@@ -1,4 +1,13 @@
 ChangeLog for Nicotine
+Version 1.2.3 July 7th 2006
+ * Added abort, retry, ban, clear queued, and clear finished/aborted buttons 
+   to transfers.
+ * Made lists' rows to use the alternating color pattern.
+ * Changed all the icons. Most of the new icons are modified from 
+   Mark James' Silk icon set: http://www.famfamfam.com/lab/icons/silk/
+ * Fixed other users sending PM cause the tab to be switched to their message.
+ * Fixed erroneously translated internal strings that caused queued downloads
+   to fail.
 
 Version 1.2.2 June 15th 2006
  * Renamed "User list" to "Buddy list"
