@@ -1,0 +1,2451 @@
+# Swedish Nicotine translation
+# Copyright (C) 2003-2004, Hyriand
+# This file is distributed under the same license as the Nicotine package.
+# Hyriand <hyriand@thegraveyard.org>, 2003
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2006-06-15 19:07+0300\n"
+"PO-Revision-Date: 2004-01-08 09:35+0100\n"
+"Last-Translator: Markus Magnuson <markus@samsonrourke.com>\n"
+"Language-Team: Swedish <markus@samsonrourke.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: nicotine.py:28
+#, python-format
+msgid ""
+"You're using an old version of Python interpreter (%s).\n"
+"You should install Python 2.2.0 or newer."
+msgstr ""
+"Du använder en gammal version av Python (%s)\n"
+"Uppdatera till Python 2.2.0 eller senare"
+
+#: nicotine.py:34
+msgid ""
+"Can not find Nicotine modules. \n"
+"Perhaps they're installed in a directory which is not \n"
+"in an interpreter's module search path. \n"
+"(there could be a version mismatch between \n"
+"what version of python was used to build the Nicotine \n"
+"binary package and what you try to run Nicotine with.)"
+msgstr ""
+"Kunde inte hitta Nicotine-moduler.\n"
+"De kanske är installerade i en katalog som inte finns i sökvägen för "
+"modulerna.\n"
+"(versionen av Python som användes när Nicotine kompilerades kanske skiljer\n"
+"sig från versionen du försöker köra Nicotine med."
+
+#: nicotine.py:49
+msgid "You must install the Gtk+ 2.2 Runtime Environment to run this program"
+msgstr "Det här programmet kräver Gtk+ 2.2"
+
+#: nicotine.py:69
+#, python-format
+msgid ""
+"Can not find required PyGTK. The current search path is \n"
+"%s"
+msgstr ""
+"Kunde inte hittade PyGTK. Den nuvarande sökvägen är\n"
+"%s"
+
+#: nicotine.py:75
+msgid "Your PyGTK is too old, upgrade to at least PyGTK 1.99.16"
+msgstr "Du har en för gammal version av PyGTK, uppgradera till minst 1.99.16"
+
+#: nicotine.py:83
+msgid ""
+"You do not have Python Vorbis bindings installed. \n"
+"Others will not be able to see the lengths and the bitrates \n"
+"of Ogg Vorbis files that you share. You can get the from\n"
+"http://www.andrewchatham.com/pyogg/. \n"
+"If you're using Debian, install the python-pyvorbis package.\n"
+msgstr ""
+"Du har inte installerat Python Vorbis-bindningarna.\n"
+"Andra kommer inte att kunna se längden och bitraten för Ogg Vorbis-filer "
+"som\n"
+"du delar. Du kan ladda ner Python Vorbis på:\n"
+"http://www.andrewchatham.com/pyogg/\n"
+"Om du använder Debian så installerar du paketet python-pyvorbis\n"
+
+#: nicotine.py:96
+msgid ""
+"Nicotine supports a country code blocker but that\n"
+"requires a (GPL'ed) library called GeoIP. You can find it here:\n"
+"C library:       http://www.maxmind.com/app/c\n"
+"Python bindings: http://www.maxmind.com/app/python\n"
+"(the python bindings require the C library)\n"
+msgstr ""
+"Nicotine stöder en landskodblockerare, men den kräver\n"
+"kodbiblioteket GeoIP (under GPL). Du kan hitta kodbiblioteket här:\n"
+"C-bibliotek:       http://www.maxmind.com/app/c\n"
+"Python-bindningar: http://www.maxmind.com/app/python\n"
+"(Python-bindningarna kräver C-biblioteket)\n"
+
+#: nicotine.py:106
+msgid ""
+"Usage: nicotine [OPTION]...\n"
+"  -c file,\t--config=file\tUse non-default configuration file\n"
+"  -h,\t\t--help\t\tDisplay this help and exit\n"
+"\n"
+"Report bugs to <hyriand@thegraveyard.org>"
+msgstr ""
+"Användning: nicotine [ALTERNATIV]...\n"
+"  -c fil,\t--config=fil\tAnvänd icke-standard konfigurationsfil\n"
+"  -h,\t\t--help\t\tVisa den här hjälptexten och avsluta\n"
+"\n"
+"Rapportera buggar till <hyriand@thegraveyard.org>"
+
+#: nicotine.py:154
+#, python-format
+msgid "Starting using the profiler (saving log to %s)"
+msgstr "Använder profileraren (sparar loggfil till %s)"
+
+#: pynicotine/config.py:155
+msgid "Shared files database seems to be corrupted, rescan your shares"
+msgstr ""
+"Databasen för delade filer verkar vara skadad, indexera om dina delade filer"
+
+#: pynicotine/config.py:264
+#, python-format
+msgid "Can't create directory '%s', reported error: %s"
+msgstr "Kunde inte skapa katalogen '%s', rapporterat fel: %s"
+
+#: pynicotine/config.py:279
+#, python-format
+msgid "Can't back config file up, error: %s"
+msgstr "Kunde inte göra backup på konfigurationsfil, error: %s"
+
+#: pynicotine/config.py:286
+#, python-format
+msgid "Can't save config file, I/O error(%s): %s"
+msgstr "Kunde inte spara konfigurationsfil, I/O-fel(%s): %s"
+
+#: pynicotine/config.py:396 pynicotine/config.py:410
+#, python-format
+msgid "No such alias (%s)"
+msgstr "Kunde inte hitta alias (%s)"
+
+#: pynicotine/config.py:398
+msgid "Aliases:"
+msgstr "Alias:"
+
+#: pynicotine/config.py:408
+#, python-format
+msgid "Removed alias %s: %s"
+msgstr "Tog bort aliaset %s: %s"
+
+#: pynicotine/pynicotine.py:269
+#, python-format
+msgid "The server seems to be down or not responding, retrying in %i seconds"
+msgstr ""
+"Servern verkar vara nere eller svarar inte, försöker igen om %i sekunder"
+
+#: pynicotine/pynicotine.py:327
+#, python-format
+msgid "Can't connect to server %s:%s: %s"
+msgstr "Kunde inte ansluta till servern %s:%s: %s"
+
+#: pynicotine/pynicotine.py:354
+#, python-format
+msgid "Can't connect to %s, sending notification via the server"
+msgstr ""
+
+#: pynicotine/pynicotine.py:368
+#, python-format
+msgid "Listening on port %i"
+msgstr "Lyssnar på port %i"
+
+#: pynicotine/pynicotine.py:371
+#, python-format
+msgid "Connected to server %s:%s, logging in..."
+msgstr "Ansluten till servern %s:%s, loggar in..."
+
+#: pynicotine/pynicotine.py:394
+#, python-format
+msgid "Disconnected from server %s:%s"
+msgstr "Nedkopplad från servern %s:%s"
+
+#: pynicotine/pynicotine.py:407
+#, python-format
+msgid "Connection closed by peer: %s"
+msgstr "Anslutningen stängd av annan användare: %s"
+
+#: pynicotine/pynicotine.py:417
+#, python-format
+msgid "Removed connection closed by peer: %s %s"
+msgstr "Tog bort anslutningen som stängdes av annan användare: %s %s"
+
+#: pynicotine/pynicotine.py:422
+msgid "Logged in, getting the list of rooms..."
+msgstr "Inloggad, hämtar listan över rum..."
+
+#: pynicotine/pynicotine.py:436 pynicotine/pynicotine.py:437
+#, python-format
+msgid "Can not log in, reason: %s"
+msgstr "Kunde inte logga in, anledning: %s"
+
+#: pynicotine/pynicotine.py:492
+#, fuzzy, python-format
+msgid "%i privileged users"
+msgstr "Kolla privilegier"
+
+#: pynicotine/pynicotine.py:501
+#, python-format
+msgid "User %s added to privileged list"
+msgstr "Användaren %s lades till den privilegierade listan"
+
+#: pynicotine/pynicotine.py:509
+#, python-format
+msgid "%i days, %i hours, %i minutes, %i seconds of download privileges left"
+msgstr ""
+"%i dagar, %i timmar, %i minuter, %i sekunders nedladdningsprivilegium kvar"
+
+#: pynicotine/pynicotine.py:584
+#, python-format
+msgid "Server reported port 0 for the 10th time for user %s, giving up"
+msgstr ""
+"Servern rapporterade port 0 för användaren %s för tionde gången, ger upp"
+
+#: pynicotine/pynicotine.py:586
+#, python-format
+msgid "Server reported non-zero port for user %s after %i retries"
+msgstr "Servern rapporterade icke-noll-port för användaren %s efter %i försök"
+
+#: pynicotine/pynicotine.py:596
+#, python-format
+msgid "Server reported port 0 for user %s, retrying"
+msgstr "Servern rapporterade port 0 för användaren %s, försöker igen"
+
+#: pynicotine/pynicotine.py:613
+#, python-format
+msgid "IP address of %s is %s, name %s, port %i%s"
+msgstr "IP-adressen för %s är %s, namn %s, port %i%s"
+
+#: pynicotine/pynicotine.py:615
+#, python-format
+msgid "IP address of %s is %s, port %i%s"
+msgstr "IP-adressen för %s är %s, port %i%s"
+
+#: pynicotine/pynicotine.py:621
+msgid ""
+"Someone else is logging in with the same nickname, server is going to "
+"disconnect us"
+msgstr ""
+"Någon annan loggar in med samma användarnamn, servern stänger din anslutning"
+
+#: pynicotine/pynicotine.py:662 pynicotine/transfers.py:757
+#, fuzzy, python-format
+msgid "Banned (%s)"
+msgstr "Bannade användare:"
+
+#: pynicotine/pynicotine.py:664 pynicotine/transfers.py:759
+#, fuzzy
+msgid "Banned"
+msgstr "Banna"
+
+#: pynicotine/pynicotine.py:671
+#, fuzzy
+msgid "Sorry, friends only"
+msgstr "Endast mina kompisar kan se mina filer"
+
+#: pynicotine/pynicotine.py:673
+msgid "geoip"
+msgstr ""
+
+#: pynicotine/pynicotine.py:677
+msgid "Sorry, geographical paranoia"
+msgstr ""
+
+#: pynicotine/pynicotine.py:681
+msgid "Sorry, your country is blocked"
+msgstr ""
+
+#: pynicotine/pynicotine.py:690
+#, python-format
+msgid "%s is making a BrowseShares request"
+msgstr ""
+
+#: pynicotine/pynicotine.py:724
+#, python-format
+msgid "%s is making a UserInfo request"
+msgstr ""
+
+#: pynicotine/pynicotine.py:777
+#, python-format
+msgid "Can't connect to %s (either way), giving up"
+msgstr "Kunde inte ansluta till %s på något sätt, ger upp"
+
+#: pynicotine/pynicotine.py:788
+#, python-format
+msgid "User %s does not respond to connect request, giving up"
+msgstr "Användaren %s svarar inte på anslutningsförfrågan, ger upp"
+
+#: pynicotine/pynicotine.py:893
+msgid ""
+"Please try browsing me if you get 'File not shared' errors. This is an "
+"automatic message, you don't have to reply to it."
+msgstr ""
+
+#: pynicotine/pynicotine.py:925
+#, python-format
+msgid "Unknown tunneled message: %s"
+msgstr "Okänt meddelande: %s"
+
+#: pynicotine/pynicotine.py:986
+#, python-format
+msgid "User %s is directly searching for %s, returning %i results"
+msgstr "Användaren %s gör en direktsökning på %s, returnerar %i sökresultat"
+
+#: pynicotine/pynicotine.py:988
+#, python-format
+msgid "User %s is searching for %s, returning %i results"
+msgstr "Användaren %s gör en sökning på %s, returnerar %i sökresultat"
+
+#: pynicotine/pynicotine.py:1060
+#, python-format
+msgid "Couldn't write to transfer log: %s"
+msgstr ""
+
+#: pynicotine/slskmessages.py:169
+#, python-format
+msgid "Warning: networking thread has to convert unicode string %s message %s"
+msgstr ""
+"Varning: Nätverkstråden måste konvertera unicode-textsträng %s meddelande %s"
+
+#: pynicotine/slskmessages.py:172
+#, python-format
+msgid "Warning: unknown object type %s"
+msgstr "Varning: Okänd objekttyp %s"
+
+#: pynicotine/slskmessages.py:177
+#, python-format
+msgid "Empty message made, class %s"
+msgstr "Skapade tomt meddelande, class %s"
+
+#: pynicotine/slskmessages.py:183
+#, python-format
+msgid "Can't parse incoming messages, class %s"
+msgstr "Kunde inte tolka inkommande meddelanden, class %s"
+
+#: pynicotine/slskproto.py:353
+#, python-format
+msgid "Server message type %i size %i contents %s unknown"
+msgstr "Servermeddelande typ %i storlek %i innehåll %s okänt"
+
+#: pynicotine/slskproto.py:438
+#, python-format
+msgid "Unknown peer init code: %i, message contents %s"
+msgstr ""
+"Okänd initieringskod från annan användare: %i, meddelandets innehåll %s"
+
+#: pynicotine/slskproto.py:452
+#, python-format
+msgid "Peer message type %i size %i contents %s unknown"
+msgstr "Meddelandetyp från annan användare okänd: %i, storlek %i innehåll %s"
+
+#: pynicotine/slskproto.py:454
+#, python-format
+msgid "Can't handle connection type %s"
+msgstr "Kunde inte hantera anslutningstypen %s"
+
+#: pynicotine/slskproto.py:479
+#, python-format
+msgid "Distrib message type %i size %i contents %s unknown"
+msgstr "Distribuerad meddelandetyp okänd: %i storlek %i innehåll %s"
+
+#: pynicotine/slskproto.py:544
+#, python-format
+msgid "Can't send the message over the closed connection: %s %s"
+msgstr "Kunde inte skicka meddelande över stängd anslutning: %s %s"
+
+#: pynicotine/transfers.py:66 pynicotine/transfers.py:122
+#: pynicotine/transfers.py:134 pynicotine/transfers.py:155
+#: pynicotine/transfers.py:162 pynicotine/transfers.py:311
+#: pynicotine/transfers.py:431 pynicotine/transfers.py:434
+#: pynicotine/gtkgui/transferlist.py:56
+msgid "Getting status"
+msgstr "Hämtar status"
+
+#: pynicotine/transfers.py:117
+#, python-format
+msgid "User %s does not exist"
+msgstr "Användaren %s existerar inte"
+
+#: pynicotine/transfers.py:122 pynicotine/transfers.py:124
+#: pynicotine/transfers.py:296 pynicotine/transfers.py:335
+#: pynicotine/transfers.py:340 pynicotine/transfers.py:341
+#: pynicotine/transfers.py:361 pynicotine/transfers.py:367
+#: pynicotine/transfers.py:394 pynicotine/transfers.py:408
+#: pynicotine/transfers.py:460 pynicotine/transfers.py:763
+#: pynicotine/transfers.py:779 pynicotine/transfers.py:852
+msgid "Queued"
+msgstr ""
+
+#: pynicotine/transfers.py:122 pynicotine/transfers.py:128
+#: pynicotine/transfers.py:925 pynicotine/gtkgui/transferlist.py:58
+msgid "User logged off"
+msgstr "Användaren utloggad"
+
+#: pynicotine/transfers.py:122 pynicotine/transfers.py:186
+#: pynicotine/transfers.py:915 pynicotine/transfers.py:927
+#: pynicotine/gtkgui/transferlist.py:207 pynicotine/gtkgui/transferlist.py:211
+msgid "Connection closed by peer"
+msgstr "Anslutningen stängd av annan användare"
+
+#: pynicotine/transfers.py:122 pynicotine/transfers.py:124
+#: pynicotine/transfers.py:127 pynicotine/transfers.py:659
+#: pynicotine/gtkgui/transferlist.py:59 pynicotine/gtkgui/transferlist.py:181
+#: pynicotine/gtkgui/transferlist.py:207 pynicotine/gtkgui/transferlist.py:211
+msgid "Aborted"
+msgstr "Avbruten"
+
+#: pynicotine/transfers.py:122 pynicotine/transfers.py:124
+#: pynicotine/transfers.py:234 pynicotine/transfers.py:240
+#: pynicotine/transfers.py:491 pynicotine/gtkgui/transferlist.py:52
+#: pynicotine/gtkgui/transferlist.py:207 pynicotine/gtkgui/transferlist.py:211
+msgid "Cannot connect"
+msgstr "Kunde inte ansluta"
+
+#: pynicotine/transfers.py:132 pynicotine/transfers.py:641
+#: pynicotine/transfers.py:659 pynicotine/transfers.py:743
+#: pynicotine/transfers.py:923 pynicotine/transfers.py:990
+#: pynicotine/transfers.py:1017 pynicotine/gtkgui/transferlist.py:60
+#: pynicotine/gtkgui/transferlist.py:204 pynicotine/gtkgui/transferlist.py:211
+msgid "Finished"
+msgstr "Klar"
+
+#: pynicotine/transfers.py:186 pynicotine/transfers.py:473
+#: pynicotine/transfers.py:481
+msgid "Establishing connection"
+msgstr "Upprättar anslutning"
+
+#: pynicotine/transfers.py:189 pynicotine/transfers.py:929
+#, python-format
+msgid "Retrying failed download: user %s, file %s"
+msgstr "Prövar misslyckad nedladdning igen: användare %s, fil %s"
+
+#: pynicotine/transfers.py:192
+#, python-format
+msgid "Failed download: user %s, file %s"
+msgstr "Misslyckad nedladdning: användare %s, fil %s"
+
+#: pynicotine/transfers.py:197 pynicotine/transfers.py:201
+#: pynicotine/gtkgui/transferlist.py:55
+msgid "Getting address"
+msgstr "Hämtar adress"
+
+#: pynicotine/transfers.py:209 pynicotine/transfers.py:213
+#: pynicotine/gtkgui/transferlist.py:54
+msgid "Connecting"
+msgstr "Ansluter"
+
+#: pynicotine/transfers.py:223 pynicotine/transfers.py:227
+#: pynicotine/gtkgui/transferlist.py:53
+msgid "Waiting for peer to connect"
+msgstr "Väntar på anslutning från annan användare"
+
+#: pynicotine/transfers.py:256 pynicotine/transfers.py:260
+#: pynicotine/transfers.py:581 pynicotine/gtkgui/transferlist.py:51
+msgid "Initializing transfer"
+msgstr "Initierar överföring"
+
+#: pynicotine/transfers.py:268 pynicotine/transfers.py:273
+#: pynicotine/transfers.py:913 pynicotine/gtkgui/transferlist.py:50
+msgid "Requesting file"
+msgstr "Begär fil"
+
+#: pynicotine/transfers.py:291
+#, python-format
+msgid "Got transfer request %s but cannot determine requestor"
+msgstr "Tog emot överföringsförfrågan %s, men kunde inte bestämma förfrågaren"
+
+#: pynicotine/transfers.py:299 pynicotine/gtkgui/transferlist.py:49
+msgid "Waiting for download"
+msgstr "Väntar på nedladdning"
+
+#: pynicotine/transfers.py:320
+msgid "Cancelled"
+msgstr ""
+
+#: pynicotine/transfers.py:321
+#, python-format
+msgid "Denied file request: %s"
+msgstr "Nekade filförfrågan: %s"
+
+#: pynicotine/transfers.py:333 pynicotine/transfers.py:398
+#, fuzzy
+msgid "File not shared"
+msgstr "Klar"
+
+#: pynicotine/transfers.py:338 pynicotine/transfers.py:391
+#, python-format
+msgid "User limit of %i megabytes exceeded"
+msgstr ""
+
+#: pynicotine/transfers.py:348
+#, fuzzy
+msgid "Waiting for upload"
+msgstr "Väntar på nedladdning"
+
+#: pynicotine/transfers.py:352
+#, python-format
+msgid "Upload request: %s"
+msgstr "Uppladdningsförfrågan: %s"
+
+#: pynicotine/transfers.py:399
+#, python-format
+msgid "Queued upload request: %s"
+msgstr "Köad uppladdningsförfrågan: %s"
+
+#: pynicotine/transfers.py:486
+#, python-format
+msgid "Got unknown transfer response: %s"
+msgstr "Tog emot okänt överföringssvar: %s"
+
+#: pynicotine/transfers.py:520
+#, python-format
+msgid "OS error: %s"
+msgstr "OS-fel: %s"
+
+#: pynicotine/transfers.py:521
+msgid "Download directory error"
+msgstr "Fel på nedladdningskatalog"
+
+#: pynicotine/transfers.py:540 pynicotine/transfers.py:585
+#: pynicotine/transfers.py:666 pynicotine/transfers.py:965
+#, python-format
+msgid "I/O error: %s"
+msgstr "I/O-fel: %s"
+
+#: pynicotine/transfers.py:541 pynicotine/transfers.py:586
+#: pynicotine/transfers.py:667 pynicotine/transfers.py:958
+msgid "Local file error"
+msgstr "Lokalt filfel"
+
+#: pynicotine/transfers.py:555
+#, python-format
+msgid "Can't get an exclusive lock on file - I/O error: %s"
+msgstr "Kunde inte upprätta ett exklusivt lås på fil - I/O-fel: %s"
+
+#: pynicotine/transfers.py:566
+#, python-format
+msgid "Download started: %s"
+msgstr "Nedladdning påbörjad: %s"
+
+#: pynicotine/transfers.py:567
+#, python-format
+msgid "Download started: user %s, file %s"
+msgstr "Nedladdning påbörjad: användare %s, fil %s"
+
+#: pynicotine/transfers.py:583
+#, python-format
+msgid "Upload started: user %s, file %s"
+msgstr "Uppladdning påbörjad: användare %s, fil %s"
+
+#: pynicotine/transfers.py:596
+#, python-format
+msgid "Unknown file request: %s"
+msgstr "Okänd filförfrågan: %s"
+
+#: pynicotine/transfers.py:640
+#, python-format
+msgid "Couldn't move '%s' to '%s'"
+msgstr "Kunde inte flytta '%s' till '%s'"
+
+#: pynicotine/transfers.py:642
+#, python-format
+msgid "Download finished: %s"
+msgstr "Nedladdning slutförd: %s"
+
+#: pynicotine/transfers.py:643
+#, python-format
+msgid "Download finished: user %s, file %s"
+msgstr "Nedladdning slutförd: användare %s, fil %s"
+
+#: pynicotine/transfers.py:655
+#, python-format
+msgid "Executed: %s"
+msgstr "Körde: %s"
+
+#: pynicotine/transfers.py:664
+#, python-format
+msgid "Executed on folder: %s"
+msgstr "Körde på mapp: %s"
+
+#: pynicotine/transfers.py:738 pynicotine/gtkgui/transferlist.py:100
+msgid "(privileged)"
+msgstr "(privilegierad)"
+
+#: pynicotine/transfers.py:740 pynicotine/gtkgui/transferlist.py:101
+msgid "(friend)"
+msgstr "(kompis)"
+
+#: pynicotine/transfers.py:749
+#, python-format
+msgid "Upload finished: user %s, file %s"
+msgstr "Uppladdning slutförd: användare %s, fil %s"
+
+#: pynicotine/transfers.py:952
+#, python-format
+msgid "File: %s, place in queue: %s"
+msgstr "Fil: %s, plats i kön: %s"
+
+#: pynicotine/transfers.py:1011
+#, python-format
+msgid "Upload aborted, user %s file %s"
+msgstr "Uppladdning avbruten: användare %s, fil %s"
+
+#: pynicotine/transfers.py:1013
+#, python-format
+msgid "Download aborted, user %s file %s"
+msgstr "Nedladdning avbruten: användare %s, fil %s"
+
+#: pynicotine/gtkgui/about.py:27
+#, python-format
+msgid ""
+"Nicotine+ %s\n"
+"\n"
+"Copyright (c) 2003 Hyriand\n"
+"http://nicotine.thegraveyard.org/\n"
+"hyriand@thegraveyard.org\n"
+"\n"
+"Based on code from the PySoulSeek project\n"
+"Copyright (c) 2001-2003 Alexander Kanavin\n"
+"\n"
+"With additions by daelstorm (c) 2006\n"
+"\n"
+"Released under the GNU Public License\n"
+"\n"
+"See MAINTAINERS file for the list of contributors"
+msgstr ""
+"Nicotine+ %s\n"
+"\n"
+"Copyright (c) 2003 Hyriand\n"
+"http://nicotine.thegraveyard.org/\n"
+"hyriand@thegraveyard.org\n"
+"\n"
+"Baserad på kod från PySoulSeek-projektet\n"
+"Copyright (c) 2001-2003 Alexander Kanavin\n"
+"\n"
+"Släppt under GNU Public License\n"
+"\n"
+"Se filen MAINTAINERS för en lista över medhjälpare"
+
+#: pynicotine/gtkgui/about.py:53
+msgid "About search filters"
+msgstr "Om sökfilter"
+
+#: pynicotine/gtkgui/about.py:54
+msgid ""
+"Search filtering\n"
+"\n"
+"You can use this to refine which results are displayed. The full results\n"
+"from the server are always available if you clear all the search terms.\n"
+"\n"
+"You can filter by:\n"
+"\n"
+"Included text: Files are shown if they contain this text. Case is "
+"insensitive,\n"
+"but word order is important. 'Spears Brittany' will not show any 'Brittany "
+"Spears'\n"
+"\n"
+"Excluded text: As above, but files will not be displayed if the text "
+"matches\n"
+"\n"
+"Size: Shows results based on size. use > and < to find files larger or "
+"smaller.\n"
+"Files exactly the same as this term will always match. Use = to specify an "
+"exact\n"
+"match. Use k or m to specify kilo or megabytes. >10M will find files larger "
+"than\n"
+"10 megabytes. <4000k will find files smaller than 4000k.\n"
+"\n"
+"Bitrate: Find files based on bitrate. Use < and > to find lower or higher. "
+">192\n"
+"finds 192 and higher, <192 finds 192 or lower. =192 only finds 192. for VBR, "
+"the\n"
+"average bitrate is used.\n"
+"\n"
+"Free slot: Show only those results from users which have at least one upload "
+"slot\n"
+"free.\n"
+"\n"
+"To set the filter, press Enter. This will apply to any existing results, and "
+"any\n"
+"more that are returned. To filter in a different way, just set the relevant "
+"terms.\n"
+"You do not need to do another search to apply a different filter."
+msgstr ""
+"Sökfilter\n"
+"\n"
+"Du kan använda sökfilter för att sortera bland sökresultaten. Alla resultat\n"
+"från servern blir tillgängliga om du rensar alla sökfält.\n"
+"\n"
+"Du kan filtrera genom:\n"
+"\n"
+"Inkluderad text: Sökresultat visas om de innehåller denna text. Skiftläget\n"
+"ignoreras, men ordningen på orden är viktig. 'Spears Brittany' kommer inte "
+"att\n"
+"visa några 'Brittany Spears'.\n"
+"\n"
+"Exkluderad text: Som ovan, men sökresultat kommer inte visas om texten "
+"överensstämmer.\n"
+"\n"
+"Storlek: Visar sökresultat utifrån filstorlek. Använd < och > för att hitta\n"
+"större eller mindre filer. Filer som är exakt lika stora som detta kommer "
+"alltid\n"
+"att visas. Använd = för att visa exakta överensstämmelser. Använd 'k' eller "
+"'m'\n"
+"för att ange kilo- eller megabyte. >10M kommer att visa filer som är större "
+"än\n"
+"10 megabyte, och <4000k kommer att visa filer som är mindre än 4000 "
+"kilobyte.\n"
+"\n"
+"Bitrate: Hitta filer utifrån bitrate. Använd < och > för att hitta högre "
+"eller\n"
+"lägre bitrate. >192 visar filer vars bitrate högre än 192, <192 visar\n"
+"filer vars bitrate som är 192 eller lägre. =192 visar filer vars bitrate är\n"
+"exakt 192. För VBR (variable bitrate) används den genomsnittliga bitraten.\n"
+"\n"
+"Ledig plats: Visar endast sökresultat från användare som har minst en ledig "
+"uppladdningsplats.\n"
+"\n"
+"För aktivera ett filter, tryck Enter. Filtret tillämpas endast på redan "
+"existerande\n"
+"sökresultat. För att filtrera på ett annat sätt, skriv bara in nya värden i\n"
+"fälten. Du behöver inte söka på nytt för att tillämpa ett annat filter."
+
+#: pynicotine/gtkgui/about.py:104 pynicotine/gtkgui/about.py:105
+#: pynicotine/gtkgui/about.py:106
+msgid "room"
+msgstr "rum"
+
+#: pynicotine/gtkgui/about.py:104
+msgid "Join room 'room'"
+msgstr "Anslut till rummet 'rum'"
+
+#: pynicotine/gtkgui/about.py:105 pynicotine/gtkgui/about.py:106
+msgid "Leave room 'room'"
+msgstr "Lämna rummet 'rum'"
+
+#: pynicotine/gtkgui/about.py:107 pynicotine/gtkgui/about.py:142
+msgid "Clear the chat window"
+msgstr "Rensa chattfönstret"
+
+#: pynicotine/gtkgui/about.py:108
+msgid "Set your personal ticker"
+msgstr "Ställ in din egna ticker"
+
+#: pynicotine/gtkgui/about.py:110 pynicotine/gtkgui/about.py:111
+#: pynicotine/gtkgui/about.py:112 pynicotine/gtkgui/about.py:113
+#: pynicotine/gtkgui/about.py:118 pynicotine/gtkgui/about.py:119
+#: pynicotine/gtkgui/about.py:120 pynicotine/gtkgui/about.py:121
+#: pynicotine/gtkgui/about.py:123 pynicotine/gtkgui/about.py:124
+#: pynicotine/gtkgui/about.py:129 pynicotine/gtkgui/about.py:144
+#: pynicotine/gtkgui/about.py:145 pynicotine/gtkgui/about.py:146
+#: pynicotine/gtkgui/about.py:147 pynicotine/gtkgui/about.py:152
+#: pynicotine/gtkgui/about.py:153 pynicotine/gtkgui/about.py:154
+#: pynicotine/gtkgui/about.py:155
+msgid "user"
+msgstr "användare"
+
+#: pynicotine/gtkgui/about.py:110 pynicotine/gtkgui/about.py:144
+msgid "Add user 'user' to your user list"
+msgstr "Lägg användaren 'användare' till din användarlista"
+
+#: pynicotine/gtkgui/about.py:111 pynicotine/gtkgui/about.py:145
+msgid "Browse files of user 'user'"
+msgstr "Bläddra filer hos användaren 'användare'"
+
+#: pynicotine/gtkgui/about.py:112 pynicotine/gtkgui/about.py:146
+msgid "Request user info for user 'user'"
+msgstr "Begär användarinfo från användaren 'användare'"
+
+#: pynicotine/gtkgui/about.py:113 pynicotine/gtkgui/about.py:147
+msgid "Show IP for user 'user'"
+msgstr "Visa IP-adress för användaren 'användare'"
+
+#: pynicotine/gtkgui/about.py:115 pynicotine/gtkgui/about.py:116
+#: pynicotine/gtkgui/about.py:149 pynicotine/gtkgui/about.py:150
+msgid "command"
+msgstr "kommando"
+
+#: pynicotine/gtkgui/about.py:115 pynicotine/gtkgui/about.py:149
+msgid "definition"
+msgstr "definition"
+
+#: pynicotine/gtkgui/about.py:115 pynicotine/gtkgui/about.py:149
+msgid "Add a new alias"
+msgstr "Lägg till ett nytt alias"
+
+#: pynicotine/gtkgui/about.py:116 pynicotine/gtkgui/about.py:150
+msgid "Remove an alias"
+msgstr "Ta bort ett alias"
+
+#: pynicotine/gtkgui/about.py:118 pynicotine/gtkgui/about.py:152
+msgid "Add user 'user' to your ban list"
+msgstr "Lägg användaren 'användare' till din ban-lista"
+
+#: pynicotine/gtkgui/about.py:119 pynicotine/gtkgui/about.py:153
+msgid "Remove user 'user' from your ban list"
+msgstr "Ta bort användaren 'användare' från din ban-lista"
+
+#: pynicotine/gtkgui/about.py:120 pynicotine/gtkgui/about.py:154
+msgid "Add user 'user' to your ignore list"
+msgstr "Lägg användaren 'användare' till din ignore-lista"
+
+#: pynicotine/gtkgui/about.py:121 pynicotine/gtkgui/about.py:155
+msgid "Remove user 'user' from your ignore list"
+msgstr "Ta bort användaren 'användare' från din ignore-lista"
+
+#: pynicotine/gtkgui/about.py:123
+msgid "message"
+msgstr "meddelande"
+
+#: pynicotine/gtkgui/about.py:123
+msgid "Send message 'message' to user 'user'"
+msgstr "Skicka meddelandet 'message' till användaren 'användare'"
+
+#: pynicotine/gtkgui/about.py:124
+msgid "Open private chat window for user 'user'"
+msgstr "Öppna privat chattfönster för användaren 'användare'"
+
+#: pynicotine/gtkgui/about.py:126 pynicotine/gtkgui/about.py:127
+#: pynicotine/gtkgui/about.py:128 pynicotine/gtkgui/about.py:129
+#: pynicotine/gtkgui/about.py:157 pynicotine/gtkgui/about.py:158
+#: pynicotine/gtkgui/about.py:159 pynicotine/gtkgui/about.py:160
+msgid "query"
+msgstr "förfrågan"
+
+#: pynicotine/gtkgui/about.py:126 pynicotine/gtkgui/about.py:157
+msgid "Start a new search for 'query'"
+msgstr "Påbörja sökning efter 'förfrågan'"
+
+#: pynicotine/gtkgui/about.py:127 pynicotine/gtkgui/about.py:158
+msgid "Search the joined roms for 'query'"
+msgstr "Sök i anslutna rum efter 'förfrågan'"
+
+#: pynicotine/gtkgui/about.py:128 pynicotine/gtkgui/about.py:159
+msgid "Search the buddy list for 'query'"
+msgstr "Sök i kompislistan efter 'förfrågan'"
+
+#: pynicotine/gtkgui/about.py:129 pynicotine/gtkgui/about.py:160
+msgid "Search a user's shares for 'query'"
+msgstr "Sök i en användares delade filer efter 'förfrågan'"
+
+#: pynicotine/gtkgui/about.py:131 pynicotine/gtkgui/about.py:162
+msgid "Rescan shares"
+msgstr "Indexera om delade filer"
+
+#: pynicotine/gtkgui/about.py:132 pynicotine/gtkgui/about.py:163
+msgid "Toggles your away status"
+msgstr "Ändrar din away-status"
+
+#: pynicotine/gtkgui/about.py:133 pynicotine/gtkgui/about.py:164
+msgid "Quit Nicotine"
+msgstr "Avsluta Nicotine"
+
+#: pynicotine/gtkgui/about.py:137
+msgid "About chat room commands"
+msgstr "Om kommandon för chattrum"
+
+#: pynicotine/gtkgui/about.py:141
+msgid "Close the current private chat"
+msgstr "Stäng den privata chatten"
+
+#: pynicotine/gtkgui/about.py:168
+msgid "About private chat commands"
+msgstr "Om kommandon för privata chattrum"
+
+#: pynicotine/gtkgui/browsetreemodels.py:148 pynicotine/gtkgui/search.py:495
+msgid " (vbr)"
+msgstr " (vbr) "
+
+#: pynicotine/gtkgui/chatrooms.py:65
+msgid "Room"
+msgstr "Rum"
+
+#: pynicotine/gtkgui/chatrooms.py:66
+msgid "Users"
+msgstr "Användare"
+
+#: pynicotine/gtkgui/chatrooms.py:81
+msgid "Join room"
+msgstr "Anslut till rum"
+
+#: pynicotine/gtkgui/chatrooms.py:82
+msgid "Leave room"
+msgstr "Lämna rum"
+
+#: pynicotine/gtkgui/chatrooms.py:84 pynicotine/gtkgui/nicotine_glade.py:1461
+#: pynicotine/gtkgui/nicotine_glade.py:1602
+msgid "Refresh"
+msgstr "Uppdatera"
+
+#: pynicotine/gtkgui/chatrooms.py:234
+msgid "Set ticker message"
+msgstr "Ställ in ticker-meddelande"
+
+#: pynicotine/gtkgui/chatrooms.py:243
+msgid "Set room ticker message:"
+msgstr "Ställ in ticker-meddelande för rum"
+
+#: pynicotine/gtkgui/chatrooms.py:254
+msgid "Just this time"
+msgstr "Bara den här gången"
+
+#: pynicotine/gtkgui/chatrooms.py:259
+msgid "Always for this channel"
+msgstr "Alltid för den här kanalen"
+
+#: pynicotine/gtkgui/chatrooms.py:263
+msgid "Default for all channels"
+msgstr "Standard för alla kanaler"
+
+#: pynicotine/gtkgui/chatrooms.py:322 pynicotine/gtkgui/frame.py:136
+#: pynicotine/gtkgui/search.py:131 pynicotine/gtkgui/search.py:373
+#: pynicotine/gtkgui/transferlist.py:28 pynicotine/gtkgui/userlist.py:19
+msgid "User"
+msgstr "Användare"
+
+#: pynicotine/gtkgui/chatrooms.py:323 pynicotine/gtkgui/frame.py:137
+#: pynicotine/gtkgui/search.py:375 pynicotine/gtkgui/transferlist.py:31
+#: pynicotine/gtkgui/userlist.py:20
+msgid "Speed"
+msgstr "Hastighet"
+
+#: pynicotine/gtkgui/chatrooms.py:324 pynicotine/gtkgui/frame.py:138
+#: pynicotine/gtkgui/userlist.py:21
+msgid "Files"
+msgstr "Filer"
+
+#: pynicotine/gtkgui/chatrooms.py:347 pynicotine/gtkgui/downloads.py:22
+#: pynicotine/gtkgui/frame.py:150 pynicotine/gtkgui/search.py:401
+#: pynicotine/gtkgui/uploads.py:19 pynicotine/gtkgui/userbrowse.py:70
+#: pynicotine/gtkgui/userbrowse.py:92 pynicotine/gtkgui/userbrowse.py:106
+#: pynicotine/gtkgui/userlist.py:46
+msgid "Send _message"
+msgstr "Skicka _meddelande"
+
+#: pynicotine/gtkgui/chatrooms.py:349 pynicotine/gtkgui/downloads.py:23
+#: pynicotine/gtkgui/frame.py:152 pynicotine/gtkgui/search.py:402
+#: pynicotine/gtkgui/uploads.py:20 pynicotine/gtkgui/userbrowse.py:71
+#: pynicotine/gtkgui/userbrowse.py:93 pynicotine/gtkgui/userbrowse.py:107
+#: pynicotine/gtkgui/userlist.py:47
+msgid "Show IP a_ddress"
+msgstr "Visa IP-a_dress"
+
+#: pynicotine/gtkgui/chatrooms.py:350 pynicotine/gtkgui/downloads.py:24
+#: pynicotine/gtkgui/frame.py:153 pynicotine/gtkgui/search.py:403
+#: pynicotine/gtkgui/uploads.py:21 pynicotine/gtkgui/userbrowse.py:72
+#: pynicotine/gtkgui/userbrowse.py:94 pynicotine/gtkgui/userbrowse.py:108
+#: pynicotine/gtkgui/userlist.py:48
+msgid "Get user i_nfo"
+msgstr "Visa användari_nfo"
+
+#: pynicotine/gtkgui/chatrooms.py:351 pynicotine/gtkgui/downloads.py:25
+#: pynicotine/gtkgui/frame.py:154 pynicotine/gtkgui/search.py:404
+#: pynicotine/gtkgui/uploads.py:22 pynicotine/gtkgui/userlist.py:49
+msgid "Brow_se files"
+msgstr "Bläddra"
+
+#: pynicotine/gtkgui/chatrooms.py:352 pynicotine/gtkgui/downloads.py:26
+#: pynicotine/gtkgui/search.py:405 pynicotine/gtkgui/uploads.py:23
+#: pynicotine/gtkgui/userbrowse.py:73 pynicotine/gtkgui/userbrowse.py:109
+msgid "Gi_ve privileges"
+msgstr "Kolla privilegier"
+
+#: pynicotine/gtkgui/chatrooms.py:353 pynicotine/gtkgui/downloads.py:27
+#: pynicotine/gtkgui/frame.py:155 pynicotine/gtkgui/search.py:406
+#: pynicotine/gtkgui/uploads.py:24 pynicotine/gtkgui/userbrowse.py:74
+#: pynicotine/gtkgui/userbrowse.py:95 pynicotine/gtkgui/userbrowse.py:110
+msgid "_Add user to list"
+msgstr "Lägg _användaren till kompislistan"
+
+#: pynicotine/gtkgui/chatrooms.py:354 pynicotine/gtkgui/downloads.py:28
+#: pynicotine/gtkgui/frame.py:156 pynicotine/gtkgui/search.py:407
+#: pynicotine/gtkgui/uploads.py:25 pynicotine/gtkgui/userbrowse.py:75
+#: pynicotine/gtkgui/userbrowse.py:96 pynicotine/gtkgui/userbrowse.py:111
+#: pynicotine/gtkgui/userlist.py:51
+msgid "_Ban this user"
+msgstr "_Banna"
+
+#: pynicotine/gtkgui/chatrooms.py:355 pynicotine/gtkgui/downloads.py:29
+#: pynicotine/gtkgui/frame.py:157 pynicotine/gtkgui/search.py:408
+#: pynicotine/gtkgui/uploads.py:26 pynicotine/gtkgui/userbrowse.py:76
+#: pynicotine/gtkgui/userbrowse.py:97 pynicotine/gtkgui/userbrowse.py:112
+#: pynicotine/gtkgui/userlist.py:52
+msgid "_Ignore this user"
+msgstr "_Ignorera"
+
+#: pynicotine/gtkgui/chatrooms.py:547 pynicotine/gtkgui/privatechat.py:267
+#, python-format
+msgid "Command %s is not recognized"
+msgstr "Kände inte igen kommandot %s"
+
+#: pynicotine/gtkgui/chatrooms.py:558
+#, python-format
+msgid "%s joined the room"
+msgstr "%s anslöt till rummet"
+
+#: pynicotine/gtkgui/chatrooms.py:568
+#, python-format
+msgid "%s left the room"
+msgstr "%s lämnade rummet"
+
+#: pynicotine/gtkgui/chatrooms.py:584
+#, python-format
+msgid "%s has gone away"
+msgstr "%s är away"
+
+#: pynicotine/gtkgui/chatrooms.py:586
+#, python-format
+msgid "%s has returned"
+msgstr "%s är tillbaka"
+
+#: pynicotine/gtkgui/chatrooms.py:614
+msgid "--- disconnected ---"
+msgstr "--- nedkopplad ---"
+
+#: pynicotine/gtkgui/chatrooms.py:627
+msgid "--- reconnected ---"
+msgstr "--- återansluten ---"
+
+#: pynicotine/gtkgui/checklatest.py:29
+#, python-format
+msgid ""
+"Could not retrieve version information!\n"
+"Error: %s"
+msgstr ""
+"Kunde inte hämta versionsinfo!\n"
+"Fel: %s"
+
+#: pynicotine/gtkgui/checklatest.py:35
+#, python-format
+msgid ""
+"A newer version ('%s') is available. Check\n"
+"the Nicotine+ homepage, ( http://thegraveyard.org/daelstorm/nicotine-plus."
+"php ) for the latest version."
+msgstr ""
+"En senare version ('%s') är tillgänglig. Besök\n"
+"Nicotine-hemisdan för den senaste versionen. ( http://thegraveyard.org/"
+"daelstorm/nicotine-plus.php )"
+
+#: pynicotine/gtkgui/checklatest.py:37
+msgid "You are using the latest version of Nicotine."
+msgstr "Du använder den senaste versionen av Nicoptine."
+
+#: pynicotine/gtkgui/downloads.py:17
+msgid "Get place in _queue"
+msgstr "Hämta plats i kön"
+
+#: pynicotine/gtkgui/downloads.py:19 pynicotine/gtkgui/search.py:398
+#: pynicotine/gtkgui/uploads.py:16 pynicotine/gtkgui/userbrowse.py:68
+#: pynicotine/gtkgui/userbrowse.py:88 pynicotine/gtkgui/userbrowse.py:104
+msgid "Copy _URL"
+msgstr "Kopiera _URL"
+
+#: pynicotine/gtkgui/downloads.py:20 pynicotine/gtkgui/search.py:399
+#: pynicotine/gtkgui/uploads.py:17
+msgid "Copy folder URL"
+msgstr "Kopiera mappens URL"
+
+#: pynicotine/gtkgui/downloads.py:21 pynicotine/gtkgui/uploads.py:18
+#: pynicotine/gtkgui/userbrowse.py:91
+msgid "Send to _player"
+msgstr ""
+
+#: pynicotine/gtkgui/downloads.py:31 pynicotine/gtkgui/uploads.py:28
+msgid "Abor_t"
+msgstr "Avbry_t"
+
+#: pynicotine/gtkgui/downloads.py:32
+msgid "Abort and remove _file(s)"
+msgstr "Avbryt och ta bort _fil(er)"
+
+#: pynicotine/gtkgui/downloads.py:33
+msgid "_Retry"
+msgstr "Försök igen"
+
+#: pynicotine/gtkgui/downloads.py:34 pynicotine/gtkgui/uploads.py:29
+msgid "_Clear"
+msgstr "Rensa"
+
+#: pynicotine/gtkgui/downloads.py:36 pynicotine/gtkgui/uploads.py:31
+msgid "Clear finished/aborted"
+msgstr "Rensa slutförda/avbrutna"
+
+#: pynicotine/gtkgui/downloads.py:37 pynicotine/gtkgui/uploads.py:32
+msgid "Clear finished"
+msgstr "Rensa slutförda"
+
+#: pynicotine/gtkgui/downloads.py:38 pynicotine/gtkgui/uploads.py:33
+msgid "Clear aborted"
+msgstr "Rensa avbrutna"
+
+#: pynicotine/gtkgui/downloads.py:39 pynicotine/gtkgui/uploads.py:34
+msgid "Clear queued"
+msgstr "Rensa köande"
+
+#: pynicotine/gtkgui/frame.py:73
+msgid "Nicotine+"
+msgstr "Nicotine+"
+
+#: pynicotine/gtkgui/frame.py:79
+msgid "Clear log"
+msgstr "Rensa loggfil"
+
+#: pynicotine/gtkgui/frame.py:97 pynicotine/gtkgui/frame.py:952
+msgid "I like"
+msgstr "Jag gillar"
+
+#: pynicotine/gtkgui/frame.py:102
+msgid "_Remove this item"
+msgstr "Ta bort"
+
+#: pynicotine/gtkgui/frame.py:103
+msgid "Re_commendations for this item"
+msgstr "Re_kommendationer"
+
+#: pynicotine/gtkgui/frame.py:110
+msgid "I dislike"
+msgstr "Jag gillar inte"
+
+#: pynicotine/gtkgui/frame.py:114
+msgid "Remove this item"
+msgstr "Ta bort"
+
+#: pynicotine/gtkgui/frame.py:118 pynicotine/gtkgui/nicotine_glade.py:414
+msgid "Recommendations"
+msgstr "Rekommendationer"
+
+#: pynicotine/gtkgui/frame.py:119
+msgid "Rating"
+msgstr "Betyg"
+
+#: pynicotine/gtkgui/frame.py:126
+msgid "I _like this"
+msgstr "Jag gi_llar det här"
+
+#: pynicotine/gtkgui/frame.py:127
+msgid "I _don't like this"
+msgstr "Jag gillar inte _det här"
+
+#: pynicotine/gtkgui/frame.py:128
+msgid "_Recommendations for this item"
+msgstr "_Rekommendationer"
+
+#: pynicotine/gtkgui/frame.py:130
+msgid "_Search for this item"
+msgstr "_Sök efter det här"
+
+#: pynicotine/gtkgui/frame.py:245 pynicotine/gtkgui/frame.py:586
+#: pynicotine/gtkgui/frame.py:599 pynicotine/gtkgui/privatechat.py:34
+#: pynicotine/gtkgui/userinfo.py:38
+msgid "Offline"
+msgstr "Offline"
+
+#: pynicotine/gtkgui/frame.py:272
+msgid ""
+"You need to configure your settings (Server, Username, Password, Download "
+"Directory) before connecting..."
+msgstr ""
+
+#: pynicotine/gtkgui/frame.py:608 pynicotine/gtkgui/frame.py:643
+#: pynicotine/gtkgui/privatechat.py:34 pynicotine/gtkgui/userinfo.py:38
+msgid "Online"
+msgstr "Online"
+
+#: pynicotine/gtkgui/frame.py:616 pynicotine/gtkgui/frame.py:646
+#: pynicotine/gtkgui/privatechat.py:34
+#: pynicotine/gtkgui/settings_glade.py:2101 pynicotine/gtkgui/userinfo.py:38
+msgid "Away"
+msgstr "Away"
+
+#: pynicotine/gtkgui/frame.py:712
+#, python-format
+msgid "Down: %i users, %.1f KB/s"
+msgstr "Ned: %i användare, %.1f KB/s"
+
+#: pynicotine/gtkgui/frame.py:713
+#, python-format
+msgid "Up: %i users, %.1f KB/s"
+msgstr "Upp: %i användare, %.1f KB/s"
+
+#: pynicotine/gtkgui/frame.py:753
+msgid "Rescanning started"
+msgstr "Indexering påbörjad"
+
+#: pynicotine/gtkgui/frame.py:768
+#, fuzzy
+msgid "Rescanning Buddy Shares started"
+msgstr "Indexering påbörjad"
+
+#: pynicotine/gtkgui/frame.py:784
+#, fuzzy
+msgid "Rescanning Buddy Shares finished"
+msgstr "Indexering slutförd"
+
+#: pynicotine/gtkgui/frame.py:794
+msgid "Rescanning finished"
+msgstr "Indexering slutförd"
+
+#: pynicotine/gtkgui/frame.py:846
+msgid ""
+"You need to finish configuring your settings (Server, Username, Password, "
+"Download Directory) before connecting..."
+msgstr ""
+
+#: pynicotine/gtkgui/frame.py:905
+#, python-format
+msgid "Invalid SoulSeek meta-url: %s"
+msgstr "Felaktig SoulSeek-meta-url: %s"
+
+#: pynicotine/gtkgui/frame.py:952
+msgid "Add thing I like"
+msgstr "Lägg till sak som jag gillar"
+
+#: pynicotine/gtkgui/frame.py:961
+msgid "Add thing I don't like"
+msgstr "Lägg till sak som jag inte gillar"
+
+#: pynicotine/gtkgui/frame.py:961
+msgid "I don't like"
+msgstr "Jag gillar inte"
+
+#: pynicotine/gtkgui/frame.py:986
+#, python-format
+msgid "Recommendations for %s"
+msgstr "Rekommendationer för %s"
+
+#: pynicotine/gtkgui/nicotine_glade.py:13
+msgid "Nicotine"
+msgstr "Nicotine"
+
+#: pynicotine/gtkgui/nicotine_glade.py:28
+msgid "_File"
+msgstr "Arkiv"
+
+#: pynicotine/gtkgui/nicotine_glade.py:33
+msgid "_Connect"
+msgstr "Anslut"
+
+#: pynicotine/gtkgui/nicotine_glade.py:40
+msgid "_Disconnect"
+msgstr "Koppla ned"
+
+#: pynicotine/gtkgui/nicotine_glade.py:47
+msgid "_Away/Return"
+msgstr "_Away/Tillbaka"
+
+#: pynicotine/gtkgui/nicotine_glade.py:54
+msgid "Check _privileges"
+msgstr "Kolla _privilegier"
+
+#: pynicotine/gtkgui/nicotine_glade.py:65
+msgid "Show _debug info"
+msgstr "Visa _debug-info"
+
+#: pynicotine/gtkgui/nicotine_glade.py:77
+msgid "_Hide log window"
+msgstr "Göm loggfönstret"
+
+#: pynicotine/gtkgui/nicotine_glade.py:85
+msgid "Hide room _list"
+msgstr "Göm _listan med rum"
+
+#: pynicotine/gtkgui/nicotine_glade.py:93
+msgid "Hide _tickers"
+msgstr ""
+
+#: pynicotine/gtkgui/nicotine_glade.py:106
+msgid "_Settings"
+msgstr "Inställningar"
+
+#: pynicotine/gtkgui/nicotine_glade.py:117
+msgid "_Rescan shares"
+msgstr "Indexera om delade filer"
+
+#: pynicotine/gtkgui/nicotine_glade.py:123
+#, fuzzy
+msgid "_Rescan Buddy shares"
+msgstr "Indexera om delade filer"
+
+#: pynicotine/gtkgui/nicotine_glade.py:129
+msgid "_Browse my shares"
+msgstr "_Bläddra bland mina filer"
+
+#: pynicotine/gtkgui/nicotine_glade.py:140
+msgid "E_xit"
+msgstr "Avsluta"
+
+#: pynicotine/gtkgui/nicotine_glade.py:151
+msgid "_Modes"
+msgstr ""
+
+#: pynicotine/gtkgui/nicotine_glade.py:156
+msgid "_Chat Rooms"
+msgstr "_Chattrum"
+
+#: pynicotine/gtkgui/nicotine_glade.py:162
+msgid "_Private Chat"
+msgstr "_Privat chatt"
+
+#: pynicotine/gtkgui/nicotine_glade.py:168
+msgid "_Downloads"
+msgstr "_Nedladdningar"
+
+#: pynicotine/gtkgui/nicotine_glade.py:174
+msgid "_Uploads"
+msgstr "_Uppladdningar"
+
+#: pynicotine/gtkgui/nicotine_glade.py:180
+msgid "_Search Files"
+msgstr "_Sök"
+
+#: pynicotine/gtkgui/nicotine_glade.py:186
+msgid "User I_nfo"
+msgstr "Användari_nfo"
+
+#: pynicotine/gtkgui/nicotine_glade.py:192
+msgid "User _Browse"
+msgstr "_Bläddra filer"
+
+#: pynicotine/gtkgui/nicotine_glade.py:198
+msgid "_Interests"
+msgstr "_Intressen"
+
+#: pynicotine/gtkgui/nicotine_glade.py:204
+msgid "Buddy _List"
+msgstr "Kompisar"
+
+#: pynicotine/gtkgui/nicotine_glade.py:214
+msgid "H_elp"
+msgstr "H_jälp"
+
+#: pynicotine/gtkgui/nicotine_glade.py:219
+msgid "About _chat room commands"
+msgstr "Om kommandon för _chattrum"
+
+#: pynicotine/gtkgui/nicotine_glade.py:225
+msgid "About _private chat commands"
+msgstr "Om kommandon för _privata chattrum"
+
+#: pynicotine/gtkgui/nicotine_glade.py:236
+msgid "About _search filters"
+msgstr "Om _sökfilter"
+
+#: pynicotine/gtkgui/nicotine_glade.py:247
+msgid "Check _latest"
+msgstr "Kolla _senaste versionen"
+
+#: pynicotine/gtkgui/nicotine_glade.py:258
+msgid "About _Nicotine"
+msgstr "Om _Nicotine"
+
+#: pynicotine/gtkgui/nicotine_glade.py:287
+#: pynicotine/gtkgui/nicotine_glade.py:291
+#: pynicotine/gtkgui/nicotine_glade.py:316
+#: pynicotine/gtkgui/nicotine_glade.py:328
+#: pynicotine/gtkgui/nicotine_glade.py:387
+#: pynicotine/gtkgui/nicotine_glade.py:391
+#: pynicotine/gtkgui/nicotine_glade.py:395
+#: pynicotine/gtkgui/nicotine_glade.py:568
+#: pynicotine/gtkgui/nicotine_glade.py:606
+msgid "ImageLabel"
+msgstr "ImageLabel"
+
+#: pynicotine/gtkgui/nicotine_glade.py:287
+msgid "Chat rooms"
+msgstr "Chattrum"
+
+#: pynicotine/gtkgui/nicotine_glade.py:291
+#: pynicotine/gtkgui/nicotine_glade.py:1405
+msgid "Private chat"
+msgstr "Privat chatt"
+
+#: pynicotine/gtkgui/nicotine_glade.py:316
+msgid "Downloads"
+msgstr "Nedladdningar"
+
+#: pynicotine/gtkgui/nicotine_glade.py:328
+msgid "Uploads"
+msgstr "Uppladdningar"
+
+#: pynicotine/gtkgui/nicotine_glade.py:355
+msgid "Global"
+msgstr "Global"
+
+#: pynicotine/gtkgui/nicotine_glade.py:362 pynicotine/gtkgui/search.py:131
+msgid "Rooms"
+msgstr "Rum"
+
+#: pynicotine/gtkgui/nicotine_glade.py:369 pynicotine/gtkgui/search.py:131
+msgid "Buddies"
+msgstr "Kompisar"
+
+#: pynicotine/gtkgui/nicotine_glade.py:375
+#: pynicotine/gtkgui/settings_glade.py:1824
+msgid "Search"
+msgstr "Sök"
+
+#: pynicotine/gtkgui/nicotine_glade.py:387
+msgid "Search files"
+msgstr "Sök"
+
+#: pynicotine/gtkgui/nicotine_glade.py:391
+#: pynicotine/gtkgui/settingswindow.py:763
+#: pynicotine/gtkgui/settingswindow.py:774
+msgid "User info"
+msgstr "Användarinfo"
+
+#: pynicotine/gtkgui/nicotine_glade.py:395
+msgid "User browse"
+msgstr "Bläddra filer"
+
+#: pynicotine/gtkgui/nicotine_glade.py:407
+msgid "Similar users"
+msgstr "Liknande användare"
+
+#: pynicotine/gtkgui/nicotine_glade.py:421
+msgid "Global recommendations"
+msgstr "Globala rekommendationer"
+
+#: pynicotine/gtkgui/nicotine_glade.py:474
+#: pynicotine/gtkgui/nicotine_glade.py:520
+msgid "Add"
+msgstr "Lägg till"
+
+#: pynicotine/gtkgui/nicotine_glade.py:568
+msgid "Interests"
+msgstr "Intressen"
+
+#: pynicotine/gtkgui/nicotine_glade.py:591
+msgid "Add: "
+msgstr "Lägg till: "
+
+#: pynicotine/gtkgui/nicotine_glade.py:606
+msgid "Buddy list"
+msgstr "Kompisar"
+
+#: pynicotine/gtkgui/nicotine_glade.py:783
+#: pynicotine/gtkgui/nicotine_glade.py:936
+#: pynicotine/gtkgui/nicotine_glade.py:1030
+#: pynicotine/gtkgui/nicotine_glade.py:1231
+#: pynicotine/gtkgui/nicotine_glade.py:1504
+#: pynicotine/gtkgui/nicotine_glade.py:1627
+#: pynicotine/gtkgui/nicotine_glade.py:1686
+#: pynicotine/gtkgui/settings_glade.py:223
+#: pynicotine/gtkgui/settings_glade.py:574
+#: pynicotine/gtkgui/settings_glade.py:820
+#: pynicotine/gtkgui/settings_glade.py:941
+#: pynicotine/gtkgui/settings_glade.py:1402
+#: pynicotine/gtkgui/settings_glade.py:1513
+#: pynicotine/gtkgui/settings_glade.py:1813
+#: pynicotine/gtkgui/settings_glade.py:1999
+#: pynicotine/gtkgui/settings_glade.py:2090
+#: pynicotine/gtkgui/settings_glade.py:2172
+#: pynicotine/gtkgui/settings_glade.py:2263
+#: pynicotine/gtkgui/settings_glade.py:2329
+#: pynicotine/gtkgui/settings_glade.py:2452
+#: pynicotine/gtkgui/settings_glade.py:2536
+#: pynicotine/gtkgui/settings_glade.py:2590
+#: pynicotine/gtkgui/settings_glade.py:2668
+#, python-format
+msgid "(custom widget: %s)"
+msgstr "(custom widget: %s)"
+
+#: pynicotine/gtkgui/nicotine_glade.py:794
+#: pynicotine/gtkgui/nicotine_glade.py:947
+#: pynicotine/gtkgui/nicotine_glade.py:1041
+#: pynicotine/gtkgui/nicotine_glade.py:1242
+#: pynicotine/gtkgui/nicotine_glade.py:1515
+#: pynicotine/gtkgui/nicotine_glade.py:1638
+msgid "window1"
+msgstr "window1"
+
+#: pynicotine/gtkgui/nicotine_glade.py:887
+#: pynicotine/gtkgui/nicotine_glade.py:996
+#: pynicotine/gtkgui/settings_glade.py:1413
+msgid "Log"
+msgstr "Loggfil"
+
+#: pynicotine/gtkgui/nicotine_glade.py:894
+msgid "Auto-join"
+msgstr "Auto-joina"
+
+#: pynicotine/gtkgui/nicotine_glade.py:900
+msgid "Leave"
+msgstr "Lämna"
+
+#: pynicotine/gtkgui/nicotine_glade.py:1002
+#: pynicotine/gtkgui/nicotine_glade.py:1069
+#: pynicotine/gtkgui/nicotine_glade.py:1454
+#: pynicotine/gtkgui/nicotine_glade.py:1595
+#: pynicotine/gtkgui/privatechat.py:102
+msgid "Close"
+msgstr "Stäng"
+
+#: pynicotine/gtkgui/nicotine_glade.py:1056
+msgid "Enable filters"
+msgstr "Aktivera filter"
+
+#: pynicotine/gtkgui/nicotine_glade.py:1062
+#: pynicotine/gtkgui/nicotine_glade.py:1440
+msgid "Ignore"
+msgstr "Ignorera"
+
+#: pynicotine/gtkgui/nicotine_glade.py:1077
+msgid "Remember"
+msgstr "Kom ihåg"
+
+#: pynicotine/gtkgui/nicotine_glade.py:1087
+#: pynicotine/gtkgui/settings_glade.py:1893
+msgid "Filter in:"
+msgstr "Filtrera in:"
+
+#: pynicotine/gtkgui/nicotine_glade.py:1107
+#: pynicotine/gtkgui/settings_glade.py:1899
+msgid "Filter out:"
+msgstr "Filtrera ut:"
+
+#: pynicotine/gtkgui/nicotine_glade.py:1127
+#: pynicotine/gtkgui/settings_glade.py:1905
+msgid "Size:"
+msgstr "Storlek:"
+
+#: pynicotine/gtkgui/nicotine_glade.py:1148
+#: pynicotine/gtkgui/settings_glade.py:1911
+msgid "Bitrate:"
+msgstr "Bitrate:"
+
+#: pynicotine/gtkgui/nicotine_glade.py:1169
+#: pynicotine/gtkgui/settings_glade.py:1963
+msgid "Country:"
+msgstr "Land:"
+
+#: pynicotine/gtkgui/nicotine_glade.py:1192
+#: pynicotine/gtkgui/settings_glade.py:1959
+msgid "Free slot"
+msgstr "Ledig plats"
+
+#: pynicotine/gtkgui/nicotine_glade.py:1291
+#: pynicotine/gtkgui/settings_glade.py:849
+msgid "Self description:"
+msgstr "Beskrivning:"
+
+#: pynicotine/gtkgui/nicotine_glade.py:1307
+msgid "Total uploads allowed: unknown"
+msgstr "Totalt antal tillåtna uppladdningar: okänt"
+
+#: pynicotine/gtkgui/nicotine_glade.py:1313
+msgid "Queue size: unknown"
+msgstr "Längd på kö: okänd"
+
+#: pynicotine/gtkgui/nicotine_glade.py:1323
+msgid "Slots available: unknown"
+msgstr "Platser lediga: okänt"
+
+#: pynicotine/gtkgui/nicotine_glade.py:1329
+#, fuzzy
+msgid "Speed: unknown"
+msgstr "Längd på kö: okänd"
+
+#: pynicotine/gtkgui/nicotine_glade.py:1341
+#, fuzzy
+msgid "Files Shared: unknown"
+msgstr "Platser lediga: okänt"
+
+#: pynicotine/gtkgui/nicotine_glade.py:1347
+msgid "Dirs Shared: unknown"
+msgstr ""
+
+#: pynicotine/gtkgui/nicotine_glade.py:1361
+msgid "Information:"
+msgstr "Information:"
+
+#: pynicotine/gtkgui/nicotine_glade.py:1392
+msgid "Picture:"
+msgstr "Bild:"
+
+#: pynicotine/gtkgui/nicotine_glade.py:1412
+msgid "Browse"
+msgstr "Bläddra"
+
+#: pynicotine/gtkgui/nicotine_glade.py:1419
+msgid "Show IP"
+msgstr "Visa IP-nummer"
+
+#: pynicotine/gtkgui/nicotine_glade.py:1426
+msgid "Add to list"
+msgstr "Lägg till kompislistan"
+
+#: pynicotine/gtkgui/nicotine_glade.py:1433
+#: pynicotine/gtkgui/settings_glade.py:1524
+msgid "Ban"
+msgstr "Banna"
+
+#: pynicotine/gtkgui/nicotine_glade.py:1447
+msgid "Save pic"
+msgstr "Spara bild"
+
+#: pynicotine/gtkgui/nicotine_glade.py:1528
+msgid "Search file and folder names (exact match):"
+msgstr "Sök efter fil- och mappnamn (exakt överensstämmelse):"
+
+#: pynicotine/gtkgui/nicotine_glade.py:1663
+msgid "Create: "
+msgstr "Skapa:"
+
+#: pynicotine/gtkgui/privatechat.py:104
+msgid "Show IP address"
+msgstr "Visa IP-adress"
+
+#: pynicotine/gtkgui/privatechat.py:105
+msgid "Get user info"
+msgstr "Visa användarinfo"
+
+#: pynicotine/gtkgui/privatechat.py:106
+msgid "Browse files"
+msgstr "Bläddra"
+
+#: pynicotine/gtkgui/privatechat.py:107
+msgid "Give privileges"
+msgstr "Kolla privilegier"
+
+#: pynicotine/gtkgui/privatechat.py:108
+msgid "Add user to list"
+msgstr "Lägg användaren till kompislistan"
+
+#: pynicotine/gtkgui/privatechat.py:109
+msgid "Ban this user"
+msgstr "Banna"
+
+#: pynicotine/gtkgui/privatechat.py:110
+msgid "Ignore this user"
+msgstr "Ignorera"
+
+#: pynicotine/gtkgui/privatechat.py:111
+msgid "Client Version"
+msgstr ""
+
+#: pynicotine/gtkgui/search.py:372 pynicotine/gtkgui/transferlist.py:27
+#: pynicotine/gtkgui/userbrowse.py:47
+msgid "Filename"
+msgstr "Filnamn"
+
+#: pynicotine/gtkgui/search.py:374 pynicotine/gtkgui/transferlist.py:30
+#: pynicotine/gtkgui/userbrowse.py:48
+msgid "Size"
+msgstr "Storlek"
+
+#: pynicotine/gtkgui/search.py:376
+msgid "In queue"
+msgstr "Köplats"
+
+#: pynicotine/gtkgui/search.py:377
+msgid "Immediate Download"
+msgstr "Direkt nedladdning"
+
+#: pynicotine/gtkgui/search.py:378 pynicotine/gtkgui/userbrowse.py:49
+msgid "Bitrate"
+msgstr "Bitrate"
+
+#: pynicotine/gtkgui/search.py:379 pynicotine/gtkgui/userbrowse.py:50
+msgid "Length"
+msgstr "Längd"
+
+#: pynicotine/gtkgui/search.py:380
+msgid "Directory"
+msgstr "Katalog"
+
+#: pynicotine/gtkgui/search.py:394 pynicotine/gtkgui/userbrowse.py:85
+#: pynicotine/gtkgui/userbrowse.py:101
+msgid "_Download file(s)"
+msgstr "Ladda ner fil(er)"
+
+#: pynicotine/gtkgui/search.py:395
+msgid "Download file(s) _to..."
+msgstr "Ladda ner fil(er) _till..."
+
+#: pynicotine/gtkgui/search.py:396
+msgid "Download containing _folder(s)"
+msgstr "Ladda ned överliggande _mapp(ar)"
+
+#: pynicotine/gtkgui/search.py:481 pynicotine/gtkgui/search.py:536
+msgid "Y"
+msgstr "J"
+
+#: pynicotine/gtkgui/search.py:483
+msgid "N"
+msgstr "N"
+
+#: pynicotine/gtkgui/settings_glade.py:12
+msgid "Server Settings"
+msgstr "Inställningar"
+
+#: pynicotine/gtkgui/settings_glade.py:30
+msgid "Server: (use server.slsknet.org:2240 for the main server)"
+msgstr "Server: (använd server.slsknet.org:2240 för huvudservern)"
+
+#: pynicotine/gtkgui/settings_glade.py:69
+msgid "Login:"
+msgstr "Användarnamn:"
+
+#: pynicotine/gtkgui/settings_glade.py:94
+msgid "Password:"
+msgstr "Lösenord:"
+
+#: pynicotine/gtkgui/settings_glade.py:117
+msgid "Network Character Encoding (utf-8 is a good choice)"
+msgstr "Nätverkskodning (utf-8 är ett bra val)"
+
+#: pynicotine/gtkgui/settings_glade.py:150
+msgid "Client connection ports (use first available):"
+msgstr "Klientens anslutningarportar (använd första möjliga):"
+
+#: pynicotine/gtkgui/settings_glade.py:169
+msgid "-"
+msgstr "-"
+
+#: pynicotine/gtkgui/settings_glade.py:185
+msgid "Use the above ports to configure your router or firewall."
+msgstr ""
+
+#: pynicotine/gtkgui/settings_glade.py:193
+msgid "I can receive direct connections"
+msgstr "Jag kan ta emot direktanslutningar"
+
+#: pynicotine/gtkgui/settings_glade.py:197
+msgid "(only use if the above ports are remotely accessable)"
+msgstr ""
+
+#: pynicotine/gtkgui/settings_glade.py:207
+msgid "Enable CTCP-like PM responses (Client Version)"
+msgstr ""
+
+#: pynicotine/gtkgui/settings_glade.py:213
+#: pynicotine/gtkgui/settingswindow.py:744
+#: pynicotine/gtkgui/settingswindow.py:769
+msgid "Server"
+msgstr "Server"
+
+#: pynicotine/gtkgui/settings_glade.py:234
+#: pynicotine/gtkgui/settings_glade.py:540
+#: pynicotine/gtkgui/settingswindow.py:745
+#: pynicotine/gtkgui/settingswindow.py:770
+#: pynicotine/gtkgui/settingswindow.py:846
+msgid "Shares"
+msgstr "Delade mappar"
+
+#: pynicotine/gtkgui/settings_glade.py:252
+msgid "Incomplete file directory:"
+msgstr "Ofullständiga nedladdningar:"
+
+#: pynicotine/gtkgui/settings_glade.py:287
+#: pynicotine/gtkgui/settings_glade.py:341
+#: pynicotine/gtkgui/settings_glade.py:913
+#: pynicotine/gtkgui/settings_glade.py:1483
+msgid "Choose..."
+msgstr "Välj..."
+
+#: pynicotine/gtkgui/settings_glade.py:306
+msgid "Download directory:"
+msgstr "Färdiga nedladdningar:"
+
+#: pynicotine/gtkgui/settings_glade.py:356
+msgid "Share download directory"
+msgstr "Dela nedladdningsmappen"
+
+#: pynicotine/gtkgui/settings_glade.py:365
+msgid "Rescan shares on startup"
+msgstr "Indexera om dina dela filer vid programstart"
+
+#: pynicotine/gtkgui/settings_glade.py:407
+#: pynicotine/gtkgui/settings_glade.py:495
+#: pynicotine/gtkgui/settings_glade.py:1581
+#: pynicotine/gtkgui/settings_glade.py:1689
+msgid "Add..."
+msgstr "Lägg till..."
+
+#: pynicotine/gtkgui/settings_glade.py:435
+#: pynicotine/gtkgui/settings_glade.py:523
+#: pynicotine/gtkgui/settings_glade.py:1609
+#: pynicotine/gtkgui/settings_glade.py:1717
+#: pynicotine/gtkgui/settings_glade.py:2423
+msgid "Remove"
+msgstr "Ta bort"
+
+#: pynicotine/gtkgui/settings_glade.py:452
+msgid "Enable Buddy-Only shares"
+msgstr ""
+
+#: pynicotine/gtkgui/settings_glade.py:585
+#: pynicotine/gtkgui/settings_glade.py:798
+#: pynicotine/gtkgui/settingswindow.py:746
+#: pynicotine/gtkgui/settingswindow.py:772
+msgid "Transfers"
+msgstr "Överföringar"
+
+#: pynicotine/gtkgui/settings_glade.py:607
+msgid "If Uploads are sent at"
+msgstr "Uppladdningsförfrågan"
+
+#: pynicotine/gtkgui/settings_glade.py:620
+msgid "KBytes/sec then"
+msgstr "KB/s"
+
+#: pynicotine/gtkgui/settings_glade.py:627
+msgid "other uploads will be queued."
+msgstr ""
+
+#: pynicotine/gtkgui/settings_glade.py:640
+msgid "Limit number of uploads to"
+msgstr "Avgränsa uppladdningshastigheten till"
+
+#: pynicotine/gtkgui/settings_glade.py:653
+msgid "(NOT RECOMMENDED)"
+msgstr "(REKOMMENDERAS EJ)"
+
+#: pynicotine/gtkgui/settings_glade.py:675
+#: pynicotine/gtkgui/settings_glade.py:757
+msgid "KBytes/sec"
+msgstr "KB/s"
+
+#: pynicotine/gtkgui/settings_glade.py:682
+msgid "Limit uploads speed to"
+msgstr "Avgränsa uppladdningshastigheten till"
+
+#: pynicotine/gtkgui/settings_glade.py:689
+msgid "per transfer"
+msgstr "per överföring"
+
+#: pynicotine/gtkgui/settings_glade.py:696
+msgid "total transfers"
+msgstr "totalt"
+
+#: pynicotine/gtkgui/settings_glade.py:711
+msgid "Each user may queue a maximum of"
+msgstr "En användare kan köa maximalt"
+
+#: pynicotine/gtkgui/settings_glade.py:725
+msgid "Megabytes"
+msgstr "MB"
+
+#: pynicotine/gtkgui/settings_glade.py:734
+msgid "Queue size limit does not apply to friends"
+msgstr "Mina kompisar slipper körestriktioner"
+
+#: pynicotine/gtkgui/settings_glade.py:744
+msgid "Limit download speed to"
+msgstr "Avgränsa uppladdningshastigheten till"
+
+#: pynicotine/gtkgui/settings_glade.py:762
+msgid "for total transfers"
+msgstr "totalt"
+
+#: pynicotine/gtkgui/settings_glade.py:773
+msgid "Share to friends only"
+msgstr "Endast mina kompisar kan se mina filer"
+
+#: pynicotine/gtkgui/settings_glade.py:780
+msgid "Privilege all my friends"
+msgstr "Mina kompisar går före i nedladdningskön"
+
+#: pynicotine/gtkgui/settings_glade.py:786
+msgid "Lock incoming files (turn off for NFS)"
+msgstr "Lås inkommande filer (stäng av för NFS)"
+
+#: pynicotine/gtkgui/settings_glade.py:792
+msgid "Allow Buddies to send you files"
+msgstr ""
+
+#: pynicotine/gtkgui/settings_glade.py:831
+msgid "Userinfo"
+msgstr "Användarinfo"
+
+#: pynicotine/gtkgui/settings_glade.py:878
+msgid "Image:"
+msgstr "Image:"
+
+#: pynicotine/gtkgui/settings_glade.py:928
+msgid "Personal settings"
+msgstr "Personliga inställningar"
+
+#: pynicotine/gtkgui/settings_glade.py:952
+msgid "Bloat"
+msgstr ""
+
+#: pynicotine/gtkgui/settings_glade.py:968
+msgid "Close-buttons on tabs (requires restart)"
+msgstr "Stängningsknapar på flikar (kräver omstart)"
+
+#: pynicotine/gtkgui/settings_glade.py:994
+msgid "Remote text"
+msgstr "Vanlig text"
+
+#: pynicotine/gtkgui/settings_glade.py:1028
+#: pynicotine/gtkgui/settings_glade.py:1139
+#: pynicotine/gtkgui/settings_glade.py:1166
+#: pynicotine/gtkgui/settings_glade.py:1193
+#: pynicotine/gtkgui/settings_glade.py:1317
+#: pynicotine/gtkgui/settings_glade.py:1344
+msgid "Default"
+msgstr "Standard"
+
+#: pynicotine/gtkgui/settings_glade.py:1056
+msgid "Local text"
+msgstr "Egen text"
+
+#: pynicotine/gtkgui/settings_glade.py:1084
+msgid "/me text"
+msgstr "/me-text"
+
+#: pynicotine/gtkgui/settings_glade.py:1112
+msgid "Highlight text"
+msgstr "Markerad text"
+
+#: pynicotine/gtkgui/settings_glade.py:1225
+msgid "Chat colours"
+msgstr "Chattfärger"
+
+#: pynicotine/gtkgui/settings_glade.py:1248
+msgid "Immediate DL"
+msgstr "Utan kö"
+
+#: pynicotine/gtkgui/settings_glade.py:1276
+msgid "With queue"
+msgstr "Med kö"
+
+#: pynicotine/gtkgui/settings_glade.py:1355
+msgid "Search colours"
+msgstr "Sökfärger"
+
+#: pynicotine/gtkgui/settings_glade.py:1367
+msgid "Decimal seperator:"
+msgstr "Separera decimaler med:"
+
+#: pynicotine/gtkgui/settings_glade.py:1392
+msgid "Extra stuff for your comfort"
+msgstr "Extragrejer för din bekvämlighet"
+
+#: pynicotine/gtkgui/settings_glade.py:1429
+msgid "Log private chat by default"
+msgstr "Logga privata chatter"
+
+#: pynicotine/gtkgui/settings_glade.py:1435
+msgid "Log chatrooms by default"
+msgstr "Logga chattrum"
+
+#: pynicotine/gtkgui/settings_glade.py:1441
+msgid "Log transfers"
+msgstr "Logga överföringar"
+
+#: pynicotine/gtkgui/settings_glade.py:1449
+msgid "Logs directory:"
+msgstr "Katalog för loggfiler:"
+
+#: pynicotine/gtkgui/settings_glade.py:1500
+#: pynicotine/gtkgui/settingswindow.py:765
+#: pynicotine/gtkgui/settingswindow.py:780
+msgid "Logging"
+msgstr "Loggar"
+
+#: pynicotine/gtkgui/settings_glade.py:1547
+msgid "Banned Users:"
+msgstr "Bannade användare:"
+
+#: pynicotine/gtkgui/settings_glade.py:1637
+#: pynicotine/gtkgui/settings_glade.py:1745
+msgid "Clear"
+msgstr "Rensa"
+
+#: pynicotine/gtkgui/settings_glade.py:1655
+msgid "Ignored users:"
+msgstr "Ignorerade användare:"
+
+#: pynicotine/gtkgui/settings_glade.py:1766
+msgid "Use custom ban message:"
+msgstr "Använd eget ban-meddelande:"
+
+#: pynicotine/gtkgui/settings_glade.py:1782
+msgid "Banning"
+msgstr "Ban"
+
+#: pynicotine/gtkgui/settings_glade.py:1838
+msgid "Network Searches:"
+msgstr "Sökningar:"
+
+#: pynicotine/gtkgui/settings_glade.py:1848
+msgid "Send out a max of"
+msgstr "Returnera maximalt"
+
+#: pynicotine/gtkgui/settings_glade.py:1862
+msgid "results per search request"
+msgstr "sökresultat per sökning"
+
+#: pynicotine/gtkgui/settings_glade.py:1869
+msgid "Your Searches:"
+msgstr "Sökningar:"
+
+#: pynicotine/gtkgui/settings_glade.py:1877
+msgid "Use regular expressions for filter in & out"
+msgstr "Använd regular expressions för filtrering"
+
+#: pynicotine/gtkgui/settings_glade.py:1883
+msgid "Enable filters by default"
+msgstr "Aktivera filter"
+
+#: pynicotine/gtkgui/settings_glade.py:1986
+#: pynicotine/gtkgui/settingswindow.py:766
+#: pynicotine/gtkgui/settingswindow.py:781
+msgid "Searches"
+msgstr "Sökningar"
+
+#: pynicotine/gtkgui/settings_glade.py:2011
+msgid "Nicotine Settings"
+msgstr "Inställningar"
+
+#: pynicotine/gtkgui/settings_glade.py:2119
+msgid "Toggle away after "
+msgstr "Byt till away-läge efter"
+
+#: pynicotine/gtkgui/settings_glade.py:2133
+msgid " minutes of inactivity"
+msgstr " minuters inaktivitet"
+
+#: pynicotine/gtkgui/settings_glade.py:2144
+msgid "Auto-reply when away:  "
+msgstr "Auto-svar vid away-läge: "
+
+#: pynicotine/gtkgui/settings_glade.py:2162
+#: pynicotine/gtkgui/settingswindow.py:762
+#: pynicotine/gtkgui/settingswindow.py:782
+msgid "Away mode"
+msgstr "Away-läge"
+
+#: pynicotine/gtkgui/settings_glade.py:2183
+#: pynicotine/gtkgui/settings_glade.py:2253
+#: pynicotine/gtkgui/settingswindow.py:767
+#: pynicotine/gtkgui/settingswindow.py:783
+msgid "Events"
+msgstr "Händelser"
+
+#: pynicotine/gtkgui/settings_glade.py:2201
+msgid "Run command after download finishes ($ for filename):"
+msgstr "Kör kommande när neddladdning är slutförd ($ för filnamnet):"
+
+#: pynicotine/gtkgui/settings_glade.py:2221
+msgid "Run command after folder finishes ($ for folder path):"
+msgstr "Kör kommande när mapp är slutförd ($ för mappnamnet):"
+
+#: pynicotine/gtkgui/settings_glade.py:2238
+msgid "Audio Player command:"
+msgstr ""
+
+#: pynicotine/gtkgui/settings_glade.py:2274
+msgid "GeoBlock"
+msgstr "Geo-block"
+
+#: pynicotine/gtkgui/settings_glade.py:2290
+msgid "Enable geographical blocker"
+msgstr "Aktivera geografisk blockerare"
+
+#: pynicotine/gtkgui/settings_glade.py:2297
+msgid "Geographical paranoia (block unresolvable IPs)"
+msgstr "Geografisk paranoia (blockera icke-identifierade IP-nummer)"
+
+#: pynicotine/gtkgui/settings_glade.py:2301
+msgid "Country codes to block (comma separated):"
+msgstr "Landskoder att blockera (avgränsa med komma)"
+
+#: pynicotine/gtkgui/settings_glade.py:2316
+msgid "Geographical Blocking"
+msgstr "Geografisk blockering"
+
+#: pynicotine/gtkgui/settings_glade.py:2340
+msgid "UrlCatch"
+msgstr "URL-catching"
+
+#: pynicotine/gtkgui/settings_glade.py:2356
+msgid "Enable URL catching"
+msgstr "Aktivera URL-catching"
+
+#: pynicotine/gtkgui/settings_glade.py:2363
+msgid "Humanize slsk:// urls"
+msgstr "Humanisera 'slsk://'-URL:er"
+
+#: pynicotine/gtkgui/settings_glade.py:2367
+msgid "Protocols handlers:"
+msgstr "Protokollhanterare:"
+
+#: pynicotine/gtkgui/settings_glade.py:2389
+msgid "Protocol:"
+msgstr "Protokoll:"
+
+#: pynicotine/gtkgui/settings_glade.py:2402
+msgid "Handler:"
+msgstr "Hanterare:"
+
+#: pynicotine/gtkgui/settings_glade.py:2416
+msgid "Update"
+msgstr "Uppdatera"
+
+#: pynicotine/gtkgui/settings_glade.py:2433
+msgid "URL Catching:"
+msgstr "URL-catching:"
+
+#: pynicotine/gtkgui/settings_glade.py:2463
+#: pynicotine/gtkgui/settingswindow.py:743
+#: pynicotine/gtkgui/settingswindow.py:771
+msgid "Connection"
+msgstr "Anslutning"
+
+#: pynicotine/gtkgui/settings_glade.py:2480
+msgid ""
+"Choose Server to configure the server you wish to connect to, your username, "
+"password and connection ports."
+msgstr ""
+
+#: pynicotine/gtkgui/settings_glade.py:2486
+msgid "Choose Shares to configure your Download and Shared directories."
+msgstr ""
+
+#: pynicotine/gtkgui/settings_glade.py:2492
+msgid ""
+"Choose Transfers to configure how uploads are queued and what privileges are "
+"given to your friends."
+msgstr ""
+
+#: pynicotine/gtkgui/settings_glade.py:2498
+msgid ""
+"Choose Geo Block (if available) to control from which countries users are "
+"allowed access to your shares."
+msgstr ""
+
+#: pynicotine/gtkgui/settings_glade.py:2504
+msgid ""
+"If you wish to use Geo Block, install GeoIP and it's Python Bindings from "
+"your distro's packaging tool or from:"
+msgstr ""
+
+#: pynicotine/gtkgui/settings_glade.py:2510
+msgid "http://www.maxmind.com/app/c"
+msgstr ""
+
+#: pynicotine/gtkgui/settings_glade.py:2516
+msgid "http://www.maxmind.com/app/python"
+msgstr ""
+
+#: pynicotine/gtkgui/settings_glade.py:2526
+msgid "Connection Settings"
+msgstr "Inställningar"
+
+#: pynicotine/gtkgui/settings_glade.py:2547
+#: pynicotine/gtkgui/settingswindow.py:757
+#: pynicotine/gtkgui/settingswindow.py:776
+msgid "UI"
+msgstr "UI"
+
+#: pynicotine/gtkgui/settings_glade.py:2564
+msgid "Choose Interface to configure text color and other settings."
+msgstr ""
+
+#: pynicotine/gtkgui/settings_glade.py:2570
+msgid ""
+"Choose URL Catching to configure the programs used when clicking on links."
+msgstr ""
+
+#: pynicotine/gtkgui/settings_glade.py:2580
+msgid "User Interface Settings"
+msgstr "Personliga inställningar"
+
+#: pynicotine/gtkgui/settings_glade.py:2601
+#: pynicotine/gtkgui/settingswindow.py:761
+#: pynicotine/gtkgui/settingswindow.py:779
+msgid "Misc"
+msgstr "Diverse"
+
+#: pynicotine/gtkgui/settings_glade.py:2618
+msgid "Choose Away mode to configure your auto-away settings."
+msgstr ""
+
+#: pynicotine/gtkgui/settings_glade.py:2624
+msgid "Choose User info to add text and an image to your personal info."
+msgstr ""
+
+#: pynicotine/gtkgui/settings_glade.py:2630
+msgid "Choose Ban / ignore to manage your ban list and ignore list."
+msgstr ""
+
+#: pynicotine/gtkgui/settings_glade.py:2636
+msgid "Choose Logging to configure what's logged and where to save the logs."
+msgstr ""
+
+#: pynicotine/gtkgui/settings_glade.py:2642
+msgid ""
+"Choose Searches to configure search settings and to set default search "
+"filters."
+msgstr ""
+
+#: pynicotine/gtkgui/settings_glade.py:2648
+msgid ""
+"Choose Events to configure what commands are executed upon the completion of "
+"downloads."
+msgstr ""
+
+#: pynicotine/gtkgui/settings_glade.py:2658
+msgid "Miscellaneous Settings"
+msgstr "Inställningar"
+
+#: pynicotine/gtkgui/settingswindow.py:637
+msgid "Protocol"
+msgstr "Protokoll"
+
+#: pynicotine/gtkgui/settingswindow.py:638
+msgid "Handler"
+msgstr "Hanterare"
+
+#: pynicotine/gtkgui/settingswindow.py:749
+#: pynicotine/gtkgui/settingswindow.py:753
+#: pynicotine/gtkgui/settingswindow.py:773
+msgid "Geo Block"
+msgstr "Geo-block"
+
+#: pynicotine/gtkgui/settingswindow.py:758
+#: pynicotine/gtkgui/settingswindow.py:777
+msgid "Interface"
+msgstr "Gränssnitt"
+
+#: pynicotine/gtkgui/settingswindow.py:759
+#: pynicotine/gtkgui/settingswindow.py:778
+msgid "URL Catching"
+msgstr "URL-catching"
+
+#: pynicotine/gtkgui/settingswindow.py:764
+#: pynicotine/gtkgui/settingswindow.py:775
+msgid "Ban / ignore"
+msgstr "Banna / Ignorera"
+
+#: pynicotine/gtkgui/settingswindow.py:785
+msgid "Categories"
+msgstr "Kategorier"
+
+#: pynicotine/gtkgui/transferlist.py:29
+msgid "Status"
+msgstr "Status"
+
+#: pynicotine/gtkgui/transferlist.py:32
+msgid "Time elapsed"
+msgstr "Förfluten tid"
+
+#: pynicotine/gtkgui/transferlist.py:33
+msgid "Time left"
+msgstr "Tid kvar"
+
+#: pynicotine/gtkgui/transferlist.py:34
+msgid "Path"
+msgstr "Sökväg"
+
+#: pynicotine/gtkgui/transferlist.py:109
+#, python-format
+msgid "%.2f GB"
+msgstr "%.2f GB"
+
+#: pynicotine/gtkgui/transferlist.py:111
+#, python-format
+msgid "%.2f MB"
+msgstr "%.2f MB"
+
+#: pynicotine/gtkgui/transferlist.py:113
+#, python-format
+msgid "%.2f KB"
+msgstr "%.2f KB"
+
+#: pynicotine/gtkgui/userbrowse.py:41
+msgid "Share tree"
+msgstr "Struktur över delade filer"
+
+#: pynicotine/gtkgui/userbrowse.py:63
+msgid "_Download directory"
+msgstr "_Nedladdningsmapp"
+
+#: pynicotine/gtkgui/userbrowse.py:64
+msgid "Download directory _to..."
+msgstr "Ladda ner mapp _till..."
+
+#: pynicotine/gtkgui/userbrowse.py:65
+msgid "Download _recursive"
+msgstr "Ladda ner _rekursivt"
+
+#: pynicotine/gtkgui/userbrowse.py:66
+msgid "Download r_ecursive to..."
+msgstr "Ladda ner r_ekursivt till..."
+
+#: pynicotine/gtkgui/userbrowse.py:86 pynicotine/gtkgui/userbrowse.py:102
+msgid "Download _to..."
+msgstr "Ladda ner _till..."
+
+#: pynicotine/gtkgui/userbrowse.py:90
+msgid "Up_load file(s)"
+msgstr "_Ladda ner fil(er)"
+
+#: pynicotine/gtkgui/userinfo.py:30
+#, fuzzy, python-format
+msgid "Speed: %s"
+msgstr "Hastighet"
+
+#: pynicotine/gtkgui/userinfo.py:31
+#, fuzzy, python-format
+msgid "Files Shared: %s"
+msgstr "Klar"
+
+#: pynicotine/gtkgui/userinfo.py:32
+#, python-format
+msgid "Dirs Shared: %s"
+msgstr ""
+
+#: pynicotine/gtkgui/userinfo.py:87
+#, python-format
+msgid "Total uploads allowed: %i"
+msgstr "Totalt antal tillåtna uppladdningar: %i"
+
+#: pynicotine/gtkgui/userinfo.py:88
+#, python-format
+msgid "Queue size: %i"
+msgstr "Köstorlek: %i"
+
+#: pynicotine/gtkgui/userinfo.py:89
+#, python-format
+msgid "Slots available: %i"
+msgstr "Lediga platser: %i"
+
+#: pynicotine/gtkgui/userlist.py:22 pynicotine/gtkgui/userlist.py:140
+msgid "Comments"
+msgstr "Kommentarer"
+
+#: pynicotine/gtkgui/userlist.py:50
+msgid "_Give privileges"
+msgstr "Kolla privile_gier"
+
+#: pynicotine/gtkgui/userlist.py:54
+msgid "_Online notify"
+msgstr "_Online-notifiering"
+
+#: pynicotine/gtkgui/userlist.py:55
+msgid "_Privileged"
+msgstr "_Privilegierad"
+
+#: pynicotine/gtkgui/userlist.py:57
+msgid "Edit _comments"
+msgstr "Redigera _kommentarer"
+
+#: pynicotine/gtkgui/userlist.py:58
+msgid "_Remove"
+msgstr "Ta bo_rt"
+
+#: pynicotine/gtkgui/userlist.py:105
+#, python-format
+msgid "User %s is offline"
+msgstr "Användaren %s är offline"
+
+#: pynicotine/gtkgui/userlist.py:105
+#, python-format
+msgid "User %s is away"
+msgstr "Användaren %s är away"
+
+#: pynicotine/gtkgui/userlist.py:105
+#, python-format
+msgid "User %s is online"
+msgstr "Användaren %s är online"
+
+#: pynicotine/gtkgui/userlist.py:140
+msgid "Edit comments"
+msgstr "Redigera kommentarer"
+
+#~ msgid "User _List"
+#~ msgstr "_Kompisar"
+
+#~ msgid "User list"
+#~ msgstr "Kompisar"
+
+#~ msgid "Select directory..."
+#~ msgstr "Välj katalog..."
+
+#~ msgid "Directory Tree"
+#~ msgstr "Katalogstruktur"
+
+#~ msgid "Create folder"
+#~ msgstr "Skapa katalog"
+
+#~ msgid "Make folder..."
+#~ msgstr "Skapa mapp..."
+
+#~ msgid "Enter pathname of new folder:"
+#~ msgstr "Ange sökväg för ny mapp:"
+
+#~ msgid "Could not create folder"
+#~ msgstr "Kunde inte skapa mapp"
+
+#~ msgid ""
+#~ "<big><b>A programming error has been detected during the execution of "
+#~ "this program.</b></big>\n"
+#~ "\n"
+#~ "It probably isn't fatal, but should be reported to the developers "
+#~ "nonetheless."
+#~ msgstr ""
+#~ "<big><b>Ett programfel upptäcktes vid körningen av det här programmet.</"
+#~ "b></big>\n"
+#~ "\n"
+#~ "Det är antagligen inte allvarligt, men du bör rapportera det till "
+#~ "utvecklaren."
+
+#~ msgid "Bug Detected"
+#~ msgstr "Bugg upptäckt"
+
+#~ msgid "Details..."
+#~ msgstr "Detaljer..."
+
+#~ msgid "Report..."
+#~ msgstr "Rapportera..."
+
+#~ msgid "Bug Details"
+#~ msgstr "Buggdetaljer"
+
+#~ msgid "window2"
+#~ msgstr "window2"
+
+#~ msgid "window3"
+#~ msgstr "window3"
+
+#~ msgid "window4"
+#~ msgstr "window4"
+
+#~ msgid "Locally queue uploads if:"
+#~ msgstr "Lokalköa uppladdningar om:"
+
+#~ msgid "Upload speed exceeds "
+#~ msgstr "Uppladdningshastigheten överstiger "
+
+#~ msgid "Number of uploads exceeds"
+#~ msgstr "Antalet uppladdningar överstiger"
+
+#~ msgid "window5"
+#~ msgstr "window5"
+
+#~ msgid "window6"
+#~ msgstr "window6"
+
+#~ msgid "window7"
+#~ msgstr "window7"
+
+#~ msgid "window8"
+#~ msgstr "window8"
+
+#~ msgid "window9"
+#~ msgstr "window9"

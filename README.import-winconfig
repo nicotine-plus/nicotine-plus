@@ -1,0 +1,79 @@
+README for nicotine-import-config
+
+
+nicotine-import-winconfig
+=======================
+
+nicotine-import-winconfig is a program to import your queue, user list,
+password information, auto-joined chatrooms, banlist, and user
+information from the Windows SoulSeek configuration.
+
+
+Usage
+-----
+
+A typical invocation would be
+
+    nicotine-import-winconfig "/mnt/win9x/Program Files/SoulSeek" 
+
+The program should be run when nicotine is _not_ running.  The program
+will add the information (download queue, userlist, password info,
+etc.)  to the existing configuration or write a new configuration from
+scratch when no configuration exists.
+
+The program will overwrite your ~/.nicotine/config file.
+
+You might want to back up the file first, but it should not be
+necessary.  A different config file can be choses using the '--config'
+flag.  
+
+When you don't want to import all configuration options you can choose
+what to import using  command line flags.  Use the --help flag for
+more details.
+
+In case there's an image included in the Windows SoulSeek userinfo the
+image will be extracted and written to a file:
+
+      <configfile>-userinfo.<ext> 
+
+where <configfile> is the path to your nicotine configfile and
+<ext> is the appropiate file extension for the image type.
+
+
+Redhat 7.x users might have to start the program as
+
+    python2 nicotine-import-winconfig "/mnt/win9x/Program Files/SoulSeek" 
+
+because their default python interpreter is python 1.5 instead of the
+newer 2.2 version.  The program fails with python 1.5.
+
+
+Installation
+------------
+
+When nicotine is installed no special installation should be necesary.
+
+However, when you run nicotine from the source tarball it can be
+nicotine-import-winconfig cannot find the nicotinek config module.
+In this case, copy nicotine-import-winconfig to that directory and run
+it from there.
+
+
+Sharing the download directory between platforms
+------------------------------------------------
+
+Nicotine can continue downloads that started on Windows.
+Of course, the download directories should be the same for Linux
+(FreeBSD?) and Windows.
+
+Example:
+
+- Say your download directory is "/mnt/media/slsk_in"
+- Your windows sharing directory is "F:\slsk_in"
+- your F drive is mounted on "/mnt/media"
+
+
+Good luck.
+
+( based on original pyslsk-import-winconfig documentation by:
+Geert Kloosterman <geertk@ai.rug.nl> )

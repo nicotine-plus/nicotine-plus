@@ -1,0 +1,13 @@
+#! /bin/sh
+echo
+echo "Generating nicotine_glade.py from nicotine.glade"
+python glade2py.py nicotine.glade > nicotine_glade.py
+echo "Generating settings_glade.py from nicotine-settings.glade"
+python glade2py.py nicotine-settings.glade > settings_glade.py
+echo
+echo "  lines   words"
+wc -lw nicotine.glade nicotine-settings.glade
+echo
+echo "  lines   words"
+wc -lw nicotine_glade.py settings_glade.py
+echo

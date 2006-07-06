@@ -1,0 +1,10 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Nicotine
+Comment=SoulSeek filesharing client
+Exec=nicotine
+Icon=nicotine_clear.png
+Terminal=false
+Type=Application
+Categories=Application;Network;
+StartupNotify=true

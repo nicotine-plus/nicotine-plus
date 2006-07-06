@@ -1,0 +1,30 @@
+Linux/Unix installation instructions follow.
+
+To install Nicotine, from the source tree run:
+
+python setup.py install --prefix=<dir>
+
+If you omit --prefix Nicotine will be installed into the python system
+directory (typically /usr)
+
+This is not recommended however, as there is no way to uninstall things
+easily this way.
+
+
+The recommended way of running Nicotine is from the source tree, which might
+seem strange, but is no problem at all, especially if you are the only user of
+the system that is interested in running Nicotine. From the source tree run:
+
+python ./nicotine
+
+
+Another option would be that you create an RPM from the source tree:
+
+python setup.py bdist_rpm
+
+which will create a binary RPM in the dist subdirectory of the source tree.
+
+
+Note: to build source distribution (.tar.bz2) from itself, run:
+
+python setup.py sdist --formats=bztar

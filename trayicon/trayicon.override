@@ -1,0 +1,31 @@
+/* -*- Mode: C; c-basic-offset: 4 -*- */
+%%
+headers
+#include <Python.h>
+
+#include "pygobject.h"
+#include "eggtrayicon.h"
+%%
+modulename trayicon
+%%
+import gtk.Plug as PyGtkPlug_Type
+import gtk.gdk.Screen as PyGdkScreen_Type
+%%
+ignore-glob
+  *_get_type
+ignore
+  egg_tray_icon_new_for_screen
+%%
+override egg_tray_icon_send_message kwargs
+static PyObject*
+_wrap_egg_tray_icon_send_message(PyGObject *self, PyObject *args, PyObject *kwargs)
+{
+    static char *kwlist[] = {"timeout", "message", NULL};
+    int timeout, len, ret;
+    char *message;
+
+    if (!PyArg_ParseTupleAndKeywords(args, kwargs, "is#:TrayIcon.send_message", kwlist, &timeout, &message, &len))
+        return NULL;
+    ret = egg_tray_icon_send_message(EGG_TRAY_ICON(self->obj), timeout, message, len);
+    return PyInt_FromLong(ret);
+}

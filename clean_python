@@ -1,0 +1,4 @@
+find ./ -iname "*.pyc" -exec rm {} \;
+find ./ -iname "*~"    -exec rm {} \;
+find ./ -iname "*.bak"    -exec rm {} \;
+

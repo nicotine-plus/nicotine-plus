@@ -1,0 +1,34 @@
+# Set the C flags to include the GTK+ and Python libraries
+CFLAGS = `pkg-config --cflags gtk+-2.0 pygtk-2.0` -I@@PREFIX@@/include/python@@PY_VER@@/ -I. -fPIC
+LDFLAGS = `pkg-config --libs gtk+-2.0 pygtk-2.0`
+
+all: trayicon.so
+
+# Build the shared object
+trayicon.so: trayicon.o eggtrayicon.o trayiconmodule.o
+	$(CC) $(LDFLAGS) -shared $^ -o $@
+
+
+# The path to the GTK+ python types
+DEFS=`pkg-config --variable=defsdir pygtk-2.0`
+
+# Generate the C wrapper from the defs and our override file
+trayicon.c: trayicon.defs trayicon.override
+	pygtk-codegen-2.0 --prefix trayicon \
+	--register $(DEFS)/gdk-types.defs \
+	--register $(DEFS)/gtk-types.defs \
+	--override trayicon.override \
+	trayicon.defs > $@
+
+# A simple install rule
+install: trayicon.so
+	install -d $(DESTDIR)@@PREFIX@@/lib/python@@PY_VER@@/site-packages/pynicotine
+	install -m 755 trayicon.so $(DESTDIR)@@PREFIX@@/lib/python@@PY_VER@@/site-packages/pynicotine
+
+# A rule to clean the generated files
+clean:
+	rm -f trayicon.so *.o trayicon.c *~ 
+
+distclean: clean
+	rm -f Makefile
+.PHONY: clean

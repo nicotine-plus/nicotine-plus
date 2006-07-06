@@ -1,0 +1,329 @@
+#!/usr/bin/env python
+
+# Import the windows slsk config files in Nicotine.
+# Geert Kloosterman <geertk@ai.rug.nl>
+
+from struct import unpack
+import getopt
+import sys
+import os
+import string
+import imghdr
+
+try:
+    from pynicotine.config import *
+except ImportError,e:
+    print """Error: Cannot find the Nicotine config module.
+
+If you're running Nicotine from a src tarball, copy this program to the
+source directory and try running it from there."""
+    sys.exit(1)
+
+def usage():
+    print """Usage: nicotine-import-winconfig [OPTIONS] <path_to_the_winslsk_files>
+
+  -c file, --config=file  Use non-default nicotine configuration file to write to
+  -q, --queue             Import the queue  
+  -u, --userlist          Import the userlist
+  -l, --login             Import the login information
+  -C, --chatrooms         Import the list of autojoined chatrooms
+  -b, --banned            Import the list of banned users
+  -i  --userinfo          Import the userinfo and the image
+  -h, --help              Print this help message and exit
+
+If no configuration items are specified all are imported.
+
+Run this script when Nicotine is _not_ running.
+See README.import-winconfig from the Nicotine distribution for more info.
+
+Please report any problems to hyriand on soulseek or
+<hyriand@thegraveyard.org>."""
+
+def parse_args():
+    global opt
+    opt = {}
+    try:
+        opts, args = getopt.getopt(sys.argv[1:],
+                                   "c:qulCbih",
+                                   ["config=", "queue", "userlist", "login",
+                                    "chatrooms", "banned", "userinfo", "help"])
+    except getopt.GetoptError:
+        usage()
+        sys.exit(1)
+    # check for winpath
+    if len(args) < 1:
+        usage()
+        sys.exit(1)
+    slskdir = args[0]
+    check_slskdir(slskdir)
+    opt['slskdir'] = slskdir
+
+    # defaults
+    opt['config']  = os.path.join(os.path.expanduser("~"),'.nicotine/config')
+    queue = userlist = login = chatrooms = banned = userinfo = None
+    for o, a in opts:
+        if o in ("-c", "--config"):
+            opt['config'] = a
+        if o in ("-q", "--queue"):
+            queue = 1
+        if o in ("-u", "--userlist"):
+            userlist = 1
+        if o in ("-l", "--login"):
+            login = 1
+        if o in ("-C", "--chatrooms"):
+            chatrooms = 1
+        if o in ("-b", "--banned"):
+            banned = 1
+        if o in ("-i", "--userinfo"):
+            userinfo = 1
+        if o in ("-h", "--help"):
+            usage()
+            sys.exit()
+    # import all when none specified
+    if not (queue or userlist or login or chatrooms or banned or userinfo):
+        queue = userlist = login = chatrooms = banned = userinfo = 1
+    opt['queue']     = queue
+    opt['userlist']  = userlist
+    opt['login']     = login
+    opt['chatrooms'] = chatrooms
+    opt['banned']    = banned
+    opt['userinfo']  = userinfo
+
+       
+def check_slskdir(slskdir):
+    # we check if the file queue2.cfg exists under the slsk dir
+    queue2path = os.path.join(slskdir, 'queue2.cfg')
+    
+    if not os.access(queue2path, os.F_OK):
+        print "nicotine-import-winconfig: Error: Could not find \"queue2.cfg\" in \"%s\"" % (slskdir)
+        print "Are you sure you've supplied the right path?"
+        sys.exit(1)
+
+
+def winpath(file):
+    global opt
+    return os.path.join(opt['slskdir'], file)
+
+
+def get_downloads(fname):
+    """Returns the list of downloads in the queue2.cnf file
+
+The windows slsk queue2.cnf file format:
+
+- little-endian, wordsize=4
+- The file starts with 3 ints (4bytes per int).
+- First 2 ints are unknown
+- The 3rd one is the number of entries in the file
+
+Then for each download entry:
+
+- The length of the username, followed by the username
+- The length of the remote filename, followed by the remote filename
+- The length of the local dir, followed by the local dir
+
+The file can contain some unknown stuff at the end."""
+    
+    infile = open(fname, 'r')
+    intsize = 4
+    downloads = []
+
+    str = infile.read(3*intsize)
+
+    i1, i2, n_entries = unpack("iii", str)
+
+    for i in range(n_entries):
+        length = unpack("i", infile.read(intsize))[0]
+        uname = infile.read(length)
+        length = unpack("i", infile.read(intsize))[0]
+        remfile = infile.read(length)
+        length = unpack("i", infile.read(intsize))[0]
+        localdir = infile.read(length)
+        downloads.append([uname, remfile, localdir])
+        
+    infile.close()
+    return downloads
+    
+
+def get_user_and_pass(fname):
+    """Returns a (user,passwd) tuple. 
+
+File format of login.cfg (see also get_downloads):
+
+- two unknown ints at the beginning
+- the number of bytes of the username, followed by the username
+- the number of bytes from the passwd, followed by the passwd
+- followed by some undetermined bytes"""
+
+
+    infile = open(fname, 'r')
+    intsize = 4
+    downloads = []
+
+    str = infile.read(3*intsize)
+
+    i1, i2, length = unpack("iii", str)
+
+    user = infile.read(length)
+    length = unpack("i", infile.read(intsize))[0]
+    passwd = infile.read(length)
+        
+    infile.close()
+    return (user, passwd)
+
+
+def get_basic_config(fname):
+    """Works for userlist, chatrooms, dlbans, etc.
+
+
+The hotlist.cnf file format (see get_downloads for more info):
+
+- The file starts with an int: the number of users in the list
+
+Then for each user:
+
+- The length of the username, followed by the username"""
+    
+    infile = open(fname, 'r')
+    intsize = 4
+    users = []
+
+    str = infile.read(1*intsize)
+
+    n_entries = unpack("i", str)[0]
+    for i in range(n_entries):
+        length = unpack("i", infile.read(intsize))[0]
+        user = infile.read(length)
+        users.append(user)
+        
+    infile.close()
+    return users
+
+
+def get_userinfo(fname):
+    """The userinfo file format:
+
+- an int with the size of the text part, followed by the text part
+- one byte, an indication for an image. 0 is no image, 1 is image
+- an int with the image size, followed by the image data """
+
+    infile = open(fname, 'r')
+    intsize = 4
+
+    imgdata = None
+
+    str = infile.read(intsize)
+    length = unpack("i", str)[0]
+    descr = infile.read(length)
+    descr = string.replace(descr, "\r", "")
+    has_image = unpack("b",infile.read(1))[0]
+    if has_image:
+        length = unpack("i", infile.read(intsize))[0]
+        imgdata = infile.read(length)
+        
+    infile.close()
+    return (descr, imgdata)
+
+
+def save_image(imgdata):
+    """Save IMGDATA to file and return the filename or None."""
+    global opt
+
+    if not imgdata:
+        print "No image data.  No image saved."
+        return ""
+
+    extension = imghdr.what(None, imgdata)
+    if not extension:
+        # how to print to stderr in python?  (no real problem here)
+        print "Could not determine image type.  Image not saved."
+        return ""
+
+    fname = os.path.abspath(opt['config'] + '-userinfo.' + extension)
+    outfile = open(fname, "w")
+    outfile.write(imgdata)
+    outfile.close()
+    print "Wrote image to \"%s\"" % (fname)
+    return fname
+
+
+def is_in_user_list(user, user_list):
+    """Checks if USER is in USER_LIST, ignoring the comment field"""
+    for i in user_list:
+        if type(i) == type(''):
+            sys.stderr.write("\nError: The nicotine userlist is in an old pyslsk format.\n" +
+                             "Please run Nicotine once before running this script.\n" +
+                             "Config file not updated.\n")
+            sys.exit(1)
+        if user == i[0]:
+            return 1
+    return 0
+
+
+def main():
+    global opt
+
+    parse_args()    
+
+    # get the Nicotine configfile
+    config = Config(opt['config'])
+    config.readConfig()
+
+    # get the windows info and update the sections
+    if opt['queue']:
+        print "Getting download queue..."
+        windownloads = get_downloads(winpath('queue2.cfg'))
+
+        for i in windownloads:
+            if not i in config.sections["transfers"]["downloads"]:
+                config.sections["transfers"]["downloads"].append(i)
+        
+    if opt['userlist']:
+        print "Getting userlist..."
+        users = get_basic_config(winpath('hotlist.cfg'))
+
+        for i in users:
+            if not is_in_user_list(i,config.sections["server"]["userlist"]):
+                config.sections["server"]["userlist"].append([i,''])
+
+    if opt['login']:
+        print "Getting login and password..."
+        (login,passw) = get_user_and_pass(winpath('login.cfg'))
+
+        config.sections["server"]["login"] = login
+        config.sections["server"]["passw"] = passw
+
+    if opt['chatrooms']:
+        print "Getting the list of autojoined chatrooms..."
+        chatrooms = get_basic_config(winpath('chatrooms.cfg'))
+        chatrooms.append('nicotine')
+
+        for i in chatrooms:
+            if i not in config.sections["server"]["autojoin"]:
+                config.sections["server"]["autojoin"].append(i)
+
+    if opt['banned']:
+        print "Getting the list of banned users..."
+        banlist = get_basic_config(winpath('dlbans.cfg'))
+
+        for i in banlist:
+            if i not in config.sections["server"]["banlist"]:
+                config.sections["server"]["banlist"].append(i)
+
+    if opt['userinfo']:
+        print "Getting userinfo and image..."
+        (descr, imgdata) = get_userinfo(winpath('userinfo.cfg'))
+        if descr:
+            config.sections["userinfo"]['descr'] = descr.__repr__()
+        if imgdata:
+            config.sections["userinfo"]['pic'] = save_image(imgdata)
+  
+    # write it
+    config.writeConfig()
+    
+    print "Updated the Nicotine config file (%s)" % (opt['config'])
+    print "\nMake sure you set the server option and download folder in the Settings panel."
+    print "Don't forget to add your shares..."
+
+   
+if __name__ == '__main__':
+    main()

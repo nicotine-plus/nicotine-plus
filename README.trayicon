@@ -1,0 +1,7 @@
+To build the trayicon extension module, change to the "trayicon"
+subdirectory and run the "autogen.py" script using the python version
+that you run nicotine with. Then, as root, type "make install" and it should
+build the trayicon.so module and place it in the appropriate directory.
+
+Or, you can run the "trayicon-install" script, which does the same thing 
+in one go.

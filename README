@@ -1,0 +1,50 @@
+
+Nicotine is a client for the SoulSeek filesharing network. It was "forked"
+(and thus reuses a lot of code) from the PySoulSeek project by Alexander
+Kanavin, and features (among other things) a completely new graphical user
+interface. The homepage of PySoulSeek is http://sensi.org/~ak/pyslsk/
+
+
+To use it on Linux/Unix and X11 you'll need all of the following:
+
+* Gtk+ 2.0 or newer
+* Python 2.2.3 or newer
+* pygtk-1.99.16 or newer (may work with older version, but is *UNTESTED*)
+
+
+I also recommend installing Python Ogg and Python Vorbis bindings.
+They are not required, but if you install them, others will be able to
+see the bitrates and the lengths of Ogg Vorbis files that you share.
+Binary RPMS of the bindings for Python 2.2 are available at pyslsk 
+homepage, source is available at the bindings homepage: 
+http://www.andrewchatham.com/pyogg/
+Debian users should install the python-pyvorbis package.
+
+
+After installing nicotine (see INSTALL for that), the executable
+to run is named 'nicotine'.
+
+
+To bring up a context menu for items is a list, select them with the left
+mousebutton first, and then right-click to bring up the context menu. These
+menus will only show options available in the context of the selected items
+(f.e. if you select search results from multiple users, actions on the user
+will not be available). Pressing the tab key in a chatroom or a private chat
+invokes nickname auto-completion.
+
+
+If you want Nicotine to use your PySoulSeek configuration files, use:
+
+nicotine -c ~/.pyslsk
+
+
+Have fun, and if you want to contact me for any feedback (thank-yous,
+bugreports, patches, etc) you can do so by emailing to:
+
+Hyriand <hyriand@thegraveyard.org>
+
+
+Nicotine can be found at http://nicotine.thegraveyard.org/
+
+
+ps. Please remember, not sharing kills P2P!

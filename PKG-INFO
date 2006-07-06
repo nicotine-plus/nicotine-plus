@@ -1,0 +1,11 @@
+Metadata-Version: 1.0
+Name: nicotine
+Version: 1.2.0
+Summary: Client for SoulSeek filesharing system.
+Home-page: http://thegraveyard.org/daelstorm/nicotine-patch/
+Author: Hyriand, daelstorm
+Author-email: hyriand@thegraveyard.org, daelstorm@gmail.com
+License: GPL
+Description: Nicotine is a client for SoulSeek filesharing system.
+        
+Platform: UNKNOWN

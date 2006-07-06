@@ -1,0 +1,9 @@
+cd trayicon
+./autogen.py
+make
+echo
+echo "If there have been no error messages (you can ignore Warnings) so far, you've compiled the trayicon module and are read to copy it to the Python directory."
+echo
+echo "If you have sudo access, input your root password now, otherwise, switch to root and run 'make install'"
+echo "--------------------------------"
+su -c "make install"

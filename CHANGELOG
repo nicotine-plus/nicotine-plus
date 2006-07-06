@@ -1,0 +1,304 @@
+ChangeLog for Nicotine
+
+Version 1.2.2 June 15th 2006
+ * Renamed "User list" to "Buddy list"
+ * Added Double-clicking on a user starts a private message in the chatrooms, 
+   the userlist, and similar users.
+ * Added TrayIcon from unreleased Nicotine 1.1.0pre1, and added a menu to it.
+   This is a module and needs to be compiled.
+ * Added Speed, Files and Dirs to userinfo
+ * Made more strings translatable
+ * Added Buddy-only shares
+
+Version 1.2.1 June 10th 2006
+ * Added a bunch of hotkeys to the popup menus and normal menus. 
+ * Added a new menu for Modes (Chat Rooms, Private Chat, etc)
+ * Starting a Private message via the Popup menu will now switch you Private
+   Chat tab, so you can immediately start typing.
+ * Fixed a segfault in User Browse, if you clicked on the folder expanders while
+   shares were loading. This was done making the folder pane be disabled while
+   refreshing.
+ * Updated translations to work with hotkey menu and other changes
+ * French translation: systry corrected typos and translated more strings.
+ * Added a Send to Player popup menu item, which allows you to send downloading,
+   uploading or files in your own shares to an external program, such as a media
+   player.
+
+Version 1.2.0b May 11th 2006
+ * Added a "Send to Player" popup menu item for downloads and personal shares
+
+Version 1.2.0 May 10th 2006
+ * Added New Room and User search messages, and use them instead of sending out 
+   direct peer searches
+ * Fixed all those depreciated Combo() functions, updated all of them to 
+   PyGTK 2.6 compatible functions.
+ * Fixed the CRITICAL pygtk_generic_tree_model warning that has been plaguing 
+   Nicotine since GTK2.4 came out. The problem was fixed by adding:
+   "if not node: node = self.tree"  to the on_iter_nth_child() function.
+ * Moved the upload popup-menu item so that it isn't incorrectly disabled from
+   sending multiple files.
+ * Added two new debugging messages for when someone browses you or gets your
+   userinfo, you can see their username. ( Idea/code stolen from "Airn Here",
+   pointed out by heni (thanks to both of you) ) 
+ * Fixed a little bug in a popup menu that caused a traceback
+ * Added an optional client version message, which is similar to the CTCP
+   VERSION message on IRC. It sends your client's version via Private Message to
+   a remote  user. You can disable automatic responding of it in the 
+   Settings->Server.  So far, it works only with this version of Nicotine and 
+   Museek's Curses client, Mucous. Send it via the popup menu in Private chat,
+   or with the command: /ctcpversion
+
+Version 1.0.8-e March 25 2006
+ * Made password to be starred like ***** via cravings' patch
+ * Added a Give Privileges popup menu item (taken from the development 1.1.0pre1
+   version of nicotine that hyriand never released.)
+ * Changed the Upload Files dialog from a textentry to a scrollbox  
+
+Version 1.0.8-d Aug 17 2004
+ * 1.0.8-d is a combo of 1.0.8z and some new stuff, listing it all here.
+ * Added GTK2-Fileselector (Works nicely for Win32)
+ * Added many changes to wording of the settings dialogs
+ * Added Remote Uploads (Browse yourself, right click on files, upload, type in
+   username)
+ * Added Remote Downloads (Added Checkbox in Settings->Transfers)
+ * Fixed some of the many PyGTK warning messages
+ * Removed the PING-OF-BAN
+
+Version 1.0.8rc1 May 1 2004
+ * Added the missing handler for server-pushed searches
+ * Allow users to have negative speed-ratings
+ * Double click downloads in searches and browsers, join room in room list
+
+Version 1.0.7 Jan 11 2004
+ * Changed hate-list to be network-driven instead of being a filter
+ * Updated translations
+ * When available, Nicotine will use PyGNOME to launch protocols that
+   haven't been configured
+
+Version 1.0.7rc2 Jan 07 2004
+ * Moved encoding dropdown-list out of the scrolled area in userinfo tabs
+ * Transfer logs (enable in settings->logging)
+ * Last 7 lines of a private message log are shown
+ * Config file now backed up (to <filename>.old)
+ * Check privileges shows days, hours, minutes, seconds
+ * Changed default server to server.slsknet.org
+   (mail.slsknet.org will be automatically changed)
+ * Anti-frumin ticker update (replace newlines with spaces)
+ * Added country-code filter to the search filters
+ * Added a "Hide tickers" menu entry which hides all tickers
+ * Added option to not show the close buttons on the tabs
+ * Added option to not lock incoming files
+ * Fixed /tick
+
+Version 1.0.7rc1 Jan 02 2004
+ * Added room ticker support
+ * Alt-A fixed
+
+Version 1.0.6 - Dec 05 2003
+ * Probable fix for GUI freeze (thanks stillbirth)
+ * Bye bye total queue limit
+ * Translations updated
+
+Version 1.0.6rc1 - Nov 18 2003
+ * Files that are downloaded should now be encoded
+ * Possible fix for a threading race condition
+ * Possible fix for listport not defined problem and a million little things
+ * Possible fix for yet-another-corrupted-shares-database problem
+ * Translation caching
+ * Whacked some tracebacks
+ * Implemented recommendations system
+ * Translation updates
+ * Added polish translation (thanks owczi)
+ * Fixed bug that made "Queue limits do not apply to friends" not work
+ * Fix for the version checking bug
+
+Version 1.0.5 - Nov 7 2003
+ * Quickfix for protocol change
+
+Version 1.0.4.1 - Sep 26 2003
+ * Changed default server
+ * Fix for online notify
+ * Added french translation (thanks flashfr)
+
+Version 1.0.4 - Sep 17 2003
+ ---> Can you find the EASTER EGG? <---
+
+ * Show IP address now shows country name instead of code (when GeoIP is
+   installed)
+ * Fixed sorting in transferlists
+ * Clear (room) log window popup menu
+ * Room and user encodings (for chats, browse, userinfoetc)
+ * Close buttons on sub-tabs
+ * Translatable (see the languages/nicotine.pot file)
+ * Window icon (normally blue, yellow when highlight)
+ * MacOSX OSError / IOError fixups
+ * Fix for minimum window size
+ * Desktop shortcut (files/nicotine.desktop), not installed by default
+ * Possible fix for the "ServerConnection doesn't have fileupl" problem
+ * Userinfo is now properly network encoded
+ * Bundled a custom version of the ConfigParser that doesn't have problem
+   with semi-colons
+ * Download to.. for searches now defaults to downloaddir
+ * Close tab-button for searches closes and ignores
+ * UTF8 log window fixes
+ * Fix for invalid server traceback (in settings window)
+
+Version 1.0.3 - Aug 28 2003
+ * PyGTK version check (Nicotine requires 1.99.16 or higher)
+ * Hide room list menu option (is remembered between sessions)
+ * Control-C doesn't kill nicotine anymore (silently ignored)
+ * Fix for deprecation warning (PyGTK 1.99.18)
+ * Bug-reporting assistant (based on work by
+   Gustavo J. A. M. Carneiro)
+ * Reduced the sensitivity of the auto-scroller a bit
+ * Workaround for missing-menu-labels in tab popup menus
+ * Changed PyVorbis warning
+ * Check latest (checks if you're using the newest version)
+ * Autocompletion of / commands
+ * Some small psyco fixes
+ * Browse yourself without even being connected
+ * Default filter settings
+ * Fixed searches for special characters and limit history to 15 entries
+ * Long overdue enter-activates-OK in input dialog
+ * Make folder button in directory chooser dialog 
+ * Change %20 in slsk:// urls to spaces (blame Wretched)
+ * Copy file and folder URLs in transfer lists and searches
+ * Fixed Hide log window on startup
+ * Improved the move-from-incomplete-to-download-folder function so that it
+   can move across partitions / drives / whatever.
+ * Now really included Carlos Laviola's debian control files
+
+Version 1.0.2 - Aug 23 2003
+ * Possible fix for freezes
+ * Fix for GTK-Critical at startup with hidden log
+ * Fixed URL catcher regular expression a bit
+ * Added debian control files (by Aubin Paul)
+ * Hopefully fixed the missing "2 chars search result directory" thing
+ * Fixed roomslist popup menu
+ * More UTF8 cleanups (and dumped the need for most of the localencodings
+   in the process), should really work on MacOSX again
+ * Fixed alt 1-8 / left,right,up,down to work with numlock / scrolllock on
+ * Checkboxified all the "Add to user list", "Ban this user" and "Ignore
+   this user" context-menu items
+ * Fixed small bug in config loader (concerning importing pyslsk-1.2.3 userlist)
+ * Fixed small bug in the browse file model
+ * Fixed some selection issues
+ * Fixed rooms list being sorted A-Za-z instead of Aa-Zz
+ * Fixed column-sizes being weird when resizing
+ * Removed talkback handler
+ * Added handler for slsk:// meta-protocol and the ability to copy slsk://
+   urls in browse ("Copy URL").
+ * Should work on OSX again
+ * Threading issue with rescanning fixed
+ * Focus chat line input widget on tab change (chat rooms and private chat)
+ * <insert stuff I forgot to add to changelog here>
+
+Version 1.0.1 - Aug 19 2003
+ * UTF8 fixes for settings window
+ * UTF8 fixes for directory dialog
+ * UTF8 fix for private chats in some locales (fr_FR for example)
+
+Version 1.0.0 - Aug 18 2003 (INITIAL PUBLIC RELEASE)
+ * Changed URL to the Nicotine homepage to http://nicotine.thegraveyard.org/
+ * Added Alt-H accelerator to hide log
+
+Version 1.0.0rc8 - Aug 18 2003
+ * New MP3 header engine (shouldn't crash anymore, and should be faster)
+ * Made the default handler for the http protocol more compatible (added
+   quotes)
+
+Version 1.0.0rc7 - Aug 17 2003
+ * Fixed check privileges (thanks hednod)
+ * Userlist context menu issues fixed
+ * Several win32 fixups / custom-hacks made for upcoming win32 release
+
+Version 1.0.0rc6 - Aug 16 2003
+ * Merged PySoulSeek 1.2.4 core changes
+  * Privileged users in userlist
+  * Online notify
+
+Version 1.0.0rc5 - Aug 16 2003
+ * pytgtk-1.99.16 compatibility fix (thanks alexbk)
+
+Version 1.0.0rc4 - Aug 16 2003
+ * Fixed private-chat-shows-status-change-a-million-times
+ * Fixed bug concerning GeoIP not being able to look up country code
+ * Fixed email address in nicotine "binary"
+
+Version 1.0.0rc3 - Aug 16 2003
+ * Geographical blocking works for search results too
+ * Geographical blocking settings now automatically uppercased
+ * py2exe.bat bundled (used to create a "frozen" .exe on win32)
+ * setup.iss bundled (used to create an installer using InnoSetup)
+ * Tab menus now show page title instead of Page n
+ * More win32 fixups
+ * URLs now only respond to left click
+ * User-info description field in settings now wraps
+ * User-info image no longer writes temporary image file
+ * Image data now encapsulated in imagedata.py
+
+Version 1.0.0rc2 - Aug 13 2003
+ * Fixed typo
+
+Version 1.0.0rc1 - Aug 13 2003
+ * Nasty Bug(tm) fixed
+ * URL catcher fixup
+ * Server banner is now shown
+ * Hide log window menu item
+ * Win32 fixups
+
+Version 0.5.1 - Ayg 13 2003
+ * URL catching
+ * Bugfix: /ip no longer shows None
+ * Bugfix: CheckUser would fuck up when disconnected
+ * Fixed date for 0.5.0
+
+Version 0.5.0 - Aug 13 2003
+ * Geographical blocking using GeoIP (optional)
+ * Userlist only sharing
+ * Userlist values are reset after disconnect
+ * Small bugfixes and typos
+ * Instead of printing certain bugreports to the console,
+   it now sends a private message to hyriand instead
+
+Version 0.4.9 - Aug 11 2003
+ * Python 2,2,0 compatibility
+ * Python 2.3 deprecation warning fixed
+ * Minor bugfixes (mainly in transfer lists, I hope they work)
+ * Fixed the setup.py to install images
+ * Added browse files to search results context menu
+ * Added abort & remove file to downloads context menu
+ * KB/GB/MB is now done at 1000 instead of 1024 (producing 0.99 MB instead
+   of 1000 KB)
+
+Version 0.4.8 - Aug 10 2003
+ * Minor bugfixes and de-glitchifications
+
+Version 0.4.7 - Aug 9 2003
+ * New logo and icon (thanks (va)*10^3)
+ * Generate profiler log when using nicotine --profile
+   (profiler log will be saved as <configfile>.profile)
+
+Version 0.4.6 - Aug 8 2003
+ * Room user lists are filled again when reconnected
+ * User is offline/away/online in private chats
+ * Right-click on tab shows tab list
+ * Auto-reply implemented
+ * Added *1000 factor for auto-search interval *oops*
+
+Version 0.4.5 - Aug 7 2003
+ * Page Up / Down scrolls chats
+ * // at the start of a chat line will "escape" the / used by commands
+ * Evil typos corrected (tnx SmackleFunky)
+ * Bugfixes
+ * Search filter history
+
+Version 0.4.4 - Aug 7 2003
+ * Bugfixes
+ * About dialogs
+
+Version 0.4.3 - Aug 5 2003
+ * Small bugfixes (sorting, UpdateColours, ChooseDir)
+
+Version 0.4.2 - Aug 5 2003
+ * First changelog entry.. Basically everything implemented :)

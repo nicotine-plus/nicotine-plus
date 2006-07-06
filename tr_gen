@@ -1,0 +1,4 @@
+cp nicotine nicotine.py
+xgettext -k_ -kN_ -o languages/nicotine.pot *.py */*.py */*/*.py
+rm nicotine.py
+echo "Generated nicotine.pot from all python scripts in this directory, and subdirectories"

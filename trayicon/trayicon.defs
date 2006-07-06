@@ -1,0 +1,58 @@
+;; -*- scheme -*-
+; object definitions ...
+(define-object TrayIcon
+  (in-module "Egg")
+  (parent "GtkPlug")
+  (c-name "EggTrayIcon")
+  (gtype-id "EGG_TYPE_TRAY_ICON")
+)
+
+;; Enumerations and flags ...
+
+
+;; From eggtrayicon.h
+
+(define-function egg_tray_icon_get_type
+  (c-name "egg_tray_icon_get_type")
+  (return-type "GType")
+)
+
+(define-function egg_tray_icon_new_for_screen
+  (c-name "egg_tray_icon_new_for_screen")
+  (return-type "EggTrayIcon*")
+  (parameters
+    '("GdkScreen*" "screen")
+    '("const-gchar*" "name")
+  )
+)
+
+(define-function egg_tray_icon_new
+  (c-name "egg_tray_icon_new")
+  (is-constructor-of "EggTrayIcon")
+  (return-type "EggTrayIcon*")
+  (parameters
+    '("const-gchar*" "name")
+  )
+)
+
+(define-method send_message
+  (of-object "EggTrayIcon")
+  (c-name "egg_tray_icon_send_message")
+  (return-type "guint")
+  (parameters
+    '("gint" "timeout")
+    '("const-char*" "message")
+    '("gint" "len")
+  )
+)
+
+(define-method cancel_message
+  (of-object "EggTrayIcon")
+  (c-name "egg_tray_icon_cancel_message")
+  (return-type "none")
+  (parameters
+    '("guint" "id")
+  )
+)
+
+
