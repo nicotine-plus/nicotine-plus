@@ -20,13 +20,14 @@ class TransferList:
 		
 		widget.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
 		
-		columntypes = [gobject.TYPE_STRING for i in range(9)] + [gobject.TYPE_INT, gobject.TYPE_INT]
+		columntypes = [gobject.TYPE_STRING for i in range(10)] + [gobject.TYPE_INT, gobject.TYPE_INT]
 		self.transfersmodel = gtk.ListStore(*columntypes)
 		
 		cols = InitialiseColumns(widget,
 			[_("Filename"), 250, "text"],
 			[_("User"), 100, "text"],
 			[_("Status"), 150, "text"],
+			[_("Percent"), 50, "text"],
 			[_("Size"), 100, "text"],
 			[_("Speed"), 50, "text"],
 			[_("Time elapsed"), 70, "text"],
@@ -36,12 +37,13 @@ class TransferList:
 		cols[0].set_sort_column_id(0)
 		cols[1].set_sort_column_id(1)
 		cols[2].set_sort_column_id(9)
-		cols[3].set_sort_column_id(10)
-		cols[4].set_sort_column_id(4)
+		cols[3].set_sort_column_id(3)
+		cols[4].set_sort_column_id(10)
 		cols[5].set_sort_column_id(5)
 		cols[6].set_sort_column_id(6)
 		cols[7].set_sort_column_id(7)
-		self.transfersmodel.set_sort_func(4, float_sort_func, 4)
+		cols[8].set_sort_column_id(8)
+		self.transfersmodel.set_sort_func(5, float_sort_func, 5)
 			
 		widget.set_model(self.transfersmodel)
 	
@@ -85,7 +87,7 @@ class TransferList:
 		
 	def SelectedTransfersCallback(self, model, path, iter):
 		user = model.get_value(iter, 1)
-		file = model.get_value(iter, 8)
+		file = model.get_value(iter, 9)
 		for i in self.list:
 			if i.user == user and i.filename == file:
 				self.selected_transfers.append(i)
@@ -138,19 +140,28 @@ class TransferList:
 				speed = str(transfer.speed)
 			elap = str(transfer.timeelapsed)
 			left = str(transfer.timeleft)
-			
+			try:
+				ist= int(istatus)
+				if ist == 11:
+					percent = "100%"
+				elif ist <= 15 and ist !=11 :
+					percent = "0%"
+				else:
+					percent = "%i%%" % ((100 * ist)/ int(size))
+			except:
+				percent = "0%"
 			for i in self.transfers:
 				if i[0] == key:
 					if i[2] != transfer:
 						if i[2] in self.list:
 							self.list.remove(i[2])
 						i[2] = transfer
-					self.transfersmodel.set(i[1], 2, status, 3, hsize, 4, speed, 5, elap, 6, left, 9, istatus, 10, size)
+					self.transfersmodel.set(i[1], 2, status, 3, percent, 4, hsize, 5, speed, 6, elap, 7, left, 10, istatus, 11, size)
 					break
 			else:
 				shortfn = self.frame.np.decode(fn.split("\\")[-1])
 				path = self.frame.np.decode(transfer.path)
-				iter = self.transfersmodel.append([shortfn, user, status, hsize, speed, elap, left, path, fn, istatus, size])
+				iter = self.transfersmodel.append([shortfn, user, status, percent,  hsize, speed, elap, left, path, fn, istatus, size])
 				self.transfers.append([key, iter, transfer])
 			
 		elif self.list is not None:
