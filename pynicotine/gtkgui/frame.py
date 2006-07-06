@@ -60,8 +60,8 @@ class testwin(MainWindow):
 	def __init__(self, config):
 		self.images = {}
 		self.clip_data = ""
-		for i in "empty", "away", "online", "offline", "hilite":
-			loader = gtk.gdk.PixbufLoader("gif")
+		for i in "empty", "away", "online", "offline", "hilite", "hilite2", "connect", "disconnect", "away2", "n":
+			loader = gtk.gdk.PixbufLoader("png")
 			data = getattr(imagedata, i)
 			loader.write(data, len(data))
 			loader.close()
@@ -73,7 +73,7 @@ class testwin(MainWindow):
 
 		MainWindow.__init__(self)
 		self.MainWindow.set_title(_("Nicotine+") + " " + version)
-		self.MainWindow.set_icon(self.images["online"])
+		self.MainWindow.set_icon(self.images["n"])
 		self.MainWindow.selection_add_target("PRIMARY", "STRING", 1)
 		
 		self.roomlist = roomlist(self)
@@ -272,7 +272,7 @@ class testwin(MainWindow):
 		self.eventbox = gtk.EventBox()
 		img = gtk.Image()
 		self.traymenu()
-		self.load_image(None, "offline")
+		self.load_image(None, "disconnect")
 
 		self.trayicon.add(self.eventbox)
 		self.trayicon.show_all()
@@ -300,7 +300,7 @@ class testwin(MainWindow):
 			if self.tray_status["hilites"]["rooms"] == [] and self.tray_status["hilites"]["private"] == []:
 				icon = image
 			else:
-				icon = "hilite"
+				icon = "hilite2"
 			if icon == None:
 				# If there is no hilite, display the status
 				icon = self.tray_status["status"]
@@ -612,7 +612,7 @@ class testwin(MainWindow):
 		self.check_privileges1.set_sensitive(0)
 		
 		self.SetUserStatus(_("Offline"))
-		self.load_image(None, "offline")
+		self.load_image(None, "disconnect")
 		self.searches.interval = 0
 		self.chatrooms.ConnClose()
 		self.searches.ConnClose()
@@ -625,7 +625,7 @@ class testwin(MainWindow):
 		self.disconnect1.set_sensitive(0)
 		
 		self.SetUserStatus(_("Offline"))
-		self.load_image(None, "offline")
+		self.load_image(None, "disconnect")
 		
 	def SetUserStatus(self, status):
 		self.UserStatus.pop(self.user_context_id)
@@ -634,7 +634,7 @@ class testwin(MainWindow):
 	def InitInterface(self, msg):
 		if self.away == 0:
 			self.SetUserStatus(_("Online"))
-			self.load_image(None, "online")
+			self.load_image(None, "connect")
 			autoaway = self.np.config.sections["server"]["autoaway"]
 			if autoaway > 0:
 				self.awaytimer = gobject.timeout_add(1000*60*autoaway, self.OnAutoAway)
@@ -642,7 +642,7 @@ class testwin(MainWindow):
 				self.awaytimer = None
 		else:
 			self.SetUserStatus(_("Away"))
-			self.load_image(None, "away")
+			self.load_image(None, "away2")
 		
 		self.awayreturn1.set_sensitive(1)
 		self.check_privileges1.set_sensitive(1)
@@ -669,10 +669,10 @@ class testwin(MainWindow):
 		self.away = (self.away+1) % 2
 		if self.away == 0:
 			self.SetUserStatus(_("Online"))
-			self.load_image(None, "online")
+			self.load_image(None, "connect")
 		else:
 			self.SetUserStatus(_("Away"))
-			self.load_image(None, "away")
+			self.load_image(None, "away2")
 		self.np.queue.put(slskmessages.SetStatus(self.away and 1 or 2))
 		if HAVE_TRAYICON:
 			pass
@@ -686,19 +686,19 @@ class testwin(MainWindow):
 
 	def ChatRequestIcon(self, status = 0):
 		if status == 1 and not self.got_focus:
-			self.MainWindow.set_icon(self.images["hilite"])
+			self.MainWindow.set_icon(self.images["hilite2"])
 		if self.notebook1.get_current_page() == 0:
 			return
 		if status == 0:
 			if self.ChatTabLabel.get_image() == self.images["hilite"]:
 				return
-		self.ChatTabLabel.set_image(status == 1 and self.images["hilite"] or self.images["online"])
+		self.ChatTabLabel.set_image(status == 1 and self.images["hilite"] or self.images["hilite"])
 
 	def RequestIcon(self, tablabel):
 		if tablabel == self.PrivateChatTabLabel and not self.got_focus:
-			self.MainWindow.set_icon(self.images["hilite"])
+			self.MainWindow.set_icon(self.images["hilite2"])
 		if self.current_tab != tablabel:
-			tablabel.set_image(self.images["online"])
+			tablabel.set_image(self.images["hilite"])
 		
 	def OnSwitchPage(self, notebook, page, page_nr):
 		l = [self.ChatTabLabel, self.PrivateChatTabLabel, None, None, self.SearchTabLabel, self.UserInfoTabLabel, self.UserBrowseTabLabel, None, None][page_nr]
@@ -993,7 +993,7 @@ class testwin(MainWindow):
 		checklatest(self.MainWindow)
 
 	def OnFocusIn(self, widget, event):
-		self.MainWindow.set_icon(self.images["online"])
+		self.MainWindow.set_icon(self.images["n"])
 		self.got_focus = True
 	
 	def OnFocusOut(self, widget, event):

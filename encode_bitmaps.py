@@ -2,12 +2,17 @@ import os
 import sys, string
 
 table = [
-	["away.gif", "away"],
-	["online.gif", "online"],
-	["offline.gif", "offline"],
-	["empty.gif", "empty"],
-	["hilite.gif", "hilite"],
-	["nicotine-n.png", "nicotinen"],
+	["away.png", "away"],
+	["online.png", "online"],
+	["offline.png", "offline"],
+	["connect.png", "connect"],
+	["disconnect.png", "disconnect"],
+	["away2.png", "away2"],
+	["empty.png", "empty"],
+	["hilite.png", "hilite"],
+	["hilite2.png", "hilite2"],
+	["nicotine+.png", "nicotinen"],
+	["n.png", "n"],
 ]
 
 outf = open(os.path.join("pynicotine","gtkgui","imagedata.py"), "w")

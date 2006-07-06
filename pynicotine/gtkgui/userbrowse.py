@@ -56,7 +56,7 @@ class UserBrowse(UserBrowseTab):
 		self.FileTreeView.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
 
 		self.FileTreeView.set_headers_clickable(True)
-		
+		self.FileTreeView.set_property("rules-hint", True)
 		self.folder_popup_menu = popup = PopupMenu(self.frame)
 		popup.set_user(user)
 		popup.setup(

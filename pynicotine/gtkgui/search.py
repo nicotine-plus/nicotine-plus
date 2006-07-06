@@ -366,7 +366,7 @@ class Search(SearchTab):
 		self.selected_users = []
 
 		self.ResultsList.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
-		
+		self.ResultsList.set_property("rules-hint", True)
 		cols = InitialiseColumns(self.ResultsList,
 			["", 20, "text", self.CellDataFunc],
 			[_("Filename"), 250, "text", self.CellDataFunc],

@@ -11,6 +11,8 @@ class Uploads(TransferList):
 	def __init__(self, frame):
 		TransferList.__init__(self, frame, frame.UploadList)
 		self.frame = frame
+		self.frame.UploadList.set_property("rules-hint", True)
+
 		self.popup_menu = popup = PopupMenu(frame)
 		popup.setup(
 			(_("Copy _URL"), self.OnCopyURL),

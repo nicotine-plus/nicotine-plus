@@ -11,6 +11,7 @@ from pynicotine.utils import _
 class Downloads(TransferList):
 	def __init__(self, frame):
 		TransferList.__init__(self, frame, frame.DownloadList)
+		self.frame.DownloadList.set_property("rules-hint", True)
 		self.accel_group = gtk.AccelGroup()
 		self.popup_menu = popup = PopupMenu(frame)
 		popup.setup(
