@@ -27,8 +27,7 @@ from userbrowse import UserBrowse
 from settingswindow import SettingsWindow
 from about import *
 from checklatest import checklatest
-
-import imagedata
+from pynicotine.config import *
 import utils
 from utils import AppendLine, ImageLabel, IconNotebook, ScrollBottom, PopupMenu, Humanize
 import translux
@@ -60,17 +59,39 @@ class testwin(MainWindow):
 	def __init__(self, config):
 		self.images = {}
 		self.clip_data = ""
-		for i in "empty", "away", "online", "offline", "hilite", "hilite2", "connect", "disconnect", "away2", "n":
-			loader = gtk.gdk.PixbufLoader("png")
-			data = getattr(imagedata, i)
-			loader.write(data, len(data))
-			loader.close()
-			self.images[i] = loader.get_pixbuf()
-
+		self.configfile = config
+		
+		
 		self.chatrooms = None
 		
 		self.got_focus = False
-
+		config2 = Config(config)
+        	config2.readConfig()
+		for i in "empty", "away", "online", "offline", "hilite", "hilite2", "connect", "disconnect", "away2", "n":
+			loader = gtk.gdk.PixbufLoader("png")
+			if "icontheme" in config2.sections["ui"]:
+				path = os.path.expanduser(os.path.join(config2.sections["ui"]["icontheme"], i +".png"))
+				if os.path.exists(path):
+					data = open(path)
+					s = data.read()
+					loader.write(s, len(s))
+					data.close()
+					del s
+				else:
+					# default icons
+					data = getattr(imagedata, i)
+					loader.write(data, len(data))
+			else:
+				# default icons
+				data = getattr(imagedata, i)
+				loader.write(data, len(data))
+			
+			
+			loader.close()
+			self.images[i] = loader.get_pixbuf()
+		del data
+		del config2
+		
 		MainWindow.__init__(self)
 		self.MainWindow.set_title(_("Nicotine+") + " " + version)
 		self.MainWindow.set_icon(self.images["n"])
@@ -80,7 +101,8 @@ class testwin(MainWindow):
 		
 		self.logpopupmenu = PopupMenu(self).setup([_("Clear log"), self.OnClearLogWindow])
 		
-		self.configfile = config
+		
+		self.importimages()
 		self.transfermsgs = {}
 		self.transfermsgspostedtime = 0
 		self.manualdisconnect = 0
@@ -181,6 +203,8 @@ class testwin(MainWindow):
 		utils.PROTOCOL_HANDLERS = self.np.config.sections["urls"]["protocols"].copy()
 		utils.PROTOCOL_HANDLERS["slsk"] = self.OnSoulSeek
 
+
+		
 		for thing in self.np.config.sections["interests"]["likes"]:
 			self.likes[thing] = self.likeslist.append([thing])
 		for thing in self.np.config.sections["interests"]["dislikes"]:
@@ -265,6 +289,12 @@ class testwin(MainWindow):
 		else:
 			self.OnConnect(-1)
 			
+	def importimages(self):
+		try:
+			import imagedata
+		except Exception, e:
+			print e
+		
 	def create_trayicon(self):
 		self.is_mapped = 1
 		self.trayicon = trayicon.TrayIcon("Nicotine")

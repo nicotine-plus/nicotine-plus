@@ -436,7 +436,9 @@ class BloatFrame(settings_glade.BloatFrame):
 		settings_glade.BloatFrame.__init__(self, False)
 		for item in ["<None>", ",", ".", "<space>"]:
 			self.DecimalSep.append_text(item)
-
+			
+		self.ThemeButton.connect("clicked", self.OnChooseThemeDir)
+		
 		self.PickRemote.connect("clicked", self.PickColour, self.Remote)
 		self.PickLocal.connect("clicked", self.PickColour, self.Local)
 		self.PickMe.connect("clicked", self.PickColour, self.Me)
@@ -451,9 +453,17 @@ class BloatFrame(settings_glade.BloatFrame):
 		self.DefaultImmediate.connect("clicked", self.DefaultColour, self.Immediate)
 		self.DefaultQueue.connect("clicked", self.DefaultColour, self.Queue)
 		
+	def OnChooseThemeDir(self, widget):
+		dir = ChooseDir(self.Main.get_toplevel(), self.IconTheme.get_text())
+		if dir is not None:
+			for directory in dir: # iterate over selected files
+				self.IconTheme.set_text(recode(directory))
+				
 	def SetSettings(self, config):
 		ui = config["ui"]
 		transfers = config["transfers"]
+		if ui["icontheme"] is not None:
+			self.IconTheme.set_text(ui["icontheme"])
 		if ui["chatlocal"] is not None:
 			self.Local.set_text(ui["chatlocal"])
 		if ui["chatremote"] is not None:
@@ -474,6 +484,7 @@ class BloatFrame(settings_glade.BloatFrame):
 	def GetSettings(self):
 		return {
 			"ui": {
+				"icontheme": self.IconTheme.get_text(),
 				"chatlocal": self.Local.get_text(),
 				"chatremote": self.Remote.get_text(),
 				"chatme": self.Me.get_text(),

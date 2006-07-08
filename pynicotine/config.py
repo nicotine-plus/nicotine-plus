@@ -62,7 +62,7 @@ class Config:
 	"searches":{"maxresults":50,"re_filter":0,"history":[], \
 	"enablefilters":0, "defilter":["","","","",0,""], "filtercc":[], \
 	"filterin":[],"filterout":[],"filtersize":[],"filterbr":[]}, \
- 	"ui":{"chatme":"FOREST GREEN", "chatremote":"","chatlocal":"BLUE", \
+ 	"ui":{"icontheme": "", "chatme":"FOREST GREEN", "chatremote":"","chatlocal":"BLUE", \
  	"chathilite":"red", "search":"","searchq":"GREY", "decimalsep":",", \
  	"roomlistcollapsed": 0, "tabclosers": 1}, \
  	"urls":{"urlcatching":1,"protocols":{"http":"mozilla \"%s\" &"}, \

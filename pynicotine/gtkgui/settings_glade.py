@@ -969,6 +969,36 @@ class BloatFrame:
         self.TabClosers.show()
         self.vbox86.pack_start(self.TabClosers, False, False, 0)
 
+        self.hbox170 = gtk.HBox(False, 0)
+        self.hbox170.show()
+        self.hbox170.set_spacing(0)
+
+        self.label294 = gtk.Label(_("Icon Theme Directory (requires restart):"))
+        self.label294.set_padding(0, 0)
+        self.label294.show()
+        self.hbox170.pack_start(self.label294, False, False, 0)
+
+        self.vbox86.pack_start(self.hbox170, False, False, 0)
+
+        self.hbox169 = gtk.HBox(False, 8)
+        self.hbox169.show()
+        self.hbox169.set_spacing(8)
+
+        self.IconTheme = gtk.Entry()
+        self.IconTheme.set_text("")
+        self.IconTheme.set_editable(True)
+        self.IconTheme.show()
+        self.IconTheme.set_visibility(True)
+        self.hbox169.pack_start(self.IconTheme, True, True, 0)
+
+        self.ThemeButton = gtk.Button()
+        self.ThemeButton.set_label(_("Select Theme"))
+        self.ThemeButton.show()
+
+        self.hbox169.pack_end(self.ThemeButton, False, False, 0)
+
+        self.vbox86.pack_start(self.hbox169, False, True, 0)
+
         self.table2 = gtk.Table()
         self.table2.show()
         self.table2.set_row_spacings(0)
