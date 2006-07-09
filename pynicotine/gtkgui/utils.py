@@ -260,6 +260,12 @@ class PopupMenu(gtk.Menu):
 		for item in items:
 			if item[0] == "":
 				menuitem = gtk.MenuItem()
+			elif item[0] == 1:
+				menuitem = gtk.MenuItem()
+				menuitem = gtk.MenuItem(item[1])
+				menuitem.set_submenu(item[2])
+				if item[3] is not None:
+					menuitem.connect("activate", item[3])
 			else:
 				if item[0][0] == "$":
 					menuitem = gtk.CheckMenuItem(item[0][1:])

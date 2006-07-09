@@ -1,4 +1,11 @@
 ChangeLog for Nicotine
+
+Version 1.2.4
+ * Added new birdy icons
+ * Made Copy URL popup menu options use the ctrl-c/ctrl-v clipboard, as well as the middle-click one
+ * Split big Download/Upload Popup menus into submenus
+ * Fixed an problem with upload percentages not working properly
+
 Version 1.2.3 July 7th 2006
  * Added abort, retry, ban, clear queued, and clear finished/aborted buttons 
    to transfers.

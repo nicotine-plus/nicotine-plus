@@ -14,30 +14,42 @@ class Downloads(TransferList):
 		self.frame.DownloadList.set_property("rules-hint", True)
 		self.accel_group = gtk.AccelGroup()
 		self.popup_menu = popup = PopupMenu(frame)
+		
+		self.popup_menu2 = popup2 = PopupMenu(frame)
+		popup2.setup( 
+		        (_("Clear finished/aborted"), self.OnClearFinishedAborted),
+			(_("Clear finished"), self.OnClearFinished),
+			(_("Clear aborted"), self.OnClearAborted),
+			(_("Clear queued"), self.OnClearQueued),
+		)
+		self.popup_menu_users = popup3 = PopupMenu(frame)
+		popup3.setup( 
+			(_("Send _message"), popup3.OnSendMessage),
+			(_("Show IP a_ddress"), popup3.OnShowIPaddress),
+			(_("Get user i_nfo"), popup3.OnGetUserInfo),
+			(_("Brow_se files"), popup3.OnBrowseUser),
+			(_("Gi_ve privileges"), popup3.OnGivePrivileges),
+			("", None),
+			("$" + _("_Add user to list"), popup3.OnAddToList),
+			("$" + _("_Ban this user"), popup3.OnBanUser),
+			("$" + _("_Ignore this user"), popup3.OnIgnoreUser),
+		)
+		
 		popup.setup(
 			(_("Get place in _queue"), self.OnGetPlaceInQueue),
 			("", None),
 			(_("Copy _URL"), self.OnCopyURL),
 			(_("Copy folder URL"), self.OnCopyDirURL),
 			(_("Send to _player"), self.OnPlayFiles),
-			(_("Send _message"), popup.OnSendMessage),
-			(_("Show IP a_ddress"), popup.OnShowIPaddress),
-			(_("Get user i_nfo"), popup.OnGetUserInfo),
-			(_("Brow_se files"), popup.OnBrowseUser),
-			(_("Gi_ve privileges"), popup.OnGivePrivileges),
-			("$" + _("_Add user to list"), popup.OnAddToList),
-			("$" + _("_Ban this user"), popup.OnBanUser),
-			("$" + _("_Ignore this user"), popup.OnIgnoreUser),
+			(1, _("User"), self.popup_menu_users, self.OnPopupMenuUsers),
+			("", None),
+			(_("_Retry"), self.OnRetryTransfer),
 			("", None),
 			(_("Abor_t"), self.OnAbortTransfer),
 			(_("Abort and remove _file(s)"), self.OnAbortRemoveTransfer),
-			(_("_Retry"), self.OnRetryTransfer),
 			(_("_Clear"), self.OnClearTransfer),
 			("", None),
-			(_("Clear finished/aborted"), self.OnClearFinishedAborted),
-			(_("Clear finished"), self.OnClearFinished),
-			(_("Clear aborted"), self.OnClearAborted),
-			(_("Clear queued"), self.OnClearQueued),
+			(1, _("Clear Groups"), self.popup_menu2, None),
 		)
 		frame.DownloadList.connect("button_press_event", self.OnPopupMenu, "mouse")
  		frame.DownloadList.connect("key-press-event", self.on_key_press_event)
@@ -88,7 +100,37 @@ class Downloads(TransferList):
 				if os.path.exists(self.frame.np.config.sections["transfers"]["downloaddir"]+"/"+basename):
 					os.system("%s \"%s\" &" %(self.frame.np.config.sections["players"]["default"], self.frame.np.config.sections["transfers"]["downloaddir"]+"/"+basename ) )
 
+	def OnPopupMenuUsers(self, widget):
+		
+		self.selected_transfers = []
+		self.selected_users = []
+		self.widget.get_selection().selected_foreach(self.SelectedTransfersCallback)
+
+		items = self.popup_menu_users.get_children()
+		
+		act = False
+		if len(self.selected_users) == 1:
+			act = True
+		items[0].set_sensitive(act)
+		items[1].set_sensitive(act)
+		items[2].set_sensitive(act)
+		items[3].set_sensitive(act)
+
+		act = False
+		if len(self.selected_users) == 1:
+			user = self.selected_users[0]
+			self.popup_menu_users.set_user(user)
 			
+			act = True
+			items[6].set_active(user in [i[0] for i in self.frame.np.config.sections["server"]["userlist"]])
+			items[7].set_active(user in self.frame.np.config.sections["server"]["banlist"])
+			items[8].set_active(user in self.frame.np.config.sections["server"]["ignorelist"])
+		
+		for i in range(4, 9):
+			items[i].set_sensitive(act)
+
+		return True
+				
 	def OnPopupMenu(self, widget, event, kind):
 		if kind == "mouse":
 			if event.button != 3:
@@ -99,33 +141,29 @@ class Downloads(TransferList):
 		self.widget.get_selection().selected_foreach(self.SelectedTransfersCallback)
 
 		items = self.popup_menu.get_children()
-
 		if len(self.selected_users) == 0:
 			items[0].set_sensitive(False)
+			items[4].set_sensitive(False)
 		else:
 			items[0].set_sensitive(True)
+			items[4].set_sensitive(True)
 		
 		act = False
 		if len(self.selected_transfers) == 1:
 			act = True
 		items[2].set_sensitive(act)
 		items[3].set_sensitive(act)
-
-		act = False
-		if len(self.selected_users) == 1:
-			user = self.selected_users[0]
-			self.popup_menu.set_user(user)
-			act = True
-			items[10].set_active(user in [i[0] for i in self.frame.np.config.sections["server"]["userlist"]])
-			items[11].set_active(user in self.frame.np.config.sections["server"]["banlist"])
-			items[12].set_active(user in self.frame.np.config.sections["server"]["ignorelist"])
-			
-		for i in range(5, 12):
-			items[i].set_sensitive(act)
+		items[5].set_sensitive(act)
 		
-		act = len(self.selected_transfers) and True or False
-		for i in range(13, 17):
-			items[i].set_sensitive(act)
+		if len(self.selected_users) == 0:
+			act = False
+			for i in range(7, 12):
+				items[i].set_sensitive(act)
+		else:
+			act = True
+			for i in range(7, 12):
+				items[i].set_sensitive(act)
+
 		
 		self.popup_menu.popup(None, None, None, 3, event.time)
 		if kind == "keyboard":

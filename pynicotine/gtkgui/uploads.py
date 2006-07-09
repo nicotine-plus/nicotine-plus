@@ -104,15 +104,11 @@ class Uploads(TransferList):
 		self.widget.get_selection().selected_foreach(self.SelectedTransfersCallback)
 
 		items = self.popup_menu_users.get_children()
-
-		if len(self.selected_users) == 0:
-			items[0].set_sensitive(False)
-		else:
-			items[0].set_sensitive(True)
 		
 		act = False
 		if len(self.selected_users) == 1:
 			act = True
+		items[0].set_sensitive(act)
 		items[1].set_sensitive(act)
 		items[2].set_sensitive(act)
 		items[3].set_sensitive(act)
