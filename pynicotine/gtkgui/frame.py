@@ -96,7 +96,7 @@ class testwin(MainWindow):
 		self.MainWindow.set_title(_("Nicotine+") + " " + version)
 		self.MainWindow.set_icon(self.images["n"])
 		self.MainWindow.selection_add_target("PRIMARY", "STRING", 1)
-		
+		self.clip = gtk.Clipboard(display=gtk.gdk.display_get_default(), selection="CLIPBOARD")
 		self.roomlist = roomlist(self)
 		
 		self.logpopupmenu = PopupMenu(self).setup([_("Clear log"), self.OnClearLogWindow])
@@ -963,8 +963,10 @@ class testwin(MainWindow):
 			self.logMessage(_("Invalid SoulSeek meta-url: %s") % url)
 
 	def SetClipboardURL(self, user, path):
+		self.clip.set_text( "slsk://" + urllib.pathname2url("%s/%s" % (user, path.replace("\\", "/"))) )
 		self.clip_data = "slsk://" + urllib.pathname2url("%s/%s" % (user, path.replace("\\", "/")))
 		self.MainWindow.selection_owner_set("PRIMARY", 0L)
+
 
 	def OnSelectionGet(self, widget, data, info, timestamp):
 		data.set_text(self.clip_data, -1)

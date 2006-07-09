@@ -60,6 +60,7 @@ class TransferList:
 		_("User logged off"),
 		_("Aborted"),
 		_("Finished"),
+		_("Waiting for upload"),
 	]
 	
 	def get_status_index(self, val):
@@ -95,16 +96,18 @@ class TransferList:
 					self.selected_users.append(user)
 				break
 	
-	def Humanize(self, size):
+	def Humanize(self, size, modifier):
 		if size is None:
 			return None
 		priv = ""
-		ispriv = " " + _("(privileged)")
-		isfriend = " " + _("(friend)")
-		if type(size) is StringType and size[-len(ispriv):] == ispriv:
-			size, priv = size[:-len(ispriv)], size[-len(ispriv):]
-		elif type(size) is StringType and size[-len(isfriend):] == isfriend:
-			size, priv = size[:-len(isfriend)], size[-len(isfriend):]
+		if modifier == None:
+			modifier = ""
+		#== " " + _("(privileged)")
+		#isfriend = " " + _("(friend)")
+		#if type(size) is StringType and size[-len(ispriv):] == ispriv:
+			#size, priv = size[:-len(ispriv)], size[-len(ispriv):]
+		#elif type(size) is StringType and size[-len(isfriend):] == isfriend:
+			#size, priv = size[:-len(isfriend)], size[-len(isfriend):]
 		try:
 			s = int(size)
 			if s >= 1000*1024*1024:
@@ -115,9 +118,9 @@ class TransferList:
 				r = _("%.2f KB") % ((float(s) / 1024.0))
 			else:
 				r = str(size)
-			return r + priv
+			return r + " "+ modifier
 		except:
-			return size + priv
+			return size + " "+ modifier
 	
 	def update(self, transfer = None):
 		if transfer is not None:
@@ -127,13 +130,13 @@ class TransferList:
 			user = transfer.user
 			key = [user, fn]
 			
-			status = self.Humanize(transfer.status)
+			status = self.Humanize(transfer.status, None)
 			istatus = self.get_status_index(transfer.status)
 			try:
 				size = int(transfer.size)
 			except TypeError:
 				size = 0
-			hsize = self.Humanize(transfer.size)
+			hsize = self.Humanize(transfer.size, transfer.modifier)
 			try:
 				speed = "%.1f" % transfer.speed
 			except TypeError:
@@ -141,10 +144,10 @@ class TransferList:
 			elap = str(transfer.timeelapsed)
 			left = str(transfer.timeleft)
 			try:
-				ist= int(istatus)
-				if ist == 11:
+				ist =  int(istatus)
+				if  ist == int(transfer.size) or ist == 11:
 					percent = "100%"
-				elif ist <= 15 and ist !=11 :
+				elif  ist < 11:
 					percent = "0%"
 				else:
 					percent = "%i%%" % ((100 * ist)/ int(size))

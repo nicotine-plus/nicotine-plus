@@ -24,12 +24,13 @@ from gtkgui.utils import recode2
 
 class Transfer:
     """ This class holds information about a single transfer. """
-    def __init__(self, conn = None, user = None, filename = None, path = None, status = None, req=None, size = None, file = None, starttime = None, offset = None, currentbytes = None, speed = None,timeelapsed = None, timeleft = None, timequeued = None, transfertimer = None, requestconn = None):
+    def __init__(self, conn = None, user = None, filename = None, path = None, status = None, req=None, size = None, file = None, starttime = None, offset = None, currentbytes = None, speed = None,timeelapsed = None, timeleft = None, timequeued = None, transfertimer = None, requestconn = None, modifier = None):
 	self.user = user
 	self.filename = filename
 	self.conn = conn
 	self.path = path
 	self.status = status
+	self.modifier = modifier
 	self.req = req
 	self.size = size
 	self.file = file
@@ -734,10 +735,11 @@ class Transfers:
 		    if oldelapsed == i.timeelapsed:
 			needupdate = 0
                     i.status = str(i.currentbytes)
+		    
                     if i.user in self.privilegedusers:
-                        i.status = i.status + " " + _("(privileged)")
+			    i.modifier = _("(privileged)")
 		    elif self.UserListPrivileged(i.user):
-			i.status = i.status + " " + _("(friend)")
+			    i.modifier = _("(friend)")
 		else:
                     msg.file.close()
                     i.status = _("Finished")
