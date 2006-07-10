@@ -1,6 +1,6 @@
 ChangeLog for Nicotine
 
-Version 1.2.4
+Unreleased....
  * Added new birdy icons
  * Made Copy URL popup menu options use the ctrl-c/ctrl-v clipboard, as well as the middle-click one
  * Split big Download/Upload Popup menus into submenus
@@ -79,6 +79,10 @@ Version 1.0.8-d Aug 17 2004
  * Added Remote Downloads (Added Checkbox in Settings->Transfers)
  * Fixed some of the many PyGTK warning messages
  * Removed the PING-OF-BAN
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Forked
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Version 1.0.8rc1 May 1 2004
  * Added the missing handler for server-pushed searches

@@ -7,7 +7,7 @@
 This module contains utility fuctions.
 """
 
-version = "1.2.3"
+version = "1.2.4"
 latesturl = "http://thegraveyard.org/daelstorm/nicotine/LATEST"
 
 import string
