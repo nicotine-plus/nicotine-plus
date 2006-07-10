@@ -268,6 +268,16 @@ class testwin(MainWindow):
 		self.userinfo.SetTabLabel(self.UserInfoTabLabel)
 		self.userbrowse.SetTabLabel(self.UserBrowseTabLabel)
 		
+		self.sUserinfoButton.connect("clicked", self.OnGetUserInfo)
+		self.UserinfoEntry.connect("activate", self.OnGetUserInfo)
+		
+		self.sPrivateChatButton.connect("clicked", self.OnGetPrivateChat)
+		self.PrivateChatEntry.connect("activate", self.OnGetPrivateChat)
+		
+		self.sSharesButton.connect("clicked", self.OnGetShares)
+		self.SharesEntry.connect("activate", self.OnGetShares)
+		
+		
 		self.SetUserStatus(_("Offline"))
 		self.UpdateBandwidth()
 		
@@ -355,7 +365,29 @@ class testwin(MainWindow):
 		except Exception,e:
 			print "ERROR: load_image_wrapped", e
 	
+	def OnGetUserInfo(self, widget):
+		text = self.UserinfoEntry.get_text()
+		if not text:
+			return
+		self.LocalUserInfoRequest(text)
+		self.UserinfoEntry.set_text("")
+		
+	def OnGetShares(self, widget):
+		text = self.SharesEntry.get_text()
+		if not text:
+			return
+		self.BrowseUser(text)
+		self.SharesEntry.set_text("")
+
+	def OnGetPrivateChat(self, widget):
+		text = self.PrivateChatEntry.get_text()
+		if not text:
+			return
+		self.privatechats.SendMessage(text, None, 1)
+		self.PrivateChatEntry.set_text("")
+		
 	def OnGetAUsersInfo(self, widget, prefix = ""):
+		# popup
 		user = input_box(self, title='Nicotine+: Get User Info',
 		message='Enter the User whose User Info you wish to recieve:',
 		default_text='')

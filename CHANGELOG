@@ -1,6 +1,7 @@
 ChangeLog for Nicotine
 
 Unreleased....
+ * Added user entry boxes in Private Chat, User info, and User browse
  * Added new birdy icons
  * Added a theme selector to Settings->UI->Interface->Icon Theme Directory
    If any of the theme icons exist in this directory, they'll be used instead 

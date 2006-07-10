@@ -286,8 +286,39 @@ class MainWindow:
 
         self.ChatTabLabel = self.get_custom_widget("ChatTabLabel", _("ImageLabel"), _("Chat rooms"), 0, 0)
         self.ChatTabLabel.show()
+        self.vbox17 = gtk.VBox(False, 0)
+        self.vbox17.show()
+        self.vbox17.set_spacing(0)
+
         self.PrivatechatNotebook = self.get_custom_widget("PrivatechatNotebook", "", "", 0, 0)
         self.PrivatechatNotebook.show()
+        self.vbox17.pack_start(self.PrivatechatNotebook, True, True, 0)
+
+        self.hbox20 = gtk.HBox(False, 5)
+        self.hbox20.show()
+        self.hbox20.set_spacing(5)
+        self.hbox20.set_border_width(5)
+
+        self.sPrivateChatButton = gtk.Button()
+        self.sPrivateChatButton.set_label(_("Start Message"))
+        self.sPrivateChatButton.show()
+
+        self.hbox20.pack_end(self.sPrivateChatButton, False, False, 0)
+
+        self.PrivateChatEntry = gtk.Entry()
+        self.PrivateChatEntry.set_text("")
+        self.PrivateChatEntry.set_editable(True)
+        self.PrivateChatEntry.show()
+        self.PrivateChatEntry.set_visibility(True)
+        self.hbox20.pack_end(self.PrivateChatEntry, False, True, 0)
+
+        self.label29 = gtk.Label(_("Input a user:"))
+        self.label29.set_padding(0, 0)
+        self.label29.show()
+        self.hbox20.pack_end(self.label29, False, False, 0)
+
+        self.vbox17.pack_start(self.hbox20, False, True, 0)
+
         self.PrivateChatTabLabel = self.get_custom_widget("PrivateChatTabLabel", _("ImageLabel"), _("Private chat"), 0, 0)
         self.PrivateChatTabLabel.show()
         self.vboxdownloads = gtk.VBox(False, 0)
@@ -483,12 +514,74 @@ class MainWindow:
 
         self.SearchTabLabel = self.get_custom_widget("SearchTabLabel", _("ImageLabel"), _("Search files"), 0, 0)
         self.SearchTabLabel.show()
+        self.vbox18 = gtk.VBox(False, 0)
+        self.vbox18.show()
+        self.vbox18.set_spacing(0)
+
         self.UserInfoNotebook = self.get_custom_widget("UserInfoNotebook", "", "", 0, 0)
         self.UserInfoNotebook.show()
+        self.vbox18.pack_start(self.UserInfoNotebook, True, True, 0)
+
+        self.hbox21 = gtk.HBox(False, 5)
+        self.hbox21.show()
+        self.hbox21.set_spacing(5)
+        self.hbox21.set_border_width(5)
+
+        self.sUserinfoButton = gtk.Button()
+        self.sUserinfoButton.set_label(_("Get Userinfo"))
+        self.sUserinfoButton.show()
+
+        self.hbox21.pack_end(self.sUserinfoButton, False, False, 0)
+
+        self.UserinfoEntry = gtk.Entry()
+        self.UserinfoEntry.set_text("")
+        self.UserinfoEntry.set_editable(True)
+        self.UserinfoEntry.show()
+        self.UserinfoEntry.set_visibility(True)
+        self.hbox21.pack_end(self.UserinfoEntry, False, True, 0)
+
+        self.label30 = gtk.Label(_("Input a user:"))
+        self.label30.set_padding(0, 0)
+        self.label30.show()
+        self.hbox21.pack_end(self.label30, False, False, 0)
+
+        self.vbox18.pack_start(self.hbox21, False, True, 0)
+
         self.UserInfoTabLabel = self.get_custom_widget("UserInfoTabLabel", _("ImageLabel"), _("User info"), 0, 0)
         self.UserInfoTabLabel.show()
+        self.vbox19 = gtk.VBox(False, 0)
+        self.vbox19.show()
+        self.vbox19.set_spacing(0)
+
         self.UserBrowseNotebook = self.get_custom_widget("UserBrowseNotebook", "", "", 0, 0)
         self.UserBrowseNotebook.show()
+        self.vbox19.pack_start(self.UserBrowseNotebook, True, True, 0)
+
+        self.hbox22 = gtk.HBox(False, 5)
+        self.hbox22.show()
+        self.hbox22.set_spacing(5)
+        self.hbox22.set_border_width(5)
+
+        self.sSharesButton = gtk.Button()
+        self.sSharesButton.set_label(_("Get Shares"))
+        self.sSharesButton.show()
+
+        self.hbox22.pack_end(self.sSharesButton, False, False, 0)
+
+        self.SharesEntry = gtk.Entry()
+        self.SharesEntry.set_text("")
+        self.SharesEntry.set_editable(True)
+        self.SharesEntry.show()
+        self.SharesEntry.set_visibility(True)
+        self.hbox22.pack_end(self.SharesEntry, False, True, 0)
+
+        self.label31 = gtk.Label(_("Input a user:"))
+        self.label31.set_padding(0, 0)
+        self.label31.show()
+        self.hbox22.pack_end(self.label31, False, False, 0)
+
+        self.vbox19.pack_start(self.hbox22, False, True, 0)
+
         self.UserBrowseTabLabel = self.get_custom_widget("UserBrowseTabLabel", _("ImageLabel"), _("User browse"), 0, 0)
         self.UserBrowseTabLabel.show()
         self.interests = gtk.VBox(False, 10)
@@ -704,7 +797,7 @@ class MainWindow:
         self.custom8.show()
         self.notebook1.append_page(self.hpaned1, self.ChatTabLabel)
 
-        self.notebook1.append_page(self.PrivatechatNotebook, self.PrivateChatTabLabel)
+        self.notebook1.append_page(self.vbox17, self.PrivateChatTabLabel)
 
         self.notebook1.append_page(self.vboxdownloads, self.custom3)
 
@@ -712,9 +805,9 @@ class MainWindow:
 
         self.notebook1.append_page(self.vbox3, self.SearchTabLabel)
 
-        self.notebook1.append_page(self.UserInfoNotebook, self.UserInfoTabLabel)
+        self.notebook1.append_page(self.vbox18, self.UserInfoTabLabel)
 
-        self.notebook1.append_page(self.UserBrowseNotebook, self.UserBrowseTabLabel)
+        self.notebook1.append_page(self.vbox19, self.UserBrowseTabLabel)
 
         self.notebook1.append_page(self.interests, self.InterestsTabLabel)
 
