@@ -8,7 +8,7 @@ This module contains utility fuctions.
 """
 
 version = "1.2.4"
-latesturl = "http://thegraveyard.org/daelstorm/nicotine/LATEST"
+latesturl = "http://nicotine-plus.sourceforge.net/LATEST"
 
 import string
 import os.path
