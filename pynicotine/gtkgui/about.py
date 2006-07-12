@@ -33,7 +33,8 @@ hyriand@thegraveyard.org
 Based on code from the PySoulSeek project
 Copyright (c) 2001-2003 Alexander Kanavin
 
-With additions by daelstorm (c) 2006
+With additions by daelstorm and others (c) 2006
+http://nicotine-plus.sourceforge.net/
 
 Released under the GNU Public License
 
