@@ -723,7 +723,7 @@ class NetworkEventProcessor:
 		self.logMessage("%s %s" %(msg.__class__, vars(msg)),1)
 		return
 	try:
-	    f=open(self.config.sections["userinfo"]["pic"],'r')
+	    f=open(self.config.sections["userinfo"]["pic"],'rb')
 	    pic = f.read()
 	    f.close()
 	except:
@@ -733,7 +733,7 @@ class NetworkEventProcessor:
 	if self.transfers is not None:
 	    totalupl = self.transfers.getTotalUploadsAllowed()
 	    queuesize = self.transfers.getUploadQueueSizes()[0]
- 	    slotsavail = not self.transfers.bandwidthLimitReached()
+	    slotsavail = not self.transfers.bandwidthLimitReached()
 	    self.queue.put(slskmessages.UserInfoReply(msg.conn.conn,descr,pic,totalupl, queuesize,slotsavail))
 
 	self.logMessage(_("%s is making a UserInfo request") %(user), None)
