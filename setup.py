@@ -29,7 +29,7 @@ if sys.platform.startswith("win"):
 
 if __name__ == '__main__' :
     LONG_DESCRIPTION = \
-""" Nicotine is a client for SoulSeek filesharing system. 
+""" Nicotine-Plus is a client for SoulSeek filesharing system, forked from Nicotine. 
 """
 
     from pynicotine.utils import version
@@ -38,9 +38,9 @@ if __name__ == '__main__' :
           version               = version,
           license               = "GPL",
           description           = "Client for SoulSeek filesharing system.",
-          author                = "Hyriand",
-          author_email          = "hyriand@thegraveyard.org",
-          url                   = "http://nicotine.thegraveyard.org/",
+          author                = "daelstorm",
+          author_email          = "daelstorm@gmail.com",
+          url                   = "http://nicotine-plus.sourceforge.net/",
           packages              = [ 'pynicotine', 'pynicotine.gtkgui' ],
           scripts               = [ 'nicotine','nicotine-import-winconfig'],
           long_description      = LONG_DESCRIPTION,

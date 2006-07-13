@@ -1,0 +1,63 @@
+Nicotine+ is a client for the SoulSeek filesharing network. It was "forked"
+from Nicotine, Hyriand's Soulseek client, which in turn was forked from the 
+PySoulSeek project by Alexander Kanavin. 
+
+Dependencies:
+ To use it on Linux/Unix and X11 you'll need the following:
+
+ Required:
+  * An X server            http://www.x.org/
+  * Gtk+ 2.4 or newer      http://www.gtk.org/
+  * Python 2.2.3 or newer  http://www.python.org/
+  * pygtk-2.4 or newer (may work with older version, but is *UNTESTED*)
+    http://www.pygtk.org/
+ 
+ Optional:
+  * PyOGG and PyVorbis (OGG metadata support for your shares)
+    http://ekyo.nerim.net/software/pyogg/
+    Debian users should install the python-pyvorbis package.
+  * GeoIP python bindings (Country lookup) http://www.maxmind.com/app/python
+  * Psyco (speeds up Python code) http://psyco.sourceforge.net/
+  * TrayIcon (included with Nicotine+) is a System Tray app that requires a
+    Python module to be compiled. Read README.trayicon for more information.
+
+After installing nicotine (see INSTALL for that), the executable
+to run is named 'nicotine'.
+
+General Usage:
+ To bring up a context menu for items is a list, select them with the left
+ mousebutton first, and then right-click to bring up the context menu. These
+ menus will only show options available in the context of the selected items
+ (f.e. if you select search results from multiple users, actions on the user
+ will not be available). Pressing the tab key in a chatroom or a private chat
+ invokes nickname auto-completion.
+
+Translations:
+ Translators, please read the TRANSLATORS and TRANSLATIONS files.
+
+Config Conversion:
+ If you wish to import your config from the official Windows client,
+ use the nicotine-import-winconfig script. Read the README.import-winconfig
+ for more information.
+
+PySoulSeek Config:
+ If you want Nicotine to use your PySoulSeek configuration files, use:
+
+# nicotine -c ~/.pyslsk
+
+Have fun, and if you want to contact a developer for any feedback,
+you can PM daelstorm on Soulseek, or by emailing to:
+
+daelstorm <daelstorm@gmail.com>
+
+The homepage of Nicotine+ is:  http://nicotine-plus.sourceforge.net/
+The Wiki/Trac of Nicotine+ is: http://www.nicotine-plus.org/
+
+The homepage of Nicotine is:   http://nicotine.thegraveyard.org/
+The homepage of PySoulSeek is: http://sensi.org/~ak/pyslsk/
+
+
+ps. Please remember, not sharing kills P2P!
+
+
+

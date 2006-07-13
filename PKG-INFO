@@ -1,11 +1,11 @@
 Metadata-Version: 1.0
-Name: nicotine+
+Name: nicotine
 Version: 1.2.4
 Summary: Client for SoulSeek filesharing system.
-Home-page: http://thegraveyard.org/daelstorm/nicotine-plus.php
-Author: Hyriand, daelstorm
-Author-email: hyriand@thegraveyard.org, daelstorm@gmail.com
+Home-page: http://nicotine-plus.sourceforge.net/
+Author: daelstorm
+Author-email: daelstorm@gmail.com
 License: GPL
-Description: Nicotine is a client for SoulSeek filesharing system.
+Description: Nicotine-Plus is a client for SoulSeek filesharing system, forked from Nicotine.
         
 Platform: UNKNOWN

@@ -1,0 +1,66 @@
+Nicotine+ TODO
+================
+updated version: http://www.nicotine-plus.org/wiki/ToDo
+
+ - daelstorm (main-developer)
+	* Fix bugs
+	* Add cool stuff
+	* Make Username Tabs to open the same popup menus as their mode, not a silly tab selector
+	* Fix memory leak with refreshing other users' shares
+
+daelstorm's history TODO:
+	* Add a special list of rooms and toggle for buddying everyone in those room, if you are sharing list only.
+
+================================
+
+ - eL_vErDe (developer)
+
+================================
+ - osiris (handy-man)
+	* update NicotineGuide to match current version
+	* update source documentation
+	* write & update win32 docs
+	* start with 1.2.4 packages
+	* compile and fix Geo-IP and python-geoip for windows :(
+	* write & update translation HowTo for linux/windows
+
+osiris TODO history
+	* write NicotineGuide [DONE!]
+	* windows installer [DONE!]
+	* installer icons [DONE!]
+	* 1.2.3 slax module (including python-geoip/vorbis/ogg/ modules)
+	* 1.2.3 slackware package [DONE!]
+
+==============================================================================================================================
+
+ - Hyriand (founder of nicotine)
+till 1.0.8 you could bug him... later version (1.2.x) are cleaned up and maintained by Nicotine+ Dev.Team.. DO NOT BUG Hyriand
+if you have problems!! Instead, send him a compliment, thank him for the trouble he took to write Nicotine :)
+
+Hydriand's history TODO:
+	* Find similar / continue existing download (DONE!)
+  	* Keyboard list selection [DONE!]
+  * Autocompletion:
+	* Show popup menu when multiple completions are possible
+	* Context sensitive autocompletion
+	* Transfer logs (what, where, from whom, what error) [DONE!]
+	* Connect / disconnect from distributed network depending on "max search results"
+
+   * Full core / gui separation [Wrote MuseekDaemon]
+   * Rewrite GUI in C and hope it's faster [...]
+   * Create (n)curses gui [...]
+
+Long term / permanent term:
+  * Internationalization ("i18n") [DONE!]
+  * Keep "core" in sync with PySoulSeek [DONE!]
+  * Keep up with protocol changes [DONE!]
+
+  * Undetermined term:
+	* Win32 packages and installer (requires a magical speed-up first, which 
+	  isn't going to happen any time soon, but with core/gui separation, a
+	  native win32 gui should be possible) [DONE!]
+
+-----------------------------------------------------------------
+
+Client in C/C++  :::  done-> (Museek & Museeq)
+NCurses GUI      ::: done->( museekchat / Mucous )

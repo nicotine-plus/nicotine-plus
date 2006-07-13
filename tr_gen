@@ -1,3 +1,4 @@
+#!/bin/sh
 cp nicotine nicotine.py
 xgettext -k_ -kN_ -o languages/nicotine.pot *.py */*.py */*/*.py
 rm nicotine.py

@@ -1,5 +1,10 @@
-TRANSLATORS:
+Nicotine+ TRANSLATORS
+================
+Updated version: not available yet
+For a list of translaters see TRANSLATORS
 
+HowTo translate
+================
 1a) To create the .pot file (template), copy nicotine+/nicotine to nicotine.py and run 
     the following command from the nicotine+ directory:
 
@@ -7,7 +12,7 @@ TRANSLATORS:
 
     Then remove the temporary nicotine.py
     
-1b) or run the tr_gen script
+1b) or run the tr_gen.sh script
 
 2)  To update to language .po files, run following command from the 
     nicotine+/languages directory:
