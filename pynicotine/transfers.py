@@ -309,7 +309,7 @@ class Transfers:
 	    else:
 		# Remote Uploads only for users in list (Added by daelstorm)
 		if user in [i[0] for i in self.eventprocessor.userlist.userlist] and self.eventprocessor.config.sections["transfers"]["remotedownloads"] == 1:
-			transfer = Transfer(user = user, filename=msg.file , path=msg.file, status = _('Getting status'))
+			transfer = Transfer(user = user, filename=msg.file , path="", status = _('Getting status'))
 			self.downloads.append(transfer)
                 	self.SaveDownloads()
 			self.queue.put(slskmessages.GetUserStatus(user))
