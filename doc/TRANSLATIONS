@@ -1,30 +1,37 @@
 Nicotine+ TRANSLATORS
 ================
-Updated version: not available yet
+
 For a list of translaters see TRANSLATORS
 
 HowTo translate
 ================
-1a) To create the .pot file (template), copy nicotine+/nicotine to nicotine.py and run 
-    the following command from the nicotine+ directory:
+To update the .pot file (template)
+	a) Run the 'tr_gen' script or...
+	b) Copy nicotine+/nicotine to nicotine.py and run  the following 
+            command from the nicotine+ directory:
+		xgettext -k_ -kN_ -o messages.pot *.py */*.py */*/*.py
+	    Then remove the temporary nicotine.py
 
-    xgettext -k_ -kN_ -o messages.pot *.py */*.py */*/*.py
+To create a new language
+	Create a subdirectory under nicotine+/languages/
+	for your translation. Copy the 'nicotine.pot' to that subdirectory and 
+	rename it to 'nicotine.po'. Edit this file with poedit or the editor 
+	of your choice.
 
-    Then remove the temporary nicotine.py
-    
-1b) or run the tr_gen.sh script
+To update all language .po files
+	Run following command from the nicotine+/languages directory:
+		find ./ -iname *.po -exec  msgmerge -U {} nicotine.pot \;
+	Then, each nicotine.po will need to be updated with the new translations.
 
-2)  To update to language .po files, run following command from the 
-    nicotine+/languages directory:
+To update just the language .po file you are working on
+	Change to the directory of the translation and run:
+		msgmerge -U nicotine.po ../nicotine.pot
 
-	find ./ -iname *.po -exec  msgmerge -U {} nicotine.pot \;
+Convert nicotine.po to nicotine.mo
+	When finished editing the .po, in the language's subdirectory, 
+	do the following command:
+		msgfmt nicotine.po -o nicotine.mo
 
-    Then, each nicotine.po will need to be updated with the new translations.
-    
-3)  Edit the nicotine.po file in the language directory, and then, when finished, in the language's
-    directory, do the following command:
-
-4)  msgfmt nicotine.po -o nicotine.mo
 
 After nicotine has been installed, the new .mo files will be 
 in /usr/shares/locale/$LANGUAGE/LC_MESSAGES/
