@@ -1,4 +1,4 @@
-Nicotine+ TRANSLATORS
+Nicotine+ TRANSLATIONS
 ================
 
 For a list of translaters see TRANSLATORS
@@ -42,21 +42,21 @@ USERS:
 
 For Nicotine to know you want a certain translation, your locale needs to be set to that language.
 FRENCH:
-    export LC_ALL=fr_FR; nicotine
+	LC_ALL=fr_FR nicotine
 GERMAN:
-    export LC_ALL=de_DE; nicotine
+	LC_ALL=de_DE nicotine
 DUTCH:
-    export LC_ALL=nl_NL; nicotine
+	LC_ALL=nl_NL nicotine
 DANISH:
-    export LC_ALL=dk_DK; nicotine
+	LC_ALL=dk_DK nicotine
 ITALIAN:
-    export LC_ALL=it_IT; nicotine
+	LC_ALL=it_IT nicotine
 SPANISH:
-    export LC_ALL=es_ES; nicotine
+	LC_ALL=es_ES nicotine
 POLISH:
-    export LC_ALL=pl_PL; nicotine
+	LC_ALL=pl_PL nicotine
 SWEDISH:
-    export LC_ALL=sv_SE; nicotine
+	LC_ALL=sv_SE nicotine
 HUNGARIAN:
-    export LC_ALL=hu_HU; nicotine
+	LC_ALL=hu_HU nicotine
 
