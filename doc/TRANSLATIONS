@@ -8,9 +8,9 @@ HowTo translate
 To update the .pot file (template)
 	a) Run the 'tr_gen' script or...
 	b) Copy nicotine+/nicotine to nicotine.py and run  the following 
-            command from the nicotine+ directory:
+           command from the nicotine+ directory:
 		xgettext -k_ -kN_ -o messages.pot *.py */*.py */*/*.py
-	    Then remove the temporary nicotine.py
+	   Then remove the temporary nicotine.py
 
 To create a new language
 	Create a subdirectory under nicotine+/languages/
