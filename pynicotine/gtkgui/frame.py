@@ -72,7 +72,7 @@ class testwin(MainWindow):
 			if "icontheme" in config2.sections["ui"]:
 				path = os.path.expanduser(os.path.join(config2.sections["ui"]["icontheme"], i +".png"))
 				if os.path.exists(path):
-					data = open(path)
+					data = open(path, 'rb')
 					s = data.read()
 					loader.write(s, len(s))
 					data.close()
