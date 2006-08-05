@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: nicotine+\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2006-07-12 16:49+0300\n"
-"PO-Revision-Date: 2006-08-05 17:16+0200\n"
+"PO-Revision-Date: 2006-08-05 17:43+0200\n"
 "Last-Translator: Jozef Říha <jose1711@gmail.com>\n"
 "Language-Team: slovak\n"
 "MIME-Version: 1.0\n"
@@ -808,7 +808,7 @@ msgstr "proces"
 
 #: pynicotine/gtkgui/about.py:117 pynicotine/gtkgui/about.py:152
 msgid "Add a new alias that runs a process"
-msgstr "Pridať nový alias, ktorý spúšťa proces"
+msgstr "Pridať nový alias (, ktorý spúšťa proces )"
 
 #: pynicotine/gtkgui/about.py:118 pynicotine/gtkgui/about.py:153
 msgid "Remove an alias"
@@ -851,7 +851,7 @@ msgstr "dotaz"
 
 #: pynicotine/gtkgui/about.py:128 pynicotine/gtkgui/about.py:160
 msgid "Start a new search for 'query'"
-msgstr "Začať nové vyhľadávanie dotazu"
+msgstr "Začať nové vyhľadávanie na 'dotaz'"
 
 #: pynicotine/gtkgui/about.py:129 pynicotine/gtkgui/about.py:161
 msgid "Search the joined roms for 'query'"
@@ -871,7 +871,7 @@ msgstr "Prehľadať zdieľané súbory"
 
 #: pynicotine/gtkgui/about.py:134 pynicotine/gtkgui/about.py:166
 msgid "Toggles your away status"
-msgstr "Prepnúť stav dostupný/preč"
+msgstr "Prepnúť stav prítomný/preč"
 
 #: pynicotine/gtkgui/about.py:135 pynicotine/gtkgui/about.py:167
 msgid "Quit Nicotine"
@@ -1447,7 +1447,7 @@ msgstr "Zrušiť a vymazať"
 #: pynicotine/gtkgui/nicotine_glade.py:385
 #: pynicotine/gtkgui/nicotine_glade.py:443
 msgid "Ban User(s)"
-msgstr "Zakázaní užívateľ(ia)"
+msgstr "Zakázať užívateľ(ov)"
 
 #: pynicotine/gtkgui/nicotine_glade.py:392
 msgid "Downloads"
@@ -1897,7 +1897,7 @@ msgstr "KBytov/sekundu, tak"
 
 #: pynicotine/gtkgui/settings_glade.py:627
 msgid "other uploads will be queued."
-msgstr "ďalšie súbory umiestnené do fronty."
+msgstr "ďalšie súbory budú umiestnené do fronty."
 
 #: pynicotine/gtkgui/settings_glade.py:640
 msgid "Limit number of uploads to"
@@ -2227,8 +2227,8 @@ msgid ""
 "Choose Transfers to configure how uploads are queued and what privileges are "
 "given to your friends."
 msgstr ""
-"Choose Transfers to configure how uploads are queued and what privileges are "
-"given to your friends."
+"Vyberte Prenosy na nastavenie podmienok, podľa ktorých sú poskytované súbory umiestňované do fronty "
+"a privilégií, ktoré obdržia vaši priatelia."
 
 #: pynicotine/gtkgui/settings_glade.py:2528
 msgid ""
@@ -2244,7 +2244,7 @@ msgid ""
 "your distro's packaging tool or from:"
 msgstr ""
 "Ak si želáte použiť GeoBlock, nainštalujte GeoIP a viazania na Python "
-"pomocou nájstroja na inštaláciu pre vašu distribúciu alebo z:"
+"pomocou nástroja na inštaláciu balíčkov pre vašu distribúciu alebo z:"
 
 #: pynicotine/gtkgui/settings_glade.py:2540
 msgid "http://www.maxmind.com/app/c"
