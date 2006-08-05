@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: nicotine+\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2006-07-12 16:49+0300\n"
-"PO-Revision-Date: 2006-08-04 22:47+0200\n"
+"PO-Revision-Date: 2006-08-05 17:16+0200\n"
 "Last-Translator: Jozef Říha <jose1711@gmail.com>\n"
 "Language-Team: slovak\n"
 "MIME-Version: 1.0\n"
@@ -619,7 +619,7 @@ msgid "Download aborted, user %s file %s"
 msgstr "Sťahovanie zrušené, užívateľ %s, súbor %s"
 
 #: pynicotine/gtkgui/about.py:27
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Nicotine+ %s\n"
 "\n"
@@ -646,7 +646,8 @@ msgstr ""
 "Postavené na kóde projektu PySoulSeek\n"
 "Copyright (c) 2001-2003 Alexander Kanavin\n"
 "\n"
-"S úpravami od daelstorma (c) 2006\n"
+"S úpravami od daelstorma a ďalších (c) 2006\n"
+"http://nicotine-plus.sourceforge.net/\n"
 "\n"
 "Uvoľnené pod GNU Verejnou Licenciou (GNU GPL)\n"
 "\n"
@@ -1120,9 +1121,8 @@ msgid "_Clear"
 msgstr "_Vyčistiť"
 
 #: pynicotine/gtkgui/downloads.py:52 pynicotine/gtkgui/uploads.py:46
-#, fuzzy
 msgid "Clear Groups"
-msgstr "Vyčistiť protokol"
+msgstr "Vyčistiť skupiny"
 
 #: pynicotine/gtkgui/frame.py:96
 msgid "Nicotine+"
@@ -1398,15 +1398,14 @@ msgid "Chat rooms"
 msgstr "Chatovacie miestnosti"
 
 #: pynicotine/gtkgui/nicotine_glade.py:303
-#, fuzzy
 msgid "Start Message"
-msgstr "[Automatická správa]"
+msgstr "Začať správu"
 
 #: pynicotine/gtkgui/nicotine_glade.py:315
 #: pynicotine/gtkgui/nicotine_glade.py:543
 #: pynicotine/gtkgui/nicotine_glade.py:578
 msgid "Input a user:"
-msgstr ""
+msgstr "Vložte užívateľa:"
 
 #: pynicotine/gtkgui/nicotine_glade.py:322
 #: pynicotine/gtkgui/nicotine_glade.py:1595
@@ -1488,7 +1487,6 @@ msgid "Search files"
 msgstr "Hľadať súbory"
 
 #: pynicotine/gtkgui/nicotine_glade.py:531
-#, fuzzy
 msgid "Get Userinfo"
 msgstr "Získať údaje o užívateľovi"
 
@@ -1499,9 +1497,8 @@ msgid "User info"
 msgstr "Údaje o užívateľovi"
 
 #: pynicotine/gtkgui/nicotine_glade.py:566
-#, fuzzy
 msgid "Get Shares"
-msgstr "Zdieľané súbory"
+msgstr "Získať zoznam zdieľaných súborov"
 
 #: pynicotine/gtkgui/nicotine_glade.py:585
 msgid "User browse"
@@ -1984,13 +1981,12 @@ msgid "Close-buttons on tabs (requires restart)"
 msgstr "Zobrazovať [x] na paneloch (vyžaduje reštart programu)"
 
 #: pynicotine/gtkgui/settings_glade.py:976
-#, fuzzy
 msgid "Icon Theme Directory (requires restart):"
-msgstr "Zobrazovať [x] na paneloch (vyžaduje reštart programu)"
+msgstr "Adresár s témou ikon (vyžaduje reštart programu):"
 
 #: pynicotine/gtkgui/settings_glade.py:995
 msgid "Select Theme"
-msgstr ""
+msgstr "Vyberte tému"
 
 #: pynicotine/gtkgui/settings_glade.py:1024
 msgid "Remote text"
@@ -2371,7 +2367,7 @@ msgstr "Stav"
 
 #: pynicotine/gtkgui/transferlist.py:30
 msgid "Percent"
-msgstr ""
+msgstr "Percent"
 
 #: pynicotine/gtkgui/transferlist.py:33
 msgid "Time elapsed"
