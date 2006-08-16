@@ -419,6 +419,12 @@ class ChatRoom(ChatRoomTab):
 			tag = self.tag_local
 		elif text.upper().find(login.upper()) > -1:
 			tag = self.tag_hilite
+		#elif msg.user in [i[0] for i in self.frame.np.config.sections["server"]["userlist"]]:
+			#print msg.user, "is a buddy"
+		#elif msg.user in self.frame.np.config.sections["server"]["banlist"]:
+			#print msg.user, "is a banned"
+		#elif msg.user in self.frame.np.config.sections["server"]["ignorelist"]:
+			#print msg.user, "is ignored"
 		else:
 			tag = self.tag_remote
 		
@@ -542,6 +548,10 @@ class ChatRoom(ChatRoomTab):
 				self.frame.BanUser(args)
 		elif cmd == "/ignore":
 			if args:
+				self.frame.IgnoreUser(args)
+		elif cmd == "/nuke":
+			if args:
+				self.frame.BanUser(args)
 				self.frame.IgnoreUser(args)
 		elif cmd == "/unban":
 			if args:

@@ -64,7 +64,7 @@ class Config:
 	"filterin":[],"filterout":[],"filtersize":[],"filterbr":[]}, \
  	"ui":{"icontheme": "", "chatme":"FOREST GREEN", "chatremote":"","chatlocal":"BLUE", \
  	"chathilite":"red", "search":"","searchq":"GREY", "decimalsep":",", \
- 	"roomlistcollapsed": 0, "tabclosers": 1}, \
+ 	"roomlistcollapsed": 0, "tabclosers": 1, "buddylistinchatrooms": 0}, \
  	"urls":{"urlcatching":1,"protocols":{"http":"mozilla \"%s\" &"}, \
  	"humanizeurls":1}, "interests": {"likes":[], "dislikes":[]}, \
 	"ticker": {"default": "", "rooms": {}, "hide": 0},\
@@ -103,7 +103,7 @@ class Config:
 		    print "Bogus config section:",i
 		elif j not in self.sections[i].keys() and j != "filter":
 		    print "Bogus config option",j,"section",i
-		elif j in ['login','passw','enc','downloaddir','customban','descr','pic','logsdir','incompletedir', 'autoreply', 'afterfinish', 'afterfolder', 'default', 'otherplayers'] or (i == "ui" and j not in ["roomlistcollapsed", "tabclosers"]):
+		elif j in ['login','passw','enc','downloaddir','customban','descr','pic','logsdir','incompletedir', 'autoreply', 'afterfinish', 'afterfolder', 'default', 'otherplayers'] or (i == "ui" and j not in ["roomlistcollapsed", "tabclosers",  'buddylistinchatrooms']):
 		    self.sections[i][j] = val
 		else:
 		    try:

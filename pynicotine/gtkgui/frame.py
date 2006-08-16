@@ -246,9 +246,51 @@ class testwin(MainWindow):
 		if self.np.config.sections["ui"]["roomlistcollapsed"]:
 			self.hide_room_list1.set_active(1)
 		else:
-			self.hpaned1.pack2(self.roomlist.vbox2, False, True)
+			self.vpaned3.pack2(self.roomlist.vbox2,True, True)
 			self.hide_room_list1.set_active(0)
+			
+		self.userlistvbox = gtk.VBox(False, 5)
+		self.userlistvbox.show()
+		self.userlistvbox.set_spacing(0)
+		self.userlistvbox.set_border_width(5)
+	
+		self.scrolledwindow11 = gtk.ScrolledWindow()
+		self.scrolledwindow11.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+		self.scrolledwindow11.show()
+		self.scrolledwindow11.set_shadow_type(gtk.SHADOW_NONE)
+	
+		self.UserList = gtk.TreeView()
+		self.UserList.show()
+		self.UserList.set_headers_visible(True)
+		self.scrolledwindow11.add(self.UserList)
+	
+		self.userlistvbox.pack_start(self.scrolledwindow11, True, True, 0)
+	
+		self.hbox3 = gtk.HBox(False, 0)
+		self.hbox3.show()
+		self.hbox3.set_spacing(0)
+	
+		self.label12 = gtk.Label(_("Add Buddy: "))
+		self.label12.set_padding(0, 0)
+		self.label12.show()
+		self.hbox3.pack_start(self.label12, False, False, 0)
+	
+		self.AddUserEntry = gtk.Entry()
+		self.AddUserEntry.set_text("")
+		self.AddUserEntry.set_editable(True)
+		self.AddUserEntry.show()
+		self.AddUserEntry.set_visibility(True)
+		self.AddUserEntry.connect("activate", self.OnAddUser)
+		self.hbox3.pack_start(self.AddUserEntry, True, True, 0)
+	
+		self.userlistvbox.pack_start(self.hbox3, False, True, 0)
 
+		if int(self.np.config.sections["ui"]["buddylistinchatrooms"]):
+			self.buddylist_in_chatrooms1.set_active(1)
+		else:
+			self.buddylist_in_chatrooms1.set_active(0)
+			
+			
 		if self.np.config.sections["ticker"]["hide"]:
 			self.hide_tickers1.set_active(1)
 
@@ -298,7 +340,7 @@ class testwin(MainWindow):
 			self.OnSettings(None)
 		else:
 			self.OnConnect(-1)
-			
+		
 	def importimages(self):
 		try:
 			import imagedata
@@ -974,13 +1016,31 @@ class testwin(MainWindow):
 		active = widget.get_active()
 		self.np.config.sections["ui"]["roomlistcollapsed"] = active
 		if active:
-			if self.roomlist.vbox2 in self.hpaned1.get_children():
-				self.hpaned1.remove(self.roomlist.vbox2)
+			if self.roomlist.vbox2 in self.vpaned3.get_children():
+				self.vpaned3.remove(self.roomlist.vbox2)
 		else:
-			if not self.roomlist.vbox2 in self.hpaned1.get_children():
-				self.hpaned1.pack2(self.roomlist.vbox2, False, True)
+			if not self.roomlist.vbox2 in self.vpaned3.get_children():
+				self.vpaned3.pack2(self.roomlist.vbox2, True, True)
 		self.np.config.writeConfig()
+		
+	def OnToggleBuddyList(self, widget):
+		active = widget.get_active()
+		self.np.config.sections["ui"]["buddylistinchatrooms"] = active
+		if active:
+			if self.userlistvbox in self.notebook1.get_children():
+				self.notebook1.remove_page(8)
+			self.vpaned3.pack1(self.userlistvbox, True, True)
 
+		else:
+			self.custom8 = self.get_custom_widget("custom8", _("ImageLabel"), _("Buddy list"), 0, 0)
+			self.custom8.show()
+			if self.userlistvbox in self.vpaned3.get_children():
+				self.vpaned3.remove(self.userlistvbox)
+       			self.notebook1.append_page(self.userlistvbox, self.custom8)
+			
+		
+		self.np.config.writeConfig()
+		
 	def OnCheckPrivileges(self, widget):
 		self.np.queue.put(slskmessages.CheckPrivileges())
 

@@ -31,6 +31,7 @@ attrs = [
 	["visible", lambda w, v: (v == "True" and ("%s.show()" % w)) or ""],
 	["visibility", lambda w, v: (v == "True" and ("%s.set_visibility(True)" % w)) or ("%s.set_visibility(False)" % w)],	
 	["headers_visible", lambda w, v: "%s.set_headers_visible(%s)" % (w, v.capitalize())],
+	["image", lambda w,v: "%s.set_image(%s)" % (w,v)],
 	["spacing", lambda w,v: "%s.set_spacing(%s)" % (w,v)],
 	["border_width", lambda w,v: "%s.set_border_width(%s)" % (w,v)],
 	["row_spacing", lambda w,v: "%s.set_row_spacings(%s)" % (w,v)],

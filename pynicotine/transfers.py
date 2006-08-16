@@ -10,8 +10,8 @@ transfer manager.
 import slskmessages
 import threading
 from slskmessages import newId
-import os
-import os,stat
+
+import os, stat
 import os.path
 import string
 import time
