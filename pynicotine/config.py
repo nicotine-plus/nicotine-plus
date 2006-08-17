@@ -50,7 +50,7 @@ class Config:
 	"transfers":{"downloaddir":None,"sharedownloaddir":1,"shared":None, "buddyshared": [],\
 	"uploadbandwidth":10,"uselimit":0,"uploadlimit":150,"limitby":1,\
 	"preferfriends":0, "useupslots":0, "uploadslots":2, "incompletedir":"", \
-	"afterfinish":"", "afterfolder":"", "lock":1, \
+	"afterfinish":"", "afterfolder":"", "lock":1, "fifoqueue": 0,\
 	"usecustomban":0,"customban":"Banned, don't bother retrying", "queuelimit":100,\
 	"friendsonly":0, "friendsnolimits":0, "enablebuddyshares": 0,\
 	"geoblock": 0, "geopanic": 0, "geoblockcc": [""], "remotedownloads": 1, \
@@ -63,7 +63,7 @@ class Config:
 	"enablefilters":0, "defilter":["","","","",0,""], "filtercc":[], \
 	"filterin":[],"filterout":[],"filtersize":[],"filterbr":[]}, \
  	"ui":{"icontheme": "", "chatme":"FOREST GREEN", "chatremote":"","chatlocal":"BLUE", \
- 	"chathilite":"red", "search":"","searchq":"GREY", "decimalsep":",", \
+ 	"chathilite":"red", "search":"","searchq":"GREY", "decimalsep":",", "chatfont": "", \
  	"roomlistcollapsed": 0, "tabclosers": 1, "buddylistinchatrooms": 0}, \
  	"urls":{"urlcatching":1,"protocols":{"http":"mozilla \"%s\" &"}, \
  	"humanizeurls":1}, "interests": {"likes":[], "dislikes":[]}, \
@@ -103,7 +103,7 @@ class Config:
 		    print "Bogus config section:",i
 		elif j not in self.sections[i].keys() and j != "filter":
 		    print "Bogus config option",j,"section",i
-		elif j in ['login','passw','enc','downloaddir','customban','descr','pic','logsdir','incompletedir', 'autoreply', 'afterfinish', 'afterfolder', 'default', 'otherplayers'] or (i == "ui" and j not in ["roomlistcollapsed", "tabclosers",  'buddylistinchatrooms']):
+		elif j in ['login','passw','enc','downloaddir','customban','descr','pic','logsdir','incompletedir', 'autoreply', 'afterfinish', 'afterfolder', 'default', 'chatfont'] or (i == "ui" and j not in ["roomlistcollapsed", "tabclosers",  'buddylistinchatrooms']):
 		    self.sections[i][j] = val
 		else:
 		    try:

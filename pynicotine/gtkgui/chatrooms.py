@@ -617,10 +617,11 @@ class ChatRoom(ChatRoomTab):
 	def UpdateColours(self):
 		def makecolour(buffer, colour):
 			colour = self.frame.np.config.sections["ui"][colour]
+			font = self.frame.np.config.sections["ui"]["chatfont"]
 			if colour:
-				return buffer.create_tag(foreground = colour)
+				return buffer.create_tag(foreground = colour, font=font)
 			else:
-				return buffer.create_tag()
+				return buffer.create_tag( font=font)
 				
 		buffer = self.ChatScroll.get_buffer()
 		self.tag_remote = makecolour(buffer, "chatremote")

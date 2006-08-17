@@ -990,7 +990,7 @@ class FileSearchRequest(PeerMessage):
 
 class FileSearchResult(PeerMessage):
     """ Peer sends this when it has a file search match."""
-    def __init__(self,conn, user = None, geoip = None, token = None, list = None, fileindex = None, freeulslots = None, ulspeed = None, inqueue = None):
+    def __init__(self,conn, user = None, geoip = None, token = None, list = None, fileindex = None, freeulslots = None, ulspeed = None, inqueue = None, fifoqueue = None):
 	self.conn = conn
 	self.user = user
 	self.geoip = geoip
@@ -1000,6 +1000,7 @@ class FileSearchResult(PeerMessage):
 	self.freeulslots = freeulslots
 	self.ulspeed = ulspeed 
 	self.inqueue = inqueue
+	self.fifoqueue = fifoqueue
     
     def parseNetworkMessage(self, message):
 	try:
@@ -1040,16 +1041,29 @@ class FileSearchResult(PeerMessage):
 		filelist.append(self.fileindex[str(i)])
 	    except:
 		pass
-	count = 0
-	for i in filelist:
-	    if i[0][-4:].lower() == ".ogg":
-		count += 1
-	    else:
-		count -= 1
-	if count > 0:
-	    queuesize = self.inqueue[1]
-	else:
+	#count = 0
+	#for i in filelist:
+	    #if i[0][-4:].lower() == ".ogg":
+		#count += 1
+	    #else:
+		#count -= 1
+	#if count > 0:
+	    #queuesize = self.inqueue[1]
+	#else:
+	    #queuesize = self.inqueue[0]
+	if self.fifoqueue:
 	    queuesize = self.inqueue[0]
+	else:
+	    count = 0
+	    for i in filelist:
+		if i[0][-4:].lower() == ".ogg":
+		    count += 1
+		else:
+		    count -= 1
+	    if count > 0:
+		queuesize = self.inqueue[1]
+	    else:
+		queuesize = self.inqueue[0]
 
 	msg = self.packObject(self.user)+self.packObject(self.token)+self.packObject(len(filelist))
 	for i in filelist:

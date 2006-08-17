@@ -19,6 +19,26 @@ PROTOCOL_HANDLERS = {}
 CATCH_URLS = 0
 HUMANIZE_URLS = 0
 
+def popupWarning(parent, title, warning):
+	dlg = gtk.Dialog(title = title, parent = parent,
+		buttons = (gtk.STOCK_OK, gtk.RESPONSE_OK, gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL))
+	dlg.set_default_response(gtk.RESPONSE_OK)
+	
+	dlg.set_border_width(10)
+	dlg.vbox.set_spacing(10)
+		
+	label = gtk.Label()
+	label.set_text(warning)
+	dlg.vbox.pack_start(label, True, True)
+
+	dlg.vbox.show_all()
+
+	result = None
+	if dlg.run() == gtk.RESPONSE_OK:
+		dlg.destroy()
+		
+	return 0
+	
 def recode(s):
 	try:
 		return s.decode(locale.nl_langinfo(locale.CODESET), "replace").encode("utf-8", "replace")

@@ -1,12 +1,21 @@
 ChangeLog for Nicotine
 
-Unreleased....
+Version 1.2.4 August 17th 2006
+ * Added a Font selector for chat messages under Settings->UI->Interface
+   (47th_Ronin's request)
+ * Made Nicotine's shares builder ignore ALL dot-files and dot-directories 
+   (such as the ~/.nicotine/ directory) for security reasons. (Izaak's idea)
+ * Warn if home directory is being shared. (Izaak's idea)
+ * Added the First in, First out queue from jat's evil cocaine patch (without
+   any of the other features)
+ * Added gtk stock icons to many buttons
  * Added user entry boxes in Private Chat, User info, and User browse
- * Added new birdy icons
+ * Added new birdy icons which replace the little people icons
  * Added a theme selector to Settings->UI->Interface->Icon Theme Directory
    If any of the theme icons exist in this directory, they'll be used instead 
    of the built-in images.
- * Made Copy URL popup menu options use the ctrl-c/ctrl-v clipboard, as well as the middle-click one
+ * Made Copy URL popup menu options use the ctrl-c/ctrl-v clipboard, as well as
+the middle-click one
  * Split big Download/Upload Popup menus into submenus
  * Fixed an problem with upload percentages not working properly
 

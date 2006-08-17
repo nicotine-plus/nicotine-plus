@@ -295,7 +295,7 @@ class MainWindow:
         self.vpaned3 = gtk.VPaned()
         self.vpaned3.show()
 
-        self.hpaned1.pack2(self.vpaned3, True, True)
+        self.hpaned1.pack2(self.vpaned3, False, True)
 
         self.ChatTabLabel = self.get_custom_widget("ChatTabLabel", _("ImageLabel"), _("Chat rooms"), 0, 0)
         self.ChatTabLabel.show()
@@ -428,11 +428,6 @@ class MainWindow:
         self.clearQueuedButton.add(self.alignment22)
 
         self.hbox18.pack_start(self.clearQueuedButton, False, False, 0)
-
-        self.label24 = gtk.Label(_("Manage selected Downloads:"))
-        self.label24.set_padding(0, 0)
-        self.label24.show()
-        self.hbox18.pack_start(self.label24, False, False, 0)
 
         self.retryTransferButton = gtk.Button()
         self.retryTransferButton.show()
@@ -619,11 +614,6 @@ class MainWindow:
         self.clearUploadQueueButton.add(self.alignment19)
 
         self.hbox19.pack_start(self.clearUploadQueueButton, False, False, 0)
-
-        self.label28 = gtk.Label(_("Manage selected Uploads:"))
-        self.label28.set_padding(0, 0)
-        self.label28.show()
-        self.hbox19.pack_start(self.label28, False, False, 0)
 
         self.abortUploadButton = gtk.Button()
         self.abortUploadButton.show()
@@ -1779,6 +1769,9 @@ class UserInfoTab:
         self.Main.show()
         self.Main.set_spacing(0)
 
+        self.hpaned5 = gtk.HPaned()
+        self.hpaned5.show()
+
         self.vbox8 = gtk.VBox(False, 0)
         self.vbox8.set_size_request(250, -1)
         self.vbox8.show()
@@ -1896,7 +1889,7 @@ class UserInfoTab:
 
         self.vbox8.pack_start(self.frame2, False, True, 0)
 
-        self.Main.pack_start(self.vbox8, False, True, 0)
+        self.hpaned5.pack1(self.vbox8, False, True)
 
         self.frame3 = gtk.Frame()
         self.frame3.show()
@@ -1925,7 +1918,9 @@ class UserInfoTab:
         self.label19.show()
         self.frame3.set_label_widget(self.label19)
 
-        self.Main.pack_start(self.frame3, True, True, 0)
+        self.hpaned5.pack2(self.frame3, True, True)
+
+        self.Main.pack_start(self.hpaned5, True, True, 0)
 
         self.vbox9 = gtk.VBox(False, 10)
         self.vbox9.show()

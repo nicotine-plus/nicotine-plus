@@ -6,8 +6,8 @@ import settings_glade
 import locale
 
 from dirchooser import ChooseDir
-from utils import InputDialog, InitialiseColumns, recode, recode2
-
+from utils import InputDialog, InitialiseColumns, recode, recode2, popupWarning
+import os, pwd
 from pynicotine.utils import _
 
 class ServerFrame(settings_glade.ServerFrame):
@@ -86,20 +86,28 @@ class SharesFrame(settings_glade.SharesFrame):
 
 	def SetSettings(self, config):
 		transfers = config["transfers"]
+		homedir = pwd.getpwuid(os.getuid())[5]
 		if transfers["incompletedir"] is not None:
 			self.IncompleteDir.set_text(recode(transfers["incompletedir"]))
 		if transfers["downloaddir"] is not None:
 			self.DownloadDir.set_text(recode(transfers["downloaddir"]))
 		if transfers["sharedownloaddir"] is not None:
+			if homedir == transfers["downloaddir"] and transfers["sharedownloaddir"]:
+				popupWarning(None, "Warning","Security Risk: you should not share your home directory!")
 			self.ShareDownloadDir.set_active(transfers["sharedownloaddir"])
 		self.shareslist.clear()
 		self.bshareslist.clear()
+		
 		if transfers["shared"] is not None:
 			for share in transfers["shared"]:
+				if homedir == share:
+					popupWarning(None, "Warning","Security Risk: you should not share your home directory!")
 				self.shareslist.append([recode(share), share])
 			self.shareddirs = transfers["shared"][:]
 		if transfers["buddyshared"] is not None:
 			for share in transfers["buddyshared"]:
+				if homedir == share:
+					popupWarning(None, "Warning","Security Risk: you should not share your home directory!")
 				self.bshareslist.append([recode(share), share])
 			self.bshareddirs = transfers["buddyshared"][:]
 		if transfers["rescanonstartup"] is not None:
@@ -224,6 +232,8 @@ class TransfersFrame(settings_glade.TransfersFrame):
 			self.LockIncoming.set_active(transfers["lock"])
 		if transfers["remotedownloads"] is not None:
 			self.RemoteDownloads.set_active(transfers["remotedownloads"])
+		if transfers["fifoqueue"] is not None:
+			self.FirstInFirstOut.set_active(transfers["fifoqueue"])
 		self.OnQueueUseSlotsToggled(self.QueueUseSlots)
 		self.OnLimitToggled(self.Limit)
 		self.OnFriendsOnlyToggled(self.FriendsOnly)
@@ -256,6 +266,7 @@ class TransfersFrame(settings_glade.TransfersFrame):
 				"uploadslots": uploadslots,
 				"uselimit": self.Limit.get_active(),
 				"uploadlimit": uploadlimit,
+				"fifoqueue": self.FirstInFirstOut.get_active(),
 				"limitby": self.LimitTotalTransfers.get_active(),
 				"queuelimit": queuelimit,
 				"friendsnolimits": self.FriendsNoLimits.get_active(),
@@ -436,8 +447,9 @@ class BloatFrame(settings_glade.BloatFrame):
 		settings_glade.BloatFrame.__init__(self, False)
 		for item in ["<None>", ",", ".", "<space>"]:
 			self.DecimalSep.append_text(item)
-			
+		#self.font =""
 		self.ThemeButton.connect("clicked", self.OnChooseThemeDir)
+		#self.SelectChatFont.connect("font-set", self.OnChooseChatFont)
 		
 		self.PickRemote.connect("clicked", self.PickColour, self.Remote)
 		self.PickLocal.connect("clicked", self.PickColour, self.Local)
@@ -464,6 +476,9 @@ class BloatFrame(settings_glade.BloatFrame):
 		transfers = config["transfers"]
 		if ui["icontheme"] is not None:
 			self.IconTheme.set_text(ui["icontheme"])
+		if ui["chatfont"] is not None:
+			self.SelectChatFont.set_font_name(ui["chatfont"])
+			
 		if ui["chatlocal"] is not None:
 			self.Local.set_text(ui["chatlocal"])
 		if ui["chatremote"] is not None:
@@ -485,6 +500,7 @@ class BloatFrame(settings_glade.BloatFrame):
 		return {
 			"ui": {
 				"icontheme": self.IconTheme.get_text(),
+				"chatfont": self.SelectChatFont.get_font_name(),
 				"chatlocal": self.Local.get_text(),
 				"chatremote": self.Remote.get_text(),
 				"chatme": self.Me.get_text(),

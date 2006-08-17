@@ -700,6 +700,31 @@ class TransfersFrame:
 
         self.vbox81.pack_start(self.table1, False, False, 0)
 
+        self.hbox171 = gtk.HBox(False, 0)
+        self.hbox171.show()
+        self.hbox171.set_spacing(0)
+
+        self.label295 = gtk.Label(_("Upload Queue type:"))
+        self.label295.set_padding(5, 0)
+        self.label295.show()
+        self.hbox171.pack_start(self.label295, False, False, 0)
+
+        self.RoundRobin = gtk.RadioButton()
+        self.RoundRobin.set_active(False)
+        self.RoundRobin.set_label(_("Round Robin"))
+        self.RoundRobin.show()
+
+        self.hbox171.pack_start(self.RoundRobin, False, False, 0)
+
+        self.FirstInFirstOut = gtk.RadioButton(self.RoundRobin)
+        self.FirstInFirstOut.set_active(False)
+        self.FirstInFirstOut.set_label(_("First In, First Out"))
+        self.FirstInFirstOut.show()
+
+        self.hbox171.pack_start(self.FirstInFirstOut, False, False, 5)
+
+        self.vbox81.pack_start(self.hbox171, True, True, 0)
+
         self.vbox83 = gtk.VBox(False, 0)
         self.vbox83.show()
         self.vbox83.set_spacing(0)
@@ -998,6 +1023,21 @@ class BloatFrame:
         self.hbox169.pack_end(self.ThemeButton, False, False, 0)
 
         self.vbox86.pack_start(self.hbox169, False, True, 0)
+
+        self.hbox172 = gtk.HBox(False, 0)
+        self.hbox172.show()
+        self.hbox172.set_spacing(0)
+
+        self.chatfontlabel = gtk.Label(_("Chat Font:"))
+        self.chatfontlabel.set_padding(5, 0)
+        self.chatfontlabel.show()
+        self.hbox172.pack_start(self.chatfontlabel, False, False, 0)
+
+        self.SelectChatFont = gtk.FontButton()
+        self.SelectChatFont.show()
+        self.hbox172.pack_start(self.SelectChatFont, False, False, 5)
+
+        self.vbox86.pack_start(self.hbox172, True, True, 0)
 
         self.table2 = gtk.Table()
         self.table2.show()

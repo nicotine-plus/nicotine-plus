@@ -15,7 +15,7 @@ class PrivateChats(IconNotebook):
 	def __init__(self, frame):
 		IconNotebook.__init__(self, frame.images)
 		self.popup_enable()
-		self.set_tab_pos(gtk.POS_RIGHT)
+		self.set_tab_pos(gtk.POS_TOP)
 		self.frame = frame
 		self.users = {}
 		self.connect("switch-page", self.OnSwitchPage)
@@ -294,10 +294,12 @@ class PrivateChat(PrivateChatTab):
 	def UpdateColours(self):
 		def makecolour(buffer, colour):
 			colour = self.frame.np.config.sections["ui"][colour]
+			font = self.frame.np.config.sections["ui"]["chatfont"]
 			if colour:
-				return buffer.create_tag(foreground = colour)
+				return buffer.create_tag(foreground = colour, font=font)
 			else:
-				return buffer.create_tag()
+				return buffer.create_tag( font=font)
+
 				
 		buffer = self.ChatScroll.get_buffer()
 		self.tag_remote = makecolour(buffer, "chatremote")

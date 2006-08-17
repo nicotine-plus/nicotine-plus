@@ -1000,6 +1000,7 @@ class NetworkEventProcessor:
 	else:
 		wordindex = self.config.sections["transfers"]["wordindex"]
 		fileindex = self.config.sections["transfers"]["fileindex"]
+	fifoqueue = self.config.sections["transfers"]["fifoqueue"]
 	if maxresults == 0:
 	    return
 	terms = searchterm.translate(self.translatepunctuation).lower().split()
@@ -1021,7 +1022,7 @@ class NetworkEventProcessor:
      	    queuesizes = self.transfers.getUploadQueueSizes()
             slotsavail = not self.transfers.bandwidthLimitReached()
 	    if len(results) > 0:
-		message = slskmessages.FileSearchResult(None, user, geoip, searchid,results,fileindex,slotsavail, self.speed, queuesizes)
+		message = slskmessages.FileSearchResult(None, user, geoip, searchid,results,fileindex,slotsavail, self.speed, queuesizes, fifoqueue)
 		self.ProcessRequestToPeer(user, message)
 		if direct:
 		    self.logMessage(_("User %s is directly searching for %s, returning %i results") %(user,self.decode(searchterm),len(results)),1)

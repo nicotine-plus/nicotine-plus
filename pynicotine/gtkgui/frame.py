@@ -249,10 +249,10 @@ class testwin(MainWindow):
 			self.vpaned3.pack2(self.roomlist.vbox2,True, True)
 			self.hide_room_list1.set_active(0)
 			
-		self.userlistvbox = gtk.VBox(False, 5)
+		self.userlistvbox = gtk.VBox(False, 0)
 		self.userlistvbox.show()
 		self.userlistvbox.set_spacing(0)
-		self.userlistvbox.set_border_width(5)
+		self.userlistvbox.set_border_width(0)
 	
 		self.scrolledwindow11 = gtk.ScrolledWindow()
 		self.scrolledwindow11.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)

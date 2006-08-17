@@ -19,6 +19,7 @@ class UserBrowse(UserBrowseTab):
 		UserBrowseTab.__init__(self, False)
 		
 		self.userbrowses = userbrowses
+		self.userbrowses.set_tab_pos(gtk.POS_TOP)
 		self.frame = userbrowses.frame
 		self.user = user
 		self.conn = conn

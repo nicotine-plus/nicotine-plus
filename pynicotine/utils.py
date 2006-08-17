@@ -13,7 +13,8 @@ latesturl = "http://nicotine-plus.sourceforge.net/LATEST"
 import string
 import os.path
 import os,dircache
-
+import sys
+win32 = sys.platform.startswith("win")
 try:
     import _mp3 as mp3
     print "Using C mp3 scanner"
@@ -69,6 +70,9 @@ def getDirsMtimes(dirs, yieldcall = None):
     list = {}
     for i in dirs:
 	i = i.replace("//","/")
+	
+	if hiddenCheck(i):
+		continue
 	try:
 	    contents = dircache.listdir(i)
 	    mtime = os.path.getmtime(i)
@@ -100,10 +104,13 @@ def getFilesList(mtimes, oldmtimes, oldlist, yieldcall = None):
     (if mp3) bitrate and track length in seconds """
     list = {}
     for i in mtimes:
+	if hiddenCheck(i):
+		continue	
 	if oldmtimes.has_key(i):
 	  if mtimes[i] == oldmtimes[i]:
 	    list[i] = oldlist[i]
 	    continue
+
 	list[i] = []
 	try:
 	    contents = dircache.listdir(i)
@@ -111,7 +118,10 @@ def getFilesList(mtimes, oldmtimes, oldlist, yieldcall = None):
 	    print errtuple
 	    continue
 	for f in contents:
+	    if hiddenCheck(f):
+		continue	
 	    pathname = os.path.join(i, f)
+	    
 	    try:
 	        isfile = os.path.isfile(pathname)
 	    except OSError, errtuple:
@@ -123,6 +133,7 @@ def getFilesList(mtimes, oldmtimes, oldlist, yieldcall = None):
 	            list[i].append(getFileInfo(f,pathname))
 	    if yieldcall is not None:
                 yieldcall()
+
     return list
 
 def getFileInfo(name, pathname):
@@ -150,6 +161,8 @@ def getFileInfo(name, pathname):
 def getFilesStreams(mtimes, oldmtimes, oldstreams, sharedfiles, yieldcall = None):
     streams = {}
     for i in mtimes.keys():
+	if hiddenCheck(i):
+		continue	
 	if oldmtimes.has_key(i):
 	  if mtimes[i] == oldmtimes[i]:
 	    streams[i] = oldstreams[i]
@@ -158,7 +171,19 @@ def getFilesStreams(mtimes, oldmtimes, oldstreams, sharedfiles, yieldcall = None
         if yieldcall is not None:
             yieldcall()
     return streams
-
+	
+def hiddenCheck(direct):
+	if win32:
+		dirs = direct.split("\\")
+	else:
+		dirs = direct.split("/")
+	hidden = 0
+	for dir in dirs:
+		if dir.startswith("."):
+		    hidden = 1
+		    break
+	return hidden
+	
 def getDirStream(dir):
     from slskmessages import SlskMessage
     msg = SlskMessage()
@@ -185,6 +210,9 @@ def getFilesIndex(mtimes, oldmtimes, shareddirs,sharedfiles, yieldcall = None):
     index = 0
 
     for i in mtimes.keys():
+	
+	if hiddenCheck(i):
+		continue
 	for j in sharedfiles[i]:
 	    indexes = getIndexWords(i,j[0],shareddirs)
 	    for k in indexes:

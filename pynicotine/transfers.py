@@ -781,17 +781,21 @@ class Transfers:
 	list = [i for i in self.uploads if not i.user in trusers and i.status == "Queued"]
 	listogg = [i for i in list if i.filename[-4:].lower() == ".ogg"]
 	listprivileged = [i for i in list if i.user in self.privilegedusers or self.UserListPrivileged(i.user)]
-	if len(listogg) > 0:
+	if len(listogg) > 0 and not self.eventprocessor.config.sections["transfers"]["fifoqueue"]:
 	    list = listogg
 	if len(listprivileged) > 0:
 	    list = listprivileged
 	if len(list) == 0:
 	    return
-	mintimequeued = time.time() + 1
-	for i in list:
-	    if i.timequeued < mintimequeued:
-		transfercandidate = i
-		mintimequeued = i.timequeued
+
+	if self.eventprocessor.config.sections["transfers"]["fifoqueue"]:
+		transfercandidate = list[0]
+	else:
+		mintimequeued = time.time() + 1
+		for i in list:
+		    if i.timequeued < mintimequeued:
+			transfercandidate = i
+			mintimequeued = i.timequeued
 	if transfercandidate is not None:
 	    self.pushFile(user = transfercandidate.user, filename = transfercandidate.filename, transfer = transfercandidate)
 	    self.removeQueued(transfercandidate.user, transfercandidate.filename)
@@ -801,34 +805,56 @@ class Transfers:
             if i.conn is msg.conn.conn:
                 user = i.username
 		
-	list = {user:time.time()}
-	listogg = {user:time.time()}
-	listpriv = {user:time.time()}
-	countogg = 0
-	countpriv = 0
-	
-        for i in self.uploads:
-	    if i.status == "Queued":
-		if i.user in listpriv.keys() or i.user in self.privilegedusers or self.UserListPrivileged(i.user):
-		    listpriv[i.user] = i.timequeued
-		    countpriv += 1
-		elif i.filename[-4:].lower() == ".ogg":
-		    listogg[i.user] = i.timequeued
-		    countogg += 1
+	if self.eventprocessor.config.sections["transfer"]["fifoqueue"]:
+		count = 0
+		countpriv = 0
+		place = 0
+		
+		for i in self.uploads:
+		    if i.status == "Queued":
+			if self.isPrivileged(i.user):
+			    countpriv += 1
+			else:
+			    count += 1
+			if i.user == user and i.filename == msg.file:
+			    if self.isPrivileged(user):
+				place = countpriv
+				break
+			    else:
+				place = count
+ 
+		if not self.isPrivileged(user):
+		    place += countpriv
+ 	else:
+		list = {user:time.time()}
+		listogg = {user:time.time()}
+		listpriv = {user:time.time()}
+		countogg = 0
+		countpriv = 0
+		
+		for i in self.uploads:
+			if i.status == "Queued":
+				if i.user in listpriv.keys() or i.user in self.privilegedusers or self.UserListPrivileged(i.user):
+					listpriv[i.user] = i.timequeued
+					countpriv += 1
+				elif i.filename[-4:].lower() == ".ogg":
+					listogg[i.user] = i.timequeued
+					countogg += 1
+				else:
+					list[i.user] = i.timequeued
+		place = 0
+		if user in self.privilegedusers or self.UserListPrivileged(user):
+			list = listpriv
+		elif msg.file[-4:].lower() == ".ogg":
+			list = listogg
+			place = place + countpriv
 		else:
-		    list[i.user] = i.timequeued
+			place = place + countpriv + countogg
+		for i in list.keys():
+			if list[i] < list[user]:
+				place = place + 1
 
-	place = 0
-	if user in self.privilegedusers or self.UserListPrivileged(user):
-	    list = listpriv
-	elif msg.file[-4:].lower() == ".ogg":
-	    list = listogg
-	    place = place + countpriv
-	else:
-	    place = place + countpriv + countogg
-	for i in list.keys():
-	    if list[i] < list[user]:
-		place = place + 1
+
 	self.queue.put(slskmessages.PlaceInQueue(msg.conn.conn, msg.file, place))
 
     def getTime(self,seconds):
@@ -855,10 +881,17 @@ class Transfers:
 		self.addQueued(i.user, i.filename)
 
     def getUploadQueueSizes(self, username = None):
-	if username in self.privilegedusers or self.UserListPrivileged(username):
-	    return len(self.privusersqueued), len(self.privusersqueued)
-	else:
-	    return len(self.usersqueued)+self.privcount+self.oggcount, len(self.oggusersqueued)+self.privcount
+	if self.eventprocessor.config.sections["transfers"]["fifoqueue"]:
+	    count = 0
+	    for i in self.uploads:
+		if i.status == "Queued":
+		    count += 1
+	    return count, count
+ 	else:
+	    if username in self.privilegedusers or self.UserListPrivileged(username):
+		return len(self.privusersqueued), len(self.privusersqueued)
+	    else:
+		return len(self.usersqueued)+self.privcount+self.oggcount, len(self.oggusersqueued)+self.privcount
 
     def addQueued(self, user, filename):
         if user in self.privilegedusers:
