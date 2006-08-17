@@ -685,7 +685,7 @@ class MainWindow:
         self.image18.show()
         self.hbox38.pack_start(self.image18, False, False, 0)
 
-        self.label47 = gtk.Label(_("Abort User's Uploads(s)"))
+        self.label47 = gtk.Label(_("Abort User's Upload(s)"))
         self.label47.set_padding(0, 0)
         self.label47.show()
         self.hbox38.pack_start(self.label47, False, False, 0)
