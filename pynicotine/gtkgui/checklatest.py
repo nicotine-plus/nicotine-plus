@@ -16,8 +16,12 @@ def makeversion(version):
 		build = int(version[ix+2:]) + 0x80
 		version = version[:ix]
 	s = version.split(".")
-	major, minor, micro = [int(i) for i in s[:3]]
-	return (major << 24) + (minor << 16) + (micro << 8) + build
+	if len(s) >= 4:
+		major, minor, micro, milli = [int(i) for i in s[:4]]
+	else:
+		major, minor, micro = [int(i) for i in s[:3)]]
+		milli = 0
+	return (major << 24) + (minor << 16) + (micro << 8) + milli + build 
 
 def checklatest(frame):
 	try:
@@ -32,7 +36,7 @@ def checklatest(frame):
 		return
 	myversion = makeversion(version)
 	if latest > myversion:
-		dlg = gtk.MessageDialog(frame, 0, gtk.MESSAGE_WARNING, gtk.BUTTONS_OK, _("A newer version ('%s') is available. Check\nthe Nicotine+ homepage, ( http://thegraveyard.org/daelstorm/nicotine-plus.php ) for the latest version.") % data)
+		dlg = gtk.MessageDialog(frame, 0, gtk.MESSAGE_WARNING, gtk.BUTTONS_OK, _("A newer version ('%s') is available. Check\nthe Nicotine+ homepage, ( http://nicotine-plus.sourceforge.net ) for the latest version.") % data)
 	else:
 		dlg = gtk.MessageDialog(frame, 0, gtk.MESSAGE_INFO, gtk.BUTTONS_OK, _("You are using the latest version of Nicotine."))
 	dlg.run()

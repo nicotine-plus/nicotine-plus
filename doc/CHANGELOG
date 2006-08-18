@@ -1,6 +1,7 @@
 ChangeLog for Nicotine
 
 Unreleased
+ * Modified CheckVersion function to allow for milli ( X.X.X.X  ) versioning.
  * Add a Bool to the GetUserStatus message received from the server, for privs.
    If 1, add user to list of privileged users.
  * Added SendUploadSpeed (121) message which replaced SendSpeed (34) a long 
