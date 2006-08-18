@@ -19,7 +19,7 @@ def makeversion(version):
 	if len(s) >= 4:
 		major, minor, micro, milli = [int(i) for i in s[:4]]
 	else:
-		major, minor, micro = [int(i) for i in s[:3)]]
+		major, minor, micro = [int(i) for i in s[:3]]
 		milli = 0
 	return (major << 24) + (minor << 16) + (micro << 8) + milli + build 
 
