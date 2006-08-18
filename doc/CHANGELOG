@@ -1,6 +1,8 @@
 ChangeLog for Nicotine
 
 Unreleased
+ * Added SendUploadSpeed (121) message which replaced SendSpeed (34) a long 
+   time ago. Thanks to sierracat for the info, and to slack-line for testing.
  * Fixed bug with Buddylist tab not appearing on startup.
  * Fixed bug with double-clicking on a user in the Buddy not switching to the 
    correct private chat tab.
