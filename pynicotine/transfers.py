@@ -643,8 +643,9 @@ class Transfers:
 			    self.eventprocessor.logMessage(_("Download finished: %s") % self.decode(newname))
 			    self.eventprocessor.logTransfer(_("Download finished: user %s, file %s") % (i.user, self.decode(i.filename)))
 			    self.queue.put(slskmessages.ConnClose(msg.conn))
-			    if i.speed is not None:
-			        self.queue.put(slskmessages.SendSpeed(i.user, int(i.speed*1024)))
+			    #if i.speed is not None:
+			        #self.queue.put(slskmessages.SendSpeed(i.user, int(i.speed*1024)))
+				#Removed due to misuse. Replaced by SendUploadSpeed
 			    i.conn = None
 			    self.addToShared(newname)
 			    self.eventprocessor.sendNumSharedFoldersFiles()
@@ -743,6 +744,8 @@ class Transfers:
 		else:
                     msg.file.close()
                     i.status = _("Finished")
+		    if i.speed is not None:
+		    	self.queue.put(slskmessages.SendUploadSpeed(int(i.speed*1024)))
 #                    i.conn = None
 #		    self.queue.put(slskmessages.ConnClose(msg.conn))
 		    for j in self.uploads:

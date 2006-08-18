@@ -1,6 +1,17 @@
 ChangeLog for Nicotine
 
+Unreleased
+ * Fixed bug with Buddylist tab not appearing on startup.
+ * Fixed bug with double-clicking on a user in the Buddy not switching to the 
+   correct private chat tab.
+   
+
 Version 1.2.4 August 17th 2006
+ * Added new translations for Hungarian (djbaloo) and Slovak (Josef Riha)
+ * Made Buddylist toggleable between it's own tab and pane on the right side
+   of chatrooms
+ * Rearranged tabs to the top of the window
+ * Rearranged Browse Share's progress bar as in Ziabice's patch
  * Added a Font selector for chat messages under Settings->UI->Interface
    (47th_Ronin's request)
  * Made Nicotine's shares builder ignore ALL dot-files and dot-directories 

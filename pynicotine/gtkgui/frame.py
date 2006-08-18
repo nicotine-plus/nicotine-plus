@@ -288,7 +288,9 @@ class testwin(MainWindow):
 		if int(self.np.config.sections["ui"]["buddylistinchatrooms"]):
 			self.buddylist_in_chatrooms1.set_active(1)
 		else:
-			self.buddylist_in_chatrooms1.set_active(0)
+			self.custom8 = self.get_custom_widget("custom8", _("ImageLabel"), _("Buddy list"), 0, 0)
+			self.custom8.show()
+			self.notebook1.append_page(self.userlistvbox, self.custom8)
 			
 			
 		if self.np.config.sections["ticker"]["hide"]:
@@ -1018,25 +1020,33 @@ class testwin(MainWindow):
 		if active:
 			if self.roomlist.vbox2 in self.vpaned3.get_children():
 				self.vpaned3.remove(self.roomlist.vbox2)
+			if not self.buddylist_in_chatrooms1.get_active():
+				self.vpaned3.hide()
 		else:
 			if not self.roomlist.vbox2 in self.vpaned3.get_children():
 				self.vpaned3.pack2(self.roomlist.vbox2, True, True)
+				self.vpaned3.show()
 		self.np.config.writeConfig()
 		
 	def OnToggleBuddyList(self, widget):
 		active = widget.get_active()
 		self.np.config.sections["ui"]["buddylistinchatrooms"] = active
 		if active:
+			self.vpaned3.show()
 			if self.userlistvbox in self.notebook1.get_children():
 				self.notebook1.remove_page(8)
-			self.vpaned3.pack1(self.userlistvbox, True, True)
-
+			if self.userlistvbox not in self.vpaned3.get_children():
+				self.vpaned3.pack1(self.userlistvbox, True, True)
 		else:
-			self.custom8 = self.get_custom_widget("custom8", _("ImageLabel"), _("Buddy list"), 0, 0)
-			self.custom8.show()
+			if self.hide_room_list1.get_active():
+				self.vpaned3.hide()
 			if self.userlistvbox in self.vpaned3.get_children():
 				self.vpaned3.remove(self.userlistvbox)
-       			self.notebook1.append_page(self.userlistvbox, self.custom8)
+			self.custom8 = self.get_custom_widget("custom8", _("ImageLabel"), _("Buddy list"), 0, 0)
+			self.custom8.show()
+			if self.userlistvbox not in self.notebook1.get_children():
+				self.notebook1.append_page(self.userlistvbox, self.custom8)
+       			
 			
 		
 		self.np.config.writeConfig()

@@ -500,6 +500,15 @@ class SendSpeed(ServerMessage):
     def makeNetworkMessage(self):
 	return self.packObject(self.user)+self.packObject(self.speed)
 
+class SendUploadSpeed(ServerMessage):
+    """ We send this after a finished download to let the server update
+    the spped statistics for a user"""
+    def __init__(self, speed = None):
+	self.speed = speed
+
+    def makeNetworkMessage(self):
+	return self.packObject(self.speed)
+    
 class SharedFoldersFiles(ServerMessage):
     """ We send this to server to indicate the number of folder and files
     that we share """

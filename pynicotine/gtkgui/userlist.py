@@ -16,9 +16,9 @@ class UserList:
 		self.usersmodel = gtk.ListStore(gtk.gdk.Pixbuf, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_INT, gobject.TYPE_INT, gobject.TYPE_INT)
 		cols = InitialiseColumns(self.frame.UserList,
 			["", -1, "pixbuf"],
-			[_("User"), 130, "text"],
-			[_("Speed"), 50, "text"],
-			[_("Files"), 50, "text"],
+			[_("User"), 100, "text"],
+			[_("Speed"), 0, "text"],
+			[_("Files"), 0, "text"],
 			[_("Comments"), -1, "text"]
 		)
 		cols[0].set_sort_column_id(5)
@@ -72,7 +72,7 @@ class UserList:
 		
 		if event.button != 3:
 			if event.type == gtk.gdk._2BUTTON_PRESS:
-				self.frame.privatechats.SendMessage(user)
+				self.frame.privatechats.SendMessage(user, None, 1)
 				self.frame.notebook1.set_current_page(1)
 			return
 		
