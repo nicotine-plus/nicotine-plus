@@ -258,7 +258,7 @@ class RemoveUser(ServerMessage):
         return self.packObject(self.user)
 
 class GetUserStatus(ServerMessage):
-    """ Server tells us if a user has gone away or has returned"""
+	""" Server tells us if a user has gone away or has returned"""
 	def __init__(self, user = None):
 		self.user = user
 		self.privileged = None
