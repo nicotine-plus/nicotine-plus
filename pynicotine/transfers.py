@@ -99,7 +99,8 @@ class Transfers:
 	    self.addToPrivileged(i)    
 
     def addToPrivileged(self, user):
-	self.privilegedusers.append(user)
+	if user not in self.privilegedusers:
+		self.privilegedusers.append(user)
 	if self.oggusersqueued.has_key(user):
 	    self.privusersqueued.setdefault(user,0)
 	    self.privusersqueued[user] += self.oggusersqueued[user]

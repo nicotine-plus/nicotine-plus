@@ -259,15 +259,22 @@ class RemoveUser(ServerMessage):
 
 class GetUserStatus(ServerMessage):
     """ Server tells us if a user has gone away or has returned"""
-    def __init__(self, user = None):
-        self.user = user
+	def __init__(self, user = None):
+		self.user = user
+		self.privileged = None
 
-    def makeNetworkMessage(self):
-        return self.packObject(self.user)
+	def makeNetworkMessage(self):
+		return self.packObject(self.user)
 
-    def parseNetworkMessage(self,message):
-        len,self.user = self.getObject(message,types.StringType)
-        len,self.status = self.getObject(message, types.IntType,len)
+	def parseNetworkMessage(self,message):
+	
+		len,self.user = self.getObject(message,types.StringType)
+		len,self.status = self.getObject(message, types.IntType,len)
+		# Exception handler is for Soulfind compatibility
+		try:
+			len, self.privileged = len+1, ord(message[len])
+		except:
+			pass
 
 class SetStatus(ServerMessage):
     """ We send our new status to the server """

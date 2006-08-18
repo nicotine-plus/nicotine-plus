@@ -532,6 +532,15 @@ class NetworkEventProcessor:
 	        self.users[msg.user].status = msg.status
 	else:
 	    self.users[msg.user] = UserAddr(status = msg.status)
+	    
+	if msg.privileged != None:
+		if msg.privileged == 1:
+			if self.transfers is not None:
+				self.transfers.addToPrivileged(msg.user)
+				self.logMessage(_("User %s added to privileged list") %(msg.user),1)
+			else:
+				self.logMessage("%s %s" %(msg.__class__, vars(msg)))
+
         self.frame.GetUserStatus(msg)
 	if self.userlist is not None:
 	    self.userlist.GetUserStatus(msg)

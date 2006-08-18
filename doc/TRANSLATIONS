@@ -60,3 +60,5 @@ SWEDISH:
 HUNGARIAN:
 	LC_ALL=hu_HU nicotine
 
+SLOVAK:
+	LC_ALL=sk_SK nicotine

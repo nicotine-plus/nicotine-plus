@@ -14,6 +14,18 @@ osiris		handy-man		active			[osiris.contact@gmail.com]	author of nicotine+ guide
 ---------------------------------------------------------------------------------------------------------------------------
 
 
+Nicotine+ related
+===================
+name					active/retired		contact				remarks
+===========================================================================================================================
+Vasi		developer		active			[djvasi@gmail.com]		develop nicotine+ on Apple
+												www.nicotine-app.sf.net
+---------------------------------------------------------------------------------------------------------------------------
+g4llow		Package-developer	active			[g4llow@gmail.com]		Submitted Slack.Build file
+												burpo.altervista.org
+---------------------------------------------------------------------------------------------------------------------------
+
+
 Nicotine related
 ===================
 
@@ -38,9 +50,10 @@ alexbk		developer		retired?		[ak@sensi.org]			original author of pyslsk
 Gustavo		--------		---------		[gjc@inescporto.pt]		Made the exception dialog
 ----------------------------------------------------------------------------------------------------------------------------
 SeeSchloss	developer		retired			[http://seeschloss.org]		made 1.0.8 win32 installer
+----------------------------------------------------------------------------------------------------------------------------
 
 
 Contact info
 ================
-Have you done something for nicotine and your name is forgotten?? 
-forgive me, please let me know.. you can contact nicotine doc maintainer @ osiris.contact@gmail.com
+Have you done something for nicotine or nicotine+ and your name is forgotten?? 
+forgive me, please let me know.. you can contact nicotine doc maintainer: osiris.contact@gmail.com
