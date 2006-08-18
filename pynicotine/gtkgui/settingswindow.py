@@ -7,7 +7,12 @@ import locale
 
 from dirchooser import ChooseDir
 from utils import InputDialog, InitialiseColumns, recode, recode2, popupWarning
-import os, pwd
+import os, sys
+win32 = sys.platform.startswith("win")
+if win32:
+	pass
+else:
+	import pwd
 from pynicotine.utils import _
 
 class ServerFrame(settings_glade.ServerFrame):
@@ -86,14 +91,19 @@ class SharesFrame(settings_glade.SharesFrame):
 
 	def SetSettings(self, config):
 		transfers = config["transfers"]
-		homedir = pwd.getpwuid(os.getuid())[5]
+		if win32:
+			place = "Windows"
+			homedir = "C:\windows"
+		else:
+			place = "Home"
+			homedir = pwd.getpwuid(os.getuid())[5]
 		if transfers["incompletedir"] is not None:
 			self.IncompleteDir.set_text(recode(transfers["incompletedir"]))
 		if transfers["downloaddir"] is not None:
 			self.DownloadDir.set_text(recode(transfers["downloaddir"]))
 		if transfers["sharedownloaddir"] is not None:
 			if homedir == transfers["downloaddir"] and transfers["sharedownloaddir"]:
-				popupWarning(None, "Warning","Security Risk: you should not share your home directory!")
+				popupWarning(None, "Warning","Security Risk: you should not share your %s directory!" %place)
 			self.ShareDownloadDir.set_active(transfers["sharedownloaddir"])
 		self.shareslist.clear()
 		self.bshareslist.clear()
@@ -101,13 +111,13 @@ class SharesFrame(settings_glade.SharesFrame):
 		if transfers["shared"] is not None:
 			for share in transfers["shared"]:
 				if homedir == share:
-					popupWarning(None, "Warning","Security Risk: you should not share your home directory!")
+					popupWarning(None, "Warning","Security Risk: you should not share your %s directory!" %place)
 				self.shareslist.append([recode(share), share])
 			self.shareddirs = transfers["shared"][:]
 		if transfers["buddyshared"] is not None:
 			for share in transfers["buddyshared"]:
 				if homedir == share:
-					popupWarning(None, "Warning","Security Risk: you should not share your home directory!")
+					popupWarning(None, "Warning","Security Risk: you should not share your %s directory!" %place)
 				self.bshareslist.append([recode(share), share])
 			self.bshareddirs = transfers["buddyshared"][:]
 		if transfers["rescanonstartup"] is not None:

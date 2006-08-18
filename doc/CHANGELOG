@@ -5,6 +5,10 @@ Unreleased
    If 1, add user to list of privileged users.
  * Added SendUploadSpeed (121) message which replaced SendSpeed (34) a long 
    time ago. Thanks to sierracat for the info, and to slack---line for testing.
+   
+Version 1.2.4.1 August 18th 2006
+Bugfix Release
+ * Disabled use of 'pwd' module on windows
  * Fixed bug with Buddylist tab not appearing on startup.
  * Fixed bug with double-clicking on a user in the Buddy not switching to the 
    correct private chat tab.
