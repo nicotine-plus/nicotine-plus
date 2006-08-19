@@ -591,9 +591,9 @@ class TransfersFrame:
         self.Main.show()
         self.Main.set_shadow_type(gtk.SHADOW_ETCHED_IN)
 
-        self.vbox81 = gtk.VBox(False, 15)
+        self.vbox81 = gtk.VBox(False, 5)
         self.vbox81.show()
-        self.vbox81.set_spacing(15)
+        self.vbox81.set_spacing(5)
         self.vbox81.set_border_width(5)
 
         self.vbox82 = gtk.VBox(False, 0)
@@ -700,9 +700,9 @@ class TransfersFrame:
 
         self.vbox81.pack_start(self.table1, False, False, 0)
 
-        self.hbox171 = gtk.HBox(False, 0)
+        self.hbox171 = gtk.HBox(False, 5)
         self.hbox171.show()
-        self.hbox171.set_spacing(0)
+        self.hbox171.set_spacing(5)
 
         self.label295 = gtk.Label(_("Upload Queue type:"))
         self.label295.set_padding(5, 0)
@@ -723,7 +723,7 @@ class TransfersFrame:
 
         self.hbox171.pack_start(self.FirstInFirstOut, False, False, 5)
 
-        self.vbox81.pack_start(self.hbox171, True, True, 0)
+        self.vbox81.pack_start(self.hbox171, False, True, 0)
 
         self.vbox83 = gtk.VBox(False, 0)
         self.vbox83.show()
@@ -793,30 +793,36 @@ class TransfersFrame:
 
         self.vbox81.pack_start(self.vbox83, False, False, 0)
 
+        self.hbox176 = gtk.HBox(False, 5)
+        self.hbox176.show()
+        self.hbox176.set_spacing(5)
+
         self.FriendsOnly = gtk.CheckButton()
         self.FriendsOnly.set_active(False)
         self.FriendsOnly.set_label(_("Share to friends only"))
         self.FriendsOnly.show()
         self.FriendsOnly.connect("toggled", self.OnFriendsOnlyToggled)
-        self.vbox81.pack_start(self.FriendsOnly, False, False, 0)
+        self.hbox176.pack_start(self.FriendsOnly, False, False, 0)
 
         self.PreferFriends = gtk.CheckButton()
         self.PreferFriends.set_active(False)
         self.PreferFriends.set_label(_("Privilege all my friends"))
         self.PreferFriends.show()
-        self.vbox81.pack_start(self.PreferFriends, False, False, 0)
+        self.hbox176.pack_start(self.PreferFriends, False, False, 0)
 
-        self.LockIncoming = gtk.CheckButton()
-        self.LockIncoming.set_active(False)
-        self.LockIncoming.set_label(_("Lock incoming files (turn off for NFS)"))
-        self.LockIncoming.show()
-        self.vbox81.pack_start(self.LockIncoming, False, False, 0)
+        self.vbox81.pack_start(self.hbox176, False, False, 0)
 
         self.RemoteDownloads = gtk.CheckButton()
         self.RemoteDownloads.set_active(False)
         self.RemoteDownloads.set_label(_("Allow Buddies to send you files"))
         self.RemoteDownloads.show()
         self.vbox81.pack_start(self.RemoteDownloads, False, False, 0)
+
+        self.LockIncoming = gtk.CheckButton()
+        self.LockIncoming.set_active(False)
+        self.LockIncoming.set_label(_("Lock incoming files (turn off for NFS)"))
+        self.LockIncoming.show()
+        self.vbox81.pack_start(self.LockIncoming, False, False, 0)
 
         self.Main.add(self.vbox81)
 
@@ -983,9 +989,9 @@ class BloatFrame:
         self.Main.show()
         self.Main.set_shadow_type(gtk.SHADOW_ETCHED_IN)
 
-        self.vbox86 = gtk.VBox(False, 10)
+        self.vbox86 = gtk.VBox(False, 5)
         self.vbox86.show()
-        self.vbox86.set_spacing(10)
+        self.vbox86.set_spacing(5)
         self.vbox86.set_border_width(5)
 
         self.TabClosers = gtk.CheckButton()
@@ -1017,8 +1023,29 @@ class BloatFrame:
         self.hbox169.pack_start(self.IconTheme, True, True, 0)
 
         self.ThemeButton = gtk.Button()
-        self.ThemeButton.set_label(_("Select Theme"))
         self.ThemeButton.show()
+
+        self.alignment73 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment73.show()
+
+        self.hbox173 = gtk.HBox(False, 2)
+        self.hbox173.show()
+        self.hbox173.set_spacing(2)
+
+        self.image67 = gtk.Image()
+        self.image67.set_padding(0, 0)
+        self.image67.set_from_stock(gtk.STOCK_DIRECTORY, 4)
+        self.image67.show()
+        self.hbox173.pack_start(self.image67, False, False, 0)
+
+        self.label296 = gtk.Label(_("Select Theme"))
+        self.label296.set_padding(0, 0)
+        self.label296.show()
+        self.hbox173.pack_start(self.label296, False, False, 0)
+
+        self.alignment73.add(self.hbox173)
+
+        self.ThemeButton.add(self.alignment73)
 
         self.hbox169.pack_end(self.ThemeButton, False, False, 0)
 
@@ -1037,7 +1064,7 @@ class BloatFrame:
         self.SelectChatFont.show()
         self.hbox172.pack_start(self.SelectChatFont, False, False, 5)
 
-        self.vbox86.pack_start(self.hbox172, True, True, 0)
+        self.vbox86.pack_start(self.hbox172, False, True, 0)
 
         self.table2 = gtk.Table()
         self.table2.show()
@@ -2483,16 +2510,58 @@ class UrlCatchFrame:
         self.table3.attach(self.Handler, 1, 2, 1, 2, gtk.EXPAND|gtk.FILL, 0, 0, 0)
 
         self.button86 = gtk.Button()
-        self.button86.set_label(_("Update"))
         self.button86.show()
         self.button86.connect("clicked", self.OnUpdate)
+
+        self.alignment74 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment74.show()
+
+        self.hbox174 = gtk.HBox(False, 2)
+        self.hbox174.show()
+        self.hbox174.set_spacing(2)
+
+        self.image68 = gtk.Image()
+        self.image68.set_padding(0, 0)
+        self.image68.set_from_stock(gtk.STOCK_REDO, 4)
+        self.image68.show()
+        self.hbox174.pack_start(self.image68, False, False, 0)
+
+        self.label297 = gtk.Label(_("Update"))
+        self.label297.set_padding(0, 0)
+        self.label297.show()
+        self.hbox174.pack_start(self.label297, False, False, 0)
+
+        self.alignment74.add(self.hbox174)
+
+        self.button86.add(self.alignment74)
 
         self.table3.attach(self.button86, 2, 3, 0, 1, gtk.FILL, 0, 0, 0)
 
         self.button87 = gtk.Button()
-        self.button87.set_label(_("Remove"))
         self.button87.show()
         self.button87.connect("clicked", self.OnRemove)
+
+        self.alignment75 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment75.show()
+
+        self.hbox175 = gtk.HBox(False, 2)
+        self.hbox175.show()
+        self.hbox175.set_spacing(2)
+
+        self.image69 = gtk.Image()
+        self.image69.set_padding(0, 0)
+        self.image69.set_from_stock(gtk.STOCK_REMOVE, 4)
+        self.image69.show()
+        self.hbox175.pack_start(self.image69, False, False, 0)
+
+        self.label298 = gtk.Label(_("Remove"))
+        self.label298.set_padding(0, 0)
+        self.label298.show()
+        self.hbox175.pack_start(self.label298, False, False, 0)
+
+        self.alignment75.add(self.hbox175)
+
+        self.button87.add(self.alignment75)
 
         self.table3.attach(self.button87, 2, 3, 1, 2, gtk.FILL, 0, 0, 0)
 
