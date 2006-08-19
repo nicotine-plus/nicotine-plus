@@ -96,6 +96,7 @@ class testwin(MainWindow):
 		self.MainWindow.set_title(_("Nicotine+") + " " + version)
 		self.MainWindow.set_icon(self.images["n"])
 		self.MainWindow.selection_add_target("PRIMARY", "STRING", 1)
+		self.MainWindow.set_geometry_hints(None, min_width=500, min_height=500)
 		self.clip = gtk.Clipboard(display=gtk.gdk.display_get_default(), selection="CLIPBOARD")
 		self.roomlist = roomlist(self)
 		
