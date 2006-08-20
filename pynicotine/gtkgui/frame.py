@@ -799,7 +799,7 @@ class testwin(MainWindow):
 		if status == 0:
 			if self.ChatTabLabel.get_image() == self.images["hilite"]:
 				return
-		self.ChatTabLabel.set_image(status == 1 and self.images["hilite"] or self.images["hilite"])
+		self.ChatTabLabel.set_image(status == 1 and self.images["hilite"] or self.images["online"])
 
 	def RequestIcon(self, tablabel):
 		if tablabel == self.PrivateChatTabLabel and not self.got_focus:
