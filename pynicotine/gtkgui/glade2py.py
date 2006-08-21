@@ -312,6 +312,7 @@ classes = {
 	"GtkScrolledWindow": [write_widget_container, "ScrolledWindow", PM_ADD],
 	"GtkViewport": [write_widget_container, "Viewport", PM_ADD],
 	"GtkLabel": [write_widget_generic, "Label", "$label"],
+	"GtkExpander": [write_widget_container, "Expander", PM_ADD],
 	"GtkCombo": [write_widget_container, "Combo", PM_NONE],
 	"GtkComboBox": [write_widget_combobox],
 	"GtkComboBoxEntry": [write_widget_comboboxentry],

@@ -369,9 +369,9 @@ class MainWindow:
 
         self.vboxdownloads.pack_start(self.scrolledwindow29, True, True, 0)
 
-        self.hbox18 = gtk.HBox(False, 5)
-        self.hbox18.show()
-        self.hbox18.set_spacing(5)
+        self.DownloadButtons = gtk.HBox(False, 5)
+        self.DownloadButtons.show()
+        self.DownloadButtons.set_spacing(5)
 
         self.clearFinishedAbortedButton = gtk.Button()
         self.clearFinishedAbortedButton.show()
@@ -399,7 +399,7 @@ class MainWindow:
 
         self.clearFinishedAbortedButton.add(self.alignment21)
 
-        self.hbox18.pack_start(self.clearFinishedAbortedButton, False, False, 0)
+        self.DownloadButtons.pack_start(self.clearFinishedAbortedButton, False, False, 0)
 
         self.clearQueuedButton = gtk.Button()
         self.clearQueuedButton.show()
@@ -427,7 +427,7 @@ class MainWindow:
 
         self.clearQueuedButton.add(self.alignment22)
 
-        self.hbox18.pack_start(self.clearQueuedButton, False, False, 0)
+        self.DownloadButtons.pack_start(self.clearQueuedButton, False, False, 0)
 
         self.retryTransferButton = gtk.Button()
         self.retryTransferButton.show()
@@ -455,7 +455,7 @@ class MainWindow:
 
         self.retryTransferButton.add(self.alignment15)
 
-        self.hbox18.pack_start(self.retryTransferButton, False, False, 1)
+        self.DownloadButtons.pack_start(self.retryTransferButton, False, False, 1)
 
         self.abortTransferButton = gtk.Button()
         self.abortTransferButton.show()
@@ -483,7 +483,7 @@ class MainWindow:
 
         self.abortTransferButton.add(self.alignment16)
 
-        self.hbox18.pack_start(self.abortTransferButton, False, False, 0)
+        self.DownloadButtons.pack_start(self.abortTransferButton, False, False, 0)
 
         self.deleteTransferButton = gtk.Button()
         self.deleteTransferButton.show()
@@ -511,7 +511,7 @@ class MainWindow:
 
         self.deleteTransferButton.add(self.alignment9)
 
-        self.hbox18.pack_start(self.deleteTransferButton, False, False, 0)
+        self.DownloadButtons.pack_start(self.deleteTransferButton, False, False, 0)
 
         self.banDownloadButton = gtk.Button()
         self.banDownloadButton.show()
@@ -539,9 +539,9 @@ class MainWindow:
 
         self.banDownloadButton.add(self.alignment13)
 
-        self.hbox18.pack_end(self.banDownloadButton, False, False, 0)
+        self.DownloadButtons.pack_end(self.banDownloadButton, False, False, 0)
 
-        self.vboxdownloads.pack_start(self.hbox18, False, True, 0)
+        self.vboxdownloads.pack_start(self.DownloadButtons, False, True, 0)
 
         self.custom3 = self.get_custom_widget("custom3", _("ImageLabel"), _("Downloads"), 0, 0)
         self.custom3.show()
@@ -561,9 +561,9 @@ class MainWindow:
 
         self.vboxuploads.pack_start(self.scrolledwindow30, True, True, 0)
 
-        self.hbox19 = gtk.HBox(False, 5)
-        self.hbox19.show()
-        self.hbox19.set_spacing(5)
+        self.UploadButtons = gtk.HBox(False, 5)
+        self.UploadButtons.show()
+        self.UploadButtons.set_spacing(5)
 
         self.clearUploadFinishedAbortedButton = gtk.Button()
         self.clearUploadFinishedAbortedButton.show()
@@ -591,7 +591,7 @@ class MainWindow:
 
         self.clearUploadFinishedAbortedButton.add(self.alignment20)
 
-        self.hbox19.pack_start(self.clearUploadFinishedAbortedButton, False, False, 0)
+        self.UploadButtons.pack_start(self.clearUploadFinishedAbortedButton, False, False, 0)
 
         self.clearUploadQueueButton = gtk.Button()
         self.clearUploadQueueButton.show()
@@ -619,7 +619,7 @@ class MainWindow:
 
         self.clearUploadQueueButton.add(self.alignment19)
 
-        self.hbox19.pack_start(self.clearUploadQueueButton, False, False, 0)
+        self.UploadButtons.pack_start(self.clearUploadQueueButton, False, False, 0)
 
         self.abortUploadButton = gtk.Button()
         self.abortUploadButton.show()
@@ -647,7 +647,7 @@ class MainWindow:
 
         self.abortUploadButton.add(self.alignment17)
 
-        self.hbox19.pack_start(self.abortUploadButton, False, False, 0)
+        self.UploadButtons.pack_start(self.abortUploadButton, False, False, 0)
 
         self.banUploadButton = gtk.Button()
         self.banUploadButton.show()
@@ -675,7 +675,7 @@ class MainWindow:
 
         self.banUploadButton.add(self.alignment14)
 
-        self.hbox19.pack_end(self.banUploadButton, False, False, 0)
+        self.UploadButtons.pack_end(self.banUploadButton, False, False, 0)
 
         self.abortUserUploadButton = gtk.Button()
         self.abortUserUploadButton.show()
@@ -703,12 +703,12 @@ class MainWindow:
 
         self.abortUserUploadButton.add(self.alignment18)
 
-        self.hbox19.pack_start(self.abortUserUploadButton, False, False, 0)
+        self.UploadButtons.pack_start(self.abortUserUploadButton, False, False, 0)
 
-        self.vboxuploads.pack_start(self.hbox19, False, True, 0)
+        self.vboxuploads.pack_start(self.UploadButtons, False, True, 0)
 
-        self.custom10 = self.get_custom_widget("custom10", _("ImageLabel"), _("Uploads"), 0, 0)
-        self.custom10.show()
+        self.UploadsTabLabel = self.get_custom_widget("UploadsTabLabel", _("ImageLabel"), _("Uploads"), 0, 0)
+        self.UploadsTabLabel.show()
         self.searchvbox = gtk.VBox(False, 5)
         self.searchvbox.show()
         self.searchvbox.set_spacing(5)
@@ -1142,7 +1142,7 @@ class MainWindow:
 
         self.notebook1.append_page(self.vboxdownloads, self.custom3)
 
-        self.notebook1.append_page(self.vboxuploads, self.custom10)
+        self.notebook1.append_page(self.vboxuploads, self.UploadsTabLabel)
 
         self.notebook1.append_page(self.searchvbox, self.SearchTabLabel)
 

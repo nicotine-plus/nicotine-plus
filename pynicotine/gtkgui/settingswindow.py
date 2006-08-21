@@ -49,7 +49,8 @@ class ServerFrame(settings_glade.ServerFrame):
 			server = tuple(server)
 		except:
 			server = None
-
+		if str(self.Login.get_text()) == "None":
+			popupWarning(None, _("Warning: Bad Username"), _("Username None is not a good password, please pick another.") )
 		try:
 			firstport = int(self.FirstPort.get_text())
 			lastport = int(self.LastPort.get_text())
@@ -103,7 +104,7 @@ class SharesFrame(settings_glade.SharesFrame):
 			self.DownloadDir.set_text(recode(transfers["downloaddir"]))
 		if transfers["sharedownloaddir"] is not None:
 			if homedir == transfers["downloaddir"] and transfers["sharedownloaddir"]:
-				popupWarning(None, "Warning","Security Risk: you should not share your %s directory!" %place)
+				popupWarning(None, _("Warning"),_("Security Risk: you should not share your %s directory!" %place))
 			self.ShareDownloadDir.set_active(transfers["sharedownloaddir"])
 		self.shareslist.clear()
 		self.bshareslist.clear()
@@ -111,13 +112,13 @@ class SharesFrame(settings_glade.SharesFrame):
 		if transfers["shared"] is not None:
 			for share in transfers["shared"]:
 				if homedir == share:
-					popupWarning(None, "Warning","Security Risk: you should not share your %s directory!" %place)
+					popupWarning(None, _("Warning"),_("Security Risk: you should not share your %s directory!" %place))
 				self.shareslist.append([recode(share), share])
 			self.shareddirs = transfers["shared"][:]
 		if transfers["buddyshared"] is not None:
 			for share in transfers["buddyshared"]:
 				if homedir == share:
-					popupWarning(None, "Warning","Security Risk: you should not share your %s directory!" %place)
+					popupWarning(None, _("Warning"),_("Security Risk: you should not share your %s directory!" %place))
 				self.bshareslist.append([recode(share), share])
 			self.bshareddirs = transfers["buddyshared"][:]
 		if transfers["rescanonstartup"] is not None:
@@ -139,6 +140,7 @@ class SharesFrame(settings_glade.SharesFrame):
 				"enablebuddyshares": self.enableBuddyShares.get_active(),
 			}
 		}
+
 	def OnEnabledBuddySharesToggled(self, widget):
 		sensitive = widget.get_active()
 		self.BuddyShares.set_sensitive(sensitive)
@@ -247,7 +249,9 @@ class TransfersFrame(settings_glade.TransfersFrame):
 		self.OnQueueUseSlotsToggled(self.QueueUseSlots)
 		self.OnLimitToggled(self.Limit)
 		self.OnFriendsOnlyToggled(self.FriendsOnly)
-	
+		self.ShowTransferButtons.set_active(transfers["enabletransferbuttons"])
+
+			
 	def GetSettings(self):
 		try:
 			uploadbandwidth = int(self.QueueBandwidth.get_text())
@@ -284,6 +288,7 @@ class TransfersFrame(settings_glade.TransfersFrame):
 				"preferfriends": self.PreferFriends.get_active(),
 				"lock": self.LockIncoming.get_active(),
 				"remotedownloads": self.RemoteDownloads.get_active(),
+				"enabletransferbuttons": self.ShowTransferButtons.get_active(),
 			},
 		}
 
@@ -366,14 +371,14 @@ class BanFrame(settings_glade.BanFrame):
 		settings_glade.BanFrame.__init__(self, False)
 		self.banned = []
 		self.banlist = gtk.ListStore(gobject.TYPE_STRING)
-		column = gtk.TreeViewColumn("Users", gtk.CellRendererText(), text = 0)
+		column = gtk.TreeViewColumn(_("Users"), gtk.CellRendererText(), text = 0)
 		self.Banned.append_column(column)
 		self.Banned.set_model(self.banlist)
 		self.Banned.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
 
 		self.ignored = []
 		self.ignorelist = gtk.ListStore(gobject.TYPE_STRING)
-		column = gtk.TreeViewColumn("Users", gtk.CellRendererText(), text = 0)
+		column = gtk.TreeViewColumn(_("Users"), gtk.CellRendererText(), text = 0)
 		self.Ignored.append_column(column)
 		self.Ignored.set_model(self.ignorelist)
 		self.Ignored.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
@@ -411,7 +416,7 @@ class BanFrame(settings_glade.BanFrame):
 		}
 	
 	def OnAddBanned(self, widget):
-		user = InputDialog(self.Main.get_toplevel(), "Ban user...", "User:")
+		user = InputDialog(self.Main.get_toplevel(), _("Ban user..."), _("User:") )
 		if user and user not in self.banned:
 			self.banned.append(user)
 			self.banlist.append([user])
@@ -432,7 +437,7 @@ class BanFrame(settings_glade.BanFrame):
 		self.banlist.clear()
 
 	def OnAddIgnored(self, widget):
-		user = InputDialog(self.Main.get_toplevel(), "Ignore user...", "User:")
+		user = InputDialog(self.Main.get_toplevel(), _("Ignore user..."), _("User:") )
 		if user and user not in self.ignored:
 			self.ignored.append(user)
 			self.ignorelist.append([user])
@@ -457,9 +462,7 @@ class BloatFrame(settings_glade.BloatFrame):
 		settings_glade.BloatFrame.__init__(self, False)
 		for item in ["<None>", ",", ".", "<space>"]:
 			self.DecimalSep.append_text(item)
-		#self.font =""
 		self.ThemeButton.connect("clicked", self.OnChooseThemeDir)
-		#self.SelectChatFont.connect("font-set", self.OnChooseChatFont)
 		
 		self.PickRemote.connect("clicked", self.PickColour, self.Remote)
 		self.PickLocal.connect("clicked", self.PickColour, self.Local)
@@ -523,7 +526,7 @@ class BloatFrame(settings_glade.BloatFrame):
 		}
 	
 	def PickColour(self, widget, entry):
-		dlg = gtk.ColorSelectionDialog("Pick a colour, any colour")
+		dlg = gtk.ColorSelectionDialog(_("Pick a colour, any colour"))
 		colour = entry.get_text()
 		if colour != None and colour !='':
 			colour = gtk.gdk.color_parse(colour)
@@ -769,7 +772,7 @@ class SettingsWindow(settings_glade.SettingsWindow):
 		self.SettingsWindow.set_transient_for(frame.MainWindow)
 
 		self.SettingsWindow.connect("delete-event", self.OnDelete)
-		
+		self.frame = frame
 		self.empty_label = gtk.Label("")
 		self.empty_label.show()
 		self.viewport1.add(self.empty_label)

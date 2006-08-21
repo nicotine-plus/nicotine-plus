@@ -233,6 +233,7 @@ class testwin(MainWindow):
 	        self.LogScrolledWindow.add(self.LogWindow)
 	        self.LogWindow.connect("button-press-event", self.OnPopupLogMenu)
 		self.UpdateColours()
+		
 
 	        if self.translux:
 	        	self.LogScrolledWindow.get_vadjustment().connect("value-changed", lambda *args: self.LogWindow.queue_draw())
@@ -325,6 +326,7 @@ class testwin(MainWindow):
 		
 		self.SetUserStatus(_("Offline"))
 		self.UpdateBandwidth()
+		self.UpdateTransferButtons()
 		
 		self.disconnect1.set_sensitive(0)
 		self.awayreturn1.set_sensitive(0)
@@ -967,7 +969,7 @@ class testwin(MainWindow):
 		self.chatrooms.roomsctrl.UpdateColours()
 		self.privatechats.UpdateColours()
 		self.UpdateColours()
-		
+		self.UpdateTransferButtons()
 		if needrescan:
 			self.needrescan = 1
 		
@@ -982,7 +984,17 @@ class testwin(MainWindow):
 		else:
 			if self.np.transfers is None:
 				self.connect1.set_sensitive(1)
-
+				
+	def UpdateTransferButtons(self):
+		if self.np.config.sections["transfers"]["enabletransferbuttons"]:
+			self.DownloadButtons.show()
+			self.UploadButtons.show()
+		else:
+			
+			print self.UploadButtons
+			self.UploadButtons.hide()
+			self.DownloadButtons.hide()
+			
 	def OnAbout(self, widget):
 		dlg = AboutDialog(self.MainWindow)
 		dlg.run()

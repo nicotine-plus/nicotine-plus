@@ -663,7 +663,7 @@
 		  </child>
 
 		  <child>
-		    <widget class="GtkHBox" id="hbox18">
+		    <widget class="GtkHBox" id="DownloadButtons">
 		      <property name="visible">True</property>
 		      <property name="homogeneous">False</property>
 		      <property name="spacing">5</property>
@@ -1201,7 +1201,7 @@
 		  </child>
 
 		  <child>
-		    <widget class="GtkHBox" id="hbox19">
+		    <widget class="GtkHBox" id="UploadButtons">
 		      <property name="visible">True</property>
 		      <property name="homogeneous">False</property>
 		      <property name="spacing">5</property>
@@ -1611,7 +1611,7 @@
 	      </child>
 
 	      <child>
-		<widget class="Custom" id="custom10">
+		<widget class="Custom" id="UploadsTabLabel">
 		  <property name="visible">True</property>
 		  <property name="string1">ImageLabel</property>
 		  <property name="string2">Uploads</property>

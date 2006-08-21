@@ -52,7 +52,7 @@ class Config:
 	"preferfriends":0, "useupslots":0, "uploadslots":2, "incompletedir":"", \
 	"afterfinish":"", "afterfolder":"", "lock":1, "fifoqueue": 0,\
 	"usecustomban":0,"customban":"Banned, don't bother retrying", "queuelimit":100,\
-	"friendsonly":0, "friendsnolimits":0, "enablebuddyshares": 0,\
+	"friendsonly":0, "friendsnolimits":0, "enablebuddyshares": 0, "enabletransferbuttons": 1,\
 	"geoblock": 0, "geopanic": 0, "geoblockcc": [""], "remotedownloads": 1, \
 	"downloads":[],"sharedfiles":{},"sharedfilesstreams":{}, \
 	"wordindex":{},"fileindex":{},"sharedmtimes":{},"bsharedfiles":{},"bsharedfilesstreams":{}, \
