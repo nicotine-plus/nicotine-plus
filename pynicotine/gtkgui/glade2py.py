@@ -23,6 +23,7 @@ attrs = [
 	["text", lambda w,v: "%s.set_text(\"%s\")" % (w, v.replace("\"", "\\\""))],
 	["accel_group", lambda w,v: "%s.add_accel_group(%s)" % (w, v)],
 	["wrap_mode", lambda w,v: "%s.set_wrap_mode(%s)" % (w, v.replace("GTK_", "gtk."))],
+	["wrap", lambda w,v: "%s.set_line_wrap(%s)" % (w, v.capitalize())],
 	["cursor_visible", lambda w,v: "%s.set_cursor_visible(%s)" % (w, v.capitalize())],
 	["editable", lambda w,v: "%s.set_editable(%s)" % (w, v.capitalize())],
 	["scrollable", lambda w,v: "%s.set_scrollable(%s)" % (w, v.capitalize())],

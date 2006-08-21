@@ -31,6 +31,7 @@ class ServerFrame:
         self.label166.set_alignment(0, 0)
         self.label166.set_size_request(360, -1)
         self.label166.set_padding(0, 0)
+        self.label166.set_line_wrap(True)
         self.label166.show()
         self.vbox72.pack_start(self.label166, False, False, 3)
 
@@ -70,6 +71,7 @@ class ServerFrame:
         self.label167.set_alignment(0, 0.5)
         self.label167.set_size_request(57, -1)
         self.label167.set_padding(0, 0)
+        self.label167.set_line_wrap(False)
         self.label167.show()
         self.vbox73.pack_start(self.label167, False, False, 0)
 
@@ -95,6 +97,7 @@ class ServerFrame:
         self.label168.set_alignment(0, 0)
         self.label168.set_size_request(5, -1)
         self.label168.set_padding(0, 0)
+        self.label168.set_line_wrap(False)
         self.label168.show()
         self.vbox74.pack_start(self.label168, False, False, 0)
 
@@ -117,6 +120,7 @@ class ServerFrame:
         self.label169 = gtk.Label(_("Network Character Encoding (utf-8 is a good choice)"))
         self.label169.set_alignment(0.0500000007451, 0.5)
         self.label169.set_padding(0, 0)
+        self.label169.set_line_wrap(False)
         self.label169.show()
         self.vbox75.pack_start(self.label169, False, False, 0)
 
@@ -150,6 +154,7 @@ class ServerFrame:
         self.label172 = gtk.Label(_("Client connection ports (use first available):"))
         self.label172.set_alignment(0, 0.5)
         self.label172.set_padding(0, 0)
+        self.label172.set_line_wrap(False)
         self.label172.show()
         self.vbox76.pack_start(self.label172, False, False, 0)
 
@@ -169,6 +174,7 @@ class ServerFrame:
         self.label173 = gtk.Label(_("-"))
         self.label173.set_size_request(0, -1)
         self.label173.set_padding(0, 0)
+        self.label173.set_line_wrap(False)
         self.label173.show()
         self.hbox106.pack_start(self.label173, False, False, 0)
 
@@ -185,6 +191,7 @@ class ServerFrame:
         self.label260 = gtk.Label(_("Use the above ports to configure your router or firewall."))
         self.label260.set_alignment(0, 0.5)
         self.label260.set_padding(0, 11)
+        self.label260.set_line_wrap(False)
         self.label260.show()
         self.vbox76.pack_start(self.label260, False, False, 0)
 
@@ -197,6 +204,7 @@ class ServerFrame:
         self.label271 = gtk.Label(_("(only use if the above ports are remotely accessable)"))
         self.label271.set_alignment(0, 0.5)
         self.label271.set_padding(0, 0)
+        self.label271.set_line_wrap(False)
         self.label271.show()
         self.vbox76.pack_start(self.label271, False, False, 0)
 
@@ -212,6 +220,7 @@ class ServerFrame:
 
         self.label165 = gtk.Label(_("Server"))
         self.label165.set_padding(0, 0)
+        self.label165.set_line_wrap(False)
         self.label165.show()
         self.Main.set_label_widget(self.label165)
 
@@ -252,6 +261,7 @@ class SharesFrame:
         self.label176 = gtk.Label(_("Incomplete file directory:"))
         self.label176.set_alignment(0, 0.5)
         self.label176.set_padding(0, 0)
+        self.label176.set_line_wrap(False)
         self.label176.show()
         self.vbox78.pack_start(self.label176, False, False, 0)
 
@@ -286,6 +296,7 @@ class SharesFrame:
 
         self.label231 = gtk.Label(_("Choose..."))
         self.label231.set_padding(0, 0)
+        self.label231.set_line_wrap(False)
         self.label231.show()
         self.hbox152.pack_start(self.label231, False, False, 0)
 
@@ -306,6 +317,7 @@ class SharesFrame:
         self.label178 = gtk.Label(_("Download directory:"))
         self.label178.set_alignment(0, 0.5)
         self.label178.set_padding(0, 0)
+        self.label178.set_line_wrap(False)
         self.label178.show()
         self.vbox79.pack_start(self.label178, False, False, 0)
 
@@ -340,6 +352,7 @@ class SharesFrame:
 
         self.label232 = gtk.Label(_("Choose..."))
         self.label232.set_padding(0, 0)
+        self.label232.set_line_wrap(False)
         self.label232.show()
         self.hbox153.pack_start(self.label232, False, False, 0)
 
@@ -406,6 +419,7 @@ class SharesFrame:
 
         self.label233 = gtk.Label(_("Add..."))
         self.label233.set_padding(0, 0)
+        self.label233.set_line_wrap(False)
         self.label233.show()
         self.hbox154.pack_start(self.label233, False, False, 0)
 
@@ -434,6 +448,7 @@ class SharesFrame:
 
         self.label234 = gtk.Label(_("Remove"))
         self.label234.set_padding(0, 0)
+        self.label234.set_line_wrap(False)
         self.label234.show()
         self.hbox155.pack_start(self.label234, False, False, 0)
 
@@ -494,6 +509,7 @@ class SharesFrame:
 
         self.label290 = gtk.Label(_("Add..."))
         self.label290.set_padding(0, 0)
+        self.label290.set_line_wrap(False)
         self.label290.show()
         self.hbox167.pack_start(self.label290, False, False, 0)
 
@@ -522,6 +538,7 @@ class SharesFrame:
 
         self.label293 = gtk.Label(_("Remove"))
         self.label293.set_padding(0, 0)
+        self.label293.set_line_wrap(False)
         self.label293.show()
         self.hbox168.pack_start(self.label293, False, False, 0)
 
@@ -539,6 +556,7 @@ class SharesFrame:
 
         self.label175 = gtk.Label(_("Shares"))
         self.label175.set_padding(0, 0)
+        self.label175.set_line_wrap(False)
         self.label175.show()
         self.Main.set_label_widget(self.label175)
 
@@ -606,6 +624,7 @@ class TransfersFrame:
 
         self.label185 = gtk.Label(_("If Uploads are sent at"))
         self.label185.set_padding(0, 0)
+        self.label185.set_line_wrap(False)
         self.label185.show()
         self.hbox117.pack_start(self.label185, False, False, 0)
 
@@ -619,6 +638,7 @@ class TransfersFrame:
 
         self.label186 = gtk.Label(_("KBytes/sec then"))
         self.label186.set_padding(0, 0)
+        self.label186.set_line_wrap(False)
         self.label186.show()
         self.hbox117.pack_start(self.label186, False, False, 0)
 
@@ -628,6 +648,7 @@ class TransfersFrame:
         self.label261.set_alignment(0, 0)
         self.label261.set_size_request(-1, 24)
         self.label261.set_padding(0, 0)
+        self.label261.set_line_wrap(False)
         self.label261.show()
         self.vbox82.pack_start(self.label261, False, False, 0)
 
@@ -652,6 +673,7 @@ class TransfersFrame:
 
         self.label254 = gtk.Label(_("(NOT RECOMMENDED)"))
         self.label254.set_padding(0, 0)
+        self.label254.set_line_wrap(False)
         self.label254.show()
         self.hbox118.pack_start(self.label254, False, False, 0)
 
@@ -674,6 +696,7 @@ class TransfersFrame:
 
         self.label188 = gtk.Label(_("KBytes/sec"))
         self.label188.set_padding(0, 0)
+        self.label188.set_line_wrap(False)
         self.label188.show()
         self.table1.attach(self.label188, 2, 3, 0, 1, 0, 0, 0, 0)
 
@@ -706,6 +729,7 @@ class TransfersFrame:
 
         self.label295 = gtk.Label(_("Upload Queue type:"))
         self.label295.set_padding(5, 0)
+        self.label295.set_line_wrap(False)
         self.label295.show()
         self.hbox171.pack_start(self.label295, False, False, 0)
 
@@ -736,6 +760,7 @@ class TransfersFrame:
         self.label189 = gtk.Label(_("Each user may queue a maximum of"))
         self.label189.set_alignment(0, 0.5)
         self.label189.set_padding(0, 0)
+        self.label189.set_line_wrap(False)
         self.label189.show()
         self.hbox119.pack_start(self.label189, False, False, 0)
 
@@ -749,6 +774,7 @@ class TransfersFrame:
 
         self.label190 = gtk.Label(_("Megabytes"))
         self.label190.set_padding(0, 0)
+        self.label190.set_line_wrap(False)
         self.label190.show()
         self.hbox119.pack_start(self.label190, False, False, 0)
 
@@ -781,11 +807,13 @@ class TransfersFrame:
 
         self.label288 = gtk.Label(_("KBytes/sec"))
         self.label288.set_padding(0, 0)
+        self.label288.set_line_wrap(False)
         self.label288.show()
         self.hbox165.pack_start(self.label288, False, False, 5)
 
         self.label289 = gtk.Label(_("for total transfers"))
         self.label289.set_padding(0, 0)
+        self.label289.set_line_wrap(False)
         self.label289.show()
         self.hbox165.pack_start(self.label289, False, False, 3)
 
@@ -828,6 +856,7 @@ class TransfersFrame:
 
         self.label183 = gtk.Label(_("Transfers"))
         self.label183.set_padding(0, 0)
+        self.label183.set_line_wrap(False)
         self.label183.show()
         self.Main.set_label_widget(self.label183)
 
@@ -880,6 +909,7 @@ class UserinfoFrame:
         self.label193 = gtk.Label(_("Self description:"))
         self.label193.set_alignment(0, 0.5)
         self.label193.set_padding(0, 0)
+        self.label193.set_line_wrap(False)
         self.label193.show()
         self.vbox85.pack_start(self.label193, False, False, 0)
 
@@ -909,6 +939,7 @@ class UserinfoFrame:
         self.label265 = gtk.Label(_("Image:"))
         self.label265.set_alignment(0, 0.5)
         self.label265.set_padding(0, 0)
+        self.label265.set_line_wrap(False)
         self.label265.show()
         self.vbox84.pack_start(self.label265, False, False, 0)
 
@@ -943,6 +974,7 @@ class UserinfoFrame:
 
         self.label230 = gtk.Label(_("Choose..."))
         self.label230.set_padding(0, 0)
+        self.label230.set_line_wrap(False)
         self.label230.show()
         self.hbox151.pack_start(self.label230, False, False, 0)
 
@@ -958,6 +990,7 @@ class UserinfoFrame:
 
         self.label192 = gtk.Label(_("Personal settings"))
         self.label192.set_padding(0, 0)
+        self.label192.set_line_wrap(False)
         self.label192.show()
         self.Main.set_label_widget(self.label192)
 
@@ -1006,6 +1039,7 @@ class BloatFrame:
 
         self.label294 = gtk.Label(_("Icon Theme Directory (requires restart):"))
         self.label294.set_padding(0, 0)
+        self.label294.set_line_wrap(False)
         self.label294.show()
         self.hbox170.pack_start(self.label294, False, False, 0)
 
@@ -1040,6 +1074,7 @@ class BloatFrame:
 
         self.label296 = gtk.Label(_("Select Theme"))
         self.label296.set_padding(0, 0)
+        self.label296.set_line_wrap(False)
         self.label296.show()
         self.hbox173.pack_start(self.label296, False, False, 0)
 
@@ -1057,6 +1092,7 @@ class BloatFrame:
 
         self.chatfontlabel = gtk.Label(_("Chat Font:"))
         self.chatfontlabel.set_padding(5, 0)
+        self.chatfontlabel.set_line_wrap(False)
         self.chatfontlabel.show()
         self.hbox172.pack_start(self.chatfontlabel, False, False, 0)
 
@@ -1090,6 +1126,7 @@ class BloatFrame:
 
         self.label197 = gtk.Label(_("Remote text"))
         self.label197.set_padding(0, 0)
+        self.label197.set_line_wrap(False)
         self.label197.show()
         self.hbox124.pack_start(self.label197, False, False, 0)
 
@@ -1124,6 +1161,7 @@ class BloatFrame:
 
         self.label198 = gtk.Label(_("Default"))
         self.label198.set_padding(0, 0)
+        self.label198.set_line_wrap(False)
         self.label198.show()
         self.hbox125.pack_start(self.label198, False, False, 0)
 
@@ -1152,6 +1190,7 @@ class BloatFrame:
 
         self.label205 = gtk.Label(_("Local text"))
         self.label205.set_padding(0, 0)
+        self.label205.set_line_wrap(False)
         self.label205.show()
         self.hbox132.pack_start(self.label205, False, False, 0)
 
@@ -1180,6 +1219,7 @@ class BloatFrame:
 
         self.label206 = gtk.Label(_("/me text"))
         self.label206.set_padding(0, 0)
+        self.label206.set_line_wrap(False)
         self.label206.show()
         self.hbox133.pack_start(self.label206, False, False, 0)
 
@@ -1208,6 +1248,7 @@ class BloatFrame:
 
         self.label207 = gtk.Label(_("Highlight text"))
         self.label207.set_padding(0, 0)
+        self.label207.set_line_wrap(False)
         self.label207.show()
         self.hbox134.pack_start(self.label207, False, False, 0)
 
@@ -1235,6 +1276,7 @@ class BloatFrame:
 
         self.label202 = gtk.Label(_("Default"))
         self.label202.set_padding(0, 0)
+        self.label202.set_line_wrap(False)
         self.label202.show()
         self.hbox129.pack_start(self.label202, False, False, 0)
 
@@ -1262,6 +1304,7 @@ class BloatFrame:
 
         self.label203 = gtk.Label(_("Default"))
         self.label203.set_padding(0, 0)
+        self.label203.set_line_wrap(False)
         self.label203.show()
         self.hbox130.pack_start(self.label203, False, False, 0)
 
@@ -1289,6 +1332,7 @@ class BloatFrame:
 
         self.label204 = gtk.Label(_("Default"))
         self.label204.set_padding(0, 0)
+        self.label204.set_line_wrap(False)
         self.label204.show()
         self.hbox131.pack_start(self.label204, False, False, 0)
 
@@ -1322,6 +1366,7 @@ class BloatFrame:
         self.label196 = gtk.Label(_("Chat colours"))
         self.label196.set_alignment(0, 0.5)
         self.label196.set_padding(0, 5)
+        self.label196.set_line_wrap(False)
         self.label196.show()
         self.table2.attach(self.label196, 0, 3, 0, 1, gtk.FILL, 0, 0, 0)
 
@@ -1344,6 +1389,7 @@ class BloatFrame:
 
         self.label209 = gtk.Label(_("Immediate DL"))
         self.label209.set_padding(0, 0)
+        self.label209.set_line_wrap(False)
         self.label209.show()
         self.hbox135.pack_start(self.label209, False, False, 0)
 
@@ -1372,6 +1418,7 @@ class BloatFrame:
 
         self.label210 = gtk.Label(_("With queue"))
         self.label210.set_padding(0, 0)
+        self.label210.set_line_wrap(False)
         self.label210.show()
         self.hbox136.pack_start(self.label210, False, False, 0)
 
@@ -1413,6 +1460,7 @@ class BloatFrame:
 
         self.label211 = gtk.Label(_("Default"))
         self.label211.set_padding(0, 0)
+        self.label211.set_line_wrap(False)
         self.label211.show()
         self.hbox137.pack_start(self.label211, False, False, 0)
 
@@ -1440,6 +1488,7 @@ class BloatFrame:
 
         self.label212 = gtk.Label(_("Default"))
         self.label212.set_padding(0, 0)
+        self.label212.set_line_wrap(False)
         self.label212.show()
         self.hbox138.pack_start(self.label212, False, False, 0)
 
@@ -1452,6 +1501,7 @@ class BloatFrame:
         self.label208 = gtk.Label(_("Search colours"))
         self.label208.set_alignment(0, 0.5)
         self.label208.set_padding(0, 5)
+        self.label208.set_line_wrap(False)
         self.label208.show()
         self.table2.attach(self.label208, 0, 3, 5, 6, gtk.FILL, 0, 0, 0)
 
@@ -1464,6 +1514,7 @@ class BloatFrame:
         self.label213 = gtk.Label(_("Decimal seperator:"))
         self.label213.set_alignment(0, 0.5)
         self.label213.set_padding(0, 0)
+        self.label213.set_line_wrap(False)
         self.label213.show()
         self.hbox139.pack_start(self.label213, False, False, 0)
 
@@ -1488,6 +1539,7 @@ class BloatFrame:
 
         self.label195 = gtk.Label(_("Extra stuff for your comfort"))
         self.label195.set_padding(0, 0)
+        self.label195.set_line_wrap(False)
         self.label195.show()
         self.Main.set_label_widget(self.label195)
 
@@ -1546,6 +1598,7 @@ class LogFrame:
         self.label217 = gtk.Label(_("Logs directory:"))
         self.label217.set_alignment(0, 0.5)
         self.label217.set_padding(0, 0)
+        self.label217.set_line_wrap(False)
         self.label217.show()
         self.vbox90.pack_start(self.label217, False, False, 0)
 
@@ -1579,6 +1632,7 @@ class LogFrame:
 
         self.label227 = gtk.Label(_("Choose..."))
         self.label227.set_padding(0, 0)
+        self.label227.set_line_wrap(False)
         self.label227.show()
         self.hbox148.pack_start(self.label227, False, False, 0)
 
@@ -1596,6 +1650,7 @@ class LogFrame:
 
         self.label216 = gtk.Label(_("Logging"))
         self.label216.set_padding(0, 0)
+        self.label216.set_line_wrap(False)
         self.label216.show()
         self.Main.set_label_widget(self.label216)
 
@@ -1643,6 +1698,7 @@ class BanFrame:
 
         self.label219 = gtk.Label(_("Banned Users:"))
         self.label219.set_padding(0, 0)
+        self.label219.set_line_wrap(False)
         self.label219.show()
         self.vbox92.pack_start(self.label219, False, False, 0)
 
@@ -1677,6 +1733,7 @@ class BanFrame:
 
         self.label238 = gtk.Label(_("Add..."))
         self.label238.set_padding(0, 0)
+        self.label238.set_line_wrap(False)
         self.label238.show()
         self.hbox156.pack_start(self.label238, False, False, 0)
 
@@ -1705,6 +1762,7 @@ class BanFrame:
 
         self.label239 = gtk.Label(_("Remove"))
         self.label239.set_padding(0, 0)
+        self.label239.set_line_wrap(False)
         self.label239.show()
         self.hbox157.pack_start(self.label239, False, False, 0)
 
@@ -1733,6 +1791,7 @@ class BanFrame:
 
         self.label240 = gtk.Label(_("Clear"))
         self.label240.set_padding(0, 0)
+        self.label240.set_line_wrap(False)
         self.label240.show()
         self.hbox158.pack_start(self.label240, False, False, 0)
 
@@ -1751,6 +1810,7 @@ class BanFrame:
 
         self.label237 = gtk.Label(_("Ignored users:"))
         self.label237.set_padding(0, 0)
+        self.label237.set_line_wrap(False)
         self.label237.show()
         self.vbox97.pack_start(self.label237, False, False, 0)
 
@@ -1785,6 +1845,7 @@ class BanFrame:
 
         self.label241 = gtk.Label(_("Add..."))
         self.label241.set_padding(0, 0)
+        self.label241.set_line_wrap(False)
         self.label241.show()
         self.hbox159.pack_start(self.label241, False, False, 0)
 
@@ -1813,6 +1874,7 @@ class BanFrame:
 
         self.label242 = gtk.Label(_("Remove"))
         self.label242.set_padding(0, 0)
+        self.label242.set_line_wrap(False)
         self.label242.show()
         self.hbox160.pack_start(self.label242, False, False, 0)
 
@@ -1841,6 +1903,7 @@ class BanFrame:
 
         self.label243 = gtk.Label(_("Clear"))
         self.label243.set_padding(0, 0)
+        self.label243.set_line_wrap(False)
         self.label243.show()
         self.hbox161.pack_start(self.label243, False, False, 0)
 
@@ -1878,6 +1941,7 @@ class BanFrame:
 
         self.label218 = gtk.Label(_("Banning"))
         self.label218.set_padding(0, 0)
+        self.label218.set_line_wrap(False)
         self.label218.show()
         self.Main.set_label_widget(self.label218)
 
@@ -1935,6 +1999,7 @@ class SearchFrame:
         self.label262 = gtk.Label(_("Network Searches:"))
         self.label262.set_alignment(0, 0)
         self.label262.set_padding(0, 0)
+        self.label262.set_line_wrap(False)
         self.label262.show()
         self.vbox93.pack_start(self.label262, False, False, 0)
 
@@ -1945,6 +2010,7 @@ class SearchFrame:
         self.label225 = gtk.Label(_("Send out a max of"))
         self.label225.set_alignment(1, 0.5)
         self.label225.set_padding(0, 0)
+        self.label225.set_line_wrap(False)
         self.label225.show()
         self.hbox147.pack_start(self.label225, False, False, 0)
 
@@ -1958,6 +2024,7 @@ class SearchFrame:
 
         self.label226 = gtk.Label(_("results per search request"))
         self.label226.set_padding(0, 0)
+        self.label226.set_line_wrap(False)
         self.label226.show()
         self.hbox147.pack_start(self.label226, False, False, 0)
 
@@ -1966,6 +2033,7 @@ class SearchFrame:
         self.label263 = gtk.Label(_("Your Searches:"))
         self.label263.set_alignment(0, 0.5)
         self.label263.set_padding(0, 0)
+        self.label263.set_line_wrap(False)
         self.label263.show()
         self.vbox93.pack_start(self.label263, False, False, 0)
 
@@ -1990,24 +2058,28 @@ class SearchFrame:
         self.label255 = gtk.Label(_("Filter in:"))
         self.label255.set_alignment(0, 0.5)
         self.label255.set_padding(0, 0)
+        self.label255.set_line_wrap(False)
         self.label255.show()
         self.table4.attach(self.label255, 0, 1, 0, 1, gtk.FILL, 0, 0, 0)
 
         self.label256 = gtk.Label(_("Filter out:"))
         self.label256.set_alignment(0, 0.5)
         self.label256.set_padding(0, 0)
+        self.label256.set_line_wrap(False)
         self.label256.show()
         self.table4.attach(self.label256, 0, 1, 1, 2, gtk.FILL, 0, 0, 0)
 
         self.label257 = gtk.Label(_("Size:"))
         self.label257.set_alignment(0, 0.5)
         self.label257.set_padding(0, 0)
+        self.label257.set_line_wrap(False)
         self.label257.show()
         self.table4.attach(self.label257, 0, 1, 2, 3, gtk.FILL, 0, 0, 0)
 
         self.label258 = gtk.Label(_("Bitrate:"))
         self.label258.set_alignment(0, 0.5)
         self.label258.set_padding(0, 0)
+        self.label258.set_line_wrap(False)
         self.label258.show()
         self.table4.attach(self.label258, 0, 1, 3, 4, gtk.FILL, 0, 0, 0)
 
@@ -2060,6 +2132,7 @@ class SearchFrame:
         self.label259 = gtk.Label(_("Country:"))
         self.label259.set_alignment(0, 0.5)
         self.label259.set_padding(0, 0)
+        self.label259.set_line_wrap(False)
         self.label259.show()
         self.table4.attach(self.label259, 0, 1, 4, 5, gtk.FILL, 0, 0, 0)
 
@@ -2082,6 +2155,7 @@ class SearchFrame:
 
         self.label224 = gtk.Label(_("Searches"))
         self.label224.set_padding(0, 0)
+        self.label224.set_line_wrap(False)
         self.label224.show()
         self.Main.set_label_widget(self.label224)
 
@@ -2216,6 +2290,7 @@ class AwayFrame:
         self.label170 = gtk.Label(_("Toggle away after "))
         self.label170.set_alignment(0, 0.5)
         self.label170.set_padding(0, 0)
+        self.label170.set_line_wrap(False)
         self.label170.show()
         self.hbox105.pack_start(self.label170, False, False, 0)
 
@@ -2229,6 +2304,7 @@ class AwayFrame:
 
         self.label171 = gtk.Label(_(" minutes of inactivity"))
         self.label171.set_padding(0, 0)
+        self.label171.set_line_wrap(False)
         self.label171.show()
         self.hbox105.pack_start(self.label171, False, False, 0)
 
@@ -2241,6 +2317,7 @@ class AwayFrame:
         self.label174 = gtk.Label(_("Auto-reply when away:  "))
         self.label174.set_alignment(0, 0.5)
         self.label174.set_padding(0, 0)
+        self.label174.set_line_wrap(False)
         self.label174.show()
         self.hbox107.pack_start(self.label174, False, False, 0)
 
@@ -2258,6 +2335,7 @@ class AwayFrame:
 
         self.label235 = gtk.Label(_("Away mode"))
         self.label235.set_padding(0, 0)
+        self.label235.set_line_wrap(False)
         self.label235.show()
         self.Main.set_label_widget(self.label235)
 
@@ -2298,6 +2376,7 @@ class EventsFrame:
         self.label214 = gtk.Label(_("Run command after download finishes ($ for filename):"))
         self.label214.set_alignment(0, 0.5)
         self.label214.set_padding(0, 0)
+        self.label214.set_line_wrap(False)
         self.label214.show()
         self.vbox87.pack_start(self.label214, False, False, 0)
 
@@ -2319,6 +2398,7 @@ class EventsFrame:
         self.label215.set_alignment(0, 0.5)
         self.label215.set_size_request(48, -1)
         self.label215.set_padding(0, 0)
+        self.label215.set_line_wrap(False)
         self.label215.show()
         self.vbox88.pack_start(self.label215, False, False, 0)
 
@@ -2334,6 +2414,7 @@ class EventsFrame:
 
         self.PlayerLabel = gtk.Label(_("Audio Player command:"))
         self.PlayerLabel.set_padding(0, 0)
+        self.PlayerLabel.set_line_wrap(False)
         self.PlayerLabel.show()
         self.vbox96.pack_start(self.PlayerLabel, False, False, 0)
 
@@ -2349,6 +2430,7 @@ class EventsFrame:
 
         self.label236 = gtk.Label(_("Events"))
         self.label236.set_padding(0, 0)
+        self.label236.set_line_wrap(False)
         self.label236.show()
         self.Main.set_label_widget(self.label236)
 
@@ -2398,6 +2480,7 @@ class GeoBlockFrame:
         self.label245 = gtk.Label(_("Country codes to block (comma separated):"))
         self.label245.set_alignment(0, 0.5)
         self.label245.set_padding(0, 0)
+        self.label245.set_line_wrap(False)
         self.label245.show()
         self.vbox98.pack_start(self.label245, False, False, 0)
 
@@ -2412,6 +2495,7 @@ class GeoBlockFrame:
 
         self.label244 = gtk.Label(_("Geographical Blocking"))
         self.label244.set_padding(0, 0)
+        self.label244.set_line_wrap(False)
         self.label244.show()
         self.Main.set_label_widget(self.label244)
 
@@ -2463,6 +2547,7 @@ class UrlCatchFrame:
 
         self.label251 = gtk.Label(_("Protocols handlers:"))
         self.label251.set_padding(0, 0)
+        self.label251.set_line_wrap(False)
         self.label251.show()
         self.vbox99.pack_start(self.label251, False, False, 0)
 
@@ -2486,6 +2571,7 @@ class UrlCatchFrame:
         self.label252 = gtk.Label(_("Protocol:"))
         self.label252.set_alignment(0, 0.5)
         self.label252.set_padding(0, 0)
+        self.label252.set_line_wrap(False)
         self.label252.show()
         self.table3.attach(self.label252, 0, 1, 0, 1, gtk.FILL, 0, 0, 0)
 
@@ -2499,6 +2585,7 @@ class UrlCatchFrame:
         self.label253 = gtk.Label(_("Handler:"))
         self.label253.set_alignment(0, 0.5)
         self.label253.set_padding(0, 0)
+        self.label253.set_line_wrap(False)
         self.label253.show()
         self.table3.attach(self.label253, 0, 1, 1, 2, gtk.FILL, 0, 0, 0)
 
@@ -2528,6 +2615,7 @@ class UrlCatchFrame:
 
         self.label297 = gtk.Label(_("Update"))
         self.label297.set_padding(0, 0)
+        self.label297.set_line_wrap(False)
         self.label297.show()
         self.hbox174.pack_start(self.label297, False, False, 0)
 
@@ -2556,6 +2644,7 @@ class UrlCatchFrame:
 
         self.label298 = gtk.Label(_("Remove"))
         self.label298.set_padding(0, 0)
+        self.label298.set_line_wrap(False)
         self.label298.show()
         self.hbox175.pack_start(self.label298, False, False, 0)
 
@@ -2571,6 +2660,7 @@ class UrlCatchFrame:
 
         self.label246 = gtk.Label(_("URL Catching:"))
         self.label246.set_padding(0, 0)
+        self.label246.set_line_wrap(False)
         self.label246.show()
         self.Main.set_label_widget(self.label246)
 
@@ -2619,42 +2709,49 @@ class ConnectionFrame:
         self.label267 = gtk.Label(_("Choose Server to configure the server you wish to connect to, your username, password and connection ports."))
         self.label267.set_alignment(0, 0)
         self.label267.set_padding(8, 0)
+        self.label267.set_line_wrap(True)
         self.label267.show()
         self.vbox100.pack_start(self.label267, False, False, 0)
 
         self.label268 = gtk.Label(_("Choose Shares to configure your Download and Shared directories."))
         self.label268.set_alignment(0, 0)
         self.label268.set_padding(8, 0)
+        self.label268.set_line_wrap(True)
         self.label268.show()
         self.vbox100.pack_start(self.label268, False, False, 0)
 
         self.label269 = gtk.Label(_("Choose Transfers to configure how uploads are queued and what privileges are given to your friends."))
         self.label269.set_alignment(0, 0)
         self.label269.set_padding(8, 0)
+        self.label269.set_line_wrap(True)
         self.label269.show()
         self.vbox100.pack_start(self.label269, False, False, 0)
 
         self.label284 = gtk.Label(_("Choose Geo Block (if available) to control from which countries users are allowed access to your shares."))
         self.label284.set_alignment(0, 0)
         self.label284.set_padding(8, 0)
+        self.label284.set_line_wrap(True)
         self.label284.show()
         self.vbox100.pack_start(self.label284, False, False, 0)
 
         self.label285 = gtk.Label(_("If you wish to use Geo Block, install GeoIP and it's Python Bindings from your distro's packaging tool or from:"))
         self.label285.set_alignment(0, 0)
         self.label285.set_padding(8, 0)
+        self.label285.set_line_wrap(True)
         self.label285.show()
         self.vbox100.pack_start(self.label285, False, False, 0)
 
         self.label286 = gtk.Label(_("http://www.maxmind.com/app/c"))
         self.label286.set_alignment(0, 0)
         self.label286.set_padding(8, 0)
+        self.label286.set_line_wrap(False)
         self.label286.show()
         self.vbox100.pack_start(self.label286, False, False, 0)
 
         self.label287 = gtk.Label(_("http://www.maxmind.com/app/python"))
         self.label287.set_alignment(0, 0)
         self.label287.set_padding(8, 0)
+        self.label287.set_line_wrap(False)
         self.label287.show()
         self.vbox100.pack_start(self.label287, False, False, 0)
 
@@ -2664,6 +2761,7 @@ class ConnectionFrame:
 
         self.label266 = gtk.Label(_("Connection Settings"))
         self.label266.set_padding(0, 0)
+        self.label266.set_line_wrap(False)
         self.label266.show()
         self.Main.set_label_widget(self.label266)
 
@@ -2703,12 +2801,14 @@ class UIFrame:
         self.label272 = gtk.Label(_("Choose Interface to configure text color and other settings."))
         self.label272.set_alignment(0, 0)
         self.label272.set_padding(8, 0)
+        self.label272.set_line_wrap(True)
         self.label272.show()
         self.vbox101.pack_start(self.label272, False, False, 0)
 
         self.label273 = gtk.Label(_("Choose URL Catching to configure the programs used when clicking on links."))
         self.label273.set_alignment(0, 0)
         self.label273.set_padding(8, 0)
+        self.label273.set_line_wrap(True)
         self.label273.show()
         self.vbox101.pack_start(self.label273, False, False, 0)
 
@@ -2718,6 +2818,7 @@ class UIFrame:
 
         self.label276 = gtk.Label(_("User Interface Settings"))
         self.label276.set_padding(0, 0)
+        self.label276.set_line_wrap(False)
         self.label276.show()
         self.Main.set_label_widget(self.label276)
 
@@ -2757,36 +2858,42 @@ class MiscFrame:
         self.label277 = gtk.Label(_("Choose Away mode to configure your auto-away settings."))
         self.label277.set_alignment(0, 0)
         self.label277.set_padding(8, 0)
+        self.label277.set_line_wrap(True)
         self.label277.show()
         self.vbox102.pack_start(self.label277, False, False, 0)
 
         self.label278 = gtk.Label(_("Choose User info to add text and an image to your personal info."))
         self.label278.set_alignment(0, 0)
         self.label278.set_padding(8, 0)
+        self.label278.set_line_wrap(True)
         self.label278.show()
         self.vbox102.pack_start(self.label278, False, False, 0)
 
         self.label280 = gtk.Label(_("Choose Ban / ignore to manage your ban list and ignore list."))
         self.label280.set_alignment(0, 0)
         self.label280.set_padding(8, 0)
+        self.label280.set_line_wrap(True)
         self.label280.show()
         self.vbox102.pack_start(self.label280, False, False, 0)
 
         self.label281 = gtk.Label(_("Choose Logging to configure what's logged and where to save the logs."))
         self.label281.set_alignment(0, 0)
         self.label281.set_padding(8, 0)
+        self.label281.set_line_wrap(True)
         self.label281.show()
         self.vbox102.pack_start(self.label281, False, False, 0)
 
         self.label282 = gtk.Label(_("Choose Searches to configure search settings and to set default search filters."))
         self.label282.set_alignment(0, 0)
         self.label282.set_padding(8, 0)
+        self.label282.set_line_wrap(True)
         self.label282.show()
         self.vbox102.pack_start(self.label282, False, False, 0)
 
         self.label283 = gtk.Label(_("Choose Events to configure what commands are executed upon the completion of downloads."))
         self.label283.set_alignment(0, 0)
         self.label283.set_padding(8, 0)
+        self.label283.set_line_wrap(True)
         self.label283.show()
         self.vbox102.pack_start(self.label283, False, False, 0)
 
@@ -2796,6 +2903,7 @@ class MiscFrame:
 
         self.label279 = gtk.Label(_("Miscellaneous Settings"))
         self.label279.set_padding(0, 0)
+        self.label279.set_line_wrap(False)
         self.label279.show()
         self.Main.set_label_widget(self.label279)
 

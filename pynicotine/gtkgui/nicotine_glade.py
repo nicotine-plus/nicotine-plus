@@ -288,6 +288,7 @@ class MainWindow:
 
         self.hpaned1 = gtk.HPaned()
         self.hpaned1.show()
+        self.hpaned1.set_border_width(3)
 
         self.ChatNotebook = self.get_custom_widget("ChatNotebook", "", "", 0, 0)
         self.ChatNotebook.show()
@@ -300,18 +301,21 @@ class MainWindow:
 
         self.ChatTabLabel = self.get_custom_widget("ChatTabLabel", _("ImageLabel"), _("Chat rooms"), 0, 0)
         self.ChatTabLabel.show()
-        self.privatevbox = gtk.VBox(False, 0)
+        self.privatevbox = gtk.VBox(False, 5)
         self.privatevbox.show()
-        self.privatevbox.set_spacing(0)
-
-        self.PrivatechatNotebook = self.get_custom_widget("PrivatechatNotebook", "", "", 0, 0)
-        self.PrivatechatNotebook.show()
-        self.privatevbox.pack_start(self.PrivatechatNotebook, True, True, 0)
+        self.privatevbox.set_spacing(5)
+        self.privatevbox.set_border_width(5)
 
         self.hbox20 = gtk.HBox(False, 5)
         self.hbox20.show()
         self.hbox20.set_spacing(5)
-        self.hbox20.set_border_width(5)
+
+        self.PrivateChatEntry = gtk.Entry()
+        self.PrivateChatEntry.set_text("")
+        self.PrivateChatEntry.set_editable(True)
+        self.PrivateChatEntry.show()
+        self.PrivateChatEntry.set_visibility(True)
+        self.hbox20.pack_start(self.PrivateChatEntry, False, True, 0)
 
         self.sPrivateChatButton = gtk.Button()
         self.sPrivateChatButton.show()
@@ -331,28 +335,21 @@ class MainWindow:
 
         self.label39 = gtk.Label(_("Start Message"))
         self.label39.set_padding(0, 0)
+        self.label39.set_line_wrap(False)
         self.label39.show()
-        self.hbox30.pack_start(self.label39, False, False, 0)
+        self.hbox30.pack_end(self.label39, False, False, 0)
 
         self.alignment10.add(self.hbox30)
 
         self.sPrivateChatButton.add(self.alignment10)
 
-        self.hbox20.pack_end(self.sPrivateChatButton, False, False, 0)
-
-        self.PrivateChatEntry = gtk.Entry()
-        self.PrivateChatEntry.set_text("")
-        self.PrivateChatEntry.set_editable(True)
-        self.PrivateChatEntry.show()
-        self.PrivateChatEntry.set_visibility(True)
-        self.hbox20.pack_end(self.PrivateChatEntry, False, True, 0)
-
-        self.label29 = gtk.Label(_("Input a user:"))
-        self.label29.set_padding(0, 0)
-        self.label29.show()
-        self.hbox20.pack_end(self.label29, False, False, 0)
+        self.hbox20.pack_start(self.sPrivateChatButton, False, False, 0)
 
         self.privatevbox.pack_start(self.hbox20, False, True, 0)
+
+        self.PrivatechatNotebook = self.get_custom_widget("PrivatechatNotebook", "", "", 0, 0)
+        self.PrivatechatNotebook.show()
+        self.privatevbox.pack_start(self.PrivatechatNotebook, True, True, 0)
 
         self.PrivateChatTabLabel = self.get_custom_widget("PrivateChatTabLabel", _("ImageLabel"), _("Private chat"), 0, 0)
         self.PrivateChatTabLabel.show()
@@ -361,7 +358,7 @@ class MainWindow:
         self.vboxdownloads.set_spacing(0)
 
         self.scrolledwindow29 = gtk.ScrolledWindow()
-        self.scrolledwindow29.set_policy(gtk.POLICY_ALWAYS, gtk.POLICY_ALWAYS)
+        self.scrolledwindow29.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
         self.scrolledwindow29.show()
         self.scrolledwindow29.set_shadow_type(gtk.SHADOW_NONE)
 
@@ -394,6 +391,7 @@ class MainWindow:
 
         self.label50 = gtk.Label(_("Clear Finished / Aborted"))
         self.label50.set_padding(0, 0)
+        self.label50.set_line_wrap(False)
         self.label50.show()
         self.hbox41.pack_start(self.label50, False, False, 0)
 
@@ -421,6 +419,7 @@ class MainWindow:
 
         self.label51 = gtk.Label(_("Clear Queued"))
         self.label51.set_padding(0, 0)
+        self.label51.set_line_wrap(False)
         self.label51.show()
         self.hbox42.pack_start(self.label51, False, False, 0)
 
@@ -448,6 +447,7 @@ class MainWindow:
 
         self.label44 = gtk.Label(_("Retry"))
         self.label44.set_padding(0, 0)
+        self.label44.set_line_wrap(False)
         self.label44.show()
         self.hbox35.pack_start(self.label44, False, False, 0)
 
@@ -475,6 +475,7 @@ class MainWindow:
 
         self.label45 = gtk.Label(_("Abort"))
         self.label45.set_padding(0, 0)
+        self.label45.set_line_wrap(False)
         self.label45.show()
         self.hbox36.pack_start(self.label45, False, False, 0)
 
@@ -502,6 +503,7 @@ class MainWindow:
 
         self.label38 = gtk.Label(_("Abort & Delete"))
         self.label38.set_padding(0, 0)
+        self.label38.set_line_wrap(False)
         self.label38.show()
         self.hbox29.pack_start(self.label38, False, False, 0)
 
@@ -529,6 +531,7 @@ class MainWindow:
 
         self.label42 = gtk.Label(_("Ban User(s)"))
         self.label42.set_padding(0, 0)
+        self.label42.set_line_wrap(False)
         self.label42.show()
         self.hbox33.pack_start(self.label42, False, False, 0)
 
@@ -547,7 +550,7 @@ class MainWindow:
         self.vboxuploads.set_spacing(0)
 
         self.scrolledwindow30 = gtk.ScrolledWindow()
-        self.scrolledwindow30.set_policy(gtk.POLICY_ALWAYS, gtk.POLICY_ALWAYS)
+        self.scrolledwindow30.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
         self.scrolledwindow30.show()
         self.scrolledwindow30.set_shadow_type(gtk.SHADOW_NONE)
 
@@ -580,6 +583,7 @@ class MainWindow:
 
         self.label49 = gtk.Label(_("Clear Finished / Aborted"))
         self.label49.set_padding(0, 0)
+        self.label49.set_line_wrap(False)
         self.label49.show()
         self.hbox40.pack_start(self.label49, False, False, 0)
 
@@ -607,6 +611,7 @@ class MainWindow:
 
         self.label48 = gtk.Label(_("Clear Queued"))
         self.label48.set_padding(0, 0)
+        self.label48.set_line_wrap(False)
         self.label48.show()
         self.hbox39.pack_start(self.label48, False, False, 0)
 
@@ -634,6 +639,7 @@ class MainWindow:
 
         self.label46 = gtk.Label(_("Abort"))
         self.label46.set_padding(0, 0)
+        self.label46.set_line_wrap(False)
         self.label46.show()
         self.hbox37.pack_start(self.label46, False, False, 0)
 
@@ -661,6 +667,7 @@ class MainWindow:
 
         self.label43 = gtk.Label(_("Ban User(s)"))
         self.label43.set_padding(0, 0)
+        self.label43.set_line_wrap(False)
         self.label43.show()
         self.hbox34.pack_start(self.label43, False, False, 0)
 
@@ -688,6 +695,7 @@ class MainWindow:
 
         self.label47 = gtk.Label(_("Abort User's Upload(s)"))
         self.label47.set_padding(0, 0)
+        self.label47.set_line_wrap(False)
         self.label47.show()
         self.hbox38.pack_start(self.label47, False, False, 0)
 
@@ -701,9 +709,10 @@ class MainWindow:
 
         self.custom10 = self.get_custom_widget("custom10", _("ImageLabel"), _("Uploads"), 0, 0)
         self.custom10.show()
-        self.searchvbox = gtk.VBox(False, 0)
+        self.searchvbox = gtk.VBox(False, 5)
         self.searchvbox.show()
-        self.searchvbox.set_spacing(0)
+        self.searchvbox.set_spacing(5)
+        self.searchvbox.set_border_width(5)
 
         self.hbox2 = gtk.HBox(False, 0)
         self.hbox2.show()
@@ -764,6 +773,7 @@ class MainWindow:
 
         self.label32 = gtk.Label(_("Search"))
         self.label32.set_padding(0, 0)
+        self.label32.set_line_wrap(False)
         self.label32.show()
         self.hbox23.pack_start(self.label32, False, False, 0)
 
@@ -781,18 +791,21 @@ class MainWindow:
 
         self.SearchTabLabel = self.get_custom_widget("SearchTabLabel", _("ImageLabel"), _("Search files"), 0, 0)
         self.SearchTabLabel.show()
-        self.userinfovbox = gtk.VBox(False, 0)
+        self.userinfovbox = gtk.VBox(False, 5)
         self.userinfovbox.show()
-        self.userinfovbox.set_spacing(0)
-
-        self.UserInfoNotebook = self.get_custom_widget("UserInfoNotebook", "", "", 0, 0)
-        self.UserInfoNotebook.show()
-        self.userinfovbox.pack_start(self.UserInfoNotebook, True, True, 0)
+        self.userinfovbox.set_spacing(5)
+        self.userinfovbox.set_border_width(5)
 
         self.hbox21 = gtk.HBox(False, 5)
         self.hbox21.show()
         self.hbox21.set_spacing(5)
-        self.hbox21.set_border_width(5)
+
+        self.UserinfoEntry = gtk.Entry()
+        self.UserinfoEntry.set_text("")
+        self.UserinfoEntry.set_editable(True)
+        self.UserinfoEntry.show()
+        self.UserinfoEntry.set_visibility(True)
+        self.hbox21.pack_start(self.UserinfoEntry, False, True, 0)
 
         self.sUserinfoButton = gtk.Button()
         self.sUserinfoButton.show()
@@ -812,6 +825,7 @@ class MainWindow:
 
         self.label41 = gtk.Label(_("Get Userinfo"))
         self.label41.set_padding(0, 0)
+        self.label41.set_line_wrap(False)
         self.label41.show()
         self.hbox32.pack_start(self.label41, False, False, 0)
 
@@ -819,36 +833,31 @@ class MainWindow:
 
         self.sUserinfoButton.add(self.alignment12)
 
-        self.hbox21.pack_end(self.sUserinfoButton, False, False, 0)
-
-        self.UserinfoEntry = gtk.Entry()
-        self.UserinfoEntry.set_text("")
-        self.UserinfoEntry.set_editable(True)
-        self.UserinfoEntry.show()
-        self.UserinfoEntry.set_visibility(True)
-        self.hbox21.pack_end(self.UserinfoEntry, False, True, 0)
-
-        self.label30 = gtk.Label(_("Input a user:"))
-        self.label30.set_padding(0, 0)
-        self.label30.show()
-        self.hbox21.pack_end(self.label30, False, False, 0)
+        self.hbox21.pack_start(self.sUserinfoButton, False, False, 0)
 
         self.userinfovbox.pack_start(self.hbox21, False, True, 0)
 
+        self.UserInfoNotebook = self.get_custom_widget("UserInfoNotebook", "", "", 0, 0)
+        self.UserInfoNotebook.show()
+        self.userinfovbox.pack_start(self.UserInfoNotebook, True, True, 0)
+
         self.UserInfoTabLabel = self.get_custom_widget("UserInfoTabLabel", _("ImageLabel"), _("User info"), 0, 0)
         self.UserInfoTabLabel.show()
-        self.userbrowsevbox = gtk.VBox(False, 0)
+        self.userbrowsevbox = gtk.VBox(False, 5)
         self.userbrowsevbox.show()
-        self.userbrowsevbox.set_spacing(0)
-
-        self.UserBrowseNotebook = self.get_custom_widget("UserBrowseNotebook", "", "", 0, 0)
-        self.UserBrowseNotebook.show()
-        self.userbrowsevbox.pack_start(self.UserBrowseNotebook, True, True, 0)
+        self.userbrowsevbox.set_spacing(5)
+        self.userbrowsevbox.set_border_width(5)
 
         self.hbox22 = gtk.HBox(False, 5)
         self.hbox22.show()
         self.hbox22.set_spacing(5)
-        self.hbox22.set_border_width(5)
+
+        self.SharesEntry = gtk.Entry()
+        self.SharesEntry.set_text("")
+        self.SharesEntry.set_editable(True)
+        self.SharesEntry.show()
+        self.SharesEntry.set_visibility(True)
+        self.hbox22.pack_start(self.SharesEntry, False, True, 0)
 
         self.sSharesButton = gtk.Button()
         self.sSharesButton.show()
@@ -866,8 +875,9 @@ class MainWindow:
         self.image11.show()
         self.hbox31.pack_start(self.image11, False, False, 0)
 
-        self.label40 = gtk.Label(_("Get Shares"))
+        self.label40 = gtk.Label(_("Browse Shares"))
         self.label40.set_padding(0, 0)
+        self.label40.set_line_wrap(False)
         self.label40.show()
         self.hbox31.pack_start(self.label40, False, False, 0)
 
@@ -875,21 +885,13 @@ class MainWindow:
 
         self.sSharesButton.add(self.alignment11)
 
-        self.hbox22.pack_end(self.sSharesButton, False, False, 0)
-
-        self.SharesEntry = gtk.Entry()
-        self.SharesEntry.set_text("")
-        self.SharesEntry.set_editable(True)
-        self.SharesEntry.show()
-        self.SharesEntry.set_visibility(True)
-        self.hbox22.pack_end(self.SharesEntry, False, True, 0)
-
-        self.label31 = gtk.Label(_("Input a user:"))
-        self.label31.set_padding(0, 0)
-        self.label31.show()
-        self.hbox22.pack_end(self.label31, False, False, 0)
+        self.hbox22.pack_start(self.sSharesButton, False, False, 0)
 
         self.userbrowsevbox.pack_start(self.hbox22, False, True, 0)
+
+        self.UserBrowseNotebook = self.get_custom_widget("UserBrowseNotebook", "", "", 0, 0)
+        self.UserBrowseNotebook.show()
+        self.userbrowsevbox.pack_start(self.UserBrowseNotebook, True, True, 0)
 
         self.UserBrowseTabLabel = self.get_custom_widget("UserBrowseTabLabel", _("ImageLabel"), _("User browse"), 0, 0)
         self.UserBrowseTabLabel.show()
@@ -921,6 +923,7 @@ class MainWindow:
 
         self.label35 = gtk.Label(_("Similar users"))
         self.label35.set_padding(0, 0)
+        self.label35.set_line_wrap(False)
         self.label35.show()
         self.hbox26.pack_start(self.label35, False, False, 0)
 
@@ -949,6 +952,7 @@ class MainWindow:
 
         self.label34 = gtk.Label(_("Recommendations"))
         self.label34.set_padding(0, 0)
+        self.label34.set_line_wrap(False)
         self.label34.show()
         self.hbox25.pack_start(self.label34, False, False, 0)
 
@@ -977,6 +981,7 @@ class MainWindow:
 
         self.label33 = gtk.Label(_("Global recommendations"))
         self.label33.set_padding(0, 0)
+        self.label33.set_line_wrap(False)
         self.label33.show()
         self.hbox24.pack_start(self.label33, False, False, 0)
 
@@ -1035,6 +1040,7 @@ class MainWindow:
 
         self.label22 = gtk.Label(_("Add"))
         self.label22.set_padding(0, 0)
+        self.label22.set_line_wrap(False)
         self.label22.show()
         self.hbox15.pack_start(self.label22, False, False, 0)
 
@@ -1081,6 +1087,7 @@ class MainWindow:
 
         self.label21 = gtk.Label(_("Add"))
         self.label21.set_padding(0, 0)
+        self.label21.set_line_wrap(False)
         self.label21.show()
         self.hbox14.pack_start(self.label21, False, False, 0)
 
@@ -1443,6 +1450,7 @@ class ChatRoomTab:
 
         self.label62 = gtk.Label(_("Leave"))
         self.label62.set_padding(0, 0)
+        self.label62.set_line_wrap(False)
         self.label62.show()
         self.hbox53.pack_start(self.label62, False, False, 0)
 
@@ -1516,9 +1524,9 @@ class PrivateChatTab:
 
         self.Main.pack_start(self.scrolledwindow16, True, True, 0)
 
-        self.hbox5 = gtk.HBox(False, 0)
+        self.hbox5 = gtk.HBox(False, 5)
         self.hbox5.show()
-        self.hbox5.set_spacing(0)
+        self.hbox5.set_spacing(5)
 
         self.ChatLine = gtk.Entry()
         self.ChatLine.set_text("")
@@ -1566,6 +1574,7 @@ class PrivateChatTab:
 
         self.label63 = gtk.Label(_("Close"))
         self.label63.set_padding(0, 0)
+        self.label63.set_line_wrap(False)
         self.label63.show()
         self.hbox54.pack_start(self.label63, False, False, 0)
 
@@ -1647,6 +1656,7 @@ class SearchTab:
 
         self.label65 = gtk.Label(_("Ignore"))
         self.label65.set_padding(0, 0)
+        self.label65.set_line_wrap(False)
         self.label65.show()
         self.hbox56.pack_start(self.label65, False, False, 0)
 
@@ -1675,6 +1685,7 @@ class SearchTab:
 
         self.label64 = gtk.Label(_("Close"))
         self.label64.set_padding(0, 0)
+        self.label64.set_line_wrap(False)
         self.label64.show()
         self.hbox55.pack_start(self.label64, False, False, 0)
 
@@ -1698,6 +1709,7 @@ class SearchTab:
 
         self.label13 = gtk.Label(_("Filter in:"))
         self.label13.set_padding(0, 0)
+        self.label13.set_line_wrap(False)
         self.label13.show()
         self.Filters.pack_start(self.label13, False, False, 0)
 
@@ -1718,6 +1730,7 @@ class SearchTab:
 
         self.label14 = gtk.Label(_("Filter out:"))
         self.label14.set_padding(0, 0)
+        self.label14.set_line_wrap(False)
         self.label14.show()
         self.Filters.pack_start(self.label14, False, False, 0)
 
@@ -1738,6 +1751,7 @@ class SearchTab:
 
         self.label15 = gtk.Label(_("Size:"))
         self.label15.set_padding(0, 0)
+        self.label15.set_line_wrap(False)
         self.label15.show()
         self.Filters.pack_start(self.label15, False, False, 0)
 
@@ -1759,6 +1773,7 @@ class SearchTab:
 
         self.label16 = gtk.Label(_("Bitrate:"))
         self.label16.set_padding(0, 0)
+        self.label16.set_line_wrap(False)
         self.label16.show()
         self.Filters.pack_start(self.label16, False, False, 0)
 
@@ -1780,6 +1795,7 @@ class SearchTab:
 
         self.label23 = gtk.Label(_("Country:"))
         self.label23.set_padding(0, 0)
+        self.label23.set_line_wrap(False)
         self.label23.show()
         self.Filters.pack_start(self.label23, False, False, 0)
 
@@ -1905,6 +1921,7 @@ class UserInfoTab:
 
         self.label17 = gtk.Label(_("Self description:"))
         self.label17.set_padding(0, 0)
+        self.label17.set_line_wrap(False)
         self.label17.show()
         self.frame1.set_label_widget(self.label17)
 
@@ -1922,12 +1939,14 @@ class UserInfoTab:
         self.uploads = gtk.Label(_("Total uploads allowed: unknown"))
         self.uploads.set_alignment(0, 0.5)
         self.uploads.set_padding(0, 0)
+        self.uploads.set_line_wrap(False)
         self.uploads.show()
         self.vbox10.pack_start(self.uploads, False, False, 0)
 
         self.queuesize = gtk.Label(_("Queue size: unknown"))
         self.queuesize.set_alignment(0, 0.5)
         self.queuesize.set_padding(0, 0)
+        self.queuesize.set_line_wrap(False)
         self.queuesize.show()
         self.vbox10.pack_start(self.queuesize, False, False, 0)
 
@@ -1938,12 +1957,14 @@ class UserInfoTab:
         self.slotsavail = gtk.Label(_("Slots available: unknown"))
         self.slotsavail.set_alignment(0, 0.5)
         self.slotsavail.set_padding(0, 0)
+        self.slotsavail.set_line_wrap(False)
         self.slotsavail.show()
         self.hbox17.pack_start(self.slotsavail, False, False, 0)
 
         self.speed = gtk.Label(_("Speed: unknown"))
         self.speed.set_alignment(0, 0.5)
         self.speed.set_padding(0, 0)
+        self.speed.set_line_wrap(False)
         self.speed.show()
         self.hbox17.pack_start(self.speed, False, False, 0)
 
@@ -1956,12 +1977,14 @@ class UserInfoTab:
         self.filesshared = gtk.Label(_("Files Shared: unknown"))
         self.filesshared.set_alignment(0, 0.5)
         self.filesshared.set_padding(0, 0)
+        self.filesshared.set_line_wrap(False)
         self.filesshared.show()
         self.hbox16.pack_start(self.filesshared, False, False, 0)
 
         self.dirsshared = gtk.Label(_("Dirs Shared: unknown"))
         self.dirsshared.set_alignment(0, 0.5)
         self.dirsshared.set_padding(0, 0)
+        self.dirsshared.set_line_wrap(False)
         self.dirsshared.show()
         self.hbox16.pack_start(self.dirsshared, False, False, 0)
 
@@ -1975,6 +1998,7 @@ class UserInfoTab:
 
         self.label18 = gtk.Label(_("Information:"))
         self.label18.set_padding(0, 0)
+        self.label18.set_line_wrap(False)
         self.label18.show()
         self.frame2.set_label_widget(self.label18)
 
@@ -2006,6 +2030,7 @@ class UserInfoTab:
 
         self.label19 = gtk.Label(_("Picture:"))
         self.label19.set_padding(0, 0)
+        self.label19.set_line_wrap(False)
         self.label19.show()
         self.frame3.set_label_widget(self.label19)
 
@@ -2037,6 +2062,7 @@ class UserInfoTab:
 
         self.label52 = gtk.Label(_("Private chat"))
         self.label52.set_padding(0, 0)
+        self.label52.set_line_wrap(False)
         self.label52.show()
         self.hbox43.pack_start(self.label52, False, False, 0)
 
@@ -2065,6 +2091,7 @@ class UserInfoTab:
 
         self.label53 = gtk.Label(_("Browse"))
         self.label53.set_padding(0, 0)
+        self.label53.set_line_wrap(False)
         self.label53.show()
         self.hbox44.pack_start(self.label53, False, False, 0)
 
@@ -2093,6 +2120,7 @@ class UserInfoTab:
 
         self.label54 = gtk.Label(_("Show IP"))
         self.label54.set_padding(0, 0)
+        self.label54.set_line_wrap(False)
         self.label54.show()
         self.hbox45.pack_start(self.label54, False, False, 0)
 
@@ -2121,6 +2149,7 @@ class UserInfoTab:
 
         self.label55 = gtk.Label(_("Add to list"))
         self.label55.set_padding(0, 0)
+        self.label55.set_line_wrap(False)
         self.label55.show()
         self.hbox46.pack_start(self.label55, False, False, 0)
 
@@ -2149,6 +2178,7 @@ class UserInfoTab:
 
         self.label66 = gtk.Label(_("Ban"))
         self.label66.set_padding(0, 0)
+        self.label66.set_line_wrap(False)
         self.label66.show()
         self.hbox57.pack_start(self.label66, False, False, 0)
 
@@ -2177,6 +2207,7 @@ class UserInfoTab:
 
         self.label61 = gtk.Label(_("Ignore"))
         self.label61.set_padding(0, 0)
+        self.label61.set_line_wrap(False)
         self.label61.show()
         self.hbox52.pack_start(self.label61, False, False, 0)
 
@@ -2205,6 +2236,7 @@ class UserInfoTab:
 
         self.label58 = gtk.Label(_("Save pic"))
         self.label58.set_padding(0, 0)
+        self.label58.set_line_wrap(False)
         self.label58.show()
         self.hbox49.pack_start(self.label58, False, False, 0)
 
@@ -2233,6 +2265,7 @@ class UserInfoTab:
 
         self.label60 = gtk.Label(_("Close"))
         self.label60.set_padding(0, 0)
+        self.label60.set_line_wrap(False)
         self.label60.show()
         self.hbox51.pack_start(self.label60, False, False, 0)
 
@@ -2261,6 +2294,7 @@ class UserInfoTab:
 
         self.label59 = gtk.Label(_("Refresh"))
         self.label59.set_padding(0, 0)
+        self.label59.set_line_wrap(False)
         self.label59.show()
         self.hbox50.pack_start(self.label59, False, False, 0)
 
@@ -2333,6 +2367,7 @@ class UserBrowseTab:
 
         self.label20 = gtk.Label(_("Search file and folder names (exact match):"))
         self.label20.set_padding(0, 0)
+        self.label20.set_line_wrap(False)
         self.label20.show()
         self.hbox8.pack_start(self.label20, False, False, 0)
 
@@ -2472,6 +2507,7 @@ class RoomList:
 
         self.label10 = gtk.Label(_("Create: "))
         self.label10.set_padding(0, 0)
+        self.label10.set_line_wrap(False)
         self.label10.show()
         self.hbox1.pack_start(self.label10, False, False, 0)
 
