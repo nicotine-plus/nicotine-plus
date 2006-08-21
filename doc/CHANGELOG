@@ -1,6 +1,8 @@
 ChangeLog for Nicotine
 
 Unreleased
+ * Added option to Transfer Settings to show/hide the transfer buttons.
+ * Added expander to glade2py, so it can now be used.
  * Rearranged the new user entry/buttons to the top left of their tabs, added 
    spacing inside tabs.
  * Added more stock gtk icons to Settings and Userinfo, among other places.

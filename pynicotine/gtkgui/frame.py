@@ -990,8 +990,6 @@ class testwin(MainWindow):
 			self.DownloadButtons.show()
 			self.UploadButtons.show()
 		else:
-			
-			print self.UploadButtons
 			self.UploadButtons.hide()
 			self.DownloadButtons.hide()
 			
