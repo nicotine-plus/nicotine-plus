@@ -1,6 +1,11 @@
 ChangeLog for Nicotine
 
 Unreleased
+ * Rearranged the new user entry/buttons to the top left of their tabs, added 
+   spacing inside tabs.
+ * Added more stock gtk icons to Settings and Userinfo, among other places.
+ * Fixed the Chatrooms tab hilite bug (reported by Offhand, xrc)
+ * Made the main window's minimum size to be 500x500 px
  * Modified CheckVersion function to allow for milli ( X.X.X.X  ) versioning.
  * Add a Bool to the GetUserStatus message received from the server, for privs.
    If 1, add user to list of privileged users.
