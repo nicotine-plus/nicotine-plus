@@ -245,6 +245,8 @@ class UserBrowse(UserBrowseTab):
 		self.DownloadDirectory(self.selected_folder, "", 1)
 	
 	def OnDownloadDirectoryTo(self, widget):
+		if self.selected_folder == None:
+			return
 		dir = ChooseDir(self.frame.MainWindow, self.frame.np.config.sections["transfers"]["downloaddir"])
 		if dir is None:
 			return
@@ -271,6 +273,8 @@ class UserBrowse(UserBrowseTab):
 
 	
 	def DownloadDirectory(self, node, prefix = "", recurse = 0):
+		if node == None:
+			return
 		dir = node.path
 		ldir = prefix + dir[:-1].split("\\")[-1]
 		for file in node.files:
