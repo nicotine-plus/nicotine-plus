@@ -100,7 +100,7 @@ class SlskProtoThread(threading.Thread):
 		UserInfoRequest:15,UserInfoReply:16, FolderContentsRequest:36,
 		FolderContentsResponse:37, TransferRequest:40,
 		TransferResponse:41,PlaceholdUpload:42,QueueUpload:43,
-		PlaceInQueue:44,UploadFailed:46,QueueFailed:50,PlaceInQueueRequest:51, 
+		PlaceInQueue:44,UploadFailed:46,QueueFailed:50,PlaceInQueueRequest:51, UploadQueueNotification:52,
 		Msg12547:12547}
 
     distribclasses = {0:DistribAlive,3:DistribSearch}

@@ -498,8 +498,8 @@ class QueuedDownloads(ServerMessage):
         len, self.slotsfull = self.getObject(message,types.IntType, len)
 
 class SendSpeed(ServerMessage):
-    """ We send this after a finished download to let the server update
-    the spped statistics for a user"""
+    """ We used to send this after a finished download to let the server update
+    the speed statistics for a user"""
     def __init__(self, user = None, speed = None):
 	self.user = user
 	self.speed = speed
@@ -508,7 +508,7 @@ class SendSpeed(ServerMessage):
 	return self.packObject(self.user)+self.packObject(self.speed)
 
 class SendUploadSpeed(ServerMessage):
-    """ We send this after a finished download to let the server update
+    """ We now send this after a finished upload to let the server update
     the spped statistics for a user"""
     def __init__(self, speed = None):
 	self.speed = speed
@@ -666,6 +666,18 @@ class MinParentsInCache(Msg83):
     pass
 class Msg12547(Msg83):
     pass
+
+class UploadQueueNotification(PeerMessage):
+    def __init__(self,conn):
+	self.conn = conn
+
+    def makeNetworkMessage(self):
+	return ""
+
+    def parseNetworkMessage(self, message):
+        return ""
+
+    
 class Msg89(Msg83):
     pass
 

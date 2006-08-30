@@ -171,7 +171,7 @@ class NetworkEventProcessor:
 			slskmessages.IncConn:self.IncConn,
 			slskmessages.PlaceholdUpload:self.PlaceholdUpload,
 			slskmessages.PlaceInQueueRequest:self.PlaceInQueueRequest,
-
+			slskmessages.UploadQueueNotification:self.UploadQueueNotification,
 			slskmessages.SearchRequest:self.SearchRequest,
 			slskmessages.FileSearch:self.SearchRequest,
 			slskmessages.RoomSearch:self.SearchRequest,
@@ -881,6 +881,22 @@ class NetworkEventProcessor:
             self.transfers.PlaceInQueueRequest(msg)
         else:
             self.logMessage("%s %s" %(msg.__class__, vars(msg)))
+
+    def UploadQueueNotification(self, msg):
+      self.logMessage("%s %s" %(msg.__class__, vars(msg)),1)
+      username = None
+      for i in self.peerconns:
+            if i.conn is msg.conn.conn:
+		username = i.username
+                break
+      if username is None:
+        return
+      if username in [i[0] for i in self.config.sections["server"]["userlist"]] and self.config.sections["transfers"]["remotedownloads"] == 1:
+            self.logMessage(_("Your buddy, %s, is attempting to upload file(s) to you.")%(username), None)
+      else:
+            self.queue.put(slskmessages.MessageUser(username, _("[Automatic Message] ")+_("You are not allowed to send me files.")) )
+            self.logMessage(_("%s is not allowed to send you file(s), but is attempting to, anyway. Warning Sent.")%(username), None)
+            
 
 
     def UploadFailed(self,msg):

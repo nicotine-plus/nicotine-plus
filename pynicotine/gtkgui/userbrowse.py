@@ -293,14 +293,16 @@ class UserBrowse(UserBrowseTab):
 	def OnUploadFiles(self, widget, prefix = ""):
 		dir = self.selected_folder.path
 
-		result = input_box(self.frame, title='Nicotine: Remote Upload File(s)',
+		user = input_box(self.frame, title='Nicotine: Remote Upload File(s)',
 		message='Enter the User you wish to upload to:',
 		default_text='')
-		if result is None:
+		if user is None:
 			pass
 		else:
+                        self.frame.np.ProcessRequestToPeer(user,slskmessages.UploadQueueNotification(None)  )
+                        #self.np.ProcessRequestToPeer(user, slskmessages.UserInfoRequest(None), self.userinfo)
 			for fn in self.selected_files:
-				self.frame.np.transfers.pushFile(result, dir + fn, prefix)
+				self.frame.np.transfers.pushFile(user, dir + fn, prefix)
 				self.frame.np.transfers.checkUploadQueue()
 			
 	def OnPlayFiles(self, widget, prefix = ""):
