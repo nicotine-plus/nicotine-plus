@@ -1,27 +1,5 @@
-Nicotine+ Depencies
-====================================================================
-On Linux, the BSDs and MacOSX, a X-Server is required.
-None is required on Win32.
+Linux/Unix installation instructions follow.
 
-Required Dependencies
-
-    * GTK2 Gimp Tool Kit Version 2
-    * PyGTK2 Python Bindings for GTK2
-    * Python Python 2.x or greater
-    * Python's BSDDB module (Some BSDs include this seperately from Python)
-          o On NetBSD the package is named py24_bsddb 
-
-Optional Dependencies 
-
-    * PyOGG & PyVorbis ( OGG metadata support )
-    * GeoIP Python API (Country lookup / blocking support )
-    * Psyco (Speeds up Python Code execution)
-    * The TrayIcon is a Python module the requires the development packages 
-      of PyGTK, GTK2 and Python as well as GCC. 
-
-
-Linux/Unix installation
-====================================================================
 To install Nicotine, from the source tree run:
 
 python setup.py install --prefix=<dir>
@@ -40,17 +18,13 @@ the system that is interested in running Nicotine. From the source tree run:
 python ./nicotine
 
 
-Building RPM packages
-====================================================================
-You create a RPM from the source tree:
+Another option would be that you create an RPM from the source tree:
 
 python setup.py bdist_rpm
 
 which will create a binary RPM in the dist subdirectory of the source tree.
 
 
-Creating RPM packages
-====================================================================
 Note: to build source distribution (.tar.bz2) from itself, run:
 
 python setup.py sdist --formats=bztar
