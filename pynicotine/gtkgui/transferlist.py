@@ -19,15 +19,14 @@ class TransferList:
 		self.selected_users = []
 		
 		widget.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
-		
-		columntypes = [gobject.TYPE_STRING for i in range(10)] + [gobject.TYPE_INT, gobject.TYPE_INT]
+
+                columntypes = [gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_INT , gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING,  gobject.TYPE_INT, gobject.TYPE_INT]
 		self.transfersmodel = gtk.ListStore(*columntypes)
-		
 		cols = InitialiseColumns(widget,
 			[_("Filename"), 250, "text"],
 			[_("User"), 100, "text"],
 			[_("Status"), 150, "text"],
-			[_("Percent"), 50, "text"],
+			[_("Percent"), 70, "progress"],
 			[_("Size"), 100, "text"],
 			[_("Speed"), 50, "text"],
 			[_("Time elapsed"), 70, "text"],
@@ -146,13 +145,14 @@ class TransferList:
 			try:
 				ist =  int(istatus)
 				if  ist == int(transfer.size) or ist == 11:
-					percent = "100%"
+					percent = 100
 				elif  ist < 11:
-					percent = "0%"
+					percent = 0
 				else:
-					percent = "%i%%" % ((100 * ist)/ int(size))
+					percent = ((100 * ist)/ int(size))
 			except:
-				percent = "0%"
+				percent = 0
+
 			for i in self.transfers:
 				if i[0] == key:
 					if i[2] != transfer:
