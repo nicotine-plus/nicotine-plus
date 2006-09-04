@@ -101,7 +101,24 @@ class testwin(MainWindow):
 		self.roomlist = roomlist(self)
 		
 		self.logpopupmenu = PopupMenu(self).setup([_("Clear log"), self.OnClearLogWindow])
-		
+		def on_delete_event(widget, event):
+                    if HAVE_TRAYICON:
+                      option = Option_Box(self, title=_('Close Nicotine-Plus?'), message=_('Are you sure you wish to exit Nicotine-Plus at this time?'), option1=_("Exit"), option2=_("Send to Tray"), option3=_("Cancel") )
+                    else:
+                      option = Option_Box(self, title=_('Close Nicotine-Plus?'), message=_('Are you sure you wish to exit Nicotine-Plus at this time?'), option1=_("Exit"), option3=_("Cancel"), option2=None )
+		    if option is None:
+			pass
+		    else:
+                      if option == 2: 
+                        if self.is_mapped:
+                          self.MainWindow.unmap()
+                          self.is_mapped = 0
+                      elif option == 1:
+                        gtk.main_quit()
+                        return False
+                    return True
+
+                self.MainWindow.connect("delete-event",on_delete_event)
 		
 		self.importimages()
 		self.transfermsgs = {}
@@ -435,8 +452,8 @@ class testwin(MainWindow):
 		
 	def OnGetAUsersInfo(self, widget, prefix = ""):
 		# popup
-		user = input_box(self, title='Nicotine+: Get User Info',
-		message='Enter the User whose User Info you wish to recieve:',
+		user = input_box(self, title=_('Nicotine+: Get User Info'),
+		message=_('Enter the User whose User Info you wish to recieve:'),
 		default_text='')
 		if user is None:
 			pass
@@ -444,8 +461,8 @@ class testwin(MainWindow):
 			self.LocalUserInfoRequest(user)
 			
 	def OnGetAUsersIP(self, widget, prefix = ""):
-		user = input_box(self, title="Nicotine+: Get A User's IP",
-		message='Enter the User whose IP Address you wish to recieve:',
+		user = input_box(self, title=_("Nicotine+: Get A User's IP"),
+		message=_('Enter the User whose IP Address you wish to recieve:'),
 		default_text='')
 		if user is None:
 			pass
@@ -454,8 +471,8 @@ class testwin(MainWindow):
 # 			self.np.ProcessRequestToPeer(user, slskmessages.UserInfoRequest(None), self.userinfo)
 			
 	def OnGetAUsersShares(self, widget, prefix = ""):
-		user = input_box(self, title="Nicotine+: Get A User's Shares List",
-		message='Enter the User whose Shares List you wish to recieve:',
+		user = input_box(self, title=_("Nicotine+: Get A User's Shares List"),
+		message=_('Enter the User whose Shares List you wish to recieve:'),
 		default_text='')
 		if user is None:
 			pass
@@ -467,23 +484,23 @@ class testwin(MainWindow):
 			file_menu = gtk.Menu()
 			connect_menu = gtk.Menu()
 			
-			quit_item = gtk.MenuItem("Quit")
+			quit_item = gtk.MenuItem(_("Quit"))
 			quit_item.connect_object("activate", self.OnExit, "file.quit")
 			quit_item.show()
 
-			ip_item = gtk.MenuItem("Lookup A User's IP")
+			ip_item = gtk.MenuItem(_("Lookup a User's IP"))
 			ip_item.connect_object("activate", self.OnGetAUsersIP, "file.ip")
 			ip_item.show()
 			
-			userinfo_item = gtk.MenuItem("Lookup A User's Info")
+			userinfo_item = gtk.MenuItem(_("Lookup a User's Info"))
 			userinfo_item.connect_object("activate", self.OnGetAUsersInfo, "file.userinfo")
 			userinfo_item.show()
 			
-			shares_item = gtk.MenuItem("Lookup A User's Shares")
+			shares_item = gtk.MenuItem(_("Lookup a User's Shares"))
 			shares_item.connect_object("activate", self.OnGetAUsersShares, "file.usershares")
 			shares_item.show()
 			
-			hide_item = gtk.MenuItem("Hide / Unhide Nicotine")
+			hide_item = gtk.MenuItem(_("Hide / Unhide Nicotine"))
 			hide_item.connect_object("activate", self.HideUnhideWindow, "file.hide")
 			hide_item.show()
 			
@@ -492,22 +509,22 @@ class testwin(MainWindow):
 			away_item.add_accelerator("activate", self.accel_group, gtk.gdk.keyval_from_name("A"), gtk.gdk.MOD1_MASK, gtk.ACCEL_VISIBLE)
 			away_item.show()
 			
-			settings_item = gtk.MenuItem("Settings")
+			settings_item = gtk.MenuItem(_("Settings"))
 			settings_item.connect_object("activate", self.OnSettings, "settings")
 			settings_item.show()
 			
-			connect_item = gtk.MenuItem("Connect")
+			connect_item = gtk.MenuItem(_("Connect"))
 			connect_item.connect_object("activate", self.OnConnect, None)
 			connect_item.show()
 			
-			disconnect_item = gtk.MenuItem("Disconnect")
+			disconnect_item = gtk.MenuItem(_("Disconnect"))
 			disconnect_item.connect_object("activate", self.OnDisconnect, "disconnect")
 			disconnect_item.show()
 			
 			connect_menu.append(connect_item)
 			connect_menu.append(disconnect_item)
 					
-			server_menu = gtk.MenuItem("Server")
+			server_menu = gtk.MenuItem(_("Server"))
 			server_menu.show()
 			server_menu.set_submenu(connect_menu)
 			file_menu.append(hide_item)
@@ -690,7 +707,7 @@ class testwin(MainWindow):
 				self.np.queue.get(0)
 		self.SetUserStatus("...")
 		server = self.np.config.sections["server"]["server"]
-		self.SetStatusText("Connecting to %s:%s" %(server[0],server[1]))
+		self.SetStatusText(_("Connecting to %s:%s" %(server[0],server[1])))
 		self.np.queue.put(slskmessages.ServerConn(None, server))
 		if self.np.servertimer is not None:
 			self.np.servertimer.cancel()
