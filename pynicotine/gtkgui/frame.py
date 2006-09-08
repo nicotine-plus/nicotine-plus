@@ -707,7 +707,7 @@ class testwin(MainWindow):
 				self.np.queue.get(0)
 		self.SetUserStatus("...")
 		server = self.np.config.sections["server"]["server"]
-		self.SetStatusText(_("Connecting to %s:%s" %(server[0],server[1])))
+		self.SetStatusText(_("Connecting to %s:%s") %(server[0],server[1]) )
 		self.np.queue.put(slskmessages.ServerConn(None, server))
 		if self.np.servertimer is not None:
 			self.np.servertimer.cancel()

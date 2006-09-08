@@ -101,12 +101,7 @@ class TransferList:
 		priv = ""
 		if modifier == None:
 			modifier = ""
-		#== " " + _("(privileged)")
-		#isfriend = " " + _("(friend)")
-		#if type(size) is StringType and size[-len(ispriv):] == ispriv:
-			#size, priv = size[:-len(ispriv)], size[-len(ispriv):]
-		#elif type(size) is StringType and size[-len(isfriend):] == isfriend:
-			#size, priv = size[:-len(isfriend)], size[-len(isfriend):]
+                else: modifier = " " + modifer
 		try:
 			s = int(size)
 			if s >= 1000*1024*1024:
@@ -117,15 +112,16 @@ class TransferList:
 				r = _("%.2f KB") % ((float(s) / 1024.0))
 			else:
 				r = str(size)
-			return r + " "+ modifier
+			return r + modifier
 		except:
-			return size + " "+ modifier
+			return size + modifier
 	
 	def update(self, transfer = None):
 		if transfer is not None:
 			if not transfer in self.list:
 				return
 			fn = transfer.filename
+                        currentbytes = transfer.currentbytes
 			user = transfer.user
 			key = [user, fn]
 			
@@ -142,17 +138,20 @@ class TransferList:
 				speed = str(transfer.speed)
 			elap = str(transfer.timeelapsed)
 			left = str(transfer.timeleft)
+                        
 			try:
-				ist =  int(istatus)
-				if  ist == int(transfer.size) or ist == 11:
+                                #print currentbytes
+				ist = int(currentbytes)
+				if  ist == int(transfer.size):
 					percent = 100
-				elif  ist < 11:
-					percent = 0
 				else:
 					percent = ((100 * ist)/ int(size))
-			except:
+			except Exception, e:
+                                #print e
 				percent = 0
+                                
 
+                        
 			for i in self.transfers:
 				if i[0] == key:
 					if i[2] != transfer:
@@ -160,13 +159,14 @@ class TransferList:
 							self.list.remove(i[2])
 						i[2] = transfer
 					self.transfersmodel.set(i[1], 2, status, 3, percent, 4, hsize, 5, speed, 6, elap, 7, left, 10, istatus, 11, size)
+
 					break
 			else:
 				shortfn = self.frame.np.decode(fn.split("\\")[-1])
 				path = self.frame.np.decode(transfer.path)
 				iter = self.transfersmodel.append([shortfn, user, status, percent,  hsize, speed, elap, left, path, fn, istatus, size])
 				self.transfers.append([key, iter, transfer])
-			
+				
 		elif self.list is not None:
 			for i in self.transfers[:]:
 				for j in self.list:

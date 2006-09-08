@@ -29,9 +29,13 @@ class Searches:
 		#frame.combo1.disable_activate()
 		
 		items = self.frame.np.config.sections["searches"]["history"]
+		templist = []
 		for i in items:
+			if i not in templist:
+				templist.append(i)
+		for i in templist:
 			self.frame.combo1.append_text(i)
-		#frame.combo1.set_popdown_strings([""] + items)
+		
 		
 	def SetInterval(self, msg):
 		self.interval = 1000
@@ -76,14 +80,20 @@ class Searches:
 		if not text:
 			return
 		
-		s = self.frame.np.config.sections["searches"]["history"]
-		if text in s:
-			s.remove(text)
-		s.insert(0, text)
-		del s[15:]
+		items = self.frame.np.config.sections["searches"]["history"]
+		if text in items:
+			items.remove(text)
+		items.insert(0, text)
+		# Clear old items
+		del items[15:]
 		self.frame.np.config.writeConfig()
-		#self.frame.combo1.set_popdown_strings([""] + s)
-		for i in s:
+		# Repopulate the combo list
+		self.frame.combo1.get_model().clear()
+		templist = []
+		for i in items:
+			if i not in templist:
+				templist.append(i)
+		for i in templist:
 			self.frame.combo1.append_text(i)
 			
 		if self.frame.GlobalRadio.get_active():
