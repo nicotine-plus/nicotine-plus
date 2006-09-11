@@ -428,7 +428,18 @@ class testwin(MainWindow):
 			self.eventbox.show()
 		except Exception,e:
 			print "ERROR: load_image_wrapped", e
-	
+			
+	def download_large_folder(self, username, folder, files, numfiles, msg):
+		gtk.gdk.threads_enter()
+		
+		
+		option = Option_Box(self, title=_('Download %i files?' %numfiles), message=_("Are you sure you wish to download %i files from %s's directory %s?" %( numfiles, username, folder ) ), option1=_("Ok"), option3=_("Cancel"), option2=None )
+		gtk.gdk.threads_leave()
+
+		if option == 1:
+			self.np.transfers.FolderContentsResponse(msg)
+			
+		
 	def OnGetUserInfo(self, widget):
 		text = self.UserinfoEntry.get_text()
 		if not text:

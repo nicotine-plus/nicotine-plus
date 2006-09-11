@@ -914,7 +914,28 @@ class NetworkEventProcessor:
 
     def FolderContentsResponse(self,msg):
         if self.transfers is not None:
-            self.transfers.FolderContentsResponse(msg)
+		
+		for i in self.peerconns:
+			if i.conn is msg.conn.conn:
+        	        	username = i.username
+		# Check for a large number of files
+		many=0
+		folder = ""
+		files = []
+		for i in msg.list.keys():
+			for j in msg.list[i].keys():
+				if os.path.commonprefix([i,j]) == j:
+					numfiles = len(msg.list[i][j])
+					if numfiles > 100:
+						many=1
+						files = msg.list[i][j]
+						folder = j
+						
+						
+		if many:
+			self.frame.download_large_folder(username, folder, files, numfiles, msg)
+		else:
+			self.transfers.FolderContentsResponse(msg)
         else:
             self.logMessage("%s %s" %(msg.__class__, vars(msg)))
 

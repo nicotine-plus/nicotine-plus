@@ -1,6 +1,13 @@
-ChangeLog for Nicotine
+ChangeLog for Nicotine Plus
 
-Unreleased
+Unreleased 1.2.5pre
+ * Added confirmation exit popup dialog when quiting with the window manager.
+ * Replaced "pure text" percent column with a CellRendererProgress column
+ * Added support for sending and recieving Soulseek peer message 52, Upload
+   Queue Notification, which allows users to notify upload recipients that 
+   they are attempting to send a file. Also, a log message is printed when a 
+   user attempts to send you file(s) and an automatic is sent if they aren't 
+   allowed to.
  * Added option to Transfer Settings to show/hide the transfer buttons.
  * Added expander to glade2py, so it can now be used.
  * Rearranged the new user entry/buttons to the top left of their tabs, added 

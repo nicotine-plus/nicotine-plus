@@ -78,7 +78,7 @@ class OptionDialog( gtk.Dialog):
         self.connect("delete_event", self.quit)
 	
         if modal:
-            self.set_modal(True)
+            self.set_modal(False)
         box = gtk.VBox(spacing=10)
         box.set_border_width(10)
         self.vbox.pack_start(box)
