@@ -820,7 +820,10 @@ class testwin(MainWindow):
 	
 	def OnSearch(self, widget):
 		self.searches.OnSearch()
-
+		
+	def OnClearSearchHistory(self, widget):
+		self.searches.OnClearSearchHistory()
+		
 	def ChatRequestIcon(self, status = 0):
 		if status == 1 and not self.got_focus:
 			self.MainWindow.set_icon(self.images["hilite2"])

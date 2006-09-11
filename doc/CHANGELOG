@@ -1,6 +1,7 @@
 ChangeLog for Nicotine Plus
 
 Unreleased 1.2.5pre
+ * Added 'clear search history' button to search
  * Shortened Search tab length and added a label containing the full query 
    next to the "Enable filters" checkbox.
  * Added confirmation exit popup dialog when quiting with the window manager.

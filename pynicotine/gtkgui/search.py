@@ -36,7 +36,6 @@ class Searches:
 		for i in templist:
 			self.frame.combo1.append_text(i)
 		
-		
 	def SetInterval(self, msg):
 		self.interval = 1000
 		
@@ -73,6 +72,12 @@ class Searches:
 				break
 		
 		return True
+	
+	def OnClearSearchHistory(self):
+		self.frame.SearchEntry.set_text("")
+		self.frame.np.config.sections["searches"]["history"] = []
+		self.frame.np.config.writeConfig()
+		self.frame.combo1.get_model().clear()
 	
 	def OnSearch(self):
 		text = self.frame.SearchEntry.get_text().strip()

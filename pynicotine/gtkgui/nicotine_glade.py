@@ -733,6 +733,35 @@ class MainWindow:
         self.combo1.set_text_column(0)
         self.hbox2.pack_start(self.combo1, True, True, 0)
 
+        self.ClearSearchHistory = gtk.Button()
+        self.ClearSearchHistory.show()
+        self.ClearSearchHistory.connect("clicked", self.OnClearSearchHistory)
+
+        self.alignment38 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment38.show()
+
+        self.hbox59 = gtk.HBox(False, 2)
+        self.hbox59.show()
+        self.hbox59.set_spacing(2)
+
+        self.image38 = gtk.Image()
+        self.image38.set_padding(0, 0)
+        self.image38.set_from_stock(gtk.STOCK_CLEAR, 4)
+        self.image38.show()
+        self.hbox59.pack_start(self.image38, False, False, 0)
+
+        self.label67 = gtk.Label(_("Clear"))
+        self.label67.set_padding(0, 0)
+        self.label67.set_line_wrap(False)
+        self.label67.show()
+        self.hbox59.pack_start(self.label67, False, False, 0)
+
+        self.alignment38.add(self.hbox59)
+
+        self.ClearSearchHistory.add(self.alignment38)
+
+        self.hbox2.pack_start(self.ClearSearchHistory, False, False, 0)
+
         self.GlobalRadio = gtk.RadioButton()
         self.GlobalRadio.set_active(False)
         self.GlobalRadio.set_label(_("Global"))
@@ -1291,6 +1320,9 @@ class MainWindow:
         pass
 
     def OnSearch(self, widget):
+        pass
+
+    def OnClearSearchHistory(self, widget):
         pass
 
     def OnSimilarUsersClicked(self, widget):
