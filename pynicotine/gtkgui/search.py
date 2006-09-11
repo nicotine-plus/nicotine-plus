@@ -138,9 +138,9 @@ class Searches:
 		tab = Search(self, text, id, mode, remember)
 
 		if mode:
-			label = "(" + ("", _("Rooms"), _("Buddies"), _("User"))[mode] + ") " + text
+			label = "(" + ("", _("Rooms"), _("Buddies"), _("User"))[mode] + ") " + text[:15]
 		else:
-			label = text
+			label = text[:20]
 		self.frame.SearchNotebook.append_page(tab.vbox7, label, tab.OnCloseIgnore)
 
 		search = [id, text, tab, mode, remember]
@@ -348,6 +348,7 @@ class Search(SearchTab):
 		self.mode = mode
 		self.remember = remember
 		self.users = []
+		self.QueryLabel.set_text(text)
 
 		self.resultsmodel = SearchTreeModel()
 

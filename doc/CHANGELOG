@@ -1,6 +1,8 @@
 ChangeLog for Nicotine Plus
 
 Unreleased 1.2.5pre
+ * Shortened Search tab length and added a label containing the full query 
+   next to the "Enable filters" checkbox.
  * Added confirmation exit popup dialog when quiting with the window manager.
  * Replaced "pure text" percent column with a CellRendererProgress column
  * Added support for sending and recieving Soulseek peer message 52, Upload

@@ -1630,12 +1630,19 @@ class SearchTab:
         self.hbox6.show()
         self.hbox6.set_spacing(5)
 
+        self.QueryLabel = gtk.Label(_("Query"))
+        self.QueryLabel.set_alignment(0, 0.5)
+        self.QueryLabel.set_padding(0, 0)
+        self.QueryLabel.set_line_wrap(False)
+        self.QueryLabel.show()
+        self.hbox6.pack_start(self.QueryLabel, True, True, 0)
+
         self.checkbutton1 = gtk.CheckButton()
         self.checkbutton1.set_active(False)
         self.checkbutton1.set_label(_("Enable filters"))
         self.checkbutton1.show()
         self.checkbutton1.connect("toggled", self.OnToggleFilters)
-        self.hbox6.pack_start(self.checkbutton1, True, True, 0)
+        self.hbox6.pack_start(self.checkbutton1, False, True, 0)
 
         self.button2 = gtk.Button()
         self.button2.show()
