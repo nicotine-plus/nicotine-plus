@@ -84,7 +84,16 @@ class Searches:
 		self.frame.SearchEntry.set_text("")
 		if not text:
 			return
+
+		if self.frame.GlobalRadio.get_active():
+			mode = 0
+		elif self.frame.RoomsRadio.get_active():
+			mode = 1
+		else:
+			mode = 2
+		self.DoSearch(text, mode)
 		
+	def DoSearch(self, text, mode, users = []):
 		items = self.frame.np.config.sections["searches"]["history"]
 		if text in items:
 			items.remove(text)
@@ -101,15 +110,6 @@ class Searches:
 		for i in templist:
 			self.frame.combo1.append_text(i)
 			
-		if self.frame.GlobalRadio.get_active():
-			mode = 0
-		elif self.frame.RoomsRadio.get_active():
-			mode = 1
-		else:
-			mode = 2
-		self.DoSearch(text, mode)
-		
-	def DoSearch(self, text, mode, users = []):
 		self.CreateTab(self.searchid, text, mode)
 		text = self.frame.np.encode(text)
 		if mode == 0:

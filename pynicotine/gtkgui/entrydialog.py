@@ -72,13 +72,12 @@ def Option_Box(frame, title="Option Box", message="", default_text='',
     return win.ret
 
 class OptionDialog( gtk.Dialog):
-    def __init__(self, frame, message="",modal= True, option1="", option2="", option3=""):
+    def __init__(self, frame, message="",modal= False, option1="", option2="", option3=""):
         gtk.Dialog.__init__(self)
         self.connect("destroy", self.quit)
         self.connect("delete_event", self.quit)
 	
-        if modal:
-            self.set_modal(False)
+        self.set_modal(modal)
         box = gtk.VBox(spacing=10)
         box.set_border_width(10)
         self.vbox.pack_start(box)
