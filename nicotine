@@ -121,7 +121,7 @@ if __name__ == '__main__':
 
     import sys, getopt, os.path
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "hc:", ["help", "config=", "profile"])
+        opts, args = getopt.getopt(sys.argv[1:], "hc:td", ["help", "config=", "profile", "enable-trayicon", "disable-trayicon"])
     except getopt.GetoptError:
         # print help information and exit:
         usage()
@@ -133,6 +133,7 @@ if __name__ == '__main__':
     else:
         config = os.path.join(os.path.expanduser("~"),'.nicotine','config')
     profile = 0
+    trayicon = 1
     for o, a in opts:
         if o in ("-h", "--help"):
             usage()
@@ -141,12 +142,15 @@ if __name__ == '__main__':
             config = a
         if o == "--profile":
             profile = 1
-
+        if o in ("-t", "--enable-trayicon"):
+            trayicon=1
+        if o in ("-d", "--disable-trayicon"):	
+            trayicon=0
     result = checkenv()
     if result is None:
 	from pynicotine.gtkgui import frame
 
-        app = frame.MainApp(config)
+        app = frame.MainApp(config, trayicon)
 	if profile:
 	    import hotshot
 	    log = os.path.expanduser(config) + ".profile"

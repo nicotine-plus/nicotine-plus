@@ -1100,6 +1100,40 @@ class BloatFrame:
 
         self.vbox86.pack_start(self.hbox172, False, True, 0)
 
+        self.hbox177 = gtk.HBox(False, 10)
+        self.hbox177.show()
+        self.hbox177.set_spacing(10)
+
+        self.TrayiconCheck = gtk.CheckButton()
+        self.TrayiconCheck.set_active(False)
+        self.TrayiconCheck.set_label(_("Display Tray Icon"))
+        self.TrayiconCheck.show()
+        self.hbox177.pack_start(self.TrayiconCheck, False, False, 0)
+
+        self.label213 = gtk.Label(_("Decimal seperator:"))
+        self.label213.set_alignment(0, 0.5)
+        self.label213.set_padding(0, 0)
+        self.label213.set_line_wrap(False)
+        self.label213.show()
+        self.hbox177.pack_start(self.label213, False, False, 0)
+
+        self.DecimalSep_List = gtk.ListStore(gobject.TYPE_STRING)
+        self.DecimalSep = gtk.ComboBoxEntry()
+        self.DecimalSep.set_size_request(99, -1)
+        self.DecimalSep.show()
+
+        self.entry89 = self.DecimalSep.child
+        self.entry89.set_text("")
+        self.entry89.set_editable(False)
+        self.entry89.show()
+        self.entry89.set_visibility(True)
+
+        self.DecimalSep.set_model(self.DecimalSep_List)
+        self.DecimalSep.set_text_column(0)
+        self.hbox177.pack_start(self.DecimalSep, True, True, 0)
+
+        self.vbox86.pack_start(self.hbox177, False, False, 0)
+
         self.table2 = gtk.Table()
         self.table2.show()
         self.table2.set_row_spacings(0)
@@ -1504,34 +1538,6 @@ class BloatFrame:
         self.table2.attach(self.label300, 0, 3, 0, 1, gtk.FILL, 0, 0, 0)
 
         self.vbox86.pack_start(self.table2, False, False, 0)
-
-        self.hbox139 = gtk.HBox(False, 5)
-        self.hbox139.show()
-        self.hbox139.set_spacing(5)
-
-        self.label213 = gtk.Label(_("Decimal seperator:"))
-        self.label213.set_alignment(0, 0.5)
-        self.label213.set_padding(0, 0)
-        self.label213.set_line_wrap(False)
-        self.label213.show()
-        self.hbox139.pack_start(self.label213, False, False, 0)
-
-        self.DecimalSep_List = gtk.ListStore(gobject.TYPE_STRING)
-        self.DecimalSep = gtk.ComboBoxEntry()
-        self.DecimalSep.set_size_request(99, -1)
-        self.DecimalSep.show()
-
-        self.entry89 = self.DecimalSep.child
-        self.entry89.set_text("")
-        self.entry89.set_editable(False)
-        self.entry89.show()
-        self.entry89.set_visibility(True)
-
-        self.DecimalSep.set_model(self.DecimalSep_List)
-        self.DecimalSep.set_text_column(0)
-        self.hbox139.pack_start(self.DecimalSep, False, False, 0)
-
-        self.vbox86.pack_start(self.hbox139, False, False, 0)
 
         self.Main.add(self.vbox86)
 

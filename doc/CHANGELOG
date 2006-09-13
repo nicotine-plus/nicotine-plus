@@ -1,6 +1,9 @@
 ChangeLog for Nicotine Plus
 
 Unreleased 1.2.5pre
+ * Made Trayicon toggleable while running from the UI settings or at startup 
+   with --enable-trayicon, -t  and --disable-trayicon, -d
+ * Made /search commands modify the search history
  * Added 'clear search history' button to search
  * Shortened Search tab length and added a label containing the full query 
    next to the "Enable filters" checkbox.

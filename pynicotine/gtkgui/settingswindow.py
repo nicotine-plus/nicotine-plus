@@ -508,6 +508,8 @@ class BloatFrame(settings_glade.BloatFrame):
 			self.DecimalSep.child.set_text(ui["decimalsep"])
 		if ui["tabclosers"] is not None:
 			self.TabClosers.set_active(ui["tabclosers"])
+		if ui["trayicon"] is not None:
+			self.TrayiconCheck.set_active(ui["trayicon"])
 
 	def GetSettings(self):
 		return {
@@ -522,6 +524,7 @@ class BloatFrame(settings_glade.BloatFrame):
 				"searchq": self.Queue.get_text(),
 				"decimalsep": self.DecimalSep.child.get_text(),
 				"tabclosers": self.TabClosers.get_active(),
+				"trayicon": self.TrayiconCheck.get_active(),
 			},
 		}
 	

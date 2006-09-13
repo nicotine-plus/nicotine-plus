@@ -35,13 +35,7 @@ import translux
 from pynicotine.utils import _
 
 from entrydialog import  *
-try:
-	from pynicotine import trayicon
-	HAVE_TRAYICON = 1
-except ImportError, e:
-	print e
-	HAVE_TRAYICON = 0
-	print "Warning: Trayicon Python module not found."
+
 
 class roomlist(RoomList):
 	def __init__(self, frame):
@@ -56,12 +50,11 @@ class roomlist(RoomList):
 		widget.set_text("")
 
 class testwin(MainWindow):
-	def __init__(self, config):
+	def __init__(self, config, use_trayicon):
 		self.images = {}
 		self.clip_data = ""
 		self.configfile = config
-		
-		
+
 		self.chatrooms = None
 		
 		self.got_focus = False
@@ -89,6 +82,13 @@ class testwin(MainWindow):
 			
 			loader.close()
 			self.images[i] = loader.get_pixbuf()
+			
+		self.trayicon_module = None
+		self.trayicon_module_failed_to_load = 0
+		if use_trayicon and config2.sections["ui"]["trayicon"]:
+			self.create_trayicon()
+		else:
+			self.HAVE_TRAYICON = 0
 		del data
 		del config2
 		
@@ -102,7 +102,7 @@ class testwin(MainWindow):
 		
 		self.logpopupmenu = PopupMenu(self).setup([_("Clear log"), self.OnClearLogWindow])
 		def on_delete_event(widget, event):
-                    if HAVE_TRAYICON:
+                    if self.HAVE_TRAYICON:
                       option = Option_Box(self, title=_('Close Nicotine-Plus?'), message=_('Are you sure you wish to exit Nicotine-Plus at this time?'), option1=_("Exit"), option2=_("Send to Tray"), option3=_("Cancel") )
                     else:
                       option = Option_Box(self, title=_('Close Nicotine-Plus?'), message=_('Are you sure you wish to exit Nicotine-Plus at this time?'), option1=_("Exit"), option3=_("Cancel"), option2=None )
@@ -350,8 +350,8 @@ class testwin(MainWindow):
 		self.check_privileges1.set_sensitive(0)
 		self.current_image=None
 		self.tray_status = {"hilites" : { "rooms": [], "private": [] }, "status": "", "last": ""}
-		if HAVE_TRAYICON:
-			self.create_trayicon()
+		if self.HAVE_TRAYICON:
+			self.draw_trayicon()
 		if self.np.config.sections["transfers"]["rescanonstartup"]:
 			self.OnRescan()
 
@@ -368,36 +368,62 @@ class testwin(MainWindow):
 			import imagedata
 		except Exception, e:
 			print e
-		
+			
 	def create_trayicon(self):
+		try:
+			from pynicotine import trayicon
+			self.trayicon_module = trayicon
+			self.HAVE_TRAYICON = 1
+		except ImportError, e:
+			self.trayicon_module_failed_to_load = 1
+			self.HAVE_TRAYICON = 0
+			print "Warning: Trayicon Python module was not found in the pynicotine directory:", e
+			
+	def destroy_trayicon(self):
+		self.HAVE_TRAYICON = 0
+		self.current_image = None
+		self.tray_status["last"] = ""
+		self.eventbox.destroy()
+		self.trayicon.destroy()
+		self.tray_menu.destroy()
+		
+		
+	def restart_trayicon(self):
+		self.destroy_trayicon()
+		self.HAVE_TRAYICON = 1
+		self.draw_trayicon()
+		
+	def draw_trayicon(self):
+		if not self.HAVE_TRAYICON:
+			return
 		self.is_mapped = 1
-		self.trayicon = trayicon.TrayIcon("Nicotine")
+		self.trayicon = self.trayicon_module.TrayIcon("Nicotine")
 		
 		self.eventbox = gtk.EventBox()
 		img = gtk.Image()
 		self.traymenu()
-		self.load_image(None, "disconnect")
+		self.load_image(None, self.tray_status["status"])
 
 		self.trayicon.add(self.eventbox)
 		self.trayicon.show_all()
 		self.eventbox.connect("button-press-event", self.OnTrayiconClicked)
 			
 	def load_image(self, image, status=None):
+		# Abort if Trayicon module wasn't loaded
+		if not self.HAVE_TRAYICON:
+			return
 		try:
 			self.load_image_wrapped(image, status)
 		except:
 			print "Error changing Trayicon's icon, attempting to recreate it."
 			try:
-				self.create_trayicon()
+				self.restart_trayicon()
 			except:
 				print "Trayicon failed to load"
 				
 	def load_image_wrapped(self, image, status=None):
 	
 		try:
-			# Abort if Trayicon module wasn't loaded
-			if not HAVE_TRAYICON:
-				return
 			if status != None:
 				self.tray_status["status"] = status
 			# Check for hilites, and display hilite icon if there is a room or private hilite
@@ -749,7 +775,8 @@ class testwin(MainWindow):
 		self.check_privileges1.set_sensitive(0)
 		
 		self.SetUserStatus(_("Offline"))
-		self.load_image(None, "disconnect")
+		self.tray_status["status"] = "disconnect"
+		self.load_image(None)
 		self.searches.interval = 0
 		self.chatrooms.ConnClose()
 		self.searches.ConnClose()
@@ -762,7 +789,8 @@ class testwin(MainWindow):
 		self.disconnect1.set_sensitive(0)
 		
 		self.SetUserStatus(_("Offline"))
-		self.load_image(None, "disconnect")
+		self.tray_status["status"] = "disconnect"
+		self.load_image(None)
 		
 	def SetUserStatus(self, status):
 		self.UserStatus.pop(self.user_context_id)
@@ -771,7 +799,8 @@ class testwin(MainWindow):
 	def InitInterface(self, msg):
 		if self.away == 0:
 			self.SetUserStatus(_("Online"))
-			self.load_image(None, "connect")
+			self.tray_status["status"] = "connect"
+			self.load_image(None)
 			autoaway = self.np.config.sections["server"]["autoaway"]
 			if autoaway > 0:
 				self.awaytimer = gobject.timeout_add(1000*60*autoaway, self.OnAutoAway)
@@ -779,7 +808,8 @@ class testwin(MainWindow):
 				self.awaytimer = None
 		else:
 			self.SetUserStatus(_("Away"))
-			self.load_image(None, "away2")
+			self.tray_status["status"] = "away2"
+			self.load_image(None)
 		
 		self.awayreturn1.set_sensitive(1)
 		self.check_privileges1.set_sensitive(1)
@@ -806,12 +836,14 @@ class testwin(MainWindow):
 		self.away = (self.away+1) % 2
 		if self.away == 0:
 			self.SetUserStatus(_("Online"))
-			self.load_image(None, "connect")
+			self.tray_status["status"] = "connect"
+			self.load_image(None)
 		else:
 			self.SetUserStatus(_("Away"))
-			self.load_image(None, "away2")
+			self.tray_status["status"] = "away2"
+			self.load_image(None)
 		self.np.queue.put(slskmessages.SetStatus(self.away and 1 or 2))
-		if HAVE_TRAYICON:
+		if self.HAVE_TRAYICON:
 			pass
 			
 		
@@ -996,7 +1028,15 @@ class testwin(MainWindow):
 		self.np.queue.put(slskmessages.SetUploadLimit(uselimit,uploadlimit,limitby))
 
 		self.np.config.writeConfig()
-
+		if not self.np.config.sections["ui"]["trayicon"] and self.HAVE_TRAYICON:
+			self.destroy_trayicon()
+		elif self.np.config.sections["ui"]["trayicon"] and not self.HAVE_TRAYICON:
+			if self.trayicon_module == None and not self.trayicon_module_failed_to_load:
+				self.create_trayicon()
+			else:
+				self.HAVE_TRAYICON = 1
+				
+			self.draw_trayicon()
 		self.chatrooms.roomsctrl.UpdateColours()
 		self.privatechats.UpdateColours()
 		self.UpdateColours()
@@ -1421,8 +1461,8 @@ class testwin(MainWindow):
 	def OnUserList(self, widget):
 		self.notebook1.set_current_page(8)
 class MainApp:
-	def __init__(self, config):
-		self.frame = testwin(config)
+	def __init__(self, config, trayicon):
+		self.frame = testwin(config, trayicon)
 	
 	def MainLoop(self):
 		signal.signal(signal.SIGINT, signal.SIG_IGN)
