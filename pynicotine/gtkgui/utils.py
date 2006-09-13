@@ -110,9 +110,9 @@ def UrlEvent(tag, widget, event, iter, url):
 def AppendLine(textview, line, tag = None, timestamp = "%H:%M:%S"):
 	def _makeurltag(buffer, tag, url):
 		props = {}
-		if tag is not None:
-			color = tag.get_property("foreground_gdk")
-			props["foreground_gdk"] = color
+		#if tag is not None:
+			#color = tag.get_property("foreground_gdk")
+			#props["foreground_gdk"] = color
 		props["underline"] = pango.UNDERLINE_SINGLE
 		tag = buffer.create_tag(**props)
 		tag.last_event_type = -1
