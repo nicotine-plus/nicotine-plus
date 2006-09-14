@@ -20,16 +20,16 @@ daelstorm's history TODO:
 	* update NicotineGuide to match current version
 	* update source documentation
 	* write & update win32 docs
-	* start with 1.2.4 packages
 	* compile and fix Geo-IP and python-geoip for windows :(
 	* write & update translation HowTo for linux/windows
 
 osiris TODO history
-	* write NicotineGuide [DONE!]
-	* windows installer [DONE!]
-	* installer icons [DONE!]
+	* write NicotineGuide
+	* windows installer
+	* installer icons
 	* 1.2.3 slax module (including python-geoip/vorbis/ogg/ modules)
-	* 1.2.3 slackware package [DONE!]
+	* 1.2.3 slackware package
+	* start with 1.2.4 packages
 
 ==============================================================================================================================
 

@@ -1,8 +1,28 @@
  ChangeLog for Nicotine+ Documents
 
+September 14, 2006
+   * removed pages
+     * 4.2 Nicotine+ Settings: Connection
+     * 4.3 Nicotine+ Settings: User interface
+     * 4.4 Nicotine+ Settings: Miscellaneous
+   * updated pages
+     * 4.2.2 Nicotine+ Settings: Shares (used same screenshot of shares as 4.1 Nicotine+ Settings: Before you connect)
+       removed extra image.
+     * 4.2.3 Nicotine+ Settings: Transfers (new screenshot, Queue type, show transfer buttons)
+     * 4.3.1 Nicotine+ Settings: Interface (new screenshot, Display Tray Icon, Decimal seperator)
+     * 4.3.2 Nicotine+ Settings: URL Catching (new screenshot, windows note, removed list of protocls & handlers)
+     * 4.4.6 Nicotine+ Settings: Events (new screenshot, windows note)
+   * new screenshots for
+     * 4.1, 4.2.4, 4.4.1/2/3/4/5
+ 
 Septermer 13, 2006
   * Nicotine+ Guide one-page HTML (finished last 3 sub-chapters)
+  * added pages
+    * 2.2.7 Nicotine+ on Suse
   * updated pages
+    * 1. Nicotine+ Guide: Conventions Used in This Guide (code)
+    * 2.2 Nicotine+ Installation: Linux (code, added NicotineOnSuse)
+    * 2.3 Nicotine+ Installation: Windows (note about GTK+)
     * 5.7 Nicotine+ Getting Around: User browse (code)
     * 5.7.1 Nicotine+ Getting Around: User browse menu's (code)
     * 5.8 Nicotine+ Getting Around: Interests (code)

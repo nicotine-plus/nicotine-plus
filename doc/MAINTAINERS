@@ -1,59 +1,92 @@
-Nicotine+ Maintainers
-=====================
+Nicotine+ MAINTAINERS
+======================
+List of all people contributing to Nicotine+
 
-name					active/retired		contact				remarks
-===========================================================================================================================
-daelstorm	main-developer		active							keeps nicotine alive! do I
-												need to say more? :)
----------------------------------------------------------------------------------------------------------------------------
-eL_vErDe	developer		active
----------------------------------------------------------------------------------------------------------------------------
-osiris		handy-man		active			[osiris.contact@gmail.com]	author of nicotine+ guides
-												maintainer of linux packages
-												develop nicotine+ on win32
----------------------------------------------------------------------------------------------------------------------------
+Nicotine+ maintainers
+======================
+dealstorm
+	* main-developer (active)
+	* [daelstorm.thegraveyard.org]
+	* keeps nicotine alive! do I need to say more? :)
+
+osiris
+	* handy-man (active)
+	* [osiris.contact@gmail.com][osiris.codedchaos.com]
+	* maintainer of Nicotine+ documentation/some Linux packages, Author of Nicotine+ Guide, Nicotine+ on win32
 
 
-Nicotine+ related
-===================
-name					active/retired		contact				remarks
-===========================================================================================================================
-Vasi		developer		active			[djvasi@gmail.com]		develop nicotine+ on Apple
-												www.nicotine-app.sf.net
----------------------------------------------------------------------------------------------------------------------------
-g4llow		Package-developer	active			[g4llow@gmail.com]		Submitted Slack.Build file
-												burpo.altervista.org
----------------------------------------------------------------------------------------------------------------------------
+Nicotine+ related (develop)
+============================
+
+eL_vErDe
+	* provides Nicotine+ Trac and SVN @ http://www.nicotine-plus.org
+
+vasi
+	* Mac developer (active)
+	* [djvasi@gmail.com][www.nicotine-app.sf.net]
+	* develop nicotine+ on Apple
+
+g4llow
+	* Package-developer (active)			
+	* [g4llow@gmail.com][burpo.altervista.org]		
+	* Submitted Slack.Build file
+
+lee8oi		
+	* Bash Commander (active)		
+	* [winslaya@gmail.com] [winslayer.codedchaos.com]	
+	* new and updated /alias
+INMCM
+	* Nicotine+ topic maintainer on ubuntuforums.org 
+	* [http://ubuntuforums.org/showthread.php?t=196835]
+
+suser-guru
+       * Suse Linux packager (active)
+       * [http://linux01.gwdg.de/~pbleser/]
+       * Nicotine+ RPM's for Suse 9.1, 9.2, 9.3, 10.0, 10.1
 
 
 Nicotine related
 ===================
 
-name					active/retired		contact				remarks
-===========================================================================================================================
-Hyriand		founder			retired			[hyriand@thegraveyard.org]
----------------------------------------------------------------------------------------------------------------------------
-SmackleFunky	beta-tester		retired
----------------------------------------------------------------------------------------------------------------------------
-Wretched	beta-tester		retired							bringer of great ideas
----------------------------------------------------------------------------------------------------------------------------
-(va)*10^3	beta-tester		retired			[http://www.coxsone.co.uk]	designer of the old 
-												nicotine homepage and 
-												artwork (logos)
----------------------------------------------------------------------------------------------------------------------------
-sierracat	MacOSX-tester		retired	
----------------------------------------------------------------------------------------------------------------------------
-alexbk		developer		retired?		[ak@sensi.org]			original author of pyslsk
-												which is used for nicotine
-												core
-----------------------------------------------------------------------------------------------------------------------------
-Gustavo		--------		---------		[gjc@inescporto.pt]		Made the exception dialog
-----------------------------------------------------------------------------------------------------------------------------
-SeeSchloss	developer		retired			[http://seeschloss.org]		made 1.0.8 win32 installer
-----------------------------------------------------------------------------------------------------------------------------
+Hyriand
+	* Founder (retired)
+	* [hyriand@thegraveyard.org] [http://nicotine.thegraveyard.org]
+	
+SmackleFunky	
+	* beta-tester (retired)
+
+Wretched
+	* beta-tester (retired)
+	* bringer of great ideas
+
+(va)*10^3
+	* beta-tester (retired)			
+	* [http://www.coxsone.co.uk]	
+	* designer of the old nicotine homepage and artwork (logos)
+
+sierracat 
+	* MacOSX-tester (retired)	
+
+alexbk
+	* developer (retired?)	
+	* [ak@sensi.org]			
+	* author of original pyslsk, which is used for nicotine core
+
+Gustavo
+	* [gjc@inescporto.pt]
+	* Made the exception dialog
+
+SeeSchloss
+	* developer (retired)
+	* [http://seeschloss.org]
+	* made 1.0.8 win32 installer
 
 
 Contact info
 ================
 Have you done something for nicotine or nicotine+ and your name is forgotten?? 
 forgive me, please let me know.. you can contact nicotine doc maintainer: osiris.contact@gmail.com
+
+WANTED!
+=========
+If you see your name under Nicotine+ related (Translation), Please contact doc maintainer. we need your email/homepage.
