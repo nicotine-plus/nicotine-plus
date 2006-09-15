@@ -60,22 +60,39 @@ class UserBrowse(UserBrowseTab):
 		self.FileTreeView.set_property("rules-hint", True)
 		self.folder_popup_menu = popup = PopupMenu(self.frame)
 		popup.set_user(user)
-		popup.setup(
-			("#" + _("_Download directory"), self.OnDownloadDirectory, gtk.STOCK_GO_DOWN),
-			("#" + _("Download directory _to..."), self.OnDownloadDirectoryTo, gtk.STOCK_GO_DOWN),
-			("#" + _("Download _recursive"), self.OnDownloadDirectoryRecursive, gtk.STOCK_GO_DOWN),
-			("#" + _("Download r_ecursive to..."), self.OnDownloadDirectoryRecursiveTo, gtk.STOCK_GO_DOWN),
-			("", None),
-			("#" + _("Copy _URL"), self.OnCopyDirURL, gtk.STOCK_COPY),
-			("", None),
-			("#" + _("Send _message"), popup.OnSendMessage, gtk.STOCK_EDIT),
-			("#" + _("Show IP a_ddress"), popup.OnShowIPaddress, gtk.STOCK_NETWORK),
-			("#" + _("Get user i_nfo"), popup.OnGetUserInfo, gtk.STOCK_INFO),
-			("#" + _("Gi_ve privileges"), popup.OnGivePrivileges, gtk.STOCK_JUMP_TO),
-			("$" + _("_Add user to list"), popup.OnAddToList),
-			("$" + _("_Ban this user"), popup.OnBanUser),
-			("$" + _("_Ignore this user"), popup.OnIgnoreUser),
-		)
+		if user == self.frame.np.config.sections["server"]["login"]:
+			popup.setup(
+				("#" + _("_Download directory"), self.OnDownloadDirectory, gtk.STOCK_GO_DOWN),
+				("#" + _("Download directory _to..."), self.OnDownloadDirectoryTo, gtk.STOCK_GO_DOWN),
+				("#" + _("Download _recursive"), self.OnDownloadDirectoryRecursive, gtk.STOCK_GO_DOWN),
+				("#" + _("Download r_ecursive to..."), self.OnDownloadDirectoryRecursiveTo, gtk.STOCK_GO_DOWN),
+				("", None),
+				("#" + _("Copy _URL"), self.OnCopyDirURL, gtk.STOCK_COPY),
+				("", None),
+				("#" + _("Send _message"), popup.OnSendMessage, gtk.STOCK_EDIT),
+				("#" + _("Show IP a_ddress"), popup.OnShowIPaddress, gtk.STOCK_NETWORK),
+				("#" + _("Get user i_nfo"), popup.OnGetUserInfo, gtk.STOCK_INFO),
+				("$" + _("_Add user to list"), popup.OnAddToList),
+				("$" + _("_Ban this user"), popup.OnBanUser),
+				("$" + _("_Ignore this user"), popup.OnIgnoreUser),
+			)
+		else:
+			popup.setup(
+				("#" + _("_Download directory"), self.OnDownloadDirectory, gtk.STOCK_GO_DOWN),
+				("#" + _("Download directory _to..."), self.OnDownloadDirectoryTo, gtk.STOCK_GO_DOWN),
+				("#" + _("Download _recursive"), self.OnDownloadDirectoryRecursive, gtk.STOCK_GO_DOWN),
+				("#" + _("Download r_ecursive to..."), self.OnDownloadDirectoryRecursiveTo, gtk.STOCK_GO_DOWN),
+				("", None),
+				("#" + _("Copy _URL"), self.OnCopyDirURL, gtk.STOCK_COPY),
+				("", None),
+				("#" + _("Send _message"), popup.OnSendMessage, gtk.STOCK_EDIT),
+				("#" + _("Show IP a_ddress"), popup.OnShowIPaddress, gtk.STOCK_NETWORK),
+				("#" + _("Get user i_nfo"), popup.OnGetUserInfo, gtk.STOCK_INFO),
+				("#" + _("Gi_ve privileges"), popup.OnGivePrivileges, gtk.STOCK_JUMP_TO),
+				("$" + _("_Add user to list"), popup.OnAddToList),
+				("$" + _("_Ban this user"), popup.OnBanUser),
+				("$" + _("_Ignore this user"), popup.OnIgnoreUser),
+			)
 		self.FolderTreeView.connect("button_press_event", self.OnFolderClicked)
 		
 		self.file_popup_menu = popup = PopupMenu(self.frame)
@@ -132,10 +149,14 @@ class UserBrowse(UserBrowseTab):
 		for item in items[0:4]:
 			item.set_sensitive(act)
 		items[5].set_sensitive(act)
-		
-		items[11].set_active(self.user in [i[0] for i in self.frame.np.config.sections["server"]["userlist"]])
-		items[12].set_active(self.user in self.frame.np.config.sections["server"]["banlist"])
-		items[13].set_active(self.user in self.frame.np.config.sections["server"]["ignorelist"])
+		if self.user == self.frame.np.config.sections["server"]["login"]:
+			items[10].set_active(self.user in [i[0] for i in self.frame.np.config.sections["server"]["userlist"]])
+			items[11].set_active(self.user in self.frame.np.config.sections["server"]["banlist"])
+			items[12].set_active(self.user in self.frame.np.config.sections["server"]["ignorelist"])
+		else:
+			items[11].set_active(self.user in [i[0] for i in self.frame.np.config.sections["server"]["userlist"]])
+			items[12].set_active(self.user in self.frame.np.config.sections["server"]["banlist"])
+			items[13].set_active(self.user in self.frame.np.config.sections["server"]["ignorelist"])
 		
 		self.folder_popup_menu.popup(None, None, None, event.button, event.time)
 	
