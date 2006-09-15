@@ -14,12 +14,17 @@ from distutils.core import setup
 from distutils.sysconfig import get_python_lib
 
 mo_dirs = glob.glob(os.path.join("languages", "*"))
-translations = []
+files = []
 for mo in mo_dirs:
 	p, lang = os.path.split(mo)
 	if lang == "nicotine.pot":
 		continue
-	translations.append((os.path.join(sys.prefix, "share", "locale", lang, "LC_MESSAGES"), [os.path.join(mo, "nicotine.mo")]))
+	files.append((os.path.join(sys.prefix, "share", "locale", lang, "LC_MESSAGES"), [os.path.join(mo, "nicotine.mo")]))
+sound_dirs = glob.glob(os.path.join("sounds", "*"))
+for sounds in sound_dirs:
+	p, theme = os.path.split(sounds)
+	for file in ["private.ogg", "room_nick.ogg", "details.txt", "license.txt"]:
+		files.append((os.path.join(sys.prefix, "share", "nicotine", "sounds", theme), [os.path.join(sounds, file)]))
 	
 if sys.platform.startswith("win"):
   try:
@@ -44,6 +49,6 @@ if __name__ == '__main__' :
           packages              = [ 'pynicotine', 'pynicotine.gtkgui' ],
           scripts               = [ 'nicotine','nicotine-import-winconfig'],
           long_description      = LONG_DESCRIPTION,
-          data_files		= translations
+          data_files		= files
          )
 

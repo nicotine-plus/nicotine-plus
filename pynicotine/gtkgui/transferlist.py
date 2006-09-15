@@ -98,10 +98,11 @@ class TransferList:
 	def Humanize(self, size, modifier):
 		if size is None:
 			return None
-		priv = ""
+
 		if modifier == None:
 			modifier = ""
-                else: modifier = " " + modifer
+                else: modifier = " " + modifier
+
 		try:
 			s = int(size)
 			if s >= 1000*1024*1024:
@@ -166,7 +167,7 @@ class TransferList:
 				path = self.frame.np.decode(transfer.path)
 				iter = self.transfersmodel.append([shortfn, user, status, percent,  hsize, speed, elap, left, path, fn, istatus, size])
 				self.transfers.append([key, iter, transfer])
-				
+
 		elif self.list is not None:
 			for i in self.transfers[:]:
 				for j in self.list:

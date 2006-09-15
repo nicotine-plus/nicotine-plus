@@ -1,0 +1,18 @@
+Origins of audio samples
+============================================================================
+
+Creator: zeuss
+Creator's Url: http://freesound.iua.upf.edu/usersViewSingle.php?id=124239
+
+Nicotine+ Filename: room_nick.ogg
+Sample Url: http://freesound.iua.upf.edu/samplesViewSingle.php?id=22267
+Original Filename: 22267_zeuss_The_Chime.wav
+
+============================================================================
+
+Creator: yawfle
+Creator's Url: http://freesound.iua.upf.edu/usersViewSingle.php?id=11628
+
+Nicotine+ Filename: private.ogg
+Sample Url: http://freesound.iua.upf.edu/samplesViewSingle.php?id=19875
+Original Filename: 19875_yawfle_fpphone_bellding.flac

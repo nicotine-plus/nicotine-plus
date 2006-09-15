@@ -402,18 +402,18 @@ class testwin(MainWindow):
 		self.eventbox = gtk.EventBox()
 		img = gtk.Image()
 		self.traymenu()
-		self.load_image(None, self.tray_status["status"])
+		self.load_image(self.tray_status["status"])
 
 		self.trayicon.add(self.eventbox)
 		self.trayicon.show_all()
 		self.eventbox.connect("button-press-event", self.OnTrayiconClicked)
 			
-	def load_image(self, image, status=None):
+	def load_image(self, status=None):
 		# Abort if Trayicon module wasn't loaded
 		if not self.HAVE_TRAYICON:
 			return
 		try:
-			self.load_image_wrapped(image, status)
+			self.load_image_wrapped(status)
 		except:
 			print "Error changing Trayicon's icon, attempting to recreate it."
 			try:
@@ -421,19 +421,18 @@ class testwin(MainWindow):
 			except:
 				print "Trayicon failed to load"
 				
-	def load_image_wrapped(self, image, status=None):
+	def load_image_wrapped(self, status=None):
 	
 		try:
 			if status != None:
 				self.tray_status["status"] = status
 			# Check for hilites, and display hilite icon if there is a room or private hilite
 			if self.tray_status["hilites"]["rooms"] == [] and self.tray_status["hilites"]["private"] == []:
-				icon = image
-			else:
-				icon = "hilite2"
-			if icon == None:
 				# If there is no hilite, display the status
 				icon = self.tray_status["status"]
+			else:
+				icon = "hilite2"
+				
 			if icon != self.tray_status["last"]:
 				self.tray_status["last"] = icon
 			else:
@@ -455,6 +454,43 @@ class testwin(MainWindow):
 		except Exception,e:
 			print "ERROR: load_image_wrapped", e
 			
+	def sound(self, message, user, place=None):
+		if sys.platform == "win32":
+			return
+		if "soundenabled" in self.np.config.sections["ui"]:
+			if not self.np.config.sections["ui"]["soundenabled"]:
+				return
+		else: return
+		if "speechenabled" in self.np.config.sections["ui"]:
+			if self.np.config.sections["ui"]["speechenabled"]:
+				if message == "room_nick" and place is not None:
+					os.system("flite -t \"%s, the user, %s has mentioned your name in the room, %s.\" &" %(self.np.config.sections[ "server"]["login"], user, place) )
+				elif message == "private":
+					os.system("flite -t \"%s, you have recieved a private message from %s.\" &" %(self.np.config.sections["server"]["login"], user ) )
+				return
+		path = None
+		exists = 0
+		if message == "private":
+			soundtitle = "private"
+		elif message == "room_nick":
+			soundtitle = "room_nick"
+			
+		if "soundtheme" in self.np.config.sections["ui"]:
+			path = os.path.expanduser(os.path.join(self.np.config.sections["ui"]["soundtheme"], "%s.ogg" % soundtitle))
+			if os.path.exists(path): exists = 1
+			else: path = None	
+		if not exists:
+			path = "%s/share/nicotine/sounds/default/%s.ogg" %(sys.prefix, soundtitle)
+			if os.path.exists(path): exists = 1
+			else: path = None
+		if not exists:
+			path = "sounds/default/%s.ogg" % soundtitle
+			if os.path.exists(path): exists = 1
+			else: path = None
+		if path != None and exists:
+			if "soundcommand" in self.np.config.sections["ui"]:
+				os.system("%s %s &" % ( self.np.config.sections["ui"]["soundcommand"], path))
+	
 	def download_large_folder(self, username, folder, files, numfiles, msg):
 		gtk.gdk.threads_enter()
 		
@@ -776,7 +812,7 @@ class testwin(MainWindow):
 		
 		self.SetUserStatus(_("Offline"))
 		self.tray_status["status"] = "disconnect"
-		self.load_image(None)
+		self.load_image()
 		self.searches.interval = 0
 		self.chatrooms.ConnClose()
 		self.searches.ConnClose()
@@ -790,7 +826,7 @@ class testwin(MainWindow):
 		
 		self.SetUserStatus(_("Offline"))
 		self.tray_status["status"] = "disconnect"
-		self.load_image(None)
+		self.load_image()
 		
 	def SetUserStatus(self, status):
 		self.UserStatus.pop(self.user_context_id)
@@ -800,7 +836,7 @@ class testwin(MainWindow):
 		if self.away == 0:
 			self.SetUserStatus(_("Online"))
 			self.tray_status["status"] = "connect"
-			self.load_image(None)
+			self.load_image()
 			autoaway = self.np.config.sections["server"]["autoaway"]
 			if autoaway > 0:
 				self.awaytimer = gobject.timeout_add(1000*60*autoaway, self.OnAutoAway)
@@ -809,7 +845,7 @@ class testwin(MainWindow):
 		else:
 			self.SetUserStatus(_("Away"))
 			self.tray_status["status"] = "away2"
-			self.load_image(None)
+			self.load_image()
 		
 		self.awayreturn1.set_sensitive(1)
 		self.check_privileges1.set_sensitive(1)
@@ -837,11 +873,11 @@ class testwin(MainWindow):
 		if self.away == 0:
 			self.SetUserStatus(_("Online"))
 			self.tray_status["status"] = "connect"
-			self.load_image(None)
+			self.load_image()
 		else:
 			self.SetUserStatus(_("Away"))
 			self.tray_status["status"] = "away2"
-			self.load_image(None)
+			self.load_image()
 		self.np.queue.put(slskmessages.SetStatus(self.away and 1 or 2))
 		if self.HAVE_TRAYICON:
 			pass

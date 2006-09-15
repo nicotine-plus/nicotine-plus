@@ -98,7 +98,7 @@ class RoomsControl:
 				# Remove hilite
 				if name in self.frame.tray_status["hilites"]["rooms"]:
 					self.frame.tray_status["hilites"]["rooms"].remove(name)
-					self.frame.load_image(None)
+					self.frame.load_image()
 
 			
 	def OnResort(self, column, column_id):
@@ -435,7 +435,8 @@ class ChatRoom(ChatRoomTab):
 			if self.frame.ChatNotebook.get_current_page() != self.frame.ChatNotebook.page_num(self.roomsctrl.joinedrooms[self.room].Main) or self.frame.notebook1.get_current_page() != 0:
 				if self.room not in self.frame.tray_status["hilites"]["rooms"]:
 					self.frame.tray_status["hilites"]["rooms"].append(self.room)
-					self.frame.load_image(None)
+					self.frame.sound("room_nick", msg.user, place=self.room)
+					self.frame.load_image()
 		else:
 			self.frame.ChatNotebook.request_changed(self.Main)
 			self.frame.ChatRequestIcon(0)

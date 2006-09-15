@@ -249,7 +249,7 @@ class TransfersFrame(settings_glade.TransfersFrame):
 		self.OnQueueUseSlotsToggled(self.QueueUseSlots)
 		self.OnLimitToggled(self.Limit)
 		self.OnFriendsOnlyToggled(self.FriendsOnly)
-		self.ShowTransferButtons.set_active(transfers["enabletransferbuttons"])
+		
 
 			
 	def GetSettings(self):
@@ -288,7 +288,7 @@ class TransfersFrame(settings_glade.TransfersFrame):
 				"preferfriends": self.PreferFriends.get_active(),
 				"lock": self.LockIncoming.get_active(),
 				"remotedownloads": self.RemoteDownloads.get_active(),
-				"enabletransferbuttons": self.ShowTransferButtons.get_active(),
+				
 			},
 		}
 
@@ -463,6 +463,7 @@ class BloatFrame(settings_glade.BloatFrame):
 		for item in ["<None>", ",", ".", "<space>"]:
 			self.DecimalSep.append_text(item)
 		self.ThemeButton.connect("clicked", self.OnChooseThemeDir)
+		self.SoundButton.connect("clicked", self.OnChooseSoundDir)
 		
 		self.PickRemote.connect("clicked", self.PickColour, self.Remote)
 		self.PickLocal.connect("clicked", self.PickColour, self.Local)
@@ -477,6 +478,8 @@ class BloatFrame(settings_glade.BloatFrame):
 		self.DefaultHighlight.connect("clicked", self.DefaultColour, self.Highlight)
 		self.DefaultImmediate.connect("clicked", self.DefaultColour, self.Immediate)
 		self.DefaultQueue.connect("clicked", self.DefaultColour, self.Queue)
+		self.DefaultQueue.connect("clicked", self.DefaultColour, self.Queue)
+		self.DefaultSoundCommand.connect("clicked", self.DefaultSound, self.SoundCommand)
 		
 	def OnChooseThemeDir(self, widget):
 		dir = ChooseDir(self.Main.get_toplevel(), self.IconTheme.get_text())
@@ -484,6 +487,12 @@ class BloatFrame(settings_glade.BloatFrame):
 			for directory in dir: # iterate over selected files
 				self.IconTheme.set_text(recode(directory))
 				
+	def OnChooseSoundDir(self, widget):
+		dir = ChooseDir(self.Main.get_toplevel(), self.SoundDirectory.get_text())
+		if dir is not None:
+			for directory in dir: # iterate over selected files
+				self.SoundDirectory.set_text(recode(directory))
+								
 	def SetSettings(self, config):
 		ui = config["ui"]
 		transfers = config["transfers"]
@@ -510,7 +519,15 @@ class BloatFrame(settings_glade.BloatFrame):
 			self.TabClosers.set_active(ui["tabclosers"])
 		if ui["trayicon"] is not None:
 			self.TrayiconCheck.set_active(ui["trayicon"])
-
+		if ui["soundenabled"] is not None:
+			self.SoundCheck.set_active(ui["soundenabled"])
+		self.OnSoundCheckToggled(self.SoundCheck)
+		if ui["soundcommand"] is not None:
+			self.SoundCommand.set_text(ui["soundcommand"])
+		if ui["soundtheme"] is not None:
+			self.SoundDirectory.set_text(ui["soundtheme"])
+		if transfers["enabletransferbuttons"] is not None:
+			self.ShowTransferButtons.set_active(transfers["enabletransferbuttons"])
 	def GetSettings(self):
 		return {
 			"ui": {
@@ -525,9 +542,24 @@ class BloatFrame(settings_glade.BloatFrame):
 				"decimalsep": self.DecimalSep.child.get_text(),
 				"tabclosers": self.TabClosers.get_active(),
 				"trayicon": self.TrayiconCheck.get_active(),
+				"soundcommand": self.SoundCommand.get_text(),
+				"soundtheme": self.SoundDirectory.get_text(),
+				"soundenabled": self.SoundCheck.get_active(),
+			},
+			"transfers": {
+				"enabletransferbuttons": self.ShowTransferButtons.get_active(),
 			},
 		}
-	
+		
+	def OnSoundCheckToggled(self, widget):
+		sensitive = widget.get_active()
+		self.SoundCommand.set_sensitive(sensitive)
+		self.SoundDirectory.set_sensitive(sensitive)
+		self.SoundButton.set_sensitive(sensitive)
+		self.DefaultSoundCommand.set_sensitive(sensitive)
+		self.sndcmdLabel.set_sensitive(sensitive)
+		self.snddirLabel.set_sensitive(sensitive)
+		
 	def PickColour(self, widget, entry):
 		dlg = gtk.ColorSelectionDialog(_("Pick a colour, any colour"))
 		colour = entry.get_text()
@@ -542,6 +574,9 @@ class BloatFrame(settings_glade.BloatFrame):
 		
 	def DefaultColour(self, widget, entry):
 		entry.set_text("")
+		
+	def DefaultSound(self, widget, entry):
+		entry.set_text("play -q")
 			
 class LogFrame(settings_glade.LogFrame):
 	def __init__(self):
@@ -773,7 +808,8 @@ class SettingsWindow(settings_glade.SettingsWindow):
 		gobject.signal_new("settings-closed", gtk.Window, gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_STRING,))
 		
 		self.SettingsWindow.set_transient_for(frame.MainWindow)
-
+		self.SettingsWindow.set_geometry_hints(None, min_width=550, min_height=400)
+		self.SettingsWindow.set_default_size(650, 500)
 		self.SettingsWindow.connect("delete-event", self.OnDelete)
 		self.frame = frame
 		self.empty_label = gtk.Label("")

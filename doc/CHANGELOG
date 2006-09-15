@@ -1,6 +1,16 @@
 ChangeLog for Nicotine Plus
 
 Unreleased 1.2.5pre
+ * Fixed a typo in transferlist.py 
+ * Notifications: Now testing 'flite' support, a text-to-speech engine.
+   This may or may not be removed. The option is 'speechenabled'
+ * Moved Icon theme and Sound theme settings inside seperate expanders.
+ * Notifications: Added a sound effect, room_nick.ogg, for nick-mention in 
+   chatrooms (when not in that room) and a seperate sound effect, private.ogg, 
+   for when a private message arrives, and you are not in that tab. Sound 
+   options are found in the UI settings, and seperate sound theme directories
+   and audio players can be selected, as well. Ogg files are installed into
+   $PREFIX/share/nicotine/$THEMEDIR/
  * Made Trayicon toggleable while running from the UI settings or at startup 
    with --enable-trayicon, -t  and --disable-trayicon, -d
  * Made /search commands modify the search history
@@ -14,7 +24,7 @@ Unreleased 1.2.5pre
    they are attempting to send a file. Also, a log message is printed when a 
    user attempts to send you file(s) and an automatic is sent if they aren't 
    allowed to.
- * Added option to Transfer Settings to show/hide the transfer buttons.
+ * Added option to UI Settings to show/hide the transfer buttons.
  * Added expander to glade2py, so it can now be used.
  * Rearranged the new user entry/buttons to the top left of their tabs, added 
    spacing inside tabs.
