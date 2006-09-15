@@ -1,6 +1,12 @@
 ChangeLog for Nicotine Plus
 
 Unreleased 1.2.5pre
+ * Made the encodings Comboboxes give location or language details in a
+   seperate column.
+ * Made the Tray Icon's popup menu disable menu options based on connection
+   status. Also simplified it's code to match the way Nicotine normally 
+   creates menus. 
+ * Made all the popup menus have GTK stock icons.
  * Made many of the Main Menu items have icons.
  * Added three new menu options under help: Offline Nicotine Plus Guide, the 
    Nicotine-Plus Trac and the Nicotine Plus Sourceforge Project websites. 

@@ -309,11 +309,18 @@ class ChatRoom(ChatRoomTab):
 	        	self.ChatScroll.get_parent().get_vadjustment().connect("value-changed", lambda *args: self.ChatScroll.queue_draw())
 	        	self.ChatScroll.get_parent().get_hadjustment().connect("value-changed", lambda *args: self.ChatScroll.queue_draw())
 
+		self.Elist = {}
 		self.encoding, m = EncodingsMenu(self.frame.np, "roomencoding", room)
+		self.EncodingStore = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
+		self.Encoding.set_size_request(100, -1)
+		self.Encoding.set_model(self.EncodingStore)
+		cell2 = gtk.CellRendererText()
+		self.Encoding.pack_start(cell2, False)
+		self.Encoding.add_attribute(cell2, 'text', 1)
 		for item in m:
-			self.Encoding.append_text(item)
-		if self.encoding in m:
-			self.Encoding.set_active(m.index(self.encoding))
+			self.Elist[item[1]] = self.EncodingStore.append([item[1], item[0] ])
+			if self.encoding == item[1]:
+				self.Encoding.set_active_iter(self.Elist[self.encoding])
 
 		self.Log.set_active(self.frame.np.config.sections["logging"]["chatrooms"])
 		

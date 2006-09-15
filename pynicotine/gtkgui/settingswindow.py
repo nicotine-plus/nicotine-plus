@@ -19,8 +19,15 @@ class ServerFrame(settings_glade.ServerFrame):
 	def __init__(self, encodings):
 		settings_glade.ServerFrame.__init__(self, False)
 		self.Server.append_text("server.slsknet.org:2240")
-		for code in encodings:
-			self.Encoding.append_text(code)
+
+		self.Elist = {}
+		self.EncodingStore = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
+		self.Encoding.set_model(self.EncodingStore)
+		cell2 = gtk.CellRendererText()
+		self.Encoding.pack_start(cell2, False)
+		self.Encoding.add_attribute(cell2, 'text', 1)
+		for item in encodings:
+			self.Elist[item[1]] = self.EncodingStore.append([item[1], item[0] ])
 
 	def SetSettings(self, config):
 		server = config["server"]
