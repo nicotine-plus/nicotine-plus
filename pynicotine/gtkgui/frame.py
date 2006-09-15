@@ -387,7 +387,7 @@ class testwin(MainWindow):
 		self.tray_status["last"] = ""
 		self.eventbox.destroy()
 		self.trayicon.destroy()
-		self.tray_menu.destroy()
+		self.tray_popup_menu.destroy()
 		
 		
 	def restart_trayicon(self):
@@ -559,62 +559,40 @@ class testwin(MainWindow):
 			file_menu = gtk.Menu()
 			connect_menu = gtk.Menu()
 			
-			quit_item = gtk.MenuItem(_("Quit"))
-			quit_item.connect_object("activate", self.OnExit, "file.quit")
-			quit_item.show()
+			self.tray_popup_menu_server = popup0 = PopupMenu(self)
+			popup0.setup(
+				("#" + _("Connect"), self.OnConnect, gtk.STOCK_CONNECT),
+				("#" + _("Disconnect"), self.OnDisconnect, gtk.STOCK_DISCONNECT),
+			)
+			self.tray_popup_menu = popup = PopupMenu(self)
+			popup.setup(
+				
+				("#" + _("Hide / Unhide Nicotine"), self.HideUnhideWindow, gtk.STOCK_GOTO_BOTTOM),
+				(1, _("Server"), self.tray_popup_menu_server, self.OnPopupServer),
+				("#" + _("Settings"), self.OnSettings, gtk.STOCK_PREFERENCES),
+				("#" + _("Lookup a User's IP"), self.OnGetAUsersIP, gtk.STOCK_NETWORK),
+				("#" + _("Lookup a User's Info"), self.OnGetAUsersInfo, gtk.STOCK_INFO),
+				("#" + _("Lookup a User's Shares"), self.OnGetAUsersShares, gtk.STOCK_HARDDISK),
+				(_("Toggle Away"), self.OnAway ),
+				("#" + _("Quit"), self.OnExit, gtk.STOCK_QUIT),
 
-			ip_item = gtk.MenuItem(_("Lookup a User's IP"))
-			ip_item.connect_object("activate", self.OnGetAUsersIP, "file.ip")
-			ip_item.show()
-			
-			userinfo_item = gtk.MenuItem(_("Lookup a User's Info"))
-			userinfo_item.connect_object("activate", self.OnGetAUsersInfo, "file.userinfo")
-			userinfo_item.show()
-			
-			shares_item = gtk.MenuItem(_("Lookup a User's Shares"))
-			shares_item.connect_object("activate", self.OnGetAUsersShares, "file.usershares")
-			shares_item.show()
-			
-			hide_item = gtk.MenuItem(_("Hide / Unhide Nicotine"))
-			hide_item.connect_object("activate", self.HideUnhideWindow, "file.hide")
-			hide_item.show()
-			
-			away_item = gtk.MenuItem("Toggle Away")
-			away_item.connect_object("activate", self.OnAway, "file.away")
-			away_item.add_accelerator("activate", self.accel_group, gtk.gdk.keyval_from_name("A"), gtk.gdk.MOD1_MASK, gtk.ACCEL_VISIBLE)
-			away_item.show()
-			
-			settings_item = gtk.MenuItem(_("Settings"))
-			settings_item.connect_object("activate", self.OnSettings, "settings")
-			settings_item.show()
-			
-			connect_item = gtk.MenuItem(_("Connect"))
-			connect_item.connect_object("activate", self.OnConnect, None)
-			connect_item.show()
-			
-			disconnect_item = gtk.MenuItem(_("Disconnect"))
-			disconnect_item.connect_object("activate", self.OnDisconnect, "disconnect")
-			disconnect_item.show()
-			
-			connect_menu.append(connect_item)
-			connect_menu.append(disconnect_item)
-					
-			server_menu = gtk.MenuItem(_("Server"))
-			server_menu.show()
-			server_menu.set_submenu(connect_menu)
-			file_menu.append(hide_item)
-			file_menu.append(server_menu)
-			file_menu.append(settings_item)
-			file_menu.append(ip_item)
-			file_menu.append(userinfo_item)
-			file_menu.append(shares_item)
-			file_menu.append(away_item)
-			file_menu.append(quit_item)
-			self.tray_menu = file_menu
-			
+			)
+		
 		except Exception,e:
 			print "ERROR: tray menu", e
 			
+	def OnPopupServer(self, widget):
+		items = self.tray_popup_menu_server.get_children()
+		
+		
+		if self.tray_status["status"] == "disconnect":
+			items[0].set_sensitive(True)
+			items[1].set_sensitive(False)
+		else:
+			items[0].set_sensitive(False)
+			items[1].set_sensitive(True)
+		return
+		
 	def button_press(self, widget, event):
 		try:
 
@@ -647,7 +625,7 @@ class testwin(MainWindow):
 			self.HideUnhideWindow(None)
 		else:
 			if event.type == gtk.gdk.BUTTON_PRESS:
-				self.tray_menu.popup(None, None, None, event.button, event.time)
+				self.tray_popup_menu.popup(None, None, None, event.button, event.time)
 				return True
 			return False
 				
