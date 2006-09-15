@@ -462,6 +462,8 @@ class BloatFrame(settings_glade.BloatFrame):
 		settings_glade.BloatFrame.__init__(self, False)
 		for item in ["<None>", ",", ".", "<space>"]:
 			self.DecimalSep.append_text(item)
+		for item in ["play -q", "ogg123 -q"]:
+			self.SoundCommand.append_text(item)
 		self.ThemeButton.connect("clicked", self.OnChooseThemeDir)
 		self.SoundButton.connect("clicked", self.OnChooseSoundDir)
 		
@@ -523,7 +525,7 @@ class BloatFrame(settings_glade.BloatFrame):
 			self.SoundCheck.set_active(ui["soundenabled"])
 		self.OnSoundCheckToggled(self.SoundCheck)
 		if ui["soundcommand"] is not None:
-			self.SoundCommand.set_text(ui["soundcommand"])
+			self.SoundCommand.child.set_text(ui["soundcommand"])
 		if ui["soundtheme"] is not None:
 			self.SoundDirectory.set_text(ui["soundtheme"])
 		if transfers["enabletransferbuttons"] is not None:
@@ -542,7 +544,7 @@ class BloatFrame(settings_glade.BloatFrame):
 				"decimalsep": self.DecimalSep.child.get_text(),
 				"tabclosers": self.TabClosers.get_active(),
 				"trayicon": self.TrayiconCheck.get_active(),
-				"soundcommand": self.SoundCommand.get_text(),
+				"soundcommand": self.SoundCommand.child.get_text(),
 				"soundtheme": self.SoundDirectory.get_text(),
 				"soundenabled": self.SoundCheck.get_active(),
 			},
@@ -575,8 +577,8 @@ class BloatFrame(settings_glade.BloatFrame):
 	def DefaultColour(self, widget, entry):
 		entry.set_text("")
 		
-	def DefaultSound(self, widget, entry):
-		entry.set_text("play -q")
+	def DefaultSound(self, widget, combo):
+		combo.child.set_text("play -q")
 			
 class LogFrame(settings_glade.LogFrame):
 	def __init__(self):

@@ -259,7 +259,7 @@ class MainWindow:
 
         self.help1_menu = gtk.Menu()
 
-        self.nicotine_guide1 = gtk.ImageMenuItem(_("Offline Nicotine Guide"))
+        self.nicotine_guide1 = gtk.ImageMenuItem(_("Offline Nicotine Plus Guide"))
         self.nicotine_guide1.show()
         self.nicotine_guide1.connect("activate", self.OnNicotineGuide)
         self.nicotine_guide1.add_accelerator("activate", self.accel_group, gtk.gdk.keyval_from_name("F1"), 0, gtk.ACCEL_VISIBLE)

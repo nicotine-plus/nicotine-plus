@@ -1166,11 +1166,12 @@ class BloatFrame:
         self.sndcmdLabel.show()
         self.hbox180.pack_start(self.sndcmdLabel, False, False, 0)
 
-        self.SoundCommand = gtk.Entry()
-        self.SoundCommand.set_text("")
-        self.SoundCommand.set_editable(True)
+        self.SoundCommand_List = gtk.ListStore(gobject.TYPE_STRING)
+        self.SoundCommand = gtk.ComboBoxEntry()
         self.SoundCommand.show()
-        self.SoundCommand.set_visibility(True)
+
+        self.SoundCommand.set_model(self.SoundCommand_List)
+        self.SoundCommand.set_text_column(0)
         self.hbox180.pack_start(self.SoundCommand, True, True, 0)
 
         self.DefaultSoundCommand = gtk.Button()

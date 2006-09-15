@@ -54,7 +54,7 @@
 		      <accelerator key="C" modifiers="GDK_MOD1_MASK" signal="activate"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image187">
+			<widget class="GtkImage" id="image235">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-connect</property>
 			  <property name="icon_size">1</property>
@@ -76,7 +76,7 @@
 		      <accelerator key="D" modifiers="GDK_MOD1_MASK" signal="activate"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image188">
+			<widget class="GtkImage" id="image236">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-disconnect</property>
 			  <property name="icon_size">1</property>
@@ -107,7 +107,7 @@
 		      <signal name="activate" handler="OnCheckPrivileges" last_modification_time="Wed, 16 Jul 2003 14:18:47 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image189">
+			<widget class="GtkImage" id="image237">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-jump-to</property>
 			  <property name="icon_size">1</property>
@@ -201,7 +201,7 @@
 		      <accelerator key="S" modifiers="GDK_MOD1_MASK" signal="activate"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image190">
+			<widget class="GtkImage" id="image238">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-preferences</property>
 			  <property name="icon_size">1</property>
@@ -228,7 +228,7 @@
 		      <signal name="activate" handler="OnRescan" last_modification_time="Mon, 28 Jul 2003 12:49:11 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image191">
+			<widget class="GtkImage" id="image239">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-refresh</property>
 			  <property name="icon_size">1</property>
@@ -249,7 +249,7 @@
 		      <signal name="activate" handler="OnBuddyRescan" last_modification_time="Sat, 10 Jun 2006 21:43:23 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image192">
+			<widget class="GtkImage" id="image240">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-refresh</property>
 			  <property name="icon_size">1</property>
@@ -270,7 +270,7 @@
 		      <signal name="activate" handler="OnBrowseMyShares" last_modification_time="Tue, 26 Aug 2003 16:00:37 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image193">
+			<widget class="GtkImage" id="image241">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-harddisk</property>
 			  <property name="icon_size">1</property>
@@ -298,7 +298,7 @@
 		      <accelerator key="X" modifiers="GDK_MOD1_MASK" signal="activate"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image194">
+			<widget class="GtkImage" id="image242">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-quit</property>
 			  <property name="icon_size">1</property>
@@ -332,7 +332,7 @@
 		      <signal name="activate" handler="OnChatRooms" last_modification_time="Sun, 28 May 2006 23:35:44 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image195">
+			<widget class="GtkImage" id="image243">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-jump-to</property>
 			  <property name="icon_size">1</property>
@@ -353,7 +353,7 @@
 		      <signal name="activate" handler="OnPrivateChat" last_modification_time="Sun, 28 May 2006 23:35:44 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image196">
+			<widget class="GtkImage" id="image244">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-jump-to</property>
 			  <property name="icon_size">1</property>
@@ -374,7 +374,7 @@
 		      <signal name="activate" handler="OnDownloads" last_modification_time="Sun, 28 May 2006 23:35:44 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image197">
+			<widget class="GtkImage" id="image245">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-go-down</property>
 			  <property name="icon_size">1</property>
@@ -395,7 +395,7 @@
 		      <signal name="activate" handler="OnUploads" last_modification_time="Sun, 28 May 2006 23:35:44 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image198">
+			<widget class="GtkImage" id="image246">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-go-up</property>
 			  <property name="icon_size">1</property>
@@ -416,7 +416,7 @@
 		      <signal name="activate" handler="OnSearchFiles" last_modification_time="Sun, 28 May 2006 23:35:44 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image199">
+			<widget class="GtkImage" id="image247">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-find</property>
 			  <property name="icon_size">1</property>
@@ -437,7 +437,7 @@
 		      <signal name="activate" handler="OnUserInfo" last_modification_time="Sun, 28 May 2006 23:35:44 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image200">
+			<widget class="GtkImage" id="image248">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-info</property>
 			  <property name="icon_size">1</property>
@@ -458,7 +458,7 @@
 		      <signal name="activate" handler="OnUserBrowse" last_modification_time="Sun, 28 May 2006 23:35:44 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image201">
+			<widget class="GtkImage" id="image249">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-harddisk</property>
 			  <property name="icon_size">1</property>
@@ -479,7 +479,7 @@
 		      <signal name="activate" handler="OnInterests" last_modification_time="Sun, 28 May 2006 23:35:44 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image202">
+			<widget class="GtkImage" id="image250">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-jump-to</property>
 			  <property name="icon_size">1</property>
@@ -500,7 +500,7 @@
 		      <signal name="activate" handler="OnUserList" last_modification_time="Sun, 28 May 2006 23:35:44 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image203">
+			<widget class="GtkImage" id="image251">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-index</property>
 			  <property name="icon_size">1</property>
@@ -535,7 +535,7 @@
 		      <accelerator key="F1" modifiers="0" signal="activate"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image204">
+			<widget class="GtkImage" id="image252">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-help</property>
 			  <property name="icon_size">1</property>
@@ -556,7 +556,7 @@
 		      <signal name="activate" handler="OnSourceForgeProject" last_modification_time="Fri, 15 Sep 2006 02:37:43 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image205">
+			<widget class="GtkImage" id="image253">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-home</property>
 			  <property name="icon_size">1</property>
@@ -577,7 +577,7 @@
 		      <signal name="activate" handler="OnTrac" last_modification_time="Fri, 15 Sep 2006 02:37:43 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image206">
+			<widget class="GtkImage" id="image254">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-dialog-question</property>
 			  <property name="icon_size">1</property>
@@ -604,7 +604,7 @@
 		      <signal name="activate" handler="OnAboutChatroomCommands" last_modification_time="Wed, 16 Jul 2003 14:18:47 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image207">
+			<widget class="GtkImage" id="image255">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-help</property>
 			  <property name="icon_size">1</property>
@@ -625,7 +625,7 @@
 		      <signal name="activate" handler="OnAboutPrivateChatCommands" last_modification_time="Wed, 16 Jul 2003 14:18:47 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image208">
+			<widget class="GtkImage" id="image256">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-help</property>
 			  <property name="icon_size">1</property>
@@ -652,7 +652,7 @@
 		      <signal name="activate" handler="OnAboutFilters" last_modification_time="Wed, 16 Jul 2003 14:18:47 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image209">
+			<widget class="GtkImage" id="image257">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-help</property>
 			  <property name="icon_size">1</property>
@@ -679,7 +679,7 @@
 		      <signal name="activate" handler="OnCheckLatest" last_modification_time="Tue, 26 Aug 2003 21:26:11 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image210">
+			<widget class="GtkImage" id="image258">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-connect</property>
 			  <property name="icon_size">1</property>
@@ -706,7 +706,7 @@
 		      <signal name="activate" handler="OnAbout" last_modification_time="Wed, 16 Jul 2003 14:18:47 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image211">
+			<widget class="GtkImage" id="image259">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-about</property>
 			  <property name="icon_size">1</property>

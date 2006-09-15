@@ -879,9 +879,7 @@ class testwin(MainWindow):
 			self.tray_status["status"] = "away2"
 			self.load_image()
 		self.np.queue.put(slskmessages.SetStatus(self.away and 1 or 2))
-		if self.HAVE_TRAYICON:
-			pass
-			
+
 		
 	def OnExit(self, widget):
 		self.MainWindow.destroy()
