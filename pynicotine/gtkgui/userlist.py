@@ -43,19 +43,20 @@ class UserList:
 
 		self.popup_menu = popup = PopupMenu(frame)
 		popup.setup(
-			(_("Send _message"), popup.OnSendMessage),
-			(_("Show IP a_ddress"), popup.OnShowIPaddress),
-			(_("Get user i_nfo"), popup.OnGetUserInfo),
-			(_("Brow_se files"), popup.OnBrowseUser),
-			(_("_Give privileges"), popup.OnGivePrivileges),
+			("#" + _("Send _message"), popup.OnSendMessage, gtk.STOCK_EDIT),
+			("", None),
+			("#" + _("Show IP a_ddress"), popup.OnShowIPaddress, gtk.STOCK_NETWORK),
+			("#" + _("Get user i_nfo"), popup.OnGetUserInfo, gtk.STOCK_INFO),
+			("#" + _("Brow_se files"), popup.OnBrowseUser, gtk.STOCK_HARDDISK),
+			("#" + _("Gi_ve privileges"), popup.OnGivePrivileges, gtk.STOCK_JUMP_TO),
 			("$" + _("_Ban this user"), popup.OnBanUser),
 			("$" + _("_Ignore this user"), popup.OnIgnoreUser),
 			("", None),
 			("$" + _("_Online notify"), self.OnNotify),
 			("$" + _("_Privileged"), self.OnPrivileged),
 			("", None),
-			(_("Edit _comments"), self.OnEditComments),
-			(_("_Remove"), self.OnRemoveUser),
+			("#" + _("Edit _comments"), self.OnEditComments, gtk.STOCK_EDIT),
+			("#" + _("_Remove"), self.OnRemoveUser, gtk.STOCK_CANCEL),
 		)
 		self.frame.UserList.connect("button_press_event", self.OnPopupMenu)
 	
@@ -81,10 +82,10 @@ class UserList:
 		
 		items = self.popup_menu.get_children()
 		
-		items[5].set_active(user in self.frame.np.config.sections["server"]["banlist"])
-		items[6].set_active(user in self.frame.np.config.sections["server"]["ignorelist"])
-		items[8].set_active(user in self.notify)
-		items[9].set_active(user in self.privileged)
+		items[6].set_active(user in self.frame.np.config.sections["server"]["banlist"])
+		items[7].set_active(user in self.frame.np.config.sections["server"]["ignorelist"])
+		items[9].set_active(user in self.notify)
+		items[10].set_active(user in self.privileged)
 		
 		self.popup_menu.popup(None, None, None, event.button, event.time)
 		

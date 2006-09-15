@@ -17,18 +17,18 @@ class Downloads(TransferList):
 		
 		self.popup_menu2 = popup2 = PopupMenu(frame)
 		popup2.setup( 
-		        (_("Clear finished/aborted"), self.OnClearFinishedAborted),
-			(_("Clear finished"), self.OnClearFinished),
-			(_("Clear aborted"), self.OnClearAborted),
-			(_("Clear queued"), self.OnClearQueued),
+		        ("#" + _("Clear finished/aborted"), self.OnClearFinishedAborted, gtk.STOCK_CLEAR),
+			("#" + _("Clear finished"), self.OnClearFinished, gtk.STOCK_CLEAR),
+			("#" + _("Clear aborted"), self.OnClearAborted, gtk.STOCK_CLEAR),
+			("#" + _("Clear queued"), self.OnClearQueued, gtk.STOCK_CLEAR),
 		)
 		self.popup_menu_users = popup3 = PopupMenu(frame)
 		popup3.setup( 
-			(_("Send _message"), popup3.OnSendMessage),
-			(_("Show IP a_ddress"), popup3.OnShowIPaddress),
-			(_("Get user i_nfo"), popup3.OnGetUserInfo),
-			(_("Brow_se files"), popup3.OnBrowseUser),
-			(_("Gi_ve privileges"), popup3.OnGivePrivileges),
+			("#" + _("Send _message"), popup3.OnSendMessage, gtk.STOCK_EDIT),
+			("#" + _("Show IP a_ddress"), popup3.OnShowIPaddress, gtk.STOCK_NETWORK),
+			("#" + _("Get user i_nfo"), popup3.OnGetUserInfo, gtk.STOCK_INFO),
+			("#" + _("Brow_se files"), popup3.OnBrowseUser, gtk.STOCK_HARDDISK),
+			("#" + _("Gi_ve privileges"), popup3.OnGivePrivileges, gtk.STOCK_JUMP_TO),
 			("", None),
 			("$" + _("_Add user to list"), popup3.OnAddToList),
 			("$" + _("_Ban this user"), popup3.OnBanUser),
@@ -36,18 +36,18 @@ class Downloads(TransferList):
 		)
 		
 		popup.setup(
-			(_("Get place in _queue"), self.OnGetPlaceInQueue),
+			("#" + _("Get place in _queue"), self.OnGetPlaceInQueue, gtk.STOCK_INDEX),
 			("", None),
-			(_("Copy _URL"), self.OnCopyURL),
-			(_("Copy folder URL"), self.OnCopyDirURL),
-			(_("Send to _player"), self.OnPlayFiles),
+			("#" + _("Copy _URL"), self.OnCopyURL, gtk.STOCK_COPY),
+			("#" + _("Copy folder URL"), self.OnCopyDirURL, gtk.STOCK_COPY),
+			("#" + _("Send to _player"), self.OnPlayFiles, gtk.STOCK_MEDIA_PLAY),
 			(1, _("User"), self.popup_menu_users, self.OnPopupMenuUsers),
 			("", None),
-			(_("_Retry"), self.OnRetryTransfer),
+			("#" + _("_Retry"), self.OnRetryTransfer, gtk.STOCK_REDO),
 			("", None),
-			(_("Abor_t"), self.OnAbortTransfer),
-			(_("Abort and remove _file(s)"), self.OnAbortRemoveTransfer),
-			(_("_Clear"), self.OnClearTransfer),
+			("#" + _("Abor_t"), self.OnAbortTransfer, gtk.STOCK_CANCEL),
+			("#" + _("Abort and remove _file(s)"), self.OnAbortRemoveTransfer, gtk.STOCK_DELETE),
+			("#" + _("_Clear"), self.OnClearTransfer, gtk.STOCK_CLEAR),
 			("", None),
 			(1, _("Clear Groups"), self.popup_menu2, None),
 		)

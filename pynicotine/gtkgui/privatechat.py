@@ -113,16 +113,17 @@ class PrivateChat(PrivateChatTab):
 
 		self.popup_menu = popup = PopupMenu(self.frame)
 		popup.setup(
-			(_("Close"), self.OnClose),
+			("#" + _("Close"), self.OnClose, gtk.STOCK_CANCEL),
 			("", None),
-			(_("Show IP address"), popup.OnShowIPaddress),
-			(_("Get user info"), popup.OnGetUserInfo),
-			(_("Browse files"), popup.OnBrowseUser),
-			(_("Give privileges"), popup.OnGivePrivileges),
+			("#" + _("Show IP a_ddress"), popup.OnShowIPaddress, gtk.STOCK_NETWORK),
+			("#" + _("Get user i_nfo"), popup.OnGetUserInfo, gtk.STOCK_INFO),
+			("#" + _("Brow_se files"), popup.OnBrowseUser, gtk.STOCK_HARDDISK),
+			("#" + _("Gi_ve privileges"), popup.OnGivePrivileges, gtk.STOCK_JUMP_TO),
 			("$" + _("Add user to list"), popup.OnAddToList),
 			("$" + _("Ban this user"), popup.OnBanUser),
 			("$" + _("Ignore this user"), popup.OnIgnoreUser),
-			(_("Client Version"), popup.OnVersion ),
+			("#" + _("Client Version"), popup.OnVersion, gtk.STOCK_ABOUT ),
+			
 		)
 		popup.set_user(user)
 		self.ChatScroll.connect("button_press_event", self.OnPopupMenu)

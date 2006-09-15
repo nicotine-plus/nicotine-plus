@@ -349,12 +349,12 @@ class ChatRoom(ChatRoomTab):
 	
 		self.popup_menu = popup = PopupMenu(self.frame)
 		popup.setup(
-			(_("Send _message"), popup.OnSendMessage),
+			("#" + _("Send _message"), popup.OnSendMessage, gtk.STOCK_EDIT),
 			("", None),
-			(_("Show IP a_ddress"), popup.OnShowIPaddress),
-			(_("Get user i_nfo"), popup.OnGetUserInfo),
-			(_("Brow_se files"), popup.OnBrowseUser),
-			(_("Gi_ve privileges"), popup.OnGivePrivileges),
+			("#" + _("Show IP a_ddress"), popup.OnShowIPaddress, gtk.STOCK_NETWORK),
+			("#" + _("Get user i_nfo"), popup.OnGetUserInfo, gtk.STOCK_INFO),
+			("#" + _("Brow_se files"), popup.OnBrowseUser, gtk.STOCK_HARDDISK),
+			("#" + _("Gi_ve privileges"), popup.OnGivePrivileges, gtk.STOCK_JUMP_TO),
 			("$" + _("_Add user to list"), popup.OnAddToList),
 			("$" + _("_Ban this user"), popup.OnBanUser),
 			("$" + _("_Ignore this user"), popup.OnIgnoreUser),
@@ -364,7 +364,7 @@ class ChatRoom(ChatRoomTab):
 		self.entry3.grab_focus()
 		self.vbox6.set_focus_child(self.entry3)
 		
-		self.logpopupmenu = PopupMenu(self.frame).setup(["Clear log", self.OnClearRoomLog])
+		self.logpopupmenu = PopupMenu(self.frame).setup(["#" + _("Clear log"), self.OnClearRoomLog, gtk.STOCK_CLEAR])
 		self.RoomLog.connect("button-press-event", self.OnPopupRoomLogMenu)
 		
 	def get_custom_widget(self, id, string1, string2, int1, int2):

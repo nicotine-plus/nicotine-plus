@@ -292,6 +292,10 @@ class PopupMenu(gtk.Menu):
 			else:
 				if item[0][0] == "$":
 					menuitem = gtk.CheckMenuItem(item[0][1:])
+				elif item[0][0] == "#":
+					menuitem = gtk.ImageMenuItem(item[0][1:])
+					img = gtk.image_new_from_stock(item[2], gtk.ICON_SIZE_MENU)
+        				menuitem.set_image(img)
 				else:
 					menuitem = gtk.MenuItem(item[0])
 				if item[1] is not None:
@@ -341,7 +345,7 @@ class PopupMenu(gtk.Menu):
 		self.frame.privatechats.SendMessage(self.user, "\x01VERSION\x01")
 		
 	def OnGivePrivileges(self, widget):
-		text = InputDialog(None, "Give privileges", "Give how many days of privilegs?")
+		text = InputDialog(None, _("Give privileges"), _("Give how many days of privileges do you wish to give this user?"))
 		if text:
 			try:
 				days = int(text)

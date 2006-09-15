@@ -61,17 +61,17 @@ class UserBrowse(UserBrowseTab):
 		self.folder_popup_menu = popup = PopupMenu(self.frame)
 		popup.set_user(user)
 		popup.setup(
-			(_("_Download directory"), self.OnDownloadDirectory),
-			(_("Download directory _to..."), self.OnDownloadDirectoryTo),
-			(_("Download _recursive"), self.OnDownloadDirectoryRecursive),
-			(_("Download r_ecursive to..."), self.OnDownloadDirectoryRecursiveTo),
+			("#" + _("_Download directory"), self.OnDownloadDirectory, gtk.STOCK_GO_DOWN),
+			("#" + _("Download directory _to..."), self.OnDownloadDirectoryTo, gtk.STOCK_GO_DOWN),
+			("#" + _("Download _recursive"), self.OnDownloadDirectoryRecursive, gtk.STOCK_GO_DOWN),
+			("#" + _("Download r_ecursive to..."), self.OnDownloadDirectoryRecursiveTo, gtk.STOCK_GO_DOWN),
 			("", None),
-			(_("Copy _URL"), self.OnCopyDirURL),
+			("#" + _("Copy _URL"), self.OnCopyDirURL, gtk.STOCK_COPY),
 			("", None),
-			(_("Send _message"), popup.OnSendMessage),
-			(_("Show IP a_ddress"), popup.OnShowIPaddress),
-			(_("Get user i_nfo"), popup.OnGetUserInfo),
-			(_("Gi_ve privileges"), popup.OnGivePrivileges),
+			("#" + _("Send _message"), popup.OnSendMessage, gtk.STOCK_EDIT),
+			("#" + _("Show IP a_ddress"), popup.OnShowIPaddress, gtk.STOCK_NETWORK),
+			("#" + _("Get user i_nfo"), popup.OnGetUserInfo, gtk.STOCK_INFO),
+			("#" + _("Gi_ve privileges"), popup.OnGivePrivileges, gtk.STOCK_JUMP_TO),
 			("$" + _("_Add user to list"), popup.OnAddToList),
 			("$" + _("_Ban this user"), popup.OnBanUser),
 			("$" + _("_Ignore this user"), popup.OnIgnoreUser),
@@ -80,34 +80,33 @@ class UserBrowse(UserBrowseTab):
 		
 		self.file_popup_menu = popup = PopupMenu(self.frame)
 		popup.set_user(user)
-		# Here daelstorm adds the upload command
-		if user ==self.frame.np.config.sections["server"]["login"]:
+		if user == self.frame.np.config.sections["server"]["login"]:
 			popup.setup(
-				(_("_Download file(s)"), self.OnDownloadFiles),
-				(_("Download _to..."), self.OnDownloadFilesTo),
+				("#" + _("_Download file(s)"), self.OnDownloadFiles, gtk.STOCK_GO_DOWN),
+				("#" + _("Download _to..."), self.OnDownloadFilesTo, gtk.STOCK_GO_DOWN),
 				("", None),
-				(_("Copy _URL"), self.OnCopyURL),
+				("#" + _("Copy _URL"), self.OnCopyURL, gtk.STOCK_COPY),
 				("", None),
-				(_("Up_load file(s)"), self.OnUploadFiles),
-				(_("Send to _player"), self.OnPlayFiles),
-				(_("Send _message"), popup.OnSendMessage),
-				(_("Show IP a_ddress"), popup.OnShowIPaddress),
-				(_("Get user i_nfo"), popup.OnGetUserInfo),
+				("#" + _("Up_load file(s)"), self.OnUploadFiles, gtk.STOCK_GO_UP),
+				("#" + _("Send to _player"), self.OnPlayFiles, gtk.STOCK_MEDIA_PLAY),
+				("#" + _("Send _message"), popup.OnSendMessage, gtk.STOCK_EDIT),
+				("#" + _("Show IP a_ddress"), popup.OnShowIPaddress, gtk.STOCK_NETWORK),
+				("#" + _("Get user i_nfo"), popup.OnGetUserInfo, gtk.STOCK_INFO),
 				("$" + _("_Add user to list"), popup.OnAddToList),
 				("$" + _("_Ban this user"), popup.OnBanUser),
 				("$" + _("_Ignore this user"), popup.OnIgnoreUser),
 			)
 		else:
 			popup.setup(
-				(_("_Download file(s)"), self.OnDownloadFiles),
-				(_("Download _to..."), self.OnDownloadFilesTo),
+				("#" + _("_Download file(s)"), self.OnDownloadFiles, gtk.STOCK_GO_DOWN),
+				("#" + _("Download _to..."), self.OnDownloadFilesTo, gtk.STOCK_GO_DOWN),
 				("", None),
-				(_("Copy _URL"), self.OnCopyURL),
+				("#" + _("Copy _URL"), self.OnCopyURL, gtk.STOCK_COPY),
 				("", None),
-				(_("Send _message"), popup.OnSendMessage),
-				(_("Show IP a_ddress"), popup.OnShowIPaddress),
-				(_("Get user i_nfo"), popup.OnGetUserInfo),
-				(_("Gi_ve privileges"), popup.OnGivePrivileges),
+				("#" + _("Send _message"), popup.OnSendMessage, gtk.STOCK_EDIT),
+				("#" + _("Show IP a_ddress"), popup.OnShowIPaddress, gtk.STOCK_NETWORK),
+				("#" + _("Get user i_nfo"), popup.OnGetUserInfo, gtk.STOCK_INFO),
+				("#" + _("Gi_ve privileges"), popup.OnGivePrivileges, gtk.STOCK_JUMP_TO),
 				("$" + _("_Add user to list"), popup.OnAddToList),
 				("$" + _("_Ban this user"), popup.OnBanUser),
 				("$" + _("_Ignore this user"), popup.OnIgnoreUser),
@@ -169,9 +168,13 @@ class UserBrowse(UserBrowseTab):
 			items[3].set_sensitive(True)
 		else:
 			items[3].set_sensitive(False)
-
+		
 		# daelstorm modified the numbers for the upload menu item
-		if self.user ==self.frame.np.config.sections["server"]["login"]:
+		if self.user == self.frame.np.config.sections["server"]["login"]:
+			if len(self.selected_files) >= 1:
+				items[5].set_sensitive(True)
+			else:
+				items[5].set_sensitive(False)
 			items[10].set_active(self.user in [i[0] for i in self.frame.np.config.sections["server"]["userlist"]])
 			items[11].set_active(self.user in self.frame.np.config.sections["server"]["banlist"])
 			items[12].set_active(self.user in self.frame.np.config.sections["server"]["ignorelist"])
@@ -300,7 +303,6 @@ class UserBrowse(UserBrowseTab):
 			pass
 		else:
                         self.frame.np.ProcessRequestToPeer(user,slskmessages.UploadQueueNotification(None)  )
-                        #self.np.ProcessRequestToPeer(user, slskmessages.UserInfoRequest(None), self.userinfo)
 			for fn in self.selected_files:
 				self.frame.np.transfers.pushFile(user, dir + fn, prefix)
 				self.frame.np.transfers.checkUploadQueue()

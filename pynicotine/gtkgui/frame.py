@@ -141,8 +141,8 @@ class testwin(MainWindow):
 		self.LikesList.set_model(self.likeslist)
 		self.til_popup_menu = popup = utils.PopupMenu(self)
 		popup.setup(
-			(_("_Remove this item"), self.OnRemoveThingILike),
-			(_("Re_commendations for this item"), self.OnRecommendItem),
+			("#" + _("_Remove this item"), self.OnRemoveThingILike, gtk.STOCK_CANCEL),
+			("#" + _("Re_commendations for this item"), self.OnRecommendItem, gtk.STOCK_INDEX),
 		)
 		self.LikesList.connect("button_press_event", self.OnPopupTILMenu)
 
@@ -167,9 +167,9 @@ class testwin(MainWindow):
 		popup.setup(
 			("$" + _("I _like this"), self.OnLikeRecommendation),
 			("$" + _("I _don't like this"), self.OnDislikeRecommendation),
-			(_("_Recommendations for this item"), self.OnRecommendRecommendation),
+			("#" + _("_Recommendations for this item"), self.OnRecommendRecommendation, gtk.STOCK_INDEX),
 			("", None),
-			(_("_Search for this item"), self.OnRecommendSearch),
+			("#" + _("_Search for this item"), self.OnRecommendSearch, gtk.STOCK_FIND),
 		)
 		self.RecommendationsList.connect("button_press_event", self.OnPopupRMenu)
 
@@ -189,11 +189,13 @@ class testwin(MainWindow):
 		self.recommendationuserslist.set_sort_column_id(1, gtk.SORT_ASCENDING)
 		self.ru_popup_menu = popup = utils.PopupMenu(self)
 		popup.setup(
-			(_("Send _message"), popup.OnSendMessage),
+			("#" + _("Send _message"), popup.OnSendMessage, gtk.STOCK_EDIT),
 			("", None),
-			(_("Show IP a_ddress"), popup.OnShowIPaddress),
-			(_("Get user i_nfo"), popup.OnGetUserInfo),
-			(_("Brow_se files"), popup.OnBrowseUser),
+			("#" + _("Show IP a_ddress"), popup.OnShowIPaddress, gtk.STOCK_NETWORK),
+			("#" + _("Get user i_nfo"), popup.OnGetUserInfo, gtk.STOCK_INFO),
+			("#" + _("Brow_se files"), popup.OnBrowseUser, gtk.STOCK_HARDDISK),
+			("#" + _("Gi_ve privileges"), popup.OnGivePrivileges, gtk.STOCK_JUMP_TO),
+			("", None),
 			("$" + _("_Add user to list"), popup.OnAddToList),
 			("$" + _("_Ban this user"), popup.OnBanUser),
 			("$" + _("_Ignore this user"), popup.OnIgnoreUser),
