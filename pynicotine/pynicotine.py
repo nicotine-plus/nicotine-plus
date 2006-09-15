@@ -294,7 +294,7 @@ class NetworkEventProcessor:
 	return str(string).decode(networkenc,'replace').encode("utf-8", "replace")
 
     def getencodings(self):
-	return ['ascii', 'cp037', 'cp1006', 'cp1026', 'cp1140', 'cp1250', 'cp1251', 'cp1252', 'cp1253', 'cp1254', 'cp1255', 'cp1256', 'cp1257', 'cp1258', 'cp424', 'cp437', 'cp500', 'cp737', 'cp775', 'cp850', 'cp852', 'cp855', 'cp856', 'cp857', 'cp860', 'cp861', 'cp862', 'cp863', 'cp864', 'cp865', 'cp866', 'cp869', 'cp874', 'cp875', 'iso8859-1', 'iso8859-10', 'iso8859-13', 'iso8859-14', 'iso8859-15', 'iso8859-2', 'iso8859-3', 'iso8859-4', 'iso8859-5', 'iso8859-6', 'iso8859-7', 'iso8859-8', 'iso8859-9', 'koi8-r', 'latin-1', 'mac-cyrillic', 'mac-greek', 'mac-iceland', 'mac-latin2', 'mac-roman', 'mac-turkish', 'utf-16', 'utf-7', 'utf-8']
+	return ['ascii', 'cp037',  'cp424', 'cp437', 'cp500', 'cp737', 'cp775', 'cp850', 'cp852', 'cp855', 'cp856', 'cp857', 'cp860', 'cp861', 'cp862', 'cp863', 'cp864', 'cp865', 'cp866', 'cp869', 'cp874', 'cp875',  'cp932',  'cp950',  'cp1006',  'cp1026', 'cp1140', 'cp1250', 'cp1251', 'cp1252', 'cp1253', 'cp1254', 'cp1255', 'cp1256', 'cp1257', 'cp1258',   'iso8859-1', 'iso8859-10', 'iso8859-13', 'iso8859-14', 'iso8859-15', 'iso8859-2', 'iso8859-3', 'iso8859-4', 'iso8859-5', 'iso8859-6', 'iso8859-7', 'iso8859-8', 'iso8859-9', 'koi8-r', 'latin-1', 'mac-cyrillic', 'mac-greek', 'mac-iceland', 'mac-latin2', 'mac-roman', 'mac-turkish', 'utf-16', 'utf-7', 'utf-8']
 
     def sendNumSharedFoldersFiles(self):
 	conf = self.config.sections
