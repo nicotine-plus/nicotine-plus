@@ -13,7 +13,7 @@ class Downloads(TransferList):
 		TransferList.__init__(self, frame, frame.DownloadList)
 		self.frame.DownloadList.set_property("rules-hint", True)
 		self.accel_group = gtk.AccelGroup()
-		self.popup_menu = popup = PopupMenu(frame)
+		
 		
 		self.popup_menu2 = popup2 = PopupMenu(frame)
 		popup2.setup( 
@@ -34,7 +34,7 @@ class Downloads(TransferList):
 			("$" + _("_Ban this user"), popup3.OnBanUser),
 			("$" + _("_Ignore this user"), popup3.OnIgnoreUser),
 		)
-		
+		self.popup_menu = popup = PopupMenu(frame)
 		popup.setup(
 			("#" + _("Get place in _queue"), self.OnGetPlaceInQueue, gtk.STOCK_INDEX),
 			("", None),

@@ -556,9 +556,7 @@ class testwin(MainWindow):
 			
 	def traymenu(self):
 		try:
-			file_menu = gtk.Menu()
-			connect_menu = gtk.Menu()
-			
+
 			self.tray_popup_menu_server = popup0 = PopupMenu(self)
 			popup0.setup(
 				("#" + _("Connect"), self.OnConnect, gtk.STOCK_CONNECT),
@@ -566,7 +564,6 @@ class testwin(MainWindow):
 			)
 			self.tray_popup_menu = popup = PopupMenu(self)
 			popup.setup(
-				
 				("#" + _("Hide / Unhide Nicotine"), self.HideUnhideWindow, gtk.STOCK_GOTO_BOTTOM),
 				(1, _("Server"), self.tray_popup_menu_server, self.OnPopupServer),
 				("#" + _("Settings"), self.OnSettings, gtk.STOCK_PREFERENCES),
@@ -575,7 +572,6 @@ class testwin(MainWindow):
 				("#" + _("Lookup a User's Shares"), self.OnGetAUsersShares, gtk.STOCK_HARDDISK),
 				(_("Toggle Away"), self.OnAway ),
 				("#" + _("Quit"), self.OnExit, gtk.STOCK_QUIT),
-
 			)
 		
 		except Exception,e:
@@ -620,10 +616,22 @@ class testwin(MainWindow):
 		(w, h) = self.trayicon.get_size()
 		if event.x < 0 or event.y < 0 or event.x >= w or event.y >= h:
 			return
-# 		print event.button
+
 		if event.button == 1:
 			self.HideUnhideWindow(None)
 		else:
+			items = self.tray_popup_menu.get_children()
+			if self.tray_status["status"] == "disconnect":
+				items[3].set_sensitive(False)
+				items[4].set_sensitive(False)
+				items[5].set_sensitive(False)
+				items[6].set_sensitive(False)
+			else:
+				
+				items[3].set_sensitive(True)
+				items[4].set_sensitive(True)
+				items[5].set_sensitive(True)
+				items[6].set_sensitive(True)
 			if event.type == gtk.gdk.BUTTON_PRESS:
 				self.tray_popup_menu.popup(None, None, None, event.button, event.time)
 				return True
