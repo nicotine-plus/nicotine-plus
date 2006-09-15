@@ -30,31 +30,37 @@ class MainWindow:
 
         self.file1_menu = gtk.Menu()
 
-        self.connect1 = gtk.MenuItem(_("_Connect"))
+        self.connect1 = gtk.ImageMenuItem(_("_Connect"))
         self.connect1.show()
         self.connect1.connect("activate", self.OnConnect)
-        self.connect1.add_accelerator("activate", self.accel_group, gtk.gdk.keyval_from_name("c"), gtk.gdk.MOD1_MASK, gtk.ACCEL_VISIBLE)
+        self.connect1.add_accelerator("activate", self.accel_group, gtk.gdk.keyval_from_name("C"), gtk.gdk.MOD1_MASK, gtk.ACCEL_VISIBLE)
 
+        img = gtk.image_new_from_stock(gtk.STOCK_CONNECT, gtk.ICON_SIZE_MENU)
+        self.connect1.set_image(img)
         self.file1_menu.append(self.connect1)
 
-        self.disconnect1 = gtk.MenuItem(_("_Disconnect"))
+        self.disconnect1 = gtk.ImageMenuItem(_("_Disconnect"))
         self.disconnect1.show()
         self.disconnect1.connect("activate", self.OnDisconnect)
-        self.disconnect1.add_accelerator("activate", self.accel_group, gtk.gdk.keyval_from_name("d"), gtk.gdk.MOD1_MASK, gtk.ACCEL_VISIBLE)
+        self.disconnect1.add_accelerator("activate", self.accel_group, gtk.gdk.keyval_from_name("D"), gtk.gdk.MOD1_MASK, gtk.ACCEL_VISIBLE)
 
+        img = gtk.image_new_from_stock(gtk.STOCK_DISCONNECT, gtk.ICON_SIZE_MENU)
+        self.disconnect1.set_image(img)
         self.file1_menu.append(self.disconnect1)
 
         self.awayreturn1 = gtk.MenuItem(_("_Away/Return"))
         self.awayreturn1.show()
         self.awayreturn1.connect("activate", self.OnAway)
-        self.awayreturn1.add_accelerator("activate", self.accel_group, gtk.gdk.keyval_from_name("a"), gtk.gdk.MOD1_MASK, gtk.ACCEL_VISIBLE)
+        self.awayreturn1.add_accelerator("activate", self.accel_group, gtk.gdk.keyval_from_name("A"), gtk.gdk.MOD1_MASK, gtk.ACCEL_VISIBLE)
 
         self.file1_menu.append(self.awayreturn1)
 
-        self.check_privileges1 = gtk.MenuItem(_("Check _privileges"))
+        self.check_privileges1 = gtk.ImageMenuItem(_("Check _privileges"))
         self.check_privileges1.show()
         self.check_privileges1.connect("activate", self.OnCheckPrivileges)
 
+        img = gtk.image_new_from_stock(gtk.STOCK_JUMP_TO, gtk.ICON_SIZE_MENU)
+        self.check_privileges1.set_image(img)
         self.file1_menu.append(self.check_privileges1)
 
         self.scheidingslijn1 = gtk.MenuItem()
@@ -78,7 +84,7 @@ class MainWindow:
         self.hide_log_window1.set_active(False)
         self.hide_log_window1.show()
         self.hide_log_window1.connect("activate", self.OnHideLog)
-        self.hide_log_window1.add_accelerator("activate", self.accel_group, gtk.gdk.keyval_from_name("h"), gtk.gdk.MOD1_MASK, gtk.ACCEL_VISIBLE)
+        self.hide_log_window1.add_accelerator("activate", self.accel_group, gtk.gdk.keyval_from_name("H"), gtk.gdk.MOD1_MASK, gtk.ACCEL_VISIBLE)
 
         self.file1_menu.append(self.hide_log_window1)
 
@@ -86,7 +92,7 @@ class MainWindow:
         self.hide_room_list1.set_active(False)
         self.hide_room_list1.show()
         self.hide_room_list1.connect("activate", self.OnHideRoomList)
-        self.hide_room_list1.add_accelerator("activate", self.accel_group, gtk.gdk.keyval_from_name("r"), gtk.gdk.MOD1_MASK, gtk.ACCEL_VISIBLE)
+        self.hide_room_list1.add_accelerator("activate", self.accel_group, gtk.gdk.keyval_from_name("R"), gtk.gdk.MOD1_MASK, gtk.ACCEL_VISIBLE)
 
         self.file1_menu.append(self.hide_room_list1)
 
@@ -94,7 +100,7 @@ class MainWindow:
         self.hide_tickers1.set_active(False)
         self.hide_tickers1.show()
         self.hide_tickers1.connect("activate", self.OnHideTickers)
-        self.hide_tickers1.add_accelerator("activate", self.accel_group, gtk.gdk.keyval_from_name("t"), gtk.gdk.MOD1_MASK, gtk.ACCEL_VISIBLE)
+        self.hide_tickers1.add_accelerator("activate", self.accel_group, gtk.gdk.keyval_from_name("T"), gtk.gdk.MOD1_MASK, gtk.ACCEL_VISIBLE)
 
         self.file1_menu.append(self.hide_tickers1)
 
@@ -102,7 +108,7 @@ class MainWindow:
         self.buddylist_in_chatrooms1.set_active(False)
         self.buddylist_in_chatrooms1.show()
         self.buddylist_in_chatrooms1.connect("activate", self.OnToggleBuddyList)
-        self.buddylist_in_chatrooms1.add_accelerator("activate", self.accel_group, gtk.gdk.keyval_from_name("u"), gtk.gdk.MOD1_MASK, gtk.ACCEL_VISIBLE)
+        self.buddylist_in_chatrooms1.add_accelerator("activate", self.accel_group, gtk.gdk.keyval_from_name("U"), gtk.gdk.MOD1_MASK, gtk.ACCEL_VISIBLE)
 
         self.file1_menu.append(self.buddylist_in_chatrooms1)
 
@@ -111,11 +117,13 @@ class MainWindow:
 
         self.file1_menu.append(self.scheidingslijn5)
 
-        self.settings1 = gtk.MenuItem(_("_Settings"))
+        self.settings1 = gtk.ImageMenuItem(_("_Settings"))
         self.settings1.show()
         self.settings1.connect("activate", self.OnSettings)
-        self.settings1.add_accelerator("activate", self.accel_group, gtk.gdk.keyval_from_name("s"), gtk.gdk.MOD1_MASK, gtk.ACCEL_VISIBLE)
+        self.settings1.add_accelerator("activate", self.accel_group, gtk.gdk.keyval_from_name("S"), gtk.gdk.MOD1_MASK, gtk.ACCEL_VISIBLE)
 
+        img = gtk.image_new_from_stock(gtk.STOCK_PREFERENCES, gtk.ICON_SIZE_MENU)
+        self.settings1.set_image(img)
         self.file1_menu.append(self.settings1)
 
         self.scheidingslijn6 = gtk.MenuItem()
@@ -123,22 +131,28 @@ class MainWindow:
 
         self.file1_menu.append(self.scheidingslijn6)
 
-        self.rescan1 = gtk.MenuItem(_("_Rescan shares"))
+        self.rescan1 = gtk.ImageMenuItem(_("_Rescan shares"))
         self.rescan1.show()
         self.rescan1.connect("activate", self.OnRescan)
 
+        img = gtk.image_new_from_stock(gtk.STOCK_REFRESH, gtk.ICON_SIZE_MENU)
+        self.rescan1.set_image(img)
         self.file1_menu.append(self.rescan1)
 
-        self.rescan2 = gtk.MenuItem(_("_Rescan Buddy shares"))
+        self.rescan2 = gtk.ImageMenuItem(_("_Rescan Buddy shares"))
         self.rescan2.show()
         self.rescan2.connect("activate", self.OnBuddyRescan)
 
+        img = gtk.image_new_from_stock(gtk.STOCK_REFRESH, gtk.ICON_SIZE_MENU)
+        self.rescan2.set_image(img)
         self.file1_menu.append(self.rescan2)
 
-        self.browse_my_shares1 = gtk.MenuItem(_("_Browse my shares"))
+        self.browse_my_shares1 = gtk.ImageMenuItem(_("_Browse my shares"))
         self.browse_my_shares1.show()
         self.browse_my_shares1.connect("activate", self.OnBrowseMyShares)
 
+        img = gtk.image_new_from_stock(gtk.STOCK_HARDDISK, gtk.ICON_SIZE_MENU)
+        self.browse_my_shares1.set_image(img)
         self.file1_menu.append(self.browse_my_shares1)
 
         self.scheidingslijn2 = gtk.MenuItem()
@@ -146,11 +160,13 @@ class MainWindow:
 
         self.file1_menu.append(self.scheidingslijn2)
 
-        self.exit1 = gtk.MenuItem(_("E_xit"))
+        self.exit1 = gtk.ImageMenuItem(_("E_xit"))
         self.exit1.show()
         self.exit1.connect("activate", self.OnExit)
-        self.exit1.add_accelerator("activate", self.accel_group, gtk.gdk.keyval_from_name("x"), gtk.gdk.MOD1_MASK, gtk.ACCEL_VISIBLE)
+        self.exit1.add_accelerator("activate", self.accel_group, gtk.gdk.keyval_from_name("X"), gtk.gdk.MOD1_MASK, gtk.ACCEL_VISIBLE)
 
+        img = gtk.image_new_from_stock(gtk.STOCK_QUIT, gtk.ICON_SIZE_MENU)
+        self.exit1.set_image(img)
         self.file1_menu.append(self.exit1)
 
         self.file1.set_submenu(self.file1_menu)
@@ -162,58 +178,76 @@ class MainWindow:
 
         self.modes1_menu = gtk.Menu()
 
-        self.chat_rooms1 = gtk.MenuItem(_("_Chat Rooms"))
+        self.chat_rooms1 = gtk.ImageMenuItem(_("_Chat Rooms"))
         self.chat_rooms1.show()
         self.chat_rooms1.connect("activate", self.OnChatRooms)
 
+        img = gtk.image_new_from_stock(gtk.STOCK_JUMP_TO, gtk.ICON_SIZE_MENU)
+        self.chat_rooms1.set_image(img)
         self.modes1_menu.append(self.chat_rooms1)
 
-        self.private_chat1 = gtk.MenuItem(_("_Private Chat"))
+        self.private_chat1 = gtk.ImageMenuItem(_("_Private Chat"))
         self.private_chat1.show()
         self.private_chat1.connect("activate", self.OnPrivateChat)
 
+        img = gtk.image_new_from_stock(gtk.STOCK_JUMP_TO, gtk.ICON_SIZE_MENU)
+        self.private_chat1.set_image(img)
         self.modes1_menu.append(self.private_chat1)
 
-        self.downloads1 = gtk.MenuItem(_("_Downloads"))
+        self.downloads1 = gtk.ImageMenuItem(_("_Downloads"))
         self.downloads1.show()
         self.downloads1.connect("activate", self.OnDownloads)
 
+        img = gtk.image_new_from_stock(gtk.STOCK_GO_DOWN, gtk.ICON_SIZE_MENU)
+        self.downloads1.set_image(img)
         self.modes1_menu.append(self.downloads1)
 
-        self.uploads1 = gtk.MenuItem(_("_Uploads"))
+        self.uploads1 = gtk.ImageMenuItem(_("_Uploads"))
         self.uploads1.show()
         self.uploads1.connect("activate", self.OnUploads)
 
+        img = gtk.image_new_from_stock(gtk.STOCK_GO_UP, gtk.ICON_SIZE_MENU)
+        self.uploads1.set_image(img)
         self.modes1_menu.append(self.uploads1)
 
-        self.search_files1 = gtk.MenuItem(_("_Search Files"))
+        self.search_files1 = gtk.ImageMenuItem(_("_Search Files"))
         self.search_files1.show()
         self.search_files1.connect("activate", self.OnSearchFiles)
 
+        img = gtk.image_new_from_stock(gtk.STOCK_FIND, gtk.ICON_SIZE_MENU)
+        self.search_files1.set_image(img)
         self.modes1_menu.append(self.search_files1)
 
-        self.user_info1 = gtk.MenuItem(_("User I_nfo"))
+        self.user_info1 = gtk.ImageMenuItem(_("User I_nfo"))
         self.user_info1.show()
         self.user_info1.connect("activate", self.OnUserInfo)
 
+        img = gtk.image_new_from_stock(gtk.STOCK_INFO, gtk.ICON_SIZE_MENU)
+        self.user_info1.set_image(img)
         self.modes1_menu.append(self.user_info1)
 
-        self.user_browse1 = gtk.MenuItem(_("User _Browse"))
+        self.user_browse1 = gtk.ImageMenuItem(_("User _Browse"))
         self.user_browse1.show()
         self.user_browse1.connect("activate", self.OnUserBrowse)
 
+        img = gtk.image_new_from_stock(gtk.STOCK_HARDDISK, gtk.ICON_SIZE_MENU)
+        self.user_browse1.set_image(img)
         self.modes1_menu.append(self.user_browse1)
 
-        self.interests1 = gtk.MenuItem(_("_Interests"))
+        self.interests1 = gtk.ImageMenuItem(_("_Interests"))
         self.interests1.show()
         self.interests1.connect("activate", self.OnInterests)
 
+        img = gtk.image_new_from_stock(gtk.STOCK_JUMP_TO, gtk.ICON_SIZE_MENU)
+        self.interests1.set_image(img)
         self.modes1_menu.append(self.interests1)
 
-        self.user_list1 = gtk.MenuItem(_("Buddy _List"))
+        self.user_list1 = gtk.ImageMenuItem(_("Buddy _List"))
         self.user_list1.show()
         self.user_list1.connect("activate", self.OnUserList)
 
+        img = gtk.image_new_from_stock(gtk.STOCK_INDEX, gtk.ICON_SIZE_MENU)
+        self.user_list1.set_image(img)
         self.modes1_menu.append(self.user_list1)
 
         self.modes1.set_submenu(self.modes1_menu)
@@ -225,16 +259,50 @@ class MainWindow:
 
         self.help1_menu = gtk.Menu()
 
-        self.about_chatroom_commands1 = gtk.MenuItem(_("About _chat room commands"))
+        self.nicotine_guide1 = gtk.ImageMenuItem(_("Offline Nicotine Guide"))
+        self.nicotine_guide1.show()
+        self.nicotine_guide1.connect("activate", self.OnNicotineGuide)
+        self.nicotine_guide1.add_accelerator("activate", self.accel_group, gtk.gdk.keyval_from_name("F1"), 0, gtk.ACCEL_VISIBLE)
+
+        img = gtk.image_new_from_stock(gtk.STOCK_HELP, gtk.ICON_SIZE_MENU)
+        self.nicotine_guide1.set_image(img)
+        self.help1_menu.append(self.nicotine_guide1)
+
+        self.SourceForgeProject = gtk.ImageMenuItem(_("Sourceforge Project Website"))
+        self.SourceForgeProject.show()
+        self.SourceForgeProject.connect("activate", self.OnSourceForgeProject)
+
+        img = gtk.image_new_from_stock(gtk.STOCK_HOME, gtk.ICON_SIZE_MENU)
+        self.SourceForgeProject.set_image(img)
+        self.help1_menu.append(self.SourceForgeProject)
+
+        self.Trac = gtk.ImageMenuItem(_("Nicotine-Plus Trac Website"))
+        self.Trac.show()
+        self.Trac.connect("activate", self.OnTrac)
+
+        img = gtk.image_new_from_stock(gtk.STOCK_DIALOG_QUESTION, gtk.ICON_SIZE_MENU)
+        self.Trac.set_image(img)
+        self.help1_menu.append(self.Trac)
+
+        self.separator1 = gtk.MenuItem()
+        self.separator1.show()
+
+        self.help1_menu.append(self.separator1)
+
+        self.about_chatroom_commands1 = gtk.ImageMenuItem(_("About _chat room commands"))
         self.about_chatroom_commands1.show()
         self.about_chatroom_commands1.connect("activate", self.OnAboutChatroomCommands)
 
+        img = gtk.image_new_from_stock(gtk.STOCK_HELP, gtk.ICON_SIZE_MENU)
+        self.about_chatroom_commands1.set_image(img)
         self.help1_menu.append(self.about_chatroom_commands1)
 
-        self.about_private_chat_command1 = gtk.MenuItem(_("About _private chat commands"))
+        self.about_private_chat_command1 = gtk.ImageMenuItem(_("About _private chat commands"))
         self.about_private_chat_command1.show()
         self.about_private_chat_command1.connect("activate", self.OnAboutPrivateChatCommands)
 
+        img = gtk.image_new_from_stock(gtk.STOCK_HELP, gtk.ICON_SIZE_MENU)
+        self.about_private_chat_command1.set_image(img)
         self.help1_menu.append(self.about_private_chat_command1)
 
         self.scheidingslijn4 = gtk.MenuItem()
@@ -242,10 +310,12 @@ class MainWindow:
 
         self.help1_menu.append(self.scheidingslijn4)
 
-        self.abour_search_filters1 = gtk.MenuItem(_("About _search filters"))
+        self.abour_search_filters1 = gtk.ImageMenuItem(_("About _search filters"))
         self.abour_search_filters1.show()
         self.abour_search_filters1.connect("activate", self.OnAboutFilters)
 
+        img = gtk.image_new_from_stock(gtk.STOCK_HELP, gtk.ICON_SIZE_MENU)
+        self.abour_search_filters1.set_image(img)
         self.help1_menu.append(self.abour_search_filters1)
 
         self.scheidingslijn3 = gtk.MenuItem()
@@ -253,10 +323,12 @@ class MainWindow:
 
         self.help1_menu.append(self.scheidingslijn3)
 
-        self.check_latest1 = gtk.MenuItem(_("Check _latest"))
+        self.check_latest1 = gtk.ImageMenuItem(_("Check _latest"))
         self.check_latest1.show()
         self.check_latest1.connect("activate", self.OnCheckLatest)
 
+        img = gtk.image_new_from_stock(gtk.STOCK_CONNECT, gtk.ICON_SIZE_MENU)
+        self.check_latest1.set_image(img)
         self.help1_menu.append(self.check_latest1)
 
         self.scheidingslijn7 = gtk.MenuItem()
@@ -264,10 +336,12 @@ class MainWindow:
 
         self.help1_menu.append(self.scheidingslijn7)
 
-        self.about_nicotine1 = gtk.MenuItem(_("About _Nicotine"))
+        self.about_nicotine1 = gtk.ImageMenuItem(_("About _Nicotine"))
         self.about_nicotine1.show()
         self.about_nicotine1.connect("activate", self.OnAbout)
 
+        img = gtk.image_new_from_stock(gtk.STOCK_ABOUT, gtk.ICON_SIZE_MENU)
+        self.about_nicotine1.set_image(img)
         self.help1_menu.append(self.about_nicotine1)
 
         self.help1.set_submenu(self.help1_menu)
@@ -1299,6 +1373,15 @@ class MainWindow:
         pass
 
     def OnUserList(self, widget):
+        pass
+
+    def OnNicotineGuide(self, widget):
+        pass
+
+    def OnSourceForgeProject(self, widget):
+        pass
+
+    def OnTrac(self, widget):
         pass
 
     def OnAboutChatroomCommands(self, widget):

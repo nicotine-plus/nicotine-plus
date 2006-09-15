@@ -46,22 +46,46 @@
 		<widget class="GtkMenu" id="file1_menu">
 
 		  <child>
-		    <widget class="GtkMenuItem" id="connect1">
+		    <widget class="GtkImageMenuItem" id="connect1">
 		      <property name="visible">True</property>
 		      <property name="label" translatable="yes">_Connect</property>
 		      <property name="use_underline">True</property>
 		      <signal name="activate" handler="OnConnect" last_modification_time="Wed, 16 Jul 2003 14:18:47 GMT"/>
 		      <accelerator key="C" modifiers="GDK_MOD1_MASK" signal="activate"/>
+
+		      <child internal-child="image">
+			<widget class="GtkImage" id="image187">
+			  <property name="visible">True</property>
+			  <property name="stock">gtk-connect</property>
+			  <property name="icon_size">1</property>
+			  <property name="xalign">0.5</property>
+			  <property name="yalign">0.5</property>
+			  <property name="xpad">0</property>
+			  <property name="ypad">0</property>
+			</widget>
+		      </child>
 		    </widget>
 		  </child>
 
 		  <child>
-		    <widget class="GtkMenuItem" id="disconnect1">
+		    <widget class="GtkImageMenuItem" id="disconnect1">
 		      <property name="visible">True</property>
 		      <property name="label" translatable="yes">_Disconnect</property>
 		      <property name="use_underline">True</property>
 		      <signal name="activate" handler="OnDisconnect" last_modification_time="Wed, 16 Jul 2003 14:18:47 GMT"/>
 		      <accelerator key="D" modifiers="GDK_MOD1_MASK" signal="activate"/>
+
+		      <child internal-child="image">
+			<widget class="GtkImage" id="image188">
+			  <property name="visible">True</property>
+			  <property name="stock">gtk-disconnect</property>
+			  <property name="icon_size">1</property>
+			  <property name="xalign">0.5</property>
+			  <property name="yalign">0.5</property>
+			  <property name="xpad">0</property>
+			  <property name="ypad">0</property>
+			</widget>
+		      </child>
 		    </widget>
 		  </child>
 
@@ -76,11 +100,23 @@
 		  </child>
 
 		  <child>
-		    <widget class="GtkMenuItem" id="check_privileges1">
+		    <widget class="GtkImageMenuItem" id="check_privileges1">
 		      <property name="visible">True</property>
 		      <property name="label" translatable="yes">Check _privileges</property>
 		      <property name="use_underline">True</property>
 		      <signal name="activate" handler="OnCheckPrivileges" last_modification_time="Wed, 16 Jul 2003 14:18:47 GMT"/>
+
+		      <child internal-child="image">
+			<widget class="GtkImage" id="image189">
+			  <property name="visible">True</property>
+			  <property name="stock">gtk-jump-to</property>
+			  <property name="icon_size">1</property>
+			  <property name="xalign">0.5</property>
+			  <property name="yalign">0.5</property>
+			  <property name="xpad">0</property>
+			  <property name="ypad">0</property>
+			</widget>
+		      </child>
 		    </widget>
 		  </child>
 
@@ -157,12 +193,24 @@
 		  </child>
 
 		  <child>
-		    <widget class="GtkMenuItem" id="settings1">
+		    <widget class="GtkImageMenuItem" id="settings1">
 		      <property name="visible">True</property>
 		      <property name="label" translatable="yes">_Settings</property>
 		      <property name="use_underline">True</property>
 		      <signal name="activate" handler="OnSettings" last_modification_time="Wed, 16 Jul 2003 14:18:47 GMT"/>
 		      <accelerator key="S" modifiers="GDK_MOD1_MASK" signal="activate"/>
+
+		      <child internal-child="image">
+			<widget class="GtkImage" id="image190">
+			  <property name="visible">True</property>
+			  <property name="stock">gtk-preferences</property>
+			  <property name="icon_size">1</property>
+			  <property name="xalign">0.5</property>
+			  <property name="yalign">0.5</property>
+			  <property name="xpad">0</property>
+			  <property name="ypad">0</property>
+			</widget>
+		      </child>
 		    </widget>
 		  </child>
 
@@ -173,29 +221,65 @@
 		  </child>
 
 		  <child>
-		    <widget class="GtkMenuItem" id="rescan1">
+		    <widget class="GtkImageMenuItem" id="rescan1">
 		      <property name="visible">True</property>
 		      <property name="label" translatable="yes">_Rescan shares</property>
 		      <property name="use_underline">True</property>
 		      <signal name="activate" handler="OnRescan" last_modification_time="Mon, 28 Jul 2003 12:49:11 GMT"/>
+
+		      <child internal-child="image">
+			<widget class="GtkImage" id="image191">
+			  <property name="visible">True</property>
+			  <property name="stock">gtk-refresh</property>
+			  <property name="icon_size">1</property>
+			  <property name="xalign">0.5</property>
+			  <property name="yalign">0.5</property>
+			  <property name="xpad">0</property>
+			  <property name="ypad">0</property>
+			</widget>
+		      </child>
 		    </widget>
 		  </child>
 
 		  <child>
-		    <widget class="GtkMenuItem" id="rescan2">
+		    <widget class="GtkImageMenuItem" id="rescan2">
 		      <property name="visible">True</property>
 		      <property name="label" translatable="yes">_Rescan Buddy shares</property>
 		      <property name="use_underline">True</property>
 		      <signal name="activate" handler="OnBuddyRescan" last_modification_time="Sat, 10 Jun 2006 21:43:23 GMT"/>
+
+		      <child internal-child="image">
+			<widget class="GtkImage" id="image192">
+			  <property name="visible">True</property>
+			  <property name="stock">gtk-refresh</property>
+			  <property name="icon_size">1</property>
+			  <property name="xalign">0.5</property>
+			  <property name="yalign">0.5</property>
+			  <property name="xpad">0</property>
+			  <property name="ypad">0</property>
+			</widget>
+		      </child>
 		    </widget>
 		  </child>
 
 		  <child>
-		    <widget class="GtkMenuItem" id="browse_my_shares1">
+		    <widget class="GtkImageMenuItem" id="browse_my_shares1">
 		      <property name="visible">True</property>
 		      <property name="label" translatable="yes">_Browse my shares</property>
 		      <property name="use_underline">True</property>
 		      <signal name="activate" handler="OnBrowseMyShares" last_modification_time="Tue, 26 Aug 2003 16:00:37 GMT"/>
+
+		      <child internal-child="image">
+			<widget class="GtkImage" id="image193">
+			  <property name="visible">True</property>
+			  <property name="stock">gtk-harddisk</property>
+			  <property name="icon_size">1</property>
+			  <property name="xalign">0.5</property>
+			  <property name="yalign">0.5</property>
+			  <property name="xpad">0</property>
+			  <property name="ypad">0</property>
+			</widget>
+		      </child>
 		    </widget>
 		  </child>
 
@@ -206,12 +290,24 @@
 		  </child>
 
 		  <child>
-		    <widget class="GtkMenuItem" id="exit1">
+		    <widget class="GtkImageMenuItem" id="exit1">
 		      <property name="visible">True</property>
 		      <property name="label" translatable="yes">E_xit</property>
 		      <property name="use_underline">True</property>
 		      <signal name="activate" handler="OnExit" last_modification_time="Wed, 16 Jul 2003 14:18:47 GMT"/>
 		      <accelerator key="X" modifiers="GDK_MOD1_MASK" signal="activate"/>
+
+		      <child internal-child="image">
+			<widget class="GtkImage" id="image194">
+			  <property name="visible">True</property>
+			  <property name="stock">gtk-quit</property>
+			  <property name="icon_size">1</property>
+			  <property name="xalign">0.5</property>
+			  <property name="yalign">0.5</property>
+			  <property name="xpad">0</property>
+			  <property name="ypad">0</property>
+			</widget>
+		      </child>
 		    </widget>
 		  </child>
 		</widget>
@@ -229,83 +325,191 @@
 		<widget class="GtkMenu" id="modes1_menu">
 
 		  <child>
-		    <widget class="GtkMenuItem" id="chat_rooms1">
+		    <widget class="GtkImageMenuItem" id="chat_rooms1">
 		      <property name="visible">True</property>
 		      <property name="label" translatable="yes">_Chat Rooms</property>
 		      <property name="use_underline">True</property>
 		      <signal name="activate" handler="OnChatRooms" last_modification_time="Sun, 28 May 2006 23:35:44 GMT"/>
+
+		      <child internal-child="image">
+			<widget class="GtkImage" id="image195">
+			  <property name="visible">True</property>
+			  <property name="stock">gtk-jump-to</property>
+			  <property name="icon_size">1</property>
+			  <property name="xalign">0.5</property>
+			  <property name="yalign">0.5</property>
+			  <property name="xpad">0</property>
+			  <property name="ypad">0</property>
+			</widget>
+		      </child>
 		    </widget>
 		  </child>
 
 		  <child>
-		    <widget class="GtkMenuItem" id="private_chat1">
+		    <widget class="GtkImageMenuItem" id="private_chat1">
 		      <property name="visible">True</property>
 		      <property name="label" translatable="yes">_Private Chat</property>
 		      <property name="use_underline">True</property>
 		      <signal name="activate" handler="OnPrivateChat" last_modification_time="Sun, 28 May 2006 23:35:44 GMT"/>
+
+		      <child internal-child="image">
+			<widget class="GtkImage" id="image196">
+			  <property name="visible">True</property>
+			  <property name="stock">gtk-jump-to</property>
+			  <property name="icon_size">1</property>
+			  <property name="xalign">0.5</property>
+			  <property name="yalign">0.5</property>
+			  <property name="xpad">0</property>
+			  <property name="ypad">0</property>
+			</widget>
+		      </child>
 		    </widget>
 		  </child>
 
 		  <child>
-		    <widget class="GtkMenuItem" id="downloads1">
+		    <widget class="GtkImageMenuItem" id="downloads1">
 		      <property name="visible">True</property>
 		      <property name="label" translatable="yes">_Downloads</property>
 		      <property name="use_underline">True</property>
 		      <signal name="activate" handler="OnDownloads" last_modification_time="Sun, 28 May 2006 23:35:44 GMT"/>
+
+		      <child internal-child="image">
+			<widget class="GtkImage" id="image197">
+			  <property name="visible">True</property>
+			  <property name="stock">gtk-go-down</property>
+			  <property name="icon_size">1</property>
+			  <property name="xalign">0.5</property>
+			  <property name="yalign">0.5</property>
+			  <property name="xpad">0</property>
+			  <property name="ypad">0</property>
+			</widget>
+		      </child>
 		    </widget>
 		  </child>
 
 		  <child>
-		    <widget class="GtkMenuItem" id="uploads1">
+		    <widget class="GtkImageMenuItem" id="uploads1">
 		      <property name="visible">True</property>
 		      <property name="label" translatable="yes">_Uploads</property>
 		      <property name="use_underline">True</property>
 		      <signal name="activate" handler="OnUploads" last_modification_time="Sun, 28 May 2006 23:35:44 GMT"/>
+
+		      <child internal-child="image">
+			<widget class="GtkImage" id="image198">
+			  <property name="visible">True</property>
+			  <property name="stock">gtk-go-up</property>
+			  <property name="icon_size">1</property>
+			  <property name="xalign">0.5</property>
+			  <property name="yalign">0.5</property>
+			  <property name="xpad">0</property>
+			  <property name="ypad">0</property>
+			</widget>
+		      </child>
 		    </widget>
 		  </child>
 
 		  <child>
-		    <widget class="GtkMenuItem" id="search_files1">
+		    <widget class="GtkImageMenuItem" id="search_files1">
 		      <property name="visible">True</property>
 		      <property name="label" translatable="yes">_Search Files</property>
 		      <property name="use_underline">True</property>
 		      <signal name="activate" handler="OnSearchFiles" last_modification_time="Sun, 28 May 2006 23:35:44 GMT"/>
+
+		      <child internal-child="image">
+			<widget class="GtkImage" id="image199">
+			  <property name="visible">True</property>
+			  <property name="stock">gtk-find</property>
+			  <property name="icon_size">1</property>
+			  <property name="xalign">0.5</property>
+			  <property name="yalign">0.5</property>
+			  <property name="xpad">0</property>
+			  <property name="ypad">0</property>
+			</widget>
+		      </child>
 		    </widget>
 		  </child>
 
 		  <child>
-		    <widget class="GtkMenuItem" id="user_info1">
+		    <widget class="GtkImageMenuItem" id="user_info1">
 		      <property name="visible">True</property>
 		      <property name="label" translatable="yes">User I_nfo</property>
 		      <property name="use_underline">True</property>
 		      <signal name="activate" handler="OnUserInfo" last_modification_time="Sun, 28 May 2006 23:35:44 GMT"/>
+
+		      <child internal-child="image">
+			<widget class="GtkImage" id="image200">
+			  <property name="visible">True</property>
+			  <property name="stock">gtk-info</property>
+			  <property name="icon_size">1</property>
+			  <property name="xalign">0.5</property>
+			  <property name="yalign">0.5</property>
+			  <property name="xpad">0</property>
+			  <property name="ypad">0</property>
+			</widget>
+		      </child>
 		    </widget>
 		  </child>
 
 		  <child>
-		    <widget class="GtkMenuItem" id="user_browse1">
+		    <widget class="GtkImageMenuItem" id="user_browse1">
 		      <property name="visible">True</property>
 		      <property name="label" translatable="yes">User _Browse</property>
 		      <property name="use_underline">True</property>
 		      <signal name="activate" handler="OnUserBrowse" last_modification_time="Sun, 28 May 2006 23:35:44 GMT"/>
+
+		      <child internal-child="image">
+			<widget class="GtkImage" id="image201">
+			  <property name="visible">True</property>
+			  <property name="stock">gtk-harddisk</property>
+			  <property name="icon_size">1</property>
+			  <property name="xalign">0.5</property>
+			  <property name="yalign">0.5</property>
+			  <property name="xpad">0</property>
+			  <property name="ypad">0</property>
+			</widget>
+		      </child>
 		    </widget>
 		  </child>
 
 		  <child>
-		    <widget class="GtkMenuItem" id="interests1">
+		    <widget class="GtkImageMenuItem" id="interests1">
 		      <property name="visible">True</property>
 		      <property name="label" translatable="yes">_Interests</property>
 		      <property name="use_underline">True</property>
 		      <signal name="activate" handler="OnInterests" last_modification_time="Sun, 28 May 2006 23:35:44 GMT"/>
+
+		      <child internal-child="image">
+			<widget class="GtkImage" id="image202">
+			  <property name="visible">True</property>
+			  <property name="stock">gtk-jump-to</property>
+			  <property name="icon_size">1</property>
+			  <property name="xalign">0.5</property>
+			  <property name="yalign">0.5</property>
+			  <property name="xpad">0</property>
+			  <property name="ypad">0</property>
+			</widget>
+		      </child>
 		    </widget>
 		  </child>
 
 		  <child>
-		    <widget class="GtkMenuItem" id="user_list1">
+		    <widget class="GtkImageMenuItem" id="user_list1">
 		      <property name="visible">True</property>
 		      <property name="label" translatable="yes">Buddy _List</property>
 		      <property name="use_underline">True</property>
 		      <signal name="activate" handler="OnUserList" last_modification_time="Sun, 28 May 2006 23:35:44 GMT"/>
+
+		      <child internal-child="image">
+			<widget class="GtkImage" id="image203">
+			  <property name="visible">True</property>
+			  <property name="stock">gtk-index</property>
+			  <property name="icon_size">1</property>
+			  <property name="xalign">0.5</property>
+			  <property name="yalign">0.5</property>
+			  <property name="xpad">0</property>
+			  <property name="ypad">0</property>
+			</widget>
+		      </child>
 		    </widget>
 		  </child>
 		</widget>
@@ -323,20 +527,114 @@
 		<widget class="GtkMenu" id="help1_menu">
 
 		  <child>
-		    <widget class="GtkMenuItem" id="about_chatroom_commands1">
+		    <widget class="GtkImageMenuItem" id="nicotine_guide1">
 		      <property name="visible">True</property>
-		      <property name="label" translatable="yes">About _chat room commands</property>
+		      <property name="label" translatable="yes">Offline Nicotine Plus Guide</property>
 		      <property name="use_underline">True</property>
-		      <signal name="activate" handler="OnAboutChatroomCommands" last_modification_time="Wed, 16 Jul 2003 14:18:47 GMT"/>
+		      <signal name="activate" handler="OnNicotineGuide" last_modification_time="Fri, 15 Sep 2006 02:01:54 GMT"/>
+		      <accelerator key="F1" modifiers="0" signal="activate"/>
+
+		      <child internal-child="image">
+			<widget class="GtkImage" id="image204">
+			  <property name="visible">True</property>
+			  <property name="stock">gtk-help</property>
+			  <property name="icon_size">1</property>
+			  <property name="xalign">0.5</property>
+			  <property name="yalign">0.5</property>
+			  <property name="xpad">0</property>
+			  <property name="ypad">0</property>
+			</widget>
+		      </child>
 		    </widget>
 		  </child>
 
 		  <child>
-		    <widget class="GtkMenuItem" id="about_private_chat_command1">
+		    <widget class="GtkImageMenuItem" id="SourceForgeProject">
+		      <property name="visible">True</property>
+		      <property name="label" translatable="yes">Sourceforge Project Website</property>
+		      <property name="use_underline">True</property>
+		      <signal name="activate" handler="OnSourceForgeProject" last_modification_time="Fri, 15 Sep 2006 02:37:43 GMT"/>
+
+		      <child internal-child="image">
+			<widget class="GtkImage" id="image205">
+			  <property name="visible">True</property>
+			  <property name="stock">gtk-home</property>
+			  <property name="icon_size">1</property>
+			  <property name="xalign">0.5</property>
+			  <property name="yalign">0.5</property>
+			  <property name="xpad">0</property>
+			  <property name="ypad">0</property>
+			</widget>
+		      </child>
+		    </widget>
+		  </child>
+
+		  <child>
+		    <widget class="GtkImageMenuItem" id="Trac">
+		      <property name="visible">True</property>
+		      <property name="label" translatable="yes">Nicotine-Plus Trac Website</property>
+		      <property name="use_underline">True</property>
+		      <signal name="activate" handler="OnTrac" last_modification_time="Fri, 15 Sep 2006 02:37:43 GMT"/>
+
+		      <child internal-child="image">
+			<widget class="GtkImage" id="image206">
+			  <property name="visible">True</property>
+			  <property name="stock">gtk-dialog-question</property>
+			  <property name="icon_size">1</property>
+			  <property name="xalign">0.5</property>
+			  <property name="yalign">0.5</property>
+			  <property name="xpad">0</property>
+			  <property name="ypad">0</property>
+			</widget>
+		      </child>
+		    </widget>
+		  </child>
+
+		  <child>
+		    <widget class="GtkSeparatorMenuItem" id="separator1">
+		      <property name="visible">True</property>
+		    </widget>
+		  </child>
+
+		  <child>
+		    <widget class="GtkImageMenuItem" id="about_chatroom_commands1">
+		      <property name="visible">True</property>
+		      <property name="label" translatable="yes">About _chat room commands</property>
+		      <property name="use_underline">True</property>
+		      <signal name="activate" handler="OnAboutChatroomCommands" last_modification_time="Wed, 16 Jul 2003 14:18:47 GMT"/>
+
+		      <child internal-child="image">
+			<widget class="GtkImage" id="image207">
+			  <property name="visible">True</property>
+			  <property name="stock">gtk-help</property>
+			  <property name="icon_size">1</property>
+			  <property name="xalign">0.5</property>
+			  <property name="yalign">0.5</property>
+			  <property name="xpad">0</property>
+			  <property name="ypad">0</property>
+			</widget>
+		      </child>
+		    </widget>
+		  </child>
+
+		  <child>
+		    <widget class="GtkImageMenuItem" id="about_private_chat_command1">
 		      <property name="visible">True</property>
 		      <property name="label" translatable="yes">About _private chat commands</property>
 		      <property name="use_underline">True</property>
 		      <signal name="activate" handler="OnAboutPrivateChatCommands" last_modification_time="Wed, 16 Jul 2003 14:18:47 GMT"/>
+
+		      <child internal-child="image">
+			<widget class="GtkImage" id="image208">
+			  <property name="visible">True</property>
+			  <property name="stock">gtk-help</property>
+			  <property name="icon_size">1</property>
+			  <property name="xalign">0.5</property>
+			  <property name="yalign">0.5</property>
+			  <property name="xpad">0</property>
+			  <property name="ypad">0</property>
+			</widget>
+		      </child>
 		    </widget>
 		  </child>
 
@@ -347,11 +645,23 @@
 		  </child>
 
 		  <child>
-		    <widget class="GtkMenuItem" id="abour_search_filters1">
+		    <widget class="GtkImageMenuItem" id="abour_search_filters1">
 		      <property name="visible">True</property>
 		      <property name="label" translatable="yes">About _search filters</property>
 		      <property name="use_underline">True</property>
 		      <signal name="activate" handler="OnAboutFilters" last_modification_time="Wed, 16 Jul 2003 14:18:47 GMT"/>
+
+		      <child internal-child="image">
+			<widget class="GtkImage" id="image209">
+			  <property name="visible">True</property>
+			  <property name="stock">gtk-help</property>
+			  <property name="icon_size">1</property>
+			  <property name="xalign">0.5</property>
+			  <property name="yalign">0.5</property>
+			  <property name="xpad">0</property>
+			  <property name="ypad">0</property>
+			</widget>
+		      </child>
 		    </widget>
 		  </child>
 
@@ -362,11 +672,23 @@
 		  </child>
 
 		  <child>
-		    <widget class="GtkMenuItem" id="check_latest1">
+		    <widget class="GtkImageMenuItem" id="check_latest1">
 		      <property name="visible">True</property>
 		      <property name="label" translatable="yes">Check _latest</property>
 		      <property name="use_underline">True</property>
 		      <signal name="activate" handler="OnCheckLatest" last_modification_time="Tue, 26 Aug 2003 21:26:11 GMT"/>
+
+		      <child internal-child="image">
+			<widget class="GtkImage" id="image210">
+			  <property name="visible">True</property>
+			  <property name="stock">gtk-connect</property>
+			  <property name="icon_size">1</property>
+			  <property name="xalign">0.5</property>
+			  <property name="yalign">0.5</property>
+			  <property name="xpad">0</property>
+			  <property name="ypad">0</property>
+			</widget>
+		      </child>
 		    </widget>
 		  </child>
 
@@ -377,11 +699,23 @@
 		  </child>
 
 		  <child>
-		    <widget class="GtkMenuItem" id="about_nicotine1">
+		    <widget class="GtkImageMenuItem" id="about_nicotine1">
 		      <property name="visible">True</property>
 		      <property name="label" translatable="yes">About _Nicotine</property>
 		      <property name="use_underline">True</property>
 		      <signal name="activate" handler="OnAbout" last_modification_time="Wed, 16 Jul 2003 14:18:47 GMT"/>
+
+		      <child internal-child="image">
+			<widget class="GtkImage" id="image211">
+			  <property name="visible">True</property>
+			  <property name="stock">gtk-about</property>
+			  <property name="icon_size">1</property>
+			  <property name="xalign">0.5</property>
+			  <property name="yalign">0.5</property>
+			  <property name="xpad">0</property>
+			  <property name="ypad">0</property>
+			</widget>
+		      </child>
 		    </widget>
 		  </child>
 		</widget>

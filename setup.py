@@ -25,6 +25,9 @@ for sounds in sound_dirs:
 	p, theme = os.path.split(sounds)
 	for file in ["private.ogg", "room_nick.ogg", "details.txt", "license.txt"]:
 		files.append((os.path.join(sys.prefix, "share", "nicotine", "sounds", theme), [os.path.join(sounds, file)]))
+doc_files = glob.glob(os.path.join("doc", "*"))
+for file in doc_files:
+	files.append((os.path.join(sys.prefix, "share", "nicotine", "documentation"), [file]))
 	
 if sys.platform.startswith("win"):
   try:

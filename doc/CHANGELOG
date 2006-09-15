@@ -1,6 +1,10 @@
 ChangeLog for Nicotine Plus
 
 Unreleased 1.2.5pre
+ * Made many of the Main Menu items have icons.
+ * Added three new menu options under help: Offline Nicotine Plus Guide, the 
+   Nicotine-Plus Trac and the Nicotine Plus Sourceforge Project websites. 
+ * Added NicotinePlusGuide to setup.py, so it will be installed
  * Fixed a typo in transferlist.py 
  * Notifications: Now testing 'flite' support, a text-to-speech engine.
    This may or may not be removed. The option is 'speechenabled'

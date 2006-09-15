@@ -1100,6 +1100,31 @@ class testwin(MainWindow):
 			self.UploadButtons.hide()
 			self.DownloadButtons.hide()
 			
+	def OnNicotineGuide(self, widget):
+		url = "file://%s/share/nicotine/documentation/NicotinePlusGuide.html" % sys.prefix
+		self.OpenUrl(url)
+		
+	def OnSourceForgeProject(self, widget):
+		url = "http://sourceforge.net/projects/nicotine-plus/"
+		self.OpenUrl(url)
+		
+	def OnTrac(self, widget):
+		url = "http://nicotine-plus.org/"
+		self.OpenUrl(url)
+		
+	def OpenUrl(self, url):
+		if utils.PROTOCOL_HANDLERS.has_key("http"):
+			if utils.PROTOCOL_HANDLERS["http"].__class__ is utils.types.MethodType:
+				utils.PROTOCOL_HANDLERS["http"](url)
+			else:
+				cmd = utils.PROTOCOL_HANDLERS["http"] % url
+				os.system(cmd)
+		else:
+			try:
+				import gnome.vfs
+				gnome.url_show(url)
+			except Exception, e:
+				pass
 	def OnAbout(self, widget):
 		dlg = AboutDialog(self.MainWindow)
 		dlg.run()

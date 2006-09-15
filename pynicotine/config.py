@@ -66,7 +66,7 @@ class Config:
  	"chathilite":"red", "search":"","searchq":"GREY", "decimalsep":",", "chatfont": "", \
  	"roomlistcollapsed": 0, "tabclosers": 1, "buddylistinchatrooms": 0, "trayicon": 1,
 	"soundenabled": 1, "soundtheme": "", "soundcommand": "play -q", "speechenabled": 0}, \
- 	"urls":{"urlcatching":1,"protocols":{"http":"mozilla \"%s\" &"}, \
+ 	"urls":{"urlcatching":1,"protocols":{"http":"firefox \"%s\" &"}, \
  	"humanizeurls":1}, "interests": {"likes":[], "dislikes":[]}, \
 	"ticker": {"default": "", "rooms": {}, "hide": 0},\
 	"players": {"default": "xmms -e "}}

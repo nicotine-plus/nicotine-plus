@@ -101,7 +101,7 @@ def write_widget_attrs(widget):
 			signals.append(callback)
 	
 	for accel in widget.accelerators:
-		print indent + "%s.add_accelerator(\"%s\", self.accel_group, gtk.gdk.keyval_from_name(\"%s\"), %s, gtk.ACCEL_VISIBLE)" % (widget.id, accel[2], accel[0].lower(), accel[1])
+		print indent + "%s.add_accelerator(\"%s\", self.accel_group, gtk.gdk.keyval_from_name(\"%s\"), %s, gtk.ACCEL_VISIBLE)" % (widget.id, accel[2], accel[0], accel[1])
 		
 def write_widget_generic(widget, my_class, *args):
 	global signals, indent
@@ -222,7 +222,33 @@ def write_widget_menuitem(widget, my_class):
 		write_widget(w)
 		print indent + "%s.set_submenu(%s)" % (widget.id, w.id)
 		print
+		
+def write_widget_imagemenuitem(widget, my_class):
+	args = []
+	if widget.attrs.has_key("label"):
+		label = widget.attrs["label"].replace("\"", "\\\"")
+		if label:
+			args.append("_(\"%s\")" % label)
+		else:
+			args.append('""')
+		del widget.attrs["label"]
+	else:
+		label = ""
+	write_widget_generic(widget, my_class, *args)
+	print
+	if widget.internalchildren:
+		if widget.internalchildren["image"].attrs.has_key("stock"):
+			stock = widget.internalchildren["image"].attrs["stock"]
+			stock = "gtk.STOCK_" + stock[4:].upper().replace("-", "_")
+			print indent + "img = gtk.image_new_from_stock(%s, gtk.ICON_SIZE_MENU)" % stock
+			print indent + "%s.set_image(img)" % (widget.id)
+	if widget.children:
+		w = widget.children[0]
+		write_widget(w)
+		print indent + "%s.set_submenu(%s)" % (widget.id, w.id)
+		print
 
+		
 def write_widget_notebook(widget):
 	write_widget_generic(widget, "Notebook")
 	print
@@ -303,6 +329,7 @@ classes = {
 	"GtkHBox": [write_widget_container, "HBox", PM_PACK, "#homogeneous", "@spacing"],
 	"GtkMenuBar": [write_widget_menu, "MenuBar"],
 	"GtkMenuItem": [write_widget_menuitem, "MenuItem"],
+	"GtkImageMenuItem": [write_widget_imagemenuitem, "ImageMenuItem"],
 	"GtkSeparatorMenuItem": [write_widget_menuitem, "MenuItem"],
 	"GtkCheckMenuItem": [write_widget_menuitem, "CheckMenuItem"],
 	"GtkMenu": [write_widget_menu, "Menu"],
@@ -434,6 +461,13 @@ def process_widget(widget):
 			elif child.nodeName == "accelerator":
 				k, m, s = process_accelerator(child)
 				w.accelerators.append([k, m, s])
+			elif child.nodeName == "image":
+				childw = process_child(child)
+				if child.attributes.has_key("internal-child"):
+					v = child.attributes["internal-child"].nodeValue
+					w.internalchildren[v] = childw
+				else:
+					w.children.append(childw)
 	return w
 	
 def process_interface(dom):
