@@ -48,11 +48,13 @@ class MainWindow:
         self.disconnect1.set_image(img)
         self.file1_menu.append(self.disconnect1)
 
-        self.awayreturn1 = gtk.MenuItem(_("_Away/Return"))
+        self.awayreturn1 = gtk.ImageMenuItem(_("_Away/Return"))
         self.awayreturn1.show()
         self.awayreturn1.connect("activate", self.OnAway)
         self.awayreturn1.add_accelerator("activate", self.accel_group, gtk.gdk.keyval_from_name("A"), gtk.gdk.MOD1_MASK, gtk.ACCEL_VISIBLE)
 
+        img = gtk.image_new_from_stock(gtk.STOCK_MISSING_IMAGE, gtk.ICON_SIZE_MENU)
+        self.awayreturn1.set_image(img)
         self.file1_menu.append(self.awayreturn1)
 
         self.check_privileges1 = gtk.ImageMenuItem(_("Check _privileges"))
