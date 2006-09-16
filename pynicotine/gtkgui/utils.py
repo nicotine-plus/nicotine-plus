@@ -77,6 +77,7 @@ def InitialiseColumns(treeview, *args):
 			column.set_min_width(0)
 		if len(c) > 3:
 			column.set_cell_data_func(renderer, c[3])
+		column.set_reorderable(True)
 		treeview.append_column(column)
 		cols.append(column)
 		i += 1
@@ -296,6 +297,11 @@ class PopupMenu(gtk.Menu):
 					menuitem = gtk.ImageMenuItem(item[0][1:])
 					img = gtk.image_new_from_stock(item[2], gtk.ICON_SIZE_MENU)
         				menuitem.set_image(img)
+				elif item[0][0] == "%":
+					menuitem = gtk.ImageMenuItem(item[0][1:])	
+					img = gtk.Image()
+					img.set_from_pixbuf(item[2])
+					menuitem.set_image(img)
 				else:
 					menuitem = gtk.MenuItem(item[0])
 				if item[1] is not None:

@@ -356,7 +356,9 @@ class testwin(MainWindow):
 			self.draw_trayicon()
 		if self.np.config.sections["transfers"]["rescanonstartup"]:
 			self.OnRescan()
-
+		img = gtk.Image()
+		img.set_from_pixbuf(self.images["away2"])
+		self.awayreturn1.set_image(img)
 		if self.np.config.needConfig():
 			self.connect1.set_sensitive(0)
 			self.rescan1.set_sensitive(0)
@@ -570,7 +572,7 @@ class testwin(MainWindow):
 				("#" + _("Lookup a User's IP"), self.OnGetAUsersIP, gtk.STOCK_NETWORK),
 				("#" + _("Lookup a User's Info"), self.OnGetAUsersInfo, gtk.STOCK_INFO),
 				("#" + _("Lookup a User's Shares"), self.OnGetAUsersShares, gtk.STOCK_HARDDISK),
-				(_("Toggle Away"), self.OnAway ),
+				("%" + _("Toggle Away"), self.OnAway, self.images["away2"] ),
 				("#" + _("Quit"), self.OnExit, gtk.STOCK_QUIT),
 			)
 		
@@ -1087,8 +1089,16 @@ class testwin(MainWindow):
 			self.DownloadButtons.hide()
 			
 	def OnNicotineGuide(self, widget):
-		url = "file://%s/share/nicotine/documentation/NicotinePlusGuide.html" % sys.prefix
-		self.OpenUrl(url)
+		file = "doc/NicotinePlusGuide.html" 
+		if os.path.exists(file):
+			url = "file://%s/%s" % (os.environ["PWD"], file)
+			self.OpenUrl(url)
+		else:
+			file = "%s/share/nicotine/documentation/NicotinePlusGuide.html" % sys.prefix
+			if os.path.exists(file):
+				url = "file://%s" % file
+				self.OpenUrl(url)
+			
 		
 	def OnSourceForgeProject(self, widget):
 		url = "http://sourceforge.net/projects/nicotine-plus/"

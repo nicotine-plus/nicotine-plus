@@ -55,7 +55,7 @@ class UserBrowse(UserBrowseTab):
 		
 		self.FolderTreeView.get_selection().connect("changed", self.OnSelectDir)
 
-		cols = cols = InitialiseColumns(self.FileTreeView,
+		cols = InitialiseColumns(self.FileTreeView,
 			[_("Filename"), 250, "text"],
 			[_("Size"), 100, "text"],
 			[_("Bitrate"), 50, "text"],

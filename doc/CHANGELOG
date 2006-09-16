@@ -1,6 +1,7 @@
 ChangeLog for Nicotine Plus
 
 Unreleased 1.2.5pre
+ * Made columns reorderable (temporarily, they return to the default order)
  * Made the encodings Comboboxes give location or language details in a
    seperate column.
  * Made the Tray Icon's popup menu disable menu options based on connection
