@@ -1,53 +1,69 @@
 ChangeLog for Nicotine Plus
 
-Unreleased 1.2.5pre
- * Made columns reorderable (temporarily, they return to the default order)
+1.2.5 September 17th 2006
+
+GENERAL CHANGES
+ * Made columns reorderable (temporarily, they return to the default order
+   after a restart)
  * Made the encodings Comboboxes give location or language details in a
-   seperate column.
- * Made the Tray Icon's popup menu disable menu options based on connection
-   status. Also simplified it's code to match the way Nicotine normally 
-   creates menus. 
+   separate column.
  * Made all the popup menus have GTK stock icons.
- * Made many of the Main Menu items have icons.
+ * Made most of the Main Menu items have icons.
  * Added three new menu options under help: Offline Nicotine Plus Guide, the 
-   Nicotine-Plus Trac and the Nicotine Plus Sourceforge Project websites. 
- * Added NicotinePlusGuide to setup.py, so it will be installed
- * Fixed a typo in transferlist.py 
- * Notifications: Now testing 'flite' support, a text-to-speech engine.
-   This may or may not be removed. The option is 'speechenabled'
- * Moved Icon theme and Sound theme settings inside seperate expanders.
- * Notifications: Added a sound effect, room_nick.ogg, for nick-mention in 
-   chatrooms (when not in that room) and a seperate sound effect, private.ogg, 
-   for when a private message arrives, and you are not in that tab. Sound 
-   options are found in the UI settings, and seperate sound theme directories
-   and audio players can be selected, as well. Ogg files are installed into
-   $PREFIX/share/nicotine/$THEMEDIR/
- * Made Trayicon toggleable while running from the UI settings or at startup 
-   with --enable-trayicon, -t  and --disable-trayicon, -d
- * Made /search commands modify the search history
- * Added 'clear search history' button to search
- * Shortened Search tab length and added a label containing the full query 
-   next to the "Enable filters" checkbox.
- * Added confirmation exit popup dialog when quiting with the window manager.
- * Replaced "pure text" percent column with a CellRendererProgress column
- * Added support for sending and recieving Soulseek peer message 52, Upload
-   Queue Notification, which allows users to notify upload recipients that 
-   they are attempting to send a file. Also, a log message is printed when a 
-   user attempts to send you file(s) and an automatic is sent if they aren't 
-   allowed to.
+   Nicotine-Plus Trac and the Nicotine Plus Sourceforge Project websites.
+ * Added the NicotinePlusGuide to setup.py, so it will be installed
+ * Set Firefox as the default http:// URL handler
+ * Replaced "pure text" percent column with a CellRendererProgress column in
+   the Downloads and Uploads transfer lists.
  * Added option to UI Settings to show/hide the transfer buttons.
  * Added expander to glade2py, so it can now be used.
  * Rearranged the new user entry/buttons to the top left of their tabs, added 
    spacing inside tabs.
- * Added more stock gtk icons to Settings and Userinfo, among other places.
- * Fixed the Chatrooms tab hilite bug (reported by Offhand, xrc)
+ * Added more stock GTK icons to Settings and Userinfo, among other places.
+ * Added confirmation exit popup dialog when quitting with the window manager.
  * Made the main window's minimum size to be 500x500 px
- * Modified CheckVersion function to allow for milli ( X.X.X.X  ) versioning.
- * Add a Bool to the GetUserStatus message received from the server, for privs.
-   If 1, add user to list of privileged users.
+ 
+BUGFIXES
+ * Fixed a typo in transferlist.py that caused some transfers to get stuck
+   in the Initializing state, even though transfers still work.
+ * Fixed the Chatrooms tab hilite bug (reported by Offhand, xrc)
+ 
+TRAY ICON
+ * Made the Tray Icon's popup menu disable menu options based on connection
+   status. Also simplified it's code to match the way Nicotine normally 
+   creates menus. 
+ * Made Trayicon toggleable while running from the UI settings or at startup 
+   with --enable-trayicon, -t  and --disable-trayicon, -d
+   
+SEARCH
+ * Made /search commands modify the search history
+ * Added 'clear search history' button to search
+ * Shortened Search tab length and added a label containing the full query 
+   next to the "Enable filters" checkbox.
+ 
+AUDIO 
+ * Notifications: Now testing 'flite' support, a text-to-speech engine.
+   This may or may not be removed. The option is 'speechenabled'
+ * Moved Icon theme and Sound theme settings inside separate expanders.
+ * Notifications: Added a sound effect, room_nick.ogg, for nick-mention in 
+   chatrooms (when not in that room) and a separate sound effect, private.ogg, 
+   for when a private message arrives, and you are not in that tab. Sound 
+   options are found in the UI settings, and separate sound theme directories
+   and audio players can be selected, as well. Ogg files are installed into
+   $PREFIX/share/nicotine/$THEMEDIR/
+
+NETWORKING
+ * Added support for sending and receiving Soulseek peer message 52, Upload
+   Queue Notification, which allows users to notify upload recipients that 
+   they are attempting to send a file. Also, a log message is printed when a 
+   user attempts to send you file(s) and an automatic is sent if they aren't 
+   allowed to.
+ * Add a Bool to the GetUserStatus message received from the server, for 
+   privileges. If 1, add user to list of privileged users.
  * Added SendUploadSpeed (121) message which replaced SendSpeed (34) a long 
    time ago. Thanks to sierracat for the info, and to slack---line for testing.
-   
+ * Modified CheckVersion function to allow for milli ( X.X.X.X  ) versioning.
+ 
 Version 1.2.4.1 August 18th 2006
 Bugfix Release
  * Disabled use of 'pwd' module on windows
