@@ -384,6 +384,8 @@ class testwin(MainWindow):
 			print "Warning: Trayicon Python module was not found in the pynicotine directory:", e
 			
 	def destroy_trayicon(self):
+		if self.trayicon_module_failed_to_load:
+			return
 		self.HAVE_TRAYICON = 0
 		self.current_image = None
 		self.tray_status["last"] = ""
@@ -400,6 +402,8 @@ class testwin(MainWindow):
 	def draw_trayicon(self):
 		if not self.HAVE_TRAYICON:
 			return
+		if self.trayicon_module == None:
+			return
 		self.is_mapped = 1
 		self.trayicon = self.trayicon_module.TrayIcon("Nicotine")
 		
@@ -415,6 +419,8 @@ class testwin(MainWindow):
 	def load_image(self, status=None):
 		# Abort if Trayicon module wasn't loaded
 		if not self.HAVE_TRAYICON:
+			return
+		if self.trayicon_module == None:
 			return
 		try:
 			self.load_image_wrapped(status)
