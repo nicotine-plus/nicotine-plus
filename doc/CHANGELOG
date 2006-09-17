@@ -30,7 +30,7 @@ BUGFIXES
  
 TRAY ICON
  * Made the Tray Icon's popup menu disable menu options based on connection
-   status. Also simplified it's code to match the way Nicotine normally 
+   status. Also simplified its code to match the way Nicotine normally 
    creates menus. 
  * Made Trayicon toggleable while running from the UI settings or at startup 
    with --enable-trayicon, -t  and --disable-trayicon, -d
@@ -74,7 +74,7 @@ Bugfix Release
 
 Version 1.2.4 August 17th 2006
  * Added new translations for Hungarian (djbaloo) and Slovak (Josef Riha)
- * Made Buddylist toggleable between it's own tab and pane on the right side
+ * Made Buddylist toggleable between its own tab and pane on the right side
    of chatrooms
  * Rearranged tabs to the top of the window
  * Rearranged Browse Share's progress bar as in Ziabice's patch

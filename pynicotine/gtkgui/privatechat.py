@@ -123,7 +123,7 @@ class PrivateChat(PrivateChatTab):
 			("#" + _("Close"), self.OnClose, gtk.STOCK_CANCEL),
 			("", None),
 			("#" + _("Show IP a_ddress"), popup.OnShowIPaddress, gtk.STOCK_NETWORK),
-			("#" + _("Get user i_nfo"), popup.OnGetUserInfo, gtk.STOCK_INFO),
+			("#" + _("Get user i_nfo"), popup.OnGetUserInfo, gtk.STOCK_DIALOG_INFO),
 			("#" + _("Brow_se files"), popup.OnBrowseUser, gtk.STOCK_HARDDISK),
 			("#" + _("Gi_ve privileges"), popup.OnGivePrivileges, gtk.STOCK_JUMP_TO),
 			("$" + _("Add user to list"), popup.OnAddToList),

@@ -26,7 +26,7 @@ class Downloads(TransferList):
 		popup3.setup( 
 			("#" + _("Send _message"), popup3.OnSendMessage, gtk.STOCK_EDIT),
 			("#" + _("Show IP a_ddress"), popup3.OnShowIPaddress, gtk.STOCK_NETWORK),
-			("#" + _("Get user i_nfo"), popup3.OnGetUserInfo, gtk.STOCK_INFO),
+			("#" + _("Get user i_nfo"), popup3.OnGetUserInfo, gtk.STOCK_DIALOG_INFO),
 			("#" + _("Brow_se files"), popup3.OnBrowseUser, gtk.STOCK_HARDDISK),
 			("#" + _("Gi_ve privileges"), popup3.OnGivePrivileges, gtk.STOCK_JUMP_TO),
 			("", None),

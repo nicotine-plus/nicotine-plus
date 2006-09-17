@@ -224,7 +224,7 @@ class MainWindow:
         self.user_info1.show()
         self.user_info1.connect("activate", self.OnUserInfo)
 
-        img = gtk.image_new_from_stock(gtk.STOCK_INFO, gtk.ICON_SIZE_MENU)
+        img = gtk.image_new_from_stock(gtk.STOCK_DIALOG_INFO, gtk.ICON_SIZE_MENU)
         self.user_info1.set_image(img)
         self.modes1_menu.append(self.user_info1)
 
