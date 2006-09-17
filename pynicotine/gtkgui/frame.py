@@ -84,9 +84,12 @@ class testwin(MainWindow):
 			self.images[i] = loader.get_pixbuf()
 			
 		self.trayicon_module = None
-		self.trayicon_module_failed_to_load = 0
+		self.TRAYICON_CREATED = 0
+		self.TRAYICON_FAILED = 0
+		self.CREATE_TRAYICON = 0
 		if use_trayicon and config2.sections["ui"]["trayicon"]:
-			self.create_trayicon()
+			self.CREATE_TRAYICON = 1
+			
 		else:
 			self.HAVE_TRAYICON = 0
 		del data
@@ -352,6 +355,8 @@ class testwin(MainWindow):
 		self.check_privileges1.set_sensitive(0)
 		self.current_image=None
 		self.tray_status = {"hilites" : { "rooms": [], "private": [] }, "status": "", "last": ""}
+		if self.CREATE_TRAYICON:
+			self.create_trayicon()
 		if self.HAVE_TRAYICON:
 			self.draw_trayicon()
 		if self.np.config.sections["transfers"]["rescanonstartup"]:
@@ -374,29 +379,35 @@ class testwin(MainWindow):
 			print e
 			
 	def create_trayicon(self):
+		if sys.platform == "win32":
+			self.TRAYICON_FAILED = 1
+			self.HAVE_TRAYICON = 0
+			return
+		if self.TRAYICON_FAILED:
+			return
 		try:
 			from pynicotine import trayicon
 			self.trayicon_module = trayicon
 			self.HAVE_TRAYICON = 1
-		except ImportError, e:
-			self.trayicon_module_failed_to_load = 1
+			self.TRAYICON_FAILED = 0
+		except ImportError, error:
+			self.TRAYICON_FAILED = 1
 			self.HAVE_TRAYICON = 0
-			print "Warning: Trayicon Python module was not found in the pynicotine directory:", e
+			print "Note: Trayicon Python module was not found in the pynicotine directory: %s" % error
+			self.logMessage("Note: Trayicon Python module was not found in the pynicotine directory: %s. If you are usign" % error, "TrayIcon")
 			
 	def destroy_trayicon(self):
-		if self.trayicon_module_failed_to_load:
+		if not self.TRAYICON_CREATED:
 			return
-		self.HAVE_TRAYICON = 0
+		self.TRAYICON_CREATED = 0
 		self.current_image = None
 		self.tray_status["last"] = ""
 		self.eventbox.destroy()
 		self.trayicon.destroy()
 		self.tray_popup_menu.destroy()
 		
-		
 	def restart_trayicon(self):
 		self.destroy_trayicon()
-		self.HAVE_TRAYICON = 1
 		self.draw_trayicon()
 		
 	def draw_trayicon(self):
@@ -404,6 +415,9 @@ class testwin(MainWindow):
 			return
 		if self.trayicon_module == None:
 			return
+		if self.TRAYICON_CREATED:
+			return
+		self.TRAYICON_CREATED = 1
 		self.is_mapped = 1
 		self.trayicon = self.trayicon_module.TrayIcon("Nicotine")
 		
@@ -422,17 +436,8 @@ class testwin(MainWindow):
 			return
 		if self.trayicon_module == None:
 			return
-		try:
-			self.load_image_wrapped(status)
-		except:
-			print "Error changing Trayicon's icon, attempting to recreate it."
-			try:
-				self.restart_trayicon()
-			except:
-				print "Trayicon failed to load"
-				
-	def load_image_wrapped(self, status=None):
-	
+		if not self.TRAYICON_CREATED:
+			return
 		try:
 			if status != None:
 				self.tray_status["status"] = status
@@ -462,7 +467,7 @@ class testwin(MainWindow):
 			self.eventbox.add(self.current_image)
 			self.eventbox.show()
 		except Exception,e:
-			print "ERROR: load_image_wrapped", e
+			print "ERROR: load_image", e
 			
 	def sound(self, message, user, place=None):
 		if sys.platform == "win32":
@@ -1061,7 +1066,7 @@ class testwin(MainWindow):
 		if not self.np.config.sections["ui"]["trayicon"] and self.HAVE_TRAYICON:
 			self.destroy_trayicon()
 		elif self.np.config.sections["ui"]["trayicon"] and not self.HAVE_TRAYICON:
-			if self.trayicon_module == None and not self.trayicon_module_failed_to_load:
+			if self.trayicon_module == None and not self.TRAYICON_CREATED:
 				self.create_trayicon()
 			else:
 				self.HAVE_TRAYICON = 1
