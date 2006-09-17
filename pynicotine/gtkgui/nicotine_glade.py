@@ -790,9 +790,9 @@ class MainWindow:
         self.searchvbox.set_spacing(5)
         self.searchvbox.set_border_width(5)
 
-        self.hbox2 = gtk.HBox(False, 0)
+        self.hbox2 = gtk.HBox(False, 8)
         self.hbox2.show()
-        self.hbox2.set_spacing(0)
+        self.hbox2.set_spacing(8)
 
         self.combo1_List = gtk.ListStore(gobject.TYPE_STRING)
         self.combo1 = gtk.ComboBoxEntry()

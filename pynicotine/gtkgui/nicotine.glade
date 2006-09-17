@@ -1981,7 +1981,7 @@
 		    <widget class="GtkHBox" id="hbox2">
 		      <property name="visible">True</property>
 		      <property name="homogeneous">False</property>
-		      <property name="spacing">0</property>
+		      <property name="spacing">8</property>
 
 		      <child>
 			<widget class="GtkComboBoxEntry" id="combo1">
