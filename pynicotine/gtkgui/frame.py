@@ -1230,7 +1230,7 @@ class testwin(MainWindow):
 				if self.np.config.sections["userinfo"]["pic"] != "":
 					if os.path.exists(self.np.config.sections["userinfo"]["pic"]):
 						has_pic = True
-						f=open(self.np.config.sections["userinfo"]["pic"],'r')
+						f=open(self.np.config.sections["userinfo"]["pic"],'rb')
 						pic = f.read()
 						f.close()
 					else:

@@ -12,7 +12,13 @@ from pynicotine.utils import _
 
 def ChooseDir(parent = None, initialdir = "~"):
 	dialog = gtk.FileChooserDialog(parent=None, action=gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER, buttons=(gtk.STOCK_OK, gtk.RESPONSE_ACCEPT, gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT))
+        dialog.set_action(gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER)
 	dialog.set_select_multiple(True)
+        dir = os.path.expanduser(initialdir)
+        if os.path.exists(dir):
+            dialog.set_current_folder(dir)
+        else:
+            dialog.set_current_folder(os.path.expanduser("~"))
 	response = dialog.run()
 	
 	if response == gtk.RESPONSE_ACCEPT:

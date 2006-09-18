@@ -11,7 +11,7 @@ import slskmessages
 import threading
 from slskmessages import newId
 
-import os, stat
+import os, stat, sys
 import os.path
 import string
 import time
@@ -145,6 +145,7 @@ class Transfers:
 
 
     def getFile(self, user, filename, path="", transfer = None):
+	path=self.CleanPath(path)
 	self.transferFile(0,user,filename,path,transfer)
 
     def pushFile(self, user, filename, path="", transfer = None):
@@ -512,9 +513,9 @@ class Transfers:
                     i.transfertimer.cancel()
                 if not incompletedir:
                     if i.path and i.path[0] == '/':
-                        incompletedir = i.path
+                        incompletedir = self.CleanPath(i.path)
                     else:
-                        incompletedir = os.path.join(downloaddir, i.path)
+                        incompletedir = os.path.join(downloaddir, self.CleanPath(i.path))
 		try:
 		    if not os.access(incompletedir,os.F_OK):
 		        os.makedirs(incompletedir)
@@ -597,7 +598,14 @@ class Transfers:
 	else:
 	    self.eventprocessor.logMessage(_("Unknown file request: %s") % str(vars(msg)),1)
 	    self.queue.put(slskmessages.ConnClose(msg.conn))
-
+            
+    def CleanPath(self, path):
+        if sys.platform == "win32":
+            chars = ["?", "\"", ":", ">", "<", "|", "*"]
+            for char in chars:
+                path = path.replace(char, "_")
+	return path
+        
     def FileDownload(self, msg):
 	""" A file download is in progress"""
 	needupdate = 1
@@ -622,7 +630,7 @@ class Transfers:
 			    basename = self.encode(string.split(i.filename,'\\')[-1], i.user)
 			    downloaddir = self.eventprocessor.config.sections["transfers"]["downloaddir"]
 			    if i.path and i.path[0] == '/':
-			        folder = i.path
+			        folder = self.CleanPath(i.path)
 			    else:
 			        folder = os.path.join(downloaddir, self.encode(i.path))
 		            if not os.access(folder,os.F_OK):
@@ -1056,6 +1064,7 @@ class Transfers:
 	return [ [i.user, i.filename, i.path] for i in self.downloads if i.status != _('Finished')]
 
     def SaveDownloads(self):
+        """ Save list of files to be downloaded """
 	self.eventprocessor.config.sections["transfers"]["downloads"] = self.GetDownloads()
 	self.eventprocessor.config.writeConfig()
 
@@ -1071,6 +1080,10 @@ class Transfers:
             coding = self.eventprocessor.config.sections["server"]["userencoding"][user]
         s = self.eventprocessor.decode(s, coding)
         try:
+            if sys.platform == "win32":
+                chars = ["?", "\/", "\"", ":", ">", "<", "|", "*"]
+                for char in chars:
+                    s = s.replace(char, "_")
             return s.encode(locale.nl_langinfo(locale.CODESET), "replace")
 #            return s.sencode(os.filesystemencoding(), "replace")
         except:

@@ -1,5 +1,16 @@
 ChangeLog for Nicotine Plus
 
+1.2.5.1 September 18th 2006
+Bugfix Release
+ * Made TrayIcon not attempt to load on 'win32' operating systems
+ * Fixed trayicon bug that caused error messages everytime the Settings 
+   window's Apply or Okay button was pressed when the trayicon isn't loaded.
+   (reported by renu_mulitiplus)
+ * Fixed displaying your own Userinfo image on Windows.
+ * Replace the characters ?, ", :, >, <, |, and * with an underscore _ on 
+   Windows, to avoid filesystem errors. (Reported by theorem21)
+ * Made the Directory Chooser start with the predefined directory set.
+  
 1.2.5 September 17th 2006
 
 GENERAL CHANGES
