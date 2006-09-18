@@ -526,6 +526,8 @@ class BloatFrame(settings_glade.BloatFrame):
 			self.DecimalSep.child.set_text(ui["decimalsep"])
 		if ui["tabclosers"] is not None:
 			self.TabClosers.set_active(ui["tabclosers"])
+		if sys.platform == "win32":
+			self.TrayiconCheck.set_sensitive(False)
 		if ui["trayicon"] is not None:
 			self.TrayiconCheck.set_active(ui["trayicon"])
 		if ui["soundenabled"] is not None:
