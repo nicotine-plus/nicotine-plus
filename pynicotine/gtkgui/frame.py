@@ -354,7 +354,7 @@ class testwin(MainWindow):
 		self.awayreturn1.set_sensitive(0)
 		self.check_privileges1.set_sensitive(0)
 		self.current_image=None
-		self.tray_status = {"hilites" : { "rooms": [], "private": [] }, "status": "", "last": ""}
+		self.tray_status = {"hilites" : { "rooms": [], "private": [] }, "status": "disconnect", "last": ""}
 		if self.CREATE_TRAYICON:
 			self.create_trayicon()
 		if self.HAVE_TRAYICON:
@@ -411,11 +411,7 @@ class testwin(MainWindow):
 		self.draw_trayicon()
 		
 	def draw_trayicon(self):
-		if not self.HAVE_TRAYICON:
-			return
-		if self.trayicon_module == None:
-			return
-		if self.TRAYICON_CREATED:
+		if not self.HAVE_TRAYICON or self.trayicon_module == None or  self.TRAYICON_CREATED:
 			return
 		self.TRAYICON_CREATED = 1
 		self.is_mapped = 1
@@ -432,11 +428,7 @@ class testwin(MainWindow):
 			
 	def load_image(self, status=None):
 		# Abort if Trayicon module wasn't loaded
-		if not self.HAVE_TRAYICON:
-			return
-		if self.trayicon_module == None:
-			return
-		if not self.TRAYICON_CREATED:
+		if not self.HAVE_TRAYICON or self.trayicon_module == None or not self.TRAYICON_CREATED:
 			return
 		try:
 			if status != None:
@@ -774,6 +766,8 @@ class testwin(MainWindow):
 	def OnConnect(self, widget):
 		self.connect1.set_sensitive(0)
 		self.disconnect1.set_sensitive(1)
+		self.tray_status["status"] = "connect"
+		self.load_image()
 		if self.np.serverconn is not None:
 			return
 		if widget != -1:
