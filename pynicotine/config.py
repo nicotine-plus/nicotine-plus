@@ -266,25 +266,11 @@ class Config:
 	
         oldumask = os.umask(0077)
 
-        try:
-            s = os.stat(self.filename)
-            if s.st_size > 0:
-                try:
-                    os.remove(self.filename + ".old")
-                except OSError, s:
-                    print s
-
-                try:
-                    os.rename(self.filename, self.filename + ".old")
-                except OSError, error:
-                    print _("Can't back config file up, error: %s") % error
-        except OSError:
-            pass
-            
 	try:
-	    f = open(self.filename,"w")
-	except IOError, (errno, strerror):
-            print _("Can't save config file, I/O error(%s): %s") % (errno, strerror)
+	    f = open(self.filename + ".new", "w")
+	except IOError, e:
+            print _("Can't save config file, I/O error: %s") % e
+            return
 	else:
 	    self.parser.write(f)
 	    f.close()
@@ -294,6 +280,28 @@ class Config:
             os.chmod(self.filename, 0600)
         except:
             pass
+
+        try:
+            s = os.stat(self.filename)
+            if s.st_size > 0:
+                try:
+                    if os.path.exists(self.filename + ".old"):
+                        os.remove(self.filename + ".old")
+                except OSError, s:
+                    print s
+
+                try:
+                    os.rename(self.filename, self.filename + ".old")
+                except OSError, error:
+                    print _("Can't back config file up, error: %s") % error
+        except OSError:
+            pass
+
+        try:
+            os.rename(self.filename + ".new", self.filename)
+        except OSError, error:
+               print _("Can't rename config file, error: %s") % error
+
         self.config_lock.release()
 	
     def setBuddyShares(self,files,streams,wordindex,fileindex,mtimes):
