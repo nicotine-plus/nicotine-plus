@@ -605,10 +605,11 @@ class Search(SearchTab):
 
 	def OnClose(self, widget):
 		self.searches.RemoveTab(self)
+		self.OnCloseIgnore(widget)
 
 	def OnCloseIgnore(self, widget):
 		self.OnIgnore(self.button2)
-		self.OnClose(widget)
+		self.searches.RemoveTab(self)
 
 	def OnToggleRemember(self, widget):
 		self.remember = widget.get_active()

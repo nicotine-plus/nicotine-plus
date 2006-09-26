@@ -778,39 +778,6 @@ class TransfersFrame:
         self.FriendsNoLimits.show()
         self.vbox83.pack_start(self.FriendsNoLimits, False, False, 0)
 
-        self.hbox165 = gtk.HBox(False, 0)
-        self.hbox165.show()
-        self.hbox165.set_spacing(0)
-
-        self.DownloadLimit = gtk.CheckButton()
-        self.DownloadLimit.set_active(False)
-        self.DownloadLimit.set_label(_("Limit download speed to"))
-        self.DownloadLimit.show()
-        self.DownloadLimit.connect("toggled", self.OnDownloadLimitToggled)
-        self.hbox165.pack_start(self.DownloadLimit, False, False, 0)
-
-        self.DownloadLimitSpeed = gtk.Entry()
-        self.DownloadLimitSpeed.set_size_request(30, -1)
-        self.DownloadLimitSpeed.set_text("")
-        self.DownloadLimitSpeed.set_editable(True)
-        self.DownloadLimitSpeed.show()
-        self.DownloadLimitSpeed.set_visibility(True)
-        self.hbox165.pack_start(self.DownloadLimitSpeed, False, True, 0)
-
-        self.label288 = gtk.Label(_("KBytes/sec"))
-        self.label288.set_padding(0, 0)
-        self.label288.set_line_wrap(False)
-        self.label288.show()
-        self.hbox165.pack_start(self.label288, False, False, 5)
-
-        self.label289 = gtk.Label(_("for total transfers"))
-        self.label289.set_padding(0, 0)
-        self.label289.set_line_wrap(False)
-        self.label289.show()
-        self.hbox165.pack_start(self.label289, False, False, 0)
-
-        self.vbox83.pack_start(self.hbox165, True, True, 0)
-
         self.vbox81.pack_start(self.vbox83, False, False, 0)
 
         self.hbox176 = gtk.HBox(False, 5)
@@ -860,9 +827,6 @@ class TransfersFrame:
         pass
 
     def OnLimitToggled(self, widget):
-        pass
-
-    def OnDownloadLimitToggled(self, widget):
         pass
 
     def OnFriendsOnlyToggled(self, widget):

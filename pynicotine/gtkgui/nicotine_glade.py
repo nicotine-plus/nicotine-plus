@@ -809,6 +809,35 @@ class MainWindow:
         self.combo1.set_text_column(0)
         self.hbox2.pack_start(self.combo1, True, True, 0)
 
+        self.SearchButton = gtk.Button()
+        self.SearchButton.show()
+        self.SearchButton.connect("clicked", self.OnSearch)
+
+        self.alignment3 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment3.show()
+
+        self.hbox23 = gtk.HBox(False, 2)
+        self.hbox23.show()
+        self.hbox23.set_spacing(2)
+
+        self.image3 = gtk.Image()
+        self.image3.set_padding(0, 0)
+        self.image3.set_from_stock(gtk.STOCK_FIND, 4)
+        self.image3.show()
+        self.hbox23.pack_start(self.image3, False, False, 0)
+
+        self.label32 = gtk.Label(_("Search"))
+        self.label32.set_padding(0, 0)
+        self.label32.set_line_wrap(False)
+        self.label32.show()
+        self.hbox23.pack_start(self.label32, False, False, 0)
+
+        self.alignment3.add(self.hbox23)
+
+        self.SearchButton.add(self.alignment3)
+
+        self.hbox2.pack_start(self.SearchButton, False, False, 0)
+
         self.ClearSearchHistory = gtk.Button()
         self.ClearSearchHistory.show()
         self.ClearSearchHistory.connect("clicked", self.OnClearSearchHistory)
@@ -858,35 +887,6 @@ class MainWindow:
         self.BuddiesRadio.show()
 
         self.hbox2.pack_start(self.BuddiesRadio, False, False, 0)
-
-        self.SearchButton = gtk.Button()
-        self.SearchButton.show()
-        self.SearchButton.connect("clicked", self.OnSearch)
-
-        self.alignment3 = gtk.Alignment(0.5, 0.5, 0, 0)
-        self.alignment3.show()
-
-        self.hbox23 = gtk.HBox(False, 2)
-        self.hbox23.show()
-        self.hbox23.set_spacing(2)
-
-        self.image3 = gtk.Image()
-        self.image3.set_padding(0, 0)
-        self.image3.set_from_stock(gtk.STOCK_FIND, 4)
-        self.image3.show()
-        self.hbox23.pack_start(self.image3, False, False, 0)
-
-        self.label32 = gtk.Label(_("Search"))
-        self.label32.set_padding(0, 0)
-        self.label32.set_line_wrap(False)
-        self.label32.show()
-        self.hbox23.pack_start(self.label32, False, False, 0)
-
-        self.alignment3.add(self.hbox23)
-
-        self.SearchButton.add(self.alignment3)
-
-        self.hbox2.pack_start(self.SearchButton, False, False, 0)
 
         self.searchvbox.pack_start(self.hbox2, False, True, 0)
 
