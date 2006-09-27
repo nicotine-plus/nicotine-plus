@@ -629,7 +629,7 @@ class TransfersFrame:
         self.hbox117.pack_start(self.label185, False, False, 0)
 
         self.QueueBandwidth = gtk.Entry()
-        self.QueueBandwidth.set_size_request(30, -1)
+        self.QueueBandwidth.set_size_request(50, -1)
         self.QueueBandwidth.set_text("")
         self.QueueBandwidth.set_editable(True)
         self.QueueBandwidth.show()
@@ -656,7 +656,7 @@ class TransfersFrame:
         self.hbox118.pack_start(self.QueueUseSlots, False, False, 0)
 
         self.QueueSlots = gtk.Entry()
-        self.QueueSlots.set_size_request(30, -1)
+        self.QueueSlots.set_size_request(50, -1)
         self.QueueSlots.set_text("")
         self.QueueSlots.set_editable(True)
         self.QueueSlots.show()
@@ -679,7 +679,7 @@ class TransfersFrame:
         self.table1.set_col_spacings(5)
 
         self.LimitSpeed = gtk.Entry()
-        self.LimitSpeed.set_size_request(30, -1)
+        self.LimitSpeed.set_size_request(50, -1)
         self.LimitSpeed.set_text("")
         self.LimitSpeed.set_editable(True)
         self.LimitSpeed.show()
@@ -757,7 +757,7 @@ class TransfersFrame:
         self.hbox119.pack_start(self.label189, False, False, 0)
 
         self.MaxUserQueue = gtk.Entry()
-        self.MaxUserQueue.set_size_request(35, -1)
+        self.MaxUserQueue.set_size_request(50, -1)
         self.MaxUserQueue.set_text("100")
         self.MaxUserQueue.set_editable(True)
         self.MaxUserQueue.show()

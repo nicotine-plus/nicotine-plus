@@ -820,7 +820,7 @@ class SettingsWindow(settings_glade.SettingsWindow):
 		
 		self.SettingsWindow.set_transient_for(frame.MainWindow)
 		self.SettingsWindow.set_geometry_hints(None, min_width=550, min_height=400)
-		self.SettingsWindow.set_default_size(650, 500)
+		self.SettingsWindow.set_default_size(700, 500)
 		self.SettingsWindow.connect("delete-event", self.OnDelete)
 		self.frame = frame
 		self.empty_label = gtk.Label("")

@@ -1489,7 +1489,7 @@
 
 		  <child>
 		    <widget class="GtkEntry" id="QueueBandwidth">
-		      <property name="width_request">30</property>
+		      <property name="width_request">50</property>
 		      <property name="visible">True</property>
 		      <property name="can_focus">True</property>
 		      <property name="editable">True</property>
@@ -1567,7 +1567,7 @@
 
 		  <child>
 		    <widget class="GtkEntry" id="QueueSlots">
-		      <property name="width_request">30</property>
+		      <property name="width_request">50</property>
 		      <property name="visible">True</property>
 		      <property name="can_focus">True</property>
 		      <property name="editable">True</property>
@@ -1635,7 +1635,7 @@
 
 	      <child>
 		<widget class="GtkEntry" id="LimitSpeed">
-		  <property name="width_request">30</property>
+		  <property name="width_request">50</property>
 		  <property name="visible">True</property>
 		  <property name="can_focus">True</property>
 		  <property name="editable">True</property>
@@ -1875,7 +1875,7 @@
 
 		  <child>
 		    <widget class="GtkEntry" id="MaxUserQueue">
-		      <property name="width_request">35</property>
+		      <property name="width_request">50</property>
 		      <property name="visible">True</property>
 		      <property name="can_focus">True</property>
 		      <property name="editable">True</property>
