@@ -371,7 +371,10 @@ class ChatRoom(ChatRoomTab):
 		self.entry3.grab_focus()
 		self.vbox6.set_focus_child(self.entry3)
 		
-		self.logpopupmenu = PopupMenu(self.frame).setup(["#" + _("Clear log"), self.OnClearRoomLog, gtk.STOCK_CLEAR])
+		self.logpopupmenu = PopupMenu(self.frame).setup(
+			("#" + _("Copy All"), self.OnCopyAllRoomLog, gtk.STOCK_SELECT_ALL),
+			("#" + _("Clear log"), self.OnClearRoomLog, gtk.STOCK_CLEAR),
+		)
 		self.RoomLog.connect("button-press-event", self.OnPopupRoomLogMenu)
 		
 	def get_custom_widget(self, id, string1, string2, int1, int2):
@@ -726,7 +729,12 @@ class ChatRoom(ChatRoomTab):
 		widget.emit_stop_by_name("button-press-event")
 		self.logpopupmenu.popup(None, None, None, event.button, event.time)
 		return True
-
+	
+	def OnCopyAllRoomLog(self, widget):
+		start, end = self.RoomLog.get_buffer().get_bounds()
+		log = self.RoomLog.get_buffer().get_text(start, end)
+		self.frame.clip.set_text(log)
+		
 	def OnClearRoomLog(self, widget):
 		self.RoomLog.get_buffer().set_text("")
 

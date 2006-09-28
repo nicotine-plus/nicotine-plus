@@ -103,7 +103,10 @@ class testwin(MainWindow):
 		self.clip = gtk.Clipboard(display=gtk.gdk.display_get_default(), selection="CLIPBOARD")
 		self.roomlist = roomlist(self)
 		
-		self.logpopupmenu = PopupMenu(self).setup([_("Clear log"), self.OnClearLogWindow])
+		self.logpopupmenu = PopupMenu(self).setup(
+			("#" + _("Copy All"), self.OnCopyAllLogWindow, gtk.STOCK_SELECT_ALL),
+			("#" + _("Clear log"), self.OnClearLogWindow, gtk.STOCK_CLEAR)
+		)
 		def on_delete_event(widget, event):
                     if self.HAVE_TRAYICON:
                       option = Option_Box(self, title=_('Close Nicotine-Plus?'), message=_('Are you sure you wish to exit Nicotine-Plus at this time?'), option1=_("Exit"), option2=_("Send to Tray"), option3=_("Cancel") )
@@ -1284,6 +1287,11 @@ class testwin(MainWindow):
 		self.logpopupmenu.popup(None, None, None, event.button, event.time)
 		return True
 
+	def OnCopyAllLogWindow(self, widget):
+		start, end = self.LogWindow.get_buffer().get_bounds()
+		log = self.LogWindow.get_buffer().get_text(start, end)
+		self.clip.set_text(log)
+		
 	def OnClearLogWindow(self, widget):
 		self.LogWindow.get_buffer().set_text("")
 
