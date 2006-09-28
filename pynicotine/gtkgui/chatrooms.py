@@ -372,7 +372,7 @@ class ChatRoom(ChatRoomTab):
 		self.vbox6.set_focus_child(self.entry3)
 		
 		self.logpopupmenu = PopupMenu(self.frame).setup(
-			("#" + _("Copy All"), self.OnCopyAllRoomLog, gtk.STOCK_SELECT_ALL),
+			("#" + _("Copy All"), self.OnCopyAllRoomLog, gtk.STOCK_COPY),
 			("#" + _("Clear log"), self.OnClearRoomLog, gtk.STOCK_CLEAR),
 		)
 		self.RoomLog.connect("button-press-event", self.OnPopupRoomLogMenu)

@@ -104,7 +104,7 @@ class testwin(MainWindow):
 		self.roomlist = roomlist(self)
 		
 		self.logpopupmenu = PopupMenu(self).setup(
-			("#" + _("Copy All"), self.OnCopyAllLogWindow, gtk.STOCK_SELECT_ALL),
+			("#" + _("Copy All"), self.OnCopyAllLogWindow, gtk.STOCK_COPY),
 			("#" + _("Clear log"), self.OnClearLogWindow, gtk.STOCK_CLEAR)
 		)
 		def on_delete_event(widget, event):
