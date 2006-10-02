@@ -21,14 +21,14 @@ HUMANIZE_URLS = 0
 
 def popupWarning(parent, title, warning):
 	dlg = gtk.Dialog(title = title, parent = parent,
-		buttons = (gtk.STOCK_OK, gtk.RESPONSE_OK, gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL))
+		buttons = (gtk.STOCK_OK, gtk.RESPONSE_OK))
 	dlg.set_default_response(gtk.RESPONSE_OK)
 	
 	dlg.set_border_width(10)
 	dlg.vbox.set_spacing(10)
 		
 	label = gtk.Label()
-	label.set_text(warning)
+	label.set_markup(warning)
 	dlg.vbox.pack_start(label, True, True)
 
 	dlg.vbox.show_all()

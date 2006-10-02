@@ -29,7 +29,7 @@ from about import *
 from checklatest import checklatest
 from pynicotine.config import *
 import utils
-from utils import AppendLine, ImageLabel, IconNotebook, ScrollBottom, PopupMenu, Humanize
+from utils import AppendLine, ImageLabel, IconNotebook, ScrollBottom, PopupMenu, Humanize, popupWarning
 import translux
 
 from pynicotine.utils import _
@@ -159,7 +159,7 @@ class testwin(MainWindow):
 		cols[0].set_sort_column_id(0)
 		self.DislikesList.set_model(self.dislikeslist)
 		self.tidl_popup_menu = popup = utils.PopupMenu(self)
-		popup.setup((_("Remove this item"), self.OnRemoveThingIDislike))
+		popup.setup(("#" + _("Remove this item"), self.OnRemoveThingIDislike, gtk.STOCK_CANCEL))
 		self.DislikesList.connect("button_press_event", self.OnPopupTIDLMenu)
 
 		cols = utils.InitialiseColumns(self.RecommendationsList,
@@ -442,6 +442,7 @@ class testwin(MainWindow):
 				icon = self.tray_status["status"]
 			else:
 				icon = "hilite2"
+				self.MainWindow.set_urgency_hint(True)
 				
 			if icon != self.tray_status["last"]:
 				self.tray_status["last"] = icon
@@ -1106,7 +1107,8 @@ class testwin(MainWindow):
 			if os.path.exists(file):
 				url = "file://%s" % file
 				self.OpenUrl(url)
-			
+			else:
+				popupWarning(None, _("Cannot Find Guide"), _("The Nicotine Offline Guide ( NicotinePlusGuide.html ) was not found in either the following directories:\n\n<u>%s/doc/\n</u><b>and</b>\n<u>%s/share/nicotine/documentation/</u>\n\nEither install Nicotine-Plus, or start from inside the Nicotine-Plus source directory." % (os.environ["PWD"], sys.prefix ) ) )
 		
 	def OnSourceForgeProject(self, widget):
 		url = "http://sourceforge.net/projects/nicotine-plus/"

@@ -1,5 +1,21 @@
 ChangeLog for Nicotine Plus
-
+UNRELEASED
+ * Added Urgency Hint on highlight (Titlebar flashes, or WM tries to get 
+   your attention)
+ * Added 'Copy all' menu item to Room Status logs and the debug log 
+ * Also added icons to the Clear log and the Remove Dislike menu items 
+ * Search's Close button also "ignores" the search, like the X button the tab.
+ * Use a safer method to save the config file
+ * nicotine.desktop and nicotine_clear.png are installed to 
+   $PREFIX/share/applications and $PREFIX/share/pixmaps
+ * Fixed a bug with the Trayicon intially being icon-less
+ * Enlarged number entry boxes in Transfer Settings
+ 
+TRANSLATIONS
+ * Hungarian translation updated (djbaloo)
+ * UnfinishedPortuguese-Brazilian translation added (SucideSolution)
+ * Slovak Translation Updated (Jozef)
+ 
 1.2.5.1 September 18th 2006
 Bugfix Release
  * Made TrayIcon not attempt to load on 'win32' operating systems

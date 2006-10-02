@@ -15,7 +15,6 @@ import transfers
 import Queue
 import threading
 from config import *
-import threading
 import string
 import types
 import locale
