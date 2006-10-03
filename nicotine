@@ -41,6 +41,8 @@ binary package and what you try to run Nicotine with.)""")
     # EEK! Scary Win32 stuff
     if win32:
      # Fetchs gtk2 path from registry
+     try: import dbhash
+     except: print _("Warning: the Berkeley DB module, dbhash, could not be loaded.")
      import _winreg
      import msvcrt
      try:
