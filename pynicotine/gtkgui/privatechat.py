@@ -68,8 +68,8 @@ class PrivateChats(IconNotebook):
 		self.frame.RequestIcon(self.frame.PrivateChatTabLabel)
 		if self.get_current_page() != self.page_num(self.users[msg.user].Main) or self.frame.notebook1.get_current_page() != 1:
 			self.frame.Notification("private", msg.user)
-		else:
-			self.frame.MainWindow.set_urgency_hint(False)
+		#else:
+			#self.frame.MainWindow.set_urgency_hint(False)
 
 	def UpdateColours(self):
 		for chat in self.users.values():

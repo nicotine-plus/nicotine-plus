@@ -444,8 +444,9 @@ class ChatRoom(ChatRoomTab):
 			if self.frame.ChatNotebook.get_current_page() != self.frame.ChatNotebook.page_num(self.roomsctrl.joinedrooms[self.room].Main) or self.frame.notebook1.get_current_page() != 0:
 				if self.room not in self.frame.tray_status["hilites"]["rooms"]:
 					self.frame.Notification("rooms", msg.user, self.room)
-			else:
-				self.MainWindow.set_urgency_hint(False)
+			#else:
+				#self.MainWindow.set_urgency_hint(False)
+				
 
 		else:
 			self.frame.ChatNotebook.request_changed(self.Main)

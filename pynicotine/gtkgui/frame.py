@@ -436,7 +436,7 @@ class testwin(MainWindow):
 				hilites["rooms"].append(room)
 				self.sound("room_nick", user, place=room)
 				self.load_image()
-				self.MainWindow.set_urgency_hint(True)
+				#self.MainWindow.set_urgency_hint(True)
 		if location == "private":
 			if user in hilites[location]:
 				hilites[location].remove(user)
@@ -445,7 +445,7 @@ class testwin(MainWindow):
 				hilites[location].append(user)
 				self.sound(location, user)
 				self.load_image()
-				self.MainWindow.set_urgency_hint(True)
+				#self.MainWindow.set_urgency_hint(True)
 		self.TitleNotification(user)
 		
 	def ClearNotification(self, location, user, room=None):
@@ -460,14 +460,15 @@ class testwin(MainWindow):
 		
 	def TitleNotification(self, user=None):
 		if self.tray_status["hilites"]["rooms"] == [] and self.tray_status["hilites"]["private"] == []:
+			# Reset Title
 			if self.MainWindow.get_title() != _("Nicotine+") + " " + version:  
 				self.MainWindow.set_title(_("Nicotine+") + " " + version)
 		else:
-			set = 0
+			# Private Chats have a higher priority
 			if len(self.tray_status["hilites"]["private"]) > 0:
 				user = self.tray_status["hilites"]["private"][-1]
 				self.MainWindow.set_title(_("Nicotine+") + " " + version+ " :: " +  _("Private Message from %s" % user) )
-				
+			# Allow for the possibility the username is not available
 			elif len(self.tray_status["hilites"]["rooms"]) > 0:
 				room = self.tray_status["hilites"]["rooms"][-1]
 				if user == None:
