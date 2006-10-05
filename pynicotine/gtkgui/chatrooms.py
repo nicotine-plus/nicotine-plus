@@ -97,8 +97,7 @@ class RoomsControl:
 				gobject.idle_add(room.entry3.grab_focus)
 				# Remove hilite
 				if name in self.frame.tray_status["hilites"]["rooms"]:
-					self.frame.tray_status["hilites"]["rooms"].remove(name)
-					self.frame.load_image()
+					self.frame.ClearNotification("rooms", None, name)
 
 			
 	def OnResort(self, column, column_id):
@@ -444,9 +443,10 @@ class ChatRoom(ChatRoomTab):
 			# add hilite to trayicon
 			if self.frame.ChatNotebook.get_current_page() != self.frame.ChatNotebook.page_num(self.roomsctrl.joinedrooms[self.room].Main) or self.frame.notebook1.get_current_page() != 0:
 				if self.room not in self.frame.tray_status["hilites"]["rooms"]:
-					self.frame.tray_status["hilites"]["rooms"].append(self.room)
-					self.frame.sound("room_nick", msg.user, place=self.room)
-					self.frame.load_image()
+					self.frame.Notification("rooms", msg.user, self.room)
+			else:
+				self.MainWindow.set_urgency_hint(False)
+
 		else:
 			self.frame.ChatNotebook.request_changed(self.Main)
 			self.frame.ChatRequestIcon(0)

@@ -428,7 +428,53 @@ class testwin(MainWindow):
 		self.trayicon.add(self.eventbox)
 		self.trayicon.show_all()
 		self.eventbox.connect("button-press-event", self.OnTrayiconClicked)
-			
+		
+	def Notification(self, location, user, room=None):
+		hilites = self.tray_status["hilites"]
+		if location == "rooms" and room != None and user != None:
+			if room not in hilites["rooms"]:
+				hilites["rooms"].append(room)
+				self.sound("room_nick", user, place=room)
+				self.load_image()
+				self.MainWindow.set_urgency_hint(True)
+		if location == "private":
+			if user in hilites[location]:
+				hilites[location].remove(user)
+				hilites[location].append(user)
+			if user not in hilites[location]: 
+				hilites[location].append(user)
+				self.sound(location, user)
+				self.load_image()
+				self.MainWindow.set_urgency_hint(True)
+		self.TitleNotification(user)
+		
+	def ClearNotification(self, location, user, room=None):
+		if location == "rooms" and room != None:
+			if room in self.tray_status["hilites"]["rooms"]:
+				self.tray_status["hilites"]["rooms"].remove(room)
+		if location == "private":	
+			if user in self.tray_status["hilites"]["private"]: 
+				self.tray_status["hilites"]["private"].remove(user)
+		self.TitleNotification(user)
+		self.load_image()
+		
+	def TitleNotification(self, user=None):
+		if self.tray_status["hilites"]["rooms"] == [] and self.tray_status["hilites"]["private"] == []:
+			if self.MainWindow.get_title() != _("Nicotine+") + " " + version:  
+				self.MainWindow.set_title(_("Nicotine+") + " " + version)
+		else:
+			set = 0
+			if len(self.tray_status["hilites"]["private"]) > 0:
+				user = self.tray_status["hilites"]["private"][-1]
+				self.MainWindow.set_title(_("Nicotine+") + " " + version+ " :: " +  _("Private Message from %s" % user) )
+				
+			elif len(self.tray_status["hilites"]["rooms"]) > 0:
+				room = self.tray_status["hilites"]["rooms"][-1]
+				if user == None:
+					self.MainWindow.set_title(_("Nicotine+") + " " + version+ " :: " +  _("You've been mentioned in the %s room" % (room) ) )
+				else:
+					self.MainWindow.set_title(_("Nicotine+") + " " + version+ " :: " +  _("%s mentioned you in the %s room" % (user, room) ) )
+				
 	def load_image(self, status=None):
 		# Abort if Trayicon module wasn't loaded
 		if not self.HAVE_TRAYICON or self.trayicon_module == None or not self.TRAYICON_CREATED:
@@ -442,8 +488,7 @@ class testwin(MainWindow):
 				icon = self.tray_status["status"]
 			else:
 				icon = "hilite2"
-				self.MainWindow.set_urgency_hint(True)
-				
+
 			if icon != self.tray_status["last"]:
 				self.tray_status["last"] = icon
 			else:
@@ -904,6 +949,7 @@ class testwin(MainWindow):
 			self.MainWindow.set_icon(self.images["hilite2"])
 		if self.current_tab != tablabel:
 			tablabel.set_image(self.images["hilite"])
+			
 		
 	def OnSwitchPage(self, notebook, page, page_nr):
 		l = [self.ChatTabLabel, self.PrivateChatTabLabel, None, None, self.SearchTabLabel, self.UserInfoTabLabel, self.UserBrowseTabLabel, None, None][page_nr]

@@ -199,6 +199,9 @@ class ImageLabel(gtk.HBox):
 		
 	def set_text(self, lbl):
 		self.label.set_text(lbl)
+		
+	def get_text(self):
+		return self.label.get_text()
 	
 class IconNotebook(gtk.Notebook):
 	def __init__(self, images):

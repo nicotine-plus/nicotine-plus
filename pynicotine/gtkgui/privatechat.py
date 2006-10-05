@@ -30,8 +30,7 @@ class PrivateChats(IconNotebook):
 				gobject.idle_add(tab.ChatLine.grab_focus)
 				# Remove hilite if selected tab belongs to a user in the hilite list
 				if user in self.frame.tray_status["hilites"]["private"]:
-					self.frame.tray_status["hilites"]["private"].remove(user)
-					self.frame.load_image()
+					self.frame.ClearNotification("private", tab.user)
 		
 	def GetUserStatus(self, msg):
 		if self.users.has_key(msg.user):
@@ -68,11 +67,9 @@ class PrivateChats(IconNotebook):
 		self.request_changed(tab.Main)
 		self.frame.RequestIcon(self.frame.PrivateChatTabLabel)
 		if self.get_current_page() != self.page_num(self.users[msg.user].Main) or self.frame.notebook1.get_current_page() != 1:
-			if msg.user not in self.frame.tray_status["hilites"]["private"]:
-				self.frame.tray_status["hilites"]["private"].append(msg.user)
-				self.frame.sound("private", msg.user)
-				self.frame.load_image()
-		
+			self.frame.Notification("private", msg.user)
+		else:
+			self.frame.MainWindow.set_urgency_hint(False)
 
 	def UpdateColours(self):
 		for chat in self.users.values():
@@ -81,7 +78,7 @@ class PrivateChats(IconNotebook):
 	def RemoveTab(self, tab):
 		self.remove_page(tab.Main)
 		if tab.user in self.frame.tray_status["hilites"]["private"]:
-			self.frame.tray_status["hilites"]["private"].remove(tab.user)
+			self.frame.ClearNotification("private", tab.user)
 		del self.users[tab.user]
 	
 class PrivateChat(PrivateChatTab):
