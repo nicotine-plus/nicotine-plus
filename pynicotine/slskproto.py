@@ -272,19 +272,20 @@ class SlskProtoThread(threading.Thread):
                             del conns[i]
 
 # ---------------------------
-#	This Gets Nicotine users banned
+#	This sometimes(?) Gets Nicotine users banned
 # ---------------------------
-# 	    curtime = time.time()
-# 	    for i in conns.keys()[:]:
-# 		if i is not s:
-# 		    if curtime - conns[i].lastactive > 120:
-# 			self._ui_callback([ConnClose(i,conns[i].addr)])
-#                         i.close()
-#                         del conns[i]
-# 		else:
-# 		    if curtime - conns[s].lastping > 30:
-# 			conns[s].lastping = curtime
-# 			queue.put(ServerPing()) 
+	    curtime = time.time()
+	    for i in conns.keys()[:]:
+		if i is not s:
+		    if curtime - conns[i].lastactive > 120:
+			self._ui_callback([ConnClose(i,conns[i].addr)])
+                        i.close()
+                        del conns[i]
+		else:
+		    #  Was 30 seconds
+		    if curtime - conns[s].lastping > 120:
+			conns[s].lastping = curtime
+			queue.put(ServerPing()) 
 	    self._ui_callback([])
 	if s is not None:
             s.close()
