@@ -694,9 +694,11 @@ class NetworkEventProcessor:
         for i in self.peerconns:
             if i.conn is msg.conn.conn:
 	        user = i.username
+		ip, port = i.addr
 		break
-	if user  == self.config.sections["server"]["login"]:
-		self.logMessage(_("%s is making a BrowseShares request, blocking possible spoofing attempt.") %(user), None)
+	
+	if user == self.config.sections["server"]["login"]:
+		self.logMessage(_("%s is making a BrowseShares request, blocking possible spoofing attempt from IP %s port %s") %(user, ip, port), None)
 		return
 	self.logMessage(_("%s is making a BrowseShares request") %(user), None)
         addr = msg.conn.addr[0]
@@ -722,9 +724,10 @@ class NetworkEventProcessor:
 	for i in self.peerconns:
 	    if i.conn is msg.conn.conn:
 	        user = i.username
+		ip, port = i.addr
 		break
 	if user == self.config.sections["server"]["login"]:
-		self.logMessage(_("Blocking %s from making a UserInfo request, possible spoofing attempt.") %(user), None)
+		self.logMessage(_("Blocking %s from making a UserInfo request, possible spoofing attempt from IP %s port %s") %(user, ip, port), None)
 		return
 	if user in self.config.sections["server"]["banlist"]:
 		self.logMessage(_("%s is banned, but is making a UserInfo request") %(user), 1)
