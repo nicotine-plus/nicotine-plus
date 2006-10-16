@@ -1,0 +1,52 @@
+Nicotine+ on Windows
+====================
+Vandy Omall <osiris.contact@gmail.com>
+
+This document contains info regarding making Nicotine+ excutable.
+Filenames are only for better understanding, 
+as better version are released now and then...
+
+Download & Install
+===================
+Required:
+
+- Python (Python-2.4.3.msi)
+- GTK+ (gtk-win32-2.8.18-rc1.exe)
+- PyGTK (pygtk-2.8.6-1.win32-py2.4.exe)
+- PyCairo (pycairo-1.0.2-1.win32-py2.4.exe)
+- py2exe (py2exe-0.6.5.win32-py2.4.exe)
+
+Optional:
+
+- Psyco (psyco-1.5.1-win-2.4.zip)
+- Pyvorbis (pyvorbis-1.4.win32-py2.4.exe)
+- pyOGG (pyogg-1.3.win32-py2.4.exe)
+
+Make EXE
+===================
+Copy tools/make_exe.bat and tools/make_exe.py to source tree
+Copy files/nicotine.ico to source tree
+Run make_exe.bat
+When finished, you can find your win32 Nicotine+ 
+in dist subdirectory of the source tree.
+
+Tips&Tricks
+===================
+1. To speed up Py2Exe insert at the top of make_exe.py:
+
+	import psyco
+	psyco.full()
+
+2. To generate a log of the process insert the following line 
+   in-between the two others. 
+
+	psyco.log()
+
+Software
+===================
+http://www.python.org (python)
+http://gladewin32.sourceforge.net (GTK+ for windows, developer installer)
+http://www.py2exe.org (Python to exe converter)
+http://psyco.sourceforge.net/ (Psyco for windows)
+http://www.mapr.ucl.ac.be/~gustin/win32_ports/pygtk.html (PyGTK, PyCairo) 
+http://thomas.paviot.free.fr/soya/ (PyOGG & PyVorbis for windows)

@@ -1,1 +1,9 @@
-none of the files here work in their current directory. copy them to source directory.
+README for Nicotine+ Tools
+===========================
+none of the files here work in their current 
+directory. copy them to the source tree.
+
+Windows Tools
+	Doc 			see doc/INSTALL_win32.txt
+	make_exe.bat 	checks for needed dependencies and generates nicotine.exe
+	make_exe.py 	setup file containing arguments for building nicotine.exe

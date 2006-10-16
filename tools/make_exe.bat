@@ -43,6 +43,6 @@ echo.
 rd /S /Q build
 echo  Done...
 echo  Make Python app excutable
-c:\Python24\python setup_win32.py py2exe -O2
+c:\Python24\python make_exe.py py2exe -O2
 rem
 pause

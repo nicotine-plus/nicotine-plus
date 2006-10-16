@@ -1,5 +1,5 @@
 ## Generorate win32 excutable for WindowsXP
-## Useage: python setup_win32.py py2exe -O2
+## Useage: python make_exe.py py2exe -O2
 ## This file contains snippets from various sources.
 ## Copyright (C) 2003-2006 Yann Le Boulanger <asterix@lagaule.org>
 ## Copyright (C) 2005-2006 Nikos Kouremenos <kourem@gmail.com>
