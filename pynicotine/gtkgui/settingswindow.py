@@ -158,17 +158,16 @@ class SharesFrame(settings_glade.SharesFrame):
 		return self.needrescan
 	
 	def OnChooseIncompleteDir(self, widget):
-		dir = ChooseDir(self.Main.get_toplevel(), self.IncompleteDir.get_text())
-		if dir is not None:
-			for directory in dir: # iterate over selected files
+		dir1 = ChooseDir(self.Main.get_toplevel(), self.IncompleteDir.get_text())
+		if dir1 is not None:
+			for directory in dir1: # iterate over selected files
 				self.incompletedir = directory
 				self.IncompleteDir.set_text(recode(directory))
 
 	def OnChooseDownloadDir(self, widget):
-		dir = ChooseDir(self.Main.get_toplevel(), self.DownloadDir.get_text())
-
-		if dir is not None:
-			for directory in dir: # iterate over selected files
+		dir1 = ChooseDir(self.Main.get_toplevel(), self.DownloadDir.get_text())
+		if dir1 is not None:
+			for directory in dir1: # iterate over selected files
 				self.DownloadDir.set_text(recode(directory))
 				if self.ShareDownloadDir.get_active():
 					self.needrescan = 1
@@ -526,8 +525,8 @@ class BloatFrame(settings_glade.BloatFrame):
 			self.DecimalSep.child.set_text(ui["decimalsep"])
 		if ui["tabclosers"] is not None:
 			self.TabClosers.set_active(ui["tabclosers"])
-		if sys.platform == "win32":
-			self.TrayiconCheck.set_sensitive(False)
+		#if sys.platform == "win32":
+		#	self.TrayiconCheck.set_sensitive(False)
 		if ui["trayicon"] is not None:
 			self.TrayiconCheck.set_active(ui["trayicon"])
 		if ui["soundenabled"] is not None:

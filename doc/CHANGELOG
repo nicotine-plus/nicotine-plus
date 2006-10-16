@@ -36,11 +36,14 @@ NETWORKING
  * Spoof warning now includes the IP and port of the user sending the message.
 
 TRAY ICON
+ * Hacked apart Systraywin32 from Gajim to work with Nicotine+ on Windows
+   requires pywin32 which you can download from here:
+   http://sourceforge.net/project/showfiles.php?group_id=78018 
  * Fixed a bug with the Trayicon intially being icon-less
 
 TRANSLATIONS
  * Hungarian translation updated (djbaloo)
- * UnfinishedPortuguese-Brazilian translation added (SuicideSolution)
+ * Portuguese-Brazilian translation finished (SuicideSolution)
  * Slovak Translation Updated (Jozef)
 
 1.2.5.1 September 18th 2006

@@ -58,8 +58,31 @@ class testwin(MainWindow):
 		self.chatrooms = None
 		
 		self.got_focus = False
+		self.importimages()
+		if sys.platform == "win32":
+				import icondata
 		config2 = Config(config)
         	config2.readConfig()
+		# For Win32 Systray 
+		if sys.platform == "win32":
+			self.icons = {}
+			for i in "hilite2", "connect", "disconnect", "away2":
+				if "icontheme"  in config2.sections["ui"]:
+					path = os.path.expanduser(os.path.join(config2.sections["ui"]["icontheme"], i +".ico"))
+					if os.path.exists(path):
+						data = open(path, 'rb')
+						s = data.read()
+						data.close()
+						self.icons[i] = s
+						del s
+						continue
+					else:
+						# default icons
+						data = getattr(icondata, i)
+				else:
+					# default icons
+					data = getattr(icondata, i)
+				self.icons[i] = data
 		for i in "empty", "away", "online", "offline", "hilite", "hilite2", "connect", "disconnect", "away2", "n":
 			loader = gtk.gdk.PixbufLoader("png")
 			if "icontheme" in config2.sections["ui"]:
@@ -82,7 +105,7 @@ class testwin(MainWindow):
 			
 			loader.close()
 			self.images[i] = loader.get_pixbuf()
-			
+		self.trayicon = None
 		self.trayicon_module = None
 		self.TRAYICON_CREATED = 0
 		self.TRAYICON_FAILED = 0
@@ -120,13 +143,15 @@ class testwin(MainWindow):
                           self.MainWindow.unmap()
                           self.is_mapped = 0
                       elif option == 1:
+			if sys.platform == "win32":
+				self.trayicon.hide_icon()
                         gtk.main_quit()
                         return False
                     return True
 
                 self.MainWindow.connect("delete-event",on_delete_event)
 		
-		self.importimages()
+
 		self.transfermsgs = {}
 		self.transfermsgspostedtime = 0
 		self.manualdisconnect = 0
@@ -357,7 +382,7 @@ class testwin(MainWindow):
 		self.awayreturn1.set_sensitive(0)
 		self.check_privileges1.set_sensitive(0)
 		self.current_image=None
-		self.tray_status = {"hilites" : { "rooms": [], "private": [] }, "status": "disconnect", "last": ""}
+		self.tray_status = {"hilites" : { "rooms": [], "private": [] }, "status": "disconnect", "last": "disconnect"}
 		if self.CREATE_TRAYICON:
 			self.create_trayicon()
 		if self.HAVE_TRAYICON:
@@ -378,56 +403,71 @@ class testwin(MainWindow):
 	def importimages(self):
 		try:
 			import imagedata
+
 		except Exception, e:
 			print e
 			
 	def create_trayicon(self):
-		if sys.platform == "win32":
-			self.TRAYICON_FAILED = 1
-			self.HAVE_TRAYICON = 0
-			return
 		if self.TRAYICON_FAILED:
 			return
 		try:
-			from pynicotine import trayicon
-			self.trayicon_module = trayicon
+		        if sys.platform == "win32":
+				import systraywin32
+				self.trayicon_module = systraywin32
+			else:
+			        from pynicotine import trayicon
+			        self.trayicon_module = trayicon
 			self.HAVE_TRAYICON = 1
 			self.TRAYICON_FAILED = 0
 		except ImportError, error:
 			self.TRAYICON_FAILED = 1
 			self.HAVE_TRAYICON = 0
-			print "Note: Trayicon Python module was not found in the pynicotine directory: %s" % error
-			self.logMessage("Note: Trayicon Python module was not found in the pynicotine directory: %s. If you are usign" % error, "TrayIcon")
+			if sys.platform == "win32":
+				print "Note: The systraywin32.py Python file failed to load properly because: %s. You may require pywin32. Get a version that matches your version of Python from here:\nhttp://sourceforge.net/project/showfiles.php?group_id=78018 " % error
+				self.logMessage("Note: The systraywin32.py Python file failed to load properly because: %s. You may require pywin32. Get a version that matches your version of Python from here:\nhttp://sourceforge.net/project/showfiles.php?group_id=78018 " % error, "TrayIcon")
+			else:
+				print "Note: Trayicon Python module was not found in the pynicotine directory: %s" % error
+				self.logMessage("Note: Trayicon Python module was not found in the pynicotine directory: %s." % error, "TrayIcon")
 			
 	def destroy_trayicon(self):
 		if not self.TRAYICON_CREATED:
 			return
 		self.TRAYICON_CREATED = 0
+		self.HAVE_TRAYICON = 0
 		self.current_image = None
-		self.tray_status["last"] = ""
-		self.eventbox.destroy()
-		self.trayicon.destroy()
-		self.tray_popup_menu.destroy()
 		
-	def restart_trayicon(self):
-		self.destroy_trayicon()
-		self.draw_trayicon()
+		if sys.platform != "win32":
+			self.eventbox.destroy()
+			self.trayicon.destroy()
+		else:
+			self.tray_status["last"] = ""
+			self.trayicon.hide_icon()
+		
+		self.tray_popup_menu.destroy()
+
 		
 	def draw_trayicon(self):
 		if not self.HAVE_TRAYICON or self.trayicon_module == None or  self.TRAYICON_CREATED:
 			return
 		self.TRAYICON_CREATED = 1
 		self.is_mapped = 1
-		self.trayicon = self.trayicon_module.TrayIcon("Nicotine")
-		
-		self.eventbox = gtk.EventBox()
-		img = gtk.Image()
 		self.traymenu()
+		if sys.platform == "win32":
+			if not self.trayicon:
+				self.trayicon = self.trayicon_module.TrayIcon("Nicotine", self)
+			self.trayicon.show_icon()
+			
+		else:
+			self.trayicon = self.trayicon_module.TrayIcon("Nicotine")
+			self.trayicon.show_all()
+		if sys.platform != "win32":
+			self.eventbox = gtk.EventBox()
 		self.load_image(self.tray_status["status"])
 
-		self.trayicon.add(self.eventbox)
-		self.trayicon.show_all()
-		self.eventbox.connect("button-press-event", self.OnTrayiconClicked)
+		if sys.platform != "win32":
+			self.trayicon.add(self.eventbox)
+			self.eventbox.connect("button-press-event", self.OnTrayiconClicked)
+			self.trayicon.show_all()
 		
 	def Notification(self, location, user, room=None):
 		hilites = self.tray_status["hilites"]
@@ -492,22 +532,23 @@ class testwin(MainWindow):
 
 			if icon != self.tray_status["last"]:
 				self.tray_status["last"] = icon
+
+			if sys.platform == "win32":
+				# For Win32 Systray 
+				self.trayicon.set_img(icon)
 			else:
-				# If the icon hasn't changed since the last time, do nothing
-				return
-			self.eventbox.hide()
-			if self.current_image != None:
-				self.eventbox.remove(self.current_image)
+				# For X11 Systray 
+				self.eventbox.hide()
+				if self.current_image != None:
+					self.eventbox.remove(self.current_image)
 			
-			img = gtk.Image()
-			img.set_from_pixbuf(self.images[icon])
+				img = gtk.Image()
+				img.set_from_pixbuf(self.images[icon])
+				img.show()
 
-			img.show()
-
-			self.current_image = img
-
-			self.eventbox.add(self.current_image)
-			self.eventbox.show()
+				self.current_image = img
+				self.eventbox.add(self.current_image)
+				self.eventbox.show()
 		except Exception,e:
 			print "ERROR: load_image", e
 			
@@ -811,6 +852,9 @@ class testwin(MainWindow):
 	            self.np.transfers.AbortTransfers()
 		self.np.config.writeConfig()
 		self.np.protothread.abort()
+		if sys.platform == "win32":
+			if self.trayicon:
+				self.trayicon.hide_icon()
 		gtk.main_quit()
 		
 	def OnConnect(self, widget):
@@ -1117,6 +1161,7 @@ class testwin(MainWindow):
 				self.HAVE_TRAYICON = 1
 				
 			self.draw_trayicon()
+
 		self.chatrooms.roomsctrl.UpdateColours()
 		self.privatechats.UpdateColours()
 		self.UpdateColours()

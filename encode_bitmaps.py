@@ -18,7 +18,7 @@ table = [
 outf = open(os.path.join("pynicotine","gtkgui","imagedata.py"), "w")
 for image in table:
 	print image[0]
-	f = open(os.path.join("img", image[0]), "r")
+	f = open(os.path.join("img", image[0]), "rb")
 	d = f.read()
 	f.close()
 	outf.write("%s = %s\n" % (image[1], `d`))
