@@ -21,11 +21,6 @@ Nicotine+ related (develop)
 eL_vErDe
 	* provides Nicotine+ Trac and SVN @ http://www.nicotine-plus.org
 
-vasi
-	* Mac developer (active)
-	* [djvasi@gmail.com][www.nicotine-app.sf.net]
-	* packaged nicotine on OSX PowerPc
-
 g4llow
 	* Package-developer (active)			
 	* [g4llow@gmail.com][burpo.altervista.org]		
@@ -35,6 +30,7 @@ lee8oi
 	* Bash Commander (active)		
 	* [winslaya@gmail.com] [winslayer.codedchaos.com]	
 	* new and updated /alias
+
 INMCM
 	* Nicotine+ topic maintainer on ubuntuforums.org 
 	* [http://ubuntuforums.org/showthread.php?t=196835]
@@ -82,6 +78,11 @@ SeeSchloss
 	* [http://seeschloss.org]
 	* made 1.0.8 win32 installer
 	* Created Soulfind, opensource Soulseek Server written in D
+	
+vasi
+	* Mac developer (active)
+	* [djvasi@gmail.com][www.nicotine-app.sf.net]
+	* packaged nicotine on OSX PowerPc
 
 
 Contact info
