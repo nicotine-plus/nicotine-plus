@@ -310,11 +310,15 @@ class NetworkEventProcessor:
 
     def RescanShares(self,msg):
 	import utils
+	utils.frame = self.frame
+	utils.log = self.logMessage
         files, streams, wordindex, fileindex, mtimes = utils.rescandirs(msg.shared,self.config.sections["transfers"]["sharedmtimes"],self.config.sections["transfers"]["sharedfiles"],self.config.sections["transfers"]["sharedfilesstreams"],msg.yieldfunction)
 	self.frame.RescanFinished([files, streams, wordindex, fileindex, mtimes], "normal")
 	
     def RescanBuddyShares(self,msg):
 	import utils
+	utils.frame = self.frame
+	utils.log = self.logMessage
         files, streams, wordindex, fileindex, mtimes = utils.rescandirs(msg.shared,self.config.sections["transfers"]["bsharedmtimes"],self.config.sections["transfers"]["bsharedfiles"],self.config.sections["transfers"]["bsharedfilesstreams"],msg.yieldfunction)
 	self.frame.RescanFinished([files, streams, wordindex, fileindex, mtimes], "buddy")
 	
@@ -734,7 +738,11 @@ class NetworkEventProcessor:
 		self.logMessage("%s %s" %(msg.__class__, vars(msg)),1)
 		return
 	try:
-	    f=open(self.config.sections["userinfo"]["pic"],'rb')
+	    if win32:
+		    userpic = u"%s" % self.config.sections["userinfo"]["pic"]
+	    else:
+		    userpic = self.config.sections["userinfo"]["pic"]
+	    f=open(userpic,'rb')
 	    pic = f.read()
 	    f.close()
 	except:

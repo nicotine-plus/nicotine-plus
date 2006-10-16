@@ -7,7 +7,7 @@
 This module contains utility fuctions.
 """
 
-version = "1.2.5.1"
+version = "1.2.6pre1"
 latesturl = "http://nicotine-plus.sourceforge.net/LATEST"
 
 import string
@@ -15,6 +15,8 @@ import os.path
 import os,dircache
 import sys
 win32 = sys.platform.startswith("win")
+frame = 0
+log = 0
 try:
     import _mp3 as mp3
     print "Using C mp3 scanner"
@@ -67,94 +69,131 @@ def rescandirs(shared, sharedmtimes, sharedfiles, sharedfilesstreams, yieldfunct
     
 
 def getDirsMtimes(dirs, yieldcall = None):
-    list = {}
-    for i in dirs:
-	i = i.replace("//","/")
-	
-	if hiddenCheck(i):
-		continue
-	try:
-	    contents = dircache.listdir(i)
-	    mtime = os.path.getmtime(i)
-	except OSError, errtuple:
-	    print errtuple
-	    continue
-	list[i] = mtime
-        for f in contents:
-	    pathname = os.path.join(i, f)
-            try:
-                isdir = os.path.isdir(pathname)
-		mtime = os.path.getmtime(pathname)
-            except OSError, errtuple:
-                print errtuple
-		continue
-	    else:
-		if isdir:
-		    list[pathname] = mtime
-		    dircontents = getDirsMtimes([pathname])
-		    for k in dircontents:
-			list[k] = dircontents[k]
-		if yieldcall is not None:
-		    yieldcall()
-    return list
+	list = {}
+	for i in dirs:
+		i = i.replace("//","/")
+		if win32:
+			# force Unicode for reading from disk
+			i = u"%s" %i
+		if hiddenCheck(i):
+			continue
+		try:
+			contents = dircache.listdir(i)
+			mtime = os.path.getmtime(i)
+		except OSError, errtuple:
+			print errtuple
+			if log:
+				log(str(errtuple))
+			continue
+		if win32:
+			# remove Unicode for saving in list
+			i = str(i)
+		list[i] = mtime
+		for f in contents:
+			if win32:
+				# remove Unicode for saving in list
+				f = str(f)
+			pathname = os.path.join(i, f)
+			if win32:
+				# force Unicode for reading from disk
+				pathname = u"%s" % pathname
+			try:
+				isdir = os.path.isdir(pathname)
+				mtime = os.path.getmtime(pathname)
+			except OSError, errtuple:
+				print errtuple
+				if log:
+					log(errtuple)
+				continue
+			else:
+				if win32:
+					# remove Unicode for saving in list
+					pathname = str(pathname)
+				if isdir:
+					list[pathname] = mtime
+					dircontents = getDirsMtimes([pathname])
+					for k in dircontents:
+						list[k] = dircontents[k]
+				if yieldcall is not None:
+					yieldcall()
+	return list
 
 
 def getFilesList(mtimes, oldmtimes, oldlist, yieldcall = None):
-    """ Get a list of files with their filelength and 
-    (if mp3) bitrate and track length in seconds """
-    list = {}
-    for i in mtimes:
-	if hiddenCheck(i):
-		continue	
-	if oldmtimes.has_key(i):
-	  if mtimes[i] == oldmtimes[i]:
-	    list[i] = oldlist[i]
-	    continue
+	""" Get a list of files with their filelength and 
+	(if mp3) bitrate and track length in seconds """
+	list = {}
+	for i in mtimes:
+		if hiddenCheck(i):
+			continue	
+		if oldmtimes.has_key(i):
+			if mtimes[i] == oldmtimes[i]:
+				list[i] = oldlist[i]
+	    			continue
 
-	list[i] = []
-	try:
-	    contents = dircache.listdir(i)
-	except OSError, errtuple:
-	    print errtuple
-	    continue
-	for f in contents:
-	    if hiddenCheck(f):
-		continue	
-	    pathname = os.path.join(i, f)
-	    
-	    try:
-	        isfile = os.path.isfile(pathname)
-	    except OSError, errtuple:
-	        print errtuple
-	        continue
-	    else:
-		if isfile:
-                    # It's a file, check if it is mp3
-	            list[i].append(getFileInfo(f,pathname))
-	    if yieldcall is not None:
-                yieldcall()
-
-    return list
+		list[i] = []
+		if win32:
+			# force Unicode for reading from disk
+			i = u"%s" %i
+		try:
+			contents = dircache.listdir(i)
+		except OSError, errtuple:
+			print errtuple
+			if log:
+				log(str(errtuple))
+			continue
+		if win32:
+			# remove Unicode for saving in list
+			i = str(i)
+		for f in contents:
+			if win32:
+				# remove Unicode for saving in list
+				f = str(f)
+			if hiddenCheck(f):
+				continue	
+			pathname = os.path.join(i, f)
+			if win32:
+				# force Unicode for reading from disk
+				pathname = u"%s" %pathname
+			try:
+				isfile = os.path.isfile(pathname)
+			except OSError, errtuple:
+				print errtuple
+				continue
+			else:
+				if isfile:
+					# It's a file, check if it is mp3
+					list[i].append(getFileInfo(f,pathname))
+			if yieldcall is not None:
+				yieldcall()
+	
+	return list
 
 def getFileInfo(name, pathname):
-    size = os.path.getsize(pathname)   
+    size = os.path.getsize(pathname)
+    if win32:
+        # remove Unicode for saving in list
+        name_f = str(name)
+    else:
+        name_f = name
     if name[-4:] == ".mp3" or name[-4:] == ".MP3":
-	mp3info=mp3.detect_mp3(pathname)
+        mp3info=mp3.detect_mp3(pathname)
         if mp3info:
             bitrateinfo = (mp3info["bitrate"],mp3info["vbr"])
-            fileinfo = (name,size,bitrateinfo,mp3info["time"])
+            fileinfo = (name_f,size,bitrateinfo,mp3info["time"])
         else:
-            fileinfo = (name,size,None,None)
+            fileinfo = (name_f,size,None,None)
     elif vorbis and (name[-4:] == ".ogg" or name[-4:] == ".OGG"):
+
 	try:
 	    vf = vorbis.VorbisFile(pathname)
 	    time = int(vf.time_total(0))
 	    bitrate = vf.bitrate(0)/1000
-	    fileinfo = (name,size, (bitrate,0), time)
+	    fileinfo = (name_f,size, (bitrate,0), time)
 	except:
-	    fileinfo = (name,size,None,None)
+	    fileinfo = (name_f,size,None,None)
     else:
-	fileinfo = (name,size,None,None)
+	fileinfo = (name_f,size,None,None)
     return fileinfo
 
 
@@ -227,7 +266,7 @@ def getIndexWords(dir,file,shareddirs):
     import os.path,string
     for i in shareddirs:
 	if os.path.commonprefix([dir,i]) == i:
-	    dir = dir[len(i):]
+	    dir = dir[len(i):]    
     words = string.split(string.lower(string.translate(dir+' '+file, string.maketrans(string.punctuation,string.join([' ' for i in string.punctuation],'')))))
     # remove duplicates
     d = {}

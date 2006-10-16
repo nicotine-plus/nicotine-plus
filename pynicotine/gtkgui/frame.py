@@ -1274,9 +1274,13 @@ class testwin(MainWindow):
 		if user == self.np.config.sections["server"]["login"]:
 			try:
 				if self.np.config.sections["userinfo"]["pic"] != "":
-					if os.path.exists(self.np.config.sections["userinfo"]["pic"]):
+					if sys.platform == "win32":
+						userpic = u"%s" % self.np.config.sections["userinfo"]["pic"]
+					else:
+						userpic = self.np.config.sections["userinfo"]["pic"]
+					if os.path.exists(userpic):
 						has_pic = True
-						f=open(self.np.config.sections["userinfo"]["pic"],'rb')
+						f=open(userpic,'rb')
 						pic = f.read()
 						f.close()
 					else:
