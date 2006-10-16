@@ -29,7 +29,7 @@ doc_files = glob.glob(os.path.join("doc", "*"))
 for file in doc_files:
 	files.append((os.path.join(sys.prefix, "share", "nicotine", "documentation"), [file]))
 files.append((os.path.join(sys.prefix, "share", "applications"), ["files/nicotine.desktop"]))
-files.append((os.path.join(sys.prefix, "share", "pixmaps"), ["files/nicotine_clear.png"]))
+files.append((os.path.join(sys.prefix, "share", "pixmaps"), ["files/nicotine-plus-32px.png"]))
 if sys.platform.startswith("win"):
   try:
     import py2exe

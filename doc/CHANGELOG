@@ -1,21 +1,48 @@
 ChangeLog for Nicotine Plus
-UNRELEASED
- * Added Urgency Hint on highlight (Titlebar flashes, or WM tries to get 
-   your attention)
- * Added 'Copy all' menu item to Room Status logs and the debug log 
+
+1.2.6pre1
+INTERFACE CHANGES
+ * Display shares-scanning errors in the Log Window
+ * Added Titlebar messages on Private Chat and nick mention in Chat Rooms
+ * Disabled: Urgency Hint on highlight (Titlebar flashes, or WM tries to get 
+   your attention) Doesn't work very well, disabled for now.
+ * Popup a warning message if the Guide cannot be found
+ * Added 'Copy all' menu item to Room Status logs and the debug log
  * Also added icons to the Clear log and the Remove Dislike menu items 
- * Search's Close button also "ignores" the search, like the X button the tab.
- * Use a safer method to save the config file
- * nicotine.desktop and nicotine_clear.png are installed to 
-   $PREFIX/share/applications and $PREFIX/share/pixmaps
- * Fixed a bug with the Trayicon intially being icon-less
  * Enlarged number entry boxes in Transfer Settings
- 
+ * Added thread protection to File/Directory Chooser (was getting freezes)
+
+SEARCH
+ * Search's Close button also "ignores" the search, like the X button the tab.
+
+CONFIG
+ * Use a safer method to save the config file. Create 'config.new', move old 
+   'config' to 'config.old', rename 'config.new' to 'config' (from 1.1.0pre1)
+
+PACKAGING
+ * Added 4 nicotine-plus-??px.png icons 16px, 32px, 64px and 96px. 
+ * nicotine.desktop and nicotine-plus-32px.png are installed to 
+   $PREFIX/share/applications and $PREFIX/share/pixmaps
+
+WINDOWS
+ * Added elaborate Unicode filename-reading hack. This should allow 
+   non-latin files/directories to be added to the shares. (Since this feature
+   breaks in Linux, Windows detection is used throughout the filescanner 
+   converting strings to unicode and back.
+ * Always load dbhash module on Windows
+
+NETWORKING
+ * Re-enable Server Ping (120 sec) and Timeout for Connection Close (120 sec)
+ * Spoof warning now includes the IP and port of the user sending the message.
+
+TRAY ICON
+ * Fixed a bug with the Trayicon intially being icon-less
+
 TRANSLATIONS
  * Hungarian translation updated (djbaloo)
- * UnfinishedPortuguese-Brazilian translation added (SucideSolution)
+ * UnfinishedPortuguese-Brazilian translation added (SuicideSolution)
  * Slovak Translation Updated (Jozef)
- 
+
 1.2.5.1 September 18th 2006
 Bugfix Release
  * Made TrayIcon not attempt to load on 'win32' operating systems
