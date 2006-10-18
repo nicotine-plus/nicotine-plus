@@ -738,8 +738,10 @@ class NetworkEventProcessor:
 		self.logMessage("%s %s" %(msg.__class__, vars(msg)),1)
 		return
 	try:
-	    if win32:
+	    if sys.platform == "win32":
 		    userpic = u"%s" % self.config.sections["userinfo"]["pic"]
+		    if not os.path.exists(userpic):
+		    	userpic = self.config.sections["userinfo"]["pic"]
 	    else:
 		    userpic = self.config.sections["userinfo"]["pic"]
 	    f=open(userpic,'rb')
