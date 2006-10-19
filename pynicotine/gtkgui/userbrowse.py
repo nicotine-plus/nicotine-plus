@@ -229,7 +229,7 @@ class UserBrowse(UserBrowseTab):
 
 	def OnSave(self, widget):
 		configdir, config = os.path.split(self.frame.np.config.filename)
-		sharesdir = configdir+os.sep+"usershares"+os.sep
+		sharesdir = os.path.abspath(configdir+os.sep+"usershares"+os.sep)
 			
 		try:
 			if not os.path.exists(sharesdir):

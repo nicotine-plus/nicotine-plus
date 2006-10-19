@@ -143,7 +143,7 @@ class testwin(MainWindow):
                           self.MainWindow.unmap()
                           self.is_mapped = 0
                       elif option == 1:
-			if sys.platform == "win32":
+			if sys.platform == "win32" and self.trayicon:
 				self.trayicon.hide_icon()
                         gtk.main_quit()
                         return False
@@ -616,7 +616,14 @@ class testwin(MainWindow):
 		
 	def OnLoadFromDisk(self, widget):
 		configdir, config = os.path.split(self.np.config.filename)
-		sharesdir = configdir+os.sep+"usershares"+os.sep
+		sharesdir = os.path.abspath(configdir+os.sep+"usershares"+os.sep)
+		try:
+			if not os.path.exists(sharesdir):
+				os.mkdir(sharesdir)
+		except Exception, msg:
+			error = _("Can't create directory '%s', reported error: %s" % (sharesdir, msg))
+			print error
+			self.logMessage(error)
 		shares = ChooseFile(self.MainWindow.get_toplevel(), sharesdir)
 		if shares is None:
 			return
