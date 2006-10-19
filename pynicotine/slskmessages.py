@@ -1037,9 +1037,7 @@ class FileSearchResult(PeerMessage):
             print error
             self.list={}
             return
-#        f = open("ttt","w")
-#        f.write(message)
-#        f.close()
+
 	len, self.user = self.getObject(message,types.StringType)
 	len, self.token = self.getObject(message,types.IntType,len)
         len, nfiles = self.getObject(message,types.IntType, len)
@@ -1052,10 +1050,11 @@ class FileSearchResult(PeerMessage):
             len, ext = self.getObject(message,types.StringType, len)
             len, numattr = self.getObject(message, types.IntType, len)
             attrs = []
-            for j in range(numattr):
-                len, attrnum = self.getObject(message,types.IntType, len)
-                len, attr = self.getObject(message,types.IntType, len)
-                attrs.append(attr)
+            if numattr:
+		for j in range(numattr):
+			len, attrnum = self.getObject(message,types.IntType, len)
+			len, attr = self.getObject(message,types.IntType, len)
+			attrs.append(attr)
             list.append([code,name,size,ext,attrs])
         self.list = list
 	len, self.freeulslots = len+1, ord(message[len])
@@ -1069,16 +1068,7 @@ class FileSearchResult(PeerMessage):
 		filelist.append(self.fileindex[str(i)])
 	    except:
 		pass
-	#count = 0
-	#for i in filelist:
-	    #if i[0][-4:].lower() == ".ogg":
-		#count += 1
-	    #else:
-		#count -= 1
-	#if count > 0:
-	    #queuesize = self.inqueue[1]
-	#else:
-	    #queuesize = self.inqueue[0]
+
 	if self.fifoqueue:
 	    queuesize = self.inqueue[0]
 	else:

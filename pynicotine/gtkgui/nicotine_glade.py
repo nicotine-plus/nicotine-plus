@@ -992,6 +992,35 @@ class MainWindow:
 
         self.hbox22.pack_start(self.sSharesButton, False, False, 0)
 
+        self.LoadFromDisk = gtk.Button()
+        self.LoadFromDisk.show()
+        self.LoadFromDisk.connect("clicked", self.OnLoadFromDisk)
+
+        self.alignment39 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment39.show()
+
+        self.hbox60 = gtk.HBox(False, 2)
+        self.hbox60.show()
+        self.hbox60.set_spacing(2)
+
+        self.image310 = gtk.Image()
+        self.image310.set_padding(0, 0)
+        self.image310.set_from_stock(gtk.STOCK_OPEN, 4)
+        self.image310.show()
+        self.hbox60.pack_start(self.image310, False, False, 0)
+
+        self.label68 = gtk.Label(_("Load From Disk"))
+        self.label68.set_padding(0, 0)
+        self.label68.set_line_wrap(False)
+        self.label68.show()
+        self.hbox60.pack_start(self.label68, False, False, 0)
+
+        self.alignment39.add(self.hbox60)
+
+        self.LoadFromDisk.add(self.alignment39)
+
+        self.hbox22.pack_start(self.LoadFromDisk, False, False, 0)
+
         self.userbrowsevbox.pack_start(self.hbox22, False, True, 0)
 
         self.UserBrowseNotebook = self.get_custom_widget("UserBrowseNotebook", "", "", 0, 0)
@@ -1408,6 +1437,9 @@ class MainWindow:
         pass
 
     def OnClearSearchHistory(self, widget):
+        pass
+
+    def OnLoadFromDisk(self, widget):
         pass
 
     def OnSimilarUsersClicked(self, widget):
@@ -2546,17 +2578,23 @@ class UserBrowseTab:
         self.progressbar1.show()
         self.hbox9.pack_start(self.progressbar1, False, False, 0)
 
-        self.button12 = gtk.Button(None, gtk.STOCK_CLOSE)
-        self.button12.show()
-        self.button12.connect("clicked", self.OnClose)
+        self.CloseButton = gtk.Button(None, gtk.STOCK_CLOSE)
+        self.CloseButton.show()
+        self.CloseButton.connect("clicked", self.OnClose)
 
-        self.hbox9.pack_end(self.button12, False, False, 0)
+        self.hbox9.pack_end(self.CloseButton, False, False, 0)
 
-        self.button13 = gtk.Button(None, gtk.STOCK_REFRESH)
-        self.button13.show()
-        self.button13.connect("clicked", self.OnRefresh)
+        self.RefreshButton = gtk.Button(None, gtk.STOCK_REFRESH)
+        self.RefreshButton.show()
+        self.RefreshButton.connect("clicked", self.OnRefresh)
 
-        self.hbox9.pack_end(self.button13, False, False, 0)
+        self.hbox9.pack_end(self.RefreshButton, False, False, 0)
+
+        self.SaveButton = gtk.Button(None, gtk.STOCK_SAVE)
+        self.SaveButton.show()
+        self.SaveButton.connect("clicked", self.OnSave)
+
+        self.hbox9.pack_end(self.SaveButton, False, False, 0)
 
         self.sMain.pack_start(self.hbox9, False, True, 0)
 
@@ -2590,6 +2628,9 @@ class UserBrowseTab:
         pass
 
     def OnRefresh(self, widget):
+        pass
+
+    def OnSave(self, widget):
         pass
 
     def get_custom_widget(self, id, string1, string2, int1, int2):

@@ -1,7 +1,7 @@
 # Copyright (c) 2003-2004 Hyriand. All rights reserved.
 #
 import gtk
-import os
+import os, sys
 import urllib
 import gobject
 
@@ -226,11 +226,32 @@ class UserBrowse(UserBrowseTab):
 		model = BrowseDirsModel(self.decode, list)
 		self.FolderTreeView.set_model(model)
 		self.FolderTreeView.set_sensitive( True)
+
+	def OnSave(self, widget):
+		configdir, config = os.path.split(self.frame.np.config.filename)
+		sharesdir = configdir+os.sep+"usershares"+os.sep
+			
+		try:
+			if not os.path.exists(sharesdir):
+				os.mkdir(sharesdir)
+		except OSError, msg:
+			print "Can't create directory '%s', reported error: %s" % (sharesdir, msg)
+		try:
+			import pickle
+			import bz2
+			sharesfile = bz2.BZ2File(os.path.join(sharesdir, self.user), 'w' )
+			pickle.dump(self.list, sharesfile)
+ 			sharesfile.close()
+		except OSError, msg:
+			 print "Can't save shares, '%s', reported error: %s" % (sharesfile, msg)
 		
 	def ShowInfo(self, msg):
 		self.conn = None
 		self.MakeNewModel(msg.list)
-
+		
+	def LoadShares(self, username, list):
+		self.MakeNewModel(list)
+		
 	def UpdateGauge(self, msg):
 		if msg.total == 0 or msg.bytes == 0:
 			fraction = 0.0

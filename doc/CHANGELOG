@@ -1,7 +1,9 @@
 ChangeLog for Nicotine Plus
 
-1.2.6pre1
+1.2.6pre2
 INTERFACE CHANGES
+ * Users' Shares lists can be saved to disk and then reloaded them, for ease 
+   and speed. On *nix, these files will be stored in ~/.nicotine/usershares/
  * Display shares-scanning errors in the Log Window
  * Added Titlebar messages on Private Chat and nick mention in Chat Rooms
  * Disabled: Urgency Hint on highlight (Titlebar flashes, or WM tries to get 
@@ -11,8 +13,7 @@ INTERFACE CHANGES
  * Also added icons to the Clear log and the Remove Dislike menu items 
  * Enlarged number entry boxes in Transfer Settings
  * Added thread protection to File/Directory Chooser (was getting freezes)
-
-SEARCH
+ SEARCH
  * Search's Close button also "ignores" the search, like the X button the tab.
 
 CONFIG

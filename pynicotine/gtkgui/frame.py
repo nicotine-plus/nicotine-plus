@@ -31,7 +31,7 @@ from pynicotine.config import *
 import utils
 from utils import AppendLine, ImageLabel, IconNotebook, ScrollBottom, PopupMenu, Humanize, popupWarning
 import translux
-
+from dirchooser import ChooseFile
 from pynicotine.utils import _
 
 from entrydialog import  *
@@ -613,7 +613,34 @@ class testwin(MainWindow):
 			return
 		self.BrowseUser(text)
 		self.SharesEntry.set_text("")
-
+		
+	def OnLoadFromDisk(self, widget):
+		configdir, config = os.path.split(self.np.config.filename)
+		sharesdir = configdir+os.sep+"usershares"+os.sep
+		shares = ChooseFile(self.MainWindow.get_toplevel(), sharesdir)
+		if shares is None:
+			return
+		for share in shares: # iterate over selected files
+			share1 = share
+			break
+		try:
+			
+			import pickle, bz2
+			sharefile = bz2.BZ2File(share1)
+			list1 = pickle.load(sharefile)
+			sharefile.close()
+			if not isinstance(list1, dict):
+				raise TypeError, "Bad data in file %s" % share1
+			username = share1.split(os.sep)[-1]
+			self.userbrowse.InitWindow(username, [])
+			if username in self.userbrowse.users:
+				self.userbrowse.users[username].LoadShares(username, list1)
+		except Exception, msg:
+			error = _("Loading Shares from disk failed: %s" % msg)
+			self.logMessage(error)
+			print error
+			
+	
 	def OnGetPrivateChat(self, widget):
 		text = self.PrivateChatEntry.get_text()
 		if not text:
