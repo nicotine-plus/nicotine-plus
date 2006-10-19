@@ -241,7 +241,7 @@ class UserBrowse(UserBrowseTab):
 		try:
 			import pickle
 			import bz2
-			sharesfile = bz2.BZ2File(self.encode(os.path.join(sharesdir, self.user)), 'w' )
+			sharesfile = bz2.BZ2File(os.path.join(sharesdir, self.encode(self.user)), 'w' )
 			pickle.dump(self.list, sharesfile)
  			sharesfile.close()
 		except Exception, msg:
