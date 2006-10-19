@@ -245,7 +245,7 @@ class UserBrowse(UserBrowseTab):
 			pickle.dump(self.list, sharesfile)
  			sharesfile.close()
 		except Exception, msg:
-			error = _("Can't save shares, '%s', reported error: %s" % (sharesfile, msg) )
+			error = _("Can't save shares, '%s', reported error: %s" % (self.user, msg) )
 			print error
 			self.frame.logMessage(error)
 			
