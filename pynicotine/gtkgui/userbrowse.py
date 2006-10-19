@@ -234,17 +234,31 @@ class UserBrowse(UserBrowseTab):
 		try:
 			if not os.path.exists(sharesdir):
 				os.mkdir(sharesdir)
-		except OSError, msg:
-			print "Can't create directory '%s', reported error: %s" % (sharesdir, msg)
+		except Exception, msg:
+			error = _("Can't create directory '%s', reported error: %s" % (sharesdir, msg))
+			print error
+			self.frame.logMessage(error)
 		try:
 			import pickle
 			import bz2
-			sharesfile = bz2.BZ2File(os.path.join(sharesdir, self.user), 'w' )
+			sharesfile = bz2.BZ2File(self.encode(os.path.join(sharesdir, self.user)), 'w' )
 			pickle.dump(self.list, sharesfile)
  			sharesfile.close()
-		except OSError, msg:
-			 print "Can't save shares, '%s', reported error: %s" % (sharesfile, msg)
-		
+		except Exception, msg:
+			error = _("Can't save shares, '%s', reported error: %s" % (sharesfile, msg) )
+			print error
+			self.frame.logMessage(error)
+			
+	def encode(self, path):
+		try:
+			if sys.platform == "win32":
+				chars = ["?", "\/", "\"", ":", ">", "<", "|", "*"]
+				for char in chars:
+					path = path.replace(char, "_")
+			return path
+		except:
+			return path
+	
 	def ShowInfo(self, msg):
 		self.conn = None
 		self.MakeNewModel(msg.list)
