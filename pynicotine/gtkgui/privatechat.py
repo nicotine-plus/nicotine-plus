@@ -17,6 +17,7 @@ class PrivateChats(IconNotebook):
 		self.popup_enable()
 		self.set_tab_pos(gtk.POS_TOP)
 		self.frame = frame
+		self.connected = 1
 		self.users = {}
 		self.connect("switch-page", self.OnSwitchPage)
 
@@ -51,7 +52,7 @@ class PrivateChats(IconNotebook):
 		if text is not None:
 			self.users[user].SendMessage(text)
 	
-	def ShowMessage(self, msg, text):
+	def ShowMessage(self, msg, text, status=None):
 		if msg.user in self.frame.np.config.sections["server"]["ignorelist"]:
 			return
 
@@ -61,13 +62,14 @@ class PrivateChats(IconNotebook):
 			text = "CTCP VERSION"
 		self.SendMessage(msg.user, None)
 		tab = self.users[msg.user]
-		tab.ShowMessage(text)
+		tab.ShowMessage(text, status)
 		if ctcpversion and self.frame.np.config.sections["server"]["ctcpmsgs"] == 0:
-			self.SendMessage(msg.user, "Nicotine %s" % version)
+			self.SendMessage(msg.user, "Nicotine-Plus %s" % version)
 		self.request_changed(tab.Main)
 		self.frame.RequestIcon(self.frame.PrivateChatTabLabel)
 		if self.get_current_page() != self.page_num(self.users[msg.user].Main) or self.frame.notebook1.get_current_page() != 1:
 			self.frame.Notification("private", msg.user)
+		
 		#else:
 			#self.frame.MainWindow.set_urgency_hint(False)
 
@@ -80,7 +82,18 @@ class PrivateChats(IconNotebook):
 		if tab.user in self.frame.tray_status["hilites"]["private"]:
 			self.frame.ClearNotification("private", tab.user)
 		del self.users[tab.user]
-	
+
+	def Login(self):
+		self.connected = 1
+		for user in self.users:
+			self.users[user].Login()
+					
+	def ConnClose(self):
+		self.connected = 0
+		for user in self.users:
+			self.users[user].ConnClose()
+			
+			
 class PrivateChat(PrivateChatTab):
 	def __init__(self, chats, user):
 		PrivateChatTab.__init__(self, False)
@@ -90,8 +103,8 @@ class PrivateChat(PrivateChatTab):
 		self.frame = chats.frame
 		self.logfile = None
 		self.autoreplied = 0
+		self.offlinemessage = 0
 		self.status = -1
-
 		self.Elist = {}
 		self.encoding, m = EncodingsMenu(self.frame.np, "userencoding", user)
 		self.EncodingStore = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
@@ -148,7 +161,14 @@ class PrivateChat(PrivateChatTab):
 		if self.frame.translux:
 			self.frame.translux.unsubscribe(self.tlux_chat)
 		self.Main.destroy()
-
+		
+	def Login(self):
+		AppendLine(self.ChatScroll, _("--- reconnected ---"), self.tag_hilite, "%c")
+		
+	def ConnClose(self):
+		AppendLine(self.ChatScroll, _("--- disconnected ---"), self.tag_hilite, "%c")
+		self.offlinemessage = 0
+		
 	def OnPopupMenu(self, widget, event):
 		if event.button != 3:
 			return
@@ -160,7 +180,7 @@ class PrivateChat(PrivateChatTab):
 		self.ChatScroll.emit_stop_by_name("button_press_event")
 		return True
 
-	def ShowMessage(self, text):
+	def ShowMessage(self, text, status=None):
 		if text[:4] == "/me ":
 			line = "* %s %s" % (self.user, text[4:])
 			tag = self.tag_me
@@ -176,6 +196,10 @@ class PrivateChat(PrivateChatTab):
 		if self.frame.away and not self.autoreplied and autoreply:
 			self.SendMessage("[Auto-Message] %s" % autoreply)
 			self.autoreplied = 1
+		if status and not self.offlinemessage:
+			AppendLine(self.ChatScroll, _("* Message(s) sent while you were offline."), self.tag_hilite, "%c")
+			self.offlinemessage = 1
+			
 
 	def SendMessage(self, text):
 
@@ -206,7 +230,7 @@ class PrivateChat(PrivateChatTab):
 		if not text:
 			widget.set_text("")
 			return
-			
+		
 		s = text.split(" ", 1)
 		cmd = s[0]
 		if len(s) == 2 and s[1]:
@@ -297,7 +321,10 @@ class PrivateChat(PrivateChatTab):
 		else:
 			if text[:2] == "//":
 				text = text[1:]
-			self.SendMessage(text)
+			if self.chats.connected:
+				self.SendMessage(text)
+				widget.set_text("")
+			return
 		widget.set_text("")
 
 	def UpdateColours(self):

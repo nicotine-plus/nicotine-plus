@@ -420,6 +420,7 @@ class NetworkEventProcessor:
 		self.logMessage(_("Removed connection closed by peer: %s %s") %(conn, addr),1)
 	
     def Login(self,msg):
+	self.logintime = time.time()
 	conf = self.config.sections
 	if msg.success:
 	    self.setStatus(_("Logged in, getting the list of rooms..."))
@@ -434,6 +435,7 @@ class NetworkEventProcessor:
                 self.queue.put(slskmessages.AddThingILike(self.encode(thing)))
 	    for thing in self.config.sections["interests"]["dislikes"]:
                 self.queue.put(slskmessages.AddThingIHate(self.encode(thing)))
+	    self.privatechat.Login()
 	else:
 	    self.frame.manualdisconnect = 1
 	    self.setStatus(_("Can not log in, reason: %s") %(msg.reason))
@@ -441,8 +443,13 @@ class NetworkEventProcessor:
 
 
     def MessageUser(self, msg):
+	status = 0
+	if time.time() <= self.logintime + 2:
+		# Offline message 
+		status = 1
+		
 	if self.privatechat is not None:
-	    self.privatechat.ShowMessage(msg,msg.msg)
+	    self.privatechat.ShowMessage(msg,msg.msg,status=status)
 	    self.queue.put(slskmessages.MessageAcked(msg.msgid))
        	else:
             self.logMessage("%s %s" %(msg.__class__, vars(msg)))

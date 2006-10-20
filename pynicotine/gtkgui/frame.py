@@ -938,6 +938,7 @@ class testwin(MainWindow):
 		self.load_image()
 		self.searches.interval = 0
 		self.chatrooms.ConnClose()
+		self.privatechats.ConnClose()
 		self.searches.ConnClose()
 		self.uploads.ConnClose()
 		self.downloads.ConnClose()
