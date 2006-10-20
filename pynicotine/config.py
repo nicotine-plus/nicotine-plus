@@ -69,7 +69,7 @@ class Config:
  	"urls":{"urlcatching":1,"protocols":{"http":"firefox \"%s\" &"}, \
  	"humanizeurls":1}, "interests": {"likes":[], "dislikes":[]}, \
 	"ticker": {"default": "", "rooms": {}, "hide": 0},\
-	"players": {"default": "xmms -e "}}
+	"players": {"default": "xmms -e ", "npothercommand": "", "npplayer": "infopipe", "npformatlist": [], "npformat": "" }}
 
  	try:
  	    f = open(filename+".alias")
@@ -104,7 +104,7 @@ class Config:
 		    print "Bogus config section:",i
 		elif j not in self.sections[i].keys() and j != "filter":
 		    print "Bogus config option",j,"section",i
-		elif j in ['login','passw','enc','downloaddir','customban','descr','pic','logsdir','incompletedir', 'autoreply', 'afterfinish', 'afterfolder', 'default', 'chatfont'] or (i == "ui" and j not in ["roomlistcollapsed", "tabclosers",  'buddylistinchatrooms', "trayicon", "soundenabled", "speechenabled"]):
+		elif j in ['login','passw','enc','downloaddir','customban','descr','pic','logsdir','incompletedir', 'autoreply', 'afterfinish', 'afterfolder', 'default', 'chatfont', "npothercommand", "npplayer", "npformat"] or (i == "ui" and j not in ["roomlistcollapsed", "tabclosers",  'buddylistinchatrooms', "trayicon", "soundenabled", "speechenabled"]):
 		    self.sections[i][j] = val
 		else:
 		    try:

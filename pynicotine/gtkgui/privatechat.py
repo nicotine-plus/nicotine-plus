@@ -220,7 +220,7 @@ class PrivateChat(PrivateChatTab):
 		self.frame.np.queue.put(slskmessages.MessageUser(self.user, text))
 	
 	CMDS = ["/alias ", "/unalias ", "/whois ", "/browse ", "/ip ", "/pm ", "/msg ", "/search ", "/usearch ", "/rsearch ",
-		"/bsearch ", "/add ", "/ban ", "/ignore ", "/unban ", "/unignore ", "/clear", "/quit", "/rescan", "/nsa", "/info", "/ctcpversion"]
+		"/bsearch ", "/add ", "/buddy ", "/rem ", "/unbuddy ", "/ban ", "/ignore ", "/unban ", "/unignore ", "/clear", "/quit", "/rescan", "/nsa", "/info", "/ctcpversion"]
 
 	def OnEnter(self, widget):
 		text = self.frame.np.encode(widget.get_text(), self.encoding)
@@ -287,9 +287,12 @@ class PrivateChat(PrivateChatTab):
 			if realargs:
 				self.frame.searches.DoSearch(realargs, 2)
 				self.frame.OnSearch(None)
-		elif cmd in ["/ad", "/add"]:
+		elif cmd in ["/ad", "/add", "/buddy"]:
 			if args:
 				self.frame.userlist.AddToList(args)
+		elif cmd in ["/rem", "/unbuddy"]:
+			if args:
+				self.frame.userlist.RemoveFromList(args)
 		elif cmd == "/ban":
 			if args:
 				self.frame.BanUser(args)
@@ -313,6 +316,10 @@ class PrivateChat(PrivateChatTab):
 			self.frame.OnExit(None)
 		elif cmd in ["/c", "/close"]:
 			self.OnClose(None)
+		elif cmd == "/now":
+			np = self.frame.now.DisplayNowPlaying(None)
+			if np:
+				self.SendMessage(np)
 		elif cmd == "/rescan":
 			self.frame.OnRescan()
 		elif cmd and cmd[:1] == "/" and cmd != "/me" and cmd[:2] != "//":

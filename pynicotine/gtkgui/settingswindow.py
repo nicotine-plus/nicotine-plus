@@ -366,17 +366,11 @@ class UserinfoFrame(settings_glade.UserinfoFrame):
 
 		
 	def OnChooseImage(self, widget):
-		
 		dlg = ChooseImage(initialfile=self.Image.get_text())
-		#dlg = gtk.FileSelection()
-		#dlg.set_filename(self.Image.get_text())
 		if dlg:
-		#result = dlg.run()
-		#if result == gtk.RESPONSE_OK:
 			for file in dlg:
 				self.Image.set_text(file)
 				break
-		#dlg.destroy()
 
 class BanFrame(settings_glade.BanFrame):
 	def __init__(self):

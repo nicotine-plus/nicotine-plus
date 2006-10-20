@@ -2,6 +2,10 @@ ChangeLog for Nicotine Plus
 
 1.2.6pre2
 INTERFACE CHANGES
+ * Added a GUI for new built-in NowPlaying scripts and new /now command to use
+   them. Supported players: Amarok, Rhythmbox, BMPx, XMMS/Infopipe, MPD/mpc.
+   An 'other' player option also exists.
+ * Added /buddy, /rem, unbuddy commands to Private Chat and Chat Rooms. 
  * The Userinfo Picture file chooser now displays a preview of the image
  * Private Chat does not allow you to send messages while offline. New
    disconnected and reconnected messages appear in the chat log. Another new

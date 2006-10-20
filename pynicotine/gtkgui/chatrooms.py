@@ -475,7 +475,7 @@ class ChatRoom(ChatRoomTab):
 
 	
 	CMDS = ["/alias ", "/unalias ", "/whois ", "/browse ", "/ip ", "/pm ", "/msg ", "/search ", "/usearch ", "/rsearch ",
-		"/bsearch ", "/join ", "/leave", "/add ", "/ban ", "/ignore ", "/unban ", "/unignore ", "/clear", "/part ", "/quit",
+		"/bsearch ", "/join ", "/leave", "/add ", "/buddy ", "/rem ", "/unbuddy ", "/ban ", "/ignore ", "/unban ", "/unignore ", "/clear", "/part ", "/quit",
 		"/rescan", "/tick", "/nsa", "/info"]
 
 	def OnEnter(self, widget):
@@ -552,9 +552,12 @@ class ChatRoom(ChatRoomTab):
 				self.frame.np.queue.put(slskmessages.LeaveRoom(args))
 			else:
 				self.frame.np.queue.put(slskmessages.LeaveRoom(self.room))
-		elif cmd in ["/ad", "/add"]:
+		elif cmd in ["/ad", "/add", "/buddy"]:
 			if args:
 				self.frame.userlist.AddToList(args)
+		elif cmd in ["/rem", "/unbuddy"]:
+			if args:
+				self.frame.userlist.RemoveFromList(args)
 		elif cmd == "/ban":
 			if args:
 				self.frame.BanUser(args)
@@ -578,6 +581,10 @@ class ChatRoom(ChatRoomTab):
 			self.frame.OnAway(None)
 		elif cmd in ["/q", "/quit"]:
 			self.frame.OnExit(None)
+		elif cmd == "/now":
+			np = self.frame.now.DisplayNowPlaying(None)
+			if np:
+				self.frame.np.queue.put(slskmessages.SayChatroom(self.room, np))	
 		elif cmd == "/rescan":
 			self.frame.BothRescan()
 		elif cmd  in ["/tick", "/t"]:

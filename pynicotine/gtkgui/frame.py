@@ -33,7 +33,7 @@ from utils import AppendLine, ImageLabel, IconNotebook, ScrollBottom, PopupMenu,
 import translux
 from dirchooser import ChooseFile
 from pynicotine.utils import _
-
+import nowplaying
 from entrydialog import  *
 
 
@@ -392,6 +392,7 @@ class testwin(MainWindow):
 		img = gtk.Image()
 		img.set_from_pixbuf(self.images["away2"])
 		self.awayreturn1.set_image(img)
+		self.now = nowplaying.NowPlaying(self)
 		if self.np.config.needConfig():
 			self.connect1.set_sensitive(0)
 			self.rescan1.set_sensitive(0)
@@ -613,7 +614,7 @@ class testwin(MainWindow):
 			return
 		self.BrowseUser(text)
 		self.SharesEntry.set_text("")
-		
+	
 	def OnLoadFromDisk(self, widget):
 		configdir, config = os.path.split(self.np.config.filename)
 		sharesdir = os.path.abspath(configdir+os.sep+"usershares"+os.sep)
@@ -647,7 +648,11 @@ class testwin(MainWindow):
 			self.logMessage(error)
 			print error
 			
-	
+	def OnNowPlayingConfigure(self, widget):
+		
+		self.now.NowPlaying.show()
+		
+		
 	def OnGetPrivateChat(self, widget):
 		text = self.PrivateChatEntry.get_text()
 		if not text:

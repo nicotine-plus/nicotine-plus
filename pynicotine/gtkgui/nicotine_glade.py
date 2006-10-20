@@ -128,6 +128,14 @@ class MainWindow:
         self.settings1.set_image(img)
         self.file1_menu.append(self.settings1)
 
+        self.now_playing1 = gtk.ImageMenuItem(_("Configure _Now Playing"))
+        self.now_playing1.show()
+        self.now_playing1.connect("activate", self.OnNowPlayingConfigure)
+
+        img = gtk.image_new_from_stock(gtk.STOCK_PREFERENCES, gtk.ICON_SIZE_MENU)
+        self.now_playing1.set_image(img)
+        self.file1_menu.append(self.now_playing1)
+
         self.scheidingslijn6 = gtk.MenuItem()
         self.scheidingslijn6.show()
 
@@ -1365,6 +1373,9 @@ class MainWindow:
         pass
 
     def OnSettings(self, widget):
+        pass
+
+    def OnNowPlayingConfigure(self, widget):
         pass
 
     def OnRescan(self, widget):
