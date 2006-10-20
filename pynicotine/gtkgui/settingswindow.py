@@ -5,7 +5,7 @@ import gobject
 import settings_glade
 import locale
 
-from dirchooser import ChooseDir
+from dirchooser import *
 from utils import InputDialog, InitialiseColumns, recode, recode2, popupWarning
 import os, sys
 win32 = sys.platform.startswith("win")
@@ -363,14 +363,20 @@ class UserinfoFrame(settings_glade.UserinfoFrame):
 				"descrutf8": 1,
 			}
 		}
+
 		
 	def OnChooseImage(self, widget):
-		dlg = gtk.FileSelection()
-		dlg.set_filename(self.Image.get_text())
-		result = dlg.run()
-		if result == gtk.RESPONSE_OK:
-			self.Image.set_text(dlg.get_filename())
-		dlg.destroy()
+		
+		dlg = ChooseImage(initialfile=self.Image.get_text())
+		#dlg = gtk.FileSelection()
+		#dlg.set_filename(self.Image.get_text())
+		if dlg:
+		#result = dlg.run()
+		#if result == gtk.RESPONSE_OK:
+			for file in dlg:
+				self.Image.set_text(file)
+				break
+		#dlg.destroy()
 
 class BanFrame(settings_glade.BanFrame):
 	def __init__(self):

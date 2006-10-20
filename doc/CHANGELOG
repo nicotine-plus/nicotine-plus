@@ -2,6 +2,7 @@ ChangeLog for Nicotine Plus
 
 1.2.6pre2
 INTERFACE CHANGES
+ * The Userinfo Picture file chooser now displays a preview of the image
  * Private Chat does not allow you to send messages while offline. New
    disconnected and reconnected messages appear in the chat log. Another new
    message is displayed if you were sent messages while offline.
@@ -19,7 +20,8 @@ INTERFACE CHANGES
  
 SEARCH
  * Search's Close button also "ignores" the search, like the X button the tab.
-
+ * Fixed bug in "Download file(s) to..." causing the path to be corrupted.
+ 
 CONFIG
  * Use a safer method to save the config file. Create 'config.new', move old 
    'config' to 'config.old', rename 'config.new' to 'config' (from 1.1.0pre1)
