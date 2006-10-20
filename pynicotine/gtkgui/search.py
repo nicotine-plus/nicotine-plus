@@ -563,7 +563,9 @@ class Search(SearchTab):
 		dir = ChooseDir(self.frame.MainWindow, self.frame.np.config.sections["transfers"]["downloaddir"])
 		if dir is None:
 			return
-		self.OnDownloadFiles(widget, dir)
+		for dirs in dir:
+			self.OnDownloadFiles(widget, dirs)
+			break
 	
 	def OnDownloadFolders(self, widget):
 		folders = []
