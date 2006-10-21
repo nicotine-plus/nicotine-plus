@@ -1,6 +1,6 @@
 ChangeLog for Nicotine Plus
 
-1.2.6pre2
+1.2.6
 INTERFACE CHANGES
  * Added a GUI for new built-in NowPlaying scripts and new /now command to use
    them. Supported players: Amarok, Rhythmbox, BMPx, XMMS/Infopipe, MPD/mpc.
