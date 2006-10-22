@@ -51,16 +51,7 @@ class UserTabs(IconNotebook):
 			self.frame.np.queue.put(slskmessages.GetUserStats(user))
 			
 	def ShowLocalInfo(self, user, descr, has_pic, pic, totalupl, queuesize, slotsavail):
-		if self.users.has_key(user):
-			self.users[user].conn = user+str(1234)
-			self.frame.np.queue.put(slskmessages.GetUserStats(user))
-		else:
-			w = self.subwindow(self, user, user+str(1234))
-			self.append_page(w.Main, user[:15], w.OnClose)
-			self.users[user] = w
-			self.frame.np.queue.put(slskmessages.GetUserStatus(user))
-			self.frame.np.queue.put(slskmessages.GetUserStats(user))
-			
+		self.InitWindow(user, None)
 		self.users[user].ShowLocalInfo(user, descr, has_pic, pic, totalupl, queuesize, slotsavail)
 		self.request_changed(self.users[user].Main)
 		if self.mytab is not None:
@@ -87,7 +78,7 @@ class UserInfo(UserInfoTab):
 		self.user = user
 		self.conn = conn
 		self._descr = ""
-		
+				
 		self.Elist = {}
 		self.encoding, m = EncodingsMenu(self.frame.np, "userencoding", user)
 		self.EncodingStore = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
@@ -112,25 +103,27 @@ class UserInfo(UserInfoTab):
 		self.uploads.set_text(_("Total uploads allowed: %i") % totalupl)
 		self.queuesize.set_text(_("Queue size: %i") % queuesize)
 		self.slotsavail.set_text(_("Slots available: %i") % slotsavail)
-
 		if has_pic and pic is not None:
 			try:
+				import gc
 				loader = gtk.gdk.PixbufLoader()
 				loader.write(pic)
 				loader.close()
 				self.image.set_from_pixbuf(loader.get_pixbuf())
-			except TypeError:
+				del pic, loader
+				gc.collect()
+
+			except TypeError, e:
 				name = tempfile.mktemp()
 				f = open(name,"w")
 				f.write(pic)
 				f.close()
 				self.image.set_from_file(name)
 				os.remove(name)
-			except:
+			except Exception, e: 
 				self.image.set_from_pixbuf(None)
 		else:
 			self.image.set_from_pixbuf(None)
-			
 
 	def ShowInfo(self, msg):
 		self.conn = None
@@ -145,10 +138,13 @@ class UserInfo(UserInfoTab):
 
 		if msg.has_pic and msg.pic is not None:
 			try:
+				import gc
 				loader = gtk.gdk.PixbufLoader()
 				loader.write(msg.pic)
 				loader.close()
 				self.image.set_from_pixbuf(loader.get_pixbuf())
+				del loader
+				gc.collect()
 			except TypeError:
 				name = tempfile.mktemp()
 				f = open(name,"w")
