@@ -217,14 +217,13 @@ class UserBrowse(UserBrowseTab):
 		self.FileTreeView.emit_stop_by_name("button_press_event")
 		self.file_popup_menu.popup(None, None, None, event.button, event.time)
 		return True
-		
+
 	def MakeNewModel(self, list):
 		self.list = list
 		self.selected_folder = None
 		self.selected_files = []
 		self.FileTreeView.set_model(BrowseFilesModel(self.decode, []))
-		model = BrowseDirsModel(self.decode, list)
-		self.FolderTreeView.set_model(model)
+		self.FolderTreeView.set_model(BrowseDirsModel(self.decode, list))
 		self.FolderTreeView.set_sensitive( True)
 
 	def OnSave(self, widget):
@@ -263,7 +262,7 @@ class UserBrowse(UserBrowseTab):
 		self.conn = None
 		self.MakeNewModel(msg.list)
 		
-	def LoadShares(self, username, list):
+	def LoadShares(self, list):
 		self.MakeNewModel(list)
 		
 	def UpdateGauge(self, msg):

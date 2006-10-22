@@ -640,9 +640,9 @@ class testwin(MainWindow):
 			if not isinstance(list1, dict):
 				raise TypeError, "Bad data in file %s" % share1
 			username = share1.split(os.sep)[-1]
-			self.userbrowse.InitWindow(username, [])
+			self.userbrowse.InitWindow(username, None)
 			if username in self.userbrowse.users:
-				self.userbrowse.users[username].LoadShares(username, list1)
+				self.userbrowse.users[username].LoadShares(list1)
 		except Exception, msg:
 			error = _("Loading Shares from disk failed: %s" % msg)
 			self.logMessage(error)

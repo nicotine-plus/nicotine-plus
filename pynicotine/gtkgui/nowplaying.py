@@ -50,7 +50,7 @@ class NowPlaying:
 		self.hbox1.set_spacing(5)
 		self.hbox1.set_border_width(3)
 		
-		self.label2 = gtk.Label(_(""))
+		self.label2 = gtk.Label()
 	
 		self.NP_infopipe = gtk.RadioButton()
 		self.NP_infopipe.set_active(False)
@@ -204,7 +204,7 @@ class NowPlaying:
 		self.label6.set_line_wrap(False)
 		self.label6.show()
 		
-		self.label7 = gtk.Label(_(""))
+		self.label7 = gtk.Label()
 		self.label7.set_alignment(0, 0.5)
 		self.label7.set_padding(5, 5)
 		self.label7.set_line_wrap(False)
@@ -334,7 +334,7 @@ class NowPlaying:
 		else:
 			self.NPCommand.set_sensitive(False)
 		if not set:
-			self.label2.set_text(_(""))
+			self.label2.set_text("")
 			
 	def OnNPCancel(self, widget):
 		self.quit(None)

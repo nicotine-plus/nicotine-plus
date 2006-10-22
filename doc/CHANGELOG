@@ -1,5 +1,15 @@
 ChangeLog for Nicotine Plus
 
+Unreleased
+
+TRANSLATIONS
+ * Added Lithuanian Translation (Žygimantas)
+ 
+BUGFIXES
+ * Fixed Big memory leak with PixbufLoader in Userinfo (call garbage collector) 
+ * Fixed large-file (>4GB) file scanning and shares browsing issue
+
+
 1.2.6
 INTERFACE CHANGES
  * Added a GUI for new built-in NowPlaying scripts and new /now command to use
