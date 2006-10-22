@@ -234,7 +234,12 @@ def getDirStream(dir):
 def getByteStream(fileinfo):
     from slskmessages import SlskMessage
     self = SlskMessage()
-    stream = chr(1) + self.packObject(fileinfo[0]) + self.packObject(fileinfo[1]) + self.packObject(0)
+
+    size = fileinfo[1]
+    size1 = size & 0xffffffff
+    size2 = size >> 32
+    
+    stream = chr(1) + self.packObject(fileinfo[0]) + self.packObject(size1) + self.packObject(size2)
     if fileinfo[2] is not None:
         stream = stream + self.packObject('mp3') + self.packObject(3)
         stream = stream + self.packObject(0)+ self.packObject(fileinfo[2][0])+self.packObject(1)+ self.packObject(fileinfo[3])+self.packObject(2)+self.packObject(fileinfo[2][1])
