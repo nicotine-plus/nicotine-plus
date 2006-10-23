@@ -11,10 +11,11 @@ Download & Install
 Required:
 
 - Python (Python-2.4.3.msi)
-- GTK+ (gtk-win32-2.8.18-rc1.exe)
+- GTK+ (gtk-win32-2.8.20-devel.exe)
 - PyGTK (pygtk-2.8.6-1.win32-py2.4.exe)
 - PyCairo (pycairo-1.0.2-1.win32-py2.4.exe)
 - py2exe (py2exe-0.6.5.win32-py2.4.exe)
+- pywin32 (pywin32-210.win32-py2.4.exe)
 
 Optional:
 
@@ -24,9 +25,7 @@ Optional:
 
 Make EXE
 ===================
-Copy tools/make_exe.bat and tools/make_exe.py to source tree
-Copy files/nicotine.ico to source tree
-Run make_exe.bat
+Run make_exe.bat in /tools
 When finished, you can find your win32 Nicotine+ 
 in dist subdirectory of the source tree.
 
@@ -50,3 +49,4 @@ http://www.py2exe.org (Python to exe converter)
 http://psyco.sourceforge.net/ (Psyco for windows)
 http://www.mapr.ucl.ac.be/~gustin/win32_ports/pygtk.html (PyGTK, PyCairo) 
 http://thomas.paviot.free.fr/soya/ (PyOGG & PyVorbis for windows)
+https://sourceforge.net/projects/pywin32/ (PyWin, Python for windows extentions)

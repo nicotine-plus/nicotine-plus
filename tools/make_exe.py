@@ -51,7 +51,7 @@ if __name__ == '__main__' :
           windows               = [{'script': 'nicotine', 'icon_resources': [(1, 'nicotine.ico')]}],
           options               = {
     'py2exe': {
-        'includes': 'cairo,pango,pangocairo,atk,gobject,psyco,ogg',
+        'includes': 'cairo,pango,pangocairo,atk,gobject,psyco,ogg,pywin',
         'dll_excludes': [
             'iconv.dll','intl.dll',
             'libatk-1.0-0.dll',
