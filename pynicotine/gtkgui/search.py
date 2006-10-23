@@ -7,6 +7,7 @@ import re
 import sre_constants
 import locale
 import string
+import random
 
 from pynicotine import slskmessages
 
@@ -20,7 +21,7 @@ class Searches:
 	def __init__(self, frame):
 		self.frame = frame
 		self.interval = 0
-		self.searchid = 0
+		self.searchid = int(random.random() * (2**31-1))
 		self.searches = {}
 		self.timer = None
 		self.disconnected = 0
@@ -42,7 +43,8 @@ class Searches:
 		if not self.disconnected:
 			for term in self.frame.np.config.sections["server"]["autosearch"]:
 				self.CreateTab(self.searchid, term, 0, 1)
-				self.searchid += 1
+				self.searchid = (self.searchid + 1) % (2**31)
+				
 		
 		self.OnAutoSearch()
 		self.timer = gobject.timeout_add(self.interval*1000, self.OnAutoSearch)

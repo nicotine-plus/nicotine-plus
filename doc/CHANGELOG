@@ -6,6 +6,9 @@ TRANSLATIONS
  * Added Lithuanian Translation (Žygimantas)
  
 BUGFIXES
+ * Fixed search results from last session being placed in search result tabs in
+   new session that match their tickets by using random tickets instead 
+   starting from 0.
  * Fixed Big memory leak with PixbufLoader in Userinfo (call garbage collector) 
  * Fixed large-file (>4GB) file scanning and shares browsing issue
 
