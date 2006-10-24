@@ -1523,9 +1523,9 @@ class testwin(MainWindow):
 				self.notebook1.set_current_page(1)
 			return
 		self.ru_popup_menu.set_user(user)
-		items[5].set_active(user in [i[0] for i in self.np.config.sections["server"]["userlist"]])
-		items[6].set_active(user in self.np.config.sections["server"]["banlist"])
-		items[7].set_active(user in self.np.config.sections["server"]["ignorelist"])
+		items[7].set_active(user in [i[0] for i in self.np.config.sections["server"]["userlist"]])
+		items[8].set_active(user in self.np.config.sections["server"]["banlist"])
+		items[9].set_active(user in self.np.config.sections["server"]["ignorelist"])
 		self.ru_popup_menu.popup(None, None, None, event.button, event.time)
 
 	def OnRemoveThingILike(self, widget):
