@@ -894,7 +894,7 @@ class PeerInit(PeerMessage):
     def parseNetworkMessage(self, message):
 	len, self.user = self.getObject(message, types.StringType)
 	len, self.type = self.getObject(message, types.StringType,len)
-	len ,self.token = self.getObject(message, types.IntType, len)
+	len, self.token = self.getObject(message, types.IntType, len)
 
 class UserInfoRequest(PeerMessage):
     """ Ask other peer to send user information, picture and all."""
@@ -924,17 +924,16 @@ class UserInfoReply(PeerMessage):
 	len, self.has_pic = len+1, message[len]
 	if ord(self.has_pic):
 	    len, self.pic = self.getObject(message, types.StringType,len)
-#	len, self.userupl = self.getObject(message, types.IntType, len)
 	len, self.totalupl = self.getObject(message, types.IntType, len)
         len, self.queuesize = self.getObject(message, types.IntType, len)
-        len, self.slotsavail = len+1, ord(message[len])
+	len, self.slotsavail = self.getObject(message, types.IntType, len)
 
     def makeNetworkMessage(self):
 	if self.pic is not None:
 	    pic = chr(1) + self.packObject(self.pic)
 	else:
 	    pic = chr(0)
-	return self.packObject(self.descr)+pic+self.packObject(self.totalupl)+self.packObject(self.queuesize)+chr(self.slotsavail)
+	return self.packObject(self.descr)+pic+self.packObject(self.totalupl)+self.packObject(self.queuesize)+self.packObject(self.slotsavail)
 
 
 class SharedFileList(PeerMessage):

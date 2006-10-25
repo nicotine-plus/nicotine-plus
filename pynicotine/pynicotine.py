@@ -699,14 +699,37 @@ class NetworkEventProcessor:
     	if self.config.sections["transfers"]["geoblockcc"][0].find(cc) >= 0:
     	    return 0, _("Sorry, your country is blocked")
     	return 1, ""
-
+	
+    def CheckSpoof(self, user, ip, port):
+	if not self.users.has_key(user):
+		return 0
+	if self.users[user].addr != None:
+		u_ip, u_port = self.users[user].addr
+		print u_ip, ip
+		if u_ip != ip:
+			warning = _("IP %s:%s is spoofing user %s with a peer request, blocking because it does not match IP: %s") %(ip, port, user, u_ip)
+			self.logMessage(warning , None)
+			print warning 
+			return 1
+	return 0
+	
     def GetSharedFileList(self,msg):
         self.logMessage("%s %s" %(msg.__class__, vars(msg)),1)
-        for i in self.peerconns:
-            if i.conn is msg.conn.conn:
+	user = ip = port = None
+	# Get peer's username, ip and port
+	for i in self.peerconns:
+	    if i.conn is msg.conn.conn:
 	        user = i.username
 		ip, port = i.addr
 		break
+	if user == None:
+		# No peer connection
+		return
+	# Check address is spoofed, if possible
+	#if self.CheckSpoof(user, ip, port):
+		# Message IS spoofed
+	#	return
+               	
 	
 	if user == self.config.sections["server"]["login"]:
 		self.logMessage(_("%s is making a BrowseShares request, blocking possible spoofing attempt from IP %s port %s") %(user, ip, port), None)
@@ -732,11 +755,20 @@ class NetworkEventProcessor:
 			
 	
     def UserInfoRequest(self, msg):
+	user = ip = port = None
+	# Get peer's username, ip and port
 	for i in self.peerconns:
 	    if i.conn is msg.conn.conn:
 	        user = i.username
 		ip, port = i.addr
 		break
+	if user == None:
+		# No peer connection
+		return
+	# Check address is spoofed, if possible
+	#if self.CheckSpoof(user, ip, port):
+		# Message IS spoofed
+	#	return
 	if user == self.config.sections["server"]["login"]:
 		self.logMessage(_("Blocking %s from making a UserInfo request, possible spoofing attempt from IP %s port %s") %(user, ip, port), None)
 		return
@@ -761,7 +793,7 @@ class NetworkEventProcessor:
 	if self.transfers is not None:
 	    totalupl = self.transfers.getTotalUploadsAllowed()
 	    queuesize = self.transfers.getUploadQueueSizes()[0]
-	    slotsavail = not self.transfers.bandwidthLimitReached()
+	    slotsavail = int(not self.transfers.bandwidthLimitReached())
 	    self.queue.put(slskmessages.UserInfoReply(msg.conn.conn,descr,pic,totalupl, queuesize,slotsavail))
 
 	self.logMessage(_("%s is making a UserInfo request") %(user), None)
@@ -1085,7 +1117,7 @@ class NetworkEventProcessor:
 	results = min[:maxresults]
 	if len(results) > 0 and self.transfers is not None:
      	    queuesizes = self.transfers.getUploadQueueSizes()
-            slotsavail = not self.transfers.bandwidthLimitReached()
+            slotsavail = int(not self.transfers.bandwidthLimitReached())
 	    if len(results) > 0:
 		message = slskmessages.FileSearchResult(None, user, geoip, searchid,results,fileindex,slotsavail, self.speed, queuesizes, fifoqueue)
 		self.ProcessRequestToPeer(user, message)
