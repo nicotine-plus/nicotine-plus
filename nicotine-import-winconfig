@@ -23,12 +23,12 @@ def usage():
     print """Usage: nicotine-import-winconfig [OPTIONS] <path_to_the_winslsk_files>
 
   -c file, --config=file  Use non-default nicotine configuration file to write to
-  -q, --queue             Import the queue  
+  -q, --queue             Import the download queue
   -u, --userlist          Import the userlist
   -l, --login             Import the login information
   -C, --chatrooms         Import the list of autojoined chatrooms
   -b, --banned            Import the list of banned users
-  -i  --userinfo          Import the userinfo and the image
+  -i, --userinfo          Import the userinfo and picture
   -h, --help              Print this help message and exit
 
 If no configuration items are specified all are imported.
