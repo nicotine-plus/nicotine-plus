@@ -1,0 +1,51 @@
+.TH NICOTINE-IMPORT-WINCONFIG 1 "October 2006" "Version 1.2.6"
+
+.SH NAME
+.B nicotine-import-winconfig
+is a script to convert SoulSeek Windows client configuration file to the Nicotine format.
+.SH SYNOPSIS
+.B nicotine-import-winconfig
+[options] <path_to_the_windows_soulseek_files>
+.SH DESCRIPTION
+.BI nicotine-import-winconfig
+will read the SoulSeek Windows client configuration file and will extract information like download queue, userlist, login information, list of autojoined chatrooms, list of banned users, user info/picture, and write them to $HOME/.nicotine/config, which is the default nicotine configuration file.
+.SH OPTIONS
+If you don't want to import the whole configuration, you may consider using the command line flags below.
+.TP
+.I -q, --queue
+Import the download queue.
+.TP
+.I -u, --userlist
+Import the userlist.
+.TP
+.I -l, --login
+Import the login information.
+.TP
+.I -C, --chatrooms
+Import the list of autojoined chatrooms.
+.TP
+.I -b, --banned
+Import the list of banned users.
+.TP
+.I -i, --userinfo
+Import the userinfo and picture.
+.TP
+.I -h, --help
+Show help and exit.
+.TP
+.I -c <file>, --config=<file>
+Use <file> as Nicotine configuration file. If <file> do not exists a new empty configuration file will be created.
+.SH EXAMPLES
+Import the SoulSeek Windows client configuration from /mnt/windows into the default nicotine configuration file :
+.PP
+Nicotine should be shut down before doing this.
+.PP
+.B
+nicotine-import-winconfig
+"/mnt/windows/Program Files/SoulSeek"
+.SH AUTHOR
+This manual page was written by Adam Cecile <gandalf@le-vert.net> for the Nicotine+ project.
+.br
+Permission is granted to copy, distribute and/or modify this document under the terms of the GNU General Public License, Version 2 or any later version published by the Free Software Foundation.
+.SH SEE ALSO
+.B nicotine(1)
