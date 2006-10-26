@@ -36,8 +36,8 @@ If no configuration items are specified all are imported.
 Run this script when Nicotine is _not_ running.
 See README.import-winconfig from the Nicotine distribution for more info.
 
-Please report any problems to hyriand on soulseek or
-<hyriand@thegraveyard.org>."""
+Please report any problems to our bugtracker :
+http://www.nicotine-plus.org/newticket"""
 
 def parse_args():
     global opt
