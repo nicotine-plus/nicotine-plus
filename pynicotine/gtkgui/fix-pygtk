@@ -1,2 +1,0 @@
-replace "gtk.TRUE" "True" -- *.py
-replace "gtk.FALSE" "False" -- *.py
