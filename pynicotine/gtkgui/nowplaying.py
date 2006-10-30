@@ -493,7 +493,7 @@ class NowPlaying:
 		if "$b" in slist:
 			output = self.amarok_command("album")
 			if output:
-				self.title["length"] = output
+				self.title["album"] = output
 		if "$c" in slist:
 			output = self.amarok_command("comment")
 			if output: self.title["comment"] = output
