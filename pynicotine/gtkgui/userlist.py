@@ -65,29 +65,29 @@ class UserList:
 			self.usersmodel.set(user[2], 0, self.frame.GetStatusImage(0), 2, "0", 3, "0", 5, 0, 6, 0, 7, 0)
 	
 	def OnPopupMenu(self, widget, event):
-		model, iter = self.frame.UserList.get_selection().get_selected()
-		if not iter:
-			return
-
-		user = model.get_value(iter, 1)
-		
-		if event.button != 3:
-			if event.type == gtk.gdk._2BUTTON_PRESS:
-				self.frame.privatechats.SendMessage(user, None, 1)
-				self.frame.notebook1.set_current_page(1)
-			return
-		
-
-		self.popup_menu.set_user(user)
-		
 		items = self.popup_menu.get_children()
-		
-		items[6].set_active(user in self.frame.np.config.sections["server"]["banlist"])
-		items[7].set_active(user in self.frame.np.config.sections["server"]["ignorelist"])
-		items[9].set_active(user in self.notify)
-		items[10].set_active(user in self.privileged)
-		
-		self.popup_menu.popup(None, None, None, event.button, event.time)
+		d = self.frame.UserList.get_path_at_pos(int(event.x), int(event.y))
+
+		if d:
+			path, column, x, y = d
+			user = self.frame.UserList.get_model().get_value(self.frame.UserList.get_model().get_iter(path), 1)
+			
+			if event.button != 3:
+				if event.type == gtk.gdk._2BUTTON_PRESS:
+					self.frame.privatechats.SendMessage(user, None, 1)
+					self.frame.notebook1.set_current_page(1)
+				return
+			
+			self.popup_menu.set_user(user)
+			
+			items = self.popup_menu.get_children()
+			
+			items[6].set_active(user in self.frame.np.config.sections["server"]["banlist"])
+			items[7].set_active(user in self.frame.np.config.sections["server"]["ignorelist"])
+			items[9].set_active(user in self.notify)
+			items[10].set_active(user in self.privileged)
+			
+			self.popup_menu.popup(None, None, None, event.button, event.time)
 		
 	def GetIter(self, user):
 		iters = [i[2] for i in self.userlist if i[0] == user]
