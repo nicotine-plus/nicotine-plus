@@ -481,6 +481,7 @@ class UserBrowse(UserBrowseTab):
 	def OnClose(self, widget):
 		self.userbrowses.remove_page(self.Main)
 		del self.userbrowses.users[self.user]
+		self.frame.np.ClosePeerConnection(self.conn)
 		self.Main.destroy()
 
 	def OnRefresh(self, widget):

@@ -745,7 +745,14 @@ class NetworkEventProcessor:
 	else:
 	    self.queue.put(slskmessages.SharedFileList(msg.conn.conn,{}))
 	    
-
+    def ClosePeerConnection(self, peerconn):
+	if peerconn == None:
+		return
+	for i in self.peerconns[:]:
+		if i.conn == peerconn:
+			self.queue.put(slskmessages.ConnClose(i.conn))
+			break
+		
     def UserInfoReply(self,msg):
 	for i in self.peerconns:
 	    if i.conn is msg.conn.conn and self.userinfo is not None:
