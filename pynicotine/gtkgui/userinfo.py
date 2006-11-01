@@ -190,6 +190,7 @@ class UserInfo(UserInfoTab):
 	def OnClose(self, widget):
 		self.userinfos.remove_page(self.Main)
 		del self.userinfos.users[self.user]
+		self.frame.np.ClosePeerConnection(self.conn)
 		self.Main.destroy()
 
 	def OnSavePicture(self, widget):
