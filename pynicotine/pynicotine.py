@@ -729,10 +729,10 @@ class NetworkEventProcessor:
 	#if self.CheckSpoof(user, ip, port):
 		# Message IS spoofed
 	#	return
-               	
-	
 	if user == self.config.sections["server"]["login"]:
 		self.logMessage(_("%s is making a BrowseShares request, blocking possible spoofing attempt from IP %s port %s") %(user, ip, port), None)
+		if msg.conn.conn != None:
+			self.queue.put(slskmessages.ConnClose(msg.conn.conn))
 		return
 	self.logMessage(_("%s is making a BrowseShares request") %(user), None)
         addr = msg.conn.addr[0]
@@ -752,8 +752,7 @@ class NetworkEventProcessor:
 		# probably impossible to do this
 		if i.username != self.config.sections["server"]["login"]:
 			self.userinfo.ShowInfo(i.username, msg)
-			
-	
+		
     def UserInfoRequest(self, msg):
 	user = ip = port = None
 	# Get peer's username, ip and port
@@ -771,6 +770,8 @@ class NetworkEventProcessor:
 	#	return
 	if user == self.config.sections["server"]["login"]:
 		self.logMessage(_("Blocking %s from making a UserInfo request, possible spoofing attempt from IP %s port %s") %(user, ip, port), None)
+		if msg.conn.conn != None:
+			self.queue.put(slskmessages.ConnClose(msg.conn.conn))
 		return
 	if user in self.config.sections["server"]["banlist"]:
 		self.logMessage(_("%s is banned, but is making a UserInfo request") %(user), 1)
