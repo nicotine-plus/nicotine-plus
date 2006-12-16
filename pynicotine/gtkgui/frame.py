@@ -1125,6 +1125,10 @@ class NicotineFrame(MainWindow):
 		shared = self.np.config.sections["transfers"]["shared"][:]
 		if self.np.config.sections["transfers"]["sharedownloaddir"]:
 			shared.append(self.np.config.sections["transfers"]["downloaddir"])
+		cleanedshares = []
+		for i in shared:
+			if i not in cleanedshares:
+				cleanedshares.append(i)
 		msg = slskmessages.RescanShares(shared, lambda: None)
 		thread.start_new_thread(self.np.RescanShares, (msg,))
 		
@@ -1137,10 +1141,14 @@ class NicotineFrame(MainWindow):
 		self.rescan2.set_sensitive(False)
 		self.logMessage(_("Rescanning Buddy Shares started"))
 		
-		shared = self.np.config.sections["transfers"]["buddyshared"][:]
+		shared = self.np.config.sections["transfers"]["buddyshared"][:] + self.np.config.sections["transfers"]["shared"][:]
 		if self.np.config.sections["transfers"]["sharedownloaddir"]:
 			shared.append(self.np.config.sections["transfers"]["downloaddir"])
-		msg = slskmessages.RescanBuddyShares(shared, lambda: None)
+		cleanedshares = []
+		for i in shared:
+			if i not in cleanedshares:
+				cleanedshares.append(i)
+		msg = slskmessages.RescanBuddyShares(cleanedshares, lambda: None)
 		thread.start_new_thread(self.np.RescanBuddyShares, (msg,))
 		
 	def _BuddyRescanFinished(self, data):
