@@ -216,6 +216,8 @@ class SlskProtoThread(threading.Thread):
 	    try:
 		input,output,exc = select.select(conns.keys()+connsinprogress.keys()+[p],connsinprogress.keys()+outsock,[],0.5)
 	    except select.error:
+		# Error recieved; terminate networking loop
+		self._ui_callback([_("Major Socket Error: Networking terminated!")])
 		self._want_abort = 1
 	    for i in conns.keys():
 		if i in output:
@@ -350,7 +352,7 @@ class SlskProtoThread(threading.Thread):
                 msg.parseNetworkMessage(buffer[8:msgsize+4])
                 msgs.append(msg)
             else:
-                msgs.append(Notify(_("Server message type %i size %i contents %s unknown") %(msgtype,msgsize-4,buffer[8:msgsize+4].__repr__())))
+                msgs.append(_("Server message type %i size %i contents %s unknown") %(msgtype,msgsize-4,buffer[8:msgsize+4].__repr__()))
 	    buffer = buffer[msgsize+4:]
         return msgs,buffer
 
@@ -415,47 +417,66 @@ class SlskProtoThread(threading.Thread):
         from the buffer, creates message objects and returns them 
         and the rest of the buffer.
         """
-        msgs=[]
+	msgs=[]
 	while (conn.init is None or conn.init.type not in ['F','D']) and len(buffer) >= 8:
-	    msgsize = struct.unpack("<i",buffer[:4])[0]
-	    if len(buffer) >= 8:
-		msgtype = struct.unpack("<i",buffer[4:8])[0]
-                self._ui_callback([PeerTransfer(conn,msgsize,len(buffer)-4,self.peerclasses.get(msgtype,None))])
-	    if msgsize + 4 > len(buffer):
-		break
-	    elif conn.init is None:
-		if buffer[4] == chr(0):
-		    msg = PierceFireWall(conn)
-		    msg.parseNetworkMessage(buffer[5:msgsize+4])
-		    conn.piercefw = msg
-		    msgs.append(msg)
-		elif buffer[4] == chr(1):
-		    msg = PeerInit(conn)
-		    msg.parseNetworkMessage(buffer[5:msgsize+4])
-		    conn.init = msg
-		    msgs.append(msg)
-		elif conn.piercefw is None:
-		    msgs.append(Notify(_("Unknown peer init code: %i, message contents %s") %(ord(buffer[4]),buffer[5:msgsize+4].__repr__())))
-                    conn.conn.close()
-                    self._ui_callback([ConnClose(conn.conn,conn.addr)])
-                    conn.conn = None
-                    break
+		msgsize = struct.unpack("<i",buffer[:4])[0]
+		if len(buffer) >= 8:
+			msgtype = struct.unpack("<i",buffer[4:8])[0]
+			self._ui_callback([PeerTransfer(conn,msgsize,len(buffer)-4,self.peerclasses.get(msgtype,None))])
+		if msgsize + 4 > len(buffer):
+			break
+		elif conn.init is None:
+			# Unpack Peer Connections
+			if buffer[4] == chr(0):
+				msg = PierceFireWall(conn)
+				try:
+					msg.parseNetworkMessage(buffer[5:msgsize+4])
+				except Exception, error:
+					print error
+				else:
+					conn.piercefw = msg
+					msgs.append(msg)
+			elif buffer[4] == chr(1):
+				msg = PeerInit(conn)
+				try:
+					msg.parseNetworkMessage(buffer[5:msgsize+4])
+				except Exception, error:
+					print error
+				else:
+					conn.init = msg
+					msgs.append(msg)
+			elif conn.piercefw is None:
+				msgs.append(_("Unknown peer init code: %i, message contents %s") %(ord(buffer[4]),buffer[5:msgsize+4].__repr__()))
+				conn.conn.close()
+				self._ui_callback([ConnClose(conn.conn,conn.addr)])
+				conn.conn = None
+				break
+			else:
+				break
+        	elif conn.init.type == 'P':
+			# Unpack Peer Messages
+			msgtype = struct.unpack("<i",buffer[4:8])[0]
+			if self.peerclasses.has_key(msgtype):
+				msg = self.peerclasses[msgtype](conn)
+				# Parse Peer Message and handle exceptions
+				try:
+                    			msg.parseNetworkMessage(buffer[8:msgsize+4])
+		    		except Exception, error:
+					msgname = str(self.peerclasses[msgtype]).split(".")[-1]
+					print "Error parsing %s:" % msgname, error
+					msgs.append(_("There was an error while unpacking Peer message type %s size %i contents %s from user: %s, %s:%s") %(msgname,msgsize-4,buffer[8:msgsize+4].__repr__(), conn.init.user, conn.init.conn.addr[0], conn.init.conn.addr[1]))
+				else:
+					msgs.append(msg)
+			else:
+				# Unknown Peer Message
+				msgs.append(_("Peer message type %i size %i contents %s unknown, from user: %s, %s:%s") %(msgtype,msgsize-4,buffer[8:msgsize+4].__repr__(), conn.init.user, conn.init.conn.addr[0], conn.init.conn.addr[1]))
 		else:
-		    break
-            elif conn.init.type == 'P':
-		msgtype = struct.unpack("<i",buffer[4:8])[0]
-		if self.peerclasses.has_key(msgtype):
-                    msg = self.peerclasses[msgtype](conn)
-                    msg.parseNetworkMessage(buffer[8:msgsize+4])
-                    msgs.append(msg)
-            	else:
-		    msgs.append(Notify(_("Peer message type %i size %i contents %s unknown") %(msgtype,msgsize-4,buffer[8:msgsize+4].__repr__())))
-	    else:
-		msgs.append(Notify(_("Can't handle connection type %s") %(conn.init.type)))
-	    if msgsize>=0:
-		buffer = buffer[msgsize+4:]
-	    else:
-		buffer = ""
+			# Unknown Message type 
+			msgs.append(_("Can't handle connection type %s") %(conn.init.type))
+		if msgsize>=0:
+			buffer = buffer[msgsize+4:]
+		else:
+			buffer = ""
 	conn.ibuf = buffer
 	return msgs,conn
 
@@ -476,7 +497,7 @@ class SlskProtoThread(threading.Thread):
 		msg.parseNetworkMessage(buffer[5:msgsize+4])
 		msgs.append(msg)
 	    else:
-		msgs.append(Notify(_("Distrib message type %i size %i contents %s unknown") %(msgtype,msgsize-1,buffer[5:msgsize+4].__repr__())))
+		msgs.append(_("Distrib message type %i size %i contents %s unknown") %(msgtype,msgsize-1,buffer[5:msgsize+4].__repr__()))
 		conn.conn.close()
 		self._ui_callback([ConnClose(conn.conn,conn.addr)])
 		conn.conn = None
@@ -514,6 +535,7 @@ class SlskProtoThread(threading.Thread):
 		    needsleep = 1
 	    elif issubclass(msgObj.__class__,PeerMessage):
 	      if conns.has_key(msgObj.conn):
+		# Pack Peer and File and Search Messages 
 		if msgObj.__class__ is PierceFireWall:
                     conns[msgObj.conn].piercefw = msgObj
 		    msg = msgObj.makeNetworkMessage()
@@ -523,6 +545,7 @@ class SlskProtoThread(threading.Thread):
 		    msg = msgObj.makeNetworkMessage()
 		    if conns[msgObj.conn].piercefw is None:
 			conns[msgObj.conn].obuf = conns[msgObj.conn].obuf + struct.pack("<i", len(msg) + 1) + chr(1) + msg
+                    
 		elif msgObj.__class__ is FileRequest:
 		    conns[msgObj.conn].filereq = msgObj
 		    msg = msgObj.makeNetworkMessage()
@@ -541,7 +564,8 @@ class SlskProtoThread(threading.Thread):
 		        conns[msgObj.conn].obuf = conns[msgObj.conn].obuf + struct.pack("<ii", len(msg) + 4, self.peercodes[msgObj.__class__]) + msg
 	      else:
 		if msgObj.__class__ not in [PeerInit, PierceFireWall, FileSearchResult]:
-		    self._ui_callback([Notify(_("Can't send the message over the closed connection: %s %s") %(msgObj.__class__, vars(msgObj)))])
+		    #self._ui_callback([Notify(_("Can't send the message over the closed connection: %s %s") %(msgObj.__class__, vars(msgObj)))])
+                    self._ui_callback([_("Can't send the message over the closed connection: %s %s") %(msgObj.__class__, vars(msgObj))])
 	    elif issubclass(msgObj.__class__,InternalMessage):
 		if msgObj.__class__ is ServerConn:
 		    try:

@@ -49,7 +49,7 @@ class roomlist(RoomList):
 		self.frame.np.queue.put(slskmessages.JoinRoom(room))
 		widget.set_text("")
 
-class testwin(MainWindow):
+class NicotineFrame(MainWindow):
 	def __init__(self, config, use_trayicon):
 		self.images = {}
 		self.clip_data = ""
@@ -824,6 +824,12 @@ class testwin(MainWindow):
 			self.MainWindow.emit("network_event_lo", lo)
 		return False
 	
+        ## Recieved a network event via emit_network_event 
+        ## with at least one, but possibly more messages
+        ## call the appropriate event class for these message
+        # @param self NicotineFrame (Class)
+        # @param widget the main window
+        # @param msgs a list of messages 
 	def OnNetworkEvent(self, widget, msgs):
 		for i in msgs:
 			if self.np.events.has_key(i.__class__):
@@ -1670,7 +1676,7 @@ class testwin(MainWindow):
 		self.notebook1.set_current_page(8)
 class MainApp:
 	def __init__(self, config, trayicon):
-		self.frame = testwin(config, trayicon)
+		self.frame = NicotineFrame(config, trayicon)
 	
 	def MainLoop(self):
 		signal.signal(signal.SIGINT, signal.SIG_IGN)

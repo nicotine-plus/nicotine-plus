@@ -54,7 +54,7 @@ class Config:
 	"usecustomban":0,"customban":"Banned, don't bother retrying", "queuelimit":100,\
 	"friendsonly":0, "friendsnolimits":0, "enablebuddyshares": 0, "enabletransferbuttons": 1,\
 	"geoblock": 0, "geopanic": 0, "geoblockcc": [""], "remotedownloads": 1, \
-	"downloads":[],"sharedfiles":{},"sharedfilesstreams":{}, \
+	"downloads":[],"sharedfiles":{},"sharedfilesstreams":{}, "uploadsinsubdirs": 1, \
 	"wordindex":{},"fileindex":{},"sharedmtimes":{},"bsharedfiles":{},"bsharedfilesstreams":{}, \
 	"bwordindex":{},"bfileindex":{},"bsharedmtimes":{}, "rescanonstartup":0}, \
 	"userinfo":{"descr":"''","pic":"","descrutf8":0},"logging": {"logcollapsed":0, \

@@ -77,6 +77,7 @@ class UserBrowse(UserBrowseTab):
 				("#" + _("Download directory _to..."), self.OnDownloadDirectoryTo, gtk.STOCK_GO_DOWN),
 				("#" + _("Download _recursive"), self.OnDownloadDirectoryRecursive, gtk.STOCK_GO_DOWN),
 				("#" + _("Download r_ecursive to..."), self.OnDownloadDirectoryRecursiveTo, gtk.STOCK_GO_DOWN),
+				("#" + _("Upload Directory to..."), self.OnUploadDirectoryTo, gtk.STOCK_GO_DOWN),
 				("", None),
 				("#" + _("Copy _URL"), self.OnCopyDirURL, gtk.STOCK_COPY),
 				("", None),
@@ -161,9 +162,9 @@ class UserBrowse(UserBrowseTab):
 			item.set_sensitive(act)
 		items[5].set_sensitive(act)
 		if self.user == self.frame.np.config.sections["server"]["login"]:
-			items[10].set_active(self.user in [i[0] for i in self.frame.np.config.sections["server"]["userlist"]])
-			items[11].set_active(self.user in self.frame.np.config.sections["server"]["banlist"])
-			items[12].set_active(self.user in self.frame.np.config.sections["server"]["ignorelist"])
+			items[11].set_active(self.user in [i[0] for i in self.frame.np.config.sections["server"]["userlist"]])
+			items[12].set_active(self.user in self.frame.np.config.sections["server"]["banlist"])
+			items[13].set_active(self.user in self.frame.np.config.sections["server"]["ignorelist"])
 		else:
 			items[11].set_active(self.user in [i[0] for i in self.frame.np.config.sections["server"]["userlist"]])
 			items[12].set_active(self.user in self.frame.np.config.sections["server"]["banlist"])
@@ -359,13 +360,42 @@ class UserBrowse(UserBrowseTab):
 			self.frame.np.transfers.getFile(self.user, dir + fn, prefix)
 
 	# Here daelstorm adds the upload command
+	def OnUploadDirectoryTo(self, widget):
+		node = self.selected_folder
+		if node == None:
+			return
+		#dir = node.path
+		
+		#for file in node.files:
+			#self.frame.np.transfers.getFile(self.user, dir + file[1], ldir)
+		#if not recurse:
+			#return
+		#for n in node.nodes.values():
+			#self.DownloadDirectory(n, os.path.join(ldir, ""), False)
+			
+		dir = self.selected_folder.path
+		ldir = dir[:-1].split("\\")[-1]
+		user = input_box(self.frame, title="Nicotine: Remote Upload Directory's Contents",
+		message='Enter the User you wish to upload to:',
+		default_text='')
+		if user is None or user == "":
+			pass
+		else:
+                        self.frame.np.ProcessRequestToPeer(user,slskmessages.UploadQueueNotification(None)  )
+			for file in node.files:
+				self.frame.np.transfers.pushFile(user, dir+file[1], ldir)
+				self.frame.np.transfers.checkUploadQueue()
+			#for fn in self.selected_files:
+				#self.frame.np.transfers.pushFile(user, dir + fn, "")
+				
+				
 	def OnUploadFiles(self, widget, prefix = ""):
 		dir = self.selected_folder.path
 
 		user = input_box(self.frame, title='Nicotine: Remote Upload File(s)',
 		message='Enter the User you wish to upload to:',
 		default_text='')
-		if user is None:
+		if user is None or user == "":
 			pass
 		else:
                         self.frame.np.ProcessRequestToPeer(user,slskmessages.UploadQueueNotification(None)  )

@@ -182,7 +182,7 @@ class NetworkEventProcessor:
 			transfers.TransferTimeout:self.TransferTimeout,
 			slskmessages.RescanShares:self.RescanShares,
 			slskmessages.RescanBuddyShares:self.RescanBuddyShares,
-			slskmessages.Notify:self.Notify,
+                        str:self.Notify,
 			slskmessages.GlobalRecommendations:self.GlobalRecommendations,
 			slskmessages.Recommendations:self.Recommendations,
 			slskmessages.ItemRecommendations:self.ItemRecommendations,
@@ -192,7 +192,7 @@ class NetworkEventProcessor:
 			slskmessages.RoomTickerAdd:self.RoomTickerAdd,
 			slskmessages.RoomTickerRemove:self.RoomTickerRemove,
 			}
-
+			#slskmessages.Notify:self.Notify,
 
     def ProcessRequestToPeer(self, user, message, window = None, address = None):
         """ 
@@ -321,9 +321,12 @@ class NetworkEventProcessor:
 	utils.log = self.logMessage
         files, streams, wordindex, fileindex, mtimes = utils.rescandirs(msg.shared,self.config.sections["transfers"]["bsharedmtimes"],self.config.sections["transfers"]["bsharedfiles"],self.config.sections["transfers"]["bsharedfilesstreams"],msg.yieldfunction)
 	self.frame.RescanFinished([files, streams, wordindex, fileindex, mtimes], "buddy")
-	
-    def Notify(self, msg):
-	self.logMessage("%s" % self.decode(msg.msg))
+        
+    ## Notify user of error when recieving or sending a message
+    # @param self NetworkEventProcessor (Class)
+    # @param string a string containing an error message
+    def Notify(self, string):
+	self.logMessage("%s" % self.decode(string))
 
     def ConnectError(self,msg):
 	if msg.connobj.__class__ is slskmessages.ServerConn:
@@ -666,10 +669,10 @@ class NetworkEventProcessor:
 	self.logMessage("%s %s" %(msg.__class__, vars(msg)),1)
 
     def IncConn(self,msg):
-	self.logMessage("%s %s" %(msg.__class__, vars(msg)),1)
+        self.logMessage("%s %s" %(msg.__class__, vars(msg)),1)
 
     def ConnectToPeer(self, msg):
-	init = slskmessages.PeerInit(None,msg.user,msg.type,0)
+        init = slskmessages.PeerInit(None,msg.user,msg.type,0)
         self.queue.put(slskmessages.OutConn(None,(msg.ip,msg.port),init))
         self.peerconns.append(PeerConnection(addr = (msg.ip,msg.port), username = msg.user, msgs = [], token = msg.token, init = init))
 

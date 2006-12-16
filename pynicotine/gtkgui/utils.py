@@ -186,7 +186,7 @@ class ImageLabel(gtk.HBox):
 			self.button.add(img)
 			self.button.connect("clicked", onclose)
 			self.button.set_relief(gtk.RELIEF_NONE)
-			self.button.set_size_request(16,16)
+			self.button.set_size_request(18,18)
 			self.pack_start(self.button, False, False)
 			self.button.show_all()
 
