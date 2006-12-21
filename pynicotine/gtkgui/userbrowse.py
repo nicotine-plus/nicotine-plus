@@ -77,7 +77,7 @@ class UserBrowse(UserBrowseTab):
 				("#" + _("Download directory _to..."), self.OnDownloadDirectoryTo, gtk.STOCK_GO_DOWN),
 				("#" + _("Download _recursive"), self.OnDownloadDirectoryRecursive, gtk.STOCK_GO_DOWN),
 				("#" + _("Download r_ecursive to..."), self.OnDownloadDirectoryRecursiveTo, gtk.STOCK_GO_DOWN),
-				("#" + _("Upload Directory to..."), self.OnUploadDirectoryTo, gtk.STOCK_GO_DOWN),
+				("#" + _("Upload Directory to..."), self.OnUploadDirectoryTo, gtk.STOCK_GO_UP),
 				("", None),
 				("#" + _("Copy _URL"), self.OnCopyDirURL, gtk.STOCK_COPY),
 				("", None),
@@ -364,15 +364,7 @@ class UserBrowse(UserBrowseTab):
 		node = self.selected_folder
 		if node == None:
 			return
-		#dir = node.path
-		
-		#for file in node.files:
-			#self.frame.np.transfers.getFile(self.user, dir + file[1], ldir)
-		#if not recurse:
-			#return
-		#for n in node.nodes.values():
-			#self.DownloadDirectory(n, os.path.join(ldir, ""), False)
-			
+
 		dir = self.selected_folder.path
 		ldir = dir[:-1].split("\\")[-1]
 		user = input_box(self.frame, title="Nicotine: Remote Upload Directory's Contents",

@@ -1129,7 +1129,7 @@ class NicotineFrame(MainWindow):
 		for i in shared:
 			if i not in cleanedshares:
 				cleanedshares.append(i)
-		msg = slskmessages.RescanShares(shared, lambda: None)
+		msg = slskmessages.RescanShares(cleanedshares, lambda: None)
 		thread.start_new_thread(self.np.RescanShares, (msg,))
 		
 		

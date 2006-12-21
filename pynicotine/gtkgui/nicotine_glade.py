@@ -1559,6 +1559,7 @@ class ChatRoomTab:
         self.hbox58 = gtk.HBox(False, 5)
         self.hbox58.show()
         self.hbox58.set_spacing(5)
+        self.hbox58.set_border_width(3)
 
         self.Log = gtk.CheckButton()
         self.Log.set_active(False)
@@ -1583,6 +1584,7 @@ class ChatRoomTab:
         self.hbox4 = gtk.HBox(False, 0)
         self.hbox4.show()
         self.hbox4.set_spacing(0)
+        self.hbox4.set_border_width(3)
 
         self.AutoJoin = gtk.CheckButton()
         self.AutoJoin.set_active(False)

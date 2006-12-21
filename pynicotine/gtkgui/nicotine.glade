@@ -3587,6 +3587,7 @@
 
 	  <child>
 	    <widget class="GtkHBox" id="hbox58">
+	      <property name="border_width">3</property>
 	      <property name="visible">True</property>
 	      <property name="homogeneous">False</property>
 	      <property name="spacing">5</property>
@@ -3635,6 +3636,7 @@
 
 	  <child>
 	    <widget class="GtkHBox" id="hbox4">
+	      <property name="border_width">3</property>
 	      <property name="visible">True</property>
 	      <property name="homogeneous">False</property>
 	      <property name="spacing">0</property>
