@@ -318,10 +318,10 @@ class NicotineFrame(MainWindow):
 	
 		self.userlistvbox.pack_start(self.scrolledwindow11, True, True, 0)
 	
-		self.hbox3 = gtk.HBox(False, 0)
+		self.hbox3 = gtk.HBox(False, 3)
 		self.hbox3.show()
-		self.hbox3.set_spacing(0)
-	
+		self.hbox3.set_spacing(5)
+		self.hbox3.set_border_width(3)
 		self.label12 = gtk.Label(_("Add Buddy: "))
 		self.label12.set_padding(0, 0)
 		self.label12.show()

@@ -1689,6 +1689,7 @@ class PrivateChatTab:
         self.hbox5 = gtk.HBox(False, 5)
         self.hbox5.show()
         self.hbox5.set_spacing(5)
+        self.hbox5.set_border_width(3)
 
         self.ChatLine = gtk.Entry()
         self.ChatLine.set_text("")
@@ -2679,9 +2680,10 @@ class RoomList:
 
         self.vbox2.pack_start(self.scrolledwindow10, True, True, 0)
 
-        self.hbox1 = gtk.HBox(False, 0)
+        self.hbox1 = gtk.HBox(False, 5)
         self.hbox1.show()
-        self.hbox1.set_spacing(0)
+        self.hbox1.set_spacing(5)
+        self.hbox1.set_border_width(3)
 
         self.label10 = gtk.Label(_("Create: "))
         self.label10.set_padding(0, 0)
