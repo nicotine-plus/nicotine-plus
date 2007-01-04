@@ -232,7 +232,11 @@ class IconNotebook(gtk.Notebook):
 		l2 = ImageLabel(label, self.images["empty"])
 		self.pages.append([page, l, 0, l2])
 		gtk.Notebook.append_page_menu(self, page, l, l2)
-		self.set_tab_reorderable(page, True)
+		try:
+			self.set_tab_reorderable(page, True)
+		except:
+			# Old PyGTK2
+			pass
 		
 	def set_image(self, page, status):
 		image = self.images[("empty", "online", "hilite")[status]]
