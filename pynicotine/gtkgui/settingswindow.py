@@ -479,6 +479,14 @@ class BloatFrame(settings_glade.BloatFrame):
 		self.PickHighlight.connect("clicked", self.PickColour, self.Highlight)
 		self.PickImmediate.connect("clicked", self.PickColour, self.Immediate)
 		self.PickQueue.connect("clicked", self.PickColour, self.Queue)
+		
+		self.PickAway.connect("clicked", self.PickColour, self.AwayColor)
+		self.PickOnline.connect("clicked", self.PickColour, self.OnlineColor)
+		self.PickOffline.connect("clicked", self.PickColour, self.OfflineColor)
+		
+		self.DefaultAway.connect("clicked", self.DefaultColour, self.AwayColor)
+		self.DefaultOnline.connect("clicked", self.DefaultColour, self.OnlineColor)
+		self.DefaultOffline.connect("clicked", self.DefaultColour, self.OfflineColor)
 
 		self.DefaultRemote.connect("clicked", self.DefaultColour, self.Remote)
 		self.DefaultLocal.connect("clicked", self.DefaultColour, self.Local)
@@ -517,6 +525,16 @@ class BloatFrame(settings_glade.BloatFrame):
 			self.Me.set_text(ui["chatme"])
 		if ui["chathilite"] is not None:
 			self.Highlight.set_text(ui["chathilite"])
+			
+		if ui["useraway"] is not None:
+			self.AwayColor.set_text(ui["useraway"])
+		if ui["useronline"] is not None:
+			self.OnlineColor.set_text(ui["useronline"])
+		if ui["useroffline"] is not None:
+			self.OfflineColor.set_text(ui["useroffline"])
+		if ui["usernamehotspots"] is not None:
+			self.UsernameHotspots.set_active(ui["usernamehotspots"])
+		self.OnUsernameHotspotsToggled(self.UsernameHotspots)
 		if ui["search"] is not None:
 			self.Immediate.set_text(ui["search"])
 		if ui["searchq"] is not None:
@@ -525,6 +543,7 @@ class BloatFrame(settings_glade.BloatFrame):
 			self.DecimalSep.child.set_text(ui["decimalsep"])
 		if ui["tabclosers"] is not None:
 			self.TabClosers.set_active(ui["tabclosers"])
+		
 		#if sys.platform == "win32":
 		#	self.TrayiconCheck.set_sensitive(False)
 		if ui["trayicon"] is not None:
@@ -555,11 +574,28 @@ class BloatFrame(settings_glade.BloatFrame):
 				"soundcommand": self.SoundCommand.child.get_text(),
 				"soundtheme": self.SoundDirectory.get_text(),
 				"soundenabled": self.SoundCheck.get_active(),
+				"useraway": self.AwayColor.get_text(),
+				"useronline": self.OnlineColor.get_text(),
+				"useroffline": self.OfflineColor.get_text(),
+				"usernamehotspots": self.UsernameHotspots.get_active(),
 			},
 			"transfers": {
 				"enabletransferbuttons": self.ShowTransferButtons.get_active(),
 			},
 		}
+	def OnUsernameHotspotsToggled(self, widget):
+		sensitive = widget.get_active()
+		self.AwayColor.set_sensitive(sensitive)
+		self.OnlineColor.set_sensitive(sensitive)
+		self.OfflineColor.set_sensitive(sensitive)
+		
+		self.DefaultAway.set_sensitive(sensitive)
+		self.DefaultOnline.set_sensitive(sensitive)
+		self.DefaultOffline.set_sensitive(sensitive)
+		
+		self.PickAway.set_sensitive(sensitive)
+		self.PickOnline.set_sensitive(sensitive)
+		self.PickOffline.set_sensitive(sensitive)
 		
 	def OnSoundCheckToggled(self, widget):
 		sensitive = widget.get_active()

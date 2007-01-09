@@ -199,20 +199,40 @@ class DistribMessage(SlskMessage):
 class Login(ServerMessage):
     """ We sent this to the server right after the connection has been 
     established. Server responds with the greeting message. """
+    
     def __init__(self, username=None, passwd=None, version = None):
         self.username = username
         self.passwd = passwd
         self.version = version
-
+	
     def makeNetworkMessage(self):
-        return self.packObject(self.username)+ self.packObject(self.passwd) + self.packObject(self.version)
+	import md5
+	m = md5.new()
+	m.update(self.username+self.passwd)
+	md5hash = m.hexdigest()
+        message = self.packObject(self.username)+ self.packObject(self.passwd) + self.packObject(self.version) + self.packObject(md5hash) + self.packObject(1)
+	return message
+
 
     def parseNetworkMessage(self,message):
-        len, self.success = 1, ord(message[0])
+        len1, self.success = 1, ord(message[0])
         if not self.success:
-            len,self.reason = self.getObject(message,types.StringType,len)
+            len1,self.reason = self.getObject(message,types.StringType,len1)
 	else:
-            len,self.banner = self.getObject(message,types.StringType,len)
+            len1,self.banner = self.getObject(message,types.StringType,len1)
+	try:
+	    len1,self.num = self.getObject(message, types.IntType,len1)
+	    # Unknown number
+	    #print self.num
+	except Exception, error:
+	    print "Unpack number", error
+	try:
+	    if len(message[len1:]) > 0:
+	    	len1, self.checksum = self.getObject(message,types.StringType,len1)
+	    #print self.checksum
+	except Exception, error:
+	    # Not an official client on the official server
+	    pass
 
 
 class SetWaitPort(ServerMessage):

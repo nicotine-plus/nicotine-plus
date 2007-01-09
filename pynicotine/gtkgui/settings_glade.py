@@ -1625,6 +1625,205 @@ class BloatFrame:
 
         self.table2.attach(self.PickQueue, 0, 1, 6, 7, gtk.FILL, 0, 0, 0)
 
+        self.PickOnline = gtk.Button()
+        self.PickOnline.show()
+
+        self.alignment78 = gtk.Alignment(0, 0.5, 0, 0)
+        self.alignment78.show()
+
+        self.hbox183 = gtk.HBox(False, 2)
+        self.hbox183.show()
+        self.hbox183.set_spacing(2)
+        self.hbox183.set_border_width(3)
+
+        self.image72 = gtk.Image()
+        self.image72.set_padding(0, 0)
+        self.image72.set_from_stock(gtk.STOCK_SELECT_COLOR, 4)
+        self.image72.show()
+        self.hbox183.pack_start(self.image72, False, False, 0)
+
+        self.label308 = gtk.Label(_("Online"))
+        self.label308.set_padding(0, 0)
+        self.label308.set_line_wrap(False)
+        self.label308.show()
+        self.hbox183.pack_start(self.label308, False, False, 0)
+
+        self.alignment78.add(self.hbox183)
+
+        self.PickOnline.add(self.alignment78)
+
+        self.table2.attach(self.PickOnline, 0, 1, 8, 9, gtk.FILL, 0, 0, 0)
+
+        self.PickOffline = gtk.Button()
+        self.PickOffline.show()
+
+        self.alignment79 = gtk.Alignment(0, 0.5, 0, 0)
+        self.alignment79.show()
+
+        self.hbox184 = gtk.HBox(False, 2)
+        self.hbox184.show()
+        self.hbox184.set_spacing(2)
+        self.hbox184.set_border_width(3)
+
+        self.image73 = gtk.Image()
+        self.image73.set_padding(0, 0)
+        self.image73.set_from_stock(gtk.STOCK_SELECT_COLOR, 4)
+        self.image73.show()
+        self.hbox184.pack_start(self.image73, False, False, 0)
+
+        self.label309 = gtk.Label(_("Offline"))
+        self.label309.set_padding(0, 0)
+        self.label309.set_line_wrap(False)
+        self.label309.show()
+        self.hbox184.pack_start(self.label309, False, False, 0)
+
+        self.alignment79.add(self.hbox184)
+
+        self.PickOffline.add(self.alignment79)
+
+        self.table2.attach(self.PickOffline, 0, 1, 9, 10, gtk.FILL, 0, 0, 0)
+
+        self.PickAway = gtk.Button()
+        self.PickAway.show()
+
+        self.alignment80 = gtk.Alignment(0, 0.5, 0, 0)
+        self.alignment80.show()
+
+        self.hbox185 = gtk.HBox(False, 2)
+        self.hbox185.show()
+        self.hbox185.set_spacing(2)
+        self.hbox185.set_border_width(3)
+
+        self.image74 = gtk.Image()
+        self.image74.set_padding(0, 0)
+        self.image74.set_from_stock(gtk.STOCK_SELECT_COLOR, 4)
+        self.image74.show()
+        self.hbox185.pack_start(self.image74, False, False, 0)
+
+        self.label310 = gtk.Label(_("Away"))
+        self.label310.set_padding(0, 0)
+        self.label310.set_line_wrap(False)
+        self.label310.show()
+        self.hbox185.pack_start(self.label310, False, False, 0)
+
+        self.alignment80.add(self.hbox185)
+
+        self.PickAway.add(self.alignment80)
+
+        self.table2.attach(self.PickAway, 0, 1, 10, 11, gtk.FILL, 0, 0, 0)
+
+        self.OnlineColor = gtk.Entry()
+        self.OnlineColor.set_text("")
+        self.OnlineColor.set_editable(False)
+        self.OnlineColor.show()
+        self.OnlineColor.set_visibility(True)
+        self.table2.attach(self.OnlineColor, 1, 2, 8, 9, gtk.EXPAND|gtk.FILL, 0, 0, 0)
+
+        self.OfflineColor = gtk.Entry()
+        self.OfflineColor.set_text("")
+        self.OfflineColor.set_editable(False)
+        self.OfflineColor.show()
+        self.OfflineColor.set_visibility(True)
+        self.table2.attach(self.OfflineColor, 1, 2, 9, 10, gtk.EXPAND|gtk.FILL, 0, 0, 0)
+
+        self.AwayColor = gtk.Entry()
+        self.AwayColor.set_text("")
+        self.AwayColor.set_editable(False)
+        self.AwayColor.show()
+        self.AwayColor.set_visibility(True)
+        self.table2.attach(self.AwayColor, 1, 2, 10, 11, gtk.EXPAND|gtk.FILL, 0, 0, 0)
+
+        self.DefaultOnline = gtk.Button()
+        self.DefaultOnline.show()
+
+        self.alignment81 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment81.show()
+
+        self.hbox186 = gtk.HBox(False, 2)
+        self.hbox186.show()
+        self.hbox186.set_spacing(2)
+
+        self.image75 = gtk.Image()
+        self.image75.set_padding(0, 0)
+        self.image75.set_from_stock(gtk.STOCK_CANCEL, 4)
+        self.image75.show()
+        self.hbox186.pack_start(self.image75, False, False, 0)
+
+        self.label311 = gtk.Label(_("Default"))
+        self.label311.set_padding(0, 0)
+        self.label311.set_line_wrap(False)
+        self.label311.show()
+        self.hbox186.pack_start(self.label311, False, False, 0)
+
+        self.alignment81.add(self.hbox186)
+
+        self.DefaultOnline.add(self.alignment81)
+
+        self.table2.attach(self.DefaultOnline, 2, 3, 8, 9, gtk.FILL, 0, 0, 0)
+
+        self.DefaultOffline = gtk.Button()
+        self.DefaultOffline.show()
+
+        self.alignment82 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment82.show()
+
+        self.hbox187 = gtk.HBox(False, 2)
+        self.hbox187.show()
+        self.hbox187.set_spacing(2)
+
+        self.image76 = gtk.Image()
+        self.image76.set_padding(0, 0)
+        self.image76.set_from_stock(gtk.STOCK_CANCEL, 4)
+        self.image76.show()
+        self.hbox187.pack_start(self.image76, False, False, 0)
+
+        self.label312 = gtk.Label(_("Default"))
+        self.label312.set_padding(0, 0)
+        self.label312.set_line_wrap(False)
+        self.label312.show()
+        self.hbox187.pack_start(self.label312, False, False, 0)
+
+        self.alignment82.add(self.hbox187)
+
+        self.DefaultOffline.add(self.alignment82)
+
+        self.table2.attach(self.DefaultOffline, 2, 3, 9, 10, gtk.FILL, 0, 0, 0)
+
+        self.DefaultAway = gtk.Button()
+        self.DefaultAway.show()
+
+        self.alignment83 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment83.show()
+
+        self.hbox188 = gtk.HBox(False, 2)
+        self.hbox188.show()
+        self.hbox188.set_spacing(2)
+
+        self.image77 = gtk.Image()
+        self.image77.set_padding(0, 0)
+        self.image77.set_from_stock(gtk.STOCK_CANCEL, 4)
+        self.image77.show()
+        self.hbox188.pack_start(self.image77, False, False, 0)
+
+        self.label313 = gtk.Label(_("Default"))
+        self.label313.set_padding(0, 0)
+        self.label313.set_line_wrap(False)
+        self.label313.show()
+        self.hbox188.pack_start(self.label313, False, False, 0)
+
+        self.alignment83.add(self.hbox188)
+
+        self.DefaultAway.add(self.alignment83)
+
+        self.table2.attach(self.DefaultAway, 2, 3, 10, 11, gtk.FILL, 0, 0, 0)
+
+        self.UsernameHotspots = gtk.CheckButton()
+        self.UsernameHotspots.set_active(False)
+        self.UsernameHotspots.set_label(_("Username Colours and Hotspots"))
+        self.UsernameHotspots.show()
+        self.UsernameHotspots.connect("toggled", self.OnUsernameHotspotsToggled)
+        self.table2.attach(self.UsernameHotspots, 0, 3, 7, 8, gtk.FILL, 0, 0, 0)
+
         self.expander2.add(self.table2)
 
         self.label306 = gtk.Label(_("Chat colours"))
@@ -1648,6 +1847,9 @@ class BloatFrame:
             self.BloatFrame.add(self.Main)
 
     def OnSoundCheckToggled(self, widget):
+        pass
+
+    def OnUsernameHotspotsToggled(self, widget):
         pass
 
     def get_custom_widget(self, id, string1, string2, int1, int2):

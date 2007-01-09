@@ -253,6 +253,7 @@ class NicotineFrame(MainWindow):
 		utils.HUMANIZE_URLS = self.np.config.sections["urls"]["humanizeurls"]
 		utils.PROTOCOL_HANDLERS = self.np.config.sections["urls"]["protocols"].copy()
 		utils.PROTOCOL_HANDLERS["slsk"] = self.OnSoulSeek
+		utils.USERNAMEHOTSPOTS = self.np.config.sections["ui"]["usernamehotspots"]
 
 
 		
@@ -1194,6 +1195,7 @@ class NicotineFrame(MainWindow):
 		utils.HUMANIZE_URLS = self.np.config.sections["urls"]["humanizeurls"]
 		utils.PROTOCOL_HANDLERS = self.np.config.sections["urls"]["protocols"].copy()
 		utils.PROTOCOL_HANDLERS["slsk"] = self.OnSoulSeek
+		utils.USERNAMEHOTSPOTS = self.np.config.sections["ui"]["usernamehotspots"]
 		uselimit = self.np.config.sections["transfers"]["uselimit"]
 		uploadlimit = self.np.config.sections["transfers"]["uploadlimit"]
 		limitby = self.np.config.sections["transfers"]["limitby"]

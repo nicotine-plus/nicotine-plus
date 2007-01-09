@@ -18,6 +18,7 @@ URL_RE = re.compile("(\\w+\\://[\\w\\.].+?)[\\s\\(\\)]|(www\\.\\w+\\.\\w+.*?)[\\
 PROTOCOL_HANDLERS = {}
 CATCH_URLS = 0
 HUMANIZE_URLS = 0
+USERNAMEHOTSPOTS = 0
 
 def popupWarning(parent, title, warning):
 	dlg = gtk.Dialog(title = title, parent = parent,
@@ -108,12 +109,12 @@ def UrlEvent(tag, widget, event, iter, url):
 				pass
 	tag.last_event_type = event.type
 
-def AppendLine(textview, line, tag = None, timestamp = "%H:%M:%S"):
+def AppendLine(textview, line, tag = None, timestamp = "%H:%M:%S", username=None, usertag=None):
 	def _makeurltag(buffer, tag, url):
 		props = {}
-		#if tag is not None:
-			#color = tag.get_property("foreground_gdk")
-			#props["foreground_gdk"] = color
+		if tag is not None:
+			color = tag.get_property("foreground_gdk")
+			props["foreground_gdk"] = color
 		props["underline"] = pango.UNDERLINE_SINGLE
 		tag = buffer.create_tag(**props)
 		tag.last_event_type = -1
@@ -143,14 +144,43 @@ def AppendLine(textview, line, tag = None, timestamp = "%H:%M:%S"):
 		url = match.group()[:-1]
 		urltag = _makeurltag(buffer, tag, url)
 		line = line[match.end()-1:]
-		_append(buffer, start, tag)
+		
+		if USERNAMEHOTSPOTS and username != None and usertag != None:
+			np = re.compile(username)
+			match = np.search(start)
+			if match != None:
+				start2 = start[:match.start()]
+				name = match.group()[:]
+				start = start[match.end():]
+				_append(buffer, start2, tag)
+				_append(buffer, name, usertag)
+				_append(buffer, start, tag)
+			else:
+				_append(buffer, start, tag)
+		else:
+			_append(buffer, start, tag)
 		if url.startswith("slsk://") and HUMANIZE_URLS:
 			url = url.replace("%20", " ")
 		_append(buffer, url, urltag)
 		match = URL_RE.search(line)
 	
+	
 	if line:
-		_append(buffer, line, tag)
+		
+		if USERNAMEHOTSPOTS and username != None and usertag != None:
+			np = re.compile(username)
+			match = np.search(line)
+			if match != None:
+				start = line[:match.start()]
+				name = match.group()[:]
+				line = line[match.end():]
+				_append(buffer, start, tag)
+				_append(buffer, name, usertag)
+				_append(buffer, line, tag)
+			else:
+				_append(buffer, line, tag)
+		else:
+			_append(buffer, line, tag)
 	
 	if not hasattr(scrolledwindow, "need_scroll"):
 		scrolledwindow.need_scroll = 1

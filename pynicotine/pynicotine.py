@@ -88,6 +88,7 @@ class NetworkEventProcessor:
         self.search = None
         self.transfers = None
 	self.userlist = None
+	self.logintime = None
 
 	self.servertimer = None
 	self.servertimeout = -1
@@ -447,9 +448,10 @@ class NetworkEventProcessor:
 
     def MessageUser(self, msg):
 	status = 0
-	if time.time() <= self.logintime + 2:
-		# Offline message 
-		status = 1
+	if self.logintime:
+		if time.time() <= self.logintime + 2:
+			# Offline message 
+			status = 1
 		
 	if self.privatechat is not None:
 	    self.privatechat.ShowMessage(msg,msg.msg,status=status)
@@ -708,7 +710,7 @@ class NetworkEventProcessor:
 		return 0
 	if self.users[user].addr != None:
 		u_ip, u_port = self.users[user].addr
-		print u_ip, ip
+		#print u_ip, ip
 		if u_ip != ip:
 			warning = _("IP %s:%s is spoofing user %s with a peer request, blocking because it does not match IP: %s") %(ip, port, user, u_ip)
 			self.logMessage(warning , None)

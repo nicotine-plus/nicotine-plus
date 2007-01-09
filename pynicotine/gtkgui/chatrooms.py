@@ -3,7 +3,7 @@
 import gtk
 import gobject
 import locale
-
+import pango
 from pynicotine import slskmessages
 from nicotine_glade import ChatRoomTab
 from utils import InitialiseColumns, AppendLine, PopupMenu, FastListModel, string_sort_func, WriteLog, int_sort_func, Humanize, expand_alias, EncodingsMenu, SaveEncoding
@@ -216,7 +216,7 @@ class RoomsControl:
 	
 	def UpdateColours(self):
 		for room in self.joinedrooms.values():
-			room.UpdateColours()
+			room.ChangeColours()
 
 	def LeaveRoom(self, msg):
 		room = self.joinedrooms[msg.room]
@@ -323,7 +323,7 @@ class ChatRoom(ChatRoomTab):
 
 		self.Log.set_active(self.frame.np.config.sections["logging"]["chatrooms"])
 		
-		self.UpdateColours()
+		
 		
 		if room in self.frame.np.config.sections["server"]["autojoin"]:
 			self.AutoJoin.set_active(True)
@@ -350,7 +350,7 @@ class ChatRoom(ChatRoomTab):
 			hfiles = Humanize(users[user].files)
 			iter = self.usersmodel.append([img, user, hspeed, hfiles, users[user].status, users[user].avgspeed, users[user].files])
 			self.users[user] = iter
-		
+		self.UpdateColours()
 		self.UserList.set_model(self.usersmodel)
 	
 		self.popup_menu = popup = PopupMenu(self.frame)
@@ -467,7 +467,7 @@ class ChatRoom(ChatRoomTab):
 
 		line = "\n-- ".join(line.split("\n"))
 
-		self.lines.append(AppendLine(self.ChatScroll, self.frame.np.decode(line, self.encoding), tag))
+		self.lines.append(AppendLine(self.ChatScroll, self.frame.np.decode(line, self.encoding), tag, username=msg.user, usertag=self.tag_users[msg.user]))
 		if self.Log.get_active():
 			self.logfile = WriteLog(self.logfile, self.frame.np.config.sections["logging"]["logsdir"], self.room, line)
 			
@@ -607,6 +607,12 @@ class ChatRoom(ChatRoomTab):
 		hfiles = Humanize(userdata.files)
 		iter = self.usersmodel.append([img, username, hspeed, hfiles, userdata.status, userdata.avgspeed, userdata.files])
 		self.users[username] = iter
+		color = self.getUserStatusColor(userdata.status)
+		if username in self.tag_users.keys():
+			
+			self.changecolour(self.tag_users[username], color)
+		else:
+			self.tag_users[username] = self.makecolour(self.ChatScroll.get_buffer(), color, username=username)
 	
 	def UserLeftRoom(self, username):
 		if not self.users.has_key(username):
@@ -614,6 +620,9 @@ class ChatRoom(ChatRoomTab):
 		AppendLine(self.RoomLog, _("%s left the room") % username, self.tag_log)
 		self.usersmodel.remove(self.users[username])
 		del self.users[username]
+		if username in self.tag_users.keys():
+			color = self.getUserStatusColor(-1)
+			self.changecolour(self.tag_users[username], color)
 	
 	def GetUserStats(self, user, avgspeed, files):
 		if not self.users.has_key(user):
@@ -631,8 +640,39 @@ class ChatRoom(ChatRoomTab):
 		else:
 			action = _("%s has returned")
 		AppendLine(self.RoomLog, action % user, self.tag_log)
+		if user in self.tag_users.keys():
+			color = self.getUserStatusColor(status)
+			self.changecolour(self.tag_users[user], color)
 		self.usersmodel.set(self.users[user], 0, img, 4, status)
+		
+	def makecolour(self, buffer, colour, username=None):
+		colour = self.frame.np.config.sections["ui"][colour]
+		font =  self.frame.np.config.sections["ui"]["chatfont"]
+		if colour:
+			tag = buffer.create_tag(foreground = colour, font=font)
+		else:
+			tag = buffer.create_tag( font=font)
+		if username is not None:
 
+			#tag.set_property("underline", pango.UNDERLINE_SINGLE)
+			tag.set_property("weight",  pango.WEIGHT_BOLD)
+			tag.connect("event", self.UserNameEvent, username)
+			tag.last_event_type = -1
+			#tag = buffer.create_tag( font=font)
+		return tag
+		
+	def UserNameEvent(self, tag, widget, event, iter, user):
+		if tag.last_event_type == gtk.gdk.BUTTON_PRESS and event.type == gtk.gdk.BUTTON_RELEASE and event.button == 1:
+			if user in self.users.keys():
+				self.popup_menu.set_user(user)
+				items = self.popup_menu.get_children()
+				# Chat, Userlists use the normal popup system
+				items[6].set_active(user in [i[0] for i in self.frame.np.config.sections["server"]["userlist"]])
+				items[7].set_active(user in self.frame.np.config.sections["server"]["banlist"])
+				items[8].set_active(user in self.frame.np.config.sections["server"]["ignorelist"])
+				self.popup_menu.popup(None, None, None, event.button, event.time)
+		tag.last_event_type = event.type
+		
 	def UpdateColours(self):
 		def makecolour(buffer, colour):
 			colour = self.frame.np.config.sections["ui"][colour]
@@ -647,9 +687,55 @@ class ChatRoom(ChatRoomTab):
 		self.tag_local = makecolour(buffer, "chatlocal")
 		self.tag_me = makecolour(buffer, "chatme")
 		self.tag_hilite = makecolour(buffer, "chathilite")
+		self.tag_users = {}
+		for user in self.users:
+			status = self.usersmodel.get_value(self.users[user], 4)
+			color = self.getUserStatusColor(status)
+			if user in self.tag_users.keys():
+				self.changecolour(self.tag_users[username], color)
+			else:
+				self.tag_users[user] = self.makecolour(buffer, color, user)
 		buffer = self.RoomLog.get_buffer()
 		self.tag_log = makecolour(buffer, "chatremote")
-	
+		
+		
+	def getUserStatusColor(self, status):
+		if status == 1:
+			color = "useraway"
+		elif status == 2:
+			color = "useronline"
+		else:
+			color = "useroffline"
+		return color
+		
+	def changecolour(self, tag, colour):
+		if self.frame.np.config.sections["ui"].has_key(colour):
+			color = self.frame.np.config.sections["ui"][colour]
+		else:
+			color = "#000000"
+		font = self.frame.np.config.sections["ui"]["chatfont"]
+		
+		if color:
+			if color == "":
+				color = "#000000"
+			tag.set_property("foreground", color)
+			tag.set_property("font", font)
+			if colour in ["useraway", "useronline", "useroffline"]:
+				tag.set_property("weight",  pango.WEIGHT_BOLD)
+		else:
+			tag.set_property("font", font)
+			
+	def ChangeColours(self):
+		
+
+		self.changecolour(self.tag_remote, "chatremote")
+		self.changecolour(self.tag_local, "chatlocal")
+		self.changecolour(self.tag_me, "chatme")
+		self.changecolour(self.tag_hilite, "chathilite")
+		for username in self.users.keys():
+			color = self.getUserStatusColor(self.usersmodel.get_value(self.users[username], 4))
+			self.changecolour(self.tag_users[username], color)
+		
 	def OnLeave(self, widget = None):
 		if self.leaving:
 			return

@@ -3,7 +3,7 @@
 import gtk
 import gobject
 import os
-
+import pango
 from nicotine_glade import PrivateChatTab
 from utils import AppendLine, IconNotebook, PopupMenu, WriteLog, expand_alias, EncodingsMenu, SaveEncoding
 from chatrooms import GetCompletion
@@ -75,7 +75,7 @@ class PrivateChats(IconNotebook):
 
 	def UpdateColours(self):
 		for chat in self.users.values():
-			chat.UpdateColours()
+			chat.ChangeColours()
 
 	def RemoveTab(self, tab):
 		self.remove_page(tab.Main)
@@ -152,7 +152,7 @@ class PrivateChat(PrivateChatTab):
 			f.close()
 			s = d.split("\n")
 			for l in s[-8:-1]:
-				AppendLine(self.ChatScroll, l + "\n", self.tag_hilite, "")
+				AppendLine(self.ChatScroll, l + "\n", self.tag_hilite, "", username=self.user, usertag=self.tag_username)
 		except IOError, e:
 			pass
 
@@ -188,7 +188,7 @@ class PrivateChat(PrivateChatTab):
 			line = "[%s] %s" % (self.user, text)
 			tag = self.tag_remote
 		line = self.frame.np.decode(line, self.encoding)
-		AppendLine(self.ChatScroll, line, tag, "%c")
+		AppendLine(self.ChatScroll, line, tag, "%c", username=self.user, usertag=self.tag_username)
 		if self.Log.get_active():
 			self.logfile = WriteLog(self.logfile, self.frame.np.config.sections["logging"]["logsdir"], self.user, line)
 		
@@ -214,7 +214,7 @@ class PrivateChat(PrivateChatTab):
 				line = text
 			tag = self.tag_local
 			
-		AppendLine(self.ChatScroll, self.frame.np.decode(line, self.encoding), tag, "%c")
+		AppendLine(self.ChatScroll, self.frame.np.decode(line, self.encoding), tag, "%c", username=self.user, usertag=self.tag_username)
 		if self.Log.get_active():
 			self.logfile = WriteLog(self.logfile, self.frame.np.config.sections["logging"]["logsdir"], self.user, line)
 		self.frame.np.queue.put(slskmessages.MessageUser(self.user, text))
@@ -349,11 +349,63 @@ class PrivateChat(PrivateChatTab):
 		self.tag_local = makecolour(buffer, "chatlocal")
 		self.tag_me = makecolour(buffer, "chatme")
 		self.tag_hilite = makecolour(buffer, "chathilite")
+		if self.status == 1:
+			color = "useraway"
+		elif self.status == 2:
+			color = "useronline"
+		else:
+			color = "useroffline"
+		self.tag_username = makecolour(buffer, color)
 
+
+	def changecolour(self, tag, colour):
+		if self.frame.np.config.sections["ui"].has_key(colour):
+			color = self.frame.np.config.sections["ui"][colour]
+		else:
+			color = "#000000"
+		font = self.frame.np.config.sections["ui"]["chatfont"]
+		
+		if color:
+			if color == "":
+				color = "#000000"
+			tag.set_property("foreground", color)
+			tag.set_property("font", font)
+			if colour in ["useraway", "useronline", "useroffline"]:
+				tag.set_property("weight",  pango.WEIGHT_BOLD)
+		else:
+			tag.set_property("font", font)
+			
+	def ChangeColours(self):
+		
+				
+		self.changecolour(self.tag_remote, "chatremote")
+		self.changecolour(self.tag_local, "chatlocal")
+		self.changecolour(self.tag_me, "chatme")
+		self.changecolour(self.tag_hilite, "chathilite")
+		color = self.getUserStatusColor(self.status)
+		self.changecolour(self.tag_username, color)
+		
+		
+	def getUserStatusColor(self, status):
+		if status == 1:
+			color = "useraway"
+		elif status == 2:
+			color = "useronline"
+		else:
+			color = "useroffline"
+		return color
+		
 	def GetUserStatus(self, status):
 		if status == self.status:
 			return
+		
+		
 		self.status = status
+
+		color = self.getUserStatusColor(self.status)
+
+		self.changecolour(self.tag_username, color)
+		
 		line = "* " + ["User %s is offline", "User %s is away", "User %s is online"][status] % self.user
 		AppendLine(self.ChatScroll, line, self.tag_hilite, "%c")
 	
