@@ -406,8 +406,8 @@ class PrivateChat(PrivateChatTab):
 
 		self.changecolour(self.tag_username, color)
 		
-		line = "* " + ["User %s is offline", "User %s is away", "User %s is online"][status] % self.user
-		AppendLine(self.ChatScroll, line, self.tag_hilite, "%c")
+		#line = "* " + ["User %s is offline", "User %s is away", "User %s is online"][status] % self.user
+		#AppendLine(self.ChatScroll, line, self.tag_hilite, "%c")
 	
 	def OnClose(self, widget):
 		if self.logfile is not None:

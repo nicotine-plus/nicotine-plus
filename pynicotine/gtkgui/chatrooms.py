@@ -87,7 +87,30 @@ class RoomsControl:
 		frame.roomlist.RoomsList.set_headers_clickable(True)
 		
 		self.frame.ChatNotebook.connect("switch-page", self.OnSwitchPage)
-
+		self.frame.ChatNotebook.connect("page-reordered", self.OnReorderedPage)
+		
+	def OnReorderedPage(self, notebook, page, page_num, force=0):
+		room_tab_order = {}
+		# Find position of opened autojoined rooms
+		for name, room in self.joinedrooms.items():
+			if name not in self.frame.np.config.sections["server"]["autojoin"]:
+				continue
+			room_tab_order [ notebook.page_num(room.Main) ] = name
+		pos = 1000
+		# Add closed autojoined rooms as well
+		for name in self.frame.np.config.sections["server"]["autojoin"]:
+			if not self.joinedrooms.has_key(name):
+				room_tab_order [ pos ] = name
+				pos += 1
+		# Sort by "position"
+		rto = room_tab_order.keys()
+		rto.sort()
+		new_autojoin = []
+		for roomplace in rto:
+			new_autojoin.append(room_tab_order[roomplace])
+		# Save
+		self.frame.np.config.sections["server"]["autojoin"] = new_autojoin
+		
 	def OnSwitchPage(self, notebook, page, page_num, force=0):
 		if self.frame.notebook1.get_current_page() != 0 and not force:
 			return
@@ -466,8 +489,12 @@ class ChatRoom(ChatRoomTab):
 			del self.lines[0:200]
 
 		line = "\n-- ".join(line.split("\n"))
-
-		self.lines.append(AppendLine(self.ChatScroll, self.frame.np.decode(line, self.encoding), tag, username=msg.user, usertag=self.tag_users[msg.user]))
+		
+		if self.tag_users.has_key(msg.user):
+			usertag = self.tag_users[msg.user]
+		else:
+			usertag = None
+		self.lines.append(AppendLine(self.ChatScroll, self.frame.np.decode(line, self.encoding), tag, username=msg.user, usertag=usertag))
 		if self.Log.get_active():
 			self.logfile = WriteLog(self.logfile, self.frame.np.config.sections["logging"]["logsdir"], self.room, line)
 			
