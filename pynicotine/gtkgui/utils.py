@@ -146,8 +146,7 @@ def AppendLine(textview, line, tag = None, timestamp = "%H:%M:%S", username=None
 		line = line[match.end()-1:]
 		
 		if USERNAMEHOTSPOTS and username != None and usertag != None:
-			regexpname = re.escape(username)
-			np = re.compile(regexpname)
+			np = re.compile(re.escape(username))
 			match = np.search(start)
 			if match != None:
 				start2 = start[:match.start()]
@@ -169,8 +168,7 @@ def AppendLine(textview, line, tag = None, timestamp = "%H:%M:%S", username=None
 	if line:
 		
 		if USERNAMEHOTSPOTS and username != None and usertag != None:
-			regexpname = re.escape(username)
-			np = re.compile(regexpname)
+			np = re.compile(re.escape(username))
 			match = np.search(line)
 			if match != None:
 				start = line[:match.start()]

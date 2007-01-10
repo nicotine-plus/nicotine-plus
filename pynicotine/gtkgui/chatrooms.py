@@ -87,7 +87,11 @@ class RoomsControl:
 		frame.roomlist.RoomsList.set_headers_clickable(True)
 		
 		self.frame.ChatNotebook.connect("switch-page", self.OnSwitchPage)
-		self.frame.ChatNotebook.connect("page-reordered", self.OnReorderedPage)
+		try:
+			self.frame.ChatNotebook.connect("page-reordered", self.OnReorderedPage)
+		except:
+			# No PyGTK 2.10! Gosh, you really need to get with the times!
+			pass
 		
 	def OnReorderedPage(self, notebook, page, page_num, force=0):
 		room_tab_order = {}
