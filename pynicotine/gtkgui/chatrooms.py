@@ -720,19 +720,13 @@ class ChatRoom(ChatRoomTab):
 		tag.last_event_type = event.type
 		
 	def UpdateColours(self):
-		def makecolour(buffer, colour):
-			colour = self.frame.np.config.sections["ui"][colour]
-			font = self.frame.np.config.sections["ui"]["chatfont"]
-			if colour:
-				return buffer.create_tag(foreground = colour, font=font)
-			else:
-				return buffer.create_tag( font=font)
+
 				
 		buffer = self.ChatScroll.get_buffer()
-		self.tag_remote = makecolour(buffer, "chatremote")
-		self.tag_local = makecolour(buffer, "chatlocal")
-		self.tag_me = makecolour(buffer, "chatme")
-		self.tag_hilite = makecolour(buffer, "chathilite")
+		self.tag_remote = self.makecolour(buffer, "chatremote")
+		self.tag_local = self.makecolour(buffer, "chatlocal")
+		self.tag_me = self.makecolour(buffer, "chatme")
+		self.tag_hilite = self.makecolour(buffer, "chathilite")
 		self.tag_users = {}
 		for user in self.users:
 			status = self.usersmodel.get_value(self.users[user], 4)
@@ -742,7 +736,7 @@ class ChatRoom(ChatRoomTab):
 			else:
 				self.tag_users[user] = self.makecolour(buffer, color, user)
 		buffer = self.RoomLog.get_buffer()
-		self.tag_log = makecolour(buffer, "chatremote")
+		self.tag_log = self.makecolour(buffer, "chatremote")
 		
 		
 	def getUserStatusColor(self, status):

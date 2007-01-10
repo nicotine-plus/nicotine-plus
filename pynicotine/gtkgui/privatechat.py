@@ -334,6 +334,7 @@ class PrivateChat(PrivateChatTab):
 			return
 		widget.set_text("")
 
+
 	def UpdateColours(self):
 		def makecolour(buffer, colour):
 			colour = self.frame.np.config.sections["ui"][colour]
@@ -355,8 +356,23 @@ class PrivateChat(PrivateChatTab):
 			color = "useronline"
 		else:
 			color = "useroffline"
-		self.tag_username = makecolour(buffer, color)
+		
+		
 
+		self.tag_username = makecolour(buffer, color)
+		usernamestyle = self.frame.np.config.sections["ui"]["usernamestyle"]
+		if usernamestyle == "bold":
+			self.tag_username.set_property("weight",  pango.WEIGHT_BOLD)
+		else:
+			self.tag_username.set_property("weight",  pango.WEIGHT_NORMAL)
+		if usernamestyle == "italic":
+			self.tag_username.set_property("style",  pango.STYLE_ITALIC)
+		else:
+			self.tag_username.set_property("style",  pango.STYLE_NORMAL)
+		if usernamestyle == "underline":
+			self.tag_username.set_property("underline", pango.UNDERLINE_SINGLE)
+		else:
+			self.tag_username.set_property("underline", pango.UNDERLINE_NONE)
 
 	def changecolour(self, tag, colour):
 		if self.frame.np.config.sections["ui"].has_key(colour):
@@ -371,7 +387,19 @@ class PrivateChat(PrivateChatTab):
 			tag.set_property("foreground", color)
 			tag.set_property("font", font)
 			if colour in ["useraway", "useronline", "useroffline"]:
-				tag.set_property("weight",  pango.WEIGHT_BOLD)
+				usernamestyle = self.frame.np.config.sections["ui"]["usernamestyle"]
+				if usernamestyle == "bold":
+					tag.set_property("weight",  pango.WEIGHT_BOLD)
+				else:
+					tag.set_property("weight",  pango.WEIGHT_NORMAL)
+				if usernamestyle == "italic":
+					tag.set_property("style",  pango.STYLE_ITALIC)
+				else:
+					tag.set_property("style",  pango.STYLE_NORMAL)
+				if usernamestyle == "underline":
+					tag.set_property("underline", pango.UNDERLINE_SINGLE)
+				else:
+					tag.set_property("underline", pango.UNDERLINE_NONE)
 		else:
 			tag.set_property("font", font)
 			
