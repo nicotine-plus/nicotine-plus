@@ -197,10 +197,20 @@ class UserInfo(UserInfoTab):
 		if self.image is None:
 			return
 		pixbuf = self.image.get_pixbuf()
-		name = os.path.join(self.frame.np.config.sections["transfers"]["downloaddir"],self.user) + ".jpg"
+		name = os.path.join(self.frame.np.config.sections["transfers"]["downloaddir"],self.encode(self.user)) + ".jpg"
 		pixbuf.save(name, "jpeg", {"quality": "100"})
 		self.frame.logMessage("Picture saved to " + name)
-
+		
+	def encode(self, path):
+		try:
+			if sys.platform == "win32":
+				chars = ["?", "\/", "\"", ":", ">", "<", "|", "*"]
+				for char in chars:
+					path = path.replace(char, "_")
+			return path
+		except:
+			return path
+			
 	def OnEncodingChanged(self, widget):
 		try:
 			# PyGTK 2.6

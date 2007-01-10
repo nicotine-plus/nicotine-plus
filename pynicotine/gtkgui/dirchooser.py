@@ -26,9 +26,9 @@ def ChooseDir(parent = None, initialdir = "~"):
 	else:
 		res = None
 	dialog.hide()
-	gtk.threads_leave()
+	gtk.gdk.threads_leave()
 	dialog.destroy()
-	gtk.threads_enter()
+	gtk.gdk.threads_enter()
 	del dialog
 	return res
 
@@ -48,9 +48,9 @@ def ChooseFile(parent = None, initialdir = "~", initialfile = ""):
 	else:
 		res = None
 	dialog.hide()
-	gtk.threads_leave()
+	gtk.gdk.threads_leave()
 	dialog.destroy()
-	gtk.threads_enter()
+	gtk.gdk.threads_enter()
 	del dialog
 	return res
 
@@ -80,9 +80,9 @@ def ChooseImage(parent = None, initialdir = "~", initialfile = ""):
 	else:
 		res = None
 	dialog.hide()
-	gtk.threads_leave()
+	gtk.gdk.threads_leave()
 	dialog.destroy()
-	gtk.threads_enter()
+	gtk.gdk.threads_enter()
 	del dialog
 	return res
 	

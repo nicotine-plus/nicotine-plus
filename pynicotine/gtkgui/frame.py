@@ -15,7 +15,7 @@ import gobject
 import thread
 import urllib
 import signal
-
+import re
 from privatechat import PrivateChats
 from chatrooms import ChatRooms
 from userinfo import UserTabs, UserInfo
@@ -401,6 +401,7 @@ class NicotineFrame(MainWindow):
 			self.OnSettings(None)
 		else:
 			self.OnConnect(-1)
+		self.UpdateDownloadFilters()
 		
 	def importimages(self):
 		try:
@@ -663,18 +664,26 @@ class NicotineFrame(MainWindow):
 		
 	def OnGetAUsersInfo(self, widget, prefix = ""):
 		# popup
+		users = []
+		for entry in self.np.config.sections["server"]["userlist"]:
+			users.append(entry[0])
+		users.sort()
 		user = input_box(self, title=_('Nicotine+: Get User Info'),
 		message=_('Enter the User whose User Info you wish to recieve:'),
-		default_text='')
+		default_text='', droplist=users)
 		if user is None:
 			pass
 		else:
 			self.LocalUserInfoRequest(user)
 			
 	def OnGetAUsersIP(self, widget, prefix = ""):
+		users = []
+		for entry in self.np.config.sections["server"]["userlist"]:
+			users.append(entry[0])
+		users.sort()
 		user = input_box(self, title=_("Nicotine+: Get A User's IP"),
 		message=_('Enter the User whose IP Address you wish to recieve:'),
-		default_text='')
+		default_text='', droplist=users)
 		if user is None:
 			pass
 		else:
@@ -682,9 +691,13 @@ class NicotineFrame(MainWindow):
 # 			self.np.ProcessRequestToPeer(user, slskmessages.UserInfoRequest(None), self.userinfo)
 			
 	def OnGetAUsersShares(self, widget, prefix = ""):
+		users = []
+		for entry in self.np.config.sections["server"]["userlist"]:
+			users.append(entry[0])
+		users.sort()
 		user = input_box(self, title=_("Nicotine+: Get A User's Shares List"),
 		message=_('Enter the User whose Shares List you wish to recieve:'),
-		default_text='')
+		default_text='', droplist=users)
 		if user is None:
 			pass
 		else:
@@ -1206,7 +1219,7 @@ class NicotineFrame(MainWindow):
 		else:
 			self.np.queue.put(slskmessages.SetGeoBlock(None))
 		self.np.queue.put(slskmessages.SetUploadLimit(uselimit,uploadlimit,limitby))
-
+		self.UpdateDownloadFilters()
 		self.np.config.writeConfig()
 		if not self.np.config.sections["ui"]["trayicon"] and self.HAVE_TRAYICON:
 			self.destroy_trayicon()
@@ -1232,11 +1245,57 @@ class NicotineFrame(MainWindow):
 
 		if self.np.config.needConfig():
 			self.connect1.set_sensitive(0)
-			self.logMessage(_("You need to finish configuring your settings (Server, Username, Password, Download Directory) before connecting..."))
+			self.logMessage(_("You need to finish configuring your settings (Server, Username, Password, Download Directory) before connecting... but if this message persists, check your Nicotine config file for options set to \'None\'."))
 		else:
 			if self.np.transfers is None:
 				self.connect1.set_sensitive(1)
-				
+		
+	def UpdateDownloadFilters(self):
+		proccessedfilters = []
+		outfilter = "(\\\\("
+		failed = {}
+		df = self.np.config.sections["transfers"]["downloadfilters"]
+		df.sort()
+		# Get Filters from config file and check their escaped status
+		# Test if they are valid regular expressions and save error messages
+		
+		for item in df :
+			filter, escaped = item
+			if escaped:
+				dfilter = re.escape(filter)
+				dfilter = dfilter.replace("\*", ".*")
+			else:
+				dfilter = filter
+			try:
+				re.compile("("+dfilter+")")
+				outfilter += dfilter
+				proccessedfilters.append(dfilter)
+			except Exception, e:
+				failed[dfilter] = e
+					
+			proccessedfilters.append(dfilter)
+			
+			if item is not df[-1]:
+				outfilter += "|"
+		# Crop trailing pipes
+		while outfilter[-1] == "|":
+			outfilter = outfilter [:-1]
+		outfilter += ")$)"
+		try:
+			re.compile(outfilter)
+			self.np.config.sections["transfers"]["downloadregexp"] = outfilter
+			# Send error messages for each failed filter to log window
+			if len(failed.keys()) >= 1:
+				errors = ""
+				for filter, error in failed.items():
+					errors += "Filter: %s Error: %s " % (filter, error)
+				error = _("Error: %d Download filters failed! %s " %(len(failed.keys()), errors) )
+				self.logMessage(error)
+		except Exception, e:
+			# Strange that individual filters _and_ the composite filter both fail
+			self.logMessage(_("Error: Download Filter failed! Verify your filters. Reason: %s" % e))
+			self.np.config.sections["transfers"]["downloadregexp"] = ""
+		
 	def UpdateTransferButtons(self):
 		if self.np.config.sections["transfers"]["enabletransferbuttons"]:
 			self.DownloadButtons.show()

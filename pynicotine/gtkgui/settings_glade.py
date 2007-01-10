@@ -811,6 +811,218 @@ class TransfersFrame:
         self.LockIncoming.show()
         self.vbox81.pack_start(self.LockIncoming, False, False, 0)
 
+        self.hbox192 = gtk.HBox(False, 3)
+        self.hbox192.show()
+        self.hbox192.set_spacing(3)
+
+        self.label314 = gtk.Label("")
+        self.label314.set_alignment(0, 0.5)
+        self.label314.set_padding(0, 0)
+        self.label314.set_line_wrap(False)
+        self.label314.set_markup(_("<b>Do not download these file types:</b>"))
+        self.label314.show()
+        self.hbox192.pack_start(self.label314, False, False, 0)
+
+        self.DownloadFilter = gtk.CheckButton()
+        self.DownloadFilter.set_active(False)
+        self.DownloadFilter.set_label(_("Enable Filters"))
+        self.DownloadFilter.show()
+        self.DownloadFilter.connect("toggled", self.OnEnableFiltersToggle)
+        self.hbox192.pack_start(self.DownloadFilter, False, False, 0)
+
+        self.vbox81.pack_start(self.hbox192, False, False, 0)
+
+        self.label317 = gtk.Label("")
+        self.label317.set_alignment(0, 0.5)
+        self.label317.set_padding(0, 0)
+        self.label317.set_line_wrap(True)
+        self.label317.set_markup(_("<b>Syntax:</b> Letters are Case Insensitive, All Python Regular Expressions are supported if escaping is disabled. For simple filters, keep escaping enabled."))
+        self.label317.show()
+        self.vbox81.pack_start(self.label317, False, True, 0)
+
+        self.hbox189 = gtk.HBox(False, 0)
+        self.hbox189.show()
+        self.hbox189.set_spacing(0)
+
+        self.scrolledwindow16 = gtk.ScrolledWindow()
+        self.scrolledwindow16.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+        self.scrolledwindow16.show()
+        self.scrolledwindow16.set_shadow_type(gtk.SHADOW_IN)
+
+        self.FilterView = gtk.TreeView()
+        self.FilterView.show()
+        self.FilterView.set_headers_visible(True)
+        self.scrolledwindow16.add(self.FilterView)
+
+        self.hbox189.pack_start(self.scrolledwindow16, True, True, 0)
+
+        self.vbox105 = gtk.VBox(False, 3)
+        self.vbox105.show()
+        self.vbox105.set_spacing(3)
+        self.vbox105.set_border_width(3)
+
+        self.AddFilter = gtk.Button()
+        self.AddFilter.show()
+        self.AddFilter.connect("clicked", self.OnAddFilter)
+
+        self.alignment85 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment85.show()
+
+        self.hbox191 = gtk.HBox(False, 2)
+        self.hbox191.show()
+        self.hbox191.set_spacing(2)
+
+        self.image79 = gtk.Image()
+        self.image79.set_padding(0, 0)
+        self.image79.set_from_stock(gtk.STOCK_ADD, 4)
+        self.image79.show()
+        self.hbox191.pack_start(self.image79, False, False, 0)
+
+        self.label316 = gtk.Label(_("Add..."))
+        self.label316.set_padding(0, 0)
+        self.label316.set_line_wrap(False)
+        self.label316.show()
+        self.hbox191.pack_start(self.label316, False, False, 0)
+
+        self.alignment85.add(self.hbox191)
+
+        self.AddFilter.add(self.alignment85)
+
+        self.vbox105.pack_start(self.AddFilter, False, False, 0)
+
+        self.EditFilter = gtk.Button()
+        self.EditFilter.show()
+        self.EditFilter.connect("clicked", self.OnEditFilter)
+
+        self.alignment88 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment88.show()
+
+        self.hbox196 = gtk.HBox(False, 2)
+        self.hbox196.show()
+        self.hbox196.set_spacing(2)
+
+        self.image82 = gtk.Image()
+        self.image82.set_padding(0, 0)
+        self.image82.set_from_stock(gtk.STOCK_EDIT, 4)
+        self.image82.show()
+        self.hbox196.pack_start(self.image82, False, False, 0)
+
+        self.label320 = gtk.Label(_("Edit Filter"))
+        self.label320.set_padding(0, 0)
+        self.label320.set_line_wrap(False)
+        self.label320.show()
+        self.hbox196.pack_start(self.label320, False, False, 0)
+
+        self.alignment88.add(self.hbox196)
+
+        self.EditFilter.add(self.alignment88)
+
+        self.vbox105.pack_start(self.EditFilter, False, False, 0)
+
+        self.RemoveFilter = gtk.Button()
+        self.RemoveFilter.show()
+        self.RemoveFilter.connect("clicked", self.OnRemoveFilter)
+
+        self.alignment84 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment84.show()
+
+        self.hbox190 = gtk.HBox(False, 2)
+        self.hbox190.show()
+        self.hbox190.set_spacing(2)
+
+        self.image78 = gtk.Image()
+        self.image78.set_padding(0, 0)
+        self.image78.set_from_stock(gtk.STOCK_REMOVE, 4)
+        self.image78.show()
+        self.hbox190.pack_start(self.image78, False, False, 0)
+
+        self.label315 = gtk.Label(_("Remove"))
+        self.label315.set_padding(0, 0)
+        self.label315.set_line_wrap(False)
+        self.label315.show()
+        self.hbox190.pack_start(self.label315, False, False, 0)
+
+        self.alignment84.add(self.hbox190)
+
+        self.RemoveFilter.add(self.alignment84)
+
+        self.vbox105.pack_start(self.RemoveFilter, False, False, 0)
+
+        self.DefaultFilters = gtk.Button()
+        self.DefaultFilters.show()
+        self.DefaultFilters.connect("clicked", self.OnDefaultFilters)
+
+        self.alignment86 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment86.show()
+
+        self.hbox193 = gtk.HBox(False, 2)
+        self.hbox193.show()
+        self.hbox193.set_spacing(2)
+
+        self.image80 = gtk.Image()
+        self.image80.set_padding(0, 0)
+        self.image80.set_from_stock(gtk.STOCK_REFRESH, 4)
+        self.image80.show()
+        self.hbox193.pack_start(self.image80, False, False, 0)
+
+        self.DefaultLabel = gtk.Label(_("Load Defaults"))
+        self.DefaultLabel.set_padding(0, 0)
+        self.DefaultLabel.set_line_wrap(False)
+        self.DefaultLabel.show()
+        self.hbox193.pack_start(self.DefaultLabel, False, False, 0)
+
+        self.alignment86.add(self.hbox193)
+
+        self.DefaultFilters.add(self.alignment86)
+
+        self.vbox105.pack_start(self.DefaultFilters, False, False, 0)
+
+        self.hbox189.pack_start(self.vbox105, False, True, 3)
+
+        self.vbox81.pack_start(self.hbox189, True, True, 0)
+
+        self.hbox195 = gtk.HBox(False, 5)
+        self.hbox195.show()
+        self.hbox195.set_spacing(5)
+
+        self.VerifyFilters = gtk.Button()
+        self.VerifyFilters.show()
+        self.VerifyFilters.connect("clicked", self.OnVerifyFilter)
+
+        self.alignment87 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment87.show()
+
+        self.hbox194 = gtk.HBox(False, 2)
+        self.hbox194.show()
+        self.hbox194.set_spacing(2)
+
+        self.image81 = gtk.Image()
+        self.image81.set_padding(0, 0)
+        self.image81.set_from_stock(gtk.STOCK_SPELL_CHECK, 4)
+        self.image81.show()
+        self.hbox194.pack_start(self.image81, False, False, 0)
+
+        self.label319 = gtk.Label(_("Verify Filters"))
+        self.label319.set_padding(0, 0)
+        self.label319.set_line_wrap(False)
+        self.label319.show()
+        self.hbox194.pack_start(self.label319, False, False, 0)
+
+        self.alignment87.add(self.hbox194)
+
+        self.VerifyFilters.add(self.alignment87)
+
+        self.hbox195.pack_start(self.VerifyFilters, False, False, 0)
+
+        self.VerifiedLabel = gtk.Label("")
+        self.VerifiedLabel.set_padding(0, 0)
+        self.VerifiedLabel.set_line_wrap(True)
+        self.VerifiedLabel.set_markup(_("<b>Unverified</b>"))
+        self.VerifiedLabel.show()
+        self.hbox195.pack_start(self.VerifiedLabel, False, False, 0)
+
+        self.vbox81.pack_start(self.hbox195, False, True, 0)
+
         self.Main.add(self.vbox81)
 
         self.label183 = gtk.Label(_("Transfers"))
@@ -830,6 +1042,24 @@ class TransfersFrame:
         pass
 
     def OnFriendsOnlyToggled(self, widget):
+        pass
+
+    def OnEnableFiltersToggle(self, widget):
+        pass
+
+    def OnAddFilter(self, widget):
+        pass
+
+    def OnEditFilter(self, widget):
+        pass
+
+    def OnRemoveFilter(self, widget):
+        pass
+
+    def OnDefaultFilters(self, widget):
+        pass
+
+    def OnVerifyFilter(self, widget):
         pass
 
     def get_custom_widget(self, id, string1, string2, int1, int2):
@@ -1217,9 +1447,10 @@ class BloatFrame:
 
         self.expander1.add(self.vbox104)
 
-        self.themeExpander = gtk.Label(_("Icon and Sound Themes"))
+        self.themeExpander = gtk.Label("")
         self.themeExpander.set_padding(0, 0)
         self.themeExpander.set_line_wrap(False)
+        self.themeExpander.set_markup(_("<b>Icon and Sound Themes</b>"))
         self.themeExpander.show()
         self.expander1.set_label_widget(self.themeExpander)
 
@@ -1490,10 +1721,11 @@ class BloatFrame:
 
         self.table2.attach(self.DefaultHighlight, 2, 3, 3, 4, gtk.FILL, 0, 0, 0)
 
-        self.label208 = gtk.Label(_("Search colours"))
+        self.label208 = gtk.Label("")
         self.label208.set_alignment(0, 0.5)
         self.label208.set_padding(0, 5)
         self.label208.set_line_wrap(False)
+        self.label208.set_markup(_("<b>Search colours</b>"))
         self.label208.show()
         self.table2.attach(self.label208, 0, 3, 4, 5, gtk.FILL, 0, 0, 0)
 
@@ -1683,35 +1915,6 @@ class BloatFrame:
 
         self.table2.attach(self.PickOffline, 0, 1, 9, 10, gtk.FILL, 0, 0, 0)
 
-        self.PickAway = gtk.Button()
-        self.PickAway.show()
-
-        self.alignment80 = gtk.Alignment(0, 0.5, 0, 0)
-        self.alignment80.show()
-
-        self.hbox185 = gtk.HBox(False, 2)
-        self.hbox185.show()
-        self.hbox185.set_spacing(2)
-        self.hbox185.set_border_width(3)
-
-        self.image74 = gtk.Image()
-        self.image74.set_padding(0, 0)
-        self.image74.set_from_stock(gtk.STOCK_SELECT_COLOR, 4)
-        self.image74.show()
-        self.hbox185.pack_start(self.image74, False, False, 0)
-
-        self.label310 = gtk.Label(_("Away"))
-        self.label310.set_padding(0, 0)
-        self.label310.set_line_wrap(False)
-        self.label310.show()
-        self.hbox185.pack_start(self.label310, False, False, 0)
-
-        self.alignment80.add(self.hbox185)
-
-        self.PickAway.add(self.alignment80)
-
-        self.table2.attach(self.PickAway, 0, 1, 10, 11, gtk.FILL, 0, 0, 0)
-
         self.OnlineColor = gtk.Entry()
         self.OnlineColor.set_text("")
         self.OnlineColor.set_editable(False)
@@ -1725,13 +1928,6 @@ class BloatFrame:
         self.OfflineColor.show()
         self.OfflineColor.set_visibility(True)
         self.table2.attach(self.OfflineColor, 1, 2, 9, 10, gtk.EXPAND|gtk.FILL, 0, 0, 0)
-
-        self.AwayColor = gtk.Entry()
-        self.AwayColor.set_text("")
-        self.AwayColor.set_editable(False)
-        self.AwayColor.show()
-        self.AwayColor.set_visibility(True)
-        self.table2.attach(self.AwayColor, 1, 2, 10, 11, gtk.EXPAND|gtk.FILL, 0, 0, 0)
 
         self.DefaultOnline = gtk.Button()
         self.DefaultOnline.show()
@@ -1789,6 +1985,49 @@ class BloatFrame:
 
         self.table2.attach(self.DefaultOffline, 2, 3, 9, 10, gtk.FILL, 0, 0, 0)
 
+        self.UsernameHotspots = gtk.CheckButton()
+        self.UsernameHotspots.set_active(False)
+        self.UsernameHotspots.set_label(_("Username Colours and Hotspots"))
+        self.UsernameHotspots.show()
+        self.UsernameHotspots.connect("toggled", self.OnUsernameHotspotsToggled)
+        self.table2.attach(self.UsernameHotspots, 0, 3, 7, 8, gtk.FILL, 0, 0, 0)
+
+        self.AwayColor = gtk.Entry()
+        self.AwayColor.set_text("")
+        self.AwayColor.set_editable(False)
+        self.AwayColor.show()
+        self.AwayColor.set_visibility(True)
+        self.table2.attach(self.AwayColor, 1, 2, 10, 11, gtk.EXPAND|gtk.FILL, 0, 0, 0)
+
+        self.PickAway = gtk.Button()
+        self.PickAway.show()
+
+        self.alignment80 = gtk.Alignment(0, 0.5, 0, 0)
+        self.alignment80.show()
+
+        self.hbox185 = gtk.HBox(False, 2)
+        self.hbox185.show()
+        self.hbox185.set_spacing(2)
+        self.hbox185.set_border_width(3)
+
+        self.image74 = gtk.Image()
+        self.image74.set_padding(0, 0)
+        self.image74.set_from_stock(gtk.STOCK_SELECT_COLOR, 4)
+        self.image74.show()
+        self.hbox185.pack_start(self.image74, False, False, 0)
+
+        self.label310 = gtk.Label(_("Away"))
+        self.label310.set_padding(0, 0)
+        self.label310.set_line_wrap(False)
+        self.label310.show()
+        self.hbox185.pack_start(self.label310, False, False, 0)
+
+        self.alignment80.add(self.hbox185)
+
+        self.PickAway.add(self.alignment80)
+
+        self.table2.attach(self.PickAway, 0, 1, 10, 11, gtk.FILL, 0, 0, 0)
+
         self.DefaultAway = gtk.Button()
         self.DefaultAway.show()
 
@@ -1817,18 +2056,32 @@ class BloatFrame:
 
         self.table2.attach(self.DefaultAway, 2, 3, 10, 11, gtk.FILL, 0, 0, 0)
 
-        self.UsernameHotspots = gtk.CheckButton()
-        self.UsernameHotspots.set_active(False)
-        self.UsernameHotspots.set_label(_("Username Colours and Hotspots"))
-        self.UsernameHotspots.show()
-        self.UsernameHotspots.connect("toggled", self.OnUsernameHotspotsToggled)
-        self.table2.attach(self.UsernameHotspots, 0, 3, 7, 8, gtk.FILL, 0, 0, 0)
+        self.hbox197 = gtk.HBox(False, 3)
+        self.hbox197.show()
+        self.hbox197.set_spacing(3)
+
+        self.label321 = gtk.Label(_("Username Font Style:"))
+        self.label321.set_padding(0, 0)
+        self.label321.set_line_wrap(False)
+        self.label321.show()
+        self.hbox197.pack_start(self.label321, False, False, 0)
+
+        self.UsernameStyle_List = gtk.ListStore(gobject.TYPE_STRING)
+        self.UsernameStyle = gtk.ComboBoxEntry()
+        self.UsernameStyle.show()
+
+        self.UsernameStyle.set_model(self.UsernameStyle_List)
+        self.UsernameStyle.set_text_column(0)
+        self.hbox197.pack_start(self.UsernameStyle, False, True, 0)
+
+        self.table2.attach(self.hbox197, 0, 3, 11, 12, gtk.FILL, gtk.EXPAND|gtk.FILL, 0, 0)
 
         self.expander2.add(self.table2)
 
-        self.label306 = gtk.Label(_("Chat colours"))
+        self.label306 = gtk.Label("")
         self.label306.set_padding(0, 0)
         self.label306.set_line_wrap(False)
+        self.label306.set_markup(_("<b>Chat colours</b>"))
         self.label306.show()
         self.expander2.set_label_widget(self.label306)
 
@@ -3064,9 +3317,10 @@ class ConnectionFrame:
 
         self.Main.add(self.alignment68)
 
-        self.label266 = gtk.Label(_("Connection Settings"))
+        self.label266 = gtk.Label("")
         self.label266.set_padding(0, 0)
         self.label266.set_line_wrap(False)
+        self.label266.set_markup(_("Connection Settings"))
         self.label266.show()
         self.Main.set_label_widget(self.label266)
 
@@ -3121,9 +3375,10 @@ class UIFrame:
 
         self.Main.add(self.alignment69)
 
-        self.label276 = gtk.Label(_("User Interface Settings"))
+        self.label276 = gtk.Label("")
         self.label276.set_padding(0, 0)
         self.label276.set_line_wrap(False)
+        self.label276.set_markup(_("User Interface Settings"))
         self.label276.show()
         self.Main.set_label_widget(self.label276)
 
@@ -3206,9 +3461,10 @@ class MiscFrame:
 
         self.Main.add(self.alignment70)
 
-        self.label279 = gtk.Label(_("Miscellaneous Settings"))
+        self.label279 = gtk.Label("")
         self.label279.set_padding(0, 0)
         self.label279.set_line_wrap(False)
+        self.label279.set_markup(_("Miscellaneous Settings"))
         self.label279.show()
         self.Main.set_label_widget(self.label279)
 

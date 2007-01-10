@@ -4,9 +4,10 @@ import gtk
 import gobject
 import settings_glade
 import locale
-
+import re
 from dirchooser import *
 from utils import InputDialog, InitialiseColumns, recode, recode2, popupWarning
+from entrydialog import *
 import os, sys
 win32 = sys.platform.startswith("win")
 if win32:
@@ -16,7 +17,8 @@ else:
 from pynicotine.utils import _
 
 class ServerFrame(settings_glade.ServerFrame):
-	def __init__(self, encodings):
+	def __init__(self, parent, encodings):
+		self.frame = parent.frame
 		settings_glade.ServerFrame.__init__(self, False)
 		self.Server.append_text("server.slsknet.org:2240")
 
@@ -78,7 +80,8 @@ class ServerFrame(settings_glade.ServerFrame):
 		}
 
 class SharesFrame(settings_glade.SharesFrame):
-	def __init__(self):
+	def __init__(self, parent):
+		self.frame = parent.frame
 		settings_glade.SharesFrame.__init__(self, False)
 		self.needrescan = 0
 		self.shareslist = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
@@ -217,8 +220,22 @@ class SharesFrame(settings_glade.SharesFrame):
 		self.needrescan = 1
 
 class TransfersFrame(settings_glade.TransfersFrame):
-	def __init__(self):
+	def __init__(self, parent):
+		self.frame = parent.frame
 		settings_glade.TransfersFrame.__init__(self, False)
+		
+		
+		self.filterlist = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_BOOLEAN )
+		self.downloadfilters = []
+		
+		cols = InitialiseColumns(self.FilterView,
+			[_("Filter"), 250, "text"],
+			[_("Escaped"), 40, "text"],
+		)
+		cols[0].set_sort_column_id(0)
+		cols[1].set_sort_column_id(1)
+		self.FilterView.set_model(self.filterlist)
+		self.FilterView.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
 
 	def SetSettings(self, config):
 		transfers = config["transfers"]
@@ -255,6 +272,16 @@ class TransfersFrame(settings_glade.TransfersFrame):
 		self.OnQueueUseSlotsToggled(self.QueueUseSlots)
 		self.OnLimitToggled(self.Limit)
 		self.OnFriendsOnlyToggled(self.FriendsOnly)
+		if transfers["enablefilters"] is not None:
+			self.DownloadFilter.set_active(transfers["enablefilters"])
+		
+		self.filtersiters = {}
+		self.filterlist.clear()
+		if transfers["downloadfilters"] != []:
+			for dfilter in transfers["downloadfilters"]:
+				filter, escaped = dfilter
+				self.filtersiters[filter] = self.filterlist.append([filter, escaped])
+		self.OnEnableFiltersToggle(self.DownloadFilter)
 		
 
 			
@@ -294,7 +321,8 @@ class TransfersFrame(settings_glade.TransfersFrame):
 				"preferfriends": self.PreferFriends.get_active(),
 				"lock": self.LockIncoming.get_active(),
 				"remotedownloads": self.RemoteDownloads.get_active(),
-				
+				"downloadfilters": self.GetFilterList(),
+				"enablefilters": self.DownloadFilter.get_active(),
 			},
 		}
 
@@ -311,8 +339,131 @@ class TransfersFrame(settings_glade.TransfersFrame):
 		sensitive = not widget.get_active()
 		self.PreferFriends.set_sensitive(sensitive)
 
+	def OnEnableFiltersToggle(self, widget):
+		sensitive = widget.get_active()
+		self.VerifyFilters.set_sensitive(sensitive)
+		self.VerifiedLabel.set_sensitive(sensitive)
+		self.DefaultFilters.set_sensitive(sensitive)
+		self.RemoveFilter.set_sensitive(sensitive)
+		self.EditFilter.set_sensitive(sensitive)
+		self.AddFilter.set_sensitive(sensitive)
+		self.FilterView.set_sensitive(sensitive)
+	
+	def OnAddFilter(self, widget):
+		response = input_box(self.frame, title=_('Nicotine+: Add a download filter'),		message=_('Enter a new download filter:'),
+		default_text='', option=True, optionvalue=True, optionmessage="Escape this filter?", droplist=self.filtersiters.keys())
+		if type(response) is list:
+			filter = response[0]
+			escaped = response[1]
+			if filter in self.filtersiters.keys():
+				self.filterlist.set(self.filtersiters[filter], 0, filter, 1, escaped)
+			else:
+				self.filtersiters[filter] = self.filterlist.append([filter, escaped])
+			self.OnVerifyFilter(self.VerifyFilters)
+	def GetFilterList(self):
+		self.downloadfilters = []
+		df = self.filtersiters.keys()
+		df.sort()
+		for filter in df :
+			iter = self.filtersiters[filter]
+			dfilter = self.filterlist.get_value(iter, 0)
+			escaped = self.filterlist.get_value(iter, 1)
+			self.downloadfilters.append([dfilter, int(escaped)])
+		return self.downloadfilters
+			
+	
+	def OnEditFilter(self, widget):
+		dfilter = self.GetSelectedFilter()
+		if dfilter:
+			iter = self.filtersiters[dfilter]
+			escapedvalue = self.filterlist.get_value(iter, 1)
+			response = input_box(self.frame, title=_('Nicotine+: Edit a download filter'), message=_('Modify this download filter:'),
+			default_text=dfilter, option=True, optionvalue=escapedvalue, optionmessage="Escape this filter?", droplist=self.filtersiters.keys())
+			if type(response) is list:
+				filter, escaped = response
+				if filter in self.filtersiters.keys():
+					self.filterlist.set(self.filtersiters[filter], 0, filter, 1, escaped)
+				else:
+					self.filtersiters[filter] = self.filterlist.append([filter, escaped])
+					del self.filtersiters[dfilter]
+					self.filterlist.remove(iter)
+				self.OnVerifyFilter(self.VerifyFilters)
+
+	
+	def _SelectedFilter(self, model, path, iter, list):
+		list.append(iter)
+		
+	def GetSelectedFilter(self):
+		iters = []
+		self.FilterView.get_selection().selected_foreach(self._SelectedFilter, iters)
+		if iters == []:
+			return None
+		dfilter = self.filterlist.get_value(iters[0], 0)
+		return dfilter
+	
+	def OnRemoveFilter(self, widget):
+		dfilter = self.GetSelectedFilter()
+		if dfilter:
+			iter = self.filtersiters[dfilter]
+			self.filterlist.remove(iter)
+			del self.filtersiters[dfilter]
+			self.OnVerifyFilter(self.VerifyFilters)
+			
+	
+	def OnDefaultFilters(self, widget):
+		self.filtersiters = {}
+		self.filterlist.clear()
+		default_filters = [["desktop.ini", 1], ["folder.jpg", 1], ["*.url", 1], ["thumbs.db", 1], ["albumart(_{........-....-....-....-............}_)?(_?(large|small))?\.jpg", 0]]
+		for dfilter in default_filters:
+			filter, escaped = dfilter
+			self.filtersiters[filter] = self.filterlist.append([filter, escaped])
+		self.OnVerifyFilter(self.VerifyFilters)
+	def OnVerifyFilter(self, widget):
+		#print self.VerifiedLabel.get_text()
+		outfilter = "(\\\\("
+		df = self.filtersiters.keys()
+		df.sort()
+		proccessedfilters = []
+		failed = {}
+		for filter in df :
+			iter = self.filtersiters[filter]
+			dfilter = self.filterlist.get_value(iter, 0)
+			escaped = self.filterlist.get_value(iter, 1)
+			if escaped:
+				dfilter = re.escape(dfilter)
+				dfilter = dfilter.replace("\*", ".*")
+			try:
+				re.compile("("+dfilter+")")
+				outfilter += dfilter
+				proccessedfilters.append(dfilter)
+			except Exception, e:
+				failed[dfilter] = e
+				
+			
+			
+			if filter is not df[-1]:
+				outfilter += "|"
+		outfilter += ")$)"
+		
+		try:
+			re.compile(outfilter)
+			
+		except Exception, e:
+			failed[outfilter] = e
+			
+		if len(failed.keys()) >= 1:
+			errors = ""
+			for filter, error in failed.items():
+				errors += "Filter: %s Error: %s " % (filter, error)
+			error = _("%d Failed! %s " %(len(failed.keys()), errors) )
+			self.VerifiedLabel.set_markup("<span color=\"red\" weight=\"bold\">%s</span>" % error)
+		else:
+			self.VerifiedLabel.set_markup("<b>Filters Successful</b>")
+
+	
 class GeoBlockFrame(settings_glade.GeoBlockFrame):
-	def __init__(self):
+	def __init__(self, parent):
+		self.frame = parent.frame
 		settings_glade.GeoBlockFrame.__init__(self, False)
 	
 	def SetSettings(self, config):
@@ -340,7 +491,8 @@ class GeoBlockFrame(settings_glade.GeoBlockFrame):
 		self.GeoBlockCC.set_sensitive(sensitive)
 
 class UserinfoFrame(settings_glade.UserinfoFrame):
-	def __init__(self):
+	def __init__(self, parent):
+		self.frame = parent.frame
 		settings_glade.UserinfoFrame.__init__(self, False)
 
 	def SetSettings(self, config):
@@ -373,7 +525,8 @@ class UserinfoFrame(settings_glade.UserinfoFrame):
 				break
 
 class BanFrame(settings_glade.BanFrame):
-	def __init__(self):
+	def __init__(self, parent):
+		self.frame = parent.frame
 		settings_glade.BanFrame.__init__(self, False)
 		self.banned = []
 		self.banlist = gtk.ListStore(gobject.TYPE_STRING)
@@ -464,12 +617,16 @@ class BanFrame(settings_glade.BanFrame):
 		self.CustomBan.set_sensitive(widget.get_active())
 
 class BloatFrame(settings_glade.BloatFrame):
-	def __init__(self):
+	def __init__(self, parent):
+		self.frame = parent.frame
 		settings_glade.BloatFrame.__init__(self, False)
 		for item in ["<None>", ",", ".", "<space>"]:
 			self.DecimalSep.append_text(item)
 		for item in ["play -q", "ogg123 -q"]:
 			self.SoundCommand.append_text(item)
+		for item in ["bold", "italic", "underline", "normal"]:
+			self.UsernameStyle.append_text(item)
+		self.UsernameStyle.child.set_editable(False)
 		self.ThemeButton.connect("clicked", self.OnChooseThemeDir)
 		self.SoundButton.connect("clicked", self.OnChooseSoundDir)
 		
@@ -553,8 +710,10 @@ class BloatFrame(settings_glade.BloatFrame):
 		self.OnSoundCheckToggled(self.SoundCheck)
 		if ui["soundcommand"] is not None:
 			self.SoundCommand.child.set_text(ui["soundcommand"])
-		if ui["soundtheme"] is not None:
-			self.SoundDirectory.set_text(ui["soundtheme"])
+		if ui["soundcommand"] is not None:
+			self.SoundCommand.child.set_text(ui["soundcommand"])
+		if ui["usernamestyle"] is not None:
+			self.UsernameStyle.child.set_text(ui["usernamestyle"])
 		if transfers["enabletransferbuttons"] is not None:
 			self.ShowTransferButtons.set_active(transfers["enabletransferbuttons"])
 	def GetSettings(self):
@@ -578,6 +737,7 @@ class BloatFrame(settings_glade.BloatFrame):
 				"useronline": self.OnlineColor.get_text(),
 				"useroffline": self.OfflineColor.get_text(),
 				"usernamehotspots": self.UsernameHotspots.get_active(),
+				"usernamestyle": self.UsernameStyle.child.get_text(),
 			},
 			"transfers": {
 				"enabletransferbuttons": self.ShowTransferButtons.get_active(),
@@ -625,7 +785,8 @@ class BloatFrame(settings_glade.BloatFrame):
 		combo.child.set_text("play -q")
 			
 class LogFrame(settings_glade.LogFrame):
-	def __init__(self):
+	def __init__(self, parent):
+		self.frame = parent.frame
 		settings_glade.LogFrame.__init__(self, False)
 
 	def SetSettings(self, config):
@@ -657,7 +818,8 @@ class LogFrame(settings_glade.LogFrame):
 
 
 class SearchFrame(settings_glade.SearchFrame):
-	def __init__(self):
+	def __init__(self, parent):
+		self.frame = parent.frame
 		settings_glade.SearchFrame.__init__(self, False)
 
 	def SetSettings(self, config):
@@ -705,7 +867,8 @@ class SearchFrame(settings_glade.SearchFrame):
 			w.set_sensitive(active)
 
 class AwayFrame(settings_glade.AwayFrame):
-	def __init__(self):
+	def __init__(self, parent):
+		self.frame = parent.frame
 		settings_glade.AwayFrame.__init__(self, False)
 	
 	def SetSettings(self, config):		
@@ -728,7 +891,8 @@ class AwayFrame(settings_glade.AwayFrame):
 		}
 
 class EventsFrame(settings_glade.EventsFrame):
-	def __init__(self):
+	def __init__(self, parent):
+		self.frame = parent.frame
 		settings_glade.EventsFrame.__init__(self, False)
 	
 	def SetSettings(self, config):
@@ -753,7 +917,8 @@ class EventsFrame(settings_glade.EventsFrame):
 		}
 
 class UrlCatchFrame(settings_glade.UrlCatchFrame):
-	def __init__(self):
+	def __init__(self, parent):
+		self.frame = parent.frame
 		settings_glade.UrlCatchFrame.__init__(self, False)
 		self.protocolmodel = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
 		self.protocols = {}
@@ -854,8 +1019,8 @@ class SettingsWindow(settings_glade.SettingsWindow):
 		gobject.signal_new("settings-closed", gtk.Window, gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_STRING,))
 		
 		self.SettingsWindow.set_transient_for(frame.MainWindow)
-		self.SettingsWindow.set_geometry_hints(None, min_width=550, min_height=400)
-		self.SettingsWindow.set_default_size(700, 500)
+		self.SettingsWindow.set_geometry_hints(None, min_width=600, min_height=400)
+		self.SettingsWindow.set_default_size(700, 550)
 		self.SettingsWindow.connect("delete-event", self.OnDelete)
 		self.frame = frame
 		self.empty_label = gtk.Label("")
@@ -891,21 +1056,22 @@ class SettingsWindow(settings_glade.SettingsWindow):
 		model.append(row, [_("Searches")])
 		model.append(row, [_("Events")])
 		
-		p[_("Server")] = ServerFrame(frame.np.getencodings())
-		p[_("Shares")] = SharesFrame()
+		p[_("Server")] = ServerFrame(self, frame.np.getencodings())
+		p[_("Shares")] = SharesFrame(self)
+		p[_("Transfers")] = TransfersFrame(self)
+		p[_("Geo Block")] = GeoBlockFrame(self)
+		p[_("User info")] = UserinfoFrame(self)
+		p[_("Ban / ignore")] = BanFrame(self)
+		p[_("Interface")] = BloatFrame(self)
+		p[_("URL Catching")] = UrlCatchFrame(self)
+		p[_("Logging")] = LogFrame(self)
+		p[_("Searches")] = SearchFrame(self)
+		p[_("Away mode")] = AwayFrame(self)
+		p[_("Events")] = EventsFrame(self)
+		
 		p[_("Connection")] = ConnectionFrame()
-		p[_("Transfers")] = TransfersFrame()
-		p[_("Geo Block")] = GeoBlockFrame()
-		p[_("User info")] = UserinfoFrame()
-		p[_("Ban / ignore")] = BanFrame()
 		p[_("UI")] = UIFrame()
-		p[_("Interface")] = BloatFrame()
-		p[_("URL Catching")] = UrlCatchFrame()
 		p[_("Misc")] = MiscFrame()
-		p[_("Logging")] = LogFrame()
-		p[_("Searches")] = SearchFrame()
-		p[_("Away mode")] = AwayFrame()
-		p[_("Events")] = EventsFrame()
 		
 		column = gtk.TreeViewColumn(_("Categories"), gtk.CellRendererText(), text = 0)
 

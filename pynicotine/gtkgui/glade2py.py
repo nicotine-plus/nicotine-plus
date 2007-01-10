@@ -24,6 +24,7 @@ attrs = [
 	["accel_group", lambda w,v: "%s.add_accel_group(%s)" % (w, v)],
 	["wrap_mode", lambda w,v: "%s.set_wrap_mode(%s)" % (w, v.replace("GTK_", "gtk."))],
 	["wrap", lambda w,v: "%s.set_line_wrap(%s)" % (w, v.capitalize())],
+	["set_markup", lambda w,v: "%s.set_markup(_(\"%s\"))" % (w, v)],
 	["cursor_visible", lambda w,v: "%s.set_cursor_visible(%s)" % (w, v.capitalize())],
 	["editable", lambda w,v: "%s.set_editable(%s)" % (w, v.capitalize())],
 	["scrollable", lambda w,v: "%s.set_scrollable(%s)" % (w, v.capitalize())],
@@ -114,6 +115,12 @@ def write_widget_generic(widget, my_class, *args):
 				arg= "None"
 		elif arg[0] == "$":
 			s = widget.attrs[arg[1:]].replace("\"", "\\\"")
+			
+			if arg[1:] == "label":
+				if widget.attrs.has_key("use_markup") and widget.attrs["use_markup"] == "True":
+					widget.attrs["set_markup"] = s
+					s = ""
+					
 			if s:
 				narg = '_("%s")' % s
 			else:

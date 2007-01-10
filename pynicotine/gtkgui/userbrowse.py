@@ -367,9 +367,13 @@ class UserBrowse(UserBrowseTab):
 
 		dir = self.selected_folder.path
 		ldir = dir[:-1].split("\\")[-1]
+		users = []
+		for entry in self.frame.np.config.sections["server"]["userlist"]:
+			users.append(entry[0])
+		users.sort()
 		user = input_box(self.frame, title="Nicotine: Remote Upload Directory's Contents",
 		message='Enter the User you wish to upload to:',
-		default_text='')
+		default_text='', droplist=self.frame.np.config.sections["server"]["userlist"])
 		if user is None or user == "":
 			pass
 		else:
@@ -383,10 +387,13 @@ class UserBrowse(UserBrowseTab):
 				
 	def OnUploadFiles(self, widget, prefix = ""):
 		dir = self.selected_folder.path
-
+		users = []
+		for entry in self.frame.np.config.sections["server"]["userlist"]:
+			users.append(entry[0])
+		users.sort()
 		user = input_box(self.frame, title='Nicotine: Remote Upload File(s)',
 		message='Enter the User you wish to upload to:',
-		default_text='')
+		default_text='', droplist=self.frame.np.config.sections["server"]["userlist"])
 		if user is None or user == "":
 			pass
 		else:

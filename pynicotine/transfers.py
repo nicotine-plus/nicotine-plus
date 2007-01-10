@@ -13,7 +13,7 @@ from slskmessages import newId
 
 import os, stat, sys
 import os.path
-import string
+import string, re
 import time
 import mp3
 import locale
@@ -170,9 +170,26 @@ class Transfers:
 	    status = self.users[user].status
 	else:
 	    status = None
-	if status is None:
-	    self.queue.put(slskmessages.GetUserStatus(user))
-	else:
+	    
+ # Download filter, added by Ceesjan.
+	if not direction and self.eventprocessor.config.sections["transfers"]["enablefilters"]:
+		# Only filter downloads, never uploads!
+		try:
+			downloadregexp = re.compile(self.eventprocessor.config.sections["transfers"]["downloadregexp"], re.I)
+			if downloadregexp.search(filename) is not None:
+				self.eventprocessor.logMessage(_("Filtering: %s") % filename)
+				self.AbortTransfer(transfer)
+				# The string to be displayed on the GUI
+				status = transfer.status = _('Filtered')
+				# In order to remove the filtered files from the saved download queue.
+				self.SaveDownloads()
+
+		except:
+			pass
+		
+        if status is None:
+            self.queue.put(slskmessages.GetUserStatus(user))
+        elif status is not 'Filtered':
 	    transfer.req = newId()
 	    self.eventprocessor.ProcessRequestToPeer(user,slskmessages.TransferRequest(None,direction,transfer.req,filename, self.getFileSize(filename)))
 	if direction == 0:

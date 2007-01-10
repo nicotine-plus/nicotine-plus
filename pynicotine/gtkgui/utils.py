@@ -134,7 +134,9 @@ def AppendLine(textview, line, tag = None, timestamp = "%H:%M:%S", username=None
 		
 	buffer = textview.get_buffer()
 	linenr = buffer.get_line_count()
-	
+	ME = 0
+	if line.startswith("/me"):
+		ME = 1
 	if timestamp:
 		line = "%s %s\n" % (recode(time.strftime(timestamp)), line)
 
@@ -145,7 +147,7 @@ def AppendLine(textview, line, tag = None, timestamp = "%H:%M:%S", username=None
 		urltag = _makeurltag(buffer, tag, url)
 		line = line[match.end()-1:]
 		
-		if USERNAMEHOTSPOTS and username != None and usertag != None:
+		if USERNAMEHOTSPOTS and username != None and usertag != None and not ME:
 			np = re.compile(re.escape(username))
 			match = np.search(start)
 			if match != None:
@@ -167,7 +169,7 @@ def AppendLine(textview, line, tag = None, timestamp = "%H:%M:%S", username=None
 	
 	if line:
 		
-		if USERNAMEHOTSPOTS and username != None and usertag != None:
+		if USERNAMEHOTSPOTS and username != None and usertag != None and not ME:
 			np = re.compile(re.escape(username))
 			match = np.search(line)
 			if match != None:
@@ -523,12 +525,22 @@ def WriteLog(logfile, logsdir, fn, msg):
 		oldumask = os.umask(0077)
 		if not os.path.exists(logsdir):
 			os.makedirs(logsdir)
-		logfile = open(os.path.join(logsdir, fn.replace(os.sep, "-") + ".log"), 'a', 0)
+		logfile = open(encode(os.path.join(logsdir, fn.replace(os.sep, "-") + ".log")), 'a', 0)
 		os.umask(oldumask)
 	logfile.write("%s %s\n" % (recode(time.strftime("%c")), msg))
 	logfile.flush()
 	return logfile
-
+		
+def encode(path):
+	try:
+		if sys.platform == "win32":
+			chars = ["?", "\/", "\"", ":", ">", "<", "|", "*"]
+			for char in chars:
+				path = path.replace(char, "_")
+		return path
+	except:
+		return path
+		
 def Humanize(number):
 	fashion = DECIMALSEP
 	if fashion == "" or fashion == "<None>":

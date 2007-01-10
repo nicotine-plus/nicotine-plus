@@ -9,11 +9,11 @@ from pynicotine.utils import _
 
 
 class EntryDialog( gtk.Dialog):
-    def __init__(self, frame, message="", default_text='', modal= True):
+    def __init__(self, frame, message="", default_text='', modal= True, option=False, optionmessage="", optionvalue=False, droplist=[]):
         gtk.Dialog.__init__(self)
         self.connect("destroy", self.quit)
         self.connect("delete_event", self.quit)
-	
+	self.gotoption = option
         if modal:
             self.set_modal(True)
         box = gtk.VBox(spacing=10)
@@ -22,16 +22,24 @@ class EntryDialog( gtk.Dialog):
         box.show()
         if message:
             label = gtk.Label(message)
-            box.pack_start(label)
+            box.pack_start(label, False, False)
             label.show()
 	self.combo = gtk.combo_box_entry_new_text()
-	for i in frame.np.config.sections["server"]["userlist"]:
-		self.combo.append_text( i[0])
+	for i in droplist:
+		self.combo.append_text( i)
 	self.combo.child.set_text(default_text)
 
-        box.pack_start(self.combo)
+        box.pack_start(self.combo, False, False)
         self.combo.show()
         self.combo.grab_focus()
+	
+	
+	self.option = gtk.CheckButton()
+	self.option.set_active(optionvalue)
+	self.option.set_label(optionmessage)
+	self.option.show()
+	if self.gotoption:
+		box.pack_start(self.option, False, False)
         button = gtk.Button("OK")
         button.connect("clicked", self.click)
         button.set_flags(gtk.CAN_DEFAULT)
@@ -49,14 +57,19 @@ class EntryDialog( gtk.Dialog):
         self.destroy()
         gtk.main_quit()
     def click(self, button):
-        self.ret = self.combo.child.get_text()
+	if self.gotoption:
+		self.ret = [self.combo.child.get_text(), self.option.get_active()]
+	else:
+        	self.ret = self.combo.child.get_text()
         self.quit()
 
 def input_box(frame, title="Input Box", message="", default_text='',
-        modal= True):
+        modal= True, option=False, optionmessage="", optionvalue=False, droplist=[]):
 
-    win = EntryDialog(frame, message, default_text, modal=modal)
+    win = EntryDialog(frame, message, default_text, modal=modal, option=option, optionmessage=optionmessage, optionvalue=optionvalue, droplist=droplist)
     win.set_title(title)
+    win.set_icon(frame.images["n"])
+    win.set_default_size(300, 100)
     win.show()
     gtk.main()
     return win.ret
@@ -67,6 +80,7 @@ def Option_Box(frame, title="Option Box", message="", default_text='',
 
     win = OptionDialog(frame, message, modal=modal, option3=option3, option1=option1, option2=option2)
     win.set_title(title)
+    win.set_icon(frame.images["n"])
     win.show()
     gtk.main()
     return win.ret

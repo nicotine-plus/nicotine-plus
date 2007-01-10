@@ -56,14 +56,14 @@ class Config:
 	"geoblock": 0, "geopanic": 0, "geoblockcc": [""], "remotedownloads": 1, \
 	"downloads":[],"sharedfiles":{},"sharedfilesstreams":{}, "uploadsinsubdirs": 1, \
 	"wordindex":{},"fileindex":{},"sharedmtimes":{},"bsharedfiles":{},"bsharedfilesstreams":{}, \
-	"bwordindex":{},"bfileindex":{},"bsharedmtimes":{}, "rescanonstartup":0}, \
+	"bwordindex":{},"bfileindex":{},"bsharedmtimes":{}, "rescanonstartup":0, "enablefilters": 1, "downloadregexp": "", "downloadfilters": [["desktop.ini", 1], ["folder.jpg", 1], ["*.url", 1], ["thumbs.db", 1], ["albumart(_{........-....-....-....-............}_)?(_?(large|small))?\.jpg", 0]]}, \
 	"userinfo":{"descr":"''","pic":"","descrutf8":0},"logging": {"logcollapsed":0, \
 	"logsdir":os.path.expanduser(LOGDIR),"privatechat":0,"chatrooms":0,"transfers":0}, \
 	"searches":{"maxresults":50,"re_filter":0,"history":[], \
 	"enablefilters":0, "defilter":["","","","",0,""], "filtercc":[], \
 	"filterin":[],"filterout":[],"filtersize":[],"filterbr":[]}, \
  	"ui":{"icontheme": "", "chatme":"FOREST GREEN", "chatremote":"","chatlocal":"BLUE", \
- 	"chathilite":"red", "useronline":"BLACK", "useraway":"ORANGE","useroffline":"#aa0000", "usernamehotspots":1, "search":"","searchq":"GREY", "decimalsep":",", "chatfont": "", \
+ 	"chathilite":"red", "useronline":"BLACK", "useraway":"ORANGE","useroffline":"#aa0000", "usernamehotspots":1, "usernamestyle": "bold", "search":"","searchq":"GREY", "decimalsep":",", "chatfont": "", \
  	"roomlistcollapsed": 0, "tabclosers": 1, "buddylistinchatrooms": 0, "trayicon": 1,
 	"soundenabled": 1, "soundtheme": "", "soundcommand": "play -q", "speechenabled": 0}, \
  	"urls":{"urlcatching":1,"protocols":{"http":"firefox \"%s\" &"}, \
@@ -84,8 +84,8 @@ class Config:
 	for i in self.sections.keys():
 	    for j in self.sections[i].keys():
 # 		print self.sections[i][j]
-		if self.sections[i][j] is None or self.sections[i][j] == '' and i not in ("userinfo", "ui", "ticker", "players") and j not in ("incompletedir", "autoreply", 'afterfinish','afterfolder', 'geoblockcc'):
-		    return 1
+		if self.sections[i][j] is None or self.sections[i][j] == '' and i not in ("userinfo", "ui", "ticker", "players") and j not in ("incompletedir", "autoreply", 'afterfinish','afterfolder', 'geoblockcc', 'downloadregexp'):
+			return 1
 	return 0
 
     def readConfig(self):
@@ -104,14 +104,14 @@ class Config:
 		    print "Bogus config section:",i
 		elif j not in self.sections[i].keys() and j != "filter":
 		    print "Bogus config option",j,"section",i
-		elif j in ['login','passw','enc','downloaddir','customban','descr','pic','logsdir','incompletedir', 'autoreply', 'afterfinish', 'afterfolder', 'default', 'chatfont', "npothercommand", "npplayer", "npformat"] or (i == "ui" and j not in ["roomlistcollapsed", "tabclosers",  'buddylistinchatrooms', "trayicon", "usernamehotspots", "soundenabled", "speechenabled"]):
+		elif j in ['login','passw','enc',  'downloaddir','customban','descr','pic','logsdir','incompletedir', 'autoreply', 'afterfinish', 'downloadregexp', 'afterfolder', 'default', 'chatfont', "npothercommand", "npplayer", "npformat"] or (i == "ui" and j not in ["roomlistcollapsed", "tabclosers",  'buddylistinchatrooms', "trayicon", "usernamehotspots", "soundenabled", "speechenabled", "enablefilters"]):
 		    self.sections[i][j] = val
 		else:
 		    try:
 		        self.sections[i][j] = eval(val, {})
 		    except:
 			self.sections[i][j] = None
-			print "CONFIG ERROR: Couldn't decode %s section %s value %s" % (j, i, val)
+			print "CONFIG ERROR: Couldn't decode %s section %s value %s" % (str(j), str(i), str(val))
 	autojoin = self.sections["server"]["autojoin"]
 	for user in self.sections["server"]["userlist"]:
 		if len(user) == 2:

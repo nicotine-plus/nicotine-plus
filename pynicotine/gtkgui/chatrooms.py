@@ -679,20 +679,35 @@ class ChatRoom(ChatRoomTab):
 	def makecolour(self, buffer, colour, username=None):
 		colour = self.frame.np.config.sections["ui"][colour]
 		font =  self.frame.np.config.sections["ui"]["chatfont"]
+		
 		if colour:
 			tag = buffer.create_tag(foreground = colour, font=font)
 		else:
 			tag = buffer.create_tag( font=font)
 		if username is not None:
-
-			#tag.set_property("underline", pango.UNDERLINE_SINGLE)
-			tag.set_property("weight",  pango.WEIGHT_BOLD)
+			usernamestyle = self.frame.np.config.sections["ui"]["usernamestyle"]
+			
+			#tag.set_property("weight",  pango.WEIGHT_BOLD)
+			if usernamestyle == "bold":
+				tag.set_property("weight",  pango.WEIGHT_BOLD)
+			else:
+				tag.set_property("weight",  pango.WEIGHT_NORMAL)
+			if usernamestyle == "italic":
+				tag.set_property("style",  pango.STYLE_ITALIC)
+			else:
+				tag.set_property("style",  pango.STYLE_NORMAL)
+			if usernamestyle == "underline":
+				tag.set_property("underline", pango.UNDERLINE_SINGLE)
+			else:
+				tag.set_property("underline", pango.UNDERLINE_NONE)
+				
 			tag.connect("event", self.UserNameEvent, username)
 			tag.last_event_type = -1
-			#tag = buffer.create_tag( font=font)
 		return tag
 		
 	def UserNameEvent(self, tag, widget, event, iter, user):
+		
+		
 		if tag.last_event_type == gtk.gdk.BUTTON_PRESS and event.type == gtk.gdk.BUTTON_RELEASE and event.button == 1:
 			if user in self.users.keys():
 				self.popup_menu.set_user(user)
@@ -752,7 +767,19 @@ class ChatRoom(ChatRoomTab):
 			tag.set_property("foreground", color)
 			tag.set_property("font", font)
 			if colour in ["useraway", "useronline", "useroffline"]:
-				tag.set_property("weight",  pango.WEIGHT_BOLD)
+				usernamestyle = self.frame.np.config.sections["ui"]["usernamestyle"]
+				if usernamestyle == "bold":
+					tag.set_property("weight",  pango.WEIGHT_BOLD)
+				else:
+					tag.set_property("weight",  pango.WEIGHT_NORMAL)
+				if usernamestyle == "italic":
+					tag.set_property("style",  pango.STYLE_ITALIC)
+				else:
+					tag.set_property("style",  pango.STYLE_NORMAL)
+				if usernamestyle == "underline":
+					tag.set_property("underline", pango.UNDERLINE_SINGLE)
+				else:
+					tag.set_property("underline", pango.UNDERLINE_NONE)
 		else:
 			tag.set_property("font", font)
 			
