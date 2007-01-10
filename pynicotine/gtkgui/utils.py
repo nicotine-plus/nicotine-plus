@@ -135,7 +135,7 @@ def AppendLine(textview, line, tag = None, timestamp = "%H:%M:%S", username=None
 	buffer = textview.get_buffer()
 	linenr = buffer.get_line_count()
 	ME = 0
-	if line.startswith("/me"):
+	if line.startswith("* "):
 		ME = 1
 	if timestamp:
 		line = "%s %s\n" % (recode(time.strftime(timestamp)), line)
