@@ -22,16 +22,16 @@ from gettext import gettext as _
 
 def checkenv():
 
-    import sys,string
-    ver = sys.version_info[0]*100+sys.version_info[1]*10+sys.version_info[2]
-    if ver < 220:
-        return _("""You're using an old version of Python interpreter (%s).
+	import sys,string
+	ver = sys.version_info[0]*100+sys.version_info[1]*10+sys.version_info[2]
+	if ver < 220:
+		return _("""You're using an old version of Python interpreter (%s).
 You should install Python 2.2.0 or newer.""") %(string.split(sys.version)[0])
 
-    try:
-	import pynicotine
-    except ImportError,e:
-	return _("""Can not find Nicotine modules. 
+	try:
+		import pynicotine
+	except ImportError,e:
+		return _("""Can not find Nicotine modules. 
 Perhaps they're installed in a directory which is not 
 in an interpreter's module search path. 
 (there could be a version mismatch between 
@@ -39,73 +39,73 @@ what version of python was used to build the Nicotine
 binary package and what you try to run Nicotine with.)""")
 
     # EEK! Scary Win32 stuff
-    if win32:
-     # Fetchs gtk2 path from registry
-     try: import dbhash
-     except: print _("Warning: the Berkeley DB module, dbhash, could not be loaded.")
-     import _winreg
-     import msvcrt
-     try:
-       k = _winreg.OpenKey(_winreg.HKEY_LOCAL_MACHINE, "Software\\GTK\\2.0")
-     except EnvironmentError:
-       print _("You must install the Gtk+ 2.2 Runtime Environment to run this program")
-       while not msvcrt.kbhit():
-        pass
-       sys.exit(1)
-     else:    
-      gtkdir = _winreg.QueryValueEx(k, "Path")
-      import os
-      os.environ['PATH'] += ";%s/lib;%s/bin" % (gtkdir[0], gtkdir[0])
-
-    try:
 	if win32:
-	  try:
-		  import gtk
-	  except:
-		  import pygtk
-	else:
-	  import pygtk
-	  pygtk.require("2.0")
-    except:
-	import sys
-	return _("Can not find required PyGTK. The current search path is \n%s") % (sys.path)
+		# Fetchs gtk2 path from registry
+		try: import dbhash
+		except: print _("Warning: the Berkeley DB module, dbhash, could not be loaded.")
+		import _winreg
+		import msvcrt
+		try:
+			k = _winreg.OpenKey(_winreg.HKEY_LOCAL_MACHINE, "Software\\GTK\\2.0")
+		except EnvironmentError:
+			print _("You must install the Gtk+ 2.2 Runtime Environment to run this program")
+			while not msvcrt.kbhit():
+				pass
+			sys.exit(1)
+		else:
+			gtkdir = _winreg.QueryValueEx(k, "Path")
+			import os
+			os.environ['PATH'] += ";%s/lib;%s/bin" % (gtkdir[0], gtkdir[0])
 
-    import gtk
-    major, minor, micro = gtk.pygtk_version
-    v = (major<<16) + (minor<< 8) + micro
-    if v < ((1<<16) + (99<<8) + 16):
-    	return _("Your PyGTK is too old, upgrade to at least PyGTK 1.99.16")
+	try:
+		if win32:
+			try:
+				import gtk
+			except:
+				import pygtk
+		else:
+			import pygtk
+			pygtk.require("2.0")
+	except:
+		import sys
+		return _("Can not find required PyGTK. The current search path is \n%s") % (sys.path)
 
-    try:
-	import ogg.vorbis
-    except:
-        try:
-            import _vorbis
-        except ImportError:
-	    print _("""You do not have Python Vorbis bindings installed. 
+	import gtk
+	major, minor, micro = gtk.pygtk_version
+	v = (major<<16) + (minor<< 8) + micro
+	if v < ((1<<16) + (99<<8) + 16):
+		return _("Your PyGTK is too old, upgrade to at least PyGTK 1.99.16")
+
+	try:
+		import ogg.vorbis
+	except:
+		try:
+			import _vorbis
+		except ImportError:
+			print _("""You do not have Python Vorbis bindings installed. 
 Others will not be able to see the lengths and the bitrates 
 of Ogg Vorbis files that you share. You can get the from
 http://www.andrewchatham.com/pyogg/. 
 If you're using Debian, install the python-pyvorbis package.
 """)
 
-    try:
-        import GeoIP
-    except ImportError:
-        try:
-            import _GeoIP
-        except ImportError:
-            print _("""Nicotine supports a country code blocker but that
-requires a (GPL'ed) library called GeoIP. You can find it here:
-C library:       http://www.maxmind.com/app/c
-Python bindings: http://www.maxmind.com/app/python
-(the python bindings require the C library)
-""")
-
-    return None
+	try:
+		import GeoIP
+	except ImportError:
+		try:
+			import _GeoIP
+		except ImportError:
+			print _("""Nicotine supports a country code blocker but that
+	requires a (GPL'ed) library called GeoIP. You can find it here:
+	C library:       http://www.maxmind.com/app/c
+	Python bindings: http://www.maxmind.com/app/python
+	(the python bindings require the C library)
+	""")
+	
+	return None
 
 def usage():
-    print _("""Usage: nicotine [OPTION]...
+	print _("""Usage: nicotine [OPTION]...
   -c file,	--config=file	Use non-default configuration file
   -h,		--help		Display this help and exit
 
@@ -113,54 +113,54 @@ Please report any problems to our bugtracker :
 http://www.nicotine-plus.org/newticket""")
 
 if __name__ == '__main__':
-    import locale
-    try:
-        locale.setlocale(locale.LC_ALL, '')
-    except:
-        print "Cannot set locale"
+	import locale
+	try:
+		locale.setlocale(locale.LC_ALL, '')
+	except:
+		print "Cannot set locale"
 
-    import gettext
-    gettext.textdomain("nicotine")
+	import gettext
+	gettext.textdomain("nicotine")
 
-    import sys, getopt, os.path
-    try:
-        opts, args = getopt.getopt(sys.argv[1:], "hc:td", ["help", "config=", "profile", "enable-trayicon", "disable-trayicon"])
-    except getopt.GetoptError:
-        # print help information and exit:
-        usage()
-        sys.exit(2)
+	import sys, getopt, os.path
+	try:
+		opts, args = getopt.getopt(sys.argv[1:], "hc:td", ["help", "config=", "profile", "enable-trayicon", "disable-trayicon"])
+	except getopt.GetoptError:
+		# print help information and exit:
+		usage()
+		sys.exit(2)
 
-    if win32:
-        mydir,x = os.path.split(sys.argv[0])
-        config = os.path.join(mydir, "config", "config")
-    else:
-        config = os.path.join(os.path.expanduser("~"),'.nicotine','config')
-    profile = 0
-    trayicon = 1
-    for o, a in opts:
-        if o in ("-h", "--help"):
-            usage()
-            sys.exit()
-        if o in ("-c", "--config"):
-            config = a
-        if o == "--profile":
-            profile = 1
-        if o in ("-t", "--enable-trayicon"):
-            trayicon=1
-        if o in ("-d", "--disable-trayicon"):	
-            trayicon=0
-    result = checkenv()
-    if result is None:
-	from pynicotine.gtkgui import frame
-
-        app = frame.MainApp(config, trayicon)
-	if profile:
-	    import hotshot
-	    log = os.path.expanduser(config) + ".profile"
-	    profiler = hotshot.Profile(log)
-            print _("Starting using the profiler (saving log to %s)") % log
-	    profiler.runcall(app.MainLoop)
+	if win32:
+		mydir,x = os.path.split(sys.argv[0])
+		config = os.path.join(mydir, "config", "config")
 	else:
-            app.MainLoop()
-    else:
-        print result
+		config = os.path.join(os.path.expanduser("~"),'.nicotine','config')
+	profile = 0
+	trayicon = 1
+	for o, a in opts:
+		if o in ("-h", "--help"):
+			usage()
+			sys.exit()
+		if o in ("-c", "--config"):
+			config = a
+		if o == "--profile":
+			profile = 1
+		if o in ("-t", "--enable-trayicon"):
+			trayicon=1
+		if o in ("-d", "--disable-trayicon"):	
+			trayicon=0
+	result = checkenv()
+	if result is None:
+		from pynicotine.gtkgui import frame
+
+		app = frame.MainApp(config, trayicon)
+		if profile:
+			import hotshot
+			log = os.path.expanduser(config) + ".profile"
+			profiler = hotshot.Profile(log)
+			print _("Starting using the profiler (saving log to %s)") % log
+			profiler.runcall(app.MainLoop)
+		else:
+			app.MainLoop()
+	else:
+		print result

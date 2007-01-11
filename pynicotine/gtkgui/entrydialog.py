@@ -9,132 +9,132 @@ from pynicotine.utils import _
 
 
 class EntryDialog( gtk.Dialog):
-    def __init__(self, frame, message="", default_text='', modal= True, option=False, optionmessage="", optionvalue=False, droplist=[]):
-        gtk.Dialog.__init__(self)
-        self.connect("destroy", self.quit)
-        self.connect("delete_event", self.quit)
-	self.gotoption = option
-        if modal:
-            self.set_modal(True)
-        box = gtk.VBox(spacing=10)
-        box.set_border_width(10)
-        self.vbox.pack_start(box)
-        box.show()
-        if message:
-            label = gtk.Label(message)
-            box.pack_start(label, False, False)
-            label.show()
-	self.combo = gtk.combo_box_entry_new_text()
-	for i in droplist:
-		self.combo.append_text( i)
-	self.combo.child.set_text(default_text)
-
-        box.pack_start(self.combo, False, False)
-        self.combo.show()
-        self.combo.grab_focus()
+	def __init__(self, frame, message="", default_text='', modal= True, option=False, optionmessage="", optionvalue=False, droplist=[]):
+		gtk.Dialog.__init__(self)
+		self.connect("destroy", self.quit)
+		self.connect("delete_event", self.quit)
+		self.gotoption = option
+		if modal:
+			self.set_modal(True)
+		box = gtk.VBox(spacing=10)
+		box.set_border_width(10)
+		self.vbox.pack_start(box)
+		box.show()
+		if message:
+			label = gtk.Label(message)
+			box.pack_start(label, False, False)
+			label.show()
+		self.combo = gtk.combo_box_entry_new_text()
+		for i in droplist:
+			self.combo.append_text( i)
+		self.combo.child.set_text(default_text)
 	
+		box.pack_start(self.combo, False, False)
+		self.combo.show()
+		self.combo.grab_focus()
+		
+		
+		self.option = gtk.CheckButton()
+		self.option.set_active(optionvalue)
+		self.option.set_label(optionmessage)
+		self.option.show()
+		if self.gotoption:
+			box.pack_start(self.option, False, False)
+		button = gtk.Button("OK")
+		button.connect("clicked", self.click)
+		button.set_flags(gtk.CAN_DEFAULT)
+		self.action_area.pack_start(button)
+		button.show()
+		button.grab_default()
+		button = gtk.Button("Cancel")
+		button.connect("clicked", self.quit)
+		button.set_flags(gtk.CAN_DEFAULT)
+		self.action_area.pack_start(button)
+		button.show()
+		self.ret = None
+	def quit(self, w=None, event=None):
+		self.hide()
+		self.destroy()
+		gtk.main_quit()
+	def click(self, button):
+		if self.gotoption:
+			self.ret = [self.combo.child.get_text(), self.option.get_active()]
+		else:
+			self.ret = self.combo.child.get_text()
+		self.quit()
+
+def input_box(frame, title="Input Box", message="", default_text='', 
+	modal= True, option=False, optionmessage="", optionvalue=False, droplist=[]):
+
+	win = EntryDialog(frame, message, default_text, modal=modal, option=option, optionmessage=optionmessage, optionvalue=optionvalue, droplist=droplist)
+	win.set_title(title)
+	win.set_icon(frame.images["n"])
+	win.set_default_size(300, 100)
+	win.show()
+	gtk.main()
+	return win.ret
+
+
+def Option_Box(frame, title="Option Box", message="", default_text='', 
+	modal= True, option1="", option2="", option3="" ):
 	
-	self.option = gtk.CheckButton()
-	self.option.set_active(optionvalue)
-	self.option.set_label(optionmessage)
-	self.option.show()
-	if self.gotoption:
-		box.pack_start(self.option, False, False)
-        button = gtk.Button("OK")
-        button.connect("clicked", self.click)
-        button.set_flags(gtk.CAN_DEFAULT)
-        self.action_area.pack_start(button)
-        button.show()
-        button.grab_default()
-        button = gtk.Button("Cancel")
-        button.connect("clicked", self.quit)
-        button.set_flags(gtk.CAN_DEFAULT)
-        self.action_area.pack_start(button)
-        button.show()
-        self.ret = None
-    def quit(self, w=None, event=None):
-        self.hide()
-        self.destroy()
-        gtk.main_quit()
-    def click(self, button):
-	if self.gotoption:
-		self.ret = [self.combo.child.get_text(), self.option.get_active()]
-	else:
-        	self.ret = self.combo.child.get_text()
-        self.quit()
-
-def input_box(frame, title="Input Box", message="", default_text='',
-        modal= True, option=False, optionmessage="", optionvalue=False, droplist=[]):
-
-    win = EntryDialog(frame, message, default_text, modal=modal, option=option, optionmessage=optionmessage, optionvalue=optionvalue, droplist=droplist)
-    win.set_title(title)
-    win.set_icon(frame.images["n"])
-    win.set_default_size(300, 100)
-    win.show()
-    gtk.main()
-    return win.ret
-
-
-def Option_Box(frame, title="Option Box", message="", default_text='',
-        modal= True, option1="", option2="", option3="" ):
-
-    win = OptionDialog(frame, message, modal=modal, option3=option3, option1=option1, option2=option2)
-    win.set_title(title)
-    win.set_icon(frame.images["n"])
-    win.show()
-    gtk.main()
-    return win.ret
+	win = OptionDialog(frame, message, modal=modal, option3=option3, option1=option1, option2=option2)
+	win.set_title(title)
+	win.set_icon(frame.images["n"])
+	win.show()
+	gtk.main()
+	return win.ret
 
 class OptionDialog( gtk.Dialog):
-    def __init__(self, frame, message="",modal= False, option1="", option2="", option3=""):
-        gtk.Dialog.__init__(self)
-        self.connect("destroy", self.quit)
-        self.connect("delete_event", self.quit)
+	def __init__(self, frame, message="",modal= False, option1="", option2="", option3=""):
+		gtk.Dialog.__init__(self)
+		self.connect("destroy", self.quit)
+		self.connect("delete_event", self.quit)
+		
+		self.set_modal(modal)
+		box = gtk.VBox(spacing=10)
+		box.set_border_width(10)
+		self.vbox.pack_start(box)
+		box.show()
+		if message:
+			label = gtk.Label(message)
+			box.pack_start(label)
+			label.show()
 	
-        self.set_modal(modal)
-        box = gtk.VBox(spacing=10)
-        box.set_border_width(10)
-        self.vbox.pack_start(box)
-        box.show()
-        if message:
-            label = gtk.Label(message)
-            box.pack_start(label)
-            label.show()
-
-        if option1 is not None:
-          button1 = gtk.Button(option1)
-          button1.connect("clicked", self.option1)
-          button1.set_flags(gtk.CAN_DEFAULT)
-          self.action_area.pack_start(button1)
-          button1.show()
-        if option2 is not None:
-          button2 = gtk.Button(option2)
-          button2.connect("clicked", self.option2)
-          button2.set_flags(gtk.CAN_DEFAULT)
-          self.action_area.pack_start(button2)
-          button2.show()
-          button2.grab_default()
-        if option3 is not None:
-          button3 = gtk.Button(option3)
-          button3.connect("clicked", self.option3)
-          button3.set_flags(gtk.CAN_DEFAULT)
-          self.action_area.pack_start(button3)
-          button3.show()
-          self.ret = None
+		if option1 is not None:
+			button1 = gtk.Button(option1)
+			button1.connect("clicked", self.option1)
+			button1.set_flags(gtk.CAN_DEFAULT)
+			self.action_area.pack_start(button1)
+			button1.show()
+		if option2 is not None:
+			button2 = gtk.Button(option2)
+			button2.connect("clicked", self.option2)
+			button2.set_flags(gtk.CAN_DEFAULT)
+			self.action_area.pack_start(button2)
+			button2.show()
+			button2.grab_default()
+		if option3 is not None:
+			button3 = gtk.Button(option3)
+			button3.connect("clicked", self.option3)
+			button3.set_flags(gtk.CAN_DEFAULT)
+			self.action_area.pack_start(button3)
+			button3.show()
+			self.ret = None
         
-    def quit(self, w=None, event=None):
-        self.hide()
-        self.destroy()
-        gtk.main_quit()
-        
-    def option3(self, button3):
-        self.ret = 3
-        self.quit()
-        
-    def option1(self, button1):
-        self.ret = 1
-        self.quit()
-        
-    def option2(self, button2):
-        self.ret = 2
-        self.quit()
+	def quit(self, w=None, event=None):
+		self.hide()
+		self.destroy()
+		gtk.main_quit()
+		
+	def option3(self, button3):
+		self.ret = 3
+		self.quit()
+		
+	def option1(self, button1):
+		self.ret = 1
+		self.quit()
+		
+	def option2(self, button2):
+		self.ret = 2
+		self.quit()

@@ -2087,6 +2087,197 @@ class BloatFrame:
 
         self.vboxUI.pack_start(self.expander2, False, False, 0)
 
+        self.expander3 = gtk.Expander()
+        self.expander3.show()
+        self.expander3.set_spacing(0)
+
+        self.vbox106 = gtk.VBox(False, 3)
+        self.vbox106.show()
+        self.vbox106.set_spacing(3)
+        self.vbox106.set_border_width(3)
+
+        self.label343 = gtk.Label("")
+        self.label343.set_alignment(0, 0.5)
+        self.label343.set_padding(0, 0)
+        self.label343.set_line_wrap(True)
+        self.label343.set_markup(_("<b>Warning:</b> This feature is resource intensive and may be very slow. If Nicotine<b>+</b> is started with this feature disabled, you will need to enable it and restart to see it's effects."))
+        self.label343.show()
+        self.vbox106.pack_start(self.label343, False, False, 0)
+
+        self.EnableTransparent = gtk.CheckButton()
+        self.EnableTransparent.set_active(False)
+        self.EnableTransparent.set_label(_("Enable Transparent Textviews"))
+        self.EnableTransparent.show()
+        self.EnableTransparent.set_border_width(3)
+        self.EnableTransparent.connect("toggled", self.OnEnableTransparentToggled)
+        self.vbox106.pack_start(self.EnableTransparent, False, False, 0)
+
+        self.hbox198 = gtk.HBox(False, 5)
+        self.hbox198.show()
+        self.hbox198.set_spacing(5)
+
+        self.PickTint = gtk.Button()
+        self.PickTint.show()
+        self.PickTint.connect("clicked", self.OnPickTint)
+
+        self.alignment89 = gtk.Alignment(0, 0.5, 0, 0)
+        self.alignment89.show()
+
+        self.hbox199 = gtk.HBox(False, 2)
+        self.hbox199.show()
+        self.hbox199.set_spacing(2)
+        self.hbox199.set_border_width(3)
+
+        self.image83 = gtk.Image()
+        self.image83.set_padding(0, 0)
+        self.image83.set_from_stock(gtk.STOCK_SELECT_COLOR, 4)
+        self.image83.show()
+        self.hbox199.pack_start(self.image83, False, False, 0)
+
+        self.label344 = gtk.Label(_("Tint Color"))
+        self.label344.set_padding(0, 0)
+        self.label344.set_line_wrap(False)
+        self.label344.show()
+        self.hbox199.pack_start(self.label344, False, False, 0)
+
+        self.alignment89.add(self.hbox199)
+
+        self.PickTint.add(self.alignment89)
+
+        self.hbox198.pack_start(self.PickTint, False, False, 0)
+
+        self.TintColor = gtk.Entry()
+        self.TintColor.set_text("")
+        self.TintColor.set_editable(False)
+        self.TintColor.show()
+        self.TintColor.set_visibility(True)
+        self.hbox198.pack_start(self.TintColor, False, True, 0)
+
+        self.DefaultTint = gtk.Button()
+        self.DefaultTint.show()
+        self.DefaultTint.connect("clicked", self.OnDefaultTint)
+
+        self.alignment90 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment90.show()
+
+        self.hbox200 = gtk.HBox(False, 2)
+        self.hbox200.show()
+        self.hbox200.set_spacing(2)
+
+        self.image84 = gtk.Image()
+        self.image84.set_padding(0, 0)
+        self.image84.set_from_stock(gtk.STOCK_CANCEL, 4)
+        self.image84.show()
+        self.hbox200.pack_start(self.image84, False, False, 0)
+
+        self.label345 = gtk.Label(_("Default"))
+        self.label345.set_padding(0, 0)
+        self.label345.set_line_wrap(False)
+        self.label345.show()
+        self.hbox200.pack_start(self.label345, False, False, 0)
+
+        self.alignment90.add(self.hbox200)
+
+        self.DefaultTint.add(self.alignment90)
+
+        self.hbox198.pack_start(self.DefaultTint, False, False, 0)
+
+        self.vbox106.pack_start(self.hbox198, False, False, 0)
+
+        self.hbox202 = gtk.HBox(False, 0)
+        self.hbox202.show()
+        self.hbox202.set_spacing(0)
+
+        self.vbox108 = gtk.VBox(False, 0)
+        self.vbox108.show()
+        self.vbox108.set_spacing(0)
+
+        self.label346 = gtk.Label(_("Red"))
+        self.label346.set_padding(0, 0)
+        self.label346.set_line_wrap(False)
+        self.label346.show()
+        self.vbox108.pack_start(self.label346, True, False, 0)
+
+        self.Red = gtk.HScale(gtk.Adjustment(value=0, lower=0, upper=255, step_incr=1, page_incr=20, page_size=0))
+        self.Red.show()
+        self.Red.set_digits(0)
+        self.Red.connect("value_changed", self.ScaleColour)
+
+        self.vbox108.pack_start(self.Red, True, True, 0)
+
+        self.hbox202.pack_start(self.vbox108, True, True, 0)
+
+        self.vbox109 = gtk.VBox(False, 0)
+        self.vbox109.show()
+        self.vbox109.set_spacing(0)
+
+        self.label348 = gtk.Label(_("Green"))
+        self.label348.set_padding(0, 0)
+        self.label348.set_line_wrap(False)
+        self.label348.show()
+        self.vbox109.pack_start(self.label348, True, False, 0)
+
+        self.Green = gtk.HScale(gtk.Adjustment(value=0, lower=0, upper=255, step_incr=1, page_incr=20, page_size=0))
+        self.Green.show()
+        self.Green.set_digits(0)
+        self.Green.connect("value_changed", self.ScaleColour)
+
+        self.vbox109.pack_start(self.Green, True, True, 0)
+
+        self.hbox202.pack_start(self.vbox109, True, True, 0)
+
+        self.vbox110 = gtk.VBox(False, 0)
+        self.vbox110.show()
+        self.vbox110.set_spacing(0)
+
+        self.label349 = gtk.Label("")
+        self.label349.set_padding(0, 0)
+        self.label349.set_line_wrap(False)
+        self.label349.set_markup(_("Blue"))
+        self.label349.show()
+        self.vbox110.pack_start(self.label349, True, False, 0)
+
+        self.Blue = gtk.HScale(gtk.Adjustment(value=0, lower=0, upper=255, step_incr=1, page_incr=20, page_size=0))
+        self.Blue.show()
+        self.Blue.set_digits(0)
+        self.Blue.connect("value_changed", self.ScaleColour)
+
+        self.vbox110.pack_start(self.Blue, True, True, 0)
+
+        self.hbox202.pack_start(self.vbox110, True, True, 0)
+
+        self.vbox111 = gtk.VBox(False, 0)
+        self.vbox111.show()
+        self.vbox111.set_spacing(0)
+
+        self.label347 = gtk.Label(_("Alpha"))
+        self.label347.set_padding(0, 0)
+        self.label347.set_line_wrap(False)
+        self.label347.show()
+        self.vbox111.pack_start(self.label347, True, False, 0)
+
+        self.TintAlpha = gtk.HScale(gtk.Adjustment(value=0, lower=0, upper=255, step_incr=1, page_incr=20, page_size=0))
+        self.TintAlpha.show()
+        self.TintAlpha.set_digits(0)
+        self.TintAlpha.connect("value_changed", self.ScaleColour)
+
+        self.vbox111.pack_start(self.TintAlpha, True, True, 0)
+
+        self.hbox202.pack_start(self.vbox111, True, True, 0)
+
+        self.vbox106.pack_start(self.hbox202, True, True, 0)
+
+        self.expander3.add(self.vbox106)
+
+        self.label342 = gtk.Label("")
+        self.label342.set_padding(0, 0)
+        self.label342.set_line_wrap(False)
+        self.label342.set_markup(_("<b>Transparent Log Windows</b>"))
+        self.label342.show()
+        self.expander3.set_label_widget(self.label342)
+
+        self.vboxUI.pack_start(self.expander3, False, False, 0)
+
         self.Main.add(self.vboxUI)
 
         self.label195 = gtk.Label(_("Extra stuff for your comfort"))
@@ -2103,6 +2294,18 @@ class BloatFrame:
         pass
 
     def OnUsernameHotspotsToggled(self, widget):
+        pass
+
+    def OnEnableTransparentToggled(self, widget):
+        pass
+
+    def OnPickTint(self, widget):
+        pass
+
+    def OnDefaultTint(self, widget):
+        pass
+
+    def ScaleColour(self, widget):
         pass
 
     def get_custom_widget(self, id, string1, string2, int1, int2):

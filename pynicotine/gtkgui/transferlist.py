@@ -20,7 +20,7 @@ class TransferList:
 		
 		widget.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
 
-                columntypes = [gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_INT , gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING,  gobject.TYPE_INT, gobject.TYPE_INT]
+		columntypes = [gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_INT , gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING,  gobject.TYPE_INT, gobject.TYPE_INT]
 		self.transfersmodel = gtk.ListStore(*columntypes)
 		cols = InitialiseColumns(widget,
 			[_("Filename"), 250, "text"],
@@ -101,7 +101,7 @@ class TransferList:
 
 		if modifier == None:
 			modifier = ""
-                else: modifier = " " + modifier
+		else: modifier = " " + modifier
 
 		try:
 			s = int(size)
@@ -122,7 +122,7 @@ class TransferList:
 			if not transfer in self.list:
 				return
 			fn = transfer.filename
-                        currentbytes = transfer.currentbytes
+			currentbytes = transfer.currentbytes
 			user = transfer.user
 			key = [user, fn]
 			
@@ -139,7 +139,7 @@ class TransferList:
 				speed = str(transfer.speed)
 			elap = str(transfer.timeelapsed)
 			left = str(transfer.timeleft)
-                        
+
 			try:
                                 #print currentbytes
 				ist = int(currentbytes)
@@ -150,9 +150,9 @@ class TransferList:
 			except Exception, e:
                                 #print e
 				percent = 0
-                                
 
-                        
+
+
 			for i in self.transfers:
 				if i[0] == key:
 					if i[2] != transfer:

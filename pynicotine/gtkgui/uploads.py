@@ -46,7 +46,7 @@ class Uploads(TransferList):
 			(1, _("Clear Groups"), self.popup_menu2, None),
 		)
 		frame.UploadList.connect("button_press_event", self.OnPopupMenu, "mouse")
- 		frame.UploadList.connect("key-press-event", self.on_key_press_event)
+		frame.UploadList.connect("key-press-event", self.on_key_press_event)
 		frame.clearUploadFinishedAbortedButton.connect("clicked", self.OnClearFinishedAborted)
 		frame.clearUploadQueueButton.connect("clicked", self.OnClearQueued)
 		frame.abortUploadButton.connect("clicked", self.OnAbortTransfer)
@@ -79,8 +79,8 @@ class Uploads(TransferList):
 	def on_key_press_event(self, widget, event):
 		key = gtk.gdk.keyval_name(event.keyval)
 
- 		if key in ( "P", "p"):
- 			self.OnPopupMenu(widget, event, "keyboard")
+		if key in ( "P", "p"):
+			self.OnPopupMenu(widget, event, "keyboard")
 		else:
 			self.selected_transfers = []
 			self.selected_users = []
@@ -182,7 +182,7 @@ class Uploads(TransferList):
 		if kind == "keyboard":
 			widget.emit_stop_by_name("key_press_event")
 		elif kind == "mouse":
- 			widget.emit_stop_by_name("button_press_event")
+			widget.emit_stop_by_name("button_press_event")
 		return True
 		
 	def ClearByUser(self, user):

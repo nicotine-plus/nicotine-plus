@@ -12,13 +12,13 @@ from pynicotine.utils import _
 
 def ChooseDir(parent = None, initialdir = "~"):
 	dialog = gtk.FileChooserDialog(parent=parent, action=gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER, buttons = (gtk.STOCK_OK, gtk.RESPONSE_ACCEPT, gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT))
-        dialog.set_action(gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER)
+	dialog.set_action(gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER)
 	dialog.set_select_multiple(True)
-        dir = os.path.expanduser(initialdir)
-        if os.path.exists(dir):
-            dialog.set_current_folder(dir)
-        else:
-            dialog.set_current_folder(os.path.expanduser("~"))
+	dir = os.path.expanduser(initialdir)
+	if os.path.exists(dir):
+		dialog.set_current_folder(dir)
+	else:
+		dialog.set_current_folder(os.path.expanduser("~"))
 	response = dialog.run()
 	
 	if response == gtk.RESPONSE_ACCEPT:
@@ -34,13 +34,13 @@ def ChooseDir(parent = None, initialdir = "~"):
 
 def ChooseFile(parent = None, initialdir = "~", initialfile = ""):
 	dialog = gtk.FileChooserDialog(parent=parent, action=gtk.FILE_CHOOSER_ACTION_OPEN, buttons = (gtk.STOCK_OK, gtk.RESPONSE_ACCEPT, gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT))
-        dialog.set_action(gtk.FILE_CHOOSER_ACTION_OPEN)
+	dialog.set_action(gtk.FILE_CHOOSER_ACTION_OPEN)
 	dialog.set_select_multiple(False)
-        dir = os.path.expanduser(initialdir)
-        if os.path.exists(dir):
-            dialog.set_current_folder(dir)
-        else:
-            dialog.set_current_folder(os.path.expanduser("~"))
+	dir = os.path.expanduser(initialdir)
+	if os.path.exists(dir):
+		dialog.set_current_folder(dir)
+	else:
+		dialog.set_current_folder(os.path.expanduser("~"))
 	response = dialog.run()
 	
 	if response == gtk.RESPONSE_ACCEPT:
@@ -63,16 +63,16 @@ def ChooseImage(parent = None, initialdir = "~", initialfile = ""):
 	image.show()
 	preview.show()
 	dialog = gtk.FileChooserDialog(parent=parent, action=gtk.FILE_CHOOSER_ACTION_OPEN, buttons = (gtk.STOCK_OK, gtk.RESPONSE_ACCEPT, gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT))
-        dialog.set_action(gtk.FILE_CHOOSER_ACTION_OPEN)
+	dialog.set_action(gtk.FILE_CHOOSER_ACTION_OPEN)
 	dialog.set_select_multiple(False)
 	dialog.set_preview_widget(preview)
 	dialog.connect("update-preview", update_preview_cb, preview)
-        dir, file = os.path.split(initialfile)
+	dir, file = os.path.split(initialfile)
 	dir = os.path.expanduser(dir)
-        if os.path.exists(dir):
-            dialog.set_current_folder(dir)
-        else:
-            dialog.set_current_folder(os.path.expanduser("~"))
+	if os.path.exists(dir):
+		dialog.set_current_folder(dir)
+	else:
+		dialog.set_current_folder(os.path.expanduser("~"))
 	response = dialog.run()
 	
 	if response == gtk.RESPONSE_ACCEPT:
@@ -85,7 +85,7 @@ def ChooseImage(parent = None, initialdir = "~", initialfile = ""):
 	gtk.gdk.threads_enter()
 	del dialog
 	return res
-	
+
 def update_preview_cb(file_chooser, preview):
 	filename = file_chooser.get_preview_filename()
 	try:

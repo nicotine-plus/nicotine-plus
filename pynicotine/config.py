@@ -18,402 +18,419 @@ import thread
 from utils import _
 
 class Config:
-    """ 
-    This class holds configuration information and provides the 
-    following methods:
-
-    needConfig() - returns true if configuration information is incomplete
-    readConfig() - reads configuration information from ~/.nicotine/config
-    setConfig(config_info_dict) - sets configuration information
-    writeConfig - writes configuration information to ~/.nicotine/config
-
-    The actual configuration information is stored as a two-level dictionary.
-    First-level keys are config sections, second-level keys are config 
-    parameters.
-    """
-    def __init__(self, filename):
-	self.config_lock = thread.allocate_lock()
-	self.config_lock.acquire()
-
-        self.filename = filename
-	self.parser = ConfigParser.ConfigParser()
-	self.parser.read([self.filename])
-	if sys.platform.startswith("win"):
-		LOGDIR="C:\\My Documents"
-	else:
-		LOGDIR="~"
-        self.sections = {"server":{"server":('server.slsknet.org', 2240), \
-	"login":None,"passw":None,"firewalled":1, "ctcpmsgs": 0,  \
-	"autosearch":[],"autoreply":"", "roomencoding": {}, "userencoding": {}, \
-	"portrange": (2234,2239), "enc":"utf-8","userlist":[], \
-	"banlist":[], "ignorelist":[],"autojoin":["nicotine"],"autoaway":15}, \
-	"transfers":{"downloaddir":None,"sharedownloaddir":1,"shared":None, "buddyshared": [],\
-	"uploadbandwidth":10,"uselimit":0,"uploadlimit":150,"limitby":1,\
-	"preferfriends":0, "useupslots":0, "uploadslots":2, "incompletedir":"", \
-	"afterfinish":"", "afterfolder":"", "lock":1, "fifoqueue": 0,\
-	"usecustomban":0,"customban":"Banned, don't bother retrying", "queuelimit":100,\
-	"friendsonly":0, "friendsnolimits":0, "enablebuddyshares": 0, "enabletransferbuttons": 1,\
-	"geoblock": 0, "geopanic": 0, "geoblockcc": [""], "remotedownloads": 1, \
-	"downloads":[],"sharedfiles":{},"sharedfilesstreams":{}, "uploadsinsubdirs": 1, \
-	"wordindex":{},"fileindex":{},"sharedmtimes":{},"bsharedfiles":{},"bsharedfilesstreams":{}, \
-	"bwordindex":{},"bfileindex":{},"bsharedmtimes":{}, "rescanonstartup":0, "enablefilters": 1, "downloadregexp": "", "downloadfilters": [["desktop.ini", 1], ["folder.jpg", 1], ["*.url", 1], ["thumbs.db", 1], ["albumart(_{........-....-....-....-............}_)?(_?(large|small))?\.jpg", 0]]}, \
-	"userinfo":{"descr":"''","pic":"","descrutf8":0},"logging": {"logcollapsed":0, \
-	"logsdir":os.path.expanduser(LOGDIR),"privatechat":0,"chatrooms":0,"transfers":0}, \
-	"searches":{"maxresults":50,"re_filter":0,"history":[], \
-	"enablefilters":0, "defilter":["","","","",0,""], "filtercc":[], \
-	"filterin":[],"filterout":[],"filtersize":[],"filterbr":[]}, \
- 	"ui":{"icontheme": "", "chatme":"FOREST GREEN", "chatremote":"","chatlocal":"BLUE", \
- 	"chathilite":"red", "useronline":"BLACK", "useraway":"ORANGE","useroffline":"#aa0000", "usernamehotspots":1, "usernamestyle": "bold", "search":"","searchq":"GREY", "decimalsep":",", "chatfont": "", \
- 	"roomlistcollapsed": 0, "tabclosers": 1, "buddylistinchatrooms": 0, "trayicon": 1,
-	"soundenabled": 1, "soundtheme": "", "soundcommand": "play -q", "speechenabled": 0}, \
- 	"urls":{"urlcatching":1,"protocols":{"http":"firefox \"%s\" &"}, \
- 	"humanizeurls":1}, "interests": {"likes":[], "dislikes":[]}, \
-	"ticker": {"default": "", "rooms": {}, "hide": 0},\
-	"players": {"default": "xmms -e ", "npothercommand": "", "npplayer": "infopipe", "npformatlist": [], "npformat": "" }}
-
- 	try:
- 	    f = open(filename+".alias")
- 	    self.aliases = cPickle.load(f)
- 	    f.close()
- 	except:
- 	    self.aliases = {}
-	self.config_lock.release()
-    
-    
-    def needConfig(self):
-	for i in self.sections.keys():
-	    for j in self.sections[i].keys():
-# 		print self.sections[i][j]
-		if self.sections[i][j] is None or self.sections[i][j] == '' and i not in ("userinfo", "ui", "ticker", "players") and j not in ("incompletedir", "autoreply", 'afterfinish','afterfolder', 'geoblockcc', 'downloadregexp'):
-			return 1
-	return 0
-
-    def readConfig(self):
-        self.config_lock.acquire()
-	path, fn = os.path.split(self.filename)
-	try:
-	    if not os.path.isdir(path):
-	        os.makedirs(path)
-	except OSError, msg:
-	    print "Can't create directory '%s', reported error: %s" % (path, msg)
+	""" 
+	This class holds configuration information and provides the 
+	following methods:
 	
-	for i in self.parser.sections():
-	    for j in self.parser.options(i):
-		val = self.parser.get(i,j, raw = 1)
-		if i not in self.sections.keys():
-		    print "Bogus config section:",i
-		elif j not in self.sections[i].keys() and j != "filter":
-		    print "Bogus config option",j,"section",i
-		elif j in ['login','passw','enc',  'downloaddir','customban','descr','pic','logsdir','incompletedir', 'autoreply', 'afterfinish', 'downloadregexp', 'afterfolder', 'default', 'chatfont', "npothercommand", "npplayer", "npformat"] or (i == "ui" and j not in ["roomlistcollapsed", "tabclosers",  'buddylistinchatrooms', "trayicon", "usernamehotspots", "soundenabled", "speechenabled", "enablefilters"]):
-		    self.sections[i][j] = val
+	needConfig() - returns true if configuration information is incomplete
+	readConfig() - reads configuration information from ~/.nicotine/config
+	setConfig(config_info_dict) - sets configuration information
+	writeConfig - writes configuration information to ~/.nicotine/config
+	
+	The actual configuration information is stored as a two-level dictionary.
+	First-level keys are config sections, second-level keys are config 
+	parameters.
+	"""
+	def __init__(self, filename):
+		self.config_lock = thread.allocate_lock()
+		self.config_lock.acquire()
+	
+		self.filename = filename
+		self.parser = ConfigParser.ConfigParser()
+		self.parser.read([self.filename])
+		if sys.platform.startswith("win"):
+			LOGDIR="C:\\My Documents"
 		else:
-		    try:
-		        self.sections[i][j] = eval(val, {})
-		    except:
-			self.sections[i][j] = None
-			print "CONFIG ERROR: Couldn't decode %s section %s value %s" % (str(j), str(i), str(val))
-	autojoin = self.sections["server"]["autojoin"]
-	for user in self.sections["server"]["userlist"]:
-		if len(user) == 2:
-			user += [0,0]
+			LOGDIR="~"
+		self.sections = { 
+"server":{"server":('server.slsknet.org', 2240), "login":None,"passw":None, \
+"firewalled":1, "ctcpmsgs": 0, "autosearch":[],"autoreply":"", "roomencoding": {}, \
+"userencoding": {}, "portrange": (2234,2239), "enc":"utf-8", "userlist":[], \
+"banlist":[], "ignorelist":[], "autojoin":["nicotine"], "autoaway":15}, \
+\
+"transfers":{"downloaddir":None,"sharedownloaddir":1,"shared":None, "buddyshared": [],\
+"uploadbandwidth":10, "uselimit":0,"uploadlimit":150, "preferfriends":0, \
+"useupslots":0, "uploadslots":2, "incompletedir":"", "afterfinish":"", \
+"afterfolder":"", "lock":1, "fifoqueue": 0, "usecustomban":0, "limitby":1, \
+"customban":"Banned, don't bother retrying","queuelimit":100,"friendsonly":0, \
+"friendsnolimits":0, "enablebuddyshares": 0, "enabletransferbuttons": 1, \
+"geoblock": 0, "geopanic": 0, "geoblockcc": [""], "remotedownloads": 1, \
+"downloads":[],"sharedfiles":{},"sharedfilesstreams":{}, "uploadsinsubdirs": 1, \
+"wordindex":{},"fileindex":{},"sharedmtimes":{},"bsharedfiles":{},"bsharedfilesstreams":{}, \
+"bwordindex":{},"bfileindex":{},"bsharedmtimes":{}, "rescanonstartup":0, \
+"enablefilters":1, "downloadregexp":"", "downloadfilters":[["desktop.ini",1],\
+["folder.jpg", 1], ["*.url", 1], ["thumbs.db", 1], \
+["albumart(_{........-....-....-....-............}_)?(_?(large|small))?\.jpg", 0]]}, \
+\
+"userinfo":{"descr":"''","pic":"","descrutf8":0},\
+\
+"logging": {"logcollapsed":0, "logsdir":os.path.expanduser(LOGDIR), \
+"privatechat":0, "chatrooms":0,"transfers":0}, \
+\
+"searches":{"maxresults":50,"re_filter":0,"history":[], \
+"enablefilters":0, "defilter":["","","","",0,""], "filtercc":[], \
+"filterin":[],"filterout":[],"filtersize":[],"filterbr":[]}, \
+\
+"ui":{"icontheme": "", "chatme":"FOREST GREEN", "chatremote":"","chatlocal":"BLUE", \
+"chathilite":"red", "useronline":"BLACK", "useraway":"ORANGE","useroffline":"#aa0000",\
+"usernamehotspots":1, "usernamestyle": "bold", "search":"","searchq":"GREY", \
+"decimalsep":",", "chatfont": "", "roomlistcollapsed": 0, "tabclosers": 1,\
+"buddylistinchatrooms": 0, "trayicon": 1, "soundenabled": 1, "soundtheme": "",\
+"soundcommand": "play -q", "speechenabled": 0, "enabletrans":0,\
+"transtint": "#aaaaaa", "transalpha": 150, "transfilter": 0x00000000L}, \
+\
+"urls":{"urlcatching":1,"protocols":{"http":"firefox \"%s\" &"}, "humanizeurls":1},\
+\
+"interests": {"likes":[], "dislikes":[]}, \
+\
+"ticker": {"default": "", "rooms": {}, "hide": 0},\
+\
+"players": {"default": "xmms -e ", "npothercommand": "", "npplayer": "infopipe",\
+ "npformatlist": [], "npformat": "" }}
 	
-	if "pyslsk" in autojoin and not "nicotine" in autojoin:
-	    autojoin.append("nicotine")
-	
-	# decode the userinfo from local encoding to utf8 (1.0.3 -> 1.0.4 change)
-	if not self.sections["userinfo"]["descrutf8"]:
-	    try:
-	        import locale
-	        descr = eval(self.sections["userinfo"]["descr"], {}).decode(locale.nl_langinfo(locale.CODESET), "replace").encode("utf-8", "replace")
-	        self.sections["userinfo"]["descr"] = descr.__repr__()
-	    except:
-	        pass
-	    self.sections["userinfo"]["descrutf8"] = 1
-	        
-        sharedfiles = None
-	bsharedfiles = None
-        sharedfilesstreams = None
-	bsharedfilesstreams = None
-        wordindex = None
-	bwordindex = None
-        fileindex = None
-	bfileindex = None
-        sharedmtimes = None
-	bsharedmtimes = None
-	
-	try:
-	    sharedfiles = shelve.open(self.filename+".files.db")
-	    bsharedfiles = shelve.open(self.filename+".buddyfiles.db")
-	    sharedfilesstreams =shelve.open(self.filename+".streams.db")
-	    bsharedfilesstreams =shelve.open(self.filename+".buddystreams.db")
-	    wordindex = shelve.open(self.filename+".wordindex.db")
-	    bwordindex = shelve.open(self.filename+".buddywordindex.db")
-	    fileindex = shelve.open(self.filename+".fileindex.db")
-	    bfileindex = shelve.open(self.filename+".buddyfileindex.db")
-	    sharedmtimes = shelve.open(self.filename+".mtimes.db")
-	    bsharedmtimes = shelve.open(self.filename+".buddymtimes.db")
-	except:
-	    print _("Shared files database seems to be corrupted, rescan your shares")
+		try:
+			f = open(filename+".alias")
+			self.aliases = cPickle.load(f)
+			f.close()
+		except:
+			self.aliases = {}
+		self.config_lock.release()
+    
+    
+	def needConfig(self):
+		for i in self.sections.keys():
+			for j in self.sections[i].keys():
+		# 		print self.sections[i][j]
+				if self.sections[i][j] is None or self.sections[i][j] == '' and i not in ("userinfo", "ui", "ticker", "players") and j not in ("incompletedir", "autoreply", 'afterfinish','afterfolder', 'geoblockcc', 'downloadregexp'):
+					return 1
+		return 0
 
-	    if sharedfiles:
-	        sharedfiles.close()
-	    try:
-	        os.unlink(self.filename+'.files.db')
-	    except:
-	        pass
-	    sharedfiles = shelve.open(self.filename+".files.db",flag='n')
-	    if bsharedfiles:
-	        bsharedfiles.close()
-	    try:
-	        os.unlink(self.filename+'.buddyfiles.db')
-	    except:
-	        pass
-	    bsharedfiles = shelve.open(self.filename+".buddyfiles.db",flag='n')
-
-	    if sharedfilesstreams:
-	        sharedfilesstreams.close()
-	    try:
-	        os.unlink(self.filename+'.streams.db')
-	    except:
-	        pass
-	    sharedfilesstreams =shelve.open(self.filename+".streams.db",flag='n')
-	    if bsharedfilesstreams:
-	        bsharedfilesstreams.close()
-	    try:
-	        os.unlink(self.filename+'.buddystreams.db')
-	    except:
-	        pass
-	    bsharedfilesstreams =shelve.open(self.filename+".buddystreams.db",flag='n')
-
-	    if wordindex:
-	        wordindex.close()
-	    try:
-	        os.unlink(self.filename+'.wordindex.db')
-	    except:
-	        pass
-            wordindex = shelve.open(self.filename+".wordindex.db",flag='n')
-	    if bwordindex:
-	        bwordindex.close()
-	    try:
-	        os.unlink(self.filename+'.buddywordindex.db')
-	    except:
-	        pass
-            bwordindex = shelve.open(self.filename+".buddywordindex.db",flag='n')
-
-	    if fileindex:
-	        fileindex.close()
-	    try:
-	        os.unlink(self.filename+'.fileindex.db')
-	    except:
-	        pass
-            fileindex = shelve.open(self.filename+".fileindex.db",flag='n')
-	    if bfileindex:
-	        bfileindex.close()
-	    try:
-	        os.unlink(self.filename+'.buddyfileindex.db')
-	    except:
-	        pass
-            bfileindex = shelve.open(self.filename+".buddyfileindex.db",flag='n')
-
-	    if sharedmtimes:
-	        sharedmtimes.close()
-	    try:
-	        os.unlink(self.filename+'.mtimes.db')
-	    except:
-	        pass
-            sharedmtimes = shelve.open(self.filename+".mtimes.db",flag='n')
-	    if bsharedmtimes:
-	        bsharedmtimes.close()
-	    try:
-	        os.unlink(self.filename+'.buddymtimes.db')
-	    except:
-	        pass
-            bsharedmtimes = shelve.open(self.filename+".buddymtimes.db",flag='n')
-	self.sections["transfers"]["sharedfiles"] = sharedfiles
-	self.sections["transfers"]["sharedfilesstreams"] = sharedfilesstreams
-	self.sections["transfers"]["wordindex"] = wordindex
-	self.sections["transfers"]["fileindex"] = fileindex
-	self.sections["transfers"]["sharedmtimes"] = sharedmtimes
-	
-	self.sections["transfers"]["bsharedfiles"] = bsharedfiles
-	self.sections["transfers"]["bsharedfilesstreams"] = bsharedfilesstreams
-	self.sections["transfers"]["bwordindex"] = bwordindex
-	self.sections["transfers"]["bfileindex"] = bfileindex
-	self.sections["transfers"]["bsharedmtimes"] = bsharedmtimes
+	def readConfig(self):
+		self.config_lock.acquire()
+		path, fn = os.path.split(self.filename)
+		try:
+			if not os.path.isdir(path):
+				os.makedirs(path)
+		except OSError, msg:
+			print "Can't create directory '%s', reported error: %s" % (path, msg)
 		
-	if self.sections["server"]["server"][0] == "mail.slsknet.org":
-	    self.sections["server"]["server"] = ('server.slsknet.org', 2240)
-	
-	self.config_lock.release()
- 
-    def writeConfig(self):
-        self.config_lock.acquire()
-        for i in self.sections.keys():
-            if not self.parser.has_section(i):
-                self.parser.add_section(i)
-            for j in self.sections[i].keys():
-                if j not in ["sharedfiles","sharedfilesstreams","wordindex","fileindex","sharedmtimes", "bsharedfiles","bsharedfilesstreams","bwordindex","bfileindex","bsharedmtimes"]:
-                    self.parser.set(i,j,self.sections[i][j])
-                else:
-                    self.parser.remove_option(i,j)
-
-	path, fn = os.path.split(self.filename)
-	try:
-	    if not os.path.isdir(path):
-	        os.makedirs(path)
-	except OSError, msg:
-	    print _("Can't create directory '%s', reported error: %s") % (path, msg)
-	
-        oldumask = os.umask(0077)
-
-	try:
-	    f = open(self.filename + ".new", "w")
-	except IOError, e:
-            print _("Can't save config file, I/O error: %s") % e
-            return
-	else:
-	    self.parser.write(f)
-	    f.close()
-        os.umask(oldumask)
-        # A paranoid precaution since config contains the password
-        try:
-            os.chmod(self.filename, 0600)
-        except:
-            pass
-
-        try:
-            s = os.stat(self.filename)
-            if s.st_size > 0:
-                try:
-                    if os.path.exists(self.filename + ".old"):
-                        os.remove(self.filename + ".old")
-                except OSError, s:
-                    print s
-
-                try:
-                    os.rename(self.filename, self.filename + ".old")
-                except OSError, error:
-                    print _("Can't back config file up, error: %s") % error
-        except OSError:
-            pass
-
-        try:
-            os.rename(self.filename + ".new", self.filename)
-        except OSError, error:
-               print _("Can't rename config file, error: %s") % error
-
-        self.config_lock.release()
-	
-    def setBuddyShares(self,files,streams,wordindex,fileindex,mtimes):
-	if self.sections["transfers"]["bsharedfiles"] == files:
-	    return
-	self.config_lock.acquire()
-	self.sections["transfers"]["bsharedfiles"].close()
-	self.sections["transfers"]["bsharedfilesstreams"].close()
-	self.sections["transfers"]["bsharedmtimes"].close()
-	self.sections["transfers"]["bwordindex"].close()
-	self.sections["transfers"]["bfileindex"].close()
-	
-	self.sections["transfers"]["bsharedfiles"] = shelve.open(self.filename+".buddyfiles.db",'n')
-	self.sections["transfers"]["bsharedfilesstreams"] = shelve.open(self.filename+".buddystreams.db",'n')
-	self.sections["transfers"]["bsharedmtimes"] = shelve.open(self.filename+".buddymtimes.db",'n')
-	self.sections["transfers"]["bwordindex"] = shelve.open(self.filename+".buddywordindex.db",'n')
-	self.sections["transfers"]["bfileindex"] = shelve.open(self.filename+".buddyfileindex.db",'n')
-	    
-	for (i,j) in files.items():
-	    self.sections["transfers"]["bsharedfiles"][i] = j
-	for (i,j) in streams.items():
-           self.sections["transfers"]["bsharedfilesstreams"][i] = j
-	for (i,j) in mtimes.items():
-            self.sections["transfers"]["bsharedmtimes"][i] = j
-	for (i,j) in wordindex.items():
-	    self.sections["transfers"]["bwordindex"][i] = j
-        for (i,j) in fileindex.items():
-            self.sections["transfers"]["bfileindex"][i] = j
-        self.config_lock.release()
+		for i in self.parser.sections():
+			for j in self.parser.options(i):
+				val = self.parser.get(i,j, raw = 1)
+				if i not in self.sections.keys():
+					print "Unknown config section:",i
+				elif j not in self.sections[i].keys() and j != "filter":
+					print "Unknown config option",j,"section",i
+				elif j in ['login','passw','enc',  'downloaddir','customban','descr','pic','logsdir','incompletedir', 'autoreply', 'afterfinish', 'downloadregexp', 'afterfolder', 'default', 'chatfont', "npothercommand", "npplayer", "npformat"] or (i == "ui" and j not in ["roomlistcollapsed", "tabclosers",  'buddylistinchatrooms', "trayicon", "usernamehotspots", "soundenabled", "transalpha",  "enabletrans", "speechenabled", "enablefilters"]):
+					self.sections[i][j] = val
+				else:
+					try:
+						self.sections[i][j] = eval(val, {})
+					except:
+						self.sections[i][j] = None
+						print "CONFIG ERROR: Couldn't decode %s section %s value %s" % (str(j), str(i), str(val))
+		autojoin = self.sections["server"]["autojoin"]
+		for user in self.sections["server"]["userlist"]:
+			if len(user) == 2:
+				user += [0,0]
 		
-    def setShares(self,files,streams,wordindex,fileindex,mtimes):
-	if self.sections["transfers"]["sharedfiles"] == files:
-	    return
+		if "pyslsk" in autojoin and not "nicotine" in autojoin:
+			autojoin.append("nicotine")
+		
+		# decode the userinfo from local encoding to utf8 (1.0.3 -> 1.0.4 change)
+		if not self.sections["userinfo"]["descrutf8"]:
+			try:
+				import locale
+				descr = eval(self.sections["userinfo"]["descr"], {}).decode(locale.nl_langinfo(locale.CODESET), "replace").encode("utf-8", "replace")
+				self.sections["userinfo"]["descr"] = descr.__repr__()
+			except:
+				pass
+			self.sections["userinfo"]["descrutf8"] = 1
+			
+		sharedfiles = None
+		bsharedfiles = None
+		sharedfilesstreams = None
+		bsharedfilesstreams = None
+		wordindex = None
+		bwordindex = None
+		fileindex = None
+		bfileindex = None
+		sharedmtimes = None
+		bsharedmtimes = None
+		
+		try:
+			sharedfiles = shelve.open(self.filename+".files.db")
+			bsharedfiles = shelve.open(self.filename+".buddyfiles.db")
+			sharedfilesstreams =shelve.open(self.filename+".streams.db")
+			bsharedfilesstreams =shelve.open(self.filename+".buddystreams.db")
+			wordindex = shelve.open(self.filename+".wordindex.db")
+			bwordindex = shelve.open(self.filename+".buddywordindex.db")
+			fileindex = shelve.open(self.filename+".fileindex.db")
+			bfileindex = shelve.open(self.filename+".buddyfileindex.db")
+			sharedmtimes = shelve.open(self.filename+".mtimes.db")
+			bsharedmtimes = shelve.open(self.filename+".buddymtimes.db")
+		except:
+			print _("Shared files database seems to be corrupted, rescan your shares")
+		
+			if sharedfiles:
+				sharedfiles.close()
+			try:
+				os.unlink(self.filename+'.files.db')
+			except:
+				pass
+			sharedfiles = shelve.open(self.filename+".files.db",flag='n')
+			if bsharedfiles:
+				bsharedfiles.close()
+			try:
+				os.unlink(self.filename+'.buddyfiles.db')
+			except:
+				pass
+			bsharedfiles = shelve.open(self.filename+".buddyfiles.db",flag='n')
+		
+			if sharedfilesstreams:
+				sharedfilesstreams.close()
+			try:
+				os.unlink(self.filename+'.streams.db')
+			except:
+				pass
+			sharedfilesstreams =shelve.open(self.filename+".streams.db",flag='n')
+			if bsharedfilesstreams:
+				bsharedfilesstreams.close()
+			try:
+				os.unlink(self.filename+'.buddystreams.db')
+			except:
+				pass
+			bsharedfilesstreams =shelve.open(self.filename+".buddystreams.db",flag='n')
+		
+			if wordindex:
+				wordindex.close()
+			try:
+				os.unlink(self.filename+'.wordindex.db')
+			except:
+				pass
+			wordindex = shelve.open(self.filename+".wordindex.db",flag='n')
+			if bwordindex:
+				bwordindex.close()
+			try:
+				os.unlink(self.filename+'.buddywordindex.db')
+			except:
+				pass
+			bwordindex = shelve.open(self.filename+".buddywordindex.db",flag='n')
+		
+			if fileindex:
+				fileindex.close()
+			try:
+				os.unlink(self.filename+'.fileindex.db')
+			except:
+				pass
+			fileindex = shelve.open(self.filename+".fileindex.db",flag='n')
+			if bfileindex:
+				bfileindex.close()
+			try:
+				os.unlink(self.filename+'.buddyfileindex.db')
+			except:
+				pass
+			bfileindex = shelve.open(self.filename+".buddyfileindex.db",flag='n')
+		
+			if sharedmtimes:
+				sharedmtimes.close()
+			try:
+				os.unlink(self.filename+'.mtimes.db')
+			except:
+				pass
+			sharedmtimes = shelve.open(self.filename+".mtimes.db",flag='n')
+			if bsharedmtimes:
+				bsharedmtimes.close()
+			try:
+				os.unlink(self.filename+'.buddymtimes.db')
+			except:
+				pass
+			bsharedmtimes = shelve.open(self.filename+".buddymtimes.db",flag='n')
+		self.sections["transfers"]["sharedfiles"] = sharedfiles
+		self.sections["transfers"]["sharedfilesstreams"] = sharedfilesstreams
+		self.sections["transfers"]["wordindex"] = wordindex
+		self.sections["transfers"]["fileindex"] = fileindex
+		self.sections["transfers"]["sharedmtimes"] = sharedmtimes
+		
+		self.sections["transfers"]["bsharedfiles"] = bsharedfiles
+		self.sections["transfers"]["bsharedfilesstreams"] = bsharedfilesstreams
+		self.sections["transfers"]["bwordindex"] = bwordindex
+		self.sections["transfers"]["bfileindex"] = bfileindex
+		self.sections["transfers"]["bsharedmtimes"] = bsharedmtimes
+			
+		if self.sections["server"]["server"][0] == "mail.slsknet.org":
+			self.sections["server"]["server"] = ('server.slsknet.org', 2240)
+		
+		self.config_lock.release()
 	
-        self.config_lock.acquire()
-	self.sections["transfers"]["sharedfiles"].close()
-	self.sections["transfers"]["sharedfilesstreams"].close()
-	self.sections["transfers"]["sharedmtimes"].close()
-	self.sections["transfers"]["wordindex"].close()
-	self.sections["transfers"]["fileindex"].close()
-	self.sections["transfers"]["sharedfiles"] = shelve.open(self.filename+".files.db",'n')
-	self.sections["transfers"]["sharedfilesstreams"] = shelve.open(self.filename+".streams.db",'n')
-	self.sections["transfers"]["sharedmtimes"] = shelve.open(self.filename+".mtimes.db",'n')
-	self.sections["transfers"]["wordindex"] = shelve.open(self.filename+".wordindex.db",'n')
-	self.sections["transfers"]["fileindex"] = shelve.open(self.filename+".fileindex.db",'n')
-
-	for (i,j) in files.items():
-	    self.sections["transfers"]["sharedfiles"][i] = j
-	for (i,j) in streams.items():
-           self.sections["transfers"]["sharedfilesstreams"][i] = j
-	for (i,j) in mtimes.items():
-            self.sections["transfers"]["sharedmtimes"][i] = j
-	for (i,j) in wordindex.items():
-	    self.sections["transfers"]["wordindex"][i] = j
-        for (i,j) in fileindex.items():
-            self.sections["transfers"]["fileindex"][i] = j
-
-	self.config_lock.release()
-
-    def writeShares(self):
-        self.config_lock.acquire()
-	self.sections["transfers"]["sharedfiles"].sync()
-	self.sections["transfers"]["sharedfilesstreams"].sync()
-	self.sections["transfers"]["wordindex"].sync()
-	self.sections["transfers"]["fileindex"].sync()
-	self.sections["transfers"]["sharedmtimes"].sync()
+	def writeConfig(self):
+		self.config_lock.acquire()
+		for i in self.sections.keys():
+			if not self.parser.has_section(i):
+				self.parser.add_section(i)
+			for j in self.sections[i].keys():
+				if j not in ["sharedfiles","sharedfilesstreams","wordindex","fileindex","sharedmtimes", "bsharedfiles","bsharedfilesstreams","bwordindex","bfileindex","bsharedmtimes"]:
+					self.parser.set(i,j,self.sections[i][j])
+				else:
+					self.parser.remove_option(i,j)
 	
-	self.sections["transfers"]["bsharedfiles"].sync()
-	self.sections["transfers"]["bsharedfilesstreams"].sync()
-	self.sections["transfers"]["bwordindex"].sync()
-	self.sections["transfers"]["bfileindex"].sync()
-	self.sections["transfers"]["bsharedmtimes"].sync()
-	self.config_lock.release()
-
-    def pushHistory(self, history, text, max):
-	if text in history:
-	    history.remove(text)
-	elif len(history) >= max:
-	   del history[-1]
-	history.insert(0, text)
-	self.writeConfig()
+		path, fn = os.path.split(self.filename)
+		try:
+			if not os.path.isdir(path):
+				os.makedirs(path)
+		except OSError, msg:
+			print _("Can't create directory '%s', reported error: %s") % (path, msg)
+		
+		oldumask = os.umask(0077)
 	
-    def writeAliases(self):
-        self.config_lock.acquire()
-        f = open(self.filename+".alias","w")
-        cPickle.dump(self.aliases, f, 1)
-        f.close()
-        self.config_lock.release()
+		try:
+			f = open(self.filename + ".new", "w")
+		except IOError, e:
+			print _("Can't save config file, I/O error: %s") % e
+			return
+		else:
+			self.parser.write(f)
+			f.close()
+		os.umask(oldumask)
+		# A paranoid precaution since config contains the password
+		try:
+			os.chmod(self.filename, 0600)
+		except:
+			pass
+	
+		try:
+			s = os.stat(self.filename)
+			if s.st_size > 0:
+				try:
+					if os.path.exists(self.filename + ".old"):
+						os.remove(self.filename + ".old")
+				except OSError, s:
+					print s
+		
+				try:
+					os.rename(self.filename, self.filename + ".old")
+				except OSError, error:
+					print _("Can't back config file up, error: %s") % error
+		except OSError:
+			pass
+	
+		try:
+			os.rename(self.filename + ".new", self.filename)
+		except OSError, error:
+			print _("Can't rename config file, error: %s") % error
+	
+		self.config_lock.release()
+	
+	def setBuddyShares(self,files,streams,wordindex,fileindex,mtimes):
+		if self.sections["transfers"]["bsharedfiles"] == files:
+			return
+		self.config_lock.acquire()
+		self.sections["transfers"]["bsharedfiles"].close()
+		self.sections["transfers"]["bsharedfilesstreams"].close()
+		self.sections["transfers"]["bsharedmtimes"].close()
+		self.sections["transfers"]["bwordindex"].close()
+		self.sections["transfers"]["bfileindex"].close()
+		
+		self.sections["transfers"]["bsharedfiles"] = shelve.open(self.filename+".buddyfiles.db",'n')
+		self.sections["transfers"]["bsharedfilesstreams"] = shelve.open(self.filename+".buddystreams.db",'n')
+		self.sections["transfers"]["bsharedmtimes"] = shelve.open(self.filename+".buddymtimes.db",'n')
+		self.sections["transfers"]["bwordindex"] = shelve.open(self.filename+".buddywordindex.db",'n')
+		self.sections["transfers"]["bfileindex"] = shelve.open(self.filename+".buddyfileindex.db",'n')
+		
+		for (i,j) in files.items():
+			self.sections["transfers"]["bsharedfiles"][i] = j
+		for (i,j) in streams.items():
+			self.sections["transfers"]["bsharedfilesstreams"][i] = j
+		for (i,j) in mtimes.items():
+			self.sections["transfers"]["bsharedmtimes"][i] = j
+		for (i,j) in wordindex.items():
+			self.sections["transfers"]["bwordindex"][i] = j
+		for (i,j) in fileindex.items():
+			self.sections["transfers"]["bfileindex"][i] = j
+		self.config_lock.release()
+		
+	def setShares(self,files,streams,wordindex,fileindex,mtimes):
+		if self.sections["transfers"]["sharedfiles"] == files:
+			return
+		
+		self.config_lock.acquire()
+		self.sections["transfers"]["sharedfiles"].close()
+		self.sections["transfers"]["sharedfilesstreams"].close()
+		self.sections["transfers"]["sharedmtimes"].close()
+		self.sections["transfers"]["wordindex"].close()
+		self.sections["transfers"]["fileindex"].close()
+		self.sections["transfers"]["sharedfiles"] = shelve.open(self.filename+".files.db",'n')
+		self.sections["transfers"]["sharedfilesstreams"] = shelve.open(self.filename+".streams.db",'n')
+		self.sections["transfers"]["sharedmtimes"] = shelve.open(self.filename+".mtimes.db",'n')
+		self.sections["transfers"]["wordindex"] = shelve.open(self.filename+".wordindex.db",'n')
+		self.sections["transfers"]["fileindex"] = shelve.open(self.filename+".fileindex.db",'n')
+	
+		for (i,j) in files.items():
+			self.sections["transfers"]["sharedfiles"][i] = j
+		for (i,j) in streams.items():
+			self.sections["transfers"]["sharedfilesstreams"][i] = j
+		for (i,j) in mtimes.items():
+			self.sections["transfers"]["sharedmtimes"][i] = j
+		for (i,j) in wordindex.items():
+			self.sections["transfers"]["wordindex"][i] = j
+		for (i,j) in fileindex.items():
+			self.sections["transfers"]["fileindex"][i] = j
+	
+		self.config_lock.release()
 
-    def AddAlias(self, rest):
-	if rest:
-	    args = rest.split(" ", 1)
-	    if len(args) == 2:
-	        if args[0] in ("alias", "unalias"):
-	            return "I will not alias that!\n"
-	        self.aliases[args[0]] = args[1]
-	        self.writeAliases()
-	    if self.aliases.has_key(args[0]):
-	        return "Alias %s: %s\n" % (args[0], self.aliases[args[0]])
-	    else:
-	        return _("No such alias (%s)") % rest + "\n"
-        else:
-           m = "\n" + _("Aliases:") + "\n"
-           for i in self.aliases.keys():
-               m = m + "%s: %s\n" % (i, self.aliases[i])
-           return m+"\n"
+	def writeShares(self):
+		self.config_lock.acquire()
+		self.sections["transfers"]["sharedfiles"].sync()
+		self.sections["transfers"]["sharedfilesstreams"].sync()
+		self.sections["transfers"]["wordindex"].sync()
+		self.sections["transfers"]["fileindex"].sync()
+		self.sections["transfers"]["sharedmtimes"].sync()
+		
+		self.sections["transfers"]["bsharedfiles"].sync()
+		self.sections["transfers"]["bsharedfilesstreams"].sync()
+		self.sections["transfers"]["bwordindex"].sync()
+		self.sections["transfers"]["bfileindex"].sync()
+		self.sections["transfers"]["bsharedmtimes"].sync()
+		self.config_lock.release()
 
-    def Unalias(self, rest):
-	if rest and self.aliases.has_key(rest):
-	    x = self.aliases[rest]
-	    del self.aliases[rest]
-	    self.writeAliases()
-	    return _("Removed alias %s: %s") % (rest, x) + "\n"
-	else:
-	    return _("No such alias (%s)") % rest + "\n"
+	def pushHistory(self, history, text, max):
+		if text in history:
+			history.remove(text)
+		elif len(history) >= max:
+			del history[-1]
+		history.insert(0, text)
+		self.writeConfig()
+	
+	def writeAliases(self):
+		self.config_lock.acquire()
+		f = open(self.filename+".alias","w")
+		cPickle.dump(self.aliases, f, 1)
+		f.close()
+		self.config_lock.release()
+
+	def AddAlias(self, rest):
+		if rest:
+			args = rest.split(" ", 1)
+			if len(args) == 2:
+				if args[0] in ("alias", "unalias"):
+					return "I will not alias that!\n"
+				self.aliases[args[0]] = args[1]
+				self.writeAliases()
+			if self.aliases.has_key(args[0]):
+				return "Alias %s: %s\n" % (args[0], self.aliases[args[0]])
+			else:
+				return _("No such alias (%s)") % rest + "\n"
+		else:
+			m = "\n" + _("Aliases:") + "\n"
+			for i in self.aliases.keys():
+				m = m + "%s: %s\n" % (i, self.aliases[i])
+			return m+"\n"
+
+	def Unalias(self, rest):
+		if rest and self.aliases.has_key(rest):
+			x = self.aliases[rest]
+			del self.aliases[rest]
+			self.writeAliases()
+			return _("Removed alias %s: %s") % (rest, x) + "\n"
+		else:
+			return _("No such alias (%s)") % rest + "\n"

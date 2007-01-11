@@ -59,7 +59,7 @@ class ServerFrame(settings_glade.ServerFrame):
 		except:
 			server = None
 		if str(self.Login.get_text()) == "None":
-			popupWarning(None, _("Warning: Bad Username"), _("Username None is not a good password, please pick another.") )
+			popupWarning(None, _("Warning: Bad Username"), _("Username 'None' is not a good one, please pick another.") )
 		try:
 			firstport = int(self.FirstPort.get_text())
 			lastport = int(self.LastPort.get_text())
@@ -178,20 +178,20 @@ class SharesFrame(settings_glade.SharesFrame):
 	def OnAddSharedDir(self, widget):
 		dir1 = ChooseDir(self.Main.get_toplevel())
 		if dir1 is not None:
-		    for directory in dir1:
-			if directory not in self.shareddirs:
-			    self.shareslist.append([recode(directory), directory])
-			    self.shareddirs.append(directory)
-			    self.needrescan = 1
+			for directory in dir1:
+				if directory not in self.shareddirs:
+					self.shareslist.append([recode(directory), directory])
+					self.shareddirs.append(directory)
+					self.needrescan = 1
 			    
 	def OnAddSharedBuddyDir(self, widget):
 		dir1 = ChooseDir(self.Main.get_toplevel())
 		if dir1 is not None:
-		    for directory in dir1:
-			if directory not in self.bshareddirs:
-			    self.bshareslist.append([recode(directory), directory])
-			    self.bshareddirs.append(directory)
-			    self.needrescan = 1
+			for directory in dir1:
+				if directory not in self.bshareddirs:
+					self.bshareslist.append([recode(directory), directory])
+					self.bshareddirs.append(directory)
+					self.needrescan = 1
 			    
 	def _RemoveSharedDir(self, model, path, iter, list):
 		list.append(iter)
@@ -418,8 +418,9 @@ class TransfersFrame(settings_glade.TransfersFrame):
 			filter, escaped = dfilter
 			self.filtersiters[filter] = self.filterlist.append([filter, escaped])
 		self.OnVerifyFilter(self.VerifyFilters)
+		
 	def OnVerifyFilter(self, widget):
-		#print self.VerifiedLabel.get_text()
+
 		outfilter = "(\\\\("
 		df = self.filtersiters.keys()
 		df.sort()
@@ -654,6 +655,10 @@ class BloatFrame(settings_glade.BloatFrame):
 		self.DefaultQueue.connect("clicked", self.DefaultColour, self.Queue)
 		self.DefaultSoundCommand.connect("clicked", self.DefaultSound, self.SoundCommand)
 		
+		# Ting
+		self.PickTint.connect("clicked", self.PickColour, self.TintColor)
+		self.DefaultTint.connect("clicked", self.DefaultColour, self.TintColor)
+		
 	def OnChooseThemeDir(self, widget):
 		dir = ChooseDir(self.Main.get_toplevel(), self.IconTheme.get_text())
 		if dir is not None:
@@ -716,6 +721,17 @@ class BloatFrame(settings_glade.BloatFrame):
 			self.UsernameStyle.child.set_text(ui["usernamestyle"])
 		if transfers["enabletransferbuttons"] is not None:
 			self.ShowTransferButtons.set_active(transfers["enabletransferbuttons"])
+		if ui["enabletrans"] is not None:
+			self.EnableTransparent.set_active(ui["enabletrans"])
+		self.OnEnableTransparentToggled(self.EnableTransparent)
+		self.settingup = 1
+		if ui["transtint"] is not None:
+			self.TintColor.set_text(ui["transtint"])
+		if ui["transalpha"] is not None:
+			self.TintAlpha.set_value(ui["transalpha"])
+		
+		self.ColourScale("")
+		self.settingup = 0
 	def GetSettings(self):
 		return {
 			"ui": {
@@ -738,11 +754,30 @@ class BloatFrame(settings_glade.BloatFrame):
 				"useroffline": self.OfflineColor.get_text(),
 				"usernamehotspots": self.UsernameHotspots.get_active(),
 				"usernamestyle": self.UsernameStyle.child.get_text(),
+				"enabletrans": self.EnableTransparent.get_active(),
+				"transtint": self.TintColor.get_text(),
+				"transalpha": self.TintAlpha.get_value(),
 			},
 			"transfers": {
 				"enabletransferbuttons": self.ShowTransferButtons.get_active(),
 			},
 		}
+	def OnEnableTransparentToggled(self, widget):
+		sensitive = widget.get_active()
+		self.PickTint.set_sensitive(sensitive)
+		
+		self.TintAlpha.set_sensitive(sensitive)
+		self.DefaultTint.set_sensitive(sensitive)
+		self.TintColor.set_sensitive(sensitive)
+		self.Blue.set_sensitive(sensitive)
+		self.Red.set_sensitive(sensitive)
+		self.Green.set_sensitive(sensitive)
+		self.label346.set_sensitive(sensitive)
+		self.label348.set_sensitive(sensitive)
+		self.label349.set_sensitive(sensitive)
+		self.label347.set_sensitive(sensitive)
+		
+		
 	def OnUsernameHotspotsToggled(self, widget):
 		sensitive = widget.get_active()
 		self.AwayColor.set_sensitive(sensitive)
@@ -769,14 +804,51 @@ class BloatFrame(settings_glade.BloatFrame):
 	def PickColour(self, widget, entry):
 		dlg = gtk.ColorSelectionDialog(_("Pick a colour, any colour"))
 		colour = entry.get_text()
+		if entry is self.TintColor:
+			dlg.colorsel.set_has_opacity_control(True)
+			dlg.colorsel.set_current_alpha(int(self.TintAlpha.get_value()) * 256)
 		if colour != None and colour !='':
 			colour = gtk.gdk.color_parse(colour)
 			dlg.colorsel.set_current_color(colour)
+			
 		if dlg.run() == gtk.RESPONSE_OK:
 			colour = dlg.colorsel.get_current_color()
+			#print colour.red, colour.red / 256, colour.green,  colour.green / 256, colour.blue, colour.blue / 256
 			colour = "#%02X%02X%02X" % (colour.red / 256, colour.green / 256, colour.blue / 256)
 			entry.set_text(colour)
+			
+		
+		if entry is self.TintColor:
+			alpha = dlg.colorsel.get_current_alpha()
+
+			self.TintAlpha.set_value(alpha /256)
+			self.ColourScale("")
 		dlg.destroy()
+		
+	def ColourScale(self, widget):
+		tint = self.TintColor.get_text()
+		if tint != "":
+			if tint[0] == "#" and len(tint) == 7:
+				try:
+					red   = int(tint[1:3], 16)
+					green = int(tint[3:5], 16)
+					blue  = int(tint[5:], 16)
+	
+					self.Red.set_value(red)
+					self.Blue.set_value(blue)
+					self.Green.set_value(green)
+				except Exception, e:
+					print e
+	def ScaleColour(self, widget):
+		if self.settingup:
+			return
+		red = int(self.Red.get_value() )
+		green = int(self.Green.get_value())
+		blue = int(self.Blue.get_value())
+
+		colour = "#%02X%02X%02X" % (red, green, blue)
+
+		self.TintColor.set_text(colour)
 		
 	def DefaultColour(self, widget, entry):
 		entry.set_text("")

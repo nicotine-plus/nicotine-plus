@@ -60,9 +60,9 @@ class NicotineFrame(MainWindow):
 		self.got_focus = False
 		self.importimages()
 		if sys.platform == "win32":
-				import icondata
+			import icondata
 		config2 = Config(config)
-        	config2.readConfig()
+		config2.readConfig()
 		# For Win32 Systray 
 		if sys.platform == "win32":
 			self.icons = {}
@@ -131,25 +131,25 @@ class NicotineFrame(MainWindow):
 			("#" + _("Clear log"), self.OnClearLogWindow, gtk.STOCK_CLEAR)
 		)
 		def on_delete_event(widget, event):
-                    if self.HAVE_TRAYICON:
-                      option = Option_Box(self, title=_('Close Nicotine-Plus?'), message=_('Are you sure you wish to exit Nicotine-Plus at this time?'), option1=_("Exit"), option2=_("Send to Tray"), option3=_("Cancel") )
-                    else:
-                      option = Option_Box(self, title=_('Close Nicotine-Plus?'), message=_('Are you sure you wish to exit Nicotine-Plus at this time?'), option1=_("Exit"), option3=_("Cancel"), option2=None )
-		    if option is None:
-			pass
-		    else:
-                      if option == 2: 
-                        if self.is_mapped:
-                          self.MainWindow.unmap()
-                          self.is_mapped = 0
-                      elif option == 1:
-			if sys.platform == "win32" and self.trayicon:
-				self.trayicon.hide_icon()
-                        gtk.main_quit()
-                        return False
-                    return True
+			if self.HAVE_TRAYICON:
+				option = Option_Box(self, title=_('Close Nicotine-Plus?'), message=_('Are you sure you wish to exit Nicotine-Plus at this time?'), option1=_("Exit"), option2=_("Send to Tray"), option3=_("Cancel") )
+			else:
+				option = Option_Box(self, title=_('Close Nicotine-Plus?'), message=_('Are you sure you wish to exit Nicotine-Plus at this time?'), option1=_("Exit"), option3=_("Cancel"), option2=None )
+			if option is None:
+				pass
+			else:
+				if option == 2: 
+					if self.is_mapped:
+						self.MainWindow.unmap()
+						self.is_mapped = 0
+				elif option == 1:
+					if sys.platform == "win32" and self.trayicon:
+						self.trayicon.hide_icon()
+					gtk.main_quit()
+					return False
+			return True
 
-                self.MainWindow.connect("delete-event",on_delete_event)
+		self.MainWindow.connect("delete-event",on_delete_event)
 		
 
 		self.transfermsgs = {}
@@ -265,35 +265,31 @@ class NicotineFrame(MainWindow):
 		closers = self.np.config.sections["ui"]["tabclosers"]
 		for w in self.ChatNotebook, self.PrivatechatNotebook, self.UserInfoNotebook, self.UserBrowseNotebook, self.SearchNotebook:
 			w.tabclosers = closers
-		
-		if self.np.config.sections["ui"].has_key("filter"):
-			self.translux = translux.Translux(self.MainWindow, eval(self.np.config.sections["ui"]["filter"]))
-		else:
-			self.translux = None
-
+		self.translux = None
+		self.TransparentTint()
 		self.LogScrolledWindow = gtk.ScrolledWindow()
 		self.LogScrolledWindow.set_shadow_type(gtk.SHADOW_IN)
-	        self.LogScrolledWindow.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
-        	self.LogScrolledWindow.show()
-	        
-	        self.LogWindow = gtk.TextView()
-	        self.LogWindow.set_wrap_mode(gtk.WRAP_WORD)
-	        self.LogWindow.set_cursor_visible(False)
-	        self.LogWindow.set_editable(False)
-	        self.LogWindow.show()
-	        self.LogScrolledWindow.add(self.LogWindow)
-	        self.LogWindow.connect("button-press-event", self.OnPopupLogMenu)
+		self.LogScrolledWindow.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+		self.LogScrolledWindow.show()
+
+		self.LogWindow = gtk.TextView()
+		self.LogWindow.set_wrap_mode(gtk.WRAP_WORD)
+		self.LogWindow.set_cursor_visible(False)
+		self.LogWindow.set_editable(False)
+		self.LogWindow.show()
+		self.LogScrolledWindow.add(self.LogWindow)
+		self.LogWindow.connect("button-press-event", self.OnPopupLogMenu)
 		self.UpdateColours()
 		
 
-	        if self.translux:
-	        	self.LogScrolledWindow.get_vadjustment().connect("value-changed", lambda *args: self.LogWindow.queue_draw())
-	        	self.translux.subscribe(self.LogWindow, lambda: self.LogWindow.get_window(gtk.TEXT_WINDOW_TEXT))
+		if self.translux:
+			self.LogScrolledWindow.get_vadjustment().connect("value-changed", lambda *args: self.LogWindow.queue_draw())
+			self.translux.subscribe(self.LogWindow, lambda: self.LogWindow.get_window(gtk.TEXT_WINDOW_TEXT))
 	        
 		if self.np.config.sections["logging"]["logcollapsed"]:
 			self.hide_log_window1.set_active(1)
 		else:
-		        self.vpaned1.pack2(self.LogScrolledWindow, False, True)
+			self.vpaned1.pack2(self.LogScrolledWindow, False, True)
 			self.hide_log_window1.set_active(0)
 		
 		if self.np.config.sections["ui"]["roomlistcollapsed"]:
@@ -414,7 +410,7 @@ class NicotineFrame(MainWindow):
 		if self.TRAYICON_FAILED:
 			return
 		try:
-		        if sys.platform == "win32":
+			if sys.platform == "win32":
 				import systraywin32
 				self.trayicon_module = systraywin32
 			else:
@@ -1220,6 +1216,7 @@ class NicotineFrame(MainWindow):
 			self.np.queue.put(slskmessages.SetGeoBlock(None))
 		self.np.queue.put(slskmessages.SetUploadLimit(uselimit,uploadlimit,limitby))
 		self.UpdateDownloadFilters()
+		self.TransparentTint(1)
 		self.np.config.writeConfig()
 		if not self.np.config.sections["ui"]["trayicon"] and self.HAVE_TRAYICON:
 			self.destroy_trayicon()
@@ -1249,7 +1246,43 @@ class NicotineFrame(MainWindow):
 		else:
 			if self.np.transfers is None:
 				self.connect1.set_sensitive(1)
+	def HTMLColorToRGB(self, colorstring):
+		""" convert #RRGGBB to an (R, G, B) tuple """
+		colorstring = colorstring.strip()
+		if colorstring[0] == '#': colorstring = colorstring[1:]
+		if len(colorstring) != 8:
+			raise ValueError, "input #%s is not in #RRGGBB format" % colorstring
+		r, g, b,a = colorstring[:2], colorstring[2:4], colorstring[4:6], colorstring[6:8]
+		r, g, b,a = [int(n, 16) for n in (r, g, b, a)]
+		return (r, g, b,a)
 		
+	def TransparentTint(self, update=None):
+
+		if not self.np.config.sections["ui"]["enabletrans"]:
+			if self.translux:
+				self.translux.disable()
+			return
+	
+		filter =""
+		tint = None
+		ttint = self.np.config.sections["ui"]["transtint"]
+		if ttint[0] != "#":
+			return
+		ttint = ttint[1:]
+		if len(ttint) != 6:
+			return
+		try:
+
+			alpha = "%02X" % self.np.config.sections["ui"]["transalpha"]
+			tint = long(ttint+alpha, 16)
+	
+			if update and self.translux:
+				self.translux.changeTint(tint)
+		except Exception, e:
+			print e
+		if self.translux is None and tint is not None:
+			self.translux = translux.Translux(self.MainWindow, tint)
+
 	def UpdateDownloadFilters(self):
 		proccessedfilters = []
 		outfilter = "(\\\\("

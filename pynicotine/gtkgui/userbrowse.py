@@ -243,7 +243,7 @@ class UserBrowse(UserBrowseTab):
 			import bz2
 			sharesfile = bz2.BZ2File(os.path.join(sharesdir, self.encode(self.user)), 'w' )
 			pickle.dump(self.list, sharesfile)
- 			sharesfile.close()
+			sharesfile.close()
 		except Exception, msg:
 			error = _("Can't save shares, '%s', reported error: %s" % (self.user, msg) )
 			print error
@@ -377,7 +377,7 @@ class UserBrowse(UserBrowseTab):
 		if user is None or user == "":
 			pass
 		else:
-                        self.frame.np.ProcessRequestToPeer(user,slskmessages.UploadQueueNotification(None)  )
+			self.frame.np.ProcessRequestToPeer(user,slskmessages.UploadQueueNotification(None)  )
 			for file in node.files:
 				self.frame.np.transfers.pushFile(user, dir+file[1], ldir)
 				self.frame.np.transfers.checkUploadQueue()
@@ -397,7 +397,7 @@ class UserBrowse(UserBrowseTab):
 		if user is None or user == "":
 			pass
 		else:
-                        self.frame.np.ProcessRequestToPeer(user,slskmessages.UploadQueueNotification(None)  )
+			self.frame.np.ProcessRequestToPeer(user,slskmessages.UploadQueueNotification(None)  )
 			for fn in self.selected_files:
 				self.frame.np.transfers.pushFile(user, dir + fn, prefix)
 				self.frame.np.transfers.checkUploadQueue()

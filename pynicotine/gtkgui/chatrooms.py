@@ -331,9 +331,9 @@ class ChatRoom(ChatRoomTab):
 			self.tlux_chat = lambda: self.ChatScroll.get_window(gtk.TEXT_WINDOW_TEXT)
 			self.frame.translux.subscribe(self.RoomLog, self.tlux_roomlog)
 			self.frame.translux.subscribe(self.ChatScroll, self.tlux_chat)
-	        	self.RoomLog.get_parent().get_vadjustment().connect("value-changed", lambda *args: self.RoomLog.queue_draw())
-	        	self.ChatScroll.get_parent().get_vadjustment().connect("value-changed", lambda *args: self.ChatScroll.queue_draw())
-	        	self.ChatScroll.get_parent().get_hadjustment().connect("value-changed", lambda *args: self.ChatScroll.queue_draw())
+			self.RoomLog.get_parent().get_vadjustment().connect("value-changed", lambda *args: self.RoomLog.queue_draw())
+			self.ChatScroll.get_parent().get_vadjustment().connect("value-changed", lambda *args: self.ChatScroll.queue_draw())
+			self.ChatScroll.get_parent().get_hadjustment().connect("value-changed", lambda *args: self.ChatScroll.queue_draw())
 
 		self.Elist = {}
 		self.encoding, m = EncodingsMenu(self.frame.np, "roomencoding", room)

@@ -13,6 +13,7 @@ class Translux:
 		self.atom1 = gtk.gdk.atom_intern("ESETROOT_PMAP_ID")
 		self.atom2 = gtk.gdk.atom_intern("_XROOTPMAP_ID")
 		parent.connect("configure-event", self.OnConfigure)
+
 	
 	def __del__(self):
 		for subscriber in self.subscribers.keys():
@@ -105,8 +106,9 @@ class Translux:
 		# create the tinting filter
 		filter = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, True, 8, dw, dh)
 		filter.fill(self.tint)
-		filter.render_to_drawable_alpha(dpixmap, 0, 0, 0, 0, dw, dh, 0, 0, 0, 0, 0)
-		
+		#filter.render_to_drawable_alpha(dpixmap, 0, 0, 0, 0, dw, dh, 0, 0, 0, 0, 0)
+		#dpixmap.draw_pixbuf(gc, filter, x, y, dw, dh)
+		dpixmap.draw_pixbuf(gc, filter, 0, 0, 0, 0, dw, dh)
 		# update the style or set the back_pixmap
 		if style:
 			style = widget.get_style()
@@ -121,7 +123,19 @@ class Translux:
 
 		# Force a redraw on the widget
 		widget.queue_draw()
-
+		
+		
+	def changeTint(self, tint):
+		self.tint = tint
+		self.update()
+		
+	def disable(self):
+		for sub in self.subscribers.copy().keys():
+			self.unsubscribe(sub)
+		self.subscribers = subscribers
+		return
+		self.idle_tag = None
+		
 	def update(self):
 		pixmap = self.get_root_pixmap()
 		if pixmap is None:
@@ -155,9 +169,9 @@ class Translux:
 
 if __name__ == "__main__":
 	w = gtk.Window()
-	w.connect("delete-event", gtk.mainquit)
+	w.connect("delete-event", gtk.main_quit)
 
-	t = Translux(w, 0x8080ff80L)
+	t = Translux(w, 0x80f0ff80L)
 	w.set_style(w.get_style().copy())
 	
 	h = gtk.HBox()
@@ -179,4 +193,4 @@ if __name__ == "__main__":
 	w.add(h)
 	w.show_all()
 	
-	gtk.mainloop()
+	gtk.main()

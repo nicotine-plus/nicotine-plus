@@ -52,7 +52,7 @@ class Downloads(TransferList):
 			(1, _("Clear Groups"), self.popup_menu2, None),
 		)
 		frame.DownloadList.connect("button_press_event", self.OnPopupMenu, "mouse")
- 		frame.DownloadList.connect("key-press-event", self.on_key_press_event)
+		frame.DownloadList.connect("key-press-event", self.on_key_press_event)
 		frame.clearFinishedAbortedButton.connect("clicked", self.OnClearFinishedAborted)
 		frame.clearQueuedButton.connect("clicked", self.OnClearQueued)
 		frame.retryTransferButton.connect("clicked", self.OnRetryTransfer)
@@ -77,8 +77,8 @@ class Downloads(TransferList):
 	def on_key_press_event(self, widget, event):
 		key = gtk.gdk.keyval_name(event.keyval)
 
- 		if key in ( "P", "p"):
- 			self.OnPopupMenu(widget, event, "keyboard")
+		if key in ( "P", "p"):
+			self.OnPopupMenu(widget, event, "keyboard")
 		else:
 			self.select_transfers()
 			
@@ -88,7 +88,7 @@ class Downloads(TransferList):
 				self.OnRetryTransfer(widget)
 			elif key == "Delete":
 				self.OnAbortTransfer(widget, True, True)
-# 		print key
+		#print key
 
 	def OnPlayFiles(self, widget, prefix = ""):
 		for fn in self.selected_transfers:
@@ -169,7 +169,7 @@ class Downloads(TransferList):
 		if kind == "keyboard":
 			widget.emit_stop_by_name("key_press_event")
 		elif kind == "mouse":
- 			widget.emit_stop_by_name("button_press_event")
+			widget.emit_stop_by_name("button_press_event")
 
 		return True
 		

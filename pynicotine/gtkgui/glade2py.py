@@ -34,6 +34,7 @@ attrs = [
 	["visibility", lambda w, v: (v == "True" and ("%s.set_visibility(True)" % w)) or ("%s.set_visibility(False)" % w)],	
 	["headers_visible", lambda w, v: "%s.set_headers_visible(%s)" % (w, v.capitalize())],
 	["image", lambda w,v: "%s.set_image(%s)" % (w,v)],
+	["digits", lambda w,v: "%s.set_digits(%s)" % (w,v)],
 	["spacing", lambda w,v: "%s.set_spacing(%s)" % (w,v)],
 	["border_width", lambda w,v: "%s.set_border_width(%s)" % (w,v)],
 	["row_spacing", lambda w,v: "%s.set_row_spacings(%s)" % (w,v)],
@@ -104,6 +105,55 @@ def write_widget_attrs(widget):
 	for accel in widget.accelerators:
 		print indent + "%s.add_accelerator(\"%s\", self.accel_group, gtk.gdk.keyval_from_name(\"%s\"), %s, gtk.ACCEL_VISIBLE)" % (widget.id, accel[2], accel[0], accel[1])
 		
+def write_widget_adjustment(widget, my_class, *args):
+	restargs = ""
+	value, min, max, step_incr, page_incr, page_size = widget.attrs["adjustment"].split(" ")
+	print value, min, max, step_incr, page_incr, page_size
+	print indent + "%s_adj = gtk.Adjustment(value=%s, lower=%s, upper=%s, step_incr=%s, page_incr=%s, page_size=%s)" % (widget.id, value, min, max, step_incr, page_incr, page_size)
+
+def write_widget_spinbutton(widget, my_class, *args):
+	global signals, indent
+	#{'digits': '0', 'climb_rate': '1', 'update_policy': 'GTK_UPDATE_ALWAYS', 'can_focus': 'True', 'numeric': 'False', 'visible': 'True', 'snap_to_ticks': 'False', 'wrap': 'False', 'adjustment': '0 0 255 1 10 10'}
+	value, min, max, step_incr, page_incr, page_size = widget.attrs["adjustment"].split(" ")
+	adjustment = "gtk.Adjustment(value=%s, lower=%s, upper=%s, step_incr=%s, page_incr=%s, page_size=%s)" % (value, min, max, step_incr, page_incr, page_size)
+	restargs = ""
+	print indent + "%s = gtk.%s(%s)" % (widget.id, my_class, adjustment)
+	allowed = ["visible", "digits"]
+	for i in attrs:
+		if i[0] in allowed:
+			if widget.attrs.has_key("visible"):
+				v = i[1](widget.id, widget.attrs[i[0]])
+				if v:
+					print indent + "%s" % v
+	for signal in widget.signals.keys():
+		callback = widget.signals[signal]
+		print indent + "%s.connect(\"%s\", self.%s)" % (widget.id, signal, callback)
+		if not callback in signals:
+			signals.append(callback)
+	print 
+def write_widget_scale(widget, my_class, *args):
+	global signals, indent
+	restargs = ""
+	#print indent + "%s_adj = gtk.%s(%s)" % (widget.id, my_class, restargs)
+	#print 
+	value, min, max, step_incr, page_incr, page_size = widget.attrs["adjustment"].split(" ")
+	adjustment = "gtk.Adjustment(value=%s, lower=%s, upper=%s, step_incr=%s, page_incr=%s, page_size=%s)" % (value, min, max, step_incr, page_incr, page_size)
+	restargs = ""
+	print indent + "%s = gtk.%s(%s)" % (widget.id, my_class, adjustment)
+	allowed = ["visible", "digits"]
+	for i in attrs:
+		if i[0] in allowed:
+			if widget.attrs.has_key("visible"):
+				v = i[1](widget.id, widget.attrs[i[0]])
+				if v:
+					print indent + "%s" % v
+	for signal in widget.signals.keys():
+		callback = widget.signals[signal]
+		print indent + "%s.connect(\"%s\", self.%s)" % (widget.id, signal, callback)
+		if not callback in signals:
+			signals.append(callback)
+	print 
+	
 def write_widget_generic(widget, my_class, *args):
 	global signals, indent
 	restargs = ""
@@ -114,13 +164,14 @@ def write_widget_generic(widget, my_class, *args):
 			except:
 				arg= "None"
 		elif arg[0] == "$":
+			
 			s = widget.attrs[arg[1:]].replace("\"", "\\\"")
 			
 			if arg[1:] == "label":
 				if widget.attrs.has_key("use_markup") and widget.attrs["use_markup"] == "True":
 					widget.attrs["set_markup"] = s
 					s = ""
-					
+
 			if s:
 				narg = '_("%s")' % s
 			else:
@@ -356,6 +407,10 @@ classes = {
 	"GtkRadioButton": [write_widget_radiobutton],
 	"GtkButton": [write_widget_button],
 	"GtkTextView": [write_widget_textview],
+	"GtkSpinButton": [write_widget_spinbutton, "SpinButton"],
+	"GtkHScale": [write_widget_scale, "HScale"],
+	"GtkVScale": [write_widget_scale, "VScale"],
+	"GtkAdjustment": [write_widget_adjustment, "Adjustment"],
 	"GtkStatusbar": [write_widget_generic, "Statusbar"],
 	"GtkEntry": [write_widget_generic, "Entry"],
 	"GtkList": [write_widget_generic, "List"],

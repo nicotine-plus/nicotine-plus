@@ -32,7 +32,7 @@ class NowPlaying:
 			self.NowPlaying.add_accel_group(self.accel_group)
 			#self.NowPlaying.show()
 			self.NowPlaying.connect("destroy", self.quit)
-        		self.NowPlaying.connect("delete_event", self.quit)
+			self.NowPlaying.connect("delete_event", self.quit)
 	
 		self.vbox1 = gtk.VBox(False, 5)
 		self.vbox1.show()
@@ -546,7 +546,7 @@ class NowPlaying:
 			self.rbshell = dbus.Interface(rbshellobj, 'org.gnome.Rhythmbox.Shell')
 			rbplayerobj = bus.get_object('org.gnome.Rhythmbox', '/org/gnome/Rhythmbox/Player')
 			rbplayer = dbus.Interface(rbplayerobj, 'org.gnome.Rhythmbox.Player')
- 		except Exception, e:
+		except Exception, e:
 			print "NowPlaying Error opening Rhythmbox interface on dbus", e
 			return None
 

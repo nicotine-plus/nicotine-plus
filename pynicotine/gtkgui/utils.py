@@ -336,7 +336,7 @@ class PopupMenu(gtk.Menu):
 				elif item[0][0] == "#":
 					menuitem = gtk.ImageMenuItem(item[0][1:])
 					img = gtk.image_new_from_stock(item[2], gtk.ICON_SIZE_MENU)
-        				menuitem.set_image(img)
+					menuitem.set_image(img)
 				elif item[0][0] == "%":
 					menuitem = gtk.ImageMenuItem(item[0][1:])	
 					img = gtk.Image()
@@ -453,12 +453,12 @@ class FastListModel(gtk.GenericTreeModel):
 		return (iter,)
     
 	def on_get_iter(self, path):
-	        '''returns the node corresponding to the given path.  In our
+		'''returns the node corresponding to the given path.  In our
 	        case, the node is the path'''
 		if path[0] < len(self.data):
-		    return path[0]
+			return path[0]
 		else:
-		    return None
+			return None
 
 	def on_get_value(self, iter, column):
 		'''returns the value stored in a particular column for the node'''
@@ -560,87 +560,87 @@ def Humanize(number):
 	return neg + ret[:-1]
  
 def expand_alias(aliases, cmd):
-    def getpart(line):
-        if line[0] != "(":
-            return ""
-        ix = 1
-        ret = ""
-        level = 0
-        while ix < len(line):
-            if line[ix] == "(":
-                level = level + 1
-            if line[ix] == ")":
-                if level == 0:
-                    return ret
-                else:
-                    level = level - 1
-            ret = ret + line[ix]
-            ix = ix + 1
-        return ""
+	def getpart(line):
+		if line[0] != "(":
+			return ""
+		ix = 1
+		ret = ""
+		level = 0
+		while ix < len(line):
+			if line[ix] == "(":
+				level = level + 1
+			if line[ix] == ")":
+				if level == 0:
+					return ret
+				else:
+					level = level - 1
+			ret = ret + line[ix]
+			ix = ix + 1
+		return ""
 
-    if not cmd:
-        return None
-    if cmd[0] != "/":
-        return None
-    cmd = cmd[1:].split(" ")
-    if not aliases.has_key(cmd[0]):
-        return None
-    alias = aliases[cmd[0]]
-    ret = ""
-    i = 0
-    while i < len(alias):
-        if alias[i:i+2] == "$(":
-            arg=getpart(alias[i+1:])
-            if not arg:
-                ret = ret + "$"
-                i = i + 1
-                continue
-            i = i + len(arg) + 3
-            args = arg.split("=",1)
-            if len(args) > 1:
-                default = args[1]
-            else:
-                default = ""
-            args = args[0].split(":")
-            if len(args) == 1:
-                first = last = int(args[0])
-            else:
-               if args[0]:
-                   first = int(args[0])
-               else:
-                   first = 1
-               if args[1]:
-                   last = int(args[1])
-               else:
-                   last = len(cmd)
-            v = string.join(cmd[first:last+1])
-            if not v: v = default
-            ret = ret + v
-        elif alias[i:i+2] == "|(":
-            arg = getpart(alias[i+1:])
-            if not arg:
-                ret = ret + "|"
-                i = i + 1
-                continue
-            i = i + len(arg) + 3
-            for j in range(len(cmd)-1, -1, -1):
-                arg = arg.replace("$%i" % j, cmd[j])
-            arg = arg.replace("$@", string.join(cmd[1:], " "))
-            stdin, stdout = os.popen2(arg)
-            v = stdout.read().split("\n")
-            r = ""
-            for l in v:
-                l = l.strip()
-                if l:
-                    r = r + l + "\n"
-            ret = ret + r.strip()
-            stdin.close()
-            stdout.close()
-            os.wait()
-        else:
-            ret = ret + alias[i]
-            i = i + 1
-    return ret
+	if not cmd:
+		return None
+	if cmd[0] != "/":
+		return None
+	cmd = cmd[1:].split(" ")
+	if not aliases.has_key(cmd[0]):
+		return None
+	alias = aliases[cmd[0]]
+	ret = ""
+	i = 0
+	while i < len(alias):
+		if alias[i:i+2] == "$(":
+			arg=getpart(alias[i+1:])
+			if not arg:
+				ret = ret + "$"
+				i = i + 1
+				continue
+			i = i + len(arg) + 3
+			args = arg.split("=",1)
+			if len(args) > 1:
+				default = args[1]
+			else:
+				default = ""
+			args = args[0].split(":")
+			if len(args) == 1:
+				first = last = int(args[0])
+			else:
+				if args[0]:
+					first = int(args[0])
+				else:
+					first = 1
+				if args[1]:
+					last = int(args[1])
+				else:
+					last = len(cmd)
+			v = string.join(cmd[first:last+1])
+			if not v: v = default
+			ret = ret + v
+		elif alias[i:i+2] == "|(":
+			arg = getpart(alias[i+1:])
+			if not arg:
+				ret = ret + "|"
+				i = i + 1
+				continue
+			i = i + len(arg) + 3
+			for j in range(len(cmd)-1, -1, -1):
+				arg = arg.replace("$%i" % j, cmd[j])
+			arg = arg.replace("$@", string.join(cmd[1:], " "))
+			stdin, stdout = os.popen2(arg)
+			v = stdout.read().split("\n")
+			r = ""
+			for l in v:
+				l = l.strip()
+				if l:
+					r = r + l + "\n"
+			ret = ret + r.strip()
+			stdin.close()
+			stdout.close()
+			os.wait()
+		else:
+			ret = ret + alias[i]
+			i = i + 1
+	return ret
 
 def EncodingsMenu(np, section = None, entry = None):
 	if section and entry and np.config.sections["server"][section].has_key(entry):

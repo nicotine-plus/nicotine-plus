@@ -119,7 +119,7 @@ class BrowseDirsModel(gtk.GenericTreeModel):
 		return len(node.keys())
 	
 	def on_iter_nth_child(self, node, n):
- 		if not node:
+		if not node:
 			node = self.tree
 		try:
 			return node[n]
