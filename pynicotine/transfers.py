@@ -600,32 +600,32 @@ class Transfers:
 				self.downloadspanel.update(i)
 				return
 			
-				for i in self.uploads:
-					if msg.req == i.req and i.conn is None:
-						i.conn = msg.conn
-						i.req = None
-						if i.transfertimer is not None:
-							i.transfertimer.cancel()
-						try:
-							f = open(i.filename.replace("\\",os.sep),"rb")
-							self.queue.put(slskmessages.UploadFile(i.conn,file = f,size = i.size))
-							i.status = _("Initializing transfer")
-							i.file = f
-							self.eventprocessor.logTransfer(_("Upload started: user %s, file %s") % (i.user, self.decode(i.filename)))
-						except IOError, strerror:
-							self.eventprocessor.logMessage(_("I/O error: %s") % strerror)
-							i.status = _("Local file error")
-							try:
-								f.close()
-							except:
-								pass
-							i.conn = None
-							self.queue.put(slskmessages.ConnClose(msg.conn))
-						self.uploadspanel.update(i)
-						break
-				else:
-					self.eventprocessor.logMessage(_("Unknown file request: %s") % str(vars(msg)),1)
+		for i in self.uploads:
+			if msg.req == i.req and i.conn is None:
+				i.conn = msg.conn
+				i.req = None
+				if i.transfertimer is not None:
+					i.transfertimer.cancel()
+				try:
+					f = open(i.filename.replace("\\",os.sep),"rb")
+					self.queue.put(slskmessages.UploadFile(i.conn,file = f,size = i.size))
+					i.status = _("Initializing transfer")
+					i.file = f
+					self.eventprocessor.logTransfer(_("Upload started: user %s, file %s") % (i.user, self.decode(i.filename)))
+				except IOError, strerror:
+					self.eventprocessor.logMessage(_("I/O error: %s") % strerror)
+					i.status = _("Local file error")
+					try:
+						f.close()
+					except:
+						pass
+					i.conn = None
 					self.queue.put(slskmessages.ConnClose(msg.conn))
+				self.uploadspanel.update(i)
+				break
+		else:
+			self.eventprocessor.logMessage(_("Unknown file request: %s") % str(vars(msg)),1)
+			self.queue.put(slskmessages.ConnClose(msg.conn))
             
 	def CleanPath(self, path):
 		if sys.platform == "win32":
