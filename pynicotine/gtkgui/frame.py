@@ -1246,16 +1246,7 @@ class NicotineFrame(MainWindow):
 		else:
 			if self.np.transfers is None:
 				self.connect1.set_sensitive(1)
-	def HTMLColorToRGB(self, colorstring):
-		""" convert #RRGGBB to an (R, G, B) tuple """
-		colorstring = colorstring.strip()
-		if colorstring[0] == '#': colorstring = colorstring[1:]
-		if len(colorstring) != 8:
-			raise ValueError, "input #%s is not in #RRGGBB format" % colorstring
-		r, g, b,a = colorstring[:2], colorstring[2:4], colorstring[4:6], colorstring[6:8]
-		r, g, b,a = [int(n, 16) for n in (r, g, b, a)]
-		return (r, g, b,a)
-		
+
 	def TransparentTint(self, update=None):
 
 		if not self.np.config.sections["ui"]["enabletrans"]:
