@@ -327,7 +327,7 @@ class Transfers:
 					i.transfertimer.start()
 					response = slskmessages.TransferResponse(conn,1,req = i.req)
 					self.downloadspanel.update(i)
-				break
+					break
 			else:
 				# Remote Uploads only for users in list (Added by daelstorm)
 				if user in [i[0] for i in self.eventprocessor.userlist.userlist] and self.eventprocessor.config.sections["transfers"]["remotedownloads"] == 1:
