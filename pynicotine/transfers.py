@@ -491,8 +491,8 @@ class Transfers:
 					if i in self.uploads:
 						if i.transfertimer is not None:
 							i.transfertimer.cancel()
-					self.uploads.remove(i)
-					self.uploadspanel.update()
+						self.uploads.remove(i)
+						self.uploadspanel.update()
 				self.checkUploadQueue()
 		elif msg.filesize != None:
 			for i in self.downloads:
