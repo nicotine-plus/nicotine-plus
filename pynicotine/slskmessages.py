@@ -940,13 +940,27 @@ class UserInfoReply(PeerMessage):
 		self.slotsavail = slotsavail
 	
 	def parseNetworkMessage(self,message):
-		len, self.descr = self.getObject(message, types.StringType)
-		len, self.has_pic = len+1, message[len]
+		pos, self.descr = self.getObject(message, types.StringType)
+		pos, self.has_pic = pos+1, message[pos]
 		if ord(self.has_pic):
-			len, self.pic = self.getObject(message, types.StringType,len)
-		len, self.totalupl = self.getObject(message, types.IntType, len)
-		len, self.queuesize = self.getObject(message, types.IntType, len)
-		len, self.slotsavail = self.getObject(message, types.IntType, len)
+			pos, self.pic = self.getObject(message, types.StringType,pos)
+		pos, self.totalupl = self.getObject(message, types.IntType, pos)
+		pos, self.queuesize = self.getObject(message, types.IntType, pos)
+		if len(message[pos:]) == 1:
+			# Old Nicotine clients send bool instead int
+			try:
+				pos, self.slotsavail = pos+1, message[pos]
+				if ord(self.slotsavail):
+					self.slotsavail = 1
+				else:
+					self.slotsavail =0
+			except Exception, e:
+				self.slotsavail = 0
+				
+		else:
+			pos, self.slotsavail = self.getObject(message, types.IntType, pos)
+
+
 
 	def makeNetworkMessage(self):
 		if self.pic is not None:
