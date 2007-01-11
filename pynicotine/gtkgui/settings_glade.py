@@ -2100,7 +2100,7 @@ class BloatFrame:
         self.label343.set_alignment(0, 0.5)
         self.label343.set_padding(0, 0)
         self.label343.set_line_wrap(True)
-        self.label343.set_markup(_("<b>Warning:</b> This feature is resource intensive and may be very slow. If Nicotine<b>+</b> is started with this feature disabled, you will need to enable it and restart to see it's effects."))
+        self.label343.set_markup(_("<b>Warning:</b> This feature is resource intensive and may be very slow. If Nicotine<b>+</b> is started with this feature disabled, you will need to enable it and restart to see its effects."))
         self.label343.show()
         self.vbox106.pack_start(self.label343, False, False, 0)
 

@@ -1,5 +1,43 @@
-#!/bin/sh
-cp nicotine nicotine.py
-xgettext -k_ -kN_ -o languages/nicotine.pot *.py */*.py */*/*.py
-rm nicotine.py
-echo "Generated nicotine.pot from all python scripts in this directory, and subdirectories"
+#!/usr/bin/python
+# Old Script fails on imagedata.py and icondata.py
+# cp nicotine nicotine.py
+# xgettext -k_ -kN_ -o languages/nicotine.pot *.py */*.py */*/*.py
+# rm nicotine.py
+
+print "Generating nicotine.pot from selected python scripts in this directory, and subdirectories"
+import sys, os
+import shutil
+files = {}
+files[""] = os.listdir("./")
+files["pynicotine/"] = os.listdir("./pynicotine")
+files["pynicotine/gtkgui/"] = os.listdir("./pynicotine/gtkgui")
+
+if os.path.exists("./nicotine"):
+	shutil.copy("./nicotine", "./nicotine.py")
+else:
+	print "Error: nicotine executable not found in this directory"
+	raise SystemExit
+def isPythonScript(dir, file):
+	if file.rsplit(".")[-1].lower() == "py":
+		return dir + file
+	return None
+pythonscripts = []
+blacklist = ["icondata", "imagedata", "__init__"]
+for dir, files in files.items():
+	for file in files:
+		ispy = isPythonScript(dir, file)
+		if ispy is not None:
+			pythonscripts.append(ispy)
+
+for item in blacklist:
+	for path in pythonscripts[:]:
+		if item in path:
+			pythonscripts.remove(path)
+goodpython = ""
+for path in pythonscripts[:]:
+	goodpython += path + " "
+print "xgettext -k_ -kN_ -o languages/nicotine.pot %s" % goodpython
+r = os.system("xgettext -k_ -kN_ -o languages/nicotine.pot %s" % goodpython)
+os.remove("./nicotine.py")
+if r:
+	print "Error while creating nicotine.pot"

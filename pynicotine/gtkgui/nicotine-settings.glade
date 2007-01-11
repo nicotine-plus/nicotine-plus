@@ -5453,7 +5453,7 @@
 		  <child>
 		    <widget class="GtkLabel" id="label343">
 		      <property name="visible">True</property>
-		      <property name="label" translatable="yes">&lt;b&gt;Warning:&lt;/b&gt; This feature is resource intensive and may be very slow. If Nicotine&lt;b&gt;+&lt;/b&gt; is started with this feature disabled, you will need to enable it and restart to see it's effects.</property>
+		      <property name="label" translatable="yes">&lt;b&gt;Warning:&lt;/b&gt; This feature is resource intensive and may be very slow. If Nicotine&lt;b&gt;+&lt;/b&gt; is started with this feature disabled, you will need to enable it and restart to see its effects.</property>
 		      <property name="use_underline">False</property>
 		      <property name="use_markup">True</property>
 		      <property name="justify">GTK_JUSTIFY_LEFT</property>
