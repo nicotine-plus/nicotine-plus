@@ -1181,7 +1181,7 @@ class FolderContentsResponse(PeerMessage):
 						len, attrnum = self.getObject(message,types.IntType, len)
 						len, attr = self.getObject(message,types.IntType, len)
 						attrs.append(attr)
-				list[folder][dir].append([code,name,size,ext,attrs])
+					list[folder][dir].append([code,name,size,ext,attrs])
 		self.list = list
 
 	def makeNetworkMessage(self):

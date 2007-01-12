@@ -373,7 +373,7 @@ class UserBrowse(UserBrowseTab):
 		users.sort()
 		user = input_box(self.frame, title="Nicotine: Remote Upload Directory's Contents",
 		message='Enter the User you wish to upload to:',
-		default_text='', droplist=self.frame.np.config.sections["server"]["userlist"])
+		default_text='', droplist=users)
 		if user is None or user == "":
 			pass
 		else:
@@ -393,7 +393,7 @@ class UserBrowse(UserBrowseTab):
 		users.sort()
 		user = input_box(self.frame, title='Nicotine: Remote Upload File(s)',
 		message='Enter the User you wish to upload to:',
-		default_text='', droplist=self.frame.np.config.sections["server"]["userlist"])
+		default_text='', droplist=users)
 		if user is None or user == "":
 			pass
 		else:
