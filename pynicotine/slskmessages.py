@@ -949,11 +949,7 @@ class UserInfoReply(PeerMessage):
 		if len(message[pos:]) == 1:
 			# Old Nicotine clients send bool instead int
 			try:
-				pos, self.slotsavail = pos+1, message[pos]
-				if ord(self.slotsavail):
-					self.slotsavail = 1
-				else:
-					self.slotsavail =0
+				pos, self.slotsavail = pos+1, ord(message[pos])
 			except Exception, e:
 				self.slotsavail = 0
 				
@@ -977,9 +973,7 @@ class SharedFileList(PeerMessage):
 		self.list = list
 	 
 	def parseNetworkMessage(self, message, nozlib = 0):
-	#	f = open("ttty","w")
-	#	f.write(message)
-	#	f.close()
+
 		if not nozlib:
 			try:
 				message=zlib.decompress(message)
@@ -1120,10 +1114,11 @@ class FileSearchResult(PeerMessage):
 		for i in filelist:
 			msg = msg+chr(1)+self.packObject(i[0].replace(os.sep,"\\"))+self.packObject(i[1])+self.packObject(0)
 			if i[2] is None:
-					msg = msg + self.packObject('')+self.packObject(0)
+				# No metadata
+				msg = msg + self.packObject('')+self.packObject(0)
 			else:
-					msg = msg + self.packObject("mp3") + self.packObject(3)
-					msg = msg + self.packObject(0) + self.packObject(i[2][0])+self.packObject(1)+ self.packObject(i[3])+self.packObject(2)+self.packObject(i[2][1])
+				msg = msg + self.packObject("mp3") + self.packObject(3)
+				msg = msg + self.packObject(0) + self.packObject(i[2][0])+self.packObject(1)+ self.packObject(i[3])+self.packObject(2)+self.packObject(i[2][1])
 		msg = msg+chr(self.freeulslots)+self.packObject(self.ulspeed)+self.packObject(queuesize)
 		return zlib.compress(msg)
 
