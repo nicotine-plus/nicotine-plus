@@ -190,7 +190,9 @@ class SlskProtoThread(threading.Thread):
 	
 	def run(self):
 		""" Actual networking loop is here."""
+		# @var p Peer / Listen Port
 		p = self._p
+		# @var s Server Port
 		s = None
 		conns = self._conns
 		connsinprogress = self._connsinprogress
@@ -214,17 +216,20 @@ class SlskProtoThread(threading.Thread):
 				else:
 					outsock.append(i)
 			try:
+				# Select Networking Input and Output sockets
 				input,output,exc = select.select(conns.keys()+connsinprogress.keys()+[p],connsinprogress.keys()+outsock,[],0.5)
 			except select.error:
 				# Error recieved; terminate networking loop
 				self._ui_callback([_("Major Socket Error: Networking terminated!")])
 				self._want_abort = 1
+			# Write Output
 			for i in conns.keys():
 				if i in output:
 					try:
 						self.writeData(s,conns,i)
 					except socket.error, err:
 						self._ui_callback([ConnectError(conns[i],err)])
+			# Listen / Peer Port
 			if p in input:
 				try:
 					incconn, incaddr = p.accept()
@@ -233,6 +238,8 @@ class SlskProtoThread(threading.Thread):
 				else:
 					conns[incconn] = PeerConnection(incconn,incaddr,"","")
 					self._ui_callback([IncConn(incconn, incaddr)])
+					
+			# Manage Connections
 			for i in connsinprogress.keys()[:]:
 				try:
 					msgObj = connsinprogress[i].msgObj
@@ -250,6 +257,7 @@ class SlskProtoThread(threading.Thread):
 							conns[i]=PeerConnection(i,msgObj.addr,"","",msgObj.init)
 							self._ui_callback([OutConn(i,msgObj.addr)])
 						del connsinprogress[i]
+			# Process Data
 			for i in conns.keys()[:]:
 				if i in input:
 					try:
@@ -273,9 +281,10 @@ class SlskProtoThread(threading.Thread):
 						if conns[i].conn == None:
 							del conns[i]
 
-# ---------------------------
-#	This sometimes(?) Gets Nicotine users banned
-# ---------------------------
+			# ---------------------------
+			# Server Pings used to get us banned
+			# ---------------------------
+			# Timeout Connections
 			curtime = time.time()
 			for i in conns.keys()[:]:
 				if i is not s:
@@ -287,8 +296,10 @@ class SlskProtoThread(threading.Thread):
 					#  Was 30 seconds
 					if curtime - conns[s].lastping > 120:
 						conns[s].lastping = curtime
-						queue.put(ServerPing()) 
+						queue.put(ServerPing())
 			self._ui_callback([])
+			
+		# Close Server Port
 		if s is not None:
 			s.close()
 		self._stopped = 1
@@ -343,21 +354,23 @@ class SlskProtoThread(threading.Thread):
 		of the buffer.
 		"""
 		msgs=[]
+		# Server messages are 8 bytes or greater in length
 		while len(buffer) >=8:
 			msgsize, msgtype = struct.unpack("<ii",buffer[:8])
 			if msgsize + 4 > len(buffer):
-					break
+				break
 			elif self.serverclasses.has_key(msgtype):
-					msg = self.serverclasses[msgtype]()
-					msg.parseNetworkMessage(buffer[8:msgsize+4])
-					msgs.append(msg)
+				msg = self.serverclasses[msgtype]()
+				msg.parseNetworkMessage(buffer[8:msgsize+4])
+				msgs.append(msg)
 			else:
-					msgs.append(_("Server message type %i size %i contents %s unknown") %(msgtype,msgsize-4,buffer[8:msgsize+4].__repr__()))
+				msgs.append(_("Server message type %i size %i contents %s unknown") %(msgtype,msgsize-4,buffer[8:msgsize+4].__repr__()))
 			buffer = buffer[msgsize+4:]
 		return msgs,buffer
 
 	def parseFileReq(self,conn,buffer):
 		msg = None
+		# File Request messages are 4 bytes or greater in length
 		if len(buffer) >= 4:
 			reqnum = struct.unpack("<i",buffer[:4])[0]
 			msg = FileRequest(conn.conn,reqnum)
@@ -387,11 +400,11 @@ class SlskProtoThread(threading.Thread):
 			leftbytes = conn.bytestoread - conn.filereadbytes
 			if leftbytes > 0:
 				try:
-						conn.filedown.file.write(buffer[:leftbytes])
+					conn.filedown.file.write(buffer[:leftbytes])
 				except IOError, strerror:
-						self._ui_callback([FileError(conn,conn.filedown.file,strerror)])
+					self._ui_callback([FileError(conn,conn.filedown.file,strerror)])
 				except ValueError:
-						pass
+					pass
 				self._ui_callback([DownloadFile(conn.conn,len(buffer[:leftbytes]),conn.filedown.file)])
 			conn.filereadbytes = conn.filereadbytes + len(buffer[:leftbytes])
 			buffer = buffer[leftbytes:]
@@ -490,22 +503,22 @@ class SlskProtoThread(threading.Thread):
 		while len(buffer) >= 5:
 			msgsize = struct.unpack("<i",buffer[:4])[0]
 			if msgsize + 4 > len(buffer):
-					break
+				break
 			msgtype = ord(buffer[4])
 			if self.distribclasses.has_key(msgtype):
-					msg = self.distribclasses[msgtype](conn)
-					msg.parseNetworkMessage(buffer[5:msgsize+4])
-					msgs.append(msg)
+				msg = self.distribclasses[msgtype](conn)
+				msg.parseNetworkMessage(buffer[5:msgsize+4])
+				msgs.append(msg)
 			else:
-					msgs.append(_("Distrib message type %i size %i contents %s unknown") %(msgtype,msgsize-1,buffer[5:msgsize+4].__repr__()))
-					conn.conn.close()
-					self._ui_callback([ConnClose(conn.conn,conn.addr)])
-					conn.conn = None
-					break
+				msgs.append(_("Distrib message type %i size %i contents %s unknown") %(msgtype,msgsize-1,buffer[5:msgsize+4].__repr__()))
+				conn.conn.close()
+				self._ui_callback([ConnClose(conn.conn,conn.addr)])
+				conn.conn = None
+				break
 			if msgsize>=0:
-					buffer = buffer[msgsize+4:]
+				buffer = buffer[msgsize+4:]
 			else:
-					buffer = ""
+				buffer = ""
 		conn.ibuf = buffer
 		return msgs,conn
 
@@ -577,9 +590,9 @@ class SlskProtoThread(threading.Thread):
 					except socket.error,err:
 						self._ui_callback([ConnectError(msgObj,err)])
 				elif msgObj.__class__ is ConnClose and conns.has_key(msgObj.conn):
-						msgObj.conn.close()
-						self._ui_callback([ConnClose(msgObj.conn,conns[msgObj.conn].addr)])
-						del conns[msgObj.conn]
+					msgObj.conn.close()
+					self._ui_callback([ConnClose(msgObj.conn,conns[msgObj.conn].addr)])
+					del conns[msgObj.conn]
 				elif msgObj.__class__ is OutConn:
 					try:
 						conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
