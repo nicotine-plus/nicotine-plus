@@ -2,10 +2,47 @@ ChangeLog for Nicotine Plus
 
 Unreleased
 
+GENERAL CHANGES
+ * Recursive downloads in User Browse now checks from > 100 files and displays
+   a Warning dialog that gives you a chance to cancel downloading.
+ * Downloads and Uploads popup menus have a new item under the user submenu,
+   "Select User's Transfers".
+ * Translux (pseudo-transparent TextViews) is an old easter egg that is now
+   customizable in UI Settings.
+ * Usernames in the chat room log now have hotspots associated with them, 
+   meaning they can be left-clicked on to load the same popup as you have in
+   the users list. This option can be disabled in UI Settings.
+ * Usernames are also colored based on Online, Away and Offline/In-Room status.
+ * "User is away/online/offline" messages removed from Private Chat
+ * QuinoX's patch, a download filter: ( http://qtea.nl/tmp/nicotine+ ) was
+   reworked a little and given a nice listview to add the Regular Expressions
+   (filters) to. This feature will allow you to blacklist certain types of
+   files, which may save you from the pointless downloading and cleanup of
+   unwanted files.
+ * Added some padding around various widgets
+ * Tabs and be reordered on the fly, now (Requires PyGTK 2.10) Also, Chat Room
+   tab positions are saved in their reordered position.
+ * Per-file identation consistancy was drastically improved. transfers.py, 
+   slskproto.py and a few others were really bad.
+SEARCH
+ * Search has a new popup window for displaying the metadata of search results.
+   This popup is accessible after selecting 1 or more files and clicking on the
+   "View Metadata of File(s)" popup menu item. From this window, you can also
+   download file(s) or initiate browsing of the current file's user's shares.
+   
+NETWORKING
+ * Handle all peer message unpacking with an exception handler. Should make us
+   safer from malformed data sent by users.
+ * Close peer connection when userinfo's or browse's close buttons are pressed.
+   (This is to save bandwidth)
+   
 TRANSLATIONS
- * Added Lithuanian Translation (Žygimantas)
+ * Added Lithuanian Translation by Žygimantas
+ * Added Euskare (Basque) translation by Julen of librezale.org
  
 BUGFIXES
+ * Various minor bugs killed
+ * Userlist selection bug fixed
  * Fixed search results from last session being placed in search result tabs in
    new session that match their tickets by using random tickets instead 
    starting from 0.

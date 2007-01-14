@@ -33,6 +33,7 @@ class Downloads(TransferList):
 			("$" + _("_Add user to list"), popup3.OnAddToList),
 			("$" + _("_Ban this user"), popup3.OnBanUser),
 			("$" + _("_Ignore this user"), popup3.OnIgnoreUser),
+			("#" + _("Select User's Transfers"), self.OnSelectUserTransfer, gtk.STOCK_INDEX),
 		)
 		self.popup_menu = popup = PopupMenu(frame)
 		popup.setup(
@@ -74,6 +75,25 @@ class Downloads(TransferList):
 		self.select_transfers()
 		self.OnAbortTransfer(widget, False)
 		
+	def OnSelectUserTransfer(self, widet):
+		if len(self.selected_users) != 1:
+			return
+		selected_user = self.selected_users[0]
+		
+		sel = self.frame.DownloadList.get_selection()
+		fmodel = self.frame.DownloadList.get_model()
+		sel.unselect_all()
+		
+		for item in self.transfers:
+			user_file, iter, transfer = item
+			user, filepath = user_file
+			if selected_user == user:
+				ix = fmodel.get_path(iter)
+				sel.select_path(ix,)
+					
+		self.select_transfers()
+	
+	
 	def on_key_press_event(self, widget, event):
 		key = gtk.gdk.keyval_name(event.keyval)
 
@@ -97,8 +117,8 @@ class Downloads(TransferList):
 					os.system("%s \"%s\" &" %(self.frame.np.config.sections["players"]["default"], fn.file.name) )
 					continue
 				basename = string.split(fn.filename,'\\')[-1]
-				if os.path.exists(self.frame.np.config.sections["transfers"]["downloaddir"]+"/"+basename):
-					os.system("%s \"%s\" &" %(self.frame.np.config.sections["players"]["default"], self.frame.np.config.sections["transfers"]["downloaddir"]+"/"+basename ) )
+				if os.path.exists(self.frame.np.config.sections["transfers"]["downloaddir"]+os.sep+basename):
+					os.system("%s \"%s\" &" %(self.frame.np.config.sections["players"]["default"], self.frame.np.config.sections["transfers"]["downloaddir"]+os.sep+basename ) )
 
 	def OnPopupMenuUsers(self, widget):
 		
@@ -144,16 +164,18 @@ class Downloads(TransferList):
 		if len(self.selected_users) == 0:
 			items[0].set_sensitive(False)
 			items[4].set_sensitive(False)
+			items[5].set_sensitive(False)
 		else:
 			items[0].set_sensitive(True)
 			items[4].set_sensitive(True)
+			items[5].set_sensitive(True)
 		
 		act = False
 		if len(self.selected_transfers) == 1:
 			act = True
 		items[2].set_sensitive(act)
 		items[3].set_sensitive(act)
-		items[5].set_sensitive(act)
+		
 		
 		if len(self.selected_users) == 0:
 			act = False

@@ -312,8 +312,44 @@ class UserBrowse(UserBrowseTab):
 		self.DownloadDirectory(self.selected_folder)
 			
 	def OnDownloadDirectoryRecursive(self, widget):
-		self.DownloadDirectory(self.selected_folder, "", 1)
-	
+
+		prefix = ""
+		node = self.selected_folder 
+		if node == None:
+			return
+		dir = node.path
+		localdir = prefix + dir[:-1].split("\\")[-1]
+
+		files = []
+		files += self.DownloadDirectoryRecursive(node, os.path.join(localdir, ""))
+		# Check the number of files to be downloaded, just to make sure we aren't accidently downloading hundreds or thousands
+		numfiles = len(files)
+		go_ahead=0
+		if len(files) > 100:
+			go_ahead = Option_Box(self.frame, title=_('Nicotine+: Download %i files?' %numfiles), message=_("Are you sure you wish to download %i files from %s's directory %s?" %( numfiles, self.user, dir ) ), option1=_("Ok"), option3=_("Cancel"), option2=None, status="warning" )
+			
+		else:
+			go_ahead = 1
+			
+		if go_ahead == 1:
+			# Good to go, we download these
+			for item in files:
+				file, localpath = item
+				self.frame.np.transfers.getFile(self.user, file, localpath)
+			
+	def DownloadDirectoryRecursive(self, node, prefix = ""):
+		# Find all files and add them to list
+		if node == None:
+			return
+		dir = node.path
+		localdir = prefix + dir[:-1].split("\\")[-1]
+		files = []
+		for file in node.files:
+			files.append([dir + file[1], localdir])
+		for n in node.nodes.values():
+			files += self.DownloadDirectoryRecursive(n, os.path.join(localdir, ""))
+		return files	
+		
 	def OnDownloadDirectoryTo(self, widget):
 		if self.selected_folder == None:
 			return

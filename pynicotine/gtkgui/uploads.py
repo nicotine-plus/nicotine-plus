@@ -30,6 +30,7 @@ class Uploads(TransferList):
 			("$" + _("_Add user to list"), popup3.OnAddToList),
 			("$" + _("_Ban this user"), popup3.OnBanUser),
 			("$" + _("_Ignore this user"), popup3.OnIgnoreUser),
+			("#" + _("Select User's Transfers"), self.OnSelectUserTransfer, gtk.STOCK_INDEX),
 		)
 		
 			
@@ -74,7 +75,24 @@ class Uploads(TransferList):
 		TransferList.OnAbortTransfer(self, widget, False, False)
 		self.frame.np.transfers.calcUploadQueueSizes()
 		self.frame.np.transfers.checkUploadQueue()
-
+		
+	def OnSelectUserTransfer(self, widet):
+		if len(self.selected_users) != 1:
+			return
+		selected_user = self.selected_users[0]
+		
+		sel = self.frame.UploadList.get_selection()
+		fmodel = self.frame.UploadList.get_model()
+		sel.unselect_all()
+		
+		for item in self.transfers:
+			user_file, iter, transfer = item
+			user, filepath = user_file
+			if selected_user == user:
+				ix = fmodel.get_path(iter)
+				sel.select_path(ix,)
+					
+		self.select_transfers()
 
 	def on_key_press_event(self, widget, event):
 		key = gtk.gdk.keyval_name(event.keyval)
@@ -137,29 +155,6 @@ class Uploads(TransferList):
 		self.selected_users = []
 		self.widget.get_selection().selected_foreach(self.SelectedTransfersCallback)
 
-		#items = self.popup_menu.get_children()
-
-		#act = False
-		#if len(self.selected_transfers) == 1:
-			#act = True
-		#items[0].set_sensitive(act)
-		#items[1].set_sensitive(act)
-
-		#act = False
-		#if len(self.selected_users) == 1:
-			#user = self.selected_users[0]
-			#self.popup_menu.set_user(user)
-			#act = True
-			#items[8].set_active(user in [i[0] for i in self.frame.np.config.sections["server"]["userlist"]])
-			#items[9].set_active(user in self.frame.np.config.sections["server"]["banlist"])
-			#items[10].set_active(user in self.frame.np.config.sections["server"]["ignorelist"])
-
-		#for i in range(3, 9):
-			#items[i].set_sensitive(act)
-		
-		#act = len(self.selected_transfers) and True or False
-		#for i in range(10, 12):
-			#items[i].set_sensitive(act)
 		
 		items = self.popup_menu.get_children()
 		if len(self.selected_users) == 0:
@@ -167,9 +162,15 @@ class Uploads(TransferList):
 		else:
 			act = True
 		items[2].set_sensitive(act)
-		items[3].set_sensitive(act)
+		
 		for i in range(4, 8):
 			items[i].set_sensitive(act)
+			
+		if len(self.selected_users) == 1:
+			act = True
+		else:
+			act = False
+		items[3].set_sensitive(act)
 			
 		act = False
 		if len(self.selected_transfers) == 1:

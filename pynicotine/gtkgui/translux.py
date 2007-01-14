@@ -132,9 +132,10 @@ class Translux:
 	def disable(self):
 		for sub in self.subscribers.copy().keys():
 			self.unsubscribe(sub)
-		self.subscribers = subscribers
-		return
+
+		
 		self.idle_tag = None
+		return
 		
 	def update(self):
 		pixmap = self.get_root_pixmap()
@@ -181,6 +182,13 @@ if __name__ == "__main__":
 	s = gtk.ScrolledWindow()
 	e.add(s)
 	t.subscribe(e, None)
+	usersmodel = gtk.ListStore(gobject.TYPE_STRING)
+	trv = gtk.TreeView(usersmodel)
+	t.subscribe(trv, lambda: trv.get_root_window())
+	h.add(trv)
+	renderer = gtk.CellRendererText()
+	column=gtk.TreeViewColumn("d", renderer, text = 0)
+	trv.append_column(column)
 	
 	tv = gtk.TextView()
 	t.subscribe(tv, lambda: tv.get_window(gtk.TEXT_WINDOW_TEXT))

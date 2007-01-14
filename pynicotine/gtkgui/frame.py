@@ -132,9 +132,9 @@ class NicotineFrame(MainWindow):
 		)
 		def on_delete_event(widget, event):
 			if self.HAVE_TRAYICON:
-				option = Option_Box(self, title=_('Close Nicotine-Plus?'), message=_('Are you sure you wish to exit Nicotine-Plus at this time?'), option1=_("Exit"), option2=_("Send to Tray"), option3=_("Cancel") )
+				option = Option_Box(self, title=_('Close Nicotine-Plus?'), message=_('Are you sure you wish to exit Nicotine-Plus at this time?'), option1=_("Exit"), option2=_("Send to Tray"), option3=_("Cancel"), status="question" )
 			else:
-				option = Option_Box(self, title=_('Close Nicotine-Plus?'), message=_('Are you sure you wish to exit Nicotine-Plus at this time?'), option1=_("Exit"), option3=_("Cancel"), option2=None )
+				option = Option_Box(self, title=_('Close Nicotine-Plus?'), message=_('Are you sure you wish to exit Nicotine-Plus at this time?'), option1=_("Exit"), option3=_("Cancel"), option2=None, status="question" )
 			if option is None:
 				pass
 			else:
@@ -592,7 +592,7 @@ class NicotineFrame(MainWindow):
 		gtk.gdk.threads_enter()
 		
 		
-		option = Option_Box(self, title=_('Download %i files?' %numfiles), message=_("Are you sure you wish to download %i files from %s's directory %s?" %( numfiles, username, folder ) ), option1=_("Ok"), option3=_("Cancel"), option2=None )
+		option = Option_Box(self, title=_('Nicotine+: Download %i files?' %numfiles), message=_("Are you sure you wish to download %i files from %s's directory %s?" %( numfiles, username, folder ) ), option1=_("Ok"), option3=_("Cancel"), option2=None )
 		gtk.gdk.threads_leave()
 
 		if option == 1:
@@ -1269,10 +1269,42 @@ class NicotineFrame(MainWindow):
 	
 			if update and self.translux:
 				self.translux.changeTint(tint)
+				if self.LogWindow not in self.translux.subscribers.keys():
+					self.translux.subscribe(self.LogWindow, lambda: self.LogWindow.get_window(gtk.TEXT_WINDOW_TEXT))
 		except Exception, e:
 			print e
 		if self.translux is None and tint is not None:
 			self.translux = translux.Translux(self.MainWindow, tint)
+			
+	def CreateIconButton(self, icon, icontype, callback, label=None):
+		button = gtk.Button()
+		button.connect_object("clicked", callback, "")
+		button.show()
+		
+		Alignment = gtk.Alignment(0.5, 0.5, 0, 0)
+		Alignment.show()
+	
+		Hbox = gtk.HBox(False, 2)
+		Hbox.show()
+		Hbox.set_spacing(2)
+	
+		image = gtk.Image()
+		image.set_padding(0, 0)
+		if icontype == "stock":
+			image.set_from_stock(icon, 4)
+		else:
+			image.set_from_pixbuf(icon)
+		image.show()
+		Hbox.pack_start(image, False, False, 0)
+		Alignment.add(Hbox)
+		if label:
+			Label = gtk.Label(label)
+			Label.set_padding(0, 0)
+			Label.show()
+			Hbox.pack_start(Label, False, False, 0)
+		button.add(Alignment)
+		return button
+
 
 	def UpdateDownloadFilters(self):
 		proccessedfilters = []

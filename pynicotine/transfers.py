@@ -392,7 +392,7 @@ class Transfers:
 	def queueLimitReached(self, user):
 		uploadslimit = self.eventprocessor.config.sections["transfers"]["queuelimit"]*1024*1024
 		sizelist = [i.size for i in self.uploads if i.user == user and i.status == 'Queued']
-		size = reduce(lambda x, y: x+y, sizelist, 0)
+		size = sum(sizelist)
 		return size >= uploadslimit
 
 	def QueueUpload(self, msg):
@@ -466,8 +466,9 @@ class Transfers:
 		useupslots = self.eventprocessor.config.sections["transfers"]["useupslots"]
 		bandwidthlist = [i.speed for i in self.uploads if i.conn is not None and i.speed is not None]
 		slotsreached = len(bandwidthlist) >= maxupslots
-		return (reduce(lambda x, y: x+y, bandwidthlist, 0) > maxbandwidth) or (useupslots and slotsreached)
+		return (sum(bandwidthlist) > maxbandwidth) or (useupslots and slotsreached)
 
+	
 	def getFileSize(self,filename):
 		try:
 			size = os.path.getsize(filename.replace("\\",os.sep))

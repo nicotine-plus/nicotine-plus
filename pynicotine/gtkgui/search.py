@@ -14,7 +14,7 @@ from pynicotine import slskmessages
 from nicotine_glade import SearchTab
 from utils import InitialiseColumns, PopupMenu, FastListModel, Humanize
 from dirchooser import ChooseDir
-
+from entrydialog import *
 from pynicotine.utils import _
 
 class Searches:
@@ -412,6 +412,7 @@ class Search(SearchTab):
 			("#" + _("_Download file(s)"), self.OnDownloadFiles, gtk.STOCK_GO_DOWN),
 			("#" + _("Download file(s) _to..."), self.OnDownloadFilesTo, gtk.STOCK_GO_DOWN),
 			("#" + _("Download containing _folder(s)"), self.OnDownloadFolders, gtk.STOCK_GO_DOWN),
+			("#" + _("View Metadata of file(s)"), self.OnSearchMeta, gtk.STOCK_PROPERTIES),
 			("", None),
 			("#" + _("Copy _URL"), self.OnCopyURL, gtk.STOCK_COPY),
 			("#" + _("Copy folder URL"), self.OnCopyDirURL, gtk.STOCK_COPY),
@@ -470,19 +471,19 @@ class Search(SearchTab):
 			act = True
 		else:
 			act = False
-		items[4].set_sensitive(act)
 		items[5].set_sensitive(act)
+		items[6].set_sensitive(act)
 
 		act = False
 		if len(self.selected_users) == 1:
 			act = True
 			user = self.selected_users[0]
 			self.popup_menu.set_user(user)
-			items[12].set_active(user in [i[0] for i in self.frame.np.config.sections["server"]["userlist"]])
-			items[13].set_active(user in self.frame.np.config.sections["server"]["banlist"])
-			items[14].set_active(user in self.frame.np.config.sections["server"]["ignorelist"])
+			items[13].set_active(user in [i[0] for i in self.frame.np.config.sections["server"]["userlist"]])
+			items[14].set_active(user in self.frame.np.config.sections["server"]["banlist"])
+			items[15].set_active(user in self.frame.np.config.sections["server"]["ignorelist"])
 		
-		for i in range(7, 14):
+		for i in range(7, 16):
 			items[i].set_sensitive(act)
 		
 		widget.emit_stop_by_name("button_press_event")
@@ -555,7 +556,43 @@ class Search(SearchTab):
 		colour = self.frame.np.config.sections["ui"][colour] or None
 		cellrenderer.set_property("foreground", colour)
 
+	def MetaBox(self, title="Meta Data", message="", data=None, modal= True):
+		win = MetaDialog( self.frame, message,  data, modal)
+		win.set_title(title)
+		win.set_icon(self.frame.images["n"])
+		win.set_default_size(300, 100)
+		win.show()
+		gtk.main()
+		return win.ret
+	
+	def SelectedResultsAllData(self, model, path, iter, data):
+		num = model.get_value(iter, 0)
+		filename = model.get_value(iter, 1)
+		user = model.get_value(iter, 2)
+		size = model.get_value(iter, 3)
+		speed = model.get_value(iter, 4)
+		queue = model.get_value(iter, 5)
+		immediate = model.get_value(iter, 6)
+		bitratestr = model.get_value(iter, 7)
+		length = model.get_value(iter, 8)
+		directory = model.get_value(iter, 9)
+		#bitrate = model.get_value(iter, 10)
+		fn = model.get_value(iter, 11)
+		country = model.get_value(iter, 12)
+		data[len(data)] = {"user":user, "fn": fn, "position":num, "filename":filename, "directory":directory, "size":size, "speed":speed, "queue":queue, "immediate":immediate, "bitrate":bitratestr, "length":length, "country":country}
+
+			
+	def OnSearchMeta(self, widget):
+		if not self.frame.np.transfers:
+			return
+		data = {}
+		self.ResultsList.get_selection().selected_foreach(self.SelectedResultsAllData, data)
+
+		if data != {}:	
+			self.MetaBox(title=_("Nicotine+: Search Results"), message=_("<b>Metadata</b> for Search Query: <i>%s</i>" % self.text), data=data, modal=True)
+			
 	def OnDownloadFiles(self, widget, prefix = ""):
+		
 		if not self.frame.np.transfers:
 			return
 		for file in self.selected_results:
@@ -586,7 +623,7 @@ class Search(SearchTab):
 		user, path = self.selected_results[0][:2]
 		path = string.join(path.split("\\")[:-1], "\\") + "\\"
 		self.frame.SetClipboardURL(user, path)
-
+	
 	def OnToggleFilters(self, widget):
 		if widget.get_active():
 			self.Filters.show()

@@ -27,10 +27,21 @@ def popupWarning(parent, title, warning):
 	
 	dlg.set_border_width(10)
 	dlg.vbox.set_spacing(10)
-		
+	hbox = gtk.HBox(spacing=5)
+	hbox.set_border_width(5)
+	hbox.show()
+	dlg.vbox.pack_start(hbox)
+	
+	image = gtk.Image()
+	image.set_padding(0, 0)
+	icon = gtk.STOCK_DIALOG_WARNING
+	image.set_from_stock(icon, 4)
+	image.show()
+	
+	hbox.pack_start(image)	
 	label = gtk.Label()
 	label.set_markup(warning)
-	dlg.vbox.pack_start(label, True, True)
+	hbox.pack_start(label, True, True)
 
 	dlg.vbox.show_all()
 
