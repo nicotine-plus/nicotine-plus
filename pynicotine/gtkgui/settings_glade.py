@@ -3679,3 +3679,209 @@ class MiscFrame:
         w = gtk.Label(_("(custom widget: %s)") % id)
         return w
 
+class ImportFrame:
+    def __init__(self, create = True, accel_group = None):
+        if accel_group is None:
+             self.accel_group = gtk.AccelGroup()
+        else:
+             self.accel_group = accel_group
+        if create:
+            self.ImportFrame = gtk.Window(gtk.WINDOW_TOPLEVEL)
+            self.ImportFrame.set_title(_("Import Config"))
+            self.ImportFrame.set_position(gtk.WIN_POS_NONE)
+            self.ImportFrame.add_accel_group(self.accel_group)
+            self.ImportFrame.show()
+
+        self.Main = gtk.Frame()
+        self.Main.show()
+        self.Main.set_shadow_type(gtk.SHADOW_ETCHED_IN)
+
+        self.vbox112 = gtk.VBox(False, 10)
+        self.vbox112.show()
+        self.vbox112.set_spacing(10)
+        self.vbox112.set_border_width(5)
+
+        self.label354 = gtk.Label(_("Importing the config files from the official client will overwrite some of your settings (Login, Password, User Info, User Image). Use caution with this feature."))
+        self.label354.set_alignment(0, 0.5)
+        self.label354.set_padding(0, 0)
+        self.label354.set_line_wrap(True)
+        self.label354.show()
+        self.vbox112.pack_start(self.label354, False, False, 0)
+
+        self.label356 = gtk.Label(_("Select the directory that contains slsk.exe and the .cfg files: Ex: C:\\Program Files\\SoulSeek"))
+        self.label356.set_alignment(0, 0.5)
+        self.label356.set_padding(0, 0)
+        self.label356.set_line_wrap(True)
+        self.label356.show()
+        self.vbox112.pack_start(self.label356, False, False, 0)
+
+        self.hbox203 = gtk.HBox(False, 5)
+        self.hbox203.show()
+        self.hbox203.set_spacing(5)
+        self.hbox203.set_border_width(3)
+
+        self.ImportPath = gtk.Entry()
+        self.ImportPath.set_size_request(313, -1)
+        self.ImportPath.set_text("")
+        self.ImportPath.set_editable(True)
+        self.ImportPath.show()
+        self.ImportPath.set_visibility(True)
+        self.hbox203.pack_start(self.ImportPath, True, True, 0)
+
+        self.ImportDirectory = gtk.Button()
+        self.ImportDirectory.show()
+        self.ImportDirectory.connect("clicked", self.OnImportDirectory)
+
+        self.alignment91 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment91.show()
+
+        self.hbox204 = gtk.HBox(False, 2)
+        self.hbox204.show()
+        self.hbox204.set_spacing(2)
+
+        self.image85 = gtk.Image()
+        self.image85.set_padding(0, 0)
+        self.image85.set_from_stock(gtk.STOCK_OPEN, 4)
+        self.image85.show()
+        self.hbox204.pack_start(self.image85, False, False, 0)
+
+        self.ImportDir = gtk.Label(_("Import Directory"))
+        self.ImportDir.set_padding(0, 0)
+        self.ImportDir.set_line_wrap(False)
+        self.ImportDir.show()
+        self.hbox204.pack_start(self.ImportDir, False, False, 0)
+
+        self.alignment91.add(self.hbox204)
+
+        self.ImportDirectory.add(self.alignment91)
+
+        self.hbox203.pack_end(self.ImportDirectory, False, False, 0)
+
+        self.vbox112.pack_start(self.hbox203, False, True, 0)
+
+        self.hbox205 = gtk.HBox(False, 5)
+        self.hbox205.show()
+        self.hbox205.set_spacing(5)
+        self.hbox205.set_border_width(3)
+
+        self.ImportQueue = gtk.CheckButton()
+        self.ImportQueue.set_active(False)
+        self.ImportQueue.set_label(_("Queue"))
+        self.ImportQueue.show()
+        self.hbox205.pack_start(self.ImportQueue, False, False, 0)
+
+        self.ImportLogin = gtk.CheckButton()
+        self.ImportLogin.set_active(False)
+        self.ImportLogin.set_label(_("Login / Password"))
+        self.ImportLogin.show()
+        self.hbox205.pack_start(self.ImportLogin, False, False, 0)
+
+        self.ImportRooms = gtk.CheckButton()
+        self.ImportRooms.set_active(False)
+        self.ImportRooms.set_label(_("Joined Chat Rooms"))
+        self.ImportRooms.show()
+        self.hbox205.pack_start(self.ImportRooms, False, False, 0)
+
+        self.vbox112.pack_start(self.hbox205, False, True, 0)
+
+        self.hbox206 = gtk.HBox(False, 5)
+        self.hbox206.show()
+        self.hbox206.set_spacing(5)
+        self.hbox206.set_border_width(3)
+
+        self.ImportBuddyList = gtk.CheckButton()
+        self.ImportBuddyList.set_active(False)
+        self.ImportBuddyList.set_label(_("Buddy List"))
+        self.ImportBuddyList.show()
+        self.hbox206.pack_start(self.ImportBuddyList, False, False, 0)
+
+        self.ImportBanList = gtk.CheckButton()
+        self.ImportBanList.set_active(False)
+        self.ImportBanList.set_label(_("Banned List"))
+        self.ImportBanList.show()
+        self.hbox206.pack_start(self.ImportBanList, False, False, 0)
+
+        self.ImportIgnoreList = gtk.CheckButton()
+        self.ImportIgnoreList.set_active(False)
+        self.ImportIgnoreList.set_label(_("Ignored List"))
+        self.ImportIgnoreList.show()
+        self.hbox206.pack_start(self.ImportIgnoreList, False, False, 0)
+
+        self.ImportUserInfo = gtk.CheckButton()
+        self.ImportUserInfo.set_active(False)
+        self.ImportUserInfo.set_label(_("User Info"))
+        self.ImportUserInfo.show()
+        self.hbox206.pack_start(self.ImportUserInfo, False, False, 0)
+
+        self.ImportUserImage = gtk.CheckButton()
+        self.ImportUserImage.set_active(False)
+        self.ImportUserImage.set_label(_("User Image"))
+        self.ImportUserImage.show()
+        self.hbox206.pack_start(self.ImportUserImage, False, False, 0)
+
+        self.vbox112.pack_start(self.hbox206, False, True, 0)
+
+        self.hbox207 = gtk.HBox(False, 5)
+        self.hbox207.show()
+        self.hbox207.set_spacing(5)
+        self.hbox207.set_border_width(3)
+
+        self.label358 = gtk.Label(_("Restart Nicotine to see all changes take effect"))
+        self.label358.set_padding(0, 0)
+        self.label358.set_line_wrap(False)
+        self.label358.show()
+        self.hbox207.pack_start(self.label358, False, False, 0)
+
+        self.ImportConfig = gtk.Button()
+        self.ImportConfig.show()
+        self.ImportConfig.connect("clicked", self.OnImportConfig)
+
+        self.alignment92 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment92.show()
+
+        self.hbox208 = gtk.HBox(False, 2)
+        self.hbox208.show()
+        self.hbox208.set_spacing(2)
+
+        self.image86 = gtk.Image()
+        self.image86.set_padding(0, 0)
+        self.image86.set_from_stock(gtk.STOCK_EXECUTE, 4)
+        self.image86.show()
+        self.hbox208.pack_start(self.image86, False, False, 0)
+
+        self.label357 = gtk.Label(_("Import Config"))
+        self.label357.set_padding(0, 0)
+        self.label357.set_line_wrap(False)
+        self.label357.show()
+        self.hbox208.pack_start(self.label357, False, False, 0)
+
+        self.alignment92.add(self.hbox208)
+
+        self.ImportConfig.add(self.alignment92)
+
+        self.hbox207.pack_end(self.ImportConfig, False, False, 0)
+
+        self.vbox112.pack_start(self.hbox207, False, False, 0)
+
+        self.Main.add(self.vbox112)
+
+        self.label353 = gtk.Label(_("Import Config"))
+        self.label353.set_padding(0, 0)
+        self.label353.set_line_wrap(False)
+        self.label353.show()
+        self.Main.set_label_widget(self.label353)
+
+
+        if create:
+            self.ImportFrame.add(self.Main)
+
+    def OnImportDirectory(self, widget):
+        pass
+
+    def OnImportConfig(self, widget):
+        pass
+
+    def get_custom_widget(self, id, string1, string2, int1, int2):
+        w = gtk.Label(_("(custom widget: %s)") % id)
+        return w
+

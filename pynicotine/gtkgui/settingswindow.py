@@ -6,7 +6,7 @@ import settings_glade
 import locale
 import re
 from dirchooser import *
-from utils import InputDialog, InitialiseColumns, recode, recode2, popupWarning
+from utils import InputDialog, InitialiseColumns, recode, recode2, popupWarning, ImportWinSlskConfig
 from entrydialog import *
 import os, sys
 win32 = sys.platform.startswith("win")
@@ -988,6 +988,52 @@ class EventsFrame(settings_glade.EventsFrame):
 			}
 		}
 
+
+class ImportFrame(settings_glade.ImportFrame):
+	def __init__(self, parent):
+		self.p = parent
+		self.frame = parent.frame
+		settings_glade.ImportFrame.__init__(self, False)
+	
+	def SetSettings(self, config):
+
+		self.config = self.frame.np.config
+		path = "C:\Program Files\SoulSeek"
+		if os.path.exists(path):
+			self.ImportPath.set_text(path)
+			
+
+	def GetSettings(self):
+		return {}
+		
+	def OnImportDirectory(self, widget):
+		dir1 = ChooseDir(self.Main.get_toplevel(), self.ImportPath.get_text())
+		if dir1 is not None:
+			for directory in dir1: # iterate over selected files
+				self.ImportPath.set_text(recode(directory))
+	
+	def OnImportConfig(self, widget):
+		Path = self.ImportPath.get_text()
+		Queue = self.ImportQueue.get_active()
+		Login = self.ImportLogin.get_active()
+		Rooms = self.ImportRooms.get_active()
+		BuddyList = self.ImportBuddyList.get_active()
+		BanList = self.ImportBanList.get_active()
+		IgnoreList = self.ImportIgnoreList.get_active()
+		UserInfo = self.ImportUserInfo.get_active()
+		UserImage = self.ImportUserImage.get_active()
+
+		Import = ImportWinSlskConfig(self.config, Path, Queue, Login, Rooms, BuddyList, BanList, IgnoreList, UserInfo, UserImage)
+		response = Import.Run()
+		if response == 0:
+			popupWarning(None, _("Nothing Imported"), _("Config files for the official Soulseek client not found in \"%s\"" % Path) )
+		elif response == 1:
+			popupWarning(None, _("Imported Soulseek Config"), _("Config was imported. You may need to restart for changes to take effect. If you changed your user name, buddy list or queue then you should restart immediately.") )
+			self.p.SetSettings(self.frame.np.config.sections)
+		elif response == 2:
+			popupWarning(None, _("Nothing Imported"), _("No options were selected") )
+
+
 class UrlCatchFrame(settings_glade.UrlCatchFrame):
 	def __init__(self, parent):
 		self.frame = parent.frame
@@ -1127,6 +1173,7 @@ class SettingsWindow(settings_glade.SettingsWindow):
 		model.append(row, [_("Logging")])
 		model.append(row, [_("Searches")])
 		model.append(row, [_("Events")])
+		model.append(row, [_("Import Config")])
 		
 		p[_("Server")] = ServerFrame(self, frame.np.getencodings())
 		p[_("Shares")] = SharesFrame(self)
@@ -1140,6 +1187,7 @@ class SettingsWindow(settings_glade.SettingsWindow):
 		p[_("Searches")] = SearchFrame(self)
 		p[_("Away mode")] = AwayFrame(self)
 		p[_("Events")] = EventsFrame(self)
+		p[_("Import Config")] = ImportFrame(self)
 		
 		p[_("Connection")] = ConnectionFrame()
 		p[_("UI")] = UIFrame()
@@ -1200,6 +1248,7 @@ class SettingsWindow(settings_glade.SettingsWindow):
 			"ui": {},
 			"urls": {},
 			"players": {},
+			
 		}
 		
 		for page in self.pages.values():

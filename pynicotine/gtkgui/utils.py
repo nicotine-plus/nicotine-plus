@@ -10,6 +10,9 @@ import string
 import re
 import types
 
+from struct import unpack
+import imghdr
+
 from pynicotine import slskmessages
 
 DECIMALSEP = ""
@@ -41,6 +44,7 @@ def popupWarning(parent, title, warning):
 	hbox.pack_start(image)	
 	label = gtk.Label()
 	label.set_markup(warning)
+	label.set_line_wrap(True)
 	hbox.pack_start(label, True, True)
 
 	dlg.vbox.show_all()
@@ -671,3 +675,248 @@ def SaveEncoding(np, section, entry, encoding):
 	elif np.config.sections["server"][section].has_key(entry):
 		del np.config.sections["server"][section][entry]
 	np.config.writeConfig()
+	
+class ImportWinSlskConfig:
+	def __init__(self, config, Path, Queue, Login, Rooms, BuddyList, BanList, IgnoreList, UserInfo, UserImage):
+		self.config = config
+		self.Path = Path
+		self.Queue = Queue
+		self.Login = Login
+		self.Rooms = Rooms
+		self.BuddyList = BuddyList
+		self.BanList = BanList
+		self.IgnoreList = IgnoreList
+		self.UserInfo = UserInfo
+		self.UserImage = UserImage
+		
+	def Run(self):
+		if not self.check_slskdir():
+			return 0
+		if not self.Queue and not self.Login and not self.Rooms and not self.BuddyList and not self.IgnoreList and not self.BanList and not self.UserInfo and not self.UserImage:
+			return 2
+
+		if self.Queue:
+			# Get download queue
+			windownloads = self.get_downloads(self.winpath('queue2.cfg'))
+		
+			for i in windownloads:
+				if not i in self.config.sections["transfers"]["downloads"]:
+					#print i
+					self.config.sections["transfers"]["downloads"].append(i)
+			
+		if self.BuddyList:
+			#print "Getting userlist..."
+			users = self.get_basic_config(self.winpath('hotlist.cfg'))
+		
+			for i in users:
+				if not self.is_in_user_list(i,self.config.sections["server"]["userlist"]):
+					#print [i,'']
+					self.config.sections["server"]["userlist"].append([i,''])
+		
+		if self.Login:
+			# Get login and password
+			(login,passw) = self.get_user_and_pass(self.winpath('login.cfg'))
+			self.config.sections["server"]["login"] = login
+			self.config.sections["server"]["passw"] = passw
+		
+		if self.Rooms:
+			#"Get the list of autojoined chatrooms
+			chatrooms = self.get_basic_config(self.winpath('chatrooms.cfg'))
+			chatrooms.append('nicotine')
+		
+			for i in chatrooms:
+				if i not in self.config.sections["server"]["autojoin"]:
+					self.config.sections["server"]["autojoin"].append(i)
+		
+		if self.BanList:
+			# Get the list of banned users
+			banlist = self.get_basic_config(self.winpath('dlbans.cfg'))
+		
+			for i in banlist:
+				if i not in self.config.sections["server"]["banlist"]:
+					self.config.sections["server"]["banlist"].append(i)
+		
+		if self.IgnoreList:
+			# Get the list of ignored users
+			ignorelist = self.get_basic_config(self.winpath('ignores.cfg'))
+		
+			for i in ignorelist:
+				if i not in self.config.sections["server"]["ignorelist"]:
+					self.config.sections["server"]["ignorelist"].append(i)
+		if self.UserInfo:
+			# Get userinfo and image
+			(descr, imgdata) = self.get_userinfo(self.winpath('userinfo.cfg'))
+			if descr:
+				self.config.sections["userinfo"]['descr'] = descr.__repr__()
+		if self.UserImage:
+			(descr, imgdata) = self.get_userinfo(self.winpath('userinfo.cfg'))
+			if imgdata:
+				img = self.save_image(imgdata)
+				if img != "":
+					self.config.sections["userinfo"]['pic'] = img
+		return 1
+  
+	def check_slskdir(self):
+		# we check if the file queue2.cfg exists under the slsk dir
+		queue2path = os.path.join(self.Path, 'queue2.cfg')
+		
+		if not os.access(queue2path, os.F_OK):
+			return 0
+		return 1
+
+
+	def winpath(self, file):
+		return os.path.join(self.Path, file)
+
+
+	def get_downloads(self, fname):
+		"""Returns the list of downloads in the queue2.cnf file
+		
+		The windows slsk queue2.cnf file format:
+		
+		- little-endian, wordsize=4
+		- The file starts with 3 ints (4bytes per int).
+		- First 2 ints are unknown
+		- The 3rd one is the number of entries in the file
+		
+		Then for each download entry:
+		
+		- The length of the username, followed by the username
+		- The length of the remote filename, followed by the remote filename
+		- The length of the local dir, followed by the local dir
+		
+		The file can contain some unknown stuff at the end."""
+		
+		infile = open(fname, 'r')
+		intsize = 4
+		downloads = []
+		
+		str = infile.read(3*intsize)
+		
+		i1, i2, n_entries = unpack("iii", str)
+		
+		for i in range(n_entries):
+			length = unpack("i", infile.read(intsize))[0]
+			uname = infile.read(length)
+			length = unpack("i", infile.read(intsize))[0]
+			remfile = infile.read(length)
+			length = unpack("i", infile.read(intsize))[0]
+			localdir = infile.read(length)
+			downloads.append([uname, remfile, localdir])
+			
+		infile.close()
+		return downloads
+    
+
+	def get_user_and_pass(self, fname):
+		"""Returns a (user,passwd) tuple. 
+		
+		File format of login.cfg (see also get_downloads):
+		
+		- two unknown ints at the beginning
+		- the number of bytes of the username, followed by the username
+		- the number of bytes from the passwd, followed by the passwd
+		- followed by some undetermined bytes"""
+		
+		
+		infile = open(fname, 'r')
+		intsize = 4
+		downloads = []
+		
+		str = infile.read(3*intsize)
+		
+		i1, i2, length = unpack("iii", str)
+		
+		user = infile.read(length)
+		length = unpack("i", infile.read(intsize))[0]
+		passwd = infile.read(length)
+			
+		infile.close()
+		return (user, passwd)
+
+
+	def get_basic_config(self, fname):
+		"""Works for userlist, chatrooms, dlbans, etc.
+		
+		
+		The hotlist.cnf file format (see get_downloads for more info):
+		
+		- The file starts with an int: the number of users in the list
+		
+		Then for each user:
+		
+		- The length of the username, followed by the username"""
+		
+		infile = open(fname, 'r')
+		intsize = 4
+		users = []
+		
+		str = infile.read(1*intsize)
+		
+		n_entries = unpack("i", str)[0]
+		for i in range(n_entries):
+			length = unpack("i", infile.read(intsize))[0]
+			user = infile.read(length)
+			users.append(user)
+			
+		infile.close()
+		return users
+
+
+	def get_userinfo(self, fname):
+		"""The userinfo file format:
+		
+		- an int with the size of the text part, followed by the text part
+		- one byte, an indication for an image. 0 is no image, 1 is image
+		- an int with the image size, followed by the image data """
+		
+		infile = open(fname, 'r')
+		intsize = 4
+		
+		imgdata = None
+		
+		str = infile.read(intsize)
+		length = unpack("i", str)[0]
+		descr = infile.read(length)
+		descr = string.replace(descr, "\r", "")
+		has_image = unpack("b",infile.read(1))[0]
+		if has_image:
+			length = unpack("i", infile.read(intsize))[0]
+			imgdata = infile.read(length)
+			
+		infile.close()
+		return (descr, imgdata)
+
+
+	def save_image(self, imgdata):
+		"""Save IMGDATA to file and return the filename or None."""
+		if not imgdata:
+			print "No image data.  No image saved."
+			return ""
+		
+		extension = imghdr.what(None, imgdata)
+		if not extension:
+			# how to print to stderr in python?  (no real problem here)
+			print "Could not determine image type.  Image not saved."
+			return ""
+		
+		fname = os.path.abspath(self.config.filename + '-userinfo.' + extension)
+		outfile = open(fname, "w")
+		outfile.write(imgdata)
+		outfile.close()
+		print "Wrote image to \"%s\"" % (fname)
+		return fname
+
+
+	def is_in_user_list(self, user, user_list):
+		"""Checks if USER is in USER_LIST, ignoring the comment field"""
+		for i in user_list:
+			if type(i) == type(''):
+				sys.stderr.write("\nError: The nicotine userlist is in an old pyslsk format.\n" +
+				"Please run Nicotine once before running this script.\n" +
+				"Config file not updated.\n")
+				break
+			if user == i[0]:
+				return 1
+		return 0
+

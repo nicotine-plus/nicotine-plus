@@ -44,8 +44,8 @@ def parse_args():
     opt = {}
     try:
         opts, args = getopt.getopt(sys.argv[1:],
-                                   "c:qulCbih",
-                                   ["config=", "queue", "userlist", "login",
+                                   "c:qulCbIih",
+                                   ["config=", "queue", "userlist", "ignored", "login",
                                     "chatrooms", "banned", "userinfo", "help"])
     except getopt.GetoptError:
         usage()
@@ -60,7 +60,7 @@ def parse_args():
 
     # defaults
     opt['config']  = os.path.join(os.path.expanduser("~"),'.nicotine/config')
-    queue = userlist = login = chatrooms = banned = userinfo = None
+    queue = userlist = ignored = login = chatrooms = banned = userinfo = None
     for o, a in opts:
         if o in ("-c", "--config"):
             opt['config'] = a
@@ -74,6 +74,8 @@ def parse_args():
             chatrooms = 1
         if o in ("-b", "--banned"):
             banned = 1
+	if o in ("-I", "--ignored"):
+            ignored = 1
         if o in ("-i", "--userinfo"):
             userinfo = 1
         if o in ("-h", "--help"):
@@ -81,12 +83,13 @@ def parse_args():
             sys.exit()
     # import all when none specified
     if not (queue or userlist or login or chatrooms or banned or userinfo):
-        queue = userlist = login = chatrooms = banned = userinfo = 1
+        queue = userlist = login = ignored = chatrooms = banned = userinfo = 1
     opt['queue']     = queue
     opt['userlist']  = userlist
     opt['login']     = login
     opt['chatrooms'] = chatrooms
     opt['banned']    = banned
+    opt['ignored']   = ignored
     opt['userinfo']  = userinfo
 
        
@@ -308,7 +311,14 @@ def main():
         for i in banlist:
             if i not in config.sections["server"]["banlist"]:
                 config.sections["server"]["banlist"].append(i)
-
+		
+    if opt['ignored']:
+        print "Getting the list of ignored users..."
+        ignorelist = get_basic_config(winpath('ignores.cfg'))
+        for i in ignorelist:
+            if i not in config.sections["server"]["ignorelist"]:
+                config.sections["server"]["ignorelist"].append(i)
+		
     if opt['userinfo']:
         print "Getting userinfo and image..."
         (descr, imgdata) = get_userinfo(winpath('userinfo.cfg'))

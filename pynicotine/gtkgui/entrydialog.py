@@ -73,7 +73,7 @@ class MetaDialog( gtk.Dialog):
 		self.Media.show()
 		self.Media.set_shadow_type(gtk.SHADOW_ETCHED_IN)
 		hbox6 = gtk.HBox(spacing=5, homogeneous=False)
-        	hbox6.set_border_width(5)
+		hbox6.set_border_width(5)
 		hbox6.show()
 
 		self.Size = self.MakeLabelStaticEntry( hbox6, _("<b>File Size:</b>"), "", expand=False, width=11, xalign=1)
@@ -120,10 +120,12 @@ class MetaDialog( gtk.Dialog):
 		self.buttonbox.pack_start(self.DownloadAll, False, False)
 		self.Selected = self.MakeLabel( self.buttonbox, "<b>%s</b> File(s) Selected" % len(self.data.keys()),  expand=False,  xalign=1)
 		self.Previous = self.nicotine.CreateIconButton(gtk.STOCK_GO_BACK, "stock", self.OnPrevious, _("Previous"))
-		self.buttonbox.pack_start(self.Previous, False, False)
+		
 		self.Next = self.nicotine.CreateIconButton(gtk.STOCK_GO_FORWARD, "stock", self.OnNext, _("Next"))
-		self.buttonbox.pack_start(self.Next, False, False)
-
+		
+		self.buttonbox.pack_end(self.Next, False, False)
+		self.buttonbox.pack_end(self.Previous, False, False)
+		
 		button = self.nicotine.CreateIconButton(gtk.STOCK_CLOSE, "stock", self.click, _("Close"))
 
 		button.set_flags(gtk.CAN_DEFAULT)
@@ -238,10 +240,12 @@ class MetaDialog( gtk.Dialog):
 		label.set_markup(labeltitle)
 		label.show()
 		#label.set_property("selectable", True)
-		parent.pack_start(label, False, False)
+		parent.pack_start(label, expand, fill)
 
 		try:label.set_property("xalign", xalign)
-		except:pass
+		except Exception, e:
+			print e
+			pass
 
 		return label
 		
