@@ -65,7 +65,7 @@ class UserList:
 	def cell_edited_callback(self, widget, index, value, treeview, pos):
 		store = treeview.get_model()
 		iter = store.get_iter(index)
-		store.set(iter, pos, value)
+		#store.set(iter, pos, value)
 		if pos == 4:
 			self.SetComment(iter, store, value)
 			
