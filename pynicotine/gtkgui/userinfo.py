@@ -11,6 +11,7 @@ from pynicotine import slskmessages
 
 from pynicotine.utils import _
 
+# User Info and User Browse Notebooks
 class UserTabs(IconNotebook):
 	def __init__(self, frame, subwindow):
 		IconNotebook.__init__(self, frame.images)

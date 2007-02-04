@@ -4,7 +4,7 @@ import gtk
 import os, sys
 import urllib
 import gobject
-
+import gc
 from userinfo import UserTabs
 from nicotine_glade import UserBrowseTab
 from browsetreemodels import BrowseDirsModel, BrowseFilesModel

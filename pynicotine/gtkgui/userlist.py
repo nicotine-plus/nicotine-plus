@@ -19,14 +19,16 @@ class UserList:
 			[_("User"), 100, "text"],
 			[_("Speed"), 0, "text"],
 			[_("Files"), 0, "text"],
-			[_("Comments"), -1, "text"]
+			[_("Comments"), -1, "edit"]
 		)
 		cols[0].set_sort_column_id(5)
 		cols[1].set_sort_column_id(1)
 		cols[2].set_sort_column_id(6)
 		cols[3].set_sort_column_id(7)
 		cols[4].set_sort_column_id(4)
-		
+		renderers = cols[4].get_cell_renderers()
+		for render in renderers:
+			render.connect('edited', self.cell_edited_callback, self.frame.UserList, 4)
 		self.frame.UserList.set_model(self.usersmodel)
 		
 		self.privileged = []
@@ -60,6 +62,23 @@ class UserList:
 		)
 		self.frame.UserList.connect("button_press_event", self.OnPopupMenu)
 	
+	def cell_edited_callback(self, widget, index, value, treeview, pos):
+		store = treeview.get_model()
+		iter = store.get_iter(index)
+		store.set(iter, pos, value)
+		if pos == 4:
+			self.SetComment(iter, store, value)
+			
+	def SetComment(self, iter, store, comments=None):
+		user = store.get_value(iter, 1)
+		if comments is not None:
+			for i in self.userlist:
+				if i[0] == user:
+					i[1] = comments
+					self.usersmodel.set(i[2], 4, comments)
+					break
+			self.SaveUserList()
+			
 	def ConnClose(self):
 		for user in self.userlist:
 			self.usersmodel.set(user[2], 0, self.frame.GetStatusImage(0), 2, "0", 3, "0", 5, 0, 6, 0, 7, 0)

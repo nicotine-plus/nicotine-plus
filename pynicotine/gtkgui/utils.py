@@ -67,12 +67,17 @@ def recode2(s):
 	except:
 		return s
 
+		
 def InitialiseColumns(treeview, *args):
 	i = 0
 	cols = []
 	for c in args:
 		if c[2] == "text":
 			renderer = gtk.CellRendererText()
+			column = gtk.TreeViewColumn(c[0], renderer, text = i)
+		elif c[2] == "edit":
+			renderer = gtk.CellRendererText()
+			renderer.set_property('editable', True)
 			column = gtk.TreeViewColumn(c[0], renderer, text = i)
 		elif c[2] == "progress":
 			renderer = gtk.CellRendererProgress()
@@ -705,7 +710,7 @@ class ImportWinSlskConfig:
 					self.config.sections["transfers"]["downloads"].append(i)
 			
 		if self.BuddyList:
-			#print "Getting userlist..."
+			# Getting userlist
 			users = self.get_basic_config(self.winpath('hotlist.cfg'))
 		
 			for i in users:
@@ -720,7 +725,7 @@ class ImportWinSlskConfig:
 			self.config.sections["server"]["passw"] = passw
 		
 		if self.Rooms:
-			#"Get the list of autojoined chatrooms
+			# Get the list of autojoined chatrooms
 			chatrooms = self.get_basic_config(self.winpath('chatrooms.cfg'))
 			chatrooms.append('nicotine')
 		
