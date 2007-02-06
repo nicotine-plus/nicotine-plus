@@ -513,7 +513,7 @@ class NetworkEventProcessor:
 	def AddToPrivileged(self, msg):
 		if self.transfers is not None:
 			self.transfers.addToPrivileged(msg.user)
-			self.logMessage(_("User %s added to privileged list") %(msg.user),1)
+			#self.logMessage(_("User %s added to privileged list") %(msg.user),1)
 		else:
 			self.logMessage("%s %s" %(msg.__class__, vars(msg)))
 
@@ -552,7 +552,7 @@ class NetworkEventProcessor:
 			if msg.privileged == 1:
 				if self.transfers is not None:
 					self.transfers.addToPrivileged(msg.user)
-					self.logMessage(_("User %s added to privileged list") %(msg.user),1)
+					
 				else:
 					self.logMessage("%s %s" %(msg.__class__, vars(msg)))
 
@@ -709,6 +709,8 @@ class NetworkEventProcessor:
 		if not self.users.has_key(user):
 			return 0
 		if self.users[user].addr != None:
+			if len(self.users[user].addr) != 2:
+				return 0
 			u_ip, u_port = self.users[user].addr
 			#print u_ip, ip
 			if u_ip != ip:
@@ -724,6 +726,8 @@ class NetworkEventProcessor:
 		# Get peer's username, ip and port
 		for i in self.peerconns:
 			if i.conn is msg.conn.conn:
+				if len(i.addr) != 2:
+					break
 				user = i.username
 				ip, port = i.addr
 				break
@@ -831,6 +835,7 @@ class NetworkEventProcessor:
 				else:
 					country = ""
 				self.search.ShowResult(msg, i.username, country)
+				#self.ClosePeerConnection(i.conn)
 
 	def PierceFireWall(self, msg):
 		for i in self.peerconns:
