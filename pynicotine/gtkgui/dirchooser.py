@@ -10,6 +10,7 @@ from utils import recode, InputDialog
 
 from pynicotine.utils import _
 
+
 def ChooseDir(parent = None, initialdir = "~"):
 	dialog = gtk.FileChooserDialog(parent=parent, action=gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER, buttons = (gtk.STOCK_OK, gtk.RESPONSE_ACCEPT, gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT))
 	dialog.set_action(gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER)
@@ -26,10 +27,11 @@ def ChooseDir(parent = None, initialdir = "~"):
 	else:
 		res = None
 	dialog.hide()
-	gtk.gdk.threads_leave()
+	#gtk.gdk.threads_leave()
 	dialog.destroy()
-	gtk.gdk.threads_enter()
-	del dialog
+	#gtk.gdk.threads_enter()
+	#gtk.main()
+	#del dialog
 	return res
 
 def ChooseFile(parent = None, initialdir = "~", initialfile = ""):
