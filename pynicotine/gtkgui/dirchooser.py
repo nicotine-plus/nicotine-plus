@@ -21,12 +21,12 @@ def ChooseDir(parent = None, initialdir = "~"):
 	else:
 		dialog.set_current_folder(os.path.expanduser("~"))
 	response = dialog.run()
-	
+
 	if response == gtk.RESPONSE_ACCEPT:
 		res = dialog.get_filenames()
 	else:
 		res = None
-	dialog.hide()
+	#dialog.hide()
 	#gtk.gdk.threads_leave()
 	dialog.destroy()
 	#gtk.gdk.threads_enter()
