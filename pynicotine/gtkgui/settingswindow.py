@@ -176,7 +176,6 @@ class SharesFrame(settings_glade.SharesFrame):
 					self.needrescan = 1
 
 	def OnAddSharedDir(self, widget):
-		return
 		dir1 = ChooseDir(self.Main.get_toplevel())
 		if dir1 is not None:
 			for directory in dir1:
