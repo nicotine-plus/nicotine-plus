@@ -219,11 +219,11 @@ class TransferList:
 		self.ClearTransfers([_("Finished")])
 	
 	def OnClearAborted(self, widget):
-		statuslist = [_("Aborted"),_("Connection closed by peer"),"Cancelled", _("Cannot connect")]
+		statuslist = [_("Aborted"),"Cancelled"]
 		self.ClearTransfers(statuslist)
 
 	def OnClearFinishedAborted(self, widget):
-		statuslist = [_("Aborted"),_("Connection closed by peer"),"Cancelled", _("Cannot connect"), _("Finished"), _("Filtered")]
+		statuslist = [_("Aborted"),"Cancelled", _("Finished"), _("Filtered")]
 		self.ClearTransfers(statuslist)
 
 	def OnClearQueued(self, widget):
