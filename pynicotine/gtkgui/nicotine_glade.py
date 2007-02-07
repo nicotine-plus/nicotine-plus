@@ -625,7 +625,7 @@ class MainWindow:
 
         self.DownloadButtons.pack_end(self.banDownloadButton, False, False, 0)
 
-        self.vboxdownloads.pack_start(self.DownloadButtons, False, True, 0)
+        self.vboxdownloads.pack_start(self.DownloadButtons, False, True, 3)
 
         self.custom3 = self.get_custom_widget("custom3", _("ImageLabel"), _("Downloads"), 0, 0)
         self.custom3.show()
@@ -789,7 +789,7 @@ class MainWindow:
 
         self.UploadButtons.pack_start(self.abortUserUploadButton, False, False, 0)
 
-        self.vboxuploads.pack_start(self.UploadButtons, False, True, 0)
+        self.vboxuploads.pack_start(self.UploadButtons, False, True, 3)
 
         self.UploadsTabLabel = self.get_custom_widget("UploadsTabLabel", _("ImageLabel"), _("Uploads"), 0, 0)
         self.UploadsTabLabel.show()
@@ -1872,7 +1872,7 @@ class SearchTab:
         self.RememberCheckButton.connect("toggled", self.OnToggleRemember)
         self.hbox6.pack_start(self.RememberCheckButton, False, False, 0)
 
-        self.vbox7.pack_start(self.hbox6, False, True, 0)
+        self.vbox7.pack_start(self.hbox6, False, True, 3)
 
         self.Filters = gtk.HBox(False, 2)
         self.Filters.set_spacing(2)
@@ -1992,7 +1992,7 @@ class SearchTab:
         self.FilterFreeSlot.connect("toggled", self.OnRefilter)
         self.Filters.pack_start(self.FilterFreeSlot, False, False, 0)
 
-        self.vbox7.pack_start(self.Filters, False, True, 0)
+        self.vbox7.pack_start(self.Filters, False, True, 3)
 
         self.scrolledwindow17 = gtk.ScrolledWindow()
         self.scrolledwindow17.set_policy(gtk.POLICY_ALWAYS, gtk.POLICY_ALWAYS)
