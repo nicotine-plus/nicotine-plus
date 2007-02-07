@@ -55,9 +55,13 @@ class UserBrowse(UserBrowseTab):
 		
 		self.DirStore = gtk.TreeStore(  str, str )
 		self.FolderTreeView.set_model(self.DirStore)
-		self.FolderTreeView.set_property("rules-hint", True)
+		#self.FolderTreeView.set_property("rules-hint", True)
 		self.FolderTreeView.set_headers_visible(True)
-		self.FolderTreeView.set_enable_tree_lines(True)
+		try:
+			# PyGTK2 >= 2.10
+			self.FolderTreeView.set_enable_tree_lines(True)
+		except:
+			pass
 		
 		cols = InitialiseColumns(self.FolderTreeView,
 			[_("Directories"), -1, "text"], #0
