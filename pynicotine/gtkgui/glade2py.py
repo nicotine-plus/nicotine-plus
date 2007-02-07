@@ -403,6 +403,7 @@ classes = {
 	"GtkComboBoxEntry": [write_widget_comboboxentry],
 	"GtkComboBoxEntryChild": [write_widget_generic, "child"],
 	"GtkCheckButton": [write_widget_generic, "CheckButton"],
+	"GtkToggleButton": [write_widget_generic, "ToggleButton"],
 	"GtkFontButton": [write_widget_generic, "FontButton"],
 	"GtkRadioButton": [write_widget_radiobutton],
 	"GtkButton": [write_widget_button],

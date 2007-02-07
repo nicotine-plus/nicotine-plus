@@ -50,12 +50,9 @@ class ConnectToPeerTimeout:
 class NetworkEventProcessor:
 	""" This class contains handlers for various messages from the networking
 	thread"""
-	def __init__(self,frame,callback, writelog, setstatus, configfile):
-		# self.searchfile = file("searches.txt","a")
-	
-	
-	
-		self.frame=frame
+	def __init__(self, frame, callback, writelog, setstatus, configfile):
+
+		self.frame = frame
 		self.callback = callback
 		self.logMessage = writelog
 		self.setStatus = setstatus
@@ -247,7 +244,7 @@ class NetworkEventProcessor:
 			conn = PeerConnection(addr = addr, username = user, msgs = [message], token = token, init = init)
 			self.peerconns.append(conn)
 			if token is not None:
-				conntimeout = ConnectToPeerTimeout(self.peerconns[-1],self.frame.callback)
+				conntimeout = ConnectToPeerTimeout(self.peerconns[-1],self.callback)
 				timer = threading.Timer(300.0, conntimeout.timeout)
 				self.peerconns[-1].conntimer = timer
 				timer.start()
@@ -270,7 +267,7 @@ class NetworkEventProcessor:
 	
 	def ServerTimeout(self):
 		if not self.config.needConfig():
-			self.frame.callback([slskmessages.ConnectToServer()])
+			self.callback([slskmessages.ConnectToServer()])
 	
 	def StopTimers(self):
 		for i in self.peerconns:
@@ -348,7 +345,7 @@ class NetworkEventProcessor:
 						for j in i.msgs: 
 							if j.__class__ is slskmessages.TransferRequest and self.transfers is not None:
 								self.transfers.gotConnectError(j.req)
-						conntimeout = ConnectToPeerTimeout(i,self.frame.callback)
+						conntimeout = ConnectToPeerTimeout(i,self.callback)
 						timer = threading.Timer(300.0, conntimeout.timeout)
 						timer.start()
 						if i.conntimer is not None:

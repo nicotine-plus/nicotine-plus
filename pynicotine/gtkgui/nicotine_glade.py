@@ -2539,7 +2539,7 @@ class UserBrowseTab:
         self.label20.set_padding(0, 0)
         self.label20.set_line_wrap(False)
         self.label20.show()
-        self.hbox8.pack_start(self.label20, False, False, 0)
+        self.hbox8.pack_start(self.label20, False, False, 5)
 
         self.entry4 = gtk.Entry()
         self.entry4.set_text("")
@@ -2565,6 +2565,23 @@ class UserBrowseTab:
         self.hpaned2 = gtk.HPaned()
         self.hpaned2.show()
 
+        self.vbox17 = gtk.VBox(False, 0)
+        self.vbox17.show()
+        self.vbox17.set_spacing(0)
+
+        self.hbox61 = gtk.HBox(False, 0)
+        self.hbox61.show()
+        self.hbox61.set_spacing(0)
+
+        self.ExpandButton = gtk.ToggleButton()
+        self.ExpandButton.set_active(False)
+        self.ExpandButton.set_label(_("Expand / Collapse all"))
+        self.ExpandButton.show()
+        self.ExpandButton.connect("clicked", self.OnExpand)
+        self.hbox61.pack_start(self.ExpandButton, False, False, 0)
+
+        self.vbox17.pack_start(self.hbox61, False, False, 0)
+
         self.scrolledwindow21 = gtk.ScrolledWindow()
         self.scrolledwindow21.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
         self.scrolledwindow21.set_size_request(250, -1)
@@ -2576,7 +2593,9 @@ class UserBrowseTab:
         self.FolderTreeView.set_headers_visible(False)
         self.scrolledwindow21.add(self.FolderTreeView)
 
-        self.hpaned2.pack1(self.scrolledwindow21, False, True)
+        self.vbox17.pack_start(self.scrolledwindow21, True, True, 0)
+
+        self.hpaned2.pack1(self.vbox17, False, True)
 
         self.sMain = gtk.VBox(False, 0)
         self.sMain.show()
@@ -2636,6 +2655,9 @@ class UserBrowseTab:
         pass
 
     def OnEncodingChanged(self, widget):
+        pass
+
+    def OnExpand(self, widget):
         pass
 
     def OnClose(self, widget):

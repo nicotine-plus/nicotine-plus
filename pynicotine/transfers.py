@@ -97,7 +97,7 @@ class Transfers:
 
 	def setPrivilegedUsers(self, list):
 		for i in list:
-			self.addToPrivileged(i)    
+			self.addToPrivileged(i)
 
 	def addToPrivileged(self, user):
 		if user not in self.privilegedusers:

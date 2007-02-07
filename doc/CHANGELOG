@@ -30,6 +30,16 @@ GENERAL CHANGES
    tab positions are saved in their reordered position.
  * Per-file identation consistancy was drastically improved. transfers.py, 
    slskproto.py and a few others were really bad.
+   
+USER BROWSE
+ * The browsetreemodels functions were disabled, and file and folder treeviews 
+   were reimplemented with code from the PyGTK2 museek client, Murmur.
+ * Search now works slightly different. Queries match all files in a directory,
+   and switch between matching directories each time.
+ * Tree lines and a 'Directories' sorting header were added to the Folder Treeview
+ * Upload Directories Recursive was added to Folders' Popup
+ * An expand / collapse all directories button was added
+ 
 SEARCH
  * Search has a new popup window for displaying the metadata of search results.
    This popup is accessible after selecting 1 or more files and clicking on the

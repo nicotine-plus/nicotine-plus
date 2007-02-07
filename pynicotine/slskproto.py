@@ -61,7 +61,8 @@ class PeerConnectionInProgress:
 	def __init__(self, conn = None, msgObj = None):
 		self.conn = conn
 		self.msgObj = msgObj
-
+		#self.lastactive = time.time()
+		
 class SlskProtoThread(threading.Thread):
 	""" This is a netwroking thread that actually does all the communication.
 	It sends data to the UI thread via a callback function and receives data
@@ -218,9 +219,11 @@ class SlskProtoThread(threading.Thread):
 			try:
 				# Select Networking Input and Output sockets
 				input,output,exc = select.select(conns.keys()+connsinprogress.keys()+[p],connsinprogress.keys()+outsock,[],0.5)
-			except select.error:
+				#print "Sockets open:", len(conns.keys()+connsinprogress.keys()+[p]+outsock), len(conns.keys()),  len(connsinprogress.keys())
+			except select.error, error:
 				# Error recieved; terminate networking loop
-				self._ui_callback([_("Major Socket Error: Networking terminated!")])
+				self._ui_callback([_("Major Socket Error: Networking terminated! %s" % str(error)) ])
+				print error
 				self._want_abort = 1
 			# Write Output
 			for i in conns.keys():
@@ -240,6 +243,7 @@ class SlskProtoThread(threading.Thread):
 					self._ui_callback([IncConn(incconn, incaddr)])
 					
 			# Manage Connections
+			curtime = time.time()
 			for i in connsinprogress.keys()[:]:
 				try:
 					msgObj = connsinprogress[i].msgObj
@@ -257,6 +261,14 @@ class SlskProtoThread(threading.Thread):
 							conns[i]=PeerConnection(i,msgObj.addr,"","",msgObj.init)
 							self._ui_callback([OutConn(i,msgObj.addr)])
 						del connsinprogress[i]
+					#else:
+						#print connsinprogress[i].msgObj
+						#seconds = 30
+						#if curtime - connsinprogress[i].lastactive > seconds:
+							#self._ui_callback([ConnClose(i,codnnsinprogress[i].addr)])
+							#i.close()
+							#print "Closed_cip", connsinprogress[i]
+							#del connsinprogress[i]
 			# Process Data
 			for i in conns.keys()[:]:
 				if i in input:
@@ -286,11 +298,18 @@ class SlskProtoThread(threading.Thread):
 			# ---------------------------
 			# Timeout Connections
 			curtime = time.time()
+			connsockets = len(conns.keys())
 			for i in conns.keys()[:]:
 				if i is not s:
 					if curtime - conns[i].lastactive > 120:
+					#if connsockets > 60:
+						#seconds = 15
+					#else:
+						#seconds = 30
+					#if curtime - conns[i].lastactive > seconds:
 						self._ui_callback([ConnClose(i,conns[i].addr)])
 						i.close()
+						#print "Closed_run", conns[i].addr
 						del conns[i]
 				else:
 					#  Was 30 seconds
@@ -345,6 +364,7 @@ class SlskProtoThread(threading.Thread):
 		if not data:
 			self._ui_callback([ConnClose(i,conns[i].addr)])
 			i.close()
+			#print "Closed", conns[i].addr
 			del conns[i]
 
 
@@ -591,6 +611,7 @@ class SlskProtoThread(threading.Thread):
 						self._ui_callback([ConnectError(msgObj,err)])
 				elif msgObj.__class__ is ConnClose and conns.has_key(msgObj.conn):
 					msgObj.conn.close()
+					#print "Close3", conns[msgObj.conn].addr
 					self._ui_callback([ConnClose(msgObj.conn,conns[msgObj.conn].addr)])
 					del conns[msgObj.conn]
 				elif msgObj.__class__ is OutConn:
