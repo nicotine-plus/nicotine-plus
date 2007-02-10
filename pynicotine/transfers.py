@@ -65,7 +65,20 @@ class Transfers:
 		self.privilegedusers = []
 		getstatus = {}
 		for i in downloads:
-			self.downloads.append(Transfer(user = i[0], filename=i[1], path=i[2], status = _('Getting status')))
+			size = currentbytes = None
+			
+			if len(i) >= 6:
+				try:
+					currentbytes = int(i[5])
+					size = int(i[4])
+				except: pass
+				
+				
+			if len(i) >= 4 and i[3] == _('Paused'):
+				status = _('Paused')
+			else:
+				status = _('Getting status')
+			self.downloads.append(Transfer(user = i[0], filename=i[1], path=i[2], status=status, size=size, currentbytes=currentbytes))
 			getstatus[i[0]] = ""
 		for i in getstatus.keys():
 			self.queue.put(slskmessages.GetUserStatus(i))
@@ -124,12 +137,12 @@ class Transfers:
 		for i in self.downloads:
 			if msg.user == i.user and i.status in ['Queued', _('Getting status'), _('User logged off'), _('Connection closed by peer'), _('Aborted'), _('Cannot connect')]:
 				if msg.status != 0:
-					if i.status not in ['Queued', _('Aborted'), _('Cannot connect')]:
+					if i.status not in ['Queued', _('Aborted'), _('Cannot connect'), _('Paused') ]:
 						self.getFile(i.user, i.filename, i.path, i)
 				else:
 					if i.status not in [_('Aborted')]:
 						i.status = _("User logged off")
-						self.downloadspanel.update(i)    
+						self.downloadspanel.update(i)
 
 		for i in self.uploads[:]:
 			if msg.user == i.user and i.status != _('Finished'):
@@ -1085,7 +1098,10 @@ class Transfers:
 	def AbortTransfers(self):
 		""" Stop all transfers """
 		for i in self.downloads+self.uploads:
-			if i.status != _("Finished"):
+			if i.status in ( _("Aborted"), _("Paused")):
+				self.AbortTransfer(i)
+				i.status = _("Paused")
+			elif i.status != _("Finished"):
 				self.AbortTransfer(i)
 				i.status = "Old"
 				#self.downloadspanel.update()
@@ -1112,7 +1128,7 @@ class Transfers:
 
 	def GetDownloads(self):
 		""" Get a list of incomplete and not aborted downloads """
-		return [ [i.user, i.filename, i.path] for i in self.downloads if i.status != _('Finished')]
+		return [ [i.user, i.filename, i.path, i.status, i.size, i.currentbytes] for i in self.downloads if i.status != _('Finished')]
 
 	def SaveDownloads(self):
 		""" Save list of files to be downloaded """

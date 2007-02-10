@@ -597,7 +597,6 @@ class NicotineFrame(MainWindow):
 
 		if option == 1:
 			self.np.transfers.FolderContentsResponse(msg)
-			
 		
 	def OnGetUserInfo(self, widget):
 		text = self.UserinfoEntry.get_text()
@@ -906,6 +905,7 @@ class NicotineFrame(MainWindow):
 		if self.np.transfers is not None:
 	            self.np.transfers.AbortTransfers()
 		self.np.config.writeConfig()
+		self.np.transfers.SaveDownloads()
 		self.np.protothread.abort()
 		if sys.platform == "win32":
 			if self.trayicon:
@@ -1027,6 +1027,7 @@ class NicotineFrame(MainWindow):
 
 		
 	def OnExit(self, widget):
+		
 		self.MainWindow.destroy()
 	
 	def OnSearch(self, widget):

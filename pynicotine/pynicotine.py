@@ -403,6 +403,7 @@ class NetworkEventProcessor:
 			self.serverconn = None
 			if self.transfers is not None:
 				self.transfers.AbortTransfers()
+				self.transfers.SaveDownloads()
 			self.privatechat = self.chatrooms = self.userinfo = self.userbrowse = self.search = self.transfers = self.userlist = None
 			self.frame.ConnClose(conn, addr)
 		else:
