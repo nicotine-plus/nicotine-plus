@@ -190,7 +190,7 @@ class UserBrowse(UserBrowseTab):
 		if self.selected_folder is None:
 			act = False
 		items = self.folder_popup_menu.get_children()
-		for item in items[0:5]:
+		for item in items[0:6]:
 			item.set_sensitive(act)
 		
 		if self.user == self.frame.np.config.sections["server"]["login"]:
@@ -438,7 +438,7 @@ class UserBrowse(UserBrowseTab):
 		dir = self.selected_folder 
 		if dir == None:
 			return
-		localdir = prefix + dir[:-1].split("\\")[-1]
+		localdir = prefix + dir.split("\\")[-1]
 
 		files = []
 		files += self.DownloadDirectoryRecursive(dir, os.path.join(localdir, ""))
@@ -461,7 +461,7 @@ class UserBrowse(UserBrowseTab):
 		# Find all files and add them to list
 		if dir == None:
 			return
-		localdir = prefix + dir[:-1].split("\\")[-1]
+		localdir = prefix + dir.split("\\")[-1]
 		files = []
 		if dir in self.shares.keys():
 			for file in self.shares[dir]:
@@ -504,7 +504,7 @@ class UserBrowse(UserBrowseTab):
 	def DownloadDirectory(self, dir, prefix = "", recurse = 0):
 		if dir == None:
 			return
-		ldir = prefix + dir[:-1].split("\\")[-1]
+		ldir = prefix + dir.split("\\")[-1]
 		for file in self.shares[dir]:
 			self.frame.np.transfers.getFile(self.user, "\\".join([dir, file[1]]), ldir)
 		if not recurse:
