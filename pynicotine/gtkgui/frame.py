@@ -905,7 +905,6 @@ class NicotineFrame(MainWindow):
 		if self.np.transfers is not None:
 	            self.np.transfers.AbortTransfers()
 		self.np.config.writeConfig()
-		self.np.transfers.SaveDownloads()
 		self.np.protothread.abort()
 		if sys.platform == "win32":
 			if self.trayicon:

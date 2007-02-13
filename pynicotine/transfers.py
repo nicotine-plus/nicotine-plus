@@ -1000,6 +1000,7 @@ class Transfers:
 	def ConnClose(self, conn, addr):
 		""" The remote user has closed the connection either because
 		he logged off, or because there's a network problem."""
+		self.SaveDownloads()
 		for i in self.downloads + self.uploads:
 			if i.requestconn == conn and i.status == _('Requesting file'):
 				i.requestconn = None
