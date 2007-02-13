@@ -148,7 +148,13 @@ class TransferList:
 				speed = str(transfer.speed)
 			elap = str(transfer.timeelapsed)
 			left = str(transfer.timeleft)
-
+			
+			if speed == "None":
+				speed = ""
+			if elap == "None":
+				elap = ""
+			if left == "None":
+				left = ""
 			try:
                                 #print currentbytes
 				ist = int(currentbytes)

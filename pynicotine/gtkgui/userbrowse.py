@@ -438,8 +438,8 @@ class UserBrowse(UserBrowseTab):
 		dir = self.selected_folder 
 		if dir == None:
 			return
-		localdir = prefix + dir.split("\\")[-1]
-
+		#localdir = prefix + dir.split("\\")[-1]
+		localdir = ""
 		files = []
 		files += self.DownloadDirectoryRecursive(dir, os.path.join(localdir, ""))
 		# Check the number of files to be downloaded, just to make sure we aren't accidently downloading hundreds or thousands
@@ -462,6 +462,7 @@ class UserBrowse(UserBrowseTab):
 		if dir == None:
 			return
 		localdir = prefix + dir.split("\\")[-1]
+		print localdir
 		files = []
 		if dir in self.shares.keys():
 			for file in self.shares[dir]:
