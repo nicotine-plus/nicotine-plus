@@ -17,14 +17,15 @@ class TransferList:
 		self.list = None
 		self.selected_transfers = []
 		self.selected_users = []
-		
+		self.users = {}
 		widget.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
 
-		columntypes = [gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_INT , gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING,  gobject.TYPE_INT, gobject.TYPE_INT]
-		self.transfersmodel = gtk.ListStore(*columntypes)
-		cols = InitialiseColumns(widget,
-			[_("Filename"), 250, "text"],
+		columntypes = [gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_INT , gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING,  gobject.TYPE_INT, gobject.TYPE_INT, bool]
+
+		self.transfersmodel = gtk.TreeStore(*columntypes)
+		self.cols = cols = InitialiseColumns(widget,
 			[_("User"), 100, "text"],
+			[_("Filename"), 250, "text"],
 			[_("Status"), 150, "text"],
 			[_("Percent"), 70, "progress"],
 			[_("Size"), 100, "text"],
@@ -36,12 +37,17 @@ class TransferList:
 		cols[0].set_sort_column_id(0)
 		cols[1].set_sort_column_id(1)
 		cols[2].set_sort_column_id(9)
+		
+		# Only view progress renderer on transfers, not user tree parents
 		cols[3].set_sort_column_id(3)
+		cols[3].set_attributes(cols[3].get_cell_renderers()[0], value=3, visible=12)
+		
 		cols[4].set_sort_column_id(10)
 		cols[5].set_sort_column_id(5)
 		cols[6].set_sort_column_id(6)
 		cols[7].set_sort_column_id(7)
 		cols[8].set_sort_column_id(8)
+
 		self.transfersmodel.set_sort_func(5, float_sort_func, 5)
 			
 		widget.set_model(self.transfersmodel)
@@ -86,7 +92,7 @@ class TransferList:
 		self.transfers = []
 		
 	def SelectedTransfersCallback(self, model, path, iter):
-		user = model.get_value(iter, 1)
+		user = model.get_value(iter, 0)
 		file = model.get_value(iter, 9)
 		for i in self.list:
 			if i.user == user and i.filename == file:
@@ -163,9 +169,17 @@ class TransferList:
 
 					break
 			else:
+				if not self.users.has_key(user):
+					# ProgressRender not visible (last column sets 4th column)
+					self.users[user] = self.transfersmodel.append(None, [user, "", "", 0,  "", "", "", "", "", "", 0, 0, False])
+					
 				shortfn = self.frame.np.decode(fn.split("\\")[-1])
 				path = self.frame.np.decode(transfer.path)
-				iter = self.transfersmodel.append([shortfn, user, status, percent,  hsize, speed, elap, left, path, fn, istatus, size])
+				iter = self.transfersmodel.append(self.users[user], [user, shortfn, status, percent,  hsize, speed, elap, left, path, fn, istatus, size, True])
+				# Expand path
+				path = self.transfersmodel.get_path(iter)
+				self.widget.expand_to_path(path)
+
 				self.transfers.append([key, iter, transfer])
 
 		elif self.list is not None:
@@ -179,7 +193,8 @@ class TransferList:
 			for i in self.list:
 				self.update(i)
 		self.frame.UpdateBandwidth()
-		
+
+	
 	def OnCopyURL(self, widget):
 		i = self.selected_transfers[0]
 		self.frame.SetClipboardURL(i.user, i.filename)

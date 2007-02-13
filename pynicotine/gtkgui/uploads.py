@@ -6,6 +6,7 @@ from transferlist import TransferList
 from utils import PopupMenu
 import string, os
 from pynicotine.utils import _
+from pynicotine import slskmessages
 
 class Uploads(TransferList):
 	def __init__(self, frame):
@@ -43,6 +44,7 @@ class Uploads(TransferList):
 			("", None),
 			("#" + _("Abor_t"), self.OnAbortTransfer, gtk.STOCK_CANCEL),
 			("#" + _("_Clear"), self.OnClearTransfer, gtk.STOCK_CLEAR),
+			("#" + _("_Retry"), self.OnUploadTransfer, gtk.STOCK_REDO),
 			("", None),
 			(1, _("Clear Groups"), self.popup_menu2, None),
 		)
@@ -53,7 +55,8 @@ class Uploads(TransferList):
 		frame.abortUploadButton.connect("clicked", self.OnAbortTransfer)
 		frame.abortUserUploadButton.connect("clicked", self.OnAbortUser)
 		frame.banUploadButton.connect("clicked", self.OnBan)
-
+		frame.UploadList.expand_all()
+		
 	def select_transfers(self):
 		self.selected_transfers = []
 		self.selected_users = []
@@ -76,6 +79,19 @@ class Uploads(TransferList):
 		self.frame.np.transfers.calcUploadQueueSizes()
 		self.frame.np.transfers.checkUploadQueue()
 		
+	def OnUploadTransfer(self, widget):
+		self.select_transfers()
+		for transfer in self.selected_transfers:
+			filename = transfer.filename
+			path = transfer.path
+			user = transfer.user
+
+			self.frame.np.ProcessRequestToPeer(user,slskmessages.UploadQueueNotification(None)  )
+
+			self.frame.np.transfers.pushFile(user, filename, path)
+			self.frame.np.transfers.checkUploadQueue()
+
+			
 	def OnSelectUserTransfer(self, widet):
 		if len(self.selected_users) != 1:
 			return
@@ -111,7 +127,7 @@ class Uploads(TransferList):
 
 	def OnPlayFiles(self, widget, prefix = ""):
 		for fn in self.selected_transfers:
-			s = fn.filename.replace("\\", "/")
+			s = fn.filename.replace("\\", os.sep)
 			if os.path.exists(s):
 				os.system("%s \"%s\" &" %(self.frame.np.config.sections["players"]["default"], s) )
 

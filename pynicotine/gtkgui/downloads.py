@@ -60,6 +60,7 @@ class Downloads(TransferList):
 		frame.abortTransferButton.connect("clicked", self.OnSelectAbortTransfer)
 		frame.deleteTransferButton.connect("clicked", self.OnAbortRemoveTransfer)
 		frame.banDownloadButton.connect("clicked", self.OnBan)
+		frame.DownloadList.expand_all()
 
 	def select_transfers(self):
 		self.selected_transfers = []
@@ -108,17 +109,17 @@ class Downloads(TransferList):
 				self.OnRetryTransfer(widget)
 			elif key == "Delete":
 				self.OnAbortTransfer(widget, True, True)
-		#print key
 
 	def OnPlayFiles(self, widget, prefix = ""):
 		for fn in self.selected_transfers:
-			if fn.file is not None:
-				if os.path.exists(fn.file.name):
-					os.system("%s \"%s\" &" %(self.frame.np.config.sections["players"]["default"], fn.file.name) )
-					continue
-				basename = string.split(fn.filename,'\\')[-1]
-				if os.path.exists(self.frame.np.config.sections["transfers"]["downloaddir"]+os.sep+basename):
-					os.system("%s \"%s\" &" %(self.frame.np.config.sections["players"]["default"], self.frame.np.config.sections["transfers"]["downloaddir"]+os.sep+basename ) )
+			if fn.file is None:
+				continue
+			if os.path.exists(fn.file.name):
+				os.system("%s \"%s\" &" %(self.frame.np.config.sections["players"]["default"], fn.file.name) )
+				continue
+			basename = string.split(fn.filename,'\\')[-1]
+			if os.path.exists(self.frame.np.config.sections["transfers"]["downloaddir"]+os.sep+basename):
+				os.system("%s \"%s\" &" %(self.frame.np.config.sections["players"]["default"], self.frame.np.config.sections["transfers"]["downloaddir"]+os.sep+basename ) )
 
 	def OnPopupMenuUsers(self, widget):
 		
