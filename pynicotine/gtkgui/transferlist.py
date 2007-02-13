@@ -194,6 +194,10 @@ class TransferList:
 				else:
 					self.transfersmodel.remove(i[1])
 					self.transfers.remove(i)
+			for i in self.users.keys()[:]:
+				if not self.transfersmodel.iter_has_child(self.users[i]):
+					self.transfersmodel.remove(self.users[i])
+					del self.users[i]
 			for i in self.list:
 				self.update(i)
 		self.frame.UpdateBandwidth()
