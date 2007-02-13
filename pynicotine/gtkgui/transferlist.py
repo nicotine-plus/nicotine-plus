@@ -90,6 +90,9 @@ class TransferList:
 		self.transfersmodel.clear()
 		self.list = None
 		self.transfers = []
+		self.users.clear()
+		self.selected_transfers = []
+		self.selected_users = []
 		
 	def SelectedTransfersCallback(self, model, path, iter):
 		user = model.get_value(iter, 0)
@@ -178,7 +181,8 @@ class TransferList:
 				iter = self.transfersmodel.append(self.users[user], [user, shortfn, status, percent,  hsize, speed, elap, left, path, fn, istatus, size, True])
 				# Expand path
 				path = self.transfersmodel.get_path(iter)
-				self.widget.expand_to_path(path)
+				if path is not None:
+					self.widget.expand_to_path(path)
 
 				self.transfers.append([key, iter, transfer])
 
