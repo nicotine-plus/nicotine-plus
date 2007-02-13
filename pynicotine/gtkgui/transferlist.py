@@ -160,25 +160,26 @@ class TransferList:
                                 #print e
 				percent = 0
 
-
-
+			# Modify old transfer
 			for i in self.transfers:
-				if i[0] == key:
-					if i[2] != transfer:
-						if i[2] in self.list:
-							self.list.remove(i[2])
-						i[2] = transfer
-					self.transfersmodel.set(i[1], 2, status, 3, percent, 4, hsize, 5, speed, 6, elap, 7, left, 10, istatus, 11, size)
-
-					break
+				if i[0] != key:
+					continue
+				if i[2] != transfer:
+					if i[2] in self.list:
+						self.list.remove(i[2])
+					i[2] = transfer
+				self.transfersmodel.set(i[1], 2, status, 3, percent, 4, hsize, 5, speed, 6, elap, 7, left, 10, istatus, 11, size)
+				break
 			else:
+				# Create Parent if it doesn't exist
 				if not self.users.has_key(user):
 					# ProgressRender not visible (last column sets 4th column)
 					self.users[user] = self.transfersmodel.append(None, [user, "", "", 0,  "", "", "", "", "", "", 0, 0, False])
-					
+				# Add a new transfer
 				shortfn = self.frame.np.decode(fn.split("\\")[-1])
 				path = self.frame.np.decode(transfer.path)
 				iter = self.transfersmodel.append(self.users[user], [user, shortfn, status, percent,  hsize, speed, elap, left, path, fn, istatus, size, True])
+				
 				# Expand path
 				path = self.transfersmodel.get_path(iter)
 				if path is not None:
@@ -192,14 +193,19 @@ class TransferList:
 					if [j.user, j.filename] == i[0]:
 						break
 				else:
+					# Remove transfers from treeview that aren't in the transfer list
 					self.transfersmodel.remove(i[1])
 					self.transfers.remove(i)
-			for i in self.users.keys()[:]:
-				if not self.transfersmodel.iter_has_child(self.users[i]):
-					self.transfersmodel.remove(self.users[i])
-					del self.users[i]
 			for i in self.list:
 				self.update(i)
+		# Remove empty parent rows
+		for i in self.users.keys()[:]:
+			if not self.transfersmodel.iter_has_child(self.users[i]):
+				self.transfersmodel.remove(self.users[i])
+				del self.users[i]
+			else:
+				files = self.transfersmodel.iter_n_children(self.users[i])
+				self.transfersmodel.set(self.users[i], 0, _("%s (%s Files)"%(i, files) )  )
 		self.frame.UpdateBandwidth()
 
 	
