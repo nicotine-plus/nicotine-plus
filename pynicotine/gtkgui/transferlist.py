@@ -205,7 +205,7 @@ class TransferList:
 				del self.users[i]
 			else:
 				files = self.transfersmodel.iter_n_children(self.users[i])
-				self.transfersmodel.set(self.users[i], 0, _("%s (%s Files)"%(i, files) )  )
+				self.transfersmodel.set(self.users[i], 2, _("%s Files" %  files )  )
 		self.frame.UpdateBandwidth()
 
 	
