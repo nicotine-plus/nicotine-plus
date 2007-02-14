@@ -420,6 +420,7 @@ class NetworkEventProcessor:
 					break
 			else:
 				self.logMessage(_("Removed connection closed by peer: %s %s") %(conn, addr),1)
+				self.queue.put(slskmessages.ConnClose(conn))
 		
 	def Login(self,msg):
 		self.logintime = time.time()
