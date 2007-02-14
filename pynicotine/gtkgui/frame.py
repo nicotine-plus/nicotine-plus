@@ -937,6 +937,7 @@ class NicotineFrame(MainWindow):
 
 	def FetchUserListStatus(self):
 		for user in self.userlist.userlist:
+			self.np.queue.put(slskmessages.AddUser(user[0]))
 			self.np.queue.put(slskmessages.GetUserStatus(user[0]))
 			self.np.queue.put(slskmessages.GetUserStats(user[0]))
 		return False

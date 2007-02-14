@@ -45,6 +45,7 @@ class PrivateChats(IconNotebook):
 			tab = PrivateChat(self, user)
 			self.users[user] = tab
 			self.append_page(tab.Main, user, tab.OnClose)
+			self.frame.np.queue.put(slskmessages.AddUser(user))
 			self.frame.np.queue.put(slskmessages.GetUserStatus(user))
 		if direction:
 			if self.get_current_page() != self.page_num(self.users[user].Main):

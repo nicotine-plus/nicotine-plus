@@ -538,7 +538,8 @@ class NetworkEventProcessor:
 			self.logMessage("%s %s" %(msg.__class__, vars(msg)),1)
 
 	def GetUserStatus(self,msg):
-		self.queue.put(slskmessages.AddUser(msg.user))
+		# Causes recursive requests when privileged?
+		#self.queue.put(slskmessages.AddUser(msg.user))
 		if self.users.has_key(msg.user):
 			if msg.status == 0:
 				self.users[msg.user] = UserAddr(status = msg.status)

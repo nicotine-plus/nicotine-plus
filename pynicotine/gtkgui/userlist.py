@@ -144,7 +144,7 @@ class UserList:
 		self.userlist.append([user, "", iter])
 		
 		self.SaveUserList()
-		
+		self.frame.np.queue.put(slskmessages.AddUser(user))
 		self.frame.np.queue.put(slskmessages.GetUserStatus(user))
 		self.frame.np.queue.put(slskmessages.GetUserStats(user))
 
