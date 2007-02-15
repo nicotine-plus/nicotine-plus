@@ -121,7 +121,7 @@ def getDirsMtimes(dirs, yieldcall = None):
 			except OSError, errtuple:
 				print errtuple
 				if log:
-					log(errtuple)
+					log(str(errtuple))
 				continue
 			else:
 				if win32:
@@ -141,8 +141,7 @@ def getFilesList(mtimes, oldmtimes, oldlist, yieldcall = None, progress=None):
 	""" Get a list of files with their filelength and 
 	(if mp3) bitrate and track length in seconds """
 	list = {}
-	
-	percent = (float(len(mtimes))/ (len(mtimes) * 100))
+	percent = 1.0 / len(mtimes)
 
 	for directory in mtimes:
 		if hiddenCheck(directory):
@@ -150,6 +149,7 @@ def getFilesList(mtimes, oldmtimes, oldlist, yieldcall = None, progress=None):
 		if oldmtimes.has_key(directory):
 			if mtimes[directory] == oldmtimes[directory]:
 				list[directory] = oldlist[directory]
+				progress.set_fraction(progress.get_fraction()+percent)
 				continue
 
 		list[directory] = []
@@ -162,6 +162,7 @@ def getFilesList(mtimes, oldmtimes, oldlist, yieldcall = None, progress=None):
 			print errtuple
 			if log:
 				log(str(errtuple))
+			progress.set_fraction(progress.get_fraction()+percent)
 			continue
 		if win32:
 			# remove Unicode for saving in list
@@ -180,6 +181,8 @@ def getFilesList(mtimes, oldmtimes, oldlist, yieldcall = None, progress=None):
 				isfile = os.path.isfile(path)
 			except OSError, errtuple:
 				print errtuple
+				if log:
+					log(str(errtuple))
 				continue
 			else:
 				if isfile:
@@ -189,6 +192,7 @@ def getFilesList(mtimes, oldmtimes, oldlist, yieldcall = None, progress=None):
 				yieldcall()
 		if progress:
 			progress.set_fraction(progress.get_fraction()+percent)
+
 	return list
 			
 # Get metadata for mp3s and oggs
