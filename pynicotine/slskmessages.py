@@ -303,7 +303,25 @@ class SetStatus(ServerMessage):
 	
 	def makeNetworkMessage(self):
 		return self.packObject(self.status)
- 
+
+class NotifyPrivileges(ServerMessage):
+	""" Server tells us something about privileges"""
+	def __init__(self, token = None, user = None):
+		self.token = token
+		self.user = user
+	def parseNetworkMessage(self,message):
+		len,self.token = self.getObject(message, types.IntType, len)
+		len,self.user = self.getObject(message,types.StringType,len)
+			
+class AckNotifyPrivileges(ServerMessage):
+	def __init__(self, token = None, user = None):
+		self.token = token
+		self.user = user
+		
+	def makeNetworkMessage(self):
+		#return self.packObject(self.token)
+		pass
+
 class SayChatroom(ServerMessage):
 	""" Either we want to say something in the chatroom, or someone did."""
 	def __init__(self,room = None, msg = None):
@@ -675,6 +693,7 @@ class Msg84(Msg83):
 
 class Msg85(Msg83):
 	pass
+
 
 class ParentInactivityTimeout(Msg83):
 	pass

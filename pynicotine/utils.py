@@ -60,14 +60,28 @@ def getServerList(url):
 	except:
 		return []
 
+# Rescan directories in shared databases
 def rescandirs(shared, sharedmtimes, sharedfiles, sharedfilesstreams, yieldfunction):
-	newmtimes = getDirsMtimes(shared,yieldfunction)
+	# Check for modified or new files
+	# returns dict in format:  { Directory : mtime, ... }
+	newmtimes = getDirsMtimes(shared, yieldfunction)
+	
+	# Get list of files
+	# returns dict in format { Directory : { File : metadata, ... }, ... }
 	newsharedfiles = getFilesList(newmtimes, sharedmtimes, sharedfiles,yieldfunction)
+	# Pack shares data
+	# returns dict in format { Directory : hex string of files+metadata, ... }
 	newsharedfilesstreams = getFilesStreams(newmtimes, sharedmtimes, sharedfilesstreams, newsharedfiles,yieldfunction)
+	# Update Search Index
+	# newwordindex is a dict in format {word: [num, num, ..], ... } with num matching
+	# keys in newfileindex
+	# newfileindex is a dict in format { num: (path, size, (bitrate, vbr), length), ... }
 	newwordindex, newfileindex = getFilesIndex(newmtimes, sharedmtimes, shared, newsharedfiles,yieldfunction)
-	return newsharedfiles,newsharedfilesstreams,newwordindex,newfileindex, newmtimes
+	
+	return newsharedfiles, newsharedfilesstreams, newwordindex, newfileindex, newmtimes
     
 
+# Get Modification Times
 def getDirsMtimes(dirs, yieldcall = None):
 	list = {}
 	for i in dirs:
@@ -118,7 +132,7 @@ def getDirsMtimes(dirs, yieldcall = None):
 					yieldcall()
 	return list
 
-
+# Check for new files
 def getFilesList(mtimes, oldmtimes, oldlist, yieldcall = None):
 	""" Get a list of files with their filelength and 
 	(if mp3) bitrate and track length in seconds """
@@ -168,7 +182,8 @@ def getFilesList(mtimes, oldmtimes, oldlist, yieldcall = None):
 				yieldcall()
 	
 	return list
-
+			
+# Get metadata for mp3s and oggs
 def getFileInfo(name, pathname):
 	size = os.path.getsize(pathname)
 	if win32:
@@ -205,13 +220,15 @@ def getFilesStreams(mtimes, oldmtimes, oldstreams, sharedfiles, yieldcall = None
 			continue	
 		if oldmtimes.has_key(i):
 			if mtimes[i] == oldmtimes[i]:
+				# No change
 				streams[i] = oldstreams[i]
 				continue
 		streams[i] = getDirStream(sharedfiles[i])
 		if yieldcall is not None:
 			yieldcall()
 	return streams
-	
+
+# Stop any dot directories
 def hiddenCheck(direct):
 	if win32:
 		dirs = direct.split("\\")
@@ -220,18 +237,21 @@ def hiddenCheck(direct):
 	hidden = 0
 	for dir in dirs:
 		if dir.startswith("."):
-		    hidden = 1
-		    break
+			hidden = 1
+			break
 	return hidden
-	
+
+# Pack all files and metadata in directory
 def getDirStream(dir):
 	from slskmessages import SlskMessage
 	msg = SlskMessage()
 	stream = msg.packObject(len(dir))
-	for i in dir:
-		stream = stream + getByteStream(i)
-	return stream
 	
+	for file_and_meta in dir:
+		stream += getByteStream(file_and_meta)
+	return stream
+
+# Pack a file's metadata
 def getByteStream(fileinfo):
 	from slskmessages import SlskMessage
 	self = SlskMessage()
@@ -248,8 +268,8 @@ def getByteStream(fileinfo):
 		stream = stream + self.packObject('') + self.packObject(0)
 	return stream
 
-
-def getFilesIndex(mtimes, oldmtimes, shareddirs,sharedfiles, yieldcall = None):
+# Update Search index with new files
+def getFilesIndex(mtimes, oldmtimes, shareddirs, sharedfiles, yieldcall = None):
 	wordindex = {}
 	fileindex = {}
 	index = 0
@@ -267,12 +287,12 @@ def getFilesIndex(mtimes, oldmtimes, shareddirs,sharedfiles, yieldcall = None):
 		if yieldcall is not None:
 			yieldcall()
 	return wordindex, fileindex
-
-def getIndexWords(dir,file,shareddirs):
-	import os.path,string
+		
+# Collect words from filenames for Search index
+def getIndexWords(dir, file, shareddirs):
 	for i in shareddirs:
 		if os.path.commonprefix([dir,i]) == i:
-			dir = dir[len(i):]    
+			dir = dir[len(i):]
 	words = string.split(string.lower(string.translate(dir+' '+file, string.maketrans(string.punctuation,string.join([' ' for i in string.punctuation],'')))))
 	# remove duplicates
 	d = {}
