@@ -17,6 +17,7 @@ import sys
 win32 = sys.platform.startswith("win")
 frame = 0
 log = 0
+
 try:
 	import _mp3 as mp3
 	print "Using C mp3 scanner"
@@ -61,22 +62,25 @@ def getServerList(url):
 		return []
 
 # Rescan directories in shared databases
-def rescandirs(shared, sharedmtimes, sharedfiles, sharedfilesstreams, yieldfunction):
+def rescandirs(shared, sharedmtimes, sharedfiles, sharedfilesstreams, yieldfunction, progress=None):
 	# Check for modified or new files
 	# returns dict in format:  { Directory : mtime, ... }
 	newmtimes = getDirsMtimes(shared, yieldfunction)
-	
+
 	# Get list of files
 	# returns dict in format { Directory : { File : metadata, ... }, ... }
-	newsharedfiles = getFilesList(newmtimes, sharedmtimes, sharedfiles,yieldfunction)
+	newsharedfiles = getFilesList(newmtimes, sharedmtimes, sharedfiles,yieldfunction, progress)
+
 	# Pack shares data
 	# returns dict in format { Directory : hex string of files+metadata, ... }
-	newsharedfilesstreams = getFilesStreams(newmtimes, sharedmtimes, sharedfilesstreams, newsharedfiles,yieldfunction)
+	newsharedfilesstreams = getFilesStreams(newmtimes, sharedmtimes, sharedfilesstreams, newsharedfiles, yieldfunction)
+
 	# Update Search Index
 	# newwordindex is a dict in format {word: [num, num, ..], ... } with num matching
 	# keys in newfileindex
 	# newfileindex is a dict in format { num: (path, size, (bitrate, vbr), length), ... }
-	newwordindex, newfileindex = getFilesIndex(newmtimes, sharedmtimes, shared, newsharedfiles,yieldfunction)
+	newwordindex, newfileindex = getFilesIndex(newmtimes, sharedmtimes, shared, newsharedfiles, yieldfunction)
+	progress.set_fraction(1.0)
 	
 	return newsharedfiles, newsharedfilesstreams, newwordindex, newfileindex, newmtimes
     
@@ -84,16 +88,16 @@ def rescandirs(shared, sharedmtimes, sharedfiles, sharedfilesstreams, yieldfunct
 # Get Modification Times
 def getDirsMtimes(dirs, yieldcall = None):
 	list = {}
-	for i in dirs:
-		i = i.replace("//","/")
+	for directory in dirs:
+		directory = directory.replace("//","/")
 		if win32:
 			# force Unicode for reading from disk
-			i = u"%s" %i
-		if hiddenCheck(i):
+			directory = u"%s" %directory
+		if hiddenCheck(directory):
 			continue
 		try:
-			contents = dircache.listdir(i)
-			mtime = os.path.getmtime(i)
+			contents = dircache.listdir(directory)
+			mtime = os.path.getmtime(directory)
 		except OSError, errtuple:
 			print errtuple
 			if log:
@@ -101,19 +105,19 @@ def getDirsMtimes(dirs, yieldcall = None):
 			continue
 		if win32:
 			# remove Unicode for saving in list
-			i = str(i)
-		list[i] = mtime
-		for f in contents:
+			directory = str(directory)
+		list[directory] = mtime
+		for filename in contents:
 			if win32:
 				# remove Unicode for saving in list
-				f = str(f)
-			pathname = os.path.join(i, f)
+				filename = str(filename)
+			path = os.path.join(directory, filename)
 			if win32:
 				# force Unicode for reading from disk
-				pathname = u"%s" % pathname
+				path = u"%s" % path
 			try:
-				isdir = os.path.isdir(pathname)
-				mtime = os.path.getmtime(pathname)
+				isdir = os.path.isdir(path)
+				mtime = os.path.getmtime(path)
 			except OSError, errtuple:
 				print errtuple
 				if log:
@@ -122,35 +126,38 @@ def getDirsMtimes(dirs, yieldcall = None):
 			else:
 				if win32:
 					# remove Unicode for saving in list
-					pathname = str(pathname)
+					path = str(path)
 				if isdir:
-					list[pathname] = mtime
-					dircontents = getDirsMtimes([pathname])
+					list[path] = mtime
+					dircontents = getDirsMtimes([path])
 					for k in dircontents:
 						list[k] = dircontents[k]
 				if yieldcall is not None:
 					yieldcall()
 	return list
-
+				
 # Check for new files
-def getFilesList(mtimes, oldmtimes, oldlist, yieldcall = None):
+def getFilesList(mtimes, oldmtimes, oldlist, yieldcall = None, progress=None):
 	""" Get a list of files with their filelength and 
 	(if mp3) bitrate and track length in seconds """
 	list = {}
-	for i in mtimes:
-		if hiddenCheck(i):
+	
+	percent = (float(len(mtimes))/ (len(mtimes) * 100))
+
+	for directory in mtimes:
+		if hiddenCheck(directory):
 			continue	
-		if oldmtimes.has_key(i):
-			if mtimes[i] == oldmtimes[i]:
-				list[i] = oldlist[i]
+		if oldmtimes.has_key(directory):
+			if mtimes[directory] == oldmtimes[directory]:
+				list[directory] = oldlist[directory]
 				continue
 
-		list[i] = []
+		list[directory] = []
 		if win32:
 			# force Unicode for reading from disk
-			i = u"%s" %i
+			directory = u"%s" %directory
 		try:
-			contents = dircache.listdir(i)
+			contents = dircache.listdir(directory)
 		except OSError, errtuple:
 			print errtuple
 			if log:
@@ -158,29 +165,30 @@ def getFilesList(mtimes, oldmtimes, oldlist, yieldcall = None):
 			continue
 		if win32:
 			# remove Unicode for saving in list
-			i = str(i)
-		for f in contents:
+			directory = str(directory)
+		for filename in contents:
 			if win32:
 				# remove Unicode for saving in list
-				f = str(f)
-			if hiddenCheck(f):
+				filename = str(filename)
+			if hiddenCheck(filename):
 				continue	
-			pathname = os.path.join(i, f)
+			path = os.path.join(directory, filename)
 			if win32:
 				# force Unicode for reading from disk
-				pathname = u"%s" %pathname
+				path = u"%s" % path
 			try:
-				isfile = os.path.isfile(pathname)
+				isfile = os.path.isfile(path)
 			except OSError, errtuple:
 				print errtuple
 				continue
 			else:
 				if isfile:
 					# It's a file, check if it is mp3
-					list[i].append(getFileInfo(f,pathname))
+					list[directory].append(getFileInfo(filename, path))
 			if yieldcall is not None:
 				yieldcall()
-	
+		if progress:
+			progress.set_fraction(progress.get_fraction()+percent)
 	return list
 			
 # Get metadata for mp3s and oggs

@@ -389,6 +389,14 @@ class NicotineFrame(MainWindow):
 		img = gtk.Image()
 		img.set_from_pixbuf(self.images["away2"])
 		self.awayreturn1.set_image(img)
+		
+		self.SharesProgress = gtk.ProgressBar()
+		self.SharesProgress.set_text(_("Scanning Shares"))
+		self.hbox10.pack_start(self.SharesProgress, False, False, 1)
+		self.BuddySharesProgress = gtk.ProgressBar()
+		self.BuddySharesProgress.set_text(_("Scanning Buddy Shares"))
+		self.hbox10.pack_start(self.BuddySharesProgress, False, False, 1)
+		
 		self.now = nowplaying.NowPlaying(self)
 		if self.np.config.needConfig():
 			self.connect1.set_sensitive(0)
