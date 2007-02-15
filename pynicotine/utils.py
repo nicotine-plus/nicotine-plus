@@ -65,6 +65,7 @@ def getServerList(url):
 def rescandirs(shared, sharedmtimes, sharedfiles, sharedfilesstreams, yieldfunction, progress=None):
 	# Check for modified or new files
 	# returns dict in format:  { Directory : mtime, ... }
+	progress.set_fraction(0)
 	newmtimes = getDirsMtimes(shared, yieldfunction)
 
 	# Get list of files
@@ -144,12 +145,16 @@ def getFilesList(mtimes, oldmtimes, oldlist, yieldcall = None, progress=None):
 	percent = 1.0 / len(mtimes)
 
 	for directory in mtimes:
+		if progress:
+			#print progress.get_fraction()+percent
+			if progress.get_fraction()+percent <= 1.0:
+				progress.set_fraction(progress.get_fraction()+percent)
 		if hiddenCheck(directory):
+
 			continue	
 		if oldmtimes.has_key(directory):
 			if mtimes[directory] == oldmtimes[directory]:
 				list[directory] = oldlist[directory]
-				progress.set_fraction(progress.get_fraction()+percent)
 				continue
 
 		list[directory] = []
@@ -162,7 +167,6 @@ def getFilesList(mtimes, oldmtimes, oldlist, yieldcall = None, progress=None):
 			print errtuple
 			if log:
 				log(str(errtuple))
-			progress.set_fraction(progress.get_fraction()+percent)
 			continue
 		if win32:
 			# remove Unicode for saving in list
@@ -190,8 +194,6 @@ def getFilesList(mtimes, oldmtimes, oldlist, yieldcall = None, progress=None):
 					list[directory].append(getFileInfo(filename, path))
 			if yieldcall is not None:
 				yieldcall()
-		if progress:
-			progress.set_fraction(progress.get_fraction()+percent)
 
 	return list
 			
