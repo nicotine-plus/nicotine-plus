@@ -142,8 +142,9 @@ def getFilesList(mtimes, oldmtimes, oldlist, yieldcall = None, progress=None):
 	""" Get a list of files with their filelength and 
 	(if mp3) bitrate and track length in seconds """
 	list = {}
-	percent = 1.0 / len(mtimes)
-
+	if len(mtimes):
+		percent = 1.0 / len(mtimes)
+	
 	for directory in mtimes:
 		if progress:
 			#print progress.get_fraction()+percent
