@@ -57,10 +57,10 @@ class UserBrowse(UserBrowseTab):
 		self.FolderTreeView.set_model(self.DirStore)
 
 		self.FolderTreeView.set_headers_visible(True)
-		self.FolderTreeView.set_property("enable-tree-lines", True)
+		# GTK 2.10 
+		try: self.FolderTreeView.set_property("enable-tree-lines", True)
+		except: pass
 
-			
-			
 		
 		cols = InitialiseColumns(self.FolderTreeView,
 			[_("Directories"), -1, "text"], #0
