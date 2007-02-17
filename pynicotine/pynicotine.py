@@ -1025,18 +1025,19 @@ class NetworkEventProcessor:
 	def FolderContentsRequest(self,msg):
 		username = None
 		checkuser = None
+		reason = ""
 		for i in self.peerconns:
 			if i.conn is msg.conn.conn:
 				username = i.username
 				checkuser, reason = self.CheckUser(username, None, None)
-			
-				
-			break
+				break
+		if not username:
+			return
 		if not checkuser:
-			self.queue.put(slskmessages.MessageUser(i.username, _("[Automatic Message] ")+reason) )
+			self.queue.put(slskmessages.MessageUser(username, _("[Automatic Message] ")+reason) )
 			return
 		else:
-			self.queue.put(slskmessages.MessageUser(i.username, _("Please try browsing me if you get 'File not shared' errors. This is an automatic message, you don't have to reply to it.") ) )
+			self.queue.put(slskmessages.MessageUser(username, _("Please try browsing me if you get 'File not shared' errors. This is an automatic message, you don't have to reply to it.") ) )
 			
 		if checkuser == 1:
 			shares = self.config.sections["transfers"]["sharedfiles"]
