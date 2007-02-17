@@ -439,6 +439,12 @@ class Search(SearchTab):
 		
 	def ChangeColours(self):
 		self.frame.SetTextBG(self.ResultsList)
+		self.frame.SetTextBG(self.FilterIn.child)
+		self.frame.SetTextBG(self.FilterOut.child)
+		self.frame.SetTextBG(self.FilterSize.child)
+		self.frame.SetTextBG(self.FilterBitrate.child)
+		self.frame.SetTextBG(self.FilterCountry.child)
+
 		
 	def SelectedResultsCallback(self, model, path, iter):
 		user = model.get_value(iter, 2)

@@ -916,15 +916,31 @@ class NicotineFrame(MainWindow):
 		self.SetTextBG(self.RecommendationUsersList)
 		self.SetTextBG(self.LikesList)
 		self.SetTextBG(self.DislikesList)
+		self.SetTextBG(self.PrivateChatEntry)
+		self.SetTextBG(self.UserinfoEntry)
+		self.SetTextBG(self.SharesEntry)
+		self.SetTextBG(self.AddUserEntry)
+		self.SetTextBG(self.SearchEntry)
+		
 		
 	def SetTextBG(self, widget):
 		bgcolor = self.np.config.sections["ui"]["textbg"]
 		if bgcolor == "":
-			widget.modify_base(gtk.STATE_NORMAL, None)
-			widget.modify_bg(gtk.STATE_NORMAL, None)
+			colour = None
 		else:
-			widget.modify_base(gtk.STATE_NORMAL, gtk.gdk.color_parse(bgcolor))
-			widget.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse(bgcolor))
+			colour = gtk.gdk.color_parse(bgcolor)
+			
+		widget.modify_base(gtk.STATE_NORMAL, colour)
+		widget.modify_bg(gtk.STATE_NORMAL, colour)
+		
+		if type(widget) is gtk.Entry:
+			fgcolor = self.np.config.sections["ui"]["chatlocal"]
+			if fgcolor == "":
+				colour = None
+			else:
+				colour = gtk.gdk.color_parse(fgcolor)
+			widget.modify_text(gtk.STATE_NORMAL, colour)
+			widget.modify_fg(gtk.STATE_NORMAL, colour)
 			
 	def logMessage(self, msg, debug = None):
 		if debug is None or self.showdebug:

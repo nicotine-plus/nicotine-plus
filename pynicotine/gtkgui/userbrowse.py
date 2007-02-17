@@ -164,7 +164,8 @@ class UserBrowse(UserBrowseTab):
 	def ChangeColours(self):
 		self.frame.SetTextBG(self.FileTreeView)
 		self.frame.SetTextBG(self.FolderTreeView)
-			
+		self.frame.SetTextBG(self.entry4)
+		
 	def CellDataFunc(self, column, cellrenderer, model, iter):
 		colour = self.frame.np.config.sections["ui"]["search"]
 		if colour == "":

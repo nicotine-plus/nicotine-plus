@@ -1721,7 +1721,7 @@ class BloatFrame:
         self.label208.set_alignment(0, 0.5)
         self.label208.set_padding(0, 5)
         self.label208.set_line_wrap(False)
-        self.label208.set_markup(_("<b>Search colours</b>"))
+        self.label208.set_markup(_("<b>List and search colours</b>"))
         self.label208.show()
         self.table2.attach(self.label208, 0, 3, 4, 5, gtk.FILL, 0, 0, 0)
 
@@ -1741,7 +1741,7 @@ class BloatFrame:
         self.image43.show()
         self.hbox135.pack_start(self.image43, False, False, 0)
 
-        self.label209 = gtk.Label(_("Immediate DL"))
+        self.label209 = gtk.Label(_("List Text"))
         self.label209.set_padding(0, 0)
         self.label209.set_line_wrap(False)
         self.label209.show()

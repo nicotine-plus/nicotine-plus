@@ -93,6 +93,7 @@ class RoomsControl:
 			# No PyGTK 2.10! Gosh, you really need to get with the times!
 			pass
 		self.frame.SetTextBG(self.frame.roomlist.RoomsList)
+		self.frame.SetTextBG(self.frame.roomlist.CreateRoomEntry)
 		
 	def OnReorderedPage(self, notebook, page, page_num, force=0):
 		room_tab_order = {}
@@ -244,6 +245,7 @@ class RoomsControl:
 	
 	def UpdateColours(self):
 		self.frame.SetTextBG(self.frame.roomlist.RoomsList)
+		self.frame.SetTextBG(self.frame.roomlist.CreateRoomEntry)
 		for room in self.joinedrooms.values():
 			room.ChangeColours()
 
@@ -745,6 +747,9 @@ class ChatRoom(ChatRoomTab):
 		self.frame.SetTextBG(self.RoomLog)
 		self.frame.SetTextBG(self.UserList)
 		
+		self.frame.SetTextBG(self.entry3)
+		
+		
 	def getUserStatusColor(self, status):
 		if status == 1:
 			color = "useraway"
@@ -798,6 +803,7 @@ class ChatRoom(ChatRoomTab):
 		self.frame.SetTextBG(self.ChatScroll)
 		self.frame.SetTextBG(self.RoomLog)
 		self.frame.SetTextBG(self.UserList)
+		self.frame.SetTextBG(self.entry3)
 				
 	def OnLeave(self, widget = None):
 		if self.leaving:
