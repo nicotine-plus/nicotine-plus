@@ -62,8 +62,8 @@ class RoomsControl:
 		self.autojoin = 1
 		
 		cols = InitialiseColumns(frame.roomlist.RoomsList,
-			[_("Room"), 150, "text"],
-			[_("Users"), -1, "text"],
+			[_("Room"), 150, "text", self.frame.CellDataFunc],
+			[_("Users"), -1, "text", self.frame.CellDataFunc],
 		)
 		
 		for ix in range(len(cols)):
@@ -92,6 +92,7 @@ class RoomsControl:
 		except:
 			# No PyGTK 2.10! Gosh, you really need to get with the times!
 			pass
+		self.frame.SetTextBG(self.frame.roomlist.RoomsList)
 		
 	def OnReorderedPage(self, notebook, page, page_num, force=0):
 		room_tab_order = {}
@@ -242,6 +243,7 @@ class RoomsControl:
 		self.joinedrooms[msg.room].SayChatRoom(msg, text)
 	
 	def UpdateColours(self):
+		self.frame.SetTextBG(self.frame.roomlist.RoomsList)
 		for room in self.joinedrooms.values():
 			room.ChangeColours()
 
@@ -357,9 +359,9 @@ class ChatRoom(ChatRoomTab):
 			
 		cols = InitialiseColumns(self.UserList, 
 			["", -1, "pixbuf"],
-			[_("User"), 100, "text"],
-			[_("Speed"), 0, "text"],
-			[_("Files"), 0, "text"],
+			[_("User"), 100, "text", self.frame.CellDataFunc],
+			[_("Speed"), 0, "text", self.frame.CellDataFunc],
+			[_("Files"), 0, "text", self.frame.CellDataFunc],
 		)
 		cols[0].set_sort_column_id(4)
 		cols[1].set_sort_column_id(1)
