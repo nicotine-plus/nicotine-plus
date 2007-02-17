@@ -1090,8 +1090,9 @@ class FileSearchResult(PeerMessage):
 		for i in range(nfiles):
 			len, code = len+1, ord(message[len])
 			len, name = self.getObject(message,types.StringType, len)
-			len, size = self.getObject(message,types.IntType, len)
-			len, size2 = self.getObject(message,types.IntType, len)
+			len, size1 = self.getObject(message,types.LongType, len)
+			len, size2 = self.getObject(message,types.LongType, len)
+			size = (size2 << 32) + size1
 			len, ext = self.getObject(message,types.StringType, len)
 			len, numattr = self.getObject(message, types.IntType, len)
 			attrs = []
@@ -1185,8 +1186,9 @@ class FolderContentsResponse(PeerMessage):
 				for j in range(nfiles):
 					len, code = len+1, ord(message[len])
 					len, name = self.getObject(message,types.StringType, len)
-					len, size = self.getObject(message,types.IntType, len)
-					len, size2 = self.getObject(message,types.IntType, len)
+					len, size1 = self.getObject(message,types.LongType, len)
+					len, size2 = self.getObject(message,types.LongType, len)
+					size = (size2 << 32) + size1
 					len, ext = self.getObject(message,types.StringType, len)
 					len, numattr = self.getObject(message, types.IntType, len)
 					attrs = []

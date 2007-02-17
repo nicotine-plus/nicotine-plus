@@ -1462,7 +1462,7 @@ class BloatFrame:
 
         self.table2 = gtk.Table()
         self.table2.show()
-        self.table2.set_row_spacings(0)
+        self.table2.set_row_spacings(2)
         self.table2.set_col_spacings(15)
 
         self.PickRemote = gtk.Button()
@@ -1474,7 +1474,6 @@ class BloatFrame:
         self.hbox124 = gtk.HBox(False, 2)
         self.hbox124.show()
         self.hbox124.set_spacing(2)
-        self.hbox124.set_border_width(3)
 
         self.image32 = gtk.Image()
         self.image32.set_padding(0, 0)
@@ -1503,7 +1502,6 @@ class BloatFrame:
         self.hbox132 = gtk.HBox(False, 2)
         self.hbox132.show()
         self.hbox132.set_spacing(2)
-        self.hbox132.set_border_width(3)
 
         self.image40 = gtk.Image()
         self.image40.set_padding(0, 0)
@@ -1532,7 +1530,6 @@ class BloatFrame:
         self.hbox133 = gtk.HBox(False, 2)
         self.hbox133.show()
         self.hbox133.set_spacing(2)
-        self.hbox133.set_border_width(3)
 
         self.image41 = gtk.Image()
         self.image41.set_padding(0, 0)
@@ -1561,7 +1558,6 @@ class BloatFrame:
         self.hbox134 = gtk.HBox(False, 2)
         self.hbox134.show()
         self.hbox134.set_spacing(2)
-        self.hbox134.set_border_width(3)
 
         self.image42 = gtk.Image()
         self.image42.set_padding(0, 0)
@@ -1738,7 +1734,6 @@ class BloatFrame:
         self.hbox135 = gtk.HBox(False, 2)
         self.hbox135.show()
         self.hbox135.set_spacing(2)
-        self.hbox135.set_border_width(3)
 
         self.image43 = gtk.Image()
         self.image43.set_padding(0, 0)
@@ -1837,7 +1832,6 @@ class BloatFrame:
         self.hbox136 = gtk.HBox(False, 2)
         self.hbox136.show()
         self.hbox136.set_spacing(2)
-        self.hbox136.set_border_width(3)
 
         self.image44 = gtk.Image()
         self.image44.set_padding(0, 0)
@@ -1856,64 +1850,6 @@ class BloatFrame:
         self.PickQueue.add(self.alignment47)
 
         self.table2.attach(self.PickQueue, 0, 1, 6, 7, gtk.FILL, 0, 0, 0)
-
-        self.PickOnline = gtk.Button()
-        self.PickOnline.show()
-
-        self.alignment78 = gtk.Alignment(0, 0.5, 0, 0)
-        self.alignment78.show()
-
-        self.hbox183 = gtk.HBox(False, 2)
-        self.hbox183.show()
-        self.hbox183.set_spacing(2)
-        self.hbox183.set_border_width(3)
-
-        self.image72 = gtk.Image()
-        self.image72.set_padding(0, 0)
-        self.image72.set_from_stock(gtk.STOCK_SELECT_COLOR, 4)
-        self.image72.show()
-        self.hbox183.pack_start(self.image72, False, False, 0)
-
-        self.label308 = gtk.Label(_("Online"))
-        self.label308.set_padding(0, 0)
-        self.label308.set_line_wrap(False)
-        self.label308.show()
-        self.hbox183.pack_start(self.label308, False, False, 0)
-
-        self.alignment78.add(self.hbox183)
-
-        self.PickOnline.add(self.alignment78)
-
-        self.table2.attach(self.PickOnline, 0, 1, 8, 9, gtk.FILL, 0, 0, 0)
-
-        self.PickOffline = gtk.Button()
-        self.PickOffline.show()
-
-        self.alignment79 = gtk.Alignment(0, 0.5, 0, 0)
-        self.alignment79.show()
-
-        self.hbox184 = gtk.HBox(False, 2)
-        self.hbox184.show()
-        self.hbox184.set_spacing(2)
-        self.hbox184.set_border_width(3)
-
-        self.image73 = gtk.Image()
-        self.image73.set_padding(0, 0)
-        self.image73.set_from_stock(gtk.STOCK_SELECT_COLOR, 4)
-        self.image73.show()
-        self.hbox184.pack_start(self.image73, False, False, 0)
-
-        self.label309 = gtk.Label(_("Offline"))
-        self.label309.set_padding(0, 0)
-        self.label309.set_line_wrap(False)
-        self.label309.show()
-        self.hbox184.pack_start(self.label309, False, False, 0)
-
-        self.alignment79.add(self.hbox184)
-
-        self.PickOffline.add(self.alignment79)
-
-        self.table2.attach(self.PickOffline, 0, 1, 9, 10, gtk.FILL, 0, 0, 0)
 
         self.OnlineColor = gtk.Entry()
         self.OnlineColor.set_text("")
@@ -2008,7 +1944,6 @@ class BloatFrame:
         self.hbox185 = gtk.HBox(False, 2)
         self.hbox185.show()
         self.hbox185.set_spacing(2)
-        self.hbox185.set_border_width(3)
 
         self.image74 = gtk.Image()
         self.image74.set_padding(0, 0)
@@ -2055,6 +1990,125 @@ class BloatFrame:
         self.DefaultAway.add(self.alignment83)
 
         self.table2.attach(self.DefaultAway, 2, 3, 10, 11, gtk.FILL, 0, 0, 0)
+
+        self.PickOnline = gtk.Button()
+        self.PickOnline.show()
+
+        self.alignment78 = gtk.Alignment(0, 0.5, 0, 0)
+        self.alignment78.show()
+
+        self.hbox183 = gtk.HBox(False, 2)
+        self.hbox183.show()
+        self.hbox183.set_spacing(2)
+
+        self.image72 = gtk.Image()
+        self.image72.set_padding(0, 0)
+        self.image72.set_from_stock(gtk.STOCK_SELECT_COLOR, 4)
+        self.image72.show()
+        self.hbox183.pack_start(self.image72, False, False, 0)
+
+        self.label308 = gtk.Label(_("Online"))
+        self.label308.set_padding(0, 0)
+        self.label308.set_line_wrap(False)
+        self.label308.show()
+        self.hbox183.pack_start(self.label308, False, False, 0)
+
+        self.alignment78.add(self.hbox183)
+
+        self.PickOnline.add(self.alignment78)
+
+        self.table2.attach(self.PickOnline, 0, 1, 8, 9, gtk.FILL, 0, 0, 0)
+
+        self.PickOffline = gtk.Button()
+        self.PickOffline.show()
+
+        self.alignment79 = gtk.Alignment(0, 0.5, 0, 0)
+        self.alignment79.show()
+
+        self.hbox184 = gtk.HBox(False, 2)
+        self.hbox184.show()
+        self.hbox184.set_spacing(2)
+
+        self.image73 = gtk.Image()
+        self.image73.set_padding(0, 0)
+        self.image73.set_from_stock(gtk.STOCK_SELECT_COLOR, 4)
+        self.image73.show()
+        self.hbox184.pack_start(self.image73, False, False, 0)
+
+        self.label309 = gtk.Label(_("Offline"))
+        self.label309.set_padding(0, 0)
+        self.label309.set_line_wrap(False)
+        self.label309.show()
+        self.hbox184.pack_start(self.label309, False, False, 0)
+
+        self.alignment79.add(self.hbox184)
+
+        self.PickOffline.add(self.alignment79)
+
+        self.table2.attach(self.PickOffline, 0, 1, 9, 10, gtk.FILL, 0, 0, 0)
+
+        self.DefaultBackground = gtk.Button()
+        self.DefaultBackground.show()
+
+        self.alignment94 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment94.show()
+
+        self.hbox210 = gtk.HBox(False, 2)
+        self.hbox210.show()
+        self.hbox210.set_spacing(2)
+
+        self.image88 = gtk.Image()
+        self.image88.set_padding(0, 0)
+        self.image88.set_from_stock(gtk.STOCK_CANCEL, 4)
+        self.image88.show()
+        self.hbox210.pack_start(self.image88, False, False, 0)
+
+        self.label360 = gtk.Label(_("Default"))
+        self.label360.set_padding(0, 0)
+        self.label360.set_line_wrap(False)
+        self.label360.show()
+        self.hbox210.pack_start(self.label360, False, False, 0)
+
+        self.alignment94.add(self.hbox210)
+
+        self.DefaultBackground.add(self.alignment94)
+
+        self.table2.attach(self.DefaultBackground, 2, 3, 12, 13, gtk.FILL, 0, 0, 0)
+
+        self.BackgroundColor = gtk.Entry()
+        self.BackgroundColor.set_text("")
+        self.BackgroundColor.set_editable(False)
+        self.BackgroundColor.show()
+        self.BackgroundColor.set_visibility(True)
+        self.table2.attach(self.BackgroundColor, 1, 2, 12, 13, gtk.EXPAND|gtk.FILL, 0, 0, 0)
+
+        self.PickBackground = gtk.Button()
+        self.PickBackground.show()
+
+        self.alignment93 = gtk.Alignment(0, 0.5, 0, 0)
+        self.alignment93.show()
+
+        self.hbox209 = gtk.HBox(False, 2)
+        self.hbox209.show()
+        self.hbox209.set_spacing(2)
+
+        self.image87 = gtk.Image()
+        self.image87.set_padding(0, 0)
+        self.image87.set_from_stock(gtk.STOCK_SELECT_COLOR, 4)
+        self.image87.show()
+        self.hbox209.pack_start(self.image87, False, False, 0)
+
+        self.label359 = gtk.Label(_("Background"))
+        self.label359.set_padding(0, 0)
+        self.label359.set_line_wrap(False)
+        self.label359.show()
+        self.hbox209.pack_start(self.label359, False, False, 0)
+
+        self.alignment93.add(self.hbox209)
+
+        self.PickBackground.add(self.alignment93)
+
+        self.table2.attach(self.PickBackground, 0, 1, 12, 13, gtk.FILL, 0, 0, 0)
 
         self.hbox197 = gtk.HBox(False, 3)
         self.hbox197.show()

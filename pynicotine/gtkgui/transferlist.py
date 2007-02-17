@@ -20,7 +20,7 @@ class TransferList:
 		self.users = {}
 		widget.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
 
-		columntypes = [gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_INT , gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING,  gobject.TYPE_INT, gobject.TYPE_INT, bool]
+		columntypes = [gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_INT , gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING,  gobject.TYPE_INT, gobject.TYPE_INT, gobject.TYPE_INT, bool]
 
 		self.transfersmodel = gtk.TreeStore(*columntypes)
 		self.cols = cols = InitialiseColumns(widget,
@@ -40,7 +40,7 @@ class TransferList:
 		
 		# Only view progress renderer on transfers, not user tree parents
 		cols[3].set_sort_column_id(3)
-		cols[3].set_attributes(cols[3].get_cell_renderers()[0], value=3, visible=12)
+		cols[3].set_attributes(cols[3].get_cell_renderers()[0], value=3, visible=13)
 		
 		cols[4].set_sort_column_id(10)
 		cols[5].set_sort_column_id(5)
@@ -132,6 +132,8 @@ class TransferList:
 				return
 			fn = transfer.filename
 			currentbytes = transfer.currentbytes
+			if currentbytes == None:
+				currentbytes = 0
 			user = transfer.user
 			key = [user, fn]
 			
@@ -174,17 +176,17 @@ class TransferList:
 					if i[2] in self.list:
 						self.list.remove(i[2])
 					i[2] = transfer
-				self.transfersmodel.set(i[1], 2, status, 3, percent, 4, hsize, 5, speed, 6, elap, 7, left, 10, istatus, 11, size)
+				self.transfersmodel.set(i[1], 2, status, 3, percent, 4, hsize, 5, speed, 6, elap, 7, left, 10, istatus, 11, size, 12, currentbytes)
 				break
 			else:
 				# Create Parent if it doesn't exist
 				if not self.users.has_key(user):
 					# ProgressRender not visible (last column sets 4th column)
-					self.users[user] = self.transfersmodel.append(None, [user, "", "", 0,  "", "", "", "", "", "", 0, 0, False])
+					self.users[user] = self.transfersmodel.append(None, [user, "", "", 0,  "", "", "", "", "", "", 0, 0, 0, False])
 				# Add a new transfer
 				shortfn = self.frame.np.decode(fn.split("\\")[-1])
 				path = self.frame.np.decode(transfer.path)
-				iter = self.transfersmodel.append(self.users[user], [user, shortfn, status, percent,  hsize, speed, elap, left, path, fn, istatus, size, True])
+				iter = self.transfersmodel.append(self.users[user], [user, shortfn, status, percent,  hsize, speed, elap, left, path, fn, istatus, size, currentbytes, True])
 				
 				# Expand path
 				path = self.transfersmodel.get_path(iter)
@@ -211,7 +213,18 @@ class TransferList:
 				del self.users[i]
 			else:
 				files = self.transfersmodel.iter_n_children(self.users[i])
-				self.transfersmodel.set(self.users[i], 2, _("%s Files" %  files )  )
+				totalsize = position = 1
+				for f in range(files):
+					iter = self.transfersmodel.iter_nth_child(self.users[i], f)
+					totalsize += self.transfersmodel.get_value(iter, 11)
+					position += self.transfersmodel.get_value(iter, 12)
+				percent = ((100 * position)/ int(totalsize))
+				
+				self.transfersmodel.set(self.users[i], 2, _("%s Files" %  files ), 4, self.Humanize(totalsize, None ))
+				if percent:
+					self.transfersmodel.set(self.users[i], 3, percent, 13, True)
+				else:
+					self.transfersmodel.set(self.users[i], 3, percent, 13, False)
 		self.frame.UpdateBandwidth()
 
 	

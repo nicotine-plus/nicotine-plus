@@ -279,7 +279,7 @@ class NicotineFrame(MainWindow):
 		self.LogWindow.show()
 		self.LogScrolledWindow.add(self.LogWindow)
 		self.LogWindow.connect("button-press-event", self.OnPopupLogMenu)
-		self.UpdateColours()
+		self.UpdateColours(1)
 		
 
 		if self.translux:
@@ -875,12 +875,43 @@ class NicotineFrame(MainWindow):
 		self.transfermsgs = {}
 		self.transfermsgspostedtime = curtime
 		return msgs
-
-	def UpdateColours(self):
-		colour = self.np.config.sections["ui"]["chatremote"]
-		d = colour and {"foreground": colour} or {}
-		self.tag_log = self.LogWindow.get_buffer().create_tag(**d)
+	
+	
+	def changecolour(self, tag, colour):
+		if self.frame.np.config.sections["ui"].has_key(colour):
+			color = self.frame.np.config.sections["ui"][colour]
+		else:
+			color = "#000000"
+		font = self.frame.np.config.sections["ui"]["chatfont"]
 		
+		if color:
+			if color == "":
+				color = "#000000"
+			tag.set_property("foreground", color)
+			tag.set_property("font", font)
+		
+		else:
+			tag.set_property("font", font)
+			
+	def UpdateColours(self, first=0):
+		colour = self.np.config.sections["ui"]["chatremote"]
+		font = self.np.config.sections["ui"]["chatfont"]
+		if first:
+			self.tag_log = self.LogWindow.get_buffer().create_tag(foreground = colour, font=font)
+		else:
+			self.tag_log.set_property("font", font)
+			self.tag_log.set_property("foreground", colour)
+		self.SetTextBG(self.LogWindow)
+		
+	def SetTextBG(self, widget):
+		bgcolor = self.np.config.sections["ui"]["textbg"]
+		if bgcolor == "":
+			widget.modify_base(gtk.STATE_NORMAL, None)
+			widget.modify_bg(gtk.STATE_NORMAL, None)
+		else:
+			widget.modify_base(gtk.STATE_NORMAL, gtk.gdk.color_parse(bgcolor))
+			widget.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse(bgcolor))
+			
 	def logMessage(self, msg, debug = None):
 		if debug is None or self.showdebug:
 			AppendLine(self.LogWindow, msg, self.tag_log)

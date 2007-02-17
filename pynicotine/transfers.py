@@ -159,18 +159,18 @@ class Transfers:
 			self.checkUploadQueue()
 
 
-	def getFile(self, user, filename, path="", transfer = None):
+	def getFile(self, user, filename, path="", transfer = None, size=None):
 		path=self.CleanPath(path)
-		self.transferFile(0,user,filename,path,transfer)
+		self.transferFile(0,user,filename,path,transfer,size)
 
-	def pushFile(self, user, filename, path="", transfer = None):
-		self.transferFile(1,user,filename,path,transfer)
+	def pushFile(self, user, filename, path="", transfer = None, size=None):
+		self.transferFile(1,user,filename,path,transfer,size)
 
-	def transferFile(self, direction, user, filename, path="", transfer = None):
+	def transferFile(self, direction, user, filename, path="", transfer = None, size=None):
 		""" Get a single file. path is a local path. if transfer object is 
 		not None, update it, otherwise create a new one."""
 		if transfer is None:
-			transfer = Transfer(user = user, filename= filename, path=path, status = _('Getting status'))
+			transfer = Transfer(user = user, filename= filename, path=path, status = _('Getting status'), size=size)
 			
 			if direction == 0:
 				self.downloads.append(transfer)
@@ -868,7 +868,7 @@ class Transfers:
 			if i.conn is msg.conn.conn:
 				user = i.username
 			
-		if self.eventprocessor.config.sections["transfer"]["fifoqueue"]:
+		if self.eventprocessor.config.sections["transfers"]["fifoqueue"]:
 			count = 0
 			countpriv = 0
 			place = 0
@@ -1099,9 +1099,9 @@ class Transfers:
 				if os.path.commonprefix([i,j]) == j:
 					for k in msg.list[i][j]:
 						if j[-1] == '\\':
-							self.getFile(username, j + k[1], j.split('\\')[-2])
+							self.getFile(username, j + k[1], j.split('\\')[-2], size=k[2])
 						else:
-							self.getFile(username, j + '\\' + k[1], j.split('\\')[-1])
+							self.getFile(username, j + '\\' + k[1], j.split('\\')[-1], size=k[2])
 
 	def AbortTransfers(self):
 		""" Stop all transfers """

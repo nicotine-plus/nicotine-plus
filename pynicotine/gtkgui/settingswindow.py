@@ -645,6 +645,9 @@ class BloatFrame(settings_glade.BloatFrame):
 		self.DefaultAway.connect("clicked", self.DefaultColour, self.AwayColor)
 		self.DefaultOnline.connect("clicked", self.DefaultColour, self.OnlineColor)
 		self.DefaultOffline.connect("clicked", self.DefaultColour, self.OfflineColor)
+		
+		self.PickBackground.connect("clicked", self.PickColour, self.BackgroundColor)
+		self.DefaultBackground.connect("clicked", self.DefaultColour, self.BackgroundColor)
 
 		self.DefaultRemote.connect("clicked", self.DefaultColour, self.Remote)
 		self.DefaultLocal.connect("clicked", self.DefaultColour, self.Local)
@@ -696,6 +699,8 @@ class BloatFrame(settings_glade.BloatFrame):
 			self.OfflineColor.set_text(ui["useroffline"])
 		if ui["usernamehotspots"] is not None:
 			self.UsernameHotspots.set_active(ui["usernamehotspots"])
+		if ui["textbg"] is not None:
+			self.BackgroundColor.set_text(ui["textbg"])
 		self.OnUsernameHotspotsToggled(self.UsernameHotspots)
 		if ui["search"] is not None:
 			self.Immediate.set_text(ui["search"])
@@ -705,9 +710,7 @@ class BloatFrame(settings_glade.BloatFrame):
 			self.DecimalSep.child.set_text(ui["decimalsep"])
 		if ui["tabclosers"] is not None:
 			self.TabClosers.set_active(ui["tabclosers"])
-		
-		#if sys.platform == "win32":
-		#	self.TrayiconCheck.set_sensitive(False)
+	
 		if ui["trayicon"] is not None:
 			self.TrayiconCheck.set_active(ui["trayicon"])
 		if ui["soundenabled"] is not None:
@@ -741,6 +744,7 @@ class BloatFrame(settings_glade.BloatFrame):
 				"chatremote": self.Remote.get_text(),
 				"chatme": self.Me.get_text(),
 				"chathilite": self.Highlight.get_text(),
+				"textbg": self.BackgroundColor.get_text(),
 				"search": self.Immediate.get_text(),
 				"searchq": self.Queue.get_text(),
 				"decimalsep": self.DecimalSep.child.get_text(),

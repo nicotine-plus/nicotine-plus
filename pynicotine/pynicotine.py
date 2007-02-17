@@ -764,10 +764,13 @@ class NetworkEventProcessor:
 		checkuser, reason = self.CheckUser(user, self.geoip, addr)
 	
 		if checkuser == 1:
+			# Send Normal Shares
 			self.queue.put(slskmessages.SharedFileList(msg.conn.conn,self.config.sections["transfers"]["sharedfilesstreams"]))
 		elif checkuser == 2:
+			# Send Buddy Shares
 			self.queue.put(slskmessages.SharedFileList(msg.conn.conn,self.config.sections["transfers"]["bsharedfilesstreams"]))
 		else:
+			# Nyah, Nyah
 			self.queue.put(slskmessages.SharedFileList(msg.conn.conn,{}))
 		
 	def ClosePeerConnection(self, peerconn):

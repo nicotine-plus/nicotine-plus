@@ -738,6 +738,8 @@ class ChatRoom(ChatRoomTab):
 		buffer = self.RoomLog.get_buffer()
 		self.tag_log = self.makecolour(buffer, "chatremote")
 		
+		self.SetTextBG(self.ChatScroll)
+		self.SetTextBG(self.RoomLog)
 		
 	def getUserStatusColor(self, status):
 		if status == 1:
@@ -784,10 +786,23 @@ class ChatRoom(ChatRoomTab):
 		self.changecolour(self.tag_local, "chatlocal")
 		self.changecolour(self.tag_me, "chatme")
 		self.changecolour(self.tag_hilite, "chathilite")
+		self.changecolour(self.tag_log, "chatremote")
 		for username in self.users.keys():
 			color = self.getUserStatusColor(self.usersmodel.get_value(self.users[username], 4))
 			self.changecolour(self.tag_users[username], color)
+			
+		self.SetTextBG(self.ChatScroll)
+		self.SetTextBG(self.RoomLog)
 		
+	def SetTextBG(self, widget):
+		bgcolor = self.frame.np.config.sections["ui"]["textbg"]
+		if bgcolor == "":
+			widget.modify_base(gtk.STATE_NORMAL, None)
+			widget.modify_bg(gtk.STATE_NORMAL, None)
+		else:
+			widget.modify_base(gtk.STATE_NORMAL, gtk.gdk.color_parse(bgcolor))
+			widget.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse(bgcolor))
+				
 	def OnLeave(self, widget = None):
 		if self.leaving:
 			return
