@@ -715,12 +715,13 @@ class NetworkEventProcessor:
 		if self.users[user].addr != None:
 			#if len(self.users[user].addr) != 2:
 				#return 0
-			u_ip, u_port = self.users[user].addr
-			if u_ip != ip:
-				warning = _("IP %s:%s is spoofing user %s with a peer request, blocking because it does not match IP: %s") %(ip, port, user, u_ip)
-				self.logMessage(warning , None)
-				print warning 
-				return 1
+			if len(self.users[user].addr) == 2:
+				u_ip, u_port = self.users[user].addr
+				if u_ip != ip:
+					warning = _("IP %s:%s is spoofing user %s with a peer request, blocking because it does not match IP: %s") %(ip, port, user, u_ip)
+					self.logMessage(warning , None)
+					print warning 
+					return 1
 		return 0
 	
 	def GetSharedFileList(self,msg):

@@ -310,8 +310,8 @@ class NotifyPrivileges(ServerMessage):
 		self.token = token
 		self.user = user
 	def parseNetworkMessage(self,message):
-		len,self.token = self.getObject(message, types.IntType, len)
-		len,self.user = self.getObject(message,types.StringType,len)
+		len, self.token = self.getObject(message,types.IntType)
+		len, self.user = self.getObject(message,types.StringType,len)
 			
 class AckNotifyPrivileges(ServerMessage):
 	def __init__(self, token = None, user = None):
