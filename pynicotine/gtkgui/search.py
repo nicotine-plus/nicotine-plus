@@ -194,7 +194,7 @@ class Searches:
 		
 	def UpdateColours(self):
 		for id in self.searches.values():
-			id.ChangeColours()
+			id[2].ChangeColours()
 			
 class SearchTreeModel(FastListModel):
 	COLUMNS = 14

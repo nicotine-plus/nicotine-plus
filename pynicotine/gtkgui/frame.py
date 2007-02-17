@@ -880,18 +880,20 @@ class NicotineFrame(MainWindow):
 	
 	def CellDataFunc(self, column, cellrenderer, model, iter):
 		colour = self.np.config.sections["ui"]["search"]
+		if colour == "":
+			colour = None
 		cellrenderer.set_property("foreground", colour)
 		
 	def changecolour(self, tag, colour):
 		if self.frame.np.config.sections["ui"].has_key(colour):
 			color = self.frame.np.config.sections["ui"][colour]
 		else:
-			color = "#000000"
+			color = None
 		font = self.frame.np.config.sections["ui"]["chatfont"]
 		
 		if color:
 			if color == "":
-				color = "#000000"
+				color = None
 			tag.set_property("foreground", color)
 			tag.set_property("font", font)
 		

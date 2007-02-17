@@ -64,6 +64,8 @@ class UserList:
 	
 	def CellDataFunc(self, column, cellrenderer, model, iter):
 		colour = self.frame.np.config.sections["ui"]["search"]
+		if colour == "":
+			colour = None
 		cellrenderer.set_property("foreground", colour)
 		
 	def cell_edited_callback(self, widget, index, value, treeview, pos):
