@@ -374,7 +374,7 @@ class PrivateChat(PrivateChatTab):
 			self.tag_username.set_property("underline", pango.UNDERLINE_SINGLE)
 		else:
 			self.tag_username.set_property("underline", pango.UNDERLINE_NONE)
-		self.SetTextBG(self.ChatScroll)
+		self.frame.SetTextBG(self.ChatScroll)
 		
 	def changecolour(self, tag, colour):
 		if self.frame.np.config.sections["ui"].has_key(colour):
@@ -412,16 +412,8 @@ class PrivateChat(PrivateChatTab):
 		self.changecolour(self.tag_hilite, "chathilite")
 		color = self.getUserStatusColor(self.status)
 		self.changecolour(self.tag_username, color)
-		self.SetTextBG(self.ChatScroll)
-		
-	def SetTextBG(self, widget):
-		bgcolor = self.frame.np.config.sections["ui"]["textbg"]
-		if bgcolor == "":
-			widget.modify_base(gtk.STATE_NORMAL, None)
-			widget.modify_bg(gtk.STATE_NORMAL, None)
-		else:
-			widget.modify_base(gtk.STATE_NORMAL, gtk.gdk.color_parse(bgcolor))
-			widget.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse(bgcolor))
+		self.frame.SetTextBG(self.ChatScroll)
+
 		
 	def getUserStatusColor(self, status):
 		if status == 1:

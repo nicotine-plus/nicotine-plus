@@ -24,15 +24,15 @@ class TransferList:
 
 		self.transfersmodel = gtk.TreeStore(*columntypes)
 		self.cols = cols = InitialiseColumns(widget,
-			[_("User"), 100, "text"],
-			[_("Filename"), 250, "text"],
-			[_("Status"), 150, "text"],
+			[_("User"), 100, "text", self.CellDataFunc],
+			[_("Filename"), 250, "text", self.CellDataFunc],
+			[_("Status"), 150, "text", self.CellDataFunc],
 			[_("Percent"), 70, "progress"],
-			[_("Size"), 100, "text"],
-			[_("Speed"), 50, "text"],
-			[_("Time elapsed"), 70, "text"],
-			[_("Time left"), 70, "text"],
-			[_("Path"), 1000, "text"],
+			[_("Size"), 100, "text", self.CellDataFunc],
+			[_("Speed"), 50, "text", self.CellDataFunc],
+			[_("Time elapsed"), 70, "text", self.CellDataFunc],
+			[_("Time left"), 70, "text", self.CellDataFunc],
+			[_("Path"), 1000, "text", self.CellDataFunc],
 		)
 		cols[0].set_sort_column_id(0)
 		cols[1].set_sort_column_id(1)
@@ -51,7 +51,11 @@ class TransferList:
 		self.transfersmodel.set_sort_func(5, float_sort_func, 5)
 			
 		widget.set_model(self.transfersmodel)
-	
+		self.UpdateColours()
+		
+	def UpdateColours(self):
+		self.frame.SetTextBG(self.widget)
+		
 	status_tab = [
 		_("Waiting for download"),
 		_("Requesting file"),
@@ -68,6 +72,10 @@ class TransferList:
 		_("Waiting for upload"),
 	]
 	
+	def CellDataFunc(self, column, cellrenderer, model, iter):
+		colour = self.frame.np.config.sections["ui"]["search"]
+		cellrenderer.set_property("foreground", colour)
+		
 	def get_status_index(self, val):
 		try:
 			return int(val)

@@ -167,9 +167,11 @@ class NicotineFrame(MainWindow):
 		self.likes = {}
 		self.likeslist = gtk.ListStore(gobject.TYPE_STRING)
 		self.likeslist.set_sort_column_id(0, gtk.SORT_ASCENDING)
-		cols = utils.InitialiseColumns(self.LikesList, [_("I like")+":", 0, "text"])
+		cols = utils.InitialiseColumns(self.LikesList, [_("I like")+":", 0, "text", self.CellDataFunc])
 		cols[0].set_sort_column_id(0)
 		self.LikesList.set_model(self.likeslist)
+		self.RecommendationsList.set_property("rules-hint", True)
+		self.RecommendationUsersList.set_property("rules-hint", True)
 		self.til_popup_menu = popup = utils.PopupMenu(self)
 		popup.setup(
 			("#" + _("_Remove this item"), self.OnRemoveThingILike, gtk.STOCK_CANCEL),
@@ -180,7 +182,7 @@ class NicotineFrame(MainWindow):
 		self.dislikes = {}
 		self.dislikeslist = gtk.ListStore(gobject.TYPE_STRING)
 		self.dislikeslist.set_sort_column_id(0, gtk.SORT_ASCENDING)
-		cols = utils.InitialiseColumns(self.DislikesList, [_("I dislike")+":", 0, "text"])
+		cols = utils.InitialiseColumns(self.DislikesList, [_("I dislike")+":", 0, "text", self.CellDataFunc])
 		cols[0].set_sort_column_id(0)
 		self.DislikesList.set_model(self.dislikeslist)
 		self.tidl_popup_menu = popup = utils.PopupMenu(self)
@@ -188,8 +190,8 @@ class NicotineFrame(MainWindow):
 		self.DislikesList.connect("button_press_event", self.OnPopupTIDLMenu)
 
 		cols = utils.InitialiseColumns(self.RecommendationsList,
-			[_("Recommendations"), 0, "text"],
-			[_("Rating"), 75, "text"])
+			[_("Recommendations"), 0, "text", self.CellDataFunc],
+			[_("Rating"), 75, "text", self.CellDataFunc])
 		cols[0].set_sort_column_id(0)
 		cols[1].set_sort_column_id(2)
 		self.recommendationslist = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_INT)
@@ -206,9 +208,9 @@ class NicotineFrame(MainWindow):
 
 		cols = utils.InitialiseColumns(self.RecommendationUsersList, 
 			["", -1, "pixbuf"],
-			[_("User"), 100, "text"],
-			[_("Speed"), 0, "text"],
-			[_("Files"), 0, "text"],
+			[_("User"), 100, "text", self.CellDataFunc],
+			[_("Speed"), 0, "text", self.CellDataFunc],
+			[_("Files"), 0, "text", self.CellDataFunc],
 		)
 		cols[0].set_sort_column_id(4)
 		cols[1].set_sort_column_id(1)
@@ -279,7 +281,7 @@ class NicotineFrame(MainWindow):
 		self.LogWindow.show()
 		self.LogScrolledWindow.add(self.LogWindow)
 		self.LogWindow.connect("button-press-event", self.OnPopupLogMenu)
-		self.UpdateColours(1)
+		
 		
 
 		if self.translux:
@@ -344,7 +346,7 @@ class NicotineFrame(MainWindow):
 			
 		if self.np.config.sections["ticker"]["hide"]:
 			self.hide_tickers1.set_active(1)
-
+		self.UpdateColours(1)
 		self.settingswindow = SettingsWindow(self)
 		self.settingswindow.SettingsWindow.connect("settings-closed", self.OnSettingsClosed)
 		
@@ -876,7 +878,10 @@ class NicotineFrame(MainWindow):
 		self.transfermsgspostedtime = curtime
 		return msgs
 	
-	
+	def CellDataFunc(self, column, cellrenderer, model, iter):
+		colour = self.np.config.sections["ui"]["search"]
+		cellrenderer.set_property("foreground", colour)
+		
 	def changecolour(self, tag, colour):
 		if self.frame.np.config.sections["ui"].has_key(colour):
 			color = self.frame.np.config.sections["ui"][colour]
@@ -902,6 +907,11 @@ class NicotineFrame(MainWindow):
 			self.tag_log.set_property("font", font)
 			self.tag_log.set_property("foreground", colour)
 		self.SetTextBG(self.LogWindow)
+		self.SetTextBG(self.UserList)
+		self.SetTextBG(self.RecommendationsList)
+		self.SetTextBG(self.RecommendationUsersList)
+		self.SetTextBG(self.LikesList)
+		self.SetTextBG(self.DislikesList)
 		
 	def SetTextBG(self, widget):
 		bgcolor = self.np.config.sections["ui"]["textbg"]
@@ -1262,6 +1272,12 @@ class NicotineFrame(MainWindow):
 
 		self.chatrooms.roomsctrl.UpdateColours()
 		self.privatechats.UpdateColours()
+		self.searches.UpdateColours()
+		self.downloads.UpdateColours()
+		self.uploads.UpdateColours()
+		self.userinfo.UpdateColours()
+		self.userbrowse.UpdateColours()
+		
 		self.UpdateColours()
 		self.UpdateTransferButtons()
 		if needrescan:

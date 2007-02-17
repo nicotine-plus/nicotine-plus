@@ -63,7 +63,7 @@ class UserBrowse(UserBrowseTab):
 
 		
 		cols = InitialiseColumns(self.FolderTreeView,
-			[_("Directories"), -1, "text"], #0
+			[_("Directories"), -1, "text", self.CellDataFunc], #0
 		)
 		cols[0].set_sort_column_id(0)
 		self.folder_popup_menu = popup = PopupMenu(self.frame)
@@ -110,10 +110,10 @@ class UserBrowse(UserBrowseTab):
 		self.FileStore = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_INT, gobject.TYPE_INT, gobject.TYPE_STRING)
 		self.FileTreeView.set_model(self.FileStore)
 		cols = InitialiseColumns(self.FileTreeView,
-			[_("Filename"), 250, "text"],
-			[_("Size"), 100, "text"],
-			[_("Bitrate"), 50, "text"],
-			[_("Length"), 50, "text"],
+			[_("Filename"), 250, "text", self.CellDataFunc],
+			[_("Size"), 100, "text", self.CellDataFunc],
+			[_("Bitrate"), 50, "text", self.CellDataFunc],
+			[_("Length"), 50, "text", self.CellDataFunc],
 		)
 		cols[0].set_sort_column_id(0)
 		cols[1].set_sort_column_id(4)
@@ -159,7 +159,16 @@ class UserBrowse(UserBrowseTab):
 				("$" + _("_Ignore this user"), popup.OnIgnoreUser),
 			)
 		self.FileTreeView.connect("button_press_event", self.OnFileClicked)
+		self.ChangeColours()
 		
+	def ChangeColours(self):
+		self.frame.SetTextBG(self.FileTreeView)
+		self.frame.SetTextBG(self.FolderTreeView)
+			
+	def CellDataFunc(self, column, cellrenderer, model, iter):
+		colour = self.frame.np.config.sections["ui"]["search"]
+		cellrenderer.set_property("foreground", colour)
+			
 	def decode(self, str):
 		return self.frame.np.decode(str, self.encoding)
 	

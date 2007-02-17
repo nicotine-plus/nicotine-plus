@@ -16,10 +16,10 @@ class UserList:
 		self.usersmodel = gtk.ListStore(gtk.gdk.Pixbuf, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_INT, gobject.TYPE_INT, gobject.TYPE_INT)
 		cols = InitialiseColumns(self.frame.UserList,
 			["", -1, "pixbuf"],
-			[_("User"), 100, "text"],
-			[_("Speed"), 0, "text"],
-			[_("Files"), 0, "text"],
-			[_("Comments"), -1, "edit"]
+			[_("User"), 100, "text", self.CellDataFunc],
+			[_("Speed"), 0, "text", self.CellDataFunc],
+			[_("Files"), 0, "text", self.CellDataFunc],
+			[_("Comments"), -1, "edit", self.CellDataFunc]
 		)
 		cols[0].set_sort_column_id(5)
 		cols[1].set_sort_column_id(1)
@@ -30,7 +30,7 @@ class UserList:
 		for render in renderers:
 			render.connect('edited', self.cell_edited_callback, self.frame.UserList, 4)
 		self.frame.UserList.set_model(self.usersmodel)
-		
+		self.frame.UserList.set_property("rules-hint", True)
 		self.privileged = []
 		self.notify = []
 		for user in self.frame.np.config.sections["server"]["userlist"]:
@@ -62,6 +62,10 @@ class UserList:
 		)
 		self.frame.UserList.connect("button_press_event", self.OnPopupMenu)
 	
+	def CellDataFunc(self, column, cellrenderer, model, iter):
+		colour = self.frame.np.config.sections["ui"]["search"]
+		cellrenderer.set_property("foreground", colour)
+		
 	def cell_edited_callback(self, widget, index, value, treeview, pos):
 		store = treeview.get_model()
 		iter = store.get_iter(index)

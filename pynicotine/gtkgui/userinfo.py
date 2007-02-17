@@ -8,7 +8,7 @@ import gobject
 from nicotine_glade import UserInfoTab
 from utils import IconNotebook, PopupMenu, EncodingsMenu, SaveEncoding,  Humanize
 from pynicotine import slskmessages
-
+from utils import AppendLine
 from pynicotine.utils import _
 
 # User Info and User Browse Notebooks
@@ -70,7 +70,10 @@ class UserTabs(IconNotebook):
 		for i in self.users.values():
 			if i.conn == msg.conn.conn:
 				i.UpdateGauge(msg)
-
+	def UpdateColours(self):
+		for i in self.users.values():
+			i.ChangeColours()
+			
 class UserInfo(UserInfoTab):
 	def __init__(self, userinfos, user, conn):
 		UserInfoTab.__init__(self, False)
@@ -94,14 +97,45 @@ class UserInfo(UserInfoTab):
 			if self.encoding == item[1]:
 				self.Encoding.set_active_iter(self.Elist[self.encoding])
 
-
+		self.tag_local = self.makecolour(buffer, "chatlocal")
+		self.frame.SetTextBG(self.descr)
+		
+	def makecolour(self, buffer, colour):
+		buffer = self.descr.get_buffer()
+		colour = self.frame.np.config.sections["ui"][colour]
+		font = self.frame.np.config.sections["ui"]["chatfont"]
+		if colour:
+			return buffer.create_tag(foreground = colour, font=font)
+		else:
+			return buffer.create_tag( font=font)
+		
+	def changecolour(self, tag, colour):
+		if self.frame.np.config.sections["ui"].has_key(colour):
+			color = self.frame.np.config.sections["ui"][colour]
+		else:
+			color = None
+		font = self.frame.np.config.sections["ui"]["chatfont"]
+		
+		if color:
+			if color == "":
+				color = None
+			tag.set_property("foreground", color)
+			tag.set_property("font", font)
+	
+		else:
+			tag.set_property("font", font)
+			
+	def ChangeColours(self):
+		self.changecolour(self.tag_local, "chatlocal")
+		self.frame.SetTextBG(self.descr)
+		
 	def ShowLocalInfo(self, user, descr, has_pic, pic, totalupl, queuesize, slotsavail):
 		self.conn = None
 		self._descr = descr
 		
-		buffer = self.descr.get_buffer()
-		buffer.set_text(self.frame.np.decode(descr, self.encoding))
+		self.descr.get_buffer().set_text("")
 		
+		AppendLine(self.descr, self.frame.np.decode(descr, self.encoding), self.tag_local)
 		self.uploads.set_text(_("Total uploads allowed: %i") % totalupl)
 		self.queuesize.set_text(_("Queue size: %i") % queuesize)
 		self.slotsavail.set_text(_("Slots available: %i") % slotsavail)

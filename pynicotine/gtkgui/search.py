@@ -191,7 +191,11 @@ class Searches:
 		self.frame.np.config.sections["server"]["autosearch"].append(i[1])
 		self.frame.np.config.writeConfig()
 		i[4] = 1
-	
+		
+	def UpdateColours(self):
+		for id in self.searches.values():
+			id.ChangeColours()
+			
 class SearchTreeModel(FastListModel):
 	COLUMNS = 14
 	COLUMN_TYPES = [gobject.TYPE_INT, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING,
@@ -431,7 +435,11 @@ class Search(SearchTab):
 		
 		self._more_results = 0
 		self.new_results = []
-	
+		self.ChangeColours()
+		
+	def ChangeColours(self):
+		self.frame.SetTextBG(self.ResultsList)
+		
 	def SelectedResultsCallback(self, model, path, iter):
 		user = model.get_value(iter, 2)
 		fn = model.get_value(iter, 11)
