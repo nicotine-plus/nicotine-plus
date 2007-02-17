@@ -189,6 +189,7 @@ class NetworkEventProcessor:
 			slskmessages.RoomTickerState:self.RoomTickerState,
 			slskmessages.RoomTickerAdd:self.RoomTickerAdd,
 			slskmessages.RoomTickerRemove:self.RoomTickerRemove,
+			slskmessages.NotifyPrivileges:self.NotifyPrivileges,
 			}
 			#slskmessages.Notify:self.Notify,
 
@@ -448,7 +449,12 @@ class NetworkEventProcessor:
 			self.setStatus(_("Can not log in, reason: %s") %(msg.reason))
 			self.logMessage(_("Can not log in, reason: %s") %(msg.reason))
 
-
+	def NotifyPrivileges(self, msg):
+		if msg.token != None:
+			pass
+			# Until I know the syntax, sending this message is probably a bad idea
+			#self.queue.put(slskmessages.AckNotifyPrivileges(msg.token))
+			
 	def MessageUser(self, msg):
 		status = 0
 		if self.logintime:

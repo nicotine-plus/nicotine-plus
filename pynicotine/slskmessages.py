@@ -309,18 +309,17 @@ class NotifyPrivileges(ServerMessage):
 	def __init__(self, token = None, user = None):
 		self.token = token
 		self.user = user
+		
 	def parseNetworkMessage(self,message):
 		len, self.token = self.getObject(message,types.IntType)
 		len, self.user = self.getObject(message,types.StringType,len)
 			
 class AckNotifyPrivileges(ServerMessage):
-	def __init__(self, token = None, user = None):
+	def __init__(self, token = None):
 		self.token = token
-		self.user = user
 		
 	def makeNetworkMessage(self):
-		#return self.packObject(self.token)
-		pass
+		return self.packObject(self.token)
 
 class SayChatroom(ServerMessage):
 	""" Either we want to say something in the chatroom, or someone did."""
