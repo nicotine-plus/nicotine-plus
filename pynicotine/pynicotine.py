@@ -238,7 +238,7 @@ class NetworkEventProcessor:
 					self.queue.put(slskmessages.OutConn(None,addr))
 				else:
 					firewalled = 0
-			elif not firewalled:
+			if not firewalled:
 				token = newId()
 				self.queue.put(slskmessages.ConnectToPeer(token,user,type))
 			conn = PeerConnection(addr = addr, username = user, msgs = [message], token = token, init = init)
@@ -713,10 +713,9 @@ class NetworkEventProcessor:
 		if not self.users.has_key(user):
 			return 0
 		if self.users[user].addr != None:
-			if len(self.users[user].addr) != 2:
-				return 0
+			#if len(self.users[user].addr) != 2:
+				#return 0
 			u_ip, u_port = self.users[user].addr
-			#print u_ip, ip
 			if u_ip != ip:
 				warning = _("IP %s:%s is spoofing user %s with a peer request, blocking because it does not match IP: %s") %(ip, port, user, u_ip)
 				self.logMessage(warning , None)
@@ -730,9 +729,10 @@ class NetworkEventProcessor:
 		# Get peer's username, ip and port
 		for i in self.peerconns:
 			if i.conn is msg.conn.conn:
+				
+				user = i.username
 				if len(i.addr) != 2:
 					break
-				user = i.username
 				ip, port = i.addr
 				break
 		if user == None:
@@ -743,7 +743,10 @@ class NetworkEventProcessor:
 			# Message IS spoofed
 		#	return
 		if user == self.config.sections["server"]["login"]:
-			self.logMessage(_("%s is making a BrowseShares request, blocking possible spoofing attempt from IP %s port %s") %(user, ip, port), None)
+			if ip != None and port != None:
+				self.logMessage(_("%s is making a BrowseShares request, blocking possible spoofing attempt from IP %s port %s") %(user, ip, port), None)
+			else:
+				self.logMessage(_("%s is making a BrowseShares request, blocking possible spoofing attempt from an unknown IP & port") %(user), None)
 			if msg.conn.conn != None:
 				self.queue.put(slskmessages.ConnClose(msg.conn.conn))
 			return
