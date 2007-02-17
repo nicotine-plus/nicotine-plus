@@ -722,12 +722,13 @@ class NetworkEventProcessor:
 			#if len(self.users[user].addr) != 2:
 				#return 0
 			if len(self.users[user].addr) == 2:
-				u_ip, u_port = self.users[user].addr
-				if u_ip != ip:
-					warning = _("IP %s:%s is spoofing user %s with a peer request, blocking because it does not match IP: %s") %(ip, port, user, u_ip)
-					self.logMessage(warning , None)
-					print warning 
-					return 1
+				if self.users[user].addr is not None:
+					u_ip, u_port = self.users[user].addr
+					if u_ip != ip:
+						warning = _("IP %s:%s is spoofing user %s with a peer request, blocking because it does not match IP: %s") %(ip, port, user, u_ip)
+						self.logMessage(warning , None)
+						print warning 
+						return 1
 		return 0
 	
 	def GetSharedFileList(self,msg):
@@ -738,9 +739,10 @@ class NetworkEventProcessor:
 			if i.conn is msg.conn.conn:
 				
 				user = i.username
-				if len(i.addr) != 2:
-					break
-				ip, port = i.addr
+				if i.addr is not None:
+					if len(i.addr) != 2:
+						break
+					ip, port = i.addr
 				break
 		if user == None:
 			# No peer connection
@@ -789,7 +791,8 @@ class NetworkEventProcessor:
 		for i in self.peerconns:
 			if i.conn is msg.conn.conn:
 				user = i.username
-				ip, port = i.addr
+				if i.addr is not None:
+					ip, port = i.addr
 				break
 		if user == None:
 			# No peer connection
@@ -799,7 +802,10 @@ class NetworkEventProcessor:
 			# Message IS spoofed
 		#	return
 		if user == self.config.sections["server"]["login"]:
-			self.logMessage(_("Blocking %s from making a UserInfo request, possible spoofing attempt from IP %s port %s") %(user, ip, port), None)
+			if ip is not None and port is not None:
+				self.logMessage(_("Blocking %s from making a UserInfo request, possible spoofing attempt from IP %s port %s") %(user, ip, port), None)
+			else:
+				self.logMessage(_("Blocking %s from making a UserInfo request, possible possible spoofing attempt from an unknown IP & port") %(user), None)
 			if msg.conn.conn != None:
 				self.queue.put(slskmessages.ConnClose(msg.conn.conn))
 			return

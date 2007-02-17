@@ -206,7 +206,7 @@ def getFileInfo(name, pathname):
         	name_f = str(name)
 	else:
         	name_f = name
-	if name[-4:] == ".mp3" or name[-4:] == ".MP3":
+	if name[-4:].lower() == ".mp3":
 		mp3info=mp3.detect_mp3(pathname)
 		if mp3info:
 			bitrateinfo = (mp3info["bitrate"],mp3info["vbr"])
@@ -214,7 +214,7 @@ def getFileInfo(name, pathname):
 		else:
 			fileinfo = (name_f,size,None,None)
 	
-	elif vorbis and (name[-4:] == ".ogg" or name[-4:] == ".OGG"):
+	elif vorbis and (name[-4:].lower() == ".ogg"):
 
 		try:
 			vf = vorbis.VorbisFile(pathname)
