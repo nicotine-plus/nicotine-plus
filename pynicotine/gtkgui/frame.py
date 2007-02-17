@@ -903,6 +903,8 @@ class NicotineFrame(MainWindow):
 	def UpdateColours(self, first=0):
 		colour = self.np.config.sections["ui"]["chatremote"]
 		font = self.np.config.sections["ui"]["chatfont"]
+		if font == "":
+			font = None
 		if first:
 			self.tag_log = self.LogWindow.get_buffer().create_tag(foreground = colour, font=font)
 		else:
