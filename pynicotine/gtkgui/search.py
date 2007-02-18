@@ -449,8 +449,9 @@ class Search(SearchTab):
 	def SelectedResultsCallback(self, model, path, iter):
 		user = model.get_value(iter, 2)
 		fn = model.get_value(iter, 11)
+		size = model.get_value(iter, 13)
 		
-		self.selected_results.append((user, fn))
+		self.selected_results.append((user, fn, size))
 		
 		if not user in self.selected_users:
 			self.selected_users.append(user)
@@ -610,7 +611,7 @@ class Search(SearchTab):
 		if not self.frame.np.transfers:
 			return
 		for file in self.selected_results:
-			self.frame.np.transfers.getFile(file[0], file[1], prefix)
+			self.frame.np.transfers.getFile(file[0], file[1], prefix, size=file[2])
 	
 	def OnDownloadFilesTo(self, widget):
 		dir = ChooseDir(self.frame.MainWindow, self.frame.np.config.sections["transfers"]["downloaddir"])

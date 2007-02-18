@@ -465,8 +465,8 @@ class UserBrowse(UserBrowseTab):
 		if go_ahead == 1:
 			# Good to go, we download these
 			for item in files:
-				file, localpath = item
-				self.frame.np.transfers.getFile(self.user, file, localpath)
+				file, localpath, size = item
+				self.frame.np.transfers.getFile(self.user, file, localpath,  size=size)
 			
 	def DownloadDirectoryRecursive(self, dir, prefix = ""):
 		# Find all files and add them to list
@@ -477,7 +477,7 @@ class UserBrowse(UserBrowseTab):
 		files = []
 		if dir in self.shares.keys():
 			for file in self.shares[dir]:
-				files.append(["\\".join([dir, file[1]]), localdir])
+				files.append(["\\".join([dir, file[1]]), localdir, file[2]])
 		
 		for directory in self.shares.keys():
 			if dir in directory and dir != directory:
@@ -518,7 +518,7 @@ class UserBrowse(UserBrowseTab):
 			return
 		ldir = prefix + dir.split("\\")[-1]
 		for file in self.shares[dir]:
-			self.frame.np.transfers.getFile(self.user, "\\".join([dir, file[1]]), ldir)
+			self.frame.np.transfers.getFile(self.user, "\\".join([dir, file[1]]), ldir, size=file[2])
 		if not recurse:
 			return
 		for directory in self.shares.keys():
@@ -530,7 +530,11 @@ class UserBrowse(UserBrowseTab):
 	def OnDownloadFiles(self, widget, prefix = ""):
 		dir = self.selected_folder
 		for fn in self.selected_files:
-			self.frame.np.transfers.getFile(self.user, "\\".join([dir, fn]), prefix)
+			path = "\\".join([dir, fn])
+			size = None
+			size_l = [i[2] for i in self.shares[dir] if i[1] == fn]
+			if size_l != []: size = size_l[0]
+			self.frame.np.transfers.getFile(self.user, path, prefix, size=size)
 
 	
 	def OnUploadDirectoryRecursiveTo(self, widget):
@@ -548,7 +552,9 @@ class UserBrowse(UserBrowseTab):
 			if dir in self.shares.keys():
 
 				for file in self.shares[dir]:
-					self.frame.np.transfers.pushFile(user, "\\".join([dir, file[1]]), ldir)
+					path = "\\".join([dir, file[1]])
+					size = file[2]
+					self.frame.np.transfers.pushFile(user, path, ldir, size=size)
 					self.frame.np.transfers.checkUploadQueue()
 		if not recurse:
 			return

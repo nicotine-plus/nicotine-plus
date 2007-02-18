@@ -161,10 +161,10 @@ class Transfers:
 
 	def getFile(self, user, filename, path="", transfer = None, size=None):
 		path=self.CleanPath(path)
-		self.transferFile(0,user,filename,path,transfer,size)
+		self.transferFile(0, user, filename, path, transfer,size)
 
 	def pushFile(self, user, filename, path="", transfer = None, size=None):
-		self.transferFile(1,user,filename,path,transfer,size)
+		self.transferFile(1, user, filename, path, transfer,size)
 
 	def transferFile(self, direction, user, filename, path="", transfer = None, size=None):
 		""" Get a single file. path is a local path. if transfer object is 
