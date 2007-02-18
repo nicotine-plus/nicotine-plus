@@ -77,7 +77,8 @@ class Config:
 "decimalsep":",", "chatfont": "", "roomlistcollapsed": 0, "tabclosers": 1,\
 "buddylistinchatrooms": 0, "trayicon": 1, "soundenabled": 1, "soundtheme": "",\
 "soundcommand": "play -q", "speechenabled": 0, "enabletrans":0,\
-"transtint": "#aaaaaa", "transalpha": 150, "transfilter": 0x00000000L}, \
+"transtint": "#aaaaaa", "transalpha": 150, "transfilter": 0x00000000L,
+"width": 800, "height": 600}, \
 \
 "urls":{"urlcatching":1,"protocols":{"http":"firefox \"%s\" &"}, "humanizeurls":1},\
 \
@@ -121,7 +122,7 @@ class Config:
 					print "Unknown config section:",i
 				elif j not in self.sections[i].keys() and j != "filter":
 					print "Unknown config option",j,"section",i
-				elif j in ['login','passw','enc',  'downloaddir','customban','descr','pic','logsdir','incompletedir', 'autoreply', 'afterfinish', 'downloadregexp', 'afterfolder', 'default', 'chatfont', "npothercommand", "npplayer", "npformat"] or (i == "ui" and j not in ["roomlistcollapsed", "tabclosers",  'buddylistinchatrooms', "trayicon", "usernamehotspots", "soundenabled", "transalpha",  "enabletrans", "speechenabled", "enablefilters"]):
+				elif j in ['login','passw','enc',  'downloaddir','customban','descr','pic','logsdir','incompletedir', 'autoreply', 'afterfinish', 'downloadregexp', 'afterfolder', 'default', 'chatfont', "npothercommand", "npplayer", "npformat"] or (i == "ui" and j not in ["roomlistcollapsed", "tabclosers",  'buddylistinchatrooms', "trayicon", "usernamehotspots", "soundenabled", "transalpha",  "enabletrans", "speechenabled", "enablefilters", "width", "height"]):
 					self.sections[i][j] = val
 				else:
 					try:

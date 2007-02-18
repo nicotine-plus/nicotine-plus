@@ -116,13 +116,18 @@ class NicotineFrame(MainWindow):
 		else:
 			self.HAVE_TRAYICON = 0
 		del data
-		del config2
+		
 		
 		MainWindow.__init__(self)
 		self.MainWindow.set_title(_("Nicotine+") + " " + version)
 		self.MainWindow.set_icon(self.images["n"])
 		self.MainWindow.selection_add_target("PRIMARY", "STRING", 1)
 		self.MainWindow.set_geometry_hints(None, min_width=500, min_height=500)
+		self.MainWindow.connect("configure_event", self.OnWindowChange)
+		width = config2.sections["ui"]["width"]
+		height = config2.sections["ui"]["height"]
+		self.MainWindow.resize(width, height)
+		del config2
 		self.clip = gtk.Clipboard(display=gtk.gdk.display_get_default(), selection="CLIPBOARD")
 		self.roomlist = roomlist(self)
 		
@@ -958,13 +963,19 @@ class NicotineFrame(MainWindow):
 	def SetStatusText(self, msg):
 		self.Statusbar.pop(self.status_context_id)
 		self.Statusbar.push(self.status_context_id, msg)
-	
+		
+	def OnWindowChange(self, widget, blag):
+		(width, height)= self.MainWindow.get_size()
+		self.np.config.sections["ui"]["height"] = height
+		self.np.config.sections["ui"]["width"] = width
+		
 	def OnDestroy(self, widget):
 		if self.np.servertimer is not None:
 		    self.np.servertimer.cancel()
 		self.np.StopTimers()
 		if self.np.transfers is not None:
 	            self.np.transfers.AbortTransfers()
+		
 		self.np.config.writeConfig()
 		self.np.protothread.abort()
 		if sys.platform == "win32":

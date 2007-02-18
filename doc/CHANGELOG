@@ -3,6 +3,9 @@ ChangeLog for Nicotine Plus
 Unreleased
 
 GENERAL CHANGES
+ * Window size is restored on startup
+ * Background color of entry boxes, text views and list views is now changeable
+   and all lists foreground color changes with the 'list text' option.
  * Comments in Buddy List can now be edited in-list by clicking twice on the 
    comment column, not by double-clicking (which would open Private Chat).
  * Added an Import Config frame to Settings, which duplicates the functionality
