@@ -502,7 +502,7 @@ class NowPlaying:
 			if output: self.title["track"] = output
 		if "$y" in slist:
 			output = self.amarok_command("year")
-			if output or not output == "0":
+			if output and not output == "0":
 				self.title["year"] = output
 		if "$r" in slist:
 			output = self.amarok_command("bitrate")
