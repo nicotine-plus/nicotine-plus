@@ -230,7 +230,7 @@ class TransferList:
 					position += self.transfersmodel.get_value(iter, 12)
 				percent = ((100 * position)/ int(totalsize))
 				
-				self.transfersmodel.set(self.users[i], 2, _("%s Files" %  files ), 4, self.Humanize(totalsize, None ))
+				self.transfersmodel.set(self.users[i], 2, _("%s Files") % files , 4, self.Humanize(totalsize, None ))
 				if percent:
 					self.transfersmodel.set(self.users[i], 3, percent, 13, True)
 				else:
