@@ -68,9 +68,9 @@ class Transfers:
 			size = currentbytes = None
 			
 			if len(i) >= 6:
-				try:
-					currentbytes = int(i[5])
-					size = int(i[4])
+				try: size = int(i[4])
+				except: pass
+				try: currentbytes = int(i[5])
 				except: pass
 				
 				
