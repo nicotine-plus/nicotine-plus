@@ -1310,11 +1310,11 @@ class MainWindow:
         self.hbox10.pack_start(self.Statusbar, True, True, 0)
 
         self.SharesProgress = gtk.ProgressBar()
-        self.SharesProgress.set_text("Scanning Shares")
+        self.SharesProgress.set_text(_("Scanning Shares"))
         self.hbox10.pack_start(self.SharesProgress, False, False, 0)
 
         self.BuddySharesProgress = gtk.ProgressBar()
-        self.BuddySharesProgress.set_text("Scanning Buddy Shares")
+        self.BuddySharesProgress.set_text(_("Scanning Buddy Shares"))
         self.hbox10.pack_start(self.BuddySharesProgress, False, False, 0)
 
         self.UserStatus = gtk.Statusbar()

@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-02-18 16:20+0100\n"
-"PO-Revision-Date: 2007-02-18 19:49+0100\n"
+"POT-Creation-Date: 2007-02-19 08:08+0100\n"
+"PO-Revision-Date: 2007-02-19 09:08+0100\n"
 "Last-Translator: nince78\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -2248,6 +2248,16 @@ msgstr "Toevoegen"
 #: pynicotine/gtkgui/nicotine_glade.py:1279
 msgid "Interests"
 msgstr "Interesses"
+
+# !
+#: pynicotine/gtkgui/nicotine_glade.py:1313
+msgid "Scanning Shares"
+msgstr "Bestanden lezend"
+
+# !
+#: pynicotine/gtkgui/nicotine_glade.py:1317
+msgid "Scanning Buddy Shares"
+msgstr "Bestanden vrienden lezend"
 
 #: pynicotine/gtkgui/nicotine_glade.py:1491
 #: pynicotine/gtkgui/nicotine_glade.py:1674
