@@ -138,7 +138,7 @@ class UserInfo(UserInfoTab):
 		AppendLine(self.descr, self.frame.np.decode(descr, self.encoding), self.tag_local, timestamp=None)
 		self.uploads.set_text(_("Total uploads allowed: %i") % totalupl)
 		self.queuesize.set_text(_("Queue size: %i") % queuesize)
-		self.slotsavail.set_text(_("Slots available: %i") % slotsavail)
+		self.slotsavail.set_text(_("Slots available: %s") % (slotsavail==1))
 		if has_pic and pic is not None:
 			try:
 				import gc
@@ -170,7 +170,7 @@ class UserInfo(UserInfoTab):
 		
 		self.uploads.set_text(_("Total uploads allowed: %i") % msg.totalupl)
 		self.queuesize.set_text(_("Queue size: %i") % msg.queuesize)
-		self.slotsavail.set_text(_("Slots available: %i") % msg.slotsavail)
+		self.slotsavail.set_text(_("Slots available: %s") % (msg.slotsavail==2))
 
 		if msg.has_pic and msg.pic is not None:
 			try:

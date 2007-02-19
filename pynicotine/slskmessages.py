@@ -949,13 +949,15 @@ class UserInfoRequest(PeerMessage):
 
 class UserInfoReply(PeerMessage):
 	""" Peer responds with this, when asked for user information."""
-	def __init__(self,conn,descr = None, pic = None, totalupl = None, queuesize = None, slotsavail = None):
+	def __init__(self,conn,descr = None, pic = None, totalupl = None, queuesize = None, slotsavail = None, something=None):
 		self.conn = conn
 		self.descr = descr
 		self.pic = pic
 		self.totalupl = totalupl
 		self.queuesize = queuesize
 		self.slotsavail = slotsavail
+		# Unknown (appears when slotsavail == 0)
+		self.something = something
 	
 	def parseNetworkMessage(self,message):
 		pos, self.descr = self.getObject(message, types.StringType)
@@ -964,15 +966,11 @@ class UserInfoReply(PeerMessage):
 			pos, self.pic = self.getObject(message, types.StringType,pos)
 		pos, self.totalupl = self.getObject(message, types.IntType, pos)
 		pos, self.queuesize = self.getObject(message, types.IntType, pos)
-		if len(message[pos:]) == 1:
-			# Old Nicotine clients send bool instead int
-			try:
-				pos, self.slotsavail = pos+1, ord(message[pos])
-			except Exception, e:
-				self.slotsavail = 0
-				
-		else:
-			pos, self.slotsavail = self.getObject(message, types.IntType, pos)
+		pos, self.slotsavail = pos+1, ord(message[pos])
+		
+		if len(message[pos:]) >= 4:
+			pos, self.something = self.getObject(message, types.IntType, pos)
+			
 
 
 
