@@ -1276,7 +1276,7 @@ class NicotineFrame(MainWindow):
 		if msg == "cancel":
 			return
 		
-		needrescan, config = self.settingswindow.GetSettings()
+		needrescan, needcolors, config = self.settingswindow.GetSettings()
 		for (key, data) in config.items():
 			self.np.config.sections[key].update(data)
 		
@@ -1308,16 +1308,18 @@ class NicotineFrame(MainWindow):
 				self.HAVE_TRAYICON = 1
 				
 			self.draw_trayicon()
-
-		self.chatrooms.roomsctrl.UpdateColours()
-		self.privatechats.UpdateColours()
-		self.searches.UpdateColours()
-		self.downloads.UpdateColours()
-		self.uploads.UpdateColours()
-		self.userinfo.UpdateColours()
-		self.userbrowse.UpdateColours()
-		
-		self.UpdateColours()
+			
+		if needcolors:
+			self.chatrooms.roomsctrl.UpdateColours()
+			self.privatechats.UpdateColours()
+			self.searches.UpdateColours()
+			self.downloads.UpdateColours()
+			self.uploads.UpdateColours()
+			self.userinfo.UpdateColours()
+			self.userbrowse.UpdateColours()
+			
+			self.UpdateColours()
+			
 		self.UpdateTransferButtons()
 		if needrescan:
 			self.needrescan = 1

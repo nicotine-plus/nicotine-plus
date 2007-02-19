@@ -620,6 +620,7 @@ class BanFrame(settings_glade.BanFrame):
 class BloatFrame(settings_glade.BloatFrame):
 	def __init__(self, parent):
 		self.frame = parent.frame
+		self.needcolors = 0
 		settings_glade.BloatFrame.__init__(self, False)
 		for item in ["<None>", ",", ".", "<space>"]:
 			self.DecimalSep.append_text(item)
@@ -658,9 +659,26 @@ class BloatFrame(settings_glade.BloatFrame):
 		self.DefaultQueue.connect("clicked", self.DefaultColour, self.Queue)
 		self.DefaultSoundCommand.connect("clicked", self.DefaultSound, self.SoundCommand)
 		
-		# Ting
+		# Tint
 		self.PickTint.connect("clicked", self.PickColour, self.TintColor)
 		self.DefaultTint.connect("clicked", self.DefaultColour, self.TintColor)
+		
+		# To set needcolors flag
+		self.SelectChatFont.connect("font-set", self.FontsColorsChanged)
+		self.Local.connect("changed", self.FontsColorsChanged)
+		self.Remote.connect("changed", self.FontsColorsChanged)
+		self.Me.connect("changed", self.FontsColorsChanged)
+		self.Highlight.connect("changed", self.FontsColorsChanged)
+		self.BackgroundColor.connect("changed", self.FontsColorsChanged)
+		self.Immediate.connect("changed", self.FontsColorsChanged)
+		self.Queue.connect("changed", self.FontsColorsChanged)
+		self.AwayColor.connect("changed", self.FontsColorsChanged)
+		self.OnlineColor.connect("changed", self.FontsColorsChanged)
+		self.OfflineColor.connect("changed", self.FontsColorsChanged)
+		self.UsernameStyle.child.connect("changed", self.FontsColorsChanged)
+		
+	def FontsColorsChanged(self, widget):
+		self.needcolors = 1
 		
 	def OnChooseThemeDir(self, widget):
 		dir = ChooseDir(self.Main.get_toplevel(), self.IconTheme.get_text())
@@ -670,7 +688,7 @@ class BloatFrame(settings_glade.BloatFrame):
 				
 	def OnChooseSoundDir(self, widget):
 		dir = ChooseDir(self.Main.get_toplevel(), self.SoundDirectory.get_text())
-		if dir is not None:
+		if dir is not None: 
 			for directory in dir: # iterate over selected files
 				self.SoundDirectory.set_text(recode(directory))
 								
@@ -737,6 +755,8 @@ class BloatFrame(settings_glade.BloatFrame):
 		
 		self.ColourScale("")
 		self.settingup = 0
+		self.needcolors = 0
+		
 	def GetSettings(self):
 		return {
 			"ui": {
@@ -771,6 +791,7 @@ class BloatFrame(settings_glade.BloatFrame):
 				"store": self.ReopenPrivateChats.get_active(),
 			},
 		}
+
 	def OnEnableTransparentToggled(self, widget):
 		sensitive = widget.get_active()
 		self.PickTint.set_sensitive(sensitive)
@@ -1265,4 +1286,4 @@ class SettingsWindow(settings_glade.SettingsWindow):
 			sub = page.GetSettings()
 			for (key,data) in sub.items():
 				config[key].update(data)
-		return self.pages[_("Shares")].GetNeedRescan(), config
+		return self.pages[_("Shares")].GetNeedRescan(), self.pages[_("Interface")].needcolors, config
