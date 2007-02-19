@@ -129,7 +129,6 @@ class PrivateChat(PrivateChatTab):
 		
 		self.Log.set_active(self.frame.np.config.sections["logging"]["privatechat"])
 
-		self.UpdateColours()
 
 		if self.frame.translux:
 			self.tlux_chat = lambda: self.ChatScroll.get_window(gtk.TEXT_WINDOW_TEXT)
@@ -154,6 +153,9 @@ class PrivateChat(PrivateChatTab):
 		popup.set_user(user)
 		self.ChatScroll.connect("button_press_event", self.OnPopupMenu)
 
+		self.UpdateColours()
+		
+		# Read log file
 		log = os.path.join(self.frame.np.config.sections["logging"]["logsdir"], self.user.replace(os.sep, "-") + ".log")
 		try:
 			f = open(log, "r")
@@ -165,7 +167,7 @@ class PrivateChat(PrivateChatTab):
 		except IOError, e:
 			pass
 
-				
+		
 	def destroy(self):
 		if self.frame.translux:
 			self.frame.translux.unsubscribe(self.tlux_chat)
@@ -343,32 +345,36 @@ class PrivateChat(PrivateChatTab):
 			return
 		widget.set_text("")
 
-
-	def UpdateColours(self):
-		def makecolour(buffer, colour):
-			colour = self.frame.np.config.sections["ui"][colour]
-			font = self.frame.np.config.sections["ui"]["chatfont"]
-			if colour:
-				return buffer.create_tag(foreground = colour, font=font)
-			else:
-				return buffer.create_tag( font=font)
-
-				
-		buffer = self.ChatScroll.get_buffer()
-		self.tag_remote = makecolour(buffer, "chatremote")
-		self.tag_local = makecolour(buffer, "chatlocal")
-		self.tag_me = makecolour(buffer, "chatme")
-		self.tag_hilite = makecolour(buffer, "chathilite")
-		if self.status == 1:
-			color = "useraway"
-		elif self.status == 2:
-			color = "useronline"
+	def makecolour(self, buffer, colour):
+		color = self.frame.np.config.sections["ui"][colour]
+		if color == "":
+			color = self.backupcolor
 		else:
-			color = "useroffline"
+			color = gtk.gdk.color_parse(color)
 		
+		font = self.frame.np.config.sections["ui"]["chatfont"]
+		tag = buffer.create_tag()
+		tag.set_property("foreground-gdk", color)
+		tag.set_property("font", font)
+		return tag
 		
+	def UpdateColours(self):
+		map = self.frame.MainWindow.get_style().copy()
+		self.backupcolor = map.text[gtk.STATE_NORMAL]
 
-		self.tag_username = makecolour(buffer, color)
+		buffer = self.ChatScroll.get_buffer()
+		self.tag_remote = self.makecolour(buffer, "chatremote")
+		self.tag_local = self.makecolour(buffer, "chatlocal")
+		self.tag_me = self.makecolour(buffer, "chatme")
+		self.tag_hilite = self.makecolour(buffer, "chathilite")
+		if self.status == 1:
+			statuscolor = "useraway"
+		elif self.status == 2:
+			statuscolor = "useronline"
+		else:
+			statuscolor = "useroffline"
+	
+		self.tag_username = self.makecolour(buffer, statuscolor)
 		usernamestyle = self.frame.np.config.sections["ui"]["usernamestyle"]
 		if usernamestyle == "bold":
 			self.tag_username.set_property("weight",  pango.WEIGHT_BOLD)
@@ -384,36 +390,40 @@ class PrivateChat(PrivateChatTab):
 			self.tag_username.set_property("underline", pango.UNDERLINE_NONE)
 		self.frame.SetTextBG(self.ChatScroll)
 		self.frame.SetTextBG(self.ChatLine)
+		
 	def changecolour(self, tag, colour):
 		if self.frame.np.config.sections["ui"].has_key(colour):
 			color = self.frame.np.config.sections["ui"][colour]
 		else:
-			color = "#000000"
+			color = ""
 		font = self.frame.np.config.sections["ui"]["chatfont"]
-		
-		if color:
-			if color == "":
-				color = "#000000"
-			tag.set_property("foreground", color)
-			tag.set_property("font", font)
-			if colour in ["useraway", "useronline", "useroffline"]:
-				usernamestyle = self.frame.np.config.sections["ui"]["usernamestyle"]
-				if usernamestyle == "bold":
-					tag.set_property("weight",  pango.WEIGHT_BOLD)
-				else:
-					tag.set_property("weight",  pango.WEIGHT_NORMAL)
-				if usernamestyle == "italic":
-					tag.set_property("style",  pango.STYLE_ITALIC)
-				else:
-					tag.set_property("style",  pango.STYLE_NORMAL)
-				if usernamestyle == "underline":
-					tag.set_property("underline", pango.UNDERLINE_SINGLE)
-				else:
-					tag.set_property("underline", pango.UNDERLINE_NONE)
+
+		if color == "":
+			color = self.backupcolor
 		else:
-			tag.set_property("font", font)
+			color = gtk.gdk.color_parse(color)
+		tag.set_property("foreground-gdk", color)
+		tag.set_property("font", font)
+		if colour in ["useraway", "useronline", "useroffline"]:
+			usernamestyle = self.frame.np.config.sections["ui"]["usernamestyle"]
+			if usernamestyle == "bold":
+				tag.set_property("weight",  pango.WEIGHT_BOLD)
+			else:
+				tag.set_property("weight",  pango.WEIGHT_NORMAL)
+			if usernamestyle == "italic":
+				tag.set_property("style",  pango.STYLE_ITALIC)
+			else:
+				tag.set_property("style",  pango.STYLE_NORMAL)
+			if usernamestyle == "underline":
+				tag.set_property("underline", pango.UNDERLINE_SINGLE)
+			else:
+				tag.set_property("underline", pango.UNDERLINE_NONE)
+	
 			
 	def ChangeColours(self):
+		map = self.ChatScroll.get_style().copy()
+		self.backupcolor = map.text[gtk.STATE_NORMAL]
+		
 		self.changecolour(self.tag_remote, "chatremote")
 		self.changecolour(self.tag_local, "chatlocal")
 		self.changecolour(self.tag_me, "chatme")

@@ -36,10 +36,13 @@ except:
 
 import gettext
 tr_cache = {}
+
+# Translation Function
 def _(s):
 	global tr_cache
-	if s == "":
-		return s
+	# Don't translate empty strings
+	# Poedit uses empty strings as metadata
+	if s == "": return s
 	if not tr_cache.has_key(s):
 		tr_cache[s] = gettext.gettext(s)
 	return tr_cache[s]

@@ -906,17 +906,21 @@ class NicotineFrame(MainWindow):
 			tag.set_property("font", font)
 			
 	def UpdateColours(self, first=0):
-		colour = self.np.config.sections["ui"]["chatremote"]
+		color = self.np.config.sections["ui"]["chatremote"]
 		font = self.np.config.sections["ui"]["chatfont"]
-		if colour == "":
-			colour = None
+		if color == "":
+			map = self.LogWindow.get_style().copy()
+			colour = map.text[gtk.STATE_NORMAL]
+		else:
+			colour = gtk.gdk.color_parse(color)
 		if font == "":
 			font = None
 		if first:
-			self.tag_log = self.LogWindow.get_buffer().create_tag(foreground = colour, font=font)
-		else:
-			self.tag_log.set_property("font", font)
-			self.tag_log.set_property("foreground", colour)
+			self.tag_log = self.LogWindow.get_buffer().create_tag()
+		
+		self.tag_log.set_property("font", font)
+		self.tag_log.set_property("foreground-gdk", colour)
+		
 		self.SetTextBG(self.LogWindow)
 		self.SetTextBG(self.UserList)
 		self.SetTextBG(self.RecommendationsList)

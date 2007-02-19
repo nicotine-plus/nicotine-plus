@@ -726,7 +726,8 @@ class ChatRoom(ChatRoomTab):
 		
 	def UpdateColours(self):
 
-				
+		map = self.ChatScroll.get_style().copy()
+		self.backupcolor = map.text[gtk.STATE_NORMAL]
 		buffer = self.ChatScroll.get_buffer()
 		self.tag_remote = self.makecolour(buffer, "chatremote")
 		self.tag_local = self.makecolour(buffer, "chatlocal")
@@ -763,34 +764,37 @@ class ChatRoom(ChatRoomTab):
 		if self.frame.np.config.sections["ui"].has_key(colour):
 			color = self.frame.np.config.sections["ui"][colour]
 		else:
-			color = "#000000"
+			color = ""
 		font = self.frame.np.config.sections["ui"]["chatfont"]
 		
-		if color:
-			if color == "":
-				color = "#000000"
-			tag.set_property("foreground", color)
-			tag.set_property("font", font)
-			if colour in ["useraway", "useronline", "useroffline"]:
-				usernamestyle = self.frame.np.config.sections["ui"]["usernamestyle"]
-				if usernamestyle == "bold":
-					tag.set_property("weight",  pango.WEIGHT_BOLD)
-				else:
-					tag.set_property("weight",  pango.WEIGHT_NORMAL)
-				if usernamestyle == "italic":
-					tag.set_property("style",  pango.STYLE_ITALIC)
-				else:
-					tag.set_property("style",  pango.STYLE_NORMAL)
-				if usernamestyle == "underline":
-					tag.set_property("underline", pango.UNDERLINE_SINGLE)
-				else:
-					tag.set_property("underline", pango.UNDERLINE_NONE)
+		if color == "":
+			color = self.backupcolor
 		else:
-			tag.set_property("font", font)
+			color = gtk.gdk.color_parse(color)
+		tag.set_property("foreground-gdk", color)
+		tag.set_property("font", font)
+		# Hotspots
+		if colour in ["useraway", "useronline", "useroffline"]:
+			usernamestyle = self.frame.np.config.sections["ui"]["usernamestyle"]
+			if usernamestyle == "bold":
+				tag.set_property("weight",  pango.WEIGHT_BOLD)
+			else:
+				tag.set_property("weight",  pango.WEIGHT_NORMAL)
+			if usernamestyle == "italic":
+				tag.set_property("style",  pango.STYLE_ITALIC)
+			else:
+				tag.set_property("style",  pango.STYLE_NORMAL)
+			if usernamestyle == "underline":
+				tag.set_property("underline", pango.UNDERLINE_SINGLE)
+			else:
+				tag.set_property("underline", pango.UNDERLINE_NONE)
+		
 			
 	def ChangeColours(self):
 		
-
+		map = self.ChatScroll.get_style().copy()
+		self.backupcolor = map.text[gtk.STATE_NORMAL]
+			
 		self.changecolour(self.tag_remote, "chatremote")
 		self.changecolour(self.tag_local, "chatlocal")
 		self.changecolour(self.tag_me, "chatme")
