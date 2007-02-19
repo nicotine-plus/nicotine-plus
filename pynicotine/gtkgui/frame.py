@@ -908,6 +908,8 @@ class NicotineFrame(MainWindow):
 	def UpdateColours(self, first=0):
 		colour = self.np.config.sections["ui"]["chatremote"]
 		font = self.np.config.sections["ui"]["chatfont"]
+		if colour == "":
+			colour = None
 		if font == "":
 			font = None
 		if first:
