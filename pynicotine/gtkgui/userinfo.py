@@ -135,7 +135,7 @@ class UserInfo(UserInfoTab):
 		
 		self.descr.get_buffer().set_text("")
 		
-		AppendLine(self.descr, self.frame.np.decode(descr, self.encoding), self.tag_local)
+		AppendLine(self.descr, self.frame.np.decode(descr, self.encoding), self.tag_local, timestamp=None)
 		self.uploads.set_text(_("Total uploads allowed: %i") % totalupl)
 		self.queuesize.set_text(_("Queue size: %i") % queuesize)
 		self.slotsavail.set_text(_("Slots available: %i") % slotsavail)

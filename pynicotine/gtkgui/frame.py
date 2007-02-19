@@ -127,6 +127,8 @@ class NicotineFrame(MainWindow):
 		width = config2.sections["ui"]["width"]
 		height = config2.sections["ui"]["height"]
 		self.MainWindow.resize(width, height)
+		self.MainWindow.set_position(gtk.WIN_POS_CENTER)
+		self.MainWindow.show()
 		del config2
 		self.clip = gtk.Clipboard(display=gtk.gdk.display_get_default(), selection="CLIPBOARD")
 		self.roomlist = roomlist(self)

@@ -9,11 +9,9 @@ class MainWindow:
              self.accel_group = accel_group
         if create:
             self.MainWindow = gtk.Window(gtk.WINDOW_TOPLEVEL)
-            self.MainWindow.set_default_size(800, 600)
             self.MainWindow.set_title(_("Nicotine"))
             self.MainWindow.set_position(gtk.WIN_POS_CENTER)
             self.MainWindow.add_accel_group(self.accel_group)
-            self.MainWindow.show()
             self.MainWindow.connect("selection_get", self.OnSelectionGet)
             self.MainWindow.connect("focus_in_event", self.OnFocusIn)
             self.MainWindow.connect("focus_out_event", self.OnFocusOut)
