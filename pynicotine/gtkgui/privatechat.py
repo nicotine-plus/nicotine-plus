@@ -83,11 +83,19 @@ class PrivateChats(IconNotebook):
 		if tab.user in self.frame.tray_status["hilites"]["private"]:
 			self.frame.ClearNotification("private", tab.user)
 		del self.users[tab.user]
+		if tab.user in self.frame.np.config.sections["privatechat"]["users"]:
+			self.frame.np.config.sections["privatechat"]["users"].remove(tab.user)
 
 	def Login(self):
 		self.connected = 1
 		for user in self.users:
 			self.users[user].Login()
+			
+		if self.frame.np.config.sections["privatechat"]["store"]:
+			self.frame.np.config.sections["privatechat"]["users"].sort()
+			for user in self.frame.np.config.sections["privatechat"]["users"]:
+				if user not in self.users.keys():
+					self.SendMessage(user, None, 1)
 					
 	def ConnClose(self):
 		self.connected = 0

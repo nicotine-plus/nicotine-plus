@@ -395,7 +395,7 @@ class MainWindow:
         self.hbox20.set_spacing(5)
 
         self.PrivateChatEntry = gtk.Entry()
-        self.PrivateChatEntry.set_text("")
+        self.PrivateChatEntry.set_text(_(""))
         self.PrivateChatEntry.set_editable(True)
         self.PrivateChatEntry.show()
         self.PrivateChatEntry.set_visibility(True)
@@ -807,7 +807,7 @@ class MainWindow:
         self.combo1.show()
 
         self.SearchEntry = self.combo1.child
-        self.SearchEntry.set_text("")
+        self.SearchEntry.set_text(_(""))
         self.SearchEntry.set_editable(True)
         self.SearchEntry.show()
         self.SearchEntry.set_visibility(True)
@@ -914,7 +914,7 @@ class MainWindow:
         self.hbox21.set_spacing(5)
 
         self.UserinfoEntry = gtk.Entry()
-        self.UserinfoEntry.set_text("")
+        self.UserinfoEntry.set_text(_(""))
         self.UserinfoEntry.set_editable(True)
         self.UserinfoEntry.show()
         self.UserinfoEntry.set_visibility(True)
@@ -966,7 +966,7 @@ class MainWindow:
         self.hbox22.set_spacing(5)
 
         self.SharesEntry = gtk.Entry()
-        self.SharesEntry.set_text("")
+        self.SharesEntry.set_text(_(""))
         self.SharesEntry.set_editable(True)
         self.SharesEntry.show()
         self.SharesEntry.set_visibility(True)
@@ -1536,7 +1536,7 @@ class ChatRoomTab:
         self.vbox6.pack_start(self.scrolledwindow15, True, True, 0)
 
         self.entry3 = gtk.Entry()
-        self.entry3.set_text("")
+        self.entry3.set_text(_(""))
         self.entry3.set_editable(True)
         self.entry3.show()
         self.entry3.set_visibility(True)
@@ -1700,7 +1700,7 @@ class PrivateChatTab:
         self.hbox5.set_border_width(3)
 
         self.ChatLine = gtk.Entry()
-        self.ChatLine.set_text("")
+        self.ChatLine.set_text(_(""))
         self.ChatLine.set_editable(True)
         self.ChatLine.show()
         self.ChatLine.set_visibility(True)
@@ -1896,7 +1896,7 @@ class SearchTab:
         self.FilterIn.show()
 
         self.combo_entry1 = self.FilterIn.child
-        self.combo_entry1.set_text("")
+        self.combo_entry1.set_text(_(""))
         self.combo_entry1.set_editable(True)
         self.combo_entry1.show()
         self.combo_entry1.set_visibility(True)
@@ -1917,7 +1917,7 @@ class SearchTab:
         self.FilterOut.show()
 
         self.combo_entry2 = self.FilterOut.child
-        self.combo_entry2.set_text("")
+        self.combo_entry2.set_text(_(""))
         self.combo_entry2.set_editable(True)
         self.combo_entry2.show()
         self.combo_entry2.set_visibility(True)
@@ -1939,7 +1939,7 @@ class SearchTab:
         self.FilterSize.show()
 
         self.combo_entry3 = self.FilterSize.child
-        self.combo_entry3.set_text("")
+        self.combo_entry3.set_text(_(""))
         self.combo_entry3.set_editable(True)
         self.combo_entry3.show()
         self.combo_entry3.set_visibility(True)
@@ -1961,7 +1961,7 @@ class SearchTab:
         self.FilterBitrate.show()
 
         self.combo_entry4 = self.FilterBitrate.child
-        self.combo_entry4.set_text("")
+        self.combo_entry4.set_text(_(""))
         self.combo_entry4.set_editable(True)
         self.combo_entry4.show()
         self.combo_entry4.set_visibility(True)
@@ -1983,7 +1983,7 @@ class SearchTab:
         self.FilterCountry.show()
 
         self.combo_entry5 = self.FilterCountry.child
-        self.combo_entry5.set_text("")
+        self.combo_entry5.set_text(_(""))
         self.combo_entry5.set_editable(True)
         self.combo_entry5.show()
         self.combo_entry5.set_visibility(True)
@@ -2550,7 +2550,7 @@ class UserBrowseTab:
         self.hbox8.pack_start(self.label20, False, False, 5)
 
         self.entry4 = gtk.Entry()
-        self.entry4.set_text("")
+        self.entry4.set_text(_(""))
         self.entry4.set_editable(True)
         self.entry4.show()
         self.entry4.set_visibility(True)
@@ -2619,21 +2619,90 @@ class UserBrowseTab:
         self.progressbar1.show()
         self.hbox9.pack_start(self.progressbar1, False, False, 0)
 
-        self.CloseButton = gtk.Button(None, gtk.STOCK_CLOSE)
+        self.CloseButton = gtk.Button()
         self.CloseButton.show()
         self.CloseButton.connect("clicked", self.OnClose)
 
+        self.alignment40 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment40.show()
+
+        self.hbox62 = gtk.HBox(False, 2)
+        self.hbox62.show()
+        self.hbox62.set_spacing(2)
+
+        self.image364 = gtk.Image()
+        self.image364.set_padding(0, 0)
+        self.image364.set_from_stock(gtk.STOCK_CLOSE, 4)
+        self.image364.show()
+        self.hbox62.pack_start(self.image364, False, False, 0)
+
+        self.label69 = gtk.Label(_("Close"))
+        self.label69.set_padding(0, 0)
+        self.label69.set_line_wrap(False)
+        self.label69.show()
+        self.hbox62.pack_start(self.label69, False, False, 0)
+
+        self.alignment40.add(self.hbox62)
+
+        self.CloseButton.add(self.alignment40)
+
         self.hbox9.pack_end(self.CloseButton, False, False, 0)
 
-        self.RefreshButton = gtk.Button(None, gtk.STOCK_REFRESH)
+        self.RefreshButton = gtk.Button()
         self.RefreshButton.show()
         self.RefreshButton.connect("clicked", self.OnRefresh)
 
+        self.alignment42 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment42.show()
+
+        self.hbox64 = gtk.HBox(False, 2)
+        self.hbox64.show()
+        self.hbox64.set_spacing(2)
+
+        self.image366 = gtk.Image()
+        self.image366.set_padding(0, 0)
+        self.image366.set_from_stock(gtk.STOCK_REFRESH, 4)
+        self.image366.show()
+        self.hbox64.pack_start(self.image366, False, False, 0)
+
+        self.label71 = gtk.Label(_("Refresh"))
+        self.label71.set_padding(0, 0)
+        self.label71.set_line_wrap(False)
+        self.label71.show()
+        self.hbox64.pack_start(self.label71, False, False, 0)
+
+        self.alignment42.add(self.hbox64)
+
+        self.RefreshButton.add(self.alignment42)
+
         self.hbox9.pack_end(self.RefreshButton, False, False, 0)
 
-        self.SaveButton = gtk.Button(None, gtk.STOCK_SAVE)
+        self.SaveButton = gtk.Button()
         self.SaveButton.show()
         self.SaveButton.connect("clicked", self.OnSave)
+
+        self.alignment41 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment41.show()
+
+        self.hbox63 = gtk.HBox(False, 2)
+        self.hbox63.show()
+        self.hbox63.set_spacing(2)
+
+        self.image365 = gtk.Image()
+        self.image365.set_padding(0, 0)
+        self.image365.set_from_stock(gtk.STOCK_SAVE, 4)
+        self.image365.show()
+        self.hbox63.pack_start(self.image365, False, False, 0)
+
+        self.label70 = gtk.Label(_("Save"))
+        self.label70.set_padding(0, 0)
+        self.label70.set_line_wrap(False)
+        self.label70.show()
+        self.hbox63.pack_start(self.label70, False, False, 0)
+
+        self.alignment41.add(self.hbox63)
+
+        self.SaveButton.add(self.alignment41)
 
         self.hbox9.pack_end(self.SaveButton, False, False, 0)
 
@@ -2722,7 +2791,7 @@ class RoomList:
         self.hbox1.pack_start(self.label10, False, False, 0)
 
         self.CreateRoomEntry = gtk.Entry()
-        self.CreateRoomEntry.set_text("")
+        self.CreateRoomEntry.set_text(_(""))
         self.CreateRoomEntry.set_editable(True)
         self.CreateRoomEntry.show()
         self.CreateRoomEntry.set_visibility(True)

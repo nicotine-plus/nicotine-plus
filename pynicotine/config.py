@@ -67,6 +67,8 @@ class Config:
 "logging": {"logcollapsed":0, "logsdir":os.path.expanduser(LOGDIR), \
 "privatechat":0, "chatrooms":0,"transfers":0}, \
 \
+"privatechat":{"store":0, "users":[]},\
+\
 "searches":{"maxresults":50,"re_filter":0,"history":[], \
 "enablefilters":0, "defilter":["","","","",0,""], "filtercc":[], \
 "filterin":[],"filterout":[],"filtersize":[],"filterbr":[]}, \

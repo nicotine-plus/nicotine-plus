@@ -26,6 +26,11 @@ class AboutDialog(GenericAboutDialog):
 		img.set_from_pixbuf(pixbuf)
 		label = gtk.Label(_("""Nicotine+ %s
 
+Copyright (c) 2007 daelstorm
+http://nicotine-plus.sourceforge.net/
+daelstorm@gmail.com
+
+Based on code from Nicotine
 Copyright (c) 2003 Hyriand
 http://nicotine.thegraveyard.org/
 hyriand@thegraveyard.org
@@ -33,13 +38,10 @@ hyriand@thegraveyard.org
 Based on code from the PySoulSeek project
 Copyright (c) 2001-2003 Alexander Kanavin
 
-With additions by daelstorm and others (c) 2006
-http://nicotine-plus.sourceforge.net/
-
 Released under the GNU Public License
 
 See MAINTAINERS file for the list of contributors""") % version)
-		label.set_justify(gtk.JUSTIFY_CENTER)
+		label.set_justify(gtk.JUSTIFY_LEFT)
 		vbox = gtk.VBox()
 		vbox.pack_start(img, False, False)
 		hbox = gtk.HBox()
@@ -79,7 +81,7 @@ free.
 To set the filter, press Enter. This will apply to any existing results, and any
 more that are returned. To filter in a different way, just set the relevant terms.
 You do not need to do another search to apply a different filter."""))
-		label.set_justify(gtk.JUSTIFY_CENTER)
+		label.set_justify(gtk.JUSTIFY_LEFT)
 		self.vbox.pack_start(label)
 		self.show_all()
 

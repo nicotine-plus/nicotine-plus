@@ -676,6 +676,7 @@ class BloatFrame(settings_glade.BloatFrame):
 								
 	def SetSettings(self, config):
 		ui = config["ui"]
+		private = config["privatechat"]
 		transfers = config["transfers"]
 		if ui["icontheme"] is not None:
 			self.IconTheme.set_text(ui["icontheme"])
@@ -710,7 +711,8 @@ class BloatFrame(settings_glade.BloatFrame):
 			self.DecimalSep.child.set_text(ui["decimalsep"])
 		if ui["tabclosers"] is not None:
 			self.TabClosers.set_active(ui["tabclosers"])
-	
+		if private["store"] is not None:
+			self.ReopenPrivateChats.set_active(private["store"])
 		if ui["trayicon"] is not None:
 			self.TrayiconCheck.set_active(ui["trayicon"])
 		if ui["soundenabled"] is not None:
@@ -764,6 +766,9 @@ class BloatFrame(settings_glade.BloatFrame):
 			},
 			"transfers": {
 				"enabletransferbuttons": self.ShowTransferButtons.get_active(),
+			},
+			"privatechat": {
+				"store": self.ReopenPrivateChats.get_active(),
 			},
 		}
 	def OnEnableTransparentToggled(self, widget):
@@ -1249,6 +1254,7 @@ class SettingsWindow(settings_glade.SettingsWindow):
 			"userinfo": {},
 			"logging": {},
 			"searches": {},
+			"privatechat": {},
 			"ui": {},
 			"urls": {},
 			"players": {},

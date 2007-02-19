@@ -975,7 +975,9 @@ class NicotineFrame(MainWindow):
 		self.np.StopTimers()
 		if self.np.transfers is not None:
 	            self.np.transfers.AbortTransfers()
-		
+		    
+		self.np.config.sections["privatechat"]["users"] = self.privatechats.users.keys()
+			
 		self.np.config.writeConfig()
 		self.np.protothread.abort()
 		if sys.platform == "win32":

@@ -20,7 +20,7 @@ attrs = [
 	["window_position", lambda w,v: "%s.set_position(%s)" % (w, v.replace("GTK_", "gtk."))],
 	["tab_pos", lambda w,v: "%s.set_tab_pos(%s)" % (w, v.replace("GTK_", "gtk."))],
 	["has_resize_grip", lambda w,v: "%s.set_has_resize_grip(%s)" % (w,v.capitalize())],
-	["text", lambda w,v: "%s.set_text(\"%s\")" % (w, v.replace("\"", "\\\""))],
+	["text", lambda w,v: "%s.set_text(_(\"%s\"))" % (w, v.replace("\"", "\\\""))],
 	["accel_group", lambda w,v: "%s.add_accel_group(%s)" % (w, v)],
 	["wrap_mode", lambda w,v: "%s.set_wrap_mode(%s)" % (w, v.replace("GTK_", "gtk."))],
 	["wrap", lambda w,v: "%s.set_line_wrap(%s)" % (w, v.capitalize())],
