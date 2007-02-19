@@ -62,24 +62,29 @@ def getServerList(url):
 		return []
 
 # Rescan directories in shared databases
-def rescandirs(shared, sharedmtimes, sharedfiles, sharedfilesstreams, yieldfunction, progress=None):
+def rescandirs(shared, sharedmtimes, sharedfiles, sharedfilesstreams, yieldfunction, progress=None, name=""):
 	# Check for modified or new files
 	# returns dict in format:  { Directory : mtime, ... }
+	
+	progress.set_text(_("Checking for changes"))
+	progress.show()
 	progress.set_fraction(0)
 	newmtimes = getDirsMtimes(shared, yieldfunction)
-
+	progress.set_text(_("Scanning %sShares") % name)
 	# Get list of files
 	# returns dict in format { Directory : { File : metadata, ... }, ... }
 	newsharedfiles = getFilesList(newmtimes, sharedmtimes, sharedfiles,yieldfunction, progress)
 
 	# Pack shares data
 	# returns dict in format { Directory : hex string of files+metadata, ... }
+	progress.set_text(_("Building DataBase"))
 	newsharedfilesstreams = getFilesStreams(newmtimes, sharedmtimes, sharedfilesstreams, newsharedfiles, yieldfunction)
-
+	
 	# Update Search Index
 	# newwordindex is a dict in format {word: [num, num, ..], ... } with num matching
 	# keys in newfileindex
 	# newfileindex is a dict in format { num: (path, size, (bitrate, vbr), length), ... }
+	progress.set_text(_("Building Index"))
 	newwordindex, newfileindex = getFilesIndex(newmtimes, sharedmtimes, shared, newsharedfiles, yieldfunction)
 	progress.set_fraction(1.0)
 	
