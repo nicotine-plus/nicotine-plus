@@ -490,7 +490,8 @@ class SlskProtoThread(threading.Thread):
 				# Unpack Peer Messages
 				msgtype = struct.unpack("<i",buffer[4:8])[0]
 				if self.peerclasses.has_key(msgtype):
-					try: msg = self.peerclasses[msgtype](conn)
+					try: 
+						msg = self.peerclasses[msgtype](conn)
 						# Parse Peer Message and handle exceptions
 						try:
 							msg.parseNetworkMessage(buffer[8:msgsize+4])
