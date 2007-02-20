@@ -831,8 +831,13 @@ class NetworkEventProcessor:
 		if self.transfers is not None:
 			totalupl = self.transfers.getTotalUploadsAllowed()
 			queuesize = self.transfers.getUploadQueueSizes()[0]
-			slotsavail = int(not self.transfers.bandwidthLimitReached())
-			self.queue.put(slskmessages.UserInfoReply(msg.conn.conn,descr,pic,totalupl, queuesize,slotsavail))
+			slotsavail = (not self.transfers.bandwidthLimitReached())
+			ua = self.frame.np.config.sections["transfers"]["remotedownloads"]
+			if ua:
+				uploadallowed = self.frame.np.config.sections["transfers"]["uploadallowed"]
+			else:
+				uploadallowed = ua
+			self.queue.put(slskmessages.UserInfoReply(msg.conn.conn, descr, pic, totalupl, queuesize, slotsavail, uploadallowed))
 	
 		self.logMessage(_("%s is making a UserInfo request") %(user), None)
 		self.logMessage("%s %s" %(msg.__class__, vars(msg)),1)

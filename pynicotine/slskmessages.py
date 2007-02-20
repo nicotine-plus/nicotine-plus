@@ -949,15 +949,14 @@ class UserInfoRequest(PeerMessage):
 
 class UserInfoReply(PeerMessage):
 	""" Peer responds with this, when asked for user information."""
-	def __init__(self,conn,descr = None, pic = None, totalupl = None, queuesize = None, slotsavail = None, something=None):
+	def __init__(self,conn,descr = None, pic = None, totalupl = None, queuesize = None, slotsavail = None, uploadallowed=None):
 		self.conn = conn
 		self.descr = descr
 		self.pic = pic
 		self.totalupl = totalupl
 		self.queuesize = queuesize
 		self.slotsavail = slotsavail
-		# Unknown (appears when slotsavail == 0)
-		self.something = something
+		self.uploadallowed = uploadallowed
 	
 	def parseNetworkMessage(self,message):
 		pos, self.descr = self.getObject(message, types.StringType)
@@ -969,7 +968,8 @@ class UserInfoReply(PeerMessage):
 		pos, self.slotsavail = pos+1, ord(message[pos])
 		
 		if len(message[pos:]) >= 4:
-			pos, self.something = self.getObject(message, types.IntType, pos)
+			pos, self.uploadallowed = self.getObject(message, types.IntType, pos)
+			print self.slotsavail, self.uploadallowed
 			
 
 
@@ -979,7 +979,7 @@ class UserInfoReply(PeerMessage):
 			pic = chr(1) + self.packObject(self.pic)
 		else:
 			pic = chr(0)
-		return self.packObject(self.descr)+pic+self.packObject(self.totalupl)+self.packObject(self.queuesize)+self.packObject(self.slotsavail)
+		return self.packObject(self.descr)+pic+self.packObject(self.totalupl)+self.packObject(self.queuesize)+self.packObject(self.slotsavail)+self.packObject(self.uploadallowed)
 
 
 class SharedFileList(PeerMessage):

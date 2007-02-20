@@ -30,8 +30,8 @@ class UserTabs(IconNotebook):
 		if self.users.has_key(msg.user):
 			tab = self.users[msg.user]
 			tab.speed.set_text(_("Speed: %s") %  Humanize(msg.avgspeed))
-			tab.filesshared.set_text(_("Files Shared: %s") % Humanize(msg.files))
-			tab.dirsshared.set_text(_("Dirs Shared: %s") % Humanize(msg.dirs))
+			tab.filesshared.set_text(_("Files: %s") % Humanize(msg.files))
+			tab.dirsshared.set_text(_("Directories: %s") % Humanize(msg.dirs))
 
 	def GetUserStatus(self, msg):
 		
@@ -52,9 +52,9 @@ class UserTabs(IconNotebook):
 			self.frame.np.queue.put(slskmessages.GetUserStatus(user))
 			self.frame.np.queue.put(slskmessages.GetUserStats(user))
 			
-	def ShowLocalInfo(self, user, descr, has_pic, pic, totalupl, queuesize, slotsavail):
+	def ShowLocalInfo(self, user, descr, has_pic, pic, totalupl, queuesize, slotsavail, uploadallowed):
 		self.InitWindow(user, None)
-		self.users[user].ShowLocalInfo(user, descr, has_pic, pic, totalupl, queuesize, slotsavail)
+		self.users[user].ShowUserInfo(descr, has_pic, pic, totalupl, queuesize, slotsavail, uploadallowed)
 		self.request_changed(self.users[user].Main)
 		if self.mytab is not None:
 			self.frame.RequestIcon(self.mytab)
@@ -65,7 +65,7 @@ class UserTabs(IconNotebook):
 		self.request_changed(self.users[user].Main)
 		if self.mytab is not None:
 			self.frame.RequestIcon(self.mytab)
-	
+			
 	def UpdateGauge(self, msg):
 		for i in self.users.values():
 			if i.conn == msg.conn.conn:
@@ -129,7 +129,7 @@ class UserInfo(UserInfoTab):
 		self.changecolour(self.tag_local, "chatlocal")
 		self.frame.SetTextBG(self.descr)
 		
-	def ShowLocalInfo(self, user, descr, has_pic, pic, totalupl, queuesize, slotsavail):
+	def ShowUserInfo(self, descr, has_pic, pic, totalupl, queuesize, slotsavail, uploadallowed):
 		self.conn = None
 		self._descr = descr
 		
@@ -138,7 +138,22 @@ class UserInfo(UserInfoTab):
 		AppendLine(self.descr, self.frame.np.decode(descr, self.encoding), self.tag_local, timestamp=None)
 		self.uploads.set_text(_("Total uploads allowed: %i") % totalupl)
 		self.queuesize.set_text(_("Queue size: %i") % queuesize)
-		self.slotsavail.set_text(_("Slots available: %s") % (slotsavail==1))
+		if slotsavail:
+			slots = _("Yes")
+		else:
+			slots = _("No")
+		self.slotsavail.set_text(_("Slots free: %s") % slots)
+		if uploadallowed == 0:
+			allowed = _("No one")
+		elif uploadallowed == 1:
+			allowed = _("Everyone")
+		elif uploadallowed == 2:
+			allowed = _("Users in list")
+		elif uploadallowed == 3:
+			allowed = _("Users in trusted list")
+		else:
+			allowed = _("unknown")
+		self.AcceptUploads.set_text(_("%s") % allowed)
 		if has_pic and pic is not None:
 			try:
 				import gc
@@ -160,38 +175,9 @@ class UserInfo(UserInfoTab):
 				self.image.set_from_pixbuf(None)
 		else:
 			self.image.set_from_pixbuf(None)
-
+			
 	def ShowInfo(self, msg):
-		self.conn = None
-		self._descr = msg.descr
-		
-		buffer = self.descr.get_buffer()
-		buffer.set_text(self.frame.np.decode(msg.descr, self.encoding))
-		
-		self.uploads.set_text(_("Total uploads allowed: %i") % msg.totalupl)
-		self.queuesize.set_text(_("Queue size: %i") % msg.queuesize)
-		self.slotsavail.set_text(_("Slots available: %s") % (msg.slotsavail==2))
-
-		if msg.has_pic and msg.pic is not None:
-			try:
-				import gc
-				loader = gtk.gdk.PixbufLoader()
-				loader.write(msg.pic)
-				loader.close()
-				self.image.set_from_pixbuf(loader.get_pixbuf())
-				del loader
-				gc.collect()
-			except TypeError:
-				name = tempfile.mktemp()
-				f = open(name,"w")
-				f.write(msg.pic)
-				f.close()
-				self.image.set_from_file(name)
-				os.remove(name)
-			except:
-				self.image.set_from_pixbuf(None)
-		else:
-			self.image.set_from_pixbuf(None)
+		self.ShowUserInfo(msg.descr, msg.has_pic, msg.pic, msg.totalupl, msg.queuesize, msg.slotsavail, msg.uploadallowed)
 		
 	def UpdateGauge(self, msg):
 		if msg.total == 0 or msg.bytes == 0:

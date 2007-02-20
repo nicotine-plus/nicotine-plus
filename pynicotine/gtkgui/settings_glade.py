@@ -2,11 +2,16 @@ import gtk, gobject
 from pynicotine.utils import _
 
 class ServerFrame:
-    def __init__(self, create = True, accel_group = None):
+    def __init__(self, create = True, accel_group = None, tooltips = None):
         if accel_group is None:
              self.accel_group = gtk.AccelGroup()
         else:
              self.accel_group = accel_group
+        if tooltips is None:
+             self.tooltips = gtk.Tooltips()
+        else:
+             self.tooltips = tooltips
+        self.tooltips.enable()
         if create:
             self.ServerFrame = gtk.Window(gtk.WINDOW_TOPLEVEL)
             self.ServerFrame.set_title(_("Server Settings"))
@@ -233,11 +238,16 @@ class ServerFrame:
         return w
 
 class SharesFrame:
-    def __init__(self, create = True, accel_group = None):
+    def __init__(self, create = True, accel_group = None, tooltips = None):
         if accel_group is None:
              self.accel_group = gtk.AccelGroup()
         else:
              self.accel_group = accel_group
+        if tooltips is None:
+             self.tooltips = gtk.Tooltips()
+        else:
+             self.tooltips = tooltips
+        self.tooltips.enable()
         if create:
             self.SharesFrame = gtk.Window(gtk.WINDOW_TOPLEVEL)
             self.SharesFrame.set_title(_("Shares"))
@@ -593,11 +603,16 @@ class SharesFrame:
         return w
 
 class TransfersFrame:
-    def __init__(self, create = True, accel_group = None):
+    def __init__(self, create = True, accel_group = None, tooltips = None):
         if accel_group is None:
              self.accel_group = gtk.AccelGroup()
         else:
              self.accel_group = accel_group
+        if tooltips is None:
+             self.tooltips = gtk.Tooltips()
+        else:
+             self.tooltips = tooltips
+        self.tooltips.enable()
         if create:
             self.TransfersFrame = gtk.Window(gtk.WINDOW_TOPLEVEL)
             self.TransfersFrame.set_title(_("Transfers"))
@@ -614,15 +629,52 @@ class TransfersFrame:
         self.vbox81.set_spacing(5)
         self.vbox81.set_border_width(5)
 
-        self.vbox82 = gtk.VBox(False, 0)
+        self.vbox82 = gtk.VBox(False, 3)
         self.vbox82.show()
-        self.vbox82.set_spacing(0)
+        self.vbox82.set_spacing(3)
+
+        self.expander5 = gtk.Expander()
+        self.expander5.set_expanded(True)
+        self.expander5.show()
+        self.expander5.set_spacing(0)
+
+        self.vbox114 = gtk.VBox(False, 3)
+        self.vbox114.show()
+        self.vbox114.set_spacing(3)
+
+        self.hbox171 = gtk.HBox(False, 5)
+        self.hbox171.show()
+        self.hbox171.set_spacing(5)
+
+        self.label295 = gtk.Label(_("Upload Queue type:"))
+        self.label295.set_alignment(0, 0.5)
+        self.label295.set_padding(0, 0)
+        self.label295.set_line_wrap(False)
+        self.label295.show()
+        self.hbox171.pack_start(self.label295, False, False, 0)
+
+        self.RoundRobin = gtk.RadioButton()
+        self.RoundRobin.set_active(False)
+        self.RoundRobin.set_label(_("Round Robin"))
+        self.RoundRobin.show()
+
+        self.hbox171.pack_start(self.RoundRobin, False, False, 0)
+
+        self.FirstInFirstOut = gtk.RadioButton(self.RoundRobin)
+        self.FirstInFirstOut.set_active(False)
+        self.FirstInFirstOut.set_label(_("First In, First Out"))
+        self.FirstInFirstOut.show()
+
+        self.hbox171.pack_start(self.FirstInFirstOut, False, False, 5)
+
+        self.vbox114.pack_start(self.hbox171, False, False, 0)
 
         self.hbox117 = gtk.HBox(False, 5)
         self.hbox117.show()
         self.hbox117.set_spacing(5)
 
-        self.label185 = gtk.Label(_("If Uploads are sent at"))
+        self.label185 = gtk.Label(_("Queue Uploads if total transfer speed reaches"))
+        self.label185.set_alignment(0, 0.5)
         self.label185.set_padding(0, 0)
         self.label185.set_line_wrap(False)
         self.label185.show()
@@ -630,27 +682,29 @@ class TransfersFrame:
 
         self.QueueBandwidth = gtk.Entry()
         self.QueueBandwidth.set_size_request(50, -1)
+        self.tooltips.set_tip(self.QueueBandwidth, _("Set to a very large number if you want to always"))
         self.QueueBandwidth.set_text(_(""))
         self.QueueBandwidth.set_editable(True)
         self.QueueBandwidth.show()
         self.QueueBandwidth.set_visibility(True)
         self.hbox117.pack_start(self.QueueBandwidth, False, False, 0)
 
-        self.label186 = gtk.Label(_("KBytes/sec then other uploads will be queued."))
+        self.label186 = gtk.Label(_("KBytes/sec"))
         self.label186.set_padding(0, 0)
         self.label186.set_line_wrap(True)
         self.label186.show()
         self.hbox117.pack_start(self.label186, False, False, 0)
 
-        self.vbox82.pack_start(self.hbox117, False, False, 0)
+        self.vbox114.pack_start(self.hbox117, False, False, 0)
 
         self.hbox118 = gtk.HBox(False, 5)
         self.hbox118.show()
         self.hbox118.set_spacing(5)
 
         self.QueueUseSlots = gtk.CheckButton()
+        self.tooltips.set_tip(self.QueueUseSlots, _("If disabled, slots with automatically be determined by available bandwidth limitations"))
         self.QueueUseSlots.set_active(False)
-        self.QueueUseSlots.set_label(_("Limit number of uploads to"))
+        self.QueueUseSlots.set_label(_("Limit number of upload slots to"))
         self.QueueUseSlots.show()
         self.QueueUseSlots.connect("toggled", self.OnQueueUseSlotsToggled)
         self.hbox118.pack_start(self.QueueUseSlots, False, False, 0)
@@ -669,9 +723,7 @@ class TransfersFrame:
         self.label254.show()
         self.hbox118.pack_start(self.label254, False, False, 0)
 
-        self.vbox82.pack_start(self.hbox118, False, False, 0)
-
-        self.vbox81.pack_start(self.vbox82, False, False, 0)
+        self.vbox114.pack_start(self.hbox118, False, False, 0)
 
         self.table1 = gtk.Table()
         self.table1.show()
@@ -713,37 +765,7 @@ class TransfersFrame:
 
         self.table1.attach(self.LimitTotalTransfers, 3, 4, 1, 2, gtk.FILL, 0, 0, 0)
 
-        self.vbox81.pack_start(self.table1, False, False, 0)
-
-        self.hbox171 = gtk.HBox(False, 5)
-        self.hbox171.show()
-        self.hbox171.set_spacing(5)
-
-        self.label295 = gtk.Label(_("Upload Queue type:"))
-        self.label295.set_padding(5, 0)
-        self.label295.set_line_wrap(False)
-        self.label295.show()
-        self.hbox171.pack_start(self.label295, False, False, 0)
-
-        self.RoundRobin = gtk.RadioButton()
-        self.RoundRobin.set_active(False)
-        self.RoundRobin.set_label(_("Round Robin"))
-        self.RoundRobin.show()
-
-        self.hbox171.pack_start(self.RoundRobin, False, False, 0)
-
-        self.FirstInFirstOut = gtk.RadioButton(self.RoundRobin)
-        self.FirstInFirstOut.set_active(False)
-        self.FirstInFirstOut.set_label(_("First In, First Out"))
-        self.FirstInFirstOut.show()
-
-        self.hbox171.pack_start(self.FirstInFirstOut, False, False, 5)
-
-        self.vbox81.pack_start(self.hbox171, False, True, 0)
-
-        self.vbox83 = gtk.VBox(False, 0)
-        self.vbox83.show()
-        self.vbox83.set_spacing(0)
+        self.vbox114.pack_start(self.table1, False, False, 0)
 
         self.hbox119 = gtk.HBox(False, 5)
         self.hbox119.show()
@@ -758,6 +780,7 @@ class TransfersFrame:
 
         self.MaxUserQueue = gtk.Entry()
         self.MaxUserQueue.set_size_request(50, -1)
+        self.tooltips.set_tip(self.MaxUserQueue, _("Files will remain in the user's queue but will not be queuable until the total size of queue files is under this limit"))
         self.MaxUserQueue.set_text(_("100"))
         self.MaxUserQueue.set_editable(True)
         self.MaxUserQueue.show()
@@ -770,15 +793,52 @@ class TransfersFrame:
         self.label190.show()
         self.hbox119.pack_start(self.label190, False, False, 0)
 
-        self.vbox83.pack_start(self.hbox119, False, False, 0)
+        self.vbox114.pack_start(self.hbox119, False, False, 0)
 
         self.FriendsNoLimits = gtk.CheckButton()
         self.FriendsNoLimits.set_active(False)
         self.FriendsNoLimits.set_label(_("Queue size limit does not apply to friends"))
         self.FriendsNoLimits.show()
-        self.vbox83.pack_start(self.FriendsNoLimits, False, False, 0)
+        self.vbox114.pack_start(self.FriendsNoLimits, False, False, 0)
 
-        self.vbox81.pack_start(self.vbox83, False, False, 0)
+        self.hbox211 = gtk.HBox(False, 5)
+        self.hbox211.show()
+        self.hbox211.set_spacing(5)
+
+        self.RemoteDownloads = gtk.CheckButton()
+        self.RemoteDownloads.set_active(False)
+        self.RemoteDownloads.set_label(_("Allow these users to send you files:"))
+        self.RemoteDownloads.show()
+        self.hbox211.pack_start(self.RemoteDownloads, False, False, 0)
+
+        self.UploadsAllowed_List = gtk.ListStore(gobject.TYPE_STRING)
+        self.UploadsAllowed = gtk.ComboBox()
+        self.UploadsAllowed.show()
+        self.UploadsAllowed_List.append([""])
+
+        self.UploadsAllowed.set_model(self.UploadsAllowed_List)
+        cell = gtk.CellRendererText()
+        self.UploadsAllowed.pack_start(cell, True)
+        self.UploadsAllowed.add_attribute(cell, 'text', 0)
+        self.hbox211.pack_start(self.UploadsAllowed, False, True, 0)
+
+        self.vbox114.pack_start(self.hbox211, True, True, 0)
+
+        self.expander5.add(self.vbox114)
+
+        self.label362 = gtk.Label("")
+        self.label362.set_padding(0, 0)
+        self.label362.set_line_wrap(False)
+        self.label362.set_markup(_("<b>Upload Queue:</b>"))
+        self.label362.show()
+        self.expander5.set_label_widget(self.label362)
+
+        self.vbox82.pack_start(self.expander5, False, False, 0)
+
+        self.expander6 = gtk.Expander()
+        self.expander6.set_expanded(True)
+        self.expander6.show()
+        self.expander6.set_spacing(5)
 
         self.hbox176 = gtk.HBox(False, 5)
         self.hbox176.show()
@@ -797,13 +857,18 @@ class TransfersFrame:
         self.PreferFriends.show()
         self.hbox176.pack_start(self.PreferFriends, False, False, 0)
 
-        self.vbox81.pack_start(self.hbox176, False, False, 0)
+        self.expander6.add(self.hbox176)
 
-        self.RemoteDownloads = gtk.CheckButton()
-        self.RemoteDownloads.set_active(False)
-        self.RemoteDownloads.set_label(_("Allow Buddies to send you files"))
-        self.RemoteDownloads.show()
-        self.vbox81.pack_start(self.RemoteDownloads, False, False, 0)
+        self.label363 = gtk.Label("")
+        self.label363.set_padding(0, 0)
+        self.label363.set_line_wrap(False)
+        self.label363.set_markup(_("<b>Privileges:</b>"))
+        self.label363.show()
+        self.expander6.set_label_widget(self.label363)
+
+        self.vbox82.pack_start(self.expander6, False, False, 0)
+
+        self.vbox81.pack_start(self.vbox82, False, False, 0)
 
         self.LockIncoming = gtk.CheckButton()
         self.LockIncoming.set_active(False)
@@ -811,38 +876,89 @@ class TransfersFrame:
         self.LockIncoming.show()
         self.vbox81.pack_start(self.LockIncoming, False, False, 0)
 
-        self.hbox192 = gtk.HBox(False, 3)
-        self.hbox192.show()
-        self.hbox192.set_spacing(3)
+        self.expander7 = gtk.Expander()
+        self.expander7.set_expanded(False)
+        self.expander7.show()
+        self.expander7.set_spacing(0)
 
-        self.label314 = gtk.Label("")
-        self.label314.set_alignment(0, 0.5)
-        self.label314.set_padding(0, 0)
-        self.label314.set_line_wrap(False)
-        self.label314.set_markup(_("<b>Do not download these file types:</b>"))
-        self.label314.show()
-        self.hbox192.pack_start(self.label314, False, False, 0)
+        self.vbox115 = gtk.VBox(False, 0)
+        self.vbox115.show()
+        self.vbox115.set_spacing(0)
+
+        self.hbox212 = gtk.HBox(False, 3)
+        self.hbox212.show()
+        self.hbox212.set_spacing(3)
+
+        self.label364 = gtk.Label("")
+        self.label364.set_alignment(0, 0.5)
+        self.label364.set_padding(0, 0)
+        self.label364.set_line_wrap(False)
+        self.label364.set_markup(_("<b>Do not download these file types:</b>"))
+        self.label364.show()
+        self.hbox212.pack_start(self.label364, False, False, 0)
 
         self.DownloadFilter = gtk.CheckButton()
         self.DownloadFilter.set_active(False)
         self.DownloadFilter.set_label(_("Enable Filters"))
         self.DownloadFilter.show()
         self.DownloadFilter.connect("toggled", self.OnEnableFiltersToggle)
-        self.hbox192.pack_start(self.DownloadFilter, False, False, 0)
+        self.hbox212.pack_start(self.DownloadFilter, False, False, 0)
 
-        self.vbox81.pack_start(self.hbox192, False, False, 0)
+        self.vbox115.pack_start(self.hbox212, False, True, 0)
 
-        self.label317 = gtk.Label("")
-        self.label317.set_alignment(0, 0.5)
-        self.label317.set_padding(0, 0)
-        self.label317.set_line_wrap(True)
-        self.label317.set_markup(_("<b>Syntax:</b> Letters are Case Insensitive, All Python Regular Expressions are supported if escaping is disabled. For simple filters, keep escaping enabled."))
-        self.label317.show()
-        self.vbox81.pack_start(self.label317, False, True, 0)
+        self.label365 = gtk.Label("")
+        self.label365.set_alignment(0, 0.5)
+        self.label365.set_padding(0, 0)
+        self.label365.set_line_wrap(True)
+        self.label365.set_markup(_("<b>Syntax:</b> Letters are Case Insensitive, All Python Regular Expressions are supported if escaping is disabled. For simple filters, keep escaping enabled."))
+        self.label365.show()
+        self.vbox115.pack_start(self.label365, False, False, 0)
 
-        self.hbox189 = gtk.HBox(False, 0)
-        self.hbox189.show()
-        self.hbox189.set_spacing(0)
+        self.hbox218 = gtk.HBox(False, 5)
+        self.hbox218.show()
+        self.hbox218.set_spacing(5)
+
+        self.VerifyFilters = gtk.Button()
+        self.VerifyFilters.show()
+        self.VerifyFilters.connect("clicked", self.OnVerifyFilter)
+
+        self.alignment99 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment99.show()
+
+        self.hbox219 = gtk.HBox(False, 2)
+        self.hbox219.show()
+        self.hbox219.set_spacing(2)
+
+        self.image93 = gtk.Image()
+        self.image93.set_padding(0, 0)
+        self.image93.set_from_stock(gtk.STOCK_SPELL_CHECK, 4)
+        self.image93.show()
+        self.hbox219.pack_start(self.image93, False, False, 0)
+
+        self.label370 = gtk.Label(_("Verify Filters"))
+        self.label370.set_padding(0, 0)
+        self.label370.set_line_wrap(False)
+        self.label370.show()
+        self.hbox219.pack_start(self.label370, False, False, 0)
+
+        self.alignment99.add(self.hbox219)
+
+        self.VerifyFilters.add(self.alignment99)
+
+        self.hbox218.pack_end(self.VerifyFilters, False, False, 0)
+
+        self.VerifiedLabel = gtk.Label("")
+        self.VerifiedLabel.set_padding(0, 0)
+        self.VerifiedLabel.set_line_wrap(True)
+        self.VerifiedLabel.set_markup(_("<b>Unverified</b>"))
+        self.VerifiedLabel.show()
+        self.hbox218.pack_end(self.VerifiedLabel, False, False, 0)
+
+        self.vbox115.pack_start(self.hbox218, False, False, 0)
+
+        self.hbox213 = gtk.HBox(False, 0)
+        self.hbox213.show()
+        self.hbox213.set_spacing(0)
 
         self.scrolledwindow16 = gtk.ScrolledWindow()
         self.scrolledwindow16.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
@@ -854,174 +970,143 @@ class TransfersFrame:
         self.FilterView.set_headers_visible(True)
         self.scrolledwindow16.add(self.FilterView)
 
-        self.hbox189.pack_start(self.scrolledwindow16, True, True, 0)
+        self.hbox213.pack_start(self.scrolledwindow16, True, True, 0)
 
-        self.vbox105 = gtk.VBox(False, 3)
-        self.vbox105.show()
-        self.vbox105.set_spacing(3)
-        self.vbox105.set_border_width(3)
+        self.vbox116 = gtk.VBox(False, 3)
+        self.vbox116.show()
+        self.vbox116.set_spacing(3)
+        self.vbox116.set_border_width(3)
 
         self.AddFilter = gtk.Button()
         self.AddFilter.show()
         self.AddFilter.connect("clicked", self.OnAddFilter)
 
-        self.alignment85 = gtk.Alignment(0.5, 0.5, 0, 0)
-        self.alignment85.show()
+        self.alignment95 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment95.show()
 
-        self.hbox191 = gtk.HBox(False, 2)
-        self.hbox191.show()
-        self.hbox191.set_spacing(2)
+        self.hbox214 = gtk.HBox(False, 2)
+        self.hbox214.show()
+        self.hbox214.set_spacing(2)
 
-        self.image79 = gtk.Image()
-        self.image79.set_padding(0, 0)
-        self.image79.set_from_stock(gtk.STOCK_ADD, 4)
-        self.image79.show()
-        self.hbox191.pack_start(self.image79, False, False, 0)
+        self.image89 = gtk.Image()
+        self.image89.set_padding(0, 0)
+        self.image89.set_from_stock(gtk.STOCK_ADD, 4)
+        self.image89.show()
+        self.hbox214.pack_start(self.image89, False, False, 0)
 
-        self.label316 = gtk.Label(_("Add..."))
-        self.label316.set_padding(0, 0)
-        self.label316.set_line_wrap(False)
-        self.label316.show()
-        self.hbox191.pack_start(self.label316, False, False, 0)
+        self.label366 = gtk.Label(_("Add..."))
+        self.label366.set_padding(0, 0)
+        self.label366.set_line_wrap(False)
+        self.label366.show()
+        self.hbox214.pack_start(self.label366, False, False, 0)
 
-        self.alignment85.add(self.hbox191)
+        self.alignment95.add(self.hbox214)
 
-        self.AddFilter.add(self.alignment85)
+        self.AddFilter.add(self.alignment95)
 
-        self.vbox105.pack_start(self.AddFilter, False, False, 0)
+        self.vbox116.pack_start(self.AddFilter, False, False, 0)
 
         self.EditFilter = gtk.Button()
         self.EditFilter.show()
         self.EditFilter.connect("clicked", self.OnEditFilter)
 
-        self.alignment88 = gtk.Alignment(0.5, 0.5, 0, 0)
-        self.alignment88.show()
+        self.alignment96 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment96.show()
 
-        self.hbox196 = gtk.HBox(False, 2)
-        self.hbox196.show()
-        self.hbox196.set_spacing(2)
+        self.hbox215 = gtk.HBox(False, 2)
+        self.hbox215.show()
+        self.hbox215.set_spacing(2)
 
-        self.image82 = gtk.Image()
-        self.image82.set_padding(0, 0)
-        self.image82.set_from_stock(gtk.STOCK_EDIT, 4)
-        self.image82.show()
-        self.hbox196.pack_start(self.image82, False, False, 0)
+        self.image90 = gtk.Image()
+        self.image90.set_padding(0, 0)
+        self.image90.set_from_stock(gtk.STOCK_EDIT, 4)
+        self.image90.show()
+        self.hbox215.pack_start(self.image90, False, False, 0)
 
-        self.label320 = gtk.Label(_("Edit Filter"))
-        self.label320.set_padding(0, 0)
-        self.label320.set_line_wrap(False)
-        self.label320.show()
-        self.hbox196.pack_start(self.label320, False, False, 0)
+        self.label367 = gtk.Label(_("Edit Filter"))
+        self.label367.set_padding(0, 0)
+        self.label367.set_line_wrap(False)
+        self.label367.show()
+        self.hbox215.pack_start(self.label367, False, False, 0)
 
-        self.alignment88.add(self.hbox196)
+        self.alignment96.add(self.hbox215)
 
-        self.EditFilter.add(self.alignment88)
+        self.EditFilter.add(self.alignment96)
 
-        self.vbox105.pack_start(self.EditFilter, False, False, 0)
+        self.vbox116.pack_start(self.EditFilter, False, False, 0)
 
         self.RemoveFilter = gtk.Button()
         self.RemoveFilter.show()
         self.RemoveFilter.connect("clicked", self.OnRemoveFilter)
 
-        self.alignment84 = gtk.Alignment(0.5, 0.5, 0, 0)
-        self.alignment84.show()
+        self.alignment97 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment97.show()
 
-        self.hbox190 = gtk.HBox(False, 2)
-        self.hbox190.show()
-        self.hbox190.set_spacing(2)
+        self.hbox216 = gtk.HBox(False, 2)
+        self.hbox216.show()
+        self.hbox216.set_spacing(2)
 
-        self.image78 = gtk.Image()
-        self.image78.set_padding(0, 0)
-        self.image78.set_from_stock(gtk.STOCK_REMOVE, 4)
-        self.image78.show()
-        self.hbox190.pack_start(self.image78, False, False, 0)
+        self.image91 = gtk.Image()
+        self.image91.set_padding(0, 0)
+        self.image91.set_from_stock(gtk.STOCK_REMOVE, 4)
+        self.image91.show()
+        self.hbox216.pack_start(self.image91, False, False, 0)
 
-        self.label315 = gtk.Label(_("Remove"))
-        self.label315.set_padding(0, 0)
-        self.label315.set_line_wrap(False)
-        self.label315.show()
-        self.hbox190.pack_start(self.label315, False, False, 0)
+        self.label368 = gtk.Label(_("Remove"))
+        self.label368.set_padding(0, 0)
+        self.label368.set_line_wrap(False)
+        self.label368.show()
+        self.hbox216.pack_start(self.label368, False, False, 0)
 
-        self.alignment84.add(self.hbox190)
+        self.alignment97.add(self.hbox216)
 
-        self.RemoveFilter.add(self.alignment84)
+        self.RemoveFilter.add(self.alignment97)
 
-        self.vbox105.pack_start(self.RemoveFilter, False, False, 0)
+        self.vbox116.pack_start(self.RemoveFilter, False, False, 0)
 
         self.DefaultFilters = gtk.Button()
         self.DefaultFilters.show()
         self.DefaultFilters.connect("clicked", self.OnDefaultFilters)
 
-        self.alignment86 = gtk.Alignment(0.5, 0.5, 0, 0)
-        self.alignment86.show()
+        self.alignment98 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment98.show()
 
-        self.hbox193 = gtk.HBox(False, 2)
-        self.hbox193.show()
-        self.hbox193.set_spacing(2)
+        self.hbox217 = gtk.HBox(False, 2)
+        self.hbox217.show()
+        self.hbox217.set_spacing(2)
 
-        self.image80 = gtk.Image()
-        self.image80.set_padding(0, 0)
-        self.image80.set_from_stock(gtk.STOCK_REFRESH, 4)
-        self.image80.show()
-        self.hbox193.pack_start(self.image80, False, False, 0)
+        self.image92 = gtk.Image()
+        self.image92.set_padding(0, 0)
+        self.image92.set_from_stock(gtk.STOCK_REFRESH, 4)
+        self.image92.show()
+        self.hbox217.pack_start(self.image92, False, False, 0)
 
-        self.DefaultLabel = gtk.Label(_("Load Defaults"))
-        self.DefaultLabel.set_padding(0, 0)
-        self.DefaultLabel.set_line_wrap(False)
-        self.DefaultLabel.show()
-        self.hbox193.pack_start(self.DefaultLabel, False, False, 0)
+        self.label369 = gtk.Label(_("Load Defaults"))
+        self.label369.set_padding(0, 0)
+        self.label369.set_line_wrap(False)
+        self.label369.show()
+        self.hbox217.pack_start(self.label369, False, False, 0)
 
-        self.alignment86.add(self.hbox193)
+        self.alignment98.add(self.hbox217)
 
-        self.DefaultFilters.add(self.alignment86)
+        self.DefaultFilters.add(self.alignment98)
 
-        self.vbox105.pack_start(self.DefaultFilters, False, False, 0)
+        self.vbox116.pack_start(self.DefaultFilters, False, False, 0)
 
-        self.hbox189.pack_start(self.vbox105, False, True, 3)
+        self.hbox213.pack_start(self.vbox116, False, False, 3)
 
-        self.vbox81.pack_start(self.hbox189, True, True, 0)
+        self.vbox115.pack_start(self.hbox213, False, True, 0)
 
-        self.hbox195 = gtk.HBox(False, 5)
-        self.hbox195.show()
-        self.hbox195.set_spacing(5)
+        self.expander7.add(self.vbox115)
 
-        self.VerifyFilters = gtk.Button()
-        self.VerifyFilters.show()
-        self.VerifyFilters.connect("clicked", self.OnVerifyFilter)
+        self.label372 = gtk.Label("")
+        self.label372.set_padding(0, 0)
+        self.label372.set_line_wrap(False)
+        self.label372.set_markup(_("<b>Download Filters:</b>"))
+        self.label372.show()
+        self.expander7.set_label_widget(self.label372)
 
-        self.alignment87 = gtk.Alignment(0.5, 0.5, 0, 0)
-        self.alignment87.show()
-
-        self.hbox194 = gtk.HBox(False, 2)
-        self.hbox194.show()
-        self.hbox194.set_spacing(2)
-
-        self.image81 = gtk.Image()
-        self.image81.set_padding(0, 0)
-        self.image81.set_from_stock(gtk.STOCK_SPELL_CHECK, 4)
-        self.image81.show()
-        self.hbox194.pack_start(self.image81, False, False, 0)
-
-        self.label319 = gtk.Label(_("Verify Filters"))
-        self.label319.set_padding(0, 0)
-        self.label319.set_line_wrap(False)
-        self.label319.show()
-        self.hbox194.pack_start(self.label319, False, False, 0)
-
-        self.alignment87.add(self.hbox194)
-
-        self.VerifyFilters.add(self.alignment87)
-
-        self.hbox195.pack_start(self.VerifyFilters, False, False, 0)
-
-        self.VerifiedLabel = gtk.Label("")
-        self.VerifiedLabel.set_padding(0, 0)
-        self.VerifiedLabel.set_line_wrap(True)
-        self.VerifiedLabel.set_markup(_("<b>Unverified</b>"))
-        self.VerifiedLabel.show()
-        self.hbox195.pack_start(self.VerifiedLabel, False, False, 0)
-
-        self.vbox81.pack_start(self.hbox195, False, True, 0)
+        self.vbox81.pack_start(self.expander7, False, True, 0)
 
         self.Main.add(self.vbox81)
 
@@ -1047,6 +1132,9 @@ class TransfersFrame:
     def OnEnableFiltersToggle(self, widget):
         pass
 
+    def OnVerifyFilter(self, widget):
+        pass
+
     def OnAddFilter(self, widget):
         pass
 
@@ -1059,19 +1147,21 @@ class TransfersFrame:
     def OnDefaultFilters(self, widget):
         pass
 
-    def OnVerifyFilter(self, widget):
-        pass
-
     def get_custom_widget(self, id, string1, string2, int1, int2):
         w = gtk.Label(_("(custom widget: %s)") % id)
         return w
 
 class UserinfoFrame:
-    def __init__(self, create = True, accel_group = None):
+    def __init__(self, create = True, accel_group = None, tooltips = None):
         if accel_group is None:
              self.accel_group = gtk.AccelGroup()
         else:
              self.accel_group = accel_group
+        if tooltips is None:
+             self.tooltips = gtk.Tooltips()
+        else:
+             self.tooltips = tooltips
+        self.tooltips.enable()
         if create:
             self.UserinfoFrame = gtk.Window(gtk.WINDOW_TOPLEVEL)
             self.UserinfoFrame.set_title(_("Userinfo"))
@@ -1192,11 +1282,16 @@ class UserinfoFrame:
         return w
 
 class BloatFrame:
-    def __init__(self, create = True, accel_group = None):
+    def __init__(self, create = True, accel_group = None, tooltips = None):
         if accel_group is None:
              self.accel_group = gtk.AccelGroup()
         else:
              self.accel_group = accel_group
+        if tooltips is None:
+             self.tooltips = gtk.Tooltips()
+        else:
+             self.tooltips = tooltips
+        self.tooltips.enable()
         if create:
             self.BloatFrame = gtk.Window(gtk.WINDOW_TOPLEVEL)
             self.BloatFrame.set_title(_("Bloat"))
@@ -1289,6 +1384,7 @@ class BloatFrame:
         self.vboxUI.pack_start(self.hbox182, False, False, 0)
 
         self.expander1 = gtk.Expander()
+        self.expander1.set_expanded(False)
         self.expander1.show()
         self.expander1.set_spacing(0)
 
@@ -1463,6 +1559,7 @@ class BloatFrame:
         self.vboxUI.pack_start(self.expander1, False, False, 0)
 
         self.expander2 = gtk.Expander()
+        self.expander2.set_expanded(True)
         self.expander2.show()
         self.expander2.set_spacing(0)
 
@@ -2148,6 +2245,7 @@ class BloatFrame:
         self.vboxUI.pack_start(self.expander2, False, False, 0)
 
         self.expander3 = gtk.Expander()
+        self.expander3.set_expanded(False)
         self.expander3.show()
         self.expander3.set_spacing(0)
 
@@ -2373,11 +2471,16 @@ class BloatFrame:
         return w
 
 class LogFrame:
-    def __init__(self, create = True, accel_group = None):
+    def __init__(self, create = True, accel_group = None, tooltips = None):
         if accel_group is None:
              self.accel_group = gtk.AccelGroup()
         else:
              self.accel_group = accel_group
+        if tooltips is None:
+             self.tooltips = gtk.Tooltips()
+        else:
+             self.tooltips = tooltips
+        self.tooltips.enable()
         if create:
             self.LogFrame = gtk.Window(gtk.WINDOW_TOPLEVEL)
             self.LogFrame.set_title(_("Log"))
@@ -2487,11 +2590,16 @@ class LogFrame:
         return w
 
 class BanFrame:
-    def __init__(self, create = True, accel_group = None):
+    def __init__(self, create = True, accel_group = None, tooltips = None):
         if accel_group is None:
              self.accel_group = gtk.AccelGroup()
         else:
              self.accel_group = accel_group
+        if tooltips is None:
+             self.tooltips = gtk.Tooltips()
+        else:
+             self.tooltips = tooltips
+        self.tooltips.enable()
         if create:
             self.BanFrame = gtk.Window(gtk.WINDOW_TOPLEVEL)
             self.BanFrame.set_title(_("Ban"))
@@ -2796,11 +2904,16 @@ class BanFrame:
         return w
 
 class SearchFrame:
-    def __init__(self, create = True, accel_group = None):
+    def __init__(self, create = True, accel_group = None, tooltips = None):
         if accel_group is None:
              self.accel_group = gtk.AccelGroup()
         else:
              self.accel_group = accel_group
+        if tooltips is None:
+             self.tooltips = gtk.Tooltips()
+        else:
+             self.tooltips = tooltips
+        self.tooltips.enable()
         if create:
             self.SearchFrame = gtk.Window(gtk.WINDOW_TOPLEVEL)
             self.SearchFrame.set_title(_("Search"))
@@ -2992,11 +3105,16 @@ class SearchFrame:
         return w
 
 class SettingsWindow:
-    def __init__(self, create = True, accel_group = None):
+    def __init__(self, create = True, accel_group = None, tooltips = None):
         if accel_group is None:
              self.accel_group = gtk.AccelGroup()
         else:
              self.accel_group = accel_group
+        if tooltips is None:
+             self.tooltips = gtk.Tooltips()
+        else:
+             self.tooltips = tooltips
+        self.tooltips.enable()
         if create:
             self.SettingsWindow = gtk.Window(gtk.WINDOW_TOPLEVEL)
             self.SettingsWindow.set_default_size(650, 400)
@@ -3083,11 +3201,16 @@ class SettingsWindow:
         return w
 
 class AwayFrame:
-    def __init__(self, create = True, accel_group = None):
+    def __init__(self, create = True, accel_group = None, tooltips = None):
         if accel_group is None:
              self.accel_group = gtk.AccelGroup()
         else:
              self.accel_group = accel_group
+        if tooltips is None:
+             self.tooltips = gtk.Tooltips()
+        else:
+             self.tooltips = tooltips
+        self.tooltips.enable()
         if create:
             self.AwayFrame = gtk.Window(gtk.WINDOW_TOPLEVEL)
             self.AwayFrame.set_title(_("Away"))
@@ -3169,11 +3292,16 @@ class AwayFrame:
         return w
 
 class EventsFrame:
-    def __init__(self, create = True, accel_group = None):
+    def __init__(self, create = True, accel_group = None, tooltips = None):
         if accel_group is None:
              self.accel_group = gtk.AccelGroup()
         else:
              self.accel_group = accel_group
+        if tooltips is None:
+             self.tooltips = gtk.Tooltips()
+        else:
+             self.tooltips = tooltips
+        self.tooltips.enable()
         if create:
             self.EventsFrame = gtk.Window(gtk.WINDOW_TOPLEVEL)
             self.EventsFrame.set_title(_("Events"))
@@ -3264,11 +3392,16 @@ class EventsFrame:
         return w
 
 class GeoBlockFrame:
-    def __init__(self, create = True, accel_group = None):
+    def __init__(self, create = True, accel_group = None, tooltips = None):
         if accel_group is None:
              self.accel_group = gtk.AccelGroup()
         else:
              self.accel_group = accel_group
+        if tooltips is None:
+             self.tooltips = gtk.Tooltips()
+        else:
+             self.tooltips = tooltips
+        self.tooltips.enable()
         if create:
             self.GeoBlockFrame = gtk.Window(gtk.WINDOW_TOPLEVEL)
             self.GeoBlockFrame.set_title(_("GeoBlock"))
@@ -3332,11 +3465,16 @@ class GeoBlockFrame:
         return w
 
 class UrlCatchFrame:
-    def __init__(self, create = True, accel_group = None):
+    def __init__(self, create = True, accel_group = None, tooltips = None):
         if accel_group is None:
              self.accel_group = gtk.AccelGroup()
         else:
              self.accel_group = accel_group
+        if tooltips is None:
+             self.tooltips = gtk.Tooltips()
+        else:
+             self.tooltips = tooltips
+        self.tooltips.enable()
         if create:
             self.UrlCatchFrame = gtk.Window(gtk.WINDOW_TOPLEVEL)
             self.UrlCatchFrame.set_title(_("UrlCatch"))
@@ -3503,11 +3641,16 @@ class UrlCatchFrame:
         return w
 
 class ConnectionFrame:
-    def __init__(self, create = True, accel_group = None):
+    def __init__(self, create = True, accel_group = None, tooltips = None):
         if accel_group is None:
              self.accel_group = gtk.AccelGroup()
         else:
              self.accel_group = accel_group
+        if tooltips is None:
+             self.tooltips = gtk.Tooltips()
+        else:
+             self.tooltips = tooltips
+        self.tooltips.enable()
         if create:
             self.ConnectionFrame = gtk.Window(gtk.WINDOW_TOPLEVEL)
             self.ConnectionFrame.set_title(_("Connection"))
@@ -3596,11 +3739,16 @@ class ConnectionFrame:
         return w
 
 class UIFrame:
-    def __init__(self, create = True, accel_group = None):
+    def __init__(self, create = True, accel_group = None, tooltips = None):
         if accel_group is None:
              self.accel_group = gtk.AccelGroup()
         else:
              self.accel_group = accel_group
+        if tooltips is None:
+             self.tooltips = gtk.Tooltips()
+        else:
+             self.tooltips = tooltips
+        self.tooltips.enable()
         if create:
             self.UIFrame = gtk.Window(gtk.WINDOW_TOPLEVEL)
             self.UIFrame.set_title(_("UI"))
@@ -3654,11 +3802,16 @@ class UIFrame:
         return w
 
 class MiscFrame:
-    def __init__(self, create = True, accel_group = None):
+    def __init__(self, create = True, accel_group = None, tooltips = None):
         if accel_group is None:
              self.accel_group = gtk.AccelGroup()
         else:
              self.accel_group = accel_group
+        if tooltips is None:
+             self.tooltips = gtk.Tooltips()
+        else:
+             self.tooltips = tooltips
+        self.tooltips.enable()
         if create:
             self.MiscFrame = gtk.Window(gtk.WINDOW_TOPLEVEL)
             self.MiscFrame.set_title(_("Misc"))
@@ -3740,11 +3893,16 @@ class MiscFrame:
         return w
 
 class ImportFrame:
-    def __init__(self, create = True, accel_group = None):
+    def __init__(self, create = True, accel_group = None, tooltips = None):
         if accel_group is None:
              self.accel_group = gtk.AccelGroup()
         else:
              self.accel_group = accel_group
+        if tooltips is None:
+             self.tooltips = gtk.Tooltips()
+        else:
+             self.tooltips = tooltips
+        self.tooltips.enable()
         if create:
             self.ImportFrame = gtk.Window(gtk.WINDOW_TOPLEVEL)
             self.ImportFrame.set_title(_("Import Config"))

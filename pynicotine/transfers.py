@@ -484,7 +484,10 @@ class Transfers:
 		useupslots = self.eventprocessor.config.sections["transfers"]["useupslots"]
 		bandwidthlist = [i.speed for i in self.uploads if i.conn is not None and i.speed is not None]
 		slotsreached = len(bandwidthlist) >= maxupslots
-		return (sum(bandwidthlist) > maxbandwidth) or (useupslots and slotsreached)
+		if useupslots:
+			return slotsreached
+		else:
+			return (sum(bandwidthlist) > maxbandwidth)
 
 	
 	def getFileSize(self,filename):

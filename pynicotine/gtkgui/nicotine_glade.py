@@ -2,11 +2,16 @@ import gtk, gobject
 from pynicotine.utils import _
 
 class MainWindow:
-    def __init__(self, create = True, accel_group = None):
+    def __init__(self, create = True, accel_group = None, tooltips = None):
         if accel_group is None:
              self.accel_group = gtk.AccelGroup()
         else:
              self.accel_group = accel_group
+        if tooltips is None:
+             self.tooltips = gtk.Tooltips()
+        else:
+             self.tooltips = tooltips
+        self.tooltips.enable()
         if create:
             self.MainWindow = gtk.Window(gtk.WINDOW_TOPLEVEL)
             self.MainWindow.set_title(_("Nicotine"))
@@ -1479,11 +1484,16 @@ class MainWindow:
         return w
 
 class ChatRoomTab:
-    def __init__(self, create = True, accel_group = None):
+    def __init__(self, create = True, accel_group = None, tooltips = None):
         if accel_group is None:
              self.accel_group = gtk.AccelGroup()
         else:
              self.accel_group = accel_group
+        if tooltips is None:
+             self.tooltips = gtk.Tooltips()
+        else:
+             self.tooltips = tooltips
+        self.tooltips.enable()
         if create:
             self.ChatRoomTab = gtk.Window(gtk.WINDOW_TOPLEVEL)
             self.ChatRoomTab.set_title(_("window1"))
@@ -1662,11 +1672,16 @@ class ChatRoomTab:
         return w
 
 class PrivateChatTab:
-    def __init__(self, create = True, accel_group = None):
+    def __init__(self, create = True, accel_group = None, tooltips = None):
         if accel_group is None:
              self.accel_group = gtk.AccelGroup()
         else:
              self.accel_group = accel_group
+        if tooltips is None:
+             self.tooltips = gtk.Tooltips()
+        else:
+             self.tooltips = tooltips
+        self.tooltips.enable()
         if create:
             self.PrivateChatTab = gtk.Window(gtk.WINDOW_TOPLEVEL)
             self.PrivateChatTab.set_title(_("window1"))
@@ -1779,11 +1794,16 @@ class PrivateChatTab:
         return w
 
 class SearchTab:
-    def __init__(self, create = True, accel_group = None):
+    def __init__(self, create = True, accel_group = None, tooltips = None):
         if accel_group is None:
              self.accel_group = gtk.AccelGroup()
         else:
              self.accel_group = accel_group
+        if tooltips is None:
+             self.tooltips = gtk.Tooltips()
+        else:
+             self.tooltips = tooltips
+        self.tooltips.enable()
         if create:
             self.SearchTab = gtk.Window(gtk.WINDOW_TOPLEVEL)
             self.SearchTab.set_title(_("window1"))
@@ -2036,11 +2056,16 @@ class SearchTab:
         return w
 
 class UserInfoTab:
-    def __init__(self, create = True, accel_group = None):
+    def __init__(self, create = True, accel_group = None, tooltips = None):
         if accel_group is None:
              self.accel_group = gtk.AccelGroup()
         else:
              self.accel_group = accel_group
+        if tooltips is None:
+             self.tooltips = gtk.Tooltips()
+        else:
+             self.tooltips = tooltips
+        self.tooltips.enable()
         if create:
             self.UserInfoTab = gtk.Window(gtk.WINDOW_TOPLEVEL)
             self.UserInfoTab.set_title(_("window1"))
@@ -2107,10 +2132,10 @@ class UserInfoTab:
         self.frame2.show()
         self.frame2.set_shadow_type(gtk.SHADOW_ETCHED_IN)
 
-        self.vbox10 = gtk.VBox(False, 10)
+        self.vbox10 = gtk.VBox(False, 5)
         self.vbox10.show()
-        self.vbox10.set_spacing(10)
-        self.vbox10.set_border_width(10)
+        self.vbox10.set_spacing(5)
+        self.vbox10.set_border_width(5)
 
         self.uploads = gtk.Label(_("Total uploads allowed: unknown"))
         self.uploads.set_alignment(0, 0.5)
@@ -2119,23 +2144,29 @@ class UserInfoTab:
         self.uploads.show()
         self.vbox10.pack_start(self.uploads, False, False, 0)
 
+        self.slotsavail = gtk.Label(_("Slots free: unknown"))
+        self.slotsavail.set_alignment(0, 0.5)
+        self.slotsavail.set_padding(0, 0)
+        self.slotsavail.set_line_wrap(False)
+        self.slotsavail.show()
+        self.vbox10.pack_start(self.slotsavail, False, False, 0)
+
+        self.hbox65 = gtk.HBox(False, 5)
+        self.hbox65.show()
+        self.hbox65.set_spacing(5)
+
         self.queuesize = gtk.Label(_("Queue size: unknown"))
         self.queuesize.set_alignment(0, 0.5)
         self.queuesize.set_padding(0, 0)
         self.queuesize.set_line_wrap(False)
         self.queuesize.show()
-        self.vbox10.pack_start(self.queuesize, False, False, 0)
+        self.hbox65.pack_start(self.queuesize, False, False, 0)
+
+        self.vbox10.pack_start(self.hbox65, False, False, 0)
 
         self.hbox17 = gtk.HBox(False, 5)
         self.hbox17.show()
         self.hbox17.set_spacing(5)
-
-        self.slotsavail = gtk.Label(_("Slots available: unknown"))
-        self.slotsavail.set_alignment(0, 0.5)
-        self.slotsavail.set_padding(0, 0)
-        self.slotsavail.set_line_wrap(False)
-        self.slotsavail.show()
-        self.hbox17.pack_start(self.slotsavail, False, False, 0)
 
         self.speed = gtk.Label(_("Speed: unknown"))
         self.speed.set_alignment(0, 0.5)
@@ -2150,14 +2181,14 @@ class UserInfoTab:
         self.hbox16.show()
         self.hbox16.set_spacing(5)
 
-        self.filesshared = gtk.Label(_("Files Shared: unknown"))
+        self.filesshared = gtk.Label(_("Files: unknown"))
         self.filesshared.set_alignment(0, 0.5)
         self.filesshared.set_padding(0, 0)
         self.filesshared.set_line_wrap(False)
         self.filesshared.show()
         self.hbox16.pack_start(self.filesshared, False, False, 0)
 
-        self.dirsshared = gtk.Label(_("Dirs Shared: unknown"))
+        self.dirsshared = gtk.Label(_("Directories: unknown"))
         self.dirsshared.set_alignment(0, 0.5)
         self.dirsshared.set_padding(0, 0)
         self.dirsshared.set_line_wrap(False)
@@ -2169,6 +2200,24 @@ class UserInfoTab:
         self.progressbar = gtk.ProgressBar()
         self.progressbar.show()
         self.vbox10.pack_end(self.progressbar, False, True, 0)
+
+        self.hbox66 = gtk.HBox(False, 5)
+        self.hbox66.show()
+        self.hbox66.set_spacing(5)
+
+        self.label72 = gtk.Label(_("Accepts Uploads from:"))
+        self.label72.set_padding(0, 0)
+        self.label72.set_line_wrap(False)
+        self.label72.show()
+        self.hbox66.pack_start(self.label72, False, False, 0)
+
+        self.AcceptUploads = gtk.Label(_("unknown"))
+        self.AcceptUploads.set_padding(0, 0)
+        self.AcceptUploads.set_line_wrap(False)
+        self.AcceptUploads.show()
+        self.hbox66.pack_start(self.AcceptUploads, False, False, 0)
+
+        self.vbox10.pack_start(self.hbox66, True, True, 0)
 
         self.frame2.add(self.vbox10)
 
@@ -2521,11 +2570,16 @@ class UserInfoTab:
         return w
 
 class UserBrowseTab:
-    def __init__(self, create = True, accel_group = None):
+    def __init__(self, create = True, accel_group = None, tooltips = None):
         if accel_group is None:
              self.accel_group = gtk.AccelGroup()
         else:
              self.accel_group = accel_group
+        if tooltips is None:
+             self.tooltips = gtk.Tooltips()
+        else:
+             self.tooltips = tooltips
+        self.tooltips.enable()
         if create:
             self.UserBrowseTab = gtk.Window(gtk.WINDOW_TOPLEVEL)
             self.UserBrowseTab.set_title(_("window1"))
@@ -2749,11 +2803,16 @@ class UserBrowseTab:
         return w
 
 class RoomList:
-    def __init__(self, create = True, accel_group = None):
+    def __init__(self, create = True, accel_group = None, tooltips = None):
         if accel_group is None:
              self.accel_group = gtk.AccelGroup()
         else:
              self.accel_group = accel_group
+        if tooltips is None:
+             self.tooltips = gtk.Tooltips()
+        else:
+             self.tooltips = tooltips
+        self.tooltips.enable()
         if create:
             self.RoomList = gtk.Window(gtk.WINDOW_TOPLEVEL)
             self.RoomList.set_title(_("window1"))

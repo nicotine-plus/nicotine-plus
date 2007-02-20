@@ -1606,8 +1606,12 @@ class NicotineFrame(MainWindow):
 				totalupl = self.np.transfers.getTotalUploadsAllowed()
 				queuesize = self.np.transfers.getUploadQueueSizes()[0]
 				slotsavail = not self.np.transfers.bandwidthLimitReached()
-
-				self.userinfo.ShowLocalInfo(user, descr, has_pic, pic, totalupl, queuesize, slotsavail)
+				ua = self.np.config.sections["transfers"]["remotedownloads"]
+				if ua:
+					uploadallowed = self.np.config.sections["transfers"]["uploadallowed"]
+				else:
+					uploadallowed = ua
+				self.userinfo.ShowLocalInfo(user, descr, has_pic, pic, totalupl, queuesize, slotsavail, uploadallowed)
 			
 		else:
 			self.np.ProcessRequestToPeer(user, slskmessages.UserInfoRequest(None), self.userinfo)

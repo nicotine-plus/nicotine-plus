@@ -329,7 +329,10 @@ class TransfersFrame(settings_glade.TransfersFrame):
 	def OnQueueUseSlotsToggled(self, widget):
 		sensitive = widget.get_active()
 		self.QueueSlots.set_sensitive(sensitive)
-	
+		self.QueueBandwidth.set_sensitive(not sensitive)
+		self.label185.set_sensitive(not sensitive)
+		self.label186.set_sensitive(not sensitive)
+		
 	def OnLimitToggled(self, widget):
 		sensitive = widget.get_active()
 		for w in self.LimitSpeed, self.LimitPerTransfer, self.LimitTotalTransfers:

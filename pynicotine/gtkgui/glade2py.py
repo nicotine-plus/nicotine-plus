@@ -89,7 +89,16 @@ def write_widget_attrs(widget):
 		img = "gtk.STOCK_" + widget.attrs["stock"][4:].upper().replace("-", "_")
 		sze = widget.attrs["icon_size"]
 		print indent + "%s.set_from_stock(%s, %s)" % (widget.id, img, sze)
-	
+		
+	if widget.attrs.has_key("tooltip"):
+		tip = widget.attrs["tooltip"]
+		print indent + "self.tooltips.set_tip(%s, _(\"%s\"))" % (widget.id, tip)
+		
+	if widget.attrs.has_key("expanded"):
+		expanded = widget.attrs["expanded"]
+		print indent + "%s.set_expanded(%s)" % (widget.id, expanded)
+		
+		
 	for i in attrs:
 		if widget.attrs.has_key(i[0]):
 			v = i[1](widget.id, widget.attrs[i[0]])
@@ -477,11 +486,16 @@ def write_main(w):
 	global signals, indent
 	w.attrs["accel_group"] = "self.accel_group"
 	print "class %s:" % w.id[5:]
-	print "    def __init__(self, create = True, accel_group = None):"
+	print "    def __init__(self, create = True, accel_group = None, tooltips = None):"
 	print "        if accel_group is None:"
 	print "             self.accel_group = gtk.AccelGroup()"
 	print "        else:"
 	print "             self.accel_group = accel_group"
+	print "        if tooltips is None:"
+	print "             self.tooltips = gtk.Tooltips()"
+	print "        else:"
+	print "             self.tooltips = tooltips"
+	print "        self.tooltips.enable()"
 	print "        if create:"
 	indent = "            "
 	write_widget(w)
