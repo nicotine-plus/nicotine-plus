@@ -899,18 +899,18 @@ class Transfers:
 			
 			for i in self.uploads:
 				if i.status == "Queued":
-					if self.UserListPrivileged(i.user):
+					if self.isPrivileged(i.user):
 						countpriv += 1
 					else:
 						count += 1
 					if i.user == user and i.filename == msg.file:
-						if self.UserListPrivileged(user):
+						if self.isPrivileged(user):
 							place = countpriv
 							break
 						else:
 							place = count
 		
-					if not self.UserListPrivileged(user):
+					if not self.isPrivileged(user):
 						place += countpriv
 		else:
 			list = {user:time.time()}
@@ -1027,7 +1027,13 @@ class Transfers:
 			return 1
 		else:
 			return 0
-
+		
+	def isPrivileged(self, user):
+		if user in self.privilegedusers or self.UserListPrivileged(user):
+			return True
+		else:
+			return False 
+		
 	def ConnClose(self, conn, addr):
 		""" The remote user has closed the connection either because
 		he logged off, or because there's a network problem."""
