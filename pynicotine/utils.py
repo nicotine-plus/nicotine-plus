@@ -14,6 +14,7 @@ import string
 import os.path
 import os,dircache
 import sys
+import gobject
 win32 = sys.platform.startswith("win")
 frame = 0
 log = 0
@@ -71,25 +72,25 @@ def rescandirs(shared, sharedmtimes, sharedfiles, sharedfilesstreams, yieldfunct
 	# Check for modified or new files
 	# returns dict in format:  { Directory : mtime, ... }
 	
-	progress.set_text(_("Checking for changes"))
-	progress.show()
-	progress.set_fraction(0)
+	gobject.idle_add(progress.set_text, _("Checking for changes"))
+	gobject.idle_add(progress.show)
+	gobject.idle_add(progress.set_fraction, 0)
 	newmtimes = getDirsMtimes(shared, yieldfunction)
-	progress.set_text(_("Scanning %sShares") % name)
+	gobject.idle_add(progress.set_text, _("Scanning %sShares") % name)
 	# Get list of files
 	# returns dict in format { Directory : { File : metadata, ... }, ... }
 	newsharedfiles = getFilesList(newmtimes, sharedmtimes, sharedfiles,yieldfunction, progress)
 
 	# Pack shares data
 	# returns dict in format { Directory : hex string of files+metadata, ... }
-	progress.set_text(_("Building DataBase"))
+	gobject.idle_add(progress.set_text, _("Building DataBase"))
 	newsharedfilesstreams = getFilesStreams(newmtimes, sharedmtimes, sharedfilesstreams, newsharedfiles, yieldfunction)
 	
 	# Update Search Index
 	# newwordindex is a dict in format {word: [num, num, ..], ... } with num matching
 	# keys in newfileindex
 	# newfileindex is a dict in format { num: (path, size, (bitrate, vbr), length), ... }
-	progress.set_text(_("Building Index"))
+	gobject.idle_add(progress.set_text, _("Building Index"))
 	newwordindex, newfileindex = getFilesIndex(newmtimes, sharedmtimes, shared, newsharedfiles, yieldfunction)
 	progress.set_fraction(1.0)
 	
@@ -159,7 +160,7 @@ def getFilesList(mtimes, oldmtimes, oldlist, yieldcall = None, progress=None):
 		if progress:
 			#print progress.get_fraction()+percent
 			if progress.get_fraction()+percent <= 1.0:
-				progress.set_fraction(progress.get_fraction()+percent)
+				gobject.idle_add(progress.set_fraction,progress.get_fraction()+percent)
 		if hiddenCheck(directory):
 
 			continue	
