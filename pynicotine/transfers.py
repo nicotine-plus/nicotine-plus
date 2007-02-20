@@ -652,6 +652,7 @@ class Transfers:
 				if i.transfertimer is not None:
 					i.transfertimer.cancel()
 				try:
+					# Open File
 					f = open(i.filename.replace("\\",os.sep),"rb")
 					self.queue.put(slskmessages.UploadFile(i.conn,file = f,size = i.size))
 					i.status = _("Initializing transfer")
@@ -859,30 +860,47 @@ class Transfers:
 			self.eventprocessor.config.sections["server"]["banlist"].append(user)
 			self.eventprocessor.config.writeConfig()
 
-
+	# Find next file to upload
 	def checkUploadQueue(self):
 		if self.bandwidthLimitReached() or self.transferNegotiating():
 			return
 		transfercandidate = None
 		trusers = self.getTransferringUsers()
+		
+		# List of transfer instances of users who are not currently transferring
 		list = [i for i in self.uploads if not i.user in trusers and i.status == "Queued"]
-		listogg = [i for i in list if i.filename[-4:].lower() == ".ogg"]
-		listprivileged = [i for i in list if i.user in self.privilegedusers or self.UserListPrivileged(i.user)]
-		if len(listogg) > 0 and not self.eventprocessor.config.sections["transfers"]["fifoqueue"]:
-			list = listogg
+		# Sublist of privileged users transfers
+		listprivileged = [i for i in list if self.isPrivileged(i.user)]
+		
+		if not self.eventprocessor.config.sections["transfers"]["fifoqueue"]:
+			# Sublist of ogg files transfers
+			listogg = [i for i in list if i.filename[-4:].lower() == ".ogg"]
+			if len(listogg) > 0:
+				# Only OGG files will get selected
+				list = listogg
+				
 		if len(listprivileged) > 0:
+			# Upload to a privileged user
+			# Only Privileged users' files will get selected
 			list = listprivileged
+			
 		if len(list) == 0:
 			return
-	
+
 		if self.eventprocessor.config.sections["transfers"]["fifoqueue"]:
+			# FIFO
+			# Get the first item in the list
 			transfercandidate = list[0]
 		else:
+			# Round Robin 
+			# Get first transfer that was queued less than one second from now
 			mintimequeued = time.time() + 1
 			for i in list:
 				if i.timequeued < mintimequeued:
 					transfercandidate = i
+					# Break loop
 					mintimequeued = i.timequeued
+					
 		if transfercandidate is not None:
 			self.pushFile(user = transfercandidate.user, filename = transfercandidate.filename, transfer = transfercandidate)
 			self.removeQueued(transfercandidate.user, transfercandidate.filename)
@@ -893,35 +911,43 @@ class Transfers:
 				user = i.username
 			
 		if self.eventprocessor.config.sections["transfers"]["fifoqueue"]:
+			# Number of transfers queued by non-privileged users
 			count = 0
+			# Number of transfers queued by privileged users
 			countpriv = 0
+			# Place in the queue for msg.file
 			place = 0
 			
 			for i in self.uploads:
+				# Ignore non-queued files
 				if i.status == "Queued":
 					if self.isPrivileged(i.user):
 						countpriv += 1
 					else:
 						count += 1
+					# Stop counting on the matching file
 					if i.user == user and i.filename == msg.file:
 						if self.isPrivileged(user):
+							# User is privileged so we only 
+							# count priv'd transfers
 							place = countpriv
-							break
 						else:
-							place = count
-		
-					if not self.isPrivileged(user):
-						place += countpriv
+							# Count all transfers
+							place = count + countpriv
+						break
+			# Debugging
+			#print i.user, i.filename, count, countpriv, place
 		else:
-			list = {user:time.time()}
-			listogg = {user:time.time()}
-			listpriv = {user:time.time()}
+			#list = {user:time.time()}
+			#listogg = {user:time.time()}
+			list = listogg = listpriv = {user:time.time()}
 			countogg = 0
 			countpriv = 0
 			
 			for i in self.uploads:
+				# Ignore non-queued files
 				if i.status == "Queued":
-					if i.user in listpriv.keys() or i.user in self.privilegedusers or self.UserListPrivileged(i.user):
+					if i.user in listpriv.keys() or self.isPrivileged(i.user):
 						listpriv[i.user] = i.timequeued
 						countpriv += 1
 					elif i.filename[-4:].lower() == ".ogg":
@@ -930,17 +956,24 @@ class Transfers:
 					else:
 						list[i.user] = i.timequeued
 			place = 0
-			if user in self.privilegedusers or self.UserListPrivileged(user):
+			if self.isPrivileged(user):
+				# Only have priv'd files in the list
 				list = listpriv
 			elif msg.file[-4:].lower() == ".ogg":
+				# Only have ogg files in the list
 				list = listogg
-				place = place + countpriv
+				# Add priv'd numbers to place, since
+				# They won't be in the list
+				place += countpriv
 			else:
-				place = place + countpriv + countogg
+				# If file is not ogg and user is not privileged
+				# Add priv'd and ogg numbers to place, since
+				# They won't be in the list
+				place += countpriv + countogg
+				
 			for i in list.keys():
 				if list[i] < list[user]:
-					place = place + 1
-	
+					place += 1
 	
 		self.queue.put(slskmessages.PlaceInQueue(msg.conn.conn, msg.file, place))
 
@@ -975,7 +1008,7 @@ class Transfers:
 					count += 1
 			return count, count
 		else:
-			if username in self.privilegedusers or self.UserListPrivileged(username):
+			if self.isPrivileged(username):
 				return len(self.privusersqueued), len(self.privusersqueued)
 			else:
 				return len(self.usersqueued)+self.privcount+self.oggcount, len(self.oggusersqueued)+self.privcount
@@ -1018,8 +1051,10 @@ class Transfers:
 	    
 	
 	def UserListPrivileged(self, user):
+		# All users
 		if self.eventprocessor.config.sections["transfers"]["preferfriends"]:
 			return user in [i[0] for i in self.eventprocessor.config.sections["server"]["userlist"]]
+		# Only privileged users
 		userlist = [i[0] for i in self.eventprocessor.config.sections["server"]["userlist"]]
 		if user not in userlist:
 			return 0

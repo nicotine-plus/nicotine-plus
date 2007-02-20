@@ -1322,6 +1322,8 @@ class NicotineFrame(MainWindow):
 			
 			self.UpdateColours()
 			
+		if self.np.transfers is not None:
+			self.np.transfers.checkUploadQueue()
 		self.UpdateTransferButtons()
 		if needrescan:
 			self.needrescan = 1
