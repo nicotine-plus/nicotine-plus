@@ -629,10 +629,6 @@ class TransfersFrame:
         self.vbox81.set_spacing(5)
         self.vbox81.set_border_width(5)
 
-        self.vbox82 = gtk.VBox(False, 3)
-        self.vbox82.show()
-        self.vbox82.set_spacing(3)
-
         self.expander5 = gtk.Expander()
         self.expander5.set_expanded(True)
         self.expander5.show()
@@ -654,6 +650,7 @@ class TransfersFrame:
         self.hbox171.pack_start(self.label295, False, False, 0)
 
         self.RoundRobin = gtk.RadioButton()
+        self.tooltips.set_tip(self.RoundRobin, _("Users will be sent one file and then another user will be selected"))
         self.RoundRobin.set_active(False)
         self.RoundRobin.set_label(_("Round Robin"))
         self.RoundRobin.show()
@@ -661,6 +658,7 @@ class TransfersFrame:
         self.hbox171.pack_start(self.RoundRobin, False, False, 0)
 
         self.FirstInFirstOut = gtk.RadioButton(self.RoundRobin)
+        self.tooltips.set_tip(self.FirstInFirstOut, _("Files will be sent in the order they were queued"))
         self.FirstInFirstOut.set_active(False)
         self.FirstInFirstOut.set_label(_("First In, First Out"))
         self.FirstInFirstOut.show()
@@ -682,7 +680,6 @@ class TransfersFrame:
 
         self.QueueBandwidth = gtk.Entry()
         self.QueueBandwidth.set_size_request(50, -1)
-        self.tooltips.set_tip(self.QueueBandwidth, _("Set to a very large number if you want to always"))
         self.QueueBandwidth.set_text(_(""))
         self.QueueBandwidth.set_editable(True)
         self.QueueBandwidth.show()
@@ -702,7 +699,7 @@ class TransfersFrame:
         self.hbox118.set_spacing(5)
 
         self.QueueUseSlots = gtk.CheckButton()
-        self.tooltips.set_tip(self.QueueUseSlots, _("If disabled, slots with automatically be determined by available bandwidth limitations"))
+        self.tooltips.set_tip(self.QueueUseSlots, _("If disabled, slots will automatically be determined by available bandwidth limitations"))
         self.QueueUseSlots.set_active(False)
         self.QueueUseSlots.set_label(_("Limit number of upload slots to"))
         self.QueueUseSlots.show()
@@ -711,6 +708,7 @@ class TransfersFrame:
 
         self.QueueSlots = gtk.Entry()
         self.QueueSlots.set_size_request(50, -1)
+        self.tooltips.set_tip(self.QueueSlots, _("Set to 0 to disable uploads"))
         self.QueueSlots.set_text(_(""))
         self.QueueSlots.set_editable(True)
         self.QueueSlots.show()
@@ -780,7 +778,7 @@ class TransfersFrame:
 
         self.MaxUserQueue = gtk.Entry()
         self.MaxUserQueue.set_size_request(50, -1)
-        self.tooltips.set_tip(self.MaxUserQueue, _("Files will remain in the user's queue but will not be queuable until the total size of queue files is under this limit"))
+        self.tooltips.set_tip(self.MaxUserQueue, _("Files will remain in the download user's queue with a warning message but will not be added to your upload queue until the user retries them with a smaller total queue size"))
         self.MaxUserQueue.set_text(_("100"))
         self.MaxUserQueue.set_editable(True)
         self.MaxUserQueue.show()
@@ -806,6 +804,7 @@ class TransfersFrame:
         self.hbox211.set_spacing(5)
 
         self.RemoteDownloads = gtk.CheckButton()
+        self.tooltips.set_tip(self.RemoteDownloads, _("The users will be able to send you files. These files will be downloaded into the Buddy Uploads subdirectory in your Download directory"))
         self.RemoteDownloads.set_active(False)
         self.RemoteDownloads.set_label(_("Allow these users to send you files:"))
         self.RemoteDownloads.show()
@@ -833,18 +832,23 @@ class TransfersFrame:
         self.label362.show()
         self.expander5.set_label_widget(self.label362)
 
-        self.vbox82.pack_start(self.expander5, False, False, 0)
+        self.vbox81.pack_start(self.expander5, False, True, 0)
 
         self.expander6 = gtk.Expander()
         self.expander6.set_expanded(True)
         self.expander6.show()
         self.expander6.set_spacing(5)
 
+        self.vbox117 = gtk.VBox(False, 0)
+        self.vbox117.show()
+        self.vbox117.set_spacing(0)
+
         self.hbox176 = gtk.HBox(False, 5)
         self.hbox176.show()
         self.hbox176.set_spacing(5)
 
         self.FriendsOnly = gtk.CheckButton()
+        self.tooltips.set_tip(self.FriendsOnly, _("If buddy shares are enabled, they will be shared. Otherwise normal shares will be used."))
         self.FriendsOnly.set_active(False)
         self.FriendsOnly.set_label(_("Share to friends only"))
         self.FriendsOnly.show()
@@ -852,12 +856,15 @@ class TransfersFrame:
         self.hbox176.pack_start(self.FriendsOnly, False, False, 0)
 
         self.PreferFriends = gtk.CheckButton()
+        self.tooltips.set_tip(self.PreferFriends, _("Friends will have higher priority in the queue, the same as globally privileged users"))
         self.PreferFriends.set_active(False)
         self.PreferFriends.set_label(_("Privilege all my friends"))
         self.PreferFriends.show()
         self.hbox176.pack_start(self.PreferFriends, False, False, 0)
 
-        self.expander6.add(self.hbox176)
+        self.vbox117.pack_start(self.hbox176, True, True, 0)
+
+        self.expander6.add(self.vbox117)
 
         self.label363 = gtk.Label("")
         self.label363.set_padding(0, 0)
@@ -866,15 +873,7 @@ class TransfersFrame:
         self.label363.show()
         self.expander6.set_label_widget(self.label363)
 
-        self.vbox82.pack_start(self.expander6, False, False, 0)
-
-        self.vbox81.pack_start(self.vbox82, False, False, 0)
-
-        self.LockIncoming = gtk.CheckButton()
-        self.LockIncoming.set_active(False)
-        self.LockIncoming.set_label(_("Lock incoming files (turn off for NFS)"))
-        self.LockIncoming.show()
-        self.vbox81.pack_start(self.LockIncoming, False, False, 0)
+        self.vbox81.pack_start(self.expander6, False, True, 0)
 
         self.expander7 = gtk.Expander()
         self.expander7.set_expanded(False)
@@ -914,63 +913,10 @@ class TransfersFrame:
         self.label365.show()
         self.vbox115.pack_start(self.label365, False, False, 0)
 
-        self.hbox218 = gtk.HBox(False, 5)
-        self.hbox218.show()
-        self.hbox218.set_spacing(5)
-
-        self.VerifyFilters = gtk.Button()
-        self.VerifyFilters.show()
-        self.VerifyFilters.connect("clicked", self.OnVerifyFilter)
-
-        self.alignment99 = gtk.Alignment(0.5, 0.5, 0, 0)
-        self.alignment99.show()
-
-        self.hbox219 = gtk.HBox(False, 2)
-        self.hbox219.show()
-        self.hbox219.set_spacing(2)
-
-        self.image93 = gtk.Image()
-        self.image93.set_padding(0, 0)
-        self.image93.set_from_stock(gtk.STOCK_SPELL_CHECK, 4)
-        self.image93.show()
-        self.hbox219.pack_start(self.image93, False, False, 0)
-
-        self.label370 = gtk.Label(_("Verify Filters"))
-        self.label370.set_padding(0, 0)
-        self.label370.set_line_wrap(False)
-        self.label370.show()
-        self.hbox219.pack_start(self.label370, False, False, 0)
-
-        self.alignment99.add(self.hbox219)
-
-        self.VerifyFilters.add(self.alignment99)
-
-        self.hbox218.pack_end(self.VerifyFilters, False, False, 0)
-
-        self.VerifiedLabel = gtk.Label("")
-        self.VerifiedLabel.set_padding(0, 0)
-        self.VerifiedLabel.set_line_wrap(True)
-        self.VerifiedLabel.set_markup(_("<b>Unverified</b>"))
-        self.VerifiedLabel.show()
-        self.hbox218.pack_end(self.VerifiedLabel, False, False, 0)
-
-        self.vbox115.pack_start(self.hbox218, False, False, 0)
-
-        self.hbox213 = gtk.HBox(False, 0)
-        self.hbox213.show()
-        self.hbox213.set_spacing(0)
-
-        self.scrolledwindow16 = gtk.ScrolledWindow()
-        self.scrolledwindow16.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
-        self.scrolledwindow16.show()
-        self.scrolledwindow16.set_shadow_type(gtk.SHADOW_IN)
-
-        self.FilterView = gtk.TreeView()
-        self.FilterView.show()
-        self.FilterView.set_headers_visible(True)
-        self.scrolledwindow16.add(self.FilterView)
-
-        self.hbox213.pack_start(self.scrolledwindow16, True, True, 0)
+        self.table5 = gtk.Table()
+        self.table5.show()
+        self.table5.set_row_spacings(3)
+        self.table5.set_col_spacings(3)
 
         self.vbox116 = gtk.VBox(False, 3)
         self.vbox116.show()
@@ -1093,9 +1039,71 @@ class TransfersFrame:
 
         self.vbox116.pack_start(self.DefaultFilters, False, False, 0)
 
-        self.hbox213.pack_start(self.vbox116, False, False, 3)
+        self.table5.attach(self.vbox116, 1, 2, 1, 2, gtk.FILL, gtk.FILL, 0, 0)
 
-        self.vbox115.pack_start(self.hbox213, False, True, 0)
+        self.hbox218 = gtk.HBox(False, 5)
+        self.hbox218.show()
+        self.hbox218.set_spacing(5)
+
+        self.VerifiedLabel = gtk.Label("")
+        self.VerifiedLabel.set_alignment(1, 0.5)
+        self.VerifiedLabel.set_padding(0, 0)
+        self.VerifiedLabel.set_line_wrap(True)
+        self.VerifiedLabel.set_markup(_("<b>Unverified</b>"))
+        self.VerifiedLabel.show()
+        self.hbox218.pack_end(self.VerifiedLabel, True, True, 0)
+
+        self.table5.attach(self.hbox218, 0, 1, 0, 1, gtk.EXPAND|gtk.FILL, gtk.FILL, 0, 0)
+
+        self.scrolledwindow16 = gtk.ScrolledWindow()
+        self.scrolledwindow16.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+        self.scrolledwindow16.show()
+        self.scrolledwindow16.set_shadow_type(gtk.SHADOW_IN)
+
+        self.FilterView = gtk.TreeView()
+        self.FilterView.show()
+        self.FilterView.set_headers_visible(True)
+        self.scrolledwindow16.add(self.FilterView)
+
+        self.table5.attach(self.scrolledwindow16, 0, 1, 1, 2, gtk.EXPAND|gtk.FILL, gtk.FILL, 0, 0)
+
+        self.vbox118 = gtk.VBox(False, 3)
+        self.vbox118.show()
+        self.vbox118.set_spacing(3)
+        self.vbox118.set_border_width(3)
+
+        self.VerifyFilters = gtk.Button()
+        self.VerifyFilters.show()
+        self.VerifyFilters.connect("clicked", self.OnVerifyFilter)
+
+        self.alignment99 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment99.show()
+
+        self.hbox219 = gtk.HBox(False, 2)
+        self.hbox219.show()
+        self.hbox219.set_spacing(2)
+
+        self.image93 = gtk.Image()
+        self.image93.set_padding(0, 0)
+        self.image93.set_from_stock(gtk.STOCK_SPELL_CHECK, 4)
+        self.image93.show()
+        self.hbox219.pack_start(self.image93, False, False, 0)
+
+        self.label373 = gtk.Label(_("Verify Filters"))
+        self.label373.set_padding(0, 0)
+        self.label373.set_line_wrap(False)
+        self.label373.show()
+        self.hbox219.pack_start(self.label373, False, False, 0)
+
+        self.alignment99.add(self.hbox219)
+
+        self.VerifyFilters.add(self.alignment99)
+
+        self.vbox118.pack_start(self.VerifyFilters, False, False, 0)
+
+        self.table5.attach(self.vbox118, 1, 2, 0, 1, gtk.FILL, gtk.FILL, 0, 0)
+
+        self.vbox115.pack_start(self.table5, True, True, 0)
 
         self.expander7.add(self.vbox115)
 
@@ -1107,6 +1115,12 @@ class TransfersFrame:
         self.expander7.set_label_widget(self.label372)
 
         self.vbox81.pack_start(self.expander7, False, True, 0)
+
+        self.LockIncoming = gtk.CheckButton()
+        self.LockIncoming.set_active(False)
+        self.LockIncoming.set_label(_("Lock incoming files (turn off for NFS)"))
+        self.LockIncoming.show()
+        self.vbox81.pack_start(self.LockIncoming, False, False, 0)
 
         self.Main.add(self.vbox81)
 
@@ -1132,9 +1146,6 @@ class TransfersFrame:
     def OnEnableFiltersToggle(self, widget):
         pass
 
-    def OnVerifyFilter(self, widget):
-        pass
-
     def OnAddFilter(self, widget):
         pass
 
@@ -1145,6 +1156,9 @@ class TransfersFrame:
         pass
 
     def OnDefaultFilters(self, widget):
+        pass
+
+    def OnVerifyFilter(self, widget):
         pass
 
     def get_custom_widget(self, id, string1, string2, int1, int2):

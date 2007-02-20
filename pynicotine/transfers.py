@@ -910,7 +910,7 @@ class Transfers:
 						else:
 							place = count
 		
-					if not self.isPrivileged(user):
+					if not self.UserListPrivileged(user):
 						place += countpriv
 		else:
 			list = {user:time.time()}

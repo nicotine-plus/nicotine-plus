@@ -234,13 +234,26 @@ class TransfersFrame(settings_glade.TransfersFrame):
 		
 		cols = InitialiseColumns(self.FilterView,
 			[_("Filter"), 250, "text"],
-			[_("Escaped"), 40, "text"],
+			[_("Escaped"), 40, "toggle"],
 		)
 		cols[0].set_sort_column_id(0)
 		cols[1].set_sort_column_id(1)
+		renderers = cols[1].get_cell_renderers()
+		for render in renderers:
+			render.connect('toggled', self.cell_toggle_callback, self.frame.UserList, 1)
 		self.FilterView.set_model(self.filterlist)
 		self.FilterView.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
-
+		
+	def cell_toggle_callback(self, widget, index, treeview, pos):
+		
+		iter = self.filterlist.get_iter(index)
+		#user = self.usersmodel.get_value(iter, 1)
+		value = self.filterlist.get_value(iter, pos)
+		self.filterlist.set(iter, pos, not value)
+		
+		self.OnVerifyFilter(self.VerifyFilters)
+		
+		
 	def SetSettings(self, config):
 		transfers = config["transfers"]
 		server = config["server"]
