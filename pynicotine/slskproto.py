@@ -490,16 +490,18 @@ class SlskProtoThread(threading.Thread):
 				# Unpack Peer Messages
 				msgtype = struct.unpack("<i",buffer[4:8])[0]
 				if self.peerclasses.has_key(msgtype):
-					msg = self.peerclasses[msgtype](conn)
-					# Parse Peer Message and handle exceptions
-					try:
-						msg.parseNetworkMessage(buffer[8:msgsize+4])
+					try: msg = self.peerclasses[msgtype](conn)
+						# Parse Peer Message and handle exceptions
+						try:
+							msg.parseNetworkMessage(buffer[8:msgsize+4])
+						except Exception, error:
+							msgname = str(self.peerclasses[msgtype]).split(".")[-1]
+							print "Error parsing %s:" % msgname, error
+							msgs.append(_("There was an error while unpacking Peer message type %s size %i contents %s from user: %s, %s:%s") %(msgname,msgsize-4,buffer[8:msgsize+4].__repr__(), conn.init.user, conn.init.conn.addr[0], conn.init.conn.addr[1]))
+						else:
+							msgs.append(msg)
 					except Exception, error:
-						msgname = str(self.peerclasses[msgtype]).split(".")[-1]
-						print "Error parsing %s:" % msgname, error
-						msgs.append(_("There was an error while unpacking Peer message type %s size %i contents %s from user: %s, %s:%s") %(msgname,msgsize-4,buffer[8:msgsize+4].__repr__(), conn.init.user, conn.init.conn.addr[0], conn.init.conn.addr[1]))
-					else:
-						msgs.append(msg)
+							print error, msgtype, conn
 				else:
 					# Unknown Peer Message
 					msgs.append(_("Peer message type %i size %i contents %s unknown, from user: %s, %s:%s") %(msgtype,msgsize-4,buffer[8:msgsize+4].__repr__(), conn.init.user, conn.init.conn.addr[0], conn.init.conn.addr[1]))
