@@ -969,17 +969,13 @@ class UserInfoReply(PeerMessage):
 		
 		if len(message[pos:]) >= 4:
 			pos, self.uploadallowed = self.getObject(message, types.IntType, pos)
-			print self.slotsavail, self.uploadallowed
-			
-
-
 
 	def makeNetworkMessage(self):
 		if self.pic is not None:
 			pic = chr(1) + self.packObject(self.pic)
 		else:
 			pic = chr(0)
-		return self.packObject(self.descr)+pic+self.packObject(self.totalupl)+self.packObject(self.queuesize)+self.packObject(self.slotsavail)+self.packObject(self.uploadallowed)
+		return self.packObject(self.descr)+pic+self.packObject(self.totalupl)+self.packObject(self.queuesize)+chr(self.slotsavail)+self.packObject(self.uploadallowed)
 
 
 class SharedFileList(PeerMessage):

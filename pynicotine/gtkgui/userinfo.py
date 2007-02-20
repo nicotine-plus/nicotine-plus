@@ -150,7 +150,7 @@ class UserInfo(UserInfoTab):
 		elif uploadallowed == 2:
 			allowed = _("Users in list")
 		elif uploadallowed == 3:
-			allowed = _("Users in trusted list")
+			allowed = _("Trusted Users")
 		else:
 			allowed = _("unknown")
 		self.AcceptUploads.set_text(_("%s") % allowed)

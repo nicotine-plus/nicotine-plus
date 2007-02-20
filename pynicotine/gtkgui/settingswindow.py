@@ -223,8 +223,12 @@ class TransfersFrame(settings_glade.TransfersFrame):
 	def __init__(self, parent):
 		self.frame = parent.frame
 		settings_glade.TransfersFrame.__init__(self, False)
-		
-		
+		self.UploadsAllowed_List.clear()
+		self.alloweduserslist = [_("No one"), _("Everyone"), _("Users in list"), _("Trusted Users")]
+
+		for item in self.alloweduserslist:
+			self.UploadsAllowed_List.append([item])
+
 		self.filterlist = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_BOOLEAN )
 		self.downloadfilters = []
 		
@@ -269,6 +273,9 @@ class TransfersFrame(settings_glade.TransfersFrame):
 			self.RemoteDownloads.set_active(transfers["remotedownloads"])
 		if transfers["fifoqueue"] is not None:
 			self.FirstInFirstOut.set_active(transfers["fifoqueue"])
+		if transfers["uploadallowed"] is not None:
+			self.UploadsAllowed.set_active(transfers["uploadallowed"])
+		
 		self.OnQueueUseSlotsToggled(self.QueueUseSlots)
 		self.OnLimitToggled(self.Limit)
 		self.OnFriendsOnlyToggled(self.FriendsOnly)
@@ -305,7 +312,10 @@ class TransfersFrame(settings_glade.TransfersFrame):
 			queuelimit = int(self.MaxUserQueue.get_text())
 		except:
 			queuelimit = None
-		
+		try:
+			uploadallowed =  self.UploadsAllowed.get_active()
+		except:
+			uploadallowed = 0
 		return {
 			"transfers": {
 				"uploadbandwidth": uploadbandwidth,
@@ -321,6 +331,7 @@ class TransfersFrame(settings_glade.TransfersFrame):
 				"preferfriends": self.PreferFriends.get_active(),
 				"lock": self.LockIncoming.get_active(),
 				"remotedownloads": self.RemoteDownloads.get_active(),
+				"uploadallowed": uploadallowed,
 				"downloadfilters": self.GetFilterList(),
 				"enablefilters": self.DownloadFilter.get_active(),
 			},

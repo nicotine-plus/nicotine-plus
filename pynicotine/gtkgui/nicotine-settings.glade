@@ -1503,6 +1503,7 @@
 			  <child>
 			    <widget class="GtkRadioButton" id="RoundRobin">
 			      <property name="visible">True</property>
+			      <property name="tooltip" translatable="yes">Users will be sent one file and then another user will be selected</property>
 			      <property name="can_focus">True</property>
 			      <property name="label" translatable="yes">Round Robin</property>
 			      <property name="use_underline">True</property>
@@ -1522,6 +1523,7 @@
 			  <child>
 			    <widget class="GtkRadioButton" id="FirstInFirstOut">
 			      <property name="visible">True</property>
+			      <property name="tooltip" translatable="yes">Files will be sent in the order they were queued</property>
 			      <property name="can_focus">True</property>
 			      <property name="label" translatable="yes">First In, First Out</property>
 			      <property name="use_underline">True</property>
@@ -1581,7 +1583,6 @@
 			    <widget class="GtkEntry" id="QueueBandwidth">
 			      <property name="width_request">50</property>
 			      <property name="visible">True</property>
-			      <property name="tooltip" translatable="yes">Set to a very large number if you want to always</property>
 			      <property name="can_focus">True</property>
 			      <property name="editable">True</property>
 			      <property name="visibility">True</property>
@@ -1661,6 +1662,7 @@
 			    <widget class="GtkEntry" id="QueueSlots">
 			      <property name="width_request">50</property>
 			      <property name="visible">True</property>
+			      <property name="tooltip" translatable="yes">Set to 0 to disable uploads</property>
 			      <property name="can_focus">True</property>
 			      <property name="editable">True</property>
 			      <property name="visibility">True</property>
@@ -1879,7 +1881,7 @@
 			    <widget class="GtkEntry" id="MaxUserQueue">
 			      <property name="width_request">50</property>
 			      <property name="visible">True</property>
-			      <property name="tooltip" translatable="yes">Files will remain in the user's queue but will not be queuable until the total size of queue files is under this limit</property>
+			      <property name="tooltip" translatable="yes">Files will remain in the download user's queue with a warning message but will be added to your upload queue until the user retries them with a smaller total queue size</property>
 			      <property name="can_focus">True</property>
 			      <property name="editable">True</property>
 			      <property name="visibility">True</property>
@@ -1956,6 +1958,7 @@
 			  <child>
 			    <widget class="GtkCheckButton" id="RemoteDownloads">
 			      <property name="visible">True</property>
+			      <property name="tooltip" translatable="yes">The users will be able to send you files. These files will be downloaded into the Buddy Uploads subdirectory in your Download directory</property>
 			      <property name="can_focus">True</property>
 			      <property name="label" translatable="yes">Allow these users to send you files:</property>
 			      <property name="use_underline">True</property>
@@ -2041,6 +2044,7 @@
 		      <child>
 			<widget class="GtkCheckButton" id="FriendsOnly">
 			  <property name="visible">True</property>
+			  <property name="tooltip" translatable="yes">If buddy shares are enabled, they will be shared. Otherwise normal shares will be used.</property>
 			  <property name="can_focus">True</property>
 			  <property name="label" translatable="yes">Share to friends only</property>
 			  <property name="use_underline">True</property>
@@ -2061,6 +2065,7 @@
 		      <child>
 			<widget class="GtkCheckButton" id="PreferFriends">
 			  <property name="visible">True</property>
+			  <property name="tooltip" translatable="yes">Friends will have higher priority in the queue, the same as globally privileged users</property>
 			  <property name="can_focus">True</property>
 			  <property name="label" translatable="yes">Privilege all my friends</property>
 			  <property name="use_underline">True</property>

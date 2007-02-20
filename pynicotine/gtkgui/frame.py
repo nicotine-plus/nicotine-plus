@@ -214,7 +214,7 @@ class NicotineFrame(MainWindow):
 		self.RecommendationsList.connect("button_press_event", self.OnPopupRMenu)
 
 		cols = utils.InitialiseColumns(self.RecommendationUsersList, 
-			["", -1, "pixbuf"],
+			["", 20, "pixbuf"],
 			[_("User"), 100, "text", self.CellDataFunc],
 			[_("Speed"), 0, "text", self.CellDataFunc],
 			[_("Files"), 0, "text", self.CellDataFunc],

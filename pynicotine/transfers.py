@@ -317,6 +317,7 @@ class Transfers:
 
 	def TransferRequest(self,msg):
 		user = None
+		transfers = self.eventprocessor.config.sections["transfers"]
 		if msg.conn is not None:
 			for i in self.peerconns:
 				if i.conn is msg.conn.conn:
@@ -347,7 +348,27 @@ class Transfers:
 					break
 			else:
 				# Remote Uploads only for users in list (Added by daelstorm)
-				if user in [i[0] for i in self.eventprocessor.userlist.userlist] and self.eventprocessor.config.sections["transfers"]["remotedownloads"] == 1:
+				if transfers["remotedownloads"] == 1:
+					if transfers["uploadallowed"] == 2:
+						# Users in userlist
+						if user not in [i[0] for i in self.eventprocessor.userlist.userlist]:
+							# Not a buddy
+							return
+					elif transfers["uploadallowed"] == 0:
+						# No One can sent files to you
+						return
+					elif transfers["uploadallowed"] == 1:
+						# Everyone can sent files to you
+						pass
+					elif transfers["uploadallowed"] == 3:
+						# Trusted Users
+						if user not in [i[0] for i in self.eventprocessor.userlist.userlist]:
+							# Not a buddy
+							return
+						if user not in self.eventprocessor.userlist.trusted:
+							# Not Trusted
+							return
+						
 					path = ""
 					if self.eventprocessor.config.sections["transfers"]["uploadsinsubdirs"]:
 						parentdir = msg.file.split("\\")[-2]
@@ -878,12 +899,12 @@ class Transfers:
 			
 			for i in self.uploads:
 				if i.status == "Queued":
-					if self.isPrivileged(i.user):
+					if self.UserListPrivileged(i.user):
 						countpriv += 1
 					else:
 						count += 1
 					if i.user == user and i.filename == msg.file:
-						if self.isPrivileged(user):
+						if self.UserListPrivileged(user):
 							place = countpriv
 							break
 						else:

@@ -6,34 +6,53 @@ GENERAL CHANGES
  * Window size is restored on startup
  * Background color of entry boxes, text views and list views is now changeable
    and all lists foreground color changes with the 'list text' option.
- * Comments in Buddy List can now be edited in-list by clicking twice on the 
-   comment column, not by double-clicking (which would open Private Chat).
+ * Added some padding around various widgets
+ * Tabs can be reordered on the fly, now (Requires PyGTK 2.10) Also, Chat Room
+   tab positions are saved in their reordered position.
+ * Per-file identation consistancy was drastically improved. transfers.py, 
+   slskproto.py and a few others were really bad.
+
+SETTINGS
  * Added an Import Config frame to Settings, which duplicates the functionality
    of nicotine-import-winconfig. User can now easily import config options
    from the official Windows Soulseek client's config directory. Support for importing
    the ignore list was also added to nicotine-import-winconfig.
- * Recursive downloads in User Browse now checks from > 100 files and displays
-   a Warning dialog that gives you a chance to cancel downloading.
- * Downloads and Uploads popup menus have a new item under the user submenu,
-   "Select User's Transfers".
  * Translux (pseudo-transparent TextViews) is an old easter egg that is now
    customizable in UI Settings.
+ * Transfer settings was rearranged and organized with expanders
+ * Transfer settings has a new combo box for selecting which users are allowed
+   to initiate uploading files to you. Trusted users are set in the buddy list.
+ * Added several tooltips to Settings' transfer widgets in hopes of providing
+   better explanations of some of the more complex functionality.
+USERLIST
+ * Comments in Buddy List can now be edited in-list by clicking twice on the 
+   comment column, not by double-clicking (which would open Private Chat).
+ * Trusted checkbox column added to the buddy list. Trusted users are an
+   optional selection of users to whom remote uploads can be limited.
+
+CHAT
  * Usernames in the chat room log now have hotspots associated with them, 
    meaning they can be left-clicked on to load the same popup as you have in
    the users list. This option can be disabled in UI Settings.
  * Usernames are also colored based on Online, Away and Offline/In-Room status.
  * "User is away/online/offline" messages removed from Private Chat
+
+   
+TRANSFERS
+ * Transfers are now sub-items in a one-step tree with the user as a parent
  * QuinoX's patch, a download filter: ( http://qtea.nl/tmp/nicotine+ ) was
    reworked a little and given a nice listview to add the Regular Expressions
    (filters) to. This feature will allow you to blacklist certain types of
    files, which may save you from the pointless downloading and cleanup of
    unwanted files.
- * Added some padding around various widgets
- * Tabs and be reordered on the fly, now (Requires PyGTK 2.10) Also, Chat Room
-   tab positions are saved in their reordered position.
- * Per-file identation consistancy was drastically improved. transfers.py, 
-   slskproto.py and a few others were really bad.
+ * Downloads and Uploads popup menus have a new item under the user submenu,
+   "Select User's Transfers".
+
    
+USER INFO
+ * Stats were rearrange and the status of who is allowed to initiate uploads to
+   the user was added.
+ 
 USER BROWSE
  * The browsetreemodels functions were disabled, and file and folder treeviews 
    were reimplemented with code from the PyGTK2 museek client, Murmur.
@@ -42,7 +61,9 @@ USER BROWSE
  * Tree lines and a 'Directories' sorting header were added to the Folder Treeview
  * Upload Directories Recursive was added to Folders' Popup
  * An expand / collapse all directories button was added
- 
+ * Recursive downloads in User Browse now checks from > 100 files and displays
+   a Warning dialog that gives you a chance to cancel downloading.
+   
 SEARCH
  * Search has a new popup window for displaying the metadata of search results.
    This popup is accessible after selecting 1 or more files and clicking on the

@@ -82,6 +82,9 @@ def InitialiseColumns(treeview, *args):
 		elif c[2] == "progress":
 			renderer = gtk.CellRendererProgress()
 			column = gtk.TreeViewColumn(c[0], renderer, value = i)
+		elif c[2] == "toggle":
+			renderer = gtk.CellRendererToggle()
+			column = gtk.TreeViewColumn(c[0], renderer, active = i)
 		else:
 			renderer = gtk.CellRendererPixbuf()
 			column = gtk.TreeViewColumn(c[0], renderer, pixbuf = 0)

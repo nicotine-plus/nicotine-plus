@@ -360,7 +360,7 @@ class ChatRoom(ChatRoomTab):
 			self.AutoJoin.set_active(True)
 			
 		cols = InitialiseColumns(self.UserList, 
-			["", -1, "pixbuf"],
+			["", 20, "pixbuf"],
 			[_("User"), 100, "text", self.frame.CellDataFunc],
 			[_("Speed"), 0, "text", self.frame.CellDataFunc],
 			[_("Files"), 0, "text", self.frame.CellDataFunc],
