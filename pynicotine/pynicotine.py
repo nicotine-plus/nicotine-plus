@@ -311,7 +311,7 @@ class NetworkEventProcessor:
 		import utils
 		utils.frame = self.frame
 		utils.log = self.logMessage
-		files, streams, wordindex, fileindex, mtimes = utils.rescandirs(msg.shared, self.config.sections["transfers"]["sharedmtimes"], self.config.sections["transfers"]["sharedfiles"], self.config.sections["transfers"]["sharedfilesstreams"], msg.yieldfunction, self.frame.SharesProgress, name="")
+		files, streams, wordindex, fileindex, mtimes = utils.rescandirs(msg.shared, self.config.sections["transfers"]["sharedmtimes"], self.config.sections["transfers"]["sharedfiles"], self.config.sections["transfers"]["sharedfilesstreams"], msg.yieldfunction, self.frame.SharesProgress, name=_("Shares"))
 		self.frame.RescanFinished([files, streams, wordindex, fileindex, mtimes], "normal")
 		self.frame.SharesProgress.hide()
 	
@@ -319,7 +319,7 @@ class NetworkEventProcessor:
 		import utils
 		utils.frame = self.frame
 		utils.log = self.logMessage
-		files, streams, wordindex, fileindex, mtimes = utils.rescandirs(msg.shared, self.config.sections["transfers"]["bsharedmtimes"], self.config.sections["transfers"]["bsharedfiles"], self.config.sections["transfers"]["bsharedfilesstreams"], msg.yieldfunction, self.frame.BuddySharesProgress, name="Buddy ")
+		files, streams, wordindex, fileindex, mtimes = utils.rescandirs(msg.shared, self.config.sections["transfers"]["bsharedmtimes"], self.config.sections["transfers"]["bsharedfiles"], self.config.sections["transfers"]["bsharedfilesstreams"], msg.yieldfunction, self.frame.BuddySharesProgress, name=_("Buddy Shares"))
 		self.frame.RescanFinished([files, streams, wordindex, fileindex, mtimes], "buddy")
 		self.frame.BuddySharesProgress.hide()
         

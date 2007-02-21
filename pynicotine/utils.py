@@ -76,7 +76,7 @@ def rescandirs(shared, sharedmtimes, sharedfiles, sharedfilesstreams, yieldfunct
 	gobject.idle_add(progress.show)
 	gobject.idle_add(progress.set_fraction, 0)
 	newmtimes = getDirsMtimes(shared, yieldfunction)
-	gobject.idle_add(progress.set_text, _("Scanning %sShares") % name)
+	gobject.idle_add(progress.set_text, _("Scanning %s") % name)
 	# Get list of files
 	# returns dict in format { Directory : { File : metadata, ... }, ... }
 	newsharedfiles = getFilesList(newmtimes, sharedmtimes, sharedfiles,yieldfunction, progress)
