@@ -1579,7 +1579,7 @@ class BloatFrame:
 
         self.table2 = gtk.Table()
         self.table2.show()
-        self.table2.set_row_spacings(2)
+        self.table2.set_row_spacings(3)
         self.table2.set_col_spacings(15)
 
         self.PickRemote = gtk.Button()
@@ -2247,12 +2247,75 @@ class BloatFrame:
 
         self.table2.attach(self.hbox197, 0, 3, 11, 12, gtk.FILL, gtk.EXPAND|gtk.FILL, 0, 0)
 
+        self.PickInput = gtk.Button()
+        self.PickInput.show()
+
+        self.alignment100 = gtk.Alignment(0, 0.5, 0, 0)
+        self.alignment100.show()
+
+        self.hbox220 = gtk.HBox(False, 2)
+        self.hbox220.show()
+        self.hbox220.set_spacing(2)
+
+        self.image94 = gtk.Image()
+        self.image94.set_padding(0, 0)
+        self.image94.set_from_stock(gtk.STOCK_SELECT_COLOR, 4)
+        self.image94.show()
+        self.hbox220.pack_start(self.image94, False, False, 0)
+
+        self.label374 = gtk.Label(_("Input Text"))
+        self.label374.set_padding(0, 0)
+        self.label374.set_line_wrap(False)
+        self.label374.show()
+        self.hbox220.pack_start(self.label374, False, False, 0)
+
+        self.alignment100.add(self.hbox220)
+
+        self.PickInput.add(self.alignment100)
+
+        self.table2.attach(self.PickInput, 0, 1, 13, 14, gtk.FILL, 0, 0, 0)
+
+        self.InputColor = gtk.Entry()
+        self.InputColor.set_text("")
+        self.InputColor.set_editable(False)
+        self.InputColor.show()
+        self.InputColor.set_visibility(True)
+        self.table2.attach(self.InputColor, 1, 2, 13, 14, gtk.EXPAND|gtk.FILL, 0, 0, 0)
+
+        self.DefaultInput = gtk.Button()
+        self.DefaultInput.show()
+
+        self.alignment101 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment101.show()
+
+        self.hbox221 = gtk.HBox(False, 2)
+        self.hbox221.show()
+        self.hbox221.set_spacing(2)
+
+        self.image95 = gtk.Image()
+        self.image95.set_padding(0, 0)
+        self.image95.set_from_stock(gtk.STOCK_CANCEL, 4)
+        self.image95.show()
+        self.hbox221.pack_start(self.image95, False, False, 0)
+
+        self.label375 = gtk.Label(_("Default"))
+        self.label375.set_padding(0, 0)
+        self.label375.set_line_wrap(False)
+        self.label375.show()
+        self.hbox221.pack_start(self.label375, False, False, 0)
+
+        self.alignment101.add(self.hbox221)
+
+        self.DefaultInput.add(self.alignment101)
+
+        self.table2.attach(self.DefaultInput, 2, 3, 13, 14, gtk.FILL, 0, 0, 0)
+
         self.expander2.add(self.table2)
 
         self.label306 = gtk.Label("")
         self.label306.set_padding(0, 0)
         self.label306.set_line_wrap(False)
-        self.label306.set_markup(_("<b>Chat colours</b>"))
+        self.label306.set_markup(_("<b>Colours</b>"))
         self.label306.show()
         self.expander2.set_label_widget(self.label306)
 

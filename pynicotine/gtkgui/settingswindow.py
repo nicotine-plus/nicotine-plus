@@ -676,7 +676,10 @@ class BloatFrame(settings_glade.BloatFrame):
 		
 		self.PickBackground.connect("clicked", self.PickColour, self.BackgroundColor)
 		self.DefaultBackground.connect("clicked", self.DefaultColour, self.BackgroundColor)
-
+		
+		self.PickInput.connect("clicked", self.PickColour, self.InputColor)
+		self.DefaultInput.connect("clicked", self.DefaultColour, self.InputColor)
+		
 		self.DefaultRemote.connect("clicked", self.DefaultColour, self.Remote)
 		self.DefaultLocal.connect("clicked", self.DefaultColour, self.Local)
 		self.DefaultMe.connect("clicked", self.DefaultColour, self.Me)
@@ -703,6 +706,7 @@ class BloatFrame(settings_glade.BloatFrame):
 		self.OnlineColor.connect("changed", self.FontsColorsChanged)
 		self.OfflineColor.connect("changed", self.FontsColorsChanged)
 		self.UsernameStyle.child.connect("changed", self.FontsColorsChanged)
+		self.InputColor.connect("changed", self.FontsColorsChanged)
 		
 	def FontsColorsChanged(self, widget):
 		self.needcolors = 1
@@ -747,6 +751,8 @@ class BloatFrame(settings_glade.BloatFrame):
 			self.UsernameHotspots.set_active(ui["usernamehotspots"])
 		if ui["textbg"] is not None:
 			self.BackgroundColor.set_text(ui["textbg"])
+		if ui["inputcolor"] is not None:
+			self.InputColor.set_text(ui["inputcolor"])
 		self.OnUsernameHotspotsToggled(self.UsernameHotspots)
 		if ui["search"] is not None:
 			self.Immediate.set_text(ui["search"])
@@ -794,6 +800,7 @@ class BloatFrame(settings_glade.BloatFrame):
 				"chatme": self.Me.get_text(),
 				"chathilite": self.Highlight.get_text(),
 				"textbg": self.BackgroundColor.get_text(),
+				"inputcolor": self.InputColor.get_text(),
 				"search": self.Immediate.get_text(),
 				"searchq": self.Queue.get_text(),
 				"decimalsep": self.DecimalSep.child.get_text(),

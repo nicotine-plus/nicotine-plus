@@ -97,7 +97,7 @@ class UserInfo(UserInfoTab):
 			if self.encoding == item[1]:
 				self.Encoding.set_active_iter(self.Elist[self.encoding])
 
-		self.tag_local = self.makecolour(buffer, "chatlocal")
+		self.tag_local = self.makecolour(buffer, "chatremote")
 		self.frame.SetTextBG(self.descr)
 		
 	def makecolour(self, buffer, colour):
@@ -126,7 +126,7 @@ class UserInfo(UserInfoTab):
 			tag.set_property("font", font)
 			
 	def ChangeColours(self):
-		self.changecolour(self.tag_local, "chatlocal")
+		self.changecolour(self.tag_local, "chatremote")
 		self.frame.SetTextBG(self.descr)
 		
 	def ShowUserInfo(self, descr, has_pic, pic, totalupl, queuesize, slotsavail, uploadallowed):

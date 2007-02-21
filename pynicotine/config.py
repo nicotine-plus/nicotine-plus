@@ -77,6 +77,7 @@ class Config:
 "ui":{"icontheme": "", "chatme":"FOREST GREEN", "chatremote":"","chatlocal":"BLUE", \
 "chathilite":"red", "useronline":"BLACK", "useraway":"ORANGE","useroffline":"#aa0000",\
 "usernamehotspots":1, "usernamestyle": "bold", "textbg": "", "search":"","searchq":"GREY", \
+"inputcolor":"", \
 "decimalsep":",", "chatfont": "", "roomlistcollapsed": 0, "tabclosers": 1,\
 "buddylistinchatrooms": 0, "trayicon": 1, "soundenabled": 1, "soundtheme": "",\
 "soundcommand": "play -q", "speechenabled": 0, "enabletrans":0,\

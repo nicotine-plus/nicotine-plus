@@ -947,7 +947,7 @@ class NicotineFrame(MainWindow):
 		widget.modify_bg(gtk.STATE_NORMAL, colour)
 		
 		if type(widget) is gtk.Entry:
-			fgcolor = self.np.config.sections["ui"]["chatlocal"]
+			fgcolor = self.np.config.sections["ui"]["inputcolor"]
 			if fgcolor == "":
 				colour = None
 			else:
