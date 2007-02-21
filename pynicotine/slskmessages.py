@@ -166,7 +166,7 @@ class SlskMessage:
 		elif type(object) is types.StringType:
 			return struct.pack("<i",len(object))+object
 		elif type(object) is types.UnicodeType:
-			print _("Warning: networking thread has to convert unicode string %s message %s") % (object, self.__class__)
+			print _("Warning: networking thread has to convert unicode string %(object)s message %(type)s") % {'object':object, 'type':self.__class__}
 			encoded = object.encode("utf-8",'replace')
 			return struct.pack("<i",len(encoded))+encoded
 		print _("Warning: unknown object type %s") % type(object)

@@ -51,7 +51,7 @@ class ServerFrame:
 
         self.entry66 = self.Server.child
         self.entry66.set_size_request(103, -1)
-        self.entry66.set_text(_(""))
+        self.entry66.set_text("")
         self.entry66.set_editable(True)
         self.entry66.show()
         self.entry66.set_visibility(True)
@@ -82,7 +82,7 @@ class ServerFrame:
 
         self.Login = gtk.Entry()
         self.Login.set_size_request(130, -1)
-        self.Login.set_text(_(""))
+        self.Login.set_text("")
         self.Login.set_editable(True)
         self.Login.show()
         self.Login.set_visibility(True)
@@ -108,7 +108,7 @@ class ServerFrame:
 
         self.Password = gtk.Entry()
         self.Password.set_size_request(100, -1)
-        self.Password.set_text(_(""))
+        self.Password.set_text("")
         self.Password.set_editable(True)
         self.Password.show()
         self.Password.set_visibility(False)
@@ -139,7 +139,7 @@ class ServerFrame:
         self.Encoding.show()
 
         self.combo_entry2 = self.Encoding.child
-        self.combo_entry2.set_text(_(""))
+        self.combo_entry2.set_text("")
         self.combo_entry2.set_editable(False)
         self.combo_entry2.show()
         self.combo_entry2.set_visibility(True)
@@ -281,7 +281,7 @@ class SharesFrame:
 
         self.IncompleteDir = gtk.Entry()
         self.IncompleteDir.set_size_request(250, -1)
-        self.IncompleteDir.set_text(_(""))
+        self.IncompleteDir.set_text("")
         self.IncompleteDir.set_editable(True)
         self.IncompleteDir.show()
         self.IncompleteDir.set_visibility(True)
@@ -337,7 +337,7 @@ class SharesFrame:
 
         self.DownloadDir = gtk.Entry()
         self.DownloadDir.set_size_request(250, -1)
-        self.DownloadDir.set_text(_(""))
+        self.DownloadDir.set_text("")
         self.DownloadDir.set_editable(True)
         self.DownloadDir.show()
         self.DownloadDir.set_visibility(True)
@@ -680,7 +680,7 @@ class TransfersFrame:
 
         self.QueueBandwidth = gtk.Entry()
         self.QueueBandwidth.set_size_request(50, -1)
-        self.QueueBandwidth.set_text(_(""))
+        self.QueueBandwidth.set_text("")
         self.QueueBandwidth.set_editable(True)
         self.QueueBandwidth.show()
         self.QueueBandwidth.set_visibility(True)
@@ -709,7 +709,7 @@ class TransfersFrame:
         self.QueueSlots = gtk.Entry()
         self.QueueSlots.set_size_request(50, -1)
         self.tooltips.set_tip(self.QueueSlots, _("Set to 0 to disable uploads"))
-        self.QueueSlots.set_text(_(""))
+        self.QueueSlots.set_text("")
         self.QueueSlots.set_editable(True)
         self.QueueSlots.show()
         self.QueueSlots.set_visibility(True)
@@ -730,7 +730,7 @@ class TransfersFrame:
 
         self.LimitSpeed = gtk.Entry()
         self.LimitSpeed.set_size_request(50, -1)
-        self.LimitSpeed.set_text(_(""))
+        self.LimitSpeed.set_text("")
         self.LimitSpeed.set_editable(True)
         self.LimitSpeed.show()
         self.LimitSpeed.set_visibility(True)
@@ -1239,7 +1239,7 @@ class UserinfoFrame:
 
         self.Image = gtk.Entry()
         self.Image.set_size_request(250, -1)
-        self.Image.set_text(_(""))
+        self.Image.set_text("")
         self.Image.set_editable(True)
         self.Image.show()
         self.Image.set_visibility(True)
@@ -1386,7 +1386,7 @@ class BloatFrame:
         self.DecimalSep.show()
 
         self.entry89 = self.DecimalSep.child
-        self.entry89.set_text(_(""))
+        self.entry89.set_text("")
         self.entry89.set_editable(False)
         self.entry89.show()
         self.entry89.set_visibility(True)
@@ -1423,7 +1423,7 @@ class BloatFrame:
         self.hbox169.set_spacing(5)
 
         self.IconTheme = gtk.Entry()
-        self.IconTheme.set_text(_(""))
+        self.IconTheme.set_text("")
         self.IconTheme.set_editable(True)
         self.IconTheme.show()
         self.IconTheme.set_visibility(True)
@@ -1553,7 +1553,7 @@ class BloatFrame:
         self.hbox178.pack_end(self.SoundButton, False, False, 0)
 
         self.SoundDirectory = gtk.Entry()
-        self.SoundDirectory.set_text(_(""))
+        self.SoundDirectory.set_text("")
         self.SoundDirectory.set_editable(True)
         self.SoundDirectory.show()
         self.SoundDirectory.set_visibility(True)
@@ -1695,28 +1695,28 @@ class BloatFrame:
         self.table2.attach(self.PickHighlight, 0, 1, 3, 4, gtk.FILL, 0, 0, 0)
 
         self.Remote = gtk.Entry()
-        self.Remote.set_text(_(""))
+        self.Remote.set_text("")
         self.Remote.set_editable(False)
         self.Remote.show()
         self.Remote.set_visibility(True)
         self.table2.attach(self.Remote, 1, 2, 0, 1, gtk.EXPAND|gtk.FILL, 0, 0, 0)
 
         self.Local = gtk.Entry()
-        self.Local.set_text(_(""))
+        self.Local.set_text("")
         self.Local.set_editable(False)
         self.Local.show()
         self.Local.set_visibility(True)
         self.table2.attach(self.Local, 1, 2, 1, 2, gtk.EXPAND|gtk.FILL, 0, 0, 0)
 
         self.Me = gtk.Entry()
-        self.Me.set_text(_(""))
+        self.Me.set_text("")
         self.Me.set_editable(False)
         self.Me.show()
         self.Me.set_visibility(True)
         self.table2.attach(self.Me, 1, 2, 2, 3, gtk.EXPAND|gtk.FILL, 0, 0, 0)
 
         self.Highlight = gtk.Entry()
-        self.Highlight.set_text(_(""))
+        self.Highlight.set_text("")
         self.Highlight.set_editable(False)
         self.Highlight.show()
         self.Highlight.set_visibility(True)
@@ -1871,7 +1871,7 @@ class BloatFrame:
         self.table2.attach(self.PickImmediate, 0, 1, 5, 6, gtk.FILL, 0, 0, 0)
 
         self.Immediate = gtk.Entry()
-        self.Immediate.set_text(_(""))
+        self.Immediate.set_text("")
         self.Immediate.set_editable(False)
         self.Immediate.show()
         self.Immediate.set_visibility(True)
@@ -1934,7 +1934,7 @@ class BloatFrame:
         self.table2.attach(self.DefaultQueue, 2, 3, 6, 7, gtk.FILL, 0, 0, 0)
 
         self.Queue = gtk.Entry()
-        self.Queue.set_text(_(""))
+        self.Queue.set_text("")
         self.Queue.set_editable(False)
         self.Queue.show()
         self.Queue.set_visibility(True)
@@ -1969,14 +1969,14 @@ class BloatFrame:
         self.table2.attach(self.PickQueue, 0, 1, 6, 7, gtk.FILL, 0, 0, 0)
 
         self.OnlineColor = gtk.Entry()
-        self.OnlineColor.set_text(_(""))
+        self.OnlineColor.set_text("")
         self.OnlineColor.set_editable(False)
         self.OnlineColor.show()
         self.OnlineColor.set_visibility(True)
         self.table2.attach(self.OnlineColor, 1, 2, 8, 9, gtk.EXPAND|gtk.FILL, 0, 0, 0)
 
         self.OfflineColor = gtk.Entry()
-        self.OfflineColor.set_text(_(""))
+        self.OfflineColor.set_text("")
         self.OfflineColor.set_editable(False)
         self.OfflineColor.show()
         self.OfflineColor.set_visibility(True)
@@ -2046,7 +2046,7 @@ class BloatFrame:
         self.table2.attach(self.UsernameHotspots, 0, 3, 7, 8, gtk.FILL, 0, 0, 0)
 
         self.AwayColor = gtk.Entry()
-        self.AwayColor.set_text(_(""))
+        self.AwayColor.set_text("")
         self.AwayColor.set_editable(False)
         self.AwayColor.show()
         self.AwayColor.set_visibility(True)
@@ -2193,7 +2193,7 @@ class BloatFrame:
         self.table2.attach(self.DefaultBackground, 2, 3, 12, 13, gtk.FILL, 0, 0, 0)
 
         self.BackgroundColor = gtk.Entry()
-        self.BackgroundColor.set_text(_(""))
+        self.BackgroundColor.set_text("")
         self.BackgroundColor.set_editable(False)
         self.BackgroundColor.show()
         self.BackgroundColor.set_visibility(True)
@@ -2319,7 +2319,7 @@ class BloatFrame:
         self.hbox198.pack_start(self.PickTint, False, False, 0)
 
         self.TintColor = gtk.Entry()
-        self.TintColor.set_text(_(""))
+        self.TintColor.set_text("")
         self.TintColor.set_editable(False)
         self.TintColor.show()
         self.TintColor.set_visibility(True)
@@ -2872,7 +2872,7 @@ class BanFrame:
         self.hbox146.pack_start(self.UseCustomBan, False, False, 0)
 
         self.CustomBan = gtk.Entry()
-        self.CustomBan.set_text(_(""))
+        self.CustomBan.set_text("")
         self.CustomBan.set_editable(True)
         self.CustomBan.show()
         self.CustomBan.set_visibility(True)
@@ -3032,14 +3032,14 @@ class SearchFrame:
         self.table4.attach(self.label258, 0, 1, 3, 4, gtk.FILL, 0, 0, 0)
 
         self.FilterIn = gtk.Entry()
-        self.FilterIn.set_text(_(""))
+        self.FilterIn.set_text("")
         self.FilterIn.set_editable(True)
         self.FilterIn.show()
         self.FilterIn.set_visibility(True)
         self.table4.attach(self.FilterIn, 1, 2, 0, 1, gtk.EXPAND|gtk.FILL, 0, 0, 0)
 
         self.FilterOut = gtk.Entry()
-        self.FilterOut.set_text(_(""))
+        self.FilterOut.set_text("")
         self.FilterOut.set_editable(True)
         self.FilterOut.show()
         self.FilterOut.set_visibility(True)
@@ -3050,7 +3050,7 @@ class SearchFrame:
         self.hbox162.set_spacing(0)
 
         self.FilterSize = gtk.Entry()
-        self.FilterSize.set_text(_(""))
+        self.FilterSize.set_text("")
         self.FilterSize.set_editable(True)
         self.FilterSize.show()
         self.FilterSize.set_visibility(True)
@@ -3063,7 +3063,7 @@ class SearchFrame:
         self.hbox163.set_spacing(0)
 
         self.FilterBR = gtk.Entry()
-        self.FilterBR.set_text(_(""))
+        self.FilterBR.set_text("")
         self.FilterBR.set_editable(True)
         self.FilterBR.show()
         self.FilterBR.set_visibility(True)
@@ -3089,7 +3089,7 @@ class SearchFrame:
         self.hbox164.set_spacing(0)
 
         self.FilterCC = gtk.Entry()
-        self.FilterCC.set_text(_(""))
+        self.FilterCC.set_text("")
         self.FilterCC.set_editable(True)
         self.FilterCC.show()
         self.FilterCC.set_visibility(True)
@@ -3281,7 +3281,7 @@ class AwayFrame:
 
         self.AutoReply = gtk.Entry()
         self.AutoReply.set_size_request(193, -1)
-        self.AutoReply.set_text(_(""))
+        self.AutoReply.set_text("")
         self.AutoReply.set_editable(True)
         self.AutoReply.show()
         self.AutoReply.set_visibility(True)
@@ -3345,7 +3345,7 @@ class EventsFrame:
 
         self.AfterDownload = gtk.Entry()
         self.AfterDownload.set_size_request(313, -1)
-        self.AfterDownload.set_text(_(""))
+        self.AfterDownload.set_text("")
         self.AfterDownload.set_editable(True)
         self.AfterDownload.show()
         self.AfterDownload.set_visibility(True)
@@ -3367,7 +3367,7 @@ class EventsFrame:
 
         self.AfterFolder = gtk.Entry()
         self.AfterFolder.set_size_request(313, -1)
-        self.AfterFolder.set_text(_(""))
+        self.AfterFolder.set_text("")
         self.AfterFolder.set_editable(True)
         self.AfterFolder.show()
         self.AfterFolder.set_visibility(True)
@@ -3453,7 +3453,7 @@ class GeoBlockFrame:
         self.vbox98.pack_start(self.label245, False, False, 0)
 
         self.GeoBlockCC = gtk.Entry()
-        self.GeoBlockCC.set_text(_(""))
+        self.GeoBlockCC.set_text("")
         self.GeoBlockCC.set_editable(True)
         self.GeoBlockCC.show()
         self.GeoBlockCC.set_visibility(True)
@@ -3549,7 +3549,7 @@ class UrlCatchFrame:
         self.table3.attach(self.label252, 0, 1, 0, 1, gtk.FILL, 0, 0, 0)
 
         self.Protocol = gtk.Entry()
-        self.Protocol.set_text(_(""))
+        self.Protocol.set_text("")
         self.Protocol.set_editable(True)
         self.Protocol.show()
         self.Protocol.set_visibility(True)
@@ -3563,7 +3563,7 @@ class UrlCatchFrame:
         self.table3.attach(self.label253, 0, 1, 1, 2, gtk.FILL, 0, 0, 0)
 
         self.Handler = gtk.Entry()
-        self.Handler.set_text(_(""))
+        self.Handler.set_text("")
         self.Handler.set_editable(True)
         self.Handler.show()
         self.Handler.set_visibility(True)
@@ -3954,7 +3954,7 @@ class ImportFrame:
 
         self.ImportPath = gtk.Entry()
         self.ImportPath.set_size_request(313, -1)
-        self.ImportPath.set_text(_(""))
+        self.ImportPath.set_text("")
         self.ImportPath.set_editable(True)
         self.ImportPath.show()
         self.ImportPath.set_visibility(True)

@@ -482,8 +482,8 @@ class TransfersFrame(settings_glade.TransfersFrame):
 		if len(failed.keys()) >= 1:
 			errors = ""
 			for filter, error in failed.items():
-				errors += "Filter: %s Error: %s " % (filter, error)
-			error = _("%d Failed! %s " %(len(failed.keys()), errors) )
+				errors += "Filter: %(filter)s Error: %(error)s " % {'filter':filter, 'error':error}
+			error = _("%(num)d Failed! %(error)s " %{'num':len(failed.keys()), 'error':errors} )
 			self.VerifiedLabel.set_markup("<span color=\"red\" weight=\"bold\">%s</span>" % error)
 		else:
 			self.VerifiedLabel.set_markup("<b>Filters Successful</b>")

@@ -384,7 +384,7 @@ class SlskProtoThread(threading.Thread):
 				msg.parseNetworkMessage(buffer[8:msgsize+4])
 				msgs.append(msg)
 			else:
-				msgs.append(_("Server message type %i size %i contents %s unknown") %(msgtype,msgsize-4,buffer[8:msgsize+4].__repr__()))
+				msgs.append(_("Server message type %(type)i size %(size)i contents %(buffer)s unknown") %{'type':msgtype, 'size':msgsize-4, 'buffer':buffer[8:msgsize+4].__repr__()})
 			buffer = buffer[msgsize+4:]
 		return msgs,buffer
 
@@ -479,7 +479,7 @@ class SlskProtoThread(threading.Thread):
 						conn.init = msg
 						msgs.append(msg)
 				elif conn.piercefw is None:
-					msgs.append(_("Unknown peer init code: %i, message contents %s") %(ord(buffer[4]),buffer[5:msgsize+4].__repr__()))
+					msgs.append(_("Unknown peer init code: %(type)i, message contents %(buffer)s") %{'type':ord(buffer[4]), 'buffer':buffer[5:msgsize+4].__repr__()})
 					conn.conn.close()
 					self._ui_callback([ConnClose(conn.conn,conn.addr)])
 					conn.conn = None
@@ -498,14 +498,15 @@ class SlskProtoThread(threading.Thread):
 						except Exception, error:
 							msgname = str(self.peerclasses[msgtype]).split(".")[-1]
 							print "Error parsing %s:" % msgname, error
-							msgs.append(_("There was an error while unpacking Peer message type %s size %i contents %s from user: %s, %s:%s") %(msgname,msgsize-4,buffer[8:msgsize+4].__repr__(), conn.init.user, conn.init.conn.addr[0], conn.init.conn.addr[1]))
+							msgs.append(_("There was an error while unpacking Peer message type %(type)s size %(size)i contents %(buffer)s from user: %(user)s, %(host)s:%(port)s") %{'type':msgname, 'size':msgsize-4, 'buffer':buffer[8:msgsize+4].__repr__(), 'user':conn.init.user, 'host':conn.init.conn.addr[0], 'port':conn.init.conn.addr[1]})
 						else:
 							msgs.append(msg)
 					except Exception, error:
-							print error, msgtype, conn
+						print error, msgtype, conn
 				else:
 					# Unknown Peer Message
-					msgs.append(_("Peer message type %i size %i contents %s unknown, from user: %s, %s:%s") %(msgtype,msgsize-4,buffer[8:msgsize+4].__repr__(), conn.init.user, conn.init.conn.addr[0], conn.init.conn.addr[1]))
+					msgs.append(_("Peer message type %(type)s size %(size)i contents %(buffer)s unknown, from user: %(user)s, %(host)s:%(port)s") %{'type':msgtype, 'size':msgsize-4, 'buffer':buffer[8:msgsize+4].__repr__(), 'user':conn.init.user, 'host':conn.init.conn.addr[0], 'port':conn.init.conn.addr[1]})
+					
 			else:
 				# Unknown Message type 
 				msgs.append(_("Can't handle connection type %s") %(conn.init.type))
@@ -533,7 +534,7 @@ class SlskProtoThread(threading.Thread):
 				msg.parseNetworkMessage(buffer[5:msgsize+4])
 				msgs.append(msg)
 			else:
-				msgs.append(_("Distrib message type %i size %i contents %s unknown") %(msgtype,msgsize-1,buffer[5:msgsize+4].__repr__()))
+				msgs.append(_("Distrib message type %(type)i size %(size)i contents %(buffer)s unknown") %{'type':msgtype, 'size':msgsize-1, 'buffer':buffer[5:msgsize+4].__repr__() } )
 				conn.conn.close()
 				self._ui_callback([ConnClose(conn.conn,conn.addr)])
 				conn.conn = None
@@ -601,7 +602,7 @@ class SlskProtoThread(threading.Thread):
 				else:
 					if msgObj.__class__ not in [PeerInit, PierceFireWall, FileSearchResult]:
 						#self._ui_callback([Notify(_("Can't send the message over the closed connection: %s %s") %(msgObj.__class__, vars(msgObj)))])
-						self._ui_callback([_("Can't send the message over the closed connection: %s %s") %(msgObj.__class__, vars(msgObj))])
+						self._ui_callback([_("Can't send the message over the closed connection: %(type)s %(msg_obj)s") %{'type':msgObj.__class__, 'msg_obj':vars(msgObj)}])
 			elif issubclass(msgObj.__class__,InternalMessage):
 				if msgObj.__class__ is ServerConn:
 					try:

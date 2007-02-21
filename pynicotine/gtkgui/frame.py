@@ -515,14 +515,14 @@ class NicotineFrame(MainWindow):
 			# Private Chats have a higher priority
 			if len(self.tray_status["hilites"]["private"]) > 0:
 				user = self.tray_status["hilites"]["private"][-1]
-				self.MainWindow.set_title(_("Nicotine+") + " " + version+ " :: " +  _("Private Message from %s" % user) )
+				self.MainWindow.set_title(_("Nicotine+") + " " + version+ " :: " +  _("Private Message from %(user)s" % {'user':user} ) )
 			# Allow for the possibility the username is not available
 			elif len(self.tray_status["hilites"]["rooms"]) > 0:
 				room = self.tray_status["hilites"]["rooms"][-1]
 				if user == None:
-					self.MainWindow.set_title(_("Nicotine+") + " " + version+ " :: " +  _("You've been mentioned in the %s room" % (room) ) )
+					self.MainWindow.set_title(_("Nicotine+") + " " + version+ " :: " +  _("You've been mentioned in the %(room)s room" % {'room':room} ) )
 				else:
-					self.MainWindow.set_title(_("Nicotine+") + " " + version+ " :: " +  _("%s mentioned you in the %s room" % (user, room) ) )
+					self.MainWindow.set_title(_("Nicotine+") + " " + version+ " :: " +  _("%(user)s mentioned you in the %(room)s room" % {'user':user, 'room':room } ) )
 				
 	def load_image(self, status=None):
 		# Abort if Trayicon module wasn't loaded
@@ -601,7 +601,7 @@ class NicotineFrame(MainWindow):
 		gtk.gdk.threads_enter()
 		
 		
-		option = Option_Box(self, title=_('Nicotine+: Download %i files?' %numfiles), message=_("Are you sure you wish to download %i files from %s's directory %s?" %( numfiles, username, folder ) ), option1=_("Ok"), option3=_("Cancel"), option2=None )
+		option = Option_Box(self, title=_('Nicotine+')+': Download %(num)i files?' %{'num':numfiles}, message=_("Are you sure you wish to download %(num)i files from %(user)s's directory %(folder)s?") %{'num': numfiles, 'user':username, 'folder':folder } , option1=_("Ok"), option3=_("Cancel"), option2=None )
 		gtk.gdk.threads_leave()
 
 		if option == 1:
@@ -628,7 +628,7 @@ class NicotineFrame(MainWindow):
 			if not os.path.exists(sharesdir):
 				os.mkdir(sharesdir)
 		except Exception, msg:
-			error = _("Can't create directory '%s', reported error: %s" % (sharesdir, msg))
+			error = _("Can't create directory '%(folder)s', reported error: %(error)s" % {'folder':sharesdir, 'error':msg})
 			print error
 			self.logMessage(error)
 		shares = ChooseFile(self.MainWindow.get_toplevel(), sharesdir)
@@ -644,13 +644,13 @@ class NicotineFrame(MainWindow):
 			list1 = pickle.load(sharefile)
 			sharefile.close()
 			if not isinstance(list1, dict):
-				raise TypeError, "Bad data in file %s" % share1
+				raise TypeError, "Bad data in file %(sharesdb)s" % {'sharesdb':share1}
 			username = share1.split(os.sep)[-1]
 			self.userbrowse.InitWindow(username, None)
 			if username in self.userbrowse.users:
 				self.userbrowse.users[username].LoadShares(list1)
 		except Exception, msg:
-			error = _("Loading Shares from disk failed: %s" % msg)
+			error = _("Loading Shares from disk failed: %(error)s" % {'error':msg})
 			self.logMessage(error)
 			print error
 			
@@ -1005,7 +1005,7 @@ class NicotineFrame(MainWindow):
 				self.np.queue.get(0)
 		self.SetUserStatus("...")
 		server = self.np.config.sections["server"]["server"]
-		self.SetStatusText(_("Connecting to %s:%s") %(server[0],server[1]) )
+		self.SetStatusText(_("Connecting to %(host)s:%(port)s") %{'host':server[0],'port':server[1]} )
 		self.np.queue.put(slskmessages.ServerConn(None, server))
 		if self.np.servertimer is not None:
 			self.np.servertimer.cancel()
@@ -1172,8 +1172,8 @@ class NicotineFrame(MainWindow):
 		
 		self.DownStatus.pop(self.down_context_id)
 		self.UpStatus.pop(self.up_context_id)
-		self.DownStatus.push(self.down_context_id, _("Down: %i users, %.1f KB/s") % (usersdown,down))
-		self.UpStatus.push(self.up_context_id, _("Up: %i users, %.1f KB/s") % (usersup,up))
+		self.DownStatus.push(self.down_context_id, _("Down: %(num)i users, %(speed).1f KB/s") % {'num':usersdown, 'speed':down})
+		self.UpStatus.push(self.up_context_id, _("Up: %(num)i users, %(speed).1f KB/s") % {'num':usersup,'speed':up})
 	
 	def BanUser(self, user):
 		if self.np.transfers is not None:
@@ -1438,7 +1438,7 @@ class NicotineFrame(MainWindow):
 				errors = ""
 				for filter, error in failed.items():
 					errors += "Filter: %s Error: %s " % (filter, error)
-				error = _("Error: %d Download filters failed! %s " %(len(failed.keys()), errors) )
+				error = _("Error: %(num)d Download filters failed! %(error)s " %{'num':len(failed.keys()), 'error':errors} )
 				self.logMessage(error)
 		except Exception, e:
 			# Strange that individual filters _and_ the composite filter both fail
@@ -1464,7 +1464,7 @@ class NicotineFrame(MainWindow):
 				url = "file://%s" % file
 				self.OpenUrl(url)
 			else:
-				popupWarning(None, _("Cannot Find Guide"), _("The Nicotine Offline Guide ( NicotinePlusGuide.html ) was not found in either the following directories:\n\n<u>%s/doc/\n</u><b>and</b>\n<u>%s/share/nicotine/documentation/</u>\n\nEither install Nicotine-Plus, or start from inside the Nicotine-Plus source directory." % (os.environ["PWD"], sys.prefix ) ) )
+				popupWarning(None, _("Cannot Find Guide"), _("The Nicotine Offline Guide ( NicotinePlusGuide.html ) was not found in either the following directories:\n\n<u>%(pwd)s/doc/\n</u><b>and</b>\n<u>%(prefix)s/share/nicotine/documentation/</u>\n\nEither install Nicotine-Plus, or start from inside the Nicotine-Plus source directory." % {'pwd':os.environ["PWD"], 'prefix':sys.prefix } ) )
 		
 	def OnSourceForgeProject(self, widget):
 		url = "http://sourceforge.net/projects/nicotine-plus/"

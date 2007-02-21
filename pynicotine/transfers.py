@@ -224,10 +224,10 @@ class Transfers:
 			if i.user == user and i.filename == msg.file and (i.conn is not None or i.status in [_("Connection closed by peer"), _("Establishing connection")]):
 				self.AbortTransfer(i)
 				self.getFile(i.user, i.filename, i.path, i)
-				self.eventprocessor.logTransfer(_("Retrying failed download: user %s, file %s") %(i.user,self.decode(i.filename)), 1)
+				self.eventprocessor.logTransfer(_("Retrying failed download: user %(user)s, file %(file)s") %{'user':i.user, 'file':self.decode(i.filename)}, 1)
 				break
 		else:
-			self.eventprocessor.logTransfer(_("Failed download: user %s, file %s") %(user,self.decode(msg.file)), 1)
+			self.eventprocessor.logTransfer(_("Failed download: user %(user)s, file %(file)s") %{'user':user, 'file':self.decode(msg.file)}, 1)
 
 	def gettingAddress(self, req):
 		for i in self.downloads:
@@ -640,7 +640,7 @@ class Transfers:
 						i.offset = size
 						i.starttime = time.time()
 						self.eventprocessor.logMessage(_("Download started: %s") % self.decode(f.name))
-						self.eventprocessor.logTransfer(_("Download started: user %s, file %s") % (i.user, self.decode(i.filename)))
+						self.eventprocessor.logTransfer(_("Download started: user %(user)s, file %(file)s") % {'user':i.user, 'file':self.decode(i.filename)})
 		
 				self.downloadspanel.update(i)
 				return
@@ -657,7 +657,7 @@ class Transfers:
 					self.queue.put(slskmessages.UploadFile(i.conn,file = f,size = i.size))
 					i.status = _("Initializing transfer")
 					i.file = f
-					self.eventprocessor.logTransfer(_("Upload started: user %s, file %s") % (i.user, self.decode(i.filename)))
+					self.eventprocessor.logTransfer(_("Upload started: user %(user)s, file %(file)s") % {'user':i.user, 'file':self.decode(i.filename)})
 				except IOError, strerror:
 					self.eventprocessor.logMessage(_("I/O error: %s") % strerror)
 					i.status = _("Local file error")
@@ -722,10 +722,10 @@ class Transfers:
 							f1.close()
 							os.remove(msg.file.name)
 						except OSError:
-							self.eventprocessor.logMessage(_("Couldn't move '%s' to '%s'") % (self.decode(msg.file.name), self.decode(newname)))
+							self.eventprocessor.logMessage(_("Couldn't move '%(tempfile)s' to '%(file)s'") % {'tempfile':self.decode(msg.file.name), 'file':self.decode(newname)})
 					i.status = _("Finished")
-					self.eventprocessor.logMessage(_("Download finished: %s") % self.decode(newname))
-					self.eventprocessor.logTransfer(_("Download finished: user %s, file %s") % (i.user, self.decode(i.filename)))
+					self.eventprocessor.logMessage(_("Download finished: %(file)s") % {'file':self.decode(newname)})
+					self.eventprocessor.logTransfer(_("Download finished: user %(user)s, file %(file)s") % {'user':i.user, 'file':self.decode(i.filename)})
 					self.queue.put(slskmessages.ConnClose(msg.conn))
 					#if i.speed is not None:
 						#self.queue.put(slskmessages.SendSpeed(i.user, int(i.speed*1024)))
@@ -836,7 +836,7 @@ class Transfers:
 				for j in self.uploads:
 					if j.user == i.user:
 						j.timequeued = curtime
-				self.eventprocessor.logTransfer(_("Upload finished: user %s, file %s") % (i.user, self.decode(i.filename)))
+				self.eventprocessor.logTransfer(_("Upload finished: %(user)s, file %(file)s") % {'user':i.user, 'file':self.decode(i.filename)})
 				self.checkUploadQueue()
 				self.uploadspanel.update(i)
 			if needupdate:
@@ -938,8 +938,7 @@ class Transfers:
 			# Debugging
 			#print i.user, i.filename, count, countpriv, place
 		else:
-			#list = {user:time.time()}
-			#listogg = {user:time.time()}
+
 			list = listogg = listpriv = {user:time.time()}
 			countogg = 0
 			countpriv = 0
@@ -1091,7 +1090,8 @@ class Transfers:
 				else:
 					i.status = _("Connection closed by peer")
 					if i in self.downloads:
-						self.eventprocessor.logTransfer(_("Retrying failed download: user %s, file %s") %(i.user, self.decode(i.filename)), 1)
+						self.eventprocessor.logTransfer(_("Retrying failed download: %(user)s, file %(file)s") % {'user':i.user, 'file':self.decode(i.filename)}, 1)
+						
 						self.getFile(i.user, i.filename, i.path, i)
 			i.conn = None
 			self.downloadspanel.update(i)
@@ -1132,7 +1132,7 @@ class Transfers:
 				i.place = msg.place
 				self.downloadspanel.update(i)
 		'''			
-		self.eventprocessor.logMessage(_("File: %s, place in queue: %s") % (self.decode(msg.filename.split('\\')[-1]), msg.place))
+		self.eventprocessor.logMessage(_("File: %(file)s, place in queue: %(place)s") % {'file':self.decode(msg.filename.split('\\')[-1]), 'place':msg.place})
 
 	def FileError(self, msg):
 		""" Networking thread encountered a local file error"""
@@ -1195,9 +1195,9 @@ class Transfers:
 			except:
 				pass
 			if transfer in self.uploads:
-				self.eventprocessor.logTransfer(_("Upload aborted, user %s file %s") % (transfer.user, transfer.filename))
+				self.eventprocessor.logTransfer(_("Upload aborted, user %(user)s file %(file)s") % {'user':transfer.user, 'file':transfer.filename})
 			else:
-				self.eventprocessor.logTransfer(_("Download aborted, user %s file %s") % (transfer.user, transfer.filename))
+				self.eventprocessor.logTransfer(_("Download aborted, user %(user)s file %(file)s") % {'user':transfer.user, 'file':transfer.filename})
 
 	def GetDownloads(self):
 		""" Get a list of incomplete and not aborted downloads """

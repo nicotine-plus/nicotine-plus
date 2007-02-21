@@ -283,7 +283,7 @@ class Config:
 			if not os.path.isdir(path):
 				os.makedirs(path)
 		except OSError, msg:
-			print _("Can't create directory '%s', reported error: %s") % (path, msg)
+			print _("Can't create directory '%(path)s', reported error: %(error)s") % {'path':path, 'error':msg}
 		
 		oldumask = os.umask(0077)
 	
@@ -435,6 +435,6 @@ class Config:
 			x = self.aliases[rest]
 			del self.aliases[rest]
 			self.writeAliases()
-			return _("Removed alias %s: %s") % (rest, x) + "\n"
+			return _("Removed alias %(alias)s: %(action)s\n") % {'alias':rest, 'action':x}
 		else:
-			return _("No such alias (%s)") % rest + "\n"
+			return _("No such alias (%(alias)s)\n") % {'alias':rest}

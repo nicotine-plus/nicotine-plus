@@ -398,7 +398,7 @@ class MainWindow:
         self.hbox20.set_spacing(5)
 
         self.PrivateChatEntry = gtk.Entry()
-        self.PrivateChatEntry.set_text(_(""))
+        self.PrivateChatEntry.set_text("")
         self.PrivateChatEntry.set_editable(True)
         self.PrivateChatEntry.show()
         self.PrivateChatEntry.set_visibility(True)
@@ -810,7 +810,7 @@ class MainWindow:
         self.combo1.show()
 
         self.SearchEntry = self.combo1.child
-        self.SearchEntry.set_text(_(""))
+        self.SearchEntry.set_text("")
         self.SearchEntry.set_editable(True)
         self.SearchEntry.show()
         self.SearchEntry.set_visibility(True)
@@ -917,7 +917,7 @@ class MainWindow:
         self.hbox21.set_spacing(5)
 
         self.UserinfoEntry = gtk.Entry()
-        self.UserinfoEntry.set_text(_(""))
+        self.UserinfoEntry.set_text("")
         self.UserinfoEntry.set_editable(True)
         self.UserinfoEntry.show()
         self.UserinfoEntry.set_visibility(True)
@@ -969,7 +969,7 @@ class MainWindow:
         self.hbox22.set_spacing(5)
 
         self.SharesEntry = gtk.Entry()
-        self.SharesEntry.set_text(_(""))
+        self.SharesEntry.set_text("")
         self.SharesEntry.set_editable(True)
         self.SharesEntry.show()
         self.SharesEntry.set_visibility(True)
@@ -1544,7 +1544,7 @@ class ChatRoomTab:
         self.vbox6.pack_start(self.scrolledwindow15, True, True, 0)
 
         self.entry3 = gtk.Entry()
-        self.entry3.set_text(_(""))
+        self.entry3.set_text("")
         self.entry3.set_editable(True)
         self.entry3.show()
         self.entry3.set_visibility(True)
@@ -1713,7 +1713,7 @@ class PrivateChatTab:
         self.hbox5.set_border_width(3)
 
         self.ChatLine = gtk.Entry()
-        self.ChatLine.set_text(_(""))
+        self.ChatLine.set_text("")
         self.ChatLine.set_editable(True)
         self.ChatLine.show()
         self.ChatLine.set_visibility(True)
@@ -1914,7 +1914,7 @@ class SearchTab:
         self.FilterIn.show()
 
         self.combo_entry1 = self.FilterIn.child
-        self.combo_entry1.set_text(_(""))
+        self.combo_entry1.set_text("")
         self.combo_entry1.set_editable(True)
         self.combo_entry1.show()
         self.combo_entry1.set_visibility(True)
@@ -1935,7 +1935,7 @@ class SearchTab:
         self.FilterOut.show()
 
         self.combo_entry2 = self.FilterOut.child
-        self.combo_entry2.set_text(_(""))
+        self.combo_entry2.set_text("")
         self.combo_entry2.set_editable(True)
         self.combo_entry2.show()
         self.combo_entry2.set_visibility(True)
@@ -1957,7 +1957,7 @@ class SearchTab:
         self.FilterSize.show()
 
         self.combo_entry3 = self.FilterSize.child
-        self.combo_entry3.set_text(_(""))
+        self.combo_entry3.set_text("")
         self.combo_entry3.set_editable(True)
         self.combo_entry3.show()
         self.combo_entry3.set_visibility(True)
@@ -1979,7 +1979,7 @@ class SearchTab:
         self.FilterBitrate.show()
 
         self.combo_entry4 = self.FilterBitrate.child
-        self.combo_entry4.set_text(_(""))
+        self.combo_entry4.set_text("")
         self.combo_entry4.set_editable(True)
         self.combo_entry4.show()
         self.combo_entry4.set_visibility(True)
@@ -2001,7 +2001,7 @@ class SearchTab:
         self.FilterCountry.show()
 
         self.combo_entry5 = self.FilterCountry.child
-        self.combo_entry5.set_text(_(""))
+        self.combo_entry5.set_text("")
         self.combo_entry5.set_editable(True)
         self.combo_entry5.show()
         self.combo_entry5.set_visibility(True)
@@ -2602,7 +2602,7 @@ class UserBrowseTab:
         self.hbox8.pack_start(self.label20, False, False, 5)
 
         self.entry4 = gtk.Entry()
-        self.entry4.set_text(_(""))
+        self.entry4.set_text("")
         self.entry4.set_editable(True)
         self.entry4.show()
         self.entry4.set_visibility(True)
@@ -2848,7 +2848,7 @@ class RoomList:
         self.hbox1.pack_start(self.label10, False, False, 0)
 
         self.CreateRoomEntry = gtk.Entry()
-        self.CreateRoomEntry.set_text(_(""))
+        self.CreateRoomEntry.set_text("")
         self.CreateRoomEntry.set_editable(True)
         self.CreateRoomEntry.show()
         self.CreateRoomEntry.set_visibility(True)

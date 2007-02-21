@@ -331,7 +331,7 @@ class NetworkEventProcessor:
 
 	def ConnectError(self,msg):
 		if msg.connobj.__class__ is slskmessages.ServerConn:
-			self.setStatus(_("Can't connect to server %s:%s: %s") % (msg.connobj.addr[0],msg.connobj.addr[1],self.decode(msg.err)))
+			self.setStatus(_("Can't connect to server %(host)s:%(port)s: %(error)s") % {'host': msg.connobj.addr[0], 'port': msg.connobj.addr[1], 'error': self.decode(msg.err) } )
 			self.setServerTimer()
 			if self.serverconn is not None:
 				self.serverconn = None
@@ -375,7 +375,7 @@ class NetworkEventProcessor:
 		self.setStatus(_("Listening on port %i") %(msg.port))
 
 	def ServerConn(self, msg):
-		self.setStatus(_("Connected to server %s:%s, logging in...") %(msg.addr[0],msg.addr[1]))
+		self.setStatus(_("Connected to server %(host)s:%(port)s, logging in...") % {'host':msg.addr[0], 'port': msg.addr[1]})
 		time.sleep(1)
 		self.serverconn = msg.conn
 		self.servertimeout = -1
@@ -398,7 +398,7 @@ class NetworkEventProcessor:
 
 	def ClosedConnection(self, conn, addr):
 		if conn == self.serverconn:
-			self.setStatus(_("Disconnected from server %s:%s") %(addr[0],addr[1]))
+			self.setStatus(_("Disconnected from server %(host)s:%(port)s") %{'host':addr[0], 'port':addr[1]})
 			if not self.frame.manualdisconnect:
 				self.setServerTimer()
 			else:
@@ -422,7 +422,7 @@ class NetworkEventProcessor:
 					self.peerconns.remove(i)
 					break
 			else:
-				self.logMessage(_("Removed connection closed by peer: %s %s") %(conn, addr),1)
+				self.logMessage(_("Removed connection closed by peer: %(conn_obj)s %(address)s") %{'conn_obj':conn, 'address':addr},1)
 				self.queue.put(slskmessages.ConnClose(conn))
 		
 	def Login(self,msg):
@@ -528,7 +528,10 @@ class NetworkEventProcessor:
 		mins = msg.days / 60
 		hours = mins / 60
 		days = hours / 24
-		self.logMessage(_("%i days, %i hours, %i minutes, %i seconds of download privileges left") %(days, hours % 24, mins % 60, msg.days % 60))
+		if msg.days == 0:
+			self.logMessage(_("You have no privileges left"))
+		else:
+			self.logMessage(_("%(days)i days, %(hours)i hours, %(minutes)i minutes, %(seconds)i seconds of download privileges left") %{'days':days, 'hours':hours % 24, 'minutes':mins % 60, 'seconds':msg.days % 60})
 
 	def AdminMessage(self, msg):
 		self.logMessage("%s" %(msg.msg))
@@ -613,9 +616,9 @@ class NetworkEventProcessor:
 			if i.username == msg.user and i.addr is None:
 				if msg.port != 0 or i.tryaddr == 10:
 					if i.tryaddr == 10:
-						self.logMessage(_("Server reported port 0 for the 10th time for user %s, giving up") %(msg.user),1)
+						self.logMessage(_("Server reported port 0 for the 10th time for user %(user)s, giving up") %{'user':msg.user},1)
 					elif i.tryaddr is not None:
-						self.logMessage(_("Server reported non-zero port for user %s after %i retries") %(msg.user, i.tryaddr),1)
+						self.logMessage(_("Server reported non-zero port for user %(user)s after %(tries)i retries") %{'user':msg.user, 'tries':i.tryaddr},1)
 					i.addr = (msg.ip, msg.port)
 					i.tryaddr = None
 					self.queue.put(slskmessages.OutConn(None, i.addr))
@@ -625,7 +628,7 @@ class NetworkEventProcessor:
 				else:
 					if i.tryaddr is None:
 						i.tryaddr = 1
-						self.logMessage(_("Server reported port 0 for user %s, retrying") %(msg.user),1)
+						self.logMessage(_("Server reported port 0 for user %(user)s, retrying") %{'user':msg.user},1)
 					else:
 						i.tryaddr +=1
 					self.queue.put(slskmessages.GetPeerAddress(msg.user))
@@ -642,9 +645,9 @@ class NetworkEventProcessor:
 				cc = ""
 			try:
 				hostname = socket.gethostbyaddr(msg.ip)[0]
-				message = _("IP address of %s is %s, name %s, port %i%s") %(msg.user,msg.ip,hostname,msg.port,cc)
+				message = _("IP address of %(user)s is %(ip)s, name %(host)s, port %(port)i%(country)s") %{'user':msg.user, 'ip':msg.ip, 'host':hostname, 'port':msg.port, 'country':cc}
 			except:
-				message = _("IP address of %s is %s, port %i%s") %(msg.user,msg.ip,msg.port,cc)
+				message = _("IP address of %(user)s is %(ip)s, port %(port)i%(country)s") %{'user':msg.user, 'ip':msg.ip, 'port':msg.port, 'country':cc}
 			self.logMessage(message)
 		if self.users.has_key(msg.user):
 			self.users[msg.user].addr = (msg.ip,msg.port)
@@ -723,7 +726,7 @@ class NetworkEventProcessor:
 				if self.users[user].addr is not None:
 					u_ip, u_port = self.users[user].addr
 					if u_ip != ip:
-						warning = _("IP %s:%s is spoofing user %s with a peer request, blocking because it does not match IP: %s") %(ip, port, user, u_ip)
+						warning = _("IP %(ip)s:%(port)s is spoofing user %(user)s with a peer request, blocking because it does not match IP: %(real_ip)s") %{'ip':ip, 'port':port, 'user':user, 'real_ip':u_ip}
 						self.logMessage(warning , None)
 						print warning 
 						return 1
@@ -751,13 +754,13 @@ class NetworkEventProcessor:
 		#	return
 		if user == self.config.sections["server"]["login"]:
 			if ip != None and port != None:
-				self.logMessage(_("%s is making a BrowseShares request, blocking possible spoofing attempt from IP %s port %s") %(user, ip, port), None)
+				self.logMessage(_("%(user)s is making a BrowseShares request, blocking possible spoofing attempt from IP %(ip)s port %(port)s") %{'user':user, 'ip':ip, 'port':port}, None)
 			else:
-				self.logMessage(_("%s is making a BrowseShares request, blocking possible spoofing attempt from an unknown IP & port") %(user), None)
+				self.logMessage(_("%(user)s is making a BrowseShares request, blocking possible spoofing attempt from an unknown IP & port") %{'user':user}, None)
 			if msg.conn.conn != None:
 				self.queue.put(slskmessages.ConnClose(msg.conn.conn))
 			return
-		self.logMessage(_("%s is making a BrowseShares request") %(user), None)
+		self.logMessage(_("%(user)s is making a BrowseShares request") %{'user':user}, None)
 		addr = msg.conn.addr[0]
 		checkuser, reason = self.CheckUser(user, self.geoip, addr)
 	
@@ -804,14 +807,14 @@ class NetworkEventProcessor:
 		#	return
 		if user == self.config.sections["server"]["login"]:
 			if ip is not None and port is not None:
-				self.logMessage(_("Blocking %s from making a UserInfo request, possible spoofing attempt from IP %s port %s") %(user, ip, port), None)
+				self.logMessage(_("Blocking %(user)s from making a UserInfo request, possible spoofing attempt from IP %(ip)s port %(port)s") %{'user':user, 'ip':ip, 'port':port}, None)
 			else:
 				self.logMessage(_("Blocking %s from making a UserInfo request, possible possible spoofing attempt from an unknown IP & port") %(user), None)
 			if msg.conn.conn != None:
 				self.queue.put(slskmessages.ConnClose(msg.conn.conn))
 			return
 		if user in self.config.sections["server"]["banlist"]:
-			self.logMessage(_("%s is banned, but is making a UserInfo request") %(user), 1)
+			self.logMessage(_("%(user)s is banned, but is making a UserInfo request") %{'user':user}, 1)
 			self.logMessage("%s %s" %(msg.__class__, vars(msg)),1)
 			return
 		try:
@@ -839,7 +842,7 @@ class NetworkEventProcessor:
 				uploadallowed = ua
 			self.queue.put(slskmessages.UserInfoReply(msg.conn.conn, descr, pic, totalupl, queuesize, slotsavail, uploadallowed))
 	
-		self.logMessage(_("%s is making a UserInfo request") %(user), None)
+		self.logMessage(_("%(user)s is making a UserInfo request") %{'user':user}, None)
 		self.logMessage("%s %s" %(msg.__class__, vars(msg)),1)
 		
 
@@ -1167,9 +1170,10 @@ class NetworkEventProcessor:
 				message = slskmessages.FileSearchResult(None, user, geoip, searchid,results,fileindex,slotsavail, self.speed, queuesizes, fifoqueue)
 				self.ProcessRequestToPeer(user, message)
 				if direct:
-					self.logMessage(_("User %s is directly searching for %s, returning %i results") %(user,self.decode(searchterm),len(results)),1)
+					self.logMessage(_("User %(user)s is directly searching for %(query)s, returning %(num)i results") %{'user':user,'query':self.decode(searchterm),'num':len(results)},1)
 				else:
-					self.logMessage(_("User %s is searching for %s, returning %i results") %(user,self.decode(searchterm),len(results)),1)
+					self.logMessage(_("User %(user)s is searching for %(query)s, returning %(num)i results") %{'user':user,'query':self.decode(searchterm),'num':len(results)},1)
+					
 
 	def NetInfo(self, msg):
 		self.distribcache.update(msg.list)

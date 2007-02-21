@@ -368,7 +368,7 @@ class UserBrowse(UserBrowseTab):
 			if not os.path.exists(sharesdir):
 				os.mkdir(sharesdir)
 		except Exception, msg:
-			error = _("Can't create directory '%s', reported error: %s" % (sharesdir, msg))
+			error = _("Can't create directory '%(folder)s', reported error: %(error)s" % {'folder':sharesdir, 'error':msg})
 			print error
 			self.frame.logMessage(error)
 		try:
@@ -378,7 +378,7 @@ class UserBrowse(UserBrowseTab):
 			pickle.dump(self.shares, sharesfile)
 			sharesfile.close()
 		except Exception, msg:
-			error = _("Can't save shares, '%s', reported error: %s" % (self.user, msg) )
+			error = _("Can't save shares, '%(user)s', reported error: %(error)s" % {'user':self.user, 'error':msg} )
 			print error
 			self.frame.logMessage(error)
 			
@@ -457,7 +457,7 @@ class UserBrowse(UserBrowseTab):
 		numfiles = len(files)
 		go_ahead=0
 		if len(files) > 100:
-			go_ahead = Option_Box(self.frame, title=_('Nicotine+: Download %i files?' %numfiles), message=_("Are you sure you wish to download %i files from %s's directory %s?" %( numfiles, self.user, dir ) ), option1=_("Ok"), option3=_("Cancel"), option2=None, status="warning" )
+			go_ahead = Option_Box(self.frame, title=_('Nicotine+')+': Download %(num)i files?' % {'num':numfiles}, message=_("Are you sure you wish to download %(num)i files from %(user)s's directory %(folder)s?" %{ 'num':numfiles, 'user':self.user, 'folder':dir } ), option1=_("Ok"), option3=_("Cancel"), option2=None, status="warning" )
 			
 		else:
 			go_ahead = 1
