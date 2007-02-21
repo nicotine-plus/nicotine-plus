@@ -3,62 +3,12 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#: pynicotine/gtkgui/settings_glade.py:54
-#: pynicotine/gtkgui/settings_glade.py:85
-#: pynicotine/gtkgui/settings_glade.py:111
-#: pynicotine/gtkgui/settings_glade.py:142
-#: pynicotine/gtkgui/settings_glade.py:284
-#: pynicotine/gtkgui/settings_glade.py:340
-#: pynicotine/gtkgui/settings_glade.py:683
-#: pynicotine/gtkgui/settings_glade.py:712
-#: pynicotine/gtkgui/settings_glade.py:733
-#: pynicotine/gtkgui/settings_glade.py:1242
-#: pynicotine/gtkgui/settings_glade.py:1389
-#: pynicotine/gtkgui/settings_glade.py:1426
-#: pynicotine/gtkgui/settings_glade.py:1556
-#: pynicotine/gtkgui/settings_glade.py:1698
-#: pynicotine/gtkgui/settings_glade.py:1705
-#: pynicotine/gtkgui/settings_glade.py:1712
-#: pynicotine/gtkgui/settings_glade.py:1719
-#: pynicotine/gtkgui/settings_glade.py:1874
-#: pynicotine/gtkgui/settings_glade.py:1937
-#: pynicotine/gtkgui/settings_glade.py:1972
-#: pynicotine/gtkgui/settings_glade.py:1979
-#: pynicotine/gtkgui/settings_glade.py:2049
-#: pynicotine/gtkgui/settings_glade.py:2196
-#: pynicotine/gtkgui/settings_glade.py:2322
-#: pynicotine/gtkgui/settings_glade.py:2875
-#: pynicotine/gtkgui/settings_glade.py:3035
-#: pynicotine/gtkgui/settings_glade.py:3042
-#: pynicotine/gtkgui/settings_glade.py:3053
-#: pynicotine/gtkgui/settings_glade.py:3066
-#: pynicotine/gtkgui/settings_glade.py:3092
-#: pynicotine/gtkgui/settings_glade.py:3284
-#: pynicotine/gtkgui/settings_glade.py:3348
-#: pynicotine/gtkgui/settings_glade.py:3370
-#: pynicotine/gtkgui/settings_glade.py:3456
-#: pynicotine/gtkgui/settings_glade.py:3552
-#: pynicotine/gtkgui/settings_glade.py:3566
-#: pynicotine/gtkgui/settings_glade.py:3957
-#: pynicotine/gtkgui/nicotine_glade.py:401
-#: pynicotine/gtkgui/nicotine_glade.py:813
-#: pynicotine/gtkgui/nicotine_glade.py:920
-#: pynicotine/gtkgui/nicotine_glade.py:972
-#: pynicotine/gtkgui/nicotine_glade.py:1547
-#: pynicotine/gtkgui/nicotine_glade.py:1716
-#: pynicotine/gtkgui/nicotine_glade.py:1917
-#: pynicotine/gtkgui/nicotine_glade.py:1938
-#: pynicotine/gtkgui/nicotine_glade.py:1960
-#: pynicotine/gtkgui/nicotine_glade.py:1982
-#: pynicotine/gtkgui/nicotine_glade.py:2004
-#: pynicotine/gtkgui/nicotine_glade.py:2605
-#: pynicotine/gtkgui/nicotine_glade.py:2851
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-02-21 17:02+0100\n"
+"POT-Creation-Date: 2007-02-21 19:56+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -303,24 +253,27 @@ msgid " (vbr)"
 msgstr ""
 
 #: pynicotine/gtkgui/userbrowse.py:371 pynicotine/gtkgui/frame.py:631
-#: pynicotine/config.py:286
 #, python-format
-msgid "Can't create directory '%s', reported error: %s"
+msgid "Can't create directory '%(folder)s', reported error: %(error)s"
 msgstr ""
 
 #: pynicotine/gtkgui/userbrowse.py:381
 #, python-format
-msgid "Can't save shares, '%s', reported error: %s"
+msgid "Can't save shares, '%(user)s', reported error: %(error)s"
+msgstr ""
+
+#: pynicotine/gtkgui/userbrowse.py:460 pynicotine/gtkgui/frame.py:122
+#: pynicotine/gtkgui/frame.py:512 pynicotine/gtkgui/frame.py:513
+#: pynicotine/gtkgui/frame.py:518 pynicotine/gtkgui/frame.py:523
+#: pynicotine/gtkgui/frame.py:525 pynicotine/gtkgui/frame.py:604
+msgid "Nicotine+"
 msgstr ""
 
 #: pynicotine/gtkgui/userbrowse.py:460 pynicotine/gtkgui/frame.py:604
 #, python-format
-msgid "Nicotine+: Download %i files?"
-msgstr ""
-
-#: pynicotine/gtkgui/userbrowse.py:460 pynicotine/gtkgui/frame.py:604
-#, python-format
-msgid "Are you sure you wish to download %i files from %s's directory %s?"
+msgid ""
+"Are you sure you wish to download %(num)i files from %(user)s's directory %"
+"(folder)s?"
 msgstr ""
 
 #: pynicotine/gtkgui/userbrowse.py:460 pynicotine/gtkgui/frame.py:604
@@ -406,12 +359,6 @@ msgstr ""
 
 #: pynicotine/gtkgui/downloads.py:53 pynicotine/gtkgui/uploads.py:49
 msgid "Clear Groups"
-msgstr ""
-
-#: pynicotine/gtkgui/frame.py:122 pynicotine/gtkgui/frame.py:512
-#: pynicotine/gtkgui/frame.py:513 pynicotine/gtkgui/frame.py:518
-#: pynicotine/gtkgui/frame.py:523 pynicotine/gtkgui/frame.py:525
-msgid "Nicotine+"
 msgstr ""
 
 #: pynicotine/gtkgui/frame.py:137 pynicotine/gtkgui/chatrooms.py:406
@@ -521,22 +468,22 @@ msgstr ""
 
 #: pynicotine/gtkgui/frame.py:518
 #, python-format
-msgid "Private Message from %s"
+msgid "Private Message from %(user)s"
 msgstr ""
 
 #: pynicotine/gtkgui/frame.py:523
 #, python-format
-msgid "You've been mentioned in the %s room"
+msgid "You've been mentioned in the %(room)s room"
 msgstr ""
 
 #: pynicotine/gtkgui/frame.py:525
 #, python-format
-msgid "%s mentioned you in the %s room"
+msgid "%(user)s mentioned you in the %(room)s room"
 msgstr ""
 
 #: pynicotine/gtkgui/frame.py:653
 #, python-format
-msgid "Loading Shares from disk failed: %s"
+msgid "Loading Shares from disk failed: %(error)s"
 msgstr ""
 
 #: pynicotine/gtkgui/frame.py:675
@@ -607,17 +554,17 @@ msgstr ""
 
 #: pynicotine/gtkgui/frame.py:1008
 #, python-format
-msgid "Connecting to %s:%s"
+msgid "Connecting to %(host)s:%(port)s"
 msgstr ""
 
 #: pynicotine/gtkgui/frame.py:1175
 #, python-format
-msgid "Down: %i users, %.1f KB/s"
+msgid "Down: %(num)i users, %(speed).1f KB/s"
 msgstr ""
 
 #: pynicotine/gtkgui/frame.py:1176
 #, python-format
-msgid "Up: %i users, %.1f KB/s"
+msgid "Up: %(num)i users, %(speed).1f KB/s"
 msgstr ""
 
 #: pynicotine/gtkgui/frame.py:1216
@@ -645,7 +592,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/frame.py:1441
 #, python-format
-msgid "Error: %d Download filters failed! %s "
+msgid "Error: %(num)d Download filters failed! %(error)s "
 msgstr ""
 
 #: pynicotine/gtkgui/frame.py:1445
@@ -663,9 +610,9 @@ msgid ""
 "The Nicotine Offline Guide ( NicotinePlusGuide.html ) was not found in "
 "either the following directories:\n"
 "\n"
-"<u>%s/doc/\n"
+"<u>%(pwd)s/doc/\n"
 "</u><b>and</b>\n"
-"<u>%s/share/nicotine/documentation/</u>\n"
+"<u>%(prefix)s/share/nicotine/documentation/</u>\n"
 "\n"
 "Either install Nicotine-Plus, or start from inside the Nicotine-Plus source "
 "directory."
@@ -1663,7 +1610,7 @@ msgid "Waiting for download"
 msgstr ""
 
 #: pynicotine/gtkgui/transferlist.py:61 pynicotine/transfers.py:308
-#: pynicotine/transfers.py:313 pynicotine/transfers.py:1077
+#: pynicotine/transfers.py:313 pynicotine/transfers.py:1076
 msgid "Requesting file"
 msgstr ""
 
@@ -1702,7 +1649,7 @@ msgid "Getting status"
 msgstr ""
 
 #: pynicotine/gtkgui/transferlist.py:69 pynicotine/transfers.py:139
-#: pynicotine/transfers.py:145 pynicotine/transfers.py:1090
+#: pynicotine/transfers.py:145 pynicotine/transfers.py:1089
 msgid "User logged off"
 msgstr ""
 
@@ -1717,7 +1664,7 @@ msgstr ""
 #: pynicotine/gtkgui/transferlist.py:71 pynicotine/gtkgui/transferlist.py:277
 #: pynicotine/gtkgui/transferlist.py:284 pynicotine/transfers.py:149
 #: pynicotine/transfers.py:726 pynicotine/transfers.py:745
-#: pynicotine/transfers.py:831 pynicotine/transfers.py:1088
+#: pynicotine/transfers.py:831 pynicotine/transfers.py:1087
 #: pynicotine/transfers.py:1177 pynicotine/transfers.py:1204
 msgid "Finished"
 msgstr ""
@@ -1914,7 +1861,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/settingswindow.py:486
 #, python-format
-msgid "%d Failed! %s "
+msgid "%(num)d Failed! %(error)s "
 msgstr ""
 
 #: pynicotine/gtkgui/settingswindow.py:561
@@ -2751,7 +2698,7 @@ msgstr ""
 
 #: pynicotine/pynicotine.py:334
 #, python-format
-msgid "Can't connect to server %s:%s: %s"
+msgid "Can't connect to server %(host)s:%(port)s: %(error)s"
 msgstr ""
 
 #: pynicotine/pynicotine.py:361
@@ -2766,12 +2713,12 @@ msgstr ""
 
 #: pynicotine/pynicotine.py:378
 #, python-format
-msgid "Connected to server %s:%s, logging in..."
+msgid "Connected to server %(host)s:%(port)s, logging in..."
 msgstr ""
 
 #: pynicotine/pynicotine.py:401
 #, python-format
-msgid "Disconnected from server %s:%s"
+msgid "Disconnected from server %(host)s:%(port)s"
 msgstr ""
 
 #: pynicotine/pynicotine.py:415
@@ -2781,7 +2728,7 @@ msgstr ""
 
 #: pynicotine/pynicotine.py:425
 #, python-format
-msgid "Removed connection closed by peer: %s %s"
+msgid "Removed connection closed by peer: %(conn_obj)s %(address)s"
 msgstr ""
 
 #: pynicotine/pynicotine.py:432
@@ -2798,169 +2745,177 @@ msgstr ""
 msgid "%i privileged users"
 msgstr ""
 
-#: pynicotine/pynicotine.py:531
-#, python-format
-msgid "%i days, %i hours, %i minutes, %i seconds of download privileges left"
+#: pynicotine/pynicotine.py:532
+msgid "You have no privileges left"
 msgstr ""
 
-#: pynicotine/pynicotine.py:616
+#: pynicotine/pynicotine.py:534
 #, python-format
-msgid "Server reported port 0 for the 10th time for user %s, giving up"
+msgid ""
+"%(days)i days, %(hours)i hours, %(minutes)i minutes, %(seconds)i seconds of "
+"download privileges left"
 msgstr ""
 
-#: pynicotine/pynicotine.py:618
+#: pynicotine/pynicotine.py:619
 #, python-format
-msgid "Server reported non-zero port for user %s after %i retries"
+msgid "Server reported port 0 for the 10th time for user %(user)s, giving up"
 msgstr ""
 
-#: pynicotine/pynicotine.py:628
+#: pynicotine/pynicotine.py:621
 #, python-format
-msgid "Server reported port 0 for user %s, retrying"
+msgid "Server reported non-zero port for user %(user)s after %(tries)i retries"
 msgstr ""
 
-#: pynicotine/pynicotine.py:645
+#: pynicotine/pynicotine.py:631
 #, python-format
-msgid "IP address of %s is %s, name %s, port %i%s"
+msgid "Server reported port 0 for user %(user)s, retrying"
 msgstr ""
 
-#: pynicotine/pynicotine.py:647
+#: pynicotine/pynicotine.py:648
 #, python-format
-msgid "IP address of %s is %s, port %i%s"
+msgid ""
+"IP address of %(user)s is %(ip)s, name %(host)s, port %(port)i%(country)s"
 msgstr ""
 
-#: pynicotine/pynicotine.py:653
+#: pynicotine/pynicotine.py:650
+#, python-format
+msgid "IP address of %(user)s is %(ip)s, port %(port)i%(country)s"
+msgstr ""
+
+#: pynicotine/pynicotine.py:656
 msgid ""
 "Someone else is logging in with the same nickname, server is going to "
 "disconnect us"
 msgstr ""
 
-#: pynicotine/pynicotine.py:694 pynicotine/transfers.py:847
+#: pynicotine/pynicotine.py:697 pynicotine/transfers.py:847
 #, python-format
 msgid "Banned (%s)"
 msgstr ""
 
-#: pynicotine/pynicotine.py:696 pynicotine/transfers.py:849
+#: pynicotine/pynicotine.py:699 pynicotine/transfers.py:849
 msgid "Banned"
 msgstr ""
 
-#: pynicotine/pynicotine.py:703
+#: pynicotine/pynicotine.py:706
 msgid "Sorry, friends only"
 msgstr ""
 
-#: pynicotine/pynicotine.py:705
+#: pynicotine/pynicotine.py:708
 msgid "geoip"
 msgstr ""
 
-#: pynicotine/pynicotine.py:709
+#: pynicotine/pynicotine.py:712
 msgid "Sorry, geographical paranoia"
 msgstr ""
 
-#: pynicotine/pynicotine.py:713
+#: pynicotine/pynicotine.py:716
 msgid "Sorry, your country is blocked"
 msgstr ""
 
-#: pynicotine/pynicotine.py:726
+#: pynicotine/pynicotine.py:729
 #, python-format
 msgid ""
-"IP %s:%s is spoofing user %s with a peer request, blocking because it does "
-"not match IP: %s"
+"IP %(ip)s:%(port)s is spoofing user %(user)s with a peer request, blocking "
+"because it does not match IP: %(real_ip)s"
 msgstr ""
 
-#: pynicotine/pynicotine.py:754
+#: pynicotine/pynicotine.py:757
 #, python-format
 msgid ""
-"%s is making a BrowseShares request, blocking possible spoofing attempt from "
-"IP %s port %s"
+"%(user)s is making a BrowseShares request, blocking possible spoofing "
+"attempt from IP %(ip)s port %(port)s"
 msgstr ""
 
-#: pynicotine/pynicotine.py:756
+#: pynicotine/pynicotine.py:759
 #, python-format
 msgid ""
-"%s is making a BrowseShares request, blocking possible spoofing attempt from "
-"an unknown IP & port"
+"%(user)s is making a BrowseShares request, blocking possible spoofing "
+"attempt from an unknown IP & port"
 msgstr ""
 
-#: pynicotine/pynicotine.py:760
+#: pynicotine/pynicotine.py:763
 #, python-format
-msgid "%s is making a BrowseShares request"
+msgid "%(user)s is making a BrowseShares request"
 msgstr ""
 
-#: pynicotine/pynicotine.py:807
+#: pynicotine/pynicotine.py:810
 #, python-format
 msgid ""
-"Blocking %s from making a UserInfo request, possible spoofing attempt from "
-"IP %s port %s"
+"Blocking %(user)s from making a UserInfo request, possible spoofing attempt "
+"from IP %(ip)s port %(port)s"
 msgstr ""
 
-#: pynicotine/pynicotine.py:809
+#: pynicotine/pynicotine.py:812
 #, python-format
 msgid ""
 "Blocking %s from making a UserInfo request, possible possible spoofing "
 "attempt from an unknown IP & port"
 msgstr ""
 
-#: pynicotine/pynicotine.py:814
+#: pynicotine/pynicotine.py:817
 #, python-format
-msgid "%s is banned, but is making a UserInfo request"
+msgid "%(user)s is banned, but is making a UserInfo request"
 msgstr ""
 
-#: pynicotine/pynicotine.py:842
+#: pynicotine/pynicotine.py:845
 #, python-format
-msgid "%s is making a UserInfo request"
+msgid "%(user)s is making a UserInfo request"
 msgstr ""
 
-#: pynicotine/pynicotine.py:898
+#: pynicotine/pynicotine.py:901
 #, python-format
 msgid "Can't connect to %s (either way), giving up"
 msgstr ""
 
-#: pynicotine/pynicotine.py:909
+#: pynicotine/pynicotine.py:912
 #, python-format
 msgid "User %s does not respond to connect request, giving up"
 msgstr ""
 
-#: pynicotine/pynicotine.py:990
+#: pynicotine/pynicotine.py:993
 #, python-format
 msgid "Your buddy, %s, is attempting to upload file(s) to you."
 msgstr ""
 
-#: pynicotine/pynicotine.py:992 pynicotine/pynicotine.py:1049
+#: pynicotine/pynicotine.py:995 pynicotine/pynicotine.py:1052
 msgid "[Automatic Message] "
 msgstr ""
 
-#: pynicotine/pynicotine.py:992
+#: pynicotine/pynicotine.py:995
 msgid "You are not allowed to send me files."
 msgstr ""
 
-#: pynicotine/pynicotine.py:993
+#: pynicotine/pynicotine.py:996
 #, python-format
 msgid ""
 "%s is not allowed to send you file(s), but is attempting to, anyway. Warning "
 "Sent."
 msgstr ""
 
-#: pynicotine/pynicotine.py:1052
+#: pynicotine/pynicotine.py:1055
 msgid ""
 "Please try browsing me if you get 'File not shared' errors. This is an "
 "automatic message, you don't have to reply to it."
 msgstr ""
 
-#: pynicotine/pynicotine.py:1108
+#: pynicotine/pynicotine.py:1111
 #, python-format
 msgid "Unknown tunneled message: %s"
 msgstr ""
 
-#: pynicotine/pynicotine.py:1170
+#: pynicotine/pynicotine.py:1173
 #, python-format
-msgid "User %s is directly searching for %s, returning %i results"
+msgid ""
+"User %(user)s is directly searching for %(query)s, returning %(num)i results"
 msgstr ""
 
-#: pynicotine/pynicotine.py:1172
+#: pynicotine/pynicotine.py:1175
 #, python-format
-msgid "User %s is searching for %s, returning %i results"
+msgid "User %(user)s is searching for %(query)s, returning %(num)i results"
 msgstr ""
 
-#: pynicotine/pynicotine.py:1244
+#: pynicotine/pynicotine.py:1248
 #, python-format
 msgid "Couldn't write to transfer log: %s"
 msgstr ""
@@ -2972,39 +2927,41 @@ msgstr ""
 
 #: pynicotine/slskproto.py:387
 #, python-format
-msgid "Server message type %i size %i contents %s unknown"
+msgid "Server message type %(type)i size %(size)i contents %(buffer)s unknown"
 msgstr ""
 
 #: pynicotine/slskproto.py:482
 #, python-format
-msgid "Unknown peer init code: %i, message contents %s"
+msgid "Unknown peer init code: %(type)i, message contents %(buffer)s"
 msgstr ""
 
 #: pynicotine/slskproto.py:501
 #, python-format
 msgid ""
-"There was an error while unpacking Peer message type %s size %i contents %s "
-"from user: %s, %s:%s"
+"There was an error while unpacking Peer message type %(type)s size %(size)i "
+"contents %(buffer)s from user: %(user)s, %(host)s:%(port)s"
 msgstr ""
 
 #: pynicotine/slskproto.py:508
 #, python-format
-msgid "Peer message type %i size %i contents %s unknown, from user: %s, %s:%s"
+msgid ""
+"Peer message type %(type)s size %(size)i contents %(buffer)s unknown, from "
+"user: %(user)s, %(host)s:%(port)s"
 msgstr ""
 
-#: pynicotine/slskproto.py:511
+#: pynicotine/slskproto.py:512
 #, python-format
 msgid "Can't handle connection type %s"
 msgstr ""
 
-#: pynicotine/slskproto.py:536
+#: pynicotine/slskproto.py:537
 #, python-format
-msgid "Distrib message type %i size %i contents %s unknown"
+msgid "Distrib message type %(type)i size %(size)i contents %(buffer)s unknown"
 msgstr ""
 
-#: pynicotine/slskproto.py:604
+#: pynicotine/slskproto.py:605
 #, python-format
-msgid "Can't send the message over the closed connection: %s %s"
+msgid "Can't send the message over the closed connection: %(type)s %(msg_obj)s"
 msgstr ""
 
 #: pynicotine/utils.py:75
@@ -3026,7 +2983,9 @@ msgstr ""
 
 #: pynicotine/slskmessages.py:169
 #, python-format
-msgid "Warning: networking thread has to convert unicode string %s message %s"
+msgid ""
+"Warning: networking thread has to convert unicode string %(object)s message %"
+"(type)s"
 msgstr ""
 
 #: pynicotine/slskmessages.py:172
@@ -3048,6 +3007,11 @@ msgstr ""
 msgid "Shared files database seems to be corrupted, rescan your shares"
 msgstr ""
 
+#: pynicotine/config.py:286
+#, python-format
+msgid "Can't create directory '%(path)s', reported error: %(error)s"
+msgstr ""
+
 #: pynicotine/config.py:293
 #, python-format
 msgid "Can't save config file, I/O error: %s"
@@ -3063,7 +3027,7 @@ msgstr ""
 msgid "Can't rename config file, error: %s"
 msgstr ""
 
-#: pynicotine/config.py:426 pynicotine/config.py:440
+#: pynicotine/config.py:426
 #, python-format
 msgid "No such alias (%s)"
 msgstr ""
@@ -3074,7 +3038,12 @@ msgstr ""
 
 #: pynicotine/config.py:438
 #, python-format
-msgid "Removed alias %s: %s"
+msgid "Removed alias %(alias)s: %(action)s\n"
+msgstr ""
+
+#: pynicotine/config.py:440
+#, python-format
+msgid "No such alias (%(alias)s)\n"
 msgstr ""
 
 #: pynicotine/transfers.py:77 pynicotine/transfers.py:78
@@ -3089,7 +3058,7 @@ msgid "User %s does not exist"
 msgstr ""
 
 #: pynicotine/transfers.py:139 pynicotine/transfers.py:224
-#: pynicotine/transfers.py:1079 pynicotine/transfers.py:1092
+#: pynicotine/transfers.py:1078 pynicotine/transfers.py:1091
 msgid "Connection closed by peer"
 msgstr ""
 
@@ -3103,14 +3072,14 @@ msgstr ""
 msgid "Establishing connection"
 msgstr ""
 
-#: pynicotine/transfers.py:227 pynicotine/transfers.py:1094
+#: pynicotine/transfers.py:227
 #, python-format
-msgid "Retrying failed download: user %s, file %s"
+msgid "Retrying failed download: user %(user)s, file %(file)s"
 msgstr ""
 
 #: pynicotine/transfers.py:230
 #, python-format
-msgid "Failed download: user %s, file %s"
+msgid "Failed download: user %(user)s, file %(file)s"
 msgstr ""
 
 #: pynicotine/transfers.py:332
@@ -3187,12 +3156,12 @@ msgstr ""
 
 #: pynicotine/transfers.py:643
 #, python-format
-msgid "Download started: user %s, file %s"
+msgid "Download started: user %(user)s, file %(file)s"
 msgstr ""
 
 #: pynicotine/transfers.py:660
 #, python-format
-msgid "Upload started: user %s, file %s"
+msgid "Upload started: user %(user)s, file %(file)s"
 msgstr ""
 
 #: pynicotine/transfers.py:673
@@ -3202,17 +3171,17 @@ msgstr ""
 
 #: pynicotine/transfers.py:725
 #, python-format
-msgid "Couldn't move '%s' to '%s'"
+msgid "Couldn't move '%(tempfile)s' to '%(file)s'"
 msgstr ""
 
 #: pynicotine/transfers.py:727
 #, python-format
-msgid "Download finished: %s"
+msgid "Download finished: %(file)s"
 msgstr ""
 
 #: pynicotine/transfers.py:728
 #, python-format
-msgid "Download finished: user %s, file %s"
+msgid "Download finished: user %(user)s, file %(file)s"
 msgstr ""
 
 #: pynicotine/transfers.py:741
@@ -3235,20 +3204,25 @@ msgstr ""
 
 #: pynicotine/transfers.py:839
 #, python-format
-msgid "Upload finished: user %s, file %s"
+msgid "Upload finished: %(user)s, file %(file)s"
+msgstr ""
+
+#: pynicotine/transfers.py:1093
+#, python-format
+msgid "Retrying failed download: %(user)s, file %(file)s"
 msgstr ""
 
 #: pynicotine/transfers.py:1135
 #, python-format
-msgid "File: %s, place in queue: %s"
+msgid "File: %(file)s, place in queue: %(place)s"
 msgstr ""
 
 #: pynicotine/transfers.py:1198
 #, python-format
-msgid "Upload aborted, user %s file %s"
+msgid "Upload aborted, user %(user)s file %(file)s"
 msgstr ""
 
 #: pynicotine/transfers.py:1200
 #, python-format
-msgid "Download aborted, user %s file %s"
+msgid "Download aborted, user %(user)s file %(file)s"
 msgstr ""
