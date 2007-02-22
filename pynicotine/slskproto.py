@@ -237,7 +237,7 @@ class SlskProtoThread(threading.Thread):
 				try:
 					incconn, incaddr = p.accept()
 				except:
-					time.sleep(0.5)
+					time.sleep(0.1)
 				else:
 					conns[incconn] = PeerConnection(incconn,incaddr,"","")
 					self._ui_callback([IncConn(incconn, incaddr)])

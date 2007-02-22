@@ -920,7 +920,7 @@ class Transfers:
 			
 			for i in self.uploads:
 				# Ignore non-queued files
-				if i.status == "Queued":
+				if i.status == _("Queued"):
 					if self.isPrivileged(i.user):
 						countpriv += 1
 					else:
@@ -945,7 +945,7 @@ class Transfers:
 			
 			for i in self.uploads:
 				# Ignore non-queued files
-				if i.status == "Queued":
+				if i.status == _("Queued"):
 					if i.user in listpriv.keys() or self.isPrivileged(i.user):
 						listpriv[i.user] = i.timequeued
 						countpriv += 1
