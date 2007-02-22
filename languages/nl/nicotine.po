@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-02-21 18:30+0100\n"
-"PO-Revision-Date: 2007-02-21 19:55+0100\n"
+"POT-Creation-Date: 2007-02-22 08:03+0100\n"
+"PO-Revision-Date: 2007-02-22 08:59+0100\n"
 "Last-Translator: nince78\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -61,7 +61,7 @@ msgstr "Afgemeld"
 #: pynicotine/gtkgui/frame.py:1073
 #: pynicotine/gtkgui/frame.py:1105
 #: pynicotine/gtkgui/settings_glade.py:2071
-#: pynicotine/gtkgui/settings_glade.py:3230
+#: pynicotine/gtkgui/settings_glade.py:3293
 #: pynicotine/gtkgui/privatechat.py:39
 msgid "Away"
 msgstr "Afwezig"
@@ -616,8 +616,8 @@ msgstr "Verberg / toon Nicotine"
 
 #: pynicotine/gtkgui/frame.py:721
 #: pynicotine/gtkgui/settings_glade.py:226
-#: pynicotine/gtkgui/settingswindow.py:1209
-#: pynicotine/gtkgui/settingswindow.py:1235
+#: pynicotine/gtkgui/settingswindow.py:1216
+#: pynicotine/gtkgui/settingswindow.py:1242
 msgid "Server"
 msgstr "Server"
 
@@ -791,19 +791,19 @@ msgstr "Maak CTCP privéberichten mogelijk"
 #: pynicotine/gtkgui/settings_glade.py:602
 #: pynicotine/gtkgui/settings_glade.py:1165
 #: pynicotine/gtkgui/settings_glade.py:1295
-#: pynicotine/gtkgui/settings_glade.py:2484
-#: pynicotine/gtkgui/settings_glade.py:2603
-#: pynicotine/gtkgui/settings_glade.py:2917
-#: pynicotine/gtkgui/settings_glade.py:3118
-#: pynicotine/gtkgui/settings_glade.py:3214
-#: pynicotine/gtkgui/settings_glade.py:3305
-#: pynicotine/gtkgui/settings_glade.py:3405
-#: pynicotine/gtkgui/settings_glade.py:3478
-#: pynicotine/gtkgui/settings_glade.py:3654
-#: pynicotine/gtkgui/settings_glade.py:3752
+#: pynicotine/gtkgui/settings_glade.py:2547
+#: pynicotine/gtkgui/settings_glade.py:2666
+#: pynicotine/gtkgui/settings_glade.py:2980
+#: pynicotine/gtkgui/settings_glade.py:3181
+#: pynicotine/gtkgui/settings_glade.py:3277
+#: pynicotine/gtkgui/settings_glade.py:3368
+#: pynicotine/gtkgui/settings_glade.py:3468
+#: pynicotine/gtkgui/settings_glade.py:3541
+#: pynicotine/gtkgui/settings_glade.py:3717
 #: pynicotine/gtkgui/settings_glade.py:3815
-#: pynicotine/gtkgui/settings_glade.py:3906
-#: pynicotine/gtkgui/settings_glade.py:4117
+#: pynicotine/gtkgui/settings_glade.py:3878
+#: pynicotine/gtkgui/settings_glade.py:3969
+#: pynicotine/gtkgui/settings_glade.py:4180
 #: pynicotine/gtkgui/nowplaying.py:412
 #: pynicotine/gtkgui/nicotine_glade.py:1483
 #: pynicotine/gtkgui/nicotine_glade.py:1671
@@ -818,9 +818,9 @@ msgstr "(aangepaste widget: %s)"
 
 #: pynicotine/gtkgui/settings_glade.py:253
 #: pynicotine/gtkgui/settings_glade.py:567
-#: pynicotine/gtkgui/settingswindow.py:1210
-#: pynicotine/gtkgui/settingswindow.py:1236
-#: pynicotine/gtkgui/settingswindow.py:1316
+#: pynicotine/gtkgui/settingswindow.py:1217
+#: pynicotine/gtkgui/settingswindow.py:1243
+#: pynicotine/gtkgui/settingswindow.py:1323
 #: pynicotine/pynicotine.py:314
 msgid "Shares"
 msgstr "Gedeelde mappen"
@@ -832,7 +832,7 @@ msgstr "Map onvoltooide bestanden:"
 #: pynicotine/gtkgui/settings_glade.py:307
 #: pynicotine/gtkgui/settings_glade.py:363
 #: pynicotine/gtkgui/settings_glade.py:1265
-#: pynicotine/gtkgui/settings_glade.py:2571
+#: pynicotine/gtkgui/settings_glade.py:2634
 msgid "Choose..."
 msgstr "Kiezen..."
 
@@ -851,17 +851,17 @@ msgstr "Herlees bestanden bij opstarten"
 #: pynicotine/gtkgui/settings_glade.py:430
 #: pynicotine/gtkgui/settings_glade.py:520
 #: pynicotine/gtkgui/settings_glade.py:943
-#: pynicotine/gtkgui/settings_glade.py:2677
-#: pynicotine/gtkgui/settings_glade.py:2789
+#: pynicotine/gtkgui/settings_glade.py:2740
+#: pynicotine/gtkgui/settings_glade.py:2852
 msgid "Add..."
 msgstr "Toevoegen..."
 
 #: pynicotine/gtkgui/settings_glade.py:459
 #: pynicotine/gtkgui/settings_glade.py:549
 #: pynicotine/gtkgui/settings_glade.py:1001
-#: pynicotine/gtkgui/settings_glade.py:2706
-#: pynicotine/gtkgui/settings_glade.py:2818
-#: pynicotine/gtkgui/settings_glade.py:3618
+#: pynicotine/gtkgui/settings_glade.py:2769
+#: pynicotine/gtkgui/settings_glade.py:2881
+#: pynicotine/gtkgui/settings_glade.py:3681
 msgid "Remove"
 msgstr "Wis"
 
@@ -871,8 +871,8 @@ msgstr "Deel bepaalde mappen alleen met vrienden:"
 
 #: pynicotine/gtkgui/settings_glade.py:618
 #: pynicotine/gtkgui/settings_glade.py:1127
-#: pynicotine/gtkgui/settingswindow.py:1211
-#: pynicotine/gtkgui/settingswindow.py:1237
+#: pynicotine/gtkgui/settingswindow.py:1218
+#: pynicotine/gtkgui/settingswindow.py:1244
 msgid "Transfers"
 msgstr "Overdrachten"
 
@@ -898,12 +898,12 @@ msgstr "FIFO"
 
 #: pynicotine/gtkgui/settings_glade.py:674
 msgid "Queue Uploads if total transfer speed reaches"
-msgstr "Zet uitgaand in de wacht als totale snelheid"
+msgstr "Zet uitgaand in de wacht als totale snelheid komt op"
 
 #: pynicotine/gtkgui/settings_glade.py:689
 #: pynicotine/gtkgui/settings_glade.py:739
 msgid "KBytes/sec"
-msgstr "KB/sec bereikt"
+msgstr "KB/sec"
 
 #: pynicotine/gtkgui/settings_glade.py:702
 msgid "If disabled, slots will automatically be determined by available bandwidth limitations"
@@ -911,7 +911,7 @@ msgstr "Indien uit, zal het aantal bepaald worden door bandbreedte-beperkingen"
 
 #: pynicotine/gtkgui/settings_glade.py:704
 msgid "Limit number of upload slots to"
-msgstr "Aantal uitgaande bestanden limiteren tot"
+msgstr "Aantal uitgaande bestanden beperken tot"
 
 #: pynicotine/gtkgui/settings_glade.py:711
 msgid "Set to 0 to disable uploads"
@@ -923,7 +923,7 @@ msgstr "(AFGERADEN)"
 
 #: pynicotine/gtkgui/settings_glade.py:747
 msgid "Limit uploads speed to"
-msgstr "Limiteer uitgaande snelheid tot"
+msgstr "Beperk uitgaande snelheid tot"
 
 #: pynicotine/gtkgui/settings_glade.py:754
 msgid "per transfer"
@@ -935,7 +935,7 @@ msgstr "totaal overdrachten"
 
 #: pynicotine/gtkgui/settings_glade.py:772
 msgid "Each user may queue a maximum of"
-msgstr "Een gebruiker mag max."
+msgstr "Een gebruiker mag maximaal"
 
 #: pynicotine/gtkgui/settings_glade.py:781
 msgid "Files will remain in the download user's queue with a warning message but will not be added to your upload queue until the user retries them with a smaller total queue size"
@@ -951,7 +951,7 @@ msgstr "MB in de wacht zetten"
 
 #: pynicotine/gtkgui/settings_glade.py:798
 msgid "Queue size limit does not apply to friends"
-msgstr "Limieten gelden niet voor vrienden"
+msgstr "Beperkingen gelden niet voor vrienden"
 
 #: pynicotine/gtkgui/settings_glade.py:807
 msgid "The users will be able to send you files. These files will be downloaded into the Buddy Uploads subdirectory in your Download directory"
@@ -1095,7 +1095,8 @@ msgstr "Commando:"
 #: pynicotine/gtkgui/settings_glade.py:2029
 #: pynicotine/gtkgui/settings_glade.py:2099
 #: pynicotine/gtkgui/settings_glade.py:2183
-#: pynicotine/gtkgui/settings_glade.py:2345
+#: pynicotine/gtkgui/settings_glade.py:2301
+#: pynicotine/gtkgui/settings_glade.py:2408
 msgid "Default"
 msgstr "Standaard"
 
@@ -1137,7 +1138,7 @@ msgstr "Met wachtrij"
 
 #: pynicotine/gtkgui/settings_glade.py:2043
 msgid "Username Colours and Hotspots"
-msgstr "Kleuren van gebruikersnaam en Hutspots"
+msgstr "Kleuren van (aanklikbare) gebruikersnamen"
 
 #: pynicotine/gtkgui/settings_glade.py:2218
 msgid "Background"
@@ -1147,415 +1148,419 @@ msgstr "Achtergrond"
 msgid "Username Font Style:"
 msgstr "Stijl gebruikersnaam:"
 
-#: pynicotine/gtkgui/settings_glade.py:2255
-msgid "<b>Chat colours</b>"
-msgstr "<b>Gesprekskleuren</b>"
+#: pynicotine/gtkgui/settings_glade.py:2266
+msgid "Input Text"
+msgstr "Invoertekst"
 
-#: pynicotine/gtkgui/settings_glade.py:2275
+#: pynicotine/gtkgui/settings_glade.py:2318
+msgid "<b>Colours</b>"
+msgstr "<b>Kleuren</b>"
+
+#: pynicotine/gtkgui/settings_glade.py:2338
 msgid "<b>Warning:</b> This feature is resource intensive and may be very slow. If Nicotine<b>+</b> is started with this feature disabled, you will need to enable it and restart to see its effects."
 msgstr "<b>Waarschuwing:</b> Deze functie kost veel kracht en kan erg traag zijn. Als Nicotine<b>+</b> gestart is met deze functie uit, moet je na het inschakelen N+ herstarten om het effect te zien."
 
-#: pynicotine/gtkgui/settings_glade.py:2281
+#: pynicotine/gtkgui/settings_glade.py:2344
 msgid "Enable Transparent Textviews"
 msgstr "Schakel transparante tekst in"
 
-#: pynicotine/gtkgui/settings_glade.py:2309
+#: pynicotine/gtkgui/settings_glade.py:2372
 msgid "Tint Color"
 msgstr "Kleurtint"
 
-#: pynicotine/gtkgui/settings_glade.py:2367
+#: pynicotine/gtkgui/settings_glade.py:2430
 msgid "Red"
 msgstr "Rood"
 
-#: pynicotine/gtkgui/settings_glade.py:2386
+#: pynicotine/gtkgui/settings_glade.py:2449
 msgid "Green"
 msgstr "Groen"
 
-#: pynicotine/gtkgui/settings_glade.py:2408
+#: pynicotine/gtkgui/settings_glade.py:2471
 msgid "Blue"
 msgstr "Blauw"
 
-#: pynicotine/gtkgui/settings_glade.py:2425
+#: pynicotine/gtkgui/settings_glade.py:2488
 msgid "Alpha"
 msgstr "Transparant"
 
-#: pynicotine/gtkgui/settings_glade.py:2447
+#: pynicotine/gtkgui/settings_glade.py:2510
 msgid "<b>Transparent Log Windows</b>"
 msgstr "<b>Transparante logboek vensters</b>"
 
-#: pynicotine/gtkgui/settings_glade.py:2455
+#: pynicotine/gtkgui/settings_glade.py:2518
 msgid "Extra stuff for your comfort"
 msgstr "Extra's voor uw comfort"
 
-#: pynicotine/gtkgui/settings_glade.py:2500
+#: pynicotine/gtkgui/settings_glade.py:2563
 #: pynicotine/gtkgui/nicotine_glade.py:1582
 #: pynicotine/gtkgui/nicotine_glade.py:1737
 msgid "Log"
 msgstr "Logboek"
 
-#: pynicotine/gtkgui/settings_glade.py:2516
+#: pynicotine/gtkgui/settings_glade.py:2579
 msgid "Log private chat by default"
 msgstr "Sla privégesprekken standaard op in logboek"
 
-#: pynicotine/gtkgui/settings_glade.py:2522
+#: pynicotine/gtkgui/settings_glade.py:2585
 msgid "Log chatrooms by default"
 msgstr "Sla kamergesprekken standaard op in logboek"
 
-#: pynicotine/gtkgui/settings_glade.py:2528
+#: pynicotine/gtkgui/settings_glade.py:2591
 msgid "Log transfers"
-msgstr "Bestandsoverdrachten in logboek opslaan"
+msgstr "Sla overdrachten op in logboek"
 
-#: pynicotine/gtkgui/settings_glade.py:2536
+#: pynicotine/gtkgui/settings_glade.py:2599
 msgid "Logs directory:"
 msgstr "Map voor logboek:"
 
-#: pynicotine/gtkgui/settings_glade.py:2548
+#: pynicotine/gtkgui/settings_glade.py:2611
 msgid "~/"
 msgstr ""
 
-#: pynicotine/gtkgui/settings_glade.py:2589
-#: pynicotine/gtkgui/settingswindow.py:1230
-#: pynicotine/gtkgui/settingswindow.py:1243
+#: pynicotine/gtkgui/settings_glade.py:2652
+#: pynicotine/gtkgui/settingswindow.py:1237
+#: pynicotine/gtkgui/settingswindow.py:1250
 msgid "Logging"
 msgstr "Logboek"
 
-#: pynicotine/gtkgui/settings_glade.py:2619
+#: pynicotine/gtkgui/settings_glade.py:2682
 #: pynicotine/gtkgui/nicotine_glade.py:2404
 msgid "Ban"
 msgstr "Verbannen"
 
-#: pynicotine/gtkgui/settings_glade.py:2642
+#: pynicotine/gtkgui/settings_glade.py:2705
 msgid "Banned Users:"
 msgstr "Verbannen:"
 
-#: pynicotine/gtkgui/settings_glade.py:2735
-#: pynicotine/gtkgui/settings_glade.py:2847
+#: pynicotine/gtkgui/settings_glade.py:2798
+#: pynicotine/gtkgui/settings_glade.py:2910
 #: pynicotine/gtkgui/nicotine_glade.py:869
 msgid "Clear"
 msgstr "Wis"
 
-#: pynicotine/gtkgui/settings_glade.py:2754
+#: pynicotine/gtkgui/settings_glade.py:2817
 msgid "Ignored users:"
 msgstr "Genegeerd:"
 
-#: pynicotine/gtkgui/settings_glade.py:2869
+#: pynicotine/gtkgui/settings_glade.py:2932
 msgid "Use custom ban message:"
 msgstr "Gebruik eigen verban bericht:"
 
-#: pynicotine/gtkgui/settings_glade.py:2885
+#: pynicotine/gtkgui/settings_glade.py:2948
 msgid "Banning"
 msgstr "Verbannen"
 
-#: pynicotine/gtkgui/settings_glade.py:2933
+#: pynicotine/gtkgui/settings_glade.py:2996
 #: pynicotine/gtkgui/nicotine_glade.py:840
 msgid "Search"
 msgstr "Zoeken"
 
-#: pynicotine/gtkgui/settings_glade.py:2947
+#: pynicotine/gtkgui/settings_glade.py:3010
 msgid "Network Searches:"
 msgstr "Zoekopdrachten"
 
-#: pynicotine/gtkgui/settings_glade.py:2958
+#: pynicotine/gtkgui/settings_glade.py:3021
 msgid "Send out a max of"
 msgstr "Maximaal"
 
-#: pynicotine/gtkgui/settings_glade.py:2967
+#: pynicotine/gtkgui/settings_glade.py:3030
 msgid "10"
 msgstr ""
 
-#: pynicotine/gtkgui/settings_glade.py:2973
+#: pynicotine/gtkgui/settings_glade.py:3036
 msgid "results per search request"
 msgstr "resultaten per verzoek"
 
-#: pynicotine/gtkgui/settings_glade.py:2981
+#: pynicotine/gtkgui/settings_glade.py:3044
 msgid "Your Searches:"
 msgstr "Zoekopdrachten"
 
-#: pynicotine/gtkgui/settings_glade.py:2990
+#: pynicotine/gtkgui/settings_glade.py:3053
 msgid "Use regular expressions for filter in & out"
 msgstr "Gebruik reguliere expressies voor filters"
 
-#: pynicotine/gtkgui/settings_glade.py:2996
+#: pynicotine/gtkgui/settings_glade.py:3059
 msgid "Enable filters by default"
 msgstr "Filters standaard inschakelen"
 
-#: pynicotine/gtkgui/settings_glade.py:3006
+#: pynicotine/gtkgui/settings_glade.py:3069
 #: pynicotine/gtkgui/nicotine_glade.py:1906
 msgid "Filter in:"
 msgstr "Inclusief:"
 
-#: pynicotine/gtkgui/settings_glade.py:3013
+#: pynicotine/gtkgui/settings_glade.py:3076
 #: pynicotine/gtkgui/nicotine_glade.py:1927
 msgid "Filter out:"
 msgstr "Exclusief:"
 
-#: pynicotine/gtkgui/settings_glade.py:3020
+#: pynicotine/gtkgui/settings_glade.py:3083
 #: pynicotine/gtkgui/nicotine_glade.py:1948
 msgid "Size:"
 msgstr "Grootte:"
 
-#: pynicotine/gtkgui/settings_glade.py:3027
+#: pynicotine/gtkgui/settings_glade.py:3090
 #: pynicotine/gtkgui/nicotine_glade.py:1970
 msgid "Bitrate:"
 msgstr "Bitrate:"
 
-#: pynicotine/gtkgui/settings_glade.py:3076
+#: pynicotine/gtkgui/settings_glade.py:3139
 #: pynicotine/gtkgui/nicotine_glade.py:2016
 msgid "Free slot"
 msgstr "Vrij"
 
-#: pynicotine/gtkgui/settings_glade.py:3080
+#: pynicotine/gtkgui/settings_glade.py:3143
 #: pynicotine/gtkgui/nicotine_glade.py:1992
 msgid "Country:"
 msgstr "Land:"
 
-#: pynicotine/gtkgui/settings_glade.py:3104
-#: pynicotine/gtkgui/settingswindow.py:1231
-#: pynicotine/gtkgui/settingswindow.py:1244
+#: pynicotine/gtkgui/settings_glade.py:3167
+#: pynicotine/gtkgui/settingswindow.py:1238
+#: pynicotine/gtkgui/settingswindow.py:1251
 msgid "Searches"
 msgstr "Zoekopdrachten"
 
-#: pynicotine/gtkgui/settings_glade.py:3135
+#: pynicotine/gtkgui/settings_glade.py:3198
 msgid "Nicotine Settings"
 msgstr "Nicotine Instellingen"
 
-#: pynicotine/gtkgui/settings_glade.py:3248
+#: pynicotine/gtkgui/settings_glade.py:3311
 msgid "Toggle away after "
 msgstr "Zet status op afwezig na "
 
-#: pynicotine/gtkgui/settings_glade.py:3257
+#: pynicotine/gtkgui/settings_glade.py:3320
 msgid "15"
 msgstr ""
 
-#: pynicotine/gtkgui/settings_glade.py:3263
+#: pynicotine/gtkgui/settings_glade.py:3326
 msgid " minutes of inactivity"
 msgstr " minuten zonder activiteit"
 
-#: pynicotine/gtkgui/settings_glade.py:3275
+#: pynicotine/gtkgui/settings_glade.py:3338
 msgid "Auto-reply when away:  "
 msgstr "Automatisch antwoord bij afwezigheid:  "
 
-#: pynicotine/gtkgui/settings_glade.py:3294
-#: pynicotine/gtkgui/settingswindow.py:1227
-#: pynicotine/gtkgui/settingswindow.py:1245
+#: pynicotine/gtkgui/settings_glade.py:3357
+#: pynicotine/gtkgui/settingswindow.py:1234
+#: pynicotine/gtkgui/settingswindow.py:1252
 msgid "Away mode"
 msgstr "Afwezigheid"
 
-#: pynicotine/gtkgui/settings_glade.py:3321
-#: pynicotine/gtkgui/settings_glade.py:3394
-#: pynicotine/gtkgui/settingswindow.py:1232
-#: pynicotine/gtkgui/settingswindow.py:1246
+#: pynicotine/gtkgui/settings_glade.py:3384
+#: pynicotine/gtkgui/settings_glade.py:3457
+#: pynicotine/gtkgui/settingswindow.py:1239
+#: pynicotine/gtkgui/settingswindow.py:1253
 msgid "Events"
 msgstr "Gebeurtenissen"
 
-#: pynicotine/gtkgui/settings_glade.py:3339
+#: pynicotine/gtkgui/settings_glade.py:3402
 msgid "Run command after download finishes ($ for filename):"
 msgstr "Voer uit na voltooiing inkomend bestand ($ voor bestandsnaam):"
 
-#: pynicotine/gtkgui/settings_glade.py:3360
+#: pynicotine/gtkgui/settings_glade.py:3423
 msgid "Run command after folder finishes ($ for folder path):"
 msgstr "Voer uit na voltooiing inkomende map ($ voor pad):"
 
-#: pynicotine/gtkgui/settings_glade.py:3378
+#: pynicotine/gtkgui/settings_glade.py:3441
 msgid "Audio Player command:"
 msgstr "Commando mediaspeler:"
 
-#: pynicotine/gtkgui/settings_glade.py:3421
+#: pynicotine/gtkgui/settings_glade.py:3484
 msgid "GeoBlock"
 msgstr "Geogr. Blokkeren"
 
-#: pynicotine/gtkgui/settings_glade.py:3437
+#: pynicotine/gtkgui/settings_glade.py:3500
 msgid "Enable geographical blocker"
 msgstr "Geografische blokkeerder inschakelen"
 
-#: pynicotine/gtkgui/settings_glade.py:3444
+#: pynicotine/gtkgui/settings_glade.py:3507
 msgid "Geographical paranoia (block unresolvable IPs)"
 msgstr "Geografisch paranoia (blokkeer onbekende IPs)"
 
-#: pynicotine/gtkgui/settings_glade.py:3448
+#: pynicotine/gtkgui/settings_glade.py:3511
 msgid "Country codes to block (comma separated):"
 msgstr "Landcodes die geblokkeerd moeten worden (kommagescheiden):"
 
-#: pynicotine/gtkgui/settings_glade.py:3464
+#: pynicotine/gtkgui/settings_glade.py:3527
 msgid "Geographical Blocking"
 msgstr "Geografisch Blokkeren"
 
-#: pynicotine/gtkgui/settings_glade.py:3494
+#: pynicotine/gtkgui/settings_glade.py:3557
 msgid "UrlCatch"
 msgstr "URL afvanger"
 
-#: pynicotine/gtkgui/settings_glade.py:3510
+#: pynicotine/gtkgui/settings_glade.py:3573
 msgid "Enable URL catching"
 msgstr "URL afvanger inschakelen"
 
-#: pynicotine/gtkgui/settings_glade.py:3517
+#: pynicotine/gtkgui/settings_glade.py:3580
 msgid "Humanize slsk:// urls"
 msgstr "slsk:// urls vermenselijken"
 
-#: pynicotine/gtkgui/settings_glade.py:3521
+#: pynicotine/gtkgui/settings_glade.py:3584
 msgid "Protocols handlers:"
 msgstr "Protocol programma's:"
 
-#: pynicotine/gtkgui/settings_glade.py:3544
+#: pynicotine/gtkgui/settings_glade.py:3607
 msgid "Protocol:"
 msgstr "Protocol:"
 
-#: pynicotine/gtkgui/settings_glade.py:3558
+#: pynicotine/gtkgui/settings_glade.py:3621
 msgid "Handler:"
 msgstr "Programma:"
 
-#: pynicotine/gtkgui/settings_glade.py:3589
+#: pynicotine/gtkgui/settings_glade.py:3652
 msgid "Update"
 msgstr "Vernieuwen"
 
-#: pynicotine/gtkgui/settings_glade.py:3634
+#: pynicotine/gtkgui/settings_glade.py:3697
 msgid "URL Catching:"
 msgstr "URL afvanger:"
 
-#: pynicotine/gtkgui/settings_glade.py:3670
-#: pynicotine/gtkgui/settingswindow.py:1208
-#: pynicotine/gtkgui/settingswindow.py:1249
+#: pynicotine/gtkgui/settings_glade.py:3733
+#: pynicotine/gtkgui/settingswindow.py:1215
+#: pynicotine/gtkgui/settingswindow.py:1256
 msgid "Connection"
 msgstr "Verbinding"
 
-#: pynicotine/gtkgui/settings_glade.py:3687
+#: pynicotine/gtkgui/settings_glade.py:3750
 msgid "Choose Server to configure the server you wish to connect to, your username, password and connection ports."
 msgstr "Kies Server om de server, gebruikersnaam, wachtwoord en poorten in te stellen."
 
-#: pynicotine/gtkgui/settings_glade.py:3694
+#: pynicotine/gtkgui/settings_glade.py:3757
 msgid "Choose Shares to configure your Download and Shared directories."
 msgstr "Kies 'Gedeelde mappen' om de mappen in te stellen voor inkomende, gedeelde en onvoltooide bestanden."
 
-#: pynicotine/gtkgui/settings_glade.py:3701
+#: pynicotine/gtkgui/settings_glade.py:3764
 msgid "Choose Transfers to configure how uploads are queued and what privileges are given to your friends."
 msgstr "Kies Overdrachten om te bepalen hoe uitgaande bestanden in de wacht worden gezet en hoe vrienden worden bevoordeeld."
 
-#: pynicotine/gtkgui/settings_glade.py:3708
+#: pynicotine/gtkgui/settings_glade.py:3771
 msgid "Choose Geo Block (if available) to control from which countries users are allowed access to your shares."
 msgstr "Kies Geo Block (indien beschikbaar) om te bepalen welke nationaliteiten toegang hebben tot jouw gedeelde bestanden."
 
-#: pynicotine/gtkgui/settings_glade.py:3715
+#: pynicotine/gtkgui/settings_glade.py:3778
 msgid "If you wish to use Geo Block, install GeoIP and it's Python Bindings from your distro's packaging tool or from:"
 msgstr "Als je Geo Block wilt gebruiken, installeer dan GeoIP en zijn Python bibliotheken met jouw pakketmanager of van:"
 
-#: pynicotine/gtkgui/settings_glade.py:3722
+#: pynicotine/gtkgui/settings_glade.py:3785
 msgid "http://www.maxmind.com/app/c"
 msgstr "http://www.maxmind.com/app/c"
 
-#: pynicotine/gtkgui/settings_glade.py:3729
+#: pynicotine/gtkgui/settings_glade.py:3792
 msgid "http://www.maxmind.com/app/python"
 msgstr "http://www.maxmind.com/app/python"
 
-#: pynicotine/gtkgui/settings_glade.py:3743
+#: pynicotine/gtkgui/settings_glade.py:3806
 msgid "Connection Settings"
 msgstr "Verbindingsinstellingen"
 
-#: pynicotine/gtkgui/settings_glade.py:3768
-#: pynicotine/gtkgui/settingswindow.py:1222
-#: pynicotine/gtkgui/settingswindow.py:1250
+#: pynicotine/gtkgui/settings_glade.py:3831
+#: pynicotine/gtkgui/settingswindow.py:1229
+#: pynicotine/gtkgui/settingswindow.py:1257
 msgid "UI"
 msgstr "Gebr. schil"
 
-#: pynicotine/gtkgui/settings_glade.py:3785
+#: pynicotine/gtkgui/settings_glade.py:3848
 msgid "Choose Interface to configure text color and other settings."
 msgstr "Kies Uiterlijk om tekstkleuren en dergelijke in te stellen."
 
-#: pynicotine/gtkgui/settings_glade.py:3792
+#: pynicotine/gtkgui/settings_glade.py:3855
 msgid "Choose URL Catching to configure the programs used when clicking on links."
 msgstr "Kies 'URL afvanger' om te kiezen welke programma's worden gebruikt voor links."
 
 # !
-#: pynicotine/gtkgui/settings_glade.py:3806
+#: pynicotine/gtkgui/settings_glade.py:3869
 msgid "User Interface Settings"
 msgstr "Gebruikersschil"
 
-#: pynicotine/gtkgui/settings_glade.py:3831
-#: pynicotine/gtkgui/settingswindow.py:1226
-#: pynicotine/gtkgui/settingswindow.py:1251
+#: pynicotine/gtkgui/settings_glade.py:3894
+#: pynicotine/gtkgui/settingswindow.py:1233
+#: pynicotine/gtkgui/settingswindow.py:1258
 msgid "Misc"
 msgstr "Diversen"
 
-#: pynicotine/gtkgui/settings_glade.py:3848
+#: pynicotine/gtkgui/settings_glade.py:3911
 msgid "Choose Away mode to configure your auto-away settings."
 msgstr "Kies Afwezigheid om automatische afwezigheid te configureren."
 
-#: pynicotine/gtkgui/settings_glade.py:3855
+#: pynicotine/gtkgui/settings_glade.py:3918
 msgid "Choose User info to add text and an image to your personal info."
 msgstr "Kies Gebruikersinfo om jouw persoonlijke tekst en de afbeelding te wijzigen."
 
-#: pynicotine/gtkgui/settings_glade.py:3862
+#: pynicotine/gtkgui/settings_glade.py:3925
 msgid "Choose Ban / ignore to manage your ban list and ignore list."
 msgstr "Kies 'Verbannen / Negeren' om te bepalen wie je verbant en/of negeert."
 
-#: pynicotine/gtkgui/settings_glade.py:3869
+#: pynicotine/gtkgui/settings_glade.py:3932
 msgid "Choose Logging to configure what's logged and where to save the logs."
 msgstr "Kies Logboek om te bepalen wat er in het logboek komt en waar het opgeslagen wordt."
 
-#: pynicotine/gtkgui/settings_glade.py:3876
+#: pynicotine/gtkgui/settings_glade.py:3939
 msgid "Choose Searches to configure search settings and to set default search filters."
 msgstr "Kies Zoekopdrachten om zoekinstellingen en filters te wijzigen."
 
-#: pynicotine/gtkgui/settings_glade.py:3883
+#: pynicotine/gtkgui/settings_glade.py:3946
 msgid "Choose Events to configure what commands are executed upon the completion of downloads."
 msgstr "Kies Gebeurtenissen om in te stellen wat er gebeurt als er inkomende bestanden klaar zijn."
 
-#: pynicotine/gtkgui/settings_glade.py:3897
+#: pynicotine/gtkgui/settings_glade.py:3960
 msgid "Miscellaneous Settings"
 msgstr "Diverse instellingen"
 
-#: pynicotine/gtkgui/settings_glade.py:3922
-#: pynicotine/gtkgui/settings_glade.py:4084
-#: pynicotine/gtkgui/settings_glade.py:4100
-#: pynicotine/gtkgui/settingswindow.py:1233
-#: pynicotine/gtkgui/settingswindow.py:1247
+#: pynicotine/gtkgui/settings_glade.py:3985
+#: pynicotine/gtkgui/settings_glade.py:4147
+#: pynicotine/gtkgui/settings_glade.py:4163
+#: pynicotine/gtkgui/settingswindow.py:1240
+#: pynicotine/gtkgui/settingswindow.py:1254
 msgid "Import Config"
 msgstr "Importeer configuratie"
 
-#: pynicotine/gtkgui/settings_glade.py:3936
+#: pynicotine/gtkgui/settings_glade.py:3999
 msgid "Importing the config files from the official client will overwrite some of your settings (Login, Password, User Info, User Image). Use caution with this feature."
 msgstr "De import van instellingen van het officiële slsk programma zal de configuratie van Nicotine+ overschrijven. Wees dus voorzichtig."
 
-#: pynicotine/gtkgui/settings_glade.py:3943
+#: pynicotine/gtkgui/settings_glade.py:4006
 msgid "Select the directory that contains slsk.exe and the .cfg files: Ex: C:\\Program Files\\SoulSeek"
 msgstr "Selecteer de map met slsk.exe en de .cfg bestanden (bv C:\\Program Files\\Soulseek):"
 
-#: pynicotine/gtkgui/settings_glade.py:3980
+#: pynicotine/gtkgui/settings_glade.py:4043
 msgid "Import Directory"
 msgstr "Bladeren..."
 
-#: pynicotine/gtkgui/settings_glade.py:4001
+#: pynicotine/gtkgui/settings_glade.py:4064
 msgid "Queue"
 msgstr "Wachtrij"
 
-#: pynicotine/gtkgui/settings_glade.py:4007
+#: pynicotine/gtkgui/settings_glade.py:4070
 msgid "Login / Password"
 msgstr "Naam & wachtwoord"
 
-#: pynicotine/gtkgui/settings_glade.py:4013
+#: pynicotine/gtkgui/settings_glade.py:4076
 msgid "Joined Chat Rooms"
 msgstr "Betreden kamers"
 
-#: pynicotine/gtkgui/settings_glade.py:4026
+#: pynicotine/gtkgui/settings_glade.py:4089
 msgid "Buddy List"
 msgstr "Vrienden"
 
-#: pynicotine/gtkgui/settings_glade.py:4032
+#: pynicotine/gtkgui/settings_glade.py:4095
 msgid "Banned List"
 msgstr "Verbannen"
 
-#: pynicotine/gtkgui/settings_glade.py:4038
+#: pynicotine/gtkgui/settings_glade.py:4101
 msgid "Ignored List"
 msgstr "Genegeerd"
 
-#: pynicotine/gtkgui/settings_glade.py:4044
+#: pynicotine/gtkgui/settings_glade.py:4107
 msgid "User Info"
 msgstr "Gebruikersinfo"
 
-#: pynicotine/gtkgui/settings_glade.py:4050
+#: pynicotine/gtkgui/settings_glade.py:4113
 msgid "User Image"
 msgstr "Afbeelding"
 
-#: pynicotine/gtkgui/settings_glade.py:4061
+#: pynicotine/gtkgui/settings_glade.py:4124
 msgid "Restart Nicotine to see all changes take effect"
 msgstr "Herstart Nicotine na de import."
 
@@ -1795,7 +1800,7 @@ msgstr "Gefilterd"
 
 #: pynicotine/gtkgui/nowplaying.py:30
 msgid "NowPlaying"
-msgstr "Now Playing"
+msgstr "Nu spelend"
 
 #: pynicotine/gtkgui/nowplaying.py:41
 msgid "Display what your Media Player is playing in Chat with the /now command"
@@ -1852,7 +1857,7 @@ msgid ""
 "$r Bitrate\n"
 "$s Status"
 msgstr ""
-"$n Now Playing\n"
+"$n Nu spelend\n"
 "$l Lengte\n"
 "$r Bitrate\n"
 "$s Status"
@@ -1866,7 +1871,7 @@ msgid ""
 "$k Track Number\n"
 "$f Filename"
 msgstr ""
-"$n Now Playing\n"
+"$n Nu spelend\n"
 "$t Titel\n"
 "$a Artiest\n"
 "$b Album\n"
@@ -1887,6 +1892,17 @@ msgid ""
 "$y Year\n"
 "$f Filename"
 msgstr ""
+"$n Nu spelend\n"
+"$l Lengte\n"
+"$r Bitrate\n"
+"$s Status\n"
+"$t Titel\n"
+"$a Artiest\n"
+"$b Album\n"
+"$c Commentaar\n"
+"$k Nummer\n"
+"$y Jaar\n"
+"$f Bestandsnaam"
 
 #: pynicotine/gtkgui/nowplaying.py:325
 msgid ""
@@ -1902,6 +1918,17 @@ msgid ""
 "$y Year\n"
 "$f Filename (URI)"
 msgstr ""
+"$n Nu spelend\n"
+"$l Lengte\n"
+"$r Bitrate\n"
+"$s Status\n"
+"$t Titel\n"
+"$a Artiest\n"
+"$b Album\n"
+"$c Commentaar\n"
+"$k Nummer\n"
+"$y Jaar\n"
+"$f Bestandsnaam (URI)"
 
 #: pynicotine/gtkgui/nowplaying.py:328
 msgid ""
@@ -1915,10 +1942,19 @@ msgid ""
 "$y Year\n"
 "$f Filename (URI)"
 msgstr ""
+"$n Nu spelend\n"
+"$l Lengte\n"
+"$r Bitrate\n"
+"$t Titel\n"
+"$a Artiest\n"
+"$b Album\n"
+"$k Nummer\n"
+"$y Jaar\n"
+"$f Bestandsnaam (URI)"
 
 #: pynicotine/gtkgui/nowplaying.py:331
 msgid "$n Now Playing"
-msgstr ""
+msgstr "$n Nu spelend"
 
 #: pynicotine/gtkgui/settingswindow.py:62
 msgid "Warning: Bad Username"
@@ -1989,69 +2025,69 @@ msgstr "Gebruiker:"
 msgid "Ignore user..."
 msgstr "Negeer gebruiker..."
 
-#: pynicotine/gtkgui/settingswindow.py:862
+#: pynicotine/gtkgui/settingswindow.py:869
 msgid "Pick a colour, any colour"
 msgstr "Kies een kleur, doe eens gek"
 
-#: pynicotine/gtkgui/settingswindow.py:1086
-#: pynicotine/gtkgui/settingswindow.py:1091
+#: pynicotine/gtkgui/settingswindow.py:1093
+#: pynicotine/gtkgui/settingswindow.py:1098
 msgid "Nothing Imported"
 msgstr "Niets geimporteerd"
 
-#: pynicotine/gtkgui/settingswindow.py:1086
+#: pynicotine/gtkgui/settingswindow.py:1093
 #, python-format
 msgid "Config files for the official Soulseek client not found in \"%s\""
 msgstr "Configuratiebestanden voor officiële slsk niet gevonden in \"%s\""
 
-#: pynicotine/gtkgui/settingswindow.py:1088
+#: pynicotine/gtkgui/settingswindow.py:1095
 msgid "Imported Soulseek Config"
 msgstr "Geïmporteerde Soulseek configuratie"
 
-#: pynicotine/gtkgui/settingswindow.py:1088
+#: pynicotine/gtkgui/settingswindow.py:1095
 msgid "Config was imported. You may need to restart for changes to take effect. If you changed your user name, buddy list or queue then you should restart immediately."
 msgstr "Configuratie geïmporteerd. Misschien moet je herstarten. Als je de gebruikersnaam, vriendenlijst of wachtrij hebt veranderd dan moet je meteen herstarten."
 
-#: pynicotine/gtkgui/settingswindow.py:1091
+#: pynicotine/gtkgui/settingswindow.py:1098
 msgid "No options were selected"
 msgstr "Geen opties geselecteerd"
 
-#: pynicotine/gtkgui/settingswindow.py:1101
+#: pynicotine/gtkgui/settingswindow.py:1108
 msgid "Protocol"
 msgstr "Protocol"
 
-#: pynicotine/gtkgui/settingswindow.py:1102
+#: pynicotine/gtkgui/settingswindow.py:1109
 msgid "Handler"
 msgstr "Programma"
 
-#: pynicotine/gtkgui/settingswindow.py:1214
-#: pynicotine/gtkgui/settingswindow.py:1218
-#: pynicotine/gtkgui/settingswindow.py:1238
+#: pynicotine/gtkgui/settingswindow.py:1221
+#: pynicotine/gtkgui/settingswindow.py:1225
+#: pynicotine/gtkgui/settingswindow.py:1245
 msgid "Geo Block"
 msgstr "Geogr. Blokkeren"
 
-#: pynicotine/gtkgui/settingswindow.py:1223
-#: pynicotine/gtkgui/settingswindow.py:1241
-#: pynicotine/gtkgui/settingswindow.py:1316
+#: pynicotine/gtkgui/settingswindow.py:1230
+#: pynicotine/gtkgui/settingswindow.py:1248
+#: pynicotine/gtkgui/settingswindow.py:1323
 msgid "Interface"
 msgstr "Uiterlijk"
 
-#: pynicotine/gtkgui/settingswindow.py:1224
-#: pynicotine/gtkgui/settingswindow.py:1242
+#: pynicotine/gtkgui/settingswindow.py:1231
+#: pynicotine/gtkgui/settingswindow.py:1249
 msgid "URL Catching"
 msgstr "URL afvanger"
 
-#: pynicotine/gtkgui/settingswindow.py:1228
-#: pynicotine/gtkgui/settingswindow.py:1239
+#: pynicotine/gtkgui/settingswindow.py:1235
+#: pynicotine/gtkgui/settingswindow.py:1246
 #: pynicotine/gtkgui/nicotine_glade.py:960
 msgid "User info"
 msgstr "Gebruikersinfo"
 
-#: pynicotine/gtkgui/settingswindow.py:1229
-#: pynicotine/gtkgui/settingswindow.py:1240
+#: pynicotine/gtkgui/settingswindow.py:1236
+#: pynicotine/gtkgui/settingswindow.py:1247
 msgid "Ban / ignore"
 msgstr "Verbannen / negeren"
 
-#: pynicotine/gtkgui/settingswindow.py:1253
+#: pynicotine/gtkgui/settingswindow.py:1260
 msgid "Categories"
 msgstr "Categorieën"
 
@@ -2075,11 +2111,11 @@ msgstr "Verversen"
 
 #: pynicotine/gtkgui/chatrooms.py:269
 msgid "Set ticker message"
-msgstr "Stel ticker bericht in"
+msgstr "Stel tikker in"
 
 #: pynicotine/gtkgui/chatrooms.py:278
 msgid "Set room ticker message:"
-msgstr "Stel ticker bericht in:"
+msgstr "Stel tikker kamer in:"
 
 #: pynicotine/gtkgui/chatrooms.py:289
 msgid "Just this time"
@@ -2151,7 +2187,7 @@ msgstr "Verberg kamer_lijst"
 
 #: pynicotine/gtkgui/nicotine_glade.py:104
 msgid "Hide _tickers"
-msgstr "Verberg _tickers"
+msgstr "Verberg _tikkers"
 
 #: pynicotine/gtkgui/nicotine_glade.py:112
 msgid "Buddylist in Chatrooms"
@@ -2163,7 +2199,7 @@ msgstr "Instellingen"
 
 #: pynicotine/gtkgui/nicotine_glade.py:134
 msgid "Configure _Now Playing"
-msgstr "Configureer _Now Playing"
+msgstr "Configureer /_now"
 
 #: pynicotine/gtkgui/nicotine_glade.py:147
 msgid "_Rescan shares"
@@ -2363,11 +2399,11 @@ msgstr "Interesses"
 
 #: pynicotine/gtkgui/nicotine_glade.py:1316
 msgid "Scanning Shares"
-msgstr "Bestanden lezend"
+msgstr "Bestanden lezen"
 
 #: pynicotine/gtkgui/nicotine_glade.py:1320
 msgid "Scanning Buddy Shares"
-msgstr "Bestanden vrienden lezend"
+msgstr "Bestanden vrienden lezen"
 
 #: pynicotine/gtkgui/nicotine_glade.py:1499
 #: pynicotine/gtkgui/nicotine_glade.py:1687
@@ -2638,7 +2674,7 @@ msgstr "Leeg het kamer venster"
 
 #: pynicotine/gtkgui/about.py:111
 msgid "Set your personal ticker"
-msgstr "Ticker instellen"
+msgstr "Persoonlijke tikker instellen"
 
 #: pynicotine/gtkgui/about.py:113
 #: pynicotine/gtkgui/about.py:114
@@ -2728,7 +2764,7 @@ msgstr "Verwijder een alias"
 #: pynicotine/gtkgui/about.py:122
 #: pynicotine/gtkgui/about.py:159
 msgid "Display the Now Playing script's output"
-msgstr "Toon de uitvoer van het Now Playing script"
+msgstr "Laat weten wat je mediaspeler nu speelt"
 
 #: pynicotine/gtkgui/about.py:124
 #: pynicotine/gtkgui/about.py:161
@@ -3142,7 +3178,7 @@ msgstr "Verandering bekijken"
 #: pynicotine/utils.py:79
 #, python-format
 msgid "Scanning %s"
-msgstr "%s lezend"
+msgstr "%s lezen"
 
 #: pynicotine/utils.py:86
 msgid "Building DataBase"
@@ -3173,45 +3209,45 @@ msgstr "Leeg bericht gemaakt, klasse %s"
 msgid "Can't parse incoming messages, class %s"
 msgstr "Kan incomend bericht, klass %s, niet verwerken"
 
-#: pynicotine/config.py:177
+#: pynicotine/config.py:178
 msgid "Shared files database seems to be corrupted, rescan your shares"
 msgstr "Uw gedeelde bestandenlijst lijkt beschadigd, herlees uw bestanden"
 
-#: pynicotine/config.py:286
+#: pynicotine/config.py:287
 #, python-format
 msgid "Can't create directory '%(path)s', reported error: %(error)s"
 msgstr "Kan '%(path)s' niet aanmaken, fout: %(error)s"
 
-#: pynicotine/config.py:293
+#: pynicotine/config.py:294
 #, python-format
 msgid "Can't save config file, I/O error: %s"
 msgstr "Kan configuratiebestand niet opslaan, fout: %s"
 
-#: pynicotine/config.py:317
+#: pynicotine/config.py:318
 #, python-format
 msgid "Can't back config file up, error: %s"
 msgstr "Kan geen reservekopie van configuratiebestand maken, fout: %s"
 
-#: pynicotine/config.py:324
+#: pynicotine/config.py:325
 #, python-format
 msgid "Can't rename config file, error: %s"
 msgstr "Kan configuratiebestand niet hernoemen, fout: %s"
 
-#: pynicotine/config.py:426
+#: pynicotine/config.py:427
 #, python-format
 msgid "No such alias (%s)"
 msgstr "Onbekende alias (%s)"
 
-#: pynicotine/config.py:428
+#: pynicotine/config.py:429
 msgid "Aliases:"
 msgstr "Aliassen:"
 
-#: pynicotine/config.py:438
+#: pynicotine/config.py:439
 #, python-format
 msgid "Removed alias %(alias)s: %(action)s\n"
 msgstr "Alias %(alias)s gewist: %(action)s\n"
 
-#: pynicotine/config.py:440
+#: pynicotine/config.py:441
 #, python-format
 msgid "No such alias (%(alias)s)\n"
 msgstr "Onbekende alias (%(alias)s)\n"
