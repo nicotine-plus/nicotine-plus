@@ -24,6 +24,7 @@ SETTINGS
    to initiate uploading files to you. Trusted users are set in the buddy list.
  * Added several tooltips to Settings' transfer widgets in hopes of providing
    better explanations of some of the more complex functionality.
+   
 USERLIST
  * Comments in Buddy List can now be edited in-list by clicking twice on the 
    comment column, not by double-clicking (which would open Private Chat).

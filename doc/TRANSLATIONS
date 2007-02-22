@@ -41,24 +41,45 @@ For testing, you can copy them there, yourself (if you have permissions)
 USERS:
 
 For Nicotine to know you want a certain translation, your locale needs to be set to that language.
+
+ENGLISH
+# LC_ALL=en_US nicotine
+
 FRENCH:
-	LC_ALL=fr_FR nicotine
+# LC_ALL=fr_FR nicotine
+
 GERMAN:
-	LC_ALL=de_DE nicotine
+# LC_ALL=de_DE nicotine
+
 DUTCH:
-	LC_ALL=nl_NL nicotine
+# LC_ALL=nl_NL nicotine
+
 DANISH:
-	LC_ALL=dk_DK nicotine
+# LC_ALL=dk_DK nicotine
+
 ITALIAN:
-	LC_ALL=it_IT nicotine
+# LC_ALL=it_IT nicotine
+
 SPANISH:
-	LC_ALL=es_ES nicotine
+# LC_ALL=es_ES nicotine
+
 POLISH:
-	LC_ALL=pl_PL nicotine
+# LC_ALL=pl_PL nicotine
+
 SWEDISH:
-	LC_ALL=sv_SE nicotine
+# LC_ALL=sv_SE nicotine
+
 HUNGARIAN:
-	LC_ALL=hu_HU nicotine
+# LC_ALL=hu_HU nicotine
 
 SLOVAK:
-	LC_ALL=sk_SK nicotine
+# LC_ALL=sk_SK nicotine
+
+Portuguese Brazilian
+# LC_ALL=pt_BR nicotine
+
+Lithuanian
+# LC_ALL=lt_LT nicotine
+
+Euskare (Basque)
+# LC_ALL=eu nicotine

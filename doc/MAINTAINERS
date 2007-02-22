@@ -39,7 +39,9 @@ suser-guru
        * Suse Linux packager (active)
        * [http://linux01.gwdg.de/~pbleser/]
        * Nicotine+ RPM's for Suse 9.1, 9.2, 9.3, 10.0, 10.1
-
+QuinoX
+       * Wrote the Download filters patch that was rewritten
+         and added to Nicotine+ http://qtea.nl/tmp/nicotine+
 
 Nicotine related
 ===================
