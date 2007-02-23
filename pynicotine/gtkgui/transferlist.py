@@ -65,7 +65,7 @@ class TransferList:
 		_("Connecting"),
 		_("Getting address"),
 		_("Getting status"),
-		"Queued",
+		_("Queued"),
 		_("User logged off"),
 		_("Aborted"),
 		_("Finished"),
@@ -285,4 +285,4 @@ class TransferList:
 		self.ClearTransfers(statuslist)
 
 	def OnClearQueued(self, widget):
-		self.ClearTransfers(["Queued"])
+		self.ClearTransfers([_("Queued")])

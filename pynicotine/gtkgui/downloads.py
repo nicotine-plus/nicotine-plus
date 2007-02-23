@@ -204,7 +204,7 @@ class Downloads(TransferList):
 	def OnGetPlaceInQueue(self, widget):
 		self.select_transfers()
 		for i in self.selected_transfers:
-			if i.status != "Queued":
+			if i.status != _("Queued"):
 				continue
 			self.frame.np.ProcessRequestToPeer(i.user, slskmessages.PlaceInQueueRequest(None, i.filename))
 

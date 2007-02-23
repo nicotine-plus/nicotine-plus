@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nicotine\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-02-22 16:42+0200\n"
+"POT-Creation-Date: 2007-02-23 09:02+0200\n"
 "PO-Revision-Date: 2006-09-24 15:58+0200\n"
 "Last-Translator: Jozef Riha <jose1711@gmail.com>\n"
 "Language-Team: Slovak <sk@li.org>\n"
@@ -379,6 +379,19 @@ msgstr "_Vyčistiť"
 #: pynicotine/gtkgui/downloads.py:53 pynicotine/gtkgui/uploads.py:49
 msgid "Clear Groups"
 msgstr "Vyčistiť skupiny"
+
+#: pynicotine/gtkgui/downloads.py:207 pynicotine/gtkgui/transferlist.py:68
+#: pynicotine/gtkgui/transferlist.py:288 pynicotine/transfers.py:139
+#: pynicotine/transfers.py:141 pynicotine/transfers.py:337
+#: pynicotine/transfers.py:401 pynicotine/transfers.py:406
+#: pynicotine/transfers.py:407 pynicotine/transfers.py:427
+#: pynicotine/transfers.py:433 pynicotine/transfers.py:460
+#: pynicotine/transfers.py:474 pynicotine/transfers.py:531
+#: pynicotine/transfers.py:853 pynicotine/transfers.py:871
+#: pynicotine/transfers.py:923 pynicotine/transfers.py:948
+#: pynicotine/transfers.py:999 pynicotine/transfers.py:1006
+msgid "Queued"
+msgstr "Vo fronte"
 
 #: pynicotine/gtkgui/frame.py:122 pynicotine/gtkgui/frame.py:512
 #: pynicotine/gtkgui/frame.py:513 pynicotine/gtkgui/frame.py:518
@@ -3261,10 +3274,6 @@ msgstr "Zakázaný požiadavok na súbor: %s"
 #, python-format
 msgid "User limit of %i megabytes exceeded"
 msgstr "Užívateľský limit %i megabytov bol vyčerpaný"
-
-#: pynicotine/transfers.py:407
-msgid "Queued"
-msgstr "Vo fronte"
 
 #: pynicotine/transfers.py:418
 #, python-format
