@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-02-24 20:51+0200\n"
+"POT-Creation-Date: 2007-02-24 21:24+0200\n"
 "PO-Revision-Date: 2007-02-22 08:59+0100\n"
 "Last-Translator: nince78\n"
 "Language-Team: \n"
@@ -371,11 +371,6 @@ msgstr "Wis"
 #: pynicotine/gtkgui/downloads.py:53 pynicotine/gtkgui/uploads.py:49
 msgid "Clear Groups"
 msgstr "Wis groepen"
-
-#: pynicotine/gtkgui/downloads.py:207 pynicotine/gtkgui/transferlist.py:159
-#: pynicotine/gtkgui/transferlist.py:333
-msgid "Queued"
-msgstr "In de wachtrij"
 
 #: pynicotine/gtkgui/frame.py:122 pynicotine/gtkgui/frame.py:512
 #: pynicotine/gtkgui/frame.py:513 pynicotine/gtkgui/frame.py:518
@@ -2539,103 +2534,104 @@ msgstr "Resterend"
 msgid "Path"
 msgstr "Pad"
 
-#: pynicotine/gtkgui/transferlist.py:60 pynicotine/gtkgui/transferlist.py:141
-msgid "Waiting for download"
-msgstr "Wacht op inkomend"
-
-#: pynicotine/gtkgui/transferlist.py:61 pynicotine/gtkgui/transferlist.py:145
-msgid "Requesting file"
-msgstr "Vraagt bestand op"
-
-#: pynicotine/gtkgui/transferlist.py:62 pynicotine/gtkgui/transferlist.py:147
-msgid "Initializing transfer"
-msgstr "Overdracht wordt gestart"
-
-#: pynicotine/gtkgui/transferlist.py:63 pynicotine/gtkgui/transferlist.py:149
-msgid "Cannot connect"
-msgstr "Kan niet verbinden"
-
-#: pynicotine/gtkgui/transferlist.py:64 pynicotine/gtkgui/transferlist.py:151
-msgid "Waiting for peer to connect"
-msgstr "Wacht op verbinding van naaste"
-
-#: pynicotine/gtkgui/transferlist.py:65 pynicotine/gtkgui/transferlist.py:153
-msgid "Connecting"
-msgstr "Bezig met verbinden"
-
-#: pynicotine/gtkgui/transferlist.py:66 pynicotine/gtkgui/transferlist.py:155
-msgid "Getting address"
-msgstr "Vraagt adres op"
-
-#: pynicotine/gtkgui/transferlist.py:67 pynicotine/gtkgui/transferlist.py:157
+#: pynicotine/gtkgui/transferlist.py:62 pynicotine/gtkgui/transferlist.py:165
 msgid "Getting status"
 msgstr "Vraagt status op"
 
-#: pynicotine/gtkgui/transferlist.py:69 pynicotine/gtkgui/transferlist.py:161
-msgid "User logged off"
-msgstr "Gebruiker afgemeld"
+#: pynicotine/gtkgui/transferlist.py:63 pynicotine/gtkgui/transferlist.py:149
+msgid "Waiting for download"
+msgstr "Wacht op inkomend"
 
-#: pynicotine/gtkgui/transferlist.py:70 pynicotine/gtkgui/transferlist.py:163
-#: pynicotine/gtkgui/transferlist.py:299 pynicotine/gtkgui/transferlist.py:325
-#: pynicotine/gtkgui/transferlist.py:329
-msgid "Aborted"
-msgstr "Afgebroken"
-
-#: pynicotine/gtkgui/transferlist.py:71 pynicotine/gtkgui/transferlist.py:165
-#: pynicotine/gtkgui/transferlist.py:322 pynicotine/gtkgui/transferlist.py:329
-msgid "Finished"
-msgstr "Klaar"
-
-#: pynicotine/gtkgui/transferlist.py:72 pynicotine/gtkgui/transferlist.py:143
+#: pynicotine/gtkgui/transferlist.py:64 pynicotine/gtkgui/transferlist.py:151
 msgid "Waiting for upload"
 msgstr "Wacht op uitgaand"
 
+#: pynicotine/gtkgui/transferlist.py:65 pynicotine/gtkgui/transferlist.py:163
+msgid "Getting address"
+msgstr "Vraagt adres op"
+
+#: pynicotine/gtkgui/transferlist.py:66 pynicotine/gtkgui/transferlist.py:161
+msgid "Connecting"
+msgstr "Bezig met verbinden"
+
+#: pynicotine/gtkgui/transferlist.py:67 pynicotine/gtkgui/transferlist.py:159
+msgid "Waiting for peer to connect"
+msgstr "Wacht op verbinding van naaste"
+
+#: pynicotine/gtkgui/transferlist.py:68 pynicotine/gtkgui/transferlist.py:157
+msgid "Cannot connect"
+msgstr "Kan niet verbinden"
+
+#: pynicotine/gtkgui/transferlist.py:69 pynicotine/gtkgui/transferlist.py:169
+msgid "User logged off"
+msgstr "Gebruiker afgemeld"
+
+#: pynicotine/gtkgui/transferlist.py:70 pynicotine/gtkgui/transferlist.py:153
+msgid "Requesting file"
+msgstr "Vraagt bestand op"
+
+#: pynicotine/gtkgui/transferlist.py:71 pynicotine/gtkgui/transferlist.py:155
+msgid "Initializing transfer"
+msgstr "Overdracht wordt gestart"
+
+#: pynicotine/gtkgui/transferlist.py:72 pynicotine/gtkgui/transferlist.py:177
+msgid "Filtered"
+msgstr "Gefilterd"
+
+# !
+#: pynicotine/gtkgui/transferlist.py:73 pynicotine/gtkgui/transferlist.py:185
+msgid "Download directory error"
+msgstr "Fout map inkomend"
+
+#: pynicotine/gtkgui/transferlist.py:74 pynicotine/gtkgui/transferlist.py:187
+msgid "Local file error"
+msgstr "Lokale bestandsfout"
+
+#: pynicotine/gtkgui/transferlist.py:75 pynicotine/gtkgui/transferlist.py:181
+msgid "File not shared"
+msgstr "Bestand niet gedeeld"
+
+#: pynicotine/gtkgui/transferlist.py:76 pynicotine/gtkgui/transferlist.py:171
+msgid "Aborted"
+msgstr "Afgebroken"
+
+#: pynicotine/gtkgui/transferlist.py:77 pynicotine/gtkgui/transferlist.py:175
+msgid "Paused"
+msgstr "Gepauzeerd"
+
+#: pynicotine/gtkgui/transferlist.py:78 pynicotine/gtkgui/transferlist.py:167
+msgid "Queued"
+msgstr "In de wachtrij"
+
+#: pynicotine/gtkgui/transferlist.py:79 pynicotine/gtkgui/transferlist.py:173
+msgid "Finished"
+msgstr "Klaar"
+
 # encoding=UTF8
-#: pynicotine/gtkgui/transferlist.py:128
+#: pynicotine/gtkgui/transferlist.py:136
 #, python-format
 msgid "%.2f GB"
 msgstr "%.2f GB"
 
-#: pynicotine/gtkgui/transferlist.py:130
+#: pynicotine/gtkgui/transferlist.py:138
 #, python-format
 msgid "%.2f MB"
 msgstr "%.2f MB"
 
-#: pynicotine/gtkgui/transferlist.py:132
+#: pynicotine/gtkgui/transferlist.py:140
 #, python-format
 msgid "%.2f KB"
 msgstr "%.2f KB"
 
-#: pynicotine/gtkgui/transferlist.py:167
-msgid "Paused"
-msgstr "Gepauzeerd"
-
-#: pynicotine/gtkgui/transferlist.py:169 pynicotine/gtkgui/transferlist.py:329
-msgid "Filtered"
-msgstr "Gefilterd"
-
-#: pynicotine/gtkgui/transferlist.py:171
+#: pynicotine/gtkgui/transferlist.py:179
 msgid "Connection closed by peer"
 msgstr "Verbinding gesloten door naaste computer"
 
-#: pynicotine/gtkgui/transferlist.py:173
-msgid "File not shared"
-msgstr "Bestand niet gedeeld"
-
-#: pynicotine/gtkgui/transferlist.py:175
+#: pynicotine/gtkgui/transferlist.py:183
 msgid "Establishing connection"
 msgstr "Bezig met verbinden"
 
-# !
-#: pynicotine/gtkgui/transferlist.py:177
-msgid "Download directory error"
-msgstr "Fout map inkomend"
-
-#: pynicotine/gtkgui/transferlist.py:179
-msgid "Local file error"
-msgstr "Lokale bestandsfout"
-
-#: pynicotine/gtkgui/transferlist.py:278
+#: pynicotine/gtkgui/transferlist.py:286
 #, python-format
 msgid "%s Files"
 msgstr "%s bestanden"

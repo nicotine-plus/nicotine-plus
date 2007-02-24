@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nicotine+ 1.2.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-02-24 20:51+0200\n"
+"POT-Creation-Date: 2007-02-24 21:24+0200\n"
 "PO-Revision-Date: 2006-09-18 20:00+0100\n"
 "Last-Translator: Baloo <dj_baloo@freemail.hu>\n"
 "Language-Team: djbaloo <dj_baloo@freemail.hu>\n"
@@ -375,11 +375,6 @@ msgstr "Tis_ztít"
 #: pynicotine/gtkgui/downloads.py:53 pynicotine/gtkgui/uploads.py:49
 msgid "Clear Groups"
 msgstr "Csoportok Tisztítása"
-
-#: pynicotine/gtkgui/downloads.py:207 pynicotine/gtkgui/transferlist.py:159
-#: pynicotine/gtkgui/transferlist.py:333
-msgid "Queued"
-msgstr "Várakozó"
 
 #: pynicotine/gtkgui/frame.py:122 pynicotine/gtkgui/frame.py:512
 #: pynicotine/gtkgui/frame.py:513 pynicotine/gtkgui/frame.py:518
@@ -2555,103 +2550,104 @@ msgstr "Hátralévő idő"
 msgid "Path"
 msgstr "Útvonal"
 
-#: pynicotine/gtkgui/transferlist.py:60 pynicotine/gtkgui/transferlist.py:141
-msgid "Waiting for download"
-msgstr "Letöltésre várakozás"
-
-#: pynicotine/gtkgui/transferlist.py:61 pynicotine/gtkgui/transferlist.py:145
-msgid "Requesting file"
-msgstr "File kérése"
-
-#: pynicotine/gtkgui/transferlist.py:62 pynicotine/gtkgui/transferlist.py:147
-msgid "Initializing transfer"
-msgstr "Átvitel inicializálása"
-
-#: pynicotine/gtkgui/transferlist.py:63 pynicotine/gtkgui/transferlist.py:149
-msgid "Cannot connect"
-msgstr "Nem lehet csatlakozni"
-
-#: pynicotine/gtkgui/transferlist.py:64 pynicotine/gtkgui/transferlist.py:151
-msgid "Waiting for peer to connect"
-msgstr "Várakozás a peer-re a csatlakozáshoz"
-
-#: pynicotine/gtkgui/transferlist.py:65 pynicotine/gtkgui/transferlist.py:153
-msgid "Connecting"
-msgstr "Csatlakozás"
-
-#: pynicotine/gtkgui/transferlist.py:66 pynicotine/gtkgui/transferlist.py:155
-msgid "Getting address"
-msgstr "Cím lekérése"
-
-#: pynicotine/gtkgui/transferlist.py:67 pynicotine/gtkgui/transferlist.py:157
+#: pynicotine/gtkgui/transferlist.py:62 pynicotine/gtkgui/transferlist.py:165
 msgid "Getting status"
 msgstr "Állapot lekérése"
 
-#: pynicotine/gtkgui/transferlist.py:69 pynicotine/gtkgui/transferlist.py:161
-msgid "User logged off"
-msgstr "Felhasználó kilépett"
+#: pynicotine/gtkgui/transferlist.py:63 pynicotine/gtkgui/transferlist.py:149
+msgid "Waiting for download"
+msgstr "Letöltésre várakozás"
 
-#: pynicotine/gtkgui/transferlist.py:70 pynicotine/gtkgui/transferlist.py:163
-#: pynicotine/gtkgui/transferlist.py:299 pynicotine/gtkgui/transferlist.py:325
-#: pynicotine/gtkgui/transferlist.py:329
-msgid "Aborted"
-msgstr "Megszakítva"
-
-#: pynicotine/gtkgui/transferlist.py:71 pynicotine/gtkgui/transferlist.py:165
-#: pynicotine/gtkgui/transferlist.py:322 pynicotine/gtkgui/transferlist.py:329
-msgid "Finished"
-msgstr "Befejezve"
-
-#: pynicotine/gtkgui/transferlist.py:72 pynicotine/gtkgui/transferlist.py:143
+#: pynicotine/gtkgui/transferlist.py:64 pynicotine/gtkgui/transferlist.py:151
 msgid "Waiting for upload"
 msgstr "Feltöltésre várakozás"
 
-#: pynicotine/gtkgui/transferlist.py:128
-#, python-format
-msgid "%.2f GB"
-msgstr "%.2f GB"
+#: pynicotine/gtkgui/transferlist.py:65 pynicotine/gtkgui/transferlist.py:163
+msgid "Getting address"
+msgstr "Cím lekérése"
 
-#: pynicotine/gtkgui/transferlist.py:130
-#, python-format
-msgid "%.2f MB"
-msgstr "%.2f MB"
+#: pynicotine/gtkgui/transferlist.py:66 pynicotine/gtkgui/transferlist.py:161
+msgid "Connecting"
+msgstr "Csatlakozás"
 
-#: pynicotine/gtkgui/transferlist.py:132
-#, python-format
-msgid "%.2f KB"
-msgstr "%.2f KB"
+#: pynicotine/gtkgui/transferlist.py:67 pynicotine/gtkgui/transferlist.py:159
+msgid "Waiting for peer to connect"
+msgstr "Várakozás a peer-re a csatlakozáshoz"
 
-#: pynicotine/gtkgui/transferlist.py:167
-#, fuzzy
-msgid "Paused"
-msgstr "felhasználó"
+#: pynicotine/gtkgui/transferlist.py:68 pynicotine/gtkgui/transferlist.py:157
+msgid "Cannot connect"
+msgstr "Nem lehet csatlakozni"
 
-#: pynicotine/gtkgui/transferlist.py:169 pynicotine/gtkgui/transferlist.py:329
+#: pynicotine/gtkgui/transferlist.py:69 pynicotine/gtkgui/transferlist.py:169
+msgid "User logged off"
+msgstr "Felhasználó kilépett"
+
+#: pynicotine/gtkgui/transferlist.py:70 pynicotine/gtkgui/transferlist.py:153
+msgid "Requesting file"
+msgstr "File kérése"
+
+#: pynicotine/gtkgui/transferlist.py:71 pynicotine/gtkgui/transferlist.py:155
+msgid "Initializing transfer"
+msgstr "Átvitel inicializálása"
+
+#: pynicotine/gtkgui/transferlist.py:72 pynicotine/gtkgui/transferlist.py:177
 #, fuzzy
 msgid "Filtered"
 msgstr "Beszűrés:"
 
-#: pynicotine/gtkgui/transferlist.py:171
-msgid "Connection closed by peer"
-msgstr "Kapcsolat bezárult a peer által"
-
-#: pynicotine/gtkgui/transferlist.py:173
-msgid "File not shared"
-msgstr "Nincs fájl megosztva"
-
-#: pynicotine/gtkgui/transferlist.py:175
-msgid "Establishing connection"
-msgstr "Kapcsolat létesítése"
-
-#: pynicotine/gtkgui/transferlist.py:177
+#: pynicotine/gtkgui/transferlist.py:73 pynicotine/gtkgui/transferlist.py:185
 msgid "Download directory error"
 msgstr "Könyvtár letöltési hiba"
 
-#: pynicotine/gtkgui/transferlist.py:179
+#: pynicotine/gtkgui/transferlist.py:74 pynicotine/gtkgui/transferlist.py:187
 msgid "Local file error"
 msgstr "Helyi file hiba"
 
-#: pynicotine/gtkgui/transferlist.py:278
+#: pynicotine/gtkgui/transferlist.py:75 pynicotine/gtkgui/transferlist.py:181
+msgid "File not shared"
+msgstr "Nincs fájl megosztva"
+
+#: pynicotine/gtkgui/transferlist.py:76 pynicotine/gtkgui/transferlist.py:171
+msgid "Aborted"
+msgstr "Megszakítva"
+
+#: pynicotine/gtkgui/transferlist.py:77 pynicotine/gtkgui/transferlist.py:175
+#, fuzzy
+msgid "Paused"
+msgstr "felhasználó"
+
+#: pynicotine/gtkgui/transferlist.py:78 pynicotine/gtkgui/transferlist.py:167
+msgid "Queued"
+msgstr "Várakozó"
+
+#: pynicotine/gtkgui/transferlist.py:79 pynicotine/gtkgui/transferlist.py:173
+msgid "Finished"
+msgstr "Befejezve"
+
+#: pynicotine/gtkgui/transferlist.py:136
+#, python-format
+msgid "%.2f GB"
+msgstr "%.2f GB"
+
+#: pynicotine/gtkgui/transferlist.py:138
+#, python-format
+msgid "%.2f MB"
+msgstr "%.2f MB"
+
+#: pynicotine/gtkgui/transferlist.py:140
+#, python-format
+msgid "%.2f KB"
+msgstr "%.2f KB"
+
+#: pynicotine/gtkgui/transferlist.py:179
+msgid "Connection closed by peer"
+msgstr "Kapcsolat bezárult a peer által"
+
+#: pynicotine/gtkgui/transferlist.py:183
+msgid "Establishing connection"
+msgstr "Kapcsolat létesítése"
+
+#: pynicotine/gtkgui/transferlist.py:286
 #, fuzzy, python-format
 msgid "%s Files"
 msgstr "Fájlok"

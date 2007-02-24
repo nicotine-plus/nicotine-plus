@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nicotine-plus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-02-24 20:51+0200\n"
+"POT-Creation-Date: 2007-02-24 21:24+0200\n"
 "PO-Revision-Date: 2006-10-07 13:46-0300\n"
 "Last-Translator: Felipe Nogaroto Gonzalez <suicide@bunghole.com.br>\n"
 "Language-Team: Brazilian Portuguese\n"
@@ -377,11 +377,6 @@ msgstr "Limpar"
 #: pynicotine/gtkgui/downloads.py:53 pynicotine/gtkgui/uploads.py:49
 msgid "Clear Groups"
 msgstr "Limpar Grupos"
-
-#: pynicotine/gtkgui/downloads.py:207 pynicotine/gtkgui/transferlist.py:159
-#: pynicotine/gtkgui/transferlist.py:333
-msgid "Queued"
-msgstr "Fila"
 
 #: pynicotine/gtkgui/frame.py:122 pynicotine/gtkgui/frame.py:512
 #: pynicotine/gtkgui/frame.py:513 pynicotine/gtkgui/frame.py:518
@@ -2563,103 +2558,104 @@ msgstr "Tempo restante"
 msgid "Path"
 msgstr "Caminho"
 
-#: pynicotine/gtkgui/transferlist.py:60 pynicotine/gtkgui/transferlist.py:141
-msgid "Waiting for download"
-msgstr "Aguardando download"
-
-#: pynicotine/gtkgui/transferlist.py:61 pynicotine/gtkgui/transferlist.py:145
-msgid "Requesting file"
-msgstr "Requisitando arquivo"
-
-#: pynicotine/gtkgui/transferlist.py:62 pynicotine/gtkgui/transferlist.py:147
-msgid "Initializing transfer"
-msgstr "Iniciando transferência"
-
-#: pynicotine/gtkgui/transferlist.py:63 pynicotine/gtkgui/transferlist.py:149
-msgid "Cannot connect"
-msgstr "Não foi possível conectar"
-
-#: pynicotine/gtkgui/transferlist.py:64 pynicotine/gtkgui/transferlist.py:151
-msgid "Waiting for peer to connect"
-msgstr "Aguardando a outra ponta conectar"
-
-#: pynicotine/gtkgui/transferlist.py:65 pynicotine/gtkgui/transferlist.py:153
-msgid "Connecting"
-msgstr "Conectando"
-
-#: pynicotine/gtkgui/transferlist.py:66 pynicotine/gtkgui/transferlist.py:155
-msgid "Getting address"
-msgstr "Obtendo endereço"
-
-#: pynicotine/gtkgui/transferlist.py:67 pynicotine/gtkgui/transferlist.py:157
+#: pynicotine/gtkgui/transferlist.py:62 pynicotine/gtkgui/transferlist.py:165
 msgid "Getting status"
 msgstr "Obtendo status"
 
-#: pynicotine/gtkgui/transferlist.py:69 pynicotine/gtkgui/transferlist.py:161
-msgid "User logged off"
-msgstr "Usuário saiu"
+#: pynicotine/gtkgui/transferlist.py:63 pynicotine/gtkgui/transferlist.py:149
+msgid "Waiting for download"
+msgstr "Aguardando download"
 
-#: pynicotine/gtkgui/transferlist.py:70 pynicotine/gtkgui/transferlist.py:163
-#: pynicotine/gtkgui/transferlist.py:299 pynicotine/gtkgui/transferlist.py:325
-#: pynicotine/gtkgui/transferlist.py:329
-msgid "Aborted"
-msgstr "Abortado"
-
-#: pynicotine/gtkgui/transferlist.py:71 pynicotine/gtkgui/transferlist.py:165
-#: pynicotine/gtkgui/transferlist.py:322 pynicotine/gtkgui/transferlist.py:329
-msgid "Finished"
-msgstr "Finalizado"
-
-#: pynicotine/gtkgui/transferlist.py:72 pynicotine/gtkgui/transferlist.py:143
+#: pynicotine/gtkgui/transferlist.py:64 pynicotine/gtkgui/transferlist.py:151
 msgid "Waiting for upload"
 msgstr "Aguardando upload"
 
-#: pynicotine/gtkgui/transferlist.py:128
-#, python-format
-msgid "%.2f GB"
-msgstr ""
+#: pynicotine/gtkgui/transferlist.py:65 pynicotine/gtkgui/transferlist.py:163
+msgid "Getting address"
+msgstr "Obtendo endereço"
 
-#: pynicotine/gtkgui/transferlist.py:130
-#, python-format
-msgid "%.2f MB"
-msgstr ""
+#: pynicotine/gtkgui/transferlist.py:66 pynicotine/gtkgui/transferlist.py:161
+msgid "Connecting"
+msgstr "Conectando"
 
-#: pynicotine/gtkgui/transferlist.py:132
-#, python-format
-msgid "%.2f KB"
-msgstr ""
+#: pynicotine/gtkgui/transferlist.py:67 pynicotine/gtkgui/transferlist.py:159
+msgid "Waiting for peer to connect"
+msgstr "Aguardando a outra ponta conectar"
 
-#: pynicotine/gtkgui/transferlist.py:167
-#, fuzzy
-msgid "Paused"
-msgstr "usuário"
+#: pynicotine/gtkgui/transferlist.py:68 pynicotine/gtkgui/transferlist.py:157
+msgid "Cannot connect"
+msgstr "Não foi possível conectar"
 
-#: pynicotine/gtkgui/transferlist.py:169 pynicotine/gtkgui/transferlist.py:329
+#: pynicotine/gtkgui/transferlist.py:69 pynicotine/gtkgui/transferlist.py:169
+msgid "User logged off"
+msgstr "Usuário saiu"
+
+#: pynicotine/gtkgui/transferlist.py:70 pynicotine/gtkgui/transferlist.py:153
+msgid "Requesting file"
+msgstr "Requisitando arquivo"
+
+#: pynicotine/gtkgui/transferlist.py:71 pynicotine/gtkgui/transferlist.py:155
+msgid "Initializing transfer"
+msgstr "Iniciando transferência"
+
+#: pynicotine/gtkgui/transferlist.py:72 pynicotine/gtkgui/transferlist.py:177
 #, fuzzy
 msgid "Filtered"
 msgstr "Filtro de Entrada:"
 
-#: pynicotine/gtkgui/transferlist.py:171
-msgid "Connection closed by peer"
-msgstr "Conexão fechada na outra ponta"
-
-#: pynicotine/gtkgui/transferlist.py:173
-msgid "File not shared"
-msgstr "Arquivo não compartilhado"
-
-#: pynicotine/gtkgui/transferlist.py:175
-msgid "Establishing connection"
-msgstr "Estabelecendo conexão"
-
-#: pynicotine/gtkgui/transferlist.py:177
+#: pynicotine/gtkgui/transferlist.py:73 pynicotine/gtkgui/transferlist.py:185
 msgid "Download directory error"
 msgstr "Erro no diretório de download"
 
-#: pynicotine/gtkgui/transferlist.py:179
+#: pynicotine/gtkgui/transferlist.py:74 pynicotine/gtkgui/transferlist.py:187
 msgid "Local file error"
 msgstr "Erro no arquivo local"
 
-#: pynicotine/gtkgui/transferlist.py:278
+#: pynicotine/gtkgui/transferlist.py:75 pynicotine/gtkgui/transferlist.py:181
+msgid "File not shared"
+msgstr "Arquivo não compartilhado"
+
+#: pynicotine/gtkgui/transferlist.py:76 pynicotine/gtkgui/transferlist.py:171
+msgid "Aborted"
+msgstr "Abortado"
+
+#: pynicotine/gtkgui/transferlist.py:77 pynicotine/gtkgui/transferlist.py:175
+#, fuzzy
+msgid "Paused"
+msgstr "usuário"
+
+#: pynicotine/gtkgui/transferlist.py:78 pynicotine/gtkgui/transferlist.py:167
+msgid "Queued"
+msgstr "Fila"
+
+#: pynicotine/gtkgui/transferlist.py:79 pynicotine/gtkgui/transferlist.py:173
+msgid "Finished"
+msgstr "Finalizado"
+
+#: pynicotine/gtkgui/transferlist.py:136
+#, python-format
+msgid "%.2f GB"
+msgstr ""
+
+#: pynicotine/gtkgui/transferlist.py:138
+#, python-format
+msgid "%.2f MB"
+msgstr ""
+
+#: pynicotine/gtkgui/transferlist.py:140
+#, python-format
+msgid "%.2f KB"
+msgstr ""
+
+#: pynicotine/gtkgui/transferlist.py:179
+msgid "Connection closed by peer"
+msgstr "Conexão fechada na outra ponta"
+
+#: pynicotine/gtkgui/transferlist.py:183
+msgid "Establishing connection"
+msgstr "Estabelecendo conexão"
+
+#: pynicotine/gtkgui/transferlist.py:286
 #, fuzzy, python-format
 msgid "%s Files"
 msgstr "Arquivos"
