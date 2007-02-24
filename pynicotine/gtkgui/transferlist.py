@@ -59,20 +59,25 @@ class TransferList:
 		self.frame.SetTextBG(self.widget)
 		
 	status_tab = [
+		_("Getting status"),
 		_("Waiting for download"),
 		_("Waiting for upload"),
+		_("Getting address"),
+		_("Connecting"),
+		_("Waiting for peer to connect"),
+		_("Cannot connect"),
+		_("User logged off"),
 		_("Requesting file"),
 		_("Initializing transfer"),
-		_("Cannot connect"),
-		_("Waiting for peer to connect"),
-		_("Connecting"),
-		_("Getting address"),
-		_("Getting status"),
-		_("Queued"),
-		_("User logged off"),
+		_('Filtered'),
+		_("Download directory error"),
+		_("Local file error"),
+		_("File not shared"),
 		_("Aborted"),
 		_('Paused'),
+		_("Queued"),
 		_("Finished"),
+
 	]
 	
 	def CellDataFunc(self, column, cellrenderer, model, iter):
