@@ -337,26 +337,32 @@ class UserBrowse(UserBrowseTab):
 
 		files = self.shares[directory]
 		for file in files:
-			
+			# DecodedFilename, HSize, Bitrate, HLength, Size, Length, RawFilename
 			rl = 0
 			f = [self.decode(file[1]), Humanize(file[2])]
-			if file[3] == "mp3":
+			if file[3] == "":
+				f += ["", ""]
+			
+			
+			else:
+				#file[4] is for file types such as 'mp3'
 				attrs = file[4]
-				if len(attrs) >= 3:
-					br = str(attrs[0])
-					if attrs[2]:
-						br = br + _(" (vbr)")
-					l = "%i:%02i" % (attrs[1] / 60, attrs[1] % 60)
-					rl = attrs[1]
-					f += [br, l]
+				if attrs != [] and type(attrs) is list:
+					if len(attrs) >= 3:
+						br = str(attrs[0])
+						if attrs[2]:
+							br = br + _(" (vbr)")
+						l = "%i:%02i" % (attrs[1] / 60, attrs[1] % 60)
+						rl = attrs[1]
+						f += [br, l]
+					else:
+						f += ["", ""]
 				else:
 					f += ["", ""]
-			elif file[3] == "":
-				f += ["", ""]
-			else:
-				f += [file[4], file[4]]
+			
 			f += [file[2], rl, file[1]]
-		
+			print file
+			print f
 			self.files[f[0]] = self.FileStore.append(f)
 		
 			
