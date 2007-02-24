@@ -74,10 +74,10 @@ class Transfers:
 				except: pass
 				
 				
-			if len(i) >= 4 and i[3] == _('Paused'):
-				status = _('Paused')
+			if len(i) >= 4 and i[3] == 'Paused':
+				status = 'Paused'
 			else:
-				status = _('Getting status')
+				status = 'Getting status'
 			self.downloads.append(Transfer(user = i[0], filename=i[1], path=i[2], status=status, size=size, currentbytes=currentbytes))
 			getstatus[i[0]] = ""
 		for i in getstatus.keys():
@@ -136,19 +136,19 @@ class Transfers:
 	def GetUserStatus(self,msg):
 		""" We get a status of a user and if he's online, we request a file from him """
 		for i in self.downloads:
-			if msg.user == i.user and i.status in [_("Queued"), _('Getting status'), _('User logged off'), _('Connection closed by peer'), _('Aborted'), _('Cannot connect')]:
+			if msg.user == i.user and i.status in ["Queued", 'Getting status', 'User logged off', 'Connection closed by peer', 'Aborted', 'Cannot connect']:
 				if msg.status != 0:
-					if i.status not in [_("Queued"), _('Aborted'), _('Cannot connect'), _('Paused') ]:
+					if i.status not in ["Queued", 'Aborted', 'Cannot connect', 'Paused' ]:
 						self.getFile(i.user, i.filename, i.path, i)
 				else:
-					if i.status not in [_('Aborted')]:
-						i.status = _("User logged off")
+					if i.status not in ['Aborted']:
+						i.status = "User logged off"
 						self.downloadspanel.update(i)
 
 		for i in self.uploads[:]:
-			if msg.user == i.user and i.status != _('Finished'):
+			if msg.user == i.user and i.status != 'Finished':
 				if msg.status != 0:
-					if i.status == _('Getting status'):
+					if i.status == 'Getting status':
 						self.pushFile(i.user, i.filename, i.path, i)
 				else:
 					if i.transfertimer is not None:
@@ -170,7 +170,7 @@ class Transfers:
 		""" Get a single file. path is a local path. if transfer object is 
 		not None, update it, otherwise create a new one."""
 		if transfer is None:
-			transfer = Transfer(user = user, filename= filename, path=path, status = _('Getting status'), size=size)
+			transfer = Transfer(user = user, filename= filename, path=path, status = 'Getting status', size=size)
 			
 			if direction == 0:
 				self.downloads.append(transfer)
@@ -178,7 +178,7 @@ class Transfers:
 			else:
 				self.uploads.append(transfer)
 		else:
-			transfer.status = _('Getting status')
+			transfer.status = 'Getting status'
 		
 		if self.users.has_key(user):
 			status = self.users[user].status
@@ -194,7 +194,7 @@ class Transfers:
 					self.eventprocessor.logMessage(_("Filtering: %s") % filename)
 					self.AbortTransfer(transfer)
 					# The string to be displayed on the GUI
-					status = transfer.status = _('Filtered')
+					status = transfer.status = 'Filtered'
 					# In order to remove the filtered files from the saved download queue.
 					self.SaveDownloads()
 	
@@ -221,7 +221,7 @@ class Transfers:
 		else:
 			return
 		for i in self.downloads:
-			if i.user == user and i.filename == msg.file and (i.conn is not None or i.status in [_("Connection closed by peer"), _("Establishing connection")]):
+			if i.user == user and i.filename == msg.file and (i.conn is not None or i.status in ["Connection closed by peer", "Establishing connection"]):
 				self.AbortTransfer(i)
 				self.getFile(i.user, i.filename, i.path, i)
 				self.eventprocessor.logTransfer(_("Retrying failed download: user %(user)s, file %(file)s") %{'user':i.user, 'file':self.decode(i.filename)}, 1)
@@ -232,11 +232,11 @@ class Transfers:
 	def gettingAddress(self, req):
 		for i in self.downloads:
 			if i.req == req:
-				i.status = _("Getting address")
+				i.status = "Getting address"
 				self.downloadspanel.update(i)
 		for i in self.uploads:
 			if i.req == req:
-				i.status = _("Getting address")
+				i.status = "Getting address"
 				self.uploadspanel.update(i)
 
 	def gotAddress(self, req):
@@ -244,11 +244,11 @@ class Transfers:
 		to connect to."""
 		for i in self.downloads:
 			if i.req == req:
-				i.status = _("Connecting")
+				i.status = "Connecting"
 				self.downloadspanel.update(i)
 		for i in self.uploads:
 			if i.req == req:
-				i.status = _("Connecting")
+				i.status = "Connecting"
 				self.uploadspanel.update(i)
 
 
@@ -258,25 +258,25 @@ class Transfers:
 		event processor, we just provide a visual feedback to the user."""
 		for i in self.downloads:
 			if i.req == req:
-				i.status = _("Waiting for peer to connect")
+				i.status = "Waiting for peer to connect"
 				self.downloadspanel.update(i)
 		for i in self.uploads:
 			if i.req == req:
-				i.status = _("Waiting for peer to connect")
+				i.status = "Waiting for peer to connect"
 				self.uploadspanel.update(i)
 
 	def gotCantConnect(self,req):
 		""" We can't connect to the user, either way. """
 		for i in self.downloads:
 			if i.req == req:
-				i.status = _("Cannot connect")
+				i.status = "Cannot connect"
 				i.req = None
 				self.downloadspanel.update(i)
 				self.queue.put(slskmessages.AddUser(i.user))
 				self.queue.put(slskmessages.GetUserStatus(i.user))
 		for i in self.uploads:
 			if i.req == req:
-				i.status = _("Cannot connect")
+				i.status = "Cannot connect"
 				i.req = None
 				curtime = time.time()
 				for j in self.uploads:
@@ -293,11 +293,11 @@ class Transfers:
 		now exchange initialisation messages."""
 		for i in self.downloads:
 			if i.req == req:
-				i.status = _("Initializing transfer")
+				i.status = "Initializing transfer"
 				self.downloadspanel.update(i)
 		for i in self.uploads:
 			if i.req == req:
-				i.status = _("Initializing transfer")
+				i.status = "Initializing transfer"
 				self.uploadspanel.update(i)
 
 	def gotConnect(self, req, conn):
@@ -305,12 +305,12 @@ class Transfers:
 		messages."""
 		for i in self.downloads:
 			if i.req == req:
-				i.status = _("Requesting file")
+				i.status = "Requesting file"
 				i.requestconn = conn
 				self.downloadspanel.update(i)
 		for i in self.uploads:
 			if i.req == req:
-				i.status = _("Requesting file")
+				i.status = "Requesting file"
 				i.requestconn = conn
 				self.uploadspanel.update(i)
 
@@ -334,10 +334,10 @@ class Transfers:
 	
 		if msg.direction == 1:
 			for i in self.downloads:
-				if i.filename == msg.file and user == i.user and i.status == _("Queued"):
+				if i.filename == msg.file and user == i.user and i.status == "Queued":
 					i.size = msg.filesize
 					i.req = msg.req
-					i.status = _("Waiting for download")
+					i.status = "Waiting for download"
 					transfertimeout = TransferTimeout(i.req, self.eventprocessor.frame.callback)
 					if i.transfertimer is not None:
 						i.transfertimer.cancel()
@@ -373,7 +373,7 @@ class Transfers:
 					if self.eventprocessor.config.sections["transfers"]["uploadsinsubdirs"]:
 						parentdir = msg.file.split("\\")[-2]
 						path = _("Buddy Uploads")+os.sep+user+os.sep+parentdir
-					transfer = Transfer(user = user, filename=msg.file , path=path, status = _('Getting status'), size=msg.filesize)
+					transfer = Transfer(user = user, filename=msg.file , path=path, status = 'Getting status', size=msg.filesize)
 					self.downloads.append(transfer)
 					self.SaveDownloads()
 					self.queue.put(slskmessages.AddUser(user))
@@ -398,20 +398,20 @@ class Transfers:
 			elif not self.fileIsShared(user, msg.file):
 				response = slskmessages.TransferResponse(conn,0,reason = "File not shared", req = msg.req)
 			elif self.fileIsQueued(user, msg.file):
-				response = slskmessages.TransferResponse(conn,0,reason = _("Queued"), req = msg.req)
+				response = slskmessages.TransferResponse(conn,0,reason = "Queued", req = msg.req)
 			elif limits and self.queueLimitReached(user):
 				uploadslimit = self.eventprocessor.config.sections["transfers"]["queuelimit"]
-				response = slskmessages.TransferResponse(conn,0,reason = _("User limit of %i megabytes exceeded") %(uploadslimit), req = msg.req)
+				response = slskmessages.TransferResponse(conn,0,reason = "User limit of %i megabytes exceeded" %(uploadslimit), req = msg.req)
 			elif user in self.getTransferringUsers() or self.bandwidthLimitReached() or self.transferNegotiating():
-				response = slskmessages.TransferResponse(conn,0,reason = _("Queued"), req = msg.req)
-				self.uploads.append(Transfer(user = user, filename = msg.file, path = os.path.dirname(msg.file.replace('\\',os.sep)), status = _("Queued"), timequeued = time.time(), size = self.getFileSize(msg.file), place = len(self.uploads)))
+				response = slskmessages.TransferResponse(conn,0,reason = "Queued", req = msg.req)
+				self.uploads.append(Transfer(user = user, filename = msg.file, path = os.path.dirname(msg.file.replace('\\',os.sep)), status = "Queued", timequeued = time.time(), size = self.getFileSize(msg.file), place = len(self.uploads)))
 				self.uploadspanel.update(self.uploads[-1])
 				self.addQueued(user, msg.file)
 			else:
 				size = self.getFileSize(msg.file)
 				response = slskmessages.TransferResponse(conn,1,req = msg.req, filesize = size)
 				transfertimeout = TransferTimeout(msg.req, self.eventprocessor.frame.callback) 
-				self.uploads.append(Transfer(user = user, filename = msg.file, path = os.path.dirname(msg.file.replace('\\',os.sep)), status = _("Waiting for upload"), req = msg.req, size = size, place = len(self.uploads)))
+				self.uploads.append(Transfer(user = user, filename = msg.file, path = os.path.dirname(msg.file.replace('\\',os.sep)), status = "Waiting for upload", req = msg.req, size = size, place = len(self.uploads)))
 				self.uploads[-1].transfertimer = threading.Timer(30.0, transfertimeout.timeout)
 				self.uploads[-1].transfertimer.start()
 				self.uploadspanel.update(self.uploads[-1])
@@ -424,13 +424,13 @@ class Transfers:
 
 	def fileIsQueued(self, user, file):
 		for i in self.uploads:
-			if i.user == user and i.filename == file and i.status == _("Queued"):
+			if i.user == user and i.filename == file and i.status == "Queued":
 				return 1
 		return 0
 
 	def queueLimitReached(self, user):
 		uploadslimit = self.eventprocessor.config.sections["transfers"]["queuelimit"]*1024*1024
-		sizelist = [i.size for i in self.uploads if i.user == user and i.status == _("Queued")]
+		sizelist = [i.size for i in self.uploads if i.user == user and i.status == "Queued"]
 		size = sum(sizelist)
 		return size >= uploadslimit
 
@@ -454,14 +454,14 @@ class Transfers:
 				self.queue.put(slskmessages.QueueFailed(conn = msg.conn.conn, file = msg.file, reason = reason))
 			elif limits and self.queueLimitReached(user):
 				uploadslimit = self.eventprocessor.config.sections["transfers"]["queuelimit"]
-				limitmsg = _("User limit of %i megabytes exceeded") %(uploadslimit)
+				limitmsg = "User limit of %i megabytes exceeded" %(uploadslimit)
 				self.queue.put(slskmessages.QueueFailed(conn = msg.conn.conn, file = msg.file, reason = limitmsg)) 
 			elif self.fileIsShared(user, msg.file):
-				self.uploads.append(Transfer(user = user, filename = msg.file, path = os.path.dirname(msg.file.replace('\\',os.sep)), status = _("Queued"), timequeued = time.time(), size = self.getFileSize(msg.file)))
+				self.uploads.append(Transfer(user = user, filename = msg.file, path = os.path.dirname(msg.file.replace('\\',os.sep)), status = "Queued", timequeued = time.time(), size = self.getFileSize(msg.file)))
 				self.uploadspanel.update(self.uploads[-1])
 				self.addQueued(user, msg.file)
 			else:
-				self.queue.put(slskmessages.QueueFailed(conn = msg.conn.conn, file = msg.file, reason = _("File not shared") ))
+				self.queue.put(slskmessages.QueueFailed(conn = msg.conn.conn, file = msg.file, reason = "File not shared" ))
 		self.eventprocessor.logMessage(_("Queued upload request: %s") % str(vars(msg)),1)
 		self.checkUploadQueue()
 
@@ -471,7 +471,7 @@ class Transfers:
 			if i.conn is msg.conn.conn:
 				user = i.username
 		for i in self.downloads:
-			if i.user == user and i.filename == msg.file and i.status == _("Queued"):
+			if i.user == user and i.filename == msg.file and i.status == "Queued":
 				i.status = msg.reason
 				self.downloadspanel.update(i)
 				break
@@ -494,10 +494,10 @@ class Transfers:
 		return 0
 
 	def getTransferringUsers(self):
-		return [i.user for i in self.uploads if i.req is not None or i.conn is not None or i.status == _('Getting status')] #some file is being transfered
+		return [i.user for i in self.uploads if i.req is not None or i.conn is not None or i.status == 'Getting status'] #some file is being transfered
 	
 	def transferNegotiating(self):
-		return len([i for i in self.uploads if i.req is not None or (i.conn is not None and i.speed is None) or i.status == _('Getting status')]) > 0 #some file is being negotiated
+		return len([i for i in self.uploads if i.req is not None or (i.conn is not None and i.speed is None) or i.status == 'Getting status']) > 0 #some file is being negotiated
 
 	def bandwidthLimitReached(self):
 		maxbandwidth = self.eventprocessor.config.sections["transfers"]["uploadbandwidth"]
@@ -528,7 +528,7 @@ class Transfers:
 				i.req = None
 				self.downloadspanel.update(i)
 				self.uploadspanel.update(i)
-				if msg.reason == _("Queued"):
+				if msg.reason == "Queued":
 					if i.user not in self.users or self.users[i.user].status is None:
 						self.queue.put(slskmessages.AddUser(i.user))
 						self.queue.put(slskmessages.GetUserStatus(i.user))
@@ -543,7 +543,7 @@ class Transfers:
 				if i.req != msg.req:
 					continue
 				i.size = msg.filesize
-				i.status = _("Establishing connection")
+				i.status = "Establishing connection"
 				#Have to establish 'F' connection here
 				self.eventprocessor.ProcessRequestToPeer(i.user,slskmessages.FileRequest(None,msg.req))
 				self.downloadspanel.update(i)
@@ -552,7 +552,7 @@ class Transfers:
 			for i in self.uploads:
 				if i.req != msg.req:
 					continue
-				i.status = _("Establishing connection")
+				i.status = "Establishing connection"
 				self.eventprocessor.ProcessRequestToPeer(i.user,slskmessages.FileRequest(None,msg.req))
 				self.uploadspanel.update(i)
 				break
@@ -563,7 +563,7 @@ class Transfers:
 		for i in (self.downloads+self.uploads)[:]:
 			if i.req != msg.req:
 				continue
-			i.status = _("Cannot connect")
+			i.status = "Cannot connect"
 			i.req = None
 			self.queue.put(slskmessages.AddUser(i.user))
 			self.queue.put(slskmessages.GetUserStatus(i.user))
@@ -594,7 +594,7 @@ class Transfers:
 						os.makedirs(incompletedir)
 				except OSError, strerror:
 					self.eventprocessor.logMessage(_("OS error: %s") % strerror)
-					i.status = _("Download directory error")
+					i.status = "Download directory error"
 					i.conn = None
 					self.queue.put(slskmessages.ConnClose(msg.conn))
 				else: 
@@ -614,7 +614,7 @@ class Transfers:
 						f = open(fname,'ab+')
 					except IOError, strerror:
 						self.eventprocessor.logMessage(_("I/O error: %s") % strerror)
-						i.status = _("Local file error")
+						i.status = "Local file error"
 						try:
 							f.close()
 						except:
@@ -655,12 +655,12 @@ class Transfers:
 					# Open File
 					f = open(i.filename.replace("\\",os.sep),"rb")
 					self.queue.put(slskmessages.UploadFile(i.conn,file = f,size = i.size))
-					i.status = _("Initializing transfer")
+					i.status = "Initializing transfer"
 					i.file = f
 					self.eventprocessor.logTransfer(_("Upload started: user %(user)s, file %(file)s") % {'user':i.user, 'file':self.decode(i.filename)})
 				except IOError, strerror:
 					self.eventprocessor.logMessage(_("I/O error: %s") % strerror)
-					i.status = _("Local file error")
+					i.status = "Local file error"
 					try:
 						f.close()
 					except:
@@ -723,7 +723,7 @@ class Transfers:
 							os.remove(msg.file.name)
 						except OSError:
 							self.eventprocessor.logMessage(_("Couldn't move '%(tempfile)s' to '%(file)s'") % {'tempfile':self.decode(msg.file.name), 'file':self.decode(newname)})
-					i.status = _("Finished")
+					i.status = "Finished"
 					self.eventprocessor.logMessage(_("Download finished: %(file)s") % {'file':self.decode(newname)})
 					self.eventprocessor.logTransfer(_("Download finished: user %(user)s, file %(file)s") % {'user':i.user, 'file':self.decode(i.filename)})
 					self.queue.put(slskmessages.ConnClose(msg.conn))
@@ -742,7 +742,7 @@ class Transfers:
 					if self.eventprocessor.config.sections["transfers"]["afterfolder"] and i.path:
 						# walk through downloads and break if any file in the same folder exists, else execute
 						for ia in self.downloads:
-							if ia.status not in [_('Finished'),_('Aborted')] and ia.path and ia.path == i.path:
+							if ia.status not in ['Finished', 'Aborted'] and ia.path and ia.path == i.path:
 								break
 						else:
 							command = self.eventprocessor.config.sections["transfers"]["afterfolder"].replace("$", utils.escapeCommand(folder))
@@ -750,7 +750,7 @@ class Transfers:
 							self.eventprocessor.logMessage(_("Executed on folder: %s") % self.decode(command))
 			except IOError, strerror:
 				self.eventprocessor.logMessage(_("I/O error: %s") % self.decode(strerror))
-				i.status = _("Local file error")
+				i.status = "Local file error"
 				try:
 					msg.file.close()
 				except:
@@ -828,7 +828,7 @@ class Transfers:
 					i.modifier = _("(friend)")
 			else:
 				msg.file.close()
-				i.status = _("Finished")
+				i.status = "Finished"
 				if i.speed is not None:
 					self.queue.put(slskmessages.SendUploadSpeed(int(i.speed*1024)))
 				#i.conn = None
@@ -850,7 +850,7 @@ class Transfers:
 	
 		list = [i for i in self.uploads if i.user == user]
 		for upload in list:
-			if upload.status == _("Queued"):
+			if upload.status == "Queued":
 				self.eventprocessor.ProcessRequestToPeer(user,slskmessages.QueueFailed(None,file = upload.filename, reason = banmsg))
 			else:
 				self.AbortTransfer(upload)
@@ -868,7 +868,7 @@ class Transfers:
 		trusers = self.getTransferringUsers()
 		
 		# List of transfer instances of users who are not currently transferring
-		list = [i for i in self.uploads if not i.user in trusers and i.status == _("Queued")]
+		list = [i for i in self.uploads if not i.user in trusers and i.status == "Queued"]
 		# Sublist of privileged users transfers
 		listprivileged = [i for i in list if self.isPrivileged(i.user)]
 		
@@ -920,7 +920,7 @@ class Transfers:
 			
 			for i in self.uploads:
 				# Ignore non-queued files
-				if i.status == _("Queued"):
+				if i.status == "Queued":
 					if self.isPrivileged(i.user):
 						countpriv += 1
 					else:
@@ -945,7 +945,7 @@ class Transfers:
 			
 			for i in self.uploads:
 				# Ignore non-queued files
-				if i.status == _("Queued"):
+				if i.status == "Queued":
 					if i.user in listpriv.keys() or self.isPrivileged(i.user):
 						listpriv[i.user] = i.timequeued
 						countpriv += 1
@@ -996,14 +996,14 @@ class Transfers:
 		self.oggusersqueued = {}
 	
 		for i in self.uploads:
-			if i.status == _("Queued"):
+			if i.status == "Queued":
 				self.addQueued(i.user, i.filename)
 
 	def getUploadQueueSizes(self, username = None):
 		if self.eventprocessor.config.sections["transfers"]["fifoqueue"]:
 			count = 0
 			for i in self.uploads:
-				if i.status == _("Queued"):
+				if i.status == "Queued":
 					count += 1
 			return count, count
 		else:
@@ -1073,9 +1073,9 @@ class Transfers:
 		he logged off, or because there's a network problem."""
 		self.SaveDownloads()
 		for i in self.downloads + self.uploads:
-			if i.requestconn == conn and i.status == _('Requesting file'):
+			if i.requestconn == conn and i.status == 'Requesting file':
 				i.requestconn = None
-				i.status = _("Connection closed by peer")
+				i.status = "Connection closed by peer"
 				i.req = None
 				self.downloadspanel.update(i)
 				self.uploadspanel.update(i)
@@ -1084,11 +1084,11 @@ class Transfers:
 				continue
 			if i.file is not None:
 				i.file.close()
-			if i.status != _("Finished"):
+			if i.status != "Finished":
 				if self.users.has_key(i.user) and self.users[i.user].status == 0:
-					i.status = _("User logged off")
+					i.status = "User logged off"
 				else:
-					i.status = _("Connection closed by peer")
+					i.status = "Connection closed by peer"
 					if i in self.downloads:
 						self.eventprocessor.logTransfer(_("Retrying failed download: %(user)s, file %(file)s") % {'user':i.user, 'file':self.decode(i.filename)}, 1)
 						
@@ -1139,7 +1139,7 @@ class Transfers:
 		for i in self.downloads+self.uploads:
 			if i.conn != msg.conn.conn:
 				continue
-			i.status = _("Local file error")
+			i.status = "Local file error"
 			try:
 				msg.file.close()
 			except:
@@ -1171,10 +1171,10 @@ class Transfers:
 	def AbortTransfers(self):
 		""" Stop all transfers """
 		for i in self.downloads+self.uploads:
-			if i.status in ( _("Aborted"), _("Paused")):
+			if i.status in ( "Aborted", "Paused"):
 				self.AbortTransfer(i)
-				i.status = _("Paused")
-			elif i.status != _("Finished"):
+				i.status = "Paused"
+			elif i.status != "Finished":
 				self.AbortTransfer(i)
 				i.status = "Old"
 				#self.downloadspanel.update()
@@ -1201,7 +1201,7 @@ class Transfers:
 
 	def GetDownloads(self):
 		""" Get a list of incomplete and not aborted downloads """
-		return [ [i.user, i.filename, i.path, i.status, i.size, i.currentbytes] for i in self.downloads if i.status != _('Finished')]
+		return [ [i.user, i.filename, i.path, i.status, i.size, i.currentbytes] for i in self.downloads if i.status != 'Finished']
 
 	def SaveDownloads(self):
 		""" Save list of files to be downloaded """

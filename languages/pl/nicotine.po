@@ -2,14 +2,13 @@
 # Copyright (C) 2003, Hyriand
 # This file is distributed under the same license as the Nicotine package.
 # Hyriand <hyriand@thegraveyard.org>, 2003
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-02-23 09:02+0200\n"
-"PO-Revision-Date: 2004-01-10 13:59+0200\n"
-"Last-Translator: Wojciech Owczarek <owczi@counter-strike.pl>\n"
+"POT-Creation-Date: 2007-02-24 20:51+0200\n"
+"PO-Revision-Date: 2007-02-23 14:17+0200\n"
+"Last-Translator: daelstorm <daelstorm@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -382,23 +381,15 @@ msgstr "Wy_czyść"
 msgid "Clear Groups"
 msgstr "Wyczyść"
 
-#: pynicotine/gtkgui/downloads.py:207 pynicotine/gtkgui/transferlist.py:68
-#: pynicotine/gtkgui/transferlist.py:288 pynicotine/transfers.py:139
-#: pynicotine/transfers.py:141 pynicotine/transfers.py:337
-#: pynicotine/transfers.py:401 pynicotine/transfers.py:406
-#: pynicotine/transfers.py:407 pynicotine/transfers.py:427
-#: pynicotine/transfers.py:433 pynicotine/transfers.py:460
-#: pynicotine/transfers.py:474 pynicotine/transfers.py:531
-#: pynicotine/transfers.py:853 pynicotine/transfers.py:871
-#: pynicotine/transfers.py:923 pynicotine/transfers.py:948
-#: pynicotine/transfers.py:999 pynicotine/transfers.py:1006
+#: pynicotine/gtkgui/downloads.py:207 pynicotine/gtkgui/transferlist.py:159
+#: pynicotine/gtkgui/transferlist.py:333
 msgid "Queued"
 msgstr ""
 
 #: pynicotine/gtkgui/frame.py:122 pynicotine/gtkgui/frame.py:512
 #: pynicotine/gtkgui/frame.py:513 pynicotine/gtkgui/frame.py:518
 #: pynicotine/gtkgui/frame.py:523 pynicotine/gtkgui/frame.py:525
-#: pynicotine/gtkgui/frame.py:604 pynicotine/gtkgui/userbrowse.py:460
+#: pynicotine/gtkgui/frame.py:604 pynicotine/gtkgui/userbrowse.py:465
 msgid "Nicotine+"
 msgstr "Nicotine+"
 
@@ -428,7 +419,7 @@ msgid "Send to Tray"
 msgstr ""
 
 #: pynicotine/gtkgui/frame.py:142 pynicotine/gtkgui/frame.py:144
-#: pynicotine/gtkgui/frame.py:604 pynicotine/gtkgui/userbrowse.py:460
+#: pynicotine/gtkgui/frame.py:604 pynicotine/gtkgui/userbrowse.py:465
 #: pynicotine/gtkgui/entrydialog.py:310
 msgid "Cancel"
 msgstr ""
@@ -527,30 +518,30 @@ msgid "Private Message from %(user)s"
 msgstr ""
 
 #: pynicotine/gtkgui/frame.py:523
-#, fuzzy, python-format
+#, python-format
 msgid "You've been mentioned in the %(room)s room"
-msgstr "%s wszedł na kanał"
+msgstr "%(room)s wszedł na kanał"
 
 #: pynicotine/gtkgui/frame.py:525
-#, fuzzy, python-format
+#, python-format
 msgid "%(user)s mentioned you in the %(room)s room"
-msgstr "%s wszedł na kanał"
+msgstr "%(user)s %(room)s wszedł na kanał"
 
-#: pynicotine/gtkgui/frame.py:604 pynicotine/gtkgui/userbrowse.py:460
+#: pynicotine/gtkgui/frame.py:604 pynicotine/gtkgui/userbrowse.py:465
 #, python-format
 msgid ""
 "Are you sure you wish to download %(num)i files from %(user)s's directory %"
 "(folder)s?"
 msgstr ""
 
-#: pynicotine/gtkgui/frame.py:604 pynicotine/gtkgui/userbrowse.py:460
+#: pynicotine/gtkgui/frame.py:604 pynicotine/gtkgui/userbrowse.py:465
 msgid "Ok"
 msgstr ""
 
-#: pynicotine/gtkgui/frame.py:631 pynicotine/gtkgui/userbrowse.py:371
-#, fuzzy, python-format
+#: pynicotine/gtkgui/frame.py:631 pynicotine/gtkgui/userbrowse.py:376
+#, python-format
 msgid "Can't create directory '%(folder)s', reported error: %(error)s"
-msgstr "Nie mogę utworzyć katalogu '%s', z powodu błędu: %s"
+msgstr "Nie mogę utworzyć katalogu '%(folder)s', z powodu błędu: %(error)s"
 
 #: pynicotine/gtkgui/frame.py:653
 #, python-format
@@ -558,9 +549,8 @@ msgid "Loading Shares from disk failed: %(error)s"
 msgstr ""
 
 #: pynicotine/gtkgui/frame.py:675
-#, fuzzy
 msgid "Nicotine+: Get User Info"
-msgstr "Pobierz info"
+msgstr "Nicotine+: Pobierz info"
 
 #: pynicotine/gtkgui/frame.py:676
 msgid "Enter the User whose User Info you wish to recieve:"
@@ -583,32 +573,28 @@ msgid "Enter the User whose Shares List you wish to recieve:"
 msgstr ""
 
 #: pynicotine/gtkgui/frame.py:715
-#, fuzzy
 msgid "Connect"
-msgstr "Połą_cz"
+msgstr "Połącz"
 
 #: pynicotine/gtkgui/frame.py:716
-#, fuzzy
 msgid "Disconnect"
-msgstr "_Rozłącz"
+msgstr "Rozłącz"
 
 #: pynicotine/gtkgui/frame.py:720
 msgid "Hide / Unhide Nicotine"
 msgstr ""
 
 #: pynicotine/gtkgui/frame.py:722
-#, fuzzy
 msgid "Settings"
-msgstr "_Ustawienia"
+msgstr "Ustawienia"
 
 #: pynicotine/gtkgui/frame.py:723
 msgid "Lookup a User's IP"
 msgstr ""
 
 #: pynicotine/gtkgui/frame.py:724
-#, fuzzy
 msgid "Lookup a User's Info"
-msgstr "I_nfo użytkownika"
+msgstr "Info użytkownika"
 
 #: pynicotine/gtkgui/frame.py:725
 msgid "Lookup a User's Shares"
@@ -642,14 +628,14 @@ msgid "Away"
 msgstr "Zajęty"
 
 #: pynicotine/gtkgui/frame.py:1175
-#, fuzzy, python-format
+#, python-format
 msgid "Down: %(num)i users, %(speed).1f KB/s"
-msgstr "Pobierane: %i, %.1f KB/s"
+msgstr "Pobierane: %(num)i, %(speed).1f KB/s"
 
 #: pynicotine/gtkgui/frame.py:1176
-#, fuzzy, python-format
+#, python-format
 msgid "Up: %(num)i users, %(speed).1f KB/s"
-msgstr "Wysyłane: %i, %.1fKB/s"
+msgstr "Wysyłane: %(num)i, %(speed).1fKB/s"
 
 #: pynicotine/gtkgui/frame.py:1216
 msgid "Rescanning started"
@@ -946,9 +932,8 @@ msgid "Allow these users to send you files:"
 msgstr ""
 
 #: pynicotine/gtkgui/settings_glade.py:831
-#, fuzzy
 msgid "<b>Upload Queue:</b>"
-msgstr "Żądanie wysłania: %s"
+msgstr "Żądanie wysłania"
 
 #: pynicotine/gtkgui/settings_glade.py:851
 msgid ""
@@ -1509,9 +1494,8 @@ msgid "Login / Password"
 msgstr "Hasło:"
 
 #: pynicotine/gtkgui/settings_glade.py:4076
-#, fuzzy
 msgid "Joined Chat Rooms"
-msgstr "_Kanały"
+msgstr "Kanały"
 
 #: pynicotine/gtkgui/settings_glade.py:4089
 #, fuzzy
@@ -1572,9 +1556,9 @@ msgid "Speed: %s"
 msgstr "Prędkość"
 
 #: pynicotine/gtkgui/userinfo.py:33
-#, fuzzy, python-format
+#, python-format
 msgid "Files: %s"
-msgstr "Zawiera:"
+msgstr "Pliki: %s"
 
 #: pynicotine/gtkgui/userinfo.py:34
 #, fuzzy, python-format
@@ -1596,7 +1580,6 @@ msgid "Yes"
 msgstr ""
 
 #: pynicotine/gtkgui/userinfo.py:144
-#, fuzzy
 msgid "No"
 msgstr "Nie"
 
@@ -1677,26 +1660,26 @@ msgstr "Pobierz do..."
 msgid "Up_load file(s)"
 msgstr "wyś_lij  plik(i)"
 
-#: pynicotine/gtkgui/userbrowse.py:348 pynicotine/gtkgui/search.py:529
+#: pynicotine/gtkgui/userbrowse.py:354 pynicotine/gtkgui/search.py:529
 #: pynicotine/gtkgui/browsetreemodels.py:148
 msgid " (vbr)"
 msgstr "(vbr)"
 
-#: pynicotine/gtkgui/userbrowse.py:381
+#: pynicotine/gtkgui/userbrowse.py:386
 #, fuzzy, python-format
 msgid "Can't save shares, '%(user)s', reported error: %(error)s"
 msgstr "Nie mogę utworzyć katalogu '%s', z powodu błędu: %s"
 
-#: pynicotine/gtkgui/userbrowse.py:575
+#: pynicotine/gtkgui/userbrowse.py:580
 #, fuzzy
 msgid "Nicotine: Upload Directory's Contents"
 msgstr "Pobierz katalog do..."
 
-#: pynicotine/gtkgui/userbrowse.py:576 pynicotine/gtkgui/userbrowse.py:588
+#: pynicotine/gtkgui/userbrowse.py:581 pynicotine/gtkgui/userbrowse.py:593
 msgid "Enter the User you wish to upload to:"
 msgstr ""
 
-#: pynicotine/gtkgui/userbrowse.py:587
+#: pynicotine/gtkgui/userbrowse.py:592
 #, fuzzy
 msgid "Nicotine: Upload File(s)"
 msgstr "wyś_lij  plik(i)"
@@ -2140,9 +2123,8 @@ msgid "Speed: unknown"
 msgstr "Rozmiar kolejki: nieznany"
 
 #: pynicotine/gtkgui/nicotine_glade.py:2184
-#, fuzzy
 msgid "Files: unknown"
-msgstr "Dostępne sloty: nieznane"
+msgstr "Pliki: nieznane"
 
 #: pynicotine/gtkgui/nicotine_glade.py:2191
 #, fuzzy
@@ -2563,71 +2545,54 @@ msgstr "Pozostało"
 msgid "Path"
 msgstr "Ścieżka"
 
-#: pynicotine/gtkgui/transferlist.py:60 pynicotine/transfers.py:340
+#: pynicotine/gtkgui/transferlist.py:60 pynicotine/gtkgui/transferlist.py:141
 msgid "Waiting for download"
 msgstr "Czekam na transfer"
 
-#: pynicotine/gtkgui/transferlist.py:61 pynicotine/transfers.py:308
-#: pynicotine/transfers.py:313 pynicotine/transfers.py:1076
+#: pynicotine/gtkgui/transferlist.py:61 pynicotine/gtkgui/transferlist.py:145
 msgid "Requesting file"
 msgstr "Wysyłam żądanie"
 
-#: pynicotine/gtkgui/transferlist.py:62 pynicotine/transfers.py:296
-#: pynicotine/transfers.py:300 pynicotine/transfers.py:658
+#: pynicotine/gtkgui/transferlist.py:62 pynicotine/gtkgui/transferlist.py:147
 msgid "Initializing transfer"
 msgstr "Inicjalizuję transfer"
 
-#: pynicotine/gtkgui/transferlist.py:63 pynicotine/transfers.py:139
-#: pynicotine/transfers.py:141 pynicotine/transfers.py:272
-#: pynicotine/transfers.py:279 pynicotine/transfers.py:566
+#: pynicotine/gtkgui/transferlist.py:63 pynicotine/gtkgui/transferlist.py:149
 msgid "Cannot connect"
 msgstr "Nie można połączyć"
 
-#: pynicotine/gtkgui/transferlist.py:64 pynicotine/transfers.py:261
-#: pynicotine/transfers.py:265
+#: pynicotine/gtkgui/transferlist.py:64 pynicotine/gtkgui/transferlist.py:151
 msgid "Waiting for peer to connect"
 msgstr "Czekam na połączenie"
 
-#: pynicotine/gtkgui/transferlist.py:65 pynicotine/transfers.py:247
-#: pynicotine/transfers.py:251
+#: pynicotine/gtkgui/transferlist.py:65 pynicotine/gtkgui/transferlist.py:153
 msgid "Connecting"
 msgstr "Łączenie"
 
-#: pynicotine/gtkgui/transferlist.py:66 pynicotine/transfers.py:235
-#: pynicotine/transfers.py:239
+#: pynicotine/gtkgui/transferlist.py:66 pynicotine/gtkgui/transferlist.py:155
 msgid "Getting address"
 msgstr "Pobieram adres"
 
-#: pynicotine/gtkgui/transferlist.py:67 pynicotine/transfers.py:80
-#: pynicotine/transfers.py:139 pynicotine/transfers.py:151
-#: pynicotine/transfers.py:173 pynicotine/transfers.py:181
-#: pynicotine/transfers.py:376 pynicotine/transfers.py:497
-#: pynicotine/transfers.py:500
+#: pynicotine/gtkgui/transferlist.py:67 pynicotine/gtkgui/transferlist.py:157
 msgid "Getting status"
 msgstr "Pobieram stastus"
 
-#: pynicotine/gtkgui/transferlist.py:69 pynicotine/transfers.py:139
-#: pynicotine/transfers.py:145 pynicotine/transfers.py:1089
+#: pynicotine/gtkgui/transferlist.py:69 pynicotine/gtkgui/transferlist.py:161
 msgid "User logged off"
 msgstr "Wylogował się"
 
-#: pynicotine/gtkgui/transferlist.py:70 pynicotine/gtkgui/transferlist.py:254
-#: pynicotine/gtkgui/transferlist.py:280 pynicotine/gtkgui/transferlist.py:284
-#: pynicotine/transfers.py:139 pynicotine/transfers.py:141
-#: pynicotine/transfers.py:144 pynicotine/transfers.py:745
-#: pynicotine/transfers.py:1174
+#: pynicotine/gtkgui/transferlist.py:70 pynicotine/gtkgui/transferlist.py:163
+#: pynicotine/gtkgui/transferlist.py:299 pynicotine/gtkgui/transferlist.py:325
+#: pynicotine/gtkgui/transferlist.py:329
 msgid "Aborted"
 msgstr "Anulowano"
 
-#: pynicotine/gtkgui/transferlist.py:71 pynicotine/gtkgui/transferlist.py:277
-#: pynicotine/gtkgui/transferlist.py:284 pynicotine/transfers.py:149
-#: pynicotine/transfers.py:726 pynicotine/transfers.py:745
-#: pynicotine/transfers.py:831 pynicotine/transfers.py:1087
-#: pynicotine/transfers.py:1177 pynicotine/transfers.py:1204
+#: pynicotine/gtkgui/transferlist.py:71 pynicotine/gtkgui/transferlist.py:165
+#: pynicotine/gtkgui/transferlist.py:322 pynicotine/gtkgui/transferlist.py:329
 msgid "Finished"
 msgstr "Zakończony"
 
-#: pynicotine/gtkgui/transferlist.py:72 pynicotine/transfers.py:414
+#: pynicotine/gtkgui/transferlist.py:72 pynicotine/gtkgui/transferlist.py:143
 #, fuzzy
 msgid "Waiting for upload"
 msgstr "Czekam na transfer"
@@ -2647,15 +2612,41 @@ msgstr "%.2f MB"
 msgid "%.2f KB"
 msgstr "%.2f KB"
 
-#: pynicotine/gtkgui/transferlist.py:233
-#, fuzzy, python-format
-msgid "%s Files"
-msgstr "Pliki"
+#: pynicotine/gtkgui/transferlist.py:167
+#, fuzzy
+msgid "Paused"
+msgstr "użytkownik"
 
-#: pynicotine/gtkgui/transferlist.py:284 pynicotine/transfers.py:197
+#: pynicotine/gtkgui/transferlist.py:169 pynicotine/gtkgui/transferlist.py:329
 #, fuzzy
 msgid "Filtered"
 msgstr "Zawiera:"
+
+#: pynicotine/gtkgui/transferlist.py:171
+msgid "Connection closed by peer"
+msgstr "Połączenie zerwano"
+
+#: pynicotine/gtkgui/transferlist.py:173
+#, fuzzy
+msgid "File not shared"
+msgstr "Zakończony"
+
+#: pynicotine/gtkgui/transferlist.py:175
+msgid "Establishing connection"
+msgstr "Ustanawiam połączenie"
+
+#: pynicotine/gtkgui/transferlist.py:177
+msgid "Download directory error"
+msgstr "Błąd pobierania katalogu"
+
+#: pynicotine/gtkgui/transferlist.py:179
+msgid "Local file error"
+msgstr "Lokalny błąd pliku"
+
+#: pynicotine/gtkgui/transferlist.py:278
+#, python-format
+msgid "%s Files"
+msgstr "%s Pliki"
 
 #: pynicotine/gtkgui/entrydialog.py:63
 msgid "<b>File Name:</b>"
@@ -3203,32 +3194,15 @@ msgstr "Usunięto alias %s: %s"
 msgid "No such alias (%(alias)s)\n"
 msgstr "Nie ma takiego aliasu (%s)"
 
-#: pynicotine/transfers.py:77 pynicotine/transfers.py:78
-#: pynicotine/transfers.py:141 pynicotine/transfers.py:1174
-#: pynicotine/transfers.py:1176
-#, fuzzy
-msgid "Paused"
-msgstr "użytkownik"
-
 #: pynicotine/transfers.py:134
 #, python-format
 msgid "User %s does not exist"
 msgstr "Nie ma takiego użytkownika: %s"
 
-#: pynicotine/transfers.py:139 pynicotine/transfers.py:224
-#: pynicotine/transfers.py:1078 pynicotine/transfers.py:1091
-msgid "Connection closed by peer"
-msgstr "Połączenie zerwano"
-
 #: pynicotine/transfers.py:194
 #, fuzzy, python-format
 msgid "Filtering: %s"
 msgstr "Zawiera:"
-
-#: pynicotine/transfers.py:224 pynicotine/transfers.py:546
-#: pynicotine/transfers.py:555
-msgid "Establishing connection"
-msgstr "Ustanawiam połączenie"
 
 #: pynicotine/transfers.py:227
 #, fuzzy, python-format
@@ -3255,20 +3229,10 @@ msgstr "Wysyłanie"
 msgid "Denied file request: %s"
 msgstr "Odrzucono żądanie pliku: %s"
 
-#: pynicotine/transfers.py:404 pynicotine/transfers.py:457
-#, python-format
-msgid "User limit of %i megabytes exceeded"
-msgstr ""
-
 #: pynicotine/transfers.py:418
 #, python-format
 msgid "Upload request: %s"
 msgstr "Żądanie wysłania: %s"
-
-#: pynicotine/transfers.py:464
-#, fuzzy
-msgid "File not shared"
-msgstr "Zakończony"
 
 #: pynicotine/transfers.py:465
 #, python-format
@@ -3285,20 +3249,11 @@ msgstr "Odebrano nieznaną odpowiedź: %s"
 msgid "OS error: %s"
 msgstr "Błąd systemu: %s"
 
-#: pynicotine/transfers.py:597
-msgid "Download directory error"
-msgstr "Błąd pobierania katalogu"
-
 #: pynicotine/transfers.py:616 pynicotine/transfers.py:662
 #: pynicotine/transfers.py:752 pynicotine/transfers.py:1149
 #, python-format
 msgid "I/O error: %s"
 msgstr "Błąd WE/WY: %s"
-
-#: pynicotine/transfers.py:617 pynicotine/transfers.py:663
-#: pynicotine/transfers.py:753 pynicotine/transfers.py:1142
-msgid "Local file error"
-msgstr "Lokalny błąd pliku"
 
 #: pynicotine/transfers.py:631
 #, python-format

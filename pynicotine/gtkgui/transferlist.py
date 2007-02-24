@@ -65,7 +65,7 @@ class TransferList:
 		_("Connecting"),
 		_("Getting address"),
 		_("Getting status"),
-		_("Queued"),
+		"Queued",
 		_("User logged off"),
 		_("Aborted"),
 		_("Finished"),
@@ -135,7 +135,52 @@ class TransferList:
 			return r + modifier
 		except:
 			return size + modifier
-	
+			
+	def TranslateStatus(self, status):
+		if status == "Waiting for download":
+			newstatus = _("Waiting for download")
+		elif status == "Waiting for upload":
+			newstatus = _("Waiting for upload")
+		elif status == "Requesting file":
+			newstatus = _("Requesting file")
+		elif status == "Initializing transfer":
+			newstatus = _("Initializing transfer")
+		elif status == "Cannot connect":
+			newstatus = _("Cannot connect")
+		elif status == "Waiting for peer to connect":
+			newstatus = _("Waiting for peer to connect")
+		elif status == "Connecting":
+			newstatus = _("Connecting")
+		elif status == "Getting address":
+			newstatus = _("Getting address")
+		elif status == "Getting status":
+			newstatus = _("Getting status")
+		elif status == "Queued":
+			newstatus = _("Queued")
+		elif status == "User logged off":
+			newstatus = _("User logged off")
+		elif status == "Aborted":
+			newstatus =  _("Aborted")
+		elif status == "Finished":
+			newstatus = _("Finished")
+		elif status == 'Paused':
+			newstatus = _("Paused")
+		elif status == 'Filtered':
+			newstatus = _('Filtered')
+		elif status == 'Connection closed by peer':
+			newstatus = _('Connection closed by peer')
+		elif status == "File not shared":
+			newstatus = _("File not shared")
+		elif status == "Establishing connection":
+			newstatus = _("Establishing connection")
+		elif status == "Download directory error":
+			newstatus = _("Download directory error")
+		elif status == "Local file error":
+			newstatus = _("Local file error")
+		else:
+			newstatus = status
+		return newstatus
+		
 	def update(self, transfer = None):
 		if transfer is not None:
 			if not transfer in self.list:
@@ -147,7 +192,7 @@ class TransferList:
 			user = transfer.user
 			key = [user, fn]
 			
-			status = self.Humanize(transfer.status, None)
+			status = self.Humanize(self.TranslateStatus(transfer.status), None)
 			istatus = self.get_status_index(transfer.status)
 			try:
 				size = int(transfer.size)
@@ -285,4 +330,4 @@ class TransferList:
 		self.ClearTransfers(statuslist)
 
 	def OnClearQueued(self, widget):
-		self.ClearTransfers([_("Queued")])
+		self.ClearTransfers([_("Queued"), "Queued"])

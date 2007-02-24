@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-02-23 09:02+0200\n"
+"POT-Creation-Date: 2007-02-24 20:51+0200\n"
 "PO-Revision-Date: 2007-02-22 08:59+0100\n"
 "Last-Translator: nince78\n"
 "Language-Team: \n"
@@ -372,23 +372,15 @@ msgstr "Wis"
 msgid "Clear Groups"
 msgstr "Wis groepen"
 
-#: pynicotine/gtkgui/downloads.py:207 pynicotine/gtkgui/transferlist.py:68
-#: pynicotine/gtkgui/transferlist.py:288 pynicotine/transfers.py:139
-#: pynicotine/transfers.py:141 pynicotine/transfers.py:337
-#: pynicotine/transfers.py:401 pynicotine/transfers.py:406
-#: pynicotine/transfers.py:407 pynicotine/transfers.py:427
-#: pynicotine/transfers.py:433 pynicotine/transfers.py:460
-#: pynicotine/transfers.py:474 pynicotine/transfers.py:531
-#: pynicotine/transfers.py:853 pynicotine/transfers.py:871
-#: pynicotine/transfers.py:923 pynicotine/transfers.py:948
-#: pynicotine/transfers.py:999 pynicotine/transfers.py:1006
+#: pynicotine/gtkgui/downloads.py:207 pynicotine/gtkgui/transferlist.py:159
+#: pynicotine/gtkgui/transferlist.py:333
 msgid "Queued"
 msgstr "In de wachtrij"
 
 #: pynicotine/gtkgui/frame.py:122 pynicotine/gtkgui/frame.py:512
 #: pynicotine/gtkgui/frame.py:513 pynicotine/gtkgui/frame.py:518
 #: pynicotine/gtkgui/frame.py:523 pynicotine/gtkgui/frame.py:525
-#: pynicotine/gtkgui/frame.py:604 pynicotine/gtkgui/userbrowse.py:460
+#: pynicotine/gtkgui/frame.py:604 pynicotine/gtkgui/userbrowse.py:465
 msgid "Nicotine+"
 msgstr "Nicotine+"
 
@@ -417,7 +409,7 @@ msgid "Send to Tray"
 msgstr "Zend naar systeemvak"
 
 #: pynicotine/gtkgui/frame.py:142 pynicotine/gtkgui/frame.py:144
-#: pynicotine/gtkgui/frame.py:604 pynicotine/gtkgui/userbrowse.py:460
+#: pynicotine/gtkgui/frame.py:604 pynicotine/gtkgui/userbrowse.py:465
 #: pynicotine/gtkgui/entrydialog.py:310
 msgid "Cancel"
 msgstr "Annuleren"
@@ -526,7 +518,7 @@ msgstr "Je bent genoemd in de %(room)s kamer"
 msgid "%(user)s mentioned you in the %(room)s room"
 msgstr "%(user)s noemde jou in de %(room)s kamer"
 
-#: pynicotine/gtkgui/frame.py:604 pynicotine/gtkgui/userbrowse.py:460
+#: pynicotine/gtkgui/frame.py:604 pynicotine/gtkgui/userbrowse.py:465
 #, python-format
 msgid ""
 "Are you sure you wish to download %(num)i files from %(user)s's directory %"
@@ -535,11 +527,11 @@ msgstr ""
 "Weet je zeker dat je %(num)i bestanden binnen wilt halen van %(user)s uit "
 "map %(folder)s?"
 
-#: pynicotine/gtkgui/frame.py:604 pynicotine/gtkgui/userbrowse.py:460
+#: pynicotine/gtkgui/frame.py:604 pynicotine/gtkgui/userbrowse.py:465
 msgid "Ok"
 msgstr "Oké"
 
-#: pynicotine/gtkgui/frame.py:631 pynicotine/gtkgui/userbrowse.py:371
+#: pynicotine/gtkgui/frame.py:631 pynicotine/gtkgui/userbrowse.py:376
 #, python-format
 msgid "Can't create directory '%(folder)s', reported error: %(error)s"
 msgstr "Kan map '%(folder)s' niet maken, fout: %(error)s"
@@ -1685,25 +1677,25 @@ msgstr "Haal binnen, _naar..."
 msgid "Up_load file(s)"
 msgstr "Verzend bestand(en)"
 
-#: pynicotine/gtkgui/userbrowse.py:348 pynicotine/gtkgui/search.py:529
+#: pynicotine/gtkgui/userbrowse.py:354 pynicotine/gtkgui/search.py:529
 #: pynicotine/gtkgui/browsetreemodels.py:148
 msgid " (vbr)"
 msgstr " (vbr)"
 
-#: pynicotine/gtkgui/userbrowse.py:381
+#: pynicotine/gtkgui/userbrowse.py:386
 #, python-format
 msgid "Can't save shares, '%(user)s', reported error: %(error)s"
 msgstr "Kan gedeelde mappen niet opslaan, '%(user)s', fout: %(error)s"
 
-#: pynicotine/gtkgui/userbrowse.py:575
+#: pynicotine/gtkgui/userbrowse.py:580
 msgid "Nicotine: Upload Directory's Contents"
 msgstr "Nicotine: verzend inhoud map"
 
-#: pynicotine/gtkgui/userbrowse.py:576 pynicotine/gtkgui/userbrowse.py:588
+#: pynicotine/gtkgui/userbrowse.py:581 pynicotine/gtkgui/userbrowse.py:593
 msgid "Enter the User you wish to upload to:"
 msgstr "Naar wie wil je verzenden?"
 
-#: pynicotine/gtkgui/userbrowse.py:587
+#: pynicotine/gtkgui/userbrowse.py:592
 msgid "Nicotine: Upload File(s)"
 msgstr "Nicotine: Verzend bestand(en)"
 
@@ -2547,71 +2539,54 @@ msgstr "Resterend"
 msgid "Path"
 msgstr "Pad"
 
-#: pynicotine/gtkgui/transferlist.py:60 pynicotine/transfers.py:340
+#: pynicotine/gtkgui/transferlist.py:60 pynicotine/gtkgui/transferlist.py:141
 msgid "Waiting for download"
 msgstr "Wacht op inkomend"
 
-#: pynicotine/gtkgui/transferlist.py:61 pynicotine/transfers.py:308
-#: pynicotine/transfers.py:313 pynicotine/transfers.py:1076
+#: pynicotine/gtkgui/transferlist.py:61 pynicotine/gtkgui/transferlist.py:145
 msgid "Requesting file"
 msgstr "Vraagt bestand op"
 
-#: pynicotine/gtkgui/transferlist.py:62 pynicotine/transfers.py:296
-#: pynicotine/transfers.py:300 pynicotine/transfers.py:658
+#: pynicotine/gtkgui/transferlist.py:62 pynicotine/gtkgui/transferlist.py:147
 msgid "Initializing transfer"
 msgstr "Overdracht wordt gestart"
 
-#: pynicotine/gtkgui/transferlist.py:63 pynicotine/transfers.py:139
-#: pynicotine/transfers.py:141 pynicotine/transfers.py:272
-#: pynicotine/transfers.py:279 pynicotine/transfers.py:566
+#: pynicotine/gtkgui/transferlist.py:63 pynicotine/gtkgui/transferlist.py:149
 msgid "Cannot connect"
 msgstr "Kan niet verbinden"
 
-#: pynicotine/gtkgui/transferlist.py:64 pynicotine/transfers.py:261
-#: pynicotine/transfers.py:265
+#: pynicotine/gtkgui/transferlist.py:64 pynicotine/gtkgui/transferlist.py:151
 msgid "Waiting for peer to connect"
 msgstr "Wacht op verbinding van naaste"
 
-#: pynicotine/gtkgui/transferlist.py:65 pynicotine/transfers.py:247
-#: pynicotine/transfers.py:251
+#: pynicotine/gtkgui/transferlist.py:65 pynicotine/gtkgui/transferlist.py:153
 msgid "Connecting"
 msgstr "Bezig met verbinden"
 
-#: pynicotine/gtkgui/transferlist.py:66 pynicotine/transfers.py:235
-#: pynicotine/transfers.py:239
+#: pynicotine/gtkgui/transferlist.py:66 pynicotine/gtkgui/transferlist.py:155
 msgid "Getting address"
 msgstr "Vraagt adres op"
 
-#: pynicotine/gtkgui/transferlist.py:67 pynicotine/transfers.py:80
-#: pynicotine/transfers.py:139 pynicotine/transfers.py:151
-#: pynicotine/transfers.py:173 pynicotine/transfers.py:181
-#: pynicotine/transfers.py:376 pynicotine/transfers.py:497
-#: pynicotine/transfers.py:500
+#: pynicotine/gtkgui/transferlist.py:67 pynicotine/gtkgui/transferlist.py:157
 msgid "Getting status"
 msgstr "Vraagt status op"
 
-#: pynicotine/gtkgui/transferlist.py:69 pynicotine/transfers.py:139
-#: pynicotine/transfers.py:145 pynicotine/transfers.py:1089
+#: pynicotine/gtkgui/transferlist.py:69 pynicotine/gtkgui/transferlist.py:161
 msgid "User logged off"
 msgstr "Gebruiker afgemeld"
 
-#: pynicotine/gtkgui/transferlist.py:70 pynicotine/gtkgui/transferlist.py:254
-#: pynicotine/gtkgui/transferlist.py:280 pynicotine/gtkgui/transferlist.py:284
-#: pynicotine/transfers.py:139 pynicotine/transfers.py:141
-#: pynicotine/transfers.py:144 pynicotine/transfers.py:745
-#: pynicotine/transfers.py:1174
+#: pynicotine/gtkgui/transferlist.py:70 pynicotine/gtkgui/transferlist.py:163
+#: pynicotine/gtkgui/transferlist.py:299 pynicotine/gtkgui/transferlist.py:325
+#: pynicotine/gtkgui/transferlist.py:329
 msgid "Aborted"
 msgstr "Afgebroken"
 
-#: pynicotine/gtkgui/transferlist.py:71 pynicotine/gtkgui/transferlist.py:277
-#: pynicotine/gtkgui/transferlist.py:284 pynicotine/transfers.py:149
-#: pynicotine/transfers.py:726 pynicotine/transfers.py:745
-#: pynicotine/transfers.py:831 pynicotine/transfers.py:1087
-#: pynicotine/transfers.py:1177 pynicotine/transfers.py:1204
+#: pynicotine/gtkgui/transferlist.py:71 pynicotine/gtkgui/transferlist.py:165
+#: pynicotine/gtkgui/transferlist.py:322 pynicotine/gtkgui/transferlist.py:329
 msgid "Finished"
 msgstr "Klaar"
 
-#: pynicotine/gtkgui/transferlist.py:72 pynicotine/transfers.py:414
+#: pynicotine/gtkgui/transferlist.py:72 pynicotine/gtkgui/transferlist.py:143
 msgid "Waiting for upload"
 msgstr "Wacht op uitgaand"
 
@@ -2631,14 +2606,39 @@ msgstr "%.2f MB"
 msgid "%.2f KB"
 msgstr "%.2f KB"
 
-#: pynicotine/gtkgui/transferlist.py:233
+#: pynicotine/gtkgui/transferlist.py:167
+msgid "Paused"
+msgstr "Gepauzeerd"
+
+#: pynicotine/gtkgui/transferlist.py:169 pynicotine/gtkgui/transferlist.py:329
+msgid "Filtered"
+msgstr "Gefilterd"
+
+#: pynicotine/gtkgui/transferlist.py:171
+msgid "Connection closed by peer"
+msgstr "Verbinding gesloten door naaste computer"
+
+#: pynicotine/gtkgui/transferlist.py:173
+msgid "File not shared"
+msgstr "Bestand niet gedeeld"
+
+#: pynicotine/gtkgui/transferlist.py:175
+msgid "Establishing connection"
+msgstr "Bezig met verbinden"
+
+# !
+#: pynicotine/gtkgui/transferlist.py:177
+msgid "Download directory error"
+msgstr "Fout map inkomend"
+
+#: pynicotine/gtkgui/transferlist.py:179
+msgid "Local file error"
+msgstr "Lokale bestandsfout"
+
+#: pynicotine/gtkgui/transferlist.py:278
 #, python-format
 msgid "%s Files"
 msgstr "%s bestanden"
-
-#: pynicotine/gtkgui/transferlist.py:284 pynicotine/transfers.py:197
-msgid "Filtered"
-msgstr "Gefilterd"
 
 #: pynicotine/gtkgui/entrydialog.py:63
 msgid "<b>File Name:</b>"
@@ -3259,31 +3259,15 @@ msgstr "Alias %(alias)s gewist: %(action)s\n"
 msgid "No such alias (%(alias)s)\n"
 msgstr "Onbekende alias (%(alias)s)\n"
 
-#: pynicotine/transfers.py:77 pynicotine/transfers.py:78
-#: pynicotine/transfers.py:141 pynicotine/transfers.py:1174
-#: pynicotine/transfers.py:1176
-msgid "Paused"
-msgstr "Gepauzeerd"
-
 #: pynicotine/transfers.py:134
 #, python-format
 msgid "User %s does not exist"
 msgstr "Gebruiker %s bestaat niet"
 
-#: pynicotine/transfers.py:139 pynicotine/transfers.py:224
-#: pynicotine/transfers.py:1078 pynicotine/transfers.py:1091
-msgid "Connection closed by peer"
-msgstr "Verbinding gesloten door naaste computer"
-
 #: pynicotine/transfers.py:194
 #, python-format
 msgid "Filtering: %s"
 msgstr "Gefilterd: %s"
-
-#: pynicotine/transfers.py:224 pynicotine/transfers.py:546
-#: pynicotine/transfers.py:555
-msgid "Establishing connection"
-msgstr "Bezig met verbinden"
 
 #: pynicotine/transfers.py:227
 #, python-format
@@ -3310,19 +3294,10 @@ msgstr "Zendingen van vrienden"
 msgid "Denied file request: %s"
 msgstr "Bestandsactie geweigerd: %s"
 
-#: pynicotine/transfers.py:404 pynicotine/transfers.py:457
-#, python-format
-msgid "User limit of %i megabytes exceeded"
-msgstr "Gebruikerslimiet van %i MB overschreden"
-
 #: pynicotine/transfers.py:418
 #, python-format
 msgid "Upload request: %s"
 msgstr "Zendverzoek: %s"
-
-#: pynicotine/transfers.py:464
-msgid "File not shared"
-msgstr "Bestand niet gedeeld"
 
 #: pynicotine/transfers.py:465
 #, python-format
@@ -3339,21 +3314,11 @@ msgstr "Onbekend overdrachtsantwoord ontvangen: %s"
 msgid "OS error: %s"
 msgstr "OS fout: %s"
 
-# !
-#: pynicotine/transfers.py:597
-msgid "Download directory error"
-msgstr "Fout map inkomend"
-
 #: pynicotine/transfers.py:616 pynicotine/transfers.py:662
 #: pynicotine/transfers.py:752 pynicotine/transfers.py:1149
 #, python-format
 msgid "I/O error: %s"
 msgstr "I/U fout: %s"
-
-#: pynicotine/transfers.py:617 pynicotine/transfers.py:663
-#: pynicotine/transfers.py:753 pynicotine/transfers.py:1142
-msgid "Local file error"
-msgstr "Lokale bestandsfout"
 
 #: pynicotine/transfers.py:631
 #, python-format
@@ -3437,6 +3402,9 @@ msgstr "Uitgaand afgebroken: gebruiker %(user)s, bestand %(file)s"
 #, python-format
 msgid "Download aborted, user %(user)s file %(file)s"
 msgstr "Inkomend afgebroken: gebruiker %(user)s, bestand %(file)s"
+
+#~ msgid "User limit of %i megabytes exceeded"
+#~ msgstr "Gebruikerslimiet van %i MB overschreden"
 
 #~ msgid "Nicotine+: Download %i files?"
 #~ msgstr "Nicotine+: %i bestanden binnenhalen?"

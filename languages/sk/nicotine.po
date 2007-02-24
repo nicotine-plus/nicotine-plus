@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nicotine\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-02-23 09:02+0200\n"
+"POT-Creation-Date: 2007-02-24 20:51+0200\n"
 "PO-Revision-Date: 2006-09-24 15:58+0200\n"
 "Last-Translator: Jozef Riha <jose1711@gmail.com>\n"
 "Language-Team: Slovak <sk@li.org>\n"
@@ -380,23 +380,15 @@ msgstr "_Vyčistiť"
 msgid "Clear Groups"
 msgstr "Vyčistiť skupiny"
 
-#: pynicotine/gtkgui/downloads.py:207 pynicotine/gtkgui/transferlist.py:68
-#: pynicotine/gtkgui/transferlist.py:288 pynicotine/transfers.py:139
-#: pynicotine/transfers.py:141 pynicotine/transfers.py:337
-#: pynicotine/transfers.py:401 pynicotine/transfers.py:406
-#: pynicotine/transfers.py:407 pynicotine/transfers.py:427
-#: pynicotine/transfers.py:433 pynicotine/transfers.py:460
-#: pynicotine/transfers.py:474 pynicotine/transfers.py:531
-#: pynicotine/transfers.py:853 pynicotine/transfers.py:871
-#: pynicotine/transfers.py:923 pynicotine/transfers.py:948
-#: pynicotine/transfers.py:999 pynicotine/transfers.py:1006
+#: pynicotine/gtkgui/downloads.py:207 pynicotine/gtkgui/transferlist.py:159
+#: pynicotine/gtkgui/transferlist.py:333
 msgid "Queued"
 msgstr "Vo fronte"
 
 #: pynicotine/gtkgui/frame.py:122 pynicotine/gtkgui/frame.py:512
 #: pynicotine/gtkgui/frame.py:513 pynicotine/gtkgui/frame.py:518
 #: pynicotine/gtkgui/frame.py:523 pynicotine/gtkgui/frame.py:525
-#: pynicotine/gtkgui/frame.py:604 pynicotine/gtkgui/userbrowse.py:460
+#: pynicotine/gtkgui/frame.py:604 pynicotine/gtkgui/userbrowse.py:465
 msgid "Nicotine+"
 msgstr "Nicotine+"
 
@@ -425,7 +417,7 @@ msgid "Send to Tray"
 msgstr "Poslať do oznamovacej oblasti"
 
 #: pynicotine/gtkgui/frame.py:142 pynicotine/gtkgui/frame.py:144
-#: pynicotine/gtkgui/frame.py:604 pynicotine/gtkgui/userbrowse.py:460
+#: pynicotine/gtkgui/frame.py:604 pynicotine/gtkgui/userbrowse.py:465
 #: pynicotine/gtkgui/entrydialog.py:310
 msgid "Cancel"
 msgstr "Zrušiť"
@@ -534,7 +526,7 @@ msgstr "%s vstúpil do miestnosti"
 msgid "%(user)s mentioned you in the %(room)s room"
 msgstr "%s vstúpil do miestnosti"
 
-#: pynicotine/gtkgui/frame.py:604 pynicotine/gtkgui/userbrowse.py:460
+#: pynicotine/gtkgui/frame.py:604 pynicotine/gtkgui/userbrowse.py:465
 #, fuzzy, python-format
 msgid ""
 "Are you sure you wish to download %(num)i files from %(user)s's directory %"
@@ -542,11 +534,11 @@ msgid ""
 msgstr ""
 "Ste si istý, že chcete stiahnuť %i súborov od užívateľa %s z adresára %s?"
 
-#: pynicotine/gtkgui/frame.py:604 pynicotine/gtkgui/userbrowse.py:460
+#: pynicotine/gtkgui/frame.py:604 pynicotine/gtkgui/userbrowse.py:465
 msgid "Ok"
 msgstr "Ok"
 
-#: pynicotine/gtkgui/frame.py:631 pynicotine/gtkgui/userbrowse.py:371
+#: pynicotine/gtkgui/frame.py:631 pynicotine/gtkgui/userbrowse.py:376
 #, fuzzy, python-format
 msgid "Can't create directory '%(folder)s', reported error: %(error)s"
 msgstr "Nepodarilo sa vytvoriť adresár '%s', hlásená chyba: %s"
@@ -1691,27 +1683,27 @@ msgstr "Stiah_nuť do..."
 msgid "Up_load file(s)"
 msgstr "Stiahn_uť súbor(y)"
 
-#: pynicotine/gtkgui/userbrowse.py:348 pynicotine/gtkgui/search.py:529
+#: pynicotine/gtkgui/userbrowse.py:354 pynicotine/gtkgui/search.py:529
 #: pynicotine/gtkgui/browsetreemodels.py:148
 msgid " (vbr)"
 msgstr " (vbr)"
 
-#: pynicotine/gtkgui/userbrowse.py:381
+#: pynicotine/gtkgui/userbrowse.py:386
 #, fuzzy, python-format
 msgid "Can't save shares, '%(user)s', reported error: %(error)s"
 msgstr "Nepodarilo sa vytvoriť adresár '%s', hlásená chyba: %s"
 
-#: pynicotine/gtkgui/userbrowse.py:575
+#: pynicotine/gtkgui/userbrowse.py:580
 #, fuzzy
 msgid "Nicotine: Upload Directory's Contents"
 msgstr "Stiahnuť adresár _do..."
 
-#: pynicotine/gtkgui/userbrowse.py:576 pynicotine/gtkgui/userbrowse.py:588
+#: pynicotine/gtkgui/userbrowse.py:581 pynicotine/gtkgui/userbrowse.py:593
 #, fuzzy
 msgid "Enter the User you wish to upload to:"
 msgstr "Zadajte užívateľa, o ktorom chcete získať informácie:"
 
-#: pynicotine/gtkgui/userbrowse.py:587
+#: pynicotine/gtkgui/userbrowse.py:592
 #, fuzzy
 msgid "Nicotine: Upload File(s)"
 msgstr "Stiahn_uť súbor(y)"
@@ -2570,71 +2562,54 @@ msgstr "Zostávajúci čas"
 msgid "Path"
 msgstr "Cesta"
 
-#: pynicotine/gtkgui/transferlist.py:60 pynicotine/transfers.py:340
+#: pynicotine/gtkgui/transferlist.py:60 pynicotine/gtkgui/transferlist.py:141
 msgid "Waiting for download"
 msgstr "Čakanie na stiahnutie"
 
-#: pynicotine/gtkgui/transferlist.py:61 pynicotine/transfers.py:308
-#: pynicotine/transfers.py:313 pynicotine/transfers.py:1076
+#: pynicotine/gtkgui/transferlist.py:61 pynicotine/gtkgui/transferlist.py:145
 msgid "Requesting file"
 msgstr "Požiadavok na súbor"
 
-#: pynicotine/gtkgui/transferlist.py:62 pynicotine/transfers.py:296
-#: pynicotine/transfers.py:300 pynicotine/transfers.py:658
+#: pynicotine/gtkgui/transferlist.py:62 pynicotine/gtkgui/transferlist.py:147
 msgid "Initializing transfer"
 msgstr "Spúšťanie prenosu"
 
-#: pynicotine/gtkgui/transferlist.py:63 pynicotine/transfers.py:139
-#: pynicotine/transfers.py:141 pynicotine/transfers.py:272
-#: pynicotine/transfers.py:279 pynicotine/transfers.py:566
+#: pynicotine/gtkgui/transferlist.py:63 pynicotine/gtkgui/transferlist.py:149
 msgid "Cannot connect"
 msgstr "Nepodarilo sa pripojiť"
 
-#: pynicotine/gtkgui/transferlist.py:64 pynicotine/transfers.py:261
-#: pynicotine/transfers.py:265
+#: pynicotine/gtkgui/transferlist.py:64 pynicotine/gtkgui/transferlist.py:151
 msgid "Waiting for peer to connect"
 msgstr "Čakanie na pripojenie vzdialeného užívateľa"
 
-#: pynicotine/gtkgui/transferlist.py:65 pynicotine/transfers.py:247
-#: pynicotine/transfers.py:251
+#: pynicotine/gtkgui/transferlist.py:65 pynicotine/gtkgui/transferlist.py:153
 msgid "Connecting"
 msgstr "Pripájanie sa"
 
-#: pynicotine/gtkgui/transferlist.py:66 pynicotine/transfers.py:235
-#: pynicotine/transfers.py:239
+#: pynicotine/gtkgui/transferlist.py:66 pynicotine/gtkgui/transferlist.py:155
 msgid "Getting address"
 msgstr "Získavanie adresy"
 
-#: pynicotine/gtkgui/transferlist.py:67 pynicotine/transfers.py:80
-#: pynicotine/transfers.py:139 pynicotine/transfers.py:151
-#: pynicotine/transfers.py:173 pynicotine/transfers.py:181
-#: pynicotine/transfers.py:376 pynicotine/transfers.py:497
-#: pynicotine/transfers.py:500
+#: pynicotine/gtkgui/transferlist.py:67 pynicotine/gtkgui/transferlist.py:157
 msgid "Getting status"
 msgstr "Získavanie stavu"
 
-#: pynicotine/gtkgui/transferlist.py:69 pynicotine/transfers.py:139
-#: pynicotine/transfers.py:145 pynicotine/transfers.py:1089
+#: pynicotine/gtkgui/transferlist.py:69 pynicotine/gtkgui/transferlist.py:161
 msgid "User logged off"
 msgstr "Užívateľ sa odpojil"
 
-#: pynicotine/gtkgui/transferlist.py:70 pynicotine/gtkgui/transferlist.py:254
-#: pynicotine/gtkgui/transferlist.py:280 pynicotine/gtkgui/transferlist.py:284
-#: pynicotine/transfers.py:139 pynicotine/transfers.py:141
-#: pynicotine/transfers.py:144 pynicotine/transfers.py:745
-#: pynicotine/transfers.py:1174
+#: pynicotine/gtkgui/transferlist.py:70 pynicotine/gtkgui/transferlist.py:163
+#: pynicotine/gtkgui/transferlist.py:299 pynicotine/gtkgui/transferlist.py:325
+#: pynicotine/gtkgui/transferlist.py:329
 msgid "Aborted"
 msgstr "Zrušené"
 
-#: pynicotine/gtkgui/transferlist.py:71 pynicotine/gtkgui/transferlist.py:277
-#: pynicotine/gtkgui/transferlist.py:284 pynicotine/transfers.py:149
-#: pynicotine/transfers.py:726 pynicotine/transfers.py:745
-#: pynicotine/transfers.py:831 pynicotine/transfers.py:1087
-#: pynicotine/transfers.py:1177 pynicotine/transfers.py:1204
+#: pynicotine/gtkgui/transferlist.py:71 pynicotine/gtkgui/transferlist.py:165
+#: pynicotine/gtkgui/transferlist.py:322 pynicotine/gtkgui/transferlist.py:329
 msgid "Finished"
 msgstr "Ukončené"
 
-#: pynicotine/gtkgui/transferlist.py:72 pynicotine/transfers.py:414
+#: pynicotine/gtkgui/transferlist.py:72 pynicotine/gtkgui/transferlist.py:143
 msgid "Waiting for upload"
 msgstr "Čakám na upload"
 
@@ -2653,15 +2628,40 @@ msgstr "%.2f MB"
 msgid "%.2f KB"
 msgstr "%.2f KB"
 
-#: pynicotine/gtkgui/transferlist.py:233
-#, fuzzy, python-format
-msgid "%s Files"
-msgstr "Súbory"
+#: pynicotine/gtkgui/transferlist.py:167
+#, fuzzy
+msgid "Paused"
+msgstr "užívateľ"
 
-#: pynicotine/gtkgui/transferlist.py:284 pynicotine/transfers.py:197
+#: pynicotine/gtkgui/transferlist.py:169 pynicotine/gtkgui/transferlist.py:329
 #, fuzzy
 msgid "Filtered"
 msgstr "Obsiahnutý text:"
+
+#: pynicotine/gtkgui/transferlist.py:171
+msgid "Connection closed by peer"
+msgstr "Spojenie ukončené vzdialeným užívateľom"
+
+#: pynicotine/gtkgui/transferlist.py:173
+msgid "File not shared"
+msgstr "Súbor nie je zdieľaný"
+
+#: pynicotine/gtkgui/transferlist.py:175
+msgid "Establishing connection"
+msgstr "Vytvára sa spojenie"
+
+#: pynicotine/gtkgui/transferlist.py:177
+msgid "Download directory error"
+msgstr "Chyba adresára pre sťahovanie súborov"
+
+#: pynicotine/gtkgui/transferlist.py:179
+msgid "Local file error"
+msgstr "Chyba lokálneho súboru"
+
+#: pynicotine/gtkgui/transferlist.py:278
+#, fuzzy, python-format
+msgid "%s Files"
+msgstr "Súbory"
 
 #: pynicotine/gtkgui/entrydialog.py:63
 msgid "<b>File Name:</b>"
@@ -3218,32 +3218,15 @@ msgstr "Odstránený alias %s: %s"
 msgid "No such alias (%(alias)s)\n"
 msgstr "Neznámy alias (%s)"
 
-#: pynicotine/transfers.py:77 pynicotine/transfers.py:78
-#: pynicotine/transfers.py:141 pynicotine/transfers.py:1174
-#: pynicotine/transfers.py:1176
-#, fuzzy
-msgid "Paused"
-msgstr "užívateľ"
-
 #: pynicotine/transfers.py:134
 #, python-format
 msgid "User %s does not exist"
 msgstr "Užívateľ %s neexistuje"
 
-#: pynicotine/transfers.py:139 pynicotine/transfers.py:224
-#: pynicotine/transfers.py:1078 pynicotine/transfers.py:1091
-msgid "Connection closed by peer"
-msgstr "Spojenie ukončené vzdialeným užívateľom"
-
 #: pynicotine/transfers.py:194
 #, fuzzy, python-format
 msgid "Filtering: %s"
 msgstr "Obsiahnutý text:"
-
-#: pynicotine/transfers.py:224 pynicotine/transfers.py:546
-#: pynicotine/transfers.py:555
-msgid "Establishing connection"
-msgstr "Vytvára sa spojenie"
 
 #: pynicotine/transfers.py:227
 #, fuzzy, python-format
@@ -3270,19 +3253,10 @@ msgstr "Uploady"
 msgid "Denied file request: %s"
 msgstr "Zakázaný požiadavok na súbor: %s"
 
-#: pynicotine/transfers.py:404 pynicotine/transfers.py:457
-#, python-format
-msgid "User limit of %i megabytes exceeded"
-msgstr "Užívateľský limit %i megabytov bol vyčerpaný"
-
 #: pynicotine/transfers.py:418
 #, python-format
 msgid "Upload request: %s"
 msgstr "Požiadavok na upload: %s"
-
-#: pynicotine/transfers.py:464
-msgid "File not shared"
-msgstr "Súbor nie je zdieľaný"
 
 #: pynicotine/transfers.py:465
 #, python-format
@@ -3299,20 +3273,11 @@ msgstr "Neznáma odpoveď na prenos: %s"
 msgid "OS error: %s"
 msgstr "Chyba OS: %s"
 
-#: pynicotine/transfers.py:597
-msgid "Download directory error"
-msgstr "Chyba adresára pre sťahovanie súborov"
-
 #: pynicotine/transfers.py:616 pynicotine/transfers.py:662
 #: pynicotine/transfers.py:752 pynicotine/transfers.py:1149
 #, python-format
 msgid "I/O error: %s"
 msgstr "Vstupno-výstupná chyba: %s"
-
-#: pynicotine/transfers.py:617 pynicotine/transfers.py:663
-#: pynicotine/transfers.py:753 pynicotine/transfers.py:1142
-msgid "Local file error"
-msgstr "Chyba lokálneho súboru"
 
 #: pynicotine/transfers.py:631
 #, python-format
@@ -3396,6 +3361,9 @@ msgstr "Upload zrušený, užívateľ %s, súbor %s"
 #, fuzzy, python-format
 msgid "Download aborted, user %(user)s file %(file)s"
 msgstr "Sťahovanie zrušené, užívateľ %s, súbor %s"
+
+#~ msgid "User limit of %i megabytes exceeded"
+#~ msgstr "Užívateľský limit %i megabytov bol vyčerpaný"
 
 #, fuzzy
 #~ msgid "Nicotine+: Download %i files?"
