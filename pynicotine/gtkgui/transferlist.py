@@ -36,13 +36,15 @@ class TransferList:
 		)
 		cols[0].set_sort_column_id(0)
 		cols[1].set_sort_column_id(1)
-		cols[2].set_sort_column_id(9)
+		cols[2].set_sort_column_id(2)
 		
 		# Only view progress renderer on transfers, not user tree parents
-		cols[3].set_sort_column_id(3)
+		self.transfersmodel.set_sort_func(2, self.status_sort_func, 2)
+		cols[3].set_sort_column_id(10)
+		
 		cols[3].set_attributes(cols[3].get_cell_renderers()[0], value=3, visible=13)
 		
-		cols[4].set_sort_column_id(10)
+		cols[4].set_sort_column_id(11)
 		cols[5].set_sort_column_id(5)
 		cols[6].set_sort_column_id(6)
 		cols[7].set_sort_column_id(7)
@@ -58,6 +60,7 @@ class TransferList:
 		
 	status_tab = [
 		_("Waiting for download"),
+		_("Waiting for upload"),
 		_("Requesting file"),
 		_("Initializing transfer"),
 		_("Cannot connect"),
@@ -65,11 +68,11 @@ class TransferList:
 		_("Connecting"),
 		_("Getting address"),
 		_("Getting status"),
-		"Queued",
+		_("Queued"),
 		_("User logged off"),
 		_("Aborted"),
+		_('Paused'),
 		_("Finished"),
-		_("Waiting for upload"),
 	]
 	
 	def CellDataFunc(self, column, cellrenderer, model, iter):
@@ -87,7 +90,7 @@ class TransferList:
 			else:
 				return -len(self.status_tab)
 	
-	def status_sort_func(self, model, iter1, iter2):
+	def status_sort_func(self, model, iter1, iter2, column):
 		val1 = self.get_status_index(model.get_value(iter1, 2))
 		val2 = self.get_status_index(model.get_value(iter2, 2))
 		return cmp(val1, val2)
@@ -296,7 +299,7 @@ class TransferList:
 		transfers = self.selected_transfers
 		for i in transfers:
 			self.frame.np.transfers.AbortTransfer(i, remove)
-			i.status = _("Aborted")
+			i.status = "Aborted"
 			i.req = None
 			if clear:
 				for t in self.list[:]:
@@ -319,15 +322,15 @@ class TransferList:
 		self.update()
 		
 	def OnClearFinished(self, widget):
-		self.ClearTransfers([_("Finished")])
+		self.ClearTransfers(["Finished"])
 	
 	def OnClearAborted(self, widget):
-		statuslist = [_("Aborted"),"Cancelled"]
+		statuslist = ["Aborted","Cancelled"]
 		self.ClearTransfers(statuslist)
 
 	def OnClearFinishedAborted(self, widget):
-		statuslist = [_("Aborted"),"Cancelled", _("Finished"), _("Filtered")]
+		statuslist = ["Aborted","Cancelled", "Finished", "Filtered"]
 		self.ClearTransfers(statuslist)
 
 	def OnClearQueued(self, widget):
-		self.ClearTransfers([_("Queued"), "Queued"])
+		self.ClearTransfers(["Queued"])
