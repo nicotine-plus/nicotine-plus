@@ -361,8 +361,7 @@ class UserBrowse(UserBrowseTab):
 					f += ["", ""]
 			
 			f += [file[2], rl, file[1]]
-			print file
-			print f
+
 			self.files[f[0]] = self.FileStore.append(f)
 		
 			
