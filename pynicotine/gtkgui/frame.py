@@ -1253,6 +1253,7 @@ class NicotineFrame(MainWindow):
 			self.np.sendNumSharedFoldersFiles()
 		self.brescanning = 0
 		self.logMessage(_("Rescanning Buddy Shares finished"))
+		self.BuddySharesProgress.hide()
 		
 	def _RescanFinished(self, data):
 		self.np.config.setShares(*data)
@@ -1263,14 +1264,15 @@ class NicotineFrame(MainWindow):
 			self.np.sendNumSharedFoldersFiles()
 		self.rescanning = 0
 		self.logMessage(_("Rescanning finished"))
+		self.SharesProgress.hide()
 		
 	def RescanFinished(self, data, type):
 		if type == "buddy":
 			gobject.idle_add(self._BuddyRescanFinished, data)
-			self.frame.BuddySharesProgress.hide()
+			
 		elif type == "normal":
 			gobject.idle_add(self._RescanFinished, data)
-			self.frame.SharesProgress.hide()
+			
 	
 	def OnSettings(self, widget):
 		self.settingswindow.SetSettings(self.np.config.sections)
