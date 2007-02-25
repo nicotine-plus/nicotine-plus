@@ -67,24 +67,54 @@ See MAINTAINERS file for the list of contributors""") % version)
 		self.label17.show()
 		self.frame1.set_label_widget(self.label17)
 		
-		VersionPython = gtk.Label("Python %s" % pythonversion)
-		VersionPython.set_justify(gtk.JUSTIFY_LEFT)
-		VersionPython.set_alignment(0, 0)
+		hboxpython = gtk.HBox(5)
+		hboxpython.show()
+		python = gtk.Label("Python:")
+		python.set_alignment(0, 0.5)
+		python.show()
+		
+		VersionPython = gtk.Label(pythonversion)
+		VersionPython.set_alignment(0, 0.5)
 		VersionPython.show()
+		
+		hboxpython.pack_start(python, True, True)
+		hboxpython.pack_start(VersionPython, True, True)
+		
+		hboxgtk = gtk.HBox(5)
+		hboxgtk.show()
+		
 		gtkversion = "%d.%d.%d" % (gtk.gtk_version[0], gtk.gtk_version[1], gtk.gtk_version[2])
-		VersionGTK = gtk.Label("GTK+ %s" % gtkversion)
-		VersionGTK.set_justify(gtk.JUSTIFY_LEFT)
-		VersionGTK.set_alignment(0, 0)
+		VersionGTK = gtk.Label(gtkversion)
+		
+		gtkplus = gtk.Label("GTK+:")
+		gtkplus.set_alignment(0, 0.5)
+		gtkplus.show()
+		
+		VersionGTK.set_alignment(0, 0.5)
 		VersionGTK.show()
+		
+		hboxgtk.pack_start(gtkplus, True, True)
+		hboxgtk.pack_start(VersionGTK, True, True)
+		
+		hboxpygtk = gtk.HBox(5)
+		hboxpygtk.show()
+		
 		pygtkversion = "%d.%d.%d" % (gtk.pygtk_version[0], gtk.pygtk_version[1], gtk.pygtk_version[2])
-		VersionPyGTK = gtk.Label("PyGTK+ %s" % pygtkversion)
-		VersionPyGTK.set_justify(gtk.JUSTIFY_LEFT)
-		VersionPyGTK.set_alignment(0, 0)
+		VersionPyGTK = gtk.Label(pygtkversion)
+			
+		pygtkplus = gtk.Label("PyGTK+:")
+		pygtkplus.set_alignment(0, 0.5)
+		pygtkplus.show()
+		
+		VersionPyGTK.set_alignment(0, 0.5)
 		VersionPyGTK.show()
 		
-		self.vbox2.pack_start(VersionPython, True, True)
-		self.vbox2.pack_start(VersionGTK, True, True)
-		self.vbox2.pack_start(VersionPyGTK, True, True)
+		hboxpygtk.pack_start(pygtkplus, True, True)
+		hboxpygtk.pack_start(VersionPyGTK, True, True)
+		
+		self.vbox2.pack_start(hboxpython, True, True)
+		self.vbox2.pack_start(hboxgtk, True, True)
+		self.vbox2.pack_start(hboxpygtk, True, True)
 		
 		self.vbox.pack_start(hbox, True, True)
 		self.vbox.pack_start(self.frame1, True, True)
