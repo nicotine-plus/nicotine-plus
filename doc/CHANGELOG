@@ -48,6 +48,7 @@ TRANSFERS
    unwanted files.
  * Downloads and Uploads popup menus have a new item under the user submenu,
    "Select User's Transfers".
+ * Uploads can be retried
 
    
 USER INFO

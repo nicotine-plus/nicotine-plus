@@ -26,9 +26,9 @@ class TransferList:
 		self.cols = cols = InitialiseColumns(widget,
 			[_("User"), 100, "text", self.CellDataFunc],
 			[_("Filename"), 250, "text", self.CellDataFunc],
-			[_("Status"), 150, "text", self.CellDataFunc],
+			[_("Status"), 140, "text", self.CellDataFunc],
 			[_("Percent"), 70, "progress"],
-			[_("Size"), 100, "text", self.CellDataFunc],
+			[_("Size"), 170, "text", self.CellDataFunc],
 			[_("Speed"), 50, "text", self.CellDataFunc],
 			[_("Time elapsed"), 70, "text", self.CellDataFunc],
 			[_("Time left"), 70, "text", self.CellDataFunc],
@@ -76,6 +76,7 @@ class TransferList:
 		_("Aborted"),
 		_('Paused'),
 		_("Queued"),
+		_("Transferring"),
 		_("Finished"),
 
 	]
@@ -173,6 +174,8 @@ class TransferList:
 			newstatus = _("Finished")
 		elif status == 'Paused':
 			newstatus = _("Paused")
+		elif status == 'Transferring':
+			newstatus = _("Transferring")
 		elif status == 'Filtered':
 			newstatus = _('Filtered')
 		elif status == 'Connection closed by peer':
@@ -206,7 +209,8 @@ class TransferList:
 				size = int(transfer.size)
 			except TypeError:
 				size = 0
-			hsize = self.Humanize(transfer.size, transfer.modifier)
+			hsize = "%s / %s" % (self.Humanize(currentbytes, None), self.Humanize(transfer.size, transfer.modifier ))
+			#self.Humanize(transfer.size, transfer.modifier)
 			try:
 				speed = "%.1f" % transfer.speed
 			except TypeError:
@@ -222,13 +226,14 @@ class TransferList:
 				left = ""
 			try:
                                 #print currentbytes
-				ist = int(currentbytes)
-				if  ist == int(transfer.size):
+				icurrentbytes = int(currentbytes)
+				if  icurrentbytes == int(transfer.size):
 					percent = 100
 				else:
-					percent = ((100 * ist)/ int(size))
+					percent = ((100 * icurrentbytes)/ int(size))
 			except Exception, e:
                                 #print e
+				icurrentbytes = 0
 				percent = 0
 
 			# Modify old transfer
@@ -245,11 +250,11 @@ class TransferList:
 				# Create Parent if it doesn't exist
 				if not self.users.has_key(user):
 					# ProgressRender not visible (last column sets 4th column)
-					self.users[user] = self.transfersmodel.append(None, [user, "", "", 0,  "", "", "", "", "", "", 0, 0, 0, False])
+					self.users[user] = self.transfersmodel.append(None, [user, "", "", 0,  "", "", "", "", "", "", 0, 0, 0,  False])
 				# Add a new transfer
 				shortfn = self.frame.np.decode(fn.split("\\")[-1])
 				path = self.frame.np.decode(transfer.path)
-				iter = self.transfersmodel.append(self.users[user], [user, shortfn, status, percent,  hsize, speed, elap, left, path, fn, istatus, size, currentbytes, True])
+				iter = self.transfersmodel.append(self.users[user], [user, shortfn, status, percent,  hsize, speed, elap, left, path, fn, istatus, size, icurrentbytes, True])
 				
 				# Expand path
 				path = self.transfersmodel.get_path(iter)
@@ -276,18 +281,28 @@ class TransferList:
 				del self.users[i]
 			else:
 				files = self.transfersmodel.iter_n_children(self.users[i])
-				totalsize = position = 1
+				ispeed = 0.0
+				totalsize = position = 0
 				for f in range(files):
 					iter = self.transfersmodel.iter_nth_child(self.users[i], f)
 					totalsize += self.transfersmodel.get_value(iter, 11)
 					position += self.transfersmodel.get_value(iter, 12)
+					status = self.transfersmodel.get_value(iter, 2)
+					if status == _("Transferring"):
+						str_speed = self.transfersmodel.get_value(iter, 5)
+						if str_speed != "":
+							ispeed += float(str_speed)
+					
+				try:
+					speed = "%.1f" % ispeed
+				except TypeError:
+					speed = str(ispeed)
+					
 				percent = ((100 * position)/ int(totalsize))
 				
-				self.transfersmodel.set(self.users[i], 2, _("%s Files") % files , 4, self.Humanize(totalsize, None ))
-				if percent:
-					self.transfersmodel.set(self.users[i], 3, percent, 13, True)
-				else:
-					self.transfersmodel.set(self.users[i], 3, percent, 13, False)
+				self.transfersmodel.set(self.users[i], 2, _("%s Files") % files , 3, percent, 4, "%s / %s" % (self.Humanize(position, None), self.Humanize(totalsize, None )), 5, speed, 11, ispeed, 13, True)
+				#self.transfersmodel.set(self.users[i],  )
+				
 		self.frame.UpdateBandwidth()
 
 	

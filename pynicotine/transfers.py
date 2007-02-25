@@ -635,7 +635,8 @@ class Transfers:
 						size = f.tell()
 						self.queue.put(slskmessages.DownloadFile(i.conn,size,f,i.size))
 						i.currentbytes = size
-						i.status = "%s" %(str(i.currentbytes))
+						#i.status = "%s" %(str(i.currentbytes))
+						i.status = "Transferring"
 						i.file = f
 						i.offset = size
 						i.starttime = time.time()
@@ -690,7 +691,8 @@ class Transfers:
 			try:
 				curtime = time.time()
 				i.currentbytes = msg.file.tell()
-				i.status = "%s" %(str(i.currentbytes))
+				#i.status = "%s" %(str(i.currentbytes))
+				i.status = "Transferring"
 				oldelapsed = i.timeelapsed
 				i.timeelapsed = self.getTime(curtime - i.starttime)
 				if curtime > i.starttime and i.currentbytes > i.offset:
@@ -699,7 +701,8 @@ class Transfers:
 				if i.size > i.currentbytes:
 					if oldelapsed == i.timeelapsed:
 						needupdate = 0
-					i.status = str(i.currentbytes)
+					#i.status = str(i.currentbytes)
+					i.status = "Transferring"
 				else:
 					msg.file.close()
 					basename = self.encode(string.split(i.filename,'\\')[-1], i.user)
@@ -820,7 +823,8 @@ class Transfers:
 			if i.size > i.currentbytes:
 				if oldelapsed == i.timeelapsed:
 					needupdate = 0
-				i.status = str(i.currentbytes)
+				#i.status = str(i.currentbytes)
+				i.status = "Transferring"
 			
 				if i.user in self.privilegedusers:
 					i.modifier = _("(privileged)")

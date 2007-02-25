@@ -49,11 +49,11 @@ def ChooseFile(parent = None, initialdir = "~", initialfile = ""):
 		res = dialog.get_filenames()
 	else:
 		res = None
-	dialog.hide()
-	gtk.gdk.threads_leave()
+	#dialog.hide()
+	#gtk.gdk.threads_leave()
 	dialog.destroy()
-	gtk.gdk.threads_enter()
-	del dialog
+	#gtk.gdk.threads_enter()
+	#del dialog
 	return res
 
 def ChooseImage(parent = None, initialdir = "~", initialfile = ""):
