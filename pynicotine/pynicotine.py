@@ -313,7 +313,7 @@ class NetworkEventProcessor:
 		utils.log = self.logMessage
 		files, streams, wordindex, fileindex, mtimes = utils.rescandirs(msg.shared, self.config.sections["transfers"]["sharedmtimes"], self.config.sections["transfers"]["sharedfiles"], self.config.sections["transfers"]["sharedfilesstreams"], msg.yieldfunction, self.frame.SharesProgress, name=_("Shares"))
 		self.frame.RescanFinished([files, streams, wordindex, fileindex, mtimes], "normal")
-		self.frame.SharesProgress.hide()
+		
 	
 	def RescanBuddyShares(self,msg):
 		import utils
@@ -321,7 +321,7 @@ class NetworkEventProcessor:
 		utils.log = self.logMessage
 		files, streams, wordindex, fileindex, mtimes = utils.rescandirs(msg.shared, self.config.sections["transfers"]["bsharedmtimes"], self.config.sections["transfers"]["bsharedfiles"], self.config.sections["transfers"]["bsharedfilesstreams"], msg.yieldfunction, self.frame.BuddySharesProgress, name=_("Buddy Shares"))
 		self.frame.RescanFinished([files, streams, wordindex, fileindex, mtimes], "buddy")
-		self.frame.BuddySharesProgress.hide()
+		
         
 	## Notify user of error when recieving or sending a message
 	# @param self NetworkEventProcessor (Class)

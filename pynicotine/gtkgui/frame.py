@@ -1267,8 +1267,10 @@ class NicotineFrame(MainWindow):
 	def RescanFinished(self, data, type):
 		if type == "buddy":
 			gobject.idle_add(self._BuddyRescanFinished, data)
+			self.frame.BuddySharesProgress.hide()
 		elif type == "normal":
 			gobject.idle_add(self._RescanFinished, data)
+			self.frame.SharesProgress.hide()
 	
 	def OnSettings(self, widget):
 		self.settingswindow.SetSettings(self.np.config.sections)
