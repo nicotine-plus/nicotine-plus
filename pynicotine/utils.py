@@ -7,7 +7,7 @@
 This module contains utility fuctions.
 """
 
-version = "1.2.7pre1"
+version = "1.2.7"
 latesturl = "http://nicotine-plus.sourceforge.net/LATEST"
 
 import string

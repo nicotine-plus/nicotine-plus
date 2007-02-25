@@ -1,6 +1,6 @@
 ChangeLog for Nicotine Plus
 
-Unreleased
+1.2.7
 
 GENERAL CHANGES
  * Window size is restored on startup
@@ -34,8 +34,9 @@ USERLIST
 CHAT
  * Usernames in the chat room log now have hotspots associated with them, 
    meaning they can be left-clicked on to load the same popup as you have in
-   the users list. This option can be disabled in UI Settings.
+   the users list.
  * Usernames are also colored based on Online, Away and Offline/In-Room status.
+   This option can be disabled in UI Settings.
  * "User is away/online/offline" messages removed from Private Chat
 
    
@@ -49,8 +50,12 @@ TRANSFERS
  * Downloads and Uploads popup menus have a new item under the user submenu,
    "Select User's Transfers".
  * Uploads can be retried
-
-   
+ * The Size column now has the current file position and the total file size
+ * Remotely-Initiated-Uploads will no longer be accepted if an Upload Queue 
+   Notification message has not been sent, first. This means versions of 
+   Nicotine+ earlier than 1.2.5 will not be able to initiate sending you files,
+   no matter what your allowed uploaders is set to.
+ 
 USER INFO
  * Stats were rearrange and the status of who is allowed to initiate uploads to
    the user was added.
@@ -79,8 +84,11 @@ NETWORKING
    (This is to save bandwidth)
    
 TRANSLATIONS
+ * ><))))*> updated the French translation
+ * (._.) and Meokater updated the German translation
  * nince78 updated the Dutch translation
  * Nicola updated the Italian Translation
+ * Added Finnish translation by Kalevi
  * Added Lithuanian Translation by Žygimantas
  * Added Euskare (Basque) translation by Julen of librezale.org
  
