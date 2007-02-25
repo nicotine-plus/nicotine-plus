@@ -63,6 +63,7 @@ class Transfers:
 		self.downloads = []
 		self.uploads = []
 		self.privilegedusers = []
+		self.RequestedUploadQueue = []
 		getstatus = {}
 		for i in downloads:
 			size = currentbytes = None
@@ -347,28 +348,8 @@ class Transfers:
 					self.downloadspanel.update(i)
 					break
 			else:
-				# Remote Uploads only for users in list (Added by daelstorm)
-				if transfers["remotedownloads"] == 1:
-					if transfers["uploadallowed"] == 2:
-						# Users in userlist
-						if user not in [i[0] for i in self.eventprocessor.userlist.userlist]:
-							# Not a buddy
-							return
-					elif transfers["uploadallowed"] == 0:
-						# No One can sent files to you
-						return
-					elif transfers["uploadallowed"] == 1:
-						# Everyone can sent files to you
-						pass
-					elif transfers["uploadallowed"] == 3:
-						# Trusted Users
-						if user not in [i[0] for i in self.eventprocessor.userlist.userlist]:
-							# Not a buddy
-							return
-						if user not in self.eventprocessor.userlist.trusted:
-							# Not Trusted
-							return
-						
+				
+				if self.CanUpload(user) and user in self.RequestedUploadQueue: 
 					path = ""
 					if self.eventprocessor.config.sections["transfers"]["uploadsinsubdirs"]:
 						parentdir = msg.file.split("\\")[-2]
@@ -465,7 +446,49 @@ class Transfers:
 		self.eventprocessor.logMessage(_("Queued upload request: %s") % str(vars(msg)),1)
 		self.checkUploadQueue()
 
-
+	def UploadQueueNotification(self, msg):
+		username = None
+		for i in self.peerconns:
+			if i.conn is msg.conn.conn:
+				username = i.username
+				break
+		if username is None:
+			return
+		if self.CanUpload(username):
+			self.eventprocessor.logMessage(_("Your buddy, %s, is attempting to upload file(s) to you.")%(username), None)
+			if username not in self.RequestedUploadQueue:
+				self.RequestedUploadQueue.append(username)
+		else:
+			self.queue.put(slskmessages.MessageUser(username, _("[Automatic Message] ")+_("You are not allowed to send me files.")) )
+			self.eventprocessor.logMessage(_("%s is not allowed to send you file(s), but is attempting to, anyway. Warning Sent.")%(username), None)
+			return
+			
+	def CanUpload(self, user):
+		transfers = self.eventprocessor.config.sections["transfers"]
+		if transfers["remotedownloads"] == 1:
+			# Remote Uploads only for users in list
+			if transfers["uploadallowed"] == 2:
+				# Users in userlist
+				if user not in [i[0] for i in self.eventprocessor.userlist.userlist]:
+					# Not a buddy
+					return
+			elif transfers["uploadallowed"] == 0:
+				# No One can sent files to you
+				return
+			elif transfers["uploadallowed"] == 1:
+				# Everyone can sent files to you
+				pass
+			elif transfers["uploadallowed"] == 3:
+				# Trusted Users
+				if user not in [i[0] for i in self.eventprocessor.userlist.userlist]:
+					# Not a buddy
+					return
+				if user not in self.eventprocessor.userlist.trusted:
+					# Not Trusted
+					return
+			return 1
+		return 0
+			
 	def QueueFailed(self, msg):
 		for i in self.peerconns:
 			if i.conn is msg.conn.conn:

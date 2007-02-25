@@ -982,21 +982,8 @@ class NetworkEventProcessor:
 
 	def UploadQueueNotification(self, msg):
 		self.logMessage("%s %s" %(msg.__class__, vars(msg)),1)
-		username = None
-		for i in self.peerconns:
-			if i.conn is msg.conn.conn:
-				username = i.username
-				break
-		if username is None:
-			return
-		if username in [i[0] for i in self.config.sections["server"]["userlist"]] and self.config.sections["transfers"]["remotedownloads"] == 1:
-			self.logMessage(_("Your buddy, %s, is attempting to upload file(s) to you.")%(username), None)
-		else:
-			self.queue.put(slskmessages.MessageUser(username, _("[Automatic Message] ")+_("You are not allowed to send me files.")) )
-			self.logMessage(_("%s is not allowed to send you file(s), but is attempting to, anyway. Warning Sent.")%(username), None)
-            
-
-
+		self.transfers.UploadQueueNotification(msg)
+			
 	def UploadFailed(self,msg):
 		if self.transfers is not None:
 			self.transfers.UploadFailed(msg)
