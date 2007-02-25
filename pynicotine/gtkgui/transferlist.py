@@ -282,7 +282,7 @@ class TransferList:
 			else:
 				files = self.transfersmodel.iter_n_children(self.users[i])
 				ispeed = 0.0
-				totalsize = position = 0
+				percent = totalsize = position = 0
 				for f in range(files):
 					iter = self.transfersmodel.iter_nth_child(self.users[i], f)
 					totalsize += self.transfersmodel.get_value(iter, 11)
@@ -297,8 +297,8 @@ class TransferList:
 					speed = "%.1f" % ispeed
 				except TypeError:
 					speed = str(ispeed)
-					
-				percent = ((100 * position)/ int(totalsize))
+				if totalsize > 0:
+					percent = ((100 * position)/ totalsize)
 				
 				self.transfersmodel.set(self.users[i], 2, _("%s Files") % files , 3, percent, 4, "%s / %s" % (self.Humanize(position, None), self.Humanize(totalsize, None )), 5, speed, 11, ispeed, 13, True)
 				#self.transfersmodel.set(self.users[i],  )
