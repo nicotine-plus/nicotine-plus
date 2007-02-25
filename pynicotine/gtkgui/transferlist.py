@@ -209,7 +209,7 @@ class TransferList:
 				size = int(transfer.size)
 			except TypeError:
 				size = 0
-			hsize = "%s / %s" % (self.Humanize(currentbytes, None), self.Humanize(transfer.size, transfer.modifier ))
+			hsize = "%s / %s" % (self.Humanize(currentbytes, None), self.Humanize(size, transfer.modifier ))
 			#self.Humanize(transfer.size, transfer.modifier)
 			try:
 				speed = "%.1f" % transfer.speed
