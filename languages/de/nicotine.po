@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nicotine\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-02-24 21:24+0200\n"
+"POT-Creation-Date: 2007-02-25 14:44+0200\n"
 "PO-Revision-Date: 2007-02-23 14:11+0200\n"
 "Last-Translator: daelstorm <daelstorm@gmail.com>\n"
 "Language-Team: Deutsch\n"
@@ -2560,102 +2560,108 @@ msgstr "Zeit verbleibend"
 msgid "Path"
 msgstr "Pfad"
 
-#: pynicotine/gtkgui/transferlist.py:62 pynicotine/gtkgui/transferlist.py:165
+#: pynicotine/gtkgui/transferlist.py:62 pynicotine/gtkgui/transferlist.py:166
 msgid "Getting status"
 msgstr "Ermittle Status"
 
-#: pynicotine/gtkgui/transferlist.py:63 pynicotine/gtkgui/transferlist.py:149
+#: pynicotine/gtkgui/transferlist.py:63 pynicotine/gtkgui/transferlist.py:150
 msgid "Waiting for download"
 msgstr "Warte auf Download"
 
-#: pynicotine/gtkgui/transferlist.py:64 pynicotine/gtkgui/transferlist.py:151
+#: pynicotine/gtkgui/transferlist.py:64 pynicotine/gtkgui/transferlist.py:152
 msgid "Waiting for upload"
 msgstr "Warte auf Upload"
 
-#: pynicotine/gtkgui/transferlist.py:65 pynicotine/gtkgui/transferlist.py:163
+#: pynicotine/gtkgui/transferlist.py:65 pynicotine/gtkgui/transferlist.py:164
 msgid "Getting address"
 msgstr "Ermittle Adresse"
 
-#: pynicotine/gtkgui/transferlist.py:66 pynicotine/gtkgui/transferlist.py:161
+#: pynicotine/gtkgui/transferlist.py:66 pynicotine/gtkgui/transferlist.py:162
 msgid "Connecting"
 msgstr "Verbinde"
 
-#: pynicotine/gtkgui/transferlist.py:67 pynicotine/gtkgui/transferlist.py:159
+#: pynicotine/gtkgui/transferlist.py:67 pynicotine/gtkgui/transferlist.py:160
 msgid "Waiting for peer to connect"
 msgstr "Warte auf Gegenseite"
 
-#: pynicotine/gtkgui/transferlist.py:68 pynicotine/gtkgui/transferlist.py:157
+#: pynicotine/gtkgui/transferlist.py:68 pynicotine/gtkgui/transferlist.py:158
 msgid "Cannot connect"
 msgstr "Verbinden nicht möglich"
 
-#: pynicotine/gtkgui/transferlist.py:69 pynicotine/gtkgui/transferlist.py:169
+#: pynicotine/gtkgui/transferlist.py:69 pynicotine/gtkgui/transferlist.py:170
 msgid "User logged off"
 msgstr "User abgemeldet"
 
-#: pynicotine/gtkgui/transferlist.py:70 pynicotine/gtkgui/transferlist.py:153
+#: pynicotine/gtkgui/transferlist.py:70 pynicotine/gtkgui/transferlist.py:154
 msgid "Requesting file"
 msgstr "Fordere Datei an"
 
-#: pynicotine/gtkgui/transferlist.py:71 pynicotine/gtkgui/transferlist.py:155
+#: pynicotine/gtkgui/transferlist.py:71 pynicotine/gtkgui/transferlist.py:156
 msgid "Initializing transfer"
 msgstr "Initialisiere Transfer"
 
-#: pynicotine/gtkgui/transferlist.py:72 pynicotine/gtkgui/transferlist.py:177
+#: pynicotine/gtkgui/transferlist.py:72 pynicotine/gtkgui/transferlist.py:180
 msgid "Filtered"
 msgstr "Reinfiltern:"
 
-#: pynicotine/gtkgui/transferlist.py:73 pynicotine/gtkgui/transferlist.py:185
+#: pynicotine/gtkgui/transferlist.py:73 pynicotine/gtkgui/transferlist.py:188
 msgid "Download directory error"
 msgstr "Download-Verzeichnis-Fehler"
 
-#: pynicotine/gtkgui/transferlist.py:74 pynicotine/gtkgui/transferlist.py:187
+#: pynicotine/gtkgui/transferlist.py:74 pynicotine/gtkgui/transferlist.py:190
 msgid "Local file error"
 msgstr "Lokaler Datei-Fehler"
 
-#: pynicotine/gtkgui/transferlist.py:75 pynicotine/gtkgui/transferlist.py:181
+#: pynicotine/gtkgui/transferlist.py:75 pynicotine/gtkgui/transferlist.py:184
 msgid "File not shared"
 msgstr "Datei nicht Freigegeben"
 
-#: pynicotine/gtkgui/transferlist.py:76 pynicotine/gtkgui/transferlist.py:171
+#: pynicotine/gtkgui/transferlist.py:76 pynicotine/gtkgui/transferlist.py:172
 msgid "Aborted"
 msgstr "Abgebrochen"
 
-#: pynicotine/gtkgui/transferlist.py:77 pynicotine/gtkgui/transferlist.py:175
+#: pynicotine/gtkgui/transferlist.py:77 pynicotine/gtkgui/transferlist.py:176
 msgid "Paused"
 msgstr "Pausiert"
 
-#: pynicotine/gtkgui/transferlist.py:78 pynicotine/gtkgui/transferlist.py:167
+#: pynicotine/gtkgui/transferlist.py:78 pynicotine/gtkgui/transferlist.py:168
 msgid "Queued"
 msgstr "In Warteschlange"
 
-#: pynicotine/gtkgui/transferlist.py:79 pynicotine/gtkgui/transferlist.py:173
+#: pynicotine/gtkgui/transferlist.py:79 pynicotine/gtkgui/transferlist.py:178
+#: pynicotine/gtkgui/transferlist.py:291
+#, fuzzy
+msgid "Transferring"
+msgstr "Transfers"
+
+#: pynicotine/gtkgui/transferlist.py:80 pynicotine/gtkgui/transferlist.py:174
 msgid "Finished"
 msgstr "Abgeschlossen"
 
-#: pynicotine/gtkgui/transferlist.py:136
+#: pynicotine/gtkgui/transferlist.py:137
 #, python-format
 msgid "%.2f GB"
 msgstr "%.2f GB"
 
-#: pynicotine/gtkgui/transferlist.py:138
+#: pynicotine/gtkgui/transferlist.py:139
 #, python-format
 msgid "%.2f MB"
 msgstr "%.2f MB"
 
-#: pynicotine/gtkgui/transferlist.py:140
+#: pynicotine/gtkgui/transferlist.py:141
 #, python-format
 msgid "%.2f KB"
 msgstr "%.2f KB"
 
-#: pynicotine/gtkgui/transferlist.py:179
+#: pynicotine/gtkgui/transferlist.py:182
 msgid "Connection closed by peer"
 msgstr "Verbindung von Gegenseite getrennt"
 
-#: pynicotine/gtkgui/transferlist.py:183
+#: pynicotine/gtkgui/transferlist.py:186
 msgid "Establishing connection"
 msgstr "Stelle Verbindung her"
 
-#: pynicotine/gtkgui/transferlist.py:286
+#: pynicotine/gtkgui/transferlist.py:303
 #, python-format
 msgid "%s Files"
 msgstr "%s Dateien"
@@ -2980,12 +2986,12 @@ msgid ""
 "disconnect us"
 msgstr "Jemand anderes meldet sich mit demselben Nick an, Server trennt uns"
 
-#: pynicotine/pynicotine.py:697 pynicotine/transfers.py:847
+#: pynicotine/pynicotine.py:697 pynicotine/transfers.py:851
 #, python-format
 msgid "Banned (%s)"
 msgstr "Gebannt (%s)"
 
-#: pynicotine/pynicotine.py:699 pynicotine/transfers.py:849
+#: pynicotine/pynicotine.py:699 pynicotine/transfers.py:853
 msgid "Banned"
 msgstr "Gebannt"
 
@@ -3318,8 +3324,8 @@ msgstr "Umbekannte Transfer-Antwort erhalten: %s"
 msgid "OS error: %s"
 msgstr "Betriebssystem-Fehler: %s"
 
-#: pynicotine/transfers.py:616 pynicotine/transfers.py:662
-#: pynicotine/transfers.py:752 pynicotine/transfers.py:1149
+#: pynicotine/transfers.py:616 pynicotine/transfers.py:663
+#: pynicotine/transfers.py:755 pynicotine/transfers.py:1153
 #, python-format
 msgid "I/O error: %s"
 msgstr "E/A-Fehler: %s"
@@ -3329,80 +3335,80 @@ msgstr "E/A-Fehler: %s"
 msgid "Can't get an exclusive lock on file - I/O error: %s"
 msgstr "Kann nicht auf Datei zugreifen - E/A Fehler: %s"
 
-#: pynicotine/transfers.py:642
+#: pynicotine/transfers.py:643
 #, python-format
 msgid "Download started: %s"
 msgstr "Download begonnen: %s"
 
-#: pynicotine/transfers.py:643
+#: pynicotine/transfers.py:644
 #, python-format
 msgid "Download started: user %(user)s, file %(file)s"
 msgstr "Download gestartet: User %(user)s, Datei %(file)s"
 
-#: pynicotine/transfers.py:660
+#: pynicotine/transfers.py:661
 #, python-format
 msgid "Upload started: user %(user)s, file %(file)s"
 msgstr "Upload gestartet: User %(user)s, Datei %(file)s"
 
-#: pynicotine/transfers.py:673
+#: pynicotine/transfers.py:674
 #, python-format
 msgid "Unknown file request: %s"
 msgstr "Unbekannte Datei-Anforderung: %s"
 
-#: pynicotine/transfers.py:725
+#: pynicotine/transfers.py:728
 #, python-format
 msgid "Couldn't move '%(tempfile)s' to '%(file)s'"
 msgstr "Kann '%(tempfile)s' nicht nach '%(file)s' verschieben"
 
-#: pynicotine/transfers.py:727
+#: pynicotine/transfers.py:730
 #, python-format
 msgid "Download finished: %(file)s"
 msgstr "Download abgeschlossen: %(file)s"
 
-#: pynicotine/transfers.py:728
+#: pynicotine/transfers.py:731
 #, python-format
 msgid "Download finished: user %(user)s, file %(file)s"
 msgstr "Download abgeschlossen: User %(user)s, Datei %(file)s"
 
-#: pynicotine/transfers.py:741
+#: pynicotine/transfers.py:744
 #, python-format
 msgid "Executed: %s"
 msgstr "Ausgeführt: %s"
 
-#: pynicotine/transfers.py:750
+#: pynicotine/transfers.py:753
 #, python-format
 msgid "Executed on folder: %s"
 msgstr "Angewendet auf Ordner: %s"
 
-#: pynicotine/transfers.py:826
+#: pynicotine/transfers.py:830
 msgid "(privileged)"
 msgstr "(privilegiert)"
 
-#: pynicotine/transfers.py:828
+#: pynicotine/transfers.py:832
 msgid "(friend)"
 msgstr "(Freund)"
 
-#: pynicotine/transfers.py:839
+#: pynicotine/transfers.py:843
 #, python-format
 msgid "Upload finished: %(user)s, file %(file)s"
 msgstr "Upload abgeschlossen: User %(user)s, Datei %(file)s"
 
-#: pynicotine/transfers.py:1093
+#: pynicotine/transfers.py:1097
 #, python-format
 msgid "Retrying failed download: %(user)s, file %(file)s"
 msgstr "Wiederhole fehlgeschlagenen Download: User %(user)s, Datei %(file)s"
 
-#: pynicotine/transfers.py:1135
+#: pynicotine/transfers.py:1139
 #, python-format
 msgid "File: %(file)s, place in queue: %(place)s"
 msgstr "Datei: %(file)s, Position in Schlange: %(place)s"
 
-#: pynicotine/transfers.py:1198
+#: pynicotine/transfers.py:1202
 #, python-format
 msgid "Upload aborted, user %(user)s file %(file)s"
 msgstr "Upload abgebrochen: User %(user)s, Datei %(file)s"
 
-#: pynicotine/transfers.py:1200
+#: pynicotine/transfers.py:1204
 #, python-format
 msgid "Download aborted, user %(user)s file %(file)s"
 msgstr "Download abgebrochen: User %(user)s, Datei %(file)s"
