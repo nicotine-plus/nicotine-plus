@@ -1,5 +1,14 @@
 ChangeLog for Nicotine Plus
 
+UNRELEASED
+
+GENERAL CHANGES
+ * The About Nicotine+ dialog now shows the versions of Python, PyGTK and GTK+
+ 
+BUGFIXES
+ * The shares scanning progress bar now disappears after scanning shares a 
+   little more frequently.
+
 1.2.7
 
 GENERAL CHANGES
@@ -84,7 +93,7 @@ NETWORKING
    (This is to save bandwidth)
    
 TRANSLATIONS
- * ><))))*> updated the French translation
+ * ><((((*> updated the French translation
  * (._.) and Meokater updated the German translation
  * nince78 updated the Dutch translation
  * Nicola updated the Italian Translation

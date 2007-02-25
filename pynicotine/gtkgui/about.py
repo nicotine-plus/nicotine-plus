@@ -1,7 +1,7 @@
 # Copyright (c) 2003-2004 Hyriand. All rights reserved.
 #
 import gtk
-import os
+import os, sys
 from pynicotine.utils import version
 import imagedata
 
@@ -48,7 +48,49 @@ See MAINTAINERS file for the list of contributors""") % version)
 		hbox.set_spacing(10)
 		hbox.pack_start(vbox, True, True)
 		hbox.pack_start(label, True, True)
+		sys.version_info
+		pythonversion = "%d.%d.%d" % (sys.version_info[0], sys.version_info[1], sys.version_info[2])
+		
+		self.frame1 = gtk.Frame()
+		self.frame1.show()
+		self.frame1.set_shadow_type(gtk.SHADOW_ETCHED_IN)
+		
+		
+		self.vbox2 = gtk.VBox()
+		self.vbox2.set_spacing(5)
+		self.vbox2.set_border_width(5)
+		self.frame1.add(self.vbox2)
+		
+		self.label17 = gtk.Label(_("Dependencies"))
+		self.label17.set_padding(0, 0)
+		self.label17.set_line_wrap(False)
+		self.label17.show()
+		self.frame1.set_label_widget(self.label17)
+		
+		VersionPython = gtk.Label("Python %s" % pythonversion)
+		VersionPython.set_justify(gtk.JUSTIFY_LEFT)
+		VersionPython.set_alignment(0, 0)
+		VersionPython.show()
+		gtkversion = "%d.%d.%d" % (gtk.gtk_version[0], gtk.gtk_version[1], gtk.gtk_version[2])
+		VersionGTK = gtk.Label("GTK+ %s" % gtkversion)
+		VersionGTK.set_justify(gtk.JUSTIFY_LEFT)
+		VersionGTK.set_alignment(0, 0)
+		VersionGTK.show()
+		pygtkversion = "%d.%d.%d" % (gtk.pygtk_version[0], gtk.pygtk_version[1], gtk.pygtk_version[2])
+		VersionPyGTK = gtk.Label("PyGTK+ %s" % pygtkversion)
+		VersionPyGTK.set_justify(gtk.JUSTIFY_LEFT)
+		VersionPyGTK.set_alignment(0, 0)
+		VersionPyGTK.show()
+		
+		self.vbox2.pack_start(VersionPython, True, True)
+		self.vbox2.pack_start(VersionGTK, True, True)
+		self.vbox2.pack_start(VersionPyGTK, True, True)
+		
 		self.vbox.pack_start(hbox, True, True)
+		self.vbox.pack_start(self.frame1, True, True)
+		
+		
+		
 		self.show_all()
 
 class AboutFiltersDialog(GenericAboutDialog):
