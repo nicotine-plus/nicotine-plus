@@ -403,10 +403,26 @@ class ChatRoom(ChatRoomTab):
 		self.vbox6.set_focus_child(self.entry3)
 		
 		self.logpopupmenu = PopupMenu(self.frame).setup(
+			("#" + _("Find"), self.OnFindLogWindow, gtk.STOCK_FIND),
 			("#" + _("Copy All"), self.OnCopyAllRoomLog, gtk.STOCK_COPY),
 			("#" + _("Clear log"), self.OnClearRoomLog, gtk.STOCK_CLEAR),
 		)
 		self.RoomLog.connect("button-press-event", self.OnPopupRoomLogMenu)
+		
+		self.chatpopmenu = PopupMenu(self.frame).setup(
+			("#" + _("Find"), self.OnFindChatLog, gtk.STOCK_FIND),
+			("#" + _("Copy"), self.OnCopyChatLog, gtk.STOCK_COPY),
+			("#" + _("Copy All"), self.OnCopyAllChatLog, gtk.STOCK_COPY),
+			("#" + _("Clear log"), self.OnClearChatLog, gtk.STOCK_CLEAR),
+		)
+		self.ChatScroll.connect("button-press-event", self.OnPopupChatRoomMenu)
+		
+	def OnFindLogWindow(self, widget):
+
+		self.frame.OnFindTextview(widget, self.RoomLog)
+		
+	def OnFindChatLog(self, widget):
+		self.frame.OnFindTextview(widget, self.ChatScroll)
 		
 	def get_custom_widget(self, id, string1, string2, int1, int2):
 		if id == "Ticker":
@@ -736,8 +752,8 @@ class ChatRoom(ChatRoomTab):
 				self.changecolour(self.tag_users[username], color)
 			else:
 				self.tag_users[user] = self.makecolour(buffer, color, user)
-		buffer = self.RoomLog.get_buffer()
-		self.tag_log = self.makecolour(buffer, "chatremote")
+		logbuffer = self.RoomLog.get_buffer()
+		self.tag_log = self.makecolour(logbuffer, "chatremote")
 		
 		self.frame.SetTextBG(self.ChatScroll)
 		self.frame.SetTextBG(self.RoomLog)
@@ -795,6 +811,7 @@ class ChatRoom(ChatRoomTab):
 		self.changecolour(self.tag_me, "chatme")
 		self.changecolour(self.tag_hilite, "chathilite")
 		self.changecolour(self.tag_log, "chatremote")
+
 		for username in self.users.keys():
 			color = self.getUserStatusColor(self.usersmodel.get_value(self.users[username], 4))
 			self.changecolour(self.tag_users[username], color)
@@ -884,7 +901,14 @@ class ChatRoom(ChatRoomTab):
 		if encoding != self.encoding:
 			self.encoding = encoding
 			SaveEncoding(self.frame.np, "roomencoding", self.room, self.encoding)
-
+	
+	def OnPopupChatRoomMenu(self, widget, event):
+		if event.button != 3:
+			return False
+		widget.emit_stop_by_name("button-press-event")
+		self.chatpopmenu.popup(None, None, None, event.button, event.time)
+		return True
+	
 	def OnPopupRoomLogMenu(self, widget, event):
 		if event.button != 3:
 			return False
@@ -897,9 +921,24 @@ class ChatRoom(ChatRoomTab):
 		log = self.RoomLog.get_buffer().get_text(start, end)
 		self.frame.clip.set_text(log)
 		
+	def OnCopyChatLog(self, widget):
+		bound = self.ChatScroll.get_buffer().get_selection_bounds()
+		if bound is not None and len(bound) == 2:
+			start, end = bound
+			log = self.ChatScroll.get_buffer().get_text(start, end)
+			self.frame.clip.set_text(log)
+		
+	def OnCopyAllChatLog(self, widget):
+		start, end = self.ChatScroll.get_buffer().get_bounds()
+		log = self.ChatScroll.get_buffer().get_text(start, end)
+		self.frame.clip.set_text(log)
+		
+	def OnClearChatLog(self, widget):
+		self.ChatScroll.get_buffer().set_text("")
+
 	def OnClearRoomLog(self, widget):
 		self.RoomLog.get_buffer().set_text("")
-
+	
 	def OnTickerClicked(self, widget, event):
 		if event.button != 1:
 			return False

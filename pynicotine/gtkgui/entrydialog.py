@@ -1,6 +1,6 @@
 # Stolen from dkuhlman's example
 #
-import gtk
+import gtk, gobject
 import os
 from pynicotine.utils import version
 import imagedata
@@ -334,6 +334,65 @@ def input_box(frame, title="Input Box", message="", default_text='',
 	win.show()
 	gtk.main()
 	return win.ret
+
+class FindDialog( gtk.Dialog):
+	def __init__(self, frame, message="", default_text='', textview=None, modal= True):
+		gtk.Dialog.__init__(self)
+		gobject.signal_new("find-click", gtk.Window, gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_STRING,))
+		self.textview = textview
+		self.nicotine = frame
+		self.connect("destroy", self.quit)
+		self.connect("delete_event", self.quit)
+		
+		self.nextPosition = None	
+		self.currentPosition = None
+
+		if modal:
+			self.set_modal(True)
+		box = gtk.VBox(spacing=10)
+		box.set_border_width(10)
+		self.vbox.pack_start(box)
+		box.show()
+		if message:
+			label = gtk.Label(message)
+			box.pack_start(label, False, False)
+			label.set_line_wrap(True)
+			label.show()
+		self.entry = gtk.Entry()
+	
+		box.pack_start(self.entry, False, False)
+		self.entry.show()
+		self.entry.grab_focus()
+		self.entry.connect("activate", self.previous)
+		Previousbutton = self.nicotine.CreateIconButton(gtk.STOCK_GO_BACK, "stock", self.previous, _("Previous"))
+		Previousbutton.set_flags(gtk.CAN_DEFAULT)
+		self.action_area.pack_start(Previousbutton)
+
+		Nextbutton = self.nicotine.CreateIconButton(gtk.STOCK_GO_FORWARD, "stock", self.next, _("Next"))
+		Nextbutton.set_flags(gtk.CAN_DEFAULT)
+		self.action_area.pack_start(Nextbutton)
+		Nextbutton.grab_default()
+		
+		
+		Cancelbutton = self.nicotine.CreateIconButton(gtk.STOCK_CANCEL, "stock", self.quit, _("Cancel"))
+		Cancelbutton.set_flags(gtk.CAN_DEFAULT)
+		self.action_area.pack_start(Cancelbutton)
+
+		self.query = None
+		
+	def quit(self, w=None, event=None):
+		self.query = None
+		self.hide()
+		
+	def next(self, button):
+		
+		self.query = self.entry.get_text()
+		self.emit("find-click", "next")
+			
+	def previous(self, button):
+		
+		self.query = self.entry.get_text()
+		self.emit("find-click", "previous")
 
 
 def Option_Box(frame, title="Option Box", message="", default_text='', 

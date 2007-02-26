@@ -147,7 +147,13 @@ class PrivateChat(PrivateChatTab):
 			("$" + _("Add user to list"), popup.OnAddToList),
 			("$" + _("Ban this user"), popup.OnBanUser),
 			("$" + _("Ignore this user"), popup.OnIgnoreUser),
+			("", None),
 			("#" + _("Client Version"), popup.OnVersion, gtk.STOCK_ABOUT ),
+			("", None),
+			("#" + _("Find"), self.OnFindChatLog, gtk.STOCK_FIND),
+			("#" + _("Copy"), self.OnCopyChatLog, gtk.STOCK_COPY),
+			("#" + _("Copy All"), self.OnCopyAllChatLog, gtk.STOCK_COPY),
+			("#" + _("Clear log"), self.OnClearChatLog, gtk.STOCK_CLEAR),
 			
 		)
 		popup.set_user(user)
@@ -190,7 +196,25 @@ class PrivateChat(PrivateChatTab):
 		self.popup_menu.popup(None, None, None, event.button, event.time)
 		self.ChatScroll.emit_stop_by_name("button_press_event")
 		return True
-
+	
+	def OnFindChatLog(self, widget):
+		self.frame.OnFindTextview(widget, self.ChatScroll)
+		
+	def OnCopyChatLog(self, widget):
+		bound = self.ChatScroll.get_buffer().get_selection_bounds()
+		if bound is not None and len(bound) == 2:
+			start, end = bound
+			log = self.ChatScroll.get_buffer().get_text(start, end)
+			self.frame.clip.set_text(log)
+		
+	def OnCopyAllChatLog(self, widget):
+		start, end = self.ChatScroll.get_buffer().get_bounds()
+		log = self.ChatScroll.get_buffer().get_text(start, end)
+		self.frame.clip.set_text(log)
+		
+	def OnClearChatLog(self, widget):
+		self.ChatScroll.get_buffer().set_text("")
+	
 	def ShowMessage(self, text, status=None):
 		if text[:4] == "/me ":
 			line = "* %s %s" % (self.user, text[4:])

@@ -134,6 +134,7 @@ class NicotineFrame(MainWindow):
 		self.roomlist = roomlist(self)
 		
 		self.logpopupmenu = PopupMenu(self).setup(
+			("#" + _("Find"), self.OnFindLogWindow, gtk.STOCK_FIND),
 			("#" + _("Copy All"), self.OnCopyAllLogWindow, gtk.STOCK_COPY),
 			("#" + _("Clear log"), self.OnClearLogWindow, gtk.STOCK_CLEAR)
 		)
@@ -910,6 +911,7 @@ class NicotineFrame(MainWindow):
 	def UpdateColours(self, first=0):
 		color = self.np.config.sections["ui"]["chatremote"]
 		font = self.np.config.sections["ui"]["chatfont"]
+
 		if color == "":
 			map = self.LogWindow.get_style().copy()
 			colour = map.text[gtk.STATE_NORMAL]
@@ -919,9 +921,9 @@ class NicotineFrame(MainWindow):
 			font = None
 		if first:
 			self.tag_log = self.LogWindow.get_buffer().create_tag()
-		
 		self.tag_log.set_property("font", font)
 		self.tag_log.set_property("foreground-gdk", colour)
+
 		
 		self.SetTextBG(self.LogWindow)
 		self.SetTextBG(self.UserList)
@@ -1656,7 +1658,70 @@ class NicotineFrame(MainWindow):
 		widget.emit_stop_by_name("button-press-event")
 		self.logpopupmenu.popup(None, None, None, event.button, event.time)
 		return True
+	
+	def OnFindLogWindow(self, widget):
 
+		self.OnFindTextview(widget, self.LogWindow)
+				
+	def OnFindTextview(self, widget, textview):
+
+		if not self.__dict__.has_key("FindDialog"):
+			self.FindDialog = FindDialog(self, _('Enter the string to search for:'), "", textview=textview, modal=False)
+			self.FindDialog.set_title(_('Nicotine+: Find string'))
+			self.FindDialog.set_icon(self.images["n"])
+			self.FindDialog.set_default_size(300, 100)
+			self.FindDialog.show()
+			
+			self.FindDialog.connect("find-click", self.OnFindClicked)
+			return
+		
+		self.FindDialog.textview = textview
+		self.FindDialog.currentPosition = None
+		self.FindDialog.nextPosition = None
+		self.FindDialog.entry.set_text("")
+		self.FindDialog.show()
+
+		
+	def OnFindClicked(self, widget, direction):
+
+		if self.FindDialog.textview is None:
+			return
+		textview = self.FindDialog.textview
+		buffer = textview.get_buffer()
+		start, end = buffer.get_bounds()
+		query = self.FindDialog.query
+		
+		textview.emit("select-all", False)
+		if self.FindDialog.currentPosition is None:
+
+			self.FindDialog.currentPosition = buffer.create_mark(None, start, False)
+			self.FindDialog.nextPosition = buffer.create_mark(None, start, False)
+		second = 0
+		if direction == "next":
+			current = buffer.get_mark("insert")
+			iter = buffer.get_iter_at_mark(current)
+			match1 = iter.forward_search(query, gtk.TEXT_SEARCH_TEXT_ONLY, limit=None)
+			if match1 is not None and len(match1) == 2:
+				
+				match_start, match_end = match1
+				buffer.place_cursor(match_end)
+				buffer.select_range( match_end, match_start)
+				textview.scroll_to_iter(match_start, 0)
+		
+		elif direction == "previous":
+			current = buffer.get_mark("insert")
+			iter = buffer.get_iter_at_mark(current)
+			match1 = iter.backward_search(query, gtk.TEXT_SEARCH_TEXT_ONLY, limit=None)
+			if match1 is not None and len(match1) == 2:
+				
+				match_start, match_end = match1
+				buffer.place_cursor(match_start)
+				buffer.select_range(match_start, match_end)
+				textview.scroll_to_iter(match_start, 0)
+			return
+	
+
+		
 	def OnCopyAllLogWindow(self, widget):
 		start, end = self.LogWindow.get_buffer().get_bounds()
 		log = self.LogWindow.get_buffer().get_text(start, end)
