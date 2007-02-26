@@ -47,10 +47,10 @@ class MetaDialog( gtk.Dialog):
 		
 		self.UF.add(vbox3)
 		
-		self.Username = self.MakeLabelStaticEntry( hbox2, "<b>Username:</b>", "", expand=False)
+		self.Username = self.MakeLabelStaticEntry( hbox2, "<b>%s:</b>" % _("Username"), "", expand=False)
 		self.BrowseUser = self.nicotine.CreateIconButton(gtk.STOCK_HARDDISK, "stock", self.OnBrowseUser, _("Browse"))
 		hbox2.pack_start(self.BrowseUser, False, False)
-		self.Position = self.MakeLabelStaticEntry( hbox2, "<b>List Position:</b>", "", expand=False, width=7, xalign=1)
+		self.Position = self.MakeLabelStaticEntry( hbox2, _("<b>List Position:</b>"), "", expand=False, width=7, xalign=1)
 		
 		vbox3.pack_start(hbox2, False, False)
 		
@@ -220,7 +220,7 @@ class MetaDialog( gtk.Dialog):
 		self.Immediate.set_text	(str(self.data[self.current]["immediate"] == "Y"))
 		
 		if self.data[self.current]["country"] not in ("", None):
-			self.Country.set_markup("<b>Country Code:</b> "+self.data[self.current]["country"] )
+			self.Country.set_markup(_("<b>Country Code:</b> ")+self.data[self.current]["country"] )
 			self.Country.show()
 		else:
 			self.Country.set_text("")

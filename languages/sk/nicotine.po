@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nicotine\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-02-26 16:02+0200\n"
+"POT-Creation-Date: 2007-02-26 18:11+0200\n"
 "PO-Revision-Date: 2007-02-25 02:36+0200\n"
 "Last-Translator: daelstorm <daelstorm@gmail.com>\n"
 "Language-Team: Jozef Riha <jose1711@gmail.com>\n"
@@ -2680,6 +2680,16 @@ msgstr "Vytvára sa spojenie"
 msgid "%s Files"
 msgstr "Súbory"
 
+#: pynicotine/gtkgui/entrydialog.py:50
+#, fuzzy
+msgid "Username"
+msgstr "Užívateľ"
+
+#: pynicotine/gtkgui/entrydialog.py:53
+#, fuzzy
+msgid "<b>List Position:</b>"
+msgstr "Bitový tok:"
+
 #: pynicotine/gtkgui/entrydialog.py:63
 msgid "<b>File Name:</b>"
 msgstr ""
@@ -2733,6 +2743,11 @@ msgstr ""
 #: pynicotine/gtkgui/entrydialog.py:124 pynicotine/gtkgui/entrydialog.py:371
 msgid "Next"
 msgstr ""
+
+#: pynicotine/gtkgui/entrydialog.py:223
+#, fuzzy
+msgid "<b>Country Code:</b> "
+msgstr "Farby chatu"
 
 #: pynicotine/gtkgui/entrydialog.py:304
 msgid "OK"
@@ -3383,12 +3398,12 @@ msgstr "Pokus o obnovenie sťahovania od užívateľa %(user)s, súbor %(file)s"
 msgid "File: %(file)s, place in queue: %(place)s"
 msgstr "Súbor: %s, poradie vo fronte: %s"
 
-#: pynicotine/transfers.py:1229
+#: pynicotine/transfers.py:1227
 #, python-format
 msgid "Upload aborted, user %(user)s file %(file)s"
 msgstr "Upload zrušený, užívateľ %(user)s, súbor %(file)s"
 
-#: pynicotine/transfers.py:1231
+#: pynicotine/transfers.py:1229
 #, python-format
 msgid "Download aborted, user %(user)s file %(file)s"
 msgstr "Sťahovanie zrušené, užívateľ %(user)s, súbor %(file)s"

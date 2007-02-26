@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nicotine+ 1.2.7\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-02-26 16:02+0200\n"
+"POT-Creation-Date: 2007-02-26 18:11+0200\n"
 "PO-Revision-Date: 2007-02-25 02:24+0200\n"
 "Last-Translator: daelstorm <daelstorm@gmail.com>\n"
 "Language-Team: Kari Viittanen <mr_auer@welho.net>\n"
@@ -2686,6 +2686,16 @@ msgstr "Muodostetaan yhteyttä"
 msgid "%s Files"
 msgstr "Tiedosto(a)/(t)"
 
+#: pynicotine/gtkgui/entrydialog.py:50
+#, fuzzy
+msgid "Username"
+msgstr "Käyttäjä"
+
+#: pynicotine/gtkgui/entrydialog.py:53
+#, fuzzy
+msgid "<b>List Position:</b>"
+msgstr "<b>Bittinopeus:</b>"
+
 #: pynicotine/gtkgui/entrydialog.py:63
 msgid "<b>File Name:</b>"
 msgstr ""
@@ -2736,6 +2746,11 @@ msgstr ""
 #: pynicotine/gtkgui/entrydialog.py:124 pynicotine/gtkgui/entrydialog.py:371
 msgid "Next"
 msgstr ""
+
+#: pynicotine/gtkgui/entrydialog.py:223
+#, fuzzy
+msgid "<b>Country Code:</b> "
+msgstr "<b>Bittinopeus:</b>"
 
 #: pynicotine/gtkgui/entrydialog.py:304
 msgid "OK"
@@ -3392,12 +3407,12 @@ msgstr ""
 msgid "File: %(file)s, place in queue: %(place)s"
 msgstr "Tiedosto: %(file)s, paikka jonossa: %(place)s"
 
-#: pynicotine/transfers.py:1229
+#: pynicotine/transfers.py:1227
 #, python-format
 msgid "Upload aborted, user %(user)s file %(file)s"
 msgstr "Lähtevä keskeytetty, käyttäjä %(user)s, tiedosto %(file)s"
 
-#: pynicotine/transfers.py:1231
+#: pynicotine/transfers.py:1229
 #, python-format
 msgid "Download aborted, user %(user)s file %(file)s"
 msgstr "Lataus keskeytetty, käyttäjä %(user)s, tiedosto %(file)s"

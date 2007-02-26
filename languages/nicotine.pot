@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-02-26 16:02+0200\n"
+"POT-Creation-Date: 2007-02-26 18:11+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2543,6 +2543,14 @@ msgstr ""
 msgid "%s Files"
 msgstr ""
 
+#: pynicotine/gtkgui/entrydialog.py:50
+msgid "Username"
+msgstr ""
+
+#: pynicotine/gtkgui/entrydialog.py:53
+msgid "<b>List Position:</b>"
+msgstr ""
+
 #: pynicotine/gtkgui/entrydialog.py:63
 msgid "<b>File Name:</b>"
 msgstr ""
@@ -2589,6 +2597,10 @@ msgstr ""
 
 #: pynicotine/gtkgui/entrydialog.py:124 pynicotine/gtkgui/entrydialog.py:371
 msgid "Next"
+msgstr ""
+
+#: pynicotine/gtkgui/entrydialog.py:223
+msgid "<b>Country Code:</b> "
 msgstr ""
 
 #: pynicotine/gtkgui/entrydialog.py:304
@@ -3208,12 +3220,12 @@ msgstr ""
 msgid "File: %(file)s, place in queue: %(place)s"
 msgstr ""
 
-#: pynicotine/transfers.py:1229
+#: pynicotine/transfers.py:1227
 #, python-format
 msgid "Upload aborted, user %(user)s file %(file)s"
 msgstr ""
 
-#: pynicotine/transfers.py:1231
+#: pynicotine/transfers.py:1229
 #, python-format
 msgid "Download aborted, user %(user)s file %(file)s"
 msgstr ""

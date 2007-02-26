@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-02-26 16:02+0200\n"
+"POT-Creation-Date: 2007-02-26 18:11+0200\n"
 "PO-Revision-Date: 2007-02-22 22:36+0200\n"
 "Last-Translator: daelstorm <daelstorm@gmail.com>\n"
 "Language-Team: nicola <info@nicoladimaria.info>\n"
@@ -3213,6 +3213,21 @@ msgstr "Connesione in corso"
 msgid "%s Files"
 msgstr "%s File"
 
+# pynicotine/gtkgui/chatrooms.py
+# pynicotine/gtkgui/search.py
+# pynicotine/gtkgui/transferlist.py
+# pynicotine/gtkgui/userlist.py
+#: pynicotine/gtkgui/entrydialog.py:50
+#, fuzzy
+msgid "Username"
+msgstr "Utente"
+
+# pynicotine/gtkgui/settings_glade.py
+#: pynicotine/gtkgui/entrydialog.py:53
+#, fuzzy
+msgid "<b>List Position:</b>"
+msgstr "<b>Bitrate:</b>"
+
 #: pynicotine/gtkgui/entrydialog.py:63
 msgid "<b>File Name:</b>"
 msgstr ""
@@ -3268,6 +3283,12 @@ msgstr ""
 #: pynicotine/gtkgui/entrydialog.py:124 pynicotine/gtkgui/entrydialog.py:371
 msgid "Next"
 msgstr ""
+
+# pynicotine/gtkgui/settings_glade.py
+#: pynicotine/gtkgui/entrydialog.py:223
+#, fuzzy
+msgid "<b>Country Code:</b> "
+msgstr "Colori della Chat"
 
 #: pynicotine/gtkgui/entrydialog.py:304
 msgid "OK"
@@ -4002,13 +4023,13 @@ msgid "File: %(file)s, place in queue: %(place)s"
 msgstr "File: %s, posto in coda: %s"
 
 # pynicotine/transfers.py
-#: pynicotine/transfers.py:1229
+#: pynicotine/transfers.py:1227
 #, python-format
 msgid "Upload aborted, user %(user)s file %(file)s"
 msgstr "Upload annullato: utente %(user)s, file %(file)s"
 
 # pynicotine/transfers.py
-#: pynicotine/transfers.py:1231
+#: pynicotine/transfers.py:1229
 #, python-format
 msgid "Download aborted, user %(user)s file %(file)s"
 msgstr "Download annullato: utente %(user)s, file %(file)s"

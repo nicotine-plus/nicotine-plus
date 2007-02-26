@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-02-26 16:02+0200\n"
+"POT-Creation-Date: 2007-02-26 18:11+0200\n"
 "PO-Revision-Date: 2007-02-22 08:59+0100\n"
 "Last-Translator: nince78\n"
 "Language-Team: \n"
@@ -2656,6 +2656,16 @@ msgstr "Bezig met verbinden"
 msgid "%s Files"
 msgstr "%s bestanden"
 
+#: pynicotine/gtkgui/entrydialog.py:50
+#, fuzzy
+msgid "Username"
+msgstr "Gebruiker"
+
+#: pynicotine/gtkgui/entrydialog.py:53
+#, fuzzy
+msgid "<b>List Position:</b>"
+msgstr "<b>Laatste snelheid:</b>"
+
 #: pynicotine/gtkgui/entrydialog.py:63
 msgid "<b>File Name:</b>"
 msgstr "<b>Bestandsnaam:</b>"
@@ -2703,6 +2713,11 @@ msgstr "Vorige"
 #: pynicotine/gtkgui/entrydialog.py:124 pynicotine/gtkgui/entrydialog.py:371
 msgid "Next"
 msgstr "Volgende"
+
+#: pynicotine/gtkgui/entrydialog.py:223
+#, fuzzy
+msgid "<b>Country Code:</b> "
+msgstr "<b>Kleuren</b>"
 
 #: pynicotine/gtkgui/entrydialog.py:304
 msgid "OK"
@@ -3413,12 +3428,12 @@ msgstr "Nieuwe poging inkomend: %(file)s van %(user)s mislukte"
 msgid "File: %(file)s, place in queue: %(place)s"
 msgstr "Bestand: %(file)s, plaats in rij: %(place)s"
 
-#: pynicotine/transfers.py:1229
+#: pynicotine/transfers.py:1227
 #, python-format
 msgid "Upload aborted, user %(user)s file %(file)s"
 msgstr "Uitgaand afgebroken: gebruiker %(user)s, bestand %(file)s"
 
-#: pynicotine/transfers.py:1231
+#: pynicotine/transfers.py:1229
 #, python-format
 msgid "Download aborted, user %(user)s file %(file)s"
 msgstr "Inkomend afgebroken: gebruiker %(user)s, bestand %(file)s"

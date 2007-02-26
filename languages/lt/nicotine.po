@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nicotine+ HEAD\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-02-26 16:02+0200\n"
+"POT-Creation-Date: 2007-02-26 18:11+0200\n"
 "PO-Revision-Date: 2006-10-22 15:34+0300\n"
 "Last-Translator: Žygimantas Beručka <zygis@gnome.org>\n"
 "Language-Team: Lithuanian <komp_lt@konferencijos.lt>\n"
@@ -2689,6 +2689,16 @@ msgstr "Įtvirtintas ryšys"
 msgid "%s Files"
 msgstr "Rinkmenos"
 
+#: pynicotine/gtkgui/entrydialog.py:50
+#, fuzzy
+msgid "Username"
+msgstr "Naudotojas"
+
+#: pynicotine/gtkgui/entrydialog.py:53
+#, fuzzy
+msgid "<b>List Position:</b>"
+msgstr "Bitų dažnis:"
+
 #: pynicotine/gtkgui/entrydialog.py:63
 msgid "<b>File Name:</b>"
 msgstr ""
@@ -2742,6 +2752,11 @@ msgstr ""
 #: pynicotine/gtkgui/entrydialog.py:124 pynicotine/gtkgui/entrydialog.py:371
 msgid "Next"
 msgstr ""
+
+#: pynicotine/gtkgui/entrydialog.py:223
+#, fuzzy
+msgid "<b>Country Code:</b> "
+msgstr "Pokalbių spalvos"
 
 #: pynicotine/gtkgui/entrydialog.py:304
 msgid "OK"
@@ -3383,12 +3398,12 @@ msgstr ""
 msgid "File: %(file)s, place in queue: %(place)s"
 msgstr "Rinkmena: %s, vieta eilėje: %s"
 
-#: pynicotine/transfers.py:1229
+#: pynicotine/transfers.py:1227
 #, fuzzy, python-format
 msgid "Upload aborted, user %(user)s file %(file)s"
 msgstr "Išsiuntimas nutrauktas, naudotojas %s rinkmena %s"
 
-#: pynicotine/transfers.py:1231
+#: pynicotine/transfers.py:1229
 #, fuzzy, python-format
 msgid "Download aborted, user %(user)s file %(file)s"
 msgstr "Atsiuntimas nutrauktas, naudotojas %s rinkmena %s"
