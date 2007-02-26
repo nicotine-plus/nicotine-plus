@@ -395,22 +395,71 @@ class FindDialog( gtk.Dialog):
 		self.emit("find-click", "previous")
 
 
-def Option_Box(frame, title="Option Box", message="", default_text='', 
-	modal= True, option1="", option2="", option3="", status=None ):
+def FolderDownload(frame, title="Option Box", message="", default_text='', modal= True, data=None, callback=None ):
 	
-	win = OptionDialog(frame, message, modal=modal, option3=option3, option1=option1, option2=option2, status=status)
+	win = FolderDownloadDialog(frame, message, modal=modal)
+	win.connect("response", callback, data)
 	win.set_title(title)
 	win.set_icon(frame.images["n"])
 	win.show()
-	gtk.main()
-	return win.ret
-
-class OptionDialog( gtk.Dialog):
-	def __init__(self, frame, message="",modal= False, option1="", option2="", option3="", status=None):
+	
+class FolderDownloadDialog( gtk.Dialog):
+	def __init__(self, frame, message="",modal= False, ):
 		gtk.Dialog.__init__(self)
 		self.connect("destroy", self.quit)
 		self.connect("delete_event", self.quit)
+		self.nicotine = frame
+
+		self.set_modal(modal)
+		box = gtk.VBox(spacing=10)
+		box.set_border_width(10)
+		self.vbox.pack_start(box)
+		box.show()
+		hbox = gtk.HBox(spacing=5)
+		hbox.set_border_width(5)
+		hbox.show()
+		box.pack_start(hbox)
+
+		image = gtk.Image()
+		image.set_padding(0, 0)
+		icon = gtk.STOCK_DIALOG_QUESTION
+		image.set_from_stock(icon, 4)
+		image.show()
+		hbox.pack_start(image)
+		if message:
+			label = gtk.Label(message)
+			hbox.pack_start(label)
+			label.set_line_wrap(True)
+			label.show()
+		hbox2 = gtk.HBox(spacing=5)
+		hbox2.set_border_width(5)
+		hbox2.show()
+		box.pack_start(hbox2)	
+
+		ok_button = self.add_button(gtk.STOCK_OK, gtk.RESPONSE_OK)
+		ok_button.grab_default()
+		cancel_button = self.add_button(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL)
 		
+	def quit(self, *args):
+		self.destroy()
+		
+def QuitBox(frame, title="Option Box", message="", default_text='', 
+	modal= True, status=None, tray=False, third="" ):
+	
+	win = OptionDialog(frame, message, modal=modal, status=status, option=tray, third=third)
+	win.connect("response", frame.on_quit_response)
+	win.set_title(title)
+	win.set_icon(frame.images["n"])
+	win.show()
+	return win
+		
+class OptionDialog( gtk.Dialog):
+	def __init__(self, frame, message="",modal= False, status=None, option=False, third=""):
+		gtk.Dialog.__init__(self)
+		self.connect("destroy", self.quit)
+		self.connect("delete_event", self.quit)
+		self.nicotine = frame
+
 		self.set_modal(modal)
 		box = gtk.VBox(spacing=10)
 		box.set_border_width(10)
@@ -435,42 +484,40 @@ class OptionDialog( gtk.Dialog):
 			hbox.pack_start(label)
 			label.set_line_wrap(True)
 			label.show()
+		hbox2 = gtk.HBox(spacing=5)
+		hbox2.set_border_width(5)
+		hbox2.show()
+		box.pack_start(hbox2)	
 		
+		ok_button = self.add_button(gtk.STOCK_OK, gtk.RESPONSE_OK)
+		ok_button.grab_default()
+		if option:
 			
-		if option1 is not None:
-			button1 = gtk.Button(option1)
-			button1.connect("clicked", self.option1)
-			button1.set_flags(gtk.CAN_DEFAULT)
-			self.action_area.pack_start(button1)
-			button1.show()
-		if option2 is not None:
-			button2 = gtk.Button(option2)
-			button2.connect("clicked", self.option2)
-			button2.set_flags(gtk.CAN_DEFAULT)
-			self.action_area.pack_start(button2)
-			button2.show()
-			button2.grab_default()
-		if option3 is not None:
-			button3 = gtk.Button(option3)
-			button3.connect("clicked", self.option3)
-			button3.set_flags(gtk.CAN_DEFAULT)
-			self.action_area.pack_start(button3)
-			button3.show()
-			self.ret = None
-        
-	def quit(self, w=None, event=None):
-		self.hide()
+			Alignment = gtk.Alignment(0.5, 0.5, 0, 0)
+			Alignment.show()
+		
+			Hbox = gtk.HBox(False, 2)
+			Hbox.show()
+			Hbox.set_spacing(2)
+		
+			image = gtk.Image()
+			image.set_padding(0, 0)
+			
+			image.set_from_stock(gtk.STOCK_GO_DOWN, 4)
+			image.show()
+			Hbox.pack_start(image, False, False, 0)
+			Alignment.add(Hbox)
+			if label:
+				Label = gtk.Label(third)
+				Label.set_padding(0, 0)
+				Label.show()
+				Hbox.pack_start(Label, False, False, 0)
+			
+			tray_button = self.add_button("", gtk.RESPONSE_REJECT)
+			tray_button.remove(tray_button.get_child())
+			tray_button.add(Alignment)
+
+		cancel_button = self.add_button(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL)
+
+	def quit(self, *args):
 		self.destroy()
-		gtk.main_quit()
-		
-	def option3(self, button3):
-		self.ret = 3
-		self.quit()
-		
-	def option1(self, button1):
-		self.ret = 1
-		self.quit()
-		
-	def option2(self, button2):
-		self.ret = 2
-		self.quit()

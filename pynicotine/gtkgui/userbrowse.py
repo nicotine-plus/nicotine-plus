@@ -462,16 +462,25 @@ class UserBrowse(UserBrowseTab):
 		numfiles = len(files)
 		go_ahead=0
 		if len(files) > 100:
-			go_ahead = Option_Box(self.frame, title=_('Nicotine+')+': Download %(num)i files?' % {'num':numfiles}, message=_("Are you sure you wish to download %(num)i files from %(user)s's directory %(folder)s?" %{ 'num':numfiles, 'user':self.user, 'folder':dir } ), option1=_("Ok"), option3=_("Cancel"), option2=None, status="warning" )
+			FolderDownload(self.frame, title=_('Nicotine+')+': Download %(num)i files?' % {'num':numfiles}, message=_("Are you sure you wish to download %(num)i files from %(user)s's directory %(folder)s?" %{ 'num':numfiles, 'user':self.user, 'folder':dir } ), data=files, callback=self.folder_download_response )
 			
 		else:
-			go_ahead = 1
-			
-		if go_ahead == 1:
 			# Good to go, we download these
 			for item in files:
 				file, localpath, size = item
 				self.frame.np.transfers.getFile(self.user, file, localpath,  size=size)
+				
+	def folder_download_response(self, dialog, response, files):
+
+		if response == gtk.RESPONSE_CANCEL:
+			dialog.destroy()
+			return
+		elif response == gtk.RESPONSE_OK:
+			dialog.destroy()
+			for item in files:
+				file, localpath, size = item
+				self.frame.np.transfers.getFile(self.user, file, localpath,  size=size)
+	
 			
 	def DownloadDirectoryRecursive(self, dir, prefix = ""):
 		# Find all files and add them to list

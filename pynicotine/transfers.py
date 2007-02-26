@@ -1182,10 +1182,12 @@ class Transfers:
 	def FolderContentsResponse(self,msg):
 		""" When we got a contents of a folder, get all the files in it, but
 		skip the files in subfolders"""
+		username = None
 		for i in self.peerconns:
 			if i.conn is msg.conn.conn:
 				username = i.username
-	
+		if username is None:
+			return
 		for i in msg.list.keys():
 			for j in msg.list[i].keys():
 				if os.path.commonprefix([i,j]) == j:

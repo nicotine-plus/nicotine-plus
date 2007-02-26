@@ -1010,15 +1010,19 @@ class NetworkEventProcessor:
 			for i in msg.list.keys():
 				for j in msg.list[i].keys():
 					if os.path.commonprefix([i,j]) == j:
-						numfiles = len(msg.list[i][j])
+						files = msg.list[i][j]
+						numfiles = len(files)
 						if numfiles > 100:
 							many=1
-							files = msg.list[i][j]
+							
+							
 							folder = j
 							
 							
 			if many:
+		
 				self.frame.download_large_folder(username, folder, files, numfiles, msg)
+				
 			else:
 				self.transfers.FolderContentsResponse(msg)
 		else:

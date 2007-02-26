@@ -129,6 +129,7 @@ class NicotineFrame(MainWindow):
 		self.MainWindow.resize(width, height)
 		self.MainWindow.set_position(gtk.WIN_POS_CENTER)
 		self.MainWindow.show()
+		self.minimized = False
 		del config2
 		self.clip = gtk.Clipboard(display=gtk.gdk.display_get_default(), selection="CLIPBOARD")
 		self.roomlist = roomlist(self)
@@ -140,25 +141,22 @@ class NicotineFrame(MainWindow):
 		)
 		def on_delete_event(widget, event):
 			if self.HAVE_TRAYICON:
-				option = Option_Box(self, title=_('Close Nicotine-Plus?'), message=_('Are you sure you wish to exit Nicotine-Plus at this time?'), option1=_("Exit"), option2=_("Send to Tray"), option3=_("Cancel"), status="question" )
+				option = QuitBox(self, title=_('Close Nicotine-Plus?'), message=_('Are you sure you wish to exit Nicotine-Plus at this time?'),tray=True, status="question", third=_("Send to tray") )
 			else:
-				option = Option_Box(self, title=_('Close Nicotine-Plus?'), message=_('Are you sure you wish to exit Nicotine-Plus at this time?'), option1=_("Exit"), option3=_("Cancel"), option2=None, status="question" )
-			if option is None:
-				pass
-			else:
-				if option == 2: 
-					if self.is_mapped:
-						self.MainWindow.unmap()
-						self.is_mapped = 0
-				elif option == 1:
-					if sys.platform == "win32" and self.trayicon:
-						self.trayicon.hide_icon()
-					gtk.main_quit()
-					return False
+				option = QuitBox(self, title=_('Close Nicotine-Plus?'), message=_('Are you sure you wish to exit Nicotine-Plus at this time?'), tray=False, status="question" )
+			
 			return True
 
 		self.MainWindow.connect("delete-event",on_delete_event)
-		
+		def window_state_event_cb(window, event):
+			if event.changed_mask & gtk.gdk.WINDOW_STATE_ICONIFIED:
+				if event.new_window_state & gtk.gdk.WINDOW_STATE_ICONIFIED:
+					self.minimized = 1
+				else:
+					self.minimized = 0
+
+
+		self.MainWindow.connect('window-state-event', window_state_event_cb)
 
 		self.transfermsgs = {}
 		self.transfermsgspostedtime = 0
@@ -599,15 +597,38 @@ class NicotineFrame(MainWindow):
 				os.system("%s %s &" % ( self.np.config.sections["ui"]["soundcommand"], path))
 	
 	def download_large_folder(self, username, folder, files, numfiles, msg):
-		gtk.gdk.threads_enter()
+		FolderDownload(self, title=_('Nicotine+')+': Download %(num)i files?' %{'num':numfiles}, message=_("Are you sure you wish to download %(num)i files from %(user)s's directory %(folder)s?") %{'num': numfiles, 'user':username, 'folder':folder } , modal=True, data=msg, callback=self.folder_download_response )
 		
-		
-		option = Option_Box(self, title=_('Nicotine+')+': Download %(num)i files?' %{'num':numfiles}, message=_("Are you sure you wish to download %(num)i files from %(user)s's directory %(folder)s?") %{'num': numfiles, 'user':username, 'folder':folder } , option1=_("Ok"), option3=_("Cancel"), option2=None )
-		gtk.gdk.threads_leave()
+	def folder_download_response(self, dialog, response, data): 
 
-		if option == 1:
-			self.np.transfers.FolderContentsResponse(msg)
+		if response == gtk.RESPONSE_CANCEL:
+			dialog.destroy()
+			return
+		elif response == gtk.RESPONSE_OK:
+			dialog.destroy()
+			self.np.transfers.FolderContentsResponse(data)
+			
+	def on_quit_response(self, dialog, response): 
+		dialog.destroy()
 		
+			
+		if response == gtk.RESPONSE_OK:
+			if sys.platform == "win32" and self.trayicon:
+				self.trayicon.hide_icon()
+			self.MainWindow.destroy()
+			gtk.main_quit()
+			
+		elif response == gtk.RESPONSE_CANCEL:
+			pass
+			
+		elif response == gtk.RESPONSE_REJECT:
+			
+			if self.is_mapped:
+				self.MainWindow.unmap()
+				self.is_mapped = 0
+
+	
+			
 	def OnGetUserInfo(self, widget):
 		text = self.UserinfoEntry.get_text()
 		if not text:
@@ -762,9 +783,15 @@ class NicotineFrame(MainWindow):
 			self.MainWindow.unmap()
 			self.is_mapped = 0
 		else:
+						
 			self.MainWindow.map()
+			# weird, but this allows us to easily a minimized nicotine from one
+			# desktop to another by clicking on the tray icon
+			if self.minimized:
+				self.MainWindow.present()
 			self.MainWindow.grab_focus()
 			self.is_mapped = 1
+	
 			
 	def OnTrayiconClicked(self, obj, event):
 		(w, h) = self.trayicon.get_size()
