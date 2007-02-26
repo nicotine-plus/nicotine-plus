@@ -26,12 +26,9 @@ def ChooseDir(parent = None, initialdir = "~"):
 		res = dialog.get_filenames()
 	else:
 		res = None
-	#dialog.hide()
-	#gtk.gdk.threads_leave()
+
 	dialog.destroy()
-	#gtk.gdk.threads_enter()
-	#gtk.main()
-	#del dialog
+
 	return res
 
 def ChooseFile(parent = None, initialdir = "~", initialfile = ""):
@@ -49,11 +46,9 @@ def ChooseFile(parent = None, initialdir = "~", initialfile = ""):
 		res = dialog.get_filenames()
 	else:
 		res = None
-	#dialog.hide()
-	#gtk.gdk.threads_leave()
+
 	dialog.destroy()
-	#gtk.gdk.threads_enter()
-	#del dialog
+
 	return res
 
 def ChooseImage(parent = None, initialdir = "~", initialfile = ""):
@@ -81,11 +76,9 @@ def ChooseImage(parent = None, initialdir = "~", initialfile = ""):
 		res = dialog.get_filenames()
 	else:
 		res = None
-	dialog.hide()
-	gtk.gdk.threads_leave()
+
 	dialog.destroy()
-	gtk.gdk.threads_enter()
-	del dialog
+
 	return res
 
 def update_preview_cb(file_chooser, preview):
