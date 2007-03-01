@@ -494,9 +494,7 @@ class SlskProtoThread(threading.Thread):
 						msg = self.peerclasses[msgtype](conn)
 						# Parse Peer Message and handle exceptions
 						try:
-							if len(buffer[8:msgsize+4]) != 0:
-								msg.parseNetworkMessage(buffer[8:msgsize+4])
-							
+							msg.parseNetworkMessage(buffer[8:msgsize+4])
 						except Exception, error:
 							host = port = _("unknown")
 							msgname = str(self.peerclasses[msgtype]).split(".")[-1]

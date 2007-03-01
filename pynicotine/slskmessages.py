@@ -706,7 +706,8 @@ class MinParentsInCache(Msg83):
 class Msg12547(Msg83):
 	def __init__(self,conn):
 		self.conn = conn
-		
+	def parseNetworkMessage(self, message):
+		pass
 
 class UploadQueueNotification(PeerMessage):
 	def __init__(self,conn):
