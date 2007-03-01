@@ -496,16 +496,30 @@ class SlskProtoThread(threading.Thread):
 						try:
 							msg.parseNetworkMessage(buffer[8:msgsize+4])
 						except Exception, error:
+							host = port = _("unknown")
 							msgname = str(self.peerclasses[msgtype]).split(".")[-1]
 							print "Error parsing %s:" % msgname, error
-							msgs.append(_("There was an error while unpacking Peer message type %(type)s size %(size)i contents %(buffer)s from user: %(user)s, %(host)s:%(port)s") %{'type':msgname, 'size':msgsize-4, 'buffer':buffer[8:msgsize+4].__repr__(), 'user':conn.init.user, 'host':conn.init.conn.addr[0], 'port':conn.init.conn.addr[1]})
+							if conn.init.conn.__dict__.has_key("addr"):
+								if conn.init.conn.addr is not None:
+									host = conn.init.conn.addr[0]
+									port = conn.init.conn.addr[1]
+							debugmessage = _("There was an error while unpacking Peer message type %(type)s size %(size)i contents %(buffer)s from user: %(user)s, %(host)s:%(port)s") %{'type':msgname, 'size':msgsize-4, 'buffer':buffer[8:msgsize+4].__repr__(), 'user':conn.init.user, 'host': host, 'port': port}
+							print debugmessage
+							msgs.append(debugmessage)
 						else:
 							msgs.append(msg)
 					except Exception, error:
-						print error, msgtype, conn
+						print "Error in message function:", error, msgtype, conn
 				else:
+					host = port = _("unknown")
+					if conn.init.conn.__dict__.has_key("addr"):
+						if conn.init.conn.addr is not None:
+							host = conn.init.conn.addr[0]
+							port = conn.init.conn.addr[1]
 					# Unknown Peer Message
-					msgs.append(_("Peer message type %(type)s size %(size)i contents %(buffer)s unknown, from user: %(user)s, %(host)s:%(port)s") %{'type':msgtype, 'size':msgsize-4, 'buffer':buffer[8:msgsize+4].__repr__(), 'user':conn.init.user, 'host':conn.init.conn.addr[0], 'port':conn.init.conn.addr[1]})
+					debugmessage = _("Peer message type %(type)s size %(size)i contents %(buffer)s unknown, from user: %(user)s, %(host)s:%(port)s") %{'type':msgtype, 'size':msgsize-4, 'buffer':buffer[8:msgsize+4].__repr__(), 'user':conn.init.user, 'host': host, 'port': port}
+					msgs.append(debugmessage)
+					print debugmessage
 					
 			else:
 				# Unknown Message type 

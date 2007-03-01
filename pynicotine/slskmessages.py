@@ -702,8 +702,10 @@ class SearchInactivityTimeout(Msg83):
 
 class MinParentsInCache(Msg83):
 	pass
+
 class Msg12547(Msg83):
-	pass
+	def __init__(self, *args):
+		pass
 
 class UploadQueueNotification(PeerMessage):
 	def __init__(self,conn):
