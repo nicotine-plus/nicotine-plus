@@ -14,6 +14,7 @@ from struct import unpack
 import imghdr
 
 from pynicotine import slskmessages
+from pynicotine.utils import _
 
 DECIMALSEP = ""
 
@@ -414,7 +415,7 @@ class PopupMenu(gtk.Menu):
 		self.frame.privatechats.SendMessage(self.user, "\x01VERSION\x01")
 		
 	def OnGivePrivileges(self, widget):
-		text = InputDialog(None, "Give privileges", "Give how many days of privileges do you wish to give this user?" )
+		text = InputDialog(None, _("Give privileges"), _("Give how many days of privileges do you wish to give this user?") )
 		if text:
 			try:
 				days = int(text)
