@@ -404,6 +404,7 @@ class ChatRoom(ChatRoomTab):
 		
 		self.logpopupmenu = PopupMenu(self.frame).setup(
 			("#" + _("Find"), self.OnFindLogWindow, gtk.STOCK_FIND),
+			("#" + _("Copy"), self.OnCopyRoomLog, gtk.STOCK_COPY),
 			("#" + _("Copy All"), self.OnCopyAllRoomLog, gtk.STOCK_COPY),
 			("#" + _("Clear log"), self.OnClearRoomLog, gtk.STOCK_CLEAR),
 		)
@@ -921,6 +922,13 @@ class ChatRoom(ChatRoomTab):
 		log = self.RoomLog.get_buffer().get_text(start, end)
 		self.frame.clip.set_text(log)
 		
+	def OnCopyRoomLog(self, widget):
+		bound = self.RoomLog.get_buffer().get_selection_bounds()
+		if bound is not None and len(bound) == 2:
+			start, end = bound
+			log = self.RoomLog.get_buffer().get_text(start, end)
+			self.frame.clip.set_text(log)
+			
 	def OnCopyChatLog(self, widget):
 		bound = self.ChatScroll.get_buffer().get_selection_bounds()
 		if bound is not None and len(bound) == 2:

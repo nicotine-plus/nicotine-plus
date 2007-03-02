@@ -136,6 +136,7 @@ class NicotineFrame(MainWindow):
 		
 		self.logpopupmenu = PopupMenu(self).setup(
 			("#" + _("Find"), self.OnFindLogWindow, gtk.STOCK_FIND),
+			("#" + _("Copy"), self.OnCopyLogWindow, gtk.STOCK_COPY),
 			("#" + _("Copy All"), self.OnCopyAllLogWindow, gtk.STOCK_COPY),
 			("#" + _("Clear log"), self.OnClearLogWindow, gtk.STOCK_CLEAR)
 		)
@@ -1748,7 +1749,13 @@ class NicotineFrame(MainWindow):
 			return
 	
 
-		
+	def OnCopyLogWindow(self, widget):
+		bound = self.LogWindow.get_buffer().get_selection_bounds()
+		if bound is not None and len(bound) == 2:
+			start, end = bound
+			log = self.LogWindow.get_buffer().get_text(start, end)
+			self.clip.set_text(log)
+			
 	def OnCopyAllLogWindow(self, widget):
 		start, end = self.LogWindow.get_buffer().get_bounds()
 		log = self.LogWindow.get_buffer().get_text(start, end)
