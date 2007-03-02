@@ -222,9 +222,18 @@ class SlskProtoThread(threading.Thread):
 				#print "Sockets open:", len(conns.keys()+connsinprogress.keys()+[p]+outsock), len(conns.keys()),  len(connsinprogress.keys())
 			except select.error, error:
 				# Error recieved; terminate networking loop
-				self._ui_callback([_("Major Socket Error: Networking terminated! %s" % str(error)) ])
 				print error
-				self._want_abort = 1
+				if len(error) == 2:
+					if error[0] == 4:
+						pass
+					else:
+						self._want_abort = 1
+						self._ui_callback([_("Major Socket Error: Networking terminated! %s" % str(error)) ])
+						
+				else:
+					self._want_abort = 1
+					self._ui_callback([_("Major Socket Error: Networking terminated! %s" % str(error)) ])
+
 			# Write Output
 			for i in conns.keys():
 				if i in output:
