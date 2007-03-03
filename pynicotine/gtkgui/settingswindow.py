@@ -122,13 +122,13 @@ class SharesFrame(settings_glade.SharesFrame):
 		if transfers["shared"] is not None:
 			for share in transfers["shared"]:
 				if homedir == share:
-					popupWarning(None, _("Warning"),_("Security Risk: you should not share your %s directory!" %place))
+					popupWarning(None, _("Warning"),_("Security Risk: you should not share your %s directory!") %place)
 				self.shareslist.append([recode(share), share])
 			self.shareddirs = transfers["shared"][:]
 		if transfers["buddyshared"] is not None:
 			for share in transfers["buddyshared"]:
 				if homedir == share:
-					popupWarning(None, _("Warning"),_("Security Risk: you should not share your %s directory!" %place))
+					popupWarning(None, _("Warning"),_("Security Risk: you should not share your %s directory!") %place)
 				self.bshareslist.append([recode(share), share])
 			self.bshareddirs = transfers["buddyshared"][:]
 		if transfers["rescanonstartup"] is not None:
@@ -1090,7 +1090,7 @@ class ImportFrame(settings_glade.ImportFrame):
 		Import = ImportWinSlskConfig(self.config, Path, Queue, Login, Rooms, BuddyList, BanList, IgnoreList, UserInfo, UserImage)
 		response = Import.Run()
 		if response == 0:
-			popupWarning(None, _("Nothing Imported"), _("Config files for the official Soulseek client not found in \"%s\"" % Path) )
+			popupWarning(None, _("Nothing Imported"), _("Config files for the official Soulseek client not found in \"%s\"") % Path )
 		elif response == 1:
 			popupWarning(None, _("Imported Soulseek Config"), _("Config was imported. You may need to restart for changes to take effect. If you changed your user name, buddy list or queue then you should restart immediately.") )
 			self.p.SetSettings(self.frame.np.config.sections)
