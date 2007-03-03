@@ -224,7 +224,7 @@ class SlskProtoThread(threading.Thread):
 				# Error recieved; terminate networking loop
 				print error
 				
-				if error == str("(4, 'Interrupted system call')"):
+				if str(error)[1] == "4":
 					pass
 				else:
 					self._want_abort = 1
