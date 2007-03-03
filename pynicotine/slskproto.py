@@ -223,7 +223,8 @@ class SlskProtoThread(threading.Thread):
 			except select.error, error:
 				# Error recieved; terminate networking loop
 				print error
-				if len(error) == 2:
+				
+				if type(error) is tuple and len(error) == 2:
 					if error[0] == 4:
 						pass
 					else:
