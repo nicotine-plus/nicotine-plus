@@ -114,7 +114,7 @@ class SharesFrame(settings_glade.SharesFrame):
 			self.DownloadDir.set_text(recode(transfers["downloaddir"]))
 		if transfers["sharedownloaddir"] is not None:
 			if homedir == transfers["downloaddir"] and transfers["sharedownloaddir"]:
-				popupWarning(None, _("Warning"),_("Security Risk: you should not share your %s directory!" %place))
+				popupWarning(None, _("Warning"),_("Security Risk: you should not share your %s directory!")  %place)
 			self.ShareDownloadDir.set_active(transfers["sharedownloaddir"])
 		self.shareslist.clear()
 		self.bshareslist.clear()
