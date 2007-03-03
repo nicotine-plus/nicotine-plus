@@ -222,7 +222,7 @@ class SlskProtoThread(threading.Thread):
 				#print "Sockets open:", len(conns.keys()+connsinprogress.keys()+[p]+outsock), len(conns.keys()),  len(connsinprogress.keys())
 			except select.error, error:
 				# Error recieved; terminate networking loop
-				print error
+				print error, type(error)
 				
 				if type(error) is tuple and len(error) == 2:
 					if error[0] == 4:
