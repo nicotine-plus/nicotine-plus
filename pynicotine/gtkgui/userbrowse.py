@@ -558,8 +558,8 @@ class UserBrowse(UserBrowseTab):
 		if dir == None:
 			return
 
-		ldir = dir[:-1].split("\\")[-1]
-		
+		ldir = dir.split("\\")[-1]
+
 		if user is None or user == "":
 			return
 		else:
