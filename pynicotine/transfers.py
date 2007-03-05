@@ -1070,10 +1070,17 @@ class Transfers:
 
 	def getTotalUploadsAllowed(self):
 		list = [i for i in self.uploads if i.conn is not None]
-		if self.bandwidthLimitReached():
-			return len(list)
+
+		useupslots = self.eventprocessor.config.sections["transfers"]["useupslots"]
+
+		if useupslots:
+			maxupslots = self.eventprocessor.config.sections["transfers"]["uploadslots"]
+			return maxupslots
 		else:
-			return len(list)+1
+			if self.bandwidthLimitReached():
+				return len(list)
+			else:
+				return len(list)+1
 	    
 	
 	def UserListPrivileged(self, user):
