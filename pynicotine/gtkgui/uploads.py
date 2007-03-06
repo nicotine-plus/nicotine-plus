@@ -161,7 +161,7 @@ class Uploads(TransferList):
 			items[i].set_sensitive(act)
 
 		return True
-		
+
 	def OnPopupMenu(self, widget, event, kind):
 		if kind == "mouse":
 			if event.button != 3:
@@ -171,7 +171,7 @@ class Uploads(TransferList):
 		self.selected_users = []
 		self.widget.get_selection().selected_foreach(self.SelectedTransfersCallback)
 
-		
+		self.SelectCurrentRow(event, kind)
 		
 		items = self.popup_menu.get_children()
 		if len(self.selected_users) != 1:

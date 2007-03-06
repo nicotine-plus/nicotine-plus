@@ -123,7 +123,27 @@ class TransferList:
 				break
 		if user not in self.selected_users:
 			self.selected_users.append(user)
-	
+		
+	def SelectCurrentRow(self, event, kind):
+		# If nothing is selected (first click was right-click?) try to select the 
+		# current row
+		if self.selected_transfers == [] and self.selected_users == [] and kind == "mouse":
+			d = self.widget.get_path_at_pos(int(event.x), int(event.y))
+			if d:
+				path, column, x, y = d
+				iter = self.transfersmodel.get_iter(path)
+				user = self.transfersmodel.get_value(iter, 0)
+				file = self.transfersmodel.get_value(iter, 9)
+				if path is not None:
+					sel = self.widget.get_selection()
+					sel.unselect_all()
+					sel.select_path(path)
+				for i in self.list:
+					if i.user == user and i.filename == file:
+						self.selected_transfers.append(i)
+						break
+				if user not in self.selected_users:
+					self.selected_users.append(user)
 	def Humanize(self, size, modifier):
 		if size is None:
 			return None

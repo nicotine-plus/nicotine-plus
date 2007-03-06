@@ -151,7 +151,8 @@ class Downloads(TransferList):
 			items[i].set_sensitive(act)
 
 		return True
-				
+
+					
 	def OnPopupMenu(self, widget, event, kind):
 		if kind == "mouse":
 			if event.button != 3:
@@ -160,7 +161,10 @@ class Downloads(TransferList):
 		self.selected_transfers = []
 		self.selected_users = []
 		self.widget.get_selection().selected_foreach(self.SelectedTransfersCallback)
-
+		
+		
+		self.SelectCurrentRow(event, kind)
+		
 		items = self.popup_menu.get_children()
 		if len(self.selected_users) != 1:
 			items[5].set_sensitive(False) # Users Menu
