@@ -162,23 +162,29 @@ class Downloads(TransferList):
 		self.widget.get_selection().selected_foreach(self.SelectedTransfersCallback)
 
 		items = self.popup_menu.get_children()
-		if len(self.selected_users) == 0:
-			items[0].set_sensitive(False)
-			items[4].set_sensitive(False)
-			items[5].set_sensitive(False)
+		if len(self.selected_users) != 1:
+			items[5].set_sensitive(False) # Users Menu
 		else:
-			items[0].set_sensitive(True)
-			items[4].set_sensitive(True)
-			items[5].set_sensitive(True)
+			items[5].set_sensitive(True) # Users Menu
+		if len(self.selected_transfers) == 0:
+			act = False
+		else:
+			act = True
+		items[0].set_sensitive(act) # Place
+		items[4].set_sensitive(act) # Send to player
+		
+			
 		
 		act = False
 		if len(self.selected_transfers) == 1:
 			act = True
-		items[2].set_sensitive(act)
-		items[3].set_sensitive(act)
+		items[2].set_sensitive(act) # Copy URL
+		items[3].set_sensitive(act) # Copy Folder URL
 		
 		
-		if len(self.selected_users) == 0:
+		if len(self.selected_users) == 0 or len(self.selected_transfers) == 0:
+			# Disable options
+			# Abort, Abort and Remove, retry, clear
 			act = False
 			for i in range(7, 12):
 				items[i].set_sensitive(act)

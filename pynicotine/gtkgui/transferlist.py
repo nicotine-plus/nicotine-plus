@@ -119,9 +119,10 @@ class TransferList:
 		for i in self.list:
 			if i.user == user and i.filename == file:
 				self.selected_transfers.append(i)
-				if user not in self.selected_users:
-					self.selected_users.append(user)
+				
 				break
+		if user not in self.selected_users:
+			self.selected_users.append(user)
 	
 	def Humanize(self, size, modifier):
 		if size is None:

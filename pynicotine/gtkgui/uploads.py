@@ -172,12 +172,18 @@ class Uploads(TransferList):
 		self.widget.get_selection().selected_foreach(self.SelectedTransfersCallback)
 
 		
+		
 		items = self.popup_menu.get_children()
-		if len(self.selected_users) == 0:
+		if len(self.selected_users) != 1:
+			items[3].set_sensitive(False) # Users Menu
 			act = False
 		else:
-			act = True
-		items[2].set_sensitive(act)
+			items[3].set_sensitive(True) # Users Menu
+			if len(self.selected_transfers) == 0:
+				act = False
+			else:
+				act = True
+		items[2].set_sensitive(act) # send to player
 		
 		for i in range(4, 8):
 			items[i].set_sensitive(act)
@@ -186,7 +192,7 @@ class Uploads(TransferList):
 			act = True
 		else:
 			act = False
-		items[3].set_sensitive(act)
+		items[3].set_sensitive(act) #
 			
 		act = False
 		if len(self.selected_transfers) == 1:
