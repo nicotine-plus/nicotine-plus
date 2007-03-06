@@ -118,7 +118,7 @@ class MetaDialog( gtk.Dialog):
 		
 		self.DownloadAll = self.nicotine.CreateIconButton(gtk.STOCK_GO_DOWN, "stock", self.OnDownloadAll, _("Download All"))
 		self.buttonbox.pack_start(self.DownloadAll, False, False)
-		self.Selected = self.MakeLabel( self.buttonbox, "<b>%s</b> File(s) Selected" % len(self.data.keys()),  expand=False,  xalign=1)
+		self.Selected = self.MakeLabel( self.buttonbox, _("<b>%s</b> File(s) Selected") % len(self.data.keys()),  expand=False,  xalign=1)
 		self.Previous = self.nicotine.CreateIconButton(gtk.STOCK_GO_BACK, "stock", self.OnPrevious, _("Previous"))
 		
 		self.Next = self.nicotine.CreateIconButton(gtk.STOCK_GO_FORWARD, "stock", self.OnNext, _("Next"))

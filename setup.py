@@ -17,7 +17,7 @@ mo_dirs = glob.glob(os.path.join("languages", "*"))
 files = []
 for mo in mo_dirs:
 	p, lang = os.path.split(mo)
-	if lang in ("msgfmtall.py", "nicotine.pot"):
+	if lang in ("msgfmtall.py", "mergeall", "nicotine.pot"):
 		continue
 	files.append((os.path.join(sys.prefix, "share", "locale", lang, "LC_MESSAGES"), [os.path.join(mo, "nicotine.mo")]))
 sound_dirs = glob.glob(os.path.join("sounds", "*"))
