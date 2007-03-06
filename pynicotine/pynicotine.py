@@ -809,7 +809,7 @@ class NetworkEventProcessor:
 			if ip is not None and port is not None:
 				self.logMessage(_("Blocking %(user)s from making a UserInfo request, possible spoofing attempt from IP %(ip)s port %(port)s") %{'user':user, 'ip':ip, 'port':port}, None)
 			else:
-				self.logMessage(_("Blocking %s from making a UserInfo request, possible possible spoofing attempt from an unknown IP & port") %(user), None)
+				self.logMessage(_("Blocking %s from making a UserInfo request, possible spoofing attempt from an unknown IP & port") %(user), None)
 			if msg.conn.conn != None:
 				self.queue.put(slskmessages.ConnClose(msg.conn.conn))
 			return

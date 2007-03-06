@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nicotine\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-03-06 12:05+0200\n"
-"PO-Revision-Date: 2007-03-06 19:14+0200\n"
+"POT-Creation-Date: 2007-03-06 22:54+0200\n"
+"PO-Revision-Date: 2007-03-06 23:08+0200\n"
 "Last-Translator: daelstorm <daelstorm@gmail.com>\n"
 "Language-Team: Hyriand <hyriand@thegraveyard.org>\n"
 "MIME-Version: 1.0\n"
@@ -557,7 +557,7 @@ msgstr "Effacer les groupes"
 #: pynicotine/gtkgui/frame.py:523
 #: pynicotine/gtkgui/frame.py:525
 #: pynicotine/gtkgui/frame.py:601
-#: pynicotine/gtkgui/userbrowse.py:469
+#: pynicotine/gtkgui/userbrowse.py:478
 msgid "Nicotine+"
 msgstr "Nicotine+"
 
@@ -567,17 +567,15 @@ msgstr "Nicotine+"
 #: pynicotine/gtkgui/chatrooms.py:406
 #: pynicotine/gtkgui/chatrooms.py:414
 #: pynicotine/gtkgui/privatechat.py:153
-#, fuzzy
 msgid "Find"
-msgstr "Terminé"
+msgstr ""
 
 #: pynicotine/gtkgui/frame.py:139
 #: pynicotine/gtkgui/chatrooms.py:407
 #: pynicotine/gtkgui/chatrooms.py:415
 #: pynicotine/gtkgui/privatechat.py:154
-#, fuzzy
 msgid "Copy"
-msgstr "Copier tout"
+msgstr "Copier"
 
 #: pynicotine/gtkgui/frame.py:140
 #: pynicotine/gtkgui/chatrooms.py:408
@@ -730,14 +728,14 @@ msgid "%(user)s mentioned you in the %(room)s room"
 msgstr "%(user)s vous a mentionné dans le salon %(room)s"
 
 #: pynicotine/gtkgui/frame.py:601
-#: pynicotine/gtkgui/userbrowse.py:469
+#: pynicotine/gtkgui/userbrowse.py:478
 #, python-format
 msgid "Are you sure you wish to download %(num)i files from %(user)s's directory %(folder)s?"
 msgstr "Etes-vous sûr de vouloir télécharger %(num)i fichiers à partir du répertoire %(folder)s de %(user)s"
 
 # pynicotine/config.py
 #: pynicotine/gtkgui/frame.py:654
-#: pynicotine/gtkgui/userbrowse.py:380
+#: pynicotine/gtkgui/userbrowse.py:389
 #, python-format
 msgid "Can't create directory '%(folder)s', reported error: %(error)s"
 msgstr "Ne peut pas créer le répertoire '%(folder)s', l'erreur donnée est: %(error)s"
@@ -922,15 +920,13 @@ msgid "Invalid SoulSeek meta-url: %s"
 msgstr "Meta-URL SoulSeek invalide: %s"
 
 #: pynicotine/gtkgui/frame.py:1697
-#, fuzzy
 msgid "Enter the string to search for:"
-msgstr "Entrer le nom d'utilisateur pour Envoyer"
+msgstr ""
 
 # pynicotine/gtkgui/settings_glade.py
 #: pynicotine/gtkgui/frame.py:1698
-#, fuzzy
 msgid "Nicotine+: Find string"
-msgstr "Paramètres de Nicotine"
+msgstr ""
 
 #: pynicotine/gtkgui/frame.py:1768
 msgid "Add thing I like"
@@ -2007,31 +2003,31 @@ msgstr "Té_lécharger ce(s) fichier(s)"
 
 # pynicotine/gtkgui/browsetreemodels.py
 # pynicotine/gtkgui/search.py
-#: pynicotine/gtkgui/userbrowse.py:356
+#: pynicotine/gtkgui/userbrowse.py:365
 #: pynicotine/gtkgui/search.py:529
 #: pynicotine/gtkgui/browsetreemodels.py:148
 msgid " (vbr)"
 msgstr " (vbr)"
 
 # pynicotine/config.py
-#: pynicotine/gtkgui/userbrowse.py:390
+#: pynicotine/gtkgui/userbrowse.py:399
 #, python-format
 msgid "Can't save shares, '%(user)s', reported error: %(error)s"
 msgstr "Ne peut sauvegarder le partage, '%(user)s', erreur rapportée: %(error)s"
 
 # pynicotine/gtkgui/userbrowse.py
-#: pynicotine/gtkgui/userbrowse.py:593
+#: pynicotine/gtkgui/userbrowse.py:602
 msgid "Nicotine: Upload Directory's Contents"
 msgstr "Nicotine+: Envoyer le contenu du répertoire"
 
-#: pynicotine/gtkgui/userbrowse.py:594
-#: pynicotine/gtkgui/userbrowse.py:606
+#: pynicotine/gtkgui/userbrowse.py:603
+#: pynicotine/gtkgui/userbrowse.py:615
 msgid "Enter the User you wish to upload to:"
 msgstr "Entrer le nom d'utilisateur pour Envoyer"
 
 # pynicotine/gtkgui/search.py
 # pynicotine/gtkgui/userbrowse.py
-#: pynicotine/gtkgui/userbrowse.py:605
+#: pynicotine/gtkgui/userbrowse.py:614
 msgid "Nicotine: Upload File(s)"
 msgstr "Envoyer ce(s) fichier(s)"
 
@@ -2186,12 +2182,11 @@ msgstr "<b>Méta-données</b> pour une requête de recherche sur: <i>%s</i>"
 
 # pynicotine/gtkgui/nicotine_glade.py
 #: pynicotine/gtkgui/utils.py:418
-#, fuzzy
 msgid "Give privileges"
-msgstr "Donner des pri_vilèges"
+msgstr "Donner des privilèges"
 
 #: pynicotine/gtkgui/utils.py:418
-msgid "Give how many days of privileges do you wish to give this user?"
+msgid "Give how many days of global privileges to this user?"
 msgstr ""
 
 # pynicotine/gtkgui/frame.py
@@ -3118,103 +3113,103 @@ msgstr "Chemin"
 # pynicotine/transfers.py
 # pynicotine/gtkgui/transferlist.py
 #: pynicotine/gtkgui/transferlist.py:62
-#: pynicotine/gtkgui/transferlist.py:166
+#: pynicotine/gtkgui/transferlist.py:187
 msgid "Getting status"
 msgstr "Recherche le statut"
 
 # pynicotine/transfers.py
 # pynicotine/gtkgui/transferlist.py
 #: pynicotine/gtkgui/transferlist.py:63
-#: pynicotine/gtkgui/transferlist.py:150
+#: pynicotine/gtkgui/transferlist.py:171
 msgid "Waiting for download"
 msgstr "En attente du téléchargement"
 
 # pynicotine/transfers.py
 # pynicotine/gtkgui/transferlist.py
 #: pynicotine/gtkgui/transferlist.py:64
-#: pynicotine/gtkgui/transferlist.py:152
+#: pynicotine/gtkgui/transferlist.py:173
 msgid "Waiting for upload"
 msgstr "En attente d'envoi"
 
 # pynicotine/transfers.py
 # pynicotine/gtkgui/transferlist.py
 #: pynicotine/gtkgui/transferlist.py:65
-#: pynicotine/gtkgui/transferlist.py:164
+#: pynicotine/gtkgui/transferlist.py:185
 msgid "Getting address"
 msgstr "Recherche l'adresse"
 
 # pynicotine/transfers.py
 # pynicotine/gtkgui/transferlist.py
 #: pynicotine/gtkgui/transferlist.py:66
-#: pynicotine/gtkgui/transferlist.py:162
+#: pynicotine/gtkgui/transferlist.py:183
 msgid "Connecting"
 msgstr "En cours de connexion"
 
 # pynicotine/transfers.py
 # pynicotine/gtkgui/transferlist.py
 #: pynicotine/gtkgui/transferlist.py:67
-#: pynicotine/gtkgui/transferlist.py:160
+#: pynicotine/gtkgui/transferlist.py:181
 msgid "Waiting for peer to connect"
 msgstr "En attente du correspondant"
 
 # pynicotine/transfers.py
 # pynicotine/gtkgui/transferlist.py
 #: pynicotine/gtkgui/transferlist.py:68
-#: pynicotine/gtkgui/transferlist.py:158
+#: pynicotine/gtkgui/transferlist.py:179
 msgid "Cannot connect"
 msgstr "Ne peut se connecter"
 
 # pynicotine/transfers.py
 # pynicotine/gtkgui/transferlist.py
 #: pynicotine/gtkgui/transferlist.py:69
-#: pynicotine/gtkgui/transferlist.py:170
+#: pynicotine/gtkgui/transferlist.py:191
 msgid "User logged off"
 msgstr "Utilisateur déconnecté"
 
 # pynicotine/transfers.py
 # pynicotine/gtkgui/transferlist.py
 #: pynicotine/gtkgui/transferlist.py:70
-#: pynicotine/gtkgui/transferlist.py:154
+#: pynicotine/gtkgui/transferlist.py:175
 msgid "Requesting file"
 msgstr "Demande le fichier"
 
 # pynicotine/transfers.py
 # pynicotine/gtkgui/transferlist.py
 #: pynicotine/gtkgui/transferlist.py:71
-#: pynicotine/gtkgui/transferlist.py:156
+#: pynicotine/gtkgui/transferlist.py:177
 msgid "Initializing transfer"
 msgstr "Initialisation du transfert"
 
 # pynicotine/gtkgui/nicotine_glade.py
 # pynicotine/gtkgui/settings_glade.py
 #: pynicotine/gtkgui/transferlist.py:72
-#: pynicotine/gtkgui/transferlist.py:180
+#: pynicotine/gtkgui/transferlist.py:201
 msgid "Filtered"
 msgstr "Filtre d'inclusion"
 
 # pynicotine/transfers.py
 #: pynicotine/gtkgui/transferlist.py:73
-#: pynicotine/gtkgui/transferlist.py:188
+#: pynicotine/gtkgui/transferlist.py:209
 msgid "Download directory error"
 msgstr "Erreur lors du téléchargement du répertoire"
 
 # pynicotine/transfers.py
 #: pynicotine/gtkgui/transferlist.py:74
-#: pynicotine/gtkgui/transferlist.py:190
+#: pynicotine/gtkgui/transferlist.py:211
 msgid "Local file error"
 msgstr "Erreur locale de fichier"
 
 # pynicotine/transfers.py
 # pynicotine/gtkgui/transferlist.py
 #: pynicotine/gtkgui/transferlist.py:75
-#: pynicotine/gtkgui/transferlist.py:184
+#: pynicotine/gtkgui/transferlist.py:205
 msgid "File not shared"
 msgstr "Fichier non partagé"
 
 # pynicotine/transfers.py
 # pynicotine/gtkgui/transferlist.py
 #: pynicotine/gtkgui/transferlist.py:76
-#: pynicotine/gtkgui/transferlist.py:172
+#: pynicotine/gtkgui/transferlist.py:193
 msgid "Aborted"
 msgstr "Annulé"
 
@@ -3223,63 +3218,62 @@ msgstr "Annulé"
 # pynicotine/gtkgui/transferlist.py
 # pynicotine/gtkgui/userlist.py
 #: pynicotine/gtkgui/transferlist.py:77
-#: pynicotine/gtkgui/transferlist.py:176
+#: pynicotine/gtkgui/transferlist.py:197
 msgid "Paused"
 msgstr "En pause"
 
 #: pynicotine/gtkgui/transferlist.py:78
-#: pynicotine/gtkgui/transferlist.py:168
+#: pynicotine/gtkgui/transferlist.py:189
 msgid "Queued"
 msgstr "En attente"
 
 # pynicotine/gtkgui/settings_glade.py
 # pynicotine/gtkgui/settingswindow.py
 #: pynicotine/gtkgui/transferlist.py:79
-#: pynicotine/gtkgui/transferlist.py:178
-#: pynicotine/gtkgui/transferlist.py:291
-#, fuzzy
+#: pynicotine/gtkgui/transferlist.py:199
+#: pynicotine/gtkgui/transferlist.py:313
 msgid "Transferring"
-msgstr "Transferts"
+msgstr ""
 
 # pynicotine/transfers.py
 # pynicotine/gtkgui/transferlist.py
 #: pynicotine/gtkgui/transferlist.py:80
-#: pynicotine/gtkgui/transferlist.py:174
+#: pynicotine/gtkgui/transferlist.py:195
 msgid "Finished"
 msgstr "Terminé"
 
 # pynicotine/gtkgui/transferlist.py
-#: pynicotine/gtkgui/transferlist.py:137
+#: pynicotine/gtkgui/transferlist.py:158
 #, python-format
 msgid "%.2f GB"
 msgstr "%.2f Go"
 
 # pynicotine/gtkgui/transferlist.py
-#: pynicotine/gtkgui/transferlist.py:139
+#: pynicotine/gtkgui/transferlist.py:160
 #, python-format
 msgid "%.2f MB"
 msgstr "%.2f Mo"
 
 # pynicotine/gtkgui/transferlist.py
-#: pynicotine/gtkgui/transferlist.py:141
+#: pynicotine/gtkgui/transferlist.py:162
 #, python-format
 msgid "%.2f KB"
 msgstr "%.2f Ko"
 
 # pynicotine/transfers.py
 # pynicotine/gtkgui/transferlist.py
-#: pynicotine/gtkgui/transferlist.py:182
+#: pynicotine/gtkgui/transferlist.py:203
 msgid "Connection closed by peer"
 msgstr "Connexion ré-initialisée par le correspondant"
 
 # pynicotine/transfers.py
-#: pynicotine/gtkgui/transferlist.py:186
+#: pynicotine/gtkgui/transferlist.py:207
 msgid "Establishing connection"
 msgstr "Etablissement de la connexion"
 
 # pynicotine/gtkgui/chatrooms.py
 # pynicotine/gtkgui/userlist.py
-#: pynicotine/gtkgui/transferlist.py:303
+#: pynicotine/gtkgui/transferlist.py:327
 #, python-format
 msgid "%s Files"
 msgstr "Fichiers %s"
@@ -3361,9 +3355,8 @@ msgstr "Prochain"
 
 # pynicotine/gtkgui/settings_glade.py
 #: pynicotine/gtkgui/entrydialog.py:223
-#, fuzzy
 msgid "<b>Country Code:</b> "
-msgstr "<b>Couleurs</b>"
+msgstr ""
 
 #: pynicotine/gtkgui/entrydialog.py:304
 msgid "OK"
@@ -3664,8 +3657,8 @@ msgstr "Blocking %(user)s from making a UserInfo request, possible spoofing atte
 
 #: pynicotine/pynicotine.py:812
 #, python-format
-msgid "Blocking %s from making a UserInfo request, possible possible spoofing attempt from an unknown IP & port"
-msgstr "Blocking %s from making a UserInfo request, possible possible spoofing attempt from an unknown IP & port"
+msgid "Blocking %s from making a UserInfo request, possible spoofing attempt from an unknown IP & port"
+msgstr ""
 
 #: pynicotine/pynicotine.py:817
 #, python-format

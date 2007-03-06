@@ -17,14 +17,20 @@ BUGFIXES
    by gtk+ file dialogs) from stopping the networking loop.
  * Username hotspots for users who are offline or have left the room aren't
    disabled anymore.
+   
+TRANSFERS
+ * Right-clicking when nothing is selected will select a row
+ * In parent row, display the current transfer's time elapsed and time left.
+ * Transfer popups work better on parent rows
  
 TRANSLATIONS
- * ><((((*> updated the French translation
+ * Silvio Orta updated the Spanish translation
+ * ><((((*> and ManWell updated the French translation
  * nince78 updated the Dutch translation
- * Nicola updated the Italian Translation
- * Žygimantas updated the Lithuanian Translation
+ * Nicola updated the Italian translation
+ * Žygimantas updated the Lithuanian translation
  
-1.2.7
+1.2.7 Release (25th February 2007)
 
 GENERAL CHANGES
  * Window size is restored on startup
