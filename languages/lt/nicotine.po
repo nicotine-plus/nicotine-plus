@@ -1,249 +1,126 @@
 # Lithuanian translation of Nicotine+.
-# Copyright (C) 2006 Free Software Foundation, Inc.
+# Copyright (C) 2006-2007 Free Software Foundation, Inc.
 # This file is distributed under the same license as the Nicotine+ package.
-# Žygimantas Beručka <zygis@gnome.org>, 2006.
+# Žygimantas Beručka <zygis@gnome.org>, 2006-2007.
 # 
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Nicotine+ HEAD\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-02-26 18:11+0200\n"
-"PO-Revision-Date: 2006-10-22 15:34+0300\n"
+"POT-Creation-Date: 2007-03-03 14:20+0200\n"
+"PO-Revision-Date: 2007-03-05 22:45+0200\n"
 "Last-Translator: Žygimantas Beručka <zygis@gnome.org>\n"
 "Language-Team: Lithuanian <komp_lt@konferencijos.lt>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: pynicotine/gtkgui/settingswindow.py:62
-msgid "Warning: Bad Username"
-msgstr "Dėmesio: blogas naudotojo vardas"
-
-#: pynicotine/gtkgui/settingswindow.py:62
-#, fuzzy
-msgid "Username 'None' is not a good one, please pick another."
-msgstr "Naudotojo vardas None nėra geras slaptažodis, pasirinkite kitą."
-
-#: pynicotine/gtkgui/settingswindow.py:117
-#: pynicotine/gtkgui/settingswindow.py:125
-#: pynicotine/gtkgui/settingswindow.py:131
-msgid "Warning"
-msgstr "Dėmesio"
-
-#: pynicotine/gtkgui/settingswindow.py:117
-#: pynicotine/gtkgui/settingswindow.py:125
-#: pynicotine/gtkgui/settingswindow.py:131
+#: pynicotine/gtkgui/userinfo.py:32
 #, python-format
-msgid "Security Risk: you should not share your %s directory!"
-msgstr "Rizika saugumui: neturėtumėt viešinti aplanko %s!"
+msgid "Speed: %s"
+msgstr "Greitis: %s"
 
-#: pynicotine/gtkgui/settingswindow.py:227 pynicotine/gtkgui/userinfo.py:147
+#: pynicotine/gtkgui/userinfo.py:33
+#, python-format
+msgid "Files: %s"
+msgstr "Rinkmenos: %s"
+
+#: pynicotine/gtkgui/userinfo.py:34
+#, python-format
+msgid "Directories: %s"
+msgstr "Aplankai: %s"
+
+#: pynicotine/gtkgui/userinfo.py:40 pynicotine/gtkgui/settings_glade.py:2155
+#: pynicotine/gtkgui/privatechat.py:39 pynicotine/gtkgui/frame.py:383
+#: pynicotine/gtkgui/frame.py:1069 pynicotine/gtkgui/frame.py:1084
+msgid "Offline"
+msgstr "Atsijungęs"
+
+#: pynicotine/gtkgui/userinfo.py:40 pynicotine/gtkgui/settings_glade.py:2071
+#: pynicotine/gtkgui/settings_glade.py:3293
+#: pynicotine/gtkgui/privatechat.py:39 pynicotine/gtkgui/frame.py:1103
+#: pynicotine/gtkgui/frame.py:1135
+msgid "Away"
+msgstr "Neaktyvus"
+
+#: pynicotine/gtkgui/userinfo.py:40 pynicotine/gtkgui/settings_glade.py:2127
+#: pynicotine/gtkgui/privatechat.py:39 pynicotine/gtkgui/frame.py:1094
+#: pynicotine/gtkgui/frame.py:1131
+msgid "Online"
+msgstr "Prisijungęs"
+
+#: pynicotine/gtkgui/userinfo.py:139
+#, python-format
+msgid "Total uploads allowed: %i"
+msgstr "Iš viso leidžiamų išsiuntimų: %i"
+
+#: pynicotine/gtkgui/userinfo.py:140
+#, python-format
+msgid "Queue size: %i"
+msgstr "Eilės dydis: %i"
+
+#: pynicotine/gtkgui/userinfo.py:142
+msgid "Yes"
+msgstr "Taip"
+
+#: pynicotine/gtkgui/userinfo.py:144
+msgid "No"
+msgstr "Ne"
+
+#: pynicotine/gtkgui/userinfo.py:145
+#, python-format
+msgid "Slots free: %s"
+msgstr "Laisvos vietos: %s"
+
+#: pynicotine/gtkgui/userinfo.py:147 pynicotine/gtkgui/settingswindow.py:227
 msgid "No one"
-msgstr ""
+msgstr "Niekas"
 
-#: pynicotine/gtkgui/settingswindow.py:227 pynicotine/gtkgui/userinfo.py:149
+#: pynicotine/gtkgui/userinfo.py:149 pynicotine/gtkgui/settingswindow.py:227
 msgid "Everyone"
-msgstr ""
+msgstr "Visi"
 
-#: pynicotine/gtkgui/settingswindow.py:227 pynicotine/gtkgui/userinfo.py:151
-#, fuzzy
+#: pynicotine/gtkgui/userinfo.py:151 pynicotine/gtkgui/settingswindow.py:227
 msgid "Users in list"
-msgstr "Naudotojas %s prisijungęs"
+msgstr "Sąraše esantys naudotojai"
 
-#: pynicotine/gtkgui/settingswindow.py:227 pynicotine/gtkgui/userinfo.py:153
-#, fuzzy
+#: pynicotine/gtkgui/userinfo.py:153 pynicotine/gtkgui/settingswindow.py:227
 msgid "Trusted Users"
-msgstr "Užblokuoti naudotojai:"
+msgstr "Patikimi naudotojai"
 
-#: pynicotine/gtkgui/settingswindow.py:236
-#, fuzzy
-msgid "Filter"
-msgstr "Rodyti:"
+#: pynicotine/gtkgui/userinfo.py:155 pynicotine/gtkgui/nicotine_glade.py:2214
+#: pynicotine/slskproto.py:508 pynicotine/slskproto.py:523
+msgid "unknown"
+msgstr "nežinoma"
 
-#: pynicotine/gtkgui/settingswindow.py:237
-msgid "Escaped"
-msgstr ""
-
-#: pynicotine/gtkgui/settingswindow.py:380
-msgid "Nicotine+: Add a download filter"
-msgstr ""
-
-#: pynicotine/gtkgui/settingswindow.py:380
-msgid "Enter a new download filter:"
-msgstr ""
-
-#: pynicotine/gtkgui/settingswindow.py:407
-msgid "Nicotine+: Edit a download filter"
-msgstr ""
-
-#: pynicotine/gtkgui/settingswindow.py:407
-msgid "Modify this download filter:"
-msgstr ""
-
-#: pynicotine/gtkgui/settingswindow.py:486
+#: pynicotine/gtkgui/userinfo.py:156
 #, python-format
-msgid "%(num)d Failed! %(error)s "
-msgstr ""
+msgid "%s"
+msgstr "%s"
 
-#: pynicotine/gtkgui/settingswindow.py:561
-#: pynicotine/gtkgui/settingswindow.py:568 pynicotine/gtkgui/chatrooms.py:66
-msgid "Users"
-msgstr "Naudotojai"
-
-#: pynicotine/gtkgui/settingswindow.py:606
-msgid "Ban user..."
-msgstr "Užblokuoti naudotoją..."
-
-#: pynicotine/gtkgui/settingswindow.py:606
-#: pynicotine/gtkgui/settingswindow.py:627
-msgid "User:"
-msgstr "Naudotojas:"
-
-#: pynicotine/gtkgui/settingswindow.py:627
-msgid "Ignore user..."
-msgstr "Ignoruoti naudotoją..."
-
-#: pynicotine/gtkgui/settingswindow.py:869
-msgid "Pick a colour, any colour"
-msgstr "Pasirinkite spalvą, bet kokią spalvą"
-
-#: pynicotine/gtkgui/settingswindow.py:1093
-#: pynicotine/gtkgui/settingswindow.py:1098
-msgid "Nothing Imported"
-msgstr ""
-
-#: pynicotine/gtkgui/settingswindow.py:1093
+#: pynicotine/gtkgui/checklatest.py:33
 #, python-format
-msgid "Config files for the official Soulseek client not found in \"%s\""
-msgstr ""
-
-#: pynicotine/gtkgui/settingswindow.py:1095
-msgid "Imported Soulseek Config"
-msgstr ""
-
-#: pynicotine/gtkgui/settingswindow.py:1095
 msgid ""
-"Config was imported. You may need to restart for changes to take effect. If "
-"you changed your user name, buddy list or queue then you should restart "
-"immediately."
+"Could not retrieve version information!\n"
+"Error: %s"
 msgstr ""
+"Nepavyko gauti versijos informacija!\n"
+"Klaida: %s"
 
-#: pynicotine/gtkgui/settingswindow.py:1098
-msgid "No options were selected"
+#: pynicotine/gtkgui/checklatest.py:39
+#, python-format
+msgid ""
+"A newer version ('%s') is available. Check\n"
+"the Nicotine+ homepage, ( http://nicotine-plus.sourceforge.net ) for the "
+"latest version."
 msgstr ""
+"Prienama naujesnė versija („%s“). Naujausią versiją\n"
+"galite rasti Nicotine+ svetainėje (http://www.nicotine-plus.org)."
 
-#: pynicotine/gtkgui/settingswindow.py:1108
-msgid "Protocol"
-msgstr "Protokolas"
-
-#: pynicotine/gtkgui/settingswindow.py:1109
-msgid "Handler"
-msgstr "Valdiklis"
-
-#: pynicotine/gtkgui/settingswindow.py:1215
-#: pynicotine/gtkgui/settingswindow.py:1256
-#: pynicotine/gtkgui/settings_glade.py:3733
-msgid "Connection"
-msgstr "Prisijungimas"
-
-#: pynicotine/gtkgui/settingswindow.py:1216
-#: pynicotine/gtkgui/settingswindow.py:1242 pynicotine/gtkgui/frame.py:743
-#: pynicotine/gtkgui/settings_glade.py:226
-msgid "Server"
-msgstr "Serveris"
-
-#: pynicotine/gtkgui/settingswindow.py:1217
-#: pynicotine/gtkgui/settingswindow.py:1243
-#: pynicotine/gtkgui/settingswindow.py:1323
-#: pynicotine/gtkgui/settings_glade.py:253
-#: pynicotine/gtkgui/settings_glade.py:567 pynicotine/pynicotine.py:314
-msgid "Shares"
-msgstr "Viešiniai"
-
-#: pynicotine/gtkgui/settingswindow.py:1218
-#: pynicotine/gtkgui/settingswindow.py:1244
-#: pynicotine/gtkgui/settings_glade.py:618
-#: pynicotine/gtkgui/settings_glade.py:1127
-msgid "Transfers"
-msgstr "Siuntimai"
-
-#: pynicotine/gtkgui/settingswindow.py:1221
-#: pynicotine/gtkgui/settingswindow.py:1225
-#: pynicotine/gtkgui/settingswindow.py:1245
-msgid "Geo Block"
-msgstr "Geoblokavimas"
-
-#: pynicotine/gtkgui/settingswindow.py:1229
-#: pynicotine/gtkgui/settingswindow.py:1257
-#: pynicotine/gtkgui/settings_glade.py:3831
-msgid "UI"
-msgstr "Naudotojo sąsaja"
-
-#: pynicotine/gtkgui/settingswindow.py:1230
-#: pynicotine/gtkgui/settingswindow.py:1248
-#: pynicotine/gtkgui/settingswindow.py:1323
-msgid "Interface"
-msgstr "Sąsaja"
-
-#: pynicotine/gtkgui/settingswindow.py:1231
-#: pynicotine/gtkgui/settingswindow.py:1249
-msgid "URL Catching"
-msgstr "URL surinkimas"
-
-#: pynicotine/gtkgui/settingswindow.py:1233
-#: pynicotine/gtkgui/settingswindow.py:1258
-#: pynicotine/gtkgui/settings_glade.py:3894
-msgid "Misc"
-msgstr "Įvairūs"
-
-#: pynicotine/gtkgui/settingswindow.py:1234
-#: pynicotine/gtkgui/settingswindow.py:1252
-#: pynicotine/gtkgui/settings_glade.py:3357
-msgid "Away mode"
-msgstr "Nebuvimo režimas"
-
-#: pynicotine/gtkgui/settingswindow.py:1235
-#: pynicotine/gtkgui/settingswindow.py:1246
-#: pynicotine/gtkgui/nicotine_glade.py:960
-msgid "User info"
-msgstr "Naudotojo informacija"
-
-#: pynicotine/gtkgui/settingswindow.py:1236
-#: pynicotine/gtkgui/settingswindow.py:1247
-msgid "Ban / ignore"
-msgstr "Uždrausti / ignoruoti"
-
-#: pynicotine/gtkgui/settingswindow.py:1237
-#: pynicotine/gtkgui/settingswindow.py:1250
-#: pynicotine/gtkgui/settings_glade.py:2652
-msgid "Logging"
-msgstr "Žurnalų vedimas"
-
-#: pynicotine/gtkgui/settingswindow.py:1238
-#: pynicotine/gtkgui/settingswindow.py:1251
-#: pynicotine/gtkgui/settings_glade.py:3167
-msgid "Searches"
-msgstr "Paieškos"
-
-#: pynicotine/gtkgui/settingswindow.py:1239
-#: pynicotine/gtkgui/settingswindow.py:1253
-#: pynicotine/gtkgui/settings_glade.py:3384
-#: pynicotine/gtkgui/settings_glade.py:3457
-msgid "Events"
-msgstr "Įvykiai"
-
-#: pynicotine/gtkgui/settingswindow.py:1240
-#: pynicotine/gtkgui/settingswindow.py:1254
-#: pynicotine/gtkgui/settings_glade.py:3985
-#: pynicotine/gtkgui/settings_glade.py:4147
-#: pynicotine/gtkgui/settings_glade.py:4163
-msgid "Import Config"
-msgstr ""
-
-#: pynicotine/gtkgui/settingswindow.py:1260
-msgid "Categories"
-msgstr "Kategorijos"
+#: pynicotine/gtkgui/checklatest.py:41
+msgid "You are using the latest version of Nicotine."
+msgstr "Jūs naudojate naujausią Nicotine versiją."
 
 #: pynicotine/gtkgui/downloads.py:20 pynicotine/gtkgui/uploads.py:18
 msgid "Clear finished/aborted"
@@ -261,74 +138,74 @@ msgstr "Išvalyti nutrauktus"
 msgid "Clear queued"
 msgstr "Išvalyti esančius eilėje"
 
-#: pynicotine/gtkgui/downloads.py:27 pynicotine/gtkgui/frame.py:231
-#: pynicotine/gtkgui/userbrowse.py:82 pynicotine/gtkgui/userbrowse.py:98
-#: pynicotine/gtkgui/userbrowse.py:139 pynicotine/gtkgui/userbrowse.py:153
-#: pynicotine/gtkgui/chatrooms.py:390 pynicotine/gtkgui/search.py:424
-#: pynicotine/gtkgui/uploads.py:25 pynicotine/gtkgui/userlist.py:60
+#: pynicotine/gtkgui/downloads.py:27 pynicotine/gtkgui/userbrowse.py:82
+#: pynicotine/gtkgui/userbrowse.py:98 pynicotine/gtkgui/userbrowse.py:139
+#: pynicotine/gtkgui/userbrowse.py:153 pynicotine/gtkgui/userlist.py:60
+#: pynicotine/gtkgui/frame.py:232 pynicotine/gtkgui/chatrooms.py:390
+#: pynicotine/gtkgui/search.py:424 pynicotine/gtkgui/uploads.py:25
 msgid "Send _message"
 msgstr "Siųsti _žinutę"
 
-#: pynicotine/gtkgui/downloads.py:28 pynicotine/gtkgui/frame.py:233
-#: pynicotine/gtkgui/userbrowse.py:83 pynicotine/gtkgui/userbrowse.py:99
-#: pynicotine/gtkgui/userbrowse.py:140 pynicotine/gtkgui/userbrowse.py:154
+#: pynicotine/gtkgui/downloads.py:28 pynicotine/gtkgui/userbrowse.py:83
+#: pynicotine/gtkgui/userbrowse.py:99 pynicotine/gtkgui/userbrowse.py:140
+#: pynicotine/gtkgui/userbrowse.py:154 pynicotine/gtkgui/userlist.py:62
+#: pynicotine/gtkgui/privatechat.py:143 pynicotine/gtkgui/frame.py:234
 #: pynicotine/gtkgui/chatrooms.py:392 pynicotine/gtkgui/search.py:425
-#: pynicotine/gtkgui/privatechat.py:143 pynicotine/gtkgui/uploads.py:26
-#: pynicotine/gtkgui/userlist.py:62
+#: pynicotine/gtkgui/uploads.py:26
 msgid "Show IP a_ddress"
 msgstr "Rodyti IP a_dresą"
 
-#: pynicotine/gtkgui/downloads.py:29 pynicotine/gtkgui/frame.py:234
-#: pynicotine/gtkgui/userbrowse.py:84 pynicotine/gtkgui/userbrowse.py:100
-#: pynicotine/gtkgui/userbrowse.py:141 pynicotine/gtkgui/userbrowse.py:155
+#: pynicotine/gtkgui/downloads.py:29 pynicotine/gtkgui/userbrowse.py:84
+#: pynicotine/gtkgui/userbrowse.py:100 pynicotine/gtkgui/userbrowse.py:141
+#: pynicotine/gtkgui/userbrowse.py:155 pynicotine/gtkgui/userlist.py:63
+#: pynicotine/gtkgui/privatechat.py:144 pynicotine/gtkgui/frame.py:235
 #: pynicotine/gtkgui/chatrooms.py:393 pynicotine/gtkgui/search.py:426
-#: pynicotine/gtkgui/privatechat.py:144 pynicotine/gtkgui/uploads.py:27
-#: pynicotine/gtkgui/userlist.py:63
+#: pynicotine/gtkgui/uploads.py:27
 msgid "Get user i_nfo"
 msgstr "Gauti naudotojo i_nformaciją"
 
-#: pynicotine/gtkgui/downloads.py:30 pynicotine/gtkgui/frame.py:235
+#: pynicotine/gtkgui/downloads.py:30 pynicotine/gtkgui/userlist.py:64
+#: pynicotine/gtkgui/privatechat.py:145 pynicotine/gtkgui/frame.py:236
 #: pynicotine/gtkgui/chatrooms.py:394 pynicotine/gtkgui/search.py:427
-#: pynicotine/gtkgui/privatechat.py:145 pynicotine/gtkgui/uploads.py:28
-#: pynicotine/gtkgui/userlist.py:64
+#: pynicotine/gtkgui/uploads.py:28
 msgid "Brow_se files"
 msgstr "Narš_yti rinkmenas"
 
-#: pynicotine/gtkgui/downloads.py:31 pynicotine/gtkgui/frame.py:236
-#: pynicotine/gtkgui/userbrowse.py:101 pynicotine/gtkgui/userbrowse.py:156
+#: pynicotine/gtkgui/downloads.py:31 pynicotine/gtkgui/userbrowse.py:101
+#: pynicotine/gtkgui/userbrowse.py:156 pynicotine/gtkgui/userlist.py:65
+#: pynicotine/gtkgui/privatechat.py:146 pynicotine/gtkgui/frame.py:237
 #: pynicotine/gtkgui/chatrooms.py:395 pynicotine/gtkgui/search.py:428
-#: pynicotine/gtkgui/privatechat.py:146 pynicotine/gtkgui/uploads.py:29
-#: pynicotine/gtkgui/userlist.py:65
+#: pynicotine/gtkgui/uploads.py:29
 msgid "Gi_ve privileges"
 msgstr "_Suteikti privilegijas"
 
-#: pynicotine/gtkgui/downloads.py:33 pynicotine/gtkgui/frame.py:238
-#: pynicotine/gtkgui/userbrowse.py:85 pynicotine/gtkgui/userbrowse.py:102
-#: pynicotine/gtkgui/userbrowse.py:142 pynicotine/gtkgui/userbrowse.py:157
+#: pynicotine/gtkgui/downloads.py:33 pynicotine/gtkgui/userbrowse.py:85
+#: pynicotine/gtkgui/userbrowse.py:102 pynicotine/gtkgui/userbrowse.py:142
+#: pynicotine/gtkgui/userbrowse.py:157 pynicotine/gtkgui/frame.py:239
 #: pynicotine/gtkgui/chatrooms.py:396 pynicotine/gtkgui/search.py:429
 #: pynicotine/gtkgui/uploads.py:31
 msgid "_Add user to list"
 msgstr "Į_dėti naudotoją į sąrašą"
 
-#: pynicotine/gtkgui/downloads.py:34 pynicotine/gtkgui/frame.py:239
-#: pynicotine/gtkgui/userbrowse.py:86 pynicotine/gtkgui/userbrowse.py:103
-#: pynicotine/gtkgui/userbrowse.py:143 pynicotine/gtkgui/userbrowse.py:158
-#: pynicotine/gtkgui/chatrooms.py:397 pynicotine/gtkgui/search.py:430
-#: pynicotine/gtkgui/uploads.py:32 pynicotine/gtkgui/userlist.py:66
+#: pynicotine/gtkgui/downloads.py:34 pynicotine/gtkgui/userbrowse.py:86
+#: pynicotine/gtkgui/userbrowse.py:103 pynicotine/gtkgui/userbrowse.py:143
+#: pynicotine/gtkgui/userbrowse.py:158 pynicotine/gtkgui/userlist.py:66
+#: pynicotine/gtkgui/frame.py:240 pynicotine/gtkgui/chatrooms.py:397
+#: pynicotine/gtkgui/search.py:430 pynicotine/gtkgui/uploads.py:32
 msgid "_Ban this user"
 msgstr "_Užblokuoti šį naudotoją"
 
-#: pynicotine/gtkgui/downloads.py:35 pynicotine/gtkgui/frame.py:240
-#: pynicotine/gtkgui/userbrowse.py:87 pynicotine/gtkgui/userbrowse.py:104
-#: pynicotine/gtkgui/userbrowse.py:144 pynicotine/gtkgui/userbrowse.py:159
-#: pynicotine/gtkgui/chatrooms.py:398 pynicotine/gtkgui/search.py:431
-#: pynicotine/gtkgui/uploads.py:33 pynicotine/gtkgui/userlist.py:67
+#: pynicotine/gtkgui/downloads.py:35 pynicotine/gtkgui/userbrowse.py:87
+#: pynicotine/gtkgui/userbrowse.py:104 pynicotine/gtkgui/userbrowse.py:144
+#: pynicotine/gtkgui/userbrowse.py:159 pynicotine/gtkgui/userlist.py:67
+#: pynicotine/gtkgui/frame.py:241 pynicotine/gtkgui/chatrooms.py:398
+#: pynicotine/gtkgui/search.py:431 pynicotine/gtkgui/uploads.py:33
 msgid "_Ignore this user"
 msgstr "_Ignoruoti šį naudotoją"
 
 #: pynicotine/gtkgui/downloads.py:36 pynicotine/gtkgui/uploads.py:34
 msgid "Select User's Transfers"
-msgstr ""
+msgstr "Pasirinkite naudotojų siuntimus"
 
 #: pynicotine/gtkgui/downloads.py:40
 msgid "Get place in _queue"
@@ -351,10 +228,10 @@ msgstr "Kopijuoti aplanko URL"
 msgid "Send to _player"
 msgstr "Siųsti į _grotuvą"
 
-#: pynicotine/gtkgui/downloads.py:45 pynicotine/gtkgui/frame.py:217
+#: pynicotine/gtkgui/downloads.py:45 pynicotine/gtkgui/userlist.py:19
+#: pynicotine/gtkgui/transferlist.py:27 pynicotine/gtkgui/frame.py:218
 #: pynicotine/gtkgui/chatrooms.py:364 pynicotine/gtkgui/search.py:148
 #: pynicotine/gtkgui/search.py:395 pynicotine/gtkgui/uploads.py:43
-#: pynicotine/gtkgui/userlist.py:19 pynicotine/gtkgui/transferlist.py:27
 msgid "User"
 msgstr "Naudotojas"
 
@@ -377,345 +254,6 @@ msgstr "Iš_valyti"
 #: pynicotine/gtkgui/downloads.py:53 pynicotine/gtkgui/uploads.py:49
 msgid "Clear Groups"
 msgstr "Išvalymo grupės"
-
-#: pynicotine/gtkgui/frame.py:122 pynicotine/gtkgui/frame.py:511
-#: pynicotine/gtkgui/frame.py:512 pynicotine/gtkgui/frame.py:517
-#: pynicotine/gtkgui/frame.py:522 pynicotine/gtkgui/frame.py:524
-#: pynicotine/gtkgui/frame.py:600 pynicotine/gtkgui/userbrowse.py:465
-msgid "Nicotine+"
-msgstr "Nicotine+"
-
-#: pynicotine/gtkgui/frame.py:138 pynicotine/gtkgui/chatrooms.py:406
-#: pynicotine/gtkgui/chatrooms.py:413 pynicotine/gtkgui/privatechat.py:153
-#, fuzzy
-msgid "Find"
-msgstr "Baigta"
-
-#: pynicotine/gtkgui/frame.py:139 pynicotine/gtkgui/chatrooms.py:407
-#: pynicotine/gtkgui/chatrooms.py:415 pynicotine/gtkgui/privatechat.py:155
-msgid "Copy All"
-msgstr "Kopijuoti viską"
-
-#: pynicotine/gtkgui/frame.py:140 pynicotine/gtkgui/chatrooms.py:408
-#: pynicotine/gtkgui/chatrooms.py:416 pynicotine/gtkgui/privatechat.py:156
-msgid "Clear log"
-msgstr "Išvalyti žurnalą"
-
-#: pynicotine/gtkgui/frame.py:144 pynicotine/gtkgui/frame.py:146
-msgid "Close Nicotine-Plus?"
-msgstr "Užverti Nicotine-Plus?"
-
-#: pynicotine/gtkgui/frame.py:144 pynicotine/gtkgui/frame.py:146
-msgid "Are you sure you wish to exit Nicotine-Plus at this time?"
-msgstr "Ar tikrai norite uždaryti Nicotine-Plus?"
-
-#: pynicotine/gtkgui/frame.py:144
-#, fuzzy
-msgid "Send to tray"
-msgstr "Sutraukti į skydelį"
-
-#: pynicotine/gtkgui/frame.py:176 pynicotine/gtkgui/frame.py:1761
-msgid "I like"
-msgstr "Man patinka"
-
-#: pynicotine/gtkgui/frame.py:183
-msgid "_Remove this item"
-msgstr "_Pašalinti šį elementą"
-
-#: pynicotine/gtkgui/frame.py:184
-msgid "Re_commendations for this item"
-msgstr "Šio elemento re_komendacijos"
-
-#: pynicotine/gtkgui/frame.py:191
-msgid "I dislike"
-msgstr "Man nepatinka"
-
-#: pynicotine/gtkgui/frame.py:195
-msgid "Remove this item"
-msgstr "Pašalinti šį elementą"
-
-#: pynicotine/gtkgui/frame.py:199 pynicotine/gtkgui/nicotine_glade.py:1098
-msgid "Recommendations"
-msgstr "Rekomendacijos"
-
-#: pynicotine/gtkgui/frame.py:200
-msgid "Rating"
-msgstr "Įvertinimas"
-
-#: pynicotine/gtkgui/frame.py:207
-msgid "I _like this"
-msgstr "Man tai _patinka"
-
-#: pynicotine/gtkgui/frame.py:208
-msgid "I _don't like this"
-msgstr "Man tai _nepatinka"
-
-#: pynicotine/gtkgui/frame.py:209
-msgid "_Recommendations for this item"
-msgstr "Šio elemento _rekomendacijos"
-
-#: pynicotine/gtkgui/frame.py:211
-msgid "_Search for this item"
-msgstr "Iešk_oti šio elemento"
-
-#: pynicotine/gtkgui/frame.py:218 pynicotine/gtkgui/chatrooms.py:365
-#: pynicotine/gtkgui/search.py:397 pynicotine/gtkgui/userlist.py:20
-#: pynicotine/gtkgui/transferlist.py:32
-msgid "Speed"
-msgstr "Greitis"
-
-#: pynicotine/gtkgui/frame.py:219 pynicotine/gtkgui/chatrooms.py:366
-#: pynicotine/gtkgui/userlist.py:21
-msgid "Files"
-msgstr "Rinkmenos"
-
-#: pynicotine/gtkgui/frame.py:330
-msgid "Add Buddy: "
-msgstr "Pridėti bičiulį:"
-
-#: pynicotine/gtkgui/frame.py:348 pynicotine/gtkgui/frame.py:1583
-#: pynicotine/gtkgui/nicotine_glade.py:389
-#: pynicotine/gtkgui/nicotine_glade.py:441
-#: pynicotine/gtkgui/nicotine_glade.py:633
-#: pynicotine/gtkgui/nicotine_glade.py:797
-#: pynicotine/gtkgui/nicotine_glade.py:908
-#: pynicotine/gtkgui/nicotine_glade.py:960
-#: pynicotine/gtkgui/nicotine_glade.py:1041
-#: pynicotine/gtkgui/nicotine_glade.py:1282
-msgid "ImageLabel"
-msgstr ""
-
-#: pynicotine/gtkgui/frame.py:348 pynicotine/gtkgui/frame.py:1583
-msgid "Buddy list"
-msgstr "Bičiulių sąrašas"
-
-#: pynicotine/gtkgui/frame.py:382 pynicotine/gtkgui/frame.py:1068
-#: pynicotine/gtkgui/frame.py:1083 pynicotine/gtkgui/settings_glade.py:2155
-#: pynicotine/gtkgui/userinfo.py:40 pynicotine/gtkgui/privatechat.py:39
-msgid "Offline"
-msgstr "Atsijungęs"
-
-#: pynicotine/gtkgui/frame.py:404
-msgid ""
-"You need to configure your settings (Server, Username, Password, Download "
-"Directory) before connecting..."
-msgstr ""
-"Prieš prisijungiant turite nurodyti Jūsų nustatymus (serverį, naudotojo "
-"vardą, slaptažodį, atsiuntimų aplanką)..."
-
-#: pynicotine/gtkgui/frame.py:517
-#, fuzzy, python-format
-msgid "Private Message from %(user)s"
-msgstr "Asmeninė žinutė nuo %s"
-
-#: pynicotine/gtkgui/frame.py:522
-#, fuzzy, python-format
-msgid "You've been mentioned in the %(room)s room"
-msgstr "Jus paminėjo kambaryje %s"
-
-#: pynicotine/gtkgui/frame.py:524
-#, fuzzy, python-format
-msgid "%(user)s mentioned you in the %(room)s room"
-msgstr "%s paminėjo jus kambaryje %s"
-
-#: pynicotine/gtkgui/frame.py:600 pynicotine/gtkgui/userbrowse.py:465
-#, fuzzy, python-format
-msgid ""
-"Are you sure you wish to download %(num)i files from %(user)s's directory %"
-"(folder)s?"
-msgstr "Ar tikrai norite atsisiųsti %i rinkmenas iš naudotojo %s aplanko %s?"
-
-#: pynicotine/gtkgui/frame.py:653 pynicotine/gtkgui/userbrowse.py:376
-#, fuzzy, python-format
-msgid "Can't create directory '%(folder)s', reported error: %(error)s"
-msgstr "Nepavyko sukurti aplanko „%s“, gauta klaida: %s"
-
-#: pynicotine/gtkgui/frame.py:675
-#, python-format
-msgid "Loading Shares from disk failed: %(error)s"
-msgstr ""
-
-#: pynicotine/gtkgui/frame.py:697
-msgid "Nicotine+: Get User Info"
-msgstr "Nicotine+: gauti naudotojo informaciją"
-
-#: pynicotine/gtkgui/frame.py:698
-msgid "Enter the User whose User Info you wish to recieve:"
-msgstr "Įveskite naudotoją, kurio informaciją norite gauti:"
-
-#: pynicotine/gtkgui/frame.py:710
-msgid "Nicotine+: Get A User's IP"
-msgstr "Nicotine+: gauti naudotojo IP"
-
-#: pynicotine/gtkgui/frame.py:711
-msgid "Enter the User whose IP Address you wish to recieve:"
-msgstr "Įveskite naudotoją, kurio IP adresą norite gauti:"
-
-#: pynicotine/gtkgui/frame.py:724
-msgid "Nicotine+: Get A User's Shares List"
-msgstr "Nicotine+: gauti naudotojo viešinių sąrašą"
-
-#: pynicotine/gtkgui/frame.py:725
-msgid "Enter the User whose Shares List you wish to recieve:"
-msgstr "Įveskite naudotoją, kurio viešinių sąrašą norite gauti:"
-
-#: pynicotine/gtkgui/frame.py:737
-msgid "Connect"
-msgstr "Prisijungti"
-
-#: pynicotine/gtkgui/frame.py:738
-msgid "Disconnect"
-msgstr "Atsijungti"
-
-#: pynicotine/gtkgui/frame.py:742
-msgid "Hide / Unhide Nicotine"
-msgstr "Paslėpti / parodyti Nicotine"
-
-#: pynicotine/gtkgui/frame.py:744
-msgid "Settings"
-msgstr "Nustatymai"
-
-#: pynicotine/gtkgui/frame.py:745
-msgid "Lookup a User's IP"
-msgstr "Gauti naudotojo IP"
-
-#: pynicotine/gtkgui/frame.py:746
-msgid "Lookup a User's Info"
-msgstr "Gauti naudotojo informaciją"
-
-#: pynicotine/gtkgui/frame.py:747
-msgid "Lookup a User's Shares"
-msgstr "Gauti naudotojo viešinius"
-
-#: pynicotine/gtkgui/frame.py:748
-msgid "Toggle Away"
-msgstr "Keisti nebuvimo būseną"
-
-#: pynicotine/gtkgui/frame.py:749
-msgid "Quit"
-msgstr "Išeiti"
-
-#: pynicotine/gtkgui/frame.py:1037
-#, fuzzy, python-format
-msgid "Connecting to %(host)s:%(port)s"
-msgstr "Prisijungti prie %s:%s"
-
-#: pynicotine/gtkgui/frame.py:1093 pynicotine/gtkgui/frame.py:1130
-#: pynicotine/gtkgui/settings_glade.py:2127 pynicotine/gtkgui/userinfo.py:40
-#: pynicotine/gtkgui/privatechat.py:39
-msgid "Online"
-msgstr "Prisijungęs"
-
-#: pynicotine/gtkgui/frame.py:1102 pynicotine/gtkgui/frame.py:1134
-#: pynicotine/gtkgui/settings_glade.py:2071
-#: pynicotine/gtkgui/settings_glade.py:3293 pynicotine/gtkgui/userinfo.py:40
-#: pynicotine/gtkgui/privatechat.py:39
-msgid "Away"
-msgstr "Neaktyvus"
-
-#: pynicotine/gtkgui/frame.py:1204
-#, fuzzy, python-format
-msgid "Down: %(num)i users, %(speed).1f KB/s"
-msgstr "Ats.: %i naudot., %.1f KB/s"
-
-#: pynicotine/gtkgui/frame.py:1205
-#, fuzzy, python-format
-msgid "Up: %(num)i users, %(speed).1f KB/s"
-msgstr "Išs.: %i naudot., %.1f KB/s"
-
-#: pynicotine/gtkgui/frame.py:1245
-msgid "Rescanning started"
-msgstr "Pradėtas pakartotinis skanavimas"
-
-#: pynicotine/gtkgui/frame.py:1264
-msgid "Rescanning Buddy Shares started"
-msgstr "Pradėtas pakartotinas bičiulių viešinių skanavimas"
-
-#: pynicotine/gtkgui/frame.py:1284
-msgid "Rescanning Buddy Shares finished"
-msgstr "Baigtas bičiulių viešininų pakartotinis skanavimas"
-
-#: pynicotine/gtkgui/frame.py:1295
-msgid "Rescanning finished"
-msgstr "Baigtas pakartotinis skanavimas"
-
-#: pynicotine/gtkgui/frame.py:1371
-#, fuzzy
-msgid ""
-"You need to finish configuring your settings (Server, Username, Password, "
-"Download Directory) before connecting... but if this message persists, check "
-"your Nicotine config file for options set to 'None'."
-msgstr ""
-"Prieš prisijungiant turite nurodyti Jūsų nustatymus (serverį, naudotojo "
-"vardą, slaptažodį, atsiuntimų aplanką)..."
-
-#: pynicotine/gtkgui/frame.py:1474
-#, fuzzy, python-format
-msgid "Error: %(num)d Download filters failed! %(error)s "
-msgstr "Atsiųsta: naudotojas %s, rinkmena %s"
-
-#: pynicotine/gtkgui/frame.py:1478
-#, python-format
-msgid "Error: Download Filter failed! Verify your filters. Reason: %s"
-msgstr ""
-
-#: pynicotine/gtkgui/frame.py:1500
-msgid "Cannot Find Guide"
-msgstr "Nepavyko rasti žinyno"
-
-#: pynicotine/gtkgui/frame.py:1500
-#, fuzzy, python-format
-msgid ""
-"The Nicotine Offline Guide ( NicotinePlusGuide.html ) was not found in "
-"either the following directories:\n"
-"\n"
-"<u>%(pwd)s/doc/\n"
-"</u><b>and</b>\n"
-"<u>%(prefix)s/share/nicotine/documentation/</u>\n"
-"\n"
-"Either install Nicotine-Plus, or start from inside the Nicotine-Plus source "
-"directory."
-msgstr ""
-"Nicotine žinynas nerastas (NicotinePlusGuide.html) šiuose aplankuose:\n"
-"\n"
-"<u>%s/doc/\n"
-"</u><b>ir</b>\n"
-"<u>%s/share/nicotine/documentation/</u>\n"
-"\n"
-"Arba įdiekite Nicotine-Plus, arba paleiskite iš Nicotine-Plus pradinio kodo "
-"aplanko."
-
-#: pynicotine/gtkgui/frame.py:1603
-#, python-format
-msgid "Invalid SoulSeek meta-url: %s"
-msgstr "Netinkamas SoulSeek meta-url: %s"
-
-#: pynicotine/gtkgui/frame.py:1696
-#, fuzzy
-msgid "Enter the string to search for:"
-msgstr "Įveskite naudotoją, kurio informaciją norite gauti:"
-
-#: pynicotine/gtkgui/frame.py:1697
-#, fuzzy
-msgid "Nicotine+: Find string"
-msgstr "Nicotine nustatymai"
-
-#: pynicotine/gtkgui/frame.py:1761
-msgid "Add thing I like"
-msgstr "Pridėti mano megstamus dalykus"
-
-#: pynicotine/gtkgui/frame.py:1770
-msgid "Add thing I don't like"
-msgstr "Pridėti mano nemėgstamus dalykus"
-
-#: pynicotine/gtkgui/frame.py:1770
-msgid "I don't like"
-msgstr "Man nepatinka"
-
-#: pynicotine/gtkgui/frame.py:1795
-#, python-format
-msgid "Recommendations for %s"
-msgstr "%s rekomendacijos"
 
 #: pynicotine/gtkgui/settings_glade.py:17
 msgid "Server Settings"
@@ -743,7 +281,7 @@ msgstr "Kliento prisijungimo prievadai (naudoti pirmą prieinamą):"
 
 #: pynicotine/gtkgui/settings_glade.py:173
 msgid "2234"
-msgstr ""
+msgstr "2234"
 
 #: pynicotine/gtkgui/settings_glade.py:179
 msgid "-"
@@ -751,7 +289,7 @@ msgstr "-"
 
 #: pynicotine/gtkgui/settings_glade.py:188
 msgid "2242"
-msgstr ""
+msgstr "2242"
 
 #: pynicotine/gtkgui/settings_glade.py:196
 msgid "Use the above ports to configure your router or firewall."
@@ -771,6 +309,12 @@ msgstr "(naudokite tik jei aukščiau nurodyti prievadai prieinami iš išorės)
 msgid "Enable CTCP-like PM responses (Client Version)"
 msgstr "Įjungti į CTCP panašius AŽ atsakymus (kliento versija)"
 
+#: pynicotine/gtkgui/settings_glade.py:226
+#: pynicotine/gtkgui/settingswindow.py:1216
+#: pynicotine/gtkgui/settingswindow.py:1242 pynicotine/gtkgui/frame.py:744
+msgid "Server"
+msgstr "Serveris"
+
 #: pynicotine/gtkgui/settings_glade.py:237
 #: pynicotine/gtkgui/settings_glade.py:602
 #: pynicotine/gtkgui/settings_glade.py:1165
@@ -788,6 +332,7 @@ msgstr "Įjungti į CTCP panašius AŽ atsakymus (kliento versija)"
 #: pynicotine/gtkgui/settings_glade.py:3878
 #: pynicotine/gtkgui/settings_glade.py:3969
 #: pynicotine/gtkgui/settings_glade.py:4180
+#: pynicotine/gtkgui/nowplaying.py:412
 #: pynicotine/gtkgui/nicotine_glade.py:1483
 #: pynicotine/gtkgui/nicotine_glade.py:1671
 #: pynicotine/gtkgui/nicotine_glade.py:1793
@@ -795,10 +340,17 @@ msgstr "Įjungti į CTCP panašius AŽ atsakymus (kliento versija)"
 #: pynicotine/gtkgui/nicotine_glade.py:2569
 #: pynicotine/gtkgui/nicotine_glade.py:2802
 #: pynicotine/gtkgui/nicotine_glade.py:2868
-#: pynicotine/gtkgui/nowplaying.py:412
 #, python-format
 msgid "(custom widget: %s)"
-msgstr ""
+msgstr "(custom widget: %s)"
+
+#: pynicotine/gtkgui/settings_glade.py:253
+#: pynicotine/gtkgui/settings_glade.py:567
+#: pynicotine/gtkgui/settingswindow.py:1217
+#: pynicotine/gtkgui/settingswindow.py:1243
+#: pynicotine/gtkgui/settingswindow.py:1323 pynicotine/pynicotine.py:314
+msgid "Shares"
+msgstr "Viešiniai"
 
 #: pynicotine/gtkgui/settings_glade.py:271
 msgid "Incomplete file directory:"
@@ -813,7 +365,7 @@ msgstr "Pasirinkti..."
 
 #: pynicotine/gtkgui/settings_glade.py:327
 msgid "Download directory:"
-msgstr "Atsiųsti aplanką:"
+msgstr "Atsiuntimo aplankas:"
 
 #: pynicotine/gtkgui/settings_glade.py:379
 msgid "Share download directory"
@@ -844,6 +396,13 @@ msgstr "Pašalinti"
 msgid "Enable Buddy-Only shares"
 msgstr "Įjungti viešinius tik bičiuliams"
 
+#: pynicotine/gtkgui/settings_glade.py:618
+#: pynicotine/gtkgui/settings_glade.py:1127
+#: pynicotine/gtkgui/settingswindow.py:1218
+#: pynicotine/gtkgui/settingswindow.py:1244
+msgid "Transfers"
+msgstr "Siuntimai"
+
 #: pynicotine/gtkgui/settings_glade.py:645
 msgid "Upload Queue type:"
 msgstr "Išsiuntimo eilės tipas:"
@@ -851,6 +410,7 @@ msgstr "Išsiuntimo eilės tipas:"
 #: pynicotine/gtkgui/settings_glade.py:653
 msgid "Users will be sent one file and then another user will be selected"
 msgstr ""
+"Naudotojams bus išsiųsta viena rinkmena, tada bus pasirinktas kitas naudotojas"
 
 #: pynicotine/gtkgui/settings_glade.py:655
 msgid "Round Robin"
@@ -858,7 +418,7 @@ msgstr "Round Robin"
 
 #: pynicotine/gtkgui/settings_glade.py:661
 msgid "Files will be sent in the order they were queued"
-msgstr ""
+msgstr "Rinkmenos bus siunčiamos tokia tvarka, kokia buvo padėtos į eilę"
 
 #: pynicotine/gtkgui/settings_glade.py:663
 msgid "First In, First Out"
@@ -866,7 +426,7 @@ msgstr "First In, First Out"
 
 #: pynicotine/gtkgui/settings_glade.py:674
 msgid "Queue Uploads if total transfer speed reaches"
-msgstr ""
+msgstr "Padėti išsiuntimus į eilę, jei pasiekiamas bendras siuntimo greitis"
 
 #: pynicotine/gtkgui/settings_glade.py:689
 #: pynicotine/gtkgui/settings_glade.py:739
@@ -878,15 +438,16 @@ msgid ""
 "If disabled, slots will automatically be determined by available bandwidth "
 "limitations"
 msgstr ""
+"Jeigu išjungta, skiltys bus automatiškai nustatomos pagal prieinamus "
+"ryšio apribojimus"
 
 #: pynicotine/gtkgui/settings_glade.py:704
-#, fuzzy
 msgid "Limit number of upload slots to"
 msgstr "Riboti išsiuntimų kiekį iki"
 
 #: pynicotine/gtkgui/settings_glade.py:711
 msgid "Set to 0 to disable uploads"
-msgstr ""
+msgstr "Nustatykite į 0, kad išjungtumėte išsiuntimus"
 
 #: pynicotine/gtkgui/settings_glade.py:718
 msgid "(NOT RECOMMENDED)"
@@ -914,10 +475,13 @@ msgid ""
 "will not be added to your upload queue until the user retries them with a "
 "smaller total queue size"
 msgstr ""
+"Rinkmenos liks naudotojoo atsiuntimo eilėje su perspėjimo pranešimu, tačiau "
+"nebus pridėtas jūsų išsiuntimo eilėje, kol naudotojas pabandys dar kartą "
+"su mažesne bendra atsiuntimo eile"
 
 #: pynicotine/gtkgui/settings_glade.py:782
 msgid "100"
-msgstr ""
+msgstr "100"
 
 #: pynicotine/gtkgui/settings_glade.py:788
 msgid "Megabytes"
@@ -932,22 +496,24 @@ msgid ""
 "The users will be able to send you files. These files will be downloaded "
 "into the Buddy Uploads subdirectory in your Download directory"
 msgstr ""
+"Naudotojai galės atsiųsti jums rinkmenas. Šios rinkmenos bus atsiųstos "
+"į bičiulių išsiuntimų pooaplankį jūsų atsiuntimo aplanke"
 
 #: pynicotine/gtkgui/settings_glade.py:809
-#, fuzzy
 msgid "Allow these users to send you files:"
-msgstr "Leisti bičiuliams atsiųsti jums rinkmenas"
+msgstr "Leisti šiems naudotojams atsiųsti jums rinkmenas:"
 
 #: pynicotine/gtkgui/settings_glade.py:831
-#, fuzzy
 msgid "<b>Upload Queue:</b>"
-msgstr "Išsiuntimo eilės tipas:"
+msgstr "<b>Išsiuntimo eilė:</b>"
 
 #: pynicotine/gtkgui/settings_glade.py:851
 msgid ""
 "If buddy shares are enabled, they will be shared. Otherwise normal shares "
 "will be used."
 msgstr ""
+"Jeigu bičiųlių viešiniai įjungti, bus viešinami jie. Kitu atveju, bus "
+"naudojami normalūs viešiniai."
 
 #: pynicotine/gtkgui/settings_glade.py:853
 msgid "Share to friends only"
@@ -958,22 +524,22 @@ msgid ""
 "Friends will have higher priority in the queue, the same as globally "
 "privileged users"
 msgstr ""
+"Draugai turės didesnę pirmenybę eilėje, tokią pačią kaip visuotinai "
+"privilegijuoti naudotojai"
 
 #: pynicotine/gtkgui/settings_glade.py:861
 msgid "Privilege all my friends"
 msgstr "Privilegijuoti visus mano draugus"
 
 #: pynicotine/gtkgui/settings_glade.py:872
-#, fuzzy
 msgid "<b>Privileges:</b>"
-msgstr "Ilgis"
+msgstr "<b>Privilegijos:</b>"
 
 #: pynicotine/gtkgui/settings_glade.py:895
 msgid "<b>Do not download these file types:</b>"
-msgstr ""
+msgstr "<b>Neatsiųsti šių tipų rinkmenų:</b>"
 
 #: pynicotine/gtkgui/settings_glade.py:901
-#, fuzzy
 msgid "Enable Filters"
 msgstr "Įjungti filtrus"
 
@@ -983,28 +549,29 @@ msgid ""
 "are supported if escaping is disabled. For simple filters, keep escaping "
 "enabled."
 msgstr ""
+"<b>Sintaksė:</b> raidžių registras nesvarbus, palaikomos visos Python "
+"reguliarios išraiškos, jeigu išjungti kaitos simboliai. Naudodami "
+"paprastus filtrus, įjunkite kaitos simbolius."
 
 #: pynicotine/gtkgui/settings_glade.py:972
 msgid "Edit Filter"
-msgstr ""
+msgstr "Keisti filtrą"
 
 #: pynicotine/gtkgui/settings_glade.py:1030
-#, fuzzy
 msgid "Load Defaults"
-msgstr "Numatytoji"
+msgstr "Įkelti numatytuosius"
 
 #: pynicotine/gtkgui/settings_glade.py:1052
 msgid "<b>Unverified</b>"
-msgstr ""
+msgstr "<b>Nepatikrinta</b>"
 
 #: pynicotine/gtkgui/settings_glade.py:1092
 msgid "Verify Filters"
-msgstr ""
+msgstr "Patikrinti filtrus"
 
 #: pynicotine/gtkgui/settings_glade.py:1113
-#, fuzzy
 msgid "<b>Download Filters:</b>"
-msgstr "Skubus atsiuntimas"
+msgstr "<b>Atsiuntimo filtrai:</b>"
 
 #: pynicotine/gtkgui/settings_glade.py:1121
 msgid "Lock incoming files (turn off for NFS)"
@@ -1045,7 +612,7 @@ msgstr "Rodyti piktogramą skydelyje"
 
 #: pynicotine/gtkgui/settings_glade.py:1349
 msgid "Reopen last Private Chat messages"
-msgstr ""
+msgstr "Vėl atverti paskutinius asmeninio pokalbio pranešimus"
 
 #: pynicotine/gtkgui/settings_glade.py:1359
 msgid "Chat Font:"
@@ -1053,7 +620,7 @@ msgstr "Pokalbio šriftas:"
 
 #: pynicotine/gtkgui/settings_glade.py:1376
 msgid "Decimal seperator:"
-msgstr "Dešimčių skirtukas:"
+msgstr "Dešimtainis skirtukas:"
 
 #: pynicotine/gtkgui/settings_glade.py:1413
 msgid "Icon Theme Directory (requires restart):"
@@ -1093,9 +660,8 @@ msgid "Sound Effects Directory:"
 msgstr "Garso efektų aplankas:"
 
 #: pynicotine/gtkgui/settings_glade.py:1569
-#, fuzzy
 msgid "<b>Icon and Sound Themes</b>"
-msgstr "Piktogramų ir garso temos"
+msgstr "<b>Piktogramų ir garso temos</b>"
 
 #: pynicotine/gtkgui/settings_glade.py:1601
 msgid "Remote text"
@@ -1114,13 +680,12 @@ msgid "Highlight text"
 msgstr "Paryškinimo tekstas"
 
 #: pynicotine/gtkgui/settings_glade.py:1841
-#, fuzzy
 msgid "<b>List and search colours</b>"
-msgstr "Paieškos spalvos"
+msgstr "<b>Sąrašo ir paieškos spalvos</b>"
 
 #: pynicotine/gtkgui/settings_glade.py:1861
 msgid "List Text"
-msgstr ""
+msgstr "Sąrašo tekstas"
 
 #: pynicotine/gtkgui/settings_glade.py:1959
 msgid "With queue"
@@ -1128,24 +693,23 @@ msgstr "Eilėje"
 
 #: pynicotine/gtkgui/settings_glade.py:2043
 msgid "Username Colours and Hotspots"
-msgstr ""
+msgstr "Naudotojo vardo spalvos ir išryškinimai"
 
 #: pynicotine/gtkgui/settings_glade.py:2218
 msgid "Background"
-msgstr ""
+msgstr "Fonas"
 
 #: pynicotine/gtkgui/settings_glade.py:2234
 msgid "Username Font Style:"
-msgstr ""
+msgstr "Naudotojo vardo šrifto stilius:"
 
 #: pynicotine/gtkgui/settings_glade.py:2266
 msgid "Input Text"
-msgstr ""
+msgstr "Įvesties tekstas"
 
 #: pynicotine/gtkgui/settings_glade.py:2318
-#, fuzzy
 msgid "<b>Colours</b>"
-msgstr "Pokalbių spalvos"
+msgstr "<b>Spalvos</b>"
 
 #: pynicotine/gtkgui/settings_glade.py:2338
 msgid ""
@@ -1153,34 +717,37 @@ msgid ""
 "Nicotine<b>+</b> is started with this feature disabled, you will need to "
 "enable it and restart to see its effects."
 msgstr ""
+"<b>Dėmesio:</b> Ši funkcija naudoja daug išteklių ir gali veikti labai lėtai. "
+"Jeigu Nicotine<b>+</b> paleidžiama išjungus šią funkciją, norėdami pamatyti "
+"jos efektus, turėsite ją įjungti ir paleisti programą iš naujo."
 
 #: pynicotine/gtkgui/settings_glade.py:2344
 msgid "Enable Transparent Textviews"
-msgstr ""
+msgstr "Įjungti permatomus teksto rodinius"
 
 #: pynicotine/gtkgui/settings_glade.py:2372
 msgid "Tint Color"
-msgstr ""
+msgstr "Atspalvis"
 
 #: pynicotine/gtkgui/settings_glade.py:2430
 msgid "Red"
-msgstr ""
+msgstr "Raudona"
 
 #: pynicotine/gtkgui/settings_glade.py:2449
 msgid "Green"
-msgstr ""
+msgstr "Žalia"
 
 #: pynicotine/gtkgui/settings_glade.py:2471
 msgid "Blue"
-msgstr ""
+msgstr "Mėlyna"
 
 #: pynicotine/gtkgui/settings_glade.py:2488
 msgid "Alpha"
-msgstr ""
+msgstr "Alfa"
 
 #: pynicotine/gtkgui/settings_glade.py:2510
 msgid "<b>Transparent Log Windows</b>"
-msgstr ""
+msgstr "<b>Permatomi žurnalų langai</b>"
 
 #: pynicotine/gtkgui/settings_glade.py:2518
 msgid "Extra stuff for your comfort"
@@ -1210,7 +777,13 @@ msgstr "Žurnalų aplankas:"
 
 #: pynicotine/gtkgui/settings_glade.py:2611
 msgid "~/"
-msgstr ""
+msgstr "~/"
+
+#: pynicotine/gtkgui/settings_glade.py:2652
+#: pynicotine/gtkgui/settingswindow.py:1237
+#: pynicotine/gtkgui/settingswindow.py:1250
+msgid "Logging"
+msgstr "Žurnalų vedimas"
 
 #: pynicotine/gtkgui/settings_glade.py:2682
 #: pynicotine/gtkgui/nicotine_glade.py:2404
@@ -1254,7 +827,7 @@ msgstr "Siųsti daugiausiai "
 
 #: pynicotine/gtkgui/settings_glade.py:3030
 msgid "10"
-msgstr ""
+msgstr "10"
 
 #: pynicotine/gtkgui/settings_glade.py:3036
 msgid "results per search request"
@@ -1302,6 +875,12 @@ msgstr "Laisva skiltis"
 msgid "Country:"
 msgstr "Valstybė:"
 
+#: pynicotine/gtkgui/settings_glade.py:3167
+#: pynicotine/gtkgui/settingswindow.py:1238
+#: pynicotine/gtkgui/settingswindow.py:1251
+msgid "Searches"
+msgstr "Paieškos"
+
 #: pynicotine/gtkgui/settings_glade.py:3198
 msgid "Nicotine Settings"
 msgstr "Nicotine nustatymai"
@@ -1312,7 +891,7 @@ msgstr "Įjungti nebuvimą po "
 
 #: pynicotine/gtkgui/settings_glade.py:3320
 msgid "15"
-msgstr ""
+msgstr "15"
 
 #: pynicotine/gtkgui/settings_glade.py:3326
 msgid " minutes of inactivity"
@@ -1321,6 +900,19 @@ msgstr " minučių neveiklumo"
 #: pynicotine/gtkgui/settings_glade.py:3338
 msgid "Auto-reply when away:  "
 msgstr "Automatiškas atsakymas nebūnant:  "
+
+#: pynicotine/gtkgui/settings_glade.py:3357
+#: pynicotine/gtkgui/settingswindow.py:1234
+#: pynicotine/gtkgui/settingswindow.py:1252
+msgid "Away mode"
+msgstr "Nebuvimo režimas"
+
+#: pynicotine/gtkgui/settings_glade.py:3384
+#: pynicotine/gtkgui/settings_glade.py:3457
+#: pynicotine/gtkgui/settingswindow.py:1239
+#: pynicotine/gtkgui/settingswindow.py:1253
+msgid "Events"
+msgstr "Įvykiai"
 
 #: pynicotine/gtkgui/settings_glade.py:3402
 msgid "Run command after download finishes ($ for filename):"
@@ -1386,6 +978,12 @@ msgstr "Atnaujinti"
 msgid "URL Catching:"
 msgstr "URL surinkimas:"
 
+#: pynicotine/gtkgui/settings_glade.py:3733
+#: pynicotine/gtkgui/settingswindow.py:1215
+#: pynicotine/gtkgui/settingswindow.py:1256
+msgid "Connection"
+msgstr "Prisijungimas"
+
 #: pynicotine/gtkgui/settings_glade.py:3750
 msgid ""
 "Choose Server to configure the server you wish to connect to, your username, "
@@ -1436,6 +1034,12 @@ msgstr "http://www.maxmind.com/app/python"
 msgid "Connection Settings"
 msgstr "Ryšio nustatymai"
 
+#: pynicotine/gtkgui/settings_glade.py:3831
+#: pynicotine/gtkgui/settingswindow.py:1229
+#: pynicotine/gtkgui/settingswindow.py:1257
+msgid "UI"
+msgstr "Naudotojo sąsaja"
+
 #: pynicotine/gtkgui/settings_glade.py:3848
 msgid "Choose Interface to configure text color and other settings."
 msgstr ""
@@ -1452,6 +1056,12 @@ msgstr ""
 #: pynicotine/gtkgui/settings_glade.py:3869
 msgid "User Interface Settings"
 msgstr "Naudotojo sąsajos nustatymai"
+
+#: pynicotine/gtkgui/settings_glade.py:3894
+#: pynicotine/gtkgui/settingswindow.py:1233
+#: pynicotine/gtkgui/settingswindow.py:1258
+msgid "Misc"
+msgstr "Įvairūs"
 
 #: pynicotine/gtkgui/settings_glade.py:3911
 msgid "Choose Away mode to configure your auto-away settings."
@@ -1497,144 +1107,75 @@ msgstr ""
 msgid "Miscellaneous Settings"
 msgstr "Įvairūs nustatymai"
 
+#: pynicotine/gtkgui/settings_glade.py:3985
+#: pynicotine/gtkgui/settings_glade.py:4147
+#: pynicotine/gtkgui/settings_glade.py:4163
+#: pynicotine/gtkgui/settingswindow.py:1240
+#: pynicotine/gtkgui/settingswindow.py:1254
+msgid "Import Config"
+msgstr "Importuoti konfigūraciją"
+
 #: pynicotine/gtkgui/settings_glade.py:3999
 msgid ""
 "Importing the config files from the official client will overwrite some of "
 "your settings (Login, Password, User Info, User Image). Use caution with "
 "this feature."
 msgstr ""
+"Importavus konfigūracijos rinkmenas iš oficialaus kliento, bus perrašyti "
+"kai kurie jūsų parametrai (prisijungimo vardas, slaptažodis, naudotojo "
+"informacija, naudotojo paveikslėlis). Naudokite šią funkciją atsargiai."
 
 #: pynicotine/gtkgui/settings_glade.py:4006
 msgid ""
 "Select the directory that contains slsk.exe and the .cfg files: Ex: C:"
 "\\Program Files\\SoulSeek"
 msgstr ""
+"Pasirinkite aplanką, kuriame yra slsk.exe ir .cfg rinkmenos: Pvz., "
+"C:\\Program Files\\SoulSeek"
 
 #: pynicotine/gtkgui/settings_glade.py:4043
-#, fuzzy
 msgid "Import Directory"
-msgstr "Aplankas"
+msgstr "Importuoti aplanką"
 
 #: pynicotine/gtkgui/settings_glade.py:4064
-#, fuzzy
 msgid "Queue"
-msgstr "Eilėje"
+msgstr "Eilė"
 
 #: pynicotine/gtkgui/settings_glade.py:4070
-#, fuzzy
 msgid "Login / Password"
-msgstr "Slaptažodis:"
+msgstr "Prisijungimo vardas / slaptažodis"
 
 #: pynicotine/gtkgui/settings_glade.py:4076
-#, fuzzy
 msgid "Joined Chat Rooms"
-msgstr "_Kambariai"
+msgstr "Kambariai, kuriuose esate"
 
 #: pynicotine/gtkgui/settings_glade.py:4089
-#, fuzzy
 msgid "Buddy List"
-msgstr "Bičiulių _sąrašas"
+msgstr "Bičiulių sąrašas"
 
 #: pynicotine/gtkgui/settings_glade.py:4095
-#, fuzzy
 msgid "Banned List"
-msgstr "Užblokuotas (%s)"
+msgstr "Užblokuotųjų sąrašas"
 
 #: pynicotine/gtkgui/settings_glade.py:4101
-#, fuzzy
 msgid "Ignored List"
-msgstr "Ignoruojami naudotojai:"
+msgstr "Ignoruojųjų sąrašas"
 
 #: pynicotine/gtkgui/settings_glade.py:4107
-#, fuzzy
 msgid "User Info"
-msgstr "Naudotojo i_nformacija"
+msgstr "Naudotojo informacija"
 
 #: pynicotine/gtkgui/settings_glade.py:4113
-#, fuzzy
 msgid "User Image"
-msgstr "Paveikslėlis:"
+msgstr "Naudotojo paveikslėlis"
 
 #: pynicotine/gtkgui/settings_glade.py:4124
 msgid "Restart Nicotine to see all changes take effect"
-msgstr ""
-
-#: pynicotine/gtkgui/checklatest.py:33
-#, python-format
-msgid ""
-"Could not retrieve version information!\n"
-"Error: %s"
-msgstr ""
-"Nepavyko gauti versijos informacija!\n"
-"Klaida: %s"
-
-#: pynicotine/gtkgui/checklatest.py:39
-#, python-format
-msgid ""
-"A newer version ('%s') is available. Check\n"
-"the Nicotine+ homepage, ( http://nicotine-plus.sourceforge.net ) for the "
-"latest version."
-msgstr ""
-"Prienama naujesnė versija („%s“). Naujausią versiją\n"
-"galite rasti Nicotine+ svetainėje (http://www.nicotine-plus.org)."
-
-#: pynicotine/gtkgui/checklatest.py:41
-msgid "You are using the latest version of Nicotine."
-msgstr "Jūs naudojate naujausią Nicotine versiją."
-
-#: pynicotine/gtkgui/userinfo.py:32
-#, python-format
-msgid "Speed: %s"
-msgstr "Greitis: %s"
-
-#: pynicotine/gtkgui/userinfo.py:33
-#, fuzzy, python-format
-msgid "Files: %s"
-msgstr "Rodyti:"
-
-#: pynicotine/gtkgui/userinfo.py:34
-#, fuzzy, python-format
-msgid "Directories: %s"
-msgstr "Aplankas"
-
-#: pynicotine/gtkgui/userinfo.py:139
-#, python-format
-msgid "Total uploads allowed: %i"
-msgstr "Iš viso leidžiamų išsiuntimų: %i"
-
-#: pynicotine/gtkgui/userinfo.py:140
-#, python-format
-msgid "Queue size: %i"
-msgstr "Eilės dydis: %i"
-
-#: pynicotine/gtkgui/userinfo.py:142
-msgid "Yes"
-msgstr ""
-
-#: pynicotine/gtkgui/userinfo.py:144
-#, fuzzy
-msgid "No"
-msgstr "N"
-
-#: pynicotine/gtkgui/userinfo.py:145
-#, fuzzy, python-format
-msgid "Slots free: %s"
-msgstr "Išsiuntimo užklausa: %s"
-
-#: pynicotine/gtkgui/userinfo.py:155 pynicotine/gtkgui/nicotine_glade.py:2214
-#, fuzzy
-msgid "unknown"
-msgstr "Greitis: nežinoma"
-
-#: pynicotine/gtkgui/userinfo.py:156
-#, python-format
-msgid "%s"
-msgstr ""
+msgstr "Norėdami, kad įsigalėtų visi pakeitimai, paleiskite Nicotine iš naujo"
 
 #: pynicotine/gtkgui/userbrowse.py:66
-#, fuzzy
 msgid "Directories"
-msgstr "Aplankas"
+msgstr "Aplankai"
 
 #: pynicotine/gtkgui/userbrowse.py:73 pynicotine/gtkgui/userbrowse.py:91
 msgid "_Download directory"
@@ -1653,22 +1194,20 @@ msgid "Download r_ecursive to..."
 msgstr "Atsiųsti r_ekursyviai į..."
 
 #: pynicotine/gtkgui/userbrowse.py:77
-#, fuzzy
 msgid "Upload Directory to..."
-msgstr "Atsiųsti aplanką _į..."
+msgstr "Nusiųsti aplanką į..."
 
 #: pynicotine/gtkgui/userbrowse.py:78
-#, fuzzy
 msgid "Upload Directory recursive to..."
-msgstr "Atsiųsti aplanką _į..."
+msgstr "Nusiųsti aplanką rekursyviai į..."
 
-#: pynicotine/gtkgui/userbrowse.py:113 pynicotine/gtkgui/search.py:394
-#: pynicotine/gtkgui/transferlist.py:28
+#: pynicotine/gtkgui/userbrowse.py:113 pynicotine/gtkgui/transferlist.py:28
+#: pynicotine/gtkgui/search.py:394
 msgid "Filename"
 msgstr "Rinkmenos pavadinimas"
 
-#: pynicotine/gtkgui/userbrowse.py:114 pynicotine/gtkgui/search.py:396
-#: pynicotine/gtkgui/transferlist.py:31
+#: pynicotine/gtkgui/userbrowse.py:114 pynicotine/gtkgui/transferlist.py:31
+#: pynicotine/gtkgui/search.py:396
 msgid "Size"
 msgstr "Dydis"
 
@@ -1693,30 +1232,864 @@ msgstr "Atsiųsti _į..."
 msgid "Up_load file(s)"
 msgstr "N_usiųsti rinkmeną(as)"
 
-#: pynicotine/gtkgui/userbrowse.py:354 pynicotine/gtkgui/search.py:529
-#: pynicotine/gtkgui/browsetreemodels.py:148
+#: pynicotine/gtkgui/userbrowse.py:354
+#: pynicotine/gtkgui/browsetreemodels.py:148 pynicotine/gtkgui/search.py:529
 msgid " (vbr)"
 msgstr " (vbr)"
 
+#: pynicotine/gtkgui/userbrowse.py:376 pynicotine/gtkgui/frame.py:654
+#, python-format
+msgid "Can't create directory '%(folder)s', reported error: %(error)s"
+msgstr "Nepavyko sukurti aplanko „%(folder)s“, gauta klaida: %(error)s"
+
 #: pynicotine/gtkgui/userbrowse.py:386
-#, fuzzy, python-format
+#, python-format
 msgid "Can't save shares, '%(user)s', reported error: %(error)s"
-msgstr "Nepavyko sukurti aplanko „%s“, gauta klaida: %s"
+msgstr "Nepavyko išsaugoti viešinių, „%(user)s“, gauta klaida: %(error)s"
+
+#: pynicotine/gtkgui/userbrowse.py:465 pynicotine/gtkgui/frame.py:122
+#: pynicotine/gtkgui/frame.py:512 pynicotine/gtkgui/frame.py:513
+#: pynicotine/gtkgui/frame.py:518 pynicotine/gtkgui/frame.py:523
+#: pynicotine/gtkgui/frame.py:525 pynicotine/gtkgui/frame.py:601
+msgid "Nicotine+"
+msgstr "Nicotine+"
+
+#: pynicotine/gtkgui/userbrowse.py:465 pynicotine/gtkgui/frame.py:601
+#, python-format
+msgid ""
+"Are you sure you wish to download %(num)i files from %(user)s's directory %"
+"(folder)s?"
+msgstr ""
+"Ar tikrai norite atsisiųsti %(num)i rinkmeną (-ų) iš naudotojo %(user)s "
+"aplanko %(folder)s?"
 
 #: pynicotine/gtkgui/userbrowse.py:589
-#, fuzzy
 msgid "Nicotine: Upload Directory's Contents"
-msgstr "Atsiųsti aplanką _į..."
+msgstr "Nicotine: Nusiųsti aplanko turinį"
 
 #: pynicotine/gtkgui/userbrowse.py:590 pynicotine/gtkgui/userbrowse.py:602
-#, fuzzy
 msgid "Enter the User you wish to upload to:"
-msgstr "Įveskite naudotoją, kurio informaciją norite gauti:"
+msgstr "Nurodkite naudotoją, kuriam norite nusiųsti:"
 
 #: pynicotine/gtkgui/userbrowse.py:601
-#, fuzzy
 msgid "Nicotine: Upload File(s)"
-msgstr "N_usiųsti rinkmeną(as)"
+msgstr "Nicotine: Nusiųsti rinkmeną(as)"
+
+#: pynicotine/gtkgui/userlist.py:20 pynicotine/gtkgui/transferlist.py:32
+#: pynicotine/gtkgui/frame.py:219 pynicotine/gtkgui/chatrooms.py:365
+#: pynicotine/gtkgui/search.py:397
+msgid "Speed"
+msgstr "Greitis"
+
+#: pynicotine/gtkgui/userlist.py:21 pynicotine/gtkgui/frame.py:220
+#: pynicotine/gtkgui/chatrooms.py:366
+msgid "Files"
+msgstr "Rinkmenos"
+
+#: pynicotine/gtkgui/userlist.py:22
+msgid "Trusted"
+msgstr "Patikimas"
+
+#: pynicotine/gtkgui/userlist.py:23 pynicotine/gtkgui/userlist.py:194
+msgid "Comments"
+msgstr "Komentarai"
+
+#: pynicotine/gtkgui/userlist.py:69
+msgid "_Online notify"
+msgstr "_Pranešama apie prisijunimą"
+
+#: pynicotine/gtkgui/userlist.py:70
+msgid "_Privileged"
+msgstr "_Privilegijuotas"
+
+#: pynicotine/gtkgui/userlist.py:71
+msgid "_Trusted"
+msgstr "_Patikimas"
+
+#: pynicotine/gtkgui/userlist.py:73
+msgid "Edit _comments"
+msgstr "Keisti _komentarus"
+
+#: pynicotine/gtkgui/userlist.py:74
+msgid "_Remove"
+msgstr "_Pašalinti"
+
+#: pynicotine/gtkgui/userlist.py:159
+#, python-format
+msgid "User %s is offline"
+msgstr "Naudotojas %s atsijungęs"
+
+#: pynicotine/gtkgui/userlist.py:159
+#, python-format
+msgid "User %s is away"
+msgstr "Naudotojo %s nėra"
+
+#: pynicotine/gtkgui/userlist.py:159
+#, python-format
+msgid "User %s is online"
+msgstr "Naudotojas %s prisijungęs"
+
+#: pynicotine/gtkgui/userlist.py:194
+msgid "Edit comments"
+msgstr "Keisti komentarus"
+
+#: pynicotine/gtkgui/privatechat.py:141
+#: pynicotine/gtkgui/nicotine_glade.py:1759
+#: pynicotine/gtkgui/nicotine_glade.py:1882
+#: pynicotine/gtkgui/nicotine_glade.py:2491
+#: pynicotine/gtkgui/nicotine_glade.py:2691
+#: pynicotine/gtkgui/entrydialog.py:129
+msgid "Close"
+msgstr "Užverti"
+
+#: pynicotine/gtkgui/privatechat.py:147
+msgid "Add user to list"
+msgstr "Įtraukti naudotoją į sąrašą"
+
+#: pynicotine/gtkgui/privatechat.py:148
+msgid "Ban this user"
+msgstr "Užblokuoti šį naudotoją"
+
+#: pynicotine/gtkgui/privatechat.py:149
+msgid "Ignore this user"
+msgstr "Ignoruoti šį naudotoją"
+
+#: pynicotine/gtkgui/privatechat.py:151
+msgid "Client Version"
+msgstr "Kliento versija"
+
+#: pynicotine/gtkgui/privatechat.py:153 pynicotine/gtkgui/frame.py:138
+#: pynicotine/gtkgui/chatrooms.py:406 pynicotine/gtkgui/chatrooms.py:414
+msgid "Find"
+msgstr "Rasti"
+
+#: pynicotine/gtkgui/privatechat.py:154 pynicotine/gtkgui/frame.py:139
+#: pynicotine/gtkgui/chatrooms.py:407 pynicotine/gtkgui/chatrooms.py:415
+msgid "Copy"
+msgstr "Kopijuoti"
+
+#: pynicotine/gtkgui/privatechat.py:155 pynicotine/gtkgui/frame.py:140
+#: pynicotine/gtkgui/chatrooms.py:408 pynicotine/gtkgui/chatrooms.py:416
+msgid "Copy All"
+msgstr "Kopijuoti viską"
+
+#: pynicotine/gtkgui/privatechat.py:156 pynicotine/gtkgui/frame.py:141
+#: pynicotine/gtkgui/chatrooms.py:409 pynicotine/gtkgui/chatrooms.py:417
+msgid "Clear log"
+msgstr "Išvalyti žurnalą"
+
+#: pynicotine/gtkgui/privatechat.py:183 pynicotine/gtkgui/chatrooms.py:846
+msgid "--- reconnected ---"
+msgstr "--- prisijungta iš naujo ---"
+
+#: pynicotine/gtkgui/privatechat.py:186 pynicotine/gtkgui/chatrooms.py:833
+msgid "--- disconnected ---"
+msgstr "--- atsijungta ---"
+
+#: pynicotine/gtkgui/privatechat.py:235
+msgid "* Message(s) sent while you were offline."
+msgstr "* Atsiųsta (-os) žinutė (-ės), kai jūs buvote atsijungę."
+
+#: pynicotine/gtkgui/privatechat.py:361 pynicotine/gtkgui/chatrooms.py:641
+#, python-format
+msgid "Command %s is not recognized"
+msgstr "Komanda %s neatpažinta"
+
+#: pynicotine/gtkgui/transferlist.py:29
+msgid "Status"
+msgstr "Būsena"
+
+#: pynicotine/gtkgui/transferlist.py:30
+msgid "Percent"
+msgstr "Procentai"
+
+#: pynicotine/gtkgui/transferlist.py:33
+msgid "Time elapsed"
+msgstr "Praėjęs laikas"
+
+#: pynicotine/gtkgui/transferlist.py:34
+msgid "Time left"
+msgstr "Likęs laikas"
+
+#: pynicotine/gtkgui/transferlist.py:35
+msgid "Path"
+msgstr "Kelias"
+
+#: pynicotine/gtkgui/transferlist.py:62 pynicotine/gtkgui/transferlist.py:166
+msgid "Getting status"
+msgstr "Gaunama būsena"
+
+#: pynicotine/gtkgui/transferlist.py:63 pynicotine/gtkgui/transferlist.py:150
+msgid "Waiting for download"
+msgstr "Laukiama siuntimo"
+
+#: pynicotine/gtkgui/transferlist.py:64 pynicotine/gtkgui/transferlist.py:152
+msgid "Waiting for upload"
+msgstr "Laukiama išsiuntimo"
+
+#: pynicotine/gtkgui/transferlist.py:65 pynicotine/gtkgui/transferlist.py:164
+msgid "Getting address"
+msgstr "Gaunamas adresas"
+
+#: pynicotine/gtkgui/transferlist.py:66 pynicotine/gtkgui/transferlist.py:162
+msgid "Connecting"
+msgstr "Jungiamasi"
+
+#: pynicotine/gtkgui/transferlist.py:67 pynicotine/gtkgui/transferlist.py:160
+msgid "Waiting for peer to connect"
+msgstr "Laukiama porininko prisijungimui"
+
+#: pynicotine/gtkgui/transferlist.py:68 pynicotine/gtkgui/transferlist.py:158
+msgid "Cannot connect"
+msgstr "Nepavyko prisijungti"
+
+#: pynicotine/gtkgui/transferlist.py:69 pynicotine/gtkgui/transferlist.py:170
+msgid "User logged off"
+msgstr "Naudotojas atsijungęs"
+
+#: pynicotine/gtkgui/transferlist.py:70 pynicotine/gtkgui/transferlist.py:154
+msgid "Requesting file"
+msgstr "Užklausiama rinkmenos"
+
+#: pynicotine/gtkgui/transferlist.py:71 pynicotine/gtkgui/transferlist.py:156
+msgid "Initializing transfer"
+msgstr "Inicializuojamas siuntimas"
+
+#: pynicotine/gtkgui/transferlist.py:72 pynicotine/gtkgui/transferlist.py:180
+msgid "Filtered"
+msgstr "Atfiltruota"
+
+#: pynicotine/gtkgui/transferlist.py:73 pynicotine/gtkgui/transferlist.py:188
+msgid "Download directory error"
+msgstr "Atsiuntimo aplanko klaida"
+
+#: pynicotine/gtkgui/transferlist.py:74 pynicotine/gtkgui/transferlist.py:190
+msgid "Local file error"
+msgstr "Vietinės rinkmenos klaida"
+
+#: pynicotine/gtkgui/transferlist.py:75 pynicotine/gtkgui/transferlist.py:184
+msgid "File not shared"
+msgstr "Rinkmena neviešinama"
+
+#: pynicotine/gtkgui/transferlist.py:76 pynicotine/gtkgui/transferlist.py:172
+msgid "Aborted"
+msgstr "Nutraukta"
+
+#: pynicotine/gtkgui/transferlist.py:77 pynicotine/gtkgui/transferlist.py:176
+msgid "Paused"
+msgstr "Sulaikyta"
+
+#: pynicotine/gtkgui/transferlist.py:78 pynicotine/gtkgui/transferlist.py:168
+msgid "Queued"
+msgstr "Eilėje"
+
+#: pynicotine/gtkgui/transferlist.py:79 pynicotine/gtkgui/transferlist.py:178
+#: pynicotine/gtkgui/transferlist.py:291
+msgid "Transferring"
+msgstr "Siunčiama"
+
+#: pynicotine/gtkgui/transferlist.py:80 pynicotine/gtkgui/transferlist.py:174
+msgid "Finished"
+msgstr "Baigta"
+
+#: pynicotine/gtkgui/transferlist.py:137
+#, python-format
+msgid "%.2f GB"
+msgstr "%.2f GB"
+
+#: pynicotine/gtkgui/transferlist.py:139
+#, python-format
+msgid "%.2f MB"
+msgstr "%.2f MB"
+
+#: pynicotine/gtkgui/transferlist.py:141
+#, python-format
+msgid "%.2f KB"
+msgstr "%.2f KB"
+
+#: pynicotine/gtkgui/transferlist.py:182
+msgid "Connection closed by peer"
+msgstr "Porininkas nutraukė ryšį"
+
+#: pynicotine/gtkgui/transferlist.py:186
+msgid "Establishing connection"
+msgstr "Įtvirtintas ryšys"
+
+#: pynicotine/gtkgui/transferlist.py:303
+#, python-format
+msgid "%s Files"
+msgstr "%s rinkmenos"
+
+#: pynicotine/gtkgui/nowplaying.py:30
+msgid "NowPlaying"
+msgstr "DabarGrojama"
+
+#: pynicotine/gtkgui/nowplaying.py:41
+msgid "Display what your Media Player is playing in Chat with the /now command"
+msgstr "Pokalbių lange nurodžius komandą /now rodyti ką groja jūsų grotuvas"
+
+#: pynicotine/gtkgui/nowplaying.py:57
+msgid "XMMS / Infopipe"
+msgstr "XMMS / Infopipe"
+
+#: pynicotine/gtkgui/nowplaying.py:65
+msgid "Amarok"
+msgstr "Amarok"
+
+#: pynicotine/gtkgui/nowplaying.py:73
+msgid "MPD via mpc"
+msgstr "MPD per mpc"
+
+#: pynicotine/gtkgui/nowplaying.py:98
+msgid "BMPx"
+msgstr "BMPx"
+
+#: pynicotine/gtkgui/nowplaying.py:106
+msgid "Rhythmbox"
+msgstr "Rhythmbox"
+
+#: pynicotine/gtkgui/nowplaying.py:115
+msgid "Other"
+msgstr "Kitas"
+
+#: pynicotine/gtkgui/nowplaying.py:128
+msgid "Player Command:"
+msgstr "Grotuvo komanda:"
+
+#: pynicotine/gtkgui/nowplaying.py:148
+msgid "Legend:"
+msgstr "Legenda:"
+
+#: pynicotine/gtkgui/nowplaying.py:165
+msgid "Now playing format:"
+msgstr "Grojamos dainos rodymo formatas:"
+
+#: pynicotine/gtkgui/nowplaying.py:201
+msgid "Example:"
+msgstr "Pavyzdys:"
+
+#: pynicotine/gtkgui/nowplaying.py:250
+msgid "Test"
+msgstr "Tikrinti"
+
+#: pynicotine/gtkgui/nowplaying.py:316
+msgid ""
+"$n Now Playing\n"
+"$l Length\n"
+"$r Bitrate\n"
+"$s Status"
+msgstr ""
+"$n Dabar grojama\n"
+"$l Trukmė\n"
+"$r Bitų dažnis\n"
+"$s Būsena"
+
+#: pynicotine/gtkgui/nowplaying.py:319
+msgid ""
+"$n Now Playing\n"
+"$t Title\n"
+"$a Artist\n"
+"$b Album\n"
+"$k Track Number\n"
+"$f Filename"
+msgstr ""
+"$n Dabar grojama\n"
+"$t Pavadinimas\n"
+"$a Atlikėjas\n"
+"$b Albumas\n"
+"$k Takelio numeris\n"
+"$f Rinkmenos vardas"
+
+#: pynicotine/gtkgui/nowplaying.py:322
+msgid ""
+"$n Now Playing\n"
+"$l Length\n"
+"$r Bitrate\n"
+"$s Status\n"
+"$t Title\n"
+"$a Artist\n"
+"$b Album\n"
+"$c Comment\n"
+"$k Track Number\n"
+"$y Year\n"
+"$f Filename"
+msgstr ""
+"$n Dabar grojama\n"
+"$l Trukmė\n"
+"$r Bitų dažnis\n"
+"$s Būsena\n"
+"$t Pavadinimas\n"
+"$a Atlikėjas\n"
+"$b Albumas\n"
+"$c Komentaras\n"
+"$k Takelio numeris\n"
+"$y Metai\n"
+"$f Rinkmenos vardas"
+
+#: pynicotine/gtkgui/nowplaying.py:325
+msgid ""
+"$n Now Playing\n"
+"$l Length\n"
+"$r Bitrate\n"
+"$s Status\n"
+"$t Title\n"
+"$a Artist\n"
+"$b Album\n"
+"$c Comment\n"
+"$k Track Number\n"
+"$y Year\n"
+"$f Filename (URI)"
+msgstr ""
+"$n Dabar grojama\n"
+"$l Trukmė\n"
+"$r Bitų dažnis\n"
+"$s Būsena\n"
+"$t Pavadinimas\n"
+"$a Atlikėjas\n"
+"$b Albumas\n"
+"$c Komentaras\n"
+"$k Takelio numeris\n"
+"$y Metai\n"
+"$f Rinkmenos vardas (URI)"
+
+#: pynicotine/gtkgui/nowplaying.py:328
+msgid ""
+"$n Now Playing\n"
+"$l Length\n"
+"$r Bitrate\n"
+"$t Title\n"
+"$a Artist\n"
+"$b Album\n"
+"$k Track Number\n"
+"$y Year\n"
+"$f Filename (URI)"
+msgstr ""
+"$n Dabar grojama\n"
+"$l Trukmė\n"
+"$r Bitų dažnis\n"
+"$t Pavadinimas\n"
+"$a Atlikėjas\n"
+"$b Albumas\n"
+"$k Takelio numeris\n"
+"$y Metai\n"
+"$f Rinkmenos vardas (URI)"
+
+#: pynicotine/gtkgui/nowplaying.py:331
+msgid "$n Now Playing"
+msgstr "$n dabar grojama"
+
+#: pynicotine/gtkgui/settingswindow.py:62
+msgid "Warning: Bad Username"
+msgstr "Dėmesio: blogas naudotojo vardas"
+
+#: pynicotine/gtkgui/settingswindow.py:62
+msgid "Username 'None' is not a good one, please pick another."
+msgstr "Naudotojo vardas „None“ nėra geras, pasirinkite kitą."
+
+#: pynicotine/gtkgui/settingswindow.py:117
+#: pynicotine/gtkgui/settingswindow.py:125
+#: pynicotine/gtkgui/settingswindow.py:131
+msgid "Warning"
+msgstr "Dėmesio"
+
+#: pynicotine/gtkgui/settingswindow.py:117
+#: pynicotine/gtkgui/settingswindow.py:125
+#: pynicotine/gtkgui/settingswindow.py:131
+#, python-format
+msgid "Security Risk: you should not share your %s directory!"
+msgstr "Rizika saugumu: neturėtumėt viešinti aplanko %s!"
+
+#: pynicotine/gtkgui/settingswindow.py:236
+msgid "Filter"
+msgstr "Filtruoti"
+
+#: pynicotine/gtkgui/settingswindow.py:237
+msgid "Escaped"
+msgstr "Kaitos simbolis"
+
+#: pynicotine/gtkgui/settingswindow.py:380
+msgid "Nicotine+: Add a download filter"
+msgstr "Nicotine+: pridėti atsiuntimo filtrą"
+
+#: pynicotine/gtkgui/settingswindow.py:380
+msgid "Enter a new download filter:"
+msgstr "Įveskite naują atsiuntimo filtrą:"
+
+#: pynicotine/gtkgui/settingswindow.py:407
+msgid "Nicotine+: Edit a download filter"
+msgstr "Nicotine+: keisti atsiuntimo filtrą"
+
+#: pynicotine/gtkgui/settingswindow.py:407
+msgid "Modify this download filter:"
+msgstr "Keiskite šį atsiuntimo filtrą:"
+
+#: pynicotine/gtkgui/settingswindow.py:486
+#, python-format
+msgid "%(num)d Failed! %(error)s "
+msgstr "%(num)d Nepavyko! %(error)s "
+
+#: pynicotine/gtkgui/settingswindow.py:561
+#: pynicotine/gtkgui/settingswindow.py:568 pynicotine/gtkgui/chatrooms.py:66
+msgid "Users"
+msgstr "Naudotojai"
+
+#: pynicotine/gtkgui/settingswindow.py:606
+msgid "Ban user..."
+msgstr "Užblokuoti naudotoją..."
+
+#: pynicotine/gtkgui/settingswindow.py:606
+#: pynicotine/gtkgui/settingswindow.py:627
+msgid "User:"
+msgstr "Naudotojas:"
+
+#: pynicotine/gtkgui/settingswindow.py:627
+msgid "Ignore user..."
+msgstr "Ignoruoti naudotoją..."
+
+#: pynicotine/gtkgui/settingswindow.py:869
+msgid "Pick a colour, any colour"
+msgstr "Pasirinkite spalvą, bet kokią spalvą"
+
+#: pynicotine/gtkgui/settingswindow.py:1093
+#: pynicotine/gtkgui/settingswindow.py:1098
+msgid "Nothing Imported"
+msgstr "Nieko neimportuota"
+
+#: pynicotine/gtkgui/settingswindow.py:1093
+#, python-format
+msgid "Config files for the official Soulseek client not found in \"%s\""
+msgstr "„%s“ nerasta oficialaus Soulseek kliento konfigūracijos rinkmenų"
+
+#: pynicotine/gtkgui/settingswindow.py:1095
+msgid "Imported Soulseek Config"
+msgstr "Importuota Soulseek konfigūracija"
+
+#: pynicotine/gtkgui/settingswindow.py:1095
+msgid ""
+"Config was imported. You may need to restart for changes to take effect. If "
+"you changed your user name, buddy list or queue then you should restart "
+"immediately."
+msgstr ""
+"Konfigūracija buvo importuota. Gali reikėti paleisti programą iš naujo, kad "
+"pakeitimai įsigaliotų. Jeigu pakeitėte naudotojo vardą, bičiulių sąrašą "
+"arba eilę, tada turite paleisti iš naujo tuojau pat."
+
+#: pynicotine/gtkgui/settingswindow.py:1098
+msgid "No options were selected"
+msgstr "Parinkčių nepasirinkta"
+
+#: pynicotine/gtkgui/settingswindow.py:1108
+msgid "Protocol"
+msgstr "Protokolas"
+
+#: pynicotine/gtkgui/settingswindow.py:1109
+msgid "Handler"
+msgstr "Valdiklis"
+
+#: pynicotine/gtkgui/settingswindow.py:1221
+#: pynicotine/gtkgui/settingswindow.py:1225
+#: pynicotine/gtkgui/settingswindow.py:1245
+msgid "Geo Block"
+msgstr "Geoblokavimas"
+
+#: pynicotine/gtkgui/settingswindow.py:1230
+#: pynicotine/gtkgui/settingswindow.py:1248
+#: pynicotine/gtkgui/settingswindow.py:1323
+msgid "Interface"
+msgstr "Sąsaja"
+
+#: pynicotine/gtkgui/settingswindow.py:1231
+#: pynicotine/gtkgui/settingswindow.py:1249
+msgid "URL Catching"
+msgstr "URL surinkimas"
+
+#: pynicotine/gtkgui/settingswindow.py:1235
+#: pynicotine/gtkgui/settingswindow.py:1246
+#: pynicotine/gtkgui/nicotine_glade.py:960
+msgid "User info"
+msgstr "Naudotojo informacija"
+
+#: pynicotine/gtkgui/settingswindow.py:1236
+#: pynicotine/gtkgui/settingswindow.py:1247
+msgid "Ban / ignore"
+msgstr "Uždrausti / ignoruoti"
+
+#: pynicotine/gtkgui/settingswindow.py:1260
+msgid "Categories"
+msgstr "Kategorijos"
+
+#: pynicotine/gtkgui/frame.py:145 pynicotine/gtkgui/frame.py:147
+msgid "Close Nicotine-Plus?"
+msgstr "Užverti Nicotine-Plus?"
+
+#: pynicotine/gtkgui/frame.py:145 pynicotine/gtkgui/frame.py:147
+msgid "Are you sure you wish to exit Nicotine-Plus at this time?"
+msgstr "Ar tikrai norite uždaryti Nicotine-Plus?"
+
+#: pynicotine/gtkgui/frame.py:145
+msgid "Send to tray"
+msgstr "Sutraukti į skydelį"
+
+#: pynicotine/gtkgui/frame.py:177 pynicotine/gtkgui/frame.py:1768
+msgid "I like"
+msgstr "Man patinka"
+
+#: pynicotine/gtkgui/frame.py:184
+msgid "_Remove this item"
+msgstr "_Pašalinti šį elementą"
+
+#: pynicotine/gtkgui/frame.py:185
+msgid "Re_commendations for this item"
+msgstr "Šio elemento re_komendacijos"
+
+#: pynicotine/gtkgui/frame.py:192
+msgid "I dislike"
+msgstr "Man nepatinka"
+
+#: pynicotine/gtkgui/frame.py:196
+msgid "Remove this item"
+msgstr "Pašalinti šį elementą"
+
+#: pynicotine/gtkgui/frame.py:200 pynicotine/gtkgui/nicotine_glade.py:1098
+msgid "Recommendations"
+msgstr "Rekomendacijos"
+
+#: pynicotine/gtkgui/frame.py:201
+msgid "Rating"
+msgstr "Įvertinimas"
+
+#: pynicotine/gtkgui/frame.py:208
+msgid "I _like this"
+msgstr "Man tai _patinka"
+
+#: pynicotine/gtkgui/frame.py:209
+msgid "I _don't like this"
+msgstr "Man tai _nepatinka"
+
+#: pynicotine/gtkgui/frame.py:210
+msgid "_Recommendations for this item"
+msgstr "Šio elemento _rekomendacijos"
+
+#: pynicotine/gtkgui/frame.py:212
+msgid "_Search for this item"
+msgstr "Iešk_oti šio elemento"
+
+#: pynicotine/gtkgui/frame.py:331
+msgid "Add Buddy: "
+msgstr "Pridėti bičiulį:"
+
+#: pynicotine/gtkgui/frame.py:349 pynicotine/gtkgui/frame.py:1584
+#: pynicotine/gtkgui/nicotine_glade.py:389
+#: pynicotine/gtkgui/nicotine_glade.py:441
+#: pynicotine/gtkgui/nicotine_glade.py:633
+#: pynicotine/gtkgui/nicotine_glade.py:797
+#: pynicotine/gtkgui/nicotine_glade.py:908
+#: pynicotine/gtkgui/nicotine_glade.py:960
+#: pynicotine/gtkgui/nicotine_glade.py:1041
+#: pynicotine/gtkgui/nicotine_glade.py:1282
+msgid "ImageLabel"
+msgstr "ImageLabel"
+
+#: pynicotine/gtkgui/frame.py:349 pynicotine/gtkgui/frame.py:1584
+msgid "Buddy list"
+msgstr "Bičiulių sąrašas"
+
+#: pynicotine/gtkgui/frame.py:405
+msgid ""
+"You need to configure your settings (Server, Username, Password, Download "
+"Directory) before connecting..."
+msgstr ""
+"Prieš prisijungiant turite nurodyti Jūsų nustatymus (serverį, naudotojo "
+"vardą, slaptažodį, atsiuntimų aplanką)..."
+
+#: pynicotine/gtkgui/frame.py:518
+#, python-format
+msgid "Private Message from %(user)s"
+msgstr "Asmeninė žinutė nuo %(user)s"
+
+#: pynicotine/gtkgui/frame.py:523
+#, python-format
+msgid "You've been mentioned in the %(room)s room"
+msgstr "Jus paminėjo kambaryje %(room)s"
+
+#: pynicotine/gtkgui/frame.py:525
+#, python-format
+msgid "%(user)s mentioned you in the %(room)s room"
+msgstr "%(user)s paminėjo jus kambaryje %(room)s"
+
+#: pynicotine/gtkgui/frame.py:676
+#, python-format
+msgid "Loading Shares from disk failed: %(error)s"
+msgstr "Nepavyko įkelti viešinių iš disko: %(error)s"
+
+#: pynicotine/gtkgui/frame.py:698
+msgid "Nicotine+: Get User Info"
+msgstr "Nicotine+: gauti naudotojo informaciją"
+
+#: pynicotine/gtkgui/frame.py:699
+msgid "Enter the User whose User Info you wish to recieve:"
+msgstr "Įveskite naudotoją, kurio informaciją norite gauti:"
+
+#: pynicotine/gtkgui/frame.py:711
+msgid "Nicotine+: Get A User's IP"
+msgstr "Nicotine+: gauti naudotojo IP"
+
+#: pynicotine/gtkgui/frame.py:712
+msgid "Enter the User whose IP Address you wish to recieve:"
+msgstr "Įveskite naudotoją, kurio IP adresą norite gauti:"
+
+#: pynicotine/gtkgui/frame.py:725
+msgid "Nicotine+: Get A User's Shares List"
+msgstr "Nicotine+: gauti naudotojo viešinių sąrašą"
+
+#: pynicotine/gtkgui/frame.py:726
+msgid "Enter the User whose Shares List you wish to recieve:"
+msgstr "Įveskite naudotoją, kurio viešinių sąrašą norite gauti:"
+
+#: pynicotine/gtkgui/frame.py:738
+msgid "Connect"
+msgstr "Prisijungti"
+
+#: pynicotine/gtkgui/frame.py:739
+msgid "Disconnect"
+msgstr "Atsijungti"
+
+#: pynicotine/gtkgui/frame.py:743
+msgid "Hide / Unhide Nicotine"
+msgstr "Paslėpti / parodyti Nicotine"
+
+#: pynicotine/gtkgui/frame.py:745
+msgid "Settings"
+msgstr "Nustatymai"
+
+#: pynicotine/gtkgui/frame.py:746
+msgid "Lookup a User's IP"
+msgstr "Gauti naudotojo IP"
+
+#: pynicotine/gtkgui/frame.py:747
+msgid "Lookup a User's Info"
+msgstr "Gauti naudotojo informaciją"
+
+#: pynicotine/gtkgui/frame.py:748
+msgid "Lookup a User's Shares"
+msgstr "Gauti naudotojo viešinius"
+
+#: pynicotine/gtkgui/frame.py:749
+msgid "Toggle Away"
+msgstr "Keisti nebuvimo būseną"
+
+#: pynicotine/gtkgui/frame.py:750
+msgid "Quit"
+msgstr "Išeiti"
+
+#: pynicotine/gtkgui/frame.py:1038
+#, python-format
+msgid "Connecting to %(host)s:%(port)s"
+msgstr "Jungiamasi prie %(host)s:%(port)s"
+
+#: pynicotine/gtkgui/frame.py:1205
+#, python-format
+msgid "Down: %(num)i users, %(speed).1f KB/s"
+msgstr "Ats.: %(num)i naudot., %(speed).1f KB/s"
+
+#: pynicotine/gtkgui/frame.py:1206
+#, python-format
+msgid "Up: %(num)i users, %(speed).1f KB/s"
+msgstr "Išs.: %(num)i naudot., %(speed).1f KB/s"
+
+#: pynicotine/gtkgui/frame.py:1246
+msgid "Rescanning started"
+msgstr "Pradėtas pakartotinis skanavimas"
+
+#: pynicotine/gtkgui/frame.py:1265
+msgid "Rescanning Buddy Shares started"
+msgstr "Pradėtas pakartotinas bičiulių viešinių skanavimas"
+
+#: pynicotine/gtkgui/frame.py:1285
+msgid "Rescanning Buddy Shares finished"
+msgstr "Baigtas bičiulių viešininų pakartotinis skanavimas"
+
+#: pynicotine/gtkgui/frame.py:1296
+msgid "Rescanning finished"
+msgstr "Baigtas pakartotinis skanavimas"
+
+#: pynicotine/gtkgui/frame.py:1372
+msgid ""
+"You need to finish configuring your settings (Server, Username, Password, "
+"Download Directory) before connecting... but if this message persists, check "
+"your Nicotine config file for options set to 'None'."
+msgstr ""
+"Prieš prisijungiant, turite baigti nurodyti parametrus (serverį, naudotojo "
+"vardą, slaptažodį, atsiuntimų aplanką)... tačiau jeigu šis pranešimas "
+"rodomas ir toliau, patikrinkite Nicotine konfigūracijos rinkmenoje "
+"parinktis nustatytas į „None“."
+
+#: pynicotine/gtkgui/frame.py:1475
+#, python-format
+msgid "Error: %(num)d Download filters failed! %(error)s "
+msgstr "Klaida: %(num)d Atsiuntimų filtravimas nesėkmingas! %(error)s"
+
+#: pynicotine/gtkgui/frame.py:1479
+#, python-format
+msgid "Error: Download Filter failed! Verify your filters. Reason: %s"
+msgstr ""
+"Klaida: Atsiuntimų filtravimas nepavyko! Patikrinkite filtrus: Priežastis: %s"
+
+#: pynicotine/gtkgui/frame.py:1501
+msgid "Cannot Find Guide"
+msgstr "Nepavyko rasti žinyno"
+
+#: pynicotine/gtkgui/frame.py:1501
+#, python-format
+msgid ""
+"The Nicotine Offline Guide ( NicotinePlusGuide.html ) was not found in "
+"either the following directories:\n"
+"\n"
+"<u>%(pwd)s/doc/\n"
+"</u><b>and</b>\n"
+"<u>%(prefix)s/share/nicotine/documentation/</u>\n"
+"\n"
+"Either install Nicotine-Plus, or start from inside the Nicotine-Plus source "
+"directory."
+msgstr ""
+"Nicotine žinynas nerastas (NicotinePlusGuide.html) šiuose aplankuose:\n"
+"\n"
+"<u>%(pwd)s/doc/\n"
+"</u><b>ir</b>\n"
+"<u>%(prefix)s/share/nicotine/documentation/</u>\n"
+"\n"
+"Arba įdiekite Nicotine-Plus, arba paleiskite iš Nicotine-Plus pradinio kodo "
+"aplanko."
+
+#: pynicotine/gtkgui/frame.py:1604
+#, python-format
+msgid "Invalid SoulSeek meta-url: %s"
+msgstr "Netinkamas SoulSeek meta-url: %s"
+
+#: pynicotine/gtkgui/frame.py:1697
+msgid "Enter the string to search for:"
+msgstr "Įveskite ieškotiną eilutę:"
+
+#: pynicotine/gtkgui/frame.py:1698
+msgid "Nicotine+: Find string"
+msgstr "Nicotine+: Rasti eilutę"
+
+#: pynicotine/gtkgui/frame.py:1768
+msgid "Add thing I like"
+msgstr "Pridėti mano megstamus dalykus"
+
+#: pynicotine/gtkgui/frame.py:1777
+msgid "Add thing I don't like"
+msgstr "Pridėti mano nemėgstamus dalykus"
+
+#: pynicotine/gtkgui/frame.py:1777
+msgid "I don't like"
+msgstr "Man nepatinka"
+
+#: pynicotine/gtkgui/frame.py:1802
+#, python-format
+msgid "Recommendations for %s"
+msgstr "%s rekomendacijos"
 
 #: pynicotine/gtkgui/chatrooms.py:65
 msgid "Room"
@@ -1755,93 +2128,33 @@ msgstr "Visada šiam kanalui"
 msgid "Default for all channels"
 msgstr "Numatytoji visiems kanalams"
 
-#: pynicotine/gtkgui/chatrooms.py:414 pynicotine/gtkgui/privatechat.py:154
-#, fuzzy
-msgid "Copy"
-msgstr "Kopijuoti viską"
-
-#: pynicotine/gtkgui/chatrooms.py:640 pynicotine/gtkgui/privatechat.py:361
-#, python-format
-msgid "Command %s is not recognized"
-msgstr "Komanda %s neatpažinta"
-
-#: pynicotine/gtkgui/chatrooms.py:651
+#: pynicotine/gtkgui/chatrooms.py:652
 #, python-format
 msgid "%s joined the room"
 msgstr "%s prisijungė prie kambario"
 
-#: pynicotine/gtkgui/chatrooms.py:667
+#: pynicotine/gtkgui/chatrooms.py:668
 #, python-format
 msgid "%s left the room"
 msgstr "%s išėjo iš kambario"
 
-#: pynicotine/gtkgui/chatrooms.py:686
+#: pynicotine/gtkgui/chatrooms.py:687
 #, python-format
 msgid "%s has gone away"
 msgstr "%s pasitraukė"
 
-#: pynicotine/gtkgui/chatrooms.py:688
+#: pynicotine/gtkgui/chatrooms.py:689
 #, python-format
 msgid "%s has returned"
 msgstr "%s grįžo"
 
-#: pynicotine/gtkgui/chatrooms.py:832 pynicotine/gtkgui/privatechat.py:186
-msgid "--- disconnected ---"
-msgstr "--- atsijungta ---"
+#: pynicotine/gtkgui/utils.py:418
+msgid "Give privileges"
+msgstr "Suteikti privilegijas"
 
-#: pynicotine/gtkgui/chatrooms.py:845 pynicotine/gtkgui/privatechat.py:183
-msgid "--- reconnected ---"
-msgstr "--- prisijungta iš naujo ---"
-
-#: pynicotine/gtkgui/search.py:148 pynicotine/gtkgui/nicotine_glade.py:890
-msgid "Rooms"
-msgstr "Kambariuose"
-
-#: pynicotine/gtkgui/search.py:148 pynicotine/gtkgui/nicotine_glade.py:897
-msgid "Buddies"
-msgstr "Pas bičiulius"
-
-#: pynicotine/gtkgui/search.py:398
-msgid "In queue"
-msgstr "Eilėje"
-
-#: pynicotine/gtkgui/search.py:399
-msgid "Immediate Download"
-msgstr "Skubus atsiuntimas"
-
-#: pynicotine/gtkgui/search.py:402
-msgid "Directory"
-msgstr "Aplankas"
-
-#: pynicotine/gtkgui/search.py:417
-msgid "Download file(s) _to..."
-msgstr "Atsiųsti _rinkmeną(as) į..."
-
-#: pynicotine/gtkgui/search.py:418
-msgid "Download containing _folder(s)"
-msgstr "Atsiųsti vidinį _aplanką(us)"
-
-#: pynicotine/gtkgui/search.py:419
-msgid "View Metadata of file(s)"
-msgstr ""
-
-#: pynicotine/gtkgui/search.py:515 pynicotine/gtkgui/search.py:570
-msgid "Y"
-msgstr "T"
-
-#: pynicotine/gtkgui/search.py:517
-msgid "N"
-msgstr "N"
-
-#: pynicotine/gtkgui/search.py:607
-#, fuzzy
-msgid "Nicotine+: Search Results"
-msgstr "Nicotine nustatymai"
-
-#: pynicotine/gtkgui/search.py:607
-#, python-format
-msgid "<b>Metadata</b> for Search Query: <i>%s</i>"
-msgstr ""
+#: pynicotine/gtkgui/utils.py:418
+msgid "Give how many days of privileges do you wish to give this user?"
+msgstr "Nurodykite kiek dienų privilegijų norite suteikti šiam naudotojui?"
 
 #: pynicotine/gtkgui/nicotine_glade.py:17
 msgid "Nicotine"
@@ -1893,7 +2206,7 @@ msgstr "_Nustatymai"
 
 #: pynicotine/gtkgui/nicotine_glade.py:134
 msgid "Configure _Now Playing"
-msgstr ""
+msgstr "Konfigūruoti _Dabar grojama"
 
 #: pynicotine/gtkgui/nicotine_glade.py:147
 msgid "_Rescan shares"
@@ -2044,6 +2357,14 @@ msgstr "Išsiuntimai"
 msgid "Global"
 msgstr "Visur"
 
+#: pynicotine/gtkgui/nicotine_glade.py:890 pynicotine/gtkgui/search.py:148
+msgid "Rooms"
+msgstr "Kambariuose"
+
+#: pynicotine/gtkgui/nicotine_glade.py:897 pynicotine/gtkgui/search.py:148
+msgid "Buddies"
+msgstr "Pas bičiulius"
+
 #: pynicotine/gtkgui/nicotine_glade.py:908
 msgid "Search files"
 msgstr "Paieška"
@@ -2058,7 +2379,7 @@ msgstr "Naršyti viešinius"
 
 #: pynicotine/gtkgui/nicotine_glade.py:1023
 msgid "Load From Disk"
-msgstr ""
+msgstr "Įkelti iš disko"
 
 #: pynicotine/gtkgui/nicotine_glade.py:1041
 msgid "User browse"
@@ -2082,14 +2403,12 @@ msgid "Interests"
 msgstr "Pomėgiai"
 
 #: pynicotine/gtkgui/nicotine_glade.py:1316
-#, fuzzy
 msgid "Scanning Shares"
-msgstr "Pradėtas pakartotinis skanavimas"
+msgstr "Skanuojami viešiniai"
 
 #: pynicotine/gtkgui/nicotine_glade.py:1320
-#, fuzzy
 msgid "Scanning Buddy Shares"
-msgstr "Pradėtas pakartotinas bičiulių viešinių skanavimas"
+msgstr "Skanuojami bičiulių viešiniai"
 
 #: pynicotine/gtkgui/nicotine_glade.py:1499
 #: pynicotine/gtkgui/nicotine_glade.py:1687
@@ -2098,7 +2417,7 @@ msgstr "Pradėtas pakartotinas bičiulių viešinių skanavimas"
 #: pynicotine/gtkgui/nicotine_glade.py:2585
 #: pynicotine/gtkgui/nicotine_glade.py:2818
 msgid "window1"
-msgstr ""
+msgstr "langas1"
 
 #: pynicotine/gtkgui/nicotine_glade.py:1607
 msgid "Auto-join"
@@ -2107,14 +2426,6 @@ msgstr "Autoprijungimas"
 #: pynicotine/gtkgui/nicotine_glade.py:1629
 msgid "Leave"
 msgstr "Išeiti"
-
-#: pynicotine/gtkgui/nicotine_glade.py:1759
-#: pynicotine/gtkgui/nicotine_glade.py:1882
-#: pynicotine/gtkgui/nicotine_glade.py:2491
-#: pynicotine/gtkgui/nicotine_glade.py:2691
-#: pynicotine/gtkgui/privatechat.py:141 pynicotine/gtkgui/entrydialog.py:129
-msgid "Close"
-msgstr "Užverti"
 
 #: pynicotine/gtkgui/nicotine_glade.py:1822
 msgid "Query"
@@ -2138,9 +2449,8 @@ msgid "Total uploads allowed: unknown"
 msgstr "Iš viso leidžiama išsiuntimų: nežinoma"
 
 #: pynicotine/gtkgui/nicotine_glade.py:2147
-#, fuzzy
 msgid "Slots free: unknown"
-msgstr "Prieinami lizdai: nežinoma"
+msgstr "Neužimti lizdai: nežinoma"
 
 #: pynicotine/gtkgui/nicotine_glade.py:2158
 msgid "Queue size: unknown"
@@ -2151,18 +2461,16 @@ msgid "Speed: unknown"
 msgstr "Greitis: nežinoma"
 
 #: pynicotine/gtkgui/nicotine_glade.py:2184
-#, fuzzy
 msgid "Files: unknown"
-msgstr "Viešinama rinkmenų: nežinoma"
+msgstr "Rinkmenos: nežinoma"
 
 #: pynicotine/gtkgui/nicotine_glade.py:2191
-#, fuzzy
 msgid "Directories: unknown"
-msgstr "Aplankas"
+msgstr "Aplankai: nežinoma"
 
 #: pynicotine/gtkgui/nicotine_glade.py:2208
 msgid "Accepts Uploads from:"
-msgstr ""
+msgstr "Priima rinkmenų įkėlimus iš:"
 
 #: pynicotine/gtkgui/nicotine_glade.py:2224
 msgid "Information:"
@@ -2195,39 +2503,59 @@ msgstr "Ieškoti rinkmenų ir aplankų pavadinimų (tikslių atitikmenų):"
 
 #: pynicotine/gtkgui/nicotine_glade.py:2638
 msgid "Expand / Collapse all"
-msgstr ""
+msgstr "Išplėsti / sutraukti visus"
 
 #: pynicotine/gtkgui/nicotine_glade.py:2749
-#, fuzzy
 msgid "Save"
-msgstr "Išeiti"
+msgstr "Išsaugoti"
 
 #: pynicotine/gtkgui/nicotine_glade.py:2844
 msgid "Create: "
 msgstr "Sukurti: "
 
-#: pynicotine/gtkgui/privatechat.py:147
-msgid "Add user to list"
-msgstr "Įtraukti naudotoją į sąrašą"
+#: pynicotine/gtkgui/search.py:398
+msgid "In queue"
+msgstr "Eilėje"
 
-#: pynicotine/gtkgui/privatechat.py:148
-msgid "Ban this user"
-msgstr "Užblokuoti šį naudotoją"
+#: pynicotine/gtkgui/search.py:399
+msgid "Immediate Download"
+msgstr "Skubus atsiuntimas"
 
-#: pynicotine/gtkgui/privatechat.py:149
-msgid "Ignore this user"
-msgstr "Ignoruoti šį naudotoją"
+#: pynicotine/gtkgui/search.py:402
+msgid "Directory"
+msgstr "Aplankas"
 
-#: pynicotine/gtkgui/privatechat.py:151
-msgid "Client Version"
-msgstr "Kliento versija"
+#: pynicotine/gtkgui/search.py:417
+msgid "Download file(s) _to..."
+msgstr "Atsiųsti _rinkmeną (-as) į..."
 
-#: pynicotine/gtkgui/privatechat.py:235
-msgid "* Message(s) sent while you were offline."
-msgstr ""
+#: pynicotine/gtkgui/search.py:418
+msgid "Download containing _folder(s)"
+msgstr "Atsiųsti vidinį _aplanką (-us)"
+
+#: pynicotine/gtkgui/search.py:419
+msgid "View Metadata of file(s)"
+msgstr "Žiūrėti rinkmenos (-ų) metaduomenis"
+
+#: pynicotine/gtkgui/search.py:515 pynicotine/gtkgui/search.py:570
+msgid "Y"
+msgstr "T"
+
+#: pynicotine/gtkgui/search.py:517
+msgid "N"
+msgstr "N"
+
+#: pynicotine/gtkgui/search.py:607
+msgid "Nicotine+: Search Results"
+msgstr "Nicotine+: paieškos rezultatai"
+
+#: pynicotine/gtkgui/search.py:607
+#, python-format
+msgid "<b>Metadata</b> for Search Query: <i>%s</i>"
+msgstr "<b>Metaduomenys</b> paieškos užklausai: <i>%s</i>"
 
 #: pynicotine/gtkgui/about.py:27
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Nicotine+ %s\n"
 "\n"
@@ -2249,15 +2577,17 @@ msgid ""
 msgstr ""
 "Nicotine+ %s\n"
 "\n"
-"Autorinės teisės priklauso (c) 2003 Hyriand\n"
+"Autorinės teisės (c) 2007 daelstorm\n"
+"http://nicotine.thegraveyard.org/\n"
+"daelstorm@gmail.com\n"
+"\n"
+"Pagrįsta Nicotine kodu\n"
+"Autorinės teisės (c) 2003 Hyriand\n"
 "http://nicotine.thegraveyard.org/\n"
 "hyriand@thegraveyard.org\n"
 "\n"
-"Paremta PySoulSeek projekto kodu\n"
-"Autorinės teisės priklauso (c) 2001-2003 Alexander Kanavin\n"
-"\n"
-"Su daelstrom ir kitų priedais (c) 2006\n"
-"http://nicotine-plus.sourceforge.net/\n"
+"Pagrįsta PySoulSeek projekto kodu\n"
+"Autorinės teisės (c) 2001-2003 Alexander Kanavin\n"
 "\n"
 "Išleista GNU bendrosios viešosios licencijos sąlygomis\n"
 "\n"
@@ -2265,7 +2595,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/about.py:64
 msgid "Dependencies"
-msgstr ""
+msgstr "Priklausomybės"
 
 #: pynicotine/gtkgui/about.py:128
 msgid "About search filters"
@@ -2391,9 +2721,8 @@ msgid "Add user 'user' to your user list"
 msgstr "Įtraukti naudotoją „naudotojas“ į Jūsų naudotojų sąrašą"
 
 #: pynicotine/gtkgui/about.py:186 pynicotine/gtkgui/about.py:223
-#, fuzzy
 msgid "Remove user 'user' from your user list"
-msgstr "Pašalinti naudotoją „naudotojas“ iš užblokuotų sąrašo"
+msgstr "Pašalinti naudotoją „naudotojas“ iš naudotojų sąrašo"
 
 #: pynicotine/gtkgui/about.py:187 pynicotine/gtkgui/about.py:224
 msgid "Browse files of user 'user'"
@@ -2436,7 +2765,7 @@ msgstr "Pašalinti alternatyvų vardą"
 
 #: pynicotine/gtkgui/about.py:194 pynicotine/gtkgui/about.py:231
 msgid "Display the Now Playing script's output"
-msgstr ""
+msgstr "Rodyti scenarijaus Dabar grojama išvestį"
 
 #: pynicotine/gtkgui/about.py:196 pynicotine/gtkgui/about.py:233
 msgid "Add user 'user' to your ban list"
@@ -2513,377 +2842,139 @@ msgstr "Užverti esamą privatų pokalbį"
 msgid "About private chat commands"
 msgstr "Apie privataus pokalbio komandas"
 
-#: pynicotine/gtkgui/userlist.py:22
-#, fuzzy
-msgid "Trusted"
-msgstr "naudotojas"
-
-#: pynicotine/gtkgui/userlist.py:23 pynicotine/gtkgui/userlist.py:194
-msgid "Comments"
-msgstr "Komentarai"
-
-#: pynicotine/gtkgui/userlist.py:69
-msgid "_Online notify"
-msgstr "_Pranešama apie prisijunimą"
-
-#: pynicotine/gtkgui/userlist.py:70
-msgid "_Privileged"
-msgstr "_Privilegijuotas"
-
-#: pynicotine/gtkgui/userlist.py:71
-msgid "_Trusted"
-msgstr ""
-
-#: pynicotine/gtkgui/userlist.py:73
-msgid "Edit _comments"
-msgstr "Keisti _komentarus"
-
-#: pynicotine/gtkgui/userlist.py:74
-msgid "_Remove"
-msgstr "_Pašalinti"
-
-#: pynicotine/gtkgui/userlist.py:159
-#, python-format
-msgid "User %s is offline"
-msgstr "Naudotojas %s atsijungęs"
-
-#: pynicotine/gtkgui/userlist.py:159
-#, python-format
-msgid "User %s is away"
-msgstr "Naudotojo %s nėra"
-
-#: pynicotine/gtkgui/userlist.py:159
-#, python-format
-msgid "User %s is online"
-msgstr "Naudotojas %s prisijungęs"
-
-#: pynicotine/gtkgui/userlist.py:194
-msgid "Edit comments"
-msgstr "Keisti komentarus"
-
-#: pynicotine/gtkgui/transferlist.py:29
-msgid "Status"
-msgstr "Būsena"
-
-#: pynicotine/gtkgui/transferlist.py:30
-msgid "Percent"
-msgstr "Procentai"
-
-#: pynicotine/gtkgui/transferlist.py:33
-msgid "Time elapsed"
-msgstr "Praėjęs laikas"
-
-#: pynicotine/gtkgui/transferlist.py:34
-msgid "Time left"
-msgstr "Likęs laikas"
-
-#: pynicotine/gtkgui/transferlist.py:35
-msgid "Path"
-msgstr "Kelias"
-
-#: pynicotine/gtkgui/transferlist.py:62 pynicotine/gtkgui/transferlist.py:166
-msgid "Getting status"
-msgstr "Gaunama būsena"
-
-#: pynicotine/gtkgui/transferlist.py:63 pynicotine/gtkgui/transferlist.py:150
-msgid "Waiting for download"
-msgstr "Laukiama siuntimo"
-
-#: pynicotine/gtkgui/transferlist.py:64 pynicotine/gtkgui/transferlist.py:152
-msgid "Waiting for upload"
-msgstr "Laukiama išsiuntimo"
-
-#: pynicotine/gtkgui/transferlist.py:65 pynicotine/gtkgui/transferlist.py:164
-msgid "Getting address"
-msgstr "Gaunamas adresas"
-
-#: pynicotine/gtkgui/transferlist.py:66 pynicotine/gtkgui/transferlist.py:162
-msgid "Connecting"
-msgstr "Jungiamasi"
-
-#: pynicotine/gtkgui/transferlist.py:67 pynicotine/gtkgui/transferlist.py:160
-msgid "Waiting for peer to connect"
-msgstr "Laukiama porininko prisijungimui"
-
-#: pynicotine/gtkgui/transferlist.py:68 pynicotine/gtkgui/transferlist.py:158
-msgid "Cannot connect"
-msgstr "Nepavyko prisijungti"
-
-#: pynicotine/gtkgui/transferlist.py:69 pynicotine/gtkgui/transferlist.py:170
-msgid "User logged off"
-msgstr "Naudotojas atsijungęs"
-
-#: pynicotine/gtkgui/transferlist.py:70 pynicotine/gtkgui/transferlist.py:154
-msgid "Requesting file"
-msgstr "Užklausiama rinkmenos"
-
-#: pynicotine/gtkgui/transferlist.py:71 pynicotine/gtkgui/transferlist.py:156
-msgid "Initializing transfer"
-msgstr "Inicializuojamas siuntimas"
-
-#: pynicotine/gtkgui/transferlist.py:72 pynicotine/gtkgui/transferlist.py:180
-#, fuzzy
-msgid "Filtered"
-msgstr "Rodyti:"
-
-#: pynicotine/gtkgui/transferlist.py:73 pynicotine/gtkgui/transferlist.py:188
-msgid "Download directory error"
-msgstr "Atsiuntimo aplanko klaida"
-
-#: pynicotine/gtkgui/transferlist.py:74 pynicotine/gtkgui/transferlist.py:190
-msgid "Local file error"
-msgstr "Vietinės rinkmenos klaida"
-
-#: pynicotine/gtkgui/transferlist.py:75 pynicotine/gtkgui/transferlist.py:184
-msgid "File not shared"
-msgstr "Rinkmena neviešinama"
-
-#: pynicotine/gtkgui/transferlist.py:76 pynicotine/gtkgui/transferlist.py:172
-msgid "Aborted"
-msgstr "Nutraukta"
-
-#: pynicotine/gtkgui/transferlist.py:77 pynicotine/gtkgui/transferlist.py:176
-#, fuzzy
-msgid "Paused"
-msgstr "naudotojas"
-
-#: pynicotine/gtkgui/transferlist.py:78 pynicotine/gtkgui/transferlist.py:168
-msgid "Queued"
-msgstr "Eilėje"
-
-#: pynicotine/gtkgui/transferlist.py:79 pynicotine/gtkgui/transferlist.py:178
-#: pynicotine/gtkgui/transferlist.py:291
-#, fuzzy
-msgid "Transferring"
-msgstr "Siuntimai"
-
-#: pynicotine/gtkgui/transferlist.py:80 pynicotine/gtkgui/transferlist.py:174
-msgid "Finished"
-msgstr "Baigta"
-
-#: pynicotine/gtkgui/transferlist.py:137
-#, python-format
-msgid "%.2f GB"
-msgstr "%.2f GB"
-
-#: pynicotine/gtkgui/transferlist.py:139
-#, python-format
-msgid "%.2f MB"
-msgstr "%.2f MB"
-
-#: pynicotine/gtkgui/transferlist.py:141
-#, python-format
-msgid "%.2f KB"
-msgstr "%.2f KB"
-
-#: pynicotine/gtkgui/transferlist.py:182
-msgid "Connection closed by peer"
-msgstr "Porininkas nutraukė ryšį"
-
-#: pynicotine/gtkgui/transferlist.py:186
-msgid "Establishing connection"
-msgstr "Įtvirtintas ryšys"
-
-#: pynicotine/gtkgui/transferlist.py:303
-#, fuzzy, python-format
-msgid "%s Files"
-msgstr "Rinkmenos"
-
 #: pynicotine/gtkgui/entrydialog.py:50
-#, fuzzy
 msgid "Username"
-msgstr "Naudotojas"
+msgstr "Naudotojo vardas"
 
 #: pynicotine/gtkgui/entrydialog.py:53
-#, fuzzy
 msgid "<b>List Position:</b>"
-msgstr "Bitų dažnis:"
+msgstr "<b>Pozicija sąraše:</b>"
 
 #: pynicotine/gtkgui/entrydialog.py:63
 msgid "<b>File Name:</b>"
-msgstr ""
+msgstr "<b>Rinkmenos vardas:</b>"
 
 #: pynicotine/gtkgui/entrydialog.py:70
-#, fuzzy
 msgid "<b>Directory:</b>"
-msgstr "Aplankas"
+msgstr "<b>Aplankas:</b>"
 
 #: pynicotine/gtkgui/entrydialog.py:79
 msgid "<b>File Size:</b>"
-msgstr ""
+msgstr "<b>Rinkmenos dydis:</b>"
 
 #: pynicotine/gtkgui/entrydialog.py:80
-#, fuzzy
 msgid "<b>Length:</b>"
-msgstr "Ilgis"
+msgstr "<b>Ilgis:</b>"
 
 #: pynicotine/gtkgui/entrydialog.py:81
-#, fuzzy
 msgid "<b>Bitrate:</b>"
-msgstr "Bitų dažnis:"
+msgstr "<b>Bitų dažnis:</b>"
 
 #: pynicotine/gtkgui/entrydialog.py:91
-#, fuzzy
 msgid "<b>Immediate Downloads:</b>"
-msgstr "Skubus atsiuntimas"
+msgstr "<b>Skubūs atsiuntimai:</b>"
 
 #: pynicotine/gtkgui/entrydialog.py:93
 msgid "<b>Queue:</b>"
-msgstr ""
+msgstr "<b>Eilė:</b>"
 
 #: pynicotine/gtkgui/entrydialog.py:100
 msgid "<b>Last Speed:</b>"
-msgstr ""
+msgstr "<b>Paskutinysis greitis:</b>"
 
 #: pynicotine/gtkgui/entrydialog.py:115
-#, fuzzy
 msgid "Download"
-msgstr "Atsiuntimai"
+msgstr "Atsiųsti"
 
 #: pynicotine/gtkgui/entrydialog.py:119
-#, fuzzy
 msgid "Download All"
-msgstr "Atsiuntimai"
+msgstr "Atsiųsti visas"
 
 #: pynicotine/gtkgui/entrydialog.py:122 pynicotine/gtkgui/entrydialog.py:367
 msgid "Previous"
-msgstr ""
+msgstr "Ankstesnis"
 
 #: pynicotine/gtkgui/entrydialog.py:124 pynicotine/gtkgui/entrydialog.py:371
 msgid "Next"
-msgstr ""
+msgstr "Kitas"
 
 #: pynicotine/gtkgui/entrydialog.py:223
-#, fuzzy
 msgid "<b>Country Code:</b> "
-msgstr "Pokalbių spalvos"
+msgstr "<b>Šalies kodas:</b>"
 
 #: pynicotine/gtkgui/entrydialog.py:304
 msgid "OK"
-msgstr ""
+msgstr "Gerai"
 
 #: pynicotine/gtkgui/entrydialog.py:310 pynicotine/gtkgui/entrydialog.py:377
 msgid "Cancel"
 msgstr "Atšaukti"
 
-#: pynicotine/gtkgui/nowplaying.py:30
-msgid "NowPlaying"
+#: pynicotine/slskproto.py:231 pynicotine/slskproto.py:235
+#, python-format
+msgid "Major Socket Error: Networking terminated! %s"
+msgstr "Lizdo klaida: tinklo ryšys nutrauktas! %s"
+
+#: pynicotine/slskproto.py:396
+#, python-format
+msgid "Server message type %(type)i size %(size)i contents %(buffer)s unknown"
 msgstr ""
+"Serverio pranešimo tipas %(type)i dydis %(size)i turinys %(buffer)s nežinomas"
 
-#: pynicotine/gtkgui/nowplaying.py:41
-msgid "Display what your Media Player is playing in Chat with the /now command"
-msgstr ""
+#: pynicotine/slskproto.py:491
+#, python-format
+msgid "Unknown peer init code: %(type)i, message contents %(buffer)s"
+msgstr "Nežinomas porininko init kodas: %(type)i, pranešimo turinys %(buffer)s"
 
-#: pynicotine/gtkgui/nowplaying.py:57
-msgid "XMMS / Infopipe"
-msgstr ""
-
-#: pynicotine/gtkgui/nowplaying.py:65
-msgid "Amarok"
-msgstr ""
-
-#: pynicotine/gtkgui/nowplaying.py:73
-msgid "MPD via mpc"
-msgstr ""
-
-#: pynicotine/gtkgui/nowplaying.py:98
-msgid "BMPx"
-msgstr ""
-
-#: pynicotine/gtkgui/nowplaying.py:106
-msgid "Rhythmbox"
-msgstr ""
-
-#: pynicotine/gtkgui/nowplaying.py:115
-msgid "Other"
-msgstr ""
-
-#: pynicotine/gtkgui/nowplaying.py:128
-#, fuzzy
-msgid "Player Command:"
-msgstr "Garso grotuvo komanda:"
-
-#: pynicotine/gtkgui/nowplaying.py:148
-#, fuzzy
-msgid "Legend:"
-msgstr "Naudotojo vardas:"
-
-#: pynicotine/gtkgui/nowplaying.py:165
-msgid "Now playing format:"
-msgstr ""
-
-#: pynicotine/gtkgui/nowplaying.py:201
-msgid "Example:"
-msgstr ""
-
-#: pynicotine/gtkgui/nowplaying.py:250
-msgid "Test"
-msgstr ""
-
-#: pynicotine/gtkgui/nowplaying.py:316
+#: pynicotine/slskproto.py:515
+#, python-format
 msgid ""
-"$n Now Playing\n"
-"$l Length\n"
-"$r Bitrate\n"
-"$s Status"
+"There was an error while unpacking Peer message type %(type)s size %(size)i "
+"contents %(buffer)s from user: %(user)s, %(host)s:%(port)s"
 msgstr ""
+"Klaida išpakuojant porininko žinutę, tipas %(type)s dydis %(size)i "
+"turinys %(buffer)s iš naudotojo: %(user)s, %(host)s:%(port)s"
 
-#: pynicotine/gtkgui/nowplaying.py:319
+#: pynicotine/slskproto.py:529
+#, python-format
 msgid ""
-"$n Now Playing\n"
-"$t Title\n"
-"$a Artist\n"
-"$b Album\n"
-"$k Track Number\n"
-"$f Filename"
+"Peer message type %(type)s size %(size)i contents %(buffer)s unknown, from "
+"user: %(user)s, %(host)s:%(port)s"
 msgstr ""
+"Porininko žinutės tipas %(type)s dydis %(size)i turinys %(buffer)s nežinomas, "
+"iš naudotojo: %(user)s, %(host)s:%(port)s"
 
-#: pynicotine/gtkgui/nowplaying.py:322
-msgid ""
-"$n Now Playing\n"
-"$l Length\n"
-"$r Bitrate\n"
-"$s Status\n"
-"$t Title\n"
-"$a Artist\n"
-"$b Album\n"
-"$c Comment\n"
-"$k Track Number\n"
-"$y Year\n"
-"$f Filename"
-msgstr ""
+#: pynicotine/slskproto.py:535
+#, python-format
+msgid "Can't handle connection type %s"
+msgstr "Nepavyko apdoroti prisijungimo tipo %s"
 
-#: pynicotine/gtkgui/nowplaying.py:325
-msgid ""
-"$n Now Playing\n"
-"$l Length\n"
-"$r Bitrate\n"
-"$s Status\n"
-"$t Title\n"
-"$a Artist\n"
-"$b Album\n"
-"$c Comment\n"
-"$k Track Number\n"
-"$y Year\n"
-"$f Filename (URI)"
-msgstr ""
+#: pynicotine/slskproto.py:560
+#, python-format
+msgid "Distrib message type %(type)i size %(size)i contents %(buffer)s unknown"
+msgstr "Distrib žinutės tipas %(type)i dydis %(size)i turinys %(buffer)s nežinomas"
 
-#: pynicotine/gtkgui/nowplaying.py:328
-msgid ""
-"$n Now Playing\n"
-"$l Length\n"
-"$r Bitrate\n"
-"$t Title\n"
-"$a Artist\n"
-"$b Album\n"
-"$k Track Number\n"
-"$y Year\n"
-"$f Filename (URI)"
-msgstr ""
+#: pynicotine/slskproto.py:628
+#, python-format
+msgid "Can't send the message over the closed connection: %(type)s %(msg_obj)s"
+msgstr "Nepavyko išsiųsti žinutės esant nutrauktam prisijungimui: %(type)s %(msg_obj)s"
 
-#: pynicotine/gtkgui/nowplaying.py:331
-msgid "$n Now Playing"
-msgstr ""
+#: pynicotine/utils.py:75
+msgid "Checking for changes"
+msgstr "Ieškoma pakeitimų"
+
+#: pynicotine/utils.py:79
+#, python-format
+msgid "Scanning %s"
+msgstr "Skanuojama %s"
+
+#: pynicotine/utils.py:86
+msgid "Building DataBase"
+msgstr "Kuriama duomenų bazė"
+
+#: pynicotine/utils.py:93
+msgid "Building Index"
+msgstr "Kuriamas indeksas"
 
 #: pynicotine/pynicotine.py:267
 #, python-format
@@ -2891,14 +2982,13 @@ msgid "The server seems to be down or not responding, retrying in %i seconds"
 msgstr "Arba serveris neveikia, arba neatsako, kitas bandymas po %i sek."
 
 #: pynicotine/pynicotine.py:322
-#, fuzzy
 msgid "Buddy Shares"
-msgstr "Pradėtas pakartotinas bičiulių viešinių skanavimas"
+msgstr "Bičiulių viešiniai"
 
 #: pynicotine/pynicotine.py:334
-#, fuzzy, python-format
+#, python-format
 msgid "Can't connect to server %(host)s:%(port)s: %(error)s"
-msgstr "Nepavyko prisijungti prie serverio %s:%s: %s"
+msgstr "Nepavyko prisijungti prie serverio %(host)s:%(port)s: %(error)s"
 
 #: pynicotine/pynicotine.py:361
 #, python-format
@@ -2911,14 +3001,14 @@ msgid "Listening on port %i"
 msgstr "Klausomasi prievado %i"
 
 #: pynicotine/pynicotine.py:378
-#, fuzzy, python-format
+#, python-format
 msgid "Connected to server %(host)s:%(port)s, logging in..."
-msgstr "Prisijungta prie serverio %s:%s, registruojamasi..."
+msgstr "Prisijungta prie serverio %(host)s:%(port)s, registruojamasi..."
 
 #: pynicotine/pynicotine.py:401
-#, fuzzy, python-format
+#, python-format
 msgid "Disconnected from server %(host)s:%(port)s"
-msgstr "Atsijungta nuo serverio %s:%s"
+msgstr "Atsijungta nuo serverio %(host)s:%(port)s"
 
 #: pynicotine/pynicotine.py:415
 #, python-format
@@ -2926,9 +3016,10 @@ msgid "Connection closed by peer: %s"
 msgstr "Porininkas nutraukė prisijungimą: %s"
 
 #: pynicotine/pynicotine.py:425
-#, fuzzy, python-format
+#, python-format
 msgid "Removed connection closed by peer: %(conn_obj)s %(address)s"
-msgstr "Pašalintas porininko nutrauktas prisijungimas: %s %s"
+msgstr ""
+"Pašalintas porininko nutrauktas prisijungimas: %(conn_obj)s %(address)s"
 
 #: pynicotine/pynicotine.py:432
 msgid "Logged in, getting the list of rooms..."
@@ -2945,43 +3036,46 @@ msgid "%i privileged users"
 msgstr "%i privilegiuoti naudotojai"
 
 #: pynicotine/pynicotine.py:532
-#, fuzzy
 msgid "You have no privileges left"
-msgstr "Naudotojas %s įtrauktas į privilegijuotų sąrašą"
+msgstr "Jūs nebeturite privilegijų"
 
 #: pynicotine/pynicotine.py:534
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "%(days)i days, %(hours)i hours, %(minutes)i minutes, %(seconds)i seconds of "
 "download privileges left"
-msgstr "Atsisiuntimo privilegijų liko: %i dien., %i val., %i min., %i sek"
+msgstr ""
+"Atsisiuntimo privilegijų liko: %(days)i dien., %(hours)i val., %(minutes)i min., "
+"%(seconds)i sek"
 
 #: pynicotine/pynicotine.py:619
-#, fuzzy, python-format
+#, python-format
 msgid "Server reported port 0 for the 10th time for user %(user)s, giving up"
 msgstr ""
-"Serveris jau dešimtą kartą grąžino prievadą 0 naudotojui %s, pasiduodama"
+"Serveris jau dešimtą kartą grąžino prievadą 0 naudotojui %(user)s, pasiduodama"
 
 #: pynicotine/pynicotine.py:621
-#, fuzzy, python-format
+#, python-format
 msgid "Server reported non-zero port for user %(user)s after %(tries)i retries"
-msgstr "Serveris grąžino ne nulinį prievadą naudotojui %s po %i bandymų"
+msgstr "Serveris grąžino ne nulinį prievadą naudotojui %(user)s po %(tries)i bandymų"
 
 #: pynicotine/pynicotine.py:631
-#, fuzzy, python-format
+#, python-format
 msgid "Server reported port 0 for user %(user)s, retrying"
-msgstr "Serveris grąžino prievadą 0 naudotojui %s, bandoma dar kartą"
+msgstr "Serveris grąžino prievadą 0 naudotojui %(user)s, bandoma dar kartą"
 
 #: pynicotine/pynicotine.py:648
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "IP address of %(user)s is %(ip)s, name %(host)s, port %(port)i%(country)s"
-msgstr "Naudotojo %s IP adresas yra %s, vardas %s, prievadas %i%s"
+msgstr ""
+"Naudotojo %(user)s IP adresas yra %(ip)s, vardas %(host)s, prievadas "
+"%(port)i%(country)s"
 
 #: pynicotine/pynicotine.py:650
-#, fuzzy, python-format
+#, python-format
 msgid "IP address of %(user)s is %(ip)s, port %(port)i%(country)s"
-msgstr "Naudotojo %s IP adresas yra %s, prievadas %i%s"
+msgstr "Naudotojo %(user)s IP adresas yra %(ip)s, prievadas %(port)i%(country)s"
 
 #: pynicotine/pynicotine.py:656
 msgid ""
@@ -3020,57 +3114,59 @@ msgid ""
 "IP %(ip)s:%(port)s is spoofing user %(user)s with a peer request, blocking "
 "because it does not match IP: %(real_ip)s"
 msgstr ""
+"IP %(ip)s:%(port)s apsimeta naudotoju %(user)s su porininko užklausa, "
+"blokuojama, nes jis neatitiktų IP: %(real_ip)s"
 
 #: pynicotine/pynicotine.py:757
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "%(user)s is making a BrowseShares request, blocking possible spoofing "
 "attempt from IP %(ip)s port %(port)s"
 msgstr ""
-"%s daro viešinių naršymo užklausą, blokuojamas galimas bandymas apsimesti iš "
-"IP %s prievado %s"
+"%(user)s daro viešinių naršymo užklausą, blokuojamas galimas bandymas apsimesti iš "
+"IP %(ip)s prievado %(port)s"
 
 #: pynicotine/pynicotine.py:759
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "%(user)s is making a BrowseShares request, blocking possible spoofing "
 "attempt from an unknown IP & port"
 msgstr ""
-"%s daro viešinių naršymo užklausą, blokuojamas galimas bandymas apsimesti iš "
-"IP %s prievado %s"
+"%(user)s daro viešinių naršymo užklausą, blokuojamas galimas bandymas apsimesti iš "
+"nežinomo IP ir prievadas"
 
 #: pynicotine/pynicotine.py:763
-#, fuzzy, python-format
+#, python-format
 msgid "%(user)s is making a BrowseShares request"
-msgstr "%s daro viešinių naršymo užklausą"
+msgstr "%(user)s daro viešinių naršymo užklausą"
 
 #: pynicotine/pynicotine.py:810
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Blocking %(user)s from making a UserInfo request, possible spoofing attempt "
 "from IP %(ip)s port %(port)s"
 msgstr ""
-"%s UserInfo užklausa blokuojama, galimas bandymas apsimesti iš IP %s "
-"prievado %s"
+"%(user)s UserInfo užklausa blokuojama, galimas bandymas apsimesti iš IP %(ip)s "
+"prievado %(port)s"
 
 #: pynicotine/pynicotine.py:812
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Blocking %s from making a UserInfo request, possible possible spoofing "
 "attempt from an unknown IP & port"
 msgstr ""
-"%s UserInfo užklausa blokuojama, galimas bandymas apsimesti iš IP %s "
-"prievado %s"
+"%s UserInfo užklausa blokuojama, galimas bandymas apsimesti iš "
+"nežinomo IP ir prievado"
 
 #: pynicotine/pynicotine.py:817
-#, fuzzy, python-format
+#, python-format
 msgid "%(user)s is banned, but is making a UserInfo request"
-msgstr "%s užblokuotas, tačiau vykdo UserInfo užklausą"
+msgstr "%(user)s užblokuotas, tačiau daro UserInfo užklausą"
 
 #: pynicotine/pynicotine.py:845
-#, fuzzy, python-format
+#, python-format
 msgid "%(user)s is making a UserInfo request"
-msgstr "%s vykdo UserInfo užklausą"
+msgstr "%(user)s daro UserInfo užklausą"
 
 #: pynicotine/pynicotine.py:901
 #, python-format
@@ -3100,88 +3196,29 @@ msgid "Unknown tunneled message: %s"
 msgstr "Nežinomas tuneliuotas pranešimas: %s"
 
 #: pynicotine/pynicotine.py:1164
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "User %(user)s is directly searching for %(query)s, returning %(num)i results"
-msgstr "Naudotojas %s tiesiogiai ieško %s, grąžinama %i rezultatai"
+msgstr ""
+"Naudotojas %(user)s tiesiogiai ieško %(query)s, grąžinama %(num)i rezultatai"
 
 #: pynicotine/pynicotine.py:1166
-#, fuzzy, python-format
+#, python-format
 msgid "User %(user)s is searching for %(query)s, returning %(num)i results"
-msgstr "Naudotojas %s ieško %s, grąžinama %i rezultatai"
+msgstr "Naudotojas %(user)s ieško %(query)s, grąžinama %(num)i rezultatai"
 
 #: pynicotine/pynicotine.py:1239
 #, python-format
 msgid "Couldn't write to transfer log: %s"
 msgstr "Nepavyko įrašyti į siuntimų žurnalą: %s"
 
-#: pynicotine/slskproto.py:225
-#, python-format
-msgid "Major Socket Error: Networking terminated! %s"
-msgstr ""
-
-#: pynicotine/slskproto.py:387
-#, fuzzy, python-format
-msgid "Server message type %(type)i size %(size)i contents %(buffer)s unknown"
-msgstr "Serverio žinutės tipas %i dydis %i turinys %s nežinomas"
-
-#: pynicotine/slskproto.py:482
-#, fuzzy, python-format
-msgid "Unknown peer init code: %(type)i, message contents %(buffer)s"
-msgstr "Nežinomas porininko init kodas: %i, žinutė %s"
-
-#: pynicotine/slskproto.py:501
-#, python-format
-msgid ""
-"There was an error while unpacking Peer message type %(type)s size %(size)i "
-"contents %(buffer)s from user: %(user)s, %(host)s:%(port)s"
-msgstr ""
-
-#: pynicotine/slskproto.py:508
-#, fuzzy, python-format
-msgid ""
-"Peer message type %(type)s size %(size)i contents %(buffer)s unknown, from "
-"user: %(user)s, %(host)s:%(port)s"
-msgstr "Porininko žinutės tipas %i dydis %i turinys %s nežinomas"
-
-#: pynicotine/slskproto.py:512
-#, python-format
-msgid "Can't handle connection type %s"
-msgstr "Nepavyko apdoroti prisijungimo tipo %s"
-
-#: pynicotine/slskproto.py:537
-#, fuzzy, python-format
-msgid "Distrib message type %(type)i size %(size)i contents %(buffer)s unknown"
-msgstr "Distrib žinutės tipas %i dydis %i turinys %s nežinomas"
-
-#: pynicotine/slskproto.py:605
-#, fuzzy, python-format
-msgid "Can't send the message over the closed connection: %(type)s %(msg_obj)s"
-msgstr "Nepavyko išsiųsti žinutės esant nutrauktam prisijungimui: %s %s"
-
-#: pynicotine/utils.py:75
-msgid "Checking for changes"
-msgstr ""
-
-#: pynicotine/utils.py:79
-#, fuzzy, python-format
-msgid "Scanning %s"
-msgstr "Pradėtas pakartotinis skanavimas"
-
-#: pynicotine/utils.py:86
-msgid "Building DataBase"
-msgstr ""
-
-#: pynicotine/utils.py:93
-msgid "Building Index"
-msgstr ""
-
 #: pynicotine/slskmessages.py:169
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Warning: networking thread has to convert unicode string %(object)s message %"
 "(type)s"
-msgstr "Dėmesio: tinklo gija turi konvertuoti unikodo seką %s į žinutę %s"
+msgstr "Dėmesio: tinklo gija turi konvertuoti unikodo seką %(object)s į žinutę "
+"%(type)s"
 
 #: pynicotine/slskmessages.py:172
 #, python-format
@@ -3205,9 +3242,9 @@ msgstr ""
 "viešinius"
 
 #: pynicotine/config.py:287
-#, fuzzy, python-format
+#, python-format
 msgid "Can't create directory '%(path)s', reported error: %(error)s"
-msgstr "Nepavyko sukurti aplanko „%s“, gauta klaida: %s"
+msgstr "Nepavyko sukurti aplanko „%(path)s“, gauta klaida: %(error)s"
 
 #: pynicotine/config.py:294
 #, python-format
@@ -3235,14 +3272,14 @@ msgid "Aliases:"
 msgstr "Alternatyvūs vardai:"
 
 #: pynicotine/config.py:439
-#, fuzzy, python-format
+#, python-format
 msgid "Removed alias %(alias)s: %(action)s\n"
-msgstr "Pašalintas alternatyvus vardas %s: %s"
+msgstr "Pašalintas alternatyvus vardas %(alias)s: %(action)s\n"
 
 #: pynicotine/config.py:441
-#, fuzzy, python-format
+#, python-format
 msgid "No such alias (%(alias)s)\n"
-msgstr "Nėra tokio alternatyvaus vardo (%s)"
+msgstr "Nėra tokio alternatyvaus vardo (%(alias)s)\n"
 
 #: pynicotine/transfers.py:135
 #, python-format
@@ -3250,20 +3287,20 @@ msgid "User %s does not exist"
 msgstr "Naudotojas %s neegzistuoja"
 
 #: pynicotine/transfers.py:195
-#, fuzzy, python-format
+#, python-format
 msgid "Filtering: %s"
-msgstr "Rodyti:"
+msgstr "Filtruojama: %s"
 
 #: pynicotine/transfers.py:228
-#, fuzzy, python-format
+#, python-format
 msgid "Retrying failed download: user %(user)s, file %(file)s"
 msgstr ""
-"Pakartotinas bandymas atsisiųsti nesėkmingas: naudotojas %s, rinkmena %s"
+"Pakartotinas bandymas atsisiųsti nesėkmingas: naudotojas %(user)s, rinkmena %(file)s"
 
 #: pynicotine/transfers.py:231
-#, fuzzy, python-format
+#, python-format
 msgid "Failed download: user %(user)s, file %(file)s"
-msgstr "Nepavyko atsiųsti: naudotojas %s, rinkmena %s"
+msgstr "Nepavyko atsiųsti: naudotojas %(user)s, rinkmena %(file)s"
 
 #: pynicotine/transfers.py:333
 #, python-format
@@ -3271,9 +3308,8 @@ msgid "Got transfer request %s but cannot determine requestor"
 msgstr "Gauta siuntimo užklausa %s, tačiau nepavyko nustatyti užklausėjo"
 
 #: pynicotine/transfers.py:356
-#, fuzzy
 msgid "Buddy Uploads"
-msgstr "Išsiuntimai"
+msgstr "Bičiulių išsiuntimai"
 
 #: pynicotine/transfers.py:368
 #, python-format
@@ -3335,14 +3371,14 @@ msgid "Download started: %s"
 msgstr "Pradėtas atsiuntimas: %s"
 
 #: pynicotine/transfers.py:667
-#, fuzzy, python-format
+#, python-format
 msgid "Download started: user %(user)s, file %(file)s"
-msgstr "Pradėtas atsiuntimas: naudotojas %s, rinkmena %s"
+msgstr "Pradėtas atsiuntimas: naudotojas %(user)s, rinkmena %(file)s"
 
 #: pynicotine/transfers.py:684
-#, fuzzy, python-format
+#, python-format
 msgid "Upload started: user %(user)s, file %(file)s"
-msgstr "Pradėtas išsiuntimas: naudotojas %s, rinkmena %s"
+msgstr "Pradėtas išsiuntimas: naudotojas %(user)s, rinkmena %(file)s"
 
 #: pynicotine/transfers.py:697
 #, python-format
@@ -3350,19 +3386,19 @@ msgid "Unknown file request: %s"
 msgstr "Nežinoma rinkmenos užklausa: %s"
 
 #: pynicotine/transfers.py:751
-#, fuzzy, python-format
+#, python-format
 msgid "Couldn't move '%(tempfile)s' to '%(file)s'"
-msgstr "Nepavyko perkelti „%s“ į „%s“"
+msgstr "Nepavyko perkelti „%(tempfile)s“ į „%(file)s“"
 
 #: pynicotine/transfers.py:753
-#, fuzzy, python-format
+#, python-format
 msgid "Download finished: %(file)s"
-msgstr "Atsiųsta: %s"
+msgstr "Atsiųsta: %(file)s"
 
 #: pynicotine/transfers.py:754
-#, fuzzy, python-format
+#, python-format
 msgid "Download finished: user %(user)s, file %(file)s"
-msgstr "Atsiųsta: naudotojas %s, rinkmena %s"
+msgstr "Atsiųsta: naudotojas %(user)s, rinkmena %(file)s"
 
 #: pynicotine/transfers.py:767
 #, python-format
@@ -3383,152 +3419,28 @@ msgid "(friend)"
 msgstr "(draugas)"
 
 #: pynicotine/transfers.py:866
-#, fuzzy, python-format
+#, python-format
 msgid "Upload finished: %(user)s, file %(file)s"
-msgstr "Išsiųsta: naudotojas %s, rinkmena %s"
+msgstr "Išsiųsta: naudotojas %(user)s, rinkmena %(file)s"
 
 #: pynicotine/transfers.py:1120
-#, fuzzy, python-format
+#, python-format
 msgid "Retrying failed download: %(user)s, file %(file)s"
 msgstr ""
-"Pakartotinas bandymas atsisiųsti nesėkmingas: naudotojas %s, rinkmena %s"
+"Pakartotinas bandymas atsisiųsti nesėkmingas: naudotojas %(user)s, "
+"rinkmena %(file)s"
 
 #: pynicotine/transfers.py:1162
-#, fuzzy, python-format
+#, python-format
 msgid "File: %(file)s, place in queue: %(place)s"
-msgstr "Rinkmena: %s, vieta eilėje: %s"
+msgstr "Rinkmena: %(file)s, vieta eilėje: %(place)s"
 
 #: pynicotine/transfers.py:1227
-#, fuzzy, python-format
+#, python-format
 msgid "Upload aborted, user %(user)s file %(file)s"
-msgstr "Išsiuntimas nutrauktas, naudotojas %s rinkmena %s"
+msgstr "Išsiuntimas nutrauktas, naudotojas %(user)s rinkmena %(file)s"
 
 #: pynicotine/transfers.py:1229
-#, fuzzy, python-format
+#, python-format
 msgid "Download aborted, user %(user)s file %(file)s"
-msgstr "Atsiuntimas nutrauktas, naudotojas %s rinkmena %s"
-
-#~ msgid "Exit"
-#~ msgstr "Išeiti"
-
-#~ msgid "Ok"
-#~ msgstr "Gerai"
-
-#~ msgid "User limit of %i megabytes exceeded"
-#~ msgstr "Viršytas %i megabaitų naudotojo limitas"
-
-#, fuzzy
-#~ msgid "Nicotine+: Download %i files?"
-#~ msgstr "Atsiųsti %i rinkmenas?"
-
-#~ msgid "Files Shared: %s"
-#~ msgstr "Viešinamos rinkmenos: %s"
-
-#~ msgid "Dirs Shared: %s"
-#~ msgstr "Viešinami aplankai: %s"
-
-#~ msgid "Slots available: %i"
-#~ msgstr "Prieinami lizdai: %i"
-
-#~ msgid "If Uploads are sent at"
-#~ msgstr "Jeigu išsiuntimai siunčiami "
-
-#~ msgid "KBytes/sec then other uploads will be queued."
-#~ msgstr "KBaitų/sek greičiu, tai kiti išsiuntimai bus padėti į eilę."
-
-#~ msgid "Dirs Shared: unknown"
-#~ msgstr "Viešinama aplankų: nežinoma"
-
-#~ msgid "Immediate DL"
-#~ msgstr "Staigus atsiuntimas"
-
-#~ msgid ""
-#~ "You're using an old version of Python interpreter (%s).\n"
-#~ "You should install Python 2.2.0 or newer."
-#~ msgstr ""
-#~ "Jūs naudojate seną Python interpretatoriaus versiją (%s).\n"
-#~ "Turėtumėte įdiegti Python 2.2.0 ar naujesnę."
-
-#~ msgid ""
-#~ "Can not find Nicotine modules. \n"
-#~ "Perhaps they're installed in a directory which is not \n"
-#~ "in an interpreter's module search path. \n"
-#~ "(there could be a version mismatch between \n"
-#~ "what version of python was used to build the Nicotine \n"
-#~ "binary package and what you try to run Nicotine with.)"
-#~ msgstr ""
-#~ "Nepavyko rasti Nicotine modulių.\n"
-#~ "Galbūt jie įdiegti aplanke neesančiame interpretatoriaus\n"
-#~ "modulių paieškos kelyje.\n"
-#~ "(gali būti versijų neatitikimų tarp Python versijos su kuria\n"
-#~ "buvo sukompiliuotas Nicotine bei versijos su kuria bandote\n"
-#~ "Nicotine paleisti.)"
-
-#~ msgid "Warning: the Berkeley DB module, dbhash, could not be loaded."
-#~ msgstr "Dėmesio: nepavyko įkelti Berkeley DB modulio, dbhash."
-
-#~ msgid ""
-#~ "You must install the Gtk+ 2.2 Runtime Environment to run this program"
-#~ msgstr ""
-#~ "Norėdami paleisti šią programą, turite įdiegti Gtk+ 2.2 Runtime "
-#~ "Environment"
-
-#~ msgid ""
-#~ "Can not find required PyGTK. The current search path is \n"
-#~ "%s"
-#~ msgstr ""
-#~ "Nepavyko rasti reikiamo PyGTK. Dabartinis paieškos kelias yra \n"
-#~ "%s"
-
-#~ msgid "Your PyGTK is too old, upgrade to at least PyGTK 1.99.16"
-#~ msgstr "Jūsų PyGTK per senas, atnaujinkite bent iki PyGTK 1.99.16"
-
-#~ msgid ""
-#~ "You do not have Python Vorbis bindings installed. \n"
-#~ "Others will not be able to see the lengths and the bitrates \n"
-#~ "of Ogg Vorbis files that you share. You can get the from\n"
-#~ "http://www.andrewchatham.com/pyogg/. \n"
-#~ "If you're using Debian, install the python-pyvorbis package.\n"
-#~ msgstr ""
-#~ "Jūs neturite įdiegę Python Vorbis saitų.\n"
-#~ "Kiti negalės matyti jūsų viešinamų Ogg Vorbis rinkmenų ilgio\n"
-#~ "ir bitų dažnio. Juos galite atsisiųsti iš\n"
-#~ "http://www.andrewchatham.com/pyogg/.\n"
-#~ "Jeigu naudojate Debian, įdiekite python-vorbis paketą.\n"
-
-#, fuzzy
-#~ msgid ""
-#~ "Nicotine supports a country code blocker but that\n"
-#~ "\trequires a (GPL'ed) library called GeoIP. You can find it here:\n"
-#~ "\tC library:       http://www.maxmind.com/app/c\n"
-#~ "\tPython bindings: http://www.maxmind.com/app/python\n"
-#~ "\t(the python bindings require the C library)\n"
-#~ "\t"
-#~ msgstr ""
-#~ "Nicotine palaiko valstybių kodų blokavimą, tačiau tam\n"
-#~ "reikia (GPL licencijuotos) bibliotekos GeoIP. Galite ją rasti čia:\n"
-#~ "C biblioteka:    http://www.maxmind.com/app/c\n"
-#~ "Python saitai:   http://www.maxmind.com/app/python\n"
-#~ "(python saitam gali reikti C bibliotekos)\n"
-
-#, fuzzy
-#~ msgid ""
-#~ "Usage: nicotine [OPTION]...\n"
-#~ "  -c file,\t--config=file\tUse non-default configuration file\n"
-#~ "  -h,\t\t--help\t\tDisplay this help and exit\n"
-#~ "\n"
-#~ "Please report any problems to our bugtracker :\n"
-#~ "http://www.nicotine-plus.org/newticket"
-#~ msgstr ""
-#~ "Naudojimas: nicotine [OPTION]...\n"
-#~ "   -c rinkmena,\t--config=rinkmena\tNaudoti ne numatytąją konfigūracijos "
-#~ "rinkmeną\n"
-#~ "   -h,\t\t--help\t\tParodyti šį žinyną ir išeiti\n"
-#~ "\n"
-#~ "Praneškite apie klaidas <hyriand@thegraveyard.org>"
-
-#~ msgid "Starting using the profiler (saving log to %s)"
-#~ msgstr "Paleidžiama naudojant profiliavimą (žurnalas įrašomas į %s)"
-
-#~ msgid "Share tree"
-#~ msgstr "Viešinių medis"
+msgstr "Atsiuntimas nutrauktas, naudotojas %(user)s rinkmena %(file)s"
