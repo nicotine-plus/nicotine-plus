@@ -273,8 +273,15 @@ class UserBrowse(UserBrowseTab):
 		self.directories.clear()
 		self.files.clear()
 		self.DirStore.clear()
-	
-		self.SetDirectory(self.BrowseGetDirs())
+		
+		# Select first directory
+		currentdir = self.BrowseGetDirs()
+		sel = self.FolderTreeView.get_selection()
+		sel.unselect_all()
+		path = self.DirStore.get_path(self.directories[currentdir])
+		if path is not None:
+			sel.select_path(path)
+				
 		self.FolderTreeView.set_sensitive(True)
 		self.FileTreeView.set_sensitive(True)
 		self.SaveButton.set_sensitive(True)
@@ -320,8 +327,10 @@ class UserBrowse(UserBrowseTab):
 						children.append(path)
 						self.directories[path] = self.DirStore.append(self.directories[parent], [path.split("\\")[-1], path ] )
 					parent = path
+			sortlist = self.directories.keys()
+			sortlist.sort()
 
-			directory = children[0]
+			directory = sortlist[0]
 		return directory
 	
 			
