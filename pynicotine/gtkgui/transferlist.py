@@ -283,6 +283,7 @@ class TransferList:
 				files = self.transfersmodel.iter_n_children(self.users[i])
 				ispeed = 0.0
 				percent = totalsize = position = 0
+				elapsed = left = ""
 				for f in range(files):
 					iter = self.transfersmodel.iter_nth_child(self.users[i], f)
 					totalsize += self.transfersmodel.get_value(iter, 11)
@@ -292,6 +293,8 @@ class TransferList:
 						str_speed = self.transfersmodel.get_value(iter, 5)
 						if str_speed != "":
 							ispeed += float(str_speed)
+						elapsed = self.transfersmodel.get_value(iter, 6)
+						left = self.transfersmodel.get_value(iter, 7)
 					
 				try:
 					speed = "%.1f" % ispeed
@@ -300,7 +303,7 @@ class TransferList:
 				if totalsize > 0:
 					percent = ((100 * position)/ totalsize)
 				
-				self.transfersmodel.set(self.users[i], 2, _("%s Files") % files , 3, percent, 4, "%s / %s" % (self.Humanize(position, None), self.Humanize(totalsize, None )), 5, speed, 11, ispeed, 13, True)
+				self.transfersmodel.set(self.users[i], 2, _("%s Files") % files , 3, percent, 4, "%s / %s" % (self.Humanize(position, None), self.Humanize(totalsize, None )), 5, speed, 6, elapsed, 7, left, 11, ispeed, 13, True)
 				#self.transfersmodel.set(self.users[i],  )
 				
 		self.frame.UpdateBandwidth()
