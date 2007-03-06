@@ -195,7 +195,7 @@ class Transfers:
 					self.eventprocessor.logMessage(_("Filtering: %s") % filename)
 					self.AbortTransfer(transfer)
 					# The string to be displayed on the GUI
-					status = transfer.status = 'Filtered'
+					transfer.status = 'Filtered'
 					# In order to remove the filtered files from the saved download queue.
 					self.SaveDownloads()
 	
@@ -205,9 +205,9 @@ class Transfers:
 		if status is None:
 			self.queue.put(slskmessages.AddUser(user))
 			self.queue.put(slskmessages.GetUserStatus(user))
-		elif status is not 'Filtered':
+		if transfer.status is not 'Filtered':
 			transfer.req = newId()
-			self.eventprocessor.ProcessRequestToPeer(user,slskmessages.TransferRequest(None,direction,transfer.req,filename, self.getFileSize(filename)))
+			self.eventprocessor.ProcessRequestToPeer(user,slskmessages.TransferRequest(None, direction, transfer.req, filename, self.getFileSize(filename)))
 		if direction == 0:
 			self.downloadspanel.update(transfer)
 		else:
@@ -354,14 +354,15 @@ class Transfers:
 					if self.eventprocessor.config.sections["transfers"]["uploadsinsubdirs"]:
 						parentdir = msg.file.split("\\")[-2]
 						path = _("Buddy Uploads")+os.sep+user+os.sep+parentdir
-					transfer = Transfer(user = user, filename=msg.file , path=path, status = 'Getting status', size=msg.filesize)
+	
+					transfer = Transfer(user = user, filename=msg.file , path=path, status = 'Getting status', size=msg.filesize, req=msg.req)
 					self.downloads.append(transfer)
 					self.SaveDownloads()
 					self.queue.put(slskmessages.AddUser(user))
 					self.queue.put(slskmessages.GetUserStatus(user))
-					transfer.req = newId()
+	
+					response = slskmessages.TransferResponse(conn,0,reason = "Queued", req = transfer.req)
 					self.downloadspanel.update(transfer)
-					return
 					
 				else:
 					response = slskmessages.TransferResponse(conn,0,reason = "Cancelled", req = msg.req)

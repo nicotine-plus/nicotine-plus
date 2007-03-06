@@ -339,7 +339,9 @@ class UserBrowse(UserBrowseTab):
 		for file in files:
 			# DecodedFilename, HSize, Bitrate, HLength, Size, Length, RawFilename
 			rl = 0
-			f = [self.decode(file[1]), Humanize(file[2])]
+			try: size = int(file[2])
+			except: size = 0
+			f = [self.decode(file[1]), Humanize(size)]
 			if file[3] == "":
 				f += ["", ""]
 			
@@ -352,15 +354,17 @@ class UserBrowse(UserBrowseTab):
 						br = str(attrs[0])
 						if attrs[2]:
 							br = br + _(" (vbr)")
-						l = "%i:%02i" % (attrs[1] / 60, attrs[1] % 60)
-						rl = attrs[1]
+						try: rl = int(attrs[1])
+						except: rl = 0
+						l = "%i:%02i" % (rl / 60, rl % 60)
+						
 						f += [br, l]
 					else:
 						f += ["", ""]
 				else:
 					f += ["", ""]
 			
-			f += [file[2], rl, file[1]]
+			f += [size, rl, file[1]]
 
 			self.files[f[0]] = self.FileStore.append(f)
 		

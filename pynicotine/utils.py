@@ -7,7 +7,7 @@
 This module contains utility fuctions.
 """
 
-version = "1.2.7.1pre1"
+version = "1.2.7.1"
 latesturl = "http://nicotine-plus.sourceforge.net/LATEST"
 
 import string
@@ -92,7 +92,7 @@ def rescandirs(shared, sharedmtimes, sharedfiles, sharedfilesstreams, yieldfunct
 	# newfileindex is a dict in format { num: (path, size, (bitrate, vbr), length), ... }
 	gobject.idle_add(progress.set_text, _("Building Index"))
 	newwordindex, newfileindex = getFilesIndex(newmtimes, sharedmtimes, shared, newsharedfiles, yieldfunction)
-	progress.set_fraction(1.0)
+	gobject.idle_add(progress.set_fraction, 1.0)
 	
 	return newsharedfiles, newsharedfilesstreams, newwordindex, newfileindex, newmtimes
     

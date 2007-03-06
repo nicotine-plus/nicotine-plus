@@ -1,14 +1,27 @@
 ChangeLog for Nicotine Plus
 
-UNRELEASED
+1.2.7.1
 
 GENERAL CHANGES
  * The About Nicotine+ dialog now shows the versions of Python, PyGTK and GTK+
+ * Copy was added to the right-click menus in chat status and 
+   debug logs.
  
 BUGFIXES
  * The shares scanning progress bar now disappears after scanning shares a 
    little more frequently.
+ * Fixed a bug in the way total transfer slots were calculated
+ * Improved Remote-Uploading somewhat (was quite buggy with two Nicotine+ clients)
+ * Fix directory name cropping in 'upload directory to' in User Browse
+ * Attempted to fix the 'interrupted system call' (which sometimes are caused
+   by gtk+ file dialogs) from stopping the networking loop.
 
+TRANSLATIONS
+ * ><((((*> updated the French translation
+ * nince78 updated the Dutch translation
+ * Nicola updated the Italian Translation
+ * Žygimantas updated the Lithuanian Translation
+ 
 1.2.7
 
 GENERAL CHANGES
