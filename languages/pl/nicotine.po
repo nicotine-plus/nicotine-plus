@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: Nicotine+ 1.2.7\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-03-06 22:54+0200\n"
-"PO-Revision-Date: 2007-03-06 23:12+0200\n"
+"PO-Revision-Date: 2007-03-07 00:36+0200\n"
 "Last-Translator: daelstorm <daelstorm@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -2774,7 +2774,7 @@ msgstr "Pobierz wszystko"
 #: pynicotine/gtkgui/entrydialog.py:121
 #, python-format
 msgid "<b>%s</b> File(s) Selected"
-msgstr ""
+msgstr "b>%s</b> Wybrane Plik"
 
 #: pynicotine/gtkgui/entrydialog.py:122
 #: pynicotine/gtkgui/entrydialog.py:367
