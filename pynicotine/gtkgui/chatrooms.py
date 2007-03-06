@@ -726,14 +726,13 @@ class ChatRoom(ChatRoomTab):
 		
 		
 		if tag.last_event_type == gtk.gdk.BUTTON_PRESS and event.type == gtk.gdk.BUTTON_RELEASE and event.button == 1:
-			if user in self.users.keys():
-				self.popup_menu.set_user(user)
-				items = self.popup_menu.get_children()
-				# Chat, Userlists use the normal popup system
-				items[6].set_active(user in [i[0] for i in self.frame.np.config.sections["server"]["userlist"]])
-				items[7].set_active(user in self.frame.np.config.sections["server"]["banlist"])
-				items[8].set_active(user in self.frame.np.config.sections["server"]["ignorelist"])
-				self.popup_menu.popup(None, None, None, event.button, event.time)
+			self.popup_menu.set_user(user)
+			items = self.popup_menu.get_children()
+			# Chat, Userlists use the normal popup system
+			items[6].set_active(user in [i[0] for i in self.frame.np.config.sections["server"]["userlist"]])
+			items[7].set_active(user in self.frame.np.config.sections["server"]["banlist"])
+			items[8].set_active(user in self.frame.np.config.sections["server"]["ignorelist"])
+			self.popup_menu.popup(None, None, None, event.button, event.time)
 		tag.last_event_type = event.type
 		
 	def UpdateColours(self):
