@@ -15,6 +15,7 @@ import threading
 import struct
 import random
 import time
+from errno import EINTR
 from utils import _
 
 class Connection:
@@ -221,11 +222,12 @@ class SlskProtoThread(threading.Thread):
 				input,output,exc = select.select(conns.keys()+connsinprogress.keys()+[p],connsinprogress.keys()+outsock,[],0.5)
 				#print "Sockets open:", len(conns.keys()+connsinprogress.keys()+[p]+outsock), len(conns.keys()),  len(connsinprogress.keys())
 			except select.error, error:
-				# Error recieved; we don't care :)
+				if len(error.args) == 2 and error.args[0] == EINTR:
+					# Error recieved; but we don't care :)
+					continue
 				print error
-				
-				#self._want_abort = 1
-				#self._ui_callback([_("Major Socket Error: Networking terminated! %s" % str(error)) ])
+				self._want_abort = 1
+				self._ui_callback([_("Major Socket Error: Networking terminated! %s" % str(error)) ])
 
 			# Write Output
 			for i in conns.keys():
