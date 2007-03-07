@@ -1,7 +1,3 @@
-README for Nicotine+ Tools
-===========================
+Copy files from svnroot:/tools/win32 to this directory
 
-Windows Tools
-	Doc 			see doc/BUILD_win32.txt
-	make_exe.bat 	checks for needed dependencies and generates nicotine.exe
-	make_exe.py 	setup file containing arguments for building nicotine.exe
+Instructions are in the README and DEPENDENCIES files
