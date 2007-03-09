@@ -80,7 +80,7 @@ class Config:
 "inputcolor":"", \
 "decimalsep":",", "chatfont": "", "roomlistcollapsed": 0, "tabclosers": 1,\
 "buddylistinchatrooms": 0, "trayicon": 1, "soundenabled": 1, "soundtheme": "",\
-"soundcommand": "play -q", "speechenabled": 0, "enabletrans":0,\
+"soundcommand": "play -q", "filemanager": "rox $", "speechenabled": 0, "enabletrans":0,\
 "transtint": "#aaaaaa", "transalpha": 150, "transfilter": 0x00000000L,
 "width": 800, "height": 600}, \
 \

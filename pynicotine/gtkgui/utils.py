@@ -343,7 +343,7 @@ class PopupMenu(gtk.Menu):
 		gtk.Menu.__init__(self)
 		self.frame = frame
 		self.user = None
-		
+		self.useritem = None
 	def setup(self, *items):
 		for item in items:
 			if item[0] == "":
@@ -354,6 +354,21 @@ class PopupMenu(gtk.Menu):
 				menuitem.set_submenu(item[2])
 				if item[3] is not None:
 					menuitem.connect("activate", item[3])
+			elif item[0] == 3:
+				menuitem = gtk.MenuItem()
+				menuitem = gtk.MenuItem(item[1])
+				menuitem.set_submenu(item[2])
+				if item[3] is not None:
+					menuitem.connect("activate", item[3])
+				self.useritem = menuitem
+			elif item[0] == 2:
+				menuitem = gtk.ImageMenuItem()
+				menuitem = gtk.ImageMenuItem(item[1])
+				menuitem.set_submenu(item[2])
+				if item[3] is not None:
+					menuitem.connect("activate", item[3])
+				img = gtk.image_new_from_stock(item[4], gtk.ICON_SIZE_MENU)
+				menuitem.set_image(img)
 			else:
 				if item[0][0] == "$":
 					menuitem = gtk.CheckMenuItem(item[0][1:])
@@ -376,7 +391,9 @@ class PopupMenu(gtk.Menu):
 
 	def set_user(self, user):
 		self.user = user
-	
+		if self.useritem:
+			self.useritem.get_child().set_text(user)
+
 	def get_user(self):
 		return self.user
 		

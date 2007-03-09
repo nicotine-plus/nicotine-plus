@@ -1029,9 +1029,13 @@ class AwayFrame(settings_glade.AwayFrame):
 class EventsFrame(settings_glade.EventsFrame):
 	def __init__(self, parent):
 		self.frame = parent.frame
-		settings_glade.EventsFrame.__init__(self, False)
-	
+		settings_glade.EventsFrame.__init__(self, False) 
+		
+		for executable in ["rox $", "konqueror $", "nautilus --no-desktop $", "thunar $", "xterm -e mc $", "emelfm2 -1 $", "krusader --left $", "gentoo -1 $" ]:
+			self.FileManagerCombo.append_text( executable ) 
+		
 	def SetSettings(self, config):
+		
 		transfers = config["transfers"]
 		if transfers["afterfinish"] is not None:
 			self.AfterDownload.set_text(transfers["afterfinish"])
@@ -1040,12 +1044,18 @@ class EventsFrame(settings_glade.EventsFrame):
 		if config["players"]["default"] is not None:
 			self.audioPlayerCombo.child.set_text(config["players"]["default"])
 			self.audioPlayerCombo.append_text( config["players"]["default"] ) 
+		if config["ui"]["filemanager"] is not None:
+			self.FileManagerCombo.child.set_text(config["ui"]["filemanager"])
+			
 	def GetSettings(self):
 		return {
 			"transfers": {
 				"afterfinish": self.AfterDownload.get_text(),
 				"afterfolder": self.AfterFolder.get_text(),
 				
+			},
+			"ui": {
+				"filemanager": self.FileManagerCombo.child.get_text(),
 			},
 			"players": { 
 				"default": self.audioPlayerCombo.child.get_text(),

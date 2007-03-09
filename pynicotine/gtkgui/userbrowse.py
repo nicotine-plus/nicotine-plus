@@ -66,43 +66,75 @@ class UserBrowse(UserBrowseTab):
 			[_("Directories"), -1, "text", self.CellDataFunc], #0
 		)
 		cols[0].set_sort_column_id(0)
-		self.folder_popup_menu = popup = PopupMenu(self.frame)
-		popup.set_user(user)
+		
+		self.popup_menu_users = PopupMenu(self.frame)
+		self.popup_menu_users2 = PopupMenu(self.frame)
+		for menu in [self.popup_menu_users, self.popup_menu_users2]:
+			menu.setup( 
+				("#" + _("Send _message"), menu.OnSendMessage, gtk.STOCK_EDIT),
+				("#" + _("Show IP a_ddress"), menu.OnShowIPaddress, gtk.STOCK_NETWORK),
+				("#" + _("Get user i_nfo"), menu.OnGetUserInfo, gtk.STOCK_DIALOG_INFO),
+				("#" + _("Gi_ve privileges"), menu.OnGivePrivileges, gtk.STOCK_JUMP_TO),
+				("", None),
+				("$" + _("_Add user to list"),  menu.OnAddToList),
+				("$" + _("_Ban this user"), menu.OnBanUser),
+				("$" + _("_Ignore this user"), menu.OnIgnoreUser),
+			)
+		
+		self.popup_menu_downloads_folders = PopupMenu(self.frame)
+		self.popup_menu_downloads_folders.setup( 
+			("#" + _("_Download directory"), self.OnDownloadDirectory, gtk.STOCK_GO_DOWN),
+			("#" + _("Download directory _to..."), self.OnDownloadDirectoryTo, gtk.STOCK_GO_DOWN),
+			("#" + _("Download _recursive"), self.OnDownloadDirectoryRecursive, gtk.STOCK_GO_DOWN),
+			("#" + _("Download r_ecursive to..."), self.OnDownloadDirectoryRecursiveTo, gtk.STOCK_GO_DOWN),
+		)
+		self.popup_menu_downloads_files = PopupMenu(self.frame)
+		self.popup_menu_downloads_files.setup( 
+			("#" + _("_Download file(s)"), self.OnDownloadFiles, gtk.STOCK_GO_DOWN),
+			("#" + _("Download _to..."), self.OnDownloadFilesTo, gtk.STOCK_GO_DOWN),
+			("", None),
+			("#" + _("_Download directory"), self.OnDownloadDirectory, gtk.STOCK_GO_DOWN),
+			("#" + _("Download directory _to..."), self.OnDownloadDirectoryTo, gtk.STOCK_GO_DOWN),
+			("#" + _("Download _recursive"), self.OnDownloadDirectoryRecursive, gtk.STOCK_GO_DOWN),
+			("#" + _("Download r_ecursive to..."), self.OnDownloadDirectoryRecursiveTo, gtk.STOCK_GO_DOWN),
+		)
+				
+		self.popup_menu_uploads_folders = PopupMenu(self.frame)
+		self.popup_menu_uploads_folders.setup( 
+			("#" + _("Upload Directory to..."), self.OnUploadDirectoryTo, gtk.STOCK_GO_UP),
+			("#" + _("Upload Directory recursive to..."), self.OnUploadDirectoryRecursiveTo, gtk.STOCK_GO_UP),
+		)
+		
+		self.popup_menu_uploads_files = PopupMenu(self.frame)
+		self.popup_menu_uploads_files.setup( 
+			("#" + _("Upload Directory to..."), self.OnUploadDirectoryTo, gtk.STOCK_GO_UP),
+			("#" + _("Upload Directory recursive to..."), self.OnUploadDirectoryRecursiveTo, gtk.STOCK_GO_UP),
+			("#" + _("Up_load file(s)"), self.OnUploadFiles, gtk.STOCK_GO_UP),
+		)
+		
+		self.folder_popup_menu  = PopupMenu(self.frame)
+		self.folder_popup_menu.set_user(user)
 		if user == self.frame.np.config.sections["server"]["login"]:
-			popup.setup(
-				("#" + _("_Download directory"), self.OnDownloadDirectory, gtk.STOCK_GO_DOWN),
-				("#" + _("Download directory _to..."), self.OnDownloadDirectoryTo, gtk.STOCK_GO_DOWN),
-				("#" + _("Download _recursive"), self.OnDownloadDirectoryRecursive, gtk.STOCK_GO_DOWN),
-				("#" + _("Download r_ecursive to..."), self.OnDownloadDirectoryRecursiveTo, gtk.STOCK_GO_DOWN),
-				("#" + _("Upload Directory to..."), self.OnUploadDirectoryTo, gtk.STOCK_GO_UP),
-				("#" + _("Upload Directory recursive to..."), self.OnUploadDirectoryRecursiveTo, gtk.STOCK_GO_UP),
+			self.folder_popup_menu.setup(
+				(3, _("User"), self.popup_menu_users, self.OnPopupMenuFolderUser),
+				("", None),
+				(2, _("Download"), self.popup_menu_downloads_folders, self.OnPopupMenuDummy, gtk.STOCK_GO_DOWN),
+				(2, _("Upload"), self.popup_menu_uploads_folders, self.OnPopupMenuDummy, gtk.STOCK_GO_UP),
 				("", None),
 				("#" + _("Copy _URL"), self.OnCopyDirURL, gtk.STOCK_COPY),
-				("", None),
-				("#" + _("Send _message"), popup.OnSendMessage, gtk.STOCK_EDIT),
-				("#" + _("Show IP a_ddress"), popup.OnShowIPaddress, gtk.STOCK_NETWORK),
-				("#" + _("Get user i_nfo"), popup.OnGetUserInfo, gtk.STOCK_DIALOG_INFO),
-				("$" + _("_Add user to list"), popup.OnAddToList),
-				("$" + _("_Ban this user"), popup.OnBanUser),
-				("$" + _("_Ignore this user"), popup.OnIgnoreUser),
+				("#" + _("Open in File Manager"), self.OnFileManager, gtk.STOCK_OPEN),
+
+	
 			)
 		else:
-			popup.setup(
-				("#" + _("_Download directory"), self.OnDownloadDirectory, gtk.STOCK_GO_DOWN),
-				("#" + _("Download directory _to..."), self.OnDownloadDirectoryTo, gtk.STOCK_GO_DOWN),
-				("#" + _("Download _recursive"), self.OnDownloadDirectoryRecursive, gtk.STOCK_GO_DOWN),
-				("#" + _("Download r_ecursive to..."), self.OnDownloadDirectoryRecursiveTo, gtk.STOCK_GO_DOWN),
+			self.folder_popup_menu.setup(
+				(3, _("User"), self.popup_menu_users, self.OnPopupMenuFolderUser),
+				("", None),
+				(2, _("Download"), self.popup_menu_downloads_folders, self.OnPopupMenuDummy, gtk.STOCK_GO_DOWN),
 				("", None),
 				("#" + _("Copy _URL"), self.OnCopyDirURL, gtk.STOCK_COPY),
-				("", None),
-				("#" + _("Send _message"), popup.OnSendMessage, gtk.STOCK_EDIT),
-				("#" + _("Show IP a_ddress"), popup.OnShowIPaddress, gtk.STOCK_NETWORK),
-				("#" + _("Get user i_nfo"), popup.OnGetUserInfo, gtk.STOCK_DIALOG_INFO),
-				("#" + _("Gi_ve privileges"), popup.OnGivePrivileges, gtk.STOCK_JUMP_TO),
-				("$" + _("_Add user to list"), popup.OnAddToList),
-				("$" + _("_Ban this user"), popup.OnBanUser),
-				("$" + _("_Ignore this user"), popup.OnIgnoreUser),
 			)
+		
 		self.FolderTreeView.connect("button_press_event", self.OnFolderClicked)
 		self.FolderTreeView.get_selection().connect("changed", self.OnSelectDir)
 		
@@ -125,41 +157,65 @@ class UserBrowse(UserBrowseTab):
 		self.FileTreeView.set_headers_clickable(True)
 		self.FileTreeView.set_property("rules-hint", True)
 		
-		self.file_popup_menu = popup = PopupMenu(self.frame)
-		popup.set_user(user)
+		self.file_popup_menu = PopupMenu(self.frame)
+		
 		if user == self.frame.np.config.sections["server"]["login"]:
-			popup.setup(
-				("#" + _("_Download file(s)"), self.OnDownloadFiles, gtk.STOCK_GO_DOWN),
-				("#" + _("Download _to..."), self.OnDownloadFilesTo, gtk.STOCK_GO_DOWN),
+			self.file_popup_menu.setup(
+				(3, "User", self.popup_menu_users2, self.OnPopupMenuFileUser),
+				("", None),
+				(2, _("Download"), self.popup_menu_downloads_files, self.OnPopupMenuDummy, gtk.STOCK_GO_DOWN),
+				(2, _("Upload"), self.popup_menu_uploads_files, self.OnPopupMenuDummy, gtk.STOCK_GO_UP),
 				("", None),
 				("#" + _("Copy _URL"), self.OnCopyURL, gtk.STOCK_COPY),
-				("", None),
-				("#" + _("Up_load file(s)"), self.OnUploadFiles, gtk.STOCK_GO_UP),
 				("#" + _("Send to _player"), self.OnPlayFiles, gtk.STOCK_MEDIA_PLAY),
-				("#" + _("Send _message"), popup.OnSendMessage, gtk.STOCK_EDIT),
-				("#" + _("Show IP a_ddress"), popup.OnShowIPaddress, gtk.STOCK_NETWORK),
-				("#" + _("Get user i_nfo"), popup.OnGetUserInfo, gtk.STOCK_DIALOG_INFO),
-				("$" + _("_Add user to list"), popup.OnAddToList),
-				("$" + _("_Ban this user"), popup.OnBanUser),
-				("$" + _("_Ignore this user"), popup.OnIgnoreUser),
+				("#" + _("Open in File Manager"), self.OnFileManager, gtk.STOCK_OPEN),
+				
+				
+			
 			)
 		else:
-			popup.setup(
-				("#" + _("_Download file(s)"), self.OnDownloadFiles, gtk.STOCK_GO_DOWN),
-				("#" + _("Download _to..."), self.OnDownloadFilesTo, gtk.STOCK_GO_DOWN),
+			self.file_popup_menu.setup(
+				(3, "User", self.popup_menu_users2, self.OnPopupMenuFileUser),
+				("", None),
+				(2, _("Download"), self.popup_menu_downloads_files, self.OnPopupMenuDummy, gtk.STOCK_GO_DOWN),
 				("", None),
 				("#" + _("Copy _URL"), self.OnCopyURL, gtk.STOCK_COPY),
-				("", None),
-				("#" + _("Send _message"), popup.OnSendMessage, gtk.STOCK_EDIT),
-				("#" + _("Show IP a_ddress"), popup.OnShowIPaddress, gtk.STOCK_NETWORK),
-				("#" + _("Get user i_nfo"), popup.OnGetUserInfo, gtk.STOCK_DIALOG_INFO),
-				("#" + _("Gi_ve privileges"), popup.OnGivePrivileges, gtk.STOCK_JUMP_TO),
-				("$" + _("_Add user to list"), popup.OnAddToList),
-				("$" + _("_Ban this user"), popup.OnBanUser),
-				("$" + _("_Ignore this user"), popup.OnIgnoreUser),
+				
 			)
 		self.FileTreeView.connect("button_press_event", self.OnFileClicked)
 		self.ChangeColours()
+
+		for name, object in self.__dict__.items():
+			if type(object) is PopupMenu:
+				object.set_user(self.user)
+				
+	def OnPopupMenuDummy(self, widget):
+		pass
+
+	
+		
+	def OnPopupMenuFileUser(self, widget):
+		self.OnPopupMenuUsers(self.popup_menu_users2)
+		
+	def OnPopupMenuFolderUser(self, widget):
+		self.OnPopupMenuUsers(self.popup_menu_users)
+		
+	def OnPopupMenuUsers(self, menu):
+		items = menu.get_children()
+
+		act = True
+		items[0].set_sensitive(act)
+		items[1].set_sensitive(act)
+		items[2].set_sensitive(act)
+
+		items[5].set_active(self.user in [i[0] for i in self.frame.np.config.sections["server"]["userlist"]])
+		items[6].set_active(self.user in self.frame.np.config.sections["server"]["banlist"])
+		items[7].set_active(self.user in self.frame.np.config.sections["server"]["ignorelist"])
+		
+		for i in range(3, 8):
+			items[i].set_sensitive(act)
+
+		return True
 		
 	def ChangeColours(self):
 		self.frame.SetTextBG(self.FileTreeView)
@@ -202,20 +258,9 @@ class UserBrowse(UserBrowseTab):
 		if self.selected_folder is None:
 			act = False
 		items = self.folder_popup_menu.get_children()
-		for item in items[0:6]:
+		for item in items[1:]:
 			item.set_sensitive(act)
-		
-		if self.user == self.frame.np.config.sections["server"]["login"]:
-			items[6].set_sensitive(act)
-			items[7].set_sensitive(act)
-			items[12].set_active(self.user in [i[0] for i in self.frame.np.config.sections["server"]["userlist"]])
-			items[13].set_active(self.user in self.frame.np.config.sections["server"]["banlist"])
-			items[14].set_active(self.user in self.frame.np.config.sections["server"]["ignorelist"])
-		else:
-			items[11].set_active(self.user in [i[0] for i in self.frame.np.config.sections["server"]["userlist"]])
-			items[12].set_active(self.user in self.frame.np.config.sections["server"]["banlist"])
-			items[13].set_active(self.user in self.frame.np.config.sections["server"]["ignorelist"])
-		
+
 		self.folder_popup_menu.popup(None, None, None, event.button, event.time)
 	
 	def SelectedFilesCallback(self, model, path, iter):
@@ -237,30 +282,27 @@ class UserBrowse(UserBrowseTab):
 		self.selected_files = []
 		self.FileTreeView.get_selection().selected_foreach(self.SelectedFilesCallback)
 		
-		act = True
-		if not self.selected_files:
-			act = False
-		items = self.file_popup_menu.get_children()
-		items[0].set_sensitive(act)
-		items[1].set_sensitive(act)
-		items[3].set_sensitive(act)
-		if len(self.selected_files) == 1:
-			items[3].set_sensitive(True)
+		files = True
+		multiple = False
+	
+		if len(self.selected_files) > 1:
+			multiple = True
+		if len(self.selected_files) >= 1:
+			files = True
 		else:
-			items[3].set_sensitive(False)
+			files = False
+			
+		items = self.file_popup_menu.get_children()
 		
 		if self.user == self.frame.np.config.sections["server"]["login"]:
-			if len(self.selected_files) >= 1:
-				items[5].set_sensitive(True)
-			else:
-				items[5].set_sensitive(False)
-			items[10].set_active(self.user in [i[0] for i in self.frame.np.config.sections["server"]["userlist"]])
-			items[11].set_active(self.user in self.frame.np.config.sections["server"]["banlist"])
-			items[12].set_active(self.user in self.frame.np.config.sections["server"]["ignorelist"])
+			items[2].set_sensitive(files) # Downloads
+			items[3].set_sensitive(files) # Uploads
+			items[5].set_sensitive(not multiple and files) # Copy URL
+			items[6].set_sensitive(files) # Send to player
 		else:
-			items[9].set_active(self.user in [i[0] for i in self.frame.np.config.sections["server"]["userlist"]])
-			items[10].set_active(self.user in self.frame.np.config.sections["server"]["banlist"])
-			items[11].set_active(self.user in self.frame.np.config.sections["server"]["ignorelist"])
+			items[2].set_sensitive(files) # Downloads
+			items[4].set_sensitive(not multiple and files) # Copy URL
+			
 		self.FileTreeView.emit_stop_by_name("button_press_event")
 		self.file_popup_menu.popup(None, None, None, event.button, event.time)
 		return True
@@ -541,7 +583,7 @@ class UserBrowse(UserBrowseTab):
 
 	
 	def DownloadDirectory(self, dir, prefix = "", recurse = 0):
-		if dir == None:
+		if dir == None or not self.shares.has_key(dir):
 			return
 		ldir = prefix + dir.split("\\")[-1]
 		for file in self.shares[dir]:
@@ -725,9 +767,21 @@ class UserBrowse(UserBrowseTab):
 			self.frame.SetClipboardURL(self.user, path)
 
 	def OnCopyDirURL(self, widget):
+		if self.selected_folder is None:
+			return
 		path = self.selected_folder
+		
 		self.frame.SetClipboardURL(self.user, path)
-
+		
+	def OnFileManager(self, widget):
+		if self.selected_folder is None:
+			return
+		path = self.selected_folder.replace("\\", os.sep)
+		executable = self.frame.np.config.sections["ui"]["filemanager"]
+		if "$" in executable:
+			command = executable.replace("$", "\"%s\" &> /dev/null &") % path
+			
+			os.system(command)
 	def OnEncodingChanged(self, widget):
 		try:
 			# PyGTK 2.6

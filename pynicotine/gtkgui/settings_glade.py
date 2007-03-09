@@ -3395,16 +3395,12 @@ class EventsFrame:
         self.vbox96.set_spacing(10)
         self.vbox96.set_border_width(5)
 
-        self.vbox87 = gtk.VBox(False, 0)
-        self.vbox87.show()
-        self.vbox87.set_spacing(0)
-
         self.label214 = gtk.Label(_("Run command after download finishes ($ for filename):"))
         self.label214.set_alignment(0, 0.5)
         self.label214.set_padding(0, 0)
         self.label214.set_line_wrap(False)
         self.label214.show()
-        self.vbox87.pack_start(self.label214, False, False, 0)
+        self.vbox96.pack_start(self.label214, False, False, 0)
 
         self.AfterDownload = gtk.Entry()
         self.AfterDownload.set_size_request(313, -1)
@@ -3412,13 +3408,7 @@ class EventsFrame:
         self.AfterDownload.set_editable(True)
         self.AfterDownload.show()
         self.AfterDownload.set_visibility(True)
-        self.vbox87.pack_start(self.AfterDownload, False, False, 0)
-
-        self.vbox96.pack_start(self.vbox87, False, False, 0)
-
-        self.vbox88 = gtk.VBox(False, 0)
-        self.vbox88.show()
-        self.vbox88.set_spacing(0)
+        self.vbox96.pack_start(self.AfterDownload, False, False, 0)
 
         self.label215 = gtk.Label(_("Run command after folder finishes ($ for folder path):"))
         self.label215.set_alignment(0, 0.5)
@@ -3426,7 +3416,7 @@ class EventsFrame:
         self.label215.set_padding(0, 0)
         self.label215.set_line_wrap(False)
         self.label215.show()
-        self.vbox88.pack_start(self.label215, False, False, 0)
+        self.vbox96.pack_start(self.label215, False, False, 0)
 
         self.AfterFolder = gtk.Entry()
         self.AfterFolder.set_size_request(313, -1)
@@ -3434,11 +3424,25 @@ class EventsFrame:
         self.AfterFolder.set_editable(True)
         self.AfterFolder.show()
         self.AfterFolder.set_visibility(True)
-        self.vbox88.pack_start(self.AfterFolder, False, False, 0)
+        self.vbox96.pack_start(self.AfterFolder, False, False, 0)
 
-        self.vbox96.pack_start(self.vbox88, True, True, 0)
+        self.label376 = gtk.Label(_("File Manager command:"))
+        self.label376.set_alignment(0, 0.5)
+        self.label376.set_padding(0, 0)
+        self.label376.set_line_wrap(False)
+        self.label376.show()
+        self.vbox96.pack_start(self.label376, False, False, 0)
+
+        self.FileManagerCombo_List = gtk.ListStore(gobject.TYPE_STRING)
+        self.FileManagerCombo = gtk.ComboBoxEntry()
+        self.FileManagerCombo.show()
+
+        self.FileManagerCombo.set_model(self.FileManagerCombo_List)
+        self.FileManagerCombo.set_text_column(0)
+        self.vbox96.pack_start(self.FileManagerCombo, False, True, 0)
 
         self.PlayerLabel = gtk.Label(_("Audio Player command:"))
+        self.PlayerLabel.set_alignment(0, 0.5)
         self.PlayerLabel.set_padding(0, 0)
         self.PlayerLabel.set_line_wrap(False)
         self.PlayerLabel.show()
