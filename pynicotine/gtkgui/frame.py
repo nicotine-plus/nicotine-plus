@@ -418,24 +418,36 @@ class NicotineFrame(MainWindow):
 	def create_trayicon(self):
 		if self.TRAYICON_FAILED:
 			return
-		try:
-			if sys.platform == "win32":
+		if sys.platform == "win32":
+			try:
+			
 				import systraywin32
 				self.trayicon_module = systraywin32
+			except ImportError, error:
+				self.TRAYICON_FAILED = True
+				self.HAVE_TRAYICON = False
+				message =  _("Note: The systraywin32.py Python file failed to load properly because: %s. You may require pywin32. Get a version that matches your version of Python from here:\nhttp://sourceforge.net/project/showfiles.php?group_id=78018") % error
+				print message
+				self.logMessage(message, "TrayIcon")
+		else:
+			# PyGTK >= 2.10
+			if gtk.pygtk_version[0] >= 2 and gtk.pygtk_version[1] >= 10:
+				trayicon = gtk.StatusIcon()
+				self.trayicon_module = trayicon
+				self.HAVE_TRAYICON = True
+				self.TRAYICON_FAILED = False
 			else:
-			        from pynicotine import trayicon
-			        self.trayicon_module = trayicon
-			self.HAVE_TRAYICON = 1
-			self.TRAYICON_FAILED = 0
-		except ImportError, error:
-			self.TRAYICON_FAILED = 1
-			self.HAVE_TRAYICON = 0
-			if sys.platform == "win32":
-				print "Note: The systraywin32.py Python file failed to load properly because: %s. You may require pywin32. Get a version that matches your version of Python from here:\nhttp://sourceforge.net/project/showfiles.php?group_id=78018 " % error
-				self.logMessage("Note: The systraywin32.py Python file failed to load properly because: %s. You may require pywin32. Get a version that matches your version of Python from here:\nhttp://sourceforge.net/project/showfiles.php?group_id=78018 " % error, "TrayIcon")
-			else:
-				print "Note: Trayicon Python module was not found in the pynicotine directory: %s" % error
-				self.logMessage("Note: Trayicon Python module was not found in the pynicotine directory: %s." % error, "TrayIcon")
+			        try:
+					from pynicotine import trayicon
+			        	self.trayicon_module = trayicon
+					self.HAVE_TRAYICON = True
+					self.TRAYICON_FAILED = False
+				except:
+					self.TRAYICON_FAILED = True
+					self.HAVE_TRAYICON = False
+					message = _("Note: Trayicon Python module was not found in the pynicotine directory: %s") % error
+					print message
+					self.logMessage(message, "TrayIcon")
 			
 	def destroy_trayicon(self):
 		if not self.TRAYICON_CREATED:
@@ -445,8 +457,12 @@ class NicotineFrame(MainWindow):
 		self.current_image = None
 		
 		if sys.platform != "win32":
-			self.eventbox.destroy()
-			self.trayicon.destroy()
+			if gtk.pygtk_version[0] >= 2 and gtk.pygtk_version[1] >= 10:
+				self.trayicon_module.set_visible(False)
+				self.trayicon_module = None
+			else:
+				self.eventbox.destroy()
+				self.trayicon.destroy()
 		else:
 			self.tray_status["last"] = ""
 			self.trayicon.hide_icon()
@@ -455,7 +471,7 @@ class NicotineFrame(MainWindow):
 
 		
 	def draw_trayicon(self):
-		if not self.HAVE_TRAYICON or self.trayicon_module == None or  self.TRAYICON_CREATED:
+		if not self.HAVE_TRAYICON or self.trayicon_module == None or self.TRAYICON_CREATED:
 			return
 		self.TRAYICON_CREATED = 1
 		self.is_mapped = 1
@@ -466,16 +482,21 @@ class NicotineFrame(MainWindow):
 			self.trayicon.show_icon()
 			
 		else:
-			self.trayicon = self.trayicon_module.TrayIcon("Nicotine")
-			self.trayicon.show_all()
-		if sys.platform != "win32":
-			self.eventbox = gtk.EventBox()
+			if gtk.pygtk_version[0] >= 2 and gtk.pygtk_version[1] >= 10:
+				self.trayicon_module.set_visible(True)
+				self.trayicon_module.connect("popup-menu", self.OnStatusIconPopup)
+				self.trayicon_module.connect("activate", self.OnStatusIconClicked)
+			else:
+				self.trayicon = self.trayicon_module.TrayIcon("Nicotine")
+				self.eventbox = gtk.EventBox()
+				self.trayicon.add(self.eventbox)
+				self.eventbox.connect("button-press-event", self.OnTrayiconClicked)
+				self.trayicon.show_all()
+	
+			
 		self.load_image(self.tray_status["status"])
 
-		if sys.platform != "win32":
-			self.trayicon.add(self.eventbox)
-			self.eventbox.connect("button-press-event", self.OnTrayiconClicked)
-			self.trayicon.show_all()
+				
 		
 	def Notification(self, location, user, room=None):
 		hilites = self.tray_status["hilites"]
@@ -545,18 +566,21 @@ class NicotineFrame(MainWindow):
 				# For Win32 Systray 
 				self.trayicon.set_img(icon)
 			else:
-				# For X11 Systray 
-				self.eventbox.hide()
-				if self.current_image != None:
-					self.eventbox.remove(self.current_image)
-			
-				img = gtk.Image()
-				img.set_from_pixbuf(self.images[icon])
-				img.show()
-
-				self.current_image = img
-				self.eventbox.add(self.current_image)
-				self.eventbox.show()
+				if gtk.pygtk_version[0] >= 2 and gtk.pygtk_version[1] >= 10:
+					self.trayicon_module.set_from_pixbuf(self.images[icon])
+				else:
+					# For trayicon.so module X11 Systray 
+					self.eventbox.hide()
+					if self.current_image != None:
+						self.eventbox.remove(self.current_image)
+				
+					img = gtk.Image()
+					img.set_from_pixbuf(self.images[icon])
+					img.show()
+	
+					self.current_image = img
+					self.eventbox.add(self.current_image)
+					self.eventbox.show()
 		except Exception,e:
 			print "ERROR: load_image", e
 			
@@ -792,8 +816,14 @@ class NicotineFrame(MainWindow):
 				self.MainWindow.present()
 			self.MainWindow.grab_focus()
 			self.is_mapped = 1
-	
 			
+	def OnStatusIconClicked(self, status_icon):
+		self.HideUnhideWindow(None)
+		
+	def OnStatusIconPopup(self, status_icon, button, activate_time):
+		if button == 3:
+			self.tray_popup_menu.popup(None, None, None, button, activate_time)
+		
 	def OnTrayiconClicked(self, obj, event):
 		(w, h) = self.trayicon.get_size()
 		if event.x < 0 or event.y < 0 or event.x >= w or event.y >= h:
