@@ -665,14 +665,19 @@ class UserBrowse(UserBrowseTab):
 				self.frame.np.transfers.checkUploadQueue()
 			
 	def OnPlayFiles(self, widget, prefix = ""):
-		dir = self.selected_folder
-		
-		direct = dir.replace("\\", os.sep)
+		path = self.selected_folder.replace("\\", os.sep)
+		executable = self.frame.np.config.sections["players"]["default"]
+		if "$" not in executable:
+			return
+		commandargs = executable.split(" ")
+		pos = commandargs.index("$")
 		for fn in self.selected_files:
-			os.system("%s \"%s\" &" %(self.frame.np.config.sections["players"]["default"], os.path.join(direct, fn) ) )
-
-			
-			
+			file = os.sep.join([path, fn])
+			command = commandargs
+			command[pos] = file
+			if os.path.exists(file):
+				os.spawnlp(os.P_NOWAIT, command[0], *command)
+		
 	def OnDownloadFilesTo(self, widget):
 		ldir = ChooseDir(self.frame.MainWindow, self.frame.np.config.sections["transfers"]["downloaddir"])
 		if ldir is None:
@@ -779,9 +784,9 @@ class UserBrowse(UserBrowseTab):
 		path = self.selected_folder.replace("\\", os.sep)
 		executable = self.frame.np.config.sections["ui"]["filemanager"]
 		if "$" in executable:
-			command = executable.replace("$", "\"%s\" &> /dev/null &") % path
+			command = executable.replace("$", "\"%s\"" % path)
+			os.system("%s &> /dev/null &" % command)
 			
-			os.system(command)
 	def OnEncodingChanged(self, widget):
 		try:
 			# PyGTK 2.6

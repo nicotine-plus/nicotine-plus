@@ -126,11 +126,18 @@ class Uploads(TransferList):
 				self.OnAbortTransfer(widget, False, True)
 
 	def OnPlayFiles(self, widget, prefix = ""):
+		executable = self.frame.np.config.sections["players"]["default"]
+		if "$" not in executable:
+			return
+		commandargs = executable.split(" ")
+		pos = commandargs.index("$")
 		for fn in self.selected_transfers:
-			s = fn.filename.replace("\\", os.sep)
-			if os.path.exists(s):
-				os.system("%s \"%s\" &" %(self.frame.np.config.sections["players"]["default"], s) )
-
+			command = commandargs
+			file = fn.filename.replace("\\", os.sep)
+			if os.path.exists(file):
+				command[pos] = file
+				os.spawnlp(os.P_NOWAIT, command[0], *command)
+			
 	def OnPopupMenuUsers(self, widget):
 		
 		self.selected_transfers = []

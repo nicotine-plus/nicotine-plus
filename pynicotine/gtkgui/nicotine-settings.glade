@@ -8574,7 +8574,7 @@
 	  <child>
 	    <widget class="GtkLabel" id="label376">
 	      <property name="visible">True</property>
-	      <property name="label" translatable="yes">File Manager command:</property>
+	      <property name="label" translatable="yes">File Manager command ($ for folder path):</property>
 	      <property name="use_underline">False</property>
 	      <property name="use_markup">False</property>
 	      <property name="justify">GTK_JUSTIFY_LEFT</property>
@@ -8611,9 +8611,9 @@
 	  </child>
 
 	  <child>
-	    <widget class="GtkLabel" id="PlayerLabel">
+	    <widget class="GtkLabel" id="label377">
 	      <property name="visible">True</property>
-	      <property name="label" translatable="yes">Audio Player command:</property>
+	      <property name="label" translatable="yes">Audio Player Command ($ for filename):</property>
 	      <property name="use_underline">False</property>
 	      <property name="use_markup">False</property>
 	      <property name="justify">GTK_JUSTIFY_LEFT</property>

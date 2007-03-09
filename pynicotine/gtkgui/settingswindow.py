@@ -1030,7 +1030,8 @@ class EventsFrame(settings_glade.EventsFrame):
 	def __init__(self, parent):
 		self.frame = parent.frame
 		settings_glade.EventsFrame.__init__(self, False) 
-		
+		for executable in ["xmms -e $", "audacious -e $", "amarok -a $"]:
+			self.audioPlayerCombo.append_text( executable ) 
 		for executable in ["rox $", "konqueror $", "nautilus --no-desktop $", "thunar $", "xterm -e mc $", "emelfm2 -1 $", "krusader --left $", "gentoo -1 $" ]:
 			self.FileManagerCombo.append_text( executable ) 
 		

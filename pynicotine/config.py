@@ -90,7 +90,7 @@ class Config:
 \
 "ticker": {"default": "", "rooms": {}, "hide": 0},\
 \
-"players": {"default": "xmms -e ", "npothercommand": "", "npplayer": "infopipe",\
+"players": {"default": "xmms -e $", "npothercommand": "", "npplayer": "infopipe",\
  "npformatlist": [], "npformat": "" }}
 	
 		try:

@@ -111,15 +111,28 @@ class Downloads(TransferList):
 				self.OnAbortTransfer(widget, True, True)
 
 	def OnPlayFiles(self, widget, prefix = ""):
+		executable = self.frame.np.config.sections["players"]["default"]
+		downloaddir = self.frame.np.config.sections["transfers"]["downloaddir"]
+		if "$" not in executable:
+			return
+		commandargs = executable.split(" ")
+		pos = commandargs.index("$")
 		for fn in self.selected_transfers:
 			if fn.file is None:
 				continue
+			command = commandargs
 			if os.path.exists(fn.file.name):
-				os.system("%s \"%s\" &" %(self.frame.np.config.sections["players"]["default"], fn.file.name) )
+				command[pos] = fn.file.name
+			else:
+				basename = string.split(fn.filename, '\\')[-1]
+				path = os.sep.join([downloaddir, basename])
+				print path
+				if os.path.exists(path):
+					command[pos] = path
+			if command[pos] == "$":
 				continue
-			basename = string.split(fn.filename,'\\')[-1]
-			if os.path.exists(self.frame.np.config.sections["transfers"]["downloaddir"]+os.sep+basename):
-				os.system("%s \"%s\" &" %(self.frame.np.config.sections["players"]["default"], self.frame.np.config.sections["transfers"]["downloaddir"]+os.sep+basename ) )
+			os.spawnlp(os.P_NOWAIT, command[0], *command)
+
 
 	def OnPopupMenuUsers(self, widget):
 		
