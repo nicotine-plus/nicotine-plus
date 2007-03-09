@@ -126,7 +126,6 @@ class Downloads(TransferList):
 			else:
 				basename = string.split(fn.filename, '\\')[-1]
 				path = os.sep.join([downloaddir, basename])
-				print path
 				if os.path.exists(path):
 					command[pos] = path
 			if command[pos] == "$":
