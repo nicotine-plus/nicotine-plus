@@ -116,7 +116,7 @@ class UserBrowse(UserBrowseTab):
 		self.folder_popup_menu.set_user(user)
 		if user == self.frame.np.config.sections["server"]["login"]:
 			self.folder_popup_menu.setup(
-				(3, _("User"), self.popup_menu_users, self.OnPopupMenuFolderUser),
+				("USERMENU", _("User"), self.popup_menu_users, self.OnPopupMenuFolderUser),
 				("", None),
 				(2, _("Download"), self.popup_menu_downloads_folders, self.OnPopupMenuDummy, gtk.STOCK_GO_DOWN),
 				(2, _("Upload"), self.popup_menu_uploads_folders, self.OnPopupMenuDummy, gtk.STOCK_GO_UP),
@@ -128,7 +128,7 @@ class UserBrowse(UserBrowseTab):
 			)
 		else:
 			self.folder_popup_menu.setup(
-				(3, _("User"), self.popup_menu_users, self.OnPopupMenuFolderUser),
+				("USERMENU", _("User"), self.popup_menu_users, self.OnPopupMenuFolderUser),
 				("", None),
 				(2, _("Download"), self.popup_menu_downloads_folders, self.OnPopupMenuDummy, gtk.STOCK_GO_DOWN),
 				("", None),
@@ -161,7 +161,7 @@ class UserBrowse(UserBrowseTab):
 		
 		if user == self.frame.np.config.sections["server"]["login"]:
 			self.file_popup_menu.setup(
-				(3, "User", self.popup_menu_users2, self.OnPopupMenuFileUser),
+				("USERMENU", "User", self.popup_menu_users2, self.OnPopupMenuFileUser),
 				("", None),
 				(2, _("Download"), self.popup_menu_downloads_files, self.OnPopupMenuDummy, gtk.STOCK_GO_DOWN),
 				(2, _("Upload"), self.popup_menu_uploads_files, self.OnPopupMenuDummy, gtk.STOCK_GO_UP),
@@ -175,7 +175,7 @@ class UserBrowse(UserBrowseTab):
 			)
 		else:
 			self.file_popup_menu.setup(
-				(3, "User", self.popup_menu_users2, self.OnPopupMenuFileUser),
+				("USERMENU", "User", self.popup_menu_users2, self.OnPopupMenuFileUser),
 				("", None),
 				(2, _("Download"), self.popup_menu_downloads_files, self.OnPopupMenuDummy, gtk.STOCK_GO_DOWN),
 				("", None),

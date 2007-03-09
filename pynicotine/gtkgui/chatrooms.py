@@ -387,12 +387,15 @@ class ChatRoom(ChatRoomTab):
 		
 		self.popup_menu = popup = PopupMenu(self.frame)
 		popup.setup(
+			("USER", ""),
+			("", None),
 			("#" + _("Send _message"), popup.OnSendMessage, gtk.STOCK_EDIT),
 			("", None),
 			("#" + _("Show IP a_ddress"), popup.OnShowIPaddress, gtk.STOCK_NETWORK),
 			("#" + _("Get user i_nfo"), popup.OnGetUserInfo, gtk.STOCK_DIALOG_INFO),
 			("#" + _("Brow_se files"), popup.OnBrowseUser, gtk.STOCK_HARDDISK),
 			("#" + _("Gi_ve privileges"), popup.OnGivePrivileges, gtk.STOCK_JUMP_TO),
+			("", None),
 			("$" + _("_Add user to list"), popup.OnAddToList),
 			("$" + _("_Ban this user"), popup.OnBanUser),
 			("$" + _("_Ignore this user"), popup.OnIgnoreUser),
@@ -454,9 +457,9 @@ class ChatRoom(ChatRoomTab):
 			return
 		
 		self.popup_menu.set_user(user)
-		items[6].set_active(user in [i[0] for i in self.frame.np.config.sections["server"]["userlist"]])
-		items[7].set_active(user in self.frame.np.config.sections["server"]["banlist"])
-		items[8].set_active(user in self.frame.np.config.sections["server"]["ignorelist"])
+		items[9].set_active(user in [i[0] for i in self.frame.np.config.sections["server"]["userlist"]])
+		items[10].set_active(user in self.frame.np.config.sections["server"]["banlist"])
+		items[11].set_active(user in self.frame.np.config.sections["server"]["ignorelist"])
 		self.popup_menu.popup(None, None, None, event.button, event.time)
 		
 	def TickerSet(self, msg):
@@ -725,13 +728,13 @@ class ChatRoom(ChatRoomTab):
 	def UserNameEvent(self, tag, widget, event, iter, user):
 		
 		
-		if tag.last_event_type == gtk.gdk.BUTTON_PRESS and event.type == gtk.gdk.BUTTON_RELEASE and event.button == 1:
+		if tag.last_event_type == gtk.gdk.BUTTON_PRESS and event.type == gtk.gdk.BUTTON_RELEASE and event.button in (1, 2):
 			self.popup_menu.set_user(user)
 			items = self.popup_menu.get_children()
 			# Chat, Userlists use the normal popup system
-			items[6].set_active(user in [i[0] for i in self.frame.np.config.sections["server"]["userlist"]])
-			items[7].set_active(user in self.frame.np.config.sections["server"]["banlist"])
-			items[8].set_active(user in self.frame.np.config.sections["server"]["ignorelist"])
+			items[9].set_active(user in [i[0] for i in self.frame.np.config.sections["server"]["userlist"]])
+			items[10].set_active(user in self.frame.np.config.sections["server"]["banlist"])
+			items[11].set_active(user in self.frame.np.config.sections["server"]["ignorelist"])
 			self.popup_menu.popup(None, None, None, event.button, event.time)
 		tag.last_event_type = event.type
 		

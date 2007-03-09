@@ -3426,7 +3426,7 @@ class EventsFrame:
         self.AfterFolder.set_visibility(True)
         self.vbox96.pack_start(self.AfterFolder, False, False, 0)
 
-        self.label376 = gtk.Label(_("File Manager command:"))
+        self.label376 = gtk.Label(_("File Manager command ($ for folder path):"))
         self.label376.set_alignment(0, 0.5)
         self.label376.set_padding(0, 0)
         self.label376.set_line_wrap(False)
@@ -3441,12 +3441,12 @@ class EventsFrame:
         self.FileManagerCombo.set_text_column(0)
         self.vbox96.pack_start(self.FileManagerCombo, False, True, 0)
 
-        self.PlayerLabel = gtk.Label(_("Audio Player command:"))
-        self.PlayerLabel.set_alignment(0, 0.5)
-        self.PlayerLabel.set_padding(0, 0)
-        self.PlayerLabel.set_line_wrap(False)
-        self.PlayerLabel.show()
-        self.vbox96.pack_start(self.PlayerLabel, False, False, 0)
+        self.label377 = gtk.Label(_("Audio Player Command ($ for filename):"))
+        self.label377.set_alignment(0, 0.5)
+        self.label377.set_padding(0, 0)
+        self.label377.set_line_wrap(False)
+        self.label377.show()
+        self.vbox96.pack_start(self.label377, False, False, 0)
 
         self.audioPlayerCombo_List = gtk.ListStore(gobject.TYPE_STRING)
         self.audioPlayerCombo = gtk.ComboBoxEntry()

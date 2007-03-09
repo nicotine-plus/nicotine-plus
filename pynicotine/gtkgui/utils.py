@@ -348,21 +348,22 @@ class PopupMenu(gtk.Menu):
 		for item in items:
 			if item[0] == "":
 				menuitem = gtk.MenuItem()
+			elif item[0] == "USER":
+				menuitem = gtk.MenuItem(item[1])
+				self.useritem = menuitem
+				menuitem.set_sensitive(False)
 			elif item[0] == 1:
-				menuitem = gtk.MenuItem()
 				menuitem = gtk.MenuItem(item[1])
 				menuitem.set_submenu(item[2])
 				if item[3] is not None:
 					menuitem.connect("activate", item[3])
-			elif item[0] == 3:
-				menuitem = gtk.MenuItem()
+			elif item[0] == "USERMENU":
 				menuitem = gtk.MenuItem(item[1])
 				menuitem.set_submenu(item[2])
 				if item[3] is not None:
 					menuitem.connect("activate", item[3])
 				self.useritem = menuitem
 			elif item[0] == 2:
-				menuitem = gtk.ImageMenuItem()
 				menuitem = gtk.ImageMenuItem(item[1])
 				menuitem.set_submenu(item[2])
 				if item[3] is not None:
