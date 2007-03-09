@@ -317,7 +317,7 @@ class Transfers:
 
 
 	def TransferRequest(self,msg):
-		user = None
+		user = response = None
 		transfers = self.eventprocessor.config.sections["transfers"]
 		if msg.conn is not None:
 			for i in self.peerconns:
@@ -360,8 +360,8 @@ class Transfers:
 					self.SaveDownloads()
 					self.queue.put(slskmessages.AddUser(user))
 					self.queue.put(slskmessages.GetUserStatus(user))
-	
-					response = slskmessages.TransferResponse(conn,0,reason = "Queued", req = transfer.req)
+					if user != self.eventprocessor.config.sections["server"]["login"]:
+						response = slskmessages.TransferResponse(conn,0,reason = "Queued", req = transfer.req)
 					self.downloadspanel.update(transfer)
 					
 				else:
@@ -579,6 +579,7 @@ class Transfers:
 				i.status = "Establishing connection"
 				self.eventprocessor.ProcessRequestToPeer(i.user,slskmessages.FileRequest(None,msg.req))
 				self.uploadspanel.update(i)
+				self.checkUploadQueue()
 				break
 			else:
 				self.eventprocessor.logMessage(_("Got unknown transfer response: %s") % str(vars(msg)),1)
