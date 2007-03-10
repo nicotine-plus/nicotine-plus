@@ -442,7 +442,7 @@ class NicotineFrame(MainWindow):
 			        	self.trayicon_module = trayicon
 					self.HAVE_TRAYICON = True
 					self.TRAYICON_FAILED = False
-				except:
+				except ImportError, error:
 					self.TRAYICON_FAILED = True
 					self.HAVE_TRAYICON = False
 					message = _("Note: Trayicon Python module was not found in the pynicotine directory: %s") % error
