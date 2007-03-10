@@ -139,11 +139,12 @@ class NicotineFrame(MainWindow):
 		self.TRAYICON_CREATED = 0
 		self.TRAYICON_FAILED = 0
 		self.CREATE_TRAYICON = 0
+		self.HAVE_TRAYICON = False
 		if use_trayicon and config2.sections["ui"]["trayicon"]:
 			self.CREATE_TRAYICON = 1
-			
+			self.HAVE_TRAYICON = True
 		else:
-			self.HAVE_TRAYICON = 0
+			self.HAVE_TRAYICON = False
 		del data
 		self.BuddiesComboEntries = []
 		
@@ -523,7 +524,7 @@ class NicotineFrame(MainWindow):
 		if not self.TRAYICON_CREATED:
 			return
 		self.TRAYICON_CREATED = 0
-		self.HAVE_TRAYICON = 0
+		self.HAVE_TRAYICON = False
 		self.current_image = None
 		
 		if sys.platform != "win32":
@@ -1445,7 +1446,7 @@ class NicotineFrame(MainWindow):
 			if self.trayicon_module == None and not self.TRAYICON_CREATED:
 				self.create_trayicon()
 			else:
-				self.HAVE_TRAYICON = 1
+				self.HAVE_TRAYICON = True
 				
 			self.draw_trayicon()
 			
