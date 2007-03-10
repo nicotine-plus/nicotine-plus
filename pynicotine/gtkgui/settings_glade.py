@@ -1328,6 +1328,12 @@ class BloatFrame:
         self.TabClosers.show()
         self.vboxUI.pack_start(self.TabClosers, False, False, 0)
 
+        self.ExitDialog = gtk.CheckButton()
+        self.ExitDialog.set_active(False)
+        self.ExitDialog.set_label(_("Show confirmation dialog when closing window"))
+        self.ExitDialog.show()
+        self.vboxUI.pack_start(self.ExitDialog, False, False, 0)
+
         self.ShowTransferButtons = gtk.CheckButton()
         self.ShowTransferButtons.set_active(False)
         self.ShowTransferButtons.set_label(_("Show Buttons in Transfers Tabs"))

@@ -135,25 +135,33 @@ class PrivateChat(PrivateChatTab):
 			self.frame.translux.subscribe(self.ChatScroll, self.tlux_chat)
 			self.ChatScroll.get_parent().get_vadjustment().connect("value-changed", lambda *args: self.ChatScroll.queue_draw())
 			self.ChatScroll.get_parent().get_hadjustment().connect("value-changed", lambda *args: self.ChatScroll.queue_draw())
-
-		self.popup_menu = popup = PopupMenu(self.frame)
+		
+		self.popup_menu_user = popup = PopupMenu(self.frame)
 		popup.setup(
-			("#" + _("Close"), self.OnClose, gtk.STOCK_CANCEL),
-			("", None),
 			("#" + _("Show IP a_ddress"), popup.OnShowIPaddress, gtk.STOCK_NETWORK),
 			("#" + _("Get user i_nfo"), popup.OnGetUserInfo, gtk.STOCK_DIALOG_INFO),
 			("#" + _("Brow_se files"), popup.OnBrowseUser, gtk.STOCK_HARDDISK),
 			("#" + _("Gi_ve privileges"), popup.OnGivePrivileges, gtk.STOCK_JUMP_TO),
+			("#" + _("Client Version"), popup.OnVersion, gtk.STOCK_ABOUT ),
+			("", None),
 			("$" + _("Add user to list"), popup.OnAddToList),
 			("$" + _("Ban this user"), popup.OnBanUser),
 			("$" + _("Ignore this user"), popup.OnIgnoreUser),
-			("", None),
-			("#" + _("Client Version"), popup.OnVersion, gtk.STOCK_ABOUT ),
+		)
+		popup.set_user(user)
+		self.popup_menu = popup = PopupMenu(self.frame)
+		popup.setup(
+			("USERMENU", _("User"), self.popup_menu_user, self.OnPopupMenuUser),
 			("", None),
 			("#" + _("Find"), self.OnFindChatLog, gtk.STOCK_FIND),
+			("", None),
 			("#" + _("Copy"), self.OnCopyChatLog, gtk.STOCK_COPY),
 			("#" + _("Copy All"), self.OnCopyAllChatLog, gtk.STOCK_COPY),
+			("", None),
 			("#" + _("Clear log"), self.OnClearChatLog, gtk.STOCK_CLEAR),
+			("", None),
+			("#" + _("Close"), self.OnClose, gtk.STOCK_CANCEL),
+			
 			
 		)
 		popup.set_user(user)
@@ -189,12 +197,18 @@ class PrivateChat(PrivateChatTab):
 	def OnPopupMenu(self, widget, event):
 		if event.button != 3:
 			return
-		items = self.popup_menu.get_children()
+		
+		self.popup_menu.popup(None, None, None, event.button, event.time)
+		self.ChatScroll.emit_stop_by_name("button_press_event")
+		return True
+	
+	def OnPopupMenuUser(self, widget):
+		items = self.popup_menu_user.get_children()
+		
 		items[6].set_active(self.user in [i[0] for i in self.frame.np.config.sections["server"]["userlist"]])
 		items[7].set_active(self.user in self.frame.np.config.sections["server"]["banlist"])
 		items[8].set_active(self.user in self.frame.np.config.sections["server"]["ignorelist"])
-		self.popup_menu.popup(None, None, None, event.button, event.time)
-		self.ChatScroll.emit_stop_by_name("button_press_event")
+	
 		return True
 	
 	def OnFindChatLog(self, widget):

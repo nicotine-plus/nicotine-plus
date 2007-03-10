@@ -16,6 +16,7 @@ def GetCompletion(part, list):
 		if match in matches:
 			continue
 		if match[:len(part)] == part and len(match) > len(part):
+			print match
 			matches.append(match)
 	
 	if len(matches) == 0:
@@ -410,16 +411,20 @@ class ChatRoom(ChatRoomTab):
 		
 		self.logpopupmenu = PopupMenu(self.frame).setup(
 			("#" + _("Find"), self.OnFindLogWindow, gtk.STOCK_FIND),
+			("", None),
 			("#" + _("Copy"), self.OnCopyRoomLog, gtk.STOCK_COPY),
 			("#" + _("Copy All"), self.OnCopyAllRoomLog, gtk.STOCK_COPY),
+			("", None),
 			("#" + _("Clear log"), self.OnClearRoomLog, gtk.STOCK_CLEAR),
 		)
 		self.RoomLog.connect("button-press-event", self.OnPopupRoomLogMenu)
 		
 		self.chatpopmenu = PopupMenu(self.frame).setup(
 			("#" + _("Find"), self.OnFindChatLog, gtk.STOCK_FIND),
+			("", None),
 			("#" + _("Copy"), self.OnCopyChatLog, gtk.STOCK_COPY),
 			("#" + _("Copy All"), self.OnCopyAllChatLog, gtk.STOCK_COPY),
+			("", None),
 			("#" + _("Clear log"), self.OnClearChatLog, gtk.STOCK_CLEAR),
 		)
 		self.ChatScroll.connect("button-press-event", self.OnPopupChatRoomMenu)

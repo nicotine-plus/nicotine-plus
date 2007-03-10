@@ -760,6 +760,8 @@ class BloatFrame(settings_glade.BloatFrame):
 			self.Queue.set_text(ui["searchq"])
 		if ui["decimalsep"] is not None:
 			self.DecimalSep.child.set_text(ui["decimalsep"])
+		if ui["exitdialog"] is not None:
+			self.ExitDialog.set_active(ui["exitdialog"])
 		if ui["tabclosers"] is not None:
 			self.TabClosers.set_active(ui["tabclosers"])
 		if private["store"] is not None:
@@ -805,6 +807,7 @@ class BloatFrame(settings_glade.BloatFrame):
 				"searchq": self.Queue.get_text(),
 				"decimalsep": self.DecimalSep.child.get_text(),
 				"tabclosers": self.TabClosers.get_active(),
+				"exitdialog": self.ExitDialog.get_active(),
 				"trayicon": self.TrayiconCheck.get_active(),
 				"soundcommand": self.SoundCommand.child.get_text(),
 				"soundtheme": self.SoundDirectory.get_text(),

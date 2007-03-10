@@ -136,17 +136,21 @@ class NicotineFrame(MainWindow):
 		
 		self.logpopupmenu = PopupMenu(self).setup(
 			("#" + _("Find"), self.OnFindLogWindow, gtk.STOCK_FIND),
+			("", None),
 			("#" + _("Copy"), self.OnCopyLogWindow, gtk.STOCK_COPY),
 			("#" + _("Copy All"), self.OnCopyAllLogWindow, gtk.STOCK_COPY),
+			("", None),
 			("#" + _("Clear log"), self.OnClearLogWindow, gtk.STOCK_CLEAR)
 		)
 		def on_delete_event(widget, event):
-			if self.HAVE_TRAYICON:
-				option = QuitBox(self, title=_('Close Nicotine-Plus?'), message=_('Are you sure you wish to exit Nicotine-Plus at this time?'),tray=True, status="question", third=_("Send to tray") )
-			else:
-				option = QuitBox(self, title=_('Close Nicotine-Plus?'), message=_('Are you sure you wish to exit Nicotine-Plus at this time?'), tray=False, status="question" )
-			
-			return True
+			if self.np.config.sections["ui"]["exitdialog"]:
+				if self.HAVE_TRAYICON:
+					option = QuitBox(self, title=_('Close Nicotine-Plus?'), message=_('Are you sure you wish to exit Nicotine-Plus at this time?'),tray=True, status="question", third=_("Send to tray") )
+				else:
+					option = QuitBox(self, title=_('Close Nicotine-Plus?'), message=_('Are you sure you wish to exit Nicotine-Plus at this time?'), tray=False, status="question" )
+				
+				return True
+			return False
 
 		self.MainWindow.connect("delete-event",on_delete_event)
 		def window_state_event_cb(window, event):
@@ -388,9 +392,13 @@ class NicotineFrame(MainWindow):
 		self.searchmethods = {}
 		self.RoomSearchCombo.set_size_request(150, -1)
 		self.UserSearchEntry.set_size_request(120, -1)
-		self.SearchMethod.set_size_request(100, -1)
+		#self.SearchMethod.set_size_request(100, -1)
 		self.SearchMethod_List.clear()
-		self.searchroomslist[""] = self.RoomSearchCombo_List.append([""])
+		# Space after Joined Rooms is important, so it doesn't conflict
+		# with any possible real room, but if it's not translated with the space
+		# nothing awful will happen
+		self.searchroomslist[_("Joined Rooms ")] = self.RoomSearchCombo_List.append([_("Joined Rooms ")])
+		self.RoomSearchCombo.set_active_iter(self.searchroomslist[_("Joined Rooms ")])
 		for method in [_("Global"), _("Buddies"), _("Rooms"), _("User")]:
 			self.searchmethods[method] = self.SearchMethod_List.append([method])
 		self.SearchMethod.set_active_iter(self.searchmethods[_("Global")])

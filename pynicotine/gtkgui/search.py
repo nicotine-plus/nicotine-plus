@@ -93,7 +93,9 @@ class Searches:
 		elif self.frame.SearchMethod.get_active_text() == _("Rooms"):
 			mode = 1
 			name = self.frame.RoomSearchCombo.child.get_text()
-			if name != "" and not name.isspace():
+			# Space after Joined Rooms is important, so it doesn't conflict
+			# with any possible real room
+			if name != _("Joined Rooms ") and not name.isspace():
 				room = name
 		elif self.frame.SearchMethod.get_active_text() == _("Buddies"):
 			mode = 2
