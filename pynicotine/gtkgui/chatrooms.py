@@ -200,6 +200,8 @@ class RoomsControl:
 		self.joinedrooms[msg.room] = tab
 		self.frame.ChatNotebook.append_page(tab.Main, msg.room, tab.OnLeave)
 		
+		self.frame.searchroomslist[msg.room] = self.frame.RoomSearchCombo_List.append([msg.room])
+		
 	def SetRoomList(self, msg):
 		if self.autojoin:
 			self.autojoin = 0
@@ -257,6 +259,7 @@ class RoomsControl:
 		self.frame.ChatNotebook.remove_page(room.Main)
 		room.destroy()
 		del self.joinedrooms[msg.room]
+		self.RoomSearchCombo_List.remove(self.frame.searchroomslist[msg.room])
 	
 	def ConnClose(self):
 		self.roomsmodel = None

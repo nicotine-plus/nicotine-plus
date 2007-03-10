@@ -83,19 +83,34 @@ class Searches:
 	
 	def OnSearch(self):
 		text = self.frame.SearchEntry.get_text().strip()
-		self.frame.SearchEntry.set_text("")
+		
 		if not text:
 			return
-
-		if self.frame.GlobalRadio.get_active():
+		users = []
+		room = None
+		if self.frame.SearchMethod.get_active_text() == _("Global"):
 			mode = 0
-		elif self.frame.RoomsRadio.get_active():
+		elif self.frame.SearchMethod.get_active_text() == _("Rooms"):
 			mode = 1
-		else:
+			name = self.frame.RoomSearchCombo.child.get_text()
+			if name != "" and not name.isspace():
+				room = name
+		elif self.frame.SearchMethod.get_active_text() == _("Buddies"):
 			mode = 2
-		self.DoSearch(text, mode)
+		elif self.frame.SearchMethod.get_active_text() == _("User"):
+			mode = 3
+			user = self.frame.UserSearchEntry.get_text()
+			if user != "" and not user.isspace():
+				users = [user]
+			else:
+				return
+		else:
+			mode = 0
+			
+		self.DoSearch(text, mode, users, room)
+		self.frame.SearchEntry.set_text("")
 		
-	def DoSearch(self, text, mode, users = []):
+	def DoSearch(self, text, mode, users = [], room = None):
 		items = self.frame.np.config.sections["searches"]["history"]
 		if text in items:
 			items.remove(text)
@@ -117,19 +132,24 @@ class Searches:
 		if mode == 0:
 			self.DoGlobalSearch(self.searchid, text)
 		elif mode == 1:
-			self.DoRoomsSearch(self.searchid, text)
+			self.DoRoomsSearch(self.searchid, text, room)
 		elif mode == 2:
 			self.DoBuddiesSearch(self.searchid, text)
 		else:
-			self.DoPeerSearch(self.searchid, text, users)
+			if users != [] and users[0] != '':
+				self.DoPeerSearch(self.searchid, text, users)
 		self.searchid += 1
 		
 	def DoGlobalSearch(self, id, text):
 		self.frame.np.queue.put(slskmessages.FileSearch(id, text))
 	
-	def DoRoomsSearch(self, id, text):
-		for room in self.frame.chatrooms.roomsctrl.joinedrooms.keys():
+	def DoRoomsSearch(self, id, text, room = None):
+		print room
+		if room != None:
 			self.frame.np.queue.put(slskmessages.RoomSearch(room, id, text))
+		else:
+			for room in self.frame.chatrooms.roomsctrl.joinedrooms.keys():
+				self.frame.np.queue.put(slskmessages.RoomSearch(room, id, text))
 
 
 	def DoBuddiesSearch(self, id, text):

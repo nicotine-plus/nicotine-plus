@@ -878,26 +878,33 @@ class MainWindow:
 
         self.hbox2.pack_start(self.ClearSearchHistory, False, False, 0)
 
-        self.GlobalRadio = gtk.RadioButton()
-        self.GlobalRadio.set_active(False)
-        self.GlobalRadio.set_label(_("Global"))
-        self.GlobalRadio.show()
+        self.SearchMethod_List = gtk.ListStore(gobject.TYPE_STRING)
+        self.SearchMethod = gtk.ComboBox()
+        self.SearchMethod.show()
+        self.SearchMethod_List.append([""])
 
-        self.hbox2.pack_start(self.GlobalRadio, False, False, 0)
+        self.SearchMethod.set_model(self.SearchMethod_List)
+        cell = gtk.CellRendererText()
+        self.SearchMethod.pack_start(cell, True)
+        self.SearchMethod.add_attribute(cell, 'text', 0)
+        self.hbox2.pack_start(self.SearchMethod, False, False, 0)
 
-        self.RoomsRadio = gtk.RadioButton(self.GlobalRadio)
-        self.RoomsRadio.set_active(False)
-        self.RoomsRadio.set_label(_("Rooms"))
-        self.RoomsRadio.show()
+        self.UserSearchEntry = gtk.Entry()
+        self.UserSearchEntry.set_text("")
+        self.UserSearchEntry.set_editable(True)
+        self.UserSearchEntry.show()
+        self.UserSearchEntry.set_visibility(True)
+        self.UserSearchEntry.set_sensitive(False)
+        self.hbox2.pack_start(self.UserSearchEntry, False, False, 0)
 
-        self.hbox2.pack_start(self.RoomsRadio, False, False, 0)
+        self.RoomSearchCombo_List = gtk.ListStore(gobject.TYPE_STRING)
+        self.RoomSearchCombo = gtk.ComboBoxEntry()
+        self.RoomSearchCombo.show()
+        self.RoomSearchCombo.set_sensitive(False)
 
-        self.BuddiesRadio = gtk.RadioButton(self.GlobalRadio)
-        self.BuddiesRadio.set_active(False)
-        self.BuddiesRadio.set_label(_("Buddies"))
-        self.BuddiesRadio.show()
-
-        self.hbox2.pack_start(self.BuddiesRadio, False, False, 0)
+        self.RoomSearchCombo.set_model(self.RoomSearchCombo_List)
+        self.RoomSearchCombo.set_text_column(0)
+        self.hbox2.pack_start(self.RoomSearchCombo, False, False, 0)
 
         self.searchvbox.pack_start(self.hbox2, False, True, 0)
 

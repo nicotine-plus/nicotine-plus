@@ -383,7 +383,19 @@ class NicotineFrame(MainWindow):
 		self.SetUserStatus(_("Offline"))
 		self.UpdateBandwidth()
 		self.UpdateTransferButtons()
-		
+		# Search Methods
+		self.searchroomslist = {}
+		self.searchmethods = {}
+		self.RoomSearchCombo.set_size_request(150, -1)
+		self.UserSearchEntry.set_size_request(120, -1)
+		self.SearchMethod.set_size_request(100, -1)
+		self.SearchMethod_List.clear()
+		self.searchroomslist[""] = self.RoomSearchCombo_List.append([""])
+		for method in [_("Global"), _("Buddies"), _("Rooms"), _("User")]:
+			self.searchmethods[method] = self.SearchMethod_List.append([method])
+		self.SearchMethod.set_active_iter(self.searchmethods[_("Global")])
+		self.SearchMethod.connect("changed", self.OnSearchMethod)
+		###
 		self.disconnect1.set_sensitive(0)
 		self.awayreturn1.set_sensitive(0)
 		self.check_privileges1.set_sensitive(0)
@@ -408,6 +420,16 @@ class NicotineFrame(MainWindow):
 			self.OnConnect(-1)
 		self.UpdateDownloadFilters()
 		
+	def OnSearchMethod(self, widget):
+		act = False
+		if self.SearchMethod.get_active_text() == _("User"):
+			act = True
+		self.UserSearchEntry.set_sensitive(act)
+		act = False
+		if self.SearchMethod.get_active_text() == _("Rooms"):
+			act = True
+		self.RoomSearchCombo.set_sensitive(act)
+	
 	def importimages(self):
 		try:
 			import imagedata
