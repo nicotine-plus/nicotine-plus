@@ -181,7 +181,9 @@ class UserList:
 		self.frame.np.queue.put(slskmessages.AddUser(user))
 		self.frame.np.queue.put(slskmessages.GetUserStatus(user))
 		self.frame.np.queue.put(slskmessages.GetUserStats(user))
-
+		for widget in self.frame.BuddiesComboEntries:
+			widget.Append(user)
+			
 	def OnEditComments(self, widget):
 		user = self.popup_menu.get_user()
 		for i in self.userlist:
@@ -221,6 +223,8 @@ class UserList:
 				self.usersmodel.remove(i[2])
 				break
 		self.SaveUserList()
+		for widget in self.frame.BuddiesComboEntries:
+			widget.Remove(user)
 
 	def OnRemoveUser(self, widget):
 		self.RemoveFromList(self.popup_menu.get_user())

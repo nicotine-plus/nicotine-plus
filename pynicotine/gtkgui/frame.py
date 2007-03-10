@@ -57,6 +57,7 @@ class BuddiesComboBoxEntry(gtk.ComboBoxEntry):
 		self.store = gtk.ListStore(gobject.TYPE_STRING)
 		self.set_model(self.store)
 		self.set_text_column(0)
+		self.store.set_sort_column_id(0, gtk.SORT_ASCENDING)
         	self.show()
 		
 	def Fill(self):
@@ -144,7 +145,7 @@ class NicotineFrame(MainWindow):
 		else:
 			self.HAVE_TRAYICON = 0
 		del data
-		
+		self.BuddiesComboEntries = []
 		
 		MainWindow.__init__(self)
 		self.MainWindow.set_title(_("Nicotine+") + " " + version)
@@ -202,7 +203,9 @@ class NicotineFrame(MainWindow):
 		self.needrescan = 0
 		self.autoaway = False
 		self.awaytimer = None
-
+		# for iterating buddy changes to the combos
+		
+		
 		self.likes = {}
 		self.likeslist = gtk.ListStore(gobject.TYPE_STRING)
 		self.likeslist.set_sort_column_id(0, gtk.SORT_ASCENDING)
@@ -921,7 +924,9 @@ class NicotineFrame(MainWindow):
 		elif id == "UserBrowseNotebook":
 			return UserTabs(self, UserBrowse)
 		elif id in ("UserSearchCombo", "UserPrivateCombo", "UserInfoCombo", "UserBrowseCombo"):
-			return BuddiesComboBoxEntry(self)
+			comboentry = BuddiesComboBoxEntry(self)
+			self.BuddiesComboEntries.append(comboentry)
+			return comboentry
 		elif string1 == "ImageLabel":
 			return ImageLabel(string2, self.images["empty"])
 		else:
