@@ -1330,7 +1330,7 @@ class BloatFrame:
 
         self.ExitDialog = gtk.CheckButton()
         self.ExitDialog.set_active(False)
-        self.ExitDialog.set_label(_("Show confirmation dialog when closing window"))
+        self.ExitDialog.set_label(_("Show confirmation dialog when closing the main window"))
         self.ExitDialog.show()
         self.vboxUI.pack_start(self.ExitDialog, False, False, 0)
 
