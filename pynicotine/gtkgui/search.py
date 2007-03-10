@@ -101,7 +101,7 @@ class Searches:
 			mode = 2
 		elif self.frame.SearchMethod.get_active_text() == _("User"):
 			mode = 3
-			user = self.frame.UserSearchEntry.get_text()
+			user = self.frame.UserSearchCombo.child.get_text()
 			if user != "" and not user.isspace():
 				users = [user]
 			else:

@@ -48,7 +48,35 @@ class roomlist(RoomList):
 			return
 		self.frame.np.queue.put(slskmessages.JoinRoom(room))
 		widget.set_text("")
-
+		
+class BuddiesComboBoxEntry(gtk.ComboBoxEntry):
+	def __init__(self, frame):
+		self.frame = frame
+		gtk.ComboBoxEntry.__init__(self)
+		self.items = {}
+		self.store = gtk.ListStore(gobject.TYPE_STRING)
+		self.set_model(self.store)
+		self.set_text_column(0)
+        	self.show()
+		
+	def Fill(self):
+		self.items.clear()
+		self.store.clear()
+		self.items[""] = self.store.append([""])
+		for user in self.frame.np.config.sections["server"]["userlist"]:
+			self.items[user[0]] = self.store.append([user[0]])
+			
+	def Append(self, item):
+		if self.items.has_key(item):
+			return
+        	self.items[item] = self.get_model().append([item])
+		
+	def Remove(self, item):
+		if self.items.has_key(item):
+			self.get_model().remove(self.items[item] )
+			del self.items[item]
+		
+		
 class NicotineFrame(MainWindow):
 	def __init__(self, config, use_trayicon):
 		self.images = {}
@@ -391,7 +419,9 @@ class NicotineFrame(MainWindow):
 		self.searchroomslist = {}
 		self.searchmethods = {}
 		self.RoomSearchCombo.set_size_request(150, -1)
-		self.UserSearchEntry.set_size_request(120, -1)
+		self.UserSearchCombo.set_size_request(120, -1)
+		self.UserSearchCombo.set_sensitive(False)
+		self.UserSearchCombo.Fill()
 		#self.SearchMethod.set_size_request(100, -1)
 		self.SearchMethod_List.clear()
 		# Space after Joined Rooms is important, so it doesn't conflict
@@ -434,7 +464,7 @@ class NicotineFrame(MainWindow):
 		act = False
 		if self.SearchMethod.get_active_text() == _("User"):
 			act = True
-		self.UserSearchEntry.set_sensitive(act)
+		self.UserSearchCombo.set_sensitive(act)
 		act = False
 		if self.SearchMethod.get_active_text() == _("Rooms"):
 			act = True
@@ -890,6 +920,8 @@ class NicotineFrame(MainWindow):
 			return UserTabs(self, UserInfo)
 		elif id == "UserBrowseNotebook":
 			return UserTabs(self, UserBrowse)
+		elif id in ("UserSearchCombo", "UserPrivateCombo", "UserInfoCombo", "UserBrowseCombo"):
+			return BuddiesComboBoxEntry(self)
 		elif string1 == "ImageLabel":
 			return ImageLabel(string2, self.images["empty"])
 		else:
@@ -1437,7 +1469,7 @@ class NicotineFrame(MainWindow):
 		else:
 			if self.np.transfers is None:
 				self.connect1.set_sensitive(1)
-
+	
 	def TransparentTint(self, update=None):
 
 		if not self.np.config.sections["ui"]["enabletrans"]:

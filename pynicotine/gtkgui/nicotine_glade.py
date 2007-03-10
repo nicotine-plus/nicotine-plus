@@ -889,13 +889,9 @@ class MainWindow:
         self.SearchMethod.add_attribute(cell, 'text', 0)
         self.hbox2.pack_start(self.SearchMethod, False, False, 0)
 
-        self.UserSearchEntry = gtk.Entry()
-        self.UserSearchEntry.set_text("")
-        self.UserSearchEntry.set_editable(True)
-        self.UserSearchEntry.show()
-        self.UserSearchEntry.set_visibility(True)
-        self.UserSearchEntry.set_sensitive(False)
-        self.hbox2.pack_start(self.UserSearchEntry, False, False, 0)
+        self.UserSearchCombo = self.get_custom_widget("UserSearchCombo", "", "", 0, 0)
+        self.UserSearchCombo.show()
+        self.hbox2.pack_start(self.UserSearchCombo, False, False, 0)
 
         self.RoomSearchCombo_List = gtk.ListStore(gobject.TYPE_STRING)
         self.RoomSearchCombo = gtk.ComboBoxEntry()
