@@ -419,10 +419,12 @@ class NicotineFrame(MainWindow):
 		img.set_from_pixbuf(self.images["away2"])
 		self.awayreturn1.set_image(img)
 		self.now = nowplaying.NowPlaying(self)
-		if self.np.config.needConfig():
+		ConfigUnset = self.np.config.needConfig()
+		if ConfigUnset[0]:
 			self.connect1.set_sensitive(0)
 			self.rescan1.set_sensitive(0)
 			self.logMessage(_("You need to configure your settings (Server, Username, Password, Download Directory) before connecting..."))
+			self.logMessage(ConfigUnset[1])
 			self.OnSettings(None)
 		else:
 			self.OnConnect(-1)
@@ -1426,10 +1428,12 @@ class NicotineFrame(MainWindow):
 			self.needrescan = 0
 			self.BothRescan()
 
-
-		if self.np.config.needConfig():
-			self.connect1.set_sensitive(0)
+		ConfigUnset = self.np.config.needConfig()
+		if ConfigUnset[0]:
+			if self.np.transfers is not None:
+				self.connect1.set_sensitive(0)
 			self.logMessage(_("You need to finish configuring your settings (Server, Username, Password, Download Directory) before connecting... but if this message persists, check your Nicotine config file for options set to \'None\'."))
+			self.logMessage(ConfigUnset[1])
 		else:
 			if self.np.transfers is None:
 				self.connect1.set_sensitive(1)
