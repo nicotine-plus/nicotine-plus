@@ -406,13 +406,13 @@ class NicotineFrame(MainWindow):
 		self.userbrowse.SetTabLabel(self.UserBrowseTabLabel)
 		
 		self.sUserinfoButton.connect("clicked", self.OnGetUserInfo)
-		self.UserinfoEntry.connect("activate", self.OnGetUserInfo)
+		self.UserInfoCombo.child.connect("activate", self.OnGetUserInfo)
 		
 		self.sPrivateChatButton.connect("clicked", self.OnGetPrivateChat)
-		self.PrivateChatEntry.connect("activate", self.OnGetPrivateChat)
+		self.UserPrivateCombo.child.connect("activate", self.OnGetPrivateChat)
 		
 		self.sSharesButton.connect("clicked", self.OnGetShares)
-		self.SharesEntry.connect("activate", self.OnGetShares)
+		self.UserBrowseCombo.child.connect("activate", self.OnGetShares)
 		
 		
 		self.SetUserStatus(_("Offline"))
@@ -424,7 +424,12 @@ class NicotineFrame(MainWindow):
 		self.RoomSearchCombo.set_size_request(150, -1)
 		self.UserSearchCombo.set_size_request(120, -1)
 		self.UserSearchCombo.set_sensitive(False)
-		self.UserSearchCombo.Fill()
+		for widget in self.BuddiesComboEntries:
+			widget.Fill()
+		#self.UserSearchCombo.Fill()
+		#self.UserInfoCombo.Fill()
+		#self.UserSearchCombo.Fill()
+		#self.UserSearchCombo.Fill()
 		#self.SearchMethod.set_size_request(100, -1)
 		self.SearchMethod_List.clear()
 		# Space after Joined Rooms is important, so it doesn't conflict
@@ -720,14 +725,14 @@ class NicotineFrame(MainWindow):
 	
 			
 	def OnGetUserInfo(self, widget):
-		text = self.UserinfoEntry.get_text()
+		text = self.UserInfoCombo.child.get_text()
 		if not text:
 			return
 		self.LocalUserInfoRequest(text)
 		self.UserinfoEntry.set_text("")
 		
 	def OnGetShares(self, widget):
-		text = self.SharesEntry.get_text()
+		text = self.UserBrowseCombo.child.get_text()
 		if not text:
 			return
 		self.BrowseUser(text)
@@ -772,7 +777,7 @@ class NicotineFrame(MainWindow):
 		
 		
 	def OnGetPrivateChat(self, widget):
-		text = self.PrivateChatEntry.get_text()
+		text = self.UserPrivateCombo.child.get_text()
 		if not text:
 			return
 		self.privatechats.SendMessage(text, None, 1)
@@ -1058,9 +1063,9 @@ class NicotineFrame(MainWindow):
 		self.SetTextBG(self.RecommendationUsersList)
 		self.SetTextBG(self.LikesList)
 		self.SetTextBG(self.DislikesList)
-		self.SetTextBG(self.PrivateChatEntry)
-		self.SetTextBG(self.UserinfoEntry)
-		self.SetTextBG(self.SharesEntry)
+		self.SetTextBG(self.UserPrivateCombo.child)
+		self.SetTextBG(self.UserInfoCombo.child)
+		self.SetTextBG(self.UserBrowseCombo.child)
 		self.SetTextBG(self.AddUserEntry)
 		self.SetTextBG(self.SearchEntry)
 		

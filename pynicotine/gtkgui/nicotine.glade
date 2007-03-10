@@ -852,16 +852,11 @@
 		      <property name="spacing">5</property>
 
 		      <child>
-			<widget class="GtkEntry" id="PrivateChatEntry">
+			<widget class="Custom" id="UserPrivateCombo">
 			  <property name="visible">True</property>
-			  <property name="can_focus">True</property>
-			  <property name="editable">True</property>
-			  <property name="visibility">True</property>
-			  <property name="max_length">0</property>
-			  <property name="text" translatable="yes"></property>
-			  <property name="has_frame">True</property>
-			  <property name="invisible_char">*</property>
-			  <property name="activates_default">False</property>
+			  <property name="int1">0</property>
+			  <property name="int2">0</property>
+			  <property name="last_modification_time">Sat, 10 Mar 2007 16:23:15 GMT</property>
 			</widget>
 			<packing>
 			  <property name="padding">0</property>
@@ -2286,16 +2281,11 @@
 		      <property name="spacing">5</property>
 
 		      <child>
-			<widget class="GtkEntry" id="UserinfoEntry">
+			<widget class="Custom" id="UserInfoCombo">
 			  <property name="visible">True</property>
-			  <property name="can_focus">True</property>
-			  <property name="editable">True</property>
-			  <property name="visibility">True</property>
-			  <property name="max_length">0</property>
-			  <property name="text" translatable="yes"></property>
-			  <property name="has_frame">True</property>
-			  <property name="invisible_char">*</property>
-			  <property name="activates_default">False</property>
+			  <property name="int1">0</property>
+			  <property name="int2">0</property>
+			  <property name="last_modification_time">Sat, 10 Mar 2007 16:23:33 GMT</property>
 			</widget>
 			<packing>
 			  <property name="padding">0</property>
@@ -2437,16 +2427,11 @@
 		      <property name="spacing">5</property>
 
 		      <child>
-			<widget class="GtkEntry" id="SharesEntry">
+			<widget class="Custom" id="UserBrowseCombo">
 			  <property name="visible">True</property>
-			  <property name="can_focus">True</property>
-			  <property name="editable">True</property>
-			  <property name="visibility">True</property>
-			  <property name="max_length">0</property>
-			  <property name="text" translatable="yes"></property>
-			  <property name="has_frame">True</property>
-			  <property name="invisible_char">*</property>
-			  <property name="activates_default">False</property>
+			  <property name="int1">0</property>
+			  <property name="int2">0</property>
+			  <property name="last_modification_time">Sat, 10 Mar 2007 16:23:44 GMT</property>
 			</widget>
 			<packing>
 			  <property name="padding">0</property>

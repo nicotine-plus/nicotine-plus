@@ -397,12 +397,9 @@ class MainWindow:
         self.hbox20.show()
         self.hbox20.set_spacing(5)
 
-        self.PrivateChatEntry = gtk.Entry()
-        self.PrivateChatEntry.set_text("")
-        self.PrivateChatEntry.set_editable(True)
-        self.PrivateChatEntry.show()
-        self.PrivateChatEntry.set_visibility(True)
-        self.hbox20.pack_start(self.PrivateChatEntry, False, True, 0)
+        self.UserPrivateCombo = self.get_custom_widget("UserPrivateCombo", "", "", 0, 0)
+        self.UserPrivateCombo.show()
+        self.hbox20.pack_start(self.UserPrivateCombo, False, True, 0)
 
         self.sPrivateChatButton = gtk.Button()
         self.sPrivateChatButton.show()
@@ -919,12 +916,9 @@ class MainWindow:
         self.hbox21.show()
         self.hbox21.set_spacing(5)
 
-        self.UserinfoEntry = gtk.Entry()
-        self.UserinfoEntry.set_text("")
-        self.UserinfoEntry.set_editable(True)
-        self.UserinfoEntry.show()
-        self.UserinfoEntry.set_visibility(True)
-        self.hbox21.pack_start(self.UserinfoEntry, False, True, 0)
+        self.UserInfoCombo = self.get_custom_widget("UserInfoCombo", "", "", 0, 0)
+        self.UserInfoCombo.show()
+        self.hbox21.pack_start(self.UserInfoCombo, False, True, 0)
 
         self.sUserinfoButton = gtk.Button()
         self.sUserinfoButton.show()
@@ -971,12 +965,9 @@ class MainWindow:
         self.hbox22.show()
         self.hbox22.set_spacing(5)
 
-        self.SharesEntry = gtk.Entry()
-        self.SharesEntry.set_text("")
-        self.SharesEntry.set_editable(True)
-        self.SharesEntry.show()
-        self.SharesEntry.set_visibility(True)
-        self.hbox22.pack_start(self.SharesEntry, False, True, 0)
+        self.UserBrowseCombo = self.get_custom_widget("UserBrowseCombo", "", "", 0, 0)
+        self.UserBrowseCombo.show()
+        self.hbox22.pack_start(self.UserBrowseCombo, False, True, 0)
 
         self.sSharesButton = gtk.Button()
         self.sSharesButton.show()
