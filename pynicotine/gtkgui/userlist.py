@@ -54,7 +54,7 @@ class UserList:
 					self.trusted.append(user[0])
 			iter = self.usersmodel.append(row)
 			self.userlist.append([user[0], user[1], iter])
-
+		self.usersmodel.set_sort_column_id(1, gtk.SORT_ASCENDING)
 		self.popup_menu = popup = PopupMenu(frame)
 		popup.setup(
 			("#" + _("Send _message"), popup.OnSendMessage, gtk.STOCK_EDIT),
@@ -74,7 +74,7 @@ class UserList:
 			("#" + _("_Remove"), self.OnRemoveUser, gtk.STOCK_CANCEL),
 		)
 		self.frame.UserList.connect("button_press_event", self.OnPopupMenu)
-	
+		
 	def CellDataFunc(self, column, cellrenderer, model, iter):
 		colour = self.frame.np.config.sections["ui"]["search"]
 		if colour == "":

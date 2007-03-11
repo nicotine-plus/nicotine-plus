@@ -51,6 +51,7 @@ class UserTabs(IconNotebook):
 			self.frame.np.queue.put(slskmessages.AddUser(user))
 			self.frame.np.queue.put(slskmessages.GetUserStatus(user))
 			self.frame.np.queue.put(slskmessages.GetUserStats(user))
+			self.frame.np.queue.put(slskmessages.UserInterests(user))
 			
 	def ShowLocalInfo(self, user, descr, has_pic, pic, totalupl, queuesize, slotsavail, uploadallowed):
 		self.InitWindow(user, None)

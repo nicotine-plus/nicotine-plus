@@ -809,7 +809,7 @@ class NicotineFrame(MainWindow):
 			pass
 		else:
 			self.np.queue.put(slskmessages.GetPeerAddress(user))
-# 			self.np.ProcessRequestToPeer(user, slskmessages.UserInfoRequest(None), self.userinfo)
+
 			
 	def OnGetAUsersShares(self, widget, prefix = ""):
 		users = []
