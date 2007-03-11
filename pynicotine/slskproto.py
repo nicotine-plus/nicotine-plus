@@ -96,7 +96,7 @@ class SlskProtoThread(threading.Thread):
 		ItemSimilarUsers:112,RoomTickerState:113,
 		RoomTickerAdd:114,RoomTickerRemove:115,
 		RoomTickerSet:116,AddThingIHate:117,RemoveThingIHate:118,
-		RoomSearch:120, SendUploadSpeed:121, GivePrivileges:123, NotifyPrivileges:124, AckNotifyPrivileges:125}
+		RoomSearch:120, SendUploadSpeed:121, GivePrivileges:123, NotifyPrivileges:124, AckNotifyPrivileges:125, UserInterests:57}
 	peercodes = {GetSharedFileList:4, SharedFileList:5, FileSearchRequest:8,
 		FileSearchResult:9,
 		UserInfoRequest:15,UserInfoReply:16, FolderContentsRequest:36,

@@ -133,7 +133,7 @@ def UrlEvent(tag, widget, event, iter, url):
 				pass
 	tag.last_event_type = event.type
 
-def AppendLine(textview, line, tag = None, timestamp = "%H:%M:%S", username=None, usertag=None):
+def AppendLine(textview, line, tag = None, timestamp = "%H:%M:%S", username=None, usertag=None, scroll=True):
 	def _makeurltag(buffer, tag, url):
 		props = {}
 		if tag is not None:
@@ -210,7 +210,7 @@ def AppendLine(textview, line, tag = None, timestamp = "%H:%M:%S", username=None
 	
 	if not hasattr(scrolledwindow, "need_scroll"):
 		scrolledwindow.need_scroll = 1
-	if bottom and scrolledwindow.need_scroll:
+	if scroll and bottom and scrolledwindow.need_scroll:
 		scrolledwindow.need_scroll = 0
 		gobject.idle_add(ScrollBottom, scrolledwindow)
 	

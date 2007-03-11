@@ -6,7 +6,7 @@ import tempfile
 import gobject
 
 from nicotine_glade import UserInfoTab
-from utils import IconNotebook, PopupMenu, EncodingsMenu, SaveEncoding,  Humanize
+from utils import IconNotebook, PopupMenu, EncodingsMenu, SaveEncoding,  Humanize, InitialiseColumns
 from pynicotine import slskmessages
 from utils import AppendLine
 from pynicotine.utils import _
@@ -67,6 +67,10 @@ class UserTabs(IconNotebook):
 		if self.mytab is not None:
 			self.frame.RequestIcon(self.mytab)
 			
+	def ShowInterests(self, msg):
+		if self.users.has_key(msg.user):
+			self.users[msg.user].ShowInterests(msg.likes, msg.hates)
+			
 	def UpdateGauge(self, msg):
 		for i in self.users.values():
 			if i.conn == msg.conn.conn:
@@ -84,7 +88,19 @@ class UserInfo(UserInfoTab):
 		self.user = user
 		self.conn = conn
 		self._descr = ""
-				
+		
+		self.hatesStore = gtk.ListStore(gobject.TYPE_STRING)
+		self.Hates.set_model(self.hatesStore)
+		cols = InitialiseColumns(self.Hates, [_("Hates"), 0, "text", self.CellDataFunc])
+		cols[0].set_sort_column_id(0)
+		self.hatesStore.set_sort_column_id(0, gtk.SORT_ASCENDING)
+		
+		self.likesStore = gtk.ListStore(gobject.TYPE_STRING)
+		self.Likes.set_model(self.likesStore)
+		cols = InitialiseColumns(self.Likes, [_("Likes"), 0, "text", self.CellDataFunc])
+		cols[0].set_sort_column_id(0)
+		self.likesStore.set_sort_column_id(0, gtk.SORT_ASCENDING)
+		
 		self.Elist = {}
 		self.encoding, m = EncodingsMenu(self.frame.np, "userencoding", user)
 		self.EncodingStore = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
@@ -100,7 +116,23 @@ class UserInfo(UserInfoTab):
 
 		self.tag_local = self.makecolour(buffer, "chatremote")
 		self.frame.SetTextBG(self.descr)
+		self.InterestsExpander.connect("activate", self.ExpanderStatus)
+		self.InformationExpander.connect("activate", self.ExpanderStatus)
+		self.DescriptionExpander.connect("activate", self.ExpanderStatus)
+				
+	def CellDataFunc(self, column, cellrenderer, model, iter):
+		colour = self.frame.np.config.sections["ui"]["search"]
+		if colour == "":
+			colour = None
+		cellrenderer.set_property("foreground", colour)
 		
+	def ExpanderStatus(self, widget):
+		if widget.get_property("expanded"):
+			self.InfoVbox.set_child_packing(widget, False, True, 0, 0)
+		else:
+			self.InfoVbox.set_child_packing(widget, True, True, 0, 0)
+			
+			
 	def makecolour(self, buffer, colour):
 		buffer = self.descr.get_buffer()
 		colour = self.frame.np.config.sections["ui"][colour]
@@ -130,13 +162,21 @@ class UserInfo(UserInfoTab):
 		self.changecolour(self.tag_local, "chatremote")
 		self.frame.SetTextBG(self.descr)
 		
+	def ShowInterests(self, likes, hates):
+		self.likesStore.clear()
+		self.hatesStore.clear()
+		for like in likes:
+			self.likesStore.append([like])
+		for hate in hates:
+			self.hatesStore.append([hate])
+		
 	def ShowUserInfo(self, descr, has_pic, pic, totalupl, queuesize, slotsavail, uploadallowed):
 		self.conn = None
 		self._descr = descr
 		
 		self.descr.get_buffer().set_text("")
 		
-		AppendLine(self.descr, self.frame.np.decode(descr, self.encoding), self.tag_local, timestamp=None)
+		AppendLine(self.descr, self.frame.np.decode(descr, self.encoding), self.tag_local, timestamp=None, scroll=False)
 		self.uploads.set_text(_("Total uploads allowed: %i") % totalupl)
 		self.queuesize.set_text(_("Queue size: %i") % queuesize)
 		if slotsavail:

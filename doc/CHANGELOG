@@ -1,5 +1,27 @@
 ChangeLog for Nicotine Plus
 
+UNRELEASED
+
+GENERAL CHANGES
+ * Other users Interests are now shown in the User Info tab
+ * Send Message added to trayicon
+ * Popup Menus in Private, Chatrooms, and User Browse reorganized
+ * Search now has combo boxes, per-room searching and per-user searching.
+ * The user-entry boxes are now buddy-list combobox entries
+ * Users with PyGTK >= 2.10 will use the gtk.StatusIcon instead of
+   the old trayicon.so module.
+ * Added a filemanager popup item to the self-browse menu
+ * Changed Audio Player Syntax it now uses "$" as the filename
+ * Exit dialog can be disabled in Settings->UI
+ * When a config option is detected as unset, print it in the log window.
+ 
+NETWORKING
+ * Added Server Message 57 (User Interests)
+ 
+BUGFIXES
+ * Uploads to other Nicotine+ users work better
+ * Userinfo Description does not scroll to the bottom of the window
+
 1.2.7.1 Release (6th March 2007)
 
 GENERAL CHANGES

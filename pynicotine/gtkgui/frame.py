@@ -783,6 +783,19 @@ class NicotineFrame(MainWindow):
 		self.privatechats.SendMessage(text, None, 1)
 		self.UserPrivateCombo.child.set_text("")
 		
+	def OnOpenPrivateChat(self, widget, prefix = ""):
+		# popup
+		users = []
+		for entry in self.np.config.sections["server"]["userlist"]:
+			users.append(entry[0])
+		users.sort()
+		user = input_box(self, title=_('Nicotine+:')+" "+_("Start Message"),
+		message=_('Enter the User who you wish to send a private message:'),
+		default_text='', droplist=users)
+		if user is not None:
+			self.privatechats.SendMessage(user, None, 1)
+			self.notebook1.set_current_page(1)
+			
 	def OnGetAUsersInfo(self, widget, prefix = ""):
 		# popup
 		users = []
@@ -837,6 +850,7 @@ class NicotineFrame(MainWindow):
 				("#" + _("Hide / Unhide Nicotine"), self.HideUnhideWindow, gtk.STOCK_GOTO_BOTTOM),
 				(1, _("Server"), self.tray_popup_menu_server, self.OnPopupServer),
 				("#" + _("Settings"), self.OnSettings, gtk.STOCK_PREFERENCES),
+				("#" + _("Send Message"), self.OnOpenPrivateChat, gtk.STOCK_EDIT),
 				("#" + _("Lookup a User's IP"), self.OnGetAUsersIP, gtk.STOCK_NETWORK),
 				("#" + _("Lookup a User's Info"), self.OnGetAUsersInfo, gtk.STOCK_DIALOG_INFO),
 				("#" + _("Lookup a User's Shares"), self.OnGetAUsersShares, gtk.STOCK_HARDDISK),
@@ -904,16 +918,14 @@ class NicotineFrame(MainWindow):
 		else:
 			items = self.tray_popup_menu.get_children()
 			if self.tray_status["status"] == "disconnect":
-				items[3].set_sensitive(False)
-				items[4].set_sensitive(False)
-				items[5].set_sensitive(False)
-				items[6].set_sensitive(False)
+				act = False
 			else:
-				
-				items[3].set_sensitive(True)
-				items[4].set_sensitive(True)
-				items[5].set_sensitive(True)
-				items[6].set_sensitive(True)
+				act = True
+			items[3].set_sensitive(act)
+			items[4].set_sensitive(act)
+			items[5].set_sensitive(act)
+			items[6].set_sensitive(act)
+			items[7].set_sensitive(act)
 			if event.type == gtk.gdk.BUTTON_PRESS:
 				self.tray_popup_menu.popup(None, None, None, event.button, event.time)
 				return True

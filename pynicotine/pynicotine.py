@@ -186,12 +186,13 @@ class NetworkEventProcessor:
 			slskmessages.ItemRecommendations:self.ItemRecommendations,
 			slskmessages.SimilarUsers:self.SimilarUsers,
 			slskmessages.ItemSimilarUsers:self.ItemSimilarUsers,
+			slskmessages.UserInterests:self.UserInterests,
 			slskmessages.RoomTickerState:self.RoomTickerState,
 			slskmessages.RoomTickerAdd:self.RoomTickerAdd,
 			slskmessages.RoomTickerRemove:self.RoomTickerRemove,
 			slskmessages.NotifyPrivileges:self.NotifyPrivileges,
 			}
-			#slskmessages.Notify:self.Notify,
+
 
 	def ProcessRequestToPeer(self, user, message, window = None, address = None):
 		""" 
@@ -583,7 +584,11 @@ class NetworkEventProcessor:
 		else:
 			self.logMessage("%s %s" %(msg.__class__, vars(msg)))
 
-
+	def UserInterests(self, msg):
+		if self.userinfo is not None:
+			self.userinfo.ShowInterests(msg)
+		self.logMessage("%s %s" %(msg.__class__, vars(msg)),1)
+	
 	def GetUserStats(self,msg):
 		if msg.user == self.config.sections["server"]["login"]:
 			self.speed = msg.avgspeed

@@ -812,6 +812,31 @@ class RemoveThingILike(ServerMessage):
 class RemoveThingIHate(RemoveThingILike):
 	pass
 
+class UserInterests(ServerMessage):
+	def __init__(self, user = None):
+		self.user = user
+		self.likes = None
+		self.hates = None
+		
+	def makeNetworkMessage(self):
+		# Request a users' interests
+		return self.packObject(self.user)
+	
+	def parseNetworkMessage(self, message, pos=0):
+		# Recieve a users' interests
+		pos, self.user = self.getObject(message, types.StringType, pos)
+		pos, likesnum = self.getObject(message, types.IntType, pos)
+		self.likes = []
+		for i in range(likesnum):
+			pos, key = self.getObject(message, types.StringType, pos)
+			self.likes.append(key)
+		
+		pos, hatesnum = self.getObject(message, types.IntType, pos)
+		self.hates = []
+		for i in range(hatesnum):
+			pos, key = self.getObject(message, types.StringType, pos)
+			self.hates.append(key)
+
 class GlobalRecommendations(ServerMessage):
 	def __init__(self):
 		self.recommendations = None

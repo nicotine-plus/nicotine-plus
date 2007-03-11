@@ -2074,10 +2074,15 @@ class UserInfoTab:
         self.hpaned5 = gtk.HPaned()
         self.hpaned5.show()
 
-        self.vbox8 = gtk.VBox(False, 0)
-        self.vbox8.set_size_request(250, -1)
-        self.vbox8.show()
-        self.vbox8.set_spacing(0)
+        self.InfoVbox = gtk.VBox(False, 0)
+        self.InfoVbox.set_size_request(250, -1)
+        self.InfoVbox.show()
+        self.InfoVbox.set_spacing(0)
+
+        self.DescriptionExpander = gtk.Expander()
+        self.DescriptionExpander.set_expanded(True)
+        self.DescriptionExpander.show()
+        self.DescriptionExpander.set_spacing(0)
 
         self.frame1 = gtk.Frame()
         self.frame1.show()
@@ -2114,13 +2119,20 @@ class UserInfoTab:
 
         self.frame1.add(self.vbox16)
 
-        self.label17 = gtk.Label(_("Self description:"))
-        self.label17.set_padding(0, 0)
-        self.label17.set_line_wrap(False)
-        self.label17.show()
-        self.frame1.set_label_widget(self.label17)
+        self.DescriptionExpander.add(self.frame1)
 
-        self.vbox8.pack_start(self.frame1, True, True, 0)
+        self.label74 = gtk.Label(_("Self description:"))
+        self.label74.set_padding(0, 0)
+        self.label74.set_line_wrap(False)
+        self.label74.show()
+        self.DescriptionExpander.set_label_widget(self.label74)
+
+        self.InfoVbox.pack_start(self.DescriptionExpander, True, True, 0)
+
+        self.InformationExpander = gtk.Expander()
+        self.InformationExpander.set_expanded(True)
+        self.InformationExpander.show()
+        self.InformationExpander.set_spacing(0)
 
         self.frame2 = gtk.Frame()
         self.frame2.show()
@@ -2211,19 +2223,64 @@ class UserInfoTab:
         self.AcceptUploads.show()
         self.hbox66.pack_start(self.AcceptUploads, False, False, 0)
 
-        self.vbox10.pack_start(self.hbox66, True, True, 0)
+        self.vbox10.pack_start(self.hbox66, False, True, 0)
 
         self.frame2.add(self.vbox10)
 
-        self.label18 = gtk.Label(_("Information:"))
-        self.label18.set_padding(0, 0)
-        self.label18.set_line_wrap(False)
-        self.label18.show()
-        self.frame2.set_label_widget(self.label18)
+        self.InformationExpander.add(self.frame2)
 
-        self.vbox8.pack_start(self.frame2, False, True, 0)
+        self.label72 = gtk.Label(_("Information:"))
+        self.label72.set_padding(0, 0)
+        self.label72.set_line_wrap(False)
+        self.label72.show()
+        self.InformationExpander.set_label_widget(self.label72)
 
-        self.hpaned5.pack1(self.vbox8, False, True)
+        self.InfoVbox.pack_start(self.InformationExpander, True, True, 0)
+
+        self.InterestsExpander = gtk.Expander()
+        self.InterestsExpander.set_expanded(False)
+        self.InterestsExpander.show()
+        self.InterestsExpander.set_spacing(0)
+
+        self.vbox18 = gtk.VBox(False, 0)
+        self.vbox18.show()
+        self.vbox18.set_spacing(0)
+
+        self.scrolledwindow31 = gtk.ScrolledWindow()
+        self.scrolledwindow31.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+        self.scrolledwindow31.show()
+        self.scrolledwindow31.set_shadow_type(gtk.SHADOW_IN)
+
+        self.Likes = gtk.TreeView()
+        self.Likes.show()
+        self.Likes.set_headers_visible(True)
+        self.scrolledwindow31.add(self.Likes)
+
+        self.vbox18.pack_start(self.scrolledwindow31, True, True, 0)
+
+        self.scrolledwindow32 = gtk.ScrolledWindow()
+        self.scrolledwindow32.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+        self.scrolledwindow32.show()
+        self.scrolledwindow32.set_shadow_type(gtk.SHADOW_IN)
+
+        self.Hates = gtk.TreeView()
+        self.Hates.show()
+        self.Hates.set_headers_visible(True)
+        self.scrolledwindow32.add(self.Hates)
+
+        self.vbox18.pack_start(self.scrolledwindow32, True, True, 0)
+
+        self.InterestsExpander.add(self.vbox18)
+
+        self.label73 = gtk.Label(_("Interests:"))
+        self.label73.set_padding(0, 0)
+        self.label73.set_line_wrap(False)
+        self.label73.show()
+        self.InterestsExpander.set_label_widget(self.label73)
+
+        self.InfoVbox.pack_start(self.InterestsExpander, False, True, 0)
+
+        self.hpaned5.pack1(self.InfoVbox, False, True)
 
         self.frame3 = gtk.Frame()
         self.frame3.show()
