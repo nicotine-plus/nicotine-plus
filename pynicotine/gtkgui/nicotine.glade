@@ -4721,6 +4721,22 @@
 			  <property name="spacing">5</property>
 
 			  <child>
+			    <widget class="GtkProgressBar" id="progressbar">
+			      <property name="visible">True</property>
+			      <property name="orientation">GTK_PROGRESS_LEFT_TO_RIGHT</property>
+			      <property name="fraction">0</property>
+			      <property name="pulse_step">0.10000000149</property>
+			      <property name="ellipsize">PANGO_ELLIPSIZE_NONE</property>
+			    </widget>
+			    <packing>
+			      <property name="padding">0</property>
+			      <property name="expand">False</property>
+			      <property name="fill">False</property>
+			      <property name="pack_type">GTK_PACK_END</property>
+			    </packing>
+			  </child>
+
+			  <child>
 			    <widget class="GtkLabel" id="uploads">
 			      <property name="visible">True</property>
 			      <property name="label" translatable="yes">Total uploads allowed: unknown</property>
@@ -4906,22 +4922,6 @@
 			      <property name="padding">0</property>
 			      <property name="expand">False</property>
 			      <property name="fill">False</property>
-			    </packing>
-			  </child>
-
-			  <child>
-			    <widget class="GtkProgressBar" id="progressbar">
-			      <property name="visible">True</property>
-			      <property name="orientation">GTK_PROGRESS_LEFT_TO_RIGHT</property>
-			      <property name="fraction">0</property>
-			      <property name="pulse_step">0.10000000149</property>
-			      <property name="ellipsize">PANGO_ELLIPSIZE_NONE</property>
-			    </widget>
-			    <packing>
-			      <property name="padding">0</property>
-			      <property name="expand">False</property>
-			      <property name="fill">True</property>
-			      <property name="pack_type">GTK_PACK_END</property>
 			    </packing>
 			  </child>
 
@@ -6138,8 +6138,8 @@
 		    </widget>
 		    <packing>
 		      <property name="padding">0</property>
-		      <property name="expand">False</property>
-		      <property name="fill">False</property>
+		      <property name="expand">True</property>
+		      <property name="fill">True</property>
 		    </packing>
 		  </child>
 

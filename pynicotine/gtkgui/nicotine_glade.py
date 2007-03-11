@@ -2143,6 +2143,10 @@ class UserInfoTab:
         self.vbox10.set_spacing(5)
         self.vbox10.set_border_width(5)
 
+        self.progressbar = gtk.ProgressBar()
+        self.progressbar.show()
+        self.vbox10.pack_end(self.progressbar, False, False, 0)
+
         self.uploads = gtk.Label(_("Total uploads allowed: unknown"))
         self.uploads.set_alignment(0, 0.5)
         self.uploads.set_padding(0, 0)
@@ -2202,10 +2206,6 @@ class UserInfoTab:
         self.hbox16.pack_start(self.dirsshared, False, False, 0)
 
         self.vbox10.pack_start(self.hbox16, False, False, 0)
-
-        self.progressbar = gtk.ProgressBar()
-        self.progressbar.show()
-        self.vbox10.pack_end(self.progressbar, False, True, 0)
 
         self.hbox66 = gtk.HBox(False, 5)
         self.hbox66.show()
@@ -2720,7 +2720,7 @@ class UserBrowseTab:
         self.progressbar1 = gtk.ProgressBar()
         self.progressbar1.set_size_request(250, -1)
         self.progressbar1.show()
-        self.hbox9.pack_start(self.progressbar1, False, False, 0)
+        self.hbox9.pack_start(self.progressbar1, True, True, 0)
 
         self.CloseButton = gtk.Button()
         self.CloseButton.show()
