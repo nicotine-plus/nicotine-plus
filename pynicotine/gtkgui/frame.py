@@ -143,8 +143,7 @@ class NicotineFrame(MainWindow):
 		if use_trayicon and config2.sections["ui"]["trayicon"]:
 			self.CREATE_TRAYICON = 1
 			self.HAVE_TRAYICON = True
-		else:
-			self.HAVE_TRAYICON = False
+		
 		del data
 		self.BuddiesComboEntries = []
 		
@@ -730,14 +729,14 @@ class NicotineFrame(MainWindow):
 		if not text:
 			return
 		self.LocalUserInfoRequest(text)
-		self.UserinfoEntry.set_text("")
+		self.UserInfoCombo.child.set_text("")
 		
 	def OnGetShares(self, widget):
 		text = self.UserBrowseCombo.child.get_text()
 		if not text:
 			return
 		self.BrowseUser(text)
-		self.SharesEntry.set_text("")
+		self.UserBrowseCombo.child.set_text("")
 	
 	def OnLoadFromDisk(self, widget):
 		configdir, config = os.path.split(self.np.config.filename)
@@ -782,7 +781,7 @@ class NicotineFrame(MainWindow):
 		if not text:
 			return
 		self.privatechats.SendMessage(text, None, 1)
-		self.PrivateChatEntry.set_text("")
+		self.UserPrivateCombo.child.set_text("")
 		
 	def OnGetAUsersInfo(self, widget, prefix = ""):
 		# popup
