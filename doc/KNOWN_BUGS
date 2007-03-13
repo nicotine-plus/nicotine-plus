@@ -6,5 +6,7 @@ Nicotine+ Known Bugs
    in all sorts of evil pango errors and general havoc. It may even cause
    Nicotine-Plus to crash or enter a cpu-hogging loop. Win32's socket limit is
    very easy to reach. since it's quite low.
+ * PyVorbis 1.3 and 1.4 will crash Python periodically. Python2.5 is especially
+   crash prone. There are patches which address this.
 
 Check the Trac for issues: http://nicotine-plus.org/report/1
