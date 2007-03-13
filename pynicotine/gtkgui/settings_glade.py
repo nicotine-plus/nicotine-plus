@@ -3387,6 +3387,7 @@ class UrlCatchFrame:
         self.vbox99.pack_start(self.HumanizeURLs, False, False, 0)
 
         self.label251 = gtk.Label(_("Protocols handlers:"))
+        self.label251.set_alignment(0, 0.5)
         self.label251.set_padding(0, 0)
         self.label251.set_line_wrap(False)
         self.label251.show()
@@ -3417,6 +3418,7 @@ class UrlCatchFrame:
         self.table3.attach(self.label252, 0, 1, 0, 1, gtk.FILL, 0, 0, 0)
 
         self.Protocol = gtk.Entry()
+        self.tooltips.set_tip(self.Protocol, _("Example: http"))
         self.Protocol.set_text("")
         self.Protocol.set_editable(True)
         self.Protocol.show()
@@ -3429,13 +3431,6 @@ class UrlCatchFrame:
         self.label253.set_line_wrap(False)
         self.label253.show()
         self.table3.attach(self.label253, 0, 1, 1, 2, gtk.FILL, 0, 0, 0)
-
-        self.Handler = gtk.Entry()
-        self.Handler.set_text("")
-        self.Handler.set_editable(True)
-        self.Handler.show()
-        self.Handler.set_visibility(True)
-        self.table3.attach(self.Handler, 1, 2, 1, 2, gtk.EXPAND|gtk.FILL, 0, 0, 0)
 
         self.button86 = gtk.Button()
         self.button86.show()
@@ -3494,6 +3489,14 @@ class UrlCatchFrame:
         self.button87.add(self.alignment75)
 
         self.table3.attach(self.button87, 2, 3, 1, 2, gtk.FILL, 0, 0, 0)
+
+        self.Handler_List = gtk.ListStore(gobject.TYPE_STRING)
+        self.Handler = gtk.ComboBoxEntry()
+        self.Handler.show()
+
+        self.Handler.set_model(self.Handler_List)
+        self.Handler.set_text_column(0)
+        self.table3.attach(self.Handler, 1, 2, 1, 2, gtk.FILL, gtk.FILL, 0, 0)
 
         self.vbox99.pack_start(self.table3, True, True, 0)
 

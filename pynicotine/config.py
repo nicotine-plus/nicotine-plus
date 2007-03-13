@@ -84,7 +84,7 @@ class Config:
 "transtint": "#aaaaaa", "transalpha": 150, "transfilter": 0x00000000L,
 "width": 800, "height": 600}, \
 \
-"urls":{"urlcatching":1,"protocols":{"http":"firefox \"%s\" &"}, "humanizeurls":1},\
+"urls":{"urlcatching":1,"protocols":{"http":"firefox %s", "https":"firefox %s"}, "humanizeurls":1},\
 \
 "interests": {"likes":[], "dislikes":[]}, \
 \

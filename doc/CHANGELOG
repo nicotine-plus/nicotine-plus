@@ -11,10 +11,21 @@ GENERAL CHANGES
  * Users with PyGTK >= 2.10 will use the gtk.StatusIcon instead of
    the old trayicon.so module.
  * Added a filemanager popup item to the self-browse menu
+ * Gstreamer-Python support for sound effects added
+ * Added testing Soulseek server (port 2242) to the server combobox.
+ * Reopen Settings dialog, if a setting is not set.
+ * Changed the URL Catcher's syntax. Quotes are stripped and the function
+   os.spawnlp(os.P_NOWAIT, command, command, args) is used instead of 
+   os.system("command &"). The handler entry is now a combobox and 
+   includes a bunch of webbrowser commands.
+ 
+SETTINGS
  * Changed Audio Player Syntax it now uses "$" as the filename
  * Exit dialog can be disabled in Settings->UI
  * When a config option is detected as unset, print it in the log window.
- 
+ * Move Icon theme and trayicon settings to a seperate frame
+ * Move sound effect and audio player settings to a seperate frame
+
 NETWORKING
  * Added Server Message 57 (User Interests)
  

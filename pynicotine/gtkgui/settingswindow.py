@@ -1188,7 +1188,11 @@ class UrlCatchFrame(settings_glade.UrlCatchFrame):
 		)
 		self.ProtocolHandlers.set_model(self.protocolmodel)
 		self.ProtocolHandlers.get_selection().connect("changed", self.OnSelect)
-
+		self.handlermodel = gtk.ListStore(gobject.TYPE_STRING)
+		for item in ["firefox %s", "mozilla %s", "opera %s", "links -g %s", "dillo %s", "konqueror %s"]:
+			self.handlermodel.append([item])
+		self.Handler.set_model(self.handlermodel)
+		
 	def SetSettings(self, config):
 		self.protocolmodel.clear()
 		self.protocols = {}
@@ -1199,8 +1203,15 @@ class UrlCatchFrame(settings_glade.UrlCatchFrame):
 			self.HumanizeURLs.set_active(urls["humanizeurls"])
 		if urls["protocols"] is not None:
 			for key in urls["protocols"].keys():
-				iter = self.protocolmodel.append([key, urls["protocols"][key]])
-				self.protocols[key] = [iter, urls["protocols"][key]]
+				if urls["protocols"][key] == "firefox \"%s\" &":
+					command = "firefox %s"
+				elif urls["protocols"][key][-1] == "&":
+					command = urls["protocols"][key][:-1]
+				else:
+					command = urls["protocols"][key]
+				command = command.replace("\"", "")
+				iter = self.protocolmodel.append([key, command])
+				self.protocols[key] = [iter, command]
 
 		self.OnURLCatchingToggled(self.URLCatching)
 
@@ -1227,11 +1238,11 @@ class UrlCatchFrame(settings_glade.UrlCatchFrame):
 			protocol = model.get_value(iter, 0)
 			handler = model.get_value(iter, 1)
 			self.Protocol.set_text(protocol)
-			self.Handler.set_text(handler)
+			self.Handler.child.set_text(handler)
 
 	def OnUpdate(self, widget):
 		key = self.Protocol.get_text()
-		value = self.Handler.get_text()
+		value = self.Handler.child.get_text()
 		if self.protocols.has_key(key):
 			self.protocols[key][1] = value
 			self.protocolmodel.set(self.protocols[key][0], 1, value)
@@ -1305,17 +1316,18 @@ class SettingsWindow(settings_glade.SettingsWindow):
 				pass
 
 		row = model.append(None, [_("UI")])
+		model.append(row, [_("Icons")])
 		model.append(row, [_("Interface")])
 		model.append(row, [_("URL Catching")])
-		model.append(row, [_("Sounds")])
-		model.append(row, [_("Icons")])
 		
 		row = model.append(None, [_("Misc")])
 		model.append(row, [_("Away mode")])
-		model.append(row, [_("User info")])
 		model.append(row, [_("Ban / ignore")])
 		model.append(row, [_("Logging")])
+		model.append(row, [_("Sounds")])
 		model.append(row, [_("Searches")])
+		model.append(row, [_("User info")])
+		row = model.append(None, [_("Advanced")])
 		model.append(row, [_("Events")])
 		model.append(row, [_("Import Config")])
 		
