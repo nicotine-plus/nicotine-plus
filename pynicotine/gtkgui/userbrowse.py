@@ -320,9 +320,10 @@ class UserBrowse(UserBrowseTab):
 		currentdir = self.BrowseGetDirs()
 		sel = self.FolderTreeView.get_selection()
 		sel.unselect_all()
-		path = self.DirStore.get_path(self.directories[currentdir])
-		if path is not None:
-			sel.select_path(path)
+		if self.directories.has_key(self.currentdir):
+			path = self.DirStore.get_path(self.directories[currentdir])
+			if path is not None:
+				sel.select_path(path)
 				
 		self.FolderTreeView.set_sensitive(True)
 		self.FileTreeView.set_sensitive(True)
