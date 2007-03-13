@@ -57,7 +57,7 @@ class BuddiesComboBoxEntry(gtk.ComboBoxEntry):
 		self.store = gtk.ListStore(gobject.TYPE_STRING)
 		self.set_model(self.store)
 		self.set_text_column(0)
-		self.store.set_sort_column_id(0, gtk.SORT_ASCENDING)
+		
         	self.show()
 		
 	def Fill(self):
@@ -66,7 +66,7 @@ class BuddiesComboBoxEntry(gtk.ComboBoxEntry):
 		self.items[""] = self.store.append([""])
 		for user in self.frame.np.config.sections["server"]["userlist"]:
 			self.items[user[0]] = self.store.append([user[0]])
-			
+		self.store.set_sort_column_id(0, gtk.SORT_ASCENDING)	
 	def Append(self, item):
 		if self.items.has_key(item):
 			return

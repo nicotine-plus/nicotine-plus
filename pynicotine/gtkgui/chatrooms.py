@@ -16,7 +16,7 @@ def GetCompletion(part, list):
 		if match in matches:
 			continue
 		if match[:len(part)] == part and len(match) > len(part):
-			print match
+			#print match
 			matches.append(match)
 	
 	if len(matches) == 0:
