@@ -131,7 +131,7 @@ class Transfers:
 
 	def getAddUser(self,msg):
 		""" Server tells us it'll notify us about a change in user's status """
-		if not msg.userexists:
+		if not msg.userexists and self.eventprocessor.config.sections["ui"]["notexists"]:
 			self.eventprocessor.logMessage(_("User %s does not exist") % (msg.user))
 
 	def GetUserStatus(self,msg):

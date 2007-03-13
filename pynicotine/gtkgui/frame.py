@@ -57,7 +57,8 @@ class BuddiesComboBoxEntry(gtk.ComboBoxEntry):
 		self.store = gtk.ListStore(gobject.TYPE_STRING)
 		self.set_model(self.store)
 		self.set_text_column(0)
-		
+		self.store.set_default_sort_func(lambda *args: -1) 
+  		self.store.set_sort_column_id(-1, gtk.SORT_ASCENDING)
         	self.show()
 		
 	def Fill(self):
@@ -424,8 +425,8 @@ class NicotineFrame(MainWindow):
 		self.RoomSearchCombo.set_size_request(150, -1)
 		self.UserSearchCombo.set_size_request(120, -1)
 		self.UserSearchCombo.set_sensitive(False)
-		for widget in self.BuddiesComboEntries:
-			widget.Fill()
+		thread.start_new_thread(self.BuddiesCombosFill, ("",))
+		
 		#self.UserSearchCombo.Fill()
 		#self.UserInfoCombo.Fill()
 		#self.UserSearchCombo.Fill()
@@ -948,7 +949,12 @@ class NicotineFrame(MainWindow):
 			return ImageLabel(string2, self.images["empty"])
 		else:
 			return MainWindow.get_custom_widget(self, id, string1, string2, int1, int2)
-
+		
+	def BuddiesCombosFill(self, nothing):
+		
+		for widget in self.BuddiesComboEntries:
+			gobject.idle_add(widget.Fill)
+			
 	def OnAutoAway(self):
 		if not self.away:
 			self.autoaway = True
