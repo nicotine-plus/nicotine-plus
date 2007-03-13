@@ -20,6 +20,8 @@ Dependencies:
   * Psyco (speeds up Python code) http://psyco.sourceforge.net/
   * TrayIcon (included with Nicotine+) is a System Tray app that requires a
     Python module to be compiled. Read README.trayicon for more information.
+    However, with PyGTK 2.10, that module is no longer used. Instead,
+    gtk.SystemIcon is used.
 
 After installing nicotine (see INSTALL for that), the executable
 to run is named 'nicotine'.

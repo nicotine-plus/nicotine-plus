@@ -1,7 +1,24 @@
-To build the trayicon extension module, change to the "trayicon"
-subdirectory and run the "autogen.py" script using the python version
-that you run nicotine with. Then, as root, type "make install" and it should
-build the trayicon.so module and place it in the appropriate directory.
+TRAYICON
 
-Or, you can run the "trayicon-install" script, which does the same thing 
-in one go.
+USING PYGTK >= 2.10
+ * If you are using PyGTK 2.10, Nicotine+ will use gtk.SystemIcon()
+   instead of the trayicon module.
+
+USING PYGTK <= 2.9
+
+  * To build the trayicon extension module, change to the "trayicon"
+    subdirectory and run the "autogen.py" script using the python version
+    that you run nicotine with. Then, as root, type "make install" and it 
+    should build the trayicon.so module and place it in the appropriate 
+    directory.
+  * Or, you can run the "trayicon-install" script, which does the same thing 
+    in one go.
+  * Don't forget to run 'make clean' and recompiling the module if you have an
+    old module kicking around after a Python upgrade.
+  * Source installations (not copied to /usr/..) will need the trayicon.so
+    copied to the pynicotine subdirectory.
+  
+WINDOWS:
+	
+ * The windows system tray uses PyWin, Python for windows extentions
+ * Website: http://sourceforge.net/projects/pywin32/ 

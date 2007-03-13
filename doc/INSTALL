@@ -24,6 +24,7 @@ python setup.py bdist_rpm
 
 which will create a binary RPM in the dist subdirectory of the source tree.
 
+(Mandriva packagers may need to remove the "icon = .." in setup.cfg
 
 Note: to build source distribution (.tar.bz2) from itself, run:
 

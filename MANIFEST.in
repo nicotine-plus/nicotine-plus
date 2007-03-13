@@ -1,0 +1,9 @@
+include COPYING MANIFEST 
+include MANIFEST.in
+recursive-include doc *
+recursive-include trayicon *.c *.override *.defs *.h Makefile.in
+recursive-include pynicotine *.py 
+recursive-include languages *.po 
+recursive-include img *.png
+
+
