@@ -1322,12 +1322,6 @@ class BloatFrame:
         self.vboxUI.set_spacing(5)
         self.vboxUI.set_border_width(5)
 
-        self.TabClosers = gtk.CheckButton()
-        self.TabClosers.set_active(False)
-        self.TabClosers.set_label(_("Close-buttons on tabs (requires restart)"))
-        self.TabClosers.show()
-        self.vboxUI.pack_start(self.TabClosers, False, False, 0)
-
         self.ExitDialog = gtk.CheckButton()
         self.ExitDialog.set_active(False)
         self.ExitDialog.set_label(_("Show confirmation dialog when closing the main window"))
@@ -1343,12 +1337,6 @@ class BloatFrame:
         self.hbox177 = gtk.HBox(False, 10)
         self.hbox177.show()
         self.hbox177.set_spacing(10)
-
-        self.TrayiconCheck = gtk.CheckButton()
-        self.TrayiconCheck.set_active(False)
-        self.TrayiconCheck.set_label(_("Display Tray Icon"))
-        self.TrayiconCheck.show()
-        self.hbox177.pack_start(self.TrayiconCheck, False, False, 0)
 
         self.ReopenPrivateChats = gtk.CheckButton()
         self.ReopenPrivateChats.set_active(False)
@@ -1403,183 +1391,8 @@ class BloatFrame:
 
         self.vboxUI.pack_start(self.hbox182, False, False, 0)
 
-        self.expander1 = gtk.Expander()
-        self.expander1.set_expanded(False)
-        self.expander1.show()
-        self.expander1.set_spacing(0)
-
-        self.vbox104 = gtk.VBox(False, 0)
-        self.vbox104.show()
-        self.vbox104.set_spacing(0)
-
-        self.hbox170 = gtk.HBox(False, 0)
-        self.hbox170.show()
-        self.hbox170.set_spacing(0)
-
-        self.label294 = gtk.Label(_("Icon Theme Directory (requires restart):"))
-        self.label294.set_padding(0, 0)
-        self.label294.set_line_wrap(False)
-        self.label294.show()
-        self.hbox170.pack_start(self.label294, False, False, 0)
-
-        self.vbox104.pack_start(self.hbox170, True, True, 3)
-
-        self.hbox169 = gtk.HBox(False, 5)
-        self.hbox169.show()
-        self.hbox169.set_spacing(5)
-
-        self.IconTheme = gtk.Entry()
-        self.IconTheme.set_text("")
-        self.IconTheme.set_editable(True)
-        self.IconTheme.show()
-        self.IconTheme.set_visibility(True)
-        self.hbox169.pack_start(self.IconTheme, True, True, 0)
-
-        self.ThemeButton = gtk.Button()
-        self.ThemeButton.show()
-
-        self.alignment73 = gtk.Alignment(0.5, 0.5, 0, 0)
-        self.alignment73.show()
-
-        self.hbox173 = gtk.HBox(False, 2)
-        self.hbox173.show()
-        self.hbox173.set_spacing(2)
-
-        self.image67 = gtk.Image()
-        self.image67.set_padding(0, 0)
-        self.image67.set_from_stock(gtk.STOCK_DIRECTORY, 4)
-        self.image67.show()
-        self.hbox173.pack_start(self.image67, False, False, 0)
-
-        self.label296 = gtk.Label(_("Select"))
-        self.label296.set_padding(0, 0)
-        self.label296.set_line_wrap(False)
-        self.label296.show()
-        self.hbox173.pack_start(self.label296, False, False, 0)
-
-        self.alignment73.add(self.hbox173)
-
-        self.ThemeButton.add(self.alignment73)
-
-        self.hbox169.pack_end(self.ThemeButton, False, False, 0)
-
-        self.vbox104.pack_start(self.hbox169, True, True, 3)
-
-        self.SoundCheck = gtk.CheckButton()
-        self.SoundCheck.set_active(False)
-        self.SoundCheck.set_label(_("Enable Sound Effects"))
-        self.SoundCheck.show()
-        self.SoundCheck.connect("toggled", self.OnSoundCheckToggled)
-        self.vbox104.pack_start(self.SoundCheck, False, False, 0)
-
-        self.hbox180 = gtk.HBox(False, 5)
-        self.hbox180.show()
-        self.hbox180.set_spacing(5)
-
-        self.sndcmdLabel = gtk.Label(_("Sound Effects command:"))
-        self.sndcmdLabel.set_padding(0, 0)
-        self.sndcmdLabel.set_line_wrap(False)
-        self.sndcmdLabel.show()
-        self.hbox180.pack_start(self.sndcmdLabel, False, False, 0)
-
-        self.SoundCommand_List = gtk.ListStore(gobject.TYPE_STRING)
-        self.SoundCommand = gtk.ComboBoxEntry()
-        self.SoundCommand.show()
-
-        self.SoundCommand.set_model(self.SoundCommand_List)
-        self.SoundCommand.set_text_column(0)
-        self.hbox180.pack_start(self.SoundCommand, True, True, 0)
-
-        self.DefaultSoundCommand = gtk.Button()
-        self.DefaultSoundCommand.show()
-
-        self.alignment77 = gtk.Alignment(0.5, 0.5, 0, 0)
-        self.alignment77.show()
-
-        self.hbox181 = gtk.HBox(False, 2)
-        self.hbox181.show()
-        self.hbox181.set_spacing(2)
-
-        self.image71 = gtk.Image()
-        self.image71.set_padding(0, 0)
-        self.image71.set_from_stock(gtk.STOCK_CANCEL, 4)
-        self.image71.show()
-        self.hbox181.pack_start(self.image71, False, False, 0)
-
-        self.label304 = gtk.Label(_("Default"))
-        self.label304.set_padding(0, 0)
-        self.label304.set_line_wrap(False)
-        self.label304.show()
-        self.hbox181.pack_start(self.label304, False, False, 0)
-
-        self.alignment77.add(self.hbox181)
-
-        self.DefaultSoundCommand.add(self.alignment77)
-
-        self.hbox180.pack_start(self.DefaultSoundCommand, False, False, 0)
-
-        self.vbox104.pack_start(self.hbox180, True, True, 3)
-
-        self.hbox178 = gtk.HBox(False, 5)
-        self.hbox178.show()
-        self.hbox178.set_spacing(5)
-
-        self.snddirLabel = gtk.Label(_("Sound Effects Directory:"))
-        self.snddirLabel.set_padding(0, 0)
-        self.snddirLabel.set_line_wrap(False)
-        self.snddirLabel.show()
-        self.hbox178.pack_start(self.snddirLabel, False, False, 0)
-
-        self.SoundButton = gtk.Button()
-        self.SoundButton.show()
-
-        self.alignment76 = gtk.Alignment(0.5, 0.5, 0, 0)
-        self.alignment76.show()
-
-        self.hbox179 = gtk.HBox(False, 2)
-        self.hbox179.show()
-        self.hbox179.set_spacing(2)
-
-        self.image70 = gtk.Image()
-        self.image70.set_padding(0, 0)
-        self.image70.set_from_stock(gtk.STOCK_DIRECTORY, 4)
-        self.image70.show()
-        self.hbox179.pack_start(self.image70, False, False, 0)
-
-        self.label302 = gtk.Label(_("Select"))
-        self.label302.set_padding(0, 0)
-        self.label302.set_line_wrap(False)
-        self.label302.show()
-        self.hbox179.pack_start(self.label302, False, False, 0)
-
-        self.alignment76.add(self.hbox179)
-
-        self.SoundButton.add(self.alignment76)
-
-        self.hbox178.pack_end(self.SoundButton, False, False, 0)
-
-        self.SoundDirectory = gtk.Entry()
-        self.SoundDirectory.set_text("")
-        self.SoundDirectory.set_editable(True)
-        self.SoundDirectory.show()
-        self.SoundDirectory.set_visibility(True)
-        self.hbox178.pack_start(self.SoundDirectory, True, True, 0)
-
-        self.vbox104.pack_start(self.hbox178, True, True, 3)
-
-        self.expander1.add(self.vbox104)
-
-        self.themeExpander = gtk.Label("")
-        self.themeExpander.set_padding(0, 0)
-        self.themeExpander.set_line_wrap(False)
-        self.themeExpander.set_markup(_("<b>Icon and Sound Themes</b>"))
-        self.themeExpander.show()
-        self.expander1.set_label_widget(self.themeExpander)
-
-        self.vboxUI.pack_start(self.expander1, False, False, 0)
-
         self.expander2 = gtk.Expander()
-        self.expander2.set_expanded(True)
+        self.expander2.set_expanded(False)
         self.expander2.show()
         self.expander2.set_spacing(0)
 
@@ -2531,9 +2344,6 @@ class BloatFrame:
         if create:
             self.BloatFrame.add(self.Main)
 
-    def OnSoundCheckToggled(self, widget):
-        pass
-
     def OnUsernameHotspotsToggled(self, widget):
         pass
 
@@ -3447,21 +3257,6 @@ class EventsFrame:
         self.FileManagerCombo.set_text_column(0)
         self.vbox96.pack_start(self.FileManagerCombo, False, True, 0)
 
-        self.label377 = gtk.Label(_("Audio Player Command ($ for filename):"))
-        self.label377.set_alignment(0, 0.5)
-        self.label377.set_padding(0, 0)
-        self.label377.set_line_wrap(False)
-        self.label377.show()
-        self.vbox96.pack_start(self.label377, False, False, 0)
-
-        self.audioPlayerCombo_List = gtk.ListStore(gobject.TYPE_STRING)
-        self.audioPlayerCombo = gtk.ComboBoxEntry()
-        self.audioPlayerCombo.show()
-
-        self.audioPlayerCombo.set_model(self.audioPlayerCombo_List)
-        self.audioPlayerCombo.set_text_column(0)
-        self.vbox96.pack_start(self.audioPlayerCombo, False, True, 0)
-
         self.Main.add(self.vbox96)
 
         self.label236 = gtk.Label(_("Events"))
@@ -4185,6 +3980,451 @@ class ImportFrame:
 
     def OnImportConfig(self, widget):
         pass
+
+    def get_custom_widget(self, id, string1, string2, int1, int2):
+        w = gtk.Label(_("(custom widget: %s)") % id)
+        return w
+
+class SoundsFrame:
+    def __init__(self, create = True, accel_group = None, tooltips = None):
+        if accel_group is None:
+             self.accel_group = gtk.AccelGroup()
+        else:
+             self.accel_group = accel_group
+        if tooltips is None:
+             self.tooltips = gtk.Tooltips()
+        else:
+             self.tooltips = tooltips
+        self.tooltips.enable()
+        if create:
+            self.SoundsFrame = gtk.Window(gtk.WINDOW_TOPLEVEL)
+            self.SoundsFrame.set_title(_("Sounds"))
+            self.SoundsFrame.set_position(gtk.WIN_POS_NONE)
+            self.SoundsFrame.add_accel_group(self.accel_group)
+            self.SoundsFrame.show()
+
+        self.Main = gtk.Frame()
+        self.Main.show()
+        self.Main.set_shadow_type(gtk.SHADOW_ETCHED_IN)
+
+        self.vbox119 = gtk.VBox(False, 5)
+        self.vbox119.show()
+        self.vbox119.set_spacing(5)
+        self.vbox119.set_border_width(5)
+
+        self.SoundCheck = gtk.CheckButton()
+        self.SoundCheck.set_active(False)
+        self.SoundCheck.set_label(_("Enable Sound Effects"))
+        self.SoundCheck.show()
+        self.SoundCheck.connect("toggled", self.OnSoundCheckToggled)
+        self.vbox119.pack_start(self.SoundCheck, False, False, 0)
+
+        self.hbox228 = gtk.HBox(False, 5)
+        self.hbox228.show()
+        self.hbox228.set_spacing(5)
+
+        self.sndcmdLabel = gtk.Label(_("Sound Effects command:"))
+        self.sndcmdLabel.set_padding(0, 0)
+        self.sndcmdLabel.set_line_wrap(False)
+        self.sndcmdLabel.show()
+        self.hbox228.pack_start(self.sndcmdLabel, False, False, 0)
+
+        self.SoundCommand_List = gtk.ListStore(gobject.TYPE_STRING)
+        self.SoundCommand = gtk.ComboBoxEntry()
+        self.SoundCommand.show()
+
+        self.SoundCommand.set_model(self.SoundCommand_List)
+        self.SoundCommand.set_text_column(0)
+        self.hbox228.pack_start(self.SoundCommand, True, True, 0)
+
+        self.DefaultSoundCommand = gtk.Button()
+        self.DefaultSoundCommand.show()
+
+        self.alignment103 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment103.show()
+
+        self.hbox229 = gtk.HBox(False, 2)
+        self.hbox229.show()
+        self.hbox229.set_spacing(2)
+
+        self.image97 = gtk.Image()
+        self.image97.set_padding(0, 0)
+        self.image97.set_from_stock(gtk.STOCK_CANCEL, 4)
+        self.image97.show()
+        self.hbox229.pack_start(self.image97, False, False, 0)
+
+        self.label383 = gtk.Label(_("Default"))
+        self.label383.set_padding(0, 0)
+        self.label383.set_line_wrap(False)
+        self.label383.show()
+        self.hbox229.pack_start(self.label383, False, False, 0)
+
+        self.alignment103.add(self.hbox229)
+
+        self.DefaultSoundCommand.add(self.alignment103)
+
+        self.hbox228.pack_start(self.DefaultSoundCommand, False, False, 0)
+
+        self.vbox119.pack_start(self.hbox228, False, True, 0)
+
+        self.hbox230 = gtk.HBox(False, 5)
+        self.hbox230.show()
+        self.hbox230.set_spacing(5)
+
+        self.snddirLabel = gtk.Label(_("Sound Effects Directory:"))
+        self.snddirLabel.set_padding(0, 0)
+        self.snddirLabel.set_line_wrap(False)
+        self.snddirLabel.show()
+        self.hbox230.pack_start(self.snddirLabel, False, False, 0)
+
+        self.SoundButton = gtk.Button()
+        self.SoundButton.show()
+
+        self.alignment104 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment104.show()
+
+        self.hbox231 = gtk.HBox(False, 2)
+        self.hbox231.show()
+        self.hbox231.set_spacing(2)
+
+        self.image98 = gtk.Image()
+        self.image98.set_padding(0, 0)
+        self.image98.set_from_stock(gtk.STOCK_DIRECTORY, 4)
+        self.image98.show()
+        self.hbox231.pack_start(self.image98, False, False, 0)
+
+        self.label385 = gtk.Label(_("Select"))
+        self.label385.set_padding(0, 0)
+        self.label385.set_line_wrap(False)
+        self.label385.show()
+        self.hbox231.pack_start(self.label385, False, False, 0)
+
+        self.alignment104.add(self.hbox231)
+
+        self.SoundButton.add(self.alignment104)
+
+        self.hbox230.pack_end(self.SoundButton, False, False, 0)
+
+        self.SoundDirectory = gtk.Entry()
+        self.SoundDirectory.set_text("")
+        self.SoundDirectory.set_editable(True)
+        self.SoundDirectory.show()
+        self.SoundDirectory.set_visibility(True)
+        self.hbox230.pack_start(self.SoundDirectory, True, True, 0)
+
+        self.vbox119.pack_start(self.hbox230, False, True, 0)
+
+        self.label421 = gtk.Label(_("Audio Player Command ($ for filename):"))
+        self.label421.set_alignment(0, 0.5)
+        self.label421.set_padding(0, 0)
+        self.label421.set_line_wrap(False)
+        self.label421.show()
+        self.vbox119.pack_start(self.label421, False, False, 0)
+
+        self.audioPlayerCombo_List = gtk.ListStore(gobject.TYPE_STRING)
+        self.audioPlayerCombo = gtk.ComboBoxEntry()
+        self.audioPlayerCombo.show()
+
+        self.audioPlayerCombo.set_model(self.audioPlayerCombo_List)
+        self.audioPlayerCombo.set_text_column(0)
+        self.vbox119.pack_start(self.audioPlayerCombo, False, True, 0)
+
+        self.Main.add(self.vbox119)
+
+        self.label420 = gtk.Label("")
+        self.label420.set_padding(0, 0)
+        self.label420.set_line_wrap(False)
+        self.label420.set_markup(_("<b>Sounds:</b>"))
+        self.label420.show()
+        self.Main.set_label_widget(self.label420)
+
+
+        if create:
+            self.SoundsFrame.add(self.Main)
+
+    def OnSoundCheckToggled(self, widget):
+        pass
+
+    def get_custom_widget(self, id, string1, string2, int1, int2):
+        w = gtk.Label(_("(custom widget: %s)") % id)
+        return w
+
+class IconsFrame:
+    def __init__(self, create = True, accel_group = None, tooltips = None):
+        if accel_group is None:
+             self.accel_group = gtk.AccelGroup()
+        else:
+             self.accel_group = accel_group
+        if tooltips is None:
+             self.tooltips = gtk.Tooltips()
+        else:
+             self.tooltips = tooltips
+        self.tooltips.enable()
+        if create:
+            self.IconsFrame = gtk.Window(gtk.WINDOW_TOPLEVEL)
+            self.IconsFrame.set_title(_("Icons"))
+            self.IconsFrame.set_position(gtk.WIN_POS_NONE)
+            self.IconsFrame.add_accel_group(self.accel_group)
+            self.IconsFrame.show()
+
+        self.Main = gtk.Frame()
+        self.Main.show()
+        self.Main.set_shadow_type(gtk.SHADOW_ETCHED_IN)
+
+        self.vbox125 = gtk.VBox(False, 5)
+        self.vbox125.show()
+        self.vbox125.set_spacing(5)
+        self.vbox125.set_border_width(5)
+
+        self.TabClosers = gtk.CheckButton()
+        self.TabClosers.set_active(False)
+        self.TabClosers.set_label(_("Close-buttons on tabs (requires restart)"))
+        self.TabClosers.show()
+        self.vbox125.pack_start(self.TabClosers, False, False, 0)
+
+        self.hbox258 = gtk.HBox(False, 10)
+        self.hbox258.show()
+        self.hbox258.set_spacing(10)
+
+        self.TrayiconCheck = gtk.CheckButton()
+        self.TrayiconCheck.set_active(False)
+        self.TrayiconCheck.set_label(_("Display Tray Icon"))
+        self.TrayiconCheck.show()
+        self.hbox258.pack_start(self.TrayiconCheck, False, False, 0)
+
+        self.vbox125.pack_start(self.hbox258, False, False, 0)
+
+        self.hbox261 = gtk.HBox(False, 0)
+        self.hbox261.show()
+        self.hbox261.set_spacing(0)
+
+        self.label424 = gtk.Label(_("Icon Theme Directory (requires restart):"))
+        self.label424.set_padding(0, 0)
+        self.label424.set_line_wrap(False)
+        self.label424.show()
+        self.hbox261.pack_start(self.label424, False, False, 0)
+
+        self.vbox125.pack_start(self.hbox261, False, False, 0)
+
+        self.hbox262 = gtk.HBox(False, 5)
+        self.hbox262.show()
+        self.hbox262.set_spacing(5)
+
+        self.ThemeButton = gtk.Button()
+        self.ThemeButton.show()
+
+        self.alignment128 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment128.show()
+
+        self.hbox263 = gtk.HBox(False, 2)
+        self.hbox263.show()
+        self.hbox263.set_spacing(2)
+
+        self.image122 = gtk.Image()
+        self.image122.set_padding(0, 0)
+        self.image122.set_from_stock(gtk.STOCK_DIRECTORY, 4)
+        self.image122.show()
+        self.hbox263.pack_start(self.image122, False, False, 0)
+
+        self.label425 = gtk.Label(_("Select"))
+        self.label425.set_padding(0, 0)
+        self.label425.set_line_wrap(False)
+        self.label425.show()
+        self.hbox263.pack_start(self.label425, False, False, 0)
+
+        self.alignment128.add(self.hbox263)
+
+        self.ThemeButton.add(self.alignment128)
+
+        self.hbox262.pack_start(self.ThemeButton, False, False, 0)
+
+        self.IconTheme = gtk.Entry()
+        self.IconTheme.set_text("")
+        self.IconTheme.set_editable(True)
+        self.IconTheme.show()
+        self.IconTheme.set_visibility(True)
+        self.hbox262.pack_start(self.IconTheme, True, True, 0)
+
+        self.DefaultTheme = gtk.Button()
+        self.DefaultTheme.show()
+
+        self.alignment154 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment154.show()
+
+        self.hbox294 = gtk.HBox(False, 2)
+        self.hbox294.show()
+        self.hbox294.set_spacing(2)
+
+        self.image148 = gtk.Image()
+        self.image148.set_padding(0, 0)
+        self.image148.set_from_stock(gtk.STOCK_CANCEL, 4)
+        self.image148.show()
+        self.hbox294.pack_start(self.image148, False, False, 0)
+
+        self.label465 = gtk.Label(_("Default"))
+        self.label465.set_padding(0, 0)
+        self.label465.set_line_wrap(False)
+        self.label465.show()
+        self.hbox294.pack_start(self.label465, False, False, 0)
+
+        self.alignment154.add(self.hbox294)
+
+        self.DefaultTheme.add(self.alignment154)
+
+        self.hbox262.pack_start(self.DefaultTheme, False, True, 0)
+
+        self.vbox125.pack_start(self.hbox262, False, True, 0)
+
+        self.label466 = gtk.Label(_("Current Icons:"))
+        self.label466.set_alignment(0, 0.5)
+        self.label466.set_padding(0, 0)
+        self.label466.set_line_wrap(False)
+        self.label466.show()
+        self.vbox125.pack_start(self.label466, False, False, 0)
+
+        self.table6 = gtk.Table()
+        self.table6.show()
+        self.table6.set_border_width(3)
+        self.table6.set_row_spacings(3)
+        self.table6.set_col_spacings(10)
+
+        self.label476 = gtk.Label("")
+        self.label476.set_alignment(0, 0.5)
+        self.label476.set_padding(0, 0)
+        self.label476.set_line_wrap(False)
+        self.label476.set_markup(_("<b>Trayicon</b>"))
+        self.label476.show()
+        self.table6.attach(self.label476, 2, 3, 0, 1, gtk.FILL, 0, 0, 0)
+
+        self.label472 = gtk.Label(_("Connected:"))
+        self.label472.set_alignment(0, 0.5)
+        self.label472.set_padding(0, 0)
+        self.label472.set_line_wrap(False)
+        self.label472.show()
+        self.table6.attach(self.label472, 2, 3, 1, 2, gtk.FILL, 0, 0, 0)
+
+        self.label471 = gtk.Label(_("Disconnected:"))
+        self.label471.set_alignment(0, 0.5)
+        self.label471.set_padding(0, 0)
+        self.label471.set_line_wrap(False)
+        self.label471.show()
+        self.table6.attach(self.label471, 2, 3, 2, 3, gtk.FILL, 0, 0, 0)
+
+        self.label470 = gtk.Label(_("Away:"))
+        self.label470.set_alignment(0, 0.5)
+        self.label470.set_padding(0, 0)
+        self.label470.set_line_wrap(False)
+        self.label470.show()
+        self.table6.attach(self.label470, 2, 3, 3, 4, gtk.FILL, 0, 0, 0)
+
+        self.label475 = gtk.Label(_("Hilite:"))
+        self.label475.set_alignment(0, 0.5)
+        self.label475.set_padding(0, 0)
+        self.label475.set_line_wrap(False)
+        self.label475.show()
+        self.table6.attach(self.label475, 2, 3, 4, 5, gtk.FILL, 0, 0, 0)
+
+        self.Disconnect = gtk.Image()
+        self.Disconnect.set_padding(0, 0)
+        self.Disconnect.show()
+        self.table6.attach(self.Disconnect, 3, 4, 2, 3, gtk.FILL, gtk.FILL, 0, 0)
+
+        self.Hilite2 = gtk.Image()
+        self.Hilite2.set_padding(0, 0)
+        self.Hilite2.show()
+        self.table6.attach(self.Hilite2, 3, 4, 4, 5, gtk.FILL, gtk.FILL, 0, 0)
+
+        self.Away2 = gtk.Image()
+        self.Away2.set_padding(0, 0)
+        self.Away2.show()
+        self.table6.attach(self.Away2, 3, 4, 3, 4, gtk.FILL, gtk.FILL, 0, 0)
+
+        self.Connect = gtk.Image()
+        self.Connect.set_padding(0, 0)
+        self.Connect.show()
+        self.table6.attach(self.Connect, 3, 4, 1, 2, gtk.FILL, gtk.FILL, 0, 0)
+
+        self.label473 = gtk.Label(_("Window:"))
+        self.label473.set_alignment(0, 0.5)
+        self.label473.set_padding(0, 0)
+        self.label473.set_line_wrap(False)
+        self.label473.show()
+        self.table6.attach(self.label473, 0, 1, 5, 6, gtk.FILL, 0, 0, 0)
+
+        self.N = gtk.Image()
+        self.N.set_padding(0, 0)
+        self.N.show()
+        self.table6.attach(self.N, 1, 2, 5, 6, gtk.FILL, gtk.FILL, 0, 0)
+
+        self.label474 = gtk.Label(_("Hilite:"))
+        self.label474.set_alignment(0, 0.5)
+        self.label474.set_padding(0, 0)
+        self.label474.set_line_wrap(False)
+        self.label474.show()
+        self.table6.attach(self.label474, 0, 1, 4, 5, gtk.FILL, 0, 0, 0)
+
+        self.Hilite = gtk.Image()
+        self.Hilite.set_padding(0, 0)
+        self.Hilite.show()
+        self.table6.attach(self.Hilite, 1, 2, 4, 5, gtk.FILL, gtk.FILL, 0, 0)
+
+        self.Offline = gtk.Image()
+        self.Offline.set_padding(0, 0)
+        self.Offline.show()
+        self.table6.attach(self.Offline, 1, 2, 3, 4, gtk.FILL, gtk.FILL, 0, 0)
+
+        self.Away = gtk.Image()
+        self.Away.set_padding(0, 0)
+        self.Away.show()
+        self.table6.attach(self.Away, 1, 2, 2, 3, gtk.FILL, gtk.FILL, 0, 0)
+
+        self.Online = gtk.Image()
+        self.Online.set_padding(0, 0)
+        self.Online.show()
+        self.table6.attach(self.Online, 1, 2, 1, 2, gtk.FILL, gtk.FILL, 0, 0)
+
+        self.label469 = gtk.Label(_("Offline:"))
+        self.label469.set_alignment(0, 0.5)
+        self.label469.set_padding(0, 0)
+        self.label469.set_line_wrap(False)
+        self.label469.show()
+        self.table6.attach(self.label469, 0, 1, 3, 4, gtk.FILL, 0, 0, 0)
+
+        self.label468 = gtk.Label(_("Away:"))
+        self.label468.set_alignment(0, 0.5)
+        self.label468.set_padding(0, 0)
+        self.label468.set_line_wrap(False)
+        self.label468.show()
+        self.table6.attach(self.label468, 0, 1, 2, 3, gtk.FILL, 0, 0, 0)
+
+        self.label467 = gtk.Label(_("Online:"))
+        self.label467.set_alignment(0, 0.5)
+        self.label467.set_padding(0, 0)
+        self.label467.set_line_wrap(False)
+        self.label467.show()
+        self.table6.attach(self.label467, 0, 1, 1, 2, gtk.FILL, 0, 0, 0)
+
+        self.label477 = gtk.Label("")
+        self.label477.set_alignment(0, 0.5)
+        self.label477.set_padding(0, 0)
+        self.label477.set_line_wrap(False)
+        self.label477.set_markup(_("<b>Status</b>"))
+        self.label477.show()
+        self.table6.attach(self.label477, 0, 1, 0, 1, gtk.FILL, 0, 0, 0)
+
+        self.vbox125.pack_start(self.table6, True, True, 0)
+
+        self.Main.add(self.vbox125)
+
+        self.label464 = gtk.Label(_("Extra stuff for your comfort"))
+        self.label464.set_padding(0, 0)
+        self.label464.set_line_wrap(False)
+        self.label464.show()
+        self.Main.set_label_widget(self.label464)
+
+
+        if create:
+            self.IconsFrame.add(self.Main)
 
     def get_custom_widget(self, id, string1, string2, int1, int2):
         w = gtk.Label(_("(custom widget: %s)") % id)

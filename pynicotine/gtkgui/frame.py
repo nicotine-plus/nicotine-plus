@@ -2,8 +2,6 @@
 #
 import os
 
-#import gtkexcepthook
-
 import gtk
 from nicotine_glade import MainWindow, ChatRoomTab, RoomList
 from pynicotine.pynicotine import NetworkEventProcessor
@@ -321,7 +319,7 @@ class NicotineFrame(MainWindow):
 		self.LogWindow.set_wrap_mode(gtk.WRAP_WORD)
 		self.LogWindow.set_cursor_visible(False)
 		self.LogWindow.set_editable(False)
-		self.LogWindow.show()
+		
 		self.LogScrolledWindow.add(self.LogWindow)
 		self.LogWindow.connect("button-press-event", self.OnPopupLogMenu)
 		
@@ -342,7 +340,7 @@ class NicotineFrame(MainWindow):
 		else:
 			self.vpaned3.pack2(self.roomlist.vbox2,True, True)
 			self.hide_room_list1.set_active(0)
-			
+		self.LogWindow.show()	
 		self.userlistvbox = gtk.VBox(False, 0)
 		self.userlistvbox.show()
 		self.userlistvbox.set_spacing(0)
@@ -658,10 +656,9 @@ class NicotineFrame(MainWindow):
 	def sound(self, message, user, place=None):
 		if sys.platform == "win32":
 			return
-		if "soundenabled" in self.np.config.sections["ui"]:
-			if not self.np.config.sections["ui"]["soundenabled"]:
-				return
-		else: return
+		if "soundenabled" not in self.np.config.sections["ui"] or not self.np.config.sections["ui"]["soundenabled"]:
+			return
+		
 		if "speechenabled" in self.np.config.sections["ui"]:
 			if self.np.config.sections["ui"]["speechenabled"]:
 				if message == "room_nick" and place is not None:
@@ -669,6 +666,9 @@ class NicotineFrame(MainWindow):
 				elif message == "private":
 					os.system("flite -t \"%s, you have recieved a private message from %s.\" &" %(self.np.config.sections["server"]["login"], user ) )
 				return
+		if not self.np.config.sections["ui"].has_key("soundcommand"):
+			return
+		command = self.np.config.sections["ui"]["soundcommand"]
 		path = None
 		exists = 0
 		if message == "private":
@@ -689,8 +689,21 @@ class NicotineFrame(MainWindow):
 			if os.path.exists(path): exists = 1
 			else: path = None
 		if path != None and exists:
-			if "soundcommand" in self.np.config.sections["ui"]:
-				os.system("%s %s &" % ( self.np.config.sections["ui"]["soundcommand"], path))
+			if command == "Gstreamer (gst-python)":
+				try:
+					import pygst
+					pygst.require("0.10")
+					import gst
+					self.player = gst.element_factory_make("playbin", "player")
+					fakesink = gst.element_factory_make('fakesink', "my-fakesink")
+					self.player.set_property("video-sink", fakesink)
+					self.player.set_property('uri', "file://" + path)
+					self.player.set_state(gst.STATE_PLAYING)
+				except Exception, error:
+					print _("Gstreamer-python failed to play:"), error
+			else:
+				os.system("%s %s &" % ( command, path))
+
 	
 	def download_large_folder(self, username, folder, files, numfiles, msg):
 		FolderDownload(self, title=_('Nicotine+')+': Download %(num)i files?' %{'num':numfiles}, message=_("Are you sure you wish to download %(num)i files from %(user)s's directory %(folder)s?") %{'num': numfiles, 'user':username, 'folder':folder } , modal=True, data=msg, callback=self.folder_download_response )
@@ -1494,6 +1507,7 @@ class NicotineFrame(MainWindow):
 				self.connect1.set_sensitive(0)
 			self.logMessage(_("You need to finish configuring your settings (Server, Username, Password, Download Directory) before connecting... but if this message persists, check your Nicotine config file for options set to \'None\'."))
 			self.logMessage(ConfigUnset[1])
+			self.OnSettings(None)
 		else:
 			if self.np.transfers is None:
 				self.connect1.set_sensitive(1)

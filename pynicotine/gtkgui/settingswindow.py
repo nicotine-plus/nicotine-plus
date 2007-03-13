@@ -21,6 +21,7 @@ class ServerFrame(settings_glade.ServerFrame):
 		self.frame = parent.frame
 		settings_glade.ServerFrame.__init__(self, False)
 		self.Server.append_text("server.slsknet.org:2240")
+		self.Server.append_text("server.slsknet.org:2242")
 
 		self.Elist = {}
 		self.EncodingStore = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
@@ -644,6 +645,106 @@ class BanFrame(settings_glade.BanFrame):
 	def OnUseCustomBanToggled(self, widget):
 		self.CustomBan.set_sensitive(widget.get_active())
 
+class SoundsFrame(settings_glade.SoundsFrame):
+	def __init__(self, parent):
+		self.frame = parent.frame
+		settings_glade.SoundsFrame.__init__(self, False)
+		for executable in ["xmms -e $", "audacious -e $", "amarok -a $"]:
+			self.audioPlayerCombo.append_text( executable )
+		for item in ["play -q", "ogg123 -q", "Gstreamer (gst-python)"]:
+			self.SoundCommand.append_text(item)
+		self.SoundButton.connect("clicked", self.OnChooseSoundDir)
+		self.DefaultSoundCommand.connect("clicked", self.DefaultSound, self.SoundCommand)
+			
+	def OnSoundCheckToggled(self, widget):
+		sensitive = widget.get_active()
+		self.SoundCommand.set_sensitive(sensitive)
+		self.SoundDirectory.set_sensitive(sensitive)
+		self.SoundButton.set_sensitive(sensitive)
+		self.DefaultSoundCommand.set_sensitive(sensitive)
+		self.sndcmdLabel.set_sensitive(sensitive)
+		self.snddirLabel.set_sensitive(sensitive)
+		
+	def DefaultSound(self, widget, combo):
+		combo.child.set_text("play -q")
+		
+	def SetSettings(self, config):
+		ui = config["ui"]
+		
+		if ui["soundcommand"] is not None:
+			self.SoundCommand.child.set_text(ui["soundcommand"])
+		if ui["soundenabled"] is not None:
+			self.SoundCheck.set_active(ui["soundenabled"])
+		if ui["soundtheme"] is not None:
+			self.SoundDirectory.set_text(ui["soundtheme"])
+		self.OnSoundCheckToggled(self.SoundCheck)
+		
+		if config["players"]["default"] is not None:
+			self.audioPlayerCombo.child.set_text(config["players"]["default"])
+			self.audioPlayerCombo.append_text( config["players"]["default"] )
+	def GetSettings(self):
+		return {
+			"ui": {
+				"soundcommand": self.SoundCommand.child.get_text(),
+				"soundtheme": self.SoundDirectory.get_text(),
+				"soundenabled": self.SoundCheck.get_active(),
+			},
+			"players": {
+				"default": self.audioPlayerCombo.child.get_text(),
+			},
+		}
+
+	
+	def OnChooseSoundDir(self, widget):
+		dir = ChooseDir(self.Main.get_toplevel(), self.SoundDirectory.get_text())
+		if dir is not None: 
+			for directory in dir: # iterate over selected files
+				self.SoundDirectory.set_text(recode(directory))
+				
+class IconsFrame(settings_glade.IconsFrame):
+	def __init__(self, parent):
+		self.frame = parent.frame
+		settings_glade.IconsFrame.__init__(self, False)
+		self.ThemeButton.connect("clicked", self.OnChooseThemeDir)
+		self.DefaultTheme.connect("clicked", self.OnDefaultTheme)
+		self.N.set_from_pixbuf(self.frame.images["n"])
+		self.Away.set_from_pixbuf(self.frame.images["away"])
+		self.Away2.set_from_pixbuf(self.frame.images["away2"])
+		self.Online.set_from_pixbuf(self.frame.images["online"])
+		self.Offline.set_from_pixbuf(self.frame.images["offline"])
+		self.Hilite.set_from_pixbuf(self.frame.images["hilite"])
+		self.Hilite2.set_from_pixbuf(self.frame.images["hilite2"])
+		self.Connect.set_from_pixbuf(self.frame.images["connect"])
+		self.Disconnect.set_from_pixbuf(self.frame.images["disconnect"])
+		
+	def SetSettings(self, config):
+		ui = config["ui"]
+		if ui["tabclosers"] is not None:
+			self.TabClosers.set_active(ui["tabclosers"])
+		if ui["trayicon"] is not None:
+			self.TrayiconCheck.set_active(ui["trayicon"])
+		if ui["icontheme"] is not None:
+			self.IconTheme.set_text(ui["icontheme"])
+			
+	def OnDefaultTheme(self, widget):
+		self.IconTheme.set_text("")
+		
+	def OnChooseThemeDir(self, widget):
+		dir = ChooseDir(self.Main.get_toplevel(), self.IconTheme.get_text())
+		if dir is not None:
+			for directory in dir: # iterate over selected files
+				self.IconTheme.set_text(recode(directory))
+			
+	def GetSettings(self):
+		return {
+			"ui": {
+				"icontheme": self.IconTheme.get_text(),
+				"tabclosers": self.TabClosers.get_active(),
+				"trayicon": self.TrayiconCheck.get_active(),
+		
+			},
+		}
+
 class BloatFrame(settings_glade.BloatFrame):
 	def __init__(self, parent):
 		self.frame = parent.frame
@@ -651,13 +752,12 @@ class BloatFrame(settings_glade.BloatFrame):
 		settings_glade.BloatFrame.__init__(self, False)
 		for item in ["<None>", ",", ".", "<space>"]:
 			self.DecimalSep.append_text(item)
-		for item in ["play -q", "ogg123 -q"]:
-			self.SoundCommand.append_text(item)
+		
 		for item in ["bold", "italic", "underline", "normal"]:
 			self.UsernameStyle.append_text(item)
 		self.UsernameStyle.child.set_editable(False)
-		self.ThemeButton.connect("clicked", self.OnChooseThemeDir)
-		self.SoundButton.connect("clicked", self.OnChooseSoundDir)
+		
+		
 		
 		self.PickRemote.connect("clicked", self.PickColour, self.Remote)
 		self.PickLocal.connect("clicked", self.PickColour, self.Local)
@@ -687,7 +787,7 @@ class BloatFrame(settings_glade.BloatFrame):
 		self.DefaultImmediate.connect("clicked", self.DefaultColour, self.Immediate)
 		self.DefaultQueue.connect("clicked", self.DefaultColour, self.Queue)
 		self.DefaultQueue.connect("clicked", self.DefaultColour, self.Queue)
-		self.DefaultSoundCommand.connect("clicked", self.DefaultSound, self.SoundCommand)
+		
 		
 		# Tint
 		self.PickTint.connect("clicked", self.PickColour, self.TintColor)
@@ -711,24 +811,13 @@ class BloatFrame(settings_glade.BloatFrame):
 	def FontsColorsChanged(self, widget):
 		self.needcolors = 1
 		
-	def OnChooseThemeDir(self, widget):
-		dir = ChooseDir(self.Main.get_toplevel(), self.IconTheme.get_text())
-		if dir is not None:
-			for directory in dir: # iterate over selected files
-				self.IconTheme.set_text(recode(directory))
-				
-	def OnChooseSoundDir(self, widget):
-		dir = ChooseDir(self.Main.get_toplevel(), self.SoundDirectory.get_text())
-		if dir is not None: 
-			for directory in dir: # iterate over selected files
-				self.SoundDirectory.set_text(recode(directory))
+
 								
 	def SetSettings(self, config):
 		ui = config["ui"]
 		private = config["privatechat"]
 		transfers = config["transfers"]
-		if ui["icontheme"] is not None:
-			self.IconTheme.set_text(ui["icontheme"])
+		
 		if ui["chatfont"] is not None:
 			self.SelectChatFont.set_font_name(ui["chatfont"])
 			
@@ -762,19 +851,13 @@ class BloatFrame(settings_glade.BloatFrame):
 			self.DecimalSep.child.set_text(ui["decimalsep"])
 		if ui["exitdialog"] is not None:
 			self.ExitDialog.set_active(ui["exitdialog"])
-		if ui["tabclosers"] is not None:
-			self.TabClosers.set_active(ui["tabclosers"])
+		
 		if private["store"] is not None:
 			self.ReopenPrivateChats.set_active(private["store"])
-		if ui["trayicon"] is not None:
-			self.TrayiconCheck.set_active(ui["trayicon"])
-		if ui["soundenabled"] is not None:
-			self.SoundCheck.set_active(ui["soundenabled"])
-		self.OnSoundCheckToggled(self.SoundCheck)
-		if ui["soundcommand"] is not None:
-			self.SoundCommand.child.set_text(ui["soundcommand"])
-		if ui["soundcommand"] is not None:
-			self.SoundCommand.child.set_text(ui["soundcommand"])
+		
+		
+	
+	
 		if ui["usernamestyle"] is not None:
 			self.UsernameStyle.child.set_text(ui["usernamestyle"])
 		if transfers["enabletransferbuttons"] is not None:
@@ -795,7 +878,7 @@ class BloatFrame(settings_glade.BloatFrame):
 	def GetSettings(self):
 		return {
 			"ui": {
-				"icontheme": self.IconTheme.get_text(),
+				
 				"chatfont": self.SelectChatFont.get_font_name(),
 				"chatlocal": self.Local.get_text(),
 				"chatremote": self.Remote.get_text(),
@@ -806,12 +889,7 @@ class BloatFrame(settings_glade.BloatFrame):
 				"search": self.Immediate.get_text(),
 				"searchq": self.Queue.get_text(),
 				"decimalsep": self.DecimalSep.child.get_text(),
-				"tabclosers": self.TabClosers.get_active(),
 				"exitdialog": self.ExitDialog.get_active(),
-				"trayicon": self.TrayiconCheck.get_active(),
-				"soundcommand": self.SoundCommand.child.get_text(),
-				"soundtheme": self.SoundDirectory.get_text(),
-				"soundenabled": self.SoundCheck.get_active(),
 				"useraway": self.AwayColor.get_text(),
 				"useronline": self.OnlineColor.get_text(),
 				"useroffline": self.OfflineColor.get_text(),
@@ -858,15 +936,7 @@ class BloatFrame(settings_glade.BloatFrame):
 		self.PickAway.set_sensitive(sensitive)
 		self.PickOnline.set_sensitive(sensitive)
 		self.PickOffline.set_sensitive(sensitive)
-		
-	def OnSoundCheckToggled(self, widget):
-		sensitive = widget.get_active()
-		self.SoundCommand.set_sensitive(sensitive)
-		self.SoundDirectory.set_sensitive(sensitive)
-		self.SoundButton.set_sensitive(sensitive)
-		self.DefaultSoundCommand.set_sensitive(sensitive)
-		self.sndcmdLabel.set_sensitive(sensitive)
-		self.snddirLabel.set_sensitive(sensitive)
+
 		
 	def PickColour(self, widget, entry):
 		dlg = gtk.ColorSelectionDialog(_("Pick a colour, any colour"))
@@ -920,8 +990,7 @@ class BloatFrame(settings_glade.BloatFrame):
 	def DefaultColour(self, widget, entry):
 		entry.set_text("")
 		
-	def DefaultSound(self, widget, combo):
-		combo.child.set_text("play -q")
+
 			
 class LogFrame(settings_glade.LogFrame):
 	def __init__(self, parent):
@@ -1033,8 +1102,7 @@ class EventsFrame(settings_glade.EventsFrame):
 	def __init__(self, parent):
 		self.frame = parent.frame
 		settings_glade.EventsFrame.__init__(self, False) 
-		for executable in ["xmms -e $", "audacious -e $", "amarok -a $"]:
-			self.audioPlayerCombo.append_text( executable ) 
+		
 		for executable in ["rox $", "konqueror $", "nautilus --no-desktop $", "thunar $", "xterm -e mc $", "emelfm2 -1 $", "krusader --left $", "gentoo -1 $" ]:
 			self.FileManagerCombo.append_text( executable ) 
 		
@@ -1045,9 +1113,7 @@ class EventsFrame(settings_glade.EventsFrame):
 			self.AfterDownload.set_text(transfers["afterfinish"])
 		if transfers["afterfolder"] is not None:
 			self.AfterFolder.set_text(transfers["afterfolder"])
-		if config["players"]["default"] is not None:
-			self.audioPlayerCombo.child.set_text(config["players"]["default"])
-			self.audioPlayerCombo.append_text( config["players"]["default"] ) 
+
 		if config["ui"]["filemanager"] is not None:
 			self.FileManagerCombo.child.set_text(config["ui"]["filemanager"])
 			
@@ -1061,9 +1127,7 @@ class EventsFrame(settings_glade.EventsFrame):
 			"ui": {
 				"filemanager": self.FileManagerCombo.child.get_text(),
 			},
-			"players": { 
-				"default": self.audioPlayerCombo.child.get_text(),
-			}
+		
 		}
 
 
@@ -1243,6 +1307,8 @@ class SettingsWindow(settings_glade.SettingsWindow):
 		row = model.append(None, [_("UI")])
 		model.append(row, [_("Interface")])
 		model.append(row, [_("URL Catching")])
+		model.append(row, [_("Sounds")])
+		model.append(row, [_("Icons")])
 		
 		row = model.append(None, [_("Misc")])
 		model.append(row, [_("Away mode")])
@@ -1260,6 +1326,8 @@ class SettingsWindow(settings_glade.SettingsWindow):
 		p[_("User info")] = UserinfoFrame(self)
 		p[_("Ban / ignore")] = BanFrame(self)
 		p[_("Interface")] = BloatFrame(self)
+		p[_("Sounds")] = SoundsFrame(self)
+		p[_("Icons")] = IconsFrame(self)
 		p[_("URL Catching")] = UrlCatchFrame(self)
 		p[_("Logging")] = LogFrame(self)
 		p[_("Searches")] = SearchFrame(self)
