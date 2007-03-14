@@ -74,36 +74,95 @@ class SlskProtoThread(threading.Thread):
 	with length and message code followed by the actual messsage data. 
 	These are the codes."""
 	
-	servercodes = {Login:1,SetWaitPort:2,
-		GetPeerAddress:3,AddUser:5,GetUserStatus:7,SayChatroom:13,
-		JoinRoom:14,LeaveRoom:15,UserJoinedRoom:16,UserLeftRoom:17,
-		ConnectToPeer:18,MessageUser:22,MessageAcked:23,
-		FileSearch:26,SetStatus:28,ServerPing:32,SendSpeed:34,
-		SharedFoldersFiles:35, 
-		GetUserStats:36,QueuedDownloads:40,Relogged:41,UserSearch:42,
-		AddThingILike:51,RemoveThingILike:52,
-		Recommendations:54, GlobalRecommendations:56,
-		PlaceInLineResponse:60,RoomAdded:62,RoomRemoved:63,
-		RoomList:64,ExactFileSearch:65,AdminMessage:66, 
-		GlobalUserList:67,TunneledMessage:68,PrivilegedUsers:69,
-		Msg83:83,Msg84:84,Msg85:85,ParentInactivityTimeout:86,
-		SearchInactivityTimeout:87,MinParentsInCache:88,
-		Msg89:89,DistribAliveInterval:90,
-		AddToPrivileged:91,CheckPrivileges:92,CantConnectToPeer:1001,
-		HaveNoParent:71,SearchRequest:93,NetInfo:102,
-		WishlistSearch:103,WishlistInterval:104,
-		SimilarUsers:110,ItemRecommendations:111,
-		ItemSimilarUsers:112,RoomTickerState:113,
-		RoomTickerAdd:114,RoomTickerRemove:115,
-		RoomTickerSet:116,AddThingIHate:117,RemoveThingIHate:118,
-		RoomSearch:120, SendUploadSpeed:121, GivePrivileges:123, NotifyPrivileges:124, AckNotifyPrivileges:125, UserInterests:57}
-	peercodes = {GetSharedFileList:4, SharedFileList:5, FileSearchRequest:8,
+	servercodes = {
+		Login:1,
+		SetWaitPort:2,
+		GetPeerAddress:3,
+		AddUser:5,
+		GetUserStatus:7,
+		SayChatroom:13,
+		JoinRoom:14,
+		LeaveRoom:15,
+		UserJoinedRoom:16,
+		UserLeftRoom:17,
+		ConnectToPeer:18,
+		MessageUser:22,
+		MessageAcked:23,
+		FileSearch:26,
+		SetStatus:28,
+		ServerPing:32,
+		SendSpeed:34,
+		SharedFoldersFiles:35,
+		GetUserStats:36,
+		QueuedDownloads:40,
+		Relogged:41,
+		UserSearch:42,
+		AddThingILike:51,
+		RemoveThingILike:52,
+		Recommendations:54,
+		GlobalRecommendations:56,
+		UserInterests:57,
+		PlaceInLineResponse:60,
+		RoomAdded:62,
+		RoomRemoved:63,
+		RoomList:64,
+		ExactFileSearch:65,
+		AdminMessage:66,
+		GlobalUserList:67,
+		TunneledMessage:68,
+		PrivilegedUsers:69,
+		Msg83:83,
+		Msg84:84,
+		Msg85:85,
+		ParentInactivityTimeout:86,
+		SearchInactivityTimeout:87,
+		MinParentsInCache:88,
+		Msg89:89,
+		DistribAliveInterval:90,
+		AddToPrivileged:91,
+		CheckPrivileges:92,
+		CantConnectToPeer:1001,
+		HaveNoParent:71,
+		SearchRequest:93,
+		NetInfo:102,
+		WishlistSearch:103,
+		WishlistInterval:104,
+		SimilarUsers:110,
+		ItemRecommendations:111,
+		ItemSimilarUsers:112,
+		RoomTickerState:113,
+		RoomTickerAdd:114,
+		RoomTickerRemove:115,
+		RoomTickerSet:116,
+		AddThingIHate:117,
+		RemoveThingIHate:118,
+		RoomSearch:120, 
+		SendUploadSpeed:121,
+		GivePrivileges:123,
+		NotifyPrivileges:124,
+		AckNotifyPrivileges:125,
+		}
+		
+	peercodes = {
+		GetSharedFileList:4,
+		SharedFileList:5,
+		FileSearchRequest:8,
 		FileSearchResult:9,
-		UserInfoRequest:15,UserInfoReply:16, FolderContentsRequest:36,
-		FolderContentsResponse:37, TransferRequest:40,
-		TransferResponse:41,PlaceholdUpload:42,QueueUpload:43,
-		PlaceInQueue:44,UploadFailed:46,QueueFailed:50,PlaceInQueueRequest:51, UploadQueueNotification:52,
-		Msg12547:12547}
+		UserInfoRequest:15,
+		UserInfoReply:16,
+		FolderContentsRequest:36,
+		FolderContentsResponse:37,
+		TransferRequest:40,
+		TransferResponse:41,
+		PlaceholdUpload:42,
+		QueueUpload:43,
+		PlaceInQueue:44,
+		UploadFailed:46,
+		QueueFailed:50,
+		PlaceInQueueRequest:51,
+		UploadQueueNotification:52,
+		Msg12547:12547
+		}
 
 	distribclasses = {0:DistribAlive,3:DistribSearch}
 
@@ -265,14 +324,7 @@ class SlskProtoThread(threading.Thread):
 							conns[i]=PeerConnection(i,msgObj.addr,"","",msgObj.init)
 							self._ui_callback([OutConn(i,msgObj.addr)])
 						del connsinprogress[i]
-					#else:
-						#print connsinprogress[i].msgObj
-						#seconds = 30
-						#if curtime - connsinprogress[i].lastactive > seconds:
-							#self._ui_callback([ConnClose(i,codnnsinprogress[i].addr)])
-							#i.close()
-							#print "Closed_cip", connsinprogress[i]
-							#del connsinprogress[i]
+					
 			# Process Data
 			for i in conns.keys()[:]:
 				if i in input:

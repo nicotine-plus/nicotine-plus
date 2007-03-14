@@ -133,16 +133,12 @@ class NicotineFrame(MainWindow):
 			
 			loader.close()
 			self.images[i] = loader.get_pixbuf()
-		self.trayicon = None
-		self.trayicon_module = None
-		self.TRAYICON_CREATED = 0
-		self.TRAYICON_FAILED = 0
-		self.CREATE_TRAYICON = 0
-		self.HAVE_TRAYICON = False
+		self.TrayApp = TrayApp(self)
+
 		if use_trayicon and config2.sections["ui"]["trayicon"]:
-			self.CREATE_TRAYICON = 1
-			self.HAVE_TRAYICON = True
-		
+			self.TrayApp.CREATE_TRAYICON = 1
+			self.TrayApp.HAVE_TRAYICON = True
+			self.TrayApp.Create()
 		del data
 		self.BuddiesComboEntries = []
 		
@@ -172,7 +168,7 @@ class NicotineFrame(MainWindow):
 		)
 		def on_delete_event(widget, event):
 			if self.np.config.sections["ui"]["exitdialog"]:
-				if self.HAVE_TRAYICON:
+				if self.TrayApp.HAVE_TRAYICON:
 					option = QuitBox(self, title=_('Close Nicotine-Plus?'), message=_('Are you sure you wish to exit Nicotine-Plus at this time?'),tray=True, status="question", third=_("Send to tray") )
 				else:
 					option = QuitBox(self, title=_('Close Nicotine-Plus?'), message=_('Are you sure you wish to exit Nicotine-Plus at this time?'), tray=False, status="question" )
@@ -445,11 +441,8 @@ class NicotineFrame(MainWindow):
 		self.awayreturn1.set_sensitive(0)
 		self.check_privileges1.set_sensitive(0)
 		self.current_image=None
-		self.tray_status = {"hilites" : { "rooms": [], "private": [] }, "status": "disconnect", "last": "disconnect"}
-		if self.CREATE_TRAYICON:
-			self.create_trayicon()
-		if self.HAVE_TRAYICON:
-			self.draw_trayicon()
+		
+		
 		if self.np.config.sections["transfers"]["rescanonstartup"]:
 			self.OnRescan()
 		img = gtk.Image()
@@ -483,97 +476,15 @@ class NicotineFrame(MainWindow):
 
 		except Exception, e:
 			print e
-			
-	def create_trayicon(self):
-		if self.TRAYICON_FAILED:
-			return
-		if sys.platform == "win32":
-			try:
-			
-				import systraywin32
-				self.trayicon_module = systraywin32
-			except ImportError, error:
-				self.TRAYICON_FAILED = True
-				self.HAVE_TRAYICON = False
-				message =  _("Note: The systraywin32.py Python file failed to load properly because: %s. You may require pywin32. Get a version that matches your version of Python from here:\nhttp://sourceforge.net/project/showfiles.php?group_id=78018") % error
-				print message
-				self.logMessage(message, "TrayIcon")
-		else:
-			# PyGTK >= 2.10
-			if gtk.pygtk_version[0] >= 2 and gtk.pygtk_version[1] >= 10:
-				trayicon = gtk.StatusIcon()
-				self.trayicon_module = trayicon
-				self.HAVE_TRAYICON = True
-				self.TRAYICON_FAILED = False
-			else:
-			        try:
-					from pynicotine import trayicon
-			        	self.trayicon_module = trayicon
-					self.HAVE_TRAYICON = True
-					self.TRAYICON_FAILED = False
-				except ImportError, error:
-					self.TRAYICON_FAILED = True
-					self.HAVE_TRAYICON = False
-					message = _("Note: Trayicon Python module was not found in the pynicotine directory: %s") % error
-					print message
-					self.logMessage(message, "TrayIcon")
-			
-	def destroy_trayicon(self):
-		if not self.TRAYICON_CREATED:
-			return
-		self.TRAYICON_CREATED = 0
-		self.HAVE_TRAYICON = False
-		self.current_image = None
-		
-		if sys.platform != "win32":
-			if gtk.pygtk_version[0] >= 2 and gtk.pygtk_version[1] >= 10:
-				self.trayicon_module.set_visible(False)
-				self.trayicon_module = None
-			else:
-				self.eventbox.destroy()
-				self.trayicon.destroy()
-		else:
-			self.tray_status["last"] = ""
-			self.trayicon.hide_icon()
-		
-		self.tray_popup_menu.destroy()
 
-		
-	def draw_trayicon(self):
-		if not self.HAVE_TRAYICON or self.trayicon_module == None or self.TRAYICON_CREATED:
-			return
-		self.TRAYICON_CREATED = 1
-		self.is_mapped = 1
-		self.traymenu()
-		if sys.platform == "win32":
-			if not self.trayicon:
-				self.trayicon = self.trayicon_module.TrayIcon("Nicotine", self)
-			self.trayicon.show_icon()
-			
-		else:
-			if gtk.pygtk_version[0] >= 2 and gtk.pygtk_version[1] >= 10:
-				self.trayicon_module.set_visible(True)
-				self.trayicon_module.connect("popup-menu", self.OnStatusIconPopup)
-				self.trayicon_module.connect("activate", self.OnStatusIconClicked)
-			else:
-				self.trayicon = self.trayicon_module.TrayIcon("Nicotine")
-				self.eventbox = gtk.EventBox()
-				self.trayicon.add(self.eventbox)
-				self.eventbox.connect("button-press-event", self.OnTrayiconClicked)
-				self.trayicon.show_all()
-	
-			
-		self.load_image(self.tray_status["status"])
-
-				
 		
 	def Notification(self, location, user, room=None):
-		hilites = self.tray_status["hilites"]
+		hilites = self.TrayApp.tray_status["hilites"]
 		if location == "rooms" and room != None and user != None:
 			if room not in hilites["rooms"]:
 				hilites["rooms"].append(room)
 				self.sound("room_nick", user, place=room)
-				self.load_image()
+				self.TrayApp.SetImage()
 				#self.MainWindow.set_urgency_hint(True)
 		if location == "private":
 			if user in hilites[location]:
@@ -582,77 +493,38 @@ class NicotineFrame(MainWindow):
 			if user not in hilites[location]: 
 				hilites[location].append(user)
 				self.sound(location, user)
-				self.load_image()
+				self.TrayApp.SetImage()
 				#self.MainWindow.set_urgency_hint(True)
 		self.TitleNotification(user)
 		
 	def ClearNotification(self, location, user, room=None):
 		if location == "rooms" and room != None:
-			if room in self.tray_status["hilites"]["rooms"]:
-				self.tray_status["hilites"]["rooms"].remove(room)
+			if room in self.TrayApp.tray_status["hilites"]["rooms"]:
+				self.TrayApp.tray_status["hilites"]["rooms"].remove(room)
 		if location == "private":	
-			if user in self.tray_status["hilites"]["private"]: 
-				self.tray_status["hilites"]["private"].remove(user)
+			if user in self.TrayApp.tray_status["hilites"]["private"]: 
+				self.TrayApp.tray_status["hilites"]["private"].remove(user)
 		self.TitleNotification(user)
-		self.load_image()
+		self.TrayApp.SetImage()
 		
 	def TitleNotification(self, user=None):
-		if self.tray_status["hilites"]["rooms"] == [] and self.tray_status["hilites"]["private"] == []:
+		if self.TrayApp.tray_status["hilites"]["rooms"] == [] and self.TrayApp.tray_status["hilites"]["private"] == []:
 			# Reset Title
 			if self.MainWindow.get_title() != _("Nicotine+") + " " + version:  
 				self.MainWindow.set_title(_("Nicotine+") + " " + version)
 		else:
 			# Private Chats have a higher priority
-			if len(self.tray_status["hilites"]["private"]) > 0:
-				user = self.tray_status["hilites"]["private"][-1]
+			if len(self.TrayApp.tray_status["hilites"]["private"]) > 0:
+				user = self.TrayApp.tray_status["hilites"]["private"][-1]
 				self.MainWindow.set_title(_("Nicotine+") + " " + version+ " :: " +  _("Private Message from %(user)s" % {'user':user} ) )
 			# Allow for the possibility the username is not available
-			elif len(self.tray_status["hilites"]["rooms"]) > 0:
-				room = self.tray_status["hilites"]["rooms"][-1]
+			elif len(self.TrayApp.tray_status["hilites"]["rooms"]) > 0:
+				room = self.TrayApp.tray_status["hilites"]["rooms"][-1]
 				if user == None:
 					self.MainWindow.set_title(_("Nicotine+") + " " + version+ " :: " +  _("You've been mentioned in the %(room)s room" % {'room':room} ) )
 				else:
 					self.MainWindow.set_title(_("Nicotine+") + " " + version+ " :: " +  _("%(user)s mentioned you in the %(room)s room" % {'user':user, 'room':room } ) )
-				
-	def load_image(self, status=None):
-		# Abort if Trayicon module wasn't loaded
-		if not self.HAVE_TRAYICON or self.trayicon_module == None or not self.TRAYICON_CREATED:
-			return
-		try:
-			if status != None:
-				self.tray_status["status"] = status
-			# Check for hilites, and display hilite icon if there is a room or private hilite
-			if self.tray_status["hilites"]["rooms"] == [] and self.tray_status["hilites"]["private"] == []:
-				# If there is no hilite, display the status
-				icon = self.tray_status["status"]
-			else:
-				icon = "hilite2"
 
-			if icon != self.tray_status["last"]:
-				self.tray_status["last"] = icon
-
-			if sys.platform == "win32":
-				# For Win32 Systray 
-				self.trayicon.set_img(icon)
-			else:
-				if gtk.pygtk_version[0] >= 2 and gtk.pygtk_version[1] >= 10:
-					self.trayicon_module.set_from_pixbuf(self.images[icon])
-				else:
-					# For trayicon.so module X11 Systray 
-					self.eventbox.hide()
-					if self.current_image != None:
-						self.eventbox.remove(self.current_image)
-				
-					img = gtk.Image()
-					img.set_from_pixbuf(self.images[icon])
-					img.show()
-	
-					self.current_image = img
-					self.eventbox.add(self.current_image)
-					self.eventbox.show()
-		except Exception,e:
-			print "ERROR: load_image", e
-			
 	def sound(self, message, user, place=None):
 		if sys.platform == "win32":
 			return
@@ -722,8 +594,8 @@ class NicotineFrame(MainWindow):
 		
 			
 		if response == gtk.RESPONSE_OK:
-			if sys.platform == "win32" and self.trayicon:
-				self.trayicon.hide_icon()
+			if sys.platform == "win32" and self.TrayApp.trayicon:
+				self.TrayApp.trayicon.hide_icon()
 			self.MainWindow.destroy()
 			gtk.main_quit()
 			
@@ -851,42 +723,7 @@ class NicotineFrame(MainWindow):
 		else:
 			self.BrowseUser(user)
 			
-	def traymenu(self):
-		try:
 
-			self.tray_popup_menu_server = popup0 = PopupMenu(self)
-			popup0.setup(
-				("#" + _("Connect"), self.OnConnect, gtk.STOCK_CONNECT),
-				("#" + _("Disconnect"), self.OnDisconnect, gtk.STOCK_DISCONNECT),
-			)
-			self.tray_popup_menu = popup = PopupMenu(self)
-			popup.setup(
-				("#" + _("Hide / Unhide Nicotine"), self.HideUnhideWindow, gtk.STOCK_GOTO_BOTTOM),
-				(1, _("Server"), self.tray_popup_menu_server, self.OnPopupServer),
-				("#" + _("Settings"), self.OnSettings, gtk.STOCK_PREFERENCES),
-				("#" + _("Send Message"), self.OnOpenPrivateChat, gtk.STOCK_EDIT),
-				("#" + _("Lookup a User's IP"), self.OnGetAUsersIP, gtk.STOCK_NETWORK),
-				("#" + _("Lookup a User's Info"), self.OnGetAUsersInfo, gtk.STOCK_DIALOG_INFO),
-				("#" + _("Lookup a User's Shares"), self.OnGetAUsersShares, gtk.STOCK_HARDDISK),
-				("%" + _("Toggle Away"), self.OnAway, self.images["away2"] ),
-				("#" + _("Quit"), self.OnExit, gtk.STOCK_QUIT),
-			)
-		
-		except Exception,e:
-			print "ERROR: tray menu", e
-			
-	def OnPopupServer(self, widget):
-		items = self.tray_popup_menu_server.get_children()
-		
-		
-		if self.tray_status["status"] == "disconnect":
-			items[0].set_sensitive(True)
-			items[1].set_sensitive(False)
-		else:
-			items[0].set_sensitive(False)
-			items[1].set_sensitive(True)
-		return
-		
 	def button_press(self, widget, event):
 		try:
 
@@ -900,50 +737,8 @@ class NicotineFrame(MainWindow):
 			return False
 		except Exception,e:
 			print "button_press error", e
-			
-	def HideUnhideWindow(self, widget):
-		if self.is_mapped:
-			self.MainWindow.unmap()
-			self.is_mapped = 0
-		else:
-						
-			self.MainWindow.map()
-			# weird, but this allows us to easily a minimized nicotine from one
-			# desktop to another by clicking on the tray icon
-			if self.minimized:
-				self.MainWindow.present()
-			self.MainWindow.grab_focus()
-			self.is_mapped = 1
-			
-	def OnStatusIconClicked(self, status_icon):
-		self.HideUnhideWindow(None)
-		
-	def OnStatusIconPopup(self, status_icon, button, activate_time):
-		if button == 3:
-			self.tray_popup_menu.popup(None, None, None, button, activate_time)
-		
-	def OnTrayiconClicked(self, obj, event):
-		(w, h) = self.trayicon.get_size()
-		if event.x < 0 or event.y < 0 or event.x >= w or event.y >= h:
-			return
 
-		if event.button == 1:
-			self.HideUnhideWindow(None)
-		else:
-			items = self.tray_popup_menu.get_children()
-			if self.tray_status["status"] == "disconnect":
-				act = False
-			else:
-				act = True
-			items[3].set_sensitive(act)
-			items[4].set_sensitive(act)
-			items[5].set_sensitive(act)
-			items[6].set_sensitive(act)
-			items[7].set_sensitive(act)
-			if event.type == gtk.gdk.BUTTON_PRESS:
-				self.tray_popup_menu.popup(None, None, None, event.button, event.time)
-				return True
-			return False
+
 				
 	def get_custom_widget(self, id, string1, string2, int1, int2):
 		if id in ["ChatNotebook", "SearchNotebook"]:
@@ -1154,15 +949,15 @@ class NicotineFrame(MainWindow):
 		self.np.config.writeConfig()
 		self.np.protothread.abort()
 		if sys.platform == "win32":
-			if self.trayicon:
-				self.trayicon.hide_icon()
+			if self.TrayApp.trayicon:
+				self.TrayApp.trayicon.hide_icon()
 		gtk.main_quit()
 		
 	def OnConnect(self, widget):
 		self.connect1.set_sensitive(0)
 		self.disconnect1.set_sensitive(1)
-		self.tray_status["status"] = "connect"
-		self.load_image()
+		self.TrayApp.tray_status["status"] = "connect"
+		self.TrayApp.SetImage()
 		if self.np.serverconn is not None:
 			return
 		if widget != -1:
@@ -1202,8 +997,8 @@ class NicotineFrame(MainWindow):
 		self.check_privileges1.set_sensitive(0)
 		
 		self.SetUserStatus(_("Offline"))
-		self.tray_status["status"] = "disconnect"
-		self.load_image()
+		self.TrayApp.tray_status["status"] = "disconnect"
+		self.TrayApp.SetImage()
 		self.searches.interval = 0
 		self.chatrooms.ConnClose()
 		self.privatechats.ConnClose()
@@ -1217,8 +1012,8 @@ class NicotineFrame(MainWindow):
 		self.disconnect1.set_sensitive(0)
 		
 		self.SetUserStatus(_("Offline"))
-		self.tray_status["status"] = "disconnect"
-		self.load_image()
+		self.TrayApp.tray_status["status"] = "disconnect"
+		self.TrayApp.SetImage()
 		
 	def SetUserStatus(self, status):
 		self.UserStatus.pop(self.user_context_id)
@@ -1227,8 +1022,8 @@ class NicotineFrame(MainWindow):
 	def InitInterface(self, msg):
 		if self.away == 0:
 			self.SetUserStatus(_("Online"))
-			self.tray_status["status"] = "connect"
-			self.load_image()
+			self.TrayApp.tray_status["status"] = "connect"
+			self.TrayApp.SetImage()
 			autoaway = self.np.config.sections["server"]["autoaway"]
 			if autoaway > 0:
 				self.awaytimer = gobject.timeout_add(1000*60*autoaway, self.OnAutoAway)
@@ -1236,8 +1031,8 @@ class NicotineFrame(MainWindow):
 				self.awaytimer = None
 		else:
 			self.SetUserStatus(_("Away"))
-			self.tray_status["status"] = "away2"
-			self.load_image()
+			self.TrayApp.tray_status["status"] = "away2"
+			self.TrayApp.SetImage()
 		
 		self.awayreturn1.set_sensitive(1)
 		self.check_privileges1.set_sensitive(1)
@@ -1264,12 +1059,12 @@ class NicotineFrame(MainWindow):
 		self.away = (self.away+1) % 2
 		if self.away == 0:
 			self.SetUserStatus(_("Online"))
-			self.tray_status["status"] = "connect"
-			self.load_image()
+			self.TrayApp.tray_status["status"] = "connect"
+			self.TrayApp.SetImage()
 		else:
 			self.SetUserStatus(_("Away"))
-			self.tray_status["status"] = "away2"
-			self.load_image()
+			self.TrayApp.tray_status["status"] = "away2"
+			self.TrayApp.SetImage()
 		self.np.queue.put(slskmessages.SetStatus(self.away and 1 or 2))
 
 		
@@ -1470,15 +1265,15 @@ class NicotineFrame(MainWindow):
 		self.UpdateDownloadFilters()
 		self.TransparentTint(1)
 		self.np.config.writeConfig()
-		if not self.np.config.sections["ui"]["trayicon"] and self.HAVE_TRAYICON:
-			self.destroy_trayicon()
-		elif self.np.config.sections["ui"]["trayicon"] and not self.HAVE_TRAYICON:
-			if self.trayicon_module == None and not self.TRAYICON_CREATED:
-				self.create_trayicon()
+		if not self.np.config.sections["ui"]["trayicon"] and self.TrayApp.HAVE_TRAYICON:
+			self.TrayApp.destroy_trayicon()
+		elif self.np.config.sections["ui"]["trayicon"] and not self.TrayApp.HAVE_TRAYICON:
+			if self.TrayApp.trayicon_module == None and not self.TrayApp.TRAYICON_CREATED:
+				self.TrayApp.Load()
 			else:
-				self.HAVE_TRAYICON = True
+				self.TrayApp.HAVE_TRAYICON = True
 				
-			self.draw_trayicon()
+			self.TrayApp.Draw()
 			
 		if needcolors:
 			self.chatrooms.roomsctrl.UpdateColours()
@@ -2137,6 +1932,230 @@ class NicotineFrame(MainWindow):
 	
 	def OnUserList(self, widget):
 		self.notebook1.set_current_page(8)
+
+class TrayApp:
+	def __init__(self, frame):
+		self.frame = frame
+		self.frame.is_mapped = 1
+		self.current_image = None
+		self.pygtkicon = False
+		if gtk.pygtk_version[0] >= 2 and gtk.pygtk_version[1] >= 10:
+			self.pygtkicon = True
+		self.trayicon = None
+		self.trayicon_module = None
+		self.TRAYICON_CREATED = 0
+		self.TRAYICON_FAILED = 0
+		self.CREATE_TRAYICON = 0
+		self.HAVE_TRAYICON = False
+		self.tray_status = {"hilites" : { "rooms": [], "private": [] }, "status": "disconnect", "last": "disconnect"}
+		self.CreateMenu()
+				
+	def HideUnhideWindow(self, widget):
+		if self.is_mapped:
+			self.frame.MainWindow.unmap()
+			self.frame.is_mapped = 0
+		else:
+						
+			self.frame.MainWindow.map()
+			# weird, but this allows us to easily a minimized nicotine from one
+			# desktop to another by clicking on the tray icon
+			if self.frame.minimized:
+				self.frame.MainWindow.present()
+			self.frame.MainWindow.grab_focus()
+			self.frame.is_mapped = 1
+			
+	def Create(self):
+		if self.CREATE_TRAYICON:
+			self.Load()
+		if self.HAVE_TRAYICON:
+			self.Draw()
+			
+	def Load(self):
+		if self.TRAYICON_FAILED:
+			return
+		if sys.platform == "win32":
+			try:
+			
+				import systraywin32
+				self.trayicon_module = systraywin32
+			except ImportError, error:
+				self.TRAYICON_FAILED = True
+				self.HAVE_TRAYICON = False
+				message =  _("Note: The systraywin32.py Python file failed to load properly because: %s. You may require pywin32. Get a version that matches your version of Python from here:\nhttp://sourceforge.net/project/showfiles.php?group_id=78018") % error
+				print message
+				self.logMessage(message, "TrayIcon")
+		else:
+			# PyGTK >= 2.10
+			if self.pygtkicon:
+				trayicon = gtk.StatusIcon()
+				self.trayicon_module = trayicon
+				self.HAVE_TRAYICON = True
+				self.TRAYICON_FAILED = False
+			else:
+			        try:
+					from pynicotine import trayicon
+			        	self.trayicon_module = trayicon
+					self.HAVE_TRAYICON = True
+					self.TRAYICON_FAILED = False
+				except ImportError, error:
+					self.TRAYICON_FAILED = True
+					self.HAVE_TRAYICON = False
+					message = _("Note: Trayicon Python module was not found in the pynicotine directory: %s") % error
+					print message
+					self.logMessage(message, "TrayIcon")
+			
+	def destroy_trayicon(self):
+		if not self.TRAYICON_CREATED:
+			return
+		self.TRAYICON_CREATED = 0
+		self.HAVE_TRAYICON = False
+		self.current_image = None
+		
+		if sys.platform != "win32":
+			if self.pygtkicon:
+				self.trayicon_module.set_visible(False)
+				self.trayicon_module = None
+			else:
+				self.eventbox.destroy()
+				self.trayicon.destroy()
+		else:
+			self.tray_status["last"] = ""
+			self.trayicon.hide_icon()
+		
+		self.tray_popup_menu.destroy()
+
+		
+	def Draw(self):
+		if not self.HAVE_TRAYICON or self.trayicon_module == None or self.TRAYICON_CREATED:
+			return
+		self.TRAYICON_CREATED = 1
+	
+		
+		if sys.platform == "win32":
+			if not self.trayicon:
+				self.trayicon = self.trayicon_module.TrayIcon("Nicotine", self)
+			self.trayicon.show_icon()
+			
+		else:
+			if self.pygtkicon:
+				self.trayicon_module.set_visible(True)
+				self.trayicon_module.connect("popup-menu", self.OnStatusIconPopup)
+				self.trayicon_module.connect("activate", self.OnStatusIconClicked)
+			else:
+				self.trayicon = self.trayicon_module.TrayIcon("Nicotine")
+				self.eventbox = gtk.EventBox()
+				self.trayicon.add(self.eventbox)
+				self.eventbox.connect("button-press-event", self.OnTrayiconClicked)
+				self.trayicon.show_all()
+	
+			
+		self.SetImage(self.tray_status["status"])
+
+					
+	def SetImage(self, status=None):
+		# Abort if Trayicon module wasn't loaded
+		if not self.HAVE_TRAYICON or self.trayicon_module == None or not self.TRAYICON_CREATED:
+			return
+		try:
+			if status != None:
+				self.tray_status["status"] = status
+			# Check for hilites, and display hilite icon if there is a room or private hilite
+			if self.tray_status["hilites"]["rooms"] == [] and self.tray_status["hilites"]["private"] == []:
+				# If there is no hilite, display the status
+				icon = self.tray_status["status"]
+			else:
+				icon = "hilite2"
+
+			if icon != self.tray_status["last"]:
+				self.tray_status["last"] = icon
+
+			if sys.platform == "win32":
+				# For Win32 Systray 
+				self.trayicon.set_img(icon)
+			else:
+				if self.pygtkicon:
+					self.trayicon_module.set_from_pixbuf(self.frame.images[icon])
+				else:
+					# For trayicon.so module X11 Systray 
+					self.eventbox.hide()
+					if self.current_image != None:
+						self.eventbox.remove(self.current_image)
+				
+					img = gtk.Image()
+					img.set_from_pixbuf(self.frame.images[icon])
+					img.show()
+	
+					self.current_image = img
+					self.eventbox.add(self.current_image)
+					self.eventbox.show()
+		except Exception,e:
+			print "ERROR: SetImage", e
+			
+	def CreateMenu(self):
+		try:
+
+			self.tray_popup_menu_server = popup0 = PopupMenu(self)
+			popup0.setup(
+				("#" + _("Connect"), self.frame.OnConnect, gtk.STOCK_CONNECT),
+				("#" + _("Disconnect"), self.frame.OnDisconnect, gtk.STOCK_DISCONNECT),
+			)
+			self.tray_popup_menu = popup = PopupMenu(self)
+			popup.setup(
+				("#" + _("Hide / Unhide Nicotine"), self.HideUnhideWindow, gtk.STOCK_GOTO_BOTTOM),
+				(1, _("Server"), self.tray_popup_menu_server, self.OnPopupServer),
+				("#" + _("Settings"), self.frame.OnSettings, gtk.STOCK_PREFERENCES),
+				("#" + _("Send Message"), self.frame.OnOpenPrivateChat, gtk.STOCK_EDIT),
+				("#" + _("Lookup a User's IP"), self.frame.OnGetAUsersIP, gtk.STOCK_NETWORK),
+				("#" + _("Lookup a User's Info"), self.frame.OnGetAUsersInfo, gtk.STOCK_DIALOG_INFO),
+				("#" + _("Lookup a User's Shares"), self.frame.OnGetAUsersShares, gtk.STOCK_HARDDISK),
+				("%" + _("Toggle Away"), self.frame.OnAway, self.frame.images["away2"] ),
+				("#" + _("Quit"), self.frame.OnExit, gtk.STOCK_QUIT),
+			)
+		
+		except Exception,e:
+			print "ERROR: tray menu", e
+			
+	def OnPopupServer(self, widget):
+		items = self.tray_popup_menu_server.get_children()
+		
+		
+		if self.tray_status["status"] == "disconnect":
+			items[0].set_sensitive(True)
+			items[1].set_sensitive(False)
+		else:
+			items[0].set_sensitive(False)
+			items[1].set_sensitive(True)
+		return
+
+	def OnStatusIconClicked(self, status_icon):
+		self.HideUnhideWindow(None)
+		
+	def OnStatusIconPopup(self, status_icon, button, activate_time):
+		if button == 3:
+			self.tray_popup_menu.popup(None, None, None, button, activate_time)
+		
+	def OnTrayiconClicked(self, obj, event):
+		(w, h) = self.trayicon.get_size()
+		if event.x < 0 or event.y < 0 or event.x >= w or event.y >= h:
+			return
+
+		if event.button == 1:
+			self.HideUnhideWindow(None)
+		else:
+			items = self.tray_popup_menu.get_children()
+			if self.tray_status["status"] == "disconnect":
+				act = False
+			else:
+				act = True
+			items[3].set_sensitive(act)
+			items[4].set_sensitive(act)
+			items[5].set_sensitive(act)
+			items[6].set_sensitive(act)
+			items[7].set_sensitive(act)
+			if event.type == gtk.gdk.BUTTON_PRESS:
+				self.tray_popup_menu.popup(None, None, None, event.button, event.time)
+				return True
+			return False
 class MainApp:
 	def __init__(self, config, trayicon):
 		self.frame = NicotineFrame(config, trayicon)

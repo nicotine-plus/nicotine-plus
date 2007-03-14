@@ -30,7 +30,7 @@ class PrivateChats(IconNotebook):
 			if tab.Main == page:
 				gobject.idle_add(tab.ChatLine.grab_focus)
 				# Remove hilite if selected tab belongs to a user in the hilite list
-				if user in self.frame.tray_status["hilites"]["private"]:
+				if user in self.frame.TrayApp.tray_status["hilites"]["private"]:
 					self.frame.ClearNotification("private", tab.user)
 		
 	def GetUserStatus(self, msg):
@@ -80,7 +80,7 @@ class PrivateChats(IconNotebook):
 
 	def RemoveTab(self, tab):
 		self.remove_page(tab.Main)
-		if tab.user in self.frame.tray_status["hilites"]["private"]:
+		if tab.user in self.frame.TrayApp.tray_status["hilites"]["private"]:
 			self.frame.ClearNotification("private", tab.user)
 		del self.users[tab.user]
 		if tab.user in self.frame.np.config.sections["privatechat"]["users"]:
