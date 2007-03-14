@@ -87,13 +87,14 @@ class NicotineFrame(MainWindow):
 		
 		self.got_focus = False
 		self.importimages()
-		if sys.platform == "win32":
-			import icondata
 		config2 = Config(config)
 		config2.readConfig()
 		# For Win32 Systray 
+		print sys.platform
+		self.icons = {}
 		if sys.platform == "win32":
-			self.icons = {}
+		        import icondata
+			
 			for i in "hilite2", "connect", "disconnect", "away2":
 				if "icontheme"  in config2.sections["ui"]:
 					path = os.path.expanduser(os.path.join(config2.sections["ui"]["icontheme"], i +".ico"))
@@ -2033,7 +2034,7 @@ class TrayApp:
 		
 		if sys.platform == "win32":
 			if not self.trayicon:
-				self.trayicon = self.trayicon_module.TrayIcon("Nicotine", self)
+				self.trayicon = self.trayicon_module.TrayIcon("Nicotine", self.frame)
 			self.trayicon.show_icon()
 			
 		else:

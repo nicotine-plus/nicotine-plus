@@ -206,7 +206,7 @@ class TrayIcon:
 		self.name = name
 		self.status = 'offline'
 		self.systray_context_menu = gtk.Menu()
-		self.menu = self.frame.tray_popup_menu
+		self.menu = self.frame.TrayApp.tray_popup_menu
 		self.added_hide_menuitem = False
 
 		w = gtk.Window() # just a window to pass
@@ -230,15 +230,15 @@ class TrayIcon:
 		# do not remove set_img does both above. 
 		# maybe I can only change img without readding
 		# the notify icon? HOW??
-		self.set_img(self.frame.tray_status["last"] )
+		self.set_img(self.frame.TrayApp.tray_status["last"] )
 
 	def hide_icon(self):
 		self.systray_winapi.remove()
 
 	def on_clicked(self, hwnd, message, wparam, lparam):
 		if lparam == win32con.WM_RBUTTONUP: # Right click
-			items = self.frame.tray_popup_menu.get_children()
-			if self.frame.tray_status["status"] == "disconnect":
+			items = self.frame.TrayApp.tray_popup_menu.get_children()
+			if self.frame.TrayApp.tray_status["status"] == "disconnect":
 				items[3].set_sensitive(False)
 				items[4].set_sensitive(False)
 				items[5].set_sensitive(False)
@@ -249,11 +249,11 @@ class TrayIcon:
 				items[4].set_sensitive(True)
 				items[5].set_sensitive(True)
 				items[6].set_sensitive(True)
-			self.frame.tray_popup_menu.popup(None, None, None, 0, 0)
+			self.frame.TrayApp.tray_popup_menu.popup(None, None, None, 0, 0)
 		elif lparam == win32con.WM_MBUTTONUP: # Middle click
 			pass
 		elif lparam == win32con.WM_LBUTTONUP: # Left click
-			self.frame.HideUnhideWindow(None)
+			self.frame.TrayApp.HideUnhideWindow(None)
 
 	def add(self, icon):
 		pass
