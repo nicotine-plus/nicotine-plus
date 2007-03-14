@@ -1189,7 +1189,7 @@ class UrlCatchFrame(settings_glade.UrlCatchFrame):
 		self.ProtocolHandlers.set_model(self.protocolmodel)
 		self.ProtocolHandlers.get_selection().connect("changed", self.OnSelect)
 		self.handlermodel = gtk.ListStore(gobject.TYPE_STRING)
-		for item in ["firefox %s", "mozilla %s", "opera %s", "links -g %s", "dillo %s", "konqueror %s"]:
+		for item in ["firefox %s", "firefox -a firefox --remote openURL(%s,new-tab)", "mozilla %s", "opera %s", "links -g %s", "dillo %s", "konqueror %s"]:
 			self.handlermodel.append([item])
 		self.Handler.set_model(self.handlermodel)
 		
@@ -1209,7 +1209,7 @@ class UrlCatchFrame(settings_glade.UrlCatchFrame):
 					command = urls["protocols"][key][:-1]
 				else:
 					command = urls["protocols"][key]
-				command = command.replace("\"", "")
+				command = command.replace("\"", "").replace("\'", "")
 				iter = self.protocolmodel.append([key, command])
 				self.protocols[key] = [iter, command]
 
@@ -1242,7 +1242,7 @@ class UrlCatchFrame(settings_glade.UrlCatchFrame):
 
 	def OnUpdate(self, widget):
 		key = self.Protocol.get_text()
-		value = self.Handler.child.get_text()
+		value = self.Handler.child.get_text().replace("\"", "").replace("\'", "")
 		if self.protocols.has_key(key):
 			self.protocols[key][1] = value
 			self.protocolmodel.set(self.protocols[key][0], 1, value)
