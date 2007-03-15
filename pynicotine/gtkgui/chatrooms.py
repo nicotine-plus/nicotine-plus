@@ -484,7 +484,8 @@ class ChatRoom(ChatRoomTab):
 		
 	def SayChatRoom(self, msg, text):
 		login = self.frame.np.config.sections["server"]["login"]
-		if msg.user == login:
+		user = msg.user
+		if user == login:
 			tag = self.tag_local
 		elif text.upper().find(login.upper()) > -1:
 			tag = self.tag_hilite
@@ -492,13 +493,13 @@ class ChatRoom(ChatRoomTab):
 		else:
 			tag = self.tag_remote
 		
-		if msg.user != login and tag == self.tag_hilite:
+		if user != login and tag == self.tag_hilite:
 			self.frame.ChatNotebook.request_hilite(self.Main)
 			self.frame.ChatRequestIcon(1)
 			# add hilite to trayicon
 			if self.frame.ChatNotebook.get_current_page() != self.frame.ChatNotebook.page_num(self.roomsctrl.joinedrooms[self.room].Main) or self.frame.notebook1.get_current_page() != 0:
 				if self.room not in self.frame.TrayApp.tray_status["hilites"]["rooms"]:
-					self.frame.Notification("rooms", msg.user, self.room)
+					self.frame.Notification("rooms", user, self.room)
 			#else:
 				#self.MainWindow.set_urgency_hint(False)
 				
@@ -508,10 +509,10 @@ class ChatRoom(ChatRoomTab):
 			self.frame.ChatRequestIcon(0)
 			
 		if text[:4] == "/me ":
-			line = "* %s %s" % (msg.user, text[4:])
+			line = "* %s %s" % (user, text[4:])
 			tag = self.tag_me
 		else:
-			line = "[%s] %s" % (msg.user, text)
+			line = "[%s] %s" % (user, text)
 		
 		if len(self.lines) >= 400:
 			buffer = self.ChatScroll.get_buffer()
@@ -522,11 +523,12 @@ class ChatRoom(ChatRoomTab):
 
 		line = "\n-- ".join(line.split("\n"))
 		
-		if self.tag_users.has_key(msg.user):
-			usertag = self.tag_users[msg.user]
+		color = self.getUserStatusColor(self.usersmodel.get_value(self.users[user], 4))
+		if self.tag_users.has_key(user):
+			self.changecolour(self.tag_users[user], color)
 		else:
-			usertag = None
-		self.lines.append(AppendLine(self.ChatScroll, self.frame.np.decode(line, self.encoding), tag, username=msg.user, usertag=usertag))
+			self.tag_users[user] = self.makecolour(buffer, color, user)
+		self.lines.append(AppendLine(self.ChatScroll, self.frame.np.decode(line, self.encoding), tag, username=user, usertag=self.tag_users[user]))
 		if self.Log.get_active():
 			self.logfile = WriteLog(self.logfile, self.frame.np.config.sections["logging"]["logsdir"], self.room, line)
 			
@@ -823,9 +825,12 @@ class ChatRoom(ChatRoomTab):
 		self.changecolour(self.tag_hilite, "chathilite")
 		self.changecolour(self.tag_log, "chatremote")
 
-		for username in self.users.keys():
-			color = self.getUserStatusColor(self.usersmodel.get_value(self.users[username], 4))
-			self.changecolour(self.tag_users[username], color)
+		for user in self.users.keys():
+			color = self.getUserStatusColor(self.usersmodel.get_value(self.users[user], 4))
+			if user in self.tag_users.keys():
+				self.changecolour(self.tag_users[username], color)
+			else:
+				self.tag_users[user] = self.makecolour(buffer, color, user)
 			
 		self.frame.SetTextBG(self.ChatScroll)
 		self.frame.SetTextBG(self.RoomLog)
