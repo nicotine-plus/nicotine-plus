@@ -422,11 +422,7 @@ class NicotineFrame(MainWindow):
 		self.UserSearchCombo.set_sensitive(False)
 		thread.start_new_thread(self.BuddiesCombosFill, ("",))
 		
-		#self.UserSearchCombo.Fill()
-		#self.UserInfoCombo.Fill()
-		#self.UserSearchCombo.Fill()
-		#self.UserSearchCombo.Fill()
-		#self.SearchMethod.set_size_request(100, -1)
+
 		self.SearchMethod_List.clear()
 		# Space after Joined Rooms is important, so it doesn't conflict
 		# with any possible real room, but if it's not translated with the space
@@ -441,8 +437,8 @@ class NicotineFrame(MainWindow):
 		self.disconnect1.set_sensitive(0)
 		self.awayreturn1.set_sensitive(0)
 		self.check_privileges1.set_sensitive(0)
-		self.current_image=None
-		
+
+		self.gstreamer = gstreamer()
 		
 		if self.np.config.sections["transfers"]["rescanonstartup"]:
 			self.OnRescan()
@@ -563,21 +559,14 @@ class NicotineFrame(MainWindow):
 			else: path = None
 		if path != None and exists:
 			if command == "Gstreamer (gst-python)":
-				try:
-					import pygst
-					pygst.require("0.10")
-					import gst
-					self.player = gst.element_factory_make("playbin", "player")
-					fakesink = gst.element_factory_make('fakesink', "my-fakesink")
-					self.player.set_property("video-sink", fakesink)
-					self.player.set_property('uri', "file://" + path)
-					self.player.set_state(gst.STATE_PLAYING)
-				except Exception, error:
-					print _("Gstreamer-python failed to play:"), error
+				if self.gstreamer.player is None:
+					return
+				self.gstreamer.play(path)
 			else:
 				os.system("%s %s &" % ( command, path))
 
 	
+			
 	def download_large_folder(self, username, folder, files, numfiles, msg):
 		FolderDownload(self, title=_('Nicotine+')+': Download %(num)i files?' %{'num':numfiles}, message=_("Are you sure you wish to download %(num)i files from %(user)s's directory %(folder)s?") %{'num': numfiles, 'user':username, 'folder':folder } , modal=True, data=msg, callback=self.folder_download_response )
 		
@@ -2163,6 +2152,38 @@ class TrayApp:
 				self.tray_popup_menu.popup(None, None, None, event.button, event.time)
 				return True
 			return False
+
+class gstreamer:
+	def __init__(self):
+		self.player = None
+		try:
+			import pygst
+			pygst.require("0.10")
+			import gst
+		except Exception, error:
+			print _("Gstreamer-python failed to play:"), error
+			return
+		self.gst = gst
+		self.player = gst.element_factory_make("playbin", "player")
+		fakesink = gst.element_factory_make('fakesink', "my-fakesink")
+		self.player.set_property("video-sink", fakesink)
+		
+		self.bus = self.player.get_bus()
+		self.bus.add_signal_watch()
+		self.bus.connect('message', self.on_gst_message)
+
+	def play(self, path):
+		self.player.set_property('uri', "file://" + path)
+		self.player.set_state(self.gst.STATE_PLAYING)
+
+	def on_gst_message(self, bus, message):
+		t = message.type
+		if t == self.gst.MESSAGE_EOS:
+			self.player.set_state(self.gst.STATE_NULL)
+			
+		elif t == self.gst.MESSAGE_ERROR:
+			self.player.set_state(self.gst.STATE_NULL)
+			
 class MainApp:
 	def __init__(self, config, trayicon):
 		self.frame = NicotineFrame(config, trayicon)
