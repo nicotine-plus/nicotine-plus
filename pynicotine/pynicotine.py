@@ -834,7 +834,7 @@ class NetworkEventProcessor:
 			f.close()
 		except:
 			pic = None
-		descr = self.encode(eval(self.config.sections["userinfo"]["descr"], {}))
+		descr = self.encode(eval(self.config.sections["userinfo"]["descr"], {})).replace("\n", "\r\n")
 		
 		if self.transfers is not None:
 			totalupl = self.transfers.getTotalUploadsAllowed()
