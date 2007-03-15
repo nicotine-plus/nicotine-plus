@@ -10,11 +10,12 @@ This module implements SoulSeek networking protocol.
 from slskmessages import *
 import SocketServer
 import socket
+if sys.platform == "win32":
+	from multiselect import multiselect
 import select
 import threading
 import struct
-import random
-import time
+import random,  sys, time
 from errno import EINTR
 from utils import _
 
@@ -258,7 +259,7 @@ class SlskProtoThread(threading.Thread):
 		conns = self._conns
 		connsinprogress = self._connsinprogress
 		queue = self._queue
-
+		
 		while not self._want_abort:
 			if not queue.empty():
 				conns, connsinprogress, s = self.process_queue(queue, conns, connsinprogress,s)
@@ -278,16 +279,19 @@ class SlskProtoThread(threading.Thread):
 					outsock.append(i)
 			try:
 				# Select Networking Input and Output sockets
-				input,output,exc = select.select(conns.keys()+connsinprogress.keys()+[p],connsinprogress.keys()+outsock,[],0.5)
+				if sys.platform == "win32":
+					input,output,exc = multiselect(conns.keys()+connsinprogress.keys()+[p],connsinprogress.keys()+outsock,[],0.5)
+				else:
+					input,output,exc = select.select(conns.keys()+connsinprogress.keys()+[p],connsinprogress.keys()+outsock,[],0.5)
 				#print "Sockets open:", len(conns.keys()+connsinprogress.keys()+[p]+outsock), len(conns.keys()),  len(connsinprogress.keys())
 			except select.error, error:
 				if len(error.args) == 2 and error.args[0] == EINTR:
 					# Error recieved; but we don't care :)
 					continue
+				# Error recieved; terminate networking loop
 				print error
 				self._want_abort = 1
 				self._ui_callback([_("Major Socket Error: Networking terminated! %s" % str(error)) ])
-
 			# Write Output
 			for i in conns.keys():
 				if i in output:
@@ -373,7 +377,7 @@ class SlskProtoThread(threading.Thread):
 						conns[s].lastping = curtime
 						queue.put(ServerPing())
 			self._ui_callback([])
-			
+
 		# Close Server Port
 		if s is not None:
 			s.close()
