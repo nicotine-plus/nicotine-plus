@@ -10,12 +10,13 @@ This module implements SoulSeek networking protocol.
 from slskmessages import *
 import SocketServer
 import socket
+import random,  sys, time
 if sys.platform == "win32":
 	from multiselect import multiselect
 import select
 import threading
 import struct
-import random,  sys, time
+
 from errno import EINTR
 from utils import _
 
