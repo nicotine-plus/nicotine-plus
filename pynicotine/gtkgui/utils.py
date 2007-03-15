@@ -123,9 +123,9 @@ def UrlEvent(tag, widget, event, iter, url):
 			if PROTOCOL_HANDLERS[protocol].__class__ is types.MethodType:
 				PROTOCOL_HANDLERS[protocol](url.strip())
 			else:
-				cmd = PROTOCOL_HANDLERS[protocol] % url
-				command = cmd.strip().split(" ")
-				os.spawnlp(os.P_NOWAIT, command[0], *command)
+				cmd = '%s &' % (PROTOCOL_HANDLERS[protocol] % url)
+
+				os.system( cmd)
 		else:
 			try:
 				import gnome.vfs
