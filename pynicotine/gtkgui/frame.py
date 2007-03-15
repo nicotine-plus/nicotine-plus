@@ -1958,7 +1958,7 @@ class TrayApp:
 		self.CreateMenu()
 				
 	def HideUnhideWindow(self, widget):
-		if self.is_mapped:
+		if self.frame.is_mapped:
 			self.frame.MainWindow.unmap()
 			self.frame.is_mapped = 0
 		else:
