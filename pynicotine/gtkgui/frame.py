@@ -559,6 +559,8 @@ class NicotineFrame(MainWindow):
 			else: path = None
 		if path != None and exists:
 			if command == "Gstreamer (gst-python)":
+				if sys.platform == "win32"
+					return
 				if self.gstreamer.player is None:
 					return
 				self.gstreamer.play(path)
