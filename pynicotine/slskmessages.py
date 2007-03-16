@@ -218,21 +218,25 @@ class Login(ServerMessage):
 		len1, self.success = 1, ord(message[0])
 		if not self.success:
 			len1,self.reason = self.getObject(message,types.StringType,len1)
+	
 		else:
 			len1,self.banner = self.getObject(message,types.StringType,len1)
-		try:
-			len1,self.num = self.getObject(message, types.IntType,len1)
-			# Unknown number
-		#print self.num
-		except Exception, error:
-			print "Unpack number", error
-		try:
-			if len(message[len1:]) > 0:
-				len1, self.checksum = self.getObject(message,types.StringType,len1)
-			#print self.checksum
-		except Exception, error:
-			# Not an official client on the official server
-			pass
+		if len(message[len1:]) > 0 :
+			try:
+				
+				len2,self.num = self.getObject(message, types.IntType,len1)
+				# Unknown number
+		
+			except Exception, error:
+				print "Unpack number", error
+			try:
+		
+				if len(message[len1:]) > 0:
+					len1, self.checksum = self.getObject(message,types.StringType,len1)
+				#print self.checksum
+			except Exception, error:
+				# Not an official client on the official server
+				pass
 
 
 class SetWaitPort(ServerMessage):

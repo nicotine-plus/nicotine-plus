@@ -18,6 +18,7 @@ from pynicotine.utils import _
 
 class ServerFrame(settings_glade.ServerFrame):
 	def __init__(self, parent, encodings):
+		self.p = parent
 		self.frame = parent.frame
 		settings_glade.ServerFrame.__init__(self, False)
 		self.Server.append_text("server.slsknet.org:2240")
@@ -60,13 +61,16 @@ class ServerFrame(settings_glade.ServerFrame):
 		except:
 			server = None
 		if str(self.Login.get_text()) == "None":
-			popupWarning(None, _("Warning: Bad Username"), _("Username 'None' is not a good one, please pick another.") )
+			popupWarning(self.p.SettingsWindow, _("Warning: Bad Username"), _("Username 'None' is not a good one, please pick another."), self.frame.images["n"] )
+			raise UserWarning
 		try:
 			firstport = int(self.FirstPort.get_text())
 			lastport = int(self.LastPort.get_text())
 			portrange = (firstport, lastport)
 		except:
 			portrange = None
+			popupWarning(self.p.SettingsWindow, _("Warning: Invalid ports"), _("Client ports are invalid."), self.frame.images["n"] )
+			raise UserWarning
 		
 		return {
 			"server": {
@@ -82,6 +86,7 @@ class ServerFrame(settings_glade.ServerFrame):
 
 class SharesFrame(settings_glade.SharesFrame):
 	def __init__(self, parent):
+		self.p = parent
 		self.frame = parent.frame
 		settings_glade.SharesFrame.__init__(self, False)
 		self.needrescan = 0
@@ -103,33 +108,23 @@ class SharesFrame(settings_glade.SharesFrame):
 
 	def SetSettings(self, config):
 		transfers = config["transfers"]
-		if win32:
-			place = "Windows"
-			homedir = "C:\windows"
-		else:
-			place = "Home"
-			homedir = pwd.getpwuid(os.getuid())[5]
+		
 		if transfers["incompletedir"] is not None:
 			self.IncompleteDir.set_text(recode(transfers["incompletedir"]))
 		if transfers["downloaddir"] is not None:
 			self.DownloadDir.set_text(recode(transfers["downloaddir"]))
 		if transfers["sharedownloaddir"] is not None:
-			if homedir == transfers["downloaddir"] and transfers["sharedownloaddir"]:
-				popupWarning(None, _("Warning"),_("Security Risk: you should not share your %s directory!")  %place)
+			
 			self.ShareDownloadDir.set_active(transfers["sharedownloaddir"])
 		self.shareslist.clear()
 		self.bshareslist.clear()
 		
 		if transfers["shared"] is not None:
 			for share in transfers["shared"]:
-				if homedir == share:
-					popupWarning(None, _("Warning"),_("Security Risk: you should not share your %s directory!") %place)
 				self.shareslist.append([recode(share), share])
 			self.shareddirs = transfers["shared"][:]
 		if transfers["buddyshared"] is not None:
 			for share in transfers["buddyshared"]:
-				if homedir == share:
-					popupWarning(None, _("Warning"),_("Security Risk: you should not share your %s directory!") %place)
 				self.bshareslist.append([recode(share), share])
 			self.bshareddirs = transfers["buddyshared"][:]
 		if transfers["rescanonstartup"] is not None:
@@ -140,6 +135,19 @@ class SharesFrame(settings_glade.SharesFrame):
 		self.needrescan = 0
 
 	def GetSettings(self):
+		if win32:
+			place = "Windows"
+			homedir = "C:\windows"
+		else:
+			place = "Home"
+			homedir = pwd.getpwuid(os.getuid())[5]
+		if homedir == recode2(self.DownloadDir.get_text()) and self.ShareDownloadDir.get_active():
+			popupWarning(self.p.SettingsWindow, _("Warning"),_("Security Risk: you should not share your %s directory!")  %place, self.frame.images["n"])
+			raise UserWarning
+		for share in self.shareddirs+self.bshareddirs:
+			if homedir == share:
+				popupWarning(self.p.SettingsWindow, _("Warning"),_("Security Risk: you should not share your %s directory!") %place, self.frame.images["n"])
+				raise UserWarning
 		return {
 			"transfers": {
 				"incompletedir": recode2(self.IncompleteDir.get_text()),
@@ -222,6 +230,7 @@ class SharesFrame(settings_glade.SharesFrame):
 
 class TransfersFrame(settings_glade.TransfersFrame):
 	def __init__(self, parent):
+		self.p = parent
 		self.frame = parent.frame
 		settings_glade.TransfersFrame.__init__(self, False)
 		self.UploadsAllowed_List.clear()
@@ -492,6 +501,7 @@ class TransfersFrame(settings_glade.TransfersFrame):
 	
 class GeoBlockFrame(settings_glade.GeoBlockFrame):
 	def __init__(self, parent):
+		self.p = parent
 		self.frame = parent.frame
 		settings_glade.GeoBlockFrame.__init__(self, False)
 	
@@ -521,6 +531,7 @@ class GeoBlockFrame(settings_glade.GeoBlockFrame):
 
 class UserinfoFrame(settings_glade.UserinfoFrame):
 	def __init__(self, parent):
+		self.p = parent
 		self.frame = parent.frame
 		settings_glade.UserinfoFrame.__init__(self, False)
 
@@ -555,6 +566,7 @@ class UserinfoFrame(settings_glade.UserinfoFrame):
 
 class BanFrame(settings_glade.BanFrame):
 	def __init__(self, parent):
+		self.p = parent
 		self.frame = parent.frame
 		settings_glade.BanFrame.__init__(self, False)
 		self.banned = []
@@ -647,6 +659,7 @@ class BanFrame(settings_glade.BanFrame):
 
 class SoundsFrame(settings_glade.SoundsFrame):
 	def __init__(self, parent):
+		self.p = parent
 		self.frame = parent.frame
 		settings_glade.SoundsFrame.__init__(self, False)
 		for executable in ["xmms -e $", "audacious -e $", "amarok -a $"]:
@@ -683,9 +696,16 @@ class SoundsFrame(settings_glade.SoundsFrame):
 			self.audioPlayerCombo.child.set_text(config["players"]["default"])
 			self.audioPlayerCombo.append_text( config["players"]["default"] )
 	def GetSettings(self):
+
+		soundcommand = self.SoundCommand.child.get_text()
+		if soundcommand == "Gstreamer (gst-python)":
+			if self.frame.gstreamer.player is None:
+				popupWarning(self.p.SettingsWindow, _("Warning"), _("Gstreamer-python is not installed") , self.frame.images["n"] )
+				raise UserWarning
+		
 		return {
 			"ui": {
-				"soundcommand": self.SoundCommand.child.get_text(),
+				"soundcommand": soundcommand,
 				"soundtheme": self.SoundDirectory.get_text(),
 				"soundenabled": self.SoundCheck.get_active(),
 			},
@@ -703,6 +723,7 @@ class SoundsFrame(settings_glade.SoundsFrame):
 				
 class IconsFrame(settings_glade.IconsFrame):
 	def __init__(self, parent):
+		self.p = parent
 		self.frame = parent.frame
 		settings_glade.IconsFrame.__init__(self, False)
 		self.ThemeButton.connect("clicked", self.OnChooseThemeDir)
@@ -747,6 +768,7 @@ class IconsFrame(settings_glade.IconsFrame):
 
 class BloatFrame(settings_glade.BloatFrame):
 	def __init__(self, parent):
+		self.p = parent
 		self.frame = parent.frame
 		self.needcolors = 0
 		settings_glade.BloatFrame.__init__(self, False)
@@ -994,6 +1016,7 @@ class BloatFrame(settings_glade.BloatFrame):
 			
 class LogFrame(settings_glade.LogFrame):
 	def __init__(self, parent):
+		self.p = parent
 		self.frame = parent.frame
 		settings_glade.LogFrame.__init__(self, False)
 
@@ -1027,6 +1050,7 @@ class LogFrame(settings_glade.LogFrame):
 
 class SearchFrame(settings_glade.SearchFrame):
 	def __init__(self, parent):
+		self.p = parent
 		self.frame = parent.frame
 		settings_glade.SearchFrame.__init__(self, False)
 
@@ -1076,6 +1100,7 @@ class SearchFrame(settings_glade.SearchFrame):
 
 class AwayFrame(settings_glade.AwayFrame):
 	def __init__(self, parent):
+		self.p = parent
 		self.frame = parent.frame
 		settings_glade.AwayFrame.__init__(self, False)
 	
@@ -1100,6 +1125,7 @@ class AwayFrame(settings_glade.AwayFrame):
 
 class EventsFrame(settings_glade.EventsFrame):
 	def __init__(self, parent):
+		self.p = parent
 		self.frame = parent.frame
 		settings_glade.EventsFrame.__init__(self, False) 
 		
@@ -1168,17 +1194,18 @@ class ImportFrame(settings_glade.ImportFrame):
 		Import = ImportWinSlskConfig(self.config, Path, Queue, Login, Rooms, BuddyList, BanList, IgnoreList, UserInfo, UserImage)
 		response = Import.Run()
 		if response == 0:
-			popupWarning(None, _("Nothing Imported"), _("Config files for the official Soulseek client not found in \"%s\"") % Path )
+			popupWarning(self.p.SettingsWindow, _("Nothing Imported"), _("Config files for the official Soulseek client not found in \"%s\"") % Path , self.frame.images["n"])
 		elif response == 1:
-			popupWarning(None, _("Imported Soulseek Config"), _("Config was imported. You may need to restart for changes to take effect. If you changed your user name, buddy list or queue then you should restart immediately.") )
+			popupWarning(self.p.SettingsWindow, _("Imported Soulseek Config"), _("Config was imported. You may need to restart for changes to take effect. If you changed your user name, buddy list or queue then you should restart immediately."), self.frame.images["n"] )
 			self.p.SetSettings(self.frame.np.config.sections)
 		elif response == 2:
-			popupWarning(None, _("Nothing Imported"), _("No options were selected") )
+			popupWarning(self.p.SettingsWindow, _("Nothing Imported"), _("No options were selected") , self.frame.images["n"])
 
 
 class UrlCatchFrame(settings_glade.UrlCatchFrame):
 	def __init__(self, parent):
 		self.frame = parent.frame
+		self.p = parent
 		settings_glade.UrlCatchFrame.__init__(self, False)
 		self.protocolmodel = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
 		self.protocols = {}
@@ -1297,39 +1324,39 @@ class SettingsWindow(settings_glade.SettingsWindow):
 		self.empty_label = gtk.Label("")
 		self.empty_label.show()
 		self.viewport1.add(self.empty_label)
-		
+		self.tree = {}
 		self.pages = p = {}
 		model = gtk.TreeStore(gobject.TYPE_STRING)
 
-		row = model.append(None, [_("Connection")])
-		model.append(row, [_("Server")])
-		model.append(row, [_("Shares")])
-		model.append(row, [_("Transfers")])
+		self.tree[_("Connection")] = row = model.append(None, [_("Connection")])
+		self.tree[_("Server")] = model.append(row, [_("Server")])
+		self.tree[_("Shares")] = model.append(row, [_("Shares")])
+		self.tree[_("Transfers")] = model.append(row, [_("Transfers")])
 		try:
 			import GeoIP
-			model.append(row, [_("Geo Block")])
+			self.tree[_("Geo Block")] = model.append(row, [_("Geo Block")])
 		except ImportError:
 			try:
 				import _GeoIP
-				model.append(row, [_("Geo Block")])
+				self.tree[_("Geo Block")] = model.append(row, [_("Geo Block")])
 			except ImportError:
 				pass
 
-		row = model.append(None, [_("UI")])
-		model.append(row, [_("Icons")])
-		model.append(row, [_("Interface")])
-		model.append(row, [_("URL Catching")])
+		self.tree[_("UI")] = row = model.append(None, [_("UI")])
+		self.tree[_("Icons")] = model.append(row, [_("Icons")])
+		self.tree[_("Interface")] = model.append(row, [_("Interface")])
+		self.tree[_("URL Catching")] = model.append(row, [_("URL Catching")])
 		
-		row = model.append(None, [_("Misc")])
-		model.append(row, [_("Away mode")])
-		model.append(row, [_("Ban / ignore")])
-		model.append(row, [_("Logging")])
-		model.append(row, [_("Sounds")])
-		model.append(row, [_("Searches")])
-		model.append(row, [_("User info")])
-		row = model.append(None, [_("Advanced")])
-		model.append(row, [_("Events")])
-		model.append(row, [_("Import Config")])
+		self.tree[_("Misc")] = row = model.append(None, [_("Misc")])
+		self.tree[_("Away mode")] = model.append(row, [_("Away mode")])
+		self.tree[_("Ban / ignore")] = model.append(row, [_("Ban / ignore")])
+		self.tree[_("Logging")] = model.append(row, [_("Logging")])
+		self.tree[_("Sounds")] = model.append(row, [_("Sounds")])
+		self.tree[_("Searches")] = model.append(row, [_("Searches")])
+		self.tree[_("User info")] = model.append(row, [_("User info")])
+		self.tree[_("Advanced")] = row = model.append(None, [_("Advanced")])
+		self.tree[_("Events")] = model.append(row, [_("Events")])
+		self.tree[_("Import Config")] = model.append(row, [_("Import Config")])
 		
 		p[_("Server")] = ServerFrame(self, frame.np.getencodings())
 		p[_("Shares")] = SharesFrame(self)
@@ -1375,16 +1402,31 @@ class SettingsWindow(settings_glade.SettingsWindow):
 			self.viewport1.add(self.pages[page].Main)
 		else:
 			self.viewport1.add(self.empty_label)
+			
+	def SwitchToPage(self, page):
 
+		child = self.viewport1.get_child()
+		if child:
+			self.viewport1.remove(child)
+	
+		if self.tree[page] is None:
+			self.viewport1.add(self.empty_label)
+			return
+		model = self.SettingsTreeview.get_model()
+		sel = self.SettingsTreeview.get_selection()
+		sel.unselect_all()
+		path = model.get_path(self.tree[page])
+		if path is not None:
+			sel.select_path(path)
+
+			
 	def OnApply(self, widget):
 		self.SettingsWindow.emit("settings-closed", "apply")
 
 	def OnOk(self, widget):
-		self.SettingsWindow.hide()
 		self.SettingsWindow.emit("settings-closed", "ok")
 
 	def OnCancel(self, widget):
-		self.SettingsWindow.hide()
 		self.SettingsWindow.emit("settings-closed", "cancel")
 		
 	def OnDelete(self, widget, event):
@@ -1397,21 +1439,24 @@ class SettingsWindow(settings_glade.SettingsWindow):
 			page.SetSettings(config)
 
 	def GetSettings(self):
-		config = {
-			"server": {},
-			"transfers": {},
-			"userinfo": {},
-			"logging": {},
-			"searches": {},
-			"privatechat": {},
-			"ui": {},
-			"urls": {},
-			"players": {},
+		try:
+			config = {
+				"server": {},
+				"transfers": {},
+				"userinfo": {},
+				"logging": {},
+				"searches": {},
+				"privatechat": {},
+				"ui": {},
+				"urls": {},
+				"players": {},
+				
+			}
 			
-		}
-		
-		for page in self.pages.values():
-			sub = page.GetSettings()
-			for (key,data) in sub.items():
-				config[key].update(data)
-		return self.pages[_("Shares")].GetNeedRescan(), self.pages[_("Interface")].needcolors, config
+			for page in self.pages.values():
+				sub = page.GetSettings()
+				for (key,data) in sub.items():
+					config[key].update(data)
+			return self.pages[_("Shares")].GetNeedRescan(), self.pages[_("Interface")].needcolors, config
+		except UserWarning, warning:
+			return None

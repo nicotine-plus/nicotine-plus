@@ -24,11 +24,11 @@ CATCH_URLS = 0
 HUMANIZE_URLS = 0
 USERNAMEHOTSPOTS = 0
 
-def popupWarning(parent, title, warning):
+def popupWarning(parent, title, warning, icon=None):
 	dlg = gtk.Dialog(title = title, parent = parent,
 		buttons = (gtk.STOCK_OK, gtk.RESPONSE_OK))
 	dlg.set_default_response(gtk.RESPONSE_OK)
-	
+	dlg.set_icon(icon)
 	dlg.set_border_width(10)
 	dlg.vbox.set_spacing(10)
 	hbox = gtk.HBox(spacing=5)

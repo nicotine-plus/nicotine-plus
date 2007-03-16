@@ -559,8 +559,6 @@ class NicotineFrame(MainWindow):
 			else: path = None
 		if path != None and exists:
 			if command == "Gstreamer (gst-python)":
-				if sys.platform == "win32":
-					return
 				if self.gstreamer.player is None:
 					return
 				self.gstreamer.play(path)
@@ -1232,9 +1230,14 @@ class NicotineFrame(MainWindow):
 	
 	def OnSettingsClosed(self, widget, msg):
 		if msg == "cancel":
+			self.settingswindow.SettingsWindow.hide()
 			return
-		
-		needrescan, needcolors, config = self.settingswindow.GetSettings()
+		output = self.settingswindow.GetSettings()
+		if type(output) is not tuple:
+			return
+		if msg == "ok":
+			self.settingswindow.SettingsWindow.hide()
+		needrescan, needcolors, config = output
 		for (key, data) in config.items():
 			self.np.config.sections[key].update(data)
 		
@@ -2163,7 +2166,7 @@ class gstreamer:
 			pygst.require("0.10")
 			import gst
 		except Exception, error:
-			print _("Gstreamer-python failed to play:"), error
+			#print _("Gstreamer-python failed to play:"), error
 			return
 		self.gst = gst
 		self.player = gst.element_factory_make("playbin", "player")
