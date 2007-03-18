@@ -40,7 +40,9 @@ For testing, you can copy them there, yourself (if you have permissions)
 
 USERS:
 
-For Nicotine to know you want a certain translation, your locale needs to be set to that language.
+For Nicotine to know you want a certain translation, your locale needs to be
+set to that language. If your operating system doesn't have it set, already,
+starting with these commands will force an operating system to load.
 
 ENGLISH
 # LC_ALL=en_US nicotine
@@ -81,5 +83,5 @@ Portuguese Brazilian
 Lithuanian
 # LC_ALL=lt_LT nicotine
 
-Euskare (Basque)
+Euskara (Basque)
 # LC_ALL=eu nicotine
