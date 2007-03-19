@@ -1423,7 +1423,7 @@ class NicotineFrame(MainWindow):
 		except:
 		        path = os.getcwd()
 			
-		if os.path.exists(os.sep.join(path, file)) and path:
+		if os.path.exists(os.sep.join([path, file])) and path:
 			url = "file://%s/%s" % (path , file)
 			self.OpenUrl(url)
 		else:
