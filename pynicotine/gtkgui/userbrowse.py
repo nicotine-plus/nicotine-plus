@@ -785,8 +785,7 @@ class UserBrowse(UserBrowseTab):
 		path = self.selected_folder.replace("\\", os.sep)
 		executable = self.frame.np.config.sections["ui"]["filemanager"]
 		if "$" in executable:
-			command = executable.replace("$", "\"%s\"" % path)
-			os.system("%s &> /dev/null &" % command)
+			os.system("%s &" % executable.replace("$", "\"%s\"" % path))
 			
 	def OnEncodingChanged(self, widget):
 		try:

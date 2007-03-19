@@ -1416,15 +1416,11 @@ class NicotineFrame(MainWindow):
 			self.DownloadButtons.hide()
 			
 	def OnNicotineGuide(self, widget):
-		file = "doc"+os.sep+"NicotinePlusGuide.html"
-		path = None
-		try :
-			path = os.environ["PWD"]
-		except:
-		        path = os.getcwd()
+		file = "NicotinePlusGuide.html"
+		path = os.getcwd()
 			
-		if os.path.exists(os.sep.join([path, file])) and path:
-			url = "file://%s/%s" % (path , file)
+		if os.path.exists(os.sep.join([path, "doc", file])) and path:
+			url = "file://%s/%s/%s" % (path ,"doc", file)
 			self.OpenUrl(url)
 		else:
 			file = "%s/share/nicotine/documentation/NicotinePlusGuide.html" % sys.prefix
