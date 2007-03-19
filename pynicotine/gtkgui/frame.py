@@ -1416,19 +1416,27 @@ class NicotineFrame(MainWindow):
 			self.DownloadButtons.hide()
 			
 	def OnNicotineGuide(self, widget):
+		paths = []
 		file = "NicotinePlusGuide.html"
-		path = os.getcwd()
-			
-		if os.path.exists(os.sep.join([path, "doc", file])) and path:
-			url = "file://%s/%s/%s" % (path ,"doc", file)
-			self.OpenUrl(url)
+		path1 = os.getcwd()
+		path1split = path1.rsplit(os.sep, 1)
+
+		if path1split[1] == "doc":
+			paths.append(path1split[0])
 		else:
-			file = "%s/share/nicotine/documentation/NicotinePlusGuide.html" % sys.prefix
-			if os.path.exists(file):
-				url = "file://%s" % file
+			paths.append(path1)
+		path2 = "%s/share/nicotine/documentation" % sys.prefix
+		paths.append(path2)
+		winpath = "C:\Program Files\Nicotine+" 
+		paths.append(winpath)
+		for path in paths:
+			if os.path.exists(os.sep.join([path, "doc", file])):
+				url = "file:%s/%s/%s" % (urllib.pathname2url(path).replace("|", ":") ,"doc", file)
+
 				self.OpenUrl(url)
-			else:
-				popupWarning(None, _("Cannot Find Guide"), _("The Nicotine Offline Guide ( NicotinePlusGuide.html ) was not found in either the following directories:\n\n<u>%(pwd)s\n</u><b>and</b>\n<u>%(prefix)s/share/nicotine/documentation/</u>\n\nEither install Nicotine-Plus, or start from inside the Nicotine-Plus source directory." % {'pwd':path, 'prefix':sys.prefix } ) )
+				return
+		else:
+			popupWarning(None, _("Cannot Find Guide"), _("The Nicotine Offline Guide ( NicotinePlusGuide.html ) was not found in either the following directories:\n\n<u>%(pwd)s\n</u><b>and</b>\n<u>%(prefix)s/share/nicotine/documentation/</u>\n\nEither install Nicotine-Plus, or start from inside the Nicotine-Plus source directory." % {'pwd':path1, 'prefix':sys.prefix } ) )
 		
 	def OnSourceForgeProject(self, widget):
 		url = "http://sourceforge.net/projects/nicotine-plus/"
