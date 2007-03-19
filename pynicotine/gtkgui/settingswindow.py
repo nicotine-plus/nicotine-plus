@@ -1216,7 +1216,7 @@ class UrlCatchFrame(settings_glade.UrlCatchFrame):
 		self.ProtocolHandlers.set_model(self.protocolmodel)
 		self.ProtocolHandlers.get_selection().connect("changed", self.OnSelect)
 		self.handlermodel = gtk.ListStore(gobject.TYPE_STRING)
-		for item in ["firefox %s", "firefox -a firefox --remote openURL(%s,new-tab)", "mozilla %s", "opera %s", "links -g %s", "dillo %s", "konqueror %s", "\"c:\Program Files\Mozilla Firefox\Firefox.exe\" %s"]:
+		for item in ["firefox \"%s\"", "firefox -a firefox --remote 'openURL(%s,new-tab)'", "mozilla \"%s\"", "opera \"%s\"", "links -g \"%s\"", "dillo \"%s\"", "konqueror \"%s\"", "\"c:\Program Files\Mozilla Firefox\Firefox.exe\" %s"]:
 			self.handlermodel.append([item])
 		self.Handler.set_model(self.handlermodel)
 		
