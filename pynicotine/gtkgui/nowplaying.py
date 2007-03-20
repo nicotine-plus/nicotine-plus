@@ -172,19 +172,7 @@ class NowPlaying:
 		self.NPFormat_List = gtk.ListStore(gobject.TYPE_STRING)
 		self.NPFormat = gtk.ComboBoxEntry()
 		self.NPFormat.show()
-		self.defaultlist = [ "$n", "$a - $t", "[$a] $t", "Now $s: [$a] $t", "Now $s: $n", "$a - $b - $t", "$a - $b - $t ($l/$rKBps) from $y $c" ]
-		if self.frame.np.config.sections["players"]["npformat"] != "":
-			self.NPFormat.child.set_text(self.frame.np.config.sections["players"]["npformat"])
-		if self.frame.np.config.sections["players"]["npformatlist"] != []:
-			if self.frame.np.config.sections["players"]["npformat"] == "":
-				self.NPFormat.child.set_text(self.frame.np.config.sections["players"]["npformatlist"][0])
-			for item in self.frame.np.config.sections["players"]["npformatlist"]:
-				self.NPFormat_List.append([item])
-		if self.frame.np.config.sections["players"]["npformat"] == "":
-			self.NPFormat.child.set_text(self.defaultlist[0])
-
-		for item in self.defaultlist:
-			self.NPFormat_List.append([item])
+		
 		
 
 	
@@ -265,6 +253,20 @@ class NowPlaying:
 		if create:
 			self.NowPlaying.add(self.vbox1)
 		
+		if self.frame.np.config.sections["players"]["npformat"] != "":
+			self.NPFormat.child.set_text(self.frame.np.config.sections["players"]["npformat"])
+		if self.frame.np.config.sections["players"]["npformatlist"] != []:
+			if self.frame.np.config.sections["players"]["npformat"] == "":
+				self.NPFormat.child.set_text(str(self.frame.np.config.sections["players"]["npformatlist"][0]))
+			for item in self.frame.np.config.sections["players"]["npformatlist"]:
+				self.NPFormat_List.append([item])
+		if self.frame.np.config.sections["players"]["npformat"] == "":
+			self.NPFormat.child.set_text(str(self.defaultlist[0]))
+
+		self.defaultlist = [ "$n", "$a - $t", "[$a] $t", "Now $s: [$a] $t", "Now $s: $n", "$a - $b - $t", "$a - $b - $t ($l/$rKBps) from $y $c" ]
+		for item in self.defaultlist:
+			self.NPFormat_List.append([str(item)])
+		# Set the active radio button
 		self.SetPlayer(self.frame.np.config.sections["players"]["npplayer"])
 		
 	def title_clear(self):

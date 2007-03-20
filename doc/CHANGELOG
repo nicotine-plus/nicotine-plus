@@ -3,20 +3,19 @@ ChangeLog for Nicotine Plus
 UNRELEASED
 
 GENERAL CHANGES
- * Other users Interests are now shown in the User Info tab
+ * Other users Interests are now shown in the User Info tab, with expanders
  * Send Message added to trayicon
  * Popup Menus in Private, Chatrooms, and User Browse reorganized
  * Search now has combo boxes, per-room searching and per-user searching.
  * The user-entry boxes are now buddy-list combobox entries
  * Users with PyGTK >= 2.10 will use the gtk.StatusIcon instead of
    the old trayicon.so module.
- * Added a filemanager popup item to the self-browse menu
+ * Added a filemanager popup item to the self-browse menu; configurable
+   under Settings->Advanced->Events
  * Gstreamer-Python support for sound effects added
  * Added testing Soulseek server (port 2242) to the server combobox.
- * Reopen Settings dialog, if a setting is not set.
- * Changed the URL Catcher's syntax. Quotes are stripped and the function
-   os.spawnlp(os.P_NOWAIT, command, command, args) is used instead of 
-   os.system("command &"). The handler entry is now a combobox and 
+ * Changed the URL Catcher's syntax. The ampersand "&" is no longer needed
+   at the end of URL Handlers. The handler entry is now a combobox and
    includes a bunch of webbrowser commands.
  
 SETTINGS
@@ -25,9 +24,13 @@ SETTINGS
  * When a config option is detected as unset, print it in the log window.
  * Move Icon theme and trayicon settings to a seperate frame
  * Move sound effect and audio player settings to a seperate frame
-
+ * Reopen Settings dialog, if a setting is not set.
+ 
 NETWORKING
+ * On Win32, hyriand's multithreaded socket selector is used. This will allow
+   a largenumber of sockets to be used, which should make Nicotine+ more stable
  * Added Server Message 57 (User Interests)
+ * Send \r\n with userinfo description instead of just \n
  
 BUGFIXES
  * Uploads to other Nicotine+ users work better
