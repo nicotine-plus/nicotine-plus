@@ -828,7 +828,7 @@ class ChatRoom(ChatRoomTab):
 		for user in self.users.keys():
 			color = self.getUserStatusColor(self.usersmodel.get_value(self.users[user], 4))
 			if user in self.tag_users.keys():
-				self.changecolour(self.tag_users[username], color)
+				self.changecolour(self.tag_users[user], color)
 			else:
 				self.tag_users[user] = self.makecolour(buffer, color, user)
 			

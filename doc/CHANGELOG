@@ -28,7 +28,7 @@ SETTINGS
  
 NETWORKING
  * On Win32, hyriand's multithreaded socket selector is used. This will allow
-   a largenumber of sockets to be used, which should make Nicotine+ more stable
+   a larger number of sockets to be used, thus increasing stability.
  * Added Server Message 57 (User Interests)
  * Send \r\n with userinfo description instead of just \n
  

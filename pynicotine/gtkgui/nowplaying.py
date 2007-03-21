@@ -247,7 +247,9 @@ class NowPlaying:
 		self.hbox3.pack_end(self.NPTest, False, False, 0)
 	
 		self.vbox1.pack_start(self.hbox3, False, True, 0)
+		self.defaultlist = [ "$n", "$a - $t", "[$a] $t", "Now $s: [$a] $t", "Now $s: $n", "$a - $b - $t", "$a - $b - $t ($l/$rKBps) from $y $c" ]
 		self.title_clear()
+		
 		self.OnNPPlayer(None)
 	
 		if create:
@@ -263,7 +265,7 @@ class NowPlaying:
 		if self.frame.np.config.sections["players"]["npformat"] == "":
 			self.NPFormat.child.set_text(str(self.defaultlist[0]))
 
-		self.defaultlist = [ "$n", "$a - $t", "[$a] $t", "Now $s: [$a] $t", "Now $s: $n", "$a - $b - $t", "$a - $b - $t ($l/$rKBps) from $y $c" ]
+		
 		for item in self.defaultlist:
 			self.NPFormat_List.append([str(item)])
 		# Set the active radio button
