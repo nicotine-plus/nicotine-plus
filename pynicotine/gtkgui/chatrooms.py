@@ -260,7 +260,7 @@ class RoomsControl:
 		self.frame.ChatNotebook.remove_page(room.Main)
 		room.destroy()
 		del self.joinedrooms[msg.room]
-		self.RoomSearchCombo_List.remove(self.frame.searchroomslist[msg.room])
+		self.frame.RoomSearchCombo_List.remove(self.frame.searchroomslist[msg.room])
 	
 	def ConnClose(self):
 		self.roomsmodel = None
