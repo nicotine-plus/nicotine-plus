@@ -136,10 +136,6 @@ class NicotineFrame(MainWindow):
 			self.images[i] = loader.get_pixbuf()
 		self.TrayApp = TrayApp(self)
 
-		if use_trayicon and config2.sections["ui"]["trayicon"]:
-			self.TrayApp.CREATE_TRAYICON = 1
-			self.TrayApp.HAVE_TRAYICON = True
-			self.TrayApp.Create()
 		del data
 		self.BuddiesComboEntries = []
 		
@@ -337,7 +333,8 @@ class NicotineFrame(MainWindow):
 		else:
 			self.vpaned3.pack2(self.roomlist.vbox2,True, True)
 			self.hide_room_list1.set_active(0)
-		self.LogWindow.show()	
+		self.LogWindow.show()
+
 		self.userlistvbox = gtk.VBox(False, 0)
 		self.userlistvbox.show()
 		self.userlistvbox.set_spacing(0)
@@ -456,6 +453,11 @@ class NicotineFrame(MainWindow):
 		else:
 			self.OnConnect(-1)
 		self.UpdateDownloadFilters()
+
+		if use_trayicon and self.np.config.sections["ui"]["trayicon"]:
+			self.TrayApp.CREATE_TRAYICON = 1
+			self.TrayApp.HAVE_TRAYICON = True
+			self.TrayApp.Create()
 		
 	def OnSearchMethod(self, widget):
 		act = False
@@ -1988,7 +1990,7 @@ class TrayApp:
 				self.HAVE_TRAYICON = False
 				message =  _("Note: The systraywin32.py Python file failed to load properly because: %s. You may require pywin32. Get a version that matches your version of Python from here:\nhttp://sourceforge.net/project/showfiles.php?group_id=78018") % error
 				print message
-				self.logMessage(message, "TrayIcon")
+				self.frame.logMessage(message)
 		else:
 			# PyGTK >= 2.10
 			if self.pygtkicon:
@@ -2007,7 +2009,7 @@ class TrayApp:
 					self.HAVE_TRAYICON = False
 					message = _("Note: Trayicon Python module was not found in the pynicotine directory: %s") % error
 					print message
-					self.logMessage(message, "TrayIcon")
+					self.frame.logMessage(message)
 			
 	def destroy_trayicon(self):
 		if not self.TRAYICON_CREATED:
