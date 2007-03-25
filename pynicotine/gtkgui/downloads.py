@@ -61,7 +61,22 @@ class Downloads(TransferList):
 		frame.deleteTransferButton.connect("clicked", self.OnAbortRemoveTransfer)
 		frame.banDownloadButton.connect("clicked", self.OnBan)
 		frame.DownloadList.expand_all()
+		self.frame.ToggleTreeDownloads.set_active(self.frame.np.config.sections["transfers"]["groupdownloads"])
+		frame.ToggleTreeDownloads.connect("toggled", self.OnToggleTree)
+		self.OnToggleTree(None)
 
+	def OnToggleTree(self, widget):
+		self.TreeUsers = self.frame.ToggleTreeDownloads.get_active()
+		self.frame.np.config.sections["transfers"]["groupdownloads"] = self.TreeUsers
+		self.RebuildTransfers()
+		
+	def RebuildTransfers(self):
+		if self.frame.np.transfers is None:
+			return
+		self.Clear()
+		for transfer in self.frame.np.transfers.downloads:
+			self.update(transfer)
+			
 	def select_transfers(self):
 		self.selected_transfers = []
 		self.selected_users = []

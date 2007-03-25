@@ -51,7 +51,10 @@ class TransferList:
 		cols[8].set_sort_column_id(8)
 
 		self.transfersmodel.set_sort_func(5, float_sort_func, 5)
-			
+		#self.frame.CreateIconButton(gtk.STOCK_INDENT, "stock", self.OnToggleTree, "Group by Users")
+		#self.hbox1.pack_end(self.ToggleTree, False, False)
+		
+		
 		widget.set_model(self.transfersmodel)
 		self.UpdateColours()
 		
@@ -106,8 +109,10 @@ class TransferList:
 		self.update()
 		
 	def ConnClose(self):
-		self.transfersmodel.clear()
+		
 		self.list = None
+		self.Clear()
+		self.transfersmodel.clear()
 		self.transfers = []
 		self.users.clear()
 		self.selected_transfers = []
@@ -268,14 +273,19 @@ class TransferList:
 				self.transfersmodel.set(i[1], 2, status, 3, percent, 4, hsize, 5, speed, 6, elap, 7, left, 10, istatus, 11, size, 12, currentbytes)
 				break
 			else:
-				# Create Parent if it doesn't exist
-				if not self.users.has_key(user):
-					# ProgressRender not visible (last column sets 4th column)
-					self.users[user] = self.transfersmodel.append(None, [user, "", "", 0,  "", "", "", "", "", "", 0, 0, 0,  False])
+				if self.TreeUsers:
+					if not self.users.has_key(user):
+						# Create Parent if it doesn't exist
+						# ProgressRender not visible (last column sets 4th column)
+						self.users[user] = self.transfersmodel.append(None, [user, "", "", 0,  "", "", "", "", "", "", 0, 0, 0,  False])
+						
+					parent = self.users[user]
+				else:
+					parent = None
 				# Add a new transfer
 				shortfn = self.frame.np.decode(fn.split("\\")[-1])
 				path = self.frame.np.decode(transfer.path)
-				iter = self.transfersmodel.append(self.users[user], [user, shortfn, status, percent,  hsize, speed, elap, left, path, fn, istatus, size, icurrentbytes, True])
+				iter = self.transfersmodel.append(parent, [user, shortfn, status, percent,  hsize, speed, elap, left, path, fn, istatus, size, icurrentbytes, True])
 				
 				# Expand path
 				path = self.transfersmodel.get_path(iter)
@@ -330,6 +340,38 @@ class TransferList:
 		self.frame.UpdateBandwidth()
 
 	
+		#newiters = []
+		#for iter in self.downloads.values():
+			#if iter in self.users.values():
+				#pass
+			#else:
+				#newiters.append(iter)
+		#transfers = []
+		#for i in newiters:
+			#user = self.store.get_value(i, 0)
+			#filename = self.store.get_value(i, 1)
+			#rate = self.store.get_value(i, 2)
+			#state = self.store.get_value(i, 3)
+			#filepos = self.store.get_value(i, 4)
+			#filesize = self.store.get_value(i, 5)
+			#path = self.store.get_value(i, 6)
+			#realRate = self.store.get_value(i, 7)
+			#realPos = self.store.get_value(i, 8)
+			#realSize = self.store.get_value(i, 9)
+			#transfers.append([user, filename, rate, state, filepos, filesize, path, realRate, realPos, realSize])
+		#self.Clear()
+		#for transfer in transfers:
+			#user, filename, rate, state, filepos, filesize, path, realRate, realPos, realSize = transfer
+			#self.append(user, filename, realRate, state, realPos, realSize, path)
+		#iter = self.transfersmodel.append(parent, [user, shortfn, status, percent,  hsize, speed, elap, left, path, fn, istatus, size, icurrentbytes, True])
+		
+	def Clear(self):
+		self.users.clear()
+		self.transfers = []
+		self.selected_transfers = []
+		self.selected_users = []
+		self.transfersmodel.clear()
+
 	def OnCopyURL(self, widget):
 		i = self.selected_transfers[0]
 		self.frame.SetClipboardURL(i.user, i.filename)

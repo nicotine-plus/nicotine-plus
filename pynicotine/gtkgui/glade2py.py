@@ -88,7 +88,10 @@ def write_widget_attrs(widget):
 		
 	if widget.attrs.has_key("stock"):
 		img = "gtk.STOCK_" + widget.attrs["stock"][4:].upper().replace("-", "_")
-		sze = widget.attrs["icon_size"]
+		if widget.attrs.has_key("icon_size"):
+			sze = widget.attrs["icon_size"]
+		else:
+			sze = 4
 		print indent + "%s.set_from_stock(%s, %s)" % (widget.id, img, sze)
 		
 	if widget.attrs.has_key("tooltip"):
@@ -113,7 +116,10 @@ def write_widget_attrs(widget):
 			signals.append(callback)
 	
 	for accel in widget.accelerators:
-		print indent + "%s.add_accelerator(\"%s\", self.accel_group, gtk.gdk.keyval_from_name(\"%s\"), %s, gtk.ACCEL_VISIBLE)" % (widget.id, accel[2], accel[0], accel[1])
+		key, modifer, signal = accel[0], accel[1], accel[2]
+		if modifer == "" or modifer.isspace():
+			modifer = "0"
+		print indent + "%s.add_accelerator(\"%s\", self.accel_group, gtk.gdk.keyval_from_name(\"%s\"), %s, gtk.ACCEL_VISIBLE)" % (widget.id, signal, key, modifer)
 		
 def write_widget_adjustment(widget, my_class, *args):
 	restargs = ""
@@ -168,11 +174,20 @@ def write_widget_generic(widget, my_class, *args):
 	global signals, indent
 	restargs = ""
 	for arg in args[0:]:
-		if arg[0] == "@":
-			try:
+		if arg[0] == "+":
+			name = arg[1:]
+			if widget.attrs.has_key(name):
 				arg = widget.attrs[arg[1:]]
-			except:
-				arg= "None"
+			else:
+				arg= ""
+		elif arg[0] == "@":
+			name = arg[1:]
+			if widget.attrs.has_key(name):
+				arg = widget.attrs[arg[1:]]
+			if arg in ("@xalign", "@yalign"):
+				arg = "0.5"
+			else:
+				arg= "0"
 		elif arg[0] == "$":
 			
 			s = widget.attrs[arg[1:]].replace("\"", "\\\"")
@@ -189,7 +204,10 @@ def write_widget_generic(widget, my_class, *args):
 			del widget.attrs[arg[1:]]
 			arg = narg
 		elif arg[0] == "#":
-			arg = "%s" % widget.attrs[arg[1:]].capitalize()
+			name = arg[1:]
+			if widget.attrs.has_key(name):
+				arg = "%s" % (widget.attrs[name].capitalize())
+			else: arg = "False"
 		if arg[:4] == "GTK_":
 			arg = "gtk." + arg[4:]
 		if restargs:
@@ -209,8 +227,15 @@ def write_widget_container(widget, my_class, pack, *args):
 		if pack == PM_PACK:
 			if w.packing.has_key("expand"):
 				x = w.packing["expand"].capitalize()
-				f = w.packing["fill"].capitalize()
-				p = w.packing["padding"]
+				if w.packing.has_key("fill"):
+					f = w.packing["fill"].capitalize()
+				else:
+					f = "True"
+				if w.packing.has_key("padding"):
+					p = w.packing["padding"]
+				else:
+					p = "0"
+					
 				if w.packing.has_key("pack_type"):
 					packtype = w.packing["pack_type"]
 				else:
@@ -223,8 +248,14 @@ def write_widget_container(widget, my_class, pack, *args):
 			else:
 				print indent + "%s.pack_start(%s)" % (widget.id, w.id)
 		elif pack == PM_PACK12:
-			r = w.packing["resize"].capitalize()
-			s = w.packing["shrink"].capitalize()
+			if w.packing.has_key("resize"):
+				r = w.packing["resize"].capitalize()
+			else:
+				r = "True"
+			if w.packing.has_key("shrink"):	
+				s = w.packing["shrink"].capitalize()
+			else:
+				s = "True"
 			i = widget.children.index(w) + 1
 			print indent + "%s.pack%i(%s, %s, %s)" % (widget.id, i, w.id, r, s)
 		elif pack == PM_ADD:
@@ -260,6 +291,8 @@ def write_widget_container(widget, my_class, pack, *args):
 		print
 	for wid in widget.internalchildren.keys():
 		w = widget.internalchildren[wid]
+		if my_class == "ComboBoxEntry":
+			wid = "child"
 		print indent + "%s = %s.%s" % (w.id, widget.id, wid)
 		write_widget_attrs(w)
 		print
@@ -391,7 +424,7 @@ def write_widget_custom(widget):
 	write_widget_attrs(widget)
 
 classes = {
-	"GtkWindow": [write_widget_container, "Window", PM_NONE, "@type"],
+	"GtkWindow": [write_widget_container, "Window", PM_NONE, "+type"],
 	"GtkOptionMenu": [write_widget_container, "OptionMenu", PM_NONE],
 	"GtkVBox": [write_widget_container, "VBox", PM_PACK, "#homogeneous", "@spacing"],
 	"GtkHBox": [write_widget_container, "HBox", PM_PACK, "#homogeneous", "@spacing"],

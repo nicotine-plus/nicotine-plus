@@ -56,7 +56,22 @@ class Uploads(TransferList):
 		frame.abortUserUploadButton.connect("clicked", self.OnAbortUser)
 		frame.banUploadButton.connect("clicked", self.OnBan)
 		frame.UploadList.expand_all()
+		self.frame.ToggleTreeUploads.set_active(self.frame.np.config.sections["transfers"]["groupuploads"])
+		frame.ToggleTreeUploads.connect("toggled", self.OnToggleTree)
+		self.OnToggleTree(None)
+
+	def OnToggleTree(self, widget):
+		self.TreeUsers = self.frame.ToggleTreeUploads.get_active()
+		self.frame.np.config.sections["transfers"]["groupuploads"] = self.TreeUsers
+		self.RebuildTransfers()
 		
+	def RebuildTransfers(self):
+		if self.frame.np.transfers is None:
+			return
+		self.Clear()
+		for transfer in self.frame.np.transfers.uploads:
+			self.update(transfer)
+			
 	def select_transfers(self):
 		self.selected_transfers = []
 		self.selected_users = []

@@ -3,6 +3,7 @@ ChangeLog for Nicotine Plus
 UNRELEASED
 
 GENERAL CHANGES
+ * Added a "Group by users" toggle to transfers
  * Other users Interests are now shown in the User Info tab, with expanders
  * Send Message added to trayicon
  * Popup Menus in Private, Chatrooms, and User Browse reorganized
@@ -35,7 +36,8 @@ NETWORKING
 BUGFIXES
  * Uploads to other Nicotine+ users work better
  * Userinfo Description does not scroll to the bottom of the window
-
+ * Fixed a few bugs with the trayicon
+ 
 1.2.7.1 Release (6th March 2007)
 
 GENERAL CHANGES

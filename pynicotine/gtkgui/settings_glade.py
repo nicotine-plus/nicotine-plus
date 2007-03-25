@@ -23,7 +23,7 @@ class ServerFrame:
         self.Main.show()
         self.Main.set_shadow_type(gtk.SHADOW_ETCHED_IN)
 
-        self.vbox71 = gtk.VBox(False, 10)
+        self.vbox71 = gtk.VBox(False, 0)
         self.vbox71.show()
         self.vbox71.set_spacing(10)
         self.vbox71.set_border_width(5)
@@ -64,7 +64,7 @@ class ServerFrame:
 
         self.vbox71.pack_start(self.vbox72, False, True, 0)
 
-        self.hbox104 = gtk.HBox(False, 10)
+        self.hbox104 = gtk.HBox(False, 0)
         self.hbox104.show()
         self.hbox104.set_spacing(10)
 
@@ -163,7 +163,7 @@ class ServerFrame:
         self.label172.show()
         self.vbox76.pack_start(self.label172, False, False, 0)
 
-        self.hbox106 = gtk.HBox(False, 5)
+        self.hbox106 = gtk.HBox(False, 0)
         self.hbox106.set_size_request(114, -1)
         self.hbox106.show()
         self.hbox106.set_spacing(5)
@@ -259,7 +259,7 @@ class SharesFrame:
         self.Main.show()
         self.Main.set_shadow_type(gtk.SHADOW_ETCHED_IN)
 
-        self.vbox77 = gtk.VBox(False, 7)
+        self.vbox77 = gtk.VBox(False, 0)
         self.vbox77.show()
         self.vbox77.set_spacing(7)
         self.vbox77.set_border_width(5)
@@ -275,7 +275,7 @@ class SharesFrame:
         self.label176.show()
         self.vbox78.pack_start(self.label176, False, False, 0)
 
-        self.hbox109 = gtk.HBox(False, 5)
+        self.hbox109 = gtk.HBox(False, 0)
         self.hbox109.show()
         self.hbox109.set_spacing(5)
 
@@ -291,10 +291,10 @@ class SharesFrame:
         self.button73.show()
         self.button73.connect("clicked", self.OnChooseIncompleteDir)
 
-        self.alignment58 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment58 = gtk.Alignment(0, 0, 0, 0)
         self.alignment58.show()
 
-        self.hbox152 = gtk.HBox(False, 2)
+        self.hbox152 = gtk.HBox(False, 0)
         self.hbox152.show()
         self.hbox152.set_spacing(2)
 
@@ -331,7 +331,7 @@ class SharesFrame:
         self.label178.show()
         self.vbox79.pack_start(self.label178, False, False, 0)
 
-        self.hbox111 = gtk.HBox(False, 5)
+        self.hbox111 = gtk.HBox(False, 0)
         self.hbox111.show()
         self.hbox111.set_spacing(5)
 
@@ -347,10 +347,10 @@ class SharesFrame:
         self.button74.show()
         self.button74.connect("clicked", self.OnChooseDownloadDir)
 
-        self.alignment59 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment59 = gtk.Alignment(0, 0, 0, 0)
         self.alignment59.show()
 
-        self.hbox153 = gtk.HBox(False, 2)
+        self.hbox153 = gtk.HBox(False, 0)
         self.hbox153.show()
         self.hbox153.set_spacing(2)
 
@@ -389,7 +389,7 @@ class SharesFrame:
         self.RescanOnStartup.show()
         self.vbox77.pack_start(self.RescanOnStartup, False, False, 0)
 
-        self.hbox113 = gtk.HBox(False, 5)
+        self.hbox113 = gtk.HBox(False, 0)
         self.hbox113.show()
         self.hbox113.set_spacing(5)
 
@@ -414,10 +414,10 @@ class SharesFrame:
         self.addSharesButton.show()
         self.addSharesButton.connect("clicked", self.OnAddSharedDir)
 
-        self.alignment60 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment60 = gtk.Alignment(0, 0, 0, 0)
         self.alignment60.show()
 
-        self.hbox154 = gtk.HBox(False, 2)
+        self.hbox154 = gtk.HBox(False, 0)
         self.hbox154.show()
         self.hbox154.set_spacing(2)
 
@@ -443,10 +443,10 @@ class SharesFrame:
         self.removeSharesButton.show()
         self.removeSharesButton.connect("clicked", self.OnRemoveSharedDir)
 
-        self.alignment61 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment61 = gtk.Alignment(0, 0, 0, 0)
         self.alignment61.show()
 
-        self.hbox155 = gtk.HBox(False, 2)
+        self.hbox155 = gtk.HBox(False, 0)
         self.hbox155.show()
         self.hbox155.set_spacing(2)
 
@@ -479,7 +479,7 @@ class SharesFrame:
         self.enableBuddyShares.connect("toggled", self.OnEnabledBuddySharesToggled)
         self.vbox77.pack_start(self.enableBuddyShares, False, False, 0)
 
-        self.hbox166 = gtk.HBox(False, 5)
+        self.hbox166 = gtk.HBox(False, 0)
         self.hbox166.show()
         self.hbox166.set_spacing(5)
 
@@ -504,10 +504,10 @@ class SharesFrame:
         self.addBuddySharesButton.show()
         self.addBuddySharesButton.connect("clicked", self.OnAddSharedBuddyDir)
 
-        self.alignment71 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment71 = gtk.Alignment(0, 0, 0, 0)
         self.alignment71.show()
 
-        self.hbox167 = gtk.HBox(False, 2)
+        self.hbox167 = gtk.HBox(False, 0)
         self.hbox167.show()
         self.hbox167.set_spacing(2)
 
@@ -533,10 +533,10 @@ class SharesFrame:
         self.removeBuddySharesButton.show()
         self.removeBuddySharesButton.connect("clicked", self.OnRemoveSharedBuddyDir)
 
-        self.alignment72 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment72 = gtk.Alignment(0, 0, 0, 0)
         self.alignment72.show()
 
-        self.hbox168 = gtk.HBox(False, 2)
+        self.hbox168 = gtk.HBox(False, 0)
         self.hbox168.show()
         self.hbox168.set_spacing(2)
 
@@ -624,7 +624,7 @@ class TransfersFrame:
         self.Main.show()
         self.Main.set_shadow_type(gtk.SHADOW_ETCHED_IN)
 
-        self.vbox81 = gtk.VBox(False, 5)
+        self.vbox81 = gtk.VBox(False, 0)
         self.vbox81.show()
         self.vbox81.set_spacing(5)
         self.vbox81.set_border_width(5)
@@ -634,11 +634,11 @@ class TransfersFrame:
         self.expander5.show()
         self.expander5.set_spacing(0)
 
-        self.vbox114 = gtk.VBox(False, 3)
+        self.vbox114 = gtk.VBox(False, 0)
         self.vbox114.show()
         self.vbox114.set_spacing(3)
 
-        self.hbox171 = gtk.HBox(False, 5)
+        self.hbox171 = gtk.HBox(False, 0)
         self.hbox171.show()
         self.hbox171.set_spacing(5)
 
@@ -667,7 +667,7 @@ class TransfersFrame:
 
         self.vbox114.pack_start(self.hbox171, False, False, 0)
 
-        self.hbox117 = gtk.HBox(False, 5)
+        self.hbox117 = gtk.HBox(False, 0)
         self.hbox117.show()
         self.hbox117.set_spacing(5)
 
@@ -694,7 +694,7 @@ class TransfersFrame:
 
         self.vbox114.pack_start(self.hbox117, False, False, 0)
 
-        self.hbox118 = gtk.HBox(False, 5)
+        self.hbox118 = gtk.HBox(False, 0)
         self.hbox118.show()
         self.hbox118.set_spacing(5)
 
@@ -765,7 +765,7 @@ class TransfersFrame:
 
         self.vbox114.pack_start(self.table1, False, False, 0)
 
-        self.hbox119 = gtk.HBox(False, 5)
+        self.hbox119 = gtk.HBox(False, 0)
         self.hbox119.show()
         self.hbox119.set_spacing(5)
 
@@ -799,7 +799,7 @@ class TransfersFrame:
         self.FriendsNoLimits.show()
         self.vbox114.pack_start(self.FriendsNoLimits, False, False, 0)
 
-        self.hbox211 = gtk.HBox(False, 5)
+        self.hbox211 = gtk.HBox(False, 0)
         self.hbox211.show()
         self.hbox211.set_spacing(5)
 
@@ -843,7 +843,7 @@ class TransfersFrame:
         self.vbox117.show()
         self.vbox117.set_spacing(0)
 
-        self.hbox176 = gtk.HBox(False, 5)
+        self.hbox176 = gtk.HBox(False, 0)
         self.hbox176.show()
         self.hbox176.set_spacing(5)
 
@@ -884,7 +884,7 @@ class TransfersFrame:
         self.vbox115.show()
         self.vbox115.set_spacing(0)
 
-        self.hbox212 = gtk.HBox(False, 3)
+        self.hbox212 = gtk.HBox(False, 0)
         self.hbox212.show()
         self.hbox212.set_spacing(3)
 
@@ -918,7 +918,7 @@ class TransfersFrame:
         self.table5.set_row_spacings(3)
         self.table5.set_col_spacings(3)
 
-        self.vbox116 = gtk.VBox(False, 3)
+        self.vbox116 = gtk.VBox(False, 0)
         self.vbox116.show()
         self.vbox116.set_spacing(3)
         self.vbox116.set_border_width(3)
@@ -927,10 +927,10 @@ class TransfersFrame:
         self.AddFilter.show()
         self.AddFilter.connect("clicked", self.OnAddFilter)
 
-        self.alignment95 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment95 = gtk.Alignment(0, 0, 0, 0)
         self.alignment95.show()
 
-        self.hbox214 = gtk.HBox(False, 2)
+        self.hbox214 = gtk.HBox(False, 0)
         self.hbox214.show()
         self.hbox214.set_spacing(2)
 
@@ -956,10 +956,10 @@ class TransfersFrame:
         self.EditFilter.show()
         self.EditFilter.connect("clicked", self.OnEditFilter)
 
-        self.alignment96 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment96 = gtk.Alignment(0, 0, 0, 0)
         self.alignment96.show()
 
-        self.hbox215 = gtk.HBox(False, 2)
+        self.hbox215 = gtk.HBox(False, 0)
         self.hbox215.show()
         self.hbox215.set_spacing(2)
 
@@ -985,10 +985,10 @@ class TransfersFrame:
         self.RemoveFilter.show()
         self.RemoveFilter.connect("clicked", self.OnRemoveFilter)
 
-        self.alignment97 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment97 = gtk.Alignment(0, 0, 0, 0)
         self.alignment97.show()
 
-        self.hbox216 = gtk.HBox(False, 2)
+        self.hbox216 = gtk.HBox(False, 0)
         self.hbox216.show()
         self.hbox216.set_spacing(2)
 
@@ -1014,10 +1014,10 @@ class TransfersFrame:
         self.DefaultFilters.show()
         self.DefaultFilters.connect("clicked", self.OnDefaultFilters)
 
-        self.alignment98 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment98 = gtk.Alignment(0, 0, 0, 0)
         self.alignment98.show()
 
-        self.hbox217 = gtk.HBox(False, 2)
+        self.hbox217 = gtk.HBox(False, 0)
         self.hbox217.show()
         self.hbox217.set_spacing(2)
 
@@ -1041,7 +1041,7 @@ class TransfersFrame:
 
         self.table5.attach(self.vbox116, 1, 2, 1, 2, gtk.FILL, gtk.FILL, 0, 0)
 
-        self.hbox218 = gtk.HBox(False, 5)
+        self.hbox218 = gtk.HBox(False, 0)
         self.hbox218.show()
         self.hbox218.set_spacing(5)
 
@@ -1067,7 +1067,7 @@ class TransfersFrame:
 
         self.table5.attach(self.scrolledwindow16, 0, 1, 1, 2, gtk.EXPAND|gtk.FILL, gtk.FILL, 0, 0)
 
-        self.vbox118 = gtk.VBox(False, 3)
+        self.vbox118 = gtk.VBox(False, 0)
         self.vbox118.show()
         self.vbox118.set_spacing(3)
         self.vbox118.set_border_width(3)
@@ -1076,10 +1076,10 @@ class TransfersFrame:
         self.VerifyFilters.show()
         self.VerifyFilters.connect("clicked", self.OnVerifyFilter)
 
-        self.alignment99 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment99 = gtk.Alignment(0, 0, 0, 0)
         self.alignment99.show()
 
-        self.hbox219 = gtk.HBox(False, 2)
+        self.hbox219 = gtk.HBox(False, 0)
         self.hbox219.show()
         self.hbox219.set_spacing(2)
 
@@ -1187,7 +1187,7 @@ class UserinfoFrame:
         self.Main.show()
         self.Main.set_shadow_type(gtk.SHADOW_ETCHED_IN)
 
-        self.vbox84 = gtk.VBox(False, 10)
+        self.vbox84 = gtk.VBox(False, 0)
         self.vbox84.show()
         self.vbox84.set_spacing(10)
         self.vbox84.set_border_width(5)
@@ -1233,7 +1233,7 @@ class UserinfoFrame:
         self.label265.show()
         self.vbox84.pack_start(self.label265, False, False, 0)
 
-        self.hbox122 = gtk.HBox(False, 5)
+        self.hbox122 = gtk.HBox(False, 0)
         self.hbox122.show()
         self.hbox122.set_spacing(5)
 
@@ -1249,10 +1249,10 @@ class UserinfoFrame:
         self.button53.show()
         self.button53.connect("clicked", self.OnChooseImage)
 
-        self.alignment57 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment57 = gtk.Alignment(0, 0, 0, 0)
         self.alignment57.show()
 
-        self.hbox151 = gtk.HBox(False, 2)
+        self.hbox151 = gtk.HBox(False, 0)
         self.hbox151.show()
         self.hbox151.set_spacing(2)
 
@@ -1317,7 +1317,7 @@ class BloatFrame:
         self.Main.show()
         self.Main.set_shadow_type(gtk.SHADOW_ETCHED_IN)
 
-        self.vboxUI = gtk.VBox(False, 5)
+        self.vboxUI = gtk.VBox(False, 0)
         self.vboxUI.show()
         self.vboxUI.set_spacing(5)
         self.vboxUI.set_border_width(5)
@@ -1334,7 +1334,7 @@ class BloatFrame:
         self.ShowTransferButtons.show()
         self.vboxUI.pack_start(self.ShowTransferButtons, False, False, 0)
 
-        self.hbox177 = gtk.HBox(False, 10)
+        self.hbox177 = gtk.HBox(False, 0)
         self.hbox177.show()
         self.hbox177.set_spacing(10)
 
@@ -1363,7 +1363,7 @@ class BloatFrame:
 
         self.vboxUI.pack_start(self.hbox172, False, True, 0)
 
-        self.hbox182 = gtk.HBox(False, 5)
+        self.hbox182 = gtk.HBox(False, 0)
         self.hbox182.show()
         self.hbox182.set_spacing(5)
 
@@ -1404,10 +1404,10 @@ class BloatFrame:
         self.PickRemote = gtk.Button()
         self.PickRemote.show()
 
-        self.alignment35 = gtk.Alignment(0, 0.5, 0, 0)
+        self.alignment35 = gtk.Alignment(0, 0, 0, 0)
         self.alignment35.show()
 
-        self.hbox124 = gtk.HBox(False, 2)
+        self.hbox124 = gtk.HBox(False, 0)
         self.hbox124.show()
         self.hbox124.set_spacing(2)
 
@@ -1432,10 +1432,10 @@ class BloatFrame:
         self.PickLocal = gtk.Button()
         self.PickLocal.show()
 
-        self.alignment43 = gtk.Alignment(0, 0.5, 0, 0)
+        self.alignment43 = gtk.Alignment(0, 0, 0, 0)
         self.alignment43.show()
 
-        self.hbox132 = gtk.HBox(False, 2)
+        self.hbox132 = gtk.HBox(False, 0)
         self.hbox132.show()
         self.hbox132.set_spacing(2)
 
@@ -1460,10 +1460,10 @@ class BloatFrame:
         self.PickMe = gtk.Button()
         self.PickMe.show()
 
-        self.alignment44 = gtk.Alignment(0, 0.5, 0, 0)
+        self.alignment44 = gtk.Alignment(0, 0, 0, 0)
         self.alignment44.show()
 
-        self.hbox133 = gtk.HBox(False, 2)
+        self.hbox133 = gtk.HBox(False, 0)
         self.hbox133.show()
         self.hbox133.set_spacing(2)
 
@@ -1488,10 +1488,10 @@ class BloatFrame:
         self.PickHighlight = gtk.Button()
         self.PickHighlight.show()
 
-        self.alignment45 = gtk.Alignment(0, 0.5, 0, 0)
+        self.alignment45 = gtk.Alignment(0, 0, 0, 0)
         self.alignment45.show()
 
-        self.hbox134 = gtk.HBox(False, 2)
+        self.hbox134 = gtk.HBox(False, 0)
         self.hbox134.show()
         self.hbox134.set_spacing(2)
 
@@ -1544,10 +1544,10 @@ class BloatFrame:
         self.DefaultRemote = gtk.Button()
         self.DefaultRemote.show()
 
-        self.alignment36 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment36 = gtk.Alignment(0, 0, 0, 0)
         self.alignment36.show()
 
-        self.hbox125 = gtk.HBox(False, 2)
+        self.hbox125 = gtk.HBox(False, 0)
         self.hbox125.show()
         self.hbox125.set_spacing(2)
 
@@ -1572,10 +1572,10 @@ class BloatFrame:
         self.DefaultLocal = gtk.Button()
         self.DefaultLocal.show()
 
-        self.alignment40 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment40 = gtk.Alignment(0, 0, 0, 0)
         self.alignment40.show()
 
-        self.hbox129 = gtk.HBox(False, 2)
+        self.hbox129 = gtk.HBox(False, 0)
         self.hbox129.show()
         self.hbox129.set_spacing(2)
 
@@ -1600,10 +1600,10 @@ class BloatFrame:
         self.DefaultMe = gtk.Button()
         self.DefaultMe.show()
 
-        self.alignment41 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment41 = gtk.Alignment(0, 0, 0, 0)
         self.alignment41.show()
 
-        self.hbox130 = gtk.HBox(False, 2)
+        self.hbox130 = gtk.HBox(False, 0)
         self.hbox130.show()
         self.hbox130.set_spacing(2)
 
@@ -1628,10 +1628,10 @@ class BloatFrame:
         self.DefaultHighlight = gtk.Button()
         self.DefaultHighlight.show()
 
-        self.alignment42 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment42 = gtk.Alignment(0, 0, 0, 0)
         self.alignment42.show()
 
-        self.hbox131 = gtk.HBox(False, 2)
+        self.hbox131 = gtk.HBox(False, 0)
         self.hbox131.show()
         self.hbox131.set_spacing(2)
 
@@ -1664,10 +1664,10 @@ class BloatFrame:
         self.PickImmediate = gtk.Button()
         self.PickImmediate.show()
 
-        self.alignment46 = gtk.Alignment(0, 0.5, 0, 0)
+        self.alignment46 = gtk.Alignment(0, 0, 0, 0)
         self.alignment46.show()
 
-        self.hbox135 = gtk.HBox(False, 2)
+        self.hbox135 = gtk.HBox(False, 0)
         self.hbox135.show()
         self.hbox135.set_spacing(2)
 
@@ -1699,10 +1699,10 @@ class BloatFrame:
         self.DefaultImmediate = gtk.Button()
         self.DefaultImmediate.show()
 
-        self.alignment48 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment48 = gtk.Alignment(0, 0, 0, 0)
         self.alignment48.show()
 
-        self.hbox137 = gtk.HBox(False, 2)
+        self.hbox137 = gtk.HBox(False, 0)
         self.hbox137.show()
         self.hbox137.set_spacing(2)
 
@@ -1727,10 +1727,10 @@ class BloatFrame:
         self.DefaultQueue = gtk.Button()
         self.DefaultQueue.show()
 
-        self.alignment49 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment49 = gtk.Alignment(0, 0, 0, 0)
         self.alignment49.show()
 
-        self.hbox138 = gtk.HBox(False, 2)
+        self.hbox138 = gtk.HBox(False, 0)
         self.hbox138.show()
         self.hbox138.set_spacing(2)
 
@@ -1762,10 +1762,10 @@ class BloatFrame:
         self.PickQueue = gtk.Button()
         self.PickQueue.show()
 
-        self.alignment47 = gtk.Alignment(0, 0.5, 0, 0)
+        self.alignment47 = gtk.Alignment(0, 0, 0, 0)
         self.alignment47.show()
 
-        self.hbox136 = gtk.HBox(False, 2)
+        self.hbox136 = gtk.HBox(False, 0)
         self.hbox136.show()
         self.hbox136.set_spacing(2)
 
@@ -1804,10 +1804,10 @@ class BloatFrame:
         self.DefaultOnline = gtk.Button()
         self.DefaultOnline.show()
 
-        self.alignment81 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment81 = gtk.Alignment(0, 0, 0, 0)
         self.alignment81.show()
 
-        self.hbox186 = gtk.HBox(False, 2)
+        self.hbox186 = gtk.HBox(False, 0)
         self.hbox186.show()
         self.hbox186.set_spacing(2)
 
@@ -1832,10 +1832,10 @@ class BloatFrame:
         self.DefaultOffline = gtk.Button()
         self.DefaultOffline.show()
 
-        self.alignment82 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment82 = gtk.Alignment(0, 0, 0, 0)
         self.alignment82.show()
 
-        self.hbox187 = gtk.HBox(False, 2)
+        self.hbox187 = gtk.HBox(False, 0)
         self.hbox187.show()
         self.hbox187.set_spacing(2)
 
@@ -1874,10 +1874,10 @@ class BloatFrame:
         self.PickAway = gtk.Button()
         self.PickAway.show()
 
-        self.alignment80 = gtk.Alignment(0, 0.5, 0, 0)
+        self.alignment80 = gtk.Alignment(0, 0, 0, 0)
         self.alignment80.show()
 
-        self.hbox185 = gtk.HBox(False, 2)
+        self.hbox185 = gtk.HBox(False, 0)
         self.hbox185.show()
         self.hbox185.set_spacing(2)
 
@@ -1902,10 +1902,10 @@ class BloatFrame:
         self.DefaultAway = gtk.Button()
         self.DefaultAway.show()
 
-        self.alignment83 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment83 = gtk.Alignment(0, 0, 0, 0)
         self.alignment83.show()
 
-        self.hbox188 = gtk.HBox(False, 2)
+        self.hbox188 = gtk.HBox(False, 0)
         self.hbox188.show()
         self.hbox188.set_spacing(2)
 
@@ -1930,10 +1930,10 @@ class BloatFrame:
         self.PickOnline = gtk.Button()
         self.PickOnline.show()
 
-        self.alignment78 = gtk.Alignment(0, 0.5, 0, 0)
+        self.alignment78 = gtk.Alignment(0, 0, 0, 0)
         self.alignment78.show()
 
-        self.hbox183 = gtk.HBox(False, 2)
+        self.hbox183 = gtk.HBox(False, 0)
         self.hbox183.show()
         self.hbox183.set_spacing(2)
 
@@ -1958,10 +1958,10 @@ class BloatFrame:
         self.PickOffline = gtk.Button()
         self.PickOffline.show()
 
-        self.alignment79 = gtk.Alignment(0, 0.5, 0, 0)
+        self.alignment79 = gtk.Alignment(0, 0, 0, 0)
         self.alignment79.show()
 
-        self.hbox184 = gtk.HBox(False, 2)
+        self.hbox184 = gtk.HBox(False, 0)
         self.hbox184.show()
         self.hbox184.set_spacing(2)
 
@@ -1986,10 +1986,10 @@ class BloatFrame:
         self.DefaultBackground = gtk.Button()
         self.DefaultBackground.show()
 
-        self.alignment94 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment94 = gtk.Alignment(0, 0, 0, 0)
         self.alignment94.show()
 
-        self.hbox210 = gtk.HBox(False, 2)
+        self.hbox210 = gtk.HBox(False, 0)
         self.hbox210.show()
         self.hbox210.set_spacing(2)
 
@@ -2021,10 +2021,10 @@ class BloatFrame:
         self.PickBackground = gtk.Button()
         self.PickBackground.show()
 
-        self.alignment93 = gtk.Alignment(0, 0.5, 0, 0)
+        self.alignment93 = gtk.Alignment(0, 0, 0, 0)
         self.alignment93.show()
 
-        self.hbox209 = gtk.HBox(False, 2)
+        self.hbox209 = gtk.HBox(False, 0)
         self.hbox209.show()
         self.hbox209.set_spacing(2)
 
@@ -2046,7 +2046,7 @@ class BloatFrame:
 
         self.table2.attach(self.PickBackground, 0, 1, 12, 13, gtk.FILL, 0, 0, 0)
 
-        self.hbox197 = gtk.HBox(False, 3)
+        self.hbox197 = gtk.HBox(False, 0)
         self.hbox197.show()
         self.hbox197.set_spacing(3)
 
@@ -2069,10 +2069,10 @@ class BloatFrame:
         self.PickInput = gtk.Button()
         self.PickInput.show()
 
-        self.alignment100 = gtk.Alignment(0, 0.5, 0, 0)
+        self.alignment100 = gtk.Alignment(0, 0, 0, 0)
         self.alignment100.show()
 
-        self.hbox220 = gtk.HBox(False, 2)
+        self.hbox220 = gtk.HBox(False, 0)
         self.hbox220.show()
         self.hbox220.set_spacing(2)
 
@@ -2104,10 +2104,10 @@ class BloatFrame:
         self.DefaultInput = gtk.Button()
         self.DefaultInput.show()
 
-        self.alignment101 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment101 = gtk.Alignment(0, 0, 0, 0)
         self.alignment101.show()
 
-        self.hbox221 = gtk.HBox(False, 2)
+        self.hbox221 = gtk.HBox(False, 0)
         self.hbox221.show()
         self.hbox221.set_spacing(2)
 
@@ -2145,7 +2145,7 @@ class BloatFrame:
         self.expander3.show()
         self.expander3.set_spacing(0)
 
-        self.vbox106 = gtk.VBox(False, 3)
+        self.vbox106 = gtk.VBox(False, 0)
         self.vbox106.show()
         self.vbox106.set_spacing(3)
         self.vbox106.set_border_width(3)
@@ -2166,7 +2166,7 @@ class BloatFrame:
         self.EnableTransparent.connect("toggled", self.OnEnableTransparentToggled)
         self.vbox106.pack_start(self.EnableTransparent, False, False, 0)
 
-        self.hbox198 = gtk.HBox(False, 5)
+        self.hbox198 = gtk.HBox(False, 0)
         self.hbox198.show()
         self.hbox198.set_spacing(5)
 
@@ -2174,10 +2174,10 @@ class BloatFrame:
         self.PickTint.show()
         self.PickTint.connect("clicked", self.OnPickTint)
 
-        self.alignment89 = gtk.Alignment(0, 0.5, 0, 0)
+        self.alignment89 = gtk.Alignment(0, 0, 0, 0)
         self.alignment89.show()
 
-        self.hbox199 = gtk.HBox(False, 2)
+        self.hbox199 = gtk.HBox(False, 0)
         self.hbox199.show()
         self.hbox199.set_spacing(2)
         self.hbox199.set_border_width(3)
@@ -2211,10 +2211,10 @@ class BloatFrame:
         self.DefaultTint.show()
         self.DefaultTint.connect("clicked", self.OnDefaultTint)
 
-        self.alignment90 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment90 = gtk.Alignment(0, 0, 0, 0)
         self.alignment90.show()
 
-        self.hbox200 = gtk.HBox(False, 2)
+        self.hbox200 = gtk.HBox(False, 0)
         self.hbox200.show()
         self.hbox200.set_spacing(2)
 
@@ -2385,7 +2385,7 @@ class LogFrame:
         self.Main.show()
         self.Main.set_shadow_type(gtk.SHADOW_ETCHED_IN)
 
-        self.vbox89 = gtk.VBox(False, 10)
+        self.vbox89 = gtk.VBox(False, 0)
         self.vbox89.show()
         self.vbox89.set_spacing(10)
         self.vbox89.set_border_width(5)
@@ -2419,7 +2419,7 @@ class LogFrame:
         self.label217.show()
         self.vbox90.pack_start(self.label217, False, False, 0)
 
-        self.hbox140 = gtk.HBox(False, 5)
+        self.hbox140 = gtk.HBox(False, 0)
         self.hbox140.show()
         self.hbox140.set_spacing(5)
 
@@ -2434,10 +2434,10 @@ class LogFrame:
         self.button66.show()
         self.button66.connect("clicked", self.OnChooseLogDir)
 
-        self.alignment54 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment54 = gtk.Alignment(0, 0, 0, 0)
         self.alignment54.show()
 
-        self.hbox148 = gtk.HBox(False, 2)
+        self.hbox148 = gtk.HBox(False, 0)
         self.hbox148.show()
         self.hbox148.set_spacing(2)
 
@@ -2504,12 +2504,12 @@ class BanFrame:
         self.Main.show()
         self.Main.set_shadow_type(gtk.SHADOW_ETCHED_IN)
 
-        self.vbox91 = gtk.VBox(False, 10)
+        self.vbox91 = gtk.VBox(False, 0)
         self.vbox91.show()
         self.vbox91.set_spacing(10)
         self.vbox91.set_border_width(5)
 
-        self.hbox141 = gtk.HBox(False, 10)
+        self.hbox141 = gtk.HBox(False, 0)
         self.hbox141.show()
         self.hbox141.set_spacing(10)
 
@@ -2540,10 +2540,10 @@ class BanFrame:
         self.button80.show()
         self.button80.connect("clicked", self.OnAddBanned)
 
-        self.alignment62 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment62 = gtk.Alignment(0, 0, 0, 0)
         self.alignment62.show()
 
-        self.hbox156 = gtk.HBox(False, 2)
+        self.hbox156 = gtk.HBox(False, 0)
         self.hbox156.show()
         self.hbox156.set_spacing(2)
 
@@ -2569,10 +2569,10 @@ class BanFrame:
         self.button81.show()
         self.button81.connect("clicked", self.OnRemoveBanned)
 
-        self.alignment63 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment63 = gtk.Alignment(0, 0, 0, 0)
         self.alignment63.show()
 
-        self.hbox157 = gtk.HBox(False, 2)
+        self.hbox157 = gtk.HBox(False, 0)
         self.hbox157.show()
         self.hbox157.set_spacing(2)
 
@@ -2598,10 +2598,10 @@ class BanFrame:
         self.button82.show()
         self.button82.connect("clicked", self.OnClearBanned)
 
-        self.alignment64 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment64 = gtk.Alignment(0, 0, 0, 0)
         self.alignment64.show()
 
-        self.hbox158 = gtk.HBox(False, 2)
+        self.hbox158 = gtk.HBox(False, 0)
         self.hbox158.show()
         self.hbox158.set_spacing(2)
 
@@ -2652,10 +2652,10 @@ class BanFrame:
         self.button77.show()
         self.button77.connect("clicked", self.OnAddIgnored)
 
-        self.alignment65 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment65 = gtk.Alignment(0, 0, 0, 0)
         self.alignment65.show()
 
-        self.hbox159 = gtk.HBox(False, 2)
+        self.hbox159 = gtk.HBox(False, 0)
         self.hbox159.show()
         self.hbox159.set_spacing(2)
 
@@ -2681,10 +2681,10 @@ class BanFrame:
         self.button78.show()
         self.button78.connect("clicked", self.OnRemoveIgnored)
 
-        self.alignment66 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment66 = gtk.Alignment(0, 0, 0, 0)
         self.alignment66.show()
 
-        self.hbox160 = gtk.HBox(False, 2)
+        self.hbox160 = gtk.HBox(False, 0)
         self.hbox160.show()
         self.hbox160.set_spacing(2)
 
@@ -2710,10 +2710,10 @@ class BanFrame:
         self.button79.show()
         self.button79.connect("clicked", self.OnClearIgnored)
 
-        self.alignment67 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment67 = gtk.Alignment(0, 0, 0, 0)
         self.alignment67.show()
 
-        self.hbox161 = gtk.HBox(False, 2)
+        self.hbox161 = gtk.HBox(False, 0)
         self.hbox161.show()
         self.hbox161.set_spacing(2)
 
@@ -2818,7 +2818,7 @@ class SearchFrame:
         self.Main.show()
         self.Main.set_shadow_type(gtk.SHADOW_ETCHED_IN)
 
-        self.vbox93 = gtk.VBox(False, 10)
+        self.vbox93 = gtk.VBox(False, 0)
         self.vbox93.show()
         self.vbox93.set_spacing(10)
         self.vbox93.set_border_width(5)
@@ -2830,7 +2830,7 @@ class SearchFrame:
         self.label262.show()
         self.vbox93.pack_start(self.label262, False, False, 0)
 
-        self.hbox147 = gtk.HBox(False, 5)
+        self.hbox147 = gtk.HBox(False, 0)
         self.hbox147.show()
         self.hbox147.set_spacing(5)
 
@@ -3015,7 +3015,7 @@ class SettingsWindow:
             self.SettingsWindow.set_position(gtk.WIN_POS_CENTER)
             self.SettingsWindow.add_accel_group(self.accel_group)
 
-        self.vbox94 = gtk.VBox(False, 10)
+        self.vbox94 = gtk.VBox(False, 0)
         self.vbox94.show()
         self.vbox94.set_spacing(10)
         self.vbox94.set_border_width(5)
@@ -3115,7 +3115,7 @@ class AwayFrame:
         self.Main.show()
         self.Main.set_shadow_type(gtk.SHADOW_ETCHED_IN)
 
-        self.vbox95 = gtk.VBox(False, 10)
+        self.vbox95 = gtk.VBox(False, 0)
         self.vbox95.show()
         self.vbox95.set_spacing(10)
         self.vbox95.set_border_width(5)
@@ -3206,7 +3206,7 @@ class EventsFrame:
         self.Main.show()
         self.Main.set_shadow_type(gtk.SHADOW_ETCHED_IN)
 
-        self.vbox96 = gtk.VBox(False, 10)
+        self.vbox96 = gtk.VBox(False, 0)
         self.vbox96.show()
         self.vbox96.set_spacing(10)
         self.vbox96.set_border_width(5)
@@ -3295,7 +3295,7 @@ class GeoBlockFrame:
         self.Main.show()
         self.Main.set_shadow_type(gtk.SHADOW_ETCHED_IN)
 
-        self.vbox98 = gtk.VBox(False, 10)
+        self.vbox98 = gtk.VBox(False, 0)
         self.vbox98.show()
         self.vbox98.set_spacing(10)
         self.vbox98.set_border_width(5)
@@ -3368,7 +3368,7 @@ class UrlCatchFrame:
         self.Main.show()
         self.Main.set_shadow_type(gtk.SHADOW_ETCHED_IN)
 
-        self.vbox99 = gtk.VBox(False, 10)
+        self.vbox99 = gtk.VBox(False, 0)
         self.vbox99.show()
         self.vbox99.set_spacing(10)
         self.vbox99.set_border_width(5)
@@ -3436,10 +3436,10 @@ class UrlCatchFrame:
         self.button86.show()
         self.button86.connect("clicked", self.OnUpdate)
 
-        self.alignment74 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment74 = gtk.Alignment(0, 0, 0, 0)
         self.alignment74.show()
 
-        self.hbox174 = gtk.HBox(False, 2)
+        self.hbox174 = gtk.HBox(False, 0)
         self.hbox174.show()
         self.hbox174.set_spacing(2)
 
@@ -3465,10 +3465,10 @@ class UrlCatchFrame:
         self.button87.show()
         self.button87.connect("clicked", self.OnRemove)
 
-        self.alignment75 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment75 = gtk.Alignment(0, 0, 0, 0)
         self.alignment75.show()
 
-        self.hbox175 = gtk.HBox(False, 2)
+        self.hbox175 = gtk.HBox(False, 0)
         self.hbox175.show()
         self.hbox175.set_spacing(2)
 
@@ -3547,10 +3547,10 @@ class ConnectionFrame:
         self.Main.show()
         self.Main.set_shadow_type(gtk.SHADOW_ETCHED_IN)
 
-        self.alignment68 = gtk.Alignment(0.5, 0.5, 1, 1)
+        self.alignment68 = gtk.Alignment(0, 0, 0, 0)
         self.alignment68.show()
 
-        self.vbox100 = gtk.VBox(False, 6)
+        self.vbox100 = gtk.VBox(False, 0)
         self.vbox100.show()
         self.vbox100.set_spacing(6)
         self.vbox100.set_border_width(2)
@@ -3645,10 +3645,10 @@ class UIFrame:
         self.Main.show()
         self.Main.set_shadow_type(gtk.SHADOW_ETCHED_IN)
 
-        self.alignment69 = gtk.Alignment(0, 0, 1, 1)
+        self.alignment69 = gtk.Alignment(0, 0, 0, 0)
         self.alignment69.show()
 
-        self.vbox101 = gtk.VBox(False, 6)
+        self.vbox101 = gtk.VBox(False, 0)
         self.vbox101.show()
         self.vbox101.set_spacing(6)
         self.vbox101.set_border_width(2)
@@ -3708,10 +3708,10 @@ class MiscFrame:
         self.Main.show()
         self.Main.set_shadow_type(gtk.SHADOW_ETCHED_IN)
 
-        self.alignment70 = gtk.Alignment(0, 0, 1, 1)
+        self.alignment70 = gtk.Alignment(0, 0, 0, 0)
         self.alignment70.show()
 
-        self.vbox102 = gtk.VBox(False, 6)
+        self.vbox102 = gtk.VBox(False, 0)
         self.vbox102.show()
         self.vbox102.set_spacing(6)
         self.vbox102.set_border_width(2)
@@ -3799,7 +3799,7 @@ class ImportFrame:
         self.Main.show()
         self.Main.set_shadow_type(gtk.SHADOW_ETCHED_IN)
 
-        self.vbox112 = gtk.VBox(False, 10)
+        self.vbox112 = gtk.VBox(False, 0)
         self.vbox112.show()
         self.vbox112.set_spacing(10)
         self.vbox112.set_border_width(5)
@@ -3818,7 +3818,7 @@ class ImportFrame:
         self.label356.show()
         self.vbox112.pack_start(self.label356, False, False, 0)
 
-        self.hbox203 = gtk.HBox(False, 5)
+        self.hbox203 = gtk.HBox(False, 0)
         self.hbox203.show()
         self.hbox203.set_spacing(5)
         self.hbox203.set_border_width(3)
@@ -3835,10 +3835,10 @@ class ImportFrame:
         self.ImportDirectory.show()
         self.ImportDirectory.connect("clicked", self.OnImportDirectory)
 
-        self.alignment91 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment91 = gtk.Alignment(0, 0, 0, 0)
         self.alignment91.show()
 
-        self.hbox204 = gtk.HBox(False, 2)
+        self.hbox204 = gtk.HBox(False, 0)
         self.hbox204.show()
         self.hbox204.set_spacing(2)
 
@@ -3862,7 +3862,7 @@ class ImportFrame:
 
         self.vbox112.pack_start(self.hbox203, False, True, 0)
 
-        self.hbox205 = gtk.HBox(False, 5)
+        self.hbox205 = gtk.HBox(False, 0)
         self.hbox205.show()
         self.hbox205.set_spacing(5)
         self.hbox205.set_border_width(3)
@@ -3887,7 +3887,7 @@ class ImportFrame:
 
         self.vbox112.pack_start(self.hbox205, False, True, 0)
 
-        self.hbox206 = gtk.HBox(False, 5)
+        self.hbox206 = gtk.HBox(False, 0)
         self.hbox206.show()
         self.hbox206.set_spacing(5)
         self.hbox206.set_border_width(3)
@@ -3924,7 +3924,7 @@ class ImportFrame:
 
         self.vbox112.pack_start(self.hbox206, False, True, 0)
 
-        self.hbox207 = gtk.HBox(False, 5)
+        self.hbox207 = gtk.HBox(False, 0)
         self.hbox207.show()
         self.hbox207.set_spacing(5)
         self.hbox207.set_border_width(3)
@@ -3939,10 +3939,10 @@ class ImportFrame:
         self.ImportConfig.show()
         self.ImportConfig.connect("clicked", self.OnImportConfig)
 
-        self.alignment92 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment92 = gtk.Alignment(0, 0, 0, 0)
         self.alignment92.show()
 
-        self.hbox208 = gtk.HBox(False, 2)
+        self.hbox208 = gtk.HBox(False, 0)
         self.hbox208.show()
         self.hbox208.set_spacing(2)
 
@@ -4010,7 +4010,7 @@ class SoundsFrame:
         self.Main.show()
         self.Main.set_shadow_type(gtk.SHADOW_ETCHED_IN)
 
-        self.vbox119 = gtk.VBox(False, 5)
+        self.vbox119 = gtk.VBox(False, 0)
         self.vbox119.show()
         self.vbox119.set_spacing(5)
         self.vbox119.set_border_width(5)
@@ -4022,7 +4022,7 @@ class SoundsFrame:
         self.SoundCheck.connect("toggled", self.OnSoundCheckToggled)
         self.vbox119.pack_start(self.SoundCheck, False, False, 0)
 
-        self.hbox228 = gtk.HBox(False, 5)
+        self.hbox228 = gtk.HBox(False, 0)
         self.hbox228.show()
         self.hbox228.set_spacing(5)
 
@@ -4043,10 +4043,10 @@ class SoundsFrame:
         self.DefaultSoundCommand = gtk.Button()
         self.DefaultSoundCommand.show()
 
-        self.alignment103 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment103 = gtk.Alignment(0, 0, 0, 0)
         self.alignment103.show()
 
-        self.hbox229 = gtk.HBox(False, 2)
+        self.hbox229 = gtk.HBox(False, 0)
         self.hbox229.show()
         self.hbox229.set_spacing(2)
 
@@ -4070,7 +4070,7 @@ class SoundsFrame:
 
         self.vbox119.pack_start(self.hbox228, False, True, 0)
 
-        self.hbox230 = gtk.HBox(False, 5)
+        self.hbox230 = gtk.HBox(False, 0)
         self.hbox230.show()
         self.hbox230.set_spacing(5)
 
@@ -4083,10 +4083,10 @@ class SoundsFrame:
         self.SoundButton = gtk.Button()
         self.SoundButton.show()
 
-        self.alignment104 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment104 = gtk.Alignment(0, 0, 0, 0)
         self.alignment104.show()
 
-        self.hbox231 = gtk.HBox(False, 2)
+        self.hbox231 = gtk.HBox(False, 0)
         self.hbox231.show()
         self.hbox231.set_spacing(2)
 
@@ -4174,7 +4174,7 @@ class IconsFrame:
         self.Main.show()
         self.Main.set_shadow_type(gtk.SHADOW_ETCHED_IN)
 
-        self.vbox125 = gtk.VBox(False, 5)
+        self.vbox125 = gtk.VBox(False, 0)
         self.vbox125.show()
         self.vbox125.set_spacing(5)
         self.vbox125.set_border_width(5)
@@ -4185,7 +4185,7 @@ class IconsFrame:
         self.TabClosers.show()
         self.vbox125.pack_start(self.TabClosers, False, False, 0)
 
-        self.hbox258 = gtk.HBox(False, 10)
+        self.hbox258 = gtk.HBox(False, 0)
         self.hbox258.show()
         self.hbox258.set_spacing(10)
 
@@ -4209,17 +4209,17 @@ class IconsFrame:
 
         self.vbox125.pack_start(self.hbox261, False, False, 0)
 
-        self.hbox262 = gtk.HBox(False, 5)
+        self.hbox262 = gtk.HBox(False, 0)
         self.hbox262.show()
         self.hbox262.set_spacing(5)
 
         self.ThemeButton = gtk.Button()
         self.ThemeButton.show()
 
-        self.alignment128 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment128 = gtk.Alignment(0, 0, 0, 0)
         self.alignment128.show()
 
-        self.hbox263 = gtk.HBox(False, 2)
+        self.hbox263 = gtk.HBox(False, 0)
         self.hbox263.show()
         self.hbox263.set_spacing(2)
 
@@ -4251,10 +4251,10 @@ class IconsFrame:
         self.DefaultTheme = gtk.Button()
         self.DefaultTheme.show()
 
-        self.alignment154 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment154 = gtk.Alignment(0, 0, 0, 0)
         self.alignment154.show()
 
-        self.hbox294 = gtk.HBox(False, 2)
+        self.hbox294 = gtk.HBox(False, 0)
         self.hbox294.show()
         self.hbox294.set_spacing(2)
 

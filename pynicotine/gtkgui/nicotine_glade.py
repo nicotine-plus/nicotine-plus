@@ -13,7 +13,7 @@ class MainWindow:
              self.tooltips = tooltips
         self.tooltips.enable()
         if create:
-            self.MainWindow = gtk.Window(gtk.WINDOW_TOPLEVEL)
+            self.MainWindow = gtk.Window()
             self.MainWindow.set_title(_("Nicotine"))
             self.MainWindow.set_position(gtk.WIN_POS_CENTER)
             self.MainWindow.add_accel_group(self.accel_group)
@@ -23,7 +23,6 @@ class MainWindow:
 
         self.vbox1 = gtk.VBox(False, 0)
         self.vbox1.show()
-        self.vbox1.set_spacing(0)
 
         self.menubar1 = gtk.MenuBar()
         self.menubar1.show()
@@ -74,7 +73,6 @@ class MainWindow:
         self.file1_menu.append(self.scheidingslijn1)
 
         self.show_debug_info1 = gtk.CheckMenuItem(_("Show _debug info"))
-        self.show_debug_info1.set_active(False)
         self.show_debug_info1.show()
         self.show_debug_info1.connect("activate", self.OnShowDebug)
 
@@ -86,7 +84,6 @@ class MainWindow:
         self.file1_menu.append(self.scheidingslijn8)
 
         self.hide_log_window1 = gtk.CheckMenuItem(_("_Hide log window"))
-        self.hide_log_window1.set_active(False)
         self.hide_log_window1.show()
         self.hide_log_window1.connect("activate", self.OnHideLog)
         self.hide_log_window1.add_accelerator("activate", self.accel_group, gtk.gdk.keyval_from_name("H"), gtk.gdk.MOD1_MASK, gtk.ACCEL_VISIBLE)
@@ -94,7 +91,6 @@ class MainWindow:
         self.file1_menu.append(self.hide_log_window1)
 
         self.hide_room_list1 = gtk.CheckMenuItem(_("Hide room _list"))
-        self.hide_room_list1.set_active(False)
         self.hide_room_list1.show()
         self.hide_room_list1.connect("activate", self.OnHideRoomList)
         self.hide_room_list1.add_accelerator("activate", self.accel_group, gtk.gdk.keyval_from_name("R"), gtk.gdk.MOD1_MASK, gtk.ACCEL_VISIBLE)
@@ -102,7 +98,6 @@ class MainWindow:
         self.file1_menu.append(self.hide_room_list1)
 
         self.hide_tickers1 = gtk.CheckMenuItem(_("Hide _tickers"))
-        self.hide_tickers1.set_active(False)
         self.hide_tickers1.show()
         self.hide_tickers1.connect("activate", self.OnHideTickers)
         self.hide_tickers1.add_accelerator("activate", self.accel_group, gtk.gdk.keyval_from_name("T"), gtk.gdk.MOD1_MASK, gtk.ACCEL_VISIBLE)
@@ -110,7 +105,6 @@ class MainWindow:
         self.file1_menu.append(self.hide_tickers1)
 
         self.buddylist_in_chatrooms1 = gtk.CheckMenuItem(_("Buddylist in Chatrooms"))
-        self.buddylist_in_chatrooms1.set_active(False)
         self.buddylist_in_chatrooms1.show()
         self.buddylist_in_chatrooms1.connect("activate", self.OnToggleBuddyList)
         self.buddylist_in_chatrooms1.add_accelerator("activate", self.accel_group, gtk.gdk.keyval_from_name("U"), gtk.gdk.MOD1_MASK, gtk.ACCEL_VISIBLE)
@@ -368,7 +362,6 @@ class MainWindow:
 
         self.notebook1 = gtk.Notebook()
         self.notebook1.set_size_request(0, 0)
-        self.notebook1.set_tab_pos(gtk.POS_TOP)
         self.notebook1.set_scrollable(True)
         self.notebook1.show()
         self.notebook1.connect("switch_page", self.OnSwitchPage)
@@ -388,12 +381,12 @@ class MainWindow:
 
         self.ChatTabLabel = self.get_custom_widget("ChatTabLabel", _("ImageLabel"), _("Chat rooms"), 0, 0)
         self.ChatTabLabel.show()
-        self.privatevbox = gtk.VBox(False, 5)
+        self.privatevbox = gtk.VBox(False, 0)
         self.privatevbox.show()
         self.privatevbox.set_spacing(5)
         self.privatevbox.set_border_width(5)
 
-        self.hbox20 = gtk.HBox(False, 5)
+        self.hbox20 = gtk.HBox(False, 0)
         self.hbox20.show()
         self.hbox20.set_spacing(5)
 
@@ -407,19 +400,16 @@ class MainWindow:
         self.alignment10 = gtk.Alignment(0.5, 0.5, 0, 0)
         self.alignment10.show()
 
-        self.hbox30 = gtk.HBox(False, 2)
+        self.hbox30 = gtk.HBox(False, 0)
         self.hbox30.show()
         self.hbox30.set_spacing(2)
 
         self.image10 = gtk.Image()
-        self.image10.set_padding(0, 0)
         self.image10.set_from_stock(gtk.STOCK_JUMP_TO, 4)
         self.image10.show()
         self.hbox30.pack_start(self.image10, False, False, 0)
 
         self.label39 = gtk.Label(_("Start Message"))
-        self.label39.set_padding(0, 0)
-        self.label39.set_line_wrap(False)
         self.label39.show()
         self.hbox30.pack_end(self.label39, False, False, 0)
 
@@ -433,27 +423,34 @@ class MainWindow:
 
         self.PrivatechatNotebook = self.get_custom_widget("PrivatechatNotebook", "", "", 0, 0)
         self.PrivatechatNotebook.show()
-        self.privatevbox.pack_start(self.PrivatechatNotebook, True, True, 0)
+        self.privatevbox.pack_start(self.PrivatechatNotebook)
 
         self.PrivateChatTabLabel = self.get_custom_widget("PrivateChatTabLabel", _("ImageLabel"), _("Private chat"), 0, 0)
         self.PrivateChatTabLabel.show()
         self.vboxdownloads = gtk.VBox(False, 0)
         self.vboxdownloads.show()
-        self.vboxdownloads.set_spacing(0)
+
+        self.hbox3 = gtk.HBox(False, 0)
+        self.hbox3.show()
+
+        self.ToggleTreeDownloads = gtk.CheckButton()
+        self.ToggleTreeDownloads.set_label(_("Group by Users"))
+        self.ToggleTreeDownloads.show()
+        self.hbox3.pack_end(self.ToggleTreeDownloads, False, False, 0)
+
+        self.vboxdownloads.pack_start(self.hbox3, False, False, 0)
 
         self.scrolledwindow29 = gtk.ScrolledWindow()
         self.scrolledwindow29.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
         self.scrolledwindow29.show()
-        self.scrolledwindow29.set_shadow_type(gtk.SHADOW_NONE)
 
         self.DownloadList = gtk.TreeView()
         self.DownloadList.show()
-        self.DownloadList.set_headers_visible(True)
         self.scrolledwindow29.add(self.DownloadList)
 
-        self.vboxdownloads.pack_start(self.scrolledwindow29, True, True, 0)
+        self.vboxdownloads.pack_start(self.scrolledwindow29)
 
-        self.DownloadButtons = gtk.HBox(False, 5)
+        self.DownloadButtons = gtk.HBox(False, 0)
         self.DownloadButtons.show()
         self.DownloadButtons.set_spacing(5)
 
@@ -463,19 +460,16 @@ class MainWindow:
         self.alignment21 = gtk.Alignment(0.5, 0.5, 0, 0)
         self.alignment21.show()
 
-        self.hbox41 = gtk.HBox(False, 2)
+        self.hbox41 = gtk.HBox(False, 0)
         self.hbox41.show()
         self.hbox41.set_spacing(2)
 
         self.image21 = gtk.Image()
-        self.image21.set_padding(0, 0)
         self.image21.set_from_stock(gtk.STOCK_CLEAR, 4)
         self.image21.show()
         self.hbox41.pack_start(self.image21, False, False, 0)
 
         self.label50 = gtk.Label(_("Clear Finished / Aborted"))
-        self.label50.set_padding(0, 0)
-        self.label50.set_line_wrap(False)
         self.label50.show()
         self.hbox41.pack_start(self.label50, False, False, 0)
 
@@ -491,19 +485,16 @@ class MainWindow:
         self.alignment22 = gtk.Alignment(0.5, 0.5, 0, 0)
         self.alignment22.show()
 
-        self.hbox42 = gtk.HBox(False, 2)
+        self.hbox42 = gtk.HBox(False, 0)
         self.hbox42.show()
         self.hbox42.set_spacing(2)
 
         self.image22 = gtk.Image()
-        self.image22.set_padding(0, 0)
         self.image22.set_from_stock(gtk.STOCK_CLEAR, 4)
         self.image22.show()
         self.hbox42.pack_start(self.image22, False, False, 0)
 
         self.label51 = gtk.Label(_("Clear Queued"))
-        self.label51.set_padding(0, 0)
-        self.label51.set_line_wrap(False)
         self.label51.show()
         self.hbox42.pack_start(self.label51, False, False, 0)
 
@@ -519,19 +510,16 @@ class MainWindow:
         self.alignment15 = gtk.Alignment(0.5, 0.5, 0, 0)
         self.alignment15.show()
 
-        self.hbox35 = gtk.HBox(False, 2)
+        self.hbox35 = gtk.HBox(False, 0)
         self.hbox35.show()
         self.hbox35.set_spacing(2)
 
         self.image15 = gtk.Image()
-        self.image15.set_padding(0, 0)
         self.image15.set_from_stock(gtk.STOCK_REDO, 4)
         self.image15.show()
         self.hbox35.pack_start(self.image15, False, False, 0)
 
         self.label44 = gtk.Label(_("Retry"))
-        self.label44.set_padding(0, 0)
-        self.label44.set_line_wrap(False)
         self.label44.show()
         self.hbox35.pack_start(self.label44, False, False, 0)
 
@@ -547,19 +535,16 @@ class MainWindow:
         self.alignment16 = gtk.Alignment(0.5, 0.5, 0, 0)
         self.alignment16.show()
 
-        self.hbox36 = gtk.HBox(False, 2)
+        self.hbox36 = gtk.HBox(False, 0)
         self.hbox36.show()
         self.hbox36.set_spacing(2)
 
         self.image16 = gtk.Image()
-        self.image16.set_padding(0, 0)
         self.image16.set_from_stock(gtk.STOCK_CANCEL, 4)
         self.image16.show()
         self.hbox36.pack_start(self.image16, False, False, 0)
 
         self.label45 = gtk.Label(_("Abort"))
-        self.label45.set_padding(0, 0)
-        self.label45.set_line_wrap(False)
         self.label45.show()
         self.hbox36.pack_start(self.label45, False, False, 0)
 
@@ -575,19 +560,16 @@ class MainWindow:
         self.alignment9 = gtk.Alignment(0.5, 0.5, 0, 0)
         self.alignment9.show()
 
-        self.hbox29 = gtk.HBox(False, 2)
+        self.hbox29 = gtk.HBox(False, 0)
         self.hbox29.show()
         self.hbox29.set_spacing(2)
 
         self.image9 = gtk.Image()
-        self.image9.set_padding(0, 0)
         self.image9.set_from_stock(gtk.STOCK_DELETE, 4)
         self.image9.show()
         self.hbox29.pack_start(self.image9, False, False, 0)
 
         self.label38 = gtk.Label(_("Abort & Delete"))
-        self.label38.set_padding(0, 0)
-        self.label38.set_line_wrap(False)
         self.label38.show()
         self.hbox29.pack_start(self.label38, False, False, 0)
 
@@ -603,19 +585,16 @@ class MainWindow:
         self.alignment13 = gtk.Alignment(0.5, 0.5, 0, 0)
         self.alignment13.show()
 
-        self.hbox33 = gtk.HBox(False, 2)
+        self.hbox33 = gtk.HBox(False, 0)
         self.hbox33.show()
         self.hbox33.set_spacing(2)
 
         self.image13 = gtk.Image()
-        self.image13.set_padding(0, 0)
         self.image13.set_from_stock(gtk.STOCK_STOP, 4)
         self.image13.show()
         self.hbox33.pack_start(self.image13, False, False, 0)
 
         self.label42 = gtk.Label(_("Ban User(s)"))
-        self.label42.set_padding(0, 0)
-        self.label42.set_line_wrap(False)
         self.label42.show()
         self.hbox33.pack_start(self.label42, False, False, 0)
 
@@ -631,21 +610,28 @@ class MainWindow:
         self.custom3.show()
         self.vboxuploads = gtk.VBox(False, 0)
         self.vboxuploads.show()
-        self.vboxuploads.set_spacing(0)
+
+        self.hbox13 = gtk.HBox(False, 0)
+        self.hbox13.show()
+
+        self.ToggleTreeUploads = gtk.CheckButton()
+        self.ToggleTreeUploads.set_label(_("Group by Users"))
+        self.ToggleTreeUploads.show()
+        self.hbox13.pack_end(self.ToggleTreeUploads, False, False, 0)
+
+        self.vboxuploads.pack_start(self.hbox13, False, False, 0)
 
         self.scrolledwindow30 = gtk.ScrolledWindow()
         self.scrolledwindow30.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
         self.scrolledwindow30.show()
-        self.scrolledwindow30.set_shadow_type(gtk.SHADOW_NONE)
 
         self.UploadList = gtk.TreeView()
         self.UploadList.show()
-        self.UploadList.set_headers_visible(True)
         self.scrolledwindow30.add(self.UploadList)
 
-        self.vboxuploads.pack_start(self.scrolledwindow30, True, True, 0)
+        self.vboxuploads.pack_start(self.scrolledwindow30)
 
-        self.UploadButtons = gtk.HBox(False, 5)
+        self.UploadButtons = gtk.HBox(False, 0)
         self.UploadButtons.show()
         self.UploadButtons.set_spacing(5)
 
@@ -655,19 +641,16 @@ class MainWindow:
         self.alignment20 = gtk.Alignment(0.5, 0.5, 0, 0)
         self.alignment20.show()
 
-        self.hbox40 = gtk.HBox(False, 2)
+        self.hbox40 = gtk.HBox(False, 0)
         self.hbox40.show()
         self.hbox40.set_spacing(2)
 
         self.image20 = gtk.Image()
-        self.image20.set_padding(0, 0)
         self.image20.set_from_stock(gtk.STOCK_CLEAR, 4)
         self.image20.show()
         self.hbox40.pack_start(self.image20, False, False, 0)
 
         self.label49 = gtk.Label(_("Clear Finished / Aborted"))
-        self.label49.set_padding(0, 0)
-        self.label49.set_line_wrap(False)
         self.label49.show()
         self.hbox40.pack_start(self.label49, False, False, 0)
 
@@ -683,19 +666,16 @@ class MainWindow:
         self.alignment19 = gtk.Alignment(0.5, 0.5, 0, 0)
         self.alignment19.show()
 
-        self.hbox39 = gtk.HBox(False, 2)
+        self.hbox39 = gtk.HBox(False, 0)
         self.hbox39.show()
         self.hbox39.set_spacing(2)
 
         self.image19 = gtk.Image()
-        self.image19.set_padding(0, 0)
         self.image19.set_from_stock(gtk.STOCK_CLEAR, 4)
         self.image19.show()
         self.hbox39.pack_start(self.image19, False, False, 0)
 
         self.label48 = gtk.Label(_("Clear Queued"))
-        self.label48.set_padding(0, 0)
-        self.label48.set_line_wrap(False)
         self.label48.show()
         self.hbox39.pack_start(self.label48, False, False, 0)
 
@@ -711,19 +691,16 @@ class MainWindow:
         self.alignment17 = gtk.Alignment(0.5, 0.5, 0, 0)
         self.alignment17.show()
 
-        self.hbox37 = gtk.HBox(False, 2)
+        self.hbox37 = gtk.HBox(False, 0)
         self.hbox37.show()
         self.hbox37.set_spacing(2)
 
         self.image17 = gtk.Image()
-        self.image17.set_padding(0, 0)
         self.image17.set_from_stock(gtk.STOCK_CANCEL, 4)
         self.image17.show()
         self.hbox37.pack_start(self.image17, False, False, 0)
 
         self.label46 = gtk.Label(_("Abort"))
-        self.label46.set_padding(0, 0)
-        self.label46.set_line_wrap(False)
         self.label46.show()
         self.hbox37.pack_start(self.label46, False, False, 0)
 
@@ -733,53 +710,22 @@ class MainWindow:
 
         self.UploadButtons.pack_start(self.abortUploadButton, False, False, 0)
 
-        self.banUploadButton = gtk.Button()
-        self.banUploadButton.show()
-
-        self.alignment14 = gtk.Alignment(0.5, 0.5, 0, 0)
-        self.alignment14.show()
-
-        self.hbox34 = gtk.HBox(False, 2)
-        self.hbox34.show()
-        self.hbox34.set_spacing(2)
-
-        self.image14 = gtk.Image()
-        self.image14.set_padding(0, 0)
-        self.image14.set_from_stock(gtk.STOCK_STOP, 4)
-        self.image14.show()
-        self.hbox34.pack_start(self.image14, False, False, 0)
-
-        self.label43 = gtk.Label(_("Ban User(s)"))
-        self.label43.set_padding(0, 0)
-        self.label43.set_line_wrap(False)
-        self.label43.show()
-        self.hbox34.pack_start(self.label43, False, False, 0)
-
-        self.alignment14.add(self.hbox34)
-
-        self.banUploadButton.add(self.alignment14)
-
-        self.UploadButtons.pack_end(self.banUploadButton, False, False, 0)
-
         self.abortUserUploadButton = gtk.Button()
         self.abortUserUploadButton.show()
 
         self.alignment18 = gtk.Alignment(0.5, 0.5, 0, 0)
         self.alignment18.show()
 
-        self.hbox38 = gtk.HBox(False, 2)
+        self.hbox38 = gtk.HBox(False, 0)
         self.hbox38.show()
         self.hbox38.set_spacing(2)
 
         self.image18 = gtk.Image()
-        self.image18.set_padding(0, 0)
         self.image18.set_from_stock(gtk.STOCK_CANCEL, 4)
         self.image18.show()
         self.hbox38.pack_start(self.image18, False, False, 0)
 
         self.label47 = gtk.Label(_("Abort User's Upload(s)"))
-        self.label47.set_padding(0, 0)
-        self.label47.set_line_wrap(False)
         self.label47.show()
         self.hbox38.pack_start(self.label47, False, False, 0)
 
@@ -789,16 +735,41 @@ class MainWindow:
 
         self.UploadButtons.pack_start(self.abortUserUploadButton, False, False, 0)
 
+        self.banUploadButton = gtk.Button()
+        self.banUploadButton.show()
+
+        self.alignment14 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment14.show()
+
+        self.hbox34 = gtk.HBox(False, 0)
+        self.hbox34.show()
+        self.hbox34.set_spacing(2)
+
+        self.image14 = gtk.Image()
+        self.image14.set_from_stock(gtk.STOCK_STOP, 4)
+        self.image14.show()
+        self.hbox34.pack_start(self.image14, False, False, 0)
+
+        self.label43 = gtk.Label(_("Ban User(s)"))
+        self.label43.show()
+        self.hbox34.pack_start(self.label43, False, False, 0)
+
+        self.alignment14.add(self.hbox34)
+
+        self.banUploadButton.add(self.alignment14)
+
+        self.UploadButtons.pack_end(self.banUploadButton, False, False, 0)
+
         self.vboxuploads.pack_start(self.UploadButtons, False, True, 3)
 
         self.UploadsTabLabel = self.get_custom_widget("UploadsTabLabel", _("ImageLabel"), _("Uploads"), 0, 0)
         self.UploadsTabLabel.show()
-        self.searchvbox = gtk.VBox(False, 5)
+        self.searchvbox = gtk.VBox(False, 0)
         self.searchvbox.show()
         self.searchvbox.set_spacing(5)
         self.searchvbox.set_border_width(5)
 
-        self.hbox2 = gtk.HBox(False, 8)
+        self.hbox2 = gtk.HBox(False, 0)
         self.hbox2.show()
         self.hbox2.set_spacing(8)
 
@@ -807,15 +778,11 @@ class MainWindow:
         self.combo1.show()
 
         self.SearchEntry = self.combo1.child
-        self.SearchEntry.set_text("")
-        self.SearchEntry.set_editable(True)
-        self.SearchEntry.show()
-        self.SearchEntry.set_visibility(True)
         self.SearchEntry.connect("activate", self.OnSearch)
 
         self.combo1.set_model(self.combo1_List)
         self.combo1.set_text_column(0)
-        self.hbox2.pack_start(self.combo1, True, True, 0)
+        self.hbox2.pack_start(self.combo1)
 
         self.SearchButton = gtk.Button()
         self.SearchButton.show()
@@ -824,19 +791,16 @@ class MainWindow:
         self.alignment3 = gtk.Alignment(0.5, 0.5, 0, 0)
         self.alignment3.show()
 
-        self.hbox23 = gtk.HBox(False, 2)
+        self.hbox23 = gtk.HBox(False, 0)
         self.hbox23.show()
         self.hbox23.set_spacing(2)
 
         self.image3 = gtk.Image()
-        self.image3.set_padding(0, 0)
         self.image3.set_from_stock(gtk.STOCK_FIND, 4)
         self.image3.show()
         self.hbox23.pack_start(self.image3, False, False, 0)
 
         self.label32 = gtk.Label(_("Search"))
-        self.label32.set_padding(0, 0)
-        self.label32.set_line_wrap(False)
         self.label32.show()
         self.hbox23.pack_start(self.label32, False, False, 0)
 
@@ -853,19 +817,16 @@ class MainWindow:
         self.alignment38 = gtk.Alignment(0.5, 0.5, 0, 0)
         self.alignment38.show()
 
-        self.hbox59 = gtk.HBox(False, 2)
+        self.hbox59 = gtk.HBox(False, 0)
         self.hbox59.show()
         self.hbox59.set_spacing(2)
 
         self.image38 = gtk.Image()
-        self.image38.set_padding(0, 0)
         self.image38.set_from_stock(gtk.STOCK_CLEAR, 4)
         self.image38.show()
         self.hbox59.pack_start(self.image38, False, False, 0)
 
         self.label67 = gtk.Label(_("Clear"))
-        self.label67.set_padding(0, 0)
-        self.label67.set_line_wrap(False)
         self.label67.show()
         self.hbox59.pack_start(self.label67, False, False, 0)
 
@@ -895,6 +856,8 @@ class MainWindow:
         self.RoomSearchCombo.show()
         self.RoomSearchCombo.set_sensitive(False)
 
+        self.comboboxentry_entry2 = self.RoomSearchCombo.child
+
         self.RoomSearchCombo.set_model(self.RoomSearchCombo_List)
         self.RoomSearchCombo.set_text_column(0)
         self.hbox2.pack_start(self.RoomSearchCombo, False, False, 0)
@@ -903,16 +866,16 @@ class MainWindow:
 
         self.SearchNotebook = self.get_custom_widget("SearchNotebook", "", "", 0, 0)
         self.SearchNotebook.show()
-        self.searchvbox.pack_start(self.SearchNotebook, True, True, 0)
+        self.searchvbox.pack_start(self.SearchNotebook)
 
         self.SearchTabLabel = self.get_custom_widget("SearchTabLabel", _("ImageLabel"), _("Search files"), 0, 0)
         self.SearchTabLabel.show()
-        self.userinfovbox = gtk.VBox(False, 5)
+        self.userinfovbox = gtk.VBox(False, 0)
         self.userinfovbox.show()
         self.userinfovbox.set_spacing(5)
         self.userinfovbox.set_border_width(5)
 
-        self.hbox21 = gtk.HBox(False, 5)
+        self.hbox21 = gtk.HBox(False, 0)
         self.hbox21.show()
         self.hbox21.set_spacing(5)
 
@@ -926,19 +889,16 @@ class MainWindow:
         self.alignment12 = gtk.Alignment(0.5, 0.5, 0, 0)
         self.alignment12.show()
 
-        self.hbox32 = gtk.HBox(False, 2)
+        self.hbox32 = gtk.HBox(False, 0)
         self.hbox32.show()
         self.hbox32.set_spacing(2)
 
         self.image12 = gtk.Image()
-        self.image12.set_padding(0, 0)
         self.image12.set_from_stock(gtk.STOCK_JUMP_TO, 4)
         self.image12.show()
         self.hbox32.pack_start(self.image12, False, False, 0)
 
         self.label41 = gtk.Label(_("Get Userinfo"))
-        self.label41.set_padding(0, 0)
-        self.label41.set_line_wrap(False)
         self.label41.show()
         self.hbox32.pack_start(self.label41, False, False, 0)
 
@@ -952,16 +912,16 @@ class MainWindow:
 
         self.UserInfoNotebook = self.get_custom_widget("UserInfoNotebook", "", "", 0, 0)
         self.UserInfoNotebook.show()
-        self.userinfovbox.pack_start(self.UserInfoNotebook, True, True, 0)
+        self.userinfovbox.pack_start(self.UserInfoNotebook)
 
         self.UserInfoTabLabel = self.get_custom_widget("UserInfoTabLabel", _("ImageLabel"), _("User info"), 0, 0)
         self.UserInfoTabLabel.show()
-        self.userbrowsevbox = gtk.VBox(False, 5)
+        self.userbrowsevbox = gtk.VBox(False, 0)
         self.userbrowsevbox.show()
         self.userbrowsevbox.set_spacing(5)
         self.userbrowsevbox.set_border_width(5)
 
-        self.hbox22 = gtk.HBox(False, 5)
+        self.hbox22 = gtk.HBox(False, 0)
         self.hbox22.show()
         self.hbox22.set_spacing(5)
 
@@ -975,19 +935,16 @@ class MainWindow:
         self.alignment11 = gtk.Alignment(0.5, 0.5, 0, 0)
         self.alignment11.show()
 
-        self.hbox31 = gtk.HBox(False, 2)
+        self.hbox31 = gtk.HBox(False, 0)
         self.hbox31.show()
         self.hbox31.set_spacing(2)
 
         self.image11 = gtk.Image()
-        self.image11.set_padding(0, 0)
         self.image11.set_from_stock(gtk.STOCK_JUMP_TO, 4)
         self.image11.show()
         self.hbox31.pack_start(self.image11, False, False, 0)
 
         self.label40 = gtk.Label(_("Browse Shares"))
-        self.label40.set_padding(0, 0)
-        self.label40.set_line_wrap(False)
         self.label40.show()
         self.hbox31.pack_start(self.label40, False, False, 0)
 
@@ -1004,19 +961,16 @@ class MainWindow:
         self.alignment39 = gtk.Alignment(0.5, 0.5, 0, 0)
         self.alignment39.show()
 
-        self.hbox60 = gtk.HBox(False, 2)
+        self.hbox60 = gtk.HBox(False, 0)
         self.hbox60.show()
         self.hbox60.set_spacing(2)
 
         self.image310 = gtk.Image()
-        self.image310.set_padding(0, 0)
         self.image310.set_from_stock(gtk.STOCK_OPEN, 4)
         self.image310.show()
         self.hbox60.pack_start(self.image310, False, False, 0)
 
         self.label68 = gtk.Label(_("Load From Disk"))
-        self.label68.set_padding(0, 0)
-        self.label68.set_line_wrap(False)
         self.label68.show()
         self.hbox60.pack_start(self.label68, False, False, 0)
 
@@ -1030,76 +984,18 @@ class MainWindow:
 
         self.UserBrowseNotebook = self.get_custom_widget("UserBrowseNotebook", "", "", 0, 0)
         self.UserBrowseNotebook.show()
-        self.userbrowsevbox.pack_start(self.UserBrowseNotebook, True, True, 0)
+        self.userbrowsevbox.pack_start(self.UserBrowseNotebook)
 
         self.UserBrowseTabLabel = self.get_custom_widget("UserBrowseTabLabel", _("ImageLabel"), _("User browse"), 0, 0)
         self.UserBrowseTabLabel.show()
-        self.interests = gtk.VBox(False, 10)
+        self.interests = gtk.VBox(False, 0)
         self.interests.show()
         self.interests.set_spacing(10)
         self.interests.set_border_width(10)
 
-        self.hbox12 = gtk.HBox(False, 5)
+        self.hbox12 = gtk.HBox(False, 0)
         self.hbox12.show()
         self.hbox12.set_spacing(5)
-
-        self.button19 = gtk.Button()
-        self.button19.show()
-        self.button19.connect("clicked", self.OnSimilarUsersClicked)
-
-        self.alignment6 = gtk.Alignment(0.5, 0.5, 0, 0)
-        self.alignment6.show()
-
-        self.hbox26 = gtk.HBox(False, 2)
-        self.hbox26.show()
-        self.hbox26.set_spacing(2)
-
-        self.image6 = gtk.Image()
-        self.image6.set_padding(0, 0)
-        self.image6.set_from_stock(gtk.STOCK_REFRESH, 4)
-        self.image6.show()
-        self.hbox26.pack_start(self.image6, False, False, 0)
-
-        self.label35 = gtk.Label(_("Similar users"))
-        self.label35.set_padding(0, 0)
-        self.label35.set_line_wrap(False)
-        self.label35.show()
-        self.hbox26.pack_start(self.label35, False, False, 0)
-
-        self.alignment6.add(self.hbox26)
-
-        self.button19.add(self.alignment6)
-
-        self.hbox12.pack_end(self.button19, False, False, 0)
-
-        self.button18 = gtk.Button()
-        self.button18.show()
-        self.button18.connect("clicked", self.OnRecommendationsClicked)
-
-        self.alignment5 = gtk.Alignment(0.5, 0.5, 0, 0)
-        self.alignment5.show()
-
-        self.hbox25 = gtk.HBox(False, 2)
-        self.hbox25.show()
-        self.hbox25.set_spacing(2)
-
-        self.image5 = gtk.Image()
-        self.image5.set_padding(0, 0)
-        self.image5.set_from_stock(gtk.STOCK_REFRESH, 4)
-        self.image5.show()
-        self.hbox25.pack_start(self.image5, False, False, 0)
-
-        self.label34 = gtk.Label(_("Recommendations"))
-        self.label34.set_padding(0, 0)
-        self.label34.set_line_wrap(False)
-        self.label34.show()
-        self.hbox25.pack_start(self.label34, False, False, 0)
-
-        self.alignment5.add(self.hbox25)
-
-        self.button18.add(self.alignment5)
-
-        self.hbox12.pack_end(self.button18, False, False, 0)
 
         self.button17 = gtk.Button()
         self.button17.show()
@@ -1108,19 +1004,16 @@ class MainWindow:
         self.alignment4 = gtk.Alignment(0.5, 0.5, 0, 0)
         self.alignment4.show()
 
-        self.hbox24 = gtk.HBox(False, 2)
+        self.hbox24 = gtk.HBox(False, 0)
         self.hbox24.show()
         self.hbox24.set_spacing(2)
 
         self.image4 = gtk.Image()
-        self.image4.set_padding(0, 0)
         self.image4.set_from_stock(gtk.STOCK_REFRESH, 4)
         self.image4.show()
         self.hbox24.pack_start(self.image4, False, False, 0)
 
         self.label33 = gtk.Label(_("Global recommendations"))
-        self.label33.set_padding(0, 0)
-        self.label33.set_line_wrap(False)
         self.label33.show()
         self.hbox24.pack_start(self.label33, False, False, 0)
 
@@ -1130,21 +1023,73 @@ class MainWindow:
 
         self.hbox12.pack_end(self.button17, False, False, 0)
 
+        self.button18 = gtk.Button()
+        self.button18.show()
+        self.button18.connect("clicked", self.OnRecommendationsClicked)
+
+        self.alignment5 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment5.show()
+
+        self.hbox25 = gtk.HBox(False, 0)
+        self.hbox25.show()
+        self.hbox25.set_spacing(2)
+
+        self.image5 = gtk.Image()
+        self.image5.set_from_stock(gtk.STOCK_REFRESH, 4)
+        self.image5.show()
+        self.hbox25.pack_start(self.image5, False, False, 0)
+
+        self.label34 = gtk.Label(_("Recommendations"))
+        self.label34.show()
+        self.hbox25.pack_start(self.label34, False, False, 0)
+
+        self.alignment5.add(self.hbox25)
+
+        self.button18.add(self.alignment5)
+
+        self.hbox12.pack_end(self.button18, False, False, 0)
+
+        self.button19 = gtk.Button()
+        self.button19.show()
+        self.button19.connect("clicked", self.OnSimilarUsersClicked)
+
+        self.alignment6 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment6.show()
+
+        self.hbox26 = gtk.HBox(False, 0)
+        self.hbox26.show()
+        self.hbox26.set_spacing(2)
+
+        self.image6 = gtk.Image()
+        self.image6.set_from_stock(gtk.STOCK_REFRESH, 4)
+        self.image6.show()
+        self.hbox26.pack_start(self.image6, False, False, 0)
+
+        self.label35 = gtk.Label(_("Similar users"))
+        self.label35.show()
+        self.hbox26.pack_start(self.label35, False, False, 0)
+
+        self.alignment6.add(self.hbox26)
+
+        self.button19.add(self.alignment6)
+
+        self.hbox12.pack_end(self.button19, False, False, 0)
+
         self.interests.pack_start(self.hbox12, False, True, 0)
 
-        self.hbox11 = gtk.HBox(False, 5)
+        self.hbox11 = gtk.HBox(False, 0)
         self.hbox11.show()
         self.hbox11.set_spacing(5)
 
         self.hpaned3 = gtk.HPaned()
         self.hpaned3.show()
 
-        self.vbox13 = gtk.VBox(True, 10)
+        self.vbox13 = gtk.VBox(True, 0)
         self.vbox13.set_size_request(200, -1)
         self.vbox13.show()
         self.vbox13.set_spacing(10)
 
-        self.vbox14 = gtk.VBox(False, 5)
+        self.vbox14 = gtk.VBox(False, 0)
         self.vbox14.show()
         self.vbox14.set_spacing(5)
 
@@ -1155,10 +1100,9 @@ class MainWindow:
 
         self.LikesList = gtk.TreeView()
         self.LikesList.show()
-        self.LikesList.set_headers_visible(True)
         self.scrolledwindow23.add(self.LikesList)
 
-        self.vbox14.pack_start(self.scrolledwindow23, True, True, 0)
+        self.vbox14.pack_start(self.scrolledwindow23)
 
         self.button15 = gtk.Button()
         self.button15.show()
@@ -1167,19 +1111,16 @@ class MainWindow:
         self.alignment2 = gtk.Alignment(0.5, 0.5, 0, 0)
         self.alignment2.show()
 
-        self.hbox15 = gtk.HBox(False, 2)
+        self.hbox15 = gtk.HBox(False, 0)
         self.hbox15.show()
         self.hbox15.set_spacing(2)
 
         self.image2 = gtk.Image()
-        self.image2.set_padding(0, 0)
         self.image2.set_from_stock(gtk.STOCK_ADD, 4)
         self.image2.show()
         self.hbox15.pack_start(self.image2, False, False, 0)
 
         self.label22 = gtk.Label(_("Add"))
-        self.label22.set_padding(0, 0)
-        self.label22.set_line_wrap(False)
         self.label22.show()
         self.hbox15.pack_start(self.label22, False, False, 0)
 
@@ -1189,9 +1130,9 @@ class MainWindow:
 
         self.vbox14.pack_start(self.button15, False, False, 0)
 
-        self.vbox13.pack_start(self.vbox14, True, True, 0)
+        self.vbox13.pack_start(self.vbox14)
 
-        self.vbox15 = gtk.VBox(False, 5)
+        self.vbox15 = gtk.VBox(False, 0)
         self.vbox15.show()
         self.vbox15.set_spacing(5)
 
@@ -1202,10 +1143,9 @@ class MainWindow:
 
         self.DislikesList = gtk.TreeView()
         self.DislikesList.show()
-        self.DislikesList.set_headers_visible(True)
         self.scrolledwindow24.add(self.DislikesList)
 
-        self.vbox15.pack_start(self.scrolledwindow24, True, True, 0)
+        self.vbox15.pack_start(self.scrolledwindow24)
 
         self.button16 = gtk.Button()
         self.button16.show()
@@ -1214,19 +1154,16 @@ class MainWindow:
         self.alignment1 = gtk.Alignment(0.5, 0.5, 0, 0)
         self.alignment1.show()
 
-        self.hbox14 = gtk.HBox(False, 2)
+        self.hbox14 = gtk.HBox(False, 0)
         self.hbox14.show()
         self.hbox14.set_spacing(2)
 
         self.image1 = gtk.Image()
-        self.image1.set_padding(0, 0)
         self.image1.set_from_stock(gtk.STOCK_ADD, 4)
         self.image1.show()
         self.hbox14.pack_start(self.image1, False, False, 0)
 
         self.label21 = gtk.Label(_("Add"))
-        self.label21.set_padding(0, 0)
-        self.label21.set_line_wrap(False)
         self.label21.show()
         self.hbox14.pack_start(self.label21, False, False, 0)
 
@@ -1236,7 +1173,7 @@ class MainWindow:
 
         self.vbox15.pack_start(self.button16, False, False, 0)
 
-        self.vbox13.pack_start(self.vbox15, True, True, 0)
+        self.vbox13.pack_start(self.vbox15)
 
         self.hpaned3.pack1(self.vbox13, False, True)
 
@@ -1250,7 +1187,6 @@ class MainWindow:
 
         self.RecommendationsList = gtk.TreeView()
         self.RecommendationsList.show()
-        self.RecommendationsList.set_headers_visible(True)
         self.scrolledwindow26.add(self.RecommendationsList)
 
         self.hpaned4.pack1(self.scrolledwindow26, True, True)
@@ -1262,16 +1198,15 @@ class MainWindow:
 
         self.RecommendationUsersList = gtk.TreeView()
         self.RecommendationUsersList.show()
-        self.RecommendationUsersList.set_headers_visible(True)
         self.scrolledwindow27.add(self.RecommendationUsersList)
 
         self.hpaned4.pack2(self.scrolledwindow27, True, True)
 
         self.hpaned3.pack2(self.hpaned4, True, True)
 
-        self.hbox11.pack_start(self.hpaned3, True, True, 0)
+        self.hbox11.pack_start(self.hpaned3)
 
-        self.interests.pack_start(self.hbox11, True, True, 0)
+        self.interests.pack_start(self.hbox11)
 
         self.InterestsTabLabel = self.get_custom_widget("InterestsTabLabel", _("ImageLabel"), _("Interests"), 0, 0)
         self.InterestsTabLabel.show()
@@ -1293,18 +1228,17 @@ class MainWindow:
 
         self.vpaned1.pack1(self.notebook1, True, True)
 
-        self.vbox1.pack_start(self.vpaned1, True, True, 0)
+        self.vbox1.pack_start(self.vpaned1)
 
         self.hbox10 = gtk.HBox(False, 0)
         self.hbox10.show()
-        self.hbox10.set_spacing(0)
         self.hbox10.set_border_width(2)
 
         self.Statusbar = gtk.Statusbar()
         self.Statusbar.set_has_resize_grip(False)
         self.Statusbar.show()
         self.Statusbar.set_border_width(1)
-        self.hbox10.pack_start(self.Statusbar, True, True, 0)
+        self.hbox10.pack_start(self.Statusbar)
 
         self.SharesProgress = gtk.ProgressBar()
         self.SharesProgress.set_text(_("Scanning Shares"))
@@ -1458,13 +1392,13 @@ class MainWindow:
     def OnLoadFromDisk(self, widget):
         pass
 
-    def OnSimilarUsersClicked(self, widget):
+    def OnGlobalRecommendationsClicked(self, widget):
         pass
 
     def OnRecommendationsClicked(self, widget):
         pass
 
-    def OnGlobalRecommendationsClicked(self, widget):
+    def OnSimilarUsersClicked(self, widget):
         pass
 
     def OnAddThingILike(self, widget):
@@ -1489,9 +1423,8 @@ class ChatRoomTab:
              self.tooltips = tooltips
         self.tooltips.enable()
         if create:
-            self.ChatRoomTab = gtk.Window(gtk.WINDOW_TOPLEVEL)
+            self.ChatRoomTab = gtk.Window()
             self.ChatRoomTab.set_title(_("window1"))
-            self.ChatRoomTab.set_position(gtk.WIN_POS_NONE)
             self.ChatRoomTab.add_accel_group(self.accel_group)
             self.ChatRoomTab.show()
 
@@ -1507,7 +1440,6 @@ class ChatRoomTab:
         self.scrolledwindow13.set_shadow_type(gtk.SHADOW_IN)
 
         self.RoomLog = gtk.TextView()
-        self.RoomLog.set_wrap_mode(gtk.WRAP_NONE)
         self.RoomLog.set_cursor_visible(False)
         self.RoomLog.set_editable(False)
         self.RoomLog.show()
@@ -1517,7 +1449,6 @@ class ChatRoomTab:
 
         self.vbox6 = gtk.VBox(False, 0)
         self.vbox6.show()
-        self.vbox6.set_spacing(0)
 
         self.Ticker = self.get_custom_widget("Ticker", "", "", 0, 0)
         self.Ticker.connect("button_press_event", self.OnTickerClicked)
@@ -1535,13 +1466,10 @@ class ChatRoomTab:
         self.ChatScroll.show()
         self.scrolledwindow15.add(self.ChatScroll)
 
-        self.vbox6.pack_start(self.scrolledwindow15, True, True, 0)
+        self.vbox6.pack_start(self.scrolledwindow15)
 
         self.entry3 = gtk.Entry()
-        self.entry3.set_text("")
-        self.entry3.set_editable(True)
         self.entry3.show()
-        self.entry3.set_visibility(True)
         self.entry3.connect("activate", self.OnEnter)
         self.entry3.connect("key_press_event", self.OnKeyPress)
         self.vbox6.pack_start(self.entry3, False, False, 0)
@@ -1552,7 +1480,6 @@ class ChatRoomTab:
 
         self.vbox5 = gtk.VBox(False, 0)
         self.vbox5.show()
-        self.vbox5.set_spacing(0)
 
         self.scrolledwindow14 = gtk.ScrolledWindow()
         self.scrolledwindow14.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
@@ -1561,18 +1488,16 @@ class ChatRoomTab:
 
         self.UserList = gtk.TreeView()
         self.UserList.show()
-        self.UserList.set_headers_visible(True)
         self.scrolledwindow14.add(self.UserList)
 
-        self.vbox5.pack_start(self.scrolledwindow14, True, True, 0)
+        self.vbox5.pack_start(self.scrolledwindow14)
 
-        self.hbox58 = gtk.HBox(False, 5)
+        self.hbox58 = gtk.HBox(False, 0)
         self.hbox58.show()
         self.hbox58.set_spacing(5)
         self.hbox58.set_border_width(3)
 
         self.Log = gtk.CheckButton()
-        self.Log.set_active(False)
         self.Log.set_label(_("Log"))
         self.Log.show()
         self.Log.connect("toggled", self.OnLogToggled)
@@ -1587,17 +1512,15 @@ class ChatRoomTab:
         cell = gtk.CellRendererText()
         self.Encoding.pack_start(cell, True)
         self.Encoding.add_attribute(cell, 'text', 0)
-        self.hbox58.pack_start(self.Encoding, True, True, 0)
+        self.hbox58.pack_start(self.Encoding)
 
         self.vbox5.pack_start(self.hbox58, False, False, 0)
 
         self.hbox4 = gtk.HBox(False, 0)
         self.hbox4.show()
-        self.hbox4.set_spacing(0)
         self.hbox4.set_border_width(3)
 
         self.AutoJoin = gtk.CheckButton()
-        self.AutoJoin.set_active(False)
         self.AutoJoin.set_label(_("Auto-join"))
         self.AutoJoin.show()
         self.AutoJoin.connect("toggled", self.OnAutojoin)
@@ -1610,19 +1533,16 @@ class ChatRoomTab:
         self.alignment33 = gtk.Alignment(0.5, 0.5, 0, 0)
         self.alignment33.show()
 
-        self.hbox53 = gtk.HBox(False, 2)
+        self.hbox53 = gtk.HBox(False, 0)
         self.hbox53.show()
         self.hbox53.set_spacing(2)
 
         self.image33 = gtk.Image()
-        self.image33.set_padding(0, 0)
         self.image33.set_from_stock(gtk.STOCK_CLOSE, 4)
         self.image33.show()
         self.hbox53.pack_start(self.image33, False, False, 0)
 
         self.label62 = gtk.Label(_("Leave"))
-        self.label62.set_padding(0, 0)
-        self.label62.set_line_wrap(False)
         self.label62.show()
         self.hbox53.pack_start(self.label62, False, False, 0)
 
@@ -1677,15 +1597,13 @@ class PrivateChatTab:
              self.tooltips = tooltips
         self.tooltips.enable()
         if create:
-            self.PrivateChatTab = gtk.Window(gtk.WINDOW_TOPLEVEL)
+            self.PrivateChatTab = gtk.Window()
             self.PrivateChatTab.set_title(_("window1"))
-            self.PrivateChatTab.set_position(gtk.WIN_POS_NONE)
             self.PrivateChatTab.add_accel_group(self.accel_group)
             self.PrivateChatTab.show()
 
         self.Main = gtk.VBox(False, 0)
         self.Main.show()
-        self.Main.set_spacing(0)
 
         self.scrolledwindow16 = gtk.ScrolledWindow()
         self.scrolledwindow16.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
@@ -1699,21 +1617,18 @@ class PrivateChatTab:
         self.ChatScroll.show()
         self.scrolledwindow16.add(self.ChatScroll)
 
-        self.Main.pack_start(self.scrolledwindow16, True, True, 0)
+        self.Main.pack_start(self.scrolledwindow16)
 
-        self.hbox5 = gtk.HBox(False, 5)
+        self.hbox5 = gtk.HBox(False, 0)
         self.hbox5.show()
         self.hbox5.set_spacing(5)
         self.hbox5.set_border_width(3)
 
         self.ChatLine = gtk.Entry()
-        self.ChatLine.set_text("")
-        self.ChatLine.set_editable(True)
         self.ChatLine.show()
-        self.ChatLine.set_visibility(True)
         self.ChatLine.connect("activate", self.OnEnter)
         self.ChatLine.connect("key_press_event", self.OnKeyPress)
-        self.hbox5.pack_start(self.ChatLine, True, True, 0)
+        self.hbox5.pack_start(self.ChatLine)
 
         self.Encoding_List = gtk.ListStore(gobject.TYPE_STRING)
         self.Encoding = gtk.ComboBox()
@@ -1727,7 +1642,6 @@ class PrivateChatTab:
         self.hbox5.pack_start(self.Encoding, False, False, 0)
 
         self.Log = gtk.CheckButton()
-        self.Log.set_active(False)
         self.Log.set_label(_("Log"))
         self.Log.show()
         self.Log.connect("toggled", self.OnLogToggled)
@@ -1740,19 +1654,16 @@ class PrivateChatTab:
         self.alignment34 = gtk.Alignment(0.5, 0.5, 0, 0)
         self.alignment34.show()
 
-        self.hbox54 = gtk.HBox(False, 2)
+        self.hbox54 = gtk.HBox(False, 0)
         self.hbox54.show()
         self.hbox54.set_spacing(2)
 
         self.image34 = gtk.Image()
-        self.image34.set_padding(0, 0)
         self.image34.set_from_stock(gtk.STOCK_CLOSE, 4)
         self.image34.show()
         self.hbox54.pack_start(self.image34, False, False, 0)
 
         self.label63 = gtk.Label(_("Close"))
-        self.label63.set_padding(0, 0)
-        self.label63.set_line_wrap(False)
         self.label63.show()
         self.hbox54.pack_start(self.label63, False, False, 0)
 
@@ -1799,29 +1710,24 @@ class SearchTab:
              self.tooltips = tooltips
         self.tooltips.enable()
         if create:
-            self.SearchTab = gtk.Window(gtk.WINDOW_TOPLEVEL)
+            self.SearchTab = gtk.Window()
             self.SearchTab.set_title(_("window1"))
-            self.SearchTab.set_position(gtk.WIN_POS_NONE)
             self.SearchTab.add_accel_group(self.accel_group)
             self.SearchTab.show()
 
         self.vbox7 = gtk.VBox(False, 0)
         self.vbox7.show()
-        self.vbox7.set_spacing(0)
 
-        self.hbox6 = gtk.HBox(False, 5)
+        self.hbox6 = gtk.HBox(False, 0)
         self.hbox6.show()
         self.hbox6.set_spacing(5)
 
         self.QueryLabel = gtk.Label(_("Query"))
-        self.QueryLabel.set_alignment(0, 0.5)
-        self.QueryLabel.set_padding(0, 0)
-        self.QueryLabel.set_line_wrap(False)
+        self.QueryLabel.set_alignment(0, 0.50)
         self.QueryLabel.show()
-        self.hbox6.pack_start(self.QueryLabel, True, True, 0)
+        self.hbox6.pack_start(self.QueryLabel)
 
         self.checkbutton1 = gtk.CheckButton()
-        self.checkbutton1.set_active(False)
         self.checkbutton1.set_label(_("Enable filters"))
         self.checkbutton1.show()
         self.checkbutton1.connect("toggled", self.OnToggleFilters)
@@ -1834,19 +1740,16 @@ class SearchTab:
         self.alignment36 = gtk.Alignment(0.5, 0.5, 0, 0)
         self.alignment36.show()
 
-        self.hbox56 = gtk.HBox(False, 2)
+        self.hbox56 = gtk.HBox(False, 0)
         self.hbox56.show()
         self.hbox56.set_spacing(2)
 
         self.image36 = gtk.Image()
-        self.image36.set_padding(0, 0)
         self.image36.set_from_stock(gtk.STOCK_STOP, 4)
         self.image36.show()
         self.hbox56.pack_start(self.image36, False, False, 0)
 
         self.label65 = gtk.Label(_("Ignore"))
-        self.label65.set_padding(0, 0)
-        self.label65.set_line_wrap(False)
         self.label65.show()
         self.hbox56.pack_start(self.label65, False, False, 0)
 
@@ -1863,19 +1766,16 @@ class SearchTab:
         self.alignment35 = gtk.Alignment(0.5, 0.5, 0, 0)
         self.alignment35.show()
 
-        self.hbox55 = gtk.HBox(False, 2)
+        self.hbox55 = gtk.HBox(False, 0)
         self.hbox55.show()
         self.hbox55.set_spacing(2)
 
         self.image35 = gtk.Image()
-        self.image35.set_padding(0, 0)
         self.image35.set_from_stock(gtk.STOCK_CLOSE, 4)
         self.image35.show()
         self.hbox55.pack_start(self.image35, False, False, 0)
 
         self.label64 = gtk.Label(_("Close"))
-        self.label64.set_padding(0, 0)
-        self.label64.set_line_wrap(False)
         self.label64.show()
         self.hbox55.pack_start(self.label64, False, False, 0)
 
@@ -1886,7 +1786,6 @@ class SearchTab:
         self.hbox6.pack_start(self.button3, False, False, 0)
 
         self.RememberCheckButton = gtk.CheckButton()
-        self.RememberCheckButton.set_active(False)
         self.RememberCheckButton.set_label(_("Remember"))
         self.RememberCheckButton.show()
         self.RememberCheckButton.connect("toggled", self.OnToggleRemember)
@@ -1894,12 +1793,10 @@ class SearchTab:
 
         self.vbox7.pack_start(self.hbox6, False, True, 3)
 
-        self.Filters = gtk.HBox(False, 2)
+        self.Filters = gtk.HBox(False, 0)
         self.Filters.set_spacing(2)
 
         self.label13 = gtk.Label(_("Filter in:"))
-        self.label13.set_padding(0, 0)
-        self.label13.set_line_wrap(False)
         self.label13.show()
         self.Filters.pack_start(self.label13, False, False, 0)
 
@@ -1907,20 +1804,13 @@ class SearchTab:
         self.FilterIn = gtk.ComboBoxEntry()
         self.FilterIn.show()
 
-        self.combo_entry1 = self.FilterIn.child
-        self.combo_entry1.set_text("")
-        self.combo_entry1.set_editable(True)
-        self.combo_entry1.show()
-        self.combo_entry1.set_visibility(True)
-        self.combo_entry1.connect("activate", self.OnRefilter)
+        self.comboboxentry_entry3 = self.FilterIn.child
 
         self.FilterIn.set_model(self.FilterIn_List)
         self.FilterIn.set_text_column(0)
-        self.Filters.pack_start(self.FilterIn, True, True, 0)
+        self.Filters.pack_start(self.FilterIn)
 
         self.label14 = gtk.Label(_("Filter out:"))
-        self.label14.set_padding(0, 0)
-        self.label14.set_line_wrap(False)
         self.label14.show()
         self.Filters.pack_start(self.label14, False, False, 0)
 
@@ -1928,20 +1818,13 @@ class SearchTab:
         self.FilterOut = gtk.ComboBoxEntry()
         self.FilterOut.show()
 
-        self.combo_entry2 = self.FilterOut.child
-        self.combo_entry2.set_text("")
-        self.combo_entry2.set_editable(True)
-        self.combo_entry2.show()
-        self.combo_entry2.set_visibility(True)
-        self.combo_entry2.connect("activate", self.OnRefilter)
+        self.comboboxentry_entry4 = self.FilterOut.child
 
         self.FilterOut.set_model(self.FilterOut_List)
         self.FilterOut.set_text_column(0)
-        self.Filters.pack_start(self.FilterOut, True, True, 0)
+        self.Filters.pack_start(self.FilterOut)
 
         self.label15 = gtk.Label(_("Size:"))
-        self.label15.set_padding(0, 0)
-        self.label15.set_line_wrap(False)
         self.label15.show()
         self.Filters.pack_start(self.label15, False, False, 0)
 
@@ -1950,20 +1833,13 @@ class SearchTab:
         self.FilterSize.set_size_request(75, -1)
         self.FilterSize.show()
 
-        self.combo_entry3 = self.FilterSize.child
-        self.combo_entry3.set_text("")
-        self.combo_entry3.set_editable(True)
-        self.combo_entry3.show()
-        self.combo_entry3.set_visibility(True)
-        self.combo_entry3.connect("activate", self.OnRefilter)
+        self.comboboxentry_entry5 = self.FilterSize.child
 
         self.FilterSize.set_model(self.FilterSize_List)
         self.FilterSize.set_text_column(0)
         self.Filters.pack_start(self.FilterSize, False, True, 0)
 
         self.label16 = gtk.Label(_("Bitrate:"))
-        self.label16.set_padding(0, 0)
-        self.label16.set_line_wrap(False)
         self.label16.show()
         self.Filters.pack_start(self.label16, False, False, 0)
 
@@ -1972,20 +1848,13 @@ class SearchTab:
         self.FilterBitrate.set_size_request(75, -1)
         self.FilterBitrate.show()
 
-        self.combo_entry4 = self.FilterBitrate.child
-        self.combo_entry4.set_text("")
-        self.combo_entry4.set_editable(True)
-        self.combo_entry4.show()
-        self.combo_entry4.set_visibility(True)
-        self.combo_entry4.connect("activate", self.OnRefilter)
+        self.comboboxentry_entry6 = self.FilterBitrate.child
 
         self.FilterBitrate.set_model(self.FilterBitrate_List)
         self.FilterBitrate.set_text_column(0)
         self.Filters.pack_start(self.FilterBitrate, False, True, 0)
 
         self.label23 = gtk.Label(_("Country:"))
-        self.label23.set_padding(0, 0)
-        self.label23.set_line_wrap(False)
         self.label23.show()
         self.Filters.pack_start(self.label23, False, False, 0)
 
@@ -1994,19 +1863,13 @@ class SearchTab:
         self.FilterCountry.set_size_request(75, -1)
         self.FilterCountry.show()
 
-        self.combo_entry5 = self.FilterCountry.child
-        self.combo_entry5.set_text("")
-        self.combo_entry5.set_editable(True)
-        self.combo_entry5.show()
-        self.combo_entry5.set_visibility(True)
-        self.combo_entry5.connect("activate", self.OnRefilter)
+        self.comboboxentry_entry7 = self.FilterCountry.child
 
         self.FilterCountry.set_model(self.FilterCountry_List)
         self.FilterCountry.set_text_column(0)
         self.Filters.pack_start(self.FilterCountry, False, True, 0)
 
         self.FilterFreeSlot = gtk.CheckButton()
-        self.FilterFreeSlot.set_active(False)
         self.FilterFreeSlot.set_label(_("Free slot"))
         self.FilterFreeSlot.show()
         self.FilterFreeSlot.connect("toggled", self.OnRefilter)
@@ -2015,16 +1878,14 @@ class SearchTab:
         self.vbox7.pack_start(self.Filters, False, True, 3)
 
         self.scrolledwindow17 = gtk.ScrolledWindow()
-        self.scrolledwindow17.set_policy(gtk.POLICY_ALWAYS, gtk.POLICY_ALWAYS)
         self.scrolledwindow17.show()
         self.scrolledwindow17.set_shadow_type(gtk.SHADOW_IN)
 
         self.ResultsList = gtk.TreeView()
         self.ResultsList.show()
-        self.ResultsList.set_headers_visible(True)
         self.scrolledwindow17.add(self.ResultsList)
 
-        self.vbox7.pack_start(self.scrolledwindow17, True, True, 0)
+        self.vbox7.pack_start(self.scrolledwindow17)
 
 
         if create:
@@ -2061,15 +1922,13 @@ class UserInfoTab:
              self.tooltips = tooltips
         self.tooltips.enable()
         if create:
-            self.UserInfoTab = gtk.Window(gtk.WINDOW_TOPLEVEL)
+            self.UserInfoTab = gtk.Window()
             self.UserInfoTab.set_title(_("window1"))
-            self.UserInfoTab.set_position(gtk.WIN_POS_NONE)
             self.UserInfoTab.add_accel_group(self.accel_group)
             self.UserInfoTab.show()
 
         self.Main = gtk.HBox(False, 0)
         self.Main.show()
-        self.Main.set_spacing(0)
 
         self.hpaned5 = gtk.HPaned()
         self.hpaned5.show()
@@ -2077,20 +1936,16 @@ class UserInfoTab:
         self.InfoVbox = gtk.VBox(False, 0)
         self.InfoVbox.set_size_request(250, -1)
         self.InfoVbox.show()
-        self.InfoVbox.set_spacing(0)
 
         self.DescriptionExpander = gtk.Expander()
         self.DescriptionExpander.set_expanded(True)
         self.DescriptionExpander.show()
-        self.DescriptionExpander.set_spacing(0)
 
         self.frame1 = gtk.Frame()
         self.frame1.show()
-        self.frame1.set_shadow_type(gtk.SHADOW_ETCHED_IN)
 
         self.vbox16 = gtk.VBox(False, 0)
         self.vbox16.show()
-        self.vbox16.set_spacing(0)
 
         self.Encoding_List = gtk.ListStore(gobject.TYPE_STRING)
         self.Encoding = gtk.ComboBox()
@@ -2115,136 +1970,111 @@ class UserInfoTab:
         self.descr.show()
         self.scrolledwindow28.add(self.descr)
 
-        self.vbox16.pack_start(self.scrolledwindow28, True, True, 0)
+        self.vbox16.pack_start(self.scrolledwindow28)
 
         self.frame1.add(self.vbox16)
 
         self.DescriptionExpander.add(self.frame1)
 
         self.label74 = gtk.Label(_("Self description:"))
-        self.label74.set_padding(0, 0)
-        self.label74.set_line_wrap(False)
         self.label74.show()
         self.DescriptionExpander.set_label_widget(self.label74)
 
-        self.InfoVbox.pack_start(self.DescriptionExpander, True, True, 0)
+        self.InfoVbox.pack_start(self.DescriptionExpander)
 
         self.InformationExpander = gtk.Expander()
         self.InformationExpander.set_expanded(True)
         self.InformationExpander.show()
-        self.InformationExpander.set_spacing(0)
 
         self.frame2 = gtk.Frame()
         self.frame2.show()
-        self.frame2.set_shadow_type(gtk.SHADOW_ETCHED_IN)
 
-        self.vbox10 = gtk.VBox(False, 5)
+        self.vbox10 = gtk.VBox(False, 0)
         self.vbox10.show()
         self.vbox10.set_spacing(5)
         self.vbox10.set_border_width(5)
 
-        self.progressbar = gtk.ProgressBar()
-        self.progressbar.show()
-        self.vbox10.pack_end(self.progressbar, False, False, 0)
-
         self.uploads = gtk.Label(_("Total uploads allowed: unknown"))
-        self.uploads.set_alignment(0, 0.5)
-        self.uploads.set_padding(0, 0)
-        self.uploads.set_line_wrap(False)
+        self.uploads.set_alignment(0, 0.50)
         self.uploads.show()
         self.vbox10.pack_start(self.uploads, False, False, 0)
 
         self.slotsavail = gtk.Label(_("Slots free: unknown"))
-        self.slotsavail.set_alignment(0, 0.5)
-        self.slotsavail.set_padding(0, 0)
-        self.slotsavail.set_line_wrap(False)
+        self.slotsavail.set_alignment(0, 0.50)
         self.slotsavail.show()
         self.vbox10.pack_start(self.slotsavail, False, False, 0)
 
-        self.hbox65 = gtk.HBox(False, 5)
+        self.hbox65 = gtk.HBox(False, 0)
         self.hbox65.show()
         self.hbox65.set_spacing(5)
 
         self.queuesize = gtk.Label(_("Queue size: unknown"))
-        self.queuesize.set_alignment(0, 0.5)
-        self.queuesize.set_padding(0, 0)
-        self.queuesize.set_line_wrap(False)
+        self.queuesize.set_alignment(0, 0.50)
         self.queuesize.show()
         self.hbox65.pack_start(self.queuesize, False, False, 0)
 
         self.vbox10.pack_start(self.hbox65, False, False, 0)
 
-        self.hbox17 = gtk.HBox(False, 5)
+        self.hbox17 = gtk.HBox(False, 0)
         self.hbox17.show()
         self.hbox17.set_spacing(5)
 
         self.speed = gtk.Label(_("Speed: unknown"))
-        self.speed.set_alignment(0, 0.5)
-        self.speed.set_padding(0, 0)
-        self.speed.set_line_wrap(False)
+        self.speed.set_alignment(0, 0.50)
         self.speed.show()
         self.hbox17.pack_start(self.speed, False, False, 0)
 
         self.vbox10.pack_start(self.hbox17, False, False, 0)
 
-        self.hbox16 = gtk.HBox(False, 5)
+        self.hbox16 = gtk.HBox(False, 0)
         self.hbox16.show()
         self.hbox16.set_spacing(5)
 
         self.filesshared = gtk.Label(_("Files: unknown"))
-        self.filesshared.set_alignment(0, 0.5)
-        self.filesshared.set_padding(0, 0)
-        self.filesshared.set_line_wrap(False)
+        self.filesshared.set_alignment(0, 0.50)
         self.filesshared.show()
         self.hbox16.pack_start(self.filesshared, False, False, 0)
 
         self.dirsshared = gtk.Label(_("Directories: unknown"))
-        self.dirsshared.set_alignment(0, 0.5)
-        self.dirsshared.set_padding(0, 0)
-        self.dirsshared.set_line_wrap(False)
+        self.dirsshared.set_alignment(0, 0.50)
         self.dirsshared.show()
         self.hbox16.pack_start(self.dirsshared, False, False, 0)
 
         self.vbox10.pack_start(self.hbox16, False, False, 0)
 
-        self.hbox66 = gtk.HBox(False, 5)
+        self.hbox66 = gtk.HBox(False, 0)
         self.hbox66.show()
         self.hbox66.set_spacing(5)
 
         self.label72 = gtk.Label(_("Accepts Uploads from:"))
-        self.label72.set_padding(0, 0)
-        self.label72.set_line_wrap(False)
         self.label72.show()
         self.hbox66.pack_start(self.label72, False, False, 0)
 
         self.AcceptUploads = gtk.Label(_("unknown"))
-        self.AcceptUploads.set_padding(0, 0)
-        self.AcceptUploads.set_line_wrap(False)
         self.AcceptUploads.show()
         self.hbox66.pack_start(self.AcceptUploads, False, False, 0)
 
         self.vbox10.pack_start(self.hbox66, False, True, 0)
+
+        self.progressbar = gtk.ProgressBar()
+        self.progressbar.show()
+        self.vbox10.pack_end(self.progressbar, False, False, 0)
 
         self.frame2.add(self.vbox10)
 
         self.InformationExpander.add(self.frame2)
 
         self.label72 = gtk.Label(_("Information:"))
-        self.label72.set_padding(0, 0)
-        self.label72.set_line_wrap(False)
         self.label72.show()
         self.InformationExpander.set_label_widget(self.label72)
 
-        self.InfoVbox.pack_start(self.InformationExpander, True, True, 0)
+        self.InfoVbox.pack_start(self.InformationExpander)
 
         self.InterestsExpander = gtk.Expander()
-        self.InterestsExpander.set_expanded(False)
         self.InterestsExpander.show()
-        self.InterestsExpander.set_spacing(0)
 
         self.vbox18 = gtk.VBox(False, 0)
         self.vbox18.show()
-        self.vbox18.set_spacing(0)
 
         self.scrolledwindow31 = gtk.ScrolledWindow()
         self.scrolledwindow31.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
@@ -2253,10 +2083,9 @@ class UserInfoTab:
 
         self.Likes = gtk.TreeView()
         self.Likes.show()
-        self.Likes.set_headers_visible(True)
         self.scrolledwindow31.add(self.Likes)
 
-        self.vbox18.pack_start(self.scrolledwindow31, True, True, 0)
+        self.vbox18.pack_start(self.scrolledwindow31)
 
         self.scrolledwindow32 = gtk.ScrolledWindow()
         self.scrolledwindow32.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
@@ -2265,16 +2094,13 @@ class UserInfoTab:
 
         self.Hates = gtk.TreeView()
         self.Hates.show()
-        self.Hates.set_headers_visible(True)
         self.scrolledwindow32.add(self.Hates)
 
-        self.vbox18.pack_start(self.scrolledwindow32, True, True, 0)
+        self.vbox18.pack_start(self.scrolledwindow32)
 
         self.InterestsExpander.add(self.vbox18)
 
         self.label73 = gtk.Label(_("Interests:"))
-        self.label73.set_padding(0, 0)
-        self.label73.set_line_wrap(False)
         self.label73.show()
         self.InterestsExpander.set_label_widget(self.label73)
 
@@ -2284,19 +2110,17 @@ class UserInfoTab:
 
         self.frame3 = gtk.Frame()
         self.frame3.show()
-        self.frame3.set_shadow_type(gtk.SHADOW_ETCHED_IN)
 
         self.scrolledwindow19 = gtk.ScrolledWindow()
         self.scrolledwindow19.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
         self.scrolledwindow19.show()
-        self.scrolledwindow19.set_shadow_type(gtk.SHADOW_NONE)
 
         self.viewport2 = gtk.Viewport()
         self.viewport2.show()
         self.viewport2.set_shadow_type(gtk.SHADOW_NONE)
 
         self.image = gtk.Image()
-        self.image.set_padding(0, 0)
+        self.image.set_from_stock(gtk.STOCK_MISSING_IMAGE, 4)
         self.image.show()
         self.viewport2.add(self.image)
 
@@ -2305,16 +2129,14 @@ class UserInfoTab:
         self.frame3.add(self.scrolledwindow19)
 
         self.label19 = gtk.Label(_("Picture:"))
-        self.label19.set_padding(0, 0)
-        self.label19.set_line_wrap(False)
         self.label19.show()
         self.frame3.set_label_widget(self.label19)
 
         self.hpaned5.pack2(self.frame3, True, True)
 
-        self.Main.pack_start(self.hpaned5, True, True, 0)
+        self.Main.pack_start(self.hpaned5)
 
-        self.vbox9 = gtk.VBox(False, 5)
+        self.vbox9 = gtk.VBox(False, 0)
         self.vbox9.show()
         self.vbox9.set_spacing(5)
         self.vbox9.set_border_width(5)
@@ -2326,19 +2148,16 @@ class UserInfoTab:
         self.alignment23 = gtk.Alignment(0.5, 0.5, 0, 0)
         self.alignment23.show()
 
-        self.hbox43 = gtk.HBox(False, 2)
+        self.hbox43 = gtk.HBox(False, 0)
         self.hbox43.show()
         self.hbox43.set_spacing(2)
 
         self.image23 = gtk.Image()
-        self.image23.set_padding(0, 0)
         self.image23.set_from_stock(gtk.STOCK_EDIT, 4)
         self.image23.show()
         self.hbox43.pack_start(self.image23, False, False, 0)
 
         self.label52 = gtk.Label(_("Private chat"))
-        self.label52.set_padding(0, 0)
-        self.label52.set_line_wrap(False)
         self.label52.show()
         self.hbox43.pack_start(self.label52, False, False, 0)
 
@@ -2355,19 +2174,16 @@ class UserInfoTab:
         self.alignment24 = gtk.Alignment(0.5, 0.5, 0, 0)
         self.alignment24.show()
 
-        self.hbox44 = gtk.HBox(False, 2)
+        self.hbox44 = gtk.HBox(False, 0)
         self.hbox44.show()
         self.hbox44.set_spacing(2)
 
         self.image24 = gtk.Image()
-        self.image24.set_padding(0, 0)
         self.image24.set_from_stock(gtk.STOCK_HARDDISK, 4)
         self.image24.show()
         self.hbox44.pack_start(self.image24, False, False, 0)
 
         self.label53 = gtk.Label(_("Browse"))
-        self.label53.set_padding(0, 0)
-        self.label53.set_line_wrap(False)
         self.label53.show()
         self.hbox44.pack_start(self.label53, False, False, 0)
 
@@ -2384,19 +2200,16 @@ class UserInfoTab:
         self.alignment25 = gtk.Alignment(0.5, 0.5, 0, 0)
         self.alignment25.show()
 
-        self.hbox45 = gtk.HBox(False, 2)
+        self.hbox45 = gtk.HBox(False, 0)
         self.hbox45.show()
         self.hbox45.set_spacing(2)
 
         self.image25 = gtk.Image()
-        self.image25.set_padding(0, 0)
         self.image25.set_from_stock(gtk.STOCK_NETWORK, 4)
         self.image25.show()
         self.hbox45.pack_start(self.image25, False, False, 0)
 
         self.label54 = gtk.Label(_("Show IP"))
-        self.label54.set_padding(0, 0)
-        self.label54.set_line_wrap(False)
         self.label54.show()
         self.hbox45.pack_start(self.label54, False, False, 0)
 
@@ -2413,19 +2226,16 @@ class UserInfoTab:
         self.alignment26 = gtk.Alignment(0.5, 0.5, 0, 0)
         self.alignment26.show()
 
-        self.hbox46 = gtk.HBox(False, 2)
+        self.hbox46 = gtk.HBox(False, 0)
         self.hbox46.show()
         self.hbox46.set_spacing(2)
 
         self.image26 = gtk.Image()
-        self.image26.set_padding(0, 0)
         self.image26.set_from_stock(gtk.STOCK_ADD, 4)
         self.image26.show()
         self.hbox46.pack_start(self.image26, False, False, 0)
 
         self.label55 = gtk.Label(_("Add to list"))
-        self.label55.set_padding(0, 0)
-        self.label55.set_line_wrap(False)
         self.label55.show()
         self.hbox46.pack_start(self.label55, False, False, 0)
 
@@ -2442,19 +2252,16 @@ class UserInfoTab:
         self.alignment37 = gtk.Alignment(0.5, 0.5, 0, 0)
         self.alignment37.show()
 
-        self.hbox57 = gtk.HBox(False, 2)
+        self.hbox57 = gtk.HBox(False, 0)
         self.hbox57.show()
         self.hbox57.set_spacing(2)
 
         self.image37 = gtk.Image()
-        self.image37.set_padding(0, 0)
         self.image37.set_from_stock(gtk.STOCK_STOP, 4)
         self.image37.show()
         self.hbox57.pack_start(self.image37, False, False, 0)
 
         self.label66 = gtk.Label(_("Ban"))
-        self.label66.set_padding(0, 0)
-        self.label66.set_line_wrap(False)
         self.label66.show()
         self.hbox57.pack_start(self.label66, False, False, 0)
 
@@ -2471,19 +2278,16 @@ class UserInfoTab:
         self.alignment32 = gtk.Alignment(0.5, 0.5, 0, 0)
         self.alignment32.show()
 
-        self.hbox52 = gtk.HBox(False, 2)
+        self.hbox52 = gtk.HBox(False, 0)
         self.hbox52.show()
         self.hbox52.set_spacing(2)
 
         self.image32 = gtk.Image()
-        self.image32.set_padding(0, 0)
         self.image32.set_from_stock(gtk.STOCK_DELETE, 4)
         self.image32.show()
         self.hbox52.pack_start(self.image32, False, False, 0)
 
         self.label61 = gtk.Label(_("Ignore"))
-        self.label61.set_padding(0, 0)
-        self.label61.set_line_wrap(False)
         self.label61.show()
         self.hbox52.pack_start(self.label61, False, False, 0)
 
@@ -2500,19 +2304,16 @@ class UserInfoTab:
         self.alignment29 = gtk.Alignment(0.5, 0.5, 0, 0)
         self.alignment29.show()
 
-        self.hbox49 = gtk.HBox(False, 2)
+        self.hbox49 = gtk.HBox(False, 0)
         self.hbox49.show()
         self.hbox49.set_spacing(2)
 
         self.image29 = gtk.Image()
-        self.image29.set_padding(0, 0)
         self.image29.set_from_stock(gtk.STOCK_SAVE, 4)
         self.image29.show()
         self.hbox49.pack_start(self.image29, False, False, 0)
 
         self.label58 = gtk.Label(_("Save pic"))
-        self.label58.set_padding(0, 0)
-        self.label58.set_line_wrap(False)
         self.label58.show()
         self.hbox49.pack_start(self.label58, False, False, 0)
 
@@ -2522,35 +2323,6 @@ class UserInfoTab:
 
         self.vbox9.pack_start(self.button9, False, False, 0)
 
-        self.button10 = gtk.Button()
-        self.button10.show()
-        self.button10.connect("clicked", self.OnClose)
-
-        self.alignment31 = gtk.Alignment(0.5, 0.5, 0, 0)
-        self.alignment31.show()
-
-        self.hbox51 = gtk.HBox(False, 2)
-        self.hbox51.show()
-        self.hbox51.set_spacing(2)
-
-        self.image31 = gtk.Image()
-        self.image31.set_padding(0, 0)
-        self.image31.set_from_stock(gtk.STOCK_CLOSE, 4)
-        self.image31.show()
-        self.hbox51.pack_start(self.image31, False, False, 0)
-
-        self.label60 = gtk.Label(_("Close"))
-        self.label60.set_padding(0, 0)
-        self.label60.set_line_wrap(False)
-        self.label60.show()
-        self.hbox51.pack_start(self.label60, False, False, 0)
-
-        self.alignment31.add(self.hbox51)
-
-        self.button10.add(self.alignment31)
-
-        self.vbox9.pack_end(self.button10, False, False, 0)
-
         self.button11 = gtk.Button()
         self.button11.show()
         self.button11.connect("clicked", self.OnRefresh)
@@ -2558,19 +2330,16 @@ class UserInfoTab:
         self.alignment30 = gtk.Alignment(0.5, 0.5, 0, 0)
         self.alignment30.show()
 
-        self.hbox50 = gtk.HBox(False, 2)
+        self.hbox50 = gtk.HBox(False, 0)
         self.hbox50.show()
         self.hbox50.set_spacing(2)
 
         self.image30 = gtk.Image()
-        self.image30.set_padding(0, 0)
         self.image30.set_from_stock(gtk.STOCK_REFRESH, 4)
         self.image30.show()
         self.hbox50.pack_start(self.image30, False, False, 0)
 
         self.label59 = gtk.Label(_("Refresh"))
-        self.label59.set_padding(0, 0)
-        self.label59.set_line_wrap(False)
         self.label59.show()
         self.hbox50.pack_start(self.label59, False, False, 0)
 
@@ -2579,6 +2348,32 @@ class UserInfoTab:
         self.button11.add(self.alignment30)
 
         self.vbox9.pack_end(self.button11, False, False, 0)
+
+        self.button10 = gtk.Button()
+        self.button10.show()
+        self.button10.connect("clicked", self.OnClose)
+
+        self.alignment31 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment31.show()
+
+        self.hbox51 = gtk.HBox(False, 0)
+        self.hbox51.show()
+        self.hbox51.set_spacing(2)
+
+        self.image31 = gtk.Image()
+        self.image31.set_from_stock(gtk.STOCK_CLOSE, 4)
+        self.image31.show()
+        self.hbox51.pack_start(self.image31, False, False, 0)
+
+        self.label60 = gtk.Label(_("Close"))
+        self.label60.show()
+        self.hbox51.pack_start(self.label60, False, False, 0)
+
+        self.alignment31.add(self.hbox51)
+
+        self.button10.add(self.alignment31)
+
+        self.vbox9.pack_end(self.button10, False, False, 0)
 
         self.Main.pack_start(self.vbox9, False, True, 0)
 
@@ -2610,10 +2405,10 @@ class UserInfoTab:
     def OnSavePicture(self, widget):
         pass
 
-    def OnClose(self, widget):
+    def OnRefresh(self, widget):
         pass
 
-    def OnRefresh(self, widget):
+    def OnClose(self, widget):
         pass
 
     def get_custom_widget(self, id, string1, string2, int1, int2):
@@ -2632,33 +2427,26 @@ class UserBrowseTab:
              self.tooltips = tooltips
         self.tooltips.enable()
         if create:
-            self.UserBrowseTab = gtk.Window(gtk.WINDOW_TOPLEVEL)
+            self.UserBrowseTab = gtk.Window()
             self.UserBrowseTab.set_title(_("window1"))
-            self.UserBrowseTab.set_position(gtk.WIN_POS_NONE)
             self.UserBrowseTab.add_accel_group(self.accel_group)
             self.UserBrowseTab.show()
 
         self.Main = gtk.VBox(False, 0)
         self.Main.show()
-        self.Main.set_spacing(0)
 
-        self.hbox8 = gtk.HBox(False, 5)
+        self.hbox8 = gtk.HBox(False, 0)
         self.hbox8.show()
         self.hbox8.set_spacing(5)
 
         self.label20 = gtk.Label(_("Search file and folder names (exact match):"))
-        self.label20.set_padding(0, 0)
-        self.label20.set_line_wrap(False)
         self.label20.show()
         self.hbox8.pack_start(self.label20, False, False, 5)
 
         self.entry4 = gtk.Entry()
-        self.entry4.set_text("")
-        self.entry4.set_editable(True)
         self.entry4.show()
-        self.entry4.set_visibility(True)
         self.entry4.connect("activate", self.OnSearch)
-        self.hbox8.pack_start(self.entry4, True, True, 0)
+        self.hbox8.pack_start(self.entry4)
 
         self.Encoding_List = gtk.ListStore(gobject.TYPE_STRING)
         self.Encoding = gtk.ComboBox()
@@ -2678,14 +2466,11 @@ class UserBrowseTab:
 
         self.vbox17 = gtk.VBox(False, 0)
         self.vbox17.show()
-        self.vbox17.set_spacing(0)
 
         self.hbox61 = gtk.HBox(False, 0)
         self.hbox61.show()
-        self.hbox61.set_spacing(0)
 
         self.ExpandButton = gtk.ToggleButton()
-        self.ExpandButton.set_active(False)
         self.ExpandButton.set_label(_("Expand / Collapse all"))
         self.ExpandButton.show()
         self.ExpandButton.connect("clicked", self.OnExpand)
@@ -2704,15 +2489,14 @@ class UserBrowseTab:
         self.FolderTreeView.set_headers_visible(False)
         self.scrolledwindow21.add(self.FolderTreeView)
 
-        self.vbox17.pack_start(self.scrolledwindow21, True, True, 0)
+        self.vbox17.pack_start(self.scrolledwindow21)
 
         self.hpaned2.pack1(self.vbox17, False, True)
 
         self.sMain = gtk.VBox(False, 0)
         self.sMain.show()
-        self.sMain.set_spacing(0)
 
-        self.hbox9 = gtk.HBox(False, 5)
+        self.hbox9 = gtk.HBox(False, 0)
         self.hbox9.show()
         self.hbox9.set_spacing(5)
         self.hbox9.set_border_width(10)
@@ -2720,36 +2504,33 @@ class UserBrowseTab:
         self.progressbar1 = gtk.ProgressBar()
         self.progressbar1.set_size_request(250, -1)
         self.progressbar1.show()
-        self.hbox9.pack_start(self.progressbar1, True, True, 0)
+        self.hbox9.pack_start(self.progressbar1)
 
-        self.CloseButton = gtk.Button()
-        self.CloseButton.show()
-        self.CloseButton.connect("clicked", self.OnClose)
+        self.SaveButton = gtk.Button()
+        self.SaveButton.show()
+        self.SaveButton.connect("clicked", self.OnSave)
 
-        self.alignment40 = gtk.Alignment(0.5, 0.5, 0, 0)
-        self.alignment40.show()
+        self.alignment41 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment41.show()
 
-        self.hbox62 = gtk.HBox(False, 2)
-        self.hbox62.show()
-        self.hbox62.set_spacing(2)
+        self.hbox63 = gtk.HBox(False, 0)
+        self.hbox63.show()
+        self.hbox63.set_spacing(2)
 
-        self.image364 = gtk.Image()
-        self.image364.set_padding(0, 0)
-        self.image364.set_from_stock(gtk.STOCK_CLOSE, 4)
-        self.image364.show()
-        self.hbox62.pack_start(self.image364, False, False, 0)
+        self.image365 = gtk.Image()
+        self.image365.set_from_stock(gtk.STOCK_SAVE, 4)
+        self.image365.show()
+        self.hbox63.pack_start(self.image365, False, False, 0)
 
-        self.label69 = gtk.Label(_("Close"))
-        self.label69.set_padding(0, 0)
-        self.label69.set_line_wrap(False)
-        self.label69.show()
-        self.hbox62.pack_start(self.label69, False, False, 0)
+        self.label70 = gtk.Label(_("Save"))
+        self.label70.show()
+        self.hbox63.pack_start(self.label70, False, False, 0)
 
-        self.alignment40.add(self.hbox62)
+        self.alignment41.add(self.hbox63)
 
-        self.CloseButton.add(self.alignment40)
+        self.SaveButton.add(self.alignment41)
 
-        self.hbox9.pack_end(self.CloseButton, False, False, 0)
+        self.hbox9.pack_end(self.SaveButton, False, False, 0)
 
         self.RefreshButton = gtk.Button()
         self.RefreshButton.show()
@@ -2758,19 +2539,16 @@ class UserBrowseTab:
         self.alignment42 = gtk.Alignment(0.5, 0.5, 0, 0)
         self.alignment42.show()
 
-        self.hbox64 = gtk.HBox(False, 2)
+        self.hbox64 = gtk.HBox(False, 0)
         self.hbox64.show()
         self.hbox64.set_spacing(2)
 
         self.image366 = gtk.Image()
-        self.image366.set_padding(0, 0)
         self.image366.set_from_stock(gtk.STOCK_REFRESH, 4)
         self.image366.show()
         self.hbox64.pack_start(self.image366, False, False, 0)
 
         self.label71 = gtk.Label(_("Refresh"))
-        self.label71.set_padding(0, 0)
-        self.label71.set_line_wrap(False)
         self.label71.show()
         self.hbox64.pack_start(self.label71, False, False, 0)
 
@@ -2780,34 +2558,31 @@ class UserBrowseTab:
 
         self.hbox9.pack_end(self.RefreshButton, False, False, 0)
 
-        self.SaveButton = gtk.Button()
-        self.SaveButton.show()
-        self.SaveButton.connect("clicked", self.OnSave)
+        self.CloseButton = gtk.Button()
+        self.CloseButton.show()
+        self.CloseButton.connect("clicked", self.OnClose)
 
-        self.alignment41 = gtk.Alignment(0.5, 0.5, 0, 0)
-        self.alignment41.show()
+        self.alignment40 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment40.show()
 
-        self.hbox63 = gtk.HBox(False, 2)
-        self.hbox63.show()
-        self.hbox63.set_spacing(2)
+        self.hbox62 = gtk.HBox(False, 0)
+        self.hbox62.show()
+        self.hbox62.set_spacing(2)
 
-        self.image365 = gtk.Image()
-        self.image365.set_padding(0, 0)
-        self.image365.set_from_stock(gtk.STOCK_SAVE, 4)
-        self.image365.show()
-        self.hbox63.pack_start(self.image365, False, False, 0)
+        self.image364 = gtk.Image()
+        self.image364.set_from_stock(gtk.STOCK_CLOSE, 4)
+        self.image364.show()
+        self.hbox62.pack_start(self.image364, False, False, 0)
 
-        self.label70 = gtk.Label(_("Save"))
-        self.label70.set_padding(0, 0)
-        self.label70.set_line_wrap(False)
-        self.label70.show()
-        self.hbox63.pack_start(self.label70, False, False, 0)
+        self.label69 = gtk.Label(_("Close"))
+        self.label69.show()
+        self.hbox62.pack_start(self.label69, False, False, 0)
 
-        self.alignment41.add(self.hbox63)
+        self.alignment40.add(self.hbox62)
 
-        self.SaveButton.add(self.alignment41)
+        self.CloseButton.add(self.alignment40)
 
-        self.hbox9.pack_end(self.SaveButton, False, False, 0)
+        self.hbox9.pack_end(self.CloseButton, False, False, 0)
 
         self.sMain.pack_start(self.hbox9, False, True, 0)
 
@@ -2818,14 +2593,13 @@ class UserBrowseTab:
 
         self.FileTreeView = gtk.TreeView()
         self.FileTreeView.show()
-        self.FileTreeView.set_headers_visible(True)
         self.scrolledwindow20.add(self.FileTreeView)
 
-        self.sMain.pack_start(self.scrolledwindow20, True, True, 0)
+        self.sMain.pack_start(self.scrolledwindow20)
 
         self.hpaned2.pack2(self.sMain, True, True)
 
-        self.Main.pack_start(self.hpaned2, True, True, 0)
+        self.Main.pack_start(self.hpaned2)
 
 
         if create:
@@ -2840,13 +2614,13 @@ class UserBrowseTab:
     def OnExpand(self, widget):
         pass
 
-    def OnClose(self, widget):
+    def OnSave(self, widget):
         pass
 
     def OnRefresh(self, widget):
         pass
 
-    def OnSave(self, widget):
+    def OnClose(self, widget):
         pass
 
     def get_custom_widget(self, id, string1, string2, int1, int2):
@@ -2865,15 +2639,13 @@ class RoomList:
              self.tooltips = tooltips
         self.tooltips.enable()
         if create:
-            self.RoomList = gtk.Window(gtk.WINDOW_TOPLEVEL)
+            self.RoomList = gtk.Window()
             self.RoomList.set_title(_("window1"))
-            self.RoomList.set_position(gtk.WIN_POS_NONE)
             self.RoomList.add_accel_group(self.accel_group)
             self.RoomList.show()
 
         self.vbox2 = gtk.VBox(False, 0)
         self.vbox2.show()
-        self.vbox2.set_spacing(0)
 
         self.scrolledwindow10 = gtk.ScrolledWindow()
         self.scrolledwindow10.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
@@ -2882,29 +2654,23 @@ class RoomList:
 
         self.RoomsList = gtk.TreeView()
         self.RoomsList.show()
-        self.RoomsList.set_headers_visible(True)
         self.scrolledwindow10.add(self.RoomsList)
 
-        self.vbox2.pack_start(self.scrolledwindow10, True, True, 0)
+        self.vbox2.pack_start(self.scrolledwindow10)
 
-        self.hbox1 = gtk.HBox(False, 5)
+        self.hbox1 = gtk.HBox(False, 0)
         self.hbox1.show()
         self.hbox1.set_spacing(5)
         self.hbox1.set_border_width(3)
 
         self.label10 = gtk.Label(_("Create: "))
-        self.label10.set_padding(0, 0)
-        self.label10.set_line_wrap(False)
         self.label10.show()
         self.hbox1.pack_start(self.label10, False, False, 0)
 
         self.CreateRoomEntry = gtk.Entry()
-        self.CreateRoomEntry.set_text("")
-        self.CreateRoomEntry.set_editable(True)
         self.CreateRoomEntry.show()
-        self.CreateRoomEntry.set_visibility(True)
         self.CreateRoomEntry.connect("activate", self.OnCreateRoom)
-        self.hbox1.pack_start(self.CreateRoomEntry, True, True, 0)
+        self.hbox1.pack_start(self.CreateRoomEntry)
 
         self.vbox2.pack_start(self.hbox1, False, True, 0)
 
