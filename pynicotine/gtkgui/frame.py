@@ -79,64 +79,28 @@ class BuddiesComboBoxEntry(gtk.ComboBoxEntry):
 		
 class NicotineFrame(MainWindow):
 	def __init__(self, config, use_trayicon):
-		self.images = {}
+		
 		self.clip_data = ""
 		self.configfile = config
-
+		self.transfermsgs = {}
+		self.transfermsgspostedtime = 0
+		self.manualdisconnect = 0
+		self.away = 0
+		self.showdebug = 0
+		self.current_tab = 0
+		self.rescanning = 0
+		self.brescanning = 0
+		self.needrescan = 0
+		self.autoaway = False
+		self.awaytimer = None
+		
 		self.chatrooms = None
 		
 		self.got_focus = False
-		self.importimages()
-		config2 = Config(config)
-		config2.readConfig()
-		# For Win32 Systray 
 
-		self.icons = {}
-		if sys.platform == "win32":
-		        import icondata
-			
-			for i in "hilite2", "connect", "disconnect", "away2":
-				if "icontheme"  in config2.sections["ui"]:
-					path = os.path.expanduser(os.path.join(config2.sections["ui"]["icontheme"], i +".ico"))
-					if os.path.exists(path):
-						data = open(path, 'rb')
-						s = data.read()
-						data.close()
-						self.icons[i] = s
-						del s
-						continue
-					else:
-						# default icons
-						data = getattr(icondata, i)
-				else:
-					# default icons
-					data = getattr(icondata, i)
-				self.icons[i] = data
-		for i in "empty", "away", "online", "offline", "hilite", "hilite2", "connect", "disconnect", "away2", "n":
-			loader = gtk.gdk.PixbufLoader("png")
-			if "icontheme" in config2.sections["ui"]:
-				path = os.path.expanduser(os.path.join(config2.sections["ui"]["icontheme"], i +".png"))
-				if os.path.exists(path):
-					data = open(path, 'rb')
-					s = data.read()
-					loader.write(s, len(s))
-					data.close()
-					del s
-				else:
-					# default icons
-					data = getattr(imagedata, i)
-					loader.write(data, len(data))
-			else:
-				# default icons
-				data = getattr(imagedata, i)
-				loader.write(data, len(data))
-			
-			
-			loader.close()
-			self.images[i] = loader.get_pixbuf()
-		self.TrayApp = TrayApp(self)
+		self.np = NetworkEventProcessor(self, self.callback, self.logMessage, self.SetStatusText, config)
+		self.LoadIcons()
 
-		del data
 		self.BuddiesComboEntries = []
 		
 		MainWindow.__init__(self)
@@ -145,13 +109,14 @@ class NicotineFrame(MainWindow):
 		self.MainWindow.selection_add_target("PRIMARY", "STRING", 1)
 		self.MainWindow.set_geometry_hints(None, min_width=500, min_height=500)
 		self.MainWindow.connect("configure_event", self.OnWindowChange)
-		width = config2.sections["ui"]["width"]
-		height = config2.sections["ui"]["height"]
+		
+		width = self.np.config.sections["ui"]["width"]
+		height = self.np.config.sections["ui"]["height"]
 		self.MainWindow.resize(width, height)
 		self.MainWindow.set_position(gtk.WIN_POS_CENTER)
 		self.MainWindow.show()
 		self.minimized = False
-		del config2
+	
 		self.clip = gtk.Clipboard(display=gtk.gdk.display_get_default(), selection="CLIPBOARD")
 		self.roomlist = roomlist(self)
 		
@@ -184,17 +149,7 @@ class NicotineFrame(MainWindow):
 
 		self.MainWindow.connect('window-state-event', window_state_event_cb)
 
-		self.transfermsgs = {}
-		self.transfermsgspostedtime = 0
-		self.manualdisconnect = 0
-		self.away = 0
-		self.showdebug = 0
-		self.current_tab = 0
-		self.rescanning = 0
-		self.brescanning = 0
-		self.needrescan = 0
-		self.autoaway = False
-		self.awaytimer = None
+
 		# for iterating buddy changes to the combos
 		
 		
@@ -283,13 +238,14 @@ class NicotineFrame(MainWindow):
 		self.MainWindow.connect("network_event", self.OnNetworkEvent)
 		self.MainWindow.connect("network_event_lo", self.OnNetworkEvent)
 
-		self.np = NetworkEventProcessor(self, self.callback, self.logMessage, self.SetStatusText, config)
+		
 		utils.DECIMALSEP = self.np.config.sections["ui"]["decimalsep"]
 		utils.CATCH_URLS = self.np.config.sections["urls"]["urlcatching"]
 		utils.HUMANIZE_URLS = self.np.config.sections["urls"]["humanizeurls"]
 		utils.PROTOCOL_HANDLERS = self.np.config.sections["urls"]["protocols"].copy()
 		utils.PROTOCOL_HANDLERS["slsk"] = self.OnSoulSeek
 		utils.USERNAMEHOTSPOTS = self.np.config.sections["ui"]["usernamehotspots"]
+
 
 
 		
@@ -443,6 +399,8 @@ class NicotineFrame(MainWindow):
 		img.set_from_pixbuf(self.images["away2"])
 		self.awayreturn1.set_image(img)
 		self.now = nowplaying.NowPlaying(self)
+		self.TrayApp = TrayApp(self)
+		
 		ConfigUnset = self.np.config.needConfig()
 		if ConfigUnset[0]:
 			self.connect1.set_sensitive(0)
@@ -453,11 +411,64 @@ class NicotineFrame(MainWindow):
 		else:
 			self.OnConnect(-1)
 		self.UpdateDownloadFilters()
-
+		
+		
 		if use_trayicon and self.np.config.sections["ui"]["trayicon"]:
 			self.TrayApp.CREATE_TRAYICON = 1
 			self.TrayApp.HAVE_TRAYICON = True
 			self.TrayApp.Create()
+			
+	def LoadIcons(self):
+		self.images = {}
+		self.icons = {}
+		# For Win32 Systray 
+		if sys.platform == "win32":
+		        import icondata
+			
+			for i in "hilite2", "connect", "disconnect", "away2":
+				if "icontheme"  in self.np.config.sections["ui"]:
+					path = os.path.expanduser(os.path.join(self.np.config.sections["ui"]["icontheme"], i +".ico"))
+					if os.path.exists(path):
+						data = open(path, 'rb')
+						s = data.read()
+						data.close()
+						self.icons[i] = s
+						del s
+						continue
+					else:
+						# default icons
+						data = getattr(icondata, i)
+				else:
+					# default icons
+					data = getattr(icondata, i)
+				self.icons[i] = data
+		for i in "empty", "away", "online", "offline", "hilite", "hilite2", "connect", "disconnect", "away2", "n":
+			try:
+				import imagedata
+			except Exception, e:
+				print e
+			loader = gtk.gdk.PixbufLoader("png")
+			if "icontheme" in self.np.config.sections["ui"]:
+				path = os.path.expanduser(os.path.join(self.np.config.sections["ui"]["icontheme"], i +".png"))
+				if os.path.exists(path):
+					data = open(path, 'rb')
+					s = data.read()
+					loader.write(s, len(s))
+					data.close()
+					del s
+				else:
+					# default icons
+					data = getattr(imagedata, i)
+					loader.write(data, len(data))
+			else:
+				# default icons
+				data = getattr(imagedata, i)
+				loader.write(data, len(data))
+			
+			
+			loader.close()
+			self.images[i] = loader.get_pixbuf()
+
 		
 	def OnSearchMethod(self, widget):
 		act = False
@@ -469,14 +480,6 @@ class NicotineFrame(MainWindow):
 			act = True
 		self.RoomSearchCombo.set_sensitive(act)
 	
-	def importimages(self):
-		try:
-			import imagedata
-
-		except Exception, e:
-			print e
-
-		
 	def Notification(self, location, user, room=None):
 		hilites = self.TrayApp.tray_status["hilites"]
 		if location == "rooms" and room != None and user != None:
