@@ -266,8 +266,12 @@ class PrivateChat(PrivateChatTab):
 		AppendLine(self.ChatScroll, self.frame.np.decode(line, self.encoding), tag, "%c", username=self.user, usertag=self.tag_username)
 		if self.Log.get_active():
 			self.logfile = WriteLog(self.logfile, self.frame.np.config.sections["logging"]["logsdir"], self.user, line)
-		self.frame.np.queue.put(slskmessages.MessageUser(self.user, text))
-	
+		
+		if self.PeerPrivateMessages.get_active():
+			# not in the soulseek protocol
+			self.frame.np.ProcessRequestToPeer(self.user, slskmessages.PMessageUser(None,self.frame.np.config.sections["server"]["login"], text))
+		else:
+			self.frame.np.queue.put(slskmessages.MessageUser(self.user, text))
 	CMDS = ["/alias ", "/unalias ", "/whois ", "/browse ", "/ip ", "/pm ", "/msg ", "/search ", "/usearch ", "/rsearch ",
 		"/bsearch ", "/add ", "/buddy ", "/rem ", "/unbuddy ", "/ban ", "/ignore ", "/unban ", "/unignore ", "/clear", "/quit", "/rescan", "/nsa", "/info", "/ctcpversion"]
 

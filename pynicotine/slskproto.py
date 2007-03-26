@@ -152,6 +152,7 @@ class SlskProtoThread(threading.Thread):
 		FileSearchResult:9,
 		UserInfoRequest:15,
 		UserInfoReply:16,
+		PMessageUser:22,
 		FolderContentsRequest:36,
 		FolderContentsResponse:37,
 		TransferRequest:40,

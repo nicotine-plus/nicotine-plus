@@ -1641,6 +1641,12 @@ class PrivateChatTab:
         self.Encoding.add_attribute(cell, 'text', 0)
         self.hbox5.pack_start(self.Encoding, False, False, 0)
 
+        self.PeerPrivateMessages = gtk.CheckButton()
+        self.tooltips.set_tip(self.PeerPrivateMessages, _("Send the private message directly to the user (not supported on most clients)"))
+        self.PeerPrivateMessages.set_label(_("Direct"))
+        self.PeerPrivateMessages.show()
+        self.hbox5.pack_start(self.PeerPrivateMessages, False, False, 0)
+
         self.Log = gtk.CheckButton()
         self.Log.set_label(_("Log"))
         self.Log.show()

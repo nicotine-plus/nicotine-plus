@@ -111,6 +111,7 @@ class NetworkEventProcessor:
 			slskmessages.ConnClose:self.ConnClose,
 			slskmessages.Login:self.Login,
 			slskmessages.MessageUser:self.MessageUser,
+			slskmessages.PMessageUser:self.PMessageUser,
 			slskmessages.ExactFileSearch:self.ExactFileSearch,
 			slskmessages.UserJoinedRoom:self.UserJoinedRoom,
 			slskmessages.SayChatroom:self.SayChatRoom,
@@ -456,13 +457,36 @@ class NetworkEventProcessor:
 			# Until I know the syntax, sending this message is probably a bad idea
 			#self.queue.put(slskmessages.AckNotifyPrivileges(msg.token))
 			
+	def PMessageUser(self, msg):
+		user = ip = port = None
+		# Get peer's username, ip and port
+		for i in self.peerconns:
+			if i.conn is msg.conn.conn:
+				user = i.username
+				if i.addr is not None:
+					ip, port = i.addr
+				break
+		if user == None:
+			# No peer connection
+			return
+		if user != msg.user:
+			text = _("(Warning: %(realuser)s is attempting to spoof %(fakeuser)s) ") % {"realuser": user, "fakeuser": msg.user} + msg.msg
+			msg.user = user
+		else:
+			text = msg.msg
+		if self.privatechat is not None:
+			self.privatechat.ShowMessage(msg,text,status=0)
+			
+		else:
+			self.logMessage("%s %s" %(msg.__class__, vars(msg)))
+			
 	def MessageUser(self, msg):
 		status = 0
 		if self.logintime:
 			if time.time() <= self.logintime + 2:
 				# Offline message 
 				status = 1
-			
+		
 		if self.privatechat is not None:
 			self.privatechat.ShowMessage(msg,msg.msg,status=status)
 			self.queue.put(slskmessages.MessageAcked(msg.msgid))

@@ -487,7 +487,7 @@ class ConnectToPeer(ServerMessage):
 		len, self.ip = len+4, socket.inet_ntoa(self.strrev(message[len:len+4]))
 		len,self.port = self.getObject(message, types.IntType, len, 1)
 		len,self.token = self.getObject(message, types.IntType, len)
-	
+
 class MessageUser(ServerMessage):
 	""" Chat phrase sent to someone or received by us in private"""
 	def __init__(self, user = None, msg = None):
@@ -502,7 +502,7 @@ class MessageUser(ServerMessage):
 		len,self.timestamp = self.getObject(message,types.IntType, len)
 		len,self.user = self.getObject(message,types.StringType, len)
 		len,self.msg = self.getObject(message,types.StringType, len)
-
+		
 class MessageAcked(ServerMessage):
 	""" Confirmation of private chat message.
 	If we don't send it, the server will keep sending the chat phrase to us.
@@ -966,6 +966,22 @@ class PeerInit(PeerMessage):
 		len, self.user = self.getObject(message, types.StringType)
 		len, self.type = self.getObject(message, types.StringType,len)
 		len, self.token = self.getObject(message, types.IntType, len)
+
+class PMessageUser(PeerMessage):
+	""" Chat phrase sent to someone or received by us in private"""
+	def __init__(self, conn = None, user = None, msg = None):
+		self.conn = conn
+		self.user = user
+		self.msg = msg
+	
+	def makeNetworkMessage(self):
+		return self.packObject(0)+self.packObject(0)+self.packObject(self.user)+self.packObject(self.msg)
+	
+	def parseNetworkMessage(self,message):
+		len,self.msgid = self.getObject(message,types.IntType)
+		len,self.timestamp = self.getObject(message,types.IntType, len)
+		len,self.user = self.getObject(message,types.StringType, len)
+		len,self.msg = self.getObject(message,types.StringType, len)
 
 class UserInfoRequest(PeerMessage):
 	""" Ask other peer to send user information, picture and all."""
