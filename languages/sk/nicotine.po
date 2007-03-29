@@ -1,15 +1,13 @@
 # translation of nicotine.po to Slovak
-# TRANSLATION of nicotine.po to slovak
 # This file is distributed under the same license as the Nicotine+ package.
 #
-# Jozef Říha <jose1711@gmail.com>, 2006.
-# Jozef Riha <jose1711@gmail.com>, 2006.
+# Jozef Říha <jose1711@gmail.com>, 2006, 2007.
 msgid ""
 msgstr ""
 "Project-Id-Version: nicotine\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-03-13 09:30+0200\n"
-"PO-Revision-Date: 2007-03-06 23:15+0200\n"
+"POT-Creation-Date: 2007-03-29 19:22+0200\n"
+"PO-Revision-Date: 2007-03-29 11:17+0200\n"
 "Last-Translator: daelstorm <daelstorm@gmail.com>\n"
 "Language-Team: Jozef Riha <jose1711@gmail.com>\n"
 "MIME-Version: 1.0\n"
@@ -18,247 +16,261 @@ msgstr ""
 "X-Generator: KBabel 1.11.4\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
-#: pynicotine/gtkgui/settingswindow.py:63
+#: pynicotine/gtkgui/settingswindow.py:64
 msgid "Warning: Bad Username"
-msgstr "Varovanie: chybné užívateľské meno"
+msgstr "Varovanie: Chybné užívateľské meno"
 
-#: pynicotine/gtkgui/settingswindow.py:63
+#: pynicotine/gtkgui/settingswindow.py:64
 msgid "Username 'None' is not a good one, please pick another."
-msgstr "Užívateľské meno None nie je dobrým heslom, prosím vyberte iné."
+msgstr "Užívateľské meno 'None' nie je vhodným menom, prosím vyberte iné."
 
-#: pynicotine/gtkgui/settingswindow.py:118
-#: pynicotine/gtkgui/settingswindow.py:126
-#: pynicotine/gtkgui/settingswindow.py:132
+#: pynicotine/gtkgui/settingswindow.py:72
+#, fuzzy
+msgid "Warning: Invalid ports"
+msgstr "Varovanie: Chybné užívateľské meno"
+
+#: pynicotine/gtkgui/settingswindow.py:72
+msgid "Client ports are invalid."
+msgstr ""
+
+#: pynicotine/gtkgui/settingswindow.py:145
+#: pynicotine/gtkgui/settingswindow.py:149
+#: pynicotine/gtkgui/settingswindow.py:703
 msgid "Warning"
 msgstr "Varovanie"
 
-#: pynicotine/gtkgui/settingswindow.py:118
-#: pynicotine/gtkgui/settingswindow.py:126
-#: pynicotine/gtkgui/settingswindow.py:132
+#: pynicotine/gtkgui/settingswindow.py:145
+#: pynicotine/gtkgui/settingswindow.py:149
 #, python-format
 msgid "Security Risk: you should not share your %s directory!"
 msgstr "Bezpečnostné riziko: nemali by ste zdieľať váš adresár %s!"
 
-#: pynicotine/gtkgui/settingswindow.py:228 pynicotine/gtkgui/userinfo.py:188
+#: pynicotine/gtkgui/settingswindow.py:237 pynicotine/gtkgui/userinfo.py:188
 msgid "No one"
-msgstr ""
+msgstr "Nikto"
 
-#: pynicotine/gtkgui/settingswindow.py:228 pynicotine/gtkgui/userinfo.py:190
+#: pynicotine/gtkgui/settingswindow.py:237 pynicotine/gtkgui/userinfo.py:190
 msgid "Everyone"
-msgstr ""
+msgstr "Každý"
 
-#: pynicotine/gtkgui/settingswindow.py:228 pynicotine/gtkgui/userinfo.py:192
-#, fuzzy
+#: pynicotine/gtkgui/settingswindow.py:237 pynicotine/gtkgui/userinfo.py:192
 msgid "Users in list"
-msgstr "Užívateľ %s je online"
+msgstr "Užívatelia v zozname"
 
-#: pynicotine/gtkgui/settingswindow.py:228 pynicotine/gtkgui/userinfo.py:194
-#, fuzzy
+#: pynicotine/gtkgui/settingswindow.py:237 pynicotine/gtkgui/userinfo.py:194
 msgid "Trusted Users"
-msgstr "Zakázaní užívatelia:"
+msgstr "Dôveryhodní užívatelia"
 
-#: pynicotine/gtkgui/settingswindow.py:237
-#, fuzzy
+#: pynicotine/gtkgui/settingswindow.py:246
 msgid "Filter"
-msgstr "Obsiahnutý text:"
+msgstr "Filter"
 
-#: pynicotine/gtkgui/settingswindow.py:238
+#: pynicotine/gtkgui/settingswindow.py:247
 msgid "Escaped"
-msgstr ""
+msgstr "Escapeované"
 
-#: pynicotine/gtkgui/settingswindow.py:381
+#: pynicotine/gtkgui/settingswindow.py:390
 msgid "Nicotine+: Add a download filter"
-msgstr ""
+msgstr "Nicotine+: Pridať filter pre download"
 
-#: pynicotine/gtkgui/settingswindow.py:381
+#: pynicotine/gtkgui/settingswindow.py:390
 msgid "Enter a new download filter:"
-msgstr ""
+msgstr "Zadajte nový filter pre download:"
 
-#: pynicotine/gtkgui/settingswindow.py:408
+#: pynicotine/gtkgui/settingswindow.py:417
 msgid "Nicotine+: Edit a download filter"
-msgstr ""
+msgstr "Nicotine+: Upraviť filter pre download"
 
-#: pynicotine/gtkgui/settingswindow.py:408
+#: pynicotine/gtkgui/settingswindow.py:417
 msgid "Modify this download filter:"
-msgstr ""
+msgstr "Zmeňte tento filter pre download:"
 
-#: pynicotine/gtkgui/settingswindow.py:487
+#: pynicotine/gtkgui/settingswindow.py:496
 #, python-format
 msgid "%(num)d Failed! %(error)s "
-msgstr ""
+msgstr "%(num)d zlyhal! %(error)s "
 
-#: pynicotine/gtkgui/settingswindow.py:562
-#: pynicotine/gtkgui/settingswindow.py:569 pynicotine/gtkgui/chatrooms.py:67
+#: pynicotine/gtkgui/settingswindow.py:574
+#: pynicotine/gtkgui/settingswindow.py:581 pynicotine/gtkgui/chatrooms.py:67
 msgid "Users"
 msgstr "Užívatelia"
 
-#: pynicotine/gtkgui/settingswindow.py:607
+#: pynicotine/gtkgui/settingswindow.py:619
 msgid "Ban user..."
 msgstr "Zakázať užívateľa..."
 
-#: pynicotine/gtkgui/settingswindow.py:607
-#: pynicotine/gtkgui/settingswindow.py:628
+#: pynicotine/gtkgui/settingswindow.py:619
+#: pynicotine/gtkgui/settingswindow.py:640
 msgid "User:"
 msgstr "Užívateľ:"
 
-#: pynicotine/gtkgui/settingswindow.py:628
+#: pynicotine/gtkgui/settingswindow.py:640
 msgid "Ignore user..."
 msgstr "Ignorovať užívateľa..."
 
-#: pynicotine/gtkgui/settingswindow.py:942
+#: pynicotine/gtkgui/settingswindow.py:703
+msgid "Gstreamer-python is not installed"
+msgstr ""
+
+#: pynicotine/gtkgui/settingswindow.py:964
 msgid "Pick a colour, any colour"
 msgstr "Vyberte farbu, akúkoľvek"
 
-#: pynicotine/gtkgui/settingswindow.py:1171
-#: pynicotine/gtkgui/settingswindow.py:1176
+#: pynicotine/gtkgui/settingswindow.py:1197
+#: pynicotine/gtkgui/settingswindow.py:1202
 msgid "Nothing Imported"
-msgstr ""
+msgstr "Nič nebolo importované"
 
-#: pynicotine/gtkgui/settingswindow.py:1171
+#: pynicotine/gtkgui/settingswindow.py:1197
 #, python-format
 msgid "Config files for the official Soulseek client not found in \"%s\""
 msgstr ""
+"Konfiguračné súbory pre oficiálneho Soulseek klienta neboli nájdené v \"%s\""
 
-#: pynicotine/gtkgui/settingswindow.py:1173
+#: pynicotine/gtkgui/settingswindow.py:1199
 msgid "Imported Soulseek Config"
-msgstr ""
+msgstr "Importovaný Soulseek konfiguračný súbor"
 
-#: pynicotine/gtkgui/settingswindow.py:1173
+#: pynicotine/gtkgui/settingswindow.py:1199
 msgid ""
 "Config was imported. You may need to restart for changes to take effect. If "
 "you changed your user name, buddy list or queue then you should restart "
 "immediately."
 msgstr ""
+"Konfiguračný súbor bol importovaný. Možno budete potrebovať reštartovať "
+"aplikáciu, aby boli zmeny použité. Ak ste zmenili vaše užívateľské meno, "
+"zoznam kamarátov alebo front, mali by ste ju reštartovať okamžite."
 
-#: pynicotine/gtkgui/settingswindow.py:1176
+#: pynicotine/gtkgui/settingswindow.py:1202
 msgid "No options were selected"
-msgstr ""
+msgstr "Neboli vybrané žiadne voľby"
 
-#: pynicotine/gtkgui/settingswindow.py:1186
+#: pynicotine/gtkgui/settingswindow.py:1213
 msgid "Protocol"
 msgstr "Protokol"
 
-#: pynicotine/gtkgui/settingswindow.py:1187
+#: pynicotine/gtkgui/settingswindow.py:1214
 msgid "Handler"
 msgstr "Obslužný program"
 
-#: pynicotine/gtkgui/settingswindow.py:1303
-#: pynicotine/gtkgui/settingswindow.py:1349
+#: pynicotine/gtkgui/settingswindow.py:1331
+#: pynicotine/gtkgui/settingswindow.py:1377
 #: pynicotine/gtkgui/settings_glade.py:3541
 msgid "Connection"
 msgstr "Pripojenie"
 
-#: pynicotine/gtkgui/settingswindow.py:1304
-#: pynicotine/gtkgui/settingswindow.py:1333 pynicotine/gtkgui/frame.py:865
-#: pynicotine/gtkgui/settings_glade.py:226
+#: pynicotine/gtkgui/settingswindow.py:1332
+#: pynicotine/gtkgui/settingswindow.py:1361 pynicotine/gtkgui/frame.py:2115
+#: pynicotine/gtkgui/settings_glade.py:226 pynicotine/pynicotine.py:452
 msgid "Server"
 msgstr "Server"
 
-#: pynicotine/gtkgui/settingswindow.py:1305
-#: pynicotine/gtkgui/settingswindow.py:1334
-#: pynicotine/gtkgui/settingswindow.py:1416
+#: pynicotine/gtkgui/settingswindow.py:1333
+#: pynicotine/gtkgui/settingswindow.py:1362
+#: pynicotine/gtkgui/settingswindow.py:1460
 #: pynicotine/gtkgui/settings_glade.py:253
-#: pynicotine/gtkgui/settings_glade.py:567 pynicotine/pynicotine.py:315
+#: pynicotine/gtkgui/settings_glade.py:567 pynicotine/pynicotine.py:316
 msgid "Shares"
 msgstr "Zdieľané súbory"
 
-#: pynicotine/gtkgui/settingswindow.py:1306
-#: pynicotine/gtkgui/settingswindow.py:1335
+#: pynicotine/gtkgui/settingswindow.py:1334
+#: pynicotine/gtkgui/settingswindow.py:1363
 #: pynicotine/gtkgui/settings_glade.py:618
 #: pynicotine/gtkgui/settings_glade.py:1127
 msgid "Transfers"
 msgstr "Prenosy"
 
-#: pynicotine/gtkgui/settingswindow.py:1309
-#: pynicotine/gtkgui/settingswindow.py:1313
-#: pynicotine/gtkgui/settingswindow.py:1336
+#: pynicotine/gtkgui/settingswindow.py:1337
+#: pynicotine/gtkgui/settingswindow.py:1341
+#: pynicotine/gtkgui/settingswindow.py:1364
 msgid "Geo Block"
 msgstr "Geografické blokovanie"
 
-#: pynicotine/gtkgui/settingswindow.py:1317
-#: pynicotine/gtkgui/settingswindow.py:1350
+#: pynicotine/gtkgui/settingswindow.py:1345
+#: pynicotine/gtkgui/settingswindow.py:1378
 #: pynicotine/gtkgui/settings_glade.py:3639
 msgid "UI"
 msgstr "Rozhranie"
 
-#: pynicotine/gtkgui/settingswindow.py:1318
-#: pynicotine/gtkgui/settingswindow.py:1341
+#: pynicotine/gtkgui/settingswindow.py:1346
+#: pynicotine/gtkgui/settingswindow.py:1369
 #: pynicotine/gtkgui/settings_glade.py:4168
 msgid "Icons"
 msgstr ""
 
-#: pynicotine/gtkgui/settingswindow.py:1319
-#: pynicotine/gtkgui/settingswindow.py:1339
-#: pynicotine/gtkgui/settingswindow.py:1416
+#: pynicotine/gtkgui/settingswindow.py:1347
+#: pynicotine/gtkgui/settingswindow.py:1367
+#: pynicotine/gtkgui/settingswindow.py:1460
 msgid "Interface"
 msgstr "Interface"
 
-#: pynicotine/gtkgui/settingswindow.py:1320
-#: pynicotine/gtkgui/settingswindow.py:1342
+#: pynicotine/gtkgui/settingswindow.py:1348
+#: pynicotine/gtkgui/settingswindow.py:1370
 msgid "URL Catching"
 msgstr "Zachytávanie URL"
 
-#: pynicotine/gtkgui/settingswindow.py:1322
-#: pynicotine/gtkgui/settingswindow.py:1351
+#: pynicotine/gtkgui/settingswindow.py:1350
+#: pynicotine/gtkgui/settingswindow.py:1379
 #: pynicotine/gtkgui/settings_glade.py:3702
 msgid "Misc"
 msgstr "Rôzne"
 
-#: pynicotine/gtkgui/settingswindow.py:1323
-#: pynicotine/gtkgui/settingswindow.py:1345
+#: pynicotine/gtkgui/settingswindow.py:1351
+#: pynicotine/gtkgui/settingswindow.py:1373
 #: pynicotine/gtkgui/settings_glade.py:3173
 msgid "Away mode"
 msgstr "Mód neprítomnosti"
 
-#: pynicotine/gtkgui/settingswindow.py:1324
-#: pynicotine/gtkgui/settingswindow.py:1338
+#: pynicotine/gtkgui/settingswindow.py:1352
+#: pynicotine/gtkgui/settingswindow.py:1366
 msgid "Ban / ignore"
 msgstr "Zakázať / ignorovať"
 
-#: pynicotine/gtkgui/settingswindow.py:1325
-#: pynicotine/gtkgui/settingswindow.py:1343
+#: pynicotine/gtkgui/settingswindow.py:1353
+#: pynicotine/gtkgui/settingswindow.py:1371
 #: pynicotine/gtkgui/settings_glade.py:2468
 msgid "Logging"
 msgstr "Logovanie"
 
-#: pynicotine/gtkgui/settingswindow.py:1326
-#: pynicotine/gtkgui/settingswindow.py:1340
+#: pynicotine/gtkgui/settingswindow.py:1354
+#: pynicotine/gtkgui/settingswindow.py:1368
 #: pynicotine/gtkgui/settings_glade.py:4004
 msgid "Sounds"
 msgstr ""
 
-#: pynicotine/gtkgui/settingswindow.py:1327
-#: pynicotine/gtkgui/settingswindow.py:1344
+#: pynicotine/gtkgui/settingswindow.py:1355
+#: pynicotine/gtkgui/settingswindow.py:1372
 #: pynicotine/gtkgui/settings_glade.py:2983
 msgid "Searches"
-msgstr "Vyhľadávanie"
+msgstr "Hľadania"
 
-#: pynicotine/gtkgui/settingswindow.py:1328
-#: pynicotine/gtkgui/settingswindow.py:1337
-#: pynicotine/gtkgui/nicotine_glade.py:957
+#: pynicotine/gtkgui/settingswindow.py:1356
+#: pynicotine/gtkgui/settingswindow.py:1365
+#: pynicotine/gtkgui/nicotine_glade.py:917
+#: pynicotine/gtkgui/nicotine_glade_3.py:916
 msgid "User info"
 msgstr "Údaje o užívateľovi"
 
-#: pynicotine/gtkgui/settingswindow.py:1329
+#: pynicotine/gtkgui/settingswindow.py:1357
 msgid "Advanced"
 msgstr ""
 
-#: pynicotine/gtkgui/settingswindow.py:1330
-#: pynicotine/gtkgui/settingswindow.py:1346
+#: pynicotine/gtkgui/settingswindow.py:1358
+#: pynicotine/gtkgui/settingswindow.py:1374
 #: pynicotine/gtkgui/settings_glade.py:3200
 #: pynicotine/gtkgui/settings_glade.py:3262
 msgid "Events"
 msgstr "Udalosti"
 
-#: pynicotine/gtkgui/settingswindow.py:1331
-#: pynicotine/gtkgui/settingswindow.py:1347
+#: pynicotine/gtkgui/settingswindow.py:1359
+#: pynicotine/gtkgui/settingswindow.py:1375
 #: pynicotine/gtkgui/settings_glade.py:3793
 #: pynicotine/gtkgui/settings_glade.py:3955
 #: pynicotine/gtkgui/settings_glade.py:3971
 msgid "Import Config"
-msgstr ""
+msgstr "Importovať konfiguračný súbor"
 
-#: pynicotine/gtkgui/settingswindow.py:1353
+#: pynicotine/gtkgui/settingswindow.py:1381
 msgid "Categories"
 msgstr "Kategórie"
 
@@ -278,56 +290,56 @@ msgstr "Vyčistiť zrušené"
 msgid "Clear queued"
 msgstr "Vyčistiť súbory vo fronte"
 
-#: pynicotine/gtkgui/downloads.py:27 pynicotine/gtkgui/frame.py:266
-#: pynicotine/gtkgui/userbrowse.py:74 pynicotine/gtkgui/chatrooms.py:396
+#: pynicotine/gtkgui/downloads.py:27 pynicotine/gtkgui/frame.py:214
+#: pynicotine/gtkgui/userbrowse.py:74 pynicotine/gtkgui/chatrooms.py:397
 #: pynicotine/gtkgui/search.py:446 pynicotine/gtkgui/uploads.py:25
 #: pynicotine/gtkgui/userlist.py:60
 msgid "Send _message"
 msgstr "_Poslať správu"
 
-#: pynicotine/gtkgui/downloads.py:28 pynicotine/gtkgui/frame.py:268
-#: pynicotine/gtkgui/userbrowse.py:75 pynicotine/gtkgui/chatrooms.py:398
+#: pynicotine/gtkgui/downloads.py:28 pynicotine/gtkgui/frame.py:216
+#: pynicotine/gtkgui/userbrowse.py:75 pynicotine/gtkgui/chatrooms.py:399
 #: pynicotine/gtkgui/search.py:447 pynicotine/gtkgui/privatechat.py:141
 #: pynicotine/gtkgui/uploads.py:26 pynicotine/gtkgui/userlist.py:62
 msgid "Show IP a_ddress"
 msgstr "Zobraziť IP _adresu"
 
-#: pynicotine/gtkgui/downloads.py:29 pynicotine/gtkgui/frame.py:269
-#: pynicotine/gtkgui/userbrowse.py:76 pynicotine/gtkgui/chatrooms.py:399
+#: pynicotine/gtkgui/downloads.py:29 pynicotine/gtkgui/frame.py:217
+#: pynicotine/gtkgui/userbrowse.py:76 pynicotine/gtkgui/chatrooms.py:400
 #: pynicotine/gtkgui/search.py:448 pynicotine/gtkgui/privatechat.py:142
 #: pynicotine/gtkgui/uploads.py:27 pynicotine/gtkgui/userlist.py:63
 msgid "Get user i_nfo"
 msgstr "Získať ú_daje o užívateľovi"
 
-#: pynicotine/gtkgui/downloads.py:30 pynicotine/gtkgui/frame.py:270
-#: pynicotine/gtkgui/chatrooms.py:400 pynicotine/gtkgui/search.py:449
+#: pynicotine/gtkgui/downloads.py:30 pynicotine/gtkgui/frame.py:218
+#: pynicotine/gtkgui/chatrooms.py:401 pynicotine/gtkgui/search.py:449
 #: pynicotine/gtkgui/privatechat.py:143 pynicotine/gtkgui/uploads.py:28
 #: pynicotine/gtkgui/userlist.py:64
 msgid "Brow_se files"
 msgstr "P_rehliadať súbory"
 
-#: pynicotine/gtkgui/downloads.py:31 pynicotine/gtkgui/frame.py:271
-#: pynicotine/gtkgui/userbrowse.py:77 pynicotine/gtkgui/chatrooms.py:401
+#: pynicotine/gtkgui/downloads.py:31 pynicotine/gtkgui/frame.py:219
+#: pynicotine/gtkgui/userbrowse.py:77 pynicotine/gtkgui/chatrooms.py:402
 #: pynicotine/gtkgui/search.py:450 pynicotine/gtkgui/privatechat.py:144
 #: pynicotine/gtkgui/uploads.py:29 pynicotine/gtkgui/userlist.py:65
 msgid "Gi_ve privileges"
 msgstr "_Venovať privilégiá"
 
-#: pynicotine/gtkgui/downloads.py:33 pynicotine/gtkgui/frame.py:273
-#: pynicotine/gtkgui/userbrowse.py:79 pynicotine/gtkgui/chatrooms.py:403
+#: pynicotine/gtkgui/downloads.py:33 pynicotine/gtkgui/frame.py:221
+#: pynicotine/gtkgui/userbrowse.py:79 pynicotine/gtkgui/chatrooms.py:404
 #: pynicotine/gtkgui/search.py:451 pynicotine/gtkgui/uploads.py:31
 msgid "_Add user to list"
 msgstr "P_ridať užívateľa medzi kamarátov"
 
-#: pynicotine/gtkgui/downloads.py:34 pynicotine/gtkgui/frame.py:274
-#: pynicotine/gtkgui/userbrowse.py:80 pynicotine/gtkgui/chatrooms.py:404
+#: pynicotine/gtkgui/downloads.py:34 pynicotine/gtkgui/frame.py:222
+#: pynicotine/gtkgui/userbrowse.py:80 pynicotine/gtkgui/chatrooms.py:405
 #: pynicotine/gtkgui/search.py:452 pynicotine/gtkgui/uploads.py:32
 #: pynicotine/gtkgui/userlist.py:66
 msgid "_Ban this user"
 msgstr "_Zakázať tohto užívateľa"
 
-#: pynicotine/gtkgui/downloads.py:35 pynicotine/gtkgui/frame.py:275
-#: pynicotine/gtkgui/userbrowse.py:81 pynicotine/gtkgui/chatrooms.py:405
+#: pynicotine/gtkgui/downloads.py:35 pynicotine/gtkgui/frame.py:223
+#: pynicotine/gtkgui/userbrowse.py:81 pynicotine/gtkgui/chatrooms.py:406
 #: pynicotine/gtkgui/search.py:453 pynicotine/gtkgui/uploads.py:33
 #: pynicotine/gtkgui/userlist.py:67
 msgid "_Ignore this user"
@@ -335,7 +347,7 @@ msgstr "_Ignorovať tohto užívateľa"
 
 #: pynicotine/gtkgui/downloads.py:36 pynicotine/gtkgui/uploads.py:34
 msgid "Select User's Transfers"
-msgstr ""
+msgstr "Vybrať prenosy užívateľa"
 
 #: pynicotine/gtkgui/downloads.py:40
 msgid "Get place in _queue"
@@ -358,8 +370,8 @@ msgstr "Kopírovať URL adresára"
 msgid "Send to _player"
 msgstr "_Otvoriť v prehrávači"
 
-#: pynicotine/gtkgui/downloads.py:45 pynicotine/gtkgui/frame.py:252
-#: pynicotine/gtkgui/frame.py:439 pynicotine/gtkgui/frame.py:472
+#: pynicotine/gtkgui/downloads.py:45 pynicotine/gtkgui/frame.py:200
+#: pynicotine/gtkgui/frame.py:385 pynicotine/gtkgui/frame.py:475
 #: pynicotine/gtkgui/userbrowse.py:119 pynicotine/gtkgui/userbrowse.py:131
 #: pynicotine/gtkgui/chatrooms.py:368 pynicotine/gtkgui/search.py:102
 #: pynicotine/gtkgui/search.py:170 pynicotine/gtkgui/search.py:417
@@ -388,193 +400,180 @@ msgstr "_Vyčistiť"
 msgid "Clear Groups"
 msgstr "Vyčistiť skupiny"
 
-#: pynicotine/gtkgui/frame.py:150 pynicotine/gtkgui/frame.py:602
-#: pynicotine/gtkgui/frame.py:603 pynicotine/gtkgui/frame.py:608
-#: pynicotine/gtkgui/frame.py:613 pynicotine/gtkgui/frame.py:615
-#: pynicotine/gtkgui/frame.py:709 pynicotine/gtkgui/userbrowse.py:521
+#: pynicotine/gtkgui/frame.py:107 pynicotine/gtkgui/frame.py:515
+#: pynicotine/gtkgui/frame.py:516 pynicotine/gtkgui/frame.py:521
+#: pynicotine/gtkgui/frame.py:526 pynicotine/gtkgui/frame.py:528
+#: pynicotine/gtkgui/frame.py:576 pynicotine/gtkgui/userbrowse.py:521
 msgid "Nicotine+"
 msgstr "Nicotine+"
 
-#: pynicotine/gtkgui/frame.py:166 pynicotine/gtkgui/chatrooms.py:413
-#: pynicotine/gtkgui/chatrooms.py:423 pynicotine/gtkgui/privatechat.py:156
-#, fuzzy
+#: pynicotine/gtkgui/frame.py:124 pynicotine/gtkgui/chatrooms.py:414
+#: pynicotine/gtkgui/chatrooms.py:424 pynicotine/gtkgui/privatechat.py:156
 msgid "Find"
-msgstr "Ukončené"
+msgstr "Nájsť"
 
-#: pynicotine/gtkgui/frame.py:168 pynicotine/gtkgui/chatrooms.py:415
-#: pynicotine/gtkgui/chatrooms.py:425 pynicotine/gtkgui/privatechat.py:158
-#, fuzzy
+#: pynicotine/gtkgui/frame.py:126 pynicotine/gtkgui/chatrooms.py:416
+#: pynicotine/gtkgui/chatrooms.py:426 pynicotine/gtkgui/privatechat.py:158
 msgid "Copy"
-msgstr "_Kopírovať URL"
+msgstr "Kopírovať"
 
-#: pynicotine/gtkgui/frame.py:169 pynicotine/gtkgui/chatrooms.py:416
-#: pynicotine/gtkgui/chatrooms.py:426 pynicotine/gtkgui/privatechat.py:159
+#: pynicotine/gtkgui/frame.py:127 pynicotine/gtkgui/chatrooms.py:417
+#: pynicotine/gtkgui/chatrooms.py:427 pynicotine/gtkgui/privatechat.py:159
 msgid "Copy All"
-msgstr ""
+msgstr "Kopírovať všetko"
 
-#: pynicotine/gtkgui/frame.py:171 pynicotine/gtkgui/chatrooms.py:418
-#: pynicotine/gtkgui/chatrooms.py:428 pynicotine/gtkgui/privatechat.py:161
+#: pynicotine/gtkgui/frame.py:129 pynicotine/gtkgui/chatrooms.py:419
+#: pynicotine/gtkgui/chatrooms.py:429 pynicotine/gtkgui/privatechat.py:161
 msgid "Clear log"
 msgstr "Vyčistiť protokol"
 
-#: pynicotine/gtkgui/frame.py:176 pynicotine/gtkgui/frame.py:178
+#: pynicotine/gtkgui/frame.py:134 pynicotine/gtkgui/frame.py:136
 msgid "Close Nicotine-Plus?"
 msgstr "Zavrieť Nicotine-Plus?"
 
-#: pynicotine/gtkgui/frame.py:176 pynicotine/gtkgui/frame.py:178
+#: pynicotine/gtkgui/frame.py:134 pynicotine/gtkgui/frame.py:136
 msgid "Are you sure you wish to exit Nicotine-Plus at this time?"
 msgstr "Ste si istý, že chcete teraz ukončiť Nicotine-Plus?"
 
-#: pynicotine/gtkgui/frame.py:176
-#, fuzzy
+#: pynicotine/gtkgui/frame.py:134
 msgid "Send to tray"
 msgstr "Poslať do oznamovacej oblasti"
 
-#: pynicotine/gtkgui/frame.py:211 pynicotine/gtkgui/frame.py:1906
+#: pynicotine/gtkgui/frame.py:159 pynicotine/gtkgui/frame.py:1711
 msgid "I like"
 msgstr "Mám rád(a)"
 
-#: pynicotine/gtkgui/frame.py:218
+#: pynicotine/gtkgui/frame.py:166
 msgid "_Remove this item"
 msgstr "_Odstrániť túto položku"
 
-#: pynicotine/gtkgui/frame.py:219
+#: pynicotine/gtkgui/frame.py:167
 msgid "Re_commendations for this item"
 msgstr "_Doporučenia pre túto položku"
 
-#: pynicotine/gtkgui/frame.py:226
+#: pynicotine/gtkgui/frame.py:174
 msgid "I dislike"
 msgstr "Nemám rád(a)"
 
-#: pynicotine/gtkgui/frame.py:230
+#: pynicotine/gtkgui/frame.py:178
 msgid "Remove this item"
 msgstr "Odstrániť túto položku"
 
-#: pynicotine/gtkgui/frame.py:234 pynicotine/gtkgui/nicotine_glade.py:1092
+#: pynicotine/gtkgui/frame.py:182 pynicotine/gtkgui/nicotine_glade.py:1042
+#: pynicotine/gtkgui/nicotine_glade_3.py:1041
 msgid "Recommendations"
 msgstr "Doporučenia"
 
-#: pynicotine/gtkgui/frame.py:235
+#: pynicotine/gtkgui/frame.py:183
 msgid "Rating"
 msgstr "Hodnotenie"
 
-#: pynicotine/gtkgui/frame.py:242
+#: pynicotine/gtkgui/frame.py:190
 msgid "I _like this"
 msgstr "_Mám rád(a) toto"
 
-#: pynicotine/gtkgui/frame.py:243
+#: pynicotine/gtkgui/frame.py:191
 msgid "I _don't like this"
 msgstr "_Nemám rád(a) toto"
 
-#: pynicotine/gtkgui/frame.py:244
+#: pynicotine/gtkgui/frame.py:192
 msgid "_Recommendations for this item"
 msgstr "D_oporučenia pre túto položku"
 
-#: pynicotine/gtkgui/frame.py:246
+#: pynicotine/gtkgui/frame.py:194
 msgid "_Search for this item"
 msgstr "Vyhľa_dať túto položku"
 
-#: pynicotine/gtkgui/frame.py:253 pynicotine/gtkgui/chatrooms.py:369
+#: pynicotine/gtkgui/frame.py:201 pynicotine/gtkgui/chatrooms.py:369
 #: pynicotine/gtkgui/search.py:419 pynicotine/gtkgui/userlist.py:20
 #: pynicotine/gtkgui/transferlist.py:32
 msgid "Speed"
 msgstr "Rýchlosť"
 
-#: pynicotine/gtkgui/frame.py:254 pynicotine/gtkgui/chatrooms.py:370
+#: pynicotine/gtkgui/frame.py:202 pynicotine/gtkgui/chatrooms.py:370
 #: pynicotine/gtkgui/userlist.py:21
 msgid "Files"
 msgstr "Súbory"
 
-#: pynicotine/gtkgui/frame.py:365
+#: pynicotine/gtkgui/frame.py:315
 msgid "Add Buddy: "
 msgstr "Pridať kamaráta: "
 
-#: pynicotine/gtkgui/frame.py:383 pynicotine/gtkgui/frame.py:1722
-#: pynicotine/gtkgui/nicotine_glade.py:389
-#: pynicotine/gtkgui/nicotine_glade.py:438
-#: pynicotine/gtkgui/nicotine_glade.py:630
-#: pynicotine/gtkgui/nicotine_glade.py:794
-#: pynicotine/gtkgui/nicotine_glade.py:908
-#: pynicotine/gtkgui/nicotine_glade.py:957
-#: pynicotine/gtkgui/nicotine_glade.py:1035
-#: pynicotine/gtkgui/nicotine_glade.py:1276
+#: pynicotine/gtkgui/frame.py:333 pynicotine/gtkgui/frame.py:1527
+#: pynicotine/gtkgui/nicotine_glade.py:382
+#: pynicotine/gtkgui/nicotine_glade.py:428
+#: pynicotine/gtkgui/nicotine_glade.py:609
+#: pynicotine/gtkgui/nicotine_glade.py:765
+#: pynicotine/gtkgui/nicotine_glade.py:871
+#: pynicotine/gtkgui/nicotine_glade.py:917
+#: pynicotine/gtkgui/nicotine_glade.py:989
+#: pynicotine/gtkgui/nicotine_glade.py:1211
+#: pynicotine/gtkgui/nicotine_glade_3.py:382
+#: pynicotine/gtkgui/nicotine_glade_3.py:428
+#: pynicotine/gtkgui/nicotine_glade_3.py:609
+#: pynicotine/gtkgui/nicotine_glade_3.py:765
+#: pynicotine/gtkgui/nicotine_glade_3.py:870
+#: pynicotine/gtkgui/nicotine_glade_3.py:916
+#: pynicotine/gtkgui/nicotine_glade_3.py:988
+#: pynicotine/gtkgui/nicotine_glade_3.py:1210
 msgid "ImageLabel"
 msgstr "ImageLabel"
 
-#: pynicotine/gtkgui/frame.py:383 pynicotine/gtkgui/frame.py:1722
+#: pynicotine/gtkgui/frame.py:333 pynicotine/gtkgui/frame.py:1527
 msgid "Buddy list"
 msgstr "Zoznam užívateľov"
 
-#: pynicotine/gtkgui/frame.py:417 pynicotine/gtkgui/frame.py:1204
-#: pynicotine/gtkgui/frame.py:1219 pynicotine/gtkgui/settings_glade.py:1974
+#: pynicotine/gtkgui/frame.py:367 pynicotine/gtkgui/frame.py:994
+#: pynicotine/gtkgui/frame.py:1009 pynicotine/gtkgui/settings_glade.py:1974
 #: pynicotine/gtkgui/userinfo.py:40 pynicotine/gtkgui/privatechat.py:39
 msgid "Offline"
 msgstr "Offline"
 
-#: pynicotine/gtkgui/frame.py:437 pynicotine/gtkgui/frame.py:438
+#: pynicotine/gtkgui/frame.py:383 pynicotine/gtkgui/frame.py:384
 #: pynicotine/gtkgui/search.py:98
 #, fuzzy
 msgid "Joined Rooms "
-msgstr "Chatovacie _miestnosti"
+msgstr "Pripojený v chatovacích miestnostiach"
 
-#: pynicotine/gtkgui/frame.py:439 pynicotine/gtkgui/frame.py:441
+#: pynicotine/gtkgui/frame.py:385 pynicotine/gtkgui/frame.py:387
 #: pynicotine/gtkgui/search.py:91
 msgid "Global"
 msgstr "Globálne"
 
-#: pynicotine/gtkgui/frame.py:439 pynicotine/gtkgui/search.py:100
+#: pynicotine/gtkgui/frame.py:385 pynicotine/gtkgui/search.py:100
 #: pynicotine/gtkgui/search.py:170
 msgid "Buddies"
 msgstr "Kamaráti"
 
-#: pynicotine/gtkgui/frame.py:439 pynicotine/gtkgui/frame.py:476
+#: pynicotine/gtkgui/frame.py:385 pynicotine/gtkgui/frame.py:479
 #: pynicotine/gtkgui/search.py:93 pynicotine/gtkgui/search.py:170
 msgid "Rooms"
 msgstr "Miestnosti"
 
-#: pynicotine/gtkgui/frame.py:463
+#: pynicotine/gtkgui/frame.py:408
 msgid ""
 "You need to configure your settings (Server, Username, Password, Download "
 "Directory) before connecting..."
 msgstr ""
 "Pred pripojením musíte upraviť nastavenia (server, užívateľské meno, heslo, "
-"adresáre)..."
+"adresár pre download)..."
 
-#: pynicotine/gtkgui/frame.py:498
-#, python-format
-msgid ""
-"Note: The systraywin32.py Python file failed to load properly because: %s. "
-"You may require pywin32. Get a version that matches your version of Python "
-"from here:\n"
-"http://sourceforge.net/project/showfiles.php?group_id=78018"
-msgstr ""
-
-#: pynicotine/gtkgui/frame.py:517
-#, python-format
-msgid ""
-"Note: Trayicon Python module was not found in the pynicotine directory: %s"
-msgstr ""
-
-#: pynicotine/gtkgui/frame.py:608
+#: pynicotine/gtkgui/frame.py:521
 #, python-format
 msgid "Private Message from %(user)s"
-msgstr ""
+msgstr "Súkromná správa od %(user)s"
 
-#: pynicotine/gtkgui/frame.py:613
-#, fuzzy, python-format
+#: pynicotine/gtkgui/frame.py:526
+#, python-format
 msgid "You've been mentioned in the %(room)s room"
-msgstr "%s vstúpil do miestnosti"
+msgstr "Niekto vás spomenul v miestnosti %(room)s"
 
-#: pynicotine/gtkgui/frame.py:615
-#, fuzzy, python-format
+#: pynicotine/gtkgui/frame.py:528
+#, python-format
 msgid "%(user)s mentioned you in the %(room)s room"
-msgstr "%s vstúpil do miestnosti"
+msgstr "%(user)s vás spomenul v miestnosti %(room)s"
 
-#: pynicotine/gtkgui/frame.py:703
-msgid "Gstreamer-python failed to play:"
-msgstr ""
-
-#: pynicotine/gtkgui/frame.py:709 pynicotine/gtkgui/userbrowse.py:521
+#: pynicotine/gtkgui/frame.py:576 pynicotine/gtkgui/userbrowse.py:521
 #, python-format
 msgid ""
 "Are you sure you wish to download %(num)i files from %(user)s's directory %"
@@ -583,207 +582,232 @@ msgstr ""
 "Ste si istý, že chcete stiahnuť %(num)i súborov od užívateľa %(user)s z "
 "adresára %(folder)s?"
 
-#: pynicotine/gtkgui/frame.py:762 pynicotine/gtkgui/userbrowse.py:432
+#: pynicotine/gtkgui/frame.py:629 pynicotine/gtkgui/userbrowse.py:432
 #, python-format
 msgid "Can't create directory '%(folder)s', reported error: %(error)s"
 msgstr "Nepodarilo sa vytvoriť adresár '%(folder)s', hlásená chyba: %(error)s"
 
-#: pynicotine/gtkgui/frame.py:784
+#: pynicotine/gtkgui/frame.py:651
 #, python-format
 msgid "Loading Shares from disk failed: %(error)s"
-msgstr ""
+msgstr "Nahrávanie zdieľaných súborov z disku zlyhalo: %(error)s"
 
-#: pynicotine/gtkgui/frame.py:806
+#: pynicotine/gtkgui/frame.py:673
 #, fuzzy
 msgid "Nicotine+:"
 msgstr "Nicotine+"
 
-#: pynicotine/gtkgui/frame.py:806 pynicotine/gtkgui/nicotine_glade.py:420
+#: pynicotine/gtkgui/frame.py:673 pynicotine/gtkgui/nicotine_glade.py:412
+#: pynicotine/gtkgui/nicotine_glade_3.py:412
 msgid "Start Message"
-msgstr "Začať správu"
+msgstr "Začať si písať s"
 
-#: pynicotine/gtkgui/frame.py:807
+#: pynicotine/gtkgui/frame.py:674
 #, fuzzy
 msgid "Enter the User who you wish to send a private message:"
 msgstr "Zadajte užívateľa, o ktorom chcete získať informácie:"
 
-#: pynicotine/gtkgui/frame.py:819
+#: pynicotine/gtkgui/frame.py:686
 msgid "Nicotine+: Get User Info"
 msgstr "Nicotine+: Získať údaje o užívateľovi"
 
-#: pynicotine/gtkgui/frame.py:820
+#: pynicotine/gtkgui/frame.py:687
 msgid "Enter the User whose User Info you wish to recieve:"
 msgstr "Zadajte užívateľa, o ktorom chcete získať informácie:"
 
-#: pynicotine/gtkgui/frame.py:832
+#: pynicotine/gtkgui/frame.py:699
 msgid "Nicotine+: Get A User's IP"
 msgstr "Nicotine+: Zistiť IP adresu užívateľa"
 
-#: pynicotine/gtkgui/frame.py:833
+#: pynicotine/gtkgui/frame.py:700
 msgid "Enter the User whose IP Address you wish to recieve:"
 msgstr "Zadajte užívateľa, ktorého IP adresu chcete vedieť:"
 
-#: pynicotine/gtkgui/frame.py:846
+#: pynicotine/gtkgui/frame.py:713
 msgid "Nicotine+: Get A User's Shares List"
 msgstr "Nicotine+: Získať zoznam zdieľaných súborov užívateľa"
 
-#: pynicotine/gtkgui/frame.py:847
+#: pynicotine/gtkgui/frame.py:714
 msgid "Enter the User whose Shares List you wish to recieve:"
 msgstr "Zadajte užívateľa, ktorého zoznam zdieľaných súborov chcete získať:"
 
-#: pynicotine/gtkgui/frame.py:859
-msgid "Connect"
-msgstr "Pripojiť sa"
-
-#: pynicotine/gtkgui/frame.py:860
-msgid "Disconnect"
-msgstr "Odpojiť sa"
-
-#: pynicotine/gtkgui/frame.py:864
-msgid "Hide / Unhide Nicotine"
-msgstr "Skryť/Zobraziť Nicotine"
-
-#: pynicotine/gtkgui/frame.py:866
-msgid "Settings"
-msgstr "Nastavenia"
-
-#: pynicotine/gtkgui/frame.py:867
-#, fuzzy
-msgid "Send Message"
-msgstr "_Poslať správu"
-
-#: pynicotine/gtkgui/frame.py:868
-msgid "Lookup a User's IP"
-msgstr "Vyhľadať IP adresu užívateľa"
-
-#: pynicotine/gtkgui/frame.py:869
-msgid "Lookup a User's Info"
-msgstr "Vyhľadať informácie o užívateľovi"
-
-#: pynicotine/gtkgui/frame.py:870
-msgid "Lookup a User's Shares"
-msgstr "Vyhľadať zoznam užívateľom zdieľaných súborov"
-
-#: pynicotine/gtkgui/frame.py:871
-msgid "Toggle Away"
-msgstr "Prepnúť preč/prítomný"
-
-#: pynicotine/gtkgui/frame.py:872
-msgid "Quit"
-msgstr "Ukončiť"
-
-#: pynicotine/gtkgui/frame.py:1173
+#: pynicotine/gtkgui/frame.py:963
 #, python-format
 msgid "Connecting to %(host)s:%(port)s"
 msgstr "Pripájam sa k %(host)s:%(port)s"
 
-#: pynicotine/gtkgui/frame.py:1229 pynicotine/gtkgui/frame.py:1266
+#: pynicotine/gtkgui/frame.py:1019 pynicotine/gtkgui/frame.py:1056
 #: pynicotine/gtkgui/settings_glade.py:1946 pynicotine/gtkgui/userinfo.py:40
 #: pynicotine/gtkgui/privatechat.py:39
 msgid "Online"
 msgstr "Online"
 
-#: pynicotine/gtkgui/frame.py:1238 pynicotine/gtkgui/frame.py:1270
+#: pynicotine/gtkgui/frame.py:1028 pynicotine/gtkgui/frame.py:1060
 #: pynicotine/gtkgui/settings_glade.py:1890
 #: pynicotine/gtkgui/settings_glade.py:3109 pynicotine/gtkgui/userinfo.py:40
 #: pynicotine/gtkgui/privatechat.py:39
 msgid "Away"
 msgstr "Preč"
 
-#: pynicotine/gtkgui/frame.py:1340
+#: pynicotine/gtkgui/frame.py:1130
 #, python-format
 msgid "Down: %(num)i users, %(speed).1f KB/s"
-msgstr "Sťahv: %(num)i užívateľov, %(speed).1f KB/s"
+msgstr "Down: %(num)i užívateľov, %(speed).1f KB/s"
 
-#: pynicotine/gtkgui/frame.py:1341
+#: pynicotine/gtkgui/frame.py:1131
 #, python-format
 msgid "Up: %(num)i users, %(speed).1f KB/s"
-msgstr "Poskyt: %(num)i užívateľov, %(speed).1f KB/s"
+msgstr "Up: %(num)i užívateľov, %(speed).1f KB/s"
 
-#: pynicotine/gtkgui/frame.py:1381
+#: pynicotine/gtkgui/frame.py:1171
 msgid "Rescanning started"
 msgstr "Reskenovanie začalo"
 
-#: pynicotine/gtkgui/frame.py:1400
+#: pynicotine/gtkgui/frame.py:1190
 msgid "Rescanning Buddy Shares started"
 msgstr "Reskenovanie súborov pre priateľov začalo"
 
-#: pynicotine/gtkgui/frame.py:1420
+#: pynicotine/gtkgui/frame.py:1210
 msgid "Rescanning Buddy Shares finished"
 msgstr "Reskenovanie súborov pre priateľov skončilo"
 
-#: pynicotine/gtkgui/frame.py:1431
+#: pynicotine/gtkgui/frame.py:1221
 msgid "Rescanning finished"
 msgstr "Reskenovanie skončilo"
 
-#: pynicotine/gtkgui/frame.py:1508
+#: pynicotine/gtkgui/frame.py:1303
 msgid ""
 "You need to finish configuring your settings (Server, Username, Password, "
 "Download Directory) before connecting... but if this message persists, check "
 "your Nicotine config file for options set to 'None'."
 msgstr ""
 "Pred pripojením musíte dokončiť nastavenia (server, užívateľské meno, heslo, "
-"adresáre)..."
+"adresár pre download)... ale ak sa táto správa opakuje, pozrite sa do "
+"konfiguračného súboru nicotine, či neobsahuje voľby nastavené na 'None'."
 
-#: pynicotine/gtkgui/frame.py:1613
+#: pynicotine/gtkgui/frame.py:1408
 #, python-format
 msgid "Error: %(num)d Download filters failed! %(error)s "
-msgstr ""
+msgstr "Chyba: %(num)d Filtre pre download zlyhali! %(error)s"
 
-#: pynicotine/gtkgui/frame.py:1617
+#: pynicotine/gtkgui/frame.py:1412
 #, python-format
 msgid "Error: Download Filter failed! Verify your filters. Reason: %s"
 msgstr ""
+"Chyba: Filter pre download zlyhal! Skontrolujte vaše filtre. Príčina: %s"
 
-#: pynicotine/gtkgui/frame.py:1639
+#: pynicotine/gtkgui/frame.py:1444
 msgid "Cannot Find Guide"
-msgstr ""
+msgstr "Nemôžem nájsť Sprievodcu"
 
-#: pynicotine/gtkgui/frame.py:1639
-#, python-format
+#: pynicotine/gtkgui/frame.py:1444
+#, fuzzy, python-format
 msgid ""
 "The Nicotine Offline Guide ( NicotinePlusGuide.html ) was not found in "
 "either the following directories:\n"
 "\n"
-"<u>%(pwd)s/doc/\n"
+"<u>%(pwd)s\n"
 "</u><b>and</b>\n"
 "<u>%(prefix)s/share/nicotine/documentation/</u>\n"
 "\n"
 "Either install Nicotine-Plus, or start from inside the Nicotine-Plus source "
 "directory."
 msgstr ""
+"Offline sprievodca programom Nicotine (NicotinePlusGuide.html) nebol nájdený "
+"v žiadnom z týchto adresárov:\n"
+"\n"
+"<u>%(pwd)s/doc/\n"
+"</u><b>a</b>\n"
+"<u>%(prefix)s/share/nicotine/documentation/</u>\n"
+"\n"
+"Buď nainštalujte Nicotine-Plus alebo ho spustite zo zdrojového adresára "
+"Nicotine-Plus."
 
-#: pynicotine/gtkgui/frame.py:1742
+#: pynicotine/gtkgui/frame.py:1547
 #, python-format
 msgid "Invalid SoulSeek meta-url: %s"
 msgstr "Chybná SoulSeek meta-url: %s"
 
-#: pynicotine/gtkgui/frame.py:1835
-#, fuzzy
+#: pynicotine/gtkgui/frame.py:1640
 msgid "Enter the string to search for:"
-msgstr "Zadajte užívateľa, o ktorom chcete získať informácie:"
+msgstr "Zadajte reťazec, ktorý chcete hľadať:"
 
-#: pynicotine/gtkgui/frame.py:1836
-#, fuzzy
+#: pynicotine/gtkgui/frame.py:1641
 msgid "Nicotine+: Find string"
-msgstr "Nastavenia Nicotine"
+msgstr "Nicotine+: Nájsť reťazec"
 
-#: pynicotine/gtkgui/frame.py:1906
+#: pynicotine/gtkgui/frame.py:1711
 msgid "Add thing I like"
 msgstr "Pridať vec, ktorú mám rád(a)"
 
-#: pynicotine/gtkgui/frame.py:1915
+#: pynicotine/gtkgui/frame.py:1720
 msgid "Add thing I don't like"
 msgstr "Pridať vec, ktorú nemám rád(a)"
 
-#: pynicotine/gtkgui/frame.py:1915
+#: pynicotine/gtkgui/frame.py:1720
 msgid "I don't like"
 msgstr "Nemám rád(a)"
 
-#: pynicotine/gtkgui/frame.py:1940
+#: pynicotine/gtkgui/frame.py:1745
 #, python-format
 msgid "Recommendations for %s"
 msgstr "Doporučenia pre %s"
+
+#: pynicotine/gtkgui/frame.py:1994
+#, python-format
+msgid ""
+"Note: The systraywin32.py Python file failed to load properly because: %s. "
+"You may require pywin32. Get a version that matches your version of Python "
+"from here:\n"
+"http://sourceforge.net/project/showfiles.php?group_id=78018"
+msgstr ""
+
+#: pynicotine/gtkgui/frame.py:2013
+#, python-format
+msgid ""
+"Note: Trayicon Python module was not found in the pynicotine directory: %s"
+msgstr ""
+
+#: pynicotine/gtkgui/frame.py:2109
+msgid "Connect"
+msgstr "Pripojiť sa"
+
+#: pynicotine/gtkgui/frame.py:2110
+msgid "Disconnect"
+msgstr "Odpojiť sa"
+
+#: pynicotine/gtkgui/frame.py:2114
+msgid "Hide / Unhide Nicotine"
+msgstr "Skryť/Zobraziť Nicotine"
+
+#: pynicotine/gtkgui/frame.py:2116
+msgid "Settings"
+msgstr "Nastavenia"
+
+#: pynicotine/gtkgui/frame.py:2117
+#, fuzzy
+msgid "Send Message"
+msgstr "_Poslať správu"
+
+#: pynicotine/gtkgui/frame.py:2118
+msgid "Lookup a User's IP"
+msgstr "Vyhľadať IP adresu užívateľa"
+
+#: pynicotine/gtkgui/frame.py:2119
+msgid "Lookup a User's Info"
+msgstr "Vyhľadať informácie o užívateľovi"
+
+#: pynicotine/gtkgui/frame.py:2120
+msgid "Lookup a User's Shares"
+msgstr "Vyhľadať zoznam užívateľom zdieľaných súborov"
+
+#: pynicotine/gtkgui/frame.py:2121
+msgid "Toggle Away"
+msgstr "Prepnúť preč/prítomný"
+
+#: pynicotine/gtkgui/frame.py:2122
+msgid "Quit"
+msgstr "Ukončiť"
 
 #: pynicotine/gtkgui/settings_glade.py:17
 msgid "Server Settings"
@@ -803,7 +827,7 @@ msgstr "Heslo:"
 
 #: pynicotine/gtkgui/settings_glade.py:125
 msgid "Network Character Encoding (utf-8 is a good choice)"
-msgstr "Znaková sada (utf-8 je doporučené)"
+msgstr "Znaková sada (utf-8 je dobrá voľba)"
 
 #: pynicotine/gtkgui/settings_glade.py:159
 msgid "Client connection ports (use first available):"
@@ -811,7 +835,7 @@ msgstr "Porty pre pripojenie (bude použitý prvý dostupný)"
 
 #: pynicotine/gtkgui/settings_glade.py:173
 msgid "2234"
-msgstr ""
+msgstr "2234"
 
 #: pynicotine/gtkgui/settings_glade.py:179
 msgid "-"
@@ -819,7 +843,7 @@ msgstr "-"
 
 #: pynicotine/gtkgui/settings_glade.py:188
 msgid "2242"
-msgstr ""
+msgstr "2242"
 
 #: pynicotine/gtkgui/settings_glade.py:196
 msgid "Use the above ports to configure your router or firewall."
@@ -857,14 +881,21 @@ msgstr "Povoliť PM odpovede typu CTCP (klientská verzia)"
 #: pynicotine/gtkgui/settings_glade.py:3988
 #: pynicotine/gtkgui/settings_glade.py:4152
 #: pynicotine/gtkgui/settings_glade.py:4433
-#: pynicotine/gtkgui/nicotine_glade.py:1477
-#: pynicotine/gtkgui/nicotine_glade.py:1665
-#: pynicotine/gtkgui/nicotine_glade.py:1787
-#: pynicotine/gtkgui/nicotine_glade.py:2049
-#: pynicotine/gtkgui/nicotine_glade.py:2620
-#: pynicotine/gtkgui/nicotine_glade.py:2853
-#: pynicotine/gtkgui/nicotine_glade.py:2919
-#: pynicotine/gtkgui/nowplaying.py:412
+#: pynicotine/gtkgui/nicotine_glade.py:1411
+#: pynicotine/gtkgui/nicotine_glade.py:1585
+#: pynicotine/gtkgui/nicotine_glade.py:1704
+#: pynicotine/gtkgui/nicotine_glade.py:1916
+#: pynicotine/gtkgui/nicotine_glade.py:2421
+#: pynicotine/gtkgui/nicotine_glade.py:2633
+#: pynicotine/gtkgui/nicotine_glade.py:2691
+#: pynicotine/gtkgui/nowplaying.py:416
+#: pynicotine/gtkgui/nicotine_glade_3.py:1410
+#: pynicotine/gtkgui/nicotine_glade_3.py:1584
+#: pynicotine/gtkgui/nicotine_glade_3.py:1697
+#: pynicotine/gtkgui/nicotine_glade_3.py:1909
+#: pynicotine/gtkgui/nicotine_glade_3.py:2414
+#: pynicotine/gtkgui/nicotine_glade_3.py:2626
+#: pynicotine/gtkgui/nicotine_glade_3.py:2684
 #, python-format
 msgid "(custom widget: %s)"
 msgstr "(vlastný widget: %s)"
@@ -882,7 +913,7 @@ msgstr "Vybrať..."
 
 #: pynicotine/gtkgui/settings_glade.py:327
 msgid "Download directory:"
-msgstr "Adresár pre sťahované súbory:"
+msgstr "Adresár pre download:"
 
 #: pynicotine/gtkgui/settings_glade.py:379
 msgid "Share download directory"
@@ -919,7 +950,7 @@ msgstr "Typ požiadavku na upload:"
 
 #: pynicotine/gtkgui/settings_glade.py:653
 msgid "Users will be sent one file and then another user will be selected"
-msgstr ""
+msgstr "Užívateľom pošlete jeden súbor a potom bude sťahovať ďalší užívateľ"
 
 #: pynicotine/gtkgui/settings_glade.py:655
 msgid "Round Robin"
@@ -927,7 +958,7 @@ msgstr "Cyklická obsluha"
 
 #: pynicotine/gtkgui/settings_glade.py:661
 msgid "Files will be sent in the order they were queued"
-msgstr ""
+msgstr "Súbory budú posielané v tom poradí, v akom boli umiestnené do frontu"
 
 #: pynicotine/gtkgui/settings_glade.py:663
 msgid "First In, First Out"
@@ -935,7 +966,7 @@ msgstr "Prvý dnu, prvý von"
 
 #: pynicotine/gtkgui/settings_glade.py:674
 msgid "Queue Uploads if total transfer speed reaches"
-msgstr ""
+msgstr "Umiestniť uploady do frontu, ak celkový prenos dosiahne"
 
 #: pynicotine/gtkgui/settings_glade.py:689
 #: pynicotine/gtkgui/settings_glade.py:739
@@ -947,6 +978,8 @@ msgid ""
 "If disabled, slots will automatically be determined by available bandwidth "
 "limitations"
 msgstr ""
+"Ak vypnuté, slot bude automaticky stanovený obmedzeniami dostupnej šírky "
+"pásma"
 
 #: pynicotine/gtkgui/settings_glade.py:704
 msgid "Limit number of upload slots to"
@@ -954,7 +987,7 @@ msgstr "Obmedzovať počet súčasne poskytovaných súborov na"
 
 #: pynicotine/gtkgui/settings_glade.py:711
 msgid "Set to 0 to disable uploads"
-msgstr ""
+msgstr "Nastavte na 0 pre vypnutie uploadov"
 
 #: pynicotine/gtkgui/settings_glade.py:718
 msgid "(NOT RECOMMENDED)"
@@ -982,10 +1015,13 @@ msgid ""
 "will not be added to your upload queue until the user retries them with a "
 "smaller total queue size"
 msgstr ""
+"Súbory zostanú v užívateľskom fronte pre download s varovnou správou, ale "
+"nebudú pridané do vašeho frontu na upload, pokiaľ ich užívateľ neskúsi opäť "
+"stiahnuť s menšou celkovou veľkosťou frontu"
 
 #: pynicotine/gtkgui/settings_glade.py:782
 msgid "100"
-msgstr ""
+msgstr "100"
 
 #: pynicotine/gtkgui/settings_glade.py:788
 msgid "Megabytes"
@@ -1000,22 +1036,24 @@ msgid ""
 "The users will be able to send you files. These files will be downloaded "
 "into the Buddy Uploads subdirectory in your Download directory"
 msgstr ""
+"Užívatelia vám budú môcť poslať súbory. Tieto súbory budu stiahnuté do "
+"podadresára Uploady od kamarátov vo vašom adresáre pre download"
 
 #: pynicotine/gtkgui/settings_glade.py:809
-#, fuzzy
 msgid "Allow these users to send you files:"
-msgstr "Povoliť priateľom posielať mi súbory"
+msgstr "Povoliť týmto užívateľom posielať vám súbory:"
 
 #: pynicotine/gtkgui/settings_glade.py:831
-#, fuzzy
 msgid "<b>Upload Queue:</b>"
-msgstr "Typ požiadavku na upload:"
+msgstr "<b>Front pre upload:</b>"
 
 #: pynicotine/gtkgui/settings_glade.py:851
 msgid ""
 "If buddy shares are enabled, they will be shared. Otherwise normal shares "
 "will be used."
 msgstr ""
+"Ak je zapnuté zdieľanie s kamarátmi, budú zdieľané. Inak budú použité bežne "
+"zdieľané súbory."
 
 #: pynicotine/gtkgui/settings_glade.py:853
 msgid "Share to friends only"
@@ -1026,22 +1064,22 @@ msgid ""
 "Friends will have higher priority in the queue, the same as globally "
 "privileged users"
 msgstr ""
+"Priatelia budú mať vyššiu prioritu vo fronte, rovnako ako aj užívatelia s "
+"globálnymi oprávneniami"
 
 #: pynicotine/gtkgui/settings_glade.py:861
 msgid "Privilege all my friends"
 msgstr "Privilégia pre všetkých mojich priateľov"
 
 #: pynicotine/gtkgui/settings_glade.py:872
-#, fuzzy
 msgid "<b>Privileges:</b>"
-msgstr "Dĺžka"
+msgstr "<b>Privilégia:</b>"
 
 #: pynicotine/gtkgui/settings_glade.py:895
 msgid "<b>Do not download these file types:</b>"
-msgstr ""
+msgstr "<b>Nesťahovať tieto typy súborov:</b>"
 
 #: pynicotine/gtkgui/settings_glade.py:901
-#, fuzzy
 msgid "Enable Filters"
 msgstr "Zapnúť filtre"
 
@@ -1051,39 +1089,41 @@ msgid ""
 "are supported if escaping is disabled. For simple filters, keep escaping "
 "enabled."
 msgstr ""
+"<b>Syntax:</b> Písmená rozlišujú veľkosť, sú podporované všetky regulárne "
+"výrazy Pythonu, ak je vypnuté escapeovanie. Pre jednoduché filtre nechajte "
+"escapeovanie zapnuté."
 
 #: pynicotine/gtkgui/settings_glade.py:972
 msgid "Edit Filter"
-msgstr ""
+msgstr "Upraviť filter"
 
 #: pynicotine/gtkgui/settings_glade.py:1030
-#, fuzzy
 msgid "Load Defaults"
-msgstr "Východzie"
+msgstr "Nahrať východzie"
 
 #: pynicotine/gtkgui/settings_glade.py:1052
 msgid "<b>Unverified</b>"
-msgstr ""
+msgstr "<b>Neoverené</b>"
 
 #: pynicotine/gtkgui/settings_glade.py:1092
 msgid "Verify Filters"
-msgstr ""
+msgstr "Overiť filtre"
 
 #: pynicotine/gtkgui/settings_glade.py:1113
-#, fuzzy
 msgid "<b>Download Filters:</b>"
-msgstr "Okamžité sťahovanie"
+msgstr "<b>Filtre pre download:</b>"
 
 #: pynicotine/gtkgui/settings_glade.py:1121
 msgid "Lock incoming files (turn off for NFS)"
-msgstr "Uzamknúť prichádzajúce súbory (vypnutie pre NFS)"
+msgstr "Uzamknúť prichádzajúce súbory (vypnite pre NFS)"
 
 #: pynicotine/gtkgui/settings_glade.py:1181
 msgid "Userinfo"
 msgstr "Údaje o užívateľovi"
 
 #: pynicotine/gtkgui/settings_glade.py:1199
-#: pynicotine/gtkgui/nicotine_glade.py:2124
+#: pynicotine/gtkgui/nicotine_glade.py:1985
+#: pynicotine/gtkgui/nicotine_glade_3.py:1978
 msgid "Self description:"
 msgstr "Vlastný popis:"
 
@@ -1109,7 +1149,7 @@ msgstr "Zobrazovať tlačidlá na paneli prenosov"
 
 #: pynicotine/gtkgui/settings_glade.py:1343
 msgid "Reopen last Private Chat messages"
-msgstr ""
+msgstr "Znovu otvoriť posledné správy súkromného chatu"
 
 #: pynicotine/gtkgui/settings_glade.py:1353
 msgid "Chat Font:"
@@ -1153,13 +1193,12 @@ msgid "Default"
 msgstr "Východzie"
 
 #: pynicotine/gtkgui/settings_glade.py:1660
-#, fuzzy
 msgid "<b>List and search colours</b>"
-msgstr "Farby vyhľadávania"
+msgstr "<b>Farby zoznamu a hľadaní</b>"
 
 #: pynicotine/gtkgui/settings_glade.py:1680
 msgid "List Text"
-msgstr ""
+msgstr "Vypísať text"
 
 #: pynicotine/gtkgui/settings_glade.py:1778
 msgid "With queue"
@@ -1167,23 +1206,23 @@ msgstr "Vo fronte"
 
 #: pynicotine/gtkgui/settings_glade.py:1862
 msgid "Username Colours and Hotspots"
-msgstr ""
+msgstr "Farby pre užívateľské mená a horúce miesta"
 
 #: pynicotine/gtkgui/settings_glade.py:2037
 msgid "Background"
-msgstr ""
+msgstr "Pozadie"
 
 #: pynicotine/gtkgui/settings_glade.py:2053
 msgid "Username Font Style:"
-msgstr ""
+msgstr "Štýl písma mena užívateľa:"
 
 #: pynicotine/gtkgui/settings_glade.py:2085
 msgid "Input Text"
-msgstr ""
+msgstr "Vstupný text"
 
 #: pynicotine/gtkgui/settings_glade.py:2137
 msgid "<b>Colours</b>"
-msgstr "Farby"
+msgstr "<b>Farby</b>"
 
 #: pynicotine/gtkgui/settings_glade.py:2157
 msgid ""
@@ -1191,34 +1230,37 @@ msgid ""
 "Nicotine<b>+</b> is started with this feature disabled, you will need to "
 "enable it and restart to see its effects."
 msgstr ""
+"<b>Varovanie:</b> Táto vlastnosť je náročná na zdroje a môže byť pomalá. Ak "
+"je Nicotine<b>+</b> spustený s touto vlastnosťou vypnutou, po jej zapnutí "
+"budete musieť reštartovať Nicotine, aby bola použitá. "
 
 #: pynicotine/gtkgui/settings_glade.py:2163
 msgid "Enable Transparent Textviews"
-msgstr ""
+msgstr "Povoliť priesvitné textové pohľady"
 
 #: pynicotine/gtkgui/settings_glade.py:2191
 msgid "Tint Color"
-msgstr ""
+msgstr "Farba odtieňa"
 
 #: pynicotine/gtkgui/settings_glade.py:2249
 msgid "Red"
-msgstr ""
+msgstr "Červená"
 
 #: pynicotine/gtkgui/settings_glade.py:2268
 msgid "Green"
-msgstr ""
+msgstr "Zelená"
 
 #: pynicotine/gtkgui/settings_glade.py:2290
 msgid "Blue"
-msgstr ""
+msgstr "Modrá"
 
 #: pynicotine/gtkgui/settings_glade.py:2307
 msgid "Alpha"
-msgstr ""
+msgstr "Alfa"
 
 #: pynicotine/gtkgui/settings_glade.py:2329
 msgid "<b>Transparent Log Windows</b>"
-msgstr ""
+msgstr "<b>Priesvitné okná s logmi</b>"
 
 #: pynicotine/gtkgui/settings_glade.py:2337
 #: pynicotine/gtkgui/settings_glade.py:4422
@@ -1226,10 +1268,12 @@ msgid "Extra stuff for your comfort"
 msgstr "Extra veci pre vaše pohodlie"
 
 #: pynicotine/gtkgui/settings_glade.py:2379
-#: pynicotine/gtkgui/nicotine_glade.py:1576
-#: pynicotine/gtkgui/nicotine_glade.py:1731
+#: pynicotine/gtkgui/nicotine_glade.py:1501
+#: pynicotine/gtkgui/nicotine_glade.py:1651
+#: pynicotine/gtkgui/nicotine_glade_3.py:1500
+#: pynicotine/gtkgui/nicotine_glade_3.py:1644
 msgid "Log"
-msgstr "Zaznamenávať"
+msgstr "Logovať"
 
 #: pynicotine/gtkgui/settings_glade.py:2395
 msgid "Log private chat by default"
@@ -1249,10 +1293,11 @@ msgstr "Adresár s log súbormi:"
 
 #: pynicotine/gtkgui/settings_glade.py:2427
 msgid "~/"
-msgstr ""
+msgstr "~/"
 
 #: pynicotine/gtkgui/settings_glade.py:2498
-#: pynicotine/gtkgui/nicotine_glade.py:2455
+#: pynicotine/gtkgui/nicotine_glade.py:2270
+#: pynicotine/gtkgui/nicotine_glade_3.py:2263
 msgid "Ban"
 msgstr "Zakázať"
 
@@ -1262,7 +1307,8 @@ msgstr "Zakázaní užívatelia:"
 
 #: pynicotine/gtkgui/settings_glade.py:2614
 #: pynicotine/gtkgui/settings_glade.py:2726
-#: pynicotine/gtkgui/nicotine_glade.py:866
+#: pynicotine/gtkgui/nicotine_glade.py:829
+#: pynicotine/gtkgui/nicotine_glade_3.py:828
 msgid "Clear"
 msgstr "Vyčistiť"
 
@@ -1279,7 +1325,8 @@ msgid "Banning"
 msgstr "Zákaz"
 
 #: pynicotine/gtkgui/settings_glade.py:2812
-#: pynicotine/gtkgui/nicotine_glade.py:837
+#: pynicotine/gtkgui/nicotine_glade.py:803
+#: pynicotine/gtkgui/nicotine_glade_3.py:802
 msgid "Search"
 msgstr "Hľadať"
 
@@ -1293,7 +1340,7 @@ msgstr "Zobrazovať najviac"
 
 #: pynicotine/gtkgui/settings_glade.py:2846
 msgid "10"
-msgstr ""
+msgstr "10"
 
 #: pynicotine/gtkgui/settings_glade.py:2852
 msgid "results per search request"
@@ -1312,32 +1359,38 @@ msgid "Enable filters by default"
 msgstr "Štandardne povoliť filtre"
 
 #: pynicotine/gtkgui/settings_glade.py:2885
-#: pynicotine/gtkgui/nicotine_glade.py:1900
+#: pynicotine/gtkgui/nicotine_glade.py:1805
+#: pynicotine/gtkgui/nicotine_glade_3.py:1798
 msgid "Filter in:"
 msgstr "Obsiahnutý text:"
 
 #: pynicotine/gtkgui/settings_glade.py:2892
-#: pynicotine/gtkgui/nicotine_glade.py:1921
+#: pynicotine/gtkgui/nicotine_glade.py:1819
+#: pynicotine/gtkgui/nicotine_glade_3.py:1812
 msgid "Filter out:"
 msgstr "Výlučený text:"
 
 #: pynicotine/gtkgui/settings_glade.py:2899
-#: pynicotine/gtkgui/nicotine_glade.py:1942
+#: pynicotine/gtkgui/nicotine_glade.py:1833
+#: pynicotine/gtkgui/nicotine_glade_3.py:1826
 msgid "Size:"
 msgstr "Veľkosť:"
 
 #: pynicotine/gtkgui/settings_glade.py:2906
-#: pynicotine/gtkgui/nicotine_glade.py:1964
+#: pynicotine/gtkgui/nicotine_glade.py:1848
+#: pynicotine/gtkgui/nicotine_glade_3.py:1841
 msgid "Bitrate:"
 msgstr "Bitový tok:"
 
 #: pynicotine/gtkgui/settings_glade.py:2955
-#: pynicotine/gtkgui/nicotine_glade.py:2010
+#: pynicotine/gtkgui/nicotine_glade.py:1879
+#: pynicotine/gtkgui/nicotine_glade_3.py:1872
 msgid "Free slot"
 msgstr "Voľný slot"
 
 #: pynicotine/gtkgui/settings_glade.py:2959
-#: pynicotine/gtkgui/nicotine_glade.py:1986
+#: pynicotine/gtkgui/nicotine_glade.py:1863
+#: pynicotine/gtkgui/nicotine_glade_3.py:1856
 msgid "Country:"
 msgstr "Krajina:"
 
@@ -1351,7 +1404,7 @@ msgstr "Prepnúť do módu neprítomnosti (preč) po "
 
 #: pynicotine/gtkgui/settings_glade.py:3136
 msgid "15"
-msgstr ""
+msgstr "15"
 
 #: pynicotine/gtkgui/settings_glade.py:3142
 msgid " minutes of inactivity"
@@ -1415,8 +1468,9 @@ msgid "Protocol:"
 msgstr "Protokol:"
 
 #: pynicotine/gtkgui/settings_glade.py:3421
+#, fuzzy
 msgid "Example: http"
-msgstr ""
+msgstr "Príklad:"
 
 #: pynicotine/gtkgui/settings_glade.py:3428
 msgid "Handler:"
@@ -1481,7 +1535,7 @@ msgstr "Nastavenie pripojenia"
 
 #: pynicotine/gtkgui/settings_glade.py:3656
 msgid "Choose Interface to configure text color and other settings."
-msgstr "Vyberťe Interface na nastavenie farby textu a ďalšie nastavenia."
+msgstr "Vyberte Interface na nastavenie farby textu a ďalšie nastavenia."
 
 #: pynicotine/gtkgui/settings_glade.py:3663
 msgid ""
@@ -1543,42 +1597,41 @@ msgid ""
 "your settings (Login, Password, User Info, User Image). Use caution with "
 "this feature."
 msgstr ""
+"Importovanie konfiguračných súborov oficiálneho klienta prepíše niektoré "
+"vaše nastavenia (Login, heslo, užívateľské informácie, obrázok užívateľa). "
+"Používajte túto funkciu obozretne."
 
 #: pynicotine/gtkgui/settings_glade.py:3814
 msgid ""
 "Select the directory that contains slsk.exe and the .cfg files: Ex: C:"
 "\\Program Files\\SoulSeek"
 msgstr ""
+"Vyberte adresár, ktorý obsahuje slsk.exe a súbory .cfg: napr: C:\\Program "
+"Files\\SoulSeek"
 
 #: pynicotine/gtkgui/settings_glade.py:3851
-#, fuzzy
 msgid "Import Directory"
-msgstr "Adresár"
+msgstr "Importovať adresár"
 
 #: pynicotine/gtkgui/settings_glade.py:3872
-#, fuzzy
 msgid "Queue"
-msgstr "Vo fronte"
+msgstr "Front"
 
 #: pynicotine/gtkgui/settings_glade.py:3878
-#, fuzzy
 msgid "Login / Password"
-msgstr "Heslo:"
+msgstr "Login / Heslo"
 
 #: pynicotine/gtkgui/settings_glade.py:3884
-#, fuzzy
 msgid "Joined Chat Rooms"
-msgstr "Chatovacie _miestnosti"
+msgstr "Pripojený v chatovacích miestnostiach"
 
 #: pynicotine/gtkgui/settings_glade.py:3897
-#, fuzzy
 msgid "Buddy List"
-msgstr "Zoznam _kamarátov"
+msgstr "Zoznam kamarátov"
 
 #: pynicotine/gtkgui/settings_glade.py:3903
-#, fuzzy
 msgid "Banned List"
-msgstr "Zakázaní (%s)"
+msgstr "Zoznam zákazov"
 
 #: pynicotine/gtkgui/settings_glade.py:3909
 msgid "Ignored List"
@@ -1589,13 +1642,12 @@ msgid "User Info"
 msgstr "Údaje o užívateľovi"
 
 #: pynicotine/gtkgui/settings_glade.py:3921
-#, fuzzy
 msgid "User Image"
-msgstr "Obrázok:"
+msgstr "Obrázok užívateľa"
 
 #: pynicotine/gtkgui/settings_glade.py:3932
 msgid "Restart Nicotine to see all changes take effect"
-msgstr ""
+msgstr "Reštartujte Nicotine, ak chcete použiť zmeny"
 
 #: pynicotine/gtkgui/settings_glade.py:4020
 msgid "Enable Sound Effects"
@@ -1622,7 +1674,7 @@ msgstr "Príkaz na spustenie prehrávača:"
 #: pynicotine/gtkgui/settings_glade.py:4140
 #, fuzzy
 msgid "<b>Sounds:</b>"
-msgstr "Farby"
+msgstr "<b>Farby</b>"
 
 #: pynicotine/gtkgui/settings_glade.py:4184
 msgid "Close-buttons on tabs (requires restart)"
@@ -1634,7 +1686,7 @@ msgstr "Zobrazovať ikonu v oznamovacej oblasti"
 
 #: pynicotine/gtkgui/settings_glade.py:4204
 msgid "Icon Theme Directory (requires restart):"
-msgstr "Adresár s témou ikon (vyžaduje reštart programu):"
+msgstr "Adresár s motívom ikon (vyžaduje reštart programu):"
 
 #: pynicotine/gtkgui/settings_glade.py:4281
 msgid "Current Icons:"
@@ -1643,7 +1695,7 @@ msgstr ""
 #: pynicotine/gtkgui/settings_glade.py:4298
 #, fuzzy
 msgid "<b>Trayicon</b>"
-msgstr "Adresár"
+msgstr "<b>Adresár:</b>"
 
 #: pynicotine/gtkgui/settings_glade.py:4302
 #, fuzzy
@@ -1665,7 +1717,7 @@ msgstr "Preč"
 #: pynicotine/gtkgui/settings_glade.py:4362
 #, fuzzy
 msgid "Hilite:"
-msgstr "Obsiahnutý text:"
+msgstr "Filter"
 
 #: pynicotine/gtkgui/settings_glade.py:4350
 #, fuzzy
@@ -1685,9 +1737,9 @@ msgstr "Online"
 #: pynicotine/gtkgui/settings_glade.py:4414
 #, fuzzy
 msgid "<b>Status</b>"
-msgstr "Bitový tok:"
+msgstr "<b>Bitový tok:</b>"
 
-#: pynicotine/gtkgui/checklatest.py:33
+#: pynicotine/gtkgui/checklatest.py:37
 #, python-format
 msgid ""
 "Could not retrieve version information!\n"
@@ -1696,7 +1748,12 @@ msgstr ""
 "Nepodarilo sa získať informáciu o verzii!\n"
 "Chyba: %s"
 
-#: pynicotine/gtkgui/checklatest.py:39
+#: pynicotine/gtkgui/checklatest.py:38 pynicotine/gtkgui/checklatest.py:50
+#, fuzzy
+msgid "Check Latest Version"
+msgstr "_Skontrolovať najnovšiu verziu"
+
+#: pynicotine/gtkgui/checklatest.py:44
 #, python-format
 msgid ""
 "A newer version ('%s') is available. Check\n"
@@ -1706,8 +1763,16 @@ msgstr ""
 "Je dostupná nová verzia ('%s'). Hľadajte ju\n"
 "na domovskej stránke Nicotine+ (http://nicotine-plus.sourceforge.net)."
 
-#: pynicotine/gtkgui/checklatest.py:41
-msgid "You are using the latest version of Nicotine."
+#: pynicotine/gtkgui/checklatest.py:47
+msgid ""
+"You appear to be using a development version of Nicotine+.\n"
+"Check out the latest version from the Subversion repository at http://"
+"nicotine-plus.org"
+msgstr ""
+
+#: pynicotine/gtkgui/checklatest.py:49
+#, fuzzy
+msgid "You are using the latest version of Nicotine+."
 msgstr "Používate najnovšiu verziu Nicotine."
 
 #: pynicotine/gtkgui/userinfo.py:32
@@ -1716,14 +1781,14 @@ msgid "Speed: %s"
 msgstr "Rýchlosť: %s"
 
 #: pynicotine/gtkgui/userinfo.py:33
-#, fuzzy, python-format
+#, python-format
 msgid "Files: %s"
-msgstr "Obsiahnutý text:"
+msgstr "Súbory: %s"
 
 #: pynicotine/gtkgui/userinfo.py:34
-#, fuzzy, python-format
+#, python-format
 msgid "Directories: %s"
-msgstr "Adresár"
+msgstr "Adresáre: %s"
 
 #: pynicotine/gtkgui/userinfo.py:94
 msgid "Hates"
@@ -1737,7 +1802,7 @@ msgstr "Súbory"
 #: pynicotine/gtkgui/userinfo.py:180
 #, python-format
 msgid "Total uploads allowed: %i"
-msgstr "Povolený počet poskytovaných súborov celkom: %i"
+msgstr "Povolený počet uploadov celkom: %i"
 
 #: pynicotine/gtkgui/userinfo.py:181
 #, python-format
@@ -1746,32 +1811,31 @@ msgstr "Veľkosť frontu: %i"
 
 #: pynicotine/gtkgui/userinfo.py:183
 msgid "Yes"
-msgstr ""
+msgstr "Áno"
 
 #: pynicotine/gtkgui/userinfo.py:185
-#, fuzzy
 msgid "No"
-msgstr "N"
+msgstr "Nie"
 
 #: pynicotine/gtkgui/userinfo.py:186
-#, fuzzy, python-format
+#, python-format
 msgid "Slots free: %s"
-msgstr "Požiadavok na upload: %s"
+msgstr "Voľných slotov: %s"
 
-#: pynicotine/gtkgui/userinfo.py:196 pynicotine/gtkgui/nicotine_glade.py:2220
-#: pynicotine/slskproto.py:503 pynicotine/slskproto.py:518
+#: pynicotine/gtkgui/userinfo.py:196 pynicotine/gtkgui/nicotine_glade.py:2059
+#: pynicotine/gtkgui/nicotine_glade_3.py:2052 pynicotine/slskproto.py:561
+#: pynicotine/slskproto.py:576
 msgid "unknown"
 msgstr "neznáma"
 
 #: pynicotine/gtkgui/userinfo.py:197
 #, python-format
 msgid "%s"
-msgstr ""
+msgstr "%s"
 
 #: pynicotine/gtkgui/userbrowse.py:66
-#, fuzzy
 msgid "Directories"
-msgstr "Adresár"
+msgstr "Adresáre"
 
 #: pynicotine/gtkgui/userbrowse.py:86 pynicotine/gtkgui/userbrowse.py:96
 msgid "_Download directory"
@@ -1798,14 +1862,12 @@ msgid "Download _to..."
 msgstr "Stiah_nuť do..."
 
 #: pynicotine/gtkgui/userbrowse.py:104 pynicotine/gtkgui/userbrowse.py:110
-#, fuzzy
 msgid "Upload Directory to..."
-msgstr "Stiahnuť adresár _do..."
+msgstr "Nahrať adresár do..."
 
 #: pynicotine/gtkgui/userbrowse.py:105 pynicotine/gtkgui/userbrowse.py:111
-#, fuzzy
 msgid "Upload Directory recursive to..."
-msgstr "Stiahnuť adresár _do..."
+msgstr "Nahrať adresár rekurzívne do..."
 
 #: pynicotine/gtkgui/userbrowse.py:112
 msgid "Up_load file(s)"
@@ -1814,9 +1876,8 @@ msgstr "Stiahn_uť súbor(y)"
 #: pynicotine/gtkgui/userbrowse.py:121 pynicotine/gtkgui/userbrowse.py:133
 #: pynicotine/gtkgui/userbrowse.py:166 pynicotine/gtkgui/userbrowse.py:180
 #: pynicotine/gtkgui/entrydialog.py:115
-#, fuzzy
 msgid "Download"
-msgstr "Sťahovanie"
+msgstr "Stiahnuť"
 
 #: pynicotine/gtkgui/userbrowse.py:122 pynicotine/gtkgui/userbrowse.py:167
 #, fuzzy
@@ -1846,29 +1907,26 @@ msgid "Length"
 msgstr "Dĺžka"
 
 #: pynicotine/gtkgui/userbrowse.py:408 pynicotine/gtkgui/search.py:551
-#: pynicotine/gtkgui/browsetreemodels.py:148
 msgid " (vbr)"
 msgstr " (vbr)"
 
 #: pynicotine/gtkgui/userbrowse.py:442
 #, python-format
 msgid "Can't save shares, '%(user)s', reported error: %(error)s"
-msgstr "Nepodarilo sa vytvoriť adresár '%(user)s', hlásená chyba: %(error)s"
+msgstr ""
+"Nepodarilo sa uložiť zdieľané súbory '%(user)s', hlásená chyba: %(error)s"
 
 #: pynicotine/gtkgui/userbrowse.py:645
-#, fuzzy
 msgid "Nicotine: Upload Directory's Contents"
-msgstr "Stiahnuť adresár _do..."
+msgstr "Nicotine: Nahrať obsah adresára"
 
 #: pynicotine/gtkgui/userbrowse.py:646 pynicotine/gtkgui/userbrowse.py:658
-#, fuzzy
 msgid "Enter the User you wish to upload to:"
-msgstr "Zadajte užívateľa, o ktorom chcete získať informácie:"
+msgstr "Zadajte užívateľa, ku ktorému chcete uploadovať:"
 
 #: pynicotine/gtkgui/userbrowse.py:657
-#, fuzzy
 msgid "Nicotine: Upload File(s)"
-msgstr "Stiahn_uť súbor(y)"
+msgstr "Nicotine: Uploadovať súbor(y)"
 
 #: pynicotine/gtkgui/chatrooms.py:66
 msgid "Room"
@@ -1882,8 +1940,10 @@ msgstr "Vstúpiť do miestnosti"
 msgid "Leave room"
 msgstr "Opustiť miestnosť"
 
-#: pynicotine/gtkgui/chatrooms.py:85 pynicotine/gtkgui/nicotine_glade.py:2571
-#: pynicotine/gtkgui/nicotine_glade.py:2771
+#: pynicotine/gtkgui/chatrooms.py:85 pynicotine/gtkgui/nicotine_glade.py:2348
+#: pynicotine/gtkgui/nicotine_glade.py:2557
+#: pynicotine/gtkgui/nicotine_glade_3.py:2341
+#: pynicotine/gtkgui/nicotine_glade_3.py:2550
 msgid "Refresh"
 msgstr "Obnoviť"
 
@@ -1907,38 +1967,43 @@ msgstr "Vždy pre tento kanál"
 msgid "Default for all channels"
 msgstr "Prednastavené pre všetky kanály"
 
-#: pynicotine/gtkgui/chatrooms.py:652 pynicotine/gtkgui/privatechat.py:375
+#: pynicotine/gtkgui/chatrooms.py:655 pynicotine/gtkgui/privatechat.py:379
 #, python-format
 msgid "Command %s is not recognized"
 msgstr "Príkaz %s nie je rozpoznaný"
 
-#: pynicotine/gtkgui/chatrooms.py:663
+#: pynicotine/gtkgui/chatrooms.py:666
 #, python-format
 msgid "%s joined the room"
 msgstr "%s vstúpil do miestnosti"
 
-#: pynicotine/gtkgui/chatrooms.py:679
+#: pynicotine/gtkgui/chatrooms.py:682
 #, python-format
 msgid "%s left the room"
 msgstr "%s opustil miestnosť"
 
-#: pynicotine/gtkgui/chatrooms.py:698
+#: pynicotine/gtkgui/chatrooms.py:701
 #, python-format
 msgid "%s has gone away"
 msgstr "%s zmenil stav na Preč"
 
-#: pynicotine/gtkgui/chatrooms.py:700
+#: pynicotine/gtkgui/chatrooms.py:703
 #, python-format
 msgid "%s has returned"
 msgstr "%s sa vrátil"
 
-#: pynicotine/gtkgui/chatrooms.py:843 pynicotine/gtkgui/privatechat.py:194
+#: pynicotine/gtkgui/chatrooms.py:849 pynicotine/gtkgui/privatechat.py:194
 msgid "--- disconnected ---"
 msgstr "--- odpojený ---"
 
-#: pynicotine/gtkgui/chatrooms.py:856 pynicotine/gtkgui/privatechat.py:191
+#: pynicotine/gtkgui/chatrooms.py:862 pynicotine/gtkgui/privatechat.py:191
 msgid "--- reconnected ---"
 msgstr "--- pripojenie obnovené ---"
+
+#: pynicotine/gtkgui/search.py:323 pynicotine/gtkgui/search.py:537
+#: pynicotine/gtkgui/search.py:592
+msgid "Y"
+msgstr "A"
 
 #: pynicotine/gtkgui/search.py:420
 msgid "In queue"
@@ -1962,392 +2027,497 @@ msgstr "Stiahnuť _celý adresár"
 
 #: pynicotine/gtkgui/search.py:441
 msgid "View Metadata of file(s)"
-msgstr ""
-
-#: pynicotine/gtkgui/search.py:537 pynicotine/gtkgui/search.py:592
-msgid "Y"
-msgstr "A"
+msgstr "Zobraziť metadáta súboru(ov)"
 
 #: pynicotine/gtkgui/search.py:539
 msgid "N"
 msgstr "N"
 
 #: pynicotine/gtkgui/search.py:629
-#, fuzzy
 msgid "Nicotine+: Search Results"
-msgstr "Nastavenia Nicotine"
+msgstr "Nicotine+: Výsledky vyhľadávania"
 
 #: pynicotine/gtkgui/search.py:629
 #, python-format
 msgid "<b>Metadata</b> for Search Query: <i>%s</i>"
-msgstr ""
+msgstr "<b>Metadáta</b> pre vyhľadávací dotaz: <i>%s</i>"
 
 #: pynicotine/gtkgui/utils.py:437
-#, fuzzy
 msgid "Give privileges"
-msgstr "_Venovať privilégiá"
+msgstr "Venovať privilégia"
 
 #: pynicotine/gtkgui/utils.py:437
 msgid "Give how many days of global privileges to this user?"
-msgstr ""
+msgstr "Koľko dní globálnych oprávnení venovať tomuto užívateľovi?"
 
 #: pynicotine/gtkgui/nicotine_glade.py:17
+#: pynicotine/gtkgui/nicotine_glade_3.py:17
 msgid "Nicotine"
 msgstr "Nicotine"
 
-#: pynicotine/gtkgui/nicotine_glade.py:31
+#: pynicotine/gtkgui/nicotine_glade.py:30
+#: pynicotine/gtkgui/nicotine_glade_3.py:30
 msgid "_File"
 msgstr "_Súbor"
 
-#: pynicotine/gtkgui/nicotine_glade.py:36
+#: pynicotine/gtkgui/nicotine_glade.py:35
+#: pynicotine/gtkgui/nicotine_glade_3.py:35
 msgid "_Connect"
 msgstr "_Pripojiť sa"
 
-#: pynicotine/gtkgui/nicotine_glade.py:45
+#: pynicotine/gtkgui/nicotine_glade.py:44
+#: pynicotine/gtkgui/nicotine_glade_3.py:44
 msgid "_Disconnect"
 msgstr "_Odpojiť sa"
 
-#: pynicotine/gtkgui/nicotine_glade.py:54
+#: pynicotine/gtkgui/nicotine_glade.py:53
+#: pynicotine/gtkgui/nicotine_glade_3.py:53
 msgid "_Away/Return"
 msgstr "P_reč/Späť"
 
-#: pynicotine/gtkgui/nicotine_glade.py:63
+#: pynicotine/gtkgui/nicotine_glade.py:62
+#: pynicotine/gtkgui/nicotine_glade_3.py:62
 msgid "Check _privileges"
 msgstr "Skontrolovať privilé_giá"
 
-#: pynicotine/gtkgui/nicotine_glade.py:76
+#: pynicotine/gtkgui/nicotine_glade.py:75
+#: pynicotine/gtkgui/nicotine_glade_3.py:75
 msgid "Show _debug info"
 msgstr "Zo_braziť ladiace informácie"
 
-#: pynicotine/gtkgui/nicotine_glade.py:88
+#: pynicotine/gtkgui/nicotine_glade.py:86
+#: pynicotine/gtkgui/nicotine_glade_3.py:86
 msgid "_Hide log window"
-msgstr "Skr_yť okno so záznamom"
+msgstr "Skr_yť okno s logmi"
 
-#: pynicotine/gtkgui/nicotine_glade.py:96
+#: pynicotine/gtkgui/nicotine_glade.py:93
+#: pynicotine/gtkgui/nicotine_glade_3.py:93
 msgid "Hide room _list"
 msgstr "Skryť _okno s miestnosťami"
 
-#: pynicotine/gtkgui/nicotine_glade.py:104
+#: pynicotine/gtkgui/nicotine_glade.py:100
+#: pynicotine/gtkgui/nicotine_glade_3.py:100
 msgid "Hide _tickers"
 msgstr "Skryť _tickery"
 
-#: pynicotine/gtkgui/nicotine_glade.py:112
+#: pynicotine/gtkgui/nicotine_glade.py:107
+#: pynicotine/gtkgui/nicotine_glade_3.py:107
 msgid "Buddylist in Chatrooms"
 msgstr "Zoznam kamarátov pri chatovacích miestnostiach"
 
-#: pynicotine/gtkgui/nicotine_glade.py:125
+#: pynicotine/gtkgui/nicotine_glade.py:119
+#: pynicotine/gtkgui/nicotine_glade_3.py:119
 msgid "_Settings"
 msgstr "_Nastavenia"
 
-#: pynicotine/gtkgui/nicotine_glade.py:134
+#: pynicotine/gtkgui/nicotine_glade.py:128
+#: pynicotine/gtkgui/nicotine_glade_3.py:128
 msgid "Configure _Now Playing"
-msgstr ""
+msgstr "Nastaviť _Teraz prehrávané"
 
-#: pynicotine/gtkgui/nicotine_glade.py:147
+#: pynicotine/gtkgui/nicotine_glade.py:141
+#: pynicotine/gtkgui/nicotine_glade_3.py:141
 msgid "_Rescan shares"
 msgstr "Prehľa_dať zdieľané súbory"
 
-#: pynicotine/gtkgui/nicotine_glade.py:155
+#: pynicotine/gtkgui/nicotine_glade.py:149
+#: pynicotine/gtkgui/nicotine_glade_3.py:149
 msgid "_Rescan Buddy shares"
 msgstr "Prehľadať zd_ieľané súbory pre priateľov"
 
-#: pynicotine/gtkgui/nicotine_glade.py:163
+#: pynicotine/gtkgui/nicotine_glade.py:157
+#: pynicotine/gtkgui/nicotine_glade_3.py:157
 msgid "_Browse my shares"
 msgstr "Prehliadať m_nou zdieľané súbory"
 
-#: pynicotine/gtkgui/nicotine_glade.py:176
+#: pynicotine/gtkgui/nicotine_glade.py:170
+#: pynicotine/gtkgui/nicotine_glade_3.py:170
 msgid "E_xit"
 msgstr "_Ukončiť"
 
-#: pynicotine/gtkgui/nicotine_glade.py:189
+#: pynicotine/gtkgui/nicotine_glade.py:183
+#: pynicotine/gtkgui/nicotine_glade_3.py:183
 msgid "_Modes"
 msgstr "_Režimy"
 
-#: pynicotine/gtkgui/nicotine_glade.py:194
+#: pynicotine/gtkgui/nicotine_glade.py:188
+#: pynicotine/gtkgui/nicotine_glade_3.py:188
 msgid "_Chat Rooms"
 msgstr "Chatovacie _miestnosti"
 
-#: pynicotine/gtkgui/nicotine_glade.py:202
+#: pynicotine/gtkgui/nicotine_glade.py:196
+#: pynicotine/gtkgui/nicotine_glade_3.py:196
 msgid "_Private Chat"
 msgstr "_Súkromný chat"
 
-#: pynicotine/gtkgui/nicotine_glade.py:210
+#: pynicotine/gtkgui/nicotine_glade.py:204
+#: pynicotine/gtkgui/nicotine_glade_3.py:204
 msgid "_Downloads"
-msgstr "Sťa_hovanie"
+msgstr "_Downloady"
 
-#: pynicotine/gtkgui/nicotine_glade.py:218
+#: pynicotine/gtkgui/nicotine_glade.py:212
+#: pynicotine/gtkgui/nicotine_glade_3.py:212
 msgid "_Uploads"
-msgstr "_Poskytovanie"
+msgstr "_Uploady"
 
-#: pynicotine/gtkgui/nicotine_glade.py:226
+#: pynicotine/gtkgui/nicotine_glade.py:220
+#: pynicotine/gtkgui/nicotine_glade_3.py:220
 msgid "_Search Files"
 msgstr "Hľa_dať súbory"
 
-#: pynicotine/gtkgui/nicotine_glade.py:234
+#: pynicotine/gtkgui/nicotine_glade.py:228
+#: pynicotine/gtkgui/nicotine_glade_3.py:228
 msgid "User I_nfo"
 msgstr "Úda_je o užívateľovi"
 
-#: pynicotine/gtkgui/nicotine_glade.py:242
+#: pynicotine/gtkgui/nicotine_glade.py:236
+#: pynicotine/gtkgui/nicotine_glade_3.py:236
 msgid "User _Browse"
 msgstr "_Prehliadanie súborov užívateľa"
 
-#: pynicotine/gtkgui/nicotine_glade.py:250
+#: pynicotine/gtkgui/nicotine_glade.py:244
+#: pynicotine/gtkgui/nicotine_glade_3.py:244
 msgid "_Interests"
 msgstr "_Záujmy"
 
-#: pynicotine/gtkgui/nicotine_glade.py:258
+#: pynicotine/gtkgui/nicotine_glade.py:252
+#: pynicotine/gtkgui/nicotine_glade_3.py:252
 msgid "Buddy _List"
 msgstr "Zoznam _kamarátov"
 
-#: pynicotine/gtkgui/nicotine_glade.py:270
+#: pynicotine/gtkgui/nicotine_glade.py:264
+#: pynicotine/gtkgui/nicotine_glade_3.py:264
 msgid "H_elp"
 msgstr "_Pomoc"
 
-#: pynicotine/gtkgui/nicotine_glade.py:275
+#: pynicotine/gtkgui/nicotine_glade.py:269
+#: pynicotine/gtkgui/nicotine_glade_3.py:269
 msgid "Offline Nicotine Plus Guide"
 msgstr "Offline verzia návodu k Nicotine Plus"
 
-#: pynicotine/gtkgui/nicotine_glade.py:284
+#: pynicotine/gtkgui/nicotine_glade.py:278
+#: pynicotine/gtkgui/nicotine_glade_3.py:278
 msgid "Sourceforge Project Website"
 msgstr "Website projektu na Sourceforge"
 
-#: pynicotine/gtkgui/nicotine_glade.py:292
+#: pynicotine/gtkgui/nicotine_glade.py:286
+#: pynicotine/gtkgui/nicotine_glade_3.py:286
 msgid "Nicotine-Plus Trac Website"
 msgstr "Website Nicotine-Plus Trac"
 
-#: pynicotine/gtkgui/nicotine_glade.py:305
+#: pynicotine/gtkgui/nicotine_glade.py:299
+#: pynicotine/gtkgui/nicotine_glade_3.py:299
 msgid "About _chat room commands"
 msgstr "O _príkazoch pre chatovaciu miestnosť"
 
-#: pynicotine/gtkgui/nicotine_glade.py:313
+#: pynicotine/gtkgui/nicotine_glade.py:307
+#: pynicotine/gtkgui/nicotine_glade_3.py:307
 msgid "About _private chat commands"
 msgstr "O p_ríkazoch súkromného chatu"
 
-#: pynicotine/gtkgui/nicotine_glade.py:326
+#: pynicotine/gtkgui/nicotine_glade.py:320
+#: pynicotine/gtkgui/nicotine_glade_3.py:320
 msgid "About _search filters"
 msgstr "O _vyhľadávacích filtroch"
 
-#: pynicotine/gtkgui/nicotine_glade.py:339
+#: pynicotine/gtkgui/nicotine_glade.py:333
+#: pynicotine/gtkgui/nicotine_glade_3.py:333
 msgid "Check _latest"
 msgstr "_Skontrolovať najnovšiu verziu"
 
-#: pynicotine/gtkgui/nicotine_glade.py:352
+#: pynicotine/gtkgui/nicotine_glade.py:346
+#: pynicotine/gtkgui/nicotine_glade_3.py:346
 msgid "About _Nicotine"
 msgstr "O _Nicotine"
 
-#: pynicotine/gtkgui/nicotine_glade.py:389
+#: pynicotine/gtkgui/nicotine_glade.py:382
+#: pynicotine/gtkgui/nicotine_glade_3.py:382
 msgid "Chat rooms"
 msgstr "Chatovacie miestnosti"
 
-#: pynicotine/gtkgui/nicotine_glade.py:438
-#: pynicotine/gtkgui/nicotine_glade.py:2339
+#: pynicotine/gtkgui/nicotine_glade.py:428
+#: pynicotine/gtkgui/nicotine_glade.py:2166
+#: pynicotine/gtkgui/nicotine_glade_3.py:428
+#: pynicotine/gtkgui/nicotine_glade_3.py:2159
 msgid "Private chat"
 msgstr "Súkromný chat"
 
-#: pynicotine/gtkgui/nicotine_glade.py:476
-#: pynicotine/gtkgui/nicotine_glade.py:668
+#: pynicotine/gtkgui/nicotine_glade.py:437
+#: pynicotine/gtkgui/nicotine_glade.py:618
+#: pynicotine/gtkgui/nicotine_glade_3.py:437
+#: pynicotine/gtkgui/nicotine_glade_3.py:618
+#, fuzzy
+msgid "Group by Users"
+msgstr "Vyhľadať IP adresu užívateľa"
+
+#: pynicotine/gtkgui/nicotine_glade.py:472
+#: pynicotine/gtkgui/nicotine_glade.py:653
+#: pynicotine/gtkgui/nicotine_glade_3.py:472
+#: pynicotine/gtkgui/nicotine_glade_3.py:653
 msgid "Clear Finished / Aborted"
 msgstr "Vyčistiť hotové/zrušené"
 
-#: pynicotine/gtkgui/nicotine_glade.py:504
-#: pynicotine/gtkgui/nicotine_glade.py:696
+#: pynicotine/gtkgui/nicotine_glade.py:497
+#: pynicotine/gtkgui/nicotine_glade.py:678
+#: pynicotine/gtkgui/nicotine_glade_3.py:497
+#: pynicotine/gtkgui/nicotine_glade_3.py:678
 msgid "Clear Queued"
 msgstr "Vyčistiť súbory vo fronte"
 
-#: pynicotine/gtkgui/nicotine_glade.py:532
+#: pynicotine/gtkgui/nicotine_glade.py:522
+#: pynicotine/gtkgui/nicotine_glade_3.py:522
 msgid "Retry"
 msgstr "Skúsiť znova"
 
-#: pynicotine/gtkgui/nicotine_glade.py:560
-#: pynicotine/gtkgui/nicotine_glade.py:724
+#: pynicotine/gtkgui/nicotine_glade.py:547
+#: pynicotine/gtkgui/nicotine_glade.py:703
+#: pynicotine/gtkgui/nicotine_glade_3.py:547
+#: pynicotine/gtkgui/nicotine_glade_3.py:703
 msgid "Abort"
 msgstr "Zrušiť"
 
-#: pynicotine/gtkgui/nicotine_glade.py:588
+#: pynicotine/gtkgui/nicotine_glade.py:572
+#: pynicotine/gtkgui/nicotine_glade_3.py:572
 msgid "Abort & Delete"
 msgstr "Zrušiť a vymazať"
 
-#: pynicotine/gtkgui/nicotine_glade.py:616
-#: pynicotine/gtkgui/nicotine_glade.py:752
+#: pynicotine/gtkgui/nicotine_glade.py:597
+#: pynicotine/gtkgui/nicotine_glade.py:753
+#: pynicotine/gtkgui/nicotine_glade_3.py:597
+#: pynicotine/gtkgui/nicotine_glade_3.py:753
 msgid "Ban User(s)"
 msgstr "Zakázať užívateľ(ov)"
 
-#: pynicotine/gtkgui/nicotine_glade.py:630
+#: pynicotine/gtkgui/nicotine_glade.py:609
+#: pynicotine/gtkgui/nicotine_glade_3.py:609
 msgid "Downloads"
-msgstr "Sťahovanie"
+msgstr "Downloady"
 
-#: pynicotine/gtkgui/nicotine_glade.py:780
+#: pynicotine/gtkgui/nicotine_glade.py:728
+#: pynicotine/gtkgui/nicotine_glade_3.py:728
 msgid "Abort User's Upload(s)"
-msgstr "Zrušiť upload(y) súboru užívateľom"
+msgstr "Zrušiť upload(y) užívateľom"
 
-#: pynicotine/gtkgui/nicotine_glade.py:794
+#: pynicotine/gtkgui/nicotine_glade.py:765
+#: pynicotine/gtkgui/nicotine_glade_3.py:765
 msgid "Uploads"
 msgstr "Uploady"
 
-#: pynicotine/gtkgui/nicotine_glade.py:908
+#: pynicotine/gtkgui/nicotine_glade.py:871
+#: pynicotine/gtkgui/nicotine_glade_3.py:870
 msgid "Search files"
 msgstr "Hľadať súbory"
 
-#: pynicotine/gtkgui/nicotine_glade.py:939
+#: pynicotine/gtkgui/nicotine_glade.py:901
+#: pynicotine/gtkgui/nicotine_glade_3.py:900
 msgid "Get Userinfo"
 msgstr "Získať údaje o užívateľovi"
 
-#: pynicotine/gtkgui/nicotine_glade.py:988
+#: pynicotine/gtkgui/nicotine_glade.py:947
+#: pynicotine/gtkgui/nicotine_glade_3.py:946
 msgid "Browse Shares"
 msgstr "Prehliadať mnou zdieľané súbory"
 
-#: pynicotine/gtkgui/nicotine_glade.py:1017
+#: pynicotine/gtkgui/nicotine_glade.py:973
+#: pynicotine/gtkgui/nicotine_glade_3.py:972
 msgid "Load From Disk"
-msgstr ""
+msgstr "Načítať z disku"
 
-#: pynicotine/gtkgui/nicotine_glade.py:1035
+#: pynicotine/gtkgui/nicotine_glade.py:989
+#: pynicotine/gtkgui/nicotine_glade_3.py:988
 msgid "User browse"
 msgstr "Prehliadanie súborov užívateľa"
 
-#: pynicotine/gtkgui/nicotine_glade.py:1063
-msgid "Similar users"
-msgstr "Podobní užívatelia"
-
-#: pynicotine/gtkgui/nicotine_glade.py:1121
+#: pynicotine/gtkgui/nicotine_glade.py:1016
+#: pynicotine/gtkgui/nicotine_glade_3.py:1015
 msgid "Global recommendations"
 msgstr "Všeobecné doporučenia"
 
-#: pynicotine/gtkgui/nicotine_glade.py:1180
-#: pynicotine/gtkgui/nicotine_glade.py:1227
+#: pynicotine/gtkgui/nicotine_glade.py:1068
+#: pynicotine/gtkgui/nicotine_glade_3.py:1067
+msgid "Similar users"
+msgstr "Podobní užívatelia"
+
+#: pynicotine/gtkgui/nicotine_glade.py:1123
+#: pynicotine/gtkgui/nicotine_glade.py:1166
+#: pynicotine/gtkgui/nicotine_glade_3.py:1122
+#: pynicotine/gtkgui/nicotine_glade_3.py:1165
 msgid "Add"
 msgstr "Pridať"
 
-#: pynicotine/gtkgui/nicotine_glade.py:1276
+#: pynicotine/gtkgui/nicotine_glade.py:1211
+#: pynicotine/gtkgui/nicotine_glade_3.py:1210
 msgid "Interests"
 msgstr "Záujmy"
 
-#: pynicotine/gtkgui/nicotine_glade.py:1310
-#, fuzzy
+#: pynicotine/gtkgui/nicotine_glade.py:1244
+#: pynicotine/gtkgui/nicotine_glade_3.py:1243
 msgid "Scanning Shares"
-msgstr "Reskenovanie začalo"
+msgstr "Skenovanie zdieľaných súborov"
 
-#: pynicotine/gtkgui/nicotine_glade.py:1314
-#, fuzzy
+#: pynicotine/gtkgui/nicotine_glade.py:1248
+#: pynicotine/gtkgui/nicotine_glade_3.py:1247
 msgid "Scanning Buddy Shares"
-msgstr "Reskenovanie súborov pre priateľov začalo"
+msgstr "Skenovanie priateľmi zdieľaných súborov"
 
-#: pynicotine/gtkgui/nicotine_glade.py:1493
-#: pynicotine/gtkgui/nicotine_glade.py:1681
-#: pynicotine/gtkgui/nicotine_glade.py:1803
-#: pynicotine/gtkgui/nicotine_glade.py:2065
-#: pynicotine/gtkgui/nicotine_glade.py:2636
-#: pynicotine/gtkgui/nicotine_glade.py:2869
+#: pynicotine/gtkgui/nicotine_glade.py:1427
+#: pynicotine/gtkgui/nicotine_glade.py:1601
+#: pynicotine/gtkgui/nicotine_glade.py:1720
+#: pynicotine/gtkgui/nicotine_glade.py:1932
+#: pynicotine/gtkgui/nicotine_glade.py:2437
+#: pynicotine/gtkgui/nicotine_glade.py:2649
+#: pynicotine/gtkgui/nicotine_glade_3.py:1426
+#: pynicotine/gtkgui/nicotine_glade_3.py:1600
+#: pynicotine/gtkgui/nicotine_glade_3.py:1713
+#: pynicotine/gtkgui/nicotine_glade_3.py:1925
+#: pynicotine/gtkgui/nicotine_glade_3.py:2430
+#: pynicotine/gtkgui/nicotine_glade_3.py:2642
 msgid "window1"
 msgstr "okno1"
 
-#: pynicotine/gtkgui/nicotine_glade.py:1601
+#: pynicotine/gtkgui/nicotine_glade.py:1524
+#: pynicotine/gtkgui/nicotine_glade_3.py:1523
 msgid "Auto-join"
 msgstr "Auto-vstup"
 
-#: pynicotine/gtkgui/nicotine_glade.py:1623
+#: pynicotine/gtkgui/nicotine_glade.py:1545
+#: pynicotine/gtkgui/nicotine_glade_3.py:1544
 msgid "Leave"
 msgstr "Opustiť"
 
-#: pynicotine/gtkgui/nicotine_glade.py:1753
-#: pynicotine/gtkgui/nicotine_glade.py:1876
-#: pynicotine/gtkgui/nicotine_glade.py:2542
-#: pynicotine/gtkgui/nicotine_glade.py:2742
+#: pynicotine/gtkgui/nicotine_glade.py:1645
+msgid ""
+"Send the private message directly to the user (not supported on most clients)"
+msgstr ""
+
+#: pynicotine/gtkgui/nicotine_glade.py:1646
+#, fuzzy
+msgid "Direct"
+msgstr "Adresár"
+
+#: pynicotine/gtkgui/nicotine_glade.py:1672
+#: pynicotine/gtkgui/nicotine_glade.py:1784
+#: pynicotine/gtkgui/nicotine_glade.py:2374
+#: pynicotine/gtkgui/nicotine_glade.py:2583
 #: pynicotine/gtkgui/privatechat.py:163 pynicotine/gtkgui/entrydialog.py:129
+#: pynicotine/gtkgui/nicotine_glade_3.py:1665
+#: pynicotine/gtkgui/nicotine_glade_3.py:1777
+#: pynicotine/gtkgui/nicotine_glade_3.py:2367
+#: pynicotine/gtkgui/nicotine_glade_3.py:2576
 msgid "Close"
 msgstr "Zatvoriť"
 
-#: pynicotine/gtkgui/nicotine_glade.py:1816
+#: pynicotine/gtkgui/nicotine_glade.py:1731
+#: pynicotine/gtkgui/nicotine_glade_3.py:1724
 msgid "Query"
 msgstr "Otázka"
 
-#: pynicotine/gtkgui/nicotine_glade.py:1825
+#: pynicotine/gtkgui/nicotine_glade.py:1737
+#: pynicotine/gtkgui/nicotine_glade_3.py:1730
 msgid "Enable filters"
 msgstr "Zapnúť filtre"
 
-#: pynicotine/gtkgui/nicotine_glade.py:1847
-#: pynicotine/gtkgui/nicotine_glade.py:2484
+#: pynicotine/gtkgui/nicotine_glade.py:1758
+#: pynicotine/gtkgui/nicotine_glade.py:2296
+#: pynicotine/gtkgui/nicotine_glade_3.py:1751
+#: pynicotine/gtkgui/nicotine_glade_3.py:2289
 msgid "Ignore"
 msgstr "Ignorovať"
 
-#: pynicotine/gtkgui/nicotine_glade.py:1890
+#: pynicotine/gtkgui/nicotine_glade.py:1795
+#: pynicotine/gtkgui/nicotine_glade_3.py:1788
 msgid "Remember"
 msgstr "Zapamätať si"
 
-#: pynicotine/gtkgui/nicotine_glade.py:2150
+#: pynicotine/gtkgui/nicotine_glade.py:2003
+#: pynicotine/gtkgui/nicotine_glade_3.py:1996
 msgid "Total uploads allowed: unknown"
-msgstr "Povolené poskytovanie celkom: neznáme"
+msgstr "Povolené uploady celkom: neznáme"
 
-#: pynicotine/gtkgui/nicotine_glade.py:2157
-#, fuzzy
+#: pynicotine/gtkgui/nicotine_glade.py:2008
+#: pynicotine/gtkgui/nicotine_glade_3.py:2001
 msgid "Slots free: unknown"
-msgstr "Počet dostupných slotov: neznámy"
+msgstr "Voľné sloty: neznáme"
 
-#: pynicotine/gtkgui/nicotine_glade.py:2168
+#: pynicotine/gtkgui/nicotine_glade.py:2017
+#: pynicotine/gtkgui/nicotine_glade_3.py:2010
 msgid "Queue size: unknown"
 msgstr "Veľkosť frontu: neznáma"
 
-#: pynicotine/gtkgui/nicotine_glade.py:2181
+#: pynicotine/gtkgui/nicotine_glade.py:2028
+#: pynicotine/gtkgui/nicotine_glade_3.py:2021
 msgid "Speed: unknown"
 msgstr "Rýchlosť: neznáma"
 
-#: pynicotine/gtkgui/nicotine_glade.py:2194
-#, fuzzy
+#: pynicotine/gtkgui/nicotine_glade.py:2039
+#: pynicotine/gtkgui/nicotine_glade_3.py:2032
 msgid "Files: unknown"
-msgstr "Zdieľané súbory: neznáme"
+msgstr "Súbory: neznáme"
 
-#: pynicotine/gtkgui/nicotine_glade.py:2201
-#, fuzzy
+#: pynicotine/gtkgui/nicotine_glade.py:2044
+#: pynicotine/gtkgui/nicotine_glade_3.py:2037
 msgid "Directories: unknown"
-msgstr "Adresár"
+msgstr "Adresáre: neznáme"
 
-#: pynicotine/gtkgui/nicotine_glade.py:2214
+#: pynicotine/gtkgui/nicotine_glade.py:2055
+#: pynicotine/gtkgui/nicotine_glade_3.py:2048
 msgid "Accepts Uploads from:"
-msgstr ""
+msgstr "Akceptovať uploady od:"
 
-#: pynicotine/gtkgui/nicotine_glade.py:2232
+#: pynicotine/gtkgui/nicotine_glade.py:2073
+#: pynicotine/gtkgui/nicotine_glade_3.py:2066
 msgid "Information:"
 msgstr "Informácie:"
 
-#: pynicotine/gtkgui/nicotine_glade.py:2275
+#: pynicotine/gtkgui/nicotine_glade.py:2109
+#: pynicotine/gtkgui/nicotine_glade_3.py:2102
 #, fuzzy
 msgid "Interests:"
 msgstr "Záujmy"
 
-#: pynicotine/gtkgui/nicotine_glade.py:2307
+#: pynicotine/gtkgui/nicotine_glade.py:2137
+#: pynicotine/gtkgui/nicotine_glade_3.py:2130
 msgid "Picture:"
 msgstr "Obrázok:"
 
-#: pynicotine/gtkgui/nicotine_glade.py:2368
+#: pynicotine/gtkgui/nicotine_glade.py:2192
 #: pynicotine/gtkgui/entrydialog.py:51
+#: pynicotine/gtkgui/nicotine_glade_3.py:2185
 msgid "Browse"
 msgstr "Prehliadať"
 
-#: pynicotine/gtkgui/nicotine_glade.py:2397
+#: pynicotine/gtkgui/nicotine_glade.py:2218
+#: pynicotine/gtkgui/nicotine_glade_3.py:2211
 msgid "Show IP"
 msgstr "Zobraziť IP adresu"
 
-#: pynicotine/gtkgui/nicotine_glade.py:2426
+#: pynicotine/gtkgui/nicotine_glade.py:2244
+#: pynicotine/gtkgui/nicotine_glade_3.py:2237
 msgid "Add to list"
 msgstr "Pridať do zoznamu"
 
-#: pynicotine/gtkgui/nicotine_glade.py:2513
+#: pynicotine/gtkgui/nicotine_glade.py:2322
+#: pynicotine/gtkgui/nicotine_glade_3.py:2315
 msgid "Save pic"
 msgstr "Uložiť obrázok"
 
-#: pynicotine/gtkgui/nicotine_glade.py:2649
+#: pynicotine/gtkgui/nicotine_glade.py:2448
+#: pynicotine/gtkgui/nicotine_glade_3.py:2441
 msgid "Search file and folder names (exact match):"
 msgstr "Hľadať súbor/adresár (presná zhoda):"
 
-#: pynicotine/gtkgui/nicotine_glade.py:2689
+#: pynicotine/gtkgui/nicotine_glade.py:2480
+#: pynicotine/gtkgui/nicotine_glade_3.py:2473
 msgid "Expand / Collapse all"
-msgstr ""
+msgstr "Rozbaliť / Zabaliť všetko"
 
-#: pynicotine/gtkgui/nicotine_glade.py:2800
-#, fuzzy
+#: pynicotine/gtkgui/nicotine_glade.py:2531
+#: pynicotine/gtkgui/nicotine_glade_3.py:2524
 msgid "Save"
-msgstr "Opustiť"
+msgstr "Uložiť"
 
-#: pynicotine/gtkgui/nicotine_glade.py:2895
+#: pynicotine/gtkgui/nicotine_glade.py:2672
+#: pynicotine/gtkgui/nicotine_glade_3.py:2665
 msgid "Create: "
 msgstr "Vytvoriť: "
 
@@ -2369,7 +2539,7 @@ msgstr "Ignorovať tohto užívateľa"
 
 #: pynicotine/gtkgui/privatechat.py:249
 msgid "* Message(s) sent while you were offline."
-msgstr ""
+msgstr "* správ(a) poslaná(ných), kým ste boli offline."
 
 #: pynicotine/gtkgui/about.py:27
 #, python-format
@@ -2415,7 +2585,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/about.py:64
 msgid "Dependencies"
-msgstr ""
+msgstr "Závislosti"
 
 #: pynicotine/gtkgui/about.py:128
 msgid "About search filters"
@@ -2541,9 +2711,8 @@ msgid "Add user 'user' to your user list"
 msgstr "Pridať užívateľa 'užívateľ' do zoznamu užívateľov"
 
 #: pynicotine/gtkgui/about.py:186 pynicotine/gtkgui/about.py:223
-#, fuzzy
 msgid "Remove user 'user' from your user list"
-msgstr "Odstrániť užívateľa 'užívateľ' zo zoznamu zakázaných užívateľov"
+msgstr "Odstrániť užívateľa 'užívateľ' z vašeho zoznamu užívateľov"
 
 #: pynicotine/gtkgui/about.py:187 pynicotine/gtkgui/about.py:224
 msgid "Browse files of user 'user'"
@@ -2578,7 +2747,7 @@ msgstr "proces"
 
 #: pynicotine/gtkgui/about.py:192 pynicotine/gtkgui/about.py:229
 msgid "Add a new alias that runs a process"
-msgstr "Pridať nový alias (, ktorý spúšťa proces )"
+msgstr "Pridať nový alias, ktorý spúšťa proces"
 
 #: pynicotine/gtkgui/about.py:193 pynicotine/gtkgui/about.py:230
 msgid "Remove an alias"
@@ -2586,7 +2755,7 @@ msgstr "Odstrániť alias"
 
 #: pynicotine/gtkgui/about.py:194 pynicotine/gtkgui/about.py:231
 msgid "Display the Now Playing script's output"
-msgstr ""
+msgstr "Zobraziť výstup skriptu Teraz prehrávané"
 
 #: pynicotine/gtkgui/about.py:196 pynicotine/gtkgui/about.py:233
 msgid "Add user 'user' to your ban list"
@@ -2664,9 +2833,8 @@ msgid "About private chat commands"
 msgstr "O príkazoch súkromného chatu"
 
 #: pynicotine/gtkgui/userlist.py:22
-#, fuzzy
 msgid "Trusted"
-msgstr "užívateľ"
+msgstr "Dôveryhodný"
 
 #: pynicotine/gtkgui/userlist.py:23 pynicotine/gtkgui/userlist.py:196
 msgid "Comments"
@@ -2682,7 +2850,7 @@ msgstr "Privile_govaný"
 
 #: pynicotine/gtkgui/userlist.py:71
 msgid "_Trusted"
-msgstr ""
+msgstr "_Dôveryhodný"
 
 #: pynicotine/gtkgui/userlist.py:73
 msgid "Edit _comments"
@@ -2731,186 +2899,175 @@ msgstr "Zostávajúci čas"
 msgid "Path"
 msgstr "Cesta"
 
-#: pynicotine/gtkgui/transferlist.py:62 pynicotine/gtkgui/transferlist.py:187
+#: pynicotine/gtkgui/transferlist.py:65 pynicotine/gtkgui/transferlist.py:192
 msgid "Getting status"
 msgstr "Získavanie stavu"
 
-#: pynicotine/gtkgui/transferlist.py:63 pynicotine/gtkgui/transferlist.py:171
+#: pynicotine/gtkgui/transferlist.py:66 pynicotine/gtkgui/transferlist.py:176
 msgid "Waiting for download"
-msgstr "Čakanie na stiahnutie"
+msgstr "Čakanie na download"
 
-#: pynicotine/gtkgui/transferlist.py:64 pynicotine/gtkgui/transferlist.py:173
+#: pynicotine/gtkgui/transferlist.py:67 pynicotine/gtkgui/transferlist.py:178
 msgid "Waiting for upload"
 msgstr "Čakám na upload"
 
-#: pynicotine/gtkgui/transferlist.py:65 pynicotine/gtkgui/transferlist.py:185
+#: pynicotine/gtkgui/transferlist.py:68 pynicotine/gtkgui/transferlist.py:190
 msgid "Getting address"
 msgstr "Získavanie adresy"
 
-#: pynicotine/gtkgui/transferlist.py:66 pynicotine/gtkgui/transferlist.py:183
+#: pynicotine/gtkgui/transferlist.py:69 pynicotine/gtkgui/transferlist.py:188
 msgid "Connecting"
 msgstr "Pripájanie sa"
 
-#: pynicotine/gtkgui/transferlist.py:67 pynicotine/gtkgui/transferlist.py:181
+#: pynicotine/gtkgui/transferlist.py:70 pynicotine/gtkgui/transferlist.py:186
 msgid "Waiting for peer to connect"
 msgstr "Čakanie na pripojenie vzdialeného užívateľa"
 
-#: pynicotine/gtkgui/transferlist.py:68 pynicotine/gtkgui/transferlist.py:179
+#: pynicotine/gtkgui/transferlist.py:71 pynicotine/gtkgui/transferlist.py:184
 msgid "Cannot connect"
 msgstr "Nepodarilo sa pripojiť"
 
-#: pynicotine/gtkgui/transferlist.py:69 pynicotine/gtkgui/transferlist.py:191
+#: pynicotine/gtkgui/transferlist.py:72 pynicotine/gtkgui/transferlist.py:196
 msgid "User logged off"
 msgstr "Užívateľ sa odpojil"
 
-#: pynicotine/gtkgui/transferlist.py:70 pynicotine/gtkgui/transferlist.py:175
+#: pynicotine/gtkgui/transferlist.py:73 pynicotine/gtkgui/transferlist.py:180
 msgid "Requesting file"
-msgstr "Požiadavok na súbor"
+msgstr "Požiadavka na súbor"
 
-#: pynicotine/gtkgui/transferlist.py:71 pynicotine/gtkgui/transferlist.py:177
+#: pynicotine/gtkgui/transferlist.py:74 pynicotine/gtkgui/transferlist.py:182
 msgid "Initializing transfer"
 msgstr "Spúšťanie prenosu"
 
-#: pynicotine/gtkgui/transferlist.py:72 pynicotine/gtkgui/transferlist.py:201
-#, fuzzy
+#: pynicotine/gtkgui/transferlist.py:75 pynicotine/gtkgui/transferlist.py:206
 msgid "Filtered"
-msgstr "Obsiahnutý text:"
+msgstr "Filtrované"
 
-#: pynicotine/gtkgui/transferlist.py:73 pynicotine/gtkgui/transferlist.py:209
+#: pynicotine/gtkgui/transferlist.py:76 pynicotine/gtkgui/transferlist.py:214
 msgid "Download directory error"
-msgstr "Chyba adresára pre sťahovanie súborov"
+msgstr "Chyba adresára pre download"
 
-#: pynicotine/gtkgui/transferlist.py:74 pynicotine/gtkgui/transferlist.py:211
+#: pynicotine/gtkgui/transferlist.py:77 pynicotine/gtkgui/transferlist.py:216
 msgid "Local file error"
 msgstr "Chyba lokálneho súboru"
 
-#: pynicotine/gtkgui/transferlist.py:75 pynicotine/gtkgui/transferlist.py:205
+#: pynicotine/gtkgui/transferlist.py:78 pynicotine/gtkgui/transferlist.py:210
 msgid "File not shared"
 msgstr "Súbor nie je zdieľaný"
 
-#: pynicotine/gtkgui/transferlist.py:76 pynicotine/gtkgui/transferlist.py:193
+#: pynicotine/gtkgui/transferlist.py:79 pynicotine/gtkgui/transferlist.py:198
 msgid "Aborted"
 msgstr "Zrušené"
 
-#: pynicotine/gtkgui/transferlist.py:77 pynicotine/gtkgui/transferlist.py:197
-#, fuzzy
+#: pynicotine/gtkgui/transferlist.py:80 pynicotine/gtkgui/transferlist.py:202
 msgid "Paused"
-msgstr "užívateľ"
+msgstr "Pozastavené"
 
-#: pynicotine/gtkgui/transferlist.py:78 pynicotine/gtkgui/transferlist.py:189
+#: pynicotine/gtkgui/transferlist.py:81 pynicotine/gtkgui/transferlist.py:194
 msgid "Queued"
 msgstr "Vo fronte"
 
-#: pynicotine/gtkgui/transferlist.py:79 pynicotine/gtkgui/transferlist.py:199
-#: pynicotine/gtkgui/transferlist.py:313
-#, fuzzy
+#: pynicotine/gtkgui/transferlist.py:82 pynicotine/gtkgui/transferlist.py:204
+#: pynicotine/gtkgui/transferlist.py:323
 msgid "Transferring"
-msgstr "Prenosy"
+msgstr "Prenášam"
 
-#: pynicotine/gtkgui/transferlist.py:80 pynicotine/gtkgui/transferlist.py:195
+#: pynicotine/gtkgui/transferlist.py:83 pynicotine/gtkgui/transferlist.py:200
 msgid "Finished"
 msgstr "Ukončené"
 
-#: pynicotine/gtkgui/transferlist.py:158
+#: pynicotine/gtkgui/transferlist.py:163
 #, python-format
 msgid "%.2f GB"
 msgstr "%.2f GB"
 
-#: pynicotine/gtkgui/transferlist.py:160
+#: pynicotine/gtkgui/transferlist.py:165
 #, python-format
 msgid "%.2f MB"
 msgstr "%.2f MB"
 
-#: pynicotine/gtkgui/transferlist.py:162
+#: pynicotine/gtkgui/transferlist.py:167
 #, python-format
 msgid "%.2f KB"
 msgstr "%.2f KB"
 
-#: pynicotine/gtkgui/transferlist.py:203
+#: pynicotine/gtkgui/transferlist.py:208
 msgid "Connection closed by peer"
 msgstr "Spojenie ukončené vzdialeným užívateľom"
 
-#: pynicotine/gtkgui/transferlist.py:207
+#: pynicotine/gtkgui/transferlist.py:212
 msgid "Establishing connection"
 msgstr "Vytvára sa spojenie"
 
-#: pynicotine/gtkgui/transferlist.py:327
-#, fuzzy, python-format
+#: pynicotine/gtkgui/transferlist.py:337
+#, python-format
 msgid "%s Files"
-msgstr "Súbory"
+msgstr "%s súbory(ov)"
 
 #: pynicotine/gtkgui/entrydialog.py:50
-#, fuzzy
 msgid "Username"
-msgstr "Užívateľ"
+msgstr "Meno užívateľa"
 
 #: pynicotine/gtkgui/entrydialog.py:53
-#, fuzzy
 msgid "<b>List Position:</b>"
-msgstr "Bitový tok:"
+msgstr "<b>Pozícia v zozname:</b>"
 
 #: pynicotine/gtkgui/entrydialog.py:63
 msgid "<b>File Name:</b>"
-msgstr ""
+msgstr "<b>Názov súboru:</b>"
 
 #: pynicotine/gtkgui/entrydialog.py:70
-#, fuzzy
 msgid "<b>Directory:</b>"
-msgstr "Adresár"
+msgstr "<b>Adresár:</b>"
 
 #: pynicotine/gtkgui/entrydialog.py:79
 msgid "<b>File Size:</b>"
-msgstr ""
+msgstr "<b>Veľkosť súboru:</b>"
 
 #: pynicotine/gtkgui/entrydialog.py:80
-#, fuzzy
 msgid "<b>Length:</b>"
-msgstr "Dĺžka"
+msgstr "<b>Dĺžka:</b>"
 
 #: pynicotine/gtkgui/entrydialog.py:81
-#, fuzzy
 msgid "<b>Bitrate:</b>"
-msgstr "Bitový tok:"
+msgstr "<b>Bitový tok:</b>"
 
 #: pynicotine/gtkgui/entrydialog.py:91
-#, fuzzy
 msgid "<b>Immediate Downloads:</b>"
-msgstr "Okamžité sťahovanie"
+msgstr "<b>Okamžité sťahovanie:</b>"
 
 #: pynicotine/gtkgui/entrydialog.py:93
 msgid "<b>Queue:</b>"
-msgstr ""
+msgstr "<b>Front:</b>"
 
 #: pynicotine/gtkgui/entrydialog.py:100
 msgid "<b>Last Speed:</b>"
-msgstr ""
+msgstr "<b>Posledná rýchlosť:</b>"
 
 #: pynicotine/gtkgui/entrydialog.py:119
-#, fuzzy
 msgid "Download All"
-msgstr "Sťahovanie"
+msgstr "Stiahnuť všetko"
 
 #: pynicotine/gtkgui/entrydialog.py:121
 #, python-format
 msgid "<b>%s</b> File(s) Selected"
-msgstr ""
+msgstr "<b>%s</b> súbor(ov) vybraný(ch)"
 
 #: pynicotine/gtkgui/entrydialog.py:122 pynicotine/gtkgui/entrydialog.py:367
 msgid "Previous"
-msgstr ""
+msgstr "Predchádzajúci"
 
 #: pynicotine/gtkgui/entrydialog.py:124 pynicotine/gtkgui/entrydialog.py:371
 msgid "Next"
-msgstr ""
+msgstr "Ďalší"
 
 #: pynicotine/gtkgui/entrydialog.py:223
-#, fuzzy
 msgid "<b>Country Code:</b> "
-msgstr "Farby chatu"
+msgstr "<b>Kód krajiny:</b> "
 
 #: pynicotine/gtkgui/entrydialog.py:304
 msgid "OK"
-msgstr ""
+msgstr "OK"
 
 #: pynicotine/gtkgui/entrydialog.py:310 pynicotine/gtkgui/entrydialog.py:377
 msgid "Cancel"
@@ -2918,66 +3075,70 @@ msgstr "Zrušiť"
 
 #: pynicotine/gtkgui/nowplaying.py:30
 msgid "NowPlaying"
-msgstr ""
+msgstr "TerazPrehrávané"
 
 #: pynicotine/gtkgui/nowplaying.py:41
 msgid "Display what your Media Player is playing in Chat with the /now command"
 msgstr ""
+"Zobrazí, čo váš mediálny prehrávač prehráva v chate po zadaní príkazu /now"
 
 #: pynicotine/gtkgui/nowplaying.py:57
 msgid "XMMS / Infopipe"
-msgstr ""
+msgstr "XMMS / Infopipe"
 
 #: pynicotine/gtkgui/nowplaying.py:65
 msgid "Amarok"
-msgstr ""
+msgstr "Amarok"
 
 #: pynicotine/gtkgui/nowplaying.py:73
 msgid "MPD via mpc"
-msgstr ""
+msgstr "MPD cez mpc"
 
 #: pynicotine/gtkgui/nowplaying.py:98
 msgid "BMPx"
-msgstr ""
+msgstr "BMPx"
 
 #: pynicotine/gtkgui/nowplaying.py:106
 msgid "Rhythmbox"
-msgstr ""
+msgstr "Rhythmbox"
 
 #: pynicotine/gtkgui/nowplaying.py:115
 msgid "Other"
-msgstr ""
+msgstr "Iný"
 
 #: pynicotine/gtkgui/nowplaying.py:128
-#, fuzzy
 msgid "Player Command:"
-msgstr "Príkaz na spustenie prehrávača:"
+msgstr "Príkaz prehrávača:"
 
 #: pynicotine/gtkgui/nowplaying.py:148
 msgid "Legend:"
-msgstr ""
+msgstr "Legenda:"
 
 #: pynicotine/gtkgui/nowplaying.py:165
 msgid "Now playing format:"
-msgstr ""
+msgstr "Formát Teraz prehrávané:"
 
-#: pynicotine/gtkgui/nowplaying.py:201
+#: pynicotine/gtkgui/nowplaying.py:189
 msgid "Example:"
-msgstr ""
+msgstr "Príklad:"
 
-#: pynicotine/gtkgui/nowplaying.py:250
+#: pynicotine/gtkgui/nowplaying.py:238
 msgid "Test"
-msgstr ""
+msgstr "Test"
 
-#: pynicotine/gtkgui/nowplaying.py:316
+#: pynicotine/gtkgui/nowplaying.py:320
 msgid ""
 "$n Now Playing\n"
 "$l Length\n"
 "$r Bitrate\n"
 "$s Status"
 msgstr ""
+"$n Teraz prehrávané\n"
+"$l Dĺžka\n"
+"$r Bitový tok\n"
+"$s Stav"
 
-#: pynicotine/gtkgui/nowplaying.py:319
+#: pynicotine/gtkgui/nowplaying.py:323
 msgid ""
 "$n Now Playing\n"
 "$t Title\n"
@@ -2986,8 +3147,14 @@ msgid ""
 "$k Track Number\n"
 "$f Filename"
 msgstr ""
+"$n Teraz prehrávané\n"
+"$t Názov\n"
+"$a Umelec\n"
+"$b Album\n"
+"$k Číslo stopy\n"
+"$f Názov súboru"
 
-#: pynicotine/gtkgui/nowplaying.py:322
+#: pynicotine/gtkgui/nowplaying.py:326
 msgid ""
 "$n Now Playing\n"
 "$l Length\n"
@@ -3001,8 +3168,19 @@ msgid ""
 "$y Year\n"
 "$f Filename"
 msgstr ""
+"$n Teraz prehrávané\n"
+"$l Dĺžka\n"
+"$r Bitový tok\n"
+"$s Stav\n"
+"$t Titul\n"
+"$a Umelec\n"
+"$b Album\n"
+"$c Komentár\n"
+"$k Číslo stopy\n"
+"$y Rok\n"
+"$f Názov súboru"
 
-#: pynicotine/gtkgui/nowplaying.py:325
+#: pynicotine/gtkgui/nowplaying.py:329
 msgid ""
 "$n Now Playing\n"
 "$l Length\n"
@@ -3016,8 +3194,19 @@ msgid ""
 "$y Year\n"
 "$f Filename (URI)"
 msgstr ""
+"$n Teraz prehrávané\n"
+"$l Dĺžka\n"
+"$r Bitový tok\n"
+"$s Stav\n"
+"$t Titul\n"
+"$a Umelec\n"
+"$b Album\n"
+"$c Komentár\n"
+"$k Číslo stopy\n"
+"$y Rok\n"
+"$f Názov súboru (URI)"
 
-#: pynicotine/gtkgui/nowplaying.py:328
+#: pynicotine/gtkgui/nowplaying.py:332
 msgid ""
 "$n Now Playing\n"
 "$l Length\n"
@@ -3029,163 +3218,178 @@ msgid ""
 "$y Year\n"
 "$f Filename (URI)"
 msgstr ""
+"$n Teraz prehrávané\n"
+"$l Dĺžka\n"
+"$r Bitový tok\n"
+"$t Titul\n"
+"$a Umelec\n"
+"$b Album\n"
+"$k Číslo stopy\n"
+"$y Rok\n"
+"$f Názov súboru (URI)"
 
-#: pynicotine/gtkgui/nowplaying.py:331
+#: pynicotine/gtkgui/nowplaying.py:335
 msgid "$n Now Playing"
-msgstr ""
+msgstr "Teraz hrá $n"
 
-#: pynicotine/pynicotine.py:268
+#: pynicotine/pynicotine.py:269
 #, python-format
 msgid "The server seems to be down or not responding, retrying in %i seconds"
 msgstr ""
-"Server nie je online alebo sa k nemu nepodaril nájsť cestu, pokus o "
-"znovupripojenie o %i sekúnd"
+"Server nie je online alebo neodpovedá, pokus o znovupripojenie o %i sekúnd"
 
-#: pynicotine/pynicotine.py:323
-#, fuzzy
+#: pynicotine/pynicotine.py:324
 msgid "Buddy Shares"
-msgstr "Reskenovanie súborov pre priateľov začalo"
+msgstr "Zdieľanie pre kamarátov"
 
-#: pynicotine/pynicotine.py:335
+#: pynicotine/pynicotine.py:336
 #, python-format
 msgid "Can't connect to server %(host)s:%(port)s: %(error)s"
 msgstr "Nepodarilo sa pripojiť k serveru %(host)s:%(port)s: %(error)s"
 
-#: pynicotine/pynicotine.py:362
+#: pynicotine/pynicotine.py:363
 #, python-format
 msgid "Can't connect to %s, sending notification via the server"
 msgstr "Nepodarilo sa pripojiť k %s, posielam upozornenie cez server"
 
-#: pynicotine/pynicotine.py:376
+#: pynicotine/pynicotine.py:377
 #, python-format
 msgid "Listening on port %i"
 msgstr "Načúvam na porte %i"
 
-#: pynicotine/pynicotine.py:379
+#: pynicotine/pynicotine.py:380
 #, python-format
 msgid "Connected to server %(host)s:%(port)s, logging in..."
 msgstr "Pripojený k serveru %(host)s:%(port)s, prihlasovanie..."
 
-#: pynicotine/pynicotine.py:402
+#: pynicotine/pynicotine.py:403
 #, python-format
 msgid "Disconnected from server %(host)s:%(port)s"
 msgstr "Odpojený od serveru %(host)s:%(port)s"
 
-#: pynicotine/pynicotine.py:416
+#: pynicotine/pynicotine.py:417
 #, python-format
 msgid "Connection closed by peer: %s"
 msgstr "Spojenie ukončenie vzdialeným užívateľom: %s"
 
-#: pynicotine/pynicotine.py:426
+#: pynicotine/pynicotine.py:427
 #, python-format
 msgid "Removed connection closed by peer: %(conn_obj)s %(address)s"
 msgstr ""
 "Odstránené spojenie ukončené vzdialeným užívateľom: %(conn_obj)s %(address)s"
 
-#: pynicotine/pynicotine.py:433
+#: pynicotine/pynicotine.py:434
 msgid "Logged in, getting the list of rooms..."
 msgstr "Pripojený, získavanie zoznamu miestností..."
 
-#: pynicotine/pynicotine.py:448 pynicotine/pynicotine.py:449
+#: pynicotine/pynicotine.py:449 pynicotine/pynicotine.py:450
 #, python-format
 msgid "Can not log in, reason: %s"
 msgstr "Nepodarilo sa pripojiť, dôvod: %s"
 
-#: pynicotine/pynicotine.py:515
+#: pynicotine/pynicotine.py:473
+#, python-format
+msgid "(Warning: %(realuser)s is attempting to spoof %(fakeuser)s) "
+msgstr ""
+
+#: pynicotine/pynicotine.py:541
 #, python-format
 msgid "%i privileged users"
 msgstr "%i privilegovaných užívateľov"
 
-#: pynicotine/pynicotine.py:533
+#: pynicotine/pynicotine.py:559
 msgid "You have no privileges left"
-msgstr "Privilégia na sťahovanie platné 0 sekúnd"
+msgstr "Nezostali vám už žiadne privilégia"
 
-#: pynicotine/pynicotine.py:535
+#: pynicotine/pynicotine.py:561
 #, python-format
 msgid ""
 "%(days)i days, %(hours)i hours, %(minutes)i minutes, %(seconds)i seconds of "
 "download privileges left"
 msgstr ""
-"Privilégia na sťahovanie platné %(days)i dní, %(hours)i hodín, %(minutes)i "
+"Privilégia pre download platné %(days)i dní, %(hours)i hodín, %(minutes)i "
 "minút, %(seconds)i sekúnd"
 
-#: pynicotine/pynicotine.py:624
+#: pynicotine/pynicotine.py:650
 #, python-format
 msgid "Server reported port 0 for the 10th time for user %(user)s, giving up"
 msgstr ""
 "Server ohlásil nulový port po 10 pokusoch pre užívateľa %(user)s, vzdávam to"
 
-#: pynicotine/pynicotine.py:626
+#: pynicotine/pynicotine.py:652
 #, python-format
 msgid "Server reported non-zero port for user %(user)s after %(tries)i retries"
 msgstr ""
 "Server ohlásil nenulový port pre užívateľa %(user)s po %(tries)i pokusoch"
 
-#: pynicotine/pynicotine.py:636
+#: pynicotine/pynicotine.py:662
 #, python-format
 msgid "Server reported port 0 for user %(user)s, retrying"
 msgstr "Server ohlásil nulový port pre užívateľa %(user)s, ďalší pokus"
 
-#: pynicotine/pynicotine.py:653
+#: pynicotine/pynicotine.py:679
 #, python-format
 msgid ""
 "IP address of %(user)s is %(ip)s, name %(host)s, port %(port)i%(country)s"
 msgstr "IP adresa %(user)s je %(ip)s, názov %(host)s, port %(port)i%(country)s"
 
-#: pynicotine/pynicotine.py:655
+#: pynicotine/pynicotine.py:681
 #, python-format
 msgid "IP address of %(user)s is %(ip)s, port %(port)i%(country)s"
 msgstr "IP adresa %(user)s je %(ip)s, port %(port)i%(country)s"
 
-#: pynicotine/pynicotine.py:661
+#: pynicotine/pynicotine.py:687
 msgid ""
 "Someone else is logging in with the same nickname, server is going to "
 "disconnect us"
 msgstr ""
 "Niekto iný sa pripojil s rovnakou prezývkou, pripojenie k serveru sa preruší."
 
-#: pynicotine/pynicotine.py:702 pynicotine/transfers.py:876
+#: pynicotine/pynicotine.py:728 pynicotine/transfers.py:887
 #, python-format
 msgid "Banned (%s)"
 msgstr "Zakázaní (%s)"
 
-#: pynicotine/pynicotine.py:704 pynicotine/transfers.py:878
+#: pynicotine/pynicotine.py:730 pynicotine/transfers.py:889
 msgid "Banned"
 msgstr "Zakázaný"
 
-#: pynicotine/pynicotine.py:711
+#: pynicotine/pynicotine.py:737
 msgid "Sorry, friends only"
 msgstr "Ľutujem, iba priatelia"
 
-#: pynicotine/pynicotine.py:713
+#: pynicotine/pynicotine.py:739
 msgid "geoip"
 msgstr "geoip"
 
-#: pynicotine/pynicotine.py:717
+#: pynicotine/pynicotine.py:743
 msgid "Sorry, geographical paranoia"
 msgstr "Ľutujem, geografická paranoja"
 
-#: pynicotine/pynicotine.py:721
+#: pynicotine/pynicotine.py:747
 msgid "Sorry, your country is blocked"
 msgstr "Ľutujem, kód vašej krajiny je blokovaný"
 
-#: pynicotine/pynicotine.py:734
+#: pynicotine/pynicotine.py:760
 #, python-format
 msgid ""
 "IP %(ip)s:%(port)s is spoofing user %(user)s with a peer request, blocking "
 "because it does not match IP: %(real_ip)s"
 msgstr ""
+"IP %(ip)s:%(port)s sa snaží o podvrh (spoofing) užívateľa %(user)s cez "
+"požiadavkou vzdialeného užívateľa, blokujem, pretože nesedí skutočná IP: %"
+"(real_ip)s"
 
-#: pynicotine/pynicotine.py:762
+#: pynicotine/pynicotine.py:788
 #, python-format
 msgid ""
 "%(user)s is making a BrowseShares request, blocking possible spoofing "
 "attempt from IP %(ip)s port %(port)s"
 msgstr ""
-"%(user)s urobil dotaz BrowseShares, blokujem prípadený pokus o podvrh "
+"%(user)s urobil dotaz BrowseShares, blokujem prípadný pokus o podvrh "
 "(spoofing). %(ip)s port %(port)s"
 
-#: pynicotine/pynicotine.py:764
+#: pynicotine/pynicotine.py:790
 #, python-format
 msgid ""
 "%(user)s is making a BrowseShares request, blocking possible spoofing "
@@ -3194,12 +3398,12 @@ msgstr ""
 "%(user)s urobil dotaz BrowseShares, blokujem prípadený pokus o podvrh "
 "(spoofing)."
 
-#: pynicotine/pynicotine.py:768
+#: pynicotine/pynicotine.py:794
 #, python-format
 msgid "%(user)s is making a BrowseShares request"
 msgstr "%(user)s robí BrowseShares dotaz"
 
-#: pynicotine/pynicotine.py:815
+#: pynicotine/pynicotine.py:841
 #, python-format
 msgid ""
 "Blocking %(user)s from making a UserInfo request, possible spoofing attempt "
@@ -3208,40 +3412,40 @@ msgstr ""
 "Blokovanie %(user)s o dotaz na užívateľské informácie, možný pokus o podvrh "
 "(spoofing): %(ip)s port %(port)s"
 
-#: pynicotine/pynicotine.py:817
+#: pynicotine/pynicotine.py:843
 #, python-format
 msgid ""
 "Blocking %s from making a UserInfo request, possible spoofing attempt from "
 "an unknown IP & port"
 msgstr ""
-"Blokovanie %s o dotaz na užívateľské informácie, možný pokus o podvrh "
+"Blokujem %s o dotaz na užívateľské informácie, možný pokus o podvrh "
 "(spoofing)"
 
-#: pynicotine/pynicotine.py:822
+#: pynicotine/pynicotine.py:848
 #, python-format
 msgid "%(user)s is banned, but is making a UserInfo request"
 msgstr "%(user)s je zakázaný, ale robí dotaz na užívateľské informácie"
 
-#: pynicotine/pynicotine.py:850
+#: pynicotine/pynicotine.py:876
 #, python-format
 msgid "%(user)s is making a UserInfo request"
 msgstr "%(user)s sa dotazuje na užívateľské informácie"
 
-#: pynicotine/pynicotine.py:906
+#: pynicotine/pynicotine.py:932
 #, python-format
 msgid "Can't connect to %s (either way), giving up"
 msgstr "Nepodarilo sa pripojiť k %s (oboma spôsobmi), vzdávam to"
 
-#: pynicotine/pynicotine.py:917
+#: pynicotine/pynicotine.py:943
 #, python-format
 msgid "User %s does not respond to connect request, giving up"
 msgstr "Užívateľ %s nereaguje na požiadavok na pripojenie, vzdávam to"
 
-#: pynicotine/pynicotine.py:1048 pynicotine/transfers.py:463
+#: pynicotine/pynicotine.py:1074 pynicotine/transfers.py:471
 msgid "[Automatic Message] "
 msgstr "[Automatická správa]"
 
-#: pynicotine/pynicotine.py:1051
+#: pynicotine/pynicotine.py:1077
 msgid ""
 "Please try browsing me if you get 'File not shared' errors. This is an "
 "automatic message, you don't have to reply to it."
@@ -3250,52 +3454,55 @@ msgstr ""
 "hlášku 'Súbor nie je zdieľaný'. Toto je automatická správa a nemusíte na ňu "
 "reagovať."
 
-#: pynicotine/pynicotine.py:1107
+#: pynicotine/pynicotine.py:1133
 #, python-format
 msgid "Unknown tunneled message: %s"
 msgstr "Neznáma tunelovaná správa %s"
 
-#: pynicotine/pynicotine.py:1169
+#: pynicotine/pynicotine.py:1195
 #, python-format
 msgid ""
 "User %(user)s is directly searching for %(query)s, returning %(num)i results"
-msgstr "Užívateľ %(user)s okamžite hľadá %(query)s, dostal %(num)i výsledkov"
+msgstr "Užívateľ %(user)s hľadá priamo %(query)s, dostal %(num)i výsledkov"
 
-#: pynicotine/pynicotine.py:1171
+#: pynicotine/pynicotine.py:1197
 #, python-format
 msgid "User %(user)s is searching for %(query)s, returning %(num)i results"
 msgstr "Užívateľ %(user)s hľadá %(query)s, dostal %(num)i výsledkov"
 
-#: pynicotine/pynicotine.py:1244
+#: pynicotine/pynicotine.py:1270
 #, python-format
 msgid "Couldn't write to transfer log: %s"
 msgstr "Nebolo možné zapísať log o prenosoch: %s"
 
-#: pynicotine/slskproto.py:230
+#: pynicotine/slskproto.py:296
 #, python-format
 msgid "Major Socket Error: Networking terminated! %s"
-msgstr ""
+msgstr "Vážna chyba socketu: Sieťovanie zrušené! %s"
 
-#: pynicotine/slskproto.py:391
+#: pynicotine/slskproto.py:449
 #, python-format
 msgid "Server message type %(type)i size %(size)i contents %(buffer)s unknown"
 msgstr "Neznáma správa serveru typ %(type)i veľkosť %(size)i obsah %(buffer)s"
 
-#: pynicotine/slskproto.py:486
+#: pynicotine/slskproto.py:544
 #, python-format
 msgid "Unknown peer init code: %(type)i, message contents %(buffer)s"
 msgstr ""
 "Neznámy inicializačný kód vzd. užívateľa: %(type)i, správa obsahuje %(buffer)"
 "s"
 
-#: pynicotine/slskproto.py:510
+#: pynicotine/slskproto.py:568
 #, python-format
 msgid ""
 "There was an error while unpacking Peer message type %(type)s size %(size)i "
 "contents %(buffer)s from user: %(user)s, %(host)s:%(port)s"
 msgstr ""
+"Objavila sa chyba pri rozpakovaní správy vzdialeného užívateľa typu %(typ)s "
+"veľkosti %(size)i obsahu %(buffer)s od užívateľa: %(user)s, %(host)s:%(ports)"
+"s"
 
-#: pynicotine/slskproto.py:524
+#: pynicotine/slskproto.py:582
 #, python-format
 msgid ""
 "Peer message type %(type)s size %(size)i contents %(buffer)s unknown, from "
@@ -3304,18 +3511,18 @@ msgstr ""
 "Neznáma správa vzd. užívateľa typ %(type)s veľkosť %(size)i obsah %(buffer)"
 "s: %(user)s, %(host)s:%(port)s"
 
-#: pynicotine/slskproto.py:530
+#: pynicotine/slskproto.py:588
 #, python-format
 msgid "Can't handle connection type %s"
 msgstr "Neznámy typ pripojenia %s"
 
-#: pynicotine/slskproto.py:555
+#: pynicotine/slskproto.py:613
 #, python-format
 msgid "Distrib message type %(type)i size %(size)i contents %(buffer)s unknown"
 msgstr ""
 "Neznáma distribuovaná správa typ %(type)i veľkosť %(size)i obsah %(buffer)s"
 
-#: pynicotine/slskproto.py:623
+#: pynicotine/slskproto.py:681
 #, python-format
 msgid "Can't send the message over the closed connection: %(type)s %(msg_obj)s"
 msgstr ""
@@ -3323,20 +3530,20 @@ msgstr ""
 
 #: pynicotine/utils.py:75
 msgid "Checking for changes"
-msgstr ""
+msgstr "Kontrola zmien"
 
 #: pynicotine/utils.py:79
-#, fuzzy, python-format
+#, python-format
 msgid "Scanning %s"
-msgstr "Reskenovanie začalo"
+msgstr "Skenujem %s"
 
 #: pynicotine/utils.py:86
 msgid "Building DataBase"
-msgstr ""
+msgstr "Generujem databázu"
 
 #: pynicotine/utils.py:93
 msgid "Building Index"
-msgstr ""
+msgstr "Generujem index"
 
 #: pynicotine/slskmessages.py:169
 #, python-format
@@ -3350,7 +3557,7 @@ msgstr ""
 #: pynicotine/slskmessages.py:172
 #, python-format
 msgid "Warning: unknown object type %s"
-msgstr "Varovanie: neznámy objektový typ %s"
+msgstr "Varovanie: neznámy typ objektu %s"
 
 #: pynicotine/slskmessages.py:177
 #, python-format
@@ -3362,51 +3569,51 @@ msgstr "Vytvorená prázdna správa, trieda %s"
 msgid "Can't parse incoming messages, class %s"
 msgstr "Nepodarilo sa rozparsovať prichádzajúcu správu, trieda %s"
 
-#: pynicotine/config.py:110
+#: pynicotine/config.py:111
 #, python-format
 msgid "Config option unset: Section: %s, Option: %s"
 msgstr ""
 
-#: pynicotine/config.py:178
+#: pynicotine/config.py:179
 msgid "Shared files database seems to be corrupted, rescan your shares"
 msgstr ""
 "Databáza zdieľaných súborov sa zdá byť poškodená, reskenujte zdieľané dáta"
 
-#: pynicotine/config.py:287
+#: pynicotine/config.py:288
 #, python-format
 msgid "Can't create directory '%(path)s', reported error: %(error)s"
 msgstr "Nepodarilo sa vytvoriť adresár '%(path)s', hlásená chyba: %(error)s"
 
-#: pynicotine/config.py:294
+#: pynicotine/config.py:295
 #, python-format
 msgid "Can't save config file, I/O error: %s"
 msgstr "Nepodarilo sa uložiť súbor s konfiguráciou, vstupno/výstupná chyba: %s"
 
-#: pynicotine/config.py:318
+#: pynicotine/config.py:319
 #, python-format
 msgid "Can't back config file up, error: %s"
 msgstr "Nepodarilo sa zálohovať súbor s konfiguráciou, chyba: %s"
 
-#: pynicotine/config.py:325
+#: pynicotine/config.py:326
 #, python-format
 msgid "Can't rename config file, error: %s"
 msgstr "Nepodarilo sa zálohovať súbor s konfiguráciou, chyba: %s"
 
-#: pynicotine/config.py:427
+#: pynicotine/config.py:428
 #, python-format
 msgid "No such alias (%s)"
 msgstr "Neznámy alias (%s)"
 
-#: pynicotine/config.py:429
+#: pynicotine/config.py:430
 msgid "Aliases:"
 msgstr "Aliasy:"
 
-#: pynicotine/config.py:439
+#: pynicotine/config.py:440
 #, python-format
 msgid "Removed alias %(alias)s: %(action)s\n"
 msgstr "Odstránený alias %(alias)s: %(action)s\n"
 
-#: pynicotine/config.py:441
+#: pynicotine/config.py:442
 #, python-format
 msgid "No such alias (%(alias)s)\n"
 msgstr "Neznámy alias (%(alias)s)\n"
@@ -3417,9 +3624,9 @@ msgid "User %s does not exist"
 msgstr "Užívateľ %s neexistuje"
 
 #: pynicotine/transfers.py:195
-#, fuzzy, python-format
+#, python-format
 msgid "Filtering: %s"
-msgstr "Obsiahnutý text:"
+msgstr "Filtrovanie: %s"
 
 #: pynicotine/transfers.py:228
 #, python-format
@@ -3437,35 +3644,34 @@ msgid "Got transfer request %s but cannot determine requestor"
 msgstr "Zaznamenaný požiadavok na prenos %s, ale nie je možné určiť žiadateľa"
 
 #: pynicotine/transfers.py:356
-#, fuzzy
 msgid "Buddy Uploads"
-msgstr "Uploady"
+msgstr "Uploady kamarátov"
 
 #: pynicotine/transfers.py:369
 #, python-format
 msgid "Denied file request: %s"
-msgstr "Zakázaný požiadavok na súbor: %s"
+msgstr "Zakázaná požiadavka na súbor: %s"
 
-#: pynicotine/transfers.py:400
+#: pynicotine/transfers.py:408
 #, python-format
 msgid "Upload request: %s"
-msgstr "Požiadavok na upload: %s"
+msgstr "Požiadavka na upload: %s"
 
-#: pynicotine/transfers.py:447
+#: pynicotine/transfers.py:455
 #, python-format
 msgid "Queued upload request: %s"
-msgstr "Požiadavok na upload vo fronte: %s"
+msgstr "Požiadavka na upload vo fronte: %s"
 
-#: pynicotine/transfers.py:459
+#: pynicotine/transfers.py:467
 #, python-format
 msgid "Your buddy, %s, is attempting to upload file(s) to you."
 msgstr "Váš kamarát, %s, sa vám pokúša poslať súbor(y)."
 
-#: pynicotine/transfers.py:463
+#: pynicotine/transfers.py:471
 msgid "You are not allowed to send me files."
 msgstr "Nemáte oprávnenie posielať mi súbory."
 
-#: pynicotine/transfers.py:464
+#: pynicotine/transfers.py:472
 #, python-format
 msgid ""
 "%s is not allowed to send you file(s), but is attempting to, anyway. Warning "
@@ -3474,108 +3680,107 @@ msgstr ""
 "%s nemá oprávnenie posielať vám súbor(y), ale i tak sa o to pokúša. "
 "Varovanie odoslané."
 
-#: pynicotine/transfers.py:585
+#: pynicotine/transfers.py:593
 #, python-format
 msgid "Got unknown transfer response: %s"
 msgstr "Neznáma odpoveď na prenos: %s"
 
-#: pynicotine/transfers.py:621
+#: pynicotine/transfers.py:629
 #, python-format
 msgid "OS error: %s"
 msgstr "Chyba OS: %s"
 
-#: pynicotine/transfers.py:641 pynicotine/transfers.py:688
-#: pynicotine/transfers.py:780 pynicotine/transfers.py:1185
+#: pynicotine/transfers.py:649 pynicotine/transfers.py:696
+#: pynicotine/transfers.py:788 pynicotine/transfers.py:1196
 #, python-format
 msgid "I/O error: %s"
 msgstr "Vstupno-výstupná chyba: %s"
 
-#: pynicotine/transfers.py:656
+#: pynicotine/transfers.py:664
 #, python-format
 msgid "Can't get an exclusive lock on file - I/O error: %s"
 msgstr "Nebolo možné nastaviť zámok na súbor - V/V chyba: %s"
 
-#: pynicotine/transfers.py:668
+#: pynicotine/transfers.py:676
 #, python-format
 msgid "Download started: %s"
 msgstr "Sťahovanie spustené: %s"
 
-#: pynicotine/transfers.py:669
+#: pynicotine/transfers.py:677
 #, python-format
 msgid "Download started: user %(user)s, file %(file)s"
 msgstr "Sťahovanie spustené: užívateľ %(user)s, súbor %(file)s"
 
-#: pynicotine/transfers.py:686
+#: pynicotine/transfers.py:694
 #, python-format
 msgid "Upload started: user %(user)s, file %(file)s"
 msgstr "Upload začal: užívateľ %(user)s, súbor %(file)s"
 
-#: pynicotine/transfers.py:699
+#: pynicotine/transfers.py:707
 #, python-format
 msgid "Unknown file request: %s"
-msgstr "Neznámy požiadavok na súbor: %s"
+msgstr "Neznáma požiadavka na súbor: %s"
 
-#: pynicotine/transfers.py:753
+#: pynicotine/transfers.py:761
 #, python-format
 msgid "Couldn't move '%(tempfile)s' to '%(file)s'"
 msgstr "Nepodarilo sa presunúť '%(tempfile)s' do '%(file)s'"
 
-#: pynicotine/transfers.py:755
+#: pynicotine/transfers.py:763
 #, python-format
 msgid "Download finished: %(file)s"
 msgstr "Sťahovanie dokončené: %(file)s"
 
-#: pynicotine/transfers.py:756
+#: pynicotine/transfers.py:764
 #, python-format
 msgid "Download finished: user %(user)s, file %(file)s"
 msgstr "Sťahovanie dokončené: užívateľ %(user)s, súbor %(file)s"
 
-#: pynicotine/transfers.py:769
+#: pynicotine/transfers.py:777
 #, python-format
 msgid "Executed: %s"
 msgstr "Spustené: %s"
 
-#: pynicotine/transfers.py:778
+#: pynicotine/transfers.py:786
 #, python-format
 msgid "Executed on folder: %s"
 msgstr "Spustené na adresár: %s"
 
-#: pynicotine/transfers.py:855
+#: pynicotine/transfers.py:863
 msgid "(privileged)"
 msgstr "(privilegovaný)"
 
-#: pynicotine/transfers.py:857
+#: pynicotine/transfers.py:865
 msgid "(friend)"
 msgstr "(priateľ)"
 
-#: pynicotine/transfers.py:868
+#: pynicotine/transfers.py:879
 #, python-format
 msgid "Upload finished: %(user)s, file %(file)s"
 msgstr "Upload dokončený: užívateľ %(user)s, súbor %(file)s"
 
-#: pynicotine/transfers.py:1129
+#: pynicotine/transfers.py:1140
 #, python-format
 msgid "Retrying failed download: %(user)s, file %(file)s"
 msgstr "Pokus o obnovenie sťahovania od užívateľa %(user)s, súbor %(file)s"
 
-#: pynicotine/transfers.py:1171
+#: pynicotine/transfers.py:1182
 #, python-format
 msgid "File: %(file)s, place in queue: %(place)s"
 msgstr "Súbor: %(file)s, poradie vo fronte: %(place)s"
 
-#: pynicotine/transfers.py:1236
+#: pynicotine/transfers.py:1247
 #, python-format
 msgid "Upload aborted, user %(user)s file %(file)s"
 msgstr "Upload zrušený, užívateľ %(user)s, súbor %(file)s"
 
-#: pynicotine/transfers.py:1238
+#: pynicotine/transfers.py:1249
 #, python-format
 msgid "Download aborted, user %(user)s file %(file)s"
 msgstr "Sťahovanie zrušené, užívateľ %(user)s, súbor %(file)s"
 
-#, fuzzy
 #~ msgid "<b>Icon and Sound Themes</b>"
-#~ msgstr "Témy ikon a zvuku"
+#~ msgstr "<b>Motívy ikon a zvuku</b>"
 
 #~ msgid "Exit"
 #~ msgstr "Ukončiť"
