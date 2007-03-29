@@ -528,7 +528,7 @@ class ChatRoom(ChatRoomTab):
 		if self.tag_users.has_key(user):
 			self.changecolour(self.tag_users[user], color)
 		else:
-			self.tag_users[user] = self.makecolour(buffer, color, user)
+			self.tag_users[user] = self.makecolour(self.ChatScroll.get_buffer(), color, user)
 		self.lines.append(AppendLine(self.ChatScroll, self.frame.np.decode(line, self.encoding), tag, username=user, usertag=self.tag_users[user]))
 		if self.Log.get_active():
 			self.logfile = WriteLog(self.logfile, self.frame.np.config.sections["logging"]["logsdir"], self.room, line)
