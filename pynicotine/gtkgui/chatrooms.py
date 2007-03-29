@@ -377,7 +377,7 @@ class ChatRoom(ChatRoomTab):
 		self.users = {}
 
 		self.usersmodel = gtk.ListStore(gtk.gdk.Pixbuf, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_INT, gobject.TYPE_INT, gobject.TYPE_INT)
-		self.usersmodel.set_sort_column_id(1, gtk.SORT_ASCENDING)
+		
 		
 		for user in users.keys():
 			img = self.frame.GetStatusImage(users[user].status)
@@ -385,6 +385,7 @@ class ChatRoom(ChatRoomTab):
 			hfiles = Humanize(users[user].files)
 			iter = self.usersmodel.append([img, user, hspeed, hfiles, users[user].status, users[user].avgspeed, users[user].files])
 			self.users[user] = iter
+		self.usersmodel.set_sort_column_id(1, gtk.SORT_ASCENDING)
 		self.UpdateColours()
 		self.UserList.set_model(self.usersmodel)
 		self.UserList.set_property("rules-hint", True)
