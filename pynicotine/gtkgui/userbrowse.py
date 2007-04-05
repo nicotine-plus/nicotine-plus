@@ -352,7 +352,7 @@ class UserBrowse(UserBrowseTab):
 				if parent == '':
 					parent += "\\"
 					if parent not in self.directories.keys():
-						self.directories[parent] =  self.DirStore.append(None, [parent, parent])
+						self.directories[parent] =  self.DirStore.append(None, [self.decode(parent), parent])
 				parent = s[0]
 				for seq in s[1:]:
 					if parent == "":
@@ -363,12 +363,12 @@ class UserBrowse(UserBrowseTab):
 					
 
 					if parent not in self.directories.keys():
-						self.directories[parent] =  self.DirStore.append(None, [parent, parent])
+						self.directories[parent] =  self.DirStore.append(None, [self.decode(parent), parent])
 					
 
 					if path not in children:
 						children.append(path)
-						self.directories[path] = self.DirStore.append(self.directories[parent], [path.split("\\")[-1], path ] )
+						self.directories[path] = self.DirStore.append(self.directories[parent], [self.decode(path.split("\\")[-1]), path ] )
 					parent = path
 			sortlist = self.directories.keys()
 			sortlist.sort()
