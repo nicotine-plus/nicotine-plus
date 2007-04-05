@@ -67,6 +67,14 @@ class NowPlaying:
 		self.NP_amarok.connect("clicked", self.OnNPPlayer)
 	
 		self.hbox1.pack_start(self.NP_amarok, False, False, 0)
+
+		self.NP_audacious = gtk.RadioButton(self.NP_infopipe)
+		self.NP_audacious.set_active(False)
+		self.NP_audacious.set_label(_("Audacious"))
+		self.NP_audacious.show()
+		self.NP_audacious.connect("clicked", self.OnNPPlayer)
+	
+		self.hbox1.pack_start(self.NP_audacious, False, False, 0)
 	
 		self.NP_mpd = gtk.RadioButton(self.NP_infopipe)
 		self.NP_mpd.set_active(False)
@@ -280,6 +288,8 @@ class NowPlaying:
 			self.NP_infopipe.set_active(1)
 		elif player == "amarok":
 			self.NP_amarok.set_active(1)
+		elif player == "audacious":
+			self.NP_audacious.set_active(1)
 		elif player == "mpd":
 			self.NP_mpd.set_active(1)
 		#elif player == "mp3blaster":
@@ -325,6 +335,9 @@ class NowPlaying:
 		if self.NP_amarok.get_active():
 			self.label2.set_text(_("$n Now Playing\n$l Length\n$r Bitrate\n$s Status\n$t Title\n$a Artist\n$b Album\n$c Comment\n$k Track Number\n$y Year\n$f Filename"))
 			set = 1
+		if self.NP_audacious.get_active():
+			self.label2.set_text(_("$n Now Playing\n$l Length\n$r Bitrate\n$s Status\n$t Title\n$a Artist\n$b Album\n$c Comment\n$k Track Number\n$y Year\n$f Filename"))
+			set = 1
 		if self.NP_rhythmbox.get_active():
 			self.label2.set_text(_("$n Now Playing\n$l Length\n$r Bitrate\n$s Status\n$t Title\n$a Artist\n$b Album\n$c Comment\n$k Track Number\n$y Year\n$f Filename (URI)"))
 			set = 1
@@ -354,6 +367,8 @@ class NowPlaying:
 			player = "infopipe"
 		elif self.NP_amarok.get_active():
 			player = "amarok"
+		elif self.NP_audacious.get_active():
+			player = "audacious"
 		elif self.NP_mpd.get_active():
 			player = "mpd"
 		#elif self.NP_mp3blaster.get_active():
@@ -377,6 +392,8 @@ class NowPlaying:
 			result = self.xmms()
 		elif self.NP_amarok.get_active():
 			result = self.amarok()
+		elif self.NP_audacious.get_active():
+			result = self.audacious()
 		elif self.NP_mpd.get_active():
 			result = self.mpd()
 		#elif self.NP_mp3blaster.get_active():
@@ -415,9 +432,6 @@ class NowPlaying:
 	def get_custom_widget(self, id, string1, string2, int1, int2):
 		w = gtk.Label(_("(custom widget: %s)") % id)
 		return w
-	
-	def audacious(self):
-		return None
 	
 	def bmpx(self):
 		try:
@@ -534,7 +548,54 @@ class NowPlaying:
 		if output == 'call failed':
 			output = None
 		return output
+
+	def audacious(self):
+		slist = self.NPFormat.child.get_text()
 		
+		if "$n" in slist:
+			artist = self.audacious_command('current-song-tuple-data', 'performer')
+			title = self.audacious_command('current-song-tuple-data', 'track_name')
+			if artist and title: self.title["nowplaying"] = artist + ' - ' + title
+		if "$t" in slist:
+			output = self.audacious_command('current-song-tuple-data', 'track_name')
+			if output: self.title["title"] = output
+		if "$l" in slist:
+			output = self.audacious_command('current-song-length')
+			if output: self.title["length"] = output
+		if "$a" in slist:
+			output = self.audacious_command('current-song-tuple-data', 'performer')
+			if output: self.title["artist"] = output
+		if "$b" in slist:
+			output = self.audacious_command('current-song-tuple-data', 'album_name')
+			if output: self.title["album"] = output
+		if "$c" in slist:
+			output = self.audacious_command('current-song-tuple-data', 'comment')
+			if output: self.title["comment"] = output
+		if "$k" in slist:
+			output = self.audacious_command('current-song-tuple-data', 'track_number')
+			if output: self.title["track"] = output
+		if "$y" in slist:
+			output = self.audacious_command('current-song-tuple-data', 'year')
+			if output and not output == "0":
+				self.title["year"] = output
+		if "$r" in slist:
+			output = self.audacious_command('current-song-bitrate-kbps')
+			if output: self.title["bitrate"] = output
+		if "$f" in slist:
+			path = self.audacious_command('current-song-tuple-data', 'file_path')
+			ext = self.audacious_command('current-song-tuple-data', 'file_ext')
+			if path and ext: self.title["filename"] = path + ext
+		if "$s" in slist:
+			output = self.audacious_command('playback-status')
+			if output: self.title["status"] = output
+		return 1
+		
+	def audacious_command(self, command, subcommand = ''):
+		output = commands.getoutput("audtool %s %s" % (command, subcommand)).split('\n')[0]
+		if output == 'call failed':
+			output = None
+		return output
+
 	def mp3blaster(self):
 		return None
 	
