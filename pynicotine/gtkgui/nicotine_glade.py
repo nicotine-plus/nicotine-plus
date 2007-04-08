@@ -1723,6 +1723,7 @@ class SearchTab:
 
         self.vbox7 = gtk.VBox(False, 0)
         self.vbox7.show()
+        self.vbox7.set_spacing(1)
 
         self.hbox6 = gtk.HBox(False, 0)
         self.hbox6.show()
@@ -1730,16 +1731,19 @@ class SearchTab:
 
         self.QueryLabel = gtk.Label(_("Query"))
         self.QueryLabel.set_alignment(0, 0.50)
+        self.QueryLabel.set_padding(3, 0)
+        self.QueryLabel.set_line_wrap(True)
         self.QueryLabel.show()
         self.hbox6.pack_start(self.QueryLabel)
 
-        self.checkbutton1 = gtk.CheckButton()
-        self.checkbutton1.set_label(_("Enable filters"))
-        self.checkbutton1.show()
-        self.checkbutton1.connect("toggled", self.OnToggleFilters)
-        self.hbox6.pack_start(self.checkbutton1, False, True, 0)
+        self.filtersCheck = gtk.CheckButton()
+        self.filtersCheck.set_label(_("Enable filters"))
+        self.filtersCheck.show()
+        self.filtersCheck.connect("toggled", self.OnToggleFilters)
+        self.hbox6.pack_start(self.filtersCheck, False, True, 0)
 
         self.button2 = gtk.Button()
+        self.tooltips.set_tip(self.button2, _("Stop new search results from being displayed"))
         self.button2.show()
         self.button2.connect("clicked", self.OnIgnore)
 
@@ -1792,6 +1796,7 @@ class SearchTab:
         self.hbox6.pack_start(self.button3, False, False, 0)
 
         self.RememberCheckButton = gtk.CheckButton()
+        self.tooltips.set_tip(self.RememberCheckButton, _("This search will be opened the next time you start Nicotine+ and will send out new search requests after a server-set intervals (usually around one hour)"))
         self.RememberCheckButton.set_label(_("Remember"))
         self.RememberCheckButton.show()
         self.RememberCheckButton.connect("toggled", self.OnToggleRemember)
@@ -1803,6 +1808,7 @@ class SearchTab:
         self.Filters.set_spacing(2)
 
         self.label13 = gtk.Label(_("Filter in:"))
+        self.label13.set_padding(3, 0)
         self.label13.show()
         self.Filters.pack_start(self.label13, False, False, 0)
 
@@ -2536,7 +2542,7 @@ class UserBrowseTab:
 
         self.SaveButton.add(self.alignment41)
 
-        self.hbox9.pack_end(self.SaveButton, False, False, 0)
+        self.hbox9.pack_start(self.SaveButton, False, False, 0)
 
         self.RefreshButton = gtk.Button()
         self.RefreshButton.show()
@@ -2562,7 +2568,7 @@ class UserBrowseTab:
 
         self.RefreshButton.add(self.alignment42)
 
-        self.hbox9.pack_end(self.RefreshButton, False, False, 0)
+        self.hbox9.pack_start(self.RefreshButton, False, False, 0)
 
         self.CloseButton = gtk.Button()
         self.CloseButton.show()
@@ -2588,7 +2594,7 @@ class UserBrowseTab:
 
         self.CloseButton.add(self.alignment40)
 
-        self.hbox9.pack_end(self.CloseButton, False, False, 0)
+        self.hbox9.pack_start(self.CloseButton, False, False, 0)
 
         self.sMain.pack_start(self.hbox9, False, True, 0)
 

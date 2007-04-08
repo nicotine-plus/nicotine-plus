@@ -80,10 +80,12 @@ def write_widget_attrs(widget):
 		h = widget.attrs["height_request"]
 	if not (w == "-1" and h == "-1"):
 		print indent + "%s.set_size_request(%s, %s)" % (widget.id, w, h)
-
+	x = y = 0
 	if widget.attrs.has_key("xpad"):
 		x = widget.attrs["xpad"]
+	if widget.attrs.has_key("ypad"):
 		y = widget.attrs["ypad"]
+	if x != 0 or y != 0:
 		print indent + "%s.set_padding(%s, %s)" % (widget.id, x, y)
 		
 	if widget.attrs.has_key("stock"):

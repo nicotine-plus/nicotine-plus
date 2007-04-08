@@ -57,11 +57,11 @@ class UserBrowse(UserBrowseTab):
 		self.FolderTreeView.set_model(self.DirStore)
 
 		self.FolderTreeView.set_headers_visible(True)
-		# GTK 2.10 
-		try: self.FolderTreeView.set_property("enable-tree-lines", True)
-		except: pass
-
+		# GTK 2.10
+		if gtk.pygtk_version[0] >= 2 and gtk.pygtk_version[1] >= 10:
+			self.FolderTreeView.set_enable_tree_lines(True)
 		
+
 		cols = InitialiseColumns(self.FolderTreeView,
 			[_("Directories"), -1, "text", self.CellDataFunc], #0
 		)
@@ -336,44 +336,43 @@ class UserBrowse(UserBrowseTab):
 			self.FolderTreeView.collapse_all()
 		
 	def BrowseGetDirs(self):
-		sorted = []
-		for dirs in self.shares.keys():
-			sorted.append(dirs)
+		sorted = self.shares.keys()
 		sorted.sort()
+		
 		children = []
+		self.directories.clear()
 		directory = ""
-		self.directories = {}
-		if sorted != []:
-			for item in sorted:
-				s = item.split("\\")
-				path = ''
 
-				parent = s[0]
-				if parent == '':
-					parent += "\\"
-					if parent not in self.directories.keys():
-						self.directories[parent] =  self.DirStore.append(None, [self.decode(parent), parent])
-				parent = s[0]
-				for seq in s[1:]:
-					if parent == "":
-						parent += "\\"
-						path = parent+seq
-					else:
-						path = parent+"\\"+seq
-					
+		if sorted == []:
+			return directory
+		for item in sorted:
+			s = item.split("\\")
+			path = ''
 
-					if parent not in self.directories.keys():
-						self.directories[parent] =  self.DirStore.append(None, [self.decode(parent), parent])
-					
+			parent = s[0]
+			if parent == '':
+				parent += "\\"
+				if parent not in self.directories.keys():
+					self.directories[parent] =  self.DirStore.append(None, [self.decode(parent), parent])
+			parent = s[0]
+			for seq in s[1:]:
+				
 
-					if path not in children:
-						children.append(path)
-						self.directories[path] = self.DirStore.append(self.directories[parent], [self.decode(path.split("\\")[-1]), path ] )
-					parent = path
-			sortlist = self.directories.keys()
-			sortlist.sort()
+				path = "\\".join([parent, seq])
+				if parent == "":
+					parent = "\\"
+				if parent not in self.directories.keys():
+					self.directories[parent] =  self.DirStore.append(None, [self.decode(parent), parent])
 
-			directory = sortlist[0]
+
+				if path not in children:
+					children.append(path)
+					self.directories[path] = self.DirStore.append(self.directories[parent], [self.decode(path.split("\\")[-1]), path ] )
+				parent = path
+		sortlist = self.directories.keys()
+		sortlist.sort()
+
+		directory = sortlist[0]
 		return directory
 	
 			
@@ -788,14 +787,15 @@ class UserBrowse(UserBrowseTab):
 			os.system("%s &" % executable.replace("$", "\"%s\"" % path))
 			
 	def OnEncodingChanged(self, widget):
-		try:
+		if gtk.pygtk_version[0] >= 2 and gtk.pygtk_version[1] >= 6:
 			# PyGTK 2.6
 			encoding = self.Encoding.get_active_text()
-		except:
+		else:
 			# PyGTK 2.4
 			iter = self.Encoding.get_active_iter()
 			encoding_model = self.Encoding.get_model()
 			encoding = encoding_model.get_value(iter, 0)
+			
 		if encoding != self.encoding:
 			self.encoding = encoding
 			self.MakeNewModel(self.shares)

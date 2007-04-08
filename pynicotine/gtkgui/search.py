@@ -400,7 +400,7 @@ class Search(SearchTab):
 			self.FilterFreeSlot.set_active(filter[4])
 			if(len(filter) > 5):
 				self.FilterCountry.child.set_text(filter[5])
-			self.checkbutton1.set_active(1)
+			self.filtersCheck.set_active(1)
 
 		if mode > 0:
 			self.RememberCheckButton.set_sensitive(False)

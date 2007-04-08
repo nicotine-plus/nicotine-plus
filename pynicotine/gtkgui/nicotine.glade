@@ -1929,6 +1929,7 @@
                             <property name="expand">False</property>
                             <property name="fill">False</property>
                             <property name="pack_type">GTK_PACK_END</property>
+                            <property name="position">1</property>
                           </packing>
                         </child>
                       </widget>
@@ -2601,6 +2602,7 @@
     <child>
       <widget class="GtkVBox" id="vbox7">
         <property name="visible">True</property>
+        <property name="spacing">1</property>
         <child>
           <widget class="GtkHBox" id="hbox6">
             <property name="visible">True</property>
@@ -2609,11 +2611,13 @@
               <widget class="GtkLabel" id="QueryLabel">
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
+                <property name="xpad">3</property>
                 <property name="label" translatable="yes">Query</property>
+                <property name="wrap">True</property>
               </widget>
             </child>
             <child>
-              <widget class="GtkCheckButton" id="checkbutton1">
+              <widget class="GtkCheckButton" id="filtersCheck">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="label" translatable="yes">Enable filters</property>
@@ -2630,6 +2634,7 @@
               <widget class="GtkButton" id="button2">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
+                <property name="tooltip" translatable="yes">Stop new search results from being displayed</property>
                 <signal name="clicked" handler="OnIgnore"/>
                 <child>
                   <widget class="GtkAlignment" id="alignment36">
@@ -2724,6 +2729,7 @@
               <widget class="GtkCheckButton" id="RememberCheckButton">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
+                <property name="tooltip" translatable="yes">This search will be opened the next time you start Nicotine+ and will send out new search requests after a server-set intervals (usually around one hour)</property>
                 <property name="label" translatable="yes">Remember</property>
                 <property name="use_underline">True</property>
                 <property name="draw_indicator">True</property>
@@ -2747,6 +2753,7 @@
             <child>
               <widget class="GtkLabel" id="label13">
                 <property name="visible">True</property>
+                <property name="xpad">3</property>
                 <property name="label" translatable="yes">Filter in:</property>
               </widget>
               <packing>
@@ -3135,6 +3142,7 @@
                                 <property name="expand">False</property>
                                 <property name="fill">False</property>
                                 <property name="pack_type">GTK_PACK_END</property>
+                                <property name="position">6</property>
                               </packing>
                             </child>
                           </widget>
@@ -3857,8 +3865,7 @@
                       <packing>
                         <property name="expand">False</property>
                         <property name="fill">False</property>
-                        <property name="pack_type">GTK_PACK_END</property>
-                        <property name="position">3</property>
+                        <property name="position">1</property>
                       </packing>
                     </child>
                     <child>
@@ -3905,7 +3912,6 @@
                       <packing>
                         <property name="expand">False</property>
                         <property name="fill">False</property>
-                        <property name="pack_type">GTK_PACK_END</property>
                         <property name="position">2</property>
                       </packing>
                     </child>
@@ -3953,8 +3959,7 @@
                       <packing>
                         <property name="expand">False</property>
                         <property name="fill">False</property>
-                        <property name="pack_type">GTK_PACK_END</property>
-                        <property name="position">1</property>
+                        <property name="position">3</property>
                       </packing>
                     </child>
                   </widget>
