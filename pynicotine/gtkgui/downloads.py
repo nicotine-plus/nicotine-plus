@@ -238,15 +238,16 @@ class Downloads(TransferList):
 		
 		items = self.popup_menu.get_children()
 		if len(self.selected_users) != 1:
-			items[5].set_sensitive(False) # Users Menu
+			items[6].set_sensitive(False) # Users Menu
 		else:
-			items[5].set_sensitive(True) # Users Menu
+			items[6].set_sensitive(True) # Users Menu
 		if len(self.selected_transfers) == 0:
 			act = False
 		else:
 			act = True
 		items[0].set_sensitive(act) # Place
 		items[4].set_sensitive(act) # Send to player
+		items[5].set_sensitive(act) # View Meta
 		
 			
 		
@@ -261,11 +262,11 @@ class Downloads(TransferList):
 			# Disable options
 			# Abort, Abort and Remove, retry, clear
 			act = False
-			for i in range(7, 12):
+			for i in range(7, 13):
 				items[i].set_sensitive(act)
 		else:
 			act = True
-			for i in range(7, 12):
+			for i in range(7, 13):
 				items[i].set_sensitive(act)
 
 		
