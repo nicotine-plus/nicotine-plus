@@ -24,7 +24,7 @@ from gtkgui.utils import recode2
 
 class Transfer:
 	""" This class holds information about a single transfer. """
-	def __init__(self, conn = None, user = None, filename = None, path = None, status = None, req=None, size = None, file = None, starttime = None, offset = None, currentbytes = None, speed = None,timeelapsed = None, timeleft = None, timequeued = None, transfertimer = None, requestconn = None, modifier = None, place = 0):
+	def __init__(self, conn = None, user = None, filename = None, path = None, status = None, req=None, size = None, file = None, starttime = None, offset = None, currentbytes = None, speed = None,timeelapsed = None, timeleft = None, timequeued = None, transfertimer = None, requestconn = None, modifier = None, place = 0, bitrate = None, length = None):
 		self.user = user
 		self.filename = filename
 		self.conn = conn
@@ -44,6 +44,8 @@ class Transfer:
 		self.transfertimer = transfertimer
 		self.requestconn = None
 		self.place = place
+		self.bitrate = bitrate
+		self.length = length
 
 class TransferTimeout:
 	def __init__(self, req, callback):
@@ -66,20 +68,24 @@ class Transfers:
 		self.RequestedUploadQueue = []
 		getstatus = {}
 		for i in downloads:
-			size = currentbytes = None
+			size = currentbytes = bitrate = length = None
 			
 			if len(i) >= 6:
 				try: size = int(i[4])
 				except: pass
 				try: currentbytes = int(i[5])
 				except: pass
-				
+			if len(i) >= 8:
+				try: bitrate = i[6]
+				except: pass
+				try: length = i[7]
+				except: pass
 				
 			if len(i) >= 4 and i[3] == 'Paused':
 				status = 'Paused'
 			else:
 				status = 'Getting status'
-			self.downloads.append(Transfer(user = i[0], filename=i[1], path=i[2], status=status, size=size, currentbytes=currentbytes))
+			self.downloads.append(Transfer(user = i[0], filename=i[1], path=i[2], status=status, size=size, currentbytes=currentbytes, bitrate=bitrate, length=length))
 			getstatus[i[0]] = ""
 		for i in getstatus.keys():
 			self.queue.put(slskmessages.AddUser(i))
@@ -160,18 +166,18 @@ class Transfers:
 			self.checkUploadQueue()
 
 
-	def getFile(self, user, filename, path="", transfer = None, size=None):
+	def getFile(self, user, filename, path="", transfer = None, size=None, bitrate=None, length=None):
 		path=self.CleanPath(path)
-		self.transferFile(0, user, filename, path, transfer,size)
+		self.transferFile(0, user, filename, path, transfer, size, bitrate, length)
 
-	def pushFile(self, user, filename, path="", transfer = None, size=None):
-		self.transferFile(1, user, filename, path, transfer,size)
+	def pushFile(self, user, filename, path="", transfer = None, size=None, bitrate=None, length=None ):
+		self.transferFile(1, user, filename, path, transfer, size, bitrate, length)
 
-	def transferFile(self, direction, user, filename, path="", transfer = None, size=None):
+	def transferFile(self, direction, user, filename, path="", transfer = None, size=None, bitrate=None, length=None):
 		""" Get a single file. path is a local path. if transfer object is 
 		not None, update it, otherwise create a new one."""
 		if transfer is None:
-			transfer = Transfer(user = user, filename= filename, path=path, status = 'Getting status', size=size)
+			transfer = Transfer(user = user, filename= filename, path=path, status = 'Getting status', size=size, bitrate=bitrate, length=length)
 			
 			if direction == 0:
 				self.downloads.append(transfer)
@@ -368,6 +374,7 @@ class Transfers:
 					response = slskmessages.TransferResponse(conn,0,reason = "Cancelled", req = msg.req)
 					self.eventprocessor.logMessage(_("Denied file request: %s") % str(vars(msg)),1)
 		else:
+			# Request for Upload
 			friend = user in [i[0] for i in self.eventprocessor.userlist.userlist]
 			if friend and self.eventprocessor.config.sections["transfers"]["friendsnolimits"]:
 				limits = 0
@@ -397,6 +404,7 @@ class Transfers:
 				self.uploads[-1].transfertimer = threading.Timer(30.0, transfertimeout.timeout)
 				self.uploads[-1].transfertimer.start()
 				self.uploadspanel.update(self.uploads[-1])
+				
 			self.eventprocessor.logMessage(_("Upload request: %s") % str(vars(msg)),1)
 	
 		if msg.conn is not None:
@@ -666,6 +674,7 @@ class Transfers:
 						i.offset = size
 						i.starttime = time.time()
 						self.eventprocessor.logMessage(_("Download started: %s") % self.decode(f.name))
+
 						self.eventprocessor.logTransfer(_("Download started: user %(user)s, file %(file)s") % {'user':i.user, 'file':self.decode(i.filename)})
 		
 				self.downloadspanel.update(i)
@@ -855,6 +864,9 @@ class Transfers:
 					i.modifier = _("(privileged)")
 				elif self.UserListPrivileged(i.user):
 					i.modifier = _("(friend)")
+			#elif i.size is None:
+				## Failed?
+				#self.checkUploadQueue()
 			else:
 				msg.file.close()
 				i.status = "Finished"
@@ -1200,11 +1212,20 @@ class Transfers:
 		for i in msg.list.keys():
 			for j in msg.list[i].keys():
 				if os.path.commonprefix([i,j]) == j:
-					for k in msg.list[i][j]:
+					for file in msg.list[i][j]:
+						length = bitrate = None
+						attrs = file[4]
+						if attrs != []:
+							bitrate = str(attrs[0])
+							if attrs[2]:
+								bitrate += _(" (vbr)")
+							try: rl = int(attrs[1])
+							except: rl = 0
+							length = "%i:%02i" % (rl / 60, rl % 60)
 						if j[-1] == '\\':
-							self.getFile(username, j + k[1], j.split('\\')[-2], size=k[2])
+							self.getFile(username, j + file[1], j.split('\\')[-2], size=file[2], bitrate=bitrate, length=length)
 						else:
-							self.getFile(username, j + '\\' + k[1], j.split('\\')[-1], size=k[2])
+							self.getFile(username, j + '\\' + file[1], j.split('\\')[-1], size=file[2], bitrate=bitrate, length=length)
 
 	def AbortTransfers(self):
 		""" Stop all transfers """
@@ -1239,7 +1260,7 @@ class Transfers:
 
 	def GetDownloads(self):
 		""" Get a list of incomplete and not aborted downloads """
-		return [ [i.user, i.filename, i.path, i.status, i.size, i.currentbytes] for i in self.downloads if i.status != 'Finished']
+		return [ [i.user, i.filename, i.path, i.status, i.size, i.currentbytes, i.bitrate, i.length] for i in self.downloads if i.status != 'Finished']
 
 	def SaveDownloads(self):
 		""" Save list of files to be downloaded """

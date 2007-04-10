@@ -7,6 +7,7 @@ from utils import PopupMenu
 from pynicotine import slskmessages
 import string, os
 from pynicotine.utils import _
+from entrydialog import *
 
 class Downloads(TransferList):
 	def __init__(self, frame):
@@ -42,6 +43,7 @@ class Downloads(TransferList):
 			("#" + _("Copy _URL"), self.OnCopyURL, gtk.STOCK_COPY),
 			("#" + _("Copy folder URL"), self.OnCopyDirURL, gtk.STOCK_COPY),
 			("#" + _("Send to _player"), self.OnPlayFiles, gtk.STOCK_MEDIA_PLAY),
+			("#" + _("View Metadata of file(s)"), self.OnDownloadMeta, gtk.STOCK_PROPERTIES),
 			(1, _("User"), self.popup_menu_users, self.OnPopupMenuUsers),
 			("", None),
 			("#" + _("_Retry"), self.OnRetryTransfer, gtk.STOCK_REDO),
@@ -69,7 +71,49 @@ class Downloads(TransferList):
 		self.TreeUsers = self.frame.ToggleTreeDownloads.get_active()
 		self.frame.np.config.sections["transfers"]["groupdownloads"] = self.TreeUsers
 		self.RebuildTransfers()
+
+	def MetaBox(self, title="Meta Data", message="", data=None, modal= True, Search=False):
+		win = MetaDialog( self.frame, message,  data, modal, Search=Search)
+		win.set_title(title)
+		win.set_icon(self.frame.images["n"])
+		win.set_default_size(300, 100)
+		win.show()
+		gtk.main()
+		return win.ret
+	
+	def SelectedResultsAllData(self, model, path, iter, data):
+		if iter in self.selected_users:
+			return
+
+		user = model.get_value(iter, 0)
+		filename = model.get_value(iter, 1)
+		fullname = model.get_value(iter, 9)
+		size = speed = "0"
+		length = bitrate = None
+		queue = immediate = num = country = ""
+		for transfer in self.frame.np.transfers.downloads:
+			if transfer.user == user and fullname == transfer.filename:
+				size = self.Humanize(transfer.size, None)
+				try:
+					speed = str(int(transfer.speed))
+					speed += _(" KB/s")
+				except: pass
+				bitratestr = str(transfer.bitrate)
+				length = str(transfer.length)
+		directory = fullname.rsplit("\\", 1)[0]
+
+		data[len(data)] = {"user":user, "fn": fullname, "position":num, "filename":filename, "directory":directory, "size":size, "speed":speed, "queue":queue, "immediate":immediate, "bitrate":bitratestr, "length":length, "country":country}
+
 		
+	def OnDownloadMeta(self, widget):
+		if not self.frame.np.transfers:
+			return
+		data = {}
+		self.widget.get_selection().selected_foreach(self.SelectedResultsAllData, data)
+
+		if data != {}:	
+			self.MetaBox(title=_("Nicotine+:")+" "+_("Downloads Metadata"), message=_("<b>Metadata</b> for Downloads"), data=data, modal=True, Search=False)
+			
 	def RebuildTransfers(self):
 		if self.frame.np.transfers is None:
 			return

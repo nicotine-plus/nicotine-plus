@@ -522,8 +522,8 @@ class UserBrowse(UserBrowseTab):
 		else:
 			# Good to go, we download these
 			for item in files:
-				file, localpath, size = item
-				self.frame.np.transfers.getFile(self.user, file, localpath,  size=size)
+				file, localpath, size, bitrate, length = item
+				self.frame.np.transfers.getFile(self.user, file, localpath, size=size, bitrate=bitrate, length=length)
 				
 	def folder_download_response(self, dialog, response, files):
 
@@ -533,8 +533,8 @@ class UserBrowse(UserBrowseTab):
 		elif response == gtk.RESPONSE_OK:
 			dialog.destroy()
 			for item in files:
-				file, localpath, size = item
-				self.frame.np.transfers.getFile(self.user, file, localpath,  size=size)
+				file, localpath, size, bitrate, length = item
+				self.frame.np.transfers.getFile(self.user, file, localpath, size=size, bitrate=bitrate, length=length)
 	
 			
 	def DownloadDirectoryRecursive(self, dir, prefix = ""):
@@ -546,7 +546,17 @@ class UserBrowse(UserBrowseTab):
 		files = []
 		if dir in self.shares.keys():
 			for file in self.shares[dir]:
-				files.append(["\\".join([dir, file[1]]), localdir, file[2]])
+				length = bitrate = None
+				attrs = file[4]
+				if attrs != []:
+					bitrate = str(attrs[0])
+					if attrs[2]:
+						bitrate += _(" (vbr)")
+					try: rl = int(attrs[1])
+					except: rl = 0
+					length = "%i:%02i" % (rl / 60, rl % 60)
+
+				files.append(["\\".join([dir, file[1]]), localdir, file[2], bitrate, length])
 		
 		for directory in self.shares.keys():
 			if dir in directory and dir != directory:
@@ -587,7 +597,16 @@ class UserBrowse(UserBrowseTab):
 			return
 		ldir = prefix + dir.split("\\")[-1]
 		for file in self.shares[dir]:
-			self.frame.np.transfers.getFile(self.user, "\\".join([dir, file[1]]), ldir, size=file[2])
+			length = bitrate = None
+			attrs = file[4]
+			if attrs != []:
+				bitrate = str(attrs[0])
+				if attrs[2]:
+					bitrate += _(" (vbr)")
+				try: rl = int(attrs[1])
+				except: rl = 0
+				length = "%i:%02i" % (rl / 60, rl % 60)
+			self.frame.np.transfers.getFile(self.user, "\\".join([dir, file[1]]), ldir, size=file[2], bitrate=bitrate, length=length)
 		if not recurse:
 			return
 		for directory in self.shares.keys():
@@ -599,11 +618,22 @@ class UserBrowse(UserBrowseTab):
 	def OnDownloadFiles(self, widget, prefix = ""):
 		dir = self.selected_folder
 		for fn in self.selected_files:
+			file = [i for i in self.shares[dir] if i[1] == fn][0]
 			path = "\\".join([dir, fn])
-			size = None
-			size_l = [i[2] for i in self.shares[dir] if i[1] == fn]
-			if size_l != []: size = size_l[0]
-			self.frame.np.transfers.getFile(self.user, path, prefix, size=size)
+			#size = None
+			size = file[2]
+			#size_l = [i[2] for i in self.shares[dir] if i[1] == fn]
+			#if size_l != []: size = size_l[0]
+			length = bitrate = None
+			attrs = file[4]
+			if attrs != []:
+				bitrate = str(attrs[0])
+				if attrs[2]:
+					bitrate += _(" (vbr)")
+				try: rl = int(attrs[1])
+				except: rl = 0
+				length = "%i:%02i" % (rl / 60, rl % 60)
+			self.frame.np.transfers.getFile(self.user, path, prefix, size=size, bitrate=bitrate, length=length)
 
 	
 	def OnUploadDirectoryRecursiveTo(self, widget):

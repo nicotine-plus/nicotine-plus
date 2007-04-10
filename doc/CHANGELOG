@@ -57,6 +57,7 @@ BUGFIXES
    disabled anymore.
    
 TRANSFERS
+ * Downloads have a metadata popup dialog with bitrate / length
  * Right-clicking when nothing is selected will select a row
  * In parent row, display the current transfer's time elapsed and time left.
  * Transfer popups work better on parent rows

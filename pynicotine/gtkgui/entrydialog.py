@@ -9,13 +9,16 @@ from pynicotine.utils import _
 
 
 class MetaDialog( gtk.Dialog):
-	def __init__(self, frame, message="", data=None, modal= True):
+	def __init__(self, frame, message="", data=None, modal= True, Search=True):
+		
 		gtk.Dialog.__init__(self)
 		self.connect("destroy", self.quit)
 		self.connect("delete_event", self.quit)
 		self.nicotine = frame
 		if modal:
 			self.set_modal(True)
+		self.Search = Search
+		
 		self.box = gtk.VBox(spacing=10)
 		self.box.set_border_width(10)
 		self.box.show()
@@ -47,10 +50,10 @@ class MetaDialog( gtk.Dialog):
 		
 		self.UF.add(vbox3)
 		
-		self.Username = self.MakeLabelStaticEntry( hbox2, "<b>%s:</b>" % _("Username"), "", expand=False)
+		self.UsernameLabel, self.Username = self.MakeLabelStaticEntry( hbox2, "<b>%s:</b>" % _("Username"), "", expand=False)
 		self.BrowseUser = self.nicotine.CreateIconButton(gtk.STOCK_HARDDISK, "stock", self.OnBrowseUser, _("Browse"))
 		hbox2.pack_start(self.BrowseUser, False, False)
-		self.Position = self.MakeLabelStaticEntry( hbox2, _("<b>List Position:</b>"), "", expand=False, width=7, xalign=1)
+		self.PositionLabel, self.Position = self.MakeLabelStaticEntry( hbox2, _("<b>List Position:</b>"), "", expand=False, width=7, xalign=1)
 		
 		vbox3.pack_start(hbox2, False, False)
 		
@@ -60,14 +63,14 @@ class MetaDialog( gtk.Dialog):
 		hbox3.show()
 		vbox3.pack_start(hbox3, False, False)
 
-		self.Filename = self.MakeLabelStaticEntry( hbox3, _("<b>File Name:</b>"), "", fill=True)
+		self.FilenameLabel, self.Filename = self.MakeLabelStaticEntry( hbox3, _("<b>File Name:</b>"), "", fill=True)
 		
 		
 		hbox5 = gtk.HBox(spacing=5)
 		hbox5.show()
 		vbox3.pack_start(hbox5, False, False)
 
-		self.Directory = self.MakeLabelStaticEntry( hbox5, _("<b>Directory:</b>"), "", fill=True)
+		self.DirectoryLabel, self.Directory = self.MakeLabelStaticEntry( hbox5, _("<b>Directory:</b>"), "", fill=True)
 		
 		self.Media = gtk.Frame()
 		self.Media.show()
@@ -76,9 +79,9 @@ class MetaDialog( gtk.Dialog):
 		hbox6.set_border_width(5)
 		hbox6.show()
 
-		self.Size = self.MakeLabelStaticEntry( hbox6, _("<b>File Size:</b>"), "", expand=False, width=11, xalign=1)
-		self.Length = self.MakeLabelStaticEntry( hbox6, _("<b>Length:</b>"), "", expand=False, width=7, xalign=0.5)
-		self.Bitrate = self.MakeLabelStaticEntry( hbox6, _("<b>Bitrate:</b>"), "", expand=False, width=12, xalign=0.5)
+		self.SizeLabel, self.Size = self.MakeLabelStaticEntry( hbox6, _("<b>File Size:</b>"), "", expand=False, width=11, xalign=1)
+		self.LengthLabel, self.Length = self.MakeLabelStaticEntry( hbox6, _("<b>Length:</b>"), "", expand=False, width=7, xalign=0.5)
+		self.BitrateLabel, self.Bitrate = self.MakeLabelStaticEntry( hbox6, _("<b>Bitrate:</b>"), "", expand=False, width=12, xalign=0.5)
 		
 		self.Media.add(hbox6)
 		self.box.pack_start(self.Media, False, False)
@@ -88,16 +91,16 @@ class MetaDialog( gtk.Dialog):
 		self.box.pack_start(hbox7, False, False)
 	
 		
-		self.Immediate = self.MakeLabelStaticEntry( hbox7, _("<b>Immediate Downloads:</b>"), "", expand=False, width=6, xalign=0.5)
+		self.ImmediateLabel, self.Immediate = self.MakeLabelStaticEntry( hbox7, _("<b>Immediate Downloads:</b>"), "", expand=False, width=6, xalign=0.5)
 		
-		self.Queue = self.MakeLabelStaticEntry( hbox7, _("<b>Queue:</b>"), "", expand=False, width=6, xalign=1)
+		self.QueueLabel, self.Queue = self.MakeLabelStaticEntry( hbox7, _("<b>Queue:</b>"), "", expand=False, width=6, xalign=1)
 
 
 		hbox4 = gtk.HBox(spacing=5, homogeneous=False)
 		hbox4.show()
 		self.box.pack_start(hbox4, False, False)
 
-		self.Speed = self.MakeLabelStaticEntry( hbox4, _("<b>Last Speed:</b>"), "", expand=False, width=11, xalign=1)
+		self.SpeedLabel, self.Speed = self.MakeLabelStaticEntry( hbox4, _("<b>Last Speed:</b>"), "", expand=False, width=11, xalign=1)
 		
 		self.Country = gtk.Label()
 		self.Country.hide()
@@ -196,6 +199,31 @@ class MetaDialog( gtk.Dialog):
 	def Display(self, item):
 		if not self.data.has_key(item):
 			return
+		if not self.Search:
+			self.Immediate.hide()
+			self.Position.hide()
+			self.Country.hide()
+			self.Queue.hide()
+			self.Immediate.hide()
+			self.ImmediateLabel.hide()
+			self.PositionLabel.hide()
+			self.QueueLabel.hide()
+			self.ImmediateLabel.hide()
+			self.DownloadItem.hide()
+			self.DownloadAll.hide()
+		else:
+			self.Immediate.show()
+			self.Position.show()
+			self.Country.show()
+			self.Queue.show()
+			self.Immediate.show()
+			self.ImmediateLabel.show()
+			self.PositionLabel.show()
+			self.QueueLabel.show()
+			self.ImmediateLabel.show()
+			self.DownloadItem.show()
+			self.DownloadAll.show()
+			
 		self.current = item
 		
 		More = False
@@ -212,7 +240,7 @@ class MetaDialog( gtk.Dialog):
 		self.Speed.set_text	(self.data[self.current]["speed"])
 		self.Position.set_text	(str(self.data[self.current]["position"]))
 		if self.data[self.current]["bitrate"] not in ("", None):
-			self.Bitrate.set_text(self.data[self.current]["bitrate"] + " Kbps")
+			self.Bitrate.set_text(self.data[self.current]["bitrate"])
 		else:
 			self.Bitrate.set_text("")
 		self.Length.set_text	(self.data[self.current]["length"])
@@ -266,7 +294,7 @@ class MetaDialog( gtk.Dialog):
 		if entrydata is not None:
 			entry.set_text(entrydata)
 		parent.pack_start(entry, expand, fill)
-		return entry
+		return label, entry
 		
 class EntryDialog( gtk.Dialog):
 	def __init__(self, frame, message="", default_text='', modal= True, option=False, optionmessage="", optionvalue=False, droplist=[]):
