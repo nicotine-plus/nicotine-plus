@@ -365,6 +365,7 @@ class NicotineFrame(MainWindow):
 		
 		
 		self.SetUserStatus(_("Offline"))
+		self.TrayApp = TrayApp(self)
 		self.UpdateBandwidth()
 		self.UpdateTransferButtons()
 		# Search Methods
@@ -399,7 +400,7 @@ class NicotineFrame(MainWindow):
 		img.set_from_pixbuf(self.images["away2"])
 		self.awayreturn1.set_image(img)
 		self.now = nowplaying.NowPlaying(self)
-		self.TrayApp = TrayApp(self)
+		
 		
 		ConfigUnset = self.np.config.needConfig()
 		if ConfigUnset[0]:
@@ -1129,6 +1130,7 @@ class NicotineFrame(MainWindow):
 		self.UpStatus.pop(self.up_context_id)
 		self.DownStatus.push(self.down_context_id, _("Down: %(num)i users, %(speed).1f KB/s") % {'num':usersdown, 'speed':down})
 		self.UpStatus.push(self.up_context_id, _("Up: %(num)i users, %(speed).1f KB/s") % {'num':usersup,'speed':up})
+		self.TrayApp.SetToolTip(_("Nicotine+ Transfers: %(speeddown).1f KB/s Down, %(speedup).1f KB/s Up") % {'speeddown':down,'speedup':up})
 	
 	def BanUser(self, user):
 		if self.np.transfers is not None:
@@ -2166,7 +2168,11 @@ class TrayApp:
 				self.tray_popup_menu.popup(None, None, None, event.button, event.time)
 				return True
 			return False
-
+			
+	def SetToolTip(self, string):
+		if self.pygtkicon and self.trayicon_module is not None:
+   			self.trayicon_module.set_tooltip(string)
+		
 class gstreamer:
 	def __init__(self):
 		self.player = None
