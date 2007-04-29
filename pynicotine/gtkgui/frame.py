@@ -1985,24 +1985,25 @@ class TrayApp:
 	def Load(self):
 		if self.TRAYICON_FAILED:
 			return
-		if sys.platform == "win32":
-			try:
-			
-				import systraywin32
-				self.trayicon_module = systraywin32
-			except ImportError, error:
-				self.TRAYICON_FAILED = True
-				self.HAVE_TRAYICON = False
-				message =  _("Note: The systraywin32.py Python file failed to load properly because: %s. You may require pywin32. Get a version that matches your version of Python from here:\nhttp://sourceforge.net/project/showfiles.php?group_id=78018") % error
-				print message
-				self.frame.logMessage(message)
+
+		# PyGTK >= 2.10
+		if self.pygtkicon:
+			trayicon = gtk.StatusIcon()
+			self.trayicon_module = trayicon
+			self.HAVE_TRAYICON = True
+			self.TRAYICON_FAILED = False
 		else:
-			# PyGTK >= 2.10
-			if self.pygtkicon:
-				trayicon = gtk.StatusIcon()
-				self.trayicon_module = trayicon
-				self.HAVE_TRAYICON = True
-				self.TRAYICON_FAILED = False
+			if sys.platform == "win32":
+				try:
+
+					import systraywin32
+					self.trayicon_module = systraywin32
+				except ImportError, error:
+					self.TRAYICON_FAILED = True
+					self.HAVE_TRAYICON = False
+					message =  _("Note: The systraywin32.py Python file failed to load properly because: %s. You may require pywin32. Get a version that matches your version of Python from here:\nhttp://sourceforge.net/project/showfiles.php?group_id=78018") % error
+					print message
+					self.frame.logMessage(message)
 			else:
 			        try:
 					from pynicotine import trayicon
