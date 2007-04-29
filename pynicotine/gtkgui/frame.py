@@ -2024,16 +2024,17 @@ class TrayApp:
 		self.HAVE_TRAYICON = False
 		self.current_image = None
 		
-		if sys.platform != "win32":
-			if self.pygtkicon:
-				self.trayicon_module.set_visible(False)
-				self.trayicon_module = None
-			else:
+		
+		if self.pygtkicon:
+			self.trayicon_module.set_visible(False)
+			self.trayicon_module = None
+		else:
+			if sys.platform != "win32":
 				self.eventbox.destroy()
 				self.trayicon.destroy()
-		else:
-			self.tray_status["last"] = ""
-			self.trayicon.hide_icon()
+			else:
+				self.tray_status["last"] = ""
+				self.trayicon.hide_icon()
 		
 		self.tray_popup_menu.destroy()
 
@@ -2044,16 +2045,18 @@ class TrayApp:
 		self.TRAYICON_CREATED = 1
 	
 		
-		if sys.platform == "win32":
-			if not self.trayicon:
-				self.trayicon = self.trayicon_module.TrayIcon("Nicotine", self.frame)
-			self.trayicon.show_icon()
+
+		if self.pygtkicon:
+			self.trayicon_module.set_visible(True)
+			self.trayicon_module.connect("popup-menu", self.OnStatusIconPopup)
+			self.trayicon_module.connect("activate", self.OnStatusIconClicked)
 			
 		else:
-			if self.pygtkicon:
-				self.trayicon_module.set_visible(True)
-				self.trayicon_module.connect("popup-menu", self.OnStatusIconPopup)
-				self.trayicon_module.connect("activate", self.OnStatusIconClicked)
+			if sys.platform == "win32":
+				if not self.trayicon:
+					self.trayicon = self.trayicon_module.TrayIcon("Nicotine", self.frame)
+				self.trayicon.show_icon()
+				
 			else:
 				self.trayicon = self.trayicon_module.TrayIcon("Nicotine")
 				self.eventbox = gtk.EventBox()
@@ -2082,12 +2085,13 @@ class TrayApp:
 			if icon != self.tray_status["last"]:
 				self.tray_status["last"] = icon
 
-			if sys.platform == "win32":
-				# For Win32 Systray 
-				self.trayicon.set_img(icon)
+			
+			if self.pygtkicon:
+				self.trayicon_module.set_from_pixbuf(self.frame.images[icon])
 			else:
-				if self.pygtkicon:
-					self.trayicon_module.set_from_pixbuf(self.frame.images[icon])
+				if sys.platform == "win32":
+					# For Win32 Systray 
+					self.trayicon.set_img(icon)
 				else:
 					# For trayicon.so module X11 Systray 
 					self.eventbox.hide()
