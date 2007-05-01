@@ -262,14 +262,14 @@ class NetworkEventProcessor:
 	def setServerTimer(self):
 		if self.servertimeout == -1:
 			self.servertimeout = 15
-		elif 0 < self.servertimeout < 3600:
+		elif 0 < self.servertimeout < 600:
 			self.servertimeout = self.servertimeout * 2
 		self.servertimer = threading.Timer(self.servertimeout, self.ServerTimeout)
 		self.servertimer.start()
 		self.logMessage(_("The server seems to be down or not responding, retrying in %i seconds") %(self.servertimeout))
 	
 	def ServerTimeout(self):
-		if not self.config.needConfig():
+		if not self.config.needConfig()[0]:
 			self.callback([slskmessages.ConnectToServer()])
 	
 	def StopTimers(self):
