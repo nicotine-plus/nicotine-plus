@@ -16,7 +16,127 @@ from utils import InitialiseColumns, PopupMenu, FastListModel, Humanize
 from dirchooser import ChooseDir
 from entrydialog import *
 from pynicotine.utils import _
+from utils import InputDialog
 
+class WishList( gtk.Dialog):
+	def __init__(self, frame):
+		gtk.Dialog.__init__(self)
+		self.set_title(_("Nicotine+ Wishlist"))
+		self.connect("destroy", self.quit)
+		self.connect("destroy-event", self.quit)
+		self.connect("delete-event", self.quit)
+		self.connect("delete_event", self.quit)
+		self.nicotine = frame
+		self.set_size_request(200, -1)
+		
+		self.mainVbox = gtk.VBox(False, 5)
+		
+		self.mainVbox.show()
+		self.mainVbox.set_spacing(5)
+
+		self.WishLabel = gtk.Label(_("Wishlist"))
+		self.WishLabel.set_padding(0, 0)
+		self.WishLabel.set_line_wrap(False)
+		self.WishLabel.show()
+		self.mainVbox.pack_start(self.WishLabel, False, False, 0)
+
+		self.WishScrollWin = gtk.ScrolledWindow()
+		self.WishScrollWin.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+		self.WishScrollWin.show()
+		self.WishScrollWin.set_shadow_type(gtk.SHADOW_IN)
+
+		self.WishlistView = gtk.TreeView()
+		self.WishlistView.show()
+		self.WishlistView.set_headers_visible(False)
+		self.WishScrollWin.add(self.WishlistView)
+
+		self.mainVbox.pack_start(self.WishScrollWin, True, True, 0)
+
+		self.AddWishButton = self.nicotine.CreateIconButton(gtk.STOCK_REMOVE, "stock", self.OnAddWish, _("Add..."))
+		self.mainVbox.pack_start(self.AddWishButton, False, False, 0)
+
+
+		self.RemoveWishButton = self.nicotine.CreateIconButton(gtk.STOCK_REMOVE, "stock", self.OnRemoveWish, _("Remove"))
+		self.mainVbox.pack_start(self.RemoveWishButton, False, False, 0)
+
+
+		self.ClearWishesButton = self.nicotine.CreateIconButton(gtk.STOCK_CLEAR, "stock", self.OnClearWishes, _("Clear"))
+
+
+		self.mainVbox.pack_start(self.ClearWishesButton, False, False, 0)
+
+		self.vbox.pack_start(self.mainVbox, True, True, 0)
+		
+
+		self.store = gtk.ListStore(gobject.TYPE_STRING)
+		column = gtk.TreeViewColumn(_("Wishs"), gtk.CellRendererText(), text = 0)
+		self.WishlistView.append_column(column)
+		self.WishlistView.set_model(self.store)
+		self.WishlistView.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
+		self.wishes = {}
+		for wish in self.nicotine.np.config.sections["server"]["autosearch"]:
+			self.wishes[wish] = self.store.append([wish])
+		
+	def OnAddWish(self, widget):
+		wish = InputDialog(self.vbox.get_toplevel(), _("Add Wish..."), _("Wish:") )
+		if wish and wish not in self.wishes:
+			self.wishes[wish] = self.store.append([wish])
+			self.nicotine.searches.NewWish(wish)
+	
+	def _RemoveWish(self, model, path, iter, l):
+		l.append(iter)
+		
+	def removeWish(self, wish):
+		if self.wishes.has_key(wish):
+			self.store.remove(self.wishes[wish])
+			del self.wishes[wish]
+		if wish in self.nicotine.np.config.sections["server"]["autosearch"]:
+			self.nicotine.np.config.sections["server"]["autosearch"].remove(wish)
+			for number, search in self.nicotine.searches.searches.items():
+				if search[1] == wish and search[4] == 1:
+					search[4] = 0
+					self.nicotine.searches.searches[number] = search
+					if search[2] is not None:
+				
+						search[2].RememberCheckButton.set_active(False)
+				
+
+		
+	def addWish(self, wish):
+		if wish and wish not in self.wishes:
+			self.wishes[wish] = self.store.append([wish])
+		
+	def OnRemoveWish(self, widget):
+		iters = []
+		self.WishlistView.get_selection().selected_foreach(self._RemoveWish, iters)
+		for iter in iters:
+			wish = self.store.get_value(iter, 0)
+			self.removeWish(wish)
+			#self.wishes.remove(wish)
+			#self.store.remove(iter)
+
+	def OnClearWishes(self, widget):
+		self.wishes = {}
+		self.store.clear()
+		for number, search in self.nicotine.searches.searches.items():
+			search[4] = 0
+			self.nicotine.searches.searches[number] = search
+			if search[2] is not None:
+				search[2].RememberCheckButton.set_active(False)
+
+		self.nicotine.np.config.sections["server"]["autosearch"] = []
+		self.nicotine.np.config.writeConfig()
+		
+	def quit(self, w=None, event=None):
+
+		self.hide()
+		return True
+
+	def Toggle(self, widget):
+		if self.get_property("visible"):
+			self.hide()
+		else:
+			self.show()
 class Searches:
 	def __init__(self, frame):
 		self.frame = frame
@@ -36,15 +156,16 @@ class Searches:
 				templist.append(i)
 		for i in templist:
 			self.frame.combo1.append_text(i)
+		self.WishListDialog = WishList(frame)
+		self.frame.WishList.connect("clicked", self.WishListDialog.Toggle)
 		
 	def SetInterval(self, msg):
-		self.interval = 1000
-		
+		self.interval = msg.num
 		if not self.disconnected:
 			for term in self.frame.np.config.sections["server"]["autosearch"]:
-				self.CreateTab(self.searchid, term, 0, 1)
+				#self.CreateTab(self.searchid, term, 0, 1)
+				self.searches[self.searchid] = [self.searchid, term, None, 0, True]
 				self.searchid = (self.searchid + 1) % (2**31)
-				
 		
 		self.OnAutoSearch()
 		self.timer = gobject.timeout_add(self.interval*1000, self.OnAutoSearch)
@@ -64,12 +185,11 @@ class Searches:
 			return True
 		
 		term = searches.pop()
+
 		searches.insert(0, term)
 		
 		for i in self.searches.values():
 			if i[1] == term and i[4]:
-				if i[2] == None:
-					break
 				self.DoGlobalSearch(i[0], term)
 				break
 		
@@ -112,6 +232,16 @@ class Searches:
 		self.DoSearch(text, mode, users, room)
 		self.frame.SearchEntry.set_text("")
 		
+	def NewWish(self, wish):
+		if wish in self.frame.np.config.sections["server"]["autosearch"]:
+			return
+		self.frame.np.config.sections["server"]["autosearch"].append(wish)
+			
+		self.searchid += 1
+		self.searches[self.searchid] = [self.searchid, wish, None, 0, True]
+			
+		self.DoGlobalSearch(self.searchid, wish)
+		
 	def DoSearch(self, text, mode, users = [], room = None):
 		items = self.frame.np.config.sections["searches"]["history"]
 		if text in items:
@@ -146,7 +276,7 @@ class Searches:
 		self.frame.np.queue.put(slskmessages.FileSearch(id, text))
 	
 	def DoRoomsSearch(self, id, text, room = None):
-		print room
+
 		if room != None:
 			self.frame.np.queue.put(slskmessages.RoomSearch(room, id, text))
 		else:
@@ -194,6 +324,7 @@ class Searches:
 			self.frame.np.config.sections["server"]["autosearch"].remove(search[1])
 			self.frame.np.config.writeConfig()
 		search[4] = 0
+		self.WishListDialog.removeWish(search[1])
 		
 	def RemoveTab(self, tab):
 		if self.searches.has_key(tab.id):
@@ -213,6 +344,7 @@ class Searches:
 		self.frame.np.config.sections["server"]["autosearch"].append(i[1])
 		self.frame.np.config.writeConfig()
 		i[4] = 1
+		self.WishListDialog.addWish(i[1])
 		
 	def UpdateColours(self):
 		for id in self.searches.values():

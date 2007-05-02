@@ -13,7 +13,7 @@ class MetaDialog( gtk.Dialog):
 		
 		gtk.Dialog.__init__(self)
 		self.connect("destroy", self.quit)
-		self.connect("delete_event", self.quit)
+		self.connect("delete-event", self.quit)
 		self.nicotine = frame
 		if modal:
 			self.set_modal(True)
@@ -300,7 +300,7 @@ class EntryDialog( gtk.Dialog):
 	def __init__(self, frame, message="", default_text='', modal= True, option=False, optionmessage="", optionvalue=False, droplist=[]):
 		gtk.Dialog.__init__(self)
 		self.connect("destroy", self.quit)
-		self.connect("delete_event", self.quit)
+		self.connect("delete-event", self.quit)
 		self.gotoption = option
 		if modal:
 			self.set_modal(True)
@@ -370,7 +370,7 @@ class FindDialog( gtk.Dialog):
 		self.textview = textview
 		self.nicotine = frame
 		self.connect("destroy", self.quit)
-		self.connect("delete_event", self.quit)
+		self.connect("delete-event", self.quit)
 		
 		self.nextPosition = None	
 		self.currentPosition = None
@@ -435,7 +435,7 @@ class FolderDownloadDialog( gtk.Dialog):
 	def __init__(self, frame, message="",modal= False, ):
 		gtk.Dialog.__init__(self)
 		self.connect("destroy", self.quit)
-		self.connect("delete_event", self.quit)
+		self.connect("delete-event", self.quit)
 		self.nicotine = frame
 
 		self.set_modal(modal)
@@ -485,7 +485,7 @@ class OptionDialog( gtk.Dialog):
 	def __init__(self, frame, message="",modal= False, status=None, option=False, third=""):
 		gtk.Dialog.__init__(self)
 		self.connect("destroy", self.quit)
-		self.connect("delete_event", self.quit)
+		self.connect("delete-event", self.quit)
 		self.nicotine = frame
 
 		self.set_modal(modal)

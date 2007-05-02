@@ -32,7 +32,8 @@ class NowPlaying:
 			self.NowPlaying.add_accel_group(self.accel_group)
 			#self.NowPlaying.show()
 			self.NowPlaying.connect("destroy", self.quit)
-			self.NowPlaying.connect("delete_event", self.quit)
+			self.NowPlaying.connect("destroy-event", self.quit)
+			self.NowPlaying.connect("delete-event", self.quit)
 	
 		self.vbox1 = gtk.VBox(False, 5)
 		self.vbox1.show()
@@ -356,8 +357,9 @@ class NowPlaying:
 	def OnNPCancel(self, widget):
 		self.quit(None)
 		
-	def quit(self, widget):
+	def quit(self, widget, s=None):
 		self.NowPlaying.hide()
+		return True
 		
 	def OnNPTest(self, widget):
 		self.DisplayNowPlaying(None, test=1)
