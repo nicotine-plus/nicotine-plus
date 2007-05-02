@@ -773,6 +773,31 @@ class MainWindow:
         self.hbox2.show()
         self.hbox2.set_spacing(8)
 
+        self.WishList = gtk.Button()
+        self.WishList.show()
+
+        self.alignment8 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment8.show()
+
+        self.hbox18 = gtk.HBox(False, 0)
+        self.hbox18.show()
+        self.hbox18.set_spacing(2)
+
+        self.image8 = gtk.Image()
+        self.image8.set_from_stock(gtk.STOCK_EDIT, 4)
+        self.image8.show()
+        self.hbox18.pack_start(self.image8, False, False, 0)
+
+        self.label2 = gtk.Label(_("WishList"))
+        self.label2.show()
+        self.hbox18.pack_start(self.label2, False, False, 0)
+
+        self.alignment8.add(self.hbox18)
+
+        self.WishList.add(self.alignment8)
+
+        self.hbox2.pack_start(self.WishList, False, False, 0)
+
         self.combo1_List = gtk.ListStore(gobject.TYPE_STRING)
         self.combo1 = gtk.ComboBoxEntry()
         self.combo1.show()
@@ -836,17 +861,6 @@ class MainWindow:
 
         self.hbox2.pack_start(self.ClearSearchHistory, False, False, 0)
 
-        self.SearchMethod_List = gtk.ListStore(gobject.TYPE_STRING)
-        self.SearchMethod = gtk.ComboBox()
-        self.SearchMethod.show()
-        self.SearchMethod_List.append([""])
-
-        self.SearchMethod.set_model(self.SearchMethod_List)
-        cell = gtk.CellRendererText()
-        self.SearchMethod.pack_start(cell, True)
-        self.SearchMethod.add_attribute(cell, 'text', 0)
-        self.hbox2.pack_start(self.SearchMethod, False, False, 0)
-
         self.UserSearchCombo = self.get_custom_widget("UserSearchCombo", "", "", 0, 0)
         self.UserSearchCombo.show()
         self.hbox2.pack_start(self.UserSearchCombo, False, False, 0)
@@ -862,30 +876,16 @@ class MainWindow:
         self.RoomSearchCombo.set_text_column(0)
         self.hbox2.pack_start(self.RoomSearchCombo, False, False, 0)
 
-        self.WishList = gtk.Button()
-        self.WishList.show()
+        self.SearchMethod_List = gtk.ListStore(gobject.TYPE_STRING)
+        self.SearchMethod = gtk.ComboBox()
+        self.SearchMethod.show()
+        self.SearchMethod_List.append([""])
 
-        self.alignment8 = gtk.Alignment(0.5, 0.5, 0, 0)
-        self.alignment8.show()
-
-        self.hbox18 = gtk.HBox(False, 0)
-        self.hbox18.show()
-        self.hbox18.set_spacing(2)
-
-        self.image8 = gtk.Image()
-        self.image8.set_from_stock(gtk.STOCK_EDIT, 4)
-        self.image8.show()
-        self.hbox18.pack_start(self.image8, False, False, 0)
-
-        self.label2 = gtk.Label(_("WishList"))
-        self.label2.show()
-        self.hbox18.pack_start(self.label2, False, False, 0)
-
-        self.alignment8.add(self.hbox18)
-
-        self.WishList.add(self.alignment8)
-
-        self.hbox2.pack_start(self.WishList, False, False, 0)
+        self.SearchMethod.set_model(self.SearchMethod_List)
+        cell = gtk.CellRendererText()
+        self.SearchMethod.pack_start(cell, True)
+        self.SearchMethod.add_attribute(cell, 'text', 0)
+        self.hbox2.pack_start(self.SearchMethod, False, False, 0)
 
         self.searchvbox.pack_start(self.hbox2, False, True, 0)
 
@@ -1048,32 +1048,6 @@ class MainWindow:
 
         self.hbox12.pack_end(self.button17, False, False, 0)
 
-        self.button19 = gtk.Button()
-        self.button19.show()
-        self.button19.connect("clicked", self.OnSimilarUsersClicked)
-
-        self.alignment6 = gtk.Alignment(0.5, 0.5, 0, 0)
-        self.alignment6.show()
-
-        self.hbox26 = gtk.HBox(False, 0)
-        self.hbox26.show()
-        self.hbox26.set_spacing(2)
-
-        self.image6 = gtk.Image()
-        self.image6.set_from_stock(gtk.STOCK_REFRESH, 4)
-        self.image6.show()
-        self.hbox26.pack_start(self.image6, False, False, 0)
-
-        self.label35 = gtk.Label(_("Similar users"))
-        self.label35.show()
-        self.hbox26.pack_start(self.label35, False, False, 0)
-
-        self.alignment6.add(self.hbox26)
-
-        self.button19.add(self.alignment6)
-
-        self.hbox12.pack_end(self.button19, False, False, 0)
-
         self.button18 = gtk.Button()
         self.button18.show()
         self.button18.connect("clicked", self.OnRecommendationsClicked)
@@ -1099,6 +1073,32 @@ class MainWindow:
         self.button18.add(self.alignment5)
 
         self.hbox12.pack_end(self.button18, False, False, 0)
+
+        self.button19 = gtk.Button()
+        self.button19.show()
+        self.button19.connect("clicked", self.OnSimilarUsersClicked)
+
+        self.alignment6 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment6.show()
+
+        self.hbox26 = gtk.HBox(False, 0)
+        self.hbox26.show()
+        self.hbox26.set_spacing(2)
+
+        self.image6 = gtk.Image()
+        self.image6.set_from_stock(gtk.STOCK_REFRESH, 4)
+        self.image6.show()
+        self.hbox26.pack_start(self.image6, False, False, 0)
+
+        self.label35 = gtk.Label(_("Similar users"))
+        self.label35.show()
+        self.hbox26.pack_start(self.label35, False, False, 0)
+
+        self.alignment6.add(self.hbox26)
+
+        self.button19.add(self.alignment6)
+
+        self.hbox12.pack_end(self.button19, False, False, 0)
 
         self.interests.pack_start(self.hbox12, False, True, 0)
 
@@ -1420,10 +1420,10 @@ class MainWindow:
     def OnGlobalRecommendationsClicked(self, widget):
         pass
 
-    def OnSimilarUsersClicked(self, widget):
+    def OnRecommendationsClicked(self, widget):
         pass
 
-    def OnRecommendationsClicked(self, widget):
+    def OnSimilarUsersClicked(self, widget):
         pass
 
     def OnAddThingILike(self, widget):

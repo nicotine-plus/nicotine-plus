@@ -387,6 +387,8 @@ class NicotineFrame(MainWindow):
 			self.searchmethods[method] = self.SearchMethod_List.append([method])
 		self.SearchMethod.set_active_iter(self.searchmethods[_("Global")])
 		self.SearchMethod.connect("changed", self.OnSearchMethod)
+		self.UserSearchCombo.hide()
+		self.RoomSearchCombo.hide()
 		###
 		self.disconnect1.set_sensitive(0)
 		self.awayreturn1.set_sensitive(0)
@@ -474,13 +476,20 @@ class NicotineFrame(MainWindow):
 	def OnSearchMethod(self, widget):
 		act = False
 		if self.SearchMethod.get_active_text() == _("User"):
+			self.UserSearchCombo.show()
 			act = True
+		else:
+			self.UserSearchCombo.hide()
 		self.UserSearchCombo.set_sensitive(act)
 		act = False
 		if self.SearchMethod.get_active_text() == _("Rooms"):
 			act = True
+			self.RoomSearchCombo.show()
+		else:
+			self.RoomSearchCombo.hide()
 		self.RoomSearchCombo.set_sensitive(act)
-	
+		
+		
 	def Notification(self, location, user, room=None):
 		hilites = self.TrayApp.tray_status["hilites"]
 		if location == "rooms" and room != None and user != None:

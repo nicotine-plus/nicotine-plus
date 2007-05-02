@@ -27,18 +27,17 @@ class WishList( gtk.Dialog):
 		self.connect("delete-event", self.quit)
 		self.connect("delete_event", self.quit)
 		self.nicotine = frame
-		self.set_size_request(200, -1)
+		self.set_size_request(250, 250)
+		self.mainHbox = gtk.HBox(False, 5)
+		self.mainHbox.show()
 		
-		self.mainVbox = gtk.VBox(False, 5)
 		
-		self.mainVbox.show()
-		self.mainVbox.set_spacing(5)
 
-		self.WishLabel = gtk.Label(_("Wishlist"))
+		self.WishLabel = gtk.Label(_("Search Wishlist"))
 		self.WishLabel.set_padding(0, 0)
 		self.WishLabel.set_line_wrap(False)
 		self.WishLabel.show()
-		self.mainVbox.pack_start(self.WishLabel, False, False, 0)
+		self.vbox.pack_start(self.WishLabel, False, True, 0)
 
 		self.WishScrollWin = gtk.ScrolledWindow()
 		self.WishScrollWin.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
@@ -49,9 +48,13 @@ class WishList( gtk.Dialog):
 		self.WishlistView.show()
 		self.WishlistView.set_headers_visible(False)
 		self.WishScrollWin.add(self.WishlistView)
-
-		self.mainVbox.pack_start(self.WishScrollWin, True, True, 0)
-
+		
+		self.mainHbox.pack_start(self.WishScrollWin, True, True, 0)
+		self.mainVbox = gtk.VBox(False, 5)
+		self.mainHbox.pack_start(self.mainVbox, False, False)
+		self.mainVbox.show()
+		self.mainVbox.set_spacing(5)
+		
 		self.AddWishButton = self.nicotine.CreateIconButton(gtk.STOCK_REMOVE, "stock", self.OnAddWish, _("Add..."))
 		self.mainVbox.pack_start(self.AddWishButton, False, False, 0)
 
@@ -65,7 +68,7 @@ class WishList( gtk.Dialog):
 
 		self.mainVbox.pack_start(self.ClearWishesButton, False, False, 0)
 
-		self.vbox.pack_start(self.mainVbox, True, True, 0)
+		self.vbox.pack_start(self.mainHbox, True, True, 0)
 		
 
 		self.store = gtk.ListStore(gobject.TYPE_STRING)
@@ -73,6 +76,8 @@ class WishList( gtk.Dialog):
 		self.WishlistView.append_column(column)
 		self.WishlistView.set_model(self.store)
 		self.WishlistView.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
+		column.set_sort_column_id(0)
+		self.store.set_sort_column_id(0, gtk.SORT_ASCENDING)
 		self.wishes = {}
 		for wish in self.nicotine.np.config.sections["server"]["autosearch"]:
 			self.wishes[wish] = self.store.append([wish])
@@ -99,7 +104,7 @@ class WishList( gtk.Dialog):
 					if search[2] is not None:
 				
 						search[2].RememberCheckButton.set_active(False)
-				
+					break
 
 		
 	def addWish(self, wish):
@@ -112,8 +117,7 @@ class WishList( gtk.Dialog):
 		for iter in iters:
 			wish = self.store.get_value(iter, 0)
 			self.removeWish(wish)
-			#self.wishes.remove(wish)
-			#self.store.remove(iter)
+	
 
 	def OnClearWishes(self, widget):
 		self.wishes = {}
@@ -185,9 +189,8 @@ class Searches:
 			return True
 		
 		term = searches.pop()
-
 		searches.insert(0, term)
-		
+
 		for i in self.searches.values():
 			if i[1] == term and i[4]:
 				self.DoGlobalSearch(i[0], term)
