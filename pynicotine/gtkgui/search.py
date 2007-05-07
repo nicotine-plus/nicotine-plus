@@ -22,6 +22,7 @@ class WishList( gtk.Dialog):
 	def __init__(self, frame):
 		gtk.Dialog.__init__(self)
 		self.set_title(_("Nicotine+ Wishlist"))
+		self.set_icon(frame.images["n"])
 		self.connect("destroy", self.quit)
 		self.connect("destroy-event", self.quit)
 		self.connect("delete-event", self.quit)
@@ -55,7 +56,7 @@ class WishList( gtk.Dialog):
 		self.mainVbox.show()
 		self.mainVbox.set_spacing(5)
 		
-		self.AddWishButton = self.nicotine.CreateIconButton(gtk.STOCK_REMOVE, "stock", self.OnAddWish, _("Add..."))
+		self.AddWishButton = self.nicotine.CreateIconButton(gtk.STOCK_ADD, "stock", self.OnAddWish, _("Add..."))
 		self.mainVbox.pack_start(self.AddWishButton, False, False, 0)
 
 
