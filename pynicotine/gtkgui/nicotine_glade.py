@@ -2156,10 +2156,16 @@ class UserInfoTab:
         self.viewport2.show()
         self.viewport2.set_shadow_type(gtk.SHADOW_NONE)
 
+        self.eventbox1 = gtk.EventBox()
+        self.eventbox1.show()
+        self.eventbox1.connect("scroll_event", self.OnScrollEvent)
+
         self.image = gtk.Image()
         self.image.set_from_stock(gtk.STOCK_MISSING_IMAGE, 4)
         self.image.show()
-        self.viewport2.add(self.image)
+        self.eventbox1.add(self.image)
+
+        self.viewport2.add(self.eventbox1)
 
         self.scrolledwindow19.add(self.viewport2)
 
@@ -2419,6 +2425,9 @@ class UserInfoTab:
             self.UserInfoTab.add(self.Main)
 
     def OnEncodingChanged(self, widget):
+        pass
+
+    def OnScrollEvent(self, widget):
         pass
 
     def OnSendMessage(self, widget):

@@ -467,6 +467,7 @@ classes = {
 	"GtkImage": [write_widget_generic, "Image"],
 	"GtkVSeparator": [write_widget_generic, "VSeparator"],
 	"GtkHButtonBox": [write_widget_container, "HButtonBox", PM_PACK],
+	"GtkEventBox" : [write_widget_container, "EventBox", PM_ADD],
 	"GtkAlignment": [write_widget_container, "Alignment", PM_ADD, "@xalign", "@yalign", "@xscale", "@yscale"],
 	"Custom": [write_widget_custom],
 }

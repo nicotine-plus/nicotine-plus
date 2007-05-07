@@ -88,6 +88,9 @@ class UserInfo(UserInfoTab):
 		self.user = user
 		self.conn = conn
 		self._descr = ""
+		self.image_pixbuf = None
+		self.zoom_factor = 5
+		self.actual_zoom = 0
 		
 		self.hatesStore = gtk.ListStore(gobject.TYPE_STRING)
 		self.Hates.set_model(self.hatesStore)
@@ -201,10 +204,12 @@ class UserInfo(UserInfoTab):
 				loader = gtk.gdk.PixbufLoader()
 				loader.write(pic)
 				loader.close()
-				self.image.set_from_pixbuf(loader.get_pixbuf())
+				self.image_pixbuf = loader.get_pixbuf()
+				self.image.set_from_pixbuf(self.image_pixbuf)
 				del pic, loader
 				gc.collect()
-
+				self.actual_zoom = 0
+				
 			except TypeError, e:
 				name = tempfile.mktemp()
 				f = open(name,"w")
@@ -259,9 +264,9 @@ class UserInfo(UserInfoTab):
 	def OnSavePicture(self, widget):
 		if self.image is None:
 			return
-		pixbuf = self.image.get_pixbuf()
+		#pixbuf = self.image.get_pixbuf()
 		name = os.path.join(self.frame.np.config.sections["transfers"]["downloaddir"],self.encode(self.user)) + ".jpg"
-		pixbuf.save(name, "jpeg", {"quality": "100"})
+		self.image_pixbuf.save(name, "jpeg", {"quality": "100"})
 		self.frame.logMessage("Picture saved to " + name)
 		
 	def encode(self, path):
@@ -288,3 +293,59 @@ class UserInfo(UserInfoTab):
 			buffer = self.descr.get_buffer()
 			buffer.set_text(self.frame.np.decode(self._descr, self.encoding))
 			SaveEncoding(self.frame.np, "userencoding", self.user, self.encoding)
+			
+	def OnScrollEvent(self, widget, event):
+		if event.direction == gtk.gdk.SCROLL_UP:
+			self.MakeZoomIn()
+		else:
+			self.MakeZoomOut()
+
+		return True # Don't scroll the gtk.ScrolledWindow
+
+	def MakeZoomIn(self):
+		def CalcZoomIn(a):
+			return a + a * self.actual_zoom / 100 + a * self.zoom_factor / 100
+
+		import gc
+
+		if self.image is None or self.actual_zoom > 100:
+			return
+
+		x = self.image_pixbuf.get_width()
+		y = self.image_pixbuf.get_height()
+
+		self.actual_zoom += self.zoom_factor
+
+		pixbuf_zoomed = self.image_pixbuf.scale_simple(CalcZoomIn(x),
+							       CalcZoomIn(y),
+							       gtk.gdk.INTERP_TILES)
+		self.image.set_from_pixbuf(pixbuf_zoomed)
+
+		del pixbuf_zoomed
+		gc.collect()
+
+	def MakeZoomOut(self):
+		def CalcZoomOut(a):
+			return a + a * self.actual_zoom / 100 - a * self.zoom_factor / 100
+
+		import gc
+
+		if self.image is None:
+			return
+
+		x = self.image_pixbuf.get_width()
+		y = self.image_pixbuf.get_height()
+
+		self.actual_zoom -= self.zoom_factor
+
+		if CalcZoomOut(x) < 10 or CalcZoomOut(y) < 10:
+			self.actual_zoom += self.zoom_factor
+			return
+
+		pixbuf_zoomed = self.image_pixbuf.scale_simple(CalcZoomOut(x),
+							       CalcZoomOut(y),
+							       gtk.gdk.INTERP_TILES)
+		self.image.set_from_pixbuf(pixbuf_zoomed)
+
+		del pixbuf_zoomed
+		gc.collect()

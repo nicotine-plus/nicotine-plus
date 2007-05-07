@@ -18,10 +18,14 @@ GENERAL CHANGES
  * Changed the URL Catcher's syntax. The ampersand "&" is no longer needed
    at the end of URL Handlers. The handler entry is now a combobox and
    includes a bunch of webbrowser commands.
+
 SEARCH
  * Added Wishlist and changed remembered search tabs to only display
    when new search results arrive
- 
+
+USERINFO
+ * gallows added userinfo image zooming via the scrollwheel (ticket #190)
+
 SETTINGS
  * Changed Audio Player Syntax it now uses "$" as the filename
  * Exit dialog can be disabled in Settings->UI

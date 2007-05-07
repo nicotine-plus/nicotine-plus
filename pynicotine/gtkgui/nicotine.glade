@@ -3294,12 +3294,20 @@
                       <widget class="GtkViewport" id="viewport2">
                         <property name="visible">True</property>
                         <property name="shadow_type">GTK_SHADOW_NONE</property>
+			<child>
+			<widget class="GtkEventBox" id="eventbox1">
+			  <property name="visible">True</property>
+			  <property name="visible_window">True</property>
+			  <property name="above_child">False</property>
+			  <signal name="scroll_event" handler="OnScrollEvent" last_modification_time="Sun, 06 May 2007 21:07:31 GMT"/>
                         <child>
                           <widget class="GtkImage" id="image">
                             <property name="visible">True</property>
                             <property name="stock">gtk-missing-image</property>
                           </widget>
                         </child>
+                      </widget>
+		      </child>
                       </widget>
                     </child>
                   </widget>
