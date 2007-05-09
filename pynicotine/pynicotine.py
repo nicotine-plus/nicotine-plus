@@ -1071,10 +1071,10 @@ class NetworkEventProcessor:
 		if not username:
 			return
 		if not checkuser:
-			self.queue.put(slskmessages.MessageUser(username, _("[Automatic Message] ")+reason) )
+			self.queue.put(slskmessages.MessageUser(username, "[Automatic Message] "+reason) )
 			return
 		else:
-			self.queue.put(slskmessages.MessageUser(username, _("Please try browsing me if you get 'File not shared' errors. This is an automatic message, you don't have to reply to it.") ) )
+			self.queue.put(slskmessages.MessageUser(username, "Please try browsing me if you get 'File not shared' errors. This is an automatic message, you don't have to reply to it." ) )
 			
 		if checkuser == 1:
 			shares = self.config.sections["transfers"]["sharedfiles"]
