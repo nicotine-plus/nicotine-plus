@@ -263,7 +263,9 @@ class Searches:
 		for i in templist:
 			self.frame.combo1.append_text(i)
 			
-		self.CreateTab(self.searchid, text, mode)
+		search = self.CreateTab(self.searchid, text, mode)
+		if search[2] is not None:
+			self.frame.SearchNotebook.set_current_page(self.frame.SearchNotebook.page_num(search[2].vbox7))
 		text = self.frame.np.encode(text)
 		if mode == 0:
 			self.DoGlobalSearch(self.searchid, text)
