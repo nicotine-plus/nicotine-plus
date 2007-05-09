@@ -19,12 +19,16 @@ GENERAL CHANGES
    at the end of URL Handlers. The handler entry is now a combobox and
    includes a bunch of webbrowser commands.
 
+PRIVATE CHAT
+ * Added gallows' patch for including your username in the private chat log.
+   (ticket #161)
 SEARCH
  * Added Wishlist and changed remembered search tabs to only display
    when new search results arrive
+ * Switch to newly started search tab
 
 USERINFO
- * gallows added userinfo image zooming via the scrollwheel (ticket #190)
+ * gallows added userinfo image zooming via the scrollwheel (ticket #160)
 
 SETTINGS
  * Changed Audio Player Syntax it now uses "$" as the filename

@@ -177,7 +177,8 @@ class PrivateChat(PrivateChatTab):
 			f.close()
 			s = d.split("\n")
 			for l in s[-8:-1]:
-				AppendLine(self.ChatScroll, l + "\n", self.tag_hilite, "", username=self.user, usertag=self.tag_username)
+				AppendLine(self.ChatScroll, l + "\n", self.tag_hilite, "", username=self.user, usertag=self.tag_hilite)
+				
 		except IOError, e:
 			pass
 
@@ -189,11 +190,11 @@ class PrivateChat(PrivateChatTab):
 		
 	def Login(self):
 		AppendLine(self.ChatScroll, _("--- reconnected ---"), self.tag_hilite, "%c")
-		
+		self.ChangeColours()
 	def ConnClose(self):
 		AppendLine(self.ChatScroll, _("--- disconnected ---"), self.tag_hilite, "%c")
 		self.offlinemessage = 0
-		
+		self.ChangeColours()
 	def OnPopupMenu(self, widget, event):
 		if event.button != 3:
 			return
@@ -237,7 +238,7 @@ class PrivateChat(PrivateChatTab):
 			line = "[%s] %s" % (self.user, text)
 			tag = self.tag_remote
 		line = self.frame.np.decode(line, self.encoding)
-		AppendLine(self.ChatScroll, line, tag, "%c", username=self.user, usertag=self.tag_username)
+		AppendLine(self.ChatScroll, line, tag, "%c", username=self.user, usertag=self.tag_my_username)
 		if self.Log.get_active():
 			self.logfile = WriteLog(self.logfile, self.frame.np.config.sections["logging"]["logsdir"], self.user, line)
 		
@@ -251,10 +252,11 @@ class PrivateChat(PrivateChatTab):
 			
 
 	def SendMessage(self, text):
-
+		my_username = self.frame.np.config.sections["server"]["login"]
 		if text[:4] == "/me ":
-			line = "* %s %s" % (self.frame.np.config.sections["server"]["login"], text[4:])
-			tag = self.tag_me
+			line = "* %s %s" % (my_username, text[4:])
+			usertag = tag = self.tag_me
+			message = self.frame.np.decode(line, self.encoding)
 		else:
 			
 			if text == "\x01VERSION\x01":
@@ -262,18 +264,21 @@ class PrivateChat(PrivateChatTab):
 			else:
 				line = text
 			tag = self.tag_local
-			
-		AppendLine(self.ChatScroll, self.frame.np.decode(line, self.encoding), tag, "%c", username=self.user, usertag=self.tag_username)
+			usertag = self.tag_my_username
+			message = "[" + my_username + "] " + self.frame.np.decode(line, self.encoding)
+		
+		AppendLine(self.ChatScroll, message, tag, "%c", username=my_username, usertag=usertag)
 		if self.Log.get_active():
-			self.logfile = WriteLog(self.logfile, self.frame.np.config.sections["logging"]["logsdir"], self.user, line)
+			self.logfile = WriteLog(self.logfile, self.frame.np.config.sections["logging"]["logsdir"], self.user, message)
 		
 		if self.PeerPrivateMessages.get_active():
 			# not in the soulseek protocol
-			self.frame.np.ProcessRequestToPeer(self.user, slskmessages.PMessageUser(None,self.frame.np.config.sections["server"]["login"], text))
+			self.frame.np.ProcessRequestToPeer(self.user, slskmessages.PMessageUser(None, my_username, text))
 		else:
 			self.frame.np.queue.put(slskmessages.MessageUser(self.user, text))
+			
 	CMDS = ["/alias ", "/unalias ", "/whois ", "/browse ", "/ip ", "/pm ", "/msg ", "/search ", "/usearch ", "/rsearch ",
-		"/bsearch ", "/add ", "/buddy ", "/rem ", "/unbuddy ", "/ban ", "/ignore ", "/unban ", "/unignore ", "/clear", "/quit", "/rescan", "/nsa", "/info", "/ctcpversion"]
+		"/bsearch ", "/add ", "/buddy ", "/rem ", "/unbuddy ", "/ban ", "/ignore ", "/unban ", "/unignore ", "/clear", "/quit", "/rescan", "/nsa", "/info", "/ctcpversion", "/join"]
 
 	def OnEnter(self, widget):
 		text = self.frame.np.encode(widget.get_text(), self.encoding)
@@ -296,6 +301,8 @@ class PrivateChat(PrivateChatTab):
 			AppendLine(self.ChatScroll, self.frame.np.config.AddAlias(realargs), None, "")
 		elif cmd in ("/unalias", "/un"):
 			AppendLine(self.ChatScroll, self.frame.np.config.Unalias(realargs), None, "")
+		elif cmd in ["/join", "/j"]:
+			self.frame.np.queue.put(slskmessages.JoinRoom(args))
 		elif cmd in ["/w", "/whois", "/info"]:
 			if args:
 				self.frame.LocalUserInfoRequest(args)
@@ -415,21 +422,33 @@ class PrivateChat(PrivateChatTab):
 			statuscolor = "useronline"
 		else:
 			statuscolor = "useroffline"
-	
+		if self.chats.connected:
+			if self.frame.away:
+				self.tag_my_username = self.makecolour(buffer, "useraway")
+			else:
+				self.tag_my_username = self.makecolour(buffer, "useronline")
+		else:
+			self.tag_my_username = self.makecolour(buffer, "useroffline")
 		self.tag_username = self.makecolour(buffer, statuscolor)
 		usernamestyle = self.frame.np.config.sections["ui"]["usernamestyle"]
 		if usernamestyle == "bold":
 			self.tag_username.set_property("weight",  pango.WEIGHT_BOLD)
+			self.tag_my_username.set_property("weight",  pango.WEIGHT_BOLD)
 		else:
 			self.tag_username.set_property("weight",  pango.WEIGHT_NORMAL)
+			self.tag_my_username.set_property("weight",  pango.WEIGHT_NORMAL)
 		if usernamestyle == "italic":
 			self.tag_username.set_property("style",  pango.STYLE_ITALIC)
+			self.tag_my_username.set_property("style",  pango.STYLE_ITALIC)
 		else:
 			self.tag_username.set_property("style",  pango.STYLE_NORMAL)
+			self.tag_my_username.set_property("style",  pango.STYLE_NORMAL)
 		if usernamestyle == "underline":
 			self.tag_username.set_property("underline", pango.UNDERLINE_SINGLE)
+			self.tag_my_username.set_property("underline", pango.UNDERLINE_SINGLE)
 		else:
 			self.tag_username.set_property("underline", pango.UNDERLINE_NONE)
+			self.tag_my_username.set_property("underline", pango.UNDERLINE_NONE)
 		self.frame.SetTextBG(self.ChatScroll)
 		self.frame.SetTextBG(self.ChatLine)
 		
@@ -475,6 +494,13 @@ class PrivateChat(PrivateChatTab):
 		self.frame.SetTextBG(self.ChatScroll)
 		self.frame.SetTextBG(self.ChatLine)
 		
+		if self.chats.connected:
+			if self.frame.away:
+				self.changecolour(self.tag_my_username, "useraway")
+			else:
+				self.changecolour(self.tag_my_username, "useronline")
+		else:
+			self.changecolour(self.tag_my_username, "useroffline")
 	def getUserStatusColor(self, status):
 		if status == 1:
 			color = "useraway"

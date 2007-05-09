@@ -1071,6 +1071,7 @@ class NicotineFrame(MainWindow):
 			self.TrayApp.tray_status["status"] = "away2"
 			self.TrayApp.SetImage()
 		self.np.queue.put(slskmessages.SetStatus(self.away and 1 or 2))
+		self.privatechats.UpdateColours()
 
 		
 	def OnExit(self, widget):
