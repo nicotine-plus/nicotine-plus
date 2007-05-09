@@ -67,7 +67,17 @@ class Downloads(TransferList):
 		self.frame.ToggleTreeDownloads.set_active(self.frame.np.config.sections["transfers"]["groupdownloads"])
 		frame.ToggleTreeDownloads.connect("toggled", self.OnToggleTree)
 		self.OnToggleTree(None)
+		self.frame.ExpandDownloads.set_active(True)
+		frame.ExpandDownloads.connect("toggled", self.OnExpandDownloads)
+		self.expanded = False
+		
+	def OnExpandDownloads(self, widget):
 
+		if self.frame.ExpandDownloads.get_active():
+			self.frame.DownloadList.expand_all()
+		else:
+			self.frame.DownloadList.collapse_all()
+		
 	def OnToggleTree(self, widget):
 		self.TreeUsers = self.frame.ToggleTreeDownloads.get_active()
 		self.frame.np.config.sections["transfers"]["groupdownloads"] = self.TreeUsers

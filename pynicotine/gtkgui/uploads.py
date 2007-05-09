@@ -59,7 +59,17 @@ class Uploads(TransferList):
 		self.frame.ToggleTreeUploads.set_active(self.frame.np.config.sections["transfers"]["groupuploads"])
 		frame.ToggleTreeUploads.connect("toggled", self.OnToggleTree)
 		self.OnToggleTree(None)
+		self.frame.ExpandUploads.set_active(True)
+		frame.ExpandUploads.connect("toggled", self.OnExpandUploads)
+		self.expanded = False
+		
+	def OnExpandUploads(self, widget):
 
+		if self.frame.ExpandUploads.get_active():
+			self.frame.UploadList.expand_all()
+		else:
+			self.frame.UploadList.collapse_all()
+			
 	def OnToggleTree(self, widget):
 		self.TreeUsers = self.frame.ToggleTreeUploads.get_active()
 		self.frame.np.config.sections["transfers"]["groupuploads"] = self.TreeUsers

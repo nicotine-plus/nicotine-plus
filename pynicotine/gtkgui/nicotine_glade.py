@@ -432,13 +432,19 @@ class MainWindow:
 
         self.hbox3 = gtk.HBox(False, 0)
         self.hbox3.show()
+        self.hbox3.set_spacing(5)
 
         self.ToggleTreeDownloads = gtk.CheckButton()
         self.ToggleTreeDownloads.set_label(_("Group by Users"))
         self.ToggleTreeDownloads.show()
         self.hbox3.pack_end(self.ToggleTreeDownloads, False, False, 0)
 
-        self.vboxdownloads.pack_start(self.hbox3, False, False, 0)
+        self.ExpandDownloads = gtk.ToggleButton()
+        self.ExpandDownloads.set_label(_("Expand / Collapse all"))
+        self.ExpandDownloads.show()
+        self.hbox3.pack_end(self.ExpandDownloads, False, True, 0)
+
+        self.vboxdownloads.pack_start(self.hbox3, False, False, 2)
 
         self.scrolledwindow29 = gtk.ScrolledWindow()
         self.scrolledwindow29.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
@@ -613,13 +619,19 @@ class MainWindow:
 
         self.hbox13 = gtk.HBox(False, 0)
         self.hbox13.show()
+        self.hbox13.set_spacing(5)
 
         self.ToggleTreeUploads = gtk.CheckButton()
         self.ToggleTreeUploads.set_label(_("Group by Users"))
         self.ToggleTreeUploads.show()
         self.hbox13.pack_end(self.ToggleTreeUploads, False, False, 0)
 
-        self.vboxuploads.pack_start(self.hbox13, False, False, 0)
+        self.ExpandUploads = gtk.ToggleButton()
+        self.ExpandUploads.set_label(_("Expand / Collapse all"))
+        self.ExpandUploads.show()
+        self.hbox13.pack_end(self.ExpandUploads, False, True, 0)
+
+        self.vboxuploads.pack_start(self.hbox13, False, False, 2)
 
         self.scrolledwindow30 = gtk.ScrolledWindow()
         self.scrolledwindow30.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)

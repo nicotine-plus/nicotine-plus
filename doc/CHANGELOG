@@ -3,29 +3,35 @@ ChangeLog for Nicotine Plus
 UNRELEASED
 
 GENERAL CHANGES
- * Added a "Group by users" toggle to transfers
+
  * Other users Interests are now shown in the User Info tab, with expanders
  * Send Message added to trayicon
  * Popup Menus in Private, Chatrooms, and User Browse reorganized
- * Search now has combo boxes, per-room searching and per-user searching.
  * The user-entry boxes are now buddy-list combobox entries
  * Users with PyGTK >= 2.10 will use the gtk.StatusIcon instead of
    the old trayicon.so module.
  * Added a filemanager popup item to the self-browse menu; configurable
    under Settings->Advanced->Events
  * Gstreamer-Python support for sound effects added
- * Added testing Soulseek server (port 2242) to the server combobox.
+ * Added Soulseek testing server (port 2242) to the server combobox.
  * Changed the URL Catcher's syntax. The ampersand "&" is no longer needed
    at the end of URL Handlers. The handler entry is now a combobox and
    includes a bunch of webbrowser commands.
 
+TRANSFERS
+ * Added a "Group by users" check box
+ * Added Expand/Collapse all toggle button to transfers
+ 
 PRIVATE CHAT
  * Added gallows' patch for including your username in the private chat log.
    (ticket #161)
+ * Direct private messages (currently only supported by Nicotine+ >= 1.2.7.1)
+
 SEARCH
+ * Search now has combo boxes, per-room searching and per-user searching.
  * Added Wishlist and changed remembered search tabs to only display
    when new search results arrive
- * Switch to newly started search tab
+ * Switch to newly started search tab (ticket #157)
 
 USERINFO
  * gallows added userinfo image zooming via the scrollwheel (ticket #160)
