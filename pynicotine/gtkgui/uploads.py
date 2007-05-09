@@ -74,7 +74,11 @@ class Uploads(TransferList):
 		self.TreeUsers = self.frame.ToggleTreeUploads.get_active()
 		self.frame.np.config.sections["transfers"]["groupuploads"] = self.TreeUsers
 		self.RebuildTransfers()
-		
+		if not self.TreeUsers:
+			self.frame.ExpandUploads.hide()
+		else:
+			self.frame.ExpandUploads.show()
+			
 	def RebuildTransfers(self):
 		if self.frame.np.transfers is None:
 			return

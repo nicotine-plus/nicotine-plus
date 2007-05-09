@@ -81,6 +81,10 @@ class Downloads(TransferList):
 	def OnToggleTree(self, widget):
 		self.TreeUsers = self.frame.ToggleTreeDownloads.get_active()
 		self.frame.np.config.sections["transfers"]["groupdownloads"] = self.TreeUsers
+		if not self.TreeUsers:
+			self.frame.ExpandDownloads.hide()
+		else:
+			self.frame.ExpandDownloads.show()
 		self.RebuildTransfers()
 
 	def MetaBox(self, title="Meta Data", message="", data=None, modal= True, Search=False):
