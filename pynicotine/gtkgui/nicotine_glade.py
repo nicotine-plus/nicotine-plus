@@ -377,7 +377,7 @@ class MainWindow:
         self.vpaned3 = gtk.VPaned()
         self.vpaned3.show()
 
-        self.hpaned1.pack2(self.vpaned3, True, True)
+        self.hpaned1.pack2(self.vpaned3, False, True)
 
         self.ChatTabLabel = self.get_custom_widget("ChatTabLabel", _("ImageLabel"), _("Chat rooms"), 0, 0)
         self.ChatTabLabel.show()
@@ -1048,32 +1048,6 @@ class MainWindow:
 
         self.hbox12.pack_end(self.button17, False, False, 0)
 
-        self.button18 = gtk.Button()
-        self.button18.show()
-        self.button18.connect("clicked", self.OnRecommendationsClicked)
-
-        self.alignment5 = gtk.Alignment(0.5, 0.5, 0, 0)
-        self.alignment5.show()
-
-        self.hbox25 = gtk.HBox(False, 0)
-        self.hbox25.show()
-        self.hbox25.set_spacing(2)
-
-        self.image5 = gtk.Image()
-        self.image5.set_from_stock(gtk.STOCK_REFRESH, 4)
-        self.image5.show()
-        self.hbox25.pack_start(self.image5, False, False, 0)
-
-        self.label34 = gtk.Label(_("Recommendations"))
-        self.label34.show()
-        self.hbox25.pack_start(self.label34, False, False, 0)
-
-        self.alignment5.add(self.hbox25)
-
-        self.button18.add(self.alignment5)
-
-        self.hbox12.pack_end(self.button18, False, False, 0)
-
         self.button19 = gtk.Button()
         self.button19.show()
         self.button19.connect("clicked", self.OnSimilarUsersClicked)
@@ -1099,6 +1073,32 @@ class MainWindow:
         self.button19.add(self.alignment6)
 
         self.hbox12.pack_end(self.button19, False, False, 0)
+
+        self.button18 = gtk.Button()
+        self.button18.show()
+        self.button18.connect("clicked", self.OnRecommendationsClicked)
+
+        self.alignment5 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment5.show()
+
+        self.hbox25 = gtk.HBox(False, 0)
+        self.hbox25.show()
+        self.hbox25.set_spacing(2)
+
+        self.image5 = gtk.Image()
+        self.image5.set_from_stock(gtk.STOCK_REFRESH, 4)
+        self.image5.show()
+        self.hbox25.pack_start(self.image5, False, False, 0)
+
+        self.label34 = gtk.Label(_("Recommendations"))
+        self.label34.show()
+        self.hbox25.pack_start(self.label34, False, False, 0)
+
+        self.alignment5.add(self.hbox25)
+
+        self.button18.add(self.alignment5)
+
+        self.hbox12.pack_end(self.button18, False, False, 0)
 
         self.interests.pack_start(self.hbox12, False, True, 0)
 
@@ -1420,10 +1420,10 @@ class MainWindow:
     def OnGlobalRecommendationsClicked(self, widget):
         pass
 
-    def OnRecommendationsClicked(self, widget):
+    def OnSimilarUsersClicked(self, widget):
         pass
 
-    def OnSimilarUsersClicked(self, widget):
+    def OnRecommendationsClicked(self, widget):
         pass
 
     def OnAddThingILike(self, widget):

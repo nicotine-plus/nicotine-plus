@@ -240,6 +240,8 @@ class AboutPrivateDialog(GenericTableDialog):
 	        "/bsearch /bs '" + _("query")+"'", _("Search the buddy list for 'query'"),
 	        "/usearch /us '" + _("query")+"'", _("Search a user's shares for 'query'"),
 	        "", "",
+		"/join /j '" + _("room")+"'", _("Join room 'room'"),
+		"", "",
 	        "/rescan", _("Rescan shares"),
 	        "/away /a", _("Toggles your away status"),
 	        "/quit /q", _("Quit Nicotine"),
