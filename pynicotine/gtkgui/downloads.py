@@ -44,6 +44,7 @@ class Downloads(TransferList):
 			("#" + _("Copy folder URL"), self.OnCopyDirURL, gtk.STOCK_COPY),
 			("#" + _("Send to _player"), self.OnPlayFiles, gtk.STOCK_MEDIA_PLAY),
 			("#" + _("View Metadata of file(s)"), self.OnDownloadMeta, gtk.STOCK_PROPERTIES),
+			("#" + _("Open Directory"), self.OnOpenDirectory, gtk.STOCK_OPEN),
 			(1, _("User"), self.popup_menu_users, self.OnPopupMenuUsers),
 			("", None),
 			("#" + _("_Retry"), self.OnRetryTransfer, gtk.STOCK_REDO),
@@ -114,6 +115,37 @@ class Downloads(TransferList):
 		if data != {}:	
 			self.MetaBox(title=_("Nicotine+:")+" "+_("Downloads Metadata"), message=_("<b>Metadata</b> for Downloads"), data=data, modal=True, Search=False)
 			
+	def OnOpenDirectory(self, widget):
+
+		downloaddir =  self.frame.np.config.sections["transfers"]["downloaddir"]
+		incompletedir = self.frame.np.config.sections["transfers"]["incompletedir"]
+		if incompletedir == "":
+			incompletedir = downloaddir
+		filemanager_config = self.frame.np.config.sections["ui"]["filemanager"]
+		transfer = self.selected_transfers[0]
+
+		filemanager = filemanager_config.split()[0]
+		filemanager_args = filemanager_config.split(filemanager)[1]
+                arg = filemanager_args.split('$')[0].strip()
+		complete_path = os.path.join(downloaddir, transfer.path)
+		arg_list = []
+		arg_list.append(filemanager)
+
+		for i in arg.split():
+			arg_list.append(i)
+
+		if transfer.path is "":
+			if transfer.status is "Finished":
+				arg_list.append(downloaddir)
+			else:
+				arg_list.append(incompletedir)
+		elif os.path.exists(complete_path): # and tranfer.status is "Finished"
+			arg_list.append(complete_path)
+		else:
+			arg_list.append(incompletedir)
+
+		os.spawnvp(os.P_WAIT, filemanager, arg_list)
+	
 	def RebuildTransfers(self):
 		if self.frame.np.transfers is None:
 			return
