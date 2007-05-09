@@ -21,6 +21,7 @@ GENERAL CHANGES
 TRANSFERS
  * Added a "Group by users" check box
  * Added Expand/Collapse all toggle button to transfers
+ * Added a popup dialog to the "Clear Queued" transfers buttons
  
 PRIVATE CHAT
  * Added gallows' patch for including your username in the private chat log.

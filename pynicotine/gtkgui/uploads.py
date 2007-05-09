@@ -7,6 +7,7 @@ from utils import PopupMenu
 import string, os
 from pynicotine.utils import _
 from pynicotine import slskmessages
+from entrydialog import OptionDialog
 
 class Uploads(TransferList):
 	def __init__(self, frame):
@@ -51,7 +52,7 @@ class Uploads(TransferList):
 		frame.UploadList.connect("button_press_event", self.OnPopupMenu, "mouse")
 		frame.UploadList.connect("key-press-event", self.on_key_press_event)
 		frame.clearUploadFinishedAbortedButton.connect("clicked", self.OnClearFinishedAborted)
-		frame.clearUploadQueueButton.connect("clicked", self.OnClearQueued)
+		frame.clearUploadQueueButton.connect("clicked", self.OnTryClearQueued)
 		frame.abortUploadButton.connect("clicked", self.OnAbortTransfer)
 		frame.abortUserUploadButton.connect("clicked", self.OnAbortUser)
 		frame.banUploadButton.connect("clicked", self.OnBan)
@@ -62,6 +63,14 @@ class Uploads(TransferList):
 		self.frame.ExpandUploads.set_active(True)
 		frame.ExpandUploads.connect("toggled", self.OnExpandUploads)
 		self.expanded = False
+		
+	def OnTryClearQueued(self, widget):
+		direction="up"
+		win = OptionDialog(self.frame, _("Clear All Queued Uploads?"), modal=True, status=None, option=False, third="")
+		win.connect("response", self.frame.on_clear_response, direction)
+		win.set_title(_("Nicotine+")+": "+_("Clear Queued Transfers"))
+		win.set_icon( self.frame.images["n"])
+		win.show()
 		
 	def OnExpandUploads(self, widget):
 

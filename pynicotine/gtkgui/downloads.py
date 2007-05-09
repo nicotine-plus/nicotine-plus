@@ -58,7 +58,7 @@ class Downloads(TransferList):
 		frame.DownloadList.connect("button_press_event", self.OnPopupMenu, "mouse")
 		frame.DownloadList.connect("key-press-event", self.on_key_press_event)
 		frame.clearFinishedAbortedButton.connect("clicked", self.OnClearFinishedAborted)
-		frame.clearQueuedButton.connect("clicked", self.OnClearQueued)
+		frame.clearQueuedButton.connect("clicked", self.OnTryClearQueued)
 		frame.retryTransferButton.connect("clicked", self.OnRetryTransfer)
 		frame.abortTransferButton.connect("clicked", self.OnSelectAbortTransfer)
 		frame.deleteTransferButton.connect("clicked", self.OnAbortRemoveTransfer)
@@ -70,6 +70,14 @@ class Downloads(TransferList):
 		self.frame.ExpandDownloads.set_active(True)
 		frame.ExpandDownloads.connect("toggled", self.OnExpandDownloads)
 		self.expanded = False
+		
+	def OnTryClearQueued(self, widget):
+		direction="down"
+		win = OptionDialog(self.frame, _("Clear All Queued Downloads?"), modal=True, status=None, option=False, third="")
+		win.connect("response", self.frame.on_clear_response, direction)
+		win.set_title(_("Nicotine+")+": "+_("Clear Queued Transfers"))
+		win.set_icon( self.frame.images["n"])
+		win.show()
 		
 	def OnExpandDownloads(self, widget):
 

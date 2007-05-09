@@ -613,7 +613,15 @@ class NicotineFrame(MainWindow):
 				self.MainWindow.unmap()
 				self.is_mapped = 0
 
-	
+	def on_clear_response(self, dialog, response, direction):
+		dialog.destroy()
+		
+		if response == gtk.RESPONSE_OK:
+			if direction == "down":
+				self.downloads.ClearTransfers(["Queued"])
+			elif direction == "up":
+				self.uploads.ClearTransfers(["Queued"])
+
 			
 	def OnGetUserInfo(self, widget):
 		text = self.UserInfoCombo.child.get_text()
