@@ -22,7 +22,7 @@ class UserList:
 			[_("Trusted"), 0, "toggle"],
 			[_("Notify"), 0, "toggle"],
 			[_("Privileged"), 0, "toggle"],
-			[_("Last seen"), 256, "text", self.CellDataFunc],
+			[_("Last seen"), 160, "text", self.CellDataFunc],
 			[_("Comments"), -1, "edit", self.CellDataFunc],
 		)
 		cols[0].set_sort_column_id(9)
