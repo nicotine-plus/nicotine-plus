@@ -13,38 +13,55 @@ class UserList:
 		self.frame = frame
 		self.userlist = []
 		
-		self.usersmodel = gtk.ListStore(gtk.gdk.Pixbuf, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_BOOLEAN, gobject.TYPE_STRING, gobject.TYPE_INT, gobject.TYPE_INT, gobject.TYPE_INT)
+		self.usersmodel = gtk.ListStore(gtk.gdk.Pixbuf, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_BOOLEAN, gobject.TYPE_BOOLEAN, gobject.TYPE_BOOLEAN, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_INT, gobject.TYPE_INT, gobject.TYPE_INT)
 		cols = InitialiseColumns(self.frame.UserList,
 			["", 20, "pixbuf"],
-			[_("User"), 100, "text", self.CellDataFunc],
+			[_("User"), 120, "text", self.CellDataFunc],
 			[_("Speed"), 0, "text", self.CellDataFunc],
 			[_("Files"), 0, "text", self.CellDataFunc],
 			[_("Trusted"), 0, "toggle"],
+			[_("Notify"), 0, "toggle"],
+			[_("Privileged"), 0, "toggle"],
+			[_("Last seen"), 256, "text", self.CellDataFunc],
 			[_("Comments"), -1, "edit", self.CellDataFunc],
 		)
-		cols[0].set_sort_column_id(6)
+		cols[0].set_sort_column_id(9)
 		cols[1].set_sort_column_id(1)
-		cols[2].set_sort_column_id(7)
-		cols[3].set_sort_column_id(8)
+		cols[2].set_sort_column_id(10)
+		cols[3].set_sort_column_id(11)
 		cols[4].set_sort_column_id(4)
 		cols[5].set_sort_column_id(5)
-		renderers = cols[4].get_cell_renderers()
-		for render in renderers:
+		cols[6].set_sort_column_id(6)
+		cols[7].set_sort_column_id(7)
+		cols[8].set_sort_column_id(8)
+		for render in cols[4].get_cell_renderers():
 			render.connect('toggled', self.cell_toggle_callback, self.frame.UserList, 4)
-		renderers = cols[5].get_cell_renderers()
+		for render in cols[5].get_cell_renderers():
+			render.connect('toggled', self.cell_toggle_callback, self.frame.UserList, 5)
+		for render in cols[6].get_cell_renderers():
+			render.connect('toggled', self.cell_toggle_callback, self.frame.UserList, 6)
+		renderers = cols[8].get_cell_renderers()
 		for render in renderers:
-			render.connect('edited', self.cell_edited_callback, self.frame.UserList, 5)
+			render.connect('edited', self.cell_edited_callback, self.frame.UserList, 8)
 		self.frame.UserList.set_model(self.usersmodel)
 		self.frame.UserList.set_property("rules-hint", True)
 		self.privileged = []
 		self.notify = []
 		self.trusted = []
 		for user in self.frame.np.config.sections["server"]["userlist"]:
+			notify = user[2]
+			privileged = user[3]
 			if len(user) > 4:
 				trusted = user[4]
 			else:
-				trusted = 0
-			row = [self.frame.GetStatusImage(0), user[0], "0", "0", trusted, user[1], 0, 0, 0]
+				trusted = 0;
+
+			if len(user) > 5:
+				last_seen = user[5]
+			else:
+				last_seen = _("Never seen")
+
+			row = [self.frame.GetStatusImage(0), user[0], "0", "0", trusted, notify, privileged, last_seen, user[1], 0, 0, 0]
 			if len(user) > 2:
 				if user[2]:
 					self.notify.append(user[0])
@@ -52,8 +69,9 @@ class UserList:
 					self.privileged.append(user[0])
 				if trusted:
 					self.trusted.append(user[0])
+
 			iter = self.usersmodel.append(row)
-			self.userlist.append([user[0], user[1], iter])
+			self.userlist.append([user[0], user[1], last_seen, iter])
 		self.usersmodel.set_sort_column_id(1, gtk.SORT_ASCENDING)
 		self.popup_menu = popup = PopupMenu(frame)
 		popup.setup(
@@ -87,20 +105,50 @@ class UserList:
 		user = self.usersmodel.get_value(iter, 1)
 		value = self.usersmodel.get_value(iter, pos)
 		self.usersmodel.set(iter, pos, not value)
-		if user in self.trusted:
-			self.trusted.remove(user)
-		else:
-			if not user in self.trusted:
-				self.trusted.append(user)
+		if pos == 4:
+			if user in self.trusted:
+				self.trusted.remove(user)
+			else:
+				if not user in self.trusted:
+					self.trusted.append(user)
+		elif pos == 5:
+			if user in self.notify:
+				self.notify.remove(user)
+			else:
+				if not user in self.notify:
+					self.notify.append(user)
+		elif pos == 6:
+			if user in self.privileged:
+				self.privileged.remove(user)
+			else:
+				if not user in self.privileged:
+					self.privileged.append(user)
+
 		self.SaveUserList()
 		
 	def cell_edited_callback(self, widget, index, value, treeview, pos):
 		
 		store = treeview.get_model()
 		iter = store.get_iter(index)
-		if pos == 5:
+		if pos == 8:
 			self.SetComment(iter, store, value)
 		
+	def SetLastSeen(self, user, online =False):
+		import time
+
+		last_seen = "" 
+
+		if not online:
+			last_seen = time.strftime("%m/%d/%Y %H:%M:%S")
+		
+		for i in self.userlist:
+			if i[0] == user:
+				i[2] = last_seen
+				self.usersmodel.set(i[3], 7, last_seen)
+				break
+				
+		if not online:
+			self.SaveUserList()
 			
 	def SetComment(self, iter, store, comments=None):
 		user = store.get_value(iter, 1)
@@ -108,13 +156,17 @@ class UserList:
 			for i in self.userlist:
 				if i[0] == user:
 					i[1] = comments
-					self.usersmodel.set(i[2], 5, comments)
+					self.usersmodel.set(iter, 8, comments)
 					break
 			self.SaveUserList()
 			
 	def ConnClose(self):
 		for user in self.userlist:
-			self.usersmodel.set(user[2], 0, self.frame.GetStatusImage(0), 2, "0", 3, "0", 6, 0, 7, 0, 8, 0)
+			self.usersmodel.set(user[3], 0, self.frame.GetStatusImage(0), 2, "0", 3, "0", 7, 0, 8, 0, 9, 0)
+
+		for user in self.userlist:
+			if self.usersmodel.get(user[3], 7)[0] is "":
+				self.SetLastSeen(user[0])
 	
 	def OnPopupMenu(self, widget, event):
 		items = self.popup_menu.get_children()
@@ -143,7 +195,8 @@ class UserList:
 			self.popup_menu.popup(None, None, None, event.button, event.time)
 		
 	def GetIter(self, user):
-		iters = [i[2] for i in self.userlist if i[0] == user]
+		iters = [i[3] for i in self.userlist if i[0] == user]
+
 		if iters:
 			return iters[0]
 		else:
@@ -153,13 +206,18 @@ class UserList:
 		iter = self.GetIter(msg.user)
 		if iter is None:
 			return
-		if msg.status == self.usersmodel.get_value(iter, 6):
+		if msg.status == self.usersmodel.get_value(iter, 7):
 			return
 		if msg.user in self.notify:
 			status = [_("User %s is offline"), _("User %s is away"), _("User %s is online")][msg.status]
 			self.frame.logMessage(status % msg.user)
 		img = self.frame.GetStatusImage(msg.status)
-		self.usersmodel.set(iter, 0, img, 6, msg.status)
+		self.usersmodel.set(iter, 0, img, 9, msg.status)
+
+		if msg.status: # online
+			self.SetLastSeen(msg.user, online=True)
+		elif self.usersmodel.get(iter, 7)[0] is "": # disconnected
+			self.SetLastSeen(msg.user)
 
 	def GetUserStats(self, msg):
 		iter = self.GetIter(msg.user)
@@ -167,15 +225,15 @@ class UserList:
 			return
 		hspeed = Humanize(msg.avgspeed)
 		hfiles = Humanize(msg.files)
-		self.usersmodel.set(iter, 2, hspeed, 3, hfiles, 7, msg.avgspeed, 8, msg.files)
+		self.usersmodel.set(iter, 2, hspeed, 3, hfiles, 10, msg.avgspeed, 11, msg.files)
 
 	def AddToList(self, user):
 		if user in [i[0] for i in self.userlist]:
 			return
-		
-		row = [self.frame.GetStatusImage(0), user, "0", "0", False, "", 0, 0, 0]
+
+		row = [self.frame.GetStatusImage(0), user, "0", "0", False, False, False, _("Never seen"), "", 0, 0, 0]
 		iter = self.usersmodel.append(row)
-		self.userlist.append([user, "", iter])
+		self.userlist.append([user, "", _("Never seen"), iter])
 		
 		self.SaveUserList()
 		self.frame.np.queue.put(slskmessages.AddUser(user))
@@ -199,14 +257,15 @@ class UserList:
 			for i in self.userlist:
 				if i[0] == user:
 					i[1] = comments
-					self.usersmodel.set(i[2], 5, comments)
+					self.usersmodel.set(i[3], 8, comments)
 					break
 			self.SaveUserList()
 
 	def SaveUserList(self):
 		l = []
+
 		for i in self.userlist:
-			l.append([i[0], i[1], (i[0] in self.notify), (i[0] in self.privileged), (i[0] in self.trusted)])
+			l.append([i[0], i[1], (i[0] in self.notify), (i[0] in self.privileged), (i[0] in self.trusted), i[2]])
 		self.frame.np.config.sections["server"]["userlist"] = l
 		self.frame.np.config.writeConfig()
 
@@ -220,7 +279,7 @@ class UserList:
 		for i in self.userlist:
 			if i[0] == user:
 				self.userlist.remove(i)
-				self.usersmodel.remove(i[2])
+				self.usersmodel.remove(i[3])
 				break
 		self.SaveUserList()
 		for widget in self.frame.BuddiesComboEntries:
@@ -259,6 +318,6 @@ class UserList:
 				self.trusted.append(user)
 		for i in self.userlist:
 			if i[0] == user:
-				self.usersmodel.set(i[2], 4, (user in self.trusted))
+				self.usersmodel.set(i[3], 4, (user in self.trusted))
 		self.SaveUserList()
 		
