@@ -162,7 +162,7 @@ class UserList:
 			
 	def ConnClose(self):
 		for user in self.userlist:
-			self.usersmodel.set(user[3], 0, self.frame.GetStatusImage(0), 2, "0", 3, "0", 7, 0, 8, 0, 9, 0)
+			self.usersmodel.set(user[3], 0, self.frame.GetStatusImage(0), 2, "0", 3, "0", 9, 0, 10, 0, 11, 0)
 
 		for user in self.userlist:
 			if self.usersmodel.get(user[3], 7)[0] is "":
