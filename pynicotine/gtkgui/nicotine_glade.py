@@ -1518,6 +1518,10 @@ class ChatRoomTab:
         self.vbox5 = gtk.VBox(False, 0)
         self.vbox5.show()
 
+        self.LabelPeople = gtk.Label(_("0 people in room"))
+        self.LabelPeople.show()
+        self.vbox5.pack_start(self.LabelPeople, False, False, 2)
+
         self.scrolledwindow14 = gtk.ScrolledWindow()
         self.scrolledwindow14.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
         self.scrolledwindow14.show()

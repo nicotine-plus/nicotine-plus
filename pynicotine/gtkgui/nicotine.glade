@@ -2408,6 +2408,17 @@
         <child>
           <widget class="GtkVBox" id="vbox5">
             <property name="visible">True</property>
+	    <child>
+              <widget class="GtkLabel" id="LabelPeople">
+                 <property name="visible">True</property>
+                 <property name="label" translatable="yes">0 people in room</property>
+              </widget>
+              <packing>
+                 <property name="expand">False</property>
+                 <property name="fill">False</property>
+                 <property name="padding">2</property>
+              </packing>
+            </child>
             <child>
               <widget class="GtkScrolledWindow" id="scrolledwindow14">
                 <property name="visible">True</property>

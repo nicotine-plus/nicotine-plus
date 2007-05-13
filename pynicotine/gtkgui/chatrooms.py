@@ -202,6 +202,7 @@ class RoomsControl:
 		self.frame.ChatNotebook.append_page(tab.Main, msg.room, tab.OnLeave)
 		
 		self.frame.searchroomslist[msg.room] = self.frame.RoomSearchCombo_List.append([msg.room])
+		self.joinedrooms[msg.room].LabelPeople.set_text(str(len(msg.users)) + _(" people in room"))
 		
 	def SetRoomList(self, msg):
 		if self.autojoin:
@@ -675,7 +676,8 @@ class ChatRoom(ChatRoomTab):
 			self.changecolour(self.tag_users[username], color)
 		else:
 			self.tag_users[username] = self.makecolour(self.ChatScroll.get_buffer(), color, username=username)
-	
+		self.LabelPeople.set_text(str(len(self.users)) + _(" people in room"))
+		
 	def UserLeftRoom(self, username):
 		if not self.users.has_key(username):
 			return
@@ -685,6 +687,7 @@ class ChatRoom(ChatRoomTab):
 		if username in self.tag_users.keys():
 			color = self.getUserStatusColor(-1)
 			self.changecolour(self.tag_users[username], color)
+		self.LabelPeople.set_text(str(len(self.users)) + _(" people in room"))		
 	
 	def GetUserStats(self, user, avgspeed, files):
 		if not self.users.has_key(user):
@@ -849,7 +852,7 @@ class ChatRoom(ChatRoomTab):
 		AppendLine(self.ChatScroll, _("--- disconnected ---"), self.tag_hilite)
 		self.usersmodel.clear()
 		self.users = {}
-	
+		self.LabelPeople.set_text('0' + _(" people in room"))		
 	def Rejoined(self, users):
 		for user in users.keys():
 			if self.users.has_key(user):
@@ -860,6 +863,7 @@ class ChatRoom(ChatRoomTab):
 			iter = self.usersmodel.append([img, user, hspeed, hfiles, users[user].status, users[user].avgspeed, users[user].files])
 			self.users[user] = iter
 		AppendLine(self.ChatScroll, _("--- reconnected ---"), self.tag_hilite)
+		self.LabelPeople.set_text(str(len(users)) + _(" people in room"))
 
 	def OnAutojoin(self, widget):
 		autojoin = self.frame.np.config.sections["server"]["autojoin"]
