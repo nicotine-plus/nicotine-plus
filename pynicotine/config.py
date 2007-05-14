@@ -78,7 +78,7 @@ class Config:
 "ui":{"icontheme": "", "chatme":"FOREST GREEN", "chatremote":"","chatlocal":"BLUE", \
 "chathilite":"red", "useronline":"BLACK", "useraway":"ORANGE","useroffline":"#aa0000",\
 "usernamehotspots":1, "usernamestyle": "bold", "textbg": "", "search":"","searchq":"GREY", \
-"inputcolor":"", "exitdialog": 1, "notexists": 1,\
+"inputcolor":"", "spellcheck": 1, "exitdialog": 1, "notexists": 1,\
 "decimalsep":",", "chatfont": "", "roomlistcollapsed": 0, "tabclosers": 1,\
 "buddylistinchatrooms": 0, "trayicon": 1, "soundenabled": 1, "soundtheme": "",\
 "soundcommand": "play -q", "filemanager": "rox $", "speechenabled": 0, "enabletrans":0,\
@@ -127,7 +127,7 @@ class Config:
 					print "Unknown config section:",i
 				elif j not in self.sections[i].keys() and j != "filter":
 					print "Unknown config option",j,"section",i
-				elif j in ['login','passw','enc',  'downloaddir','customban','descr','pic','logsdir','incompletedir', 'autoreply', 'afterfinish', 'downloadregexp', 'afterfolder', 'default', 'chatfont', "npothercommand", "npplayer", "npformat"] or (i == "ui" and j not in ["roomlistcollapsed", "tabclosers",  'buddylistinchatrooms', "trayicon", "usernamehotspots", "exitdialog", "notexists", "soundenabled", "transalpha",  "enabletrans", "speechenabled", "enablefilters", "width", "height"]):
+				elif j in ['login','passw','enc',  'downloaddir','customban','descr','pic','logsdir','incompletedir', 'autoreply', 'afterfinish', 'downloadregexp', 'afterfolder', 'default', 'chatfont', "npothercommand", "npplayer", "npformat"] or (i == "ui" and j not in ["roomlistcollapsed", "tabclosers",  'buddylistinchatrooms', "trayicon", "usernamehotspots", "exitdialog", "spellcheck", "notexists", "soundenabled", "transalpha",  "enabletrans", "speechenabled", "enablefilters", "width", "height"]):
 					self.sections[i][j] = val
 				else:
 					try:
