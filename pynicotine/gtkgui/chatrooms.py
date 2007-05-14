@@ -356,7 +356,7 @@ class ChatRoom(ChatRoomTab):
 			self.Elist[item[1]] = self.EncodingStore.append([item[1], item[0] ])
 			if self.encoding == item[1]:
 				self.Encoding.set_active_iter(self.Elist[self.encoding])
-		if self.frame.SEXY:
+		if self.frame.SEXY and self.frame.np.config.sections["ui"]["spellcheck"]:
 			import sexy
 			self.vbox6.remove(self.entry3)
 			self.entry3.destroy()

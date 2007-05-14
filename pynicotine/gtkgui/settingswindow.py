@@ -873,6 +873,8 @@ class BloatFrame(settings_glade.BloatFrame):
 			self.DecimalSep.child.set_text(ui["decimalsep"])
 		if ui["exitdialog"] is not None:
 			self.ExitDialog.set_active(ui["exitdialog"])
+		if ui["spellcheck"] is not None:
+			self.SpellCheck.set_active(ui["spellcheck"])
 		
 		if private["store"] is not None:
 			self.ReopenPrivateChats.set_active(private["store"])
@@ -911,6 +913,7 @@ class BloatFrame(settings_glade.BloatFrame):
 				"search": self.Immediate.get_text(),
 				"searchq": self.Queue.get_text(),
 				"decimalsep": self.DecimalSep.child.get_text(),
+				"spellcheck": self.SpellCheck.get_active(),
 				"exitdialog": self.ExitDialog.get_active(),
 				"useraway": self.AwayColor.get_text(),
 				"useronline": self.OnlineColor.get_text(),

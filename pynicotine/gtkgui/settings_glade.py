@@ -1322,6 +1322,12 @@ class BloatFrame:
         self.vboxUI.set_spacing(5)
         self.vboxUI.set_border_width(5)
 
+        self.SpellCheck = gtk.CheckButton()
+        self.SpellCheck.set_active(False)
+        self.SpellCheck.set_label(_("Enable spell checking"))
+        self.SpellCheck.show()
+        self.vboxUI.pack_start(self.SpellCheck, False, False, 0)
+
         self.ExitDialog = gtk.CheckButton()
         self.ExitDialog.set_active(False)
         self.ExitDialog.set_label(_("Show confirmation dialog when closing the main window"))
