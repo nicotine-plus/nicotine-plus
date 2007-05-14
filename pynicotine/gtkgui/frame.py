@@ -33,7 +33,12 @@ from dirchooser import ChooseFile
 from pynicotine.utils import _
 import nowplaying
 from entrydialog import  *
-
+SEXY=True
+try:
+	import sexy
+except ImportError:
+	SEXY=False
+	print _("Note: Python Bindings for libsexy were not found. To enable spell checking, get them from http://www.chipx86.com/wiki/Libsexy or your distribution's package manager. Look for sexy-python or python-sexy.")
 
 class roomlist(RoomList):
 	def __init__(self, frame):
@@ -93,7 +98,7 @@ class NicotineFrame(MainWindow):
 		self.needrescan = 0
 		self.autoaway = False
 		self.awaytimer = None
-		
+		self.SEXY = SEXY
 		self.chatrooms = None
 		
 		self.got_focus = False

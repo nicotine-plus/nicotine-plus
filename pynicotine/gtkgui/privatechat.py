@@ -126,9 +126,18 @@ class PrivateChat(PrivateChatTab):
 			self.Elist[item[1]] = self.EncodingStore.append([item[1], item[0] ])
 			if self.encoding == item[1]:
 				self.Encoding.set_active_iter(self.Elist[self.encoding])
-		
+		if self.frame.SEXY:
+			import sexy
+			self.hbox5.remove(self.ChatLine)
+			self.ChatLine.destroy()
+			self.ChatLine = sexy.SpellEntry()
+			self.ChatLine.show()
+			self.ChatLine.connect("activate", self.OnEnter)
+			self.ChatLine.connect("key_press_event", self.OnKeyPress)
+			self.hbox5.pack_start(self.ChatLine)
+			self.hbox5.reorder_child(self.ChatLine, 0)
+			
 		self.Log.set_active(self.frame.np.config.sections["logging"]["privatechat"])
-
 
 		if self.frame.translux:
 			self.tlux_chat = lambda: self.ChatScroll.get_window(gtk.TEXT_WINDOW_TEXT)

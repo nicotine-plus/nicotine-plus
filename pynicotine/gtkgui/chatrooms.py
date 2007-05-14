@@ -356,7 +356,16 @@ class ChatRoom(ChatRoomTab):
 			self.Elist[item[1]] = self.EncodingStore.append([item[1], item[0] ])
 			if self.encoding == item[1]:
 				self.Encoding.set_active_iter(self.Elist[self.encoding])
-
+		if self.frame.SEXY:
+			import sexy
+			self.vbox6.remove(self.entry3)
+			self.entry3.destroy()
+			self.entry3 = sexy.SpellEntry()
+			self.entry3.show()
+        		self.entry3.connect("activate", self.OnEnter)
+        		self.entry3.connect("key_press_event", self.OnKeyPress)
+			self.vbox6.pack_start(self.entry3, False, False, 0)
+	
 		self.Log.set_active(self.frame.np.config.sections["logging"]["chatrooms"])
 		
 		
