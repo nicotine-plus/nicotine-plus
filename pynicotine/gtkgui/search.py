@@ -66,9 +66,11 @@ class WishList( gtk.Dialog):
 
 		self.ClearWishesButton = self.nicotine.CreateIconButton(gtk.STOCK_CLEAR, "stock", self.OnClearWishes, _("Clear"))
 
-
+		
 		self.mainVbox.pack_start(self.ClearWishesButton, False, False, 0)
 
+		self.CloseButton = self.nicotine.CreateIconButton(gtk.STOCK_CLOSE, "stock", self.quit, _("Close"))
+		self.mainVbox.pack_end(self.CloseButton, False, False, 0)
 		self.vbox.pack_start(self.mainHbox, True, True, 0)
 		
 
@@ -189,14 +191,13 @@ class Searches:
 		if not searches:
 			return True
 		
-		term = searches.pop()
-		searches.insert(0, term)
-
-		for i in self.searches.values():
-			if i[1] == term and i[4]:
-				self.DoGlobalSearch(i[0], term)
-				break
-		
+		# Search for a maximum of 3 items at each search interval
+		for term in searches[0:3]:
+			for i in self.searches.values():
+				if i[1] == term and i[4]:
+					self.DoWishListSearch(i[0], term)
+					oldsearch = searches.pop()
+					searches.insert(0, oldsearch)
 		return True
 	
 	def OnClearSearchHistory(self):
@@ -244,7 +245,7 @@ class Searches:
 		self.searchid += 1
 		self.searches[self.searchid] = [self.searchid, wish, None, 0, True]
 			
-		self.DoGlobalSearch(self.searchid, wish)
+		self.DoWishListSearch(self.searchid, wish)
 		
 	def DoSearch(self, text, mode, users = [], room = None):
 		items = self.frame.np.config.sections["searches"]["history"]
@@ -280,7 +281,10 @@ class Searches:
 		
 	def DoGlobalSearch(self, id, text):
 		self.frame.np.queue.put(slskmessages.FileSearch(id, text))
-	
+		
+	def DoWishListSearch(self, id, text):
+		self.frame.np.queue.put(slskmessages.WishlistSearch(id, text))
+		
 	def DoRoomsSearch(self, id, text, room = None):
 
 		if room != None:
