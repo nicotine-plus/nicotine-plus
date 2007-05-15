@@ -968,7 +968,7 @@ class NicotineFrame(MainWindow):
 		    
 		self.np.config.sections["privatechat"]["users"] = self.privatechats.users.keys()
 		if not self.manualdisconnect:
-			self.OnDisconnect()
+			self.OnDisconnect(None)
 		self.np.config.writeConfig()
 		self.np.protothread.abort()
 		if sys.platform == "win32":
