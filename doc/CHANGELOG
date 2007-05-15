@@ -17,7 +17,8 @@ GENERAL CHANGES
  * Changed the URL Catcher's syntax. The ampersand "&" is no longer needed
    at the end of URL Handlers. The handler entry is now a combobox and
    includes a bunch of webbrowser commands.
-
+ * Userlist Columns are hidable and hidden status is saved.
+ 
 TRANSFERS
  * Added a "Group by users" check box
  * Added Expand/Collapse all toggle button to transfers

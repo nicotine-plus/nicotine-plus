@@ -4,7 +4,7 @@ import gtk
 import gobject
 
 from pynicotine import slskmessages
-from utils import InitialiseColumns, PopupMenu, InputDialog, Humanize
+from utils import InitialiseColumns, PopupMenu, InputDialog, Humanize, press_header
 
 from pynicotine.utils import _
 
@@ -34,6 +34,13 @@ class UserList:
 		cols[6].set_sort_column_id(6)
 		cols[7].set_sort_column_id(7)
 		cols[8].set_sort_column_id(8)
+		for i in range (9):
+			parent = cols[i].get_widget().get_ancestor(gtk.Button)
+			if parent:
+				parent.connect('button_press_event', press_header)
+			# Read Show / Hide column settings from last session
+			cols[i].set_visible(self.frame.np.config.sections["columns"]["userlist"][i])
+			
 		for render in cols[4].get_cell_renderers():
 			render.connect('toggled', self.cell_toggle_callback, self.frame.UserList, 4)
 		for render in cols[5].get_cell_renderers():
@@ -92,6 +99,8 @@ class UserList:
 			("#" + _("_Remove"), self.OnRemoveUser, gtk.STOCK_CANCEL),
 		)
 		self.frame.UserList.connect("button_press_event", self.OnPopupMenu)
+		
+
 		
 	def CellDataFunc(self, column, cellrenderer, model, iter):
 		colour = self.frame.np.config.sections["ui"]["search"]
@@ -268,7 +277,14 @@ class UserList:
 			l.append([i[0], i[1], (i[0] in self.notify), (i[0] in self.privileged), (i[0] in self.trusted), i[2]])
 		self.frame.np.config.sections["server"]["userlist"] = l
 		self.frame.np.config.writeConfig()
-
+		
+	def saveColumns(self):
+		columns = []
+		for column in self.frame.UserList.get_columns():
+			columns.append(column.get_visible())
+		self.frame.np.config.sections["columns"]["userlist"] = columns
+		self.frame.np.config.writeConfig()
+		
 	def RemoveFromList(self, user):
 		if user in self.notify:
 			self.notify.remove(user)

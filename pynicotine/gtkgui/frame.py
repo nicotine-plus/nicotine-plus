@@ -250,7 +250,7 @@ class NicotineFrame(MainWindow):
 		utils.PROTOCOL_HANDLERS = self.np.config.sections["urls"]["protocols"].copy()
 		utils.PROTOCOL_HANDLERS["slsk"] = self.OnSoulSeek
 		utils.USERNAMEHOTSPOTS = self.np.config.sections["ui"]["usernamehotspots"]
-
+		utils.NICOTINE = self
 
 
 		
@@ -477,6 +477,9 @@ class NicotineFrame(MainWindow):
 			loader.close()
 			self.images[i] = loader.get_pixbuf()
 
+	def SaveColumns(self):
+		for i in [self.userlist]:
+			i.saveColumns()
 		
 	def OnSearchMethod(self, widget):
 		act = False

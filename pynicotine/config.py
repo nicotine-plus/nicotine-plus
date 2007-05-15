@@ -71,6 +71,8 @@ class Config:
 \
 "privatechat":{"store":0, "users":[]},\
 \
+"columns":{"userlist":[1,1,1,1,1,1,1,1,1], "roomlist":[1,1], "users_in_room_list":[1,1,1,1], "downloads":[1,1,1,1,1,1,1,1,1], "uploads":[1,1,1,1,1,1,1,1,1], "search":[1,1,1,1,1,1,1,1,1,1], "files":[1,1,1,1]},\
+\
 "searches":{"maxresults":50,"re_filter":0,"history":[], \
 "enablefilters":0, "defilter":["","","","",0,""], "filtercc":[], \
 "filterin":[],"filterout":[],"filtersize":[],"filterbr":[]}, \

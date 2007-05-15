@@ -23,6 +23,7 @@ PROTOCOL_HANDLERS = {}
 CATCH_URLS = 0
 HUMANIZE_URLS = 0
 USERNAMEHOTSPOTS = 0
+NICOTINE = None
 
 def popupWarning(parent, title, warning, icon=None):
 	dlg = gtk.Dialog(title = title, parent = parent,
@@ -103,11 +104,44 @@ def InitialiseColumns(treeview, *args):
 		if len(c) > 3:
 			column.set_cell_data_func(renderer, c[3])
 		column.set_reorderable(True)
+		column.set_widget(gtk.Label(c[0]))
+		column.get_widget().show()
 		treeview.append_column(column)
 		cols.append(column)
 		i += 1
 	return cols
+		
+def press_header(widget, event):
+	if event.button != 3:
+		return False
+	columns = widget.get_parent().get_columns()
+	visible_columns = [column for column in columns if column.get_visible()]
+	one_visible_column = len(visible_columns) == 1
+	menu = gtk.Menu()
+	pos = 1
+	for column in columns:
+		title = column.get_title()
+		if title == "":
+			title = _("Column #%i") %pos
+		item = gtk.CheckMenuItem(title)
+		if column in visible_columns:
+			item.set_active(True)
+			if one_visible_column:
+				item.set_sensitive(False)
+		else:
+			item.set_active(False)
+		item.connect('activate', header_toggle, column)
+		menu.append(item)
+		pos += 1
+	menu.show_all()
+	menu.popup(None, None, None, event.button, event.time)
+	return True
 
+def header_toggle(menuitem, column):
+	column.set_visible(not column.get_visible())
+	NICOTINE.SaveColumns()
+
+	
 def ScrollBottom(widget):
 	widget.need_scroll = 1
 	va = widget.get_vadjustment()

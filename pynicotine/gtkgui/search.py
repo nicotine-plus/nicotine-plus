@@ -169,8 +169,9 @@ class Searches:
 	def SetInterval(self, msg):
 		self.interval = msg.num
 		if not self.disconnected:
+			# Create wishlist searches (without tabs)
 			for term in self.frame.np.config.sections["server"]["autosearch"]:
-				#self.CreateTab(self.searchid, term, 0, 1)
+
 				self.searches[self.searchid] = [self.searchid, term, None, 0, True]
 				self.searchid = (self.searchid + 1) % (2**31)
 		
@@ -184,6 +185,7 @@ class Searches:
 			self.timer = None
 	
 	def OnAutoSearch(self, *args):
+		# Wishlists supported by server?
 		if self.interval == 0:
 			return False
 		
