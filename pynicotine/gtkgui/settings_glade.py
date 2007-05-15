@@ -1323,8 +1323,9 @@ class BloatFrame:
         self.vboxUI.set_border_width(5)
 
         self.SpellCheck = gtk.CheckButton()
+        self.tooltips.set_tip(self.SpellCheck, _("LibSexy Homepage: http://www.chipx86.com/wiki/Libsexy \n sexy-python bindings required."))
         self.SpellCheck.set_active(False)
-        self.SpellCheck.set_label(_("Enable spell checking"))
+        self.SpellCheck.set_label(_("Enable spell checker (requires a restart)"))
         self.SpellCheck.show()
         self.vboxUI.pack_start(self.SpellCheck, False, False, 0)
 

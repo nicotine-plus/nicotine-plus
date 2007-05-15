@@ -875,7 +875,8 @@ class BloatFrame(settings_glade.BloatFrame):
 			self.ExitDialog.set_active(ui["exitdialog"])
 		if ui["spellcheck"] is not None:
 			self.SpellCheck.set_active(ui["spellcheck"])
-		
+		if not self.frame.SEXY:
+			self.SpellCheck.set_sensitive(False)
 		if private["store"] is not None:
 			self.ReopenPrivateChats.set_active(private["store"])
 		

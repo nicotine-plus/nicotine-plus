@@ -3139,7 +3139,8 @@
 	    <widget class="GtkCheckButton" id="SpellCheck">
 	      <property name="visible">True</property>
 	      <property name="can_focus">True</property>
-	      <property name="label" translatable="yes">Enable spell check</property>
+	      <property name="label" translatable="yes">Enable spell checker (requires a restart)</property>
+	      <property name="tooltip" translatable="yes">Libsexy Website: http://www.chipx86.com/wiki/Libsexy \nlibsexy and sexy-python bindings required.</property>
 	      <property name="use_underline">True</property>
 	      <property name="relief">GTK_RELIEF_NORMAL</property>
 	      <property name="focus_on_click">True</property>
