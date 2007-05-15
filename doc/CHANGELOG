@@ -57,7 +57,11 @@ BUGFIXES
  * Fixed a few bugs with the trayicon
  * Fixed server reconnection not actually trying to reconnect (and giving up
    on the first try)
- 
+
+TRANSLATIONS
+ * Lithuanian translation updated
+ * Euskare translation updated
+
 1.2.7.1 Release (6th March 2007)
 
 GENERAL CHANGES
