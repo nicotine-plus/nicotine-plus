@@ -12,7 +12,7 @@ import random
 from pynicotine import slskmessages
 
 from nicotine_glade import SearchTab
-from utils import InitialiseColumns, PopupMenu, FastListModel, Humanize
+from utils import InitialiseColumns, PopupMenu, FastListModel, Humanize, PressHeader
 from dirchooser import ChooseDir
 from entrydialog import *
 from pynicotine.utils import _
@@ -362,6 +362,18 @@ class Searches:
 		for id in self.searches.values():
 			id[2].ChangeColours()
 			
+	def saveColumns(self):
+		page_num = self.frame.SearchNotebook.get_current_page()
+		if page_num is not None:
+			page = self.frame.SearchNotebook.get_nth_page(page_num)
+			for name, search in self.searches.items():
+				if search[2] is None:
+					continue
+				if search[2].vbox7 == page:
+					search[2].saveColumns()
+					break
+
+		
 class SearchTreeModel(FastListModel):
 	COLUMNS = 14
 	COLUMN_TYPES = [gobject.TYPE_INT, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING,
@@ -511,7 +523,7 @@ class SearchTreeModel(FastListModel):
 		for row in self.all_data:
 			if self.check_filter(row):
 				self.data.append(row)
-
+	
 class Search(SearchTab):
 	def __init__(self, searches, text, id, mode, remember):
 		SearchTab.__init__(self, False)
@@ -556,7 +568,7 @@ class Search(SearchTab):
 		self.ResultsList.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
 		self.ResultsList.set_property("rules-hint", True)
 		cols = InitialiseColumns(self.ResultsList,
-			["", 20, "text", self.CellDataFunc],
+			[_("Number"), 20, "text", self.CellDataFunc],
 			[_("Filename"), 250, "text", self.CellDataFunc],
 			[_("User"), 100, "text", self.CellDataFunc],
 			[_("Size"), 100, "text", self.CellDataFunc],
@@ -567,6 +579,14 @@ class Search(SearchTab):
 			[_("Length"), 50, "text", self.CellDataFunc],
 			[_("Directory"), 1000, "text", self.CellDataFunc],
 		)
+		cols[0].get_widget().hide()
+		for i in range (10):
+			
+			parent = cols[i].get_widget().get_ancestor(gtk.Button)
+			if parent:
+				parent.connect('button_press_event', PressHeader)
+			# Read Show / Hide column settings from last session
+			cols[i].set_visible(self.frame.np.config.sections["columns"]["search"][i])
 		self.ResultsList.set_model(self.resultsmodel)
 		for ix in range(len(cols)):
 			col = cols[ix]
@@ -611,6 +631,11 @@ class Search(SearchTab):
 		self.frame.SetTextBG(self.FilterBitrate.child)
 		self.frame.SetTextBG(self.FilterCountry.child)
 
+	def saveColumns(self):
+		columns = []
+		for column in self.ResultsList.get_columns():
+			columns.append(column.get_visible())
+		self.frame.np.config.sections["columns"]["search"] = columns
 		
 	def SelectedResultsCallback(self, model, path, iter):
 		user = model.get_value(iter, 2)

@@ -8,7 +8,7 @@ import gc
 from userinfo import UserTabs
 from nicotine_glade import UserBrowseTab
 
-from utils import InitialiseColumns, PopupMenu, EncodingsMenu, SaveEncoding, Humanize
+from utils import InitialiseColumns, PopupMenu, EncodingsMenu, SaveEncoding, Humanize, PressHeader
 from dirchooser import ChooseDir
 from entrydialog import *
 from pynicotine import slskmessages
@@ -152,6 +152,12 @@ class UserBrowse(UserBrowseTab):
 		cols[2].set_sort_column_id(2)
 		cols[3].set_sort_column_id(5)
 
+		for i in range (4):
+			parent = cols[i].get_widget().get_ancestor(gtk.Button)
+			if parent:
+				parent.connect('button_press_event', PressHeader)
+			# Read Show / Hide column settings from last session
+			cols[i].set_visible(self.frame.np.config.sections["columns"]["files"][i])
 		self.FileTreeView.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
 
 		self.FileTreeView.set_headers_clickable(True)

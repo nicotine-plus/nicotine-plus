@@ -478,8 +478,9 @@ class NicotineFrame(MainWindow):
 			self.images[i] = loader.get_pixbuf()
 
 	def SaveColumns(self):
-		for i in [self.userlist]:
+		for i in [self.userlist, self.chatrooms.roomsctrl, self.downloads, self.uploads, self.searches]:
 			i.saveColumns()
+		self.np.config.writeConfig()
 		
 	def OnSearchMethod(self, widget):
 		act = False
@@ -966,7 +967,8 @@ class NicotineFrame(MainWindow):
 	            self.np.transfers.AbortTransfers()
 		    
 		self.np.config.sections["privatechat"]["users"] = self.privatechats.users.keys()
-			
+		if not self.manualdisconnect:
+			self.OnDisconnect()
 		self.np.config.writeConfig()
 		self.np.protothread.abort()
 		if sys.platform == "win32":

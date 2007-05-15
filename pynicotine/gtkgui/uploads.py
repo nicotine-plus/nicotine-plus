@@ -3,7 +3,7 @@
 import gtk
 
 from transferlist import TransferList
-from utils import PopupMenu
+from utils import PopupMenu, PressHeader
 import string, os
 from pynicotine.utils import _
 from pynicotine import slskmessages
@@ -51,6 +51,13 @@ class Uploads(TransferList):
 		)
 		frame.UploadList.connect("button_press_event", self.OnPopupMenu, "mouse")
 		frame.UploadList.connect("key-press-event", self.on_key_press_event)
+		cols = frame.UploadList.get_columns()
+		for i in range (9):
+			parent = cols[i].get_widget().get_ancestor(gtk.Button)
+			if parent:
+				parent.connect('button_press_event', PressHeader)
+			# Read Show / Hide column settings from last session
+			cols[i].set_visible(self.frame.np.config.sections["columns"]["uploads"][i])
 		frame.clearUploadFinishedAbortedButton.connect("clicked", self.OnClearFinishedAborted)
 		frame.clearUploadQueueButton.connect("clicked", self.OnTryClearQueued)
 		frame.abortUploadButton.connect("clicked", self.OnAbortTransfer)
@@ -63,6 +70,12 @@ class Uploads(TransferList):
 		self.frame.ExpandUploads.set_active(True)
 		frame.ExpandUploads.connect("toggled", self.OnExpandUploads)
 		self.expanded = False
+
+	def saveColumns(self):
+		columns = []
+		for column in self.frame.UploadList.get_columns():
+			columns.append(column.get_visible())
+		self.frame.np.config.sections["columns"]["uploads"] = columns
 		
 	def OnTryClearQueued(self, widget):
 		direction="up"

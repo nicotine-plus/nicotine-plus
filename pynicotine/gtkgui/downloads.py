@@ -3,7 +3,7 @@
 import gtk
 
 from transferlist import TransferList
-from utils import PopupMenu
+from utils import PopupMenu, PressHeader
 from pynicotine import slskmessages
 import string, os
 from pynicotine.utils import _
@@ -57,6 +57,13 @@ class Downloads(TransferList):
 		)
 		frame.DownloadList.connect("button_press_event", self.OnPopupMenu, "mouse")
 		frame.DownloadList.connect("key-press-event", self.on_key_press_event)
+		cols = frame.DownloadList.get_columns()
+		for i in range (9):
+			parent = cols[i].get_widget().get_ancestor(gtk.Button)
+			if parent:
+				parent.connect('button_press_event', PressHeader)
+			# Read Show / Hide column settings from last session
+			cols[i].set_visible(self.frame.np.config.sections["columns"]["downloads"][i])
 		frame.clearFinishedAbortedButton.connect("clicked", self.OnClearFinishedAborted)
 		frame.clearQueuedButton.connect("clicked", self.OnTryClearQueued)
 		frame.retryTransferButton.connect("clicked", self.OnRetryTransfer)
@@ -64,12 +71,19 @@ class Downloads(TransferList):
 		frame.deleteTransferButton.connect("clicked", self.OnAbortRemoveTransfer)
 		frame.banDownloadButton.connect("clicked", self.OnBan)
 		frame.DownloadList.expand_all()
+		
 		self.frame.ToggleTreeDownloads.set_active(self.frame.np.config.sections["transfers"]["groupdownloads"])
 		frame.ToggleTreeDownloads.connect("toggled", self.OnToggleTree)
 		self.OnToggleTree(None)
 		self.frame.ExpandDownloads.set_active(True)
 		frame.ExpandDownloads.connect("toggled", self.OnExpandDownloads)
 		self.expanded = False
+		
+	def saveColumns(self):
+		columns = []
+		for column in self.frame.DownloadList.get_columns():
+			columns.append(column.get_visible())
+		self.frame.np.config.sections["columns"]["downloads"] = columns
 		
 	def OnTryClearQueued(self, widget):
 		direction="down"

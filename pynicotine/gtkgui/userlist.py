@@ -4,7 +4,7 @@ import gtk
 import gobject
 
 from pynicotine import slskmessages
-from utils import InitialiseColumns, PopupMenu, InputDialog, Humanize, press_header
+from utils import InitialiseColumns, PopupMenu, InputDialog, Humanize, PressHeader
 
 from pynicotine.utils import _
 
@@ -15,7 +15,7 @@ class UserList:
 		
 		self.usersmodel = gtk.ListStore(gtk.gdk.Pixbuf, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_BOOLEAN, gobject.TYPE_BOOLEAN, gobject.TYPE_BOOLEAN, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_INT, gobject.TYPE_INT, gobject.TYPE_INT)
 		cols = InitialiseColumns(self.frame.UserList,
-			["", 20, "pixbuf"],
+			[_("Status"), 20, "pixbuf"],
 			[_("User"), 120, "text", self.CellDataFunc],
 			[_("Speed"), 0, "text", self.CellDataFunc],
 			[_("Files"), 0, "text", self.CellDataFunc],
@@ -34,10 +34,11 @@ class UserList:
 		cols[6].set_sort_column_id(6)
 		cols[7].set_sort_column_id(7)
 		cols[8].set_sort_column_id(8)
+		cols[0].get_widget().hide()
 		for i in range (9):
 			parent = cols[i].get_widget().get_ancestor(gtk.Button)
 			if parent:
-				parent.connect('button_press_event', press_header)
+				parent.connect('button_press_event', PressHeader)
 			# Read Show / Hide column settings from last session
 			cols[i].set_visible(self.frame.np.config.sections["columns"]["userlist"][i])
 			
@@ -283,7 +284,7 @@ class UserList:
 		for column in self.frame.UserList.get_columns():
 			columns.append(column.get_visible())
 		self.frame.np.config.sections["columns"]["userlist"] = columns
-		self.frame.np.config.writeConfig()
+		
 		
 	def RemoveFromList(self, user):
 		if user in self.notify:

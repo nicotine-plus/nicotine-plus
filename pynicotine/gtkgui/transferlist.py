@@ -49,7 +49,7 @@ class TransferList:
 		cols[6].set_sort_column_id(6)
 		cols[7].set_sort_column_id(7)
 		cols[8].set_sort_column_id(8)
-
+		
 		self.transfersmodel.set_sort_func(5, float_sort_func, 5)
 		#self.frame.CreateIconButton(gtk.STOCK_INDENT, "stock", self.OnToggleTree, "Group by Users")
 		#self.hbox1.pack_end(self.ToggleTree, False, False)

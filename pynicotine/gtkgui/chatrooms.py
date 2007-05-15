@@ -6,7 +6,7 @@ import locale
 import pango
 from pynicotine import slskmessages
 from nicotine_glade import ChatRoomTab
-from utils import InitialiseColumns, AppendLine, PopupMenu, FastListModel, string_sort_func, WriteLog, int_sort_func, Humanize, expand_alias, EncodingsMenu, SaveEncoding
+from utils import InitialiseColumns, AppendLine, PopupMenu, FastListModel, string_sort_func, WriteLog, int_sort_func, Humanize, expand_alias, EncodingsMenu, SaveEncoding, PressHeader
 from pynicotine.utils import _
 from ticker import Ticker
 
@@ -73,16 +73,20 @@ class RoomsControl:
 		
 		cols[1].set_sort_indicator(True)
 		cols[1].set_sort_order(gtk.SORT_DESCENDING)
-		
+		for i in range (2):
+			parent = cols[i].get_widget().get_ancestor(gtk.Button)
+			if parent:
+				parent.connect('button_press_event', PressHeader)
+
 		self.roomsmodel = RoomsListModel([])
 		frame.roomlist.RoomsList.set_model(self.roomsmodel)
 		
 		self.popup_room = None
 		self.popup_menu = PopupMenu().setup(
-			( _("Join room"), self.OnPopupJoin ),
-			( _("Leave room"), self.OnPopupLeave, ),
+			("#" + _("Join room"), self.OnPopupJoin, gtk.STOCK_JUMP_TO ),
+			("#" + _("Leave room"), self.OnPopupLeave, gtk.STOCK_CLOSE),
 			( "", None ),
-			( _("Refresh"), self.OnPopupRefresh ),
+			("#" + _("Refresh"), self.OnPopupRefresh, gtk.STOCK_REFRESH ),
 		)
 		frame.roomlist.RoomsList.connect("button_press_event", self.OnListClicked)
 		frame.roomlist.RoomsList.set_headers_clickable(True)
@@ -202,8 +206,9 @@ class RoomsControl:
 		self.frame.ChatNotebook.append_page(tab.Main, msg.room, tab.OnLeave)
 		
 		self.frame.searchroomslist[msg.room] = self.frame.RoomSearchCombo_List.append([msg.room])
-		self.joinedrooms[msg.room].LabelPeople.set_text(str(len(msg.users)) + _(" people in room"))
+		tab.CountUsers()
 		
+
 	def SetRoomList(self, msg):
 		if self.autojoin:
 			self.autojoin = 0
@@ -252,6 +257,14 @@ class RoomsControl:
 		self.frame.SetTextBG(self.frame.roomlist.CreateRoomEntry)
 		for room in self.joinedrooms.values():
 			room.ChangeColours()
+			
+	def saveColumns(self):
+		for room in self.frame.np.config.sections["columns"]["chatrooms"].keys()[:]:
+			if room not in self.joinedrooms.keys():
+				del self.frame.np.config.sections["columns"]["chatrooms"][room]
+		for room in self.joinedrooms.values():
+			room.saveColumns()
+		
 
 	def LeaveRoom(self, msg):
 		room = self.joinedrooms[msg.room]
@@ -266,8 +279,10 @@ class RoomsControl:
 	def ConnClose(self):
 		self.roomsmodel = None
 		self.frame.roomlist.RoomsList.set_model(None)
+		
 		for room in self.joinedrooms.values():
 			room.ConnClose()
+
 		self.autojoin = 1
 
 def TickDialog(parent, default = ""):
@@ -331,7 +346,7 @@ class ChatRoom(ChatRoomTab):
 		self.lines = []
 		self.logfile = None
 		self.leaving = 0
-
+		config = self.frame.np.config.sections
 		if not self.frame.np.config.sections["ticker"]["hide"]:
 			self.Ticker.show()
 
@@ -374,7 +389,7 @@ class ChatRoom(ChatRoomTab):
 			self.AutoJoin.set_active(True)
 			
 		cols = InitialiseColumns(self.UserList, 
-			["", 20, "pixbuf"],
+			[_("Status"), 20, "pixbuf"],
 			[_("User"), 100, "text", self.frame.CellDataFunc],
 			[_("Speed"), 0, "text", self.frame.CellDataFunc],
 			[_("Files"), 0, "text", self.frame.CellDataFunc],
@@ -383,7 +398,15 @@ class ChatRoom(ChatRoomTab):
 		cols[1].set_sort_column_id(1)
 		cols[2].set_sort_column_id(5)
 		cols[3].set_sort_column_id(6)
-		
+		cols[0].get_widget().hide()
+		if not config["columns"]["chatrooms"].has_key(room):
+			config["columns"]["chatrooms"][room] = [1, 1, 1, 1]
+		for i in range (4):
+			parent = cols[i].get_widget().get_ancestor(gtk.Button)
+			if parent:
+				parent.connect('button_press_event', PressHeader)
+			# Read Show / Hide column settings from last session
+			cols[i].set_visible(config["columns"]["chatrooms"][room][i])
 		self.users = {}
 
 		self.usersmodel = gtk.ListStore(gtk.gdk.Pixbuf, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_INT, gobject.TYPE_INT, gobject.TYPE_INT)
@@ -685,7 +708,7 @@ class ChatRoom(ChatRoomTab):
 			self.changecolour(self.tag_users[username], color)
 		else:
 			self.tag_users[username] = self.makecolour(self.ChatScroll.get_buffer(), color, username=username)
-		self.LabelPeople.set_text(str(len(self.users)) + _(" people in room"))
+		self.CountUsers()
 		
 	def UserLeftRoom(self, username):
 		if not self.users.has_key(username):
@@ -696,8 +719,19 @@ class ChatRoom(ChatRoomTab):
 		if username in self.tag_users.keys():
 			color = self.getUserStatusColor(-1)
 			self.changecolour(self.tag_users[username], color)
-		self.LabelPeople.set_text(str(len(self.users)) + _(" people in room"))		
-	
+		self.CountUsers()
+		
+	def CountUsers(self):
+		numusers = len(self.users.keys())
+		if numusers > 1:
+			self.LabelPeople.show()
+			self.LabelPeople.set_text(_("%i people in room") % numusers)
+		elif numusers == 1:
+			self.LabelPeople.show()
+			self.LabelPeople.set_text(_("You are alone"))
+		else:
+			self.LabelPeople.hide()
+		
 	def GetUserStats(self, user, avgspeed, files):
 		if not self.users.has_key(user):
 			return
@@ -749,8 +783,7 @@ class ChatRoom(ChatRoomTab):
 		return tag
 		
 	def UserNameEvent(self, tag, widget, event, iter, user):
-		
-		
+
 		if tag.last_event_type == gtk.gdk.BUTTON_PRESS and event.type == gtk.gdk.BUTTON_RELEASE and event.button in (1, 2):
 			self.popup_menu.set_user(user)
 			items = self.popup_menu.get_children()
@@ -856,12 +889,26 @@ class ChatRoom(ChatRoomTab):
 		self.frame.np.queue.put(slskmessages.LeaveRoom(self.room))
 		self.Leave.set_sensitive(False)
 		self.leaving = 1
-
+		config = self.frame.np.config.sections
+		if config["columns"]["chatrooms"].has_key(self.room):
+			del config["columns"]["chatrooms"][self.room]
+			
+	def saveColumns(self):
+		columns = []
+		for column in self.UserList.get_columns():
+			columns.append(column.get_visible())
+		self.frame.np.config.sections["columns"]["chatrooms"][self.room] = columns
+		
+		
 	def ConnClose(self):
 		AppendLine(self.ChatScroll, _("--- disconnected ---"), self.tag_hilite)
 		self.usersmodel.clear()
 		self.users = {}
-		self.LabelPeople.set_text('0' + _(" people in room"))		
+		self.CountUsers()
+		config = self.frame.np.config.sections
+  		if not self.AutoJoin.get_active() and config["columns"]["chatrooms"].has_key(self.room):
+			del config["columns"]["chatrooms"][self.room]
+		
 	def Rejoined(self, users):
 		for user in users.keys():
 			if self.users.has_key(user):
@@ -872,7 +919,7 @@ class ChatRoom(ChatRoomTab):
 			iter = self.usersmodel.append([img, user, hspeed, hfiles, users[user].status, users[user].avgspeed, users[user].files])
 			self.users[user] = iter
 		AppendLine(self.ChatScroll, _("--- reconnected ---"), self.tag_hilite)
-		self.LabelPeople.set_text(str(len(users)) + _(" people in room"))
+		self.CountUsers()
 
 	def OnAutojoin(self, widget):
 		autojoin = self.frame.np.config.sections["server"]["autojoin"]

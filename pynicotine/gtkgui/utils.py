@@ -111,7 +111,7 @@ def InitialiseColumns(treeview, *args):
 		i += 1
 	return cols
 		
-def press_header(widget, event):
+def PressHeader(widget, event):
 	if event.button != 3:
 		return False
 	columns = widget.get_parent().get_columns()
