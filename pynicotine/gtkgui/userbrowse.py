@@ -157,7 +157,7 @@ class UserBrowse(UserBrowseTab):
 			if parent:
 				parent.connect('button_press_event', PressHeader)
 			# Read Show / Hide column settings from last session
-			cols[i].set_visible(self.frame.np.config.sections["columns"]["files"][i])
+			
 		self.FileTreeView.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
 
 		self.FileTreeView.set_headers_clickable(True)
