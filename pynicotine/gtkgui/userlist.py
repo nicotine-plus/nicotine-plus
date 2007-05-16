@@ -2,6 +2,8 @@
 #
 import gtk
 import gobject
+import time
+import sys
 
 from pynicotine import slskmessages
 from utils import InitialiseColumns, PopupMenu, InputDialog, Humanize, PressHeader
@@ -13,7 +15,7 @@ class UserList:
 		self.frame = frame
 		self.userlist = []
 		
-		self.usersmodel = gtk.ListStore(gtk.gdk.Pixbuf, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_BOOLEAN, gobject.TYPE_BOOLEAN, gobject.TYPE_BOOLEAN, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_INT, gobject.TYPE_INT, gobject.TYPE_INT)
+		self.usersmodel = gtk.ListStore(gtk.gdk.Pixbuf, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_BOOLEAN, gobject.TYPE_BOOLEAN, gobject.TYPE_BOOLEAN, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_INT, gobject.TYPE_INT, gobject.TYPE_INT, gobject.TYPE_INT)
 		cols = InitialiseColumns(self.frame.UserList,
 			[_("Status"), 20, "pixbuf"],
 			[_("User"), 120, "text", self.CellDataFunc],
@@ -32,7 +34,7 @@ class UserList:
 		cols[4].set_sort_column_id(4)
 		cols[5].set_sort_column_id(5)
 		cols[6].set_sort_column_id(6)
-		cols[7].set_sort_column_id(7)
+		cols[7].set_sort_column_id(12)
 		cols[8].set_sort_column_id(8)
 		cols[0].get_widget().hide()
 		for i in range (9):
@@ -66,10 +68,19 @@ class UserList:
 
 			if len(user) > 5:
 				last_seen = user[5]
+				try:
+					time_from_epoch = time.mktime(time.strptime(last_seen,
+										    "%m/%d/%Y %H:%M:%S"))
+				except:
+					if last_seen == '':
+						time_from_epoch = sys.maxint
+					else:
+						time_from_epoch = 0
 			else:
 				last_seen = _("Never seen")
+				time_from_epoch = 0
 
-			row = [self.frame.GetStatusImage(0), user[0], "0", "0", trusted, notify, privileged, last_seen, user[1], 0, 0, 0]
+			row = [self.frame.GetStatusImage(0), user[0], "0", "0", trusted, notify, privileged, last_seen, user[1], 0, 0, 0, int(time_from_epoch)]
 			if len(user) > 2:
 				if user[2]:
 					self.notify.append(user[0])
@@ -144,17 +155,18 @@ class UserList:
 			self.SetComment(iter, store, value)
 		
 	def SetLastSeen(self, user, online =False):
-		import time
-
-		last_seen = "" 
+		last_seen = ""
+		time_from_epoch = sys.maxint
 
 		if not online:
 			last_seen = time.strftime("%m/%d/%Y %H:%M:%S")
-		
+			time_from_epoch = time.mktime(time.strptime(last_seen,
+								    "%m/%d/%Y %H:%M:%S"))
 		for i in self.userlist:
 			if i[0] == user:
 				i[2] = last_seen
 				self.usersmodel.set(i[3], 7, last_seen)
+				self.usersmodel.set(i[3], 12, int(time_from_epoch))
 				break
 				
 		if not online:
@@ -241,7 +253,7 @@ class UserList:
 		if user in [i[0] for i in self.userlist]:
 			return
 
-		row = [self.frame.GetStatusImage(0), user, "0", "0", False, False, False, _("Never seen"), "", 0, 0, 0]
+		row = [self.frame.GetStatusImage(0), user, "0", "0", False, False, False, _("Never seen"), "", 0, 0, 0, 0]
 		iter = self.usersmodel.append(row)
 		self.userlist.append([user, "", _("Never seen"), iter])
 		
