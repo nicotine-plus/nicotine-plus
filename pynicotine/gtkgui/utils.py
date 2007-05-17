@@ -611,7 +611,7 @@ def WriteLog(logfile, logsdir, fn, msg):
 def fixpath(path):
 	try:
 		if sys.platform == "win32":
-			chars = ["?", "\/", "\"", ":", ">", "<", "|", "*"]
+			chars = ["?", "/", "\\", "\"", ":", ">", "<", "|", "*"]
 			for char in chars:
 				path = path.replace(char, "_")
 		return path
