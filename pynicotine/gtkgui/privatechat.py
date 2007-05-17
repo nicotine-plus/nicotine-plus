@@ -5,7 +5,7 @@ import gobject
 import os
 import pango
 from nicotine_glade import PrivateChatTab
-from utils import AppendLine, IconNotebook, PopupMenu, WriteLog, expand_alias, EncodingsMenu, SaveEncoding
+from utils import AppendLine, IconNotebook, PopupMenu, WriteLog, expand_alias, EncodingsMenu, SaveEncoding, encode
 from chatrooms import GetCompletion
 from pynicotine import slskmessages
 
@@ -179,7 +179,7 @@ class PrivateChat(PrivateChatTab):
 		self.UpdateColours()
 		
 		# Read log file
-		log = os.path.join(self.frame.np.config.sections["logging"]["logsdir"], self.user.replace(os.sep, "-") + ".log")
+		log = os.path.join(self.frame.np.config.sections["logging"]["logsdir"], encode(self.user.replace(os.sep, "-")) + ".log")
 		try:
 			f = open(log, "r")
 			d = f.read()
