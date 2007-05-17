@@ -5,7 +5,7 @@ import gobject
 import pango
 import time
 import locale
-import os
+import os, sys
 import string
 import re
 import types
@@ -602,7 +602,7 @@ def WriteLog(logfile, logsdir, fn, msg):
 		oldumask = os.umask(0077)
 		if not os.path.exists(logsdir):
 			os.makedirs(logsdir)
-		logfile = open(fixpath(os.path.join(logsdir, fn.replace(os.sep, "-") + ".log")), 'a', 0)
+		logfile = open(os.path.join(logsdir, fixpath(fn.replace(os.sep, "-")) + ".log"), 'a', 0)
 		os.umask(oldumask)
 	logfile.write("%s %s\n" % (recode(time.strftime("%c")), msg))
 	logfile.flush()
