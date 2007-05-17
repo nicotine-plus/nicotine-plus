@@ -5,7 +5,7 @@ import gobject
 import os
 import pango
 from nicotine_glade import PrivateChatTab
-from utils import AppendLine, IconNotebook, PopupMenu, WriteLog, expand_alias, EncodingsMenu, SaveEncoding, encode
+from utils import AppendLine, IconNotebook, PopupMenu, WriteLog, expand_alias, EncodingsMenu, SaveEncoding, fixpath
 from chatrooms import GetCompletion
 from pynicotine import slskmessages
 
@@ -179,7 +179,7 @@ class PrivateChat(PrivateChatTab):
 		self.UpdateColours()
 		
 		# Read log file
-		log = os.path.join(self.frame.np.config.sections["logging"]["logsdir"], encode(self.user.replace(os.sep, "-")) + ".log")
+		log = os.path.join(self.frame.np.config.sections["logging"]["logsdir"], fixpath(self.user.replace(os.sep, "-")) + ".log")
 		try:
 			f = open(log, "r")
 			d = f.read()
@@ -278,7 +278,7 @@ class PrivateChat(PrivateChatTab):
 		
 		AppendLine(self.ChatScroll, message, tag, "%c", username=my_username, usertag=usertag)
 		if self.Log.get_active():
-			self.logfile = WriteLog(self.logfile, self.frame.np.config.sections["logging"]["logsdir"], encode(self.user), message)
+			self.logfile = WriteLog(self.logfile, self.frame.np.config.sections["logging"]["logsdir"], fixpath(self.user), message)
 		
 		if self.PeerPrivateMessages.get_active():
 			# not in the soulseek protocol

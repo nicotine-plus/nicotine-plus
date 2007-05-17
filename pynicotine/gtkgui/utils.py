@@ -602,13 +602,13 @@ def WriteLog(logfile, logsdir, fn, msg):
 		oldumask = os.umask(0077)
 		if not os.path.exists(logsdir):
 			os.makedirs(logsdir)
-		logfile = open(encode(os.path.join(logsdir, fn.replace(os.sep, "-") + ".log")), 'a', 0)
+		logfile = open(fixpath(os.path.join(logsdir, fn.replace(os.sep, "-") + ".log")), 'a', 0)
 		os.umask(oldumask)
 	logfile.write("%s %s\n" % (recode(time.strftime("%c")), msg))
 	logfile.flush()
 	return logfile
 		
-def encode(path):
+def fixpath(path):
 	try:
 		if sys.platform == "win32":
 			chars = ["?", "\/", "\"", ":", ">", "<", "|", "*"]
