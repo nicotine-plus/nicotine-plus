@@ -278,7 +278,7 @@ class PrivateChat(PrivateChatTab):
 		
 		AppendLine(self.ChatScroll, message, tag, "%c", username=my_username, usertag=usertag)
 		if self.Log.get_active():
-			self.logfile = WriteLog(self.logfile, self.frame.np.config.sections["logging"]["logsdir"], self.user, message)
+			self.logfile = WriteLog(self.logfile, self.frame.np.config.sections["logging"]["logsdir"], encode(self.user), message)
 		
 		if self.PeerPrivateMessages.get_active():
 			# not in the soulseek protocol
