@@ -108,6 +108,10 @@ def write_widget_attrs(widget):
 		
 	for i in attrs:
 		if widget.attrs.has_key(i[0]):
+			#print widget.attrs[i[0]]
+			if i[0] == "width_chars" and widget.attrs[i[0]] == "-1":
+				continue
+				
 			v = i[1](widget.id, widget.attrs[i[0]])
 			if v:
 				print indent + "%s" % v
@@ -141,6 +145,8 @@ def write_widget_spinbutton(widget, my_class, *args):
 	for i in attrs:
 		if i[0] in allowed:
 			if widget.attrs.has_key(i[0]):
+				if i[0] == "width_chars" and widget.attrs["width_chars"] == -1:
+					continue
 				v = i[1](widget.id, widget.attrs[i[0]])
 				if v:
 					print indent + "%s" % v
@@ -199,7 +205,7 @@ def write_widget_generic(widget, my_class, *args):
 				if widget.attrs.has_key("use_markup") and widget.attrs["use_markup"] == "True":
 					widget.attrs["set_markup"] = s
 					s = ""
-
+			
 			if s:
 				narg = '_("%s")' % s
 			else:

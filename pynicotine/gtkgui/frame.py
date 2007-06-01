@@ -1508,6 +1508,11 @@ class NicotineFrame(MainWindow):
 		dlg = AboutPrivateDialog(self.MainWindow)
 		dlg.run()
 		dlg.destroy()
+		
+	def OnAboutDependencies(self, widget):
+		dlg = AboutDependenciesDialog(self.MainWindow)
+		dlg.run()
+		dlg.destroy()
 	
 	def OnAboutFilters(self, widget):
 		dlg = AboutFiltersDialog(self.MainWindow)

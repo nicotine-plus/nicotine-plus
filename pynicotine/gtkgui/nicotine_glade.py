@@ -312,6 +312,14 @@ class MainWindow:
         self.about_private_chat_command1.set_image(img)
         self.help1_menu.append(self.about_private_chat_command1)
 
+        self.about_dependencies = gtk.ImageMenuItem(_("About _optional dependencies"))
+        self.about_dependencies.show()
+        self.about_dependencies.connect("activate", self.OnAboutDependencies)
+
+        img = gtk.image_new_from_stock(gtk.STOCK_HELP, gtk.ICON_SIZE_MENU)
+        self.about_dependencies.set_image(img)
+        self.help1_menu.append(self.about_dependencies)
+
         self.scheidingslijn4 = gtk.MenuItem()
         self.scheidingslijn4.show()
 
@@ -1060,32 +1068,6 @@ class MainWindow:
 
         self.hbox12.pack_end(self.button17, False, False, 0)
 
-        self.button19 = gtk.Button()
-        self.button19.show()
-        self.button19.connect("clicked", self.OnSimilarUsersClicked)
-
-        self.alignment6 = gtk.Alignment(0.5, 0.5, 0, 0)
-        self.alignment6.show()
-
-        self.hbox26 = gtk.HBox(False, 0)
-        self.hbox26.show()
-        self.hbox26.set_spacing(2)
-
-        self.image6 = gtk.Image()
-        self.image6.set_from_stock(gtk.STOCK_REFRESH, 4)
-        self.image6.show()
-        self.hbox26.pack_start(self.image6, False, False, 0)
-
-        self.label35 = gtk.Label(_("Similar users"))
-        self.label35.show()
-        self.hbox26.pack_start(self.label35, False, False, 0)
-
-        self.alignment6.add(self.hbox26)
-
-        self.button19.add(self.alignment6)
-
-        self.hbox12.pack_end(self.button19, False, False, 0)
-
         self.button18 = gtk.Button()
         self.button18.show()
         self.button18.connect("clicked", self.OnRecommendationsClicked)
@@ -1111,6 +1093,32 @@ class MainWindow:
         self.button18.add(self.alignment5)
 
         self.hbox12.pack_end(self.button18, False, False, 0)
+
+        self.button19 = gtk.Button()
+        self.button19.show()
+        self.button19.connect("clicked", self.OnSimilarUsersClicked)
+
+        self.alignment6 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment6.show()
+
+        self.hbox26 = gtk.HBox(False, 0)
+        self.hbox26.show()
+        self.hbox26.set_spacing(2)
+
+        self.image6 = gtk.Image()
+        self.image6.set_from_stock(gtk.STOCK_REFRESH, 4)
+        self.image6.show()
+        self.hbox26.pack_start(self.image6, False, False, 0)
+
+        self.label35 = gtk.Label(_("Similar users"))
+        self.label35.show()
+        self.hbox26.pack_start(self.label35, False, False, 0)
+
+        self.alignment6.add(self.hbox26)
+
+        self.button19.add(self.alignment6)
+
+        self.hbox12.pack_end(self.button19, False, False, 0)
 
         self.interests.pack_start(self.hbox12, False, True, 0)
 
@@ -1408,6 +1416,9 @@ class MainWindow:
     def OnAboutPrivateChatCommands(self, widget):
         pass
 
+    def OnAboutDependencies(self, widget):
+        pass
+
     def OnAboutFilters(self, widget):
         pass
 
@@ -1432,10 +1443,10 @@ class MainWindow:
     def OnGlobalRecommendationsClicked(self, widget):
         pass
 
-    def OnSimilarUsersClicked(self, widget):
+    def OnRecommendationsClicked(self, widget):
         pass
 
-    def OnRecommendationsClicked(self, widget):
+    def OnSimilarUsersClicked(self, widget):
         pass
 
     def OnAddThingILike(self, widget):
@@ -1533,30 +1544,6 @@ class ChatRoomTab:
 
         self.vbox5.pack_start(self.scrolledwindow14)
 
-        self.hbox58 = gtk.HBox(False, 0)
-        self.hbox58.show()
-        self.hbox58.set_spacing(5)
-        self.hbox58.set_border_width(3)
-
-        self.Log = gtk.CheckButton()
-        self.Log.set_label(_("Log"))
-        self.Log.show()
-        self.Log.connect("toggled", self.OnLogToggled)
-        self.hbox58.pack_start(self.Log, False, False, 0)
-
-        self.Encoding_List = gtk.ListStore(gobject.TYPE_STRING)
-        self.Encoding = gtk.ComboBox()
-        self.Encoding.show()
-        self.Encoding.connect("changed", self.OnEncodingChanged)
-
-        self.Encoding.set_model(self.Encoding_List)
-        cell = gtk.CellRendererText()
-        self.Encoding.pack_start(cell, True)
-        self.Encoding.add_attribute(cell, 'text', 0)
-        self.hbox58.pack_start(self.Encoding)
-
-        self.vbox5.pack_start(self.hbox58, False, False, 0)
-
         self.hbox4 = gtk.HBox(False, 0)
         self.hbox4.show()
         self.hbox4.set_border_width(3)
@@ -1595,6 +1582,30 @@ class ChatRoomTab:
 
         self.vbox5.pack_start(self.hbox4, False, True, 0)
 
+        self.hbox58 = gtk.HBox(False, 0)
+        self.hbox58.show()
+        self.hbox58.set_spacing(5)
+        self.hbox58.set_border_width(3)
+
+        self.Log = gtk.CheckButton()
+        self.Log.set_label(_("Log"))
+        self.Log.show()
+        self.Log.connect("toggled", self.OnLogToggled)
+        self.hbox58.pack_start(self.Log, False, False, 0)
+
+        self.Encoding_List = gtk.ListStore(gobject.TYPE_STRING)
+        self.Encoding = gtk.ComboBox()
+        self.Encoding.show()
+        self.Encoding.connect("changed", self.OnEncodingChanged)
+
+        self.Encoding.set_model(self.Encoding_List)
+        cell = gtk.CellRendererText()
+        self.Encoding.pack_start(cell, True)
+        self.Encoding.add_attribute(cell, 'text', 0)
+        self.hbox58.pack_start(self.Encoding)
+
+        self.vbox5.pack_start(self.hbox58, False, False, 0)
+
         self.Main.pack2(self.vbox5, False, True)
 
 
@@ -1610,16 +1621,16 @@ class ChatRoomTab:
     def OnKeyPress(self, widget):
         pass
 
-    def OnLogToggled(self, widget):
-        pass
-
-    def OnEncodingChanged(self, widget):
-        pass
-
     def OnAutojoin(self, widget):
         pass
 
     def OnLeave(self, widget):
+        pass
+
+    def OnLogToggled(self, widget):
+        pass
+
+    def OnEncodingChanged(self, widget):
         pass
 
     def get_custom_widget(self, id, string1, string2, int1, int2):
@@ -1931,6 +1942,7 @@ class SearchTab:
         self.vbox7.pack_start(self.Filters, False, True, 3)
 
         self.scrolledwindow17 = gtk.ScrolledWindow()
+        self.scrolledwindow17.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
         self.scrolledwindow17.show()
         self.scrolledwindow17.set_shadow_type(gtk.SHADOW_IN)
 

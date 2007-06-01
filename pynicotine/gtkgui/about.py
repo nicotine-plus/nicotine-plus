@@ -249,3 +249,18 @@ class AboutPrivateDialog(GenericTableDialog):
 
 	def __init__(self, parent):
 		GenericTableDialog.__init__(self, parent, _("About private chat commands"))
+
+class AboutDependenciesDialog(GenericTableDialog):
+	items = [
+	        _("Sound Effects"), _("Gstreamer-python: http://gstreamer.freedesktop.org/modules/gst-python.html \nSoX: http://sox.sourceforge.net/ \nAny other command-executable OGG player"),
+		"", "",
+		_("Spell Checking"), _("Libsexy, sexy-python: http://www.chipx86.com/wiki/Libsexy"),
+		_("Speed Up"), _("Psyco: http://psyco.sourceforge.net/"),
+	        _("IP Address Geolocation"), _("GeoIP-Python: http://www.maxmind.com/app/python"),
+		_("OGG Metadata"), _("PyVorbis: http://ekyo.nerim.net/software/pyogg/ (Warning: May be unstable)"),
+	        
+
+	]
+
+	def __init__(self, parent):
+		GenericTableDialog.__init__(self, parent, _("About optional dependencies"))

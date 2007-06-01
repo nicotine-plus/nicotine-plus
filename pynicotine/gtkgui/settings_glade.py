@@ -86,6 +86,7 @@ class ServerFrame:
         self.Login.set_editable(True)
         self.Login.show()
         self.Login.set_visibility(True)
+        self.Login.set_width_chars(29)
         self.vbox73.pack_start(self.Login, False, False, 0)
 
         self.hbox104.pack_start(self.vbox73, False, False, 0)
@@ -112,6 +113,7 @@ class ServerFrame:
         self.Password.set_editable(True)
         self.Password.show()
         self.Password.set_visibility(False)
+        self.Password.set_width_chars(10)
         self.vbox74.pack_start(self.Password, False, False, 0)
 
         self.hbox104.pack_start(self.vbox74, False, False, 0)
@@ -1323,7 +1325,7 @@ class BloatFrame:
         self.vboxUI.set_border_width(5)
 
         self.SpellCheck = gtk.CheckButton()
-        self.tooltips.set_tip(self.SpellCheck, _("LibSexy Homepage: http://www.chipx86.com/wiki/Libsexy \n sexy-python bindings required."))
+        self.tooltips.set_tip(self.SpellCheck, _("Libsexy Website: http://www.chipx86.com/wiki/Libsexy \nlibsexy and sexy-python bindings required."))
         self.SpellCheck.set_active(False)
         self.SpellCheck.set_label(_("Enable spell checker (requires a restart)"))
         self.SpellCheck.show()
@@ -3139,11 +3141,11 @@ class AwayFrame:
         self.hbox105.pack_start(self.label170, False, False, 0)
 
         self.AutoAway = gtk.Entry()
-        self.AutoAway.set_size_request(27, -1)
         self.AutoAway.set_text(_("15"))
         self.AutoAway.set_editable(True)
         self.AutoAway.show()
         self.AutoAway.set_visibility(True)
+        self.AutoAway.set_width_chars(3)
         self.hbox105.pack_start(self.AutoAway, False, False, 0)
 
         self.label171 = gtk.Label(_(" minutes of inactivity"))

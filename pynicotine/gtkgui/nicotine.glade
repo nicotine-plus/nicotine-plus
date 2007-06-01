@@ -484,6 +484,21 @@
                       </widget>
                     </child>
                     <child>
+                      <widget class="GtkImageMenuItem" id="about_dependencies">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">About _optional dependencies</property>
+                        <property name="use_underline">True</property>
+                        <signal name="activate" handler="OnAboutDependencies"/>
+                        <child internal-child="image">
+                          <widget class="GtkImage" id="menu-item-image29">
+                            <property name="visible">True</property>
+                            <property name="stock">gtk-help</property>
+                            <property name="icon_size">1</property>
+                          </widget>
+                        </child>
+                      </widget>
+                    </child>
+                    <child>
                       <widget class="GtkSeparatorMenuItem" id="scheidingslijn4">
                         <property name="visible">True</property>
                       </widget>
@@ -1915,54 +1930,6 @@
                           </packing>
                         </child>
                         <child>
-                          <widget class="GtkButton" id="button19">
-                            <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <signal name="clicked" handler="OnSimilarUsersClicked"/>
-                            <child>
-                              <widget class="GtkAlignment" id="alignment6">
-                                <property name="visible">True</property>
-                                <property name="xscale">0</property>
-                                <property name="yscale">0</property>
-                                <child>
-                                  <widget class="GtkHBox" id="hbox26">
-                                    <property name="visible">True</property>
-                                    <property name="spacing">2</property>
-                                    <child>
-                                      <widget class="GtkImage" id="image6">
-                                        <property name="visible">True</property>
-                                        <property name="stock">gtk-refresh</property>
-                                      </widget>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="fill">False</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <widget class="GtkLabel" id="label35">
-                                        <property name="visible">True</property>
-                                        <property name="label" translatable="yes">Similar users</property>
-                                        <property name="use_underline">True</property>
-                                      </widget>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="fill">False</property>
-                                        <property name="position">1</property>
-                                      </packing>
-                                    </child>
-                                  </widget>
-                                </child>
-                              </widget>
-                            </child>
-                          </widget>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">False</property>
-                            <property name="pack_type">GTK_PACK_END</property>
-                            <property name="position">1</property>
-                          </packing>
-                        </child>
-                        <child>
                           <widget class="GtkButton" id="button18">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
@@ -1990,6 +1957,54 @@
                                       <widget class="GtkLabel" id="label34">
                                         <property name="visible">True</property>
                                         <property name="label" translatable="yes">Recommendations</property>
+                                        <property name="use_underline">True</property>
+                                      </widget>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">False</property>
+                                        <property name="position">1</property>
+                                      </packing>
+                                    </child>
+                                  </widget>
+                                </child>
+                              </widget>
+                            </child>
+                          </widget>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">False</property>
+                            <property name="pack_type">GTK_PACK_END</property>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <widget class="GtkButton" id="button19">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <signal name="clicked" handler="OnSimilarUsersClicked"/>
+                            <child>
+                              <widget class="GtkAlignment" id="alignment6">
+                                <property name="visible">True</property>
+                                <property name="xscale">0</property>
+                                <property name="yscale">0</property>
+                                <child>
+                                  <widget class="GtkHBox" id="hbox26">
+                                    <property name="visible">True</property>
+                                    <property name="spacing">2</property>
+                                    <child>
+                                      <widget class="GtkImage" id="image6">
+                                        <property name="visible">True</property>
+                                        <property name="stock">gtk-refresh</property>
+                                      </widget>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">False</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <widget class="GtkLabel" id="label35">
+                                        <property name="visible">True</property>
+                                        <property name="label" translatable="yes">Similar users</property>
                                         <property name="use_underline">True</property>
                                       </widget>
                                       <packing>
@@ -2408,15 +2423,15 @@
         <child>
           <widget class="GtkVBox" id="vbox5">
             <property name="visible">True</property>
-	    <child>
+            <child>
               <widget class="GtkLabel" id="LabelPeople">
-                 <property name="visible">True</property>
-                 <property name="label" translatable="yes">0 people in room</property>
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">0 people in room</property>
               </widget>
               <packing>
-                 <property name="expand">False</property>
-                 <property name="fill">False</property>
-                 <property name="padding">2</property>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="padding">2</property>
               </packing>
             </child>
             <child>
@@ -2433,40 +2448,7 @@
                   </widget>
                 </child>
               </widget>
-            </child>
-            <child>
-              <widget class="GtkHBox" id="hbox58">
-                <property name="visible">True</property>
-                <property name="border_width">3</property>
-                <property name="spacing">5</property>
-                <child>
-                  <widget class="GtkCheckButton" id="Log">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="label" translatable="yes">Log</property>
-                    <property name="use_underline">True</property>
-                    <property name="draw_indicator">True</property>
-                    <signal name="toggled" handler="OnLogToggled"/>
-                  </widget>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">False</property>
-                  </packing>
-                </child>
-                <child>
-                  <widget class="GtkComboBox" id="Encoding">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <signal name="changed" handler="OnEncodingChanged"/>
-                  </widget>
-                  <packing>
-                    <property name="position">1</property>
-                  </packing>
-                </child>
-              </widget>
               <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
                 <property name="position">1</property>
               </packing>
             </child>
@@ -2540,6 +2522,42 @@
               <packing>
                 <property name="expand">False</property>
                 <property name="position">2</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkHBox" id="hbox58">
+                <property name="visible">True</property>
+                <property name="border_width">3</property>
+                <property name="spacing">5</property>
+                <child>
+                  <widget class="GtkCheckButton" id="Log">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="label" translatable="yes">Log</property>
+                    <property name="use_underline">True</property>
+                    <property name="draw_indicator">True</property>
+                    <signal name="toggled" handler="OnLogToggled"/>
+                  </widget>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkComboBox" id="Encoding">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <signal name="changed" handler="OnEncodingChanged"/>
+                  </widget>
+                  <packing>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+              </widget>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">1</property>
               </packing>
             </child>
           </widget>
@@ -2986,6 +3004,8 @@
           <widget class="GtkScrolledWindow" id="scrolledwindow17">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
+            <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+            <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
             <property name="shadow_type">GTK_SHADOW_IN</property>
             <child>
               <widget class="GtkTreeView" id="ResultsList">
