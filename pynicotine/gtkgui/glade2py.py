@@ -16,7 +16,7 @@ class Widget:
 attrs = [
 	["title", lambda w, v: "%s.set_title(_(\"%s\"))" %(w, v.replace("\"", "\\\""))],
 	["active", lambda w, v: "%s.set_active(%s)" % (w, v.capitalize())],
-	["label", lambda w, v: "%s.set_label(_(\"%s\"))" %(w, v.replace("\"", "\\\""))],
+	["label", lambda w, v: "%s.set_label(_(\"%s\"))" %(w, v.replace("\"", "\\\"").replace("\n", "\\n"))],
 	["window_position", lambda w,v: "%s.set_position(%s)" % (w, v.replace("GTK_", "gtk."))],
 	["tab_pos", lambda w,v: "%s.set_tab_pos(%s)" % (w, v.replace("GTK_", "gtk."))],
 	["has_resize_grip", lambda w,v: "%s.set_has_resize_grip(%s)" % (w,v.capitalize())],
@@ -38,6 +38,7 @@ attrs = [
 	["digits", lambda w,v: "%s.set_digits(%s)" % (w,v)],
 	["spacing", lambda w,v: "%s.set_spacing(%s)" % (w,v)],
 	["border_width", lambda w,v: "%s.set_border_width(%s)" % (w,v)],
+	["width_chars", lambda w,v: "%s.set_width_chars(%s)" % (w,v)],
 	["row_spacing", lambda w,v: "%s.set_row_spacings(%s)" % (w,v)],
 	["column_spacing", lambda w,v: "%s.set_col_spacings(%s)" % (w,v)],
 	["layout_style", lambda w,v: "%s.set_layout(%s)" % (w, v.replace("GTK_", "gtk."))],
@@ -136,10 +137,10 @@ def write_widget_spinbutton(widget, my_class, *args):
 	adjustment = "gtk.Adjustment(value=%s, lower=%s, upper=%s, step_incr=%s, page_incr=%s, page_size=%s)" % (value, min, max, step_incr, page_incr, page_size)
 	restargs = ""
 	print indent + "%s = gtk.%s(%s)" % (widget.id, my_class, adjustment)
-	allowed = ["visible", "digits"]
+	allowed = ["visible", "width_chars"]
 	for i in attrs:
 		if i[0] in allowed:
-			if widget.attrs.has_key("visible"):
+			if widget.attrs.has_key(i[0]):
 				v = i[1](widget.id, widget.attrs[i[0]])
 				if v:
 					print indent + "%s" % v
@@ -192,7 +193,7 @@ def write_widget_generic(widget, my_class, *args):
 				arg= "0"
 		elif arg[0] == "$":
 			
-			s = widget.attrs[arg[1:]].replace("\"", "\\\"")
+			s = widget.attrs[arg[1:]].replace("\"", "\\\"").replace("\n", "\\n")
 			
 			if arg[1:] == "label":
 				if widget.attrs.has_key("use_markup") and widget.attrs["use_markup"] == "True":

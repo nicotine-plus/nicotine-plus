@@ -77,8 +77,16 @@ def InitialiseColumns(treeview, *args):
 		if c[2] == "text":
 			renderer = gtk.CellRendererText()
 			column = gtk.TreeViewColumn(c[0], renderer, text = i)
+		elif c[2] == "colored":
+			renderer = gtk.CellRendererText()
+			column = gtk.TreeViewColumn(c[0], renderer, text = i, foreground = c[3][0], background = c[3][1])
 		elif c[2] == "edit":
 			renderer = gtk.CellRendererText()
+			renderer.set_property('editable', True)
+			column = gtk.TreeViewColumn(c[0], renderer, text = i)
+		elif c[2] == "combo":
+			renderer = gtk.CellRendererCombo()
+			renderer.set_property('text-column', 0)
 			renderer.set_property('editable', True)
 			column = gtk.TreeViewColumn(c[0], renderer, text = i)
 		elif c[2] == "progress":
@@ -101,7 +109,7 @@ def InitialiseColumns(treeview, *args):
 				column.set_sizing(gtk.TREE_VIEW_COLUMN_FIXED)
 				column.set_fixed_width(c[1])
 			column.set_min_width(0)
-		if len(c) > 3:
+		if len(c) > 3 and type(c[3]) is not list:
 			column.set_cell_data_func(renderer, c[3])
 		column.set_reorderable(True)
 		column.set_widget(gtk.Label(c[0]))

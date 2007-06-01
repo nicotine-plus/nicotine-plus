@@ -4,15 +4,17 @@ List of all people contributing to Nicotine+
 
 Nicotine+ maintainers
 ======================
-dealstorm
-	* main-developer (active)
+daelstorm
+	* Developer, Coder (active)
 	* Website: http://thegraveyard.org/daelstorm (Hosted by hyriand)
-	* keeps nicotine alive! do I need to say more? :)
+	* Email: [daelstorm(at)gmail(dot)com]
 
-osiris
-	* handy-man (active)
-	* [osiris.contact@gmail.com][osiris.codedchaos.com]
-	* maintainer of Nicotine+ documentation/some Linux packages, Author of Nicotine+ Guide, Nicotine+ on win32
+gallows
+	* Package-developer, Coder (active)
+        * AKA 'burp O'
+	* Website: http://perticone.homelinux.net/~sergio/
+	* Email: [g4llow(at)gmail(dot)com]
+	* Submitted Slack.Build file
 
 
 Nicotine+ related (develop)
@@ -21,10 +23,6 @@ Nicotine+ related (develop)
 eL_vErDe
 	* provides Nicotine+ Trac and SVN @ http://www.nicotine-plus.org
 
-g4llow
-	* Package-developer (active)			
-	* [g4llow@gmail.com][burpo.altervista.org]		
-	* Submitted Slack.Build file
 
 lee8oi		
 	* Bash Commander (active)		
@@ -48,7 +46,12 @@ Nicotine related
 
 Hyriand
 	* Founder (retired)
-	* [hyriand@thegraveyard.org] [http://nicotine.thegraveyard.org]
+	* [hyriand(at)thegraveyard(dot)org] [http://nicotine.thegraveyard.org]
+
+osiris
+	* handy-man (retired)
+	* [osiris.contact(at)gmail(dot)com][osiris.codedchaos.com]
+	* maintainer of Nicotine+ documentation/some Linux packages, Author of Nicotine+ Guide, Nicotine+ on win32
 	
 SmackleFunky	
 	* beta-tester (retired)
@@ -68,11 +71,11 @@ sierracat
 
 alexbk
 	* developer (retired?)	
-	* [ak@sensi.org]			
+	* [ak(at)sensi(dot)org]
 	* author of original pyslsk, which is used for nicotine core
 
 Gustavo
-	* [gjc@inescporto.pt]
+	* [gjc(at)inescporto(dot)pt]
 	* Made the exception dialog
 
 SeeSchloss

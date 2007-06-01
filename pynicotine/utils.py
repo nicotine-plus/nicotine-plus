@@ -7,7 +7,7 @@
 This module contains utility fuctions.
 """
 
-version = "1.2.8svn"
+version = "1.2.8"
 latesturl = "http://nicotine-plus.sourceforge.net/LATEST"
 
 import string
@@ -111,9 +111,10 @@ def getDirsMtimes(dirs, yieldcall = None):
 			contents = dircache.listdir(directory)
 			mtime = os.path.getmtime(directory)
 		except OSError, errtuple:
-			print errtuple
+			message = _("Scanning Error: %s Path: %s") % (errtuple, directory)
+			print message
 			if log:
-				log(str(errtuple))
+				log(message)
 			continue
 		if win32:
 			# remove Unicode for saving in list
@@ -131,9 +132,10 @@ def getDirsMtimes(dirs, yieldcall = None):
 				isdir = os.path.isdir(path)
 				mtime = os.path.getmtime(path)
 			except OSError, errtuple:
-				print errtuple
+				message = _("Scanning Error: %s Path: %s") % (errtuple, path)
+				print message
 				if log:
-					log(str(errtuple))
+					log(message)
 				continue
 			else:
 				if win32:
@@ -196,9 +198,10 @@ def getFilesList(mtimes, oldmtimes, oldlist, yieldcall = None, progress=None):
 			try:
 				isfile = os.path.isfile(path)
 			except OSError, errtuple:
-				print errtuple
+				message = _("Scanning Error: %s Path: %s") % (errtuple, path)
+				print message
 				if log:
-					log(str(errtuple))
+					log(message)
 				continue
 			else:
 				if isfile:
