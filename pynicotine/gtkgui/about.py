@@ -13,7 +13,7 @@ class GenericAboutDialog(gtk.Dialog):
 		self.set_resizable(False)
 		self.set_position(gtk.WIN_POS_CENTER)
 		self.vbox.set_spacing(10)
-		self.set_border_width(10)
+		self.set_border_width(5)
 
 class AboutDialog(GenericAboutDialog):
 	def __init__(self, parent):
@@ -161,17 +161,33 @@ class GenericTableDialog(GenericAboutDialog):
 	items = []
 	def __init__(self, parent, title = ""):
 		GenericAboutDialog.__init__(self, parent, title)
+		self.set_resizable(True)
+		ScrolledWindow = gtk.ScrolledWindow()
+		ScrolledWindow.set_shadow_type(gtk.SHADOW_IN)
+		ScrolledWindow.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+		ScrolledWindow.show()
+		self.resize(650, 500)
+		vbox2 = gtk.VBox()
+		vbox2.show()
 		rows = len(self.items) / 2
-		table = gtk.Table(rows, 2)
+		self.table = table = gtk.Table(rows, 2)
 		table.set_col_spacings(5)
+		table.set_row_spacings(2)
 		for i in range(rows):
-			l = gtk.Label(self.items[i*2])
+			l = gtk.Label()
+			l.set_markup(self.items[i*2])
 			l.set_alignment(0.0, 0.5)
-			r = gtk.Label(self.items[i*2+1])
+			r = gtk.Label()
+			r.set_markup(self.items[i*2+1])
 			r.set_alignment(0.0, 0.5)
-			table.attach(l, 0, 1, i, i+1, xoptions = gtk.FILL|gtk.EXPAND)
-			table.attach(r, 1, 2, i, i+1)
-		self.vbox.pack_start(table)
+			r.set_line_wrap(True)
+			table.attach(l, 0, 1, i, i+1, xoptions = gtk.FILL)
+
+			table.attach(r, 1, 2, i, i+1, xoptions = gtk.FILL|gtk.EXPAND)
+		vbox2.pack_start(table, False, False)
+		vbox2.pack_start(gtk.Label(), True, True)
+		ScrolledWindow.add_with_viewport(vbox2)
+		self.vbox.pack_start(ScrolledWindow)
 		self.show_all()
 
 class AboutRoomsDialog(GenericTableDialog):
@@ -252,15 +268,16 @@ class AboutPrivateDialog(GenericTableDialog):
 
 class AboutDependenciesDialog(GenericTableDialog):
 	items = [
-	        _("Sound Effects"), _("Gstreamer-python: http://gstreamer.freedesktop.org/modules/gst-python.html \nSoX: http://sox.sourceforge.net/ \nAny other command-executable OGG player"),
+	        "<b>%s</b>" % _("Sound Effects"), "<i>%s</i>" % _("Gstreamer-python, gstreamer")+"\n"+ _("Website:")+" "+ "http://gstreamer.freedesktop.org/modules/gst-python.html" +"\n"+ "<i>%s</i>" % _("SoX")+"\n"+_("Website:")+" "+"http://sox.sourceforge.net/"+"\n"+ "<i>%s</i>" % _("Any other command-executable OGG player"),
 		"", "",
-		_("Spell Checking"), _("Libsexy, sexy-python: http://www.chipx86.com/wiki/Libsexy"),
-		_("Speed Up"), _("Psyco: http://psyco.sourceforge.net/"),
-	        _("IP Address Geolocation"), _("GeoIP-Python: http://www.maxmind.com/app/python"),
-		_("OGG Metadata"), _("PyVorbis: http://ekyo.nerim.net/software/pyogg/ (Warning: May be unstable)"),
-	        
+		"<b>%s</b>" %_("Spell Checking"), "<i>%s</i>" % _("Libsexy, sexy-python") +"\n"+ _("Website:")+" "+"http://www.chipx86.com/wiki/Libsexy",
+		"<b>%s</b>" %_("Speed Up"), "<i>%s</i>" % _("Psyco")+"\n"+_("Website:")+" "+"http://psyco.sourceforge.net/",
+	        "<b>%s</b>" %_("IP Address Geolocation"), "<i>%s</i>" % _("GeoIP-Python")+"\n"+_("Website:")+" "+"http://www.maxmind.com/app/python",
+		"<b>%s</b>" %_("OGG Metadata"), "<i>%s</i>" % _("PyVorbis") +" "+ _("(Warning: May be unstable)")+"\n"+_("Website:")+" "+ "http://ekyo.nerim.net/software/pyogg/",
+	        "<b>%s</b>" %_("Download Notifications"), "<i>%s</i>" % _("notification-daemon, notify-python, libnotify") +"\n"+_("Website:")+" "+"http://www.galago-project.org/downloads.php",
 
 	]
 
 	def __init__(self, parent):
 		GenericTableDialog.__init__(self, parent, _("About optional dependencies"))
+		self.table.set_row_spacings(5)

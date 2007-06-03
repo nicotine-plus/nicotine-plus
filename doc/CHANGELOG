@@ -1,5 +1,12 @@
 ChangeLog for Nicotine Plus
 
+UNRELEASED
+
+General Changes
+ * libnotify support added (patch by infinito ticket #176 )
+   to show download completion popups in the tray.
+   notification-daemon, libnotify and python-notify required
+
 1.2.8 Release (1st June 2007)
 
 GENERAL CHANGES

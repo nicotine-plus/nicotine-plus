@@ -50,7 +50,7 @@ class Config:
 \
 "transfers":{"downloaddir":None,"sharedownloaddir":1,"shared":None, "buddyshared": [],\
 "uploadbandwidth":10, "uselimit":0,"uploadlimit":150, "preferfriends":0, \
-"useupslots":0, "uploadslots":2, "incompletedir":"", "afterfinish":"", \
+"useupslots":0, "uploadslots":2, "incompletedir":"", "shownotification":0, "afterfinish":"", \
 "afterfolder":"", "lock":1, "fifoqueue": 0, "usecustomban":0, "limitby":1, \
 "customban":"Banned, don't bother retrying","queuelimit":100,"friendsonly":0, \
 "friendsnolimits":0, "enablebuddyshares": 0, "enabletransferbuttons": 1, \

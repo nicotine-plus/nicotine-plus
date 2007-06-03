@@ -276,23 +276,36 @@ def write_widget_container(widget, my_class, pack, *args):
 			else:
 				print indent + "%s.add(%s)" % (widget.id, w.id)
 		elif pack == PM_ATTACH:
-			la = w.packing["left_attach"]
-			ra = w.packing["right_attach"]
-			ta = w.packing["top_attach"]
-			ba = w.packing["bottom_attach"]
+			if not w.packing.has_key("left_attach"):
+				la = 0
+			else:
+				la = w.packing["left_attach"]
+			if not w.packing.has_key("right_attach"):
+				ra = 1
+			else:
+				ra = w.packing["right_attach"]
+			#print w.packing, pack
+			if not w.packing.has_key("top_attach"):
+				ta = 0
+			else:
+				ta = w.packing["top_attach"]
+			if not w.packing.has_key("bottom_attach"):
+				ba = 1
+			else:
+				ba = w.packing["bottom_attach"]
 			xopts = "gtk.EXPAND|gtk.FILL"
 			yopts = "gtk.EXPAND|gtk.FILL"
 			if w.packing.has_key("x_options"):
 				if w.packing["x_options"] == "":
 					xopts = "0"
-				elif w.packing["x_options"] == "fill":
+				elif w.packing["x_options"] in ("fill", "GTK_FILL"):
 					xopts = "gtk.FILL"
 				elif w.packing["x_options"] == "expand":
 					xopts = "gtk.EXPAND"
 			if w.packing.has_key("y_options"):
 				if w.packing["y_options"] == "":
 					yopts = "0"
-				elif w.packing["y_options"] == "fill":
+				elif w.packing["y_options"] in ("fill", "GTK_FILL"):
 					yopts = "gtk.FILL"
 				elif w.packing["y_options"] == "expand":
 					yopts = "gtk.EXPAND"

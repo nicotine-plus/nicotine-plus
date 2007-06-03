@@ -1137,8 +1137,13 @@ class EventsFrame(settings_glade.EventsFrame):
 			self.FileManagerCombo.append_text( executable ) 
 		
 	def SetSettings(self, config):
-		
+		if self.frame.np.transfers is not None and self.frame.np.transfers.pynotify is not  None:
+			self.ShowNotification.set_sensitive(True)
+		else:
+			self.ShowNotification.set_sensitive(False)
 		transfers = config["transfers"]
+		if transfers["shownotification"] is not None: 
+			self.ShowNotification.set_active(transfers["shownotification"])
 		if transfers["afterfinish"] is not None:
 			self.AfterDownload.set_text(transfers["afterfinish"])
 		if transfers["afterfolder"] is not None:
@@ -1150,6 +1155,7 @@ class EventsFrame(settings_glade.EventsFrame):
 	def GetSettings(self):
 		return {
 			"transfers": {
+				"shownotification" : self.ShowNotification.get_active(),
 				"afterfinish": self.AfterDownload.get_text(),
 				"afterfolder": self.AfterFolder.get_text(),
 				

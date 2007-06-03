@@ -21,6 +21,7 @@ import utils
 import md5
 from utils import _
 from gtkgui.utils import recode2
+import gobject
 
 class Transfer:
 	""" This class holds information about a single transfer. """
@@ -111,6 +112,13 @@ class Transfers:
 				self.geoip = _GeoIP.new(_GeoIP.GEOIP_STANDARD)
 			except:
 				self.geoip = None
+				
+		try:
+			import pynotify
+			pynotify.init("Nicotine+")
+			self.pynotify = pynotify
+		except ImportError:
+			self.pynotify = None
  
 	def setTransferPanels(self, downloads, uploads):
 		self.downloadspanel = downloads
@@ -772,6 +780,18 @@ class Transfers:
 					self.eventprocessor.sendNumSharedFoldersFiles()
 					self.SaveDownloads()
 					self.downloadspanel.update(i)
+					if self.eventprocessor.config.sections["transfers"]["shownotification"] and self.pynotify != None:
+						n = self.pynotify.Notification("Nicotine+", _("%(file)s downloaded from %(user)s") % {'user':i.user, "file":newname})
+						n.set_icon_from_pixbuf(self.eventprocessor.frame.images["n"])
+						try: n.attach_to_status_icon(self.eventprocessor.frame.TrayApp.trayicon_module)
+						except: 
+							try: n.attach_to_widget(self.eventprocessor.frame.TrayApp.trayicon_module)
+							except: pass
+						try:
+							n.show()
+						except gobject.GError, error:
+							self.eventprocessor.frame.logMessage(_("Notification Error: %s") % str(error))
+
 					if self.eventprocessor.config.sections["transfers"]["afterfinish"]:
 						command = self.eventprocessor.config.sections["transfers"]["afterfinish"].replace("$", utils.escapeCommand(newname))
 						os.system(command)
