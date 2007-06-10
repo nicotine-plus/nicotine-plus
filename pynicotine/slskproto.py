@@ -258,7 +258,7 @@ class SlskProtoThread(threading.Thread):
 		# @var p Peer / Listen Port
 		p = self._p
 		# @var s Server Port
-		s = None
+		self._s = s = None
 		conns = self._conns
 		connsinprogress = self._connsinprogress
 		queue = self._queue
@@ -266,6 +266,7 @@ class SlskProtoThread(threading.Thread):
 		while not self._want_abort:
 			if not queue.empty():
 				conns, connsinprogress, s = self.process_queue(queue, conns, connsinprogress,s)
+				self._s = s
 			for i in conns.keys()[:]:
 				if conns[i].__class__ is ServerConnection and i is not s:
 					del conns[i]
@@ -311,7 +312,7 @@ class SlskProtoThread(threading.Thread):
 				else:
 					ip, port = self.getIpPort(incaddr)
 					if self.ipBlocked(ip):
-						# "ignore connection request from blocked ip address", ip, port
+						self._ui_callback(["ignore connection request from blocked ip address %s %s" %( ip, port)])
 						pass
 					else:
 						conns[incconn] = PeerConnection(incconn,incaddr,"","")
@@ -348,9 +349,9 @@ class SlskProtoThread(threading.Thread):
 			# Process Data
 			for i in conns.keys()[:]:
 				ip, port = self.getIpPort(conns[i].addr)
-				if self.ipBlocked(ip):
+				if self.ipBlocked(ip) and i is not self._s:
 					message = "Blocking peer connection to IP: %(ip)s Port: %(port)s" % { "ip":ip, "port":port}
-	
+					print message
 					self._ui_callback([message])
 					i.close()
 					del conns[i]
