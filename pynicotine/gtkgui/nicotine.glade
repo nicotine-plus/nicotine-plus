@@ -3523,7 +3523,7 @@
               </packing>
             </child>
             <child>
-              <widget class="GtkButton" id="button7">
+              <widget class="GtkButton" id="AddToList">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <signal name="clicked" handler="OnAddToList"/>
@@ -3570,7 +3570,7 @@
               </packing>
             </child>
             <child>
-              <widget class="GtkButton" id="button8">
+              <widget class="GtkButton" id="BanUser">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <signal name="clicked" handler="OnBanUser"/>
@@ -3617,7 +3617,7 @@
               </packing>
             </child>
             <child>
-              <widget class="GtkButton" id="button14">
+              <widget class="GtkButton" id="IgnoreUser">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <signal name="clicked" handler="OnIgnoreUser"/>
@@ -3664,7 +3664,7 @@
               </packing>
             </child>
             <child>
-              <widget class="GtkButton" id="button9">
+              <widget class="GtkButton" id="SavePicture">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <signal name="clicked" handler="OnSavePicture"/>
@@ -3711,7 +3711,18 @@
               </packing>
             </child>
             <child>
-              <widget class="GtkButton" id="button11">
+              <widget class="GtkLabel" id="Filler">
+                <property name="visible">True</property>
+                <property name="label" translatable="no"></property>
+              </widget>
+              <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">7</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkButton" id="RefreshUserinfo">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <signal name="clicked" handler="OnRefresh"/>
@@ -3754,12 +3765,12 @@
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
-                <property name="pack_type">GTK_PACK_END</property>
+                <property name="pack_type">GTK_PACK_START</property>
                 <property name="position">8</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkButton" id="button10">
+              <widget class="GtkButton" id="CloseUserinfo">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <signal name="clicked" handler="OnClose"/>
@@ -3802,14 +3813,14 @@
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
-                <property name="pack_type">GTK_PACK_END</property>
-                <property name="position">7</property>
+                <property name="pack_type">GTK_PACK_START</property>
+                <property name="position">1</property>
               </packing>
             </child>
           </widget>
           <packing>
             <property name="expand">False</property>
-            <property name="position">1</property>
+            <property name="position">8</property>
           </packing>
         </child>
       </widget>

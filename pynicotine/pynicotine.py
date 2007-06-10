@@ -61,7 +61,7 @@ class NetworkEventProcessor:
 		self.config.readConfig()
 	
 		self.queue = Queue.Queue(0)
-		self.protothread = slskproto.SlskProtoThread(self.frame.networkcallback,self.queue,self.config.sections["server"]["portrange"])
+		self.protothread = slskproto.SlskProtoThread(self.frame.networkcallback,self.queue,self.config)
 		uselimit = self.config.sections["transfers"]["uselimit"]
 		uploadlimit = self.config.sections["transfers"]["uploadlimit"]
 		limitby = self.config.sections["transfers"]["limitby"]

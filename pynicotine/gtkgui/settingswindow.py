@@ -582,12 +582,20 @@ class BanFrame(settings_glade.BanFrame):
 		self.Ignored.append_column(column)
 		self.Ignored.set_model(self.ignorelist)
 		self.Ignored.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
+
+		self.blocked = []
+		self.blockedlist = gtk.ListStore(gobject.TYPE_STRING)
+		column = gtk.TreeViewColumn(_("Addresses"), gtk.CellRendererText(), text = 0)
+		self.Blocked.append_column(column)
+		self.Blocked.set_model(self.blockedlist)
+		self.Blocked.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
 		
 	def SetSettings(self, config):
 		server = config["server"]
 		transfers = config["transfers"]
 		self.banlist.clear()
 		self.ignorelist.clear()
+		self.blockedlist.clear()
 		if server["banlist"] is not None:
 			self.banned = server["banlist"][:]
 			for banned in server["banlist"]:
@@ -596,6 +604,10 @@ class BanFrame(settings_glade.BanFrame):
 			self.ignored = server["ignorelist"][:]
 			for ignored in server["ignorelist"]:
 				self.ignorelist.append([ignored])
+		if server["ipblocklist"] is not None:
+			self.blocked = server["ipblocklist"][:]
+			for blocked in server["ipblocklist"]:
+				self.blockedlist.append([blocked])
 		if transfers["usecustomban"] is not None:
 			self.UseCustomBan.set_active(transfers["usecustomban"])
 		if transfers["customban"] is not None:
@@ -608,6 +620,7 @@ class BanFrame(settings_glade.BanFrame):
 			"server": {
 				"banlist": self.banned[:],
 				"ignorelist": self.ignored[:],
+				"ipblocklist": self.blocked[:],
 			},
 			"transfers": {
 				"usecustomban": self.UseCustomBan.get_active(),
@@ -621,12 +634,12 @@ class BanFrame(settings_glade.BanFrame):
 			self.banned.append(user)
 			self.banlist.append([user])
 	
-	def _RemoveBanned(self, model, path, iter, l):
+	def _AppendItem(self, model, path, iter, l):
 		l.append(iter)
 	
 	def OnRemoveBanned(self, widget):
 		iters = []
-		self.Banned.get_selection().selected_foreach(self._RemoveBanned, iters)
+		self.Banned.get_selection().selected_foreach(self._AppendItem, iters)
 		for iter in iters:
 			user = self.banlist.get_value(iter, 0)
 			self.banned.remove(user)
@@ -644,7 +657,7 @@ class BanFrame(settings_glade.BanFrame):
 	
 	def OnRemoveIgnored(self, widget):
 		iters = []
-		self.Ignored.get_selection().selected_foreach(self._RemoveBanned, iters)
+		self.Ignored.get_selection().selected_foreach(self._AppendItem, iters)
 		for iter in iters:
 			user = self.ignorelist.get_value(iter, 0)
 			self.ignored.remove(user)
@@ -657,6 +670,24 @@ class BanFrame(settings_glade.BanFrame):
 	def OnUseCustomBanToggled(self, widget):
 		self.CustomBan.set_sensitive(widget.get_active())
 
+	def OnAddBlocked(self, widget):
+		ip = InputDialog(self.Main.get_toplevel(), _("Block IP Address..."), _("IP:") )
+		if ip and ip not in self.blocked:
+			self.blocked.append(ip)
+			self.blockedlist.append([ip])
+	
+	def OnRemoveBlocked(self, widget):
+		iters = []
+		self.Blocked.get_selection().selected_foreach(self._AppendItem, iters)
+		for iter in iters:
+			ip = self.blockedlist.get_value(iter, 0)
+			self.blocked.remove(ip)
+			self.blockedlist.remove(iter)
+
+	def OnClearBlocked(self, widget):
+		self.blocked = []
+		self.blockedlist.clear()
+		
 class SoundsFrame(settings_glade.SoundsFrame):
 	def __init__(self, parent):
 		self.p = parent

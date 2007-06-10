@@ -2290,9 +2290,9 @@ class UserInfoTab:
 
         self.vbox9.pack_start(self.button6, False, False, 0)
 
-        self.button7 = gtk.Button()
-        self.button7.show()
-        self.button7.connect("clicked", self.OnAddToList)
+        self.AddToList = gtk.Button()
+        self.AddToList.show()
+        self.AddToList.connect("clicked", self.OnAddToList)
 
         self.alignment26 = gtk.Alignment(0.5, 0.5, 0, 0)
         self.alignment26.show()
@@ -2312,13 +2312,13 @@ class UserInfoTab:
 
         self.alignment26.add(self.hbox46)
 
-        self.button7.add(self.alignment26)
+        self.AddToList.add(self.alignment26)
 
-        self.vbox9.pack_start(self.button7, False, False, 0)
+        self.vbox9.pack_start(self.AddToList, False, False, 0)
 
-        self.button8 = gtk.Button()
-        self.button8.show()
-        self.button8.connect("clicked", self.OnBanUser)
+        self.BanUser = gtk.Button()
+        self.BanUser.show()
+        self.BanUser.connect("clicked", self.OnBanUser)
 
         self.alignment37 = gtk.Alignment(0.5, 0.5, 0, 0)
         self.alignment37.show()
@@ -2338,13 +2338,13 @@ class UserInfoTab:
 
         self.alignment37.add(self.hbox57)
 
-        self.button8.add(self.alignment37)
+        self.BanUser.add(self.alignment37)
 
-        self.vbox9.pack_start(self.button8, False, False, 0)
+        self.vbox9.pack_start(self.BanUser, False, False, 0)
 
-        self.button14 = gtk.Button()
-        self.button14.show()
-        self.button14.connect("clicked", self.OnIgnoreUser)
+        self.IgnoreUser = gtk.Button()
+        self.IgnoreUser.show()
+        self.IgnoreUser.connect("clicked", self.OnIgnoreUser)
 
         self.alignment32 = gtk.Alignment(0.5, 0.5, 0, 0)
         self.alignment32.show()
@@ -2364,13 +2364,13 @@ class UserInfoTab:
 
         self.alignment32.add(self.hbox52)
 
-        self.button14.add(self.alignment32)
+        self.IgnoreUser.add(self.alignment32)
 
-        self.vbox9.pack_start(self.button14, False, False, 0)
+        self.vbox9.pack_start(self.IgnoreUser, False, False, 0)
 
-        self.button9 = gtk.Button()
-        self.button9.show()
-        self.button9.connect("clicked", self.OnSavePicture)
+        self.SavePicture = gtk.Button()
+        self.SavePicture.show()
+        self.SavePicture.connect("clicked", self.OnSavePicture)
 
         self.alignment29 = gtk.Alignment(0.5, 0.5, 0, 0)
         self.alignment29.show()
@@ -2390,13 +2390,17 @@ class UserInfoTab:
 
         self.alignment29.add(self.hbox49)
 
-        self.button9.add(self.alignment29)
+        self.SavePicture.add(self.alignment29)
 
-        self.vbox9.pack_start(self.button9, False, False, 0)
+        self.vbox9.pack_start(self.SavePicture, False, False, 0)
 
-        self.button11 = gtk.Button()
-        self.button11.show()
-        self.button11.connect("clicked", self.OnRefresh)
+        self.Filler = gtk.Label("")
+        self.Filler.show()
+        self.vbox9.pack_start(self.Filler, True, True, 0)
+
+        self.RefreshUserinfo = gtk.Button()
+        self.RefreshUserinfo.show()
+        self.RefreshUserinfo.connect("clicked", self.OnRefresh)
 
         self.alignment30 = gtk.Alignment(0.5, 0.5, 0, 0)
         self.alignment30.show()
@@ -2416,13 +2420,13 @@ class UserInfoTab:
 
         self.alignment30.add(self.hbox50)
 
-        self.button11.add(self.alignment30)
+        self.RefreshUserinfo.add(self.alignment30)
 
-        self.vbox9.pack_end(self.button11, False, False, 0)
+        self.vbox9.pack_start(self.RefreshUserinfo, False, False, 0)
 
-        self.button10 = gtk.Button()
-        self.button10.show()
-        self.button10.connect("clicked", self.OnClose)
+        self.CloseUserinfo = gtk.Button()
+        self.CloseUserinfo.show()
+        self.CloseUserinfo.connect("clicked", self.OnClose)
 
         self.alignment31 = gtk.Alignment(0.5, 0.5, 0, 0)
         self.alignment31.show()
@@ -2442,9 +2446,9 @@ class UserInfoTab:
 
         self.alignment31.add(self.hbox51)
 
-        self.button10.add(self.alignment31)
+        self.CloseUserinfo.add(self.alignment31)
 
-        self.vbox9.pack_end(self.button10, False, False, 0)
+        self.vbox9.pack_start(self.CloseUserinfo, False, False, 0)
 
         self.Main.pack_start(self.vbox9, False, True, 0)
 

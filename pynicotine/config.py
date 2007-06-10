@@ -46,7 +46,7 @@ class Config:
 "server":{"server":('server.slsknet.org', 2240), "login":None,"passw":None, \
 "firewalled":1, "ctcpmsgs": 0, "autosearch":[],"autoreply":"", "roomencoding": {}, \
 "userencoding": {}, "portrange": (2234,2239), "enc":"utf-8", "userlist":[], \
-"banlist":[], "ignorelist":[], "autojoin":["nicotine"], "autoaway":15}, \
+"banlist":[], "ignorelist":[], "ipblocklist":[], "autojoin":["nicotine"], "autoaway":15}, \
 \
 "transfers":{"downloaddir":None,"sharedownloaddir":1,"shared":None, "buddyshared": [],\
 "uploadbandwidth":10, "uselimit":0,"uploadlimit":150, "preferfriends":0, \

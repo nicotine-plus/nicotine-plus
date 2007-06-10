@@ -2393,6 +2393,106 @@ class BanFrame:
 
         self.hbox141.pack_start(self.vbox97)
 
+        self.BlockedVbox = gtk.VBox(False, 0)
+        self.BlockedVbox.set_size_request(150, -1)
+        self.BlockedVbox.show()
+
+        self.BlockedLabel = gtk.Label(_("Blocked IP Addresses:"))
+        self.BlockedLabel.show()
+        self.BlockedVbox.pack_start(self.BlockedLabel, False, False, 0)
+
+        self.BlockedSW = gtk.ScrolledWindow()
+        self.BlockedSW.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+        self.BlockedSW.show()
+        self.BlockedSW.set_shadow_type(gtk.SHADOW_IN)
+
+        self.Blocked = gtk.TreeView()
+        self.Blocked.show()
+        self.Blocked.set_headers_visible(False)
+        self.BlockedSW.add(self.Blocked)
+
+        self.BlockedVbox.pack_start(self.BlockedSW)
+
+        self.BlockedIpAdd = gtk.Button()
+        self.BlockedIpAdd.show()
+        self.BlockedIpAdd.connect("clicked", self.OnAddBlocked)
+
+        self.alignmentAddIP = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignmentAddIP.show()
+
+        self.hboxAddIP = gtk.HBox(False, 0)
+        self.hboxAddIP.show()
+        self.hboxAddIP.set_spacing(2)
+
+        self.imageAddIp = gtk.Image()
+        self.imageAddIp.set_from_stock(gtk.STOCK_ADD, 4)
+        self.imageAddIp.show()
+        self.hboxAddIP.pack_start(self.imageAddIp, False, False, 0)
+
+        self.labelAddIp = gtk.Label(_("Add..."))
+        self.labelAddIp.show()
+        self.hboxAddIP.pack_start(self.labelAddIp, False, False, 0)
+
+        self.alignmentAddIP.add(self.hboxAddIP)
+
+        self.BlockedIpAdd.add(self.alignmentAddIP)
+
+        self.BlockedVbox.pack_start(self.BlockedIpAdd, False, False, 0)
+
+        self.BlockedIpRemove = gtk.Button()
+        self.BlockedIpRemove.show()
+        self.BlockedIpRemove.connect("clicked", self.OnRemoveBlocked)
+
+        self.alignmentRemoveIP = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignmentRemoveIP.show()
+
+        self.hboxRemoveIP = gtk.HBox(False, 0)
+        self.hboxRemoveIP.show()
+        self.hboxRemoveIP.set_spacing(2)
+
+        self.imageRemoveIP = gtk.Image()
+        self.imageRemoveIP.set_from_stock(gtk.STOCK_REMOVE, 4)
+        self.imageRemoveIP.show()
+        self.hboxRemoveIP.pack_start(self.imageRemoveIP, False, False, 0)
+
+        self.labelRemoveIP = gtk.Label(_("Remove"))
+        self.labelRemoveIP.show()
+        self.hboxRemoveIP.pack_start(self.labelRemoveIP, False, False, 0)
+
+        self.alignmentRemoveIP.add(self.hboxRemoveIP)
+
+        self.BlockedIpRemove.add(self.alignmentRemoveIP)
+
+        self.BlockedVbox.pack_start(self.BlockedIpRemove, False, False, 0)
+
+        self.BlockedIpClear = gtk.Button()
+        self.BlockedIpClear.show()
+        self.BlockedIpClear.connect("clicked", self.OnClearBlocked)
+
+        self.alignmentClearIPs = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignmentClearIPs.show()
+
+        self.hboxClearIPs = gtk.HBox(False, 0)
+        self.hboxClearIPs.show()
+        self.hboxClearIPs.set_spacing(2)
+
+        self.imageClearIPs = gtk.Image()
+        self.imageClearIPs.set_from_stock(gtk.STOCK_CLEAR, 4)
+        self.imageClearIPs.show()
+        self.hboxClearIPs.pack_start(self.imageClearIPs, False, False, 0)
+
+        self.labelClearIPs = gtk.Label(_("Clear"))
+        self.labelClearIPs.show()
+        self.hboxClearIPs.pack_start(self.labelClearIPs, False, False, 0)
+
+        self.alignmentClearIPs.add(self.hboxClearIPs)
+
+        self.BlockedIpClear.add(self.alignmentClearIPs)
+
+        self.BlockedVbox.pack_start(self.BlockedIpClear, False, False, 0)
+
+        self.hbox141.pack_start(self.BlockedVbox)
+
         self.vbox91.pack_start(self.hbox141)
 
         self.hbox146 = gtk.HBox(False, 0)
@@ -2436,6 +2536,15 @@ class BanFrame:
         pass
 
     def OnClearIgnored(self, widget):
+        pass
+
+    def OnAddBlocked(self, widget):
+        pass
+
+    def OnRemoveBlocked(self, widget):
+        pass
+
+    def OnClearBlocked(self, widget):
         pass
 
     def OnUseCustomBanToggled(self, widget):

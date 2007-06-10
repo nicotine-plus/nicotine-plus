@@ -170,7 +170,7 @@ class SlskProtoThread(threading.Thread):
 	distribclasses = {0:DistribAlive,3:DistribSearch}
 
 	
-	def __init__(self, ui_callback, queue, portrange):
+	def __init__(self, ui_callback, queue, config):
 		""" ui_callback is a UI callback function to be called with messages 
 		list as a parameter. queue is Queue object that holds messages from UI
 		thread.
@@ -180,7 +180,8 @@ class SlskProtoThread(threading.Thread):
 		self._queue = queue
 		self._want_abort = 0
 		self._stopped = 0
-	
+		self._config = config
+		portrange = config.sections["server"]["portrange"]
 		self.serverclasses = {}
 		for i in self.servercodes.keys():
 			self.serverclasses[self.servercodes[i]]=i
@@ -282,9 +283,9 @@ class SlskProtoThread(threading.Thread):
 			try:
 				# Select Networking Input and Output sockets
 				if sys.platform == "win32":
-					input,output,exc = multiselect(conns.keys()+connsinprogress.keys()+[p],connsinprogress.keys()+outsock,[],0.5)
+					input,output,exc = multiselect(conns.keys() + connsinprogress.keys()+ [p], connsinprogress.keys() + outsock,[], 0.5)
 				else:
-					input,output,exc = select.select(conns.keys()+connsinprogress.keys()+[p],connsinprogress.keys()+outsock,[],0.5)
+					input,output,exc = select.select(conns.keys() + connsinprogress.keys() +[p], connsinprogress.keys() + outsock,[], 0.5)
 				#print "Sockets open:", len(conns.keys()+connsinprogress.keys()+[p]+outsock), len(conns.keys()),  len(connsinprogress.keys())
 			except select.error, error:
 				if len(error.args) == 2 and error.args[0] == EINTR:
@@ -302,14 +303,19 @@ class SlskProtoThread(threading.Thread):
 					except socket.error, err:
 						self._ui_callback([ConnectError(conns[i],err)])
 			# Listen / Peer Port
-			if p in input:
+			if p in input[:]:
 				try:
 					incconn, incaddr = p.accept()
 				except:
 					time.sleep(0.1)
 				else:
-					conns[incconn] = PeerConnection(incconn,incaddr,"","")
-					self._ui_callback([IncConn(incconn, incaddr)])
+					ip, port = self.getIpPort(incaddr)
+					if self.ipBlocked(ip):
+						# "ignore connection request from blocked ip address", ip, port
+						pass
+					else:
+						conns[incconn] = PeerConnection(incconn,incaddr,"","")
+						self._ui_callback([IncConn(incconn, incaddr)])
 					
 			# Manage Connections
 			curtime = time.time()
@@ -327,12 +333,29 @@ class SlskProtoThread(threading.Thread):
 							conns[s]=ServerConnection(s,msgObj.addr,"","")
 							self._ui_callback([ServerConn(s,msgObj.addr)])
 						else:
-							conns[i]=PeerConnection(i,msgObj.addr,"","",msgObj.init)
-							self._ui_callback([OutConn(i,msgObj.addr)])
+							ip, port = self.getIpPort(msgObj.addr)
+							if self.ipBlocked(ip):
+								message = "Blocking peer connection in progress to IP: %(ip)s Port: %(port)s" % { "ip":ip, "port":port}
+								self._ui_callback([message])
+				
+							else:
+								conns[i]=PeerConnection(i,msgObj.addr,"","",msgObj.init)
+								self._ui_callback([OutConn(i,msgObj.addr)])
+							
+								
 						del connsinprogress[i]
 					
 			# Process Data
 			for i in conns.keys()[:]:
+				ip, port = self.getIpPort(conns[i].addr)
+				if self.ipBlocked(ip):
+					message = "Blocking peer connection to IP: %(ip)s Port: %(port)s" % { "ip":ip, "port":port}
+	
+					self._ui_callback([message])
+					i.close()
+					del conns[i]
+					continue
+
 				if i in input:
 					try:
 						self.readData(conns, i)
@@ -384,7 +407,19 @@ class SlskProtoThread(threading.Thread):
 		if s is not None:
 			s.close()
 		self._stopped = 1
-
+		
+	def ipBlocked(self, address):
+		if address in self._config.sections["server"]["ipblocklist"] or address is None:
+			return True
+		return False
+		
+	def getIpPort(self, address):
+		ip = port = None
+		if type(address) is tuple:
+			ip, port = address
+		
+		return ip, port
+		
 	def writeData(self, s, conns, i):
 		if self._limits.has_key(i):
 			limit = self._limits[i]
