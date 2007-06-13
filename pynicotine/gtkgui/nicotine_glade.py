@@ -1301,14 +1301,14 @@ class MainWindow:
         self.hbox10.pack_start(self.UserStatus, False, True, 0)
 
         self.DownStatus = gtk.Statusbar()
-        self.DownStatus.set_size_request(150, -1)
+        self.DownStatus.set_size_request(190, -1)
         self.DownStatus.set_has_resize_grip(False)
         self.DownStatus.show()
         self.DownStatus.set_border_width(1)
         self.hbox10.pack_start(self.DownStatus, False, True, 0)
 
         self.UpStatus = gtk.Statusbar()
-        self.UpStatus.set_size_request(150, -1)
+        self.UpStatus.set_size_request(180, -1)
         self.UpStatus.set_has_resize_grip(False)
         self.UpStatus.show()
         self.UpStatus.set_border_width(1)

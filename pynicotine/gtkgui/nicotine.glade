@@ -2309,7 +2309,7 @@
             </child>
             <child>
               <widget class="GtkStatusbar" id="DownStatus">
-                <property name="width_request">150</property>
+                <property name="width_request">190</property>
                 <property name="visible">True</property>
                 <property name="border_width">1</property>
                 <property name="has_resize_grip">False</property>
@@ -2321,7 +2321,7 @@
             </child>
             <child>
               <widget class="GtkStatusbar" id="UpStatus">
-                <property name="width_request">150</property>
+                <property name="width_request">180</property>
                 <property name="visible">True</property>
                 <property name="border_width">1</property>
                 <property name="has_resize_grip">False</property>
