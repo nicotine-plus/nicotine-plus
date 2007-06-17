@@ -360,6 +360,8 @@ class Searches:
 		
 	def UpdateColours(self):
 		for id in self.searches.values():
+			if id[2] is None:
+				continue
 			id[2].ChangeColours()
 			
 	def saveColumns(self):
