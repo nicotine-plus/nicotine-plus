@@ -2219,12 +2219,17 @@ class gstreamer:
 			pygst.require("0.10")
 			import gst
 		except Exception, error:
-			#print _("Gstreamer-python failed to play:"), error
+			print _("ERROR: Gstreamer-python module failed to load:"), error
 			return
 		self.gst = gst
-		self.player = gst.element_factory_make("playbin", "player")
-		fakesink = gst.element_factory_make('fakesink', "my-fakesink")
-		self.player.set_property("video-sink", fakesink)
+		try:
+			self.player = gst.element_factory_make("playbin", "player")
+			fakesink = gst.element_factory_make('fakesink', "my-fakesink")
+			self.player.set_property("video-sink", fakesink)
+		except Exception, error:
+			print _("ERROR: Gstreamer-python could not play:"), error
+			self.gst = self.player = None
+			return
 		
 		self.bus = self.player.get_bus()
 		self.bus.add_signal_watch()

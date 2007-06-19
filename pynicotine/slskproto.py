@@ -607,7 +607,10 @@ class SlskProtoThread(threading.Thread):
 						else:
 							msgs.append(msg)
 					except Exception, error:
-						print "Error in message function:", error, msgtype, conn
+						debugmessage =  "Error in message function:", error, msgtype, conn
+						msgs.append(debugmessage)
+						print debugmessage
+						
 				else:
 					host = port = _("unknown")
 					if conn.init.conn is not None and conn.addr is not None:
