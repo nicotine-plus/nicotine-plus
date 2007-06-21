@@ -1336,7 +1336,24 @@ class NicotineFrame(MainWindow):
 		else:
 			if self.np.transfers is None:
 				self.connect1.set_sensitive(1)
-	
+				
+	def AutoReplace(self, message):
+		if self.np.config.sections["words"]["replacewords"]:
+			autoreplaced = self.np.config.sections["words"]["autoreplaced"]
+			for word, replacement in autoreplaced.items():
+				message = message.replace(word, replacement)
+				
+		return message
+			
+	def CensorChat(self, message):
+		if self.np.config.sections["words"]["censorwords"]:
+			filler = self.np.config.sections["words"]["censorfill"]
+			censored = self.np.config.sections["words"]["censored"]
+			for word in censored:
+				message = message.replace(word, filler * len(word))
+				
+		return message
+		
 	def TransparentTint(self, update=None):
 
 		if not self.np.config.sections["ui"]["enabletrans"]:

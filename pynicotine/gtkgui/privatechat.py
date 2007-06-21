@@ -241,10 +241,10 @@ class PrivateChat(PrivateChatTab):
 	
 	def ShowMessage(self, text, status=None):
 		if text[:4] == "/me ":
-			line = "* %s %s" % (self.user, text[4:])
+			line = "* %s %s" % (self.user, self.frame.CensorChat(text[4:]))
 			tag = self.tag_me
 		else:
-			line = "[%s] %s" % (self.user, text)
+			line = "[%s] %s" % (self.user, self.frame.CensorChat(text))
 			tag = self.tag_remote
 		line = self.frame.np.decode(line, self.encoding)
 		AppendLine(self.ChatScroll, line, tag, "%c", username=self.user, usertag=self.tag_my_username)
@@ -282,9 +282,9 @@ class PrivateChat(PrivateChatTab):
 		
 		if self.PeerPrivateMessages.get_active():
 			# not in the soulseek protocol
-			self.frame.np.ProcessRequestToPeer(self.user, slskmessages.PMessageUser(None, my_username, text))
+			self.frame.np.ProcessRequestToPeer(self.user, slskmessages.PMessageUser(None, my_username, self.frame.AutoReplace(text)))
 		else:
-			self.frame.np.queue.put(slskmessages.MessageUser(self.user, text))
+			self.frame.np.queue.put(slskmessages.MessageUser(self.user, self.frame.AutoReplace(text)))
 			
 	CMDS = ["/alias ", "/unalias ", "/whois ", "/browse ", "/ip ", "/pm ", "/msg ", "/search ", "/usearch ", "/rsearch ",
 		"/bsearch ", "/add ", "/buddy ", "/rem ", "/unbuddy ", "/ban ", "/ignore ", "/unban ", "/unignore ", "/clear", "/quit", "/rescan", "/nsa", "/info", "/ctcpversion", "/join"]

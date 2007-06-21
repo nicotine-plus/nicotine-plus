@@ -6,7 +6,11 @@ General Changes
  * libnotify support added (patch by infinito ticket #176 )
    to show download completion popups in the tray.
    notification-daemon, libnotify and python-notify required
-	   
+ * Added IP blocking
+ * Added Censor list (applies to all chat message text)
+ * Added Auto-Replace list (applies to all outgoing chat message text)
+ * Rearranged the Settings tree and removed some descriptive panes
+
 Bug Fixes
  * Pressing enter in Search Filter entry boxes now works again
 

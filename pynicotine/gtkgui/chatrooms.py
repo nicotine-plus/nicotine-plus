@@ -562,11 +562,11 @@ class ChatRoom(ChatRoomTab):
 			self.changecolour(self.tag_users[user], color)
 		else:
 			self.tag_users[user] = self.makecolour(self.ChatScroll.get_buffer(), color, user)
-		self.lines.append(AppendLine(self.ChatScroll, self.frame.np.decode(line, self.encoding), tag, username=user, usertag=self.tag_users[user]))
+		self.lines.append(AppendLine(self.ChatScroll, self.frame.CensorChat(self.frame.np.decode(line, self.encoding)), tag, username=user, usertag=self.tag_users[user]))
 		if self.Log.get_active():
 			self.logfile = WriteLog(self.logfile, self.frame.np.config.sections["logging"]["logsdir"], self.room, line)
 			
-		
+
 
 	
 	CMDS = ["/alias ", "/unalias ", "/whois ", "/browse ", "/ip ", "/pm ", "/msg ", "/search ", "/usearch ", "/rsearch ",
@@ -690,7 +690,7 @@ class ChatRoom(ChatRoomTab):
 		else:
 			if text[:2] == "//":
 				text = text[1:]
-			self.frame.np.queue.put(slskmessages.SayChatroom(self.room, text))
+			self.frame.np.queue.put(slskmessages.SayChatroom(self.room, self.frame.AutoReplace(text)))
 		widget.set_text("")
 
 	def UserJoinedRoom(self, username, userdata):

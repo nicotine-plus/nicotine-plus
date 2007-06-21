@@ -504,7 +504,18 @@ class GeoBlockFrame(settings_glade.GeoBlockFrame):
 		self.p = parent
 		self.frame = parent.frame
 		settings_glade.GeoBlockFrame.__init__(self, False)
-	
+		try:
+			import GeoIP
+			
+		except ImportError:
+			try:
+				import _GeoIP
+			except ImportError:
+				self.GeoBlock.set_sensitive(False)
+				self.GeoPanic.set_sensitive(False)
+				self.GeoBlockCC.set_sensitive(False)
+				self.CountryCodesLabel.set_sensitive(False)
+			
 	def SetSettings(self, config):
 		transfers = config["transfers"]
 		if transfers["geoblock"] is not None:
@@ -1325,22 +1336,177 @@ class UrlCatchFrame(settings_glade.UrlCatchFrame):
 		self.protocolmodel.remove(self.protocols[key][0])
 		del self.protocols[key]
 
-class ConnectionFrame(settings_glade.ConnectionFrame):
-	def __init__(self):
-		settings_glade.ConnectionFrame.__init__(self, False)
-	def SetSettings(self, config):
-		return {}
-	def GetSettings(self):
-		return {}
-		
-class UIFrame(settings_glade.UIFrame):
-	def __init__(self):
-		settings_glade.UIFrame.__init__(self, False)
-	def SetSettings(self, config):
-		return {}
-	def GetSettings(self):
-		return {}
+class CensorFrame(settings_glade.CensorFrame):
+	def __init__(self, parent):
+		self.p = parent
+		self.frame = parent.frame
+		settings_glade.CensorFrame.__init__(self, False)
 
+		self.censorlist = gtk.ListStore(gobject.TYPE_STRING)
+		cols = InitialiseColumns(self.CensorList,
+			[_("Pattern"), -1, "edit", self.frame.CellDataFunc],
+		)
+		cols[0].set_sort_column_id(0)
+
+		self.CensorList.set_model(self.censorlist)
+
+		
+		renderers = cols[0].get_cell_renderers()
+		for render in renderers:
+			render.connect('edited', self.cell_edited_callback, self.CensorList, 0)
+
+		for letter in ["#", "$", "!", " ", "x", "*" ]:
+			self.CensorReplaceCombo.append_text( letter )
+			
+	def cell_edited_callback(self, widget, index, value, treeview, pos):
+		#print index, value, treeview, pos
+		store = treeview.get_model()
+		iter = store.get_iter(index)
+		#print iter, index, value
+		store.set(iter, pos, value)
+		
+	def SetSettings(self, config):
+		self.censorlist.clear()
+		words = config["words"]
+		if words["censored"] is not None:
+			for word in words["censored"]:
+				self.censorlist.append([word])
+		if words["censorwords"] is not None:
+			self.CensorCheck.set_active(words["censorwords"])
+		if words["censorfill"] is not None:
+			self.CensorReplaceEntry.set_text(words["censorfill"])
+
+
+	def GetSettings(self):
+		censored = []
+		try:
+			iter = self.censorlist.get_iter_root()
+			while iter is not None:
+				word = self.censorlist.get_value(iter, 0)
+				censored.append(word)
+				iter = self.censorlist.iter_next(iter)
+			
+		except:
+			pass
+			
+		return {
+			
+			"words": {
+				"censorfill": self.CensorReplaceEntry.get_text(),
+				"censored": censored,
+				"censorwords": self.CensorCheck.get_active(),
+			}
+		}
+	def OnAdd(self, widget):
+		iter = self.censorlist.append([""])
+		selection = self.CensorList.get_selection()
+		selection.unselect_all()
+		selection.select_iter(iter)
+		col = self.CensorList.get_column(0)
+		render = col.get_cell_renderers()[0]
+
+		self.CensorList.set_cursor(self.censorlist.get_path(iter), focus_column=col, start_editing=True)
+
+	def OnRemove(self, widget):
+		selection = self.CensorList.get_selection()
+		iter = selection.get_selected()[1]
+		if iter is not None:
+			self.censorlist.remove(iter)
+
+	def OnClear(self, widget):
+		self.censorlist.clear()
+	
+class AutoReplaceFrame(settings_glade.AutoReplaceFrame):
+	def __init__(self, parent):
+		self.p = parent
+		self.frame = parent.frame
+		settings_glade.AutoReplaceFrame.__init__(self, False)
+	
+		self.replacelist = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
+		cols = InitialiseColumns(self.ReplacementList,
+			[_("Pattern"), 150, "edit", self.frame.CellDataFunc],
+			[_("Replacement"), -1, "edit", self.frame.CellDataFunc],
+		)
+		cols[0].set_sort_column_id(0)
+		cols[1].set_sort_column_id(1)
+		self.ReplacementList.set_model(self.replacelist)
+
+		for column in cols:
+			renderers = column.get_cell_renderers()
+			for render in renderers:
+				render.connect('edited', self.cell_edited_callback, self.ReplacementList, cols.index(column))
+				
+	def cell_edited_callback(self, widget, index, value, treeview, pos):
+		
+		store = treeview.get_model()
+		iter = store.get_iter(index)
+		store.set(iter, pos, value)
+			
+	def SetSettings(self, config):
+		self.replacelist.clear()
+		words = config["words"]
+		if words["autoreplaced"] is not None:
+			for word, replacement in words["autoreplaced"].items():
+				self.replacelist.append([word, replacement])
+		if words["replacewords"] is not None:
+			self.ReplaceCheck.set_active(words["replacewords"])
+		
+	def GetSettings(self):
+		autoreplaced = {}
+		try:
+			iter = self.replacelist.get_iter_root()
+			while iter is not None:
+				word = self.replacelist.get_value(iter, 0)
+				replacement = self.replacelist.get_value(iter, 1)
+				autoreplaced[word] = replacement
+				iter = self.replacelist.iter_next(iter)
+			
+		except:
+			autoreplaced.clear()
+			
+		return {
+			
+			"words": {
+				"autoreplaced": autoreplaced,
+				"replacewords": self.ReplaceCheck.get_active(),
+			}
+		}
+		
+	def OnAdd(self, widget):
+		iter = self.replacelist.append(["", ""])
+		selection = self.ReplacementList.get_selection()
+		selection.unselect_all()
+		selection.select_iter(iter)
+		col = self.ReplacementList.get_column(0)
+		render = col.get_cell_renderers()[0]
+
+		self.ReplacementList.set_cursor(self.replacelist.get_path(iter), focus_column=col, start_editing=True)
+
+	def OnRemove(self, widget):
+		selection = self.ReplacementList.get_selection()
+		iter = selection.get_selected()[1]
+		if iter is not None:
+			self.replacelist.remove(iter)
+
+	def OnClear(self, widget):
+		self.replacelist.clear()
+
+	def OnDefaults(self, widget):
+		self.replacelist.clear()
+		defaults = {"teh": "the", "taht": "that", "tihng": "thing", "youre": "you're", "jsut": "just", "thier": "their", "tihs": "this"}
+		for word, replacement in defaults.items():
+			self.replacelist.append([word, replacement])
+    
+
+
+class ChatFrame(settings_glade.ChatFrame):
+	def __init__(self):
+		settings_glade.ChatFrame.__init__(self, False)
+	def SetSettings(self, config):
+		return {}
+	def GetSettings(self):
+		return {}
+	
 class MiscFrame(settings_glade.MiscFrame):
 	def __init__(self):
 		settings_glade.MiscFrame.__init__(self, False)
@@ -1369,34 +1535,31 @@ class SettingsWindow(settings_glade.SettingsWindow):
 		self.pages = p = {}
 		model = gtk.TreeStore(gobject.TYPE_STRING)
 
-		self.tree[_("Connection")] = row = model.append(None, [_("Connection")])
-		self.tree[_("Server")] = model.append(row, [_("Server")])
-		self.tree[_("Shares")] = model.append(row, [_("Shares")])
-		self.tree[_("Transfers")] = model.append(row, [_("Transfers")])
-		try:
-			import GeoIP
-			self.tree[_("Geo Block")] = model.append(row, [_("Geo Block")])
-		except ImportError:
-			try:
-				import _GeoIP
-				self.tree[_("Geo Block")] = model.append(row, [_("Geo Block")])
-			except ImportError:
-				pass
-
-		self.tree[_("UI")] = row = model.append(None, [_("UI")])
+		self.tree[_("Server")] = model.append(None, [_("Server")])
+		self.tree[_("Shares")] = model.append(None, [_("Shares")])
+		
+		self.tree[_("Transfers")] = row = model.append(None, [_("Transfers")])
+		
+		self.tree[_("Events")] = model.append(row, [_("Events")])
+		self.tree[_("Geo Block")] = model.append(row, [_("Geo Block")])
+		
+					
+		self.tree[_("Interface")] = row =  model.append(None, [_("Interface")])
 		self.tree[_("Icons")] = model.append(row, [_("Icons")])
-		self.tree[_("Interface")] = model.append(row, [_("Interface")])
+		
+		
+		self.tree[_("Chat")] = row = model.append(None, [_("Chat")])
+		self.tree[_("Away mode")] = model.append(row, [_("Away mode")])
+		self.tree[_("Logging")] = model.append(row, [_("Logging")])
+		self.tree[_("Censor List")] = model.append(row, [_("Censor List")])
+		self.tree[_("Auto-Replace")] = model.append(row, [_("Auto-Replace")])
 		self.tree[_("URL Catching")] = model.append(row, [_("URL Catching")])
 		
 		self.tree[_("Misc")] = row = model.append(None, [_("Misc")])
-		self.tree[_("Away mode")] = model.append(row, [_("Away mode")])
 		self.tree[_("Ban / ignore")] = model.append(row, [_("Ban / ignore")])
-		self.tree[_("Logging")] = model.append(row, [_("Logging")])
 		self.tree[_("Sounds")] = model.append(row, [_("Sounds")])
 		self.tree[_("Searches")] = model.append(row, [_("Searches")])
 		self.tree[_("User info")] = model.append(row, [_("User info")])
-		self.tree[_("Advanced")] = row = model.append(None, [_("Advanced")])
-		self.tree[_("Events")] = model.append(row, [_("Events")])
 		self.tree[_("Import Config")] = model.append(row, [_("Import Config")])
 		
 		p[_("Server")] = ServerFrame(self, frame.np.getencodings())
@@ -1412,11 +1575,12 @@ class SettingsWindow(settings_glade.SettingsWindow):
 		p[_("Logging")] = LogFrame(self)
 		p[_("Searches")] = SearchFrame(self)
 		p[_("Away mode")] = AwayFrame(self)
+		p[_("Censor List")] = CensorFrame(self)
+		p[_("Auto-Replace")] = AutoReplaceFrame(self)
+		p[_("Chat")] = ChatFrame()
 		p[_("Events")] = EventsFrame(self)
 		p[_("Import Config")] = ImportFrame(self)
 		
-		p[_("Connection")] = ConnectionFrame()
-		p[_("UI")] = UIFrame()
 		p[_("Misc")] = MiscFrame()
 		
 		column = gtk.TreeViewColumn(_("Categories"), gtk.CellRendererText(), text = 0)
@@ -1427,6 +1591,8 @@ class SettingsWindow(settings_glade.SettingsWindow):
 		self.SettingsTreeview.expand_row((0,), True)
 		self.SettingsTreeview.expand_row((1,), True)
 		self.SettingsTreeview.expand_row((2,), True)
+		self.SettingsTreeview.expand_row((3,), True)
+		self.SettingsTreeview.expand_row((4,), True)
 
 		self.SettingsTreeview.get_selection().connect("changed", self.switch_page)
 	
@@ -1491,6 +1657,7 @@ class SettingsWindow(settings_glade.SettingsWindow):
 				"ui": {},
 				"urls": {},
 				"players": {},
+				"words": {},
 				
 			}
 			
