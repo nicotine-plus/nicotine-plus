@@ -1868,7 +1868,8 @@ class SearchTab:
         self.FilterIn = gtk.ComboBoxEntry()
         self.FilterIn.show()
 
-        self.comboboxentry_entry3 = self.FilterIn.child
+        self.FilterInEntry = self.FilterIn.child
+        self.FilterInEntry.connect("activate", self.OnRefilter)
 
         self.FilterIn.set_model(self.FilterIn_List)
         self.FilterIn.set_text_column(0)
@@ -1882,7 +1883,8 @@ class SearchTab:
         self.FilterOut = gtk.ComboBoxEntry()
         self.FilterOut.show()
 
-        self.comboboxentry_entry4 = self.FilterOut.child
+        self.FilterOutEntry = self.FilterOut.child
+        self.FilterOutEntry.connect("activate", self.OnRefilter)
 
         self.FilterOut.set_model(self.FilterOut_List)
         self.FilterOut.set_text_column(0)
@@ -1897,7 +1899,8 @@ class SearchTab:
         self.FilterSize.set_size_request(75, -1)
         self.FilterSize.show()
 
-        self.comboboxentry_entry5 = self.FilterSize.child
+        self.FilterSizeEntry = self.FilterSize.child
+        self.FilterSizeEntry.connect("activate", self.OnRefilter)
 
         self.FilterSize.set_model(self.FilterSize_List)
         self.FilterSize.set_text_column(0)
@@ -1912,7 +1915,8 @@ class SearchTab:
         self.FilterBitrate.set_size_request(75, -1)
         self.FilterBitrate.show()
 
-        self.comboboxentry_entry6 = self.FilterBitrate.child
+        self.FilterBitrateEntry = self.FilterBitrate.child
+        self.FilterBitrateEntry.connect("activate", self.OnRefilter)
 
         self.FilterBitrate.set_model(self.FilterBitrate_List)
         self.FilterBitrate.set_text_column(0)
@@ -1927,7 +1931,8 @@ class SearchTab:
         self.FilterCountry.set_size_request(75, -1)
         self.FilterCountry.show()
 
-        self.comboboxentry_entry7 = self.FilterCountry.child
+        self.FilterCountryEntry = self.FilterCountry.child
+        self.FilterCountryEntry.connect("activate", self.OnRefilter)
 
         self.FilterCountry.set_model(self.FilterCountry_List)
         self.FilterCountry.set_text_column(0)

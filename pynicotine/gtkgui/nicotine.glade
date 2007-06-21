@@ -2871,8 +2871,10 @@
             <child>
               <widget class="GtkComboBoxEntry" id="FilterIn">
                 <property name="visible">True</property>
+		
                 <child internal-child="entry">
-                  <widget class="GtkEntry" id="comboboxentry-entry3">
+                  <widget class="GtkEntry" id="FilterInEntry">
+	          <signal name="activate" handler="OnRefilter"/>
                   </widget>
                 </child>
               </widget>
@@ -2895,7 +2897,8 @@
               <widget class="GtkComboBoxEntry" id="FilterOut">
                 <property name="visible">True</property>
                 <child internal-child="entry">
-                  <widget class="GtkEntry" id="comboboxentry-entry4">
+                  <widget class="GtkEntry" id="FilterOutEntry">
+		  <signal name="activate" handler="OnRefilter"/>
                   </widget>
                 </child>
               </widget>
@@ -2919,7 +2922,8 @@
                 <property name="width_request">75</property>
                 <property name="visible">True</property>
                 <child internal-child="entry">
-                  <widget class="GtkEntry" id="comboboxentry-entry5">
+                  <widget class="GtkEntry" id="FilterSizeEntry">
+                  <signal name="activate" handler="OnRefilter"/>
                   </widget>
                 </child>
               </widget>
@@ -2944,7 +2948,8 @@
                 <property name="width_request">75</property>
                 <property name="visible">True</property>
                 <child internal-child="entry">
-                  <widget class="GtkEntry" id="comboboxentry-entry6">
+                  <widget class="GtkEntry" id="FilterBitrateEntry">
+                  <signal name="activate" handler="OnRefilter"/>
                   </widget>
                 </child>
               </widget>
@@ -2969,7 +2974,8 @@
                 <property name="width_request">75</property>
                 <property name="visible">True</property>
                 <child internal-child="entry">
-                  <widget class="GtkEntry" id="comboboxentry-entry7">
+                  <widget class="GtkEntry" id="FilterCountryEntry">
+                  <signal name="activate" handler="OnRefilter"/>
                   </widget>
                 </child>
               </widget>

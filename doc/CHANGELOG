@@ -6,6 +6,9 @@ General Changes
  * libnotify support added (patch by infinito ticket #176 )
    to show download completion popups in the tray.
    notification-daemon, libnotify and python-notify required
+	   
+Bug Fixes
+ * Pressing enter in Search Filter entry boxes now works again
 
 1.2.8 Release (1st June 2007)
 

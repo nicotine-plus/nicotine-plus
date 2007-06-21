@@ -208,6 +208,7 @@ def AppendLine(textview, line, tag = None, timestamp = "%H:%M:%S", username=None
 		line = "%s %s\n" % (recode(time.strftime(timestamp)), line)
 
 	match = URL_RE.search(line)
+	# Highlight urls, if found and tag them
 	while CATCH_URLS and match:
 		start = line[:match.start()]
 		url = match.group()[:-1]
