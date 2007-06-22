@@ -1,14 +1,12 @@
 # Copyright (c) 2003-2004 Hyriand. All rights reserved.
 #
-import gtk
-import gobject
 import os
-import pango
+import gtk, gobject, pango
+import sets
 from nicotine_glade import PrivateChatTab
 from utils import AppendLine, IconNotebook, PopupMenu, WriteLog, expand_alias, EncodingsMenu, SaveEncoding, fixpath
 from chatrooms import GetCompletion
 from pynicotine import slskmessages
-
 from pynicotine.utils import _, version
 
 class PrivateChats(IconNotebook):
@@ -137,6 +135,14 @@ class PrivateChat(PrivateChatTab):
 			self.hbox5.pack_start(self.ChatLine)
 			self.hbox5.reorder_child(self.ChatLine, 0)
 			
+		completion = gtk.EntryCompletion()
+		self.ChatLine.set_completion(completion)
+		liststore = gtk.ListStore(gobject.TYPE_STRING)
+		completion.set_model(liststore)
+		completion.set_text_column(0)
+		completion.set_match_func(self.frame.EntryCompletionFindMatch, self.ChatLine)
+		completion.connect("match-selected", self.frame.EntryCompletionFoundMatch, self.ChatLine)
+		
 		self.Log.set_active(self.frame.np.config.sections["logging"]["privatechat"])
 
 		if self.frame.translux:
@@ -540,6 +546,22 @@ class PrivateChat(PrivateChatTab):
 		self.chats.RemoveTab(self)
 		self.destroy()
 
+
+	def GetCompletionList(self, ix=0, text="", widget=None):
+		clist = [self.user, self.frame.np.config.sections["server"]["login"], "nicotine"]+ [i[0] for i in self.frame.userlist.userlist]
+		if ix == len(text) and text[:1] == "/":
+			clist += ["/"+k for k in self.frame.np.config.aliases.keys()] + self.CMDS
+		clist = list(sets.Set(clist))
+		clist.sort(key=str.lower)
+		
+		completion = widget.get_completion()
+		liststore = completion.get_model()
+		liststore.clear()
+		for word in clist:
+			liststore.append([word])
+			
+		return clist
+		
 	def OnKeyPress(self, widget, event):
 		if event.keyval == gtk.gdk.keyval_from_name("Prior"):
 			scrolled = self.ChatScroll.get_parent()
@@ -557,10 +579,10 @@ class PrivateChat(PrivateChatTab):
 			return False
 		ix = widget.get_position()
 		text = widget.get_text()[:ix].split(" ")[-1]
-		list = [self.user] + [i[0] for i in self.frame.userlist.userlist] + ["nicotine"]
-		if ix == len(text) and text[:1] == "/":
-			list += ["/"+k for k in self.frame.np.config.aliases.keys()] + self.CMDS
-		completion, single = GetCompletion(text, list)
+		
+		self.clist = self.GetCompletionList(ix, text, widget=self.ChatLine)
+		completion, single = GetCompletion(text, self.clist)
+		
 		if completion:
 			widget.insert_text(completion, ix)
 			widget.set_position(ix + len(completion))

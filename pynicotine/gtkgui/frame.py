@@ -1674,7 +1674,46 @@ class NicotineFrame(MainWindow):
 	
 	def OnFocusOut(self, widget, event):
 		self.got_focus = False
+		
+	def EntryCompletionFindMatch(self, completion, key, iter, widget):
+		model = completion.get_model()
+		text = model.get_value(iter, 0)
+		ix = widget.get_position()
+		if text is None:
+			return False
+		if " " in key:
+			skey = key[:ix].split(" ")[-1]
+		else: skey = key
+		if skey.isspace() or skey == "":
+			return False
+		if text.startswith(skey) and text != skey:
+			return True
+		return False
+#
+	def EntryCompletionFoundMatch(self, completion, model, iter, widget):
+		current_text = widget.get_text()
+		ix = widget.get_position()
+		# if more than a word has been typed, we throw away the
+		# one to the left of our current position because we want
+		# to replace it with the matching word
+		
+		if " " in current_text:
+			prefix = " ".join(current_text[:ix].split(" ")[:-1])
+			suffix = " ".join(current_text[ix:].split(" "))
 
+			# add the matching word
+			new_text = "%s %s%s" % (prefix, model[iter][0], suffix)
+			# set back the whole text
+			widget.set_text(new_text)
+			# move the cursor at the end
+			widget.set_position(len(prefix) + len(model[iter][0]) + 1)
+		else:
+			new_text = "%s" % (model[iter][0])
+			widget.set_text(new_text)
+			widget.set_position(-1)
+		# stop the event propagation
+		return True
+		
 	def OnPopupLogMenu(self, widget, event):
 		if event.button != 3:
 			return False

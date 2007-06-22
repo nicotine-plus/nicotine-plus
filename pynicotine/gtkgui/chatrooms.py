@@ -10,20 +10,21 @@ from utils import InitialiseColumns, AppendLine, PopupMenu, FastListModel, strin
 from pynicotine.utils import _
 from ticker import Ticker
 
+import sets
 def GetCompletion(part, list):
 	matches = []
 	for match in list:
 		if match in matches:
 			continue
 		if match[:len(part)] == part and len(match) > len(part):
-			#print match
+
 			matches.append(match)
-	
 	if len(matches) == 0:
 		return "", 0
 	elif len(matches) == 1:
 		return matches[0][len(part):], 1
 	else:
+
 		prefix = matches[0]
 		for item in matches:
 			for i in range(len(prefix)):
@@ -380,10 +381,19 @@ class ChatRoom(ChatRoomTab):
         		self.entry3.connect("activate", self.OnEnter)
         		self.entry3.connect("key_press_event", self.OnKeyPress)
 			self.vbox6.pack_start(self.entry3, False, False, 0)
-	
+			
+		
+		completion = gtk.EntryCompletion()
+		self.entry3.set_completion(completion)
+		liststore = gtk.ListStore(gobject.TYPE_STRING)
+		completion.set_model(liststore)
+		completion.set_text_column(0)
+		completion.set_match_func(self.frame.EntryCompletionFindMatch, self.entry3)
+		completion.connect("match-selected", self.frame.EntryCompletionFoundMatch, self.entry3)
+		
 		self.Log.set_active(self.frame.np.config.sections["logging"]["chatrooms"])
 		
-		
+		self.incomplete = -1
 		
 		if room in self.frame.np.config.sections["server"]["autojoin"]:
 			self.AutoJoin.set_active(True)
@@ -462,6 +472,7 @@ class ChatRoom(ChatRoomTab):
 			("#" + _("Clear log"), self.OnClearChatLog, gtk.STOCK_CLEAR),
 		)
 		self.ChatScroll.connect("button-press-event", self.OnPopupChatRoomMenu)
+		self.clist = self.GetCompletionList(widget=self.entry3)
 		
 	def OnFindLogWindow(self, widget):
 
@@ -923,6 +934,7 @@ class ChatRoom(ChatRoomTab):
 			self.users[user] = iter
 		AppendLine(self.ChatScroll, _("--- reconnected ---"), self.tag_hilite)
 		self.CountUsers()
+		self.clist = self.GetCompletionList(widget=self.entry3)
 
 	def OnAutojoin(self, widget):
 		autojoin = self.frame.np.config.sections["server"]["autojoin"]
@@ -933,7 +945,23 @@ class ChatRoom(ChatRoomTab):
 			if not self.room in autojoin:
 				autojoin.append(self.room)
 		self.frame.np.config.writeConfig()
+		
 
+	def GetCompletionList(self, ix=0, text="", widget=None):
+		clist = list(self.users.keys()) + [i[0] for i in self.frame.userlist.userlist] + ["nicotine", self.frame.np.config.sections["server"]["login"]]
+		if ix == len(text) and text[:1] == "/":
+			clist += ["/"+k for k in self.frame.np.config.aliases.keys()] + self.CMDS
+		clist = list(sets.Set(clist))
+		clist.sort(key=str.lower)
+		
+		completion = widget.get_completion()
+		liststore = completion.get_model()
+		liststore.clear()
+		for word in clist:
+			liststore.append([word])
+			
+		return clist
+		
 	def OnKeyPress(self, widget, event):
 		if event.keyval == gtk.gdk.keyval_from_name("Prior"):
 			scrolled = self.ChatScroll.get_parent()
@@ -948,13 +976,16 @@ class ChatRoom(ChatRoomTab):
 				new = max
 			adj.set_value(new)
 		if event.keyval != gtk.gdk.keyval_from_name("Tab"):
+			self.incomplete = -1
+			self.incompletepart = None
 			return False
 		ix = widget.get_position()
 		text = widget.get_text()[:ix].split(" ")[-1]
-		list = self.users.keys() + [i[0] for i in self.frame.userlist.userlist] + ["nicotine"]
-		if ix == len(text) and text[:1] == "/":
-			list += ["/"+k for k in self.frame.np.config.aliases.keys()] + self.CMDS
-		completion, single = GetCompletion(text, list)
+
+		self.clist = self.GetCompletionList(ix, text, widget=self.entry3)
+
+		completion, single = GetCompletion(text, self.clist)
+
 		if completion:
 			if single:
 				if ix == len(text) and text[:1] != "/":

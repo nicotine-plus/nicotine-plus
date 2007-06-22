@@ -10,6 +10,9 @@ General Changes
  * Added Censor list (applies to all chat message text)
  * Added Auto-Replace list (applies to all outgoing chat message text)
  * Rearranged the Settings tree and removed some descriptive panes
+	 
+Chat
+ * Added a completion dropdown list (gtk.EntryCompletion) to chat entries
 
 Bug Fixes
  * Pressing enter in Search Filter entry boxes now works again
