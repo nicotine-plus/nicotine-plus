@@ -1408,8 +1408,16 @@ class CensorFrame(settings_glade.CensorFrame):
 			self.CensorCheck.set_active(words["censorwords"])
 		if words["censorfill"] is not None:
 			self.CensorReplaceEntry.set_text(words["censorfill"])
-
-
+		self.OnCensorCheck(self.CensorCheck)
+		
+	def OnCensorCheck(self, widget):
+		sensitive = widget.get_active()
+		self.CensorList.set_sensitive(sensitive)
+		self.RemoveCensor.set_sensitive(sensitive)
+		self.AddCensor.set_sensitive(sensitive)
+		self.ClearCensors.set_sensitive(sensitive)
+		self.CensorReplaceEntry.set_sensitive(sensitive)
+		
 	def GetSettings(self):
 		censored = []
 		try:
@@ -1483,6 +1491,16 @@ class AutoReplaceFrame(settings_glade.AutoReplaceFrame):
 				self.replacelist.append([word, replacement])
 		if words["replacewords"] is not None:
 			self.ReplaceCheck.set_active(words["replacewords"])
+		self.OnReplaceCheck(self.ReplaceCheck)
+		
+	def OnReplaceCheck(self, widget):
+		sensitive = widget.get_active()
+		self.ReplacementList.set_sensitive(sensitive)
+		self.RemoveReplacement.set_sensitive(sensitive)
+		self.AddReplacement.set_sensitive(sensitive)
+		self.ClearReplacements.set_sensitive(sensitive)
+		self.DefaultReplacements.set_sensitive(sensitive)
+
 		
 	def GetSettings(self):
 		autoreplaced = {}

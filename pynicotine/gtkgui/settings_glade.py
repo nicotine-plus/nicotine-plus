@@ -3904,6 +3904,7 @@ class CensorFrame:
         self.CensorCheck = gtk.CheckButton()
         self.CensorCheck.set_label(_("Enable Censorship"))
         self.CensorCheck.show()
+        self.CensorCheck.connect("toggled", self.OnCensorCheck)
         self.vbox7.pack_start(self.CensorCheck, False, True, 0)
 
         self.InstructionsLabel = gtk.Label(_("Add spaces around words, if you don't wish to match strings inside words (may fail at beginning and end of lines)"))
@@ -4049,6 +4050,9 @@ class CensorFrame:
         if create:
             self.CensorFrame.add(self.Main)
 
+    def OnCensorCheck(self, widget):
+        pass
+
     def OnAdd(self, widget):
         pass
 
@@ -4175,6 +4179,7 @@ class AutoReplaceFrame:
         self.ReplaceCheck = gtk.CheckButton()
         self.ReplaceCheck.set_label(_("Enable automatic replacement of chat words you've\ntyped incorrectly or as an acronym"))
         self.ReplaceCheck.show()
+        self.ReplaceCheck.connect("toggled", self.OnReplaceCheck)
         self.vbox11.pack_start(self.ReplaceCheck, False, True, 0)
 
         self.hbox23 = gtk.HBox(False, 0)
@@ -4317,6 +4322,9 @@ class AutoReplaceFrame:
 
         if create:
             self.AutoReplaceFrame.add(self.Main)
+
+    def OnReplaceCheck(self, widget):
+        pass
 
     def OnAdd(self, widget):
         pass

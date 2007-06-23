@@ -352,6 +352,7 @@ class ChatRoom(ChatRoomTab):
 		completion.set_model(liststore)
 		completion.set_minimum_key_length(2)
 		completion.set_text_column(0)
+		completion.set_popup_single_match(False)
 		completion.set_match_func(self.frame.EntryCompletionFindMatch, self.entry3)
 		completion.connect("match-selected", self.frame.EntryCompletionFoundMatch, self.entry3)
 		

@@ -6687,6 +6687,7 @@
                 <property name="label" translatable="yes">Enable Censorship</property>
                 <property name="response_id">0</property>
                 <property name="draw_indicator">True</property>
+                <signal name="toggled" handler="OnCensorCheck"/>
               </widget>
               <packing>
                 <property name="expand">False</property>
@@ -7081,6 +7082,7 @@
 typed incorrectly or as an acronym</property>
                 <property name="response_id">0</property>
                 <property name="draw_indicator">True</property>
+                <signal name="toggled" handler="OnReplaceCheck"/>
               </widget>
               <packing>
                 <property name="expand">False</property>

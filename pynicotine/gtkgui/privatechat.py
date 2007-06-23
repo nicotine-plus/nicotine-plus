@@ -140,6 +140,7 @@ class PrivateChat(PrivateChatTab):
 		liststore = gtk.ListStore(gobject.TYPE_STRING)
 		completion.set_model(liststore)
 		completion.set_minimum_key_length(2)
+		completion.set_popup_single_match(False)
 		completion.set_text_column(0)
 		completion.set_match_func(self.frame.EntryCompletionFindMatch, self.ChatLine)
 		completion.connect("match-selected", self.frame.EntryCompletionFoundMatch, self.ChatLine)
