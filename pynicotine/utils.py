@@ -47,7 +47,7 @@ def ChangeTranslation(lang):
 	global language
 	global langTranslation
 	language = lang
-
+	message = ""
 	if language == "":
 		langTranslation = gettext
 		return
@@ -55,11 +55,12 @@ def ChangeTranslation(lang):
 		langTranslation = gettext.translation('nicotine', languages=[language])
 		langTranslation.install()
 	except IOError, e:
-		print _("Translation not found for '%s'") % language, e
+		message = _("Translation not found for '%s': %s") % (language, e)
 		langTranslation = gettext
 	except IndexError, e:
-		print _("Translation was corrupted for '%s'") % language, e
+		message = _("Translation was corrupted for '%s': %s") % (language, e)
 		langTranslation = gettext
+	return message
 ChangeTranslation(language)
 # Translation Function
 def _(s):

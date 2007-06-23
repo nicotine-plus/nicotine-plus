@@ -105,9 +105,9 @@ class NicotineFrame(MainWindow):
 
 		self.np = NetworkEventProcessor(self, self.callback, self.logMessage, self.SetStatusText, config)
 		self.LoadIcons()
-		
+		trerror = ""
 		if self.np.config.sections["language"]["setlanguage"]:
-			ChangeTranslation(self.np.config.sections["language"]["language"])
+			trerror = ChangeTranslation(self.np.config.sections["language"]["language"])
 		
 		self.BuddiesComboEntries = []
 		
@@ -428,7 +428,9 @@ class NicotineFrame(MainWindow):
 			self.TrayApp.CREATE_TRAYICON = 1
 			self.TrayApp.HAVE_TRAYICON = True
 			self.TrayApp.Create()
-		
+		if trerror != "":
+			self.logMessage(trerror)
+
 	def LoadIcons(self):
 		self.images = {}
 		self.icons = {}
