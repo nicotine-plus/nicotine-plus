@@ -33,55 +33,31 @@ def GetCompletion(part, list):
 					break
 		return prefix[len(part):], 0
 
-class RoomsListModel(FastListModel):
-	COLUMNS = 2
-	COLUMN_TYPES = (gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_INT)
-	
-	def __init__(self, rooms):
-		FastListModel.__init__(self)
-		for room in rooms:
-			self.data.append([room[0], Humanize(room[1]), room[1]])
-		self.sort_col = 1
-		self.sort_order = gtk.SORT_DESCENDING
-		self.sort()
-	
-	def sort(self):
-		if self.sort_col == 0:
-			func = locale.strcoll
-			col = 0
-		else:
-			func = cmp
-			col = 2
-		if self.sort_order == gtk.SORT_DESCENDING:
-			self.data.sort(lambda r2, r1: func(r1[col], r2[col]))
-		else:
-			self.data.sort(lambda r1, r2: func(r1[col], r2[col]))
-
 class RoomsControl:
 	def __init__(self, frame):
 		self.frame = frame
 		self.joinedrooms = {}
 		self.autojoin = 1
+		self.rooms = []
+		self.roomsmodel = gtk.ListStore(str, str, int)
+		frame.roomlist.RoomsList.set_model(self.roomsmodel)
 		
 		cols = InitialiseColumns(frame.roomlist.RoomsList,
 			[_("Room"), 150, "text", self.frame.CellDataFunc],
 			[_("Users"), -1, "text", self.frame.CellDataFunc],
 		)
-		
-		for ix in range(len(cols)):
-			col = cols[ix]
-			col.connect("clicked", self.OnResort, ix)
-		
+		cols[0].set_sort_column_id(0)
+		cols[1].set_sort_column_id(2)
+
+		self.roomsmodel.set_sort_column_id(1, gtk.SORT_DESCENDING)
 		cols[1].set_sort_indicator(True)
-		cols[1].set_sort_order(gtk.SORT_DESCENDING)
+		
 		for i in range (2):
 			parent = cols[i].get_widget().get_ancestor(gtk.Button)
 			if parent:
 				parent.connect('button_press_event', PressHeader)
 
-		self.roomsmodel = RoomsListModel([])
-		frame.roomlist.RoomsList.set_model(self.roomsmodel)
-		
+
 		self.popup_room = None
 		self.popup_menu = PopupMenu().setup(
 			("#" + _("Join room"), self.OnPopupJoin, gtk.STOCK_JUMP_TO ),
@@ -134,25 +110,7 @@ class RoomsControl:
 				if name in self.frame.TrayApp.tray_status["hilites"]["rooms"]:
 					self.frame.ClearNotification("rooms", None, name)
 
-			
-	def OnResort(self, column, column_id):
-		if self.roomsmodel.sort_col == column_id:
-			order = self.roomsmodel.sort_order
-			if order == gtk.SORT_ASCENDING:
-				order = gtk.SORT_DESCENDING
-			else:
-				order = gtk.SORT_ASCENDING
-			column.set_sort_order(order)
-			self.roomsmodel.sort_order = order
-			self.frame.roomlist.RoomsList.set_model(None)
-			self.roomsmodel.sort()
-			self.frame.roomlist.RoomsList.set_model(self.roomsmodel)
-			return
-		cols = self.frame.roomlist.RoomsList.get_columns()
-		cols[column_id].set_sort_indicator(True)
-		cols[self.roomsmodel.sort_col].set_sort_indicator(False)
-		self.roomsmodel.sort_col = column_id
-		self.OnResort(column, column_id)
+
 		
 	def OnListClicked(self, widget, event):
 		if self.roomsmodel is None:
@@ -220,9 +178,13 @@ class RoomsControl:
 
 			for room in list:
 				self.frame.np.queue.put(slskmessages.JoinRoom(room))
-
-		self.roomsmodel = RoomsListModel(msg.rooms)
-		self.frame.roomlist.RoomsList.set_model(self.roomsmodel)
+		self.roomsmodel.clear()
+		self.rooms = []
+		for rooms in msg.rooms:
+			room, users = rooms
+			self.roomsmodel.append([room, Humanize(users), users])
+			if len(msg.rooms) < 200 or users > 2:
+				self.rooms.append(room)
 
 	def GetUserStats(self, msg):
 		for room in self.joinedrooms.values():
@@ -379,6 +341,7 @@ class ChatRoom(ChatRoomTab):
 			self.entry3 = sexy.SpellEntry()
 			self.entry3.show()
         		self.entry3.connect("activate", self.OnEnter)
+			
         		self.entry3.connect("key_press_event", self.OnKeyPress)
 			self.vbox6.pack_start(self.entry3, False, False, 0)
 			
@@ -387,13 +350,12 @@ class ChatRoom(ChatRoomTab):
 		self.entry3.set_completion(completion)
 		liststore = gtk.ListStore(gobject.TYPE_STRING)
 		completion.set_model(liststore)
+		completion.set_minimum_key_length(2)
 		completion.set_text_column(0)
 		completion.set_match_func(self.frame.EntryCompletionFindMatch, self.entry3)
 		completion.connect("match-selected", self.frame.EntryCompletionFoundMatch, self.entry3)
 		
 		self.Log.set_active(self.frame.np.config.sections["logging"]["chatrooms"])
-		
-		self.incomplete = -1
 		
 		if room in self.frame.np.config.sections["server"]["autojoin"]:
 			self.AutoJoin.set_active(True)
@@ -472,7 +434,8 @@ class ChatRoom(ChatRoomTab):
 			("#" + _("Clear log"), self.OnClearChatLog, gtk.STOCK_CLEAR),
 		)
 		self.ChatScroll.connect("button-press-event", self.OnPopupChatRoomMenu)
-		self.clist = self.GetCompletionList(widget=self.entry3)
+		self.buildingcompletion = False
+		self.GetCompletionList(widget=self.entry3)
 		
 	def OnFindLogWindow(self, widget):
 
@@ -710,12 +673,16 @@ class ChatRoom(ChatRoomTab):
 	def UserJoinedRoom(self, username, userdata):
 		if self.users.has_key(username):
 			return
+		# Add to completion list, and completion drop-down
+		if username not in self.clist:
+			self.clist.append(username)
+			self.entry3.get_completion().get_model().append([username])
+			
 		AppendLine(self.RoomLog, _("%s joined the room") % username, self.tag_log)
 		img = self.frame.GetStatusImage(userdata.status)
 		hspeed = Humanize(userdata.avgspeed)
 		hfiles = Humanize(userdata.files)
-		iter = self.usersmodel.append([img, username, hspeed, hfiles, userdata.status, userdata.avgspeed, userdata.files])
-		self.users[username] = iter
+		self.users[username] = self.usersmodel.append([img, username, hspeed, hfiles, userdata.status, userdata.avgspeed, userdata.files])
 		color = self.getUserStatusColor(userdata.status)
 		if username in self.tag_users.keys():
 			
@@ -727,6 +694,18 @@ class ChatRoom(ChatRoomTab):
 	def UserLeftRoom(self, username):
 		if not self.users.has_key(username):
 			return
+		# Remove from completion list, and completion drop-down
+		if username in self.clist and username not in [i[0] for i in self.frame.userlist.userlist]:
+			self.clist.remove(username)
+			liststore = self.entry3.get_completion().get_model()
+			iter = liststore.get_iter_root()
+			while iter is not None:
+				name = liststore.get_value(iter, 0)
+				if name == username:
+					liststore.remove(iter)
+					break
+				iter = liststore.iter_next(iter)
+			
 		AppendLine(self.RoomLog, _("%s left the room") % username, self.tag_log)
 		self.usersmodel.remove(self.users[username])
 		del self.users[username]
@@ -934,7 +913,7 @@ class ChatRoom(ChatRoomTab):
 			self.users[user] = iter
 		AppendLine(self.ChatScroll, _("--- reconnected ---"), self.tag_hilite)
 		self.CountUsers()
-		self.clist = self.GetCompletionList(widget=self.entry3)
+		self.GetCompletionList(widget=self.entry3)
 
 	def OnAutojoin(self, widget):
 		autojoin = self.frame.np.config.sections["server"]["autojoin"]
@@ -948,19 +927,24 @@ class ChatRoom(ChatRoomTab):
 		
 
 	def GetCompletionList(self, ix=0, text="", widget=None):
-		clist = list(self.users.keys()) + [i[0] for i in self.frame.userlist.userlist] + ["nicotine", self.frame.np.config.sections["server"]["login"]]
-		if ix == len(text) and text[:1] == "/":
-			clist += ["/"+k for k in self.frame.np.config.aliases.keys()] + self.CMDS
-		clist = list(sets.Set(clist))
-		clist.sort(key=str.lower)
-		
+		if self.buildingcompletion:
+			return
+
+		self.buildingcompletion = True
 		completion = widget.get_completion()
 		liststore = completion.get_model()
 		liststore.clear()
+		clist = list(self.users.keys()) + [i[0] for i in self.frame.userlist.userlist] + ["nicotine", self.frame.np.config.sections["server"]["login"]] + ["/"+k for k in self.frame.np.config.aliases.keys()] + self.CMDS + self.roomsctrl.rooms
+		# no duplicates
+		clist = list(sets.Set(clist))
+		clist.sort(key=str.lower)
+		completion.set_popup_completion(False)
 		for word in clist:
 			liststore.append([word])
-			
-		return clist
+		completion.set_popup_completion(True)
+		self.clist = clist
+		self.buildingcompletion = False
+		
 		
 	def OnKeyPress(self, widget, event):
 		if event.keyval == gtk.gdk.keyval_from_name("Prior"):
@@ -976,13 +960,10 @@ class ChatRoom(ChatRoomTab):
 				new = max
 			adj.set_value(new)
 		if event.keyval != gtk.gdk.keyval_from_name("Tab"):
-			self.incomplete = -1
-			self.incompletepart = None
 			return False
 		ix = widget.get_position()
 		text = widget.get_text()[:ix].split(" ")[-1]
 
-		self.clist = self.GetCompletionList(ix, text, widget=self.entry3)
 
 		completion, single = GetCompletion(text, self.clist)
 
@@ -993,6 +974,7 @@ class ChatRoom(ChatRoomTab):
 			widget.insert_text(completion, ix)
 			widget.set_position(ix + len(completion))
 		widget.emit_stop_by_name("key_press_event")
+
 		return True
 
 	def OnLogToggled(self, widget):

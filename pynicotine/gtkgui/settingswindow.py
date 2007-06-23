@@ -1493,7 +1493,7 @@ class AutoReplaceFrame(settings_glade.AutoReplaceFrame):
 
 	def OnDefaults(self, widget):
 		self.replacelist.clear()
-		defaults = {"teh": "the", "taht": "that", "tihng": "thing", "youre": "you're", "jsut": "just", "thier": "their", "tihs": "this"}
+		defaults = {"teh ": "the ", "taht ": "that ", "tihng": "thing", "youre": "you're", "jsut": "just", "thier": "their", "tihs": "this"}
 		for word, replacement in defaults.items():
 			self.replacelist.append([word, replacement])
     

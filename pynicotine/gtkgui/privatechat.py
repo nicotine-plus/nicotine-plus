@@ -139,6 +139,7 @@ class PrivateChat(PrivateChatTab):
 		self.ChatLine.set_completion(completion)
 		liststore = gtk.ListStore(gobject.TYPE_STRING)
 		completion.set_model(liststore)
+		completion.set_minimum_key_length(2)
 		completion.set_text_column(0)
 		completion.set_match_func(self.frame.EntryCompletionFindMatch, self.ChatLine)
 		completion.connect("match-selected", self.frame.EntryCompletionFoundMatch, self.ChatLine)
@@ -196,7 +197,7 @@ class PrivateChat(PrivateChatTab):
 				
 		except IOError, e:
 			pass
-
+		self.GetCompletionList(widget=self.ChatLine)
 		
 	def destroy(self):
 		if self.frame.translux:
@@ -548,19 +549,22 @@ class PrivateChat(PrivateChatTab):
 
 
 	def GetCompletionList(self, ix=0, text="", widget=None):
-		clist = [self.user, self.frame.np.config.sections["server"]["login"], "nicotine"]+ [i[0] for i in self.frame.userlist.userlist]
-		if ix == len(text) and text[:1] == "/":
-			clist += ["/"+k for k in self.frame.np.config.aliases.keys()] + self.CMDS
-		clist = list(sets.Set(clist))
-		clist.sort(key=str.lower)
-		
+
+		self.buildingcompletion = True
 		completion = widget.get_completion()
 		liststore = completion.get_model()
 		liststore.clear()
+		clist = [self.user, self.frame.np.config.sections["server"]["login"], "nicotine"]+ [i[0] for i in self.frame.userlist.userlist] + ["/"+k for k in self.frame.np.config.aliases.keys()] + self.CMDS + self.frame.chatrooms.roomsctrl.rooms
+		# no duplicates
+		clist = list(sets.Set(clist))
+		clist.sort(key=str.lower)
+		completion.set_popup_completion(False)
 		for word in clist:
 			liststore.append([word])
-			
-		return clist
+		completion.set_popup_completion(True)
+		self.clist = clist
+	
+
 		
 	def OnKeyPress(self, widget, event):
 		if event.keyval == gtk.gdk.keyval_from_name("Prior"):
@@ -580,7 +584,9 @@ class PrivateChat(PrivateChatTab):
 		ix = widget.get_position()
 		text = widget.get_text()[:ix].split(" ")[-1]
 		
-		self.clist = self.GetCompletionList(ix, text, widget=self.ChatLine)
+		if widget.get_text()[:1] == "/":
+			self.GetCompletionList(ix, text, widget=self.ChatLine)
+			
 		completion, single = GetCompletion(text, self.clist)
 		
 		if completion:

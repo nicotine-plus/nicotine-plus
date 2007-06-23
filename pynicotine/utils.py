@@ -1,3 +1,6 @@
+# Copyright (c) 2006-2007 daelstorm. All rights reserved.
+#
+# Based on code from Nicotine, original copyright note:
 # Copyright (c) 2003-2004 Hyriand. All rights reserved.
 #
 # Based on code from PySoulSeek, original copyright note:
@@ -7,7 +10,7 @@
 This module contains utility fuctions.
 """
 
-version = "1.2.8"
+version = "1.2.9svn"
 latesturl = "http://nicotine-plus.sourceforge.net/LATEST"
 
 import string
@@ -18,7 +21,7 @@ import gobject
 win32 = sys.platform.startswith("win")
 frame = 0
 log = 0
-
+language = "fr"
 try:
 	import _mp3 as mp3
 	print "Using C mp3 scanner"
@@ -38,14 +41,30 @@ except:
 import gettext
 tr_cache = {}
 
+
+
+def ChangeTranslation(lang):
+	global language
+	global langTranslation
+	language = lang
+	try:
+		if win32:
+			langTranslation = gettext.translation('nicotine', '.', languages=[language])
+		else:
+			langTranslation = gettext.translation('nicotine', languages=[language])
+		langTranslation.install()
+	except IOError, e:
+		langTranslation = gettext
+ChangeTranslation(language)
 # Translation Function
 def _(s):
 	global tr_cache
+	global langTranslation
 	# Don't translate empty strings
 	# Poedit uses empty strings as metadata
 	if s == "": return s
 	if not tr_cache.has_key(s):
-		tr_cache[s] = gettext.gettext(s)
+		tr_cache[s] = langTranslation.gettext(s)
 	return tr_cache[s]
 
 def getServerList(url):

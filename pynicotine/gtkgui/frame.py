@@ -30,7 +30,7 @@ import utils
 from utils import AppendLine, ImageLabel, IconNotebook, ScrollBottom, PopupMenu, Humanize, popupWarning
 import translux
 from dirchooser import ChooseFile
-from pynicotine.utils import _
+from pynicotine.utils import _, ChangeTranslation
 import nowplaying
 from entrydialog import  *
 SEXY=True
@@ -105,7 +105,9 @@ class NicotineFrame(MainWindow):
 
 		self.np = NetworkEventProcessor(self, self.callback, self.logMessage, self.SetStatusText, config)
 		self.LoadIcons()
-
+		if self.np.config.sections["language"]["setlanguage"]:
+			ChangeTranslation(self.np.config.sections["language"]["language"])
+		
 		self.BuddiesComboEntries = []
 		
 		MainWindow.__init__(self)
@@ -251,7 +253,7 @@ class NicotineFrame(MainWindow):
 		utils.PROTOCOL_HANDLERS["slsk"] = self.OnSoulSeek
 		utils.USERNAMEHOTSPOTS = self.np.config.sections["ui"]["usernamehotspots"]
 		utils.NICOTINE = self
-
+		
 
 		
 		for thing in self.np.config.sections["interests"]["likes"]:
@@ -425,7 +427,7 @@ class NicotineFrame(MainWindow):
 			self.TrayApp.CREATE_TRAYICON = 1
 			self.TrayApp.HAVE_TRAYICON = True
 			self.TrayApp.Create()
-			
+		
 	def LoadIcons(self):
 		self.images = {}
 		self.icons = {}
@@ -477,6 +479,7 @@ class NicotineFrame(MainWindow):
 			loader.close()
 			self.images[i] = loader.get_pixbuf()
 
+		
 	def SaveColumns(self):
 		for i in [self.userlist, self.chatrooms.roomsctrl, self.downloads, self.uploads, self.searches]:
 			i.saveColumns()
@@ -1675,18 +1678,22 @@ class NicotineFrame(MainWindow):
 	def OnFocusOut(self, widget, event):
 		self.got_focus = False
 		
-	def EntryCompletionFindMatch(self, completion, key, iter, widget):
+	def EntryCompletionFindMatch(self, completion, entry_text, iter, widget):
 		model = completion.get_model()
-		text = model.get_value(iter, 0)
+		item_text = model.get_value(iter, 0)
 		ix = widget.get_position()
-		if text is None:
+		
+		if entry_text == None or entry_text == "" or entry_text.isspace() or item_text is None:
 			return False
-		if " " in key:
-			skey = key[:ix].split(" ")[-1]
-		else: skey = key
-		if skey.isspace() or skey == "":
+		# Get word to the left of current position
+		if " " in entry_text:
+			split_key = entry_text[:ix].split(" ")[-1]
+		else:
+			split_key = entry_text
+		if split_key.isspace() or split_key == "" or len(split_key) == 1:
 			return False
-		if text.startswith(skey) and text != skey:
+		# case-insensitive matching
+		if item_text.lower().startswith(split_key) and item_text.lower() != split_key:
 			return True
 		return False
 #
