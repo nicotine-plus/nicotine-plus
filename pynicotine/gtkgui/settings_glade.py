@@ -1189,6 +1189,31 @@ class BloatFrame:
 
         self.vboxUI.pack_start(self.hbox172, False, True, 0)
 
+        self.hbox3 = gtk.HBox(False, 0)
+        self.hbox3.show()
+        self.hbox3.set_spacing(5)
+
+        self.TranslationCheck = gtk.CheckButton()
+        self.tooltips.set_tip(self.TranslationCheck, _("Loading translations requires a restart"))
+        self.TranslationCheck.set_label(_("Translate to another language"))
+        self.TranslationCheck.show()
+        self.TranslationCheck.connect("toggled", self.OnTranslationCheckToggled)
+        self.hbox3.pack_start(self.TranslationCheck, False, True, 0)
+
+        self.TranslationCombo_List = gtk.ListStore(gobject.TYPE_STRING)
+        self.TranslationCombo = gtk.ComboBoxEntry()
+        self.TranslationCombo.show()
+
+        self.TranslationComboEntry = self.TranslationCombo.child
+        self.TranslationComboEntry.show()
+        self.TranslationComboEntry.set_width_chars(10)
+
+        self.TranslationCombo.set_model(self.TranslationCombo_List)
+        self.TranslationCombo.set_text_column(0)
+        self.hbox3.pack_start(self.TranslationCombo, False, True, 0)
+
+        self.vboxUI.pack_start(self.hbox3, False, True, 0)
+
         self.hbox182 = gtk.HBox(False, 0)
         self.hbox182.show()
         self.hbox182.set_spacing(5)
@@ -2040,6 +2065,9 @@ class BloatFrame:
 
         if create:
             self.BloatFrame.add(self.Main)
+
+    def OnTranslationCheckToggled(self, widget):
+        pass
 
     def OnUsernameHotspotsToggled(self, widget):
         pass

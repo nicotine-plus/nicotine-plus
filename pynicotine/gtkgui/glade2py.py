@@ -435,7 +435,7 @@ def write_widget_custom(widget):
 	if widget.attrs.has_key("int2"):
 		i2 = widget.attrs["int2"]
 	if s1:
-		s1 = "_(\"%s\")" % s1
+		s1 = "\"%s\"" % s1
 	else:
 		s1 = '""'
 	if s2:

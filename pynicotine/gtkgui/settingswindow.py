@@ -820,7 +820,10 @@ class BloatFrame(settings_glade.BloatFrame):
 		for item in ["bold", "italic", "underline", "normal"]:
 			self.UsernameStyle.append_text(item)
 		self.UsernameStyle.child.set_editable(False)
-		
+
+		for item in ["", "de", "dk", "fi", "fr",  "hu", "it", "lt", "nl", "pl", "pt_BR", "sk", "sv" ]:
+			self.TranslationCombo.append_text(item)
+		#self.UsernameStyle.child.set_editable(False)
 		
 		
 		self.PickRemote.connect("clicked", self.PickColour, self.Remote)
@@ -876,12 +879,17 @@ class BloatFrame(settings_glade.BloatFrame):
 		self.needcolors = 1
 		
 
-								
 	def SetSettings(self, config):
 		ui = config["ui"]
 		private = config["privatechat"]
 		transfers = config["transfers"]
-		
+		language = config["language"]
+
+		if language["setlanguage"] is not None:
+			self.TranslationCheck.set_active(int(language["setlanguage"]))
+		if language["language"] is not None:
+			self.TranslationComboEntry.set_text(language["language"])
+			
 		if ui["chatfont"] is not None:
 			self.SelectChatFont.set_font_name(ui["chatfont"])
 			
@@ -893,7 +901,7 @@ class BloatFrame(settings_glade.BloatFrame):
 			self.Me.set_text(ui["chatme"])
 		if ui["chathilite"] is not None:
 			self.Highlight.set_text(ui["chathilite"])
-			
+		
 		if ui["useraway"] is not None:
 			self.AwayColor.set_text(ui["useraway"])
 		if ui["useronline"] is not None:
@@ -921,10 +929,8 @@ class BloatFrame(settings_glade.BloatFrame):
 			self.SpellCheck.set_sensitive(False)
 		if private["store"] is not None:
 			self.ReopenPrivateChats.set_active(private["store"])
-		
-		
-	
-	
+
+
 		if ui["usernamestyle"] is not None:
 			self.UsernameStyle.child.set_text(ui["usernamestyle"])
 		if transfers["enabletransferbuttons"] is not None:
@@ -932,6 +938,7 @@ class BloatFrame(settings_glade.BloatFrame):
 		if ui["enabletrans"] is not None:
 			self.EnableTransparent.set_active(ui["enabletrans"])
 		self.OnEnableTransparentToggled(self.EnableTransparent)
+		self.OnTranslationCheckToggled(self.TranslationCheck)
 		self.settingup = 1
 		if ui["transtint"] is not None:
 			self.TintColor.set_text(ui["transtint"])
@@ -973,8 +980,16 @@ class BloatFrame(settings_glade.BloatFrame):
 			"privatechat": {
 				"store": self.ReopenPrivateChats.get_active(),
 			},
+			"language": {
+				"setlanguage": self.TranslationCheck.get_active(),
+				"language": self.TranslationComboEntry.get_text(),
+			}
 		}
-
+		
+	def OnTranslationCheckToggled(self, widget):
+		sensitive = widget.get_active()
+		self.TranslationCombo.set_sensitive(sensitive)
+		
 	def OnEnableTransparentToggled(self, widget):
 		sensitive = widget.get_active()
 		self.PickTint.set_sensitive(sensitive)
@@ -1658,6 +1673,7 @@ class SettingsWindow(settings_glade.SettingsWindow):
 				"urls": {},
 				"players": {},
 				"words": {},
+				"language": {},
 				
 			}
 			

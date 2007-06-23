@@ -21,7 +21,7 @@ import gobject
 win32 = sys.platform.startswith("win")
 frame = 0
 log = 0
-language = "fr"
+language = ""
 try:
 	import _mp3 as mp3
 	print "Using C mp3 scanner"
@@ -47,13 +47,18 @@ def ChangeTranslation(lang):
 	global language
 	global langTranslation
 	language = lang
+
+	if language == "":
+		langTranslation = gettext
+		return
 	try:
-		if win32:
-			langTranslation = gettext.translation('nicotine', '.', languages=[language])
-		else:
-			langTranslation = gettext.translation('nicotine', languages=[language])
+		langTranslation = gettext.translation('nicotine', languages=[language])
 		langTranslation.install()
 	except IOError, e:
+		print _("Translation not found for '%s'") % language, e
+		langTranslation = gettext
+	except IndexError, e:
+		print _("Translation was corrupted for '%s'") % language, e
 		langTranslation = gettext
 ChangeTranslation(language)
 # Translation Function
