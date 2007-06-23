@@ -950,6 +950,23 @@ class BloatFrame(settings_glade.BloatFrame):
 		self.needcolors = 0
 		
 	def GetSettings(self):
+		
+		try:
+			import gettext
+			message = ""
+			language = self.TranslationComboEntry.get_text()
+			if language != "":
+				langTranslation = gettext.translation('nicotine', languages=[language])
+				langTranslation.install()
+		except IOError, e:
+			message = _("Translation not found for '%s': %s") % (language, e)
+			langTranslation = gettext
+		except IndexError, e:
+			message = _("Translation was corrupted for '%s': %s") % (language, e)
+			langTranslation = gettext
+		if message is not None and message != "":
+			popupWarning(self.p.SettingsWindow, _("Warning: Missing translation"), _("Nicotine+ could not find your selected translation.\n%s") % message, self.frame.images["n"] )
+			raise UserWarning
 		return {
 			"ui": {
 				

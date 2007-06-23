@@ -428,7 +428,7 @@ class NicotineFrame(MainWindow):
 			self.TrayApp.CREATE_TRAYICON = 1
 			self.TrayApp.HAVE_TRAYICON = True
 			self.TrayApp.Create()
-		if trerror != "":
+		if trerror is not None and trerror != "":
 			self.logMessage(trerror)
 
 	def LoadIcons(self):
