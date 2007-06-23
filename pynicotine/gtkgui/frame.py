@@ -105,9 +105,10 @@ class NicotineFrame(MainWindow):
 
 		self.np = NetworkEventProcessor(self, self.callback, self.logMessage, self.SetStatusText, config)
 		self.LoadIcons()
+		self.ChangeTranslation = ChangeTranslation
 		trerror = ""
 		if self.np.config.sections["language"]["setlanguage"]:
-			trerror = ChangeTranslation(self.np.config.sections["language"]["language"])
+			trerror = self.ChangeTranslation(self.np.config.sections["language"]["language"])
 		
 		self.BuddiesComboEntries = []
 		
@@ -1310,7 +1311,7 @@ class NicotineFrame(MainWindow):
 				self.TrayApp.HAVE_TRAYICON = True
 				
 			self.TrayApp.Draw()
-			
+		self.ChangeTranslation(self.np.config.sections["language"]["language"])
 		if needcolors:
 			self.chatrooms.roomsctrl.UpdateColours()
 			self.privatechats.UpdateColours()

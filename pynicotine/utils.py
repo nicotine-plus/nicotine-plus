@@ -45,6 +45,7 @@ tr_cache = {}
 
 def ChangeTranslation(lang):
 	global language
+	global tr_cache
 	global langTranslation
 	language = lang
 	message = ""

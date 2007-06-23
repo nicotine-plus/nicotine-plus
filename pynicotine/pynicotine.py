@@ -449,7 +449,7 @@ class NetworkEventProcessor:
 			self.setStatus(_("Can not log in, reason: %s") %(msg.reason))
 			self.logMessage(_("Can not log in, reason: %s") %(msg.reason))
 			self.frame.OnSettings(None)
-			self.frame.settingswindow.SwitchToPage(_("Server"))
+			self.frame.settingswindow.SwitchToPage("Server")
 				
 	def NotifyPrivileges(self, msg):
 		if msg.token != None:

@@ -967,6 +967,7 @@ class BloatFrame(settings_glade.BloatFrame):
 		if message is not None and message != "":
 			popupWarning(self.p.SettingsWindow, _("Warning: Missing translation"), _("Nicotine+ could not find your selected translation.\n%s") % message, self.frame.images["n"] )
 			raise UserWarning
+	
 		return {
 			"ui": {
 				
@@ -1565,55 +1566,55 @@ class SettingsWindow(settings_glade.SettingsWindow):
 		self.viewport1.add(self.empty_label)
 		self.tree = {}
 		self.pages = p = {}
-		model = gtk.TreeStore(gobject.TYPE_STRING)
+		model = gtk.TreeStore(str, str)
 
-		self.tree[_("Server")] = model.append(None, [_("Server")])
-		self.tree[_("Shares")] = model.append(None, [_("Shares")])
+		self.tree["Server"] = model.append(None, [_("Server"), "Server"])
+		self.tree["Shares"] = model.append(None, [_("Shares"), "Shares"])
 		
-		self.tree[_("Transfers")] = row = model.append(None, [_("Transfers")])
+		self.tree["Transfers"] = row = model.append(None, [_("Transfers"), "Transfers"])
 		
-		self.tree[_("Events")] = model.append(row, [_("Events")])
-		self.tree[_("Geo Block")] = model.append(row, [_("Geo Block")])
+		self.tree["Events"] = model.append(row, [_("Events"), "Events"])
+		self.tree["Geo Block"] = model.append(row, [_("Geo Block"), "Geo Block"])
 		
 					
-		self.tree[_("Interface")] = row =  model.append(None, [_("Interface")])
-		self.tree[_("Icons")] = model.append(row, [_("Icons")])
+		self.tree["Interface"] = row =  model.append(None, [_("Interface"), "Interface"])
+		self.tree["Icons"] = model.append(row, [_("Icons"), "Icons"])
 		
 		
-		self.tree[_("Chat")] = row = model.append(None, [_("Chat")])
-		self.tree[_("Away mode")] = model.append(row, [_("Away mode")])
-		self.tree[_("Logging")] = model.append(row, [_("Logging")])
-		self.tree[_("Censor List")] = model.append(row, [_("Censor List")])
-		self.tree[_("Auto-Replace")] = model.append(row, [_("Auto-Replace")])
-		self.tree[_("URL Catching")] = model.append(row, [_("URL Catching")])
+		self.tree["Chat"] = row = model.append(None, [_("Chat"), "Chat"])
+		self.tree["Away mode"] = model.append(row, [_("Away mode"), "Away mode"])
+		self.tree["Logging"] = model.append(row, [_("Logging"), "Logging"])
+		self.tree["Censor List"] = model.append(row, [_("Censor List"), "Censor List"])
+		self.tree["Auto-Replace"] = model.append(row, [_("Auto-Replace"), "Auto-Replace"])
+		self.tree["URL Catching"] = model.append(row, [_("URL Catching"), "URL Catching"])
 		
-		self.tree[_("Misc")] = row = model.append(None, [_("Misc")])
-		self.tree[_("Ban / ignore")] = model.append(row, [_("Ban / ignore")])
-		self.tree[_("Sounds")] = model.append(row, [_("Sounds")])
-		self.tree[_("Searches")] = model.append(row, [_("Searches")])
-		self.tree[_("User info")] = model.append(row, [_("User info")])
-		self.tree[_("Import Config")] = model.append(row, [_("Import Config")])
+		self.tree["Misc"] = row = model.append(None, [_("Misc"), "Misc"])
+		self.tree["Ban / ignore"] = model.append(row, [_("Ban / ignore"), "Ban / ignore"])
+		self.tree["Sounds"] = model.append(row, [_("Sounds"), "Sounds"])
+		self.tree["Searches"] = model.append(row, [_("Searches"), "Searches"])
+		self.tree["User info"] = model.append(row, [_("User info"), "User info"])
+		self.tree["Import Config"] = model.append(row, [_("Import Config"), "Import Config"])
 		
-		p[_("Server")] = ServerFrame(self, frame.np.getencodings())
-		p[_("Shares")] = SharesFrame(self)
-		p[_("Transfers")] = TransfersFrame(self)
-		p[_("Geo Block")] = GeoBlockFrame(self)
-		p[_("User info")] = UserinfoFrame(self)
-		p[_("Ban / ignore")] = BanFrame(self)
-		p[_("Interface")] = BloatFrame(self)
-		p[_("Sounds")] = SoundsFrame(self)
-		p[_("Icons")] = IconsFrame(self)
-		p[_("URL Catching")] = UrlCatchFrame(self)
-		p[_("Logging")] = LogFrame(self)
-		p[_("Searches")] = SearchFrame(self)
-		p[_("Away mode")] = AwayFrame(self)
-		p[_("Censor List")] = CensorFrame(self)
-		p[_("Auto-Replace")] = AutoReplaceFrame(self)
-		p[_("Chat")] = ChatFrame()
-		p[_("Events")] = EventsFrame(self)
-		p[_("Import Config")] = ImportFrame(self)
+		p["Server"] = ServerFrame(self, frame.np.getencodings())
+		p["Shares"] = SharesFrame(self)
+		p["Transfers"] = TransfersFrame(self)
+		p["Geo Block"] = GeoBlockFrame(self)
+		p["User info"] = UserinfoFrame(self)
+		p["Ban / ignore"] = BanFrame(self)
+		p["Interface"] = BloatFrame(self)
+		p["Sounds"] = SoundsFrame(self)
+		p["Icons"] = IconsFrame(self)
+		p["URL Catching"] = UrlCatchFrame(self)
+		p["Logging"] = LogFrame(self)
+		p["Searches"] = SearchFrame(self)
+		p["Away mode"] = AwayFrame(self)
+		p["Censor List"] = CensorFrame(self)
+		p["Auto-Replace"] = AutoReplaceFrame(self)
+		p["Chat"] = ChatFrame()
+		p["Events"] = EventsFrame(self)
+		p["Import Config"] = ImportFrame(self)
 		
-		p[_("Misc")] = MiscFrame()
+		p["Misc"] = MiscFrame()
 		
 		column = gtk.TreeViewColumn(_("Categories"), gtk.CellRendererText(), text = 0)
 
@@ -1636,7 +1637,7 @@ class SettingsWindow(settings_glade.SettingsWindow):
 		if iter is None:
 			self.viewport1.add(self.empty_label)
 			return
-		page = model.get_value(iter, 0)
+		page = model.get_value(iter, 1)
 		if self.pages.has_key(page):
 			self.viewport1.add(self.pages[page].Main)
 		else:
@@ -1698,6 +1699,6 @@ class SettingsWindow(settings_glade.SettingsWindow):
 				sub = page.GetSettings()
 				for (key,data) in sub.items():
 					config[key].update(data)
-			return self.pages[_("Shares")].GetNeedRescan(), self.pages[_("Interface")].needcolors, config
+			return self.pages["Shares"].GetNeedRescan(), self.pages["Interface"].needcolors, config
 		except UserWarning, warning:
 			return None
