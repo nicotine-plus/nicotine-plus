@@ -49,7 +49,6 @@ class RoomsControl:
 		cols[0].set_sort_column_id(0)
 		cols[1].set_sort_column_id(2)
 
-		self.roomsmodel.set_sort_column_id(1, gtk.SORT_DESCENDING)
 		cols[1].set_sort_indicator(True)
 		
 		for i in range (2):
@@ -177,6 +176,8 @@ class RoomsControl:
 			for room in list:
 				self.frame.np.queue.put(slskmessages.JoinRoom(room))
 		self.roomsmodel.clear()
+		self.roomsmodel.set_default_sort_func(lambda *args: -1)
+		self.roomsmodel.set_sort_column_id(-1, gtk.SORT_ASCENDING)
 		self.rooms = []
 		for rooms in msg.rooms:
 			room, users = rooms
@@ -184,6 +185,7 @@ class RoomsControl:
 			if len(msg.rooms) < 200 or users > 2:
 				self.rooms.append(room)
 
+		self.roomsmodel.set_sort_column_id(2, gtk.SORT_DESCENDING)
 	def GetUserStats(self, msg):
 		for room in self.joinedrooms.values():
 			room.GetUserStats(msg.user, msg.avgspeed, msg.files)
@@ -389,6 +391,7 @@ class ChatRoom(ChatRoomTab):
 			iter = self.usersmodel.append([img, user, hspeed, hfiles, users[user].status, users[user].avgspeed, users[user].files])
 			self.users[user] = iter
 		self.usersmodel.set_sort_column_id(1, gtk.SORT_ASCENDING)
+		
 		self.UpdateColours()
 		self.UserList.set_model(self.usersmodel)
 		self.UserList.set_property("rules-hint", True)
@@ -905,6 +908,9 @@ class ChatRoom(ChatRoomTab):
 			self.changecolour(tag, "useroffline")
 			
 	def Rejoined(self, users):
+		# Update user list with an inexpensive sorting function
+		self.usersmodel.set_default_sort_func(lambda *args: -1)
+		self.usersmodel.set_sort_column_id(-1, gtk.SORT_ASCENDING)
 		for user in users.keys():
 			if self.users.has_key(user):
 				self.usersmodel.remove(self.users[user])
@@ -914,9 +920,15 @@ class ChatRoom(ChatRoomTab):
 			iter = self.usersmodel.append([img, user, hspeed, hfiles, users[user].status, users[user].avgspeed, users[user].files])
 			self.users[user] = iter
 		self.UserList.set_sensitive(True)
+		# Reinitialize sorting after loop is complet
+		self.usersmodel.set_sort_column_id(1, gtk.SORT_ASCENDING)
+		# Spit this line into chat log
 		AppendLine(self.ChatScroll, _("--- reconnected ---"), self.tag_hilite)
+		# Update user count
 		self.CountUsers()
+		# Build completion list
 		self.GetCompletionList(widget=self.ChatEntry)
+		# Update all username tags in chat log
 		for user, tag in self.tag_users.items():
 			if self.users.has_key(user):
 				color = self.changecolour(tag, self.getUserStatusColor(self.usersmodel.get_value(self.users[user], 4)) )
