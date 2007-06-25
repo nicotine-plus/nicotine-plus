@@ -51,6 +51,42 @@ class PrivateChats(IconNotebook):
 		if text is not None:
 			self.users[user].SendMessage(text)
 	
+	def TabPopup(self, user):
+		popup = PopupMenu(self.frame)
+		popup.setup(
+			("#" + _("Show IP a_ddress"), popup.OnShowIPaddress, gtk.STOCK_NETWORK),
+			("#" + _("Get user i_nfo"), popup.OnGetUserInfo, gtk.STOCK_DIALOG_INFO),
+			("#" + _("Brow_se files"), popup.OnBrowseUser, gtk.STOCK_HARDDISK),
+			("#" + _("Gi_ve privileges"), popup.OnGivePrivileges, gtk.STOCK_JUMP_TO),
+			("#" + _("Client Version"), popup.OnVersion, gtk.STOCK_ABOUT ),
+			("", None),
+			("$" + _("Add user to list"), popup.OnAddToList),
+			("$" + _("Ban this user"), popup.OnBanUser),
+			("$" + _("Ignore this user"), popup.OnIgnoreUser),
+		)
+		popup.set_user(user)
+		
+		items = popup.get_children()
+		
+		items[6].set_active(user in [i[0] for i in self.frame.np.config.sections["server"]["userlist"]])
+		items[7].set_active(user in self.frame.np.config.sections["server"]["banlist"])
+		items[8].set_active(user in self.frame.np.config.sections["server"]["ignorelist"])
+	
+		return popup
+		
+	def on_tab_click(self, widget, event, child):
+		if event.type == gtk.gdk.BUTTON_PRESS:
+			n = self.page_num(child)
+			page = self.get_nth_page(n)
+			username =  [user for user, tab in self.users.items() if tab.Main is page][0]
+			if event.button == 3:
+				menu = self.TabPopup(username)
+				menu.popup(None, None, None, event.button, event.time)
+			else:
+				self.set_current_page(n)
+			return True
+		return False
+			
 	def ShowMessage(self, msg, text, status=None):
 		if msg.user in self.frame.np.config.sections["server"]["ignorelist"]:
 			return
@@ -99,7 +135,10 @@ class PrivateChats(IconNotebook):
 		self.connected = 0
 		for user in self.users:
 			self.users[user].ConnClose()
-			
+			tab = self.users[user]
+			status = _("Offline")
+			self.set_text(tab.Main, "%s (%s)" % (user[:15], status))
+			tab.GetUserStatus(status)
 			
 class PrivateChat(PrivateChatTab):
 	def __init__(self, chats, user):
@@ -183,6 +222,7 @@ class PrivateChat(PrivateChatTab):
 		)
 		popup.set_user(user)
 		self.ChatScroll.connect("button_press_event", self.OnPopupMenu)
+		self.ChatScroll.connect("key_press_event", self.OnPopupMenu)
 
 		self.UpdateColours()
 		
@@ -208,17 +248,26 @@ class PrivateChat(PrivateChatTab):
 	def Login(self):
 		AppendLine(self.ChatScroll, _("--- reconnected ---"), self.tag_hilite, "%c")
 		self.ChangeColours()
+		
 	def ConnClose(self):
 		AppendLine(self.ChatScroll, _("--- disconnected ---"), self.tag_hilite, "%c")
 		self.offlinemessage = 0
 		self.ChangeColours()
-	def OnPopupMenu(self, widget, event):
-		if event.button != 3:
-			return
 		
-		self.popup_menu.popup(None, None, None, event.button, event.time)
-		self.ChatScroll.emit_stop_by_name("button_press_event")
-		return True
+	def OnPopupMenu(self, widget, event):
+		if event.type == gtk.gdk.BUTTON_PRESS and event.button == 3:
+
+			self.popup_menu.popup(None, None, None, event.button, event.time)
+			self.ChatScroll.emit_stop_by_name("button_press_event")
+			return True
+		elif event.type == gtk.gdk.KEY_PRESS:
+
+			if event.keyval == gtk.gdk.keyval_from_name("Menu"):
+				self.popup_menu.popup(None, None, None, 0, 0)
+				self.ChatScroll.emit_stop_by_name("key_press_event")
+				return True
+
+		return False
 	
 	def OnPopupMenuUser(self, widget):
 		items = self.popup_menu_user.get_children()

@@ -112,8 +112,6 @@ class UserList:
 		)
 		self.frame.UserList.connect("button_press_event", self.OnPopupMenu)
 		
-
-		
 	def CellDataFunc(self, column, cellrenderer, model, iter):
 		colour = self.frame.np.config.sections["ui"]["search"]
 		if colour == "":

@@ -818,16 +818,16 @@ class MainWindow:
 
         self.hbox2.pack_start(self.WishList, False, False, 0)
 
-        self.combo1_List = gtk.ListStore(gobject.TYPE_STRING)
-        self.combo1 = gtk.ComboBoxEntry()
-        self.combo1.show()
+        self.SearchEntryCombo_List = gtk.ListStore(gobject.TYPE_STRING)
+        self.SearchEntryCombo = gtk.ComboBoxEntry()
+        self.SearchEntryCombo.show()
 
-        self.SearchEntry = self.combo1.child
+        self.SearchEntry = self.SearchEntryCombo.child
         self.SearchEntry.connect("activate", self.OnSearch)
 
-        self.combo1.set_model(self.combo1_List)
-        self.combo1.set_text_column(0)
-        self.hbox2.pack_start(self.combo1)
+        self.SearchEntryCombo.set_model(self.SearchEntryCombo_List)
+        self.SearchEntryCombo.set_text_column(0)
+        self.hbox2.pack_start(self.SearchEntryCombo)
 
         self.SearchButton = gtk.Button()
         self.SearchButton.show()
@@ -1042,61 +1042,9 @@ class MainWindow:
         self.hbox12.show()
         self.hbox12.set_spacing(5)
 
-        self.button17 = gtk.Button()
-        self.button17.show()
-        self.button17.connect("clicked", self.OnGlobalRecommendationsClicked)
-
-        self.alignment4 = gtk.Alignment(0.5, 0.5, 0, 0)
-        self.alignment4.show()
-
-        self.hbox24 = gtk.HBox(False, 0)
-        self.hbox24.show()
-        self.hbox24.set_spacing(2)
-
-        self.image4 = gtk.Image()
-        self.image4.set_from_stock(gtk.STOCK_REFRESH, 4)
-        self.image4.show()
-        self.hbox24.pack_start(self.image4, False, False, 0)
-
-        self.label33 = gtk.Label(_("Global recommendations"))
-        self.label33.show()
-        self.hbox24.pack_start(self.label33, False, False, 0)
-
-        self.alignment4.add(self.hbox24)
-
-        self.button17.add(self.alignment4)
-
-        self.hbox12.pack_end(self.button17, False, False, 0)
-
-        self.button18 = gtk.Button()
-        self.button18.show()
-        self.button18.connect("clicked", self.OnRecommendationsClicked)
-
-        self.alignment5 = gtk.Alignment(0.5, 0.5, 0, 0)
-        self.alignment5.show()
-
-        self.hbox25 = gtk.HBox(False, 0)
-        self.hbox25.show()
-        self.hbox25.set_spacing(2)
-
-        self.image5 = gtk.Image()
-        self.image5.set_from_stock(gtk.STOCK_REFRESH, 4)
-        self.image5.show()
-        self.hbox25.pack_start(self.image5, False, False, 0)
-
-        self.label34 = gtk.Label(_("Recommendations"))
-        self.label34.show()
-        self.hbox25.pack_start(self.label34, False, False, 0)
-
-        self.alignment5.add(self.hbox25)
-
-        self.button18.add(self.alignment5)
-
-        self.hbox12.pack_end(self.button18, False, False, 0)
-
-        self.button19 = gtk.Button()
-        self.button19.show()
-        self.button19.connect("clicked", self.OnSimilarUsersClicked)
+        self.SimilarUsersButton = gtk.Button()
+        self.SimilarUsersButton.show()
+        self.SimilarUsersButton.connect("clicked", self.OnSimilarUsersClicked)
 
         self.alignment6 = gtk.Alignment(0.5, 0.5, 0, 0)
         self.alignment6.show()
@@ -1116,9 +1064,61 @@ class MainWindow:
 
         self.alignment6.add(self.hbox26)
 
-        self.button19.add(self.alignment6)
+        self.SimilarUsersButton.add(self.alignment6)
 
-        self.hbox12.pack_end(self.button19, False, False, 0)
+        self.hbox12.pack_end(self.SimilarUsersButton, False, False, 0)
+
+        self.RecommendationsButton = gtk.Button()
+        self.RecommendationsButton.show()
+        self.RecommendationsButton.connect("clicked", self.OnRecommendationsClicked)
+
+        self.alignment5 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment5.show()
+
+        self.hbox25 = gtk.HBox(False, 0)
+        self.hbox25.show()
+        self.hbox25.set_spacing(2)
+
+        self.image5 = gtk.Image()
+        self.image5.set_from_stock(gtk.STOCK_REFRESH, 4)
+        self.image5.show()
+        self.hbox25.pack_start(self.image5, False, False, 0)
+
+        self.label34 = gtk.Label(_("Recommendations"))
+        self.label34.show()
+        self.hbox25.pack_start(self.label34, False, False, 0)
+
+        self.alignment5.add(self.hbox25)
+
+        self.RecommendationsButton.add(self.alignment5)
+
+        self.hbox12.pack_end(self.RecommendationsButton, False, False, 0)
+
+        self.GlobalRecommendationsButton = gtk.Button()
+        self.GlobalRecommendationsButton.show()
+        self.GlobalRecommendationsButton.connect("clicked", self.OnGlobalRecommendationsClicked)
+
+        self.alignment4 = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.alignment4.show()
+
+        self.hbox24 = gtk.HBox(False, 0)
+        self.hbox24.show()
+        self.hbox24.set_spacing(2)
+
+        self.image4 = gtk.Image()
+        self.image4.set_from_stock(gtk.STOCK_REFRESH, 4)
+        self.image4.show()
+        self.hbox24.pack_start(self.image4, False, False, 0)
+
+        self.label33 = gtk.Label(_("Global recommendations"))
+        self.label33.show()
+        self.hbox24.pack_start(self.label33, False, False, 0)
+
+        self.alignment4.add(self.hbox24)
+
+        self.GlobalRecommendationsButton.add(self.alignment4)
+
+        self.hbox12.pack_end(self.GlobalRecommendationsButton, False, False, 0)
 
         self.interests.pack_start(self.hbox12, False, True, 0)
 
@@ -1440,13 +1440,13 @@ class MainWindow:
     def OnLoadFromDisk(self, widget):
         pass
 
-    def OnGlobalRecommendationsClicked(self, widget):
+    def OnSimilarUsersClicked(self, widget):
         pass
 
     def OnRecommendationsClicked(self, widget):
         pass
 
-    def OnSimilarUsersClicked(self, widget):
+    def OnGlobalRecommendationsClicked(self, widget):
         pass
 
     def OnAddThingILike(self, widget):
@@ -1482,6 +1482,13 @@ class ChatRoomTab:
         self.vpaned2 = gtk.VPaned()
         self.vpaned2.show()
 
+        self.vbox3 = gtk.VBox(False, 0)
+        self.vbox3.show()
+
+        self.Ticker = self.get_custom_widget("Ticker", "", "", 0, 0)
+        self.Ticker.connect("button_press_event", self.OnTickerClicked)
+        self.vbox3.pack_start(self.Ticker, False, True, 0)
+
         self.scrolledwindow13 = gtk.ScrolledWindow()
         self.scrolledwindow13.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
         self.scrolledwindow13.show()
@@ -1493,36 +1500,34 @@ class ChatRoomTab:
         self.RoomLog.show()
         self.scrolledwindow13.add(self.RoomLog)
 
-        self.vpaned2.pack1(self.scrolledwindow13, False, True)
+        self.vbox3.pack_start(self.scrolledwindow13)
+
+        self.vpaned2.pack1(self.vbox3, False, True)
 
         self.vbox6 = gtk.VBox(False, 0)
         self.vbox6.show()
 
-        self.Ticker = self.get_custom_widget("Ticker", "", "", 0, 0)
-        self.Ticker.connect("button_press_event", self.OnTickerClicked)
-        self.vbox6.pack_start(self.Ticker, False, True, 0)
-
-        self.scrolledwindow15 = gtk.ScrolledWindow()
-        self.scrolledwindow15.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
-        self.scrolledwindow15.show()
-        self.scrolledwindow15.set_shadow_type(gtk.SHADOW_IN)
+        self.ChatScrollWindow = gtk.ScrolledWindow()
+        self.ChatScrollWindow.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+        self.ChatScrollWindow.show()
+        self.ChatScrollWindow.set_shadow_type(gtk.SHADOW_IN)
 
         self.ChatScroll = gtk.TextView()
         self.ChatScroll.set_wrap_mode(gtk.WRAP_WORD)
         self.ChatScroll.set_cursor_visible(False)
         self.ChatScroll.set_editable(False)
         self.ChatScroll.show()
-        self.scrolledwindow15.add(self.ChatScroll)
+        self.ChatScrollWindow.add(self.ChatScroll)
 
-        self.vbox6.pack_start(self.scrolledwindow15)
+        self.vbox6.pack_start(self.ChatScrollWindow)
 
-        self.entry3 = gtk.Entry()
-        self.entry3.show()
-        self.entry3.connect("activate", self.OnEnter)
-        self.entry3.connect("key_press_event", self.OnKeyPress)
-        self.vbox6.pack_start(self.entry3, False, False, 0)
+        self.ChatEntry = gtk.Entry()
+        self.ChatEntry.show()
+        self.ChatEntry.connect("activate", self.OnEnter)
+        self.ChatEntry.connect("key_press_event", self.OnKeyPress)
+        self.vbox6.pack_start(self.ChatEntry, False, False, 0)
 
-        self.vpaned2.pack2(self.vbox6, True, True)
+        self.vpaned2.pack2(self.vbox6, True, False)
 
         self.Main.pack1(self.vpaned2, True, True)
 
@@ -1543,6 +1548,30 @@ class ChatRoomTab:
         self.scrolledwindow14.add(self.UserList)
 
         self.vbox5.pack_start(self.scrolledwindow14)
+
+        self.hbox58 = gtk.HBox(False, 0)
+        self.hbox58.show()
+        self.hbox58.set_spacing(5)
+        self.hbox58.set_border_width(3)
+
+        self.Log = gtk.CheckButton()
+        self.Log.set_label(_("Log"))
+        self.Log.show()
+        self.Log.connect("toggled", self.OnLogToggled)
+        self.hbox58.pack_start(self.Log, False, False, 0)
+
+        self.Encoding_List = gtk.ListStore(gobject.TYPE_STRING)
+        self.Encoding = gtk.ComboBox()
+        self.Encoding.show()
+        self.Encoding.connect("changed", self.OnEncodingChanged)
+
+        self.Encoding.set_model(self.Encoding_List)
+        cell = gtk.CellRendererText()
+        self.Encoding.pack_start(cell, True)
+        self.Encoding.add_attribute(cell, 'text', 0)
+        self.hbox58.pack_start(self.Encoding)
+
+        self.vbox5.pack_start(self.hbox58, False, False, 0)
 
         self.hbox4 = gtk.HBox(False, 0)
         self.hbox4.show()
@@ -1582,30 +1611,6 @@ class ChatRoomTab:
 
         self.vbox5.pack_start(self.hbox4, False, True, 0)
 
-        self.hbox58 = gtk.HBox(False, 0)
-        self.hbox58.show()
-        self.hbox58.set_spacing(5)
-        self.hbox58.set_border_width(3)
-
-        self.Log = gtk.CheckButton()
-        self.Log.set_label(_("Log"))
-        self.Log.show()
-        self.Log.connect("toggled", self.OnLogToggled)
-        self.hbox58.pack_start(self.Log, False, False, 0)
-
-        self.Encoding_List = gtk.ListStore(gobject.TYPE_STRING)
-        self.Encoding = gtk.ComboBox()
-        self.Encoding.show()
-        self.Encoding.connect("changed", self.OnEncodingChanged)
-
-        self.Encoding.set_model(self.Encoding_List)
-        cell = gtk.CellRendererText()
-        self.Encoding.pack_start(cell, True)
-        self.Encoding.add_attribute(cell, 'text', 0)
-        self.hbox58.pack_start(self.Encoding)
-
-        self.vbox5.pack_start(self.hbox58, False, False, 0)
-
         self.Main.pack2(self.vbox5, False, True)
 
 
@@ -1621,16 +1626,16 @@ class ChatRoomTab:
     def OnKeyPress(self, widget):
         pass
 
-    def OnAutojoin(self, widget):
-        pass
-
-    def OnLeave(self, widget):
-        pass
-
     def OnLogToggled(self, widget):
         pass
 
     def OnEncodingChanged(self, widget):
+        pass
+
+    def OnAutojoin(self, widget):
+        pass
+
+    def OnLeave(self, widget):
         pass
 
     def get_custom_widget(self, id, string1, string2, int1, int2):
@@ -2399,9 +2404,9 @@ class UserInfoTab:
 
         self.vbox9.pack_start(self.SavePicture, False, False, 0)
 
-        self.Filler = gtk.Label("")
+        self.Filler = gtk.Label()
         self.Filler.show()
-        self.vbox9.pack_start(self.Filler, True, True, 0)
+        self.vbox9.pack_start(self.Filler)
 
         self.RefreshUserinfo = gtk.Button()
         self.RefreshUserinfo.show()

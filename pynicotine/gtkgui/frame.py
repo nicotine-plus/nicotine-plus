@@ -984,8 +984,6 @@ class NicotineFrame(MainWindow):
 		gtk.main_quit()
 		
 	def OnConnect(self, widget):
-		self.connect1.set_sensitive(0)
-		self.disconnect1.set_sensitive(1)
 		self.TrayApp.tray_status["status"] = "connect"
 		self.TrayApp.SetImage()
 		if self.np.serverconn is not None:
@@ -1020,11 +1018,8 @@ class NicotineFrame(MainWindow):
 			self.awaytimer = None
 		if self.autoaway:
 			self.autoaway = self.away = False
-		
-		self.connect1.set_sensitive(1)
-		self.disconnect1.set_sensitive(0)
-		self.awayreturn1.set_sensitive(0)
-		self.check_privileges1.set_sensitive(0)
+		self.SetWidgetOnlineStatus(False)
+
 		
 		self.SetUserStatus(_("Offline"))
 		self.TrayApp.tray_status["status"] = "disconnect"
@@ -1036,14 +1031,43 @@ class NicotineFrame(MainWindow):
 		self.uploads.ConnClose()
 		self.downloads.ConnClose()
 		self.userlist.ConnClose()
-	
+		self.userinfo.ConnClose()
+		self.userbrowse.ConnClose()
+		
+	def SetWidgetOnlineStatus(self, status):
+		self.connect1.set_sensitive(not status)
+		self.disconnect1.set_sensitive(status)
+		self.awayreturn1.set_sensitive(status)
+		self.check_privileges1.set_sensitive(status)
+
+		self.roomlist.CreateRoomEntry.set_sensitive(status)
+		self.roomlist.RoomsList.set_sensitive(status)
+		self.UserPrivateCombo.set_sensitive(status)
+		self.sPrivateChatButton.set_sensitive(status)
+		self.UserBrowseCombo.set_sensitive(status)
+		self.sSharesButton.set_sensitive(status)
+		self.UserInfoCombo.set_sensitive(status)
+		self.sUserinfoButton.set_sensitive(status)
+		
+		self.UserSearchCombo.set_sensitive(status)
+		self.SearchEntryCombo.set_sensitive(status)
+		
+		self.SearchButton.set_sensitive(status)
+		self.SimilarUsersButton.set_sensitive(status)
+		self.GlobalRecommendationsButton.set_sensitive(status)
+		self.RecommendationsButton.set_sensitive(status)
+
+		self.DownloadButtons.set_sensitive(status)
+		self.UploadButtons.set_sensitive(status)
+		
 	def ConnectError(self, conn):
-		self.connect1.set_sensitive(1)
-		self.disconnect1.set_sensitive(0)
+		self.SetWidgetOnlineStatus(False)
 		
 		self.SetUserStatus(_("Offline"))
 		self.TrayApp.tray_status["status"] = "disconnect"
 		self.TrayApp.SetImage()
+		self.uploads.ConnClose()
+		self.downloads.ConnClose()
 		
 	def SetUserStatus(self, status):
 		self.UserStatus.pop(self.user_context_id)
@@ -1063,10 +1087,9 @@ class NicotineFrame(MainWindow):
 			self.SetUserStatus(_("Away"))
 			self.TrayApp.tray_status["status"] = "away2"
 			self.TrayApp.SetImage()
-		
-		self.awayreturn1.set_sensitive(1)
-		self.check_privileges1.set_sensitive(1)
-		
+
+		self.SetWidgetOnlineStatus(True)
+
 		self.uploads.InitInterface(self.np.transfers.uploads)
 		self.downloads.InitInterface(self.np.transfers.downloads)
 		gobject.idle_add(self.FetchUserListStatus)

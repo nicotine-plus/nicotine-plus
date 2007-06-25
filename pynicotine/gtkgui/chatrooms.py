@@ -105,7 +105,7 @@ class RoomsControl:
 		page = notebook.get_nth_page(page_num)
 		for name, room in self.joinedrooms.items():
 			if room.Main == page:
-				gobject.idle_add(room.entry3.grab_focus)
+				gobject.idle_add(room.ChatEntry.grab_focus)
 				# Remove hilite
 				if name in self.frame.TrayApp.tray_status["hilites"]["rooms"]:
 					self.frame.ClearNotification("rooms", None, name)
@@ -113,8 +113,6 @@ class RoomsControl:
 
 		
 	def OnListClicked(self, widget, event):
-		if self.roomsmodel is None:
-			return False
 		if event.button == 1 and event.type == gtk.gdk._2BUTTON_PRESS:
 			d = self.frame.roomlist.RoomsList.get_path_at_pos(int(event.x), int(event.y))
 			if d:
@@ -240,9 +238,8 @@ class RoomsControl:
 		self.frame.RoomSearchCombo_List.remove(self.frame.searchroomslist[msg.room])
 	
 	def ConnClose(self):
-		self.roomsmodel = None
-		self.frame.roomlist.RoomsList.set_model(None)
-		
+		self.roomsmodel.clear()
+
 		for room in self.joinedrooms.values():
 			room.ConnClose()
 
@@ -336,25 +333,25 @@ class ChatRoom(ChatRoomTab):
 				self.Encoding.set_active_iter(self.Elist[self.encoding])
 		if self.frame.SEXY and self.frame.np.config.sections["ui"]["spellcheck"]:
 			import sexy
-			self.vbox6.remove(self.entry3)
-			self.entry3.destroy()
-			self.entry3 = sexy.SpellEntry()
-			self.entry3.show()
-        		self.entry3.connect("activate", self.OnEnter)
+			self.vbox6.remove(self.ChatEntry)
+			self.ChatEntry.destroy()
+			self.ChatEntry = sexy.SpellEntry()
+			self.ChatEntry.show()
+        		self.ChatEntry.connect("activate", self.OnEnter)
 			
-        		self.entry3.connect("key_press_event", self.OnKeyPress)
-			self.vbox6.pack_start(self.entry3, False, False, 0)
+        		self.ChatEntry.connect("key_press_event", self.OnKeyPress)
+			self.vbox6.pack_start(self.ChatEntry, False, False, 0)
 			
 		
 		completion = gtk.EntryCompletion()
-		self.entry3.set_completion(completion)
+		self.ChatEntry.set_completion(completion)
 		liststore = gtk.ListStore(gobject.TYPE_STRING)
 		completion.set_model(liststore)
 		completion.set_minimum_key_length(2)
 		completion.set_text_column(0)
 		completion.set_popup_single_match(False)
-		completion.set_match_func(self.frame.EntryCompletionFindMatch, self.entry3)
-		completion.connect("match-selected", self.frame.EntryCompletionFoundMatch, self.entry3)
+		completion.set_match_func(self.frame.EntryCompletionFindMatch, self.ChatEntry)
+		completion.connect("match-selected", self.frame.EntryCompletionFoundMatch, self.ChatEntry)
 		
 		self.Log.set_active(self.frame.np.config.sections["logging"]["chatrooms"])
 		
@@ -413,8 +410,8 @@ class ChatRoom(ChatRoomTab):
 		)
 		self.UserList.connect("button_press_event", self.OnPopupMenu)
 
-		self.entry3.grab_focus()
-		self.vbox6.set_focus_child(self.entry3)
+		self.ChatEntry.grab_focus()
+		self.vbox6.set_focus_child(self.ChatEntry)
 		
 		self.logpopupmenu = PopupMenu(self.frame).setup(
 			("#" + _("Find"), self.OnFindLogWindow, gtk.STOCK_FIND),
@@ -436,7 +433,7 @@ class ChatRoom(ChatRoomTab):
 		)
 		self.ChatScroll.connect("button-press-event", self.OnPopupChatRoomMenu)
 		self.buildingcompletion = False
-		self.GetCompletionList(widget=self.entry3)
+		self.GetCompletionList(widget=self.ChatEntry)
 		
 	def OnFindLogWindow(self, widget):
 
@@ -677,7 +674,7 @@ class ChatRoom(ChatRoomTab):
 		# Add to completion list, and completion drop-down
 		if username not in self.clist:
 			self.clist.append(username)
-			self.entry3.get_completion().get_model().append([username])
+			self.ChatEntry.get_completion().get_model().append([username])
 			
 		AppendLine(self.RoomLog, _("%s joined the room") % username, self.tag_log)
 		img = self.frame.GetStatusImage(userdata.status)
@@ -698,7 +695,7 @@ class ChatRoom(ChatRoomTab):
 		# Remove from completion list, and completion drop-down
 		if username in self.clist and username not in [i[0] for i in self.frame.userlist.userlist]:
 			self.clist.remove(username)
-			liststore = self.entry3.get_completion().get_model()
+			liststore = self.ChatEntry.get_completion().get_model()
 			iter = liststore.get_iter_root()
 			while iter is not None:
 				name = liststore.get_value(iter, 0)
@@ -812,7 +809,7 @@ class ChatRoom(ChatRoomTab):
 		self.frame.SetTextBG(self.RoomLog)
 		self.frame.SetTextBG(self.UserList)
 		
-		self.frame.SetTextBG(self.entry3)
+		self.frame.SetTextBG(self.ChatEntry)
 		
 		
 	def getUserStatusColor(self, status):
@@ -875,7 +872,7 @@ class ChatRoom(ChatRoomTab):
 		self.frame.SetTextBG(self.ChatScroll)
 		self.frame.SetTextBG(self.RoomLog)
 		self.frame.SetTextBG(self.UserList)
-		self.frame.SetTextBG(self.entry3)
+		self.frame.SetTextBG(self.ChatEntry)
 				
 	def OnLeave(self, widget = None):
 		if self.leaving:
@@ -897,12 +894,16 @@ class ChatRoom(ChatRoomTab):
 	def ConnClose(self):
 		AppendLine(self.ChatScroll, _("--- disconnected ---"), self.tag_hilite)
 		self.usersmodel.clear()
-		self.users = {}
+		self.UserList.set_sensitive(False)
+		self.users.clear()
 		self.CountUsers()
 		config = self.frame.np.config.sections
   		if not self.AutoJoin.get_active() and config["columns"]["chatrooms"].has_key(self.room):
 			del config["columns"]["chatrooms"][self.room]
-		
+			
+		for tag in self.tag_users.values():
+			self.changecolour(tag, "useroffline")
+			
 	def Rejoined(self, users):
 		for user in users.keys():
 			if self.users.has_key(user):
@@ -912,9 +913,15 @@ class ChatRoom(ChatRoomTab):
 			hfiles = Humanize(users[user].files)
 			iter = self.usersmodel.append([img, user, hspeed, hfiles, users[user].status, users[user].avgspeed, users[user].files])
 			self.users[user] = iter
+		self.UserList.set_sensitive(True)
 		AppendLine(self.ChatScroll, _("--- reconnected ---"), self.tag_hilite)
 		self.CountUsers()
-		self.GetCompletionList(widget=self.entry3)
+		self.GetCompletionList(widget=self.ChatEntry)
+		for user, tag in self.tag_users.items():
+			if self.users.has_key(user):
+				color = self.changecolour(tag, self.getUserStatusColor(self.usersmodel.get_value(self.users[user], 4)) )
+			else:
+				self.changecolour(tag, "useroffline")
 
 	def OnAutojoin(self, widget):
 		autojoin = self.frame.np.config.sections["server"]["autojoin"]

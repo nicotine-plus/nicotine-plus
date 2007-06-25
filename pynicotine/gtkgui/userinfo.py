@@ -78,7 +78,52 @@ class UserTabs(IconNotebook):
 	def UpdateColours(self):
 		for i in self.users.values():
 			i.ChangeColours()
-			
+	
+	def TabPopup(self, user):
+		popup = PopupMenu(self.frame)
+		popup.setup(
+			("#" + _("Send _message"), popup.OnSendMessage, gtk.STOCK_EDIT),
+			("#" + _("Show IP a_ddress"), popup.OnShowIPaddress, gtk.STOCK_NETWORK),
+			("#" + _("Get user i_nfo"), popup.OnGetUserInfo, gtk.STOCK_DIALOG_INFO),
+			("#" + _("Brow_se files"), popup.OnBrowseUser, gtk.STOCK_HARDDISK),
+			("#" + _("Gi_ve privileges"), popup.OnGivePrivileges, gtk.STOCK_JUMP_TO),
+			("#" + _("Client Version"), popup.OnVersion, gtk.STOCK_ABOUT ),
+			("", None),
+			("$" + _("Add user to list"), popup.OnAddToList),
+			("$" + _("Ban this user"), popup.OnBanUser),
+			("$" + _("Ignore this user"), popup.OnIgnoreUser),
+		)
+		popup.set_user(user)
+		
+		items = popup.get_children()
+		
+		items[7].set_active(user in [i[0] for i in self.frame.np.config.sections["server"]["userlist"]])
+		items[8].set_active(user in self.frame.np.config.sections["server"]["banlist"])
+		items[9].set_active(user in self.frame.np.config.sections["server"]["ignorelist"])
+	
+		return popup
+		
+	def on_tab_click(self, widget, event, child):
+		if event.type == gtk.gdk.BUTTON_PRESS:
+			n = self.page_num(child)
+			page = self.get_nth_page(n)
+			username =  [user for user, tab in self.users.items() if tab.Main is page][0]
+			if event.button == 3:
+				menu = self.TabPopup(username)
+				menu.popup(None, None, None, event.button, event.time)
+			else:
+				self.set_current_page(n)
+			return True
+		return False
+
+	def ConnClose(self):
+		self.connected = 0
+		for user in self.users:
+			self.users[user].ConnClose()
+			tab = self.users[user]
+			status = _("Offline")
+			self.set_text(tab.Main, "%s (%s)" % (user[:15], status))
+
 class UserInfo(UserInfoTab):
 	def __init__(self, userinfos, user, conn):
 		UserInfoTab.__init__(self, False)
@@ -122,7 +167,10 @@ class UserInfo(UserInfoTab):
 		self.InterestsExpander.connect("activate", self.ExpanderStatus)
 		self.InformationExpander.connect("activate", self.ExpanderStatus)
 		self.DescriptionExpander.connect("activate", self.ExpanderStatus)
-				
+
+	def ConnClose(self):
+		pass
+	
 	def CellDataFunc(self, column, cellrenderer, model, iter):
 		colour = self.frame.np.config.sections["ui"]["search"]
 		if colour == "":

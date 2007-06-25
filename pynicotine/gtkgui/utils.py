@@ -268,11 +268,14 @@ class ImageLabel(gtk.HBox):
 		self._entered = 0
 		self._pressed = 0
 		self.onclose = onclose
-
+		
 		self.label = gtk.Label(label)
 		self.label.set_alignment(0.0, 0.50)
-		self.pack_start(self.label, True, True)
 		self.label.show()
+		
+		
+		self.pack_start(self.label, True, True)
+		
 
 		self.image = gtk.Image()
 		self.set_image(image)
@@ -328,16 +331,25 @@ class IconNotebook(gtk.Notebook):
 	def append_page(self, page, label, onclose = None):
 		if not self.tabclosers:
 			onclose = None
-		l = ImageLabel(label, self.images["empty"], onclose)
-		l2 = ImageLabel(label, self.images["empty"])
-		self.pages.append([page, l, 0, l2])
-		gtk.Notebook.append_page_menu(self, page, l, l2)
+		label_tab = ImageLabel(label, self.images["empty"], onclose)
+		# menu for all tabs
+		label_tab_menu = ImageLabel(label, self.images["empty"])
+		self.pages.append([page, label_tab, 0, label_tab_menu])
+		self.eventbox = gtk.EventBox()
+		label_tab.show()
+		self.eventbox.add(label_tab)
+		self.eventbox.show()
+		self.eventbox.connect('event', self.on_tab_click, page)
+		gtk.Notebook.append_page_menu(self, page, self.eventbox, label_tab_menu)
 		try:
 			self.set_tab_reorderable(page, True)
 		except:
 			# Old PyGTK2
 			pass
 		
+	def on_tab_click(self, widget, event, child):
+		pass
+	
 	def set_image(self, page, status):
 		image = self.images[("empty", "online", "hilite")[status]]
 		for i in self.pages:

@@ -198,7 +198,8 @@ class UserBrowse(UserBrowseTab):
 	def OnPopupMenuDummy(self, widget):
 		pass
 
-	
+	def ConnClose(self):
+		pass
 		
 	def OnPopupMenuFileUser(self, widget):
 		self.OnPopupMenuUsers(self.popup_menu_users2)

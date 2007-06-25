@@ -154,7 +154,7 @@ class Searches:
 		self.disconnected = 0
 	
 		frame.SearchNotebook.popup_enable()
-		#frame.combo1.disable_activate()
+		#frame.SearchEntryCombo.disable_activate()
 		
 		items = self.frame.np.config.sections["searches"]["history"]
 		templist = []
@@ -162,7 +162,7 @@ class Searches:
 			if i not in templist:
 				templist.append(i)
 		for i in templist:
-			self.frame.combo1.append_text(i)
+			self.frame.SearchEntryCombo.append_text(i)
 		self.WishListDialog = WishList(frame)
 		self.frame.WishList.connect("clicked", self.WishListDialog.Toggle)
 		
@@ -206,7 +206,7 @@ class Searches:
 		self.frame.SearchEntry.set_text("")
 		self.frame.np.config.sections["searches"]["history"] = []
 		self.frame.np.config.writeConfig()
-		self.frame.combo1.get_model().clear()
+		self.frame.SearchEntryCombo.get_model().clear()
 	
 	def OnSearch(self):
 		text = self.frame.SearchEntry.get_text().strip()
@@ -258,13 +258,13 @@ class Searches:
 		del items[15:]
 		self.frame.np.config.writeConfig()
 		# Repopulate the combo list
-		self.frame.combo1.get_model().clear()
+		self.frame.SearchEntryCombo.get_model().clear()
 		templist = []
 		for i in items:
 			if i not in templist:
 				templist.append(i)
 		for i in templist:
-			self.frame.combo1.append_text(i)
+			self.frame.SearchEntryCombo.append_text(i)
 			
 		search = self.CreateTab(self.searchid, text, mode)
 		if search[2] is not None:

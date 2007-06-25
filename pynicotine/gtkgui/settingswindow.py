@@ -1416,7 +1416,7 @@ class CensorFrame(settings_glade.CensorFrame):
 		self.RemoveCensor.set_sensitive(sensitive)
 		self.AddCensor.set_sensitive(sensitive)
 		self.ClearCensors.set_sensitive(sensitive)
-		self.CensorReplaceEntry.set_sensitive(sensitive)
+		self.CensorReplaceCombo.set_sensitive(sensitive)
 		
 	def GetSettings(self):
 		censored = []

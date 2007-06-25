@@ -7,6 +7,7 @@ class Ticker(gtk.EventBox):
 	def __init__(self):
 		gtk.EventBox.__init__(self)
 		self.label = gtk.Label()
+		self.label.set_alignment(0, 0.50)
 		self.label.show()
 		self.add(self.label)
 		self.messages = {}

@@ -589,6 +589,10 @@
                       <widget class="Custom" id="ChatNotebook">
                         <property name="visible">True</property>
                       </widget>
+                      <packing>
+                        <property name="resize">True</property>
+                        <property name="shrink">True</property>
+                      </packing>
                     </child>
                     <child>
                       <widget class="GtkVPaned" id="vpaned3">
@@ -603,6 +607,7 @@
                       </widget>
                       <packing>
                         <property name="resize">False</property>
+                        <property name="shrink">True</property>
                       </packing>
                     </child>
                   </widget>
@@ -643,6 +648,7 @@
                           <widget class="GtkButton" id="sPrivateChatButton">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
+                            <property name="response_id">0</property>
                             <child>
                               <widget class="GtkAlignment" id="alignment10">
                                 <property name="visible">True</property>
@@ -732,6 +738,7 @@
                             <property name="can_focus">True</property>
                             <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                             <property name="label" translatable="yes">Group by Users</property>
+                            <property name="response_id">0</property>
                             <property name="draw_indicator">True</property>
                           </widget>
                           <packing>
@@ -747,6 +754,7 @@
                             <property name="can_focus">True</property>
                             <property name="label" translatable="yes">Expand / Collapse all</property>
                             <property name="use_underline">True</property>
+                            <property name="response_id">0</property>
                           </widget>
                           <packing>
                             <property name="expand">False</property>
@@ -785,6 +793,7 @@
                           <widget class="GtkButton" id="clearFinishedAbortedButton">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
+                            <property name="response_id">0</property>
                             <child>
                               <widget class="GtkAlignment" id="alignment21">
                                 <property name="visible">True</property>
@@ -830,6 +839,7 @@
                           <widget class="GtkButton" id="clearQueuedButton">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
+                            <property name="response_id">0</property>
                             <child>
                               <widget class="GtkAlignment" id="alignment22">
                                 <property name="visible">True</property>
@@ -876,6 +886,7 @@
                           <widget class="GtkButton" id="retryTransferButton">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
+                            <property name="response_id">0</property>
                             <child>
                               <widget class="GtkAlignment" id="alignment15">
                                 <property name="visible">True</property>
@@ -923,6 +934,7 @@
                           <widget class="GtkButton" id="abortTransferButton">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
+                            <property name="response_id">0</property>
                             <child>
                               <widget class="GtkAlignment" id="alignment16">
                                 <property name="visible">True</property>
@@ -969,6 +981,7 @@
                           <widget class="GtkButton" id="deleteTransferButton">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
+                            <property name="response_id">0</property>
                             <child>
                               <widget class="GtkAlignment" id="alignment9">
                                 <property name="visible">True</property>
@@ -1015,6 +1028,7 @@
                           <widget class="GtkButton" id="banDownloadButton">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
+                            <property name="response_id">0</property>
                             <child>
                               <widget class="GtkAlignment" id="alignment13">
                                 <property name="visible">True</property>
@@ -1098,6 +1112,7 @@
                             <property name="can_focus">True</property>
                             <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                             <property name="label" translatable="yes">Group by Users</property>
+                            <property name="response_id">0</property>
                             <property name="draw_indicator">True</property>
                           </widget>
                           <packing>
@@ -1113,6 +1128,7 @@
                             <property name="can_focus">True</property>
                             <property name="label" translatable="yes">Expand / Collapse all</property>
                             <property name="use_underline">True</property>
+                            <property name="response_id">0</property>
                           </widget>
                           <packing>
                             <property name="expand">False</property>
@@ -1151,6 +1167,7 @@
                           <widget class="GtkButton" id="clearUploadFinishedAbortedButton">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
+                            <property name="response_id">0</property>
                             <child>
                               <widget class="GtkAlignment" id="alignment20">
                                 <property name="visible">True</property>
@@ -1196,6 +1213,7 @@
                           <widget class="GtkButton" id="clearUploadQueueButton">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
+                            <property name="response_id">0</property>
                             <child>
                               <widget class="GtkAlignment" id="alignment19">
                                 <property name="visible">True</property>
@@ -1242,6 +1260,7 @@
                           <widget class="GtkButton" id="abortUploadButton">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
+                            <property name="response_id">0</property>
                             <child>
                               <widget class="GtkAlignment" id="alignment17">
                                 <property name="visible">True</property>
@@ -1288,6 +1307,7 @@
                           <widget class="GtkButton" id="abortUserUploadButton">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
+                            <property name="response_id">0</property>
                             <child>
                               <widget class="GtkAlignment" id="alignment18">
                                 <property name="visible">True</property>
@@ -1334,6 +1354,7 @@
                           <widget class="GtkButton" id="banUploadButton">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
+                            <property name="response_id">0</property>
                             <child>
                               <widget class="GtkAlignment" id="alignment14">
                                 <property name="visible">True</property>
@@ -1416,6 +1437,7 @@
                           <widget class="GtkButton" id="WishList">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
+                            <property name="response_id">0</property>
                             <child>
                               <widget class="GtkAlignment" id="alignment8">
                                 <property name="visible">True</property>
@@ -1458,7 +1480,7 @@
                           </packing>
                         </child>
                         <child>
-                          <widget class="GtkComboBoxEntry" id="combo1">
+                          <widget class="GtkComboBoxEntry" id="SearchEntryCombo">
                             <property name="visible">True</property>
                             <child internal-child="entry">
                               <widget class="GtkEntry" id="SearchEntry">
@@ -1474,6 +1496,7 @@
                           <widget class="GtkButton" id="SearchButton">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
+                            <property name="response_id">0</property>
                             <signal name="clicked" handler="OnSearch"/>
                             <child>
                               <widget class="GtkAlignment" id="alignment3">
@@ -1521,6 +1544,7 @@
                           <widget class="GtkButton" id="ClearSearchHistory">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
+                            <property name="response_id">0</property>
                             <signal name="clicked" handler="OnClearSearchHistory"/>
                             <child>
                               <widget class="GtkAlignment" id="alignment38">
@@ -1653,6 +1677,7 @@
                           <widget class="GtkButton" id="sUserinfoButton">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
+                            <property name="response_id">0</property>
                             <child>
                               <widget class="GtkAlignment" id="alignment12">
                                 <property name="visible">True</property>
@@ -1748,6 +1773,7 @@
                           <widget class="GtkButton" id="sSharesButton">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
+                            <property name="response_id">0</property>
                             <child>
                               <widget class="GtkAlignment" id="alignment11">
                                 <property name="visible">True</property>
@@ -1797,6 +1823,7 @@
                           <widget class="GtkButton" id="LoadFromDisk">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
+                            <property name="response_id">0</property>
                             <signal name="clicked" handler="OnLoadFromDisk"/>
                             <child>
                               <widget class="GtkAlignment" id="alignment39">
@@ -1882,21 +1909,22 @@
                         <property name="visible">True</property>
                         <property name="spacing">5</property>
                         <child>
-                          <widget class="GtkButton" id="button17">
+                          <widget class="GtkButton" id="SimilarUsersButton">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <signal name="clicked" handler="OnGlobalRecommendationsClicked"/>
+                            <property name="response_id">0</property>
+                            <signal name="clicked" handler="OnSimilarUsersClicked"/>
                             <child>
-                              <widget class="GtkAlignment" id="alignment4">
+                              <widget class="GtkAlignment" id="alignment6">
                                 <property name="visible">True</property>
                                 <property name="xscale">0</property>
                                 <property name="yscale">0</property>
                                 <child>
-                                  <widget class="GtkHBox" id="hbox24">
+                                  <widget class="GtkHBox" id="hbox26">
                                     <property name="visible">True</property>
                                     <property name="spacing">2</property>
                                     <child>
-                                      <widget class="GtkImage" id="image4">
+                                      <widget class="GtkImage" id="image6">
                                         <property name="visible">True</property>
                                         <property name="stock">gtk-refresh</property>
                                       </widget>
@@ -1906,9 +1934,9 @@
                                       </packing>
                                     </child>
                                     <child>
-                                      <widget class="GtkLabel" id="label33">
+                                      <widget class="GtkLabel" id="label35">
                                         <property name="visible">True</property>
-                                        <property name="label" translatable="yes">Global recommendations</property>
+                                        <property name="label" translatable="yes">Similar users</property>
                                         <property name="use_underline">True</property>
                                       </widget>
                                       <packing>
@@ -1930,9 +1958,10 @@
                           </packing>
                         </child>
                         <child>
-                          <widget class="GtkButton" id="button18">
+                          <widget class="GtkButton" id="RecommendationsButton">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
+                            <property name="response_id">0</property>
                             <signal name="clicked" handler="OnRecommendationsClicked"/>
                             <child>
                               <widget class="GtkAlignment" id="alignment5">
@@ -1978,21 +2007,22 @@
                           </packing>
                         </child>
                         <child>
-                          <widget class="GtkButton" id="button19">
+                          <widget class="GtkButton" id="GlobalRecommendationsButton">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <signal name="clicked" handler="OnSimilarUsersClicked"/>
+                            <property name="response_id">0</property>
+                            <signal name="clicked" handler="OnGlobalRecommendationsClicked"/>
                             <child>
-                              <widget class="GtkAlignment" id="alignment6">
+                              <widget class="GtkAlignment" id="alignment4">
                                 <property name="visible">True</property>
                                 <property name="xscale">0</property>
                                 <property name="yscale">0</property>
                                 <child>
-                                  <widget class="GtkHBox" id="hbox26">
+                                  <widget class="GtkHBox" id="hbox24">
                                     <property name="visible">True</property>
                                     <property name="spacing">2</property>
                                     <child>
-                                      <widget class="GtkImage" id="image6">
+                                      <widget class="GtkImage" id="image4">
                                         <property name="visible">True</property>
                                         <property name="stock">gtk-refresh</property>
                                       </widget>
@@ -2002,9 +2032,9 @@
                                       </packing>
                                     </child>
                                     <child>
-                                      <widget class="GtkLabel" id="label35">
+                                      <widget class="GtkLabel" id="label33">
                                         <property name="visible">True</property>
-                                        <property name="label" translatable="yes">Similar users</property>
+                                        <property name="label" translatable="yes">Global recommendations</property>
                                         <property name="use_underline">True</property>
                                       </widget>
                                       <packing>
@@ -2022,7 +2052,6 @@
                             <property name="expand">False</property>
                             <property name="fill">False</property>
                             <property name="pack_type">GTK_PACK_END</property>
-                            <property name="position">1</property>
                           </packing>
                         </child>
                       </widget>
@@ -2068,6 +2097,7 @@
                                       <widget class="GtkButton" id="button15">
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
+                                        <property name="response_id">0</property>
                                         <signal name="clicked" handler="OnAddThingILike"/>
                                         <child>
                                           <widget class="GtkAlignment" id="alignment2">
@@ -2137,6 +2167,7 @@
                                       <widget class="GtkButton" id="button16">
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
+                                        <property name="response_id">0</property>
                                         <signal name="clicked" handler="OnAddThingIDislike"/>
                                         <child>
                                           <widget class="GtkAlignment" id="alignment1">
@@ -2188,6 +2219,7 @@
                               </widget>
                               <packing>
                                 <property name="resize">False</property>
+                                <property name="shrink">True</property>
                               </packing>
                             </child>
                             <child>
@@ -2208,6 +2240,10 @@
                                       </widget>
                                     </child>
                                   </widget>
+                                  <packing>
+                                    <property name="resize">True</property>
+                                    <property name="shrink">True</property>
+                                  </packing>
                                 </child>
                                 <child>
                                   <widget class="GtkScrolledWindow" id="scrolledwindow27">
@@ -2223,8 +2259,16 @@
                                       </widget>
                                     </child>
                                   </widget>
+                                  <packing>
+                                    <property name="resize">True</property>
+                                    <property name="shrink">True</property>
+                                  </packing>
                                 </child>
                               </widget>
+                              <packing>
+                                <property name="resize">True</property>
+                                <property name="shrink">True</property>
+                              </packing>
                             </child>
                           </widget>
                         </child>
@@ -2253,6 +2297,10 @@
                   </packing>
                 </child>
               </widget>
+              <packing>
+                <property name="resize">True</property>
+                <property name="shrink">True</property>
+              </packing>
             </child>
             <child>
               <placeholder/>
@@ -2353,27 +2401,9 @@
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <child>
-              <widget class="GtkScrolledWindow" id="scrolledwindow13">
+              <widget class="GtkVBox" id="vbox3">
                 <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
-                <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
-                <property name="shadow_type">GTK_SHADOW_IN</property>
-                <child>
-                  <widget class="GtkTextView" id="RoomLog">
-                    <property name="visible">True</property>
-                    <property name="editable">False</property>
-                    <property name="cursor_visible">False</property>
-                  </widget>
-                </child>
-              </widget>
-              <packing>
-                <property name="resize">False</property>
-              </packing>
-            </child>
-            <child>
-              <widget class="GtkVBox" id="vbox6">
-                <property name="visible">True</property>
+                <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                 <child>
                   <widget class="Custom" id="Ticker">
                     <signal name="button_press_event" handler="OnTickerClicked"/>
@@ -2383,7 +2413,35 @@
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkScrolledWindow" id="scrolledwindow15">
+                  <widget class="GtkScrolledWindow" id="scrolledwindow13">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+                    <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+                    <property name="shadow_type">GTK_SHADOW_IN</property>
+                    <child>
+                      <widget class="GtkTextView" id="RoomLog">
+                        <property name="visible">True</property>
+                        <property name="editable">False</property>
+                        <property name="cursor_visible">False</property>
+                      </widget>
+                    </child>
+                  </widget>
+                  <packing>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+              </widget>
+              <packing>
+                <property name="resize">False</property>
+                <property name="shrink">True</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkVBox" id="vbox6">
+                <property name="visible">True</property>
+                <child>
+                  <widget class="GtkScrolledWindow" id="ChatScrollWindow">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
@@ -2398,12 +2456,9 @@
                       </widget>
                     </child>
                   </widget>
-                  <packing>
-                    <property name="position">1</property>
-                  </packing>
                 </child>
                 <child>
-                  <widget class="GtkEntry" id="entry3">
+                  <widget class="GtkEntry" id="ChatEntry">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="has_focus">True</property>
@@ -2413,12 +2468,20 @@
                   <packing>
                     <property name="expand">False</property>
                     <property name="fill">False</property>
-                    <property name="position">2</property>
+                    <property name="position">1</property>
                   </packing>
                 </child>
               </widget>
+              <packing>
+                <property name="resize">True</property>
+                <property name="shrink">False</property>
+              </packing>
             </child>
           </widget>
+          <packing>
+            <property name="resize">True</property>
+            <property name="shrink">True</property>
+          </packing>
         </child>
         <child>
           <widget class="GtkVBox" id="vbox5">
@@ -2453,6 +2516,43 @@
               </packing>
             </child>
             <child>
+              <widget class="GtkHBox" id="hbox58">
+                <property name="visible">True</property>
+                <property name="border_width">3</property>
+                <property name="spacing">5</property>
+                <child>
+                  <widget class="GtkCheckButton" id="Log">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="label" translatable="yes">Log</property>
+                    <property name="use_underline">True</property>
+                    <property name="response_id">0</property>
+                    <property name="draw_indicator">True</property>
+                    <signal name="toggled" handler="OnLogToggled"/>
+                  </widget>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkComboBox" id="Encoding">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <signal name="changed" handler="OnEncodingChanged"/>
+                  </widget>
+                  <packing>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+              </widget>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">2</property>
+              </packing>
+            </child>
+            <child>
               <widget class="GtkHBox" id="hbox4">
                 <property name="visible">True</property>
                 <property name="border_width">3</property>
@@ -2462,6 +2562,7 @@
                     <property name="can_focus">True</property>
                     <property name="label" translatable="yes">Auto-join</property>
                     <property name="use_underline">True</property>
+                    <property name="response_id">0</property>
                     <property name="draw_indicator">True</property>
                     <signal name="toggled" handler="OnAutojoin"/>
                   </widget>
@@ -2474,6 +2575,7 @@
                   <widget class="GtkButton" id="Leave">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
+                    <property name="response_id">0</property>
                     <signal name="clicked" handler="OnLeave"/>
                     <child>
                       <widget class="GtkAlignment" id="alignment33">
@@ -2521,48 +2623,13 @@
               </widget>
               <packing>
                 <property name="expand">False</property>
-                <property name="position">2</property>
-              </packing>
-            </child>
-            <child>
-              <widget class="GtkHBox" id="hbox58">
-                <property name="visible">True</property>
-                <property name="border_width">3</property>
-                <property name="spacing">5</property>
-                <child>
-                  <widget class="GtkCheckButton" id="Log">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="label" translatable="yes">Log</property>
-                    <property name="use_underline">True</property>
-                    <property name="draw_indicator">True</property>
-                    <signal name="toggled" handler="OnLogToggled"/>
-                  </widget>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">False</property>
-                  </packing>
-                </child>
-                <child>
-                  <widget class="GtkComboBox" id="Encoding">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <signal name="changed" handler="OnEncodingChanged"/>
-                  </widget>
-                  <packing>
-                    <property name="position">1</property>
-                  </packing>
-                </child>
-              </widget>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="position">1</property>
+                <property name="position">3</property>
               </packing>
             </child>
           </widget>
           <packing>
             <property name="resize">False</property>
+            <property name="shrink">True</property>
           </packing>
         </child>
       </widget>
@@ -2624,6 +2691,7 @@
                 <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                 <property name="tooltip" translatable="yes">Send the private message directly to the user (not supported on most clients)</property>
                 <property name="label" translatable="yes">Direct</property>
+                <property name="response_id">0</property>
                 <property name="draw_indicator">True</property>
               </widget>
               <packing>
@@ -2638,6 +2706,7 @@
                 <property name="can_focus">True</property>
                 <property name="label" translatable="yes">Log</property>
                 <property name="use_underline">True</property>
+                <property name="response_id">0</property>
                 <property name="draw_indicator">True</property>
                 <signal name="toggled" handler="OnLogToggled"/>
               </widget>
@@ -2651,6 +2720,7 @@
               <widget class="GtkButton" id="button1">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
+                <property name="response_id">0</property>
                 <signal name="clicked" handler="OnClose"/>
                 <child>
                   <widget class="GtkAlignment" id="alignment34">
@@ -2729,6 +2799,7 @@
                 <property name="can_focus">True</property>
                 <property name="label" translatable="yes">Enable filters</property>
                 <property name="use_underline">True</property>
+                <property name="response_id">0</property>
                 <property name="draw_indicator">True</property>
                 <signal name="toggled" handler="OnToggleFilters"/>
               </widget>
@@ -2742,6 +2813,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="tooltip" translatable="yes">Stop new search results from being displayed</property>
+                <property name="response_id">0</property>
                 <signal name="clicked" handler="OnIgnore"/>
                 <child>
                   <widget class="GtkAlignment" id="alignment36">
@@ -2789,6 +2861,7 @@
               <widget class="GtkButton" id="button3">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
+                <property name="response_id">0</property>
                 <signal name="clicked" handler="OnClose"/>
                 <child>
                   <widget class="GtkAlignment" id="alignment35">
@@ -2839,6 +2912,7 @@
                 <property name="tooltip" translatable="yes">This search will be opened the next time you start Nicotine+ and will send out new search requests after a server-set intervals (usually around one hour)</property>
                 <property name="label" translatable="yes">Remember</property>
                 <property name="use_underline">True</property>
+                <property name="response_id">0</property>
                 <property name="draw_indicator">True</property>
                 <signal name="toggled" handler="OnToggleRemember"/>
               </widget>
@@ -2871,10 +2945,9 @@
             <child>
               <widget class="GtkComboBoxEntry" id="FilterIn">
                 <property name="visible">True</property>
-		
                 <child internal-child="entry">
                   <widget class="GtkEntry" id="FilterInEntry">
-	          <signal name="activate" handler="OnRefilter"/>
+                    <signal name="activate" handler="OnRefilter"/>
                   </widget>
                 </child>
               </widget>
@@ -2898,7 +2971,7 @@
                 <property name="visible">True</property>
                 <child internal-child="entry">
                   <widget class="GtkEntry" id="FilterOutEntry">
-		  <signal name="activate" handler="OnRefilter"/>
+                    <signal name="activate" handler="OnRefilter"/>
                   </widget>
                 </child>
               </widget>
@@ -2923,7 +2996,7 @@
                 <property name="visible">True</property>
                 <child internal-child="entry">
                   <widget class="GtkEntry" id="FilterSizeEntry">
-                  <signal name="activate" handler="OnRefilter"/>
+                    <signal name="activate" handler="OnRefilter"/>
                   </widget>
                 </child>
               </widget>
@@ -2949,7 +3022,7 @@
                 <property name="visible">True</property>
                 <child internal-child="entry">
                   <widget class="GtkEntry" id="FilterBitrateEntry">
-                  <signal name="activate" handler="OnRefilter"/>
+                    <signal name="activate" handler="OnRefilter"/>
                   </widget>
                 </child>
               </widget>
@@ -2975,7 +3048,7 @@
                 <property name="visible">True</property>
                 <child internal-child="entry">
                   <widget class="GtkEntry" id="FilterCountryEntry">
-                  <signal name="activate" handler="OnRefilter"/>
+                    <signal name="activate" handler="OnRefilter"/>
                   </widget>
                 </child>
               </widget>
@@ -2990,6 +3063,7 @@
                 <property name="can_focus">True</property>
                 <property name="label" translatable="yes">Free slot</property>
                 <property name="use_underline">True</property>
+                <property name="response_id">0</property>
                 <property name="draw_indicator">True</property>
                 <signal name="toggled" handler="OnRefilter"/>
               </widget>
@@ -3338,6 +3412,7 @@
               </widget>
               <packing>
                 <property name="resize">False</property>
+                <property name="shrink">True</property>
               </packing>
             </child>
             <child>
@@ -3380,6 +3455,10 @@
                   </packing>
                 </child>
               </widget>
+              <packing>
+                <property name="resize">True</property>
+                <property name="shrink">True</property>
+              </packing>
             </child>
           </widget>
         </child>
@@ -3392,6 +3471,7 @@
               <widget class="GtkButton" id="button4">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
+                <property name="response_id">0</property>
                 <signal name="clicked" handler="OnSendMessage"/>
                 <child>
                   <widget class="GtkAlignment" id="alignment23">
@@ -3438,6 +3518,7 @@
               <widget class="GtkButton" id="button5">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
+                <property name="response_id">0</property>
                 <signal name="clicked" handler="OnBrowseUser"/>
                 <child>
                   <widget class="GtkAlignment" id="alignment24">
@@ -3485,6 +3566,7 @@
               <widget class="GtkButton" id="button6">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
+                <property name="response_id">0</property>
                 <signal name="clicked" handler="OnShowIPaddress"/>
                 <child>
                   <widget class="GtkAlignment" id="alignment25">
@@ -3532,6 +3614,7 @@
               <widget class="GtkButton" id="AddToList">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
+                <property name="response_id">0</property>
                 <signal name="clicked" handler="OnAddToList"/>
                 <child>
                   <widget class="GtkAlignment" id="alignment26">
@@ -3579,6 +3662,7 @@
               <widget class="GtkButton" id="BanUser">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
+                <property name="response_id">0</property>
                 <signal name="clicked" handler="OnBanUser"/>
                 <child>
                   <widget class="GtkAlignment" id="alignment37">
@@ -3626,6 +3710,7 @@
               <widget class="GtkButton" id="IgnoreUser">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
+                <property name="response_id">0</property>
                 <signal name="clicked" handler="OnIgnoreUser"/>
                 <child>
                   <widget class="GtkAlignment" id="alignment32">
@@ -3673,6 +3758,7 @@
               <widget class="GtkButton" id="SavePicture">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
+                <property name="response_id">0</property>
                 <signal name="clicked" handler="OnSavePicture"/>
                 <child>
                   <widget class="GtkAlignment" id="alignment29">
@@ -3719,11 +3805,8 @@
             <child>
               <widget class="GtkLabel" id="Filler">
                 <property name="visible">True</property>
-                <property name="label" translatable="no"></property>
               </widget>
               <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
                 <property name="position">7</property>
               </packing>
             </child>
@@ -3731,6 +3814,7 @@
               <widget class="GtkButton" id="RefreshUserinfo">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
+                <property name="response_id">0</property>
                 <signal name="clicked" handler="OnRefresh"/>
                 <child>
                   <widget class="GtkAlignment" id="alignment30">
@@ -3771,7 +3855,6 @@
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
-                <property name="pack_type">GTK_PACK_START</property>
                 <property name="position">8</property>
               </packing>
             </child>
@@ -3779,6 +3862,7 @@
               <widget class="GtkButton" id="CloseUserinfo">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
+                <property name="response_id">0</property>
                 <signal name="clicked" handler="OnClose"/>
                 <child>
                   <widget class="GtkAlignment" id="alignment31">
@@ -3819,8 +3903,7 @@
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
-                <property name="pack_type">GTK_PACK_START</property>
-                <property name="position">1</property>
+                <property name="position">9</property>
               </packing>
             </child>
           </widget>
@@ -3897,6 +3980,7 @@
                         <property name="can_focus">True</property>
                         <property name="label" translatable="yes">Expand / Collapse all</property>
                         <property name="use_underline">True</property>
+                        <property name="response_id">0</property>
                         <signal name="clicked" handler="OnExpand"/>
                       </widget>
                       <packing>
@@ -3936,6 +4020,7 @@
               </widget>
               <packing>
                 <property name="resize">False</property>
+                <property name="shrink">True</property>
               </packing>
             </child>
             <child>
@@ -3957,6 +4042,7 @@
                       <widget class="GtkButton" id="SaveButton">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
+                        <property name="response_id">0</property>
                         <signal name="clicked" handler="OnSave"/>
                         <child>
                           <widget class="GtkAlignment" id="alignment41">
@@ -4004,6 +4090,7 @@
                       <widget class="GtkButton" id="RefreshButton">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
+                        <property name="response_id">0</property>
                         <signal name="clicked" handler="OnRefresh"/>
                         <child>
                           <widget class="GtkAlignment" id="alignment42">
@@ -4051,6 +4138,7 @@
                       <widget class="GtkButton" id="CloseButton">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
+                        <property name="response_id">0</property>
                         <signal name="clicked" handler="OnClose"/>
                         <child>
                           <widget class="GtkAlignment" id="alignment40">
@@ -4118,6 +4206,10 @@
                   </packing>
                 </child>
               </widget>
+              <packing>
+                <property name="resize">True</property>
+                <property name="shrink">True</property>
+              </packing>
             </child>
           </widget>
           <packing>

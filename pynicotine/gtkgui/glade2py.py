@@ -199,6 +199,8 @@ def write_widget_generic(widget, my_class, *args):
 				arg= "0"
 		elif arg[0] == "$":
 			
+			if not arg[1:] in widget.attrs.keys():
+				continue
 			s = widget.attrs[arg[1:]].replace("\"", "\\\"").replace("\n", "\\n")
 			
 			if arg[1:] == "label":

@@ -107,9 +107,10 @@ class TransferList:
 	def InitInterface(self, list):
 		self.list = list
 		self.update()
+		self.widget.set_sensitive(True)
 		
 	def ConnClose(self):
-		
+		self.widget.set_sensitive(False)
 		self.list = None
 		self.Clear()
 		self.transfersmodel.clear()
@@ -339,31 +340,6 @@ class TransferList:
 				
 		self.frame.UpdateBandwidth()
 
-	
-		#newiters = []
-		#for iter in self.downloads.values():
-			#if iter in self.users.values():
-				#pass
-			#else:
-				#newiters.append(iter)
-		#transfers = []
-		#for i in newiters:
-			#user = self.store.get_value(i, 0)
-			#filename = self.store.get_value(i, 1)
-			#rate = self.store.get_value(i, 2)
-			#state = self.store.get_value(i, 3)
-			#filepos = self.store.get_value(i, 4)
-			#filesize = self.store.get_value(i, 5)
-			#path = self.store.get_value(i, 6)
-			#realRate = self.store.get_value(i, 7)
-			#realPos = self.store.get_value(i, 8)
-			#realSize = self.store.get_value(i, 9)
-			#transfers.append([user, filename, rate, state, filepos, filesize, path, realRate, realPos, realSize])
-		#self.Clear()
-		#for transfer in transfers:
-			#user, filename, rate, state, filepos, filesize, path, realRate, realPos, realSize = transfer
-			#self.append(user, filename, realRate, state, realPos, realSize, path)
-		#iter = self.transfersmodel.append(parent, [user, shortfn, status, percent,  hsize, speed, elap, left, path, fn, istatus, size, icurrentbytes, True])
 		
 	def Clear(self):
 		self.users.clear()
