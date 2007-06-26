@@ -186,6 +186,10 @@ class RoomsControl:
 				self.rooms.append(room)
 
 		self.roomsmodel.set_sort_column_id(2, gtk.SORT_DESCENDING)
+		if self.frame.np.config.sections["words"]["roomnames"]:
+			self.frame.chatrooms.roomsctrl.UpdateCompletions()
+			self.frame.privatechats.UpdateCompletions()
+			
 	def GetUserStats(self, msg):
 		for room in self.joinedrooms.values():
 			room.GetUserStats(msg.user, msg.avgspeed, msg.files)
@@ -246,7 +250,11 @@ class RoomsControl:
 			room.ConnClose()
 
 		self.autojoin = 1
-
+		
+	def UpdateCompletions(self):
+		for room in self.joinedrooms.values():
+			room.GetCompletionList()
+			
 def TickDialog(parent, default = ""):
 	dlg = gtk.Dialog(title = _("Set ticker message"), parent = parent,
 		buttons = (gtk.STOCK_OK, gtk.RESPONSE_OK, gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL))
@@ -320,7 +328,7 @@ class ChatRoom(ChatRoomTab):
 			self.RoomLog.get_parent().get_vadjustment().connect("value-changed", lambda *args: self.RoomLog.queue_draw())
 			self.ChatScroll.get_parent().get_vadjustment().connect("value-changed", lambda *args: self.ChatScroll.queue_draw())
 			self.ChatScroll.get_parent().get_hadjustment().connect("value-changed", lambda *args: self.ChatScroll.queue_draw())
-
+		self.clist = []
 		self.Elist = {}
 		self.encoding, m = EncodingsMenu(self.frame.np, "roomencoding", room)
 		self.EncodingStore = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
@@ -349,9 +357,8 @@ class ChatRoom(ChatRoomTab):
 		self.ChatEntry.set_completion(completion)
 		liststore = gtk.ListStore(gobject.TYPE_STRING)
 		completion.set_model(liststore)
-		completion.set_minimum_key_length(2)
 		completion.set_text_column(0)
-		completion.set_popup_single_match(False)
+
 		completion.set_match_func(self.frame.EntryCompletionFindMatch, self.ChatEntry)
 		completion.connect("match-selected", self.frame.EntryCompletionFoundMatch, self.ChatEntry)
 		
@@ -436,7 +443,7 @@ class ChatRoom(ChatRoomTab):
 		)
 		self.ChatScroll.connect("button-press-event", self.OnPopupChatRoomMenu)
 		self.buildingcompletion = False
-		self.GetCompletionList(widget=self.ChatEntry)
+		self.GetCompletionList()
 		
 	def OnFindLogWindow(self, widget):
 
@@ -569,8 +576,14 @@ class ChatRoom(ChatRoomTab):
 
 		if cmd in ("/alias", "/al"):
 			AppendLine(self.ChatScroll, self.frame.np.config.AddAlias(args), self.tag_remote, "")
+			if self.frame.np.config.sections["words"]["aliases"]:
+				self.frame.chatrooms.roomsctrl.UpdateCompletions()
+				self.frame.privatechats.UpdateCompletions()
 		elif cmd in ("/unalias", "/un"):
 			AppendLine(self.ChatScroll, self.frame.np.config.Unalias(args), self.tag_remote, "")
+			if self.frame.np.config.sections["words"]["aliases"]:
+				self.frame.chatrooms.roomsctrl.UpdateCompletions()
+				self.frame.privatechats.UpdateCompletions()
 		elif cmd in ["/w", "/whois", "/info"]:
 			if args:
 				self.frame.LocalUserInfoRequest(args)
@@ -669,7 +682,7 @@ class ChatRoom(ChatRoomTab):
 			if text[:2] == "//":
 				text = text[1:]
 			self.frame.np.queue.put(slskmessages.SayChatroom(self.room, self.frame.AutoReplace(text)))
-		widget.set_text("")
+		self.ChatEntry.set_text("")
 
 	def UserJoinedRoom(self, username, userdata):
 		if self.users.has_key(username):
@@ -927,7 +940,7 @@ class ChatRoom(ChatRoomTab):
 		# Update user count
 		self.CountUsers()
 		# Build completion list
-		self.GetCompletionList(widget=self.ChatEntry)
+		self.GetCompletionList()
 		# Update all username tags in chat log
 		for user, tag in self.tag_users.items():
 			if self.users.has_key(user):
@@ -946,24 +959,43 @@ class ChatRoom(ChatRoomTab):
 		self.frame.np.config.writeConfig()
 		
 
-	def GetCompletionList(self, ix=0, text="", widget=None):
-		if self.buildingcompletion:
-			return
-
-		self.buildingcompletion = True
-		completion = widget.get_completion()
+	def GetCompletionList(self, ix=0, text=""):
+	
+		completion = self.ChatEntry.get_completion()
 		liststore = completion.get_model()
 		liststore.clear()
-		clist = list(self.users.keys()) + [i[0] for i in self.frame.userlist.userlist] + ["nicotine", self.frame.np.config.sections["server"]["login"]] + ["/"+k for k in self.frame.np.config.aliases.keys()] + self.CMDS + self.roomsctrl.rooms
+		self.clist = []
+		config = self.frame.np.config.sections["words"]
+		completion.set_popup_single_match(not config["onematch"])
+		completion.set_minimum_key_length(config["characters"])
+		
+		if not config["tab"]:
+			return
+		
+		clist = [self.frame.np.config.sections["server"]["login"], "nicotine"]
+		if config["roomusers"]:
+	
+			clist += list(self.users.keys())
+		if config["buddies"]:
+			clist += [i[0] for i in self.frame.userlist.userlist]
+		if config["aliases"]:
+			clist += ["/"+k for k in self.frame.np.config.aliases.keys()]
+		if config["commands"]:
+			clist += self.CMDS
+		if config["roomnames"]:
+			clist += self.roomsctrl.rooms
+		
+
 		# no duplicates
 		clist = list(sets.Set(clist))
 		clist.sort(key=str.lower)
 		completion.set_popup_completion(False)
-		for word in clist:
-			liststore.append([word])
+		if config["dropdown"]:
+			for word in clist:
+				liststore.append([word])
 		completion.set_popup_completion(True)
 		self.clist = clist
-		self.buildingcompletion = False
+
 		
 		
 	def OnKeyPress(self, widget, event):
@@ -980,6 +1012,9 @@ class ChatRoom(ChatRoomTab):
 				new = max
 			adj.set_value(new)
 		if event.keyval != gtk.gdk.keyval_from_name("Tab"):
+			return False
+		config = self.frame.np.config.sections["words"]
+		if not config["tab"]:
 			return False
 		ix = widget.get_position()
 		text = widget.get_text()[:ix].split(" ")[-1]

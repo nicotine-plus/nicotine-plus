@@ -140,6 +140,10 @@ class PrivateChats(IconNotebook):
 			self.set_text(tab.Main, "%s (%s)" % (user[:15], status))
 			tab.GetUserStatus(status)
 			
+	def UpdateCompletions(self):
+		for user in self.users.values():
+			user.GetCompletionList()
+			
 class PrivateChat(PrivateChatTab):
 	def __init__(self, chats, user):
 		PrivateChatTab.__init__(self, False)
@@ -151,6 +155,7 @@ class PrivateChat(PrivateChatTab):
 		self.autoreplied = 0
 		self.offlinemessage = 0
 		self.status = -1
+		self.clist = []
 		self.Elist = {}
 		self.encoding, m = EncodingsMenu(self.frame.np, "userencoding", user)
 		self.EncodingStore = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
@@ -178,8 +183,7 @@ class PrivateChat(PrivateChatTab):
 		self.ChatLine.set_completion(completion)
 		liststore = gtk.ListStore(gobject.TYPE_STRING)
 		completion.set_model(liststore)
-		completion.set_minimum_key_length(2)
-		completion.set_popup_single_match(False)
+		
 		completion.set_text_column(0)
 		completion.set_match_func(self.frame.EntryCompletionFindMatch, self.ChatLine)
 		completion.connect("match-selected", self.frame.EntryCompletionFoundMatch, self.ChatLine)
@@ -238,7 +242,7 @@ class PrivateChat(PrivateChatTab):
 				
 		except IOError, e:
 			pass
-		self.GetCompletionList(widget=self.ChatLine)
+		self.GetCompletionList()
 		
 	def destroy(self):
 		if self.frame.translux:
@@ -365,8 +369,14 @@ class PrivateChat(PrivateChatTab):
 
 		if cmd in ("/alias", "/al"):
 			AppendLine(self.ChatScroll, self.frame.np.config.AddAlias(realargs), None, "")
+			if self.frame.np.config.sections["words"]["aliases"]:
+				self.frame.chatrooms.roomsctrl.UpdateCompletions()
+				self.frame.privatechats.UpdateCompletions()
 		elif cmd in ("/unalias", "/un"):
 			AppendLine(self.ChatScroll, self.frame.np.config.Unalias(realargs), None, "")
+			if self.frame.np.config.sections["words"]["aliases"]:
+				self.frame.chatrooms.roomsctrl.UpdateCompletions()
+				self.frame.privatechats.UpdateCompletions()
 		elif cmd in ["/join", "/j"]:
 			self.frame.np.queue.put(slskmessages.JoinRoom(args))
 		elif cmd in ["/w", "/whois", "/info"]:
@@ -598,19 +608,37 @@ class PrivateChat(PrivateChatTab):
 		self.destroy()
 
 
-	def GetCompletionList(self, ix=0, text="", widget=None):
-
-		self.buildingcompletion = True
-		completion = widget.get_completion()
+	def GetCompletionList(self, ix=0, text=""):
+		config = self.frame.np.config.sections["words"]
+		completion = self.ChatLine.get_completion()
+		completion.set_popup_single_match(not config["onematch"])
+		completion.set_minimum_key_length(config["characters"])
+		
 		liststore = completion.get_model()
 		liststore.clear()
-		clist = [self.user, self.frame.np.config.sections["server"]["login"], "nicotine"]+ [i[0] for i in self.frame.userlist.userlist] + ["/"+k for k in self.frame.np.config.aliases.keys()] + self.CMDS + self.frame.chatrooms.roomsctrl.rooms
+		self.clist = []
+		
+		if not config["tab"]:
+			return
+		
+		clist = [self.user, self.frame.np.config.sections["server"]["login"], "nicotine"]
+		if config["buddies"]:
+			clist += [i[0] for i in self.frame.userlist.userlist]
+		if config["aliases"]:
+			clist += ["/"+k for k in self.frame.np.config.aliases.keys()]
+		if config["commands"]:
+			clist += self.CMDS
+		if config["roomnames"]:
+			clist += self.frame.chatrooms.roomsctrl.rooms
+		
 		# no duplicates
 		clist = list(sets.Set(clist))
 		clist.sort(key=str.lower)
+		
 		completion.set_popup_completion(False)
-		for word in clist:
-			liststore.append([word])
+		if config["dropdown"]:
+			for word in clist:
+				liststore.append([word])
 		completion.set_popup_completion(True)
 		self.clist = clist
 	
@@ -631,11 +659,14 @@ class PrivateChat(PrivateChatTab):
 			adj.set_value(new)
 		if event.keyval != gtk.gdk.keyval_from_name("Tab"):
 			return False
+		config = self.frame.np.config.sections["words"]
+		if not config["tab"]:
+			return False
 		ix = widget.get_position()
 		text = widget.get_text()[:ix].split(" ")[-1]
 		
 		if widget.get_text()[:1] == "/":
-			self.GetCompletionList(ix, text, widget=self.ChatLine)
+			self.GetCompletionList(ix, text)
 			
 		completion, single = GetCompletion(text, self.clist)
 		

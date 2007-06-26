@@ -46,8 +46,8 @@ class ServerFrame(settings_glade.ServerFrame):
 		if server["enc"] is not None:
 			self.Encoding.child.set_text(server["enc"])
 		if server["portrange"] is not None:
-			self.FirstPort.set_text(str(server["portrange"][0]))
-			self.LastPort.set_text(str(server["portrange"][1]))
+			self.FirstPort.set_value(server["portrange"][0])
+			self.LastPort.set_value(server["portrange"][1])
 		if server["firewalled"] is not None:
 			self.DirectConnection.set_active(not server["firewalled"])
 		if server["ctcpmsgs"] is not None:
@@ -64,8 +64,8 @@ class ServerFrame(settings_glade.ServerFrame):
 			popupWarning(self.p.SettingsWindow, _("Warning: Bad Username"), _("Username 'None' is not a good one, please pick another."), self.frame.images["n"] )
 			raise UserWarning
 		try:
-			firstport = int(self.FirstPort.get_text())
-			lastport = int(self.LastPort.get_text())
+			firstport = self.FirstPort.get_value_as_int()
+			lastport = self.LastPort.get_value_as_int()
 			portrange = (firstport, lastport)
 		except:
 			portrange = None
@@ -268,22 +268,22 @@ class TransfersFrame(settings_glade.TransfersFrame):
 		transfers = config["transfers"]
 		server = config["server"]
 		if transfers["uploadbandwidth"] is not None:
-			self.QueueBandwidth.set_text(str(transfers["uploadbandwidth"]))
+			self.QueueBandwidth.set_value(transfers["uploadbandwidth"])
 		if transfers["useupslots"] is not None:
 			self.QueueUseSlots.set_active(transfers["useupslots"])
 		if transfers["uploadslots"] is not None:
-			self.QueueSlots.set_text(str(transfers["uploadslots"]))
+			self.QueueSlots.set_value(transfers["uploadslots"])
 		if transfers["uselimit"] is not None:
 			self.Limit.set_active(transfers["uselimit"])
 		if transfers["uploadlimit"] is not None:
-			self.LimitSpeed.set_text(str(transfers["uploadlimit"]))
+			self.LimitSpeed.set_value(transfers["uploadlimit"])
 		if transfers["limitby"] is not None:
 			if transfers["limitby"] == 0:
 				self.LimitPerTransfer.set_active(1)
 			else:
 				self.LimitTotalTransfers.set_active(1)
 		if transfers["queuelimit"] is not None:
-			self.MaxUserQueue.set_text(str(transfers["queuelimit"]))
+			self.MaxUserQueue.set_value(transfers["queuelimit"])
 		if transfers["friendsnolimits"] is not None:
 			self.FriendsNoLimits.set_active(transfers["friendsnolimits"])
 		if transfers["friendsonly"] is not None:
@@ -317,22 +317,22 @@ class TransfersFrame(settings_glade.TransfersFrame):
 			
 	def GetSettings(self):
 		try:
-			uploadbandwidth = int(self.QueueBandwidth.get_text())
+			uploadbandwidth = self.QueueBandwidth.get_value_as_int()
 		except:
 			uploadbandwidth = None
 		
 		try:
-			uploadslots = int(self.QueueSlots.get_text())
+			uploadslots = self.QueueSlots.get_value_as_int()
 		except:
 			uploadslots = None
 		
 		try:
-			uploadlimit = int(self.LimitSpeed.get_text())
+			uploadlimit = self.LimitSpeed.get_value_as_int()
 		except:
 			uploadlimit = None
 			self.Limit.set_active(0)
 		try:
-			queuelimit = int(self.MaxUserQueue.get_text())
+			queuelimit = self.MaxUserQueue.get_value_as_int()
 		except:
 			queuelimit = None
 		try:
@@ -1140,7 +1140,7 @@ class SearchFrame(settings_glade.SearchFrame):
 			searches = None
 		
 		if searches["maxresults"] is not None:
-			self.MaxResults.set_text(str(searches["maxresults"]))
+			self.MaxResults.set_value(searches["maxresults"])
 		if searches["enablefilters"] is not None:
 			self.EnableFilters.set_active(searches["enablefilters"])
 		if searches["re_filter"] is not None:
@@ -1155,7 +1155,7 @@ class SearchFrame(settings_glade.SearchFrame):
 				self.FilterCC.set_text(searches["defilter"][5])
 
 	def GetSettings(self):
-		maxresults = int(self.MaxResults.get_text())
+		maxresults = self.MaxResults.get_value_as_int()
 		return {
 			"searches": {
 				"maxresults": maxresults,
@@ -1188,11 +1188,11 @@ class AwayFrame(settings_glade.AwayFrame):
 		if server["autoreply"] is not None:
 			self.AutoReply.set_text(server["autoreply"])
 		if server["autoaway"] is not None:
-			self.AutoAway.set_text(str(server["autoaway"]))
+			self.AutoAway.set_value(server["autoaway"])
 
 	def GetSettings(self):
 		try:
-			autoaway = int(self.AutoAway.get_text())
+			autoaway = self.AutoAway.get_value_as_int()
 		except:
 			autoaway = None
 		return {
@@ -1549,7 +1549,78 @@ class AutoReplaceFrame(settings_glade.AutoReplaceFrame):
 			self.replacelist.append([word, replacement])
     
 
+class CompletionFrame(settings_glade.CompletionFrame):
+	def __init__(self, parent):
+		self.p = parent
+		self.frame = parent.frame
+		settings_glade.CompletionFrame.__init__(self, False)
+		self.CompletionTabCheck.connect("toggled", self.OnCompletionDropdownCheck)
+		self.CompletionDropdownCheck.connect("toggled", self.OnCompletionDropdownCheck)
+		
+	def SetSettings(self, config):
+		completion = config["words"]
+		self.needcompletion = 0
+		if completion["tab"] is not None:
+			self.CompletionTabCheck.set_active(completion["tab"])
+		if completion["dropdown"] is not None:
+			self.CompletionDropdownCheck.set_active(completion["dropdown"])
 
+		self.OnCompletionDropdownCheck(self.CompletionDropdownCheck)
+		if completion["roomnames"] is not None:
+			self.CompleteRoomNamesCheck.set_active(completion["roomnames"])
+		if completion["buddies"] is not None:
+			self.CompleteBuddiesCheck.set_active(completion["buddies"])
+		if completion["roomusers"] is not None:
+			self.CompleteUsersInRoomsCheck.set_active(completion["roomusers"])
+		if completion["commands"] is not None:
+			self.CompleteCommandsCheck.set_active(completion["commands"])
+		if completion["aliases"] is not None:
+			self.CompleteAliasesCheck.set_active(completion["aliases"])
+		if completion["characters"] is not None:
+			self.CharactersCompletion.set_value(completion["characters"])
+		if completion["onematch"] is not None:
+			self.OneMatchCheck.set_active(completion["onematch"])
+		self.CharactersCompletion.connect("changed", self.OnCompletionChanged)
+		self.CompleteAliasesCheck.connect("toggled", self.OnCompletionChanged)
+		self.CompleteCommandsCheck.connect("toggled", self.OnCompletionChanged)
+		self.CompleteUsersInRoomsCheck.connect("toggled", self.OnCompletionChanged)
+		self.CompleteBuddiesCheck.connect("toggled", self.OnCompletionChanged)
+		self.CompleteRoomNamesCheck.connect("toggled", self.OnCompletionChanged)
+		
+		
+	def OnCompletionChanged(self, widget):
+		self.needcompletion = 1
+		
+	def OnCompletionDropdownCheck(self, widget):
+		sensitive = self.CompletionTabCheck.get_active()
+		self.needcompletion = 1
+		
+		self.CompleteRoomNamesCheck.set_sensitive(sensitive)
+		self.CompleteBuddiesCheck.set_sensitive(sensitive)
+		self.CompleteUsersInRoomsCheck.set_sensitive(sensitive)
+		self.CompleteCommandsCheck.set_sensitive(sensitive)
+		self.CompleteAliasesCheck.set_sensitive(sensitive)
+		self.DropdownExpander.set_sensitive(sensitive)
+		self.CompletionDropdownCheck.set_sensitive(sensitive)
+		
+		sensitive = self.CompletionDropdownCheck.get_active()
+		self.CharactersCompletion.set_sensitive(sensitive)
+		self.OneMatchCheck.set_sensitive(sensitive)
+		
+	def GetSettings(self):
+		return { "words": {
+			"tab": self.CompletionTabCheck.get_active(),
+			"dropdown": self.CompletionDropdownCheck.get_active(),
+			"characters": self.CharactersCompletion.get_value_as_int(),
+			"roomnames": self.CompleteRoomNamesCheck.get_active(),
+			"buddies": self.CompleteBuddiesCheck.get_active(),
+			"roomusers": self.CompleteUsersInRoomsCheck.get_active(),
+			"commands": self.CompleteCommandsCheck.get_active(),
+			"aliases": self.CompleteAliasesCheck.get_active(),
+			"onematch": self.OneMatchCheck.get_active(),
+			},
+		}
+	
 class ChatFrame(settings_glade.ChatFrame):
 	def __init__(self):
 		settings_glade.ChatFrame.__init__(self, False)
@@ -1605,6 +1676,7 @@ class SettingsWindow(settings_glade.SettingsWindow):
 		self.tree["Censor List"] = model.append(row, [_("Censor List"), "Censor List"])
 		self.tree["Auto-Replace"] = model.append(row, [_("Auto-Replace"), "Auto-Replace"])
 		self.tree["URL Catching"] = model.append(row, [_("URL Catching"), "URL Catching"])
+		self.tree["Completion"] = model.append(row, [_("Completion"), "Completion"])
 		
 		self.tree["Misc"] = row = model.append(None, [_("Misc"), "Misc"])
 		self.tree["Ban / ignore"] = model.append(row, [_("Ban / ignore"), "Ban / ignore"])
@@ -1623,6 +1695,7 @@ class SettingsWindow(settings_glade.SettingsWindow):
 		p["Sounds"] = SoundsFrame(self)
 		p["Icons"] = IconsFrame(self)
 		p["URL Catching"] = UrlCatchFrame(self)
+		p["Completion"] = CompletionFrame(self)
 		p["Logging"] = LogFrame(self)
 		p["Searches"] = SearchFrame(self)
 		p["Away mode"] = AwayFrame(self)
@@ -1717,6 +1790,6 @@ class SettingsWindow(settings_glade.SettingsWindow):
 				sub = page.GetSettings()
 				for (key,data) in sub.items():
 					config[key].update(data)
-			return self.pages["Shares"].GetNeedRescan(), self.pages["Interface"].needcolors, config
+			return self.pages["Shares"].GetNeedRescan(), self.pages["Interface"].needcolors, self.pages["Completion"].needcompletion, config
 		except UserWarning, warning:
 			return None

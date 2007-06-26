@@ -3,16 +3,23 @@ ChangeLog for Nicotine Plus
 UNRELEASED
 
 General Changes
+ * Rearranged the Settings tree and removed some descriptive panes
+ * Added a config option for overriding the default language
+ * Some Entry widgets in settings replaced with SpinBoxes
+ * Disable many widgets (entries, buttons, lists) when disconnected from server
+ * User tabs have right-click popup-menus in private, userinfo and userbrowse.
+ * Added Auto-Replace list (applies to all outgoing chat message text)
+ * Added Censor list (applies to all chat message text)
+ * Added IP blocking
  * libnotify support added (patch by infinito ticket #176 )
    to show download completion popups in the tray.
    notification-daemon, libnotify and python-notify required
- * Added IP blocking
- * Added Censor list (applies to all chat message text)
- * Added Auto-Replace list (applies to all outgoing chat message text)
- * Rearranged the Settings tree and removed some descriptive panes
- * Added a config option for overriding the default language
 
 Chat
+ * Usernames in chat logs and private, userinfo and userbrowse tab labels are
+   marked offline when disconnected from server
+ * Ticker moved to the top-left of the chat room frame;
+ * Added settings for tab completion and dropdown completion list
  * Added a completion dropdown list (gtk.EntryCompletion) to chat entries
 
 Bug Fixes

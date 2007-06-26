@@ -1302,7 +1302,7 @@ class NicotineFrame(MainWindow):
 			return
 		if msg == "ok":
 			self.settingswindow.SettingsWindow.hide()
-		needrescan, needcolors, config = output
+		needrescan, needcolors, needcompletion, config = output
 		for (key, data) in config.items():
 			self.np.config.sections[key].update(data)
 		
@@ -1335,6 +1335,12 @@ class NicotineFrame(MainWindow):
 				
 			self.TrayApp.Draw()
 		self.ChangeTranslation(self.np.config.sections["language"]["language"])
+
+
+		if needcompletion:
+			self.chatrooms.roomsctrl.UpdateCompletions()
+			self.privatechats.UpdateCompletions()
+			
 		if needcolors:
 			self.chatrooms.roomsctrl.UpdateColours()
 			self.privatechats.UpdateColours()
@@ -1709,6 +1715,7 @@ class NicotineFrame(MainWindow):
 		model = completion.get_model()
 		item_text = model.get_value(iter, 0)
 		ix = widget.get_position()
+		config = self.np.config.sections["words"]
 		
 		if entry_text == None or entry_text == "" or entry_text.isspace() or item_text is None:
 			return False
@@ -1717,7 +1724,7 @@ class NicotineFrame(MainWindow):
 			split_key = entry_text[:ix].split(" ")[-1]
 		else:
 			split_key = entry_text
-		if split_key.isspace() or split_key == "" or len(split_key) == 1:
+		if split_key.isspace() or split_key == "" or len(split_key) < config["characters"]:
 			return False
 		# case-insensitive matching
 		if item_text.lower().startswith(split_key) and item_text.lower() != split_key:
