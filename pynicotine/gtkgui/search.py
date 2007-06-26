@@ -832,6 +832,8 @@ class Search(SearchTab):
 	def OnCopyDirURL(self, widget):
 		user, path = self.selected_results[0][:2]
 		path = string.join(path.split("\\")[:-1], "\\") + "\\"
+		if path[:-1] != "/":
+			path += "/"
 		self.frame.SetClipboardURL(user, path)
 	
 	def OnToggleFilters(self, widget):

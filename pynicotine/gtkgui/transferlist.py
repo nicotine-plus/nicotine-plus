@@ -355,6 +355,8 @@ class TransferList:
 	def OnCopyDirURL(self, widget):
 		i = self.selected_transfers[0]
 		path = string.join(i.filename.split("\\")[:-1], "\\") + "\\"
+		if path[:-1] != "/":
+			path += "/"
 		self.frame.SetClipboardURL(i.user, path)
 		
 	def OnAbortTransfer(self, widget, remove = False, clear = False):

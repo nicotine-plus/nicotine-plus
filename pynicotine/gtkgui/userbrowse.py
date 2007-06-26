@@ -812,7 +812,8 @@ class UserBrowse(UserBrowseTab):
 		if self.selected_folder is None:
 			return
 		path = self.selected_folder
-		
+		if path[:-1] != "/":
+			path += "/"
 		self.frame.SetClipboardURL(self.user, path)
 		
 	def OnFileManager(self, widget):
