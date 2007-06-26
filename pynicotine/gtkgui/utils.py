@@ -18,7 +18,7 @@ from pynicotine.utils import _
 
 DECIMALSEP = ""
 
-URL_RE = re.compile("(\\w+\\://[\\w\\.].+?)[\\s\\(\\)]|(www\\.\\w+\\.\\w+.*?)[\\s\\(\\)]|(mailto\\:\\w.+?)[\\s\\(\\)]")
+URL_RE = re.compile("(\\w+\\://.+?)[\\s\\(\\)]|(www\\.\\w+\\.\\w+.*?)[\\s\\(\\)]|(mailto\\:\\w.+?)[\\s\\(\\)]")
 PROTOCOL_HANDLERS = {}
 CATCH_URLS = 0
 HUMANIZE_URLS = 0
