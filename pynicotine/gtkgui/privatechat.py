@@ -255,6 +255,7 @@ class PrivateChat(PrivateChatTab):
 		
 	def ConnClose(self):
 		AppendLine(self.ChatScroll, _("--- disconnected ---"), self.tag_hilite, "%c")
+		self.status = -1
 		self.offlinemessage = 0
 		self.ChangeColours()
 		
@@ -308,7 +309,7 @@ class PrivateChat(PrivateChatTab):
 			line = "[%s] %s" % (self.user, self.frame.CensorChat(text))
 			tag = self.tag_remote
 		line = self.frame.np.decode(line, self.encoding)
-		AppendLine(self.ChatScroll, line, tag, "%c", username=self.user, usertag=self.tag_my_username)
+		AppendLine(self.ChatScroll, line, tag, "%c", username=self.user, usertag=self.tag_username)
 		if self.Log.get_active():
 			self.logfile = WriteLog(self.logfile, self.frame.np.config.sections["logging"]["logsdir"], self.user, line)
 		
@@ -498,6 +499,7 @@ class PrivateChat(PrivateChatTab):
 			statuscolor = "useronline"
 		else:
 			statuscolor = "useroffline"
+		self.tag_username = self.makecolour(buffer, statuscolor)
 		if self.chats.connected:
 			if self.frame.away:
 				self.tag_my_username = self.makecolour(buffer, "useraway")
@@ -505,7 +507,7 @@ class PrivateChat(PrivateChatTab):
 				self.tag_my_username = self.makecolour(buffer, "useronline")
 		else:
 			self.tag_my_username = self.makecolour(buffer, "useroffline")
-		self.tag_username = self.makecolour(buffer, statuscolor)
+
 		usernamestyle = self.frame.np.config.sections["ui"]["usernamestyle"]
 		if usernamestyle == "bold":
 			self.tag_username.set_property("weight",  pango.WEIGHT_BOLD)
@@ -567,9 +569,6 @@ class PrivateChat(PrivateChatTab):
 		self.changecolour(self.tag_hilite, "chathilite")
 		color = self.getUserStatusColor(self.status)
 		self.changecolour(self.tag_username, color)
-		self.frame.SetTextBG(self.ChatScroll)
-		self.frame.SetTextBG(self.ChatLine)
-		
 		if self.chats.connected:
 			if self.frame.away:
 				self.changecolour(self.tag_my_username, "useraway")
@@ -577,6 +576,10 @@ class PrivateChat(PrivateChatTab):
 				self.changecolour(self.tag_my_username, "useronline")
 		else:
 			self.changecolour(self.tag_my_username, "useroffline")
+		self.frame.SetTextBG(self.ChatScroll)
+		self.frame.SetTextBG(self.ChatLine)
+
+			
 	def getUserStatusColor(self, status):
 		if status == 1:
 			color = "useraway"
@@ -592,13 +595,9 @@ class PrivateChat(PrivateChatTab):
 		
 		
 		self.status = status
-
 		color = self.getUserStatusColor(self.status)
-
 		self.changecolour(self.tag_username, color)
-		
-		#line = "* " + ["User %s is offline", "User %s is away", "User %s is online"][status] % self.user
-		#AppendLine(self.ChatScroll, line, self.tag_hilite, "%c")
+
 	
 	def OnClose(self, widget):
 		if self.logfile is not None:

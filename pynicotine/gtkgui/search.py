@@ -380,7 +380,7 @@ class SearchTreeModel(FastListModel):
 	COLUMNS = 14
 	COLUMN_TYPES = [gobject.TYPE_INT, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING,
     			gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING,
-    			gobject.TYPE_INT, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_INT, gobject.TYPE_INT, gobject.TYPE_INT]
+    			gobject.TYPE_INT, gobject.TYPE_STRING, gobject.TYPE_STRING,  gobject.TYPE_LONG, gobject.TYPE_INT, gobject.TYPE_INT]
 
 	def __init__(self):
 		FastListModel.__init__(self)
@@ -395,13 +395,14 @@ class SearchTreeModel(FastListModel):
 		returned = 0
 		
 		for r in results:
-			size = r[2]
+			size = long(r[2])
 			r[2] = Humanize(size)
 			speed = r[3]
 			r[3] = Humanize(speed)
 			queue = r[4]
 			r[4] = Humanize(queue)
 			row = [ix] + r + [size, speed, queue]
+
 			self.all_data.append(row)
 			if not self.filters or self.check_filter(row):
 				self.data.append(row)
@@ -642,7 +643,13 @@ class Search(SearchTab):
 	def SelectedResultsCallback(self, model, path, iter):
 		user = model.get_value(iter, 2)
 		fn = model.get_value(iter, 11)
-		size = model.get_value(iter, 13)
+		try:
+			size = model.get_value(iter, 13)
+		except Exception, error:
+			print error
+			size = 0
+		if size is None:
+			size = 0
 		bitrate = model.get_value(iter, 7)
 		length = model.get_value(iter, 8)
 		

@@ -644,8 +644,9 @@ class ExactFileSearch(ServerMessage):
 		len,self.req = self.getObject(message,types.IntType,len)
 		len,self.file = self.getObject(message,types.StringType,len)
 		len,self.folder = self.getObject(message,types.StringType,len)
-		len,self.size = self.getObject(message,types.IntType,len)
-		len,self.size2 = self.getObject(message,types.IntType,len)
+		len,size1 = self.getObject(message,types.IntType,len)
+		len,size2 = self.getObject(message,types.IntType,len)
+		self.size = size1 + size2
 		len,self.checksum = self.getObject(message,types.IntType,len)
 
 class AdminMessage(ServerMessage):
@@ -1054,7 +1055,8 @@ class SharedFileList(PeerMessage):
 				len, name = self.getObject(message,types.StringType, len)
 				len, size1 = self.getObject(message,types.LongType, len)
 				len, size2 = self.getObject(message,types.LongType, len)
-				size = (size2 << 32) + size1
+				#size = (size2 << 32) + size1
+				size = size2 + size1
 		
 				len, ext = self.getObject(message,types.StringType, len)
 				len, numattr = self.getObject(message, types.IntType, len)
@@ -1131,11 +1133,14 @@ class FileSearchResult(PeerMessage):
 		len, nfiles = self.getObject(message,types.IntType, len)
 		list = []
 		for i in range(nfiles):
+			size = size1 = size2 = 0
 			len, code = len+1, ord(message[len])
 			len, name = self.getObject(message,types.StringType, len)
 			len, size1 = self.getObject(message,types.LongType, len)
 			len, size2 = self.getObject(message,types.LongType, len)
-			size = (size2 << 32) + size1
+			#size = (size2 << 32) + size1
+			size = size2 + size1
+
 			len, ext = self.getObject(message,types.StringType, len)
 			len, numattr = self.getObject(message, types.IntType, len)
 			attrs = []
@@ -1227,11 +1232,13 @@ class FolderContentsResponse(PeerMessage):
 				len, nfiles = self.getObject(message,types.IntType, len)
 				list[folder][dir] = []
 				for j in range(nfiles):
+					size = size1 = size2 = 0
 					len, code = len+1, ord(message[len])
 					len, name = self.getObject(message,types.StringType, len)
 					len, size1 = self.getObject(message,types.LongType, len)
 					len, size2 = self.getObject(message,types.LongType, len)
-					size = (size2 << 32) + size1
+					#size = (size2 << 32) + size1
+					size = size2 + size1
 					len, ext = self.getObject(message,types.StringType, len)
 					len, numattr = self.getObject(message, types.IntType, len)
 					attrs = []
