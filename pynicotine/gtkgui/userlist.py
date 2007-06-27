@@ -261,7 +261,7 @@ class UserList:
 		self.frame.np.queue.put(slskmessages.GetUserStats(user))
 		for widget in self.frame.BuddiesComboEntries:
 			widget.Append(user)
-		if self.np.config.sections["words"]["buddies"]:
+		if self.frame.np.config.sections["words"]["buddies"]:
 			self.frame.chatrooms.roomsctrl.UpdateCompletions()
 			self.frame.privatechats.UpdateCompletions()
 		
@@ -314,7 +314,7 @@ class UserList:
 		self.SaveUserList()
 		for widget in self.frame.BuddiesComboEntries:
 			widget.Remove(user)
-		if self.np.config.sections["words"]["buddies"]:
+		if self.frame.np.config.sections["words"]["buddies"]:
 			self.frame.chatrooms.roomsctrl.UpdateCompletions()
 			self.frame.privatechats.UpdateCompletions()
 			

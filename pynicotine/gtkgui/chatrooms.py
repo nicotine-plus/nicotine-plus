@@ -688,9 +688,11 @@ class ChatRoom(ChatRoomTab):
 		if self.users.has_key(username):
 			return
 		# Add to completion list, and completion drop-down
-		if username not in self.clist:
-			self.clist.append(username)
-			self.ChatEntry.get_completion().get_model().append([username])
+		if self.frame.np.config.sections["words"]["tab"]:
+			if username not in self.clist:
+				self.clist.append(username)
+				if self.frame.np.config.sections["words"]["dropdown"]:
+					self.ChatEntry.get_completion().get_model().append([username])
 			
 		AppendLine(self.RoomLog, _("%s joined the room") % username, self.tag_log)
 		img = self.frame.GetStatusImage(userdata.status)
@@ -709,16 +711,18 @@ class ChatRoom(ChatRoomTab):
 		if not self.users.has_key(username):
 			return
 		# Remove from completion list, and completion drop-down
-		if username in self.clist and username not in [i[0] for i in self.frame.userlist.userlist]:
-			self.clist.remove(username)
-			liststore = self.ChatEntry.get_completion().get_model()
-			iter = liststore.get_iter_root()
-			while iter is not None:
-				name = liststore.get_value(iter, 0)
-				if name == username:
-					liststore.remove(iter)
-					break
-				iter = liststore.iter_next(iter)
+		if self.frame.np.config.sections["words"]["tab"]:
+			if username in self.clist and username not in [i[0] for i in self.frame.userlist.userlist]:
+				self.clist.remove(username)
+				if self.frame.np.config.sections["words"]["dropdown"]:
+					liststore = self.ChatEntry.get_completion().get_model()
+					iter = liststore.get_iter_root()
+					while iter is not None:
+						name = liststore.get_value(iter, 0)
+						if name == username:
+							liststore.remove(iter)
+							break
+						iter = liststore.iter_next(iter)
 			
 		AppendLine(self.RoomLog, _("%s left the room") % username, self.tag_log)
 		self.usersmodel.remove(self.users[username])
