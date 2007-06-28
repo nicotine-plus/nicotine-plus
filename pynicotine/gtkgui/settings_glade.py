@@ -3188,9 +3188,9 @@ class UrlCatchFrame:
         self.label253.show()
         self.table3.attach(self.label253, 0, 1, 1, 2, gtk.FILL, 0, 0, 0)
 
-        self.button86 = gtk.Button()
-        self.button86.show()
-        self.button86.connect("clicked", self.OnUpdate)
+        self.addButton = gtk.Button()
+        self.addButton.show()
+        self.addButton.connect("clicked", self.OnAdd)
 
         self.alignment74 = gtk.Alignment(0.5, 0.5, 0, 0)
         self.alignment74.show()
@@ -3200,19 +3200,19 @@ class UrlCatchFrame:
         self.hbox174.set_spacing(2)
 
         self.image68 = gtk.Image()
-        self.image68.set_from_stock(gtk.STOCK_REDO, 4)
+        self.image68.set_from_stock(gtk.STOCK_ADD, 4)
         self.image68.show()
         self.hbox174.pack_start(self.image68, False, False, 0)
 
-        self.label297 = gtk.Label(_("Update"))
-        self.label297.show()
-        self.hbox174.pack_start(self.label297, False, False, 0)
+        self.addlabel = gtk.Label(_("Add"))
+        self.addlabel.show()
+        self.hbox174.pack_start(self.addlabel, False, False, 0)
 
         self.alignment74.add(self.hbox174)
 
-        self.button86.add(self.alignment74)
+        self.addButton.add(self.alignment74)
 
-        self.table3.attach(self.button86, 2, 3, 0, 1, gtk.FILL, 0, 0, 0)
+        self.table3.attach(self.addButton, 2, 3, 0, 1, gtk.FILL, 0, 0, 0)
 
         self.Handler_List = gtk.ListStore(gobject.TYPE_STRING)
         self.Handler = gtk.ComboBoxEntry()
@@ -3242,7 +3242,7 @@ class UrlCatchFrame:
     def OnRemove(self, widget):
         pass
 
-    def OnUpdate(self, widget):
+    def OnAdd(self, widget):
         pass
 
     def get_custom_widget(self, id, string1, string2, int1, int2):

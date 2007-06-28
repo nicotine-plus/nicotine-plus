@@ -42,6 +42,7 @@ Released under the GNU Public License
 
 See MAINTAINERS file for the list of contributors""") % version)
 		label.set_justify(gtk.JUSTIFY_LEFT)
+		label.set_selectable(True)
 		vbox = gtk.VBox()
 		vbox.pack_start(img, False, False)
 		hbox = gtk.HBox()
@@ -154,6 +155,7 @@ To set the filter, press Enter. This will apply to any existing results, and any
 more that are returned. To filter in a different way, just set the relevant terms.
 You do not need to do another search to apply a different filter."""))
 		label.set_justify(gtk.JUSTIFY_LEFT)
+		label.set_selectable(True)
 		self.vbox.pack_start(label)
 		self.show_all()
 

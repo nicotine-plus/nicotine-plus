@@ -5434,11 +5434,11 @@
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkButton" id="button86">
+                  <widget class="GtkButton" id="addButton">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="response_id">0</property>
-                    <signal name="clicked" handler="OnUpdate"/>
+                    <signal name="clicked" handler="OnAdd"/>
                     <child>
                       <widget class="GtkAlignment" id="alignment74">
                         <property name="visible">True</property>
@@ -5451,7 +5451,7 @@
                             <child>
                               <widget class="GtkImage" id="image68">
                                 <property name="visible">True</property>
-                                <property name="stock">gtk-redo</property>
+                                <property name="stock">gtk-add</property>
                               </widget>
                               <packing>
                                 <property name="expand">False</property>
@@ -5459,9 +5459,9 @@
                               </packing>
                             </child>
                             <child>
-                              <widget class="GtkLabel" id="label297">
+                              <widget class="GtkLabel" id="addlabel">
                                 <property name="visible">True</property>
-                                <property name="label" translatable="yes">Update</property>
+                                <property name="label" translatable="yes">Add</property>
                                 <property name="use_underline">True</property>
                               </widget>
                               <packing>

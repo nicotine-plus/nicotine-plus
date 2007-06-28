@@ -1296,7 +1296,7 @@ class UrlCatchFrame(settings_glade.UrlCatchFrame):
 		self.protocols = {}
 		cols = InitialiseColumns(self.ProtocolHandlers,
 			[_("Protocol"), -1, "text"],
-			[_("Handler"), -1, "edit"],
+			[_("Handler"), -1, "combo"],
 		)
 		cols[0].set_sort_column_id(0)
 		cols[1].set_sort_column_id(1)
@@ -1313,7 +1313,10 @@ class UrlCatchFrame(settings_glade.UrlCatchFrame):
 		for item in ["firefox \"%s\"", "firefox -a firefox --remote 'openURL(%s,new-tab)'", "mozilla \"%s\"", "opera \"%s\"", "links -g \"%s\"", "dillo \"%s\"", "konqueror \"%s\"", "\"c:\Program Files\Mozilla Firefox\Firefox.exe\" %s"]:
 			self.handlermodel.append([item])
 		self.Handler.set_model(self.handlermodel)
-
+		renderers = cols[1].get_cell_renderers()
+		for render in renderers:
+			render.set_property("model", self.handlermodel)
+				
 		self.protomodel = gtk.ListStore(gobject.TYPE_STRING)
 		for item in ["http", "https", "ftp", "sftp", "news", "irc"]:
 			self.protomodel.append([item])
@@ -1390,7 +1393,7 @@ class UrlCatchFrame(settings_glade.UrlCatchFrame):
 			self.Protocol.set_text(protocol)
 			self.Handler.child.set_text(handler)
 
-	def OnUpdate(self, widget):
+	def OnAdd(self, widget):
 		protocol = self.Protocol.get_text()
 		value = self.Handler.child.get_text()
 		if self.protocols.has_key(protocol):
