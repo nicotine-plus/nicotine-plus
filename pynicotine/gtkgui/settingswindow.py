@@ -1439,7 +1439,8 @@ class CensorFrame(settings_glade.CensorFrame):
 		store = treeview.get_model()
 		iter = store.get_iter(index)
 		#print iter, index, value
-		store.set(iter, pos, value)
+		if value != "" and not value.isspace() and len(value) > 2:
+			store.set(iter, pos, value)
 		
 	def SetSettings(self, config):
 		self.censorlist.clear()
@@ -1525,6 +1526,8 @@ class AutoReplaceFrame(settings_glade.AutoReplaceFrame):
 		store = treeview.get_model()
 		iter = store.get_iter(index)
 		store.set(iter, pos, value)
+		if pos == 0:
+			treeview.set_cursor(store.get_path(iter), treeview.get_column(1), start_editing=True)
 			
 	def SetSettings(self, config):
 		self.replacelist.clear()
