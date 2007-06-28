@@ -1296,14 +1296,35 @@ class UrlCatchFrame(settings_glade.UrlCatchFrame):
 		self.protocols = {}
 		cols = InitialiseColumns(self.ProtocolHandlers,
 			[_("Protocol"), -1, "text"],
-			[_("Handler"), -1, "text"],
+			[_("Handler"), -1, "edit"],
 		)
+		cols[0].set_sort_column_id(0)
+		cols[1].set_sort_column_id(1)
 		self.ProtocolHandlers.set_model(self.protocolmodel)
 		self.ProtocolHandlers.get_selection().connect("changed", self.OnSelect)
+
+
+		renderers = cols[1].get_cell_renderers()
+		for render in renderers:
+			render.connect('edited', self.cell_edited_callback, self.ProtocolHandlers, 1)
+
+		
 		self.handlermodel = gtk.ListStore(gobject.TYPE_STRING)
 		for item in ["firefox \"%s\"", "firefox -a firefox --remote 'openURL(%s,new-tab)'", "mozilla \"%s\"", "opera \"%s\"", "links -g \"%s\"", "dillo \"%s\"", "konqueror \"%s\"", "\"c:\Program Files\Mozilla Firefox\Firefox.exe\" %s"]:
 			self.handlermodel.append([item])
 		self.Handler.set_model(self.handlermodel)
+
+		self.protomodel = gtk.ListStore(gobject.TYPE_STRING)
+		for item in ["http", "https", "ftp", "sftp", "news", "irc"]:
+			self.protomodel.append([item])
+		self.ProtocolCombo.set_model(self.protomodel)
+		
+	def cell_edited_callback(self, widget, index, value, treeview, pos):
+		#print index, value, treeview, pos
+		store = treeview.get_model()
+		iter = store.get_iter(index)
+		#print iter, index, value
+		store.set(iter, pos, value)
 		
 	def SetSettings(self, config):
 		self.protocolmodel.clear()
@@ -1326,11 +1347,28 @@ class UrlCatchFrame(settings_glade.UrlCatchFrame):
 				self.protocols[key] = [iter, command]
 
 		self.OnURLCatchingToggled(self.URLCatching)
+		selection = self.ProtocolHandlers.get_selection()
+		selection.unselect_all()
+		
+		for key, data in self.protocols.items():
+			iter = data[0]
+			if iter is not None:
+				selection.select_iter(iter)
+				break
+		
 
 	def GetSettings(self):
 		protocols = {}
-		for key in self.protocols.keys():
-			protocols[key] = self.protocols[key][1]
+
+		try:
+			iter = self.protocolmodel.get_iter_root()
+			while iter is not None:
+				protocol = self.protocolmodel.get_value(iter, 0)
+				handler = self.protocolmodel.get_value(iter, 1)
+				protocols[protocol] = handler
+				iter = self.protocolmodel.iter_next(iter)
+		except:
+			pass
 		return {
 			"urls": {
 				"urlcatching": self.URLCatching.get_active(),
@@ -1353,21 +1391,23 @@ class UrlCatchFrame(settings_glade.UrlCatchFrame):
 			self.Handler.child.set_text(handler)
 
 	def OnUpdate(self, widget):
-		key = self.Protocol.get_text()
+		protocol = self.Protocol.get_text()
 		value = self.Handler.child.get_text()
-		if self.protocols.has_key(key):
-			self.protocols[key][1] = value
-			self.protocolmodel.set(self.protocols[key][0], 1, value)
+		if self.protocols.has_key(protocol):
+			iter = self.protocols[protocol]
+			self.protocolmodel.set(iter, 1, value)
 		else:
-			iter = self.protocolmodel.append([key, value])
-			self.protocols[key] = [iter, value]
+			iter = self.protocolmodel.append([protocol, value])
+			self.protocols[protocol] = iter
 
 	def OnRemove(self, widget):
-		key = self.Protocol.get_text()
-		if not self.protocols.has_key(key):
-			return
-		self.protocolmodel.remove(self.protocols[key][0])
-		del self.protocols[key]
+		selection = self.ProtocolHandlers.get_selection()
+		tup = selection.get_selected()
+		if tup is not None:
+			iter = tup[1]
+			protocol = model.get_value(iter, 0)
+			self.protocolmodel.remove(iter)
+			del self.protocols[protocol]
 
 class CensorFrame(settings_glade.CensorFrame):
 	def __init__(self, parent):

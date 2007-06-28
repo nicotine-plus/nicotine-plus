@@ -177,10 +177,12 @@ class GenericTableDialog(GenericAboutDialog):
 			l = gtk.Label()
 			l.set_markup(self.items[i*2])
 			l.set_alignment(0.0, 0.5)
+			l.set_selectable(True)
 			r = gtk.Label()
 			r.set_markup(self.items[i*2+1])
 			r.set_alignment(0.0, 0.5)
 			r.set_line_wrap(True)
+			r.set_selectable(True)
 			table.attach(l, 0, 1, i, i+1, xoptions = gtk.FILL)
 
 			table.attach(r, 1, 2, i, i+1, xoptions = gtk.FILL|gtk.EXPAND)
