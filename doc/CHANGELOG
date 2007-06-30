@@ -3,6 +3,8 @@ ChangeLog for Nicotine Plus
 UNRELEASED
 
 General Changes
+ * Settings widgets will now be colored red if their values are invalid.
+ * URL handlers settings rearranged sligtly, combo items in the handlers column
  * Rearranged the Settings tree and removed some descriptive panes
  * Added a config option for overriding the default language
  * Some Entry widgets in settings replaced with SpinBoxes
@@ -14,8 +16,10 @@ General Changes
  * libnotify support added (patch by infinito ticket #176 )
    to show download completion popups in the tray.
    notification-daemon, libnotify and python-notify required
-
+ * Userinfo settings now have size data for image
 Chat
+ * URL's are now converted back to plain text by the URL catcher
+   (before only %20 were converted to spaces)
  * Usernames in chat logs and private, userinfo and userbrowse tab labels are
    marked offline when disconnected from server
  * Ticker moved to the top-left of the chat room frame;
@@ -24,6 +28,7 @@ Chat
 
 Bug Fixes
  * Pressing enter in Search Filter entry boxes now works again
+ * Readded "/" to pasted folder slsk:// URLs
 
 1.2.8 Release (1st June 2007)
 
@@ -87,7 +92,7 @@ BUGFIXES
 
 TRANSLATIONS
  * Lithuanian translation updated
- * Euskare translation updated
+ * Euskara translation updated
 
 1.2.7.1 Release (6th March 2007)
 
@@ -210,7 +215,7 @@ TRANSLATIONS
  * Nicola updated the Italian Translation
  * Added Finnish translation by Kalevi
  * Added Lithuanian Translation by Žygimantas
- * Added Euskare (Basque) translation by Julen of librezale.org
+ * Added Euskara (Basque) translation by Julen of librezale.org
  
 BUGFIXES
  * Various minor bugs killed

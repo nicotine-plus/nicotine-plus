@@ -1400,7 +1400,8 @@ class NicotineFrame(MainWindow):
 		filter =""
 		tint = None
 		ttint = self.np.config.sections["ui"]["transtint"]
-		if ttint[0] != "#":
+		
+		if ttint == "" or ttint[0] != "#":
 			return
 		ttint = ttint[1:]
 		if len(ttint) != 6:

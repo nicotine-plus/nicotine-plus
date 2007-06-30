@@ -9,7 +9,7 @@ import os, sys
 import string
 import re
 import types
-
+import urllib
 from struct import unpack
 import imghdr
 
@@ -230,7 +230,9 @@ def AppendLine(textview, line, tag = None, timestamp = "%H:%M:%S", username=None
 		else:
 			_append(buffer, start, tag)
 		if url.startswith("slsk://") and HUMANIZE_URLS:
-			url = url.replace("%20", " ")
+			
+			url = urllib.url2pathname( url)
+
 		_append(buffer, url, urltag)
 		match = URL_RE.search(line)
 	

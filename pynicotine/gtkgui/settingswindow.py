@@ -6,7 +6,7 @@ import settings_glade
 import locale
 import re
 from dirchooser import *
-from utils import InputDialog, InitialiseColumns, recode, recode2, popupWarning, ImportWinSlskConfig
+from utils import InputDialog, InitialiseColumns, recode, recode2, popupWarning, ImportWinSlskConfig, Humanize
 from entrydialog import *
 import os, sys
 win32 = sys.platform.startswith("win")
@@ -39,19 +39,33 @@ class ServerFrame(settings_glade.ServerFrame):
 			self.Server.child.set_text("%s:%i" % (server["server"][0], server["server"][1]))
 		else:
 			self.Server.child.set_text("server.slsknet.org:2240")
+
 		if server["login"] is not None:
 			self.Login.set_text(server["login"])
+		else:
+			self.p.Hilight(self.Login)
 		if server["passw"] is not None:
 			self.Password.set_text(server["passw"])
+		else:
+			self.p.Hilight(self.Password)
 		if server["enc"] is not None:
 			self.Encoding.child.set_text(server["enc"])
+		else:
+			self.p.Hilight(self.Encoding.child)
 		if server["portrange"] is not None:
 			self.FirstPort.set_value(server["portrange"][0])
 			self.LastPort.set_value(server["portrange"][1])
+		else:
+			self.p.Hilight(self.FirstPort)
+			self.p.Hilight(self.LastPort)
 		if server["firewalled"] is not None:
 			self.DirectConnection.set_active(not server["firewalled"])
+		else:
+			self.p.Hilight(self.DirectConnection)
 		if server["ctcpmsgs"] is not None:
 			self.ctcptogglebutton.set_active(not server["ctcpmsgs"])
+		else:
+			self.p.Hilight(self.ctcptogglebutton)
 			
 	def GetSettings(self):
 		try:
@@ -108,29 +122,44 @@ class SharesFrame(settings_glade.SharesFrame):
 
 	def SetSettings(self, config):
 		transfers = config["transfers"]
+		self.shareslist.clear()
+		self.bshareslist.clear()
 		
 		if transfers["incompletedir"] is not None:
 			self.IncompleteDir.set_text(recode(transfers["incompletedir"]))
-		if transfers["downloaddir"] is not None:
+		else:
+			self.p.Hilight(self.IncompleteDir)
+		if transfers["downloaddir"] is not None and transfers["downloaddir"] != "":
 			self.DownloadDir.set_text(recode(transfers["downloaddir"]))
+		else:
+			self.p.Hilight(self.DownloadDir)
 		if transfers["sharedownloaddir"] is not None:
 			
 			self.ShareDownloadDir.set_active(transfers["sharedownloaddir"])
-		self.shareslist.clear()
-		self.bshareslist.clear()
+		else:
+			self.p.Hilight(self.ShareDownloadDir)
+		
 		
 		if transfers["shared"] is not None:
 			for share in transfers["shared"]:
 				self.shareslist.append([recode(share), share])
 			self.shareddirs = transfers["shared"][:]
+		else:
+			self.p.Hilight(self.Shares)
 		if transfers["buddyshared"] is not None:
 			for share in transfers["buddyshared"]:
 				self.bshareslist.append([recode(share), share])
 			self.bshareddirs = transfers["buddyshared"][:]
+		else:
+			self.p.Hilight(self.BuddyShares)
 		if transfers["rescanonstartup"] is not None:
 			self.RescanOnStartup.set_active(transfers["rescanonstartup"])
+		else:
+			self.p.Hilight(self.RescanOnStartup)
 		if transfers["enablebuddyshares"] is not None:
 			self.enableBuddyShares.set_active(transfers["enablebuddyshares"])
+		else:
+			self.p.Hilight(self.enableBuddyShares)
 		self.OnEnabledBuddySharesToggled(self.enableBuddyShares)
 		self.needrescan = 0
 
@@ -269,48 +298,80 @@ class TransfersFrame(settings_glade.TransfersFrame):
 		server = config["server"]
 		if transfers["uploadbandwidth"] is not None:
 			self.QueueBandwidth.set_value(transfers["uploadbandwidth"])
+		else:
+			self.p.Hilight(self.QueueBandwidth)
 		if transfers["useupslots"] is not None:
 			self.QueueUseSlots.set_active(transfers["useupslots"])
+		else:
+			self.p.Hilight(self.QueueUseSlots)
 		if transfers["uploadslots"] is not None:
 			self.QueueSlots.set_value(transfers["uploadslots"])
+		else:
+			self.p.Hilight(self.QueueSlots)
 		if transfers["uselimit"] is not None:
 			self.Limit.set_active(transfers["uselimit"])
+		else:
+			self.p.Hilight(self.Limit)
 		if transfers["uploadlimit"] is not None:
 			self.LimitSpeed.set_value(transfers["uploadlimit"])
+		else:
+			self.p.Hilight(self.LimitSpeed)
 		if transfers["limitby"] is not None:
 			if transfers["limitby"] == 0:
 				self.LimitPerTransfer.set_active(1)
 			else:
 				self.LimitTotalTransfers.set_active(1)
+		else:
+			self.p.Hilight(self.LimitPerTransfer)
+			self.p.Hilight(self.LimitTotalTransfers)
 		if transfers["queuelimit"] is not None:
 			self.MaxUserQueue.set_value(transfers["queuelimit"])
+		else:
+			self.p.Hilight(self.MaxUserQueue)
 		if transfers["friendsnolimits"] is not None:
 			self.FriendsNoLimits.set_active(transfers["friendsnolimits"])
+		else:
+			self.p.Hilight(self.FriendsNoLimits)
 		if transfers["friendsonly"] is not None:
 			self.FriendsOnly.set_active(transfers["friendsonly"])
+		else:
+			self.p.Hilight(self.FriendsOnly)
 		if transfers["preferfriends"] is not None:
 			self.PreferFriends.set_active(transfers["preferfriends"])
+		else:
+			self.p.Hilight(self.PreferFriends)
 		if transfers["lock"] is not None:
 			self.LockIncoming.set_active(transfers["lock"])
+		else:
+			self.p.Hilight(self.LockIncoming)
 		if transfers["remotedownloads"] is not None:
 			self.RemoteDownloads.set_active(transfers["remotedownloads"])
+		else:
+			self.p.Hilight(self.RemoteDownloads)
 		if transfers["fifoqueue"] is not None:
 			self.FirstInFirstOut.set_active(transfers["fifoqueue"])
+		else:
+			self.p.Hilight(self.FirstInFirstOut)
 		if transfers["uploadallowed"] is not None:
 			self.UploadsAllowed.set_active(transfers["uploadallowed"])
+		else:
+			self.p.Hilight(self.UploadsAllowed)
 		
 		self.OnQueueUseSlotsToggled(self.QueueUseSlots)
 		self.OnLimitToggled(self.Limit)
 		self.OnFriendsOnlyToggled(self.FriendsOnly)
 		if transfers["enablefilters"] is not None:
 			self.DownloadFilter.set_active(transfers["enablefilters"])
-		
+		else:
+			self.p.Hilight(self.DownloadFilter)
 		self.filtersiters = {}
 		self.filterlist.clear()
 		if transfers["downloadfilters"] != []:
 			for dfilter in transfers["downloadfilters"]:
 				filter, escaped = dfilter
 				self.filtersiters[filter] = self.filterlist.append([filter, escaped])
+		else:
+			self.p.Hilight(self.FilterView)
 		self.OnEnableFiltersToggle(self.DownloadFilter)
 		
 
@@ -520,10 +581,16 @@ class GeoBlockFrame(settings_glade.GeoBlockFrame):
 		transfers = config["transfers"]
 		if transfers["geoblock"] is not None:
 			self.GeoBlock.set_active(transfers["geoblock"])
+		else:
+			self.p.Hilight(self.GeoBlock)
 		if transfers["geopanic"] is not None:
 			self.GeoPanic.set_active(transfers["geopanic"])
+		else:
+			self.p.Hilight(self.GeoPanic)
 		if transfers["geoblockcc"] is not None:
 			self.GeoBlockCC.set_text(transfers["geoblockcc"][0])
+		else:
+			self.p.Hilight(self.GeoBlockCC)
 		self.OnGeoBlockToggled(self.GeoBlock)
 	
 	def GetSettings(self):
@@ -551,8 +618,20 @@ class UserinfoFrame(settings_glade.UserinfoFrame):
 		if userinfo["descr"] is not None:
 			descr = eval(userinfo["descr"], {})
 			self.Description.get_buffer().set_text(descr)
+		else:
+			self.p.Hilight(self.Description)
 		if userinfo["pic"] is not None:
 			self.Image.set_text(userinfo["pic"])
+			self.GetImageSize()
+		else:
+			self.p.Hilight(self.Image)
+			
+	def GetImageSize(self):
+		if os.path.exists(self.Image.get_text()):
+			size =  os.stat(self.Image.get_text())[6]
+			self.ImageSize.set_text("Size: %s KB" % Humanize(size/1024))
+		else:
+			self.p.Hilight(self.Image)
 
 	def GetSettings(self):
 		buffer = self.Description.get_buffer()
@@ -574,7 +653,8 @@ class UserinfoFrame(settings_glade.UserinfoFrame):
 			for file in dlg:
 				self.Image.set_text(file)
 				break
-
+		self.GetImageSize()
+		
 class BanFrame(settings_glade.BanFrame):
 	def __init__(self, parent):
 		self.p = parent
@@ -611,19 +691,28 @@ class BanFrame(settings_glade.BanFrame):
 			self.banned = server["banlist"][:]
 			for banned in server["banlist"]:
 				self.banlist.append([banned])
+		else:
+			self.p.Hilight(self.Banned)
 		if server["ignorelist"] is not None:
 			self.ignored = server["ignorelist"][:]
 			for ignored in server["ignorelist"]:
 				self.ignorelist.append([ignored])
+		else:
+			self.p.Hilight(self.Ignored)
 		if server["ipblocklist"] is not None:
 			self.blocked = server["ipblocklist"][:]
 			for blocked in server["ipblocklist"]:
 				self.blockedlist.append([blocked])
+		else:
+			self.p.Hilight(self.Blocked)
 		if transfers["usecustomban"] is not None:
 			self.UseCustomBan.set_active(transfers["usecustomban"])
+		else:
+			self.p.Hilight(self.UseCustomBan)
 		if transfers["customban"] is not None:
 			self.CustomBan.set_text(transfers["customban"])
-			
+		else:
+			self.p.Hilight(self.CustomBan)	
 		self.OnUseCustomBanToggled(self.UseCustomBan)
 	
 	def GetSettings(self):
@@ -728,15 +817,23 @@ class SoundsFrame(settings_glade.SoundsFrame):
 		
 		if ui["soundcommand"] is not None:
 			self.SoundCommand.child.set_text(ui["soundcommand"])
+		else:
+			self.p.Hilight(self.SoundCommand.child)
 		if ui["soundenabled"] is not None:
 			self.SoundCheck.set_active(ui["soundenabled"])
+		else:
+			self.p.Hilight(self.SoundCheck)
 		if ui["soundtheme"] is not None:
 			self.SoundDirectory.set_text(ui["soundtheme"])
+		else:
+			self.p.Hilight(self.SoundDirectory)
 		self.OnSoundCheckToggled(self.SoundCheck)
 		
 		if config["players"]["default"] is not None:
 			self.audioPlayerCombo.child.set_text(config["players"]["default"])
 			self.audioPlayerCombo.append_text( config["players"]["default"] )
+		else:
+			self.p.Hilight(self.audioPlayerCombo.child)
 	def GetSettings(self):
 
 		soundcommand = self.SoundCommand.child.get_text()
@@ -784,11 +881,16 @@ class IconsFrame(settings_glade.IconsFrame):
 		ui = config["ui"]
 		if ui["tabclosers"] is not None:
 			self.TabClosers.set_active(ui["tabclosers"])
+		else:
+			self.p.Hilight(self.TabClosers)
 		if ui["trayicon"] is not None:
 			self.TrayiconCheck.set_active(ui["trayicon"])
+		else:
+			self.p.Hilight(self.TrayiconCheck)
 		if ui["icontheme"] is not None:
 			self.IconTheme.set_text(ui["icontheme"])
-			
+		else:
+			self.p.Hilight(self.IconTheme)
 	def OnDefaultTheme(self, widget):
 		self.IconTheme.set_text("")
 		
@@ -887,64 +989,107 @@ class BloatFrame(settings_glade.BloatFrame):
 
 		if language["setlanguage"] is not None:
 			self.TranslationCheck.set_active(int(language["setlanguage"]))
+		else:
+			self.p.Hilight(self.TranslationCheck)
 		if language["language"] is not None:
 			self.TranslationComboEntry.set_text(language["language"])
-			
+		else:
+			self.p.Hilight(self.TranslationComboEntry)
 		if ui["chatfont"] is not None:
 			self.SelectChatFont.set_font_name(ui["chatfont"])
-			
+		else:
+			self.p.Hilight(self.SelectChatFont)
 		if ui["chatlocal"] is not None:
 			self.Local.set_text(ui["chatlocal"])
+		else:
+			self.p.Hilight(self.Local)
 		if ui["chatremote"] is not None:
 			self.Remote.set_text(ui["chatremote"])
+		else:
+			self.p.Hilight(self.Remote)
 		if ui["chatme"] is not None:
 			self.Me.set_text(ui["chatme"])
+		else:
+			self.p.Hilight(self.Me)
 		if ui["chathilite"] is not None:
 			self.Highlight.set_text(ui["chathilite"])
-		
+		else:
+			self.p.Hilight(self.Highlight)
 		if ui["useraway"] is not None:
 			self.AwayColor.set_text(ui["useraway"])
+		else:
+			self.p.Hilight(self.AwayColor)
 		if ui["useronline"] is not None:
 			self.OnlineColor.set_text(ui["useronline"])
+		else:
+			self.p.Hilight(self.OnlineColor)
 		if ui["useroffline"] is not None:
 			self.OfflineColor.set_text(ui["useroffline"])
+		else:
+			self.p.Hilight(self.OfflineColor)
 		if ui["usernamehotspots"] is not None:
 			self.UsernameHotspots.set_active(ui["usernamehotspots"])
+		else:
+			self.p.Hilight(self.UsernameHotspots)
 		if ui["textbg"] is not None:
 			self.BackgroundColor.set_text(ui["textbg"])
+		else:
+			self.p.Hilight(self.BackgroundColor)
 		if ui["inputcolor"] is not None:
 			self.InputColor.set_text(ui["inputcolor"])
+		else:
+			self.p.Hilight(self.InputColor)
 		self.OnUsernameHotspotsToggled(self.UsernameHotspots)
 		if ui["search"] is not None:
 			self.Immediate.set_text(ui["search"])
+		else:
+			self.p.Hilight(self.Immediate)
 		if ui["searchq"] is not None:
 			self.Queue.set_text(ui["searchq"])
+		else:
+			self.p.Hilight(self.Queue)
 		if ui["decimalsep"] is not None:
 			self.DecimalSep.child.set_text(ui["decimalsep"])
+		else:
+			self.p.Hilight(self.DecimalSep)
 		if ui["exitdialog"] is not None:
 			self.ExitDialog.set_active(ui["exitdialog"])
+		else:
+			self.p.Hilight(self.ExitDialog)
 		if ui["spellcheck"] is not None:
 			self.SpellCheck.set_active(ui["spellcheck"])
+		else:
+			self.p.Hilight(self.SpellCheck)
 		if not self.frame.SEXY:
 			self.SpellCheck.set_sensitive(False)
 		if private["store"] is not None:
 			self.ReopenPrivateChats.set_active(private["store"])
-
+		else:
+			self.p.Hilight(self.ReopenPrivateChats)
 
 		if ui["usernamestyle"] is not None:
 			self.UsernameStyle.child.set_text(ui["usernamestyle"])
+		else:
+			self.p.Hilight(self.UsernameStyle)
 		if transfers["enabletransferbuttons"] is not None:
 			self.ShowTransferButtons.set_active(transfers["enabletransferbuttons"])
+		else:
+			self.p.Hilight(self.ShowTransferButtons)
 		if ui["enabletrans"] is not None:
 			self.EnableTransparent.set_active(ui["enabletrans"])
+		else:
+			self.p.Hilight(self.EnableTransparent)
 		self.OnEnableTransparentToggled(self.EnableTransparent)
 		self.OnTranslationCheckToggled(self.TranslationCheck)
 		self.settingup = 1
 		if ui["transtint"] is not None:
 			self.TintColor.set_text(ui["transtint"])
+		else:
+			self.p.Hilight(self.TintColor)
 		if ui["transalpha"] is not None:
 			self.TintAlpha.set_value(ui["transalpha"])
-		
+		else:
+			self.p.Hilight(self.TintAlpha)
 		self.ColourScale("")
 		self.settingup = 0
 		self.needcolors = 0
@@ -1046,8 +1191,14 @@ class BloatFrame(settings_glade.BloatFrame):
 			dlg.colorsel.set_has_opacity_control(True)
 			dlg.colorsel.set_current_alpha(int(self.TintAlpha.get_value()) * 256)
 		if colour != None and colour !='':
-			colour = gtk.gdk.color_parse(colour)
-			dlg.colorsel.set_current_color(colour)
+			try:
+				colour = gtk.gdk.color_parse(colour)
+			except:
+				self.p.Hilight(entry)
+				dlg.destroy()
+				return
+			else:
+				dlg.colorsel.set_current_color(colour)
 			
 		if dlg.run() == gtk.RESPONSE_OK:
 			colour = dlg.colorsel.get_current_color()
@@ -1103,13 +1254,20 @@ class LogFrame(settings_glade.LogFrame):
 		logging = config["logging"]
 		if logging["privatechat"] is not None:
 			self.LogPrivate.set_active(logging["privatechat"])
+		else:
+			self.p.Hilight(self.LogPrivate)
 		if logging["chatrooms"] is not None:
 			self.LogRooms.set_active(logging["chatrooms"])
+		else:
+			self.p.Hilight(self.LogRooms)
 		if logging["transfers"] is not None:
 			self.LogTransfers.set_active(logging["transfers"])
+		else:
+			self.p.Hilight(self.LogTransfers)
 		if logging["logsdir"] is not None:
 			self.LogDir.set_text(recode(logging["logsdir"]))
-
+		else:
+			self.p.Hilight(self.LogDir)
 	def GetSettings(self):
 		return {
 			"logging": {
@@ -1141,10 +1299,16 @@ class SearchFrame(settings_glade.SearchFrame):
 		
 		if searches["maxresults"] is not None:
 			self.MaxResults.set_value(searches["maxresults"])
+		else:
+			self.p.Hilight(self.MaxResults)
 		if searches["enablefilters"] is not None:
 			self.EnableFilters.set_active(searches["enablefilters"])
+		else:
+			self.p.Hilight(self.EnableFilters)
 		if searches["re_filter"] is not None:
 			self.RegexpFilters.set_active(searches["re_filter"])
+		else:
+			self.p.Hilight(self.RegexpFilters)
 		if searches["defilter"] is not None:
 			self.FilterIn.set_text(searches["defilter"][0])
 			self.FilterOut.set_text(searches["defilter"][1])
@@ -1153,6 +1317,13 @@ class SearchFrame(settings_glade.SearchFrame):
 			self.FilterFree.set_active(searches["defilter"][4])
 			if(len(searches["defilter"]) > 5):
 				self.FilterCC.set_text(searches["defilter"][5])
+		else:
+			self.p.Hilight(self.FilterIn)
+			self.p.Hilight(self.FilterOut)
+			self.p.Hilight(self.FilterSize)
+			self.p.Hilight(self.FilterBR)
+			self.p.Hilight(self.FilterFree)
+			self.p.Hilight(self.FilterCC)
 
 	def GetSettings(self):
 		maxresults = self.MaxResults.get_value_as_int()
@@ -1187,9 +1358,13 @@ class AwayFrame(settings_glade.AwayFrame):
 		server = config["server"]
 		if server["autoreply"] is not None:
 			self.AutoReply.set_text(server["autoreply"])
+		else:
+			self.p.Hilight(self.AutoReply)
 		if server["autoaway"] is not None:
 			self.AutoAway.set_value(server["autoaway"])
-
+		else:
+			self.p.Hilight(self.AutoAway)
+			
 	def GetSettings(self):
 		try:
 			autoaway = self.AutoAway.get_value_as_int()
@@ -1219,13 +1394,20 @@ class EventsFrame(settings_glade.EventsFrame):
 		transfers = config["transfers"]
 		if transfers["shownotification"] is not None: 
 			self.ShowNotification.set_active(transfers["shownotification"])
+		else:
+			self.p.Hilight(self.ShowNotification)
 		if transfers["afterfinish"] is not None:
 			self.AfterDownload.set_text(transfers["afterfinish"])
+		else:
+			self.p.Hilight(self.AfterDownload)
 		if transfers["afterfolder"] is not None:
 			self.AfterFolder.set_text(transfers["afterfolder"])
-
+		else:
+			self.p.Hilight(self.AfterFolder)
 		if config["ui"]["filemanager"] is not None:
 			self.FileManagerCombo.child.set_text(config["ui"]["filemanager"])
+		else:
+			self.p.Hilight(self.FileManagerCombo.child)
 			
 	def GetSettings(self):
 		return {
@@ -1247,15 +1429,25 @@ class ImportFrame(settings_glade.ImportFrame):
 		self.p = parent
 		self.frame = parent.frame
 		settings_glade.ImportFrame.__init__(self, False)
-	
+		self.ImportPath.connect("activate", self.CheckPath)
+		self.ImportPath.connect("changed", self.CheckPath)
+		
 	def SetSettings(self, config):
 
 		self.config = self.frame.np.config
 		path = "C:\Program Files\SoulSeek"
 		if os.path.exists(path):
 			self.ImportPath.set_text(path)
-			
+		else:
+			self.CheckPath(self.ImportPath)
 
+			
+	def CheckPath(self, widget):
+		if not os.path.exists(widget.get_text()):
+			self.p.SetTextBG(self.ImportPath, "red", "white")
+		else:
+			self.p.SetTextBG(widget, "", "")
+			
 	def GetSettings(self):
 		return {}
 		
@@ -1264,7 +1456,9 @@ class ImportFrame(settings_glade.ImportFrame):
 		if dir1 is not None:
 			for directory in dir1: # iterate over selected files
 				self.ImportPath.set_text(recode(directory))
-	
+		directory = self.ImportPath.get_text()
+		if not os.path.exists(directory):
+			self.p.Hilight(self.ImportPath)
 	def OnImportConfig(self, widget):
 		Path = self.ImportPath.get_text()
 		Queue = self.ImportQueue.get_active()
@@ -1335,8 +1529,12 @@ class UrlCatchFrame(settings_glade.UrlCatchFrame):
 		urls = config["urls"]
 		if urls["urlcatching"] is not None:
 			self.URLCatching.set_active(urls["urlcatching"])
+		else:
+			self.p.Hilight(self.URLCatching)
 		if urls["humanizeurls"] is not None:
 			self.HumanizeURLs.set_active(urls["humanizeurls"])
+		else:
+			self.p.Hilight(self.HumanizeURLs)
 		if urls["protocols"] is not None:
 			for key in urls["protocols"].keys():
 				if urls["protocols"][key] == "firefox \"%s\" &":
@@ -1348,7 +1546,8 @@ class UrlCatchFrame(settings_glade.UrlCatchFrame):
 				
 				iter = self.protocolmodel.append([key, command])
 				self.protocols[key] = [iter, command]
-
+		else:
+			self.p.Hilight(self.ProtocolHandlers)
 		self.OnURLCatchingToggled(self.URLCatching)
 		selection = self.ProtocolHandlers.get_selection()
 		selection.unselect_all()
@@ -1441,17 +1640,24 @@ class CensorFrame(settings_glade.CensorFrame):
 		#print iter, index, value
 		if value != "" and not value.isspace() and len(value) > 2:
 			store.set(iter, pos, value)
-		
+		else:
+			store.remove(iter)
 	def SetSettings(self, config):
 		self.censorlist.clear()
 		words = config["words"]
 		if words["censored"] is not None:
 			for word in words["censored"]:
 				self.censorlist.append([word])
+		else:
+			self.p.Hilight(self.CensorList)
 		if words["censorwords"] is not None:
 			self.CensorCheck.set_active(words["censorwords"])
+		else:
+			self.p.Hilight(self.CensorCheck)
 		if words["censorfill"] is not None:
 			self.CensorReplaceEntry.set_text(words["censorfill"])
+		else:
+			self.p.Hilight(self.CensorReplaceEntry)
 		self.OnCensorCheck(self.CensorCheck)
 		
 	def OnCensorCheck(self, widget):
@@ -1535,8 +1741,12 @@ class AutoReplaceFrame(settings_glade.AutoReplaceFrame):
 		if words["autoreplaced"] is not None:
 			for word, replacement in words["autoreplaced"].items():
 				self.replacelist.append([word, replacement])
+		else:
+			self.p.Hilight(self.ReplacementList)
 		if words["replacewords"] is not None:
 			self.ReplaceCheck.set_active(words["replacewords"])
+		else:
+			self.p.Hilight(self.ReplaceCheck)
 		self.OnReplaceCheck(self.ReplaceCheck)
 		
 	def OnReplaceCheck(self, widget):
@@ -1608,24 +1818,41 @@ class CompletionFrame(settings_glade.CompletionFrame):
 		self.needcompletion = 0
 		if completion["tab"] is not None:
 			self.CompletionTabCheck.set_active(completion["tab"])
+		else:
+			self.p.Hilight(self.CompletionTabCheck)
 		if completion["dropdown"] is not None:
 			self.CompletionDropdownCheck.set_active(completion["dropdown"])
-
+		else:
+			self.p.Hilight(self.CompletionDropdownCheck)
 		self.OnCompletionDropdownCheck(self.CompletionDropdownCheck)
 		if completion["roomnames"] is not None:
 			self.CompleteRoomNamesCheck.set_active(completion["roomnames"])
+		else:
+			self.p.Hilight(self.CompleteRoomNamesCheck)
 		if completion["buddies"] is not None:
 			self.CompleteBuddiesCheck.set_active(completion["buddies"])
+		else:
+			self.p.Hilight(self.CompleteBuddiesCheck)
 		if completion["roomusers"] is not None:
 			self.CompleteUsersInRoomsCheck.set_active(completion["roomusers"])
+		else:
+			self.p.Hilight(self.CompleteUsersInRoomsCheck)
 		if completion["commands"] is not None:
 			self.CompleteCommandsCheck.set_active(completion["commands"])
+		else:
+			self.p.Hilight(self.CompleteCommandsCheck)
 		if completion["aliases"] is not None:
 			self.CompleteAliasesCheck.set_active(completion["aliases"])
+		else:
+			self.p.Hilight(self.CompleteAliasesCheck)
 		if completion["characters"] is not None:
 			self.CharactersCompletion.set_value(completion["characters"])
+		else:
+			self.p.Hilight(self.CharactersCompletion)
 		if completion["onematch"] is not None:
 			self.OneMatchCheck.set_active(completion["onematch"])
+		else:
+			self.p.Hilight(self.OneMatchCheck)
 		self.CharactersCompletion.connect("changed", self.OnCompletionChanged)
 		self.CompleteAliasesCheck.connect("toggled", self.OnCompletionChanged)
 		self.CompleteCommandsCheck.connect("toggled", self.OnCompletionChanged)
@@ -1701,6 +1928,7 @@ class SettingsWindow(settings_glade.SettingsWindow):
 		self.viewport1.add(self.empty_label)
 		self.tree = {}
 		self.pages = p = {}
+		self.handler_ids = {}
 		model = gtk.TreeStore(str, str)
 
 		self.tree["Server"] = model.append(None, [_("Server"), "Server"])
@@ -1765,7 +1993,63 @@ class SettingsWindow(settings_glade.SettingsWindow):
 		self.SettingsTreeview.expand_row((4,), True)
 
 		self.SettingsTreeview.get_selection().connect("changed", self.switch_page)
-	
+		
+	def Hilight(self, widget):
+
+		if type(widget) is gtk.Entry:
+			self.Dehilight(widget)
+			self.handler_ids[widget] = []
+			self.handler_ids[widget].append(widget.connect("activate", self.Dehilight))
+			self.handler_ids[widget].append(widget.connect("changed", self.Dehilight))
+		elif type(widget) is gtk.SpinButton:
+			self.Dehilight(widget)
+			self.handler_ids[widget] = []
+			self.handler_ids[widget].append(widget.connect("activate", self.Dehilight))
+			self.handler_ids[widget].append(widget.connect("value-changed", self.Dehilight))
+
+		elif type(widget) is gtk.CheckButton:
+			self.Dehilight(widget)
+			self.handler_ids[widget] = []
+			self.handler_ids[widget].append(widget.connect("toggled", self.Dehilight))
+		elif type(widget) is gtk.TreeView:
+			model = widget.get_model()
+			self.Dehilight(widget)
+			self.handler_ids[widget] = []
+			self.handler_ids[widget].append(model.connect("row-inserted", self.DehilightTree))
+		self.SetTextBG(widget, "red", "white")
+		
+	def DehilightTree(self, model, *args):
+		for widget in self.handler_ids.keys():
+			if widget.get_model() is model:
+				self.Dehilight(widget)
+				break
+		
+	def Dehilight(self, widget, *args):
+		self.SetTextBG(widget, "", "")
+		if widget not in self.handler_ids.keys():
+			return
+		for handler_ids in self.handler_ids[widget]:
+			if type(widget) is gtk.TreeView:
+				widget.get_model().disconnect(handler_ids)
+			else:
+				widget.disconnect(handler_ids)
+
+	def SetTextBG(self, widget, bgcolor="", fgcolor=""):
+		if bgcolor == "":
+			colour = None
+		else:
+			colour = gtk.gdk.color_parse(bgcolor)
+		widget.modify_base(gtk.STATE_NORMAL, colour)
+		widget.modify_bg(gtk.STATE_NORMAL, colour)
+
+		if type(widget) in (gtk.Entry, gtk.SpinButton):
+			if fgcolor == "":
+				colour = None
+			else:
+				colour = gtk.gdk.color_parse(fgcolor)
+			widget.modify_text(gtk.STATE_NORMAL, colour)
+			widget.modify_fg(gtk.STATE_NORMAL, colour)
+			
 	def switch_page(self, widget):
 		child = self.viewport1.get_child()
 		if child:
