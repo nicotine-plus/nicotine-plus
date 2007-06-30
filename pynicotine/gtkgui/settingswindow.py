@@ -2028,11 +2028,12 @@ class SettingsWindow(settings_glade.SettingsWindow):
 		self.SetTextBG(widget, "", "")
 		if widget not in self.handler_ids.keys():
 			return
-		for handler_ids in self.handler_ids[widget]:
+		for handler_id in self.handler_ids[widget][:]:
 			if type(widget) is gtk.TreeView:
-				widget.get_model().disconnect(handler_ids)
+				widget.get_model().disconnect(handler_id)
 			else:
-				widget.disconnect(handler_ids)
+				widget.disconnect(handler_id)
+				self.handler_ids[widget].remove(handler_id)
 
 	def SetTextBG(self, widget, bgcolor="", fgcolor=""):
 		if bgcolor == "":
@@ -2094,7 +2095,10 @@ class SettingsWindow(settings_glade.SettingsWindow):
 		self.OnCancel(widget)
 		widget.emit_stop_by_name("delete-event")
 		return True
-
+	
+	def InvalidSettings(self):
+		pass
+	
 	def SetSettings(self, config):
 		for page in self.pages.values():
 			page.SetSettings(config)
