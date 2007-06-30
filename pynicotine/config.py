@@ -114,7 +114,7 @@ class Config:
 			for j in self.sections[i].keys():
 		# 		print self.sections[i][j]
 				if self.sections[i][j] is None or self.sections[i][j] == '' and i not in ("userinfo", "ui", "ticker", "players") and j not in ("incompletedir", "autoreply", 'afterfinish','afterfolder', 'geoblockcc', 'downloadregexp', "language"):
-					return 1, _("Config option unset: Section: %s, Option: %s") % (i, j)
+					return 1, (i, j)
 		return 0, ""
 
 	def readConfig(self):

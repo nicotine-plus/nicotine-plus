@@ -32,7 +32,8 @@ class ServerFrame(settings_glade.ServerFrame):
 		self.Encoding.add_attribute(cell2, 'text', 1)
 		for item in encodings:
 			self.Elist[item[1]] = self.EncodingStore.append([item[1], item[0] ])
-
+		self.options = {"server": [ "server", "login", "passw", "enc", "portrange", "firewalled", "ctcpmsgs", ] }
+			
 	def SetSettings(self, config):
 		server = config["server"]
 		if server["server"] is not None:
@@ -103,7 +104,10 @@ class SharesFrame(settings_glade.SharesFrame):
 		self.p = parent
 		self.frame = parent.frame
 		settings_glade.SharesFrame.__init__(self, False)
+		self.options = {"transfers": ["incompletedir",	"downloaddir","sharedownloaddir", "shared", "rescanonstartup", "buddyshared", "enablebuddyshares", ]}
+			
 		self.needrescan = 0
+		self.options = {}
 		self.shareslist = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
 		self.shareddirs = []
 		
@@ -119,7 +123,7 @@ class SharesFrame(settings_glade.SharesFrame):
 		self.BuddyShares.append_column(bcolumn)
 		self.BuddyShares.set_model(self.bshareslist)
 		self.BuddyShares.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
-
+		
 	def SetSettings(self, config):
 		transfers = config["transfers"]
 		self.shareslist.clear()
@@ -262,6 +266,12 @@ class TransfersFrame(settings_glade.TransfersFrame):
 		self.p = parent
 		self.frame = parent.frame
 		settings_glade.TransfersFrame.__init__(self, False)
+		self.options = {
+			"transfers": ["uploadbandwidth", "useupslots", "uploadslots",
+"uselimit", "uploadlimit", "fifoqueue", "limitby", "queuelimit", "friendsnolimits",
+"friendsonly", "preferfriends", "lock", "remotedownloads", "uploadallowed",
+"downloadfilters", "enablefilters",]
+			}
 		self.UploadsAllowed_List.clear()
 		self.alloweduserslist = [_("No one"), _("Everyone"), _("Users in list"), _("Trusted Users")]
 
@@ -565,6 +575,7 @@ class GeoBlockFrame(settings_glade.GeoBlockFrame):
 		self.p = parent
 		self.frame = parent.frame
 		settings_glade.GeoBlockFrame.__init__(self, False)
+		self.options = {"transfers": [ "geoblock", "geopanic", "geoblockcc",] }
 		try:
 			import GeoIP
 			
@@ -612,11 +623,12 @@ class UserinfoFrame(settings_glade.UserinfoFrame):
 		self.p = parent
 		self.frame = parent.frame
 		settings_glade.UserinfoFrame.__init__(self, False)
+		self.options = {"userinfo": ["descr", "pic", "descrutf8" ] }
 
 	def SetSettings(self, config):
 		userinfo = config["userinfo"]
 		if userinfo["descr"] is not None:
-			descr = eval(userinfo["descr"], {})
+			descr = userinfo["descr"]
 			self.Description.get_buffer().set_text(descr)
 		else:
 			self.p.Hilight(self.Description)
@@ -660,6 +672,9 @@ class BanFrame(settings_glade.BanFrame):
 		self.p = parent
 		self.frame = parent.frame
 		settings_glade.BanFrame.__init__(self, False)
+		self.options = {"server": [ "banlist", "ignorelist", "ipblocklist"],
+			"transfers": ["usecustomban","customban",]
+			}
 		self.banned = []
 		self.banlist = gtk.ListStore(gobject.TYPE_STRING)
 		column = gtk.TreeViewColumn(_("Users"), gtk.CellRendererText(), text = 0)
@@ -793,6 +808,8 @@ class SoundsFrame(settings_glade.SoundsFrame):
 		self.p = parent
 		self.frame = parent.frame
 		settings_glade.SoundsFrame.__init__(self, False)
+		self.options = {"ui": ["soundcommand", "soundtheme", "soundenabled"],
+			"players": ["default",]}
 		for executable in ["xmms -e $", "audacious -e $", "amarok -a $"]:
 			self.audioPlayerCombo.append_text( executable )
 		for item in ["play -q", "ogg123 -q", "Gstreamer (gst-python)"]:
@@ -865,6 +882,7 @@ class IconsFrame(settings_glade.IconsFrame):
 		self.p = parent
 		self.frame = parent.frame
 		settings_glade.IconsFrame.__init__(self, False)
+		self.options = {"ui": [	"icontheme", "tabclosers", "trayicon",]}
 		self.ThemeButton.connect("clicked", self.OnChooseThemeDir)
 		self.DefaultTheme.connect("clicked", self.OnDefaultTheme)
 		self.N.set_from_pixbuf(self.frame.images["n"])
@@ -916,6 +934,17 @@ class BloatFrame(settings_glade.BloatFrame):
 		self.frame = parent.frame
 		self.needcolors = 0
 		settings_glade.BloatFrame.__init__(self, False)
+		self.options =  {
+			"ui": [	"chatfont", "chatlocal", "chatremote", "chatme",
+"chathilite", "textbg", "inputcolor", "search", "searchq", "decimalsep",
+"spellcheck", "exitdialog", "useraway", "useronline", 
+"useroffline", "usernamehotspots", "usernamestyle", "enabletrans",
+"transtint", "transalpha"],
+			"transfers": ["enabletransferbuttons"],
+			"privatechat": ["store"],
+			"language": ["setlanguage", "language"],
+			}
+		
 		for item in ["<None>", ",", ".", "<space>"]:
 			self.DecimalSep.append_text(item)
 		
@@ -1249,6 +1278,7 @@ class LogFrame(settings_glade.LogFrame):
 		self.p = parent
 		self.frame = parent.frame
 		settings_glade.LogFrame.__init__(self, False)
+		self.options = {"logging": [ "privatechat", "chatrooms", "logsdir", "transfers", ]}
 
 	def SetSettings(self, config):
 		logging = config["logging"]
@@ -1290,6 +1320,7 @@ class SearchFrame(settings_glade.SearchFrame):
 		self.p = parent
 		self.frame = parent.frame
 		settings_glade.SearchFrame.__init__(self, False)
+		self.options = {"searches": ["maxresults", "enablefilters", "re_filter", "defilter"]}
 
 	def SetSettings(self, config):
 		try:
@@ -1353,6 +1384,7 @@ class AwayFrame(settings_glade.AwayFrame):
 		self.p = parent
 		self.frame = parent.frame
 		settings_glade.AwayFrame.__init__(self, False)
+		self.options = {"server":["autoaway", "autoreply"]}
 	
 	def SetSettings(self, config):		
 		server = config["server"]
@@ -1381,7 +1413,9 @@ class EventsFrame(settings_glade.EventsFrame):
 	def __init__(self, parent):
 		self.p = parent
 		self.frame = parent.frame
-		settings_glade.EventsFrame.__init__(self, False) 
+		settings_glade.EventsFrame.__init__(self, False)
+		self.options = {"transfers": [ "shownotification", "afterfinish", "afterfolder", ],
+			"ui": [	"filemanager" ],}
 		
 		for executable in ["rox $", "konqueror $", "nautilus --no-desktop $", "thunar $", "xterm -e mc $", "emelfm2 -1 $", "krusader --left $", "gentoo -1 $" ]:
 			self.FileManagerCombo.append_text( executable ) 
@@ -1429,6 +1463,7 @@ class ImportFrame(settings_glade.ImportFrame):
 		self.p = parent
 		self.frame = parent.frame
 		settings_glade.ImportFrame.__init__(self, False)
+		self.options = {}
 		self.ImportPath.connect("activate", self.CheckPath)
 		self.ImportPath.connect("changed", self.CheckPath)
 		
@@ -1486,6 +1521,7 @@ class UrlCatchFrame(settings_glade.UrlCatchFrame):
 		self.frame = parent.frame
 		self.p = parent
 		settings_glade.UrlCatchFrame.__init__(self, False)
+		self.options = {"urls": [ "urlcatching", "humanizeurls", "protocols"],}
 		self.protocolmodel = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
 		self.protocols = {}
 		cols = InitialiseColumns(self.ProtocolHandlers,
@@ -1616,7 +1652,7 @@ class CensorFrame(settings_glade.CensorFrame):
 		self.p = parent
 		self.frame = parent.frame
 		settings_glade.CensorFrame.__init__(self, False)
-
+		self.options = {"words": ["censorfill", "censored", "censorwords", ]}
 		self.censorlist = gtk.ListStore(gobject.TYPE_STRING)
 		cols = InitialiseColumns(self.CensorList,
 			[_("Pattern"), -1, "edit", self.frame.CellDataFunc],
@@ -1712,7 +1748,7 @@ class AutoReplaceFrame(settings_glade.AutoReplaceFrame):
 		self.p = parent
 		self.frame = parent.frame
 		settings_glade.AutoReplaceFrame.__init__(self, False)
-	
+		self.options = {"words": ["autoreplaced", "replacewords",  ]}
 		self.replacelist = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
 		cols = InitialiseColumns(self.ReplacementList,
 			[_("Pattern"), 150, "edit", self.frame.CellDataFunc],
@@ -1810,6 +1846,8 @@ class CompletionFrame(settings_glade.CompletionFrame):
 		self.p = parent
 		self.frame = parent.frame
 		settings_glade.CompletionFrame.__init__(self, False)
+		self.options = {"words": [ "tab", "dropdown", "characters", "roomnames",
+"buddies", "roomusers", "commands", "aliases", "onematch",],}
 		self.CompletionTabCheck.connect("toggled", self.OnCompletionDropdownCheck)
 		self.CompletionDropdownCheck.connect("toggled", self.OnCompletionDropdownCheck)
 		
@@ -1897,6 +1935,7 @@ class CompletionFrame(settings_glade.CompletionFrame):
 class ChatFrame(settings_glade.ChatFrame):
 	def __init__(self):
 		settings_glade.ChatFrame.__init__(self, False)
+		self.options = {}
 	def SetSettings(self, config):
 		return {}
 	def GetSettings(self):
@@ -1905,6 +1944,7 @@ class ChatFrame(settings_glade.ChatFrame):
 class MiscFrame(settings_glade.MiscFrame):
 	def __init__(self):
 		settings_glade.MiscFrame.__init__(self, False)
+		self.options = {}
 	def SetSettings(self, config):
 		return {}
 	def GetSettings(self):
@@ -2078,6 +2118,7 @@ class SettingsWindow(settings_glade.SettingsWindow):
 		sel = self.SettingsTreeview.get_selection()
 		sel.unselect_all()
 		path = model.get_path(self.tree[page])
+		self.SettingsTreeview.expand_to_path(path)
 		if path is not None:
 			sel.select_path(path)
 
@@ -2096,8 +2137,12 @@ class SettingsWindow(settings_glade.SettingsWindow):
 		widget.emit_stop_by_name("delete-event")
 		return True
 	
-	def InvalidSettings(self):
-		pass
+	def InvalidSettings(self, domain, key):
+		for name, page in self.pages.items():
+			if domain in page.options.keys():
+				if key in page.options[domain]:
+					self.SwitchToPage(name)
+					break
 	
 	def SetSettings(self, config):
 		for page in self.pages.values():

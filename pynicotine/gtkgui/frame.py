@@ -418,8 +418,10 @@ class NicotineFrame(MainWindow):
 			self.connect1.set_sensitive(0)
 			self.rescan1.set_sensitive(0)
 			self.logMessage(_("You need to configure your settings (Server, Username, Password, Download Directory) before connecting..."))
-			self.logMessage(ConfigUnset[1])
-			self.OnSettings(None)
+			if type(ConfigUnset[1]) is tuple:
+				self.logMessage(_("Config option unset: Section: %s, Option: %s") % (ConfigUnset[1][0], ConfigUnset[1][1]))
+				self.OnSettings(None)
+				self.settingswindow.InvalidSettings(ConfigUnset[1][0], ConfigUnset[1][1])
 		else:
 			self.OnConnect(-1)
 		self.UpdateDownloadFilters()
@@ -1367,8 +1369,10 @@ class NicotineFrame(MainWindow):
 			if self.np.transfers is not None:
 				self.connect1.set_sensitive(0)
 			self.logMessage(_("You need to finish configuring your settings (Server, Username, Password, Download Directory) before connecting... but if this message persists, check your Nicotine config file for options set to \'None\'."))
-			self.logMessage(ConfigUnset[1])
-			self.OnSettings(None)
+			if type(ConfigUnset[1]) is tuple:
+				self.logMessage(_("Config option unset: Section: %s, Option: %s") % (ConfigUnset[1][0], ConfigUnset[1][1]))
+				self.OnSettings(None)
+				self.settingswindow.InvalidSettings(ConfigUnset[1][0], ConfigUnset[1][1])
 		else:
 			if self.np.transfers is None:
 				self.connect1.set_sensitive(1)
