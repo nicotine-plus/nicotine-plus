@@ -302,8 +302,13 @@ class Config:
 			print _("Can't save config file, I/O error: %s") % e
 			return
 		else:
-			self.parser.write(f)
-			f.close()
+			try:
+				self.parser.write(f)
+			except IOError, e:
+				print _("Can't save config file, I/O error: %s") % e
+				return
+			else:
+				f.close()
 		os.umask(oldumask)
 		# A paranoid precaution since config contains the password
 		try:

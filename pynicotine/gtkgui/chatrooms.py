@@ -9,8 +9,9 @@ from nicotine_glade import ChatRoomTab
 from utils import InitialiseColumns, AppendLine, PopupMenu, FastListModel, string_sort_func, WriteLog, int_sort_func, Humanize, expand_alias, EncodingsMenu, SaveEncoding, PressHeader
 from pynicotine.utils import _
 from ticker import Ticker
-
+from entrydialog import OptionDialog
 import sets
+
 def GetCompletion(part, list):
 	matches = []
 	for match in list:
@@ -242,7 +243,13 @@ class RoomsControl:
 		room.destroy()
 		del self.joinedrooms[msg.room]
 		self.frame.RoomSearchCombo_List.remove(self.frame.searchroomslist[msg.room])
-	
+		if self.joinedrooms == {} and self.frame.hide_room_list1.get_active():
+			win = OptionDialog(self.frame, _("You aren't in any chat rooms.") + " " + _("Open Room List?"), modal=True, status=None, option=False, third="")
+			win.connect("response", self.frame.onOpenRoomList)
+			win.set_title(_("Nicotine+")+": "+_("Open Room List?"))
+			win.set_icon( self.frame.images["n"])
+			win.show()
+			
 	def ConnClose(self):
 		self.roomsmodel.clear()
 

@@ -448,7 +448,6 @@ class NetworkEventProcessor:
 			self.frame.manualdisconnect = 1
 			self.setStatus(_("Can not log in, reason: %s") %(msg.reason))
 			self.logMessage(_("Can not log in, reason: %s") %(msg.reason))
-			self.frame.OnSettings(None)
 			self.frame.settingswindow.SwitchToPage("Server")
 			self.frame.settingswindow.Hilight(self.frame.settingswindow.pages["Server"].Login)
 			self.frame.settingswindow.Hilight(self.frame.settingswindow.pages["Server"].Password)

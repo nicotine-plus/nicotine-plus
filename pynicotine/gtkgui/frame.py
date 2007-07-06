@@ -639,7 +639,12 @@ class NicotineFrame(MainWindow):
 				self.downloads.ClearTransfers(["Queued"])
 			elif direction == "up":
 				self.uploads.ClearTransfers(["Queued"])
-
+				
+	def onOpenRoomList(self, dialog, response):
+		dialog.destroy()
+		if response == gtk.RESPONSE_OK:
+			self.hide_room_list1.set_active(0)
+	
 			
 	def OnGetUserInfo(self, widget):
 		text = self.UserInfoCombo.child.get_text()

@@ -2106,7 +2106,8 @@ class SettingsWindow(settings_glade.SettingsWindow):
 			self.viewport1.add(self.empty_label)
 			
 	def SwitchToPage(self, page):
-
+		#if not self.SettingsWindow.get_property("visible"):
+		self.SettingsWindow.show()
 		child = self.viewport1.get_child()
 		if child:
 			self.viewport1.remove(child)
