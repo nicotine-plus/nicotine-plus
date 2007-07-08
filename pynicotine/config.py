@@ -99,7 +99,16 @@ class Config:
 \
 "players": {"default": "xmms -e $", "npothercommand": "", "npplayer": "infopipe",\
  "npformatlist": [], "npformat": "" }}
-	
+		self.defaults = {}
+		for key, value in self.sections.items():
+			if type(value) is dict:
+				if key not in self.defaults.keys():
+					self.defaults[key] = {}
+				
+				for key2, value2 in value.items():
+					self.defaults[key][key2] = value2
+			else:
+				self.defaults[key] = value
 		try:
 			f = open(filename+".alias")
 			self.aliases = cPickle.load(f)
@@ -114,7 +123,12 @@ class Config:
 			for j in self.sections[i].keys():
 		# 		print self.sections[i][j]
 				if self.sections[i][j] is None or self.sections[i][j] == '' and i not in ("userinfo", "ui", "ticker", "players") and j not in ("incompletedir", "autoreply", 'afterfinish','afterfolder', 'geoblockcc', 'downloadregexp', "language"):
-					return 1, (i, j)
+					# Repair options set to None with defaults
+					if self.sections[i][j] is None:
+						self.sections[i][j] = self.defaults[i][j]
+						return 2, (i, j, self.sections[i][j])
+					else:
+						return 1, (i, j, self.sections[i][j])
 		return 0, ""
 
 	def readConfig(self):
