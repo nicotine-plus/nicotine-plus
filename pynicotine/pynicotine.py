@@ -25,7 +25,7 @@ import os
 class PeerConnection:
 	"""
 	Holds information about a peer connection. Not every field may be set
-	to something. addr is (ip,port) address, conn is a socket object, msgs is
+	to something. addr is (ip, port) address, conn is a socket object, msgs is
 	a list of outgoing pending messages, token is a reverse-handshake 
 	number (protocol feature), init is a PeerInit protocol message. (read
 	slskmessages docstrings for explanation of these)
@@ -62,11 +62,11 @@ class NetworkEventProcessor:
 		self.config.readConfig()
 	
 		self.queue = Queue.Queue(0)
-		self.protothread = slskproto.SlskProtoThread(self.frame.networkcallback,self.queue,self.config)
+		self.protothread = slskproto.SlskProtoThread(self.frame.networkcallback, self.queue, self.config)
 		uselimit = self.config.sections["transfers"]["uselimit"]
 		uploadlimit = self.config.sections["transfers"]["uploadlimit"]
 		limitby = self.config.sections["transfers"]["limitby"]
-		self.queue.put(slskmessages.SetUploadLimit(uselimit,uploadlimit,limitby))
+		self.queue.put(slskmessages.SetUploadLimit(uselimit, uploadlimit, limitby))
 		if self.config.sections["transfers"]["geoblock"]:
 			panic = self.config.sections["transfers"]["geopanic"]
 			cc = self.config.sections["transfers"]["geoblockcc"]
@@ -93,7 +93,7 @@ class NetworkEventProcessor:
 	
 		self.distribcache = {}
 		self.speed = 0
-		self.translatepunctuation = string.maketrans(string.punctuation,string.join([' ' for i in string.punctuation],''))
+		self.translatepunctuation = string.maketrans(string.punctuation, string.join([' ' for i in string.punctuation],''))
 
 		try:
 			import GeoIP
@@ -212,9 +212,9 @@ class NetworkEventProcessor:
 				message.conn = conn.conn
 				self.queue.put(message)
 				if window is not None:
-					window.InitWindow(conn.username,conn.conn)
+					window.InitWindow(conn.username, conn.conn)
 				if message.__class__ is slskmessages.TransferRequest and self.transfers is not None:
-					self.transfers.gotConnect(message.req,conn.conn)
+					self.transfers.gotConnect(message.req, conn.conn)
 				return
 			else:
 				conn.msgs.append(message)
@@ -225,7 +225,7 @@ class NetworkEventProcessor:
 				type = 'D'
 			else:
 				type = 'P'
-			init = slskmessages.PeerInit(None,self.config.sections["server"]["login"],type,0)
+			init = slskmessages.PeerInit(None, self.config.sections["server"]["login"], type, 0)
 			firewalled = self.config.sections["server"]["firewalled"]
 			addr = None
 			behindfw = None
@@ -239,16 +239,16 @@ class NetworkEventProcessor:
 				if addr is None:
 					self.queue.put(slskmessages.GetPeerAddress(user))
 				elif behindfw is None:
-					self.queue.put(slskmessages.OutConn(None,addr))
+					self.queue.put(slskmessages.OutConn(None, addr))
 				else:
 					firewalled = 0
 			if not firewalled:
 				token = newId()
-				self.queue.put(slskmessages.ConnectToPeer(token,user,type))
+				self.queue.put(slskmessages.ConnectToPeer(token, user, type))
 			conn = PeerConnection(addr = addr, username = user, msgs = [message], token = token, init = init)
 			self.peerconns.append(conn)
 			if token is not None:
-				conntimeout = ConnectToPeerTimeout(self.peerconns[-1],self.callback)
+				conntimeout = ConnectToPeerTimeout(self.peerconns[-1], self.callback)
 				timer = threading.Timer(300.0, conntimeout.timeout)
 				self.peerconns[-1].conntimer = timer
 				timer.start()
@@ -308,7 +308,7 @@ class NetworkEventProcessor:
 		sharedfiles = 0
 		for i in conf["transfers"][shared_db].keys():
 			sharedfiles = sharedfiles + len(conf["transfers"][shared_db][i])
-		self.queue.put(slskmessages.SharedFoldersFiles(sharedfolders,sharedfiles))
+		self.queue.put(slskmessages.SharedFoldersFiles(sharedfolders, sharedfiles))
 
 	def RescanShares(self, msg):
 		import utils
@@ -318,7 +318,7 @@ class NetworkEventProcessor:
 		self.frame.RescanFinished([files, streams, wordindex, fileindex, mtimes], "normal")
 		
 	
-	def RescanBuddyShares(self,msg):
+	def RescanBuddyShares(self, msg):
 		import utils
 		utils.frame = self.frame
 		utils.log = self.logMessage
@@ -332,7 +332,7 @@ class NetworkEventProcessor:
 	def Notify(self, string):
 		self.logMessage("%s" % self.decode(string))
 
-	def ConnectError(self,msg):
+	def ConnectError(self, msg):
 		if msg.connobj.__class__ is slskmessages.ServerConn:
 			self.setStatus(_("Can't connect to server %(host)s:%(port)s: %(error)s") % {'host': msg.connobj.addr[0], 'port': msg.connobj.addr[1], 'error': self.decode(msg.err) } )
 			self.setServerTimer()
@@ -345,13 +345,13 @@ class NetworkEventProcessor:
 				if i.addr == msg.connobj.addr and i.conn is None: 
 					if i.token is None:
 						i.token  = newId()
-						self.queue.put(slskmessages.ConnectToPeer(i.token,i.username,i.init.type))
+						self.queue.put(slskmessages.ConnectToPeer(i.token, i.username, i.init.type))
 						if self.users.has_key(i.username):
 							self.users[i.username].behindfw = "yes"
 						for j in i.msgs: 
 							if j.__class__ is slskmessages.TransferRequest and self.transfers is not None:
 								self.transfers.gotConnectError(j.req)
-						conntimeout = ConnectToPeerTimeout(i,self.callback)
+						conntimeout = ConnectToPeerTimeout(i, self.callback)
 						timer = threading.Timer(300.0, conntimeout.timeout)
 						timer.start()
 						if i.conntimer is not None:
@@ -359,10 +359,10 @@ class NetworkEventProcessor:
 						i.conntimer = timer
 					else:
 						for j in i.msgs:
-							if j.__class__ in [slskmessages.TransferRequest,slskmessages.FileRequest] and self.transfers is not None:
+							if j.__class__ in [slskmessages.TransferRequest, slskmessages.FileRequest] and self.transfers is not None:
 								self.transfers.gotCantConnect(j.req)
-						self.logMessage(_("Can't connect to %s, sending notification via the server") %(i.username),1)
-						self.queue.put(slskmessages.CantConnectToPeer(i.token,i.username))
+						self.logMessage(_("Can't connect to %s, sending notification via the server") %(i.username), 1)
+						self.queue.put(slskmessages.CantConnectToPeer(i.token, i.username))
 						if i.conntimer is not None:
 							i.conntimer.cancel()
 						self.peerconns.remove(i)
@@ -370,7 +370,7 @@ class NetworkEventProcessor:
 			else:
 				self.logMessage("%s %s %s" %(msg.err, msg.__class__, vars(msg)))
 		else:
-			self.logMessage("%s %s %s" %(msg.err, msg.__class__, vars(msg)),1)
+			self.logMessage("%s %s %s" %(msg.err, msg.__class__, vars(msg)), 1)
 			self.ClosedConnection(msg.connobj.conn, msg.connobj.addr)
 
 	def IncPort(self, msg):
@@ -383,7 +383,7 @@ class NetworkEventProcessor:
 		self.serverconn = msg.conn
 		self.servertimeout = -1
 		self.users = {}
-		self.queue.put(slskmessages.Login(self.config.sections["server"]["login"],self.config.sections["server"]["passw"],181))
+		self.queue.put(slskmessages.Login(self.config.sections["server"]["login"], self.config.sections["server"]["passw"], 181))
 		if self.waitport is not None:	
 			self.queue.put(slskmessages.SetWaitPort(self.waitport))
 
@@ -415,7 +415,7 @@ class NetworkEventProcessor:
 		else:
 			for i in self.peerconns[:]:
 				if i.conn == conn:
-					self.logMessage(_("Connection closed by peer: %s") % self.decode(vars(i)),1)
+					self.logMessage(_("Connection closed by peer: %s") % self.decode(vars(i)), 1)
 					if i.conntimer is not None:
 						i.conntimer.cancel()
 					if self.transfers is not None:
@@ -425,15 +425,15 @@ class NetworkEventProcessor:
 					self.peerconns.remove(i)
 					break
 			else:
-				self.logMessage(_("Removed connection closed by peer: %(conn_obj)s %(address)s") %{'conn_obj':conn, 'address':addr},1)
+				self.logMessage(_("Removed connection closed by peer: %(conn_obj)s %(address)s") %{'conn_obj':conn, 'address':addr}, 1)
 				self.queue.put(slskmessages.ConnClose(conn))
 		
-	def Login(self,msg):
+	def Login(self, msg):
 		self.logintime = time.time()
 		conf = self.config.sections
 		if msg.success:
 			self.setStatus(_("Logged in, getting the list of rooms..."))
-			self.transfers = transfers.Transfers(conf["transfers"]["downloads"],self.peerconns,self.queue, self, self.users)
+			self.transfers = transfers.Transfers(conf["transfers"]["downloads"], self.peerconns, self.queue, self, self.users)
 		
 			self.privatechat, self.chatrooms, self.userinfo, self.userbrowse, self.search, downloads, uploads, self.userlist = self.frame.InitInterface(msg)
 		
@@ -477,7 +477,7 @@ class NetworkEventProcessor:
 		else:
 			text = msg.msg
 		if self.privatechat is not None:
-			self.privatechat.ShowMessage(msg,text,status=0)
+			self.privatechat.ShowMessage(msg, text, status=0)
 			
 		else:
 			self.logMessage("%s %s" %(msg.__class__, vars(msg)))
@@ -490,19 +490,19 @@ class NetworkEventProcessor:
 				status = 1
 		
 		if self.privatechat is not None:
-			self.privatechat.ShowMessage(msg,msg.msg,status=status)
+			self.privatechat.ShowMessage(msg, msg.msg, status=status)
 			self.queue.put(slskmessages.MessageAcked(msg.msgid))
 		else:
 			self.logMessage("%s %s" %(msg.__class__, vars(msg)))
 
-	def UserJoinedRoom(self,msg):
+	def UserJoinedRoom(self, msg):
 		if self.chatrooms is not None:
 			self.chatrooms.roomsctrl.UserJoinedRoom(msg)
 		else:
 			self.logMessage("%s %s" %(msg.__class__, vars(msg)))
 
 
-	def JoinRoom(self,msg):
+	def JoinRoom(self, msg):
 		if self.chatrooms is not None:
 			self.chatrooms.roomsctrl.JoinRoom(msg)
 			ticker = ""
@@ -518,26 +518,26 @@ class NetworkEventProcessor:
 		else:
 			self.logMessage("%s %s" %(msg.__class__, vars(msg)))
 
-	def LeaveRoom(self,msg):
+	def LeaveRoom(self, msg):
 		if self.chatrooms is not None:
 			self.chatrooms.roomsctrl.LeaveRoom(msg)
 		else:
 			self.logMessage("%s %s" %(msg.__class__, vars(msg)))
 
 
-	def SayChatRoom(self,msg):
+	def SayChatRoom(self, msg):
 		if self.chatrooms is not None:
-			self.chatrooms.roomsctrl.SayChatRoom(msg,msg.msg)
+			self.chatrooms.roomsctrl.SayChatRoom(msg, msg.msg)
 		else:
 			self.logMessage("%s %s" %(msg.__class__, vars(msg)))
 
-	def AddUser(self,msg):
+	def AddUser(self, msg):
 		if self.transfers is not None:
 			self.transfers.getAddUser(msg)
 		else:
 			self.logMessage("%s %s" %(msg.__class__, vars(msg)))
 
-	def PrivilegedUsers(self,msg):
+	def PrivilegedUsers(self, msg):
 		if self.transfers is not None:
 			self.transfers.setPrivilegedUsers(msg.users)
 			self.logMessage(_("%i privileged users") %(len(msg.users)))
@@ -549,7 +549,7 @@ class NetworkEventProcessor:
 	def AddToPrivileged(self, msg):
 		if self.transfers is not None:
 			self.transfers.addToPrivileged(msg.user)
-			#self.logMessage(_("User %s added to privileged list") %(msg.user),1)
+			#self.logMessage(_("User %s added to privileged list") %(msg.user), 1)
 		else:
 			self.logMessage("%s %s" %(msg.__class__, vars(msg)))
 
@@ -566,18 +566,18 @@ class NetworkEventProcessor:
 		self.logMessage("%s" %(msg.msg))
 	
 	def Msg83(self, msg):
-		self.logMessage("%s %s" %(msg.__class__, vars(msg)),1)
+		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 1)
 		
 	def Msg12547(self, msg):
-		self.logMessage("%s %s" %(msg.__class__, vars(msg)),1)
+		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 1)
 	
 	def WishlistInterval(self, msg):
 		if self.search is not None:
 			self.search.SetInterval(msg)
 		else:
-			self.logMessage("%s %s" %(msg.__class__, vars(msg)),1)
+			self.logMessage("%s %s" %(msg.__class__, vars(msg)), 1)
 
-	def GetUserStatus(self,msg):
+	def GetUserStatus(self, msg):
 		# Causes recursive requests when privileged?
 		#self.queue.put(slskmessages.AddUser(msg.user))
 		if self.users.has_key(msg.user):
@@ -615,9 +615,9 @@ class NetworkEventProcessor:
 	def UserInterests(self, msg):
 		if self.userinfo is not None:
 			self.userinfo.ShowInterests(msg)
-		self.logMessage("%s %s" %(msg.__class__, vars(msg)),1)
+		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 1)
 	
-	def GetUserStats(self,msg):
+	def GetUserStats(self, msg):
 		if msg.user == self.config.sections["server"]["login"]:
 			self.speed = msg.avgspeed
 	
@@ -631,27 +631,27 @@ class NetworkEventProcessor:
 		else:
 			self.logMessage("%s %s" %(msg.__class__, vars(msg)))
 
-	def UserLeftRoom(self,msg):
+	def UserLeftRoom(self, msg):
 		if self.chatrooms is not None:
 			self.chatrooms.roomsctrl.UserLeftRoom(msg)
 		else:
 			self.logMessage("%s %s" %(msg.__class__, vars(msg)))
 
 
-	def QueuedDownloads(self,msg): 
+	def QueuedDownloads(self, msg):
 	#	if self.chatrooms is not None:
 	#	    self.chatrooms.roomsctrl.QueuedDownloads(msg) 
 	#	else: 
 		self.logMessage("%s %s" %(msg.__class__, vars(msg)))
 
-	def GetPeerAddress(self,msg):
+	def GetPeerAddress(self, msg):
 		for i in self.peerconns:
 			if i.username == msg.user and i.addr is None:
 				if msg.port != 0 or i.tryaddr == 10:
 					if i.tryaddr == 10:
-						self.logMessage(_("Server reported port 0 for the 10th time for user %(user)s, giving up") %{'user':msg.user},1)
+						self.logMessage(_("Server reported port 0 for the 10th time for user %(user)s, giving up") %{'user':msg.user}, 1)
 					elif i.tryaddr is not None:
-						self.logMessage(_("Server reported non-zero port for user %(user)s after %(tries)i retries") %{'user':msg.user, 'tries':i.tryaddr},1)
+						self.logMessage(_("Server reported non-zero port for user %(user)s after %(tries)i retries") %{'user':msg.user, 'tries':i.tryaddr}, 1)
 					i.addr = (msg.ip, msg.port)
 					i.tryaddr = None
 					self.queue.put(slskmessages.OutConn(None, i.addr))
@@ -661,7 +661,7 @@ class NetworkEventProcessor:
 				else:
 					if i.tryaddr is None:
 						i.tryaddr = 1
-						self.logMessage(_("Server reported port 0 for user %(user)s, retrying") %{'user':msg.user},1)
+						self.logMessage(_("Server reported port 0 for user %(user)s, retrying") %{'user':msg.user}, 1)
 					else:
 						i.tryaddr +=1
 					self.queue.put(slskmessages.GetPeerAddress(msg.user))
@@ -683,7 +683,7 @@ class NetworkEventProcessor:
 				message = _("IP address of %(user)s is %(ip)s, port %(port)i%(country)s") %{'user':msg.user, 'ip':msg.ip, 'port':msg.port, 'country':cc}
 			self.logMessage(message)
 		if self.users.has_key(msg.user):
-			self.users[msg.user].addr = (msg.ip,msg.port)
+			self.users[msg.user].addr = (msg.ip, msg.port)
 
 	def Relogged(self, msg):
 		self.logMessage(_("Someone else is logging in with the same nickname, server is going to disconnect us"))
@@ -700,29 +700,29 @@ class NetworkEventProcessor:
 				i.conn = msg.conn
 				for j in i.msgs:
 					if j.__class__ is slskmessages.UserInfoRequest and self.userinfo is not None:
-						self.userinfo.InitWindow(i.username,msg.conn)
+						self.userinfo.InitWindow(i.username, msg.conn)
 					if j.__class__ is slskmessages.GetSharedFileList and self.userbrowse is not None:
-						self.userbrowse.InitWindow(i.username,msg.conn)
+						self.userbrowse.InitWindow(i.username, msg.conn)
 					if j.__class__ is slskmessages.FileRequest and self.transfers is not None:
-						self.transfers.gotFileConnect(j.req,msg.conn)
+						self.transfers.gotFileConnect(j.req, msg.conn)
 					if j.__class__ is slskmessages.TransferRequest and self.transfers is not None:
-						self.transfers.gotConnect(j.req,msg.conn)
+						self.transfers.gotConnect(j.req, msg.conn)
 					j.conn = msg.conn
 					self.queue.put(j)
 				i.msgs = []
 				break
 		
-		self.logMessage("%s %s" %(msg.__class__, vars(msg)),1)
+		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 1)
 
-	def IncConn(self,msg):
-		self.logMessage("%s %s" %(msg.__class__, vars(msg)),1)
+	def IncConn(self, msg):
+		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 1)
 
 	def ConnectToPeer(self, msg):
-		init = slskmessages.PeerInit(None,msg.user,msg.type,0)
-		self.queue.put(slskmessages.OutConn(None,(msg.ip,msg.port),init))
-		self.peerconns.append(PeerConnection(addr = (msg.ip,msg.port), username = msg.user, msgs = [], token = msg.token, init = init))
+		init = slskmessages.PeerInit(None, msg.user, msg.type, 0)
+		self.queue.put(slskmessages.OutConn(None, (msg.ip, msg.port), init))
+		self.peerconns.append(PeerConnection(addr = (msg.ip, msg.port), username = msg.user, msgs = [], token = msg.token, init = init))
 	
-		self.logMessage("%s %s" %(msg.__class__, vars(msg)),1)
+		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 1)
 
 	def CheckUser(self, user, geoip, addr):
 		if user in self.config.sections["server"]["banlist"]:
@@ -765,8 +765,8 @@ class NetworkEventProcessor:
 						return 1
 		return 0
 	
-	def GetSharedFileList(self,msg):
-		self.logMessage("%s %s" %(msg.__class__, vars(msg)),1)
+	def GetSharedFileList(self, msg):
+		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 1)
 		user = ip = port = None
 		# Get peer's username, ip and port
 		for i in self.peerconns:
@@ -799,13 +799,13 @@ class NetworkEventProcessor:
 	
 		if checkuser == 1:
 			# Send Normal Shares
-			self.queue.put(slskmessages.SharedFileList(msg.conn.conn,self.config.sections["transfers"]["sharedfilesstreams"]))
+			self.queue.put(slskmessages.SharedFileList(msg.conn.conn, self.config.sections["transfers"]["sharedfilesstreams"]))
 		elif checkuser == 2:
 			# Send Buddy Shares
-			self.queue.put(slskmessages.SharedFileList(msg.conn.conn,self.config.sections["transfers"]["bsharedfilesstreams"]))
+			self.queue.put(slskmessages.SharedFileList(msg.conn.conn, self.config.sections["transfers"]["bsharedfilesstreams"]))
 		else:
 			# Nyah, Nyah
-			self.queue.put(slskmessages.SharedFileList(msg.conn.conn,{}))
+			self.queue.put(slskmessages.SharedFileList(msg.conn.conn, {}))
 		
 	def ClosePeerConnection(self, peerconn):
 		if peerconn == None:
@@ -815,7 +815,7 @@ class NetworkEventProcessor:
 				self.queue.put(slskmessages.ConnClose(i.conn))
 				break
 		
-	def UserInfoReply(self,msg):
+	def UserInfoReply(self, msg):
 		for i in self.peerconns:
 			if i.conn is msg.conn.conn and self.userinfo is not None:
 				# probably impossible to do this
@@ -848,7 +848,7 @@ class NetworkEventProcessor:
 			return
 		if user in self.config.sections["server"]["banlist"]:
 			self.logMessage(_("%(user)s is banned, but is making a UserInfo request") %{'user':user}, 1)
-			self.logMessage("%s %s" %(msg.__class__, vars(msg)),1)
+			self.logMessage("%s %s" %(msg.__class__, vars(msg)), 1)
 			return
 		try:
 			if sys.platform == "win32":
@@ -876,7 +876,7 @@ class NetworkEventProcessor:
 			self.queue.put(slskmessages.UserInfoReply(msg.conn.conn, descr, pic, totalupl, queuesize, slotsavail, uploadallowed))
 	
 		self.logMessage(_("%(user)s is making a UserInfo request") %{'user':user}, None)
-		self.logMessage("%s %s" %(msg.__class__, vars(msg)),1)
+		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 1)
 		
 
 
@@ -909,19 +909,19 @@ class NetworkEventProcessor:
 				i.conn = msg.conn.conn
 				for j in i.msgs:
 					if j.__class__ is slskmessages.UserInfoRequest and self.userinfo is not None:
-						self.userinfo.InitWindow(i.username,msg.conn.conn)
+						self.userinfo.InitWindow(i.username, msg.conn.conn)
 					if j.__class__ is slskmessages.GetSharedFileList and self.userbrowse is not None:
-						self.userbrowse.InitWindow(i.username,msg.conn.conn)
+						self.userbrowse.InitWindow(i.username, msg.conn.conn)
 					if j.__class__ is slskmessages.FileRequest and self.transfers is not None:
-						self.transfers.gotFileConnect(j.req,msg.conn.conn)
+						self.transfers.gotFileConnect(j.req, msg.conn.conn)
 					if j.__class__ is slskmessages.TransferRequest and self.transfers is not None:
-						self.transfers.gotConnect(j.req,msg.conn.conn)
+						self.transfers.gotConnect(j.req, msg.conn.conn)
 					j.conn = msg.conn.conn
 					self.queue.put(j)
 				i.msgs = []
 				break
 
-		self.logMessage("%s %s" %(msg.__class__, vars(msg)),1)
+		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 1)
 
 	def CantConnectToPeer(self, msg):
 		for i in self.peerconns[:]:
@@ -931,20 +931,20 @@ class NetworkEventProcessor:
 				if i == self.GetDistribConn():
 					self.DistribConnClosed(i)
 				self.peerconns.remove(i)
-				self.logMessage(_("Can't connect to %s (either way), giving up") % (i.username),1)
+				self.logMessage(_("Can't connect to %s (either way), giving up") % (i.username), 1)
 				for j in i.msgs: 
-					if j.__class__ in [slskmessages.TransferRequest,slskmessages.FileRequest] and self.transfers is not None:
+					if j.__class__ in [slskmessages.TransferRequest, slskmessages.FileRequest] and self.transfers is not None:
 						self.transfers.gotCantConnect(j.req)
 
-	def ConnectToPeerTimeout(self,msg):
+	def ConnectToPeerTimeout(self, msg):
 		for i in self.peerconns[:]:
 			if i == msg.conn:
 				if i == self.GetDistribConn():
 					self.DistribConnClosed(i)
 				self.peerconns.remove(i)
-				self.logMessage(_("User %s does not respond to connect request, giving up") % (i.username),1)
+				self.logMessage(_("User %s does not respond to connect request, giving up") % (i.username), 1)
 				for j in i.msgs:
-					if j.__class__ in [slskmessages.TransferRequest,slskmessages.FileRequest] and self.transfers is not None:
+					if j.__class__ in [slskmessages.TransferRequest, slskmessages.FileRequest] and self.transfers is not None:
 						self.transfers.gotCantConnect(j.req)
 
 	def TransferTimeout(self, msg):
@@ -954,58 +954,58 @@ class NetworkEventProcessor:
 			self.logMessage("%s %s" %(msg.__class__, vars(msg)))
 	
 	
-	def FileDownload(self,msg):
+	def FileDownload(self, msg):
 		if self.transfers is not None:
 			self.transfers.FileDownload(msg)
 		else:
 			self.logMessage("%s %s" %(msg.__class__, vars(msg)))
 	
-	def FileUpload(self,msg):
+	def FileUpload(self, msg):
 		if self.transfers is not None:
 			self.transfers.FileUpload(msg)
 		else:
 			self.logMessage("%s %s" %(msg.__class__, vars(msg)))
 	
 	
-	def FileRequest(self,msg):
+	def FileRequest(self, msg):
 		if self.transfers is not None:
 			self.transfers.FileRequest(msg)
 		else:
 			self.logMessage("%s %s" %(msg.__class__, vars(msg)))
 	
-	def FileError(self,msg):
+	def FileError(self, msg):
 		if self.transfers is not None:
 			self.transfers.FileError(msg)
 		else:
 			self.logMessage("%s %s" %(msg.__class__, vars(msg)))
 	
-	def TransferRequest(self,msg):
+	def TransferRequest(self, msg):
 		if self.transfers is not None:
 			self.transfers.TransferRequest(msg)
 		else:
 			self.logMessage("%s %s" %(msg.__class__, vars(msg)))
 
-	def TransferResponse(self,msg):
+	def TransferResponse(self, msg):
 		if self.transfers is not None:
 			self.transfers.TransferResponse(msg)
 		else:
 			self.logMessage("%s %s" %(msg.__class__, vars(msg)))
 	
 	
-	def QueueUpload(self,msg):
+	def QueueUpload(self, msg):
 		if self.transfers is not None:
 			self.transfers.QueueUpload(msg)
 		else:
 			self.logMessage("%s %s" %(msg.__class__, vars(msg)))
 	
-	def QueueFailed(self,msg):
+	def QueueFailed(self, msg):
 		if self.transfers is not None:
 			self.transfers.QueueFailed(msg)
 		else:
 			self.logMessage("%s %s" %(msg.__class__, vars(msg)))
 	
-	def PlaceholdUpload(self,msg):
-		self.logMessage("%s %s" %(msg.__class__, vars(msg)),1)
+	def PlaceholdUpload(self, msg):
+		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 1)
 	
 	def PlaceInQueueRequest(self, msg):
 		if self.transfers is not None:
@@ -1014,23 +1014,23 @@ class NetworkEventProcessor:
 			self.logMessage("%s %s" %(msg.__class__, vars(msg)))
 
 	def UploadQueueNotification(self, msg):
-		self.logMessage("%s %s" %(msg.__class__, vars(msg)),1)
+		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 1)
 		self.transfers.UploadQueueNotification(msg)
 			
-	def UploadFailed(self,msg):
+	def UploadFailed(self, msg):
 		if self.transfers is not None:
 			self.transfers.UploadFailed(msg)
 		else:
 			self.logMessage("%s %s" %(msg.__class__, vars(msg)))
 	
 	
-	def PlaceInQueue(self,msg):
+	def PlaceInQueue(self, msg):
 		if self.transfers is not None:
 			self.transfers.PlaceInQueue(msg)
 		else:
 			self.logMessage("%s %s" %(msg.__class__, vars(msg)))
 
-	def FolderContentsResponse(self,msg):
+	def FolderContentsResponse(self, msg):
 		if self.transfers is not None:
 			
 			for i in self.peerconns:
@@ -1042,7 +1042,7 @@ class NetworkEventProcessor:
 			files = []
 			for i in msg.list.keys():
 				for j in msg.list[i].keys():
-					if os.path.commonprefix([i,j]) == j:
+					if os.path.commonprefix([i, j]) == j:
 						files = msg.list[i][j]
 						numfiles = len(files)
 						if numfiles > 100:
@@ -1061,7 +1061,7 @@ class NetworkEventProcessor:
 		else:
 			self.logMessage("%s %s" %(msg.__class__, vars(msg)))
 
-	def FolderContentsRequest(self,msg):
+	def FolderContentsRequest(self, msg):
 		username = None
 		checkuser = None
 		reason = ""
@@ -1083,40 +1083,40 @@ class NetworkEventProcessor:
 		elif checkuser == 2:
 			shares = self.config.sections["transfers"]["bsharedfiles"]
 		else:
-			response = self.queue.put(slskmessages.TransferResponse(msg.conn.conn,0,reason = reason, req=0) )
+			response = self.queue.put(slskmessages.TransferResponse(msg.conn.conn, 0, reason = reason, req=0) )
 			shares = {}
 		
 		if checkuser:
-			if shares.has_key(msg.dir.replace("\\",os.sep)[:-1]):
-				self.queue.put(slskmessages.FolderContentsResponse(msg.conn.conn, msg.dir, shares[msg.dir.replace("\\",os.sep)[:-1]]))
-			elif shares.has_key(msg.dir.replace("\\",os.sep)):
-				self.queue.put(slskmessages.FolderContentsResponse(msg.conn.conn, msg.dir, shares[msg.dir.replace("\\",os.sep)]))
+			if shares.has_key(msg.dir.replace("\\", os.sep)[:-1]):
+				self.queue.put(slskmessages.FolderContentsResponse(msg.conn.conn, msg.dir, shares[msg.dir.replace("\\", os.sep)[:-1]]))
+			elif shares.has_key(msg.dir.replace("\\", os.sep)):
+				self.queue.put(slskmessages.FolderContentsResponse(msg.conn.conn, msg.dir, shares[msg.dir.replace("\\", os.sep)]))
 			else:
 				if checkuser == 2:
 					shares = self.config.sections["transfers"]["sharedfiles"]
-					if shares.has_key(msg.dir.replace("\\",os.sep)[:-1]):
-						self.queue.put(slskmessages.FolderContentsResponse(msg.conn.conn, msg.dir, shares[msg.dir.replace("\\",os.sep)[:-1]]))
-					elif shares.has_key(msg.dir.replace("\\",os.sep)):
-						self.queue.put(slskmessages.FolderContentsResponse(msg.conn.conn, msg.dir, shares[msg.dir.replace("\\",os.sep)]))
+					if shares.has_key(msg.dir.replace("\\", os.sep)[:-1]):
+						self.queue.put(slskmessages.FolderContentsResponse(msg.conn.conn, msg.dir, shares[msg.dir.replace("\\", os.sep)[:-1]]))
+					elif shares.has_key(msg.dir.replace("\\", os.sep)):
+						self.queue.put(slskmessages.FolderContentsResponse(msg.conn.conn, msg.dir, shares[msg.dir.replace("\\", os.sep)]))
 					
 				
 		
-		self.logMessage("%s %s" %(msg.__class__, vars(msg)),1)
+		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 1)
 
-	def RoomList(self,msg):
+	def RoomList(self, msg):
 		if self.chatrooms is not None:
 			self.chatrooms.roomsctrl.SetRoomList(msg)
 			self.setStatus("")
 		else:
 			self.logMessage("%s %s" %(msg.__class__, vars(msg)))
 	
-	def GlobalUserList(self,msg):
+	def GlobalUserList(self, msg):
 		if self.globallist is not None:
 			self.globallist.setGlobalUsersList(msg)
 		else:
 			self.logMessage("%s %s" %(msg.__class__, vars(msg)))
 	
-	def PeerTransfer(self,msg):
+	def PeerTransfer(self, msg):
 		if self.userinfo is not None and msg.msg is slskmessages.UserInfoReply:
 			self.userinfo.UpdateGauge(msg)
 		if self.userbrowse is not None and msg.msg is slskmessages.SharedFileList:
@@ -1134,8 +1134,8 @@ class NetworkEventProcessor:
 		else:
 			self.logMessage(_("Unknown tunneled message: %s") %(vars(msg)))
 
-	def ExactFileSearch(self,msg):
-		self.logMessage("%s %s" %(msg.__class__, vars(msg)),1)
+	def ExactFileSearch(self, msg):
+		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 1)
 		
 	def FileSearchRequest(self, msg):
 		for i in self.peerconns:
@@ -1147,7 +1147,7 @@ class NetworkEventProcessor:
 	def SearchRequest(self, msg):
 		self.processSearchRequest(msg.searchterm, msg.user, msg.searchid, 0)
 	
-	def DistribSearch(self,msg):
+	def DistribSearch(self, msg):
 		self.processSearchRequest(msg.searchterm, msg.user, msg.searchid, 0)
 	
 	def processSearchRequest(self, searchterm, user, searchid, direct = 0):
@@ -1191,12 +1191,12 @@ class NetworkEventProcessor:
 			queuesizes = self.transfers.getUploadQueueSizes()
 			slotsavail = int(not self.transfers.bandwidthLimitReached())
 			if len(results) > 0:
-				message = slskmessages.FileSearchResult(None, user, geoip, searchid,results,fileindex,slotsavail, self.speed, queuesizes, fifoqueue)
+				message = slskmessages.FileSearchResult(None, user, geoip, searchid, results, fileindex, slotsavail, self.speed, queuesizes, fifoqueue)
 				self.ProcessRequestToPeer(user, message)
 				if direct:
-					self.logMessage(_("User %(user)s is directly searching for %(query)s, returning %(num)i results") %{'user':user,'query':self.decode(searchterm),'num':len(results)},1)
+					self.logMessage(_("User %(user)s is directly searching for %(query)s, returning %(num)i results") %{'user':user, 'query':self.decode(searchterm), 'num':len(results)}, 1)
 				else:
-					self.logMessage(_("User %(user)s is searching for %(query)s, returning %(num)i results") %{'user':user,'query':self.decode(searchterm),'num':len(results)},1)
+					self.logMessage(_("User %(user)s is searching for %(query)s, returning %(num)i results") %{'user':user, 'query':self.decode(searchterm), 'num':len(results)}, 1)
 					
 
 	def NetInfo(self, msg):
@@ -1206,11 +1206,11 @@ class NetworkEventProcessor:
 			if not self.GetDistribConn():
 				user = self.distribcache.keys()[0]
 				addr = self.distribcache[user]
-				self.ProcessRequestToPeer(user, slskmessages.DistribConn(),None,addr)
-		self.logMessage("%s %s" %(msg.__class__, vars(msg)),1)
+				self.ProcessRequestToPeer(user, slskmessages.DistribConn(), None, addr)
+		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 1)
 
 	def DistribAlive(self, msg):
-		self.logMessage("%s %s" %(msg.__class__, vars(msg)),1)
+		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 1)
 	
 	def GetDistribConn(self):
 		for i in self.peerconns:
@@ -1223,7 +1223,7 @@ class NetworkEventProcessor:
 		if len(self.distribcache) > 0:
 			user = self.distribcache.keys()[0]
 			addr = self.distribcache[user]
-			self.ProcessRequestToPeer(user, slskmessages.DistribConn(),None,addr)
+			self.ProcessRequestToPeer(user, slskmessages.DistribConn(), None, addr)
 		else:
 			self.queue.put(slskmessages.HaveNoParent(1))
 

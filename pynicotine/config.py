@@ -122,7 +122,7 @@ class Config:
 		for i in self.sections.keys():
 			for j in self.sections[i].keys():
 		# 		print self.sections[i][j]
-				if self.sections[i][j] is None or self.sections[i][j] == '' and i not in ("userinfo", "ui", "ticker", "players") and j not in ("incompletedir", "autoreply", 'afterfinish','afterfolder', 'geoblockcc', 'downloadregexp', "language"):
+				if self.sections[i][j] is None or self.sections[i][j] == '' and i not in ("userinfo", "ui", "ticker", "players") and j not in ("incompletedir", "autoreply", 'afterfinish', 'afterfolder', 'geoblockcc', 'downloadregexp', "language"):
 					# Repair options set to None with defaults
 					if self.sections[i][j] is None:
 						self.sections[i][j] = self.defaults[i][j]
@@ -142,11 +142,11 @@ class Config:
 		
 		for i in self.parser.sections():
 			for j in self.parser.options(i):
-				val = self.parser.get(i,j, raw = 1)
+				val = self.parser.get(i, j, raw = 1)
 				if i not in self.sections.keys():
-					print "Unknown config section:",i
+					print "Unknown config section:", i
 				elif j not in self.sections[i].keys() and j != "filter":
-					print "Unknown config option",j,"section",i
+					print "Unknown config option", j, "section", i
 				elif j in ['login','passw','enc',  'downloaddir','customban','descr','pic','logsdir','incompletedir', 'autoreply', 'afterfinish', 'downloadregexp', 'afterfolder', 'default', 'chatfont', "npothercommand", "npplayer", "npformat"] or (i == "ui" and j not in ["roomlistcollapsed", "tabclosers",  'buddylistinchatrooms', "trayicon", "usernamehotspots", "exitdialog", "spellcheck", "notexists", "soundenabled", "transalpha",  "enabletrans", "speechenabled", "enablefilters",  "width", "height"]) or (i == "words" and j not in ["completion", "censorwords", "replacewords", "autoreplaced", "censored", "characters", "tab", "dropdown", "roomnames", "buddies", "roomusers", "commands", "aliases", "onematch"]) or (i == "language" and j not in ["definelanguage", "setlanguage"]):
 
 					self.sections[i][j] = val
@@ -159,7 +159,7 @@ class Config:
 		autojoin = self.sections["server"]["autojoin"]
 		for user in self.sections["server"]["userlist"]:
 			if len(user) == 2:
-				user += [0,0]
+				user += [0, 0]
 		
 		if "pyslsk" in autojoin and not "nicotine" in autojoin:
 			autojoin.append("nicotine")
@@ -205,14 +205,14 @@ class Config:
 				os.unlink(self.filename+'.files.db')
 			except:
 				pass
-			sharedfiles = shelve.open(self.filename+".files.db",flag='n')
+			sharedfiles = shelve.open(self.filename+".files.db", flag='n')
 			if bsharedfiles:
 				bsharedfiles.close()
 			try:
 				os.unlink(self.filename+'.buddyfiles.db')
 			except:
 				pass
-			bsharedfiles = shelve.open(self.filename+".buddyfiles.db",flag='n')
+			bsharedfiles = shelve.open(self.filename+".buddyfiles.db", flag='n')
 		
 			if sharedfilesstreams:
 				sharedfilesstreams.close()
@@ -220,14 +220,14 @@ class Config:
 				os.unlink(self.filename+'.streams.db')
 			except:
 				pass
-			sharedfilesstreams =shelve.open(self.filename+".streams.db",flag='n')
+			sharedfilesstreams =shelve.open(self.filename+".streams.db", flag='n')
 			if bsharedfilesstreams:
 				bsharedfilesstreams.close()
 			try:
 				os.unlink(self.filename+'.buddystreams.db')
 			except:
 				pass
-			bsharedfilesstreams =shelve.open(self.filename+".buddystreams.db",flag='n')
+			bsharedfilesstreams =shelve.open(self.filename+".buddystreams.db", flag='n')
 		
 			if wordindex:
 				wordindex.close()
@@ -235,14 +235,14 @@ class Config:
 				os.unlink(self.filename+'.wordindex.db')
 			except:
 				pass
-			wordindex = shelve.open(self.filename+".wordindex.db",flag='n')
+			wordindex = shelve.open(self.filename+".wordindex.db", flag='n')
 			if bwordindex:
 				bwordindex.close()
 			try:
 				os.unlink(self.filename+'.buddywordindex.db')
 			except:
 				pass
-			bwordindex = shelve.open(self.filename+".buddywordindex.db",flag='n')
+			bwordindex = shelve.open(self.filename+".buddywordindex.db", flag='n')
 		
 			if fileindex:
 				fileindex.close()
@@ -250,14 +250,14 @@ class Config:
 				os.unlink(self.filename+'.fileindex.db')
 			except:
 				pass
-			fileindex = shelve.open(self.filename+".fileindex.db",flag='n')
+			fileindex = shelve.open(self.filename+".fileindex.db", flag='n')
 			if bfileindex:
 				bfileindex.close()
 			try:
 				os.unlink(self.filename+'.buddyfileindex.db')
 			except:
 				pass
-			bfileindex = shelve.open(self.filename+".buddyfileindex.db",flag='n')
+			bfileindex = shelve.open(self.filename+".buddyfileindex.db", flag='n')
 		
 			if sharedmtimes:
 				sharedmtimes.close()
@@ -265,14 +265,14 @@ class Config:
 				os.unlink(self.filename+'.mtimes.db')
 			except:
 				pass
-			sharedmtimes = shelve.open(self.filename+".mtimes.db",flag='n')
+			sharedmtimes = shelve.open(self.filename+".mtimes.db", flag='n')
 			if bsharedmtimes:
 				bsharedmtimes.close()
 			try:
 				os.unlink(self.filename+'.buddymtimes.db')
 			except:
 				pass
-			bsharedmtimes = shelve.open(self.filename+".buddymtimes.db",flag='n')
+			bsharedmtimes = shelve.open(self.filename+".buddymtimes.db", flag='n')
 		self.sections["transfers"]["sharedfiles"] = sharedfiles
 		self.sections["transfers"]["sharedfilesstreams"] = sharedfilesstreams
 		self.sections["transfers"]["wordindex"] = wordindex
@@ -296,10 +296,10 @@ class Config:
 			if not self.parser.has_section(i):
 				self.parser.add_section(i)
 			for j in self.sections[i].keys():
-				if j not in ["sharedfiles","sharedfilesstreams","wordindex","fileindex","sharedmtimes", "bsharedfiles","bsharedfilesstreams","bwordindex","bfileindex","bsharedmtimes"]:
-					self.parser.set(i,j,self.sections[i][j])
+				if j not in ["sharedfiles", "sharedfilesstreams", "wordindex", "fileindex", "sharedmtimes", "bsharedfiles", "bsharedfilesstreams", "bwordindex", "bfileindex", "bsharedmtimes"]:
+					self.parser.set(i, j, self.sections[i][j])
 				else:
-					self.parser.remove_option(i,j)
+					self.parser.remove_option(i, j)
 	
 		path, fn = os.path.split(self.filename)
 		try:
@@ -353,7 +353,7 @@ class Config:
 	
 		self.config_lock.release()
 	
-	def setBuddyShares(self,files,streams,wordindex,fileindex,mtimes):
+	def setBuddyShares(self, files, streams, wordindex, fileindex, mtimes):
 		if self.sections["transfers"]["bsharedfiles"] == files:
 			return
 		self.config_lock.acquire()
@@ -369,19 +369,19 @@ class Config:
 		self.sections["transfers"]["bwordindex"] = shelve.open(self.filename+".buddywordindex.db",'n')
 		self.sections["transfers"]["bfileindex"] = shelve.open(self.filename+".buddyfileindex.db",'n')
 		
-		for (i,j) in files.items():
+		for (i, j) in files.items():
 			self.sections["transfers"]["bsharedfiles"][i] = j
-		for (i,j) in streams.items():
+		for (i, j) in streams.items():
 			self.sections["transfers"]["bsharedfilesstreams"][i] = j
-		for (i,j) in mtimes.items():
+		for (i, j) in mtimes.items():
 			self.sections["transfers"]["bsharedmtimes"][i] = j
-		for (i,j) in wordindex.items():
+		for (i, j) in wordindex.items():
 			self.sections["transfers"]["bwordindex"][i] = j
-		for (i,j) in fileindex.items():
+		for (i, j) in fileindex.items():
 			self.sections["transfers"]["bfileindex"][i] = j
 		self.config_lock.release()
 		
-	def setShares(self,files,streams,wordindex,fileindex,mtimes):
+	def setShares(self, files, streams, wordindex, fileindex, mtimes):
 		if self.sections["transfers"]["sharedfiles"] == files:
 			return
 		
@@ -397,15 +397,15 @@ class Config:
 		self.sections["transfers"]["wordindex"] = shelve.open(self.filename+".wordindex.db",'n')
 		self.sections["transfers"]["fileindex"] = shelve.open(self.filename+".fileindex.db",'n')
 	
-		for (i,j) in files.items():
+		for (i, j) in files.items():
 			self.sections["transfers"]["sharedfiles"][i] = j
-		for (i,j) in streams.items():
+		for (i, j) in streams.items():
 			self.sections["transfers"]["sharedfilesstreams"][i] = j
-		for (i,j) in mtimes.items():
+		for (i, j) in mtimes.items():
 			self.sections["transfers"]["sharedmtimes"][i] = j
-		for (i,j) in wordindex.items():
+		for (i, j) in wordindex.items():
 			self.sections["transfers"]["wordindex"][i] = j
-		for (i,j) in fileindex.items():
+		for (i, j) in fileindex.items():
 			self.sections["transfers"]["fileindex"][i] = j
 	
 		self.config_lock.release()

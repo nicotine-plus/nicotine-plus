@@ -25,7 +25,7 @@ import gobject
 
 class Transfer:
 	""" This class holds information about a single transfer. """
-	def __init__(self, conn = None, user = None, filename = None, path = None, status = None, req=None, size = None, file = None, starttime = None, offset = None, currentbytes = None, speed = None,timeelapsed = None, timeleft = None, timequeued = None, transfertimer = None, requestconn = None, modifier = None, place = 0, bitrate = None, length = None):
+	def __init__(self, conn = None, user = None, filename = None, path = None, status = None, req=None, size = None, file = None, starttime = None, offset = None, currentbytes = None, speed = None, timeelapsed = None, timeleft = None, timequeued = None, transfertimer = None, requestconn = None, modifier = None, place = 0, bitrate = None, length = None):
 		self.user = user
 		self.filename = filename
 		self.conn = conn
@@ -132,23 +132,23 @@ class Transfers:
 		if user not in self.privilegedusers:
 			self.privilegedusers.append(user)
 		if self.oggusersqueued.has_key(user):
-			self.privusersqueued.setdefault(user,0)
+			self.privusersqueued.setdefault(user, 0)
 			self.privusersqueued[user] += self.oggusersqueued[user]
 			self.privcount += self.oggusersqueued[user]
 			self.oggcount -= self.oggusersqueued[user]
 			del self.oggusersqueued[user]
 		if self.usersqueued.has_key(user):
-			self.privusersqueued.setdefault(user,0)
+			self.privusersqueued.setdefault(user, 0)
 			self.privusersqueued[user] += self.usersqueued[user]
 			self.privcount += self.usersqueued[user]
 			del self.usersqueued[user]
 
-	def getAddUser(self,msg):
+	def getAddUser(self, msg):
 		""" Server tells us it'll notify us about a change in user's status """
 		if not msg.userexists and self.eventprocessor.config.sections["ui"]["notexists"]:
 			self.eventprocessor.logMessage(_("User %s does not exist") % (msg.user))
 
-	def GetUserStatus(self,msg):
+	def GetUserStatus(self, msg):
 		""" We get a status of a user and if he's online, we request a file from him """
 		for i in self.downloads:
 			if msg.user == i.user and i.status in ["Queued", 'Getting status', 'User logged off', 'Connection closed by peer', 'Aborted', 'Cannot connect']:
@@ -221,14 +221,14 @@ class Transfers:
 			self.queue.put(slskmessages.GetUserStatus(user))
 		if transfer.status is not 'Filtered':
 			transfer.req = newId()
-			self.eventprocessor.ProcessRequestToPeer(user,slskmessages.TransferRequest(None, direction, transfer.req, filename, self.getFileSize(filename)))
+			self.eventprocessor.ProcessRequestToPeer(user, slskmessages.TransferRequest(None, direction, transfer.req, filename, self.getFileSize(filename)))
 		if direction == 0:
 			self.downloadspanel.update(transfer)
 		else:
 			self.uploadspanel.update(transfer)
 
 
-	def UploadFailed(self,msg):
+	def UploadFailed(self, msg):
 		for i in self.peerconns:
 			if i.conn is msg.conn.conn:
 				user = i.username
@@ -267,7 +267,7 @@ class Transfers:
 				self.uploadspanel.update(i)
 
 
-	def gotConnectError(self,req):
+	def gotConnectError(self, req):
 		""" We couldn't connect to the user, now we are waitng for him to 
 		connect to us. Note that all this logic is handled by the network
 		event processor, we just provide a visual feedback to the user."""
@@ -280,7 +280,7 @@ class Transfers:
 				i.status = "Waiting for peer to connect"
 				self.uploadspanel.update(i)
 
-	def gotCantConnect(self,req):
+	def gotCantConnect(self, req):
 		""" We can't connect to the user, either way. """
 		for i in self.downloads:
 			if i.req == req:
@@ -330,7 +330,7 @@ class Transfers:
 				self.uploadspanel.update(i)
 
 
-	def TransferRequest(self,msg):
+	def TransferRequest(self, msg):
 		user = response = None
 		transfers = self.eventprocessor.config.sections["transfers"]
 		if msg.conn is not None:
@@ -344,7 +344,7 @@ class Transfers:
 			conn = None
 			addr = "127.0.0.1"
 		if user is None:
-			self.eventprocessor.logMessage(_("Got transfer request %s but cannot determine requestor") % vars(msg),1)
+			self.eventprocessor.logMessage(_("Got transfer request %s but cannot determine requestor") % vars(msg), 1)
 			return
 	
 		if msg.direction == 1:
@@ -358,7 +358,7 @@ class Transfers:
 						i.transfertimer.cancel()
 					i.transfertimer = threading.Timer(30.0, transfertimeout.timeout)
 					i.transfertimer.start()
-					response = slskmessages.TransferResponse(conn,1,req = i.req)
+					response = slskmessages.TransferResponse(conn, 1, req = i.req)
 					self.downloadspanel.update(i)
 					break
 			else:
@@ -375,12 +375,12 @@ class Transfers:
 					self.queue.put(slskmessages.AddUser(user))
 					self.queue.put(slskmessages.GetUserStatus(user))
 					if user != self.eventprocessor.config.sections["server"]["login"]:
-						response = slskmessages.TransferResponse(conn,0,reason = "Queued", req = transfer.req)
+						response = slskmessages.TransferResponse(conn, 0, reason = "Queued", req = transfer.req)
 					self.downloadspanel.update(transfer)
 					
 				else:
-					response = slskmessages.TransferResponse(conn,0,reason = "Cancelled", req = msg.req)
-					self.eventprocessor.logMessage(_("Denied file request: %s") % str(vars(msg)),1)
+					response = slskmessages.TransferResponse(conn, 0, reason = "Cancelled", req = msg.req)
+					self.eventprocessor.logMessage(_("Denied file request: %s") % str(vars(msg)), 1)
 		else:
 			# Request for Upload
 			friend = user in [i[0] for i in self.eventprocessor.userlist.userlist]
@@ -391,34 +391,34 @@ class Transfers:
 		
 			checkuser, reason = self.eventprocessor.CheckUser(user, self.geoip, addr)
 			if not checkuser:
-				response = slskmessages.TransferResponse(conn,0,reason = reason, req=msg.req)
+				response = slskmessages.TransferResponse(conn, 0, reason = reason, req=msg.req)
 			elif not self.fileIsShared(user, msg.file):
-				response = slskmessages.TransferResponse(conn,0,reason = "File not shared", req = msg.req)
+				response = slskmessages.TransferResponse(conn, 0, reason = "File not shared", req = msg.req)
 			elif self.fileIsQueued(user, msg.file):
-				response = slskmessages.TransferResponse(conn,0,reason = "Queued", req = msg.req)
+				response = slskmessages.TransferResponse(conn, 0, reason = "Queued", req = msg.req)
 			elif limits and self.queueLimitReached(user):
 				uploadslimit = self.eventprocessor.config.sections["transfers"]["queuelimit"]
-				response = slskmessages.TransferResponse(conn,0,reason = "User limit of %i megabytes exceeded" %(uploadslimit), req = msg.req)
+				response = slskmessages.TransferResponse(conn, 0, reason = "User limit of %i megabytes exceeded" %(uploadslimit), req = msg.req)
 			elif user in self.getTransferringUsers() or self.bandwidthLimitReached() or self.transferNegotiating():
-				response = slskmessages.TransferResponse(conn,0,reason = "Queued", req = msg.req)
-				self.uploads.append(Transfer(user = user, filename = msg.file, path = os.path.dirname(msg.file.replace('\\',os.sep)), status = "Queued", timequeued = time.time(), size = self.getFileSize(msg.file), place = len(self.uploads)))
+				response = slskmessages.TransferResponse(conn, 0, reason = "Queued", req = msg.req)
+				self.uploads.append(Transfer(user = user, filename = msg.file, path = os.path.dirname(msg.file.replace('\\', os.sep)), status = "Queued", timequeued = time.time(), size = self.getFileSize(msg.file), place = len(self.uploads)))
 				self.uploadspanel.update(self.uploads[-1])
 				self.addQueued(user, msg.file)
 			else:
 				size = self.getFileSize(msg.file)
-				response = slskmessages.TransferResponse(conn,1,req = msg.req, filesize = size)
+				response = slskmessages.TransferResponse(conn, 1, req = msg.req, filesize = size)
 				transfertimeout = TransferTimeout(msg.req, self.eventprocessor.frame.callback) 
-				self.uploads.append(Transfer(user = user, filename = msg.file, path = os.path.dirname(msg.file.replace('\\',os.sep)), status = "Waiting for upload", req = msg.req, size = size, place = len(self.uploads)))
+				self.uploads.append(Transfer(user = user, filename = msg.file, path = os.path.dirname(msg.file.replace('\\', os.sep)), status = "Waiting for upload", req = msg.req, size = size, place = len(self.uploads)))
 				self.uploads[-1].transfertimer = threading.Timer(30.0, transfertimeout.timeout)
 				self.uploads[-1].transfertimer.start()
 				self.uploadspanel.update(self.uploads[-1])
 				
-			self.eventprocessor.logMessage(_("Upload request: %s") % str(vars(msg)),1)
+			self.eventprocessor.logMessage(_("Upload request: %s") % str(vars(msg)), 1)
 	
 		if msg.conn is not None:
 			self.queue.put(response)
 		else:
-			self.eventprocessor.ProcessRequestToPeer(user,response)
+			self.eventprocessor.ProcessRequestToPeer(user, response)
 
 	def fileIsQueued(self, user, file):
 		for i in self.uploads:
@@ -455,12 +455,12 @@ class Transfers:
 				limitmsg = "User limit of %i megabytes exceeded" %(uploadslimit)
 				self.queue.put(slskmessages.QueueFailed(conn = msg.conn.conn, file = msg.file, reason = limitmsg)) 
 			elif self.fileIsShared(user, msg.file):
-				self.uploads.append(Transfer(user = user, filename = msg.file, path = os.path.dirname(msg.file.replace('\\',os.sep)), status = "Queued", timequeued = time.time(), size = self.getFileSize(msg.file)))
+				self.uploads.append(Transfer(user = user, filename = msg.file, path = os.path.dirname(msg.file.replace('\\', os.sep)), status = "Queued", timequeued = time.time(), size = self.getFileSize(msg.file)))
 				self.uploadspanel.update(self.uploads[-1])
 				self.addQueued(user, msg.file)
 			else:
 				self.queue.put(slskmessages.QueueFailed(conn = msg.conn.conn, file = msg.file, reason = "File not shared" ))
-		self.eventprocessor.logMessage(_("Queued upload request: %s") % str(vars(msg)),1)
+		self.eventprocessor.logMessage(_("Queued upload request: %s") % str(vars(msg)), 1)
 		self.checkUploadQueue()
 
 	def UploadQueueNotification(self, msg):
@@ -518,7 +518,7 @@ class Transfers:
 
 
 	def fileIsShared(self, user, filename):
-		filename = filename.replace("\\",os.sep)
+		filename = filename.replace("\\", os.sep)
 		if not os.access(filename, os.R_OK): return 0
 		dir = os.path.dirname(filename)
 		file = os.path.basename(filename)
@@ -551,14 +551,14 @@ class Transfers:
 			return (sum(bandwidthlist) > maxbandwidth)
 
 	
-	def getFileSize(self,filename):
+	def getFileSize(self, filename):
 		try:
-			size = os.path.getsize(filename.replace("\\",os.sep))
+			size = os.path.getsize(filename.replace("\\", os.sep))
 		except:
 			size = 0
 		return size
 
-	def TransferResponse(self,msg):
+	def TransferResponse(self, msg):
 		""" Got a response to the file request from the peer."""
 		if msg.reason != None:
 			for i in (self.downloads+self.uploads)[:]:
@@ -585,7 +585,7 @@ class Transfers:
 				i.size = msg.filesize
 				i.status = "Establishing connection"
 				#Have to establish 'F' connection here
-				self.eventprocessor.ProcessRequestToPeer(i.user,slskmessages.FileRequest(None,msg.req))
+				self.eventprocessor.ProcessRequestToPeer(i.user, slskmessages.FileRequest(None, msg.req))
 				self.downloadspanel.update(i)
 				break
 		else:
@@ -593,12 +593,12 @@ class Transfers:
 				if i.req != msg.req:
 					continue
 				i.status = "Establishing connection"
-				self.eventprocessor.ProcessRequestToPeer(i.user,slskmessages.FileRequest(None,msg.req))
+				self.eventprocessor.ProcessRequestToPeer(i.user, slskmessages.FileRequest(None, msg.req))
 				self.uploadspanel.update(i)
 				self.checkUploadQueue()
 				break
 			else:
-				self.eventprocessor.logMessage(_("Got unknown transfer response: %s") % str(vars(msg)),1)
+				self.eventprocessor.logMessage(_("Got unknown transfer response: %s") % str(vars(msg)), 1)
 
 	def TransferTimeout(self, msg):
 		for i in (self.downloads+self.uploads)[:]:
@@ -631,7 +631,7 @@ class Transfers:
 					else:
 						incompletedir = os.path.join(downloaddir, self.CleanPath(i.path))
 				try:
-					if not os.access(incompletedir,os.F_OK):
+					if not os.access(incompletedir, os.F_OK):
 						os.makedirs(incompletedir)
 				except OSError, strerror:
 					self.eventprocessor.logMessage(_("OS error: %s") % strerror)
@@ -642,13 +642,13 @@ class Transfers:
 					# also check for a windows-style incomplete transfer
 					basename = string.split(i.filename,'\\')[-1]
 					basename = self.encode(basename, i.user)
-					winfname = os.path.join(incompletedir,"INCOMPLETE~"+basename)
-					pyfname  = os.path.join(incompletedir,"INCOMPLETE"+basename)
-					pynewfname = os.path.join(incompletedir,"INCOMPLETE"+md5.new(i.filename+i.user).hexdigest()+basename)
+					winfname = os.path.join(incompletedir, "INCOMPLETE~"+basename)
+					pyfname  = os.path.join(incompletedir, "INCOMPLETE"+basename)
+					pynewfname = os.path.join(incompletedir, "INCOMPLETE"+md5.new(i.filename+i.user).hexdigest()+basename)
 					try:
-						if os.access(winfname,os.F_OK):
+						if os.access(winfname, os.F_OK):
 							fname = winfname
-						elif os.access(pyfname,os.F_OK):
+						elif os.access(pyfname, os.F_OK):
 							fname = pyfname
 						else:
 							fname = pynewfname
@@ -672,9 +672,9 @@ class Transfers:
 									self.eventprocessor.logMessage(_("Can't get an exclusive lock on file - I/O error: %s") % strerror)
 							except ImportError:
 								pass
-						f.seek(0,2)
+						f.seek(0, 2)
 						size = f.tell()
-						self.queue.put(slskmessages.DownloadFile(i.conn,size,f,i.size))
+						self.queue.put(slskmessages.DownloadFile(i.conn, size, f, i.size))
 						i.currentbytes = size
 						#i.status = "%s" %(str(i.currentbytes))
 						i.status = "Transferring"
@@ -696,8 +696,8 @@ class Transfers:
 					i.transfertimer.cancel()
 				try:
 					# Open File
-					f = open(i.filename.replace("\\",os.sep),"rb")
-					self.queue.put(slskmessages.UploadFile(i.conn,file = f,size = i.size))
+					f = open(i.filename.replace("\\", os.sep),"rb")
+					self.queue.put(slskmessages.UploadFile(i.conn, file = f, size = i.size))
 					i.status = "Initializing transfer"
 					i.file = f
 					self.eventprocessor.logTransfer(_("Upload started: user %(user)s, file %(file)s") % {'user':i.user, 'file':self.decode(i.filename)})
@@ -713,7 +713,7 @@ class Transfers:
 				self.uploadspanel.update(i)
 				break
 		else:
-			self.eventprocessor.logMessage(_("Unknown file request: %s") % str(vars(msg)),1)
+			self.eventprocessor.logMessage(_("Unknown file request: %s") % str(vars(msg)), 1)
 			self.queue.put(slskmessages.ConnClose(msg.conn))
             
 	def CleanPath(self, path):
@@ -753,11 +753,11 @@ class Transfers:
 						folder = self.CleanPath(i.path)
 					else:
 						folder = os.path.join(downloaddir, self.encode(i.path))
-					if not os.access(folder,os.F_OK):
+					if not os.access(folder, os.F_OK):
 						os.makedirs(folder)
 					newname = self.getRenamed(os.path.join(folder, basename))
 					try:
-						os.rename(msg.file.name,newname)
+						os.rename(msg.file.name, newname)
 					except OSError:
 						try:
 							f1 = open(msg.file.name, "r")
@@ -838,10 +838,10 @@ class Transfers:
 		
 			shared[dir] = shared.get(dir, [])
 			if file not in [i[0] for i in shared[dir]]:
-				fileinfo = utils.getFileInfo(file,name)
+				fileinfo = utils.getFileInfo(file, name)
 				shared[dir] = shared[dir] + [fileinfo]
 				sharedstreams[dir] = utils.getDirStream(shared[dir])
-				words = utils.getIndexWords(dir,file, shareddirs)
+				words = utils.getIndexWords(dir, file, shareddirs)
 				self.addToIndex(wordindex, fileindex, words, dir, fileinfo)
 				sharedmtimes[dir] = os.path.getmtime(dir)
 				self.eventprocessor.config.writeShares()
@@ -854,9 +854,9 @@ class Transfers:
 				wordindex[i] = [index]
 			else:
 				wordindex[i] = wordindex[i] + [index]
-		fileindex[str(index)] = (os.path.join(dir,fileinfo[0]),)+fileinfo[1:]
+		fileindex[str(index)] = (os.path.join(dir, fileinfo[0]),)+fileinfo[1:]
 
-	def FileUpload(self,msg):
+	def FileUpload(self, msg):
 		""" A file upload is in progress"""
 		needupdate = 1
 	
@@ -912,7 +912,7 @@ class Transfers:
 		list = [i for i in self.uploads if i.user == user]
 		for upload in list:
 			if upload.status == "Queued":
-				self.eventprocessor.ProcessRequestToPeer(user,slskmessages.QueueFailed(None,file = upload.filename, reason = banmsg))
+				self.eventprocessor.ProcessRequestToPeer(user, slskmessages.QueueFailed(None, file = upload.filename, reason = banmsg))
 			else:
 				self.AbortTransfer(upload)
 		if self.uploadspanel is not None:
@@ -1037,16 +1037,16 @@ class Transfers:
 	
 		self.queue.put(slskmessages.PlaceInQueue(msg.conn.conn, msg.file, place))
 
-	def getTime(self,seconds):
+	def getTime(self, seconds):
 		sec = int(seconds % 60)
 		minutes = int(seconds / 60 % 60)
 		hours = int(seconds / 3600 % 24)
 		days = int(seconds/86400)
 		
-		time = "%02d:%02d:%02d" %(hours, minutes, sec)
+		time_string = "%02d:%02d:%02d" % (hours, minutes, sec)
 		if days > 0:
-			time = str(days) + "." + time
-		return time
+			time_string = str(days) + "." + time_string
+		return time_string
 
 	def calcUploadQueueSizes(self):
 	# queue sizes
@@ -1075,15 +1075,15 @@ class Transfers:
 
 	def addQueued(self, user, filename):
 		if user in self.privilegedusers:
-			self.privusersqueued.setdefault(user,0)
+			self.privusersqueued.setdefault(user, 0)
 			self.privusersqueued[user] += 1
 			self.privcount += 1
 		elif filename[-4:].lower() == ".ogg":
-			self.oggusersqueued.setdefault(user,0)
+			self.oggusersqueued.setdefault(user, 0)
 			self.oggusersqueued[user] += 1
 			self.oggcount += 1
 		else:
-			self.usersqueued.setdefault(user,0)
+			self.usersqueued.setdefault(user, 0)
 			self.usersqueued[user] += 1
 
 	def removeQueued(self, user, filename):
@@ -1166,21 +1166,24 @@ class Transfers:
 			self.uploadspanel.update(i)
 			self.checkUploadQueue()
 
-	def getRenamed(self,name):
+	def getRenamed(self, name):
 		""" When a transfer is finished, we remove INCOMPLETE~ or INCOMPLETE 
 		prefix from the file's name. """
 		if not os.path.exists(name):
+			# Filename doesn't exist, good for renaming
 			return name
 		else:
+			# Append numbers to duplicate filenames so old files
+			# do not get overwritten.
 			n = 1
 			while n < 1000:
 				newname = name+"."+str(n)
 				if not os.path.exists(newname):
 					break
-				n+=1
+				n += 1
 			return newname
 
-	def PlaceInQueue(self,msg):
+	def PlaceInQueue(self, msg):
 		""" The server tells us our place in queue for a particular transfer."""
 		'''
 		username = None
@@ -1220,7 +1223,7 @@ class Transfers:
 			self.checkUploadQueue()
 
 
-	def FolderContentsResponse(self,msg):
+	def FolderContentsResponse(self, msg):
 		""" When we got a contents of a folder, get all the files in it, but
 		skip the files in subfolders"""
 		username = None
@@ -1231,7 +1234,7 @@ class Transfers:
 			return
 		for i in msg.list.keys():
 			for j in msg.list[i].keys():
-				if os.path.commonprefix([i,j]) == j:
+				if os.path.commonprefix([i, j]) == j:
 					for file in msg.list[i][j]:
 						length = bitrate = None
 						attrs = file[4]
@@ -1239,8 +1242,10 @@ class Transfers:
 							bitrate = str(attrs[0])
 							if attrs[2]:
 								bitrate += _(" (vbr)")
-							try: rl = int(attrs[1])
-							except: rl = 0
+							try:
+								rl = int(attrs[1])
+							except:
+								rl = 0
 							length = "%i:%02i" % (rl / 60, rl % 60)
 						if j[-1] == '\\':
 							self.getFile(username, j + file[1], j.split('\\')[-2], size=file[2], bitrate=bitrate, length=length)
@@ -1260,7 +1265,7 @@ class Transfers:
 				#self.uploadspanel.update()
 
 
-	def AbortTransfer(self,transfer, remove = 0):
+	def AbortTransfer(self, transfer, remove = 0):
 		if transfer.conn is not None:
 			self.queue.put(slskmessages.ConnClose(transfer.conn))
 			transfer.conn = None
@@ -1287,23 +1292,23 @@ class Transfers:
 		self.eventprocessor.config.sections["transfers"]["downloads"] = self.GetDownloads()
 		self.eventprocessor.config.writeConfig()
 	
-	def decode(self, s):
+	def decode(self, string):
 		try:
-			return s.decode(locale.nl_langinfo(locale.CODESET), "replace").encode("utf-8", "replace")
+			return string.decode(locale.nl_langinfo(locale.CODESET), "replace").encode("utf-8", "replace")
 		except:
-			return s
+			return string
 
-	def encode(self, s, user = None):
+	def encode(self, string, user = None):
 		coding = None
 		if user and self.eventprocessor.config.sections["server"]["userencoding"].has_key(user):
 			coding = self.eventprocessor.config.sections["server"]["userencoding"][user]
-		s = self.eventprocessor.decode(s, coding)
+		string = self.eventprocessor.decode(string, coding)
 		try:
 			if sys.platform == "win32":
 				chars = ["?", "\/", "\"", ":", ">", "<", "|", "*"]
 				for char in chars:
-					s = s.replace(char, "_")
-			return s.encode(locale.nl_langinfo(locale.CODESET), "replace")
+					string = string.replace(char, "_")
+			return string.encode(locale.nl_langinfo(locale.CODESET), "replace")
 	#            return s.sencode(os.filesystemencoding(), "replace")
 		except:
-			return s
+			return string

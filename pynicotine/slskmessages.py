@@ -711,6 +711,7 @@ class MinParentsInCache(Msg83):
 class Msg12547(Msg83):
 	def __init__(self, conn):
 		self.conn = conn
+		
 	def parseNetworkMessage(self, message):
 		pass
 
@@ -1030,9 +1031,9 @@ class UserInfoReply(PeerMessage):
 
 class SharedFileList(PeerMessage):
 	""" Peer responds with this when asked for a filelist."""
-	def __init__(self, conn, list = None):
+	def __init__(self, conn, shares = None):
 		self.conn = conn
-		self.list = list
+		self.list = shares
 	 
 	def parseNetworkMessage(self, message, nozlib = 0):
 
@@ -1044,12 +1045,12 @@ class SharedFileList(PeerMessage):
 				self.list={}
 				return
 
-		list={}
+		shares = {}
 		pos, ndir = self.getObject(message, types.IntType)
 		for i in range(ndir):
-			pos, dir = self.getObject(message, types.StringType, pos)
+			pos, directory = self.getObject(message, types.StringType, pos)
 			pos, nfiles = self.getObject(message, types.IntType, pos)
-			list[dir] = []
+			shares[directory] = []
 			for j in range(nfiles):
 				pos, code = pos+1, ord(message[pos])
 				pos, name = self.getObject(message, types.StringType, pos)
@@ -1065,8 +1066,8 @@ class SharedFileList(PeerMessage):
 					pos, attrnum = self.getObject(message, types.IntType, pos)
 					pos, attr = self.getObject(message, types.IntType, pos)
 					attrs.append(attr)
-				list[dir].append([code, name, size, ext, attrs])
-		self.list = list
+				shares[directory].append([code, name, size, ext, attrs])
+		self.list = shares
 
 	def makeNetworkMessage(self, nozlib = 0):
 		msg = ""
@@ -1108,12 +1109,12 @@ class FileSearchRequest(PeerMessage):
 
 class FileSearchResult(PeerMessage):
 	""" Peer sends this when it has a file search match."""
-	def __init__(self, conn, user = None, geoip = None, token = None, list = None, fileindex = None, freeulslots = None, ulspeed = None, inqueue = None, fifoqueue = None):
+	def __init__(self, conn, user = None, geoip = None, token = None, shares = None, fileindex = None, freeulslots = None, ulspeed = None, inqueue = None, fifoqueue = None):
 		self.conn = conn
 		self.user = user
 		self.geoip = geoip
 		self.token = token
-		self.list = list
+		self.list = shares
 		self.fileindex = fileindex
 		self.freeulslots = freeulslots
 		self.ulspeed = ulspeed 
@@ -1125,13 +1126,13 @@ class FileSearchResult(PeerMessage):
 			message = zlib.decompress(message)
 		except Exception, error:
 			print error
-			self.list={}
+			self.list = {}
 			return
 	
 		pos, self.user = self.getObject(message, types.StringType)
 		pos, self.token = self.getObject(message, types.IntType, pos)
 		pos, nfiles = self.getObject(message, types.IntType, pos)
-		list = []
+		shares = []
 		for i in range(nfiles):
 			size = size1 = size2 = 0
 			pos, code = pos+1, ord(message[pos])
@@ -1149,8 +1150,8 @@ class FileSearchResult(PeerMessage):
 					pos, attrnum = self.getObject(message, types.IntType, pos)
 					pos, attr = self.getObject(message, types.IntType, pos)
 					attrs.append(attr)
-			list.append([code, name, size, ext, attrs])
-		self.list = list
+			shares.append([code, name, size, ext, attrs])
+		self.list = shares
 		pos, self.freeulslots = pos+1, ord(message[pos])
 		pos, self.ulspeed = self.getObject(message, types.IntType, pos, getsignedint=1)
 		pos, self.inqueue = self.getObject(message, types.IntType, pos)
@@ -1191,9 +1192,9 @@ class FileSearchResult(PeerMessage):
 
 class FolderContentsRequest(PeerMessage):
 	""" Ask the peer to send us the contents of a single folder. """
-	def __init__(self, conn, dir=None):
+	def __init__(self, conn, directory = None):
 		self.conn = conn
-		self.dir = dir
+		self.dir = directory
 	
 	def makeNetworkMessage(self):
 		return self.packObject(1)+self.packObject(self.dir)
@@ -1205,32 +1206,32 @@ class FolderContentsRequest(PeerMessage):
 class FolderContentsResponse(PeerMessage):
 	""" Peer tells us the contents of a particular folder (with all subfolders)
 	""" 
-	def __init__(self, conn, dir = None, list = None):
+	def __init__(self, conn, directory = None, shares = None):
 		self.conn = conn
-		self.dir = dir
-		self.list = list
+		self.dir = directory
+		self.list = shares
 
 	def parseNetworkMessage(self, message):
 		try:
 			message = zlib.decompress(message)
 		except Exception, error:
 			print error
-			self.list={}
+			self.list = {}
 			return
 	#        f = open("ttt","w")
 	#        f.write(message)
 	#        f.close()
-		list={}
+		shares = {}
 		pos, nfolders = self.getObject(message, types.IntType)
 		for h in range(nfolders):
 			pos, folder = self.getObject(message, types.StringType, pos)
-			list[folder]={}
+			shares[folder]={}
 			pos, ndir = self.getObject(message, types.IntType, pos)
 		
 			for i in range(ndir):
-				pos, dir = self.getObject(message, types.StringType, pos)
+				pos, directory = self.getObject(message, types.StringType, pos)
 				pos, nfiles = self.getObject(message, types.IntType, pos)
-				list[folder][dir] = []
+				shares[folder][directory] = []
 				for j in range(nfiles):
 					size = size1 = size2 = 0
 					pos, code = pos+1, ord(message[pos])
@@ -1246,8 +1247,8 @@ class FolderContentsResponse(PeerMessage):
 						pos, attrnum = self.getObject(message, types.IntType, pos)
 						pos, attr = self.getObject(message, types.IntType, pos)
 						attrs.append(attr)
-					list[folder][dir].append([code, name, size, ext, attrs])
-		self.list = list
+					shares[folder][directory].append([code, name, size, ext, attrs])
+		self.list = shares
 
 	def makeNetworkMessage(self):
 		msg = self.packObject(1) + self.packObject(self.dir) + self.packObject(1) + self.packObject(self.dir) + self.packObject(len(self.list))

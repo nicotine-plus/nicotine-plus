@@ -107,6 +107,8 @@ If you're using Debian, install the python-pyvorbis package.
 def usage():
 	print _("""Usage: nicotine [OPTION]...
   -c file,	--config=file	Use non-default configuration file
+  -t,		--enable-trayicon
+  -d,		--disable-trayicon
   -h,		--help		Display this help and exit
 
 Please report any problems to our bugtracker :
