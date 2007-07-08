@@ -140,6 +140,11 @@ class NicotineFrame(MainWindow):
 		)
 		def on_delete_event(widget, event):
 			if self.np.config.sections["ui"]["exitdialog"]:
+				if self.TrayApp.HAVE_TRAYICON and self.np.config.sections["ui"]["exitdialog"] == 2:
+					if self.is_mapped:
+						self.MainWindow.unmap()
+						self.is_mapped = 0
+					return True
 				if self.TrayApp.HAVE_TRAYICON:
 					option = QuitBox(self, title=_('Close Nicotine-Plus?'), message=_('Are you sure you wish to exit Nicotine-Plus at this time?'),tray=True, status="question", third=_("Send to tray") )
 				else:

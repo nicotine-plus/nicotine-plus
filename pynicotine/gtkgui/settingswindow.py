@@ -883,7 +883,7 @@ class IconsFrame(settings_glade.IconsFrame):
 		self.p = parent
 		self.frame = parent.frame
 		settings_glade.IconsFrame.__init__(self, False)
-		self.options = {"ui": [	"icontheme", "tabclosers", "trayicon",]}
+		self.options = {"ui": [	"icontheme", "tabclosers", "trayicon", "exitdialog"]}
 		self.ThemeButton.connect("clicked", self.OnChooseThemeDir)
 		self.DefaultTheme.connect("clicked", self.OnDefaultTheme)
 		self.N.set_from_pixbuf(self.frame.images["n"])
@@ -906,6 +906,20 @@ class IconsFrame(settings_glade.IconsFrame):
 			self.TrayiconCheck.set_active(ui["trayicon"])
 		else:
 			self.p.Hilight(self.TrayiconCheck)
+			
+		if ui["exitdialog"] is not None:
+			exitdialog = int( ui["exitdialog"] )
+			if exitdialog == 1:
+				self.DialogOnClose.set_active(True)
+			elif exitdialog == 2:
+				self.SendToTrayOnClose.set_active(True)
+			elif exitdialog == 0:
+				self.QuitOnClose.set_active(True)
+		else:
+			self.p.Hilight(self.DialogOnClose)
+			self.p.Hilight(self.SendToTrayOnClose)
+			self.p.Hilight(self.QuitOnClose)
+			
 		if ui["icontheme"] is not None:
 			self.IconTheme.set_text(ui["icontheme"])
 		else:
@@ -920,12 +934,19 @@ class IconsFrame(settings_glade.IconsFrame):
 				self.IconTheme.set_text(recode(directory))
 			
 	def GetSettings(self):
+		mainwindow_close = 0
+		widgets = [ self.QuitOnClose, self.DialogOnClose, self.SendToTrayOnClose]
+		for i in widgets:
+			if i.get_active():
+				mainwindow_close = widgets.index(i)
+				break
+	
 		return {
 			"ui": {
 				"icontheme": self.IconTheme.get_text(),
 				"tabclosers": self.TabClosers.get_active(),
 				"trayicon": self.TrayiconCheck.get_active(),
-		
+				"exitdialog": mainwindow_close,
 			},
 		}
 
@@ -938,7 +959,7 @@ class BloatFrame(settings_glade.BloatFrame):
 		self.options =  {
 			"ui": [	"chatfont", "chatlocal", "chatremote", "chatme",
 "chathilite", "textbg", "inputcolor", "search", "searchq", "decimalsep",
-"spellcheck", "exitdialog", "useraway", "useronline", 
+"spellcheck", "useraway", "useronline",
 "useroffline", "usernamehotspots", "usernamestyle", "enabletrans",
 "transtint", "transalpha"],
 			"transfers": ["enabletransferbuttons"],
@@ -1082,10 +1103,7 @@ class BloatFrame(settings_glade.BloatFrame):
 			self.DecimalSep.child.set_text(ui["decimalsep"])
 		else:
 			self.p.Hilight(self.DecimalSep)
-		if ui["exitdialog"] is not None:
-			self.ExitDialog.set_active(ui["exitdialog"])
-		else:
-			self.p.Hilight(self.ExitDialog)
+		
 		if ui["spellcheck"] is not None:
 			self.SpellCheck.set_active(ui["spellcheck"])
 		else:
@@ -1157,7 +1175,6 @@ class BloatFrame(settings_glade.BloatFrame):
 				"searchq": self.Queue.get_text(),
 				"decimalsep": self.DecimalSep.child.get_text(),
 				"spellcheck": self.SpellCheck.get_active(),
-				"exitdialog": self.ExitDialog.get_active(),
 				"useraway": self.AwayColor.get_text(),
 				"useronline": self.OnlineColor.get_text(),
 				"useroffline": self.OfflineColor.get_text(),
