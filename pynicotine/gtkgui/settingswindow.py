@@ -628,7 +628,8 @@ class UserinfoFrame(settings_glade.UserinfoFrame):
 	def SetSettings(self, config):
 		userinfo = config["userinfo"]
 		if userinfo["descr"] is not None:
-			descr = userinfo["descr"]
+			descr = eval(userinfo["descr"], {})
+
 			self.Description.get_buffer().set_text(descr)
 		else:
 			self.p.Hilight(self.Description)
