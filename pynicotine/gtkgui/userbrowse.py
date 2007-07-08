@@ -244,7 +244,7 @@ class UserBrowse(UserBrowseTab):
 		else:
 			self.FolderTreeView.collapse_all()
 			
-			dirs = self.directories.keys()
+			dirs = list(self.directories.keys())
 			dirs.sort()
 			if dirs != []:
 				self.SetDirectory(dirs[0])
@@ -343,7 +343,7 @@ class UserBrowse(UserBrowseTab):
 			self.FolderTreeView.collapse_all()
 		
 	def BrowseGetDirs(self):
-		sorted = self.shares.keys()
+		sorted = list(self.shares.keys())
 		sorted.sort()
 		
 		children = []
@@ -376,7 +376,7 @@ class UserBrowse(UserBrowseTab):
 					children.append(path)
 					self.directories[path] = self.DirStore.append(self.directories[parent], [self.decode(path.split("\\")[-1]), path ] )
 				parent = path
-		sortlist = self.directories.keys()
+		sortlist = list(self.directories.keys())
 		sortlist.sort()
 
 		directory = sortlist[0]
@@ -584,7 +584,7 @@ class UserBrowse(UserBrowseTab):
 				self.DownloadDirectory(self.selected_folder, os.path.join(directory, ""))
 				
 			except IOError: # failed to open
-				self.message('failed to open %r for reading', directory) # notify user
+				self.frame.logMessage('failed to open %r for reading', directory) # notify user
 
 	def OnDownloadDirectoryRecursiveTo(self, widget):
 		dir = ChooseDir(self.frame.MainWindow, self.frame.np.config.sections["transfers"]["downloaddir"])
@@ -596,7 +596,7 @@ class UserBrowse(UserBrowseTab):
 				self.DownloadDirectory(self.selected_folder, os.path.join(directory, ""), 1)
 				
 			except IOError: # failed to open
-				self.message('failed to open %r for reading', directory) # notify user
+				self.frame.logMessage('failed to open %r for reading', directory) # notify user
 
 	
 	def DownloadDirectory(self, dir, prefix = "", recurse = 0):
@@ -610,9 +610,11 @@ class UserBrowse(UserBrowseTab):
 				bitrate = str(attrs[0])
 				if attrs[2]:
 					bitrate += _(" (vbr)")
-				try: rl = int(attrs[1])
-				except: rl = 0
-				length = "%i:%02i" % (rl / 60, rl % 60)
+				try:
+					rl = int(attrs[1])
+				except:
+					rl = 0
+				length = "%i:%02i" % (int(rl / 60), rl % 60)
 			self.frame.np.transfers.getFile(self.user, "\\".join([dir, file[1]]), ldir, size=file[2], bitrate=bitrate, length=length)
 		if not recurse:
 			return
@@ -637,9 +639,11 @@ class UserBrowse(UserBrowseTab):
 				bitrate = str(attrs[0])
 				if attrs[2]:
 					bitrate += _(" (vbr)")
-				try: rl = int(attrs[1])
-				except: rl = 0
-				length = "%i:%02i" % (rl / 60, rl % 60)
+				try:
+					rl = int(attrs[1])
+				except:
+					rl = 0
+				length = "%i:%02i" % (int(rl / 60), rl % 60)
 			self.frame.np.transfers.getFile(self.user, path, prefix, size=size, bitrate=bitrate, length=length)
 
 	
@@ -681,7 +685,7 @@ class UserBrowse(UserBrowseTab):
 		user = input_box(self.frame, title=_("Nicotine: Upload Directory's Contents"),
 		message=_('Enter the User you wish to upload to:'),
 		default_text='', droplist=users)
-		self.frame.np.ProcessRequestToPeer(user,slskmessages.UploadQueueNotification(None) )
+		self.frame.np.ProcessRequestToPeer(user, slskmessages.UploadQueueNotification(None) )
 		self.UploadDirectoryTo(user, dir, recurse)
 				
 	def OnUploadFiles(self, widget, prefix = ""):
@@ -696,7 +700,7 @@ class UserBrowse(UserBrowseTab):
 		if user is None or user == "":
 			pass
 		else:
-			self.frame.np.ProcessRequestToPeer(user,slskmessages.UploadQueueNotification(None)  )
+			self.frame.np.ProcessRequestToPeer(user, slskmessages.UploadQueueNotification(None)  )
 			for fn in self.selected_files:
 				self.frame.np.transfers.pushFile(user, "\\".join([dir, fn]), prefix)
 				self.frame.np.transfers.checkUploadQueue()
@@ -725,7 +729,7 @@ class UserBrowse(UserBrowseTab):
  				self.OnDownloadFiles(widget, directory)
 				
 			except IOError: # failed to open
-				self.message('failed to open %r for reading', directory) # notify user
+				self.frame.logMessage('failed to open %r for reading', directory) # notify user
 
 	def FindMatches(self):
 		self.search_list = []
@@ -830,9 +834,9 @@ class UserBrowse(UserBrowseTab):
 			encoding = self.Encoding.get_active_text()
 		else:
 			# PyGTK 2.4
-			iter = self.Encoding.get_active_iter()
+			iterator = self.Encoding.get_active_iter()
 			encoding_model = self.Encoding.get_model()
-			encoding = encoding_model.get_value(iter, 0)
+			encoding = encoding_model.get_value(iterator, 0)
 			
 		if encoding != self.encoding:
 			self.encoding = encoding

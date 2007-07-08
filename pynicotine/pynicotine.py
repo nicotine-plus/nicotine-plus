@@ -307,7 +307,7 @@ class NetworkEventProcessor:
 		sharedfolders = len(conf["transfers"][shared_db].keys())
 		sharedfiles = 0
 		for i in conf["transfers"][shared_db].keys():
-			sharedfiles = sharedfiles + len(conf["transfers"][shared_db][i])
+			sharedfiles += len(conf["transfers"][shared_db][i])
 		self.queue.put(slskmessages.SharedFoldersFiles(sharedfolders, sharedfiles))
 
 	def RescanShares(self, msg):

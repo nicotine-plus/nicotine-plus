@@ -137,7 +137,7 @@ class Uploads(TransferList):
 			path = transfer.path
 			user = transfer.user
 
-			self.frame.np.ProcessRequestToPeer(user,slskmessages.UploadQueueNotification(None)  )
+			self.frame.np.ProcessRequestToPeer(user, slskmessages.UploadQueueNotification(None))
 
 			self.frame.np.transfers.pushFile(user, filename, path)
 			self.frame.np.transfers.checkUploadQueue()

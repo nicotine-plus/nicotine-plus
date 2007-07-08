@@ -91,7 +91,7 @@ class RoomsControl:
 				room_tab_order [ pos ] = name
 				pos += 1
 		# Sort by "position"
-		rto = room_tab_order.keys()
+		rto = list(room_tab_order.keys())
 		rto.sort()
 		new_autojoin = []
 		for roomplace in rto:

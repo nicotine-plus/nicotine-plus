@@ -77,7 +77,7 @@ def _(s):
 def getServerList(url):
 	""" Parse server text file from http://www.slsk.org and 
 	return a list of servers """
-	import urllib,string
+	import urllib, string
 	try:
 		f = urllib.urlopen(url)
 		list = [string.strip(i) for i in f.readlines()]
@@ -249,10 +249,10 @@ def getFileInfo(name, pathname):
 	if name[-4:].lower() == ".mp3":
 		mp3info=mp3.detect_mp3(pathname)
 		if mp3info:
-			bitrateinfo = (mp3info["bitrate"],mp3info["vbr"])
-			fileinfo = (name_f,size,bitrateinfo,mp3info["time"])
+			bitrateinfo = (mp3info["bitrate"], mp3info["vbr"])
+			fileinfo = (name_f, size, bitrateinfo, mp3info["time"])
 		else:
-			fileinfo = (name_f,size,None,None)
+			fileinfo = (name_f, size, None, None)
 	
 	elif vorbis and (name[-4:].lower() == ".ogg"):
 
@@ -260,11 +260,11 @@ def getFileInfo(name, pathname):
 			vf = vorbis.VorbisFile(pathname)
 			time = int(vf.time_total(0))
 			bitrate = vf.bitrate(0)/1000
-			fileinfo = (name_f,size, (bitrate,0), time)
+			fileinfo = (name_f, size, (bitrate, 0), time)
 		except:
-			fileinfo = (name_f,size,None,None)
+			fileinfo = (name_f, size, None, None)
 	else:
-		fileinfo = (name_f,size,None,None)
+		fileinfo = (name_f, size, None, None)
 	return fileinfo
 
 
@@ -334,10 +334,10 @@ def getFilesIndex(mtimes, oldmtimes, shareddirs, sharedfiles, yieldcall = None):
 		if hiddenCheck(i):
 			continue
 		for j in sharedfiles[i]:
-			indexes = getIndexWords(i,j[0],shareddirs)
+			indexes = getIndexWords(i, j[0], shareddirs)
 			for k in indexes:
-				wordindex.setdefault(k,[]).append(index)
-			fileindex[str(index)] = (os.path.join(i,j[0]),)+j[1:]
+				wordindex.setdefault(k, []).append(index)
+			fileindex[str(index)] = (os.path.join(i, j[0]), )+j[1:]
 			index += 1
 		if yieldcall is not None:
 			yieldcall()
@@ -348,7 +348,7 @@ def getIndexWords(dir, file, shareddirs):
 	for i in shareddirs:
 		if os.path.commonprefix([dir,i]) == i:
 			dir = dir[len(i):]
-	words = string.split(string.lower(string.translate(dir+' '+file, string.maketrans(string.punctuation,string.join([' ' for i in string.punctuation],'')))))
+	words = string.split(string.lower(string.translate(dir+' '+file, string.maketrans( string.punctuation, string.join([' ' for i in string.punctuation], '')))))
 	# remove duplicates
 	d = {}
 	for x in words:

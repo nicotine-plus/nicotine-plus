@@ -49,7 +49,6 @@ See MAINTAINERS file for the list of contributors""") % version)
 		hbox.set_spacing(10)
 		hbox.pack_start(vbox, True, True)
 		hbox.pack_start(label, True, True)
-		sys.version_info
 		pythonversion = "%d.%d.%d" % (sys.version_info[0], sys.version_info[1], sys.version_info[2])
 		
 		self.frame1 = gtk.Frame()

@@ -794,9 +794,9 @@ class ImportWinSlskConfig:
 			users = self.get_basic_config(self.winpath('hotlist.cfg'))
 		
 			for i in users:
-				if not self.is_in_user_list(i,self.config.sections["server"]["userlist"]):
+				if not self.is_in_user_list(i, self.config.sections["server"]["userlist"]):
 					#print [i,'']
-					self.config.sections["server"]["userlist"].append([i,''])
+					self.config.sections["server"]["userlist"].append([i, ''])
 		
 		if self.Login:
 			# Get login and password

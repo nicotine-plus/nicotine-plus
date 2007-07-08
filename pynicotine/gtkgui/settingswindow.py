@@ -470,7 +470,7 @@ class TransfersFrame(settings_glade.TransfersFrame):
 			self.OnVerifyFilter(self.VerifyFilters)
 	def GetFilterList(self):
 		self.downloadfilters = []
-		df = self.filtersiters.keys()
+		df = list(self.filtersiters.keys())
 		df.sort()
 		for filter in df :
 			iter = self.filtersiters[filter]
@@ -530,7 +530,7 @@ class TransfersFrame(settings_glade.TransfersFrame):
 	def OnVerifyFilter(self, widget):
 
 		outfilter = "(\\\\("
-		df = self.filtersiters.keys()
+		df = list(self.filtersiters.keys())
 		df.sort()
 		proccessedfilters = []
 		failed = {}

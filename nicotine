@@ -22,7 +22,7 @@ from gettext import gettext as _
 
 def checkenv():
 
-	import sys,string
+	import sys, string
 	ver = sys.version_info[0]*100+sys.version_info[1]*10+sys.version_info[2]
 	if ver < 220:
 		return _("""You're using an old version of Python interpreter (%s).

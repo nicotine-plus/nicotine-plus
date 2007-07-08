@@ -61,8 +61,8 @@ class BuddiesComboBoxEntry(gtk.ComboBoxEntry):
 		self.set_model(self.store)
 		self.set_text_column(0)
 		self.store.set_default_sort_func(lambda *args: -1) 
-  		self.store.set_sort_column_id(-1, gtk.SORT_ASCENDING)
-        	self.show()
+		self.store.set_sort_column_id(-1, gtk.SORT_ASCENDING)
+		self.show()
 		
 	def Fill(self):
 		self.items.clear()
@@ -70,11 +70,12 @@ class BuddiesComboBoxEntry(gtk.ComboBoxEntry):
 		self.items[""] = self.store.append([""])
 		for user in self.frame.np.config.sections["server"]["userlist"]:
 			self.items[user[0]] = self.store.append([user[0]])
-		self.store.set_sort_column_id(0, gtk.SORT_ASCENDING)	
+		self.store.set_sort_column_id(0, gtk.SORT_ASCENDING)
+		
 	def Append(self, item):
 		if self.items.has_key(item):
 			return
-        	self.items[item] = self.get_model().append([item])
+		self.items[item] = self.get_model().append([item])
 		
 	def Remove(self, item):
 		if self.items.has_key(item):
@@ -443,10 +444,10 @@ class NicotineFrame(MainWindow):
 	def LoadIcons(self):
 		self.images = {}
 		self.icons = {}
-		# For Win32 Systray 
-		if sys.platform == "win32":
-		        import icondata
-			
+		# For Win32 Systray
+		if sys.platform == "win32" and not (gtk.pygtk_version[0] >= 2 and gtk.pygtk_version[1] >= 10):
+			import icondata
+
 			for i in "hilite2", "connect", "disconnect", "away2":
 				if "icontheme"  in self.np.config.sections["ui"]:
 					path = os.path.expanduser(os.path.join(self.np.config.sections["ui"]["icontheme"], i +".ico"))
@@ -981,12 +982,12 @@ class NicotineFrame(MainWindow):
 		
 	def OnDestroy(self, widget):
 		if self.np.servertimer is not None:
-		    self.np.servertimer.cancel()
+			self.np.servertimer.cancel()
 		self.np.StopTimers()
 		if self.np.transfers is not None:
-	            self.np.transfers.AbortTransfers()
-		    
-		self.np.config.sections["privatechat"]["users"] = self.privatechats.users.keys()
+			self.np.transfers.AbortTransfers()
+		
+		self.np.config.sections["privatechat"]["users"] = list(self.privatechats.users.keys())
 		if not self.manualdisconnect:
 			self.OnDisconnect(None)
 		self.np.config.writeConfig()
@@ -1232,7 +1233,7 @@ class NicotineFrame(MainWindow):
 	def BothRescan(self):
 		self.OnRescan()
 		if self.np.config.sections["transfers"]["enablebuddyshares"]:
- 			self.OnBuddyRescan()
+			self.OnBuddyRescan()
 
 		
 	def OnRescan(self, widget = None):
@@ -1709,9 +1710,9 @@ class NicotineFrame(MainWindow):
 		if user is None or user == login:
 			user = login
 			if user in [i[0] for i in self.np.config.sections["server"]["userlist"]] and self.np.config.sections["transfers"]["enablebuddyshares"]:
-				m = slskmessages.SharedFileList(None,self.np.config.sections["transfers"]["bsharedfilesstreams"])
+				m = slskmessages.SharedFileList(None, self.np.config.sections["transfers"]["bsharedfilesstreams"])
 			else:
-				m = slskmessages.SharedFileList(None,self.np.config.sections["transfers"]["sharedfilesstreams"])
+				m = slskmessages.SharedFileList(None, self.np.config.sections["transfers"]["sharedfilesstreams"])
 			m.parseNetworkMessage(m.makeNetworkMessage(nozlib=1), nozlib=1)
 			self.userbrowse.ShowInfo(login, m)
 		else:

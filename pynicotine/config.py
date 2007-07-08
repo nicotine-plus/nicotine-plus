@@ -48,7 +48,7 @@ class Config:
 "userencoding": {}, "portrange": (2234,2239), "enc":"utf-8", "userlist":[], \
 "banlist":[], "ignorelist":[], "ipblocklist":[], "autojoin":["nicotine"], "autoaway":15}, \
 \
-"transfers":{"downloaddir":None,"sharedownloaddir":1,"shared":None, "buddyshared": [],\
+"transfers":{"downloaddir":None, "sharedownloaddir":1, "shared":None, "buddyshared": [], \
 "uploadbandwidth":10, "uselimit":0,"uploadlimit":150, "preferfriends":0, \
 "useupslots":0, "uploadslots":2, "incompletedir":"", "shownotification":0, "afterfinish":"", \
 "afterfolder":"", "lock":1, "fifoqueue": 0, "usecustomban":0, "limitby":1, \
@@ -60,11 +60,11 @@ class Config:
 "downloads":[],"sharedfiles":{},"sharedfilesstreams":{}, "uploadsinsubdirs": 1, \
 "wordindex":{},"fileindex":{},"sharedmtimes":{},"bsharedfiles":{},"bsharedfilesstreams":{}, \
 "bwordindex":{},"bfileindex":{},"bsharedmtimes":{}, "rescanonstartup":0, \
-"enablefilters":1, "downloadregexp":"", "downloadfilters":[["desktop.ini",1],\
+"enablefilters":1, "downloadregexp":"", "downloadfilters":[["desktop.ini",1], \
 ["folder.jpg", 1], ["*.url", 1], ["thumbs.db", 1], \
 ["albumart(_{........-....-....-....-............}_)?(_?(large|small))?\.jpg", 0]]}, \
 \
-"userinfo":{"descr":"''","pic":"","descrutf8":0},\
+"userinfo":{"descr":"''", "pic":"", "descrutf8":0}, \
 \
 "language":{"setlanguage": 0, "language":""},
 \
@@ -73,31 +73,31 @@ class Config:
 "logging": {"logcollapsed":0, "logsdir":os.path.expanduser(LOGDIR), \
 "privatechat":0, "chatrooms":0,"transfers":0}, \
 \
-"privatechat":{"store":0, "users":[]},\
+"privatechat":{"store":0, "users":[]}, \
 \
-"columns":{"userlist":[1,1,1,1,1,1,1,1,1],  "chatrooms":{}, "downloads":[1,1,1,1,1,1,1,1,1], "uploads":[1,1,1,1,1,1,1,1,1], "search":[1,1,1,1,1,1,1,1,1,1] },\
+"columns":{"userlist":[1,1,1,1,1,1,1,1,1], "chatrooms":{}, "downloads":[1,1,1,1,1,1,1,1,1], "uploads":[1,1,1,1,1,1,1,1,1], "search":[1,1,1,1,1,1,1,1,1,1] }, \
 \
 "searches":{"maxresults":50,"re_filter":0,"history":[], \
 "enablefilters":0, "defilter":["","","","",0,""], "filtercc":[], \
 "filterin":[],"filterout":[],"filtersize":[],"filterbr":[]}, \
 \
 "ui":{"icontheme": "", "chatme":"FOREST GREEN", "chatremote":"","chatlocal":"BLUE", \
-"chathilite":"red", "useronline":"BLACK", "useraway":"ORANGE","useroffline":"#aa0000",\
+"chathilite":"red", "useronline":"BLACK", "useraway":"ORANGE", "useroffline":"#aa0000", \
 "usernamehotspots":1, "usernamestyle": "bold", "textbg": "", "search":"","searchq":"GREY", \
-"inputcolor":"", "spellcheck": 1, "exitdialog": 1, "notexists": 1,\
-"decimalsep":",", "chatfont": "", "roomlistcollapsed": 0, "tabclosers": 1,\
-"buddylistinchatrooms": 0, "trayicon": 1, "soundenabled": 1, "soundtheme": "",\
-"soundcommand": "play -q", "filemanager": "rox $", "speechenabled": 0, "enabletrans":0,\
+"inputcolor":"", "spellcheck": 1, "exitdialog": 1, "notexists": 1, \
+"decimalsep":",", "chatfont": "", "roomlistcollapsed": 0, "tabclosers": 1, \
+"buddylistinchatrooms": 0, "trayicon": 1, "soundenabled": 1, "soundtheme": "", \
+"soundcommand": "play -q", "filemanager": "rox $", "speechenabled": 0, "enabletrans":0, \
 "transtint": "#aaaaaa", "transalpha": 150, "transfilter": 0x00000000L,
 "width": 800, "height": 600}, \
 \
-"urls":{"urlcatching":1,"protocols":{"http":"firefox %s", "https":"firefox %s"}, "humanizeurls":1},\
+"urls":{"urlcatching":1, "protocols":{"http":"firefox %s", "https":"firefox %s"}, "humanizeurls":1}, \
 \
 "interests": {"likes":[], "dislikes":[]}, \
 \
-"ticker": {"default": "", "rooms": {}, "hide": 0},\
+"ticker": {"default": "", "rooms": {}, "hide": 0}, \
 \
-"players": {"default": "xmms -e $", "npothercommand": "", "npplayer": "infopipe",\
+"players": {"default": "xmms -e $", "npothercommand": "", "npplayer": "infopipe", \
  "npformatlist": [], "npformat": "" }}
 		self.defaults = {}
 		for key, value in self.sections.items():

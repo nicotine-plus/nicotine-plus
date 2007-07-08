@@ -313,7 +313,7 @@ class UserInfo(UserInfoTab):
 		if self.image is None:
 			return
 		#pixbuf = self.image.get_pixbuf()
-		name = os.path.join(self.frame.np.config.sections["transfers"]["downloaddir"],self.encode(self.user)) + ".jpg"
+		name = os.path.join(self.frame.np.config.sections["transfers"]["downloaddir"], self.encode(self.user)) + ".jpg"
 		self.image_pixbuf.save(name, "jpeg", {"quality": "100"})
 		self.frame.logMessage("Picture saved to " + name)
 		
