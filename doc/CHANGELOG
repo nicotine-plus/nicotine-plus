@@ -21,6 +21,8 @@ General Changes
    notification-daemon, libnotify and python-notify required
  * Userinfo settings now have size data for image
 Chat
+ * A popup dialog appears after closing the last chat room while the roomlist
+   is hidden.
  * URL's are now converted back to plain text by the URL catcher
    (before only %20 were converted to spaces)
  * Usernames in chat logs and private, userinfo and userbrowse tab labels are
