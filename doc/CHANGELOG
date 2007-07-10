@@ -1,8 +1,11 @@
 ChangeLog for Nicotine Plus
 
 UNRELEASED
+Licensing
+ * Relicensed all code under GPLv3 and LGPLv3
 
 General Changes
+ * Added credits and license note to About Nicotine dialog.
  * Settings widgets will now be colored red if their values are invalid.
  * URL handlers settings rearranged sligtly, combo items in the handlers column
  * Rearranged the Settings tree and removed some descriptive panes

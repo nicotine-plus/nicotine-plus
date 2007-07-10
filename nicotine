@@ -21,12 +21,14 @@
 Contact info:
 daelstorm@gmail.com
 """
+import platform, os
 
-try:
-	import psyco
-	psyco.profile()
-except ImportError:
-	print """Nicotine supports \"psyco\", an inline optimizer for python
+if os.uname()[4] in ("i386", "i586", "i686") and platform.architecture()[0] == "32bit":
+	try:
+		import psyco
+		psyco.profile()
+	except ImportError:
+		print """Nicotine supports \"psyco\", an inline optimizer for python
 code, you can get it at http://sourceforge.net/projects/psyco/"""
 
 import sys
