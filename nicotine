@@ -1,11 +1,25 @@
 #!/usr/bin/env python
-# Copyright (c) 2003-2004 Hyriand. All rights reserved.
 #
-# Based on code from PySoulSeek, original copyright note:
+# Copyright (C) 2007 daelstorm. All rights reserved.
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Based on code from PySoulSeek and Nicotine
 
 """
 Contact info:
-hyriand@thegraveyard.org
+daelstorm@gmail.com
 """
 
 try:
@@ -103,12 +117,20 @@ If you're using Debian, install the python-pyvorbis package.
 	""")
 	
 	return None
+def version():
+	try:
+		import pynicotine.utils
+		print _("Nicotine-Plus version %s" % pynicotine.utils.version )
+	except ImportError, error:
+		print _("Cannot find the pynicotine.utils module.")
 
 def usage():
-	print _("""Usage: nicotine [OPTION]...
+	print _("""Nicotine-Plus is a Soulseek client.
+Usage: nicotine [OPTION]...
   -c file,	--config=file	Use non-default configuration file
   -t,		--enable-trayicon
   -d,		--disable-trayicon
+  -v,		--version	Display version and exit
   -h,		--help		Display this help and exit
 
 Please report any problems to our bugtracker :
@@ -126,7 +148,7 @@ if __name__ == '__main__':
 
 	import sys, getopt, os.path
 	try:
-		opts, args = getopt.getopt(sys.argv[1:], "hc:td", ["help", "config=", "profile", "enable-trayicon", "disable-trayicon"])
+		opts, args = getopt.getopt(sys.argv[1:], "hc:tdv", ["help", "config=", "profile", "enable-trayicon", "disable-trayicon", "version"])
 	except getopt.GetoptError:
 		# print help information and exit:
 		usage()
@@ -151,6 +173,9 @@ if __name__ == '__main__':
 			trayicon=1
 		if o in ("-d", "--disable-trayicon"):	
 			trayicon=0
+		if o in ("-v", "--version"):
+			version()
+			sys.exit()
 	result = checkenv()
 	if result is None:
 		from pynicotine.gtkgui import frame

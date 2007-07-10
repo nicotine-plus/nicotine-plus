@@ -1,5 +1,21 @@
-# Copyright (c) 2003-2004 Hyriand. All rights reserved.
+# Copyright (C) 2007 daelstorm. All rights reserved.
 #
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Original copyright below
+# Copyright (c) 2003-2004 Hyriand. All rights reserved.
+
 import os
 
 import gtk
@@ -449,28 +465,8 @@ class NicotineFrame(MainWindow):
 	def LoadIcons(self):
 		self.images = {}
 		self.icons = {}
-		# For Win32 Systray
-		if sys.platform == "win32" and not (gtk.pygtk_version[0] >= 2 and gtk.pygtk_version[1] >= 10):
-			import icondata
 
-			for i in "hilite2", "connect", "disconnect", "away2":
-				if "icontheme"  in self.np.config.sections["ui"]:
-					path = os.path.expanduser(os.path.join(self.np.config.sections["ui"]["icontheme"], i +".ico"))
-					if os.path.exists(path):
-						data = open(path, 'rb')
-						s = data.read()
-						data.close()
-						self.icons[i] = s
-						del s
-						continue
-					else:
-						# default icons
-						data = getattr(icondata, i)
-				else:
-					# default icons
-					data = getattr(icondata, i)
-				self.icons[i] = data
-		for i in "empty", "away", "online", "offline", "hilite", "hilite2", "connect", "disconnect", "away2", "n":
+		for i in ["empty", "away", "online", "offline", "hilite", "hilite2", "connect", "disconnect", "away2", "n", "nicotinen"]:
 			try:
 				import imagedata
 			except Exception, e:
@@ -1573,7 +1569,7 @@ class NicotineFrame(MainWindow):
 			except Exception, e:
 				pass
 	def OnAbout(self, widget):
-		dlg = AboutDialog(self.MainWindow)
+		dlg = AboutDialog(self.MainWindow, self)
 		dlg.run()
 		dlg.destroy()
 
@@ -2149,28 +2145,18 @@ class TrayApp:
 			self.TRAYICON_FAILED = False
 		else:
 			if sys.platform == "win32":
-				try:
-
-					import systraywin32
-					self.trayicon_module = systraywin32
-				except ImportError, error:
-					self.TRAYICON_FAILED = True
-					self.HAVE_TRAYICON = False
-					message =  _("Note: The systraywin32.py Python file failed to load properly because: %s. You may require pywin32. Get a version that matches your version of Python from here:\nhttp://sourceforge.net/project/showfiles.php?group_id=78018") % error
-					print message
-					self.frame.logMessage(message)
-			else:
-			        try:
-					from pynicotine import trayicon
-			        	self.trayicon_module = trayicon
-					self.HAVE_TRAYICON = True
-					self.TRAYICON_FAILED = False
-				except ImportError, error:
-					self.TRAYICON_FAILED = True
-					self.HAVE_TRAYICON = False
-					message = _("Note: Trayicon Python module was not found in the pynicotine directory: %s") % error
-					print message
-					self.frame.logMessage(message)
+				return
+			try:
+				from pynicotine import trayicon
+				self.trayicon_module = trayicon
+				self.HAVE_TRAYICON = True
+				self.TRAYICON_FAILED = False
+			except ImportError, error:
+				self.TRAYICON_FAILED = True
+				self.HAVE_TRAYICON = False
+				message = _("Note: Trayicon Python module was not found in the pynicotine directory: %s") % error
+				print message
+				self.frame.logMessage(message)
 			
 	def destroy_trayicon(self):
 		if not self.TRAYICON_CREATED:

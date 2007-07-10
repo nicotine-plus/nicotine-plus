@@ -1,78 +1,101 @@
-# Copyright (c) 2003-2004 Hyriand. All rights reserved.
+# Copyright (C) 2007 daelstorm. All rights reserved.
+# -*- coding: utf-8 -*-
 #
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Original copyright below
+# Copyright (c) 2003-2004 Hyriand. All rights reserved.
+
 import gtk
 import os, sys
 from pynicotine.utils import version
 import imagedata
 
 from pynicotine.utils import _
-
+from utils import AppendLine
 class GenericAboutDialog(gtk.Dialog):
-	def __init__(self, parent, title = ""):
+	def __init__(self, parent, title = "", nicotine=None):
 		gtk.Dialog.__init__(self, title, parent, gtk.DIALOG_MODAL, (gtk.STOCK_OK, gtk.RESPONSE_OK))
+		if nicotine:
+			self.set_icon(nicotine.images["n"])
+		
 		self.set_resizable(False)
 		self.set_position(gtk.WIN_POS_CENTER)
 		self.vbox.set_spacing(10)
 		self.set_border_width(5)
 
-class AboutDialog(GenericAboutDialog):
-	def __init__(self, parent):
-		GenericAboutDialog.__init__(self, parent, "About Nicotine")
+class AboutDialog(gtk.Dialog):
+	def __init__(self, parent, nicotine):
+		self.nicotine = nicotine
+		gtk.Dialog.__init__(self, "About Nicotine", parent, gtk.DIALOG_MODAL)
+		
+		self.set_resizable(False)
+		self.set_position(gtk.WIN_POS_CENTER)
+		self.vbox.set_spacing(10)
+		self.set_border_width(5)
 		img = gtk.Image()
-		loader = gtk.gdk.PixbufLoader("png")
-		loader.write(imagedata.nicotinen, len(imagedata.nicotinen))
-		loader.close()
-		pixbuf = loader.get_pixbuf()
-		img.set_from_pixbuf(pixbuf)
-		label = gtk.Label(_("""Nicotine+ %s
+		img.set_from_pixbuf(self.nicotine.images["nicotinen"])
+		
+		ScrolledWindow = gtk.ScrolledWindow()
+		ScrolledWindow.set_shadow_type(gtk.SHADOW_IN)
+		ScrolledWindow.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+		ScrolledWindow.show()
+		ScrolledWindow.set_size_request(250, -1)
+		TextView = gtk.TextView()
+		TextView.set_wrap_mode(gtk.WRAP_WORD)
+		TextView.set_cursor_visible(False)
+		TextView.set_editable(False)
+		TextView.show()
+		TextView.set_left_margin(3)
+		ScrolledWindow.add(TextView)
+		
+		text = _("""Nicotine+ %s
+Website:
+http://nicotine-plus.sourceforge.net
+Trac and Wiki:
+http://nicotine-plus.org
+Sourceforge Project:
+http://sourceforge.net/projects/nicotine-plus/
 
-Copyright (c) 2007 daelstorm
-http://nicotine-plus.sourceforge.net/
-daelstorm@gmail.com
+Soulseek: http://www.slsknet.org
 
-Based on code from Nicotine
-Copyright (c) 2003 Hyriand
-http://nicotine.thegraveyard.org/
-hyriand@thegraveyard.org
-
-Based on code from the PySoulSeek project
-Copyright (c) 2001-2003 Alexander Kanavin
-
-Released under the GNU Public License
-
-See MAINTAINERS file for the list of contributors""") % version)
-		label.set_justify(gtk.JUSTIFY_LEFT)
-		label.set_selectable(True)
+Based on code from Nicotine and PySoulSeek""") % version
+		AppendLine(TextView, text, None, None)
 		vbox = gtk.VBox()
-		vbox.pack_start(img, False, False)
+		vbox.pack_start(img, False, True)
 		hbox = gtk.HBox()
 		hbox.set_spacing(10)
-		hbox.pack_start(vbox, True, True)
-		hbox.pack_start(label, True, True)
+		hbox.pack_start(vbox, False, True)
+		hbox.pack_start(ScrolledWindow, True, True)
+
+		
+		self.expander = gtk.Expander(_("Dependencies"))
+		self.expander.show()
+		
 		pythonversion = "%d.%d.%d" % (sys.version_info[0], sys.version_info[1], sys.version_info[2])
-		
-		self.frame1 = gtk.Frame()
-		self.frame1.show()
-		self.frame1.set_shadow_type(gtk.SHADOW_ETCHED_IN)
-		
 		
 		self.vbox2 = gtk.VBox()
 		self.vbox2.set_spacing(5)
 		self.vbox2.set_border_width(5)
-		self.frame1.add(self.vbox2)
-		
-		self.label17 = gtk.Label(_("Dependencies"))
-		self.label17.set_padding(0, 0)
-		self.label17.set_line_wrap(False)
-		self.label17.show()
-		self.frame1.set_label_widget(self.label17)
-		
+		self.expander.add(self.vbox2)
+
 		hboxpython = gtk.HBox(5)
 		hboxpython.show()
 		python = gtk.Label("Python:")
 		python.set_alignment(0, 0.5)
 		python.show()
-		
+
 		VersionPython = gtk.Label(pythonversion)
 		VersionPython.set_alignment(0, 0.5)
 		VersionPython.show()
@@ -117,12 +140,186 @@ See MAINTAINERS file for the list of contributors""") % version)
 		self.vbox2.pack_start(hboxpygtk, True, True)
 		
 		self.vbox.pack_start(hbox, True, True)
-		self.vbox.pack_start(self.frame1, True, True)
+		self.vbox.pack_start(self.expander, True, True)
 		
+
+		self.LicenseButton = self.nicotine.CreateIconButton(gtk.STOCK_ABOUT, "stock", self.license, _("License"))
+
+		self.action_area.pack_start(self.LicenseButton)
+
+		self.CreditsButton = self.nicotine.CreateIconButton(gtk.STOCK_ABOUT, "stock", self.credits, _("Credits"))
+
+		self.action_area.pack_start(self.CreditsButton)
 		
+		self.CloseButton = self.nicotine.CreateIconButton(gtk.STOCK_CLOSE, "stock", self.click, _("Close"))
+
+		self.CloseButton.set_flags(gtk.CAN_DEFAULT)
+		self.action_area.pack_start(self.CloseButton)
 		
 		self.show_all()
+		
+	def quit(self, w=None, event=None):
+		self.hide()
+		self.destroy()
+		
+	def credits(self, button):
+		dlg = AboutCreditsDialog(self, self.nicotine)
+		dlg.run()
+		dlg.destroy()
+		
+	def license(self, button):
+		dlg = AboutLicenseDialog(self, self.nicotine)
+		dlg.run()
+		dlg.destroy()
+		
+	def click(self, button):
 
+		self.quit()
+		
+class AboutCreditsDialog(GenericAboutDialog):
+	def __init__(self, parent, nicotine):
+		self.nicotine = nicotine
+		GenericAboutDialog.__init__(self, parent, _("Credits"), self.nicotine)
+		self.set_resizable(True)
+		self.resize(450, 300)
+		self.notebook = gtk.Notebook()
+		self.notebook.show()
+		self.DevScrolledWindow = gtk.ScrolledWindow()
+		self.DevScrolledWindow.set_shadow_type(gtk.SHADOW_IN)
+		self.DevScrolledWindow.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+		self.DevScrolledWindow.show()
+		
+		self.DevTextView = gtk.TextView()
+		self.DevTextView.set_wrap_mode(gtk.WRAP_WORD)
+		self.DevTextView.set_cursor_visible(False)
+		self.DevTextView.set_editable(False)
+		self.DevTextView.show()
+		self.DevTextView.set_left_margin(3)
+		self.DevScrolledWindow.add(self.DevTextView)
+		
+
+		text = _("""daelstorm
+\t(Lead developer)
+\t<daelstorm@gmail.com>
+\thttp://thegraveyard.org/daelstorm/
+gallows
+\t(Developer, packager)
+\t<g4ll0ws@gmail.com>
+\thttp://perticone.homelinux.net/~sergio/
+hyriand
+\t(Former lead developer, contributer, author of Nicotine)
+\t<iksteen@gmail.com>
+\thttp://www.thegraveyard.org
+Le Vert
+\t(Webhosting, packager)
+\t<gandalf@le-vert.net>
+\thttp://www.le-vert.net
+QuinoX
+\t(Code contributer)
+\thttp://index.qtea.nl
+infinito
+\t(Code contributer)
+\t<code@infinicode.org>
+\thttp://infinicode.org
+suser-guru
+\t(SUSE Packager)
+\thttp://linux01.gwdg.de/~pbleser/
+osiris
+\t(Documentation, old Win32 installers)
+\t<osiris.contact@gmail.com>
+Alexander Kanavin
+\t(PySoulSeek developer) Nicotine and Nicotine+ are based on PySoulSeek
+\thttp://sensi.org/~ak/
+""")
+		AppendLine(self.DevTextView, text, None, None)
+		
+		developersLabel = gtk.Label(_("Developers"))
+		developersLabel.show()
+		self.notebook.append_page(self.DevScrolledWindow, developersLabel)
+
+		self.TransScrolledWindow = gtk.ScrolledWindow()
+		self.TransScrolledWindow.set_shadow_type(gtk.SHADOW_IN)
+		self.TransScrolledWindow.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+		self.TransScrolledWindow.show()
+		
+		self.TransTextView = gtk.TextView()
+		self.TransTextView.set_wrap_mode(gtk.WRAP_WORD)
+		self.TransTextView.set_cursor_visible(False)
+		self.TransTextView.set_editable(False)
+		self.TransTextView.set_left_margin(3)
+		self.TransTextView.show()
+		self.TransScrolledWindow.add(self.TransTextView)
+	
+		text = _("""Dutch
+ * nince78 (2007)
+ * hyriand
+German
+ * Meokater (2007)
+ * (._.) (2007)
+ * lippel (2004)
+ * hyriand (2003)
+Spanish
+ * Silvio Orta (2007)
+ * Dreslo
+French
+ * ManWell (2007)
+ * ><((((*> (2007)
+ * flashfr
+ * systr
+Italian
+ * Nicola (2007) <info@nicoladimaria.info>
+ * dbazza
+Polish
+ * Amun-Ra (2007)
+ * thine (2007)
+ * owczi
+Swedish
+ * alimony <markus@samsonrourke.com>
+Hungarian
+ * djbaloo <dj_baloo@freemail.hu>
+Slovak 
+ * Josef Riha (2006) <jose1711@gmail.com>
+Portuguese Brazilian
+ * Suicide|Solution <felipe@bunghole.com.br> (2006) http://suicide.bunghole.com.br
+Lithuanian
+ * Žygimantas Beručka (2006) <uid0@akl.lt>
+Finnish
+ * Kalevi <mr_auer@welho.net>
+Euskara
+ * The Librezale.org Team <librezale@librezale.org> http://librezale.org
+ """)
+ 		AppendLine(self.TransTextView, text, None, None)
+		
+		translatorsLabel = gtk.Label(_("Translators"))
+		translatorsLabel.show()
+		self.notebook.append_page(self.TransScrolledWindow, translatorsLabel)
+		self.vbox.pack_start(self.notebook)
+		
+class AboutLicenseDialog(GenericAboutDialog):
+	def __init__(self, parent, nicotine):
+		self.nicotine = nicotine
+		GenericAboutDialog.__init__(self, parent, _("License"), self.nicotine)
+		label = gtk.Label(_("""GNU General Public License version 3 notice
+
+Copyright (C) 2007 daelstorm. All rights reserved.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>."""))
+		label.set_justify(gtk.JUSTIFY_LEFT)
+		label.set_selectable(True)
+		self.vbox.pack_start(label)
+		self.show_all()
+		
 class AboutFiltersDialog(GenericAboutDialog):
 	def __init__(self, parent):
 		GenericAboutDialog.__init__(self, parent, _("About search filters"))
@@ -210,7 +407,7 @@ class AboutRoomsDialog(GenericTableDialog):
 	        "/alias /al '" + _("command") + "' '" +_("definition")+"'" , _("Add a new alias"),
 		"/alias /al '" + _("command") + "' '" +_("definition")+"' |("+_("process")+")", _("Add a new alias that runs a process"),
 	        "/unalias /un '" + _("command")+"'", _("Remove an alias"),
-		"/now '", _("Display the Now Playing script's output"),
+		"/now", _("Display the Now Playing script's output"),
 	        "", "",
 	        "/ban '" + _("user")+"'", _("Add user 'user' to your ban list"),
 	        "/unban '" + _("user")+"'", _("Remove user 'user' from your ban list"),
