@@ -33,7 +33,7 @@ class NowPlaying:
 			self.NowPlaying.connect("destroy", self.quit)
 			self.NowPlaying.connect("destroy-event", self.quit)
 			self.NowPlaying.connect("delete-event", self.quit)
-	
+		self.NowPlaying.set_resizable(False)
 		self.vbox1 = gtk.VBox(False, 5)
 		self.vbox1.show()
 		self.vbox1.set_spacing(5)
@@ -83,7 +83,7 @@ class NowPlaying:
 		self.NP_mpd.connect("clicked", self.OnNPPlayer)
 	
 		self.hbox1.pack_start(self.NP_mpd, False, False, 0)
-	
+
 		self.vbox1.pack_start(self.hbox1, False, True, 0)
 	
 		self.hbox2 = gtk.HBox(False, 5)
@@ -115,9 +115,16 @@ class NowPlaying:
 		self.NP_rhythmbox.show()
 		self.NP_rhythmbox.connect("clicked", self.OnNPPlayer)
 		
-	
 		self.hbox2.pack_start(self.NP_rhythmbox, False, False, 0)
+		
+		self.NP_exaile = gtk.RadioButton(self.NP_infopipe)
+		self.NP_exaile.set_active(False)
+		self.NP_exaile.set_label(_("Exaile"))
+		self.NP_exaile.show()
+		self.NP_exaile.connect("clicked", self.OnNPPlayer)
 	
+		self.hbox2.pack_start(self.NP_exaile, False, False, 0)
+			
 		self.NP_other = gtk.RadioButton(self.NP_infopipe)
 		self.NP_other.set_active(False)
 		self.NP_other.set_label(_("Other"))
@@ -187,9 +194,10 @@ class NowPlaying:
 		self.NPFormat.set_model(self.NPFormat_List)
 		self.NPFormat.set_text_column(0)
 		self.NPFormat.child.connect("activate", self.OnAddFormat)
+		self.NPFormat.child.connect("changed", self.OnModifyFormat)
 		self.vbox1.set_border_width(5)
 		self.vbox1.pack_start(self.NPFormat, False, False, 0)
-		
+
 		self.hbox6 = gtk.HBox(False, 5)
 		self.hbox6.show()
 		self.hbox6.set_spacing(5)
@@ -257,12 +265,13 @@ class NowPlaying:
 		self.vbox1.pack_start(self.hbox3, False, True, 0)
 		self.defaultlist = [ "$n", "$a - $t", "[$a] $t", "Now $s: [$a] $t", "Now $s: $n", "$a - $b - $t", "$a - $b - $t ($l/$rKBps) from $y $c" ]
 		self.title_clear()
-		
+		self.player_replacers = []
 		self.OnNPPlayer(None)
 	
 		if create:
 			self.NowPlaying.add(self.vbox1)
-		
+		# Set the active radio button
+		self.SetPlayer(self.frame.np.config.sections["players"]["npplayer"])
 		if self.frame.np.config.sections["players"]["npformat"] != "":
 			self.NPFormat.child.set_text(self.frame.np.config.sections["players"]["npformat"])
 		if self.frame.np.config.sections["players"]["npformatlist"] != []:
@@ -276,9 +285,24 @@ class NowPlaying:
 		
 		for item in self.defaultlist:
 			self.NPFormat_List.append([str(item)])
-		# Set the active radio button
-		self.SetPlayer(self.frame.np.config.sections["players"]["npplayer"])
 		
+		
+	def SetTextBG(self, widget, bgcolor="", fgcolor=""):
+		if bgcolor == "":
+			colour = None
+		else:
+			colour = gtk.gdk.color_parse(bgcolor)
+		widget.modify_base(gtk.STATE_NORMAL, colour)
+		widget.modify_bg(gtk.STATE_NORMAL, colour)
+
+		if type(widget) in (gtk.Entry, gtk.SpinButton):
+			if fgcolor == "":
+				colour = None
+			else:
+				colour = gtk.gdk.color_parse(fgcolor)
+			widget.modify_text(gtk.STATE_NORMAL, colour)
+			widget.modify_fg(gtk.STATE_NORMAL, colour)
+				
 	def title_clear(self):
 		self.label7.set_text("")
 		self.title = { "title": "", "artist": "", "comment": "", "year": "", "album": "", "track":"", "length": "", "nowplaying": "", "status": "", "bitrate": "", "filename": ""}
@@ -298,8 +322,25 @@ class NowPlaying:
 			self.NP_rhythmbox.set_active(1)
 		elif player == "bmpx":
 			self.NP_bmpx.set_active(1)
+		elif player == "exaile":
+			self.NP_exaile.set_active(1)
 		elif player == "other":
 			self.NP_other.set_active(1)
+			self.player_replacers = ["$n"]
+		else:
+			self.NP_other.set_active(1)
+			
+	def OnModifyFormat(self, widget):
+		text = self.NPFormat.child.get_text().strip()
+		replacers = []
+		for replacer in ["$n", "$t", "$l", "$a", "$b", "$c", "$k", "$y", "$r", "$f", "$s"]:
+			if replacer in text:
+				replacers.append(replacer)
+		for replacer in replacers:
+			if replacer not in self.player_replacers:
+				self.SetTextBG(self.NPFormat.child, "red", "white")
+				return
+		self.SetTextBG(self.NPFormat.child, "", "")
 			
 	def OnAddFormat(self, widget):
 		text = self.NPFormat.child.get_text().strip()
@@ -327,31 +368,62 @@ class NowPlaying:
 	def OnNPPlayer(self, widget):
 		set = 0 
 		if self.NP_infopipe.get_active():
-			self.label2.set_text(_("$n Now Playing\n$l Length\n$r Bitrate\n$s Status"))
+			self.player_replacers = ["$n",  "$l", "$b", "$c", "$k", "$r", "$f", "$s"]
 			set = 1
-		if self.NP_mpd.get_active():
-			self.label2.set_text(_("$n Now Playing\n$t Title\n$a Artist\n$b Album\n$k Track Number\n$f Filename"))
+		elif self.NP_mpd.get_active():
+			self.player_replacers = ["$n", "$t", "$a", "$b",  "$f", "$k"]
 			set = 1
-		if self.NP_amarok.get_active():
-			self.label2.set_text(_("$n Now Playing\n$l Length\n$r Bitrate\n$s Status\n$t Title\n$a Artist\n$b Album\n$c Comment\n$k Track Number\n$y Year\n$f Filename"))
+		elif self.NP_amarok.get_active():
+			self.player_replacers = ["$n", "$t", "$l", "$a", "$b", "$c", "$k", "$y", "$r", "$f", "$s"]
 			set = 1
-		if self.NP_audacious.get_active():
-			self.label2.set_text(_("$n Now Playing\n$l Length\n$r Bitrate\n$s Status\n$t Title\n$a Artist\n$b Album\n$c Comment\n$k Track Number\n$y Year\n$f Filename"))
+		elif self.NP_audacious.get_active():
+			self.player_replacers = ["$n", "$t", "$l", "$a", "$b", "$c", "$k", "$y", "$r", "$f", "$s"]
 			set = 1
-		if self.NP_rhythmbox.get_active():
-			self.label2.set_text(_("$n Now Playing\n$l Length\n$r Bitrate\n$s Status\n$t Title\n$a Artist\n$b Album\n$c Comment\n$k Track Number\n$y Year\n$f Filename (URI)"))
+		elif self.NP_rhythmbox.get_active():
+			self.player_replacers = ["$n", "$t", "$l", "$a", "$b", "$c", "$k", "$y", "$r", "$f", "$s"]
 			set = 1
-		if self.NP_bmpx.get_active():
-			self.label2.set_text(_("$n Now Playing\n$l Length\n$r Bitrate\n$t Title\n$a Artist\n$b Album\n$k Track Number\n$y Year\n$f Filename (URI)"))
+		elif self.NP_bmpx.get_active():
+			self.player_replacers = ["$n", "$t", "$l", "$a", "$b", "$k", "$y", "$r", "$f"]
+			set = 1
+		elif self.NP_exaile.get_active():
+			self.player_replacers = ["$t", "$l", "$a", "$b"]
 			set = 1
 		if self.NP_other.get_active():
-			self.label2.set_text(_("$n Now Playing"))
+			self.player_replacers = ["$n"]
 			self.NPCommand.set_sensitive(True)
 			set = 1
 		else:
 			self.NPCommand.set_sensitive(False)
+		legend = ""
+		for item in self.player_replacers:
+			legend += item + " "
+			if item == "$t":
+				legend += _("Title")
+			elif item == "$n":
+				legend += _("Now Playing (typically \"%s - %s\")") % (_("Artist"), _("Title"))
+			elif item == "$l":
+				legend += _("Length")
+			elif item == "$r":
+				legend += _("Bitrate")
+			elif item == "$c":
+				legend += _("Comment")
+			elif item == "$a":
+				legend += _("Artist")
+			elif item == "$b":
+				legend += _("Album")
+			elif item == "$k":
+				legend += _("Track Number")
+			elif item == "$y":
+				legend += _("Year")
+			elif item == "$f":
+				legend += _("Filename (URI)")
+			elif item == "$s":
+				legend += _("Status")
+			legend += "\n"
+		self.label2.set_text(legend)
 		if not set:
 			self.label2.set_text("")
+		self.OnModifyFormat(self.NPFormat.child)
 			
 	def OnNPCancel(self, widget):
 		self.quit(None)
@@ -378,6 +450,8 @@ class NowPlaying:
 			player = "rhythmbox"
 		elif self.NP_bmpx.get_active():
 			player = "bmpx"
+		elif self.NP_exaile.get_active():
+			player = "exaile"
 		elif self.NP_other.get_active():
 			player = "other"
 			
@@ -403,6 +477,8 @@ class NowPlaying:
 			result = self.rhythmbox()
 		elif self.NP_bmpx.get_active():
 			result = self.bmpx()
+		elif self.NP_exaile.get_active():
+			result = self.exaile()
 		elif self.NP_other.get_active():
 			result = self.other()
 		if not result:
@@ -494,6 +570,47 @@ class NowPlaying:
 		if output == '' or output.startswith("MPD_HOST") or output.startswith("volume: "):
 			return None
 		return output
+	
+	def exaile(self):
+		slist = self.NPFormat.child.get_text()
+		commandlist = []
+		if "$t" in slist:
+			commandlist.append("--get-title")
+		if "$l" in slist:
+			commandlist.append("--get-length")
+		if "$a" in slist:
+			commandlist.append("--get-artist")
+		if "$b" in slist:
+			commandlist.append("--get-album")
+
+		output = self.exaile_command(commandlist)
+		if output is None:
+			return 0
+		if len(output) == len(commandlist):
+			pos = 0
+			for command in commandlist:
+				if command == "--get-title":
+					self.title["title"] = output[pos]
+				elif command == "--get-length":
+					self.title["length"] = output[pos]
+				elif command == "--get-artist":
+					self.title["artist"] = output[pos]
+				elif command == "--get-album":
+					self.title["album"] = output[pos]
+				pos += 1
+		else:
+			return 0
+		return 1
+		
+				
+	def exaile_command(self, commandlist):
+		command = ""
+		for i in commandlist:
+			command += i + " "
+		output = commands.getoutput("exaile %s" % command).split('\n')
+	
+		return output
+		
 	def amarok(self):
 		slist = self.NPFormat.child.get_text()
 		
@@ -589,6 +706,8 @@ class NowPlaying:
 		if "$s" in slist:
 			output = self.audacious_command('playback-status')
 			if output: self.title["status"] = output
+		if output.startswith("audtool"):
+			return 0
 		return 1
 		
 	def audacious_command(self, command, subcommand = ''):
