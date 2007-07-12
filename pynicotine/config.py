@@ -140,7 +140,7 @@ class Config:
 		# 		print self.sections[i][j]
 				if self.sections[i][j] is None or self.sections[i][j] == '' and i not in ("userinfo", "ui", "ticker", "players") and j not in ("incompletedir", "autoreply", 'afterfinish', 'afterfolder', 'geoblockcc', 'downloadregexp', "language"):
 					# Repair options set to None with defaults
-					if self.sections[i][j] is None:
+					if self.sections[i][j] is None and self.defaults[i][j] is not None:
 						self.sections[i][j] = self.defaults[i][j]
 						return 2, (i, j, self.sections[i][j])
 					else:

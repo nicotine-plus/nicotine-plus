@@ -2094,7 +2094,7 @@ class SettingsWindow(settings_glade.SettingsWindow):
 		
 	def DehilightTree(self, model, *args):
 		for widget in self.handler_ids.keys():
-			if widget.get_model() is model:
+			if type(widget) is gtk.TreeView and widget.get_model() is model:
 				self.Dehilight(widget)
 				break
 		
