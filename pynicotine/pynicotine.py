@@ -1210,7 +1210,7 @@ class NetworkEventProcessor:
 		terms = searchterm.translate(self.translatepunctuation).lower().split()
 		list = [wordindex[i][:] for i in terms if wordindex.has_key(i)]
 		if len(list) != len(terms) or len(list) == 0:
-			self.logMessage(_("User %(user)s is searching for %(query)s, returning no results") %{'user':user, 'query':self.decode(searchterm)}, 1)
+			self.logMessage(_("User %(user)s is searching for %(query)s, returning no results") %{'user':user, 'query':self.decode(searchterm)}, 2)
 			return
 		min = list[0]
 		for i in list[1:]:
