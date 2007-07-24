@@ -56,7 +56,10 @@ class ServerFrame(settings_glade.ServerFrame):
 			self.Server.child.set_text("%s:%i" % (server["server"][0], server["server"][1]))
 		else:
 			self.Server.child.set_text("server.slsknet.org:2240")
-
+		if self.frame.np.waitport is None:
+			self.CurrentPort.set_markup(_("Client port is not set"))
+		else:
+			self.CurrentPort.set_markup(_("Client port is <b>%(port)s</b>") % {"port": self.frame.np.waitport})
 		if server["login"] is not None:
 			self.Login.set_text(server["login"])
 		else:

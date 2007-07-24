@@ -120,7 +120,7 @@ class NetworkEventProcessor:
 				self.geoip = _GeoIP.new(_GeoIP.GEOIP_STANDARD)
 			except ImportError:
 				self.geoip = None
-
+		# Callback handlers for messages
 		self.events = {slskmessages.ConnectToServer:self.ConnectToServer,
 			slskmessages.ConnectError:self.ConnectError,
 			slskmessages.IncPort:self.IncPort,
@@ -311,11 +311,16 @@ class NetworkEventProcessor:
 		return str(string).decode(networkenc,'replace').encode("utf-8", "replace")
 
 	def getencodings(self):
+		# Encodings and descriptions for ComboBoxes
 		return [["Latin", 'ascii'], ["US-Canada", 'cp037'],  ['Hebrew', 'cp424'], ['US English', 'cp437'], ['International', 'cp500'], ['Greek', 'cp737'], ['Estonian', 'cp775'], ['Western European', 'cp850'], ['Central European', 'cp852'], ['Cyrillic', 'cp855'], ['Cyrillic', 'cp856'], ['Turkish', 'cp857'], ['Portuguese', 'cp860'], ['Icelandic', 'cp861'], ['Hebrew', 'cp862'], ['French Canadian', 'cp863'], ['Arabic', 'cp864'], ['Nordic', 'cp865'], ['Cyrillic', 'cp866'], ['Latin-9', 'cp869'], ['Thai', 'cp874'], ['Greek', 'cp875'], ['Japanese', 'cp932'], ['Chinese Simple', 'cp936'], ['Korean', 'cp949'], ['Chinese Traditional', 'cp950'], ['Urdu',  'cp1006'], ['Turkish',  'cp1026'], ['Latin', 'cp1140'], ['Central European', 'cp1250'], ['Cyrillic', 'cp1251'], ['Latin', 'cp1252'], ['Greek', 'cp1253'], ['Turkish', 'cp1254'], ['Hebrew', 'cp1255'], ['Arabic', 'cp1256'], ['Baltic', 'cp1257'], ['Vietnamese', 'cp1258'],  ['Latin', 'iso8859-1'], ['Latin 2', 'iso8859-2'], ['South European', 'iso8859-3'], ['North European', 'iso8859-4'], ['Cyrillic', 'iso8859-5'], ['Arabic', 'iso8859-6'], ['Greek', 'iso8859-7'], ['Hebrew', 'iso8859-8'], ['Turkish', 'iso8859-9'], ['Nordic', 'iso8859-10'], ['Thai', 'iso8859-11'], ['Baltic', 'iso8859-13'], ['Celtic', 'iso8859-14'], ['Western European', 'iso8859-15'], ['South-Eastern European', 'iso8859-16'], ['Cyrillic', 'koi8-r'], ['Latin', 'latin-1'], ['Cyrillic', 'mac-cyrillic'], ['Greek', 'mac-greek'], ['Icelandic', 'mac-iceland'], ['Latin 2', 'mac-latin2'], ['Latin', 'mac-roman'], ['Turkish', 'mac-turkish'], ['International', 'utf-16'], ['International', 'utf-7'], ['International', 'utf-8']]
 
 	def sendNumSharedFoldersFiles(self):
+		"""
+		Send number of files in buddy shares if only buddies can
+		download, and buddy-shares are enabled.
+		"""
 		conf = self.config.sections
-		
+
 		if conf["transfers"]["enablebuddyshares"] and conf["transfers"]["friendsonly"]:
 			shared_db = "bsharedfiles"
 		else:
@@ -399,7 +404,7 @@ class NetworkEventProcessor:
 		self.serverconn = msg.conn
 		self.servertimeout = -1
 		self.users = {}
-		self.queue.put(slskmessages.Login(self.config.sections["server"]["login"], self.config.sections["server"]["passw"], 156)) #155, 156, 157, 180
+		self.queue.put(slskmessages.Login(self.config.sections["server"]["login"], self.config.sections["server"]["passw"], 181)) #155, 156, 157, 180
 		if self.waitport is not None:	
 			self.queue.put(slskmessages.SetWaitPort(self.waitport))
 
