@@ -183,7 +183,7 @@ class Searches:
 		self.frame.WishList.connect("clicked", self.WishListDialog.Toggle)
 		
 	def SetInterval(self, msg):
-		self.interval = msg.num
+		self.interval = msg.seconds
 		if not self.disconnected:
 			# Create wishlist searches (without tabs)
 			for term in self.frame.np.config.sections["server"]["autosearch"]:
@@ -328,7 +328,7 @@ class Searches:
 			label = "(" + ("", _("Rooms"), _("Buddies"), _("User"))[mode] + ") " + text[:15]
 		else:
 			label = text[:20]
-		self.frame.SearchNotebook.append_page(tab.vbox7, label, tab.OnCloseIgnore)
+		self.frame.SearchNotebook.append_page(tab.vbox7, label, tab.OnClose)
 
 		search = [id, text, tab, mode, remember]
 		self.searches[id] = search
@@ -358,8 +358,8 @@ class Searches:
 		if self.searches.has_key(tab.id):
 			search = self.searches[tab.id]
 			search[2] = None
-			if search[4]:
-				self.RemoveAutoSearch(search[0])
+			#if search[4]:
+				#self.RemoveAutoSearch(search[0])
 		
 		self.frame.SearchNotebook.remove_page(tab.vbox7)
 
@@ -870,10 +870,9 @@ class Search(SearchTab):
 			self.ResultsList.set_model(self.resultsmodel)
 
 	def OnIgnore(self, widget):
-		self.RememberCheckButton.set_active(0)
-		self.RememberCheckButton.set_sensitive(0)
-		self.OnToggleRemember(self.RememberCheckButton)
-
+		#self.RememberCheckButton.set_active(0)
+		#self.RememberCheckButton.set_sensitive(0)
+		#self.OnToggleRemember(self.RememberCheckButton)
 		if self.id in self.searches.searches.keys():
 			del self.searches.searches[self.id]
 		
@@ -881,9 +880,9 @@ class Search(SearchTab):
 
 	def OnClose(self, widget):
 		self.searches.RemoveTab(self)
-		self.OnCloseIgnore(widget)
 
 	def OnCloseIgnore(self, widget):
+
 		self.OnIgnore(self.button2)
 		self.searches.RemoveTab(self)
 

@@ -235,7 +235,7 @@
                         <property name="label" translatable="yes">E_xit</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="OnExit"/>
-                        <accelerator key="X" modifiers="GDK_MOD1_MASK" signal="activate"/>
+                        <accelerator key="Q" modifiers="GDK_CONTROL_MASK" signal="activate"/>
                         <child internal-child="image">
                           <widget class="GtkImage" id="image346">
                             <property name="visible">True</property>

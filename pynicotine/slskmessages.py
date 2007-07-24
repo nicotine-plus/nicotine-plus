@@ -169,7 +169,7 @@ class SlskMessage:
 			else:
 				return start, None
 		except struct.error, error:
-			print error
+			print self.__class__, error
 			return start, None
 
 	def packObject(self, object):
@@ -202,7 +202,12 @@ class SlskMessage:
 		strlist = list(str)
 		strlist.reverse()
 		return ''.join(strlist)
-
+	
+	def strunreverse(self, string):
+		strlist = string.split(".")
+		strlist.reverse()
+		return '.'.join(strlist)
+	
 class ServerMessage(SlskMessage):
 	pass
 
@@ -220,6 +225,7 @@ class Login(ServerMessage):
 		self.username = username
 		self.passwd = passwd
 		self.version = version
+		self.ip = None
 		
 	def makeNetworkMessage(self):
 		import md5
@@ -231,24 +237,24 @@ class Login(ServerMessage):
 
 
 	def parseNetworkMessage(self, message):
-		pos1, self.success = 1, ord(message[0])
+		pos, self.success = 1, ord(message[0])
 		if not self.success:
-			pos1, self.reason = self.getObject(message, types.StringType, pos1)
+			pos, self.reason = self.getObject(message, types.StringType, pos)
 	
 		else:
-			pos1, self.banner = self.getObject(message, types.StringType, pos1)
-		if len(message[pos1:]) > 0 :
+			pos, self.banner = self.getObject(message, types.StringType, pos)
+		if len(message[pos:]) > 0 :
 			try:
-				
-				pos2, self.num = self.getObject(message, types.IntType, pos1)
+				import socket
+				pos, self.ip = pos+4, socket.inet_ntoa(self.strrev(message[pos:pos+4]))
+				#pos, self.num = self.getObject(message, types.IntType, pos)
 				# Unknown number
-		
 			except Exception, error:
 				print "Unpack number", error
 			try:
 		
-				if len(message[pos1:]) > 0:
-					pos1, self.checksum = self.getObject(message, types.StringType, pos1)
+				if len(message[pos:]) > 0:
+					pos, self.checksum = self.getObject(message, types.StringType, pos)
 				#print self.checksum
 			except Exception, error:
 				# Not an official client on the official server
@@ -333,11 +339,14 @@ class NotifyPrivileges(ServerMessage):
 	def parseNetworkMessage(self, message):
 		pos, self.token = self.getObject(message, types.IntType)
 		pos, self.user = self.getObject(message, types.StringType, pos)
-			
+	def makeNetworkMessage(self):
+		return self.packObject(self.token) + self.packObject(self.user)
+	
 class AckNotifyPrivileges(ServerMessage):
 	def __init__(self, token = None):
 		self.token = token
-		
+	def parseNetworkMessage(self, message):
+		pos, self.token = self.getObject(message, types.IntType)	
 	def makeNetworkMessage(self):
 		return self.packObject(self.token)
 
@@ -543,7 +552,7 @@ class FileSearch(ServerMessage):
 		pos, self.user = self.getObject(message, types.StringType)
 		pos, self.searchid = self.getObject(message, types.IntType, pos)
 		pos, self.searchterm = self.getObject(message, types.StringType, pos)
-
+		
 class WishlistSearch(FileSearch):
 	pass
 
@@ -701,30 +710,60 @@ class TunneledMessage(ServerMessage):
 		self.addr = (ip, port)
 		pos, self.msg = self.getObject(message, types.StringType, pos)
 
-class Msg83(ServerMessage):
+class ParentMinSpeed(ServerMessage):
+	# 83
 	def __init__(self):
 		pass
 	
 	def parseNetworkMessage(self, message):
 		pos, self.num = self.getObject(message, types.IntType)
 
-class Msg84(Msg83):
+class ParentSpeedRatio(ParentMinSpeed):
+	# 84
+	def __init__(self):
+		pass
+	
+	def parseNetworkMessage(self, message):
+		pos, self.num = self.getObject(message, types.IntType)
+
+class SearchParent(ServerMessage):
+	# 73
+	def __init__(self, parentip = None):
+		self.parentip = parentip
+	
+	def makeNetworkMessage(self):
+		import socket
+		ip = socket.inet_pton(socket.AF_INET,self.strunreverse(self.parentip))
+		return self.packObject(ip)
+
+class Msg85(ServerMessage):
 	pass
 
-class Msg85(Msg83):
-	pass
 
+class ParentInactivityTimeout(ServerMessage):
+	# 86
+	def __init__(self):
+		pass
+	
+	def parseNetworkMessage(self, message):
+		pos, self.seconds = self.getObject(message, types.IntType)
 
-class ParentInactivityTimeout(Msg83):
-	pass
+class SearchInactivityTimeout(ServerMessage):
+	# 87
+	def __init__(self):
+		pass
+	
+	def parseNetworkMessage(self, message):
+		pos, self.seconds = self.getObject(message, types.IntType)
 
-class SearchInactivityTimeout(Msg83):
-	pass
+class MinParentsInCache(ServerMessage):
+	def __init__(self):
+		pass
+	
+	def parseNetworkMessage(self, message):
+		pos, self.num = self.getObject(message, types.IntType)
 
-class MinParentsInCache(Msg83):
-	pass
-
-class Msg12547(Msg83):
+class Msg12547(ServerMessage):
 	def __init__(self, conn):
 		self.conn = conn
 		
@@ -742,14 +781,28 @@ class UploadQueueNotification(PeerMessage):
 		return ""
 
     
-class Msg89(Msg83):
-	pass
+class Msg89(ServerMessage):
+	def __init__(self):
+		pass
+		
+	def parseNetworkMessage(self, message):
+		pass
 
-class DistribAliveInterval(Msg83):
-	pass
+class DistribAliveInterval(ServerMessage):
+	# 90
+	def __init__(self):
+		pass
+	
+	def parseNetworkMessage(self, message):
+		pos, self.seconds = self.getObject(message, types.IntType)
+		print self.__class__, self.seconds
 
-class WishlistInterval(Msg83):
-	pass
+class WishlistInterval(ServerMessage):
+	def __init__(self):
+		pass
+		
+	def parseNetworkMessage(self, message):
+		pos, self.seconds = self.getObject(message, types.IntType)
 
 class PrivilegedUsers(ServerMessage):
 	""" A list of thise who made a donation """

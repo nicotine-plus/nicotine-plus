@@ -140,7 +140,7 @@ def rescandirs(shared, sharedmtimes, sharedfiles, sharedfilesstreams, yieldfunct
 def getDirsMtimes(dirs, yieldcall = None):
 	list = {}
 	for directory in dirs:
-		directory = directory.replace("//","/")
+		directory = os.path.expanduser(directory.replace("//","/"))
 		if win32:
 			# force Unicode for reading from disk
 			directory = u"%s" %directory
@@ -198,6 +198,7 @@ def getFilesList(mtimes, oldmtimes, oldlist, yieldcall = None, progress=None):
 		percent = 1.0 / len(mtimes)
 	
 	for directory in mtimes:
+		directory = os.path.expanduser(directory)
 		if progress:
 			#print progress.get_fraction()+percent
 			if progress.get_fraction()+percent <= 1.0:

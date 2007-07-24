@@ -841,26 +841,29 @@ class Transfers:
 			prefix2 = "buddy"
 			
 			
-		if self.eventprocessor.config.sections["transfers"]["sharedownloaddir"]:
-			shared = self.eventprocessor.config.sections["transfers"][prefix+"sharedfiles"]
-			sharedstreams = self.eventprocessor.config.sections["transfers"][prefix+"sharedfilesstreams"]
-			wordindex = self.eventprocessor.config.sections["transfers"][prefix+"wordindex"]
-			fileindex = self.eventprocessor.config.sections["transfers"][prefix+"fileindex"]
-			shareddirs = self.eventprocessor.config.sections["transfers"][prefix2+"shared"] + [self.eventprocessor.config.sections["transfers"]["downloaddir"]]
-			sharedmtimes = self.eventprocessor.config.sections["transfers"][prefix+"sharedmtimes"]
-			dir = os.path.dirname(name)
-			file = os.path.basename(name)
-			size = os.path.getsize(name)
+		if not self.eventprocessor.config.sections["transfers"]["sharedownloaddir"]:
+			return
 		
-			shared[dir] = shared.get(dir, [])
-			if file not in [i[0] for i in shared[dir]]:
-				fileinfo = utils.getFileInfo(file, name)
-				shared[dir] = shared[dir] + [fileinfo]
-				sharedstreams[dir] = utils.getDirStream(shared[dir])
-				words = utils.getIndexWords(dir, file, shareddirs)
-				self.addToIndex(wordindex, fileindex, words, dir, fileinfo)
-				sharedmtimes[dir] = os.path.getmtime(dir)
-				self.eventprocessor.config.writeShares()
+		shared = self.eventprocessor.config.sections["transfers"][prefix+"sharedfiles"]
+		sharedstreams = self.eventprocessor.config.sections["transfers"][prefix+"sharedfilesstreams"]
+		wordindex = self.eventprocessor.config.sections["transfers"][prefix+"wordindex"]
+		fileindex = self.eventprocessor.config.sections["transfers"][prefix+"fileindex"]
+		shareddirs = self.eventprocessor.config.sections["transfers"][prefix2+"shared"] + [self.eventprocessor.config.sections["transfers"]["downloaddir"]]
+		sharedmtimes = self.eventprocessor.config.sections["transfers"][prefix+"sharedmtimes"]
+		dir = os.path.expanduser(os.path.dirname(name))
+
+		file = os.path.basename(name)
+		size = os.path.getsize(name)
+
+		shared[dir] = shared.get(dir, [])
+		if file not in [i[0] for i in shared[dir]]:
+			fileinfo = utils.getFileInfo(file, name)
+			shared[dir] = shared[dir] + [fileinfo]
+			sharedstreams[dir] = utils.getDirStream(shared[dir])
+			words = utils.getIndexWords(dir, file, shareddirs)
+			self.addToIndex(wordindex, fileindex, words, dir, fileinfo)
+			sharedmtimes[dir] = os.path.getmtime(dir)
+			self.eventprocessor.config.writeShares()
 		
 
 	def addToIndex(self, wordindex, fileindex, words, dir, fileinfo):

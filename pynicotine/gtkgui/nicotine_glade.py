@@ -170,7 +170,7 @@ class MainWindow:
         self.exit1 = gtk.ImageMenuItem(_("E_xit"))
         self.exit1.show()
         self.exit1.connect("activate", self.OnExit)
-        self.exit1.add_accelerator("activate", self.accel_group, gtk.gdk.keyval_from_name("X"), gtk.gdk.MOD1_MASK, gtk.ACCEL_VISIBLE)
+        self.exit1.add_accelerator("activate", self.accel_group, gtk.gdk.keyval_from_name("Q"), gtk.gdk.CONTROL_MASK, gtk.ACCEL_VISIBLE)
 
         img = gtk.image_new_from_stock(gtk.STOCK_QUIT, gtk.ICON_SIZE_MENU)
         self.exit1.set_image(img)

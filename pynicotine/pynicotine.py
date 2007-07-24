@@ -103,7 +103,7 @@ class NetworkEventProcessor:
 		self.transfers = None
 		self.userlist = None
 		self.logintime = None
-
+		self.ipaddress = None
 		self.servertimer = None
 		self.servertimeout = -1
 	
@@ -170,17 +170,17 @@ class NetworkEventProcessor:
 			slskmessages.PrivilegedUsers:self.PrivilegedUsers,
 			slskmessages.AddToPrivileged:self.AddToPrivileged,
 			slskmessages.CheckPrivileges:self.CheckPrivileges,
-			slskmessages.ServerPing:self.Msg83,
-			slskmessages.Msg83:self.Msg83,
-			slskmessages.Msg84:self.Msg83,
-			slskmessages.Msg85:self.Msg83,
+			slskmessages.ServerPing:self.DummyMessage,
+			slskmessages.ParentMinSpeed:self.DummyMessage,
+			slskmessages.ParentSpeedRatio:self.DummyMessage,
+			slskmessages.Msg85:self.DummyMessage,
 			slskmessages.Msg12547:self.Msg12547,
-			slskmessages.ParentInactivityTimeout:self.Msg83,
-			slskmessages.SearchInactivityTimeout:self.Msg83,
-			slskmessages.MinParentsInCache:self.Msg83,
-			slskmessages.Msg89:self.Msg83,
+			slskmessages.ParentInactivityTimeout:self.ParentInactivityTimeout,
+			slskmessages.SearchInactivityTimeout:self.SearchInactivityTimeout,
+			slskmessages.MinParentsInCache:self.MinParentsInCache,
+			slskmessages.Msg89:self.DummyMessage,
 			slskmessages.WishlistInterval:self.WishlistInterval,
-			slskmessages.DistribAliveInterval:self.Msg83,
+			slskmessages.DistribAliveInterval:self.DummyMessage,
 			slskmessages.AdminMessage:self.AdminMessage,
 			slskmessages.TunneledMessage:self.TunneledMessage,
 			slskmessages.IncConn:self.IncConn,
@@ -208,7 +208,7 @@ class NetworkEventProcessor:
 			slskmessages.RoomTickerState:self.RoomTickerState,
 			slskmessages.RoomTickerAdd:self.RoomTickerAdd,
 			slskmessages.RoomTickerRemove:self.RoomTickerRemove,
-			slskmessages.NotifyPrivileges:self.NotifyPrivileges,
+			slskmessages.AckNotifyPrivileges:self.AckNotifyPrivileges,
 			}
 
 
@@ -399,7 +399,7 @@ class NetworkEventProcessor:
 		self.serverconn = msg.conn
 		self.servertimeout = -1
 		self.users = {}
-		self.queue.put(slskmessages.Login(self.config.sections["server"]["login"], self.config.sections["server"]["passw"], 181))
+		self.queue.put(slskmessages.Login(self.config.sections["server"]["login"], self.config.sections["server"]["passw"], 156)) #155, 156, 157, 180
 		if self.waitport is not None:	
 			self.queue.put(slskmessages.SetWaitPort(self.waitport))
 
@@ -450,7 +450,9 @@ class NetworkEventProcessor:
 		if msg.success:
 			self.setStatus(_("Logged in, getting the list of rooms..."))
 			self.transfers = transfers.Transfers(conf["transfers"]["downloads"], self.peerconns, self.queue, self, self.users)
-		
+			if msg.ip is not None:
+				self.ipaddress = msg.ip
+			
 			self.privatechat, self.chatrooms, self.userinfo, self.userbrowse, self.search, downloads, uploads, self.userlist = self.frame.InitInterface(msg)
 		
 			self.transfers.setTransferPanels(downloads, uploads)
@@ -460,6 +462,9 @@ class NetworkEventProcessor:
 				self.queue.put(slskmessages.AddThingILike(self.encode(thing)))
 			for thing in self.config.sections["interests"]["dislikes"]:
 				self.queue.put(slskmessages.AddThingIHate(self.encode(thing)))
+			if not len(self.distribcache):
+   				self.queue.put(slskmessages.HaveNoParent(1))
+			self.queue.put(slskmessages.NotifyPrivileges(1, self.config.sections["server"]["login"]))
 			self.privatechat.Login()
 		else:
 			self.frame.manualdisconnect = 1
@@ -469,7 +474,7 @@ class NetworkEventProcessor:
 			self.frame.settingswindow.Hilight(self.frame.settingswindow.pages["Server"].Login)
 			self.frame.settingswindow.Hilight(self.frame.settingswindow.pages["Server"].Password)
 				
-	def NotifyPrivileges(self, msg):
+	def AckNotifyPrivileges(self, msg):
 		if msg.token != None:
 			pass
 			# Until I know the syntax, sending this message is probably a bad idea
@@ -581,12 +586,21 @@ class NetworkEventProcessor:
 	def AdminMessage(self, msg):
 		self.logMessage("%s" %(msg.msg))
 	
-	def Msg83(self, msg):
+	def DummyMessage(self, msg):
 		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 1)
 		
 	def Msg12547(self, msg):
 		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 1)
-	
+		
+	def ParentInactivityTimeout(self, msg):
+		pass
+		#print msg.__class__, msg.__dict__
+	def SearchInactivityTimeout(self, msg):
+		pass
+		#print msg.__class__, msg.__dict__
+	def MinParentsInCache(self, msg):
+		pass
+		#print msg.__class__, msg.__dict__
 	def WishlistInterval(self, msg):
 		if self.search is not None:
 			self.search.SetInterval(msg)
@@ -1191,6 +1205,7 @@ class NetworkEventProcessor:
 		terms = searchterm.translate(self.translatepunctuation).lower().split()
 		list = [wordindex[i][:] for i in terms if wordindex.has_key(i)]
 		if len(list) != len(terms) or len(list) == 0:
+			self.logMessage(_("User %(user)s is searching for %(query)s, returning no results") %{'user':user, 'query':self.decode(searchterm)}, 1)
 			return
 		min = list[0]
 		for i in list[1:]:
@@ -1214,14 +1229,15 @@ class NetworkEventProcessor:
 				else:
 					self.logMessage(_("User %(user)s is searching for %(query)s, returning %(num)i results") %{'user':user, 'query':self.decode(searchterm), 'num':len(results)}, 1)
 					
-
 	def NetInfo(self, msg):
+		#print msg.list
 		self.distribcache.update(msg.list)
 		if len(self.distribcache) > 0:
 			self.queue.put(slskmessages.HaveNoParent(0))
 			if not self.GetDistribConn():
 				user = self.distribcache.keys()[0]
 				addr = self.distribcache[user]
+				#self.queue.put(slskmessages.SearchParent( addr[0]))
 				self.ProcessRequestToPeer(user, slskmessages.DistribConn(), None, addr)
 		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 1)
 
@@ -1239,6 +1255,8 @@ class NetworkEventProcessor:
 		if len(self.distribcache) > 0:
 			user = self.distribcache.keys()[0]
 			addr = self.distribcache[user]
+			#self.queue.put(slskmessages.SearchParent( addr[0]))
+			#print user, addr
 			self.ProcessRequestToPeer(user, slskmessages.DistribConn(), None, addr)
 		else:
 			self.queue.put(slskmessages.HaveNoParent(1))
