@@ -93,6 +93,7 @@ class NetworkEventProcessor:
 		self.serverconn = None
 		self.waitport = None
 		self.peerconns = []
+		self.watchedusers = []
 		self.users = {}
 		self.chatrooms = None
 		self.privatechat = None
@@ -428,6 +429,7 @@ class NetworkEventProcessor:
 			else:
 				self.frame.manualdisconnect = 0
 			self.serverconn = None
+			self.watchedusers = []
 			if self.transfers is not None:
 				self.transfers.AbortTransfers()
 				self.transfers.SaveDownloads()
@@ -558,6 +560,12 @@ class NetworkEventProcessor:
 			self.logMessage("%s %s" %(msg.__class__, vars(msg)))
 
 	def AddUser(self, msg):
+		if msg.user not in self.watchedusers and msg.userexists:
+			self.watchedusers.append(msg.user)
+		if self.search is not None:
+			if not msg.userexists:
+				#print msg.user, msg.userexists
+				self.search.NonExistantUser(msg.user)
 		if self.transfers is not None:
 			self.transfers.getAddUser(msg)
 		else:
@@ -642,6 +650,8 @@ class NetworkEventProcessor:
 			self.userinfo.GetUserStatus(msg)
 		if self.userbrowse is not None:
 			self.userbrowse.GetUserStatus(msg)
+		if self.search is not None:
+			self.search.GetUserStatus(msg)
 		if self.chatrooms is not None:
 			self.chatrooms.roomsctrl.GetUserStatus(msg)
 		else:
@@ -1210,7 +1220,7 @@ class NetworkEventProcessor:
 		terms = searchterm.translate(self.translatepunctuation).lower().split()
 		list = [wordindex[i][:] for i in terms if wordindex.has_key(i)]
 		if len(list) != len(terms) or len(list) == 0:
-			self.logMessage(_("User %(user)s is searching for %(query)s, returning no results") %{'user':user, 'query':self.decode(searchterm)}, 2)
+			#self.logMessage(_("User %(user)s is searching for %(query)s, returning no results") %{'user':user, 'query':self.decode(searchterm)}, 2)
 			return
 		min = list[0]
 		for i in list[1:]:

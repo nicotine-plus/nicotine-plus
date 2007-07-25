@@ -736,7 +736,10 @@ class UserBrowse(UserBrowseTab):
 				os.spawnlp(os.P_NOWAIT, command[0], *command)
 		
 	def OnDownloadFilesTo(self, widget):
-		ldir = ChooseDir(self.frame.MainWindow, self.frame.np.config.sections["transfers"]["downloaddir"])
+		
+		path, subdir = self.selected_folder.rsplit("\\", 1)
+		ldir = ChooseDir(self.frame.MainWindow, self.frame.np.config.sections["transfers"]["downloaddir"], create=True, name=subdir)
+
 		if ldir is None:
 			return
 

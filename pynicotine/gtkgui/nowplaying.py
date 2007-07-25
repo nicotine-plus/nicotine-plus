@@ -302,7 +302,7 @@ class NowPlaying:
 				colour = gtk.gdk.color_parse(fgcolor)
 			widget.modify_text(gtk.STATE_NORMAL, colour)
 			widget.modify_fg(gtk.STATE_NORMAL, colour)
-				
+
 	def title_clear(self):
 		self.label7.set_text("")
 		self.title = { "title": "", "artist": "", "comment": "", "year": "", "album": "", "track":"", "length": "", "nowplaying": "", "status": "", "bitrate": "", "filename": ""}
@@ -338,9 +338,9 @@ class NowPlaying:
 				replacers.append(replacer)
 		for replacer in replacers:
 			if replacer not in self.player_replacers:
-				self.SetTextBG(self.NPFormat.child, "red", "white")
+				self.frame.SetTextBG(self.NPFormat.child, "red", "white")
 				return
-		self.SetTextBG(self.NPFormat.child, "", "")
+		self.frame.SetTextBG(self.NPFormat.child, "", "")
 			
 	def OnAddFormat(self, widget):
 		text = self.NPFormat.child.get_text().strip()
@@ -669,7 +669,7 @@ class NowPlaying:
 
 	def audacious(self):
 		slist = self.NPFormat.child.get_text()
-		
+		output = ""
 		if "$n" in slist:
 			artist = self.audacious_command('current-song-tuple-data', 'performer')
 			title = self.audacious_command('current-song-tuple-data', 'track_name')

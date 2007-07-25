@@ -390,17 +390,29 @@ class Searches:
 				if search[2].vbox7 == page:
 					search[2].saveColumns()
 					break
-
+	def GetUserStatus(self, msg):
+		for number, search in self.searches.items():
+			if search[2] is None:
+				continue
+			search[2].GetUserStatus(msg)
+			
+	def NonExistantUser(self, user):
+		for number, search in self.searches.items():
+			if search[2] is None:
+				continue
+			search[2].NonExistantUser(user)
 		
 class SearchTreeModel(FastListModel):
-	COLUMNS = 14
+	COLUMNS = 17
 	COLUMN_TYPES = [gobject.TYPE_INT, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING,
     			gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING,
-    			gobject.TYPE_INT, gobject.TYPE_STRING, gobject.TYPE_STRING,  gobject.TYPE_LONG, gobject.TYPE_INT, gobject.TYPE_INT]
+    			gobject.TYPE_INT, gobject.TYPE_STRING, gobject.TYPE_STRING,  gobject.TYPE_LONG, gobject.TYPE_INT, gobject.TYPE_INT, gobject.TYPE_INT]
 
-	def __init__(self):
+	def __init__(self, search):
 		FastListModel.__init__(self)
 		self.all_data = []
+		self.search = search
+		self.frame = search.frame
 		self.filters = None
 		self.sort_col = 1
 		self.sort_order = gtk.SORT_DESCENDING
@@ -417,7 +429,8 @@ class SearchTreeModel(FastListModel):
 			r[3] = Humanize(speed)
 			queue = r[4]
 			r[4] = Humanize(queue)
-			row = [ix] + r + [size, speed, queue]
+			#r[12] # status
+			row = [ix] + r[:12] + [size, speed, queue] + [r[12]]
 
 			self.all_data.append(row)
 			if not self.filters or self.check_filter(row):
@@ -429,7 +442,23 @@ class SearchTreeModel(FastListModel):
 			ix += 1
 		
 		return returned
+			
+	def updateStatus(self, user, status):
+		pos = 0
+		for r in self.all_data:
+		
+			if user == r[2]:
+				self.all_data[pos][16] = status
+			pos += 1
+		pos = 0
+		for r in self.data:
+	
+			if user == r[2]:
+			
+				self.data[pos][16] = status
 
+			pos += 1
+		
 	def sort(self):
 		col = self.sort_col
 		order = self.sort_order
@@ -520,15 +549,19 @@ class SearchTreeModel(FastListModel):
 				f_in = re.compile(f_in.lower())
 				self.filters[0] = f_in
 			except sre_constants.error:
-				pass
+				self.frame.SetTextBG(self.search.FilterIn.child, "red", "white")
+			else:
+				self.frame.SetTextBG(self.search.FilterIn.child)
 		
 		if f_out:
 			try:
 				f_out = re.compile(f_out.lower())
 				self.filters[1] = f_out
 			except sre_constants.error:
-				pass
-		
+				self.frame.SetTextBG(self.search.FilterOut.child, "red", "white")
+			else:
+				self.frame.SetTextBG(self.search.FilterOut.child)
+
 		if size:
 			self.filters[2] = size
 		
@@ -558,7 +591,7 @@ class Search(SearchTab):
 		self.users = []
 		self.QueryLabel.set_text(text)
 
-		self.resultsmodel = SearchTreeModel()
+		self.resultsmodel = SearchTreeModel(self)
 
 # 		self.FilterIn.disable_activate()
 # 		self.FilterOut.disable_activate()
@@ -649,7 +682,18 @@ class Search(SearchTab):
 		self.frame.SetTextBG(self.FilterSize.child)
 		self.frame.SetTextBG(self.FilterBitrate.child)
 		self.frame.SetTextBG(self.FilterCountry.child)
+		
+	def GetUserStatus(self, msg):
+		if msg.user not in self.users:
+			return
 
+		self.resultsmodel.updateStatus(msg.user, msg.status)
+		
+	def NonExistantUser(self, user):
+		if user not in self.users:
+			return
+		self.resultsmodel.updateStatus(user, -1)
+		
 	def saveColumns(self):
 		columns = []
 		for column in self.ResultsList.get_columns():
@@ -727,6 +771,8 @@ class Search(SearchTab):
 		if user in self.users:
 			return
 		self.users.append(user)
+		if user not in self.frame.np.watchedusers:
+			self.frame.np.queue.put(slskmessages.AddUser(user))
 		
 		results = []
 		if msg.freeulslots:
@@ -748,7 +794,7 @@ class Search(SearchTab):
 				bitrate = str(a[0]) + bitrate
 				br = a[0]
 				length = '%i:%02i' %(a[1] / 60, a[1] % 60)
-			results.append([decode(name), user, result[2], msg.ulspeed, msg.inqueue, imdl, bitrate, length, decode(dir), br, result[1], country])
+			results.append([decode(name), user, result[2], msg.ulspeed, msg.inqueue, imdl, bitrate, length, decode(dir), br, result[1], country, 1])
 			ix += 1
 			
 		if results:
@@ -784,9 +830,21 @@ class Search(SearchTab):
 		return False
 		
 	def CellDataFunc(self, column, cellrenderer, model, iter):
+
+		status = model.get_value(iter, 16)
 		imdl = model.get_value(iter, 6)
 		colour = imdl == _("Y") and "search" or "searchq"
+
 		colour = self.frame.np.config.sections["ui"][colour] or None
+
+		if status == 0:
+			colour = self.frame.np.config.sections["ui"]["useroffline"]
+			cellrenderer.set_property("background", None)
+		elif status == -1:
+			colour = "#ffffff"
+			cellrenderer.set_property("background", "#ff0000")
+		else:
+			cellrenderer.set_property("background", None)
 		cellrenderer.set_property("foreground", colour)
 
 	def MetaBox(self, title="Meta Data", message="", data=None, modal= True):
@@ -832,7 +890,11 @@ class Search(SearchTab):
 			self.frame.np.transfers.getFile(file[0], file[1], prefix, size=file[2], bitrate=file[3], length=file[4])
 	
 	def OnDownloadFilesTo(self, widget):
-		dir = ChooseDir(self.frame.MainWindow, self.frame.np.config.sections["transfers"]["downloaddir"])
+		subdir = None
+		for file in self.selected_results:
+			subdir = file[1].rsplit("\\", 1)[0].rsplit("\\", 1)[1]
+			break
+		dir = ChooseDir(self.frame.MainWindow, self.frame.np.config.sections["transfers"]["downloaddir"], create=True, name=subdir)
 		if dir is None:
 			return
 		for dirs in dir:

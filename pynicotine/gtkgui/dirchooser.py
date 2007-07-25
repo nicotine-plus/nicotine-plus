@@ -27,15 +27,21 @@ from utils import recode, InputDialog
 from pynicotine.utils import _
 
 
-def ChooseDir(parent = None, initialdir = "~"):
+def ChooseDir(parent = None, initialdir = "~", create=False, name=None):
 	dialog = gtk.FileChooserDialog(parent=parent, action=gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER, buttons = (gtk.STOCK_OK, gtk.RESPONSE_ACCEPT, gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT))
-	dialog.set_action(gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER)
-	dialog.set_select_multiple(True)
+	if create:
+		dialog.set_action(gtk.FILE_CHOOSER_ACTION_CREATE_FOLDER)
+	else:
+		dialog.set_action(gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER)
+		dialog.set_select_multiple(True)
+	
 	dir = os.path.expanduser(initialdir)
 	if os.path.exists(dir):
 		dialog.set_current_folder(dir)
 	else:
 		dialog.set_current_folder(os.path.expanduser("~"))
+	if name:
+		dialog.set_current_name(name)
 	response = dialog.run()
 
 	if response == gtk.RESPONSE_ACCEPT:

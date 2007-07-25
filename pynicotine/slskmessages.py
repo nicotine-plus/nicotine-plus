@@ -795,7 +795,7 @@ class DistribAliveInterval(ServerMessage):
 	
 	def parseNetworkMessage(self, message):
 		pos, self.seconds = self.getObject(message, types.IntType)
-		print self.__class__, self.seconds
+
 
 class WishlistInterval(ServerMessage):
 	def __init__(self):

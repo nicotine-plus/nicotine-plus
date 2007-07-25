@@ -940,18 +940,19 @@ class NicotineFrame(MainWindow):
 		self.SetTextBG(self.SearchEntry)
 		
 		
-	def SetTextBG(self, widget):
-		bgcolor = self.np.config.sections["ui"]["textbg"]
-		if bgcolor == "":
+		
+	def SetTextBG(self, widget, bgcolor="", fgcolor=""):
+		if bgcolor == "" and self.np.config.sections["ui"]["textbg"] == "":
 			colour = None
 		else:
+			if bgcolor == "":
+				bgcolor = self.np.config.sections["ui"]["textbg"]
 			colour = gtk.gdk.color_parse(bgcolor)
 			
 		widget.modify_base(gtk.STATE_NORMAL, colour)
 		widget.modify_bg(gtk.STATE_NORMAL, colour)
-		
-		if type(widget) is gtk.Entry:
-			fgcolor = self.np.config.sections["ui"]["inputcolor"]
+
+		if type(widget) in (gtk.Entry, gtk.SpinButton):
 			if fgcolor == "":
 				colour = None
 			else:
