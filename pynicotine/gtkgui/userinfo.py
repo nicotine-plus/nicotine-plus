@@ -55,7 +55,7 @@ class UserTabs(IconNotebook):
 			self.set_text(tab.Main, "%s (%s)" % (msg.user[:15], status))
 
 	def InitWindow(self, user, conn):
-		if msg.user in self.users:
+		if user in self.users:
 			self.users[user].conn = conn
 			self.frame.np.queue.put(slskmessages.GetUserStats(user))
 		else:

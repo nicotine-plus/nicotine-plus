@@ -795,7 +795,7 @@ class NetworkEventProcessor:
 		return 1, ""
 	
 	def CheckSpoof(self, user, ip, port):
-		if msg.user not in self.users:
+		if user not in self.users:
 			return 0
 		if self.users[user].addr != None:
 			#if len(self.users[user].addr) != 2:

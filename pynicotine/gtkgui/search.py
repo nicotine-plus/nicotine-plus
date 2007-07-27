@@ -355,7 +355,7 @@ class Searches:
 		self.WishListDialog.removeWish(search[1])
 		
 	def RemoveTab(self, tab):
-		if id in self.searches:
+		if tab.id in self.searches:
 			search = self.searches[tab.id]
 			search[2] = None
 			#if search[4]:
