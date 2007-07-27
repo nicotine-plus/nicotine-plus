@@ -181,6 +181,7 @@ class Searches:
 			self.frame.SearchEntryCombo.append_text(i)
 		self.WishListDialog = WishList(frame)
 		self.frame.WishList.connect("clicked", self.WishListDialog.Toggle)
+		self.UpdateColours()
 		
 	def SetInterval(self, msg):
 		self.interval = msg.seconds

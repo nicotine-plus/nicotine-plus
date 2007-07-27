@@ -196,6 +196,8 @@ class NicotineFrame(MainWindow):
 		popup.setup(
 			("#" + _("_Remove this item"), self.OnRemoveThingILike, gtk.STOCK_CANCEL),
 			("#" + _("Re_commendations for this item"), self.OnRecommendItem, gtk.STOCK_INDEX),
+			("", None),
+			("#" + _("_Search for this item"), self.OnRecommendSearch, gtk.STOCK_FIND),
 		)
 		self.LikesList.connect("button_press_event", self.OnPopupTILMenu)
 
@@ -206,7 +208,9 @@ class NicotineFrame(MainWindow):
 		cols[0].set_sort_column_id(0)
 		self.DislikesList.set_model(self.dislikeslist)
 		self.tidl_popup_menu = popup = utils.PopupMenu(self)
-		popup.setup(("#" + _("Remove this item"), self.OnRemoveThingIDislike, gtk.STOCK_CANCEL))
+		popup.setup(("#" + _("_Remove this item"), self.OnRemoveThingIDislike, gtk.STOCK_CANCEL),
+		("", None),
+			("#" + _("_Search for this item"), self.OnRecommendSearch, gtk.STOCK_FIND),)
 		self.DislikesList.connect("button_press_event", self.OnPopupTIDLMenu)
 
 		cols = utils.InitialiseColumns(self.RecommendationsList,
@@ -2012,7 +2016,7 @@ class NicotineFrame(MainWindow):
 		self.tidl_popup_menu.popup(None, None, None, event.button, event.time)
 
 	def OnLikeRecommendation(self, widget):
-		thing = self.r_popup_menu.get_user()
+		thing = widget.parent.get_user()
 		if widget.get_active() and thing not in self.np.config.sections["interests"]["likes"]:
 			self.np.config.sections["interests"]["likes"].append(thing)
 			self.likes[thing] = self.likeslist.append([thing])
@@ -2026,7 +2030,7 @@ class NicotineFrame(MainWindow):
 			self.np.queue.put(slskmessages.RemoveThingILike(self.np.encode(thing)))
 
 	def OnDislikeRecommendation(self, widget):
-		thing = self.r_popup_menu.get_user()
+		thing = widget.parent.get_user()
 		if widget.get_active() and thing not in self.np.config.sections["interests"]["dislikes"]:
 			self.np.config.sections["interests"]["dislikes"].append(thing)
 			self.dislikes[thing] = self.dislikeslist.append([thing])
@@ -2045,7 +2049,7 @@ class NicotineFrame(MainWindow):
 		self.np.queue.put(slskmessages.ItemSimilarUsers(self.np.encode(thing)))
 
 	def OnRecommendSearch(self, widget):
-		thing = self.r_popup_menu.get_user()
+		thing = widget.parent.get_user()
 		self.SearchEntry.set_text(thing)
 		self.notebook1.set_current_page(4)
 

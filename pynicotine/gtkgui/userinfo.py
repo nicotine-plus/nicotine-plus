@@ -22,9 +22,9 @@ import tempfile
 import gobject
 
 from nicotine_glade import UserInfoTab
-from utils import IconNotebook, PopupMenu, EncodingsMenu, SaveEncoding,  Humanize, InitialiseColumns
+from utils import IconNotebook, PopupMenu, EncodingsMenu, SaveEncoding,  Humanize, InitialiseColumns, AppendLine
 from pynicotine import slskmessages
-from utils import AppendLine
+
 from pynicotine.utils import _
 
 # User Info and User Browse Notebooks
@@ -181,7 +181,54 @@ class UserInfo(UserInfoTab):
 		self.InterestsExpander.connect("activate", self.ExpanderStatus)
 		self.InformationExpander.connect("activate", self.ExpanderStatus)
 		self.DescriptionExpander.connect("activate", self.ExpanderStatus)
+		self.likes_popup_menu = popup = PopupMenu(self)
+		popup.setup(
+			("$" + _("I _like this"), self.frame.OnLikeRecommendation),
+			("$" + _("I _don't like this"), self.frame.OnDislikeRecommendation),
+			("", None),
+			("#" + _("_Search for this item"), self.frame.OnRecommendSearch, gtk.STOCK_FIND),
+		)
+		self.Likes.connect("button_press_event", self.OnPopupLikesMenu)
 
+		self.hates_popup_menu = popup = PopupMenu(self)
+		popup.setup(
+			("$" + _("I _like this"), self.frame.OnLikeRecommendation),
+			("$" + _("I _don't like this"), self.frame.OnDislikeRecommendation),
+			("", None),
+			("#" + _("_Search for this item"), self.frame.OnRecommendSearch, gtk.STOCK_FIND),
+		)
+		self.Hates.connect("button_press_event", self.OnPopupHatesMenu)
+		
+	def OnPopupLikesMenu(self, widget, event):
+		if event.button != 3:
+			return
+		d = self.Likes.get_path_at_pos(int(event.x), int(event.y))
+		if not d:
+			return
+		path, column, x, y = d
+		iter = self.likesStore.get_iter(path)
+		thing = self.likesStore.get_value(iter, 0)
+		items = self.likes_popup_menu.get_children()
+		self.likes_popup_menu.set_user(thing)
+		items[0].set_active(thing in self.frame.np.config.sections["interests"]["likes"])
+		items[1].set_active(thing in self.frame.np.config.sections["interests"]["dislikes"])
+		self.likes_popup_menu.popup(None, None, None, event.button, event.time)
+		
+	def OnPopupHatesMenu(self, widget, event):
+		if event.button != 3:
+			return
+		d = self.Hates.get_path_at_pos(int(event.x), int(event.y))
+		if not d:
+			return
+		path, column, x, y = d
+		iter = self.hatesStore.get_iter(path)
+		thing = self.hatesStore.get_value(iter, 0)
+		items = self.hates_popup_menu.get_children()
+		self.hates_popup_menu.set_user(thing)
+		items[0].set_active(thing in self.frame.np.config.sections["interests"]["likes"])
+		items[1].set_active(thing in self.frame.np.config.sections["interests"]["dislikes"])
+		self.hates_popup_menu.popup(None, None, None, event.button, event.time)
+		
 	def ConnClose(self):
 		pass
 	
