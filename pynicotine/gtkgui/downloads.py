@@ -62,6 +62,7 @@ class Downloads(TransferList):
 			("#" + _("View Metadata of file(s)"), self.OnDownloadMeta, gtk.STOCK_PROPERTIES),
 			("#" + _("Open Directory"), self.OnOpenDirectory, gtk.STOCK_OPEN),
 			(1, _("User"), self.popup_menu_users, self.OnPopupMenuUsers),
+			("#" + _("Search"), self.OnFileSearch, gtk.STOCK_FIND),
 			("", None),
 			("#" + _("_Retry"), self.OnRetryTransfer, gtk.STOCK_REDO),
 			("", None),
@@ -373,7 +374,14 @@ class Downloads(TransferList):
 			if i.status != "Queued":
 				continue
 			self.frame.np.ProcessRequestToPeer(i.user, slskmessages.PlaceInQueueRequest(None, i.filename))
-
+			
+	def OnFileSearch(self, widget):
+		self.select_transfers()
+		for transfer in self.selected_transfers:
+			self.frame.SearchEntry.set_text(transfer.filename.rsplit("\\", 1)[1])
+			self.frame.notebook1.set_current_page(4)
+			break
+		
 	def OnRetryTransfer(self, widget):
 		self.select_transfers()
 		for transfer in self.selected_transfers:

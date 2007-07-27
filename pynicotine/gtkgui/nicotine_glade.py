@@ -1225,16 +1225,56 @@ class MainWindow:
 		self.hpaned4 = gtk.HPaned()
 		self.hpaned4.show()
 
-		self.scrolledwindow26 = gtk.ScrolledWindow()
-		self.scrolledwindow26.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
-		self.scrolledwindow26.show()
-		self.scrolledwindow26.set_shadow_type(gtk.SHADOW_IN)
+		self.RecommendationsVbox = gtk.VBox(False, 0)
+		self.RecommendationsVbox.show()
+
+		self.RecommendationsExpander = gtk.Expander()
+		self.RecommendationsExpander.set_expanded(True)
+		self.RecommendationsExpander.show()
+
+		self.vbox8 = gtk.VBox(False, 0)
+		self.vbox8.show()
+
+		self.RecScrolledWindow = gtk.ScrolledWindow()
+		self.RecScrolledWindow.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+		self.RecScrolledWindow.show()
+		self.RecScrolledWindow.set_shadow_type(gtk.SHADOW_IN)
 
 		self.RecommendationsList = gtk.TreeView()
 		self.RecommendationsList.show()
-		self.scrolledwindow26.add(self.RecommendationsList)
+		self.RecScrolledWindow.add(self.RecommendationsList)
 
-		self.hpaned4.pack1(self.scrolledwindow26, True, True)
+		self.vbox8.pack_start(self.RecScrolledWindow)
+
+		self.RecommendationsExpander.add(self.vbox8)
+
+		self.RecommendationsLabel = gtk.Label(_("Recommendations"))
+		self.RecommendationsLabel.show()
+		self.RecommendationsExpander.set_label_widget(self.RecommendationsLabel)
+
+		self.RecommendationsVbox.pack_start(self.RecommendationsExpander)
+
+		self.UnrecommendationsExpander = gtk.Expander()
+		self.UnrecommendationsExpander.show()
+
+		self.UnRecScrolledWindow = gtk.ScrolledWindow()
+		self.UnRecScrolledWindow.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+		self.UnRecScrolledWindow.show()
+		self.UnRecScrolledWindow.set_shadow_type(gtk.SHADOW_IN)
+
+		self.UnrecommendationsList = gtk.TreeView()
+		self.UnrecommendationsList.show()
+		self.UnRecScrolledWindow.add(self.UnrecommendationsList)
+
+		self.UnrecommendationsExpander.add(self.UnRecScrolledWindow)
+
+		self.UnrecommendationsLabel = gtk.Label(_("Unrecommendations"))
+		self.UnrecommendationsLabel.show()
+		self.UnrecommendationsExpander.set_label_widget(self.UnrecommendationsLabel)
+
+		self.RecommendationsVbox.pack_start(self.UnrecommendationsExpander, False, True, 0)
+
+		self.hpaned4.pack1(self.RecommendationsVbox, True, True)
 
 		self.scrolledwindow27 = gtk.ScrolledWindow()
 		self.scrolledwindow27.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)

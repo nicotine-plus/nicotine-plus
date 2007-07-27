@@ -915,6 +915,7 @@ class UserInterests(ServerMessage):
 class GlobalRecommendations(ServerMessage):
 	def __init__(self):
 		self.recommendations = None
+		self.unrecommendations = None
 	
 	def makeNetworkMessage(self):
 		return ""
@@ -923,13 +924,23 @@ class GlobalRecommendations(ServerMessage):
 		self.unpack_recommendations(message)
 	
 	def unpack_recommendations(self, message, pos = 0):
-		pos, num = self.getObject(message, types.IntType, pos)
 		self.recommendations = {}
+		self.unrecommendations = {}
+		pos, num = self.getObject(message, types.IntType, pos)
 		for i in range(num):
 			pos, key = self.getObject(message, types.StringType, pos)
-			pos, rating = self.getObject(message, types.IntType, pos)
+			pos, rating = self.getObject(message, types.IntType, pos, getsignedint=1)
 			self.recommendations[key] = rating
 
+		if len(message[pos:]) == 0:
+			return
+		
+		pos, num2 = self.getObject(message, types.IntType, pos)
+		for i in range(num2):
+			pos, key = self.getObject(message, types.StringType, pos)
+			pos, rating = self.getObject(message, types.IntType, pos, getsignedint=1)
+			self.unrecommendations[key] = rating
+			
 class Recommendations(GlobalRecommendations):
 	pass
     

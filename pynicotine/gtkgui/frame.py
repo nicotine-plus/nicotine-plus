@@ -214,7 +214,7 @@ class NicotineFrame(MainWindow):
 		self.DislikesList.connect("button_press_event", self.OnPopupTIDLMenu)
 
 		cols = utils.InitialiseColumns(self.RecommendationsList,
-			[_("Recommendations"), 0, "text", self.CellDataFunc],
+			[_("Item"), 0, "text", self.CellDataFunc],
 			[_("Rating"), 75, "text", self.CellDataFunc])
 		cols[0].set_sort_column_id(0)
 		cols[1].set_sort_column_id(2)
@@ -229,6 +229,24 @@ class NicotineFrame(MainWindow):
 			("#" + _("_Search for this item"), self.OnRecommendSearch, gtk.STOCK_FIND),
 		)
 		self.RecommendationsList.connect("button_press_event", self.OnPopupRMenu)
+		cols = utils.InitialiseColumns(self.UnrecommendationsList,
+			[_("Item"), 0, "text", self.CellDataFunc],
+			[_("Rating"), 75, "text", self.CellDataFunc])
+		cols[0].set_sort_column_id(0)
+		cols[1].set_sort_column_id(2)
+		self.unrecommendationslist = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_INT)
+		self.UnrecommendationsList.set_model(self.unrecommendationslist)
+		self.ur_popup_menu = popup = utils.PopupMenu(self)
+		popup.setup(
+			("$" + _("I _like this"), self.OnLikeRecommendation),
+			("$" + _("I _don't like this"), self.OnDislikeRecommendation),
+			("#" + _("_Recommendations for this item"), self.OnRecommendRecommendation, gtk.STOCK_INDEX),
+			("", None),
+			("#" + _("_Search for this item"), self.OnRecommendSearch, gtk.STOCK_FIND),
+		)
+		self.UnrecommendationsList.connect("button_press_event", self.OnPopupUnRecMenu)
+		self.RecommendationsExpander.connect("activate", self.RecommendationsExpanderStatus)
+		self.UnrecommendationsExpander.connect("activate", self.RecommendationsExpanderStatus)
 
 		cols = utils.InitialiseColumns(self.RecommendationUsersList, 
 			["", 20, "pixbuf"],
@@ -934,6 +952,7 @@ class NicotineFrame(MainWindow):
 		self.SetTextBG(self.LogWindow)
 		self.SetTextBG(self.UserList)
 		self.SetTextBG(self.RecommendationsList)
+		self.SetTextBG(self.UnrecommendationsList)
 		self.SetTextBG(self.RecommendationUsersList)
 		self.SetTextBG(self.LikesList)
 		self.SetTextBG(self.DislikesList)
@@ -1893,14 +1912,21 @@ class NicotineFrame(MainWindow):
 		self.recommendationslist.clear()
 		for thing in recom.keys():
 			rating = recom[thing]
-			if rating >= 100000 :
-				rating = 0
 			thing = self.np.decode(thing)
 			self.recommendationslist.append([thing, Humanize(rating), rating])
 		self.recommendationslist.set_sort_column_id(2, gtk.SORT_DESCENDING)
-
+		
+	def SetUnrecommendations(self, title, recom):
+		self.unrecommendationslist.clear()
+		for thing in recom.keys():
+			rating = recom[thing]
+			thing = self.np.decode(thing)
+			self.unrecommendationslist.append([thing, Humanize(rating), rating])
+		self.unrecommendationslist.set_sort_column_id(2, gtk.SORT_ASCENDING)
+		
 	def GlobalRecommendations(self, msg):
 		self.SetRecommendations("Global recommendations", msg.recommendations)
+		self.SetUnrecommendations("Unrecommendations", msg.unrecommendations)
 
 	def Recommendations(self, msg):
 		self.SetRecommendations("Recommendations", msg.recommendations)
@@ -2068,6 +2094,21 @@ class NicotineFrame(MainWindow):
 		items[1].set_active(thing in self.np.config.sections["interests"]["dislikes"])
 		self.r_popup_menu.popup(None, None, None, event.button, event.time)
 
+	def OnPopupUnRecMenu(self, widget, event):
+		if event.button != 3:
+			return
+		d = self.UnrecommendationsList.get_path_at_pos(int(event.x), int(event.y))
+		if not d:
+			return
+		path, column, x, y = d
+		iter = self.unrecommendationslist.get_iter(path)
+		thing = self.unrecommendationslist.get_value(iter, 0)
+		items = self.ur_popup_menu.get_children()
+		self.ur_popup_menu.set_user(thing)
+		items[0].set_active(thing in self.np.config.sections["interests"]["likes"])
+		items[1].set_active(thing in self.np.config.sections["interests"]["dislikes"])
+		self.ur_popup_menu.popup(None, None, None, event.button, event.time)
+		
 	def OnHideTickers(self, widget):
 		if not self.chatrooms:
 			return
@@ -2076,7 +2117,13 @@ class NicotineFrame(MainWindow):
 		self.np.config.writeConfig()
 		for room in self.chatrooms.roomsctrl.joinedrooms.values():
 			room.ShowTicker(not hide)
-	
+			
+	def RecommendationsExpanderStatus(self, widget):
+		if widget.get_property("expanded"):
+			self.RecommendationsVbox.set_child_packing(widget, False, True, 0, 0)
+		else:
+			self.RecommendationsVbox.set_child_packing(widget, True, True, 0, 0)
+			
 	def GivePrivileges(self, user, days):
 		self.np.queue.put(slskmessages.GivePrivileges(user, days))
 		
