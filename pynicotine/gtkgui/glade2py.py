@@ -17,7 +17,7 @@
 # Original copyright below
 # Copyright (c) 2003-2004 Hyriand. All rights reserved.
 
-indent = "        "
+indent = "\t"
 class Widget:
 	def __init__(self, my_class, id):
 		self.my_class = my_class
@@ -242,7 +242,7 @@ def write_widget_generic(widget, my_class, *args):
 		restargs += arg
 	print indent + "%s = gtk.%s(%s)" % (widget.id, my_class, restargs)
 	write_widget_attrs(widget)
-	indent = "        "
+	indent = "\t\t"
 	
 def write_widget_container(widget, my_class, pack, *args):
 	write_widget_generic(widget, my_class, *args)
@@ -559,33 +559,35 @@ def process_accelerator(child):
 		
 def write_main(w):
 	global signals, indent
+	indent = "\t"
 	w.attrs["accel_group"] = "self.accel_group"
 	print "class %s:" % w.id[5:]
-	print "    def __init__(self, create = True, accel_group = None, tooltips = None):"
-	print "        if accel_group is None:"
-	print "             self.accel_group = gtk.AccelGroup()"
-	print "        else:"
-	print "             self.accel_group = accel_group"
-	print "        if tooltips is None:"
-	print "             self.tooltips = gtk.Tooltips()"
-	print "        else:"
-	print "             self.tooltips = tooltips"
-	print "        self.tooltips.enable()"
-	print "        if create:"
-	indent = "            "
+	print indent + "def __init__(self, create = True, accel_group = None, tooltips = None):"
+	print indent + indent + "if accel_group is None:"
+	print indent + indent + indent + "self.accel_group = gtk.AccelGroup()"
+	print indent + indent + "else:"
+	print indent + indent + indent + "self.accel_group = accel_group"
+	print indent + indent + "if tooltips is None:"
+	print indent + indent + indent + "self.tooltips = gtk.Tooltips()"
+	print indent + indent + "else:"
+	print indent + indent + indent + "self.tooltips = tooltips"
+	print indent + indent + "self.tooltips.enable()"
+	print indent + indent + "if create:"
+	indent = "\t\t\t"
 	write_widget(w)
+	indent = "\t"
 	if w.my_class == "GtkWindow":
-		print "        if create:"
-		print "            %s.add(%s)" % (w.id, w.children[0].id)
+		print indent + indent + "if create:"
+		print indent + indent + indent + "%s.add(%s)" % (w.id, w.children[0].id)
 	print
 	for s in signals:
-		print "    def %s(self, widget):" % s
-		print "        pass"
+		print indent + "def %s(self, widget):" % s
+		print indent + indent + "pass"
 		print
 	signals = []
-	print "    def get_custom_widget(self, id, string1, string2, int1, int2):"
-	print "        w = gtk.Label(_(\"(custom widget: %s)\") % id)"
-	print "        return w"
+	print indent + "def get_custom_widget(self, id, string1, string2, int1, int2):"
+	print indent + indent + "w = gtk.Label(_(\"(custom widget: %s)\") % id)"
+	print indent + indent + "return w"
 	print
 
 def process_widget(widget):
