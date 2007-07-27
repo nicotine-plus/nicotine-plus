@@ -177,7 +177,7 @@ def UrlEvent(tag, widget, event, iter, url):
 		if url[:4] == "www.":
 			url = "http://" + url
 		protocol = url[:url.find(":")]
-		if PROTOCOL_HANDLERS.has_key(protocol):
+		if protocol in PROTOCOL_HANDLERS:
 			if PROTOCOL_HANDLERS[protocol].__class__ is types.MethodType:
 				PROTOCOL_HANDLERS[protocol](url.strip())
 			else:
@@ -699,7 +699,7 @@ def expand_alias(aliases, cmd):
 	if cmd[0] != "/":
 		return None
 	cmd = cmd[1:].split(" ")
-	if not aliases.has_key(cmd[0]):
+	if cmd[0] not in aliases:
 		return None
 	alias = aliases[cmd[0]]
 	ret = ""
@@ -759,7 +759,7 @@ def expand_alias(aliases, cmd):
 	return ret
 
 def EncodingsMenu(np, section = None, entry = None):
-	if section and entry and np.config.sections["server"][section].has_key(entry):
+	if section and entry and entry in np.config.sections["server"][section]:
 		encoding = np.config.sections["server"][section][entry]
 	else:
 		encoding = np.config.sections["server"]["enc"]
@@ -773,7 +773,7 @@ def EncodingsMenu(np, section = None, entry = None):
 def SaveEncoding(np, section, entry, encoding):
 	if encoding != np.config.sections["server"]["enc"]:
 		np.config.sections["server"][section][entry] = encoding
-	elif np.config.sections["server"][section].has_key(entry):
+	elif entry in np.config.sections["server"][section]:
 		del np.config.sections["server"][section][entry]
 	np.config.writeConfig()
 	

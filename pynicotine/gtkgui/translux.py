@@ -43,7 +43,7 @@ class Translux:
 			window = widget
 			widget = None
 
-		if not self.subscribers.has_key(window):
+		if window not in self.subscribers:
 			self.subscribers[window] = widget
 			if widget is None:
 				widget = window
@@ -53,7 +53,7 @@ class Translux:
 			print "eek"
 	
 	def unsubscribe(self, window):
-		if self.subscribers.has_key(window):
+		if window in self.subscribers:
 			widget = self.subscribers[window]
 			if widget is None:
 				widget = window

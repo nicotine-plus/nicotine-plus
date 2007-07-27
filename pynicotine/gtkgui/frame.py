@@ -89,12 +89,12 @@ class BuddiesComboBoxEntry(gtk.ComboBoxEntry):
 		self.store.set_sort_column_id(0, gtk.SORT_ASCENDING)
 		
 	def Append(self, item):
-		if self.items.has_key(item):
+		if item in self.items:
 			return
 		self.items[item] = self.get_model().append([item])
 		
 	def Remove(self, item):
-		if self.items.has_key(item):
+		if item in self.items:
 			self.get_model().remove(self.items[item] )
 			del self.items[item]
 		
@@ -576,7 +576,7 @@ class NicotineFrame(MainWindow):
 				elif message == "private":
 					os.system("flite -t \"%s, you have recieved a private message from %s.\" &" %(self.np.config.sections["server"]["login"], user ) )
 				return
-		if not self.np.config.sections["ui"].has_key("soundcommand"):
+		if "soundcommand" not in self.np.config.sections["ui"]:
 			return
 		command = self.np.config.sections["ui"]["soundcommand"]
 		path = None
@@ -853,7 +853,7 @@ class NicotineFrame(MainWindow):
         # @param msgs a list of messages 
 	def OnNetworkEvent(self, widget, msgs):
 		for i in msgs:
-			if self.np.events.has_key(i.__class__):
+			if i.__class__ in self.np.events:
 				self.np.events[i.__class__](i)
 			else:
 				self.logMessage("No handler for class %s %s" % (i.__class__, vars(i)))
@@ -895,7 +895,7 @@ class NicotineFrame(MainWindow):
 		cellrenderer.set_property("foreground", colour)
 		
 	def changecolour(self, tag, colour):
-		if self.frame.np.config.sections["ui"].has_key(colour):
+		if colour in self.frame.np.config.sections["ui"]:
 			color = self.frame.np.config.sections["ui"][colour]
 		else:
 			color = None
@@ -1557,7 +1557,7 @@ class NicotineFrame(MainWindow):
 		self.OpenUrl(url)
 		
 	def OpenUrl(self, url):
-		if utils.PROTOCOL_HANDLERS.has_key("http"):
+		if "http" in utils.PROTOCOL_HANDLERS:
 			if utils.PROTOCOL_HANDLERS["http"].__class__ is utils.types.MethodType:
 				utils.PROTOCOL_HANDLERS["http"](url)
 			else:
@@ -1790,7 +1790,7 @@ class NicotineFrame(MainWindow):
 				
 	def OnFindTextview(self, widget, textview):
 
-		if not self.__dict__.has_key("FindDialog"):
+		if "FindDialog" not in self.__dict__:
 			self.FindDialog = FindDialog(self, _('Enter the string to search for:'), "", textview=textview, modal=False)
 			self.FindDialog.set_title(_('Nicotine+: Find string'))
 			self.FindDialog.set_icon(self.images["n"])
@@ -1928,13 +1928,13 @@ class NicotineFrame(MainWindow):
 			self.np.queue.put(slskmessages.GetUserStatus(user))
 
 	def GetUserStatus(self, msg):
-		if not self.recommendationusers.has_key(msg.user):
+		if msg.user not in self.recommendationusers:
 			return
 		img = self.GetStatusImage(msg.status)
 		self.recommendationuserslist.set(self.recommendationusers[msg.user], 0, img, 4, msg.status)
 
 	def GetUserStats(self, msg):
-		if not self.recommendationusers.has_key(msg.user):
+		if msg.user not in self.recommendationusers:
 			return
 		self.recommendationuserslist.set(self.recommendationusers[msg.user], 2, Humanize(msg.avgspeed), 3, Humanize(msg.files), 5, msg.avgspeed, 6, msg.files)
 

@@ -103,7 +103,7 @@ class RoomsControl:
 		pos = 1000
 		# Add closed autojoined rooms as well
 		for name in self.frame.np.config.sections["server"]["autojoin"]:
-			if not self.joinedrooms.has_key(name):
+			if name not in self.joinedrooms:
 				room_tab_order [ pos ] = name
 				pos += 1
 		# Sort by "position"
@@ -171,7 +171,7 @@ class RoomsControl:
 		self.frame.np.queue.put(slskmessages.RoomList())
 		
 	def JoinRoom(self, msg):
-		if self.joinedrooms.has_key(msg.room):
+		if msg.room in self.joinedrooms:
 			self.joinedrooms[msg.room].Rejoined(msg.users)
 			return
 		tab = ChatRoom(self, msg.room, msg.users)
@@ -216,7 +216,7 @@ class RoomsControl:
 			room.GetUserStatus(msg.user, msg.status)
 			
 	def UserJoinedRoom(self, msg):
-		if self.joinedrooms.has_key(msg.room):
+		if msg.room in self.joinedrooms:
 			self.joinedrooms[msg.room].UserJoinedRoom(msg.username, msg.userdata)
 	
 	def UserLeftRoom(self, msg):
@@ -401,7 +401,7 @@ class ChatRoom(ChatRoomTab):
 		cols[2].set_sort_column_id(5)
 		cols[3].set_sort_column_id(6)
 		cols[0].get_widget().hide()
-		if not config["columns"]["chatrooms"].has_key(room):
+		if room not in config["columns"]["chatrooms"]:
 			config["columns"]["chatrooms"][room] = [1, 1, 1, 1]
 		for i in range (4):
 			parent = cols[i].get_widget().get_ancestor(gtk.Button)
@@ -563,7 +563,7 @@ class ChatRoom(ChatRoomTab):
 		line = "\n-- ".join(line.split("\n"))
 		
 		color = self.getUserStatusColor(self.usersmodel.get_value(self.users[user], 4))
-		if self.tag_users.has_key(user):
+		if user in self.tag_users:
 			self.changecolour(self.tag_users[user], color)
 		else:
 			self.tag_users[user] = self.makecolour(self.ChatScroll.get_buffer(), color, user)
@@ -708,7 +708,7 @@ class ChatRoom(ChatRoomTab):
 		self.ChatEntry.set_text("")
 
 	def UserJoinedRoom(self, username, userdata):
-		if self.users.has_key(username):
+		if username in self.users:
 			return
 		# Add to completion list, and completion drop-down
 		if self.frame.np.config.sections["words"]["tab"]:
@@ -731,7 +731,7 @@ class ChatRoom(ChatRoomTab):
 		self.CountUsers()
 		
 	def UserLeftRoom(self, username):
-		if not self.users.has_key(username):
+		if username not in self.users:
 			return
 		# Remove from completion list, and completion drop-down
 		if self.frame.np.config.sections["words"]["tab"]:
@@ -767,12 +767,12 @@ class ChatRoom(ChatRoomTab):
 			self.LabelPeople.hide()
 		
 	def GetUserStats(self, user, avgspeed, files):
-		if not self.users.has_key(user):
+		if user not in self.users:
 			return
 		self.usersmodel.set(self.users[user], 2, Humanize(avgspeed), 3, Humanize(files), 5, avgspeed, 6, files)
 		
 	def GetUserStatus(self, user, status):
-		if not self.users.has_key(user):
+		if user not in self.users:
 			return
 		img = self.frame.GetStatusImage(status)
 		if img == self.usersmodel.get_value(self.users[user], 0):
@@ -865,7 +865,7 @@ class ChatRoom(ChatRoomTab):
 		return color
 		
 	def changecolour(self, tag, colour):
-		if self.frame.np.config.sections["ui"].has_key(colour):
+		if colour in self.frame.np.config.sections["ui"]:
 			color = self.frame.np.config.sections["ui"][colour]
 		else:
 			color = ""
@@ -924,7 +924,7 @@ class ChatRoom(ChatRoomTab):
 		self.Leave.set_sensitive(False)
 		self.leaving = 1
 		config = self.frame.np.config.sections
-		if config["columns"]["chatrooms"].has_key(self.room):
+		if self.room in config["columns"]["chatrooms"]:
 			del config["columns"]["chatrooms"][self.room]
 			
 	def saveColumns(self):
@@ -941,7 +941,7 @@ class ChatRoom(ChatRoomTab):
 		self.users.clear()
 		self.CountUsers()
 		config = self.frame.np.config.sections
-  		if not self.AutoJoin.get_active() and config["columns"]["chatrooms"].has_key(self.room):
+  		if not self.AutoJoin.get_active() and self.room in config["columns"]["chatrooms"]:
 			del config["columns"]["chatrooms"][self.room]
 			
 		for tag in self.tag_users.values():
@@ -952,7 +952,7 @@ class ChatRoom(ChatRoomTab):
 		self.usersmodel.set_default_sort_func(lambda *args: -1)
 		self.usersmodel.set_sort_column_id(-1, gtk.SORT_ASCENDING)
 		for user in users.keys():
-			if self.users.has_key(user):
+			if user in self.users:
 				self.usersmodel.remove(self.users[user])
 			img = self.frame.GetStatusImage(users[user].status)
 			hspeed = Humanize(users[user].avgspeed)
@@ -970,7 +970,7 @@ class ChatRoom(ChatRoomTab):
 		self.GetCompletionList()
 		# Update all username tags in chat log
 		for user, tag in self.tag_users.items():
-			if self.users.has_key(user):
+			if user in self.users:
 				color = self.changecolour(tag, self.getUserStatusColor(self.usersmodel.get_value(self.users[user], 4)) )
 			else:
 				self.changecolour(tag, "useroffline")
@@ -1124,23 +1124,24 @@ class ChatRoom(ChatRoomTab):
 	def OnTickerClicked(self, widget, event):
 		if event.button != 1:
 			return False
-		if self.Ticker.messages.has_key(self.frame.np.config.sections["server"]["login"]):
-			old = self.Ticker.messages[self.frame.np.config.sections["server"]["login"]]
+		config = self.frame.np.config.sections
+		if config["server"]["login"] in self.Ticker.messages:
+			old = self.Ticker.messages[config["server"]["login"]]
 		else:
 			old = ""
 		t, result = TickDialog(self.frame.MainWindow, old)
 		if not result is None:
 			if t == 1:
 				if not result:
-					if self.frame.np.config.sections["ticker"]["rooms"].has_key(self.room):
-						del self.frame.np.config.sections["ticker"]["rooms"][self.room]
+					if self.room in config["ticker"]["rooms"]:
+						del config["ticker"]["rooms"][self.room]
 				else:
-					self.frame.np.config.sections["ticker"]["rooms"][self.room] = result
+					config["ticker"]["rooms"][self.room] = result
 				self.frame.np.config.writeConfig()
 			elif t == 2:
-				if self.frame.np.config.sections["ticker"]["rooms"].has_key(self.room):
-					del self.frame.np.config.sections["ticker"]["rooms"][self.room]
-				self.frame.np.config.sections["ticker"]["default"] = result
+				if self.room in configs["ticker"]["rooms"]:
+					del config["ticker"]["rooms"][self.room]
+				config["ticker"]["default"] = result
 				self.frame.np.config.writeConfig()
 			self.frame.np.queue.put(slskmessages.RoomTickerSet(self.room, self.frame.np.encode(result, self.encoding)))
 		return True

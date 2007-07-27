@@ -291,7 +291,7 @@ class TransferList:
 				break
 			else:
 				if self.TreeUsers:
-					if not self.users.has_key(user):
+					if user not in self.users:
 						# Create Parent if it doesn't exist
 						# ProgressRender not visible (last column sets 4th column)
 						self.users[user] = self.transfersmodel.append(None, [user, "", "", 0,  "", "", "", "", "", "", 0, 0, 0,  False])

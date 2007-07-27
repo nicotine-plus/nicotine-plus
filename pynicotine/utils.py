@@ -83,7 +83,7 @@ def _(s):
 	# Don't translate empty strings
 	# Poedit uses empty strings as metadata
 	if s == "": return s
-	if not tr_cache.has_key(s):
+	if s not in tr_cache:
 		tr_cache[s] = langTranslation.gettext(s)
 	return tr_cache[s]
 
@@ -206,7 +206,7 @@ def getFilesList(mtimes, oldmtimes, oldlist, yieldcall = None, progress=None):
 		if hiddenCheck(directory):
 
 			continue	
-		if oldmtimes.has_key(directory):
+		if directory in oldmtimes:
 			if mtimes[directory] == oldmtimes[directory]:
 				list[directory] = oldlist[directory]
 				continue
@@ -287,7 +287,7 @@ def getFilesStreams(mtimes, oldmtimes, oldstreams, sharedfiles, yieldcall = None
 	for i in mtimes.keys():
 		if hiddenCheck(i):
 			continue	
-		if oldmtimes.has_key(i):
+		if i in oldmtimes:
 			if mtimes[i] == oldmtimes[i]:
 				# No change
 				streams[i] = oldstreams[i]

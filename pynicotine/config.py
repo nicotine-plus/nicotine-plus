@@ -464,7 +464,7 @@ class Config:
 					return "I will not alias that!\n"
 				self.aliases[args[0]] = args[1]
 				self.writeAliases()
-			if self.aliases.has_key(args[0]):
+			if args[0] in self.aliases:
 				return "Alias %s: %s\n" % (args[0], self.aliases[args[0]])
 			else:
 				return _("No such alias (%s)") % rest + "\n"
@@ -475,7 +475,7 @@ class Config:
 			return m+"\n"
 
 	def Unalias(self, rest):
-		if rest and self.aliases.has_key(rest):
+		if rest and rest in self.aliases:
 			x = self.aliases[rest]
 			del self.aliases[rest]
 			self.writeAliases()

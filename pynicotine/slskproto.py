@@ -316,6 +316,9 @@ class SlskProtoThread(threading.Thread):
 				print error
 				self._want_abort = 1
 				self._ui_callback([_("Major Socket Error: Networking terminated! %s" % str(error)) ])
+			except ValueError, error:
+				print error
+				#print len(conns.keys()), len(connsinprogress.keys())
 			# Write Output
 			for i in conns.keys():
 				if i in output:
@@ -347,6 +350,7 @@ class SlskProtoThread(threading.Thread):
 						i.recv(0)
 				except socket.error, err:
 					self._ui_callback([ConnectError(msgObj, err)])
+					i.close()
 					del connsinprogress[i]
 				else:
 					if i in output:
@@ -358,12 +362,13 @@ class SlskProtoThread(threading.Thread):
 							if self.ipBlocked(ip):
 								message = "Blocking peer connection in progress to IP: %(ip)s Port: %(port)s" % { "ip":ip, "port":port}
 								self._ui_callback([message])
+								i.close()
 				
 							else:
 								conns[i] = PeerConnection(i, msgObj.addr, "", "", msgObj.init)
 								self._ui_callback([OutConn(i, msgObj.addr)])
 							
-								
+						
 						del connsinprogress[i]
 					
 			# Process Data
@@ -382,7 +387,7 @@ class SlskProtoThread(threading.Thread):
 						self.readData(conns, i)
 					except socket.error, err:
 						self._ui_callback([ConnectError(conns[i], err)])
-				if conns.has_key(i) and len(conns[i].ibuf) > 0:
+				if i in conns and len(conns[i].ibuf) > 0:
 					if i is server_socket:
 						msgs, conns[server_socket].ibuf = self.process_server_input(conns[server_socket].ibuf)
 						self._ui_callback(msgs)
@@ -442,7 +447,7 @@ class SlskProtoThread(threading.Thread):
 		return ip, port
 		
 	def writeData(self, server_socket, conns, i):
-		if self._limits.has_key(i):
+		if i in self._limits:
 			limit = self._limits[i]
 		else:
 			limit = None
@@ -497,7 +502,7 @@ class SlskProtoThread(threading.Thread):
 			msgsize, msgtype = struct.unpack("<ii", msgBuffer[:8])
 			if msgsize + 4 > len(msgBuffer):
 				break
-			elif self.serverclasses.has_key(msgtype):
+			elif msgtype in self.serverclasses:
 				msg = self.serverclasses[msgtype]()
 				msg.parseNetworkMessage(msgBuffer[8:msgsize+4])
 				msgs.append(msg)
@@ -607,8 +612,8 @@ class SlskProtoThread(threading.Thread):
 			elif conn.init.type == 'P':
 				# Unpack Peer Messages
 				msgtype = struct.unpack("<i", msgBuffer[4:8])[0]
-				if self.peerclasses.has_key(msgtype):
-					try: 
+				if msgtype in self.peerclasses:
+					try:
 						msg = self.peerclasses[msgtype](conn)
 						# Parse Peer Message and handle exceptions
 						try:
@@ -617,7 +622,7 @@ class SlskProtoThread(threading.Thread):
 							host = port = _("unknown")
 							msgname = str(self.peerclasses[msgtype]).split(".")[-1]
 							print "Error parsing %s:" % msgname, error
-							if conn.init.conn.__dict__.has_key("addr"):
+							if "addr" in conn.init.conn.__dict__:
 								if conn.init.conn.addr is not None:
 									host = conn.init.conn.addr[0]
 									port = conn.init.conn.addr[1]
@@ -672,7 +677,7 @@ class SlskProtoThread(threading.Thread):
 			if msgsize + 4 > len(msgBuffer):
 				break
 			msgtype = ord(msgBuffer[4])
-			if self.distribclasses.has_key(msgtype):
+			if msgtype in self.distribclasses:
 				msg = self.distribclasses[msgtype](conn)
 				msg.parseNetworkMessage(msgBuffer[5:msgsize+4])
 				msgs.append(msg)
@@ -708,13 +713,13 @@ class SlskProtoThread(threading.Thread):
 		for msgObj in msgList:
 			if issubclass(msgObj.__class__, ServerMessage):
 				msg = msgObj.makeNetworkMessage()
-				if conns.has_key(server_socket):
+				if server_socket in conns:
 					conns[server_socket].obuf = conns[server_socket].obuf + struct.pack("<ii", len(msg)+4, self.servercodes[msgObj.__class__]) + msg
 				else:
 					queue.put(msgObj)
 					needsleep = 1
 			elif issubclass(msgObj.__class__, PeerMessage):
-				if conns.has_key(msgObj.conn):
+				if msgObj.conn in conns:
 					# Pack Peer and File and Search Messages 
 					if msgObj.__class__ is PierceFireWall:
 						conns[msgObj.conn].piercefw = msgObj
@@ -756,7 +761,7 @@ class SlskProtoThread(threading.Thread):
 						connsinprogress[server_socket] = PeerConnectionInProgress(server_socket, msgObj)
 					except socket.error, err:
 						self._ui_callback([ConnectError(msgObj, err)])
-				elif msgObj.__class__ is ConnClose and conns.has_key(msgObj.conn):
+				elif msgObj.__class__ is ConnClose and msgObj.conn in conns:
 					msgObj.conn.close()
 					#print "Close3", conns[msgObj.conn].addr
 					self._ui_callback([ConnClose(msgObj.conn, conns[msgObj.conn].addr)])
@@ -775,12 +780,12 @@ class SlskProtoThread(threading.Thread):
 							needsleep = 1
 						else:
 							self._ui_callback([ConnectError(msgObj, (errnum, strerror))])
-				elif msgObj.__class__ is DownloadFile and conns.has_key(msgObj.conn):
+				elif msgObj.__class__ is DownloadFile and msgObj.conn in conns:
 					conns[msgObj.conn].filedown = msgObj
 					conns[msgObj.conn].obuf = conns[msgObj.conn].obuf + struct.pack("<i", msgObj.offset) + struct.pack("<i", 0)
 					conns[msgObj.conn].bytestoread = msgObj.filesize - msgObj.offset
 					self._ui_callback([DownloadFile(msgObj.conn, 0, msgObj.file)])
-				elif msgObj.__class__ is UploadFile and conns.has_key(msgObj.conn):
+				elif msgObj.__class__ is UploadFile and msgObj.conn in conns:
 					conns[msgObj.conn].fileupl = msgObj
 					self._resetCounters(conns)
 				elif msgObj.__class__ is SetGeoBlock:

@@ -41,23 +41,21 @@ class UserTabs(IconNotebook):
 	def SetTabLabel(self, mytab):
 		self.mytab = mytab
 		
-			
 	def GetUserStats(self, msg):
-		if self.users.has_key(msg.user):
+		if msg.user in self.users:
 			tab = self.users[msg.user]
 			tab.speed.set_text(_("Speed: %s") %  Humanize(msg.avgspeed))
 			tab.filesshared.set_text(_("Files: %s") % Humanize(msg.files))
 			tab.dirsshared.set_text(_("Directories: %s") % Humanize(msg.dirs))
 
 	def GetUserStatus(self, msg):
-		
-		if self.users.has_key(msg.user):
+		if msg.user in self.users:
 			tab = self.users[msg.user]
 			status = [_("Offline"), _("Away"), _("Online")][msg.status]
 			self.set_text(tab.Main, "%s (%s)" % (msg.user[:15], status))
 
 	def InitWindow(self, user, conn):
-		if self.users.has_key(user):
+		if msg.user in self.users:
 			self.users[user].conn = conn
 			self.frame.np.queue.put(slskmessages.GetUserStats(user))
 		else:
@@ -84,7 +82,7 @@ class UserTabs(IconNotebook):
 			self.frame.RequestIcon(self.mytab)
 			
 	def ShowInterests(self, msg):
-		if self.users.has_key(msg.user):
+		if msg.user in self.users:
 			self.users[msg.user].ShowInterests(msg.likes, msg.hates)
 			
 	def UpdateGauge(self, msg):
@@ -210,7 +208,7 @@ class UserInfo(UserInfoTab):
 			return buffer.create_tag( font=font)
 		
 	def changecolour(self, tag, colour):
-		if self.frame.np.config.sections["ui"].has_key(colour):
+		if colour in self.frame.np.config.sections["ui"]:
 			color = self.frame.np.config.sections["ui"][colour]
 		else:
 			color = None

@@ -1668,7 +1668,7 @@ class UrlCatchFrame(settings_glade.UrlCatchFrame):
 	def OnAdd(self, widget):
 		protocol = self.Protocol.get_text()
 		value = self.Handler.child.get_text()
-		if self.protocols.has_key(protocol):
+		if protocol in self.protocols:
 			iter = self.protocols[protocol]
 			self.protocolmodel.set(iter, 1, value)
 		else:
@@ -2137,7 +2137,7 @@ class SettingsWindow(settings_glade.SettingsWindow):
 			self.viewport1.add(self.empty_label)
 			return
 		page = model.get_value(iter, 1)
-		if self.pages.has_key(page):
+		if page in self.pages:
 			self.viewport1.add(self.pages[page].Main)
 		else:
 			self.viewport1.add(self.empty_label)

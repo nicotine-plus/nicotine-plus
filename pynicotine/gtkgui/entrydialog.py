@@ -214,7 +214,7 @@ class MetaDialog( gtk.Dialog):
 		self.Display(self.current)
 		
 	def Display(self, item):
-		if not self.data.has_key(item):
+		if item not in self.data:
 			return
 		if not self.Search:
 			self.Immediate.hide()

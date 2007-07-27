@@ -111,7 +111,7 @@ class WishList( gtk.Dialog):
 		l.append(iter)
 		
 	def removeWish(self, wish):
-		if self.wishes.has_key(wish):
+		if wish in self.wishes:
 			self.store.remove(self.wishes[wish])
 			del self.wishes[wish]
 		if wish in self.nicotine.np.config.sections["server"]["autosearch"]:
@@ -335,7 +335,7 @@ class Searches:
 		return search
 		
 	def ShowResult(self, msg, username, country):
-		if not self.searches.has_key(msg.token):
+		if msg.token not in self.searches:
 			return
 		
 		search = self.searches[msg.token]
@@ -355,7 +355,7 @@ class Searches:
 		self.WishListDialog.removeWish(search[1])
 		
 	def RemoveTab(self, tab):
-		if self.searches.has_key(tab.id):
+		if id in self.searches:
 			search = self.searches[tab.id]
 			search[2] = None
 			#if search[4]:
@@ -364,7 +364,7 @@ class Searches:
 		self.frame.SearchNotebook.remove_page(tab.vbox7)
 
 	def AutoSearch(self, id):
-		if not self.searches.has_key(id):
+		if id not in self.searches:
 			return
 		i = self.searches[id]
 		if i[1] in self.frame.np.config.sections["server"]["autosearch"]:

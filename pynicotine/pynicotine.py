@@ -247,7 +247,7 @@ class NetworkEventProcessor:
 			addr = None
 			behindfw = None
 			token = None
-			if self.users.has_key(user):
+			if user in self.users:
 				addr = self.users[user].addr
 				behindfw = self.users[user].behindfw
 			elif address is not None:
@@ -326,7 +326,7 @@ class NetworkEventProcessor:
 			shared_db = "bsharedfiles"
 		else:
 			shared_db = "sharedfiles"
-		sharedfolders = len(conf["transfers"][shared_db].keys())
+		sharedfolders = len(conf["transfers"][shared_db])
 		sharedfiles = 0
 		for i in conf["transfers"][shared_db].keys():
 			sharedfiles += len(conf["transfers"][shared_db][i])
@@ -368,7 +368,7 @@ class NetworkEventProcessor:
 					if i.token is None:
 						i.token  = newId()
 						self.queue.put(slskmessages.ConnectToPeer(i.token, i.username, i.init.type))
-						if self.users.has_key(i.username):
+						if i.username in self.users:
 							self.users[i.username].behindfw = "yes"
 						for j in i.msgs: 
 							if j.__class__ is slskmessages.TransferRequest and self.transfers is not None:
@@ -534,13 +534,13 @@ class NetworkEventProcessor:
 		if self.chatrooms is not None:
 			self.chatrooms.roomsctrl.JoinRoom(msg)
 			ticker = ""
-			if self.config.sections["ticker"]["rooms"].has_key(msg.room):
+			if msg.room in self.config.sections["ticker"]["rooms"]:
 				ticker = self.config.sections["ticker"]["rooms"][msg.room]
 			elif self.config.sections["ticker"]["default"]:
 				ticker = self.config.sections["ticker"]["default"]
 			if ticker:
 				encoding = self.config.sections["server"]["enc"]
-				if self.config.sections["server"]["roomencoding"].has_key(msg.room):
+				if msg.room in self.config.sections["server"]["roomencoding"]:
 					encoding = self.config.sections["server"]["roomencoding"][msg.room]
 				self.queue.put(slskmessages.RoomTickerSet(msg.room, self.encode(ticker, encoding)))
 		else:
@@ -623,7 +623,7 @@ class NetworkEventProcessor:
 	def GetUserStatus(self, msg):
 		# Causes recursive requests when privileged?
 		#self.queue.put(slskmessages.AddUser(msg.user))
-		if self.users.has_key(msg.user):
+		if msg.user in self.users:
 			if msg.status == 0:
 				self.users[msg.user] = UserAddr(status = msg.status)
 			else:
@@ -727,7 +727,7 @@ class NetworkEventProcessor:
 			except:
 				message = _("IP address of %(user)s is %(ip)s, port %(port)i%(country)s") %{'user':msg.user, 'ip':msg.ip, 'port':msg.port, 'country':cc}
 			self.logMessage(message)
-		if self.users.has_key(msg.user):
+		if msg.user in self.users:
 			self.users[msg.user].addr = (msg.ip, msg.port)
 
 	def Relogged(self, msg):
@@ -795,7 +795,7 @@ class NetworkEventProcessor:
 		return 1, ""
 	
 	def CheckSpoof(self, user, ip, port):
-		if not self.users.has_key(user):
+		if msg.user not in self.users:
 			return 0
 		if self.users[user].addr != None:
 			#if len(self.users[user].addr) != 2:
@@ -1132,16 +1132,16 @@ class NetworkEventProcessor:
 			shares = {}
 		
 		if checkuser:
-			if shares.has_key(msg.dir.replace("\\", os.sep)[:-1]):
+			if msg.dir.replace("\\", os.sep)[:-1] in shares:
 				self.queue.put(slskmessages.FolderContentsResponse(msg.conn.conn, msg.dir, shares[msg.dir.replace("\\", os.sep)[:-1]]))
-			elif shares.has_key(msg.dir.replace("\\", os.sep)):
+			elif msg.dir.replace("\\", os.sep) in shares:
 				self.queue.put(slskmessages.FolderContentsResponse(msg.conn.conn, msg.dir, shares[msg.dir.replace("\\", os.sep)]))
 			else:
 				if checkuser == 2:
 					shares = self.config.sections["transfers"]["sharedfiles"]
-					if shares.has_key(msg.dir.replace("\\", os.sep)[:-1]):
+					if msg.dir.replace("\\", os.sep)[:-1] in shares:
 						self.queue.put(slskmessages.FolderContentsResponse(msg.conn.conn, msg.dir, shares[msg.dir.replace("\\", os.sep)[:-1]]))
-					elif shares.has_key(msg.dir.replace("\\", os.sep)):
+					elif msg.dir.replace("\\", os.sep) in shares:
 						self.queue.put(slskmessages.FolderContentsResponse(msg.conn.conn, msg.dir, shares[msg.dir.replace("\\", os.sep)]))
 					
 				
@@ -1168,7 +1168,7 @@ class NetworkEventProcessor:
 			self.userbrowse.UpdateGauge(msg)
 
 	def TunneledMessage(self, msg):
-		if msg.code in self.protothread.peerclasses.keys():
+		if msg.code in self.protothread.peerclasses:
 			peermsg = self.protothread.peerclasses[msg.code](None)
 		
 			peermsg.parseNetworkMessage(msg.msg)
@@ -1218,7 +1218,7 @@ class NetworkEventProcessor:
 		if maxresults == 0:
 			return
 		terms = searchterm.translate(self.translatepunctuation).lower().split()
-		list = [wordindex[i][:] for i in terms if wordindex.has_key(i)]
+		list = [wordindex[i][:] for i in terms if i in wordindex]
 		if len(list) != len(terms) or len(list) == 0:
 			#self.logMessage(_("User %(user)s is searching for %(query)s, returning no results") %{'user':user, 'query':self.decode(searchterm)}, 2)
 			return

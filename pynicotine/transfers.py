@@ -147,13 +147,13 @@ class Transfers:
 	def addToPrivileged(self, user):
 		if user not in self.privilegedusers:
 			self.privilegedusers.append(user)
-		if self.oggusersqueued.has_key(user):
+		if user in self.oggusersqueued:
 			self.privusersqueued.setdefault(user, 0)
 			self.privusersqueued[user] += self.oggusersqueued[user]
 			self.privcount += self.oggusersqueued[user]
 			self.oggcount -= self.oggusersqueued[user]
 			del self.oggusersqueued[user]
-		if self.usersqueued.has_key(user):
+		if user in self.usersqueued:
 			self.privusersqueued.setdefault(user, 0)
 			self.privusersqueued[user] += self.usersqueued[user]
 			self.privcount += self.usersqueued[user]
@@ -211,7 +211,7 @@ class Transfers:
 		else:
 			transfer.status = 'Getting status'
 		
-		if self.users.has_key(user):
+		if user in self.users:
 			status = self.users[user].status
 		else:
 			status = None
@@ -869,7 +869,7 @@ class Transfers:
 	def addToIndex(self, wordindex, fileindex, words, dir, fileinfo):
 		index = len(fileindex.keys())
 		for i in words:
-			if not wordindex.has_key(i):
+			if i not in wordindex:
 				wordindex[i] = [index]
 			else:
 				wordindex[i] = wordindex[i] + [index]
@@ -1172,7 +1172,7 @@ class Transfers:
 			if i.file is not None:
 				i.file.close()
 			if i.status != "Finished":
-				if self.users.has_key(i.user) and self.users[i.user].status == 0:
+				if i.user in self.users and self.users[i.user].status == 0:
 					i.status = "User logged off"
 				else:
 					i.status = "Connection closed by peer"
@@ -1319,7 +1319,7 @@ class Transfers:
 
 	def encode(self, string, user = None):
 		coding = None
-		if user and self.eventprocessor.config.sections["server"]["userencoding"].has_key(user):
+		if user and user in self.eventprocessor.config.sections["server"]["userencoding"]:
 			coding = self.eventprocessor.config.sections["server"]["userencoding"][user]
 		string = self.eventprocessor.decode(string, coding)
 		try:

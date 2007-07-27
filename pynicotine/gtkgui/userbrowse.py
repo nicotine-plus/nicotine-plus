@@ -343,7 +343,7 @@ class UserBrowse(UserBrowseTab):
 		currentdir = self.BrowseGetDirs()
 		sel = self.FolderTreeView.get_selection()
 		sel.unselect_all()
-		if self.directories.has_key(currentdir):
+		if currentdir in  self.directories:
 			path = self.DirStore.get_path(self.directories[currentdir])
 			if path is not None:
 				sel.select_path(path)
@@ -403,7 +403,7 @@ class UserBrowse(UserBrowseTab):
 		self.selected_folder = directory
 		self.FileStore.clear()
 		self.files.clear()
-		if not self.shares.has_key(directory):
+		if directory not in self.shares:
 			return
 		
 		path = self.DirStore.get_path( self.directories[directory] )
@@ -616,7 +616,7 @@ class UserBrowse(UserBrowseTab):
 
 	
 	def DownloadDirectory(self, dir, prefix = "", recurse = 0):
-		if dir == None or not self.shares.has_key(dir):
+		if dir == None or dir not in self.shares:
 			return
 		ldir = prefix + dir.split("\\")[-1]
 		for file in self.shares[dir]:

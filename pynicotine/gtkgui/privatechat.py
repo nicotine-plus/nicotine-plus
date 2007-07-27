@@ -48,14 +48,14 @@ class PrivateChats(IconNotebook):
 					self.frame.ClearNotification("private", tab.user)
 		
 	def GetUserStatus(self, msg):
-		if self.users.has_key(msg.user):
+		if msg.user in self.users:
 			tab = self.users[msg.user]
 			status = [_("Offline"), _("Away"), _("Online")][msg.status]
 			self.set_text(tab.Main, "%s (%s)" % (msg.user[:15], status))
 			tab.GetUserStatus(msg.status)
 
 	def SendMessage(self, user, text = None, direction = None):
-		if not self.users.has_key(user):
+		if user not in self.users:
 			tab = PrivateChat(self, user)
 			self.users[user] = tab
 			self.append_page(tab.Main, user, tab.OnClose)
@@ -547,7 +547,7 @@ class PrivateChat(PrivateChatTab):
 		self.frame.SetTextBG(self.ChatLine)
 		
 	def changecolour(self, tag, colour):
-		if self.frame.np.config.sections["ui"].has_key(colour):
+		if colour in self.frame.np.config.sections["ui"]:
 			color = self.frame.np.config.sections["ui"][colour]
 		else:
 			color = ""
