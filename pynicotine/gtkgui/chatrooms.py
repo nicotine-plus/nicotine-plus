@@ -239,6 +239,7 @@ class RoomsControl:
 	def UpdateColours(self):
 		self.frame.SetTextBG(self.frame.roomlist.RoomsList)
 		self.frame.SetTextBG(self.frame.roomlist.CreateRoomEntry)
+
 		for room in self.joinedrooms.values():
 			room.ChangeColours()
 			
@@ -853,6 +854,8 @@ class ChatRoom(ChatRoomTab):
 		self.frame.SetTextBG(self.UserList)
 		
 		self.frame.SetTextBG(self.ChatEntry)
+		self.frame.SetTextBG(self.AutoJoin)
+		self.frame.SetTextBG(self.Log)
 		
 		
 	def getUserStatusColor(self, status):
@@ -916,6 +919,8 @@ class ChatRoom(ChatRoomTab):
 		self.frame.SetTextBG(self.RoomLog)
 		self.frame.SetTextBG(self.UserList)
 		self.frame.SetTextBG(self.ChatEntry)
+		self.frame.SetTextBG(self.AutoJoin)
+		self.frame.SetTextBG(self.Log)
 				
 	def OnLeave(self, widget = None):
 		if self.leaving:

@@ -951,12 +951,18 @@ class NicotineFrame(MainWindow):
 			
 		widget.modify_base(gtk.STATE_NORMAL, colour)
 		widget.modify_bg(gtk.STATE_NORMAL, colour)
-
-		if type(widget) in (gtk.Entry, gtk.SpinButton):
-			if fgcolor == "":
-				colour = None
-			else:
+		widgetlist = [gtk.Entry, gtk.SpinButton]
+		if SEXY:
+			widgetlist.append(sexy.SpellEntry)
+		if type(widget) in widgetlist:
+			if fgcolor != "":
 				colour = gtk.gdk.color_parse(fgcolor)
+			elif fgcolor == "" and self.np.config.sections["ui"]["inputcolor"] == "":
+				colour = None
+			elif fgcolor == "" and self.np.config.sections["ui"]["inputcolor"] != "":
+				fgcolor = self.np.config.sections["ui"]["inputcolor"]
+				colour = gtk.gdk.color_parse(fgcolor)
+				
 			widget.modify_text(gtk.STATE_NORMAL, colour)
 			widget.modify_fg(gtk.STATE_NORMAL, colour)
 			
@@ -1365,7 +1371,7 @@ class NicotineFrame(MainWindow):
 			self.uploads.UpdateColours()
 			self.userinfo.UpdateColours()
 			self.userbrowse.UpdateColours()
-			
+			self.settingswindow.UpdateColours()
 			self.UpdateColours()
 			
 		if self.np.transfers is not None:

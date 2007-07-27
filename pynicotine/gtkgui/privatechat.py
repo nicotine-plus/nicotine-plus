@@ -545,6 +545,8 @@ class PrivateChat(PrivateChatTab):
 			self.tag_my_username.set_property("underline", pango.UNDERLINE_NONE)
 		self.frame.SetTextBG(self.ChatScroll)
 		self.frame.SetTextBG(self.ChatLine)
+		self.frame.SetTextBG(self.Log)
+		self.frame.SetTextBG(self.PeerPrivateMessages)
 		
 	def changecolour(self, tag, colour):
 		if colour in self.frame.np.config.sections["ui"]:

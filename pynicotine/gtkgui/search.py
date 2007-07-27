@@ -379,6 +379,7 @@ class Searches:
 			if id[2] is None:
 				continue
 			id[2].ChangeColours()
+		self.frame.SetTextBG(self.WishListDialog.WishlistView)
 			
 	def saveColumns(self):
 		page_num = self.frame.SearchNotebook.get_current_page()
@@ -682,6 +683,8 @@ class Search(SearchTab):
 		self.frame.SetTextBG(self.FilterSize.child)
 		self.frame.SetTextBG(self.FilterBitrate.child)
 		self.frame.SetTextBG(self.FilterCountry.child)
+		self.frame.SetTextBG(self.RememberCheckButton)
+		self.frame.SetTextBG(self.FilterFreeSlot)
 		
 	def GetUserStatus(self, msg):
 		if msg.user not in self.users:

@@ -177,7 +177,7 @@ class UserInfo(UserInfoTab):
 				self.Encoding.set_active_iter(self.Elist[self.encoding])
 
 		self.tag_local = self.makecolour(buffer, "chatremote")
-		self.frame.SetTextBG(self.descr)
+		self.ChangeColours()
 		self.InterestsExpander.connect("activate", self.ExpanderStatus)
 		self.InformationExpander.connect("activate", self.ExpanderStatus)
 		self.DescriptionExpander.connect("activate", self.ExpanderStatus)
@@ -226,6 +226,8 @@ class UserInfo(UserInfoTab):
 	def ChangeColours(self):
 		self.changecolour(self.tag_local, "chatremote")
 		self.frame.SetTextBG(self.descr)
+		self.frame.SetTextBG(self.Likes)
+		self.frame.SetTextBG(self.Hates)
 		
 	def ShowInterests(self, likes, hates):
 		self.likesStore.clear()
