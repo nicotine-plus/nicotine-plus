@@ -1930,9 +1930,11 @@ class NicotineFrame(MainWindow):
 
 	def Recommendations(self, msg):
 		self.SetRecommendations("Recommendations", msg.recommendations)
+		self.SetUnrecommendations("Unrecommendations", msg.unrecommendations)
 
 	def ItemRecommendations(self, msg):
 		self.SetRecommendations(_("Recommendations for %s") % msg.thing, msg.recommendations)
+		self.SetUnrecommendations("Unrecommendations", msg.unrecommendations)
 
 	def OnGlobalRecommendationsClicked(self, widget):
 		self.np.queue.put(slskmessages.GlobalRecommendations())

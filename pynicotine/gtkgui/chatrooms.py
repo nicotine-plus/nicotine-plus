@@ -441,6 +441,8 @@ class ChatRoom(ChatRoomTab):
 			("$" + _("_Add user to list"), popup.OnAddToList),
 			("$" + _("_Ban this user"), popup.OnBanUser),
 			("$" + _("_Ignore this user"), popup.OnIgnoreUser),
+			("", None),
+			("#" + _("Sear_ch this user's files"), popup.OnSearchUser, gtk.STOCK_FIND),
 		)
 		self.UserList.connect("button_press_event", self.OnPopupMenu)
 

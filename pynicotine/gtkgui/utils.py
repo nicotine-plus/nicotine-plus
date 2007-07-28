@@ -471,6 +471,11 @@ class PopupMenu(gtk.Menu):
 
 	def get_user(self):
 		return self.user
+	
+	def OnSearchUser(self, widget):
+		self.frame.SearchMethod.set_active_iter(self.frame.searchmethods[_("User")])
+		self.frame.UserSearchCombo.child.set_text(self.user)
+		self.frame.notebook1.set_current_page(4)
 		
 	def OnSendMessage(self, widget):
 		self.frame.privatechats.SendMessage(self.user, None, 1)

@@ -166,6 +166,7 @@ class Searches:
 		self.interval = 0
 		self.searchid = int(random.random() * (2**31-1))
 		self.searches = {}
+		self.usersearches = {}
 		self.timer = None
 		self.disconnected = 0
 	
@@ -245,7 +246,7 @@ class Searches:
 			mode = 2
 		elif self.frame.SearchMethod.get_active_text() == _("User"):
 			mode = 3
-			user = self.frame.UserSearchCombo.child.get_text()
+			user = self.frame.UserSearchCombo.child.get_text().strip()
 			if user != "" and not user.isspace():
 				users = [user]
 			else:
@@ -282,7 +283,8 @@ class Searches:
 				templist.append(i)
 		for i in templist:
 			self.frame.SearchEntryCombo.append_text(i)
-			
+		if mode == 3 and users != [] and users[0] != '':
+			self.usersearches[self.searchid] = users
 		search = self.CreateTab(self.searchid, text, mode)
 		if search[2] is not None:
 			self.frame.SearchNotebook.set_current_page(self.frame.SearchNotebook.page_num(search[2].vbox7))
@@ -293,9 +295,9 @@ class Searches:
 			self.DoRoomsSearch(self.searchid, text, room)
 		elif mode == 2:
 			self.DoBuddiesSearch(self.searchid, text)
-		else:
-			if users != [] and users[0] != '':
+		elif mode == 3 and users != [] and users[0] != '':
 				self.DoPeerSearch(self.searchid, text, users)
+				
 		self.searchid += 1
 		
 	def DoGlobalSearch(self, id, text):
@@ -321,12 +323,22 @@ class Searches:
 	def DoPeerSearch(self, id, text, users):
 		for user in users:
 			self.frame.np.ProcessRequestToPeer(user, slskmessages.FileSearchRequest(None,id,text))
-
+			
+	def GetUserSearchName(self, id):
+		if id in self.usersearches:
+			users = self.usersearches[id]
+			if len(users) > 1:
+				return _("Users")
+			elif len(users) == 1:
+				return users[0]
+		print self.usersearches
+		return _("User")
+		
 	def CreateTab(self, id, text, mode, remember = False):
 		tab = Search(self, text, id, mode, remember)
 
 		if mode:
-			label = "(" + ("", _("Rooms"), _("Buddies"), _("User"))[mode] + ") " + text[:15]
+			label = "(" + ("", _("Rooms"), _("Buddies"), self.GetUserSearchName(id))[mode] + ") " + text[:15]
 		else:
 			label = text[:20]
 		self.frame.SearchNotebook.append_page(tab.vbox7, label, tab.OnClose)
