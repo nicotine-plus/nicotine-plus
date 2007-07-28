@@ -813,15 +813,19 @@ class NicotineFrame(MainWindow):
 	def get_custom_widget(self, id, string1, string2, int1, int2):
 		ui = self.np.config.sections["ui"]
 		if id == "ChatNotebook":
-			return IconNotebook(self.images, ui["labelrooms"])
+			return IconNotebook(self.images, ui["labelrooms"], ui["tabclosers"])
 		elif id == "SearchNotebook":
-			return IconNotebook(self.images, ui["labelsearch"])
+			return IconNotebook(self.images, ui["labelsearch"], ui["tabclosers"])
 		elif id == "PrivatechatNotebook":
 			return PrivateChats(self)
 		elif id == "UserInfoNotebook":
-			return UserTabs(self, UserInfo)
+			notebook = UserTabs(self, UserInfo)
+			notebook.set_tab_closers(ui["tabclosers"])
+			return notebook
 		elif id == "UserBrowseNotebook":
-			return UserTabs(self, UserBrowse)
+			notebook = UserTabs(self, UserBrowse)
+			notebook.set_tab_closers(ui["tabclosers"])
+			return notebook
 		elif id in ("UserSearchCombo", "UserPrivateCombo", "UserInfoCombo", "UserBrowseCombo"):
 			comboentry = BuddiesComboBoxEntry(self)
 			self.BuddiesComboEntries.append(comboentry)
@@ -1416,9 +1420,11 @@ class NicotineFrame(MainWindow):
 			self.UpdateColours()
 			
 		closers = self.np.config.sections["ui"]["tabclosers"]
+
 		for w in self.ChatNotebook, self.PrivatechatNotebook, self.UserInfoNotebook, self.UserBrowseNotebook, self.SearchNotebook:
 			w.set_tab_closers(closers)
 		self.SetTabPositions()
+		
 		if self.np.transfers is not None:
 			self.np.transfers.checkUploadQueue()
 		self.UpdateTransferButtons()

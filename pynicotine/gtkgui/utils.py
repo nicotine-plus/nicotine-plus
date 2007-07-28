@@ -279,7 +279,7 @@ def AppendLine(textview, line, tag = None, timestamp = "%H:%M:%S", username=None
 	return linenr
 	
 class ImageLabel(gtk.HBox):
-	def __init__(self, label = "", image = None, onclose = None, closebutton = 0, angle = 0):
+	def __init__(self, label = "", image = None, onclose = None, closebutton = False, angle = 0):
 		gtk.HBox.__init__(self)
 		self.closebutton = closebutton
 		
@@ -322,7 +322,7 @@ class ImageLabel(gtk.HBox):
 		
 		self.Box.pack_start(self.label, True, True)
 		self.Box.pack_start(self.image, False, False)
-		if self.onclose is not None:
+		if self.closebutton and self.onclose is not None:
 			self._add_close_button()
 			
 	def _order_children(self):
@@ -394,8 +394,8 @@ class ImageLabel(gtk.HBox):
 		return self.label.get_text()
 	
 class IconNotebook(gtk.Notebook):
-	def __init__(self, images, angle = 0):
-		self.tabclosers = 0
+	def __init__(self, images, angle = 0, tabclosers = False):
+		self.tabclosers = tabclosers
 		gtk.Notebook.__init__(self)
 		self.images = images
 		self.pages = []
@@ -405,8 +405,7 @@ class IconNotebook(gtk.Notebook):
 		self.angle = angle
 		
 	def set_tab_closers(self, closers):
-		if closers == self.tabclosers:
-			return
+
 		self.tabclosers = closers
 		for data in self.pages:
 			page, label_tab, status, label_tab_menu = data
@@ -434,9 +433,8 @@ class IconNotebook(gtk.Notebook):
 	
 	def append_page(self, page, label, onclose = None, angle = 0):
 		self.set_tab_angle(angle)
-		closebutton = True
-		if not self.tabclosers:
-			closebutton = False
+		closebutton = self.tabclosers
+
 		label_tab = ImageLabel(label, self.images["empty"], onclose, closebutton = closebutton, angle = angle)
 		# menu for all tabs
 		label_tab_menu = ImageLabel(label, self.images["empty"])
