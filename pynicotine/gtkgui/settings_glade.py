@@ -702,7 +702,8 @@ class TransfersFrame:
 		self.UploadsAllowed_List = gtk.ListStore(gobject.TYPE_STRING)
 		self.UploadsAllowed = gtk.ComboBox()
 		self.UploadsAllowed.show()
-		self.UploadsAllowed_List.append([""])
+		for i in [_("")]:
+			self.UploadsAllowed_List.append([i])
 
 		self.UploadsAllowed.set_model(self.UploadsAllowed_List)
 		cell = gtk.CellRendererText()

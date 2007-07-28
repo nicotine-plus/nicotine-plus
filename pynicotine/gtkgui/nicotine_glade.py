@@ -899,7 +899,8 @@ class MainWindow:
 		self.SearchMethod_List = gtk.ListStore(gobject.TYPE_STRING)
 		self.SearchMethod = gtk.ComboBox()
 		self.SearchMethod.show()
-		self.SearchMethod_List.append([""])
+		for i in [_("")]:
+			self.SearchMethod_List.append([i])
 
 		self.SearchMethod.set_model(self.SearchMethod_List)
 		cell = gtk.CellRendererText()

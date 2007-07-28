@@ -2123,20 +2123,7 @@ class SettingsWindow(settings_glade.SettingsWindow):
 					
 	def SetTextBG(self, widget, bgcolor="", fgcolor=""):
 		self.frame.SetTextBG(widget, bgcolor, fgcolor)
-		#if bgcolor == "":
-			#colour = None
-		#else:
-			#colour = gtk.gdk.color_parse(bgcolor)
-		#widget.modify_base(gtk.STATE_NORMAL, colour)
-		#widget.modify_bg(gtk.STATE_NORMAL, colour)
 
-		#if type(widget) in (gtk.Entry, gtk.SpinButton):
-			#if fgcolor == "":
-				#colour = None
-			#else:
-				#colour = gtk.gdk.color_parse(fgcolor)
-			#widget.modify_text(gtk.STATE_NORMAL, colour)
-			#widget.modify_fg(gtk.STATE_NORMAL, colour)
 			
 	def switch_page(self, widget):
 		child = self.viewport1.get_child()

@@ -59,7 +59,7 @@ attrs = [
 	["column_spacing", lambda w,v: "%s.set_col_spacings(%s)" % (w,v)],
 	["layout_style", lambda w,v: "%s.set_layout(%s)" % (w, v.replace("GTK_", "gtk."))],
 	["shadow_type", lambda w,v: "%s.set_shadow_type(%s)" % (w, v.replace("GTK_", "gtk."))],
-	["items", lambda w,v: "%s_List.append([\"%s\"])" % (w, v.replace("\"", "\\\""))],
+	["items", lambda w,v: "for i in [_(\"%s\")]:\n%s\t%s_List.append([i])" % ("\"), _(\"".join(v.replace("\"", "\\\"").split("\n")), indent, w)],
 ]
 
 PM_NONE = 0
@@ -89,7 +89,8 @@ def write_widget_attrs(widget):
 			y = widget.attrs["yalign"]
 		if float(x) != 0.5 or float(y) != 0.5:
 			print indent + "%s.set_alignment(%s, %s)" % (widget.id, x, y)
-	
+	if widget.attrs.has_key("angle"):
+		print indent + "%s.set_angle(%s)" % (widget.id, widget.attrs["angle"])
 	w, h = "-1", "-1"
 	if widget.attrs.has_key("width_request"):
 		w = widget.attrs["width_request"]
@@ -175,24 +176,13 @@ def write_widget_spinbutton(widget, my_class, *args):
 def write_widget_scale(widget, my_class, *args):
 	global signals, indent
 	restargs = ""
-	#print indent + "%s_adj = gtk.%s(%s)" % (widget.id, my_class, restargs)
-	#print 
+	
 	value, min, max, step_incr, page_incr, page_size = widget.attrs["adjustment"].split(" ")
 	adjustment = "gtk.Adjustment(value=%s, lower=%s, upper=%s, step_incr=%s, page_incr=%s, page_size=%s)" % (value, min, max, step_incr, page_incr, page_size)
 	restargs = ""
 	print indent + "%s = gtk.%s(%s)" % (widget.id, my_class, adjustment)
-	allowed = ["visible", "digits"]
-	for i in attrs:
-		if i[0] in allowed:
-			if widget.attrs.has_key("visible"):
-				v = i[1](widget.id, widget.attrs[i[0]])
-				if v:
-					print indent + "%s" % v
-	for signal in widget.signals.keys():
-		callback = widget.signals[signal]
-		print indent + "%s.connect(\"%s\", self.%s)" % (widget.id, signal, callback)
-		if not callback in signals:
-			signals.append(callback)
+
+	write_widget_attrs(widget)
 	print 
 	
 def write_widget_generic(widget, my_class, *args):
@@ -223,7 +213,6 @@ def write_widget_generic(widget, my_class, *args):
 				if widget.attrs.has_key("use_markup") and widget.attrs["use_markup"] == "True":
 					widget.attrs["set_markup"] = s
 					s = ""
-			
 			if s:
 				narg = '_("%s")' % s
 			else:
@@ -363,7 +352,34 @@ def write_widget_menuitem(widget, my_class):
 		write_widget(w)
 		print indent + "%s.set_submenu(%s)" % (widget.id, w.id)
 		print
+
+def write_widget_radiomenuitem(widget, my_class):
+	args = []
+	group = "None"
+	if widget.attrs.has_key("group"):
+		group = "self.%s" % widget.attrs["group"]
+		del widget.attrs["group"]
+	args.append(group)
+	
+	if widget.attrs.has_key("label"):
+		label = widget.attrs["label"].replace("\"", "\\\"")
+		if label:
+			args.append("_(\"%s\")" % label)
+		else:
+			args.append('""')
+
+		del widget.attrs["label"]
+	else:
+		label = ""
+	write_widget_generic(widget, my_class, *args)
+	print
+	if widget.children:
+		w = widget.children[0]
+		write_widget(w)
+		print indent + "%s.set_submenu(%s)" % (widget.id, w.id)
+		print
 		
+
 def write_widget_imagemenuitem(widget, my_class):
 	args = []
 	if widget.attrs.has_key("label"):
@@ -465,6 +481,8 @@ def write_widget_custom(widget):
 
 classes = {
 	"GtkWindow": [write_widget_container, "Window", PM_NONE, "+type"],
+	"GtkDialog": [write_widget_container, "Dialog", PM_NONE],
+	"GtkAboutDialog": [write_widget_container, "AboutDialog", PM_NONE],
 	"GtkOptionMenu": [write_widget_container, "OptionMenu", PM_NONE],
 	"GtkVBox": [write_widget_container, "VBox", PM_PACK, "#homogeneous", "@spacing"],
 	"GtkHBox": [write_widget_container, "HBox", PM_PACK, "#homogeneous", "@spacing"],
@@ -472,6 +490,7 @@ classes = {
 	"GtkMenuItem": [write_widget_menuitem, "MenuItem"],
 	"GtkImageMenuItem": [write_widget_imagemenuitem, "ImageMenuItem"],
 	"GtkSeparatorMenuItem": [write_widget_menuitem, "MenuItem"],
+	"GtkRadioMenuItem": [write_widget_radiomenuitem, "RadioMenuItem"],
 	"GtkCheckMenuItem": [write_widget_menuitem, "CheckMenuItem"],
 	"GtkMenu": [write_widget_menu, "Menu"],
 	"GtkVPaned": [write_widget_container, "VPaned", PM_PACK12],
@@ -488,6 +507,8 @@ classes = {
 	"GtkCheckButton": [write_widget_generic, "CheckButton"],
 	"GtkToggleButton": [write_widget_generic, "ToggleButton"],
 	"GtkFontButton": [write_widget_generic, "FontButton"],
+	"GtkIconView": [write_widget_generic, "IconView"],
+	"GtkFileChooserButton": [write_widget_generic, "FileChooserButton"],
 	"GtkRadioButton": [write_widget_radiobutton],
 	"GtkButton": [write_widget_button],
 	"GtkTextView": [write_widget_textview],
@@ -504,6 +525,7 @@ classes = {
 	"GtkProgressBar": [write_widget_generic, "ProgressBar"],
 	"GtkImage": [write_widget_generic, "Image"],
 	"GtkVSeparator": [write_widget_generic, "VSeparator"],
+	"GtkHSeparator": [write_widget_generic, "HSeparator"],
 	"GtkHButtonBox": [write_widget_container, "HButtonBox", PM_PACK],
 	"GtkEventBox" : [write_widget_container, "EventBox", PM_ADD],
 	"GtkAlignment": [write_widget_container, "Alignment", PM_ADD, "@xalign", "@yalign", "@xscale", "@yscale"],
@@ -515,6 +537,7 @@ def write_widget(w):
 		return
 	if not w.my_class in classes:
 		sys.stderr.write("oops... widget class %s not found!\n" % w.my_class)
+		print indent + "# %s of %s should be here" % (w.id, w.my_class)
 		return
 	c = classes[w.my_class]
 	c[0](w, *c[1:])
