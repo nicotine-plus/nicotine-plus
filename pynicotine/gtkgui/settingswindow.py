@@ -1214,7 +1214,7 @@ class BloatFrame(settings_glade.BloatFrame):
 		iter = combobox.get_model().get_iter_root()
 		while iter is not None:
 			word = combobox.get_model().get_value(iter, 0)
-			if word == option:
+			if word.lower() == option:
 				combobox.set_active_iter(iter)
 				break
 			iter = combobox.get_model().iter_next(iter)
@@ -1260,12 +1260,12 @@ class BloatFrame(settings_glade.BloatFrame):
 				"enabletrans": self.EnableTransparent.get_active(),
 				"transtint": self.TintColor.get_text(),
 				"transalpha": self.TintAlpha.get_value(),
-				"tabmain": self.MainPosition.get_active_text(),
-				"tabrooms": self.ChatRoomsPosition.get_active_text(),
-				"tabprivate": self.PrivateChatPosition.get_active_text(),
-				"tabinfo": self.UserInfoPosition.get_active_text(),
-				"tabbrowse": self.UserBrowsePosition.get_active_text(),
-				"tabsearch": self.SearchPosition.get_active_text(),
+				"tabmain": self.MainPosition.get_active_text().lower(),
+				"tabrooms": self.ChatRoomsPosition.get_active_text().lower(),
+				"tabprivate": self.PrivateChatPosition.get_active_text().lower(),
+				"tabinfo": self.UserInfoPosition.get_active_text().lower(),
+				"tabbrowse": self.UserBrowsePosition.get_active_text().lower(),
+				"tabsearch": self.SearchPosition.get_active_text().lower(),
 				"labelmain": self.MainAngleSpin.get_value_as_int(),
 				"labelrooms": self.ChatRoomsAngleSpin.get_value_as_int(),
 				"labelprivate": self.PrivateChatAngleSpin.get_value_as_int(),

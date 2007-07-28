@@ -2090,7 +2090,7 @@ class BloatFrame:
 		self.MainPosition_List = gtk.ListStore(gobject.TYPE_STRING)
 		self.MainPosition = gtk.ComboBox()
 		self.MainPosition.show()
-		for i in [_("top"), _("bottom"), _("left"), _("right")]:
+		for i in [_("Top"), _("Bottom"), _("Left"), _("Right")]:
 			self.MainPosition_List.append([i])
 
 		self.MainPosition.set_model(self.MainPosition_List)
@@ -2125,7 +2125,7 @@ class BloatFrame:
 		self.ChatRoomsPosition_List = gtk.ListStore(gobject.TYPE_STRING)
 		self.ChatRoomsPosition = gtk.ComboBox()
 		self.ChatRoomsPosition.show()
-		for i in [_("top"), _("bottom"), _("left"), _("right")]:
+		for i in [_("Top"), _("Bottom"), _("Left"), _("Right")]:
 			self.ChatRoomsPosition_List.append([i])
 
 		self.ChatRoomsPosition.set_model(self.ChatRoomsPosition_List)
@@ -2160,7 +2160,7 @@ class BloatFrame:
 		self.PrivateChatPosition_List = gtk.ListStore(gobject.TYPE_STRING)
 		self.PrivateChatPosition = gtk.ComboBox()
 		self.PrivateChatPosition.show()
-		for i in [_("top"), _("bottom"), _("left"), _("right")]:
+		for i in [_("Top"), _("Bottom"), _("Left"), _("Right")]:
 			self.PrivateChatPosition_List.append([i])
 
 		self.PrivateChatPosition.set_model(self.PrivateChatPosition_List)
@@ -2195,7 +2195,7 @@ class BloatFrame:
 		self.SearchPosition_List = gtk.ListStore(gobject.TYPE_STRING)
 		self.SearchPosition = gtk.ComboBox()
 		self.SearchPosition.show()
-		for i in [_("top"), _("bottom"), _("left"), _("right")]:
+		for i in [_("Top"), _("Bottom"), _("Left"), _("Right")]:
 			self.SearchPosition_List.append([i])
 
 		self.SearchPosition.set_model(self.SearchPosition_List)
@@ -2230,7 +2230,7 @@ class BloatFrame:
 		self.UserInfoPosition_List = gtk.ListStore(gobject.TYPE_STRING)
 		self.UserInfoPosition = gtk.ComboBox()
 		self.UserInfoPosition.show()
-		for i in [_("top"), _("bottom"), _("left"), _("right")]:
+		for i in [_("Top"), _("Bottom"), _("Left"), _("Right")]:
 			self.UserInfoPosition_List.append([i])
 
 		self.UserInfoPosition.set_model(self.UserInfoPosition_List)
@@ -2265,7 +2265,7 @@ class BloatFrame:
 		self.UserBrowsePosition_List = gtk.ListStore(gobject.TYPE_STRING)
 		self.UserBrowsePosition = gtk.ComboBox()
 		self.UserBrowsePosition.show()
-		for i in [_("top"), _("bottom"), _("left"), _("right")]:
+		for i in [_("Top"), _("Bottom"), _("Left"), _("Right")]:
 			self.UserBrowsePosition_List.append([i])
 
 		self.UserBrowsePosition.set_model(self.UserBrowsePosition_List)
