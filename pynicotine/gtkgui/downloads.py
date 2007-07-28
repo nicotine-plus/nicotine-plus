@@ -379,7 +379,7 @@ class Downloads(TransferList):
 		self.select_transfers()
 		for transfer in self.selected_transfers:
 			self.frame.SearchEntry.set_text(transfer.filename.rsplit("\\", 1)[1])
-			self.frame.notebook1.set_current_page(4)
+			self.frame.MainNotebook.set_current_page(4)
 			break
 		
 	def OnRetryTransfer(self, widget):

@@ -116,7 +116,7 @@ class RoomsControl:
 		self.frame.np.config.sections["server"]["autojoin"] = new_autojoin
 		
 	def OnSwitchPage(self, notebook, page, page_num, force=0):
-		if self.frame.notebook1.get_current_page() != 0 and not force:
+		if self.frame.MainNotebook.get_current_page() != 0 and not force:
 			return
 		page = notebook.get_nth_page(page_num)
 		for name, room in self.joinedrooms.items():
@@ -508,7 +508,7 @@ class ChatRoom(ChatRoomTab):
 		if event.button != 3:
 			if event.type == gtk.gdk._2BUTTON_PRESS:
 				self.frame.privatechats.SendMessage(user, None, 1)
-				self.frame.notebook1.set_current_page(1)
+				self.frame.MainNotebook.set_current_page(1)
 			return
 		
 		self.popup_menu.set_user(user)
@@ -544,7 +544,7 @@ class ChatRoom(ChatRoomTab):
 			self.frame.ChatNotebook.request_hilite(self.Main)
 			self.frame.ChatRequestIcon(1)
 			# add hilite to trayicon
-			if self.frame.ChatNotebook.get_current_page() != self.frame.ChatNotebook.page_num(self.roomsctrl.joinedrooms[self.room].Main) or self.frame.notebook1.get_current_page() != 0:
+			if self.frame.ChatNotebook.get_current_page() != self.frame.ChatNotebook.page_num(self.roomsctrl.joinedrooms[self.room].Main) or self.frame.MainNotebook.get_current_page() != 0:
 				if self.room not in self.frame.TrayApp.tray_status["hilites"]["rooms"]:
 					self.frame.Notification("rooms", user, self.room)
 			#else:

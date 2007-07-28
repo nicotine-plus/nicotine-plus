@@ -368,11 +368,11 @@ class MainWindow:
 		self.vpaned1 = gtk.VPaned()
 		self.vpaned1.show()
 
-		self.notebook1 = gtk.Notebook()
-		self.notebook1.set_size_request(0, 0)
-		self.notebook1.set_scrollable(True)
-		self.notebook1.show()
-		self.notebook1.connect("switch_page", self.OnSwitchPage)
+		self.MainNotebook = gtk.Notebook()
+		self.MainNotebook.set_size_request(0, 0)
+		self.MainNotebook.set_scrollable(True)
+		self.MainNotebook.show()
+		self.MainNotebook.connect("switch_page", self.OnSwitchPage)
 
 		self.hpaned1 = gtk.HPaned()
 		self.hpaned1.show()
@@ -620,8 +620,8 @@ class MainWindow:
 
 		self.vboxdownloads.pack_start(self.DownloadButtons, False, True, 3)
 
-		self.custom3 = self.get_custom_widget("custom3", "ImageLabel", _("Downloads"), 0, 0)
-		self.custom3.show()
+		self.DownloadsTabLabel = self.get_custom_widget("DownloadsTabLabel", "ImageLabel", _("Downloads"), 0, 0)
+		self.DownloadsTabLabel.show()
 		self.vboxuploads = gtk.VBox(False, 0)
 		self.vboxuploads.show()
 
@@ -629,15 +629,24 @@ class MainWindow:
 		self.hbox13.show()
 		self.hbox13.set_spacing(5)
 
-		self.ToggleTreeUploads = gtk.CheckButton()
-		self.ToggleTreeUploads.set_label(_("Group by Users"))
-		self.ToggleTreeUploads.show()
-		self.hbox13.pack_end(self.ToggleTreeUploads, False, False, 0)
+		self.Spacer1 = gtk.Label()
+		self.Spacer1.show()
+		self.hbox13.pack_start(self.Spacer1)
 
 		self.ExpandUploads = gtk.ToggleButton()
 		self.ExpandUploads.set_label(_("Expand / Collapse all"))
 		self.ExpandUploads.show()
-		self.hbox13.pack_end(self.ExpandUploads, False, True, 0)
+		self.hbox13.pack_start(self.ExpandUploads, False, True, 0)
+
+		self.ToggleTreeUploads = gtk.CheckButton()
+		self.ToggleTreeUploads.set_label(_("Group by Users"))
+		self.ToggleTreeUploads.show()
+		self.hbox13.pack_start(self.ToggleTreeUploads, False, False, 0)
+
+		self.ToggleAutoclear = gtk.CheckButton()
+		self.ToggleAutoclear.set_label(_("Autoclear Finished"))
+		self.ToggleAutoclear.show()
+		self.hbox13.pack_start(self.ToggleAutoclear, False, False, 0)
 
 		self.vboxuploads.pack_start(self.hbox13, False, False, 2)
 
@@ -1069,32 +1078,6 @@ class MainWindow:
 
 		self.hbox12.pack_end(self.SimilarUsersButton, False, False, 0)
 
-		self.RecommendationsButton = gtk.Button()
-		self.RecommendationsButton.show()
-		self.RecommendationsButton.connect("clicked", self.OnRecommendationsClicked)
-
-		self.alignment5 = gtk.Alignment(0.5, 0.5, 0, 0)
-		self.alignment5.show()
-
-		self.hbox25 = gtk.HBox(False, 0)
-		self.hbox25.show()
-		self.hbox25.set_spacing(2)
-
-		self.image5 = gtk.Image()
-		self.image5.set_from_stock(gtk.STOCK_REFRESH, 4)
-		self.image5.show()
-		self.hbox25.pack_start(self.image5, False, False, 0)
-
-		self.label34 = gtk.Label(_("Recommendations"))
-		self.label34.show()
-		self.hbox25.pack_start(self.label34, False, False, 0)
-
-		self.alignment5.add(self.hbox25)
-
-		self.RecommendationsButton.add(self.alignment5)
-
-		self.hbox12.pack_end(self.RecommendationsButton, False, False, 0)
-
 		self.GlobalRecommendationsButton = gtk.Button()
 		self.GlobalRecommendationsButton.show()
 		self.GlobalRecommendationsButton.connect("clicked", self.OnGlobalRecommendationsClicked)
@@ -1120,6 +1103,32 @@ class MainWindow:
 		self.GlobalRecommendationsButton.add(self.alignment4)
 
 		self.hbox12.pack_end(self.GlobalRecommendationsButton, False, False, 0)
+
+		self.RecommendationsButton = gtk.Button()
+		self.RecommendationsButton.show()
+		self.RecommendationsButton.connect("clicked", self.OnRecommendationsClicked)
+
+		self.alignment5 = gtk.Alignment(0.5, 0.5, 0, 0)
+		self.alignment5.show()
+
+		self.hbox25 = gtk.HBox(False, 0)
+		self.hbox25.show()
+		self.hbox25.set_spacing(2)
+
+		self.image5 = gtk.Image()
+		self.image5.set_from_stock(gtk.STOCK_REFRESH, 4)
+		self.image5.show()
+		self.hbox25.pack_start(self.image5, False, False, 0)
+
+		self.label34 = gtk.Label(_("Recommendations"))
+		self.label34.show()
+		self.hbox25.pack_start(self.label34, False, False, 0)
+
+		self.alignment5.add(self.hbox25)
+
+		self.RecommendationsButton.add(self.alignment5)
+
+		self.hbox12.pack_end(self.RecommendationsButton, False, False, 0)
 
 		self.interests.pack_start(self.hbox12, False, True, 0)
 
@@ -1296,23 +1305,23 @@ class MainWindow:
 
 		self.InterestsTabLabel = self.get_custom_widget("InterestsTabLabel", "ImageLabel", _("Interests"), 0, 0)
 		self.InterestsTabLabel.show()
-		self.notebook1.append_page(self.hpaned1, self.ChatTabLabel)
+		self.MainNotebook.append_page(self.hpaned1, self.ChatTabLabel)
 
-		self.notebook1.append_page(self.privatevbox, self.PrivateChatTabLabel)
+		self.MainNotebook.append_page(self.privatevbox, self.PrivateChatTabLabel)
 
-		self.notebook1.append_page(self.vboxdownloads, self.custom3)
+		self.MainNotebook.append_page(self.vboxdownloads, self.DownloadsTabLabel)
 
-		self.notebook1.append_page(self.vboxuploads, self.UploadsTabLabel)
+		self.MainNotebook.append_page(self.vboxuploads, self.UploadsTabLabel)
 
-		self.notebook1.append_page(self.searchvbox, self.SearchTabLabel)
+		self.MainNotebook.append_page(self.searchvbox, self.SearchTabLabel)
 
-		self.notebook1.append_page(self.userinfovbox, self.UserInfoTabLabel)
+		self.MainNotebook.append_page(self.userinfovbox, self.UserInfoTabLabel)
 
-		self.notebook1.append_page(self.userbrowsevbox, self.UserBrowseTabLabel)
+		self.MainNotebook.append_page(self.userbrowsevbox, self.UserBrowseTabLabel)
 
-		self.notebook1.append_page(self.interests, self.InterestsTabLabel)
+		self.MainNotebook.append_page(self.interests, self.InterestsTabLabel)
 
-		self.vpaned1.pack1(self.notebook1, True, True)
+		self.vpaned1.pack1(self.MainNotebook, True, True)
 
 		self.vbox1.pack_start(self.vpaned1)
 
@@ -1484,10 +1493,10 @@ class MainWindow:
 	def OnSimilarUsersClicked(self, widget):
 		pass
 
-	def OnRecommendationsClicked(self, widget):
+	def OnGlobalRecommendationsClicked(self, widget):
 		pass
 
-	def OnGlobalRecommendationsClicked(self, widget):
+	def OnRecommendationsClicked(self, widget):
 		pass
 
 	def OnAddThingILike(self, widget):

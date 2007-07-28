@@ -294,9 +294,9 @@ class NicotineFrame(MainWindow):
 		if int(self.np.config.sections["ui"]["buddylistinchatrooms"]):
 			self.buddylist_in_chatrooms1.set_active(1)
 		else:
-			self.custom8 = self.get_custom_widget("custom8", "ImageLabel", _("Buddy list"), 0, 0)
-			self.custom8.show()
-			self.notebook1.append_page(self.userlistvbox, self.custom8)
+			self.BuddiesTabLabel = self.get_custom_widget("BuddiesTabLabel", "ImageLabel", _("Buddy list"), 0, 0)
+			self.BuddiesTabLabel.show()
+			self.MainNotebook.append_page(self.userlistvbox, self.BuddiesTabLabel)
 			
 			
 		if self.np.config.sections["ticker"]["hide"]:
@@ -750,7 +750,7 @@ class NicotineFrame(MainWindow):
 		default_text='', droplist=users)
 		if user is not None:
 			self.privatechats.SendMessage(user, None, 1)
-			self.notebook1.set_current_page(1)
+			self.MainNotebook.set_current_page(1)
 			
 	def OnGetAUsersInfo(self, widget, prefix = ""):
 		# popup
@@ -875,7 +875,7 @@ class NicotineFrame(MainWindow):
 			return False
 		for i in range(1, 10):
 			if event.keyval == gtk.gdk.keyval_from_name(str(i)):
-				self.notebook1.set_current_page(i-1)
+				self.MainNotebook.set_current_page(i-1)
 				widget.emit_stop_by_name("key_press_event")
 				return True
 		return False
@@ -1202,7 +1202,7 @@ class NicotineFrame(MainWindow):
 	def ChatRequestIcon(self, status = 0):
 		if status == 1 and not self.got_focus:
 			self.MainWindow.set_icon(self.images["hilite2"])
-		if self.notebook1.get_current_page() == 0:
+		if self.MainNotebook.get_current_page() == 0:
 			return
 		if status == 0:
 			if self.ChatTabLabel.get_image() == self.images["hilite"]:
@@ -1472,11 +1472,11 @@ class NicotineFrame(MainWindow):
 		ui = self.np.config.sections["ui"]
 		self.ChatNotebook.set_tab_pos(self.getTabPosition(ui["tabrooms"]))
 		self.ChatNotebook.set_tab_angle(ui["labelrooms"])
-		self.notebook1.set_tab_pos(self.getTabPosition(ui["tabmain"]))
-		for label_tab in[self.ChatTabLabel, self.PrivateChatTabLabel, self.SearchTabLabel, self.UserInfoTabLabel, self.custom3, self.UploadsTabLabel, self.UserBrowseTabLabel, self.InterestsTabLabel]:
+		self.MainNotebook.set_tab_pos(self.getTabPosition(ui["tabmain"]))
+		for label_tab in[self.ChatTabLabel, self.PrivateChatTabLabel, self.SearchTabLabel, self.UserInfoTabLabel, self.DownloadsTabLabel, self.UploadsTabLabel, self.UserBrowseTabLabel, self.InterestsTabLabel]:
 			label_tab.set_angle(ui["labelmain"])
-		if "custom8" in self.__dict__:
-			self.custom8.set_angle(ui["labelmain"])
+		if "BuddiesTabLabel" in self.__dict__:
+			self.BuddiesTabLabel.set_angle(ui["labelmain"])
 		self.PrivatechatNotebook.set_tab_pos(self.getTabPosition(ui["tabprivate"]))
 		self.PrivatechatNotebook.set_tab_angle(ui["labelprivate"])
 		self.UserInfoNotebook.set_tab_pos(self.getTabPosition(ui["tabinfo"]))
@@ -1707,8 +1707,8 @@ class NicotineFrame(MainWindow):
 		self.np.config.sections["ui"]["buddylistinchatrooms"] = active
 		if active:
 			self.vpaned3.show()
-			if self.userlistvbox in self.notebook1.get_children():
-				self.notebook1.remove_page(8)
+			if self.userlistvbox in self.MainNotebook.get_children():
+				self.MainNotebook.remove_page(8)
 			if self.userlistvbox not in self.vpaned3.get_children():
 				self.vpaned3.pack1(self.userlistvbox, True, True)
 		else:
@@ -1716,10 +1716,10 @@ class NicotineFrame(MainWindow):
 				self.vpaned3.hide()
 			if self.userlistvbox in self.vpaned3.get_children():
 				self.vpaned3.remove(self.userlistvbox)
-			self.custom8 = self.get_custom_widget("custom8", "ImageLabel", _("Buddy list"), 0, 0)
-			self.custom8.show()
-			if self.userlistvbox not in self.notebook1.get_children():
-				self.notebook1.append_page(self.userlistvbox, self.custom8)
+			self.BuddiesTabLabel = self.get_custom_widget("BuddiesTabLabel", "ImageLabel", _("Buddy list"), 0, 0)
+			self.BuddiesTabLabel.show()
+			if self.userlistvbox not in self.MainNotebook.get_children():
+				self.MainNotebook.append_page(self.userlistvbox, self.BuddiesTabLabel)
        			
 			
 		
@@ -2039,7 +2039,7 @@ class NicotineFrame(MainWindow):
 		if event.button != 3:
 			if event.type == gtk.gdk._2BUTTON_PRESS:
 				self.privatechats.SendMessage(user)
-				self.notebook1.set_current_page(1)
+				self.MainNotebook.set_current_page(1)
 			return
 		self.ru_popup_menu.set_user(user)
 		items[7].set_active(user in [i[0] for i in self.np.config.sections["server"]["userlist"]])
@@ -2132,7 +2132,7 @@ class NicotineFrame(MainWindow):
 	def OnRecommendSearch(self, widget):
 		thing = widget.parent.get_user()
 		self.SearchEntry.set_text(thing)
-		self.notebook1.set_current_page(4)
+		self.MainNotebook.set_current_page(4)
 
 	def OnPopupRMenu(self, widget, event):
 		if event.button != 3:
@@ -2183,31 +2183,31 @@ class NicotineFrame(MainWindow):
 		self.np.queue.put(slskmessages.GivePrivileges(user, days))
 		
 	def OnChatRooms(self, widget):
-		self.notebook1.set_current_page(0)
+		self.MainNotebook.set_current_page(0)
 	
 	def OnPrivateChat(self, widget):
-		self.notebook1.set_current_page(1)
+		self.MainNotebook.set_current_page(1)
 	
 	def OnDownloads(self, widget):
-		self.notebook1.set_current_page(2)
+		self.MainNotebook.set_current_page(2)
 	
 	def OnUploads(self, widget):
-		self.notebook1.set_current_page(3)
+		self.MainNotebook.set_current_page(3)
 	
 	def OnSearchFiles(self, widget):
-		self.notebook1.set_current_page(4)
+		self.MainNotebook.set_current_page(4)
 	
 	def OnUserInfo(self, widget):
-		self.notebook1.set_current_page(5)
+		self.MainNotebook.set_current_page(5)
 	
 	def OnUserBrowse(self, widget):
-		self.notebook1.set_current_page(6)
+		self.MainNotebook.set_current_page(6)
 	
 	def OnInterests(self, widget):
-		self.notebook1.set_current_page(7)
+		self.MainNotebook.set_current_page(7)
 	
 	def OnUserList(self, widget):
-		self.notebook1.set_current_page(8)
+		self.MainNotebook.set_current_page(8)
 
 class TrayApp:
 	def __init__(self, frame):

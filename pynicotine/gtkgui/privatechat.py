@@ -37,7 +37,7 @@ class PrivateChats(IconNotebook):
 		self.connect("switch-page", self.OnSwitchPage)
 
 	def OnSwitchPage(self, notebook, page, page_num, force = 0):
-		if self.frame.notebook1.get_current_page() != 1 and not force:
+		if self.frame.MainNotebook.get_current_page() != 1 and not force:
 			return
 		page = notebook.get_nth_page(page_num)
 		
@@ -119,7 +119,7 @@ class PrivateChats(IconNotebook):
 			self.SendMessage(msg.user, "Nicotine-Plus %s" % version)
 		self.request_changed(tab.Main)
 		self.frame.RequestIcon(self.frame.PrivateChatTabLabel)
-		if self.get_current_page() != self.page_num(self.users[msg.user].Main) or self.frame.notebook1.get_current_page() != 1:
+		if self.get_current_page() != self.page_num(self.users[msg.user].Main) or self.frame.MainNotebook.get_current_page() != 1:
 			self.frame.Notification("private", msg.user)
 		
 		#else:
