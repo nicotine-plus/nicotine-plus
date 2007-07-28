@@ -133,7 +133,7 @@ class NicotineFrame(MainWindow):
 		self.MainWindow.set_title(_("Nicotine+") + " " + version)
 		self.MainWindow.set_icon(self.images["n"])
 		self.MainWindow.selection_add_target("PRIMARY", "STRING", 1)
-		self.MainWindow.set_geometry_hints(None, min_width=500, min_height=500)
+		self.MainWindow.set_geometry_hints(None, min_width=500, min_height=460)
 		self.MainWindow.connect("configure_event", self.OnWindowChange)
 		
 		width = self.np.config.sections["ui"]["width"]
@@ -1640,10 +1640,17 @@ class NicotineFrame(MainWindow):
 				os.system(cmd)
 		else:
 			try:
-				import gnome.vfs
-				gnome.url_show(url)
+				import gnomevfs
 			except Exception, e:
-				pass
+				try:
+					import gnome.vfs
+				except:
+					pass
+				else:
+					gnome.url_show(url)
+			else:
+				gnome.url_show(url)
+				
 	def OnAbout(self, widget):
 		dlg = AboutDialog(self.MainWindow, self)
 		dlg.run()

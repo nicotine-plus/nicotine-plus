@@ -186,10 +186,16 @@ def UrlEvent(tag, widget, event, iter, url):
 				os.system( cmd)
 		else:
 			try:
-				import gnome.vfs
+				import gnomevfs
+			except Exception, e:
+				try:
+					import gnome.vfs
+				except:
+					pass
+				else:
+					gnome.url_show(url)
+			else:
 				gnome.url_show(url)
-			except:
-				pass
 	tag.last_event_type = event.type
 
 def AppendLine(textview, line, tag = None, timestamp = "%H:%M:%S", username=None, usertag=None, scroll=True):
