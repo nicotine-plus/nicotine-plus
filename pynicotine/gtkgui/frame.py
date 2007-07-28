@@ -182,100 +182,8 @@ class NicotineFrame(MainWindow):
 
 
 		# for iterating buddy changes to the combos
-		
-		
-		self.likes = {}
-		self.likeslist = gtk.ListStore(gobject.TYPE_STRING)
-		self.likeslist.set_sort_column_id(0, gtk.SORT_ASCENDING)
-		cols = utils.InitialiseColumns(self.LikesList, [_("I like")+":", 0, "text", self.CellDataFunc])
-		cols[0].set_sort_column_id(0)
-		self.LikesList.set_model(self.likeslist)
-		self.RecommendationsList.set_property("rules-hint", True)
-		self.RecommendationUsersList.set_property("rules-hint", True)
-		self.til_popup_menu = popup = utils.PopupMenu(self)
-		popup.setup(
-			("#" + _("_Remove this item"), self.OnRemoveThingILike, gtk.STOCK_CANCEL),
-			("#" + _("Re_commendations for this item"), self.OnRecommendItem, gtk.STOCK_INDEX),
-			("", None),
-			("#" + _("_Search for this item"), self.OnRecommendSearch, gtk.STOCK_FIND),
-		)
-		self.LikesList.connect("button_press_event", self.OnPopupTILMenu)
+		self.CreateRecommendationsWidgets()
 
-		self.dislikes = {}
-		self.dislikeslist = gtk.ListStore(gobject.TYPE_STRING)
-		self.dislikeslist.set_sort_column_id(0, gtk.SORT_ASCENDING)
-		cols = utils.InitialiseColumns(self.DislikesList, [_("I dislike")+":", 0, "text", self.CellDataFunc])
-		cols[0].set_sort_column_id(0)
-		self.DislikesList.set_model(self.dislikeslist)
-		self.tidl_popup_menu = popup = utils.PopupMenu(self)
-		popup.setup(("#" + _("_Remove this item"), self.OnRemoveThingIDislike, gtk.STOCK_CANCEL),
-		("", None),
-			("#" + _("_Search for this item"), self.OnRecommendSearch, gtk.STOCK_FIND),)
-		self.DislikesList.connect("button_press_event", self.OnPopupTIDLMenu)
-
-		cols = utils.InitialiseColumns(self.RecommendationsList,
-			[_("Item"), 0, "text", self.CellDataFunc],
-			[_("Rating"), 75, "text", self.CellDataFunc])
-		cols[0].set_sort_column_id(0)
-		cols[1].set_sort_column_id(2)
-		self.recommendationslist = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_INT)
-		self.RecommendationsList.set_model(self.recommendationslist)
-		self.r_popup_menu = popup = utils.PopupMenu(self)
-		popup.setup(
-			("$" + _("I _like this"), self.OnLikeRecommendation),
-			("$" + _("I _don't like this"), self.OnDislikeRecommendation),
-			("#" + _("_Recommendations for this item"), self.OnRecommendRecommendation, gtk.STOCK_INDEX),
-			("", None),
-			("#" + _("_Search for this item"), self.OnRecommendSearch, gtk.STOCK_FIND),
-		)
-		self.RecommendationsList.connect("button_press_event", self.OnPopupRMenu)
-		cols = utils.InitialiseColumns(self.UnrecommendationsList,
-			[_("Item"), 0, "text", self.CellDataFunc],
-			[_("Rating"), 75, "text", self.CellDataFunc])
-		cols[0].set_sort_column_id(0)
-		cols[1].set_sort_column_id(2)
-		self.unrecommendationslist = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_INT)
-		self.UnrecommendationsList.set_model(self.unrecommendationslist)
-		self.ur_popup_menu = popup = utils.PopupMenu(self)
-		popup.setup(
-			("$" + _("I _like this"), self.OnLikeRecommendation),
-			("$" + _("I _don't like this"), self.OnDislikeRecommendation),
-			("#" + _("_Recommendations for this item"), self.OnRecommendRecommendation, gtk.STOCK_INDEX),
-			("", None),
-			("#" + _("_Search for this item"), self.OnRecommendSearch, gtk.STOCK_FIND),
-		)
-		self.UnrecommendationsList.connect("button_press_event", self.OnPopupUnRecMenu)
-		self.RecommendationsExpander.connect("activate", self.RecommendationsExpanderStatus)
-		self.UnrecommendationsExpander.connect("activate", self.RecommendationsExpanderStatus)
-
-		cols = utils.InitialiseColumns(self.RecommendationUsersList, 
-			["", 20, "pixbuf"],
-			[_("User"), 100, "text", self.CellDataFunc],
-			[_("Speed"), 0, "text", self.CellDataFunc],
-			[_("Files"), 0, "text", self.CellDataFunc],
-		)
-		cols[0].set_sort_column_id(4)
-		cols[1].set_sort_column_id(1)
-		cols[2].set_sort_column_id(5)
-		cols[3].set_sort_column_id(6)
-		self.recommendationusers = {}
-		self.recommendationuserslist = gtk.ListStore(gtk.gdk.Pixbuf, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_INT, gobject.TYPE_INT, gobject.TYPE_INT)
-		self.RecommendationUsersList.set_model(self.recommendationuserslist)
-		self.recommendationuserslist.set_sort_column_id(1, gtk.SORT_ASCENDING)
-		self.ru_popup_menu = popup = utils.PopupMenu(self)
-		popup.setup(
-			("#" + _("Send _message"), popup.OnSendMessage, gtk.STOCK_EDIT),
-			("", None),
-			("#" + _("Show IP a_ddress"), popup.OnShowIPaddress, gtk.STOCK_NETWORK),
-			("#" + _("Get user i_nfo"), popup.OnGetUserInfo, gtk.STOCK_DIALOG_INFO),
-			("#" + _("Brow_se files"), popup.OnBrowseUser, gtk.STOCK_HARDDISK),
-			("#" + _("Gi_ve privileges"), popup.OnGivePrivileges, gtk.STOCK_JUMP_TO),
-			("", None),
-			("$" + _("_Add user to list"), popup.OnAddToList),
-			("$" + _("_Ban this user"), popup.OnBanUser),
-			("$" + _("_Ignore this user"), popup.OnIgnoreUser),
-		)
-		self.RecommendationUsersList.connect("button_press_event", self.OnPopupRUMenu)
 
 		self.status_context_id = self.Statusbar.get_context_id("")
 		self.user_context_id = self.UserStatus.get_context_id("")
@@ -299,7 +207,9 @@ class NicotineFrame(MainWindow):
 		utils.PROTOCOL_HANDLERS["slsk"] = self.OnSoulSeek
 		utils.USERNAMEHOTSPOTS = self.np.config.sections["ui"]["usernamehotspots"]
 		utils.NICOTINE = self
-		
+
+		for label_tab in[self.ChatTabLabel, self.PrivateChatTabLabel, self.SearchTabLabel, self.UserInfoTabLabel, self.UserBrowseTabLabel]:
+			label_tab.set_angle(self.np.config.sections["ui"]["labelmain"])
 
 		
 		for thing in self.np.config.sections["interests"]["likes"]:
@@ -309,7 +219,8 @@ class NicotineFrame(MainWindow):
 
 		closers = self.np.config.sections["ui"]["tabclosers"]
 		for w in self.ChatNotebook, self.PrivatechatNotebook, self.UserInfoNotebook, self.UserBrowseNotebook, self.SearchNotebook:
-			w.tabclosers = closers
+			w.set_tab_closers(closers)
+
 		self.translux = None
 		self.TransparentTint()
 		self.LogScrolledWindow = gtk.ScrolledWindow()
@@ -455,7 +366,7 @@ class NicotineFrame(MainWindow):
 		img.set_from_pixbuf(self.images["away2"])
 		self.awayreturn1.set_image(img)
 		self.now = nowplaying.NowPlaying(self)
-		
+		self.SetTabPositions()
 		
 		ConfigUnset = self.np.config.needConfig()
 		if ConfigUnset[0]:
@@ -537,6 +448,99 @@ class NicotineFrame(MainWindow):
 			self.RoomSearchCombo.hide()
 		self.RoomSearchCombo.set_sensitive(act)
 		
+	def CreateRecommendationsWidgets(self):
+		self.likes = {}
+		self.likeslist = gtk.ListStore(gobject.TYPE_STRING)
+		self.likeslist.set_sort_column_id(0, gtk.SORT_ASCENDING)
+		cols = utils.InitialiseColumns(self.LikesList, [_("I like")+":", 0, "text", self.CellDataFunc])
+		cols[0].set_sort_column_id(0)
+		self.LikesList.set_model(self.likeslist)
+		self.RecommendationsList.set_property("rules-hint", True)
+		self.RecommendationUsersList.set_property("rules-hint", True)
+		self.til_popup_menu = popup = utils.PopupMenu(self)
+		popup.setup(
+			("#" + _("_Remove this item"), self.OnRemoveThingILike, gtk.STOCK_CANCEL),
+			("#" + _("Re_commendations for this item"), self.OnRecommendItem, gtk.STOCK_INDEX),
+			("", None),
+			("#" + _("_Search for this item"), self.OnRecommendSearch, gtk.STOCK_FIND),
+		)
+		self.LikesList.connect("button_press_event", self.OnPopupTILMenu)
+
+		self.dislikes = {}
+		self.dislikeslist = gtk.ListStore(gobject.TYPE_STRING)
+		self.dislikeslist.set_sort_column_id(0, gtk.SORT_ASCENDING)
+		cols = utils.InitialiseColumns(self.DislikesList, [_("I dislike")+":", 0, "text", self.CellDataFunc])
+		cols[0].set_sort_column_id(0)
+		self.DislikesList.set_model(self.dislikeslist)
+		self.tidl_popup_menu = popup = utils.PopupMenu(self)
+		popup.setup(("#" + _("_Remove this item"), self.OnRemoveThingIDislike, gtk.STOCK_CANCEL),
+		("", None),
+			("#" + _("_Search for this item"), self.OnRecommendSearch, gtk.STOCK_FIND),)
+		self.DislikesList.connect("button_press_event", self.OnPopupTIDLMenu)
+
+		cols = utils.InitialiseColumns(self.RecommendationsList,
+			[_("Item"), 0, "text", self.CellDataFunc],
+			[_("Rating"), 75, "text", self.CellDataFunc])
+		cols[0].set_sort_column_id(0)
+		cols[1].set_sort_column_id(2)
+		self.recommendationslist = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_INT)
+		self.RecommendationsList.set_model(self.recommendationslist)
+		self.r_popup_menu = popup = utils.PopupMenu(self)
+		popup.setup(
+			("$" + _("I _like this"), self.OnLikeRecommendation),
+			("$" + _("I _don't like this"), self.OnDislikeRecommendation),
+			("#" + _("_Recommendations for this item"), self.OnRecommendRecommendation, gtk.STOCK_INDEX),
+			("", None),
+			("#" + _("_Search for this item"), self.OnRecommendSearch, gtk.STOCK_FIND),
+		)
+		self.RecommendationsList.connect("button_press_event", self.OnPopupRMenu)
+		cols = utils.InitialiseColumns(self.UnrecommendationsList,
+			[_("Item"), 0, "text", self.CellDataFunc],
+			[_("Rating"), 75, "text", self.CellDataFunc])
+		cols[0].set_sort_column_id(0)
+		cols[1].set_sort_column_id(2)
+		self.unrecommendationslist = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_INT)
+		self.UnrecommendationsList.set_model(self.unrecommendationslist)
+		self.ur_popup_menu = popup = utils.PopupMenu(self)
+		popup.setup(
+			("$" + _("I _like this"), self.OnLikeRecommendation),
+			("$" + _("I _don't like this"), self.OnDislikeRecommendation),
+			("#" + _("_Recommendations for this item"), self.OnRecommendRecommendation, gtk.STOCK_INDEX),
+			("", None),
+			("#" + _("_Search for this item"), self.OnRecommendSearch, gtk.STOCK_FIND),
+		)
+		self.UnrecommendationsList.connect("button_press_event", self.OnPopupUnRecMenu)
+		self.RecommendationsExpander.connect("activate", self.RecommendationsExpanderStatus)
+		self.UnrecommendationsExpander.connect("activate", self.RecommendationsExpanderStatus)
+
+		cols = utils.InitialiseColumns(self.RecommendationUsersList, 
+			["", 20, "pixbuf"],
+			[_("User"), 100, "text", self.CellDataFunc],
+			[_("Speed"), 0, "text", self.CellDataFunc],
+			[_("Files"), 0, "text", self.CellDataFunc],
+		)
+		cols[0].set_sort_column_id(4)
+		cols[1].set_sort_column_id(1)
+		cols[2].set_sort_column_id(5)
+		cols[3].set_sort_column_id(6)
+		self.recommendationusers = {}
+		self.recommendationuserslist = gtk.ListStore(gtk.gdk.Pixbuf, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_INT, gobject.TYPE_INT, gobject.TYPE_INT)
+		self.RecommendationUsersList.set_model(self.recommendationuserslist)
+		self.recommendationuserslist.set_sort_column_id(1, gtk.SORT_ASCENDING)
+		self.ru_popup_menu = popup = utils.PopupMenu(self)
+		popup.setup(
+			("#" + _("Send _message"), popup.OnSendMessage, gtk.STOCK_EDIT),
+			("", None),
+			("#" + _("Show IP a_ddress"), popup.OnShowIPaddress, gtk.STOCK_NETWORK),
+			("#" + _("Get user i_nfo"), popup.OnGetUserInfo, gtk.STOCK_DIALOG_INFO),
+			("#" + _("Brow_se files"), popup.OnBrowseUser, gtk.STOCK_HARDDISK),
+			("#" + _("Gi_ve privileges"), popup.OnGivePrivileges, gtk.STOCK_JUMP_TO),
+			("", None),
+			("$" + _("_Add user to list"), popup.OnAddToList),
+			("$" + _("_Ban this user"), popup.OnBanUser),
+			("$" + _("_Ignore this user"), popup.OnIgnoreUser),
+		)
+		self.RecommendationUsersList.connect("button_press_event", self.OnPopupRUMenu)
 		
 	def Notification(self, location, user, room=None):
 		hilites = self.TrayApp.tray_status["hilites"]
@@ -807,8 +811,11 @@ class NicotineFrame(MainWindow):
 
 				
 	def get_custom_widget(self, id, string1, string2, int1, int2):
-		if id in ["ChatNotebook", "SearchNotebook"]:
-			return IconNotebook(self.images)
+		ui = self.np.config.sections["ui"]
+		if id == "ChatNotebook":
+			return IconNotebook(self.images, ui["labelrooms"])
+		elif id == "SearchNotebook":
+			return IconNotebook(self.images, ui["labelsearch"])
 		elif id == "PrivatechatNotebook":
 			return PrivateChats(self)
 		elif id == "UserInfoNotebook":
@@ -829,6 +836,17 @@ class NicotineFrame(MainWindow):
 		for widget in self.BuddiesComboEntries:
 			gobject.idle_add(widget.Fill)
 			
+	def getTabPosition(self, string):
+		if string == "top":
+			position = gtk.POS_TOP
+		elif string == "bottom":
+			position = gtk.POS_BOTTOM
+		elif string == "left":
+			position = gtk.POS_LEFT
+		elif string == "right":
+			position = gtk.POS_RIGHT
+		return position
+		
 	def OnAutoAway(self):
 		if not self.away:
 			self.autoaway = True
@@ -1397,6 +1415,10 @@ class NicotineFrame(MainWindow):
 			self.settingswindow.UpdateColours()
 			self.UpdateColours()
 			
+		closers = self.np.config.sections["ui"]["tabclosers"]
+		for w in self.ChatNotebook, self.PrivatechatNotebook, self.UserInfoNotebook, self.UserBrowseNotebook, self.SearchNotebook:
+			w.set_tab_closers(closers)
+		self.SetTabPositions()
 		if self.np.transfers is not None:
 			self.np.transfers.checkUploadQueue()
 		self.UpdateTransferButtons()
@@ -1439,6 +1461,24 @@ class NicotineFrame(MainWindow):
 				message = message.replace(word, filler * len(word))
 				
 		return message
+			
+	def SetTabPositions(self):
+		ui = self.np.config.sections["ui"]
+		self.ChatNotebook.set_tab_pos(self.getTabPosition(ui["tabrooms"]))
+		self.ChatNotebook.set_tab_angle(ui["labelrooms"])
+		self.notebook1.set_tab_pos(self.getTabPosition(ui["tabmain"]))
+		for label_tab in[self.ChatTabLabel, self.PrivateChatTabLabel, self.SearchTabLabel, self.UserInfoTabLabel, self.custom3, self.UploadsTabLabel, self.UserBrowseTabLabel, self.InterestsTabLabel]:
+			label_tab.set_angle(ui["labelmain"])
+		if "custom8" in self.__dict__:
+			self.custom8.set_angle(ui["labelmain"])
+		self.PrivatechatNotebook.set_tab_pos(self.getTabPosition(ui["tabprivate"]))
+		self.PrivatechatNotebook.set_tab_angle(ui["labelprivate"])
+		self.UserInfoNotebook.set_tab_pos(self.getTabPosition(ui["tabinfo"]))
+		self.UserInfoNotebook.set_tab_angle(ui["labelinfo"])
+		self.UserBrowseNotebook.set_tab_pos(self.getTabPosition(ui["tabbrowse"]))
+		self.UserBrowseNotebook.set_tab_angle(ui["labelbrowse"])
+		self.SearchNotebook.set_tab_pos(self.getTabPosition(ui["tabsearch"]))
+		self.SearchNotebook.set_tab_angle(ui["labelsearch"])
 		
 	def TransparentTint(self, update=None):
 
@@ -1674,7 +1714,7 @@ class NicotineFrame(MainWindow):
 		
 	def OnCheckPrivileges(self, widget):
 		self.np.queue.put(slskmessages.CheckPrivileges())
-
+	
 	def OnSoulSeek(self, url):
 		try:
 			user, file = urllib.url2pathname(url[7:]).split("/", 1)

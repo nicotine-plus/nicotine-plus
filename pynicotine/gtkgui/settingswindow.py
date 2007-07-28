@@ -980,7 +980,8 @@ class BloatFrame(settings_glade.BloatFrame):
 "chathilite", "textbg", "inputcolor", "search", "searchq", "decimalsep",
 "spellcheck", "useraway", "useronline",
 "useroffline", "usernamehotspots", "usernamestyle", "enabletrans",
-"transtint", "transalpha"],
+"transtint", "transalpha", "tabmain", "tabrooms", "tabprivate", "tabinfo",
+"tabbrowse", "tabsearch", "labelmain", "labelrooms", "labelprivate", "labelinfo", "labelbrowse", "labelsearch" ],
 			"transfers": ["enabletransferbuttons"],
 			"privatechat": ["store"],
 			"language": ["setlanguage", "language"],
@@ -1157,10 +1158,67 @@ class BloatFrame(settings_glade.BloatFrame):
 			self.TintAlpha.set_value(ui["transalpha"])
 		else:
 			self.p.Hilight(self.TintAlpha)
+		if ui["tabmain"] is not None:
+			self.GetPosition(self.MainPosition, ui["tabmain"])
+		else:
+			self.p.Hilight(self.MainPosition)
+		if ui["tabrooms"] is not None:
+			self.GetPosition(self.ChatRoomsPosition, ui["tabrooms"])
+		else:
+			self.p.Hilight(self.ChatRoomsPosition)
+		if ui["tabprivate"] is not None:
+			self.GetPosition(self.PrivateChatPosition, ui["tabprivate"])
+		else:
+			self.p.Hilight(self.PrivateChatPosition)
+		if ui["tabinfo"] is not None:
+			self.GetPosition(self.UserInfoPosition, ui["tabinfo"])
+		else:
+			self.p.Hilight(self.UserInfoPosition)
+		if ui["tabbrowse"] is not None:
+			self.GetPosition(self.UserBrowsePosition, ui["tabbrowse"])
+		else:
+			self.p.Hilight(self.UserBrowsePosition)
+		if ui["tabsearch"] is not None:
+			self.GetPosition(self.SearchPosition, ui["tabsearch"])
+		else:
+			self.p.Hilight(self.SearchPosition)
+		if ui["labelmain"] is not None:
+			self.MainAngleSpin.set_value(ui["labelmain"])
+		else:
+			self.p.Hilight(self.MainAngleSpin)
+		if ui["labelrooms"] is not None:
+			self.ChatRoomsAngleSpin.set_value(ui["labelrooms"])
+		else:
+			self.p.Hilight(self.ChatRoomsAngleSpin)
+		if ui["labelprivate"] is not None:
+			self.PrivateChatAngleSpin.set_value(ui["labelprivate"])
+		else:
+			self.p.Hilight(self.PrivateChatAngleSpin)
+		if ui["labelinfo"] is not None:
+			self.UserInfoAngleSpin.set_value(ui["labelinfo"])
+		else:
+			self.p.Hilight(self.UserInfoAngleSpin)
+		if ui["labelbrowse"] is not None:
+			self.UserBrowseAngleSpin.set_value(ui["labelbrowse"])
+		else:
+			self.p.Hilight(self.UserBrowseAngleSpin)
+		if ui["labelsearch"] is not None:
+			self.SearchAngleSpin.set_value(ui["labelsearch"])
+		else:
+			self.p.Hilight(self.SearchAngleSpin)
 		self.ColourScale("")
 		self.settingup = 0
 		self.needcolors = 0
 		
+	def GetPosition(self, combobox, option):
+		iter = combobox.get_model().get_iter_root()
+		while iter is not None:
+			word = combobox.get_model().get_value(iter, 0)
+			if word == option:
+				combobox.set_active_iter(iter)
+				break
+			iter = combobox.get_model().iter_next(iter)
+				
 	def GetSettings(self):
 		
 		try:
@@ -1202,6 +1260,18 @@ class BloatFrame(settings_glade.BloatFrame):
 				"enabletrans": self.EnableTransparent.get_active(),
 				"transtint": self.TintColor.get_text(),
 				"transalpha": self.TintAlpha.get_value(),
+				"tabmain": self.MainPosition.get_active_text(),
+				"tabrooms": self.ChatRoomsPosition.get_active_text(),
+				"tabprivate": self.PrivateChatPosition.get_active_text(),
+				"tabinfo": self.UserInfoPosition.get_active_text(),
+				"tabbrowse": self.UserBrowsePosition.get_active_text(),
+				"tabsearch": self.SearchPosition.get_active_text(),
+				"labelmain": self.MainAngleSpin.get_value_as_int(),
+				"labelrooms": self.ChatRoomsAngleSpin.get_value_as_int(),
+				"labelprivate": self.PrivateChatAngleSpin.get_value_as_int(),
+				"labelinfo": self.UserInfoAngleSpin.get_value_as_int(),
+				"labelbrowse": self.UserBrowseAngleSpin.get_value_as_int(),
+				"labelsearch": self.SearchAngleSpin.get_value_as_int(),
 			},
 			"transfers": {
 				"enabletransferbuttons": self.ShowTransferButtons.get_active(),

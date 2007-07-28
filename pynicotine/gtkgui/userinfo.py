@@ -32,7 +32,7 @@ class UserTabs(IconNotebook):
 	def __init__(self, frame, subwindow):
 		IconNotebook.__init__(self, frame.images)
 		self.popup_enable()
-		self.set_tab_pos(gtk.POS_TOP)
+		
 		self.subwindow = subwindow
 		self.frame = frame
 		self.users = {}

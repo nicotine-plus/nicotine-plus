@@ -27,9 +27,9 @@ from pynicotine.utils import _, version
 
 class PrivateChats(IconNotebook):
 	def __init__(self, frame):
-		IconNotebook.__init__(self, frame.images)
+		IconNotebook.__init__(self, frame.images, frame.np.config.sections["ui"]["labelprivate"])
 		self.popup_enable()
-		self.set_tab_pos(gtk.POS_TOP)
+
 		self.frame = frame
 		self.connected = 1
 		self.users = {}

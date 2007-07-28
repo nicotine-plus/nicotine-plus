@@ -279,9 +279,11 @@ def AppendLine(textview, line, tag = None, timestamp = "%H:%M:%S", username=None
 	return linenr
 	
 class ImageLabel(gtk.HBox):
-	def __init__(self, label = "", image = None, onclose = None):
+	def __init__(self, label = "", image = None, onclose = None, closebutton = 0, angle = 0):
 		gtk.HBox.__init__(self)
-		self.set_spacing(2)
+		self.closebutton = closebutton
+		
+		self.angle = angle
 
 		self._entered = 0
 		self._pressed = 0
@@ -289,27 +291,94 @@ class ImageLabel(gtk.HBox):
 		
 		self.label = gtk.Label(label)
 		self.label.set_alignment(0.0, 0.50)
+		self.label.set_angle(angle)
 		self.label.show()
-		
-		
-		self.pack_start(self.label, True, True)
-		
 
 		self.image = gtk.Image()
 		self.set_image(image)
-		self.pack_start(self.image, False, False)
 		self.image.show()
 
-		if onclose is not None:
-			self.button = gtk.Button()
-			img = gtk.Image()
-			img.set_from_stock(gtk.STOCK_CLOSE, gtk.ICON_SIZE_MENU)
-			self.button.add(img)
-			self.button.connect("clicked", onclose)
-			self.button.set_relief(gtk.RELIEF_NONE)
-			self.button.set_size_request(18,18)
-			self.pack_start(self.button, False, False)
-			self.button.show_all()
+
+		self._pack_children()
+		self._order_children()
+		
+	def _pack_children(self):
+		if "Box" in self.__dict__:
+			for widget in self.Box.get_children():
+				self.Box.remove(widget)
+			self.remove(self.Box)
+			self.Box.destroy()
+			del self.Box
+
+		if self.angle in ( 90, -90):
+			self.Box = gtk.VBox()
+		else:
+			self.angle = 0
+			self.Box = gtk.HBox()
+
+		self.Box.set_spacing(2)
+		self.add(self.Box)
+		self.Box.show()
+		
+		self.Box.pack_start(self.label, True, True)
+		self.Box.pack_start(self.image, False, False)
+		if self.onclose is not None:
+			self._add_close_button()
+			
+	def _order_children(self):
+
+		if self.angle == 90:
+			if "button" in self.__dict__ and self.closebutton != 0:
+				self.Box.reorder_child(self.button, 0)
+				self.Box.reorder_child(self.image, 1)
+				self.Box.reorder_child(self.label, 2)
+			else:
+				self.Box.reorder_child(self.image, 0)
+				self.Box.reorder_child(self.label, 1)
+		else:
+			self.Box.reorder_child(self.label, 0)
+			self.Box.reorder_child(self.image, 1)
+			if "button" in self.__dict__ and self.closebutton != 0:
+				self.Box.reorder_child(self.button, 2)
+
+				
+	def set_onclose(self, closebutton):
+		self.closebutton = closebutton
+		
+		if self.closebutton:
+			self._add_close_button()
+		else:
+			self._remove_close_button()
+		self._order_children()
+		
+	def set_angle(self, angle):
+		self.angle = angle
+		self.label.set_angle(self.angle)
+		self._remove_close_button()
+
+		self._pack_children()
+		self._order_children()
+		
+	def _add_close_button(self):
+		if "button" in self.__dict__:
+			return
+		self.button = gtk.Button()
+		img = gtk.Image()
+		img.set_from_stock(gtk.STOCK_CLOSE, gtk.ICON_SIZE_MENU)
+		self.button.add(img)
+		if self.onclose is not None:
+			self.button.connect("clicked", self.onclose)
+		self.button.set_relief(gtk.RELIEF_NONE)
+		self.button.set_size_request(18,18)
+		self.button.show_all()
+		self.Box.pack_start(self.button, False, False)
+
+	def _remove_close_button(self):
+		if "button" not in self.__dict__:
+			return
+		self.Box.remove(self.button)
+		self.button.destroy()
+		del self.button
 
 	def set_image(self, img):
 		self.img = img
@@ -325,7 +394,7 @@ class ImageLabel(gtk.HBox):
 		return self.label.get_text()
 	
 class IconNotebook(gtk.Notebook):
-	def __init__(self, images):
+	def __init__(self, images, angle = 0):
 		self.tabclosers = 0
 		gtk.Notebook.__init__(self)
 		self.images = images
@@ -333,7 +402,24 @@ class IconNotebook(gtk.Notebook):
 		self.connect("switch-page", self.dismiss_icon)
 		self.connect("key_press_event", self.OnKeyPress)
 		self.set_scrollable(True)
+		self.angle = angle
 		
+	def set_tab_closers(self, closers):
+		if closers == self.tabclosers:
+			return
+		self.tabclosers = closers
+		for data in self.pages:
+			page, label_tab, status, label_tab_menu = data
+			label_tab.set_onclose(self.tabclosers)
+			
+	def set_tab_angle(self, angle):
+		if angle == self.angle:
+			return
+		self.angle = angle
+		for data in self.pages:
+			page, label_tab, status, label_tab_menu = data
+			label_tab.set_angle(angle)
+			
 	def OnKeyPress(self, widget, event):
 		if event.state & (gtk.gdk.MOD1_MASK | gtk.gdk.CONTROL_MASK) != gtk.gdk.MOD1_MASK:
 			return False
@@ -346,10 +432,12 @@ class IconNotebook(gtk.Notebook):
 		widget.emit_stop_by_name("key_press_event")
 		return True
 	
-	def append_page(self, page, label, onclose = None):
+	def append_page(self, page, label, onclose = None, angle = 0):
+		self.set_tab_angle(angle)
+		closebutton = True
 		if not self.tabclosers:
-			onclose = None
-		label_tab = ImageLabel(label, self.images["empty"], onclose)
+			closebutton = False
+		label_tab = ImageLabel(label, self.images["empty"], onclose, closebutton = closebutton, angle = angle)
 		# menu for all tabs
 		label_tab_menu = ImageLabel(label, self.images["empty"])
 		self.pages.append([page, label_tab, 0, label_tab_menu])

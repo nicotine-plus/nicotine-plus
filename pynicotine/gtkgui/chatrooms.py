@@ -176,7 +176,12 @@ class RoomsControl:
 			return
 		tab = ChatRoom(self, msg.room, msg.users)
 		self.joinedrooms[msg.room] = tab
-		self.frame.ChatNotebook.append_page(tab.Main, msg.room, tab.OnLeave)
+		angle = 0
+		try:
+			angle = int(self.frame.np.config.sections["ui"]["labelrooms"])
+		except:
+			pass
+		self.frame.ChatNotebook.append_page(tab.Main, msg.room, tab.OnLeave, angle)
 		
 		self.frame.searchroomslist[msg.room] = self.frame.RoomSearchCombo_List.append([msg.room])
 		tab.CountUsers()
@@ -1163,9 +1168,12 @@ class ChatRoom(ChatRoomTab):
 
 class ChatRooms:
 	def __init__(self, frame):
-		frame.ChatNotebook.popup_enable()
 		self.frame = frame
 		self.roomsctrl = RoomsControl(frame)
+		self.frame.ChatNotebook.popup_enable()
+		self.frame.ChatNotebook.set_tab_pos(self.frame.getTabPosition(self.frame.np.config.sections["ui"]["tabrooms"]))
+		
+		
 
 	def ConnClose(self):
 		self.roomsctrl.ConnClose()

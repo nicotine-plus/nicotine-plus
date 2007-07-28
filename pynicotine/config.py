@@ -101,6 +101,8 @@ class Config:
 "chathilite":"red", "useronline":"BLACK", "useraway":"ORANGE", "useroffline":"#aa0000", \
 "usernamehotspots":1, "usernamestyle": "bold", "textbg": "", "search":"","searchq":"GREY", \
 "inputcolor":"", "spellcheck": 1, "exitdialog": 1, "notexists": 1, \
+"tabmain": "top", "tabrooms": "top", "tabprivate": "top", "tabinfo": "top", "tabbrowse": "top", "tabsearch": "top", \
+"labelmain": 0, "labelrooms": 0, "labelprivate": 0, "labelinfo": 0, "labelbrowse": 0, "labelsearch": 0,\
 "decimalsep":",", "chatfont": "", "roomlistcollapsed": 0, "tabclosers": 1, \
 "buddylistinchatrooms": 0, "trayicon": 1, "soundenabled": 1, "soundtheme": "", \
 "soundcommand": "play -q", "filemanager": "rox $", "speechenabled": 0, "enabletrans":0, \
@@ -163,7 +165,7 @@ class Config:
 					print "Unknown config section:", i
 				elif j not in self.sections[i].keys() and j != "filter":
 					print "Unknown config option", j, "section", i
-				elif j in ['login','passw','enc',  'downloaddir','customban','descr','pic','logsdir','incompletedir', 'autoreply', 'afterfinish', 'downloadregexp', 'afterfolder', 'default', 'chatfont', "npothercommand", "npplayer", "npformat"] or (i == "ui" and j not in ["roomlistcollapsed", "tabclosers",  'buddylistinchatrooms', "trayicon", "usernamehotspots", "exitdialog", "spellcheck", "notexists", "soundenabled", "transalpha",  "enabletrans", "speechenabled", "enablefilters",  "width", "height"]) or (i == "words" and j not in ["completion", "censorwords", "replacewords", "autoreplaced", "censored", "characters", "tab", "dropdown", "roomnames", "buddies", "roomusers", "commands", "aliases", "onematch"]) or (i == "language" and j not in ["definelanguage", "setlanguage"]):
+				elif j in ['login','passw','enc',  'downloaddir','customban','descr','pic','logsdir','incompletedir', 'autoreply', 'afterfinish', 'downloadregexp', 'afterfolder', 'default', 'chatfont', "npothercommand", "npplayer", "npformat"] or (i == "ui" and j not in ["roomlistcollapsed", "tabclosers",  'buddylistinchatrooms', "trayicon", "usernamehotspots", "exitdialog", "spellcheck", "notexists", "soundenabled", "transalpha",  "enabletrans", "speechenabled", "enablefilters",  "width", "height", "labelmain", "labelrooms", "labelprivate", "labelinfo", "labelbrowse", "labelsearch"]) or (i == "words" and j not in ["completion", "censorwords", "replacewords", "autoreplaced", "censored", "characters", "tab", "dropdown", "roomnames", "buddies", "roomusers", "commands", "aliases", "onematch"]) or (i == "language" and j not in ["definelanguage", "setlanguage"]):
 
 					self.sections[i][j] = val
 				else:
