@@ -873,6 +873,8 @@ class ChatRoom(ChatRoomTab):
 			color = "useronline"
 		else:
 			color = "useroffline"
+		if not self.frame.np.config.sections["ui"]["showaway"] and color == "useraway":
+			color = "useronline"
 		return color
 		
 	def changecolour(self, tag, colour):
@@ -918,6 +920,7 @@ class ChatRoom(ChatRoomTab):
 
 		for user in self.users.keys():
 			color = self.getUserStatusColor(self.usersmodel.get_value(self.users[user], 4))
+			
 			if user in self.tag_users.keys():
 				self.changecolour(self.tag_users[user], color)
 			else:

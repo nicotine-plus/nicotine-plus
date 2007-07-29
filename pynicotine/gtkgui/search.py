@@ -854,7 +854,7 @@ class Search(SearchTab):
 		colour = self.frame.np.config.sections["ui"][colour] or None
 
 		if status == 0:
-			colour = self.frame.np.config.sections["ui"]["useroffline"]
+			colour = self.frame.np.config.sections["ui"]["searchoffline"]
 			cellrenderer.set_property("background", None)
 		elif status == -1:
 			colour = "#ffffff"

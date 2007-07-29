@@ -189,6 +189,7 @@ def write_widget_generic(widget, my_class, *args):
 	global signals, indent
 	restargs = ""
 	for arg in args[0:]:
+		
 		if arg[0] == "+":
 			name = arg[1:]
 			if widget.attrs.has_key(name):
@@ -197,10 +198,12 @@ def write_widget_generic(widget, my_class, *args):
 				arg= ""
 		elif arg[0] == "@":
 			name = arg[1:]
+
 			if widget.attrs.has_key(name):
-				arg = widget.attrs[arg[1:]]
-			if arg in ("@xalign", "@yalign"):
+				arg = widget.attrs[name]
+			if name in ("xalign", "yalign") and not widget.attrs.has_key(name):
 				arg = "0.5"
+				#pass
 			else:
 				arg= "0"
 		elif arg[0] == "$":

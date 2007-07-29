@@ -5,6 +5,9 @@ Licensing
  * Relicensed all code under GPLv3 and LGPLv3
 
 General Changes
+ * Username away color-status in chat can be toggled off
+ * Default colours and clear colours buttons added
+ * Search's offline users now uses a seperate color
  * Tabs can be repositioned and the labels can be rotated under
    Settings->Interface->Notebook Tabs
  * Search results turn red when a user goes offline

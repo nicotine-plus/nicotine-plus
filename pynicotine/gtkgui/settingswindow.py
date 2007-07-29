@@ -976,17 +976,27 @@ class BloatFrame(settings_glade.BloatFrame):
 		self.needcolors = 0
 		settings_glade.BloatFrame.__init__(self, False)
 		self.options =  {
-			"ui": [	"chatfont", "chatlocal", "chatremote", "chatme",
-"chathilite", "textbg", "inputcolor", "search", "searchq", "decimalsep",
-"spellcheck", "useraway", "useronline",
-"useroffline", "usernamehotspots", "usernamestyle", "enabletrans",
-"transtint", "transalpha", "tabmain", "tabrooms", "tabprivate", "tabinfo",
-"tabbrowse", "tabsearch", "labelmain", "labelrooms", "labelprivate", "labelinfo", "labelbrowse", "labelsearch" ],
-			"transfers": ["enabletransferbuttons"],
-			"privatechat": ["store"],
-			"language": ["setlanguage", "language"],
+			"ui": {	"chatfont":self.SelectChatFont, "chatlocal":self.Local,
+"chatremote": self.Remote, "chatme": self.Me, "chathilite": self.Highlight,
+"textbg":self.BackgroundColor, "inputcolor": self.InputColor, "search": self.Immediate,
+"searchq": self.Queue, "searchoffline": self.OfflineSearchEntry,
+"showaway": self.DisplayAwayColours,   "decimalsep": self.DecimalSep,
+"spellcheck": self.SpellCheck, "useraway": self.AwayColor,
+"useronline": self.OnlineColor, "useroffline": self.OfflineColor,
+"usernamehotspots": self.UsernameHotspots, "usernamestyle": self.UsernameStyle,
+"enabletrans": self.EnableTransparent, "transtint": self.TintColor,
+"transalpha": self.TintAlpha, "tabmain": self.MainPosition,
+"tabrooms": self.ChatRoomsPosition, "tabprivate": self.PrivateChatPosition,
+"tabinfo": self.UserInfoPosition, "tabbrowse": self.UserBrowsePosition,
+"tabsearch": self.SearchPosition, "labelmain": self.MainAngleSpin,
+"labelrooms": self.ChatRoomsPosition, "labelprivate": self.PrivateChatAngleSpin,
+"labelinfo": self.UserInfoAngleSpin, "labelbrowse": self.UserBrowseAngleSpin,
+"labelsearch": self.SearchAngleSpin },
+			"transfers": {"enabletransferbuttons": self.ShowTransferButtons},
+			"privatechat": {"store": self.ReopenPrivateChats},
+			"language": {"setlanguage": self.TranslationCheck, "language": self.TranslationComboEntry},
 			}
-		
+
 		for item in ["<None>", ",", ".", "<space>"]:
 			self.DecimalSep.append_text(item)
 
@@ -996,9 +1006,7 @@ class BloatFrame(settings_glade.BloatFrame):
 
 		for item in ["", "de", "dk", "fi", "fr",  "hu", "it", "lt", "nl", "pl", "pt_BR", "sk", "sv" ]:
 			self.TranslationCombo.append_text(item)
-		#self.UsernameStyle.child.set_editable(False)
-		
-		
+
 		self.PickRemote.connect("clicked", self.PickColour, self.Remote)
 		self.PickLocal.connect("clicked", self.PickColour, self.Local)
 		self.PickMe.connect("clicked", self.PickColour, self.Me)
@@ -1009,6 +1017,7 @@ class BloatFrame(settings_glade.BloatFrame):
 		self.PickAway.connect("clicked", self.PickColour, self.AwayColor)
 		self.PickOnline.connect("clicked", self.PickColour, self.OnlineColor)
 		self.PickOffline.connect("clicked", self.PickColour, self.OfflineColor)
+		self.PickOfflineSearch.connect("clicked", self.PickColour, self.OfflineSearchEntry)
 		
 		self.DefaultAway.connect("clicked", self.DefaultColour, self.AwayColor)
 		self.DefaultOnline.connect("clicked", self.DefaultColour, self.OnlineColor)
@@ -1026,8 +1035,11 @@ class BloatFrame(settings_glade.BloatFrame):
 		self.DefaultHighlight.connect("clicked", self.DefaultColour, self.Highlight)
 		self.DefaultImmediate.connect("clicked", self.DefaultColour, self.Immediate)
 		self.DefaultQueue.connect("clicked", self.DefaultColour, self.Queue)
-		self.DefaultQueue.connect("clicked", self.DefaultColour, self.Queue)
-		
+
+		self.DefaultColours.connect("clicked", self.OnDefaultColours)
+		self.ClearAllColours.connect("clicked", self.OnClearAllColours)
+		self.DisplayAwayColours.connect("toggled", self.ToggledAwayColours)
+		self.DefaultOfflineSearch.connect("clicked", self.DefaultColour, self.OfflineSearchEntry)
 		
 		# Tint
 		self.PickTint.connect("clicked", self.PickColour, self.TintColor)
@@ -1042,12 +1054,52 @@ class BloatFrame(settings_glade.BloatFrame):
 		self.BackgroundColor.connect("changed", self.FontsColorsChanged)
 		self.Immediate.connect("changed", self.FontsColorsChanged)
 		self.Queue.connect("changed", self.FontsColorsChanged)
+		self.OfflineSearchEntry.connect("changed", self.FontsColorsChanged)
 		self.AwayColor.connect("changed", self.FontsColorsChanged)
 		self.OnlineColor.connect("changed", self.FontsColorsChanged)
 		self.OfflineColor.connect("changed", self.FontsColorsChanged)
 		self.UsernameStyle.child.connect("changed", self.FontsColorsChanged)
 		self.InputColor.connect("changed", self.FontsColorsChanged)
 
+		
+	def ToggledAwayColours(self, widget):
+		sensitive = widget.get_active()
+		self.AwayColor.set_sensitive(sensitive)
+		self.PickAway.set_sensitive(sensitive)
+		self.DefaultAway.set_sensitive(sensitive)
+		
+	def OnDefaultColours(self, widget):
+		defaults = self.frame.np.config.defaults
+		for option in "chatlocal", "chatremote", "chatme", "chathilite", "textbg", "inputcolor", "search", "searchq", "searchoffline", "useraway", "useronline", "useroffline":
+			for key, value in self.options.items():
+				if option in value:
+					widget = self.options[key][option]
+					if type(widget) is gtk.Entry:
+						widget.set_text(defaults[key][option])
+					elif type(widget) is gtk.SpinButton:
+						widget.set_value_as_int(defaults[key][option])
+					elif type(widget) is gtk.CheckButton:
+						widget.set_active(defaults[key][option])
+					elif type(widget) is gtk.ComboBoxEntry:
+						widget.child.set_text(defaults[key][option])
+			
+
+		
+		
+	def OnClearAllColours(self, widget):
+		for option in "chatlocal", "chatremote", "chatme", "chathilite", "textbg", "inputcolor", "search", "searchq", "searchoffline", "useraway", "useronline", "useroffline":
+			for key, value in self.options.items():
+				if option in value:
+					widget = self.options[key][option]
+					if type(widget) is gtk.Entry:
+						widget.set_text("")
+					elif type(widget) is gtk.SpinButton:
+						widget.set_value_as_int(0)
+					elif type(widget) is gtk.CheckButton:
+						widget.set_active(0)
+					elif type(widget) is gtk.ComboBoxEntry:
+						widget.child.set_text("")
+	
 	def FontsColorsChanged(self, widget):
 		self.needcolors = 1
 		
@@ -1119,6 +1171,10 @@ class BloatFrame(settings_glade.BloatFrame):
 			self.Queue.set_text(ui["searchq"])
 		else:
 			self.p.Hilight(self.Queue)
+		if ui["searchoffline"] is not None:
+			self.OfflineSearchEntry.set_text(ui["searchoffline"])
+		else:
+			self.p.Hilight(self.OfflineSearchEntry)
 		if ui["decimalsep"] is not None:
 			self.DecimalSep.child.set_text(ui["decimalsep"])
 		else:
@@ -1206,9 +1262,15 @@ class BloatFrame(settings_glade.BloatFrame):
 			self.SearchAngleSpin.set_value(ui["labelsearch"])
 		else:
 			self.p.Hilight(self.SearchAngleSpin)
+		if ui["showaway"] is not None:
+			self.DisplayAwayColours.set_active(int(ui["showaway"]))
+		else:
+			self.p.Hilight(self.DisplayAwayColours)
+		self.ToggledAwayColours(self.DisplayAwayColours)
 		self.ColourScale("")
 		self.settingup = 0
 		self.needcolors = 0
+		
 		
 	def GetPosition(self, combobox, option):
 		iter = combobox.get_model().get_iter_root()
@@ -1250,6 +1312,8 @@ class BloatFrame(settings_glade.BloatFrame):
 				"inputcolor": self.InputColor.get_text(),
 				"search": self.Immediate.get_text(),
 				"searchq": self.Queue.get_text(),
+				"searchoffline": self.OfflineSearchEntry.get_text(),
+				"showaway": int(self.DisplayAwayColours.get_active()),
 				"decimalsep": self.DecimalSep.child.get_text(),
 				"spellcheck": self.SpellCheck.get_active(),
 				"useraway": self.AwayColor.get_text(),
@@ -1272,6 +1336,7 @@ class BloatFrame(settings_glade.BloatFrame):
 				"labelinfo": self.UserInfoAngleSpin.get_value_as_int(),
 				"labelbrowse": self.UserBrowseAngleSpin.get_value_as_int(),
 				"labelsearch": self.SearchAngleSpin.get_value_as_int(),
+				
 			},
 			"transfers": {
 				"enabletransferbuttons": self.ShowTransferButtons.get_active(),
@@ -2124,7 +2189,7 @@ class SettingsWindow(settings_glade.SettingsWindow):
 		p["Chat"] = ChatFrame()
 		p["Events"] = EventsFrame(self)
 		p["Import Config"] = ImportFrame(self)
-		print "Stuck"
+
 		p["Misc"] = MiscFrame()
 		
 		column = gtk.TreeViewColumn(_("Categories"), gtk.CellRendererText(), text = 0)

@@ -606,6 +606,8 @@ class PrivateChat(PrivateChatTab):
 			color = "useronline"
 		else:
 			color = "useroffline"
+		if not self.frame.np.config.sections["ui"]["showaway"] and color == "useraway":
+			color = "useronline"
 		return color
 		
 	def GetUserStatus(self, status):
