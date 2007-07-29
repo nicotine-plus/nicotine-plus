@@ -510,15 +510,15 @@ class PrivateChat(PrivateChatTab):
 		self.tag_local = self.makecolour(buffer, "chatlocal")
 		self.tag_me = self.makecolour(buffer, "chatme")
 		self.tag_hilite = self.makecolour(buffer, "chathilite")
-		if self.status == 1:
+		if self.status == 1 and self.frame.np.config.sections["ui"]["showaway"]:
 			statuscolor = "useraway"
-		elif self.status == 2:
+		elif self.status == 2 or not self.frame.np.config.sections["ui"]["showaway"] and self.status == 1:
 			statuscolor = "useronline"
 		else:
 			statuscolor = "useroffline"
 		self.tag_username = self.makecolour(buffer, statuscolor)
 		if self.chats.connected:
-			if self.frame.away:
+			if self.frame.away and self.frame.np.config.sections["ui"]["showaway"]:
 				self.tag_my_username = self.makecolour(buffer, "useraway")
 			else:
 				self.tag_my_username = self.makecolour(buffer, "useronline")
@@ -589,7 +589,7 @@ class PrivateChat(PrivateChatTab):
 		color = self.getUserStatusColor(self.status)
 		self.changecolour(self.tag_username, color)
 		if self.chats.connected:
-			if self.frame.away:
+			if self.frame.away and self.frame.np.config.sections["ui"]["showaway"]:
 				self.changecolour(self.tag_my_username, "useraway")
 			else:
 				self.changecolour(self.tag_my_username, "useronline")
@@ -613,8 +613,7 @@ class PrivateChat(PrivateChatTab):
 	def GetUserStatus(self, status):
 		if status == self.status:
 			return
-		
-		
+
 		self.status = status
 		color = self.getUserStatusColor(self.status)
 		self.changecolour(self.tag_username, color)
