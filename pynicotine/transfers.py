@@ -919,6 +919,11 @@ class Transfers:
 				self.eventprocessor.logTransfer(_("Upload finished: %(user)s, file %(file)s") % {'user':i.user, 'file':self.decode(i.filename)})
 				self.checkUploadQueue()
 				self.uploadspanel.update(i)
+				if self.eventprocessor.config.sections["transfers"]["autoclear_uploads"]:
+					self.uploads.remove(i)
+					self.calcUploadQueueSizes()
+					self.checkUploadQueue()
+					self.uploadspanel.update()
 			if needupdate:
 				self.uploadspanel.update(i)
 

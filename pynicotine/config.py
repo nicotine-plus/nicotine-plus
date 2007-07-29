@@ -72,7 +72,7 @@ class Config:
 "friendsnolimits":0, "enablebuddyshares": 0, "enabletransferbuttons": 1, \
 "groupdownloads": 0, "groupuploads": 1, \
 "geoblock": 0, "geopanic": 0, "geoblockcc": [""], "remotedownloads": 1, \
-"uploadallowed": 2, \
+"uploadallowed": 2, "autoclear_uploads": 0, \
 "downloads":[],"sharedfiles":{},"sharedfilesstreams":{}, "uploadsinsubdirs": 1, \
 "wordindex":{},"fileindex":{},"sharedmtimes":{},"bsharedfiles":{},"bsharedfilesstreams":{}, \
 "bwordindex":{},"bfileindex":{},"bsharedmtimes":{}, "rescanonstartup":0, \
@@ -101,9 +101,11 @@ class Config:
 "chathilite":"red", "useronline":"BLACK", "useraway":"ORANGE", "useroffline":"#aa0000", \
 "usernamehotspots":1, "usernamestyle": "bold", "textbg": "", "search":"","searchq":"GREY", \
 "inputcolor":"", "spellcheck": 1, "exitdialog": 1, "notexists": 1, \
-"tabmain": "top", "tabrooms": "top", "tabprivate": "top", "tabinfo": "top", "tabbrowse": "top", "tabsearch": "top", \
+"tabmain": "top", "tabrooms": "top", "tabprivate": "top", "tabinfo": "top", \
+"tabbrowse": "top", "tabsearch": "top", \
 "labelmain": 0, "labelrooms": 0, "labelprivate": 0, "labelinfo": 0, "labelbrowse": 0, "labelsearch": 0,\
 "decimalsep":",", "chatfont": "", "roomlistcollapsed": 0, "tabclosers": 1, \
+"searchoffline":"#aa0000", "showaway": 0, \
 "buddylistinchatrooms": 0, "trayicon": 1, "soundenabled": 1, "soundtheme": "", \
 "soundcommand": "play -q", "filemanager": "rox $", "speechenabled": 0, "enabletrans":0, \
 "transtint": "#aaaaaa", "transalpha": 150, "transfilter": 0x00000000L,
