@@ -264,7 +264,7 @@ class NicotineFrame(MainWindow):
 		self.scrolledwindow11.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
 		self.scrolledwindow11.show()
 		self.scrolledwindow11.set_shadow_type(gtk.SHADOW_NONE)
-	
+
 		self.UserList = gtk.TreeView()
 		self.UserList.show()
 		self.UserList.set_headers_visible(True)
@@ -304,7 +304,7 @@ class NicotineFrame(MainWindow):
 		self.UpdateColours(1)
 		self.settingswindow = SettingsWindow(self)
 		self.settingswindow.SettingsWindow.connect("settings-closed", self.OnSettingsClosed)
-		
+
 		self.chatrooms = ChatRooms(self)
 		self.searches = Searches(self)
 		self.downloads = Downloads(self)
@@ -326,7 +326,7 @@ class NicotineFrame(MainWindow):
 		
 		self.sSharesButton.connect("clicked", self.OnGetShares)
 		self.UserBrowseCombo.child.connect("activate", self.OnGetShares)
-		
+
 		
 		self.SetUserStatus(_("Offline"))
 		self.TrayApp = TrayApp(self)
@@ -339,7 +339,7 @@ class NicotineFrame(MainWindow):
 		self.UserSearchCombo.set_size_request(120, -1)
 		self.UserSearchCombo.set_sensitive(False)
 		thread.start_new_thread(self.BuddiesCombosFill, ("",))
-		
+
 
 		self.SearchMethod_List.clear()
 		# Space after Joined Rooms is important, so it doesn't conflict
@@ -367,7 +367,7 @@ class NicotineFrame(MainWindow):
 		self.awayreturn1.set_image(img)
 		self.now = nowplaying.NowPlaying(self)
 		self.SetTabPositions()
-		
+
 		ConfigUnset = self.np.config.needConfig()
 		if ConfigUnset[0]:
 			if type(ConfigUnset[1]) is tuple:
@@ -1644,7 +1644,7 @@ class NicotineFrame(MainWindow):
 			except Exception, e:
 				try:
 					import gnome.vfs
-				except:
+				except Exception, e:
 					pass
 				else:
 					gnome.url_show(url)

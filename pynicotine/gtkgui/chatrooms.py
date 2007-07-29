@@ -179,7 +179,8 @@ class RoomsControl:
 		angle = 0
 		try:
 			angle = int(self.frame.np.config.sections["ui"]["labelrooms"])
-		except:
+		except Exception, e:
+			print e
 			pass
 		self.frame.ChatNotebook.append_page(tab.Main, msg.room, tab.OnLeave, angle)
 		

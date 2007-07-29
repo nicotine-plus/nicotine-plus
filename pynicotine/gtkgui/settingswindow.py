@@ -989,7 +989,7 @@ class BloatFrame(settings_glade.BloatFrame):
 		
 		for item in ["<None>", ",", ".", "<space>"]:
 			self.DecimalSep.append_text(item)
-		
+
 		for item in ["bold", "italic", "underline", "normal"]:
 			self.UsernameStyle.append_text(item)
 		self.UsernameStyle.child.set_editable(False)
@@ -1047,7 +1047,7 @@ class BloatFrame(settings_glade.BloatFrame):
 		self.OfflineColor.connect("changed", self.FontsColorsChanged)
 		self.UsernameStyle.child.connect("changed", self.FontsColorsChanged)
 		self.InputColor.connect("changed", self.FontsColorsChanged)
-		
+
 	def FontsColorsChanged(self, widget):
 		self.needcolors = 1
 		
@@ -2089,8 +2089,7 @@ class SettingsWindow(settings_glade.SettingsWindow):
 					
 		self.tree["Interface"] = row =  model.append(None, [_("Interface"), "Interface"])
 		self.tree["Icons"] = model.append(row, [_("Icons"), "Icons"])
-		
-		
+
 		self.tree["Chat"] = row = model.append(None, [_("Chat"), "Chat"])
 		self.tree["Away mode"] = model.append(row, [_("Away mode"), "Away mode"])
 		self.tree["Logging"] = model.append(row, [_("Logging"), "Logging"])
@@ -2105,7 +2104,7 @@ class SettingsWindow(settings_glade.SettingsWindow):
 		self.tree["Searches"] = model.append(row, [_("Searches"), "Searches"])
 		self.tree["User info"] = model.append(row, [_("User info"), "User info"])
 		self.tree["Import Config"] = model.append(row, [_("Import Config"), "Import Config"])
-		
+
 		p["Server"] = ServerFrame(self, frame.np.getencodings())
 		p["Shares"] = SharesFrame(self)
 		p["Transfers"] = TransfersFrame(self)
@@ -2125,7 +2124,7 @@ class SettingsWindow(settings_glade.SettingsWindow):
 		p["Chat"] = ChatFrame()
 		p["Events"] = EventsFrame(self)
 		p["Import Config"] = ImportFrame(self)
-		
+		print "Stuck"
 		p["Misc"] = MiscFrame()
 		
 		column = gtk.TreeViewColumn(_("Categories"), gtk.CellRendererText(), text = 0)
