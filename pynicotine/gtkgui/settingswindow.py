@@ -123,10 +123,9 @@ class SharesFrame(settings_glade.SharesFrame):
 		self.p = parent
 		self.frame = parent.frame
 		settings_glade.SharesFrame.__init__(self, False)
-		self.options = {"transfers": ["incompletedir",	"downloaddir","sharedownloaddir", "shared", "rescanonstartup", "buddyshared", "enablebuddyshares", ]}
+		self.options = {"transfers": ["incompletedir", "downloaddir", "uploaddir", "sharedownloaddir", "shared", "rescanonstartup", "buddyshared", "enablebuddyshares", ]}
 			
 		self.needrescan = 0
-		self.options = {}
 		self.shareslist = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
 		self.shareddirs = []
 		
@@ -142,6 +141,13 @@ class SharesFrame(settings_glade.SharesFrame):
 		self.BuddyShares.append_column(bcolumn)
 		self.BuddyShares.set_model(self.bshareslist)
 		self.BuddyShares.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
+		self.DownloadDir.connect("changed", self.DownloadDirChanged)
+
+	def DownloadDirChanged(self, widget):
+		transfers = self.frame.np.config.sections["transfers"]
+		if transfers["incompletedir"] is not None and transfers["incompletedir"] != "":
+			return
+		self.UploadDir.set_text("%s/%s" % (self.DownloadDir.get_text(), _("Buddy Uploads")))
 		
 	def SetSettings(self, config):
 		transfers = config["transfers"]
@@ -156,6 +162,10 @@ class SharesFrame(settings_glade.SharesFrame):
 			self.DownloadDir.set_text(recode(transfers["downloaddir"]))
 		else:
 			self.p.Hilight(self.DownloadDir)
+		if transfers["uploaddir"] is not None and transfers["uploaddir"] != "":
+			self.UploadDir.set_text(recode(transfers["uploaddir"]))
+		else:
+			self.p.Hilight(self.UploadDir)
 		if transfers["sharedownloaddir"] is not None:
 			
 			self.ShareDownloadDir.set_active(transfers["sharedownloaddir"])
@@ -204,6 +214,7 @@ class SharesFrame(settings_glade.SharesFrame):
 			"transfers": {
 				"incompletedir": recode2(self.IncompleteDir.get_text()),
 				"downloaddir": recode2(self.DownloadDir.get_text()),
+				"uploaddir": recode2(self.UploadDir.get_text()),
 				"sharedownloaddir": self.ShareDownloadDir.get_active(),
 				"shared": self.shareddirs[:],
 				"rescanonstartup": self.RescanOnStartup.get_active(),

@@ -383,7 +383,7 @@ class Transfers:
 					path = ""
 					if self.eventprocessor.config.sections["transfers"]["uploadsinsubdirs"]:
 						parentdir = msg.file.split("\\")[-2]
-						path = _("Buddy Uploads")+os.sep+user+os.sep+parentdir
+						path = self.eventprocessor.config.sections["transfers"]["uploaddir"]+os.sep+user+os.sep+parentdir
 	
 					transfer = Transfer(user = user, filename=msg.file , path=path, status = 'Getting status', size=msg.filesize, req=msg.req)
 					self.downloads.append(transfer)

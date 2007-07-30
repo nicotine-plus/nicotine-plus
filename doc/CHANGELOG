@@ -5,6 +5,7 @@ Licensing
  * Relicensed all code under GPLv3 and LGPLv3
 
 General Changes
+ * Added an option to Shares for the Upload directory path (needs to be set)
  * Username away color-status in chat can be toggled off
  * Default colours and clear colours buttons added
  * Search's offline users now uses a seperate color
