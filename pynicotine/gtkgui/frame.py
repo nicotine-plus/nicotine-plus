@@ -320,7 +320,7 @@ class NicotineFrame(MainWindow):
 
 		if int(self.np.config.sections["ui"]["buddylistinchatrooms"]):
 			self.buddylist_in_chatrooms1.set_active(1)
-			self.MoveListLabel.set_text(_("Move to own tab"))
+			self.MoveListLabel.set_text(_("Move"))
 		else:
 			self.BuddiesTabLabel = self.get_custom_widget("BuddiesTabLabel", "ImageLabel", _("Buddy list"), 0, 0)
 			self.BuddiesTabLabel.show()
@@ -1746,7 +1746,7 @@ class NicotineFrame(MainWindow):
 			if self.userlistvbox not in self.vpaned3.get_children():
 				self.vpaned3.pack1(self.userlistvbox, True, True)
 				
-			self.MoveListLabel.set_text(_("Move to own tab"))
+			self.MoveListLabel.set_text(_("Move"))
 		else:
 			if self.hide_room_list1.get_active():
 				self.vpaned3.hide()
