@@ -375,6 +375,11 @@ class ChatRoom(ChatRoomTab):
 			self.Elist[item[1]] = self.EncodingStore.append([item[1], item[0] ])
 			if self.encoding == item[1]:
 				self.Encoding.set_active_iter(self.Elist[self.encoding])
+
+		self.Ticker.label.connect("button_press_event", self.OnTickerClicked)
+		self.Ticker.label.connect("focus-in-event", self.OnTickerFocus)
+		self.Ticker.label.connect("focus-out-event", self.OnTickerFocus)
+		
 		if self.frame.SEXY and self.frame.np.config.sections["ui"]["spellcheck"]:
 			import sexy
 			self.vbox6.remove(self.ChatEntry)
@@ -1163,9 +1168,15 @@ class ChatRoom(ChatRoomTab):
 
 	def OnClearRoomLog(self, widget):
 		self.RoomLog.get_buffer().set_text("")
-	
+
+	def OnTickerFocus(self, widget, event):
+		if widget.is_focus():
+			self.Ticker.disable()
+		else:
+			self.Ticker.enable()
+			
 	def OnTickerClicked(self, widget, event):
-		if event.button != 1:
+		if event.button != 1 or event.type != gtk.gdk._2BUTTON_PRESS:
 			return False
 		config = self.frame.np.config.sections
 		if config["server"]["login"] in self.Ticker.messages:

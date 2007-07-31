@@ -22,8 +22,10 @@ import gobject
 class Ticker(gtk.EventBox):
 	def __init__(self):
 		gtk.EventBox.__init__(self)
-		self.label = gtk.Label()
-		self.label.set_alignment(0, 0.50)
+		self.label = gtk.Entry()
+		#self.label.set_alignment(0, 0.50)
+		self.label.set_editable(False)
+		self.label.set_has_frame(False)
 		self.label.show()
 		self.add(self.label)
 		self.messages = {}
@@ -40,7 +42,9 @@ class Ticker(gtk.EventBox):
 			return True
 		if self.ix >= len(self.messages):
 			self.ix = 0
-		user = self.messages.keys()[self.ix]
+		messages = self.messages.keys()
+		messages.sort(key=str.lower)
+		user = messages[self.ix]
 		message = self.messages[user]
 		self.label.set_text("[%s]: %s" % (user, message))
 		self.ix += 1
@@ -67,5 +71,5 @@ class Ticker(gtk.EventBox):
 		if not self.source:
 			return
 		gobject.source_remove(self.source)
-		self.label.set_text("")
+		#self.label.set_text("")
 		self.source = None
