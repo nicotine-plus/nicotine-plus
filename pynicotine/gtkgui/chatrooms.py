@@ -83,6 +83,8 @@ class RoomsControl:
 		)
 		frame.roomlist.RoomsList.connect("button_press_event", self.OnListClicked)
 		frame.roomlist.RoomsList.set_headers_clickable(True)
+
+		frame.roomlist.HideRoomList.connect("clicked", self.OnHideRoomList)
 		
 		self.frame.ChatNotebook.connect("switch-page", self.OnSwitchPage)
 		try:
@@ -126,7 +128,9 @@ class RoomsControl:
 				if name in self.frame.TrayApp.tray_status["hilites"]["rooms"]:
 					self.frame.ClearNotification("rooms", None, name)
 
+	def OnHideRoomList(self, widget):
 
+		self.frame.hide_room_list1.set_active(1)
 		
 	def OnListClicked(self, widget, event):
 		if event.button == 1 and event.type == gtk.gdk._2BUTTON_PRESS:
@@ -527,7 +531,7 @@ class ChatRoom(ChatRoomTab):
 			self.RoomLogWindow.hide()
 		else:
 			self.RoomLogWindow.show()
-		self.vpaned2.set_position(-1)
+
 
 	def OnHideUserList(self, widget):
 		act = widget.get_active()
@@ -535,7 +539,7 @@ class ChatRoom(ChatRoomTab):
 			self.vbox5.hide()
 		else:
 			self.vbox5.show()
-		self.vpaned2.set_position(-1)
+
 	
 	def TickerSet(self, msg):
 		self.Ticker.set_ticker({})

@@ -288,16 +288,45 @@ class NicotineFrame(MainWindow):
 		self.AddUserEntry.set_visibility(True)
 		self.AddUserEntry.connect("activate", self.OnAddUser)
 		self.hbox3.pack_start(self.AddUserEntry, True, True, 0)
+
+		self.MoveList = gtk.ToggleButton()
+		self.MoveList.show()
+		self.MoveListAlignment = gtk.Alignment(0.5, 0.5, 0, 0)
+		self.MoveListAlignment.show()
+
+		self.MoveListBox = gtk.HBox(False, 2)
+		self.MoveListBox.show()
+
+		self.MoveListImage = gtk.Image()
+		self.MoveListImage.set_from_stock(gtk.STOCK_JUMP_TO, 1)
+		self.MoveListImage.show()
+		self.MoveListBox.pack_start(self.MoveListImage, False, False, 0)
+
+		self.MoveListLabel = gtk.Label()
+
+		self.MoveListLabel.show()
+		self.MoveListBox.pack_start(self.MoveListLabel, True, True, 0)
 	
+		self.MoveListAlignment.add(self.MoveListBox)
+
+		self.MoveList.add(self.MoveListAlignment)
+		
+		
+
+		self.hbox3.pack_end(self.MoveList, False, True, 0)
+		self.MoveList.connect("toggled", self.OnMoveList)
+		
 		self.userlistvbox.pack_start(self.hbox3, False, True, 0)
 
 		if int(self.np.config.sections["ui"]["buddylistinchatrooms"]):
 			self.buddylist_in_chatrooms1.set_active(1)
+			self.MoveListLabel.set_text(_("Move to own tab"))
 		else:
 			self.BuddiesTabLabel = self.get_custom_widget("BuddiesTabLabel", "ImageLabel", _("Buddy list"), 0, 0)
 			self.BuddiesTabLabel.show()
 			self.MainNotebook.append_page(self.userlistvbox, self.BuddiesTabLabel)
-			
+			self.MoveListLabel.set_text(_("Move to chat rooms"))
+
 			
 		if self.np.config.sections["ticker"]["hide"]:
 			self.hide_tickers1.set_active(1)
@@ -394,7 +423,11 @@ class NicotineFrame(MainWindow):
 			self.TrayApp.Create()
 		if trerror is not None and trerror != "":
 			self.logMessage(trerror)
-
+			
+	def OnMoveList(self, widget):
+		self.buddylist_in_chatrooms1.set_active(not self.buddylist_in_chatrooms1.get_active())
+		self.OnChatRooms(None)
+		
 	def LoadIcons(self):
 		self.images = {}
 		self.icons = {}
@@ -1074,7 +1107,8 @@ class NicotineFrame(MainWindow):
 
 	def FetchUserListStatus(self):
 		for user in self.userlist.userlist:
-			self.np.queue.put(slskmessages.AddUser(user[0]))
+			if user[0] not in self.np.watchedusers:
+				self.np.queue.put(slskmessages.AddUser(user[0]))
 			self.np.queue.put(slskmessages.GetUserStatus(user[0]))
 			self.np.queue.put(slskmessages.GetUserStats(user[0]))
 		return False
@@ -1711,6 +1745,8 @@ class NicotineFrame(MainWindow):
 				self.MainNotebook.remove_page(8)
 			if self.userlistvbox not in self.vpaned3.get_children():
 				self.vpaned3.pack1(self.userlistvbox, True, True)
+				
+			self.MoveListLabel.set_text(_("Move to own tab"))
 		else:
 			if self.hide_room_list1.get_active():
 				self.vpaned3.hide()
@@ -1720,9 +1756,9 @@ class NicotineFrame(MainWindow):
 			self.BuddiesTabLabel.show()
 			if self.userlistvbox not in self.MainNotebook.get_children():
 				self.MainNotebook.append_page(self.userlistvbox, self.BuddiesTabLabel)
-       			
-			
-		
+
+			self.MoveListLabel.set_text(_("Move to chat rooms tab"))
+
 		self.np.config.writeConfig()
 		
 	def OnCheckPrivileges(self, widget):
@@ -2004,7 +2040,8 @@ class NicotineFrame(MainWindow):
 		for user in msg.users.keys():
 			iter = self.recommendationuserslist.append([self.images["offline"], user, "0", "0", 0, 0, 0])
 			self.recommendationusers[user] = iter
-			self.np.queue.put(slskmessages.AddUser(user))
+			if user not in self.np.watchedusers:
+				self.np.queue.put(slskmessages.AddUser(user))
 			self.np.queue.put(slskmessages.GetUserStats(user))
 			self.np.queue.put(slskmessages.GetUserStatus(user))
 
@@ -2014,7 +2051,8 @@ class NicotineFrame(MainWindow):
 		for user in msg.users:
 			iter = self.recommendationuserslist.append([self.images["offline"], user, "0", "0", 0, 0, 0])
 			self.recommendationusers[user] = iter
-			self.np.queue.put(slskmessages.AddUser(user))
+			if user not in self.np.watchedusers:
+				self.np.queue.put(slskmessages.AddUser(user))
 			self.np.queue.put(slskmessages.GetUserStats(user))
 			self.np.queue.put(slskmessages.GetUserStatus(user))
 

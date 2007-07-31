@@ -1529,14 +1529,8 @@ class ChatRoomTab:
 			self.ChatRoomTab.add_accel_group(self.accel_group)
 			self.ChatRoomTab.show()
 
-		self.Main = gtk.HPaned()
+		self.Main = gtk.VBox(False, 0)
 		self.Main.show()
-
-		self.vpaned2 = gtk.VPaned()
-		self.vpaned2.show()
-
-		self.vbox3 = gtk.VBox(False, 0)
-		self.vbox3.show()
 
 		self.hbox7 = gtk.HBox(False, 0)
 		self.hbox7.show()
@@ -1546,6 +1540,7 @@ class ChatRoomTab:
 		self.hbox7.pack_start(self.Ticker)
 
 		self.HideUserList = gtk.ToggleButton()
+		self.tooltips.set_tip(self.HideUserList, _("Hide/Show User list"))
 		self.HideUserList.show()
 		self.HideUserList.connect("toggled", self.OnHideUserList)
 
@@ -1567,6 +1562,7 @@ class ChatRoomTab:
 		self.hbox7.pack_end(self.HideUserList, False, False, 0)
 
 		self.HideStatusLog = gtk.ToggleButton()
+		self.tooltips.set_tip(self.HideStatusLog, _("Hide/Show Status log"))
 		self.HideStatusLog.show()
 		self.HideStatusLog.connect("toggled", self.OnHideStatusLog)
 
@@ -1587,9 +1583,10 @@ class ChatRoomTab:
 
 		self.hbox7.pack_end(self.HideStatusLog, False, False, 0)
 
-		self.ShowChatHelp = gtk.ToggleButton()
+		self.ShowChatHelp = gtk.Button()
+		self.tooltips.set_tip(self.ShowChatHelp, _("Chat room command help"))
 		self.ShowChatHelp.show()
-		self.ShowChatHelp.connect("toggled", self.OnShowChatHelp)
+		self.ShowChatHelp.connect("clicked", self.OnShowChatHelp)
 
 		self.alignment28 = gtk.Alignment(0.5, 0.5, 0, 0)
 		self.alignment28.show()
@@ -1608,7 +1605,13 @@ class ChatRoomTab:
 
 		self.hbox7.pack_end(self.ShowChatHelp, False, False, 0)
 
-		self.vbox3.pack_start(self.hbox7, False, True, 0)
+		self.Main.pack_start(self.hbox7, False, True, 0)
+
+		self.Hpaned = gtk.HPaned()
+		self.Hpaned.show()
+
+		self.Vpaned = gtk.VPaned()
+		self.Vpaned.show()
 
 		self.RoomLogWindow = gtk.ScrolledWindow()
 		self.RoomLogWindow.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
@@ -1621,9 +1624,7 @@ class ChatRoomTab:
 		self.RoomLog.show()
 		self.RoomLogWindow.add(self.RoomLog)
 
-		self.vbox3.pack_start(self.RoomLogWindow)
-
-		self.vpaned2.pack1(self.vbox3, False, True)
+		self.Vpaned.pack1(self.RoomLogWindow, False, True)
 
 		self.vbox6 = gtk.VBox(False, 0)
 		self.vbox6.show()
@@ -1648,9 +1649,9 @@ class ChatRoomTab:
 		self.ChatEntry.connect("key_press_event", self.OnKeyPress)
 		self.vbox6.pack_start(self.ChatEntry, False, False, 0)
 
-		self.vpaned2.pack2(self.vbox6, True, False)
+		self.Vpaned.pack2(self.vbox6, True, False)
 
-		self.Main.pack1(self.vpaned2, True, True)
+		self.Hpaned.pack1(self.Vpaned, True, True)
 
 		self.vbox5 = gtk.VBox(False, 0)
 		self.vbox5.show()
@@ -1732,7 +1733,9 @@ class ChatRoomTab:
 
 		self.vbox5.pack_start(self.hbox4, False, True, 0)
 
-		self.Main.pack2(self.vbox5, False, True)
+		self.Hpaned.pack2(self.vbox5, False, True)
+
+		self.Main.pack_start(self.Hpaned)
 
 
 		if create:
@@ -2891,6 +2894,31 @@ class RoomList:
 		self.CreateRoomEntry.show()
 		self.CreateRoomEntry.connect("activate", self.OnCreateRoom)
 		self.hbox1.pack_start(self.CreateRoomEntry)
+
+		self.HideRoomList = gtk.Button()
+		self.HideRoomList.show()
+
+		self.alignment27 = gtk.Alignment(0.5, 0.5, 0, 0)
+		self.alignment27.show()
+
+		self.hbox27 = gtk.HBox(False, 0)
+		self.hbox27.show()
+		self.hbox27.set_spacing(2)
+
+		self.image7 = gtk.Image()
+		self.image7.set_from_stock(gtk.STOCK_REMOVE, 4)
+		self.image7.show()
+		self.hbox27.pack_start(self.image7, False, True, 0)
+
+		self.JumpLabel = gtk.Label(_("Hide list"))
+		self.JumpLabel.show()
+		self.hbox27.pack_start(self.JumpLabel)
+
+		self.alignment27.add(self.hbox27)
+
+		self.HideRoomList.add(self.alignment27)
+
+		self.hbox1.pack_start(self.HideRoomList, False, True, 0)
 
 		self.vbox2.pack_start(self.hbox1, False, True, 0)
 
