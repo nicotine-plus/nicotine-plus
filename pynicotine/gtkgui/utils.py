@@ -510,6 +510,8 @@ class PopupMenu(gtk.Menu):
 		self.frame = frame
 		self.user = None
 		self.useritem = None
+		self.handlers = {}
+		
 	def setup(self, *items):
 		for item in items:
 			if item[0] == "":
@@ -522,20 +524,20 @@ class PopupMenu(gtk.Menu):
 				menuitem = gtk.MenuItem(item[1])
 				menuitem.set_submenu(item[2])
 				if len(item) == 5 and item[4] is not None and item[3] is not None:
-					menuitem.connect("activate", item[3], item[4])
+					self.handlers[menuitem] = menuitem.connect("activate", item[3], item[4])
 				elif item[3] is not None:
-					menuitem.connect("activate", item[3])
+					self.handlers[menuitem] = menuitem.connect("activate", item[3])
 			elif item[0] == "USERMENU":
 				menuitem = gtk.MenuItem(item[1])
 				menuitem.set_submenu(item[2])
 				if item[3] is not None:
-					menuitem.connect("activate", item[3])
+					self.handlers[menuitem] = menuitem.connect("activate", item[3])
 				self.useritem = menuitem
 			elif item[0] == 2:
 				menuitem = gtk.ImageMenuItem(item[1])
 				menuitem.set_submenu(item[2])
 				if item[3] is not None:
-					menuitem.connect("activate", item[3])
+					self.handlers[menuitem] = menuitem.connect("activate", item[3])
 				img = gtk.image_new_from_stock(item[4], gtk.ICON_SIZE_MENU)
 				menuitem.set_image(img)
 			else:
@@ -553,15 +555,23 @@ class PopupMenu(gtk.Menu):
 				else:
 					menuitem = gtk.MenuItem(item[0])
 				if item[1] is not None:
-					menuitem.connect("activate", item[1])
+					self.handlers[menuitem] = menuitem.connect("activate", item[1])
 			self.append(menuitem)
 			menuitem.show()
 		return self
 				
 	def clear(self):
-		for item in self.get_children():
-			self.remove(item)
+		for widget in self.handlers.keys():
+			widget.disconnect(self.handlers[widget])
 			
+		self.handlers.clear()
+		for widget in self.get_children():
+			self.remove(widget)
+			widget.destroy()
+		if self.useritem is not None:
+			self.useritem.destroy()
+			self.useritem = None
+
 	def set_user(self, user):
 		self.user = user
 		if self.useritem:

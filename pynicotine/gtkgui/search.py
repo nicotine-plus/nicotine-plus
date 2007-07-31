@@ -433,7 +433,10 @@ class SearchTreeModel(FastListModel):
 	def append(self, results):
 		ix = len(self.all_data) + 1
 		l = len(self.data)
-		encode = self.frame.np.transfers.encode
+		if self.frame.np.transfers is None:
+			encode = self.frame.np.encode
+		else:
+			encode = self.frame.np.transfers.encode
 		returned = 0
 
 		for r in results:
@@ -553,11 +556,15 @@ class SearchTreeModel(FastListModel):
 		return True
 	
 	def set_filters(self, enable, f_in, f_out, size, bitrate, freeslot, country):
-		encode = self.frame.np.transfers.encode
+		
 		if not enable:
 			self.filters = None
 			self.data = self.all_data[:]
 			return
+		if self.frame.np.transfers is None:
+			encode = self.frame.np.encode
+		else:
+			encode = self.frame.np.transfers.encode
 		self.filters = [None, None, None, None, freeslot, None]
 		
 		if f_in:
@@ -668,7 +675,7 @@ class Search(SearchTab):
 		self.OnResort(cols[0], 0)
 
 		self.ResultsList.set_headers_clickable(True)
-		
+		self.popup_menu_users = PopupMenu(self.frame)
 		self.popup_menu = popup = PopupMenu(self.frame)
 		popup.setup(
 			("#" + _("_Download file(s)"), self.OnDownloadFiles, gtk.STOCK_GO_DOWN),
@@ -679,21 +686,92 @@ class Search(SearchTab):
 			("#" + _("Copy _URL"), self.OnCopyURL, gtk.STOCK_COPY),
 			("#" + _("Copy folder URL"), self.OnCopyDirURL, gtk.STOCK_COPY),
 			("", None),
-			("#" + _("Send _message"), popup.OnSendMessage, gtk.STOCK_EDIT),
-			("#" + _("Show IP a_ddress"), popup.OnShowIPaddress, gtk.STOCK_NETWORK),
-			("#" + _("Get user i_nfo"), popup.OnGetUserInfo, gtk.STOCK_DIALOG_INFO),
-			("#" + _("Brow_se files"), popup.OnBrowseUser, gtk.STOCK_HARDDISK),
-			("#" + _("Gi_ve privileges"), popup.OnGivePrivileges, gtk.STOCK_JUMP_TO),
-			("$" + _("_Add user to list"), popup.OnAddToList),
-			("$" + _("_Ban this user"), popup.OnBanUser),
-			("$" + _("_Ignore this user"), popup.OnIgnoreUser),
+			(1, _("User(s)"), self.popup_menu_users, self.OnPopupMenuUsers),
 		)
-		
+
+			
 		self.ResultsList.connect("button_press_event", self.OnListClicked)
 		
 		self._more_results = 0
 		self.new_results = []
 		self.ChangeColours()
+		
+	def OnPopupMenuUsers(self, widget):
+		
+		self.select_results()
+		#(user, fn, size, bitrate, length)
+	
+		self.popup_menu_users.clear()
+		if len(self.selected_users) > 0:
+			items = []
+			self.selected_users.sort(key=str.lower)
+			for user in self.selected_users:
+				popup = PopupMenu(self.frame)
+				popup.setup(
+					("#" + _("Send _message"), popup.OnSendMessage, gtk.STOCK_EDIT),
+					("#" + _("Show IP a_ddress"), popup.OnShowIPaddress, gtk.STOCK_NETWORK),
+					("#" + _("Get user i_nfo"), popup.OnGetUserInfo, gtk.STOCK_DIALOG_INFO),
+					("#" + _("Brow_se files"), popup.OnBrowseUser, gtk.STOCK_HARDDISK),
+					("#" + _("Gi_ve privileges"), popup.OnGivePrivileges, gtk.STOCK_JUMP_TO),
+					("", None),
+					("$" + _("_Add user to list"), popup.OnAddToList),
+					("$" + _("_Ban this user"), popup.OnBanUser),
+					("$" + _("_Ignore this user"), popup.OnIgnoreUser),
+					("#" + _("Select User's Results"), self.OnSelectUserResults, gtk.STOCK_INDEX),
+					)
+				popup.set_user(user)
+
+				items.append((1, user, popup, self.OnPopupMenuUser, popup))
+			self.popup_menu_users.setup(*items)
+		return True
+		
+	def OnPopupMenuUser(self, widget, popup=None):
+		if popup is None:
+			return
+		menu = popup
+		user = menu.user
+		items = menu.get_children()
+		
+		act = False
+		if len(self.selected_users) >= 1:
+			act = True
+		items[0].set_sensitive(act)
+		items[1].set_sensitive(act)
+		items[2].set_sensitive(act)
+		items[3].set_sensitive(act)
+
+		items[6].set_active(user in [i[0] for i in self.frame.np.config.sections["server"]["userlist"]])
+		items[7].set_active(user in self.frame.np.config.sections["server"]["banlist"])
+		items[8].set_active(user in self.frame.np.config.sections["server"]["ignorelist"])
+		
+		for i in range(4, 9):
+			items[i].set_sensitive(act)
+		return True
+		
+	def OnSelectUserResults(self, widget):
+		if len(self.selected_users) == 0:
+			return
+		selected_user = widget.parent.user
+		
+		sel = self.ResultsList.get_selection()
+		fmodel = self.ResultsList.get_model()
+		sel.unselect_all()
+		iter = self.resultsmodel.get_iter_root()
+
+		while iter is not None:
+			user = self.resultsmodel.get_value(iter, 2)
+			
+			if selected_user == user:
+				ix = fmodel.get_path(iter)
+				sel.select_path(ix,)
+			iter = self.resultsmodel.iter_next(iter)
+
+		self.select_results()
+		
+	def select_results(self):
+		self.selected_transfers = []
+		self.selected_users = []
+		self.ResultsList.get_selection().selected_foreach(self.SelectedResultsCallback)
 		
 	def ChangeColours(self):
 		self.frame.SetTextBG(self.ResultsList)
@@ -742,9 +820,7 @@ class Search(SearchTab):
 	
 	def OnListClicked(self, widget, event):
 		if event.button == 1 and event.type == gtk.gdk._2BUTTON_PRESS:
-			self.selected_results = []
-			self.selected_users = []
-			self.ResultsList.get_selection().selected_foreach(self.SelectedResultsCallback)
+			self.select_results()
 			self.OnDownloadFiles(widget)
 			self.ResultsList.get_selection().unselect_all();
 			return True
@@ -756,9 +832,7 @@ class Search(SearchTab):
 		if event.button != 3:
 			return False
 		
-		self.selected_results = []
-		self.selected_users = []
-		self.ResultsList.get_selection().selected_foreach(self.SelectedResultsCallback)
+		self.select_results()
 		
 		items = self.popup_menu.get_children()
 		
@@ -773,18 +847,6 @@ class Search(SearchTab):
 		items[5].set_sensitive(act)
 		items[6].set_sensitive(act)
 
-		act = False
-		if len(self.selected_users) == 1:
-			act = True
-			user = self.selected_users[0]
-			self.popup_menu.set_user(user)
-			items[13].set_active(user in [i[0] for i in self.frame.np.config.sections["server"]["userlist"]])
-			items[14].set_active(user in self.frame.np.config.sections["server"]["banlist"])
-			items[15].set_active(user in self.frame.np.config.sections["server"]["ignorelist"])
-		
-		for i in range(7, 16):
-			items[i].set_sensitive(act)
-		
 		widget.emit_stop_by_name("button_press_event")
 		self.popup_menu.popup(None, None, None, event.button, event.time)
 		return True

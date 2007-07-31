@@ -275,6 +275,7 @@ class Downloads(TransferList):
 		self.popup_menu_users.clear()
 		if len(self.selected_users) > 0:
 			items = []
+			self.selected_users.sort(key=str.lower)
 			for user in self.selected_users:
 				popup =  PopupMenu(self.frame)
 				popup.setup(

@@ -561,7 +561,7 @@ class NetworkEventProcessor:
 			self.logMessage("%s %s" %(msg.__class__, vars(msg)))
 
 	def AddUser(self, msg):
-		if msg.user not in self.watchedusers and msg.userexists:
+		if msg.user not in self.watchedusers:
 			self.watchedusers.append(msg.user)
 		if self.search is not None:
 			if not msg.userexists:
