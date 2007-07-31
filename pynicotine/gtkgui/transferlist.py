@@ -240,10 +240,12 @@ class TransferList:
 			if not transfer in self.list:
 				return
 			fn = transfer.filename
+			user = transfer.user
+			shortfn = self.frame.np.transfers.encode(fn.split("\\")[-1], user)
 			currentbytes = transfer.currentbytes
 			if currentbytes == None:
 				currentbytes = 0
-			user = transfer.user
+			
 			key = [user, fn]
 			
 			status = self.Humanize(self.TranslateStatus(transfer.status), None)
@@ -287,7 +289,8 @@ class TransferList:
 					if i[2] in self.list:
 						self.list.remove(i[2])
 					i[2] = transfer
-				self.transfersmodel.set(i[1], 2, status, 3, percent, 4, hsize, 5, speed, 6, elap, 7, left, 10, istatus, 11, size, 12, currentbytes)
+					
+				self.transfersmodel.set(i[1], 1, shortfn, 2, status, 3, percent, 4, hsize, 5, speed, 6, elap, 7, left, 10, istatus, 11, size, 12, currentbytes)
 				break
 			else:
 				if self.TreeUsers:
@@ -300,7 +303,7 @@ class TransferList:
 				else:
 					parent = None
 				# Add a new transfer
-				shortfn = self.frame.np.decode(fn.split("\\")[-1])
+				
 				path = self.frame.np.decode(transfer.path)
 				iter = self.transfersmodel.append(parent, [user, shortfn, status, percent,  hsize, speed, elap, left, path, fn, istatus, size, icurrentbytes, True])
 				

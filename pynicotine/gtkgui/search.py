@@ -433,9 +433,12 @@ class SearchTreeModel(FastListModel):
 	def append(self, results):
 		ix = len(self.all_data) + 1
 		l = len(self.data)
+		encode = self.frame.np.transfers.encode
 		returned = 0
-		
+		#[Filename, user, size, speed, queue, immediatedl, bitrate, length, directory, bitrate, token, country, Status]
 		for r in results:
+			user = r[1]
+			filename = encode(r[0], user)
 			size = long(r[2])
 			r[2] = Humanize(size)
 			speed = r[3]
@@ -443,7 +446,7 @@ class SearchTreeModel(FastListModel):
 			queue = r[4]
 			r[4] = Humanize(queue)
 			#r[12] # status
-			row = [ix] + r[:12] + [size, speed, queue] + [r[12]]
+			row = [ix] + [filename, user] + r[2:8] + [encode(r[8], user)] + r[9:12] + [size, speed, queue] + [r[12]]
 
 			self.all_data.append(row)
 			if not self.filters or self.check_filter(row):
@@ -809,7 +812,7 @@ class Search(SearchTab):
 				bitrate = str(a[0]) + bitrate
 				br = a[0]
 				length = '%i:%02i' %(a[1] / 60, a[1] % 60)
-			results.append([decode(name), user, result[2], msg.ulspeed, msg.inqueue, imdl, bitrate, length, decode(dir), br, result[1], country, 1])
+			results.append([name, user, result[2], msg.ulspeed, msg.inqueue, imdl, bitrate, length, dir, br, result[1], country, 1])
 			ix += 1
 			
 		if results:
@@ -817,7 +820,7 @@ class Search(SearchTab):
 			
 			if self._more_results == 0:
 				self._more_results = 1
-				gobject.timeout_add(1000, self._realaddresults)
+				gobject.timeout_add(100, self._realaddresults)
 			else:
 				self._more_results = 2
 			return len(results)
