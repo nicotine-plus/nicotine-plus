@@ -116,7 +116,7 @@ def write_widget_attrs(widget):
 		
 	if widget.attrs.has_key("tooltip"):
 		tip = widget.attrs["tooltip"]
-		print indent + "self.tooltips.set_tip(%s, _(\"%s\"))" % (widget.id, tip)
+		print indent + "self.tooltips.set_tip(%s, _(\"%s\"))" % (widget.id, tip.replace("\"", "\\\""))
 		
 	if widget.attrs.has_key("expanded"):
 		expanded = widget.attrs["expanded"]
@@ -447,6 +447,15 @@ def write_widget_button(widget):
 			return
 	write_widget_container(widget, "Button", PM_ADD)
 
+def write_widget_togglebutton(widget):
+	if widget.attrs.has_key("use_stock"):
+		if widget.attrs["use_stock"] == "True":
+			stock = "gtk.STOCK_" + widget.attrs["label"][4:].upper().replace("-", "_")
+			del widget.attrs["label"]
+			write_widget_container(widget, "ToggleButton", PM_ADD, "None", stock)
+			return
+	write_widget_container(widget, "ToggleButton", PM_ADD)
+	
 def write_widget_combobox(widget):
 	print indent + "%s_List = gtk.ListStore(gobject.TYPE_STRING)" % (widget.id)
 	write_widget_container(widget, "ComboBox", PM_ADD)
@@ -508,7 +517,7 @@ classes = {
 	"GtkComboBoxEntry": [write_widget_comboboxentry],
 	"GtkComboBoxEntryChild": [write_widget_generic, "child"],
 	"GtkCheckButton": [write_widget_generic, "CheckButton"],
-	"GtkToggleButton": [write_widget_generic, "ToggleButton"],
+	"GtkToggleButton": [write_widget_togglebutton],
 	"GtkFontButton": [write_widget_generic, "FontButton"],
 	"GtkIconView": [write_widget_generic, "IconView"],
 	"GtkFileChooserButton": [write_widget_generic, "FileChooserButton"],

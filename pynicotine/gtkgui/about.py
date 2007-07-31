@@ -392,6 +392,7 @@ class GenericTableDialog(GenericAboutDialog):
 
 class AboutRoomsDialog(GenericTableDialog):
 	items = [
+			"/me " + _("message")+"", _("Say something in the third-person"),
 	        "/join /j '" + _("room")+"'", _("Join room 'room'"),
 	        "/leave /l '" + _("room") + "'", _("Leave room 'room'"),
 	        "/part /p '" + _("room") + "'", _("Leave room 'room'"),

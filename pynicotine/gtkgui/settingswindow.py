@@ -1004,7 +1004,6 @@ class BloatFrame(settings_glade.BloatFrame):
 "labelinfo": self.UserInfoAngleSpin, "labelbrowse": self.UserBrowseAngleSpin,
 "labelsearch": self.SearchAngleSpin },
 			"transfers": {"enabletransferbuttons": self.ShowTransferButtons},
-			"privatechat": {"store": self.ReopenPrivateChats},
 			"language": {"setlanguage": self.TranslationCheck, "language": self.TranslationComboEntry},
 			}
 
@@ -1117,7 +1116,6 @@ class BloatFrame(settings_glade.BloatFrame):
 
 	def SetSettings(self, config):
 		ui = config["ui"]
-		private = config["privatechat"]
 		transfers = config["transfers"]
 		language = config["language"]
 
@@ -1197,10 +1195,6 @@ class BloatFrame(settings_glade.BloatFrame):
 			self.p.Hilight(self.SpellCheck)
 		if not self.frame.SEXY:
 			self.SpellCheck.set_sensitive(False)
-		if private["store"] is not None:
-			self.ReopenPrivateChats.set_active(private["store"])
-		else:
-			self.p.Hilight(self.ReopenPrivateChats)
 
 		if ui["usernamestyle"] is not None:
 			self.UsernameStyle.child.set_text(ui["usernamestyle"])
@@ -1352,9 +1346,6 @@ class BloatFrame(settings_glade.BloatFrame):
 			"transfers": {
 				"enabletransferbuttons": self.ShowTransferButtons.get_active(),
 			},
-			"privatechat": {
-				"store": self.ReopenPrivateChats.get_active(),
-			},
 			"language": {
 				"setlanguage": self.TranslationCheck.get_active(),
 				"language": self.TranslationComboEntry.get_text(),
@@ -1461,10 +1452,12 @@ class LogFrame(settings_glade.LogFrame):
 		self.p = parent
 		self.frame = parent.frame
 		settings_glade.LogFrame.__init__(self, False)
-		self.options = {"logging": [ "privatechat", "chatrooms", "logsdir", "transfers", ]}
+		self.options = {"logging": [ "privatechat", "chatrooms", "logsdir", "transfers", ],
+					"privatechat": {"store": self.ReopenPrivateChats},}
 
 	def SetSettings(self, config):
 		logging = config["logging"]
+		private = config["privatechat"]
 		if logging["privatechat"] is not None:
 			self.LogPrivate.set_active(logging["privatechat"])
 		else:
@@ -1481,6 +1474,10 @@ class LogFrame(settings_glade.LogFrame):
 			self.LogDir.set_text(recode(logging["logsdir"]))
 		else:
 			self.p.Hilight(self.LogDir)
+		if private["store"] is not None:
+			self.ReopenPrivateChats.set_active(private["store"])
+		else:
+			self.p.Hilight(self.ReopenPrivateChats)
 	def GetSettings(self):
 		return {
 			"logging": {
@@ -1488,7 +1485,10 @@ class LogFrame(settings_glade.LogFrame):
 				"chatrooms": self.LogRooms.get_active(),
 				"logsdir": recode2(self.LogDir.get_text()),
 				"transfers": self.LogTransfers.get_active(),
-			}
+			},
+			"privatechat": {
+				"store": self.ReopenPrivateChats.get_active(),
+			},
 		}
 
 	def OnChooseLogDir(self, widget):

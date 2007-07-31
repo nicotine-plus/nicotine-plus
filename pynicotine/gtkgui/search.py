@@ -331,7 +331,6 @@ class Searches:
 				return _("Users")
 			elif len(users) == 1:
 				return users[0]
-		print self.usersearches
 		return _("User")
 		
 	def CreateTab(self, id, text, mode, remember = False):

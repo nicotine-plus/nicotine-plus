@@ -1996,29 +1996,7 @@
               </packing>
             </child>
             <child>
-              <widget class="GtkHBox" id="hbox177">
-                <property name="visible">True</property>
-                <property name="spacing">10</property>
-                <child>
-                  <widget class="GtkCheckButton" id="ReopenPrivateChats">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="label" translatable="yes">Reopen last Private Chat messages</property>
-                    <property name="use_underline">True</property>
-                    <property name="response_id">0</property>
-                    <property name="draw_indicator">True</property>
-                  </widget>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">False</property>
-                  </packing>
-                </child>
-              </widget>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="position">2</property>
-              </packing>
+              <placeholder/>
             </child>
             <child>
               <widget class="GtkHBox" id="hbox172">
@@ -2054,42 +2032,69 @@
               </packing>
             </child>
             <child>
-              <widget class="GtkHBox" id="hbox3">
+              <widget class="GtkFrame" id="frame1">
                 <property name="visible">True</property>
                 <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                <property name="spacing">5</property>
+                <property name="label_xalign">0</property>
+                <property name="shadow_type">GTK_SHADOW_NONE</property>
                 <child>
-                  <widget class="GtkCheckButton" id="TranslationCheck">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                    <property name="tooltip" translatable="yes">Loading translations requires a restart</property>
-                    <property name="label" translatable="yes">Translate to another language</property>
-                    <property name="response_id">0</property>
-                    <property name="draw_indicator">True</property>
-                    <signal name="toggled" handler="OnTranslationCheckToggled"/>
-                  </widget>
-                  <packing>
-                    <property name="expand">False</property>
-                  </packing>
-                </child>
-                <child>
-                  <widget class="GtkComboBoxEntry" id="TranslationCombo">
+                  <widget class="GtkAlignment" id="alignment8">
                     <property name="visible">True</property>
                     <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                    <child internal-child="entry">
-                      <widget class="GtkEntry" id="TranslationComboEntry">
+                    <property name="xalign">0</property>
+                    <property name="left_padding">12</property>
+                    <child>
+                      <widget class="GtkHBox" id="hbox3">
                         <property name="visible">True</property>
-                        <property name="can_focus">True</property>
                         <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                        <property name="max_length">10</property>
-                        <property name="width_chars">10</property>
+                        <property name="spacing">5</property>
+                        <child>
+                          <widget class="GtkCheckButton" id="TranslationCheck">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                            <property name="tooltip" translatable="yes">Loading translations requires a restart</property>
+                            <property name="label" translatable="yes">Translate to another language</property>
+                            <property name="response_id">0</property>
+                            <property name="draw_indicator">True</property>
+                            <signal name="toggled" handler="OnTranslationCheckToggled"/>
+                          </widget>
+                          <packing>
+                            <property name="expand">False</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <widget class="GtkComboBoxEntry" id="TranslationCombo">
+                            <property name="visible">True</property>
+                            <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                            <child internal-child="entry">
+                              <widget class="GtkEntry" id="TranslationComboEntry">
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                                <property name="max_length">10</property>
+                                <property name="width_chars">10</property>
+                              </widget>
+                            </child>
+                          </widget>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
                       </widget>
                     </child>
                   </widget>
+                </child>
+                <child>
+                  <widget class="GtkLabel" id="label7">
+                    <property name="visible">True</property>
+                    <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                    <property name="label" translatable="yes">&lt;b&gt;Language&lt;/b&gt;</property>
+                    <property name="use_markup">True</property>
+                  </widget>
                   <packing>
-                    <property name="expand">False</property>
-                    <property name="position">1</property>
+                    <property name="type">label_item</property>
                   </packing>
                 </child>
               </widget>
@@ -4649,6 +4654,31 @@ Right</property>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
                 <property name="position">3</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkHBox" id="hbox177">
+                <property name="visible">True</property>
+                <property name="spacing">10</property>
+                <child>
+                  <widget class="GtkCheckButton" id="ReopenPrivateChats">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="label" translatable="yes">Reopen last Private Chat messages</property>
+                    <property name="use_underline">True</property>
+                    <property name="response_id">0</property>
+                    <property name="draw_indicator">True</property>
+                  </widget>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                  </packing>
+                </child>
+              </widget>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">4</property>
               </packing>
             </child>
           </widget>

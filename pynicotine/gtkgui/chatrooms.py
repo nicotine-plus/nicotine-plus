@@ -517,7 +517,26 @@ class ChatRoom(ChatRoomTab):
 		items[10].set_active(user in self.frame.np.config.sections["server"]["banlist"])
 		items[11].set_active(user in self.frame.np.config.sections["server"]["ignorelist"])
 		self.popup_menu.popup(None, None, None, event.button, event.time)
-		
+
+	def OnShowChatHelp(self, widget):
+		self.frame.OnAboutChatroomCommands(widget)
+
+	def OnHideStatusLog(self, widget):
+		act = widget.get_active()
+		if act:
+			self.RoomLogWindow.hide()
+		else:
+			self.RoomLogWindow.show()
+		self.vpaned2.set_position(-1)
+
+	def OnHideUserList(self, widget):
+		act = widget.get_active()
+		if act:
+			self.vbox5.hide()
+		else:
+			self.vbox5.show()
+		self.vpaned2.set_position(-1)
+	
 	def TickerSet(self, msg):
 		self.Ticker.set_ticker({})
 		for m in msg.msgs.keys():
@@ -1155,7 +1174,7 @@ class ChatRoom(ChatRoomTab):
 					config["ticker"]["rooms"][self.room] = result
 				self.frame.np.config.writeConfig()
 			elif t == 2:
-				if self.room in configs["ticker"]["rooms"]:
+				if self.room in config["ticker"]["rooms"]:
 					del config["ticker"]["rooms"][self.room]
 				config["ticker"]["default"] = result
 				self.frame.np.config.writeConfig()

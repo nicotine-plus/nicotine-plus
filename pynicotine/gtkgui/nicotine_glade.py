@@ -450,6 +450,7 @@ class MainWindow:
 		self.ExpandDownloads = gtk.ToggleButton()
 		self.ExpandDownloads.set_label(_("Expand / Collapse all"))
 		self.ExpandDownloads.show()
+
 		self.hbox3.pack_end(self.ExpandDownloads, False, True, 0)
 
 		self.vboxdownloads.pack_start(self.hbox3, False, False, 2)
@@ -636,6 +637,7 @@ class MainWindow:
 		self.ExpandUploads = gtk.ToggleButton()
 		self.ExpandUploads.set_label(_("Expand / Collapse all"))
 		self.ExpandUploads.show()
+
 		self.hbox13.pack_start(self.ExpandUploads, False, True, 0)
 
 		self.ToggleTreeUploads = gtk.CheckButton()
@@ -832,6 +834,7 @@ class MainWindow:
 		self.SearchEntryCombo.show()
 
 		self.SearchEntry = self.SearchEntryCombo.child
+		self.tooltips.set_tip(self.SearchEntry, _("Search patterns: with a word = term, without a word = -term, phrase = \"term1 term2 term3\""))
 		self.SearchEntry.connect("activate", self.OnSearch)
 
 		self.SearchEntryCombo.set_model(self.SearchEntryCombo_List)
@@ -1078,32 +1081,6 @@ class MainWindow:
 
 		self.hbox12.pack_end(self.SimilarUsersButton, False, False, 0)
 
-		self.GlobalRecommendationsButton = gtk.Button()
-		self.GlobalRecommendationsButton.show()
-		self.GlobalRecommendationsButton.connect("clicked", self.OnGlobalRecommendationsClicked)
-
-		self.alignment4 = gtk.Alignment(0.5, 0.5, 0, 0)
-		self.alignment4.show()
-
-		self.hbox24 = gtk.HBox(False, 0)
-		self.hbox24.show()
-		self.hbox24.set_spacing(2)
-
-		self.image4 = gtk.Image()
-		self.image4.set_from_stock(gtk.STOCK_REFRESH, 4)
-		self.image4.show()
-		self.hbox24.pack_start(self.image4, False, False, 0)
-
-		self.label33 = gtk.Label(_("Global recommendations"))
-		self.label33.show()
-		self.hbox24.pack_start(self.label33, False, False, 0)
-
-		self.alignment4.add(self.hbox24)
-
-		self.GlobalRecommendationsButton.add(self.alignment4)
-
-		self.hbox12.pack_end(self.GlobalRecommendationsButton, False, False, 0)
-
 		self.RecommendationsButton = gtk.Button()
 		self.RecommendationsButton.show()
 		self.RecommendationsButton.connect("clicked", self.OnRecommendationsClicked)
@@ -1129,6 +1106,32 @@ class MainWindow:
 		self.RecommendationsButton.add(self.alignment5)
 
 		self.hbox12.pack_end(self.RecommendationsButton, False, False, 0)
+
+		self.GlobalRecommendationsButton = gtk.Button()
+		self.GlobalRecommendationsButton.show()
+		self.GlobalRecommendationsButton.connect("clicked", self.OnGlobalRecommendationsClicked)
+
+		self.alignment4 = gtk.Alignment(0.5, 0.5, 0, 0)
+		self.alignment4.show()
+
+		self.hbox24 = gtk.HBox(False, 0)
+		self.hbox24.show()
+		self.hbox24.set_spacing(2)
+
+		self.image4 = gtk.Image()
+		self.image4.set_from_stock(gtk.STOCK_REFRESH, 4)
+		self.image4.show()
+		self.hbox24.pack_start(self.image4, False, False, 0)
+
+		self.label33 = gtk.Label(_("Global recommendations"))
+		self.label33.show()
+		self.hbox24.pack_start(self.label33, False, False, 0)
+
+		self.alignment4.add(self.hbox24)
+
+		self.GlobalRecommendationsButton.add(self.alignment4)
+
+		self.hbox12.pack_end(self.GlobalRecommendationsButton, False, False, 0)
 
 		self.interests.pack_start(self.hbox12, False, True, 0)
 
@@ -1493,10 +1496,10 @@ class MainWindow:
 	def OnSimilarUsersClicked(self, widget):
 		pass
 
-	def OnGlobalRecommendationsClicked(self, widget):
+	def OnRecommendationsClicked(self, widget):
 		pass
 
-	def OnRecommendationsClicked(self, widget):
+	def OnGlobalRecommendationsClicked(self, widget):
 		pass
 
 	def OnAddThingILike(self, widget):
@@ -1535,22 +1538,90 @@ class ChatRoomTab:
 		self.vbox3 = gtk.VBox(False, 0)
 		self.vbox3.show()
 
+		self.hbox7 = gtk.HBox(False, 0)
+		self.hbox7.show()
+
 		self.Ticker = self.get_custom_widget("Ticker", "", "", 0, 0)
 		self.Ticker.connect("button_press_event", self.OnTickerClicked)
-		self.vbox3.pack_start(self.Ticker, False, True, 0)
+		self.hbox7.pack_start(self.Ticker)
 
-		self.scrolledwindow13 = gtk.ScrolledWindow()
-		self.scrolledwindow13.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
-		self.scrolledwindow13.show()
-		self.scrolledwindow13.set_shadow_type(gtk.SHADOW_IN)
+		self.HideUserList = gtk.ToggleButton()
+		self.HideUserList.show()
+		self.HideUserList.connect("toggled", self.OnHideUserList)
+
+		self.alignment47 = gtk.Alignment(0.5, 0.5, 0, 0)
+		self.alignment47.show()
+
+		self.hbox70 = gtk.HBox(False, 0)
+		self.hbox70.show()
+
+		self.HideUserListImage = gtk.Image()
+		self.HideUserListImage.set_from_stock(gtk.STOCK_GO_FORWARD, 1)
+		self.HideUserListImage.show()
+		self.hbox70.pack_start(self.HideUserListImage, False, False, 0)
+
+		self.alignment47.add(self.hbox70)
+
+		self.HideUserList.add(self.alignment47)
+
+		self.hbox7.pack_end(self.HideUserList, False, False, 0)
+
+		self.HideStatusLog = gtk.ToggleButton()
+		self.HideStatusLog.show()
+		self.HideStatusLog.connect("toggled", self.OnHideStatusLog)
+
+		self.alignment44 = gtk.Alignment(0.5, 0.5, 0, 0)
+		self.alignment44.show()
+
+		self.hbox67 = gtk.HBox(False, 0)
+		self.hbox67.show()
+
+		self.HideStatusLogImage = gtk.Image()
+		self.HideStatusLogImage.set_from_stock(gtk.STOCK_GO_UP, 1)
+		self.HideStatusLogImage.show()
+		self.hbox67.pack_start(self.HideStatusLogImage, False, False, 0)
+
+		self.alignment44.add(self.hbox67)
+
+		self.HideStatusLog.add(self.alignment44)
+
+		self.hbox7.pack_end(self.HideStatusLog, False, False, 0)
+
+		self.ShowChatHelp = gtk.ToggleButton()
+		self.ShowChatHelp.show()
+		self.ShowChatHelp.connect("toggled", self.OnShowChatHelp)
+
+		self.alignment28 = gtk.Alignment(0.5, 0.5, 0, 0)
+		self.alignment28.show()
+
+		self.hbox47 = gtk.HBox(False, 0)
+		self.hbox47.show()
+
+		self.image39 = gtk.Image()
+		self.image39.set_from_stock(gtk.STOCK_HELP, 1)
+		self.image39.show()
+		self.hbox47.pack_start(self.image39, False, False, 0)
+
+		self.alignment28.add(self.hbox47)
+
+		self.ShowChatHelp.add(self.alignment28)
+
+		self.hbox7.pack_end(self.ShowChatHelp, False, False, 0)
+
+		self.vbox3.pack_start(self.hbox7, False, True, 0)
+
+		self.RoomLogWindow = gtk.ScrolledWindow()
+		self.RoomLogWindow.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+		self.RoomLogWindow.show()
+		self.RoomLogWindow.set_shadow_type(gtk.SHADOW_IN)
 
 		self.RoomLog = gtk.TextView()
 		self.RoomLog.set_cursor_visible(False)
 		self.RoomLog.set_editable(False)
 		self.RoomLog.show()
-		self.scrolledwindow13.add(self.RoomLog)
+		self.RoomLogWindow.add(self.RoomLog)
 
-		self.vbox3.pack_start(self.scrolledwindow13)
+		self.vbox3.pack_start(self.RoomLogWindow)
 
 		self.vpaned2.pack1(self.vbox3, False, True)
 
@@ -1668,6 +1739,15 @@ class ChatRoomTab:
 			self.ChatRoomTab.add(self.Main)
 
 	def OnTickerClicked(self, widget):
+		pass
+
+	def OnHideUserList(self, widget):
+		pass
+
+	def OnHideStatusLog(self, widget):
+		pass
+
+	def OnShowChatHelp(self, widget):
 		pass
 
 	def OnEnter(self, widget):
@@ -1849,6 +1929,13 @@ class SearchTab:
 		self.filtersCheck.connect("toggled", self.OnToggleFilters)
 		self.hbox6.pack_start(self.filtersCheck, False, True, 0)
 
+		self.RememberCheckButton = gtk.CheckButton()
+		self.tooltips.set_tip(self.RememberCheckButton, _("This search will be opened the next time you start Nicotine+ and will send out new search requests after a server-set intervals (usually around one hour)"))
+		self.RememberCheckButton.set_label(_("Wish"))
+		self.RememberCheckButton.show()
+		self.RememberCheckButton.connect("toggled", self.OnToggleRemember)
+		self.hbox6.pack_start(self.RememberCheckButton, False, False, 0)
+
 		self.button2 = gtk.Button()
 		self.tooltips.set_tip(self.button2, _("Stop new search results from being displayed"))
 		self.button2.show()
@@ -1902,13 +1989,6 @@ class SearchTab:
 
 		self.hbox6.pack_start(self.button3, False, False, 0)
 
-		self.RememberCheckButton = gtk.CheckButton()
-		self.tooltips.set_tip(self.RememberCheckButton, _("This search will be opened the next time you start Nicotine+ and will send out new search requests after a server-set intervals (usually around one hour)"))
-		self.RememberCheckButton.set_label(_("Remember"))
-		self.RememberCheckButton.show()
-		self.RememberCheckButton.connect("toggled", self.OnToggleRemember)
-		self.hbox6.pack_start(self.RememberCheckButton, False, False, 0)
-
 		self.vbox7.pack_start(self.hbox6, False, True, 3)
 
 		self.Filters = gtk.HBox(False, 0)
@@ -1924,6 +2004,7 @@ class SearchTab:
 		self.FilterIn.show()
 
 		self.FilterInEntry = self.FilterIn.child
+		self.tooltips.set_tip(self.FilterInEntry, _(". = any character, * = 0 or more of the proceeding character, | = seperator, [a-zA-Z] = any single latin character"))
 		self.FilterInEntry.connect("activate", self.OnRefilter)
 
 		self.FilterIn.set_model(self.FilterIn_List)
@@ -2019,13 +2100,13 @@ class SearchTab:
 	def OnToggleFilters(self, widget):
 		pass
 
+	def OnToggleRemember(self, widget):
+		pass
+
 	def OnIgnore(self, widget):
 		pass
 
 	def OnClose(self, widget):
-		pass
-
-	def OnToggleRemember(self, widget):
 		pass
 
 	def OnRefilter(self, widget):
@@ -2612,6 +2693,7 @@ class UserBrowseTab:
 		self.ExpandButton.set_label(_("Expand / Collapse all"))
 		self.ExpandButton.show()
 		self.ExpandButton.connect("clicked", self.OnExpand)
+
 		self.hbox61.pack_start(self.ExpandButton, False, False, 0)
 
 		self.vbox17.pack_start(self.hbox61, False, False, 0)

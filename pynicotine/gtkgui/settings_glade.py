@@ -1212,17 +1212,6 @@ class BloatFrame:
 		self.ShowTransferButtons.show()
 		self.vboxUI.pack_start(self.ShowTransferButtons, False, False, 0)
 
-		self.hbox177 = gtk.HBox(False, 0)
-		self.hbox177.show()
-		self.hbox177.set_spacing(10)
-
-		self.ReopenPrivateChats = gtk.CheckButton()
-		self.ReopenPrivateChats.set_label(_("Reopen last Private Chat messages"))
-		self.ReopenPrivateChats.show()
-		self.hbox177.pack_start(self.ReopenPrivateChats, False, False, 0)
-
-		self.vboxUI.pack_start(self.hbox177, False, False, 0)
-
 		self.hbox172 = gtk.HBox(False, 0)
 		self.hbox172.show()
 
@@ -1236,6 +1225,13 @@ class BloatFrame:
 		self.hbox172.pack_start(self.SelectChatFont, False, False, 5)
 
 		self.vboxUI.pack_start(self.hbox172, False, True, 0)
+
+		self.frame1 = gtk.Frame()
+		self.frame1.show()
+		self.frame1.set_shadow_type(gtk.SHADOW_NONE)
+
+		self.alignment8 = gtk.Alignment(0, 0.5, 0, 0)
+		self.alignment8.show()
 
 		self.hbox3 = gtk.HBox(False, 0)
 		self.hbox3.show()
@@ -1260,7 +1256,16 @@ class BloatFrame:
 		self.TranslationCombo.set_text_column(0)
 		self.hbox3.pack_start(self.TranslationCombo, False, True, 0)
 
-		self.vboxUI.pack_start(self.hbox3, False, True, 0)
+		self.alignment8.add(self.hbox3)
+
+		self.frame1.add(self.alignment8)
+
+		self.label7 = gtk.Label("")
+		self.label7.set_markup(_("<b>Language</b>"))
+		self.label7.show()
+		self.frame1.set_label_widget(self.label7)
+
+		self.vboxUI.pack_start(self.frame1, False, True, 0)
 
 		self.hbox182 = gtk.HBox(False, 0)
 		self.hbox182.show()
@@ -2618,6 +2623,17 @@ class LogFrame:
 		self.vbox90.pack_start(self.hbox140, False, False, 0)
 
 		self.vbox89.pack_start(self.vbox90, False, False, 0)
+
+		self.hbox177 = gtk.HBox(False, 0)
+		self.hbox177.show()
+		self.hbox177.set_spacing(10)
+
+		self.ReopenPrivateChats = gtk.CheckButton()
+		self.ReopenPrivateChats.set_label(_("Reopen last Private Chat messages"))
+		self.ReopenPrivateChats.show()
+		self.hbox177.pack_start(self.ReopenPrivateChats, False, False, 0)
+
+		self.vbox89.pack_start(self.hbox177, False, False, 0)
 
 		self.Main.add(self.vbox89)
 
