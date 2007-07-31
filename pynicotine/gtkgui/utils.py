@@ -521,7 +521,9 @@ class PopupMenu(gtk.Menu):
 			elif item[0] == 1:
 				menuitem = gtk.MenuItem(item[1])
 				menuitem.set_submenu(item[2])
-				if item[3] is not None:
+				if len(item) == 5 and item[4] is not None and item[3] is not None:
+					menuitem.connect("activate", item[3], item[4])
+				elif item[3] is not None:
 					menuitem.connect("activate", item[3])
 			elif item[0] == "USERMENU":
 				menuitem = gtk.MenuItem(item[1])
@@ -555,7 +557,11 @@ class PopupMenu(gtk.Menu):
 			self.append(menuitem)
 			menuitem.show()
 		return self
-
+				
+	def clear(self):
+		for item in self.get_children():
+			self.remove(item)
+			
 	def set_user(self, user):
 		self.user = user
 		if self.useritem:

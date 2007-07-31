@@ -37,27 +37,15 @@ class Uploads(TransferList):
 			("#" + _("Clear aborted"), self.OnClearAborted, gtk.STOCK_CLEAR),
 			("#" + _("Clear queued"), self.OnClearQueued, gtk.STOCK_CLEAR),
 		)
-		self.popup_menu_users = popup3 = PopupMenu(frame)
-		popup3.setup( 
-			("#" + _("Send _message"), popup3.OnSendMessage, gtk.STOCK_EDIT),
-			("#" + _("Show IP a_ddress"), popup3.OnShowIPaddress, gtk.STOCK_NETWORK),
-			("#" + _("Get user i_nfo"), popup3.OnGetUserInfo, gtk.STOCK_DIALOG_INFO),
-			("#" + _("Brow_se files"), popup3.OnBrowseUser, gtk.STOCK_HARDDISK),
-			("#" + _("Gi_ve privileges"), popup3.OnGivePrivileges, gtk.STOCK_JUMP_TO),
-			("", None),
-			("$" + _("_Add user to list"), popup3.OnAddToList),
-			("$" + _("_Ban this user"), popup3.OnBanUser),
-			("$" + _("_Ignore this user"), popup3.OnIgnoreUser),
-			("#" + _("Select User's Transfers"), self.OnSelectUserTransfer, gtk.STOCK_INDEX),
-		)
 		
+		self.popup_menu_users = PopupMenu(frame)
 			
 		self.popup_menu = popup = PopupMenu(frame)
 		popup.setup(
 			("#" + _("Copy _URL"), self.OnCopyURL, gtk.STOCK_COPY),
 			("#" + _("Copy folder URL"), self.OnCopyDirURL, gtk.STOCK_COPY),
 			("#" + _("Send to _player"), self.OnPlayFiles, gtk.STOCK_MEDIA_PLAY),
-			(1, _("User"), self.popup_menu_users, self.OnPopupMenuUsers),
+			(1, _("User(s)"), self.popup_menu_users, self.OnPopupMenuUsers),
 			("", None),
 			("#" + _("Abor_t"), self.OnAbortTransfer, gtk.STOCK_CANCEL),
 			("#" + _("_Clear"), self.OnClearTransfer, gtk.STOCK_CLEAR),
@@ -216,30 +204,51 @@ class Uploads(TransferList):
 		self.selected_transfers = []
 		self.selected_users = []
 		self.widget.get_selection().selected_foreach(self.SelectedTransfersCallback)
-
-		items = self.popup_menu_users.get_children()
 		
+		self.popup_menu_users.clear()
+		if len(self.selected_users) > 0:
+			items = []
+			for user in self.selected_users:
+				popup = PopupMenu(self.frame)
+				popup.setup(
+					("#" + _("Send _message"), popup.OnSendMessage, gtk.STOCK_EDIT),
+					("#" + _("Show IP a_ddress"), popup.OnShowIPaddress, gtk.STOCK_NETWORK),
+					("#" + _("Get user i_nfo"), popup.OnGetUserInfo, gtk.STOCK_DIALOG_INFO),
+					("#" + _("Brow_se files"), popup.OnBrowseUser, gtk.STOCK_HARDDISK),
+					("#" + _("Gi_ve privileges"), popup.OnGivePrivileges, gtk.STOCK_JUMP_TO),
+					("", None),
+					("$" + _("_Add user to list"), popup.OnAddToList),
+					("$" + _("_Ban this user"), popup.OnBanUser),
+					("$" + _("_Ignore this user"), popup.OnIgnoreUser),
+					("#" + _("Select User's Transfers"), self.OnSelectUserTransfer, gtk.STOCK_INDEX),
+					)
+				popup.set_user(user)
+
+				items.append((1, user, popup, self.OnPopupMenuUser, popup))
+			self.popup_menu_users.setup(*items)
+		return True
+			
+	def OnPopupMenuUser(self, widget, popup=None):
+		if popup is None:
+			return
+		menu = popup
+		user = menu.user
+		items = menu.get_children()
+
 		act = False
-		if len(self.selected_users) == 1:
+		if len(self.selected_users) >= 1:
 			act = True
 		items[0].set_sensitive(act)
 		items[1].set_sensitive(act)
 		items[2].set_sensitive(act)
 		items[3].set_sensitive(act)
 
-		act = False
-		if len(self.selected_users) == 1:
-			user = self.selected_users[0]
-			self.popup_menu_users.set_user(user)
-			
-			act = True
-			items[6].set_active(user in [i[0] for i in self.frame.np.config.sections["server"]["userlist"]])
-			items[7].set_active(user in self.frame.np.config.sections["server"]["banlist"])
-			items[8].set_active(user in self.frame.np.config.sections["server"]["ignorelist"])
+		items[6].set_active(user in [i[0] for i in self.frame.np.config.sections["server"]["userlist"]])
+		items[7].set_active(user in self.frame.np.config.sections["server"]["banlist"])
+		items[8].set_active(user in self.frame.np.config.sections["server"]["ignorelist"])
 		
 		for i in range(4, 9):
 			items[i].set_sensitive(act)
-
 		return True
 
 	def OnPopupMenu(self, widget, event, kind):
@@ -252,34 +261,34 @@ class Uploads(TransferList):
 		self.widget.get_selection().selected_foreach(self.SelectedTransfersCallback)
 
 		self.SelectCurrentRow(event, kind)
+
+		users = len(self.selected_users) > 0
+		multi_users = len(self.selected_users) > 1
+		files = len(self.selected_transfers) > 0
+		multi_files = len(self.selected_transfers) > 1
 		
 		items = self.popup_menu.get_children()
-		if len(self.selected_users) != 1:
-			items[3].set_sensitive(False) # Users Menu
-			act = False
-		else:
+		if users:
 			items[3].set_sensitive(True) # Users Menu
-			if len(self.selected_transfers) == 0:
-				act = False
-			else:
-				act = True
-		items[2].set_sensitive(act) # send to player
-		
-		for i in range(4, 8):
-			items[i].set_sensitive(act)
-			
-		if len(self.selected_users) == 1:
+		else:
+			items[3].set_sensitive(False) # Users Menu
+		if files and not multi_files:
 			act = True
 		else:
 			act = False
-		items[3].set_sensitive(act) #
-			
-		act = False
-		if len(self.selected_transfers) == 1:
-			act = True
 		items[0].set_sensitive(act)
 		items[1].set_sensitive(act)
-		
+
+		if users and files:
+			act = True
+		else:
+			act = False
+		for i in range(4, 8):
+			items[i].set_sensitive(act)
+		items[3].set_sensitive(act) #
+		items[2].set_sensitive(act) # send to player
+
+
 				
 		self.popup_menu.popup(None, None, None, 3, event.time)
 		if kind == "keyboard":

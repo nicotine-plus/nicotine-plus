@@ -39,19 +39,8 @@ class Downloads(TransferList):
 			("#" + _("Clear aborted"), self.OnClearAborted, gtk.STOCK_CLEAR),
 			("#" + _("Clear queued"), self.OnClearQueued, gtk.STOCK_CLEAR),
 		)
-		self.popup_menu_users = popup3 = PopupMenu(frame)
-		popup3.setup( 
-			("#" + _("Send _message"), popup3.OnSendMessage, gtk.STOCK_EDIT),
-			("#" + _("Show IP a_ddress"), popup3.OnShowIPaddress, gtk.STOCK_NETWORK),
-			("#" + _("Get user i_nfo"), popup3.OnGetUserInfo, gtk.STOCK_DIALOG_INFO),
-			("#" + _("Brow_se files"), popup3.OnBrowseUser, gtk.STOCK_HARDDISK),
-			("#" + _("Gi_ve privileges"), popup3.OnGivePrivileges, gtk.STOCK_JUMP_TO),
-			("", None),
-			("$" + _("_Add user to list"), popup3.OnAddToList),
-			("$" + _("_Ban this user"), popup3.OnBanUser),
-			("$" + _("_Ignore this user"), popup3.OnIgnoreUser),
-			("#" + _("Select User's Transfers"), self.OnSelectUserTransfer, gtk.STOCK_INDEX),
-		)
+		self.popup_menu_users = PopupMenu(frame)
+
 		self.popup_menu = popup = PopupMenu(frame)
 		popup.setup(
 			("#" + _("Get place in _queue"), self.OnGetPlaceInQueue, gtk.STOCK_INDEX),
@@ -61,7 +50,7 @@ class Downloads(TransferList):
 			("#" + _("Send to _player"), self.OnPlayFiles, gtk.STOCK_MEDIA_PLAY),
 			("#" + _("View Metadata of file(s)"), self.OnDownloadMeta, gtk.STOCK_PROPERTIES),
 			("#" + _("Open Directory"), self.OnOpenDirectory, gtk.STOCK_OPEN),
-			(1, _("User"), self.popup_menu_users, self.OnPopupMenuUsers),
+			(1, _("User(s)"), self.popup_menu_users, self.OnPopupMenuUsers),
 			("#" + _("Search"), self.OnFileSearch, gtk.STOCK_FIND),
 			("", None),
 			("#" + _("_Retry"), self.OnRetryTransfer, gtk.STOCK_REDO),
@@ -220,10 +209,10 @@ class Downloads(TransferList):
 		self.select_transfers()
 		self.OnAbortTransfer(widget, False)
 		
-	def OnSelectUserTransfer(self, widet):
-		if len(self.selected_users) != 1:
+	def OnSelectUserTransfer(self, widget):
+		if len(self.selected_users) == 0:
 			return
-		selected_user = self.selected_users[0]
+		selected_user = widget.parent.user
 		
 		sel = self.frame.DownloadList.get_selection()
 		fmodel = self.frame.DownloadList.get_model()
@@ -282,30 +271,51 @@ class Downloads(TransferList):
 		self.selected_transfers = []
 		self.selected_users = []
 		self.widget.get_selection().selected_foreach(self.SelectedTransfersCallback)
+	
+		self.popup_menu_users.clear()
+		if len(self.selected_users) > 0:
+			items = []
+			for user in self.selected_users:
+				popup =  PopupMenu(self.frame)
+				popup.setup(
+					("#" + _("Send _message"), popup.OnSendMessage, gtk.STOCK_EDIT),
+					("#" + _("Show IP a_ddress"), popup.OnShowIPaddress, gtk.STOCK_NETWORK),
+					("#" + _("Get user i_nfo"), popup.OnGetUserInfo, gtk.STOCK_DIALOG_INFO),
+					("#" + _("Brow_se files"), popup.OnBrowseUser, gtk.STOCK_HARDDISK),
+					("#" + _("Gi_ve privileges"), popup.OnGivePrivileges, gtk.STOCK_JUMP_TO),
+					("", None),
+					("$" + _("_Add user to list"), popup.OnAddToList),
+					("$" + _("_Ban this user"), popup.OnBanUser),
+					("$" + _("_Ignore this user"), popup.OnIgnoreUser),
+					("#" + _("Select User's Transfers"), self.OnSelectUserTransfer, gtk.STOCK_INDEX),
+					)
+				popup.set_user(user)
 
-		items = self.popup_menu_users.get_children()
+				items.append((1, user, popup, self.OnPopupMenuUser, popup))
+			self.popup_menu_users.setup(*items)
+		return True
+			
+	def OnPopupMenuUser(self, widget, popup=None):
+		if popup is None:
+			return
+		menu = popup
+		user = menu.user
+		items = menu.get_children()
 		
 		act = False
-		if len(self.selected_users) == 1:
+		if len(self.selected_users) >= 1:
 			act = True
 		items[0].set_sensitive(act)
 		items[1].set_sensitive(act)
 		items[2].set_sensitive(act)
 		items[3].set_sensitive(act)
 
-		act = False
-		if len(self.selected_users) == 1:
-			user = self.selected_users[0]
-			self.popup_menu_users.set_user(user)
-			
-			act = True
-			items[6].set_active(user in [i[0] for i in self.frame.np.config.sections["server"]["userlist"]])
-			items[7].set_active(user in self.frame.np.config.sections["server"]["banlist"])
-			items[8].set_active(user in self.frame.np.config.sections["server"]["ignorelist"])
+		items[6].set_active(user in [i[0] for i in self.frame.np.config.sections["server"]["userlist"]])
+		items[7].set_active(user in self.frame.np.config.sections["server"]["banlist"])
+		items[8].set_active(user in self.frame.np.config.sections["server"]["ignorelist"])
 		
 		for i in range(4, 9):
 			items[i].set_sensitive(act)
-
 		return True
 
 					
@@ -318,41 +328,44 @@ class Downloads(TransferList):
 		self.selected_users = []
 		self.widget.get_selection().selected_foreach(self.SelectedTransfersCallback)
 		
+		users = len(self.selected_users) > 0
+		multi_users = len(self.selected_users) > 1
+		files = len(self.selected_transfers) > 0
+		multi_files = len(self.selected_transfers) > 1
 		
 		self.SelectCurrentRow(event, kind)
 		
 		items = self.popup_menu.get_children()
-		if len(self.selected_users) != 1:
-			items[6].set_sensitive(False) # Users Menu
+		if users:
+			items[7].set_sensitive(True) # Users Menu
 		else:
-			items[6].set_sensitive(True) # Users Menu
-		if len(self.selected_transfers) == 0:
-			act = False
-		else:
+			items[7].set_sensitive(False) # Users Menu
+
+		if files:
 			act = True
+		else:
+			act = False
 		items[0].set_sensitive(act) # Place
 		items[4].set_sensitive(act) # Send to player
 		items[5].set_sensitive(act) # View Meta
-		
+		items[8].set_sensitive(act) # Search filename
 			
 		
 		act = False
-		if len(self.selected_transfers) == 1:
+		if not multi_files and files:
 			act = True
 		items[2].set_sensitive(act) # Copy URL
 		items[3].set_sensitive(act) # Copy Folder URL
 		
 		
-		if len(self.selected_users) == 0 or len(self.selected_transfers) == 0:
+		if not users or not files:
 			# Disable options
 			# Abort, Abort and Remove, retry, clear
 			act = False
-			for i in range(7, 13):
-				items[i].set_sensitive(act)
 		else:
 			act = True
-			for i in range(7, 13):
-				items[i].set_sensitive(act)
+		for i in range(10, 15):
+			items[i].set_sensitive(act)
 
 		
 		self.popup_menu.popup(None, None, None, 3, event.time)
