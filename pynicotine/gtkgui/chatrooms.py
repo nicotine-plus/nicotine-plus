@@ -85,7 +85,7 @@ class RoomsControl:
 		frame.roomlist.RoomsList.set_headers_clickable(True)
 
 		frame.roomlist.HideRoomList.connect("clicked", self.OnHideRoomList)
-		
+
 		self.frame.ChatNotebook.connect("switch-page", self.OnSwitchPage)
 		try:
 			self.frame.ChatNotebook.connect("page-reordered", self.OnReorderedPage)
@@ -353,7 +353,9 @@ class ChatRoom(ChatRoomTab):
 		config = self.frame.np.config.sections
 		if not self.frame.np.config.sections["ticker"]["hide"]:
 			self.Ticker.show()
-
+		if self.frame.np.config.sections["ui"]["chat_hidebuttons"]:
+			self.OnHideChatButtons(True)
+			
 		if self.frame.translux:
 			self.tlux_roomlog = lambda: self.RoomLog.get_window(gtk.TEXT_WINDOW_TEXT)
 			self.tlux_chat = lambda: self.ChatScroll.get_window(gtk.TEXT_WINDOW_TEXT)
@@ -530,6 +532,15 @@ class ChatRoom(ChatRoomTab):
 	def OnShowChatHelp(self, widget):
 		self.frame.OnAboutChatroomCommands(widget)
 
+	def OnHideChatButtons(self, hide=False):
+
+		for widget in self.HideStatusLog, self.HideUserList, self.ShowChatHelp:
+			if hide:
+				widget.hide()
+			else:
+				widget.show()
+				
+				
 	def OnHideStatusLog(self, widget):
 		act = widget.get_active()
 		if act:

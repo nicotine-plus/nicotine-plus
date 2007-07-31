@@ -90,11 +90,61 @@
                       </widget>
                     </child>
                     <child>
-                      <widget class="GtkCheckMenuItem" id="show_debug_info1">
+                      <widget class="GtkImageMenuItem" id="exit1">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">Show _debug info</property>
+                        <property name="label" translatable="yes">E_xit</property>
                         <property name="use_underline">True</property>
-                        <signal name="activate" handler="OnShowDebug"/>
+                        <signal name="activate" handler="OnExit"/>
+                        <accelerator key="Q" modifiers="GDK_CONTROL_MASK" signal="activate"/>
+                        <child internal-child="image">
+                          <widget class="GtkImage" id="image346">
+                            <property name="visible">True</property>
+                            <property name="stock">gtk-quit</property>
+                            <property name="icon_size">1</property>
+                          </widget>
+                        </child>
+                      </widget>
+                    </child>
+                  </widget>
+                </child>
+              </widget>
+            </child>
+            <child>
+              <widget class="GtkMenuItem" id="edit1">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">_Edit</property>
+                <property name="use_underline">True</property>
+                <child>
+                  <widget class="GtkMenu" id="edit_menu">
+                    <child>
+                      <widget class="GtkImageMenuItem" id="settings1">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">_Settings</property>
+                        <property name="use_underline">True</property>
+                        <signal name="activate" handler="OnSettings"/>
+                        <accelerator key="S" modifiers="GDK_MOD1_MASK" signal="activate"/>
+                        <child internal-child="image">
+                          <widget class="GtkImage" id="menu-item-image44">
+                            <property name="visible">True</property>
+                            <property name="stock">gtk-preferences</property>
+                            <property name="icon_size">1</property>
+                          </widget>
+                        </child>
+                      </widget>
+                    </child>
+                    <child>
+                      <widget class="GtkImageMenuItem" id="now_playing1">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Configure _Now Playing</property>
+                        <property name="use_underline">True</property>
+                        <signal name="activate" handler="OnNowPlayingConfigure"/>
+                        <child internal-child="image">
+                          <widget class="GtkImage" id="menu-item-image43">
+                            <property name="visible">True</property>
+                            <property name="stock">gtk-preferences</property>
+                            <property name="icon_size">1</property>
+                          </widget>
+                        </child>
                       </widget>
                     </child>
                     <child>
@@ -109,6 +159,19 @@
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="OnHideLog"/>
                         <accelerator key="H" modifiers="GDK_MOD1_MASK" signal="activate"/>
+                      </widget>
+                    </child>
+                    <child>
+                      <widget class="GtkCheckMenuItem" id="show_debug_info1">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Show _debug info</property>
+                        <property name="use_underline">True</property>
+                        <signal name="activate" handler="OnShowDebug"/>
+                      </widget>
+                    </child>
+                    <child>
+                      <widget class="GtkSeparatorMenuItem" id="scheidingslijn6">
+                        <property name="visible">True</property>
                       </widget>
                     </child>
                     <child>
@@ -130,6 +193,15 @@
                       </widget>
                     </child>
                     <child>
+                      <widget class="GtkCheckMenuItem" id="HideChatButtons">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Hide chat room log and list toggles</property>
+                        <property name="use_underline">True</property>
+                        <signal name="toggled" handler="OnHideChatButtons"/>
+                        <accelerator key="T" modifiers="GDK_MOD1_MASK" signal="activate"/>
+                      </widget>
+                    </child>
+                    <child>
                       <widget class="GtkCheckMenuItem" id="buddylist_in_chatrooms1">
                         <property name="visible">True</property>
                         <property name="label" translatable="yes">Buddylist in Chatrooms</property>
@@ -144,49 +216,13 @@
                       </widget>
                     </child>
                     <child>
-                      <widget class="GtkImageMenuItem" id="settings1">
-                        <property name="visible">True</property>
-                        <property name="label" translatable="yes">_Settings</property>
-                        <property name="use_underline">True</property>
-                        <signal name="activate" handler="OnSettings"/>
-                        <accelerator key="S" modifiers="GDK_MOD1_MASK" signal="activate"/>
-                        <child internal-child="image">
-                          <widget class="GtkImage" id="image341">
-                            <property name="visible">True</property>
-                            <property name="stock">gtk-preferences</property>
-                            <property name="icon_size">1</property>
-                          </widget>
-                        </child>
-                      </widget>
-                    </child>
-                    <child>
-                      <widget class="GtkImageMenuItem" id="now_playing1">
-                        <property name="visible">True</property>
-                        <property name="label" translatable="yes">Configure _Now Playing</property>
-                        <property name="use_underline">True</property>
-                        <signal name="activate" handler="OnNowPlayingConfigure"/>
-                        <child internal-child="image">
-                          <widget class="GtkImage" id="image342">
-                            <property name="visible">True</property>
-                            <property name="stock">gtk-preferences</property>
-                            <property name="icon_size">1</property>
-                          </widget>
-                        </child>
-                      </widget>
-                    </child>
-                    <child>
-                      <widget class="GtkSeparatorMenuItem" id="scheidingslijn6">
-                        <property name="visible">True</property>
-                      </widget>
-                    </child>
-                    <child>
                       <widget class="GtkImageMenuItem" id="rescan1">
                         <property name="visible">True</property>
                         <property name="label" translatable="yes">_Rescan shares</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="OnRescan"/>
                         <child internal-child="image">
-                          <widget class="GtkImage" id="image343">
+                          <widget class="GtkImage" id="menu-item-image42">
                             <property name="visible">True</property>
                             <property name="stock">gtk-refresh</property>
                             <property name="icon_size">1</property>
@@ -201,7 +237,7 @@
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="OnBuddyRescan"/>
                         <child internal-child="image">
-                          <widget class="GtkImage" id="image344">
+                          <widget class="GtkImage" id="menu-item-image41">
                             <property name="visible">True</property>
                             <property name="stock">gtk-refresh</property>
                             <property name="icon_size">1</property>
@@ -216,30 +252,9 @@
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="OnBrowseMyShares"/>
                         <child internal-child="image">
-                          <widget class="GtkImage" id="image345">
+                          <widget class="GtkImage" id="menu-item-image40">
                             <property name="visible">True</property>
                             <property name="stock">gtk-harddisk</property>
-                            <property name="icon_size">1</property>
-                          </widget>
-                        </child>
-                      </widget>
-                    </child>
-                    <child>
-                      <widget class="GtkSeparatorMenuItem" id="scheidingslijn2">
-                        <property name="visible">True</property>
-                      </widget>
-                    </child>
-                    <child>
-                      <widget class="GtkImageMenuItem" id="exit1">
-                        <property name="visible">True</property>
-                        <property name="label" translatable="yes">E_xit</property>
-                        <property name="use_underline">True</property>
-                        <signal name="activate" handler="OnExit"/>
-                        <accelerator key="Q" modifiers="GDK_CONTROL_MASK" signal="activate"/>
-                        <child internal-child="image">
-                          <widget class="GtkImage" id="image346">
-                            <property name="visible">True</property>
-                            <property name="stock">gtk-quit</property>
                             <property name="icon_size">1</property>
                           </widget>
                         </child>
@@ -398,7 +413,7 @@
             <child>
               <widget class="GtkMenuItem" id="help1">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes">H_elp</property>
+                <property name="label" translatable="yes">Hel_p</property>
                 <property name="use_underline">True</property>
                 <child>
                   <widget class="GtkMenu" id="help1_menu">
@@ -1504,7 +1519,7 @@
                             <property name="visible">True</property>
                             <child internal-child="entry">
                               <widget class="GtkEntry" id="SearchEntry">
-                                <property name="tooltip" translatable="yes">Search patterns: with a word = term, without a word = -term, phrase = "term1 term2 term3"</property>
+                                <property name="tooltip" translatable="yes">Search patterns: with a word = term, without a word = -term</property>
                                 <signal name="activate" handler="OnSearch"/>
                               </widget>
                             </child>

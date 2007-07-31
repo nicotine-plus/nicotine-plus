@@ -247,7 +247,7 @@ class NicotineFrame(MainWindow):
 		else:
 			self.vpaned1.pack2(self.LogScrolledWindow, False, True)
 			self.hide_log_window1.set_active(0)
-		
+
 		if self.np.config.sections["ui"]["roomlistcollapsed"]:
 			self.hide_room_list1.set_active(1)
 		else:
@@ -388,7 +388,13 @@ class NicotineFrame(MainWindow):
 		self.check_privileges1.set_sensitive(0)
 
 		self.gstreamer = gstreamer()
-		
+
+
+		if self.np.config.sections["ui"]["chat_hidebuttons"]:
+			self.HideChatButtons.set_active(1)
+		else:
+			self.HideChatButtons.set_active(0)
+
 		if self.np.config.sections["transfers"]["rescanonstartup"]:
 			self.OnRescan()
 		img = gtk.Image()
@@ -1709,7 +1715,17 @@ class NicotineFrame(MainWindow):
 		dlg = AboutFiltersDialog(self.MainWindow)
 		dlg.run()
 		dlg.destroy()
+		
+	def OnHideChatButtons(self, widget):
+		hide = widget.get_active()
+		self.np.config.sections["ui"]["chat_hidebuttons"] = hide
+		if self.chatrooms is None:
+			return
+		for room in self.chatrooms.roomsctrl.joinedrooms.values():
+			room.OnHideChatButtons(hide)
 
+		self.np.config.writeConfig()
+		
 	def OnHideLog(self, widget):
 		active = widget.get_active()
 		self.np.config.sections["logging"]["logcollapsed"] = active
