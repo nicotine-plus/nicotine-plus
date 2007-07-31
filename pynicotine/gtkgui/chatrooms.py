@@ -376,9 +376,9 @@ class ChatRoom(ChatRoomTab):
 			if self.encoding == item[1]:
 				self.Encoding.set_active_iter(self.Elist[self.encoding])
 
-		self.Ticker.label.connect("button_press_event", self.OnTickerClicked)
-		self.Ticker.label.connect("focus-in-event", self.OnTickerFocus)
-		self.Ticker.label.connect("focus-out-event", self.OnTickerFocus)
+		self.Ticker.entry.connect("button_press_event", self.OnTickerClicked)
+		self.Ticker.entry.connect("focus-in-event", self.OnTickerFocus)
+		self.Ticker.entry.connect("focus-out-event", self.OnTickerFocus)
 		
 		if self.frame.SEXY and self.frame.np.config.sections["ui"]["spellcheck"]:
 			import sexy
@@ -896,6 +896,7 @@ class ChatRoom(ChatRoomTab):
 		self.frame.SetTextBG(self.ChatEntry)
 		self.frame.SetTextBG(self.AutoJoin)
 		self.frame.SetTextBG(self.Log)
+		self.frame.SetTextBG(self.Ticker.entry)
 		
 		
 	def getUserStatusColor(self, status):
@@ -964,6 +965,7 @@ class ChatRoom(ChatRoomTab):
 		self.frame.SetTextBG(self.ChatEntry)
 		self.frame.SetTextBG(self.AutoJoin)
 		self.frame.SetTextBG(self.Log)
+		self.frame.SetTextBG(self.Ticker.entry)
 				
 	def OnLeave(self, widget = None):
 		if self.leaving:
