@@ -435,22 +435,21 @@ class SearchTreeModel(FastListModel):
 		l = len(self.data)
 		encode = self.frame.np.transfers.encode
 		returned = 0
-		#[Filename, user, size, speed, queue, immediatedl, bitrate, length, directory, bitrate, token, country, Status]
+
 		for r in results:
-			user = r[1]
-			filename = encode(r[0], user)
-			size = long(r[2])
-			r[2] = Humanize(size)
-			speed = r[3]
-			r[3] = Humanize(speed)
-			queue = r[4]
-			r[4] = Humanize(queue)
-			#r[12] # status
-			row = [ix] + [filename, user] + r[2:8] + [encode(r[8], user)] + r[9:12] + [size, speed, queue] + [r[12]]
+
+			filename, user, size, speed, queue, immediatedl, h_bitrate, length, directory, bitrate, fullpath,  country, status = r
+	
+			h_size = Humanize(long(size))
+			h_speed = Humanize(speed)
+			h_queue = Humanize(queue)
+
+			row = [ix, filename, user, h_size, h_speed, h_queue, immediatedl, h_bitrate, length, directory,  bitrate, fullpath, country,  size, speed, queue, status]
 
 			self.all_data.append(row)
 			if not self.filters or self.check_filter(row):
-				self.data.append(row)
+				encoded_row = [ix, encode(filename, user), user, h_size, h_speed, h_queue, immediatedl, h_bitrate, length, encode(directory, user), bitrate, encode(fullpath, user), country,  size, speed, queue, status]
+				self.data.append(encoded_row)
 				iter = self.get_iter((l,))
 				self.row_inserted((l,), iter)
 				l += 1
@@ -554,6 +553,7 @@ class SearchTreeModel(FastListModel):
 		return True
 	
 	def set_filters(self, enable, f_in, f_out, size, bitrate, freeslot, country):
+		encode = self.frame.np.transfers.encode
 		if not enable:
 			self.filters = None
 			self.data = self.all_data[:]
@@ -590,7 +590,11 @@ class SearchTreeModel(FastListModel):
 		self.data = []
 		for row in self.all_data:
 			if self.check_filter(row):
-				self.data.append(row)
+				ix, filename, user, h_size, h_speed, h_queue, immediatedl, h_bitrate, length, directory,  bitrate, fullpath, country,  size, speed, queue, status = row
+				
+				encoded_row = [ix, encode(filename, user), user, h_size, h_speed, h_queue, immediatedl, h_bitrate, length, encode(directory, user), bitrate, encode( fullpath, user), country,  size, speed, queue, status]
+
+				self.data.append(encoded_row)
 	
 class Search(SearchTab):
 	def __init__(self, searches, text, id, mode, remember):
