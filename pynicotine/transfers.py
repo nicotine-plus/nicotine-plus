@@ -643,7 +643,7 @@ class Transfers:
 					i.transfertimer.cancel()
 				if not incompletedir:
 					if i.path and i.path[0] == '/':
-						incompletedir = self.CleanPath(i.path, i.user)
+						incompletedir = self.CleanPath(i.path)
 					else:
 						incompletedir = os.path.join(downloaddir, self.CleanPath(i.path))
 				incompletedir = self.encode(incompletedir, i.user)
