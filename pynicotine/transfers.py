@@ -105,7 +105,8 @@ class Transfers:
 			self.downloads.append(Transfer(user = i[0], filename=i[1], path=i[2], status=status, size=size, currentbytes=currentbytes, bitrate=bitrate, length=length))
 			getstatus[i[0]] = ""
 		for i in getstatus.keys():
-			self.queue.put(slskmessages.AddUser(i))
+			if i not in self.eventprocessor.watchedusers:
+				self.queue.put(slskmessages.AddUser(i))
 			self.queue.put(slskmessages.GetUserStatus(i))
 		self.SaveDownloads()
 		self.users = users
@@ -233,7 +234,8 @@ class Transfers:
 				pass
 			
 		if status is None:
-			self.queue.put(slskmessages.AddUser(user))
+			if user not in self.eventprocessor.watchedusers:
+				self.queue.put(slskmessages.AddUser(user))
 			self.queue.put(slskmessages.GetUserStatus(user))
 		if transfer.status is not 'Filtered':
 			transfer.req = newId()
@@ -303,7 +305,8 @@ class Transfers:
 				i.status = "Cannot connect"
 				i.req = None
 				self.downloadspanel.update(i)
-				self.queue.put(slskmessages.AddUser(i.user))
+				if i.user not in self.eventprocessor.watchedusers:
+					self.queue.put(slskmessages.AddUser(i.user))
 				self.queue.put(slskmessages.GetUserStatus(i.user))
 		for i in self.uploads:
 			if i.req == req:
@@ -314,7 +317,8 @@ class Transfers:
 					if j.user == i.user:
 						j.timequeued = curtime
 				self.uploadspanel.update(i)
-				self.queue.put(slskmessages.AddUser(i.user))
+				if i.user not in self.eventprocessor.watchedusers:
+					self.queue.put(slskmessages.AddUser(i.user))
 				self.queue.put(slskmessages.GetUserStatus(i.user))
 				self.checkUploadQueue()
 
@@ -388,7 +392,8 @@ class Transfers:
 					transfer = Transfer(user = user, filename=msg.file , path=path, status = 'Getting status', size=msg.filesize, req=msg.req)
 					self.downloads.append(transfer)
 					self.SaveDownloads()
-					self.queue.put(slskmessages.AddUser(user))
+					if user not in self.eventprocessor.watchedusers:
+						self.queue.put(slskmessages.AddUser(user))
 					self.queue.put(slskmessages.GetUserStatus(user))
 					if user != self.eventprocessor.config.sections["server"]["login"]:
 						response = slskmessages.TransferResponse(conn, 0, reason = "Queued", req = transfer.req)
@@ -586,7 +591,8 @@ class Transfers:
 				self.uploadspanel.update(i)
 				if msg.reason == "Queued":
 					if i.user not in self.users or self.users[i.user].status is None:
-						self.queue.put(slskmessages.AddUser(i.user))
+						if i.user not in self.eventprocessor.watchedusers:
+							self.queue.put(slskmessages.AddUser(i.user))
 						self.queue.put(slskmessages.GetUserStatus(i.user))
 					if i in self.uploads:
 						if i.transfertimer is not None:
@@ -622,7 +628,8 @@ class Transfers:
 				continue
 			i.status = "Cannot connect"
 			i.req = None
-			self.queue.put(slskmessages.AddUser(i.user))
+			if i.user not in self.eventprocessor.watchedusers:
+				self.queue.put(slskmessages.AddUser(i.user))
 			self.queue.put(slskmessages.GetUserStatus(i.user))
 			self.downloadspanel.update(i)
 			self.uploadspanel.update(i)
