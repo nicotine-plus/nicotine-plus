@@ -529,16 +529,20 @@ class ChatRoom(ChatRoomTab):
 		act = widget.get_active()
 		if act:
 			self.RoomLogWindow.hide()
+			self.HideStatusLogImage.set_from_stock(gtk.STOCK_GO_DOWN, 1)
 		else:
 			self.RoomLogWindow.show()
+			self.HideStatusLogImage.set_from_stock(gtk.STOCK_GO_UP, 1)
 
 
 	def OnHideUserList(self, widget):
 		act = widget.get_active()
 		if act:
 			self.vbox5.hide()
+			self.HideUserListImage.set_from_stock(gtk.STOCK_GO_BACK, 1)
 		else:
 			self.vbox5.show()
+			self.HideUserListImage.set_from_stock(gtk.STOCK_GO_FORWARD, 1)
 
 	
 	def TickerSet(self, msg):
