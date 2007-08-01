@@ -45,6 +45,8 @@ class Uploads(TransferList):
 			("#" + _("Copy _URL"), self.OnCopyURL, gtk.STOCK_COPY),
 			("#" + _("Copy folder URL"), self.OnCopyDirURL, gtk.STOCK_COPY),
 			("#" + _("Send to _player"), self.OnPlayFiles, gtk.STOCK_MEDIA_PLAY),
+			("#" + _("Open Directory"), self.OnOpenDirectory, gtk.STOCK_OPEN),
+			("#" + _("Search"), self.OnFileSearch, gtk.STOCK_FIND),
 			(1, _("User(s)"), self.popup_menu_users, self.OnPopupMenuUsers),
 			("", None),
 			("#" + _("Abor_t"), self.OnAbortTransfer, gtk.STOCK_CANCEL),
@@ -91,6 +93,31 @@ class Uploads(TransferList):
 		win.set_title(_("Nicotine+")+": "+_("Clear Queued Transfers"))
 		win.set_icon( self.frame.images["n"])
 		win.show()
+
+	def OnOpenDirectory(self, widget):
+
+		downloaddir =  self.frame.np.config.sections["transfers"]["downloaddir"]
+		incompletedir = self.frame.np.config.sections["transfers"]["incompletedir"]
+		if incompletedir == "":
+			incompletedir = downloaddir
+		filemanager = self.frame.np.config.sections["ui"]["filemanager"]
+		transfer = self.selected_transfers[0]
+		
+		command = ""
+		if os.path.exists(transfer.path):
+
+			command = filemanager.replace("$", "\"%s\"" % transfer.path)
+		else:
+			command = filemanager.replace("$", "\"%s\"" % incompletedir)
+
+		os.system("%s  &" % command)
+		
+	def OnFileSearch(self, widget):
+		self.select_transfers()
+		for transfer in self.selected_transfers:
+			self.frame.SearchEntry.set_text(transfer.filename.rsplit("\\", 1)[1])
+			self.frame.MainNotebook.set_current_page(4)
+			break
 		
 	def OnExpandUploads(self, widget):
 
@@ -270,9 +297,9 @@ class Uploads(TransferList):
 		
 		items = self.popup_menu.get_children()
 		if users:
-			items[3].set_sensitive(True) # Users Menu
+			items[5].set_sensitive(True) # Users Menu
 		else:
-			items[3].set_sensitive(False) # Users Menu
+			items[5].set_sensitive(False) # Users Menu
 		if files and not multi_files:
 			act = True
 		else:
@@ -284,13 +311,11 @@ class Uploads(TransferList):
 			act = True
 		else:
 			act = False
-		for i in range(4, 8):
+		for i in range(3, 5) + range(6, 10):
 			items[i].set_sensitive(act)
-		items[3].set_sensitive(act) #
+
 		items[2].set_sensitive(act) # send to player
 
-
-				
 		self.popup_menu.popup(None, None, None, 3, event.time)
 		if kind == "keyboard":
 			widget.emit_stop_by_name("key_press_event")

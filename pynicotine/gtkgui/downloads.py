@@ -50,8 +50,8 @@ class Downloads(TransferList):
 			("#" + _("Send to _player"), self.OnPlayFiles, gtk.STOCK_MEDIA_PLAY),
 			("#" + _("View Metadata of file(s)"), self.OnDownloadMeta, gtk.STOCK_PROPERTIES),
 			("#" + _("Open Directory"), self.OnOpenDirectory, gtk.STOCK_OPEN),
-			(1, _("User(s)"), self.popup_menu_users, self.OnPopupMenuUsers),
 			("#" + _("Search"), self.OnFileSearch, gtk.STOCK_FIND),
+			(1, _("User(s)"), self.popup_menu_users, self.OnPopupMenuUsers),
 			("", None),
 			("#" + _("_Retry"), self.OnRetryTransfer, gtk.STOCK_REDO),
 			("", None),
@@ -185,7 +185,7 @@ class Downloads(TransferList):
 			arg_list.append(complete_path)
 		else:
 			arg_list.append(incompletedir)
-
+		#os.system("%s %s &")
 		os.spawnvp(os.P_WAIT, filemanager, arg_list)
 	
 	def RebuildTransfers(self):
@@ -349,6 +349,7 @@ class Downloads(TransferList):
 		items[0].set_sensitive(act) # Place
 		items[4].set_sensitive(act) # Send to player
 		items[5].set_sensitive(act) # View Meta
+		items[6].set_sensitive(act) # File manager
 		items[8].set_sensitive(act) # Search filename
 			
 		

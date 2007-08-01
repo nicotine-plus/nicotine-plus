@@ -619,10 +619,11 @@ class ChatRoom(ChatRoomTab):
 			self.changecolour(self.tag_users[user], color)
 		else:
 			self.tag_users[user] = self.makecolour(self.ChatScroll.get_buffer(), color, user)
+		timestamp_format=self.frame.np.config.sections["logging"]["rooms_timestamp"]
 		if user != login:
-			self.lines.append(AppendLine(self.ChatScroll, self.frame.CensorChat(self.frame.np.decode(line, self.encoding)), tag, username=user, usertag=self.tag_users[user]))
+			self.lines.append(AppendLine(self.ChatScroll, self.frame.CensorChat(self.frame.np.decode(line, self.encoding)), tag, username=user, usertag=self.tag_users[user], timestamp_format=timestamp_format))
 		else:
-			self.lines.append(AppendLine(self.ChatScroll, self.frame.np.decode(line, self.encoding), tag, username=user, usertag=self.tag_users[user]))
+			self.lines.append(AppendLine(self.ChatScroll, self.frame.np.decode(line, self.encoding), tag, username=user, usertag=self.tag_users[user], timestamp_format=timestamp_format))
 		if self.Log.get_active():
 			self.logfile = WriteLog(self.logfile, self.frame.np.config.sections["logging"]["logsdir"], self.room, line)
 			

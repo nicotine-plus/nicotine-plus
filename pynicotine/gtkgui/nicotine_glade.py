@@ -144,7 +144,7 @@ class MainWindow:
 
 		self.edit_menu.append(self.hide_tickers1)
 
-		self.HideChatButtons = gtk.CheckMenuItem(_("Hide Chatrooms log and list buttons"))
+		self.HideChatButtons = gtk.CheckMenuItem(_("Hide chat room log and list toggles"))
 		self.HideChatButtons.show()
 		self.HideChatButtons.connect("toggled", self.OnHideChatButtons)
 		self.HideChatButtons.add_accelerator("activate", self.accel_group, gtk.gdk.keyval_from_name("T"), gtk.gdk.MOD1_MASK, gtk.ACCEL_VISIBLE)

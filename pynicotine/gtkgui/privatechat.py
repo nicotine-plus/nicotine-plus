@@ -115,7 +115,7 @@ class PrivateChats(IconNotebook):
 			text = "CTCP VERSION"
 		self.SendMessage(msg.user, None)
 		tab = self.users[msg.user]
-		tab.ShowMessage(text, status)
+		tab.ShowMessage(text, status, msg.timestamp)
 		if ctcpversion and self.frame.np.config.sections["server"]["ctcpmsgs"] == 0:
 			self.SendMessage(msg.user, "Nicotine-Plus %s" % version)
 		self.request_changed(tab.Main)
@@ -256,7 +256,7 @@ class PrivateChat(PrivateChatTab):
 			f.close()
 			s = d.split("\n")
 			for l in s[-8:-1]:
-				AppendLine(self.ChatScroll, l + "\n", self.tag_hilite, "", username=self.user, usertag=self.tag_hilite)
+				AppendLine(self.ChatScroll, l + "\n", self.tag_hilite, timestamp_format="", username=self.user, usertag=self.tag_hilite)
 				
 		except IOError, e:
 			pass
@@ -268,11 +268,13 @@ class PrivateChat(PrivateChatTab):
 		self.Main.destroy()
 		
 	def Login(self):
-		AppendLine(self.ChatScroll, _("--- reconnected ---"), self.tag_hilite, "%c")
+		timestamp_format=self.frame.np.config.sections["logging"]["private_timestamp"]
+		AppendLine(self.ChatScroll, _("--- reconnected ---"), self.tag_hilite, timestamp_format=timestamp_format)
 		self.ChangeColours()
 		
 	def ConnClose(self):
-		AppendLine(self.ChatScroll, _("--- disconnected ---"), self.tag_hilite, "%c")
+		timestamp_format=self.frame.np.config.sections["logging"]["private_timestamp"]
+		AppendLine(self.ChatScroll, _("--- disconnected ---"), self.tag_hilite, timestamp_format=timestamp_format)
 		self.status = -1
 		self.offlinemessage = 0
 		self.ChangeColours()
@@ -319,7 +321,7 @@ class PrivateChat(PrivateChatTab):
 	def OnClearChatLog(self, widget):
 		self.ChatScroll.get_buffer().set_text("")
 	
-	def ShowMessage(self, text, status=None):
+	def ShowMessage(self, text, status=None, timestamp=None):
 		if text[:4] == "/me ":
 			line = "* %s %s" % (self.user, self.frame.CensorChat(text[4:]))
 			tag = self.tag_me
@@ -327,7 +329,8 @@ class PrivateChat(PrivateChatTab):
 			line = "[%s] %s" % (self.user, self.frame.CensorChat(text))
 			tag = self.tag_remote
 		line = self.frame.np.decode(line, self.encoding)
-		AppendLine(self.ChatScroll, line, tag, "%c", username=self.user, usertag=self.tag_username)
+		timestamp_format=self.frame.np.config.sections["logging"]["private_timestamp"]
+		AppendLine(self.ChatScroll, line, tag, timestamp=timestamp, timestamp_format=timestamp_format, username=self.user, usertag=self.tag_username)
 		if self.Log.get_active():
 			self.logfile = WriteLog(self.logfile, self.frame.np.config.sections["logging"]["logsdir"], self.user, line)
 		
@@ -336,7 +339,8 @@ class PrivateChat(PrivateChatTab):
 			self.SendMessage("[Auto-Message] %s" % autoreply)
 			self.autoreplied = 1
 		if status and not self.offlinemessage:
-			AppendLine(self.ChatScroll, _("* Message(s) sent while you were offline."), self.tag_hilite, "%c")
+			
+			AppendLine(self.ChatScroll, _("* Message(s) sent while you were offline."), self.tag_hilite, timestamp_format=timestamp_format)
 			self.offlinemessage = 1
 			
 
@@ -355,8 +359,8 @@ class PrivateChat(PrivateChatTab):
 			tag = self.tag_local
 			usertag = self.tag_my_username
 			message = "[" + my_username + "] " + self.frame.np.decode(line, self.encoding)
-		
-		AppendLine(self.ChatScroll, message, tag, "%c", username=my_username, usertag=usertag)
+		timestamp_format=self.frame.np.config.sections["logging"]["private_timestamp"]
+		AppendLine(self.ChatScroll, message, tag, timestamp_format=timestamp_format, username=my_username, usertag=usertag)
 		if self.Log.get_active():
 			self.logfile = WriteLog(self.logfile, self.frame.np.config.sections["logging"]["logsdir"], self.user, message)
 		

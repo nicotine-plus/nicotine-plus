@@ -198,7 +198,7 @@ def UrlEvent(tag, widget, event, iter, url):
 				gnome.url_show(url)
 	tag.last_event_type = event.type
 
-def AppendLine(textview, line, tag = None, timestamp = "%H:%M:%S", username=None, usertag=None, scroll=True):
+def AppendLine(textview, line, tag = None, timestamp = None, timestamp_format = "%H:%M:%S", username=None, usertag=None, scroll=True):
 	def _makeurltag(buffer, tag, url):
 		props = {}
 		if tag is not None:
@@ -226,9 +226,14 @@ def AppendLine(textview, line, tag = None, timestamp = "%H:%M:%S", username=None
 	ME = 0
 	if line.startswith("* "):
 		ME = 1
-	if timestamp:
-		line = "%s %s\n" % (recode(time.strftime(timestamp)), line)
-
+	if NICOTINE.np.config.sections["logging"]["timestamps"]:
+		if timestamp_format and not timestamp:
+			line = "%s %s\n" % (recode(time.strftime(timestamp_format)), line)
+		elif timestamp_format and timestamp:
+			line = "%s %s\n" % (recode(time.strftime(timestamp_format, time.localtime(timestamp))), line)
+	else:
+		line += "\n"
+		
 	match = URL_RE.search(line)
 	# Highlight urls, if found and tag them
 	while CATCH_URLS and match:

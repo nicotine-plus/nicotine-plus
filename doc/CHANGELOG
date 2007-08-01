@@ -5,31 +5,40 @@ Licensing
  * Relicensed all code under GPLv3 and LGPLv3
 
 General Changes
- * Added hide/show buttons in chatrooms for userlist and status log
- * Added an option to Shares for the Upload directory path (needs to be set)
- * Username away color-status in chat can be toggled off
- * Default colours and clear colours buttons added
- * Search's offline users now uses a seperate color
- * Tabs can be repositioned and the labels can be rotated under
-   Settings->Interface->Notebook Tabs
- * Search results turn red when a user goes offline
- * Added Exaile to NowPlaying
+ * Added Search and Open Directory items to uploads' popup menu
+ * Config menu items that were in the File menu moved to the new Edit menu
  * Added credits and license note to About Nicotine dialog.
  * Settings widgets will now be colored red if their values are invalid.
- * URL handlers settings rearranged sligtly, combo items in the handlers column
- * Rearranged the Settings tree and removed some descriptive panes
- * Added a config option for overriding the default language
- * Some Entry widgets in settings replaced with SpinBoxes
  * Disable many widgets (entries, buttons, lists) when disconnected from server
  * User tabs have right-click popup-menus in private, userinfo and userbrowse.
- * Added Auto-Replace list (applies to all outgoing chat message text)
- * Added Censor list (applies to all chat message text)
- * Added IP blocking
  * libnotify support added (patch by infinito ticket #176 )
    to show download completion popups in the tray.
    notification-daemon, libnotify and python-notify required
+
+Settings
+ * Added an option to Shares for the Upload directory path (needs to be set)
+ * Default colours and clear colours buttons added
+ * Tabs can be repositioned and the labels can be rotated under
+   Settings->Interface->Notebook Tabs
+ * Added Exaile to NowPlaying
+ * Added a config option for overriding the default language
+ * URL handlers settings rearranged slightly, combo items in the handlers column
+ * Rearranged the Settings tree and removed some descriptive panes
+ * Added IP blocking
+ * Some Entry widgets in settings replaced with SpinBoxes
  * Userinfo settings now have size data for image
+ 
+Search
+ * Search results encoding improved (user's encoding, falls back to global)
+ * Search results turn red when a user goes offline (configurable)
+
 Chat
+ * Timestamps configurable, disableable (under Settings->Chat->Logging)
+ * Added hide/show buttons in chatrooms for userlist and status log. These
+   buttons can be hidden by Edit->Hide chat room log and list toggles
+ * Username away color-status in chat can be toggled off
+ * Added Auto-Replace list (applies to all outgoing chat message text)
+ * Added Censor list (applies to all chat message text)
  * A popup dialog appears after closing the last chat room while the roomlist
    is hidden.
  * URL's are now converted back to plain text by the URL catcher

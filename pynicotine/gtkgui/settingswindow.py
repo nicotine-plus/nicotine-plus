@@ -1452,32 +1452,23 @@ class LogFrame(settings_glade.LogFrame):
 		self.p = parent
 		self.frame = parent.frame
 		settings_glade.LogFrame.__init__(self, False)
-		self.options = {"logging": [ "privatechat", "chatrooms", "logsdir", "transfers", ],
+		self.options = {"logging": { "privatechat": self.LogPrivate, "chatrooms": self.LogRooms, "logsdir": self.LogDir, "transfers": self.LogTransfers, "rooms_timestamp":self.ChatRoomFormat, "private_timestamp":self.PrivateChatFormat, "timestamps": self.ShowTimeStamps },
 					"privatechat": {"store": self.ReopenPrivateChats},}
 
 	def SetSettings(self, config):
-		logging = config["logging"]
-		private = config["privatechat"]
-		if logging["privatechat"] is not None:
-			self.LogPrivate.set_active(logging["privatechat"])
-		else:
-			self.p.Hilight(self.LogPrivate)
-		if logging["chatrooms"] is not None:
-			self.LogRooms.set_active(logging["chatrooms"])
-		else:
-			self.p.Hilight(self.LogRooms)
-		if logging["transfers"] is not None:
-			self.LogTransfers.set_active(logging["transfers"])
-		else:
-			self.p.Hilight(self.LogTransfers)
-		if logging["logsdir"] is not None:
-			self.LogDir.set_text(recode(logging["logsdir"]))
-		else:
-			self.p.Hilight(self.LogDir)
-		if private["store"] is not None:
-			self.ReopenPrivateChats.set_active(private["store"])
-		else:
-			self.p.Hilight(self.ReopenPrivateChats)
+		
+		for section, keys in self.options.items():
+			if section not in config:
+				continue
+			for key in keys:
+				widget = self.options[section][key]
+				if config[section][key] is None:
+					self.p.Hilight(widget)
+					self.p.ClearWidget(widget)
+				else:
+					self.p.SetWidget(widget, config[section][key])
+					self.p.Dehilight(widget)
+
 	def GetSettings(self):
 		return {
 			"logging": {
@@ -1485,6 +1476,9 @@ class LogFrame(settings_glade.LogFrame):
 				"chatrooms": self.LogRooms.get_active(),
 				"logsdir": recode2(self.LogDir.get_text()),
 				"transfers": self.LogTransfers.get_active(),
+				"private_timestamp": self.PrivateChatFormat.get_text(),
+				"rooms_timestamp": self.ChatRoomFormat.get_text(),
+				"timestamps": self.ShowTimeStamps.get_active(),
 			},
 			"privatechat": {
 				"store": self.ReopenPrivateChats.get_active(),
@@ -2317,6 +2311,27 @@ class SettingsWindow(settings_glade.SettingsWindow):
 		widget.emit_stop_by_name("delete-event")
 		return True
 	
+						
+	def ClearWidget(self, widget):
+		if type(widget) is gtk.Entry:
+			widget.set_text("")
+		elif type(widget) is gtk.SpinButton:
+			widget.set_value_as_int(0)
+		elif type(widget) is gtk.CheckButton:
+			widget.set_active(0)
+		elif type(widget) is gtk.ComboBoxEntry:
+			widget.child.set_text("")
+				
+	def SetWidget(self, widget, value):
+		if type(widget) is gtk.Entry:
+			widget.set_text(value)
+		elif type(widget) is gtk.SpinButton:
+			widget.set_value_as_int(value)
+		elif type(widget) is gtk.CheckButton:
+			widget.set_active(value)
+		elif type(widget) is gtk.ComboBoxEntry:
+			widget.child.set_text(value)
+			
 	def InvalidSettings(self, domain, key):
 		for name, page in self.pages.items():
 			if domain in page.options.keys():
