@@ -1114,7 +1114,8 @@ class SharedFileList(PeerMessage):
 	def __init__(self, conn, shares = None):
 		self.conn = conn
 		self.list = shares
-	 
+	 	self.built = None
+		
 	def parseNetworkMessage(self, message, nozlib = 0):
 
 		if not nozlib:
@@ -1149,15 +1150,21 @@ class SharedFileList(PeerMessage):
 				shares[directory].append([code, name, size, ext, attrs])
 		self.list = shares
 
-	def makeNetworkMessage(self, nozlib = 0):
+	def makeNetworkMessage(self, nozlib = 0, rebuild=False):
+		# Elaborate hack, to save CPU
+		# store the message
+		if not rebuild and self.built is not None:
+			return self.built
 		msg = ""
 		msg = msg + self.packObject(len(self.list.keys()))
 		for i in self.list.keys():
 			msg = msg + self.packObject(i.replace(os.sep,"\\")) + self.list[i]
 		if not nozlib:
-			return zlib.compress(msg)
+			self.built = zlib.compress(msg)
 		else:
-			return msg
+			self.built = msg
+		return self.built
+		
 
 class GetSharedFileList(PeerMessage):
 	""" Ask the peer for a filelist. """ 

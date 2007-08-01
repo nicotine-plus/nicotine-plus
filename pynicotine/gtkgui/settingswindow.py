@@ -231,7 +231,14 @@ class SharesFrame(settings_glade.SharesFrame):
 		
 	def GetNeedRescan(self):
 		return self.needrescan
-	
+
+	def OnChooseUploadDir(self, widget):
+		dir1 = ChooseDir(self.Main.get_toplevel(), self.UploadDir.get_text())
+		if dir1 is not None:
+			for directory in dir1: # iterate over selected files
+				self.uploaddir = directory
+				self.UploadDir.set_text(recode(directory))
+				
 	def OnChooseIncompleteDir(self, widget):
 		dir1 = ChooseDir(self.Main.get_toplevel(), self.IncompleteDir.get_text())
 		if dir1 is not None:

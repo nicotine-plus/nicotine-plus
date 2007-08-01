@@ -331,6 +331,7 @@ class SharesFrame:
 
 		self.ChooseUploadDir = gtk.Button()
 		self.ChooseUploadDir.show()
+		self.ChooseUploadDir.connect("clicked", self.OnChooseUploadDir)
 
 		self.alignment10 = gtk.Alignment(0.5, 0.5, 0, 0)
 		self.alignment10.show()
@@ -536,6 +537,9 @@ class SharesFrame:
 		pass
 
 	def OnShareDownloadDirToggled(self, widget):
+		pass
+
+	def OnChooseUploadDir(self, widget):
 		pass
 
 	def OnAddSharedDir(self, widget):

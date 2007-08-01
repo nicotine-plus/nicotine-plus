@@ -107,7 +107,9 @@ class NetworkEventProcessor:
 		self.ipaddress = None
 		self.servertimer = None
 		self.servertimeout = -1
-	
+		self.CompressedSharesBuddy = self.CompressedSharesNormal = None
+		self.CompressShares("normal")
+		self.CompressShares("buddy")
 		self.distribcache = {}
 		self.speed = 0
 		self.translatepunctuation = string.maketrans(string.punctuation, string.join([' ' for i in string.punctuation],''))
@@ -347,6 +349,18 @@ class NetworkEventProcessor:
 		files, streams, wordindex, fileindex, mtimes = utils.rescandirs(msg.shared, self.config.sections["transfers"]["bsharedmtimes"], self.config.sections["transfers"]["bsharedfiles"], self.config.sections["transfers"]["bsharedfilesstreams"], msg.yieldfunction, self.frame.BuddySharesProgress, name=_("Buddy Shares"))
 		self.frame.RescanFinished([files, streams, wordindex, fileindex, mtimes], "buddy")
 		
+	def CompressShares(self, sharestype):
+		if sharestype == "normal":
+			streams = self.config.sections["transfers"]["sharedfilesstreams"]
+		elif sharestype == "buddy":
+			streams = self.config.sections["transfers"]["bsharedfilesstreams"]
+		m = slskmessages.SharedFileList(None, streams)
+		m.makeNetworkMessage(nozlib=0, rebuild=True)
+		
+		if sharestype == "normal":
+			self.CompressedSharesNormal = m
+		elif sharestype == "buddy":
+			self.CompressedSharesBuddy = m
         
 	## Notify user of error when recieving or sending a message
 	# @param self NetworkEventProcessor (Class)
@@ -844,14 +858,22 @@ class NetworkEventProcessor:
 		checkuser, reason = self.CheckUser(user, self.geoip, addr)
 	
 		if checkuser == 1:
-			# Send Normal Shares
-			self.queue.put(slskmessages.SharedFileList(msg.conn.conn, self.config.sections["transfers"]["sharedfilesstreams"]))
+			## Send Normal Shares
+			m = self.CompressedSharesNormal
+			#self.queue.put(slskmessages.SharedFileList(msg.conn.conn, self.config.sections["transfers"]["sharedfilesstreams"]))
 		elif checkuser == 2:
-			# Send Buddy Shares
-			self.queue.put(slskmessages.SharedFileList(msg.conn.conn, self.config.sections["transfers"]["bsharedfilesstreams"]))
+			## Send Buddy Shares
+			m = self.CompressedSharesBuddy
+			#self.queue.put(slskmessages.SharedFileList(msg.conn.conn, self.config.sections["transfers"]["bsharedfilesstreams"]))
 		else:
-			# Nyah, Nyah
-			self.queue.put(slskmessages.SharedFileList(msg.conn.conn, {}))
+			## Nyah, Nyah
+			m = slskmessages.SharedFileList(msg.conn.conn, {})
+			m.makeNetworkMessage(nozlib=0)
+			#self.queue.put(slskmessages.SharedFileList(msg.conn.conn, {}))
+
+		m.conn = msg.conn.conn
+		self.queue.put(m)
+		
 		
 	def ClosePeerConnection(self, peerconn):
 		if peerconn == None:

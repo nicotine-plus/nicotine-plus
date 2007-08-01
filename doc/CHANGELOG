@@ -15,6 +15,10 @@ General Changes
    to show download completion popups in the tray.
    notification-daemon, libnotify and python-notify required
 
+Shares
+ * Shares are precompressed, before they're sent (Nicotine will recover faster
+   from many shares requests)
+
 Settings
  * Added an option to Shares for the Upload directory path (needs to be set)
  * Default colours and clear colours buttons added

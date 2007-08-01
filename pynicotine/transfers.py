@@ -842,22 +842,27 @@ class Transfers:
 				self.downloadspanel.update(i)
     
 	def addToShared(self, name):
-		prefix = ""
-		prefix2 = ""
-		if self.eventprocessor.config.sections["transfers"]["enablebuddyshares"] and self.eventprocessor.config.sections["transfers"]["friendsonly"]:
-			prefix = "b"
-			prefix2 = "buddy"
-			
-			
-		if not self.eventprocessor.config.sections["transfers"]["sharedownloaddir"]:
+		config = self.eventprocessor.config.sections
+		if not config["transfers"]["sharedownloaddir"]:
 			return
+		buddy = False
+		if config["transfers"]["enablebuddyshares"]:
+			buddy = True
 		
-		shared = self.eventprocessor.config.sections["transfers"][prefix+"sharedfiles"]
-		sharedstreams = self.eventprocessor.config.sections["transfers"][prefix+"sharedfilesstreams"]
-		wordindex = self.eventprocessor.config.sections["transfers"][prefix+"wordindex"]
-		fileindex = self.eventprocessor.config.sections["transfers"][prefix+"fileindex"]
-		shareddirs = self.eventprocessor.config.sections["transfers"][prefix2+"shared"] + [self.eventprocessor.config.sections["transfers"]["downloaddir"]]
-		sharedmtimes = self.eventprocessor.config.sections["transfers"][prefix+"sharedmtimes"]
+		shared = config["transfers"]["sharedfiles"]
+		sharedstreams = config["transfers"]["sharedfilesstreams"]
+		wordindex = config["transfers"]["wordindex"]
+		fileindex = config["transfers"]["fileindex"]
+		shareddirs = config["transfers"]["shared"] + [config["transfers"]["downloaddir"]]
+		sharedmtimes = config["transfers"]["sharedmtimes"]
+
+		bshared = config["transfers"]["bsharedfiles"]
+		bsharedstreams = config["transfers"]["bsharedfilesstreams"]
+		bwordindex = config["transfers"]["bwordindex"]
+		bfileindex = config["transfers"]["bfileindex"]
+		bshareddirs = config["transfers"]["buddyshared"] + config["transfers"]["shared"] + [config["transfers"]["downloaddir"]]
+		bsharedmtimes = config["transfers"]["bsharedmtimes"]
+		
 		dir = os.path.expanduser(os.path.dirname(name))
 
 		file = os.path.basename(name)
@@ -871,8 +876,18 @@ class Transfers:
 			words = utils.getIndexWords(dir, file, shareddirs)
 			self.addToIndex(wordindex, fileindex, words, dir, fileinfo)
 			sharedmtimes[dir] = os.path.getmtime(dir)
+			if buddy:
+				if file not in [i[0] for i in bshared[dir]]:
+					bshared[dir] = bshared[dir] + [fileinfo]
+					bsharedstreams[dir] = utils.getDirStream(bshared[dir])
+					self.addToIndex(bwordindex, bfileindex, words, dir, fileinfo)
+					bsharedmtimes[dir] = os.path.getmtime(dir)
+
 			self.eventprocessor.config.writeShares()
-		
+			
+			self.eventprocessor.CompressShares("normal")
+			if buddy:
+				self.eventprocessor.CompressShares("buddy")
 
 	def addToIndex(self, wordindex, fileindex, words, dir, fileinfo):
 		index = len(fileindex.keys())

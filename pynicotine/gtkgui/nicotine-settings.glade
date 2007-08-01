@@ -561,6 +561,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="response_id">0</property>
+                    <signal name="clicked" handler="OnChooseUploadDir"/>
                     <child>
                       <widget class="GtkAlignment" id="alignment10">
                         <property name="visible">True</property>

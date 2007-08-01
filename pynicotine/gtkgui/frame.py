@@ -1376,7 +1376,8 @@ class NicotineFrame(MainWindow):
 		self.brescanning = 0
 		self.logMessage(_("Rescanning Buddy Shares finished"))
 		self.BuddySharesProgress.hide()
-		
+		self.np.CompressShares("buddy")
+
 	def _RescanFinished(self, data):
 		self.np.config.setShares(*data)
 		self.np.config.writeShares()
@@ -1387,6 +1388,7 @@ class NicotineFrame(MainWindow):
 		self.rescanning = 0
 		self.logMessage(_("Rescanning finished"))
 		self.SharesProgress.hide()
+		self.np.CompressShares("normal")
 		
 	def RescanFinished(self, data, type):
 		if type == "buddy":
