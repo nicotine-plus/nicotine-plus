@@ -876,18 +876,18 @@ class Transfers:
 			words = utils.getIndexWords(dir, file, shareddirs)
 			self.addToIndex(wordindex, fileindex, words, dir, fileinfo)
 			sharedmtimes[dir] = os.path.getmtime(dir)
+			self.eventprocessor.newnormalshares = True
 			if buddy:
 				if file not in [i[0] for i in bshared[dir]]:
 					bshared[dir] = bshared[dir] + [fileinfo]
 					bsharedstreams[dir] = utils.getDirStream(bshared[dir])
 					self.addToIndex(bwordindex, bfileindex, words, dir, fileinfo)
 					bsharedmtimes[dir] = os.path.getmtime(dir)
+					self.eventprocessor.newbuddyshares = True
 
 			self.eventprocessor.config.writeShares()
 			
-			self.eventprocessor.CompressShares("normal")
-			if buddy:
-				self.eventprocessor.CompressShares("buddy")
+			
 
 	def addToIndex(self, wordindex, fileindex, words, dir, fileinfo):
 		index = len(fileindex.keys())

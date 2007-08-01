@@ -1152,7 +1152,8 @@ class SharedFileList(PeerMessage):
 
 	def makeNetworkMessage(self, nozlib = 0, rebuild=False):
 		# Elaborate hack, to save CPU
-		# store the message
+		# Store packed message contents in self.built, and use
+		# instead of repacking it, unles rebuild is True
 		if not rebuild and self.built is not None:
 			return self.built
 		msg = ""

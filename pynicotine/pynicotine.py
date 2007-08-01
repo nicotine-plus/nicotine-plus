@@ -110,6 +110,7 @@ class NetworkEventProcessor:
 		self.CompressedSharesBuddy = self.CompressedSharesNormal = None
 		self.CompressShares("normal")
 		self.CompressShares("buddy")
+		self.newbuddyshares = self.newnormalshares = False
 		self.distribcache = {}
 		self.speed = 0
 		self.translatepunctuation = string.maketrans(string.punctuation, string.join([' ' for i in string.punctuation],''))
@@ -859,17 +860,23 @@ class NetworkEventProcessor:
 	
 		if checkuser == 1:
 			## Send Normal Shares
+			if self.newnormalshares:
+				self.CompressShares("normal")
+				self.newnormalshares = False
 			m = self.CompressedSharesNormal
-			#self.queue.put(slskmessages.SharedFileList(msg.conn.conn, self.config.sections["transfers"]["sharedfilesstreams"]))
+
 		elif checkuser == 2:
 			## Send Buddy Shares
+			if self.newbuddyshares:
+				self.CompressShares("buddy")
+				self.newbuddyshares = False
 			m = self.CompressedSharesBuddy
-			#self.queue.put(slskmessages.SharedFileList(msg.conn.conn, self.config.sections["transfers"]["bsharedfilesstreams"]))
+
 		else:
 			## Nyah, Nyah
 			m = slskmessages.SharedFileList(msg.conn.conn, {})
 			m.makeNetworkMessage(nozlib=0)
-			#self.queue.put(slskmessages.SharedFileList(msg.conn.conn, {}))
+
 
 		m.conn = msg.conn.conn
 		self.queue.put(m)
