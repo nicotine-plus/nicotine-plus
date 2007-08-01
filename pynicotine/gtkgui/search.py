@@ -846,6 +846,10 @@ class Search(SearchTab):
 			act = False
 		items[5].set_sensitive(act)
 		items[6].set_sensitive(act)
+		act = False
+		if len(self.selected_users) > 0:
+			act = True
+		items[8].set_sensitive(act)
 
 		widget.emit_stop_by_name("button_press_event")
 		self.popup_menu.popup(None, None, None, event.button, event.time)

@@ -5811,17 +5811,6 @@ Right</property>
             <property name="spacing">5</property>
             <property name="layout_style">GTK_BUTTONBOX_END</property>
             <child>
-              <widget class="GtkButton" id="ApplyButton">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="can_default">True</property>
-                <property name="label">gtk-apply</property>
-                <property name="use_stock">True</property>
-                <property name="response_id">0</property>
-                <signal name="clicked" handler="OnApply"/>
-              </widget>
-            </child>
-            <child>
               <widget class="GtkButton" id="OkButton">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
@@ -5830,6 +5819,17 @@ Right</property>
                 <property name="use_stock">True</property>
                 <property name="response_id">0</property>
                 <signal name="clicked" handler="OnOk"/>
+              </widget>
+            </child>
+            <child>
+              <widget class="GtkButton" id="ApplyButton">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="can_default">True</property>
+                <property name="label">gtk-apply</property>
+                <property name="use_stock">True</property>
+                <property name="response_id">0</property>
+                <signal name="clicked" handler="OnApply"/>
               </widget>
               <packing>
                 <property name="position">1</property>

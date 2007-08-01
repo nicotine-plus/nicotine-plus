@@ -3318,17 +3318,17 @@ class SettingsWindow:
 		self.hbuttonbox2.set_spacing(5)
 		self.hbuttonbox2.set_layout(gtk.BUTTONBOX_END)
 
-		self.ApplyButton = gtk.Button(None, gtk.STOCK_APPLY)
-		self.ApplyButton.show()
-		self.ApplyButton.connect("clicked", self.OnApply)
-
-		self.hbuttonbox2.pack_start(self.ApplyButton)
-
 		self.OkButton = gtk.Button(None, gtk.STOCK_OK)
 		self.OkButton.show()
 		self.OkButton.connect("clicked", self.OnOk)
 
 		self.hbuttonbox2.pack_start(self.OkButton)
+
+		self.ApplyButton = gtk.Button(None, gtk.STOCK_APPLY)
+		self.ApplyButton.show()
+		self.ApplyButton.connect("clicked", self.OnApply)
+
+		self.hbuttonbox2.pack_start(self.ApplyButton)
 
 		self.CancelButton = gtk.Button(None, gtk.STOCK_CANCEL)
 		self.CancelButton.show()
@@ -3342,10 +3342,10 @@ class SettingsWindow:
 		if create:
 			self.SettingsWindow.add(self.vbox94)
 
-	def OnApply(self, widget):
+	def OnOk(self, widget):
 		pass
 
-	def OnOk(self, widget):
+	def OnApply(self, widget):
 		pass
 
 	def OnCancel(self, widget):
