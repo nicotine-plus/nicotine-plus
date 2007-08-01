@@ -37,7 +37,8 @@ Search
  * Search results turn red when a user goes offline (configurable)
 
 Chat
- * Log file's timestamps are also configurable. Default is "%Y-%m-%d %H:%M:%S"
+ * URL color is configurable
+ * Log files' timestamps are also configurable. Default is "%Y-%m-%d %H:%M:%S"
  * Timestamps configurable, disableable (under Settings->Chat->Logging)
  * Added hide/show buttons in chatrooms for userlist and status log. These
    buttons can be hidden by Edit->Hide chat room log and list toggles

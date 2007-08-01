@@ -198,12 +198,11 @@ def UrlEvent(tag, widget, event, iter, url):
 				gnome.url_show(url)
 	tag.last_event_type = event.type
 
-def AppendLine(textview, line, tag = None, timestamp = None, timestamp_format = "%H:%M:%S", username=None, usertag=None, scroll=True):
+def AppendLine(textview, line, tag = None, timestamp = None, showstamp=True, timestamp_format = "%H:%M:%S", username=None, usertag=None, scroll=True):
 	def _makeurltag(buffer, tag, url):
 		props = {}
-		if tag is not None:
-			color = tag.get_property("foreground_gdk")
-			props["foreground_gdk"] = color
+
+		props["foreground_gdk"] = gtk.gdk.color_parse(NICOTINE.np.config.sections["ui"]["urlcolor"])
 		props["underline"] = pango.UNDERLINE_SINGLE
 		tag = buffer.create_tag(**props)
 		tag.last_event_type = -1
@@ -226,7 +225,7 @@ def AppendLine(textview, line, tag = None, timestamp = None, timestamp_format = 
 	ME = 0
 	if line.startswith("* "):
 		ME = 1
-	if NICOTINE.np.config.sections["logging"]["timestamps"]:
+	if NICOTINE.np.config.sections["logging"]["timestamps"] and showstamp:
 		if timestamp_format and not timestamp:
 			line = "%s %s\n" % (recode(time.strftime(timestamp_format)), line)
 		elif timestamp_format and timestamp:

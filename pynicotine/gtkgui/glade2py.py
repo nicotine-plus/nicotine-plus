@@ -89,6 +89,20 @@ def write_widget_attrs(widget):
 			y = widget.attrs["yalign"]
 		if float(x) != 0.5 or float(y) != 0.5:
 			print indent + "%s.set_alignment(%s, %s)" % (widget.id, x, y)
+	top_padding = bottom_padding = left_padding = right_padding = 0
+	if widget.attrs.has_key("top_padding"):
+		top_padding = widget.attrs["top_padding"]
+	if widget.attrs.has_key("bottom_padding"):
+		bottom_padding = widget.attrs["bottom_padding"]
+	if widget.attrs.has_key("left_padding"):
+		left_padding = widget.attrs["left_padding"]
+	if widget.attrs.has_key("right_padding"):
+		right_padding = widget.attrs["right_padding"]
+	for i in [top_padding, bottom_padding, left_padding, right_padding]:
+		if i != 0:
+			print indent + "%s.set_padding(%s, %s, %s, %s)" % (widget.id, top_padding, bottom_padding, left_padding, right_padding)
+			break
+			
 	if widget.attrs.has_key("angle"):
 		print indent + "%s.set_angle(%s)" % (widget.id, widget.attrs["angle"])
 	w, h = "-1", "-1"
@@ -516,7 +530,7 @@ classes = {
 	"GtkComboBox": [write_widget_combobox],
 	"GtkComboBoxEntry": [write_widget_comboboxentry],
 	"GtkComboBoxEntryChild": [write_widget_generic, "child"],
-	"GtkCheckButton": [write_widget_generic, "CheckButton"],
+	"GtkCheckButton": [write_widget_container, "CheckButton", PM_ADD],
 	"GtkToggleButton": [write_widget_togglebutton],
 	"GtkFontButton": [write_widget_generic, "FontButton"],
 	"GtkIconView": [write_widget_generic, "IconView"],

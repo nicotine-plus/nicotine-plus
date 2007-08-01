@@ -97,7 +97,7 @@ class Config:
 "filterin":[],"filterout":[],"filtersize":[],"filterbr":[]}, \
 \
 "ui":{"icontheme": "", "chatme":"FOREST GREEN", "chatremote":"","chatlocal":"BLUE", \
-"chathilite":"red", "useronline":"BLACK", "useraway":"ORANGE", "useroffline":"#aa0000", \
+"chathilite":"red", "urlcolor": "#3D2B7F", "useronline":"BLACK", "useraway":"ORANGE", "useroffline":"#aa0000", \
 "usernamehotspots":1, "usernamestyle": "bold", "textbg": "", "search":"","searchq":"GREY", \
 "inputcolor":"", "spellcheck": 1, "exitdialog": 1, "notexists": 1, \
 "tabmain": "top", "tabrooms": "top", "tabprivate": "top", "tabinfo": "top", \

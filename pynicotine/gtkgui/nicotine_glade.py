@@ -456,6 +456,7 @@ class MainWindow:
 		self.ToggleTreeDownloads = gtk.CheckButton()
 		self.ToggleTreeDownloads.set_label(_("Group by Users"))
 		self.ToggleTreeDownloads.show()
+
 		self.hbox3.pack_end(self.ToggleTreeDownloads, False, False, 0)
 
 		self.ExpandDownloads = gtk.ToggleButton()
@@ -654,11 +655,13 @@ class MainWindow:
 		self.ToggleTreeUploads = gtk.CheckButton()
 		self.ToggleTreeUploads.set_label(_("Group by Users"))
 		self.ToggleTreeUploads.show()
+
 		self.hbox13.pack_start(self.ToggleTreeUploads, False, False, 0)
 
 		self.ToggleAutoclear = gtk.CheckButton()
 		self.ToggleAutoclear.set_label(_("Autoclear Finished"))
 		self.ToggleAutoclear.show()
+
 		self.hbox13.pack_start(self.ToggleAutoclear, False, False, 0)
 
 		self.vboxuploads.pack_start(self.hbox13, False, False, 2)
@@ -1694,6 +1697,7 @@ class ChatRoomTab:
 		self.Log.set_label(_("Log"))
 		self.Log.show()
 		self.Log.connect("toggled", self.OnLogToggled)
+
 		self.hbox58.pack_start(self.Log, False, False, 0)
 
 		self.Encoding_List = gtk.ListStore(gobject.TYPE_STRING)
@@ -1717,6 +1721,7 @@ class ChatRoomTab:
 		self.AutoJoin.set_label(_("Auto-join"))
 		self.AutoJoin.show()
 		self.AutoJoin.connect("toggled", self.OnAutojoin)
+
 		self.hbox4.pack_start(self.AutoJoin, False, False, 0)
 
 		self.Leave = gtk.Button()
@@ -1849,12 +1854,14 @@ class PrivateChatTab:
 		self.tooltips.set_tip(self.PeerPrivateMessages, _("Send the private message directly to the user (not supported on most clients)"))
 		self.PeerPrivateMessages.set_label(_("Direct"))
 		self.PeerPrivateMessages.show()
+
 		self.hbox5.pack_start(self.PeerPrivateMessages, False, False, 0)
 
 		self.Log = gtk.CheckButton()
 		self.Log.set_label(_("Log"))
 		self.Log.show()
 		self.Log.connect("toggled", self.OnLogToggled)
+
 		self.hbox5.pack_start(self.Log, False, False, 0)
 
 		self.button1 = gtk.Button()
@@ -1944,6 +1951,7 @@ class SearchTab:
 		self.filtersCheck.set_label(_("Enable filters"))
 		self.filtersCheck.show()
 		self.filtersCheck.connect("toggled", self.OnToggleFilters)
+
 		self.hbox6.pack_start(self.filtersCheck, False, True, 0)
 
 		self.RememberCheckButton = gtk.CheckButton()
@@ -1951,6 +1959,7 @@ class SearchTab:
 		self.RememberCheckButton.set_label(_("Wish"))
 		self.RememberCheckButton.show()
 		self.RememberCheckButton.connect("toggled", self.OnToggleRemember)
+
 		self.hbox6.pack_start(self.RememberCheckButton, False, False, 0)
 
 		self.button2 = gtk.Button()
@@ -2095,6 +2104,7 @@ class SearchTab:
 		self.FilterFreeSlot.set_label(_("Free slot"))
 		self.FilterFreeSlot.show()
 		self.FilterFreeSlot.connect("toggled", self.OnRefilter)
+
 		self.Filters.pack_start(self.FilterFreeSlot, False, False, 0)
 
 		self.vbox7.pack_start(self.Filters, False, True, 3)

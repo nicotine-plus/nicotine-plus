@@ -71,7 +71,7 @@ http://sourceforge.net/projects/nicotine-plus/
 Soulseek: http://www.slsknet.org
 
 Based on code from Nicotine and PySoulSeek""") % version
-		AppendLine(TextView, text, None, None)
+		AppendLine(TextView, text, None, None, showstamp=False)
 		vbox = gtk.VBox()
 		vbox.pack_start(img, False, True)
 		hbox = gtk.HBox()
@@ -231,7 +231,7 @@ Alexander Kanavin
 \t(PySoulSeek developer) Nicotine and Nicotine+ are based on PySoulSeek
 \thttp://sensi.org/~ak/
 """)
-		AppendLine(self.DevTextView, text, None, None)
+		AppendLine(self.DevTextView, text, None, None, showstamp=False)
 		
 		developersLabel = gtk.Label(_("Developers"))
 		developersLabel.show()
@@ -288,7 +288,7 @@ Finnish
 Euskara
  * The Librezale.org Team <librezale@librezale.org> http://librezale.org
  """)
- 		AppendLine(self.TransTextView, text, None, None)
+ 		AppendLine(self.TransTextView, text, None, None, showstamp=False)
 		
 		translatorsLabel = gtk.Label(_("Translators"))
 		translatorsLabel.show()

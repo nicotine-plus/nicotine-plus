@@ -1009,7 +1009,7 @@ class BloatFrame(settings_glade.BloatFrame):
 "tabsearch": self.SearchPosition, "labelmain": self.MainAngleSpin,
 "labelrooms": self.ChatRoomsPosition, "labelprivate": self.PrivateChatAngleSpin,
 "labelinfo": self.UserInfoAngleSpin, "labelbrowse": self.UserBrowseAngleSpin,
-"labelsearch": self.SearchAngleSpin },
+"labelsearch": self.SearchAngleSpin, "urlcolor": self.URL },
 			"transfers": {"enabletransferbuttons": self.ShowTransferButtons},
 			"language": {"setlanguage": self.TranslationCheck, "language": self.TranslationComboEntry},
 			}
@@ -1035,6 +1035,8 @@ class BloatFrame(settings_glade.BloatFrame):
 		self.PickOnline.connect("clicked", self.PickColour, self.OnlineColor)
 		self.PickOffline.connect("clicked", self.PickColour, self.OfflineColor)
 		self.PickOfflineSearch.connect("clicked", self.PickColour, self.OfflineSearchEntry)
+		self.PickURL.connect("clicked", self.PickColour, self.URL)
+		self.DefaultURL.connect("clicked", self.DefaultColour, self.URL)
 		
 		self.DefaultAway.connect("clicked", self.DefaultColour, self.AwayColor)
 		self.DefaultOnline.connect("clicked", self.DefaultColour, self.OnlineColor)
@@ -1087,7 +1089,7 @@ class BloatFrame(settings_glade.BloatFrame):
 		
 	def OnDefaultColours(self, widget):
 		defaults = self.frame.np.config.defaults
-		for option in "chatlocal", "chatremote", "chatme", "chathilite", "textbg", "inputcolor", "search", "searchq", "searchoffline", "useraway", "useronline", "useroffline":
+		for option in "chatlocal", "chatremote", "chatme", "chathilite", "textbg", "inputcolor", "search", "searchq", "searchoffline", "useraway", "urlcolor", "useronline", "useroffline":
 			for key, value in self.options.items():
 				if option in value:
 					widget = self.options[key][option]
@@ -1104,7 +1106,7 @@ class BloatFrame(settings_glade.BloatFrame):
 		
 		
 	def OnClearAllColours(self, widget):
-		for option in "chatlocal", "chatremote", "chatme", "chathilite", "textbg", "inputcolor", "search", "searchq", "searchoffline", "useraway", "useronline", "useroffline":
+		for option in "chatlocal", "chatremote", "urlcolor", "chatme", "chathilite", "textbg", "inputcolor", "search", "searchq", "searchoffline", "useraway", "useronline", "useroffline":
 			for key, value in self.options.items():
 				if option in value:
 					widget = self.options[key][option]
@@ -1126,173 +1128,30 @@ class BloatFrame(settings_glade.BloatFrame):
 		transfers = config["transfers"]
 		language = config["language"]
 
-		if language["setlanguage"] is not None:
-			self.TranslationCheck.set_active(int(language["setlanguage"]))
-		else:
-			self.p.Hilight(self.TranslationCheck)
-		if language["language"] is not None:
-			self.TranslationComboEntry.set_text(language["language"])
-		else:
-			self.p.Hilight(self.TranslationComboEntry)
-		if ui["chatfont"] is not None:
-			self.SelectChatFont.set_font_name(ui["chatfont"])
-		else:
-			self.p.Hilight(self.SelectChatFont)
-		if ui["chatlocal"] is not None:
-			self.Local.set_text(ui["chatlocal"])
-		else:
-			self.p.Hilight(self.Local)
-		if ui["chatremote"] is not None:
-			self.Remote.set_text(ui["chatremote"])
-		else:
-			self.p.Hilight(self.Remote)
-		if ui["chatme"] is not None:
-			self.Me.set_text(ui["chatme"])
-		else:
-			self.p.Hilight(self.Me)
-		if ui["chathilite"] is not None:
-			self.Highlight.set_text(ui["chathilite"])
-		else:
-			self.p.Hilight(self.Highlight)
-		if ui["useraway"] is not None:
-			self.AwayColor.set_text(ui["useraway"])
-		else:
-			self.p.Hilight(self.AwayColor)
-		if ui["useronline"] is not None:
-			self.OnlineColor.set_text(ui["useronline"])
-		else:
-			self.p.Hilight(self.OnlineColor)
-		if ui["useroffline"] is not None:
-			self.OfflineColor.set_text(ui["useroffline"])
-		else:
-			self.p.Hilight(self.OfflineColor)
-		if ui["usernamehotspots"] is not None:
-			self.UsernameHotspots.set_active(ui["usernamehotspots"])
-		else:
-			self.p.Hilight(self.UsernameHotspots)
-		if ui["textbg"] is not None:
-			self.BackgroundColor.set_text(ui["textbg"])
-		else:
-			self.p.Hilight(self.BackgroundColor)
-		if ui["inputcolor"] is not None:
-			self.InputColor.set_text(ui["inputcolor"])
-		else:
-			self.p.Hilight(self.InputColor)
-		self.OnUsernameHotspotsToggled(self.UsernameHotspots)
-		if ui["search"] is not None:
-			self.Immediate.set_text(ui["search"])
-		else:
-			self.p.Hilight(self.Immediate)
-		if ui["searchq"] is not None:
-			self.Queue.set_text(ui["searchq"])
-		else:
-			self.p.Hilight(self.Queue)
-		if ui["searchoffline"] is not None:
-			self.OfflineSearchEntry.set_text(ui["searchoffline"])
-		else:
-			self.p.Hilight(self.OfflineSearchEntry)
-		if ui["decimalsep"] is not None:
-			self.DecimalSep.child.set_text(ui["decimalsep"])
-		else:
-			self.p.Hilight(self.DecimalSep)
+		self.settingup = 1
 		
-		if ui["spellcheck"] is not None:
-			self.SpellCheck.set_active(ui["spellcheck"])
-		else:
-			self.p.Hilight(self.SpellCheck)
-		if not self.frame.SEXY:
-			self.SpellCheck.set_sensitive(False)
+		for section, keys in self.options.items():
+			if section not in config:
+				continue
+			for key in keys:
+				widget = self.options[section][key]
+				if config[section][key] is None:
+					self.p.Hilight(widget)
+					self.p.ClearWidget(widget)
+				else:
+					self.p.SetWidget(widget, config[section][key])
+					self.p.Dehilight(widget)
+					
 
-		if ui["usernamestyle"] is not None:
-			self.UsernameStyle.child.set_text(ui["usernamestyle"])
-		else:
-			self.p.Hilight(self.UsernameStyle)
-		if transfers["enabletransferbuttons"] is not None:
-			self.ShowTransferButtons.set_active(transfers["enabletransferbuttons"])
-		else:
-			self.p.Hilight(self.ShowTransferButtons)
-		if ui["enabletrans"] is not None:
-			self.EnableTransparent.set_active(ui["enabletrans"])
-		else:
-			self.p.Hilight(self.EnableTransparent)
 		self.OnEnableTransparentToggled(self.EnableTransparent)
 		self.OnTranslationCheckToggled(self.TranslationCheck)
-		self.settingup = 1
-		if ui["transtint"] is not None:
-			self.TintColor.set_text(ui["transtint"])
-		else:
-			self.p.Hilight(self.TintColor)
-		if ui["transalpha"] is not None:
-			self.TintAlpha.set_value(ui["transalpha"])
-		else:
-			self.p.Hilight(self.TintAlpha)
-		if ui["tabmain"] is not None:
-			self.GetPosition(self.MainPosition, ui["tabmain"])
-		else:
-			self.p.Hilight(self.MainPosition)
-		if ui["tabrooms"] is not None:
-			self.GetPosition(self.ChatRoomsPosition, ui["tabrooms"])
-		else:
-			self.p.Hilight(self.ChatRoomsPosition)
-		if ui["tabprivate"] is not None:
-			self.GetPosition(self.PrivateChatPosition, ui["tabprivate"])
-		else:
-			self.p.Hilight(self.PrivateChatPosition)
-		if ui["tabinfo"] is not None:
-			self.GetPosition(self.UserInfoPosition, ui["tabinfo"])
-		else:
-			self.p.Hilight(self.UserInfoPosition)
-		if ui["tabbrowse"] is not None:
-			self.GetPosition(self.UserBrowsePosition, ui["tabbrowse"])
-		else:
-			self.p.Hilight(self.UserBrowsePosition)
-		if ui["tabsearch"] is not None:
-			self.GetPosition(self.SearchPosition, ui["tabsearch"])
-		else:
-			self.p.Hilight(self.SearchPosition)
-		if ui["labelmain"] is not None:
-			self.MainAngleSpin.set_value(ui["labelmain"])
-		else:
-			self.p.Hilight(self.MainAngleSpin)
-		if ui["labelrooms"] is not None:
-			self.ChatRoomsAngleSpin.set_value(ui["labelrooms"])
-		else:
-			self.p.Hilight(self.ChatRoomsAngleSpin)
-		if ui["labelprivate"] is not None:
-			self.PrivateChatAngleSpin.set_value(ui["labelprivate"])
-		else:
-			self.p.Hilight(self.PrivateChatAngleSpin)
-		if ui["labelinfo"] is not None:
-			self.UserInfoAngleSpin.set_value(ui["labelinfo"])
-		else:
-			self.p.Hilight(self.UserInfoAngleSpin)
-		if ui["labelbrowse"] is not None:
-			self.UserBrowseAngleSpin.set_value(ui["labelbrowse"])
-		else:
-			self.p.Hilight(self.UserBrowseAngleSpin)
-		if ui["labelsearch"] is not None:
-			self.SearchAngleSpin.set_value(ui["labelsearch"])
-		else:
-			self.p.Hilight(self.SearchAngleSpin)
-		if ui["showaway"] is not None:
-			self.DisplayAwayColours.set_active(int(ui["showaway"]))
-		else:
-			self.p.Hilight(self.DisplayAwayColours)
+
 		self.ToggledAwayColours(self.DisplayAwayColours)
 		self.ColourScale("")
 		self.settingup = 0
 		self.needcolors = 0
 		
-		
-	def GetPosition(self, combobox, option):
-		iter = combobox.get_model().get_iter_root()
-		while iter is not None:
-			word = combobox.get_model().get_value(iter, 0)
-			if word.lower() == option:
-				combobox.set_active_iter(iter)
-				break
-			iter = combobox.get_model().iter_next(iter)
-				
+
 	def GetSettings(self):
 		
 		try:
@@ -1320,6 +1179,7 @@ class BloatFrame(settings_glade.BloatFrame):
 				"chatremote": self.Remote.get_text(),
 				"chatme": self.Me.get_text(),
 				"chathilite": self.Highlight.get_text(),
+				"urlcolor": self.URL.get_text(),
 				"textbg": self.BackgroundColor.get_text(),
 				"inputcolor": self.InputColor.get_text(),
 				"search": self.Immediate.get_text(),
@@ -2319,26 +2179,43 @@ class SettingsWindow(settings_glade.SettingsWindow):
 		widget.emit_stop_by_name("delete-event")
 		return True
 	
-						
+			
+	def GetPosition(self, combobox, option):
+		iter = combobox.get_model().get_iter_root()
+		while iter is not None:
+			word = combobox.get_model().get_value(iter, 0)
+			if word.lower() == option:
+				combobox.set_active_iter(iter)
+				break
+			iter = combobox.get_model().iter_next(iter)
+			
 	def ClearWidget(self, widget):
 		if type(widget) is gtk.Entry:
 			widget.set_text("")
 		elif type(widget) is gtk.SpinButton:
-			widget.set_value_as_int(0)
+			widget.set_value(0)
 		elif type(widget) is gtk.CheckButton:
 			widget.set_active(0)
 		elif type(widget) is gtk.ComboBoxEntry:
 			widget.child.set_text("")
+		elif type(widget) is gtk.ComboBox:
+			self.GetPosition(widget, "")
+		elif type(widget) is gtk.FontButton:
+			widget.set_font_name("")
 				
 	def SetWidget(self, widget, value):
 		if type(widget) is gtk.Entry:
 			widget.set_text(value)
 		elif type(widget) is gtk.SpinButton:
-			widget.set_value_as_int(value)
+			widget.set_value(int(value))
 		elif type(widget) is gtk.CheckButton:
 			widget.set_active(value)
 		elif type(widget) is gtk.ComboBoxEntry:
 			widget.child.set_text(value)
+		elif type(widget) is gtk.ComboBox:
+			self.GetPosition(widget, value)
+		elif type(widget) is gtk.FontButton:
+			widget.set_font_name(value)
 			
 	def InvalidSettings(self, domain, key):
 		for name, page in self.pages.items():
