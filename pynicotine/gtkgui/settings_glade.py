@@ -2594,7 +2594,6 @@ class LogFrame:
 		self.hbox140.set_spacing(5)
 
 		self.LogDir = gtk.Entry()
-		self.LogDir.set_text(_("~/"))
 		self.LogDir.show()
 		self.hbox140.pack_start(self.LogDir)
 
@@ -2649,6 +2648,22 @@ class LogFrame:
 		self.ShowTimeStamps.set_label(_("Display timestamps"))
 		self.ShowTimeStamps.show()
 		self.vbox89.pack_start(self.ShowTimeStamps, False, True, 0)
+
+		self.hbox25 = gtk.HBox(False, 0)
+		self.hbox25.show()
+
+		self.label19 = gtk.Label(_("Log file format:"))
+		self.label19.set_alignment(0, 0.50)
+		self.label19.show()
+		self.label19.set_width_chars(16)
+		self.hbox25.pack_start(self.label19, False, True, 0)
+
+		self.LogFileFormat = gtk.Entry()
+		self.tooltips.set_tip(self.LogFileFormat, _("http://docs.python.org/lib/module-time.html"))
+		self.LogFileFormat.show()
+		self.hbox25.pack_start(self.LogFileFormat)
+
+		self.vbox89.pack_start(self.hbox25, False, True, 0)
 
 		self.hbox17 = gtk.HBox(False, 0)
 		self.hbox17.show()

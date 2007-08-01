@@ -1459,7 +1459,7 @@ class LogFrame(settings_glade.LogFrame):
 		self.p = parent
 		self.frame = parent.frame
 		settings_glade.LogFrame.__init__(self, False)
-		self.options = {"logging": { "privatechat": self.LogPrivate, "chatrooms": self.LogRooms, "logsdir": self.LogDir, "transfers": self.LogTransfers, "rooms_timestamp":self.ChatRoomFormat, "private_timestamp":self.PrivateChatFormat, "timestamps": self.ShowTimeStamps },
+		self.options = {"logging": { "privatechat": self.LogPrivate, "chatrooms": self.LogRooms, "logsdir": self.LogDir, "transfers": self.LogTransfers, "rooms_timestamp":self.ChatRoomFormat, "private_timestamp":self.PrivateChatFormat, "log_timestamp": self.LogFileFormat, "timestamps": self.ShowTimeStamps },
 					"privatechat": {"store": self.ReopenPrivateChats},}
 
 	def SetSettings(self, config):
@@ -1485,6 +1485,7 @@ class LogFrame(settings_glade.LogFrame):
 				"transfers": self.LogTransfers.get_active(),
 				"private_timestamp": self.PrivateChatFormat.get_text(),
 				"rooms_timestamp": self.ChatRoomFormat.get_text(),
+				"log_timestamp": self.LogFileFormat.get_text(),
 				"timestamps": self.ShowTimeStamps.get_active(),
 			},
 			"privatechat": {
