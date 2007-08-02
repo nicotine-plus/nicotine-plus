@@ -770,6 +770,8 @@ class Transfers:
 					#i.status = str(i.currentbytes)
 					i.status = "Transferring"
 				else:
+					print i.size, i.currentbytes
+					
 					msg.file.close()
 					basename = self.encode(string.split(i.filename,'\\')[-1], i.user)
 					downloaddir = self.eventprocessor.config.sections["transfers"]["downloaddir"]
@@ -926,9 +928,9 @@ class Transfers:
 					i.modifier = _("(privileged)")
 				elif self.UserListPrivileged(i.user):
 					i.modifier = _("(friend)")
-			#elif i.size is None:
+			elif i.size is None:
 				## Failed?
-				#self.checkUploadQueue()
+				self.checkUploadQueue()
 			else:
 				msg.file.close()
 				i.status = "Finished"
