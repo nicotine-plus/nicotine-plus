@@ -770,8 +770,6 @@ class Transfers:
 					#i.status = str(i.currentbytes)
 					i.status = "Transferring"
 				else:
-					print i.size, i.currentbytes
-					
 					msg.file.close()
 					basename = self.encode(string.split(i.filename,'\\')[-1], i.user)
 					downloaddir = self.eventprocessor.config.sections["transfers"]["downloaddir"]
