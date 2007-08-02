@@ -880,6 +880,7 @@ class Transfers:
 			sharedmtimes[dir] = os.path.getmtime(dir)
 			self.eventprocessor.newnormalshares = True
 			if buddy:
+				bshared[dir] = bshared.get(dir, [])
 				if file not in [i[0] for i in bshared[dir]]:
 					bshared[dir] = bshared[dir] + [fileinfo]
 					bsharedstreams[dir] = utils.getDirStream(bshared[dir])
