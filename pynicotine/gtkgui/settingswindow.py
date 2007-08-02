@@ -1054,6 +1054,7 @@ class BloatFrame(settings_glade.BloatFrame):
 		self.DefaultHighlight.connect("clicked", self.DefaultColour, self.Highlight)
 		self.DefaultImmediate.connect("clicked", self.DefaultColour, self.Immediate)
 		self.DefaultQueue.connect("clicked", self.DefaultColour, self.Queue)
+		self.DefaultFont.connect("clicked", self.OnDefaultFont)
 
 		self.DefaultColours.connect("clicked", self.OnDefaultColours)
 		self.ClearAllColours.connect("clicked", self.OnClearAllColours)
@@ -1298,6 +1299,7 @@ class BloatFrame(settings_glade.BloatFrame):
 					self.Green.set_value(green)
 				except Exception, e:
 					print e
+					
 	def ScaleColour(self, widget):
 		if self.settingup:
 			return
@@ -1308,6 +1310,9 @@ class BloatFrame(settings_glade.BloatFrame):
 		colour = "#%02X%02X%02X" % (red, green, blue)
 
 		self.TintColor.set_text(colour)
+		
+	def OnDefaultFont(self, widget):
+		self.SelectChatFont.set_font_name("")
 		
 	def DefaultColour(self, widget, entry):
 		entry.set_text("")
