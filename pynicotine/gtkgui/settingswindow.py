@@ -846,14 +846,19 @@ class SoundsFrame(settings_glade.SoundsFrame):
 		self.p = parent
 		self.frame = parent.frame
 		settings_glade.SoundsFrame.__init__(self, False)
-		self.options = {"ui": ["soundcommand", "soundtheme", "soundenabled"],
-			"players": ["default",]}
+		self.options = {"ui": {"soundcommand": self.SoundCommand, "soundtheme": self.SoundDirectory, "soundenabled": self.SoundCheck, "speechenabled": self.TextToSpeech, "speechcommand": self.TTSCommand, "speechrooms": self.RoomMessage, "speechprivate": self.PrivateMessage},
+			"players": {"default": self.audioPlayerCombo}}
 		for executable in ["xmms -e $", "audacious -e $", "amarok -a $"]:
 			self.audioPlayerCombo.append_text( executable )
+		for executable in ["flite -t \"%s\"", "echo \"%s\" | festival --tts"]:
+			self.TTSCommand.append_text( executable )
 		for item in ["play -q", "ogg123 -q", "Gstreamer (gst-python)"]:
 			self.SoundCommand.append_text(item)
 		self.SoundButton.connect("clicked", self.OnChooseSoundDir)
 		self.DefaultSoundCommand.connect("clicked", self.DefaultSound, self.SoundCommand)
+		self.DefaultTTSCommand.connect("clicked", self.DefaultTTS, self.TTSCommand)
+		self.DefaultPrivateMessage.connect("clicked", self.DefaultPrivate, self.PrivateMessage)
+		self.DefaultRoomMessage.connect("clicked", self.DefaultRooms, self.RoomMessage)
 			
 	def OnSoundCheckToggled(self, widget):
 		sensitive = widget.get_active()
@@ -864,31 +869,44 @@ class SoundsFrame(settings_glade.SoundsFrame):
 		self.sndcmdLabel.set_sensitive(sensitive)
 		self.snddirLabel.set_sensitive(sensitive)
 		
+	def DefaultPrivate(self, widget, entry):
+		entry.set_text("%s sent PM. %s")
+		
+	def DefaultRooms(self, widget, entry):
+		entry.set_text("In %s, %s said %s")
+		
+	def DefaultTTS(self, widget, combo):
+		combo.child.set_text("flite -t \"%s\"")
+		
 	def DefaultSound(self, widget, combo):
+		
 		combo.child.set_text("play -q")
 		
+	def OnTextToSpeechToggled(self, widget):
+		sensitive = widget.get_active()
+		for widget in [self.SoundCommand,  self.SoundDirectory,  self.SoundButton, self.DefaultSoundCommand, self.sndcmdLabel, self.snddirLabel]:
+			widget.set_sensitive(not sensitive and self.SoundCheck.get_active())
+		for widget in [self.roomMessageBox, self.privateMessageBox, self.ttsCommandBox]:
+			widget.set_sensitive(sensitive)
+		
 	def SetSettings(self, config):
-		ui = config["ui"]
-		
-		if ui["soundcommand"] is not None:
-			self.SoundCommand.child.set_text(ui["soundcommand"])
-		else:
-			self.p.Hilight(self.SoundCommand.child)
-		if ui["soundenabled"] is not None:
-			self.SoundCheck.set_active(ui["soundenabled"])
-		else:
-			self.p.Hilight(self.SoundCheck)
-		if ui["soundtheme"] is not None:
-			self.SoundDirectory.set_text(ui["soundtheme"])
-		else:
-			self.p.Hilight(self.SoundDirectory)
+		for section, keys in self.options.items():
+			if section not in config:
+				continue
+			for key in keys:
+				widget = self.options[section][key]
+				if config[section][key] is None:
+					self.p.Hilight(widget)
+					self.p.ClearWidget(widget)
+				else:
+					self.p.SetWidget(widget, config[section][key])
+					self.p.Dehilight(widget)
+					
+
 		self.OnSoundCheckToggled(self.SoundCheck)
-		
-		if config["players"]["default"] is not None:
-			self.audioPlayerCombo.child.set_text(config["players"]["default"])
-			self.audioPlayerCombo.append_text( config["players"]["default"] )
-		else:
-			self.p.Hilight(self.audioPlayerCombo.child)
+		self.OnTextToSpeechToggled(self.TextToSpeech)
+
+			
 	def GetSettings(self):
 
 		soundcommand = self.SoundCommand.child.get_text()
@@ -902,6 +920,10 @@ class SoundsFrame(settings_glade.SoundsFrame):
 				"soundcommand": soundcommand,
 				"soundtheme": self.SoundDirectory.get_text(),
 				"soundenabled": self.SoundCheck.get_active(),
+				"speechenabled": self.TextToSpeech.get_active(),
+				"speechcommand": self.TTSCommandEntry.get_text(),
+				"speechrooms": self.RoomMessage.get_text(),
+				"speechprivate": self.PrivateMessage.get_text(),
 			},
 			"players": {
 				"default": self.audioPlayerCombo.child.get_text(),

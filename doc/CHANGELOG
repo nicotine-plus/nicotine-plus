@@ -37,6 +37,11 @@ Search
  * Search results turn red when a user goes offline (configurable)
 
 Chat
+ * Text-To-Speech support added (configurable under Settings->Misc->Sounds)
+   individual chat rooms can be disabled with the text-to-speech toggle button.
+   Chat messages are read out, and nick mentions are announced. By default,
+   there are commands for flite ( http://www.speech.cs.cmu.edu/flite/ )
+   and festival ( http://www.cstr.ed.ac.uk/projects/festival/ ).
  * URL color is configurable
  * Log files' timestamps are also configurable. Default is "%Y-%m-%d %H:%M:%S"
  * Timestamps configurable, disableable (under Settings->Chat->Logging)

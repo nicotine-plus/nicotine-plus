@@ -147,7 +147,7 @@ class MainWindow:
 		self.HideChatButtons = gtk.CheckMenuItem(_("Hide chat room log and list toggles"))
 		self.HideChatButtons.show()
 		self.HideChatButtons.connect("toggled", self.OnHideChatButtons)
-		self.HideChatButtons.add_accelerator("activate", self.accel_group, gtk.gdk.keyval_from_name("T"), gtk.gdk.MOD1_MASK, gtk.ACCEL_VISIBLE)
+		self.HideChatButtons.add_accelerator("activate", self.accel_group, gtk.gdk.keyval_from_name("B"), gtk.gdk.MOD1_MASK, gtk.ACCEL_VISIBLE)
 
 		self.edit_menu.append(self.HideChatButtons)
 
@@ -1095,32 +1095,6 @@ class MainWindow:
 
 		self.hbox12.pack_end(self.SimilarUsersButton, False, False, 0)
 
-		self.RecommendationsButton = gtk.Button()
-		self.RecommendationsButton.show()
-		self.RecommendationsButton.connect("clicked", self.OnRecommendationsClicked)
-
-		self.alignment5 = gtk.Alignment(0.5, 0.5, 0, 0)
-		self.alignment5.show()
-
-		self.hbox25 = gtk.HBox(False, 0)
-		self.hbox25.show()
-		self.hbox25.set_spacing(2)
-
-		self.image5 = gtk.Image()
-		self.image5.set_from_stock(gtk.STOCK_REFRESH, 4)
-		self.image5.show()
-		self.hbox25.pack_start(self.image5, False, False, 0)
-
-		self.label34 = gtk.Label(_("Recommendations"))
-		self.label34.show()
-		self.hbox25.pack_start(self.label34, False, False, 0)
-
-		self.alignment5.add(self.hbox25)
-
-		self.RecommendationsButton.add(self.alignment5)
-
-		self.hbox12.pack_end(self.RecommendationsButton, False, False, 0)
-
 		self.GlobalRecommendationsButton = gtk.Button()
 		self.GlobalRecommendationsButton.show()
 		self.GlobalRecommendationsButton.connect("clicked", self.OnGlobalRecommendationsClicked)
@@ -1146,6 +1120,32 @@ class MainWindow:
 		self.GlobalRecommendationsButton.add(self.alignment4)
 
 		self.hbox12.pack_end(self.GlobalRecommendationsButton, False, False, 0)
+
+		self.RecommendationsButton = gtk.Button()
+		self.RecommendationsButton.show()
+		self.RecommendationsButton.connect("clicked", self.OnRecommendationsClicked)
+
+		self.alignment5 = gtk.Alignment(0.5, 0.5, 0, 0)
+		self.alignment5.show()
+
+		self.hbox25 = gtk.HBox(False, 0)
+		self.hbox25.show()
+		self.hbox25.set_spacing(2)
+
+		self.image5 = gtk.Image()
+		self.image5.set_from_stock(gtk.STOCK_REFRESH, 4)
+		self.image5.show()
+		self.hbox25.pack_start(self.image5, False, False, 0)
+
+		self.label34 = gtk.Label(_("Recommendations"))
+		self.label34.show()
+		self.hbox25.pack_start(self.label34, False, False, 0)
+
+		self.alignment5.add(self.hbox25)
+
+		self.RecommendationsButton.add(self.alignment5)
+
+		self.hbox12.pack_end(self.RecommendationsButton, False, False, 0)
 
 		self.interests.pack_start(self.hbox12, False, True, 0)
 
@@ -1513,10 +1513,10 @@ class MainWindow:
 	def OnSimilarUsersClicked(self, widget):
 		pass
 
-	def OnRecommendationsClicked(self, widget):
+	def OnGlobalRecommendationsClicked(self, widget):
 		pass
 
-	def OnGlobalRecommendationsClicked(self, widget):
+	def OnRecommendationsClicked(self, widget):
 		pass
 
 	def OnAddThingILike(self, widget):
@@ -1555,6 +1555,28 @@ class ChatRoomTab:
 		self.Ticker = self.get_custom_widget("Ticker", "", "", 0, 0)
 		self.Ticker.connect("button_press_event", self.OnTickerClicked)
 		self.hbox7.pack_start(self.Ticker)
+
+		self.Speech = gtk.ToggleButton()
+		self.tooltips.set_tip(self.Speech, _("Toggle Text-To-Speech"))
+		self.Speech.set_active(True)
+		self.Speech.show()
+
+		self.alignment45 = gtk.Alignment(0.5, 0.5, 0, 0)
+		self.alignment45.show()
+
+		self.hbox48 = gtk.HBox(False, 0)
+		self.hbox48.show()
+
+		self.SpeechIcon = gtk.Image()
+		self.SpeechIcon.set_from_stock(gtk.STOCK_MEDIA_PLAY, 1)
+		self.SpeechIcon.show()
+		self.hbox48.pack_start(self.SpeechIcon, False, False, 0)
+
+		self.alignment45.add(self.hbox48)
+
+		self.Speech.add(self.alignment45)
+
+		self.hbox7.pack_end(self.Speech, False, False, 0)
 
 		self.HideUserList = gtk.ToggleButton()
 		self.tooltips.set_tip(self.HideUserList, _("Hide/Show User list"))

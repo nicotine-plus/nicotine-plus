@@ -117,6 +117,8 @@ class NicotineFrame(MainWindow):
 		self.awaytimer = None
 		self.SEXY = SEXY
 		self.chatrooms = None
+		self.tts = []
+		self.tts_playing = self.continue_playing = False
 		
 		self.got_focus = False
 
@@ -627,20 +629,49 @@ class NicotineFrame(MainWindow):
 					self.MainWindow.set_title(_("Nicotine+") + " " + version+ " :: " +  _("You've been mentioned in the %(room)s room" % {'room':room} ) )
 				else:
 					self.MainWindow.set_title(_("Nicotine+") + " " + version+ " :: " +  _("%(user)s mentioned you in the %(room)s room" % {'user':user, 'room':room } ) )
+					
+	def new_tts(self, message):
+		if not self.np.config.sections["ui"]["speechenabled"]:
+			return
+		if message not in self.tts:
+			self.tts.append(message)
+			thread.start_new_thread(self.play_tts, ())
+			
+	def play_tts(self):
+		if self.tts_playing:
+			self.continue_playing = True
+			return
+		for message in self.tts[:]:
+			self.tts_player(message)
+			if message in self.tts:
+				self.tts.remove(message)
+		self.tts_playing = False
+		if self.continue_playing:
+			self.continue_playing = False
+			self.play_tts()
+			
+	def tts_clean(self, message):
+		for i in ["_", "[", "]", "(", ")"]:
+			message = message.replace(i, " ")
+		return message
+		
+	def tts_player(self, message):
+		self.tts_playing = True
+		os.system(self.np.config.sections["ui"]["speechcommand"]  % message)
 
+		
 	def sound(self, message, user, place=None):
 		if sys.platform == "win32":
 			return
 		if "soundenabled" not in self.np.config.sections["ui"] or not self.np.config.sections["ui"]["soundenabled"]:
 			return
 		
-		if "speechenabled" in self.np.config.sections["ui"]:
-			if self.np.config.sections["ui"]["speechenabled"]:
-				if message == "room_nick" and place is not None:
-					os.system("flite -t \"%s, the user, %s has mentioned your name in the room, %s.\" &" %(self.np.config.sections[ "server"]["login"], user, place) )
-				elif message == "private":
-					os.system("flite -t \"%s, you have recieved a private message from %s.\" &" %(self.np.config.sections["server"]["login"], user ) )
-				return
+		if self.np.config.sections["ui"]["speechenabled"]:
+			if message == "room_nick" and place is not None:
+				self.new_tts(_("%(myusername)s, the user, %(username)s has mentioned your name in the room, %(place)s.") %{ "myusername": self.np.config.sections[ "server"]["login"], "username": user, "place": place} )
+			elif message == "private":
+				self.new_tts("%(myusername)s, you have recieved a private message from %(username)s." % {"myusername":self.np.config.sections["server"]["login"], "username":user } )
+			return
 		if "soundcommand" not in self.np.config.sections["ui"]:
 			return
 		command = self.np.config.sections["ui"]["soundcommand"]
@@ -1461,6 +1492,8 @@ class NicotineFrame(MainWindow):
 			self.settingswindow.UpdateColours()
 			self.UpdateColours()
 			
+		self.OnHideChatButtons()
+		
 		closers = self.np.config.sections["ui"]["tabclosers"]
 
 		for w in self.ChatNotebook, self.PrivatechatNotebook, self.UserInfoNotebook, self.UserBrowseNotebook, self.SearchNotebook:
@@ -1718,13 +1751,14 @@ class NicotineFrame(MainWindow):
 		dlg.run()
 		dlg.destroy()
 		
-	def OnHideChatButtons(self, widget):
-		hide = widget.get_active()
-		self.np.config.sections["ui"]["chat_hidebuttons"] = hide
+	def OnHideChatButtons(self, widget=None):
+		if widget is not None:
+			hide = widget.get_active()
+			self.np.config.sections["ui"]["chat_hidebuttons"] = hide
 		if self.chatrooms is None:
 			return
 		for room in self.chatrooms.roomsctrl.joinedrooms.values():
-			room.OnHideChatButtons(hide)
+			room.OnHideChatButtons(self.np.config.sections["ui"]["chat_hidebuttons"])
 
 		self.np.config.writeConfig()
 		

@@ -353,8 +353,8 @@ class ChatRoom(ChatRoomTab):
 		config = self.frame.np.config.sections
 		if not self.frame.np.config.sections["ticker"]["hide"]:
 			self.Ticker.show()
-		if self.frame.np.config.sections["ui"]["chat_hidebuttons"]:
-			self.OnHideChatButtons(True)
+		
+		self.OnHideChatButtons(hide=self.frame.np.config.sections["ui"]["chat_hidebuttons"])
 			
 		if self.frame.translux:
 			self.tlux_roomlog = lambda: self.RoomLog.get_window(gtk.TEXT_WINDOW_TEXT)
@@ -533,12 +533,15 @@ class ChatRoom(ChatRoomTab):
 		self.frame.OnAboutChatroomCommands(widget)
 
 	def OnHideChatButtons(self, hide=False):
-
 		for widget in self.HideStatusLog, self.HideUserList, self.ShowChatHelp:
 			if hide:
 				widget.hide()
 			else:
 				widget.show()
+		if self.frame.np.config.sections["ui"]["speechenabled"] and not hide:
+			self.Speech.show()
+		else:
+			self.Speech.hide()
 				
 				
 	def OnHideStatusLog(self, widget):
@@ -601,9 +604,11 @@ class ChatRoom(ChatRoomTab):
 			
 		if text[:4] == "/me ":
 			line = "* %s %s" % (user, text[4:])
+			speech = line[2:]
 			tag = self.tag_me
 		else:
 			line = "[%s] %s" % (user, text)
+			speech = text
 		
 		if len(self.lines) >= 400:
 			buffer = self.ChatScroll.get_buffer()
@@ -622,6 +627,8 @@ class ChatRoom(ChatRoomTab):
 		timestamp_format=self.frame.np.config.sections["logging"]["rooms_timestamp"]
 		if user != login:
 			self.lines.append(AppendLine(self.ChatScroll, self.frame.CensorChat(self.frame.np.decode(line, self.encoding)), tag, username=user, usertag=self.tag_users[user], timestamp_format=timestamp_format))
+			if self.Speech.get_active():
+				self.frame.new_tts(self.frame.np.config.sections["ui"]["speechrooms"] % (self.room, self.frame.tts_clean(user), self.frame.tts_clean(self.frame.np.decode(speech, self.encoding))) )
 		else:
 			self.lines.append(AppendLine(self.ChatScroll, self.frame.np.decode(line, self.encoding), tag, username=user, usertag=self.tag_users[user], timestamp_format=timestamp_format))
 		if self.Log.get_active():

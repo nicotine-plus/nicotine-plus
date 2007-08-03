@@ -109,19 +109,20 @@ class PrivateChats(IconNotebook):
 		if msg.user in self.frame.np.config.sections["server"]["ignorelist"]:
 			return
 
+		
+		self.SendMessage(msg.user, None)
+		self.request_changed(self.users[msg.user].Main)
+		self.frame.RequestIcon(self.frame.PrivateChatTabLabel)
+		if self.get_current_page() != self.page_num(self.users[msg.user].Main) or self.frame.MainNotebook.get_current_page() != 1:
+			self.frame.Notification("private", msg.user)
+		self.users[msg.user].ShowMessage(text, status, msg.timestamp)
 		ctcpversion = 0
 		if text == "\x01VERSION\x01":
 			ctcpversion = 1
 			text = "CTCP VERSION"
-		self.SendMessage(msg.user, None)
-		tab = self.users[msg.user]
-		tab.ShowMessage(text, status, msg.timestamp)
 		if ctcpversion and self.frame.np.config.sections["server"]["ctcpmsgs"] == 0:
 			self.SendMessage(msg.user, "Nicotine-Plus %s" % version)
-		self.request_changed(tab.Main)
-		self.frame.RequestIcon(self.frame.PrivateChatTabLabel)
-		if self.get_current_page() != self.page_num(self.users[msg.user].Main) or self.frame.MainNotebook.get_current_page() != 1:
-			self.frame.Notification("private", msg.user)
+		
 		
 		#else:
 			#self.frame.MainWindow.set_urgency_hint(False)
@@ -324,9 +325,11 @@ class PrivateChat(PrivateChatTab):
 	def ShowMessage(self, text, status=None, timestamp=None):
 		if text[:4] == "/me ":
 			line = "* %s %s" % (self.user, self.frame.CensorChat(text[4:]))
+			speech = line[2:]
 			tag = self.tag_me
 		else:
 			line = "[%s] %s" % (self.user, self.frame.CensorChat(text))
+			speech = self.frame.CensorChat(text)
 			tag = self.tag_remote
 		line = self.frame.np.decode(line, self.encoding)
 		timestamp_format=self.frame.np.config.sections["logging"]["private_timestamp"]
@@ -342,7 +345,7 @@ class PrivateChat(PrivateChatTab):
 			
 			AppendLine(self.ChatScroll, _("* Message(s) sent while you were offline."), self.tag_hilite, timestamp_format=timestamp_format)
 			self.offlinemessage = 1
-			
+		self.frame.new_tts(self.frame.np.config.sections["ui"]["speechprivate"] %(self.frame.tts_clean(self.user), self.frame.tts_clean(speech)) )
 
 	def SendMessage(self, text):
 		my_username = self.frame.np.config.sections["server"]["login"]

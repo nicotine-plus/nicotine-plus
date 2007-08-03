@@ -106,7 +106,7 @@ class Config:
 "decimalsep":",", "chatfont": "", "roomlistcollapsed": 0, "tabclosers": 1, \
 "searchoffline":"#aa0000", "showaway": 0, \
 "buddylistinchatrooms": 0, "trayicon": 1, "soundenabled": 1, "soundtheme": "", \
-"soundcommand": "play -q", "filemanager": "rox $", "speechenabled": 0, "enabletrans":0, \
+"soundcommand": "play -q", "filemanager": "rox $", "speechenabled": 0, "speechprivate": "%s told you.. %s", "speechrooms": "In %s, %s said %s", "speechcommand": "flite -t \"%s\"", "enabletrans":0, \
 "transtint": "#aaaaaa", "transalpha": 150, "transfilter": 0x00000000L,
 "width": 800, "height": 600}, \
 \
