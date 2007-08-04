@@ -2530,7 +2530,7 @@ class gstreamer:
 			pygst.require("0.10")
 			import gst
 		except Exception, error:
-			print _("ERROR: Gstreamer-python module failed to load:"), error
+			#print _("WARNING: Gstreamer-python module failed to load:"), error
 			return
 		self.gst = gst
 		try:

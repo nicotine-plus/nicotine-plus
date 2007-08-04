@@ -289,7 +289,7 @@ class UserInfo(UserInfoTab):
 	def ShowUserInfo(self, descr, has_pic, pic, totalupl, queuesize, slotsavail, uploadallowed):
 		self.conn = None
 		self._descr = descr
-		
+		self.image_pixbuf = None
 		self.descr.get_buffer().set_text("")
 		
 		AppendLine(self.descr, self.frame.np.decode(descr, self.encoding), self.tag_local, showstamp=False, scroll=False)
@@ -421,7 +421,7 @@ class UserInfo(UserInfoTab):
 
 		import gc
 
-		if self.image is None or self.actual_zoom > 100:
+		if self.image is None or self.image_pixbuf is None or self.actual_zoom > 100:
 			return
 
 		x = self.image_pixbuf.get_width()
@@ -443,7 +443,7 @@ class UserInfo(UserInfoTab):
 
 		import gc
 
-		if self.image is None:
+		if self.image is None or self.image_pixbuf is None :
 			return
 
 		x = self.image_pixbuf.get_width()
