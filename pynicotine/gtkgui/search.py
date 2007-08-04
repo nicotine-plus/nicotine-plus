@@ -801,18 +801,20 @@ class Search(SearchTab):
 		self.frame.np.config.sections["columns"]["search"] = columns
 		
 	def SelectedResultsCallback(self, model, path, iter):
-		user = model.get_value(iter, 2)
-		fn = model.get_value(iter, 11)
-		try:
-			size = model.get_value(iter, 13)
-		except Exception, error:
-			print error
-			size = 0
-		if size is None:
-			size = 0
-		bitrate = model.get_value(iter, 7)
-		length = model.get_value(iter, 8)
-		
+		num = model.get_value(iter, 0)
+		user = None
+  		for r in model.all_data:
+			if num != r[0]:
+				continue
+			user = r[2]
+			fn = r[11]
+			size = r[13]
+			bitrate = r[7]
+			length  = r[8]
+			break
+		if user is None:
+			return
+
 		self.selected_results.append((user, fn, size, bitrate, length))
 		
 		if not user in self.selected_users:
