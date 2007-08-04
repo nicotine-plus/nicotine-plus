@@ -4495,6 +4495,7 @@
     <child>
       <widget class="GtkVBox" id="vbox2">
         <property name="visible">True</property>
+        <property name="spacing">3</property>
         <child>
           <widget class="GtkScrolledWindow" id="scrolledwindow10">
             <property name="visible">True</property>
@@ -4513,8 +4514,7 @@
         <child>
           <widget class="GtkHBox" id="hbox1">
             <property name="visible">True</property>
-            <property name="border_width">3</property>
-            <property name="spacing">5</property>
+            <property name="spacing">3</property>
             <child>
               <widget class="GtkLabel" id="label10">
                 <property name="visible">True</property>
@@ -4522,7 +4522,6 @@
               </widget>
               <packing>
                 <property name="expand">False</property>
-                <property name="fill">False</property>
               </packing>
             </child>
             <child>
@@ -4541,36 +4540,17 @@
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                <property name="tooltip" translatable="yes">Hide room list</property>
                 <property name="response_id">0</property>
                 <child>
                   <widget class="GtkAlignment" id="alignment27">
                     <property name="visible">True</property>
                     <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                     <child>
-                      <widget class="GtkHBox" id="hbox27">
+                      <widget class="GtkImage" id="image7">
                         <property name="visible">True</property>
                         <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                        <property name="spacing">2</property>
-                        <child>
-                          <widget class="GtkImage" id="image7">
-                            <property name="visible">True</property>
-                            <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                            <property name="stock">gtk-remove</property>
-                          </widget>
-                          <packing>
-                            <property name="expand">False</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <widget class="GtkLabel" id="JumpLabel">
-                            <property name="visible">True</property>
-                            <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                            <property name="label" translatable="yes">Hide list</property>
-                          </widget>
-                          <packing>
-                            <property name="position">1</property>
-                          </packing>
-                        </child>
+                        <property name="stock">gtk-remove</property>
                       </widget>
                     </child>
                   </widget>

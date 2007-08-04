@@ -2915,6 +2915,7 @@ class RoomList:
 
 		self.vbox2 = gtk.VBox(False, 0)
 		self.vbox2.show()
+		self.vbox2.set_spacing(3)
 
 		self.scrolledwindow10 = gtk.ScrolledWindow()
 		self.scrolledwindow10.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
@@ -2929,12 +2930,11 @@ class RoomList:
 
 		self.hbox1 = gtk.HBox(False, 0)
 		self.hbox1.show()
-		self.hbox1.set_spacing(5)
-		self.hbox1.set_border_width(3)
+		self.hbox1.set_spacing(3)
 
 		self.label10 = gtk.Label(_("Create: "))
 		self.label10.show()
-		self.hbox1.pack_start(self.label10, False, False, 0)
+		self.hbox1.pack_start(self.label10, False, True, 0)
 
 		self.CreateRoomEntry = gtk.Entry()
 		self.CreateRoomEntry.show()
@@ -2942,25 +2942,16 @@ class RoomList:
 		self.hbox1.pack_start(self.CreateRoomEntry)
 
 		self.HideRoomList = gtk.Button()
+		self.tooltips.set_tip(self.HideRoomList, _("Hide room list"))
 		self.HideRoomList.show()
 
 		self.alignment27 = gtk.Alignment(0.5, 0.5, 0, 0)
 		self.alignment27.show()
 
-		self.hbox27 = gtk.HBox(False, 0)
-		self.hbox27.show()
-		self.hbox27.set_spacing(2)
-
 		self.image7 = gtk.Image()
 		self.image7.set_from_stock(gtk.STOCK_REMOVE, 4)
 		self.image7.show()
-		self.hbox27.pack_start(self.image7, False, True, 0)
-
-		self.JumpLabel = gtk.Label(_("Hide list"))
-		self.JumpLabel.show()
-		self.hbox27.pack_start(self.JumpLabel)
-
-		self.alignment27.add(self.hbox27)
+		self.alignment27.add(self.image7)
 
 		self.HideRoomList.add(self.alignment27)
 
