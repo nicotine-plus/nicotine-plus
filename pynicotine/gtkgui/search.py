@@ -769,7 +769,7 @@ class Search(SearchTab):
 		self.select_results()
 		
 	def select_results(self):
-		self.selected_transfers = []
+		self.selected_results = []
 		self.selected_users = []
 		self.ResultsList.get_selection().selected_foreach(self.SelectedResultsCallback)
 		
@@ -842,10 +842,8 @@ class Search(SearchTab):
 		for i in range(0, 4):
 			items[i].set_sensitive(act)
 
-		if len(self.selected_results) == 1:
-			act = True
-		else:
-			act = False
+		act = len(self.selected_results) == 1 and True or False
+
 		items[5].set_sensitive(act)
 		items[6].set_sensitive(act)
 		act = False
