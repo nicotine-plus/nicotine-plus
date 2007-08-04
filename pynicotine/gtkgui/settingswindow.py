@@ -147,7 +147,7 @@ class SharesFrame(settings_glade.SharesFrame):
 		transfers = self.frame.np.config.sections["transfers"]
 		if transfers["incompletedir"] is not None and transfers["incompletedir"] != "":
 			return
-		self.UploadDir.set_text("%s/%s" % (self.DownloadDir.get_text(), _("Buddy Uploads")))
+		self.UploadDir.set_text(os.sep.join([self.DownloadDir.get_text(), _("Buddy Uploads")]))
 		
 	def SetSettings(self, config):
 		transfers = config["transfers"]
@@ -158,14 +158,15 @@ class SharesFrame(settings_glade.SharesFrame):
 			self.IncompleteDir.set_text(recode(transfers["incompletedir"]))
 		else:
 			self.p.Hilight(self.IncompleteDir)
-		if transfers["downloaddir"] is not None and transfers["downloaddir"] != "":
-			self.DownloadDir.set_text(recode(transfers["downloaddir"]))
-		else:
-			self.p.Hilight(self.DownloadDir)
 		if transfers["uploaddir"] is not None and transfers["uploaddir"] != "":
 			self.UploadDir.set_text(recode(transfers["uploaddir"]))
 		else:
 			self.p.Hilight(self.UploadDir)
+		if transfers["downloaddir"] is not None and transfers["downloaddir"] != "":
+			self.DownloadDir.set_text(recode(transfers["downloaddir"]))
+		else:
+			self.p.Hilight(self.DownloadDir)
+		
 		if transfers["sharedownloaddir"] is not None:
 			
 			self.ShareDownloadDir.set_active(transfers["sharedownloaddir"])
@@ -194,6 +195,7 @@ class SharesFrame(settings_glade.SharesFrame):
 		else:
 			self.p.Hilight(self.enableBuddyShares)
 		self.OnEnabledBuddySharesToggled(self.enableBuddyShares)
+
 		self.needrescan = 0
 
 	def GetSettings(self):
