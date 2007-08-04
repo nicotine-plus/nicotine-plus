@@ -313,6 +313,7 @@ class ImageLabel(gtk.HBox):
 		self._order_children()
 		
 	def _pack_children(self):
+		self.set_spacing(0)
 		if "Box" in self.__dict__:
 			for widget in self.Box.get_children():
 				self.Box.remove(widget)
@@ -374,14 +375,15 @@ class ImageLabel(gtk.HBox):
 			return
 		self.button = gtk.Button()
 		img = gtk.Image()
-		img.set_from_stock(gtk.STOCK_CLOSE, 1)
+		img.set_from_stock(gtk.STOCK_CLOSE, gtk.ICON_SIZE_MENU)
 		self.button.add(img)
 		if self.onclose is not None:
 			self.button.connect("clicked", self.onclose)
 		self.button.set_relief(gtk.RELIEF_NONE)
-		#self.button.set_size_request(18,18)
+
 		self.button.show_all()
 		self.Box.pack_start(self.button, False, False)
+		
 
 	def _remove_close_button(self):
 		if "button" not in self.__dict__:

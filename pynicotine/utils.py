@@ -27,7 +27,7 @@ version = "1.2.9svn"
 latesturl = "http://nicotine-plus.sourceforge.net/LATEST"
 
 import string
-import os.path
+from UserDict import UserDict
 import os,dircache
 import sys
 import gobject
@@ -377,3 +377,48 @@ def escapeCommand(filename):
 			escaped += "\\"
 		escaped += ch
 	return escaped
+
+
+
+## Dictionary that's sorted alphabetically
+# @param UserDict dictionary to be alphabetized	
+class SortedDict(UserDict):
+	## Constructor
+	# @param self SortedDict
+	def __init__(self):
+		self.__keys__ = []
+		self.__sorted__ = True
+		UserDict.__init__(self)
+		
+	## Set key
+	# @param self SortedDict
+	# @param key dict key
+	# @param value dict value
+	def __setitem__(self, key, value):
+		if not self.__dict__.has_key(key):
+			self.__keys__.append(key) 
+			self.__sorted__ = False   
+		UserDict.__setitem__(self, key, value)
+	## Delete key
+	# @param self SortedDict
+	# @param key dict key
+	def __delitem__(self, key):
+		self.__keys__.remove(key)
+		UserDict.__delitem__(self, key)
+	## Get keys
+	# @param self SortedDict
+	# @return __keys__ 
+	def keys(self):
+		if not self.__sorted__:
+			self.__keys__.sort()
+			self.__sorted__ = True
+		return self.__keys__
+	## Get items
+	# @param self SortedDict
+	# @return list of keys and items
+	def items(self):
+		if not self.__sorted__:
+			self.__keys__.sort()
+			self.__sorted__ = True
+		for key in self.__keys__:
+			yield key, self[key]
