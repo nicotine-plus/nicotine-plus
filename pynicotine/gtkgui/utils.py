@@ -374,12 +374,12 @@ class ImageLabel(gtk.HBox):
 			return
 		self.button = gtk.Button()
 		img = gtk.Image()
-		img.set_from_stock(gtk.STOCK_CLOSE, gtk.ICON_SIZE_MENU)
+		img.set_from_stock(gtk.STOCK_CLOSE, 1)
 		self.button.add(img)
 		if self.onclose is not None:
 			self.button.connect("clicked", self.onclose)
 		self.button.set_relief(gtk.RELIEF_NONE)
-		self.button.set_size_request(18,18)
+		#self.button.set_size_request(18,18)
 		self.button.show_all()
 		self.Box.pack_start(self.button, False, False)
 
