@@ -685,6 +685,7 @@ class Transfers:
 							fname = pyfname
 						else:
 							fname = pynewfname
+						
 						if win32:
 							f = open(u"%s" % fname, 'ab+')
 						else:
@@ -717,9 +718,9 @@ class Transfers:
 						i.file = f
 						i.offset = size
 						i.starttime = time.time()
-						self.eventprocessor.logMessage(_("Download started: %s") % self.decode(f.name))
+						self.eventprocessor.logMessage(_("Download started: %s") % (u"%s" % f.name))
 
-						self.eventprocessor.logTransfer(_("Download started: user %(user)s, file %(file)s") % {'user':i.user, 'file':self.decode(i.filename)})
+						self.eventprocessor.logTransfer(_("Download started: user %(user)s, file %(file)s") % {'user':i.user, 'file':u"%s" % f.name})
 		
 				self.downloadspanel.update(i)
 				return
@@ -806,16 +807,16 @@ class Transfers:
 							f1 = open(msg.file.name, "rb")
 							d = f1.read()
 							if win32:
-								f1 = open(u"%s" % newname, "w")
+								f1 = open(u"%s" % newname, "wb")
 							else:
-								f1 = open(newname, "w")
+								f1 = open(newname, "wb")
 							f1.write(d)
 							f1.close()
 							os.remove(msg.file.name)
 						except OSError:
 							self.eventprocessor.logMessage(_("Couldn't move '%(tempfile)s' to '%(file)s'") % {'tempfile':self.decode(msg.file.name), 'file':self.decode(newname)})
 					i.status = "Finished"
-					self.eventprocessor.logMessage(_("Download finished: %(file)s") % {'file':self.decode(newname)})
+					self.eventprocessor.logMessage(_("Download finished: %(file)s") % {'file':u"%s" % newname})
 					self.eventprocessor.logTransfer(_("Download finished: user %(user)s, file %(file)s") % {'user':i.user, 'file':self.decode(i.filename)})
 					self.queue.put(slskmessages.ConnClose(msg.conn))
 					#if i.speed is not None:
@@ -1389,12 +1390,13 @@ class Transfers:
 	
 	def encode(self, string, user = None):
 		coding = None
-		if user and user in self.eventprocessor.config.sections["server"]["userencoding"]:
-			coding = self.eventprocessor.config.sections["server"]["userencoding"][user]
+		config = self.eventprocessor.config.sections
+		if user and user in config["server"]["userencoding"]:
+			coding = config["server"]["userencoding"][user]
 		string = self.eventprocessor.decode(string, coding)
 		try:
 			
-			return string.encode(locale.nl_langinfo(locale.CODESET), "replace")
+			return string.encode(locale.nl_langinfo(locale.CODESET))
 	#            return s.sencode(os.filesystemencoding(), "replace")
 		except:
 			return string
