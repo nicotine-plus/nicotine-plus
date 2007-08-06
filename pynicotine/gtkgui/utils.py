@@ -1008,7 +1008,7 @@ class ImportWinSlskConfig:
 		
 		The file can contain some unknown stuff at the end."""
 		
-		infile = open(fname, 'r')
+		infile = open(fname, 'rb')
 		intsize = 4
 		downloads = []
 		
@@ -1040,7 +1040,7 @@ class ImportWinSlskConfig:
 		- followed by some undetermined bytes"""
 		
 		
-		infile = open(fname, 'r')
+		infile = open(fname, 'rb')
 		intsize = 4
 		downloads = []
 		
@@ -1068,7 +1068,7 @@ class ImportWinSlskConfig:
 		
 		- The length of the username, followed by the username"""
 		
-		infile = open(fname, 'r')
+		infile = open(fname, 'rb')
 		intsize = 4
 		users = []
 		
@@ -1091,7 +1091,7 @@ class ImportWinSlskConfig:
 		- one byte, an indication for an image. 0 is no image, 1 is image
 		- an int with the image size, followed by the image data """
 		
-		infile = open(fname, 'r')
+		infile = open(fname, 'rb')
 		intsize = 4
 		
 		imgdata = None
@@ -1122,7 +1122,7 @@ class ImportWinSlskConfig:
 			return ""
 		
 		fname = os.path.abspath(self.config.filename + '-userinfo.' + extension)
-		outfile = open(fname, "w")
+		outfile = open(fname, "wb")
 		outfile.write(imgdata)
 		outfile.close()
 		print "Wrote image to \"%s\"" % (fname)
