@@ -75,6 +75,7 @@ class NetworkEventProcessor:
 		self.setStatus = setstatus
 	
 		self.config = Config(configfile)
+		self.config.frame = frame
 		self.config.readConfig()
 	
 		self.queue = Queue.Queue(0)
@@ -290,7 +291,7 @@ class NetworkEventProcessor:
 		self.logMessage(_("The server seems to be down or not responding, retrying in %i seconds") %(self.servertimeout))
 	
 	def ServerTimeout(self):
-		if not self.config.needConfig()[0]:
+		if not self.config.needConfig():
 			self.callback([slskmessages.ConnectToServer()])
 	
 	def StopTimers(self):

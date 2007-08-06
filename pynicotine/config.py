@@ -50,7 +50,7 @@ class Config:
 	def __init__(self, filename):
 		self.config_lock = thread.allocate_lock()
 		self.config_lock.acquire()
-	
+		self.frame = None
 		self.filename = filename
 		self.parser = ConfigParser.ConfigParser()
 		self.parser.read([self.filename])
@@ -138,17 +138,31 @@ class Config:
     
     
 	def needConfig(self):
-		for i in self.sections.keys():
-			for j in self.sections[i].keys():
-		# 		print self.sections[i][j]
-				if self.sections[i][j] is None or self.sections[i][j] == '' and i not in ("userinfo", "ui", "ticker", "players") and j not in ("incompletedir", "autoreply", 'afterfinish', 'afterfolder', 'geoblockcc', 'downloadregexp', "language"):
-					# Repair options set to None with defaults
-					if self.sections[i][j] is None and self.defaults[i][j] is not None:
-						self.sections[i][j] = self.defaults[i][j]
-						return 2, (i, j, self.sections[i][j])
-					else:
-						return 1, (i, j, self.sections[i][j])
-		return 0, ""
+		errorlevel = 0
+		try:
+			for i in self.sections.keys():
+				for j in self.sections[i].keys():
+			# 		print self.sections[i][j]
+					if self.sections[i][j] is None or self.sections[i][j] == '' and i not in ("userinfo", "ui", "ticker", "players") and j not in ("incompletedir", "autoreply", 'afterfinish', 'afterfolder', 'geoblockcc', 'downloadregexp', "language"):
+						# Repair options set to None with defaults
+						if self.sections[i][j] is None and self.defaults[i][j] is not None:
+							self.sections[i][j] = self.defaults[i][j]
+							self.frame.logMessage(_("Config option reset to default: Section: %s, Option: %s, to: %s") % (i, j, self.sections[i][j]))
+							errorlevel = 1
+						else:
+							
+							self.frame.logMessage(_("You need to configure your settings (Server, Username, Password, Download Directory) before connecting..."))
+							self.frame.logMessage(_("Config option unset: Section: %s, Option: %s") % (i, j))
+							self.frame.settingswindow.InvalidSettings(i, j)
+							errorlevel = 2
+			
+		except Exception, error:
+			message = _("Config error: %s") % error
+			self.frame.logMessage(message)
+			errorlevel = 3
+		if errorlevel > 1:
+			self.frame.settingswindow.SetSettings(self.sections)
+		return 3
 
 	def readConfig(self):
 		self.config_lock.acquire()
@@ -157,15 +171,24 @@ class Config:
 			if not os.path.isdir(path):
 				os.makedirs(path)
 		except OSError, msg:
-			print "Can't create directory '%s', reported error: %s" % (path, msg)
+			message = "Can't create directory '%s', reported error: %s" % (path, msg)
+			print message
+			if self.frame:
+				self.frame.logMessage(message)
 		
 		for i in self.parser.sections():
 			for j in self.parser.options(i):
 				val = self.parser.get(i, j, raw = 1)
 				if i not in self.sections.keys():
-					print "Unknown config section:", i
+					message = "Unknown config section:", i
+					print message
+					if self.frame:
+						self.frame.logMessage(message)
 				elif j not in self.sections[i].keys() and j != "filter":
-					print "Unknown config option", j, "section", i
+					message = "Unknown config option", j, "section", i
+					print message
+					if self.frame:
+						self.frame.logMessage(message)
 				elif j in ['login','passw','enc',  'downloaddir', 'uploaddir', 'customban','descr','pic','logsdir','incompletedir', 'autoreply', 'afterfinish', 'downloadregexp', 'afterfolder', 'default', 'chatfont', "npothercommand", "npplayer", "npformat", "private_timestamp", "rooms_timestamp", "log_timestamp"] or (i == "ui" and j not in ["roomlistcollapsed", "tabclosers",  'buddylistinchatrooms', "trayicon", "showaway", "usernamehotspots", "exitdialog", "spellcheck", "chat_hidebuttons", "notexists", "soundenabled", "transalpha",  "enabletrans", "speechenabled", "enablefilters",  "width", "height", "labelmain", "labelrooms", "labelprivate", "labelinfo", "labelbrowse", "labelsearch"]) or (i == "words" and j not in ["completion", "censorwords", "replacewords", "autoreplaced", "censored", "characters", "tab", "dropdown", "roomnames", "buddies", "roomusers", "commands", "aliases", "onematch"]) or (i == "language" and j not in ["definelanguage", "setlanguage"]):
 
 					self.sections[i][j] = val
@@ -174,7 +197,10 @@ class Config:
 						self.sections[i][j] = eval(val, {})
 					except:
 						self.sections[i][j] = None
-						print "CONFIG ERROR: Couldn't decode %s section %s value %s" % (str(j), str(i), str(val))
+						message = "CONFIG ERROR: Couldn't decode %s section %s value %s" % (str(j), str(i), str(val))
+						print message
+						if self.frame:
+							self.frame.logMessage(message)
 		autojoin = self.sections["server"]["autojoin"]
 		for user in self.sections["server"]["userlist"]:
 			if len(user) == 2:
@@ -216,7 +242,10 @@ class Config:
 			sharedmtimes = shelve.open(self.filename+".mtimes.db")
 			bsharedmtimes = shelve.open(self.filename+".buddymtimes.db")
 		except:
-			print _("Shared files database seems to be corrupted, rescan your shares")
+			message = _("Shared files database seems to be corrupted, rescan your shares")
+			print message
+			if self.frame:
+				self.frame.logMessage(message)
 		
 			if sharedfiles:
 				sharedfiles.close()
@@ -325,20 +354,29 @@ class Config:
 			if not os.path.isdir(path):
 				os.makedirs(path)
 		except OSError, msg:
-			print _("Can't create directory '%(path)s', reported error: %(error)s") % {'path':path, 'error':msg}
+			message = _("Can't create directory '%(path)s', reported error: %(error)s") % {'path':path, 'error':msg}
+			print message
+			if self.frame:
+				self.frame.logMessage(message)
 		
 		oldumask = os.umask(0077)
 	
 		try:
 			f = open(self.filename + ".new", "w")
 		except IOError, e:
-			print _("Can't save config file, I/O error: %s") % e
+			message = _("Can't save config file, I/O error: %s") % e
+			print message
+			if self.frame:
+				self.frame.logMessage(message)
 			return
 		else:
 			try:
 				self.parser.write(f)
 			except IOError, e:
-				print _("Can't save config file, I/O error: %s") % e
+				message = _("Can't save config file, I/O error: %s") % e
+				print message
+				if self.frame:
+					self.frame.logMessage(message)
 				return
 			else:
 				f.close()
@@ -355,20 +393,29 @@ class Config:
 				try:
 					if os.path.exists(self.filename + ".old"):
 						os.remove(self.filename + ".old")
-				except OSError, s:
-					print s
+				except OSError, error:
+					message = _("Can't remove %s" % self.filename + ".old")
+					print message
+					if self.frame:
+						self.frame.logMessage(message)
 		
 				try:
 					os.rename(self.filename, self.filename + ".old")
 				except OSError, error:
-					print _("Can't back config file up, error: %s") % error
+					message = _("Can't back config file up, error: %s") % error
+					print message
+					if self.frame:
+						self.frame.logMessage(message)
 		except OSError:
 			pass
 	
 		try:
 			os.rename(self.filename + ".new", self.filename)
 		except OSError, error:
-			print _("Can't rename config file, error: %s") % error
+			message = _("Can't rename config file, error: %s") % error
+			print message
+			if self.frame:
+				self.frame.logMessage(message)
 	
 		self.config_lock.release()
 	

@@ -103,6 +103,7 @@ class NicotineFrame(MainWindow):
 	def __init__(self, config, use_trayicon):
 		
 		self.clip_data = ""
+		self.log_queue = []
 		self.configfile = config
 		self.transfermsgs = {}
 		self.transfermsgspostedtime = 0
@@ -397,20 +398,18 @@ class NicotineFrame(MainWindow):
 		self.SetTabPositions()
 
 		ConfigUnset = self.np.config.needConfig()
-		if ConfigUnset[0]:
-			if type(ConfigUnset[1]) is tuple:
-				if ConfigUnset[0] == 1:
-					self.connect1.set_sensitive(0)
-					self.rescan1.set_sensitive(0)
-					self.logMessage(_("You need to configure your settings (Server, Username, Password, Download Directory) before connecting..."))
-					self.logMessage(_("Config option unset: Section: %s, Option: %s") % (ConfigUnset[1][0], ConfigUnset[1][1]))
-					# Display Settings dialog
-					self.OnSettings(None)
-					self.settingswindow.InvalidSettings(ConfigUnset[1][0], ConfigUnset[1][1])
-				else:
-					self.logMessage(_("Config option reset to default: Section: %s, Option: %s, to: %s") % (ConfigUnset[1][0], ConfigUnset[1][1], ConfigUnset[1][2]))
-					# Connect anyway
-					self.OnConnect(-1)
+		if ConfigUnset:
+			if ConfigUnset == 1:
+				self.connect1.set_sensitive(0)
+				self.rescan1.set_sensitive(0)
+					
+				# Display Settings dialog
+				self.OnSettings(None)
+				
+			else:
+				
+				# Connect anyway
+				self.OnConnect(-1)
 		else:
 			self.OnConnect(-1)
 		self.UpdateDownloadFilters()
@@ -1073,7 +1072,18 @@ class NicotineFrame(MainWindow):
 			widget.modify_fg(gtk.STATE_NORMAL, colour)
 			
 	def logMessage(self, msg, debug = None):
+		if "LogWindow" not in self.__dict__:
+			self.log_queue.append((msg, debug))
+			return False
+		for message in self.log_queue[:]:
+			old_msg, old_debug = message
+			if old_debug is None or self.showdebug:
+				AppendLine(self.LogWindow, old_msg, self.tag_log)
+				if self.np.config.sections["logging"]["logcollapsed"]:
+					self.SetStatusText(old_msg)
+			self.log_queue.remove(message)
 		if debug is None or self.showdebug:
+
 			AppendLine(self.LogWindow, msg, self.tag_log)
 			if self.np.config.sections["logging"]["logcollapsed"]:
 				self.SetStatusText(msg)
@@ -1252,7 +1262,8 @@ class NicotineFrame(MainWindow):
 
 		
 	def OnExit(self, widget):
-		
+		if sys.platform == "win32" and self.TrayApp.trayicon:
+			self.TrayApp.trayicon.hide_icon()
 		self.MainWindow.destroy()
 	
 	def OnSearch(self, widget):
@@ -1502,17 +1513,14 @@ class NicotineFrame(MainWindow):
 			self.BothRescan()
 
 		ConfigUnset = self.np.config.needConfig()
-		if ConfigUnset[0]:
+		if ConfigUnset:
 			if self.np.transfers is not None:
 				self.connect1.set_sensitive(0)
-			self.logMessage(_("You need to finish configuring your settings (Server, Username, Password, Download Directory) before connecting... but if this message persists, check your Nicotine config file for options set to \'None\'."))
-			if type(ConfigUnset[1]) is tuple:
-				if ConfigUnset[0] == 1:
-					self.logMessage(_("Config option unset: Section: %s, Option: %s") % (ConfigUnset[1][0], ConfigUnset[1][1]))
-					self.OnSettings(None)
-					self.settingswindow.InvalidSettings(ConfigUnset[1][0], ConfigUnset[1][1])
-				else:
-					self.logMessage(_("Config option reset to default: Section: %s, Option: %s") % (ConfigUnset[1][0], ConfigUnset[1][1]))
+
+			if ConfigUnset == 1:
+				self.OnSettings(None)
+				
+	
 		else:
 			if self.np.transfers is None:
 				self.connect1.set_sensitive(1)
