@@ -685,9 +685,10 @@ class Transfers:
 							fname = pyfname
 						else:
 							fname = pynewfname
-
-						f = open(u"%s" % fname, 'ab+')
-
+						if win32:
+							f = open(u"%s" % fname, 'ab+')
+						else:
+							f = open(fname, 'ab+')
 					except IOError, strerror:
 						self.eventprocessor.logMessage(_("Download I/O error: %s") % strerror)
 						i.status = "Local file error"
@@ -796,12 +797,18 @@ class Transfers:
 						os.makedirs(folder)
 					newname = self.getRenamed(os.path.join(folder, basename))
 					try:
-						os.rename(msg.file.name, u"%s" % newname)
+						if win32:
+							os.rename(msg.file.name, u"%s" % newname)
+						else:
+							os.rename(msg.file.name, newname)
 					except OSError:
 						try:
 							f1 = open(msg.file.name, "rb")
 							d = f1.read()
-							f1 = open(u"%s" % newname, "w")
+							if win32:
+								f1 = open(u"%s" % newname, "w")
+							else:
+								f1 = open(newname, "w")
 							f1.write(d)
 							f1.close()
 							os.remove(msg.file.name)
@@ -815,7 +822,10 @@ class Transfers:
 						#self.queue.put(slskmessages.SendSpeed(i.user, int(i.speed*1024)))
 						#Removed due to misuse. Replaced by SendUploadSpeed
 					i.conn = None
-					self.addToShared(u"%s" % newname)
+					if win32:
+						self.addToShared(u"%s" % newname)
+					else:
+						self.addToShared(newname)
 					self.eventprocessor.sendNumSharedFoldersFiles()
 					self.SaveDownloads()
 					self.downloadspanel.update(i)
@@ -1245,8 +1255,10 @@ class Transfers:
 	def getRenamed(self, name):
 		""" When a transfer is finished, we remove INCOMPLETE~ or INCOMPLETE 
 		prefix from the file's name. """
-		if not os.path.exists(u"%s" % name) and not os.path.exists(name):
+		if win32 and not os.path.exists(u"%s" % name) and not os.path.exists(name):
 			# Filename doesn't exist, good for renaming
+			return name
+		elif not win32 and not os.path.exists(name):
 			return name
 		else:
 			# Append numbers to duplicate filenames so old files

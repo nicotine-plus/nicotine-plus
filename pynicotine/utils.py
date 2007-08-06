@@ -114,12 +114,17 @@ def rescandirs(shared, sharedmtimes, sharedfiles, sharedfilesstreams, yieldfunct
 	gobject.idle_add(progress.set_text, _("Checking for changes"))
 	gobject.idle_add(progress.show)
 	gobject.idle_add(progress.set_fraction, 0)
-	newmtimes = getDirsMtimes(shared, yieldfunction)
+	if win32:
+		newmtimes = getDirsMtimesUnicode(shared, yieldfunction)
+	else:
+		newmtimes = getDirsMtimes(shared, yieldfunction)
 	gobject.idle_add(progress.set_text, _("Scanning %s") % name)
 	# Get list of files
 	# returns dict in format { Directory : { File : metadata, ... }, ... }
-	newsharedfiles = getFilesList(newmtimes, sharedmtimes, sharedfiles,yieldfunction, progress)
-
+	if win32:
+		newsharedfiles = getFilesListUnicode(newmtimes, sharedmtimes, sharedfiles,yieldfunction, progress)
+	else:
+		newsharedfiles = getFilesList(newmtimes, sharedmtimes, sharedfiles,yieldfunction, progress)
 	# Pack shares data
 	# returns dict in format { Directory : hex string of files+metadata, ... }
 	gobject.idle_add(progress.set_text, _("Building DataBase"))
@@ -137,7 +142,7 @@ def rescandirs(shared, sharedmtimes, sharedfiles, sharedfilesstreams, yieldfunct
     
 
 # Get Modification Times
-def getDirsMtimes(dirs, yieldcall = None):
+def getDirsMtimesUnicode(dirs, yieldcall = None):
 	list = {}
 	for directory in dirs:
 		directory = os.path.expanduser(directory.replace("//","/"))
@@ -164,8 +169,6 @@ def getDirsMtimes(dirs, yieldcall = None):
 		list[str_directory] = mtime
 
 		for filename in contents:
-		
-
 			path = os.path.join(directory, filename)
 	
 			# force Unicode for reading from disk in win32
@@ -194,6 +197,57 @@ def getDirsMtimes(dirs, yieldcall = None):
 			else:
 				if isdir:
 					list[s_path] = mtime
+					dircontents = getDirsMtimesUnicode([path])
+					for k in dircontents:
+						list[k] = dircontents[k]
+				if yieldcall is not None:
+					yieldcall()
+	return list
+
+# Get Modification Times
+def getDirsMtimes(dirs, yieldcall = None):
+	list = {}
+	for directory in dirs:
+		directory = os.path.expanduser(directory.replace("//","/"))
+
+		if hiddenCheck(directory):
+			continue
+
+		try:
+			contents = dircache.listdir(directory)
+			mtime = os.path.getmtime(directory)
+		except OSError, errtuple:
+			message = _("Scanning Directory Error: %s Path: %s") % (errtuple, directory)
+			print str(message)
+			if log:
+				log(message)
+			displayTraceback(sys.exc_info()[2])
+			continue
+		list[directory] = mtime
+
+		for filename in contents:
+			path = os.path.join(directory, filename)
+
+
+			try:
+				isdir = os.path.isdir(path)
+			except OSError, errtuple:
+				message = _("Scanning Error: %s Path: %s") % (errtuple, path)
+				print str(message)
+				if log:
+					log(message)
+				continue
+			try:
+				mtime = os.path.getmtime(path)
+			except OSError, errtuple:
+				message = _("Scanning Error: %s Path: %s") % (errtuple, path)
+				print str(message)
+				if log:
+					log(message)
+				continue
+			else:
+				if isdir:
+					list[path] = mtime
 					dircontents = getDirsMtimes([path])
 					for k in dircontents:
 						list[k] = dircontents[k]
@@ -215,11 +269,6 @@ def getFilesList(mtimes, oldmtimes, oldlist, yieldcall = None, progress=None):
 			#print progress.get_fraction()+percent
 			if progress.get_fraction()+percent <= 1.0:
 				gobject.idle_add(progress.set_fraction,progress.get_fraction()+percent)
-		if type(directory) is str:
-			u_directory = directory
-		else:
-			# force Unicode for reading from disk
-			u_directory = u"%s" %directory
 
 		if hiddenCheck(directory):
 			continue
@@ -231,10 +280,7 @@ def getFilesList(mtimes, oldmtimes, oldlist, yieldcall = None, progress=None):
 		list[directory] = []
 
 		try:
-			if win32:
-				contents = dircache.listdir(u_directory)
-			else:
-				contents = os.listdir(u_directory)
+			contents = os.listdir(directory)
 		except OSError, errtuple:
 			print str(errtuple)
 			if log:
@@ -246,16 +292,73 @@ def getFilesList(mtimes, oldmtimes, oldlist, yieldcall = None, progress=None):
 			if hiddenCheck(filename):
 				continue	
 			path = os.path.join(directory, filename)
+			try:
+
+				isfile = os.path.isfile(path)
+			except OSError, errtuple:
+				message = _("Scanning Error: %s Path: %s") % (errtuple, path)
+				print str(message)
+				if log:
+					log(message)
+				displayTraceback(sys.exc_info()[2])
+				continue
+			else:
+				if isfile:
+					# It's a file, check if it is mp3 or ogg
+					data = getFileInfo(filename, path)
+					if data is not None:
+						list[directory].append(data)
+			if yieldcall is not None:
+				yieldcall()
+
+	return list
+
+# Check for new files
+def getFilesListUnicode(mtimes, oldmtimes, oldlist, yieldcall = None, progress=None):
+	""" Get a list of files with their filelength and 
+	(if mp3) bitrate and track length in seconds """
+	list = {}
+	if len(mtimes):
+		percent = 1.0 / len(mtimes)
+	
+	for directory in mtimes:
+		directory = os.path.expanduser(directory)
+		if progress:
+			#print progress.get_fraction()+percent
+			if progress.get_fraction()+percent <= 1.0:
+				gobject.idle_add(progress.set_fraction,progress.get_fraction()+percent)
+				
+		# force Unicode for reading from disk
+		u_directory = u"%s" %directory
+		str_directory = str(directory)
+
+		if hiddenCheck(directory):
+			continue
+		if directory in oldmtimes:
+			if mtimes[directory] == oldmtimes[directory]:
+				list[directory] = oldlist[directory]
+				continue
+
+		list[str_directory] = []
+
+		try:
+			contents = os.listdir(u_directory)
+		except OSError, errtuple:
+			print str(errtuple)
+			if log:
+				log(str(errtuple))
+			continue
+
+		for filename in contents:
+			if hiddenCheck(filename):
+				continue	
+			path = os.path.join(directory, filename)
 			s_path = str(path)
 			ppath = unicode( path)
 
 			s_filename = str(filename)
 			try:
 				# try to force Unicode for reading from disk
-				
-				
-				
-					
 				isfile = os.path.isfile(ppath)
 			except OSError, errtuple:
 				message = _("Scanning Error: %s Path: %s") % (errtuple, ppath)
@@ -267,16 +370,15 @@ def getFilesList(mtimes, oldmtimes, oldlist, yieldcall = None, progress=None):
 			else:
 				if isfile:
 					# It's a file, check if it is mp3
-					data = getFileInfo(s_filename, s_path)
+					data = getFileInfoUnicode(s_filename, s_path)
 					if data is not None:
 						list[directory].append(data)
 			if yieldcall is not None:
 				yieldcall()
-
 	return list
 			
 # Get metadata for mp3s and oggs
-def getFileInfo(name, pathname):
+def getFileInfoUnicode(name, pathname):
 	try:
 		if type(name) is str:
 			name_f = u"%s" % name
@@ -321,6 +423,35 @@ def getFileInfo(name, pathname):
 			log(message)
 		displayTraceback(sys.exc_info()[2])
 
+# Get metadata for mp3s and oggs
+def getFileInfo(name, pathname):
+	try:
+		size = os.path.getsize(pathname)
+			
+		if name[-4:].lower() == ".mp3":
+			mp3info = mp3.detect_mp3(pathname)
+			if mp3info:
+				bitrateinfo = (mp3info["bitrate"], mp3info["vbr"])
+				fileinfo = (name, size, bitrateinfo, mp3info["time"])
+			else:
+				fileinfo = (name, size, None, None)
+		elif vorbis and (name[-4:].lower() == ".ogg"):
+			try:
+				vf = vorbis.VorbisFile(pathname)
+				time = int(vf.time_total(0))
+				bitrate = vf.bitrate(0)/1000
+				fileinfo = (name, size, (bitrate, 0), time)
+			except:
+				fileinfo = (name, size, None, None)
+		else:
+			fileinfo = (name, size, None, None)
+		return fileinfo
+	except Exception, errtuple:
+		message = _("Scanning File Error: %s Path: %s") % (errtuple, pathname)
+		if log:
+			log(message)
+		displayTraceback(sys.exc_info()[2])
+		
 def getFilesStreams(mtimes, oldmtimes, oldstreams, sharedfiles, yieldcall = None):
 	streams = {}
 	for i in mtimes.keys():
