@@ -214,6 +214,7 @@ class NetworkEventProcessor:
 			slskmessages.RoomTickerAdd:self.RoomTickerAdd,
 			slskmessages.RoomTickerRemove:self.RoomTickerRemove,
 			slskmessages.AckNotifyPrivileges:self.AckNotifyPrivileges,
+			slskmessages.NotifyPrivileges:self.NotifyPrivileges,
 			}
 
 
@@ -498,6 +499,10 @@ class NetworkEventProcessor:
 			#self.frame.settingswindow.Hilight(self.frame.settingswindow.pages["Server"].Login)
 			self.frame.settingswindow.Hilight(self.frame.settingswindow.pages["Server"].Password)
 				
+	def NotifyPrivileges(self, msg):
+		if msg.token != None:
+			pass
+		
 	def AckNotifyPrivileges(self, msg):
 		if msg.token != None:
 			pass
