@@ -28,7 +28,7 @@ latesturl = "http://nicotine-plus.sourceforge.net/LATEST"
 
 import string
 from UserDict import UserDict
-import os,dircache
+import os, dircache
 import sys
 import gobject
 win32 = sys.platform.startswith("win")
@@ -141,47 +141,59 @@ def getDirsMtimes(dirs, yieldcall = None):
 	list = {}
 	for directory in dirs:
 		directory = os.path.expanduser(directory.replace("//","/"))
-		if win32:
-			# force Unicode for reading from disk
-			directory = u"%s" %directory
-		if hiddenCheck(directory):
+
+		u_directory = u"%s" %directory
+		str_directory = str(directory)
+		if hiddenCheck(u_directory):
 			continue
+
 		try:
-			contents = dircache.listdir(directory)
-			mtime = os.path.getmtime(directory)
+			if win32:
+				contents = dircache.listdir(u_directory)
+				mtime = os.path.getmtime(u_directory)
+			else:
+				contents = os.listdir(u_directory)
+				mtime = os.path.getmtime(str_directory)
 		except OSError, errtuple:
-			message = _("Scanning Error: %s Path: %s") % (errtuple, directory)
-			print message
+			message = _("Scanning Directory Error: %s Path: %s") % (errtuple, u_directory)
+			print str(message)
 			if log:
 				log(message)
+			displayTraceback(sys.exc_info()[2])
 			continue
-		if win32:
-			# remove Unicode for saving in list
-			directory = str(directory)
-		list[directory] = mtime
+		list[str_directory] = mtime
+
 		for filename in contents:
-			if win32:
-				# remove Unicode for saving in list
-				filename = str(filename)
+		
+
 			path = os.path.join(directory, filename)
-			if win32:
-				# force Unicode for reading from disk
-				path = u"%s" % path
+	
+			# force Unicode for reading from disk in win32
+			u_path = u"%s" % path
+			s_path = str(path)
+
 			try:
-				isdir = os.path.isdir(path)
-				mtime = os.path.getmtime(path)
+				isdir = os.path.isdir(u_path)
 			except OSError, errtuple:
-				message = _("Scanning Error: %s Path: %s") % (errtuple, path)
-				print message
+				message = _("Scanning Error: %s Path: %s") % (errtuple, u_path)
+				print str(message)
 				if log:
 					log(message)
 				continue
+			try:
+				mtime = os.path.getmtime(u_path)
+			except OSError, errtuple:
+				try:
+					mtime = os.path.getmtime(s_path)
+				except OSError, errtuple:
+					message = _("Scanning Error: %s Path: %s") % (errtuple, u_path)
+					print str(message)
+					if log:
+						log(message)
+					continue
 			else:
-				if win32:
-					# remove Unicode for saving in list
-					path = str(path)
 				if isdir:
-					list[path] = mtime
+					list[s_path] = mtime
 					dircontents = getDirsMtimes([path])
 					for k in dircontents:
 						list[k] = dircontents[k]
@@ -203,50 +215,61 @@ def getFilesList(mtimes, oldmtimes, oldlist, yieldcall = None, progress=None):
 			#print progress.get_fraction()+percent
 			if progress.get_fraction()+percent <= 1.0:
 				gobject.idle_add(progress.set_fraction,progress.get_fraction()+percent)
-		if hiddenCheck(directory):
+		if type(directory) is str:
+			u_directory = directory
+		else:
+			# force Unicode for reading from disk
+			u_directory = u"%s" %directory
 
-			continue	
+		if hiddenCheck(directory):
+			continue
 		if directory in oldmtimes:
 			if mtimes[directory] == oldmtimes[directory]:
 				list[directory] = oldlist[directory]
 				continue
 
 		list[directory] = []
-		if win32:
-			# force Unicode for reading from disk
-			directory = u"%s" %directory
+
 		try:
-			contents = dircache.listdir(directory)
+			if win32:
+				contents = dircache.listdir(u_directory)
+			else:
+				contents = os.listdir(u_directory)
 		except OSError, errtuple:
-			print errtuple
+			print str(errtuple)
 			if log:
 				log(str(errtuple))
 			continue
-		if win32:
-			# remove Unicode for saving in list
-			directory = str(directory)
+
 		for filename in contents:
-			if win32:
-				# remove Unicode for saving in list
-				filename = str(filename)
+
 			if hiddenCheck(filename):
 				continue	
 			path = os.path.join(directory, filename)
-			if win32:
-				# force Unicode for reading from disk
-				path = u"%s" % path
+			s_path = str(path)
+			ppath = unicode( path)
+
+			s_filename = str(filename)
 			try:
-				isfile = os.path.isfile(path)
+				# try to force Unicode for reading from disk
+				
+				
+				
+					
+				isfile = os.path.isfile(ppath)
 			except OSError, errtuple:
-				message = _("Scanning Error: %s Path: %s") % (errtuple, path)
-				print message
+				message = _("Scanning Error: %s Path: %s") % (errtuple, ppath)
+				print str(message)
 				if log:
 					log(message)
+				displayTraceback(sys.exc_info()[2])
 				continue
 			else:
 				if isfile:
 					# It's a file, check if it is mp3
-					list[directory].append(getFileInfo(filename, path))
+					data = getFileInfo(s_filename, s_path)
+					if data is not None:
+						list[directory].append(data)
 			if yieldcall is not None:
 				yieldcall()
 
@@ -254,33 +277,49 @@ def getFilesList(mtimes, oldmtimes, oldlist, yieldcall = None, progress=None):
 			
 # Get metadata for mp3s and oggs
 def getFileInfo(name, pathname):
-	size = os.path.getsize(pathname)
-	if win32:
-        	# remove Unicode for saving in list
-        	name_f = str(name)
-	else:
-        	name_f = name
-	if name[-4:].lower() == ".mp3":
-		mp3info=mp3.detect_mp3(pathname)
-		if mp3info:
-			bitrateinfo = (mp3info["bitrate"], mp3info["vbr"])
-			fileinfo = (name_f, size, bitrateinfo, mp3info["time"])
+	try:
+		if type(name) is str:
+			name_f = u"%s" % name
+			pathname_f =  u"%s" % pathname
 		else:
-			fileinfo = (name_f, size, None, None)
-	
-	elif vorbis and (name[-4:].lower() == ".ogg"):
-
+			name_f = name
+			pathname_f =  pathname
 		try:
-			vf = vorbis.VorbisFile(pathname)
-			time = int(vf.time_total(0))
-			bitrate = vf.bitrate(0)/1000
-			fileinfo = (name_f, size, (bitrate, 0), time)
+			size = os.path.getsize(pathname_f)
 		except:
-			fileinfo = (name_f, size, None, None)
-	else:
-		fileinfo = (name_f, size, None, None)
-	return fileinfo
+			size = os.path.getsize(pathname)
+			
+		if name[-4:].lower() == ".mp3":
+			try:
+				mp3info = mp3.detect_mp3(pathname_f)
+			except:
+				mp3info = mp3.detect_mp3(pathname)
+			if mp3info:
+				bitrateinfo = (mp3info["bitrate"], mp3info["vbr"])
+				fileinfo = (name, size, bitrateinfo, mp3info["time"])
+			else:
+				fileinfo = (name, size, None, None)
+		
+		elif vorbis and (name[-4:].lower() == ".ogg"):
 
+			try:
+				try:
+					vf = vorbis.VorbisFile(pathname_f)
+				except:
+					vf = vorbis.VorbisFile(pathname)
+				time = int(vf.time_total(0))
+				bitrate = vf.bitrate(0)/1000
+				fileinfo = (name, size, (bitrate, 0), time)
+			except:
+				fileinfo = (name, size, None, None)
+		else:
+			fileinfo = (name, size, None, None)
+		return fileinfo
+	except Exception, errtuple:
+		message = _("Scanning File Error: %s Path: %s") % (errtuple, pathname)
+		if log:
+			log(message)
+		displayTraceback(sys.exc_info()[2])
 
 def getFilesStreams(mtimes, oldmtimes, oldstreams, sharedfiles, yieldcall = None):
 	streams = {}
@@ -299,10 +338,7 @@ def getFilesStreams(mtimes, oldmtimes, oldstreams, sharedfiles, yieldcall = None
 
 # Stop any dot directories
 def hiddenCheck(direct):
-	if win32:
-		dirs = direct.split("\\")
-	else:
-		dirs = direct.split("/")
+	dirs = direct.split(os.sep)
 	hidden = 0
 	for dir in dirs:
 		if dir.startswith("."):
@@ -378,7 +414,20 @@ def escapeCommand(filename):
 		escaped += ch
 	return escaped
 
-
+def displayTraceback(exception):
+	import traceback
+	tb = traceback.format_tb(exception)
+	for line in tb:
+		if type(line) is tuple:
+			xline = ""
+			for item in line:
+				xline += str(item) + " "
+			line = xline
+		
+		if line is tb[0]:
+			if log:
+				 log(line)
+			print str(line)
 
 ## Dictionary that's sorted alphabetically
 # @param UserDict dictionary to be alphabetized	

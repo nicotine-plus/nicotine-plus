@@ -38,6 +38,7 @@ import md5
 from utils import _
 from gtkgui.utils import recode2
 import gobject
+win32 = sys.platform.startswith("win")
 
 class Transfer:
 	""" This class holds information about a single transfer. """
@@ -539,17 +540,21 @@ class Transfers:
 
 
 	def fileIsShared(self, user, filename):
-		filename = filename.replace("\\", os.sep)
-		if not os.access(filename, os.R_OK): return 0
-		dir = os.path.dirname(filename)
-		file = os.path.basename(filename)
+		if win32:
+			u_filename= u"%s" % filename
+		else:
+			u_filename = filename
+		u_filename = u_filename.replace("\\", os.sep)
+		if not os.access(u_filename, os.R_OK): return 0
+		dir = os.path.dirname(u_filename)
+		file = os.path.basename(u_filename)
 		if self.eventprocessor.config.sections["transfers"]["enablebuddyshares"]:
 			if user in [i[0] for i in self.eventprocessor.config.sections["server"]["userlist"]]:
 				bshared = self.eventprocessor.config.sections["transfers"]["bsharedfiles"]
-				for i in bshared.get(dir, ''):
+				for i in bshared.get(str(dir), ''):
 					if file == i[0]: return 1
 		shared = self.eventprocessor.config.sections["transfers"]["sharedfiles"]
-		for i in shared.get(dir, ''):
+		for i in shared.get(str(dir), ''):
 			if file == i[0]:
 				return 1
 		return 0
@@ -574,8 +579,12 @@ class Transfers:
 	
 	def getFileSize(self, filename):
 		try:
-			size = os.path.getsize(filename.replace("\\", os.sep))
+			if win32:
+				size = os.path.getsize(u"%s" % filename.replace("\\", os.sep))
+			else:
+				size = os.path.getsize(filename.replace("\\", os.sep))
 		except:
+			# file doesn't exist (remote files are always this)
 			size = 0
 		return size
 
@@ -676,9 +685,11 @@ class Transfers:
 							fname = pyfname
 						else:
 							fname = pynewfname
-						f = open(fname,'ab+')
+
+						f = open(u"%s" % fname, 'ab+')
+
 					except IOError, strerror:
-						self.eventprocessor.logMessage(_("I/O error: %s") % strerror)
+						self.eventprocessor.logMessage(_("Download I/O error: %s") % strerror)
 						i.status = "Local file error"
 						try:
 							f.close()
@@ -720,13 +731,17 @@ class Transfers:
 					i.transfertimer.cancel()
 				try:
 					# Open File
-					f = open(i.filename.replace("\\", os.sep),"rb")
+					if win32:
+						filename = u"%s" % i.filename.replace("\\", os.sep)
+					else:
+						filename = i.filename.replace("\\", os.sep)
+					f = open(filename,"rb")
 					self.queue.put(slskmessages.UploadFile(i.conn, file = f, size = i.size))
 					i.status = "Initializing transfer"
 					i.file = f
 					self.eventprocessor.logTransfer(_("Upload started: user %(user)s, file %(file)s") % {'user':i.user, 'file':self.decode(i.filename)})
 				except IOError, strerror:
-					self.eventprocessor.logMessage(_("I/O error: %s") % strerror)
+					self.eventprocessor.logMessage(_("Upload I/O error: %s") % strerror)
 					i.status = "Local file error"
 					try:
 						f.close()
@@ -741,7 +756,7 @@ class Transfers:
 			self.queue.put(slskmessages.ConnClose(msg.conn))
             
 	def CleanPath(self, path):
-		if sys.platform == "win32":
+		if win32:
 			chars = ["?", "\"", ":", ">", "<", "|", "*"]
 			for char in chars:
 				path = path.replace(char, "_")
@@ -771,7 +786,7 @@ class Transfers:
 					i.status = "Transferring"
 				else:
 					msg.file.close()
-					basename = self.encode(string.split(i.filename,'\\')[-1], i.user)
+					basename = self.CleanPath(self.encode(string.split(i.filename,'\\')[-1], i.user))
 					downloaddir = self.eventprocessor.config.sections["transfers"]["downloaddir"]
 					if i.path and i.path[0] == '/':
 						folder = self.CleanPath(i.path)
@@ -781,12 +796,12 @@ class Transfers:
 						os.makedirs(folder)
 					newname = self.getRenamed(os.path.join(folder, basename))
 					try:
-						os.rename(msg.file.name, newname)
+						os.rename(msg.file.name, u"%s" % newname)
 					except OSError:
 						try:
-							f1 = open(msg.file.name, "r")
+							f1 = open(msg.file.name, "rb")
 							d = f1.read()
-							f1 = open(newname, "w")
+							f1 = open(u"%s" % newname, "w")
 							f1.write(d)
 							f1.close()
 							os.remove(msg.file.name)
@@ -800,7 +815,7 @@ class Transfers:
 						#self.queue.put(slskmessages.SendSpeed(i.user, int(i.speed*1024)))
 						#Removed due to misuse. Replaced by SendUploadSpeed
 					i.conn = None
-					self.addToShared(newname)
+					self.addToShared(u"%s" % newname)
 					self.eventprocessor.sendNumSharedFoldersFiles()
 					self.SaveDownloads()
 					self.downloadspanel.update(i)
@@ -830,7 +845,7 @@ class Transfers:
 							os.system(command)
 							self.eventprocessor.logMessage(_("Executed on folder: %s") % self.decode(command))
 			except IOError, strerror:
-				self.eventprocessor.logMessage(_("I/O error: %s") % self.decode(strerror))
+				self.eventprocessor.logMessage(_("Download I/O error: %s") % self.decode(strerror))
 				i.status = "Local file error"
 				try:
 					msg.file.close()
@@ -845,9 +860,6 @@ class Transfers:
 		config = self.eventprocessor.config.sections
 		if not config["transfers"]["sharedownloaddir"]:
 			return
-		buddy = False
-		if config["transfers"]["enablebuddyshares"]:
-			buddy = True
 		
 		shared = config["transfers"]["sharedfiles"]
 		sharedstreams = config["transfers"]["sharedfilesstreams"]
@@ -856,19 +868,13 @@ class Transfers:
 		shareddirs = config["transfers"]["shared"] + [config["transfers"]["downloaddir"]]
 		sharedmtimes = config["transfers"]["sharedmtimes"]
 
-		bshared = config["transfers"]["bsharedfiles"]
-		bsharedstreams = config["transfers"]["bsharedfilesstreams"]
-		bwordindex = config["transfers"]["bwordindex"]
-		bfileindex = config["transfers"]["bfileindex"]
-		bshareddirs = config["transfers"]["buddyshared"] + config["transfers"]["shared"] + [config["transfers"]["downloaddir"]]
-		bsharedmtimes = config["transfers"]["bsharedmtimes"]
-		
-		dir = os.path.expanduser(os.path.dirname(name))
-
-		file = os.path.basename(name)
+		dir = str(os.path.expanduser(os.path.dirname(name)))
+		str_name = str(name)
+		file = str(os.path.basename(name))
 		size = os.path.getsize(name)
 
 		shared[dir] = shared.get(dir, [])
+
 		if file not in [i[0] for i in shared[dir]]:
 			fileinfo = utils.getFileInfo(file, name)
 			shared[dir] = shared[dir] + [fileinfo]
@@ -877,17 +883,39 @@ class Transfers:
 			self.addToIndex(wordindex, fileindex, words, dir, fileinfo)
 			sharedmtimes[dir] = os.path.getmtime(dir)
 			self.eventprocessor.newnormalshares = True
-			if buddy:
-				bshared[dir] = bshared.get(dir, [])
-				if file not in [i[0] for i in bshared[dir]]:
-					bshared[dir] = bshared[dir] + [fileinfo]
-					bsharedstreams[dir] = utils.getDirStream(bshared[dir])
-					self.addToIndex(bwordindex, bfileindex, words, dir, fileinfo)
-					bsharedmtimes[dir] = os.path.getmtime(dir)
-					self.eventprocessor.newbuddyshares = True
-
-			self.eventprocessor.config.writeShares()
 			
+		if config["transfers"]["enablebuddyshares"]:
+			self.addToBuddyShared(name)
+			
+		self.eventprocessor.config.writeShares()
+		
+	def addToBuddyShared(self, name):
+		config = self.eventprocessor.config.sections
+		if not config["transfers"]["sharedownloaddir"]:
+			return
+		bshared = config["transfers"]["bsharedfiles"]
+		bsharedstreams = config["transfers"]["bsharedfilesstreams"]
+		bwordindex = config["transfers"]["bwordindex"]
+		bfileindex = config["transfers"]["bfileindex"]
+		bshareddirs = config["transfers"]["buddyshared"] + config["transfers"]["shared"] + [config["transfers"]["downloaddir"]]
+		bsharedmtimes = config["transfers"]["bsharedmtimes"]
+		
+		dir = str(os.path.expanduser(os.path.dirname(name)))
+		str_name = str(name)
+		file = str(os.path.basename(name))
+		size = os.path.getsize(name)
+		
+		bshared[dir] = bshared.get(dir, [])
+		
+		if file not in [i[0] for i in bshared[dir]]:
+			fileinfo = utils.getFileInfo(file, name)
+			bshared[dir] = bshared[dir] + [fileinfo]
+			bsharedstreams[dir] = utils.getDirStream(bshared[dir])
+			words = utils.getIndexWords(dir, file, bshareddirs)
+			self.addToIndex(bwordindex, bfileindex, words, dir, fileinfo)
+			bsharedmtimes[dir] = os.path.getmtime(dir)
+			
+			self.eventprocessor.newbuddyshares = True
 			
 
 	def addToIndex(self, wordindex, fileindex, words, dir, fileinfo):
@@ -1217,7 +1245,7 @@ class Transfers:
 	def getRenamed(self, name):
 		""" When a transfer is finished, we remove INCOMPLETE~ or INCOMPLETE 
 		prefix from the file's name. """
-		if not os.path.exists(name):
+		if not os.path.exists(u"%s" % name) and not os.path.exists(name):
 			# Filename doesn't exist, good for renaming
 			return name
 		else:
@@ -1230,6 +1258,7 @@ class Transfers:
 					break
 				n += 1
 			return newname
+			
 
 	def PlaceInQueue(self, msg):
 		""" The server tells us our place in queue for a particular transfer."""
@@ -1345,17 +1374,14 @@ class Transfers:
 			return string.decode(locale.nl_langinfo(locale.CODESET), "replace").encode("utf-8", "replace")
 		except:
 			return string
-
+	
 	def encode(self, string, user = None):
 		coding = None
 		if user and user in self.eventprocessor.config.sections["server"]["userencoding"]:
 			coding = self.eventprocessor.config.sections["server"]["userencoding"][user]
 		string = self.eventprocessor.decode(string, coding)
 		try:
-			if sys.platform == "win32":
-				chars = ["?", "\/", "\"", ":", ">", "<", "|", "*"]
-				for char in chars:
-					string = string.replace(char, "_")
+			
 			return string.encode(locale.nl_langinfo(locale.CODESET), "replace")
 	#            return s.sencode(os.filesystemencoding(), "replace")
 		except:
