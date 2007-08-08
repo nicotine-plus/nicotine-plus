@@ -712,12 +712,15 @@ class SlskProtoThread(threading.Thread):
 			msgList.append(queue.get())
 		for msgObj in msgList:
 			if issubclass(msgObj.__class__, ServerMessage):
-				msg = msgObj.makeNetworkMessage()
-				if server_socket in conns:
-					conns[server_socket].obuf = conns[server_socket].obuf + struct.pack("<ii", len(msg)+4, self.servercodes[msgObj.__class__]) + msg
-				else:
-					queue.put(msgObj)
-					needsleep = 1
+				try:
+					msg = msgObj.makeNetworkMessage()
+					if server_socket in conns:
+						conns[server_socket].obuf = conns[server_socket].obuf + struct.pack("<ii", len(msg)+4, self.servercodes[msgObj.__class__]) + msg
+					else:
+						queue.put(msgObj)
+						needsleep = 1
+				except Exception, error:
+					self._ui_callback([_("Error packageing message: %(type)s %(msg_obj)s") %{'type':msgObj.__class__, 'msg_obj':vars(msgObj)}])
 			elif issubclass(msgObj.__class__, PeerMessage):
 				if msgObj.conn in conns:
 					# Pack Peer and File and Search Messages 

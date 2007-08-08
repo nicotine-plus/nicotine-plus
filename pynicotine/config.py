@@ -143,26 +143,29 @@ class Config:
 			for i in self.sections.keys():
 				for j in self.sections[i].keys():
 			# 		print self.sections[i][j]
-					if self.sections[i][j] is None or self.sections[i][j] == '' and i not in ("userinfo", "ui", "ticker", "players") and j not in ("incompletedir", "autoreply", 'afterfinish', 'afterfolder', 'geoblockcc', 'downloadregexp', "language"):
+					if self.sections[i][j] is None or self.sections[i][j] == '' and i not in ("userinfo", "ui", "ticker", "players", "language") and j not in ("incompletedir", "autoreply", 'afterfinish', 'afterfolder', 'geoblockcc', 'downloadregexp', "language"):
 						# Repair options set to None with defaults
 						if self.sections[i][j] is None and self.defaults[i][j] is not None:
 							self.sections[i][j] = self.defaults[i][j]
 							self.frame.logMessage(_("Config option reset to default: Section: %s, Option: %s, to: %s") % (i, j, self.sections[i][j]))
-							errorlevel = 1
+							if errorlevel == 0:
+								errorlevel = 1
 						else:
+							if errorlevel < 2:
+								self.frame.logMessage(_("You need to configure your settings (Server, Username, Password, Download Directory) before connecting..."))
+								errorlevel = 2
 							
-							self.frame.logMessage(_("You need to configure your settings (Server, Username, Password, Download Directory) before connecting..."))
 							self.frame.logMessage(_("Config option unset: Section: %s, Option: %s") % (i, j))
 							self.frame.settingswindow.InvalidSettings(i, j)
-							errorlevel = 2
 			
 		except Exception, error:
 			message = _("Config error: %s") % error
 			self.frame.logMessage(message)
-			errorlevel = 3
+			if errorlevel < 3:
+				errorlevel = 3
 		if errorlevel > 1:
 			self.frame.settingswindow.SetSettings(self.sections)
-		return 3
+		return errorlevel
 
 	def readConfig(self):
 		self.config_lock.acquire()

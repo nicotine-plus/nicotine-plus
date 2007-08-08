@@ -399,7 +399,7 @@ class NicotineFrame(MainWindow):
 
 		ConfigUnset = self.np.config.needConfig()
 		if ConfigUnset:
-			if ConfigUnset == 1:
+			if ConfigUnset > 1:
 				self.connect1.set_sensitive(0)
 				self.rescan1.set_sensitive(0)
 					
@@ -1513,14 +1513,11 @@ class NicotineFrame(MainWindow):
 			self.BothRescan()
 
 		ConfigUnset = self.np.config.needConfig()
-		if ConfigUnset:
+		if ConfigUnset > 1:
 			if self.np.transfers is not None:
 				self.connect1.set_sensitive(0)
+			self.OnSettings(None)
 
-			if ConfigUnset == 1:
-				self.OnSettings(None)
-				
-	
 		else:
 			if self.np.transfers is None:
 				self.connect1.set_sensitive(1)
