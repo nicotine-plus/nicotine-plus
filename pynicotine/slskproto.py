@@ -720,7 +720,7 @@ class SlskProtoThread(threading.Thread):
 						queue.put(msgObj)
 						needsleep = 1
 				except Exception, error:
-					self._ui_callback([_("Error packageing message: %(type)s %(msg_obj)s") %{'type':msgObj.__class__, 'msg_obj':vars(msgObj)}])
+					self._ui_callback([_("Error packaging message: %(type)s %(msg_obj)s") %{'type':msgObj.__class__, 'msg_obj':vars(msgObj)}])
 			elif issubclass(msgObj.__class__, PeerMessage):
 				if msgObj.conn in conns:
 					# Pack Peer and File and Search Messages 
