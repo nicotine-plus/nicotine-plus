@@ -124,6 +124,7 @@ class NicotineFrame(MainWindow):
 		self.got_focus = False
 
 		self.np = NetworkEventProcessor(self, self.callback, self.logMessage, self.SetStatusText, config)
+		ConfigUnset = self.np.config.needConfig()
 		self.LoadIcons()
 		self.ChangeTranslation = ChangeTranslation
 		trerror = ""
@@ -397,11 +398,11 @@ class NicotineFrame(MainWindow):
 		self.now = nowplaying.NowPlaying(self)
 		self.SetTabPositions()
 
-		ConfigUnset = self.np.config.needConfig()
+		
 		if ConfigUnset:
 			if ConfigUnset > 1:
-				self.connect1.set_sensitive(0)
-				self.rescan1.set_sensitive(0)
+				self.connect1.set_sensitive(False)
+				self.rescan1.set_sensitive(True)
 					
 				# Display Settings dialog
 				self.OnSettings(None)
@@ -1482,7 +1483,7 @@ class NicotineFrame(MainWindow):
 		if needcompletion:
 			self.chatrooms.roomsctrl.UpdateCompletions()
 			self.privatechats.UpdateCompletions()
-			
+  	
 		if needcolors:
 			self.chatrooms.roomsctrl.UpdateColours()
 			self.privatechats.UpdateColours()
@@ -1493,15 +1494,15 @@ class NicotineFrame(MainWindow):
 			self.userbrowse.UpdateColours()
 			self.settingswindow.UpdateColours()
 			self.UpdateColours()
-			
+  	
 		self.OnHideChatButtons()
-		
+
 		closers = self.np.config.sections["ui"]["tabclosers"]
 
 		for w in self.ChatNotebook, self.PrivatechatNotebook, self.UserInfoNotebook, self.UserBrowseNotebook, self.SearchNotebook:
 			w.set_tab_closers(closers)
 		self.SetTabPositions()
-		
+
 		if self.np.transfers is not None:
 			self.np.transfers.checkUploadQueue()
 		self.UpdateTransferButtons()

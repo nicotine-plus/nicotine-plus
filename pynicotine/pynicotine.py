@@ -860,9 +860,8 @@ class NetworkEventProcessor:
 		requestTime = time.time()
 		if user in self.requestedShares:
 			if not requestTime >  10 + self.requestedShares[user]:
-				# Ignoring request, because it's 5 or less seconds since the
+				# Ignoring request, because it's 10 or less seconds since the
 				# last one by this user
-				return
 				return
 		self.requestedShares[user] = requestTime
 		# Check address is spoofed, if possible
@@ -935,7 +934,7 @@ class NetworkEventProcessor:
 		requestTime = time.time()
 		if user in self.requestedInfo:
 			if not requestTime >  10 + self.requestedInfo[user]:
-				# Ignoring request, because it's 5 or less seconds since the
+				# Ignoring request, because it's 10 or less seconds since the
 				# last one by this user
 				return
 		self.requestedInfo[user] = requestTime
