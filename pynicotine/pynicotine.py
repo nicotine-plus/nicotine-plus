@@ -113,6 +113,8 @@ class NetworkEventProcessor:
 		self.CompressShares("buddy")
 		self.newbuddyshares = self.newnormalshares = False
 		self.distribcache = {}
+		self.requestedShares = {}
+		self.requestedInfo = {}
 		self.speed = 0
 		self.translatepunctuation = string.maketrans(string.punctuation, string.join([' ' for i in string.punctuation],''))
 
@@ -855,6 +857,14 @@ class NetworkEventProcessor:
 		if user == None:
 			# No peer connection
 			return
+		requestTime = time.time()
+		if user in self.requestedShares:
+			if not requestTime >  10 + self.requestedShares[user]:
+				# Ignoring request, because it's 5 or less seconds since the
+				# last one by this user
+				return
+				return
+		self.requestedShares[user] = requestTime
 		# Check address is spoofed, if possible
 		#if self.CheckSpoof(user, ip, port):
 			# Message IS spoofed
@@ -922,6 +932,13 @@ class NetworkEventProcessor:
 		if user == None:
 			# No peer connection
 			return
+		requestTime = time.time()
+		if user in self.requestedInfo:
+			if not requestTime >  10 + self.requestedInfo[user]:
+				# Ignoring request, because it's 5 or less seconds since the
+				# last one by this user
+				return
+		self.requestedInfo[user] = requestTime
 		# Check address is spoofed, if possible
 		#if self.CheckSpoof(user, ip, port):
 			# Message IS spoofed
