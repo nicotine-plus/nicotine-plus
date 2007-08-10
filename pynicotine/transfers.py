@@ -1018,7 +1018,7 @@ class Transfers:
 		# List of transfer instances of users who are not currently transferring
 		list = [i for i in self.uploads if not i.user in trusers and i.status == "Queued"]
 		# Sublist of privileged users transfers
-		listprivileged = [i for i in list if self.isPrivileged(i.user) and not i.user in trusers and i.status == "Queued"]
+		listprivileged = [i for i in list if self.isPrivileged(i.user)]
 
 		if not self.eventprocessor.config.sections["transfers"]["fifoqueue"]:
 			# Sublist of ogg files transfers

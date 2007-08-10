@@ -249,7 +249,29 @@ class Config:
 			print message
 			if self.frame:
 				self.frame.logMessage(message)
+			files = self.clearShares(sharedfiles, bsharedfiles, sharedfilesstreams, bsharedfilesstreams, wordindex, bwordindex, fileindex, bfileindex, sharedmtimes, bsharedmtimes)
+			if files is not None:
+				sharedfiles, bsharedfiles, sharedfilesstreams, bsharedfilesstreams, wordindex, bwordindex, fileindex, bfileindex, sharedmtimes, bsharedmtimes = files
+			
+		self.sections["transfers"]["sharedfiles"] = sharedfiles
+		self.sections["transfers"]["sharedfilesstreams"] = sharedfilesstreams
+		self.sections["transfers"]["wordindex"] = wordindex
+		self.sections["transfers"]["fileindex"] = fileindex
+		self.sections["transfers"]["sharedmtimes"] = sharedmtimes
 		
+		self.sections["transfers"]["bsharedfiles"] = bsharedfiles
+		self.sections["transfers"]["bsharedfilesstreams"] = bsharedfilesstreams
+		self.sections["transfers"]["bwordindex"] = bwordindex
+		self.sections["transfers"]["bfileindex"] = bfileindex
+		self.sections["transfers"]["bsharedmtimes"] = bsharedmtimes
+			
+		if self.sections["server"]["server"][0] == "mail.slsknet.org":
+			self.sections["server"]["server"] = ('server.slsknet.org', 2240)
+		
+		self.config_lock.release()
+		
+	def clearShares(self, sharedfiles, bsharedfiles, sharedfilesstreams, bsharedfilesstreams, wordindex, bwordindex, fileindex, bfileindex, sharedmtimes, bsharedmtimes):
+		try:
 			if sharedfiles:
 				sharedfiles.close()
 			try:
@@ -324,23 +346,14 @@ class Config:
 			except:
 				pass
 			bsharedmtimes = shelve.open(self.filename+".buddymtimes.db", flag='n')
-		self.sections["transfers"]["sharedfiles"] = sharedfiles
-		self.sections["transfers"]["sharedfilesstreams"] = sharedfilesstreams
-		self.sections["transfers"]["wordindex"] = wordindex
-		self.sections["transfers"]["fileindex"] = fileindex
-		self.sections["transfers"]["sharedmtimes"] = sharedmtimes
-		
-		self.sections["transfers"]["bsharedfiles"] = bsharedfiles
-		self.sections["transfers"]["bsharedfilesstreams"] = bsharedfilesstreams
-		self.sections["transfers"]["bwordindex"] = bwordindex
-		self.sections["transfers"]["bfileindex"] = bfileindex
-		self.sections["transfers"]["bsharedmtimes"] = bsharedmtimes
+		except Exception, error:
+			message = _("Error while writing database files: %s") % error
+			print message
+			if self.frame:
+				self.frame.logMessage(message)
+			return None
+		return sharedfiles, bsharedfiles, sharedfilesstreams, bsharedfilesstreams, wordindex, bwordindex, fileindex, bfileindex, sharedmtimes, bsharedmtimes
 			
-		if self.sections["server"]["server"][0] == "mail.slsknet.org":
-			self.sections["server"]["server"] = ('server.slsknet.org', 2240)
-		
-		self.config_lock.release()
-	
 	def writeConfig(self):
 		self.config_lock.acquire()
 		for i in self.sections.keys():
