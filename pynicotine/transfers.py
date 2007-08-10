@@ -99,7 +99,7 @@ class Transfers:
 				try: length = i[7]
 				except: pass
 				
-			if len(i) >= 4 and i[3] == 'Paused':
+			if len(i) >= 4 and i[3] in ('Aborted', 'Paused'):
 				status = 'Paused'
 			else:
 				status = 'Getting status'
