@@ -124,7 +124,6 @@ class NicotineFrame(MainWindow):
 		self.got_focus = False
 
 		self.np = NetworkEventProcessor(self, self.callback, self.logMessage, self.SetStatusText, config)
-		ConfigUnset = self.np.config.needConfig()
 		self.LoadIcons()
 		self.ChangeTranslation = ChangeTranslation
 		trerror = ""
@@ -398,7 +397,7 @@ class NicotineFrame(MainWindow):
 		self.now = nowplaying.NowPlaying(self)
 		self.SetTabPositions()
 
-		
+		ConfigUnset = self.np.config.needConfig()
 		if ConfigUnset:
 			if ConfigUnset > 1:
 				self.connect1.set_sensitive(False)

@@ -143,7 +143,7 @@ class Config:
 			for i in self.sections.keys():
 				for j in self.sections[i].keys():
 			# 		print self.sections[i][j]
-					if type(self.sections[i][j]) not in [type(None), type(string)]:
+					if type(self.sections[i][j]) not in [type(None), type("")]:
 						continue
 					if self.sections[i][j] is None or self.sections[i][j] == '' and i not in ("userinfo", "ui", "ticker", "players", "language") and j not in ("incompletedir", "autoreply", 'afterfinish', 'afterfolder', 'geoblockcc', 'downloadregexp', "language"):
 						# Repair options set to None with defaults

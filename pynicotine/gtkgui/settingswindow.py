@@ -145,7 +145,7 @@ class SharesFrame(settings_glade.SharesFrame):
 
 	def DownloadDirChanged(self, widget):
 		transfers = self.frame.np.config.sections["transfers"]
-		if transfers["incompletedir"] is not None and transfers["incompletedir"] != "":
+		if transfers["uploaddir"] is not None and transfers["uploaddir"] != "":
 			return
 		self.UploadDir.set_text(os.sep.join([self.DownloadDir.get_text(), _("Buddy Uploads")]))
 		
