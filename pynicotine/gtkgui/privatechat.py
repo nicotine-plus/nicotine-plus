@@ -250,7 +250,7 @@ class PrivateChat(PrivateChatTab):
 		self.UpdateColours()
 		
 		# Read log file
-		log = os.path.join(self.frame.np.config.sections["logging"]["logsdir"], fixpath(self.user.replace(os.sep, "-")) + ".log")
+		log = os.path.join(self.frame.np.config.sections["logging"]["privatelogsdir"], fixpath(self.user.replace(os.sep, "-")) + ".log")
 		try:
 			f = open(log, "r")
 			d = f.read()
@@ -335,7 +335,7 @@ class PrivateChat(PrivateChatTab):
 		timestamp_format=self.frame.np.config.sections["logging"]["private_timestamp"]
 		AppendLine(self.ChatScroll, line, tag, timestamp=timestamp, timestamp_format=timestamp_format, username=self.user, usertag=self.tag_username)
 		if self.Log.get_active():
-			self.logfile = WriteLog(self.logfile, self.frame.np.config.sections["logging"]["logsdir"], self.user, line)
+			self.logfile = WriteLog(self.logfile, self.frame.np.config.sections["logging"]["privatelogsdir"], self.user, line)
 		
 		autoreply = self.frame.np.config.sections["server"]["autoreply"]
 		if self.frame.away and not self.autoreplied and autoreply:
@@ -365,7 +365,7 @@ class PrivateChat(PrivateChatTab):
 		timestamp_format=self.frame.np.config.sections["logging"]["private_timestamp"]
 		AppendLine(self.ChatScroll, message, tag, timestamp_format=timestamp_format, username=my_username, usertag=usertag)
 		if self.Log.get_active():
-			self.logfile = WriteLog(self.logfile, self.frame.np.config.sections["logging"]["logsdir"], self.user, message)
+			self.logfile = WriteLog(self.logfile, self.frame.np.config.sections["logging"]["privatelogsdir"], self.user, message)
 		
 		if self.PeerPrivateMessages.get_active():
 			# not in the soulseek protocol

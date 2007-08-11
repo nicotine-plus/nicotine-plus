@@ -22,11 +22,11 @@ import locale
 import pango
 from pynicotine import slskmessages
 from nicotine_glade import ChatRoomTab
-from utils import InitialiseColumns, AppendLine, PopupMenu, FastListModel, string_sort_func, WriteLog, int_sort_func, Humanize, expand_alias, EncodingsMenu, SaveEncoding, PressHeader
+from utils import InitialiseColumns, AppendLine, PopupMenu, FastListModel, string_sort_func, WriteLog, int_sort_func, Humanize, expand_alias, EncodingsMenu, SaveEncoding, PressHeader, fixpath
 from pynicotine.utils import _
 from ticker import Ticker
 from entrydialog import OptionDialog
-import sets
+import sets, os
 
 def GetCompletion(part, list):
 	matches = []
@@ -351,10 +351,10 @@ class ChatRoom(ChatRoomTab):
 		self.logfile = None
 		self.leaving = 0
 		config = self.frame.np.config.sections
-		if not self.frame.np.config.sections["ticker"]["hide"]:
+		if not config["ticker"]["hide"]:
 			self.Ticker.show()
 		
-		self.OnHideChatButtons(hide=self.frame.np.config.sections["ui"]["chat_hidebuttons"])
+		self.OnHideChatButtons(hide=config["ui"]["chat_hidebuttons"])
 			
 		if self.frame.translux:
 			self.tlux_roomlog = lambda: self.RoomLog.get_window(gtk.TEXT_WINDOW_TEXT)
@@ -382,16 +382,16 @@ class ChatRoom(ChatRoomTab):
 		self.Ticker.entry.connect("focus-in-event", self.OnTickerFocus)
 		self.Ticker.entry.connect("focus-out-event", self.OnTickerFocus)
 		
-		if self.frame.SEXY and self.frame.np.config.sections["ui"]["spellcheck"]:
+		if self.frame.SEXY and config["ui"]["spellcheck"]:
 			import sexy
-			self.vbox6.remove(self.ChatEntry)
+			self.ChatEntryBox.remove(self.ChatEntry)
 			self.ChatEntry.destroy()
 			self.ChatEntry = sexy.SpellEntry()
 			self.ChatEntry.show()
         		self.ChatEntry.connect("activate", self.OnEnter)
 			
         		self.ChatEntry.connect("key_press_event", self.OnKeyPress)
-			self.vbox6.pack_start(self.ChatEntry, False, False, 0)
+			self.ChatEntryBox.pack_start(self.ChatEntry, True, True, 0)
 			
 		
 		completion = gtk.EntryCompletion()
@@ -403,9 +403,9 @@ class ChatRoom(ChatRoomTab):
 		completion.set_match_func(self.frame.EntryCompletionFindMatch, self.ChatEntry)
 		completion.connect("match-selected", self.frame.EntryCompletionFoundMatch, self.ChatEntry)
 		
-		self.Log.set_active(self.frame.np.config.sections["logging"]["chatrooms"])
+		self.Log.set_active(config["logging"]["chatrooms"])
 		
-		if room in self.frame.np.config.sections["server"]["autojoin"]:
+		if room in config["server"]["autojoin"]:
 			self.AutoJoin.set_active(True)
 			
 		cols = InitialiseColumns(self.UserList, 
@@ -464,7 +464,7 @@ class ChatRoom(ChatRoomTab):
 		self.UserList.connect("button_press_event", self.OnPopupMenu)
 
 		self.ChatEntry.grab_focus()
-		self.vbox6.set_focus_child(self.ChatEntry)
+		self.ChatEntryBox.set_focus_child(self.ChatEntry)
 		
 		self.logpopupmenu = PopupMenu(self.frame).setup(
 			("#" + _("Find"), self.OnFindLogWindow, gtk.STOCK_FIND),
@@ -487,7 +487,54 @@ class ChatRoom(ChatRoomTab):
 		self.ChatScroll.connect("button-press-event", self.OnPopupChatRoomMenu)
 		self.buildingcompletion = False
 		self.GetCompletionList()
-		
+		if config["logging"]["readroomlogs"]:
+			self.ReadRoomLogs()
+			
+	def ReadRoomLogs(self):
+		config = self.frame.np.config.sections
+		log = os.path.join(config["logging"]["roomlogsdir"], fixpath(self.room.replace(os.sep, "-")) + ".log")
+		try:
+			roomlines = int(config["logging"]["readroomlines"])
+		except:
+			roomlines = 15
+		try:
+			f = open(log, "r")
+			d = f.read()
+			f.close()
+			s = d.split("\n")
+			for l in s[ - roomlines : -1 ]:
+				# Try to parse line for username
+				if l[10].isspace() and l[11].isdigit() and l[20] in ("[", "*"):
+					line = l[11:] + "\n"
+					if l[20] == "[" and l[20:].find("] ") != -1:
+						namepos = l[20:].find("] ")
+						user = l[21:20+namepos].strip()
+						self.getUserTag(user)
+						usertag = self.tag_users[user]
+					else:
+						user = None
+						usertag = None
+
+					if user == config["server"]["login"]:
+						tag = self.tag_local
+					elif l[20] == "*":
+						tag = self.tag_me
+					else:
+						tag = self.tag_remote
+				else:
+					line = l + "\n"
+					user = None
+					tag = None
+					usertag = None
+				timestamp_format=self.frame.np.config.sections["logging"]["rooms_timestamp"]
+				if user != config["server"]["login"]:
+					self.lines.append(AppendLine(self.ChatScroll, self.frame.CensorChat(self.frame.np.decode(line, self.encoding)), tag, username=user, usertag=usertag, timestamp_format=""))
+				else:
+					self.lines.append(AppendLine(self.ChatScroll, self.frame.np.decode(line, self.encoding), tag, username=user, usertag=usertag, timestamp_format=""))
+
+		except IOError, e:
+			pass
+				
 	def OnFindLogWindow(self, widget):
 
 		self.frame.OnFindTextview(widget, self.RoomLog)
@@ -618,12 +665,8 @@ class ChatRoom(ChatRoomTab):
 			del self.lines[0:200]
 
 		line = "\n-- ".join(line.split("\n"))
-		
-		color = self.getUserStatusColor(self.usersmodel.get_value(self.users[user], 4))
-		if user in self.tag_users:
-			self.changecolour(self.tag_users[user], color)
-		else:
-			self.tag_users[user] = self.makecolour(self.ChatScroll.get_buffer(), color, user)
+		self.getUserTag(user)
+
 		timestamp_format=self.frame.np.config.sections["logging"]["rooms_timestamp"]
 		if user != login:
 			self.lines.append(AppendLine(self.ChatScroll, self.frame.CensorChat(self.frame.np.decode(line, self.encoding)), tag, username=user, usertag=self.tag_users[user], timestamp_format=timestamp_format))
@@ -632,9 +675,18 @@ class ChatRoom(ChatRoomTab):
 		else:
 			self.lines.append(AppendLine(self.ChatScroll, self.frame.np.decode(line, self.encoding), tag, username=user, usertag=self.tag_users[user], timestamp_format=timestamp_format))
 		if self.Log.get_active():
-			self.logfile = WriteLog(self.logfile, self.frame.np.config.sections["logging"]["logsdir"], self.room, line)
+			self.logfile = WriteLog(self.logfile, self.frame.np.config.sections["logging"]["roomlogsdir"], self.room, line)
 			
-
+	def getUserTag(self, user):
+		if user not in self.users:
+			self.tag_users[user] = self.makecolour(self.ChatScroll.get_buffer(), "useroffline", user)
+			return
+		
+		color = self.getUserStatusColor(self.usersmodel.get_value(self.users[user], 4))
+		if user in self.tag_users:
+			self.changecolour(self.tag_users[user], color)
+		else:
+			self.tag_users[user] = self.makecolour(self.ChatScroll.get_buffer(), color, user)
 
 	
 	CMDS = ["/alias ", "/unalias ", "/whois ", "/browse ", "/ip ", "/pm ", "/msg ", "/search ", "/usearch ", "/rsearch ",

@@ -4710,12 +4710,12 @@ Right</property>
           <widget class="GtkVBox" id="vbox89">
             <property name="visible">True</property>
             <property name="border_width">5</property>
-            <property name="spacing">10</property>
+            <property name="spacing">5</property>
             <child>
-              <widget class="GtkCheckButton" id="LogPrivate">
+              <widget class="GtkCheckButton" id="LogRooms">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="label" translatable="yes">Log private chat by default</property>
+                <property name="label" translatable="yes">Log chatrooms by default</property>
                 <property name="use_underline">True</property>
                 <property name="response_id">0</property>
                 <property name="draw_indicator">True</property>
@@ -4726,10 +4726,10 @@ Right</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkCheckButton" id="LogRooms">
+              <widget class="GtkCheckButton" id="LogPrivate">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="label" translatable="yes">Log chatrooms by default</property>
+                <property name="label" translatable="yes">Log private chat by default</property>
                 <property name="use_underline">True</property>
                 <property name="response_id">0</property>
                 <property name="draw_indicator">True</property>
@@ -4759,7 +4759,7 @@ Right</property>
               <widget class="GtkVBox" id="vbox90">
                 <property name="visible">True</property>
                 <child>
-                  <widget class="GtkLabel" id="label217">
+                  <widget class="GtkLabel" id="LogDirLabel">
                     <property name="visible">True</property>
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">Logs directory:</property>
@@ -4770,7 +4770,7 @@ Right</property>
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkHBox" id="hbox140">
+                  <widget class="GtkHBox" id="logDirHbox">
                     <property name="visible">True</property>
                     <property name="spacing">5</property>
                     <child>
@@ -4780,7 +4780,7 @@ Right</property>
                       </widget>
                     </child>
                     <child>
-                      <widget class="GtkButton" id="button66">
+                      <widget class="GtkButton" id="ChooseLogDIr">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="response_id">0</property>
@@ -4834,11 +4834,219 @@ Right</property>
                     <property name="position">1</property>
                   </packing>
                 </child>
+                <child>
+                  <widget class="GtkLabel" id="RoomLogDirLabel">
+                    <property name="visible">True</property>
+                    <property name="xalign">0</property>
+                    <property name="label" translatable="yes">Chatroom Logs directory:</property>
+                  </widget>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="position">2</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkHBox" id="roomLogDirHbox">
+                    <property name="visible">True</property>
+                    <property name="spacing">5</property>
+                    <child>
+                      <widget class="GtkEntry" id="RoomLogDir">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                      </widget>
+                    </child>
+                    <child>
+                      <widget class="GtkButton" id="ChooseRoomLogDIr">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="response_id">0</property>
+                        <signal name="clicked" handler="OnChooseRoomLogDir"/>
+                        <child>
+                          <widget class="GtkAlignment" id="alignment17">
+                            <property name="visible">True</property>
+                            <property name="xscale">0</property>
+                            <property name="yscale">0</property>
+                            <child>
+                              <widget class="GtkHBox" id="hbox33">
+                                <property name="visible">True</property>
+                                <property name="spacing">2</property>
+                                <child>
+                                  <widget class="GtkImage" id="image17">
+                                    <property name="visible">True</property>
+                                    <property name="stock">gtk-open</property>
+                                  </widget>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">False</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <widget class="GtkLabel" id="label25">
+                                    <property name="visible">True</property>
+                                    <property name="label" translatable="yes">Choose...</property>
+                                    <property name="use_underline">True</property>
+                                  </widget>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">False</property>
+                                    <property name="position">1</property>
+                                  </packing>
+                                </child>
+                              </widget>
+                            </child>
+                          </widget>
+                        </child>
+                      </widget>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">False</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                  </widget>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="position">3</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkLabel" id="PrivateLogDirLabel">
+                    <property name="visible">True</property>
+                    <property name="xalign">0</property>
+                    <property name="label" translatable="yes">Private Chat Logs directory:</property>
+                  </widget>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="position">4</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkHBox" id="logDirHbox3">
+                    <property name="visible">True</property>
+                    <property name="spacing">5</property>
+                    <child>
+                      <widget class="GtkEntry" id="PrivateLogDir">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                      </widget>
+                    </child>
+                    <child>
+                      <widget class="GtkButton" id="ChoosePrivateLogDIr">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="response_id">0</property>
+                        <child>
+                          <widget class="GtkAlignment" id="alignment24">
+                            <property name="visible">True</property>
+                            <property name="xscale">0</property>
+                            <property name="yscale">0</property>
+                            <child>
+                              <widget class="GtkHBox" id="hbox34">
+                                <property name="visible">True</property>
+                                <property name="spacing">2</property>
+                                <child>
+                                  <widget class="GtkImage" id="image24">
+                                    <property name="visible">True</property>
+                                    <property name="stock">gtk-open</property>
+                                  </widget>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">False</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <widget class="GtkLabel" id="label28">
+                                    <property name="visible">True</property>
+                                    <property name="label" translatable="yes">Choose...</property>
+                                    <property name="use_underline">True</property>
+                                  </widget>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">False</property>
+                                    <property name="position">1</property>
+                                  </packing>
+                                </child>
+                              </widget>
+                            </child>
+                          </widget>
+                        </child>
+                      </widget>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">False</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                  </widget>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="position">5</property>
+                  </packing>
+                </child>
               </widget>
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
                 <property name="position">3</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkHBox" id="hbox31">
+                <property name="visible">True</property>
+                <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                <property name="spacing">5</property>
+                <child>
+                  <widget class="GtkCheckButton" id="ReadRoomLogs">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="label" translatable="yes">Read logged chat room messages on joining rooms</property>
+                    <property name="use_underline">True</property>
+                    <property name="response_id">0</property>
+                    <property name="draw_indicator">True</property>
+                  </widget>
+                </child>
+                <child>
+                  <widget class="GtkLabel" id="label29">
+                    <property name="visible">True</property>
+                    <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                    <property name="label" translatable="yes">Read</property>
+                  </widget>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkSpinButton" id="RoomLogLines">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                    <property name="adjustment">0 0 100 1 10 10</property>
+                  </widget>
+                  <packing>
+                    <property name="position">2</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkLabel" id="label22">
+                    <property name="visible">True</property>
+                    <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                    <property name="label" translatable="yes">lines</property>
+                  </widget>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="position">3</property>
+                  </packing>
+                </child>
+              </widget>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">4</property>
               </packing>
             </child>
             <child>
@@ -4863,7 +5071,7 @@ Right</property>
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
-                <property name="position">4</property>
+                <property name="position">5</property>
               </packing>
             </child>
             <child>
@@ -4876,7 +5084,7 @@ Right</property>
               </widget>
               <packing>
                 <property name="expand">False</property>
-                <property name="position">5</property>
+                <property name="position">6</property>
               </packing>
             </child>
             <child>
@@ -4890,7 +5098,7 @@ Right</property>
               </widget>
               <packing>
                 <property name="expand">False</property>
-                <property name="position">6</property>
+                <property name="position">7</property>
               </packing>
             </child>
             <child>
@@ -4923,7 +5131,7 @@ Right</property>
               </widget>
               <packing>
                 <property name="expand">False</property>
-                <property name="position">7</property>
+                <property name="position">8</property>
               </packing>
             </child>
             <child>
@@ -4956,7 +5164,7 @@ Right</property>
               </widget>
               <packing>
                 <property name="expand">False</property>
-                <property name="position">8</property>
+                <property name="position">9</property>
               </packing>
             </child>
             <child>
@@ -4989,7 +5197,7 @@ Right</property>
               </widget>
               <packing>
                 <property name="expand">False</property>
-                <property name="position">9</property>
+                <property name="position">10</property>
               </packing>
             </child>
           </widget>

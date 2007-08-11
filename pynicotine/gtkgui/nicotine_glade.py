@@ -1095,32 +1095,6 @@ class MainWindow:
 
 		self.hbox12.pack_end(self.SimilarUsersButton, False, False, 0)
 
-		self.GlobalRecommendationsButton = gtk.Button()
-		self.GlobalRecommendationsButton.show()
-		self.GlobalRecommendationsButton.connect("clicked", self.OnGlobalRecommendationsClicked)
-
-		self.alignment4 = gtk.Alignment(0.5, 0.5, 0, 0)
-		self.alignment4.show()
-
-		self.hbox24 = gtk.HBox(False, 0)
-		self.hbox24.show()
-		self.hbox24.set_spacing(2)
-
-		self.image4 = gtk.Image()
-		self.image4.set_from_stock(gtk.STOCK_REFRESH, 4)
-		self.image4.show()
-		self.hbox24.pack_start(self.image4, False, False, 0)
-
-		self.label33 = gtk.Label(_("Global recommendations"))
-		self.label33.show()
-		self.hbox24.pack_start(self.label33, False, False, 0)
-
-		self.alignment4.add(self.hbox24)
-
-		self.GlobalRecommendationsButton.add(self.alignment4)
-
-		self.hbox12.pack_end(self.GlobalRecommendationsButton, False, False, 0)
-
 		self.RecommendationsButton = gtk.Button()
 		self.RecommendationsButton.show()
 		self.RecommendationsButton.connect("clicked", self.OnRecommendationsClicked)
@@ -1146,6 +1120,32 @@ class MainWindow:
 		self.RecommendationsButton.add(self.alignment5)
 
 		self.hbox12.pack_end(self.RecommendationsButton, False, False, 0)
+
+		self.GlobalRecommendationsButton = gtk.Button()
+		self.GlobalRecommendationsButton.show()
+		self.GlobalRecommendationsButton.connect("clicked", self.OnGlobalRecommendationsClicked)
+
+		self.alignment4 = gtk.Alignment(0.5, 0.5, 0, 0)
+		self.alignment4.show()
+
+		self.hbox24 = gtk.HBox(False, 0)
+		self.hbox24.show()
+		self.hbox24.set_spacing(2)
+
+		self.image4 = gtk.Image()
+		self.image4.set_from_stock(gtk.STOCK_REFRESH, 4)
+		self.image4.show()
+		self.hbox24.pack_start(self.image4, False, False, 0)
+
+		self.label33 = gtk.Label(_("Global recommendations"))
+		self.label33.show()
+		self.hbox24.pack_start(self.label33, False, False, 0)
+
+		self.alignment4.add(self.hbox24)
+
+		self.GlobalRecommendationsButton.add(self.alignment4)
+
+		self.hbox12.pack_end(self.GlobalRecommendationsButton, False, False, 0)
 
 		self.interests.pack_start(self.hbox12, False, True, 0)
 
@@ -1513,10 +1513,10 @@ class MainWindow:
 	def OnSimilarUsersClicked(self, widget):
 		pass
 
-	def OnGlobalRecommendationsClicked(self, widget):
+	def OnRecommendationsClicked(self, widget):
 		pass
 
-	def OnRecommendationsClicked(self, widget):
+	def OnGlobalRecommendationsClicked(self, widget):
 		pass
 
 	def OnAddThingILike(self, widget):
@@ -1622,28 +1622,6 @@ class ChatRoomTab:
 
 		self.hbox7.pack_end(self.HideStatusLog, False, False, 0)
 
-		self.ShowChatHelp = gtk.Button()
-		self.tooltips.set_tip(self.ShowChatHelp, _("Chat room command help"))
-		self.ShowChatHelp.show()
-		self.ShowChatHelp.connect("clicked", self.OnShowChatHelp)
-
-		self.alignment28 = gtk.Alignment(0.5, 0.5, 0, 0)
-		self.alignment28.show()
-
-		self.hbox47 = gtk.HBox(False, 0)
-		self.hbox47.show()
-
-		self.image39 = gtk.Image()
-		self.image39.set_from_stock(gtk.STOCK_HELP, 1)
-		self.image39.show()
-		self.hbox47.pack_start(self.image39, False, False, 0)
-
-		self.alignment28.add(self.hbox47)
-
-		self.ShowChatHelp.add(self.alignment28)
-
-		self.hbox7.pack_end(self.ShowChatHelp, False, False, 0)
-
 		self.Main.pack_start(self.hbox7, False, True, 0)
 
 		self.Hpaned = gtk.HPaned()
@@ -1682,11 +1660,38 @@ class ChatRoomTab:
 
 		self.vbox6.pack_start(self.ChatScrollWindow)
 
+		self.ChatEntryBox = gtk.HBox(False, 0)
+		self.ChatEntryBox.show()
+
 		self.ChatEntry = gtk.Entry()
 		self.ChatEntry.show()
 		self.ChatEntry.connect("activate", self.OnEnter)
 		self.ChatEntry.connect("key_press_event", self.OnKeyPress)
-		self.vbox6.pack_start(self.ChatEntry, False, False, 0)
+		self.ChatEntryBox.pack_start(self.ChatEntry)
+
+		self.ShowChatHelp = gtk.Button()
+		self.tooltips.set_tip(self.ShowChatHelp, _("Chat room command help"))
+		self.ShowChatHelp.show()
+		self.ShowChatHelp.connect("clicked", self.OnShowChatHelp)
+
+		self.alignment28 = gtk.Alignment(0.5, 0.5, 0, 0)
+		self.alignment28.show()
+
+		self.hbox47 = gtk.HBox(False, 0)
+		self.hbox47.show()
+
+		self.image39 = gtk.Image()
+		self.image39.set_from_stock(gtk.STOCK_HELP, 1)
+		self.image39.show()
+		self.hbox47.pack_start(self.image39, False, False, 0)
+
+		self.alignment28.add(self.hbox47)
+
+		self.ShowChatHelp.add(self.alignment28)
+
+		self.ChatEntryBox.pack_end(self.ShowChatHelp, False, False, 0)
+
+		self.vbox6.pack_start(self.ChatEntryBox, False, False, 0)
 
 		self.Vpaned.pack2(self.vbox6, True, False)
 
@@ -1791,13 +1796,13 @@ class ChatRoomTab:
 	def OnHideStatusLog(self, widget):
 		pass
 
-	def OnShowChatHelp(self, widget):
-		pass
-
 	def OnEnter(self, widget):
 		pass
 
 	def OnKeyPress(self, widget):
+		pass
+
+	def OnShowChatHelp(self, widget):
 		pass
 
 	def OnLogToggled(self, widget):

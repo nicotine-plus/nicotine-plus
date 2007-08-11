@@ -14,7 +14,8 @@ General Changes
  * libnotify support added (patch by infinito ticket #176 )
    to show download completion popups in the tray.
    notification-daemon, libnotify and python-notify required
-
+ * Added a 10 second cooldown between responding to Userinfo and Usershares requests
+   from the same user (to mitigate damage from DOS attacks and simple accidents)
 Shares
  * Shares are precompressed, before they're sent (Nicotine will recover faster
    from many shares requests)
@@ -31,10 +32,13 @@ Settings
  * Added IP blocking
  * Some Entry widgets in settings replaced with SpinBoxes
  * Userinfo settings now have size data for image
- 
+
 Search
  * Search results encoding improved (user's encoding, falls back to global)
  * Search results turn red when a user goes offline (configurable)
+
+Transfer
+ * Fixed pausing of aborted downloads after reconnecting to the server.
 
 Chat
  * Text-To-Speech support added (configurable under Settings->Misc->Sounds)
@@ -42,9 +46,10 @@ Chat
    Chat messages are read out, and nick mentions are announced. By default,
    there are commands for flite ( http://www.speech.cs.cmu.edu/flite/ )
    and festival ( http://www.cstr.ed.ac.uk/projects/festival/ ).
- * URL color is configurable
- * Log files' timestamps are also configurable. Default is "%Y-%m-%d %H:%M:%S"
+ * URL text color is configurable (doesn't effect old links after changing)
  * Timestamps configurable, disableable (under Settings->Chat->Logging)
+ * Log files' timestamps are also configurable. Default is "%Y-%m-%d %H:%M:%S"
+ * Added a help button for chatroom commands
  * Added hide/show buttons in chatrooms for userlist and status log. These
    buttons can be hidden by Edit->Hide chat room log and list toggles
  * Username away color-status in chat can be toggled off
@@ -61,8 +66,10 @@ Chat
  * Added a completion dropdown list (gtk.EntryCompletion) to chat entries
 
 Bug Fixes
+ * Fixed a major slowdown in needConfig function (was reading shares data)
  * Pressing enter in Search Filter entry boxes now works again
  * Readded "/" to pasted folder slsk:// URLs
+ * Reading slsk.exe's cfg files should now work on Windows
 
 1.2.8 Release (1st June 2007)
 

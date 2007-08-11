@@ -1348,7 +1348,7 @@ class LogFrame(settings_glade.LogFrame):
 		self.p = parent
 		self.frame = parent.frame
 		settings_glade.LogFrame.__init__(self, False)
-		self.options = {"logging": { "privatechat": self.LogPrivate, "chatrooms": self.LogRooms, "logsdir": self.LogDir, "transfers": self.LogTransfers, "rooms_timestamp":self.ChatRoomFormat, "private_timestamp":self.PrivateChatFormat, "log_timestamp": self.LogFileFormat, "timestamps": self.ShowTimeStamps },
+		self.options = {"logging": { "privatechat": self.LogPrivate, "chatrooms": self.LogRooms, "logsdir": self.LogDir, "roomlogsdir": self.RoomLogDir, "privatelogsdir": self.PrivateLogDir, "transfers": self.LogTransfers, "rooms_timestamp":self.ChatRoomFormat, "private_timestamp":self.PrivateChatFormat, "log_timestamp": self.LogFileFormat, "timestamps": self.ShowTimeStamps, "readroomlines": self.RoomLogLines, "readroomlogs": self.ReadRoomLogs},
 					"privatechat": {"store": self.ReopenPrivateChats},}
 
 	def SetSettings(self, config):
@@ -1371,6 +1371,10 @@ class LogFrame(settings_glade.LogFrame):
 				"privatechat": self.LogPrivate.get_active(),
 				"chatrooms": self.LogRooms.get_active(),
 				"logsdir": recode2(self.LogDir.get_text()),
+				"roomlogsdir": recode2(self.RoomLogDir.get_text()),
+				"privatelogsdir": recode2(self.PrivateLogDir.get_text()),
+				"readroomlogs": self.ReadRoomLogs.get_active(),
+				"readroomlines": self.RoomLogLines.get_value_as_int(),
 				"transfers": self.LogTransfers.get_active(),
 				"private_timestamp": self.PrivateChatFormat.get_text(),
 				"rooms_timestamp": self.ChatRoomFormat.get_text(),
@@ -1387,7 +1391,18 @@ class LogFrame(settings_glade.LogFrame):
 		if dir is not None:
 			for directory in dir: # iterate over selected files
 				self.LogDir.set_text(recode(directory))
-
+				
+	def OnChooseRoomLogDir(self, widget):
+		dir = ChooseDir(self.Main.get_toplevel(), self.LogDir.get_text())
+		if dir is not None:
+			for directory in dir: # iterate over selected files
+				self.RoomLogDir.set_text(recode(directory))
+				
+	def OnChoosePrivateLogDir(self, widget):
+		dir = ChooseDir(self.Main.get_toplevel(), self.LogDir.get_text())
+		if dir is not None:
+			for directory in dir: # iterate over selected files
+				self.PrivateLogDir.set_text(recode(directory))
 
 class SearchFrame(settings_glade.SearchFrame):
 	def __init__(self, parent):

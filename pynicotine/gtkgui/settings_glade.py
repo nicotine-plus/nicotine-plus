@@ -2685,20 +2685,20 @@ class LogFrame:
 
 		self.vbox89 = gtk.VBox(False, 0)
 		self.vbox89.show()
-		self.vbox89.set_spacing(10)
+		self.vbox89.set_spacing(5)
 		self.vbox89.set_border_width(5)
-
-		self.LogPrivate = gtk.CheckButton()
-		self.LogPrivate.set_label(_("Log private chat by default"))
-		self.LogPrivate.show()
-
-		self.vbox89.pack_start(self.LogPrivate, False, False, 0)
 
 		self.LogRooms = gtk.CheckButton()
 		self.LogRooms.set_label(_("Log chatrooms by default"))
 		self.LogRooms.show()
 
 		self.vbox89.pack_start(self.LogRooms, False, False, 0)
+
+		self.LogPrivate = gtk.CheckButton()
+		self.LogPrivate.set_label(_("Log private chat by default"))
+		self.LogPrivate.show()
+
+		self.vbox89.pack_start(self.LogPrivate, False, False, 0)
 
 		self.LogTransfers = gtk.CheckButton()
 		self.LogTransfers.set_label(_("Log transfers"))
@@ -2709,22 +2709,22 @@ class LogFrame:
 		self.vbox90 = gtk.VBox(False, 0)
 		self.vbox90.show()
 
-		self.label217 = gtk.Label(_("Logs directory:"))
-		self.label217.set_alignment(0, 0.50)
-		self.label217.show()
-		self.vbox90.pack_start(self.label217, False, False, 0)
+		self.LogDirLabel = gtk.Label(_("Logs directory:"))
+		self.LogDirLabel.set_alignment(0, 0.50)
+		self.LogDirLabel.show()
+		self.vbox90.pack_start(self.LogDirLabel, False, False, 0)
 
-		self.hbox140 = gtk.HBox(False, 0)
-		self.hbox140.show()
-		self.hbox140.set_spacing(5)
+		self.logDirHbox = gtk.HBox(False, 0)
+		self.logDirHbox.show()
+		self.logDirHbox.set_spacing(5)
 
 		self.LogDir = gtk.Entry()
 		self.LogDir.show()
-		self.hbox140.pack_start(self.LogDir)
+		self.logDirHbox.pack_start(self.LogDir)
 
-		self.button66 = gtk.Button()
-		self.button66.show()
-		self.button66.connect("clicked", self.OnChooseLogDir)
+		self.ChooseLogDIr = gtk.Button()
+		self.ChooseLogDIr.show()
+		self.ChooseLogDIr.connect("clicked", self.OnChooseLogDir)
 
 		self.alignment54 = gtk.Alignment(0.5, 0.5, 0, 0)
 		self.alignment54.show()
@@ -2744,13 +2744,119 @@ class LogFrame:
 
 		self.alignment54.add(self.hbox148)
 
-		self.button66.add(self.alignment54)
+		self.ChooseLogDIr.add(self.alignment54)
 
-		self.hbox140.pack_start(self.button66, False, False, 0)
+		self.logDirHbox.pack_start(self.ChooseLogDIr, False, False, 0)
 
-		self.vbox90.pack_start(self.hbox140, False, False, 0)
+		self.vbox90.pack_start(self.logDirHbox, False, False, 0)
+
+		self.RoomLogDirLabel = gtk.Label(_("Chatroom Logs directory:"))
+		self.RoomLogDirLabel.set_alignment(0, 0.50)
+		self.RoomLogDirLabel.show()
+		self.vbox90.pack_start(self.RoomLogDirLabel, False, False, 0)
+
+		self.roomLogDirHbox = gtk.HBox(False, 0)
+		self.roomLogDirHbox.show()
+		self.roomLogDirHbox.set_spacing(5)
+
+		self.RoomLogDir = gtk.Entry()
+		self.RoomLogDir.show()
+		self.roomLogDirHbox.pack_start(self.RoomLogDir)
+
+		self.ChooseRoomLogDIr = gtk.Button()
+		self.ChooseRoomLogDIr.show()
+		self.ChooseRoomLogDIr.connect("clicked", self.OnChooseRoomLogDir)
+
+		self.alignment17 = gtk.Alignment(0.5, 0.5, 0, 0)
+		self.alignment17.show()
+
+		self.hbox33 = gtk.HBox(False, 0)
+		self.hbox33.show()
+		self.hbox33.set_spacing(2)
+
+		self.image17 = gtk.Image()
+		self.image17.set_from_stock(gtk.STOCK_OPEN, 4)
+		self.image17.show()
+		self.hbox33.pack_start(self.image17, False, False, 0)
+
+		self.label25 = gtk.Label(_("Choose..."))
+		self.label25.show()
+		self.hbox33.pack_start(self.label25, False, False, 0)
+
+		self.alignment17.add(self.hbox33)
+
+		self.ChooseRoomLogDIr.add(self.alignment17)
+
+		self.roomLogDirHbox.pack_start(self.ChooseRoomLogDIr, False, False, 0)
+
+		self.vbox90.pack_start(self.roomLogDirHbox, False, False, 0)
+
+		self.PrivateLogDirLabel = gtk.Label(_("Private Chat Logs directory:"))
+		self.PrivateLogDirLabel.set_alignment(0, 0.50)
+		self.PrivateLogDirLabel.show()
+		self.vbox90.pack_start(self.PrivateLogDirLabel, False, False, 0)
+
+		self.logDirHbox3 = gtk.HBox(False, 0)
+		self.logDirHbox3.show()
+		self.logDirHbox3.set_spacing(5)
+
+		self.PrivateLogDir = gtk.Entry()
+		self.PrivateLogDir.show()
+		self.logDirHbox3.pack_start(self.PrivateLogDir)
+
+		self.ChoosePrivateLogDIr = gtk.Button()
+		self.ChoosePrivateLogDIr.show()
+
+		self.alignment24 = gtk.Alignment(0.5, 0.5, 0, 0)
+		self.alignment24.show()
+
+		self.hbox34 = gtk.HBox(False, 0)
+		self.hbox34.show()
+		self.hbox34.set_spacing(2)
+
+		self.image24 = gtk.Image()
+		self.image24.set_from_stock(gtk.STOCK_OPEN, 4)
+		self.image24.show()
+		self.hbox34.pack_start(self.image24, False, False, 0)
+
+		self.label28 = gtk.Label(_("Choose..."))
+		self.label28.show()
+		self.hbox34.pack_start(self.label28, False, False, 0)
+
+		self.alignment24.add(self.hbox34)
+
+		self.ChoosePrivateLogDIr.add(self.alignment24)
+
+		self.logDirHbox3.pack_start(self.ChoosePrivateLogDIr, False, False, 0)
+
+		self.vbox90.pack_start(self.logDirHbox3, False, False, 0)
 
 		self.vbox89.pack_start(self.vbox90, False, False, 0)
+
+		self.hbox31 = gtk.HBox(False, 0)
+		self.hbox31.show()
+		self.hbox31.set_spacing(5)
+
+		self.ReadRoomLogs = gtk.CheckButton()
+		self.ReadRoomLogs.set_label(_("Read logged chat room messages on joining rooms"))
+		self.ReadRoomLogs.show()
+
+		self.hbox31.pack_start(self.ReadRoomLogs)
+
+		self.label29 = gtk.Label(_("Read"))
+		self.label29.show()
+		self.hbox31.pack_start(self.label29, False, True, 0)
+
+		self.RoomLogLines = gtk.SpinButton(gtk.Adjustment(value=0, lower=0, upper=100, step_incr=1, page_incr=10, page_size=10))
+		self.RoomLogLines.show()
+
+		self.hbox31.pack_start(self.RoomLogLines)
+
+		self.label22 = gtk.Label(_("lines"))
+		self.label22.show()
+		self.hbox31.pack_start(self.label22, False, True, 0)
+
+		self.vbox89.pack_start(self.hbox31, False, False, 0)
 
 		self.hbox177 = gtk.HBox(False, 0)
 		self.hbox177.show()
@@ -2836,6 +2942,9 @@ class LogFrame:
 			self.LogFrame.add(self.Main)
 
 	def OnChooseLogDir(self, widget):
+		pass
+
+	def OnChooseRoomLogDir(self, widget):
 		pass
 
 	def get_custom_widget(self, id, string1, string2, int1, int2):
