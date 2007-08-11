@@ -1655,15 +1655,14 @@ class UrlCatchFrame(settings_glade.UrlCatchFrame):
 					command = urls["protocols"][key]
 				
 				iter = self.protocolmodel.append([key, command])
-				self.protocols[key] = [iter, command]
+				self.protocols[key] = iter
 		else:
 			self.p.Hilight(self.ProtocolHandlers)
 		self.OnURLCatchingToggled(self.URLCatching)
 		selection = self.ProtocolHandlers.get_selection()
 		selection.unselect_all()
 		
-		for key, data in self.protocols.items():
-			iter = data[0]
+		for key, iter in self.protocols.items():
 			if iter is not None:
 				selection.select_iter(iter)
 				break
@@ -1704,20 +1703,20 @@ class UrlCatchFrame(settings_glade.UrlCatchFrame):
 
 	def OnAdd(self, widget):
 		protocol = self.Protocol.get_text()
-		value = self.Handler.child.get_text()
+		command = self.Handler.child.get_text()
 		if protocol in self.protocols:
 			iter = self.protocols[protocol]
-			self.protocolmodel.set(iter, 1, value)
+			if iter is not None:
+				self.protocolmodel.set(iter, 1, command)
 		else:
-			iter = self.protocolmodel.append([protocol, value])
+			iter = self.protocolmodel.append([protocol, command])
 			self.protocols[protocol] = iter
 
 	def OnRemove(self, widget):
 		selection = self.ProtocolHandlers.get_selection()
-		tup = selection.get_selected()
-		if tup is not None:
-			iter = tup[1]
-			protocol = model.get_value(iter, 0)
+		model, iter = selection.get_selected()
+		if iter is not None:
+			protocol = self.protocolmodel.get_value(iter, 0)
 			self.protocolmodel.remove(iter)
 			del self.protocols[protocol]
 
