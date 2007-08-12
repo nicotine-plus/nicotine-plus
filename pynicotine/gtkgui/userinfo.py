@@ -207,7 +207,7 @@ class UserInfo(UserInfoTab):
 			("#" + _("Zoom In"), self.MakeZoomIn, gtk.STOCK_ZOOM_IN),
 			("#" + _("Zoom Out"), self.MakeZoomOut, gtk.STOCK_ZOOM_OUT),
 			("", None),
-			("#" + _("Save Image"), self.OnSavePicture, gtk.STOCK_FIND),
+			("#" + _("Save Image"), self.OnSavePicture, gtk.STOCK_SAVE),
 			
 		)
 
