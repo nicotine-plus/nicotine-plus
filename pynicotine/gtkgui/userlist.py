@@ -242,8 +242,9 @@ class UserList:
 		iter = self.GetIter(msg.user)
 		if iter is None:
 			return
-		if msg.status == self.usersmodel.get_value(iter, 7):
+		if msg.status == int(self.usersmodel.get_value(iter, 9)):
 			return
+
 		if msg.user in self.notify:
 			status = [_("User %s is offline"), _("User %s is away"), _("User %s is online")][msg.status]
 			self.frame.logMessage(status % msg.user)

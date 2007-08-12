@@ -362,11 +362,13 @@ class TransfersFrame(settings_glade.TransfersFrame):
 					self.p.Dehilight(widget)
 					
 
-		
 		self.OnQueueUseSlotsToggled(self.QueueUseSlots)
 		self.OnLimitToggled(self.Limit)
 		self.OnFriendsOnlyToggled(self.FriendsOnly)
-
+		if transfers["uploadallowed"] is not None:
+			self.UploadsAllowed.set_active(transfers["uploadallowed"])
+		else:
+			self.p.Hilight(self.UploadsAllowed)
 		self.filtersiters = {}
 		self.filterlist.clear()
 		if transfers["downloadfilters"] != []:
