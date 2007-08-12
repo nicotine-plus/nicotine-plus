@@ -131,13 +131,7 @@ class Transfers:
 			except:
 				self.geoip = None
 				
-		try:
-			import pynotify
-			pynotify.init("Nicotine+")
-			self.pynotify = pynotify
-		except ImportError:
-			self.pynotify = None
- 
+
 	def setTransferPanels(self, downloads, uploads):
 		self.downloadspanel = downloads
 		self.uploadspanel = uploads
@@ -767,7 +761,7 @@ class Transfers:
 	def FileDownload(self, msg):
 		""" A file download is in progress"""
 		needupdate = 1
-	
+		config = self.eventprocessor.config.sections
 		for i in self.downloads:
 			if i.conn != msg.conn:
 				continue
@@ -789,7 +783,7 @@ class Transfers:
 				else:
 					msg.file.close()
 					basename = self.CleanPath(self.encode(string.split(i.filename,'\\')[-1], i.user))
-					downloaddir = self.eventprocessor.config.sections["transfers"]["downloaddir"]
+					downloaddir = config["transfers"]["downloaddir"]
 					if i.path and i.path[0] == '/':
 						folder = self.CleanPath(i.path)
 					else:
@@ -830,31 +824,26 @@ class Transfers:
 					self.eventprocessor.sendNumSharedFoldersFiles()
 					self.SaveDownloads()
 					self.downloadspanel.update(i)
-					if self.eventprocessor.config.sections["transfers"]["shownotification"] and self.pynotify != None:
-						n = self.pynotify.Notification("Nicotine+", _("%(file)s downloaded from %(user)s") % {'user':i.user, "file":newname})
-						n.set_icon_from_pixbuf(self.eventprocessor.frame.images["n"])
-						try: n.attach_to_status_icon(self.eventprocessor.frame.TrayApp.trayicon_module)
-						except: 
-							try: n.attach_to_widget(self.eventprocessor.frame.TrayApp.trayicon_module)
-							except: pass
-						try:
-							n.show()
-						except gobject.GError, error:
-							self.eventprocessor.frame.logMessage(_("Notification Error: %s") % str(error))
+					if config["transfers"]["shownotification"]:
+						self.eventprocessor.frame.NewNotification(_("%(file)s downloaded from %(user)s") % {'user':i.user, "file":newname.rsplit(os.sep, 1)[1]}, title=_("Nicotine+ :: file downloaded"))
 
-					if self.eventprocessor.config.sections["transfers"]["afterfinish"]:
-						command = self.eventprocessor.config.sections["transfers"]["afterfinish"].replace("$", utils.escapeCommand(newname))
+					if config["transfers"]["afterfinish"]:
+						command = config["transfers"]["afterfinish"].replace("$", utils.escapeCommand(newname))
 						os.system(command)
 						self.eventprocessor.logMessage(_("Executed: %s") % self.decode(command))
-					if self.eventprocessor.config.sections["transfers"]["afterfolder"] and i.path:
+					if i.path and config["transfers"]["shownotification"] or config["transfers"]["afterfolder"]:
 						# walk through downloads and break if any file in the same folder exists, else execute
 						for ia in self.downloads:
-							if ia.status not in ['Finished', 'Aborted'] and ia.path and ia.path == i.path:
+							if ia.status not in ['Finished', 'Aborted', 'Paused', 'Filtered'] and ia.path and ia.path == i.path:
 								break
 						else:
-							command = self.eventprocessor.config.sections["transfers"]["afterfolder"].replace("$", utils.escapeCommand(folder))
-							os.system(command)
-							self.eventprocessor.logMessage(_("Executed on folder: %s") % self.decode(command))
+							if config["transfers"]["shownotification"]:
+								self.eventprocessor.frame.NewNotification(_("%(folder)s downloaded from %(user)s") % {'user':i.user, "folder":folder}, title=_("Nicotine+ :: directory completed"))
+							if config["transfers"]["afterfolder"]:
+								command = config["transfers"]["afterfolder"].replace("$", utils.escapeCommand(folder))
+								os.system(command)
+								self.eventprocessor.logMessage(_("Executed on folder: %s") % self.decode(command))
+								
 			except IOError, strerror:
 				self.eventprocessor.logMessage(_("Download I/O error: %s") % self.decode(strerror))
 				i.status = "Local file error"

@@ -429,6 +429,20 @@ class NicotineFrame(MainWindow):
 		if trerror is not None and trerror != "":
 			self.logMessage(trerror)
 			
+	def NewNotification(self, message, title="Nicotine+"):
+		if self.pynotify is None:
+			return
+		n = self.pynotify.Notification(title, message)
+		n.set_icon_from_pixbuf(self.images["n"])
+		try: n.attach_to_status_icon(self.TrayApp.trayicon_module)
+		except:
+			try: n.attach_to_widget(self.TrayApp.trayicon_module)
+			except: pass
+		try:
+			n.show()
+		except gobject.GError, error:
+			self.logMessage(_("Notification Error: %s") % str(error))
+				
 	def OnMoveList(self, widget):
 		self.buddylist_in_chatrooms1.set_active(not self.buddylist_in_chatrooms1.get_active())
 		self.OnChatRooms(None)
