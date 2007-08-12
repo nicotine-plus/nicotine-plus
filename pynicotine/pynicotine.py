@@ -205,7 +205,8 @@ class NetworkEventProcessor:
 			transfers.TransferTimeout:self.TransferTimeout,
 			slskmessages.RescanShares:self.RescanShares,
 			slskmessages.RescanBuddyShares:self.RescanBuddyShares,
-                        str:self.Notify,
+			str:self.Notify,
+			slskmessages.InternalData:self.DisplaySockets,
 			slskmessages.GlobalRecommendations:self.GlobalRecommendations,
 			slskmessages.Recommendations:self.Recommendations,
 			slskmessages.ItemRecommendations:self.ItemRecommendations,
@@ -228,7 +229,7 @@ class NetworkEventProcessor:
 	
 		conn = None
 		for i in self.peerconns:
-			if i.username == user and i.init.type == 'P' and message.__class__ is not slskmessages.FileRequest:
+			if i.username == user and i.init.type == 'P' and message.__class__ is not slskmessages.FileRequest and message.__class__ is not slskmessages.FileSearchResult:
 				conn = i
 				break
 		if conn is not None:
@@ -380,6 +381,9 @@ class NetworkEventProcessor:
 	def Notify(self, string):
 		self.logMessage("%s" % self.decode(string))
 
+	def DisplaySockets(self, msg):
+		self.frame.SetSocketStatus(msg.msg)
+		
 	def ConnectError(self, msg):
 		if msg.connobj.__class__ is slskmessages.ServerConn:
 			self.setStatus(_("Can't connect to server %(host)s:%(port)s: %(error)s") % {'host': msg.connobj.addr[0], 'port': msg.connobj.addr[1], 'error': self.decode(msg.err) } )
@@ -904,12 +908,14 @@ class NetworkEventProcessor:
 		self.queue.put(m)
 		
 		
-	def ClosePeerConnection(self, peerconn):
+	def ClosePeerConnection(self, peerconn, force=False):
 		if peerconn == None:
 			return
+		curtime = time.time()
 		for i in self.peerconns[:]:
 			if i.conn == peerconn:
-				self.queue.put(slskmessages.ConnClose(i.conn))
+				if not self.protothread.socketStillActive(i.conn):
+					self.queue.put(slskmessages.ConnClose(i.conn))
 				break
 		
 	def UserInfoReply(self, msg):
@@ -1001,7 +1007,7 @@ class NetworkEventProcessor:
 				else:
 					country = ""
 				self.search.ShowResult(msg, i.username, country)
-				#self.ClosePeerConnection(i.conn)
+				self.ClosePeerConnection(i.conn)
 
 	def PierceFireWall(self, msg):
 		for i in self.peerconns:

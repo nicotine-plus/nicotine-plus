@@ -307,6 +307,11 @@ class SlskProtoThread(threading.Thread):
 					input, output, exc = multiselect(conns.keys() + connsinprogress.keys()+ [p], connsinprogress.keys() + outsock, [], 0.5)
 				else:
 					input, output, exc = select.select(conns.keys() + connsinprogress.keys() +[p], connsinprogress.keys() + outsock, [], 0.5)
+				numsockets = 0
+				if p is not None:
+					numsockets += 1
+				numsockets += len(conns) + len(connsinprogress)
+				self._ui_callback([InternalData(numsockets)])
 				#print "Sockets open:", len(conns.keys()+connsinprogress.keys()+[p]+outsock), len(conns.keys()),  len(connsinprogress.keys())
 			except select.error, error:
 				if len(error.args) == 2 and error.args[0] == EINTR:
@@ -410,14 +415,11 @@ class SlskProtoThread(threading.Thread):
 			# Timeout Connections
 			curtime = time.time()
 			connsockets = len(conns.keys())
+			num = 0
 			for i in conns.keys()[:]:
-				if i is not server_socket:
-					if curtime - conns[i].lastactive > 120:
-					#if connsockets > 60:
-						#seconds = 15
-					#else:
-						#seconds = 30
-					#if curtime - conns[i].lastactive > seconds:
+				if i is not server_socket and i is not p:
+					if curtime - conns[i].lastactive > 60:
+
 						self._ui_callback([ConnClose(i, conns[i].addr)])
 						i.close()
 						#print "Closed_run", conns[i].addr
@@ -427,12 +429,26 @@ class SlskProtoThread(threading.Thread):
 					if curtime - conns[server_socket].lastping > 120:
 						conns[server_socket].lastping = curtime
 						queue.put(ServerPing())
+				num += 1
 			self._ui_callback([])
 
 		# Close Server Port
 		if server_socket is not None:
 			server_socket.close()
 		self._stopped = 1
+		
+	def checkTimeSinceActive(self, conn):
+		for i in self._conns.keys():
+			if i == conn:
+				return self._conns[conn].lastactive
+		return None
+		
+	def socketStillActive(self, conn):
+		for i in self._conns.keys():
+			if i == conn:
+				if len(self._conns[conn].obuf) > 0 or len(self._conns[conn].ibuf) > 0:
+					return True
+		return False
 		
 	def ipBlocked(self, address):
 		if address in self._config.sections["server"]["ipblocklist"] or address is None:

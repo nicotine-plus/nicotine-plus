@@ -196,6 +196,7 @@ class NicotineFrame(MainWindow):
 
 
 		self.status_context_id = self.Statusbar.get_context_id("")
+		self.socket_context_id = self.SocketStatus.get_context_id("")
 		self.user_context_id = self.UserStatus.get_context_id("")
 		self.down_context_id = self.DownStatus.get_context_id("")
 		self.up_context_id = self.UpStatus.get_context_id("")
@@ -1232,6 +1233,10 @@ class NicotineFrame(MainWindow):
 	def SetUserStatus(self, status):
 		self.UserStatus.pop(self.user_context_id)
 		self.UserStatus.push(self.user_context_id, status)
+		
+	def SetSocketStatus(self, status):
+		self.SocketStatus.pop(self.socket_context_id)
+		self.SocketStatus.push(self.socket_context_id, _("%s Connections") % status)
 		
 	def InitInterface(self, msg):
 		if self.away == 0:

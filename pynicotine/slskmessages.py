@@ -145,6 +145,10 @@ class Notify(InternalMessage):
 	def __init__(self, msg):
 		self.msg = msg
 
+class InternalData(InternalMessage):
+	def __init__(self, msg):
+		self.msg = msg
+		
 class SlskMessage:
 	""" This is a parent class for all protocol messages. """
 	

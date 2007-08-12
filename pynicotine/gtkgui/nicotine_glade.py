@@ -1095,32 +1095,6 @@ class MainWindow:
 
 		self.hbox12.pack_end(self.SimilarUsersButton, False, False, 0)
 
-		self.GlobalRecommendationsButton = gtk.Button()
-		self.GlobalRecommendationsButton.show()
-		self.GlobalRecommendationsButton.connect("clicked", self.OnGlobalRecommendationsClicked)
-
-		self.alignment4 = gtk.Alignment(0.5, 0.5, 0, 0)
-		self.alignment4.show()
-
-		self.hbox24 = gtk.HBox(False, 0)
-		self.hbox24.show()
-		self.hbox24.set_spacing(2)
-
-		self.image4 = gtk.Image()
-		self.image4.set_from_stock(gtk.STOCK_REFRESH, 4)
-		self.image4.show()
-		self.hbox24.pack_start(self.image4, False, False, 0)
-
-		self.label33 = gtk.Label(_("Global recommendations"))
-		self.label33.show()
-		self.hbox24.pack_start(self.label33, False, False, 0)
-
-		self.alignment4.add(self.hbox24)
-
-		self.GlobalRecommendationsButton.add(self.alignment4)
-
-		self.hbox12.pack_end(self.GlobalRecommendationsButton, False, False, 0)
-
 		self.RecommendationsButton = gtk.Button()
 		self.RecommendationsButton.show()
 		self.RecommendationsButton.connect("clicked", self.OnRecommendationsClicked)
@@ -1146,6 +1120,32 @@ class MainWindow:
 		self.RecommendationsButton.add(self.alignment5)
 
 		self.hbox12.pack_end(self.RecommendationsButton, False, False, 0)
+
+		self.GlobalRecommendationsButton = gtk.Button()
+		self.GlobalRecommendationsButton.show()
+		self.GlobalRecommendationsButton.connect("clicked", self.OnGlobalRecommendationsClicked)
+
+		self.alignment4 = gtk.Alignment(0.5, 0.5, 0, 0)
+		self.alignment4.show()
+
+		self.hbox24 = gtk.HBox(False, 0)
+		self.hbox24.show()
+		self.hbox24.set_spacing(2)
+
+		self.image4 = gtk.Image()
+		self.image4.set_from_stock(gtk.STOCK_REFRESH, 4)
+		self.image4.show()
+		self.hbox24.pack_start(self.image4, False, False, 0)
+
+		self.label33 = gtk.Label(_("Global recommendations"))
+		self.label33.show()
+		self.hbox24.pack_start(self.label33, False, False, 0)
+
+		self.alignment4.add(self.hbox24)
+
+		self.GlobalRecommendationsButton.add(self.alignment4)
+
+		self.hbox12.pack_end(self.GlobalRecommendationsButton, False, False, 0)
 
 		self.interests.pack_start(self.hbox12, False, True, 0)
 
@@ -1361,11 +1361,18 @@ class MainWindow:
 		self.hbox10.pack_start(self.BuddySharesProgress, False, False, 0)
 
 		self.UserStatus = gtk.Statusbar()
-		self.UserStatus.set_size_request(100, -1)
+		self.UserStatus.set_size_request(80, -1)
 		self.UserStatus.set_has_resize_grip(False)
 		self.UserStatus.show()
 		self.UserStatus.set_border_width(1)
 		self.hbox10.pack_start(self.UserStatus, False, True, 0)
+
+		self.SocketStatus = gtk.Statusbar()
+		self.SocketStatus.set_size_request(130, -1)
+		self.SocketStatus.set_has_resize_grip(False)
+		self.SocketStatus.show()
+		self.SocketStatus.set_border_width(1)
+		self.hbox10.pack_start(self.SocketStatus, False, True, 0)
 
 		self.DownStatus = gtk.Statusbar()
 		self.DownStatus.set_size_request(190, -1)
@@ -1513,10 +1520,10 @@ class MainWindow:
 	def OnSimilarUsersClicked(self, widget):
 		pass
 
-	def OnGlobalRecommendationsClicked(self, widget):
+	def OnRecommendationsClicked(self, widget):
 		pass
 
-	def OnRecommendationsClicked(self, widget):
+	def OnGlobalRecommendationsClicked(self, widget):
 		pass
 
 	def OnAddThingILike(self, widget):

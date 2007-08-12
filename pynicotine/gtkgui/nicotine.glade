@@ -1994,55 +1994,6 @@
                           </packing>
                         </child>
                         <child>
-                          <widget class="GtkButton" id="GlobalRecommendationsButton">
-                            <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="response_id">0</property>
-                            <signal name="clicked" handler="OnGlobalRecommendationsClicked"/>
-                            <child>
-                              <widget class="GtkAlignment" id="alignment4">
-                                <property name="visible">True</property>
-                                <property name="xscale">0</property>
-                                <property name="yscale">0</property>
-                                <child>
-                                  <widget class="GtkHBox" id="hbox24">
-                                    <property name="visible">True</property>
-                                    <property name="spacing">2</property>
-                                    <child>
-                                      <widget class="GtkImage" id="image4">
-                                        <property name="visible">True</property>
-                                        <property name="stock">gtk-refresh</property>
-                                      </widget>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="fill">False</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <widget class="GtkLabel" id="label33">
-                                        <property name="visible">True</property>
-                                        <property name="label" translatable="yes">Global recommendations</property>
-                                        <property name="use_underline">True</property>
-                                      </widget>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="fill">False</property>
-                                        <property name="position">1</property>
-                                      </packing>
-                                    </child>
-                                  </widget>
-                                </child>
-                              </widget>
-                            </child>
-                          </widget>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">False</property>
-                            <property name="pack_type">GTK_PACK_END</property>
-                            <property name="position">1</property>
-                          </packing>
-                        </child>
-                        <child>
                           <widget class="GtkButton" id="RecommendationsButton">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
@@ -2071,6 +2022,55 @@
                                       <widget class="GtkLabel" id="label34">
                                         <property name="visible">True</property>
                                         <property name="label" translatable="yes">Recommendations</property>
+                                        <property name="use_underline">True</property>
+                                      </widget>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">False</property>
+                                        <property name="position">1</property>
+                                      </packing>
+                                    </child>
+                                  </widget>
+                                </child>
+                              </widget>
+                            </child>
+                          </widget>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">False</property>
+                            <property name="pack_type">GTK_PACK_END</property>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <widget class="GtkButton" id="GlobalRecommendationsButton">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="response_id">0</property>
+                            <signal name="clicked" handler="OnGlobalRecommendationsClicked"/>
+                            <child>
+                              <widget class="GtkAlignment" id="alignment4">
+                                <property name="visible">True</property>
+                                <property name="xscale">0</property>
+                                <property name="yscale">0</property>
+                                <child>
+                                  <widget class="GtkHBox" id="hbox24">
+                                    <property name="visible">True</property>
+                                    <property name="spacing">2</property>
+                                    <child>
+                                      <widget class="GtkImage" id="image4">
+                                        <property name="visible">True</property>
+                                        <property name="stock">gtk-refresh</property>
+                                      </widget>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">False</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <widget class="GtkLabel" id="label33">
+                                        <property name="visible">True</property>
+                                        <property name="label" translatable="yes">Global recommendations</property>
                                         <property name="use_underline">True</property>
                                       </widget>
                                       <packing>
@@ -2448,7 +2448,7 @@
             </child>
             <child>
               <widget class="GtkStatusbar" id="UserStatus">
-                <property name="width_request">100</property>
+                <property name="width_request">80</property>
                 <property name="visible">True</property>
                 <property name="border_width">1</property>
                 <property name="has_resize_grip">False</property>
@@ -2456,6 +2456,18 @@
               <packing>
                 <property name="expand">False</property>
                 <property name="position">3</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkStatusbar" id="SocketStatus">
+                <property name="width_request">130</property>
+                <property name="visible">True</property>
+                <property name="border_width">1</property>
+                <property name="has_resize_grip">False</property>
+              </widget>
+              <packing>
+                <property name="expand">False</property>
+                <property name="position">4</property>
               </packing>
             </child>
             <child>
@@ -2467,7 +2479,7 @@
               </widget>
               <packing>
                 <property name="expand">False</property>
-                <property name="position">4</property>
+                <property name="position">5</property>
               </packing>
             </child>
             <child>
@@ -2479,7 +2491,7 @@
               </widget>
               <packing>
                 <property name="expand">False</property>
-                <property name="position">5</property>
+                <property name="position">6</property>
               </packing>
             </child>
           </widget>
