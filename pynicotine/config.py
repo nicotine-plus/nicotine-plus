@@ -67,7 +67,7 @@ class Config:
 "uploadbandwidth":10, "uselimit":0,"uploadlimit":150, "preferfriends":0, \
 "useupslots":0, "uploadslots":2, "incompletedir":"", "shownotification":0, "afterfinish":"", \
 "afterfolder":"", "lock":1, "fifoqueue": 0, "usecustomban":0, "limitby":1, \
-"customban":"Banned, don't bother retrying","queuelimit":100,"friendsonly":0, \
+"customban":"Banned, don't bother retrying","queuelimit":100, "filelimit": 1000, "friendsonly":0, \
 "friendsnolimits":0, "enablebuddyshares": 0, "enabletransferbuttons": 1, \
 "groupdownloads": 0, "groupuploads": 1, \
 "geoblock": 0, "geopanic": 0, "geoblockcc": [""], "remotedownloads": 1, \

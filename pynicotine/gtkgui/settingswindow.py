@@ -306,10 +306,14 @@ class TransfersFrame(settings_glade.TransfersFrame):
 		self.frame = parent.frame
 		settings_glade.TransfersFrame.__init__(self, False)
 		self.options = {
-			"transfers": ["uploadbandwidth", "useupslots", "uploadslots",
-"uselimit", "uploadlimit", "fifoqueue", "limitby", "queuelimit", "friendsnolimits",
-"friendsonly", "preferfriends", "lock", "remotedownloads", "uploadallowed",
-"downloadfilters", "enablefilters",]
+			"transfers": {"uploadbandwidth": self.QueueBandwidth, "useupslots": self.QueueUseSlots,
+"uploadslots": self.QueueSlots, "uselimit": self.Limit, "uploadlimit": self.LimitSpeed,
+"fifoqueue": self.FirstInFirstOut, "limitby": self.LimitTotalTransfers,
+"queuelimit": self.MaxUserQueue, "filelimit": self.MaxUserFiles,
+"friendsnolimits": self.FriendsNoLimits, "friendsonly": self.FriendsOnly,
+"preferfriends": self.PreferFriends, "lock":self.LockIncoming,
+"remotedownloads": self.RemoteDownloads, "uploadallowed": self.UploadsAllowed,
+"downloadfilters": self.FilterView, "enablefilters": self.DownloadFilter,}
 			}
 		self.UploadsAllowed_List.clear()
 		self.alloweduserslist = [_("No one"), _("Everyone"), _("Users in list"), _("Trusted Users")]
@@ -345,74 +349,24 @@ class TransfersFrame(settings_glade.TransfersFrame):
 	def SetSettings(self, config):
 		transfers = config["transfers"]
 		server = config["server"]
-		if transfers["uploadbandwidth"] is not None:
-			self.QueueBandwidth.set_value(transfers["uploadbandwidth"])
-		else:
-			self.p.Hilight(self.QueueBandwidth)
-		if transfers["useupslots"] is not None:
-			self.QueueUseSlots.set_active(transfers["useupslots"])
-		else:
-			self.p.Hilight(self.QueueUseSlots)
-		if transfers["uploadslots"] is not None:
-			self.QueueSlots.set_value(transfers["uploadslots"])
-		else:
-			self.p.Hilight(self.QueueSlots)
-		if transfers["uselimit"] is not None:
-			self.Limit.set_active(transfers["uselimit"])
-		else:
-			self.p.Hilight(self.Limit)
-		if transfers["uploadlimit"] is not None:
-			self.LimitSpeed.set_value(transfers["uploadlimit"])
-		else:
-			self.p.Hilight(self.LimitSpeed)
-		if transfers["limitby"] is not None:
-			if transfers["limitby"] == 0:
-				self.LimitPerTransfer.set_active(1)
-			else:
-				self.LimitTotalTransfers.set_active(1)
-		else:
-			self.p.Hilight(self.LimitPerTransfer)
-			self.p.Hilight(self.LimitTotalTransfers)
-		if transfers["queuelimit"] is not None:
-			self.MaxUserQueue.set_value(transfers["queuelimit"])
-		else:
-			self.p.Hilight(self.MaxUserQueue)
-		if transfers["friendsnolimits"] is not None:
-			self.FriendsNoLimits.set_active(transfers["friendsnolimits"])
-		else:
-			self.p.Hilight(self.FriendsNoLimits)
-		if transfers["friendsonly"] is not None:
-			self.FriendsOnly.set_active(transfers["friendsonly"])
-		else:
-			self.p.Hilight(self.FriendsOnly)
-		if transfers["preferfriends"] is not None:
-			self.PreferFriends.set_active(transfers["preferfriends"])
-		else:
-			self.p.Hilight(self.PreferFriends)
-		if transfers["lock"] is not None:
-			self.LockIncoming.set_active(transfers["lock"])
-		else:
-			self.p.Hilight(self.LockIncoming)
-		if transfers["remotedownloads"] is not None:
-			self.RemoteDownloads.set_active(transfers["remotedownloads"])
-		else:
-			self.p.Hilight(self.RemoteDownloads)
-		if transfers["fifoqueue"] is not None:
-			self.FirstInFirstOut.set_active(transfers["fifoqueue"])
-		else:
-			self.p.Hilight(self.FirstInFirstOut)
-		if transfers["uploadallowed"] is not None:
-			self.UploadsAllowed.set_active(transfers["uploadallowed"])
-		else:
-			self.p.Hilight(self.UploadsAllowed)
+		for section, keys in self.options.items():
+			if section not in config:
+				continue
+			for key in keys:
+				widget = self.options[section][key]
+				if config[section][key] is None:
+					self.p.Hilight(widget)
+					self.p.ClearWidget(widget)
+				else:
+					self.p.SetWidget(widget, config[section][key])
+					self.p.Dehilight(widget)
+					
+
 		
 		self.OnQueueUseSlotsToggled(self.QueueUseSlots)
 		self.OnLimitToggled(self.Limit)
 		self.OnFriendsOnlyToggled(self.FriendsOnly)
-		if transfers["enablefilters"] is not None:
-			self.DownloadFilter.set_active(transfers["enablefilters"])
-		else:
-			self.p.Hilight(self.DownloadFilter)
+
 		self.filtersiters = {}
 		self.filterlist.clear()
 		if transfers["downloadfilters"] != []:
@@ -427,38 +381,20 @@ class TransfersFrame(settings_glade.TransfersFrame):
 			
 	def GetSettings(self):
 		try:
-			uploadbandwidth = self.QueueBandwidth.get_value_as_int()
-		except:
-			uploadbandwidth = None
-		
-		try:
-			uploadslots = self.QueueSlots.get_value_as_int()
-		except:
-			uploadslots = None
-		
-		try:
-			uploadlimit = self.LimitSpeed.get_value_as_int()
-		except:
-			uploadlimit = None
-			self.Limit.set_active(0)
-		try:
-			queuelimit = self.MaxUserQueue.get_value_as_int()
-		except:
-			queuelimit = None
-		try:
 			uploadallowed =  self.UploadsAllowed.get_active()
 		except:
 			uploadallowed = 0
 		return {
 			"transfers": {
-				"uploadbandwidth": uploadbandwidth,
+				"uploadbandwidth": self.QueueBandwidth.get_value_as_int(),
 				"useupslots": self.QueueUseSlots.get_active(),
-				"uploadslots": uploadslots,
+				"uploadslots": self.QueueSlots.get_value_as_int(),
 				"uselimit": self.Limit.get_active(),
-				"uploadlimit": uploadlimit,
+				"uploadlimit": self.LimitSpeed.get_value_as_int(),
 				"fifoqueue": self.FirstInFirstOut.get_active(),
 				"limitby": self.LimitTotalTransfers.get_active(),
-				"queuelimit": queuelimit,
+				"queuelimit": self.MaxUserQueue.get_value_as_int(),
+				"filelimit": self.MaxUserFiles.get_value_as_int(),
 				"friendsnolimits": self.FriendsNoLimits.get_active(),
 				"friendsonly": self.FriendsOnly.get_active(),
 				"preferfriends": self.PreferFriends.get_active(),
@@ -507,6 +443,7 @@ class TransfersFrame(settings_glade.TransfersFrame):
 			else:
 				self.filtersiters[filter] = self.filterlist.append([filter, escaped])
 			self.OnVerifyFilter(self.VerifyFilters)
+			
 	def GetFilterList(self):
 		self.downloadfilters = []
 		df = list(self.filtersiters.keys())

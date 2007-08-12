@@ -415,6 +415,10 @@ class Transfers:
 			elif limits and self.queueLimitReached(user):
 				uploadslimit = self.eventprocessor.config.sections["transfers"]["queuelimit"]
 				response = slskmessages.TransferResponse(conn, 0, reason = "User limit of %i megabytes exceeded" %(uploadslimit), req = msg.req)
+			elif limits and self.fileLimitReached(user):
+				filelimit = self.eventprocessor.config.sections["transfers"]["filelimit"]
+				limitmsg = "User limit of %i files exceeded" %(filelimit)
+				response = slskmessages.TransferResponse(conn, 0, reason = limitmsg, req = msg.req)
 			elif user in self.getTransferringUsers() or self.bandwidthLimitReached() or self.transferNegotiating():
 				response = slskmessages.TransferResponse(conn, 0, reason = "Queued", req = msg.req)
 				self.uploads.append(Transfer(user = user, filename = msg.file, path = os.path.dirname(msg.file.replace('\\', os.sep)), status = "Queued", timequeued = time.time(), size = self.getFileSize(msg.file), place = len(self.uploads)))
@@ -445,9 +449,17 @@ class Transfers:
 	def queueLimitReached(self, user):
 		uploadslimit = self.eventprocessor.config.sections["transfers"]["queuelimit"]*1024*1024
 		sizelist = [i.size for i in self.uploads if i.user == user and i.status == "Queued"]
+		
 		size = sum(sizelist)
+		
 		return size >= uploadslimit
-
+	
+	def fileLimitReached(self, user):
+		filelimit = self.eventprocessor.config.sections["transfers"]["filelimit"]
+		numfiles = len([i for i in self.uploads if i.user == user and i.status == "Queued"])
+		
+		return numfiles >= filelimit
+	
 	def QueueUpload(self, msg):
 		user = None
 		for i in self.peerconns:
@@ -469,7 +481,11 @@ class Transfers:
 			elif limits and self.queueLimitReached(user):
 				uploadslimit = self.eventprocessor.config.sections["transfers"]["queuelimit"]
 				limitmsg = "User limit of %i megabytes exceeded" %(uploadslimit)
-				self.queue.put(slskmessages.QueueFailed(conn = msg.conn.conn, file = msg.file, reason = limitmsg)) 
+				self.queue.put(slskmessages.QueueFailed(conn = msg.conn.conn, file = msg.file, reason = limitmsg))
+			elif limits and self.fileLimitReached(user):
+				filelimit = self.eventprocessor.config.sections["transfers"]["filelimit"]
+				limitmsg = "User limit of %i files exceeded" %(filelimit)
+				self.queue.put(slskmessages.QueueFailed(conn = msg.conn.conn, file = msg.file, reason = limitmsg))
 			elif self.fileIsShared(user, msg.file):
 				self.uploads.append(Transfer(user = user, filename = msg.file, path = os.path.dirname(msg.file.replace('\\', os.sep)), status = "Queued", timequeued = time.time(), size = self.getFileSize(msg.file)))
 				self.uploadspanel.update(self.uploads[-1])

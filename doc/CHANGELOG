@@ -37,7 +37,8 @@ Search
  * Search results encoding improved (user's encoding, falls back to global)
  * Search results turn red when a user goes offline (configurable)
 
-Transfer
+Transfers
+ * Added a maximum files-per-user limit to the upload queue
  * Fixed pausing of aborted downloads after reconnecting to the server.
 
 Chat
