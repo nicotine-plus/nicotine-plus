@@ -123,6 +123,13 @@ class NicotineFrame(MainWindow):
 		
 		self.got_focus = False
 
+		try:
+			import pynotify
+			pynotify.init("Nicotine+")
+			self.pynotify = pynotify
+		except ImportError:
+			self.pynotify = None
+			
 		self.np = NetworkEventProcessor(self, self.callback, self.logMessage, self.SetStatusText, config)
 		self.LoadIcons()
 		self.ChangeTranslation = ChangeTranslation

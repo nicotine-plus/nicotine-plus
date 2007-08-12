@@ -247,6 +247,18 @@ class UserList:
 		if msg.user in self.notify:
 			status = [_("User %s is offline"), _("User %s is away"), _("User %s is online")][msg.status]
 			self.frame.logMessage(status % msg.user)
+			if self.frame.pynotify != None:
+				n = self.frame.pynotify.Notification("Nicotine+", status % msg.user)
+				n.set_icon_from_pixbuf(self.frame.images["n"])
+				try: n.attach_to_status_icon(self.frame.TrayApp.trayicon_module)
+				except:
+					try: n.attach_to_widget(self.frame.TrayApp.trayicon_module)
+					except: pass
+				try:
+					n.show()
+				except gobject.GError, error:
+					self.eventprocessor.frame.logMessage(_("Notification Error: %s") % str(error))
+
 		img = self.frame.GetStatusImage(msg.status)
 		self.usersmodel.set(iter, 0, img, 9, msg.status)
 

@@ -1510,7 +1510,7 @@ class EventsFrame(settings_glade.EventsFrame):
 			self.FileManagerCombo.append_text( executable ) 
 		
 	def SetSettings(self, config):
-		if self.frame.np.transfers is not None and self.frame.np.transfers.pynotify is not  None:
+		if self.frame.pynotify is not None:
 			self.ShowNotification.set_sensitive(True)
 		else:
 			self.ShowNotification.set_sensitive(False)
