@@ -693,7 +693,7 @@ class ChatRoom(ChatRoomTab):
 	
 	CMDS = ["/alias ", "/unalias ", "/whois ", "/browse ", "/ip ", "/pm ", "/msg ", "/search ", "/usearch ", "/rsearch ",
 		"/bsearch ", "/join ", "/leave", "/add ", "/buddy ", "/rem ", "/unbuddy ", "/ban ", "/ignore ", "/unban ", "/unignore ", "/clear", "/part ", "/quit",
-		"/rescan", "/tick", "/nsa", "/info"]
+		"/rescan", "/tick", "/nsa", "/info", "/detach", "/attach"]
 
 	def OnEnter(self, widget):
 		text = self.frame.np.encode(widget.get_text(), self.encoding)
@@ -807,7 +807,10 @@ class ChatRoom(ChatRoomTab):
 		elif cmd == "/now":
 			import thread
 			thread.start_new_thread(self.NowPlayingThread, ())
-			
+		elif cmd == "/detach":
+			self.frame.ChatNotebook.detach_tab(self.Main, _("Nicotine+ Chatroom: %s"))
+		elif cmd == "/attach":
+			self.frame.ChatNotebook.attach_tab(self.Main)
 		elif cmd == "/rescan":
 			self.frame.BothRescan()
 		elif cmd  in ["/tick", "/t"]:
@@ -1255,6 +1258,11 @@ class ChatRoom(ChatRoomTab):
 		else:
 			self.Ticker.enable()
 			
+	def GetTabParent(self, page):
+		if self.frame.ChatNotebook.is_tab_detached(page):
+			return self.Main.get_parent().get_parent()
+		return self.frame.MainWindow
+		
 	def OnTickerClicked(self, widget, event):
 		if event.button != 1 or event.type != gtk.gdk._2BUTTON_PRESS:
 			return False
@@ -1263,7 +1271,7 @@ class ChatRoom(ChatRoomTab):
 			old = self.Ticker.messages[config["server"]["login"]]
 		else:
 			old = ""
-		t, result = TickDialog(self.frame.MainWindow, old)
+		t, result = TickDialog(self.GetTabParent(self.Main), old)
 		if not result is None:
 			if t == 1:
 				if not result:

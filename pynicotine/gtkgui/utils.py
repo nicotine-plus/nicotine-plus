@@ -411,6 +411,7 @@ class IconNotebook(gtk.Notebook):
 		gtk.Notebook.__init__(self)
 		self.images = images
 		self.pages = []
+		self.detached_tabs = []
 		self.connect("switch-page", self.dismiss_icon)
 		self.connect("key_press_event", self.OnKeyPress)
 		self.set_scrollable(True)
@@ -451,18 +452,98 @@ class IconNotebook(gtk.Notebook):
 		# menu for all tabs
 		label_tab_menu = ImageLabel(label, self.images["empty"])
 		self.pages.append([page, label_tab, 0, label_tab_menu])
-		self.eventbox = gtk.EventBox()
+		eventbox = gtk.EventBox()
 		label_tab.show()
-		self.eventbox.add(label_tab)
-		self.eventbox.show()
-		self.eventbox.connect('event', self.on_tab_click, page)
-		gtk.Notebook.append_page_menu(self, page, self.eventbox, label_tab_menu)
+		eventbox.add(label_tab)
+		eventbox.show()
+		eventbox.connect('event', self.on_tab_click, page)
+		gtk.Notebook.append_page_menu(self, page, eventbox, label_tab_menu)
+		try:
+			self.set_tab_reorderable(page, True)
+			#self.set_tab_detachable(page, True)
+		except:
+			# Old PyGTK2
+			pass
+		
+	def OnTabWindowDestroy(self, widget, page):
+		if self.is_tab_detached(page):
+			self.attach_tab(page, destroying=True)
+			
+	def detach_tab(self, page, title=_("Nicotine+: %s")):
+		label = None
+		if self.is_tab_detached(page):
+			return
+		for i in self.pages[:]:
+			if i[0] == page:
+				pagewidget, label_tab, status, label_tab_menu = i
+				label = label_tab.label.get_text()
+				label_tab.get_parent().remove(label_tab)
+				
+				break
+
+		if label is None:
+			return
+		for i in self.detached_tabs:
+			if i[0] == label or i[1] is page:
+				return
+		gtk.Notebook.remove_page(self, self.page_num(page))
+			
+		window = gtk.Window()
+		window.set_title(title % label)
+		#window.add_accel_group(self.accel_group)
+		window.set_icon(NICOTINE.images["n"])
+		window.resize(600, 400)
+		vbox = gtk.VBox(False, spacing=5)
+		vbox.set_border_width(5)
+		vbox.pack_start(page)
+		vbox.show()
+		window.add(vbox)
+		window.connect("destroy", self.OnTabWindowDestroy, page)
+		window.show()
+		self.detached_tabs.append([page, label, window])
+		
+	def attach_tab(self, page, destroying=False):
+		pagewidget = label_tab = label_tab_menu = label = None
+
+		for item in self.detached_tabs:
+			if item[0] is page:
+				label = item[1]
+				window = item[2]
+				break
+		if label is None or window is None:
+			return
+		for i in self.pages[:]:
+			if i[0] == page:
+				label = i[1].label.get_text()
+				pagewidget, label_tab, status, label_tab_menu = i
+				break
+		for i in (pagewidget, label_tab, label_tab_menu, label, status):
+			if i is None:
+				return
+		window.get_child().remove(pagewidget)
+		
+		#self.pages.append([page, label_tab, status, label_tab_menu])
+		eventbox = gtk.EventBox()
+		label_tab.show()
+		eventbox.add(label_tab)
+		eventbox.show()
+		eventbox.connect('event', self.on_tab_click, page)
+		gtk.Notebook.append_page_menu(self, pagewidget, eventbox, label_tab_menu)
 		try:
 			self.set_tab_reorderable(page, True)
 		except:
 			# Old PyGTK2
 			pass
+		self.detached_tabs.remove(item)
+		if not destroying:
+			window.destroy()
 		
+	def is_tab_detached(self, page):
+		for item in self.detached_tabs:
+			if item[0] is page:
+				return True
+		return False
+
 	def on_tab_click(self, widget, event, child):
 		pass
 	
