@@ -201,6 +201,16 @@ class UserInfo(UserInfoTab):
 		)
 		self.Hates.connect("button_press_event", self.OnPopupHatesMenu)
 		
+		self.image_menu = popup = PopupMenu(self)
+		popup.setup(
+			("#" + _("Zoom 1:1"), self.MakeZoomNormal, gtk.STOCK_ZOOM_100),
+			("#" + _("Zoom In"), self.MakeZoomIn, gtk.STOCK_ZOOM_IN),
+			("#" + _("Zoom Out"), self.MakeZoomOut, gtk.STOCK_ZOOM_OUT),
+			("", None),
+			("#" + _("Save Image"), self.OnSavePicture, gtk.STOCK_FIND),
+			
+		)
+
 	def OnPopupLikesMenu(self, widget, event):
 		if event.button != 3:
 			return
@@ -322,7 +332,7 @@ class UserInfo(UserInfoTab):
 				del pic, loader
 				gc.collect()
 				self.actual_zoom = 0
-				
+				self.SavePicture.set_sensitive(True)
 			except TypeError, e:
 				name = tempfile.mktemp()
 				f = open(name,"w")
@@ -332,8 +342,10 @@ class UserInfo(UserInfoTab):
 				os.remove(name)
 			except Exception, e: 
 				self.image.set_from_pixbuf(None)
+				self.SavePicture.set_sensitive(False)
 		else:
 			self.image.set_from_pixbuf(None)
+			self.SavePicture.set_sensitive(False)
 			
 	def ShowInfo(self, msg):
 		self.ShowUserInfo(msg.descr, msg.has_pic, msg.pic, msg.totalupl, msg.queuesize, msg.slotsavail, msg.uploadallowed)
@@ -375,7 +387,7 @@ class UserInfo(UserInfoTab):
 		self.Main.destroy()
 
 	def OnSavePicture(self, widget):
-		if self.image is None:
+		if self.image is None or self.image_pixbuf is None:
 			return
 		#pixbuf = self.image.get_pixbuf()
 		name = os.path.join(self.frame.np.config.sections["transfers"]["downloaddir"], self.encode(self.user)) + ".jpg"
@@ -407,6 +419,20 @@ class UserInfo(UserInfoTab):
 			buffer.set_text(self.frame.np.decode(self._descr, self.encoding))
 			SaveEncoding(self.frame.np, "userencoding", self.user, self.encoding)
 			
+	def OnImageClick(self, widget, event):
+		if event.type != gtk.gdk.BUTTON_PRESS or event.button != 3:
+			return False
+		act = True
+		if self.image is None or self.image_pixbuf is None:
+			act = False
+		items = self.image_menu.get_children()
+		for item in items:
+			item.set_sensitive(act)
+			
+		self.image_menu.popup(None, None, None, event.button, event.time)
+
+		return True # Don't scroll the gtk.ScrolledWindow
+		
 	def OnScrollEvent(self, widget, event):
 		if event.direction == gtk.gdk.SCROLL_UP:
 			self.MakeZoomIn()
@@ -414,8 +440,11 @@ class UserInfo(UserInfoTab):
 			self.MakeZoomOut()
 
 		return True # Don't scroll the gtk.ScrolledWindow
-
-	def MakeZoomIn(self):
+		
+	def MakeZoomNormal(self, widget):
+		self.MakeZoomIn(zoom=True)
+		
+	def MakeZoomIn(self, widget=None, zoom=None):
 		def CalcZoomIn(a):
 			return a + a * self.actual_zoom / 100 + a * self.zoom_factor / 100
 
@@ -426,8 +455,10 @@ class UserInfo(UserInfoTab):
 
 		x = self.image_pixbuf.get_width()
 		y = self.image_pixbuf.get_height()
-
-		self.actual_zoom += self.zoom_factor
+		if zoom:
+			self.actual_zoom = 0
+		else:
+			self.actual_zoom += self.zoom_factor
 
 		pixbuf_zoomed = self.image_pixbuf.scale_simple(CalcZoomIn(x),
 							       CalcZoomIn(y),
@@ -437,7 +468,7 @@ class UserInfo(UserInfoTab):
 		del pixbuf_zoomed
 		gc.collect()
 
-	def MakeZoomOut(self):
+	def MakeZoomOut(self, widget=None):
 		def CalcZoomOut(a):
 			return a + a * self.actual_zoom / 100 - a * self.zoom_factor / 100
 

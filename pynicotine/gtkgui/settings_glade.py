@@ -2838,16 +2838,16 @@ class LogFrame:
 		self.hbox31.set_spacing(5)
 
 		self.ReadRoomLogs = gtk.CheckButton()
-		self.ReadRoomLogs.set_label(_("Read logged chat room messages on joining rooms"))
+		self.ReadRoomLogs.set_label(_("Display logged chat room messages when a room is rejoined"))
 		self.ReadRoomLogs.show()
 
-		self.hbox31.pack_start(self.ReadRoomLogs)
+		self.hbox31.pack_start(self.ReadRoomLogs, False, True, 0)
 
 		self.label29 = gtk.Label(_("Read"))
 		self.label29.show()
 		self.hbox31.pack_start(self.label29, False, True, 0)
 
-		self.RoomLogLines = gtk.SpinButton(gtk.Adjustment(value=0, lower=0, upper=100, step_incr=1, page_incr=10, page_size=10))
+		self.RoomLogLines = gtk.SpinButton(gtk.Adjustment(value=0, lower=0, upper=1000, step_incr=1, page_incr=10, page_size=10))
 		self.RoomLogLines.show()
 
 		self.hbox31.pack_start(self.RoomLogLines)
