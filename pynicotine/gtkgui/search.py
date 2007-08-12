@@ -369,11 +369,13 @@ class Searches:
 	def RemoveTab(self, tab):
 		if tab.id in self.searches:
 			search = self.searches[tab.id]
+			
 			search[2] = None
 			#if search[4]:
 				#self.RemoveAutoSearch(search[0])
 		
 		self.frame.SearchNotebook.remove_page(tab.vbox7)
+		tab.vbox7.destroy()
 
 	def AutoSearch(self, id):
 		if id not in self.searches:
@@ -616,6 +618,7 @@ class Search(SearchTab):
 		self.mode = mode
 		self.remember = remember
 		self.users = []
+		self.resultslimit = 2000
 		self.QueryLabel.set_text(text)
 
 		self.resultsmodel = SearchTreeModel(self)
@@ -890,7 +893,7 @@ class Search(SearchTab):
 			
 			if self._more_results == 0:
 				self._more_results = 1
-				gobject.timeout_add(100, self._realaddresults)
+				gobject.timeout_add(1000, self._realaddresults)
 			else:
 				self._more_results = 2
 			return len(results)

@@ -579,7 +579,7 @@ class ChatRoom(ChatRoomTab):
 		self.popup_menu.popup(None, None, None, event.button, event.time)
 
 	def OnShowChatHelp(self, widget):
-		self.frame.OnAboutChatroomCommands(widget)
+		self.frame.OnAboutChatroomCommands(widget, self.GetTabParent(self.Main))
 
 	def OnHideChatButtons(self, hide=False):
 		for widget in self.HideStatusLog, self.HideUserList, self.ShowChatHelp:

@@ -1753,8 +1753,10 @@ class NicotineFrame(MainWindow):
 		dlg.run()
 		dlg.destroy()
 
-	def OnAboutChatroomCommands(self, widget):
-		dlg = AboutRoomsDialog(self.MainWindow)
+	def OnAboutChatroomCommands(self, widget, parent=None):
+		if parent is None:
+			parent = self.MainWindow
+		dlg = AboutRoomsDialog(parent)
 		dlg.run()
 		dlg.destroy()
 	
