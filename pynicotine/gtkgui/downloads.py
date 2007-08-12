@@ -37,6 +37,8 @@ class Downloads(TransferList):
 		        ("#" + _("Clear finished/aborted"), self.OnClearFinishedAborted, gtk.STOCK_CLEAR),
 			("#" + _("Clear finished"), self.OnClearFinished, gtk.STOCK_CLEAR),
 			("#" + _("Clear aborted"), self.OnClearAborted, gtk.STOCK_CLEAR),
+			("#" + _("Clear paused"), self.OnClearPaused, gtk.STOCK_CLEAR),
+			("#" + _("Clear filtered"), self.OnClearFiltered, gtk.STOCK_CLEAR),
 			("#" + _("Clear queued"), self.OnClearQueued, gtk.STOCK_CLEAR),
 		)
 		self.popup_menu_users = PopupMenu(frame)

@@ -499,10 +499,10 @@ class ChatRoom(ChatRoomTab):
 			roomlines = 15
 		try:
 			f = open(log, "r")
-			d = f.read()
+			logfile = f.read()
 			f.close()
-			s = d.split("\n")
-			for l in s[ - roomlines : -1 ]:
+			loglines = logfile.split("\n")
+			for l in loglines[ - roomlines : -1 ]:
 				# Try to parse line for username
 				if l[10].isspace() and l[11].isdigit() and l[20] in ("[", "*"):
 					line = l[11:] + "\n"
@@ -531,6 +531,8 @@ class ChatRoom(ChatRoomTab):
 					self.lines.append(AppendLine(self.ChatScroll, self.frame.CensorChat(self.frame.np.decode(line, self.encoding)), tag, username=user, usertag=usertag, timestamp_format=""))
 				else:
 					self.lines.append(AppendLine(self.ChatScroll, self.frame.np.decode(line, self.encoding), tag, username=user, usertag=usertag, timestamp_format=""))
+			if len(loglines[ - roomlines : -1 ]) > 0:
+				AppendLine(self.ChatScroll, _("--- old messages above ---"), self.tag_hilite)
 			gobject.idle_add(self.frame.ScrollBottom, self.ChatScroll.get_parent())
 		except IOError, e:
 			pass

@@ -163,7 +163,7 @@ class Transfers:
 	def GetUserStatus(self, msg):
 		""" We get a status of a user and if he's online, we request a file from him """
 		for i in self.downloads:
-			if msg.user == i.user and i.status in ["Queued", 'Getting status', 'User logged off', 'Connection closed by peer', 'Aborted', 'Cannot connect']:
+			if msg.user == i.user and i.status in ["Queued", 'Getting status', 'User logged off', 'Connection closed by peer', 'Aborted', 'Cannot connect', 'Paused']:
 				if msg.status != 0:
 					if i.status not in ["Queued", 'Aborted', 'Cannot connect', 'Paused' ]:
 						self.getFile(i.user, i.filename, i.path, i)

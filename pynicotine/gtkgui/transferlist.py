@@ -410,6 +410,14 @@ class TransferList:
 	def OnClearAborted(self, widget):
 		statuslist = ["Aborted","Cancelled"]
 		self.ClearTransfers(statuslist)
+		
+	def OnClearFiltered(self, widget):
+		statuslist = ["Filtered"]
+		self.ClearTransfers(statuslist)
+		
+	def OnClearPaused(self, widget):
+		statuslist = ["Paused"]
+		self.ClearTransfers(statuslist)
 
 	def OnClearFinishedAborted(self, widget):
 		statuslist = ["Aborted","Cancelled", "Finished", "Filtered"]
