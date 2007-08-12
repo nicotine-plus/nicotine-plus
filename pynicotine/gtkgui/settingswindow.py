@@ -2178,6 +2178,8 @@ class SettingsWindow(settings_glade.SettingsWindow):
 			widget.set_value(0)
 		elif type(widget) is gtk.CheckButton:
 			widget.set_active(0)
+		elif type(widget) is gtk.RadioButton:
+			widget.set_active(0)
 		elif type(widget) is gtk.ComboBoxEntry:
 			widget.child.set_text("")
 		elif type(widget) is gtk.ComboBox:
@@ -2191,6 +2193,8 @@ class SettingsWindow(settings_glade.SettingsWindow):
 		elif type(widget) is gtk.SpinButton:
 			widget.set_value(int(value))
 		elif type(widget) is gtk.CheckButton:
+			widget.set_active(value)
+		elif type(widget) is gtk.RadioButton:
 			widget.set_active(value)
 		elif type(widget) is gtk.ComboBoxEntry:
 			widget.child.set_text(value)
