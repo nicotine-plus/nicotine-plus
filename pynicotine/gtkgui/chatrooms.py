@@ -489,7 +489,7 @@ class ChatRoom(ChatRoomTab):
 		self.GetCompletionList()
 		if config["logging"]["readroomlogs"]:
 			self.ReadRoomLogs()
-			
+
 	def ReadRoomLogs(self):
 		config = self.frame.np.config.sections
 		log = os.path.join(config["logging"]["roomlogsdir"], fixpath(self.room.replace(os.sep, "-")) + ".log")
@@ -531,10 +531,10 @@ class ChatRoom(ChatRoomTab):
 					self.lines.append(AppendLine(self.ChatScroll, self.frame.CensorChat(self.frame.np.decode(line, self.encoding)), tag, username=user, usertag=usertag, timestamp_format=""))
 				else:
 					self.lines.append(AppendLine(self.ChatScroll, self.frame.np.decode(line, self.encoding), tag, username=user, usertag=usertag, timestamp_format=""))
-
+			gobject.idle_add(self.frame.ScrollBottom, self.ChatScroll.get_parent())
 		except IOError, e:
 			pass
-				
+		
 	def OnFindLogWindow(self, widget):
 
 		self.frame.OnFindTextview(widget, self.RoomLog)
@@ -803,9 +803,9 @@ class ChatRoom(ChatRoomTab):
 		elif cmd in ["/q", "/quit"]:
 			self.frame.OnExit(None)
 		elif cmd == "/now":
-			np = self.frame.now.DisplayNowPlaying(None)
-			if np:
-				self.frame.np.queue.put(slskmessages.SayChatroom(self.room, np))	
+			import thread
+			thread.start_new_thread(self.NowPlayingThread, ())
+			
 		elif cmd == "/rescan":
 			self.frame.BothRescan()
 		elif cmd  in ["/tick", "/t"]:
@@ -818,7 +818,12 @@ class ChatRoom(ChatRoomTab):
 				text = text[1:]
 			self.frame.np.queue.put(slskmessages.SayChatroom(self.room, self.frame.AutoReplace(text)))
 		self.ChatEntry.set_text("")
-
+		
+	def NowPlayingThread(self):
+		np = self.frame.now.DisplayNowPlaying(None)
+		if np:
+			self.frame.np.queue.put(slskmessages.SayChatroom(self.room, np))
+				
 	def UserJoinedRoom(self, username, userdata):
 		if username in self.users:
 			return

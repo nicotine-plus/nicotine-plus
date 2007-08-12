@@ -5003,11 +5003,14 @@ Right</property>
                   <widget class="GtkCheckButton" id="ReadRoomLogs">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <property name="label" translatable="yes">Read logged chat room messages on joining rooms</property>
+                    <property name="label" translatable="yes">Display logged chat room messages when a room is rejoined</property>
                     <property name="use_underline">True</property>
                     <property name="response_id">0</property>
                     <property name="draw_indicator">True</property>
                   </widget>
+                  <packing>
+                    <property name="expand">False</property>
+                  </packing>
                 </child>
                 <child>
                   <widget class="GtkLabel" id="label29">
@@ -5025,7 +5028,7 @@ Right</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                    <property name="adjustment">0 0 100 1 10 10</property>
+                    <property name="adjustment">0 0 1000 1 10 10</property>
                   </widget>
                   <packing>
                     <property name="position">2</property>

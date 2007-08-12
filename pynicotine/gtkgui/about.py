@@ -398,6 +398,7 @@ class AboutRoomsDialog(GenericTableDialog):
 	        "/part /p '" + _("room") + "'", _("Leave room 'room'"),
 	        "/clear /cl", _("Clear the chat window"),
 		"/tick /t", _("Set your personal ticker"),
+	        "/now", _("Display Now Playing message"),
 	        "", "",
 	        "/add /ad '" + _("user")+"'", _("Add user 'user' to your user list"),
 		"/rem /unbuddy '" + _("user")+"'", _("Remove user 'user' from your user list"),

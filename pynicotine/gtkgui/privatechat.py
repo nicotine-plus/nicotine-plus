@@ -479,9 +479,8 @@ class PrivateChat(PrivateChatTab):
 		elif cmd in ["/c", "/close"]:
 			self.OnClose(None)
 		elif cmd == "/now":
-			np = self.frame.now.DisplayNowPlaying(None)
-			if np:
-				self.SendMessage(np)
+			import thread
+			thread.start_new_thread(self.NowPlayingThread, ())
 		elif cmd == "/rescan":
 			self.frame.OnRescan()
 		elif cmd and cmd[:1] == "/" and cmd != "/me" and cmd[:2] != "//":
@@ -496,6 +495,11 @@ class PrivateChat(PrivateChatTab):
 			return
 		widget.set_text("")
 
+	def NowPlayingThread(self):
+		np = self.frame.now.DisplayNowPlaying(None)
+		if np:
+			self.SendMessage(np)
+			
 	def makecolour(self, buffer, colour):
 		color = self.frame.np.config.sections["ui"][colour]
 		if color == "":
