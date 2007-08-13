@@ -20,7 +20,7 @@ import os
 import gtk, gobject, pango
 import sets
 from nicotine_glade import PrivateChatTab
-from utils import AppendLine, IconNotebook, PopupMenu, WriteLog, expand_alias, EncodingsMenu, SaveEncoding, fixpath
+from utils import AppendLine, IconNotebook, PopupMenu, WriteLog, expand_alias, is_alias, EncodingsMenu, SaveEncoding, fixpath
 from chatrooms import GetCompletion
 from pynicotine import slskmessages
 from pynicotine.utils import _, version
@@ -376,15 +376,28 @@ class PrivateChat(PrivateChatTab):
 	CMDS = ["/alias ", "/unalias ", "/whois ", "/browse ", "/ip ", "/pm ", "/msg ", "/search ", "/usearch ", "/rsearch ",
 		"/bsearch ", "/add ", "/buddy ", "/rem ", "/unbuddy ", "/ban ", "/ignore ", "/unban ", "/unignore ", "/clear", "/quit", "/rescan", "/nsa", "/info", "/ctcpversion", "/join"]
 
+		
+	def threadAlias(self, alias):
+		text = expand_alias(self.frame.np.config.aliases, alias)
+		if not text:
+			return
+		if text[:2] == "//":
+			text = text[1:]
+		self.frame.np.queue.put(slskmessages.SayChatroom(self.room, self.frame.AutoReplace(text)))
+
+			
 	def OnEnter(self, widget):
 		text = self.frame.np.encode(widget.get_text(), self.encoding)
-		result = expand_alias(self.frame.np.config.aliases, text)
-		if result is not None:
-			text = result
+
 		if not text:
 			widget.set_text("")
 			return
-		
+		if is_alias(self.frame.np.config.aliases, text):
+			import thread
+			thread.start_new_thread(self.threadAlias, (text,))
+			widget.set_text("")
+			return
+
 		s = text.split(" ", 1)
 		cmd = s[0]
 		if len(s) == 2 and s[1]:

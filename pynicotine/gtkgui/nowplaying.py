@@ -433,8 +433,9 @@ class NowPlaying:
 		return True
 		
 	def OnNPTest(self, widget):
-		self.DisplayNowPlaying(None, test=1)
-		
+		import thread
+		thread.start_new_thread(self.DisplayNowPlaying, (None, 1))
+
 	def OnNPSave(self, widget):
 		if self.NP_infopipe.get_active():
 			player = "infopipe"

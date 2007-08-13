@@ -22,7 +22,7 @@ import locale
 import pango
 from pynicotine import slskmessages
 from nicotine_glade import ChatRoomTab
-from utils import InitialiseColumns, AppendLine, PopupMenu, FastListModel, string_sort_func, WriteLog, int_sort_func, Humanize, expand_alias, EncodingsMenu, SaveEncoding, PressHeader, fixpath
+from utils import InitialiseColumns, AppendLine, PopupMenu, FastListModel, string_sort_func, WriteLog, int_sort_func, Humanize, expand_alias, is_alias, EncodingsMenu, SaveEncoding, PressHeader, fixpath
 from pynicotine.utils import _
 from ticker import Ticker
 from entrydialog import OptionDialog
@@ -696,16 +696,28 @@ class ChatRoom(ChatRoomTab):
 	CMDS = ["/alias ", "/unalias ", "/whois ", "/browse ", "/ip ", "/pm ", "/msg ", "/search ", "/usearch ", "/rsearch ",
 		"/bsearch ", "/join ", "/leave", "/add ", "/buddy ", "/rem ", "/unbuddy ", "/ban ", "/ignore ", "/unban ", "/unignore ", "/clear", "/part ", "/quit",
 		"/rescan", "/tick", "/nsa", "/info", "/detach", "/attach"]
+		
+	def threadAlias(self, alias):
+		text = expand_alias(self.frame.np.config.aliases, alias)
+		if not text:
+			return
+		if text[:2] == "//":
+			text = text[1:]
+		self.frame.np.queue.put(slskmessages.SayChatroom(self.room, self.frame.AutoReplace(text)))
 
+			
 	def OnEnter(self, widget):
 		text = self.frame.np.encode(widget.get_text(), self.encoding)
-		result = expand_alias(self.frame.np.config.aliases, text)
-		if result is not None:
-			text = result
+
 		if not text:
 			widget.set_text("")
 			return
-			
+		if is_alias(self.frame.np.config.aliases, text):
+			import thread
+			thread.start_new_thread(self.threadAlias, (text,))
+			widget.set_text("")
+			return
+		
 		s = text.split(" ", 1)
 		cmd = s[0]
 		if len(s) == 2:

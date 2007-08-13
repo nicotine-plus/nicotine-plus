@@ -875,7 +875,17 @@ def Humanize(number):
 		part, number = number[-3:], number[:-3]
 		ret = "%s%s%s" % (part, fashion, ret)
 	return neg + ret[:-1]
- 
+
+def is_alias(aliases, cmd):
+	if not cmd:
+		return False
+	if cmd[0] != "/":
+		return False
+	cmd = cmd[1:].split(" ")
+	if cmd[0] in aliases:
+		return True
+	return False
+
 def expand_alias(aliases, cmd):
 	def getpart(line):
 		if line[0] != "(":
@@ -895,13 +905,9 @@ def expand_alias(aliases, cmd):
 			ix = ix + 1
 		return ""
 
-	if not cmd:
-		return None
-	if cmd[0] != "/":
+	if not is_alias(aliases, cmd):
 		return None
 	cmd = cmd[1:].split(" ")
-	if cmd[0] not in aliases:
-		return None
 	alias = aliases[cmd[0]]
 	ret = ""
 	i = 0
@@ -953,7 +959,10 @@ def expand_alias(aliases, cmd):
 			ret = ret + r.strip()
 			stdin.close()
 			stdout.close()
-			os.wait()
+			try:
+				os.wait()
+			except OSError, error:
+				pass
 		else:
 			ret = ret + alias[i]
 			i = i + 1
