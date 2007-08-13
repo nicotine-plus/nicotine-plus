@@ -509,16 +509,18 @@ class ChatRoom(ChatRoomTab):
 					if l[20] == "[" and l[20:].find("] ") != -1:
 						namepos = l[20:].find("] ")
 						user = l[21:20+namepos].strip()
+						
 						self.getUserTag(user)
 						usertag = self.tag_users[user]
 					else:
 						user = None
 						usertag = None
-
 					if user == config["server"]["login"]:
 						tag = self.tag_local
 					elif l[20] == "*":
 						tag = self.tag_me
+					elif l[20+namepos:].upper().find(config["server"]["login"].upper()) > -1:
+						tag = self.tag_hilite
 					else:
 						tag = self.tag_remote
 				else:
