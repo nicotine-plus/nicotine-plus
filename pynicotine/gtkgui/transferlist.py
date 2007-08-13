@@ -414,6 +414,10 @@ class TransferList:
 	def OnClearFiltered(self, widget):
 		statuslist = ["Filtered"]
 		self.ClearTransfers(statuslist)
+
+	def OnClearFailed(self, widget):
+		statuslist = ["Cannot connect", 'Connection closed by peer', "Local file error", "Getting address", "Waiting for peer to connect", "Initializing transfer"]
+		self.ClearTransfers(statuslist)
 		
 	def OnClearPaused(self, widget):
 		statuslist = ["Paused"]

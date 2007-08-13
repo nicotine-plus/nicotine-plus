@@ -36,6 +36,7 @@ class Uploads(TransferList):
 			("#" + _("Clear finished"), self.OnClearFinished, gtk.STOCK_CLEAR),
 			("#" + _("Clear aborted"), self.OnClearAborted, gtk.STOCK_CLEAR),
 			("#" + _("Clear queued"), self.OnClearQueued, gtk.STOCK_CLEAR),
+			("#" + _("Clear failed"), self.OnClearFailed, gtk.STOCK_CLEAR),
 		)
 		
 		self.popup_menu_users = PopupMenu(frame)
@@ -339,8 +340,17 @@ class Uploads(TransferList):
 		TransferList.OnAbortTransfer(self, widget, remove, clear)
 		self.frame.np.transfers.calcUploadQueueSizes()
 		self.frame.np.transfers.checkUploadQueue()
+		self.update()
 
 	def OnClearQueued(self, widget):
 		self.select_transfers()
 		TransferList.OnClearQueued(self, widget)
 		self.frame.np.transfers.calcUploadQueueSizes()
+		self.frame.np.transfers.checkUploadQueue()
+		self.update()
+		
+	def OnClearFailed(self, widget):
+		TransferList.OnClearFailed(self, widget)
+		self.frame.np.transfers.calcUploadQueueSizes()
+		self.frame.np.transfers.checkUploadQueue()
+		self.update()
