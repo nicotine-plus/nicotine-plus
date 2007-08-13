@@ -534,7 +534,7 @@ class ChatRoom(ChatRoomTab):
 				else:
 					self.lines.append(AppendLine(self.ChatScroll, self.frame.np.decode(line, self.encoding), tag, username=user, usertag=usertag, timestamp_format=""))
 			if len(loglines[ - roomlines : -1 ]) > 0:
-				AppendLine(self.ChatScroll, _("--- old messages above ---"), self.tag_hilite)
+				self.lines.append(AppendLine(self.ChatScroll, _("--- old messages above ---"), self.tag_hilite))
 			gobject.idle_add(self.frame.ScrollBottom, self.ChatScroll.get_parent())
 		except IOError, e:
 			pass
@@ -660,13 +660,13 @@ class ChatRoom(ChatRoomTab):
 		else:
 			line = "[%s] %s" % (user, text)
 			speech = text
-		
+
 		if len(self.lines) >= 400:
 			buffer = self.ChatScroll.get_buffer()
 			start = buffer.get_start_iter()
-			end = buffer.get_iter_at_line(self.lines[200])
+			end = buffer.get_iter_at_line(1)
 			self.ChatScroll.get_buffer().delete(start, end)
-			del self.lines[0:200]
+			del self.lines[0]
 
 		line = "\n-- ".join(line.split("\n"))
 		self.getUserTag(user)
@@ -811,8 +811,10 @@ class ChatRoom(ChatRoomTab):
 			thread.start_new_thread(self.NowPlayingThread, ())
 		elif cmd == "/detach":
 			self.frame.ChatNotebook.detach_tab(self.Main, _("Nicotine+ Chatroom: %s"))
+			gobject.idle_add(self.frame.ScrollBottom, self.ChatScroll.get_parent())
 		elif cmd == "/attach":
 			self.frame.ChatNotebook.attach_tab(self.Main)
+			gobject.idle_add(self.frame.ScrollBottom, self.ChatScroll.get_parent())
 		elif cmd == "/rescan":
 			self.frame.BothRescan()
 		elif cmd  in ["/tick", "/t"]:
