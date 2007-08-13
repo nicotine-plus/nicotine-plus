@@ -667,21 +667,18 @@ class UserBrowse(UserBrowseTab):
 		self.OnUploadDirectoryTo(widget, recurse=1)
 	
 	def UploadDirectoryTo(self, user, dir, recurse = 0):
-		if dir == None:
+		if dir == "" or dir is None or user is None or user == "":
 			return
 
 		ldir = dir.split("\\")[-1]
 
-		if user is None or user == "":
-			return
-		else:
-			if dir in self.shares.keys():
+		if dir in self.shares.keys():
 
-				for file in self.shares[dir]:
-					path = "\\".join([dir, file[1]])
-					size = file[2]
-					self.frame.np.transfers.pushFile(user, path, ldir, size=size)
-					self.frame.np.transfers.checkUploadQueue()
+			for file in self.shares[dir]:
+				path = "\\".join([dir, file[1]])
+				size = file[2]
+				self.frame.np.transfers.pushFile(user, path, ldir, size=size)
+				self.frame.np.transfers.checkUploadQueue()
 		if not recurse:
 			return
 
@@ -691,7 +688,7 @@ class UserBrowse(UserBrowseTab):
 				
 	def OnUploadDirectoryTo(self, widget, recurse = 0):
 		dir = self.selected_folder
-		if dir == None:
+		if dir is None:
 			return
 	
 		users = []
@@ -701,6 +698,8 @@ class UserBrowse(UserBrowseTab):
 		user = input_box(self.frame, title=_("Nicotine: Upload Directory's Contents"),
 		message=_('Enter the User you wish to upload to:'),
 		default_text='', droplist=users)
+		if user is None or user == "":
+			return
 		self.frame.np.ProcessRequestToPeer(user, slskmessages.UploadQueueNotification(None) )
 		self.UploadDirectoryTo(user, dir, recurse)
 				
@@ -817,8 +816,6 @@ class UserBrowse(UserBrowseTab):
 		del self.userbrowses.users[self.user]
 		self.frame.np.ClosePeerConnection(self.conn)
 		
-
-
 	def OnRefresh(self, widget):
 		self.FolderTreeView.set_sensitive(False)
 		self.FileTreeView.set_sensitive(False)
