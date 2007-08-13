@@ -399,6 +399,8 @@ class AboutRoomsDialog(GenericTableDialog):
 	        "/clear /cl", _("Clear the chat window"),
 		"/tick /t", _("Set your personal ticker"),
 	        "/now", _("Display Now Playing message"),
+			"/detach", _("Detach a chatroom from the notebook"),
+			"/attach", _("Reattach a chatroom to the notebook"),
 	        "", "",
 	        "/add /ad '" + _("user")+"'", _("Add user 'user' to your user list"),
 		"/rem /unbuddy '" + _("user")+"'", _("Remove user 'user' from your user list"),

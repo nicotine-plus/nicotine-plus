@@ -60,6 +60,10 @@ class ServerFrame(settings_glade.ServerFrame):
 			self.CurrentPort.set_markup(_("Client port is not set"))
 		else:
 			self.CurrentPort.set_markup(_("Client port is <b>%(port)s</b>") % {"port": self.frame.np.waitport})
+		if self.frame.np.ipaddress is None:
+			self.YourIP.set_markup(_("Your IP address has not been retrieved from the server"))
+		else:
+			self.YourIP.set_markup(_("Your IP address is <b>%(ip)s</b>") % {"ip": self.frame.np.ipaddress})
 		if server["login"] is not None:
 			self.Login.set_text(server["login"])
 		else:
