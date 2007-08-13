@@ -2350,6 +2350,8 @@ class TrayApp:
 				self.frame.MainWindow.present()
 			self.frame.MainWindow.grab_focus()
 			self.frame.is_mapped = 1
+   			self.frame.chatrooms.roomsctrl.ClearNotifications()
+			self.frame.privatechats.ClearNotifications()
 			
 	def Create(self):
 		if self.CREATE_TRAYICON:

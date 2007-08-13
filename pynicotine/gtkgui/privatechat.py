@@ -47,7 +47,17 @@ class PrivateChats(IconNotebook):
 				# Remove hilite if selected tab belongs to a user in the hilite list
 				if user in self.frame.TrayApp.tray_status["hilites"]["private"]:
 					self.frame.ClearNotification("private", tab.user)
-		
+					
+	def ClearNotifications(self):
+		if self.frame.MainNotebook.get_current_page() != 1:
+			return
+		page = self.frame.PrivatechatNotebook.get_nth_page( self.frame.PrivatechatNotebook.get_current_page())
+		for user, tab in self.users.items():
+			if tab.Main == page:
+				# Remove hilite
+				if user in self.frame.TrayApp.tray_status["hilites"]["private"]:
+					self.frame.ClearNotification("private", tab.user)
+					
 	def GetUserStatus(self, msg):
 		if msg.user in self.users:
 			tab = self.users[msg.user]
@@ -113,7 +123,7 @@ class PrivateChats(IconNotebook):
 		self.SendMessage(msg.user, None)
 		self.request_changed(self.users[msg.user].Main)
 		self.frame.RequestIcon(self.frame.PrivateChatTabLabel)
-		if self.get_current_page() != self.page_num(self.users[msg.user].Main) or self.frame.MainNotebook.get_current_page() != 1:
+		if self.get_current_page() != self.page_num(self.users[msg.user].Main) or self.frame.MainNotebook.get_current_page() != 1 or not self.frame.is_mapped:
 			self.frame.Notification("private", msg.user)
 		self.users[msg.user].ShowMessage(text, status, msg.timestamp)
 		ctcpversion = 0

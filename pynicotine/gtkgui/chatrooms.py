@@ -127,7 +127,17 @@ class RoomsControl:
 				# Remove hilite
 				if name in self.frame.TrayApp.tray_status["hilites"]["rooms"]:
 					self.frame.ClearNotification("rooms", None, name)
-
+					
+	def ClearNotifications(self):
+		if self.frame.MainNotebook.get_current_page() != 0:
+			return
+		page = self.frame.ChatNotebook.get_nth_page( self.frame.ChatNotebook.get_current_page())
+		for name, room in self.joinedrooms.items():
+			if room.Main == page:
+				# Remove hilite
+				if name in self.frame.TrayApp.tray_status["hilites"]["rooms"]:
+					self.frame.ClearNotification("rooms", None, name)
+					
 	def OnHideRoomList(self, widget):
 
 		self.frame.hide_room_list1.set_active(1)
@@ -266,6 +276,8 @@ class RoomsControl:
 		if room.logfile is not None:
 			room.logfile.close()
 			room.logfile = None
+		if self.frame.ChatNotebook.is_tab_detached(room.Main):
+			self.frame.ChatNotebook.attach_tab(room.Main)
 		self.frame.ChatNotebook.remove_page(room.Main)
 		room.destroy()
 		del self.joinedrooms[msg.room]
@@ -642,7 +654,7 @@ class ChatRoom(ChatRoomTab):
 			self.frame.ChatNotebook.request_hilite(self.Main)
 			self.frame.ChatRequestIcon(1)
 			# add hilite to trayicon
-			if self.frame.ChatNotebook.get_current_page() != self.frame.ChatNotebook.page_num(self.roomsctrl.joinedrooms[self.room].Main) or self.frame.MainNotebook.get_current_page() != 0:
+			if self.frame.ChatNotebook.get_current_page() != self.frame.ChatNotebook.page_num(self.roomsctrl.joinedrooms[self.room].Main) or self.frame.MainNotebook.get_current_page() != 0 or not self.frame.is_mapped:
 				if self.room not in self.frame.TrayApp.tray_status["hilites"]["rooms"]:
 					self.frame.Notification("rooms", user, self.room)
 			#else:
