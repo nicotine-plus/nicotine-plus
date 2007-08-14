@@ -5,26 +5,36 @@ Licensing
  * Relicensed all code under GPLv3 and LGPLv3
 
 General Changes
- * Added Search and Open Directory items to uploads' popup menu
  * Config menu items that were in the File menu moved to the new Edit menu
  * Added credits and license note to About Nicotine dialog.
- * Settings widgets will now be colored red if their values are invalid.
  * Disable many widgets (entries, buttons, lists) when disconnected from server
  * User tabs have right-click popup-menus in private, userinfo and userbrowse.
  * libnotify support added (patch by infinito ticket #176 )
-   to show download completion popups in the tray.
    notification-daemon, libnotify and python-notify required
- * Added a 10 second cooldown between responding to Userinfo and Usershares requests
-   from the same user (to mitigate damage from DOS attacks and simple accidents)
+ * Added a 10 second cooldown between responding to Userinfo and Usershares
+   requests from the same user (to mitigate damage from DOS attacks and simple
+   accidents)
+ * Close buttons on tabs no longer forced to 18x18px
+ * Close buttons are dynamically added and removed when toggled in settings
+ * Added global unrecommendations list
+
+Userinfo
+ * Added popups to user's interests lists (search, add and remove interests)
+ * Added a zoom and save popup menu to the Userinfo image.
+
 Shares
  * Shares are precompressed, before they're sent (Nicotine will recover faster
    from many shares requests)
+ * Unicode filenames on Win32 are now read and shared properly (should be)
 
 Settings
+ * Settings widgets will now be colored red if their values are invalid.
+ * Your client port and server-reported IP address are shown in Server Settings
  * Added an option to Shares for the Upload directory path (needs to be set)
+   The upload directory is where your buddies 'uploads' will be saved.
  * Default colours and clear colours buttons added
- * Tabs can be repositioned and the labels can be rotated under
-   Settings->Interface->Notebook Tabs
+ * All Notebook Tabs can be repositioned and the labels can be rotated 90⁰
+   under Settings->Interface->Notebook Tabs
  * Added Exaile to NowPlaying
  * Added a config option for overriding the default language
  * URL handlers settings rearranged slightly, combo items in the handlers column
@@ -32,23 +42,46 @@ Settings
  * Added IP blocking
  * Some Entry widgets in settings replaced with SpinBoxes
  * Userinfo settings now have size data for image
+ * New options to to determine what happens when destroying the main window
+   (show a dialog, close to tray, or quit)
 
 Search
+ * Added 'Download containing folder(s) to..' to the search results popup
+ * Open a new socket for every outgoing search result to avoid problems with
+   shared sockets getting closed.
+ * Only close sockets of incoming search results if input/output buffers are
+   empty. (this may still result in the transmitting sockets)
+ * Added Search and Open Directory items to the uploads popup menu
  * Search results encoding improved (user's encoding, falls back to global)
  * Search results turn red when a user goes offline (configurable)
+ * Added a 'multiple users' submenu to search results popup
 
 Transfers
  * Added a maximum files-per-user limit to the upload queue
+ * Added a 'Clear Failed' item to the uploads menu
+ * Added 'Clear Filtered' and 'Clear Paused' to the downloads menu
  * Fixed pausing of aborted downloads after reconnecting to the server.
-
+ * Added an 'Autoclear Finished' checkbox to uploads
+ * Notify popups for completed files and completed directories (toggleable)
+ * Added a 'multiple users' submenus
+ 
 Chat
+ * Show icon, sound, speech and title notifications for "current" chat tab
+   if the window is hidden.
+ * Notify popups for buddies with "notify" enabled :)
+ * Read chatroom logs (and attempt to parse them) when rejoining a room.
+   Parsing will not work if the logs do not use the default timestamp format.
+   Chat room and Private chat logs are in seperate sub-directories, now.
+ * Threaded /aliases and /now commands (GUI no longer freezes)
+ * Use the /detach and /attach chatroom commands to pop chatrooms into their
+   own windows.
  * Text-To-Speech support added (configurable under Settings->Misc->Sounds)
    individual chat rooms can be disabled with the text-to-speech toggle button.
    Chat messages are read out, and nick mentions are announced. By default,
    there are commands for flite ( http://www.speech.cs.cmu.edu/flite/ )
    and festival ( http://www.cstr.ed.ac.uk/projects/festival/ ).
  * URL text color is configurable (doesn't effect old links after changing)
- * Timestamps configurable, disableable (under Settings->Chat->Logging)
+ * Timestamps are now configurable, disableable (under Settings->Chat->Logging)
  * Log files' timestamps are also configurable. Default is "%Y-%m-%d %H:%M:%S"
  * Added a help button for chatroom commands
  * Added hide/show buttons in chatrooms for userlist and status log. These
@@ -67,6 +100,8 @@ Chat
  * Added a completion dropdown list (gtk.EntryCompletion) to chat entries
 
 Bug Fixes
+ * Renabled the 'if i.size is None' check which should fix some upload issues
+ * Fixed a error message printed after aborting an upload directory popup
  * Fixed a major slowdown in needConfig function (was reading shares data)
  * Pressing enter in Search Filter entry boxes now works again
  * Readded "/" to pasted folder slsk:// URLs
