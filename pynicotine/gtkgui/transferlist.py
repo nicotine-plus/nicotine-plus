@@ -290,7 +290,7 @@ class TransferList:
 						self.list.remove(i[2])
 					i[2] = transfer
 					
-				self.transfersmodel.set(i[1], 1, shortfn, 2, status, 3, percent, 4, hsize, 5, speed, 6, elap, 7, left, 10, istatus, 11, size, 12, currentbytes)
+				self.transfersmodel.set(i[1], 1, shortfn, 2, status, 3, percent, 4, hsize, 5, speed, 6, elap, 7, left, 8, self.frame.np.decode(transfer.path), 10, istatus, 11, size, 12, currentbytes)
 				break
 			else:
 				if self.TreeUsers:

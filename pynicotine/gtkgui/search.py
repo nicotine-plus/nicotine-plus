@@ -684,10 +684,11 @@ class Search(SearchTab):
 			("#" + _("_Download file(s)"), self.OnDownloadFiles, gtk.STOCK_GO_DOWN),
 			("#" + _("Download file(s) _to..."), self.OnDownloadFilesTo, gtk.STOCK_GO_DOWN),
 			("#" + _("Download containing _folder(s)"), self.OnDownloadFolders, gtk.STOCK_GO_DOWN),
+			("#" + _("Download containing f_older(s) to..."), self.OnDownloadFoldersTo, gtk.STOCK_GO_DOWN),
 			("#" + _("View Metadata of file(s)"), self.OnSearchMeta, gtk.STOCK_PROPERTIES),
 			("", None),
 			("#" + _("Copy _URL"), self.OnCopyURL, gtk.STOCK_COPY),
-			("#" + _("Copy folder URL"), self.OnCopyDirURL, gtk.STOCK_COPY),
+			("#" + _("Copy folder U_RL"), self.OnCopyDirURL, gtk.STOCK_COPY),
 			("", None),
 			(1, _("User(s)"), self.popup_menu_users, self.OnPopupMenuUsers),
 		)
@@ -995,12 +996,39 @@ class Search(SearchTab):
 	def OnDownloadFolders(self, widget):
 		folders = []
 		for i in self.selected_results:
+			user = i[0]
 			dir = string.join(i[1].split("\\")[:-1], "\\")
-			if (i[0], dir) in folders:
+			if (user, dir) in folders:
 				continue
-			self.frame.np.ProcessRequestToPeer(i[0], slskmessages.FolderContentsRequest(None, dir))
-			folders.append((i[0], dir))
+			self.frame.np.ProcessRequestToPeer(user, slskmessages.FolderContentsRequest(None, dir))
+			folders.append((user, dir))
+			if user not in self.frame.np.requestedFolders:
+				continue
+			if dir in self.frame.np.requestedFolders[user]:
+				del self.frame.np.requestedFolders[user][dir]
 
+	def OnDownloadFoldersTo(self, widget):
+		subdir = None
+		folders = []
+		directories = ChooseDir(self.frame.MainWindow, self.frame.np.config.sections["transfers"]["downloaddir"], create=True, name=subdir)
+		
+		if directories is None or directories == []:
+			return
+		destination = directories[0]
+		for i in self.selected_results:
+			user = i[0]
+			dir = string.join(i[1].split("\\")[:-1], "\\")
+			if (user, dir) in folders:
+				continue
+			folders.append((user, dir))
+			
+		for tup in folders:
+			user, dir = tup
+			if user not in self.frame.np.requestedFolders:
+				self.frame.np.requestedFolders[user] = {}
+			self.frame.np.requestedFolders[user][dir] = destination
+			self.frame.np.ProcessRequestToPeer(user, slskmessages.FolderContentsRequest(None, dir))
+		
 	def OnCopyURL(self, widget):
 		user, path = self.selected_results[0][:2]
 		self.frame.SetClipboardURL(user, path)

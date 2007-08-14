@@ -115,6 +115,7 @@ class NetworkEventProcessor:
 		self.distribcache = {}
 		self.requestedShares = {}
 		self.requestedInfo = {}
+		self.requestedFolders = {}
 		self.speed = 0
 		self.translatepunctuation = string.maketrans(string.punctuation, string.join([' ' for i in string.punctuation],''))
 

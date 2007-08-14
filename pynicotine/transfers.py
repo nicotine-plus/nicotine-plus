@@ -1328,9 +1328,9 @@ class Transfers:
 		if username is None:
 			return
 		for i in msg.list.keys():
-			for j in msg.list[i].keys():
-				if os.path.commonprefix([i, j]) == j:
-					for file in msg.list[i][j]:
+			for directory in msg.list[i].keys():
+				if os.path.commonprefix([i, directory]) == directory:
+					for file in msg.list[i][directory]:
 						length = bitrate = None
 						attrs = file[4]
 						if attrs != []:
@@ -1342,11 +1342,24 @@ class Transfers:
 							except:
 								rl = 0
 							length = "%i:%02i" % (rl / 60, rl % 60)
-						if j[-1] == '\\':
-							self.getFile(username, j + file[1], j.split('\\')[-2], size=file[2], bitrate=bitrate, length=length)
+						if directory[-1] == '\\':
+							self.getFile(username, directory + file[1], self.FolderDestination(username, directory), size=file[2], bitrate=bitrate, length=length)
 						else:
-							self.getFile(username, j + '\\' + file[1], j.split('\\')[-1], size=file[2], bitrate=bitrate, length=length)
+							self.getFile(username, directory + '\\' + file[1], self.FolderDestination(username, directory), size=file[2], bitrate=bitrate, length=length)
+							
+	def FolderDestination(self, user, directory):
+		destination = ""
+		if user in self.eventprocessor.requestedFolders:
+			if directory in self.eventprocessor.requestedFolders[user]:
+				destination += self.eventprocessor.requestedFolders[user][directory]
+		if directory[-1] == '\\':
+			parent = directory.split('\\')[-2]
+			
+		else:
+			parent = directory.split('\\')[-1]
+		destination = os.path.join(destination, parent)
 
+		return destination
 	def AbortTransfers(self):
 		""" Stop all transfers """
 		for i in self.downloads+self.uploads:

@@ -322,7 +322,9 @@ class SlskProtoThread(threading.Thread):
 				self._want_abort = 1
 				self._ui_callback([_("Major Socket Error: Networking terminated! %s" % str(error)) ])
 			except ValueError, error:
+				# Possibly opened too many sockets
 				print error
+				continue
 				#print len(conns.keys()), len(connsinprogress.keys())
 			# Write Output
 			for i in conns.keys():
