@@ -664,7 +664,6 @@ class Transfers:
 
 	def TransferTimeout(self, msg):
 		for i in (self.downloads+self.uploads)[:]:
-			print msg.req
 			if i.req != msg.req:
 				continue
 			i.status = "Cannot connect"
