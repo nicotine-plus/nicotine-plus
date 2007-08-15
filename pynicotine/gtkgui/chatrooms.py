@@ -125,8 +125,7 @@ class RoomsControl:
 			if room.Main == page:
 				gobject.idle_add(room.ChatEntry.grab_focus)
 				# Remove hilite
-				if name in self.frame.TrayApp.tray_status["hilites"]["rooms"]:
-					self.frame.ClearNotification("rooms", None, name)
+				self.frame.ClearNotification("rooms", None, name)
 					
 	def ClearNotifications(self):
 		if self.frame.MainNotebook.get_current_page() != 0:
@@ -135,9 +134,15 @@ class RoomsControl:
 		for name, room in self.joinedrooms.items():
 			if room.Main == page:
 				# Remove hilite
-				if name in self.frame.TrayApp.tray_status["hilites"]["rooms"]:
-					self.frame.ClearNotification("rooms", None, name)
-					
+				self.frame.ClearNotification("rooms", None, name)
+				
+	def Focused(self, page, focused):
+		if not focused:
+			return
+		for name, room in self.users.items():
+			if room.Main == page:
+				self.frame.ClearNotification("rooms", name)
+			
 	def OnHideRoomList(self, widget):
 
 		self.frame.hide_room_list1.set_active(1)
@@ -652,19 +657,27 @@ class ChatRoom(ChatRoomTab):
 		
 		if user != login and tag == self.tag_hilite:
 			self.frame.ChatNotebook.request_hilite(self.Main)
-			self.frame.ChatRequestIcon(1)
-			# add hilite to trayicon
-			if self.frame.ChatNotebook.get_current_page() != self.frame.ChatNotebook.page_num(self.roomsctrl.joinedrooms[self.room].Main) or self.frame.MainNotebook.get_current_page() != 0 or not self.frame.is_mapped:
-				if self.room not in self.frame.TrayApp.tray_status["hilites"]["rooms"]:
+			if self.frame.ChatNotebook.is_tab_detached(self.Main):
+				if not self.frame.ChatNotebook.is_detached_tab_focused(self.Main):
 					self.frame.Notification("rooms", user, self.room)
+			else:
+				self.frame.ChatRequestIcon(1)
+					
+				# add hilite to trayicon
+				if self.frame.ChatNotebook.get_current_page() != self.frame.ChatNotebook.page_num(self.roomsctrl.joinedrooms[self.room].Main) or self.frame.MainNotebook.get_current_page() != 0 or not self.frame.is_mapped:
+					if self.room not in self.frame.TrayApp.tray_status["hilites"]["rooms"]:
+						self.frame.Notification("rooms", user, self.room)
 			#else:
 				#self.MainWindow.set_urgency_hint(False)
 				
 
 		else:
 			self.frame.ChatNotebook.request_changed(self.Main)
-			self.frame.ChatRequestIcon(0)
-			
+			if self.frame.ChatNotebook.is_tab_detached(self.Main):
+				pass
+			else:
+				self.frame.ChatRequestIcon(0)
+
 		if text[:4] == "/me ":
 			line = "* %s %s" % (user, text[4:])
 			speech = line[2:]
@@ -706,7 +719,7 @@ class ChatRoom(ChatRoomTab):
 
 	
 	CMDS = ["/alias ", "/unalias ", "/whois ", "/browse ", "/ip ", "/pm ", "/msg ", "/search ", "/usearch ", "/rsearch ",
-		"/bsearch ", "/join ", "/leave", "/add ", "/buddy ", "/rem ", "/unbuddy ", "/ban ", "/ignore ", "/unban ", "/unignore ", "/clear", "/part ", "/quit",
+		"/bsearch ", "/join ", "/leave", "/add ", "/buddy ", "/rem ", "/unbuddy ", "/ban ", "/ignore ", "/unban ", "/unignore ", "/clear", "/part ", "/quit", "/exit",
 		"/rescan", "/tick", "/nsa", "/info", "/detach", "/attach"]
 		
 	def threadAlias(self, alias):
@@ -828,13 +841,14 @@ class ChatRoom(ChatRoomTab):
 			self.lines = []
 		elif cmd in ["/a", "/away"]:
 			self.frame.OnAway(None)
-		elif cmd in ["/q", "/quit"]:
+		elif cmd in ["/q", "/quit", "/exit"]:
 			self.frame.OnExit(None)
+			return # Avoid gsignal warning
 		elif cmd == "/now":
 			import thread
 			thread.start_new_thread(self.NowPlayingThread, ())
 		elif cmd == "/detach":
-			self.frame.ChatNotebook.detach_tab(self.Main, _("Nicotine+ Chatroom: %s"))
+			self.frame.ChatNotebook.detach_tab(self.Main, _("Nicotine+ Chatroom: %s") % self.room)
 			gobject.idle_add(self.frame.ScrollBottom, self.ChatScroll.get_parent())
 		elif cmd == "/attach":
 			self.frame.ChatNotebook.attach_tab(self.Main)

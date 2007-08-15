@@ -73,8 +73,8 @@ Chat
    Parsing will not work if the logs do not use the default timestamp format.
    Chat room and Private chat logs are in seperate sub-directories, now.
  * Threaded /aliases and /now commands (GUI no longer freezes)
- * Use the /detach and /attach chatroom commands to pop chatrooms into their
-   own windows.
+ * Use the /detach and /attach chatroom commands to pop chatrooms and private
+   chats into their own windows.
  * Text-To-Speech support added (configurable under Settings->Misc->Sounds)
    individual chat rooms can be disabled with the text-to-speech toggle button.
    Chat messages are read out, and nick mentions are announced. By default,

@@ -51,10 +51,18 @@ class PrivateChats(IconNotebook):
 	def ClearNotifications(self):
 		if self.frame.MainNotebook.get_current_page() != 1:
 			return
-		page = self.frame.PrivatechatNotebook.get_nth_page( self.frame.PrivatechatNotebook.get_current_page())
+		page = self.get_nth_page( self.get_current_page())
 		for user, tab in self.users.items():
 			if tab.Main == page:
 				# Remove hilite
+				if user in self.frame.TrayApp.tray_status["hilites"]["private"]:
+					self.frame.ClearNotification("private", tab.user)
+					
+	def Focused(self, page, focused):
+		if not focused:
+			return
+		for user, tab in self.users.items():
+			if tab.Main == page:
 				if user in self.frame.TrayApp.tray_status["hilites"]["private"]:
 					self.frame.ClearNotification("private", tab.user)
 					
@@ -121,21 +129,31 @@ class PrivateChats(IconNotebook):
 
 		
 		self.SendMessage(msg.user, None)
-		self.request_changed(self.users[msg.user].Main)
-		self.frame.RequestIcon(self.frame.PrivateChatTabLabel)
-		if self.get_current_page() != self.page_num(self.users[msg.user].Main) or self.frame.MainNotebook.get_current_page() != 1 or not self.frame.is_mapped:
-			self.frame.Notification("private", msg.user)
-		self.users[msg.user].ShowMessage(text, status, msg.timestamp)
+		chat = self.users[msg.user]
+		self.request_changed(chat.Main)
+		
+		if self.is_tab_detached(chat.Main):
+			# Only show notifications if window is not focused, and don't
+			# highlight main window
+			if not self.is_detached_tab_focused(chat.Main):
+				self.frame.Notification("private", msg.user)
+		else:
+			# If tab isn't detached
+			# Hilight main private chats Label 
+			self.frame.RequestIcon(self.frame.PrivateChatTabLabel)
+			# Show notifications if the private chats notebook isn't selected,
+			# the tab is not selected, or the main window isn't mapped
+			if self.get_current_page() != self.page_num(chat.Main) or self.frame.MainNotebook.get_current_page() != 1 or not self.frame.is_mapped:
+				self.frame.Notification("private", msg.user)
+
+		# SEND CLIENT VERSION to user if the following string is sent
 		ctcpversion = 0
 		if text == "\x01VERSION\x01":
 			ctcpversion = 1
 			text = "CTCP VERSION"
+		self.users[msg.user].ShowMessage(text, status, msg.timestamp)	
 		if ctcpversion and self.frame.np.config.sections["server"]["ctcpmsgs"] == 0:
 			self.SendMessage(msg.user, "Nicotine-Plus %s" % version)
-		
-		
-		#else:
-			#self.frame.MainWindow.set_urgency_hint(False)
 
 	def UpdateColours(self):
 		for chat in self.users.values():
@@ -384,7 +402,7 @@ class PrivateChat(PrivateChatTab):
 			self.frame.np.queue.put(slskmessages.MessageUser(self.user, self.frame.AutoReplace(text)))
 			
 	CMDS = ["/alias ", "/unalias ", "/whois ", "/browse ", "/ip ", "/pm ", "/msg ", "/search ", "/usearch ", "/rsearch ",
-		"/bsearch ", "/add ", "/buddy ", "/rem ", "/unbuddy ", "/ban ", "/ignore ", "/unban ", "/unignore ", "/clear", "/quit", "/rescan", "/nsa", "/info", "/ctcpversion", "/join"]
+		"/bsearch ", "/add ", "/buddy ", "/rem ", "/unbuddy ", "/ban ", "/ignore ", "/unban ", "/unignore ", "/clear", "/quit", "/exit", "/rescan", "/nsa", "/info", "/ctcpversion", "/join"]
 
 		
 	def threadAlias(self, alias):
@@ -497,13 +515,20 @@ class PrivateChat(PrivateChatTab):
 			self.ChatScroll.get_buffer().set_text("")
 		elif cmd in ["/a", "/away"]:
 			self.frame.OnAway(None)
-		elif cmd in ["/q", "/quit"]:
+		elif cmd in ["/q", "/quit", "/exit"]:
 			self.frame.OnExit(None)
+			return
 		elif cmd in ["/c", "/close"]:
 			self.OnClose(None)
 		elif cmd == "/now":
 			import thread
 			thread.start_new_thread(self.NowPlayingThread, ())
+		elif cmd == "/detach":
+			self.frame.PrivatechatNotebook.detach_tab(self.Main, _("Nicotine+ Private Chat: %s (%s)") % (self.user, [_("Offline"), _("Away"), _("Online")][self.status]))
+			gobject.idle_add(self.frame.ScrollBottom, self.ChatScroll.get_parent())
+		elif cmd == "/attach":
+			self.frame.PrivatechatNotebook.attach_tab(self.Main)
+			gobject.idle_add(self.frame.ScrollBottom, self.ChatScroll.get_parent())
 		elif cmd == "/rescan":
 			self.frame.OnRescan()
 		elif cmd and cmd[:1] == "/" and cmd != "/me" and cmd[:2] != "//":
@@ -652,6 +677,9 @@ class PrivateChat(PrivateChatTab):
 		self.status = status
 		color = self.getUserStatusColor(self.status)
 		self.changecolour(self.tag_username, color)
+		statusword = [_("Offline"), _("Away"), _("Online")][status]
+		title = _("Nicotine+ Private Chat: %s (%s)") % (self.user, statusword)
+		self.chats.set_detached_tab_title(self.Main, title)
 
 	
 	def OnClose(self, widget):

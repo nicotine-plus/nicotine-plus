@@ -469,7 +469,7 @@ class IconNotebook(gtk.Notebook):
 		if self.is_tab_detached(page):
 			self.attach_tab(page, destroying=True)
 			
-	def detach_tab(self, page, title=_("Nicotine+: %s")):
+	def detach_tab(self, page, title=_("Nicotine+")):
 		label = None
 		if self.is_tab_detached(page):
 			return
@@ -489,7 +489,7 @@ class IconNotebook(gtk.Notebook):
 		gtk.Notebook.remove_page(self, self.page_num(page))
 			
 		window = gtk.Window()
-		window.set_title(title % label)
+		window.set_title(title)
 		#window.add_accel_group(self.accel_group)
 		window.set_icon(NICOTINE.images["n"])
 		window.resize(600, 400)
@@ -499,9 +499,28 @@ class IconNotebook(gtk.Notebook):
 		vbox.show()
 		window.add(vbox)
 		window.connect("destroy", self.OnTabWindowDestroy, page)
-		window.show()
-		self.detached_tabs.append([page, label, window])
+		window.connect("focus_in_event", self.OnFocusIn)
+		window.connect("focus_out_event", self.OnFocusOut)
 		
+		self.detached_tabs.append([page, label, window, False])
+		window.show()
+		
+	def OnFocusIn(self, widget, event):
+		widget.set_icon(NICOTINE.images["n"])
+		for item in self.detached_tabs:
+			if item[2] == widget:
+				item[3] = True
+				self.Focused(item[0], True)
+				
+	def OnFocusOut(self, widget, event):
+		for item in self.detached_tabs:
+			if item[2] == widget:
+				item[3] = False
+				self.Focused(item[0], False)
+
+	def Focused(self, page, focused):
+		pass
+	
 	def attach_tab(self, page, destroying=False):
 		pagewidget = label_tab = label_tab_menu = label = None
 
@@ -544,6 +563,25 @@ class IconNotebook(gtk.Notebook):
 				return True
 		return False
 
+	def is_detached_tab_focused(self, page):
+		for item in self.detached_tabs:
+			if item[0] is page:
+				return item[3]
+		return False
+	
+	def set_detached_icon(self, page, status):
+		image = self.images[("empty", "online", "hilite")[status]]
+		for item in self.detached_tabs:
+			if item[0] is page:
+				window = item[2]
+				window.set_icon(image)
+				
+	def set_detached_tab_title(self, page, title):
+		for item in self.detached_tabs:
+			if item[0] is page:
+				window = item[2]
+				window.set_title(title)
+				
 	def on_tab_click(self, widget, event, child):
 		pass
 	
@@ -565,18 +603,27 @@ class IconNotebook(gtk.Notebook):
 				i[1].set_text(label)
 				i[3].set_text(label)
 				return
-				
+	
+		
 	def dismiss_icon(self, notebook, page, page_num):
 		page = self.get_nth_page(page_num)
 		self.set_image(page, 0)
 
 	def request_hilite(self, page):
+		if self.is_tab_detached(page):
+			if self.is_detached_tab_focused(page):
+				return
+			self.set_detached_icon(page, 2)
 		current = self.get_nth_page(self.get_current_page())
 		if current == page:
 			return
 		self.set_image(page, 2)
 
 	def request_changed(self, page):
+		if self.is_tab_detached(page):
+			if self.is_detached_tab_focused(page):
+				return
+			self.set_detached_icon(page, 1)
 		current = self.get_nth_page(self.get_current_page())
 		if current == page:
 			return
