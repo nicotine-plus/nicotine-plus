@@ -271,17 +271,18 @@ class NowPlaying:
 		if create:
 			self.NowPlaying.add(self.vbox1)
 		# Set the active radio button
-		self.SetPlayer(self.frame.np.config.sections["players"]["npplayer"])
-		if self.frame.np.config.sections["players"]["npformat"] != "":
-			self.NPFormat.child.set_text(self.frame.np.config.sections["players"]["npformat"])
-		if self.frame.np.config.sections["players"]["npformatlist"] != []:
-			if self.frame.np.config.sections["players"]["npformat"] == "":
-				self.NPFormat.child.set_text(str(self.frame.np.config.sections["players"]["npformatlist"][0]))
-			for item in self.frame.np.config.sections["players"]["npformatlist"]:
+		config = self.frame.np.config.sections
+		self.SetPlayer(config["players"]["npplayer"])
+		if config["players"]["npformat"] != "":
+			self.NPFormat.child.set_text(config["players"]["npformat"])
+		if config["players"]["npformatlist"] != []:
+			if config["players"]["npformat"] == "":
+				self.NPFormat.child.set_text(str(config["players"]["npformatlist"][0]))
+			for item in config["players"]["npformatlist"]:
 				self.NPFormat_List.append([item])
-		if self.frame.np.config.sections["players"]["npformat"] == "":
+		if config["players"]["npformat"] == "":
 			self.NPFormat.child.set_text(str(self.defaultlist[0]))
-
+		self.NPCommand.set_text(config["players"]["npothercommand"])
 		
 		for item in self.defaultlist:
 			self.NPFormat_List.append([str(item)])
