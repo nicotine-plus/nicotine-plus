@@ -264,7 +264,7 @@ class SlskProtoThread(threading.Thread):
 		bw = 0.0
 		for j in conns.values():
 			if self._isUpload(j):
-				bw = bw + self._calcUploadSpeed(j)
+				bw += self._calcUploadSpeed(j)
 		limit = max - bw + 1024
 		if limit < 1024.0:
 			return long(0)

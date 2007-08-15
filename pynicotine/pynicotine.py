@@ -307,6 +307,18 @@ class NetworkEventProcessor:
 	def ConnectToServer(self, msg):
 		self.frame.OnConnect(None)
 
+	def encodeuser(self, string, user = None):
+		coding = None
+		config = self.config.sections
+		if user and user in config["server"]["userencoding"]:
+			coding = config["server"]["userencoding"][user]
+		string = self.decode(string, coding)
+		try:
+			
+			return string.encode(locale.nl_langinfo(locale.CODESET))
+		except:
+			return string
+		
 	def encode(self, str, networkenc = None):
 		if networkenc is None:
 			networkenc = self.config.sections["server"]["enc"]

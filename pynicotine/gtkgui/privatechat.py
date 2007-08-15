@@ -183,9 +183,8 @@ class PrivateChats(IconNotebook):
 		for user in self.users:
 			self.users[user].ConnClose()
 			tab = self.users[user]
-			status = _("Offline")
-			self.set_text(tab.Main, "%s (%s)" % (user[:15], status))
-			tab.GetUserStatus(status)
+			self.set_text(tab.Main, "%s (%s)" % (user[:15], _("Offline")))
+			tab.GetUserStatus(0)
 			
 	def UpdateCompletions(self):
 		for user in self.users.values():

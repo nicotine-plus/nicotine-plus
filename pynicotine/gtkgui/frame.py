@@ -1129,6 +1129,8 @@ class NicotineFrame(MainWindow):
 	def OnDestroy(self, widget):
 		if self.np.servertimer is not None:
 			self.np.servertimer.cancel()
+		if self.np.transfers.uploadQueueTimer is not None:
+			self.np.transfers.uploadQueueTimer.cancel()
 		self.np.StopTimers()
 		if self.np.transfers is not None:
 			self.np.transfers.AbortTransfers()

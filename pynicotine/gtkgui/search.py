@@ -435,10 +435,9 @@ class SearchTreeModel(FastListModel):
 	def append(self, results):
 		ix = len(self.all_data) + 1
 		l = len(self.data)
-		if self.frame.np.transfers is None:
-			encode = self.frame.np.encode
-		else:
-			encode = self.frame.np.transfers.encode
+
+		encode = self.frame.np.encodeuser
+		
 		returned = 0
 
 		for r in results:

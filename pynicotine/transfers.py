@@ -113,6 +113,8 @@ class Transfers:
 		self.users = users
 		self.downloadspanel = None
 		self.uploadspanel = None
+		self.uploadQueueTimer = threading.Timer(60.0, self.checkUploadQueueTimer)
+		self.uploadQueueTimer.start()
 
 # queue sizes
 		self.privcount = 0
@@ -262,11 +264,25 @@ class Transfers:
 			if i.req == req:
 				i.status = "Getting address"
 				self.downloadspanel.update(i)
+				
+				self.startTimeout(i)
 		for i in self.uploads:
 			if i.req == req:
 				i.status = "Getting address"
 				self.uploadspanel.update(i)
+				self.startTimeout(i)
 
+	def startTimeout(self, transfer):
+		# Request user's details (if not doing so) and start timer
+		if transfer.user not in self.eventprocessor.watchedusers:
+			self.queue.put(slskmessages.AddUser(i.user))
+		transfertimeout = TransferTimeout(transfer.req, self.eventprocessor.frame.callback)
+		if transfer.transfertimer is not None:
+			transfer.transfertimer.cancel()
+		transfer.transfertimer = threading.Timer(30.0, transfertimeout.timeout)
+		transfer.transfertimer.start()
+
+		
 	def gotAddress(self, req):
 		""" A connection is in progress, we got the address for a user we need
 		to connect to."""
@@ -288,10 +304,12 @@ class Transfers:
 			if i.req == req:
 				i.status = "Waiting for peer to connect"
 				self.downloadspanel.update(i)
+				self.startTimeout(i)
 		for i in self.uploads:
 			if i.req == req:
 				i.status = "Waiting for peer to connect"
 				self.uploadspanel.update(i)
+				self.startTimeout(i)
 
 	def gotCantConnect(self, req):
 		""" We can't connect to the user, either way. """
@@ -325,10 +343,12 @@ class Transfers:
 			if i.req == req:
 				i.status = "Initializing transfer"
 				self.downloadspanel.update(i)
+				self.startTimeout(i)
 		for i in self.uploads:
 			if i.req == req:
 				i.status = "Initializing transfer"
 				self.uploadspanel.update(i)
+				self.startTimeout(i)
 
 	def gotConnect(self, req, conn):
 		""" A connection has been established, now exchange initialisation
@@ -619,6 +639,7 @@ class Transfers:
 						self.uploads.remove(i)
 						self.uploadspanel.update()
 				self.checkUploadQueue()
+				
 		elif msg.filesize != None:
 			for i in self.downloads:
 				if i.req != msg.req:
@@ -643,6 +664,7 @@ class Transfers:
 
 	def TransferTimeout(self, msg):
 		for i in (self.downloads+self.uploads)[:]:
+			print msg.req
 			if i.req != msg.req:
 				continue
 			i.status = "Cannot connect"
@@ -1013,6 +1035,14 @@ class Transfers:
 			self.eventprocessor.config.sections["server"]["banlist"].append(user)
 			self.eventprocessor.config.writeConfig()
 
+	def checkUploadQueueTimer(self):
+		self.uploadQueueTimer.cancel()
+
+		self.checkUploadQueue()
+		
+		self.uploadQueueTimer = threading.Timer(60.0, self.checkUploadQueueTimer)
+		self.uploadQueueTimer.start()
+		
 	# Find next file to upload
 	def checkUploadQueue(self):
 		if self.bandwidthLimitReached() or self.transferNegotiating():
