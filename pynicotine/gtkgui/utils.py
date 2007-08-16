@@ -211,6 +211,7 @@ def AppendLine(textview, line, tag = None, timestamp = None, showstamp=True, tim
 
 	def _append(buffer, text, tag):
 		iter = buffer.get_end_iter()
+
 		if tag is not None:
 			buffer.insert_with_tags(iter, text, tag)
 		else:

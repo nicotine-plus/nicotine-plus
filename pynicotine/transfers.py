@@ -358,11 +358,13 @@ class Transfers:
 				i.status = "Requesting file"
 				i.requestconn = conn
 				self.downloadspanel.update(i)
+				self.startTimeout(i)
 		for i in self.uploads:
 			if i.req == req:
 				i.status = "Requesting file"
 				i.requestconn = conn
 				self.uploadspanel.update(i)
+				self.startTimeout(i)
 
 
 	def TransferRequest(self, msg):
@@ -772,6 +774,7 @@ class Transfers:
 					self.queue.put(slskmessages.UploadFile(i.conn, file = f, size = i.size))
 					i.status = "Initializing transfer"
 					i.file = f
+					self.startTimeout(i)
 					self.eventprocessor.logTransfer(_("Upload started: user %(user)s, file %(file)s") % {'user':i.user, 'file':self.decode(i.filename)})
 				except IOError, strerror:
 					self.eventprocessor.logMessage(_("Upload I/O error: %s") % strerror)
@@ -803,6 +806,8 @@ class Transfers:
 			if i.conn != msg.conn:
 				continue
 			try:
+				if i.transfertimer is not None:
+					i.transfertimer.cancel()
 				curtime = time.time()
 				i.currentbytes = msg.file.tell()
 				#i.status = "%s" %(str(i.currentbytes))

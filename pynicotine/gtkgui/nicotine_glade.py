@@ -1095,32 +1095,6 @@ class MainWindow:
 
 		self.hbox12.pack_end(self.SimilarUsersButton, False, False, 0)
 
-		self.RecommendationsButton = gtk.Button()
-		self.RecommendationsButton.show()
-		self.RecommendationsButton.connect("clicked", self.OnRecommendationsClicked)
-
-		self.alignment5 = gtk.Alignment(0.5, 0.5, 0, 0)
-		self.alignment5.show()
-
-		self.hbox25 = gtk.HBox(False, 0)
-		self.hbox25.show()
-		self.hbox25.set_spacing(2)
-
-		self.image5 = gtk.Image()
-		self.image5.set_from_stock(gtk.STOCK_REFRESH, 4)
-		self.image5.show()
-		self.hbox25.pack_start(self.image5, False, False, 0)
-
-		self.label34 = gtk.Label(_("Recommendations"))
-		self.label34.show()
-		self.hbox25.pack_start(self.label34, False, False, 0)
-
-		self.alignment5.add(self.hbox25)
-
-		self.RecommendationsButton.add(self.alignment5)
-
-		self.hbox12.pack_end(self.RecommendationsButton, False, False, 0)
-
 		self.GlobalRecommendationsButton = gtk.Button()
 		self.GlobalRecommendationsButton.show()
 		self.GlobalRecommendationsButton.connect("clicked", self.OnGlobalRecommendationsClicked)
@@ -1146,6 +1120,32 @@ class MainWindow:
 		self.GlobalRecommendationsButton.add(self.alignment4)
 
 		self.hbox12.pack_end(self.GlobalRecommendationsButton, False, False, 0)
+
+		self.RecommendationsButton = gtk.Button()
+		self.RecommendationsButton.show()
+		self.RecommendationsButton.connect("clicked", self.OnRecommendationsClicked)
+
+		self.alignment5 = gtk.Alignment(0.5, 0.5, 0, 0)
+		self.alignment5.show()
+
+		self.hbox25 = gtk.HBox(False, 0)
+		self.hbox25.show()
+		self.hbox25.set_spacing(2)
+
+		self.image5 = gtk.Image()
+		self.image5.set_from_stock(gtk.STOCK_REFRESH, 4)
+		self.image5.show()
+		self.hbox25.pack_start(self.image5, False, False, 0)
+
+		self.label34 = gtk.Label(_("Recommendations"))
+		self.label34.show()
+		self.hbox25.pack_start(self.label34, False, False, 0)
+
+		self.alignment5.add(self.hbox25)
+
+		self.RecommendationsButton.add(self.alignment5)
+
+		self.hbox12.pack_end(self.RecommendationsButton, False, False, 0)
 
 		self.interests.pack_start(self.hbox12, False, True, 0)
 
@@ -1520,10 +1520,10 @@ class MainWindow:
 	def OnSimilarUsersClicked(self, widget):
 		pass
 
-	def OnRecommendationsClicked(self, widget):
+	def OnGlobalRecommendationsClicked(self, widget):
 		pass
 
-	def OnGlobalRecommendationsClicked(self, widget):
+	def OnRecommendationsClicked(self, widget):
 		pass
 
 	def OnAddThingILike(self, widget):
@@ -2445,7 +2445,7 @@ class UserInfoTab:
 		self.button5.show()
 		self.button5.connect("clicked", self.OnBrowseUser)
 
-		self.alignment24 = gtk.Alignment(0.5, 0.5, 0, 0)
+		self.alignment24 = gtk.Alignment(0, 0.5, 0, 0)
 		self.alignment24.show()
 
 		self.hbox44 = gtk.HBox(False, 0)
@@ -2453,6 +2453,7 @@ class UserInfoTab:
 		self.hbox44.set_spacing(2)
 
 		self.image24 = gtk.Image()
+		self.image24.set_alignment(0, 0.50)
 		self.image24.set_from_stock(gtk.STOCK_HARDDISK, 4)
 		self.image24.show()
 		self.hbox44.pack_start(self.image24, False, False, 0)
@@ -2471,7 +2472,7 @@ class UserInfoTab:
 		self.button6.show()
 		self.button6.connect("clicked", self.OnShowIPaddress)
 
-		self.alignment25 = gtk.Alignment(0.5, 0.5, 0, 0)
+		self.alignment25 = gtk.Alignment(0, 0.5, 0, 0)
 		self.alignment25.show()
 
 		self.hbox45 = gtk.HBox(False, 0)
@@ -2497,7 +2498,7 @@ class UserInfoTab:
 		self.AddToList.show()
 		self.AddToList.connect("clicked", self.OnAddToList)
 
-		self.alignment26 = gtk.Alignment(0.5, 0.5, 0, 0)
+		self.alignment26 = gtk.Alignment(0, 0.5, 0, 0)
 		self.alignment26.show()
 
 		self.hbox46 = gtk.HBox(False, 0)
@@ -2523,7 +2524,7 @@ class UserInfoTab:
 		self.BanUser.show()
 		self.BanUser.connect("clicked", self.OnBanUser)
 
-		self.alignment37 = gtk.Alignment(0.5, 0.5, 0, 0)
+		self.alignment37 = gtk.Alignment(0, 0.5, 0, 0)
 		self.alignment37.show()
 
 		self.hbox57 = gtk.HBox(False, 0)
@@ -2549,7 +2550,7 @@ class UserInfoTab:
 		self.IgnoreUser.show()
 		self.IgnoreUser.connect("clicked", self.OnIgnoreUser)
 
-		self.alignment32 = gtk.Alignment(0.5, 0.5, 0, 0)
+		self.alignment32 = gtk.Alignment(0, 0.5, 0, 0)
 		self.alignment32.show()
 
 		self.hbox52 = gtk.HBox(False, 0)
@@ -2575,7 +2576,7 @@ class UserInfoTab:
 		self.SavePicture.show()
 		self.SavePicture.connect("clicked", self.OnSavePicture)
 
-		self.alignment29 = gtk.Alignment(0.5, 0.5, 0, 0)
+		self.alignment29 = gtk.Alignment(0, 0.5, 0, 0)
 		self.alignment29.show()
 
 		self.hbox49 = gtk.HBox(False, 0)
@@ -2605,7 +2606,7 @@ class UserInfoTab:
 		self.RefreshUserinfo.show()
 		self.RefreshUserinfo.connect("clicked", self.OnRefresh)
 
-		self.alignment30 = gtk.Alignment(0.5, 0.5, 0, 0)
+		self.alignment30 = gtk.Alignment(0, 0.5, 0, 0)
 		self.alignment30.show()
 
 		self.hbox50 = gtk.HBox(False, 0)
@@ -2631,7 +2632,7 @@ class UserInfoTab:
 		self.CloseUserinfo.show()
 		self.CloseUserinfo.connect("clicked", self.OnClose)
 
-		self.alignment31 = gtk.Alignment(0.5, 0.5, 0, 0)
+		self.alignment31 = gtk.Alignment(0, 0.5, 0, 0)
 		self.alignment31.show()
 
 		self.hbox51 = gtk.HBox(False, 0)
