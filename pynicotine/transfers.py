@@ -272,14 +272,14 @@ class Transfers:
 				self.uploadspanel.update(i)
 				self.startTimeout(i)
 
-	def startTimeout(self, transfer):
+	def startTimeout(self, transfer, delay=30.0):
 		# Request user's details (if not doing so) and start timer
 		if transfer.user not in self.eventprocessor.watchedusers:
-			self.queue.put(slskmessages.AddUser(i.user))
+			self.queue.put(slskmessages.AddUser(transfer.user))
 		transfertimeout = TransferTimeout(transfer.req, self.eventprocessor.frame.callback)
 		if transfer.transfertimer is not None:
 			transfer.transfertimer.cancel()
-		transfer.transfertimer = threading.Timer(30.0, transfertimeout.timeout)
+		transfer.transfertimer = threading.Timer(delay, transfertimeout.timeout)
 		transfer.transfertimer.start()
 
 		
@@ -774,7 +774,7 @@ class Transfers:
 					self.queue.put(slskmessages.UploadFile(i.conn, file = f, size = i.size))
 					i.status = "Initializing transfer"
 					i.file = f
-					self.startTimeout(i)
+					self.startTimeout(i, delay=60)
 					self.eventprocessor.logTransfer(_("Upload started: user %(user)s, file %(file)s") % {'user':i.user, 'file':self.decode(i.filename)})
 				except IOError, strerror:
 					self.eventprocessor.logMessage(_("Upload I/O error: %s") % strerror)
