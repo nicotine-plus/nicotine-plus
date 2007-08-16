@@ -264,7 +264,6 @@ class Transfers:
 			if i.req == req:
 				i.status = "Getting address"
 				self.downloadspanel.update(i)
-				
 				self.startTimeout(i)
 		for i in self.uploads:
 			if i.req == req:
@@ -976,6 +975,8 @@ class Transfers:
 		for i in self.uploads:
 			if i.conn != msg.conn:
 				continue
+			if i.transfertimer is not None:
+				i.transfertimer.cancel()
 			curtime = time.time()
 			if i.starttime is None:
 				i.starttime = curtime
