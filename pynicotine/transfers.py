@@ -279,7 +279,10 @@ class Transfers:
 		if transfer.transfertimer is not None:
 			transfer.transfertimer.cancel()
 		transfer.transfertimer = threading.Timer(delay, transfertimeout.timeout)
-		transfer.transfertimer.start()
+		try:
+			transfer.transfertimer.start()
+		except thread.error, error:
+			print "Cannot start new timer thread", error
 
 		
 	def gotAddress(self, req):

@@ -1291,7 +1291,7 @@ class LogFrame(settings_glade.LogFrame):
 		self.p = parent
 		self.frame = parent.frame
 		settings_glade.LogFrame.__init__(self, False)
-		self.options = {"logging": { "privatechat": self.LogPrivate, "chatrooms": self.LogRooms, "logsdir": self.LogDir, "roomlogsdir": self.RoomLogDir, "privatelogsdir": self.PrivateLogDir, "transfers": self.LogTransfers, "rooms_timestamp":self.ChatRoomFormat, "private_timestamp":self.PrivateChatFormat, "log_timestamp": self.LogFileFormat, "timestamps": self.ShowTimeStamps, "readroomlines": self.RoomLogLines, "readroomlogs": self.ReadRoomLogs},
+		self.options = {"logging": { "privatechat": self.LogPrivate, "chatrooms": self.LogRooms, "logsdir": self.LogDir, "roomlogsdir": self.RoomLogDir, "privatelogsdir": self.PrivateLogDir, "transfers": self.LogTransfers, "rooms_timestamp":self.ChatRoomFormat, "private_timestamp":self.PrivateChatFormat, "log_timestamp": self.LogFileFormat, "timestamps": self.ShowTimeStamps, "readroomlines": self.RoomLogLines,  "readprivatelines": self.PrivateLogLines, "readroomlogs": self.ReadRoomLogs},
 					"privatechat": {"store": self.ReopenPrivateChats},}
 
 	def SetSettings(self, config):
@@ -1318,6 +1318,7 @@ class LogFrame(settings_glade.LogFrame):
 				"privatelogsdir": recode2(self.PrivateLogDir.get_text()),
 				"readroomlogs": self.ReadRoomLogs.get_active(),
 				"readroomlines": self.RoomLogLines.get_value_as_int(),
+				"readprivatelines": self.PrivateLogLines.get_value_as_int(),
 				"transfers": self.LogTransfers.get_active(),
 				"private_timestamp": self.PrivateChatFormat.get_text(),
 				"rooms_timestamp": self.ChatRoomFormat.get_text(),

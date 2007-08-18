@@ -86,7 +86,7 @@ class Config:
 "words": {"censored": [], "autoreplaced": {"teh ": "the ", "taht ": "that ", "tihng": "thing", "youre": "you're", "jsut": "just", "thier": "their", "tihs": "this"}, "censorfill": "*", "censorwords": False, "replacewords": False,  "tab": True, "dropdown": True, "characters": 2, "roomnames": True, "buddies": True, "roomusers": True, "commands": True, "aliases": True, "onematch": True }, \
 \
 "logging": {"logcollapsed":0, "logsdir":os.path.expanduser(LOGDIR), "rooms_timestamp": "%H:%M:%S",\
-"private_timestamp": "%Y-%m-%d %H:%M:%S", "log_timestamp": "%Y-%m-%d %H:%M:%S", "timestamps": 1, "privatechat":0, "chatrooms":0,"transfers":0, "roomlogsdir": os.path.expanduser(os.path.join(LOGDIR, "rooms")), "privatelogsdir": os.path.expanduser(os.path.join(LOGDIR, "private")), "readroomlogs": 1, "readroomlines": 15}, \
+"private_timestamp": "%Y-%m-%d %H:%M:%S", "log_timestamp": "%Y-%m-%d %H:%M:%S", "timestamps": 1, "privatechat":0, "chatrooms":0,"transfers":0, "roomlogsdir": os.path.expanduser(os.path.join(LOGDIR, "rooms")), "privatelogsdir": os.path.expanduser(os.path.join(LOGDIR, "private")), "readroomlogs": 1, "readroomlines": 15, "readprivatelines": 15}, \
 \
 "privatechat":{"store":0, "users":[]}, \
 \

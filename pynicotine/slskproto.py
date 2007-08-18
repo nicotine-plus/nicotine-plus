@@ -767,7 +767,7 @@ class SlskProtoThread(threading.Thread):
 								checkuser = 0
 						if checkuser:
 							msg = msgObj.makeNetworkMessage()
-							conns[msgObj.conn].obuf = conns[msgObj.conn].obuf + struct.pack("<ii", len(msg) + 4, self.peercodes[msgObj.__class__]) + msg
+							conns[msgObj.conn].obuf += struct.pack("<ii", len(msg) + 4, self.peercodes[msgObj.__class__]) + msg
 				else:
 					if msgObj.__class__ not in [PeerInit, PierceFireWall, FileSearchResult]:
 						#self._ui_callback([Notify(_("Can't send the message over the closed connection: %s %s") %(msgObj.__class__, vars(msgObj)))])

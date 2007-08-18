@@ -275,20 +275,29 @@ class PrivateChat(PrivateChatTab):
 		self.ChatScroll.connect("key_press_event", self.OnPopupMenu)
 
 		self.UpdateColours()
+		self.GetCompletionList()
 		
+		self.ReadPrivateLog()
+		
+	def ReadPrivateLog(self):
 		# Read log file
-		log = os.path.join(self.frame.np.config.sections["logging"]["privatelogsdir"], fixpath(self.user.replace(os.sep, "-")) + ".log")
+		config = self.frame.np.config.sections
+		log = os.path.join(config["logging"]["privatelogsdir"], fixpath(self.user.replace(os.sep, "-")) + ".log")
+		try:
+			lines = int(config["logging"]["readprivatelines"])
+		except:
+			lines = 15
 		try:
 			f = open(log, "r")
 			d = f.read()
 			f.close()
 			s = d.split("\n")
-			for l in s[-8:-1]:
+			for l in s[- lines :-1]:
 				AppendLine(self.ChatScroll, l + "\n", self.tag_hilite, timestamp_format="", username=self.user, usertag=self.tag_hilite)
 				
 		except IOError, e:
 			pass
-		self.GetCompletionList()
+		gobject.idle_add(self.frame.ScrollBottom, self.ChatScroll.get_parent())
 		
 	def destroy(self):
 		if self.frame.translux:
