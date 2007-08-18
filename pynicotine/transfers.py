@@ -670,6 +670,8 @@ class Transfers:
 		for i in (self.downloads+self.uploads)[:]:
 			if i.req != msg.req:
 				continue
+			if i.status in ["Queued", 'User logged off', 'Finished', 'Filtered', 'Aborted', 'Paused', 'Cancelled']:
+				continue
 			i.status = "Cannot connect"
 			i.req = None
 			if i.user not in self.eventprocessor.watchedusers:
