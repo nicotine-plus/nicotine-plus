@@ -1,4 +1,5 @@
 # Copyright (C) 2007 daelstorm. All rights reserved.
+# -*- coding: utf-8 -*-
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -828,7 +829,10 @@ class Transfers:
 				i.timeelapsed = self.getTime(curtime - i.starttime)
 				if curtime > i.starttime and i.currentbytes > i.offset:
 					i.speed = (i.currentbytes - i.lastbytes)/(curtime - i.lasttime)/1024
-					i.timeleft = self.getTime((i.size - i.currentbytes)/i.speed/1024)
+					if i.speed <= 0.0:
+						i.timeleft = "∞"
+					else:
+						i.timeleft = self.getTime((i.size - i.currentbytes)/i.speed/1024)
 				i.lastbytes = i.currentbytes
 				i.lasttime = curtime
 				if i.size > i.currentbytes:
@@ -1002,7 +1006,10 @@ class Transfers:
 			i.timeelapsed = self.getTime(curtime - i.starttime)
 			if curtime > i.starttime and i.currentbytes > i.offset:
 				i.speed = (i.currentbytes - i.lastbytes)/(curtime - i.lasttime)/1024
-				i.timeleft = self.getTime((i.size - i.currentbytes)/i.speed/1024)
+				if i.speed <= 0.0:
+					i.timeleft = "∞"
+				else:
+					i.timeleft = self.getTime((i.size - i.currentbytes)/i.speed/1024)
 				self.checkUploadQueue()
 			i.lastbytes = i.currentbytes
 			i.lasttime = curtime
