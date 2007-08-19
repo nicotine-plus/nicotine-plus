@@ -1383,7 +1383,7 @@ class NetworkEventProcessor:
 		if len(self.distribcache) > 0:
 			user = self.distribcache.keys()[0]
 			addr = self.distribcache[user]
-			#self.queue.put(slskmessages.SearchParent( addr[0]))
+			self.queue.put(slskmessages.SearchParent( addr[0]))
 			#print user, addr
 			self.ProcessRequestToPeer(user, slskmessages.DistribConn(), None, addr)
 		else:
