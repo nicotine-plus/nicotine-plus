@@ -416,47 +416,211 @@ class Searches:
 			if search[2] is None:
 				continue
 			search[2].NonExistantUser(user)
-		
-class SearchTreeModel(FastListModel):
-	COLUMNS = 17
-	COLUMN_TYPES = [gobject.TYPE_INT, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING,
-    			gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING,
-    			gobject.TYPE_INT, gobject.TYPE_STRING, gobject.TYPE_STRING,  gobject.TYPE_LONG, gobject.TYPE_INT, gobject.TYPE_INT, gobject.TYPE_INT]
 
-	def __init__(self, search):
-		FastListModel.__init__(self)
+	
+class Search(SearchTab):
+	def __init__(self, searches, text, id, mode, remember):
+		SearchTab.__init__(self, False)
+
+#		self.ResultsList.set_double_buffered(False)
+
+		self.searches = searches
+		self.frame = searches.frame
+		self.text = text
+		self.id = id
+		self.mode = mode
+		self.remember = remember
+		self.users = []
+		self.usersiters = {}
+		self.resultslimit = 2000
+		self.QueryLabel.set_text(text)
+
 		self.all_data = []
-		self.search = search
-		self.frame = search.frame
 		self.filters = None
-		self.sort_col = 1
-		self.sort_order = gtk.SORT_DESCENDING
+		self.COLUMN_TYPES = [int, str, str, str, str, str, str, str, str, str,
+			int, str, str, long, int, int, int]
+		self.resultsmodel = gtk.TreeStore(* self.COLUMN_TYPES )
+
+		if self.frame.np.config.sections["searches"]["enablefilters"]:
+			filter = self.frame.np.config.sections["searches"]["defilter"]
+			self.FilterIn.child.set_text(filter[0])
+			self.FilterOut.child.set_text(filter[1])
+			self.FilterSize.child.set_text(filter[2])
+			self.FilterBitrate.child.set_text(filter[3])
+			self.FilterFreeSlot.set_active(filter[4])
+			if(len(filter) > 5):
+				self.FilterCountry.child.set_text(filter[5])
+			self.filtersCheck.set_active(1)
+
+		if mode > 0:
+			self.RememberCheckButton.set_sensitive(False)
+		self.RememberCheckButton.set_active(remember)
+
+		self.selected_results = []
+		self.selected_users = []
+
+		self.ResultsList.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
+		self.ResultsList.set_property("show-expanders", False)
+		self.ResultsList.set_property("rules-hint", True)
+		cols = InitialiseColumns(self.ResultsList,
+			[_("Number"), 25, "text", self.CellDataFunc],
+			[_("User"), 100, "text", self.CellDataFunc],
+			[_("Filename"), 250, "text", self.CellDataFunc],
+			[_("Size"), 100, "text", self.CellDataFunc],
+			[_("Speed"), 50, "text", self.CellDataFunc],
+			[_("In queue"), 50, "text", self.CellDataFunc],
+			[_("Immediate Download"), 20, "text", self.CellDataFunc],
+			[_("Bitrate"), 50, "text", self.CellDataFunc],
+			[_("Length"), 50, "text", self.CellDataFunc],
+			[_("Directory"), 1000, "text", self.CellDataFunc],
+		)
+		cols[0].get_widget().hide()
+		for i in range (10):
+			
+			parent = cols[i].get_widget().get_ancestor(gtk.Button)
+			if parent:
+				parent.connect('button_press_event', PressHeader)
+			# Read Show / Hide column settings from last session
+			cols[i].set_visible(self.frame.np.config.sections["columns"]["search"][i])
+		self.ResultsList.set_model(self.resultsmodel)
+		for ix in range(len(cols)):
+			col = cols[ix]
+			#col.connect("clicked", self.OnResort, ix)
+			#for r in col.get_cell_renderers():
+				#r.set_fixed_height_from_font(1)
+		cols[0].set_sort_column_id(0)
+		cols[1].set_sort_column_id(1)
+		cols[2].set_sort_column_id(2)
+		cols[3].set_sort_column_id(13)
+		cols[4].set_sort_column_id(14)
+		cols[5].set_sort_column_id(15)
+		cols[6].set_sort_column_id(6)
+		cols[7].set_sort_column_id(10)
+		cols[8].set_sort_column_id(8)
+		cols[9].set_sort_column_id(9)
+		if gtk.pygtk_version[0] >= 2 and gtk.pygtk_version[1] >= 10:
+			self.ResultsList.set_enable_tree_lines(True)
+		
+
+		self.ResultsList.set_headers_clickable(True)
+		self.popup_menu_users = PopupMenu(self.frame)
+		self.popup_menu = popup = PopupMenu(self.frame)
+		popup.setup(
+			("#" + _("_Download file(s)"), self.OnDownloadFiles, gtk.STOCK_GO_DOWN),
+			("#" + _("Download file(s) _to..."), self.OnDownloadFilesTo, gtk.STOCK_GO_DOWN),
+			("#" + _("Download containing _folder(s)"), self.OnDownloadFolders, gtk.STOCK_GO_DOWN),
+			("#" + _("Download containing f_older(s) to..."), self.OnDownloadFoldersTo, gtk.STOCK_GO_DOWN),
+			("#" + _("View Metadata of file(s)"), self.OnSearchMeta, gtk.STOCK_PROPERTIES),
+			("", None),
+			("#" + _("Copy _URL"), self.OnCopyURL, gtk.STOCK_COPY),
+			("#" + _("Copy folder U_RL"), self.OnCopyDirURL, gtk.STOCK_COPY),
+			("", None),
+			(1, _("User(s)"), self.popup_menu_users, self.OnPopupMenuUsers),
+		)
+
+			
+		self.ResultsList.connect("button_press_event", self.OnListClicked)
+		
+		self._more_results = 0
+		self.new_results = []
+		self.ChangeColours()
+
+
+	def AddResult(self, msg, user, country):
+		if user in self.users:
+			return
+		results = []
+		
+		self.users.append(user)
+
+		if user not in self.frame.np.watchedusers:
+			self.frame.np.queue.put(slskmessages.AddUser(user))
+		
+		if msg.freeulslots:
+			imdl = _("Y")
+		else:
+			imdl = _("N")
+		ix = len(self.all_data) + 1
+		decode = self.frame.np.decode
+		for result in msg.list:
+			name = result[1].split('\\')[-1]
+			dir = result[1][:-len(name)]
+			bitrate = ""
+			length = ""
+			br = 0
+			if result[3] == "mp3" and len(result[4]) == 3:
+				a = result[4]
+				if a[2] == 1:
+					bitrate = _(" (vbr)")
+				bitrate = str(a[0]) + bitrate
+				br = a[0]
+				length = '%i:%02i' %(a[1] / 60, a[1] % 60)
+			results.append([user, name, result[2], msg.ulspeed, msg.inqueue, imdl, bitrate, length, dir, br, result[1], country, 1])
+			ix += 1
+			
+		if results:
+			self.new_results += results
+			
+			if self._more_results == 0:
+				self._more_results = 1
+				gobject.timeout_add(1000, self._realaddresults)
+			else:
+				self._more_results = 2
+			return len(results)
+	
+	def _realaddresults(self):
+		if self._more_results == 2:
+			self._more_results = 1
+			return True
+		
+		r = self.new_results
+		self.new_results = []
+		self._more_results = 0
+
+		res = self.append(r)
+
+		if res:
+			self.frame.SearchNotebook.request_changed(self.vbox7)
+			self.frame.RequestIcon(self.frame.SearchTabLabel)
+
+		rows = len(self.all_data)
+		for c in self.ResultsList.get_columns():
+			for r in c.get_cell_renderers():
+				r.set_fixed_height_from_font(1)
+
+		return False
+		
 		
 	def append(self, results):
 		ix = len(self.all_data) + 1
-		l = len(self.data)
+		#l = len(self.data)
 
 		encode = self.frame.np.encodeuser
 		
 		returned = 0
-
+		
 		for r in results:
 
-			filename, user, size, speed, queue, immediatedl, h_bitrate, length, directory, bitrate, fullpath,  country, status = r
-	
+			user, filename, size, speed, queue, immediatedl, h_bitrate, length, directory, bitrate, fullpath,  country, status = r
+			
 			h_size = Humanize(long(size))
 			h_speed = Humanize(speed)
 			h_queue = Humanize(queue)
-
-			row = [ix, filename, user, h_size, h_speed, h_queue, immediatedl, h_bitrate, length, directory,  bitrate, fullpath, country,  size, speed, queue, status]
+			if self.usersGroup.get_active() and user not in self.usersiters:
+				self.usersiters[user] = self.resultsmodel.append(None, [0, user, "", "", h_speed, h_queue, immediatedl, "", "", "", 0, "", "", 0, speed, queue, status])
+			row = [ix, user, filename, h_size, h_speed, h_queue, immediatedl, h_bitrate, length, directory,  bitrate, fullpath, country,  size, speed, queue, status]
 
 			self.all_data.append(row)
 			if not self.filters or self.check_filter(row):
-				encoded_row = [ix, encode(filename, user), user, h_size, h_speed, h_queue, immediatedl, h_bitrate, length, encode(directory, user), bitrate, encode(fullpath, user), country,  size, speed, queue, status]
-				self.data.append(encoded_row)
-				iter = self.get_iter((l,))
-				self.row_inserted((l,), iter)
-				l += 1
+				encoded_row = [ix, user, encode(filename, user), h_size, h_speed, h_queue, immediatedl, h_bitrate, length, encode(directory, user), bitrate, encode(fullpath, user), country,  size, speed, queue, status]
+
+				if user in self.usersiters:
+					iter = self.resultsmodel.append(self.usersiters[user], encoded_row)
+				else:
+					iter = self.resultsmodel.append(None, encoded_row)
+				path = self.resultsmodel.get_path(iter)
+				if path is not None:
+					self.ResultsList.expand_to_path(path)
 				returned += 1
 			ix += 1
 		
@@ -466,17 +630,24 @@ class SearchTreeModel(FastListModel):
 		pos = 0
 		for r in self.all_data:
 		
-			if user == r[2]:
+			if user == r[1]:
 				self.all_data[pos][16] = status
 			pos += 1
-		pos = 0
-		for r in self.data:
-	
-			if user == r[2]:
-			
-				self.data[pos][16] = status
+		iter = self.resultsmodel.get_iter_root()
 
-			pos += 1
+		while iter is not None:
+			selected_user = self.resultsmodel.get_value(iter, 1)
+			
+			if selected_user == user:
+				self.resultsmodel.set_value(iter, 16, status)
+			if self.resultsmodel.iter_has_child(iter):
+				child = self.resultsmodel.iter_children(iter)
+				while child is not None:
+					selected_user = self.resultsmodel.get_value(child, 1)
+					if selected_user == user:
+						self.resultsmodel.set_value(child, 16, status)
+					child = self.resultsmodel.iter_next(child)
+			iter = self.resultsmodel.iter_next(iter)
 		
 	def sort(self):
 		col = self.sort_col
@@ -494,10 +665,10 @@ class SearchTreeModel(FastListModel):
 			compare = cmp
 
 		if order == gtk.SORT_ASCENDING:
-			self.data.sort(lambda r1,r2: compare(r1[col], r2[col]))
+			#self.data.sort(lambda r1,r2: compare(r1[col], r2[col]))
 			self.all_data.sort(lambda r1,r2: compare(r1[col], r2[col]))
 		else:
-			self.data.sort(lambda r2,r1: compare(r1[col], r2[col]))
+			#self.data.sort(lambda r2,r1: compare(r1[col], r2[col]))
 			self.all_data.sort(lambda r2,r1: compare(r1[col], r2[col]))
 
 	def checkDigit(self, filter, value, factorize = True):
@@ -535,9 +706,9 @@ class SearchTreeModel(FastListModel):
 
 	def check_filter(self, row):
 		filters = self.filters
-		if filters[0] and not filters[0].search(row[1].lower()):
+		if filters[0] and not filters[0].search(row[2].lower()):
 			return False
-		if filters[1] and filters[1].search(row[1].lower()):
+		if filters[1] and filters[1].search(row[2].lower()):
 			return False
 		if filters[2] and not self.checkDigit(filters[2], row[13]):
 			return False
@@ -560,7 +731,7 @@ class SearchTreeModel(FastListModel):
 		
 		if not enable:
 			self.filters = None
-			self.data = self.all_data[:]
+			#self.data = self.all_data[:]
 			return
 		if self.frame.np.transfers is None:
 			encode = self.frame.np.encode
@@ -573,18 +744,18 @@ class SearchTreeModel(FastListModel):
 				f_in = re.compile(f_in.lower())
 				self.filters[0] = f_in
 			except sre_constants.error:
-				self.frame.SetTextBG(self.search.FilterIn.child, "red", "white")
+				self.frame.SetTextBG(self.FilterIn.child, "red", "white")
 			else:
-				self.frame.SetTextBG(self.search.FilterIn.child)
+				self.frame.SetTextBG(self.FilterIn.child)
 		
 		if f_out:
 			try:
 				f_out = re.compile(f_out.lower())
 				self.filters[1] = f_out
 			except sre_constants.error:
-				self.frame.SetTextBG(self.search.FilterOut.child, "red", "white")
+				self.frame.SetTextBG(self.FilterOut.child, "red", "white")
 			else:
-				self.frame.SetTextBG(self.search.FilterOut.child)
+				self.frame.SetTextBG(self.FilterOut.child)
 
 		if size:
 			self.filters[2] = size
@@ -594,117 +765,32 @@ class SearchTreeModel(FastListModel):
 
 		if country:
 			self.filters[5] = country.upper().split(" ")
-
-		self.data = []
+			
+		self.usersiters.clear()
+		self.resultsmodel.clear()
+		
+		#data = []
+		
 		for row in self.all_data:
 			if self.check_filter(row):
-				ix, filename, user, h_size, h_speed, h_queue, immediatedl, h_bitrate, length, directory,  bitrate, fullpath, country,  size, speed, queue, status = row
-				
-				encoded_row = [ix, encode(filename, user), user, h_size, h_speed, h_queue, immediatedl, h_bitrate, length, encode(directory, user), bitrate, encode( fullpath, user), country,  size, speed, queue, status]
+				ix, user, filename,  h_size, h_speed, h_queue, immediatedl, h_bitrate, length, directory,  bitrate, fullpath, country,  size, speed, queue, status = row
+				if  self.usersGroup.get_active() and user not in self.usersiters:
+					self.usersiters[user] = self.resultsmodel.append(None, [0, user, "", "", h_speed, h_queue, immediatedl, "", "", "", 0, "", "", 0, speed, queue, status])
+				encoded_row = [ix, user, encode(filename, user), h_size, h_speed, h_queue, immediatedl, h_bitrate, length, encode(directory, user), bitrate, encode( fullpath, user), country,  size, speed, queue, status]
 
-				self.data.append(encoded_row)
-	
-class Search(SearchTab):
-	def __init__(self, searches, text, id, mode, remember):
-		SearchTab.__init__(self, False)
-
-#		self.ResultsList.set_double_buffered(False)
-
-		self.searches = searches
-		self.frame = searches.frame
-		self.text = text
-		self.id = id
-		self.mode = mode
-		self.remember = remember
-		self.users = []
-		self.resultslimit = 2000
-		self.QueryLabel.set_text(text)
-
-		self.resultsmodel = SearchTreeModel(self)
-
-# 		self.FilterIn.disable_activate()
-# 		self.FilterOut.disable_activate()
-# 		self.FilterSize.disable_activate()
-# 		self.FilterBitrate.disable_activate()
-# 		self.FilterCountry.disable_activate()
-
-		if self.frame.np.config.sections["searches"]["enablefilters"]:
-			filter = self.frame.np.config.sections["searches"]["defilter"]
-			self.FilterIn.child.set_text(filter[0])
-			self.FilterOut.child.set_text(filter[1])
-			self.FilterSize.child.set_text(filter[2])
-			self.FilterBitrate.child.set_text(filter[3])
-			self.FilterFreeSlot.set_active(filter[4])
-			if(len(filter) > 5):
-				self.FilterCountry.child.set_text(filter[5])
-			self.filtersCheck.set_active(1)
-
-		if mode > 0:
-			self.RememberCheckButton.set_sensitive(False)
-		self.RememberCheckButton.set_active(remember)
-
-		self.selected_results = []
-		self.selected_users = []
-
-		self.ResultsList.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
-		self.ResultsList.set_property("rules-hint", True)
-		cols = InitialiseColumns(self.ResultsList,
-			[_("Number"), 20, "text", self.CellDataFunc],
-			[_("Filename"), 250, "text", self.CellDataFunc],
-			[_("User"), 100, "text", self.CellDataFunc],
-			[_("Size"), 100, "text", self.CellDataFunc],
-			[_("Speed"), 50, "text", self.CellDataFunc],
-			[_("In queue"), 50, "text", self.CellDataFunc],
-			[_("Immediate Download"), 20, "text", self.CellDataFunc],
-			[_("Bitrate"), 50, "text", self.CellDataFunc],
-			[_("Length"), 50, "text", self.CellDataFunc],
-			[_("Directory"), 1000, "text", self.CellDataFunc],
-		)
-		cols[0].get_widget().hide()
-		for i in range (10):
-			
-			parent = cols[i].get_widget().get_ancestor(gtk.Button)
-			if parent:
-				parent.connect('button_press_event', PressHeader)
-			# Read Show / Hide column settings from last session
-			cols[i].set_visible(self.frame.np.config.sections["columns"]["search"][i])
-		self.ResultsList.set_model(self.resultsmodel)
-		for ix in range(len(cols)):
-			col = cols[ix]
-			col.connect("clicked", self.OnResort, ix)
-			for r in col.get_cell_renderers():
-				r.set_fixed_height_from_font(1)
-		self.OnResort(cols[0], 0)
-
-		self.ResultsList.set_headers_clickable(True)
-		self.popup_menu_users = PopupMenu(self.frame)
-		self.popup_menu = popup = PopupMenu(self.frame)
-		popup.setup(
-			("#" + _("_Download file(s)"), self.OnDownloadFiles, gtk.STOCK_GO_DOWN),
-			("#" + _("Download file(s) _to..."), self.OnDownloadFilesTo, gtk.STOCK_GO_DOWN),
-			("#" + _("Download containing _folder(s)"), self.OnDownloadFolders, gtk.STOCK_GO_DOWN),
-			("#" + _("Download containing f_older(s) to..."), self.OnDownloadFoldersTo, gtk.STOCK_GO_DOWN),
-			("#" + _("View Metadata of file(s)"), self.OnSearchMeta, gtk.STOCK_PROPERTIES),
-			("", None),
-			("#" + _("Copy _URL"), self.OnCopyURL, gtk.STOCK_COPY),
-			("#" + _("Copy folder U_RL"), self.OnCopyDirURL, gtk.STOCK_COPY),
-			("", None),
-			(1, _("User(s)"), self.popup_menu_users, self.OnPopupMenuUsers),
-		)
-
-			
-		self.ResultsList.connect("button_press_event", self.OnListClicked)
+				if user in self.usersiters:
+					iter = self.resultsmodel.append(self.usersiters[user], encoded_row)
+				else:
+					iter = self.resultsmodel.append(None, encoded_row)
 		
-		self._more_results = 0
-		self.new_results = []
-		self.ChangeColours()
-		
+
 	def OnPopupMenuUsers(self, widget):
 		
 		self.select_results()
 		#(user, fn, size, bitrate, length)
 	
 		self.popup_menu_users.clear()
+
 		if len(self.selected_users) > 0:
 			items = []
 			self.selected_users.sort(key=str.lower)
@@ -762,11 +848,19 @@ class Search(SearchTab):
 		iter = self.resultsmodel.get_iter_root()
 
 		while iter is not None:
-			user = self.resultsmodel.get_value(iter, 2)
-			
+			user = self.resultsmodel.get_value(iter, 1)
 			if selected_user == user:
-				ix = fmodel.get_path(iter)
-				sel.select_path(ix,)
+				fn = self.resultsmodel.get_value(iter, 11)
+				if fn == "" or self.resultsmodel.iter_has_child(iter):
+					child = self.resultsmodel.iter_children(iter)
+					while child is not None:
+						user = self.resultsmodel.get_value(child, 1)
+						if selected_user == user:
+							sel.select_path(fmodel.get_path(child),)
+						child = self.resultsmodel.iter_next(child)
+				else:
+					ix = fmodel.get_path(iter)
+					sel.select_path(ix,)
 			iter = self.resultsmodel.iter_next(iter)
 
 		self.select_results()
@@ -790,12 +884,12 @@ class Search(SearchTab):
 		if msg.user not in self.users:
 			return
 
-		self.resultsmodel.updateStatus(msg.user, msg.status)
+		self.updateStatus(msg.user, msg.status)
 		
 	def NonExistantUser(self, user):
 		if user not in self.users:
 			return
-		self.resultsmodel.updateStatus(user, -1)
+		self.updateStatus(user, -1)
 		
 	def saveColumns(self):
 		columns = []
@@ -805,11 +899,12 @@ class Search(SearchTab):
 		
 	def SelectedResultsCallback(self, model, path, iter):
 		num = model.get_value(iter, 0)
-		user = None
-  		for r in model.all_data:
-			if num != r[0]:
+		user = model.get_value(iter, 1)
+		fn = None
+  		for r in self.all_data:
+			if num != r[0] or user != r[1]:
 				continue
-			user = r[2]
+			#user = r[1]
 			fn = r[11]
 			size = r[13]
 			bitrate = r[7]
@@ -817,11 +912,14 @@ class Search(SearchTab):
 			break
 		if user is None:
 			return
-
-		self.selected_results.append((user, fn, size, bitrate, length))
-		
 		if not user in self.selected_users:
 			self.selected_users.append(user)
+			
+		if fn is None or fn == "":
+			return
+		self.selected_results.append((user, fn, size, bitrate, length))
+		
+		
 	
 	def OnListClicked(self, widget, event):
 		if event.button == 1 and event.type == gtk.gdk._2BUTTON_PRESS:
@@ -840,86 +938,20 @@ class Search(SearchTab):
 		self.select_results()
 		
 		items = self.popup_menu.get_children()
-		
-		act = len(self.selected_results) and True or False
-		for i in range(0, 4):
-			items[i].set_sensitive(act)
+		users = len(self.selected_users) > 0
+		files = len(self.selected_results) > 0
 
-		act = len(self.selected_results) == 1 and True or False
+		for i in range(0, 5):
+			items[i].set_sensitive(files)
 
-		items[5].set_sensitive(act)
-		items[6].set_sensitive(act)
-		act = False
-		if len(self.selected_users) > 0:
-			act = True
-		items[8].set_sensitive(act)
+		items[6].set_sensitive(files)
+		items[7].set_sensitive(files)
+		items[8].set_sensitive(users)
 
 		widget.emit_stop_by_name("button_press_event")
 		self.popup_menu.popup(None, None, None, event.button, event.time)
 		return True
-		
-	def AddResult(self, msg, user, country):
-		if user in self.users:
-			return
-		self.users.append(user)
-		if user not in self.frame.np.watchedusers:
-			self.frame.np.queue.put(slskmessages.AddUser(user))
-		
-		results = []
-		if msg.freeulslots:
-			imdl = _("Y")
-		else:
-			imdl = _("N")
-		ix = len(self.resultsmodel.data)
-		decode = self.frame.np.decode
-		for result in msg.list:
-			name = result[1].split('\\')[-1]
-			dir = result[1][:-len(name)]
-			bitrate = ""
-			length = ""
-			br = 0
-			if result[3] == "mp3" and len(result[4]) == 3:
-				a = result[4]
-				if a[2] == 1:
-					bitrate = _(" (vbr)")
-				bitrate = str(a[0]) + bitrate
-				br = a[0]
-				length = '%i:%02i' %(a[1] / 60, a[1] % 60)
-			results.append([name, user, result[2], msg.ulspeed, msg.inqueue, imdl, bitrate, length, dir, br, result[1], country, 1])
-			ix += 1
-			
-		if results:
-			self.new_results += results
-			
-			if self._more_results == 0:
-				self._more_results = 1
-				gobject.timeout_add(1000, self._realaddresults)
-			else:
-				self._more_results = 2
-			return len(results)
-	
-	def _realaddresults(self):
-		if self._more_results == 2:
-			self._more_results = 1
-			return True
-		
-		r = self.new_results
-		self.new_results = []
-		self._more_results = 0
 
-		res = self.resultsmodel.append(r)
-
-		if res:
-			self.frame.SearchNotebook.request_changed(self.vbox7)
-			self.frame.RequestIcon(self.frame.SearchTabLabel)
-
-		rows = len(self.resultsmodel.data)
-		for c in self.ResultsList.get_columns():
-			for r in c.get_cell_renderers():
-				r.set_fixed_height_from_font(1)
-
-		return False
-		
 	def CellDataFunc(self, column, cellrenderer, model, iter):
 
 		status = model.get_value(iter, 16)
@@ -949,8 +981,8 @@ class Search(SearchTab):
 	
 	def SelectedResultsAllData(self, model, path, iter, data):
 		num = model.get_value(iter, 0)
-		filename = model.get_value(iter, 1)
-		user = model.get_value(iter, 2)
+		filename = model.get_value(iter, 2)
+		user = model.get_value(iter, 1)
 		size = model.get_value(iter, 3)
 		speed = model.get_value(iter, 4)
 		queue = model.get_value(iter, 5)
@@ -1038,7 +1070,19 @@ class Search(SearchTab):
 		if path[:-1] != "/":
 			path += "/"
 		self.frame.SetClipboardURL(user, path)
-	
+		
+	def OnGroup(self, widget):
+		self.OnRefilter(widget)
+		
+		#self.ResultsList.set_property("level-indentation", 5)
+		self.ResultsList.set_property("show-expanders", widget.get_active())
+		if widget.get_active():
+			self.ResultsList.get_columns()[0].set_fixed_width(50)
+		else:
+			self.ResultsList.get_columns()[0].set_fixed_width(25)
+		#self.ResultsList.get_style().set_style("indent-expanders", False)
+
+			
 	def OnToggleFilters(self, widget):
 		if widget.get_active():
 			self.Filters.show()
@@ -1046,8 +1090,9 @@ class Search(SearchTab):
 		else:
 			self.Filters.hide()
 			self.ResultsList.set_model(None)
-			self.resultsmodel.set_filters(0, None, None, None, None, None, "")
+			self.set_filters(0, None, None, None, None, None, "")
 			self.ResultsList.set_model(self.resultsmodel)
+		self.ResultsList.expand_all()
 
 	def OnIgnore(self, widget):
 		#self.RememberCheckButton.set_active(0)
@@ -1092,24 +1137,7 @@ class Search(SearchTab):
 		f_country = self.PushHistory(self.FilterCountry, "filtercc")
 		
 		self.ResultsList.set_model(None)
-		self.resultsmodel.set_filters(1, f_in, f_out, f_size, f_br, f_free, f_country)
+		self.set_filters(1, f_in, f_out, f_size, f_br, f_free, f_country)
 		self.ResultsList.set_model(self.resultsmodel)
+		self.ResultsList.expand_all()
 
-	def OnResort(self, column, column_id):
-		if self.resultsmodel.sort_col == column_id:
-			order = self.resultsmodel.sort_order
-			if order == gtk.SORT_ASCENDING:
-				order = gtk.SORT_DESCENDING
-			else:
-				order = gtk.SORT_ASCENDING
-			column.set_sort_order(order)
-			self.resultsmodel.sort_order = order
-			self.ResultsList.set_model(None)
-			self.resultsmodel.sort()
-			self.ResultsList.set_model(self.resultsmodel)
-			return
-		cols = self.ResultsList.get_columns()
-		cols[self.resultsmodel.sort_col].set_sort_indicator(False)
-		cols[column_id].set_sort_indicator(True)
-		self.resultsmodel.sort_col = column_id
-		self.OnResort(column, column_id)

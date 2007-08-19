@@ -1095,32 +1095,6 @@ class MainWindow:
 
 		self.hbox12.pack_end(self.SimilarUsersButton, False, False, 0)
 
-		self.GlobalRecommendationsButton = gtk.Button()
-		self.GlobalRecommendationsButton.show()
-		self.GlobalRecommendationsButton.connect("clicked", self.OnGlobalRecommendationsClicked)
-
-		self.alignment4 = gtk.Alignment(0.5, 0.5, 0, 0)
-		self.alignment4.show()
-
-		self.hbox24 = gtk.HBox(False, 0)
-		self.hbox24.show()
-		self.hbox24.set_spacing(2)
-
-		self.image4 = gtk.Image()
-		self.image4.set_from_stock(gtk.STOCK_REFRESH, 4)
-		self.image4.show()
-		self.hbox24.pack_start(self.image4, False, False, 0)
-
-		self.label33 = gtk.Label(_("Global recommendations"))
-		self.label33.show()
-		self.hbox24.pack_start(self.label33, False, False, 0)
-
-		self.alignment4.add(self.hbox24)
-
-		self.GlobalRecommendationsButton.add(self.alignment4)
-
-		self.hbox12.pack_end(self.GlobalRecommendationsButton, False, False, 0)
-
 		self.RecommendationsButton = gtk.Button()
 		self.RecommendationsButton.show()
 		self.RecommendationsButton.connect("clicked", self.OnRecommendationsClicked)
@@ -1146,6 +1120,32 @@ class MainWindow:
 		self.RecommendationsButton.add(self.alignment5)
 
 		self.hbox12.pack_end(self.RecommendationsButton, False, False, 0)
+
+		self.GlobalRecommendationsButton = gtk.Button()
+		self.GlobalRecommendationsButton.show()
+		self.GlobalRecommendationsButton.connect("clicked", self.OnGlobalRecommendationsClicked)
+
+		self.alignment4 = gtk.Alignment(0.5, 0.5, 0, 0)
+		self.alignment4.show()
+
+		self.hbox24 = gtk.HBox(False, 0)
+		self.hbox24.show()
+		self.hbox24.set_spacing(2)
+
+		self.image4 = gtk.Image()
+		self.image4.set_from_stock(gtk.STOCK_REFRESH, 4)
+		self.image4.show()
+		self.hbox24.pack_start(self.image4, False, False, 0)
+
+		self.label33 = gtk.Label(_("Global recommendations"))
+		self.label33.show()
+		self.hbox24.pack_start(self.label33, False, False, 0)
+
+		self.alignment4.add(self.hbox24)
+
+		self.GlobalRecommendationsButton.add(self.alignment4)
+
+		self.hbox12.pack_end(self.GlobalRecommendationsButton, False, False, 0)
 
 		self.interests.pack_start(self.hbox12, False, True, 0)
 
@@ -1520,10 +1520,10 @@ class MainWindow:
 	def OnSimilarUsersClicked(self, widget):
 		pass
 
-	def OnGlobalRecommendationsClicked(self, widget):
+	def OnRecommendationsClicked(self, widget):
 		pass
 
-	def OnRecommendationsClicked(self, widget):
+	def OnGlobalRecommendationsClicked(self, widget):
 		pass
 
 	def OnAddThingILike(self, widget):
@@ -1988,6 +1988,13 @@ class SearchTab:
 
 		self.hbox6.pack_start(self.filtersCheck, False, True, 0)
 
+		self.usersGroup = gtk.CheckButton()
+		self.usersGroup.set_label(_("Group by Users"))
+		self.usersGroup.show()
+		self.usersGroup.connect("toggled", self.OnGroup)
+
+		self.hbox6.pack_start(self.usersGroup, False, True, 0)
+
 		self.RememberCheckButton = gtk.CheckButton()
 		self.tooltips.set_tip(self.RememberCheckButton, _("This search will be opened the next time you start Nicotine+ and will send out new search requests after a server-set intervals (usually around one hour)"))
 		self.RememberCheckButton.set_label(_("Wish"))
@@ -2159,6 +2166,9 @@ class SearchTab:
 			self.SearchTab.add(self.vbox7)
 
 	def OnToggleFilters(self, widget):
+		pass
+
+	def OnGroup(self, widget):
 		pass
 
 	def OnToggleRemember(self, widget):

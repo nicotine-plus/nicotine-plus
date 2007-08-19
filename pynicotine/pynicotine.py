@@ -118,6 +118,9 @@ class NetworkEventProcessor:
 		self.requestedFolders = {}
 		self.speed = 0
 		self.translatepunctuation = string.maketrans(string.punctuation, string.join([' ' for i in string.punctuation],''))
+		self.searchResultsConnections = []
+		self.searchResultsTimer = threading.Timer(10, self.closeSearchResults)
+		self.searchResultsTimer.start()
 
 		try:
 			import GeoIP
@@ -274,10 +277,13 @@ class NetworkEventProcessor:
 			conn = PeerConnection(addr = addr, username = user, msgs = [message], token = token, init = init)
 			self.peerconns.append(conn)
 			if token is not None:
+				timeout = 300.0
 				conntimeout = ConnectToPeerTimeout(self.peerconns[-1], self.callback)
-				timer = threading.Timer(300.0, conntimeout.timeout)
+				timer = threading.Timer(timeout, conntimeout.timeout)
 				self.peerconns[-1].conntimer = timer
 				timer.start()
+			if message.__class__ is slskmessages.FileSearchResult:
+				self.searchResultsConnections.append(conn)
 		if message.__class__ is slskmessages.TransferRequest and self.transfers is not None:
 			if conn.addr is None:
 				self.transfers.gettingAddress(message.req)
@@ -286,6 +292,15 @@ class NetworkEventProcessor:
 			else:
 				self.transfers.gotConnectError(message.req)
 
+	def closeSearchResults(self):
+		if self.searchResultsTimer is not None:
+			self.searchResultsTimer.cancel()
+		for conn in self.searchResultsConnections[:]:
+			self.searchResultsConnections.remove(conn)
+			self.ClosePeerConnection(conn)
+		self.searchResultsTimer = threading.Timer(10, self.closeSearchResults)
+		self.searchResultsTimer.start()
+		
 	def setServerTimer(self):
 		if self.servertimeout == -1:
 			self.servertimeout = 15
@@ -448,7 +463,7 @@ class NetworkEventProcessor:
 		self.serverconn = msg.conn
 		self.servertimeout = -1
 		self.users = {}
-		self.queue.put(slskmessages.Login(self.config.sections["server"]["login"], self.config.sections["server"]["passw"], 181)) #155, 156, 157, 180
+		self.queue.put(slskmessages.Login(self.config.sections["server"]["login"], self.config.sections["server"]["passw"], 156)) #155, 156, 157, 180
 		if self.waitport is not None:	
 			self.queue.put(slskmessages.SetWaitPort(self.waitport))
 
@@ -927,7 +942,7 @@ class NetworkEventProcessor:
 		curtime = time.time()
 		for i in self.peerconns[:]:
 			if i.conn == peerconn:
-				if not self.protothread.socketStillActive(i.conn):
+				if not self.protothread.socketStillActive(i.conn) or force:
 					self.queue.put(slskmessages.ConnClose(i.conn))
 				break
 		
@@ -1330,7 +1345,7 @@ class NetworkEventProcessor:
 			if not self.GetDistribConn():
 				user = self.distribcache.keys()[0]
 				addr = self.distribcache[user]
-				#self.queue.put(slskmessages.SearchParent( addr[0]))
+				self.queue.put(slskmessages.SearchParent( addr[0]))
 				self.ProcessRequestToPeer(user, slskmessages.DistribConn(), None, addr)
 		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 1)
 
