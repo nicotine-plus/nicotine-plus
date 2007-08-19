@@ -1074,13 +1074,11 @@ class Search(SearchTab):
 	def OnGroup(self, widget):
 		self.OnRefilter(widget)
 		
-		#self.ResultsList.set_property("level-indentation", 5)
 		self.ResultsList.set_property("show-expanders", widget.get_active())
 		if widget.get_active():
-			self.ResultsList.get_columns()[0].set_fixed_width(50)
+			self.ResultsList.get_columns()[0].set_visible(False)
 		else:
-			self.ResultsList.get_columns()[0].set_fixed_width(25)
-		#self.ResultsList.get_style().set_style("indent-expanders", False)
+			self.ResultsList.get_columns()[0].set_visible(True)
 
 			
 	def OnToggleFilters(self, widget):
