@@ -737,7 +737,7 @@ class SearchParent(ServerMessage):
 	
 	def makeNetworkMessage(self):
 		import socket
-		ip = socket.inet_pton(socket.AF_INET,self.strunreverse(self.parentip))
+		ip = socket.inet_aton(self.strunreverse(self.parentip))
 		return self.packObject(ip)
 
 class Msg85(ServerMessage):
