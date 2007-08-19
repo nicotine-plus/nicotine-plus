@@ -94,7 +94,7 @@ class Config:
 \
 "searches":{"maxresults":50,"re_filter":0,"history":[], \
 "enablefilters":0, "defilter":["","","","",0,""], "filtercc":[], \
-"filterin":[],"filterout":[],"filtersize":[],"filterbr":[]}, \
+"filterin":[],"filterout":[],"filtersize":[],"filterbr":[], "distrib_timer": 1, "distrib_ignore": 60}, \
 \
 "ui":{"icontheme": "", "chatme":"FOREST GREEN", "chatremote":"","chatlocal":"BLUE", \
 "chathilite":"red", "urlcolor": "#3D2B7F", "useronline":"BLACK", "useraway":"ORANGE", "useroffline":"#aa0000", \

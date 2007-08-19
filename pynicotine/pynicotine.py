@@ -108,6 +108,7 @@ class NetworkEventProcessor:
 		self.ipaddress = None
 		self.servertimer = None
 		self.servertimeout = -1
+		
 		self.CompressedSharesBuddy = self.CompressedSharesNormal = None
 		self.CompressShares("normal")
 		self.CompressShares("buddy")
@@ -121,7 +122,9 @@ class NetworkEventProcessor:
 		self.searchResultsConnections = []
 		self.searchResultsTimer = threading.Timer(10, self.closeSearchResults)
 		self.searchResultsTimer.start()
-
+		self.respondDistributed = True
+		self.respondDistributedTimer = threading.Timer(60, self.ToggleRespondDistributed)
+		self.respondDistributedTimer.start()
 		try:
 			import GeoIP
 			self.geoip = GeoIP.new(GeoIP.GEOIP_STANDARD)
@@ -1284,15 +1287,32 @@ class NetworkEventProcessor:
 	
 	def SearchRequest(self, msg):
 		self.processSearchRequest(msg.searchterm, msg.user, msg.searchid, 0)
-	
+		
+	def ToggleRespondDistributed(self, settings=False):
+		"""
+		Toggle responding to distributed search each (default: 60sec)
+		interval
+		"""
+		if self.respondDistributedTimer is not None:
+			self.respondDistributedTimer.cancel()
+		if self.config.sections["searches"]["distrib_timer"]:
+			if not settings:
+				# Don't toggle when just changing the settings
+				self.respondDistributed = not self.respondDistributed
+			self.respondDistributedTimer = threading.Timer(self.config.sections["searches"]["distrib_ignore"], self.ToggleRespondDistributed)
+			self.respondDistributedTimer.start()
+		else:
+			# Always respond
+			self.respondDistributed = True
+			
 	def DistribSearch(self, msg):
-		self.processSearchRequest(msg.searchterm, msg.user, msg.searchid, 0)
+		if self.respondDistributed: # set in ToggleRespondDistributed
+			self.processSearchRequest(msg.searchterm, msg.user, msg.searchid, 0)
 	
 	def processSearchRequest(self, searchterm, user, searchid, direct = 0):
 		if searchterm is None:
 			return
-	#	self.searchfile.write(searchterm+"\n")
-	#	self.searchfile.flush()
+
 		checkuser, reason = self.CheckUser(user, None, None)
 		if not checkuser:
 			return
