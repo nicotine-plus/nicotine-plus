@@ -480,8 +480,8 @@ class SlskProtoThread(threading.Thread):
 		conns[i].obuf = conns[i].obuf[bytes_send:]
 		if i is not server_socket:
 			if conns[i].fileupl is not None and conns[i].fileupl.offset is not None:
-				conns[i].fileupl.sentbytes = conns[i].fileupl.sentbytes + bytes_send
-				conns[i].sentbytes2 = conns[i].sentbytes2 + bytes_send
+				conns[i].fileupl.sentbytes += bytes_send
+				conns[i].sentbytes2 += bytes_send
 				try:
 					if conns[i].fileupl.offset + conns[i].fileupl.sentbytes + len(conns[i].obuf) < conns[i].fileupl.size:
 						bytestoread = bytes_send*2-len(conns[i].obuf)+10*1024

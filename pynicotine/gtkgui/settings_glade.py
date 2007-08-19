@@ -3435,7 +3435,7 @@ class SearchFrame:
 
 		self.hbox36.pack_start(self.ToggleDistributed, False, True, 0)
 
-		self.ToggleDistributedInterval = gtk.SpinButton(gtk.Adjustment(value=60, lower=30, upper=100, step_incr=1, page_incr=10, page_size=10))
+		self.ToggleDistributedInterval = gtk.SpinButton(gtk.Adjustment(value=60, lower=30, upper=3600, step_incr=1, page_incr=10, page_size=10))
 		self.ToggleDistributedInterval.show()
 		self.ToggleDistributedInterval.set_width_chars(5)
 

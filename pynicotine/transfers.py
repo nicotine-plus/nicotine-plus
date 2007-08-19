@@ -53,8 +53,10 @@ class Transfer:
 		self.size = size
 		self.file = file
 		self.starttime = starttime
+		self.lasttime = starttime
 		self.offset = offset
 		self.currentbytes = currentbytes
+		self.lastbytes = currentbytes
 		self.speed = speed
 		self.timeelapsed = timeelapsed
 		self.timeleft = timeleft
@@ -814,13 +816,21 @@ class Transfers:
 					i.transfertimer.cancel()
 				curtime = time.time()
 				i.currentbytes = msg.file.tell()
+				if i.lastbytes is None:
+					i.lastbytes = i.currentbytes
+				if i.starttime is None:
+					i.starttime = curtime
+				if i.lasttime is None:
+					i.lasttime = curtime - 1
 				#i.status = "%s" %(str(i.currentbytes))
 				i.status = "Transferring"
 				oldelapsed = i.timeelapsed
 				i.timeelapsed = self.getTime(curtime - i.starttime)
 				if curtime > i.starttime and i.currentbytes > i.offset:
-					i.speed = (i.currentbytes - i.offset)/(curtime - i.starttime)/1024
+					i.speed = (i.currentbytes - i.lastbytes)/(curtime - i.lasttime)/1024
 					i.timeleft = self.getTime((i.size - i.currentbytes)/i.speed/1024)
+				i.lastbytes = i.currentbytes
+				i.lasttime = curtime
 				if i.size > i.currentbytes:
 					if oldelapsed == i.timeelapsed:
 						needupdate = 0
@@ -986,13 +996,16 @@ class Transfers:
 			if i.starttime is None:
 				i.starttime = curtime
 				i.offset = msg.offset
+			
 			i.currentbytes = msg.offset + msg.sentbytes
 			oldelapsed = i.timeelapsed
 			i.timeelapsed = self.getTime(curtime - i.starttime)
 			if curtime > i.starttime and i.currentbytes > i.offset:
-				i.speed = (i.currentbytes - i.offset)/(curtime - i.starttime)/1024
+				i.speed = (i.currentbytes - i.lastbytes)/(curtime - i.lasttime)/1024
 				i.timeleft = self.getTime((i.size - i.currentbytes)/i.speed/1024)
 				self.checkUploadQueue()
+			i.lastbytes = i.currentbytes
+			i.lasttime = curtime
 			if i.size > i.currentbytes:
 				if oldelapsed == i.timeelapsed:
 					needupdate = 0
