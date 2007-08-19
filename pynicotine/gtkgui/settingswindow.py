@@ -353,17 +353,7 @@ class TransfersFrame(settings_glade.TransfersFrame):
 	def SetSettings(self, config):
 		transfers = config["transfers"]
 		server = config["server"]
-		for section, keys in self.options.items():
-			if section not in config:
-				continue
-			for key in keys:
-				widget = self.options[section][key]
-				if config[section][key] is None:
-					self.p.Hilight(widget)
-					self.p.ClearWidget(widget)
-				else:
-					self.p.SetWidget(widget, config[section][key])
-					self.p.Dehilight(widget)
+		self.p.SetWidgetsData(config, self.options)
 					
 
 		self.OnQueueUseSlotsToggled(self.QueueUseSlots)
@@ -835,17 +825,7 @@ class SoundsFrame(settings_glade.SoundsFrame):
 			widget.set_sensitive(sensitive)
 		
 	def SetSettings(self, config):
-		for section, keys in self.options.items():
-			if section not in config:
-				continue
-			for key in keys:
-				widget = self.options[section][key]
-				if config[section][key] is None:
-					self.p.Hilight(widget)
-					self.p.ClearWidget(widget)
-				else:
-					self.p.SetWidget(widget, config[section][key])
-					self.p.Dehilight(widget)
+		self.p.SetWidgetsData(config, self.options)
 					
 
 		self.OnSoundCheckToggled(self.SoundCheck)
@@ -1098,18 +1078,7 @@ class BloatFrame(settings_glade.BloatFrame):
 
 		self.settingup = 1
 		
-		for section, keys in self.options.items():
-			if section not in config:
-				continue
-			for key in keys:
-				widget = self.options[section][key]
-				if config[section][key] is None:
-					self.p.Hilight(widget)
-					self.p.ClearWidget(widget)
-				else:
-					self.p.SetWidget(widget, config[section][key])
-					self.p.Dehilight(widget)
-					
+		self.p.SetWidgetsData(config, self.options)
 
 		self.OnEnableTransparentToggled(self.EnableTransparent)
 		self.OnTranslationCheckToggled(self.TranslationCheck)
@@ -1296,17 +1265,7 @@ class LogFrame(settings_glade.LogFrame):
 
 	def SetSettings(self, config):
 		
-		for section, keys in self.options.items():
-			if section not in config:
-				continue
-			for key in keys:
-				widget = self.options[section][key]
-				if config[section][key] is None:
-					self.p.Hilight(widget)
-					self.p.ClearWidget(widget)
-				else:
-					self.p.SetWidget(widget, config[section][key])
-					self.p.Dehilight(widget)
+		self.p.SetWidgetsData(config, self.options)
 
 	def GetSettings(self):
 		return {
@@ -1353,26 +1312,15 @@ class SearchFrame(settings_glade.SearchFrame):
 		self.p = parent
 		self.frame = parent.frame
 		settings_glade.SearchFrame.__init__(self, False)
-		self.options = {"searches": ["maxresults", "enablefilters", "re_filter", "defilter"]}
+		self.options = {"searches": {"maxresults": self.MaxResults, "enablefilters": self.EnableFilters, "re_filter": self.RegexpFilters, "defilter": None, "distrib_timer": self.ToggleDistributed, "distrib_ignore": self.ToggleDistributedInterval}}
 
 	def SetSettings(self, config):
 		try:
 			searches = config["searches"]
 		except:
 			searches = None
-		
-		if searches["maxresults"] is not None:
-			self.MaxResults.set_value(searches["maxresults"])
-		else:
-			self.p.Hilight(self.MaxResults)
-		if searches["enablefilters"] is not None:
-			self.EnableFilters.set_active(searches["enablefilters"])
-		else:
-			self.p.Hilight(self.EnableFilters)
-		if searches["re_filter"] is not None:
-			self.RegexpFilters.set_active(searches["re_filter"])
-		else:
-			self.p.Hilight(self.RegexpFilters)
+		self.p.SetWidgetsData(config, self.options)
+
 		if searches["defilter"] is not None:
 			self.FilterIn.set_text(searches["defilter"][0])
 			self.FilterOut.set_text(searches["defilter"][1])
@@ -1404,6 +1352,8 @@ class SearchFrame(settings_glade.SearchFrame):
 					self.FilterFree.get_active(),
 					self.FilterCC.get_text(),
 				],
+				"distrib_timer": self.ToggleDistributed.get_active(),
+				"distrib_ignore": self.ToggleDistributedInterval.get_value_as_int(),
 			}
 		}
 
@@ -2176,6 +2126,21 @@ class SettingsWindow(settings_glade.SettingsWindow):
 				break
 			iter = combobox.get_model().iter_next(iter)
 			
+	def SetWidgetsData(self, config, options):
+		for section, keys in options.items():
+			if section not in config:
+				continue
+			for key in keys:
+				widget = options[section][key]
+				if widget is None:
+					continue
+				if config[section][key] is None:
+					self.Hilight(widget)
+					self.ClearWidget(widget)
+				else:
+					self.SetWidget(widget, config[section][key])
+					self.Dehilight(widget)
+					
 	def ClearWidget(self, widget):
 		if type(widget) is gtk.Entry:
 			widget.set_text("")

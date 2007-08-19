@@ -1131,6 +1131,8 @@ class NicotineFrame(MainWindow):
 			self.np.servertimer.cancel()
 		if self.np.searchResultsTimer is not None:
 			self.np.searchResultsTimer.cancel()
+		if self.np.respondDistributedTimer is not None:
+			self.np.respondDistributedTimer.cancel()
 		self.np.StopTimers()
 		if self.np.transfers is not None:
 			self.np.transfers.AbortTransfers()
@@ -1494,6 +1496,7 @@ class NicotineFrame(MainWindow):
 		else:
 			self.np.queue.put(slskmessages.SetGeoBlock(None))
 		self.np.queue.put(slskmessages.SetUploadLimit(uselimit,uploadlimit,limitby))
+		self.np.ToggleRespondDistributed(settings=True)
 		self.UpdateDownloadFilters()
 		self.TransparentTint(1)
 		self.np.config.writeConfig()
