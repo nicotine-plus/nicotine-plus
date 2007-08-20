@@ -25,7 +25,7 @@ transfer manager.
 """
 
 import slskmessages
-import threading
+import threading, thread
 from slskmessages import newId
 
 import os, stat, sys
