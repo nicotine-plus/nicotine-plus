@@ -620,7 +620,8 @@ class Search(SearchTab):
 					iter = self.resultsmodel.append(None, encoded_row)
 				path = self.resultsmodel.get_path(iter)
 				if path is not None:
-					self.ResultsList.expand_to_path(path)
+					if self.usersGroup.get_active() and self.ExpandButton.get_active():
+						self.ResultsList.expand_to_path(path)
 				returned += 1
 			ix += 1
 		
@@ -1077,10 +1078,19 @@ class Search(SearchTab):
 		self.ResultsList.set_property("show-expanders", widget.get_active())
 		if widget.get_active():
 			self.ResultsList.get_columns()[0].set_visible(False)
+			self.ExpandButton.show()
 		else:
 			self.ResultsList.get_columns()[0].set_visible(True)
-
+			self.ExpandButton.hide()
 			
+	def OnToggleExpandAll(self, widget):
+		if self.ExpandButton.get_active():
+			self.ResultsList.expand_all()
+			self.expandImage.set_from_stock(gtk.STOCK_REMOVE, 4)
+		else:
+			self.ResultsList.collapse_all()
+			self.expandImage.set_from_stock(gtk.STOCK_ADD, 4)
+		
 	def OnToggleFilters(self, widget):
 		if widget.get_active():
 			self.Filters.show()
@@ -1090,7 +1100,11 @@ class Search(SearchTab):
 			self.ResultsList.set_model(None)
 			self.set_filters(0, None, None, None, None, None, "")
 			self.ResultsList.set_model(self.resultsmodel)
-		self.ResultsList.expand_all()
+		if self.usersGroup.get_active():
+			if self.ExpandButton.get_active():
+				self.ResultsList.expand_all()
+			else:
+				self.ResultsList.collapse_all()
 
 	def OnIgnore(self, widget):
 		#self.RememberCheckButton.set_active(0)
@@ -1100,6 +1114,11 @@ class Search(SearchTab):
 			del self.searches.searches[self.id]
 		
 		widget.set_sensitive(False)
+		
+	def OnClear(self, widget):
+		self.all_data = []
+		self.usersiters.clear()
+		self.resultsmodel.clear()
 
 	def OnClose(self, widget):
 		self.searches.RemoveTab(self)
@@ -1137,5 +1156,8 @@ class Search(SearchTab):
 		self.ResultsList.set_model(None)
 		self.set_filters(1, f_in, f_out, f_size, f_br, f_free, f_country)
 		self.ResultsList.set_model(self.resultsmodel)
-		self.ResultsList.expand_all()
-
+		if self.usersGroup.get_active():
+			if self.ExpandButton.get_active():
+				self.ResultsList.expand_all()
+			else:
+				self.ResultsList.collapse_all()

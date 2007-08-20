@@ -46,6 +46,9 @@ Settings
    (show a dialog, close to tray, or quit)
 
 Search
+ * Search is now a genuine TreeView that supports group-by-user and
+   has a expand/collapse all toggle when grouping is enabled.
+ * Added a Clear results button
  * Added 'Download containing folder(s) to..' to the search results popup
  * Open a new socket for every outgoing search result to avoid problems with
    shared sockets getting closed.

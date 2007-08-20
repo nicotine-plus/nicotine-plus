@@ -1467,7 +1467,7 @@
                     <child>
                       <widget class="GtkHBox" id="hbox2">
                         <property name="visible">True</property>
-                        <property name="spacing">8</property>
+                        <property name="spacing">5</property>
                         <child>
                           <widget class="GtkButton" id="WishList">
                             <property name="visible">True</property>
@@ -1529,6 +1529,26 @@
                           </packing>
                         </child>
                         <child>
+                          <widget class="GtkButton" id="ClearSearchHistory">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="tooltip" translatable="yes">Clear all searches attempts</property>
+                            <property name="response_id">0</property>
+                            <signal name="clicked" handler="OnClearSearchHistory"/>
+                            <child>
+                              <widget class="GtkImage" id="image38">
+                                <property name="visible">True</property>
+                                <property name="stock">gtk-clear</property>
+                              </widget>
+                            </child>
+                          </widget>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">False</property>
+                            <property name="position">2</property>
+                          </packing>
+                        </child>
+                        <child>
                           <widget class="GtkButton" id="SearchButton">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
@@ -1557,54 +1577,6 @@
                                       <widget class="GtkLabel" id="label32">
                                         <property name="visible">True</property>
                                         <property name="label" translatable="yes">Search</property>
-                                        <property name="use_underline">True</property>
-                                      </widget>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="fill">False</property>
-                                        <property name="position">1</property>
-                                      </packing>
-                                    </child>
-                                  </widget>
-                                </child>
-                              </widget>
-                            </child>
-                          </widget>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">False</property>
-                            <property name="position">2</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <widget class="GtkButton" id="ClearSearchHistory">
-                            <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="response_id">0</property>
-                            <signal name="clicked" handler="OnClearSearchHistory"/>
-                            <child>
-                              <widget class="GtkAlignment" id="alignment38">
-                                <property name="visible">True</property>
-                                <property name="xscale">0</property>
-                                <property name="yscale">0</property>
-                                <child>
-                                  <widget class="GtkHBox" id="hbox59">
-                                    <property name="visible">True</property>
-                                    <property name="spacing">2</property>
-                                    <child>
-                                      <widget class="GtkImage" id="image38">
-                                        <property name="visible">True</property>
-                                        <property name="stock">gtk-clear</property>
-                                      </widget>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="fill">False</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <widget class="GtkLabel" id="label67">
-                                        <property name="visible">True</property>
-                                        <property name="label" translatable="yes">Clear</property>
                                         <property name="use_underline">True</property>
                                       </widget>
                                       <packing>
@@ -1994,55 +1966,6 @@
                           </packing>
                         </child>
                         <child>
-                          <widget class="GtkButton" id="RecommendationsButton">
-                            <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="response_id">0</property>
-                            <signal name="clicked" handler="OnRecommendationsClicked"/>
-                            <child>
-                              <widget class="GtkAlignment" id="alignment5">
-                                <property name="visible">True</property>
-                                <property name="xscale">0</property>
-                                <property name="yscale">0</property>
-                                <child>
-                                  <widget class="GtkHBox" id="hbox25">
-                                    <property name="visible">True</property>
-                                    <property name="spacing">2</property>
-                                    <child>
-                                      <widget class="GtkImage" id="image5">
-                                        <property name="visible">True</property>
-                                        <property name="stock">gtk-refresh</property>
-                                      </widget>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="fill">False</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <widget class="GtkLabel" id="label34">
-                                        <property name="visible">True</property>
-                                        <property name="label" translatable="yes">Recommendations</property>
-                                        <property name="use_underline">True</property>
-                                      </widget>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="fill">False</property>
-                                        <property name="position">1</property>
-                                      </packing>
-                                    </child>
-                                  </widget>
-                                </child>
-                              </widget>
-                            </child>
-                          </widget>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">False</property>
-                            <property name="pack_type">GTK_PACK_END</property>
-                            <property name="position">1</property>
-                          </packing>
-                        </child>
-                        <child>
                           <widget class="GtkButton" id="GlobalRecommendationsButton">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
@@ -2071,6 +1994,55 @@
                                       <widget class="GtkLabel" id="label33">
                                         <property name="visible">True</property>
                                         <property name="label" translatable="yes">Global recommendations</property>
+                                        <property name="use_underline">True</property>
+                                      </widget>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">False</property>
+                                        <property name="position">1</property>
+                                      </packing>
+                                    </child>
+                                  </widget>
+                                </child>
+                              </widget>
+                            </child>
+                          </widget>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">False</property>
+                            <property name="pack_type">GTK_PACK_END</property>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <widget class="GtkButton" id="RecommendationsButton">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="response_id">0</property>
+                            <signal name="clicked" handler="OnRecommendationsClicked"/>
+                            <child>
+                              <widget class="GtkAlignment" id="alignment5">
+                                <property name="visible">True</property>
+                                <property name="xscale">0</property>
+                                <property name="yscale">0</property>
+                                <child>
+                                  <widget class="GtkHBox" id="hbox25">
+                                    <property name="visible">True</property>
+                                    <property name="spacing">2</property>
+                                    <child>
+                                      <widget class="GtkImage" id="image5">
+                                        <property name="visible">True</property>
+                                        <property name="stock">gtk-refresh</property>
+                                      </widget>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">False</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <widget class="GtkLabel" id="label34">
+                                        <property name="visible">True</property>
+                                        <property name="label" translatable="yes">Recommendations</property>
                                         <property name="use_underline">True</property>
                                       </widget>
                                       <packing>
@@ -3084,14 +3056,21 @@
               </widget>
             </child>
             <child>
-              <widget class="GtkCheckButton" id="filtersCheck">
-                <property name="visible">True</property>
+              <widget class="GtkToggleButton" id="ExpandButton">
                 <property name="can_focus">True</property>
-                <property name="label" translatable="yes">Enable filters</property>
-                <property name="use_underline">True</property>
+                <property name="receives_default">True</property>
+                <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                <property name="tooltip" translatable="yes">Expand / Collapse all</property>
                 <property name="response_id">0</property>
-                <property name="draw_indicator">True</property>
-                <signal name="toggled" handler="OnToggleFilters"/>
+                <property name="active">True</property>
+                <signal name="toggled" handler="OnToggleExpandAll"/>
+                <child>
+                  <widget class="GtkImage" id="expandImage">
+                    <property name="visible">True</property>
+                    <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                    <property name="stock">gtk-remove</property>
+                  </widget>
+                </child>
               </widget>
               <packing>
                 <property name="expand">False</property>
@@ -3114,6 +3093,21 @@
               </packing>
             </child>
             <child>
+              <widget class="GtkCheckButton" id="filtersCheck">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="label" translatable="yes">Enable filters</property>
+                <property name="use_underline">True</property>
+                <property name="response_id">0</property>
+                <property name="draw_indicator">True</property>
+                <signal name="toggled" handler="OnToggleFilters"/>
+              </widget>
+              <packing>
+                <property name="expand">False</property>
+                <property name="position">3</property>
+              </packing>
+            </child>
+            <child>
               <widget class="GtkCheckButton" id="RememberCheckButton">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
@@ -3127,11 +3121,31 @@
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
-                <property name="position">3</property>
+                <property name="position">4</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkButton" id="button2">
+              <widget class="GtkButton" id="ClearButton">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="tooltip" translatable="yes">Clear all results</property>
+                <property name="response_id">0</property>
+                <signal name="clicked" handler="OnClear"/>
+                <child>
+                  <widget class="GtkImage" id="clearImage">
+                    <property name="visible">True</property>
+                    <property name="stock">gtk-clear</property>
+                  </widget>
+                </child>
+              </widget>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">5</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkButton" id="IgnoreButton">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="tooltip" translatable="yes">Stop new search results from being displayed</property>
@@ -3176,13 +3190,14 @@
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
-                <property name="position">4</property>
+                <property name="position">6</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkButton" id="button3">
+              <widget class="GtkButton" id="CloseButton">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
+                <property name="tooltip" translatable="yes">Close search tab; press ignore to prevent this tab from reopening</property>
                 <property name="response_id">0</property>
                 <signal name="clicked" handler="OnClose"/>
                 <child>
@@ -3224,7 +3239,7 @@
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
-                <property name="position">5</property>
+                <property name="position">7</property>
               </packing>
             </child>
           </widget>

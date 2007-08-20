@@ -816,7 +816,7 @@ class MainWindow:
 
 		self.hbox2 = gtk.HBox(False, 0)
 		self.hbox2.show()
-		self.hbox2.set_spacing(8)
+		self.hbox2.set_spacing(5)
 
 		self.WishList = gtk.Button()
 		self.WishList.show()
@@ -855,6 +855,18 @@ class MainWindow:
 		self.SearchEntryCombo.set_text_column(0)
 		self.hbox2.pack_start(self.SearchEntryCombo)
 
+		self.ClearSearchHistory = gtk.Button()
+		self.tooltips.set_tip(self.ClearSearchHistory, _("Clear all searches attempts"))
+		self.ClearSearchHistory.show()
+		self.ClearSearchHistory.connect("clicked", self.OnClearSearchHistory)
+
+		self.image38 = gtk.Image()
+		self.image38.set_from_stock(gtk.STOCK_CLEAR, 4)
+		self.image38.show()
+		self.ClearSearchHistory.add(self.image38)
+
+		self.hbox2.pack_start(self.ClearSearchHistory, False, False, 0)
+
 		self.SearchButton = gtk.Button()
 		self.SearchButton.show()
 		self.SearchButton.connect("clicked", self.OnSearch)
@@ -880,32 +892,6 @@ class MainWindow:
 		self.SearchButton.add(self.alignment3)
 
 		self.hbox2.pack_start(self.SearchButton, False, False, 0)
-
-		self.ClearSearchHistory = gtk.Button()
-		self.ClearSearchHistory.show()
-		self.ClearSearchHistory.connect("clicked", self.OnClearSearchHistory)
-
-		self.alignment38 = gtk.Alignment(0.5, 0.5, 0, 0)
-		self.alignment38.show()
-
-		self.hbox59 = gtk.HBox(False, 0)
-		self.hbox59.show()
-		self.hbox59.set_spacing(2)
-
-		self.image38 = gtk.Image()
-		self.image38.set_from_stock(gtk.STOCK_CLEAR, 4)
-		self.image38.show()
-		self.hbox59.pack_start(self.image38, False, False, 0)
-
-		self.label67 = gtk.Label(_("Clear"))
-		self.label67.show()
-		self.hbox59.pack_start(self.label67, False, False, 0)
-
-		self.alignment38.add(self.hbox59)
-
-		self.ClearSearchHistory.add(self.alignment38)
-
-		self.hbox2.pack_start(self.ClearSearchHistory, False, False, 0)
 
 		self.UserSearchCombo = self.get_custom_widget("UserSearchCombo", "", "", 0, 0)
 		self.UserSearchCombo.show()
@@ -1095,32 +1081,6 @@ class MainWindow:
 
 		self.hbox12.pack_end(self.SimilarUsersButton, False, False, 0)
 
-		self.RecommendationsButton = gtk.Button()
-		self.RecommendationsButton.show()
-		self.RecommendationsButton.connect("clicked", self.OnRecommendationsClicked)
-
-		self.alignment5 = gtk.Alignment(0.5, 0.5, 0, 0)
-		self.alignment5.show()
-
-		self.hbox25 = gtk.HBox(False, 0)
-		self.hbox25.show()
-		self.hbox25.set_spacing(2)
-
-		self.image5 = gtk.Image()
-		self.image5.set_from_stock(gtk.STOCK_REFRESH, 4)
-		self.image5.show()
-		self.hbox25.pack_start(self.image5, False, False, 0)
-
-		self.label34 = gtk.Label(_("Recommendations"))
-		self.label34.show()
-		self.hbox25.pack_start(self.label34, False, False, 0)
-
-		self.alignment5.add(self.hbox25)
-
-		self.RecommendationsButton.add(self.alignment5)
-
-		self.hbox12.pack_end(self.RecommendationsButton, False, False, 0)
-
 		self.GlobalRecommendationsButton = gtk.Button()
 		self.GlobalRecommendationsButton.show()
 		self.GlobalRecommendationsButton.connect("clicked", self.OnGlobalRecommendationsClicked)
@@ -1146,6 +1106,32 @@ class MainWindow:
 		self.GlobalRecommendationsButton.add(self.alignment4)
 
 		self.hbox12.pack_end(self.GlobalRecommendationsButton, False, False, 0)
+
+		self.RecommendationsButton = gtk.Button()
+		self.RecommendationsButton.show()
+		self.RecommendationsButton.connect("clicked", self.OnRecommendationsClicked)
+
+		self.alignment5 = gtk.Alignment(0.5, 0.5, 0, 0)
+		self.alignment5.show()
+
+		self.hbox25 = gtk.HBox(False, 0)
+		self.hbox25.show()
+		self.hbox25.set_spacing(2)
+
+		self.image5 = gtk.Image()
+		self.image5.set_from_stock(gtk.STOCK_REFRESH, 4)
+		self.image5.show()
+		self.hbox25.pack_start(self.image5, False, False, 0)
+
+		self.label34 = gtk.Label(_("Recommendations"))
+		self.label34.show()
+		self.hbox25.pack_start(self.label34, False, False, 0)
+
+		self.alignment5.add(self.hbox25)
+
+		self.RecommendationsButton.add(self.alignment5)
+
+		self.hbox12.pack_end(self.RecommendationsButton, False, False, 0)
 
 		self.interests.pack_start(self.hbox12, False, True, 0)
 
@@ -1520,10 +1506,10 @@ class MainWindow:
 	def OnSimilarUsersClicked(self, widget):
 		pass
 
-	def OnRecommendationsClicked(self, widget):
+	def OnGlobalRecommendationsClicked(self, widget):
 		pass
 
-	def OnGlobalRecommendationsClicked(self, widget):
+	def OnRecommendationsClicked(self, widget):
 		pass
 
 	def OnAddThingILike(self, widget):
@@ -1981,12 +1967,17 @@ class SearchTab:
 		self.QueryLabel.show()
 		self.hbox6.pack_start(self.QueryLabel)
 
-		self.filtersCheck = gtk.CheckButton()
-		self.filtersCheck.set_label(_("Enable filters"))
-		self.filtersCheck.show()
-		self.filtersCheck.connect("toggled", self.OnToggleFilters)
+		self.ExpandButton = gtk.ToggleButton()
+		self.tooltips.set_tip(self.ExpandButton, _("Expand / Collapse all"))
+		self.ExpandButton.set_active(True)
+		self.ExpandButton.connect("toggled", self.OnToggleExpandAll)
 
-		self.hbox6.pack_start(self.filtersCheck, False, True, 0)
+		self.expandImage = gtk.Image()
+		self.expandImage.set_from_stock(gtk.STOCK_REMOVE, 4)
+		self.expandImage.show()
+		self.ExpandButton.add(self.expandImage)
+
+		self.hbox6.pack_start(self.ExpandButton, False, True, 0)
 
 		self.usersGroup = gtk.CheckButton()
 		self.usersGroup.set_label(_("Group by Users"))
@@ -1994,6 +1985,13 @@ class SearchTab:
 		self.usersGroup.connect("toggled", self.OnGroup)
 
 		self.hbox6.pack_start(self.usersGroup, False, True, 0)
+
+		self.filtersCheck = gtk.CheckButton()
+		self.filtersCheck.set_label(_("Enable filters"))
+		self.filtersCheck.show()
+		self.filtersCheck.connect("toggled", self.OnToggleFilters)
+
+		self.hbox6.pack_start(self.filtersCheck, False, True, 0)
 
 		self.RememberCheckButton = gtk.CheckButton()
 		self.tooltips.set_tip(self.RememberCheckButton, _("This search will be opened the next time you start Nicotine+ and will send out new search requests after a server-set intervals (usually around one hour)"))
@@ -2003,10 +2001,22 @@ class SearchTab:
 
 		self.hbox6.pack_start(self.RememberCheckButton, False, False, 0)
 
-		self.button2 = gtk.Button()
-		self.tooltips.set_tip(self.button2, _("Stop new search results from being displayed"))
-		self.button2.show()
-		self.button2.connect("clicked", self.OnIgnore)
+		self.ClearButton = gtk.Button()
+		self.tooltips.set_tip(self.ClearButton, _("Clear all results"))
+		self.ClearButton.show()
+		self.ClearButton.connect("clicked", self.OnClear)
+
+		self.clearImage = gtk.Image()
+		self.clearImage.set_from_stock(gtk.STOCK_CLEAR, 4)
+		self.clearImage.show()
+		self.ClearButton.add(self.clearImage)
+
+		self.hbox6.pack_start(self.ClearButton, False, False, 0)
+
+		self.IgnoreButton = gtk.Button()
+		self.tooltips.set_tip(self.IgnoreButton, _("Stop new search results from being displayed"))
+		self.IgnoreButton.show()
+		self.IgnoreButton.connect("clicked", self.OnIgnore)
 
 		self.alignment36 = gtk.Alignment(0.5, 0.5, 0, 0)
 		self.alignment36.show()
@@ -2026,13 +2036,14 @@ class SearchTab:
 
 		self.alignment36.add(self.hbox56)
 
-		self.button2.add(self.alignment36)
+		self.IgnoreButton.add(self.alignment36)
 
-		self.hbox6.pack_start(self.button2, False, False, 0)
+		self.hbox6.pack_start(self.IgnoreButton, False, False, 0)
 
-		self.button3 = gtk.Button()
-		self.button3.show()
-		self.button3.connect("clicked", self.OnClose)
+		self.CloseButton = gtk.Button()
+		self.tooltips.set_tip(self.CloseButton, _("Close search tab; press ignore to prevent this tab from reopening"))
+		self.CloseButton.show()
+		self.CloseButton.connect("clicked", self.OnClose)
 
 		self.alignment35 = gtk.Alignment(0.5, 0.5, 0, 0)
 		self.alignment35.show()
@@ -2052,9 +2063,9 @@ class SearchTab:
 
 		self.alignment35.add(self.hbox55)
 
-		self.button3.add(self.alignment35)
+		self.CloseButton.add(self.alignment35)
 
-		self.hbox6.pack_start(self.button3, False, False, 0)
+		self.hbox6.pack_start(self.CloseButton, False, False, 0)
 
 		self.vbox7.pack_start(self.hbox6, False, True, 3)
 
@@ -2165,13 +2176,19 @@ class SearchTab:
 		if create:
 			self.SearchTab.add(self.vbox7)
 
-	def OnToggleFilters(self, widget):
+	def OnToggleExpandAll(self, widget):
 		pass
 
 	def OnGroup(self, widget):
 		pass
 
+	def OnToggleFilters(self, widget):
+		pass
+
 	def OnToggleRemember(self, widget):
+		pass
+
+	def OnClear(self, widget):
 		pass
 
 	def OnIgnore(self, widget):
