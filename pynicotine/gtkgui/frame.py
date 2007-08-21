@@ -337,7 +337,7 @@ class NicotineFrame(MainWindow):
 		self.settingswindow.SettingsWindow.connect("settings-closed", self.OnSettingsClosed)
 
 		self.chatrooms = ChatRooms(self)
-		self.searches = Searches(self)
+		self.Searches = Searches(self)
 		self.downloads = Downloads(self)
 		self.uploads = Uploads(self)
 		self.userlist = UserList(self)
@@ -481,7 +481,7 @@ class NicotineFrame(MainWindow):
 
 		
 	def SaveColumns(self):
-		for i in [self.userlist, self.chatrooms.roomsctrl, self.downloads, self.uploads, self.searches]:
+		for i in [self.userlist, self.chatrooms.roomsctrl, self.downloads, self.uploads, self.Searches]:
 			i.saveColumns()
 		self.np.config.writeConfig()
 		
@@ -1191,10 +1191,10 @@ class NicotineFrame(MainWindow):
 		self.SetUserStatus(_("Offline"))
 		self.TrayApp.tray_status["status"] = "disconnect"
 		self.TrayApp.SetImage()
-		self.searches.interval = 0
+		self.Searches.interval = 0
 		self.chatrooms.ConnClose()
 		self.privatechats.ConnClose()
-		self.searches.ConnClose()
+		self.Searches.ConnClose()
 		self.uploads.ConnClose()
 		self.downloads.ConnClose()
 		self.userlist.ConnClose()
@@ -1266,7 +1266,7 @@ class NicotineFrame(MainWindow):
 		gobject.idle_add(self.FetchUserListStatus)
 		
 		AppendLine(self.LogWindow, self.np.decode(msg.banner), self.tag_log)
-		return self.privatechats, self.chatrooms, self.userinfo, self.userbrowse, self.searches, self.downloads, self.uploads, self.userlist
+		return self.privatechats, self.chatrooms, self.userinfo, self.userbrowse, self.Searches, self.downloads, self.uploads, self.userlist
 
 	def GetStatusImage(self, status):
 		if status == 1:
@@ -1299,10 +1299,10 @@ class NicotineFrame(MainWindow):
 		self.MainWindow.destroy()
 	
 	def OnSearch(self, widget):
-		self.searches.OnSearch()
+		self.Searches.OnSearch()
 		
 	def OnClearSearchHistory(self, widget):
-		self.searches.OnClearSearchHistory()
+		self.Searches.OnClearSearchHistory()
 		
 	def ChatRequestIcon(self, status = 0):
 		if status == 1 and not self.got_focus:
@@ -1519,7 +1519,7 @@ class NicotineFrame(MainWindow):
 		if needcolors:
 			self.chatrooms.roomsctrl.UpdateColours()
 			self.privatechats.UpdateColours()
-			self.searches.UpdateColours()
+			self.Searches.UpdateColours()
 			self.downloads.UpdateColours()
 			self.uploads.UpdateColours()
 			self.userinfo.UpdateColours()

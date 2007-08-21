@@ -791,20 +791,20 @@ class ChatRoom(ChatRoomTab):
 				self.frame.privatechats.SendMessage(user, msg)
 		elif cmd in ["/s", "/search"]:
 			if args:
-				self.frame.searches.DoSearch(args, 0)
+				self.frame.Searches.DoSearch(args, 0)
 				self.frame.OnSearch(None)
 		elif cmd in ["/us", "/usearch"]:
 			s = args.split(" ", 1)
 			if len(s) == 2:
-				self.frame.searches.DoSearch(s[1], 3, [s[0]])
+				self.frame.Searches.DoSearch(s[1], 3, [s[0]])
 				self.frame.OnSearch(None)
 		elif cmd in ["/rs", "/rsearch"]:
 			if args:
-				self.frame.searches.DoSearch(args, 1)
+				self.frame.Searches.DoSearch(args, 1)
 				self.frame.OnSearch(None)
 		elif cmd in ["/bs", "/bsearch"]:
 			if args:
-				self.frame.searches.DoSearch(args, 2)
+				self.frame.Searches.DoSearch(args, 2)
 				self.frame.OnSearch(None)
 		elif cmd in ["/j", "/join"]:
 			if args:

@@ -484,19 +484,19 @@ class PrivateChat(PrivateChatTab):
 				self.frame.privatechats.SendMessage(user, msg)
 		elif cmd in ["/s", "/search"]:
 			if realargs:
-				self.frame.searches.DoSearch(realargs, 0)
+				self.frame.Searches.DoSearch(realargs, 0)
 				self.frame.OnSearch(None)
 		elif cmd in ["/us", "/usearch"]:
 			if realargs:
-				self.frame.searches.DoSearch(realargs, 3, [self.user])
+				self.frame.Searches.DoSearch(realargs, 3, [self.user])
 				self.frame.OnSearch(None)
 		elif cmd in ["/rs", "/rsearch"]:
 			if realargs:
-				self.frame.searches.DoSearch(realargs, 1)
+				self.frame.Searches.DoSearch(realargs, 1)
 				self.frame.OnSearch(None)
 		elif cmd in ["/bs", "/bsearch"]:
 			if realargs:
-				self.frame.searches.DoSearch(realargs, 2)
+				self.frame.Searches.DoSearch(realargs, 2)
 				self.frame.OnSearch(None)
 		elif cmd in ["/ad", "/add", "/buddy"]:
 			if args:

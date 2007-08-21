@@ -466,7 +466,7 @@ class NetworkEventProcessor:
 		self.serverconn = msg.conn
 		self.servertimeout = -1
 		self.users = {}
-		self.queue.put(slskmessages.Login(self.config.sections["server"]["login"], self.config.sections["server"]["passw"], 156)) #155, 156, 157, 180
+		self.queue.put(slskmessages.Login(self.config.sections["server"]["login"], self.config.sections["server"]["passw"], 181)) #155, 156, 157, 180
 		if self.waitport is not None:	
 			self.queue.put(slskmessages.SetWaitPort(self.waitport))
 
@@ -1365,7 +1365,7 @@ class NetworkEventProcessor:
 			if not self.GetDistribConn():
 				user = self.distribcache.keys()[0]
 				addr = self.distribcache[user]
-				self.queue.put(slskmessages.SearchParent( addr[0]))
+				#self.queue.put(slskmessages.SearchParent( addr[0]))
 				self.ProcessRequestToPeer(user, slskmessages.DistribConn(), None, addr)
 		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 1)
 
@@ -1383,7 +1383,7 @@ class NetworkEventProcessor:
 		if len(self.distribcache) > 0:
 			user = self.distribcache.keys()[0]
 			addr = self.distribcache[user]
-			self.queue.put(slskmessages.SearchParent( addr[0]))
+			#self.queue.put(slskmessages.SearchParent( addr[0]))
 			#print user, addr
 			self.ProcessRequestToPeer(user, slskmessages.DistribConn(), None, addr)
 		else:

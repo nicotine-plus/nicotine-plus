@@ -105,7 +105,7 @@ class WishList( gtk.Dialog):
 		wish = InputDialog(self.vbox.get_toplevel(), _("Add Wish..."), _("Wish:") )
 		if wish and wish not in self.wishes:
 			self.wishes[wish] = self.store.append([wish])
-			self.nicotine.searches.NewWish(wish)
+			self.nicotine.Searches.NewWish(wish)
 	
 	def _RemoveWish(self, model, path, iter, l):
 		l.append(iter)
@@ -116,10 +116,10 @@ class WishList( gtk.Dialog):
 			del self.wishes[wish]
 		if wish in self.nicotine.np.config.sections["server"]["autosearch"]:
 			self.nicotine.np.config.sections["server"]["autosearch"].remove(wish)
-			for number, search in self.nicotine.searches.searches.items():
+			for number, search in self.nicotine.Searches.searches.items():
 				if search[1] == wish and search[4] == 1:
 					search[4] = 0
-					self.nicotine.searches.searches[number] = search
+					self.nicotine.Searches.searches[number] = search
 					if search[2] is not None:
 				
 						search[2].RememberCheckButton.set_active(False)
@@ -141,9 +141,9 @@ class WishList( gtk.Dialog):
 	def OnClearWishes(self, widget):
 		self.wishes = {}
 		self.store.clear()
-		for number, search in self.nicotine.searches.searches.items():
+		for number, search in self.nicotine.Searches.searches.items():
 			search[4] = 0
-			self.nicotine.searches.searches[number] = search
+			self.nicotine.Searches.searches[number] = search
 			if search[2] is not None:
 				search[2].RememberCheckButton.set_active(False)
 
@@ -419,13 +419,13 @@ class Searches:
 
 	
 class Search(SearchTab):
-	def __init__(self, searches, text, id, mode, remember):
+	def __init__(self, Searches, text, id, mode, remember):
 		SearchTab.__init__(self, False)
 
 #		self.ResultsList.set_double_buffered(False)
 
-		self.searches = searches
-		self.frame = searches.frame
+		self.Searches = Searches
+		self.frame = Searches.frame
 		self.text = text
 		self.id = id
 		self.mode = mode
@@ -1110,8 +1110,8 @@ class Search(SearchTab):
 		#self.RememberCheckButton.set_active(0)
 		#self.RememberCheckButton.set_sensitive(0)
 		#self.OnToggleRemember(self.RememberCheckButton)
-		if self.id in self.searches.searches.keys():
-			del self.searches.searches[self.id]
+		if self.id in self.Searches.searches.keys():
+			del self.Searches.searches[self.id]
 		
 		widget.set_sensitive(False)
 		
@@ -1121,19 +1121,19 @@ class Search(SearchTab):
 		self.resultsmodel.clear()
 
 	def OnClose(self, widget):
-		self.searches.RemoveTab(self)
+		self.Searches.RemoveTab(self)
 
 	def OnCloseIgnore(self, widget):
 
 		self.OnIgnore(self.button2)
-		self.searches.RemoveTab(self)
+		self.Searches.RemoveTab(self)
 
 	def OnToggleRemember(self, widget):
 		self.remember = widget.get_active()
 		if not self.remember:
-			self.searches.RemoveAutoSearch(self.id)
+			self.Searches.RemoveAutoSearch(self.id)
 		else:
-			self.searches.AutoSearch(self.id)
+			self.Searches.AutoSearch(self.id)
 
 	def PushHistory(self, widget, title):
 		text = widget.child.get_text()
