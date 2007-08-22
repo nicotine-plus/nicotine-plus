@@ -210,6 +210,8 @@ class NicotineFrame(MainWindow):
 		self.MainWindow.connect("network_event", self.OnNetworkEvent)
 		self.MainWindow.connect("network_event_lo", self.OnNetworkEvent)
 
+		if sys.platform.startswith("win"):
+			self.now_playing1.set_sensitive(False)
 		
 		utils.DECIMALSEP = self.np.config.sections["ui"]["decimalsep"]
 		utils.CATCH_URLS = self.np.config.sections["urls"]["urlcatching"]
