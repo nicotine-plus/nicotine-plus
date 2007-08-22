@@ -812,6 +812,8 @@ class NicotineFrame(MainWindow):
 	def OnNowPlayingConfigure(self, widget):
 		
 		self.now.NowPlaying.show()
+		self.now.NowPlaying.deiconify()
+		
 		
 		
 	def OnGetPrivateChat(self, widget):

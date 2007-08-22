@@ -14,25 +14,30 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import gtk, gobject
-import os, commands, sys, re
+import os, commands, sys, re, thread, threading
 from pynicotine.utils import _
 
 class NowPlaying:
-	def __init__(self, frame, create = True, accel_group = None):
+	def __init__(self, frame):
 		self.frame = frame
-		if accel_group is None:
-			self.accel_group = gtk.AccelGroup()
-		else:
-			self.accel_group = accel_group
-		if create:
-			self.NowPlaying = gtk.Window(gtk.WINDOW_TOPLEVEL)
-			self.NowPlaying.set_title(_("NowPlaying"))
-			self.NowPlaying.set_position(gtk.WIN_POS_NONE)
-			self.NowPlaying.add_accel_group(self.accel_group)
-			#self.NowPlaying.show()
-			self.NowPlaying.connect("destroy", self.quit)
-			self.NowPlaying.connect("destroy-event", self.quit)
-			self.NowPlaying.connect("delete-event", self.quit)
+		self.accel_group = gtk.AccelGroup()
+		self.NowPlaying = gtk.Window(gtk.WINDOW_TOPLEVEL)
+		self.NowPlaying.set_title(_("Nicotine+: Configure Now Playing"))
+		self.NowPlaying.set_icon(self.frame.images["n"])
+		self.NowPlaying.set_position(gtk.WIN_POS_NONE)
+		self.NowPlaying.set_modal(True)
+		self.NowPlaying.set_transient_for(self.frame.MainWindow)
+		self.NowPlaying.add_accel_group(self.accel_group)
+	
+		self.NowPlaying.connect("destroy", self.quit)
+		self.NowPlaying.connect("destroy-event", self.quit)
+		self.NowPlaying.connect("delete-event", self.quit)
+		try:
+			import dbus
+			import dbus.glib
+			self.bus = dbus.SessionBus()
+		except Exception, e:
+			self.bus = None
 		self.NowPlaying.set_resizable(False)
 		self.vbox1 = gtk.VBox(False, 5)
 		self.vbox1.show()
@@ -268,8 +273,8 @@ class NowPlaying:
 		self.player_replacers = []
 		self.OnNPPlayer(None)
 	
-		if create:
-			self.NowPlaying.add(self.vbox1)
+		self.NowPlaying.add(self.vbox1)
+		
 		# Set the active radio button
 		config = self.frame.np.config.sections
 		self.SetPlayer(config["players"]["npplayer"])
@@ -434,9 +439,63 @@ class NowPlaying:
 		return True
 		
 	def OnNPTest(self, widget):
-		import thread
-		thread.start_new_thread(self.DisplayNowPlaying, (None, 1))
 
+		self.DisplayNowPlaying(None, 1)
+		
+	def DisplayNowPlaying(self, widget, test=0, callback=None):
+		
+		if self.NP_rhythmbox.get_active() or self.NP_bmpx.get_active():
+			# dbus (no threads, please)
+			self.GetNP(None, test, callback)
+		else:
+			# thread (command execution)
+			thread.start_new_thread(self.GetNP, (None, test, callback))
+			
+	def GetNP(self, widget, test=None, callback=None):
+		self.title_clear()
+		if self.NP_infopipe.get_active():
+			result = self.xmms()
+		elif self.NP_amarok.get_active():
+			result = self.amarok()
+		elif self.NP_audacious.get_active():
+			result = self.audacious()
+		elif self.NP_mpd.get_active():
+			result = self.mpd()
+		#elif self.NP_mp3blaster.get_active():
+		#	result = self.mp3blaster()
+		elif self.NP_rhythmbox.get_active():
+			result = self.rhythmbox()
+		elif self.NP_bmpx.get_active():
+			result = self.bmpx()
+		elif self.NP_exaile.get_active():
+			result = self.exaile()
+		elif self.NP_other.get_active():
+			result = self.other()
+		if not result:
+			return None
+
+		title = self.NPFormat.child.get_text()
+		title = title.replace("$t", self.title["title"])
+		title = title.replace("$a", self.title["artist"])
+		title = title.replace("$b", self.title["album"])
+		title = title.replace("$c", self.title["comment"])
+		title = title.replace("$n", self.title["nowplaying"])
+		title = title.replace("$k", self.title["track"])
+		title = title.replace("$l", self.title["length"])
+		title = title.replace("$y", self.title["year"])
+		title = title.replace("$r", self.title["bitrate"])
+		title = title.replace("$s", self.title["status"])
+		title = title.replace("$f", self.title["filename"])
+		
+		if test:
+			self.label7.set_text(title)
+			return None
+		if title:
+			if callback:
+				callback(title)
+			return title
+		return None
+		
 	def OnNPSave(self, widget):
 		if self.NP_infopipe.get_active():
 			player = "infopipe"
@@ -463,49 +522,7 @@ class NowPlaying:
 		self.frame.np.config.writeConfig()
 		self.quit(None)
 		
-	def DisplayNowPlaying(self, widget, test=None):
-		self.title_clear()
-		if self.NP_infopipe.get_active():
-			result = self.xmms()
-		elif self.NP_amarok.get_active():
-			result = self.amarok()
-		elif self.NP_audacious.get_active():
-			result = self.audacious()
-		elif self.NP_mpd.get_active():
-			result = self.mpd()
-		#elif self.NP_mp3blaster.get_active():
-		#	result = self.mp3blaster()
-		elif self.NP_rhythmbox.get_active():
-			result = self.rhythmbox()
-		elif self.NP_bmpx.get_active():
-			result = self.bmpx()
-		elif self.NP_exaile.get_active():
-			result = self.exaile()
-		elif self.NP_other.get_active():
-			result = self.other()
-		if not result:
-			return None
 
-		#print self.title
-		title = self.NPFormat.child.get_text()
-		title = title.replace("$t", self.title["title"])
-		title = title.replace("$a", self.title["artist"])
-		title = title.replace("$b", self.title["album"])
-		title = title.replace("$c", self.title["comment"])
-		title = title.replace("$n", self.title["nowplaying"])
-		title = title.replace("$k", self.title["track"])
-		title = title.replace("$l", self.title["length"])
-		title = title.replace("$y", self.title["year"])
-		title = title.replace("$r", self.title["bitrate"])
-		title = title.replace("$s", self.title["status"])
-		title = title.replace("$f", self.title["filename"])
-		
-		if test:
-			self.label7.set_text(title)
-			return None
-		if title:
-			#print title
-			return title
 		
 	
 	def get_custom_widget(self, id, string1, string2, int1, int2):
@@ -513,17 +530,15 @@ class NowPlaying:
 		return w
 	
 	def bmpx(self):
+		if self.bus is None:
+			self.frame.logMessage(_("ERROR: DBus not available:")+" "+"BMPx"+ " "+ _("cannot be contacted"))
+			return
 		try:
-			import dbus
-			import dbus.glib
-			bus = dbus.SessionBus()
-		except Exception, e:
-			print "NowPlaying Error while loading dbus", e	
-		try:
-			bmp_object = bus.get_object('org.beepmediaplayer.bmp', '/Core')
+			bmp_object = self.bus.get_object('org.beepmediaplayer.bmp', '/Core')
 			bmp_iface = dbus.Interface(bmp_object, 'org.beepmediaplayer.bmp')
-		except Exception, e:
-			print "NowPlaying Error while accessing bmpx dbus interface", e
+		except Exception, error:
+			self.frame.logMessage(_("ERROR while accessing the %(program)s DBus interface: %(error)s") % {"program": "BMPx", "error": error})
+			return
 		try:
 			if bmp_iface.GetCurrentSource() == -1:
 				return None
@@ -538,8 +553,8 @@ class NowPlaying:
 			self.title["album"] = metadata["album"]
 			self.title["filename"] = metadata["location"]
 			return 1 
-		except Exception, e:
-			print "NowPlaying Error during RPC", e
+		except Exception, error:
+			self.frame.logMessage(_("ERROR while reading data from the %(program)s DBus interface: %(error)s") % {"program": "BMPx", "error": error})
 			return None
 		
 	
@@ -672,6 +687,7 @@ class NowPlaying:
 	def audacious(self):
 		slist = self.NPFormat.child.get_text()
 		output = ""
+		self.audacious_running = True
 		if "$n" in slist:
 			artist = self.audacious_command('current-song-tuple-data', 'performer')
 			title = self.audacious_command('current-song-tuple-data', 'track_name')
@@ -708,34 +724,32 @@ class NowPlaying:
 		if "$s" in slist:
 			output = self.audacious_command('playback-status')
 			if output: self.title["status"] = output
-		if output.startswith("audtool"):
+		if not self.audacious_running:
+			self.frame.logMessage(_("ERROR: audtool didn't detect a running Audacious session."))
 			return 0
 		return 1
 		
 	def audacious_command(self, command, subcommand = ''):
 		output = commands.getoutput("audtool %s %s" % (command, subcommand)).split('\n')[0]
-		if output == 'call failed':
+		if output.startswith('audtool'):
 			output = None
+			self.audacious_running = False
 		return output
 
 	def mp3blaster(self):
 		return None
 	
 	def rhythmbox(self):
-		try:
-			import dbus
-			import dbus.glib
-			bus = dbus.SessionBus()
-		except Exception, e:
-			print "NowPlaying Error loading dbus", e
+		if self.bus is None:
+			self.frame.logMessage(_("ERROR: DBus not available:")+" "+"Rhythmbox"+ " "+ _("cannot be contacted"))
 			return None
 		try:
-			rbshellobj = bus.get_object('org.gnome.Rhythmbox', '/org/gnome/Rhythmbox/Shell')
+			rbshellobj = self.bus.get_object('org.gnome.Rhythmbox', '/org/gnome/Rhythmbox/Shell')
 			self.rbshell = dbus.Interface(rbshellobj, 'org.gnome.Rhythmbox.Shell')
 			rbplayerobj = bus.get_object('org.gnome.Rhythmbox', '/org/gnome/Rhythmbox/Player')
 			rbplayer = dbus.Interface(rbplayerobj, 'org.gnome.Rhythmbox.Player')
-		except Exception, e:
-			print "NowPlaying Error opening Rhythmbox interface on dbus", e
+		except Exception, error:
+			self.frame.logMessage(_("ERROR while accessing the %(program)s DBus interface: %(error)s") % {"program": "Rhythmbox", "error": error })
 			return None
 
 		try:
@@ -781,20 +795,26 @@ class NowPlaying:
 			else:
 				self.title["nowplaying"] = output 
 			return 1
-		except Exception, e:
-			print "NowPlaying Error running command %s" %  othercommand, e
+		except Exception, error:
+			self.frame.logMessage(_("ERROR: Executing '%(command)s' failed: %(error)s") % {"command": othercommand, "error": error})
 			return None
 	
 	def xmms(self):
 		if not os.path.exists("/tmp/xmms-info"):
+			self.frame.logMessage(_("ERROR: /tmp/xmms-info does not exist. Is the Infopipe plugin installed and is XMMS running?"))
 			return None
 		try:
-			fsock = open("/tmp/xmms-info")
-			do = fsock.readlines()
+			fsock = file("/tmp/xmms-info")
+			do = fsock.read().split("\n")
+			fsock.close()
+		
+			if len(do) == 0:
+				self.frame.logMessage(_("ERROR: /tmp/xmms-info is empty. Is the Infopipe plugin installed and is XMMS running?"))
 			infolist = []
 			for i in do:
-				if i != "":
-					infolist.append( i.strip("\n") )
+				if i == "":
+					continue
+				infolist.append( i )
 			#protocol  = infolist[0][29:]
 			#version = infolist[1][25:]
 			status = infolist[2][8:]
@@ -810,7 +830,7 @@ class NowPlaying:
 			title = infolist[12][7:]
 			filename = infolist[13][7:]
 			self.title = { "title": "",  "artist": "", "comment": "", "year": "", "album": "", "track":"", "nowplaying": title, "length": time, "bitrate": bitrate, "channels": channels, "position": position, "filename": filename, "status": status}
-			fsock.close()
+
 			return 1
 		except:
 			return None

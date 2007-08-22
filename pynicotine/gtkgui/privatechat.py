@@ -529,8 +529,7 @@ class PrivateChat(PrivateChatTab):
 		elif cmd in ["/c", "/close"]:
 			self.OnClose(None)
 		elif cmd == "/now":
-			import thread
-			thread.start_new_thread(self.NowPlayingThread, ())
+			self.NowPlayingThread()
 		elif cmd == "/detach":
 			self.frame.PrivatechatNotebook.detach_tab(self.Main, _("Nicotine+ Private Chat: %s (%s)") % (self.user, [_("Offline"), _("Away"), _("Online")][self.status]))
 			gobject.idle_add(self.frame.ScrollBottom, self.ChatScroll.get_parent())
@@ -552,10 +551,8 @@ class PrivateChat(PrivateChatTab):
 		widget.set_text("")
 
 	def NowPlayingThread(self):
-		np = self.frame.now.DisplayNowPlaying(None)
-		if np:
-			self.SendMessage(np)
-			
+		np = self.frame.now.DisplayNowPlaying(None, 0, self.SendMessage)
+
 	def makecolour(self, buffer, colour):
 		color = self.frame.np.config.sections["ui"][colour]
 		if color == "":

@@ -845,8 +845,7 @@ class ChatRoom(ChatRoomTab):
 			self.frame.OnExit(None)
 			return # Avoid gsignal warning
 		elif cmd == "/now":
-			import thread
-			thread.start_new_thread(self.NowPlayingThread, ())
+			self.NowPlayingThread()
 		elif cmd == "/detach":
 			self.frame.ChatNotebook.detach_tab(self.Main, _("Nicotine+ Chatroom: %s") % self.room)
 			gobject.idle_add(self.frame.ScrollBottom, self.ChatScroll.get_parent())
@@ -866,11 +865,12 @@ class ChatRoom(ChatRoomTab):
 			self.frame.np.queue.put(slskmessages.SayChatroom(self.room, self.frame.AutoReplace(text)))
 		self.ChatEntry.set_text("")
 		
+	def Say(self, text):
+		self.frame.np.queue.put(slskmessages.SayChatroom(self.room, text))
+		
 	def NowPlayingThread(self):
-		np = self.frame.now.DisplayNowPlaying(None)
-		if np:
-			self.frame.np.queue.put(slskmessages.SayChatroom(self.room, np))
-				
+		self.frame.now.DisplayNowPlaying(None, test=0, callback=self.Say)
+
 	def UserJoinedRoom(self, username, userdata):
 		if username in self.users:
 			return

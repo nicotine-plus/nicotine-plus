@@ -1026,6 +1026,7 @@ class Transfers:
 			elif i.size is None:
 				## Failed?
 				self.checkUploadQueue()
+				sleep(0.01)
 			else:
 				msg.file.close()
 				i.status = "Finished"
