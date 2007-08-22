@@ -955,66 +955,71 @@ def expand_alias(aliases, cmd):
 
 	if not is_alias(aliases, cmd):
 		return None
-	cmd = cmd[1:].split(" ")
-	alias = aliases[cmd[0]]
-	ret = ""
-	i = 0
-	while i < len(alias):
-		if alias[i:i+2] == "$(":
-			arg=getpart(alias[i+1:])
-			if not arg:
-				ret = ret + "$"
-				i = i + 1
-				continue
-			i = i + len(arg) + 3
-			args = arg.split("=",1)
-			if len(args) > 1:
-				default = args[1]
-			else:
-				default = ""
-			args = args[0].split(":")
-			if len(args) == 1:
-				first = last = int(args[0])
-			else:
-				if args[0]:
-					first = int(args[0])
+	try:
+		cmd = cmd[1:].split(" ")
+		alias = aliases[cmd[0]]
+		ret = ""
+		i = 0
+		while i < len(alias):
+			if alias[i:i+2] == "$(":
+				arg=getpart(alias[i+1:])
+				if not arg:
+					ret = ret + "$"
+					i = i + 1
+					continue
+				i = i + len(arg) + 3
+				args = arg.split("=",1)
+				if len(args) > 1:
+					default = args[1]
 				else:
-					first = 1
-				if args[1]:
-					last = int(args[1])
+					default = ""
+				args = args[0].split(":")
+				if len(args) == 1:
+					first = last = int(args[0])
 				else:
-					last = len(cmd)
-			v = string.join(cmd[first:last+1])
-			if not v: v = default
-			ret = ret + v
-		elif alias[i:i+2] == "|(":
-			arg = getpart(alias[i+1:])
-			if not arg:
-				ret = ret + "|"
+					if args[0]:
+						first = int(args[0])
+					else:
+						first = 1
+					if args[1]:
+						last = int(args[1])
+					else:
+						last = len(cmd)
+				v = string.join(cmd[first:last+1])
+				if not v: v = default
+				ret = ret + v
+			elif alias[i:i+2] == "|(":
+				arg = getpart(alias[i+1:])
+				if not arg:
+					ret = ret + "|"
+					i = i + 1
+					continue
+				i = i + len(arg) + 3
+				for j in range(len(cmd)-1, -1, -1):
+					arg = arg.replace("$%i" % j, cmd[j])
+				arg = arg.replace("$@", string.join(cmd[1:], " "))
+				stdin, stdout = os.popen2(arg)
+				v = stdout.read().split("\n")
+				r = ""
+				for l in v:
+					l = l.strip()
+					if l:
+						r = r + l + "\n"
+				ret = ret + r.strip()
+				stdin.close()
+				stdout.close()
+				try:
+					os.wait()
+				except OSError, error:
+					pass
+			else:
+				ret = ret + alias[i]
 				i = i + 1
-				continue
-			i = i + len(arg) + 3
-			for j in range(len(cmd)-1, -1, -1):
-				arg = arg.replace("$%i" % j, cmd[j])
-			arg = arg.replace("$@", string.join(cmd[1:], " "))
-			stdin, stdout = os.popen2(arg)
-			v = stdout.read().split("\n")
-			r = ""
-			for l in v:
-				l = l.strip()
-				if l:
-					r = r + l + "\n"
-			ret = ret + r.strip()
-			stdin.close()
-			stdout.close()
-			try:
-				os.wait()
-			except OSError, error:
-				pass
-		else:
-			ret = ret + alias[i]
-			i = i + 1
-	return ret
+		return ret
+	except Exception, error:
+		print error
+		pass
+	return ""
 
 def EncodingsMenu(np, section = None, entry = None):
 	if section and entry and entry in np.config.sections["server"][section]:
