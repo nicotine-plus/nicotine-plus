@@ -708,14 +708,14 @@ class ChatRoom(ChatRoomTab):
 			
 	def getUserTag(self, user):
 		if user not in self.users:
-			self.tag_users[user] = self.makecolour(self.ChatScroll.get_buffer(), "useroffline", user)
-			return
-		
-		color = self.getUserStatusColor(self.usersmodel.get_value(self.users[user], 4))
-		if user in self.tag_users:
-			self.changecolour(self.tag_users[user], color)
+			color = "useroffline"
 		else:
+			color = self.getUserStatusColor(self.usersmodel.get_value(self.users[user], 4))
+		if user not in self.tag_users:
 			self.tag_users[user] = self.makecolour(self.ChatScroll.get_buffer(), color, user)
+			return
+		else:
+			self.changecolour(self.tag_users[user], color)
 
 	
 	CMDS = ["/alias ", "/unalias ", "/whois ", "/browse ", "/ip ", "/pm ", "/msg ", "/search ", "/usearch ", "/rsearch ",
@@ -886,12 +886,9 @@ class ChatRoom(ChatRoomTab):
 		hspeed = Humanize(userdata.avgspeed)
 		hfiles = Humanize(userdata.files)
 		self.users[username] = self.usersmodel.append([img, username, hspeed, hfiles, userdata.status, userdata.avgspeed, userdata.files])
-		color = self.getUserStatusColor(userdata.status)
-		if username in self.tag_users.keys():
-			
-			self.changecolour(self.tag_users[username], color)
-		else:
-			self.tag_users[username] = self.makecolour(self.ChatScroll.get_buffer(), color, username=username)
+
+		self.getUserTag(username)
+
 		self.CountUsers()
 		
 	def UserLeftRoom(self, username):
@@ -914,9 +911,7 @@ class ChatRoom(ChatRoomTab):
 		AppendLine(self.RoomLog, _("%s left the room") % username, self.tag_log)
 		self.usersmodel.remove(self.users[username])
 		del self.users[username]
-		if username in self.tag_users.keys():
-			color = self.getUserStatusColor(-1)
-			self.changecolour(self.tag_users[username], color)
+		self.getUserTag(username)
 		self.CountUsers()
 		
 	def CountUsers(self):
@@ -1002,13 +997,9 @@ class ChatRoom(ChatRoomTab):
 		self.tag_me = self.makecolour(buffer, "chatme")
 		self.tag_hilite = self.makecolour(buffer, "chathilite")
 		self.tag_users = {}
-		for user in self.users:
-			status = self.usersmodel.get_value(self.users[user], 4)
-			color = self.getUserStatusColor(status)
-			if user in self.tag_users.keys():
-				self.changecolour(self.tag_users[username], color)
-			else:
-				self.tag_users[user] = self.makecolour(buffer, color, user)
+		for user in self.tag_users:
+			self.getUserTag(user)
+	
 		logbuffer = self.RoomLog.get_buffer()
 		self.tag_log = self.makecolour(logbuffer, "chatremote")
 		
@@ -1074,14 +1065,9 @@ class ChatRoom(ChatRoomTab):
 		self.changecolour(self.tag_hilite, "chathilite")
 		self.changecolour(self.tag_log, "chatremote")
 
-		for user in self.users.keys():
-			color = self.getUserStatusColor(self.usersmodel.get_value(self.users[user], 4))
-			
-			if user in self.tag_users.keys():
-				self.changecolour(self.tag_users[user], color)
-			else:
-				self.tag_users[user] = self.makecolour(buffer, color, user)
-			
+		for user in self.tag_users:
+			self.getUserTag(user)
+
 		self.frame.SetTextBG(self.ChatScroll)
 		self.frame.SetTextBG(self.RoomLog)
 		self.frame.SetTextBG(self.UserList)
@@ -1142,11 +1128,8 @@ class ChatRoom(ChatRoomTab):
 		# Build completion list
 		self.GetCompletionList()
 		# Update all username tags in chat log
-		for user, tag in self.tag_users.items():
-			if user in self.users:
-				color = self.changecolour(tag, self.getUserStatusColor(self.usersmodel.get_value(self.users[user], 4)) )
-			else:
-				self.changecolour(tag, "useroffline")
+		for user in self.tag_users:
+			self.getUserTag(user)
 
 	def OnAutojoin(self, widget):
 		autojoin = self.frame.np.config.sections["server"]["autojoin"]
