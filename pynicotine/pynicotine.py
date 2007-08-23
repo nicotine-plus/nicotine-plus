@@ -489,11 +489,17 @@ class NetworkEventProcessor:
 				self.setServerTimer()
 			else:
 				self.frame.manualdisconnect = 0
+			if self.searchResultsTimer is not None:
+				self.searchResultsTimer.cancel()
+			if self.respondDistributedTimer is not None:
+				self.respondDistributedTimer.cancel()
 			self.serverconn = None
 			self.watchedusers = []
 			if self.transfers is not None:
 				self.transfers.AbortTransfers()
 				self.transfers.SaveDownloads()
+				if self.transfers.uploadQueueTimer is not None:
+					self.transfers.uploadQueueTimer.cancel()
 			self.privatechat = self.chatrooms = self.userinfo = self.userbrowse = self.search = self.transfers = self.userlist = None
 			self.frame.ConnClose(conn, addr)
 		else:
