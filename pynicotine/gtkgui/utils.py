@@ -1002,7 +1002,7 @@ def expand_alias(aliases, cmd):
 				if version[0] == 3 or (version[0] >= 2 and version[1] >= 4):
 					import subprocess
 	
-					p = subprocess.Popen(arg.split(" "), stdin=subprocess.PIPE, stdout=subprocess.PIPE, close_fds=(not sys.platform.startswith("win")))
+					p = subprocess.Popen(arg, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, close_fds=(not sys.platform.startswith("win")))
 					exit = p.wait()
 
 					(stdout, stdin) = (p.stdout, p.stdin)
@@ -1013,7 +1013,8 @@ def expand_alias(aliases, cmd):
 						if l:
 							r = r + l + "\n"
 					ret = ret + r.strip()
-			
+					stdin.close()
+					stdout.close()
 				
 				else:
 					stdin, stdout = os.popen2(arg)
