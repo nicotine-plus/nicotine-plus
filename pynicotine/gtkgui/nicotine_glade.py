@@ -453,6 +453,22 @@ class MainWindow:
 		self.hbox3.show()
 		self.hbox3.set_spacing(5)
 
+		self.DownloadUsers = gtk.Label(_("Users: 0"))
+		self.DownloadUsers.set_alignment(0, 0.50)
+		self.DownloadUsers.set_padding(5, 0)
+		self.DownloadUsers.show()
+		self.DownloadUsers.set_width_chars(10)
+		self.hbox3.pack_start(self.DownloadUsers, False, True, 0)
+
+		self.DownloadFiles = gtk.Label(_("Files: 0"))
+		self.DownloadFiles.show()
+		self.DownloadFiles.set_width_chars(15)
+		self.hbox3.pack_start(self.DownloadFiles, False, True, 0)
+
+		self.Spacer5 = gtk.Label()
+		self.Spacer5.show()
+		self.hbox3.pack_start(self.Spacer5)
+
 		self.ToggleTreeDownloads = gtk.CheckButton()
 		self.ToggleTreeDownloads.set_label(_("Group by Users"))
 		self.ToggleTreeDownloads.show()
@@ -641,6 +657,18 @@ class MainWindow:
 		self.hbox13 = gtk.HBox(False, 0)
 		self.hbox13.show()
 		self.hbox13.set_spacing(5)
+
+		self.UploadUsers = gtk.Label(_("Users: 0"))
+		self.UploadUsers.set_alignment(0, 0.50)
+		self.UploadUsers.set_padding(5, 0)
+		self.UploadUsers.show()
+		self.UploadUsers.set_width_chars(10)
+		self.hbox13.pack_start(self.UploadUsers, False, True, 0)
+
+		self.UploadFiles = gtk.Label(_("Files: 0"))
+		self.UploadFiles.show()
+		self.UploadFiles.set_width_chars(15)
+		self.hbox13.pack_start(self.UploadFiles, False, True, 0)
 
 		self.Spacer1 = gtk.Label()
 		self.Spacer1.show()
@@ -1081,32 +1109,6 @@ class MainWindow:
 
 		self.hbox12.pack_end(self.SimilarUsersButton, False, False, 0)
 
-		self.GlobalRecommendationsButton = gtk.Button()
-		self.GlobalRecommendationsButton.show()
-		self.GlobalRecommendationsButton.connect("clicked", self.OnGlobalRecommendationsClicked)
-
-		self.alignment4 = gtk.Alignment(0.5, 0.5, 0, 0)
-		self.alignment4.show()
-
-		self.hbox24 = gtk.HBox(False, 0)
-		self.hbox24.show()
-		self.hbox24.set_spacing(2)
-
-		self.image4 = gtk.Image()
-		self.image4.set_from_stock(gtk.STOCK_REFRESH, 4)
-		self.image4.show()
-		self.hbox24.pack_start(self.image4, False, False, 0)
-
-		self.label33 = gtk.Label(_("Global recommendations"))
-		self.label33.show()
-		self.hbox24.pack_start(self.label33, False, False, 0)
-
-		self.alignment4.add(self.hbox24)
-
-		self.GlobalRecommendationsButton.add(self.alignment4)
-
-		self.hbox12.pack_end(self.GlobalRecommendationsButton, False, False, 0)
-
 		self.RecommendationsButton = gtk.Button()
 		self.RecommendationsButton.show()
 		self.RecommendationsButton.connect("clicked", self.OnRecommendationsClicked)
@@ -1132,6 +1134,32 @@ class MainWindow:
 		self.RecommendationsButton.add(self.alignment5)
 
 		self.hbox12.pack_end(self.RecommendationsButton, False, False, 0)
+
+		self.GlobalRecommendationsButton = gtk.Button()
+		self.GlobalRecommendationsButton.show()
+		self.GlobalRecommendationsButton.connect("clicked", self.OnGlobalRecommendationsClicked)
+
+		self.alignment4 = gtk.Alignment(0.5, 0.5, 0, 0)
+		self.alignment4.show()
+
+		self.hbox24 = gtk.HBox(False, 0)
+		self.hbox24.show()
+		self.hbox24.set_spacing(2)
+
+		self.image4 = gtk.Image()
+		self.image4.set_from_stock(gtk.STOCK_REFRESH, 4)
+		self.image4.show()
+		self.hbox24.pack_start(self.image4, False, False, 0)
+
+		self.label33 = gtk.Label(_("Global recommendations"))
+		self.label33.show()
+		self.hbox24.pack_start(self.label33, False, False, 0)
+
+		self.alignment4.add(self.hbox24)
+
+		self.GlobalRecommendationsButton.add(self.alignment4)
+
+		self.hbox12.pack_end(self.GlobalRecommendationsButton, False, False, 0)
 
 		self.interests.pack_start(self.hbox12, False, True, 0)
 
@@ -1506,10 +1534,10 @@ class MainWindow:
 	def OnSimilarUsersClicked(self, widget):
 		pass
 
-	def OnGlobalRecommendationsClicked(self, widget):
+	def OnRecommendationsClicked(self, widget):
 		pass
 
-	def OnRecommendationsClicked(self, widget):
+	def OnGlobalRecommendationsClicked(self, widget):
 		pass
 
 	def OnAddThingILike(self, widget):

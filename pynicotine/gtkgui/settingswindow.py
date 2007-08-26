@@ -882,10 +882,7 @@ class IconsFrame(settings_glade.IconsFrame):
 		
 	def SetSettings(self, config):
 		ui = config["ui"]
-		if ui["tabclosers"] is not None:
-			self.TabClosers.set_active(ui["tabclosers"])
-		else:
-			self.p.Hilight(self.TabClosers)
+
 		if ui["trayicon"] is not None:
 			self.TrayiconCheck.set_active(ui["trayicon"])
 		else:
@@ -928,49 +925,30 @@ class IconsFrame(settings_glade.IconsFrame):
 		return {
 			"ui": {
 				"icontheme": self.IconTheme.get_text(),
-				"tabclosers": self.TabClosers.get_active(),
 				"trayicon": self.TrayiconCheck.get_active(),
 				"exitdialog": mainwindow_close,
 			},
 		}
 
-class BloatFrame(settings_glade.BloatFrame):
+
+class ColoursFrame(settings_glade.ColoursFrame):
 	def __init__(self, parent):
 		self.p = parent
 		self.frame = parent.frame
+		settings_glade.ColoursFrame.__init__(self, False)
 		self.needcolors = 0
-		settings_glade.BloatFrame.__init__(self, False)
-		self.options =  {
-			"ui": {	"chatfont":self.SelectChatFont, "chatlocal":self.Local,
+		self.options = { "ui": {"chatlocal":self.Local,
 "chatremote": self.Remote, "chatme": self.Me, "chathilite": self.Highlight,
 "textbg":self.BackgroundColor, "inputcolor": self.InputColor, "search": self.Immediate,
-"searchq": self.Queue, "searchoffline": self.OfflineSearchEntry,
-"showaway": self.DisplayAwayColours,   "decimalsep": self.DecimalSep,
-"spellcheck": self.SpellCheck, "useraway": self.AwayColor,
+"searchq": self.Queue, "searchoffline": self.OfflineSearchEntry,  "useraway": self.AwayColor,
 "useronline": self.OnlineColor, "useroffline": self.OfflineColor,
 "usernamehotspots": self.UsernameHotspots, "usernamestyle": self.UsernameStyle,
-"enabletrans": self.EnableTransparent, "transtint": self.TintColor,
-"transalpha": self.TintAlpha, "tabmain": self.MainPosition,
-"tabrooms": self.ChatRoomsPosition, "tabprivate": self.PrivateChatPosition,
-"tabinfo": self.UserInfoPosition, "tabbrowse": self.UserBrowsePosition,
-"tabsearch": self.SearchPosition, "labelmain": self.MainAngleSpin,
-"labelrooms": self.ChatRoomsPosition, "labelprivate": self.PrivateChatAngleSpin,
-"labelinfo": self.UserInfoAngleSpin, "labelbrowse": self.UserBrowseAngleSpin,
-"labelsearch": self.SearchAngleSpin, "urlcolor": self.URL },
-			"transfers": {"enabletransferbuttons": self.ShowTransferButtons},
-			"language": {"setlanguage": self.TranslationCheck, "language": self.TranslationComboEntry},
-			}
-
-		for item in ["<None>", ",", ".", "<space>"]:
-			self.DecimalSep.append_text(item)
-
+"showaway": self.DisplayAwayColours, "urlcolor": self.URL,
+"enabletrans": self.EnableTransparent, "transtint": self.TintColor, "transalpha": self.TintAlpha, }
+		}
 		for item in ["bold", "italic", "underline", "normal"]:
 			self.UsernameStyle.append_text(item)
 		self.UsernameStyle.child.set_editable(False)
-
-		for item in ["", "de", "dk", "fi", "fr",  "hu", "it", "lt", "nl", "pl", "pt_BR", "sk", "sv" ]:
-			self.TranslationCombo.append_text(item)
-
 		self.PickRemote.connect("clicked", self.PickColour, self.Remote)
 		self.PickLocal.connect("clicked", self.PickColour, self.Local)
 		self.PickMe.connect("clicked", self.PickColour, self.Me)
@@ -1001,19 +979,13 @@ class BloatFrame(settings_glade.BloatFrame):
 		self.DefaultHighlight.connect("clicked", self.DefaultColour, self.Highlight)
 		self.DefaultImmediate.connect("clicked", self.DefaultColour, self.Immediate)
 		self.DefaultQueue.connect("clicked", self.DefaultColour, self.Queue)
-		self.DefaultFont.connect("clicked", self.OnDefaultFont)
 
 		self.DefaultColours.connect("clicked", self.OnDefaultColours)
 		self.ClearAllColours.connect("clicked", self.OnClearAllColours)
 		self.DisplayAwayColours.connect("toggled", self.ToggledAwayColours)
 		self.DefaultOfflineSearch.connect("clicked", self.DefaultColour, self.OfflineSearchEntry)
 		
-		# Tint
-		self.PickTint.connect("clicked", self.PickColour, self.TintColor)
-		self.DefaultTint.connect("clicked", self.DefaultColour, self.TintColor)
-		
 		# To set needcolors flag
-		self.SelectChatFont.connect("font-set", self.FontsColorsChanged)
 		self.Local.connect("changed", self.FontsColorsChanged)
 		self.Remote.connect("changed", self.FontsColorsChanged)
 		self.Me.connect("changed", self.FontsColorsChanged)
@@ -1027,8 +999,61 @@ class BloatFrame(settings_glade.BloatFrame):
 		self.OfflineColor.connect("changed", self.FontsColorsChanged)
 		self.UsernameStyle.child.connect("changed", self.FontsColorsChanged)
 		self.InputColor.connect("changed", self.FontsColorsChanged)
-
 		
+		# Tint
+		self.PickTint.connect("clicked", self.PickColour, self.TintColor)
+		self.DefaultTint.connect("clicked", self.DefaultColour, self.TintColor)
+
+	def SetSettings(self, config):
+		self.settingup = 1
+		
+		self.p.SetWidgetsData(config, self.options)
+		
+		self.ToggledAwayColours(self.DisplayAwayColours)
+		self.OnEnableTransparentToggled(self.EnableTransparent)
+		self.ColourScale("")
+		self.settingup = 0
+		self.needcolors = 0
+		
+	def OnExpand(self, widget):
+		
+		if self.ListExpander.get_property("expanded"):
+			self.vboxColours.set_child_packing(self.ListExpander, False, False, 0, 0)
+		else:
+			self.vboxColours.set_child_packing(self.ListExpander, False, True, 0, 0)
+		if self.ChatExpander.get_property("expanded"):
+			self.vboxColours.set_child_packing(self.ChatExpander, False, False, 0, 0)
+		else:
+			self.vboxColours.set_child_packing(self.ChatExpander, False, True, 0, 0)
+		if self.TransparentExpander.get_property("expanded"):
+			self.vboxColours.set_child_packing(self.TransparentExpander, False, False, 0, 0)
+		else:
+			self.vboxColours.set_child_packing(self.TransparentExpander, False, True, 0, 0)
+	def GetSettings(self):
+		return {
+			"ui": {
+				"chatlocal": self.Local.get_text(),
+				"chatremote": self.Remote.get_text(),
+				"chatme": self.Me.get_text(),
+				"chathilite": self.Highlight.get_text(),
+				"urlcolor": self.URL.get_text(),
+				"textbg": self.BackgroundColor.get_text(),
+				"inputcolor": self.InputColor.get_text(),
+				"search": self.Immediate.get_text(),
+				"searchq": self.Queue.get_text(),
+				"searchoffline": self.OfflineSearchEntry.get_text(),
+				"showaway": int(self.DisplayAwayColours.get_active()),
+				"useraway": self.AwayColor.get_text(),
+				"useronline": self.OnlineColor.get_text(),
+				"useroffline": self.OfflineColor.get_text(),
+				"usernamehotspots": self.UsernameHotspots.get_active(),
+				"usernamestyle": self.UsernameStyle.child.get_text(),
+				"enabletrans": self.EnableTransparent.get_active(),
+				"transtint": self.TintColor.get_text(),
+				"transalpha": self.TintAlpha.get_value(),
+				}
+			}
+			
 	def ToggledAwayColours(self, widget):
 		sensitive = widget.get_active()
 		self.AwayColor.set_sensitive(sensitive)
@@ -1069,97 +1094,7 @@ class BloatFrame(settings_glade.BloatFrame):
 	
 	def FontsColorsChanged(self, widget):
 		self.needcolors = 1
-		
-
-	def SetSettings(self, config):
-		ui = config["ui"]
-		transfers = config["transfers"]
-		language = config["language"]
-
-		self.settingup = 1
-		
-		self.p.SetWidgetsData(config, self.options)
-
-		self.OnEnableTransparentToggled(self.EnableTransparent)
-		self.OnTranslationCheckToggled(self.TranslationCheck)
-
-		self.ToggledAwayColours(self.DisplayAwayColours)
-		self.ColourScale("")
-		self.settingup = 0
-		self.needcolors = 0
-		
-
-	def GetSettings(self):
-		
-		try:
-			import gettext
-			message = ""
-			language = self.TranslationComboEntry.get_text()
-			if language != "":
-				langTranslation = gettext.translation('nicotine', languages=[language])
-				langTranslation.install()
-		except IOError, e:
-			message = _("Translation not found for '%s': %s") % (language, e)
-			langTranslation = gettext
-		except IndexError, e:
-			message = _("Translation was corrupted for '%s': %s") % (language, e)
-			langTranslation = gettext
-		if message is not None and message != "":
-			popupWarning(self.p.SettingsWindow, _("Warning: Missing translation"), _("Nicotine+ could not find your selected translation.\n%s") % message, self.frame.images["n"] )
-			raise UserWarning
 	
-		return {
-			"ui": {
-				
-				"chatfont": self.SelectChatFont.get_font_name(),
-				"chatlocal": self.Local.get_text(),
-				"chatremote": self.Remote.get_text(),
-				"chatme": self.Me.get_text(),
-				"chathilite": self.Highlight.get_text(),
-				"urlcolor": self.URL.get_text(),
-				"textbg": self.BackgroundColor.get_text(),
-				"inputcolor": self.InputColor.get_text(),
-				"search": self.Immediate.get_text(),
-				"searchq": self.Queue.get_text(),
-				"searchoffline": self.OfflineSearchEntry.get_text(),
-				"showaway": int(self.DisplayAwayColours.get_active()),
-				"decimalsep": self.DecimalSep.child.get_text(),
-				"spellcheck": self.SpellCheck.get_active(),
-				"useraway": self.AwayColor.get_text(),
-				"useronline": self.OnlineColor.get_text(),
-				"useroffline": self.OfflineColor.get_text(),
-				"usernamehotspots": self.UsernameHotspots.get_active(),
-				"usernamestyle": self.UsernameStyle.child.get_text(),
-				"enabletrans": self.EnableTransparent.get_active(),
-				"transtint": self.TintColor.get_text(),
-				"transalpha": self.TintAlpha.get_value(),
-				"tabmain": self.MainPosition.get_active_text().lower(),
-				"tabrooms": self.ChatRoomsPosition.get_active_text().lower(),
-				"tabprivate": self.PrivateChatPosition.get_active_text().lower(),
-				"tabinfo": self.UserInfoPosition.get_active_text().lower(),
-				"tabbrowse": self.UserBrowsePosition.get_active_text().lower(),
-				"tabsearch": self.SearchPosition.get_active_text().lower(),
-				"labelmain": self.MainAngleSpin.get_value_as_int(),
-				"labelrooms": self.ChatRoomsAngleSpin.get_value_as_int(),
-				"labelprivate": self.PrivateChatAngleSpin.get_value_as_int(),
-				"labelinfo": self.UserInfoAngleSpin.get_value_as_int(),
-				"labelbrowse": self.UserBrowseAngleSpin.get_value_as_int(),
-				"labelsearch": self.SearchAngleSpin.get_value_as_int(),
-				
-			},
-			"transfers": {
-				"enabletransferbuttons": self.ShowTransferButtons.get_active(),
-			},
-			"language": {
-				"setlanguage": self.TranslationCheck.get_active(),
-				"language": self.TranslationComboEntry.get_text(),
-			}
-		}
-		
-	def OnTranslationCheckToggled(self, widget):
-		sensitive = widget.get_active()
-		self.TranslationCombo.set_sensitive(sensitive)
-		
 	def OnEnableTransparentToggled(self, widget):
 		sensitive = widget.get_active()
 		self.PickTint.set_sensitive(sensitive)
@@ -1247,13 +1182,125 @@ class BloatFrame(settings_glade.BloatFrame):
 
 		self.TintColor.set_text(colour)
 		
-	def OnDefaultFont(self, widget):
-		self.SelectChatFont.set_font_name("")
 		
 	def DefaultColour(self, widget, entry):
 		entry.set_text("")
 		
+class NotebookFrame(settings_glade.NotebookFrame):
+	def __init__(self, parent):
+		self.p = parent
+		self.frame = parent.frame
+		settings_glade.NotebookFrame.__init__(self, False)
+		self.options = { "ui": { 
+			"tabmain": self.MainPosition, "tabrooms": self.ChatRoomsPosition, "tabprivate": self.PrivateChatPosition, "tabinfo": self.UserInfoPosition, "tabbrowse": self.UserBrowsePosition, "tabsearch": self.SearchPosition, 
+			"labelmain": self.MainAngleSpin, "labelrooms": self.ChatRoomsPosition, "labelprivate": self.PrivateChatAngleSpin, "labelinfo": self.UserInfoAngleSpin, "labelbrowse": self.UserBrowseAngleSpin, "labelsearch": self.SearchAngleSpin,
+			"tabclosers": self.TabClosers, }
+			
+		}
+		
+	def SetSettings(self, config):
+	
+		self.p.SetWidgetsData(config, self.options)
 
+	def GetSettings(self):
+		return {
+			"ui": {
+				"tabmain": self.MainPosition.get_active_text().lower(),
+				"tabrooms": self.ChatRoomsPosition.get_active_text().lower(),
+				"tabprivate": self.PrivateChatPosition.get_active_text().lower(),
+				"tabinfo": self.UserInfoPosition.get_active_text().lower(),
+				"tabbrowse": self.UserBrowsePosition.get_active_text().lower(),
+				"tabsearch": self.SearchPosition.get_active_text().lower(),
+				"labelmain": self.MainAngleSpin.get_value_as_int(),
+				"labelrooms": self.ChatRoomsAngleSpin.get_value_as_int(),
+				"labelprivate": self.PrivateChatAngleSpin.get_value_as_int(),
+				"labelinfo": self.UserInfoAngleSpin.get_value_as_int(),
+				"labelbrowse": self.UserBrowseAngleSpin.get_value_as_int(),
+				"labelsearch": self.SearchAngleSpin.get_value_as_int(),
+				"tabclosers": self.TabClosers.get_active(),
+			}
+		}
+
+	
+class BloatFrame(settings_glade.BloatFrame):
+	def __init__(self, parent):
+		self.p = parent
+		self.frame = parent.frame
+		
+		settings_glade.BloatFrame.__init__(self, False)
+		self.options =  {
+			"ui": {	"chatfont":self.SelectChatFont,  "decimalsep": self.DecimalSep, "spellcheck": self.SpellCheck,
+			},
+			"transfers": {"enabletransferbuttons": self.ShowTransferButtons},
+			"language": {"setlanguage": self.TranslationCheck, "language": self.TranslationComboEntry},
+			}
+
+		for item in ["<None>", ",", ".", "<space>"]:
+			self.DecimalSep.append_text(item)
+
+		for item in ["", "de", "dk", "fi", "fr",  "hu", "it", "lt", "nl", "pl", "pt_BR", "sk", "sv" ]:
+			self.TranslationCombo.append_text(item)
+		
+		self.DefaultFont.connect("clicked", self.OnDefaultFont)
+		self.SelectChatFont.connect("font-set", self.FontsColorsChanged)
+		self.needcolors = 0
+
+	def SetSettings(self, config):
+		self.needcolors = 0
+		ui = config["ui"]
+		transfers = config["transfers"]
+		language = config["language"]
+
+		
+		self.p.SetWidgetsData(config, self.options)
+
+		self.OnTranslationCheckToggled(self.TranslationCheck)
+
+
+	def GetSettings(self):
+		
+		try:
+			import gettext
+			message = ""
+			language = self.TranslationComboEntry.get_text()
+			if language != "":
+				langTranslation = gettext.translation('nicotine', languages=[language])
+				langTranslation.install()
+		except IOError, e:
+			message = _("Translation not found for '%s': %s") % (language, e)
+			langTranslation = gettext
+		except IndexError, e:
+			message = _("Translation was corrupted for '%s': %s") % (language, e)
+			langTranslation = gettext
+		if message is not None and message != "":
+			popupWarning(self.p.SettingsWindow, _("Warning: Missing translation"), _("Nicotine+ could not find your selected translation.\n%s") % message, self.frame.images["n"] )
+			raise UserWarning
+	
+		return {
+			"ui": {
+				"decimalsep": self.DecimalSep.child.get_text(),
+				"spellcheck": self.SpellCheck.get_active(),
+				"chatfont": self.SelectChatFont.get_font_name(),
+			},
+			"transfers": {
+				"enabletransferbuttons": self.ShowTransferButtons.get_active(),
+			},
+			"language": {
+				"setlanguage": self.TranslationCheck.get_active(),
+				"language": self.TranslationComboEntry.get_text(),
+			}
+		}
+		
+	def OnTranslationCheckToggled(self, widget):
+		sensitive = widget.get_active()
+		self.TranslationCombo.set_sensitive(sensitive)
+		
+	def OnDefaultFont(self, widget):
+		self.SelectChatFont.set_font_name("")
+
+		
+	def FontsColorsChanged(self, widget):
+		self.needcolors = 1
 			
 class LogFrame(settings_glade.LogFrame):
 	def __init__(self, parent):
@@ -1963,7 +2010,10 @@ class SettingsWindow(settings_glade.SettingsWindow):
 		
 					
 		self.tree["Interface"] = row =  model.append(None, [_("Interface"), "Interface"])
+		self.tree["Colours"] = model.append(row, [_("Colours"), "Colours"])
 		self.tree["Icons"] = model.append(row, [_("Icons"), "Icons"])
+		self.tree["Notebook Tabs"] = model.append(row, [_("Notebook Tabs"), "Notebook Tabs"])
+		
 
 		self.tree["Chat"] = row = model.append(None, [_("Chat"), "Chat"])
 		self.tree["Away mode"] = model.append(row, [_("Away mode"), "Away mode"])
@@ -1987,6 +2037,8 @@ class SettingsWindow(settings_glade.SettingsWindow):
 		p["User info"] = UserinfoFrame(self)
 		p["Ban / ignore"] = BanFrame(self)
 		p["Interface"] = BloatFrame(self)
+		p["Colours"] = ColoursFrame(self)
+		p["Notebook Tabs"] = NotebookFrame(self)
 		p["Sounds"] = SoundsFrame(self)
 		p["Icons"] = IconsFrame(self)
 		p["URL Catching"] = UrlCatchFrame(self)
@@ -2206,6 +2258,6 @@ class SettingsWindow(settings_glade.SettingsWindow):
 				sub = page.GetSettings()
 				for (key,data) in sub.items():
 					config[key].update(data)
-			return self.pages["Shares"].GetNeedRescan(), self.pages["Interface"].needcolors, self.pages["Completion"].needcompletion, config
+			return self.pages["Shares"].GetNeedRescan(), (self.pages["Colours"].needcolors or self.pages["Interface"].needcolors) , self.pages["Completion"].needcompletion, config
 		except UserWarning, warning:
 			return None

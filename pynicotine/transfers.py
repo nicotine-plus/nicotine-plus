@@ -135,8 +135,8 @@ class Transfers:
 				self.geoip = _GeoIP.new(_GeoIP.GEOIP_STANDARD)
 			except:
 				self.geoip = None
-				
-
+		
+		
 	def setTransferPanels(self, downloads, uploads):
 		self.downloadspanel = downloads
 		self.uploadspanel = uploads
@@ -276,16 +276,19 @@ class Transfers:
 
 	def startTimeout(self, transfer, delay=30.0):
 		# Request user's details (if not doing so) and start timer
+		
 		if transfer.user not in self.eventprocessor.watchedusers:
 			self.queue.put(slskmessages.AddUser(transfer.user))
 		transfertimeout = TransferTimeout(transfer.req, self.eventprocessor.frame.callback)
 		if transfer.transfertimer is not None:
 			transfer.transfertimer.cancel()
+		if self.eventprocessor.transfers is None:
+			return
 		transfer.transfertimer = threading.Timer(delay, transfertimeout.timeout)
 		try:
 			transfer.transfertimer.start()
 		except thread.error, error:
-			print "Cannot start new timer thread", error
+			print "Cannot start new timer thread:", error
 
 		
 	def gotAddress(self, req):

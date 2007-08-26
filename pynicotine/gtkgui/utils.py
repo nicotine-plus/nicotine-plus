@@ -195,7 +195,11 @@ def UrlEvent(tag, widget, event, iter, url):
 				else:
 					gnome.url_show(url)
 			else:
-				gnome.url_show(url)
+				try:
+					gnomevfs.url_show(url)
+				except:
+					pass
+				
 	tag.last_event_type = event.type
 
 def AppendLine(textview, line, tag = None, timestamp = None, showstamp=True, timestamp_format = "%H:%M:%S", username=None, usertag=None, scroll=True):
@@ -457,7 +461,8 @@ class IconNotebook(gtk.Notebook):
 		label_tab.show()
 		eventbox.add(label_tab)
 		eventbox.show()
-		eventbox.connect('event', self.on_tab_click, page)
+		eventbox.set_events(gtk.gdk.BUTTON_PRESS_MASK)
+		eventbox.connect('button_press_event', self.on_tab_click, page)
 		gtk.Notebook.append_page_menu(self, page, eventbox, label_tab_menu)
 		try:
 			self.set_tab_reorderable(page, True)
@@ -547,7 +552,8 @@ class IconNotebook(gtk.Notebook):
 		label_tab.show()
 		eventbox.add(label_tab)
 		eventbox.show()
-		eventbox.connect('event', self.on_tab_click, page)
+		eventbox.set_events(gtk.gdk.BUTTON_PRESS_MASK)
+		eventbox.connect('button_press_event', self.on_tab_click, page)
 		gtk.Notebook.append_page_menu(self, pagewidget, eventbox, label_tab_menu)
 		try:
 			self.set_tab_reorderable(page, True)

@@ -118,9 +118,9 @@ class PrivateChats(IconNotebook):
 			if event.button == 3:
 				menu = self.TabPopup(username)
 				menu.popup(None, None, None, event.button, event.time)
-			else:
-				self.set_current_page(n)
-			return True
+				return True
+	
+			return False
 		return False
 			
 	def ShowMessage(self, msg, text, status=None):

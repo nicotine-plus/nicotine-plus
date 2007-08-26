@@ -1352,13 +1352,28 @@ class NicotineFrame(MainWindow):
 				if i.speed is not None:
 					bandwidth = bandwidth + i.speed
 			return len(l),bandwidth
-
+		def _num_users(l):
+			users = []
+			
+			for i in l:
+				if i.user not in users:
+					users.append(i.user)
+			return len(users), len(l)
+				
 		if self.np.transfers is not None:
 			usersdown, down = _calc(self.np.transfers.downloads)
 			usersup, up = _calc(self.np.transfers.uploads)
+			usersdown, filesdown = _num_users(self.np.transfers.downloads)
+			usersup, filesup = _num_users(self.np.transfers.uploads)
+			
 		else:
 			down = up = 0.0
-			usersdown = usersup = 0
+			filesup = filesdown = usersdown = usersup = 0
+			
+		self.DownloadUsers.set_text(_("Users: %s") % usersdown)
+		self.UploadUsers.set_text(_("Users: %s") % usersup)
+		self.DownloadFiles.set_text(_("Files: %s") % filesdown)
+		self.UploadFiles.set_text(_("Files: %s") % filesup)
 		
 		self.DownStatus.pop(self.down_context_id)
 		self.UpStatus.pop(self.up_context_id)
