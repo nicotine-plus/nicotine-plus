@@ -1363,15 +1363,15 @@ class NicotineFrame(MainWindow):
 		if self.np.transfers is not None:
 			usersdown, down = _calc(self.np.transfers.downloads)
 			usersup, up = _calc(self.np.transfers.uploads)
-			usersdown, filesdown = _num_users(self.np.transfers.downloads)
-			usersup, filesup = _num_users(self.np.transfers.uploads)
+			total_usersdown, filesdown = _num_users(self.np.transfers.downloads)
+			total_usersup, filesup = _num_users(self.np.transfers.uploads)
 			
 		else:
 			down = up = 0.0
-			filesup = filesdown = usersdown = usersup = 0
+			filesup = filesdown = total_usersdown = total_usersup = usersdown = usersup = 0
 			
-		self.DownloadUsers.set_text(_("Users: %s") % usersdown)
-		self.UploadUsers.set_text(_("Users: %s") % usersup)
+		self.DownloadUsers.set_text(_("Users: %s") % total_usersdown)
+		self.UploadUsers.set_text(_("Users: %s") % total_usersup)
 		self.DownloadFiles.set_text(_("Files: %s") % filesdown)
 		self.UploadFiles.set_text(_("Files: %s") % filesup)
 		
