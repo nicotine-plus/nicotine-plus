@@ -469,17 +469,22 @@ class MainWindow:
 		self.Spacer5.show()
 		self.hbox3.pack_start(self.Spacer5)
 
+		self.ExpandDownloads = gtk.ToggleButton()
+		self.tooltips.set_tip(self.ExpandDownloads, _("Expand / Collapse all"))
+		self.ExpandDownloads.show()
+
+		self.ExpandDownloadsImage = gtk.Image()
+		self.ExpandDownloadsImage.set_from_stock(gtk.STOCK_REMOVE, 4)
+		self.ExpandDownloadsImage.show()
+		self.ExpandDownloads.add(self.ExpandDownloadsImage)
+
+		self.hbox3.pack_start(self.ExpandDownloads, False, True, 0)
+
 		self.ToggleTreeDownloads = gtk.CheckButton()
 		self.ToggleTreeDownloads.set_label(_("Group by Users"))
 		self.ToggleTreeDownloads.show()
 
-		self.hbox3.pack_end(self.ToggleTreeDownloads, False, False, 0)
-
-		self.ExpandDownloads = gtk.ToggleButton()
-		self.ExpandDownloads.set_label(_("Expand / Collapse all"))
-		self.ExpandDownloads.show()
-
-		self.hbox3.pack_end(self.ExpandDownloads, False, True, 0)
+		self.hbox3.pack_start(self.ToggleTreeDownloads, False, False, 0)
 
 		self.vboxdownloads.pack_start(self.hbox3, False, False, 2)
 
@@ -675,8 +680,14 @@ class MainWindow:
 		self.hbox13.pack_start(self.Spacer1)
 
 		self.ExpandUploads = gtk.ToggleButton()
-		self.ExpandUploads.set_label(_("Expand / Collapse all"))
+		self.tooltips.set_tip(self.ExpandUploads, _("Expand / Collapse all"))
+		self.ExpandUploads.set_active(True)
 		self.ExpandUploads.show()
+
+		self.ExpandUploadsImage = gtk.Image()
+		self.ExpandUploadsImage.set_from_stock(gtk.STOCK_REMOVE, 4)
+		self.ExpandUploadsImage.show()
+		self.ExpandUploads.add(self.ExpandUploadsImage)
 
 		self.hbox13.pack_start(self.ExpandUploads, False, True, 0)
 
@@ -2809,13 +2820,24 @@ class UserBrowseTab:
 
 		self.hbox61 = gtk.HBox(False, 0)
 		self.hbox61.show()
+		self.hbox61.set_spacing(5)
 
 		self.ExpandButton = gtk.ToggleButton()
-		self.ExpandButton.set_label(_("Expand / Collapse all"))
+		self.tooltips.set_tip(self.ExpandButton, _("Expand / Collapse all"))
 		self.ExpandButton.show()
 		self.ExpandButton.connect("clicked", self.OnExpand)
 
+		self.ExpandDirectoriesImage = gtk.Image()
+		self.ExpandDirectoriesImage.set_from_stock(gtk.STOCK_ADD, 4)
+		self.ExpandDirectoriesImage.show()
+		self.ExpandButton.add(self.ExpandDirectoriesImage)
+
 		self.hbox61.pack_start(self.ExpandButton, False, False, 0)
+
+		self.NumDirectories = gtk.Label(_("Directories: Unknown"))
+		self.NumDirectories.set_alignment(0, 0.50)
+		self.NumDirectories.show()
+		self.hbox61.pack_start(self.NumDirectories)
 
 		self.vbox17.pack_start(self.hbox61, False, False, 0)
 

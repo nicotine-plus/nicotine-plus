@@ -105,8 +105,10 @@ class Downloads(TransferList):
 
 		if self.frame.ExpandDownloads.get_active():
 			self.frame.DownloadList.expand_all()
+			self.frame.ExpandDownloadsImage.set_from_stock(gtk.STOCK_REMOVE, 4)
 		else:
 			self.frame.DownloadList.collapse_all()
+			self.frame.ExpandDownloadsImage.set_from_stock(gtk.STOCK_ADD, 4)
 		
 	def OnToggleTree(self, widget):
 		self.TreeUsers = self.frame.ToggleTreeDownloads.get_active()

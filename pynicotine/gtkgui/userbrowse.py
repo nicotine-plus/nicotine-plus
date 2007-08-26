@@ -257,9 +257,11 @@ class UserBrowse(UserBrowseTab):
 	def OnExpand(self, widget):
 		if self.ExpandButton.get_active():
 			self.FolderTreeView.expand_all()
+			self.ExpandDirectoriesImage.set_from_stock(gtk.STOCK_REMOVE, 4)
 		else:
 			self.FolderTreeView.collapse_all()
-			
+			self.ExpandDirectoriesImage.set_from_stock(gtk.STOCK_ADD, 4)
+
 			dirs = list(self.directories.keys())
 			dirs.sort()
 			if dirs != []:
@@ -361,7 +363,7 @@ class UserBrowse(UserBrowseTab):
 	def BrowseGetDirs(self):
 		sorted = list(self.shares.keys())
 		sorted.sort()
-		
+		self.NumDirectories.set_text(_("Directories: %s") % len(self.shares))
 		children = []
 		self.directories.clear()
 		directory = ""
