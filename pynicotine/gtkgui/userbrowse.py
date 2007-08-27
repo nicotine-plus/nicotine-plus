@@ -363,12 +363,13 @@ class UserBrowse(UserBrowseTab):
 	def BrowseGetDirs(self):
 		sorted = list(self.shares.keys())
 		sorted.sort()
-		self.NumDirectories.set_text(_("Directories: %s") % len(self.shares))
+		self.NumDirectories.set_text(_("Dirs: %s") % len(self.shares))
 		children = []
 		self.directories.clear()
 		directory = ""
 		self.totalsize = 0
 		if sorted == []:
+			self.AmountShared.set_text(_("Shared: %s") % HumanizeBytes(self.totalsize))
 			return directory
 		for item in sorted:
 			s = item.split("\\")

@@ -231,7 +231,7 @@
                       </widget>
                     </child>
                     <child>
-                      <widget class="GtkImageMenuItem" id="rescan2">
+                      <widget class="GtkImageMenuItem" id="rescan_buddy">
                         <property name="visible">True</property>
                         <property name="label" translatable="yes">_Rescan Buddy shares</property>
                         <property name="use_underline">True</property>
@@ -243,6 +243,46 @@
                             <property name="icon_size">1</property>
                           </widget>
                         </child>
+                      </widget>
+                    </child>
+                    <child>
+                      <widget class="GtkSeparatorMenuItem" id="scheidingslijn11">
+                        <property name="visible">True</property>
+                      </widget>
+                    </child>
+                    <child>
+                      <widget class="GtkImageMenuItem" id="rebuild1">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Rebuild shares</property>
+                        <property name="use_underline">True</property>
+                        <signal name="activate" handler="OnRebuild"/>
+                        <child internal-child="image">
+                          <widget class="GtkImage" id="menu-item-image31">
+                            <property name="visible">True</property>
+                            <property name="stock">gtk-refresh</property>
+                            <property name="icon_size">1</property>
+                          </widget>
+                        </child>
+                      </widget>
+                    </child>
+                    <child>
+                      <widget class="GtkImageMenuItem" id="rebuild_buddy">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Rebuild Buddy shares</property>
+                        <property name="use_underline">True</property>
+                        <signal name="activate" handler="OnBuddyRebuild"/>
+                        <child internal-child="image">
+                          <widget class="GtkImage" id="menu-item-image34">
+                            <property name="visible">True</property>
+                            <property name="stock">gtk-refresh</property>
+                            <property name="icon_size">1</property>
+                          </widget>
+                        </child>
+                      </widget>
+                    </child>
+                    <child>
+                      <widget class="GtkSeparatorMenuItem" id="scheidingslijn13">
+                        <property name="visible">True</property>
                       </widget>
                     </child>
                     <child>

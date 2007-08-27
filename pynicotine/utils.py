@@ -107,13 +107,14 @@ def getServerList(url):
 		return []
 
 # Rescan directories in shared databases
-def rescandirs(shared, sharedmtimes, sharedfiles, sharedfilesstreams, yieldfunction, progress=None, name=""):
+def rescandirs(shared, sharedmtimes, sharedfiles, sharedfilesstreams, yieldfunction, progress=None, name="", rebuild=False):
 	# Check for modified or new files
 	# returns dict in format:  { Directory : mtime, ... }
 	
 	gobject.idle_add(progress.set_text, _("Checking for changes"))
 	gobject.idle_add(progress.show)
 	gobject.idle_add(progress.set_fraction, 0)
+	
 	if win32:
 		newmtimes = getDirsMtimesUnicode(shared, yieldfunction)
 	else:
@@ -122,9 +123,9 @@ def rescandirs(shared, sharedmtimes, sharedfiles, sharedfilesstreams, yieldfunct
 	# Get list of files
 	# returns dict in format { Directory : { File : metadata, ... }, ... }
 	if win32:
-		newsharedfiles = getFilesListUnicode(newmtimes, sharedmtimes, sharedfiles,yieldfunction, progress)
+		newsharedfiles = getFilesListUnicode(newmtimes, sharedmtimes, sharedfiles,yieldfunction, progress, rebuild)
 	else:
-		newsharedfiles = getFilesList(newmtimes, sharedmtimes, sharedfiles,yieldfunction, progress)
+		newsharedfiles = getFilesList(newmtimes, sharedmtimes, sharedfiles,yieldfunction, progress, rebuild)
 	# Pack shares data
 	# returns dict in format { Directory : hex string of files+metadata, ... }
 	gobject.idle_add(progress.set_text, _("Building DataBase"))
@@ -256,7 +257,7 @@ def getDirsMtimes(dirs, yieldcall = None):
 	return list
 				
 # Check for new files
-def getFilesList(mtimes, oldmtimes, oldlist, yieldcall = None, progress=None):
+def getFilesList(mtimes, oldmtimes, oldlist, yieldcall = None, progress=None, rebuild=False):
 	""" Get a list of files with their filelength and 
 	(if mp3) bitrate and track length in seconds """
 	list = {}
@@ -272,7 +273,7 @@ def getFilesList(mtimes, oldmtimes, oldlist, yieldcall = None, progress=None):
 
 		if hiddenCheck(directory):
 			continue
-		if directory in oldmtimes:
+		if not rebuild and directory in oldmtimes:
 			if mtimes[directory] == oldmtimes[directory]:
 				list[directory] = oldlist[directory]
 				continue
@@ -314,7 +315,7 @@ def getFilesList(mtimes, oldmtimes, oldlist, yieldcall = None, progress=None):
 	return list
 
 # Check for new files
-def getFilesListUnicode(mtimes, oldmtimes, oldlist, yieldcall = None, progress=None):
+def getFilesListUnicode(mtimes, oldmtimes, oldlist, yieldcall = None, progress=None, rebuild=False):
 	""" Get a list of files with their filelength and 
 	(if mp3) bitrate and track length in seconds """
 	list = {}
@@ -334,12 +335,12 @@ def getFilesListUnicode(mtimes, oldmtimes, oldlist, yieldcall = None, progress=N
 
 		if hiddenCheck(directory):
 			continue
-		if directory in oldmtimes:
+		if not rebuild and directory in oldmtimes:
 			if mtimes[directory] == oldmtimes[directory]:
 				list[directory] = oldlist[directory]
 				continue
 
-		list[str_directory] = []
+		list[directory] = []
 
 		try:
 			contents = os.listdir(u_directory)

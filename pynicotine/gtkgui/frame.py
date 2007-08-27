@@ -1413,12 +1413,13 @@ class NicotineFrame(MainWindow):
 			self.OnBuddyRescan()
 
 		
-	def OnRescan(self, widget = None):
+	def OnRescan(self, widget = None, rebuild = False):
 		if self.rescanning:
 			return
 		self.rescanning = 1
 		
 		self.rescan1.set_sensitive(False)
+		self.rebuild1.set_sensitive(False)
 		self.logMessage(_("Rescanning started"))
 		
 		shared = self.np.config.sections["transfers"]["shared"][:]
@@ -1429,15 +1430,18 @@ class NicotineFrame(MainWindow):
 			if i not in cleanedshares:
 				cleanedshares.append(i)
 		msg = slskmessages.RescanShares(cleanedshares, lambda: None)
-		thread.start_new_thread(self.np.RescanShares, (msg,))
+		thread.start_new_thread(self.np.RescanShares, (msg, rebuild))
 		
+	def OnRebuild(self, widget = None):
+		self.OnRescan(widget, rebuild=True)
 		
-	def OnBuddyRescan(self, widget = None):
+	def OnBuddyRescan(self, widget = None, rebuild = False):
 		if self.brescanning:
 			return
 		self.brescanning = 1
 		
-		self.rescan2.set_sensitive(False)
+		self.rescan_buddy.set_sensitive(False)
+		self.rebuild_buddy.set_sensitive(False)
 		self.logMessage(_("Rescanning Buddy Shares started"))
 		
 		shared = self.np.config.sections["transfers"]["buddyshared"][:] + self.np.config.sections["transfers"]["shared"][:]
@@ -1448,13 +1452,18 @@ class NicotineFrame(MainWindow):
 			if i not in cleanedshares:
 				cleanedshares.append(i)
 		msg = slskmessages.RescanBuddyShares(cleanedshares, lambda: None)
-		thread.start_new_thread(self.np.RescanBuddyShares, (msg,))
+		thread.start_new_thread(self.np.RescanBuddyShares, (msg, rebuild))
+	
+	def OnBuddyRebuild(self, widget = None):
+		self.OnBuddyRescan(widget, rebuild=True)
+	
 		
 	def _BuddyRescanFinished(self, data):
 		self.np.config.setBuddyShares(*data)
 		self.np.config.writeShares()
 		
-		self.rescan2.set_sensitive(True)
+		self.rescan_buddy.set_sensitive(True)
+		self.rebuild_buddy.set_sensitive(True)
 		if self.np.transfers is not None:
 			self.np.sendNumSharedFoldersFiles()
 		self.brescanning = 0
@@ -1467,6 +1476,7 @@ class NicotineFrame(MainWindow):
 		self.np.config.writeShares()
 		
 		self.rescan1.set_sensitive(True)
+		self.rebuild1.set_sensitive(True)
 		if self.np.transfers is not None:
 			self.np.sendNumSharedFoldersFiles()
 		self.rescanning = 0

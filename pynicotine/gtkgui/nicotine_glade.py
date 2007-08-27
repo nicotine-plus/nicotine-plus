@@ -171,13 +171,39 @@ class MainWindow:
 		self.rescan1.set_image(img)
 		self.edit_menu.append(self.rescan1)
 
-		self.rescan2 = gtk.ImageMenuItem(_("_Rescan Buddy shares"))
-		self.rescan2.show()
-		self.rescan2.connect("activate", self.OnBuddyRescan)
+		self.rescan_buddy = gtk.ImageMenuItem(_("_Rescan Buddy shares"))
+		self.rescan_buddy.show()
+		self.rescan_buddy.connect("activate", self.OnBuddyRescan)
 
 		img = gtk.image_new_from_stock(gtk.STOCK_REFRESH, gtk.ICON_SIZE_MENU)
-		self.rescan2.set_image(img)
-		self.edit_menu.append(self.rescan2)
+		self.rescan_buddy.set_image(img)
+		self.edit_menu.append(self.rescan_buddy)
+
+		self.scheidingslijn11 = gtk.MenuItem()
+		self.scheidingslijn11.show()
+
+		self.edit_menu.append(self.scheidingslijn11)
+
+		self.rebuild1 = gtk.ImageMenuItem(_("Rebuild shares"))
+		self.rebuild1.show()
+		self.rebuild1.connect("activate", self.OnRebuild)
+
+		img = gtk.image_new_from_stock(gtk.STOCK_REFRESH, gtk.ICON_SIZE_MENU)
+		self.rebuild1.set_image(img)
+		self.edit_menu.append(self.rebuild1)
+
+		self.rebuild_buddy = gtk.ImageMenuItem(_("Rebuild Buddy shares"))
+		self.rebuild_buddy.show()
+		self.rebuild_buddy.connect("activate", self.OnBuddyRebuild)
+
+		img = gtk.image_new_from_stock(gtk.STOCK_REFRESH, gtk.ICON_SIZE_MENU)
+		self.rebuild_buddy.set_image(img)
+		self.edit_menu.append(self.rebuild_buddy)
+
+		self.scheidingslijn13 = gtk.MenuItem()
+		self.scheidingslijn13.show()
+
+		self.edit_menu.append(self.scheidingslijn13)
 
 		self.browse_my_shares1 = gtk.ImageMenuItem(_("_Browse my shares"))
 		self.browse_my_shares1.show()
@@ -1471,6 +1497,12 @@ class MainWindow:
 		pass
 
 	def OnBuddyRescan(self, widget):
+		pass
+
+	def OnRebuild(self, widget):
+		pass
+
+	def OnBuddyRebuild(self, widget):
 		pass
 
 	def OnBrowseMyShares(self, widget):

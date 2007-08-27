@@ -371,19 +371,24 @@ class NetworkEventProcessor:
 			sharedfiles += len(conf["transfers"][shared_db][i])
 		self.queue.put(slskmessages.SharedFoldersFiles(sharedfolders, sharedfiles))
 
-	def RescanShares(self, msg):
+	def RescanShares(self, msg, rebuild=False):
 		import utils
 		utils.frame = self.frame
 		utils.log = self.logMessage
-		files, streams, wordindex, fileindex, mtimes = utils.rescandirs(msg.shared, self.config.sections["transfers"]["sharedmtimes"], self.config.sections["transfers"]["sharedfiles"], self.config.sections["transfers"]["sharedfilesstreams"], msg.yieldfunction, self.frame.SharesProgress, name=_("Shares"))
+		files, streams, wordindex, fileindex, mtimes = utils.rescandirs(msg.shared, self.config.sections["transfers"]["sharedmtimes"], self.config.sections["transfers"]["sharedfiles"], self.config.sections["transfers"]["sharedfilesstreams"], msg.yieldfunction, self.frame.SharesProgress, name=_("Shares"), rebuild=rebuild)
 		self.frame.RescanFinished([files, streams, wordindex, fileindex, mtimes], "normal")
 		
+	def RebuildShares(self, msg):
+		self.RescanShares(msg, rebuild=True)
 	
-	def RescanBuddyShares(self, msg):
+	def RebuildBuddyShares(self, msg):
+		self.RescanBuddyShares(msg, rebuild=True)
+	
+	def RescanBuddyShares(self, msg, rebuild=False):
 		import utils
 		utils.frame = self.frame
 		utils.log = self.logMessage
-		files, streams, wordindex, fileindex, mtimes = utils.rescandirs(msg.shared, self.config.sections["transfers"]["bsharedmtimes"], self.config.sections["transfers"]["bsharedfiles"], self.config.sections["transfers"]["bsharedfilesstreams"], msg.yieldfunction, self.frame.BuddySharesProgress, name=_("Buddy Shares"))
+		files, streams, wordindex, fileindex, mtimes = utils.rescandirs(msg.shared, self.config.sections["transfers"]["bsharedmtimes"], self.config.sections["transfers"]["bsharedfiles"], self.config.sections["transfers"]["bsharedfilesstreams"], msg.yieldfunction, self.frame.BuddySharesProgress, name=_("Buddy Shares"), rebuild=rebuild)
 		self.frame.RescanFinished([files, streams, wordindex, fileindex, mtimes], "buddy")
 		
 	def CompressShares(self, sharestype):
