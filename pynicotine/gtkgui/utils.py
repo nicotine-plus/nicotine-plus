@@ -72,7 +72,34 @@ def popupWarning(parent, title, warning, icon=None):
 		dlg.destroy()
 		
 	return 0
+def numfmt(value):
+	v = str(float(value)) + '0000'
+	i = v.index('.')
+	if i < 4:
+		return v[:5]
+	else:
+		return v[:i+2]
 	
+def HumanizeBytes(size):
+	if size is None:
+		return None
+
+	try:
+		s = int(size)
+		if s >= 1000*1024*1024:
+			r = _("%s GB") % numfmt(float(s) / 1073741824.0 )
+		elif s >= 1000*1024:
+			r = _("%s MB") % numfmt(float(s) / 1048576.0)
+		elif s >= 1000:
+			r = _("%s KB") % numfmt(float(s) / 1024.0)
+		else:
+			r = _("%s  B") % numfmt(float(s) )
+		return r
+	except Exception, e:
+		Output(e)
+		return size
+	return str(size)
+		
 def recode(s):
 	try:
 		return s.decode(locale.nl_langinfo(locale.CODESET), "replace").encode("utf-8", "replace")

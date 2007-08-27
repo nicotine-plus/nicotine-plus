@@ -24,7 +24,7 @@ import gc
 from userinfo import UserTabs
 from nicotine_glade import UserBrowseTab
 
-from utils import InitialiseColumns, PopupMenu, EncodingsMenu, SaveEncoding, Humanize, PressHeader
+from utils import InitialiseColumns, PopupMenu, EncodingsMenu, SaveEncoding, Humanize, HumanizeBytes, PressHeader
 from dirchooser import ChooseDir
 from entrydialog import *
 from pynicotine import slskmessages
@@ -53,7 +53,7 @@ class UserBrowse(UserBrowseTab):
 		self.directories = {}
 		# Iters for current FileStore
 		self.files = {}
-			
+		self.totalsize = 0
 		self.encoding, m = EncodingsMenu(self.frame.np, "userencoding", user)
 		
 		self.EncodingStore = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
@@ -367,7 +367,7 @@ class UserBrowse(UserBrowseTab):
 		children = []
 		self.directories.clear()
 		directory = ""
-
+		self.totalsize = 0
 		if sorted == []:
 			return directory
 		for item in sorted:
@@ -396,7 +396,12 @@ class UserBrowse(UserBrowseTab):
 				parent = path
 		sortlist = list(self.directories.keys())
 		sortlist.sort()
-
+		for files in self.shares.values():
+			for filedata in files:
+			
+				self.totalsize += filedata[2]
+		self.AmountShared.set_text(_("Shared: %s") % HumanizeBytes(self.totalsize))
+		print self.totalsize
 		directory = sortlist[0]
 		return directory
 	

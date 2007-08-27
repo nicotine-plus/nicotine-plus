@@ -2834,10 +2834,15 @@ class UserBrowseTab:
 
 		self.hbox61.pack_start(self.ExpandButton, False, False, 0)
 
-		self.NumDirectories = gtk.Label(_("Directories: Unknown"))
+		self.NumDirectories = gtk.Label(_("Dirs: Unknown"))
 		self.NumDirectories.set_alignment(0, 0.50)
 		self.NumDirectories.show()
-		self.hbox61.pack_start(self.NumDirectories)
+		self.hbox61.pack_start(self.NumDirectories, False, True, 0)
+
+		self.AmountShared = gtk.Label(_("Shared: Unknown"))
+		self.AmountShared.set_alignment(0, 0.50)
+		self.AmountShared.show()
+		self.hbox61.pack_start(self.AmountShared)
 
 		self.vbox17.pack_start(self.hbox61, False, False, 0)
 
