@@ -401,7 +401,7 @@ class UserBrowse(UserBrowseTab):
 			
 				self.totalsize += filedata[2]
 		self.AmountShared.set_text(_("Shared: %s") % HumanizeBytes(self.totalsize))
-		print self.totalsize
+	
 		directory = sortlist[0]
 		return directory
 	
