@@ -73,6 +73,7 @@ class UserBrowse(UserBrowseTab):
 		self.FolderTreeView.set_model(self.DirStore)
 
 		self.FolderTreeView.set_headers_visible(True)
+		self.DirStore.set_sort_column_id(0, gtk.SORT_ASCENDING)
 		# GTK 2.10
 		if gtk.pygtk_version[0] >= 2 and gtk.pygtk_version[1] >= 10:
 			self.FolderTreeView.set_enable_tree_lines(True)
