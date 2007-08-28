@@ -339,7 +339,7 @@ class NicotineFrame(MainWindow):
 		self.settingswindow.SettingsWindow.connect("settings-closed", self.OnSettingsClosed)
 
 		self.chatrooms = ChatRooms(self)
-		self.Searches = Searches(self)
+		self.Searches = self.SearchNotebook
 		self.downloads = Downloads(self)
 		self.uploads = Uploads(self)
 		self.userlist = UserList(self)
@@ -901,7 +901,8 @@ class NicotineFrame(MainWindow):
 		if id == "ChatNotebook":
 			return IconNotebook(self.images, ui["labelrooms"], ui["tabclosers"])
 		elif id == "SearchNotebook":
-			return IconNotebook(self.images, ui["labelsearch"], ui["tabclosers"])
+			return Searches(self)
+		#IconNotebook(self.images, ui["labelsearch"], ui["tabclosers"])
 		elif id == "PrivatechatNotebook":
 			return PrivateChats(self)
 		elif id == "UserInfoNotebook":

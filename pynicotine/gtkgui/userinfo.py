@@ -52,6 +52,7 @@ class UserTabs(IconNotebook):
 	def GetUserStatus(self, msg):
 		if msg.user in self.users:
 			tab = self.users[msg.user]
+			tab.status = msg.status
 			status = [_("Offline"), _("Away"), _("Online")][msg.status]
 			self.set_text(tab.Main, "%s (%s)" % (msg.user[:15], status))
 
@@ -107,6 +108,9 @@ class UserTabs(IconNotebook):
 			("$" + _("Add user to list"), popup.OnAddToList),
 			("$" + _("Ban this user"), popup.OnBanUser),
 			("$" + _("Ignore this user"), popup.OnIgnoreUser),
+			("", None),
+			("#" + _("Detach this tab"), self.users[user].Detach, gtk.STOCK_REDO),
+			("#" + _("Close this tab"), self.users[user].OnClose, gtk.STOCK_CLOSE),
 		)
 		popup.set_user(user)
 		
@@ -135,6 +139,7 @@ class UserTabs(IconNotebook):
 		for user in self.users:
 			self.users[user].ConnClose()
 			tab = self.users[user]
+			tab.status = 0
 			status = _("Offline")
 			self.set_text(tab.Main, "%s (%s)" % (user[:15], status))
 
@@ -151,6 +156,7 @@ class UserInfo(UserInfoTab):
 		self.image_pixbuf = None
 		self.zoom_factor = 5
 		self.actual_zoom = 0
+		self.status = 0
 		
 		self.hatesStore = gtk.ListStore(gobject.TYPE_STRING)
 		self.Hates.set_model(self.hatesStore)
@@ -243,6 +249,14 @@ class UserInfo(UserInfoTab):
 	def ConnClose(self):
 		pass
 	
+	def Attach(self, widget=None):
+		self.userinfos.attach_tab(self.Main)
+
+		
+	def Detach(self, widget=None):
+		self.userinfos.detach_tab(self.Main, _("Nicotine+ Userinfo: %s (%s)") % (self.user, [_("Offline"), _("Away"), _("Online")][self.status]))
+
+		
 	def CellDataFunc(self, column, cellrenderer, model, iter):
 		colour = self.frame.np.config.sections["ui"]["search"]
 		if colour == "":

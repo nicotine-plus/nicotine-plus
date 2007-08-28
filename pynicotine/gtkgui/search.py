@@ -28,7 +28,7 @@ import random
 from pynicotine import slskmessages
 
 from nicotine_glade import SearchTab
-from utils import InitialiseColumns, PopupMenu, FastListModel, Humanize, PressHeader
+from utils import InitialiseColumns, IconNotebook, PopupMenu, FastListModel, Humanize, PressHeader
 from dirchooser import ChooseDir
 from entrydialog import *
 from pynicotine.utils import _
@@ -160,7 +160,7 @@ class WishList( gtk.Dialog):
 			self.hide()
 		else:
 			self.show()
-class Searches:
+class Searches(IconNotebook):
 	def __init__(self, frame):
 		self.frame = frame
 		self.interval = 0
@@ -169,8 +169,9 @@ class Searches:
 		self.usersearches = {}
 		self.timer = None
 		self.disconnected = 0
-	
-		frame.SearchNotebook.popup_enable()
+		ui = self.frame.np.config.sections["ui"]
+		IconNotebook.__init__(self, frame.images, ui["labelprivate"], ui["tabclosers"])
+		self.popup_enable()
 		#frame.SearchEntryCombo.disable_activate()
 		
 		items = self.frame.np.config.sections["searches"]["history"]
@@ -183,7 +184,7 @@ class Searches:
 		self.WishListDialog = WishList(frame)
 		self.frame.WishList.connect("clicked", self.WishListDialog.Toggle)
 		self.UpdateColours()
-		
+		self.show()
 	def SetInterval(self, msg):
 		self.interval = msg.seconds
 		if not self.disconnected:
@@ -287,7 +288,7 @@ class Searches:
 			self.usersearches[self.searchid] = users
 		search = self.CreateTab(self.searchid, text, mode)
 		if search[2] is not None:
-			self.frame.SearchNotebook.set_current_page(self.frame.SearchNotebook.page_num(search[2].vbox7))
+			self.set_current_page(self.page_num(search[2].Main))
 		text = self.frame.np.encode(text)
 		if mode == 0:
 			self.DoGlobalSearch(self.searchid, text)
@@ -340,7 +341,7 @@ class Searches:
 			label = "(" + ("", _("Rooms"), _("Buddies"), self.GetUserSearchName(id))[mode] + ") " + text[:15]
 		else:
 			label = text[:20]
-		self.frame.SearchNotebook.append_page(tab.vbox7, label, tab.OnClose)
+		self.append_page(tab.Main, label, tab.OnClose)
 
 		search = [id, text, tab, mode, remember]
 		self.searches[id] = search
@@ -374,8 +375,8 @@ class Searches:
 			#if search[4]:
 				#self.RemoveAutoSearch(search[0])
 		
-		self.frame.SearchNotebook.remove_page(tab.vbox7)
-		tab.vbox7.destroy()
+		self.remove_page(tab.Main)
+		tab.Main.destroy()
 
 	def AutoSearch(self, id):
 		if id not in self.searches:
@@ -396,13 +397,13 @@ class Searches:
 		self.frame.SetTextBG(self.WishListDialog.WishlistView)
 			
 	def saveColumns(self):
-		page_num = self.frame.SearchNotebook.get_current_page()
+		page_num = self.get_current_page()
 		if page_num is not None:
-			page = self.frame.SearchNotebook.get_nth_page(page_num)
+			page = self.get_nth_page(page_num)
 			for name, search in self.searches.items():
 				if search[2] is None:
 					continue
-				if search[2].vbox7 == page:
+				if search[2].Main == page:
 					search[2].saveColumns()
 					break
 	def GetUserStatus(self, msg):
@@ -416,7 +417,35 @@ class Searches:
 			if search[2] is None:
 				continue
 			search[2].NonExistantUser(user)
-
+			
+	def TabPopup(self, id):
+		popup = PopupMenu(self.frame)
+		popup.setup(
+			("#" + _("Detach this tab"), self.searches[id][2].Detach, gtk.STOCK_REDO),
+			("#" + _("Close this tab"), self.searches[id][2].OnClose, gtk.STOCK_CLOSE),
+		)
+		
+		items = popup.get_children()
+	
+		return popup
+		
+	def on_tab_click(self, widget, event, child):
+		if event.type == gtk.gdk.BUTTON_PRESS and event.button == 3:
+			id = None
+			n = self.page_num(child)
+			page = self.get_nth_page(n)
+			for search, data in self.searches.items():
+				if data[2] is None:
+					continue
+				if data[2].Main is page:
+					id = search
+					break
+			if id is not None:
+				menu = self.TabPopup(id)
+				menu.popup(None, None, None, event.button, event.time)
+				return True
+			return False
+		return False
 	
 class Search(SearchTab):
 	def __init__(self, Searches, text, id, mode, remember):
@@ -525,7 +554,14 @@ class Search(SearchTab):
 		self.new_results = []
 		self.ChangeColours()
 
+	def Attach(self, widget=None):
+		self.Searches.attach_tab(self.Main)
 
+		
+	def Detach(self, widget=None):
+		self.Searches.detach_tab(self.Main, _("Nicotine+ %s Search: %s") % ([_("Global"), _("Rooms"), _("Buddies"), self.Searches.GetUserSearchName(self.id)][self.mode], self.text))
+		
+		
 	def AddResult(self, msg, user, country):
 		if user in self.users:
 			return
@@ -580,7 +616,7 @@ class Search(SearchTab):
 		res = self.append(r)
 
 		if res:
-			self.frame.SearchNotebook.request_changed(self.vbox7)
+			self.frame.Searches.request_changed(self.Main)
 			self.frame.RequestIcon(self.frame.SearchTabLabel)
 
 		rows = len(self.all_data)

@@ -1146,32 +1146,6 @@ class MainWindow:
 
 		self.hbox12.pack_end(self.SimilarUsersButton, False, False, 0)
 
-		self.RecommendationsButton = gtk.Button()
-		self.RecommendationsButton.show()
-		self.RecommendationsButton.connect("clicked", self.OnRecommendationsClicked)
-
-		self.alignment5 = gtk.Alignment(0.5, 0.5, 0, 0)
-		self.alignment5.show()
-
-		self.hbox25 = gtk.HBox(False, 0)
-		self.hbox25.show()
-		self.hbox25.set_spacing(2)
-
-		self.image5 = gtk.Image()
-		self.image5.set_from_stock(gtk.STOCK_REFRESH, 4)
-		self.image5.show()
-		self.hbox25.pack_start(self.image5, False, False, 0)
-
-		self.label34 = gtk.Label(_("Recommendations"))
-		self.label34.show()
-		self.hbox25.pack_start(self.label34, False, False, 0)
-
-		self.alignment5.add(self.hbox25)
-
-		self.RecommendationsButton.add(self.alignment5)
-
-		self.hbox12.pack_end(self.RecommendationsButton, False, False, 0)
-
 		self.GlobalRecommendationsButton = gtk.Button()
 		self.GlobalRecommendationsButton.show()
 		self.GlobalRecommendationsButton.connect("clicked", self.OnGlobalRecommendationsClicked)
@@ -1197,6 +1171,32 @@ class MainWindow:
 		self.GlobalRecommendationsButton.add(self.alignment4)
 
 		self.hbox12.pack_end(self.GlobalRecommendationsButton, False, False, 0)
+
+		self.RecommendationsButton = gtk.Button()
+		self.RecommendationsButton.show()
+		self.RecommendationsButton.connect("clicked", self.OnRecommendationsClicked)
+
+		self.alignment5 = gtk.Alignment(0.5, 0.5, 0, 0)
+		self.alignment5.show()
+
+		self.hbox25 = gtk.HBox(False, 0)
+		self.hbox25.show()
+		self.hbox25.set_spacing(2)
+
+		self.image5 = gtk.Image()
+		self.image5.set_from_stock(gtk.STOCK_REFRESH, 4)
+		self.image5.show()
+		self.hbox25.pack_start(self.image5, False, False, 0)
+
+		self.label34 = gtk.Label(_("Recommendations"))
+		self.label34.show()
+		self.hbox25.pack_start(self.label34, False, False, 0)
+
+		self.alignment5.add(self.hbox25)
+
+		self.RecommendationsButton.add(self.alignment5)
+
+		self.hbox12.pack_end(self.RecommendationsButton, False, False, 0)
 
 		self.interests.pack_start(self.hbox12, False, True, 0)
 
@@ -1577,10 +1577,10 @@ class MainWindow:
 	def OnSimilarUsersClicked(self, widget):
 		pass
 
-	def OnRecommendationsClicked(self, widget):
+	def OnGlobalRecommendationsClicked(self, widget):
 		pass
 
-	def OnGlobalRecommendationsClicked(self, widget):
+	def OnRecommendationsClicked(self, widget):
 		pass
 
 	def OnAddThingILike(self, widget):
@@ -2023,9 +2023,9 @@ class SearchTab:
 			self.SearchTab.add_accel_group(self.accel_group)
 			self.SearchTab.show()
 
-		self.vbox7 = gtk.VBox(False, 0)
-		self.vbox7.show()
-		self.vbox7.set_spacing(1)
+		self.Main = gtk.VBox(False, 0)
+		self.Main.show()
+		self.Main.set_spacing(1)
 
 		self.hbox6 = gtk.HBox(False, 0)
 		self.hbox6.show()
@@ -2138,7 +2138,7 @@ class SearchTab:
 
 		self.hbox6.pack_start(self.CloseButton, False, False, 0)
 
-		self.vbox7.pack_start(self.hbox6, False, True, 3)
+		self.Main.pack_start(self.hbox6, False, True, 3)
 
 		self.Filters = gtk.HBox(False, 0)
 		self.Filters.set_spacing(2)
@@ -2230,7 +2230,7 @@ class SearchTab:
 
 		self.Filters.pack_start(self.FilterFreeSlot, False, False, 0)
 
-		self.vbox7.pack_start(self.Filters, False, True, 3)
+		self.Main.pack_start(self.Filters, False, True, 3)
 
 		self.scrolledwindow17 = gtk.ScrolledWindow()
 		self.scrolledwindow17.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
@@ -2241,11 +2241,11 @@ class SearchTab:
 		self.ResultsList.show()
 		self.scrolledwindow17.add(self.ResultsList)
 
-		self.vbox7.pack_start(self.scrolledwindow17)
+		self.Main.pack_start(self.scrolledwindow17)
 
 
 		if create:
-			self.SearchTab.add(self.vbox7)
+			self.SearchTab.add(self.Main)
 
 	def OnToggleExpandAll(self, widget):
 		pass

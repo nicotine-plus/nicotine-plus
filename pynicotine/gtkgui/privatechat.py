@@ -88,6 +88,8 @@ class PrivateChats(IconNotebook):
 			self.users[user].SendMessage(text)
 	
 	def TabPopup(self, user):
+		if user not in self.users:
+			return
 		popup = PopupMenu(self.frame)
 		popup.setup(
 			("#" + _("Show IP a_ddress"), popup.OnShowIPaddress, gtk.STOCK_NETWORK),
@@ -99,6 +101,9 @@ class PrivateChats(IconNotebook):
 			("$" + _("Add user to list"), popup.OnAddToList),
 			("$" + _("Ban this user"), popup.OnBanUser),
 			("$" + _("Ignore this user"), popup.OnIgnoreUser),
+			("", None),
+			("#" + _("Detach this tab"), self.users[user].Detach, gtk.STOCK_REDO),
+			("#" + _("Close this tab"), self.users[user].OnClose, gtk.STOCK_CLOSE),
 		)
 		popup.set_user(user)
 		
@@ -531,11 +536,9 @@ class PrivateChat(PrivateChatTab):
 		elif cmd == "/now":
 			self.NowPlayingThread()
 		elif cmd == "/detach":
-			self.frame.PrivatechatNotebook.detach_tab(self.Main, _("Nicotine+ Private Chat: %s (%s)") % (self.user, [_("Offline"), _("Away"), _("Online")][self.status]))
-			gobject.idle_add(self.frame.ScrollBottom, self.ChatScroll.get_parent())
+			self.Detach()
 		elif cmd == "/attach":
-			self.frame.PrivatechatNotebook.attach_tab(self.Main)
-			gobject.idle_add(self.frame.ScrollBottom, self.ChatScroll.get_parent())
+			self.Attach()
 		elif cmd == "/rescan":
 			self.frame.OnRescan()
 		elif cmd and cmd[:1] == "/" and cmd != "/me" and cmd[:2] != "//":
@@ -549,7 +552,15 @@ class PrivateChat(PrivateChatTab):
 				widget.set_text("")
 			return
 		widget.set_text("")
-
+		
+	def Attach(self, widget=None):
+		self.chats.attach_tab(self.Main)
+		gobject.idle_add(self.frame.ScrollBottom, self.ChatScroll.get_parent())
+		
+	def Detach(self, widget=None):
+		self.chats.detach_tab(self.Main, _("Nicotine+ Private Chat: %s (%s)") % (self.user, [_("Offline"), _("Away"), _("Online")][self.status]))
+		gobject.idle_add(self.frame.ScrollBottom, self.ChatScroll.get_parent())
+		
 	def NowPlayingThread(self):
 		np = self.frame.now.DisplayNowPlaying(None, 0, self.SendMessage)
 
