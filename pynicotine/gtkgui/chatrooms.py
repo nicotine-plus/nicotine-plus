@@ -26,7 +26,7 @@ from utils import InitialiseColumns, AppendLine, PopupMenu, FastListModel, strin
 from pynicotine.utils import _
 from ticker import Ticker
 from entrydialog import OptionDialog
-import sets, os
+import sets, os, re
 
 def GetCompletion(part, list):
 	matches = []
@@ -546,6 +546,9 @@ class ChatRoom(ChatRoomTab):
 					tag = None
 					usertag = None
 				timestamp_format=self.frame.np.config.sections["logging"]["rooms_timestamp"]
+
+				line = re.sub("\s\s+", "  ", line)
+				
 				if user != config["server"]["login"]:
 					self.lines.append(AppendLine(self.ChatScroll, self.frame.CensorChat(self.frame.np.decode(line, self.encoding)), tag, username=user, usertag=usertag, timestamp_format=""))
 				else:
@@ -645,6 +648,7 @@ class ChatRoom(ChatRoomTab):
 		self.Ticker.remove_ticker(msg.user)
 		
 	def SayChatRoom(self, msg, text):
+		text = re.sub("\s\s+", "  ", text)
 		login = self.frame.np.config.sections["server"]["login"]
 		user = msg.user
 		if user == login:
@@ -862,11 +866,12 @@ class ChatRoom(ChatRoomTab):
 		else:
 			if text[:2] == "//":
 				text = text[1:]
-			self.frame.np.queue.put(slskmessages.SayChatroom(self.room, self.frame.AutoReplace(text)))
+			self.Say(self.frame.AutoReplace(text))
 		self.ChatEntry.set_text("")
 		
 	def Say(self, text):
-		self.frame.np.queue.put(slskmessages.SayChatroom(self.room, text))
+		line = re.sub("\s\s+", "  ", text)
+		self.frame.np.queue.put(slskmessages.SayChatroom(self.room, line))
 		
 	def NowPlayingThread(self):
 		self.frame.now.DisplayNowPlaying(None, test=0, callback=self.Say)
