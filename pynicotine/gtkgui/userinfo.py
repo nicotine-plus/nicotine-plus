@@ -149,6 +149,8 @@ class UserInfo(UserInfoTab):
 		
 		self.userinfos = userinfos
 		self.frame = userinfos.frame
+		if not self.frame.np.config.sections["ui"]["tooltips"]:
+			self.tooltips.disable()
 		self.frame.np.queue.put(slskmessages.UserInterests(user))
 		self.user = user
 		self.conn = conn

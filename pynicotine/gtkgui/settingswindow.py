@@ -1229,7 +1229,7 @@ class BloatFrame(settings_glade.BloatFrame):
 		
 		settings_glade.BloatFrame.__init__(self, False)
 		self.options =  {
-			"ui": {	"chatfont":self.SelectChatFont,  "decimalsep": self.DecimalSep, "spellcheck": self.SpellCheck,
+			"ui": {	"chatfont":self.SelectChatFont,  "decimalsep": self.DecimalSep, "spellcheck": self.SpellCheck, "tooltips": self.ShowTooltips,
 			},
 			"transfers": {"enabletransferbuttons": self.ShowTransferButtons},
 			"language": {"setlanguage": self.TranslationCheck, "language": self.TranslationComboEntry},
@@ -1281,6 +1281,7 @@ class BloatFrame(settings_glade.BloatFrame):
 				"decimalsep": self.DecimalSep.child.get_text(),
 				"spellcheck": self.SpellCheck.get_active(),
 				"chatfont": self.SelectChatFont.get_font_name(),
+				"tooltips": self.ShowTooltips.get_active(),
 			},
 			"transfers": {
 				"enabletransferbuttons": self.ShowTransferButtons.get_active(),

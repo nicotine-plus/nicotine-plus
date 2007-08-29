@@ -431,7 +431,8 @@ class NicotineFrame(MainWindow):
 			self.TrayApp.Create()
 		if trerror is not None and trerror != "":
 			self.logMessage(trerror)
-			
+		self.SetAllToolTips()
+		
 	def NewNotification(self, message, title="Nicotine+"):
 		if self.pynotify is None:
 			return
@@ -1584,7 +1585,16 @@ class NicotineFrame(MainWindow):
 		else:
 			if self.np.transfers is None:
 				self.connect1.set_sensitive(1)
-				
+		self.SetAllToolTips()
+		
+	def SetAllToolTips(self):
+		act = self.np.config.sections["ui"]["tooltips"]
+		for tips in [self.tooltips, self.roomlist.tooltips] + [page.tooltips for page in self.settingswindow.pages.values()] + [room.tooltips for room in self.chatrooms.roomsctrl.joinedrooms.values()] + [private.tooltips for private in self.privatechats.users.values()]  + [user.tooltips for user in self.userinfo.users.values()]  + [user.tooltips for user in self.userbrowse.users.values()] + [data[2].tooltips for data in self.Searches.searches.values() if data[2] is not None]:
+			if act:
+				tips.enable()
+			else:
+				tips.disable()
+		
 	def AutoReplace(self, message):
 		if self.np.config.sections["words"]["replacewords"]:
 			autoreplaced = self.np.config.sections["words"]["autoreplaced"]

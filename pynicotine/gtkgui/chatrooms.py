@@ -360,9 +360,11 @@ def TickDialog(parent, default = ""):
 class ChatRoom(ChatRoomTab):
 	def __init__(self, roomsctrl, room, users):
 		ChatRoomTab.__init__(self, False)
-
+		
 		self.roomsctrl = roomsctrl
 		self.frame = roomsctrl.frame
+		if not self.frame.np.config.sections["ui"]["tooltips"]:
+			self.tooltips.disable()
 		self.room = room
 		self.lines = []
 		self.logfile = None

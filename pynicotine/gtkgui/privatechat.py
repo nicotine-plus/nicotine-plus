@@ -202,6 +202,8 @@ class PrivateChat(PrivateChatTab):
 		self.user = user
 		self.chats = chats
 		self.frame = chats.frame
+		if not self.frame.np.config.sections["ui"]["tooltips"]:
+			self.tooltips.disable()
 		self.logfile = None
 		self.autoreplied = 0
 		self.offlinemessage = 0
