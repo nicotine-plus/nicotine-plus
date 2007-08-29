@@ -764,8 +764,9 @@ class Transfers:
 						self.eventprocessor.logMessage(_("Download started: %s") % (u"%s" % f.name))
 
 						self.eventprocessor.logTransfer(_("Download started: user %(user)s, file %(file)s") % {'user':i.user, 'file':u"%s" % f.name})
-		
+				self.SetIconDownloads()
 				self.downloadspanel.update(i)
+				
 				return
 			
 		for i in self.uploads:
@@ -795,12 +796,23 @@ class Transfers:
 						pass
 					i.conn = None
 					self.queue.put(slskmessages.ConnClose(msg.conn))
+				self.SetIconUploads()
 				self.uploadspanel.update(i)
 				break
 		else:
 			self.eventprocessor.logMessage(_("Unknown file request: %s") % str(vars(msg)), 1)
 			self.queue.put(slskmessages.ConnClose(msg.conn))
             
+	def SetIconDownloads(self):
+		if self.eventprocessor.frame.MainNotebook.get_current_page() == 2:
+			return
+		self.eventprocessor.frame.DownloadsTabLabel.set_image(self.eventprocessor.frame.images["online"])
+		
+	def SetIconUploads(self):
+		if self.eventprocessor.frame.MainNotebook.get_current_page() == 3:
+			return
+		self.eventprocessor.frame.UploadsTabLabel.set_image(self.eventprocessor.frame.images["online"])
+		
 	def CleanPath(self, path):
 		if win32:
 			chars = ["?", "\"", ":", ">", "<", "|", "*"]

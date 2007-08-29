@@ -1328,7 +1328,7 @@ class NicotineFrame(MainWindow):
 			
 		
 	def OnSwitchPage(self, notebook, page, page_nr):
-		l = [self.ChatTabLabel, self.PrivateChatTabLabel, None, None, self.SearchTabLabel, self.UserInfoTabLabel, self.UserBrowseTabLabel, None, None][page_nr]
+		l = [self.ChatTabLabel, self.PrivateChatTabLabel, self.DownloadsTabLabel, self.UploadsTabLabel, self.SearchTabLabel, self.UserInfoTabLabel, self.UserBrowseTabLabel, None, None][page_nr]
 		n = [self.ChatNotebook, self.PrivatechatNotebook, None, None, self.SearchNotebook, self.UserInfoNotebook, self.UserBrowseNotebook, None, None][page_nr]
 		self.current_tab = l
 		if l is not None:
