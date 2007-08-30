@@ -299,7 +299,21 @@ class AboutLicenseDialog(GenericAboutDialog):
 	def __init__(self, parent, nicotine):
 		self.nicotine = nicotine
 		GenericAboutDialog.__init__(self, parent, _("License"), self.nicotine)
-		label = gtk.Label(_("""GNU General Public License version 3 notice
+		self.set_resizable(True)
+		self.resize(550, 400)
+		self.ScrolledWindow = gtk.ScrolledWindow()
+		self.ScrolledWindow.set_shadow_type(gtk.SHADOW_IN)
+		self.ScrolledWindow.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+		self.ScrolledWindow.show()
+		
+		self.TextView = gtk.TextView()
+		self.TextView.set_cursor_visible(False)
+		self.TextView.set_editable(False)
+		self.TextView.set_left_margin(3)
+		self.TextView.show()
+		self.ScrolledWindow.add(self.TextView)
+		
+		text = _("""GNU General Public License version 3 notice
 
 Copyright (C) 2007 daelstorm. All rights reserved.
 
@@ -314,10 +328,9 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>."""))
-		label.set_justify(gtk.JUSTIFY_LEFT)
-		label.set_selectable(True)
-		self.vbox.pack_start(label)
+along with this program.  If not, see < http://www.gnu.org/licenses/ >.""")
+		AppendLine(self.TextView, text, None, None, showstamp=False)
+		self.vbox.pack_start(self.ScrolledWindow)
 		self.show_all()
 		
 class AboutFiltersDialog(GenericAboutDialog):
