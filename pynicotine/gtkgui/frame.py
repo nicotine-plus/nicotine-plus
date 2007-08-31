@@ -131,6 +131,16 @@ class NicotineFrame(MainWindow):
 			self.pynotify = None
 			
 		self.np = NetworkEventProcessor(self, self.callback, self.logMessage, self.SetStatusText, config)
+		config = self.np.config.sections
+		
+		utils.DECIMALSEP = config["ui"]["decimalsep"]
+		utils.CATCH_URLS = config["urls"]["urlcatching"]
+		utils.HUMANIZE_URLS = config["urls"]["humanizeurls"]
+		utils.PROTOCOL_HANDLERS = config["urls"]["protocols"].copy()
+		utils.PROTOCOL_HANDLERS["slsk"] = self.OnSoulSeek
+		utils.USERNAMEHOTSPOTS = config["ui"]["usernamehotspots"]
+		utils.NICOTINE = self
+		
 		self.LoadIcons()
 		self.ChangeTranslation = ChangeTranslation
 		trerror = ""
@@ -164,33 +174,7 @@ class NicotineFrame(MainWindow):
 			("", None),
 			("#" + _("Clear log"), self.OnClearLogWindow, gtk.STOCK_CLEAR)
 		)
-		def on_delete_event(widget, event):
-			if self.np.config.sections["ui"]["exitdialog"]:
-				if self.TrayApp.HAVE_TRAYICON and self.np.config.sections["ui"]["exitdialog"] == 2:
-					if self.is_mapped:
-						self.MainWindow.unmap()
-						self.is_mapped = 0
-					return True
-				if self.TrayApp.HAVE_TRAYICON:
-					option = QuitBox(self, title=_('Close Nicotine-Plus?'), message=_('Are you sure you wish to exit Nicotine-Plus at this time?'),tray=True, status="question", third=_("Send to tray") )
-				else:
-					option = QuitBox(self, title=_('Close Nicotine-Plus?'), message=_('Are you sure you wish to exit Nicotine-Plus at this time?'), tray=False, status="question" )
-				
-				return True
-			return False
-
-		self.MainWindow.connect("delete-event",on_delete_event)
-		def window_state_event_cb(window, event):
-			if event.changed_mask & gtk.gdk.WINDOW_STATE_ICONIFIED:
-				if event.new_window_state & gtk.gdk.WINDOW_STATE_ICONIFIED:
-					self.minimized = 1
-				else:
-					self.minimized = 0
-
-
-		self.MainWindow.connect('window-state-event', window_state_event_cb)
-
-
+		
 		# for iterating buddy changes to the combos
 		self.CreateRecommendationsWidgets()
 
@@ -201,6 +185,8 @@ class NicotineFrame(MainWindow):
 		self.down_context_id = self.DownStatus.get_context_id("")
 		self.up_context_id = self.UpStatus.get_context_id("")
 
+		self.MainWindow.connect("delete-event", self.on_delete_event)
+		self.MainWindow.connect('window-state-event', self.window_state_event_cb)
 		self.MainWindow.connect("destroy", self.OnDestroy)
 		self.MainWindow.connect("key_press_event", self.OnKeyPress)
 		self.MainWindow.connect("motion-notify-event", self.OnButtonPress)
@@ -213,27 +199,21 @@ class NicotineFrame(MainWindow):
 		if sys.platform.startswith("win"):
 			self.now_playing1.set_sensitive(False)
 		
-		utils.DECIMALSEP = self.np.config.sections["ui"]["decimalsep"]
-		utils.CATCH_URLS = self.np.config.sections["urls"]["urlcatching"]
-		utils.HUMANIZE_URLS = self.np.config.sections["urls"]["humanizeurls"]
-		utils.PROTOCOL_HANDLERS = self.np.config.sections["urls"]["protocols"].copy()
-		utils.PROTOCOL_HANDLERS["slsk"] = self.OnSoulSeek
-		utils.USERNAMEHOTSPOTS = self.np.config.sections["ui"]["usernamehotspots"]
-		utils.NICOTINE = self
-
-		for label_tab in[self.ChatTabLabel, self.PrivateChatTabLabel, self.SearchTabLabel, self.UserInfoTabLabel, self.UserBrowseTabLabel]:
-			label_tab.set_angle(self.np.config.sections["ui"]["labelmain"])
 
 		
-		for thing in self.np.config.sections["interests"]["likes"]:
+		for thing in config["interests"]["likes"]:
 			self.likes[thing] = self.likeslist.append([thing])
-		for thing in self.np.config.sections["interests"]["dislikes"]:
+		for thing in config["interests"]["dislikes"]:
 			self.dislikes[thing] = self.dislikeslist.append([thing])
 
-		closers = self.np.config.sections["ui"]["tabclosers"]
 		for w in self.ChatNotebook, self.PrivatechatNotebook, self.UserInfoNotebook, self.UserBrowseNotebook, self.SearchNotebook:
-			w.set_tab_closers(closers)
-
+			w.set_tab_closers(config["ui"]["tabclosers"])
+			w.show_images(config["ui"]["tab_icons"])
+			
+		for label_tab in [self.ChatTabLabel, self.PrivateChatTabLabel, self.SearchTabLabel, self.UserInfoTabLabel, self.DownloadsTabLabel, self.UploadsTabLabel, self.UserBrowseTabLabel, self.InterestsTabLabel]:
+			label_tab.show_image(config["ui"]["tab_icons"])
+			label_tab.set_angle(config["ui"]["labelmain"])
+			
 		self.translux = None
 		self.TransparentTint()
 		self.LogScrolledWindow = gtk.ScrolledWindow()
@@ -255,13 +235,13 @@ class NicotineFrame(MainWindow):
 			self.LogScrolledWindow.get_vadjustment().connect("value-changed", lambda *args: self.LogWindow.queue_draw())
 			self.translux.subscribe(self.LogWindow, lambda: self.LogWindow.get_window(gtk.TEXT_WINDOW_TEXT))
 	        
-		if self.np.config.sections["logging"]["logcollapsed"]:
+		if config["logging"]["logcollapsed"]:
 			self.hide_log_window1.set_active(1)
 		else:
 			self.vpaned1.pack2(self.LogScrolledWindow, False, True)
 			self.hide_log_window1.set_active(0)
 
-		if self.np.config.sections["ui"]["roomlistcollapsed"]:
+		if config["ui"]["roomlistcollapsed"]:
 			self.hide_room_list1.set_active(1)
 		else:
 			self.vpaned3.pack2(self.roomlist.vbox2,True, True)
@@ -272,28 +252,34 @@ class NicotineFrame(MainWindow):
 		self.userlistvbox.show()
 		self.userlistvbox.set_spacing(3)
 		self.userlistvbox.set_border_width(0)
-	
-		self.scrolledwindow11 = gtk.ScrolledWindow()
-		self.scrolledwindow11.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
-		self.scrolledwindow11.show()
-		self.scrolledwindow11.set_shadow_type(gtk.SHADOW_NONE)
+		
+		self.BuddiesLabel = gtk.Label()
+		self.BuddiesLabel.set_markup("<b>"+_("Buddies")+"</b>")
+		self.BuddiesLabel.set_padding(0, 0)
+		
+		self.userlistvbox.pack_start(self.BuddiesLabel, False, False)
+		
+		self.userlistSW = gtk.ScrolledWindow()
+		self.userlistSW.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+		self.userlistSW.show()
+		self.userlistSW.set_shadow_type(gtk.SHADOW_NONE)
 
 		self.UserList = gtk.TreeView()
 		self.UserList.show()
 		self.UserList.set_headers_visible(True)
-		self.scrolledwindow11.add(self.UserList)
+		self.userlistSW.add(self.UserList)
 	
-		self.userlistvbox.pack_start(self.scrolledwindow11, True, True, 0)
+		self.userlistvbox.pack_start(self.userlistSW, True, True, 0)
 	
-		self.hbox3 = gtk.HBox(False, 3)
-		self.hbox3.set_border_width(0)
-		self.hbox3.show()
+		self.UserHbox = gtk.HBox(False, 3)
+		self.UserHbox.set_border_width(0)
+		self.UserHbox.show()
 	
 	
 		self.label12 = gtk.Label(_("Add Buddy: "))
 		self.label12.set_padding(0, 0)
 		self.label12.show()
-		self.hbox3.pack_start(self.label12, False, False)
+		self.UserHbox.pack_start(self.label12, False, False)
 	
 		self.AddUserEntry = gtk.Entry()
 		self.AddUserEntry.set_text("")
@@ -301,7 +287,7 @@ class NicotineFrame(MainWindow):
 		self.AddUserEntry.show()
 		self.AddUserEntry.set_visibility(True)
 		self.AddUserEntry.connect("activate", self.OnAddUser)
-		self.hbox3.pack_start(self.AddUserEntry, True, True)
+		self.UserHbox.pack_start(self.AddUserEntry, True, True)
 
 		self.MoveList = gtk.ToggleButton()
 		self.MoveList.show()
@@ -319,20 +305,27 @@ class NicotineFrame(MainWindow):
 		
 		
 
-		self.hbox3.pack_end(self.MoveList, False, True)
+		self.UserHbox.pack_end(self.MoveList, False, True)
 		self.MoveList.connect("toggled", self.OnMoveList)
 		
-		self.userlistvbox.pack_start(self.hbox3, False, True)
+		self.userlistvbox.pack_start(self.UserHbox, False, True)
 
-		if int(self.np.config.sections["ui"]["buddylistinchatrooms"]):
+		if int(config["ui"]["buddylistinchatrooms"]):
 			self.buddylist_in_chatrooms1.set_active(1)
+			self.BuddiesLabel.show()
 		else:
-			self.BuddiesTabLabel = self.get_custom_widget("BuddiesTabLabel", "ImageLabel", _("Buddy list"), 0, 0)
-			self.BuddiesTabLabel.show()
-			self.MainNotebook.append_page(self.userlistvbox, self.BuddiesTabLabel)
 
-			
-		if self.np.config.sections["ticker"]["hide"]:
+			self.BuddiesTabLabel = ImageLabel(_("Buddy list"), self.images["empty"])
+			self.BuddiesTabLabel.set_text_color(0)
+			self.BuddiesTabLabel.show()
+			self.BuddiesLabel.hide()
+			self.MainNotebook.append_page(self.userlistvbox, self.BuddiesTabLabel)
+		
+		
+		for l in [self.ChatTabLabel, self.PrivateChatTabLabel, self.DownloadsTabLabel, self.UploadsTabLabel, self.SearchTabLabel, self.UserInfoTabLabel, self.UserBrowseTabLabel, self.InterestsTabLabel]:
+			l.set_text_color(0)
+		
+		if config["ticker"]["hide"]:
 			self.hide_tickers1.set_active(1)
 		self.UpdateColours(1)
 		self.settingswindow = SettingsWindow(self)
@@ -394,12 +387,12 @@ class NicotineFrame(MainWindow):
 		self.gstreamer = gstreamer()
 
 
-		if self.np.config.sections["ui"]["chat_hidebuttons"]:
+		if config["ui"]["chat_hidebuttons"]:
 			self.HideChatButtons.set_active(1)
 		else:
 			self.HideChatButtons.set_active(0)
 
-		if self.np.config.sections["transfers"]["rescanonstartup"]:
+		if config["transfers"]["rescanonstartup"]:
 			self.OnRescan()
 		img = gtk.Image()
 		img.set_from_pixbuf(self.images["away2"])
@@ -425,14 +418,37 @@ class NicotineFrame(MainWindow):
 		self.UpdateDownloadFilters()
 		
 		
-		if use_trayicon and self.np.config.sections["ui"]["trayicon"]:
+		if use_trayicon and config["ui"]["trayicon"]:
 			self.TrayApp.CREATE_TRAYICON = 1
 			self.TrayApp.HAVE_TRAYICON = True
 			self.TrayApp.Create()
 		if trerror is not None and trerror != "":
 			self.logMessage(trerror)
 		self.SetAllToolTips()
+	
+	def on_delete_event(self, widget, event):
+		if not self.np.config.sections["ui"]["exitdialog"]:
+			return False
+		if self.TrayApp.HAVE_TRAYICON and self.np.config.sections["ui"]["exitdialog"] == 2:
+			if self.is_mapped:
+				self.MainWindow.unmap()
+				self.is_mapped = 0
+			return True
+		if self.TrayApp.HAVE_TRAYICON:
+			option = QuitBox(self, title=_('Close Nicotine-Plus?'), message=_('Are you sure you wish to exit Nicotine-Plus at this time?'),tray=True, status="question", third=_("Send to tray") )
+		else:
+			option = QuitBox(self, title=_('Close Nicotine-Plus?'), message=_('Are you sure you wish to exit Nicotine-Plus at this time?'), tray=False, status="question" )
 		
+		return True
+		
+			
+	def window_state_event_cb(self, window, event):
+		if event.changed_mask and gtk.gdk.WINDOW_STATE_ICONIFIED:
+			if event.new_window_state and gtk.gdk.WINDOW_STATE_ICONIFIED:
+				self.minimized = 1
+			else:
+				self.minimized = 0
+
 	def NewNotification(self, message, title="Nicotine+"):
 		if self.pynotify is None:
 			return
@@ -900,7 +916,7 @@ class NicotineFrame(MainWindow):
 	def get_custom_widget(self, id, string1, string2, int1, int2):
 		ui = self.np.config.sections["ui"]
 		if id == "ChatNotebook":
-			return IconNotebook(self.images, ui["labelrooms"], ui["tabclosers"])
+			return IconNotebook(self.images, ui["labelrooms"], ui["tabclosers"], ui["tab_icons"])
 		elif id == "SearchNotebook":
 			return Searches(self)
 		#IconNotebook(self.images, ui["labelsearch"], ui["tabclosers"])
@@ -908,11 +924,9 @@ class NicotineFrame(MainWindow):
 			return PrivateChats(self)
 		elif id == "UserInfoNotebook":
 			notebook = UserTabs(self, UserInfo)
-			notebook.set_tab_closers(ui["tabclosers"])
 			return notebook
 		elif id == "UserBrowseNotebook":
 			notebook = UserTabs(self, UserBrowse)
-			notebook.set_tab_closers(ui["tabclosers"])
 			return notebook
 		elif id in ("UserSearchCombo", "UserPrivateCombo", "UserInfoCombo", "UserBrowseCombo"):
 			comboentry = BuddiesComboBoxEntry(self)
@@ -1319,25 +1333,32 @@ class NicotineFrame(MainWindow):
 			if self.ChatTabLabel.get_image() == self.images["hilite"]:
 				return
 		self.ChatTabLabel.set_image(status == 1 and self.images["hilite"] or self.images["online"])
+		self.ChatTabLabel.set_text_color(status+1)
 
 	def RequestIcon(self, tablabel):
 		if tablabel == self.PrivateChatTabLabel and not self.got_focus:
 			self.MainWindow.set_icon(self.images["hilite2"])
 		if self.current_tab != tablabel:
 			tablabel.set_image(self.images["hilite"])
+			tablabel.set_text_color(2)
 			
 		
 	def OnSwitchPage(self, notebook, page, page_nr):
-		l = [self.ChatTabLabel, self.PrivateChatTabLabel, self.DownloadsTabLabel, self.UploadsTabLabel, self.SearchTabLabel, self.UserInfoTabLabel, self.UserBrowseTabLabel, None, None][page_nr]
+		tabLabels = [self.ChatTabLabel, self.PrivateChatTabLabel, self.DownloadsTabLabel, self.UploadsTabLabel, self.SearchTabLabel, self.UserInfoTabLabel, self.UserBrowseTabLabel, self.InterestsTabLabel]
+		if "BuddiesTabLabel" in self.__dict__:
+			tabLabels.append(self.BuddiesTabLabel)
+		l = tabLabels[page_nr]
 		n = [self.ChatNotebook, self.PrivatechatNotebook, None, None, self.SearchNotebook, self.UserInfoNotebook, self.UserBrowseNotebook, None, None][page_nr]
 		self.current_tab = l
 		if l is not None:
 			l.set_image(self.images["empty"])
+			l.set_text_color(0)
 		if n is not None:
 			n.popup_disable()
 			n.popup_enable()
 			if n.get_current_page() != -1:
 				n.dismiss_icon(n, None, n.get_current_page())
+				
 		if page_nr == 0 and self.chatrooms:
 			p = n.get_current_page()
 			self.chatrooms.roomsctrl.OnSwitchPage(n, None, p, 1)
@@ -1510,19 +1531,20 @@ class NicotineFrame(MainWindow):
 		needrescan, needcolors, needcompletion, config = output
 		for (key, data) in config.items():
 			self.np.config.sections[key].update(data)
+		config = self.np.config.sections
 		
-		utils.DECIMALSEP = self.np.config.sections["ui"]["decimalsep"]
-		utils.CATCH_URLS = self.np.config.sections["urls"]["urlcatching"]
-		utils.HUMANIZE_URLS = self.np.config.sections["urls"]["humanizeurls"]
-		utils.PROTOCOL_HANDLERS = self.np.config.sections["urls"]["protocols"].copy()
+		utils.DECIMALSEP = config["ui"]["decimalsep"]
+		utils.CATCH_URLS = config["urls"]["urlcatching"]
+		utils.HUMANIZE_URLS = config["urls"]["humanizeurls"]
+		utils.PROTOCOL_HANDLERS = config["urls"]["protocols"].copy()
 		utils.PROTOCOL_HANDLERS["slsk"] = self.OnSoulSeek
-		utils.USERNAMEHOTSPOTS = self.np.config.sections["ui"]["usernamehotspots"]
-		uselimit = self.np.config.sections["transfers"]["uselimit"]
-		uploadlimit = self.np.config.sections["transfers"]["uploadlimit"]
-		limitby = self.np.config.sections["transfers"]["limitby"]
-		if self.np.config.sections["transfers"]["geoblock"]:
-			panic = self.np.config.sections["transfers"]["geopanic"]
-			cc = self.np.config.sections["transfers"]["geoblockcc"]
+		utils.USERNAMEHOTSPOTS = config["ui"]["usernamehotspots"]
+		uselimit = config["transfers"]["uselimit"]
+		uploadlimit = config["transfers"]["uploadlimit"]
+		limitby = config["transfers"]["limitby"]
+		if config["transfers"]["geoblock"]:
+			panic = config["transfers"]["geopanic"]
+			cc = config["transfers"]["geoblockcc"]
 			self.np.queue.put(slskmessages.SetGeoBlock([panic, cc]))
 		else:
 			self.np.queue.put(slskmessages.SetGeoBlock(None))
@@ -1531,16 +1553,16 @@ class NicotineFrame(MainWindow):
 		self.UpdateDownloadFilters()
 		self.TransparentTint(1)
 		self.np.config.writeConfig()
-		if not self.np.config.sections["ui"]["trayicon"] and self.TrayApp.HAVE_TRAYICON:
+		if not config["ui"]["trayicon"] and self.TrayApp.HAVE_TRAYICON:
 			self.TrayApp.destroy_trayicon()
-		elif self.np.config.sections["ui"]["trayicon"] and not self.TrayApp.HAVE_TRAYICON:
+		elif config["ui"]["trayicon"] and not self.TrayApp.HAVE_TRAYICON:
 			if self.TrayApp.trayicon_module == None and not self.TrayApp.TRAYICON_CREATED:
 				self.TrayApp.Load()
 			else:
 				self.TrayApp.HAVE_TRAYICON = True
 				
 			self.TrayApp.Draw()
-		self.ChangeTranslation(self.np.config.sections["language"]["language"])
+		self.ChangeTranslation(config["language"]["language"])
 
 
 		if needcompletion:
@@ -1560,10 +1582,18 @@ class NicotineFrame(MainWindow):
   	
 		self.OnHideChatButtons()
 
-		closers = self.np.config.sections["ui"]["tabclosers"]
-
-		for w in self.ChatNotebook, self.PrivatechatNotebook, self.UserInfoNotebook, self.UserBrowseNotebook, self.SearchNotebook:
-			w.set_tab_closers(closers)
+		for w in [self.ChatNotebook, self.PrivatechatNotebook, self.UserInfoNotebook, self.UserBrowseNotebook, self.SearchNotebook]:
+			w.set_tab_closers(config["ui"]["tabclosers"])
+			w.show_images(config["ui"]["tab_icons"])
+			w.set_text_colors(None)
+		
+		tabLabels = [self.ChatTabLabel, self.PrivateChatTabLabel, self.DownloadsTabLabel, self.UploadsTabLabel, self.SearchTabLabel, self.UserInfoTabLabel, self.UserBrowseTabLabel, self.InterestsTabLabel]
+		if "BuddiesTabLabel" in self.__dict__:
+			tabLabels.append(self.BuddiesTabLabel)
+			
+		for label_tab in tabLabels:
+			label_tab.show_image(config["ui"]["tab_icons"])
+			label_tab.set_text_color(None)
 		self.SetTabPositions()
 
 		if self.np.transfers is not None:
@@ -1868,16 +1898,19 @@ class NicotineFrame(MainWindow):
 				self.MainNotebook.remove_page(8)
 			if self.userlistvbox not in self.vpaned3.get_children():
 				self.vpaned3.pack1(self.userlistvbox, True, True)
+			self.BuddiesLabel.show()
 				
 		else:
 			if self.hide_room_list1.get_active():
 				self.vpaned3.hide()
 			if self.userlistvbox in self.vpaned3.get_children():
 				self.vpaned3.remove(self.userlistvbox)
-			self.BuddiesTabLabel = self.get_custom_widget("BuddiesTabLabel", "ImageLabel", _("Buddy list"), 0, 0)
+			self.BuddiesTabLabel = ImageLabel(_("Buddy list"), self.images["empty"])
+			#self.get_custom_widget("BuddiesTabLabel", "ImageLabel", _("Buddy list"), 0, 0)
 			self.BuddiesTabLabel.show()
 			if self.userlistvbox not in self.MainNotebook.get_children():
 				self.MainNotebook.append_page(self.userlistvbox, self.BuddiesTabLabel)
+			self.BuddiesLabel.hide()
 
 		self.np.config.writeConfig()
 		

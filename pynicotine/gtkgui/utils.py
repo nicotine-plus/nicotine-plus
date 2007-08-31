@@ -321,24 +321,37 @@ def AppendLine(textview, line, tag = None, timestamp = None, showstamp=True, tim
 	return linenr
 	
 class ImageLabel(gtk.HBox):
-	def __init__(self, label = "", image = None, onclose = None, closebutton = False, angle = 0):
+	def __init__(self, label = "", image = None, onclose = None, closebutton = False, angle = 0, show_image = True):
 		gtk.HBox.__init__(self)
-		self.closebutton = closebutton
 		
+		self.closebutton = closebutton
 		self.angle = angle
-
+		self._show_image = show_image
+		self.notify = 0
+		
 		self._entered = 0
 		self._pressed = 0
+		
 		self.onclose = onclose
 		
-		self.label = gtk.Label(label)
+		self.label = gtk.Label()
+		if NICOTINE.np.config.sections["ui"]["tab_colors"]:
+			color = NICOTINE.np.config.sections["ui"]["tab_default"]
+		else:
+			color = ""
+		if not color:
+			self.label.set_text("%s" % label)
+		else:
+			self.label.set_markup("<span foreground=\"%s\">%s</span>" % (color, label))
 		self.label.set_alignment(0.0, 0.50)
 		self.label.set_angle(angle)
 		self.label.show()
 
 		self.image = gtk.Image()
 		self.set_image(image)
-		self.image.show()
+		
+		if self._show_image:
+			self.image.show()
 
 
 		self._pack_children()
@@ -394,6 +407,14 @@ class ImageLabel(gtk.HBox):
 			self._remove_close_button()
 		self._order_children()
 		
+	def show_image(self, show = True):
+		self._show_image = show
+		
+		if self._show_image:
+			self.image.show()
+		else:
+			self.image.hide()
+		
 	def set_angle(self, angle):
 		self.angle = angle
 		self.label.set_angle(self.angle)
@@ -423,7 +444,34 @@ class ImageLabel(gtk.HBox):
 		self.Box.remove(self.button)
 		self.button.destroy()
 		del self.button
-
+		
+	def set_text_color(self, notify = None, text = None):
+		if notify is None:
+			notify = self.notify
+		else:
+			self.notify = notify
+		if NICOTINE.np.config.sections["ui"]["tab_colors"]:
+			if notify == 1:
+				color = NICOTINE.np.config.sections["ui"]["tab_changed"]
+			elif notify == 2:
+				color = NICOTINE.np.config.sections["ui"]["tab_hilite"]
+			else:
+				color = NICOTINE.np.config.sections["ui"]["tab_default"]
+				
+			try: 
+				gtk.gdk.color_parse(color)
+			except:
+				color = ""
+		else:
+			color = ""
+		if text is None:
+			text = self.label.get_text()
+		if not color:
+			self.label.set_text("%s" % text)
+			
+		else:
+			self.label.set_markup("<span foreground=\"%s\">%s</span>" % (color, text))
+			
 	def set_image(self, img):
 		self.img = img
 		self.image.set_from_pixbuf(img)
@@ -432,16 +480,20 @@ class ImageLabel(gtk.HBox):
 		return self.img
 		
 	def set_text(self, lbl):
-		self.label.set_text(lbl)
+		if NICOTINE.np.config.sections["ui"]["tab_colors"]:
+			self.set_text_color( notify = None, text = lbl)
+		else:
+			self.label.set_text(lbl)
 		
 	def get_text(self):
 		return self.label.get_text()
 	
 class IconNotebook(gtk.Notebook):
-	def __init__(self, images, angle = 0, tabclosers = False):
+	def __init__(self, images, angle = 0, tabclosers = False, show_image = True):
 		self.tabclosers = tabclosers
 		gtk.Notebook.__init__(self)
 		self.images = images
+		self._show_image = show_image
 		self.pages = []
 		self.detached_tabs = []
 		self.connect("switch-page", self.dismiss_icon)
@@ -456,6 +508,12 @@ class IconNotebook(gtk.Notebook):
 			page, label_tab, status, label_tab_menu = data
 			label_tab.set_onclose(self.tabclosers)
 			
+	def show_images(self, show_image = True):
+		self._show_image = show_image
+		for data in self.pages:
+			page, label_tab, status, label_tab_menu = data
+			label_tab.show_image(self._show_image)
+		
 	def set_tab_angle(self, angle):
 		if angle == self.angle:
 			return
@@ -480,7 +538,7 @@ class IconNotebook(gtk.Notebook):
 		self.set_tab_angle(angle)
 		closebutton = self.tabclosers
 
-		label_tab = ImageLabel(label, self.images["empty"], onclose, closebutton = closebutton, angle = angle)
+		label_tab = ImageLabel(label, self.images["empty"], onclose, closebutton = closebutton, angle = angle, show_image = self._show_image)
 		# menu for all tabs
 		label_tab_menu = ImageLabel(label, self.images["empty"])
 		self.pages.append([page, label_tab, 0, label_tab_menu])
@@ -638,10 +696,21 @@ class IconNotebook(gtk.Notebook):
 				i[3].set_text(label)
 				return
 	
-		
+	def set_text_colors(self, color = None):
+		for i in self.pages:
+			i[1].set_text_color(color)
+			
+	def set_text_color(self, page, color = None):
+		for i in self.pages:
+			if i[0] == page:
+				i[1].set_text_color(color)
+				return
+			
 	def dismiss_icon(self, notebook, page, page_num):
 		page = self.get_nth_page(page_num)
 		self.set_image(page, 0)
+		
+		self.set_text_color(page, 0)
 
 	def request_hilite(self, page):
 		if self.is_tab_detached(page):
@@ -652,6 +721,7 @@ class IconNotebook(gtk.Notebook):
 		if current == page:
 			return
 		self.set_image(page, 2)
+		self.set_text_color(page, 2)
 
 	def request_changed(self, page):
 		if self.is_tab_detached(page):
@@ -662,6 +732,7 @@ class IconNotebook(gtk.Notebook):
 		if current == page:
 			return
 		self.set_image(page, 1)
+		self.set_text_color(page, 1)
 	
 	def remove_page(self, page):
 		for i in self.pages[:]:

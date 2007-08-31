@@ -944,7 +944,9 @@ class ColoursFrame(settings_glade.ColoursFrame):
 "useronline": self.OnlineColor, "useroffline": self.OfflineColor,
 "usernamehotspots": self.UsernameHotspots, "usernamestyle": self.UsernameStyle,
 "showaway": self.DisplayAwayColours, "urlcolor": self.URL,
-"enabletrans": self.EnableTransparent, "transtint": self.TintColor, "transalpha": self.TintAlpha, }
+"enabletrans": self.EnableTransparent, "transtint": self.TintColor, "transalpha": self.TintAlpha, 
+"tab_default": self.DefaultTab, "tab_hilite": self.HighlightTab, "tab_changed": self.ChangedTab, 
+		},
 		}
 		for item in ["bold", "italic", "underline", "normal"]:
 			self.UsernameStyle.append_text(item)
@@ -984,6 +986,14 @@ class ColoursFrame(settings_glade.ColoursFrame):
 		self.ClearAllColours.connect("clicked", self.OnClearAllColours)
 		self.DisplayAwayColours.connect("toggled", self.ToggledAwayColours)
 		self.DefaultOfflineSearch.connect("clicked", self.DefaultColour, self.OfflineSearchEntry)
+		
+		self.PickHighlightTab.connect("clicked", self.PickColour, self.HighlightTab)
+		self.PickDefaultTab.connect("clicked", self.PickColour, self.DefaultTab)
+		self.PickChangedTab.connect("clicked", self.PickColour, self.ChangedTab)
+		
+		self.DefaultHighlightTab.connect("clicked", self.DefaultColour, self.HighlightTab)
+		self.DefaultChangedTab.connect("clicked", self.DefaultColour, self.ChangedTab)
+		self.ClearDefaultTab.connect("clicked", self.DefaultColour, self.DefaultTab)
 		
 		# To set needcolors flag
 		self.Local.connect("changed", self.FontsColorsChanged)
@@ -1051,6 +1061,9 @@ class ColoursFrame(settings_glade.ColoursFrame):
 				"enabletrans": self.EnableTransparent.get_active(),
 				"transtint": self.TintColor.get_text(),
 				"transalpha": self.TintAlpha.get_value(),
+				"tab_hilite": self.HighlightTab.get_text(),
+				"tab_default": self.DefaultTab.get_text(),
+				"tab_changed": self.ChangedTab.get_text(),
 				}
 			}
 			
@@ -1061,25 +1074,27 @@ class ColoursFrame(settings_glade.ColoursFrame):
 		self.DefaultAway.set_sensitive(sensitive)
 		
 	def OnDefaultColours(self, widget):
-		defaults = self.frame.np.config.defaults
-		for option in "chatlocal", "chatremote", "chatme", "chathilite", "textbg", "inputcolor", "search", "searchq", "searchoffline", "useraway", "urlcolor", "useronline", "useroffline":
-			for key, value in self.options.items():
-				if option in value:
-					widget = self.options[key][option]
-					if type(widget) is gtk.Entry:
-						widget.set_text(defaults[key][option])
-					elif type(widget) is gtk.SpinButton:
-						widget.set_value_as_int(defaults[key][option])
-					elif type(widget) is gtk.CheckButton:
-						widget.set_active(defaults[key][option])
-					elif type(widget) is gtk.ComboBoxEntry:
-						widget.child.set_text(defaults[key][option])
+		
+		for option in "chatlocal", "chatremote", "chatme", "chathilite", "textbg", "inputcolor", "search", "searchq", "searchoffline", "useraway", "urlcolor", "useronline", "useroffline", "tab_default", "tab_changed", "tab_hilite":
+			self.SetDefaultColor(option)
 			
-
+	def SetDefaultColor(self, option):
+		defaults = self.frame.np.config.defaults
+		for key, value in self.options.items():
+			if option in value:
+				widget = self.options[key][option]
+				if type(widget) is gtk.Entry:
+					widget.set_text(defaults[key][option])
+				elif type(widget) is gtk.SpinButton:
+					widget.set_value_as_int(defaults[key][option])
+				elif type(widget) is gtk.CheckButton:
+					widget.set_active(defaults[key][option])
+				elif type(widget) is gtk.ComboBoxEntry:
+					widget.child.set_text(defaults[key][option])
 		
 		
 	def OnClearAllColours(self, widget):
-		for option in "chatlocal", "chatremote", "urlcolor", "chatme", "chathilite", "textbg", "inputcolor", "search", "searchq", "searchoffline", "useraway", "useronline", "useroffline":
+		for option in "chatlocal", "chatremote", "urlcolor", "chatme", "chathilite", "textbg", "inputcolor", "search", "searchq", "searchoffline", "useraway", "useronline", "useroffline", "tab_default", "tab_changed", "tab_hilite":
 			for key, value in self.options.items():
 				if option in value:
 					widget = self.options[key][option]
@@ -1184,6 +1199,11 @@ class ColoursFrame(settings_glade.ColoursFrame):
 		
 		
 	def DefaultColour(self, widget, entry):
+		for section in self.options.keys():
+			for key, value in self.options[section].items():
+				if value is entry:
+					self.SetDefaultColor(key)
+					return
 		entry.set_text("")
 		
 class NotebookFrame(settings_glade.NotebookFrame):
@@ -1191,10 +1211,11 @@ class NotebookFrame(settings_glade.NotebookFrame):
 		self.p = parent
 		self.frame = parent.frame
 		settings_glade.NotebookFrame.__init__(self, False)
+		self.NotificationIcon.set_from_pixbuf(self.frame.images["online"])
 		self.options = { "ui": { 
 			"tabmain": self.MainPosition, "tabrooms": self.ChatRoomsPosition, "tabprivate": self.PrivateChatPosition, "tabinfo": self.UserInfoPosition, "tabbrowse": self.UserBrowsePosition, "tabsearch": self.SearchPosition, 
 			"labelmain": self.MainAngleSpin, "labelrooms": self.ChatRoomsPosition, "labelprivate": self.PrivateChatAngleSpin, "labelinfo": self.UserInfoAngleSpin, "labelbrowse": self.UserBrowseAngleSpin, "labelsearch": self.SearchAngleSpin,
-			"tabclosers": self.TabClosers, }
+			"tabclosers": self.TabClosers, "tab_icons": self.TabIcons, "tab_colors": self.TabColours}
 			
 		}
 		
@@ -1218,6 +1239,8 @@ class NotebookFrame(settings_glade.NotebookFrame):
 				"labelbrowse": self.UserBrowseAngleSpin.get_value_as_int(),
 				"labelsearch": self.SearchAngleSpin.get_value_as_int(),
 				"tabclosers": self.TabClosers.get_active(),
+				"tab_icons": self.TabIcons.get_active(),
+				"tab_colors": self.TabColours.get_active(),
 			}
 		}
 

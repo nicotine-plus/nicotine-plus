@@ -14,6 +14,8 @@ General Changes
  * Added a 10 second cooldown between responding to Userinfo and Usershares
    requests from the same user (to mitigate damage from DOS attacks and simple
    accidents)
+ * Notification text on tabs can be colored
+ * Notification icons on tabs can be disabled
  * Close buttons on tabs no longer forced to 18x18px
  * Close buttons are dynamically added and removed when toggled in settings
  * Added global unrecommendations list
@@ -28,6 +30,7 @@ Shares
  * Unicode filenames on Win32 are now read and shared properly (should be)
 
 Settings
+ * Tooltips can be disabled
  * Settings widgets will now be colored red if their values are invalid.
  * Your client port and server-reported IP address are shown in Server Settings
  * Added an option to Shares for the Upload directory path (needs to be set)
@@ -69,6 +72,7 @@ Transfers
  * Added a 'multiple users' submenus
  
 Chat
+ * Whitespace is now limited to two spaces
  * Show icon, sound, speech and title notifications for "current" chat tab
    if the window is hidden.
  * Notify popups for buddies with "notify" enabled :)
