@@ -48,9 +48,10 @@ class ServerFrame(settings_glade.ServerFrame):
 		self.Encoding.add_attribute(cell2, 'text', 1)
 		for item in encodings:
 			self.Elist[item[1]] = self.EncodingStore.append([item[1], item[0] ])
-		self.options = {"server": [ "server", "login", "passw", "enc", "portrange", "firewalled", "ctcpmsgs", ] }
+		self.options = {"server": { "server": None, "login": self.Login, "passw": self.Password, "enc": self.Encoding.child, "portrange": None, "firewalled": self.DirectConnection, "ctcpmsgs": self.ctcptogglebutton } }
 			
 	def SetSettings(self, config):
+		self.p.SetWidgetsData(config, self.options)
 		server = config["server"]
 		if server["server"] is not None:
 			self.Server.child.set_text("%s:%i" % (server["server"][0], server["server"][1]))
@@ -66,30 +67,26 @@ class ServerFrame(settings_glade.ServerFrame):
 			self.YourIP.set_markup(_("Your IP address is <b>%(ip)s</b>") % {"ip": self.frame.np.ipaddress})
 		if server["login"] is not None:
 			self.Login.set_text(server["login"])
-		else:
-			self.p.Hilight(self.Login)
+		
 		if server["passw"] is not None:
 			self.Password.set_text(server["passw"])
-		else:
-			self.p.Hilight(self.Password)
+		
 		if server["enc"] is not None:
 			self.Encoding.child.set_text(server["enc"])
-		else:
-			self.p.Hilight(self.Encoding.child)
+		
 		if server["portrange"] is not None:
 			self.FirstPort.set_value(server["portrange"][0])
 			self.LastPort.set_value(server["portrange"][1])
 		else:
 			self.p.Hilight(self.FirstPort)
 			self.p.Hilight(self.LastPort)
+			
 		if server["firewalled"] is not None:
 			self.DirectConnection.set_active(not server["firewalled"])
-		else:
-			self.p.Hilight(self.DirectConnection)
+		
 		if server["ctcpmsgs"] is not None:
 			self.ctcptogglebutton.set_active(not server["ctcpmsgs"])
-		else:
-			self.p.Hilight(self.ctcptogglebutton)
+		
 			
 	def GetSettings(self):
 		try:
@@ -98,6 +95,7 @@ class ServerFrame(settings_glade.ServerFrame):
 			server = tuple(server)
 		except:
 			server = None
+			
 		if str(self.Login.get_text()) == "None":
 			popupWarning(self.p.SettingsWindow, _("Warning: Bad Username"), _("Username 'None' is not a good one, please pick another."), self.frame.images["n"] )
 			raise UserWarning
@@ -127,7 +125,7 @@ class SharesFrame(settings_glade.SharesFrame):
 		self.p = parent
 		self.frame = parent.frame
 		settings_glade.SharesFrame.__init__(self, False)
-		self.options = {"transfers": ["incompletedir", "downloaddir", "uploaddir", "sharedownloaddir", "shared", "rescanonstartup", "buddyshared", "enablebuddyshares", ]}
+		
 			
 		self.needrescan = 0
 		self.shareslist = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
@@ -146,6 +144,8 @@ class SharesFrame(settings_glade.SharesFrame):
 		self.BuddyShares.set_model(self.bshareslist)
 		self.BuddyShares.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
 		self.DownloadDir.connect("changed", self.DownloadDirChanged)
+		
+		self.options = {"transfers": {"incompletedir": self.IncompleteDir, "downloaddir": self.DownloadDir, "uploaddir": self.UploadDir, "sharedownloaddir": self.ShareDownloadDir, "shared": self.Shares, "rescanonstartup": self.RescanOnStartup, "buddyshared": self.BuddyShares, "enablebuddyshares": self.enableBuddyShares} }
 
 	def DownloadDirChanged(self, widget):
 		transfers = self.frame.np.config.sections["transfers"]
@@ -157,26 +157,7 @@ class SharesFrame(settings_glade.SharesFrame):
 		transfers = config["transfers"]
 		self.shareslist.clear()
 		self.bshareslist.clear()
-		
-		if transfers["incompletedir"] is not None:
-			self.IncompleteDir.set_text(recode(transfers["incompletedir"]))
-		else:
-			self.p.Hilight(self.IncompleteDir)
-		if transfers["uploaddir"] is not None and transfers["uploaddir"] != "":
-			self.UploadDir.set_text(recode(transfers["uploaddir"]))
-		else:
-			self.p.Hilight(self.UploadDir)
-		if transfers["downloaddir"] is not None and transfers["downloaddir"] != "":
-			self.DownloadDir.set_text(recode(transfers["downloaddir"]))
-		else:
-			self.p.Hilight(self.DownloadDir)
-		
-		if transfers["sharedownloaddir"] is not None:
-			
-			self.ShareDownloadDir.set_active(transfers["sharedownloaddir"])
-		else:
-			self.p.Hilight(self.ShareDownloadDir)
-		
+		self.p.SetWidgetsData(config, self.options)
 		
 		if transfers["shared"] is not None:
 			for share in transfers["shared"]:
@@ -190,14 +171,7 @@ class SharesFrame(settings_glade.SharesFrame):
 			self.bshareddirs = transfers["buddyshared"][:]
 		else:
 			self.p.Hilight(self.BuddyShares)
-		if transfers["rescanonstartup"] is not None:
-			self.RescanOnStartup.set_active(transfers["rescanonstartup"])
-		else:
-			self.p.Hilight(self.RescanOnStartup)
-		if transfers["enablebuddyshares"] is not None:
-			self.enableBuddyShares.set_active(transfers["enablebuddyshares"])
-		else:
-			self.p.Hilight(self.enableBuddyShares)
+	
 		self.OnEnabledBuddySharesToggled(self.enableBuddyShares)
 
 		self.needrescan = 0
@@ -547,7 +521,7 @@ class GeoBlockFrame(settings_glade.GeoBlockFrame):
 		self.p = parent
 		self.frame = parent.frame
 		settings_glade.GeoBlockFrame.__init__(self, False)
-		self.options = {"transfers": [ "geoblock", "geopanic", "geoblockcc",] }
+		self.options = {"transfers": { "geoblock": self.GeoBlock, "geopanic": self.GeoPanic, "geoblockcc": self.GeoBlockCC,} }
 		try:
 			import GeoIP
 			
@@ -562,18 +536,11 @@ class GeoBlockFrame(settings_glade.GeoBlockFrame):
 			
 	def SetSettings(self, config):
 		transfers = config["transfers"]
-		if transfers["geoblock"] is not None:
-			self.GeoBlock.set_active(transfers["geoblock"])
-		else:
-			self.p.Hilight(self.GeoBlock)
-		if transfers["geopanic"] is not None:
-			self.GeoPanic.set_active(transfers["geopanic"])
-		else:
-			self.p.Hilight(self.GeoPanic)
+		self.p.SetWidgetsData(config, self.options)
+
 		if transfers["geoblockcc"] is not None:
 			self.GeoBlockCC.set_text(transfers["geoblockcc"][0])
-		else:
-			self.p.Hilight(self.GeoBlockCC)
+	
 		self.OnGeoBlockToggled(self.GeoBlock)
 	
 	def GetSettings(self):
@@ -595,9 +562,11 @@ class UserinfoFrame(settings_glade.UserinfoFrame):
 		self.p = parent
 		self.frame = parent.frame
 		settings_glade.UserinfoFrame.__init__(self, False)
-		self.options = {"userinfo": ["descr", "pic", "descrutf8" ] }
-
+		self.options = {"userinfo": {"descr":None, "pic": self.Image, "descrutf8": None } }
+		self.Image.connect("changed", self.GetImageSize)
+		
 	def SetSettings(self, config):
+		self.p.SetWidgetsData(config, self.options)
 		userinfo = config["userinfo"]
 		if userinfo["descr"] is not None:
 			descr = eval(userinfo["descr"], {})
@@ -605,17 +574,15 @@ class UserinfoFrame(settings_glade.UserinfoFrame):
 			self.Description.get_buffer().set_text(descr)
 		else:
 			self.p.Hilight(self.Description)
-		if userinfo["pic"] is not None:
-			self.Image.set_text(userinfo["pic"])
-			self.GetImageSize()
-		else:
-			self.p.Hilight(self.Image)
+
+		self.GetImageSize()
 			
-	def GetImageSize(self):
+	def GetImageSize(self, widget=None):
 		if os.path.exists(self.Image.get_text()):
 			size =  os.stat(self.Image.get_text())[6]
-			self.ImageSize.set_text("Size: %s KB" % Humanize(size/1024))
+			self.ImageSize.set_text(_("Size: %s KB") % Humanize(size/1024))
 		else:
+			self.ImageSize.set_text(_("Size: %s KB") % 0)
 			self.p.Hilight(self.Image)
 
 	def GetSettings(self):
@@ -645,8 +612,8 @@ class BanFrame(settings_glade.BanFrame):
 		self.p = parent
 		self.frame = parent.frame
 		settings_glade.BanFrame.__init__(self, False)
-		self.options = {"server": [ "banlist", "ignorelist", "ipblocklist"],
-			"transfers": ["usecustomban","customban",]
+		self.options = {"server": { "banlist" : self.Banned, "ignorelist": self.Ignored, "ipblocklist": self.Blocked},
+			"transfers": {"usecustomban": self.UseCustomBan, "customban": self.CustomBan,}
 			}
 		self.banned = []
 		self.banlist = gtk.ListStore(gobject.TYPE_STRING)
@@ -675,6 +642,8 @@ class BanFrame(settings_glade.BanFrame):
 		self.banlist.clear()
 		self.ignorelist.clear()
 		self.blockedlist.clear()
+		self.p.SetWidgetsData(config, self.options)
+		
 		if server["banlist"] is not None:
 			self.banned = server["banlist"][:]
 			for banned in server["banlist"]:
@@ -693,14 +662,13 @@ class BanFrame(settings_glade.BanFrame):
 				self.blockedlist.append([blocked])
 		else:
 			self.p.Hilight(self.Blocked)
+			
 		if transfers["usecustomban"] is not None:
 			self.UseCustomBan.set_active(transfers["usecustomban"])
-		else:
-			self.p.Hilight(self.UseCustomBan)
+		
 		if transfers["customban"] is not None:
 			self.CustomBan.set_text(transfers["customban"])
-		else:
-			self.p.Hilight(self.CustomBan)	
+
 		self.OnUseCustomBanToggled(self.UseCustomBan)
 	
 	def GetSettings(self):
@@ -867,7 +835,7 @@ class IconsFrame(settings_glade.IconsFrame):
 		self.p = parent
 		self.frame = parent.frame
 		settings_glade.IconsFrame.__init__(self, False)
-		self.options = {"ui": [	"icontheme", "tabclosers", "trayicon", "exitdialog"]}
+		self.options = {"ui": {"icontheme": self.IconTheme,  "trayicon": self.TrayiconCheck, "exitdialog": None} }
 		self.ThemeButton.connect("clicked", self.OnChooseThemeDir)
 		self.DefaultTheme.connect("clicked", self.OnDefaultTheme)
 		self.N.set_from_pixbuf(self.frame.images["n"])
@@ -882,11 +850,8 @@ class IconsFrame(settings_glade.IconsFrame):
 		
 	def SetSettings(self, config):
 		ui = config["ui"]
-
-		if ui["trayicon"] is not None:
-			self.TrayiconCheck.set_active(ui["trayicon"])
-		else:
-			self.p.Hilight(self.TrayiconCheck)
+		self.p.SetWidgetsData(config, self.options)
+		
 			
 		if ui["exitdialog"] is not None:
 			exitdialog = int( ui["exitdialog"] )
@@ -900,11 +865,7 @@ class IconsFrame(settings_glade.IconsFrame):
 			self.p.Hilight(self.DialogOnClose)
 			self.p.Hilight(self.SendToTrayOnClose)
 			self.p.Hilight(self.QuitOnClose)
-			
-		if ui["icontheme"] is not None:
-			self.IconTheme.set_text(ui["icontheme"])
-		else:
-			self.p.Hilight(self.IconTheme)
+		
 	def OnDefaultTheme(self, widget):
 		self.IconTheme.set_text("")
 		
@@ -1438,18 +1399,11 @@ class AwayFrame(settings_glade.AwayFrame):
 		self.p = parent
 		self.frame = parent.frame
 		settings_glade.AwayFrame.__init__(self, False)
-		self.options = {"server":["autoaway", "autoreply"]}
+		self.options = {"server": {"autoaway": self.AutoAway, "autoreply": self.AutoReply}}
 	
 	def SetSettings(self, config):		
 		server = config["server"]
-		if server["autoreply"] is not None:
-			self.AutoReply.set_text(server["autoreply"])
-		else:
-			self.p.Hilight(self.AutoReply)
-		if server["autoaway"] is not None:
-			self.AutoAway.set_value(server["autoaway"])
-		else:
-			self.p.Hilight(self.AutoAway)
+		self.p.SetWidgetsData(config, self.options)	
 			
 	def GetSettings(self):
 		try:
@@ -1468,8 +1422,8 @@ class EventsFrame(settings_glade.EventsFrame):
 		self.p = parent
 		self.frame = parent.frame
 		settings_glade.EventsFrame.__init__(self, False)
-		self.options = {"transfers": [ "shownotification", "afterfinish", "afterfolder", ],
-			"ui": [	"filemanager" ],}
+		self.options = {"transfers": { "shownotification": self.ShowNotification, "afterfinish": self.AfterDownload, "afterfolder": self.AfterFolder, },
+			"ui": {"filemanager": self.FileManagerCombo.child },}
 		
 		for executable in ["rox $", "konqueror $", "nautilus --no-desktop $", "thunar $", "xterm -e mc $", "emelfm2 -1 $", "krusader --left $", "gentoo -1 $" ]:
 			self.FileManagerCombo.append_text( executable ) 
@@ -1479,23 +1433,8 @@ class EventsFrame(settings_glade.EventsFrame):
 			self.ShowNotification.set_sensitive(True)
 		else:
 			self.ShowNotification.set_sensitive(False)
-		transfers = config["transfers"]
-		if transfers["shownotification"] is not None: 
-			self.ShowNotification.set_active(transfers["shownotification"])
-		else:
-			self.p.Hilight(self.ShowNotification)
-		if transfers["afterfinish"] is not None:
-			self.AfterDownload.set_text(transfers["afterfinish"])
-		else:
-			self.p.Hilight(self.AfterDownload)
-		if transfers["afterfolder"] is not None:
-			self.AfterFolder.set_text(transfers["afterfolder"])
-		else:
-			self.p.Hilight(self.AfterFolder)
-		if config["ui"]["filemanager"] is not None:
-			self.FileManagerCombo.child.set_text(config["ui"]["filemanager"])
-		else:
-			self.p.Hilight(self.FileManagerCombo.child)
+		self.p.SetWidgetsData(config, self.options)
+		
 			
 	def GetSettings(self):
 		return {
@@ -1575,7 +1514,7 @@ class UrlCatchFrame(settings_glade.UrlCatchFrame):
 		self.frame = parent.frame
 		self.p = parent
 		settings_glade.UrlCatchFrame.__init__(self, False)
-		self.options = {"urls": [ "urlcatching", "humanizeurls", "protocols"],}
+		self.options = {"urls": { "urlcatching": self.URLCatching, "humanizeurls": self.HumanizeURLs, "protocols": None},}
 		self.protocolmodel = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
 		self.protocols = {}
 		cols = InitialiseColumns(self.ProtocolHandlers,
@@ -1615,16 +1554,11 @@ class UrlCatchFrame(settings_glade.UrlCatchFrame):
 		
 	def SetSettings(self, config):
 		self.protocolmodel.clear()
-		self.protocols = {}
+		self.protocols.clear()
+		self.p.SetWidgetsData(config, self.options)
+		
 		urls = config["urls"]
-		if urls["urlcatching"] is not None:
-			self.URLCatching.set_active(urls["urlcatching"])
-		else:
-			self.p.Hilight(self.URLCatching)
-		if urls["humanizeurls"] is not None:
-			self.HumanizeURLs.set_active(urls["humanizeurls"])
-		else:
-			self.p.Hilight(self.HumanizeURLs)
+	
 		if urls["protocols"] is not None:
 			for key in urls["protocols"].keys():
 				if urls["protocols"][key] == "firefox \"%s\" &":
@@ -1705,7 +1639,7 @@ class CensorFrame(settings_glade.CensorFrame):
 		self.p = parent
 		self.frame = parent.frame
 		settings_glade.CensorFrame.__init__(self, False)
-		self.options = {"words": ["censorfill", "censored", "censorwords", ]}
+		self.options = {"words": {"censorfill": self.CensorReplaceEntry, "censored": self.CensorList, "censorwords": self.CensorCheck, }}
 		self.censorlist = gtk.ListStore(gobject.TYPE_STRING)
 		cols = InitialiseColumns(self.CensorList,
 			[_("Pattern"), -1, "edit", self.frame.CellDataFunc],
@@ -1733,20 +1667,14 @@ class CensorFrame(settings_glade.CensorFrame):
 			store.remove(iter)
 	def SetSettings(self, config):
 		self.censorlist.clear()
+		self.p.SetWidgetsData(config, self.options)
 		words = config["words"]
 		if words["censored"] is not None:
 			for word in words["censored"]:
 				self.censorlist.append([word])
 		else:
 			self.p.Hilight(self.CensorList)
-		if words["censorwords"] is not None:
-			self.CensorCheck.set_active(words["censorwords"])
-		else:
-			self.p.Hilight(self.CensorCheck)
-		if words["censorfill"] is not None:
-			self.CensorReplaceEntry.set_text(words["censorfill"])
-		else:
-			self.p.Hilight(self.CensorReplaceEntry)
+		
 		self.OnCensorCheck(self.CensorCheck)
 		
 	def OnCensorCheck(self, widget):
@@ -1801,7 +1729,7 @@ class AutoReplaceFrame(settings_glade.AutoReplaceFrame):
 		self.p = parent
 		self.frame = parent.frame
 		settings_glade.AutoReplaceFrame.__init__(self, False)
-		self.options = {"words": ["autoreplaced", "replacewords",  ]}
+		self.options = {"words": {"autoreplaced": self.ReplacementList, "replacewords": self.ReplaceCheck,} }
 		self.replacelist = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
 		cols = InitialiseColumns(self.ReplacementList,
 			[_("Pattern"), 150, "edit", self.frame.CellDataFunc],
@@ -1826,16 +1754,14 @@ class AutoReplaceFrame(settings_glade.AutoReplaceFrame):
 			
 	def SetSettings(self, config):
 		self.replacelist.clear()
+		self.p.SetWidgetsData(config, self.options)
 		words = config["words"]
 		if words["autoreplaced"] is not None:
 			for word, replacement in words["autoreplaced"].items():
 				self.replacelist.append([word, replacement])
 		else:
 			self.p.Hilight(self.ReplacementList)
-		if words["replacewords"] is not None:
-			self.ReplaceCheck.set_active(words["replacewords"])
-		else:
-			self.p.Hilight(self.ReplaceCheck)
+	
 		self.OnReplaceCheck(self.ReplaceCheck)
 		
 	def OnReplaceCheck(self, widget):
@@ -1899,51 +1825,14 @@ class CompletionFrame(settings_glade.CompletionFrame):
 		self.p = parent
 		self.frame = parent.frame
 		settings_glade.CompletionFrame.__init__(self, False)
-		self.options = {"words": [ "tab", "dropdown", "characters", "roomnames",
-"buddies", "roomusers", "commands", "aliases", "onematch",],}
+		self.options = {"words": { "tab": self.CompletionTabCheck, 
+"dropdown": self.CompletionDropdownCheck, "characters": self.CharactersCompletion, 
+"roomnames": self.CompleteRoomNamesCheck, "buddies": self.CompleteBuddiesCheck, 
+"roomusers": self.CompleteUsersInRoomsCheck, "commands": self.CompleteCommandsCheck, 
+"aliases": self.CompleteAliasesCheck, "onematch": self.OneMatchCheck,}
+		}
 		self.CompletionTabCheck.connect("toggled", self.OnCompletionDropdownCheck)
 		self.CompletionDropdownCheck.connect("toggled", self.OnCompletionDropdownCheck)
-		
-	def SetSettings(self, config):
-		completion = config["words"]
-		self.needcompletion = 0
-		if completion["tab"] is not None:
-			self.CompletionTabCheck.set_active(completion["tab"])
-		else:
-			self.p.Hilight(self.CompletionTabCheck)
-		if completion["dropdown"] is not None:
-			self.CompletionDropdownCheck.set_active(completion["dropdown"])
-		else:
-			self.p.Hilight(self.CompletionDropdownCheck)
-		self.OnCompletionDropdownCheck(self.CompletionDropdownCheck)
-		if completion["roomnames"] is not None:
-			self.CompleteRoomNamesCheck.set_active(completion["roomnames"])
-		else:
-			self.p.Hilight(self.CompleteRoomNamesCheck)
-		if completion["buddies"] is not None:
-			self.CompleteBuddiesCheck.set_active(completion["buddies"])
-		else:
-			self.p.Hilight(self.CompleteBuddiesCheck)
-		if completion["roomusers"] is not None:
-			self.CompleteUsersInRoomsCheck.set_active(completion["roomusers"])
-		else:
-			self.p.Hilight(self.CompleteUsersInRoomsCheck)
-		if completion["commands"] is not None:
-			self.CompleteCommandsCheck.set_active(completion["commands"])
-		else:
-			self.p.Hilight(self.CompleteCommandsCheck)
-		if completion["aliases"] is not None:
-			self.CompleteAliasesCheck.set_active(completion["aliases"])
-		else:
-			self.p.Hilight(self.CompleteAliasesCheck)
-		if completion["characters"] is not None:
-			self.CharactersCompletion.set_value(completion["characters"])
-		else:
-			self.p.Hilight(self.CharactersCompletion)
-		if completion["onematch"] is not None:
-			self.OneMatchCheck.set_active(completion["onematch"])
-		else:
-			self.p.Hilight(self.OneMatchCheck)
 		self.CharactersCompletion.connect("changed", self.OnCompletionChanged)
 		self.CompleteAliasesCheck.connect("toggled", self.OnCompletionChanged)
 		self.CompleteCommandsCheck.connect("toggled", self.OnCompletionChanged)
@@ -1951,7 +1840,11 @@ class CompletionFrame(settings_glade.CompletionFrame):
 		self.CompleteBuddiesCheck.connect("toggled", self.OnCompletionChanged)
 		self.CompleteRoomNamesCheck.connect("toggled", self.OnCompletionChanged)
 		
-		
+	def SetSettings(self, config):
+		completion = config["words"]
+		self.needcompletion = 0
+		self.p.SetWidgetsData(config, self.options)
+
 	def OnCompletionChanged(self, widget):
 		self.needcompletion = 1
 		
@@ -2236,7 +2129,8 @@ class SettingsWindow(settings_glade.SettingsWindow):
 				
 	def SetWidget(self, widget, value):
 		if type(widget) is gtk.Entry:
-			widget.set_text(value)
+			if type(value) in ( int,str):
+				widget.set_text(value)
 		elif type(widget) is gtk.SpinButton:
 			widget.set_value(int(value))
 		elif type(widget) is gtk.CheckButton:
@@ -2244,7 +2138,8 @@ class SettingsWindow(settings_glade.SettingsWindow):
 		elif type(widget) is gtk.RadioButton:
 			widget.set_active(value)
 		elif type(widget) is gtk.ComboBoxEntry:
-			widget.child.set_text(value)
+			if type(value) in ( int,str):
+				widget.child.set_text(value)
 		elif type(widget) is gtk.ComboBox:
 			self.GetPosition(widget, value)
 		elif type(widget) is gtk.FontButton:
