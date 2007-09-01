@@ -727,8 +727,21 @@ class BanFrame(settings_glade.BanFrame):
 		self.CustomBan.set_sensitive(widget.get_active())
 
 	def OnAddBlocked(self, widget):
-		ip = InputDialog(self.Main.get_toplevel(), _("Block IP Address..."), _("IP:") )
-		if ip and ip not in self.blocked:
+		ip = InputDialog(self.Main.get_toplevel(), _("Block IP Address..."), _("IP:")+" "+_("* is a wildcard") )
+		if ip is None or ip == "" or ip.count(".") != 3:
+			return
+		for chars in ip.split("."):
+			if chars == "*":
+				continue
+			if not chars.isdigit():
+				return
+			try:
+				if int(chars) > 255:
+					return
+			except:
+				return
+			
+		if ip not in self.blocked:
 			self.blocked.append(ip)
 			self.blockedlist.append([ip])
 	

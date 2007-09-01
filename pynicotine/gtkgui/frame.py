@@ -622,7 +622,7 @@ class NicotineFrame(MainWindow):
 				self.sound("room_nick", user, place=room)
 				self.TrayApp.SetImage()
 				#self.MainWindow.set_urgency_hint(True)
-		if location == "private":
+		elif location == "private":
 			if user in hilites[location]:
 				hilites[location].remove(user)
 				hilites[location].append(user)
@@ -637,7 +637,7 @@ class NicotineFrame(MainWindow):
 		if location == "rooms" and room != None:
 			if room in self.TrayApp.tray_status["hilites"]["rooms"]:
 				self.TrayApp.tray_status["hilites"]["rooms"].remove(room)
-		if location == "private":	
+		elif location == "private":	
 			if user in self.TrayApp.tray_status["hilites"]["private"]: 
 				self.TrayApp.tray_status["hilites"]["private"].remove(user)
 		self.TitleNotification(user)

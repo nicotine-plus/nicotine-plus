@@ -42,7 +42,7 @@ Settings
  * Added a config option for overriding the default language
  * URL handlers settings rearranged slightly, combo items in the handlers column
  * Rearranged the Settings tree and removed some descriptive panes
- * Added IP blocking
+ * Added IP blocking and range blocking with * character
  * Some Entry widgets in settings replaced with SpinBoxes
  * Userinfo settings now have size data for image
  * New options to to determine what happens when destroying the main window

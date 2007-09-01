@@ -453,8 +453,30 @@ class SlskProtoThread(threading.Thread):
 		return False
 		
 	def ipBlocked(self, address):
-		if address in self._config.sections["server"]["ipblocklist"] or address is None:
+		if address is None:
 			return True
+		ips = self._config.sections["server"]["ipblocklist"]
+		s_address = address.split(".")
+		for ip in ips:
+			# No Wildcard in IP
+			if "*" not in ip:
+				if address == ip:
+					return True
+				continue
+			# Wildcard in IP
+			parts = ip.split(".")
+			seg = 0
+			for part in parts:
+				# Stop if there's no wildcard or matching string number
+				if part not in ( s_address[seg],  "*"):
+					break
+				
+				seg += 1
+				# Last time around
+				if seg == 4:
+					# Wildcard blocked
+					return True
+		# Not blocked
 		return False
 		
 	def getIpPort(self, address):
