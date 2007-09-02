@@ -335,14 +335,16 @@ class ImageLabel(gtk.HBox):
 		self.onclose = onclose
 		
 		self.label = gtk.Label()
+		self.text = label
 		if NICOTINE.np.config.sections["ui"]["tab_colors"]:
 			color = NICOTINE.np.config.sections["ui"]["tab_default"]
 		else:
 			color = ""
 		if not color:
-			self.label.set_text("%s" % label)
+			self.label.set_text("%s" % self.text)
 		else:
-			self.label.set_markup("<span foreground=\"%s\">%s</span>" % (color, label))
+			self.label.set_markup("<span foreground=\"%s\">%s</span>" % (color, self.text.replace("<", "&lt;").replace(">", "&gt;")))
+			
 		self.label.set_alignment(0.0, 0.50)
 		self.label.set_angle(angle)
 		self.label.show()
@@ -464,13 +466,13 @@ class ImageLabel(gtk.HBox):
 				color = ""
 		else:
 			color = ""
-		if text is None:
-			text = self.label.get_text()
+		if text is not None:
+			self.text = text
 		if not color:
-			self.label.set_text("%s" % text)
+			self.label.set_text("%s" % self.text)
 			
 		else:
-			self.label.set_markup("<span foreground=\"%s\">%s</span>" % (color, text))
+			self.label.set_markup("<span foreground=\"%s\">%s</span>" % (color, self.text.replace("<", "&lt;").replace(">", "&gt;")))
 			
 	def set_image(self, img):
 		self.img = img

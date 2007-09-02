@@ -951,6 +951,8 @@ class NicotineFrame(MainWindow):
 			position = gtk.POS_LEFT
 		elif string == "right":
 			position = gtk.POS_RIGHT
+		else:
+			position = gtk.POS_TOP
 		return position
 		
 	def OnAutoAway(self):
