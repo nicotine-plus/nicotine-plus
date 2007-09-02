@@ -338,7 +338,7 @@ class SlskProtoThread(threading.Thread):
 				try:
 					incconn, incaddr = p.accept()
 				except:
-					time.sleep(0.1)
+					time.sleep(0.01)
 				else:
 					ip, port = self.getIpPort(incaddr)
 					if self.ipBlocked(ip):

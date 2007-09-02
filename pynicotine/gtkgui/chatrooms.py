@@ -524,7 +524,7 @@ class ChatRoom(ChatRoomTab):
 			for l in loglines[ - roomlines : -1 ]:
 				# Try to parse line for username
 				if l[10].isspace() and l[11].isdigit() and l[20] in ("[", "*"):
-					line = l[11:] + "\n"
+					line = l[11:]
 					if l[20] == "[" and l[20:].find("] ") != -1:
 						namepos = l[20:].find("] ")
 						user = l[21:20+namepos].strip()
@@ -543,14 +543,14 @@ class ChatRoom(ChatRoomTab):
 					else:
 						tag = self.tag_remote
 				else:
-					line = l + "\n"
+					line = l
 					user = None
 					tag = None
 					usertag = None
 				timestamp_format=self.frame.np.config.sections["logging"]["rooms_timestamp"]
 
 				line = re.sub("\s\s+", "  ", line)
-				
+				line += "\n"
 				if user != config["server"]["login"]:
 					self.lines.append(AppendLine(self.ChatScroll, self.frame.CensorChat(self.frame.np.decode(line, self.encoding)), tag, username=user, usertag=usertag, timestamp_format=""))
 				else:

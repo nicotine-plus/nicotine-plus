@@ -363,7 +363,6 @@ class UserBrowse(UserBrowseTab):
 		self.FolderTreeView.set_sensitive(True)
 		self.FileTreeView.set_sensitive(True)
 		self.SaveButton.set_sensitive(True)
-		self.RefreshButton.set_sensitive(True)
 		
 		if self.ExpandButton.get_active():
 			self.FolderTreeView.expand_all()
@@ -838,7 +837,6 @@ class UserBrowse(UserBrowseTab):
 		self.FolderTreeView.set_sensitive(False)
 		self.FileTreeView.set_sensitive(False)
 		self.SaveButton.set_sensitive(False)
-		self.RefreshButton.set_sensitive(False)
 		self.frame.BrowseUser(self.user)
 
 	def OnCopyURL(self, widget):
