@@ -38,6 +38,7 @@ import utils
 import md5
 from utils import _
 from gtkgui.utils import recode2
+from time import sleep
 import gobject
 win32 = sys.platform.startswith("win")
 
