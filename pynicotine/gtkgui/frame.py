@@ -1798,7 +1798,11 @@ class NicotineFrame(MainWindow):
 				return
 		else:
 			popupWarning(None, _("Cannot Find Guide"), _("The Nicotine Offline Guide ( NicotinePlusGuide.html ) was not found in either the following directories:\n\n<u>%(pwd)s\n</u><b>and</b>\n<u>%(prefix)s/share/nicotine/documentation/</u>\n\nEither install Nicotine-Plus, or start from inside the Nicotine-Plus source directory." % {'pwd':path1, 'prefix':sys.prefix } ) )
-		
+	
+	def OnOnlineNicotineGuide(self, widget):
+		url = "http://nicotine-plus.sourceforge.net/NicotinePlusGuide/"
+		self.OpenUrl(url)
+			
 	def OnSourceForgeProject(self, widget):
 		url = "http://sourceforge.net/projects/nicotine-plus/"
 		self.OpenUrl(url)

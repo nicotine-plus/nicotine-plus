@@ -312,6 +312,14 @@ class MainWindow:
 		self.nicotine_guide1.set_image(img)
 		self.help1_menu.append(self.nicotine_guide1)
 
+		self.nicotine_guide3 = gtk.ImageMenuItem(_("Online Nicotine Plus Guide"))
+		self.nicotine_guide3.show()
+		self.nicotine_guide3.connect("activate", self.OnOnlineNicotineGuide)
+
+		img = gtk.image_new_from_stock(gtk.STOCK_HELP, gtk.ICON_SIZE_MENU)
+		self.nicotine_guide3.set_image(img)
+		self.help1_menu.append(self.nicotine_guide3)
+
 		self.SourceForgeProject = gtk.ImageMenuItem(_("Sourceforge Project Website"))
 		self.SourceForgeProject.show()
 		self.SourceForgeProject.connect("activate", self.OnSourceForgeProject)
@@ -362,13 +370,13 @@ class MainWindow:
 
 		self.help1_menu.append(self.scheidingslijn4)
 
-		self.abour_search_filters1 = gtk.ImageMenuItem(_("About _search filters"))
-		self.abour_search_filters1.show()
-		self.abour_search_filters1.connect("activate", self.OnAboutFilters)
+		self.about_search_filters1 = gtk.ImageMenuItem(_("About _search filters"))
+		self.about_search_filters1.show()
+		self.about_search_filters1.connect("activate", self.OnAboutFilters)
 
 		img = gtk.image_new_from_stock(gtk.STOCK_HELP, gtk.ICON_SIZE_MENU)
-		self.abour_search_filters1.set_image(img)
-		self.help1_menu.append(self.abour_search_filters1)
+		self.about_search_filters1.set_image(img)
+		self.help1_menu.append(self.about_search_filters1)
 
 		self.scheidingslijn3 = gtk.MenuItem()
 		self.scheidingslijn3.show()
@@ -1146,32 +1154,6 @@ class MainWindow:
 
 		self.hbox12.pack_end(self.SimilarUsersButton, False, False, 0)
 
-		self.GlobalRecommendationsButton = gtk.Button()
-		self.GlobalRecommendationsButton.show()
-		self.GlobalRecommendationsButton.connect("clicked", self.OnGlobalRecommendationsClicked)
-
-		self.alignment4 = gtk.Alignment(0.5, 0.5, 0, 0)
-		self.alignment4.show()
-
-		self.hbox24 = gtk.HBox(False, 0)
-		self.hbox24.show()
-		self.hbox24.set_spacing(2)
-
-		self.image4 = gtk.Image()
-		self.image4.set_from_stock(gtk.STOCK_REFRESH, 4)
-		self.image4.show()
-		self.hbox24.pack_start(self.image4, False, False, 0)
-
-		self.label33 = gtk.Label(_("Global recommendations"))
-		self.label33.show()
-		self.hbox24.pack_start(self.label33, False, False, 0)
-
-		self.alignment4.add(self.hbox24)
-
-		self.GlobalRecommendationsButton.add(self.alignment4)
-
-		self.hbox12.pack_end(self.GlobalRecommendationsButton, False, False, 0)
-
 		self.RecommendationsButton = gtk.Button()
 		self.RecommendationsButton.show()
 		self.RecommendationsButton.connect("clicked", self.OnRecommendationsClicked)
@@ -1197,6 +1179,32 @@ class MainWindow:
 		self.RecommendationsButton.add(self.alignment5)
 
 		self.hbox12.pack_end(self.RecommendationsButton, False, False, 0)
+
+		self.GlobalRecommendationsButton = gtk.Button()
+		self.GlobalRecommendationsButton.show()
+		self.GlobalRecommendationsButton.connect("clicked", self.OnGlobalRecommendationsClicked)
+
+		self.alignment4 = gtk.Alignment(0.5, 0.5, 0, 0)
+		self.alignment4.show()
+
+		self.hbox24 = gtk.HBox(False, 0)
+		self.hbox24.show()
+		self.hbox24.set_spacing(2)
+
+		self.image4 = gtk.Image()
+		self.image4.set_from_stock(gtk.STOCK_REFRESH, 4)
+		self.image4.show()
+		self.hbox24.pack_start(self.image4, False, False, 0)
+
+		self.label33 = gtk.Label(_("Global recommendations"))
+		self.label33.show()
+		self.hbox24.pack_start(self.label33, False, False, 0)
+
+		self.alignment4.add(self.hbox24)
+
+		self.GlobalRecommendationsButton.add(self.alignment4)
+
+		self.hbox12.pack_end(self.GlobalRecommendationsButton, False, False, 0)
 
 		self.interests.pack_start(self.hbox12, False, True, 0)
 
@@ -1538,6 +1546,9 @@ class MainWindow:
 	def OnNicotineGuide(self, widget):
 		pass
 
+	def OnOnlineNicotineGuide(self, widget):
+		pass
+
 	def OnSourceForgeProject(self, widget):
 		pass
 
@@ -1577,10 +1588,10 @@ class MainWindow:
 	def OnSimilarUsersClicked(self, widget):
 		pass
 
-	def OnGlobalRecommendationsClicked(self, widget):
+	def OnRecommendationsClicked(self, widget):
 		pass
 
-	def OnRecommendationsClicked(self, widget):
+	def OnGlobalRecommendationsClicked(self, widget):
 		pass
 
 	def OnAddThingILike(self, widget):

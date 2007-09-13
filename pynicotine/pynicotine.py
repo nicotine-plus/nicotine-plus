@@ -847,6 +847,10 @@ class NetworkEventProcessor:
 		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 1)
 
 	def CheckUser(self, user, geoip, addr):
+		"""
+		Check if this user is banned, geoip-blocked, and which shares
+		it is allowed to access based on transfer and shares settings.
+		"""
 		if user in self.config.sections["server"]["banlist"]:
 			if self.config.sections["transfers"]["usecustomban"]:
 				return 0, _("Banned (%s)") % self.config.sections["transfers"]["customban"]

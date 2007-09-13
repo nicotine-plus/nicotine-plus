@@ -1351,7 +1351,19 @@ class LogFrame(settings_glade.LogFrame):
 		if dir is not None:
 			for directory in dir: # iterate over selected files
 				self.PrivateLogDir.set_text(recode(directory))
-
+				
+	def OnDefaultTimestamp(self, widget):
+		defaults = self.frame.np.config.defaults
+		self.LogFileFormat.set_text(defaults["logging"]["log_timestamp"])
+		
+	def OnRoomDefaultTimestamp(self, widget):
+		defaults = self.frame.np.config.defaults
+		self.ChatRoomFormat.set_text(defaults["logging"]["rooms_timestamp"])
+		
+	def OnPrivateDefaultTimestamp(self, widget):
+		defaults = self.frame.np.config.defaults
+		self.PrivateChatFormat.set_text(defaults["logging"]["private_timestamp"])
+		
 class SearchFrame(settings_glade.SearchFrame):
 	def __init__(self, parent):
 		self.p = parent
