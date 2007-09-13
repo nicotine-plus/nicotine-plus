@@ -546,20 +546,26 @@ def escapeCommand(filename):
 		escaped += ch
 	return escaped
 
-def displayTraceback(exception):
+def displayTraceback(exception=None):
+	global log
 	import traceback
-	tb = traceback.format_tb(exception)
+	if exception is None:
+		tb = traceback.format_tb(sys.exc_info()[2])
+	else:
+		tb = traceback.format_tb(exception)
+	if log: log("Traceback: "+ str(sys.exc_info()[0].__name__) + ": "+str(sys.exc_info()[1]))
 	for line in tb:
 		if type(line) is tuple:
 			xline = ""
 			for item in line:
 				xline += str(item) + " "
 			line = xline
-		
-		if line is tb[0]:
-			if log:
-				 log(line)
-			print str(line)
+
+		line = line.strip("\n")
+		if log:
+			log(line)
+
+	traceback.print_exc()
 
 ## Dictionary that's sorted alphabetically
 # @param UserDict dictionary to be alphabetized	

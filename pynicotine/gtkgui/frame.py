@@ -42,7 +42,7 @@ from settingswindow import SettingsWindow
 from about import *
 from checklatest import checklatest
 from pynicotine.config import *
-import utils
+import utils, pynicotine.utils
 from utils import AppendLine, ImageLabel, IconNotebook, ScrollBottom, PopupMenu, Humanize, popupWarning
 import translux
 from dirchooser import ChooseFile
@@ -140,6 +140,7 @@ class NicotineFrame(MainWindow):
 		utils.PROTOCOL_HANDLERS["slsk"] = self.OnSoulSeek
 		utils.USERNAMEHOTSPOTS = config["ui"]["usernamehotspots"]
 		utils.NICOTINE = self
+		pynicotine.utils.log = self.logMessage
 		
 		self.LoadIcons()
 		self.ChangeTranslation = ChangeTranslation

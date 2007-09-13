@@ -29,7 +29,7 @@ from dirchooser import ChooseDir
 from entrydialog import *
 from pynicotine import slskmessages
 
-from pynicotine.utils import _
+from pynicotine.utils import _, displayTraceback
 
 class UserBrowse(UserBrowseTab):
 	def __init__(self, userbrowses, user, conn):
@@ -158,7 +158,8 @@ class UserBrowse(UserBrowseTab):
 		self.FolderTreeView.get_selection().connect("changed", self.OnSelectDir)
 		
 		# DecodedFilename, HSize, Bitrate, HLength, Size, Length, RawFilename
-		self.FileStore = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_INT, gobject.TYPE_INT, gobject.TYPE_STRING)
+		self.FileStore = gtk.ListStore(str, str, str, str, gobject.TYPE_INT64, int, str)
+
 		self.FileTreeView.set_model(self.FileStore)
 		cols = InitialiseColumns(self.FileTreeView,
 			[_("Filename"), 250, "text", self.CellDataFunc],
@@ -427,6 +428,7 @@ class UserBrowse(UserBrowseTab):
 		
 
 		files = self.shares[directory]
+
 		for file in files:
 			# DecodedFilename, HSize, Bitrate, HLength, Size, Length, RawFilename
 			rl = 0
@@ -455,10 +457,13 @@ class UserBrowse(UserBrowseTab):
 				else:
 					f += ["", ""]
 			
-			f += [size, rl, file[1]]
+			f += [long(size), rl, file[1]]
 
-			self.files[f[0]] = self.FileStore.append(f)
-		
+			try:
+				self.files[f[0]] = self.FileStore.append(f)
+			except Exception, error:
+				displayTraceback()
+
 			
 	def OnSave(self, widget):
 		configdir, config = os.path.split(self.frame.np.config.filename)
