@@ -1587,7 +1587,7 @@ class UrlCatchFrame(settings_glade.UrlCatchFrame):
 		if urls["protocols"] is not None:
 			for key in urls["protocols"].keys():
 				if urls["protocols"][key] == "firefox \"%s\" &":
-					command = "firefox %s"
+					command = "firefox \"%s\""
 				elif urls["protocols"][key][-1] == "&":
 					command = urls["protocols"][key][:-1]
 				else:
@@ -1629,6 +1629,13 @@ class UrlCatchFrame(settings_glade.UrlCatchFrame):
 
 	def OnURLCatchingToggled(self, widget):
 		self.HumanizeURLs.set_active(widget.get_active())
+		act = self.URLCatching.get_active()
+		self.RemoveHandler.set_sensitive(act)
+		self.addButton.set_sensitive(act)
+		self.HumanizeURLs.set_sensitive(act)
+		self.ProtocolHandlers.set_sensitive(act)
+		self.ProtocolCombo.set_sensitive(act)
+		self.Handler.set_sensitive(act)
 
 	def OnSelect(self, selection):
 		model, iter = selection.get_selected()
