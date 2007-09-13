@@ -771,10 +771,10 @@ class SoundsFrame(settings_glade.SoundsFrame):
 		for item in ["play -q", "ogg123 -q", "Gstreamer (gst-python)"]:
 			self.SoundCommand.append_text(item)
 		self.SoundButton.connect("clicked", self.OnChooseSoundDir)
-		self.DefaultSoundCommand.connect("clicked", self.DefaultSound, self.SoundCommand)
-		self.DefaultTTSCommand.connect("clicked", self.DefaultTTS, self.TTSCommand)
-		self.DefaultPrivateMessage.connect("clicked", self.DefaultPrivate, self.PrivateMessage)
-		self.DefaultRoomMessage.connect("clicked", self.DefaultRooms, self.RoomMessage)
+		self.DefaultSoundCommand.connect("clicked", self.DefaultSound)
+		self.DefaultTTSCommand.connect("clicked", self.DefaultTTS)
+		self.DefaultPrivateMessage.connect("clicked", self.DefaultPrivate)
+		self.DefaultRoomMessage.connect("clicked", self.DefaultRooms)
 		
 	def OnNoSoundToggled(self, widget):
 		self.OnSoundCheckToggled(None)
@@ -789,18 +789,17 @@ class SoundsFrame(settings_glade.SoundsFrame):
 		self.sndcmdLabel.set_sensitive(sensitive)
 		self.snddirLabel.set_sensitive(sensitive)
 		
-	def DefaultPrivate(self, widget, entry):
-		entry.set_text("%s sent PM. %s")
+	def DefaultPrivate(self, widget):
+		self.PrivateMessage.set_text("%(user)s told you.. %(message)s")
 		
-	def DefaultRooms(self, widget, entry):
-		entry.set_text("In %s, %s said %s")
+	def DefaultRooms(self, widget):
+		self.RoomMessage.set_text("In %(room)s, %(user)s said %(message)s")
 		
-	def DefaultTTS(self, widget, combo):
-		combo.child.set_text("flite -t \"%s\"")
+	def DefaultTTS(self, widget):
+		self.TTSCommand.child.set_text("flite -t \"%s\"")
 		
-	def DefaultSound(self, widget, combo):
-		
-		combo.child.set_text("play -q")
+	def DefaultSound(self, widget):
+		self.SoundCommand.child.set_text("play -q")
 		
 	def OnTextToSpeechToggled(self, widget):
 		sensitive = self.TextToSpeech.get_active()
@@ -811,8 +810,11 @@ class SoundsFrame(settings_glade.SoundsFrame):
 		
 	def SetSettings(self, config):
 		self.p.SetWidgetsData(config, self.options)
-					
-
+		for i in ["%(user)s", "%(message)s"]:
+			if i not in config["ui"]["speechprivate"]:
+				self.DefaultPrivate(None)
+			if i not in config["ui"]["speechrooms"]:
+				self.DefaultRooms(None)
 		self.OnSoundCheckToggled(self.SoundCheck)
 		self.OnTextToSpeechToggled(self.TextToSpeech)
 

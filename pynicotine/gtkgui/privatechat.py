@@ -388,7 +388,7 @@ class PrivateChat(PrivateChatTab):
 			
 			AppendLine(self.ChatScroll, _("* Message(s) sent while you were offline."), self.tag_hilite, timestamp_format=timestamp_format)
 			self.offlinemessage = 1
-		self.frame.new_tts(self.frame.np.config.sections["ui"]["speechprivate"] %(self.frame.tts_clean(self.user), self.frame.tts_clean(speech)) )
+		self.frame.new_tts(self.frame.np.config.sections["ui"]["speechprivate"] %{"user":self.frame.tts_clean(self.user), "message": self.frame.tts_clean(speech)} )
 
 	def SendMessage(self, text):
 		my_username = self.frame.np.config.sections["server"]["login"]

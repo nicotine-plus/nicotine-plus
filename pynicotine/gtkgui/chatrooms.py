@@ -706,7 +706,7 @@ class ChatRoom(ChatRoomTab):
 		if user != login:
 			self.lines.append(AppendLine(self.ChatScroll, self.frame.CensorChat(self.frame.np.decode(line, self.encoding)), tag, username=user, usertag=self.tag_users[user], timestamp_format=timestamp_format))
 			if self.Speech.get_active():
-				self.frame.new_tts(self.frame.np.config.sections["ui"]["speechrooms"] % (self.room, self.frame.tts_clean(user), self.frame.tts_clean(self.frame.np.decode(speech, self.encoding))) )
+				self.frame.new_tts(self.frame.np.config.sections["ui"]["speechrooms"] % {"room": self.room, "user": self.frame.tts_clean(user), "message": self.frame.tts_clean(self.frame.np.decode(speech, self.encoding))} )
 		else:
 			self.lines.append(AppendLine(self.ChatScroll, self.frame.np.decode(line, self.encoding), tag, username=user, usertag=self.tag_users[user], timestamp_format=timestamp_format))
 		if self.Log.get_active():
