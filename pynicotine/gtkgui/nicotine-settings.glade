@@ -5113,18 +5113,43 @@
             <property name="border_width">5</property>
             <property name="spacing">5</property>
             <child>
-              <widget class="GtkCheckButton" id="SoundCheck">
+              <widget class="GtkHBox" id="hbox44">
                 <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="label" translatable="yes">Enable Sound Effects</property>
-                <property name="use_underline">True</property>
-                <property name="response_id">0</property>
-                <property name="draw_indicator">True</property>
-                <signal name="toggled" handler="OnSoundCheckToggled"/>
+                <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                <property name="spacing">5</property>
+                <property name="homogeneous">True</property>
+                <child>
+                  <widget class="GtkRadioButton" id="SoundCheck">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                    <property name="label" translatable="yes">Enable Sound Effects</property>
+                    <property name="response_id">0</property>
+                    <property name="draw_indicator">True</property>
+                    <signal name="toggled" handler="OnSoundCheckToggled"/>
+                  </widget>
+                  <packing>
+                    <property name="expand">False</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkRadioButton" id="NoSounds">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                    <property name="label" translatable="yes">No Sounds</property>
+                    <property name="response_id">0</property>
+                    <property name="draw_indicator">True</property>
+                    <property name="group">SoundCheck</property>
+                    <signal name="toggled" handler="OnNoSoundToggled"/>
+                  </widget>
+                  <packing>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
               </widget>
               <packing>
                 <property name="expand">False</property>
-                <property name="fill">False</property>
               </packing>
             </child>
             <child>
@@ -5292,44 +5317,19 @@
               </packing>
             </child>
             <child>
-              <widget class="GtkLabel" id="label421">
-                <property name="visible">True</property>
-                <property name="xalign">0</property>
-                <property name="label" translatable="yes">Audio Player Command ($ for filename):</property>
-              </widget>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="padding">5</property>
-                <property name="position">4</property>
-              </packing>
-            </child>
-            <child>
-              <widget class="GtkComboBoxEntry" id="audioPlayerCombo">
-                <property name="visible">True</property>
-                <child internal-child="entry">
-                  <widget class="GtkEntry" id="comboboxentry-entry8">
-                  </widget>
-                </child>
-              </widget>
-              <packing>
-                <property name="expand">False</property>
-                <property name="position">5</property>
-              </packing>
-            </child>
-            <child>
-              <widget class="GtkCheckButton" id="TextToSpeech">
+              <widget class="GtkRadioButton" id="TextToSpeech">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                 <property name="label" translatable="yes">Enable Text To Speech</property>
                 <property name="response_id">0</property>
                 <property name="draw_indicator">True</property>
+                <property name="group">SoundCheck</property>
                 <signal name="toggled" handler="OnTextToSpeechToggled"/>
               </widget>
               <packing>
                 <property name="expand">False</property>
-                <property name="position">6</property>
+                <property name="position">4</property>
               </packing>
             </child>
             <child>
@@ -5408,7 +5408,7 @@
               </widget>
               <packing>
                 <property name="expand">False</property>
-                <property name="position">7</property>
+                <property name="position">5</property>
               </packing>
             </child>
             <child>
@@ -5487,7 +5487,7 @@
               </widget>
               <packing>
                 <property name="expand">False</property>
-                <property name="position">8</property>
+                <property name="position">6</property>
               </packing>
             </child>
             <child>
@@ -5562,6 +5562,32 @@
                     <property name="fill">False</property>
                     <property name="position">2</property>
                   </packing>
+                </child>
+              </widget>
+              <packing>
+                <property name="expand">False</property>
+                <property name="position">7</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkLabel" id="label421">
+                <property name="visible">True</property>
+                <property name="xalign">0</property>
+                <property name="label" translatable="yes">Audio Player Command ($ for filename):</property>
+              </widget>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="padding">5</property>
+                <property name="position">8</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkComboBoxEntry" id="audioPlayerCombo">
+                <property name="visible">True</property>
+                <child internal-child="entry">
+                  <widget class="GtkEntry" id="comboboxentry-entry8">
+                  </widget>
                 </child>
               </widget>
               <packing>
@@ -7719,6 +7745,7 @@ Right</property>
                               <widget class="GtkButton" id="PickLocal">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
+                                <property name="xalign">0</property>
                                 <property name="response_id">0</property>
                                 <child>
                                   <widget class="GtkAlignment" id="alignment43">
@@ -7768,6 +7795,7 @@ Right</property>
                               <widget class="GtkButton" id="PickMe">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
+                                <property name="xalign">0</property>
                                 <property name="response_id">0</property>
                                 <child>
                                   <widget class="GtkAlignment" id="alignment44">
@@ -7903,6 +7931,7 @@ Right</property>
                               <widget class="GtkButton" id="PickOnline">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
+                                <property name="xalign">0</property>
                                 <property name="response_id">0</property>
                                 <child>
                                   <widget class="GtkAlignment" id="alignment78">
@@ -7952,6 +7981,7 @@ Right</property>
                               <widget class="GtkButton" id="PickOffline">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
+                                <property name="xalign">0</property>
                                 <property name="response_id">0</property>
                                 <child>
                                   <widget class="GtkAlignment" id="alignment79">
@@ -8001,6 +8031,7 @@ Right</property>
                               <widget class="GtkButton" id="PickAway">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
+                                <property name="xalign">0</property>
                                 <property name="response_id">0</property>
                                 <child>
                                   <widget class="GtkAlignment" id="alignment80">
@@ -8051,6 +8082,7 @@ Right</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="editable">False</property>
+                                <property name="width_chars">20</property>
                               </widget>
                               <packing>
                                 <property name="left_attach">1</property>
@@ -8412,6 +8444,7 @@ Right</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="editable">False</property>
+                                <property name="width_chars">20</property>
                               </widget>
                               <packing>
                                 <property name="left_attach">1</property>
@@ -8426,6 +8459,7 @@ Right</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="editable">False</property>
+                                <property name="width_chars">20</property>
                               </widget>
                               <packing>
                                 <property name="left_attach">1</property>
@@ -8440,6 +8474,7 @@ Right</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="editable">False</property>
+                                <property name="width_chars">20</property>
                               </widget>
                               <packing>
                                 <property name="left_attach">1</property>
@@ -8454,6 +8489,7 @@ Right</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="editable">False</property>
+                                <property name="width_chars">20</property>
                               </widget>
                               <packing>
                                 <property name="left_attach">1</property>
@@ -8468,6 +8504,7 @@ Right</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="editable">False</property>
+                                <property name="width_chars">20</property>
                               </widget>
                               <packing>
                                 <property name="left_attach">1</property>
@@ -8567,6 +8604,7 @@ Right</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="editable">False</property>
+                                <property name="width_chars">20</property>
                               </widget>
                               <packing>
                                 <property name="left_attach">1</property>
@@ -8581,6 +8619,7 @@ Right</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="editable">False</property>
+                                <property name="width_chars">20</property>
                               </widget>
                               <packing>
                                 <property name="left_attach">1</property>
@@ -8665,7 +8704,6 @@ Right</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                    <property name="expanded">True</property>
                     <signal name="activate" handler="OnExpand"/>
                     <child>
                       <widget class="GtkAlignment" id="alignment6">
@@ -8688,6 +8726,7 @@ Right</property>
                               <widget class="GtkButton" id="PickImmediate">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
+                                <property name="xalign">0</property>
                                 <property name="response_id">0</property>
                                 <child>
                                   <widget class="GtkAlignment" id="alignment46">
@@ -8737,6 +8776,7 @@ Right</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="editable">False</property>
+                                <property name="width_chars">20</property>
                               </widget>
                               <packing>
                                 <property name="left_attach">1</property>
@@ -8796,6 +8836,7 @@ Right</property>
                               <widget class="GtkButton" id="PickQueue">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
+                                <property name="xalign">0</property>
                                 <property name="response_id">0</property>
                                 <child>
                                   <widget class="GtkAlignment" id="alignment47">
@@ -8846,6 +8887,7 @@ Right</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="editable">False</property>
+                                <property name="width_chars">20</property>
                               </widget>
                               <packing>
                                 <property name="left_attach">1</property>
@@ -8859,6 +8901,7 @@ Right</property>
                               <widget class="GtkButton" id="PickOfflineSearch">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
+                                <property name="xalign">0</property>
                                 <property name="response_id">0</property>
                                 <child>
                                   <widget class="GtkAlignment" id="alignment7">
@@ -8924,6 +8967,7 @@ Right</property>
                               <widget class="GtkButton" id="PickBackground">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
+                                <property name="xalign">0</property>
                                 <property name="response_id">0</property>
                                 <child>
                                   <widget class="GtkAlignment" id="alignment93">
@@ -8973,6 +9017,7 @@ Right</property>
                               <widget class="GtkButton" id="PickInput">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
+                                <property name="xalign">0</property>
                                 <property name="response_id">0</property>
                                 <child>
                                   <widget class="GtkAlignment" id="alignment100">
@@ -9023,6 +9068,7 @@ Right</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="editable">False</property>
+                                <property name="width_chars">20</property>
                               </widget>
                               <packing>
                                 <property name="left_attach">1</property>
@@ -9037,6 +9083,7 @@ Right</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="editable">False</property>
+                                <property name="width_chars">20</property>
                               </widget>
                               <packing>
                                 <property name="left_attach">1</property>
@@ -9051,6 +9098,7 @@ Right</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="editable">False</property>
+                                <property name="width_chars">20</property>
                               </widget>
                               <packing>
                                 <property name="left_attach">1</property>
@@ -9286,7 +9334,6 @@ Right</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                    <property name="expanded">True</property>
                     <child>
                       <widget class="GtkAlignment" id="alignment37">
                         <property name="visible">True</property>
@@ -9308,6 +9355,7 @@ Right</property>
                               <widget class="GtkButton" id="PickHighlightTab">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
+                                <property name="xalign">0</property>
                                 <property name="response_id">0</property>
                                 <child>
                                   <widget class="GtkAlignment" id="alignment38">
@@ -9333,6 +9381,7 @@ Right</property>
                                         <child>
                                           <widget class="GtkLabel" id="label54">
                                             <property name="visible">True</property>
+                                            <property name="xalign">0</property>
                                             <property name="label" translatable="yes">Highlight</property>
                                             <property name="use_underline">True</property>
                                           </widget>
@@ -9348,6 +9397,8 @@ Right</property>
                                 </child>
                               </widget>
                               <packing>
+                                <property name="top_attach">3</property>
+                                <property name="bottom_attach">4</property>
                                 <property name="x_options">GTK_FILL</property>
                                 <property name="y_options"></property>
                               </packing>
@@ -9357,10 +9408,13 @@ Right</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="editable">False</property>
+                                <property name="width_chars">20</property>
                               </widget>
                               <packing>
                                 <property name="left_attach">1</property>
                                 <property name="right_attach">2</property>
+                                <property name="top_attach">3</property>
+                                <property name="bottom_attach">4</property>
                                 <property name="y_options"></property>
                               </packing>
                             </child>
@@ -9408,6 +9462,8 @@ Right</property>
                               <packing>
                                 <property name="left_attach">2</property>
                                 <property name="right_attach">3</property>
+                                <property name="top_attach">3</property>
+                                <property name="bottom_attach">4</property>
                                 <property name="x_options">GTK_FILL</property>
                                 <property name="y_options"></property>
                               </packing>
@@ -9416,6 +9472,7 @@ Right</property>
                               <widget class="GtkButton" id="PickChangedTab">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
+                                <property name="xalign">0</property>
                                 <property name="response_id">0</property>
                                 <child>
                                   <widget class="GtkAlignment" id="alignment50">
@@ -9440,11 +9497,12 @@ Right</property>
                                         <child>
                                           <widget class="GtkLabel" id="label56">
                                             <property name="visible">True</property>
+                                            <property name="xalign">0</property>
                                             <property name="label" translatable="yes">Changed</property>
                                             <property name="use_underline">True</property>
+                                            <property name="width_chars">11</property>
                                           </widget>
                                           <packing>
-                                            <property name="expand">False</property>
                                             <property name="fill">False</property>
                                             <property name="position">1</property>
                                           </packing>
@@ -9455,8 +9513,8 @@ Right</property>
                                 </child>
                               </widget>
                               <packing>
-                                <property name="top_attach">1</property>
-                                <property name="bottom_attach">2</property>
+                                <property name="top_attach">2</property>
+                                <property name="bottom_attach">3</property>
                                 <property name="x_options">GTK_FILL</property>
                                 <property name="y_options"></property>
                               </packing>
@@ -9466,12 +9524,13 @@ Right</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="editable">False</property>
+                                <property name="width_chars">20</property>
                               </widget>
                               <packing>
                                 <property name="left_attach">1</property>
                                 <property name="right_attach">2</property>
-                                <property name="top_attach">1</property>
-                                <property name="bottom_attach">2</property>
+                                <property name="top_attach">2</property>
+                                <property name="bottom_attach">3</property>
                                 <property name="y_options"></property>
                               </packing>
                             </child>
@@ -9479,6 +9538,7 @@ Right</property>
                               <widget class="GtkButton" id="PickDefaultTab">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
+                                <property name="xalign">0</property>
                                 <property name="response_id">0</property>
                                 <child>
                                   <widget class="GtkAlignment" id="alignment51">
@@ -9503,6 +9563,7 @@ Right</property>
                                         <child>
                                           <widget class="GtkLabel" id="TabDefaultLabel">
                                             <property name="visible">True</property>
+                                            <property name="xalign">0</property>
                                             <property name="label" translatable="yes">Default</property>
                                             <property name="use_underline">True</property>
                                           </widget>
@@ -9518,8 +9579,8 @@ Right</property>
                                 </child>
                               </widget>
                               <packing>
-                                <property name="top_attach">2</property>
-                                <property name="bottom_attach">3</property>
+                                <property name="top_attach">1</property>
+                                <property name="bottom_attach">2</property>
                                 <property name="x_options">GTK_FILL</property>
                                 <property name="y_options"></property>
                               </packing>
@@ -9529,12 +9590,13 @@ Right</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="editable">False</property>
+                                <property name="width_chars">20</property>
                               </widget>
                               <packing>
                                 <property name="left_attach">1</property>
                                 <property name="right_attach">2</property>
-                                <property name="top_attach">2</property>
-                                <property name="bottom_attach">3</property>
+                                <property name="top_attach">1</property>
+                                <property name="bottom_attach">2</property>
                                 <property name="y_options"></property>
                               </packing>
                             </child>
@@ -9582,8 +9644,8 @@ Right</property>
                               <packing>
                                 <property name="left_attach">2</property>
                                 <property name="right_attach">3</property>
-                                <property name="top_attach">1</property>
-                                <property name="bottom_attach">2</property>
+                                <property name="top_attach">2</property>
+                                <property name="bottom_attach">3</property>
                                 <property name="x_options">GTK_FILL</property>
                                 <property name="y_options"></property>
                               </packing>
@@ -9632,9 +9694,22 @@ Right</property>
                               <packing>
                                 <property name="left_attach">2</property>
                                 <property name="right_attach">3</property>
-                                <property name="top_attach">2</property>
-                                <property name="bottom_attach">3</property>
+                                <property name="top_attach">1</property>
+                                <property name="bottom_attach">2</property>
                                 <property name="x_options">GTK_FILL</property>
+                                <property name="y_options"></property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkLabel" id="label39">
+                                <property name="visible">True</property>
+                                <property name="xalign">0</property>
+                                <property name="ypad">5</property>
+                                <property name="label" translatable="yes">Notebook tab labels change to these colours.</property>
+                                <property name="use_markup">True</property>
+                              </widget>
+                              <packing>
+                                <property name="right_attach">3</property>
                                 <property name="y_options"></property>
                               </packing>
                             </child>
@@ -9955,7 +10030,6 @@ Right</property>
                   </widget>
                   <packing>
                     <property name="expand">False</property>
-                    <property name="fill">False</property>
                     <property name="position">4</property>
                   </packing>
                 </child>

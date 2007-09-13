@@ -775,9 +775,13 @@ class SoundsFrame(settings_glade.SoundsFrame):
 		self.DefaultTTSCommand.connect("clicked", self.DefaultTTS, self.TTSCommand)
 		self.DefaultPrivateMessage.connect("clicked", self.DefaultPrivate, self.PrivateMessage)
 		self.DefaultRoomMessage.connect("clicked", self.DefaultRooms, self.RoomMessage)
-			
+		
+	def OnNoSoundToggled(self, widget):
+		self.OnSoundCheckToggled(None)
+		self.OnTextToSpeechToggled(None)
+		
 	def OnSoundCheckToggled(self, widget):
-		sensitive = widget.get_active()
+		sensitive = self.SoundCheck.get_active()
 		self.SoundCommand.set_sensitive(sensitive)
 		self.SoundDirectory.set_sensitive(sensitive)
 		self.SoundButton.set_sensitive(sensitive)
@@ -799,7 +803,7 @@ class SoundsFrame(settings_glade.SoundsFrame):
 		combo.child.set_text("play -q")
 		
 	def OnTextToSpeechToggled(self, widget):
-		sensitive = widget.get_active()
+		sensitive = self.TextToSpeech.get_active()
 		for widget in [self.SoundCommand,  self.SoundDirectory,  self.SoundButton, self.DefaultSoundCommand, self.sndcmdLabel, self.snddirLabel]:
 			widget.set_sensitive(not sensitive and self.SoundCheck.get_active())
 		for widget in [self.roomMessageBox, self.privateMessageBox, self.ttsCommandBox]:
@@ -1102,7 +1106,7 @@ class ColoursFrame(settings_glade.ColoursFrame):
 		
 	def OnUsernameHotspotsToggled(self, widget):
 		sensitive = widget.get_active()
-		self.AwayColor.set_sensitive(sensitive)
+		self.AwayColor.set_sensitive(sensitive and self.DisplayAwayColours.get_active())
 		self.OnlineColor.set_sensitive(sensitive)
 		self.OfflineColor.set_sensitive(sensitive)
 		

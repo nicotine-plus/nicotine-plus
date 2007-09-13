@@ -696,14 +696,14 @@ class NicotineFrame(MainWindow):
 	def sound(self, message, user, place=None):
 		if sys.platform == "win32":
 			return
-		if "soundenabled" not in self.np.config.sections["ui"] or not self.np.config.sections["ui"]["soundenabled"]:
-			return
 		
 		if self.np.config.sections["ui"]["speechenabled"]:
 			if message == "room_nick" and place is not None:
 				self.new_tts(_("%(myusername)s, the user, %(username)s has mentioned your name in the room, %(place)s.") %{ "myusername": self.np.config.sections[ "server"]["login"], "username": user, "place": place} )
 			elif message == "private":
 				self.new_tts("%(myusername)s, you have recieved a private message from %(username)s." % {"myusername":self.np.config.sections["server"]["login"], "username":user } )
+			return
+		if "soundenabled" not in self.np.config.sections["ui"] or not self.np.config.sections["ui"]["soundenabled"]:
 			return
 		if "soundcommand" not in self.np.config.sections["ui"]:
 			return

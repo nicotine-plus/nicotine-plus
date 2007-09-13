@@ -3162,12 +3162,25 @@ class SoundsFrame:
 		self.vbox119.set_spacing(5)
 		self.vbox119.set_border_width(5)
 
-		self.SoundCheck = gtk.CheckButton()
+		self.hbox44 = gtk.HBox(True, 0)
+		self.hbox44.show()
+		self.hbox44.set_spacing(5)
+
+		self.SoundCheck = gtk.RadioButton()
 		self.SoundCheck.set_label(_("Enable Sound Effects"))
 		self.SoundCheck.show()
 		self.SoundCheck.connect("toggled", self.OnSoundCheckToggled)
 
-		self.vbox119.pack_start(self.SoundCheck, False, False, 0)
+		self.hbox44.pack_start(self.SoundCheck, False, True, 0)
+
+		self.NoSounds = gtk.RadioButton(self.SoundCheck)
+		self.NoSounds.set_label(_("No Sounds"))
+		self.NoSounds.show()
+		self.NoSounds.connect("toggled", self.OnNoSoundToggled)
+
+		self.hbox44.pack_start(self.NoSounds)
+
+		self.vbox119.pack_start(self.hbox44, False, True, 0)
 
 		self.hbox228 = gtk.HBox(False, 0)
 		self.hbox228.show()
@@ -3259,22 +3272,7 @@ class SoundsFrame:
 
 		self.vbox119.pack_start(self.hbox1, False, True, 0)
 
-		self.label421 = gtk.Label(_("Audio Player Command ($ for filename):"))
-		self.label421.set_alignment(0, 0.50)
-		self.label421.show()
-		self.vbox119.pack_start(self.label421, False, False, 5)
-
-		self.audioPlayerCombo_List = gtk.ListStore(gobject.TYPE_STRING)
-		self.audioPlayerCombo = gtk.ComboBoxEntry()
-		self.audioPlayerCombo.show()
-
-		self.comboboxentry_entry8 = self.audioPlayerCombo.child
-
-		self.audioPlayerCombo.set_model(self.audioPlayerCombo_List)
-		self.audioPlayerCombo.set_text_column(0)
-		self.vbox119.pack_start(self.audioPlayerCombo, False, True, 0)
-
-		self.TextToSpeech = gtk.CheckButton()
+		self.TextToSpeech = gtk.RadioButton(self.SoundCheck)
 		self.TextToSpeech.set_label(_("Enable Text To Speech"))
 		self.TextToSpeech.show()
 		self.TextToSpeech.connect("toggled", self.OnTextToSpeechToggled)
@@ -3408,6 +3406,21 @@ class SoundsFrame:
 
 		self.vbox119.pack_start(self.privateMessageBox, False, True, 0)
 
+		self.label421 = gtk.Label(_("Audio Player Command ($ for filename):"))
+		self.label421.set_alignment(0, 0.50)
+		self.label421.show()
+		self.vbox119.pack_start(self.label421, False, False, 5)
+
+		self.audioPlayerCombo_List = gtk.ListStore(gobject.TYPE_STRING)
+		self.audioPlayerCombo = gtk.ComboBoxEntry()
+		self.audioPlayerCombo.show()
+
+		self.comboboxentry_entry8 = self.audioPlayerCombo.child
+
+		self.audioPlayerCombo.set_model(self.audioPlayerCombo_List)
+		self.audioPlayerCombo.set_text_column(0)
+		self.vbox119.pack_start(self.audioPlayerCombo, False, True, 0)
+
 		self.Main.add(self.vbox119)
 
 		self.label420 = gtk.Label("")
@@ -3420,6 +3433,9 @@ class SoundsFrame:
 			self.SoundsFrame.add(self.Main)
 
 	def OnSoundCheckToggled(self, widget):
+		pass
+
+	def OnNoSoundToggled(self, widget):
 		pass
 
 	def OnTextToSpeechToggled(self, widget):
@@ -4715,6 +4731,7 @@ class ColoursFrame:
 		self.table1.attach(self.PickRemote, 0, 1, 0, 1, gtk.FILL, 0, 0, 0)
 
 		self.PickLocal = gtk.Button()
+		self.PickLocal.set_alignment(0, 0.50)
 		self.PickLocal.show()
 
 		self.alignment43 = gtk.Alignment(0, 0.5, 0, 0)
@@ -4740,6 +4757,7 @@ class ColoursFrame:
 		self.table1.attach(self.PickLocal, 0, 1, 1, 2, gtk.FILL, 0, 0, 0)
 
 		self.PickMe = gtk.Button()
+		self.PickMe.set_alignment(0, 0.50)
 		self.PickMe.show()
 
 		self.alignment44 = gtk.Alignment(0, 0.5, 0, 0)
@@ -4808,6 +4826,7 @@ class ColoursFrame:
 		self.table1.attach(self.hotbox1, 0, 3, 5, 6, gtk.EXPAND|gtk.FILL, gtk.FILL, 0, 0)
 
 		self.PickOnline = gtk.Button()
+		self.PickOnline.set_alignment(0, 0.50)
 		self.PickOnline.show()
 
 		self.alignment78 = gtk.Alignment(0, 0.5, 0, 0)
@@ -4833,6 +4852,7 @@ class ColoursFrame:
 		self.table1.attach(self.PickOnline, 0, 1, 6, 7, gtk.FILL, 0, 0, 0)
 
 		self.PickOffline = gtk.Button()
+		self.PickOffline.set_alignment(0, 0.50)
 		self.PickOffline.show()
 
 		self.alignment79 = gtk.Alignment(0, 0.5, 0, 0)
@@ -4858,6 +4878,7 @@ class ColoursFrame:
 		self.table1.attach(self.PickOffline, 0, 1, 7, 8, gtk.FILL, 0, 0, 0)
 
 		self.PickAway = gtk.Button()
+		self.PickAway.set_alignment(0, 0.50)
 		self.PickAway.show()
 
 		self.alignment80 = gtk.Alignment(0, 0.5, 0, 0)
@@ -4885,6 +4906,7 @@ class ColoursFrame:
 		self.Remote = gtk.Entry()
 		self.Remote.set_editable(False)
 		self.Remote.show()
+		self.Remote.set_width_chars(20)
 		self.table1.attach(self.Remote, 1, 2, 0, 1, gtk.EXPAND|gtk.FILL, 0, 0, 0)
 
 		self.DefaultRemote = gtk.Button()
@@ -5065,26 +5087,31 @@ class ColoursFrame:
 		self.Local = gtk.Entry()
 		self.Local.set_editable(False)
 		self.Local.show()
+		self.Local.set_width_chars(20)
 		self.table1.attach(self.Local, 1, 2, 1, 2, gtk.EXPAND|gtk.FILL, 0, 0, 0)
 
 		self.Me = gtk.Entry()
 		self.Me.set_editable(False)
 		self.Me.show()
+		self.Me.set_width_chars(20)
 		self.table1.attach(self.Me, 1, 2, 2, 3, gtk.EXPAND|gtk.FILL, 0, 0, 0)
 
 		self.OnlineColor = gtk.Entry()
 		self.OnlineColor.set_editable(False)
 		self.OnlineColor.show()
+		self.OnlineColor.set_width_chars(20)
 		self.table1.attach(self.OnlineColor, 1, 2, 6, 7, gtk.EXPAND|gtk.FILL, 0, 0, 0)
 
 		self.OfflineColor = gtk.Entry()
 		self.OfflineColor.set_editable(False)
 		self.OfflineColor.show()
+		self.OfflineColor.set_width_chars(20)
 		self.table1.attach(self.OfflineColor, 1, 2, 7, 8, gtk.EXPAND|gtk.FILL, 0, 0, 0)
 
 		self.AwayColor = gtk.Entry()
 		self.AwayColor.set_editable(False)
 		self.AwayColor.show()
+		self.AwayColor.set_width_chars(20)
 		self.table1.attach(self.AwayColor, 1, 2, 8, 9, gtk.EXPAND|gtk.FILL, 0, 0, 0)
 
 		self.hbox197 = gtk.HBox(False, 0)
@@ -5135,11 +5162,13 @@ class ColoursFrame:
 		self.Highlight = gtk.Entry()
 		self.Highlight.set_editable(False)
 		self.Highlight.show()
+		self.Highlight.set_width_chars(20)
 		self.table1.attach(self.Highlight, 1, 2, 3, 4, gtk.EXPAND|gtk.FILL, 0, 0, 0)
 
 		self.URL = gtk.Entry()
 		self.URL.set_editable(False)
 		self.URL.show()
+		self.URL.set_width_chars(20)
 		self.table1.attach(self.URL, 1, 2, 4, 5, gtk.EXPAND|gtk.FILL, 0, 0, 0)
 
 		self.PickURL = gtk.Button()
@@ -5179,7 +5208,6 @@ class ColoursFrame:
 		self.vboxColours.pack_start(self.ChatExpander, False, True, 0)
 
 		self.ListExpander = gtk.Expander()
-		self.ListExpander.set_expanded(True)
 		self.ListExpander.show()
 		self.ListExpander.connect("activate", self.OnExpand)
 
@@ -5193,6 +5221,7 @@ class ColoursFrame:
 		self.table7.set_col_spacings(5)
 
 		self.PickImmediate = gtk.Button()
+		self.PickImmediate.set_alignment(0, 0.50)
 		self.PickImmediate.show()
 
 		self.alignment46 = gtk.Alignment(0, 0.5, 0, 0)
@@ -5221,6 +5250,7 @@ class ColoursFrame:
 		self.Immediate = gtk.Entry()
 		self.Immediate.set_editable(False)
 		self.Immediate.show()
+		self.Immediate.set_width_chars(20)
 		self.table7.attach(self.Immediate, 1, 2, 0, 1, gtk.EXPAND|gtk.FILL, 0, 0, 0)
 
 		self.DefaultImmediate = gtk.Button()
@@ -5249,6 +5279,7 @@ class ColoursFrame:
 		self.table7.attach(self.DefaultImmediate, 2, 3, 0, 1, gtk.FILL, 0, 0, 0)
 
 		self.PickQueue = gtk.Button()
+		self.PickQueue.set_alignment(0, 0.50)
 		self.PickQueue.show()
 
 		self.alignment47 = gtk.Alignment(0, 0.5, 0, 0)
@@ -5276,9 +5307,11 @@ class ColoursFrame:
 		self.Queue = gtk.Entry()
 		self.Queue.set_editable(False)
 		self.Queue.show()
+		self.Queue.set_width_chars(20)
 		self.table7.attach(self.Queue, 1, 2, 1, 2, gtk.EXPAND|gtk.FILL, 0, 0, 0)
 
 		self.PickOfflineSearch = gtk.Button()
+		self.PickOfflineSearch.set_alignment(0, 0.50)
 		self.PickOfflineSearch.show()
 
 		self.alignment7 = gtk.Alignment(0, 0.5, 0, 0)
@@ -5311,6 +5344,7 @@ class ColoursFrame:
 		self.table7.attach(self.label11, 0, 3, 3, 4, gtk.FILL, 0, 0, 0)
 
 		self.PickBackground = gtk.Button()
+		self.PickBackground.set_alignment(0, 0.50)
 		self.PickBackground.show()
 
 		self.alignment93 = gtk.Alignment(0, 0.5, 0, 0)
@@ -5336,6 +5370,7 @@ class ColoursFrame:
 		self.table7.attach(self.PickBackground, 0, 1, 4, 5, gtk.FILL, 0, 0, 0)
 
 		self.PickInput = gtk.Button()
+		self.PickInput.set_alignment(0, 0.50)
 		self.PickInput.show()
 
 		self.alignment100 = gtk.Alignment(0, 0.5, 0, 0)
@@ -5363,16 +5398,19 @@ class ColoursFrame:
 		self.OfflineSearchEntry = gtk.Entry()
 		self.OfflineSearchEntry.set_editable(False)
 		self.OfflineSearchEntry.show()
+		self.OfflineSearchEntry.set_width_chars(20)
 		self.table7.attach(self.OfflineSearchEntry, 1, 2, 2, 3, gtk.EXPAND|gtk.FILL, 0, 0, 0)
 
 		self.BackgroundColor = gtk.Entry()
 		self.BackgroundColor.set_editable(False)
 		self.BackgroundColor.show()
+		self.BackgroundColor.set_width_chars(20)
 		self.table7.attach(self.BackgroundColor, 1, 2, 4, 5, gtk.EXPAND|gtk.FILL, 0, 0, 0)
 
 		self.InputColor = gtk.Entry()
 		self.InputColor.set_editable(False)
 		self.InputColor.show()
+		self.InputColor.set_width_chars(20)
 		self.table7.attach(self.InputColor, 1, 2, 5, 6, gtk.EXPAND|gtk.FILL, 0, 0, 0)
 
 		self.DefaultQueue = gtk.Button()
@@ -5487,7 +5525,6 @@ class ColoursFrame:
 		self.vboxColours.pack_start(self.ListExpander, False, True, 0)
 
 		self.TabExpander = gtk.Expander()
-		self.TabExpander.set_expanded(True)
 		self.TabExpander.show()
 
 		self.alignment37 = gtk.Alignment(0, 0, 0, 0)
@@ -5500,6 +5537,7 @@ class ColoursFrame:
 		self.table8.set_col_spacings(5)
 
 		self.PickHighlightTab = gtk.Button()
+		self.PickHighlightTab.set_alignment(0, 0.50)
 		self.PickHighlightTab.show()
 
 		self.alignment38 = gtk.Alignment(0, 0.5, 0, 0)
@@ -5516,6 +5554,7 @@ class ColoursFrame:
 		self.hbox54.pack_start(self.image36, False, False, 0)
 
 		self.label54 = gtk.Label(_("Highlight"))
+		self.label54.set_alignment(0, 0.50)
 		self.label54.show()
 		self.hbox54.pack_start(self.label54, False, False, 0)
 
@@ -5523,12 +5562,13 @@ class ColoursFrame:
 
 		self.PickHighlightTab.add(self.alignment38)
 
-		self.table8.attach(self.PickHighlightTab, 0, 1, 0, 1, gtk.FILL, 0, 0, 0)
+		self.table8.attach(self.PickHighlightTab, 0, 1, 3, 4, gtk.FILL, 0, 0, 0)
 
 		self.HighlightTab = gtk.Entry()
 		self.HighlightTab.set_editable(False)
 		self.HighlightTab.show()
-		self.table8.attach(self.HighlightTab, 1, 2, 0, 1, gtk.EXPAND|gtk.FILL, 0, 0, 0)
+		self.HighlightTab.set_width_chars(20)
+		self.table8.attach(self.HighlightTab, 1, 2, 3, 4, gtk.EXPAND|gtk.FILL, 0, 0, 0)
 
 		self.DefaultHighlightTab = gtk.Button()
 		self.DefaultHighlightTab.show()
@@ -5553,9 +5593,10 @@ class ColoursFrame:
 
 		self.DefaultHighlightTab.add(self.alignment39)
 
-		self.table8.attach(self.DefaultHighlightTab, 2, 3, 0, 1, gtk.FILL, 0, 0, 0)
+		self.table8.attach(self.DefaultHighlightTab, 2, 3, 3, 4, gtk.FILL, 0, 0, 0)
 
 		self.PickChangedTab = gtk.Button()
+		self.PickChangedTab.set_alignment(0, 0.50)
 		self.PickChangedTab.show()
 
 		self.alignment50 = gtk.Alignment(0, 0.5, 0, 0)
@@ -5571,21 +5612,25 @@ class ColoursFrame:
 		self.hbox56.pack_start(self.image48, False, False, 0)
 
 		self.label56 = gtk.Label(_("Changed"))
+		self.label56.set_alignment(0, 0.50)
 		self.label56.show()
-		self.hbox56.pack_start(self.label56, False, False, 0)
+		self.label56.set_width_chars(11)
+		self.hbox56.pack_start(self.label56)
 
 		self.alignment50.add(self.hbox56)
 
 		self.PickChangedTab.add(self.alignment50)
 
-		self.table8.attach(self.PickChangedTab, 0, 1, 1, 2, gtk.FILL, 0, 0, 0)
+		self.table8.attach(self.PickChangedTab, 0, 1, 2, 3, gtk.FILL, 0, 0, 0)
 
 		self.ChangedTab = gtk.Entry()
 		self.ChangedTab.set_editable(False)
 		self.ChangedTab.show()
-		self.table8.attach(self.ChangedTab, 1, 2, 1, 2, gtk.EXPAND|gtk.FILL, 0, 0, 0)
+		self.ChangedTab.set_width_chars(20)
+		self.table8.attach(self.ChangedTab, 1, 2, 2, 3, gtk.EXPAND|gtk.FILL, 0, 0, 0)
 
 		self.PickDefaultTab = gtk.Button()
+		self.PickDefaultTab.set_alignment(0, 0.50)
 		self.PickDefaultTab.show()
 
 		self.alignment51 = gtk.Alignment(0, 0.5, 0, 0)
@@ -5601,6 +5646,7 @@ class ColoursFrame:
 		self.hbox57.pack_start(self.image49, False, False, 0)
 
 		self.TabDefaultLabel = gtk.Label(_("Default"))
+		self.TabDefaultLabel.set_alignment(0, 0.50)
 		self.TabDefaultLabel.show()
 		self.hbox57.pack_start(self.TabDefaultLabel, False, False, 0)
 
@@ -5608,12 +5654,13 @@ class ColoursFrame:
 
 		self.PickDefaultTab.add(self.alignment51)
 
-		self.table8.attach(self.PickDefaultTab, 0, 1, 2, 3, gtk.FILL, 0, 0, 0)
+		self.table8.attach(self.PickDefaultTab, 0, 1, 1, 2, gtk.FILL, 0, 0, 0)
 
 		self.DefaultTab = gtk.Entry()
 		self.DefaultTab.set_editable(False)
 		self.DefaultTab.show()
-		self.table8.attach(self.DefaultTab, 1, 2, 2, 3, gtk.EXPAND|gtk.FILL, 0, 0, 0)
+		self.DefaultTab.set_width_chars(20)
+		self.table8.attach(self.DefaultTab, 1, 2, 1, 2, gtk.EXPAND|gtk.FILL, 0, 0, 0)
 
 		self.DefaultChangedTab = gtk.Button()
 		self.DefaultChangedTab.show()
@@ -5638,7 +5685,7 @@ class ColoursFrame:
 
 		self.DefaultChangedTab.add(self.alignment55)
 
-		self.table8.attach(self.DefaultChangedTab, 2, 3, 1, 2, gtk.FILL, 0, 0, 0)
+		self.table8.attach(self.DefaultChangedTab, 2, 3, 2, 3, gtk.FILL, 0, 0, 0)
 
 		self.ClearDefaultTab = gtk.Button()
 		self.ClearDefaultTab.show()
@@ -5663,7 +5710,14 @@ class ColoursFrame:
 
 		self.ClearDefaultTab.add(self.alignment56)
 
-		self.table8.attach(self.ClearDefaultTab, 2, 3, 2, 3, gtk.FILL, 0, 0, 0)
+		self.table8.attach(self.ClearDefaultTab, 2, 3, 1, 2, gtk.FILL, 0, 0, 0)
+
+		self.label39 = gtk.Label("")
+		self.label39.set_alignment(0, 0.50)
+		self.label39.set_padding(0, 5)
+		self.label39.set_markup(_("Notebook tab labels change to these colours."))
+		self.label39.show()
+		self.table8.attach(self.label39, 0, 3, 0, 1, gtk.EXPAND|gtk.FILL, 0, 0, 0)
 
 		self.alignment37.add(self.table8)
 
@@ -5841,7 +5895,7 @@ class ColoursFrame:
 		self.label342.show()
 		self.TransparentExpander.set_label_widget(self.label342)
 
-		self.vboxColours.pack_start(self.TransparentExpander, False, False, 0)
+		self.vboxColours.pack_start(self.TransparentExpander, False, True, 0)
 
 		self.hbox9.pack_start(self.vboxColours)
 

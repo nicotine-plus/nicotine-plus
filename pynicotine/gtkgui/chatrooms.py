@@ -576,7 +576,7 @@ class ChatRoom(ChatRoomTab):
 			return ChatRoomTab.get_custom_widget(self, id, string1, string2, int1, int2)
 			
 	def destroy(self):
-		if self.frame.translux:
+		if self.frame.translux and self.tlux_roomlog:
 			self.frame.translux.unsubscribe(self.tlux_roomlog)
 			self.frame.translux.unsubscribe(self.tlux_chat)
 		self.Main.destroy()
@@ -869,9 +869,11 @@ class ChatRoom(ChatRoomTab):
 				text = text[1:]
 			self.Say(self.frame.AutoReplace(text))
 		self.ChatEntry.set_text("")
+		
 	def Detach(self, widget = None):
 		self.frame.ChatNotebook.detach_tab(self.Main, _("Nicotine+ Chatroom: %s") % self.room)
 		gobject.idle_add(self.frame.ScrollBottom, self.ChatScroll.get_parent())
+		
 	def Say(self, text):
 		line = re.sub("\s\s+", "  ", text)
 		self.frame.np.queue.put(slskmessages.SayChatroom(self.room, line))
