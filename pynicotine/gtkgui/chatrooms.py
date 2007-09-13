@@ -22,7 +22,7 @@ import locale
 import pango
 from pynicotine import slskmessages
 from nicotine_glade import ChatRoomTab
-from utils import InitialiseColumns, AppendLine, PopupMenu, FastListModel, string_sort_func, WriteLog, int_sort_func, Humanize, expand_alias, is_alias, EncodingsMenu, SaveEncoding, PressHeader, fixpath
+from utils import InitialiseColumns, AppendLine, PopupMenu, FastListModel, string_sort_func, WriteLog, int_sort_func, Humanize, expand_alias, is_alias, EncodingsMenu, SaveEncoding, PressHeader, fixpath, IconNotebook
 from pynicotine.utils import _
 from ticker import Ticker
 from entrydialog import OptionDialog
@@ -51,7 +51,7 @@ def GetCompletion(part, list):
 		return prefix[len(part):], 0
 
 class RoomsControl:
-	def __init__(self, frame):
+	def __init__(self, frame, ChatNotebook):
 		self.frame = frame
 		self.joinedrooms = {}
 		self.autojoin = 1
@@ -86,9 +86,9 @@ class RoomsControl:
 
 		frame.roomlist.HideRoomList.connect("clicked", self.OnHideRoomList)
 
-		self.frame.ChatNotebook.connect("switch-page", self.OnSwitchPage)
+		ChatNotebook.connect("switch-page", self.OnSwitchPage)
 		try:
-			self.frame.ChatNotebook.connect("page-reordered", self.OnReorderedPage)
+			ChatNotebook.connect("page-reordered", self.OnReorderedPage)
 		except:
 			# No PyGTK 2.10! Gosh, you really need to get with the times!
 			pass
@@ -853,8 +853,7 @@ class ChatRoom(ChatRoomTab):
 		elif cmd == "/now":
 			self.NowPlayingThread()
 		elif cmd == "/detach":
-			self.frame.ChatNotebook.detach_tab(self.Main, _("Nicotine+ Chatroom: %s") % self.room)
-			gobject.idle_add(self.frame.ScrollBottom, self.ChatScroll.get_parent())
+			self.Detach()
 		elif cmd == "/attach":
 			self.frame.ChatNotebook.attach_tab(self.Main)
 			gobject.idle_add(self.frame.ScrollBottom, self.ChatScroll.get_parent())
@@ -870,7 +869,9 @@ class ChatRoom(ChatRoomTab):
 				text = text[1:]
 			self.Say(self.frame.AutoReplace(text))
 		self.ChatEntry.set_text("")
-		
+	def Detach(self, widget = None):
+		self.frame.ChatNotebook.detach_tab(self.Main, _("Nicotine+ Chatroom: %s") % self.room)
+		gobject.idle_add(self.frame.ScrollBottom, self.ChatScroll.get_parent())
 	def Say(self, text):
 		line = re.sub("\s\s+", "  ", text)
 		self.frame.np.queue.put(slskmessages.SayChatroom(self.room, line))
@@ -1328,14 +1329,43 @@ class ChatRoom(ChatRoomTab):
 			self.Ticker.disable()
 			self.Ticker.hide()
 
-class ChatRooms:
+class ChatRooms(IconNotebook):
 	def __init__(self, frame):
 		self.frame = frame
-		self.roomsctrl = RoomsControl(frame)
-		self.frame.ChatNotebook.popup_enable()
-		self.frame.ChatNotebook.set_tab_pos(self.frame.getTabPosition(self.frame.np.config.sections["ui"]["tabrooms"]))
+		ui = self.frame.np.config.sections["ui"]
+		IconNotebook.__init__(self, self.frame.images, ui["labelrooms"], ui["tabclosers"], ui["tab_icons"])
+		self.roomsctrl = RoomsControl(frame, self)
 		
 		
-
+		self.popup_enable()
+		self.set_tab_pos(self.frame.getTabPosition(self.frame.np.config.sections["ui"]["tabrooms"]))
+		
+		
+	def TabPopup(self, room):
+		if room not in self.roomsctrl.joinedrooms:
+			return
+		popup = PopupMenu(self.frame)
+		popup.setup(
+			("#" + _("Detach this tab"), self.roomsctrl.joinedrooms[room].Detach, gtk.STOCK_REDO),
+			("#" + _("Leave this room"), self.roomsctrl.joinedrooms[room].OnLeave, gtk.STOCK_CLOSE),
+		)
+		popup.set_user(room)
+		
+	
+		return popup
+		
+	def on_tab_click(self, widget, event, child):
+		if event.type == gtk.gdk.BUTTON_PRESS:
+			n = self.page_num(child)
+			page = self.get_nth_page(n)
+			room =  [room for room, tab in self.roomsctrl.joinedrooms.items() if tab.Main is page][0]
+			if event.button == 3:
+				menu = self.TabPopup(room)
+				menu.popup(None, None, None, event.button, event.time)
+				return True
+	
+			return False
+		return False
+	
 	def ConnClose(self):
 		self.roomsctrl.ConnClose()

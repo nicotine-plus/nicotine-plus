@@ -149,6 +149,7 @@ class NicotineFrame(MainWindow):
 			trerror = self.ChangeTranslation(self.np.config.sections["language"]["language"])
 		
 		self.BuddiesComboEntries = []
+		self.roomlist = roomlist(self)
 		
 		MainWindow.__init__(self)
 		self.MainWindow.set_title(_("Nicotine+") + " " + version)
@@ -165,7 +166,7 @@ class NicotineFrame(MainWindow):
 		self.minimized = False
 	
 		self.clip = gtk.Clipboard(display=gtk.gdk.display_get_default(), selection="CLIPBOARD")
-		self.roomlist = roomlist(self)
+		
 		
 		self.logpopupmenu = PopupMenu(self).setup(
 			("#" + _("Find"), self.OnFindLogWindow, gtk.STOCK_FIND),
@@ -332,7 +333,7 @@ class NicotineFrame(MainWindow):
 		self.settingswindow = SettingsWindow(self)
 		self.settingswindow.SettingsWindow.connect("settings-closed", self.OnSettingsClosed)
 
-		self.chatrooms = ChatRooms(self)
+		self.chatrooms = self.ChatNotebook
 		self.Searches = self.SearchNotebook
 		self.downloads = Downloads(self)
 		self.uploads = Uploads(self)
@@ -917,7 +918,7 @@ class NicotineFrame(MainWindow):
 	def get_custom_widget(self, id, string1, string2, int1, int2):
 		ui = self.np.config.sections["ui"]
 		if id == "ChatNotebook":
-			return IconNotebook(self.images, ui["labelrooms"], ui["tabclosers"], ui["tab_icons"])
+			return ChatRooms(self)
 		elif id == "SearchNotebook":
 			return Searches(self)
 		#IconNotebook(self.images, ui["labelsearch"], ui["tabclosers"])
