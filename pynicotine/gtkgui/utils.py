@@ -485,6 +485,7 @@ class ImageLabel(gtk.HBox):
 		if NICOTINE.np.config.sections["ui"]["tab_colors"]:
 			self.set_text_color( notify = None, text = lbl)
 		else:
+			self.text = lbl
 			self.label.set_text(lbl)
 		
 	def get_text(self):
