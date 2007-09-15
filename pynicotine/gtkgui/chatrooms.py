@@ -980,10 +980,8 @@ class ChatRoom(ChatRoomTab):
 		#print 'ChatRoom.SetUserFlag:', user, 'image:', flag
 		if user not in self.users:
 			return
-		if flag not in self.frame.flag_images:
-			if self.frame.GetFlagImage is None:
-				return
-		self.usersmodel.set(self.users[user], 1, self.frame.flag_images[flag], 8, flag)
+
+		self.usersmodel.set(self.users[user], 1, self.frame.GetFlagImage(flag), 8, flag)
 
 	def makecolour(self, buffer, colour, username=None):
 		colour = self.frame.np.config.sections["ui"][colour]
