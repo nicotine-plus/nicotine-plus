@@ -140,7 +140,7 @@ def InitialiseColumns(treeview, *args):
 			column = gtk.TreeViewColumn(c[0], renderer, active = i)
 		else:
 			renderer = gtk.CellRendererPixbuf()
-			column = gtk.TreeViewColumn(c[0], renderer, pixbuf = 0)
+			column = gtk.TreeViewColumn(c[0], renderer, pixbuf = i)
 		if c[1] == -1:
 			column.set_resizable(False)
 			column.set_sizing(gtk.TREE_VIEW_COLUMN_AUTOSIZE)
@@ -744,6 +744,7 @@ class IconNotebook(gtk.Notebook):
 				i[1].destroy()
 				i[3].destroy()
 				self.pages.remove(i)
+				
 				return
 
 class PopupMenu(gtk.Menu):

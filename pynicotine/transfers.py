@@ -126,17 +126,7 @@ class Transfers:
 		self.usersqueued = {}
 		self.privusersqueued = {}
 		self.oggusersqueued = {}
-		
-		try:
-			import GeoIP
-			self.geoip = GeoIP.new(GeoIP.GEOIP_STANDARD)
-		except ImportError:
-			try:
-				import _GeoIP
-				self.geoip = _GeoIP.new(_GeoIP.GEOIP_STANDARD)
-			except:
-				self.geoip = None
-		
+		self.geoip = self.eventprocessor.geoip
 		
 	def setTransferPanels(self, downloads, uploads):
 		self.downloadspanel = downloads
@@ -455,7 +445,7 @@ class Transfers:
 		else:
 			limits = 1
 		# Check user 'permissions'
-		checkuser, reason = self.eventprocessor.CheckUser(user, self.geoip, addr)
+		checkuser, reason = self.eventprocessor.CheckUser(user, addr)
 		# checkuser is 1 if allowed
 		# reason is a string
 		if not checkuser:
@@ -526,7 +516,7 @@ class Transfers:
 			else:
 				limits = 1
 			
-			checkuser, reason = self.eventprocessor.CheckUser(user, self.geoip, addr)
+			checkuser, reason = self.eventprocessor.CheckUser(user, addr)
 			if not checkuser:
 				self.queue.put(slskmessages.QueueFailed(conn = msg.conn.conn, file = msg.file, reason = reason))
 			elif limits and self.queueLimitReached(user):

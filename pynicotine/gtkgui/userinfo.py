@@ -400,6 +400,8 @@ class UserInfo(UserInfoTab):
 		del self.userinfos.users[self.user]
 		self.frame.np.ClosePeerConnection(self.conn)
 		self.Main.destroy()
+		for i in self.__dict__.keys():
+			del self.__dict__[i]
 
 	def OnSavePicture(self, widget):
 		if self.image is None or self.image_pixbuf is None:

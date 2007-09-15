@@ -309,6 +309,8 @@ class PrivateChat(PrivateChatTab):
 	def destroy(self):
 		if self.frame.translux:
 			self.frame.translux.unsubscribe(self.tlux_chat)
+		for i in self.__dict__.keys():
+			del self.__dict__[i]
 		self.Main.destroy()
 		
 	def Login(self):

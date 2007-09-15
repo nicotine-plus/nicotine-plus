@@ -190,7 +190,7 @@ class SlskProtoThread(threading.Thread):
 	distribclasses = {0:DistribAlive, 3:DistribSearch}
 
 	
-	def __init__(self, ui_callback, queue, config):
+	def __init__(self, ui_callback, queue, config, eventprocessor):
 		""" ui_callback is a UI callback function to be called with messages 
 		list as a parameter. queue is Queue object that holds messages from UI
 		thread.
@@ -201,6 +201,7 @@ class SlskProtoThread(threading.Thread):
 		self._want_abort = 0
 		self._stopped = 0
 		self._config = config
+		self._eventprocessor = eventprocessor
 		portrange = config.sections["server"]["portrange"]
 		self.serverclasses = {}
 		for i in self.servercodes.keys():
@@ -214,18 +215,12 @@ class SlskProtoThread(threading.Thread):
 		self._connsinprogress = {}
 		self._uploadlimit = (self._calcLimitNone, 0)
 		self._limits = {}
+		# GeoIP Config
 		self._geoip = None
+		# GeoIP Module
+		self.geoip = self._eventprocessor.geoip
 		listenport = None
 
-		try:
-			import GeoIP
-			self.geoip = GeoIP.new(GeoIP.GEOIP_STANDARD)
-		except ImportError:
-			try:
-				import _GeoIP
-				self.geoip = _GeoIP.new(_GeoIP.GEOIP_STANDARD)
-			except ImportError:
-				self.geoip = None
 
 		for listenport in range(portrange[0], portrange[1]+1):
 			try:

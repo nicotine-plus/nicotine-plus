@@ -379,6 +379,7 @@ class UserData:
 		self.files = list[4]
 		self.dirs = list[5]
 		self.slotsfull = list[6]
+		self.country = list[7]
 
 class JoinRoom(ServerMessage):
 	""" Server sends us this message when we join a room. Contains users list
@@ -398,7 +399,7 @@ class JoinRoom(ServerMessage):
 		users = []
 		for i in range(numusers):
 			pos, username = self.getObject(message, types.StringType, pos)
-			users.append([username, None, None, None, None, None, None, None])
+			users.append([username, None, None, None, None, None, None, None, None])
 		pos, statuslen = self.getObject(message, types.IntType, pos)
 		for i in range(statuslen):
 			pos, users[i][1] = self.getObject(message, types.IntType, pos)
@@ -415,6 +416,10 @@ class JoinRoom(ServerMessage):
 		pos, slotslen = self.getObject(message, types.IntType, pos)
 		for i in range(slotslen):
 			pos, users[i][7] = self.getObject(message, types.IntType, pos)
+		if len(message[pos:]) > 0:
+			pos, countrylen = self.getObject(message, types.IntType, pos)
+			for i in range(numusers):
+				pos, users[i][8] = self.getObject(message, types.StringType, pos)
 		usersdict={}
 		for i in users:
 			usersdict[i[0]] = UserData(i[1:])
@@ -437,11 +442,13 @@ class UserJoinedRoom(ServerMessage):
 	def parseNetworkMessage(self, message):
 		pos, self.room = self.getObject(message, types.StringType)
 		pos, self.username = self.getObject(message, types.StringType, pos)
-		i = [None, None, None, None, None, None, None]
+		i = [None, None, None, None, None, None, None, None]
 		pos, i[0] = self.getObject(message, types.IntType, pos)
 		pos, i[1] = self.getObject(message, types.IntType, pos, getsignedint=1)
 		for j in range(2, 7):
 			pos, i[j] =(self.getObject(message, types.IntType, pos))
+		if len(message[pos:]) > 0:
+			pos, i[7] = self.getObject(message, types.StringType, pos)
 		self.userdata = UserData(i)
 
 class UserLeftRoom(ServerMessage):

@@ -368,6 +368,7 @@ class Searches(IconNotebook):
 		self.WishListDialog.removeWish(search[1])
 		
 	def RemoveTab(self, tab):
+		import gc
 		if tab.id in self.searches:
 			search = self.searches[tab.id]
 			
@@ -377,6 +378,10 @@ class Searches(IconNotebook):
 		
 		self.remove_page(tab.Main)
 		tab.Main.destroy()
+		for i in tab.__dict__.keys():
+			del tab.__dict__[i]
+		
+		gc.collect()
 
 	def AutoSearch(self, id):
 		if id not in self.searches:

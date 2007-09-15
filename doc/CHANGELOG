@@ -19,6 +19,10 @@ General Changes
  * Close buttons on tabs no longer forced to 18x18px
  * Close buttons are dynamically added and removed when toggled in settings
  * Added global unrecommendations list
+ * Merged Amun-Ra's 'Country flag column in Chatroom userlists' (this is a new
+   feature on the testing server) but works with manual IP lookups with GeoIP.
+   This requires the 242 flag images. :)
+ * Simplified GeoIP module loading
 
 Userinfo
  * Added popups to user's interests lists (search, add and remove interests)

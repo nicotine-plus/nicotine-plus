@@ -837,6 +837,8 @@ class UserBrowse(UserBrowseTab):
 		self.userbrowses.remove_page(self.Main)
 		del self.userbrowses.users[self.user]
 		self.frame.np.ClosePeerConnection(self.conn)
+		for i in self.__dict__.keys():
+			del self.__dict__[i]
 		
 	def OnRefresh(self, widget):
 		self.FolderTreeView.set_sensitive(False)

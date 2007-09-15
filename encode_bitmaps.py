@@ -14,6 +14,9 @@ table = [
 	["nicotine+.png", "nicotinen"],
 	["n.png", "n"],
 ]
+flagtable = []
+for name in os.listdir(os.path.join("img", "geoip")):
+	flagtable.append( (os.path.join("img", "geoip", name), 'flag_%s' % name[:2].upper()) )
 
 outf = open(os.path.join("pynicotine","gtkgui","imagedata.py"), "w")
 for image in table:
@@ -22,4 +25,9 @@ for image in table:
 	d = f.read()
 	f.close()
 	outf.write("%s = %s\n" % (image[1], `d`))
+for image in flagtable:
+	print image[0]
+	f = open(image[0], "rb")
+	outf.write("%s = %r\n" % (image[1], f.read()))
+	f.close()
 outf.close()

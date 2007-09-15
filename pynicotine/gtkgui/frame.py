@@ -120,7 +120,7 @@ class NicotineFrame(MainWindow):
 		self.chatrooms = None
 		self.tts = []
 		self.tts_playing = self.continue_playing = False
-		
+
 		self.got_focus = False
 
 		try:
@@ -472,6 +472,8 @@ class NicotineFrame(MainWindow):
 	def LoadIcons(self):
 		self.images = {}
 		self.icons = {}
+		self.flag_images = {}
+		self.flag_users = {}
 
 		for i in ["empty", "away", "online", "offline", "hilite", "hilite2", "connect", "disconnect", "away2", "n", "nicotinen"]:
 			try:
@@ -1299,6 +1301,37 @@ class NicotineFrame(MainWindow):
 			return self.images["online"]
 		else:
 			return self.images["offline"]
+		
+	def HasUserFlag(self, user, flag):
+		if flag not in self.flag_images:
+			self.GetFlagImage(flag)
+		if flag not in self.flag_images:
+			return
+		self.flag_users[user] = flag
+		self.chatrooms.roomsctrl.SetUserFlag(user, flag)
+		
+	def GetUserFlag(self, user):
+		if user not in self.flag_users:
+			return None
+		else:
+			return self.flag_users[user]
+		
+	def GetFlagImage(self, flag):
+
+		if flag is None: return
+		if flag not in self.flag_images:
+			if hasattr(imagedata, flag):
+				loader = gtk.gdk.PixbufLoader("png")
+				data = getattr(imagedata, flag)
+				loader.write(data, len(data))
+				loader.close()
+				img = loader.get_pixbuf()
+				self.flag_images[flag] = img
+				return img
+			else:
+				return None
+		else:
+			return self.flag_images[flag]
 	
 	def OnShowDebug(self, widget):
 		self.showdebug = widget.get_active()

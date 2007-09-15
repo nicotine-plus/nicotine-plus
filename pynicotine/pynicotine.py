@@ -79,7 +79,16 @@ class NetworkEventProcessor:
 		self.config.readConfig()
 	
 		self.queue = Queue.Queue(0)
-		self.protothread = slskproto.SlskProtoThread(self.frame.networkcallback, self.queue, self.config)
+		try:
+			import GeoIP
+			self.geoip = GeoIP.new(GeoIP.GEOIP_MEMORY_CACHE)
+		except ImportError:
+			try:
+				import _GeoIP
+				self.geoip = _GeoIP.new(_GeoIP.GEOIP_MEMORY_CACHE)
+			except ImportError:
+				self.geoip = None
+		self.protothread = slskproto.SlskProtoThread(self.frame.networkcallback, self.queue, self.config, self)
 		uselimit = self.config.sections["transfers"]["uselimit"]
 		uploadlimit = self.config.sections["transfers"]["uploadlimit"]
 		limitby = self.config.sections["transfers"]["limitby"]
@@ -125,15 +134,10 @@ class NetworkEventProcessor:
 		self.respondDistributed = True
 		self.respondDistributedTimer = threading.Timer(60, self.ToggleRespondDistributed)
 		self.respondDistributedTimer.start()
-		try:
-			import GeoIP
-			self.geoip = GeoIP.new(GeoIP.GEOIP_STANDARD)
-		except ImportError:
-			try:
-				import _GeoIP
-				self.geoip = _GeoIP.new(_GeoIP.GEOIP_STANDARD)
-			except ImportError:
-				self.geoip = None
+		
+				
+
+
 		# Callback handlers for messages
 		self.events = {slskmessages.ConnectToServer:self.ConnectToServer,
 			slskmessages.ConnectError:self.ConnectError,
@@ -792,6 +796,9 @@ class NetworkEventProcessor:
 			import socket
 			if self.geoip:
 				cc = self.geoip.country_name_by_addr(msg.ip)
+				cn = self.geoip.country_code_by_addr(msg.ip)
+				if cn is not None:
+					self.frame.HasUserFlag(msg.user, "flag_"+cn)
 			else:
 				cc = ""
 			if cc:
@@ -846,7 +853,7 @@ class NetworkEventProcessor:
 	
 		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 1)
 
-	def CheckUser(self, user, geoip, addr):
+	def CheckUser(self, user, addr):
 		"""
 		Check if this user is banned, geoip-blocked, and which shares
 		it is allowed to access based on transfer and shares settings.
@@ -863,9 +870,11 @@ class NetworkEventProcessor:
 			return 1, ""
 		if self.config.sections["transfers"]["friendsonly"]:
 			return 0, _("Sorry, friends only")
-		if not geoip or not self.config.sections["transfers"]["geoblock"]:
+		if not self.geoip or not self.config.sections["transfers"]["geoblock"]:
 			return 1, _("geoip")
-		cc = geoip.country_code_by_addr(addr)
+		cc = None
+		if addr is not None:
+			cc = self.geoip.country_code_by_addr(addr)
 		if not cc:
 			if self.config.sections["transfers"]["geopanic"]:
 				return 0, _("Sorry, geographical paranoia")
@@ -928,7 +937,7 @@ class NetworkEventProcessor:
 			return
 		self.logMessage(_("%(user)s is making a BrowseShares request") %{'user':user}, None)
 		addr = msg.conn.addr[0]
-		checkuser, reason = self.CheckUser(user, self.geoip, addr)
+		checkuser, reason = self.CheckUser(user, addr)
 	
 		if checkuser == 1:
 			## Send Normal Shares
@@ -1224,7 +1233,7 @@ class NetworkEventProcessor:
 		for i in self.peerconns:
 			if i.conn is msg.conn.conn:
 				username = i.username
-				checkuser, reason = self.CheckUser(username, None, None)
+				checkuser, reason = self.CheckUser(username, None)
 				break
 		if not username:
 			return
@@ -1328,7 +1337,7 @@ class NetworkEventProcessor:
 		if searchterm is None:
 			return
 
-		checkuser, reason = self.CheckUser(user, None, None)
+		checkuser, reason = self.CheckUser(user, None)
 		if not checkuser:
 			return
 		if reason == "geoip":

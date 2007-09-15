@@ -240,6 +240,10 @@ class RoomsControl:
 		for room in self.joinedrooms.values():
 			room.GetUserStatus(msg.user, msg.status)
 			
+	def SetUserFlag(self, user, flag):
+		for room in self.joinedrooms.values():
+			room.SetUserFlag(user, flag)
+
 	def UserJoinedRoom(self, msg):
 		if msg.room in self.joinedrooms:
 			self.joinedrooms[msg.room].UserJoinedRoom(msg.username, msg.userdata)
@@ -429,18 +433,23 @@ class ChatRoom(ChatRoomTab):
 			
 		cols = InitialiseColumns(self.UserList, 
 			[_("Status"), 20, "pixbuf"],
+			[_("Country"), 25, "pixbuf"],
 			[_("User"), 100, "text", self.frame.CellDataFunc],
 			[_("Speed"), 0, "text", self.frame.CellDataFunc],
 			[_("Files"), 0, "text", self.frame.CellDataFunc],
 		)
-		cols[0].set_sort_column_id(4)
-		cols[1].set_sort_column_id(1)
-		cols[2].set_sort_column_id(5)
+		cols[0].set_sort_column_id(5)
+		cols[1].set_sort_column_id(8)
+		cols[2].set_sort_column_id(2)
 		cols[3].set_sort_column_id(6)
+		cols[4].set_sort_column_id(7)
 		cols[0].get_widget().hide()
+		cols[1].get_widget().hide()
 		if room not in config["columns"]["chatrooms"]:
-			config["columns"]["chatrooms"][room] = [1, 1, 1, 1]
-		for i in range (4):
+			config["columns"]["chatrooms"][room] = [1, 1, 1, 1, 1]
+		if len(config["columns"]["chatrooms"][room]) != 5:	# Insert new column to old settings.
+			config["columns"]["chatrooms"][room].insert(1, 1)
+		for i in range (5):
 			parent = cols[i].get_widget().get_ancestor(gtk.Button)
 			if parent:
 				parent.connect('button_press_event', PressHeader)
@@ -448,16 +457,21 @@ class ChatRoom(ChatRoomTab):
 			cols[i].set_visible(config["columns"]["chatrooms"][room][i])
 		self.users = {}
 
-		self.usersmodel = gtk.ListStore(gtk.gdk.Pixbuf, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_INT, gobject.TYPE_INT, gobject.TYPE_INT)
-		
-		
+		self.usersmodel = gtk.ListStore(gtk.gdk.Pixbuf, gtk.gdk.Pixbuf, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_INT, gobject.TYPE_INT, gobject.TYPE_INT, gobject.TYPE_STRING)
+
 		for user in users.keys():
 			img = self.frame.GetStatusImage(users[user].status)
+			flag = users[user].country
+			if flag is not None:
+				flag = "flag_"+flag
+				self.frame.flag_users[user] = flag
+			else:
+				flag = self.frame.GetUserFlag(user)
 			hspeed = Humanize(users[user].avgspeed)
 			hfiles = Humanize(users[user].files)
-			iter = self.usersmodel.append([img, user, hspeed, hfiles, users[user].status, users[user].avgspeed, users[user].files])
+			iter = self.usersmodel.append([img, self.frame.GetFlagImage(flag), user, hspeed, hfiles, users[user].status, users[user].avgspeed, users[user].files, flag])
 			self.users[user] = iter
-		self.usersmodel.set_sort_column_id(1, gtk.SORT_ASCENDING)
+		self.usersmodel.set_sort_column_id(2, gtk.SORT_ASCENDING)
 		
 		self.UpdateColours()
 		self.UserList.set_model(self.usersmodel)
@@ -587,7 +601,7 @@ class ChatRoom(ChatRoomTab):
 		if not d:
 			return
 		path, column, x, y = d
-		user = self.usersmodel.get_value(self.usersmodel.get_iter(path), 1)
+		user = self.usersmodel.get_value(self.usersmodel.get_iter(path), 2)
 		
 		# Double click starts a private message
 		if event.button != 3:
@@ -716,7 +730,7 @@ class ChatRoom(ChatRoomTab):
 		if user not in self.users:
 			color = "useroffline"
 		else:
-			color = self.getUserStatusColor(self.usersmodel.get_value(self.users[user], 4))
+			color = self.getUserStatusColor(self.usersmodel.get_value(self.users[user], 5))
 		if user not in self.tag_users:
 			self.tag_users[user] = self.makecolour(self.ChatScroll.get_buffer(), color, user)
 			return
@@ -893,9 +907,15 @@ class ChatRoom(ChatRoomTab):
 			
 		AppendLine(self.RoomLog, _("%s joined the room") % username, self.tag_log)
 		img = self.frame.GetStatusImage(userdata.status)
+		flag = userdata.country
+		if flag is not None:
+			flag = "flag_"+flag
+			self.frame.flag_users[username] = flag
+		else:
+			flag = self.frame.GetUserFlag(username)
 		hspeed = Humanize(userdata.avgspeed)
 		hfiles = Humanize(userdata.files)
-		self.users[username] = self.usersmodel.append([img, username, hspeed, hfiles, userdata.status, userdata.avgspeed, userdata.files])
+		self.users[username] = self.usersmodel.append([img, self.frame.GetFlagImage(flag), username, hspeed, hfiles, userdata.status, userdata.avgspeed, userdata.files, flag])
 
 		self.getUserTag(username)
 
@@ -938,7 +958,7 @@ class ChatRoom(ChatRoomTab):
 	def GetUserStats(self, user, avgspeed, files):
 		if user not in self.users:
 			return
-		self.usersmodel.set(self.users[user], 2, Humanize(avgspeed), 3, Humanize(files), 5, avgspeed, 6, files)
+		self.usersmodel.set(self.users[user], 3, Humanize(avgspeed), 4, Humanize(files), 6, avgspeed, 7, files)
 		
 	def GetUserStatus(self, user, status):
 		if user not in self.users:
@@ -954,8 +974,17 @@ class ChatRoom(ChatRoomTab):
 		if user in self.tag_users.keys():
 			color = self.getUserStatusColor(status)
 			self.changecolour(self.tag_users[user], color)
-		self.usersmodel.set(self.users[user], 0, img, 4, status)
-		
+		self.usersmodel.set(self.users[user], 0, img, 5, status)
+
+	def SetUserFlag(self, user, flag):
+		#print 'ChatRoom.SetUserFlag:', user, 'image:', flag
+		if user not in self.users:
+			return
+		if flag not in self.frame.flag_images:
+			if self.frame.GetFlagImage is None:
+				return
+		self.usersmodel.set(self.users[user], 1, self.frame.flag_images[flag], 8, flag)
+
 	def makecolour(self, buffer, colour, username=None):
 		colour = self.frame.np.config.sections["ui"][colour]
 		font =  self.frame.np.config.sections["ui"]["chatfont"]
@@ -1124,9 +1153,15 @@ class ChatRoom(ChatRoomTab):
 			if user in self.users:
 				self.usersmodel.remove(self.users[user])
 			img = self.frame.GetStatusImage(users[user].status)
+			flag = users[user].country
+			if flag is not None:
+				flag = "flag_"+flag
+				self.frame.flag_users[user] = flag
+			else:
+				flag = self.frame.GetUserFlag(user)
 			hspeed = Humanize(users[user].avgspeed)
 			hfiles = Humanize(users[user].files)
-			iter = self.usersmodel.append([img, user, hspeed, hfiles, users[user].status, users[user].avgspeed, users[user].files])
+			iter = self.usersmodel.append([img, self.frame.GetFlagImage(flag), user, hspeed, hfiles, users[user].status, users[user].avgspeed, users[user].files, flag])
 			self.users[user] = iter
 		self.UserList.set_sensitive(True)
 		# Reinitialize sorting after loop is complet
