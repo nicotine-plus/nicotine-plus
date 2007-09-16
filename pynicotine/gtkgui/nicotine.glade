@@ -211,6 +211,15 @@
                       </widget>
                     </child>
                     <child>
+                      <widget class="GtkCheckMenuItem" id="HideFlags">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Hide flag columns in user lists</property>
+                        <property name="use_underline">True</property>
+                        <signal name="toggled" handler="OnHideFlags"/>
+                        <accelerator key="B" modifiers="GDK_MOD1_MASK" signal="activate"/>
+                      </widget>
+                    </child>
+                    <child>
                       <widget class="GtkSeparatorMenuItem" id="scheidingslijn5">
                         <property name="visible">True</property>
                       </widget>

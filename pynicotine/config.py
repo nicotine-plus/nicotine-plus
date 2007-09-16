@@ -90,7 +90,7 @@ class Config:
 \
 "privatechat":{"store":0, "users":[]}, \
 \
-"columns":{"userlist":[1,1,1,1,1,1,1,1,1], "chatrooms":{}, "downloads":[1,1,1,1,1,1,1,1,1], "uploads":[1,1,1,1,1,1,1,1,1], "search":[1,1,1,1,1,1,1,1,1,1] }, \
+"columns":{"userlist":[1,1,1,1,1,1,1,1,1,1], "chatrooms":{}, "downloads":[1,1,1,1,1,1,1,1,1], "uploads":[1,1,1,1,1,1,1,1,1], "search":[1,1,1,1,1,1,1,1,1,1], "hideflags": False }, \
 \
 "searches":{"maxresults":50,"re_filter":0,"history":[], \
 "enablefilters":0, "defilter":["","","","",0,""], "filtercc":[], \
@@ -211,10 +211,15 @@ class Config:
 						if self.frame:
 							self.frame.logMessage(message)
 		autojoin = self.sections["server"]["autojoin"]
-		for user in self.sections["server"]["userlist"]:
-			if len(user) == 2:
-				user += [0, 0]
-		
+		if len(self.sections["columns"]["userlist"]) < len(self.defaults["columns"]["userlist"]):
+			self.sections["columns"]["userlist"] += [True] * (len(self.defaults["columns"]["userlist"]) - len(self.sections["columns"]["userlist"]))
+			
+		for i in ["%(user)s", "%(message)s"]:
+			if i not in self.sections["ui"]["speechprivate"]:
+				self.sections["ui"]["speechprivate"] = self.defaults["ui"]["speechprivate"]
+			if i not in self.sections["ui"]["speechrooms"]:
+				self.sections["ui"]["speechrooms"] = self.defaults["ui"]["speechrooms"]
+				
 		if "pyslsk" in autojoin and not "nicotine" in autojoin:
 			autojoin.append("nicotine")
 		

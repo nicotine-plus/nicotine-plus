@@ -431,7 +431,7 @@ class ChatRoom(ChatRoomTab):
 		if room in config["server"]["autojoin"]:
 			self.AutoJoin.set_active(True)
 			
-		cols = InitialiseColumns(self.UserList, 
+		self.cols = cols = InitialiseColumns(self.UserList, 
 			[_("Status"), 20, "pixbuf"],
 			[_("Country"), 25, "pixbuf"],
 			[_("User"), 100, "text", self.frame.CellDataFunc],
@@ -455,6 +455,9 @@ class ChatRoom(ChatRoomTab):
 				parent.connect('button_press_event', PressHeader)
 			# Read Show / Hide column settings from last session
 			cols[i].set_visible(config["columns"]["chatrooms"][room][i])
+		if config["columns"]["hideflags"]:
+			cols[1].set_visible(0)
+			config["columns"]["chatrooms"][room][1] = 0
 		self.users = {}
 
 		self.usersmodel = gtk.ListStore(gtk.gdk.Pixbuf, gtk.gdk.Pixbuf, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_INT, gobject.TYPE_INT, gobject.TYPE_INT, gobject.TYPE_STRING)
@@ -977,7 +980,6 @@ class ChatRoom(ChatRoomTab):
 		self.usersmodel.set(self.users[user], 0, img, 5, status)
 
 	def SetUserFlag(self, user, flag):
-		#print 'ChatRoom.SetUserFlag:', user, 'image:', flag
 		if user not in self.users:
 			return
 

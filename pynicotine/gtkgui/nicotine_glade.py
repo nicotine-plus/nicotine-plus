@@ -158,6 +158,13 @@ class MainWindow:
 
 		self.edit_menu.append(self.buddylist_in_chatrooms1)
 
+		self.HideFlags = gtk.CheckMenuItem(_("Hide flag columns in user lists"))
+		self.HideFlags.show()
+		self.HideFlags.connect("toggled", self.OnHideFlags)
+		self.HideFlags.add_accelerator("activate", self.accel_group, gtk.gdk.keyval_from_name("B"), gtk.gdk.MOD1_MASK, gtk.ACCEL_VISIBLE)
+
+		self.edit_menu.append(self.HideFlags)
+
 		self.scheidingslijn5 = gtk.MenuItem()
 		self.scheidingslijn5.show()
 
@@ -1499,6 +1506,9 @@ class MainWindow:
 		pass
 
 	def OnToggleBuddyList(self, widget):
+		pass
+
+	def OnHideFlags(self, widget):
 		pass
 
 	def OnRescan(self, widget):

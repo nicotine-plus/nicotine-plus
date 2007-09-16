@@ -242,7 +242,7 @@ class NicotineFrame(MainWindow):
 		else:
 			self.vpaned1.pack2(self.LogScrolledWindow, False, True)
 			self.hide_log_window1.set_active(0)
-
+		
 		if config["ui"]["roomlistcollapsed"]:
 			self.hide_room_list1.set_active(1)
 		else:
@@ -355,7 +355,11 @@ class NicotineFrame(MainWindow):
 		self.sSharesButton.connect("clicked", self.OnGetShares)
 		self.UserBrowseCombo.child.connect("activate", self.OnGetShares)
 
-		
+		if config["columns"]["hideflags"]:
+			self.HideFlags.set_active(1)
+		else:
+			self.HideFlags.set_active(0)
+			
 		self.SetUserStatus(_("Offline"))
 		self.TrayApp = TrayApp(self)
 		self.UpdateBandwidth()
@@ -1307,10 +1311,15 @@ class NicotineFrame(MainWindow):
 			return
 		self.flag_users[user] = flag
 		self.chatrooms.roomsctrl.SetUserFlag(user, flag)
+		self.userlist.SetUserFlag(user, flag)
 		
 	def GetUserFlag(self, user):
 		if user not in self.flag_users:
+			for i in self.np.config.sections["server"]["userlist"]:
+				if user == i[0] and i[6] is not None:
+					return i[6]
 			return None
+		
 		else:
 			return self.flag_users[user]
 		
@@ -1913,7 +1922,17 @@ class NicotineFrame(MainWindow):
 				self.vpaned1.pack2(self.LogScrolledWindow, False, True)
 				ScrollBottom(self.LogScrolledWindow)
 		self.np.config.writeConfig()
-
+	
+	def OnHideFlags(self, widget):
+		active = widget.get_active()
+		self.np.config.sections["columns"]["hideflags"] = active
+		for room in self.chatrooms.roomsctrl.joinedrooms:
+			self.chatrooms.roomsctrl.joinedrooms[room].cols[1].set_visible(int(not active))
+			self.np.config.sections["columns"]["chatrooms"][room][1] = int(not active)
+		self.userlist.cols[1].set_visible(int(not active))
+		self.np.config.sections["columns"]["userlist"][1] = int(not active)
+		self.np.config.writeConfig()
+		
 	def OnHideRoomList(self, widget):
 		active = widget.get_active()
 		self.np.config.sections["ui"]["roomlistcollapsed"] = active

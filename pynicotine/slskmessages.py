@@ -625,7 +625,8 @@ class GetUserStats(ServerMessage):
 	""" Server sends this to indicate change in user's statistics"""
 	def __init__(self, user = None):
 		self.user = user
-	
+		self.country = None
+		
 	def makeNetworkMessage(self):
 		return self.packObject(self.user)
 	
