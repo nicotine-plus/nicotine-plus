@@ -1199,10 +1199,8 @@ class NicotineFrame(MainWindow):
 
 	def FetchUserListStatus(self):
 		for user in self.userlist.userlist:
-			if user[0] not in self.np.watchedusers:
-				self.np.queue.put(slskmessages.AddUser(user[0]))
-			self.np.queue.put(slskmessages.GetUserStatus(user[0]))
-			self.np.queue.put(slskmessages.GetUserStats(user[0]))
+			self.np.queue.put(slskmessages.AddUser(user[0]))
+
 		return False
 		
 	def ConnClose(self, conn, addr):
@@ -2234,10 +2232,8 @@ class NicotineFrame(MainWindow):
 		for user in msg.users.keys():
 			iter = self.recommendationuserslist.append([self.images["offline"], user, "0", "0", 0, 0, 0])
 			self.recommendationusers[user] = iter
-			if user not in self.np.watchedusers:
-				self.np.queue.put(slskmessages.AddUser(user))
-			self.np.queue.put(slskmessages.GetUserStats(user))
-			self.np.queue.put(slskmessages.GetUserStatus(user))
+			self.np.queue.put(slskmessages.AddUser(user))
+
 
 	def ItemSimilarUsers(self, msg):
 		self.recommendationuserslist.clear()
@@ -2245,10 +2241,7 @@ class NicotineFrame(MainWindow):
 		for user in msg.users:
 			iter = self.recommendationuserslist.append([self.images["offline"], user, "0", "0", 0, 0, 0])
 			self.recommendationusers[user] = iter
-			if user not in self.np.watchedusers:
-				self.np.queue.put(slskmessages.AddUser(user))
-			self.np.queue.put(slskmessages.GetUserStats(user))
-			self.np.queue.put(slskmessages.GetUserStatus(user))
+			self.np.queue.put(slskmessages.AddUser(user))
 
 	def GetUserStatus(self, msg):
 		if msg.user not in self.recommendationusers:

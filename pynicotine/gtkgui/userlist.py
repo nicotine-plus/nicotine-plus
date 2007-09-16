@@ -275,10 +275,8 @@ class UserList:
 		self.userlist.append([user, "", _("Never seen"), iter])
 		
 		self.SaveUserList()
-		if user not in self.frame.np.watchedusers:
-			self.frame.np.queue.put(slskmessages.AddUser(user))
-		self.frame.np.queue.put(slskmessages.GetUserStatus(user))
-		self.frame.np.queue.put(slskmessages.GetUserStats(user))
+		self.frame.np.queue.put(slskmessages.AddUser(user))
+
 		for widget in self.frame.BuddiesComboEntries:
 			widget.Append(user)
 		if self.frame.np.config.sections["words"]["buddies"]:

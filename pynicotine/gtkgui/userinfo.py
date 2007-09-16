@@ -64,10 +64,7 @@ class UserTabs(IconNotebook):
 			w = self.subwindow(self, user, conn)
 			self.append_page(w.Main, user[:15], w.OnClose)
 			self.users[user] = w
-			if user not in self.frame.np.watchedusers:
-				self.frame.np.queue.put(slskmessages.AddUser(user))
-			self.frame.np.queue.put(slskmessages.GetUserStatus(user))
-			self.frame.np.queue.put(slskmessages.GetUserStats(user))
+			self.frame.np.queue.put(slskmessages.AddUser(user))
 
 	def ShowLocalInfo(self, user, descr, has_pic, pic, totalupl, queuesize, slotsavail, uploadallowed):
 		self.InitWindow(user, None)

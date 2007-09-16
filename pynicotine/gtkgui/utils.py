@@ -863,7 +863,13 @@ class PopupMenu(gtk.Menu):
 		self.frame.privatechats.SendMessage(self.user, "\x01VERSION\x01")
 		
 	def OnGivePrivileges(self, widget):
-		text = InputDialog(None, _("Give privileges"), _("Give how many days of global privileges to this user?") )
+		self.frame.np.queue.put(slskmessages.CheckPrivileges())
+		if self.frame.np.privileges_left is None:
+			days = _("Unknown")
+		else:
+			days = self.frame.np.privileges_left / 60 / 60 / 24
+			
+		text = InputDialog(self.frame.MainWindow, _("Give privileges")+" "+_("to %(user)s") %{"user": self.user}, _("Give how many days of global privileges to this user?") + " ("+ _("%(days)s days left") %{'days':days} +")" )
 		if text:
 			try:
 				days = int(text)

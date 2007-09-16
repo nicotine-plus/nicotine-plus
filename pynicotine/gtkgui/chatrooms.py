@@ -714,8 +714,9 @@ class ChatRoom(ChatRoomTab):
 			del self.lines[0]
 
 		line = "\n-- ".join(line.split("\n"))
+		if self.Log.get_active():
+			self.logfile = WriteLog(self.logfile, self.frame.np.config.sections["logging"]["roomlogsdir"], self.room, line)
 		self.getUserTag(user)
-
 		timestamp_format=self.frame.np.config.sections["logging"]["rooms_timestamp"]
 		if user != login:
 			self.lines.append(AppendLine(self.ChatScroll, self.frame.CensorChat(self.frame.np.decode(line, self.encoding)), tag, username=user, usertag=self.tag_users[user], timestamp_format=timestamp_format))
@@ -723,8 +724,7 @@ class ChatRoom(ChatRoomTab):
 				self.frame.new_tts(self.frame.np.config.sections["ui"]["speechrooms"] % {"room": self.room, "user": self.frame.tts_clean(user), "message": self.frame.tts_clean(self.frame.np.decode(speech, self.encoding))} )
 		else:
 			self.lines.append(AppendLine(self.ChatScroll, self.frame.np.decode(line, self.encoding), tag, username=user, usertag=self.tag_users[user], timestamp_format=timestamp_format))
-		if self.Log.get_active():
-			self.logfile = WriteLog(self.logfile, self.frame.np.config.sections["logging"]["roomlogsdir"], self.room, line)
+		
 			
 	def getUserTag(self, user):
 		if user not in self.users:
@@ -1163,7 +1163,7 @@ class ChatRoom(ChatRoomTab):
 			self.users[user] = iter
 		self.UserList.set_sensitive(True)
 		# Reinitialize sorting after loop is complet
-		self.usersmodel.set_sort_column_id(1, gtk.SORT_ASCENDING)
+		self.usersmodel.set_sort_column_id(2, gtk.SORT_ASCENDING)
 		# Spit this line into chat log
 		AppendLine(self.ChatScroll, _("--- reconnected ---"), self.tag_hilite)
 		# Update user count

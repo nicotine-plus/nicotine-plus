@@ -291,13 +291,31 @@ class AddUser(ServerMessage):
 	""" Used to be kept updated about a user's status."""
 	def __init__(self, user = None):
 		self.user = user
-	
+		self.status = None
+		self.avgspeed = None
+		self.downloadnum = None
+		self.files = None
+		self.dirs = None
+		self.country = None
+		self.privileged = None
+		
 	def makeNetworkMessage(self):
 		return self.packObject(self.user)
 	
 	def parseNetworkMessage(self, message):
 		pos, self.user = self.getObject(message, types.StringType)
 		pos, self.userexists = pos+1, ord(message[pos])
+		if len(message[pos:]) > 0:
+			pos, self.status = self.getObject(message, types.IntType, pos)
+			pos, self.avgspeed = self.getObject(message, types.IntType, pos)
+			pos, size1 = self.getObject(message, types.LongType, pos)
+			pos, size2 = self.getObject(message, types.LongType, pos)
+			#self.downloads = (size2 << 32) + size1
+			self.downloadnum = size2 + size1
+			pos, self.files = self.getObject(message, types.IntType, pos)
+			pos, self.dirs = self.getObject(message, types.IntType, pos)
+			if len(message[pos:]) > 0:
+				pos, self.country = self.getObject(message, types.StringType, pos)
 
 class RemoveUser(ServerMessage):
 	""" Used when we no longer want to be kept updated about a user's status."""
@@ -614,8 +632,12 @@ class GetUserStats(ServerMessage):
 	def parseNetworkMessage(self, message):
 		pos, self.user = self.getObject(message, types.StringType)
 		pos, self.avgspeed = self.getObject(message, types.IntType, pos, getsignedint = 1)
-		pos, self.downloadnum = self.getObject(message, types.IntType, pos)
-		pos, self.something = self.getObject(message, types.IntType, pos)
+		#pos, self.downloadnum = self.getObject(message, types.IntType, pos)
+		#pos, self.something = self.getObject(message, types.IntType, pos)
+		pos, size1 = self.getObject(message, types.LongType, pos)
+		pos, size2 = self.getObject(message, types.LongType, pos)
+		#self.downloads = (size2 << 32) + size1
+		self.downloadnum = size2 + size1
 		pos, self.files = self.getObject(message, types.IntType, pos)
 		pos, self.dirs = self.getObject(message, types.IntType, pos)
 
@@ -840,7 +862,7 @@ class CheckPrivileges(ServerMessage):
 		return ""
 	
 	def parseNetworkMessage(self, message):
-		pos, self.days = self.getObject(message, types.IntType)
+		pos, self.seconds = self.getObject(message, types.IntType)
 
 class AddToPrivileged(ServerMessage):
 	def __init__(self):

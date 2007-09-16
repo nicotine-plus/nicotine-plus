@@ -574,8 +574,7 @@ class Search(SearchTab):
 		
 		self.users.append(user)
 
-		if user not in self.frame.np.watchedusers:
-			self.frame.np.queue.put(slskmessages.AddUser(user))
+		self.frame.np.queue.put(slskmessages.AddUser(user))
 		
 		if msg.freeulslots:
 			imdl = _("Y")
@@ -622,7 +621,9 @@ class Search(SearchTab):
 
 		if res:
 			self.frame.Searches.request_changed(self.Main)
-			self.frame.RequestIcon(self.frame.SearchTabLabel)
+			if self.frame.MainNotebook.get_current_page() != 4:
+				self.frame.SearchTabLabel.set_image(self.frame.images["online"])
+			#self.frame.RequestIcon(self.frame.SearchTabLabel)
 
 		rows = len(self.all_data)
 		for c in self.ResultsList.get_columns():

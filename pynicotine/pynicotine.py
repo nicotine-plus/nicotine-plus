@@ -115,6 +115,7 @@ class NetworkEventProcessor:
 		self.userlist = None
 		self.logintime = None
 		self.ipaddress = None
+		self.privileges_left = None
 		self.servertimer = None
 		self.servertimeout = -1
 		
@@ -549,6 +550,7 @@ class NetworkEventProcessor:
    				self.queue.put(slskmessages.HaveNoParent(1))
 			self.queue.put(slskmessages.NotifyPrivileges(1, self.config.sections["server"]["login"]))
 			self.privatechat.Login()
+			self.queue.put(slskmessages.CheckPrivileges())
 		else:
 			self.frame.manualdisconnect = 1
 			self.setStatus(_("Can not log in, reason: %s") %(msg.reason))
@@ -651,7 +653,16 @@ class NetworkEventProcessor:
 			self.transfers.getAddUser(msg)
 		else:
 			self.logMessage("%s %s" %(msg.__class__, vars(msg)))
-
+		if msg.status is not None:
+			self.GetUserStatus(msg)
+		elif msg.userexists and msg.status is None:
+			self.queue.put(slskmessages.GetUserStatus(msg.user))
+			
+		if msg.files is not None:
+			self.GetUserStats(msg)
+		elif msg.userexists and msg.files is None:
+			self.queue.put(slskmessages.GetUserStats(msg.user))
+			
 	def PrivilegedUsers(self, msg):
 		if self.transfers is not None:
 			self.transfers.setPrivilegedUsers(msg.users)
@@ -669,14 +680,15 @@ class NetworkEventProcessor:
 			self.logMessage("%s %s" %(msg.__class__, vars(msg)))
 
 	def CheckPrivileges(self, msg):
-		mins = msg.days / 60
+		mins = msg.seconds / 60
 		hours = mins / 60
 		days = hours / 24
-		if msg.days == 0:
+		if msg.seconds == 0:
 			self.logMessage(_("You have no privileges left"))
 		else:
-			self.logMessage(_("%(days)i days, %(hours)i hours, %(minutes)i minutes, %(seconds)i seconds of download privileges left") %{'days':days, 'hours':hours % 24, 'minutes':mins % 60, 'seconds':msg.days % 60})
-
+			self.logMessage(_("%(days)i days, %(hours)i hours, %(minutes)i minutes, %(seconds)i seconds of download privileges left") %{'days':days, 'hours':hours % 24, 'minutes':mins % 60, 'seconds':msg.seconds % 60})
+		self.privileges_left = msg.seconds
+		
 	def AdminMessage(self, msg):
 		self.logMessage("%s" %(msg.msg))
 	

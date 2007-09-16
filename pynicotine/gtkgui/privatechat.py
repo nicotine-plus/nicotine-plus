@@ -78,9 +78,8 @@ class PrivateChats(IconNotebook):
 			tab = PrivateChat(self, user)
 			self.users[user] = tab
 			self.append_page(tab.Main, user, tab.OnClose)
-			if user not in self.frame.np.watchedusers:
-				self.frame.np.queue.put(slskmessages.AddUser(user))
-			self.frame.np.queue.put(slskmessages.GetUserStatus(user))
+			self.frame.np.queue.put(slskmessages.AddUser(user))
+
 		if direction:
 			if self.get_current_page() != self.page_num(self.users[user].Main):
 				self.set_current_page(self.page_num(self.users[user].Main))
@@ -311,7 +310,6 @@ class PrivateChat(PrivateChatTab):
 			self.frame.translux.unsubscribe(self.tlux_chat)
 		for i in self.__dict__.keys():
 			del self.__dict__[i]
-		self.Main.destroy()
 		
 	def Login(self):
 		timestamp_format=self.frame.np.config.sections["logging"]["private_timestamp"]
