@@ -44,7 +44,7 @@ class UserList:
 			[_("Last seen"), 160, "text", self.CellDataFunc],
 			[_("Comments"), -1, "edit", self.CellDataFunc],
 		)
-		cols[0].set_sort_column_id(9)
+		cols[0].set_sort_column_id(10)
 		cols[1].set_sort_column_id(14)
 		cols[2].set_sort_column_id(2)
 		cols[3].set_sort_column_id(11)
