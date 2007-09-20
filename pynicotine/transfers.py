@@ -119,7 +119,9 @@ class Transfers:
 		self.uploadspanel = None
 		self.uploadQueueTimer = threading.Timer(60.0, self.checkUploadQueueTimer)
 		self.uploadQueueTimer.start()
-
+		
+		self.downloadQueueTimer = threading.Timer(180.0, self.checkDowloadQueueTimer)
+		self.downloadQueueTimer.start()
 # queue sizes
 		self.privcount = 0
 		self.oggcount = 0
@@ -1101,7 +1103,27 @@ class Transfers:
 		if user not in self.eventprocessor.config.sections["server"]["banlist"]:
 			self.eventprocessor.config.sections["server"]["banlist"].append(user)
 			self.eventprocessor.config.writeConfig()
+	
+	def checkDowloadQueueTimer(self):
+		self.downloadQueueTimer.cancel()
 
+		self.checkDownloadQueue()
+		
+		self.downloadQueueTimer = threading.Timer(180.0, self.checkDowloadQueueTimer)
+		self.downloadQueueTimer.start()
+		
+	# Find failed downloads and attempt to queue them
+	def checkDownloadQueue(self):
+		if self.eventprocessor.config.sections["transfers"]["autoretry_downloads"]:
+			statuslist = ["Cannot connect", 'Connection closed by peer', "Local file error", "Getting address", "Waiting for peer to connect", "Initializing transfer"]
+			for transfer in self.downloads:
+				if transfer.status in statuslist:
+					self.AbortTransfer(transfer)
+					transfer.req = None
+					self.getFile(transfer.user, transfer.filename, transfer.path, transfer)
+			
+			self.SaveDownloads()
+					
 	def checkUploadQueueTimer(self):
 		self.uploadQueueTimer.cancel()
 

@@ -71,7 +71,7 @@ class Config:
 "friendsnolimits":0, "enablebuddyshares": 0, "enabletransferbuttons": 1, \
 "groupdownloads": 0, "groupuploads": 1, \
 "geoblock": 0, "geopanic": 0, "geoblockcc": [""], "remotedownloads": 1, \
-"uploadallowed": 2, "autoclear_uploads": 0, \
+"uploadallowed": 2, "autoclear_uploads": 0, "autoretry_downloads": 0, \
 "downloads":[],"sharedfiles":{},"sharedfilesstreams":{}, "uploadsinsubdirs": 1, \
 "wordindex":{},"fileindex":{},"sharedmtimes":{},"bsharedfiles":{},"bsharedfilesstreams":{}, \
 "bwordindex":{},"bfileindex":{},"bsharedmtimes":{}, "rescanonstartup":0, \

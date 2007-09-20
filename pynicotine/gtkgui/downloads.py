@@ -80,6 +80,9 @@ class Downloads(TransferList):
 		frame.banDownloadButton.connect("clicked", self.OnBan)
 		frame.DownloadList.expand_all()
 		
+		self.frame.ToggleAutoRetry.set_active(self.frame.np.config.sections["transfers"]["autoretry_downloads"])
+		frame.ToggleAutoRetry.connect("toggled", self.OnToggleAutoRetry)
+		
 		self.frame.ToggleTreeDownloads.set_active(self.frame.np.config.sections["transfers"]["groupdownloads"])
 		frame.ToggleTreeDownloads.connect("toggled", self.OnToggleTree)
 		self.OnToggleTree(None)
@@ -92,6 +95,9 @@ class Downloads(TransferList):
 		for column in self.frame.DownloadList.get_columns():
 			columns.append(column.get_visible())
 		self.frame.np.config.sections["columns"]["downloads"] = columns
+		
+	def OnToggleAutoRetry(self, widget):
+		self.frame.np.config.sections["transfers"]["autoretry_downloads"] = self.frame.ToggleAutoRetry.get_active()
 		
 	def OnTryClearQueued(self, widget):
 		direction="down"

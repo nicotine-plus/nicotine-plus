@@ -230,6 +230,8 @@ osiris
 Alexander Kanavin
 \t(PySoulSeek developer) Nicotine and Nicotine+ are based on PySoulSeek
 \thttp://sensi.org/~ak/
+Amun-Ra
+\t(Code contributer)
 """)
 		AppendLine(self.DevTextView, text, None, None, showstamp=False)
 		

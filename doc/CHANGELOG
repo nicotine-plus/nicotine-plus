@@ -71,6 +71,7 @@ Transfers
  * Added a 'Clear Failed' item to the uploads menu
  * Added 'Clear Filtered' and 'Clear Paused' to the downloads menu
  * Fixed pausing of aborted downloads after reconnecting to the server.
+ * Added an 'Auto-retry Failed' checkbox to downloads (3 minute timer)
  * Added an 'Autoclear Finished' checkbox to uploads
  * Notify popups for completed files and completed directories (toggleable)
  * Added a 'multiple users' submenus
