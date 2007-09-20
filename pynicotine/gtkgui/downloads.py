@@ -143,7 +143,7 @@ class Downloads(TransferList):
 		fullname = model.get_value(iter, 9)
 		size = speed = "0"
 		length = bitrate = None
-		queue = immediate = num = country = ""
+		queue = immediate = num = country = bitratestr = ""
 		for transfer in self.frame.np.transfers.downloads:
 			if transfer.user == user and fullname == transfer.filename:
 				size = self.Humanize(transfer.size, None)
