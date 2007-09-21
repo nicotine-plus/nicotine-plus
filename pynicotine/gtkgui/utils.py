@@ -1206,11 +1206,11 @@ class ImportWinSlskConfig:
 		if self.BuddyList:
 			# Getting userlist
 			users = self.get_basic_config(self.winpath('hotlist.cfg'))
-		
+
 			for i in users:
 				if not self.is_in_user_list(i, self.config.sections["server"]["userlist"]):
 					#print [i,'']
-					self.config.sections["server"]["userlist"].append([i, ''])
+					self.config.sections["server"]["userlist"].append([i, "", 0, 0, 0, "", ""])
 		
 		if self.Login:
 			# Get login and password
@@ -1256,10 +1256,23 @@ class ImportWinSlskConfig:
 		return 1
   
 	def check_slskdir(self):
-		# we check if the file queue2.cfg exists under the slsk dir
-		queue2path = os.path.join(self.Path, 'queue2.cfg')
 		
-		if not os.access(queue2path, os.F_OK):
+		# we check if the file queue2.cfg exists under the slsk dir
+		if self.Queue:
+			path = self.winpath('queue2.cfg')
+		elif self.BuddyList:
+			path = self.winpath('hotlist.cfg')
+		elif self.Login:
+			path = self.winpath('login.cfg')
+		elif self.Rooms:
+			path = self.winpath('chatrooms.cfg')
+		elif self.BanList:
+			path = self.winpath('dlbans.cfg')
+		elif self.IgnoreList:
+			path = self.winpath('ignores.cfg')
+		elif self.UserInfo:
+			path = self.winpath('userinfo.cfg')
+		if not os.access(path, os.F_OK):
 			return 0
 		return 1
 
