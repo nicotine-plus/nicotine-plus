@@ -67,6 +67,8 @@ Search
  * Added a 'multiple users' submenu to search results popup
 
 Transfers
+ * Show total time elapsed and remaining in user's parent row instead of the
+   current transfer's time elapsed and time remaining.
  * Added a maximum files-per-user limit to the upload queue
  * Added a 'Clear Failed' item to the uploads menu
  * Added 'Clear Filtered' and 'Clear Paused' to the downloads menu

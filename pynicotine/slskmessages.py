@@ -189,7 +189,7 @@ class SlskMessage:
 			print _("Warning: networking thread has to convert unicode string %(object)s message %(type)s") % {'object':object, 'type':self.__class__}
 			encoded = object.encode("utf-8",'replace')
 			return struct.pack("<i", len(encoded))+encoded
-		print _("Warning: unknown object type %s") % type(object)
+		print _("Warning: unknown object type %s") % type(object) +" "+ ("in message %(type)s") % {'type':self.__class__}
 		return ""
         
 	def makeNetworkMessage(self):
@@ -256,7 +256,7 @@ class Login(ServerMessage):
 			except Exception, error:
 				print "Unpack number", error
 			try:
-		
+				# MD5 hexdigest of the password you sent
 				if len(message[pos:]) > 0:
 					pos, self.checksum = self.getObject(message, types.StringType, pos)
 				#print self.checksum
