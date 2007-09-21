@@ -2062,7 +2062,7 @@ class SettingsWindow(settings_glade.SettingsWindow):
 				widget.get_model().disconnect(handler_id)
 			else:
 				widget.disconnect(handler_id)
-				self.handler_ids[widget].remove(handler_id)
+			self.handler_ids[widget].remove(handler_id)
 				
 	def UpdateColours(self):
 		for name, page in self.pages.items():
