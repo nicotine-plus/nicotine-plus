@@ -326,7 +326,18 @@ class NetworkEventProcessor:
 		for i in self.peerconns:
 			if i.conntimer is not None:
 				i.conntimer.cancel()
-
+		if self.servertimer is not None:
+			self.servertimer.cancel()
+		if self.searchResultsTimer is not None:
+			self.searchResultsTimer.cancel()
+		if self.respondDistributedTimer is not None:
+			self.respondDistributedTimer.cancel()
+		if self.transfers is not None:
+			self.transfers.AbortTransfers()
+			if self.transfers.uploadQueueTimer is not None:
+				self.transfers.uploadQueueTimer.cancel()
+			if self.transfers.downloadQueueTimer is not None:
+				self.transfers.downloadQueueTimer.cancel()
 	def ConnectToServer(self, msg):
 		self.frame.OnConnect(None)
 
@@ -510,6 +521,8 @@ class NetworkEventProcessor:
 				self.transfers.SaveDownloads()
 				if self.transfers.uploadQueueTimer is not None:
 					self.transfers.uploadQueueTimer.cancel()
+				if self.transfers.downloadQueueTimer is not None:
+					self.transfers.downloadQueueTimer.cancel()
 			self.privatechat = self.chatrooms = self.userinfo = self.userbrowse = self.search = self.transfers = self.userlist = None
 			self.frame.ConnClose(conn, addr)
 		else:

@@ -1155,17 +1155,9 @@ class NicotineFrame(MainWindow):
 		self.np.config.sections["ui"]["width"] = width
 		
 	def OnDestroy(self, widget):
-		if self.np.servertimer is not None:
-			self.np.servertimer.cancel()
-		if self.np.searchResultsTimer is not None:
-			self.np.searchResultsTimer.cancel()
-		if self.np.respondDistributedTimer is not None:
-			self.np.respondDistributedTimer.cancel()
+		
 		self.np.StopTimers()
-		if self.np.transfers is not None:
-			self.np.transfers.AbortTransfers()
-			if self.np.transfers.uploadQueueTimer is not None:
-				self.np.transfers.uploadQueueTimer.cancel()
+		
 		
 		self.np.config.sections["privatechat"]["users"] = list(self.privatechats.users.keys())
 		if not self.manualdisconnect:
