@@ -7,8 +7,8 @@ msgstr ""
 "Project-Id-Version: nicotine\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-09-21 21:45+0200\n"
-"PO-Revision-Date: 2007-09-21 22:32+0100\n"
-"Last-Translator: ><((((*> <zniavre2048@gmail.com>\n"
+"PO-Revision-Date: 2007-09-21 23:48+0200\n"
+"Last-Translator: daelstorm <daelstorm@gmail.com>\n"
 "Language-Team: Hyriand <hyriand@thegraveyard.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2321,7 +2321,7 @@ msgstr "La notification change la couleur du texte des onglets"
 
 #: pynicotine/gtkgui/settings_glade.py:4391
 msgid "Main"
-msgstr "Générale"
+msgstr "Principale"
 
 #: pynicotine/gtkgui/settings_glade.py:4400
 #: pynicotine/gtkgui/settings_glade.py:4435
