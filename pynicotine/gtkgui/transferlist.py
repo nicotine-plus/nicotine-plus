@@ -1,4 +1,5 @@
 # Copyright (C) 2007 daelstorm. All rights reserved.
+# -*- coding: utf-8 -*-
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -260,13 +261,15 @@ class TransferList:
 				speed = "%.1f" % transfer.speed
 			except TypeError:
 				speed = str(transfer.speed)
-			elap = str(transfer.timeelapsed)
+
+			elap = transfer.timeelapsed
 			left = str(transfer.timeleft)
 			
 			if speed == "None":
 				speed = ""
-			if elap == "None":
-				elap = ""
+			if elap == None:
+				elap = 0
+			elap = self.frame.np.transfers.getTime(elap)
 			if left == "None":
 				left = ""
 			try:
@@ -326,25 +329,33 @@ class TransferList:
 			for i in self.list:
 				self.update(i)
 		# Remove empty parent rows
-		for i in self.users.keys()[:]:
-			if not self.transfersmodel.iter_has_child(self.users[i]):
-				self.transfersmodel.remove(self.users[i])
-				del self.users[i]
+		for user in self.users.keys()[:]:
+			if not self.transfersmodel.iter_has_child(self.users[user]):
+				self.transfersmodel.remove(self.users[user])
+				del self.users[user]
 			else:
-				files = self.transfersmodel.iter_n_children(self.users[i])
+				files = self.transfersmodel.iter_n_children(self.users[user])
 				ispeed = 0.0
 				percent = totalsize = position = 0
 				elapsed = left = ""
+				elap = 0
 				for f in range(files):
-					iter = self.transfersmodel.iter_nth_child(self.users[i], f)
+					iter = self.transfersmodel.iter_nth_child(self.users[user], f)
+					filename = self.transfersmodel.get_value(iter, 9)
+					
+					for transfer in self.list:
+						if [transfer.user, transfer.filename] == [user, filename] and transfer.timeelapsed is not None:
+							elap += transfer.timeelapsed
+							break
 					totalsize += self.transfersmodel.get_value(iter, 11)
 					position += self.transfersmodel.get_value(iter, 12)
 					status = self.transfersmodel.get_value(iter, 2)
+						
 					if status == _("Transferring"):
 						str_speed = self.transfersmodel.get_value(iter, 5)
 						if str_speed != "":
 							ispeed += float(str_speed)
-						elapsed = self.transfersmodel.get_value(iter, 6)
+						
 						left = self.transfersmodel.get_value(iter, 7)
 					
 				try:
@@ -353,9 +364,15 @@ class TransferList:
 					speed = str(ispeed)
 				if totalsize > 0:
 					percent = ((100 * position)/ totalsize)
+					
+				if ispeed <= 0.0:
+					left = "∞"
+				else:
+					left = self.frame.np.transfers.getTime((totalsize - position)/ispeed/1024)
+				elapsed = self.frame.np.transfers.getTime(elap)
 				
-				self.transfersmodel.set(self.users[i], 2, _("%s Files") % files , 3, percent, 4, "%s / %s" % (self.Humanize(position, None), self.Humanize(totalsize, None )), 5, speed, 6, elapsed, 7, left, 11, ispeed, 13, True)
-				#self.transfersmodel.set(self.users[i],  )
+				self.transfersmodel.set(self.users[user], 2, _("%s Files") % files , 3, percent, 4, "%s / %s" % (self.Humanize(position, None), self.Humanize(totalsize, None )), 5, speed, 6, elapsed, 7, left, 11, ispeed, 13, True)
+				
 				
 		self.frame.UpdateBandwidth()
 

@@ -856,7 +856,7 @@ class Transfers:
 				#i.status = "%s" %(str(i.currentbytes))
 				i.status = "Transferring"
 				oldelapsed = i.timeelapsed
-				i.timeelapsed = self.getTime(curtime - i.starttime)
+				i.timeelapsed = curtime - i.starttime
 				if curtime > i.starttime and i.currentbytes > i.offset:
 					i.speed = (i.currentbytes - i.lastbytes)/(curtime - i.lasttime)/1024
 					if i.speed <= 0.0:
@@ -1032,15 +1032,20 @@ class Transfers:
 			if i.starttime is None:
 				i.starttime = curtime
 				i.offset = msg.offset
+			lastspeed = 0
+			if i.speed is not None:
+				lastspeed = i.speed
 			
 			i.currentbytes = msg.offset + msg.sentbytes
 			oldelapsed = i.timeelapsed
-			i.timeelapsed = self.getTime(curtime - i.starttime)
+			i.timeelapsed = curtime - i.starttime
 			if curtime > i.starttime and i.currentbytes > i.offset:
 				i.speed = (i.currentbytes - i.lastbytes)/(curtime - i.lasttime)/1024
-				if i.speed <= 0.0:
+				if i.speed <= 0.0 and (i.currentbytes != i.size or lastspeed == 0):
 					i.timeleft = "∞"
 				else:
+					if (i.currentbytes == i.size) and i.speed == 0:
+						i.speed = lastspeed
 					i.timeleft = self.getTime((i.size - i.currentbytes)/i.speed/1024)
 				self.checkUploadQueue()
 			i.lastbytes = i.currentbytes
