@@ -21,7 +21,8 @@ General Changes
  * Added global unrecommendations list
  * Merged Amun-Ra's 'Country flag column in Chatroom userlists' (this is a new
    feature on the testing server) but works with manual IP lookups with GeoIP.
-   This requires the 242 flag images. :)
+   This requires the 242 flag images. Additions to several server messages are
+   used instead of GeoIP if they are available.
  * Simplified GeoIP module loading
 
 Userinfo

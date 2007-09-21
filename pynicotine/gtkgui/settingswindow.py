@@ -1253,7 +1253,7 @@ class BloatFrame(settings_glade.BloatFrame):
 		ui = config["ui"]
 		transfers = config["transfers"]
 		language = config["language"]
-
+		self.SpellCheck.set_sensitive(self.frame.SEXY)
 		
 		self.p.SetWidgetsData(config, self.options)
 
