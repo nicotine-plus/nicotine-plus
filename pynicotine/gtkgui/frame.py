@@ -198,10 +198,8 @@ class NicotineFrame(MainWindow):
 		self.MainWindow.connect("network_event", self.OnNetworkEvent)
 		self.MainWindow.connect("network_event_lo", self.OnNetworkEvent)
 
-		if sys.platform.startswith("win"):
-			self.now_playing1.set_sensitive(False)
-		
-
+		#if sys.platform.startswith("win"):
+			#self.now_playing1.set_sensitive(False)
 		
 		for thing in config["interests"]["likes"]:
 			self.likes[thing] = self.likeslist.append([thing])

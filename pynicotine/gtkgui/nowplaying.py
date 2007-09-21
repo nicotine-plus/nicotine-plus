@@ -443,8 +443,7 @@ class NowPlaying:
 		self.DisplayNowPlaying(None, 1)
 		
 	def DisplayNowPlaying(self, widget, test=0, callback=None):
-		if sys.platform.startswith("win"):
-			return
+
 		if self.NP_rhythmbox.get_active() or self.NP_bmpx.get_active():
 			# dbus (no threads, please)
 			self.GetNP(None, test, callback)
