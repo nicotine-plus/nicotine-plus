@@ -187,7 +187,7 @@ class SlskProtoThread(threading.Thread):
 		Msg12547:12547
 		}
 
-	distribclasses = {0:DistribAlive, 3:DistribSearch}
+	distribclasses = {0:DistribAlive, 3:DistribSearch, 4:DistribUnknown}
 
 	
 	def __init__(self, ui_callback, queue, config, eventprocessor):

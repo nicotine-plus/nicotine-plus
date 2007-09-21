@@ -1519,6 +1519,14 @@ class DistribSearch(DistribMessage):
 		pos, self.searchid = self.getObject(message, types.IntType, pos)
 		pos, self.searchterm = self.getObject(message, types.StringType, pos)
 
+class DistribUnknown(DistribMessage):
+	def __init__(self, conn):
+		self.conn = conn
+	
+	def parseNetworkMessage(self, message):
+		pos, self.something = self.getObject(message, types.IntType)
+		pass
+	
 class NetInfo(ServerMessage):
 	""" Information about what nodes have been added/removed in the network """
 	def __init__(self):
