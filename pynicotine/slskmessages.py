@@ -251,10 +251,9 @@ class Login(ServerMessage):
 			try:
 				import socket
 				pos, self.ip = pos+4, socket.inet_ntoa(self.strrev(message[pos:pos+4]))
-				#pos, self.num = self.getObject(message, types.IntType, pos)
 				# Unknown number
 			except Exception, error:
-				print "Unpack number", error
+				print "Error unpacking IP address", error
 			try:
 				# MD5 hexdigest of the password you sent
 				if len(message[pos:]) > 0:
@@ -541,6 +540,9 @@ class ConnectToPeer(ServerMessage):
 		pos, self.ip = pos+4, socket.inet_ntoa(self.strrev(message[pos:pos+4]))
 		pos, self.port = self.getObject(message, types.IntType, pos, 1)
 		pos, self.token = self.getObject(message, types.IntType, pos)
+		if len(message[pos:]) > 0:
+			# Don't know what this is, may be some kind of status
+			pos, self.unknown = pos+1, ord(message[pos])
 
 class MessageUser(ServerMessage):
 	""" Chat phrase sent to someone or received by us in private"""
