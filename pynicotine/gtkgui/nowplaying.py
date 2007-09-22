@@ -535,7 +535,7 @@ class NowPlaying:
 			return
 		try:
 			bmp_object = self.bus.get_object('org.beepmediaplayer.bmp', '/Core')
-			bmp_iface = dbus.Interface(bmp_object, 'org.beepmediaplayer.bmp')
+			bmp_iface = self.bus.Interface(bmp_object, 'org.beepmediaplayer.bmp')
 		except Exception, error:
 			self.frame.logMessage(_("ERROR while accessing the %(program)s DBus interface: %(error)s") % {"program": "BMPx", "error": error})
 			return
@@ -745,9 +745,9 @@ class NowPlaying:
 			return None
 		try:
 			rbshellobj = self.bus.get_object('org.gnome.Rhythmbox', '/org/gnome/Rhythmbox/Shell')
-			self.rbshell = dbus.Interface(rbshellobj, 'org.gnome.Rhythmbox.Shell')
-			rbplayerobj = bus.get_object('org.gnome.Rhythmbox', '/org/gnome/Rhythmbox/Player')
-			rbplayer = dbus.Interface(rbplayerobj, 'org.gnome.Rhythmbox.Player')
+			self.rbshell = self.bus.Interface(rbshellobj, 'org.gnome.Rhythmbox.Shell')
+			rbplayerobj = self.bus.get_object('org.gnome.Rhythmbox', '/org/gnome/Rhythmbox/Player')
+			rbplayer = self.bus.Interface(rbplayerobj, 'org.gnome.Rhythmbox.Player')
 		except Exception, error:
 			self.frame.logMessage(_("ERROR while accessing the %(program)s DBus interface: %(error)s") % {"program": "Rhythmbox", "error": error })
 			return None
