@@ -749,6 +749,8 @@ class Search(SearchTab):
 
 	def check_filter(self, row):
 		filters = self.filters
+		if not self.filtersCheck.get_active():
+			return True
 		if filters[0] and not filters[0].search(row[2].lower()):
 			return False
 		if filters[1] and filters[1].search(row[2].lower()):
@@ -772,10 +774,7 @@ class Search(SearchTab):
 	
 	def set_filters(self, enable, f_in, f_out, size, bitrate, freeslot, country):
 		
-		if not enable:
-			self.filters = None
-			#self.data = self.all_data[:]
-			return
+
 		if self.frame.np.transfers is None:
 			encode = self.frame.np.encode
 		else:

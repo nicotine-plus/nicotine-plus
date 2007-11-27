@@ -265,7 +265,7 @@ class Downloads(TransferList):
 				continue
 			command = commandargs
 			if os.path.exists(fn.file.name):
-				command[pos] = fn.file.name
+				command[pos] = "\"%s\"" % fn.file.name
 			else:
 				basename = string.split(fn.filename, '\\')[-1]
 				path = os.sep.join([downloaddir, basename])
@@ -273,7 +273,8 @@ class Downloads(TransferList):
 					command[pos] = path
 			if command[pos] == "$":
 				continue
-			os.spawnlp(os.P_NOWAIT, command[0], *command)
+			os.system("%(args)s &" % {"args": " ".join(command)})
+			#os.spawnlp(os.P_NOWAIT, command[0], *command)
 
 
 	def OnPopupMenuUsers(self, widget):

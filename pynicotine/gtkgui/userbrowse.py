@@ -752,9 +752,10 @@ class UserBrowse(UserBrowseTab):
 		for fn in self.selected_files:
 			file = os.sep.join([path, fn])
 			command = commandargs
-			command[pos] = file
+			command[pos] = "\"%s\"" % file
 			if os.path.exists(file):
-				os.spawnlp(os.P_NOWAIT, command[0], *command)
+				#os.spawnlp(os.P_NOWAIT, command[0], *command)
+				os.system("%(args)s &" % {"args": " ".join(command)})
 		
 	def OnDownloadFilesTo(self, widget):
 		

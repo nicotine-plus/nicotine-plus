@@ -227,8 +227,9 @@ class Uploads(TransferList):
 			command = commandargs
 			file = fn.filename.replace("\\", os.sep)
 			if os.path.exists(file):
-				command[pos] = file
-				os.spawnlp(os.P_NOWAIT, command[0], *command)
+				command[pos] = "\"%s\"" % file
+				#os.spawnlp(os.P_NOWAIT, command[0], *command)
+				os.system("%(args)s &" % {"args": " ".join(command)})
 			
 	def OnPopupMenuUsers(self, widget):
 		
