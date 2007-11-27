@@ -330,10 +330,19 @@ class Downloads(TransferList):
 			items[i].set_sensitive(act)
 		return True
 
-					
+	def DoubleClick(self, event):
+
+		self.selected_transfers = []
+		self.selected_users = []
+		self.frame.DownloadList.get_selection().selected_foreach(self.SelectedTransfersCallback)
+
+		self.OnPlayFiles(None)
+			
 	def OnPopupMenu(self, widget, event, kind):
 		if kind == "mouse":
 			if event.button != 3:
+				if event.button == 1 and event.type == gtk.gdk._2BUTTON_PRESS:
+					self.DoubleClick(event)
 				return False
 		
 		self.selected_transfers = []
