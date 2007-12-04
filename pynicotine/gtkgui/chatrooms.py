@@ -25,7 +25,7 @@ from nicotine_glade import ChatRoomTab
 from utils import InitialiseColumns, AppendLine, PopupMenu, FastListModel, string_sort_func, WriteLog, int_sort_func, Humanize, expand_alias, is_alias, EncodingsMenu, SaveEncoding, PressHeader, fixpath, IconNotebook
 from pynicotine.utils import _
 from ticker import Ticker
-from entrydialog import OptionDialog
+from entrydialog import OptionDialog, input_box
 import sets, os, re
 
 def GetCompletion(part, list):
@@ -56,28 +56,34 @@ class RoomsControl:
 		self.joinedrooms = {}
 		self.autojoin = 1
 		self.rooms = []
-		self.roomsmodel = gtk.ListStore(str, str, int)
+		self.privaterooms = {}
+		self.OtherPrivateRooms = self.frame.np.config.sections["private_rooms"]["membership"]
+		self.roomsmodel = gtk.ListStore(str, str, int, int)
 		frame.roomlist.RoomsList.set_model(self.roomsmodel)
 		
 		cols = InitialiseColumns(frame.roomlist.RoomsList,
-			[_("Room"), 150, "text", self.frame.CellDataFunc],
-			[_("Users"), -1, "text", self.frame.CellDataFunc],
+			[_("Room"), 150, "text", self.RoomStatus],
+			[_("Users"), -1, "text", self.RoomStatus],
 		)
 		cols[0].set_sort_column_id(0)
 		cols[1].set_sort_column_id(2)
-
-		cols[1].set_sort_indicator(True)
+		self.roomsmodel.set_sort_func(2, self.PrivateRoomsSort, 2)
+		self.roomsmodel.set_sort_column_id(2, gtk.SORT_ASCENDING)
+		#cols[1].set_sort_indicator(True)
 		
 		for i in range (2):
 			parent = cols[i].get_widget().get_ancestor(gtk.Button)
 			if parent:
 				parent.connect('button_press_event', PressHeader)
 
-
 		self.popup_room = None
 		self.popup_menu = PopupMenu().setup(
 			("#" + _("Join room"), self.OnPopupJoin, gtk.STOCK_JUMP_TO ),
 			("#" + _("Leave room"), self.OnPopupLeave, gtk.STOCK_CLOSE),
+			( "", None ),
+			("#" + _("Create Private Room"), self.OnPopupCreatePrivateRoom, gtk.STOCK_NEW),
+			("#" + _("Disown Private Room"), self.OnPopupPrivateRoomDisown, gtk.STOCK_CLOSE),
+			("#" + _("Cancel room membership"), self.OnPopupPrivateRoomDismember, gtk.STOCK_CANCEL),
 			( "", None ),
 			("#" + _("Refresh"), self.OnPopupRefresh, gtk.STOCK_REFRESH ),
 		)
@@ -94,6 +100,35 @@ class RoomsControl:
 			pass
 		self.frame.SetTextBG(self.frame.roomlist.RoomsList)
 		self.frame.SetTextBG(self.frame.roomlist.CreateRoomEntry)
+		
+	def PrivateRoomsSort(self, model, iter1, iter2, column):
+		try:
+			val1 = int(model.get_value(iter1, column)) + 1
+			private1 = int(model.get_value(iter1, 3)) * 10000
+		except:
+			val1 = 0
+			private1 = 0
+		try:
+			val2 = int(model.get_value(iter2, column)) + 1
+			private2 = int(model.get_value(iter2, 3)) * 10000
+		except:
+			val2 = 0
+			private2 = 0
+		return cmp(val1+private1, val2+private2)
+
+
+	def RoomStatus(self, column, cellrenderer, model, iter):
+
+		if self.roomsmodel.get_value(iter, 3) == 2:
+			cellrenderer.set_property("underline", pango.UNDERLINE_SINGLE)
+			cellrenderer.set_property("weight", pango.WEIGHT_BOLD)
+		elif self.roomsmodel.get_value(iter, 3) == 1:
+			cellrenderer.set_property("weight", pango.WEIGHT_BOLD)
+			cellrenderer.set_property("underline", pango.UNDERLINE_NONE)
+		else:
+			cellrenderer.set_property("weight", pango.WEIGHT_NORMAL)
+			cellrenderer.set_property("underline", pango.UNDERLINE_NONE)
+		self.frame.CellDataFunc(column, cellrenderer, model, iter)
 		
 	def OnReorderedPage(self, notebook, page, page_num, force=0):
 		room_tab_order = {}
@@ -176,13 +211,35 @@ class RoomsControl:
 			room = None
 			act = (False, False)
 		self.popup_room = room
+		#prooms_enabled = bool(self.frame.np.config.sections["private_rooms"]["enabled"])
+		prooms_enabled = True
 		items[0].set_sensitive(act[0])
 		items[1].set_sensitive(act[1])
+		items[3].set_sensitive(prooms_enabled) # Create private room
+		items[4].set_sensitive((prooms_enabled and self.popup_room in self.privaterooms)) # Disown
+		items[5].set_sensitive((prooms_enabled and self.popup_room in self.OtherPrivateRooms)) # Dismember
 		self.popup_menu.popup(None, None, None, event.button, event.time)
 	
 	def OnPopupJoin(self, widget):
 		self.frame.np.queue.put(slskmessages.JoinRoom(self.popup_room))
 	
+	def OnPopupCreatePrivateRoom(self, widget):
+		room = input_box(self.frame, title=_('Nicotine+:')+" "+_("Create Private Room"),
+		message=_('Enter the name of the private room you wish to create'),
+		default_text='')
+		if room:
+			self.frame.np.queue.put(slskmessages.JoinRoom(room, 1))
+			
+	def OnPopupPrivateRoomDisown(self, widget):
+		if self.popup_room in self.privaterooms:
+			self.frame.np.queue.put(slskmessages.PrivateRoomDisown(self.popup_room))
+			del self.privaterooms[self.popup_room]
+			
+	def OnPopupPrivateRoomDismember(self, widget):
+		if self.popup_room in self.OtherPrivateRooms:
+			self.frame.np.queue.put(slskmessages.PrivateRoomDismember(self.popup_room))
+			self.OtherPrivateRooms.remove(self.popup_room)
+			
 	def OnPopupLeave(self, widget):
 		self.frame.np.queue.put(slskmessages.LeaveRoom(self.popup_room))
 		
@@ -208,6 +265,7 @@ class RoomsControl:
 		
 
 	def SetRoomList(self, msg):
+		
 		if self.autojoin:
 			self.autojoin = 0
 			if self.joinedrooms.keys():
@@ -223,14 +281,31 @@ class RoomsControl:
 		self.rooms = []
 		for rooms in msg.rooms:
 			room, users = rooms
-			self.roomsmodel.append([room, Humanize(users), users])
+			self.roomsmodel.append([room, Humanize(users), users, 0])
 			if len(msg.rooms) < 200 or users > 2:
 				self.rooms.append(room)
-
+		self.SetPrivateRooms()
 		self.roomsmodel.set_sort_column_id(2, gtk.SORT_DESCENDING)
+		
+		
 		if self.frame.np.config.sections["words"]["roomnames"]:
 			self.frame.chatrooms.roomsctrl.UpdateCompletions()
 			self.frame.privatechats.UpdateCompletions()
+			
+	def SetPrivateRooms(self):
+		iter = self.roomsmodel.get_iter_root()
+		while iter is not None:
+			room = self.roomsmodel.get_value(iter, 0)
+			
+			lastiter = iter
+			iter = self.roomsmodel.iter_next(iter)
+			if room in self.privaterooms or room in self.OtherPrivateRooms:
+				self.roomsmodel.remove(lastiter)
+		for room in self.privaterooms:
+
+			self.roomsmodel.prepend([room, Humanize(self.privaterooms[room]["joined"]), self.privaterooms[room]["joined"], 2])
+		for room in self.OtherPrivateRooms:
+			self.roomsmodel.prepend([room, 0, 0, 1])
 			
 	def GetUserStats(self, msg):
 		for room in self.joinedrooms.values():
@@ -479,7 +554,7 @@ class ChatRoom(ChatRoomTab):
 		self.UpdateColours()
 		self.UserList.set_model(self.usersmodel)
 		self.UserList.set_property("rules-hint", True)
-		
+		self.popup_menu_privaterooms = PopupMenu(self.frame)
 		self.popup_menu = popup = PopupMenu(self.frame)
 		popup.setup(
 			("USER", ""),
@@ -496,6 +571,7 @@ class ChatRoom(ChatRoomTab):
 			("$" + _("_Ignore this user"), popup.OnIgnoreUser),
 			("", None),
 			("#" + _("Sear_ch this user's files"), popup.OnSearchUser, gtk.STOCK_FIND),
+			(1, _("Private rooms"), self.popup_menu_privaterooms, self.OnPrivateRooms),
 		)
 		self.UserList.connect("button_press_event", self.OnPopupMenu)
 
@@ -525,7 +601,11 @@ class ChatRoom(ChatRoomTab):
 		self.GetCompletionList()
 		if config["logging"]["readroomlogs"]:
 			self.ReadRoomLogs()
+	
+	def RoomStatus(self, column, cellrenderer, model, iter):
 
+		cellrenderer.set_property("weight", colour)
+		
 	def ReadRoomLogs(self):
 		config = self.frame.np.config.sections
 		log = os.path.join(config["logging"]["roomlogsdir"], fixpath(self.room.replace(os.sep, "-")) + ".log")
@@ -597,7 +677,39 @@ class ChatRoom(ChatRoomTab):
 			self.frame.translux.unsubscribe(self.tlux_roomlog)
 			self.frame.translux.unsubscribe(self.tlux_chat)
 		self.Main.destroy()
+		
+	def OnPrivateRooms(self, widget):
+		if self.popup_menu.user == None or self.popup_menu.user == self.frame.np.config.sections["server"]["login"]:
+			return False
+		
+		items = []
 
+		popup = self.popup_menu_privaterooms
+		popup.clear()
+		popup.set_user(self.popup_menu.user)
+		#print self.roomsctrl.privaterooms
+		for room in self.roomsctrl.privaterooms:
+			if self.popup_menu.user in self.roomsctrl.privaterooms[room]["users"]:
+				items.append(("#" + _("Remove from private room %s" %room), popup.OnPrivateRoomRemoveUser, gtk.STOCK_REMOVE, room))
+			else:
+				items.append(("#" + _("Add to private room %s" %room), popup.OnPrivateRoomAddUser, gtk.STOCK_ADD, room))
+			
+
+		popup.setup(*items)
+		
+		return True
+		
+	def OnPrivateRoomsUser(self, widget, popup=None):
+		if popup is None:
+			return
+		menu = popup
+		user = menu.user
+		items = menu.get_children()
+		
+		act = False
+		
+		return True
+	
 	def OnPopupMenu(self, widget, event):
 		items = self.popup_menu.get_children()
 		d = self.UserList.get_path_at_pos(int(event.x), int(event.y))
@@ -617,6 +729,8 @@ class ChatRoom(ChatRoomTab):
 		items[9].set_active(user in [i[0] for i in self.frame.np.config.sections["server"]["userlist"]])
 		items[10].set_active(user in self.frame.np.config.sections["server"]["banlist"])
 		items[11].set_active(user in self.frame.np.config.sections["server"]["ignorelist"])
+		items[14].set_sensitive(not (self.popup_menu.user == None or self.popup_menu.user == self.frame.np.config.sections["server"]["login"]))
+			
 		self.popup_menu.popup(None, None, None, event.button, event.time)
 
 	def OnShowChatHelp(self, widget):

@@ -230,6 +230,7 @@ def UrlEvent(tag, widget, event, iter, url):
 	tag.last_event_type = event.type
 
 def AppendLine(textview, line, tag = None, timestamp = None, showstamp=True, timestamp_format = "%H:%M:%S", username=None, usertag=None, scroll=True):
+	line = str(line) # Error messages are sometimes tuples
 	def _makeurltag(buffer, tag, url):
 		props = {}
 
@@ -255,6 +256,7 @@ def AppendLine(textview, line, tag = None, timestamp = None, showstamp=True, tim
 	buffer = textview.get_buffer()
 	linenr = buffer.get_line_count()
 	ME = 0
+
 	if line.startswith("* "):
 		ME = 1
 	if NICOTINE.np.config.sections["logging"]["timestamps"] and showstamp:
@@ -779,7 +781,9 @@ class PopupMenu(gtk.Menu):
 			elif item[0] == 2:
 				menuitem = gtk.ImageMenuItem(item[1])
 				menuitem.set_submenu(item[2])
-				if item[3] is not None:
+				if len(item) == 5 and item[4] is not None and item[3] is not None:
+					self.handlers[menuitem] = menuitem.connect("activate", item[3], item[4])
+				elif item[3] is not None:
 					self.handlers[menuitem] = menuitem.connect("activate", item[3])
 				img = gtk.image_new_from_stock(item[4], gtk.ICON_SIZE_MENU)
 				menuitem.set_image(img)
@@ -797,7 +801,9 @@ class PopupMenu(gtk.Menu):
 					menuitem.set_image(img)
 				else:
 					menuitem = gtk.MenuItem(item[0])
-				if item[1] is not None:
+				if len(item) >= 4 and item[3] is not None and item[1] is not None:
+					self.handlers[menuitem] = menuitem.connect("activate", item[1], item[3])
+				elif item[1] is not None:
 					self.handlers[menuitem] = menuitem.connect("activate", item[1])
 			self.append(menuitem)
 			menuitem.show()
@@ -838,8 +844,15 @@ class PopupMenu(gtk.Menu):
 	def OnGetUserInfo(self, widget):
 		self.frame.LocalUserInfoRequest(self.user)
 	
-	def OnBrowseUser(self, widget):
+	def OnBrowseUser(self, widget, room):
 		self.frame.BrowseUser(self.user)
+		
+		
+	def OnPrivateRoomAddUser(self, widget, room):
+		self.frame.PrivateRoomAddUser(room, self.user)
+		
+	def OnPrivateRoomRemoveUser(self, widget, room):
+		self.frame.PrivateRoomRemoveUser(room, self.user)
 	
 	def OnAddToList(self, widget):
 		if widget.get_active():

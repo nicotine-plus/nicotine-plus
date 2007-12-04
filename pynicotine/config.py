@@ -107,9 +107,12 @@ class Config:
 "decimalsep":",", "chatfont": "", "roomlistcollapsed": 0, "tabclosers": 1, \
 "searchoffline":"#aa0000", "showaway": 0, "tooltips": 1, \
 "buddylistinchatrooms": 0, "trayicon": 1, "soundenabled": 1, "soundtheme": "", \
-"soundcommand": "play -q", "filemanager": "rox $", "speechenabled": 0, "speechprivate": "%(user)s told you.. %(message)s", "speechrooms": "In %(room)s, %(user)s said %(message)s", "speechcommand": "flite -t \"%s\"", "enabletrans":0, \
+"soundcommand": "play -q", "filemanager": "rox $", "enabletrans":0, \
+"speechenabled": 0, "speechprivate": "%(user)s told you.. %(message)s", "speechrooms": "In %(room)s, %(user)s said %(message)s", "speechcommand": "flite -t \"%s\"", \
 "transtint": "#aaaaaa", "transalpha": 150, "transfilter": 0x00000000L,
 "width": 800, "height": 600}, \
+\
+"private_rooms": { "membership": [], "owned": [], "enabled": 0, }, \
 \
 "urls":{"urlcatching":1, "protocols":{"http":"firefox \"%s\"", "https":"firefox \"%s\""}, "humanizeurls":1}, \
 \

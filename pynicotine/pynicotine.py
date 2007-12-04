@@ -230,6 +230,14 @@ class NetworkEventProcessor:
 			slskmessages.RoomTickerRemove:self.RoomTickerRemove,
 			slskmessages.AckNotifyPrivileges:self.AckNotifyPrivileges,
 			slskmessages.NotifyPrivileges:self.NotifyPrivileges,
+			slskmessages.PrivateRoomUsers:self.PrivateRoomUsers,
+			slskmessages.PrivateRoomOwned:self.PrivateRoomOwned,
+			slskmessages.PrivateRoomAddUser:self.PrivateRoomAddUser,
+			slskmessages.PrivateRoomRemoveUser:self.PrivateRoomRemoveUser,
+			slskmessages.PrivateRoomAdded:self.PrivateRoomAdded,
+			slskmessages.PrivateRoomRemoved:self.PrivateRoomRemoved,
+			slskmessages.PrivateRoomDisown:self.PrivateRoomDisown,
+			slskmessages.PrivateRoomSomething:self.PrivateRoomSomething,
 			}
 
 
@@ -641,7 +649,57 @@ class NetworkEventProcessor:
 				self.queue.put(slskmessages.RoomTickerSet(msg.room, self.encode(ticker, encoding)))
 		else:
 			self.logMessage("%s %s" %(msg.__class__, vars(msg)))
+			
+	def PrivateRoomUsers(self, msg):
+		rooms = self.chatrooms.roomsctrl.privaterooms
+		#if msg.room not in rooms.keys():
+		rooms[msg.room]= {"users": msg.users, "joined": msg.numusers}
+		#self.chatrooms.roomsctrl.privaterooms[msg.room]["users"] = msg.users
+		self.chatrooms.roomsctrl.SetPrivateRooms()
 
+		
+	def PrivateRoomOwned(self, msg):
+		#rooms = self.chatrooms.roomsctrl.privaterooms
+		if msg.room not in self.chatrooms.roomsctrl.privaterooms.keys():
+			rooms[msg.room] = {"users":[], "joined": 0}
+		
+	def PrivateRoomAddUser(self, msg):
+		rooms = self.chatrooms.roomsctrl.privaterooms
+		if msg.room in rooms.keys():
+			if msg.user not in rooms[msg.room]["users"]:
+				rooms[msg.room]["users"].append(msg.user)
+		#msg.debug()
+
+		
+	def PrivateRoomRemoveUser(self, msg):
+		#msg.debug()
+		rooms = self.chatrooms.roomsctrl.privaterooms
+		if msg.room in rooms.keys():
+			if msg.user in rooms[msg.room]["users"]:
+				rooms[msg.room]["users"].remove(msg.user)
+		
+	def PrivateRoomAdded(self, msg):
+		rooms = self.chatrooms.roomsctrl.OtherPrivateRooms
+		if msg.room not in rooms:
+			rooms.append(msg.room)
+		self.chatrooms.roomsctrl.SetPrivateRooms()
+		#msg.debug()
+		
+	def PrivateRoomRemoved(self, msg):
+		rooms = self.chatrooms.roomsctrl.OtherPrivateRooms
+		if msg.room in rooms:
+			rooms.remove(msg.room)
+		self.chatrooms.roomsctrl.SetPrivateRooms()
+		#msg.debug()
+		
+	def PrivateRoomDisown(self, msg):
+		#msg.debug()
+		pass
+		
+	def PrivateRoomSomething(self, msg):
+		#msg.debug()
+		pass
+	
 	def LeaveRoom(self, msg):
 		if self.chatrooms is not None:
 			self.chatrooms.roomsctrl.LeaveRoom(msg)
@@ -713,13 +771,13 @@ class NetworkEventProcessor:
 		
 	def ParentInactivityTimeout(self, msg):
 		pass
-		#print msg.__class__, msg.__dict__
+		#msg.debug()
 	def SearchInactivityTimeout(self, msg):
 		pass
-		#print msg.__class__, msg.__dict__
+		#msg.debug()
 	def MinParentsInCache(self, msg):
 		pass
-		#print msg.__class__, msg.__dict__
+		#msg.debug()
 	def WishlistInterval(self, msg):
 		if self.search is not None:
 			self.search.SetInterval(msg)

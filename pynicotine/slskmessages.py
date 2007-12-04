@@ -212,6 +212,9 @@ class SlskMessage:
 		strlist.reverse()
 		return '.'.join(strlist)
 	
+	def debug(self):
+		print self, self.__dict__	
+		
 class ServerMessage(SlskMessage):
 	pass
 
@@ -401,10 +404,13 @@ class UserData:
 class JoinRoom(ServerMessage):
 	""" Server sends us this message when we join a room. Contains users list
 	with data on everyone."""
-	def __init__(self, room = None):
+	def __init__(self, room = None, private = None):
 		self.room = room
+		self.private = private
 	
 	def makeNetworkMessage(self):
+		if self.private is not None:
+			return self.packObject(self.room) + self.packObject(self.private)
 		return self.packObject(self.room)
 	
 	def parseNetworkMessage(self, message):
@@ -442,6 +448,120 @@ class JoinRoom(ServerMessage):
 			usersdict[i[0]] = UserData(i[1:])
 		return usersdict
 
+class PrivateRoomUsers(ServerMessage):
+	""" We get this when we've created a private room."""
+	def __init__(self, room = None, numusers = None, users = None):
+		self.room = room
+		self.numusers = numusers
+		self.users = users
+			
+	#def makeNetworkMessage(self):
+		#return self.packObject(self.room)
+	
+	def parseNetworkMessage(self, message):
+		pos, self.room = self.getObject(message, types.StringType)
+		pos, self.numusers = self.getObject(message, types.IntType, pos)
+		self.users = []
+		for i in range(self.numusers):
+			pos, user = self.getObject(message, types.StringType, pos)
+			self.users.append(user)
+
+	
+class PrivateRoomOwned(ServerMessage):
+	""" We get this when we've created a private room."""
+	def __init__(self, room = None, number = None):
+		self.room = room
+		self.number = number
+	
+	def parseNetworkMessage(self, message):
+		pos, self.room = self.getObject(message, types.StringType)
+		pos, self.number = self.getObject(message, types.IntType, pos)
+
+		
+class PrivateRoomAddUser(ServerMessage):
+	""" We get / receive this when we add a user to a private room."""
+	def __init__(self, room = None, user = None):
+		self.room = room
+		self.user = user
+	
+	def makeNetworkMessage(self):
+		return self.packObject(self.room) + self.packObject(self.user)
+	
+	def parseNetworkMessage(self, message):
+		pos, self.room = self.getObject(message, types.StringType)
+		pos, self.user = self.getObject(message, types.StringType, pos)
+	
+class PrivateRoomDismember(ServerMessage):
+	""" We do this to remove our own membership of a private room."""
+	def __init__(self, room = None):
+		self.room = room
+
+	def makeNetworkMessage(self):
+		return self.packObject(self.room)
+	
+	def parseNetworkMessage(self, message):
+		pos, self.room = self.getObject(message, types.StringType)
+		
+class PrivateRoomDisown	(ServerMessage):
+	""" We do this to stop owning a private room."""
+	def __init__(self, room = None):
+		self.room = room
+
+	def makeNetworkMessage(self):
+		return self.packObject(self.room)
+	
+	def parseNetworkMessage(self, message):
+		pos, self.room = self.getObject(message, types.StringType)
+
+		
+class PrivateRoomSomething(ServerMessage):
+	""" We get this when we've removed a user from a private room."""
+	def __init__(self, room = None):
+		self.room = room
+
+	def makeNetworkMessage(self):
+		return self.packObject(self.room)
+	
+	def parseNetworkMessage(self, message):
+		pos, self.room = self.getObject(message, types.StringType)
+		#pos, self.user = self.getObject(message, types.StringType, pos)
+		print message[pos:].__repr__()
+		
+class PrivateRoomRemoveUser(ServerMessage):
+	""" We get this when we've removed a user from a private room."""
+	def __init__(self, room = None, user = None):
+		self.room = room
+		self.user = user
+	
+	def makeNetworkMessage(self):
+		return self.packObject(self.room) + self.packObject(self.user)
+	
+	def parseNetworkMessage(self, message):
+		pos, self.room = self.getObject(message, types.StringType)
+		pos, self.user = self.getObject(message, types.StringType, pos)
+		
+class PrivateRoomAdded(ServerMessage):
+	""" We are sent this when we are added to a private room."""
+	def __init__(self, room = None):
+		self.room = room
+	
+	def makeNetworkMessage(self):
+		return self.packObject(self.room)
+	
+	def parseNetworkMessage(self, message):
+		self.room = self.getObject(message, types.StringType)[1]
+		
+class PrivateRoomRemoved(ServerMessage):
+	""" We are sent this when we are removed from a private room."""
+	def __init__(self, room = None):
+		self.room = room
+	
+	def makeNetworkMessage(self):
+		return self.packObject(self.room)
+	
+	def parseNetworkMessage(self, message):
+		self.room = self.getObject(message, types.StringType)[1]
+		
 class LeaveRoom(ServerMessage):
 	""" We send this when we want to leave a room."""
 	def __init__(self, room = None):

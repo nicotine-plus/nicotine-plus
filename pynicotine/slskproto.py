@@ -163,6 +163,16 @@ class SlskProtoThread(threading.Thread):
 		GivePrivileges:123,
 		NotifyPrivileges:124,
 		AckNotifyPrivileges:125,
+		#AnotherStatus:10,
+		PrivateRoomUsers:133,
+		PrivateRoomAddUser:134,
+		PrivateRoomRemoveUser:135,
+		PrivateRoomDismember:136,
+		PrivateRoomDisown:137,
+		PrivateRoomSomething:138,
+		PrivateRoomAdded:139,
+		PrivateRoomRemoved:140,
+		PrivateRoomOwned:148,
 		}
 		
 	peercodes = {

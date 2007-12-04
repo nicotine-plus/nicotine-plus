@@ -2041,7 +2041,16 @@ class NicotineFrame(MainWindow):
 
 	def OnBrowseMyShares(self, widget):
 		self.BrowseUser(None)
-
+		
+	
+				
+	def PrivateRoomRemoveUser(self, room, user):
+		#print room, user
+		self.np.queue.put(slskmessages.PrivateRoomRemoveUser(room, user))
+	def PrivateRoomAddUser(self, room, user):
+		#print room, user
+		self.np.queue.put(slskmessages.PrivateRoomAddUser(room, user))
+		
 	def OnCheckLatest(self, widget):
 		checklatest(self.MainWindow)
 
