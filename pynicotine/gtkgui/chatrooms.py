@@ -1228,6 +1228,7 @@ class ChatRoom(ChatRoomTab):
 		self.frame.SetTextBG(self.AutoJoin)
 		self.frame.SetTextBG(self.Log)
 		self.frame.SetTextBG(self.Ticker.entry)
+		self.frame.ChangeListFont(self.UserList, self.frame.np.config.sections["ui"]["listfont"])
 				
 	def OnLeave(self, widget = None):
 		if self.leaving:

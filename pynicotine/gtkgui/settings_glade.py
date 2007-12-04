@@ -1280,6 +1280,7 @@ class BloatFrame:
 		self.chatfontlabel = gtk.Label(_("Chat Font:"))
 		self.chatfontlabel.set_alignment(0, 0.50)
 		self.chatfontlabel.show()
+		self.chatfontlabel.set_width_chars(15)
 		self.hbox172.pack_start(self.chatfontlabel, False, False, 0)
 
 		self.SelectChatFont = gtk.FontButton()
@@ -1294,6 +1295,90 @@ class BloatFrame:
 		self.hbox172.pack_start(self.DefaultFont, False, True, 0)
 
 		self.vboxUI.pack_start(self.hbox172, False, True, 0)
+
+		self.hbox47 = gtk.HBox(False, 0)
+		self.hbox47.show()
+
+		self.listfontlabel = gtk.Label(_("List Font:"))
+		self.listfontlabel.set_alignment(0, 0.50)
+		self.listfontlabel.show()
+		self.listfontlabel.set_width_chars(15)
+		self.hbox47.pack_start(self.listfontlabel, False, False, 0)
+
+		self.SelectListFont = gtk.FontButton()
+		self.SelectListFont.set_size_request(150, -1)
+		self.SelectListFont.show()
+		self.hbox47.pack_start(self.SelectListFont, False, True, 5)
+
+		self.DefaultListFont = gtk.Button(None, gtk.STOCK_CLEAR)
+		self.DefaultListFont.show()
+
+		self.hbox47.pack_start(self.DefaultListFont, False, True, 0)
+
+		self.vboxUI.pack_start(self.hbox47, False, True, 0)
+
+		self.hbox53 = gtk.HBox(False, 0)
+		self.hbox53.show()
+
+		self.transfersfontlabel = gtk.Label(_("Transfers Font:"))
+		self.transfersfontlabel.set_alignment(0, 0.50)
+		self.transfersfontlabel.show()
+		self.transfersfontlabel.set_width_chars(15)
+		self.hbox53.pack_start(self.transfersfontlabel, False, False, 0)
+
+		self.SelectTransfersFont = gtk.FontButton()
+		self.SelectTransfersFont.set_size_request(150, -1)
+		self.SelectTransfersFont.show()
+		self.hbox53.pack_start(self.SelectTransfersFont, False, True, 5)
+
+		self.DefaultTransfersFont = gtk.Button(None, gtk.STOCK_CLEAR)
+		self.DefaultTransfersFont.show()
+
+		self.hbox53.pack_start(self.DefaultTransfersFont, False, True, 0)
+
+		self.vboxUI.pack_start(self.hbox53, False, True, 0)
+
+		self.hbox50 = gtk.HBox(False, 0)
+		self.hbox50.show()
+
+		self.searchfontlabel = gtk.Label(_("Search Font:"))
+		self.searchfontlabel.set_alignment(0, 0.50)
+		self.searchfontlabel.show()
+		self.searchfontlabel.set_width_chars(15)
+		self.hbox50.pack_start(self.searchfontlabel, False, False, 0)
+
+		self.SelectSearchFont = gtk.FontButton()
+		self.SelectSearchFont.set_size_request(150, -1)
+		self.SelectSearchFont.show()
+		self.hbox50.pack_start(self.SelectSearchFont, False, True, 5)
+
+		self.DefaultSearchFont = gtk.Button(None, gtk.STOCK_CLEAR)
+		self.DefaultSearchFont.show()
+
+		self.hbox50.pack_start(self.DefaultSearchFont, False, True, 0)
+
+		self.vboxUI.pack_start(self.hbox50, False, True, 0)
+
+		self.hbox51 = gtk.HBox(False, 0)
+		self.hbox51.show()
+
+		self.browsefontlabel = gtk.Label(_("Browse Font:"))
+		self.browsefontlabel.set_alignment(0, 0.50)
+		self.browsefontlabel.show()
+		self.browsefontlabel.set_width_chars(15)
+		self.hbox51.pack_start(self.browsefontlabel, False, False, 0)
+
+		self.SelectBrowserFont = gtk.FontButton()
+		self.SelectBrowserFont.set_size_request(150, -1)
+		self.SelectBrowserFont.show()
+		self.hbox51.pack_start(self.SelectBrowserFont, False, True, 5)
+
+		self.DefaultBrowserFont = gtk.Button(None, gtk.STOCK_CLEAR)
+		self.DefaultBrowserFont.show()
+
+		self.hbox51.pack_start(self.DefaultBrowserFont, False, True, 0)
+
+		self.vboxUI.pack_start(self.hbox51, False, True, 0)
 
 		self.hbox182 = gtk.HBox(False, 0)
 		self.hbox182.show()

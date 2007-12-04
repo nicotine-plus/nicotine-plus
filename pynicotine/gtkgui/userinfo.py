@@ -299,6 +299,8 @@ class UserInfo(UserInfoTab):
 		self.frame.SetTextBG(self.descr)
 		self.frame.SetTextBG(self.Likes)
 		self.frame.SetTextBG(self.Hates)
+		self.frame.ChangeListFont(self.Likes, self.frame.np.config.sections["ui"]["listfont"])
+		self.frame.ChangeListFont(self.Hates, self.frame.np.config.sections["ui"]["listfont"])
 		
 	def ShowInterests(self, likes, hates):
 		self.likesStore.clear()

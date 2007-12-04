@@ -77,6 +77,7 @@ class TransferList:
 		
 	def UpdateColours(self):
 		self.frame.SetTextBG(self.widget)
+		self.frame.ChangeListFont(self.widget, self.frame.np.config.sections["ui"]["transfersfont"])
 		
 	status_tab = [
 		_("Getting status"),

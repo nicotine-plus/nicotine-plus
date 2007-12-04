@@ -256,6 +256,10 @@ class UserBrowse(UserBrowseTab):
 		self.frame.SetTextBG(self.FolderTreeView)
 		self.frame.SetTextBG(self.entry4)
 		
+		self.frame.ChangeListFont(self.FolderTreeView, self.frame.np.config.sections["ui"]["browserfont"])
+		self.frame.ChangeListFont(self.FileTreeView, self.frame.np.config.sections["ui"]["browserfont"])
+
+		
 	def CellDataFunc(self, column, cellrenderer, model, iter):
 		colour = self.frame.np.config.sections["ui"]["search"]
 		if colour == "":

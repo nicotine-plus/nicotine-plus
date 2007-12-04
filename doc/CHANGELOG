@@ -1,5 +1,22 @@
 ChangeLog for Nicotine Plus
+Unreleased
 
+Bugs
+ * Fixed a bug with tuple error message causing a traceback
+ * Fixed a translation bug, caused by tabs positions top, left, etc
+
+Chat Rooms
+ * Private Rooms: You can now create private rooms via the roomslist popup menu
+   and add users to your private rooms via any chatroom user popup-menu. You can
+   also drop ownership of a private room and drop membership of another person's
+   private room. This feature is currently available on the testing server only.
+   
+Settings
+ * Visible colors have been added to the Colour settings (for those who don't 
+   read hexadecimal).
+ * Separate fonts for Search, Transfers, Browse and a font for all other lists
+   can now be set.
+ 
 1.2.9 Release (22 September 2007)
 Licensing
  * Relicensed all code under GPLv3 and LGPLv3

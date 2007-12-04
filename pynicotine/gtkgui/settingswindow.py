@@ -1279,7 +1279,7 @@ class BloatFrame(settings_glade.BloatFrame):
 		
 		settings_glade.BloatFrame.__init__(self, False)
 		self.options =  {
-			"ui": {	"chatfont":self.SelectChatFont,  "decimalsep": self.DecimalSep, "spellcheck": self.SpellCheck, "tooltips": self.ShowTooltips,
+			"ui": { "chatfont":self.SelectChatFont, "listfont": self.SelectListFont, "searchfont": self.SelectSearchFont, "transfersfont": self.SelectTransfersFont, "browserfont": self.SelectBrowserFont,  "decimalsep": self.DecimalSep, "spellcheck": self.SpellCheck, "tooltips": self.ShowTooltips,
 			},
 			"transfers": {"enabletransferbuttons": self.ShowTransferButtons},
 			"language": {"setlanguage": self.TranslationCheck, "language": self.TranslationComboEntry},
@@ -1293,6 +1293,19 @@ class BloatFrame(settings_glade.BloatFrame):
 		
 		self.DefaultFont.connect("clicked", self.OnDefaultFont)
 		self.SelectChatFont.connect("font-set", self.FontsColorsChanged)
+		
+		self.DefaultListFont.connect("clicked", self.OnDefaultListFont)
+		self.SelectListFont.connect("font-set", self.FontsColorsChanged)
+		
+		self.DefaultSearchFont.connect("clicked", self.OnDefaultSearchFont)
+		self.SelectSearchFont.connect("font-set", self.FontsColorsChanged)
+		
+		self.DefaultTransfersFont.connect("clicked", self.OnDefaultTransfersFont)
+		self.SelectTransfersFont.connect("font-set", self.FontsColorsChanged)
+		
+		self.DefaultBrowserFont.connect("clicked", self.OnDefaultBrowserFont)
+		self.SelectBrowserFont.connect("font-set", self.FontsColorsChanged)
+		
 		self.needcolors = 0
 
 	def SetSettings(self, config):
@@ -1331,6 +1344,10 @@ class BloatFrame(settings_glade.BloatFrame):
 				"decimalsep": self.DecimalSep.child.get_text(),
 				"spellcheck": self.SpellCheck.get_active(),
 				"chatfont": self.SelectChatFont.get_font_name(),
+				"listfont": self.SelectListFont.get_font_name(),
+				"searchfont": self.SelectSearchFont.get_font_name(),
+				"transfersfont": self.SelectTransfersFont.get_font_name(),
+				"browserfont": self.SelectBrowserFont.get_font_name(),
 				"tooltips": self.ShowTooltips.get_active(),
 			},
 			"transfers": {
@@ -1348,7 +1365,23 @@ class BloatFrame(settings_glade.BloatFrame):
 		
 	def OnDefaultFont(self, widget):
 		self.SelectChatFont.set_font_name("")
-
+		self.needcolors = 1
+		
+	def OnDefaultBrowserFont(self, widget):
+		self.SelectBrowserFont.set_font_name("")
+		self.needcolors = 1
+		
+	def OnDefaultListFont(self, widget):
+		self.SelectListFont.set_font_name("")
+		self.needcolors = 1
+		
+	def OnDefaultSearchFont(self, widget):
+		self.SelectSearchFont.set_font_name("")
+		self.needcolors = 1
+		
+	def OnDefaultTransfersFont(self, widget):
+		self.SelectTransfersFont.set_font_name("")
+		self.needcolors = 1
 		
 	def FontsColorsChanged(self, widget):
 		self.needcolors = 1
@@ -2176,7 +2209,7 @@ class SettingsWindow(settings_glade.SettingsWindow):
 		iter = combobox.get_model().get_iter_root()
 		while iter is not None:
 			word = combobox.get_model().get_value(iter, 0)
-			if word.lower() == option:
+			if word.lower() == option or word == option:
 				combobox.set_active_iter(iter)
 				break
 			iter = combobox.get_model().iter_next(iter)

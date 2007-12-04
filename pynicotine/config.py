@@ -105,6 +105,7 @@ class Config:
 "tabbrowse": "top", "tabsearch": "top", "tab_icons": 1, "chat_hidebuttons": 0, \
 "labelmain": 0, "labelrooms": 0, "labelprivate": 0, "labelinfo": 0, "labelbrowse": 0, "labelsearch": 0,\
 "decimalsep":",", "chatfont": "", "roomlistcollapsed": 0, "tabclosers": 1, \
+"searchfont": "", "listfont": "", "browserfont": "", "transfersfont": "", \
 "searchoffline":"#aa0000", "showaway": 0, "tooltips": 1, \
 "buddylistinchatrooms": 0, "trayicon": 1, "soundenabled": 1, "soundtheme": "", \
 "soundcommand": "play -q", "filemanager": "rox $", "enabletrans":0, \

@@ -1035,6 +1035,7 @@ class NicotineFrame(MainWindow):
 		if colour == "":
 			colour = None
 		cellrenderer.set_property("foreground", colour)
+		cellrenderer.set_property("font", self.np.config.sections["ui"]["listfont"])
 		
 	def changecolour(self, tag, colour):
 		if colour in self.frame.np.config.sections["ui"]:
@@ -1052,6 +1053,14 @@ class NicotineFrame(MainWindow):
 		else:
 			tag.set_property("font", font)
 			
+	def ChangeListFont(self, listview, font):
+		if font == "":
+			font = 'default font'
+		for c in listview.get_columns():
+			for r in c.get_cell_renderers():
+				if type(r) is gtk.CellRendererText:
+					r.set_property("font", font)
+				
 	def UpdateColours(self, first=0):
 		color = self.np.config.sections["ui"]["chatremote"]
 		font = self.np.config.sections["ui"]["chatfont"]
@@ -1071,6 +1080,10 @@ class NicotineFrame(MainWindow):
 		
 		self.SetTextBG(self.LogWindow)
 		self.SetTextBG(self.UserList)
+		#self.ChangeListFont( self.UserList, self.frame.np.config.sections["ui"]["listfont"])
+		for listview in [self.UserList, self.RecommendationsList, self.UnrecommendationsList, self.RecommendationUsersList, self.LikesList, self.DislikesList, self.roomlist.RoomsList]:
+			self.ChangeListFont(listview, self.np.config.sections["ui"]["listfont"])
+				
 		self.SetTextBG(self.RecommendationsList)
 		self.SetTextBG(self.UnrecommendationsList)
 		self.SetTextBG(self.RecommendationUsersList)
@@ -1109,6 +1122,7 @@ class NicotineFrame(MainWindow):
 			widget.modify_text(gtk.STATE_NORMAL, colour)
 			widget.modify_fg(gtk.STATE_NORMAL, colour)
 			
+					
 	def logMessage(self, msg, debug = None):
 		if "LogWindow" not in self.__dict__:
 			self.log_queue.append((msg, debug))

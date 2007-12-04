@@ -17,7 +17,7 @@
 # Copyright (c) 2003-2004 Hyriand. All rights reserved.
 
 import gtk
-import gobject
+import gobject, pango
 
 import re
 import sre_constants
@@ -921,6 +921,12 @@ class Search(SearchTab):
 		self.frame.SetTextBG(self.FilterCountry.child)
 		self.frame.SetTextBG(self.RememberCheckButton)
 		self.frame.SetTextBG(self.FilterFreeSlot)
+		font = self.frame.np.config.sections["ui"]["searchfont"]
+		if font == "":
+			font = 'default font'
+		for c in self.ResultsList.get_columns():
+			for r in c.get_cell_renderers():
+				r.set_property("font", font)
 		
 	def GetUserStatus(self, msg):
 		if msg.user not in self.users:
