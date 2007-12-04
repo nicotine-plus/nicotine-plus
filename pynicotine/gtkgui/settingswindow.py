@@ -1253,12 +1253,12 @@ class NotebookFrame(settings_glade.NotebookFrame):
 	def GetSettings(self):
 		return {
 			"ui": {
-				"tabmain": self.MainPosition.get_active_text().lower(),
-				"tabrooms": self.ChatRoomsPosition.get_active_text().lower(),
-				"tabprivate": self.PrivateChatPosition.get_active_text().lower(),
-				"tabinfo": self.UserInfoPosition.get_active_text().lower(),
-				"tabbrowse": self.UserBrowsePosition.get_active_text().lower(),
-				"tabsearch": self.SearchPosition.get_active_text().lower(),
+				"tabmain": self.MainPosition.get_active_text(),
+				"tabrooms": self.ChatRoomsPosition.get_active_text(),
+				"tabprivate": self.PrivateChatPosition.get_active_text(),
+				"tabinfo": self.UserInfoPosition.get_active_text(),
+				"tabbrowse": self.UserBrowsePosition.get_active_text(),
+				"tabsearch": self.SearchPosition.get_active_text(),
 				"labelmain": self.MainAngleSpin.get_value_as_int(),
 				"labelrooms": self.ChatRoomsAngleSpin.get_value_as_int(),
 				"labelprivate": self.PrivateChatAngleSpin.get_value_as_int(),

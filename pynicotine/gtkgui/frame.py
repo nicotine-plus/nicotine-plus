@@ -948,19 +948,7 @@ class NicotineFrame(MainWindow):
 		for widget in self.BuddiesComboEntries:
 			gobject.idle_add(widget.Fill)
 			
-	def getTabPosition(self, string):
-		if string == "top":
-			position = gtk.POS_TOP
-		elif string == "bottom":
-			position = gtk.POS_BOTTOM
-		elif string == "left":
-			position = gtk.POS_LEFT
-		elif string == "right":
-			position = gtk.POS_RIGHT
-		else:
-			position = gtk.POS_TOP
-		return position
-		
+
 	def OnAutoAway(self):
 		if not self.away:
 			self.autoaway = True
@@ -1675,7 +1663,20 @@ class NicotineFrame(MainWindow):
 				message = message.replace(word, filler * len(word))
 				
 		return message
-			
+		
+	def getTabPosition(self, string):
+		if string in ("Top", "top", _("Top")):
+			position = gtk.POS_TOP
+		elif string in ("Bottom", "bottom", _("Bottom")):
+			position = gtk.POS_BOTTOM
+		elif string in ("Left", "left", _("Left")):
+			position = gtk.POS_LEFT
+		elif string in ("Right", "right", _("Right")):
+			position = gtk.POS_RIGHT
+		else:
+			position = gtk.POS_TOP
+		return position
+		
 	def SetTabPositions(self):
 		ui = self.np.config.sections["ui"]
 		self.ChatNotebook.set_tab_pos(self.getTabPosition(ui["tabrooms"]))
