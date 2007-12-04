@@ -528,6 +528,7 @@ classes = {
 	"GtkExpander": [write_widget_container, "Expander", PM_ADD],
 	"GtkCombo": [write_widget_container, "Combo", PM_NONE],
 	"GtkComboBox": [write_widget_combobox],
+	"GtkDrawingArea": [write_widget_container, "DrawingArea", PM_NONE],
 	"GtkComboBoxEntry": [write_widget_comboboxentry],
 	"GtkComboBoxEntryChild": [write_widget_generic, "child"],
 	"GtkCheckButton": [write_widget_container, "CheckButton", PM_ADD],

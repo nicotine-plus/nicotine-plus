@@ -7691,7 +7691,7 @@ Right</property>
                             <property name="visible">True</property>
                             <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                             <property name="n_rows">9</property>
-                            <property name="n_columns">3</property>
+                            <property name="n_columns">4</property>
                             <property name="column_spacing">5</property>
                             <property name="row_spacing">3</property>
                             <child>
@@ -7751,8 +7751,8 @@ Right</property>
                                 <property name="width_chars">20</property>
                               </widget>
                               <packing>
-                                <property name="left_attach">1</property>
-                                <property name="right_attach">2</property>
+                                <property name="left_attach">2</property>
+                                <property name="right_attach">3</property>
                                 <property name="top_attach">4</property>
                                 <property name="bottom_attach">5</property>
                                 <property name="y_options"></property>
@@ -7766,8 +7766,8 @@ Right</property>
                                 <property name="width_chars">20</property>
                               </widget>
                               <packing>
-                                <property name="left_attach">1</property>
-                                <property name="right_attach">2</property>
+                                <property name="left_attach">2</property>
+                                <property name="right_attach">3</property>
                                 <property name="top_attach">3</property>
                                 <property name="bottom_attach">4</property>
                                 <property name="y_options"></property>
@@ -7815,8 +7815,8 @@ Right</property>
                                 </child>
                               </widget>
                               <packing>
-                                <property name="left_attach">2</property>
-                                <property name="right_attach">3</property>
+                                <property name="left_attach">3</property>
+                                <property name="right_attach">4</property>
                                 <property name="top_attach">4</property>
                                 <property name="bottom_attach">5</property>
                                 <property name="x_options">GTK_FILL</property>
@@ -7852,7 +7852,7 @@ Right</property>
                                 </child>
                               </widget>
                               <packing>
-                                <property name="right_attach">3</property>
+                                <property name="right_attach">4</property>
                                 <property name="top_attach">9</property>
                                 <property name="bottom_attach">10</property>
                                 <property name="y_options">GTK_FILL</property>
@@ -7866,8 +7866,8 @@ Right</property>
                                 <property name="width_chars">20</property>
                               </widget>
                               <packing>
-                                <property name="left_attach">1</property>
-                                <property name="right_attach">2</property>
+                                <property name="left_attach">2</property>
+                                <property name="right_attach">3</property>
                                 <property name="top_attach">8</property>
                                 <property name="bottom_attach">9</property>
                                 <property name="y_options"></property>
@@ -7881,8 +7881,8 @@ Right</property>
                                 <property name="width_chars">20</property>
                               </widget>
                               <packing>
-                                <property name="left_attach">1</property>
-                                <property name="right_attach">2</property>
+                                <property name="left_attach">2</property>
+                                <property name="right_attach">3</property>
                                 <property name="top_attach">7</property>
                                 <property name="bottom_attach">8</property>
                                 <property name="y_options"></property>
@@ -7896,8 +7896,8 @@ Right</property>
                                 <property name="width_chars">20</property>
                               </widget>
                               <packing>
-                                <property name="left_attach">1</property>
-                                <property name="right_attach">2</property>
+                                <property name="left_attach">2</property>
+                                <property name="right_attach">3</property>
                                 <property name="top_attach">6</property>
                                 <property name="bottom_attach">7</property>
                                 <property name="y_options"></property>
@@ -7911,8 +7911,8 @@ Right</property>
                                 <property name="width_chars">20</property>
                               </widget>
                               <packing>
-                                <property name="left_attach">1</property>
-                                <property name="right_attach">2</property>
+                                <property name="left_attach">2</property>
+                                <property name="right_attach">3</property>
                                 <property name="top_attach">2</property>
                                 <property name="bottom_attach">3</property>
                                 <property name="y_options"></property>
@@ -7926,8 +7926,8 @@ Right</property>
                                 <property name="width_chars">20</property>
                               </widget>
                               <packing>
-                                <property name="left_attach">1</property>
-                                <property name="right_attach">2</property>
+                                <property name="left_attach">2</property>
+                                <property name="right_attach">3</property>
                                 <property name="top_attach">1</property>
                                 <property name="bottom_attach">2</property>
                                 <property name="y_options"></property>
@@ -7975,8 +7975,8 @@ Right</property>
                                 </child>
                               </widget>
                               <packing>
-                                <property name="left_attach">2</property>
-                                <property name="right_attach">3</property>
+                                <property name="left_attach">3</property>
+                                <property name="right_attach">4</property>
                                 <property name="top_attach">8</property>
                                 <property name="bottom_attach">9</property>
                                 <property name="x_options">GTK_FILL</property>
@@ -8025,8 +8025,8 @@ Right</property>
                                 </child>
                               </widget>
                               <packing>
-                                <property name="left_attach">2</property>
-                                <property name="right_attach">3</property>
+                                <property name="left_attach">3</property>
+                                <property name="right_attach">4</property>
                                 <property name="top_attach">7</property>
                                 <property name="bottom_attach">8</property>
                                 <property name="x_options">GTK_FILL</property>
@@ -8075,8 +8075,8 @@ Right</property>
                                 </child>
                               </widget>
                               <packing>
-                                <property name="left_attach">2</property>
-                                <property name="right_attach">3</property>
+                                <property name="left_attach">3</property>
+                                <property name="right_attach">4</property>
                                 <property name="top_attach">6</property>
                                 <property name="bottom_attach">7</property>
                                 <property name="x_options">GTK_FILL</property>
@@ -8125,8 +8125,8 @@ Right</property>
                                 </child>
                               </widget>
                               <packing>
-                                <property name="left_attach">2</property>
-                                <property name="right_attach">3</property>
+                                <property name="left_attach">3</property>
+                                <property name="right_attach">4</property>
                                 <property name="top_attach">3</property>
                                 <property name="bottom_attach">4</property>
                                 <property name="x_options">GTK_FILL</property>
@@ -8175,8 +8175,8 @@ Right</property>
                                 </child>
                               </widget>
                               <packing>
-                                <property name="left_attach">2</property>
-                                <property name="right_attach">3</property>
+                                <property name="left_attach">3</property>
+                                <property name="right_attach">4</property>
                                 <property name="top_attach">2</property>
                                 <property name="bottom_attach">3</property>
                                 <property name="x_options">GTK_FILL</property>
@@ -8225,8 +8225,8 @@ Right</property>
                                 </child>
                               </widget>
                               <packing>
-                                <property name="left_attach">2</property>
-                                <property name="right_attach">3</property>
+                                <property name="left_attach">3</property>
+                                <property name="right_attach">4</property>
                                 <property name="top_attach">1</property>
                                 <property name="bottom_attach">2</property>
                                 <property name="x_options">GTK_FILL</property>
@@ -8275,8 +8275,8 @@ Right</property>
                                 </child>
                               </widget>
                               <packing>
-                                <property name="left_attach">2</property>
-                                <property name="right_attach">3</property>
+                                <property name="left_attach">3</property>
+                                <property name="right_attach">4</property>
                                 <property name="x_options">GTK_FILL</property>
                                 <property name="y_options"></property>
                               </packing>
@@ -8289,8 +8289,8 @@ Right</property>
                                 <property name="width_chars">20</property>
                               </widget>
                               <packing>
-                                <property name="left_attach">1</property>
-                                <property name="right_attach">2</property>
+                                <property name="left_attach">2</property>
+                                <property name="right_attach">3</property>
                                 <property name="x_options">GTK_EXPAND | GTK_SHRINK | GTK_FILL</property>
                                 <property name="y_options"></property>
                               </packing>
@@ -8475,7 +8475,7 @@ Right</property>
                                 </child>
                               </widget>
                               <packing>
-                                <property name="right_attach">3</property>
+                                <property name="right_attach">4</property>
                                 <property name="top_attach">5</property>
                                 <property name="bottom_attach">6</property>
                                 <property name="x_options">GTK_SHRINK | GTK_FILL</property>
@@ -8678,6 +8678,132 @@ Right</property>
                                 <property name="y_options"></property>
                               </packing>
                             </child>
+                            <child>
+                              <widget class="GtkDrawingArea" id="Drawing_Remote">
+                                <property name="width_request">16</property>
+                                <property name="height_request">16</property>
+                                <property name="visible">True</property>
+                                <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                              </widget>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="x_options"></property>
+                                <property name="y_options"></property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkDrawingArea" id="Drawing_Local">
+                                <property name="width_request">16</property>
+                                <property name="height_request">16</property>
+                                <property name="visible">True</property>
+                                <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                              </widget>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">1</property>
+                                <property name="bottom_attach">2</property>
+                                <property name="x_options"></property>
+                                <property name="y_options"></property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkDrawingArea" id="Drawing_Me">
+                                <property name="width_request">16</property>
+                                <property name="height_request">16</property>
+                                <property name="visible">True</property>
+                                <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                              </widget>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">2</property>
+                                <property name="bottom_attach">3</property>
+                                <property name="x_options"></property>
+                                <property name="y_options"></property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkDrawingArea" id="Drawing_Highlight">
+                                <property name="width_request">16</property>
+                                <property name="height_request">16</property>
+                                <property name="visible">True</property>
+                                <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                              </widget>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">3</property>
+                                <property name="bottom_attach">4</property>
+                                <property name="x_options"></property>
+                                <property name="y_options"></property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkDrawingArea" id="Drawing_URL">
+                                <property name="width_request">16</property>
+                                <property name="height_request">16</property>
+                                <property name="visible">True</property>
+                                <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                              </widget>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">4</property>
+                                <property name="bottom_attach">5</property>
+                                <property name="x_options"></property>
+                                <property name="y_options"></property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkDrawingArea" id="Drawing_OfflineColor">
+                                <property name="width_request">16</property>
+                                <property name="height_request">16</property>
+                                <property name="visible">True</property>
+                                <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                              </widget>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">7</property>
+                                <property name="bottom_attach">8</property>
+                                <property name="x_options"></property>
+                                <property name="y_options"></property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkDrawingArea" id="Drawing_OnlineColor">
+                                <property name="width_request">16</property>
+                                <property name="height_request">16</property>
+                                <property name="visible">True</property>
+                                <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                              </widget>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">6</property>
+                                <property name="bottom_attach">7</property>
+                                <property name="x_options"></property>
+                                <property name="y_options"></property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkDrawingArea" id="Drawing_AwayColor">
+                                <property name="width_request">16</property>
+                                <property name="height_request">16</property>
+                                <property name="visible">True</property>
+                                <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                              </widget>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">8</property>
+                                <property name="bottom_attach">9</property>
+                                <property name="x_options"></property>
+                                <property name="y_options"></property>
+                              </packing>
+                            </child>
                           </widget>
                         </child>
                       </widget>
@@ -8719,9 +8845,87 @@ Right</property>
                             <property name="visible">True</property>
                             <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                             <property name="n_rows">6</property>
-                            <property name="n_columns">3</property>
+                            <property name="n_columns">4</property>
                             <property name="column_spacing">5</property>
                             <property name="row_spacing">3</property>
+                            <child>
+                              <widget class="GtkDrawingArea" id="Drawing_InputColor">
+                                <property name="width_request">16</property>
+                                <property name="height_request">16</property>
+                                <property name="visible">True</property>
+                                <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                              </widget>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">5</property>
+                                <property name="bottom_attach">6</property>
+                                <property name="x_options"></property>
+                                <property name="y_options"></property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkDrawingArea" id="Drawing_BackgroundColor">
+                                <property name="width_request">16</property>
+                                <property name="height_request">16</property>
+                                <property name="visible">True</property>
+                                <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                              </widget>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">4</property>
+                                <property name="bottom_attach">5</property>
+                                <property name="x_options"></property>
+                                <property name="y_options"></property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkDrawingArea" id="Drawing_OfflineSearchEntry">
+                                <property name="width_request">16</property>
+                                <property name="height_request">16</property>
+                                <property name="visible">True</property>
+                                <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                              </widget>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">2</property>
+                                <property name="bottom_attach">3</property>
+                                <property name="x_options"></property>
+                                <property name="y_options"></property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkDrawingArea" id="Drawing_Queue">
+                                <property name="width_request">16</property>
+                                <property name="height_request">16</property>
+                                <property name="visible">True</property>
+                                <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                              </widget>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">1</property>
+                                <property name="bottom_attach">2</property>
+                                <property name="x_options"></property>
+                                <property name="y_options"></property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkDrawingArea" id="Drawing_Immediate">
+                                <property name="width_request">16</property>
+                                <property name="height_request">16</property>
+                                <property name="visible">True</property>
+                                <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                              </widget>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="x_options"></property>
+                                <property name="y_options"></property>
+                              </packing>
+                            </child>
                             <child>
                               <widget class="GtkButton" id="DefaultInput">
                                 <property name="visible">True</property>
@@ -8764,8 +8968,8 @@ Right</property>
                                 </child>
                               </widget>
                               <packing>
-                                <property name="left_attach">2</property>
-                                <property name="right_attach">3</property>
+                                <property name="left_attach">3</property>
+                                <property name="right_attach">4</property>
                                 <property name="top_attach">5</property>
                                 <property name="bottom_attach">6</property>
                                 <property name="x_options">GTK_FILL</property>
@@ -8814,8 +9018,8 @@ Right</property>
                                 </child>
                               </widget>
                               <packing>
-                                <property name="left_attach">2</property>
-                                <property name="right_attach">3</property>
+                                <property name="left_attach">3</property>
+                                <property name="right_attach">4</property>
                                 <property name="top_attach">4</property>
                                 <property name="bottom_attach">5</property>
                                 <property name="x_options">GTK_FILL</property>
@@ -8864,8 +9068,8 @@ Right</property>
                                 </child>
                               </widget>
                               <packing>
-                                <property name="left_attach">2</property>
-                                <property name="right_attach">3</property>
+                                <property name="left_attach">3</property>
+                                <property name="right_attach">4</property>
                                 <property name="top_attach">2</property>
                                 <property name="bottom_attach">3</property>
                                 <property name="x_options">GTK_FILL</property>
@@ -8914,8 +9118,8 @@ Right</property>
                                 </child>
                               </widget>
                               <packing>
-                                <property name="left_attach">2</property>
-                                <property name="right_attach">3</property>
+                                <property name="left_attach">3</property>
+                                <property name="right_attach">4</property>
                                 <property name="top_attach">1</property>
                                 <property name="bottom_attach">2</property>
                                 <property name="x_options">GTK_FILL</property>
@@ -8930,8 +9134,8 @@ Right</property>
                                 <property name="width_chars">20</property>
                               </widget>
                               <packing>
-                                <property name="left_attach">1</property>
-                                <property name="right_attach">2</property>
+                                <property name="left_attach">2</property>
+                                <property name="right_attach">3</property>
                                 <property name="top_attach">5</property>
                                 <property name="bottom_attach">6</property>
                                 <property name="y_options"></property>
@@ -8945,8 +9149,8 @@ Right</property>
                                 <property name="width_chars">20</property>
                               </widget>
                               <packing>
-                                <property name="left_attach">1</property>
-                                <property name="right_attach">2</property>
+                                <property name="left_attach">2</property>
+                                <property name="right_attach">3</property>
                                 <property name="top_attach">4</property>
                                 <property name="bottom_attach">5</property>
                                 <property name="y_options"></property>
@@ -8960,8 +9164,8 @@ Right</property>
                                 <property name="width_chars">20</property>
                               </widget>
                               <packing>
-                                <property name="left_attach">1</property>
-                                <property name="right_attach">2</property>
+                                <property name="left_attach">2</property>
+                                <property name="right_attach">3</property>
                                 <property name="top_attach">2</property>
                                 <property name="bottom_attach">3</property>
                                 <property name="y_options"></property>
@@ -9076,7 +9280,7 @@ Right</property>
                                 <property name="use_markup">True</property>
                               </widget>
                               <packing>
-                                <property name="right_attach">3</property>
+                                <property name="right_attach">4</property>
                                 <property name="top_attach">3</property>
                                 <property name="bottom_attach">4</property>
                                 <property name="x_options">GTK_FILL</property>
@@ -9141,8 +9345,8 @@ Right</property>
                                 <property name="width_chars">20</property>
                               </widget>
                               <packing>
-                                <property name="left_attach">1</property>
-                                <property name="right_attach">2</property>
+                                <property name="left_attach">2</property>
+                                <property name="right_attach">3</property>
                                 <property name="top_attach">1</property>
                                 <property name="bottom_attach">2</property>
                                 <property name="y_options"></property>
@@ -9240,8 +9444,8 @@ Right</property>
                                 </child>
                               </widget>
                               <packing>
-                                <property name="left_attach">2</property>
-                                <property name="right_attach">3</property>
+                                <property name="left_attach">3</property>
+                                <property name="right_attach">4</property>
                                 <property name="x_options">GTK_FILL</property>
                                 <property name="y_options"></property>
                               </packing>
@@ -9254,8 +9458,8 @@ Right</property>
                                 <property name="width_chars">20</property>
                               </widget>
                               <packing>
-                                <property name="left_attach">1</property>
-                                <property name="right_attach">2</property>
+                                <property name="left_attach">2</property>
+                                <property name="right_attach">3</property>
                                 <property name="y_options"></property>
                               </packing>
                             </child>
@@ -9348,9 +9552,57 @@ Right</property>
                             <property name="visible">True</property>
                             <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                             <property name="n_rows">3</property>
-                            <property name="n_columns">3</property>
+                            <property name="n_columns">4</property>
                             <property name="column_spacing">5</property>
                             <property name="row_spacing">3</property>
+                            <child>
+                              <widget class="GtkDrawingArea" id="Drawing_HighlightTab">
+                                <property name="width_request">16</property>
+                                <property name="height_request">16</property>
+                                <property name="visible">True</property>
+                                <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                              </widget>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">3</property>
+                                <property name="bottom_attach">4</property>
+                                <property name="x_options"></property>
+                                <property name="y_options"></property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkDrawingArea" id="Drawing_ChangedTab">
+                                <property name="width_request">16</property>
+                                <property name="height_request">16</property>
+                                <property name="visible">True</property>
+                                <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                              </widget>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">2</property>
+                                <property name="bottom_attach">3</property>
+                                <property name="x_options"></property>
+                                <property name="y_options"></property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkDrawingArea" id="Drawing_DefaultTab">
+                                <property name="width_request">16</property>
+                                <property name="height_request">16</property>
+                                <property name="visible">True</property>
+                                <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                              </widget>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">1</property>
+                                <property name="bottom_attach">2</property>
+                                <property name="x_options"></property>
+                                <property name="y_options"></property>
+                              </packing>
+                            </child>
                             <child>
                               <widget class="GtkLabel" id="label39">
                                 <property name="visible">True</property>
@@ -9360,7 +9612,7 @@ Right</property>
                                 <property name="use_markup">True</property>
                               </widget>
                               <packing>
-                                <property name="right_attach">3</property>
+                                <property name="right_attach">4</property>
                                 <property name="y_options"></property>
                               </packing>
                             </child>
@@ -9406,8 +9658,8 @@ Right</property>
                                 </child>
                               </widget>
                               <packing>
-                                <property name="left_attach">2</property>
-                                <property name="right_attach">3</property>
+                                <property name="left_attach">3</property>
+                                <property name="right_attach">4</property>
                                 <property name="top_attach">1</property>
                                 <property name="bottom_attach">2</property>
                                 <property name="x_options">GTK_FILL</property>
@@ -9456,8 +9708,8 @@ Right</property>
                                 </child>
                               </widget>
                               <packing>
-                                <property name="left_attach">2</property>
-                                <property name="right_attach">3</property>
+                                <property name="left_attach">3</property>
+                                <property name="right_attach">4</property>
                                 <property name="top_attach">2</property>
                                 <property name="bottom_attach">3</property>
                                 <property name="x_options">GTK_FILL</property>
@@ -9472,8 +9724,8 @@ Right</property>
                                 <property name="width_chars">20</property>
                               </widget>
                               <packing>
-                                <property name="left_attach">1</property>
-                                <property name="right_attach">2</property>
+                                <property name="left_attach">2</property>
+                                <property name="right_attach">3</property>
                                 <property name="top_attach">1</property>
                                 <property name="bottom_attach">2</property>
                                 <property name="y_options"></property>
@@ -9538,8 +9790,8 @@ Right</property>
                                 <property name="width_chars">20</property>
                               </widget>
                               <packing>
-                                <property name="left_attach">1</property>
-                                <property name="right_attach">2</property>
+                                <property name="left_attach">2</property>
+                                <property name="right_attach">3</property>
                                 <property name="top_attach">2</property>
                                 <property name="bottom_attach">3</property>
                                 <property name="y_options"></property>
@@ -9638,8 +9890,8 @@ Right</property>
                                 </child>
                               </widget>
                               <packing>
-                                <property name="left_attach">2</property>
-                                <property name="right_attach">3</property>
+                                <property name="left_attach">3</property>
+                                <property name="right_attach">4</property>
                                 <property name="top_attach">3</property>
                                 <property name="bottom_attach">4</property>
                                 <property name="x_options">GTK_FILL</property>
@@ -9654,8 +9906,8 @@ Right</property>
                                 <property name="width_chars">20</property>
                               </widget>
                               <packing>
-                                <property name="left_attach">1</property>
-                                <property name="right_attach">2</property>
+                                <property name="left_attach">2</property>
+                                <property name="right_attach">3</property>
                                 <property name="top_attach">3</property>
                                 <property name="bottom_attach">4</property>
                                 <property name="y_options"></property>
@@ -9828,6 +10080,19 @@ Right</property>
                               </packing>
                             </child>
                             <child>
+                              <widget class="GtkDrawingArea" id="Drawing_TintColor">
+                                <property name="width_request">16</property>
+                                <property name="height_request">16</property>
+                                <property name="visible">True</property>
+                                <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                              </widget>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">False</property>
+                                <property name="position">1</property>
+                              </packing>
+                            </child>
+                            <child>
                               <widget class="GtkEntry" id="TintColor">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
@@ -9835,7 +10100,7 @@ Right</property>
                               </widget>
                               <packing>
                                 <property name="expand">False</property>
-                                <property name="position">1</property>
+                                <property name="position">2</property>
                               </packing>
                             </child>
                             <child>
@@ -9883,13 +10148,12 @@ Right</property>
                               <packing>
                                 <property name="expand">False</property>
                                 <property name="fill">False</property>
-                                <property name="position">2</property>
+                                <property name="position">3</property>
                               </packing>
                             </child>
                           </widget>
                           <packing>
                             <property name="expand">False</property>
-                            <property name="fill">False</property>
                             <property name="position">2</property>
                           </packing>
                         </child>

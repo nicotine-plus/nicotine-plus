@@ -928,31 +928,40 @@ class ColoursFrame(settings_glade.ColoursFrame):
 "tab_default": self.DefaultTab, "tab_hilite": self.HighlightTab, "tab_changed": self.ChangedTab, 
 		},
 		}
+		self.colorsd = { "ui": {"chatlocal":self.Drawing_Local,
+"chatremote": self.Drawing_Remote, "chatme": self.Drawing_Me, "chathilite": self.Drawing_Highlight,
+"textbg":self.Drawing_BackgroundColor, "inputcolor": self.Drawing_InputColor, "search": self.Drawing_Immediate,
+"searchq": self.Drawing_Queue, "searchoffline": self.Drawing_OfflineSearchEntry,  "useraway": self.Drawing_AwayColor,
+"useronline": self.Drawing_OnlineColor, "useroffline": self.Drawing_OfflineColor,
+"showaway": self.DisplayAwayColours, "urlcolor": self.Drawing_URL,
+"enabletrans": self.EnableTransparent, "transtint": self.Drawing_TintColor, "transalpha": self.TintAlpha, 
+"tab_default": self.Drawing_DefaultTab, "tab_hilite": self.Drawing_HighlightTab, "tab_changed": self.Drawing_ChangedTab }, }
+		self.colors = ["chatlocal", "chatremote", "urlcolor", "chatme", "chathilite", "textbg", "inputcolor", "search", "searchq", "searchoffline", "useraway", "useronline", "useroffline", "tab_default", "tab_changed", "tab_hilite", "transtint"]
 		for item in ["bold", "italic", "underline", "normal"]:
 			self.UsernameStyle.append_text(item)
 		self.UsernameStyle.child.set_editable(False)
-		self.PickRemote.connect("clicked", self.PickColour, self.Remote)
-		self.PickLocal.connect("clicked", self.PickColour, self.Local)
-		self.PickMe.connect("clicked", self.PickColour, self.Me)
-		self.PickHighlight.connect("clicked", self.PickColour, self.Highlight)
-		self.PickImmediate.connect("clicked", self.PickColour, self.Immediate)
-		self.PickQueue.connect("clicked", self.PickColour, self.Queue)
+		self.PickRemote.connect("clicked", self.PickColour, self.Remote, self.Drawing_Remote)
+		self.PickLocal.connect("clicked", self.PickColour, self.Local, self.Drawing_Local)
+		self.PickMe.connect("clicked", self.PickColour, self.Me, self.Drawing_Me)
+		self.PickHighlight.connect("clicked", self.PickColour, self.Highlight, self.Drawing_Highlight)
+		self.PickImmediate.connect("clicked", self.PickColour, self.Immediate, self.Drawing_Immediate)
+		self.PickQueue.connect("clicked", self.PickColour, self.Queue, self.Drawing_Queue)
 		
-		self.PickAway.connect("clicked", self.PickColour, self.AwayColor)
-		self.PickOnline.connect("clicked", self.PickColour, self.OnlineColor)
-		self.PickOffline.connect("clicked", self.PickColour, self.OfflineColor)
-		self.PickOfflineSearch.connect("clicked", self.PickColour, self.OfflineSearchEntry)
-		self.PickURL.connect("clicked", self.PickColour, self.URL)
+		self.PickAway.connect("clicked", self.PickColour, self.AwayColor, self.Drawing_AwayColor)
+		self.PickOnline.connect("clicked", self.PickColour, self.OnlineColor, self.Drawing_OnlineColor)
+		self.PickOffline.connect("clicked", self.PickColour, self.OfflineColor, self.Drawing_OfflineColor)
+		self.PickOfflineSearch.connect("clicked", self.PickColour, self.OfflineSearchEntry, self.Drawing_OfflineSearchEntry)
+		self.PickURL.connect("clicked", self.PickColour, self.URL, self.Drawing_URL)
 		self.DefaultURL.connect("clicked", self.DefaultColour, self.URL)
 		
 		self.DefaultAway.connect("clicked", self.DefaultColour, self.AwayColor)
 		self.DefaultOnline.connect("clicked", self.DefaultColour, self.OnlineColor)
 		self.DefaultOffline.connect("clicked", self.DefaultColour, self.OfflineColor)
 		
-		self.PickBackground.connect("clicked", self.PickColour, self.BackgroundColor)
+		self.PickBackground.connect("clicked", self.PickColour, self.BackgroundColor, self.Drawing_BackgroundColor)
 		self.DefaultBackground.connect("clicked", self.DefaultColour, self.BackgroundColor)
 		
-		self.PickInput.connect("clicked", self.PickColour, self.InputColor)
+		self.PickInput.connect("clicked", self.PickColour, self.InputColor, self.Drawing_InputColor)
 		self.DefaultInput.connect("clicked", self.DefaultColour, self.InputColor)
 		
 		self.DefaultRemote.connect("clicked", self.DefaultColour, self.Remote)
@@ -967,9 +976,9 @@ class ColoursFrame(settings_glade.ColoursFrame):
 		self.DisplayAwayColours.connect("toggled", self.ToggledAwayColours)
 		self.DefaultOfflineSearch.connect("clicked", self.DefaultColour, self.OfflineSearchEntry)
 		
-		self.PickHighlightTab.connect("clicked", self.PickColour, self.HighlightTab)
-		self.PickDefaultTab.connect("clicked", self.PickColour, self.DefaultTab)
-		self.PickChangedTab.connect("clicked", self.PickColour, self.ChangedTab)
+		self.PickHighlightTab.connect("clicked", self.PickColour, self.HighlightTab, self.Drawing_HighlightTab)
+		self.PickDefaultTab.connect("clicked", self.PickColour, self.DefaultTab, self.Drawing_DefaultTab)
+		self.PickChangedTab.connect("clicked", self.PickColour, self.ChangedTab, self.Drawing_ChangedTab)
 		
 		self.DefaultHighlightTab.connect("clicked", self.DefaultColour, self.HighlightTab)
 		self.DefaultChangedTab.connect("clicked", self.DefaultColour, self.ChangedTab)
@@ -991,14 +1000,23 @@ class ColoursFrame(settings_glade.ColoursFrame):
 		self.InputColor.connect("changed", self.FontsColorsChanged)
 		
 		# Tint
-		self.PickTint.connect("clicked", self.PickColour, self.TintColor)
+		self.PickTint.connect("clicked", self.PickColour, self.TintColor, self.Drawing_TintColor)
 		self.DefaultTint.connect("clicked", self.DefaultColour, self.TintColor)
 
 	def SetSettings(self, config):
 		self.settingup = 1
 		
 		self.p.SetWidgetsData(config, self.options)
-		
+		for option in self.colors:
+			for key, value in self.colorsd.items():
+				if option in value:
+					drawingarea = self.colorsd[key][option]
+					try:
+						colour = gtk.gdk.color_parse(config[key][option])
+					except:
+						colour = None
+					drawingarea.modify_bg(gtk.STATE_NORMAL, colour)
+					break
 		self.ToggledAwayColours(self.DisplayAwayColours)
 		self.OnEnableTransparentToggled(self.EnableTransparent)
 		self.ColourScale("")
@@ -1054,10 +1072,12 @@ class ColoursFrame(settings_glade.ColoursFrame):
 		self.DefaultAway.set_sensitive(sensitive)
 		
 	def OnDefaultColours(self, widget):
+		#self.colors = ["chatlocal", "chatremote", "chatme", "chathilite", "textbg", "inputcolor", "search", "searchq", "searchoffline", "useraway", "urlcolor", "useronline", "useroffline", "tab_default", "tab_changed", "tab_hilite"]
 		
-		for option in "chatlocal", "chatremote", "chatme", "chathilite", "textbg", "inputcolor", "search", "searchq", "searchoffline", "useraway", "urlcolor", "useronline", "useroffline", "tab_default", "tab_changed", "tab_hilite":
+		for option in self.colors:
 			self.SetDefaultColor(option)
-			
+
+					
 	def SetDefaultColor(self, option):
 		defaults = self.frame.np.config.defaults
 		for key, value in self.options.items():
@@ -1071,13 +1091,24 @@ class ColoursFrame(settings_glade.ColoursFrame):
 					widget.set_active(defaults[key][option])
 				elif type(widget) is gtk.ComboBoxEntry:
 					widget.child.set_text(defaults[key][option])
-		
+					
+		for key, value in self.colorsd.items():
+			if option in value:
+				drawingarea = self.colorsd[key][option]
+				try:
+					colour = gtk.gdk.color_parse(defaults[key][option])
+				except:
+					colour = None
+				drawingarea.modify_bg(gtk.STATE_NORMAL, colour)
+				break
+			
 		
 	def OnClearAllColours(self, widget):
-		for option in "chatlocal", "chatremote", "urlcolor", "chatme", "chathilite", "textbg", "inputcolor", "search", "searchq", "searchoffline", "useraway", "useronline", "useroffline", "tab_default", "tab_changed", "tab_hilite":
-			for key, value in self.options.items():
+		
+		for option in self.colors:
+			for section, value in self.options.items():
 				if option in value:
-					widget = self.options[key][option]
+					widget = self.options[section][option]
 					if type(widget) is gtk.Entry:
 						widget.set_text("")
 					elif type(widget) is gtk.SpinButton:
@@ -1086,7 +1117,11 @@ class ColoursFrame(settings_glade.ColoursFrame):
 						widget.set_active(0)
 					elif type(widget) is gtk.ComboBoxEntry:
 						widget.child.set_text("")
-	
+			for section, value in self.colorsd.items():
+				if option in value:
+					drawingarea = self.colorsd[section][option]
+					drawingarea.modify_bg(gtk.STATE_NORMAL, None)
+
 	def FontsColorsChanged(self, widget):
 		self.needcolors = 1
 	
@@ -1121,7 +1156,7 @@ class ColoursFrame(settings_glade.ColoursFrame):
 		self.PickOffline.set_sensitive(sensitive)
 
 		
-	def PickColour(self, widget, entry):
+	def PickColour(self, widget, entry, drawingarea):
 		dlg = gtk.ColorSelectionDialog(_("Pick a colour, any colour"))
 		colour = entry.get_text()
 		if entry is self.TintColor:
@@ -1140,8 +1175,19 @@ class ColoursFrame(settings_glade.ColoursFrame):
 		if dlg.run() == gtk.RESPONSE_OK:
 			colour = dlg.colorsel.get_current_color()
 			#print colour.red, colour.red / 256, colour.green,  colour.green / 256, colour.blue, colour.blue / 256
-			colour = "#%02X%02X%02X" % (colour.red / 256, colour.green / 256, colour.blue / 256)
-			entry.set_text(colour)
+			colourtext = "#%02X%02X%02X" % (colour.red / 256, colour.green / 256, colour.blue / 256)
+			entry.set_text(colourtext)
+			for section in self.options.keys():
+				if section not in self.colorsd.keys():
+					continue
+				for key, value in self.options[section].items():
+					if key not in self.colorsd[section]:
+						continue
+					if entry is value:
+						drawingarea = self.colorsd[section][key]
+						drawingarea.modify_bg(gtk.STATE_NORMAL, colour)
+						break
+
 			
 		
 		if entry is self.TintColor:
@@ -1176,6 +1222,7 @@ class ColoursFrame(settings_glade.ColoursFrame):
 		colour = "#%02X%02X%02X" % (red, green, blue)
 
 		self.TintColor.set_text(colour)
+		self.Drawing_TintColor.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse(colour))
 		
 		
 	def DefaultColour(self, widget, entry):
