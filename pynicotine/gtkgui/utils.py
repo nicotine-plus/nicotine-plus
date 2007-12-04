@@ -844,7 +844,7 @@ class PopupMenu(gtk.Menu):
 	def OnGetUserInfo(self, widget):
 		self.frame.LocalUserInfoRequest(self.user)
 	
-	def OnBrowseUser(self, widget, room):
+	def OnBrowseUser(self, widget):
 		self.frame.BrowseUser(self.user)
 		
 		

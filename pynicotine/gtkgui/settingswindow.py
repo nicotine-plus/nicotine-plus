@@ -1072,7 +1072,6 @@ class ColoursFrame(settings_glade.ColoursFrame):
 		self.DefaultAway.set_sensitive(sensitive)
 		
 	def OnDefaultColours(self, widget):
-		#self.colors = ["chatlocal", "chatremote", "chatme", "chathilite", "textbg", "inputcolor", "search", "searchq", "searchoffline", "useraway", "urlcolor", "useronline", "useroffline", "tab_default", "tab_changed", "tab_hilite"]
 		
 		for option in self.colors:
 			self.SetDefaultColor(option)
@@ -2143,14 +2142,23 @@ class SettingsWindow(settings_glade.SettingsWindow):
 			else:
 				widget.disconnect(handler_id)
 			self.handler_ids[widget].remove(handler_id)
-				
+			
+
+	def ColourWidgets(self, widget):
+		if type(widget) in (gtk.Entry, gtk.SpinButton, gtk.TextView, gtk.TreeView, gtk.CheckButton, gtk.RadioButton):
+			self.SetTextBG(widget)
+		if type(widget) is gtk.TreeView:
+			self.frame.ChangeListFont(widget, self.frame.np.config.sections["ui"]["listfont"])
+			
 	def UpdateColours(self):
+		for widget in self.__dict__.values():
+			#if type(widget) in (gtk.Entry, gtk.SpinButton, gtk.TextView, gtk.TreeView, gtk.CheckButton, gtk.RadioButton):
+			self.ColourWidgets(widget)
 		for name, page in self.pages.items():
+			for widget in page.__dict__.values():
+				self.ColourWidgets(widget)
 
-			for widget in page.__dict__.values() + self.__dict__.values():
-
-				if type(widget) in (gtk.Entry, gtk.SpinButton, gtk.TextView, gtk.TreeView, gtk.CheckButton, gtk.RadioButton):
-					self.SetTextBG(widget)
+				
 					
 	def SetTextBG(self, widget, bgcolor="", fgcolor=""):
 		self.frame.SetTextBG(widget, bgcolor, fgcolor)

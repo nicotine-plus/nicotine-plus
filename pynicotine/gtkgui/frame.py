@@ -1035,7 +1035,6 @@ class NicotineFrame(MainWindow):
 		if colour == "":
 			colour = None
 		cellrenderer.set_property("foreground", colour)
-		cellrenderer.set_property("font", self.np.config.sections["ui"]["listfont"])
 		
 	def changecolour(self, tag, colour):
 		if colour in self.frame.np.config.sections["ui"]:
@@ -1058,7 +1057,7 @@ class NicotineFrame(MainWindow):
 			font = 'default font'
 		for c in listview.get_columns():
 			for r in c.get_cell_renderers():
-				if type(r) is gtk.CellRendererText:
+				if type(r)  in (gtk.CellRendererText, gtk.CellRendererCombo):
 					r.set_property("font", font)
 				
 	def UpdateColours(self, first=0):
@@ -1122,6 +1121,14 @@ class NicotineFrame(MainWindow):
 			widget.modify_text(gtk.STATE_NORMAL, colour)
 			widget.modify_fg(gtk.STATE_NORMAL, colour)
 			
+		if type(widget) is gtk.TreeView:
+			colour = self.np.config.sections["ui"]["search"]
+			if colour == "":
+				colour = None
+			for c in widget.get_columns():
+				for r in c.get_cell_renderers():
+					if type(r) in (gtk.CellRendererText, gtk.CellRendererCombo):
+						r.set_property("foreground", colour)
 					
 	def logMessage(self, msg, debug = None):
 		if "LogWindow" not in self.__dict__:

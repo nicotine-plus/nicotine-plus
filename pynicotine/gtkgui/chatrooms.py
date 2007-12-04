@@ -1141,7 +1141,7 @@ class ChatRoom(ChatRoomTab):
 		tag.last_event_type = event.type
 		
 	def UpdateColours(self):
-
+		self.frame.ChangeListFont(self.UserList, self.frame.np.config.sections["ui"]["listfont"])
 		map = self.ChatScroll.get_style().copy()
 		self.backupcolor = map.text[gtk.STATE_NORMAL]
 		buffer = self.ChatScroll.get_buffer()

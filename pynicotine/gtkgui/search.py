@@ -185,6 +185,7 @@ class Searches(IconNotebook):
 		self.frame.WishList.connect("clicked", self.WishListDialog.Toggle)
 		self.UpdateColours()
 		self.show()
+		
 	def SetInterval(self, msg):
 		self.interval = msg.seconds
 		if not self.disconnected:
@@ -922,11 +923,8 @@ class Search(SearchTab):
 		self.frame.SetTextBG(self.RememberCheckButton)
 		self.frame.SetTextBG(self.FilterFreeSlot)
 		font = self.frame.np.config.sections["ui"]["searchfont"]
-		if font == "":
-			font = 'default font'
-		for c in self.ResultsList.get_columns():
-			for r in c.get_cell_renderers():
-				r.set_property("font", font)
+
+		self.frame.ChangeListFont(self.ResultsList, font)
 		
 	def GetUserStatus(self, msg):
 		if msg.user not in self.users:
