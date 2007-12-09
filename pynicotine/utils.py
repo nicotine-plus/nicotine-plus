@@ -107,38 +107,41 @@ def getServerList(url):
 		return []
 
 # Rescan directories in shared databases
-def rescandirs(shared, sharedmtimes, sharedfiles, sharedfilesstreams, yieldfunction, progress=None, name="", rebuild=False):
-	# Check for modified or new files
-	# returns dict in format:  { Directory : mtime, ... }
+def rescandirs(shared_directories, oldmtimes, oldfiles, sharedfilesstreams, yieldfunction, progress=None, name="", rebuild=False):
+	"""
+	Check for modified or new files via OS's last mtime on a directory,
+	or, if rebuild is True, all directories
+	"""
+	#returns dict in format:  { Directory : mtime, ... }
 	
 	gobject.idle_add(progress.set_text, _("Checking for changes"))
 	gobject.idle_add(progress.show)
 	gobject.idle_add(progress.set_fraction, 0)
-	
+
 	if win32:
-		newmtimes = getDirsMtimesUnicode(shared, yieldfunction)
+		newmtimes = getDirsMtimesUnicode(shared_directories, yieldfunction)
 	else:
-		newmtimes = getDirsMtimes(shared, yieldfunction)
+		newmtimes = getDirsMtimes(shared_directories, yieldfunction)
 	gobject.idle_add(progress.set_text, _("Scanning %s") % name)
 	# Get list of files
 	# returns dict in format { Directory : { File : metadata, ... }, ... }
 	if win32:
-		newsharedfiles = getFilesListUnicode(newmtimes, sharedmtimes, sharedfiles,yieldfunction, progress, rebuild)
+		newsharedfiles = getFilesListUnicode(newmtimes, oldmtimes, oldfiles, yieldfunction, progress, rebuild)
 	else:
-		newsharedfiles = getFilesList(newmtimes, sharedmtimes, sharedfiles,yieldfunction, progress, rebuild)
+		newsharedfiles = getFilesList(newmtimes, oldmtimes, oldfiles, yieldfunction, progress, rebuild)
 	# Pack shares data
 	# returns dict in format { Directory : hex string of files+metadata, ... }
 	gobject.idle_add(progress.set_text, _("Building DataBase"))
-	newsharedfilesstreams = getFilesStreams(newmtimes, sharedmtimes, sharedfilesstreams, newsharedfiles, yieldfunction)
+	newsharedfilesstreams = getFilesStreams(newmtimes, oldmtimes, sharedfilesstreams, newsharedfiles, yieldfunction)
 	
 	# Update Search Index
 	# newwordindex is a dict in format {word: [num, num, ..], ... } with num matching
 	# keys in newfileindex
 	# newfileindex is a dict in format { num: (path, size, (bitrate, vbr), length), ... }
 	gobject.idle_add(progress.set_text, _("Building Index"))
-	newwordindex, newfileindex = getFilesIndex(newmtimes, sharedmtimes, shared, newsharedfiles, yieldfunction)
+	newwordindex, newfileindex = getFilesIndex(newmtimes, oldmtimes, shared_directories, newsharedfiles, yieldfunction)
 	gobject.idle_add(progress.set_fraction, 1.0)
-	
+
 	return newsharedfiles, newsharedfilesstreams, newwordindex, newfileindex, newmtimes
     
 
@@ -224,6 +227,7 @@ def getDirsMtimes(dirs, yieldcall = None):
 				log(message)
 			displayTraceback(sys.exc_info()[2])
 			continue
+
 		list[directory] = mtime
 
 		for filename in contents:
@@ -241,7 +245,15 @@ def getDirsMtimes(dirs, yieldcall = None):
 			try:
 				mtime = os.path.getmtime(path)
 			except OSError, errtuple:
-				message = _("Scanning Error: %s Path: %s") % (errtuple, path)
+				islink = False
+				try:
+					islink = os.path.islink(path)
+				except OSError, errtuple2:
+					print errtuple2
+				if islink:
+					message = _("Scanning Error: Broken link to directory: \"%s\" from Path: \"%s\". Repair or remove this link.") % (os.readlink(path), path)
+				else:
+					message = _("Scanning Error: %s Path: %s") % (errtuple, path)
 				print str(message)
 				if log:
 					log(message)
@@ -275,8 +287,13 @@ def getFilesList(mtimes, oldmtimes, oldlist, yieldcall = None, progress=None, re
 			continue
 		if not rebuild and directory in oldmtimes:
 			if mtimes[directory] == oldmtimes[directory]:
-				list[directory] = oldlist[directory]
-				continue
+				if os.path.exists(directory):
+					
+					list[directory] = oldlist[directory]
+					continue
+				else:
+					print "Dropping removed directory %s" % directory
+					continue
 
 		list[directory] = []
 
@@ -453,17 +470,23 @@ def getFileInfo(name, pathname):
 			log(message)
 		displayTraceback(sys.exc_info()[2])
 		
-def getFilesStreams(mtimes, oldmtimes, oldstreams, sharedfiles, yieldcall = None):
+def getFilesStreams(mtimes, oldmtimes, oldstreams, newsharedfiles, yieldcall = None):
 	streams = {}
 	for i in mtimes.keys():
 		if hiddenCheck(i):
-			continue	
+			continue
+
 		if i in oldmtimes:
 			if mtimes[i] == oldmtimes[i]:
-				# No change
-				streams[i] = oldstreams[i]
-				continue
-		streams[i] = getDirStream(sharedfiles[i])
+				if os.path.exists(i):
+					# No change
+					streams[i] = oldstreams[i]
+					continue
+				else:
+					print "Dropping missing directory %s" % directory
+					continue
+				
+		streams[i] = getDirStream(newsharedfiles[i])
 		if yieldcall is not None:
 			yieldcall()
 	return streams
@@ -506,7 +529,7 @@ def getByteStream(fileinfo):
 	return stream
 
 # Update Search index with new files
-def getFilesIndex(mtimes, oldmtimes, shareddirs, sharedfiles, yieldcall = None):
+def getFilesIndex(mtimes, oldmtimes, shareddirs, newsharedfiles, yieldcall = None):
 	wordindex = {}
 	fileindex = {}
 	index = 0
@@ -515,7 +538,7 @@ def getFilesIndex(mtimes, oldmtimes, shareddirs, sharedfiles, yieldcall = None):
 		
 		if hiddenCheck(i):
 			continue
-		for j in sharedfiles[i]:
+		for j in newsharedfiles[i]:
 			indexes = getIndexWords(i, j[0], shareddirs)
 			for k in indexes:
 				wordindex.setdefault(k, []).append(index)

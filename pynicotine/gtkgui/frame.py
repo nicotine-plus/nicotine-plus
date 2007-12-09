@@ -397,7 +397,7 @@ class NicotineFrame(MainWindow):
 			self.HideChatButtons.set_active(0)
 
 		if config["transfers"]["rescanonstartup"]:
-			self.OnRescan()
+			self.BothRescan()
 		img = gtk.Image()
 		img.set_from_pixbuf(self.images["away2"])
 		self.awayreturn1.set_image(img)
@@ -1156,7 +1156,7 @@ class NicotineFrame(MainWindow):
 	
 	def SetStatusText(self, msg):
 		self.Statusbar.pop(self.status_context_id)
-		self.Statusbar.push(self.status_context_id, msg)
+		self.Statusbar.push(self.status_context_id, str(msg))
 		
 	def OnWindowChange(self, widget, blag):
 		(width, height)= self.MainWindow.get_size()

@@ -195,7 +195,7 @@ class Config:
 					if self.frame:
 						self.frame.logMessage(message)
 				elif j not in self.sections[i].keys() and j != "filter":
-					message = "Unknown config option", j, "section", i
+					message = "Unknown config option '%s' in section '%s'" %(j, i)
 					print message
 					if self.frame:
 						self.frame.logMessage(message)

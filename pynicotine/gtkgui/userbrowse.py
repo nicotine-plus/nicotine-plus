@@ -215,7 +215,7 @@ class UserBrowse(UserBrowseTab):
 			if type(object) is PopupMenu:
 				object.set_user(self.user)
 				
-	def OnPopupMenuDummy(self, widget):
+	def OnPopupMenuDummy(self, widget, something):
 		pass
 	
 	def Attach(self, widget=None):
