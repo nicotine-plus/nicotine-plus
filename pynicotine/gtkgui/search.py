@@ -476,24 +476,17 @@ class Search(SearchTab):
 			int, str, str, long, int, int, int]
 		self.resultsmodel = gtk.TreeStore(* self.COLUMN_TYPES )
 
-		if self.frame.np.config.sections["searches"]["enablefilters"]:
-			filter = self.frame.np.config.sections["searches"]["defilter"]
-			self.FilterIn.child.set_text(filter[0])
-			self.FilterOut.child.set_text(filter[1])
-			self.FilterSize.child.set_text(filter[2])
-			self.FilterBitrate.child.set_text(filter[3])
-			self.FilterFreeSlot.set_active(filter[4])
-			if(len(filter) > 5):
-				self.FilterCountry.child.set_text(filter[5])
-			self.filtersCheck.set_active(1)
+		
 
 		if mode > 0:
 			self.RememberCheckButton.set_sensitive(False)
 		self.RememberCheckButton.set_active(remember)
 		
-		for i in [0, 128, 160, 192, 256, 320]:
-			self.FilterBitrate.get_model().append([i])
-			
+		
+		
+		self.PopulateFilters()
+		
+		
 		self.FilterIn.connect("changed", self.OnFilterChanged)
 		self.FilterOut.connect("changed", self.OnFilterChanged)
 		self.FilterSize.connect("changed", self.OnFilterChanged)
@@ -573,9 +566,54 @@ class Search(SearchTab):
 		model = widget.get_model()
 		iter = widget.get_active_iter()
 		if iter:
-			#print model.get_value(iter, 0)
 			self.OnRefilter(None)
 			
+	def PopulateFilters(self):
+		if self.frame.np.config.sections["searches"]["enablefilters"]:
+			filter = self.frame.np.config.sections["searches"]["defilter"]
+			self.FilterIn.child.set_text(filter[0])
+			self.FilterOut.child.set_text(filter[1])
+			self.FilterSize.child.set_text(filter[2])
+			self.FilterBitrate.child.set_text(filter[3])
+			self.FilterFreeSlot.set_active(filter[4])
+			if(len(filter) > 5):
+				self.FilterCountry.child.set_text(filter[5])
+			self.filtersCheck.set_active(1)
+			
+		for i in [0, 128, 160, 192, 256, 320]:
+			self.FilterBitrate.get_model().append([i])
+		s_config = self.frame.np.config.sections["searches"]
+		
+		for i in s_config["filterin"]:
+			self.AddCombo(self.FilterIn, i, True)
+		for i in s_config["filterout"]:
+			self.AddCombo(self.FilterOut, i, True)
+		for i in s_config["filtersize"]:
+			self.AddCombo(self.FilterSize, i, True)
+		for i in s_config["filterbr"]:
+			self.AddCombo(self.FilterBitrate, i, True)
+		for i in s_config["filtercc"]:
+			self.AddCombo(self.FilterCountry ,i, True)
+			
+	def AddCombo(self, ComboboxEntry, text, list=False):
+		text = text.strip()
+		if not text:
+			return False
+		model = ComboboxEntry.get_model()
+		iter = model.get_iter_root()
+		match = False
+		while iter is not None:
+			value = model.get_value(iter, 0)
+			if value.strip() == text:
+				match = True
+			iter = model.iter_next(iter)
+		if not match:
+			if list:
+				model.append([text])
+			else:
+				model.prepend([text])
+	
+		
 	def Attach(self, widget=None):
 		self.Searches.attach_tab(self.Main)
 
@@ -1203,16 +1241,9 @@ class Search(SearchTab):
 		text = text.strip()
 		history = self.frame.np.config.sections["searches"][title]
 		self.frame.np.config.pushHistory(history, text, 5)
-		match = False
-		model = widget.get_model()
-		iter = model.get_iter_root()
-		while iter is not None:
-			value = model.get_value(iter, 0)
-			if value.strip() == text:
-				match = True
-			iter = model.iter_next(iter)
-		if not match:
-			widget.append_text(text)
+		
+		self.AddCombo(widget, text)
+	
 		widget.child.set_text(text)
 		return text
 		
