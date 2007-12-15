@@ -490,7 +490,10 @@ class Search(SearchTab):
 		if mode > 0:
 			self.RememberCheckButton.set_sensitive(False)
 		self.RememberCheckButton.set_active(remember)
-
+		
+		for i in [0, 128, 160, 192, 256, 320]:
+			self.FilterBitrate.get_model().append([i])
+		
 		self.selected_results = []
 		self.selected_users = []
 
@@ -1184,9 +1187,19 @@ class Search(SearchTab):
 		text = widget.child.get_text()
 		if not text.strip():
         		return None
+		text = text.strip()
 		history = self.frame.np.config.sections["searches"][title]
 		self.frame.np.config.pushHistory(history, text, 5)
-		widget.append_text( text)
+		match = False
+		model = widget.get_model()
+		iter = model.get_iter_root()
+		while iter is not None:
+			value = model.get_value(iter, 0)
+			if value.strip() == text:
+				match = True
+			iter = model.iter_next(iter)
+		if not match:
+			widget.append_text(text)
 		widget.child.set_text(text)
 		return text
 		
