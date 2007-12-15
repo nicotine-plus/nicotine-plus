@@ -493,6 +493,12 @@ class Search(SearchTab):
 		
 		for i in [0, 128, 160, 192, 256, 320]:
 			self.FilterBitrate.get_model().append([i])
+			
+		self.FilterIn.connect("changed", self.OnFilterChanged)
+		self.FilterOut.connect("changed", self.OnFilterChanged)
+		self.FilterSize.connect("changed", self.OnFilterChanged)
+		self.FilterBitrate.connect("changed", self.OnFilterChanged)
+		self.FilterCountry.connect("changed", self.OnFilterChanged)
 		
 		self.selected_results = []
 		self.selected_users = []
@@ -562,7 +568,14 @@ class Search(SearchTab):
 		self._more_results = 0
 		self.new_results = []
 		self.ChangeColours()
-
+		
+	def OnFilterChanged(self, widget):
+		model = widget.get_model()
+		iter = widget.get_active_iter()
+		if iter:
+			#print model.get_value(iter, 0)
+			self.OnRefilter(None)
+			
 	def Attach(self, widget=None):
 		self.Searches.attach_tab(self.Main)
 
