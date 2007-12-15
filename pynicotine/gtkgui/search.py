@@ -482,10 +482,19 @@ class Search(SearchTab):
 			self.RememberCheckButton.set_sensitive(False)
 		self.RememberCheckButton.set_active(remember)
 		
-		
-		
 		self.PopulateFilters()
 		
+		self.FilterSize.clear()
+		sizecell = gtk.CellRendererText()
+		sizecell.set_property("xalign", 1)
+		self.FilterSize.pack_start(sizecell, True)
+		self.FilterSize.add_attribute(sizecell, "text", 0)
+		
+		self.FilterBitrate.clear()
+		bit_cell = gtk.CellRendererText()
+		bit_cell.set_property("xalign", 1)
+		self.FilterBitrate.pack_start(bit_cell, True)
+		self.FilterBitrate.add_attribute(bit_cell, "text", 0)
 		
 		self.FilterIn.connect("changed", self.OnFilterChanged)
 		self.FilterOut.connect("changed", self.OnFilterChanged)
@@ -582,6 +591,8 @@ class Search(SearchTab):
 			
 		for i in [0, 128, 160, 192, 256, 320]:
 			self.FilterBitrate.get_model().append([i])
+		for i in [">10000000", "<10000000", "<5000000", "<1000000", ">0"]:
+			self.FilterSize.get_model().append([i])
 		s_config = self.frame.np.config.sections["searches"]
 		
 		for i in s_config["filterin"]:
