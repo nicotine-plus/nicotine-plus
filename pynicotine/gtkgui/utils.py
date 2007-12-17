@@ -618,7 +618,7 @@ class IconNotebook(gtk.Notebook):
 		pass
 	
 	def attach_tab(self, page, destroying=False):
-		pagewidget = label_tab = label_tab_menu = label = None
+		pagewidget = label_tab = label_tab_menu = label = status = None
 
 		for item in self.detached_tabs:
 			if item[0] is page:

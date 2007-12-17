@@ -277,6 +277,7 @@ class RoomsControl:
 				self.frame.np.queue.put(slskmessages.JoinRoom(room))
 		self.roomsmodel.clear()
 		self.roomsmodel.set_default_sort_func(lambda *args: -1)
+		self.roomsmodel.set_sort_func(0, lambda *args: -1)
 		self.roomsmodel.set_sort_column_id(-1, gtk.SORT_ASCENDING)
 		self.rooms = []
 		for rooms in msg.rooms:
@@ -285,6 +286,8 @@ class RoomsControl:
 			if len(msg.rooms) < 200 or users > 2:
 				self.rooms.append(room)
 		self.SetPrivateRooms()
+		
+		self.roomsmodel.set_sort_func(2, self.PrivateRoomsSort, 2)
 		self.roomsmodel.set_sort_column_id(2, gtk.SORT_DESCENDING)
 		
 		

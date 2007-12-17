@@ -675,6 +675,8 @@ class Search(SearchTab):
 			return len(results)
 	
 	def _realaddresults(self):
+		if "_more_results" not in self.__dict__:
+			return
 		if self._more_results == 2:
 			self._more_results = 1
 			return True
