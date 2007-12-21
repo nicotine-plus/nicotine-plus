@@ -26,7 +26,7 @@ from utils import InitialiseColumns, AppendLine, PopupMenu, FastListModel, strin
 from pynicotine.utils import _
 from ticker import Ticker
 from entrydialog import OptionDialog, input_box
-import sets, os, re
+import sets, os, re, time
 
 def GetCompletion(part, list):
 	matches = []
@@ -58,21 +58,21 @@ class RoomsControl:
 		self.rooms = []
 		self.privaterooms = {}
 		self.OtherPrivateRooms = self.frame.np.config.sections["private_rooms"]["membership"]
-		self.roomsmodel = gtk.ListStore(str, str, int, int)
+		self.roomsmodel = gtk.ListStore(str, int, int)
 		frame.roomlist.RoomsList.set_model(self.roomsmodel)
 		
-		cols = InitialiseColumns(frame.roomlist.RoomsList,
+		self.cols = InitialiseColumns(frame.roomlist.RoomsList,
 			[_("Room"), 150, "text", self.RoomStatus],
 			[_("Users"), -1, "text", self.RoomStatus],
 		)
-		cols[0].set_sort_column_id(0)
-		cols[1].set_sort_column_id(2)
-		self.roomsmodel.set_sort_func(2, self.PrivateRoomsSort, 2)
-		self.roomsmodel.set_sort_column_id(2, gtk.SORT_ASCENDING)
-		#cols[1].set_sort_indicator(True)
+		self.cols[0].set_sort_column_id(0)
+		self.cols[1].set_sort_column_id(2)
+		self.roomsmodel.set_sort_func(1, self.PrivateRoomsSort, 1)
+		self.roomsmodel.set_sort_column_id(1, gtk.SORT_DESCENDING)
+		self.cols[1].set_sort_indicator(True)
 		
 		for i in range (2):
-			parent = cols[i].get_widget().get_ancestor(gtk.Button)
+			parent = self.cols[i].get_widget().get_ancestor(gtk.Button)
 			if parent:
 				parent.connect('button_press_event', PressHeader)
 
@@ -103,26 +103,23 @@ class RoomsControl:
 		
 	def PrivateRoomsSort(self, model, iter1, iter2, column):
 		try:
-			val1 = int(model.get_value(iter1, column)) + 1
-			private1 = int(model.get_value(iter1, 3)) * 10000
+			private1 = model.get_value(iter1, 2)
 		except:
-			val1 = 0
 			private1 = 0
 		try:
-			val2 = int(model.get_value(iter2, column)) + 1
-			private2 = int(model.get_value(iter2, 3)) * 10000
+			private2 = model.get_value(iter2, 2)
 		except:
-			val2 = 0
 			private2 = 0
-		return cmp(val1+private1, val2+private2)
+		return cmp(private1, private2)
+		#return cmp(val1+private1, val2+private2)
 
 
 	def RoomStatus(self, column, cellrenderer, model, iter):
 
-		if self.roomsmodel.get_value(iter, 3) == 2:
+		if self.roomsmodel.get_value(iter, 2) >= 20000:
 			cellrenderer.set_property("underline", pango.UNDERLINE_SINGLE)
 			cellrenderer.set_property("weight", pango.WEIGHT_BOLD)
-		elif self.roomsmodel.get_value(iter, 3) == 1:
+		elif self.roomsmodel.get_value(iter, 2) >= 10000:
 			cellrenderer.set_property("weight", pango.WEIGHT_BOLD)
 			cellrenderer.set_property("underline", pango.UNDERLINE_NONE)
 		else:
@@ -276,20 +273,21 @@ class RoomsControl:
 			for room in list:
 				self.frame.np.queue.put(slskmessages.JoinRoom(room))
 		self.roomsmodel.clear()
+		self.frame.roomlist.RoomsList.set_model(None)
 		self.roomsmodel.set_default_sort_func(lambda *args: -1)
-		self.roomsmodel.set_sort_func(0, lambda *args: -1)
-		self.roomsmodel.set_sort_column_id(-1, gtk.SORT_ASCENDING)
+		self.roomsmodel.set_sort_column_id(-1, gtk.SORT_DESCENDING)
+		
 		self.rooms = []
-		for rooms in msg.rooms:
-			room, users = rooms
-			self.roomsmodel.append([room, Humanize(users), users, 0])
-			if len(msg.rooms) < 200 or users > 2:
-				self.rooms.append(room)
+
+		for room, users in msg.rooms:
+			self.roomsmodel.append([room, users, users])
+			self.rooms.append(room)
+
 		self.SetPrivateRooms()
-		
-		self.roomsmodel.set_sort_func(2, self.PrivateRoomsSort, 2)
-		self.roomsmodel.set_sort_column_id(2, gtk.SORT_DESCENDING)
-		
+		self.frame.roomlist.RoomsList.set_model(self.roomsmodel)
+		self.roomsmodel.set_sort_func(1, self.PrivateRoomsSort, 1)
+		self.roomsmodel.set_sort_column_id(1, gtk.SORT_DESCENDING)
+		self.cols[1].set_sort_indicator(True)
 		
 		if self.frame.np.config.sections["words"]["roomnames"]:
 			self.frame.chatrooms.roomsctrl.UpdateCompletions()
@@ -306,9 +304,9 @@ class RoomsControl:
 				self.roomsmodel.remove(lastiter)
 		for room in self.privaterooms:
 
-			self.roomsmodel.prepend([room, Humanize(self.privaterooms[room]["joined"]), self.privaterooms[room]["joined"], 2])
+			self.roomsmodel.prepend([room, self.privaterooms[room]["joined"], 20000+self.privaterooms[room]["joined"]])
 		for room in self.OtherPrivateRooms:
-			self.roomsmodel.prepend([room, 0, 0, 1])
+			self.roomsmodel.prepend([room, 0, 10000])
 			
 	def GetUserStats(self, msg):
 		for room in self.joinedrooms.values():
