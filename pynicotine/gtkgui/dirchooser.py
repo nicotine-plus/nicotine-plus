@@ -73,6 +73,29 @@ def ChooseFile(parent = None, initialdir = "~", initialfile = ""):
 
 	return res
 
+def SaveFile(parent = None, initialdir = "~", initialfile = "", title=None):
+	dialog = gtk.FileChooserDialog(parent=parent, action=gtk.FILE_CHOOSER_ACTION_SAVE, buttons = (gtk.STOCK_OK, gtk.RESPONSE_ACCEPT, gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT))
+	dialog.set_action(gtk.FILE_CHOOSER_ACTION_SAVE)
+	dialog.set_select_multiple(False)
+	dialog.set_show_hidden(True)
+	if title:
+		dialog.set_title(title)
+	dir = os.path.expanduser(initialdir)
+	if os.path.exists(dir):
+		dialog.set_current_folder(dir)
+	else:
+		dialog.set_current_folder(os.path.expanduser("~"))
+	response = dialog.run()
+	
+	if response == gtk.RESPONSE_ACCEPT:
+		res = dialog.get_filenames()
+	else:
+		res = None
+
+	dialog.destroy()
+
+	return res
+
 def ChooseImage(parent = None, initialdir = "~", initialfile = ""):
 	image = gtk.Image()
 	preview = gtk.ScrolledWindow()

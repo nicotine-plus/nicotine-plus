@@ -25,8 +25,8 @@ This module contains configuration classes for Nicotine.
 
 import ConfigParser
 import string
-import os
-import cPickle
+import os, time
+import cPickle, bz2
 import shelve
 import sys
 import thread
@@ -453,6 +453,34 @@ class Config:
 				self.frame.logMessage(message)
 	
 		self.config_lock.release()
+	
+	def writeConfigBackup(self, filename=None):
+		
+		self.config_lock.acquire()
+		
+		if filename is None:
+			filename = "%s backup %s.tar.bz2" %(self.filename, time.strftime("%Y-%m-%d %H:%M:%S") )
+		else:
+			if filename[-8:-1] != ".tar.bz2":
+				filename += ".tar.bz2"
+		try:
+			if os.path.exists(filename):
+				raise "File %s exists" % filename
+			import tarfile
+			tar = tarfile.open(filename, "w:bz2")
+			if not os.path.exists(self.filename):
+				raise "Config file missing"
+			tar.add(self.filename)
+			if os.path.exists(self.filename+".alias"):
+				tar.add(self.filename+".alias")
+
+			tar.close()
+		except Exception, e:
+			print e
+			self.config_lock.release()
+			return (1, "Cannot write backup archive")
+		self.config_lock.release()
+		return (0, filename)
 	
 	def setBuddyShares(self, files, streams, wordindex, fileindex, mtimes):
 		if self.sections["transfers"]["bsharedfiles"] == files:

@@ -45,7 +45,7 @@ from pynicotine.config import *
 import utils, pynicotine.utils
 from utils import AppendLine, ImageLabel, IconNotebook, ScrollBottom, PopupMenu, Humanize, popupWarning
 import translux
-from dirchooser import ChooseFile
+from dirchooser import ChooseFile, SaveFile
 from pynicotine.utils import _, ChangeTranslation
 import nowplaying
 from entrydialog import  *
@@ -164,7 +164,16 @@ class NicotineFrame(MainWindow):
 		self.MainWindow.set_position(gtk.WIN_POS_CENTER)
 		self.MainWindow.show()
 		self.minimized = False
-	
+		
+		
+		self.backupconfig = gtk.ImageMenuItem(_("Backup config"))
+		self.backupconfig.show()
+		self.backupconfig.connect("activate", self.OnBackupConfig)
+
+		img = gtk.image_new_from_stock(gtk.STOCK_HARDDISK, gtk.ICON_SIZE_MENU)
+		self.backupconfig.set_image(img)
+		self.edit_menu.append(self.backupconfig)
+		
 		self.clip = gtk.Clipboard(display=gtk.gdk.display_get_default(), selection="CLIPBOARD")
 		
 		
@@ -1659,7 +1668,18 @@ class NicotineFrame(MainWindow):
 			if self.np.transfers is None:
 				self.connect1.set_sensitive(1)
 		self.SetAllToolTips()
-		
+	
+	def OnBackupConfig(self, widget=None):
+		response = SaveFile(self.MainWindow.get_toplevel(), os.path.dirname(self.np.config.filename), title="Pick a filename for config backup, or cancel to use a timestamp")
+		if response:
+			error, message = self.np.config.writeConfigBackup(response[0])
+		else:
+			error, message = self.np.config.writeConfigBackup()
+		if error:
+			self.logMessage("Error backing up config: %s" % message)
+		else:
+			self.logMessage("Config backed up to: %s" % message)
+	
 	def SetAllToolTips(self):
 		act = self.np.config.sections["ui"]["tooltips"]
 		for tips in [self.tooltips, self.roomlist.tooltips] + [page.tooltips for page in self.settingswindow.pages.values()] + [room.tooltips for room in self.chatrooms.roomsctrl.joinedrooms.values()] + [private.tooltips for private in self.privatechats.users.values()]  + [user.tooltips for user in self.userinfo.users.values()]  + [user.tooltips for user in self.userbrowse.users.values()] + [data[2].tooltips for data in self.Searches.searches.values() if data[2] is not None]:

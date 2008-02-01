@@ -275,6 +275,7 @@ class RoomsControl:
 		self.roomsmodel.clear()
 		self.frame.roomlist.RoomsList.set_model(None)
 		self.roomsmodel.set_default_sort_func(lambda *args: -1)
+		self.roomsmodel.set_sort_func(1, lambda *args: -1)
 		self.roomsmodel.set_sort_column_id(-1, gtk.SORT_DESCENDING)
 		
 		self.rooms = []
@@ -282,7 +283,6 @@ class RoomsControl:
 		for room, users in msg.rooms:
 			self.roomsmodel.append([room, users, users])
 			self.rooms.append(room)
-
 		self.SetPrivateRooms()
 		self.frame.roomlist.RoomsList.set_model(self.roomsmodel)
 		self.roomsmodel.set_sort_func(1, self.PrivateRoomsSort, 1)
