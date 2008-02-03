@@ -836,7 +836,7 @@ class Search(SearchTab):
 			return False
 		if filters[1] and filters[1].search(row[2].lower()):
 			return False
-		if filters[2] and not self.checkDigit(filters[2], row[14]):
+		if filters[2] and not self.checkDigit(filters[2], row[13]):
 			return False
 		if filters[3] and not self.checkDigit(filters[3], row[11], False):
 			return False
@@ -846,10 +846,13 @@ class Search(SearchTab):
 			for cc in filters[5]:
 				if not cc:
 					continue
+				if row[12] is None:
+					return False
+
 				if cc[0] == "-":
-					if row[13] == cc[1:]:
+					if row[12].upper()  == cc[1:].upper():
 						return False
-				elif cc != row[13]:
+				elif cc.upper() != row[12].upper():
 					return False
 		return True
 	
