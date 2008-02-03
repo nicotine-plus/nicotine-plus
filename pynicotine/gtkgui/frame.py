@@ -1558,7 +1558,10 @@ class NicotineFrame(MainWindow):
 		elif type == "normal":
 			gobject.idle_add(self._RescanFinished, data)
 			
-	
+	def OnConfigureShares(self, widget):
+		self.settingswindow.SetSettings(self.np.config.sections)
+		self.settingswindow.SwitchToPage("Shares")
+
 	def OnSettings(self, widget):
 		self.settingswindow.SetSettings(self.np.config.sections)
 		self.settingswindow.SettingsWindow.show()
