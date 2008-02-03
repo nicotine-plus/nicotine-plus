@@ -472,7 +472,7 @@ class Search(SearchTab):
 
 		self.all_data = []
 		self.filters = None
-		self.COLUMN_TYPES = [int, str, str, str, str, str, str, str, str, str,
+		self.COLUMN_TYPES = [int, str, str, str, str, str, str, str, str, gtk.gdk.Pixbuf, str,
 			int, str, str, long, int, int, int]
 		self.resultsmodel = gtk.TreeStore(* self.COLUMN_TYPES )
 
@@ -509,7 +509,7 @@ class Search(SearchTab):
 		self.ResultsList.set_property("show-expanders", False)
 		self.ResultsList.set_property("rules-hint", True)
 		cols = InitialiseColumns(self.ResultsList,
-			[_("Number"), 25, "text", self.CellDataFunc],
+			[_("Number"), 50, "text", self.CellDataFunc],
 			[_("User"), 100, "text", self.CellDataFunc],
 			[_("Filename"), 250, "text", self.CellDataFunc],
 			[_("Size"), 100, "text", self.CellDataFunc],
@@ -518,7 +518,9 @@ class Search(SearchTab):
 			[_("Immediate Download"), 20, "text", self.CellDataFunc],
 			[_("Bitrate"), 50, "text", self.CellDataFunc],
 			[_("Length"), 50, "text", self.CellDataFunc],
+			[_("Country"), 25, "pixbuf"],
 			[_("Directory"), 1000, "text", self.CellDataFunc],
+			
 		)
 		cols[0].get_widget().hide()
 		for i in range (10):
@@ -537,13 +539,14 @@ class Search(SearchTab):
 		cols[0].set_sort_column_id(0)
 		cols[1].set_sort_column_id(1)
 		cols[2].set_sort_column_id(2)
-		cols[3].set_sort_column_id(13)
-		cols[4].set_sort_column_id(14)
-		cols[5].set_sort_column_id(15)
+		cols[3].set_sort_column_id(14)
+		cols[4].set_sort_column_id(15)
+		cols[5].set_sort_column_id(16)
 		cols[6].set_sort_column_id(6)
-		cols[7].set_sort_column_id(10)
+		cols[7].set_sort_column_id(11)
 		cols[8].set_sort_column_id(8)
-		cols[9].set_sort_column_id(9)
+		cols[9].set_sort_column_id(13)
+		cols[10].set_sort_column_id(10)
 		if gtk.pygtk_version[0] >= 2 and gtk.pygtk_version[1] >= 10:
 			self.ResultsList.set_enable_tree_lines(True)
 		
@@ -696,10 +699,20 @@ class Search(SearchTab):
 		rows = len(self.all_data)
 		for c in self.ResultsList.get_columns():
 			for r in c.get_cell_renderers():
-				r.set_fixed_height_from_font(1)
+				if type(r) is not gtk.CellRendererPixbuf:
+					r.set_fixed_height_from_font(1)
 
 		return False
 		
+	def get_flag(self, user, flag=None):
+		#flag = users[user].country
+		if flag is not None:
+			flag = "flag_"+flag
+			self.frame.flag_users[user] = flag
+		else:
+			flag = self.frame.GetUserFlag(user)
+
+		return self.frame.GetFlagImage(flag)
 		
 	def append(self, results):
 		ix = len(self.all_data) + 1
@@ -717,12 +730,12 @@ class Search(SearchTab):
 			h_speed = Humanize(speed)
 			h_queue = Humanize(queue)
 			if self.usersGroup.get_active() and user not in self.usersiters:
-				self.usersiters[user] = self.resultsmodel.append(None, [0, user, "", "", h_speed, h_queue, immediatedl, "", "", "", 0, "", "", 0, speed, queue, status])
+				self.usersiters[user] = self.resultsmodel.append(None, [0, user, "", "", h_speed, h_queue, immediatedl, "", "", self.get_flag(user, country), "", 0, "", "", 0, speed, queue, status])
 			row = [ix, user, filename, h_size, h_speed, h_queue, immediatedl, h_bitrate, length, directory,  bitrate, fullpath, country,  size, speed, queue, status]
 
 			self.all_data.append(row)
 			if not self.filters or self.check_filter(row):
-				encoded_row = [ix, user, encode(filename, user), h_size, h_speed, h_queue, immediatedl, h_bitrate, length, encode(directory, user), bitrate, encode(fullpath, user), country,  size, speed, queue, status]
+				encoded_row = [ix, user, encode(filename, user), h_size, h_speed, h_queue, immediatedl, h_bitrate, length, self.get_flag(user, country), encode(directory, user), bitrate, encode(fullpath, user), country,  size, speed, queue, status]
 
 				if user in self.usersiters:
 					iter = self.resultsmodel.append(self.usersiters[user], encoded_row)
@@ -764,11 +777,11 @@ class Search(SearchTab):
 		col = self.sort_col
 		order = self.sort_order
 		if col == 3:
-			col = 13
-		elif col == 4:
 			col = 14
-		elif col == 5:
+		elif col == 4:
 			col = 15
+		elif col == 5:
+			col = 16
 
 		if self.COLUMN_TYPES[col] == gobject.TYPE_STRING:
 			compare = locale.strcoll
@@ -823,9 +836,9 @@ class Search(SearchTab):
 			return False
 		if filters[1] and filters[1].search(row[2].lower()):
 			return False
-		if filters[2] and not self.checkDigit(filters[2], row[13]):
+		if filters[2] and not self.checkDigit(filters[2], row[14]):
 			return False
-		if filters[3] and not self.checkDigit(filters[3], row[10], False):
+		if filters[3] and not self.checkDigit(filters[3], row[11], False):
 			return False
 		if filters[4] and row[6] != _("Y"):
 			return False
@@ -834,9 +847,9 @@ class Search(SearchTab):
 				if not cc:
 					continue
 				if cc[0] == "-":
-					if row[12] == cc[1:]:
+					if row[13] == cc[1:]:
 						return False
-				elif cc != row[12]:
+				elif cc != row[13]:
 					return False
 		return True
 	
@@ -885,13 +898,14 @@ class Search(SearchTab):
 			if self.check_filter(row):
 				ix, user, filename,  h_size, h_speed, h_queue, immediatedl, h_bitrate, length, directory,  bitrate, fullpath, country,  size, speed, queue, status = row
 				if  self.usersGroup.get_active() and user not in self.usersiters:
-					self.usersiters[user] = self.resultsmodel.append(None, [0, user, "", "", h_speed, h_queue, immediatedl, "", "", "", 0, "", "", 0, speed, queue, status])
-				encoded_row = [ix, user, encode(filename, user), h_size, h_speed, h_queue, immediatedl, h_bitrate, length, encode(directory, user), bitrate, encode( fullpath, user), country,  size, speed, queue, status]
+					self.usersiters[user] = self.resultsmodel.append(None, [0, user, "", "", h_speed, h_queue, immediatedl, "", "", self.get_flag(user, country), "", 0, "", "", 0, speed, queue, status])
+				encoded_row = [ix, user, encode(filename, user), h_size, h_speed, h_queue, immediatedl, h_bitrate, length, self.get_flag(user, country), encode(directory, user), bitrate, encode( fullpath, user), country,  size, speed, queue, status]
 
 				if user in self.usersiters:
 					iter = self.resultsmodel.append(self.usersiters[user], encoded_row)
 				else:
 					iter = self.resultsmodel.append(None, encoded_row)
+					
 		
 
 	def OnPopupMenuUsers(self, widget):
@@ -1102,10 +1116,10 @@ class Search(SearchTab):
 		immediate = model.get_value(iter, 6)
 		bitratestr = model.get_value(iter, 7)
 		length = model.get_value(iter, 8)
-		directory = model.get_value(iter, 9)
+		directory = model.get_value(iter, 10)
 		#bitrate = model.get_value(iter, 10)
-		fn = model.get_value(iter, 11)
-		country = model.get_value(iter, 12)
+		fn = model.get_value(iter, 12)
+		country = model.get_value(iter, 13)
 		data[len(data)] = {"user":user, "fn": fn, "position":num, "filename":filename, "directory":directory, "size":size, "speed":speed, "queue":queue, "immediate":immediate, "bitrate":bitratestr, "length":length, "country":country}
 
 			
