@@ -386,50 +386,16 @@
                   </widget>
                 </child>
                 <child>
-                  <widget class="GtkButton" id="ChooseIncompleteDir">
+                  <widget class="GtkFileChooserButton" id="ChooseIncompleteDir">
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="response_id">0</property>
-                    <signal name="clicked" handler="OnChooseIncompleteDir"/>
-                    <child>
-                      <widget class="GtkAlignment" id="alignment58">
-                        <property name="visible">True</property>
-                        <property name="xscale">0</property>
-                        <property name="yscale">0</property>
-                        <child>
-                          <widget class="GtkHBox" id="hbox152">
-                            <property name="visible">True</property>
-                            <property name="spacing">2</property>
-                            <child>
-                              <widget class="GtkImage" id="image55">
-                                <property name="visible">True</property>
-                                <property name="stock">gtk-open</property>
-                              </widget>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="fill">False</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <widget class="GtkLabel" id="label231">
-                                <property name="visible">True</property>
-                                <property name="label" translatable="yes">Choose...</property>
-                                <property name="use_underline">True</property>
-                              </widget>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="fill">False</property>
-                                <property name="position">1</property>
-                              </packing>
-                            </child>
-                          </widget>
-                        </child>
-                      </widget>
-                    </child>
+                    <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                    <property name="action">GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER</property>
+                    <property name="title" translatable="yes">Select A Directory</property>
+                    <property name="width_chars">15</property>
+                    <signal name="current_folder_changed" handler="OnChooseIncompleteDir"/>
                   </widget>
                   <packing>
                     <property name="expand">False</property>
-                    <property name="fill">False</property>
                     <property name="position">1</property>
                   </packing>
                 </child>
@@ -464,50 +430,16 @@
                   </widget>
                 </child>
                 <child>
-                  <widget class="GtkButton" id="ChooseDownloadDir">
+                  <widget class="GtkFileChooserButton" id="ChooseDownloadDir">
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="response_id">0</property>
-                    <signal name="clicked" handler="OnChooseDownloadDir"/>
-                    <child>
-                      <widget class="GtkAlignment" id="alignment59">
-                        <property name="visible">True</property>
-                        <property name="xscale">0</property>
-                        <property name="yscale">0</property>
-                        <child>
-                          <widget class="GtkHBox" id="hbox153">
-                            <property name="visible">True</property>
-                            <property name="spacing">2</property>
-                            <child>
-                              <widget class="GtkImage" id="image56">
-                                <property name="visible">True</property>
-                                <property name="stock">gtk-open</property>
-                              </widget>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="fill">False</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <widget class="GtkLabel" id="label232">
-                                <property name="visible">True</property>
-                                <property name="label" translatable="yes">Choose...</property>
-                                <property name="use_underline">True</property>
-                              </widget>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="fill">False</property>
-                                <property name="position">1</property>
-                              </packing>
-                            </child>
-                          </widget>
-                        </child>
-                      </widget>
-                    </child>
+                    <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                    <property name="action">GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER</property>
+                    <property name="title" translatable="yes">Select A Directory</property>
+                    <property name="width_chars">15</property>
+                    <signal name="current_folder_changed" handler="OnChooseDownloadDir"/>
                   </widget>
                   <packing>
                     <property name="expand">False</property>
-                    <property name="fill">False</property>
                     <property name="position">1</property>
                   </packing>
                 </child>
@@ -559,50 +491,16 @@
                   </widget>
                 </child>
                 <child>
-                  <widget class="GtkButton" id="ChooseUploadDir">
+                  <widget class="GtkFileChooserButton" id="ChooseUploadDir">
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="response_id">0</property>
-                    <signal name="clicked" handler="OnChooseUploadDir"/>
-                    <child>
-                      <widget class="GtkAlignment" id="alignment10">
-                        <property name="visible">True</property>
-                        <property name="xscale">0</property>
-                        <property name="yscale">0</property>
-                        <child>
-                          <widget class="GtkHBox" id="hbox21">
-                            <property name="visible">True</property>
-                            <property name="spacing">2</property>
-                            <child>
-                              <widget class="GtkImage" id="image6">
-                                <property name="visible">True</property>
-                                <property name="stock">gtk-open</property>
-                              </widget>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="fill">False</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <widget class="GtkLabel" id="label13">
-                                <property name="visible">True</property>
-                                <property name="label" translatable="yes">Choose...</property>
-                                <property name="use_underline">True</property>
-                              </widget>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="fill">False</property>
-                                <property name="position">1</property>
-                              </packing>
-                            </child>
-                          </widget>
-                        </child>
-                      </widget>
-                    </child>
+                    <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                    <property name="action">GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER</property>
+                    <property name="title" translatable="yes">Select A Directory</property>
+                    <property name="width_chars">15</property>
+                    <signal name="current_folder_changed" handler="OnChooseUploadDir"/>
                   </widget>
                   <packing>
                     <property name="expand">False</property>
-                    <property name="fill">False</property>
                     <property name="position">1</property>
                   </packing>
                 </child>

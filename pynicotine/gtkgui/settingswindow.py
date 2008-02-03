@@ -158,6 +158,12 @@ class SharesFrame(settings_glade.SharesFrame):
 		self.shareslist.clear()
 		self.bshareslist.clear()
 		self.p.SetWidgetsData(config, self.options)
+		if transfers["incompletedir"]:
+			self.ChooseIncompleteDir.set_current_folder(transfers["incompletedir"])
+		if transfers["uploaddir"]:
+			self.ChooseUploadDir.set_current_folder(transfers["uploaddir"])
+		if transfers["downloaddir"]:
+			self.ChooseDownloadDir.set_current_folder(transfers["downloaddir"])
 		
 		if transfers["shared"] is not None:
 			for share in transfers["shared"]:
@@ -213,27 +219,24 @@ class SharesFrame(settings_glade.SharesFrame):
 		return self.needrescan
 
 	def OnChooseUploadDir(self, widget):
-		dir1 = ChooseDir(self.Main.get_toplevel(), self.UploadDir.get_text())
-		if dir1 is not None:
-			for directory in dir1: # iterate over selected files
-				self.uploaddir = directory
-				self.UploadDir.set_text(recode(directory))
-				
+		directory = self.ChooseUploadDir.get_current_folder()
+		if directory is not None:
+			self.UploadDir.set_text(recode(directory))
+			
 	def OnChooseIncompleteDir(self, widget):
-		dir1 = ChooseDir(self.Main.get_toplevel(), self.IncompleteDir.get_text())
-		if dir1 is not None:
-			for directory in dir1: # iterate over selected files
-				self.incompletedir = directory
-				self.IncompleteDir.set_text(recode(directory))
-
+		directory = self.ChooseIncompleteDir.get_current_folder()
+		if directory is not None:
+			self.incompletedir = directory
+			self.IncompleteDir.set_text(recode(directory))
+		
 	def OnChooseDownloadDir(self, widget):
-		dir1 = ChooseDir(self.Main.get_toplevel(), self.DownloadDir.get_text())
-		if dir1 is not None:
-			for directory in dir1: # iterate over selected files
-				self.DownloadDir.set_text(recode(directory))
-				if self.ShareDownloadDir.get_active():
-					self.needrescan = 1
-
+		directory = self.ChooseDownloadDir.get_current_folder()
+		if directory is not None:
+			self.incompletedir = directory
+			self.DownloadDir.set_text(recode(directory))
+			if self.ShareDownloadDir.get_active():
+				self.needrescan = 1
+					
 	def OnAddSharedDir(self, widget):
 		dir1 = ChooseDir(self.Main.get_toplevel())
 		if dir1 is not None:

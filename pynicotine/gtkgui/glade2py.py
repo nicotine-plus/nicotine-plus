@@ -461,6 +461,18 @@ def write_widget_button(widget):
 			return
 	write_widget_container(widget, "Button", PM_ADD)
 
+def write_widget_filechooserbutton(widget):
+	
+	if widget.attrs.has_key("title"):
+		title = "title=_(\"%s\")" % widget.attrs["title"]
+	else:
+		"title=\"\""
+	del widget.attrs["title"]
+	write_widget_container(widget, "FileChooserButton", PM_ADD, title)
+	if widget.attrs.has_key("action"):
+		print indent + "%s.set_action(gtk.%s)" % (widget.id, widget.attrs["action"][4:].upper().replace("-", "_"))
+	print
+	
 def write_widget_togglebutton(widget):
 	if widget.attrs.has_key("use_stock"):
 		if widget.attrs["use_stock"] == "True":
@@ -535,7 +547,7 @@ classes = {
 	"GtkToggleButton": [write_widget_togglebutton],
 	"GtkFontButton": [write_widget_generic, "FontButton"],
 	"GtkIconView": [write_widget_generic, "IconView"],
-	"GtkFileChooserButton": [write_widget_generic, "FileChooserButton"],
+	"GtkFileChooserButton": [write_widget_filechooserbutton],
 	"GtkRadioButton": [write_widget_radiobutton],
 	"GtkButton": [write_widget_button],
 	"GtkTextView": [write_widget_textview],

@@ -236,31 +236,14 @@ class SharesFrame:
 		self.IncompleteDir.show()
 		self.hbox109.pack_start(self.IncompleteDir)
 
-		self.ChooseIncompleteDir = gtk.Button()
+		self.ChooseIncompleteDir = gtk.FileChooserButton(title=_("Select A Directory"))
 		self.ChooseIncompleteDir.show()
-		self.ChooseIncompleteDir.connect("clicked", self.OnChooseIncompleteDir)
+		self.ChooseIncompleteDir.set_width_chars(15)
+		self.ChooseIncompleteDir.connect("current_folder_changed", self.OnChooseIncompleteDir)
 
-		self.alignment58 = gtk.Alignment(0.5, 0.5, 0, 0)
-		self.alignment58.show()
+		self.ChooseIncompleteDir.set_action(gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER)
 
-		self.hbox152 = gtk.HBox(False, 0)
-		self.hbox152.show()
-		self.hbox152.set_spacing(2)
-
-		self.image55 = gtk.Image()
-		self.image55.set_from_stock(gtk.STOCK_OPEN, 4)
-		self.image55.show()
-		self.hbox152.pack_start(self.image55, False, False, 0)
-
-		self.label231 = gtk.Label(_("Choose..."))
-		self.label231.show()
-		self.hbox152.pack_start(self.label231, False, False, 0)
-
-		self.alignment58.add(self.hbox152)
-
-		self.ChooseIncompleteDir.add(self.alignment58)
-
-		self.hbox109.pack_start(self.ChooseIncompleteDir, False, False, 0)
+		self.hbox109.pack_start(self.ChooseIncompleteDir, False, True, 0)
 
 		self.vbox77.pack_start(self.hbox109, False, False, 0)
 
@@ -278,31 +261,14 @@ class SharesFrame:
 		self.DownloadDir.show()
 		self.hbox111.pack_start(self.DownloadDir)
 
-		self.ChooseDownloadDir = gtk.Button()
+		self.ChooseDownloadDir = gtk.FileChooserButton(title=_("Select A Directory"))
 		self.ChooseDownloadDir.show()
-		self.ChooseDownloadDir.connect("clicked", self.OnChooseDownloadDir)
+		self.ChooseDownloadDir.set_width_chars(15)
+		self.ChooseDownloadDir.connect("current_folder_changed", self.OnChooseDownloadDir)
 
-		self.alignment59 = gtk.Alignment(0.5, 0.5, 0, 0)
-		self.alignment59.show()
+		self.ChooseDownloadDir.set_action(gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER)
 
-		self.hbox153 = gtk.HBox(False, 0)
-		self.hbox153.show()
-		self.hbox153.set_spacing(2)
-
-		self.image56 = gtk.Image()
-		self.image56.set_from_stock(gtk.STOCK_OPEN, 4)
-		self.image56.show()
-		self.hbox153.pack_start(self.image56, False, False, 0)
-
-		self.label232 = gtk.Label(_("Choose..."))
-		self.label232.show()
-		self.hbox153.pack_start(self.label232, False, False, 0)
-
-		self.alignment59.add(self.hbox153)
-
-		self.ChooseDownloadDir.add(self.alignment59)
-
-		self.hbox111.pack_start(self.ChooseDownloadDir, False, False, 0)
+		self.hbox111.pack_start(self.ChooseDownloadDir, False, True, 0)
 
 		self.vbox77.pack_start(self.hbox111, False, False, 0)
 
@@ -328,31 +294,14 @@ class SharesFrame:
 		self.UploadDir.show()
 		self.hbox19.pack_start(self.UploadDir)
 
-		self.ChooseUploadDir = gtk.Button()
+		self.ChooseUploadDir = gtk.FileChooserButton(title=_("Select A Directory"))
 		self.ChooseUploadDir.show()
-		self.ChooseUploadDir.connect("clicked", self.OnChooseUploadDir)
+		self.ChooseUploadDir.set_width_chars(15)
+		self.ChooseUploadDir.connect("current_folder_changed", self.OnChooseUploadDir)
 
-		self.alignment10 = gtk.Alignment(0.5, 0.5, 0, 0)
-		self.alignment10.show()
+		self.ChooseUploadDir.set_action(gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER)
 
-		self.hbox21 = gtk.HBox(False, 0)
-		self.hbox21.show()
-		self.hbox21.set_spacing(2)
-
-		self.image6 = gtk.Image()
-		self.image6.set_from_stock(gtk.STOCK_OPEN, 4)
-		self.image6.show()
-		self.hbox21.pack_start(self.image6, False, False, 0)
-
-		self.label13 = gtk.Label(_("Choose..."))
-		self.label13.show()
-		self.hbox21.pack_start(self.label13, False, False, 0)
-
-		self.alignment10.add(self.hbox21)
-
-		self.ChooseUploadDir.add(self.alignment10)
-
-		self.hbox19.pack_start(self.ChooseUploadDir, False, False, 0)
+		self.hbox19.pack_start(self.ChooseUploadDir, False, True, 0)
 
 		self.vbox77.pack_start(self.hbox19, False, False, 0)
 
