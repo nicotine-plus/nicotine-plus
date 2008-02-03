@@ -107,68 +107,90 @@ class MainWindow:
 		self.now_playing1.set_image(img)
 		self.edit_menu.append(self.now_playing1)
 
-		self.scheidingslijn8 = gtk.MenuItem()
-		self.scheidingslijn8.show()
+		self.scheidingslijn13 = gtk.MenuItem()
+		self.scheidingslijn13.show()
 
-		self.edit_menu.append(self.scheidingslijn8)
+		self.edit_menu.append(self.scheidingslijn13)
+
+		self.BackupConfig = gtk.ImageMenuItem(_("Backup Config"))
+		self.BackupConfig.show()
+
+		img = gtk.image_new_from_stock(gtk.STOCK_SAVE, gtk.ICON_SIZE_MENU)
+		self.BackupConfig.set_image(img)
+		self.edit_menu.append(self.BackupConfig)
+
+		self.edit1.set_submenu(self.edit_menu)
+
+		self.menubar1.append(self.edit1)
+
+		self.View = gtk.MenuItem(_("View"))
+		self.View.show()
+
+		self.menu2 = gtk.Menu()
+		self.menu2.show()
 
 		self.hide_log_window1 = gtk.CheckMenuItem(_("_Hide log window"))
 		self.hide_log_window1.show()
 		self.hide_log_window1.connect("activate", self.OnHideLog)
 		self.hide_log_window1.add_accelerator("activate", self.accel_group, gtk.gdk.keyval_from_name("H"), gtk.gdk.MOD1_MASK, gtk.ACCEL_VISIBLE)
 
-		self.edit_menu.append(self.hide_log_window1)
+		self.menu2.append(self.hide_log_window1)
 
 		self.show_debug_info1 = gtk.CheckMenuItem(_("Show _debug info"))
 		self.show_debug_info1.show()
 		self.show_debug_info1.connect("activate", self.OnShowDebug)
 
-		self.edit_menu.append(self.show_debug_info1)
+		self.menu2.append(self.show_debug_info1)
 
 		self.scheidingslijn6 = gtk.MenuItem()
 		self.scheidingslijn6.show()
 
-		self.edit_menu.append(self.scheidingslijn6)
+		self.menu2.append(self.scheidingslijn6)
 
 		self.hide_room_list1 = gtk.CheckMenuItem(_("Hide room _list"))
 		self.hide_room_list1.show()
 		self.hide_room_list1.connect("activate", self.OnHideRoomList)
 		self.hide_room_list1.add_accelerator("activate", self.accel_group, gtk.gdk.keyval_from_name("R"), gtk.gdk.MOD1_MASK, gtk.ACCEL_VISIBLE)
 
-		self.edit_menu.append(self.hide_room_list1)
+		self.menu2.append(self.hide_room_list1)
 
 		self.hide_tickers1 = gtk.CheckMenuItem(_("Hide _tickers"))
 		self.hide_tickers1.show()
 		self.hide_tickers1.connect("activate", self.OnHideTickers)
 		self.hide_tickers1.add_accelerator("activate", self.accel_group, gtk.gdk.keyval_from_name("T"), gtk.gdk.MOD1_MASK, gtk.ACCEL_VISIBLE)
 
-		self.edit_menu.append(self.hide_tickers1)
+		self.menu2.append(self.hide_tickers1)
 
 		self.HideChatButtons = gtk.CheckMenuItem(_("Hide chat room log and list toggles"))
 		self.HideChatButtons.show()
 		self.HideChatButtons.connect("toggled", self.OnHideChatButtons)
 		self.HideChatButtons.add_accelerator("activate", self.accel_group, gtk.gdk.keyval_from_name("B"), gtk.gdk.MOD1_MASK, gtk.ACCEL_VISIBLE)
 
-		self.edit_menu.append(self.HideChatButtons)
+		self.menu2.append(self.HideChatButtons)
 
 		self.buddylist_in_chatrooms1 = gtk.CheckMenuItem(_("Buddylist in Chatrooms"))
 		self.buddylist_in_chatrooms1.show()
 		self.buddylist_in_chatrooms1.connect("activate", self.OnToggleBuddyList)
 		self.buddylist_in_chatrooms1.add_accelerator("activate", self.accel_group, gtk.gdk.keyval_from_name("U"), gtk.gdk.MOD1_MASK, gtk.ACCEL_VISIBLE)
 
-		self.edit_menu.append(self.buddylist_in_chatrooms1)
+		self.menu2.append(self.buddylist_in_chatrooms1)
 
 		self.HideFlags = gtk.CheckMenuItem(_("Hide flag columns in user lists"))
 		self.HideFlags.show()
 		self.HideFlags.connect("toggled", self.OnHideFlags)
 		self.HideFlags.add_accelerator("activate", self.accel_group, gtk.gdk.keyval_from_name("B"), gtk.gdk.MOD1_MASK, gtk.ACCEL_VISIBLE)
 
-		self.edit_menu.append(self.HideFlags)
+		self.menu2.append(self.HideFlags)
 
-		self.scheidingslijn5 = gtk.MenuItem()
-		self.scheidingslijn5.show()
+		self.View.set_submenu(self.menu2)
 
-		self.edit_menu.append(self.scheidingslijn5)
+		self.menubar1.append(self.View)
+
+		self.Shares = gtk.MenuItem(_("Shares"))
+		self.Shares.show()
+
+		self.menu1 = gtk.Menu()
+		self.menu1.show()
 
 		self.rescan1 = gtk.ImageMenuItem(_("_Rescan shares"))
 		self.rescan1.show()
@@ -176,7 +198,7 @@ class MainWindow:
 
 		img = gtk.image_new_from_stock(gtk.STOCK_REFRESH, gtk.ICON_SIZE_MENU)
 		self.rescan1.set_image(img)
-		self.edit_menu.append(self.rescan1)
+		self.menu1.append(self.rescan1)
 
 		self.rescan_buddy = gtk.ImageMenuItem(_("_Rescan Buddy shares"))
 		self.rescan_buddy.show()
@@ -184,12 +206,12 @@ class MainWindow:
 
 		img = gtk.image_new_from_stock(gtk.STOCK_REFRESH, gtk.ICON_SIZE_MENU)
 		self.rescan_buddy.set_image(img)
-		self.edit_menu.append(self.rescan_buddy)
+		self.menu1.append(self.rescan_buddy)
 
-		self.scheidingslijn11 = gtk.MenuItem()
-		self.scheidingslijn11.show()
+		self.scheidingslijn5 = gtk.MenuItem()
+		self.scheidingslijn5.show()
 
-		self.edit_menu.append(self.scheidingslijn11)
+		self.menu1.append(self.scheidingslijn5)
 
 		self.rebuild1 = gtk.ImageMenuItem(_("Rebuild shares"))
 		self.rebuild1.show()
@@ -197,7 +219,7 @@ class MainWindow:
 
 		img = gtk.image_new_from_stock(gtk.STOCK_REFRESH, gtk.ICON_SIZE_MENU)
 		self.rebuild1.set_image(img)
-		self.edit_menu.append(self.rebuild1)
+		self.menu1.append(self.rebuild1)
 
 		self.rebuild_buddy = gtk.ImageMenuItem(_("Rebuild Buddy shares"))
 		self.rebuild_buddy.show()
@@ -205,12 +227,12 @@ class MainWindow:
 
 		img = gtk.image_new_from_stock(gtk.STOCK_REFRESH, gtk.ICON_SIZE_MENU)
 		self.rebuild_buddy.set_image(img)
-		self.edit_menu.append(self.rebuild_buddy)
+		self.menu1.append(self.rebuild_buddy)
 
-		self.scheidingslijn13 = gtk.MenuItem()
-		self.scheidingslijn13.show()
+		self.scheidingslijn11 = gtk.MenuItem()
+		self.scheidingslijn11.show()
 
-		self.edit_menu.append(self.scheidingslijn13)
+		self.menu1.append(self.scheidingslijn11)
 
 		self.browse_my_shares1 = gtk.ImageMenuItem(_("_Browse my shares"))
 		self.browse_my_shares1.show()
@@ -218,11 +240,11 @@ class MainWindow:
 
 		img = gtk.image_new_from_stock(gtk.STOCK_HARDDISK, gtk.ICON_SIZE_MENU)
 		self.browse_my_shares1.set_image(img)
-		self.edit_menu.append(self.browse_my_shares1)
+		self.menu1.append(self.browse_my_shares1)
 
-		self.edit1.set_submenu(self.edit_menu)
+		self.Shares.set_submenu(self.menu1)
 
-		self.menubar1.append(self.edit1)
+		self.menubar1.append(self.Shares)
 
 		self.modes1 = gtk.MenuItem(_("_Modes"))
 		self.modes1.show()
@@ -1168,32 +1190,6 @@ class MainWindow:
 
 		self.hbox12.pack_end(self.SimilarUsersButton, False, False, 0)
 
-		self.GlobalRecommendationsButton = gtk.Button()
-		self.GlobalRecommendationsButton.show()
-		self.GlobalRecommendationsButton.connect("clicked", self.OnGlobalRecommendationsClicked)
-
-		self.alignment4 = gtk.Alignment(0.5, 0.5, 0, 0)
-		self.alignment4.show()
-
-		self.hbox24 = gtk.HBox(False, 0)
-		self.hbox24.show()
-		self.hbox24.set_spacing(2)
-
-		self.image4 = gtk.Image()
-		self.image4.set_from_stock(gtk.STOCK_REFRESH, 4)
-		self.image4.show()
-		self.hbox24.pack_start(self.image4, False, False, 0)
-
-		self.label33 = gtk.Label(_("Global recommendations"))
-		self.label33.show()
-		self.hbox24.pack_start(self.label33, False, False, 0)
-
-		self.alignment4.add(self.hbox24)
-
-		self.GlobalRecommendationsButton.add(self.alignment4)
-
-		self.hbox12.pack_end(self.GlobalRecommendationsButton, False, False, 0)
-
 		self.RecommendationsButton = gtk.Button()
 		self.RecommendationsButton.show()
 		self.RecommendationsButton.connect("clicked", self.OnRecommendationsClicked)
@@ -1219,6 +1215,32 @@ class MainWindow:
 		self.RecommendationsButton.add(self.alignment5)
 
 		self.hbox12.pack_end(self.RecommendationsButton, False, False, 0)
+
+		self.GlobalRecommendationsButton = gtk.Button()
+		self.GlobalRecommendationsButton.show()
+		self.GlobalRecommendationsButton.connect("clicked", self.OnGlobalRecommendationsClicked)
+
+		self.alignment4 = gtk.Alignment(0.5, 0.5, 0, 0)
+		self.alignment4.show()
+
+		self.hbox24 = gtk.HBox(False, 0)
+		self.hbox24.show()
+		self.hbox24.set_spacing(2)
+
+		self.image4 = gtk.Image()
+		self.image4.set_from_stock(gtk.STOCK_REFRESH, 4)
+		self.image4.show()
+		self.hbox24.pack_start(self.image4, False, False, 0)
+
+		self.label33 = gtk.Label(_("Global recommendations"))
+		self.label33.show()
+		self.hbox24.pack_start(self.label33, False, False, 0)
+
+		self.alignment4.add(self.hbox24)
+
+		self.GlobalRecommendationsButton.add(self.alignment4)
+
+		self.hbox12.pack_end(self.GlobalRecommendationsButton, False, False, 0)
 
 		self.interests.pack_start(self.hbox12, False, True, 0)
 
@@ -1605,10 +1627,10 @@ class MainWindow:
 	def OnSimilarUsersClicked(self, widget):
 		pass
 
-	def OnGlobalRecommendationsClicked(self, widget):
+	def OnRecommendationsClicked(self, widget):
 		pass
 
-	def OnRecommendationsClicked(self, widget):
+	def OnGlobalRecommendationsClicked(self, widget):
 		pass
 
 	def OnAddThingILike(self, widget):

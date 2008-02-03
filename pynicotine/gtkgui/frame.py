@@ -165,15 +165,7 @@ class NicotineFrame(MainWindow):
 		self.MainWindow.show()
 		self.minimized = False
 		
-		
-		self.backupconfig = gtk.ImageMenuItem(_("Backup config"))
-		self.backupconfig.show()
-		self.backupconfig.connect("activate", self.OnBackupConfig)
 
-		img = gtk.image_new_from_stock(gtk.STOCK_HARDDISK, gtk.ICON_SIZE_MENU)
-		self.backupconfig.set_image(img)
-		self.edit_menu.append(self.backupconfig)
-		
 		self.clip = gtk.Clipboard(display=gtk.gdk.display_get_default(), selection="CLIPBOARD")
 		
 		
