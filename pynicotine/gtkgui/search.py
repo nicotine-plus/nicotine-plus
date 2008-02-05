@@ -472,6 +472,7 @@ class Search(SearchTab):
 
 		self.all_data = []
 		self.filters = None
+		# num, user, filename, h_size, h_speed, h_queue, immediatedl, h_bitrate, length, self.get_flag(user, country), directory, bitrate, fullpath, country,  size, speed, queue, status]
 		self.COLUMN_TYPES = [int, str, str, str, str, str, str, str, str, gtk.gdk.Pixbuf, str,
 			int, str, str, long, int, int, int]
 		self.resultsmodel = gtk.TreeStore(* self.COLUMN_TYPES )
@@ -730,7 +731,7 @@ class Search(SearchTab):
 			h_speed = Humanize(speed)
 			h_queue = Humanize(queue)
 			if self.usersGroup.get_active() and user not in self.usersiters:
-				self.usersiters[user] = self.resultsmodel.append(None, [0, user, "", "", h_speed, h_queue, immediatedl, "", "", self.get_flag(user, country), "", 0, "", "", 0, speed, queue, status])
+				self.usersiters[user] = self.resultsmodel.append(None, [0, user, "", "", h_speed, h_queue, immediatedl, "", "", self.get_flag(user, country), "", 0, "", country, 0, speed, queue, status])
 			row = [ix, user, filename, h_size, h_speed, h_queue, immediatedl, h_bitrate, length, directory,  bitrate, fullpath, country,  size, speed, queue, status]
 
 			self.all_data.append(row)
@@ -901,7 +902,7 @@ class Search(SearchTab):
 			if self.check_filter(row):
 				ix, user, filename,  h_size, h_speed, h_queue, immediatedl, h_bitrate, length, directory,  bitrate, fullpath, country,  size, speed, queue, status = row
 				if  self.usersGroup.get_active() and user not in self.usersiters:
-					self.usersiters[user] = self.resultsmodel.append(None, [0, user, "", "", h_speed, h_queue, immediatedl, "", "", self.get_flag(user, country), "", 0, "", "", 0, speed, queue, status])
+					self.usersiters[user] = self.resultsmodel.append(None, [0, user, "", "", h_speed, h_queue, immediatedl, "", "", self.get_flag(user, country), "", 0, "", country, 0, speed, queue, status])
 				encoded_row = [ix, user, encode(filename, user), h_size, h_speed, h_queue, immediatedl, h_bitrate, length, self.get_flag(user, country), encode(directory, user), bitrate, encode( fullpath, user), country,  size, speed, queue, status]
 
 				if user in self.usersiters:
