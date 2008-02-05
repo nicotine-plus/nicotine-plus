@@ -58,71 +58,252 @@ class Config:
 		
 		LOGDIR=os.path.join(self.filename.rsplit(os.sep, 1)[0], "logs")
 		self.sections = {
-"server":{"server":('server.slsknet.org', 2240), "login":None,"passw":None, \
-"firewalled":1, "ctcpmsgs": 0, "autosearch":[],"autoreply":"", "roomencoding": {}, \
-"userencoding": {}, "portrange": (2234,2239), "enc":"utf-8", "userlist":[], \
-"banlist":[], "ignorelist":[], "ipblocklist":[], "autojoin":["nicotine"], "autoaway":15}, \
+"server":{ \
+	"server": ('server.slsknet.org', 2240), \
+	"login": None, \
+	"passw": None, \
+	"firewalled": 1,  \
+	"ctcpmsgs": 0,  \
+	"autosearch": [], \
+	"autoreply": "", \
+	"roomencoding": {}, \
+	"userencoding": {}, \
+	"portrange": (2234,2239), \
+	"enc": "utf-8", \
+	"userlist": [], \
+	"banlist": [], \
+	"ignorelist": [], \
+	"ipblocklist":[], \
+	"autojoin": ["nicotine"], \
+	"autoaway":15, \
+	}, \
 \
-"transfers":{"downloaddir":None, "uploaddir": None, "sharedownloaddir":1, "shared":None, "buddyshared": [], \
-"uploadbandwidth":10, "uselimit":0,"uploadlimit":150, "preferfriends":0, \
-"useupslots":0, "uploadslots":2, "incompletedir":"", "shownotification":0, "afterfinish":"", \
-"afterfolder":"", "lock":1, "fifoqueue": 0, "usecustomban":0, "limitby":1, \
-"customban":"Banned, don't bother retrying","queuelimit":100, "filelimit": 1000, "friendsonly":0, \
-"friendsnolimits":0, "enablebuddyshares": 0, "enabletransferbuttons": 1, \
-"groupdownloads": 0, "groupuploads": 1, \
-"geoblock": 0, "geopanic": 0, "geoblockcc": [""], "remotedownloads": 1, \
-"uploadallowed": 2, "autoclear_uploads": 0, "autoretry_downloads": 0, \
-"downloads":[],"sharedfiles":{},"sharedfilesstreams":{}, "uploadsinsubdirs": 1, \
-"wordindex":{},"fileindex":{},"sharedmtimes":{},"bsharedfiles":{},"bsharedfilesstreams":{}, \
-"bwordindex":{},"bfileindex":{},"bsharedmtimes":{}, "rescanonstartup":0, \
-"enablefilters":1, "downloadregexp":"", "downloadfilters":[["desktop.ini",1], \
-["folder.jpg", 1], ["*.url", 1], ["thumbs.db", 1], \
-["albumart(_{........-....-....-....-............}_)?(_?(large|small))?\.jpg", 0]]}, \
+"transfers":{ \
+	"downloaddir": None, \
+	"uploaddir": None, \
+	"sharedownloaddir": 1, \
+	"shared": None, \
+	"buddyshared": [], \
+	"uploadbandwidth": 10, \
+	"uselimit": 0, \
+	"uploadlimit": 150, \
+	"preferfriends": 0, \
+	"useupslots": 0, \
+	"uploadslots": 2, \
+	"incompletedir": "", \
+	"shownotification": 0, \
+	"afterfinish": "", \
+	"afterfolder": "", \
+	"lock": 1, \
+	"fifoqueue": 0, \
+	"usecustomban": 0, \
+	"limitby": 1, \
+	"customban": "Banned, don't bother retrying", \
+	"queuelimit": 100, \
+	"filelimit": 1000, \
+	"friendsonly":0, \
+	"friendsnolimits":0, \
+	"enablebuddyshares": 0, \
+	"enabletransferbuttons": 1, \
+	"groupdownloads": 0, \
+	"groupuploads": 1, \
+	"geoblock": 0, \
+	"geopanic": 0, \
+	"geoblockcc": [""], \
+	"remotedownloads": 1, \
+	"uploadallowed": 2, \
+	"autoclear_uploads": 0, \
+	"autoretry_downloads": 0, \
+	"downloads":[], \
+	"sharedfiles":{}, \
+	"sharedfilesstreams":{}, \
+	"uploadsinsubdirs": 1, \
+	"wordindex":{}, \
+	"fileindex":{}, \
+	"sharedmtimes":{}, \
+	"bsharedfiles":{}, \
+	"bsharedfilesstreams":{}, \
+	"bwordindex":{}, \
+	"bfileindex":{}, \
+	"bsharedmtimes":{}, \
+	"rescanonstartup":0, \
+	"enablefilters": 1, \
+	"downloadregexp": "", \
+	"downloadfilters": [["desktop.ini",1], ["folder.jpg", 1], ["*.url", 1], ["thumbs.db", 1], \
+		["albumart(_{........-....-....-....-............}_)?(_?(large|small))?\.jpg", 0]]}, \
 \
-"userinfo":{"descr":"''", "pic":"", "descrutf8":0}, \
+"userinfo":{ \
+	"descr": "''", \
+	"pic":"", \
+	"descrutf8": 0, \
+	}, \
 \
-"language":{"setlanguage": 0, "language":""},
+"language":{ \
+	"setlanguage": 0, \
+	"language": "", \
+	},
 \
-"words": {"censored": [], "autoreplaced": {"teh ": "the ", "taht ": "that ", "tihng": "thing", "youre": "you're", "jsut": "just", "thier": "their", "tihs": "this"}, "censorfill": "*", "censorwords": False, "replacewords": False,  "tab": True, "dropdown": True, "characters": 2, "roomnames": True, "buddies": True, "roomusers": True, "commands": True, "aliases": True, "onematch": True }, \
+"words": { \
+	"censored": [], \
+	"autoreplaced": {"teh ": "the ", "taht ": "that ", "tihng": "thing", "youre": "you're", "jsut": "just", "thier": "their", "tihs": "this"},  \
+	"censorfill": "*", \
+	"censorwords": False, \
+	"replacewords": False, \
+	"tab": True, \
+	"dropdown": True, \
+	"characters": 2, \
+	"roomnames": True, \
+	"buddies": True, \
+	"roomusers": True, \
+	"commands": True, \
+	"aliases": True, \
+	"onematch": True, \
+	}, \
 \
-"logging": {"logcollapsed":0, "logsdir":os.path.expanduser(LOGDIR), "rooms_timestamp": "%H:%M:%S",\
-"private_timestamp": "%Y-%m-%d %H:%M:%S", "log_timestamp": "%Y-%m-%d %H:%M:%S", "timestamps": 1, "privatechat":0, "chatrooms":0,"transfers":0, "roomlogsdir": os.path.expanduser(os.path.join(LOGDIR, "rooms")), "privatelogsdir": os.path.expanduser(os.path.join(LOGDIR, "private")), "readroomlogs": 1, "readroomlines": 15, "readprivatelines": 15}, \
+"logging": { \
+	"logcollapsed": 0, \
+	"logsdir": os.path.expanduser(LOGDIR), \
+	"rooms_timestamp": "%H:%M:%S", \
+	"private_timestamp": "%Y-%m-%d %H:%M:%S", \
+	"log_timestamp": "%Y-%m-%d %H:%M:%S", \
+	"timestamps": 1, \
+	"privatechat":0, \
+	"chatrooms":0, \
+	"transfers":0, \
+	"roomlogsdir": os.path.expanduser(os.path.join(LOGDIR, "rooms")), \
+	"privatelogsdir": os.path.expanduser(os.path.join(LOGDIR, "private")), \
+	"readroomlogs": 1, \
+	"readroomlines": 15, \
+	"readprivatelines": 15, \
+	}, \
 \
-"privatechat":{"store":0, "users":[]}, \
+"privatechat":{ \
+	"store": 0,
+	"users":[], \
+	}, \
 \
-"columns":{"userlist":[1,1,1,1,1,1,1,1,1,1], "chatrooms":{}, "downloads":[1,1,1,1,1,1,1,1,1], "uploads":[1,1,1,1,1,1,1,1,1], "search":[1,1,1,1,1,1,1,1,1,1], "hideflags": False }, \
+"columns":{ \
+	"userlist":[1,1,1,1,1,1,1,1,1,1], \
+	"chatrooms":{}, \
+	"downloads":[1,1,1,1,1,1,1,1,1], \
+	"uploads":[1,1,1,1,1,1,1,1,1], \
+	"search":[1,1,1,1,1,1,1,1,1,1,1], \
+	"hideflags": False, \
+	 }, \
 \
-"searches":{"maxresults":50,"re_filter":0,"history":[], \
-"enablefilters":0, "defilter":["","","","",0,""], "filtercc":[], \
-"filterin":[],"filterout":[],"filtersize":[],"filterbr":[], "distrib_timer": 0, "distrib_ignore": 60}, \
+"searches":{ \
+	"maxresults": 50,
+	"re_filter": 0, \
+	"history": [], \
+	"enablefilters": 0, \
+	 "defilter":["","","","",0,""], \
+	 "filtercc":[], \
+	"reopen_tabs": 1, \
+	"filterin":[], \
+	"filterout":[], \
+	"filtersize":[], \
+	"filterbr":[], \
+	"distrib_timer": 0, \
+	"distrib_ignore": 60, \
+	}, \
 \
-"ui":{"icontheme": "", "chatme":"FOREST GREEN", "chatremote":"","chatlocal":"BLUE", \
-"chathilite":"red", "urlcolor": "#3D2B7F", "useronline":"BLACK", "useraway":"ORANGE", "useroffline":"#aa0000", \
-"tab_colors": 0, "tab_default":"", "tab_hilite":"red", "tab_changed":"#0000ff", 
-"usernamehotspots":1, "usernamestyle": "bold", "textbg": "", "search":"","searchq":"GREY", \
-"inputcolor":"", "spellcheck": 1, "exitdialog": 1, "notexists": 1, \
-"tabmain": "top", "tabrooms": "top", "tabprivate": "top", "tabinfo": "top", \
-"tabbrowse": "top", "tabsearch": "top", "tab_icons": 1, "chat_hidebuttons": 0, \
-"labelmain": 0, "labelrooms": 0, "labelprivate": 0, "labelinfo": 0, "labelbrowse": 0, "labelsearch": 0,\
-"decimalsep":",", "chatfont": "", "roomlistcollapsed": 0, "tabclosers": 1, \
-"searchfont": "", "listfont": "", "browserfont": "", "transfersfont": "", \
-"searchoffline":"#aa0000", "showaway": 0, "tooltips": 1, \
-"buddylistinchatrooms": 0, "trayicon": 1, "soundenabled": 1, "soundtheme": "", \
-"soundcommand": "play -q", "filemanager": "rox $", "enabletrans":0, \
-"speechenabled": 0, "speechprivate": "%(user)s told you.. %(message)s", "speechrooms": "In %(room)s, %(user)s said %(message)s", "speechcommand": "flite -t \"%s\"", \
-"transtint": "#aaaaaa", "transalpha": 150, "transfilter": 0x00000000L,
-"width": 800, "height": 600}, \
+"ui":{ \
+	"icontheme": "", \
+	"chatme":"FOREST GREEN", \
+	"chatremote": "", \
+	"chatlocal":"BLUE", \
+	"chathilite":"red", \
+	"urlcolor": "#3D2B7F", \
+	"useronline":"BLACK", \
+	"useraway":"ORANGE", \
+	"useroffline":"#aa0000", \
+	"tab_colors": 0, \
+	"tab_default":"", \
+	"tab_hilite":"red", \
+	"tab_changed":"#0000ff", \
+	"usernamehotspots":1, \
+	"usernamestyle": "bold", \
+	"textbg": "", \
+	"search":"", \
+	"searchq":"GREY", \
+	"inputcolor":"", \
+	"spellcheck": 1, \
+	"exitdialog": 1, \
+	"notexists": 1, \
+	"tabmain": "top", \
+	"tabrooms": "top", \
+	"tabprivate": "top", \
+	"tabinfo": "top", \
+	"tabbrowse": "top", \
+	"tabsearch": "top", \
+	"tab_icons": 1, \
+	"chat_hidebuttons": 0, \
+	"labelmain": 0, \
+	"labelrooms": 0, \
+	"labelprivate": 0, \
+	"labelinfo": 0, \
+	"labelbrowse": 0, \
+	"labelsearch": 0,\
+	"decimalsep":",", \
+	"chatfont": "", \
+	"roomlistcollapsed": 0, \
+	"tabclosers": 1, \
+	"searchfont": "", \
+	"listfont": "", \
+	"browserfont": "", \
+	"transfersfont": "", \
+	"searchoffline":"#aa0000", \
+	"showaway": 0, \
+	"tooltips": 1, \
+	"buddylistinchatrooms": 0, \
+	"trayicon": 1, \
+	"soundenabled": 1, \
+	"soundtheme": "", \
+	"soundcommand": "play -q", \
+	"filemanager": "rox $", \
+	"enabletrans": 0, \
+	"speechenabled": 0, \
+	"speechprivate": "%(user)s told you.. %(message)s", \
+	"speechrooms": "In %(room)s, %(user)s said %(message)s", \
+	"speechcommand": "flite -t \"%s\"", \
+	"transtint": "#aaaaaa", \
+	"transalpha": 150, \
+	"transfilter": 0x00000000L, \
+	"width": 800, \
+	"height": 600, \
+	}, \
 \
-"private_rooms": { "membership": [], "owned": [], "enabled": 0, }, \
+"private_rooms": { \
+	"membership": [], \
+	"owned": [], \
+	"enabled": 0, \
+	}, \
 \
-"urls":{"urlcatching":1, "protocols":{"http":"firefox \"%s\"", "https":"firefox \"%s\""}, "humanizeurls":1}, \
+"urls":{
+	"urlcatching":1, \
+	"protocols":{"http":"firefox \"%s\"", "https":"firefox \"%s\""}, \
+	"humanizeurls":1, \
+	}, \
 \
-"interests": {"likes":[], "dislikes":[]}, \
+"interests": { \
+	"likes":[], \
+	"dislikes":[], \
+	}, \
 \
-"ticker": {"default": "", "rooms": {}, "hide": 0}, \
+"ticker": { \
+	"default": "", \
+	"rooms": {}, \
+	"hide": 0, \
+	}, \
 \
-"players": {"default": "xmms -e $", "npothercommand": "", "npplayer": "infopipe", \
- "npformatlist": [], "npformat": "" }}
+"players": { \
+	"default": "xmms -e $", \
+	"npothercommand": "", \
+	"npplayer": "infopipe", \
+ 	"npformatlist": [], \
+	 "npformat": "" \
+	} \
+}
 		self.defaults = {}
 		for key, value in self.sections.items():
 			if type(value) is dict:

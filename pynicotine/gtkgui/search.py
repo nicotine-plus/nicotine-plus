@@ -1237,12 +1237,8 @@ class Search(SearchTab):
 				self.ResultsList.collapse_all()
 
 	def OnIgnore(self, widget):
-		#self.RememberCheckButton.set_active(0)
-		#self.RememberCheckButton.set_sensitive(0)
-		#self.OnToggleRemember(self.RememberCheckButton)
 		if self.id in self.Searches.searches.keys():
 			del self.Searches.searches[self.id]
-		
 		widget.set_sensitive(False)
 		
 	def OnClear(self, widget):
@@ -1251,11 +1247,8 @@ class Search(SearchTab):
 		self.resultsmodel.clear()
 
 	def OnClose(self, widget):
-		self.Searches.RemoveTab(self)
-
-	def OnCloseIgnore(self, widget):
-
-		self.OnIgnore(self.button2)
+		if not self.frame.np.config.sections["searches"]["reopen_tabs"]:
+			self.OnIgnore(widget)
 		self.Searches.RemoveTab(self)
 
 	def OnToggleRemember(self, widget):

@@ -1457,7 +1457,7 @@ class SearchFrame(settings_glade.SearchFrame):
 		self.p = parent
 		self.frame = parent.frame
 		settings_glade.SearchFrame.__init__(self, False)
-		self.options = {"searches": {"maxresults": self.MaxResults, "enablefilters": self.EnableFilters, "re_filter": self.RegexpFilters, "defilter": None, "distrib_timer": self.ToggleDistributed, "distrib_ignore": self.ToggleDistributedInterval}}
+		self.options = {"searches": {"maxresults": self.MaxResults, "enablefilters": self.EnableFilters, "re_filter": self.RegexpFilters, "defilter": None, "distrib_timer": self.ToggleDistributed, "distrib_ignore": self.ToggleDistributedInterval, "reopen_tabs": self.ReopenTabs}}
 
 	def SetSettings(self, config):
 		try:
@@ -1499,6 +1499,7 @@ class SearchFrame(settings_glade.SearchFrame):
 				],
 				"distrib_timer": self.ToggleDistributed.get_active(),
 				"distrib_ignore": self.ToggleDistributedInterval.get_value_as_int(),
+				"reopen_tabs": self.ReopenTabs.get_active(),
 			}
 		}
 
