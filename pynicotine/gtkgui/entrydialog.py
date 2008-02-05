@@ -269,9 +269,9 @@ class MetaDialog( gtk.Dialog):
 		self.Immediate.set_text(str(data["immediate"] == "Y"))
 		country =  data["country"]
 		if country not in ("", None):
-			self.Country.set_markup(_("<b>Country Code:</b> ")+country )
+			self.Country.set_markup(_("<b>Country Code:</b> ") + country )
 			self.Country.show()
-			self.Flag.set_from_pixbuf(self.nicotine.GetFlagImage("flag_"+country) )
+			self.Flag.set_from_pixbuf(self.nicotine.GetFlagImage("flag_" + country) )
 			self.Flag.show()
 		else:
 			self.Country.set_text("")
@@ -283,8 +283,8 @@ class MetaDialog( gtk.Dialog):
 		self.hide()
 		self.destroy()
 		gtk.main_quit()
+		
 	def click(self, button):
-
 		self.quit()
 	
 	def MakeLabel(self, parent, labeltitle, expand=True, fill=False, xalign=0):
@@ -295,7 +295,8 @@ class MetaDialog( gtk.Dialog):
 		#label.set_property("selectable", True)
 		parent.pack_start(label, expand, fill)
 
-		try:label.set_property("xalign", xalign)
+		try:
+			label.set_property("xalign", xalign)
 		except Exception, e:
 			print e
 			pass
@@ -366,10 +367,12 @@ class EntryDialog( gtk.Dialog):
 		self.action_area.pack_start(button)
 		button.show()
 		self.ret = None
+		
 	def quit(self, w=None, event=None):
 		self.hide()
 		self.destroy()
 		gtk.main_quit()
+		
 	def click(self, button):
 		if self.gotoption:
 			self.ret = [self.combo.child.get_text(), self.option.get_active()]

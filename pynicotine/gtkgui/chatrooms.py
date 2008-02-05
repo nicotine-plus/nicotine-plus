@@ -276,19 +276,19 @@ class RoomsControl:
 		self.frame.roomlist.RoomsList.set_model(None)
 		self.roomsmodel.set_default_sort_func(lambda *args: -1)
 		self.roomsmodel.set_sort_func(1, lambda *args: -1)
-		self.roomsmodel.set_sort_column_id(-1, gtk.SORT_DESCENDING)
-		
-		self.rooms = []
+		self.roomsmodel.set_sort_column_id(-1, gtk.SORT_ASCENDING)
 
+		self.rooms = []
 		for room, users in msg.rooms:
 			self.roomsmodel.append([room, users, users])
 			self.rooms.append(room)
+
 		self.SetPrivateRooms()
 		self.frame.roomlist.RoomsList.set_model(self.roomsmodel)
 		self.roomsmodel.set_sort_func(1, self.PrivateRoomsSort, 1)
 		self.roomsmodel.set_sort_column_id(1, gtk.SORT_DESCENDING)
 		self.cols[1].set_sort_indicator(True)
-		
+
 		if self.frame.np.config.sections["words"]["roomnames"]:
 			self.frame.chatrooms.roomsctrl.UpdateCompletions()
 			self.frame.privatechats.UpdateCompletions()
