@@ -123,7 +123,9 @@ class MetaDialog( gtk.Dialog):
 		self.Country.hide()
 		
 		hbox4.pack_start(self.Country, False, False)
-
+		self.Flag = gtk.Image()
+		self.Flag.hide()
+		hbox4.pack_start(self.Flag, False, False)
 		
 		self.buttonbox = gtk.HBox(False, 2)
 		self.buttonbox.show()
@@ -220,6 +222,7 @@ class MetaDialog( gtk.Dialog):
 			self.Immediate.hide()
 			self.Position.hide()
 			self.Country.hide()
+			self.Flag.hide()
 			self.Queue.hide()
 			self.Immediate.hide()
 			self.ImmediateLabel.hide()
@@ -232,6 +235,7 @@ class MetaDialog( gtk.Dialog):
 			self.Immediate.show()
 			self.Position.show()
 			self.Country.show()
+			self.Flag.show()
 			self.Queue.show()
 			self.Immediate.show()
 			self.ImmediateLabel.show()
@@ -242,7 +246,7 @@ class MetaDialog( gtk.Dialog):
 			self.DownloadAll.show()
 			
 		self.current = item
-		
+		data = self.data[self.current]
 		More = False
 		if len(self.data.keys()) > 1:
 			More = True
@@ -250,26 +254,30 @@ class MetaDialog( gtk.Dialog):
 		self.Previous.set_sensitive(More)
 		self.DownloadAll.set_sensitive(More)
 		
-		self.Username.set_text	(self.data[self.current]["user"])
-		self.Filename.set_text	(self.data[self.current]["filename"])
-		self.Directory.set_text	(self.data[self.current]["directory"])
-		self.Size.set_text	(str(self.data[self.current]["size"]))
-		self.Speed.set_text	(self.data[self.current]["speed"])
-		self.Position.set_text	(str(self.data[self.current]["position"]))
-		if self.data[self.current]["bitrate"] not in ("", None):
-			self.Bitrate.set_text(self.data[self.current]["bitrate"])
+		self.Username.set_text(data["user"])
+		self.Filename.set_text(data["filename"])
+		self.Directory.set_text(data["directory"])
+		self.Size.set_text(str(data["size"]))
+		self.Speed.set_text(data["speed"])
+		self.Position.set_text(str(data["position"]))
+		if data["bitrate"] not in ("", None):
+			self.Bitrate.set_text(data["bitrate"])
 		else:
 			self.Bitrate.set_text("")
-		self.Length.set_text	(self.data[self.current]["length"])
-		self.Queue.set_text	(self.data[self.current]["queue"])
-		self.Immediate.set_text	(str(self.data[self.current]["immediate"] == "Y"))
-		
-		if self.data[self.current]["country"] not in ("", None):
-			self.Country.set_markup(_("<b>Country Code:</b> ")+self.data[self.current]["country"] )
+		self.Length.set_text(data["length"])
+		self.Queue.set_text(data["queue"])
+		self.Immediate.set_text(str(data["immediate"] == "Y"))
+		country =  data["country"]
+		if country not in ("", None):
+			self.Country.set_markup(_("<b>Country Code:</b> ")+country )
 			self.Country.show()
+			self.Flag.set_from_pixbuf(self.nicotine.GetFlagImage("flag_"+country) )
+			self.Flag.show()
 		else:
 			self.Country.set_text("")
 			self.Country.hide()
+			self.Flag.set_from_pixbuf(None)
+			self.Flag.hide()
 		
 	def quit(self, w=None, event=None):
 		self.hide()
