@@ -50,7 +50,7 @@ class MainWindow:
 		self.disconnect1.set_image(img)
 		self.file1_menu.append(self.disconnect1)
 
-		self.sep1 = gtk.MenuItem(_("menuitem1"))
+		self.sep1 = gtk.MenuItem()
 		self.sep1.show()
 
 		self.file1_menu.append(self.sep1)
