@@ -158,6 +158,7 @@
                         <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                         <property name="label" translatable="yes">Backup Config</property>
                         <property name="use_underline">True</property>
+                        <signal name="activate" handler="OnBackupConfig"/>
                         <child internal-child="image">
                           <widget class="GtkImage" id="menu-item-image32">
                             <property name="stock">gtk-save</property>
@@ -2162,55 +2163,6 @@
                           </packing>
                         </child>
                         <child>
-                          <widget class="GtkButton" id="GlobalRecommendationsButton">
-                            <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="response_id">0</property>
-                            <signal name="clicked" handler="OnGlobalRecommendationsClicked"/>
-                            <child>
-                              <widget class="GtkAlignment" id="alignment4">
-                                <property name="visible">True</property>
-                                <property name="xscale">0</property>
-                                <property name="yscale">0</property>
-                                <child>
-                                  <widget class="GtkHBox" id="hbox24">
-                                    <property name="visible">True</property>
-                                    <property name="spacing">2</property>
-                                    <child>
-                                      <widget class="GtkImage" id="image4">
-                                        <property name="visible">True</property>
-                                        <property name="stock">gtk-refresh</property>
-                                      </widget>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="fill">False</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <widget class="GtkLabel" id="label33">
-                                        <property name="visible">True</property>
-                                        <property name="label" translatable="yes">Global recommendations</property>
-                                        <property name="use_underline">True</property>
-                                      </widget>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="fill">False</property>
-                                        <property name="position">1</property>
-                                      </packing>
-                                    </child>
-                                  </widget>
-                                </child>
-                              </widget>
-                            </child>
-                          </widget>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">False</property>
-                            <property name="pack_type">GTK_PACK_END</property>
-                            <property name="position">1</property>
-                          </packing>
-                        </child>
-                        <child>
                           <widget class="GtkButton" id="RecommendationsButton">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
@@ -2239,6 +2191,55 @@
                                       <widget class="GtkLabel" id="label34">
                                         <property name="visible">True</property>
                                         <property name="label" translatable="yes">Recommendations</property>
+                                        <property name="use_underline">True</property>
+                                      </widget>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">False</property>
+                                        <property name="position">1</property>
+                                      </packing>
+                                    </child>
+                                  </widget>
+                                </child>
+                              </widget>
+                            </child>
+                          </widget>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">False</property>
+                            <property name="pack_type">GTK_PACK_END</property>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <widget class="GtkButton" id="GlobalRecommendationsButton">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="response_id">0</property>
+                            <signal name="clicked" handler="OnGlobalRecommendationsClicked"/>
+                            <child>
+                              <widget class="GtkAlignment" id="alignment4">
+                                <property name="visible">True</property>
+                                <property name="xscale">0</property>
+                                <property name="yscale">0</property>
+                                <child>
+                                  <widget class="GtkHBox" id="hbox24">
+                                    <property name="visible">True</property>
+                                    <property name="spacing">2</property>
+                                    <child>
+                                      <widget class="GtkImage" id="image4">
+                                        <property name="visible">True</property>
+                                        <property name="stock">gtk-refresh</property>
+                                      </widget>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">False</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <widget class="GtkLabel" id="label33">
+                                        <property name="visible">True</property>
+                                        <property name="label" translatable="yes">Global recommendations</property>
                                         <property name="use_underline">True</property>
                                       </widget>
                                       <packing>
