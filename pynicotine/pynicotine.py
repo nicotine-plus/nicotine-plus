@@ -877,6 +877,18 @@ class NetworkEventProcessor:
 					self.queue.put(slskmessages.GetPeerAddress(msg.user))
 				break
 		else:
+			if msg.user in self.users:
+				self.users[msg.user].addr = (msg.ip, msg.port)
+			else:
+				self.users[msg.user] = UserAddr(addr = (msg.ip, msg.port) )
+			if msg.user in self.ip_requested:
+				if self.ip_requested[msg.user]:
+					self.frame.OnUnBlockUser(msg.user)
+				else:
+					self.frame.OnBlockUser(msg.user)
+				del self.ip_requested[msg.user]
+				return
+				
 			import socket
 			if self.geoip:
 				cc = self.geoip.country_name_by_addr(msg.ip)
@@ -894,18 +906,8 @@ class NetworkEventProcessor:
 				message = _("IP address of %(user)s is %(ip)s, name %(host)s, port %(port)i%(country)s") %{'user':msg.user, 'ip':msg.ip, 'host':hostname, 'port':msg.port, 'country':cc}
 			except:
 				message = _("IP address of %(user)s is %(ip)s, port %(port)i%(country)s") %{'user':msg.user, 'ip':msg.ip, 'port':msg.port, 'country':cc}
-			if msg.user not in self.ip_requested:
-				self.logMessage(message)
-		if msg.user in self.users:
-			self.users[msg.user].addr = (msg.ip, msg.port)
-		else:
-			self.users[msg.user] = UserAddr(addr = (msg.ip, msg.port) )
-		if msg.user in self.ip_requested:
-			if self.ip_requested[msg.user]:
-				self.frame.OnUnBlockUser(msg.user)
-			else:
-				self.frame.OnBlockUser(msg.user)
-			del self.ip_requested[msg.user]
+			self.logMessage(message)
+		
 			
 	def Relogged(self, msg):
 		self.logMessage(_("Someone else is logging in with the same nickname, server is going to disconnect us"))

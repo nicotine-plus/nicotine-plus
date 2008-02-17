@@ -1465,13 +1465,12 @@ class NicotineFrame(MainWindow):
 		return None
 		
 	def OnBlockUser(self, user):
-		if user not in self.np.users.keys():
+		if user not in self.np.users.keys() or type(self.np.users[user].addr) is not tuple:
 			if user not in self.np.ip_requested:
 				self.np.ip_requested[user] = 0
 			self.np.queue.put(slskmessages.GetPeerAddress(user))
 			return
-		if not type(self.np.users[user].addr) is tuple:
-			return
+
 		ip, port = self.np.users[user].addr
 		if ip not in self.np.config.sections["server"]["ipblocklist"] or self.np.config.sections["server"]["ipblocklist"][ip] != user:
 			self.np.config.sections["server"]["ipblocklist"][ip] = user
