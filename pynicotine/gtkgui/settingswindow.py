@@ -632,10 +632,14 @@ class BanFrame(settings_glade.BanFrame):
 		self.Ignored.set_model(self.ignorelist)
 		self.Ignored.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
 
-		self.blocked = []
-		self.blockedlist = gtk.ListStore(gobject.TYPE_STRING)
-		column = gtk.TreeViewColumn(_("Addresses"), gtk.CellRendererText(), text = 0)
-		self.Blocked.append_column(column)
+		self.blocked = {}
+		self.blockedlist = gtk.ListStore(str, str)
+		cols = InitialiseColumns(self.Blocked,
+			[_("Addresses"), -1, "text", self.frame.CellDataFunc],
+			[_("Users"), -1, "text", self.frame.CellDataFunc],
+		)
+		cols[0].set_sort_column_id(0)
+		cols[1].set_sort_column_id(1)
 		self.Blocked.set_model(self.blockedlist)
 		self.Blocked.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
 		
@@ -660,9 +664,9 @@ class BanFrame(settings_glade.BanFrame):
 		else:
 			self.p.Hilight(self.Ignored)
 		if server["ipblocklist"] is not None:
-			self.blocked = server["ipblocklist"][:]
-			for blocked in server["ipblocklist"]:
-				self.blockedlist.append([blocked])
+			self.blocked = server["ipblocklist"].copy()
+			for blocked, user in server["ipblocklist"].items():
+				self.blockedlist.append([blocked, user ])
 		else:
 			self.p.Hilight(self.Blocked)
 			
@@ -679,7 +683,7 @@ class BanFrame(settings_glade.BanFrame):
 			"server": {
 				"banlist": self.banned[:],
 				"ignorelist": self.ignored[:],
-				"ipblocklist": self.blocked[:],
+				"ipblocklist": self.blocked.copy(),
 			},
 			"transfers": {
 				"usecustomban": self.UseCustomBan.get_active(),
@@ -745,19 +749,19 @@ class BanFrame(settings_glade.BanFrame):
 				return
 			
 		if ip not in self.blocked:
-			self.blocked.append(ip)
-			self.blockedlist.append([ip])
+			self.blocked[ip] = ""
+			self.blockedlist.append([ip, ""])
 	
 	def OnRemoveBlocked(self, widget):
 		iters = []
 		self.Blocked.get_selection().selected_foreach(self._AppendItem, iters)
 		for iter in iters:
 			ip = self.blockedlist.get_value(iter, 0)
-			self.blocked.remove(ip)
+			del self.blocked[ip]
 			self.blockedlist.remove(iter)
 
 	def OnClearBlocked(self, widget):
-		self.blocked = []
+		self.blocked = {}
 		self.blockedlist.clear()
 		
 class SoundsFrame(settings_glade.SoundsFrame):

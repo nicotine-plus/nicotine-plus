@@ -3481,7 +3481,6 @@
                           <widget class="GtkTreeView" id="Blocked">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <property name="headers_visible">False</property>
                           </widget>
                         </child>
                       </widget>
@@ -10535,9 +10534,5 @@ Right</property>
         </child>
       </widget>
     </child>
-  </widget>
-  <widget class="GtkMenu" id="menu1">
-    <property name="visible">True</property>
-    <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
   </widget>
 </glade-interface>

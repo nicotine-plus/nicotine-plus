@@ -1451,7 +1451,55 @@ class NicotineFrame(MainWindow):
 	def BanUser(self, user):
 		if self.np.transfers is not None:
 			self.np.transfers.BanUser(user)
-	
+		
+	def UserIpIsBlocked(self, user):
+		for ip, username in self.np.config.sections["server"]["ipblocklist"].items():
+			if user == username:
+				return True
+		return False
+		
+	def BlockedUserIp(self, user):
+		for ip, username in self.np.config.sections["server"]["ipblocklist"].items():
+			if user == username:
+				return ip
+		return None
+		
+	def OnBlockUser(self, user):
+		if user not in self.np.users.keys():
+			if user not in self.np.ip_requested:
+				self.np.ip_requested[user] = 0
+			self.np.queue.put(slskmessages.GetPeerAddress(user))
+			return
+		if not type(self.np.users[user].addr) is tuple:
+			return
+		ip, port = self.np.users[user].addr
+		if ip not in self.np.config.sections["server"]["ipblocklist"] or self.np.config.sections["server"]["ipblocklist"][ip] != user:
+			self.np.config.sections["server"]["ipblocklist"][ip] = user
+			self.np.config.writeConfig()
+			self.settingswindow.pages["Ban / ignore"].SetSettings(self.np.config.sections)
+			
+	def OnUnBlockUser(self, user):
+		if self.UserIpIsBlocked(user):
+			ip = self.BlockedUserIp(user)
+			if ip is not None:
+				del self.np.config.sections["server"]["ipblocklist"][ip]
+				self.np.config.writeConfig()
+				self.settingswindow.pages["Ban / ignore"].SetSettings(self.np.config.sections)
+				return True
+			
+		if user not in self.np.users.keys():
+			if user not in self.np.ip_requested:
+				self.np.ip_requested[user] = 1
+			self.np.queue.put(slskmessages.GetPeerAddress(user))
+			return
+		if not type(self.np.users[user].addr) is tuple:
+			return
+		ip, port = self.np.users[user].addr
+		if ip in self.np.config.sections["server"]["ipblocklist"]:
+			del self.np.config.sections["server"]["ipblocklist"][ip]
+			self.np.config.writeConfig()
+			self.settingswindow.pages["Ban / ignore"].SetSettings(self.np.config.sections)
+			
 	def UnbanUser(self, user):
 		if user in self.np.config.sections["server"]["banlist"]:
 			self.np.config.sections["server"]["banlist"].remove(user)

@@ -13,6 +13,8 @@ General Changes
    Also fixed the duplicate Alt-B hotkey (hide flags is now Alt-G).
  
 Chat Rooms
+ * Blocking a user's IP address is now easier with the addition of a chatroom
+   popup menu item
  * Private Rooms: You can now create private rooms via the roomslist popup menu
    and add users to your private rooms via any chatroom user popup-menu. You can
    also drop ownership of a private room and drop membership of another person's

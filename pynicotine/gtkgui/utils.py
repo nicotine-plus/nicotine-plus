@@ -756,6 +756,7 @@ class PopupMenu(gtk.Menu):
 		self.user = None
 		self.useritem = None
 		self.handlers = {}
+		self.editing = False
 		
 	def setup(self, *items):
 		for item in items:
@@ -861,11 +862,20 @@ class PopupMenu(gtk.Menu):
 			self.frame.userlist.RemoveFromList(self.user)
 	
 	def OnBanUser(self, widget):
+		
 		if widget.get_active():
 			self.frame.BanUser(self.user)
 		else:
 			self.frame.UnbanUser(self.user)
+			
+	def OnBlockUser(self, widget):
+		if self.editing: return
 	
+		if widget.get_active():
+			self.frame.OnBlockUser(self.user)
+		else:
+			self.frame.OnUnBlockUser(self.user)
+			
 	def OnIgnoreUser(self, widget):
 		if widget.get_active():
 			self.frame.IgnoreUser(self.user)

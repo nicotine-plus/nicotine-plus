@@ -73,7 +73,7 @@ class Config:
 	"userlist": [], \
 	"banlist": [], \
 	"ignorelist": [], \
-	"ipblocklist":[], \
+	"ipblocklist":{}, \
 	"autojoin": ["nicotine"], \
 	"autoaway":15, \
 	}, \
@@ -406,6 +406,12 @@ class Config:
 		if len(self.sections["columns"]["userlist"]) < len(self.defaults["columns"]["userlist"]):
 			self.sections["columns"]["userlist"] += [True] * (len(self.defaults["columns"]["userlist"]) - len(self.sections["columns"]["userlist"]))
 			
+		if type(self.sections["server"]["ipblocklist"]) is list:
+			ipblocklist = self.sections["server"]["ipblocklist"][:]
+			self.sections["server"]["ipblocklist"] = {}
+			for ip in ipblocklist:
+				self.sections["server"]["ipblocklist"][ip] = ""
+				
 		for i in ["%(user)s", "%(message)s"]:
 			if i not in self.sections["ui"]["speechprivate"]:
 				self.sections["ui"]["speechprivate"] = self.defaults["ui"]["speechprivate"]

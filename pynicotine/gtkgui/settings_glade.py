@@ -2062,7 +2062,6 @@ class BanFrame:
 
 		self.Blocked = gtk.TreeView()
 		self.Blocked.show()
-		self.Blocked.set_headers_visible(False)
 		self.BlockedSW.add(self.Blocked)
 
 		self.BlockedVbox.pack_start(self.BlockedSW)
@@ -6138,27 +6137,6 @@ class ColoursFrame:
 
 	def ScaleColour(self, widget):
 		pass
-
-	def get_custom_widget(self, id, string1, string2, int1, int2):
-		w = gtk.Label(_("(custom widget: %s)") % id)
-		return w
-
-class menu1:
-	def __init__(self, create = True, accel_group = None, tooltips = None):
-		if accel_group is None:
-			self.accel_group = gtk.AccelGroup()
-		else:
-			self.accel_group = accel_group
-		if tooltips is None:
-			self.tooltips = gtk.Tooltips()
-		else:
-			self.tooltips = tooltips
-		self.tooltips.enable()
-		if create:
-			self.menu1 = gtk.Menu()
-			self.menu1.add_accel_group(self.accel_group)
-			self.menu1.show()
-
 
 	def get_custom_widget(self, id, string1, string2, int1, int2):
 		w = gtk.Label(_("(custom widget: %s)") % id)

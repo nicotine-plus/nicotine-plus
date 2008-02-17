@@ -570,6 +570,7 @@ class ChatRoom(ChatRoomTab):
 			("$" + _("_Add user to list"), popup.OnAddToList),
 			("$" + _("_Ban this user"), popup.OnBanUser),
 			("$" + _("_Ignore this user"), popup.OnIgnoreUser),
+			("$" + _("B_lock this user's IP Address"), popup.OnBlockUser),
 			("", None),
 			("#" + _("Sear_ch this user's files"), popup.OnSearchUser, gtk.STOCK_FIND),
 			(1, _("Private rooms"), self.popup_menu_privaterooms, self.OnPrivateRooms),
@@ -725,15 +726,21 @@ class ChatRoom(ChatRoomTab):
 				self.frame.privatechats.SendMessage(user, None, 1)
 				self.frame.MainNotebook.set_current_page(1)
 			return
-		
+		self.popup_menu.editing = True
 		self.popup_menu.set_user(user)
+		me = (self.popup_menu.user == None or self.popup_menu.user == self.frame.np.config.sections["server"]["login"])
+		
 		items[9].set_active(user in [i[0] for i in self.frame.np.config.sections["server"]["userlist"]])
 		items[10].set_active(user in self.frame.np.config.sections["server"]["banlist"])
 		items[11].set_active(user in self.frame.np.config.sections["server"]["ignorelist"])
-		items[14].set_sensitive(not (self.popup_menu.user == None or self.popup_menu.user == self.frame.np.config.sections["server"]["login"]))
-			
+		items[12].set_active(self.frame.UserIpIsBlocked(user))
+		items[12].set_sensitive(not me)
+		items[15].set_sensitive(not me)
+		self.popup_menu.editing = False	
 		self.popup_menu.popup(None, None, None, event.button, event.time)
+		
 
+	
 	def OnShowChatHelp(self, widget):
 		self.frame.OnAboutChatroomCommands(widget, self.GetTabParent(self.Main))
 
