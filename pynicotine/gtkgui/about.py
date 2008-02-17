@@ -201,7 +201,7 @@ class AboutCreditsDialog(GenericAboutDialog):
 		text = _("""daelstorm
 \t(Lead developer)
 \t<daelstorm@gmail.com>
-\thttp://thegraveyard.org/daelstorm/
+\thttp://daelstorm.thegraveyard.org/
 gallows
 \t(Developer, packager)
 \t<g4ll0ws@gmail.com>

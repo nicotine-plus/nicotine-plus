@@ -337,12 +337,21 @@ renamed, try looking in the download directory and match the original filename.
 		return True
 
 	def DoubleClick(self, event):
-
-		self.selected_transfers = []
-		self.selected_users = []
-		self.frame.DownloadList.get_selection().selected_foreach(self.SelectedTransfersCallback)
-
-		self.OnPlayFiles(None)
+		self.select_transfers()
+		dc = self.frame.np.config.sections["transfers"]["download_doubleclick"]
+		
+		if dc == 1: # Send to player
+			self.OnPlayFiles(None)
+		elif dc == 2: #File manager
+			self.OnOpenDirectory(None)
+		elif dc == 3: #Search
+			self.OnFileSearch(None)
+		elif dc == 4: #Abort
+			self.OnAbortTransfer(None, False)
+		elif dc == 5: #Clear
+			self.OnClearTransfer(None)
+		elif dc == 6: #Retry
+			self.OnRetryTransfer(None)
 			
 	def OnPopupMenu(self, widget, event, kind):
 		if kind == "mouse":

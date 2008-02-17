@@ -287,6 +287,8 @@ class Uploads(TransferList):
 	def OnPopupMenu(self, widget, event, kind):
 		if kind == "mouse":
 			if event.button != 3:
+				if event.button == 1 and event.type == gtk.gdk._2BUTTON_PRESS:
+					self.DoubleClick(event)
 				return False
 		
 		self.selected_transfers = []
@@ -338,6 +340,21 @@ class Uploads(TransferList):
 		self.frame.np.transfers.checkUploadQueue()
 		self.update()
 
+	def DoubleClick(self, event):
+		self.select_transfers()
+		dc = self.frame.np.config.sections["transfers"]["upload_doubleclick"]
+		
+		if dc == 1: # Send to player
+			self.OnPlayFiles(None)
+		elif dc == 2: #File manager
+			self.OnOpenDirectory(None)
+		elif dc == 3: #Search
+			self.OnFileSearch(None)
+		elif dc == 4: #Abort
+			self.OnAbortTransfer(None, False)
+		elif dc == 5: #Clear
+			self.OnClearTransfer(None)
+			
 	def OnAbortTransfer(self, widget, remove = False, clear = False):
 		self.select_transfers()
 		TransferList.OnAbortTransfer(self, widget, remove, clear)

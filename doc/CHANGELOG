@@ -2,20 +2,40 @@ ChangeLog for Nicotine Plus
 Unreleased
 
 Bugs
+ * 'Send to player' failed because of missing quotes for finished downloads
  * Fixed a bug with tuple error message causing a traceback
- * Fixed a translation bug, caused by tabs positions top, left, etc
-
+ * Fixed a translation bug, caused by tabs positions top, left, etc that caused
+   settings dialog to not work properly
+ 
+General Changes
+ * The Edit menu has been broken into Edit, View and Shares menus
+   (similar to Enr1X's patch http://nicotine-plus.org/ticket/231 )
+   Also fixed the duplicate Alt-B hotkey (hide flags is now Alt-G).
+ 
 Chat Rooms
  * Private Rooms: You can now create private rooms via the roomslist popup menu
    and add users to your private rooms via any chatroom user popup-menu. You can
    also drop ownership of a private room and drop membership of another person's
    private room. This feature is currently available on the testing server only.
-   
+
+Search
+ * Country flags are shown in search results, metadata dialogs
+
 Settings
+ * Upload and Download transfer lists now have customizable double-click options
+   in Transfers->Events.
+ * A Backup config menu item was added to the Edit menu. This will backup your 
+   Nicotine+ config and config.alias (if it exists) into a BZ2 archive. If you
+   cancel the backup filename saving process, an archive with the format
+   'config backup YYYY-MM-DD HH:MM:SS.tar.bz2' will be created.
  * Visible colors have been added to the Colour settings (for those who don't 
    read hexadecimal).
  * Separate fonts for Search, Transfers, Browse and a font for all other lists
    can now be set.
+
+   
+Translations
+ * Slovak Translation Updated (Jozef)
  
 1.2.9 Release (22 September 2007)
 Licensing

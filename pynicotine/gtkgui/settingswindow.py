@@ -1536,7 +1536,7 @@ class EventsFrame(settings_glade.EventsFrame):
 		self.p = parent
 		self.frame = parent.frame
 		settings_glade.EventsFrame.__init__(self, False)
-		self.options = {"transfers": { "shownotification": self.ShowNotification, "afterfinish": self.AfterDownload, "afterfolder": self.AfterFolder, },
+		self.options = {"transfers": { "shownotification": self.ShowNotification, "afterfinish": self.AfterDownload, "afterfolder": self.AfterFolder, "download_doubleclick": self.DownloadDoubleClick, "upload_doubleclick": self.UploadDoubleClick, },
 			"ui": {"filemanager": self.FileManagerCombo.child },}
 		
 		for executable in ["rox $", "konqueror $", "nautilus --no-desktop $", "thunar $", "xterm -e mc $", "emelfm2 -1 $", "krusader --left $", "gentoo -1 $" ]:
@@ -1556,6 +1556,8 @@ class EventsFrame(settings_glade.EventsFrame):
 				"shownotification" : self.ShowNotification.get_active(),
 				"afterfinish": self.AfterDownload.get_text(),
 				"afterfolder": self.AfterFolder.get_text(),
+				"download_doubleclick": self.DownloadDoubleClick.get_active(),
+				"upload_doubleclick": self.UploadDoubleClick.get_active(),
 				
 			},
 			"ui": {
@@ -2271,7 +2273,10 @@ class SettingsWindow(settings_glade.SettingsWindow):
 			if type(value) in ( int,str):
 				widget.child.set_text(value)
 		elif type(widget) is gtk.ComboBox:
-			self.GetPosition(widget, value)
+			if type(value) is str:
+				self.GetPosition(widget, value)
+			elif type(value) is int:
+				widget.set_active(value)
 		elif type(widget) is gtk.FontButton:
 			widget.set_font_name(value)
 			

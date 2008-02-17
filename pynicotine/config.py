@@ -130,7 +130,10 @@ class Config:
 	"enablefilters": 1, \
 	"downloadregexp": "", \
 	"downloadfilters": [["desktop.ini",1], ["folder.jpg", 1], ["*.url", 1], ["thumbs.db", 1], \
-		["albumart(_{........-....-....-....-............}_)?(_?(large|small))?\.jpg", 0]]}, \
+		["albumart(_{........-....-....-....-............}_)?(_?(large|small))?\.jpg", 0]], \
+	"download_doubleclick": 1,\
+	"upload_doubleclick": 1,\
+	}, \
 \
 "userinfo":{ \
 	"descr": "''", \
@@ -300,8 +303,8 @@ class Config:
 	"default": "xmms -e $", \
 	"npothercommand": "", \
 	"npplayer": "infopipe", \
- 	"npformatlist": [], \
-	 "npformat": "" \
+	"npformatlist": [], \
+	"npformat": "" \
 	} \
 }
 		self.defaults = {}

@@ -50,6 +50,11 @@ class MainWindow:
 		self.disconnect1.set_image(img)
 		self.file1_menu.append(self.disconnect1)
 
+		self.sep1 = gtk.MenuItem(_("menuitem1"))
+		self.sep1.show()
+
+		self.file1_menu.append(self.sep1)
+
 		self.awayreturn1 = gtk.ImageMenuItem(_("_Away/Return"))
 		self.awayreturn1.show()
 		self.awayreturn1.connect("activate", self.OnAway)
@@ -179,7 +184,7 @@ class MainWindow:
 		self.HideFlags = gtk.CheckMenuItem(_("Hide flag columns in user lists"))
 		self.HideFlags.show()
 		self.HideFlags.connect("toggled", self.OnHideFlags)
-		self.HideFlags.add_accelerator("activate", self.accel_group, gtk.gdk.keyval_from_name("B"), gtk.gdk.MOD1_MASK, gtk.ACCEL_VISIBLE)
+		self.HideFlags.add_accelerator("activate", self.accel_group, gtk.gdk.keyval_from_name("g"), gtk.gdk.MOD1_MASK, gtk.ACCEL_VISIBLE)
 
 		self.menu2.append(self.HideFlags)
 
