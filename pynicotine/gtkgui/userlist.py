@@ -148,27 +148,33 @@ class UserList:
 	def cell_toggle_callback(self, widget, index, treeview, pos):
 	
 		iter = self.usersmodel.get_iter(index)
-		user = self.usersmodel.get_value(iter, 1)
+		user = self.usersmodel.get_value(iter, 2)
+		
 		value = self.usersmodel.get_value(iter, pos)
 		self.usersmodel.set(iter, pos, not value)
+		toggle = not value
 		if pos == 5:
-			if user in self.trusted:
-				self.trusted.remove(user)
-			else:
-				if not user in self.trusted:
+			if toggle:
+				if user not in self.trusted:
 					self.trusted.append(user)
+				
+			else:
+				if user in self.trusted:
+					self.trusted.remove(user)
 		elif pos == 6:
-			if user in self.notify:
-				self.notify.remove(user)
-			else:
-				if not user in self.notify:
+			if toggle:
+				if user not in self.notify:
 					self.notify.append(user)
-		elif pos == 7:
-			if user in self.privileged:
-				self.privileged.remove(user)
 			else:
-				if not user in self.privileged:
+				if user in self.notify:
+					self.notify.remove(user)
+		elif pos == 7:
+			if toggle:
+				if user not in self.privileged:
 					self.privileged.append(user)
+			else:
+				if user in self.privileged:
+					self.privileged.remove(user)
 
 		self.SaveUserList()
 		
@@ -336,7 +342,8 @@ class UserList:
 		l = []
 
 		for i in self.userlist:
-			l.append([i[0], i[1], (i[0] in self.notify), (i[0] in self.privileged), (i[0] in self.trusted), i[2], i[4]])
+			user, comment, seen, iter, flag = i
+			l.append([user, comment, (user in self.notify), (user in self.privileged), (user in self.trusted), seen, flag])
 		self.frame.np.config.sections["server"]["userlist"] = l
 		self.frame.np.config.writeConfig()
 		
