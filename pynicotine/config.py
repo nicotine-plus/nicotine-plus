@@ -593,6 +593,7 @@ class Config:
 			print message
 			if self.frame:
 				self.frame.logMessage(message)
+			self.config_lock.release()
 			return
 		else:
 			try:
@@ -602,6 +603,7 @@ class Config:
 				print message
 				if self.frame:
 					self.frame.logMessage(message)
+				self.config_lock.release()
 				return
 			else:
 				f.close()
@@ -668,7 +670,7 @@ class Config:
 		except Exception, e:
 			print e
 			self.config_lock.release()
-			return (1, "Cannot write backup archive")
+			return (1, "Cannot write backup archive: %s" % e)
 		self.config_lock.release()
 		return (0, filename)
 	
