@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: nicotine\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-02-17 09:25+0100\n"
-"PO-Revision-Date: 2008-02-17 20:13+0100\n"
+"PO-Revision-Date: 2008-02-18 21:53+0100\n"
 "Last-Translator: ><((((*> <zniavre2048@gmail.com>\n"
 "Language-Team: Hyriand <hyriand@thegraveyard.org>\n"
 "MIME-Version: 1.0\n"
@@ -2430,7 +2430,7 @@ msgstr "Voir mes fichiers partagés"
 
 #: pynicotine/gtkgui/nicotine_glade.py:268
 msgid "_Modes"
-msgstr "_Affichage"
+msgstr "_Fenêtres"
 
 # pynicotine/gtkgui/nicotine_glade.py
 #: pynicotine/gtkgui/nicotine_glade.py:273
@@ -3117,6 +3117,17 @@ msgid ""
 "\n"
 "Based on code from Nicotine and PySoulSeek"
 msgstr ""
+"Nicotine+ %s\n"
+"Website:\n"
+"http://nicotine-plus.sourceforge.net\n"
+"Trac and Wiki:\n"
+"http://nicotine-plus.org\n"
+"Sourceforge Project:\n"
+"http://sourceforge.net/projects/nicotine-plus/\n"
+"\n"
+"Soulseek: http://www.slsknet.org\n"
+"\n"
+"Based on code from Nicotine and PySoulSeek"
 
 #: pynicotine/gtkgui/about.py:83
 msgid "Dependencies"
@@ -3171,6 +3182,40 @@ msgid ""
 "Amun-Ra\n"
 "\t(Code contributer)\n"
 msgstr ""
+"daelstorm\n"
+"\t(Lead developer)\n"
+"\t<daelstorm@gmail.com>\n"
+"\thttp://daelstorm.thegraveyard.org/\n"
+"gallows\n"
+"\t(Developer, packager)\n"
+"\t<g4ll0ws@gmail.com>\n"
+"\thttp://perticone.homelinux.net/~sergio/\n"
+"hyriand\n"
+"\t(Former lead developer, contributer, author of Nicotine)\n"
+"\t<iksteen@gmail.com>\n"
+"\thttp://www.thegraveyard.org\n"
+"Le Vert\n"
+"\t(Webhosting, packager)\n"
+"\t<gandalf@le-vert.net>\n"
+"\thttp://www.le-vert.net\n"
+"QuinoX\n"
+"\t(Code contributer)\n"
+"\thttp://index.qtea.nl\n"
+"infinito\n"
+"\t(Code contributer)\n"
+"\t<code@infinicode.org>\n"
+"\thttp://infinicode.org\n"
+"suser-guru\n"
+"\t(SUSE Packager)\n"
+"\thttp://linux01.gwdg.de/~pbleser/\n"
+"osiris\n"
+"\t(Documentation, old Win32 installers)\n"
+"\t<osiris.contact@gmail.com>\n"
+"Alexander Kanavin\n"
+"\t(PySoulSeek developer) Nicotine and Nicotine+ are based on PySoulSeek\n"
+"\thttp://sensi.org/~ak/\n"
+"Amun-Ra\n"
+"\t(Code contributer)\n"
 
 #: pynicotine/gtkgui/about.py:238
 msgid "Developers"
@@ -3217,6 +3262,44 @@ msgid ""
 " * The Librezale.org Team <librezale@librezale.org> http://librezale.org\n"
 " "
 msgstr ""
+"Dutch\n"
+" * nince78 (2007)\n"
+" * hyriand\n"
+"German\n"
+" * Meokater (2007)\n"
+" * (._.) (2007)\n"
+" * lippel (2004)\n"
+" * hyriand (2003)\n"
+"Spanish\n"
+" * Silvio Orta (2007)\n"
+" * Dreslo\n"
+"French\n"
+" * ManWell (2007)\n"
+" * ><((((*> (2007)\n"
+" * flashfr\n"
+" * systr\n"
+"Italian\n"
+" * Nicola (2007) <info@nicoladimaria.info>\n"
+" * dbazza\n"
+"Polish\n"
+" * Amun-Ra (2007)\n"
+" * thine (2007)\n"
+" * owczi\n"
+"Swedish\n"
+" * alimony <markus@samsonrourke.com>\n"
+"Hungarian\n"
+" * djbaloo <dj_baloo@freemail.hu>\n"
+"Slovak \n"
+" * Josef Riha (2006) <jose1711@gmail.com>\n"
+"Portuguese Brazilian\n"
+" * Suicide|Solution <felipe@bunghole.com.br> (2006) http://suicide.bunghole.com.br\n"
+"Lithuanian\n"
+" * Žygimantas Beručka (2006) <uid0@akl.lt>\n"
+"Finnish\n"
+" * Kalevi <mr_auer@welho.net>\n"
+"Euskara\n"
+" * The Librezale.org Team <librezale@librezale.org> http://librezale.org\n"
+" "
 
 # pynicotine/gtkgui/settings_glade.py
 # pynicotine/gtkgui/settingswindow.py
@@ -3243,6 +3326,22 @@ msgid ""
 "You should have received a copy of the GNU General Public License\n"
 "along with this program.  If not, see < http://www.gnu.org/licenses/ >."
 msgstr ""
+"GNU General Public License version 3 notice\n"
+"\n"
+"Copyright (C) 2007 daelstorm. All rights reserved.\n"
+"\n"
+"This program is free software: you can redistribute it and/or modify\n"
+"it under the terms of the GNU General Public License as published by\n"
+"the Free Software Foundation, either version 3 of the License, or\n"
+"(at your option) any later version.\n"
+"\n"
+"This program is distributed in the hope that it will be useful,\n"
+"but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
+"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
+"GNU General Public License for more details.\n"
+"\n"
+"You should have received a copy of the GNU General Public License\n"
+"along with this program.  If not, see < http://www.gnu.org/licenses/ >."
 
 # pynicotine/gtkgui/nicotine_glade.py
 #: pynicotine/gtkgui/about.py:340
@@ -4114,7 +4213,7 @@ msgstr "Montrer les bulles d'aides"
 # pynicotine/gtkgui/nicotine_glade.py
 #: pynicotine/gtkgui/settings_glade.py:1229
 msgid "Chat Font:"
-msgstr "Police salons de discussions:"
+msgstr "Police des salons:"
 
 # pynicotine/gtkgui/nicotine_glade.py
 #: pynicotine/gtkgui/settings_glade.py:1251
@@ -4130,7 +4229,7 @@ msgstr "Police des transferts"
 # pynicotine/gtkgui/nicotine_glade.py
 #: pynicotine/gtkgui/settings_glade.py:1293
 msgid "Search Font:"
-msgstr "Police des recherches"
+msgstr "Police des résultats"
 
 # pynicotine/gtkgui/nicotine_glade.py
 #: pynicotine/gtkgui/settings_glade.py:1314
@@ -4342,6 +4441,8 @@ msgid ""
 "Reopen closed search tabs that haven't been ignored\n"
 "when new results come in"
 msgstr ""
+"Ré-ouvre les onglets des recherches qui n'ont pas été ignorées\n"
+" ,lors de l'arrivée de nouveaux resultats."
 
 # pynicotine/gtkgui/settings_glade.py
 #: pynicotine/gtkgui/settings_glade.py:2418
@@ -4393,7 +4494,7 @@ msgstr "Commande du navigateur de fichiers ($ chemin du dossier):"
 # pynicotine/gtkgui/settings_glade.py
 #: pynicotine/gtkgui/settings_glade.py:2654
 msgid "Download transfers"
-msgstr "transferts téléchargés"
+msgstr "Fichiers téléchargés"
 
 # pynicotine/gtkgui/frame.py
 # pynicotine/gtkgui/nicotine_glade.py
@@ -4405,12 +4506,12 @@ msgstr "Rien"
 #: pynicotine/gtkgui/settings_glade.py:2662
 #: pynicotine/gtkgui/settings_glade.py:2685
 msgid "Send to player"
-msgstr "Envoiyer  au lecteur "
+msgstr "Envoyer  au lecteur "
 
 # pynicotine/gtkgui/settings_glade.py
 #: pynicotine/gtkgui/settings_glade.py:2677
 msgid "Upload transfers"
-msgstr "transferts envoyés"
+msgstr "Fichiers envoyés"
 
 #: pynicotine/gtkgui/settings_glade.py:2701
 msgid "Double-clicking on..."
