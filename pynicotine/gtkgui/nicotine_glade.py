@@ -200,7 +200,7 @@ class MainWindow:
 
 		self.ConfigureShares = gtk.ImageMenuItem(_("Configure Shares"))
 		self.ConfigureShares.show()
-		self.ConfigureShares.connect("activate", self.OnConfigureShares)
+		self.ConfigureShares.connect("activate", self.OnSettingsShares)
 
 		img = gtk.image_new_from_stock(gtk.STOCK_PREFERENCES, gtk.ICON_SIZE_MENU)
 		self.ConfigureShares.set_image(img)
@@ -520,6 +520,28 @@ class MainWindow:
 
 		self.hbox20.pack_start(self.sPrivateChatButton, False, False, 0)
 
+		self.configureLog = gtk.Button()
+		self.configureLog.show()
+		self.configureLog.connect("clicked", self.OnSettingsLogging)
+
+		self.alignment38 = gtk.Alignment(0.5, 0.5, 0, 0)
+		self.alignment38.show()
+
+		self.hbox27 = gtk.HBox(False, 0)
+		self.hbox27.show()
+		self.hbox27.set_spacing(2)
+
+		self.image28 = gtk.Image()
+		self.image28.set_from_stock(gtk.STOCK_PREFERENCES, 4)
+		self.image28.show()
+		self.hbox27.pack_start(self.image28, False, False, 0)
+
+		self.alignment38.add(self.hbox27)
+
+		self.configureLog.add(self.alignment38)
+
+		self.hbox20.pack_end(self.configureLog, False, False, 0)
+
 		self.privatevbox.pack_start(self.hbox20, False, True, 0)
 
 		self.PrivatechatNotebook = self.get_custom_widget("PrivatechatNotebook", "", "", 0, 0)
@@ -574,6 +596,28 @@ class MainWindow:
 		self.ToggleAutoRetry.show()
 
 		self.hbox3.pack_start(self.ToggleAutoRetry, False, False, 0)
+
+		self.configureTransfers1 = gtk.Button()
+		self.configureTransfers1.show()
+		self.configureTransfers1.connect("clicked", self.OnSettingsTransfers)
+
+		self.alignment46 = gtk.Alignment(0.5, 0.5, 0, 0)
+		self.alignment46.show()
+
+		self.hbox59 = gtk.HBox(False, 0)
+		self.hbox59.show()
+		self.hbox59.set_spacing(2)
+
+		self.image41 = gtk.Image()
+		self.image41.set_from_stock(gtk.STOCK_PREFERENCES, 4)
+		self.image41.show()
+		self.hbox59.pack_start(self.image41, False, False, 0)
+
+		self.alignment46.add(self.hbox59)
+
+		self.configureTransfers1.add(self.alignment46)
+
+		self.hbox3.pack_end(self.configureTransfers1, False, False, 0)
 
 		self.vboxdownloads.pack_start(self.hbox3, False, False, 2)
 
@@ -791,6 +835,28 @@ class MainWindow:
 		self.ToggleAutoclear.show()
 
 		self.hbox13.pack_start(self.ToggleAutoclear, False, False, 0)
+
+		self.configureTransfers2 = gtk.Button()
+		self.configureTransfers2.show()
+		self.configureTransfers2.connect("clicked", self.OnSettingsTransfers)
+
+		self.alignment49 = gtk.Alignment(0.5, 0.5, 0, 0)
+		self.alignment49.show()
+
+		self.hbox69 = gtk.HBox(False, 0)
+		self.hbox69.show()
+		self.hbox69.set_spacing(2)
+
+		self.image43 = gtk.Image()
+		self.image43.set_from_stock(gtk.STOCK_PREFERENCES, 4)
+		self.image43.show()
+		self.hbox69.pack_start(self.image43, False, False, 0)
+
+		self.alignment49.add(self.hbox69)
+
+		self.configureTransfers2.add(self.alignment49)
+
+		self.hbox13.pack_end(self.configureTransfers2, False, False, 0)
 
 		self.vboxuploads.pack_start(self.hbox13, False, False, 2)
 
@@ -1048,6 +1114,28 @@ class MainWindow:
 		self.SearchMethod.add_attribute(cell, 'text', 0)
 		self.hbox2.pack_start(self.SearchMethod, False, False, 0)
 
+		self.configureSearches = gtk.Button()
+		self.configureSearches.show()
+		self.configureSearches.connect("clicked", self.OnSettingsSearches)
+
+		self.alignment50 = gtk.Alignment(0.5, 0.5, 0, 0)
+		self.alignment50.show()
+
+		self.hbox71 = gtk.HBox(False, 0)
+		self.hbox71.show()
+		self.hbox71.set_spacing(2)
+
+		self.image44 = gtk.Image()
+		self.image44.set_from_stock(gtk.STOCK_PREFERENCES, 4)
+		self.image44.show()
+		self.hbox71.pack_start(self.image44, False, False, 0)
+
+		self.alignment50.add(self.hbox71)
+
+		self.configureSearches.add(self.alignment50)
+
+		self.hbox2.pack_end(self.configureSearches, False, False, 0)
+
 		self.searchvbox.pack_start(self.hbox2, False, True, 0)
 
 		self.SearchNotebook = self.get_custom_widget("SearchNotebook", "", "", 0, 0)
@@ -1093,6 +1181,28 @@ class MainWindow:
 		self.sUserinfoButton.add(self.alignment12)
 
 		self.hbox21.pack_start(self.sUserinfoButton, False, False, 0)
+
+		self.configureUserinfo = gtk.Button()
+		self.configureUserinfo.show()
+		self.configureUserinfo.connect("clicked", self.OnSettingsUserinfo)
+
+		self.alignment51 = gtk.Alignment(0.5, 0.5, 0, 0)
+		self.alignment51.show()
+
+		self.hbox72 = gtk.HBox(False, 0)
+		self.hbox72.show()
+		self.hbox72.set_spacing(2)
+
+		self.image45 = gtk.Image()
+		self.image45.set_from_stock(gtk.STOCK_PREFERENCES, 4)
+		self.image45.show()
+		self.hbox72.pack_start(self.image45, False, False, 0)
+
+		self.alignment51.add(self.hbox72)
+
+		self.configureUserinfo.add(self.alignment51)
+
+		self.hbox21.pack_end(self.configureUserinfo, False, False, 0)
 
 		self.userinfovbox.pack_start(self.hbox21, False, True, 0)
 
@@ -1166,6 +1276,28 @@ class MainWindow:
 
 		self.hbox22.pack_start(self.LoadFromDisk, False, False, 0)
 
+		self.configureShares = gtk.Button()
+		self.configureShares.show()
+		self.configureShares.connect("clicked", self.OnSettingsShares)
+
+		self.alignment52 = gtk.Alignment(0.5, 0.5, 0, 0)
+		self.alignment52.show()
+
+		self.hbox73 = gtk.HBox(False, 0)
+		self.hbox73.show()
+		self.hbox73.set_spacing(2)
+
+		self.image46 = gtk.Image()
+		self.image46.set_from_stock(gtk.STOCK_PREFERENCES, 4)
+		self.image46.show()
+		self.hbox73.pack_start(self.image46, False, False, 0)
+
+		self.alignment52.add(self.hbox73)
+
+		self.configureShares.add(self.alignment52)
+
+		self.hbox22.pack_end(self.configureShares, False, False, 0)
+
 		self.userbrowsevbox.pack_start(self.hbox22, False, True, 0)
 
 		self.UserBrowseNotebook = self.get_custom_widget("UserBrowseNotebook", "", "", 0, 0)
@@ -1209,32 +1341,6 @@ class MainWindow:
 
 		self.hbox12.pack_end(self.SimilarUsersButton, False, False, 0)
 
-		self.RecommendationsButton = gtk.Button()
-		self.RecommendationsButton.show()
-		self.RecommendationsButton.connect("clicked", self.OnRecommendationsClicked)
-
-		self.alignment5 = gtk.Alignment(0.5, 0.5, 0, 0)
-		self.alignment5.show()
-
-		self.hbox25 = gtk.HBox(False, 0)
-		self.hbox25.show()
-		self.hbox25.set_spacing(2)
-
-		self.image5 = gtk.Image()
-		self.image5.set_from_stock(gtk.STOCK_REFRESH, 4)
-		self.image5.show()
-		self.hbox25.pack_start(self.image5, False, False, 0)
-
-		self.label34 = gtk.Label(_("Recommendations"))
-		self.label34.show()
-		self.hbox25.pack_start(self.label34, False, False, 0)
-
-		self.alignment5.add(self.hbox25)
-
-		self.RecommendationsButton.add(self.alignment5)
-
-		self.hbox12.pack_end(self.RecommendationsButton, False, False, 0)
-
 		self.GlobalRecommendationsButton = gtk.Button()
 		self.GlobalRecommendationsButton.show()
 		self.GlobalRecommendationsButton.connect("clicked", self.OnGlobalRecommendationsClicked)
@@ -1260,6 +1366,32 @@ class MainWindow:
 		self.GlobalRecommendationsButton.add(self.alignment4)
 
 		self.hbox12.pack_end(self.GlobalRecommendationsButton, False, False, 0)
+
+		self.RecommendationsButton = gtk.Button()
+		self.RecommendationsButton.show()
+		self.RecommendationsButton.connect("clicked", self.OnRecommendationsClicked)
+
+		self.alignment5 = gtk.Alignment(0.5, 0.5, 0, 0)
+		self.alignment5.show()
+
+		self.hbox25 = gtk.HBox(False, 0)
+		self.hbox25.show()
+		self.hbox25.set_spacing(2)
+
+		self.image5 = gtk.Image()
+		self.image5.set_from_stock(gtk.STOCK_REFRESH, 4)
+		self.image5.show()
+		self.hbox25.pack_start(self.image5, False, False, 0)
+
+		self.label34 = gtk.Label(_("Recommendations"))
+		self.label34.show()
+		self.hbox25.pack_start(self.label34, False, False, 0)
+
+		self.alignment5.add(self.hbox25)
+
+		self.RecommendationsButton.add(self.alignment5)
+
+		self.hbox12.pack_end(self.RecommendationsButton, False, False, 0)
 
 		self.interests.pack_start(self.hbox12, False, True, 0)
 
@@ -1562,7 +1694,7 @@ class MainWindow:
 	def OnHideFlags(self, widget):
 		pass
 
-	def OnConfigureShares(self, widget):
+	def OnSettingsShares(self, widget):
 		pass
 
 	def OnRescan(self, widget):
@@ -1640,10 +1772,22 @@ class MainWindow:
 	def OnSwitchPage(self, widget):
 		pass
 
+	def OnSettingsLogging(self, widget):
+		pass
+
+	def OnSettingsTransfers(self, widget):
+		pass
+
 	def OnSearch(self, widget):
 		pass
 
 	def OnClearSearchHistory(self, widget):
+		pass
+
+	def OnSettingsSearches(self, widget):
+		pass
+
+	def OnSettingsUserinfo(self, widget):
 		pass
 
 	def OnLoadFromDisk(self, widget):
@@ -1652,10 +1796,10 @@ class MainWindow:
 	def OnSimilarUsersClicked(self, widget):
 		pass
 
-	def OnRecommendationsClicked(self, widget):
+	def OnGlobalRecommendationsClicked(self, widget):
 		pass
 
-	def OnGlobalRecommendationsClicked(self, widget):
+	def OnRecommendationsClicked(self, widget):
 		pass
 
 	def OnAddThingILike(self, widget):

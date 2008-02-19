@@ -276,7 +276,6 @@ class NicotineFrame(MainWindow):
 		self.UserHbox.set_border_width(0)
 		self.UserHbox.show()
 	
-	
 		self.label12 = gtk.Label(_("Add Buddy: "))
 		self.label12.set_padding(0, 0)
 		self.label12.show()
@@ -306,7 +305,30 @@ class NicotineFrame(MainWindow):
 		
 		
 
-		self.UserHbox.pack_end(self.MoveList, False, True)
+		self.UserHbox.pack_start(self.MoveList, False, True)
+		
+		self.configureUsers = gtk.Button()
+		self.configureUsers.show()
+		self.configureUsers.connect("clicked", self.OnSettingsBanIgnore)
+
+		self.alignmentUsers = gtk.Alignment(0.5, 0.5, 0, 0)
+		self.alignmentUsers.show()
+
+		self.hboxUsers = gtk.HBox(False, 0)
+		self.hboxUsers.show()
+		self.hboxUsers.set_spacing(2)
+
+		self.image44 = gtk.Image()
+		self.image44.set_from_stock(gtk.STOCK_PREFERENCES, 4)
+		self.image44.show()
+		self.hboxUsers.pack_start(self.image44, False, False, 0)
+
+		self.alignmentUsers.add(self.hboxUsers)
+
+		self.configureUsers.add(self.alignmentUsers)
+
+		self.UserHbox.pack_end(self.configureUsers, False, False, 0)
+		
 		self.MoveList.connect("toggled", self.OnMoveList)
 		
 		self.userlistvbox.pack_start(self.UserHbox, False, True)
@@ -1605,10 +1627,30 @@ class NicotineFrame(MainWindow):
 		elif type == "normal":
 			gobject.idle_add(self._RescanFinished, data)
 			
-	def OnConfigureShares(self, widget):
+	def OnSettingsShares(self, widget):
 		self.settingswindow.SetSettings(self.np.config.sections)
 		self.settingswindow.SwitchToPage("Shares")
-
+	
+	def OnSettingsSearches(self, widget):
+		self.settingswindow.SetSettings(self.np.config.sections)
+		self.settingswindow.SwitchToPage("Searches")
+		
+	def OnSettingsTransfers(self, widget):
+		self.settingswindow.SetSettings(self.np.config.sections)
+		self.settingswindow.SwitchToPage("Transfers")
+		
+	def OnSettingsUserinfo(self, widget):
+		self.settingswindow.SetSettings(self.np.config.sections)
+		self.settingswindow.SwitchToPage("User info")
+	
+	def OnSettingsLogging(self, widget):
+		self.settingswindow.SetSettings(self.np.config.sections)
+		self.settingswindow.SwitchToPage("Logging")
+		
+	def OnSettingsBanIgnore(self, widget):
+		self.settingswindow.SetSettings(self.np.config.sections)
+		self.settingswindow.SwitchToPage("Ban / ignore")
+		
 	def OnSettings(self, widget):
 		self.settingswindow.SetSettings(self.np.config.sections)
 		self.settingswindow.SettingsWindow.show()
