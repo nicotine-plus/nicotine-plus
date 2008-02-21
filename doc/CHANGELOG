@@ -6,7 +6,11 @@ Bugs
  * Fixed a bug with tuple error message causing a traceback
  * Fixed a translation bug, caused by tabs positions top, left, etc that caused
    settings dialog to not work properly
- 
+
+Buddylist
+ * Radio buttons now allow the buddylist to be toggled as always visible, in own
+   tab, or in the chatroom tab.
+
 General Changes
  * The Edit menu has been broken into Edit, View and Shares menus
    (similar to Enr1X's patch http://nicotine-plus.org/ticket/231 )

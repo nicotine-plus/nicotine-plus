@@ -332,18 +332,14 @@ class NicotineFrame(MainWindow):
 		self.MoveList.connect("toggled", self.OnMoveList)
 		
 		self.userlistvbox.pack_start(self.UserHbox, False, True)
-
-		if int(config["ui"]["buddylistinchatrooms"]):
-			self.buddylist_in_chatrooms1.set_active(1)
-			self.BuddiesLabel.show()
-		else:
-
-			self.BuddiesTabLabel = ImageLabel(_("Buddy list"), self.images["empty"])
-			self.BuddiesTabLabel.set_text_color(0)
-			self.BuddiesTabLabel.show()
-			self.BuddiesLabel.hide()
-			self.MainNotebook.append_page(self.userlistvbox, self.BuddiesTabLabel)
 		
+		buddylist = config["ui"]["buddylistinchatrooms"]
+		if buddylist == 1:
+			self.buddylist_in_chatrooms1.set_active(1)
+		elif buddylist == 2:
+			self.buddylist_always_visible.set_active(1)
+		elif buddylist == 0:
+			self.buddylist_in_tab.set_active(1)
 		
 		for l in [self.ChatTabLabel, self.PrivateChatTabLabel, self.DownloadsTabLabel, self.UploadsTabLabel, self.SearchTabLabel, self.UserInfoTabLabel, self.UserBrowseTabLabel, self.InterestsTabLabel]:
 			l.set_text_color(0)
@@ -491,8 +487,20 @@ class NicotineFrame(MainWindow):
 			self.logMessage(_("Notification Error: %s") % str(error))
 				
 	def OnMoveList(self, widget):
-		self.buddylist_in_chatrooms1.set_active(not self.buddylist_in_chatrooms1.get_active())
-		self.OnChatRooms(None)
+		tab = always = chatrooms = False
+		if self.buddylist_in_tab.get_active():
+			tab = True
+		if self.buddylist_always_visible.get_active():
+			always = True
+		if self.buddylist_in_chatrooms1.get_active():
+			chatrooms = True
+		if tab:
+			self.buddylist_in_chatrooms1.set_active(True)
+			self.OnChatRooms(None)
+		if always:
+			self.buddylist_in_tab.set_active(True)
+		if chatrooms:
+			self.buddylist_always_visible.set_active(True)
 		
 	def LoadIcons(self):
 		self.images = {}
@@ -2050,13 +2058,14 @@ class NicotineFrame(MainWindow):
 		self.np.config.writeConfig()
 		
 	def OnHideRoomList(self, widget):
+		
 		active = widget.get_active()
 		self.np.config.sections["ui"]["roomlistcollapsed"] = active
 		if active:
 			if self.roomlist.vbox2 in self.vpaned3.get_children():
 				self.vpaned3.remove(self.roomlist.vbox2)
-			if not self.buddylist_in_chatrooms1.get_active():
-				self.vpaned3.hide()
+			#if not self.buddylist_in_chatrooms1.get_active():
+			self.vpaned3.hide()
 		else:
 			if not self.roomlist.vbox2 in self.vpaned3.get_children():
 				self.vpaned3.pack2(self.roomlist.vbox2, True, True)
@@ -2064,30 +2073,55 @@ class NicotineFrame(MainWindow):
 		self.np.config.writeConfig()
 		
 	def OnToggleBuddyList(self, widget):
-		active = widget.get_active()
-		self.np.config.sections["ui"]["buddylistinchatrooms"] = active
-		if active:
-			self.vpaned3.show()
-			if self.userlistvbox in self.MainNotebook.get_children():
-				self.MainNotebook.remove_page(8)
-			if self.userlistvbox not in self.vpaned3.get_children():
-				self.vpaned3.pack1(self.userlistvbox, True, True)
-			self.BuddiesLabel.show()
-				
-		else:
-			if self.hide_room_list1.get_active():
+		tab = always = chatrooms = False
+		if self.buddylist_in_tab.get_active():
+			tab = True
+		if self.buddylist_always_visible.get_active():
+			always = True
+		if self.buddylist_in_chatrooms1.get_active():
+			chatrooms = True
+		if self.userlistvbox in self.MainNotebook.get_children():
+			if tab:
+				return
+			self.MainNotebook.remove_page(8)
+			
+		if self.userlistvbox in self.vpanedm.get_children():
+			if always:
+				return
+			self.vpanedm.remove(self.userlistvbox)
+		if self.userlistvbox in self.vpaned3.get_children():
+			if chatrooms:
+				return
+			self.vpaned3.remove(self.userlistvbox)
+		if self.hide_room_list1.get_active():
+			#
+			if not chatrooms:
 				self.vpaned3.hide()
-			if self.userlistvbox in self.vpaned3.get_children():
-				self.vpaned3.remove(self.userlistvbox)
+		if tab:
 			self.BuddiesTabLabel = ImageLabel(_("Buddy list"), self.images["empty"])
-			#self.get_custom_widget("BuddiesTabLabel", "ImageLabel", _("Buddy list"), 0, 0)
 			self.BuddiesTabLabel.show()
 			if self.userlistvbox not in self.MainNotebook.get_children():
 				self.MainNotebook.append_page(self.userlistvbox, self.BuddiesTabLabel)
 			self.BuddiesLabel.hide()
-
-		self.np.config.writeConfig()
 		
+			self.np.config.sections["ui"]["buddylistinchatrooms"] = 0
+				
+		if chatrooms:
+			self.vpaned3.show()
+			if self.userlistvbox not in self.vpaned3.get_children():
+				self.vpaned3.pack1(self.userlistvbox, True, True)
+			self.BuddiesLabel.show()
+			self.np.config.sections["ui"]["buddylistinchatrooms"] = 1
+		if always:
+			self.vpanedm.show()
+			if self.userlistvbox not in self.vpanedm.get_children():
+				self.vpanedm.pack2(self.userlistvbox, True, True)
+			self.BuddiesLabel.show()
+			self.np.config.sections["ui"]["buddylistinchatrooms"] = 2
+		else:
+			self.vpanedm.hide()
+		self.np.config.writeConfig()
+
 	def OnCheckPrivileges(self, widget):
 		self.np.queue.put(slskmessages.CheckPrivileges())
 	

@@ -174,19 +174,36 @@ class MainWindow:
 
 		self.menu2.append(self.HideChatButtons)
 
-		self.buddylist_in_chatrooms1 = gtk.CheckMenuItem(_("Buddylist in Chatrooms"))
-		self.buddylist_in_chatrooms1.show()
-		self.buddylist_in_chatrooms1.connect("activate", self.OnToggleBuddyList)
-		self.buddylist_in_chatrooms1.add_accelerator("activate", self.accel_group, gtk.gdk.keyval_from_name("U"), gtk.gdk.MOD1_MASK, gtk.ACCEL_VISIBLE)
-
-		self.menu2.append(self.buddylist_in_chatrooms1)
-
 		self.HideFlags = gtk.CheckMenuItem(_("Hide flag columns in user lists"))
 		self.HideFlags.show()
 		self.HideFlags.connect("toggled", self.OnHideFlags)
 		self.HideFlags.add_accelerator("activate", self.accel_group, gtk.gdk.keyval_from_name("g"), gtk.gdk.MOD1_MASK, gtk.ACCEL_VISIBLE)
 
 		self.menu2.append(self.HideFlags)
+
+		self.sep3 = gtk.MenuItem()
+		self.sep3.show()
+
+		self.menu2.append(self.sep3)
+
+		self.buddylist_in_tab = gtk.RadioMenuItem(None, _("Buddylist in separate tab"))
+		self.buddylist_in_tab.show()
+		self.buddylist_in_tab.connect("toggled", self.OnToggleBuddyList)
+
+		self.menu2.append(self.buddylist_in_tab)
+
+		self.buddylist_in_chatrooms1 = gtk.RadioMenuItem(self.buddylist_in_tab, _("Buddylist in Chatrooms"))
+		self.buddylist_in_chatrooms1.show()
+		self.buddylist_in_chatrooms1.connect("toggled", self.OnToggleBuddyList)
+		self.buddylist_in_chatrooms1.add_accelerator("activate", self.accel_group, gtk.gdk.keyval_from_name("U"), gtk.gdk.MOD1_MASK, gtk.ACCEL_VISIBLE)
+
+		self.menu2.append(self.buddylist_in_chatrooms1)
+
+		self.buddylist_always_visible = gtk.RadioMenuItem(self.buddylist_in_tab, _("Buddylist always visible"))
+		self.buddylist_always_visible.show()
+		self.buddylist_always_visible.connect("toggled", self.OnToggleBuddyList)
+
+		self.menu2.append(self.buddylist_always_visible)
 
 		self.View.set_submenu(self.menu2)
 
@@ -461,8 +478,10 @@ class MainWindow:
 		self.vpaned1 = gtk.VPaned()
 		self.vpaned1.show()
 
+		self.hpanedm = gtk.HPaned()
+		self.hpanedm.show()
+
 		self.MainNotebook = gtk.Notebook()
-		self.MainNotebook.set_size_request(0, 0)
 		self.MainNotebook.set_scrollable(True)
 		self.MainNotebook.show()
 		self.MainNotebook.connect("switch_page", self.OnSwitchPage)
@@ -1096,7 +1115,7 @@ class MainWindow:
 		self.RoomSearchCombo.show()
 		self.RoomSearchCombo.set_sensitive(False)
 
-		self.comboboxentry_entry2 = self.RoomSearchCombo.child
+		self.RoomSearchEntry = self.RoomSearchCombo.child
 
 		self.RoomSearchCombo.set_model(self.RoomSearchCombo_List)
 		self.RoomSearchCombo.set_text_column(0)
@@ -1584,7 +1603,14 @@ class MainWindow:
 
 		self.MainNotebook.append_page(self.interests, self.InterestsTabLabel)
 
-		self.vpaned1.pack1(self.MainNotebook, True, True)
+		self.hpanedm.pack1(self.MainNotebook, True, True)
+
+		self.vpanedm = gtk.VPaned()
+		self.vpanedm.show()
+
+		self.hpanedm.pack2(self.vpanedm, True, True)
+
+		self.vpaned1.pack1(self.hpanedm, True, False)
 
 		self.vbox1.pack_start(self.vpaned1)
 
@@ -1688,10 +1714,10 @@ class MainWindow:
 	def OnHideChatButtons(self, widget):
 		pass
 
-	def OnToggleBuddyList(self, widget):
+	def OnHideFlags(self, widget):
 		pass
 
-	def OnHideFlags(self, widget):
+	def OnToggleBuddyList(self, widget):
 		pass
 
 	def OnSettingsShares(self, widget):
