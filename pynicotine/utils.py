@@ -472,21 +472,21 @@ def getFileInfo(name, pathname):
 		
 def getFilesStreams(mtimes, oldmtimes, oldstreams, newsharedfiles, yieldcall = None):
 	streams = {}
-	for i in mtimes.keys():
-		if hiddenCheck(i):
+	for directory in mtimes.keys():
+		if hiddenCheck(directory):
 			continue
 
-		if i in oldmtimes:
-			if mtimes[i] == oldmtimes[i]:
-				if os.path.exists(i):
+		if directory in oldmtimes:
+			if mtimes[directory] == oldmtimes[directory]:
+				if os.path.exists(directory):
 					# No change
-					streams[i] = oldstreams[i]
+					streams[directory] = oldstreams[directory]
 					continue
 				else:
 					print "Dropping missing directory %s" % directory
 					continue
 				
-		streams[i] = getDirStream(newsharedfiles[i])
+		streams[directory] = getDirStream(newsharedfiles[directory])
 		if yieldcall is not None:
 			yieldcall()
 	return streams
@@ -534,15 +534,15 @@ def getFilesIndex(mtimes, oldmtimes, shareddirs, newsharedfiles, yieldcall = Non
 	fileindex = {}
 	index = 0
 	
-	for i in mtimes.keys():
+	for directory in mtimes.keys():
 		
-		if hiddenCheck(i):
+		if hiddenCheck(directory):
 			continue
-		for j in newsharedfiles[i]:
-			indexes = getIndexWords(i, j[0], shareddirs)
+		for j in newsharedfiles[directory]:
+			indexes = getIndexWords(directory, j[0], shareddirs)
 			for k in indexes:
 				wordindex.setdefault(k, []).append(index)
-			fileindex[str(index)] = (os.path.join(i, j[0]), )+j[1:]
+			fileindex[str(index)] = (os.path.join(directory, j[0]), )+j[1:]
 			index += 1
 		if yieldcall is not None:
 			yieldcall()
