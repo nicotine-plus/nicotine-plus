@@ -269,9 +269,13 @@ class NicotineFrame(MainWindow):
 		self.UserList.show()
 		self.UserList.set_headers_visible(True)
 		self.userlistSW.add(self.UserList)
-	
+		
+		TARGETS = [('text/plain', 0, 1)]
+		self.UserList.enable_model_drag_source(gtk.gdk.BUTTON1_MASK, TARGETS, gtk.gdk.ACTION_COPY)
+		self.UserList.enable_model_drag_dest(TARGETS,  gtk.gdk.ACTION_COPY)
 		self.userlistvbox.pack_start(self.userlistSW, True, True, 0)
-	
+		self.UserList.connect("drag_data_get", self.buddylist_drag_data_get_data)
+     		self.UserList.connect("drag_data_received", self.DragUserToBuddylist)
 		self.UserHbox = gtk.HBox(False, 3)
 		self.UserHbox.set_border_width(0)
 		self.UserHbox.show()
@@ -471,7 +475,27 @@ class NicotineFrame(MainWindow):
 				self.minimized = 1
 			else:
 				self.minimized = 0
-
+				
+	def similar_users_drag_data_get_data(self, treeview, context, selection, target_id, etime):
+		treeselection = treeview.get_selection()
+		model, iter = treeselection.get_selected()
+		user = model.get_value(iter, 1)
+		#data = (status, flag, user, speed, files, trusted, notify, privileged, lastseen, comments)
+		selection.set(selection.target, 8, user)
+	
+	def buddylist_drag_data_get_data(self, treeview, context, selection, target_id, etime):
+		treeselection = treeview.get_selection()
+		model, iter = treeselection.get_selected()
+		status, flag, user, speed, files, trusted, notify, privileged, lastseen, comments = model.get(iter, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9)
+		#data = (status, flag, user, speed, files, trusted, notify, privileged, lastseen, comments)
+		selection.set(selection.target, 8, user)
+		
+     	def DragUserToBuddylist(self, treeview, context, x, y, selection, info, etime):
+		model = treeview.get_model()
+		user = selection.data
+		if user:
+			self.userlist.AddToList(user)
+			
 	def NewNotification(self, message, title="Nicotine+"):
 		if self.pynotify is None:
 			return
@@ -566,6 +590,8 @@ class NicotineFrame(MainWindow):
 		self.LikesList.set_model(self.likeslist)
 		self.RecommendationsList.set_property("rules-hint", True)
 		self.RecommendationUsersList.set_property("rules-hint", True)
+		self.RecommendationUsersList.enable_model_drag_source(gtk.gdk.BUTTON1_MASK, [('text/plain', 0, 2)], gtk.gdk.ACTION_COPY)
+		self.RecommendationUsersList.connect("drag_data_get", self.similar_users_drag_data_get_data)
 		self.til_popup_menu = popup = utils.PopupMenu(self)
 		popup.setup(
 			("#" + _("_Remove this item"), self.OnRemoveThingILike, gtk.STOCK_CANCEL),

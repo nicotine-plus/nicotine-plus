@@ -554,6 +554,8 @@ class ChatRoom(ChatRoomTab):
 		
 		self.UpdateColours()
 		self.UserList.set_model(self.usersmodel)
+		self.UserList.enable_model_drag_source(gtk.gdk.BUTTON1_MASK, [('text/plain', 0, 2)], gtk.gdk.ACTION_COPY)
+		self.UserList.connect("drag_data_get", self.drag_data_get_data)
 		self.UserList.set_property("rules-hint", True)
 		self.popup_menu_privaterooms = PopupMenu(self.frame)
 		self.popup_menu = popup = PopupMenu(self.frame)
@@ -667,6 +669,13 @@ class ChatRoom(ChatRoomTab):
 	def OnFindChatLog(self, widget):
 		self.frame.OnFindTextview(widget, self.ChatScroll)
 		
+	def drag_data_get_data(self, treeview, context, selection, target_id, etime):
+		treeselection = treeview.get_selection()
+		model, iter = treeselection.get_selected()
+		user = model.get_value(iter, 2)
+		#data = (status, flag, user, speed, files)
+		selection.set(selection.target, 8, user)
+			
 	def get_custom_widget(self, id, string1, string2, int1, int2):
 		if id == "Ticker":
 			t = Ticker()
