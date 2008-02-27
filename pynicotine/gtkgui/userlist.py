@@ -309,16 +309,15 @@ class UserList:
 		row = [self.frame.GetStatusImage(0), None, user, "0", "0", False, False, False, _("Never seen"), "", 0, 0, 0, 0, ""]
 		iter = self.usersmodel.append(row)
 		self.userlist.append([user, "", _("Never seen"), iter, self.frame.GetUserFlag(user)])
-		
 		self.SaveUserList()
 		self.frame.np.queue.put(slskmessages.AddUser(user))
 
 		for widget in self.frame.BuddiesComboEntries:
 			gobject.idle_add(widget.Append, user)
 		if self.frame.np.config.sections["words"]["buddies"]:
-			self.frame.chatrooms.roomsctrl.UpdateCompletions()
-			self.frame.privatechats.UpdateCompletions()
-		
+			gobject.idle_add(self.frame.chatrooms.roomsctrl.UpdateCompletions)
+			gobject.idle_add(self.frame.privatechats.UpdateCompletions)
+			
 	def OnEditComments(self, widget):
 		user = self.popup_menu.get_user()
 		for i in self.userlist:
@@ -370,8 +369,8 @@ class UserList:
 		for widget in self.frame.BuddiesComboEntries:
 			gobject.idle_add(widget.Remove, user)
 		if self.frame.np.config.sections["words"]["buddies"]:
-			self.frame.chatrooms.roomsctrl.UpdateCompletions()
-			self.frame.privatechats.UpdateCompletions()
+			gobject.idle_add(self.frame.chatrooms.roomsctrl.UpdateCompletions)
+			gobject.idle_add(self.frame.privatechats.UpdateCompletions)
 			
 	def OnRemoveUser(self, widget):
 		self.RemoveFromList(self.popup_menu.get_user())

@@ -856,13 +856,14 @@ class PopupMenu(gtk.Menu):
 		self.frame.PrivateRoomRemoveUser(room, self.user)
 	
 	def OnAddToList(self, widget):
+		if self.editing: return
 		if widget.get_active():
 			self.frame.userlist.AddToList(self.user)
 		else:
 			self.frame.userlist.RemoveFromList(self.user)
 	
 	def OnBanUser(self, widget):
-		
+		if self.editing: return
 		if widget.get_active():
 			self.frame.BanUser(self.user)
 		else:
@@ -877,6 +878,7 @@ class PopupMenu(gtk.Menu):
 			self.frame.OnUnBlockUser(self.user)
 			
 	def OnIgnoreUser(self, widget):
+		if self.editing: return
 		if widget.get_active():
 			self.frame.IgnoreUser(self.user)
 		else:
