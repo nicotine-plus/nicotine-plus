@@ -26,6 +26,9 @@ from pynicotine import slskmessages
 from pynicotine.utils import _, version
 
 class PrivateChats(IconNotebook):
+	CMDS = ["/alias ", "/unalias ", "/whois ", "/browse ", "/ip ", "/pm ", "/msg ", "/search ", "/usearch ", "/rsearch ",
+		"/bsearch ", "/add ", "/buddy ", "/rem ", "/unbuddy ", "/ban ", "/ignore ", "/unban ", "/unignore ", "/clear", "/quit", "/exit", "/rescan", "/nsa", "/info", "/ctcpversion", "/join"]
+		
 	def __init__(self, frame):
 		ui = frame.np.config.sections["ui"]
 		IconNotebook.__init__(self, frame.images, ui["labelprivate"], ui["tabclosers"])
@@ -34,6 +37,7 @@ class PrivateChats(IconNotebook):
 		self.frame = frame
 		self.connected = 1
 		self.users = {}
+		self.clist = []
 		self.connect("switch-page", self.OnSwitchPage)
 
 	def OnSwitchPage(self, notebook, page, page_num, force = 0):
@@ -191,8 +195,23 @@ class PrivateChats(IconNotebook):
 			tab.GetUserStatus(0)
 			
 	def UpdateCompletions(self):
+		config = self.frame.np.config.sections["words"]
+		clist = [self.frame.np.config.sections["server"]["login"], "nicotine"] + self.users.keys()
+		if config["buddies"]:
+			clist += [i[0] for i in self.frame.userlist.userlist]
+		if config["aliases"]:
+			clist += ["/"+k for k in self.frame.np.config.aliases.keys()]
+		if config["commands"]:
+			clist += self.CMDS
+		if config["roomnames"]:
+			clist += self.frame.chatrooms.roomsctrl.rooms
+		
+		# no duplicates
+		self.clist = list(sets.Set(clist))
+		self.clist.sort(key=str.lower)
+		
 		for user in self.users.values():
-			user.GetCompletionList()
+			user.GetCompletionList(clist=self.clist)
 			
 class PrivateChat(PrivateChatTab):
 	def __init__(self, chats, user):
@@ -281,7 +300,7 @@ class PrivateChat(PrivateChatTab):
 		self.ChatScroll.connect("key_press_event", self.OnPopupMenu)
 
 		self.UpdateColours()
-		self.GetCompletionList()
+		self.GetCompletionList(clist=self.chats.clist)
 		
 		self.ReadPrivateLog()
 		
@@ -416,8 +435,6 @@ class PrivateChat(PrivateChatTab):
 		else:
 			self.frame.np.queue.put(slskmessages.MessageUser(self.user, self.frame.AutoReplace(text)))
 			
-	CMDS = ["/alias ", "/unalias ", "/whois ", "/browse ", "/ip ", "/pm ", "/msg ", "/search ", "/usearch ", "/rsearch ",
-		"/bsearch ", "/add ", "/buddy ", "/rem ", "/unbuddy ", "/ban ", "/ignore ", "/unban ", "/unignore ", "/clear", "/quit", "/exit", "/rescan", "/nsa", "/info", "/ctcpversion", "/join"]
 
 		
 	def threadAlias(self, alias):
@@ -426,7 +443,7 @@ class PrivateChat(PrivateChatTab):
 			return
 		if text[:2] == "//":
 			text = text[1:]
-		self.frame.np.queue.put(slskmessages.SayChatroom(self.room, self.frame.AutoReplace(text)))
+		self.frame.np.queue.put(slskmessages.MessageUser(self.user, self.frame.AutoReplace(text)))
 
 			
 	def OnEnter(self, widget):
@@ -708,7 +725,7 @@ class PrivateChat(PrivateChatTab):
 		self.destroy()
 
 
-	def GetCompletionList(self, ix=0, text=""):
+	def GetCompletionList(self, ix=0, text="", clist=[]):
 		config = self.frame.np.config.sections["words"]
 		completion = self.ChatLine.get_completion()
 		completion.set_popup_single_match(not config["onematch"])
@@ -720,20 +737,6 @@ class PrivateChat(PrivateChatTab):
 		
 		if not config["tab"]:
 			return
-		
-		clist = [self.user, self.frame.np.config.sections["server"]["login"], "nicotine"]
-		if config["buddies"]:
-			clist += [i[0] for i in self.frame.userlist.userlist]
-		if config["aliases"]:
-			clist += ["/"+k for k in self.frame.np.config.aliases.keys()]
-		if config["commands"]:
-			clist += self.CMDS
-		if config["roomnames"]:
-			clist += self.frame.chatrooms.roomsctrl.rooms
-		
-		# no duplicates
-		clist = list(sets.Set(clist))
-		clist.sort(key=str.lower)
 		
 		completion.set_popup_completion(False)
 		if config["dropdown"]:
@@ -765,10 +768,7 @@ class PrivateChat(PrivateChatTab):
 		ix = widget.get_position()
 		text = widget.get_text()[:ix].split(" ")[-1]
 		
-		if widget.get_text()[:1] == "/":
-			self.GetCompletionList(ix, text)
-			
-		completion, single = GetCompletion(text, self.clist)
+		completion, single = GetCompletion(text, self.chats.clist)
 		
 		if completion:
 			widget.insert_text(completion, ix)

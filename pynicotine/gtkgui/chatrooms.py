@@ -51,12 +51,16 @@ def GetCompletion(part, list):
 		return prefix[len(part):], 0
 
 class RoomsControl:
+	CMDS = ["/alias ", "/unalias ", "/whois ", "/browse ", "/ip ", "/pm ", "/msg ", "/search ", "/usearch ", "/rsearch ",
+		"/bsearch ", "/join ", "/leave", "/add ", "/buddy ", "/rem ", "/unbuddy ", "/ban ", "/ignore ", "/unban ", "/unignore ", "/clear", "/part ", "/quit", "/exit",
+		"/rescan", "/tick", "/nsa", "/info", "/detach", "/attach"]
 	def __init__(self, frame, ChatNotebook):
 		self.frame = frame
 		self.joinedrooms = {}
 		self.autojoin = 1
 		self.rooms = []
 		self.privaterooms = {}
+		self.clist = []
 		self.OtherPrivateRooms = self.frame.np.config.sections["private_rooms"]["membership"]
 		self.roomsmodel = gtk.ListStore(str, int, int)
 		frame.roomlist.RoomsList.set_model(self.roomsmodel)
@@ -383,8 +387,24 @@ class RoomsControl:
 		self.autojoin = 1
 		
 	def UpdateCompletions(self):
+		self.clist = []
+		config = self.frame.np.config.sections["words"]
+		if config["tab"]:
+			config = self.frame.np.config.sections["words"]
+			clist = [self.frame.np.config.sections["server"]["login"], "nicotine"]
+	
+			if config["roomnames"]:
+				clist += self.rooms
+			if config["buddies"]:
+				clist += [i[0] for i in self.frame.userlist.userlist]
+			if config["aliases"]:
+				clist += ["/"+k for k in self.frame.np.config.aliases.keys()]
+			if config["commands"]:
+				clist += self.CMDS
+			self.clist = clist
+		
 		for room in self.joinedrooms.values():
-			room.GetCompletionList()
+			room.GetCompletionList(clist=list(self.clist))
 			
 def TickDialog(parent, default = ""):
 	dlg = gtk.Dialog(title = _("Set ticker message"), parent = parent,
@@ -602,7 +622,7 @@ class ChatRoom(ChatRoomTab):
 		)
 		self.ChatScroll.connect("button-press-event", self.OnPopupChatRoomMenu)
 		self.buildingcompletion = False
-		self.GetCompletionList()
+		self.GetCompletionList(clist=list(self.roomsctrl.clist))
 		if config["logging"]["readroomlogs"]:
 			self.ReadRoomLogs()
 	
@@ -870,11 +890,7 @@ class ChatRoom(ChatRoomTab):
 			return
 		else:
 			self.changecolour(self.tag_users[user], color)
-
 	
-	CMDS = ["/alias ", "/unalias ", "/whois ", "/browse ", "/ip ", "/pm ", "/msg ", "/search ", "/usearch ", "/rsearch ",
-		"/bsearch ", "/join ", "/leave", "/add ", "/buddy ", "/rem ", "/unbuddy ", "/ban ", "/ignore ", "/unban ", "/unignore ", "/clear", "/part ", "/quit", "/exit",
-		"/rescan", "/tick", "/nsa", "/info", "/detach", "/attach"]
 		
 	def threadAlias(self, alias):
 		text = expand_alias(self.frame.np.config.aliases, alias)
@@ -1303,7 +1319,7 @@ class ChatRoom(ChatRoomTab):
 		# Update user count
 		self.CountUsers()
 		# Build completion list
-		self.GetCompletionList()
+		self.GetCompletionList(clist=self.roomsctrl.clist)
 		# Update all username tags in chat log
 		for user in self.tag_users:
 			self.getUserTag(user)
@@ -1319,7 +1335,7 @@ class ChatRoom(ChatRoomTab):
 		self.frame.np.config.writeConfig()
 		
 
-	def GetCompletionList(self, ix=0, text=""):
+	def GetCompletionList(self, ix=0, text="", clist=[]):
 	
 		completion = self.ChatEntry.get_completion()
 		liststore = completion.get_model()
@@ -1332,19 +1348,8 @@ class ChatRoom(ChatRoomTab):
 		if not config["tab"]:
 			return
 		
-		clist = [self.frame.np.config.sections["server"]["login"], "nicotine"]
 		if config["roomusers"]:
-	
 			clist += list(self.users.keys())
-		if config["buddies"]:
-			clist += [i[0] for i in self.frame.userlist.userlist]
-		if config["aliases"]:
-			clist += ["/"+k for k in self.frame.np.config.aliases.keys()]
-		if config["commands"]:
-			clist += self.CMDS
-		if config["roomnames"]:
-			clist += self.roomsctrl.rooms
-		
 
 		# no duplicates
 		clist = list(sets.Set(clist))
@@ -1353,9 +1358,8 @@ class ChatRoom(ChatRoomTab):
 		if config["dropdown"]:
 			for word in clist:
 				liststore.append([word])
-		completion.set_popup_completion(True)
+			completion.set_popup_completion(True)
 		self.clist = clist
-
 		
 		
 	def OnKeyPress(self, widget, event):
