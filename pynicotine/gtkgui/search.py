@@ -839,7 +839,7 @@ class Search(SearchTab):
 			return False
 		if filters[2] and not self.checkDigit(filters[2], row[13]):
 			return False
-		if filters[3] and not self.checkDigit(filters[3], row[11], False):
+		if filters[3] and not self.checkDigit(filters[3], row[10], False):
 			return False
 		if filters[4] and row[6] != _("Y"):
 			return False
