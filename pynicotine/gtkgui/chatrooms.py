@@ -1164,12 +1164,19 @@ class ChatRoom(ChatRoomTab):
 	def UserNameEvent(self, tag, widget, event, iter, user):
 
 		if tag.last_event_type == gtk.gdk.BUTTON_PRESS and event.type == gtk.gdk.BUTTON_RELEASE and event.button in (1, 2):
-			self.popup_menu.set_user(user)
 			items = self.popup_menu.get_children()
 			# Chat, Userlists use the normal popup system
+			self.popup_menu.editing = True
+			self.popup_menu.set_user(user)
+			me = (self.popup_menu.user == None or self.popup_menu.user == self.frame.np.config.sections["server"]["login"])
+			
 			items[9].set_active(user in [i[0] for i in self.frame.np.config.sections["server"]["userlist"]])
 			items[10].set_active(user in self.frame.np.config.sections["server"]["banlist"])
 			items[11].set_active(user in self.frame.np.config.sections["server"]["ignorelist"])
+			items[12].set_active(self.frame.UserIpIsBlocked(user))
+			items[12].set_sensitive(not me)
+			items[15].set_sensitive(not me)
+			self.popup_menu.editing = False
 			self.popup_menu.popup(None, None, None, event.button, event.time)
 		tag.last_event_type = event.type
 		
