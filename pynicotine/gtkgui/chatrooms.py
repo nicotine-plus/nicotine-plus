@@ -85,12 +85,18 @@ class RoomsControl:
 			("#" + _("Join room"), self.OnPopupJoin, gtk.STOCK_JUMP_TO ),
 			("#" + _("Leave room"), self.OnPopupLeave, gtk.STOCK_CLOSE),
 			( "", None ),
+			("#" + _("Enable Private Room invitations"), self.OnEnablePrivateRooms, gtk.STOCK_OK),
+			("#" + _("Disable Private Room invitations"), self.OnDisablePrivateRooms, gtk.STOCK_CANCEL),
+			( "", None ),
 			("#" + _("Create Private Room"), self.OnPopupCreatePrivateRoom, gtk.STOCK_NEW),
 			("#" + _("Disown Private Room"), self.OnPopupPrivateRoomDisown, gtk.STOCK_CLOSE),
 			("#" + _("Cancel room membership"), self.OnPopupPrivateRoomDismember, gtk.STOCK_CANCEL),
 			( "", None ),
 			("#" + _("Refresh"), self.OnPopupRefresh, gtk.STOCK_REFRESH ),
 		)
+		
+		items = self.popup_menu.get_children()
+		self.Menu_Join, self.Menu_Leave, self.Menu_Empty1, self.Menu_PrivateRoom_Enable, self.Menu_PrivateRoom_Disable, self.Menu_Empty2, self.Menu_PrivateRoom_Create, self.Menu_PrivateRoom_Disown, self.Menu_PrivateRoom_Dismember, self.Menu_Empty3, self.Menu_Refresh = items
 		frame.roomlist.RoomsList.connect("button_press_event", self.OnListClicked)
 		frame.roomlist.RoomsList.set_headers_clickable(True)
 
@@ -214,16 +220,22 @@ class RoomsControl:
 		self.popup_room = room
 		#prooms_enabled = bool(self.frame.np.config.sections["private_rooms"]["enabled"])
 		prooms_enabled = True
-		items[0].set_sensitive(act[0])
-		items[1].set_sensitive(act[1])
-		items[3].set_sensitive(prooms_enabled) # Create private room
-		items[4].set_sensitive((prooms_enabled and self.popup_room in self.privaterooms)) # Disown
-		items[5].set_sensitive((prooms_enabled and self.popup_room in self.OtherPrivateRooms)) # Dismember
+		self.Menu_Join.set_sensitive(act[0])
+		self.Menu_Leave.set_sensitive(act[1])
+		self.Menu_PrivateRoom_Create.set_sensitive(prooms_enabled) # Create private room
+		self.Menu_PrivateRoom_Disown.set_sensitive((prooms_enabled and self.popup_room in self.privaterooms)) # Disown
+		self.Menu_PrivateRoom_Dismember.set_sensitive((prooms_enabled and self.popup_room in self.OtherPrivateRooms)) # Dismember
 		self.popup_menu.popup(None, None, None, event.button, event.time)
 	
 	def OnPopupJoin(self, widget):
 		self.frame.np.queue.put(slskmessages.JoinRoom(self.popup_room))
-	
+		
+	def OnEnablePrivateRooms(self, widget):
+		self.frame.np.queue.put(slskmessages.PrivateRoomToggle(True))
+		
+	def OnDisablePrivateRooms(self, widget):
+		self.frame.np.queue.put(slskmessages.PrivateRoomToggle(False))
+		
 	def OnPopupCreatePrivateRoom(self, widget):
 		room = input_box(self.frame, title=_('Nicotine+:')+" "+_("Create Private Room"),
 		message=_('Enter the name of the private room you wish to create'),
@@ -312,6 +324,11 @@ class RoomsControl:
 		for room in self.OtherPrivateRooms:
 			self.roomsmodel.prepend([room, 0, 10000])
 			
+	def TogglePrivateRooms(self, enabled):
+		self.frame.np.config.sections["server"]["private_chatrooms"] = enabled
+		self.Menu_PrivateRoom_Enable.set_sensitive(not enabled)
+		self.Menu_PrivateRoom_Disable.set_sensitive(enabled)
+		
 	def GetUserStats(self, msg):
 		for room in self.joinedrooms.values():
 			room.GetUserStats(msg.user, msg.avgspeed, msg.files)

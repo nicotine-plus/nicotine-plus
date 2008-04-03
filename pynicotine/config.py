@@ -76,6 +76,7 @@ class Config:
 	"ipblocklist":{}, \
 	"autojoin": ["nicotine"], \
 	"autoaway":15, \
+	"private_chatrooms": 0, \
 	}, \
 \
 "transfers":{ \

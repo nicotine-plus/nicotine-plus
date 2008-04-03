@@ -238,6 +238,7 @@ class NetworkEventProcessor:
 			slskmessages.PrivateRoomAdded:self.PrivateRoomAdded,
 			slskmessages.PrivateRoomRemoved:self.PrivateRoomRemoved,
 			slskmessages.PrivateRoomDisown:self.PrivateRoomDisown,
+			slskmessages.PrivateRoomToggle:self.PrivateRoomToggle,
 			slskmessages.PrivateRoomSomething:self.PrivateRoomSomething,
 			}
 
@@ -573,6 +574,8 @@ class NetworkEventProcessor:
 			self.queue.put(slskmessages.NotifyPrivileges(1, self.config.sections["server"]["login"]))
 			self.privatechat.Login()
 			self.queue.put(slskmessages.CheckPrivileges())
+			
+			self.queue.put(slskmessages.PrivateRoomToggle(self.config.sections["server"]["private_chatrooms"]))
 		else:
 			self.frame.manualdisconnect = 1
 			self.setStatus(_("Can not log in, reason: %s") %(msg.reason))
@@ -696,7 +699,13 @@ class NetworkEventProcessor:
 	def PrivateRoomDisown(self, msg):
 		#msg.debug()
 		pass
-		
+	
+	def PrivateRoomToggle(self, msg):
+		if self.chatrooms is not None:
+			self.chatrooms.roomsctrl.TogglePrivateRooms(msg.enabled)
+		else:
+			self.logMessage("%s %s" %(msg.__class__, vars(msg)))
+	
 	def PrivateRoomSomething(self, msg):
 		#msg.debug()
 		pass

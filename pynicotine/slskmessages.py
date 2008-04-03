@@ -562,6 +562,17 @@ class PrivateRoomRemoved(ServerMessage):
 	def parseNetworkMessage(self, message):
 		self.room = self.getObject(message, types.StringType)[1]
 		
+class PrivateRoomToggle(ServerMessage):
+	""" We send this when we want to enable or disable invitations to private rooms"""
+	def __init__(self, enabled = None):
+		self.enabled = enabled
+	
+	def makeNetworkMessage(self):
+		return chr(self.enabled)
+	
+	def parseNetworkMessage(self, message):
+		pos, self.enabled = 1, bool(ord(message[0]))
+		
 class LeaveRoom(ServerMessage):
 	""" We send this when we want to leave a room."""
 	def __init__(self, room = None):

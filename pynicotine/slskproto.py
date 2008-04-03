@@ -172,6 +172,7 @@ class SlskProtoThread(threading.Thread):
 		PrivateRoomSomething:138,
 		PrivateRoomAdded:139,
 		PrivateRoomRemoved:140,
+		PrivateRoomToggle:141,
 		PrivateRoomOwned:148,
 		}
 		

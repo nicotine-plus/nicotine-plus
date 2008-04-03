@@ -17,6 +17,9 @@ General Changes
    Also fixed the duplicate Alt-B hotkey (hide flags is now Alt-G).
  
 Chat Rooms
+ * Added Server Message 141, enables Private Chat Room Invitations and thus
+   allows those you invite to get past the annoying server message that warning
+   when a user you've invited 'hasn't enabled private room add'.
  * Blocking a user's IP address is now easier with the addition of a chatroom
    popup menu item
  * Private Rooms: You can now create private rooms via the roomslist popup menu
