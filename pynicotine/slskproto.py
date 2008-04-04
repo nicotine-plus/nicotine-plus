@@ -163,6 +163,8 @@ class SlskProtoThread(threading.Thread):
 		GivePrivileges:123,
 		NotifyPrivileges:124,
 		AckNotifyPrivileges:125,
+		Unknown126:126,
+		Unknown127:127,
 		#AnotherStatus:10,
 		PrivateRoomUsers:133,
 		PrivateRoomAddUser:134,
@@ -173,6 +175,10 @@ class SlskProtoThread(threading.Thread):
 		PrivateRoomAdded:139,
 		PrivateRoomRemoved:140,
 		PrivateRoomToggle:141,
+		PrivateRoomAddOperator:143,
+		PrivateRoomRemoveOperator:144,
+		PrivateRoomOperatorAdded:145,
+		PrivateRoomOperatorRemoved:146,
 		PrivateRoomOwned:148,
 		}
 		

@@ -231,6 +231,8 @@ class NetworkEventProcessor:
 			slskmessages.RoomTickerRemove:self.RoomTickerRemove,
 			slskmessages.AckNotifyPrivileges:self.AckNotifyPrivileges,
 			slskmessages.NotifyPrivileges:self.NotifyPrivileges,
+			slskmessages.Unknown126:self.Unknown126,
+			slskmessages.Unknown127:self.Unknown127,
 			slskmessages.PrivateRoomUsers:self.PrivateRoomUsers,
 			slskmessages.PrivateRoomOwned:self.PrivateRoomOwned,
 			slskmessages.PrivateRoomAddUser:self.PrivateRoomAddUser,
@@ -240,6 +242,10 @@ class NetworkEventProcessor:
 			slskmessages.PrivateRoomDisown:self.PrivateRoomDisown,
 			slskmessages.PrivateRoomToggle:self.PrivateRoomToggle,
 			slskmessages.PrivateRoomSomething:self.PrivateRoomSomething,
+			slskmessages.PrivateRoomOperatorAdded:self.PrivateRoomOperatorAdded,
+			slskmessages.PrivateRoomOperatorRemoved:self.PrivateRoomOperatorRemoved,
+			slskmessages.PrivateRoomAddOperator:self.PrivateRoomAddOperator,
+			slskmessages.PrivateRoomRemoveOperator:self.PrivateRoomRemoveOperator,
 			}
 
 
@@ -653,52 +659,79 @@ class NetworkEventProcessor:
 				self.queue.put(slskmessages.RoomTickerSet(msg.room, self.encode(ticker, encoding)))
 		else:
 			self.logMessage("%s %s" %(msg.__class__, vars(msg)))
-			
-	def PrivateRoomUsers(self, msg):
-		rooms = self.chatrooms.roomsctrl.privaterooms
-		#if msg.room not in rooms.keys():
-		rooms[msg.room]= {"users": msg.users, "joined": msg.numusers}
-		#self.chatrooms.roomsctrl.privaterooms[msg.room]["users"] = msg.users
-		self.chatrooms.roomsctrl.SetPrivateRooms()
+	def Unknown126(self, msg):
+		self.logMessage("%s %s" %(msg.__class__, vars(msg)))
+	def Unknown127(self, msg):
+		self.logMessage("%s %s" %(msg.__class__, vars(msg)))
+		
 
 		
+	def PrivateRoomUsers(self, msg):
+		if self.chatrooms is not None:
+			self.chatrooms.roomsctrl.PrivateRoomUsers(msg)
+		else:
+			self.logMessage("%s %s" %(msg.__class__, vars(msg)))
 	def PrivateRoomOwned(self, msg):
-		#rooms = self.chatrooms.roomsctrl.privaterooms
-		if msg.room not in self.chatrooms.roomsctrl.privaterooms.keys():
-			rooms[msg.room] = {"users":[], "joined": 0}
+		if self.chatrooms is not None:
+			self.chatrooms.roomsctrl.PrivateRoomOwned(msg)
+		else:
+			self.logMessage("%s %s" %(msg.__class__, vars(msg)))
 		
 	def PrivateRoomAddUser(self, msg):
-		rooms = self.chatrooms.roomsctrl.privaterooms
-		if msg.room in rooms.keys():
-			if msg.user not in rooms[msg.room]["users"]:
-				rooms[msg.room]["users"].append(msg.user)
-		#msg.debug()
-
+		if self.chatrooms is not None:
+			self.chatrooms.roomsctrl.PrivateRoomAddUser(msg)
+		else:
+			self.logMessage("%s %s" %(msg.__class__, vars(msg)))
 		
 	def PrivateRoomRemoveUser(self, msg):
-		#msg.debug()
-		rooms = self.chatrooms.roomsctrl.privaterooms
-		if msg.room in rooms.keys():
-			if msg.user in rooms[msg.room]["users"]:
-				rooms[msg.room]["users"].remove(msg.user)
+		if self.chatrooms is not None:
+			self.chatrooms.roomsctrl.PrivateRoomRemoveUser(msg)
+		else:
+			self.logMessage("%s %s" %(msg.__class__, vars(msg)))
+				
+	def PrivateRoomOperatorAdded(self, msg):
+		if self.chatrooms is not None:
+			self.chatrooms.roomsctrl.PrivateRoomOperatorAdded(msg)
+		else:
+			self.logMessage("%s %s" %(msg.__class__, vars(msg)))
 		
+		
+	def PrivateRoomOperatorRemoved(self, msg):
+		if self.chatrooms is not None:
+			self.chatrooms.roomsctrl.PrivateRoomOperatorRemoved(msg)
+		else:
+			self.logMessage("%s %s" %(msg.__class__, vars(msg)))
+
+				
+	def PrivateRoomAddOperator(self, msg):
+		if self.chatrooms is not None:
+			self.chatrooms.roomsctrl.PrivateRoomAddOperator(msg)
+		else:
+			self.logMessage("%s %s" %(msg.__class__, vars(msg)))
+		
+	def PrivateRoomRemoveOperator(self, msg):
+		if self.chatrooms is not None:
+			self.chatrooms.roomsctrl.PrivateRoomRemoveOperator(msg)
+		else:
+			self.logMessage("%s %s" %(msg.__class__, vars(msg)))
+				
 	def PrivateRoomAdded(self, msg):
-		rooms = self.chatrooms.roomsctrl.OtherPrivateRooms
-		if msg.room not in rooms:
-			rooms.append(msg.room)
-		self.chatrooms.roomsctrl.SetPrivateRooms()
-		#msg.debug()
+		if self.chatrooms is not None:
+			self.chatrooms.roomsctrl.PrivateRoomAdded(msg)
+		else:
+			self.logMessage("%s %s" %(msg.__class__, vars(msg)))
 		
 	def PrivateRoomRemoved(self, msg):
-		rooms = self.chatrooms.roomsctrl.OtherPrivateRooms
-		if msg.room in rooms:
-			rooms.remove(msg.room)
-		self.chatrooms.roomsctrl.SetPrivateRooms()
-		#msg.debug()
-		
+		if self.chatrooms is not None:
+			self.chatrooms.roomsctrl.PrivateRoomRemoved(msg)
+		else:
+			self.logMessage("%s %s" %(msg.__class__, vars(msg)))
+			
 	def PrivateRoomDisown(self, msg):
-		#msg.debug()
-		pass
+		if self.chatrooms is not None:
+			self.chatrooms.roomsctrl.PrivateRoomDisown(msg)
+		else:
+			self.logMessage("%s %s" %(msg.__class__, vars(msg)))
 	
 	def PrivateRoomToggle(self, msg):
 		if self.chatrooms is not None:

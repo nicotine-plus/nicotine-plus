@@ -447,6 +447,10 @@ class JoinRoom(ServerMessage):
 		for i in users:
 			usersdict[i[0]] = UserData(i[1:])
 		return usersdict
+class Unknown126(ServerMessage):
+	pass
+class Unknown127(ServerMessage):
+	pass
 
 class PrivateRoomUsers(ServerMessage):
 	""" We get this when we've created a private room."""
@@ -476,7 +480,12 @@ class PrivateRoomOwned(ServerMessage):
 	def parseNetworkMessage(self, message):
 		pos, self.room = self.getObject(message, types.StringType)
 		pos, self.number = self.getObject(message, types.IntType, pos)
-
+		self.operators = []
+		for i in range(self.number):
+			pos, user = self.getObject(message, types.StringType, pos)
+			self.operators.append(user)
+		#self.debug()
+	
 		
 class PrivateRoomAddUser(ServerMessage):
 	""" We get / receive this when we add a user to a private room."""
@@ -502,7 +511,7 @@ class PrivateRoomDismember(ServerMessage):
 	def parseNetworkMessage(self, message):
 		pos, self.room = self.getObject(message, types.StringType)
 		
-class PrivateRoomDisown	(ServerMessage):
+class PrivateRoomDisown(ServerMessage):
 	""" We do this to stop owning a private room."""
 	def __init__(self, room = None):
 		self.room = room
@@ -571,7 +580,61 @@ class PrivateRoomToggle(ServerMessage):
 		return chr(self.enabled)
 	
 	def parseNetworkMessage(self, message):
+		# When this is received, we store it in the config, and disable the appropriate menu item
 		pos, self.enabled = 1, bool(ord(message[0]))
+
+
+
+
+class PrivateRoomAddOperator(ServerMessage):
+	""" We send this add privateroom operator abilities to a user"""
+	def __init__(self, room = None, user = None):
+		self.room = room
+		self.user = user
+	
+	def makeNetworkMessage(self):
+		return self.packObject(self.room) + self.packObject(self.user)
+	
+	def parseNetworkMessage(self, message):
+		pos, self.room = self.getObject(message, types.StringType)
+		pos, self.user = self.getObject(message, types.StringType, pos)
+		
+class PrivateRoomRemoveOperator(ServerMessage):
+	""" We send this to remove privateroom operator abilities from a user"""
+	def __init__(self, room = None, user = None):
+		self.room = room
+		self.user = user
+	
+	def makeNetworkMessage(self):
+		return self.packObject(self.room) + self.packObject(self.user)
+	
+	def parseNetworkMessage(self, message):
+		pos, self.room = self.getObject(message, types.StringType)
+		pos, self.user = self.getObject(message, types.StringType, pos)
+		
+class PrivateRoomOperatorAdded(ServerMessage):
+	""" We receive this when given privateroom operator abilities"""
+	def __init__(self, room = None):
+		self.room = room
+	
+	def makeNetworkMessage(self):
+		return self.packObject(self.room)
+	
+	def parseNetworkMessage(self, message):
+		pos, self.room = self.getObject(message, types.StringType)
+		#pos, self.username = self.getObject(message, types.StringType, pos)
+		
+class PrivateRoomOperatorRemoved(ServerMessage):
+	""" We receive this when privateroom operator abilities are removed"""
+	def __init__(self, room = None):
+		self.room = room
+	
+	def makeNetworkMessage(self):
+		return self.packObject(self.room)
+	
+	def parseNetworkMessage(self, message):
+		pos, self.room = self.getObject(message, types.StringType)
+		#pos, self.username = self.getObject(message, types.StringType, pos)
 		
 class LeaveRoom(ServerMessage):
 	""" We send this when we want to leave a room."""
@@ -827,7 +890,22 @@ class RoomList(ServerMessage):
 		for i in range(numusercounts):
 			pos, usercount = self.getObject(message, types.IntType, pos)
 			self.rooms[i][1] = usercount
-
+		self.privaterooms = []
+		
+		try:
+			if len(message[pos:]) == 0:
+				return
+			pos, numprivateroom = self.getObject(message, types.IntType, pos)
+			for i in range(numprivateroom):
+				pos, room = self.getObject(message, types.StringType, pos)
+				self.privaterooms.append([room, None])
+			pos, numprivateroomusers = self.getObject(message, types.IntType, pos)
+			for i in range(numprivateroomusers):
+				pos, usercount = self.getObject(message, types.IntType, pos)
+				self.privaterooms[i][1] = usercount
+		except Exception, e:
+			print e
+			pass
 
 class ExactFileSearch(ServerMessage):
 	""" Someone is searching for a file with an exact name """

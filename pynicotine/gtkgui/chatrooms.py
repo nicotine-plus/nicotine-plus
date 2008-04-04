@@ -59,9 +59,16 @@ class RoomsControl:
 		self.joinedrooms = {}
 		self.autojoin = 1
 		self.rooms = []
-		self.privaterooms = {}
+		config = self.frame.np.config.sections
+		if type(config["private_rooms"]["owned"]) is list:
+			config["private_rooms"]["owned"] = {}
+		if type(config["private_rooms"]["membership"]) is list:
+			config["private_rooms"]["membership"] = {}
+		self.PrivateRooms = {}
+		#self.PrivateRoomsOperator = config["private_rooms"]["operator"]
+		#self.PrivateRoomsMembership = config["private_rooms"]["membership"]
+		
 		self.clist = []
-		self.OtherPrivateRooms = self.frame.np.config.sections["private_rooms"]["membership"]
 		self.roomsmodel = gtk.ListStore(str, int, int)
 		frame.roomlist.RoomsList.set_model(self.roomsmodel)
 		
@@ -85,8 +92,8 @@ class RoomsControl:
 			("#" + _("Join room"), self.OnPopupJoin, gtk.STOCK_JUMP_TO ),
 			("#" + _("Leave room"), self.OnPopupLeave, gtk.STOCK_CLOSE),
 			( "", None ),
-			("#" + _("Enable Private Room invitations"), self.OnEnablePrivateRooms, gtk.STOCK_OK),
-			("#" + _("Disable Private Room invitations"), self.OnDisablePrivateRooms, gtk.STOCK_CANCEL),
+			("#" + _("Enable Private Rooms"), self.OnEnablePrivateRooms, gtk.STOCK_OK),
+			("#" + _("Disable Private Rooms"), self.OnDisablePrivateRooms, gtk.STOCK_CANCEL),
 			( "", None ),
 			("#" + _("Create Private Room"), self.OnPopupCreatePrivateRoom, gtk.STOCK_NEW),
 			("#" + _("Disown Private Room"), self.OnPopupPrivateRoomDisown, gtk.STOCK_CLOSE),
@@ -97,6 +104,9 @@ class RoomsControl:
 		
 		items = self.popup_menu.get_children()
 		self.Menu_Join, self.Menu_Leave, self.Menu_Empty1, self.Menu_PrivateRoom_Enable, self.Menu_PrivateRoom_Disable, self.Menu_Empty2, self.Menu_PrivateRoom_Create, self.Menu_PrivateRoom_Disown, self.Menu_PrivateRoom_Dismember, self.Menu_Empty3, self.Menu_Refresh = items
+		self.Menu_PrivateRoom_Enable.set_sensitive(False)
+		self.Menu_PrivateRoom_Disable.set_sensitive(False)
+		self.Menu_PrivateRoom_Create.set_sensitive(False)
 		frame.roomlist.RoomsList.connect("button_press_event", self.OnListClicked)
 		frame.roomlist.RoomsList.set_headers_clickable(True)
 
@@ -110,6 +120,24 @@ class RoomsControl:
 			pass
 		self.frame.SetTextBG(self.frame.roomlist.RoomsList)
 		self.frame.SetTextBG(self.frame.roomlist.CreateRoomEntry)
+		
+	def IsPrivateRoomOwned(self, room):
+		if room in self.PrivateRooms:
+			#print self.PrivateRooms[room]
+			if self.PrivateRooms[room]["owned"] == True:
+				return True
+		return False
+		
+	def IsPrivateRoomMember(self, room):
+		if room in self.PrivateRooms:
+			return True
+		return False
+	
+	def IsPrivateRoomOperator(self, room):
+		if room in self.PrivateRooms:
+			if self.PrivateRooms[room]["operator"] == True:
+				return True
+		return False
 		
 	def PrivateRoomsSort(self, model, iter1, iter2, column):
 		try:
@@ -222,9 +250,9 @@ class RoomsControl:
 		prooms_enabled = True
 		self.Menu_Join.set_sensitive(act[0])
 		self.Menu_Leave.set_sensitive(act[1])
-		self.Menu_PrivateRoom_Create.set_sensitive(prooms_enabled) # Create private room
-		self.Menu_PrivateRoom_Disown.set_sensitive((prooms_enabled and self.popup_room in self.privaterooms)) # Disown
-		self.Menu_PrivateRoom_Dismember.set_sensitive((prooms_enabled and self.popup_room in self.OtherPrivateRooms)) # Dismember
+		#self.Menu_PrivateRoom_Create.set_sensitive(prooms_enabled) # Create private room
+		self.Menu_PrivateRoom_Disown.set_sensitive(self.IsPrivateRoomOwned( self.popup_room)) # Disown
+		self.Menu_PrivateRoom_Dismember.set_sensitive((prooms_enabled and self.IsPrivateRoomMember(self.popup_room) )) # Dismember
 		self.popup_menu.popup(None, None, None, event.button, event.time)
 	
 	def OnPopupJoin(self, widget):
@@ -244,14 +272,14 @@ class RoomsControl:
 			self.frame.np.queue.put(slskmessages.JoinRoom(room, 1))
 			
 	def OnPopupPrivateRoomDisown(self, widget):
-		if self.popup_room in self.privaterooms:
+		if self.IsPrivateRoomOwned(self.popup_room):
 			self.frame.np.queue.put(slskmessages.PrivateRoomDisown(self.popup_room))
-			del self.privaterooms[self.popup_room]
+			#self.PrivateRoom[self.popup_room]
 			
 	def OnPopupPrivateRoomDismember(self, widget):
-		if self.popup_room in self.OtherPrivateRooms:
+		if self.IsPrivateRoomMember(self.popup_room):
 			self.frame.np.queue.put(slskmessages.PrivateRoomDismember(self.popup_room))
-			self.OtherPrivateRooms.remove(self.popup_room)
+			#del self.PrivateRoom[self.popup_room]
 			
 	def OnPopupLeave(self, widget):
 		self.frame.np.queue.put(slskmessages.LeaveRoom(self.popup_room))
@@ -299,7 +327,7 @@ class RoomsControl:
 			self.roomsmodel.append([room, users, users])
 			self.rooms.append(room)
 
-		self.SetPrivateRooms()
+		self.SetPrivateRooms(msg.privaterooms)
 		self.frame.roomlist.RoomsList.set_model(self.roomsmodel)
 		self.roomsmodel.set_sort_func(1, self.PrivateRoomsSort, 1)
 		self.roomsmodel.set_sort_column_id(1, gtk.SORT_DESCENDING)
@@ -309,26 +337,116 @@ class RoomsControl:
 			self.frame.chatrooms.roomsctrl.UpdateCompletions()
 			self.frame.privatechats.UpdateCompletions()
 			
-	def SetPrivateRooms(self):
+	def SetPrivateRooms(self, rooms=[]):
+		for room in rooms:
+			if room[0] not in self.PrivateRooms.keys():
+				self.PrivateRooms[room[0]] = {"users": [], "joined": room[1], "operators": [], "owned":True, "operator":False}
 		iter = self.roomsmodel.get_iter_root()
 		while iter is not None:
 			room = self.roomsmodel.get_value(iter, 0)
 			
 			lastiter = iter
 			iter = self.roomsmodel.iter_next(iter)
-			if room in self.privaterooms or room in self.OtherPrivateRooms:
+			if self.IsPrivateRoomOwned(room) or self.IsPrivateRoomMember(room):
 				self.roomsmodel.remove(lastiter)
-		for room in self.privaterooms:
+		for room in self.PrivateRooms:
+			num = self.PrivateRooms[room]["joined"]
+			if self.IsPrivateRoomOwned(room):
+				self.roomsmodel.prepend([room, num, 20000 + num])
+			elif self.IsPrivateRoomMember(room):
+				self.roomsmodel.prepend([room, num, 10000 + num])
+				
+	def CreatePrivateRoom(self, room):
+		if room in self.PrivateRooms:
+			return
+		self.PrivateRooms[room] = {"users": [], "joined": 0, "operators": [], "owned":False, "operator":False}
+		
+	def PrivateRoomUsers(self, msg):
+		rooms = self.PrivateRooms
+		if msg.room not in rooms.keys():
+			self.CreatePrivateRoom(msg.room)
+			rooms[msg.room]["users"] = msg.users
+			rooms[msg.room]["joined"] = msg.numusers
 
-			self.roomsmodel.prepend([room, self.privaterooms[room]["joined"], 20000+self.privaterooms[room]["joined"]])
-		for room in self.OtherPrivateRooms:
-			self.roomsmodel.prepend([room, 0, 10000])
-			
+		else:
+			rooms[msg.room]["users"] = msg.users
+			rooms[msg.room]["joined"] = msg.numusers
+		#self.PrivateRoomsOwned[msg.room]["users"] = msg.users
+		self.SetPrivateRooms()
+		#msg.debug()
+		
+	def PrivateRoomOwned(self, msg):
+		rooms = self.PrivateRooms
+		if msg.room not in rooms.keys():
+			self.CreatePrivateRoom(msg.room)
+			rooms[msg.room]["operators"] = msg.operators
+		else:
+			rooms[msg.room]["operators"] = msg.operators
+		
+		#msg.debug()
+		
+		self.SetPrivateRooms()
+	def PrivateRoomAddUser(self, msg):
+		rooms = self.PrivateRooms
+		if msg.room in rooms.keys():
+			if msg.user not in rooms[msg.room]["users"]:
+				rooms[msg.room]["users"].append(msg.user)
+		
+	def PrivateRoomRemoveUser(self, msg):
+		rooms = self.PrivateRooms
+		if msg.room in rooms.keys():
+			if msg.user in rooms[msg.room]["users"]:
+				rooms[msg.room]["users"].remove(msg.user)
+				
+	def PrivateRoomOperatorAdded(self, msg):
+		rooms = self.PrivateRooms
+		if msg.room in rooms.keys():
+			rooms[msg.room]["operator"] = True
+		
+		
+	def PrivateRoomOperatorRemoved(self, msg):
+		rooms = self.PrivateRooms
+		if msg.room in rooms.keys():
+			rooms[msg.room]["operator"] = False
+
+				
+	def PrivateRoomAddOperator(self, msg):
+		rooms = self.PrivateRooms
+		if msg.room in rooms.keys():
+			if msg.user not in rooms[msg.room]["operators"]:
+				rooms[msg.room]["operators"].append(msg.user)
+		
+	def PrivateRoomRemoveOperator(self, msg):
+		rooms = self.PrivateRooms
+		if msg.room in rooms.keys():
+			if msg.user in rooms[msg.room]["operators"]:
+				rooms[msg.room]["operators"].remove(msg.user)
+				
+	def PrivateRoomAdded(self, msg):
+		rooms = self.PrivateRooms
+		room = msg.room
+		if room not in rooms:
+			self.CreatePrivateRoom(room)
+			rooms[room]["operator"] = True
+		self.SetPrivateRooms()
+
+		
+	def PrivateRoomRemoved(self, msg):
+		rooms = self.PrivateRooms
+		if msg.room in rooms:
+			rooms.remove(msg.room)
+		self.SetPrivateRooms()
+		
 	def TogglePrivateRooms(self, enabled):
 		self.frame.np.config.sections["server"]["private_chatrooms"] = enabled
 		self.Menu_PrivateRoom_Enable.set_sensitive(not enabled)
 		self.Menu_PrivateRoom_Disable.set_sensitive(enabled)
+		self.Menu_PrivateRoom_Create.set_sensitive(enabled)
 		
+	def PrivateRoomDisown(self, msg):
+		if msg.room in self.PrivateRooms.keys():
+			self.PrivateRooms[msg.room]["owner"] = False
+	
 	def GetUserStats(self, msg):
 		for room in self.joinedrooms.values():
 			room.GetUserStats(msg.user, msg.avgspeed, msg.files)
@@ -729,19 +847,25 @@ class ChatRoom(ChatRoomTab):
 	def OnPrivateRooms(self, widget):
 		if self.popup_menu.user == None or self.popup_menu.user == self.frame.np.config.sections["server"]["login"]:
 			return False
-		
+		user = self.popup_menu.user
 		items = []
 
 		popup = self.popup_menu_privaterooms
 		popup.clear()
 		popup.set_user(self.popup_menu.user)
-		#print self.roomsctrl.privaterooms
-		for room in self.roomsctrl.privaterooms:
-			if self.popup_menu.user in self.roomsctrl.privaterooms[room]["users"]:
+		#print self.roomsctrl.PrivateRooms
+		for room in self.roomsctrl.PrivateRooms:
+			if not (self.roomsctrl.IsPrivateRoomOwned(room) or self.roomsctrl.IsPrivateRoomOperator(room)):
+				continue
+			if user in self.roomsctrl.PrivateRooms[room]["users"]:
 				items.append(("#" + _("Remove from private room %s" %room), popup.OnPrivateRoomRemoveUser, gtk.STOCK_REMOVE, room))
 			else:
 				items.append(("#" + _("Add to private room %s" %room), popup.OnPrivateRoomAddUser, gtk.STOCK_ADD, room))
-			
+			if self.roomsctrl.IsPrivateRoomOwned(room):
+				if self.popup_menu.user in self.roomsctrl.PrivateRooms[room]["operators"]:
+					items.append(("#" + _("Remove as operator of %s" %room), popup.OnPrivateRoomRemoveOperator, gtk.STOCK_REMOVE, room))
+				else:
+					items.append(("#" + _("Add as operator of %s" %room), popup.OnPrivateRoomAddOperator, gtk.STOCK_ADD, room))
 
 		popup.setup(*items)
 		

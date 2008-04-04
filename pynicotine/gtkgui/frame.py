@@ -2231,11 +2231,13 @@ class NicotineFrame(MainWindow):
 	
 				
 	def PrivateRoomRemoveUser(self, room, user):
-		#print room, user
 		self.np.queue.put(slskmessages.PrivateRoomRemoveUser(room, user))
 	def PrivateRoomAddUser(self, room, user):
-		#print room, user
 		self.np.queue.put(slskmessages.PrivateRoomAddUser(room, user))
+	def PrivateRoomAddOperator(self, room, user):
+		self.np.queue.put(slskmessages.PrivateRoomAddOperator(room, user))
+	def PrivateRoomRemoveOperator(self, room, user):
+		self.np.queue.put(slskmessages.PrivateRoomRemoveOperator(room, user))
 		
 	def OnCheckLatest(self, widget):
 		checklatest(self.MainWindow)

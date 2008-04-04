@@ -855,6 +855,12 @@ class PopupMenu(gtk.Menu):
 	def OnPrivateRoomRemoveUser(self, widget, room):
 		self.frame.PrivateRoomRemoveUser(room, self.user)
 	
+	def OnPrivateRoomAddOperator(self, widget, room):
+		self.frame.PrivateRoomAddOperator(room, self.user)
+		
+	def OnPrivateRoomRemoveOperator(self, widget, room):
+		self.frame.PrivateRoomRemoveOperator(room, self.user)
+		
 	def OnAddToList(self, widget):
 		if self.editing: return
 		if widget.get_active():
