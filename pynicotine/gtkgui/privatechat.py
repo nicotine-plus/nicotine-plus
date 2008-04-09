@@ -767,12 +767,14 @@ class PrivateChat(PrivateChatTab):
 			return False
 		ix = widget.get_position()
 		text = widget.get_text()[:ix].split(" ")[-1]
+		preix = ix - len(text)
 		
 		completion, single = GetCompletion(text, self.chats.clist)
 		
 		if completion:
+			widget.delete_text(preix, ix)
 			widget.insert_text(completion, ix)
-			widget.set_position(ix + len(completion))
+			widget.set_position(preix + len(completion))
 		widget.emit_stop_by_name("key_press_event")
 		return True
 

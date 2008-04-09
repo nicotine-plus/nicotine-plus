@@ -26,29 +26,18 @@ from utils import InitialiseColumns, AppendLine, PopupMenu, FastListModel, strin
 from pynicotine.utils import _
 from ticker import Ticker
 from entrydialog import OptionDialog, input_box
+from os.path import commonprefix
 import sets, os, re, time
 
 def GetCompletion(part, list):
-	matches = []
-	for match in list:
-		if match in matches:
-			continue
-		if match[:len(part)] == part and len(match) > len(part):
-
-			matches.append(match)
+	lowerpart = part.lower()
+	matches = [x for x in set(list) if x.lower().startswith(lowerpart) and len(x) > len(part)]
 	if len(matches) == 0:
-		return "", 0
-	elif len(matches) == 1:
-		return matches[0][len(part):], 1
+		return None, 0
+	if len(matches) == 1:
+		return matches[0], 1
 	else:
-
-		prefix = matches[0]
-		for item in matches:
-			for i in range(len(prefix)):
-				if prefix[:i+1] != item[:i+1]:
-					prefix = prefix[:i]
-					break
-		return prefix[len(part):], 0
+		return commonprefix([x.lower() for x in matches]), 0
 
 class RoomsControl:
 	CMDS = ["/alias ", "/unalias ", "/whois ", "/browse ", "/ip ", "/pm ", "/msg ", "/search ", "/usearch ", "/rsearch ",
@@ -1530,7 +1519,7 @@ class ChatRoom(ChatRoomTab):
 			return False
 		ix = widget.get_position()
 		text = widget.get_text()[:ix].split(" ")[-1]
-
+		preix = ix - len(text)
 
 		completion, single = GetCompletion(text, self.clist)
 
@@ -1538,8 +1527,9 @@ class ChatRoom(ChatRoomTab):
 			if single:
 				if ix == len(text) and text[:1] != "/":
 					completion += ": "
-			widget.insert_text(completion, ix)
-			widget.set_position(ix + len(completion))
+			widget.delete_text(preix, ix)
+			widget.insert_text(completion, preix)
+			widget.set_position(preix + len(completion))
 		widget.emit_stop_by_name("key_press_event")
 
 		return True

@@ -15,7 +15,8 @@ General Changes
  * The Edit menu has been broken into Edit, View and Shares menus
    (similar to Enr1X's patch http://nicotine-plus.org/ticket/231 )
    Also fixed the duplicate Alt-B hotkey (hide flags is now Alt-G).
- 
+ * Committed QuinoX's patch for case-insensitive nick completion (#252)
+  
 Chat Rooms
  * Added Server Message 141, enables Private Chat Room Invitations and thus
    allows those you invite to get past the annoying server message that warning
