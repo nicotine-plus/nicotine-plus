@@ -2090,8 +2090,8 @@ class NicotineFrame(MainWindow):
 		if active:
 			if self.roomlist.vbox2 in self.vpaned3.get_children():
 				self.vpaned3.remove(self.roomlist.vbox2)
-			#if not self.buddylist_in_chatrooms1.get_active():
-			self.vpaned3.hide()
+			if self.userlistvbox not in self.vpaned3.get_children():
+				self.vpaned3.hide()
 		else:
 			if not self.roomlist.vbox2 in self.vpaned3.get_children():
 				self.vpaned3.pack2(self.roomlist.vbox2, True, True)
