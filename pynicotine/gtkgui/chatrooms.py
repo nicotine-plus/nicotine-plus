@@ -631,9 +631,9 @@ class ChatRoom(ChatRoomTab):
 			self.ChatEntry.destroy()
 			self.ChatEntry = sexy.SpellEntry()
 			self.ChatEntry.show()
-        		self.ChatEntry.connect("activate", self.OnEnter)
+			self.ChatEntry.connect("activate", self.OnEnter)
 			
-        		self.ChatEntry.connect("key_press_event", self.OnKeyPress)
+			self.ChatEntry.connect("key_press_event", self.OnKeyPress)
 			self.ChatEntryBox.pack_start(self.ChatEntry, True, True, 0)
 			
 		
@@ -1153,7 +1153,7 @@ class ChatRoom(ChatRoomTab):
 			gobject.idle_add(self.frame.ScrollBottom, self.ChatScroll.get_parent())
 		elif cmd == "/rescan":
 			self.frame.BothRescan()
-		elif cmd  in ["/tick", "/t"]:
+		elif cmd in ["/tick", "/t"]:
 			self.frame.np.queue.put(slskmessages.RoomTickerSet(self.room, self.frame.np.encode(args, self.encoding)))
 		elif cmd and cmd[:1] == "/" and cmd != "/me" and cmd[:2] != "//":
 			self.frame.logMessage(_("Command %s is not recognized") % text)
@@ -1264,7 +1264,7 @@ class ChatRoom(ChatRoomTab):
 
 	def makecolour(self, buffer, colour, username=None):
 		colour = self.frame.np.config.sections["ui"][colour]
-		font =  self.frame.np.config.sections["ui"]["chatfont"]
+		font = self.frame.np.config.sections["ui"]["chatfont"]
 		
 		if colour:
 			tag = buffer.create_tag(foreground = colour, font=font)
@@ -1273,15 +1273,14 @@ class ChatRoom(ChatRoomTab):
 		if username is not None:
 			usernamestyle = self.frame.np.config.sections["ui"]["usernamestyle"]
 			
-			#tag.set_property("weight",  pango.WEIGHT_BOLD)
 			if usernamestyle == "bold":
-				tag.set_property("weight",  pango.WEIGHT_BOLD)
+				tag.set_property("weight", pango.WEIGHT_BOLD)
 			else:
-				tag.set_property("weight",  pango.WEIGHT_NORMAL)
+				tag.set_property("weight", pango.WEIGHT_NORMAL)
 			if usernamestyle == "italic":
-				tag.set_property("style",  pango.STYLE_ITALIC)
+				tag.set_property("style", pango.STYLE_ITALIC)
 			else:
-				tag.set_property("style",  pango.STYLE_NORMAL)
+				tag.set_property("style", pango.STYLE_NORMAL)
 			if usernamestyle == "underline":
 				tag.set_property("underline", pango.UNDERLINE_SINGLE)
 			else:
@@ -1364,13 +1363,13 @@ class ChatRoom(ChatRoomTab):
 		if colour in ["useraway", "useronline", "useroffline"]:
 			usernamestyle = self.frame.np.config.sections["ui"]["usernamestyle"]
 			if usernamestyle == "bold":
-				tag.set_property("weight",  pango.WEIGHT_BOLD)
+				tag.set_property("weight", pango.WEIGHT_BOLD)
 			else:
-				tag.set_property("weight",  pango.WEIGHT_NORMAL)
+				tag.set_property("weight", pango.WEIGHT_NORMAL)
 			if usernamestyle == "italic":
-				tag.set_property("style",  pango.STYLE_ITALIC)
+				tag.set_property("style", pango.STYLE_ITALIC)
 			else:
-				tag.set_property("style",  pango.STYLE_NORMAL)
+				tag.set_property("style", pango.STYLE_NORMAL)
 			if usernamestyle == "underline":
 				tag.set_property("underline", pango.UNDERLINE_SINGLE)
 			else:
@@ -1424,7 +1423,7 @@ class ChatRoom(ChatRoomTab):
 		self.users.clear()
 		self.CountUsers()
 		config = self.frame.np.config.sections
-  		if not self.AutoJoin.get_active() and self.room in config["columns"]["chatrooms"]:
+		if not self.AutoJoin.get_active() and self.room in config["columns"]["chatrooms"]:
 			del config["columns"]["chatrooms"][self.room]
 			
 		for tag in self.tag_users.values():
@@ -1669,7 +1668,7 @@ class ChatRooms(IconNotebook):
 		if event.type == gtk.gdk.BUTTON_PRESS:
 			n = self.page_num(child)
 			page = self.get_nth_page(n)
-			room =  [room for room, tab in self.roomsctrl.joinedrooms.items() if tab.Main is page][0]
+			room = [room for room, tab in self.roomsctrl.joinedrooms.items() if tab.Main is page][0]
 			if event.button == 3:
 				menu = self.TabPopup(room)
 				menu.popup(None, None, None, event.button, event.time)
