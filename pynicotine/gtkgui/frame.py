@@ -242,11 +242,7 @@ class NicotineFrame(MainWindow):
 			self.vpaned1.pack2(self.LogScrolledWindow, False, True)
 			self.hide_log_window1.set_active(0)
 		
-		if config["ui"]["roomlistcollapsed"]:
-			self.hide_room_list1.set_active(1)
-		else:
-			self.vpaned3.pack2(self.roomlist.vbox2,True, True)
-			self.hide_room_list1.set_active(0)
+		
 		self.LogWindow.show()
 
 		self.userlistvbox = gtk.VBox(False, 0)
@@ -345,6 +341,12 @@ class NicotineFrame(MainWindow):
 		elif buddylist == 0:
 			self.buddylist_in_tab.set_active(1)
 		
+		if config["ui"]["roomlistcollapsed"]:
+			self.hide_room_list1.set_active(1)
+		else:
+			self.vpaned3.pack2(self.roomlist.vbox2,True, True)
+			self.hide_room_list1.set_active(0)
+			
 		for l in [self.ChatTabLabel, self.PrivateChatTabLabel, self.DownloadsTabLabel, self.UploadsTabLabel, self.SearchTabLabel, self.UserInfoTabLabel, self.UserBrowseTabLabel, self.InterestsTabLabel]:
 			l.set_text_color(0)
 		
