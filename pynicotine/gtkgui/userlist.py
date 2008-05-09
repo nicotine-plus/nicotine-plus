@@ -22,7 +22,7 @@ import time
 import sys
 
 from pynicotine import slskmessages
-from utils import InitialiseColumns, PopupMenu, InputDialog, Humanize, PressHeader
+from utils import InitialiseColumns, PopupMenu, InputDialog, Humanize, HumanSpeed, PressHeader
 
 from pynicotine.utils import _
 
@@ -44,18 +44,19 @@ class UserList:
 			[_("Last seen"), 160, "text", self.CellDataFunc],
 			[_("Comments"), -1, "edit", self.CellDataFunc],
 		)
-		cols[0].set_sort_column_id(10)
-		cols[1].set_sort_column_id(14)
-		cols[2].set_sort_column_id(2)
-		cols[3].set_sort_column_id(11)
-		cols[4].set_sort_column_id(12)
-		cols[5].set_sort_column_id(5)
-		cols[6].set_sort_column_id(6)
-		cols[7].set_sort_column_id(7)
-		cols[8].set_sort_column_id(13)
-		cols[9].set_sort_column_id(9)
-		cols[0].get_widget().hide()
-		cols[1].get_widget().hide()
+		self.col_status, self.col_country, self.col_user, self.col_speed, self.col_files, self.col_trusted, self.col_notify, self.col_privileged, self.col_last, self.col_comments = cols
+		self.col_status.set_sort_column_id(10)
+		self.col_country.set_sort_column_id(14)
+		self.col_user.set_sort_column_id(2)
+		self.col_speed.set_sort_column_id(11)
+		self.col_files.set_sort_column_id(12)
+		self.col_trusted.set_sort_column_id(5)
+		self.col_notify.set_sort_column_id(6)
+		self.col_privileged.set_sort_column_id(7)
+		self.col_last.set_sort_column_id(13)
+		self.col_comments.set_sort_column_id(9)
+		self.col_status.get_widget().hide()
+		self.col_country.get_widget().hide()
 		config = self.frame.np.config.sections
 		for i in range (10):
 			parent = cols[i].get_widget().get_ancestor(gtk.Button)
@@ -66,13 +67,13 @@ class UserList:
 		if config["columns"]["hideflags"]:
 			cols[1].set_visible(0)
 			config["columns"]["userlist"][1] = 0
-		for render in cols[5].get_cell_renderers():
+		for render in self.col_trusted.get_cell_renderers():
 			render.connect('toggled', self.cell_toggle_callback, self.frame.UserList, 5)
-		for render in cols[6].get_cell_renderers():
+		for render in self.col_notify.get_cell_renderers():
 			render.connect('toggled', self.cell_toggle_callback, self.frame.UserList, 6)
-		for render in cols[7].get_cell_renderers():
+		for render in self.col_privileged.get_cell_renderers():
 			render.connect('toggled', self.cell_toggle_callback, self.frame.UserList, 7)
-		renderers = cols[9].get_cell_renderers()
+		renderers = self.col_comments.get_cell_renderers()
 		for render in renderers:
 			render.connect('edited', self.cell_edited_callback, self.frame.UserList, 9)
 		self.frame.UserList.set_model(self.usersmodel)
@@ -279,7 +280,7 @@ class UserList:
 		iter = self.GetIter(msg.user)
 		if iter is None:
 			return
-		hspeed = Humanize(msg.avgspeed)
+		hspeed = HumanSpeed(msg.avgspeed)
 		hfiles = Humanize(msg.files)
 		self.usersmodel.set(iter, 3, hspeed, 4, hfiles, 11, msg.avgspeed, 12, msg.files)
 		if msg.country is not None:

@@ -759,9 +759,10 @@ class NetworkEventProcessor:
 	def AddUser(self, msg):
 		if msg.user not in self.watchedusers:
 			self.watchedusers.append(msg.user)
-		if self.search is not None:
-			if not msg.userexists:
-				#print msg.user, msg.userexists
+		if not msg.userexists:
+			if msg.user not in self.users:
+				self.users[msg.user] = UserAddr(status = -1)
+			if self.search is not None:	
 				self.search.NonExistantUser(msg.user)
 		if self.transfers is not None:
 			self.transfers.getAddUser(msg)

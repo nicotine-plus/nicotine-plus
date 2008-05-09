@@ -22,7 +22,7 @@ import locale
 import pango
 from pynicotine import slskmessages
 from nicotine_glade import ChatRoomTab
-from utils import InitialiseColumns, AppendLine, PopupMenu, FastListModel, string_sort_func, WriteLog, int_sort_func, Humanize, expand_alias, is_alias, EncodingsMenu, SaveEncoding, PressHeader, fixpath, IconNotebook
+from utils import InitialiseColumns, AppendLine, PopupMenu, FastListModel, string_sort_func, WriteLog, int_sort_func, Humanize, HumanSpeed, expand_alias, is_alias, EncodingsMenu, SaveEncoding, PressHeader, fixpath, IconNotebook
 from pynicotine.utils import _
 from ticker import Ticker
 from entrydialog import OptionDialog, input_box
@@ -690,7 +690,8 @@ class ChatRoom(ChatRoomTab):
 				self.frame.flag_users[user] = flag
 			else:
 				flag = self.frame.GetUserFlag(user)
-			hspeed = Humanize(users[user].avgspeed)
+			#hspeed = Humanize(users[user].avgspeed)
+			hspeed = HumanSpeed(users[user].avgspeed)
 			hfiles = Humanize(users[user].files)
 			iter = self.usersmodel.append([img, self.frame.GetFlagImage(flag), user, hspeed, hfiles, users[user].status, users[user].avgspeed, users[user].files, flag])
 			self.users[user] = iter
@@ -1193,7 +1194,7 @@ class ChatRoom(ChatRoomTab):
 			self.frame.flag_users[username] = flag
 		else:
 			flag = self.frame.GetUserFlag(username)
-		hspeed = Humanize(userdata.avgspeed)
+		hspeed = HumanSpeed(userdata.avgspeed)
 		hfiles = Humanize(userdata.files)
 		self.users[username] = self.usersmodel.append([img, self.frame.GetFlagImage(flag), username, hspeed, hfiles, userdata.status, userdata.avgspeed, userdata.files, flag])
 
@@ -1238,7 +1239,7 @@ class ChatRoom(ChatRoomTab):
 	def GetUserStats(self, user, avgspeed, files):
 		if user not in self.users:
 			return
-		self.usersmodel.set(self.users[user], 3, Humanize(avgspeed), 4, Humanize(files), 6, avgspeed, 7, files)
+		self.usersmodel.set(self.users[user], 3, HumanSpeed(avgspeed), 4, Humanize(files), 6, avgspeed, 7, files)
 		
 	def GetUserStatus(self, user, status):
 		if user not in self.users:
@@ -1443,7 +1444,7 @@ class ChatRoom(ChatRoomTab):
 				self.frame.flag_users[user] = flag
 			else:
 				flag = self.frame.GetUserFlag(user)
-			hspeed = Humanize(users[user].avgspeed)
+			hspeed = HumanSpeed(users[user].avgspeed)
 			hfiles = Humanize(users[user].files)
 			iter = self.usersmodel.append([img, self.frame.GetFlagImage(flag), user, hspeed, hfiles, users[user].status, users[user].avgspeed, users[user].files, flag])
 			self.users[user] = iter

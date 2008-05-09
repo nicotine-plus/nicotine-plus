@@ -1050,7 +1050,39 @@ def fixpath(path):
 		return path
 	except:
 		return path
+
+
+def HumanSize(number):
+	try:
+		s = float(int(number))
+		if s >= 1000*1024*1024:
+			r = _("%.2f GiB") % (s / (1024.0*1024.0*1024.0))
+		elif s >= 1000*1024:
+			r = _("%.2f MiB") % (s / (1024.0*1024.0))
+		elif s >= 1000:
+			r = _("%.2f KiB") % (s / 1024.0)
+		else:
+			r = "%d Bytes" % s
+		return r
+	except Exception, e:
+		return number
 		
+def HumanSpeed(number):
+	try:
+		s = float(int(number))
+		if s >= 1000*1024*1024:
+			r = _("%.2f GiB/s") % (s / (1024.0*1024.0*1024.0))
+		elif s >= 1000*1024:
+			r = _("%.2f MiB/s") % (s / (1024.0*1024.0))
+		elif s >= 1000:
+			r = _("%.2f KiB/s") % (s / 1024.0)
+		else:
+			r = str(number)
+		return r
+	except Exception, e:
+		return number
+
+	
 def Humanize(number):
 	fashion = DECIMALSEP
 	if fashion == "" or fashion == "<None>":

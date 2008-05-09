@@ -43,7 +43,7 @@ from about import *
 from checklatest import checklatest
 from pynicotine.config import *
 import utils, pynicotine.utils
-from utils import AppendLine, ImageLabel, IconNotebook, ScrollBottom, PopupMenu, Humanize, popupWarning
+from utils import AppendLine, ImageLabel, IconNotebook, ScrollBottom, PopupMenu, Humanize, HumanSpeed, HumanSize, popupWarning
 import translux
 from dirchooser import ChooseFile, SaveFile
 from pynicotine.utils import _, ChangeTranslation
@@ -2460,7 +2460,7 @@ class NicotineFrame(MainWindow):
 	def GetUserStats(self, msg):
 		if msg.user not in self.recommendationusers:
 			return
-		self.recommendationuserslist.set(self.recommendationusers[msg.user], 2, Humanize(msg.avgspeed), 3, Humanize(msg.files), 5, msg.avgspeed, 6, msg.files)
+		self.recommendationuserslist.set(self.recommendationusers[msg.user], 2, HumanSpeed(msg.avgspeed), 3, Humanize(msg.files), 5, msg.avgspeed, 6, msg.files)
 
 	def OnPopupRUMenu(self, widget, event):
 		items = self.ru_popup_menu.get_children()

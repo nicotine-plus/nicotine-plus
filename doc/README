@@ -7,9 +7,9 @@ Dependencies:
 
  Required:
   * An X server            http://www.x.org/
-  * Gtk+ 2.4 or newer      http://www.gtk.org/
+  * Gtk+ 2.10 or newer      http://www.gtk.org/
   * Python 2.2.3 or newer  http://www.python.org/
-  * pygtk-2.4 or newer (may work with older version, but is *UNTESTED*)
+  * pygtk-2.10 or newer (may work with older version, but is *UNTESTED*)
     http://www.pygtk.org/
  
  Optional:

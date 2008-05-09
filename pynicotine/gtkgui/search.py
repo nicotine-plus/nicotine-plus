@@ -28,7 +28,7 @@ import random
 from pynicotine import slskmessages
 
 from nicotine_glade import SearchTab
-from utils import InitialiseColumns, IconNotebook, PopupMenu, FastListModel, Humanize, PressHeader
+from utils import InitialiseColumns, IconNotebook, PopupMenu, FastListModel, Humanize, HumanSpeed, HumanSize, PressHeader
 from dirchooser import ChooseDir
 from entrydialog import *
 from pynicotine.utils import _
@@ -167,6 +167,7 @@ class Searches(IconNotebook):
 		self.searchid = int(random.random() * (2**31-1))
 		self.searches = {}
 		self.usersearches = {}
+		self.users = {}
 		self.timer = None
 		self.disconnected = 0
 		ui = self.frame.np.config.sections["ui"]
@@ -465,8 +466,8 @@ class Search(SearchTab):
 		self.id = id
 		self.mode = mode
 		self.remember = remember
-		self.users = []
 		self.usersiters = {}
+		self.users = []
 		self.resultslimit = 2000
 		self.QueryLabel.set_text(text)
 
@@ -514,7 +515,7 @@ class Search(SearchTab):
 			[_("User"), 100, "text", self.CellDataFunc],
 			[_("Filename"), 250, "text", self.CellDataFunc],
 			[_("Size"), 100, "text", self.CellDataFunc],
-			[_("Speed"), 50, "text", self.CellDataFunc],
+			[_("Speed"), 90, "text", self.CellDataFunc],
 			[_("In queue"), 50, "text", self.CellDataFunc],
 			[_("Immediate Download"), 20, "text", self.CellDataFunc],
 			[_("Bitrate"), 50, "text", self.CellDataFunc],
@@ -523,6 +524,7 @@ class Search(SearchTab):
 			[_("Directory"), 1000, "text", self.CellDataFunc],
 			
 		)
+		self.col_num, self.col_user, self.col_file, self.col_size, self.col_speed, self.col_queue, self.col_immediate, self.col_bitrate, self.col_length, self.col_country, self.col_directory = cols
 		cols[0].get_widget().hide()
 		for i in range (10):
 			
@@ -532,22 +534,26 @@ class Search(SearchTab):
 			# Read Show / Hide column settings from last session
 			cols[i].set_visible(self.frame.np.config.sections["columns"]["search"][i])
 		self.ResultsList.set_model(self.resultsmodel)
-		for ix in range(len(cols)):
-			col = cols[ix]
+		#for ix in range(len(cols)):
+			#col = cols[ix]
 			#col.connect("clicked", self.OnResort, ix)
 			#for r in col.get_cell_renderers():
 				#r.set_fixed_height_from_font(1)
-		cols[0].set_sort_column_id(0)
-		cols[1].set_sort_column_id(1)
-		cols[2].set_sort_column_id(2)
-		cols[3].set_sort_column_id(14)
-		cols[4].set_sort_column_id(15)
-		cols[5].set_sort_column_id(16)
-		cols[6].set_sort_column_id(6)
-		cols[7].set_sort_column_id(11)
-		cols[8].set_sort_column_id(8)
-		cols[9].set_sort_column_id(13)
-		cols[10].set_sort_column_id(10)
+		for r in self.col_num.get_cell_renderers() + self.col_size.get_cell_renderers() +  self.col_length.get_cell_renderers():
+			r.set_property("xalign",1)
+
+		self.col_num.set_sort_column_id(0)
+		self.col_user.set_sort_column_id(1)
+		self.col_file.set_sort_column_id(2)
+		self.col_size.set_sort_column_id(14)
+		
+		self.col_speed.set_sort_column_id(15)
+		self.col_queue.set_sort_column_id(16)
+		self.col_immediate.set_sort_column_id(6)
+		self.col_bitrate.set_sort_column_id(11)
+		self.col_length.set_sort_column_id(8)
+		self.col_country.set_sort_column_id(13)
+		self.col_directory.set_sort_column_id(10)
 		if gtk.pygtk_version[0] >= 2 and gtk.pygtk_version[1] >= 10:
 			self.ResultsList.set_enable_tree_lines(True)
 		
@@ -640,12 +646,18 @@ class Search(SearchTab):
 	def AddResult(self, msg, user, country):
 		if user in self.users:
 			return
-		results = []
-		
+		if user not in self.Searches.users.keys():
+			if user in self.frame.np.users.keys():
+				self.Searches.users[user] = self.frame.np.users[user].status
+			else:
+				self.Searches.users[user] = 0
+				self.frame.np.queue.put(slskmessages.AddUser(user))
+			if user == self.frame.np.config.sections["server"]["login"]:
+				self.Searches.users[user] = 1
+				
 		self.users.append(user)
+		results = []
 
-		self.frame.np.queue.put(slskmessages.AddUser(user))
-		
 		if msg.freeulslots:
 			imdl = _("Y")
 		else:
@@ -665,9 +677,11 @@ class Search(SearchTab):
 				bitrate = str(a[0]) + bitrate
 				br = a[0]
 				length = '%i:%02i' %(a[1] / 60, a[1] % 60)
-			results.append([user, name, result[2], msg.ulspeed, msg.inqueue, imdl, bitrate, length, dir, br, result[1], country, 1])
+			results.append([user, name, result[2], msg.ulspeed, msg.inqueue, imdl, bitrate, length, dir, br, result[1], country, self.Searches.users[user]])
 			ix += 1
 			
+		
+		
 		if results:
 			self.new_results += results
 			
@@ -726,9 +740,11 @@ class Search(SearchTab):
 		for r in results:
 
 			user, filename, size, speed, queue, immediatedl, h_bitrate, length, directory, bitrate, fullpath,  country, status = r
-			
-			h_size = Humanize(long(size))
-			h_speed = Humanize(speed)
+			if user in self.Searches.users.keys() and status != self.Searches.users[user]:
+				status = self.Searches.users[user]
+				
+			h_size = HumanSize(long(size))
+			h_speed = HumanSpeed(speed)
 			h_queue = Humanize(queue)
 			if self.usersGroup.get_active() and user not in self.usersiters:
 				self.usersiters[user] = self.resultsmodel.append(None, [0, user, "", "", h_speed, h_queue, immediatedl, "", "", self.get_flag(user, country), "", 0, "", country, 0, speed, queue, status])
@@ -737,7 +753,7 @@ class Search(SearchTab):
 			self.all_data.append(row)
 			if not self.filters or self.check_filter(row):
 				encoded_row = [ix, user, encode(filename, user), h_size, h_speed, h_queue, immediatedl, h_bitrate, length, self.get_flag(user, country), encode(directory, user), bitrate, encode(fullpath, user), country,  size, speed, queue, status]
-
+				#print user, status
 				if user in self.usersiters:
 					iter = self.resultsmodel.append(self.usersiters[user], encoded_row)
 				else:
@@ -752,6 +768,7 @@ class Search(SearchTab):
 		return returned
 			
 	def updateStatus(self, user, status):
+		self.Searches.users[user] = status
 		pos = 0
 		for r in self.all_data:
 		
@@ -764,13 +781,13 @@ class Search(SearchTab):
 			selected_user = self.resultsmodel.get_value(iter, 1)
 			
 			if selected_user == user:
-				self.resultsmodel.set_value(iter, 16, status)
+				self.resultsmodel.set_value(iter, 17, status)
 			if self.resultsmodel.iter_has_child(iter):
 				child = self.resultsmodel.iter_children(iter)
 				while child is not None:
 					selected_user = self.resultsmodel.get_value(child, 1)
 					if selected_user == user:
-						self.resultsmodel.set_value(child, 16, status)
+						self.resultsmodel.set_value(child, 17, status)
 					child = self.resultsmodel.iter_next(child)
 			iter = self.resultsmodel.iter_next(iter)
 		
@@ -900,7 +917,10 @@ class Search(SearchTab):
 		
 		for row in self.all_data:
 			if self.check_filter(row):
-				ix, user, filename,  h_size, h_speed, h_queue, immediatedl, h_bitrate, length, directory,  bitrate, fullpath, country,  size, speed, queue, status = row
+				ix, user, filename,  h_size, h_speed, h_queue, immediatedl, h_bitrate, length, directory,  bitrate, fullpath, country, size, speed, queue, status = row
+				if user in self.Searches.users.keys() and status != self.Searches.users[user]:
+					status = self.Searches.users[user]
+				#user, filename, size, speed, queue, immediatedl, h_bitrate, length, directory, bitrate, fullpath,  country, status
 				if  self.usersGroup.get_active() and user not in self.usersiters:
 					self.usersiters[user] = self.resultsmodel.append(None, [0, user, "", "", h_speed, h_queue, immediatedl, "", "", self.get_flag(user, country), "", 0, "", country, 0, speed, queue, status])
 				encoded_row = [ix, user, encode(filename, user), h_size, h_speed, h_queue, immediatedl, h_bitrate, length, self.get_flag(user, country), encode(directory, user), bitrate, encode( fullpath, user), country,  size, speed, queue, status]
@@ -1085,12 +1105,10 @@ class Search(SearchTab):
 
 	def CellDataFunc(self, column, cellrenderer, model, iter):
 
-		status = model.get_value(iter, 16)
+		status = model.get_value(iter, 17)
 		imdl = model.get_value(iter, 6)
-		colour = imdl == _("Y") and "search" or "searchq"
-
-		colour = self.frame.np.config.sections["ui"][colour] or None
-
+		color = imdl == _("Y") and "search" or "searchq"
+		colour = None
 		if status == 0:
 			colour = self.frame.np.config.sections["ui"]["searchoffline"]
 			cellrenderer.set_property("background", None)
@@ -1098,6 +1116,7 @@ class Search(SearchTab):
 			colour = "#ffffff"
 			cellrenderer.set_property("background", "#ff0000")
 		else:
+			colour = self.frame.np.config.sections["ui"][color] or None
 			cellrenderer.set_property("background", None)
 		cellrenderer.set_property("foreground", colour)
 
