@@ -212,8 +212,10 @@ class SlskMessage:
 		strlist.reverse()
 		return '.'.join(strlist)
 	
-	def debug(self):
+	def debug(self, message=None):
 		print self, self.__dict__	
+		if message:
+			print "Message contents:", message.__repr__()
 		
 class ServerMessage(SlskMessage):
 	pass
@@ -1215,7 +1217,7 @@ class SimilarUsers(ServerMessage):
 			pos, user = self.getObject(message, types.StringType, pos)
 			pos, rating = self.getObject(message, types.IntType, pos)
 			self.users[user] = rating
-
+		
 class ItemSimilarUsers(ServerMessage):
 	def __init__(self, thing = None):
 		self.thing = thing

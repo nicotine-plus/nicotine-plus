@@ -919,7 +919,7 @@ class Transfers:
 
 					if config["transfers"]["afterfinish"]:
 						command = config["transfers"]["afterfinish"].replace("$", utils.escapeCommand(newname))
-						os.system(command)
+						os.system("%s &" % command)
 						self.eventprocessor.logMessage(_("Executed: %s") % self.decode(command))
 					if i.path and config["transfers"]["shownotification"] or config["transfers"]["afterfolder"]:
 						# walk through downloads and break if any file in the same folder exists, else execute
@@ -931,7 +931,7 @@ class Transfers:
 								self.eventprocessor.frame.NewNotification(_("%(folder)s downloaded from %(user)s") % {'user':i.user, "folder":folder}, title=_("Nicotine+ :: directory completed"))
 							if config["transfers"]["afterfolder"]:
 								command = config["transfers"]["afterfolder"].replace("$", utils.escapeCommand(folder))
-								os.system(command)
+								os.system("%s &" % command)
 								self.eventprocessor.logMessage(_("Executed on folder: %s") % self.decode(command))
 								
 			except IOError, strerror:
