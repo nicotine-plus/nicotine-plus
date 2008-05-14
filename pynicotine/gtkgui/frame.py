@@ -209,6 +209,7 @@ class NicotineFrame(MainWindow):
 
 		for w in self.ChatNotebook, self.PrivatechatNotebook, self.UserInfoNotebook, self.UserBrowseNotebook, self.SearchNotebook:
 			w.set_tab_closers(config["ui"]["tabclosers"])
+			w.set_reorderable(config["ui"]["tab_reorderable"])
 			w.show_images(config["ui"]["tab_icons"])
 			
 		for label_tab in [self.ChatTabLabel, self.PrivateChatTabLabel, self.SearchTabLabel, self.UserInfoTabLabel, self.DownloadsTabLabel, self.UploadsTabLabel, self.UserBrowseTabLabel, self.InterestsTabLabel]:
@@ -1756,6 +1757,7 @@ class NicotineFrame(MainWindow):
 
 		for w in [self.ChatNotebook, self.PrivatechatNotebook, self.UserInfoNotebook, self.UserBrowseNotebook, self.SearchNotebook]:
 			w.set_tab_closers(config["ui"]["tabclosers"])
+			w.set_reorderable(config["ui"]["tab_reorderable"])
 			w.show_images(config["ui"]["tab_icons"])
 			w.set_text_colors(None)
 		

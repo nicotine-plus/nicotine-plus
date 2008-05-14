@@ -171,7 +171,7 @@ class Searches(IconNotebook):
 		self.timer = None
 		self.disconnected = 0
 		ui = self.frame.np.config.sections["ui"]
-		IconNotebook.__init__(self, frame.images, ui["labelprivate"], ui["tabclosers"], ui["tab_icons"])
+		IconNotebook.__init__(self, frame.images, ui["labelprivate"], ui["tabclosers"], ui["tab_icons"], ui["tab_reorderable"])
 		self.popup_enable()
 		#frame.SearchEntryCombo.disable_activate()
 		

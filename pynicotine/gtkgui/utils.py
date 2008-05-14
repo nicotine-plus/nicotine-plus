@@ -494,8 +494,9 @@ class ImageLabel(gtk.HBox):
 		return self.label.get_text()
 	
 class IconNotebook(gtk.Notebook):
-	def __init__(self, images, angle = 0, tabclosers = False, show_image = True):
+	def __init__(self, images, angle = 0, tabclosers = False, show_image = True, reorderable = True):
 		self.tabclosers = tabclosers
+		self.reorderable = reorderable
 		gtk.Notebook.__init__(self)
 		self.images = images
 		self._show_image = show_image
@@ -505,7 +506,16 @@ class IconNotebook(gtk.Notebook):
 		self.connect("key_press_event", self.OnKeyPress)
 		self.set_scrollable(True)
 		self.angle = angle
-		
+	
+	def set_reorderable(self, reorderable):
+		self.reorderable = reorderable
+		for data in self.pages:
+			page, label_tab, status, label_tab_menu = data
+			try:
+				self.set_tab_reorderable(page, self.reorderable)
+			except:
+				pass
+			
 	def set_tab_closers(self, closers):
 
 		self.tabclosers = closers
@@ -555,7 +565,7 @@ class IconNotebook(gtk.Notebook):
 		eventbox.connect('button_press_event', self.on_tab_click, page)
 		gtk.Notebook.append_page_menu(self, page, eventbox, label_tab_menu)
 		try:
-			self.set_tab_reorderable(page, True)
+			self.set_tab_reorderable(page, self.reorderable)
 			#self.set_tab_detachable(page, True)
 		except:
 			# Old PyGTK2
@@ -646,7 +656,7 @@ class IconNotebook(gtk.Notebook):
 		eventbox.connect('button_press_event', self.on_tab_click, page)
 		gtk.Notebook.append_page_menu(self, pagewidget, eventbox, label_tab_menu)
 		try:
-			self.set_tab_reorderable(page, True)
+			self.set_tab_reorderable(page, self.reorderable)
 		except:
 			# Old PyGTK2
 			pass

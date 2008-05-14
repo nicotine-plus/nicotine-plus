@@ -31,7 +31,7 @@ from pynicotine.utils import _
 class UserTabs(IconNotebook):
 	def __init__(self, frame, subwindow):
 		ui = frame.np.config.sections["ui"]
-		IconNotebook.__init__(self, frame.images, ui["labelinfo"], ui["tabclosers"], ui["tab_icons"])
+		IconNotebook.__init__(self, frame.images, ui["labelinfo"], ui["tabclosers"], ui["tab_icons"], ui["tab_reorderable"])
 		self.popup_enable()
 		
 		self.subwindow = subwindow

@@ -7377,6 +7377,43 @@ typed incorrectly or as an acronym</property>
                 <property name="position">2</property>
               </packing>
             </child>
+			<child>
+				<widget class="GtkCheckButton" id="TabReorderable">
+					<property name="visible">True</property>
+					<property name="can_focus">True</property>
+					<property name="response_id">0</property>
+					<property name="draw_indicator">True</property>
+					<child>
+						<widget class="GtkHBox" id="hboxReorderable">
+							<property name="visible">True</property>
+							<property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+							<property name="spacing">5</property>
+							<child>
+								<widget class="GtkImage" id="ReorderableIcon">
+									<property name="visible">True</property>
+									<property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+									<property name="stock">gtk-go-forward</property>
+								</widget>
+							</child>
+							<child>
+								<widget class="GtkLabel" id="labelReorderable">
+									<property name="visible">True</property>
+									<property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+									<property name="label" translatable="yes">Tabs can be repositioned</property>
+								</widget>
+								<packing>
+									<property name="position">1</property>
+								</packing>
+							</child>
+						</widget>
+					</child>
+				</widget>
+				<packing>
+					<property name="expand">False</property>
+					<property name="fill">False</property>
+					<property name="position">2</property>
+				</packing>
+            </child>
             <child>
               <widget class="GtkHBox" id="mNoteHBox">
                 <property name="visible">True</property>

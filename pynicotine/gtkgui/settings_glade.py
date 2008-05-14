@@ -4492,6 +4492,26 @@ class NotebookFrame:
 
 		self.vboxUI2.pack_start(self.TabColours, False, False, 0)
 
+		self.TabReorderable = gtk.CheckButton()
+		self.TabReorderable.show()
+
+		self.hboxReorderable = gtk.HBox(False, 0)
+		self.hboxReorderable.show()
+		self.hboxReorderable.set_spacing(5)
+
+		self.ReorderableIcon = gtk.Image()
+		self.ReorderableIcon.set_from_stock(gtk.STOCK_GO_FORWARD, 4)
+		self.ReorderableIcon.show()
+		self.hboxReorderable.pack_start(self.ReorderableIcon)
+
+		self.labelReorderable = gtk.Label(_("Tabs can be repositioned"))
+		self.labelReorderable.show()
+		self.hboxReorderable.pack_start(self.labelReorderable)
+
+		self.TabReorderable.add(self.hboxReorderable)
+
+		self.vboxUI2.pack_start(self.TabReorderable, False, False, 0)
+
 		self.mNoteHBox = gtk.HBox(False, 0)
 		self.mNoteHBox.show()
 		self.mNoteHBox.set_spacing(5)

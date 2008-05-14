@@ -190,11 +190,13 @@ def write_widget_spinbutton(widget, my_class, *args):
 def write_widget_scale(widget, my_class, *args):
 	global signals, indent
 	restargs = ""
-	
-	value, min, max, step_incr, page_incr, page_size = widget.attrs["adjustment"].split(" ")
-	adjustment = "gtk.Adjustment(value=%s, lower=%s, upper=%s, step_incr=%s, page_incr=%s, page_size=%s)" % (value, min, max, step_incr, page_incr, page_size)
-	restargs = ""
-	print indent + "%s = gtk.%s(%s)" % (widget.id, my_class, adjustment)
+	if "adjustment" in widget.attrs:
+		value, min, max, step_incr, page_incr, page_size = widget.attrs["adjustment"].split(" ")
+		adjustment = "gtk.Adjustment(value=%s, lower=%s, upper=%s, step_incr=%s, page_incr=%s, page_size=%s)" % (value, min, max, step_incr, page_incr, page_size)
+		restargs = ""
+		print indent + "%s = gtk.%s(%s)" % (widget.id, my_class, adjustment)
+	else:
+		print indent + "%s = gtk.%s(%s)" % (widget.id, my_class, "gtk.Adjustment()")
 
 	write_widget_attrs(widget)
 	print 
@@ -603,7 +605,9 @@ def process_child(child):
 		if node.nodeName == "widget":
 			w = process_widget(node)
 		elif node.nodeName == "packing":
-			w.packing.update(process_packing(node))
+			#print node.nodeName, process_packing(node)
+			if w is not None:
+				w.packing.update(process_packing(node))
 	return w
 	
 def process_signal(child):

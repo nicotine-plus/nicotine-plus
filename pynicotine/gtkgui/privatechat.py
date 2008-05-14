@@ -31,7 +31,7 @@ class PrivateChats(IconNotebook):
 		
 	def __init__(self, frame):
 		ui = frame.np.config.sections["ui"]
-		IconNotebook.__init__(self, frame.images, ui["labelprivate"], ui["tabclosers"])
+		IconNotebook.__init__(self, frame.images, ui["labelprivate"], ui["tabclosers"], ui["tab_icons"], ui["tab_reorderable"])
 		self.popup_enable()
 
 		self.frame = frame

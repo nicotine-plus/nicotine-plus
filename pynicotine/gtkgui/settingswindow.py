@@ -1248,7 +1248,7 @@ class NotebookFrame(settings_glade.NotebookFrame):
 		self.options = { "ui": { 
 			"tabmain": self.MainPosition, "tabrooms": self.ChatRoomsPosition, "tabprivate": self.PrivateChatPosition, "tabinfo": self.UserInfoPosition, "tabbrowse": self.UserBrowsePosition, "tabsearch": self.SearchPosition, 
 			"labelmain": self.MainAngleSpin, "labelrooms": self.ChatRoomsPosition, "labelprivate": self.PrivateChatAngleSpin, "labelinfo": self.UserInfoAngleSpin, "labelbrowse": self.UserBrowseAngleSpin, "labelsearch": self.SearchAngleSpin,
-			"tabclosers": self.TabClosers, "tab_icons": self.TabIcons, "tab_colors": self.TabColours}
+			"tabclosers": self.TabClosers, "tab_icons": self.TabIcons, "tab_colors": self.TabColours, "tab_reorderable": self.TabReorderable}
 			
 		}
 		
@@ -1274,6 +1274,7 @@ class NotebookFrame(settings_glade.NotebookFrame):
 				"tabclosers": self.TabClosers.get_active(),
 				"tab_icons": self.TabIcons.get_active(),
 				"tab_colors": self.TabColours.get_active(),
+				"tab_reorderable": self.TabReorderable.get_active(),
 			}
 		}
 

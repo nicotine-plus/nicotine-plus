@@ -1644,7 +1644,7 @@ class ChatRooms(IconNotebook):
 	def __init__(self, frame):
 		self.frame = frame
 		ui = self.frame.np.config.sections["ui"]
-		IconNotebook.__init__(self, self.frame.images, ui["labelrooms"], ui["tabclosers"], ui["tab_icons"])
+		IconNotebook.__init__(self, self.frame.images, ui["labelrooms"], ui["tabclosers"], ui["tab_icons"], ui["tab_reorderable"])
 		self.roomsctrl = RoomsControl(frame, self)
 		
 		
