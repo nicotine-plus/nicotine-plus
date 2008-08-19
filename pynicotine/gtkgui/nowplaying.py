@@ -129,7 +129,15 @@ class NowPlaying:
 		self.NP_exaile.connect("clicked", self.OnNPPlayer)
 	
 		self.hbox2.pack_start(self.NP_exaile, False, False, 0)
-			
+		
+		self.NP_lastfm = gtk.RadioButton(self.NP_infopipe)
+		self.NP_lastfm.set_active(False)
+		self.NP_lastfm.set_label(_("last.fm"))
+		self.NP_lastfm.show()
+		self.NP_lastfm.connect("clicked", self.OnNPPlayer)
+
+		self.hbox2.pack_start(self.NP_lastfm, False, False, 0)
+				
 		self.NP_other = gtk.RadioButton(self.NP_infopipe)
 		self.NP_other.set_active(False)
 		self.NP_other.set_label(_("Other"))
@@ -145,7 +153,7 @@ class NowPlaying:
 		self.hbox5.set_spacing(5)
 		self.hbox5.set_border_width(3)
 	
-		self.label5 = gtk.Label(_("Player Command:"))
+		self.label5 = gtk.Label(_("Player Command/Username"))
 		self.label5.set_padding(0, 0)
 		self.label5.set_line_wrap(False)
 		self.label5.show()
@@ -330,6 +338,8 @@ class NowPlaying:
 			self.NP_bmpx.set_active(1)
 		elif player == "exaile":
 			self.NP_exaile.set_active(1)
+		elif player == "lastfm":
+			self.NP_lastfm.set_active(1)
 		elif player == "other":
 			self.NP_other.set_active(1)
 			self.player_replacers = ["$n"]
@@ -394,12 +404,16 @@ class NowPlaying:
 		elif self.NP_exaile.get_active():
 			self.player_replacers = ["$t", "$l", "$a", "$b"]
 			set = 1
-		if self.NP_other.get_active():
-			self.player_replacers = ["$n"]
-			self.NPCommand.set_sensitive(True)
+		elif self.NP_lastfm.get_active():
+			self.player_replacers = ["$n", "$s", "$t", "$a"]
 			set = 1
-		else:
-			self.NPCommand.set_sensitive(False)
+		elif self.NP_other.get_active():
+			self.player_replacers = ["$n"]
+			set = 1
+
+		self.NPCommand.set_sensitive(self.NP_lastfm.get_active() or
+					     self.NP_other.get_active())
+		
 		legend = ""
 		for item in self.player_replacers:
 			legend += item + " "
@@ -469,6 +483,8 @@ class NowPlaying:
 			result = self.bmpx()
 		elif self.NP_exaile.get_active():
 			result = self.exaile()
+		elif self.NP_lastfm.get_active():
+			result = self.lastfm()
 		elif self.NP_other.get_active():
 			result = self.other()
 		if not result:
@@ -513,6 +529,8 @@ class NowPlaying:
 			player = "bmpx"
 		elif self.NP_exaile.get_active():
 			player = "exaile"
+		elif self.NP_lastfm.get_active():
+			player = "lastfm"
 		elif self.NP_other.get_active():
 			player = "other"
 			
@@ -521,8 +539,6 @@ class NowPlaying:
 		self.frame.np.config.sections["players"]["npformat"] = self.NPFormat.child.get_text()
 		self.frame.np.config.writeConfig()
 		self.quit(None)
-		
-
 		
 	
 	def get_custom_widget(self, id, string1, string2, int1, int2):
@@ -689,20 +705,20 @@ class NowPlaying:
 		output = ""
 		self.audacious_running = True
 		if "$n" in slist:
-			artist = self.audacious_command('current-song-tuple-data', 'performer')
-			title = self.audacious_command('current-song-tuple-data', 'track_name')
+			artist = self.audacious_command('current-song-tuple-data', 'artist')
+			title = self.audacious_command('current-song-tuple-data', 'title')
 			if artist and title: self.title["nowplaying"] = artist + ' - ' + title
 		if "$t" in slist:
-			output = self.audacious_command('current-song-tuple-data', 'track_name')
+			output = self.audacious_command('current-song-tuple-data', 'title')
 			if output: self.title["title"] = output
 		if "$l" in slist:
 			output = self.audacious_command('current-song-length')
 			if output: self.title["length"] = output
 		if "$a" in slist:
-			output = self.audacious_command('current-song-tuple-data', 'performer')
+			output = self.audacious_command('current-song-tuple-data', 'artist')
 			if output: self.title["artist"] = output
 		if "$b" in slist:
-			output = self.audacious_command('current-song-tuple-data', 'album_name')
+			output = self.audacious_command('current-song-tuple-data', 'album')
 			if output: self.title["album"] = output
 		if "$c" in slist:
 			output = self.audacious_command('current-song-tuple-data', 'comment')
@@ -718,9 +734,7 @@ class NowPlaying:
 			output = self.audacious_command('current-song-bitrate-kbps')
 			if output: self.title["bitrate"] = output
 		if "$f" in slist:
-			path = self.audacious_command('current-song-tuple-data', 'file_path')
-			ext = self.audacious_command('current-song-tuple-data', 'file_ext')
-			if path and ext: self.title["filename"] = path + ext
+			path = self.audacious_command('current-song-filename')
 		if "$s" in slist:
 			output = self.audacious_command('playback-status')
 			if output: self.title["status"] = output
@@ -740,20 +754,22 @@ class NowPlaying:
 		return None
 	
 	def rhythmbox(self):
+		from dbus import Interface
+		
 		if self.bus is None:
 			self.frame.logMessage(_("ERROR: DBus not available:")+" "+"Rhythmbox"+ " "+ _("cannot be contacted"))
 			return None
 		try:
-			rbshellobj = self.bus.get_object('org.gnome.Rhythmbox', '/org/gnome/Rhythmbox/Shell')
-			self.rbshell = self.bus.Interface(rbshellobj, 'org.gnome.Rhythmbox.Shell')
-			rbplayerobj = self.bus.get_object('org.gnome.Rhythmbox', '/org/gnome/Rhythmbox/Player')
-			rbplayer = self.bus.Interface(rbplayerobj, 'org.gnome.Rhythmbox.Player')
+			proxyobj = self.bus.get_object("org.gnome.Rhythmbox", "/org/gnome/Rhythmbox/Shell")
+			rbshell = Interface(proxyobj, "org.gnome.Rhythmbox.Shell")
+			proxyobj = self.bus.get_object('org.gnome.Rhythmbox', '/org/gnome/Rhythmbox/Player')
+ 			rbplayer = Interface(proxyobj, 'org.gnome.Rhythmbox.Player')
 		except Exception, error:
 			self.frame.logMessage(_("ERROR while accessing the %(program)s DBus interface: %(error)s") % {"program": "Rhythmbox", "error": error })
 			return None
 
 		try:
-			metadata = self.rbshell.getSongProperties(rbplayer.getPlayingUri())
+			metadata = rbshell.getSongProperties(rbplayer.getPlayingUri())
 			self.title["bitrate"] = str(metadata["bitrate"])
 			self.title["track"] = str(metadata["track-number"])
 			self.title["title"] = metadata["title"]
@@ -769,7 +785,8 @@ class NowPlaying:
 			else:
 				self.title["status"] = "paused"
 			return 1
-		except:
+		except Exception, error:
+			self.frame.logMessage(_("ERROR while accessing the %(program)s DBus interface: %(error)s") % {"program": "Rhythmbox", "error": error })
 			return None
 		
 	def get_length_time(self, length):
@@ -783,6 +800,73 @@ class NowPlaying:
 			length = "0:00"
 		return length	
 		
+	def lastfm(self):
+		def lastfm_parse(buf):
+			from time import time, altzone
+			try:
+				i = buf.index("<artist")
+				i = buf[i+1:].index(">") + i + 2
+				j = buf[i:].index("<") + i
+
+				artist = buf[i:j];
+
+				i = buf[j:].index("<name>") + j + 6
+				j = buf[i:].index("</name>") + i
+
+				title = buf[i:j]
+	
+				i = buf[j:].index("<date") + j
+				j = buf[i:].index('"') + i + 1
+				i = buf[j:].index('"') + j
+
+				date = int(buf[j:i]) # utc
+				utc_now = time() + altzone
+				playing = utc_now - date < 300
+
+				return (playing, artist, title)
+			except:
+				return (None, None, None)
+
+		try:
+			from socket import socket, AF_INET, SOCK_STREAM
+		except Exception, error:
+			self.frame.logMessage(_("ERROR while loading socket module: %(error)s") % {"command": othercommand, "error": error})
+			return None
+		
+		user = self.NPCommand.get_text()
+		host = ("ws.audioscrobbler.com", 80)
+		req  = 'GET /2.0/user/%s/recenttracks.xml HTTP/1.1\r\n' \
+		       'Host: %s\r\n\r\n' % (user, host[0])
+
+		sock = socket(AF_INET, SOCK_STREAM)
+
+		try:
+			sock.connect(host)
+		except Exception, error:
+			self.frame.logMessage(_("ERROR: could not connect to audioscrobbler: %s")) % error[1]
+			return None		     
+				    
+		sock.send(req)
+		data = sock.recv(1024)
+		sock.close()
+
+		(status, artist, title) = lastfm_parse(data)
+
+		if status is None:
+			return None
+		
+		slist = self.NPFormat.child.get_text()
+
+		if "$n" in slist:
+			self.title["nowplaying"] = "%s: %s - %s" % ((_("Last played"), _("Now playing"))[status], artist, title)
+		if "$t" in slist:
+			self.title["title"] = title
+		if "$a" in slist:
+			self.title["artist"] = artist
+		if "$s" in slist:
+			self.title["status"] = (_("paused"), _("playing"))[status]
+		
+		return 1
 
 	def other(self):
 		try: 
@@ -794,7 +878,7 @@ class NowPlaying:
 				raise Exception, output
 			else:
 				self.title["nowplaying"] = output 
-			return 1
+				return 1
 		except Exception, error:
 			self.frame.logMessage(_("ERROR: Executing '%(command)s' failed: %(error)s") % {"command": othercommand, "error": error})
 			return None
