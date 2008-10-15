@@ -1512,7 +1512,7 @@ class NetworkEventProcessor:
 			queuesizes = self.transfers.getUploadQueueSizes()
 			slotsavail = int(not self.transfers.bandwidthLimitReached())
 			if len(results) > 0:
-				message = slskmessages.FileSearchResult(None, user, geoip, searchid, results, fileindex, slotsavail, self.speed, queuesizes, fifoqueue)
+				message = slskmessages.FileSearchResult(None, self.config.sections["server"]["login"], geoip, searchid, results, fileindex, slotsavail, self.speed, queuesizes, fifoqueue)
 				self.ProcessRequestToPeer(user, message)
 				if direct:
 					self.logMessage(_("User %(user)s is directly searching for %(query)s, returning %(num)i results") %{'user':user, 'query':self.decode(searchterm), 'num':len(results)}, 1)
