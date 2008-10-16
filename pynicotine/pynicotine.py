@@ -799,7 +799,7 @@ class NetworkEventProcessor:
 		hours = mins / 60
 		days = hours / 24
 		if msg.seconds == 0:
-			self.logMessage(_("You have no privileges left"))
+			self.logMessage(_("You have no privileges left. They are not needed for Nicotine+ to function properly. You can acquire privileges by donating at %(url)s") % {'url':'http://www.slsknet.org/userlogin.php?username='+self.config.sections["server"]["login"].replace(' ','+')})
 		else:
 			self.logMessage(_("%(days)i days, %(hours)i hours, %(minutes)i minutes, %(seconds)i seconds of download privileges left") %{'days':days, 'hours':hours % 24, 'minutes':mins % 60, 'seconds':msg.seconds % 60})
 		self.privileges_left = msg.seconds
