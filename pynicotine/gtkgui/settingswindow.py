@@ -1682,10 +1682,8 @@ class UrlCatchFrame(settings_glade.UrlCatchFrame):
 	
 		if urls["protocols"] is not None:
 			for key in urls["protocols"].keys():
-				if urls["protocols"][key] == "firefox \"%s\" &":
-					command = "firefox \"%s\""
-				elif urls["protocols"][key][-1] == "&":
-					command = urls["protocols"][key][:-1]
+				if urls["protocols"][key][-1:] == "&":
+					command = urls["protocols"][key][:-1].rstrip()
 				else:
 					command = urls["protocols"][key]
 				
