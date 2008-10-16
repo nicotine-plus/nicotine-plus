@@ -838,7 +838,7 @@ msgstr "Limpar enfileirados"
 
 #: pynicotine/gtkgui/downloads.py:48
 msgid "Get place in _queue"
-msgstr "Entrar na fila"
+msgstr "Meu lugar na fila"
 
 #: pynicotine/gtkgui/downloads.py:50 pynicotine/gtkgui/search.py:550
 #: pynicotine/gtkgui/userbrowse.py:143 pynicotine/gtkgui/userbrowse.py:154
