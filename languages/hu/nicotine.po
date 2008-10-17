@@ -1051,8 +1051,8 @@ msgid "Server Settings"
 msgstr "Szerver Beállítások"
 
 #: pynicotine/gtkgui/settings_glade.py:29
-msgid "Server: (use server.slsknet.org:2240 for the main server)"
-msgstr "Szerver: (használd a server.slsknet.org:2240 címet a főszerverhez)"
+msgid "Server: (use server.slsknet.org:2242 for the main server)"
+msgstr "Szerver: (használd a server.slsknet.org:2242 címet a főszerverhez)"
 
 #: pynicotine/gtkgui/settings_glade.py:65
 msgid "Login:"

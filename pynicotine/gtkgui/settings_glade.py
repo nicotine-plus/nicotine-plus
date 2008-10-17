@@ -26,7 +26,7 @@ class ServerFrame:
 		self.ServerVbox.set_spacing(7)
 		self.ServerVbox.set_border_width(5)
 
-		self.label166 = gtk.Label(_("Server: (use server.slsknet.org:2240 for the main server)"))
+		self.label166 = gtk.Label(_("Server: (use server.slsknet.org:2242 for the main server)"))
 		self.label166.set_alignment(0, 0)
 		self.label166.set_size_request(360, -1)
 		self.label166.set_line_wrap(True)

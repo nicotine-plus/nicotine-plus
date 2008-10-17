@@ -991,8 +991,8 @@ msgid "Server Settings"
 msgstr "Zerbitzariaren Ezarpenak"
 
 #: pynicotine/gtkgui/settings_glade.py:29
-msgid "Server: (use server.slsknet.org:2240 for the main server)"
-msgstr "Zerbitzaria: (erabili server.slsknet.org:2240 zerbitzari nagusirako)"
+msgid "Server: (use server.slsknet.org:2242 for the main server)"
+msgstr "Zerbitzaria: (erabili server.slsknet.org:2242 zerbitzari nagusirako)"
 
 #: pynicotine/gtkgui/settings_glade.py:65
 msgid "Login:"

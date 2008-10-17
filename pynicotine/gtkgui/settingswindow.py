@@ -37,7 +37,7 @@ class ServerFrame(settings_glade.ServerFrame):
 		self.p = parent
 		self.frame = parent.frame
 		settings_glade.ServerFrame.__init__(self, False)
-		self.Server.append_text("server.slsknet.org:2240")
+		self.Server.append_text("server.slsknet.org:2242")
 		self.Server.append_text("server.slsknet.org:2242")
 
 		self.Elist = {}
@@ -56,7 +56,7 @@ class ServerFrame(settings_glade.ServerFrame):
 		if server["server"] is not None:
 			self.Server.child.set_text("%s:%i" % (server["server"][0], server["server"][1]))
 		else:
-			self.Server.child.set_text("server.slsknet.org:2240")
+			self.Server.child.set_text("server.slsknet.org:2242")
 		if self.frame.np.waitport is None:
 			self.CurrentPort.set_markup(_("Client port is not set"))
 		else:

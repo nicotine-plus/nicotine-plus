@@ -20,7 +20,7 @@
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
                 <property name="yalign">0</property>
-                <property name="label" translatable="yes">Server: (use server.slsknet.org:2240 for the main server)</property>
+                <property name="label" translatable="yes">Server: (use server.slsknet.org:2242 for the main server)</property>
                 <property name="wrap">True</property>
               </widget>
               <packing>

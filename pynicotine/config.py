@@ -59,7 +59,7 @@ class Config:
 		LOGDIR=os.path.join(self.filename.rsplit(os.sep, 1)[0], "logs")
 		self.sections = {
 "server":{ \
-	"server": ('server.slsknet.org', 2240), \
+	"server": ('server.slsknet.org', 2242), \
 	"login": None, \
 	"passw": None, \
 	"firewalled": 1,  \
@@ -477,7 +477,7 @@ class Config:
 		self.sections["transfers"]["bsharedmtimes"] = bsharedmtimes
 			
 		if self.sections["server"]["server"][0] == "mail.slsknet.org":
-			self.sections["server"]["server"] = ('server.slsknet.org', 2240)
+			self.sections["server"]["server"] = ('server.slsknet.org', 2242)
 		
 		self.config_lock.release()
 		

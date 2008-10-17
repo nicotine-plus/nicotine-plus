@@ -3914,8 +3914,8 @@ msgstr "Préférences"
 
 # pynicotine/gtkgui/settings_glade.py
 #: pynicotine/gtkgui/settings_glade.py:29
-msgid "Server: (use server.slsknet.org:2240 for the main server)"
-msgstr "Serveur: (utilisez mail.slsk.org:2240 pour le serveur principal)"
+msgid "Server: (use server.slsknet.org:2242 for the main server)"
+msgstr "Serveur: (utilisez server.slsknet.org:2242 pour le serveur principal)"
 
 # pynicotine/gtkgui/settings_glade.py
 #: pynicotine/gtkgui/settings_glade.py:65

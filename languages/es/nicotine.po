@@ -1268,8 +1268,8 @@ msgstr "Opciones de servidor"
 
 # pynicotine/gtkgui/settings_glade.py
 #: pynicotine/gtkgui/settings_glade.py:29
-msgid "Server: (use server.slsknet.org:2240 for the main server)"
-msgstr "Servidor: (use server.slsknet.org:2240 para el servidor principal)"
+msgid "Server: (use server.slsknet.org:2242 for the main server)"
+msgstr "Servidor: (use server.slsknet.org:2242 para el servidor principal)"
 
 # pynicotine/gtkgui/settings_glade.py
 #: pynicotine/gtkgui/settings_glade.py:65
