@@ -27,6 +27,7 @@ from pynicotine.utils import _
 from ticker import Ticker
 from entrydialog import OptionDialog, input_box
 from os.path import commonprefix
+import pluginsystem
 import sets, os, re, time
 
 def GetCompletion(part, list):
@@ -43,6 +44,7 @@ class RoomsControl:
 	CMDS = ["/alias ", "/unalias ", "/whois ", "/browse ", "/ip ", "/pm ", "/msg ", "/search ", "/usearch ", "/rsearch ",
 		"/bsearch ", "/join ", "/leave", "/add ", "/buddy ", "/rem ", "/unbuddy ", "/ban ", "/ignore ", "/unban ", "/unignore ", "/clear", "/part ", "/quit", "/exit",
 		"/rescan", "/tick", "/nsa", "/info", "/detach", "/attach"]
+	CMDS += ['/reload']
 	def __init__(self, frame, ChatNotebook):
 		self.frame = frame
 		self.joinedrooms = {}
@@ -467,7 +469,14 @@ class RoomsControl:
 	def SayChatRoom(self, msg, text):
 		if msg.user in self.frame.np.config.sections["server"]["ignorelist"]:
 			return
-		self.joinedrooms[msg.room].SayChatRoom(msg, text)
+		tuple = self.frame.pluginhandler.IncomingPublicChatEvent(msg.room, msg.user, text)
+		if tuple != None:
+			(r, n, text) = tuple
+			self.joinedrooms[msg.room].SayChatRoom(msg, text)
+			self.frame.pluginhandler.IncomingPublicChatNotification(msg.room, msg.user, text)
+		else:
+			print "Pluginsystem made me shut up" # DEBUG
+
 	
 	def UpdateColours(self):
 		self.frame.SetTextBG(self.frame.roomlist.RoomsList)
@@ -1156,13 +1165,23 @@ class ChatRoom(ChatRoomTab):
 			self.frame.BothRescan()
 		elif cmd in ["/tick", "/t"]:
 			self.frame.np.queue.put(slskmessages.RoomTickerSet(self.room, self.frame.np.encode(args, self.encoding)))
+		elif cmd in ('/reload',):
+			self.frame.pluginhandler.reread()
+			reload(pluginsystem)
+			self.frame.pluginhandler = pluginsystem.PluginHandler(self.frame)
 		elif cmd and cmd[:1] == "/" and cmd != "/me" and cmd[:2] != "//":
 			self.frame.logMessage(_("Command %s is not recognized") % text)
 			return
 		else:
 			if text[:2] == "//":
 				text = text[1:]
-			self.Say(self.frame.AutoReplace(text))
+			tuple = self.frame.pluginhandler.OutgoingPublicChatEvent(self.room, text)
+			if tuple != None:
+				(r, text) = tuple
+				self.Say(self.frame.AutoReplace(text))
+				self.frame.pluginhandler.OutgoingPublicChatNotification(self.room, text)
+			else:
+				print "Pluginsystem decided to shut me up" # DEBUG
 		self.ChatEntry.set_text("")
 		
 	def Detach(self, widget = None):

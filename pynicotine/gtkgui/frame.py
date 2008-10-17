@@ -48,6 +48,7 @@ import translux
 from dirchooser import ChooseFile, SaveFile
 from pynicotine.utils import _, ChangeTranslation
 import nowplaying
+import pluginsystem
 from entrydialog import  *
 SEXY=True
 try:
@@ -415,6 +416,7 @@ class NicotineFrame(MainWindow):
 		self.check_privileges1.set_sensitive(0)
 
 		self.gstreamer = gstreamer()
+		self.pluginhandler = pluginsystem.PluginHandler(self)
 
 
 		if config["ui"]["chat_hidebuttons"]:
