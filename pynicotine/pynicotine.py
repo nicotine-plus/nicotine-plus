@@ -455,6 +455,8 @@ class NetworkEventProcessor:
 	def ConnectError(self, msg):
 		if msg.connobj.__class__ is slskmessages.ServerConn:
 			self.setStatus(_("Can't connect to server %(host)s:%(port)s: %(error)s") % {'host': msg.connobj.addr[0], 'port': msg.connobj.addr[1], 'error': self.decode(msg.err) } )
+			if msg.connobj.addr[1] == 2240:
+				self.logMessage(_("WARNING: You tried to connect to the old server, which might have been shut down. To connect to the new Soulseek server edit your settings and change the server port from 2240 to 2242"))
 			self.setServerTimer()
 			if self.serverconn is not None:
 				self.serverconn = None
@@ -499,6 +501,8 @@ class NetworkEventProcessor:
 
 	def ServerConn(self, msg):
 		self.setStatus(_("Connected to server %(host)s:%(port)s, logging in...") % {'host':msg.addr[0], 'port': msg.addr[1]})
+		if msg.addr[1] == 2240:
+			self.logMessage(_("WARNING: You are connected to the old server, which will most likely be shut down in the near future. To connect to the new Soulseek server edit your settings and change the server port from 2240 to 2242"))
 		time.sleep(1)
 		self.serverconn = msg.conn
 		self.servertimeout = -1
