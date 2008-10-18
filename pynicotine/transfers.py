@@ -900,7 +900,7 @@ class Transfers:
 						except OSError:
 							self.eventprocessor.logMessage(_("Couldn't move '%(tempfile)s' to '%(file)s'") % {'tempfile':self.decode(msg.file.name), 'file':self.decode(newname)})
 					i.status = "Finished"
-					self.eventprocessor.logMessage(_("Download finished: %(file)s") % {'file':u"%s" % newname})
+					self.eventprocessor.logMessage(_("Download finished: %(file)s") % {'file':self.decode(newname)})
 					self.eventprocessor.logTransfer(_("Download finished: user %(user)s, file %(file)s") % {'user':i.user, 'file':self.decode(i.filename)})
 					self.queue.put(slskmessages.ConnClose(msg.conn))
 					#if i.speed is not None:
