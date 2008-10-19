@@ -115,7 +115,8 @@ class ServerFrame:
 		self.hbox106.show()
 		self.hbox106.set_spacing(5)
 
-		self.FirstPort = gtk.SpinButton(gtk.Adjustment(value=2234, lower=0, upper=65535, step_incr=1, page_incr=10, page_size=10))
+		self.FirstPort = gtk.SpinButton(gtk.Adjustment(value=2234, lower=0, upper=65535, step_incr=1, page_incr=10))
+		self.FirstPort = gtk.SpinButton(gtk.Adjustment(value=2234, lower=0, upper=65535, step_incr=1, page_incr=10))
 		self.FirstPort.show()
 
 		self.hbox106.pack_start(self.FirstPort, False, False, 0)
@@ -125,7 +126,8 @@ class ServerFrame:
 		self.label173.show()
 		self.hbox106.pack_start(self.label173, False, False, 0)
 
-		self.LastPort = gtk.SpinButton(gtk.Adjustment(value=2239, lower=0, upper=65532, step_incr=1, page_incr=10, page_size=10))
+		self.LastPort = gtk.SpinButton(gtk.Adjustment(value=2239, lower=0, upper=65532, step_incr=1, page_incr=10))
+		self.LastPort = gtk.SpinButton(gtk.Adjustment(value=2239, lower=0, upper=65532, step_incr=1, page_incr=10))
 		self.LastPort.show()
 
 		self.hbox106.pack_start(self.LastPort, False, False, 0)
@@ -578,7 +580,8 @@ class TransfersFrame:
 		self.label185.show()
 		self.hbox117.pack_start(self.label185, False, False, 0)
 
-		self.QueueBandwidth = gtk.SpinButton(gtk.Adjustment(value=0, lower=0, upper=1000000, step_incr=1, page_incr=10, page_size=10))
+		self.QueueBandwidth = gtk.SpinButton(gtk.Adjustment(value=0, lower=0, upper=1000000, step_incr=1, page_incr=10))
+		self.QueueBandwidth = gtk.SpinButton(gtk.Adjustment(value=0, lower=0, upper=1000000, step_incr=1, page_incr=10))
 		self.QueueBandwidth.show()
 
 		self.hbox117.pack_start(self.QueueBandwidth, False, False, 0)
@@ -602,7 +605,8 @@ class TransfersFrame:
 
 		self.hbox118.pack_start(self.QueueUseSlots, False, False, 0)
 
-		self.QueueSlots = gtk.SpinButton(gtk.Adjustment(value=0, lower=0, upper=1000000, step_incr=1, page_incr=10, page_size=10))
+		self.QueueSlots = gtk.SpinButton(gtk.Adjustment(value=0, lower=0, upper=1000000, step_incr=1, page_incr=10))
+		self.QueueSlots = gtk.SpinButton(gtk.Adjustment(value=0, lower=0, upper=1000000, step_incr=1, page_incr=10))
 		self.QueueSlots.show()
 
 		self.hbox118.pack_start(self.QueueSlots, False, False, 0)
@@ -625,7 +629,8 @@ class TransfersFrame:
 
 		self.hbox14.pack_start(self.Limit, False, True, 0)
 
-		self.LimitSpeed = gtk.SpinButton(gtk.Adjustment(value=0, lower=0, upper=1000000, step_incr=1, page_incr=10, page_size=10))
+		self.LimitSpeed = gtk.SpinButton(gtk.Adjustment(value=0, lower=0, upper=1000000, step_incr=1, page_incr=10))
+		self.LimitSpeed = gtk.SpinButton(gtk.Adjustment(value=0, lower=0, upper=1000000, step_incr=1, page_incr=10))
 		self.LimitSpeed.show()
 
 		self.hbox14.pack_start(self.LimitSpeed, False, True, 0)
@@ -669,7 +674,8 @@ class TransfersFrame:
 		self.hbox40.show()
 		self.hbox40.set_spacing(5)
 
-		self.MaxUserQueue = gtk.SpinButton(gtk.Adjustment(value=0, lower=0, upper=1000000, step_incr=1, page_incr=10, page_size=10))
+		self.MaxUserQueue = gtk.SpinButton(gtk.Adjustment(value=0, lower=0, upper=1000000, step_incr=1, page_incr=10))
+		self.MaxUserQueue = gtk.SpinButton(gtk.Adjustment(value=0, lower=0, upper=1000000, step_incr=1, page_incr=10))
 		self.MaxUserQueue.show()
 
 		self.hbox40.pack_start(self.MaxUserQueue, False, False, 0)
@@ -684,7 +690,8 @@ class TransfersFrame:
 		self.hbox37.show()
 		self.hbox37.set_spacing(5)
 
-		self.MaxUserFiles = gtk.SpinButton(gtk.Adjustment(value=0, lower=0, upper=1000000, step_incr=1, page_incr=10, page_size=10))
+		self.MaxUserFiles = gtk.SpinButton(gtk.Adjustment(value=0, lower=0, upper=1000000, step_incr=1, page_incr=10))
+		self.MaxUserFiles = gtk.SpinButton(gtk.Adjustment(value=0, lower=0, upper=1000000, step_incr=1, page_incr=10))
 		self.MaxUserFiles.show()
 
 		self.hbox37.pack_start(self.MaxUserFiles, False, False, 0)
@@ -1609,7 +1616,8 @@ class LogFrame:
 		self.label40.show()
 		self.hbox31.pack_start(self.label40, False, True, 0)
 
-		self.RoomLogLines = gtk.SpinButton(gtk.Adjustment(value=0, lower=0, upper=1000, step_incr=1, page_incr=10, page_size=10))
+		self.RoomLogLines = gtk.SpinButton(gtk.Adjustment(value=0, lower=0, upper=1000, step_incr=1, page_incr=10))
+		self.RoomLogLines = gtk.SpinButton(gtk.Adjustment(value=0, lower=0, upper=1000, step_incr=1, page_incr=10))
 		self.RoomLogLines.show()
 		self.RoomLogLines.set_width_chars(4)
 
@@ -1635,7 +1643,8 @@ class LogFrame:
 		self.label31.show()
 		self.hbox177.pack_start(self.label31, False, True, 0)
 
-		self.PrivateLogLines = gtk.SpinButton(gtk.Adjustment(value=0, lower=0, upper=1000, step_incr=1, page_incr=10, page_size=10))
+		self.PrivateLogLines = gtk.SpinButton(gtk.Adjustment(value=0, lower=0, upper=1000, step_incr=1, page_incr=10))
+		self.PrivateLogLines = gtk.SpinButton(gtk.Adjustment(value=0, lower=0, upper=1000, step_incr=1, page_incr=10))
 		self.PrivateLogLines.show()
 		self.PrivateLogLines.set_width_chars(4)
 
@@ -2247,7 +2256,8 @@ class SearchFrame:
 		self.label225.show()
 		self.hbox147.pack_start(self.label225, False, False, 0)
 
-		self.MaxResults = gtk.SpinButton(gtk.Adjustment(value=50, lower=0, upper=100000, step_incr=1, page_incr=10, page_size=10))
+		self.MaxResults = gtk.SpinButton(gtk.Adjustment(value=50, lower=0, upper=100000, step_incr=1, page_incr=10))
+		self.MaxResults = gtk.SpinButton(gtk.Adjustment(value=50, lower=0, upper=100000, step_incr=1, page_incr=10))
 		self.MaxResults.show()
 		self.MaxResults.set_width_chars(6)
 
@@ -2270,7 +2280,8 @@ class SearchFrame:
 
 		self.hbox36.pack_start(self.ToggleDistributed, False, True, 0)
 
-		self.ToggleDistributedInterval = gtk.SpinButton(gtk.Adjustment(value=60, lower=30, upper=3600, step_incr=1, page_incr=10, page_size=10))
+		self.ToggleDistributedInterval = gtk.SpinButton(gtk.Adjustment(value=60, lower=30, upper=3600, step_incr=1, page_incr=10))
+		self.ToggleDistributedInterval = gtk.SpinButton(gtk.Adjustment(value=60, lower=30, upper=3600, step_incr=1, page_incr=10))
 		self.ToggleDistributedInterval.show()
 		self.ToggleDistributedInterval.set_width_chars(5)
 
@@ -2528,7 +2539,8 @@ class AwayFrame:
 		self.label170.show()
 		self.hbox105.pack_start(self.label170, False, False, 0)
 
-		self.AutoAway = gtk.SpinButton(gtk.Adjustment(value=15, lower=0, upper=10000, step_incr=1, page_incr=10, page_size=10))
+		self.AutoAway = gtk.SpinButton(gtk.Adjustment(value=15, lower=0, upper=10000, step_incr=1, page_incr=10))
+		self.AutoAway = gtk.SpinButton(gtk.Adjustment(value=15, lower=0, upper=10000, step_incr=1, page_incr=10))
 		self.AutoAway.show()
 
 		self.hbox105.pack_start(self.AutoAway, False, False, 0)
@@ -4372,7 +4384,8 @@ class CompletionFrame:
 		self.label6.show()
 		self.hbox13.pack_start(self.label6, False, True, 0)
 
-		self.CharactersCompletion = gtk.SpinButton(gtk.Adjustment(value=2, lower=1, upper=10, step_incr=1, page_incr=10, page_size=10))
+		self.CharactersCompletion = gtk.SpinButton(gtk.Adjustment(value=2, lower=1, upper=10, step_incr=1, page_incr=10))
+		self.CharactersCompletion = gtk.SpinButton(gtk.Adjustment(value=2, lower=1, upper=10, step_incr=1, page_incr=10))
 		self.CharactersCompletion.show()
 
 		self.hbox13.pack_start(self.CharactersCompletion, False, True, 0)
@@ -4539,7 +4552,8 @@ class NotebookFrame:
 		self.MainAngleLabel.set_width_chars(12)
 		self.mNoteHBox.pack_start(self.MainAngleLabel, False, True, 0)
 
-		self.MainAngleSpin = gtk.SpinButton(gtk.Adjustment(value=0, lower=-90, upper=90, step_incr=90, page_incr=90, page_size=10))
+		self.MainAngleSpin = gtk.SpinButton(gtk.Adjustment(value=0, lower=-90, upper=90, step_incr=90, page_incr=90))
+		self.MainAngleSpin = gtk.SpinButton(gtk.Adjustment(value=0, lower=-90, upper=90, step_incr=90, page_incr=90))
 		self.MainAngleSpin.show()
 		self.MainAngleSpin.set_width_chars(4)
 
@@ -4574,7 +4588,8 @@ class NotebookFrame:
 		self.ChatRoomsAngleLabel.set_width_chars(12)
 		self.cNoteHBox.pack_start(self.ChatRoomsAngleLabel, False, True, 0)
 
-		self.ChatRoomsAngleSpin = gtk.SpinButton(gtk.Adjustment(value=0, lower=-90, upper=90, step_incr=90, page_incr=90, page_size=10))
+		self.ChatRoomsAngleSpin = gtk.SpinButton(gtk.Adjustment(value=0, lower=-90, upper=90, step_incr=90, page_incr=90))
+		self.ChatRoomsAngleSpin = gtk.SpinButton(gtk.Adjustment(value=0, lower=-90, upper=90, step_incr=90, page_incr=90))
 		self.ChatRoomsAngleSpin.show()
 		self.ChatRoomsAngleSpin.set_width_chars(4)
 
@@ -4609,7 +4624,8 @@ class NotebookFrame:
 		self.PrivateChatAngleLabel.set_width_chars(12)
 		self.pNoteHBox.pack_start(self.PrivateChatAngleLabel, False, True, 0)
 
-		self.PrivateChatAngleSpin = gtk.SpinButton(gtk.Adjustment(value=0, lower=-90, upper=90, step_incr=90, page_incr=90, page_size=10))
+		self.PrivateChatAngleSpin = gtk.SpinButton(gtk.Adjustment(value=0, lower=-90, upper=90, step_incr=90, page_incr=90))
+		self.PrivateChatAngleSpin = gtk.SpinButton(gtk.Adjustment(value=0, lower=-90, upper=90, step_incr=90, page_incr=90))
 		self.PrivateChatAngleSpin.show()
 		self.PrivateChatAngleSpin.set_width_chars(4)
 
@@ -4644,7 +4660,8 @@ class NotebookFrame:
 		self.SearchAngleLabel.set_width_chars(12)
 		self.SNoteHBox.pack_start(self.SearchAngleLabel, False, True, 0)
 
-		self.SearchAngleSpin = gtk.SpinButton(gtk.Adjustment(value=0, lower=-90, upper=90, step_incr=90, page_incr=90, page_size=10))
+		self.SearchAngleSpin = gtk.SpinButton(gtk.Adjustment(value=0, lower=-90, upper=90, step_incr=90, page_incr=90))
+		self.SearchAngleSpin = gtk.SpinButton(gtk.Adjustment(value=0, lower=-90, upper=90, step_incr=90, page_incr=90))
 		self.SearchAngleSpin.show()
 		self.SearchAngleSpin.set_width_chars(4)
 
@@ -4679,7 +4696,8 @@ class NotebookFrame:
 		self.UserInfoAngleLabel.set_width_chars(12)
 		self.iNoteHBox.pack_start(self.UserInfoAngleLabel, False, True, 0)
 
-		self.UserInfoAngleSpin = gtk.SpinButton(gtk.Adjustment(value=0, lower=-90, upper=90, step_incr=90, page_incr=90, page_size=10))
+		self.UserInfoAngleSpin = gtk.SpinButton(gtk.Adjustment(value=0, lower=-90, upper=90, step_incr=90, page_incr=90))
+		self.UserInfoAngleSpin = gtk.SpinButton(gtk.Adjustment(value=0, lower=-90, upper=90, step_incr=90, page_incr=90))
 		self.UserInfoAngleSpin.show()
 		self.UserInfoAngleSpin.set_width_chars(4)
 
@@ -4714,7 +4732,8 @@ class NotebookFrame:
 		self.UserBrowseAngleLabel.set_width_chars(12)
 		self.bNoteHBox.pack_start(self.UserBrowseAngleLabel, False, True, 0)
 
-		self.UserBrowseAngleSpin = gtk.SpinButton(gtk.Adjustment(value=0, lower=-90, upper=90, step_incr=90, page_incr=90, page_size=10))
+		self.UserBrowseAngleSpin = gtk.SpinButton(gtk.Adjustment(value=0, lower=-90, upper=90, step_incr=90, page_incr=90))
+		self.UserBrowseAngleSpin = gtk.SpinButton(gtk.Adjustment(value=0, lower=-90, upper=90, step_incr=90, page_incr=90))
 		self.UserBrowseAngleSpin.show()
 		self.UserBrowseAngleSpin.set_width_chars(4)
 
