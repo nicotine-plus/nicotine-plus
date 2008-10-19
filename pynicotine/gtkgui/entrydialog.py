@@ -492,9 +492,9 @@ class FolderDownloadDialog( gtk.Dialog):
 		hbox2.show()
 		box.pack_start(hbox2)	
 
+		cancel_button = self.add_button(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL)
 		ok_button = self.add_button(gtk.STOCK_OK, gtk.RESPONSE_OK)
 		ok_button.grab_default()
-		cancel_button = self.add_button(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL)
 		
 	def quit(self, *args):
 		self.destroy()
@@ -555,8 +555,6 @@ class OptionDialog( gtk.Dialog):
 		hbox2.show()
 		box.pack_start(hbox2)	
 		
-		ok_button = self.add_button(gtk.STOCK_OK, gtk.RESPONSE_OK)
-		ok_button.grab_default()
 		if option:
 			
 			Alignment = gtk.Alignment(0.5, 0.5, 0, 0)
@@ -584,6 +582,8 @@ class OptionDialog( gtk.Dialog):
 			tray_button.add(Alignment)
 
 		cancel_button = self.add_button(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL)
+		ok_button = self.add_button(gtk.STOCK_OK, gtk.RESPONSE_OK)
+		ok_button.grab_default()
 
 	def quit(self, *args):
 		self.destroy()

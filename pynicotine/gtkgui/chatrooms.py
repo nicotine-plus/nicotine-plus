@@ -541,7 +541,7 @@ class RoomsControl:
 			
 def TickDialog(parent, default = ""):
 	dlg = gtk.Dialog(title = _("Set ticker message"), parent = parent,
-		buttons = (gtk.STOCK_OK, gtk.RESPONSE_OK, gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL))
+		buttons = (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL, gtk.STOCK_OK, gtk.RESPONSE_OK))
 	dlg.set_default_response(gtk.RESPONSE_OK)
 	
 	t = 0

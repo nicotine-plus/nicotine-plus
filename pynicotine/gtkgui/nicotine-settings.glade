@@ -4141,6 +4141,9 @@ when new results come in</property>
                 <property name="response_id">0</property>
                 <signal name="clicked" handler="OnOk"/>
               </widget>
+              <packing>
+                <property name="position">2</property>
+              </packing>
             </child>
             <child>
               <widget class="GtkButton" id="ApplyButton">
@@ -4153,7 +4156,7 @@ when new results come in</property>
                 <signal name="clicked" handler="OnApply"/>
               </widget>
               <packing>
-                <property name="position">1</property>
+                <property name="position">0</property>
               </packing>
             </child>
             <child>
@@ -4167,7 +4170,7 @@ when new results come in</property>
                 <signal name="clicked" handler="OnCancel"/>
               </widget>
               <packing>
-                <property name="position">2</property>
+                <property name="position">1</property>
               </packing>
             </child>
           </widget>

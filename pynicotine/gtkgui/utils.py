@@ -921,7 +921,7 @@ class PopupMenu(gtk.Menu):
 
 def InputDialog(parent, title, message, default = ""):
 	dlg = gtk.Dialog(title = title, parent = parent,
-		buttons = (gtk.STOCK_OK, gtk.RESPONSE_OK, gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL))
+		buttons = (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL, gtk.STOCK_OK, gtk.RESPONSE_OK))
 	dlg.set_default_response(gtk.RESPONSE_OK)
 	
 	dlg.set_border_width(10)
