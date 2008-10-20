@@ -6,6 +6,7 @@ from thread import start_new_thread
 
 from traceback import extract_stack, extract_tb, format_list
 from pynicotine import slskmessages
+from utils import _
 
 WIN32 = sys.platform.startswith("win")
 
@@ -69,6 +70,28 @@ class PluginHandler(object):
         self.reread()
         self.plugins = []
         self.load(self.plugindir)
+    def TriggerCommand(self, command, args):
+        for (module, plugin) in self.plugins:
+            try:
+                func = eval("plugin.Command")
+                ret = func(command, args)
+                if ret != None:
+                    if ret == returncode['zap']:
+                        print "zapped"
+                        return True
+                    elif ret == returncode['pass']:
+                        print "passing"
+                        pass
+                    else:
+                        self.log(_("Plugin %(module) returned something weird, '%(value)', ignoring") % {'module':module, 'value':ret})
+            except:
+                self.log(_("Plugin %(module)s failed with error %(errortype)s: %(error)s.\nTrace: %(trace)s\nProblem area:%(area)s") %
+                        {'module':module,
+                         'errortype':sys.exc_info()[0],
+                         'error':sys.exc_info()[1],
+                         'trace':''.join(format_list(extract_stack())),
+                         'area':''.join(format_list(extract_tb(sys.exc_info()[2])))})
+        return False
     def TriggerEvent(self, function, args):
         """Triggers an event for the plugins. Since events and notifications
         are precisely the same except for how n+ responds to them, both can be
@@ -81,27 +104,26 @@ class PluginHandler(object):
                 func = eval("plugin." + function)
                 ret = func(*hotpotato)
                 if ret != None and type(ret) != tupletype:
-                    print "Some return code since %s != %s" % (type(ret), tupletype)
                     if ret == returncode['zap']:
                         print "zapped"
                         return None
-                    elif ret == returncode['stop']:
+                    elif ret == returncode['break']:
                         print "stopped"
                         return hotpotato
                     elif ret == returncode['pass']:
                         print "passing"
                         pass
                     else:
-                        self.log("Plugin returned something weird (" + repr(ret) + "), ignoring")
+                        self.log(_("Plugin %(module) returned something weird, '%(value)', ignoring") % {'module':module, 'value':ret})
                 if ret != None:
                     hotpotato = ret
             except:
-                self.log("Plugin %s failed with error %s: %s.\nTrace: %s\nProblem area:%s" %
-                        (module,
-                        sys.exc_info()[0],
-                        sys.exc_info()[1],
-                        ''.join(format_list(extract_stack())),
-                        ''.join(format_list(extract_tb(sys.exc_info()[2])))))
+                self.log(_("Plugin %(module)s failed with error %(errortype)s: %(error)s.\nTrace: %(trace)s\nProblem area:%(area)s") %
+                        {'module':module,
+                         'errortype':sys.exc_info()[0],
+                         'error':sys.exc_info()[1],
+                         'trace':''.join(format_list(extract_stack())),
+                         'area':''.join(format_list(extract_tb(sys.exc_info()[2])))})
         print function + " Potato is " + repr(hotpotato)
         return hotpotato
     def IncomingPrivateChatEvent(self, nick, line):
@@ -179,6 +201,7 @@ class BasePlugin(object):
         pass
     def OutgoingUserSearchEvent(self, users):
         pass
-
+    def Command(self, command, args):
+        pass
     def log(self, text):
         self.parent.log(self.__name__ + ": " + text)

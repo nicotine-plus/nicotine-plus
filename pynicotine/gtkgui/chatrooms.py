@@ -1169,6 +1169,8 @@ class ChatRoom(ChatRoomTab):
 			self.frame.pluginhandler.reread()
 			reload(pluginsystem)
 			self.frame.pluginhandler = pluginsystem.PluginHandler(self.frame)
+		elif cmd[:1] == "/" and self.frame.pluginhandler.TriggerCommand(cmd, args):
+			pass
 		elif cmd and cmd[:1] == "/" and cmd != "/me" and cmd[:2] != "//":
 			self.frame.logMessage(_("Command %s is not recognized") % text)
 			return
