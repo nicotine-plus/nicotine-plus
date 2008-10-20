@@ -714,7 +714,7 @@ class Search(SearchTab):
 			
 			if self._more_results == 0:
 				self._more_results = 1
-				gobject.timeout_add(WAIT_BEFORE_DISPLAYING, self._realaddresults)
+				gobject.timeout_add(self.WAIT_BEFORE_DISPLAYING, self._realaddresults)
 			return len(results)
 	
 	def _realaddresults(self):
