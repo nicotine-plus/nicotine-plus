@@ -36,6 +36,18 @@ import struct
 from errno import EINTR
 from utils import _
 
+try:
+	import resource
+	from math import floor
+	(soft, hard) = resource.getrlimit(resource.RLIMIT_NOFILE)
+	# Since most people have a limit of 1024 or higher we can
+	# set it to 90% of the max limit and still get a workable amount of
+	# connections. We cannot set it to 100% because connections that are being
+	# closed are not counted by us, but are still counted by the OS
+	MAXFILELIMIT = min(hard, max(int(floor(hard*0.9)), 100))
+except ImportError:
+	MAXFILELIMIT = -1
+
 class Connection:
 	"""
 	Holds data about a connection. conn is a socket object, 
@@ -753,13 +765,17 @@ class SlskProtoThread(threading.Thread):
 				i.starttime = curtime
 				i.sentbytes2 = 0
 
-	def process_queue(self, queue, conns, connsinprogress, server_socket):
+	def process_queue(self, queue, conns, connsinprogress, server_socket, maxsockets=MAXFILELIMIT):
 		""" Processes messages sent by UI thread. server_socket is a server connection
 		socket object, queue holds the messages, conns ans connsinprogess 
 		are dictionaries holding Connection and PeerConnectionInProgress 
 		messages."""
 		msgList = []
 		needsleep = 0
+		numsockets = 0
+		if server_socket is not None:
+			numsockets += 1
+		numsockets += len(conns) + len(connsinprogress)
 		while not queue.empty():
 			msgList.append(queue.get())
 		for msgObj in msgList:
@@ -807,13 +823,14 @@ class SlskProtoThread(threading.Thread):
 						#self._ui_callback([Notify(_("Can't send the message over the closed connection: %s %s") %(msgObj.__class__, vars(msgObj)))])
 						self._ui_callback([_("Can't send the message over the closed connection: %(type)s %(msg_obj)s") %{'type':msgObj.__class__, 'msg_obj':vars(msgObj)}])
 			elif issubclass(msgObj.__class__, InternalMessage):
-				if msgObj.__class__ is ServerConn:
+				if msgObj.__class__ is ServerConn and maxsockets > -1 and numsockets < maxsockets:
 					try:
 						server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 						server_socket.setblocking(0)
 						server_socket.connect_ex(msgObj.addr)
 						server_socket.setblocking(1)
 						connsinprogress[server_socket] = PeerConnectionInProgress(server_socket, msgObj)
+						numsockets += 1
 					except socket.error, err:
 						self._ui_callback([ConnectError(msgObj, err)])
 				elif msgObj.__class__ is ConnClose and msgObj.conn in conns:
@@ -821,13 +838,14 @@ class SlskProtoThread(threading.Thread):
 					#print "Close3", conns[msgObj.conn].addr
 					self._ui_callback([ConnClose(msgObj.conn, conns[msgObj.conn].addr)])
 					del conns[msgObj.conn]
-				elif msgObj.__class__ is OutConn:
+				elif msgObj.__class__ is OutConn and maxsockets > -1 and numsockets < maxsockets:
 					try:
 						conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 						conn.setblocking(0)
 						conn.connect_ex(msgObj.addr)
 						conn.setblocking(1)
 						connsinprogress[conn] = PeerConnectionInProgress(conn, msgObj)
+						numsockets += 1
 					except socket.error, (errnum, strerror):
 						import errno
 						if errno.errorcode.get(errnum,"") == 'EMFILE':
