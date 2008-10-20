@@ -77,10 +77,8 @@ class PluginHandler(object):
                 ret = func(command, args)
                 if ret != None:
                     if ret == returncode['zap']:
-                        print "zapped"
                         return True
                     elif ret == returncode['pass']:
-                        print "passing"
                         pass
                     else:
                         self.log(_("Plugin %(module) returned something weird, '%(value)', ignoring") % {'module':module, 'value':ret})
@@ -96,22 +94,17 @@ class PluginHandler(object):
         """Triggers an event for the plugins. Since events and notifications
         are precisely the same except for how n+ responds to them, both can be
         triggered by this function."""
-        #print "%s by handler. %s plugins active" % (function, str(len(self.plugins)))
         hotpotato = args
         for (module, plugin) in self.plugins:
-            #print "Trying " + repr(plugin)
             try:
                 func = eval("plugin." + function)
                 ret = func(*hotpotato)
                 if ret != None and type(ret) != tupletype:
                     if ret == returncode['zap']:
-                        print "zapped"
                         return None
                     elif ret == returncode['break']:
-                        print "stopped"
                         return hotpotato
                     elif ret == returncode['pass']:
-                        print "passing"
                         pass
                     else:
                         self.log(_("Plugin %(module) returned something weird, '%(value)', ignoring") % {'module':module, 'value':ret})
@@ -124,7 +117,6 @@ class PluginHandler(object):
                          'error':sys.exc_info()[1],
                          'trace':''.join(format_list(extract_stack())),
                          'area':''.join(format_list(extract_tb(sys.exc_info()[2])))})
-        print function + " Potato is " + repr(hotpotato)
         return hotpotato
     def IncomingPrivateChatEvent(self, nick, line):
         if nick != self.frame.np.config.sections["server"]["login"]:
@@ -147,7 +139,6 @@ class PluginHandler(object):
             # if line is None nobody actually said anything
             return self.TriggerEvent("OutgoingPrivateChatEvent", (nick, line))
         else:
-            print "Line is none"
             return (nick, line)
     def OutgoingPrivateChatNotification(self, nick, line):
         start_new_thread(self.TriggerEvent, ("OutgoingPublicChatEvent", (nick, line)))
