@@ -34,6 +34,8 @@ from entrydialog import *
 from pynicotine.utils import _
 from utils import InputDialog
 
+from time import time
+
 class WishList( gtk.Dialog):
 	def __init__(self, frame):
 		gtk.Dialog.__init__(self)
@@ -479,6 +481,7 @@ class Searches(IconNotebook):
 		return False
 	
 class Search(SearchTab):
+	WAIT_BEFORE_DISPLAYING = 5000 # in milliseconds
 	def __init__(self, Searches, text, id, mode, remember):
 		SearchTab.__init__(self, False)
 
@@ -711,21 +714,15 @@ class Search(SearchTab):
 			
 			if self._more_results == 0:
 				self._more_results = 1
-				gobject.timeout_add(1000, self._realaddresults)
-			else:
-				self._more_results = 2
+				gobject.timeout_add(WAIT_BEFORE_DISPLAYING, self._realaddresults)
 			return len(results)
 	
 	def _realaddresults(self):
 		if "_more_results" not in self.__dict__:
 			return
-		if self._more_results == 2:
-			self._more_results = 1
-			return True
-		
+		self._more_results = 0
 		r = self.new_results
 		self.new_results = []
-		self._more_results = 0
 
 		res = self.append(r)
 
