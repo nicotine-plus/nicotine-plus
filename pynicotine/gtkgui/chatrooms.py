@@ -1182,8 +1182,8 @@ class ChatRoom(ChatRoomTab):
 				(r, text) = tuple
 				self.Say(self.frame.AutoReplace(text))
 				self.frame.pluginhandler.OutgoingPublicChatNotification(self.room, text)
-			else:
-				print "Pluginsystem decided to shut me up" # DEBUG
+			#else:
+			#	self.frame.logMessage(_("Pluginsystem decided to shut me up"))
 		self.ChatEntry.set_text("")
 		
 	def Detach(self, widget = None):

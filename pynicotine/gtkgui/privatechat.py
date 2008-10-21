@@ -136,7 +136,7 @@ class PrivateChats(IconNotebook):
 			return
 		tuple = self.frame.pluginhandler.IncomingPrivateChatEvent(msg.user, text)
 		if tuple == None:
-			print "Pluginsystem made me silence."
+			#print "Pluginsystem made me silence."
 			return
 		(u, text) = tuple
 
