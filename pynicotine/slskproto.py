@@ -249,7 +249,7 @@ class SlskProtoThread(threading.Thread):
 		# GeoIP Module
 		self.geoip = self._eventprocessor.geoip
 		listenport = None
-
+		self.lastsocketwarning = 0
 
 		for listenport in range(portrange[0], portrange[1]+1):
 			try:
@@ -823,36 +823,43 @@ class SlskProtoThread(threading.Thread):
 						#self._ui_callback([Notify(_("Can't send the message over the closed connection: %s %s") %(msgObj.__class__, vars(msgObj)))])
 						self._ui_callback([_("Can't send the message over the closed connection: %(type)s %(msg_obj)s") %{'type':msgObj.__class__, 'msg_obj':vars(msgObj)}])
 			elif issubclass(msgObj.__class__, InternalMessage):
-				if msgObj.__class__ is ServerConn and maxsockets > -1 and numsockets < maxsockets:
-					try:
-						server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-						server_socket.setblocking(0)
-						server_socket.connect_ex(msgObj.addr)
-						server_socket.setblocking(1)
-						connsinprogress[server_socket] = PeerConnectionInProgress(server_socket, msgObj)
-						numsockets += 1
-					except socket.error, err:
-						self._ui_callback([ConnectError(msgObj, err)])
+				socketwarning = False
+				if msgObj.__class__ is ServerConn:
+					if maxsockets > -1 and numsockets < maxsockets:
+						try:
+							server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+							server_socket.setblocking(0)
+							server_socket.connect_ex(msgObj.addr)
+							server_socket.setblocking(1)
+							connsinprogress[server_socket] = PeerConnectionInProgress(server_socket, msgObj)
+							numsockets += 1
+						except socket.error, err:
+							self._ui_callback([ConnectError(msgObj, err)])
+					else:
+						socketwarning = True
 				elif msgObj.__class__ is ConnClose and msgObj.conn in conns:
 					msgObj.conn.close()
 					#print "Close3", conns[msgObj.conn].addr
 					self._ui_callback([ConnClose(msgObj.conn, conns[msgObj.conn].addr)])
 					del conns[msgObj.conn]
-				elif msgObj.__class__ is OutConn and maxsockets > -1 and numsockets < maxsockets:
-					try:
-						conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-						conn.setblocking(0)
-						conn.connect_ex(msgObj.addr)
-						conn.setblocking(1)
-						connsinprogress[conn] = PeerConnectionInProgress(conn, msgObj)
-						numsockets += 1
-					except socket.error, (errnum, strerror):
-						import errno
-						if errno.errorcode.get(errnum,"") == 'EMFILE':
-							queue.put(msgObj)
-							needsleep = 1
-						else:
-							self._ui_callback([ConnectError(msgObj, (errnum, strerror))])
+				elif msgObj.__class__ is OutConn:
+					if maxsockets > -1 and numsockets < maxsockets:
+						try:
+							conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+							conn.setblocking(0)
+							conn.connect_ex(msgObj.addr)
+							conn.setblocking(1)
+							connsinprogress[conn] = PeerConnectionInProgress(conn, msgObj)
+							numsockets += 1
+						except socket.error, (errnum, strerror):
+							import errno
+							if errno.errorcode.get(errnum,"") == 'EMFILE':
+								queue.put(msgObj)
+								needsleep = 1
+							else:
+								self._ui_callback([ConnectError(msgObj, (errnum, strerror))])
+					else:
+						socketwarning = True
 				elif msgObj.__class__ is DownloadFile and msgObj.conn in conns:
 					conns[msgObj.conn].filedown = msgObj
 					conns[msgObj.conn].obuf = conns[msgObj.conn].obuf + struct.pack("<i", msgObj.offset) + struct.pack("<i", 0)
@@ -873,6 +880,9 @@ class SlskProtoThread(threading.Thread):
 						cb = self._calcLimitNone
 					self._resetCounters(conns)
 					self._uploadlimit = (cb, msgObj.limit)
+				if socketwarning and time.time() - self.lastsocketwarning > 60:
+					self.lastsocketwarning = time.time()
+					self._ui_callback([_("You have just hit your connection limit of %(limit)s. Nicotine+ will drop connections for your protection. If you get this message often you should search for less generic terms, or increase your per-process file descriptor limit.") % {'limit':maxsockets}])
 		if needsleep:
 			time.sleep(1)
 		
