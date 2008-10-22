@@ -180,7 +180,7 @@ class NetworkEventProcessor:
 			slskmessages.QueueFailed:self.QueueFailed,
 			slskmessages.UploadFailed:self.UploadFailed,
 			slskmessages.PlaceInQueue:self.PlaceInQueue,
-		        slskmessages.FileError:self.FileError,
+			slskmessages.FileError:self.FileError,
 			slskmessages.FolderContentsResponse:self.FolderContentsResponse,
 			slskmessages.FolderContentsRequest:self.FolderContentsRequest,
 			slskmessages.RoomList:self.RoomList,
@@ -219,6 +219,7 @@ class NetworkEventProcessor:
 			slskmessages.RescanShares:self.RescanShares,
 			slskmessages.RescanBuddyShares:self.RescanBuddyShares,
 			str:self.Notify,
+			slskmessages.PopupMessage:self.PopupMessage,
 			slskmessages.InternalData:self.DisplaySockets,
 			slskmessages.GlobalRecommendations:self.GlobalRecommendations,
 			slskmessages.Recommendations:self.Recommendations,
@@ -448,6 +449,10 @@ class NetworkEventProcessor:
 	# @param string a string containing an error message
 	def Notify(self, string):
 		self.logMessage("%s" % self.decode(string))
+
+	def PopupMessage(self, msg):
+		self.setStatus(_(msg.title))
+		self.frame.PopupMessage(msg)
 
 	def DisplaySockets(self, msg):
 		self.frame.SetSocketStatus(msg.msg)

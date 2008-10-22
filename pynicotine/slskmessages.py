@@ -1775,3 +1775,11 @@ class GivePrivileges(ServerMessage):
 
 	def makeNetworkMessage(self):
 		return self.packObject(self.user) + self.packObject(self.days)
+
+class PopupMessage(object):
+	"""For messages that should be shown to the user prominently, for example
+	through a popup. Should be used sparsly."""
+	def __init__(self, title, message):
+		self.title = title
+		self.message = message
+

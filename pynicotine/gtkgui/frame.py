@@ -1192,6 +1192,12 @@ class NicotineFrame(MainWindow):
 					if type(r) in (gtk.CellRendererText, gtk.CellRendererCombo):
 						r.set_property("foreground", colour)
 					
+	def PopupMessage(self, popup):
+		self.logMessage(_(popup.title) + ": " + _(popup.message))
+		dialog = gtk.MessageDialog(type=gtk.MESSAGE_WARNING, buttons=gtk.BUTTONS_OK, message_format=popup.title)
+		dialog.format_secondary_text(popup.message)
+		dialog.connect('response', lambda dialog, response: dialog.destroy())
+		dialog.show()
 	def logMessage(self, msg, debug = None):
 		if "LogWindow" not in self.__dict__:
 			self.log_queue.append((msg, debug))
