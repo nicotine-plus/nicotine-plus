@@ -1778,7 +1778,7 @@ class GivePrivileges(ServerMessage):
 
 class PopupMessage(object):
 	"""For messages that should be shown to the user prominently, for example
-	through a popup. Should be used sparsly."""
+	through a popup. Should be used sparsely."""
 	def __init__(self, title, message):
 		self.title = title
 		self.message = message
