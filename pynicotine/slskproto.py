@@ -825,7 +825,7 @@ class SlskProtoThread(threading.Thread):
 			elif issubclass(msgObj.__class__, InternalMessage):
 				socketwarning = False
 				if msgObj.__class__ is ServerConn:
-					if maxsockets > -1 and numsockets < maxsockets:
+					if maxsockets == -1 or numsockets < maxsockets:
 						try:
 							server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 							server_socket.setblocking(0)
@@ -843,7 +843,7 @@ class SlskProtoThread(threading.Thread):
 					self._ui_callback([ConnClose(msgObj.conn, conns[msgObj.conn].addr)])
 					del conns[msgObj.conn]
 				elif msgObj.__class__ is OutConn:
-					if maxsockets > -1 and numsockets < maxsockets:
+					if maxsockets == -1 or numsockets < maxsockets:
 						try:
 							conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 							conn.setblocking(0)
