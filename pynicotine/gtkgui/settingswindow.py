@@ -100,8 +100,8 @@ class ServerFrame(settings_glade.ServerFrame):
 			popupWarning(self.p.SettingsWindow, _("Warning: Bad Username"), _("Username 'None' is not a good one, please pick another."), self.frame.images["n"] )
 			raise UserWarning
 		try:
-			firstport = self.FirstPort.get_value_as_int()
-			lastport = self.LastPort.get_value_as_int()
+			firstport = min(self.FirstPort.get_value_as_int(), self.LastPort.get_value_as_int())
+			lastport = max(self.FirstPort.get_value_as_int(), self.LastPort.get_value_as_int())
 			portrange = (firstport, lastport)
 		except:
 			portrange = None

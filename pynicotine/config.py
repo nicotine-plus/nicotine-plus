@@ -479,6 +479,8 @@ class Config:
 		if self.sections["server"]["server"][0] == "mail.slsknet.org":
 			self.sections["server"]["server"] = ('server.slsknet.org', 2242)
 		
+		# Setting the port range in numerical order
+		self.sections["server"]["portrange"] = (min(self.sections["server"]["portrange"]), max(self.sections["server"]["portrange"]))
 		self.config_lock.release()
 		
 	def clearShares(self, sharedfiles, bsharedfiles, sharedfilesstreams, bsharedfilesstreams, wordindex, bwordindex, fileindex, bfileindex, sharedmtimes, bsharedmtimes):
