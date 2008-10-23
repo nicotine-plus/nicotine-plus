@@ -152,6 +152,16 @@
                     <property name="position">2</property>
                   </packing>
                 </child>
+                <child>
+                  <widget class="GtkLabel" id="label29">
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">For a new account
+ enter desired details</property>
+                  </widget>
+                  <packing>
+                    <property name="position">3</property>
+                  </packing>
+                </child>
               </widget>
               <packing>
                 <property name="expand">False</property>
@@ -174,7 +184,7 @@
               <widget class="GtkLabel" id="label172">
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
-                <property name="label" translatable="yes">Client connection ports (use first available):</property>
+                <property name="label" translatable="yes">Use the first available listening port from the following range:</property>
               </widget>
               <packing>
                 <property name="expand">False</property>
@@ -203,7 +213,7 @@
                   <widget class="GtkLabel" id="label173">
                     <property name="width_request">0</property>
                     <property name="visible">True</property>
-                    <property name="label" translatable="yes">-</property>
+                    <property name="label" translatable="yes">to</property>
                   </widget>
                   <packing>
                     <property name="expand">False</property>
@@ -354,7 +364,7 @@
     <property name="visible">True</property>
     <property name="title" translatable="yes">Shares</property>
     <child>
-      <widget class="GtkFrame" id="Main">
+      <widget class="GtkFrame" id="Main1">
         <property name="visible">True</property>
         <property name="label_xalign">0</property>
         <child>
@@ -822,7 +832,7 @@
     <property name="visible">True</property>
     <property name="title" translatable="yes">Transfers</property>
     <child>
-      <widget class="GtkFrame" id="Main">
+      <widget class="GtkFrame" id="Main2">
         <property name="visible">True</property>
         <property name="label_xalign">0</property>
         <child>
@@ -1741,7 +1751,7 @@
     <property name="visible">True</property>
     <property name="title" translatable="yes">Userinfo</property>
     <child>
-      <widget class="GtkFrame" id="Main">
+      <widget class="GtkFrame" id="Main3">
         <property name="visible">True</property>
         <property name="label_xalign">0</property>
         <child>
@@ -1914,7 +1924,7 @@
     <property name="visible">True</property>
     <property name="title" translatable="yes">Bloat</property>
     <child>
-      <widget class="GtkFrame" id="Main">
+      <widget class="GtkFrame" id="Main4">
         <property name="visible">True</property>
         <property name="label_xalign">0</property>
         <child>
@@ -2364,7 +2374,7 @@
     <property name="visible">True</property>
     <property name="title" translatable="yes">Log</property>
     <child>
-      <widget class="GtkFrame" id="Main">
+      <widget class="GtkFrame" id="Main5">
         <property name="visible">True</property>
         <property name="label_xalign">0</property>
         <child>
@@ -3080,7 +3090,7 @@
     <property name="visible">True</property>
     <property name="title" translatable="yes">Ban</property>
     <child>
-      <widget class="GtkFrame" id="Main">
+      <widget class="GtkFrame" id="Main6">
         <property name="visible">True</property>
         <property name="label_xalign">0</property>
         <child>
@@ -3692,7 +3702,7 @@
     <property name="visible">True</property>
     <property name="title" translatable="yes">Search</property>
     <child>
-      <widget class="GtkFrame" id="Main">
+      <widget class="GtkFrame" id="Main7">
         <property name="visible">True</property>
         <property name="label_xalign">0</property>
         <child>
@@ -4132,20 +4142,6 @@ when new results come in</property>
             <property name="spacing">5</property>
             <property name="layout_style">GTK_BUTTONBOX_END</property>
             <child>
-              <widget class="GtkButton" id="OkButton">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="can_default">True</property>
-                <property name="label">gtk-ok</property>
-                <property name="use_stock">True</property>
-                <property name="response_id">0</property>
-                <signal name="clicked" handler="OnOk"/>
-              </widget>
-              <packing>
-                <property name="position">2</property>
-              </packing>
-            </child>
-            <child>
               <widget class="GtkButton" id="ApplyButton">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
@@ -4155,9 +4151,6 @@ when new results come in</property>
                 <property name="response_id">0</property>
                 <signal name="clicked" handler="OnApply"/>
               </widget>
-              <packing>
-                <property name="position">0</property>
-              </packing>
             </child>
             <child>
               <widget class="GtkButton" id="CancelButton">
@@ -4171,6 +4164,20 @@ when new results come in</property>
               </widget>
               <packing>
                 <property name="position">1</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkButton" id="OkButton">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="can_default">True</property>
+                <property name="label">gtk-ok</property>
+                <property name="use_stock">True</property>
+                <property name="response_id">0</property>
+                <signal name="clicked" handler="OnOk"/>
+              </widget>
+              <packing>
+                <property name="position">2</property>
               </packing>
             </child>
           </widget>
@@ -4187,7 +4194,7 @@ when new results come in</property>
     <property name="visible">True</property>
     <property name="title" translatable="yes">Away</property>
     <child>
-      <widget class="GtkFrame" id="Main">
+      <widget class="GtkFrame" id="Main8">
         <property name="visible">True</property>
         <property name="label_xalign">0</property>
         <child>
@@ -4286,7 +4293,7 @@ when new results come in</property>
     <property name="visible">True</property>
     <property name="title" translatable="yes">Events</property>
     <child>
-      <widget class="GtkFrame" id="Main">
+      <widget class="GtkFrame" id="Main9">
         <property name="visible">True</property>
         <property name="label_xalign">0</property>
         <child>
@@ -4507,7 +4514,7 @@ Clear</property>
     <property name="visible">True</property>
     <property name="title" translatable="yes">GeoBlock</property>
     <child>
-      <widget class="GtkFrame" id="Main">
+      <widget class="GtkFrame" id="Main10">
         <property name="visible">True</property>
         <property name="label_xalign">0</property>
         <child>
@@ -4644,7 +4651,7 @@ Clear</property>
     <property name="visible">True</property>
     <property name="title" translatable="yes">UrlCatch</property>
     <child>
-      <widget class="GtkFrame" id="Main">
+      <widget class="GtkFrame" id="Main11">
         <property name="visible">True</property>
         <property name="label_xalign">0</property>
         <child>
@@ -4914,7 +4921,7 @@ Clear</property>
     <property name="visible">True</property>
     <property name="title" translatable="yes">Misc</property>
     <child>
-      <widget class="GtkFrame" id="Main">
+      <widget class="GtkFrame" id="Main12">
         <property name="visible">True</property>
         <property name="label_xalign">0</property>
         <child>
@@ -4996,7 +5003,7 @@ Clear</property>
     <property name="visible">True</property>
     <property name="title" translatable="yes">Import Config</property>
     <child>
-      <widget class="GtkFrame" id="Main">
+      <widget class="GtkFrame" id="Main13">
         <property name="visible">True</property>
         <property name="label_xalign">0</property>
         <child>
@@ -5325,7 +5332,7 @@ Clear</property>
     <property name="visible">True</property>
     <property name="title" translatable="yes">Sounds</property>
     <child>
-      <widget class="GtkFrame" id="Main">
+      <widget class="GtkFrame" id="Main14">
         <property name="visible">True</property>
         <property name="label_xalign">0</property>
         <child>
@@ -5835,7 +5842,7 @@ Clear</property>
     <property name="visible">True</property>
     <property name="title" translatable="yes">Icons</property>
     <child>
-      <widget class="GtkFrame" id="Main">
+      <widget class="GtkFrame" id="Main15">
         <property name="visible">True</property>
         <property name="label_xalign">0</property>
         <child>
@@ -6374,7 +6381,7 @@ Clear</property>
     <property name="visible">True</property>
     <property name="title" translatable="yes">Log</property>
     <child>
-      <widget class="GtkFrame" id="Main">
+      <widget class="GtkFrame" id="Main16">
         <property name="visible">True</property>
         <property name="label_xalign">0</property>
         <child>
@@ -6468,7 +6475,6 @@ Clear</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                        <property name="headers_clickable">True</property>
                       </widget>
                     </child>
                   </widget>
@@ -6651,7 +6657,7 @@ Clear</property>
     <property name="visible">True</property>
     <property name="title" translatable="yes">Chat</property>
     <child>
-      <widget class="GtkFrame" id="Main">
+      <widget class="GtkFrame" id="Main17">
         <property name="visible">True</property>
         <property name="label_xalign">0</property>
         <child>
@@ -6684,7 +6690,7 @@ Clear</property>
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkLabel" id="LoggingLabel">
+                  <widget class="GtkLabel" id="LoggingLabel1">
                     <property name="visible">True</property>
                     <property name="xalign">0</property>
                     <property name="yalign">0</property>
@@ -6700,7 +6706,7 @@ Clear</property>
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkLabel" id="CensorLabel">
+                  <widget class="GtkLabel" id="CensorLabel1">
                     <property name="visible">True</property>
                     <property name="xalign">0</property>
                     <property name="yalign">0</property>
@@ -6768,7 +6774,7 @@ Clear</property>
     <property name="visible">True</property>
     <property name="title" translatable="yes">Log</property>
     <child>
-      <widget class="GtkFrame" id="Main">
+      <widget class="GtkFrame" id="Main18">
         <property name="visible">True</property>
         <property name="label_xalign">0</property>
         <child>
@@ -6808,7 +6814,6 @@ typed incorrectly or as an acronym</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                        <property name="headers_clickable">True</property>
                       </widget>
                     </child>
                   </widget>
@@ -7024,7 +7029,7 @@ typed incorrectly or as an acronym</property>
           </widget>
         </child>
         <child>
-          <widget class="GtkLabel" id="AutoReplaceLabel">
+          <widget class="GtkLabel" id="AutoReplaceLabel1">
             <property name="visible">True</property>
             <property name="label" translatable="yes">Auto-Replace List</property>
           </widget>
@@ -7039,7 +7044,7 @@ typed incorrectly or as an acronym</property>
     <property name="visible">True</property>
     <property name="title" translatable="yes">Text Completion</property>
     <child>
-      <widget class="GtkFrame" id="Main">
+      <widget class="GtkFrame" id="Main19">
         <property name="visible">True</property>
         <property name="label_xalign">0</property>
         <child>
@@ -7262,7 +7267,7 @@ typed incorrectly or as an acronym</property>
     <property name="visible">True</property>
     <property name="title" translatable="yes">Notebooks</property>
     <child>
-      <widget class="GtkFrame" id="Main">
+      <widget class="GtkFrame" id="Main20">
         <property name="visible">True</property>
         <property name="label_xalign">0</property>
         <child>
@@ -7379,43 +7384,6 @@ typed incorrectly or as an acronym</property>
                 <property name="fill">False</property>
                 <property name="position">2</property>
               </packing>
-            </child>
-			<child>
-				<widget class="GtkCheckButton" id="TabReorderable">
-					<property name="visible">True</property>
-					<property name="can_focus">True</property>
-					<property name="response_id">0</property>
-					<property name="draw_indicator">True</property>
-					<child>
-						<widget class="GtkHBox" id="hboxReorderable">
-							<property name="visible">True</property>
-							<property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-							<property name="spacing">5</property>
-							<child>
-								<widget class="GtkImage" id="ReorderableIcon">
-									<property name="visible">True</property>
-									<property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-									<property name="stock">gtk-go-forward</property>
-								</widget>
-							</child>
-							<child>
-								<widget class="GtkLabel" id="labelReorderable">
-									<property name="visible">True</property>
-									<property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-									<property name="label" translatable="yes">Tabs can be repositioned</property>
-								</widget>
-								<packing>
-									<property name="position">1</property>
-								</packing>
-							</child>
-						</widget>
-					</child>
-				</widget>
-				<packing>
-					<property name="expand">False</property>
-					<property name="fill">False</property>
-					<property name="position">2</property>
-				</packing>
             </child>
             <child>
               <widget class="GtkHBox" id="mNoteHBox">
@@ -7791,6 +7759,43 @@ Right</property>
                 <property name="position">8</property>
               </packing>
             </child>
+            <child>
+              <widget class="GtkCheckButton" id="TabReorderable">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="response_id">0</property>
+                <property name="draw_indicator">True</property>
+                <child>
+                  <widget class="GtkHBox" id="hboxReorderable">
+                    <property name="visible">True</property>
+                    <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                    <property name="spacing">5</property>
+                    <child>
+                      <widget class="GtkImage" id="ReorderableIcon">
+                        <property name="visible">True</property>
+                        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                        <property name="stock">gtk-go-forward</property>
+                      </widget>
+                    </child>
+                    <child>
+                      <widget class="GtkLabel" id="labelReorderable">
+                        <property name="visible">True</property>
+                        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                        <property name="label" translatable="yes">Tabs can be repositioned</property>
+                      </widget>
+                      <packing>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                  </widget>
+                </child>
+              </widget>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">2</property>
+              </packing>
+            </child>
           </widget>
         </child>
         <child>
@@ -7810,7 +7815,7 @@ Right</property>
     <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
     <property name="title" translatable="yes">Colours</property>
     <child>
-      <widget class="GtkFrame" id="Main">
+      <widget class="GtkFrame" id="Main21">
         <property name="visible">True</property>
         <property name="label_xalign">0</property>
         <child>
