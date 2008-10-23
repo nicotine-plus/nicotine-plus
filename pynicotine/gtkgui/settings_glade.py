@@ -98,7 +98,7 @@ class ServerFrame:
 
 		self.hbox104.pack_start(self.vbox74, False, False, 0)
 
-		self.label29 = gtk.Label(_("For a new account\n enter desired details"))
+		self.label29 = gtk.Label(_("For a new account \n enter desired details"))
 		self.label29.show()
 		self.hbox104.pack_start(self.label29)
 
@@ -119,7 +119,7 @@ class ServerFrame:
 		self.hbox106.show()
 		self.hbox106.set_spacing(5)
 
-		self.FirstPort = gtk.SpinButton(gtk.Adjustment(value=2234, lower=0, upper=65535, step_incr=1, page_incr=10, page_size=10))
+		self.FirstPort = gtk.SpinButton(gtk.Adjustment(value=2234, lower=0, upper=65535, step_incr=1, page_incr=10))
 		self.FirstPort.show()
 
 		self.hbox106.pack_start(self.FirstPort, False, False, 0)
@@ -129,7 +129,7 @@ class ServerFrame:
 		self.label173.show()
 		self.hbox106.pack_start(self.label173, False, False, 0)
 
-		self.LastPort = gtk.SpinButton(gtk.Adjustment(value=2239, lower=0, upper=65532, step_incr=1, page_incr=10, page_size=10))
+		self.LastPort = gtk.SpinButton(gtk.Adjustment(value=2239, lower=0, upper=65532, step_incr=1, page_incr=10))
 		self.LastPort.show()
 
 		self.hbox106.pack_start(self.LastPort, False, False, 0)
@@ -217,8 +217,8 @@ class SharesFrame:
 			self.SharesFrame.add_accel_group(self.accel_group)
 			self.SharesFrame.show()
 
-		self.Main1 = gtk.Frame()
-		self.Main1.show()
+		self.Main = gtk.Frame()
+		self.Main.show()
 
 		self.vbox77 = gtk.VBox(False, 0)
 		self.vbox77.show()
@@ -474,15 +474,15 @@ class SharesFrame:
 
 		self.vbox77.pack_start(self.hbox166)
 
-		self.Main1.add(self.vbox77)
+		self.Main.add(self.vbox77)
 
 		self.label175 = gtk.Label(_("Shares"))
 		self.label175.show()
-		self.Main1.set_label_widget(self.label175)
+		self.Main.set_label_widget(self.label175)
 
 
 		if create:
-			self.SharesFrame.add(self.Main1)
+			self.SharesFrame.add(self.Main)
 
 	def OnChooseIncompleteDir(self, widget):
 		pass
@@ -532,8 +532,8 @@ class TransfersFrame:
 			self.TransfersFrame.add_accel_group(self.accel_group)
 			self.TransfersFrame.show()
 
-		self.Main2 = gtk.Frame()
-		self.Main2.show()
+		self.Main = gtk.Frame()
+		self.Main.show()
 
 		self.vbox81 = gtk.VBox(False, 0)
 		self.vbox81.show()
@@ -582,7 +582,7 @@ class TransfersFrame:
 		self.label185.show()
 		self.hbox117.pack_start(self.label185, False, False, 0)
 
-		self.QueueBandwidth = gtk.SpinButton(gtk.Adjustment(value=0, lower=0, upper=1000000, step_incr=1, page_incr=10, page_size=10))
+		self.QueueBandwidth = gtk.SpinButton(gtk.Adjustment(value=0, lower=0, upper=1000000, step_incr=1, page_incr=10))
 		self.QueueBandwidth.show()
 
 		self.hbox117.pack_start(self.QueueBandwidth, False, False, 0)
@@ -606,7 +606,7 @@ class TransfersFrame:
 
 		self.hbox118.pack_start(self.QueueUseSlots, False, False, 0)
 
-		self.QueueSlots = gtk.SpinButton(gtk.Adjustment(value=0, lower=0, upper=1000000, step_incr=1, page_incr=10, page_size=10))
+		self.QueueSlots = gtk.SpinButton(gtk.Adjustment(value=0, lower=0, upper=1000000, step_incr=1, page_incr=10))
 		self.QueueSlots.show()
 
 		self.hbox118.pack_start(self.QueueSlots, False, False, 0)
@@ -629,7 +629,7 @@ class TransfersFrame:
 
 		self.hbox14.pack_start(self.Limit, False, True, 0)
 
-		self.LimitSpeed = gtk.SpinButton(gtk.Adjustment(value=0, lower=0, upper=1000000, step_incr=1, page_incr=10, page_size=10))
+		self.LimitSpeed = gtk.SpinButton(gtk.Adjustment(value=0, lower=0, upper=1000000, step_incr=1, page_incr=10))
 		self.LimitSpeed.show()
 
 		self.hbox14.pack_start(self.LimitSpeed, False, True, 0)
@@ -673,7 +673,7 @@ class TransfersFrame:
 		self.hbox40.show()
 		self.hbox40.set_spacing(5)
 
-		self.MaxUserQueue = gtk.SpinButton(gtk.Adjustment(value=0, lower=0, upper=1000000, step_incr=1, page_incr=10, page_size=10))
+		self.MaxUserQueue = gtk.SpinButton(gtk.Adjustment(value=0, lower=0, upper=1000000, step_incr=1, page_incr=10))
 		self.MaxUserQueue.show()
 
 		self.hbox40.pack_start(self.MaxUserQueue, False, False, 0)
@@ -688,7 +688,7 @@ class TransfersFrame:
 		self.hbox37.show()
 		self.hbox37.set_spacing(5)
 
-		self.MaxUserFiles = gtk.SpinButton(gtk.Adjustment(value=0, lower=0, upper=1000000, step_incr=1, page_incr=10, page_size=10))
+		self.MaxUserFiles = gtk.SpinButton(gtk.Adjustment(value=0, lower=0, upper=1000000, step_incr=1, page_incr=10))
 		self.MaxUserFiles.show()
 
 		self.hbox37.pack_start(self.MaxUserFiles, False, False, 0)
@@ -1003,15 +1003,15 @@ class TransfersFrame:
 
 		self.vbox81.pack_start(self.LockIncoming, False, False, 0)
 
-		self.Main2.add(self.vbox81)
+		self.Main.add(self.vbox81)
 
 		self.label183 = gtk.Label(_("Transfers"))
 		self.label183.show()
-		self.Main2.set_label_widget(self.label183)
+		self.Main.set_label_widget(self.label183)
 
 
 		if create:
-			self.TransfersFrame.add(self.Main2)
+			self.TransfersFrame.add(self.Main)
 
 	def OnQueueUseSlotsToggled(self, widget):
 		pass
@@ -1061,8 +1061,8 @@ class UserinfoFrame:
 			self.UserinfoFrame.add_accel_group(self.accel_group)
 			self.UserinfoFrame.show()
 
-		self.Main3 = gtk.Frame()
-		self.Main3.show()
+		self.Main = gtk.Frame()
+		self.Main.show()
 
 		self.vbox84 = gtk.VBox(False, 0)
 		self.vbox84.show()
@@ -1151,15 +1151,15 @@ class UserinfoFrame:
 
 		self.vbox84.pack_start(self.hbox122, False, False, 0)
 
-		self.Main3.add(self.vbox84)
+		self.Main.add(self.vbox84)
 
 		self.label192 = gtk.Label(_("Personal settings"))
 		self.label192.show()
-		self.Main3.set_label_widget(self.label192)
+		self.Main.set_label_widget(self.label192)
 
 
 		if create:
-			self.UserinfoFrame.add(self.Main3)
+			self.UserinfoFrame.add(self.Main)
 
 	def OnChooseImage(self, widget):
 		pass
@@ -1185,8 +1185,8 @@ class BloatFrame:
 			self.BloatFrame.add_accel_group(self.accel_group)
 			self.BloatFrame.show()
 
-		self.Main4 = gtk.Frame()
-		self.Main4.show()
+		self.Main = gtk.Frame()
+		self.Main.show()
 
 		self.vboxUI = gtk.VBox(False, 0)
 		self.vboxUI.show()
@@ -1399,15 +1399,15 @@ class BloatFrame:
 
 		self.vboxUI.pack_start(self.frame1, False, True, 0)
 
-		self.Main4.add(self.vboxUI)
+		self.Main.add(self.vboxUI)
 
 		self.label195 = gtk.Label(_("Extra stuff for your comfort"))
 		self.label195.show()
-		self.Main4.set_label_widget(self.label195)
+		self.Main.set_label_widget(self.label195)
 
 
 		if create:
-			self.BloatFrame.add(self.Main4)
+			self.BloatFrame.add(self.Main)
 
 	def OnDefaultFont(self, widget):
 		pass
@@ -1436,8 +1436,8 @@ class LogFrame:
 			self.LogFrame.add_accel_group(self.accel_group)
 			self.LogFrame.show()
 
-		self.Main5 = gtk.Frame()
-		self.Main5.show()
+		self.Main = gtk.Frame()
+		self.Main.show()
 
 		self.vbox89 = gtk.VBox(False, 0)
 		self.vbox89.show()
@@ -1613,7 +1613,7 @@ class LogFrame:
 		self.label40.show()
 		self.hbox31.pack_start(self.label40, False, True, 0)
 
-		self.RoomLogLines = gtk.SpinButton(gtk.Adjustment(value=0, lower=0, upper=1000, step_incr=1, page_incr=10, page_size=10))
+		self.RoomLogLines = gtk.SpinButton(gtk.Adjustment(value=0, lower=0, upper=1000, step_incr=1, page_incr=10))
 		self.RoomLogLines.show()
 		self.RoomLogLines.set_width_chars(4)
 
@@ -1639,7 +1639,7 @@ class LogFrame:
 		self.label31.show()
 		self.hbox177.pack_start(self.label31, False, True, 0)
 
-		self.PrivateLogLines = gtk.SpinButton(gtk.Adjustment(value=0, lower=0, upper=1000, step_incr=1, page_incr=10, page_size=10))
+		self.PrivateLogLines = gtk.SpinButton(gtk.Adjustment(value=0, lower=0, upper=1000, step_incr=1, page_incr=10))
 		self.PrivateLogLines.show()
 		self.PrivateLogLines.set_width_chars(4)
 
@@ -1792,16 +1792,16 @@ class LogFrame:
 
 		self.vbox89.pack_start(self.hbox10, False, True, 0)
 
-		self.Main5.add(self.vbox89)
+		self.Main.add(self.vbox89)
 
 		self.LoggingLabel = gtk.Label("")
 		self.LoggingLabel.set_markup(_("<b>Logging</b>"))
 		self.LoggingLabel.show()
-		self.Main5.set_label_widget(self.LoggingLabel)
+		self.Main.set_label_widget(self.LoggingLabel)
 
 
 		if create:
-			self.LogFrame.add(self.Main5)
+			self.LogFrame.add(self.Main)
 
 	def OnChooseLogDir(self, widget):
 		pass
@@ -1839,8 +1839,8 @@ class BanFrame:
 			self.BanFrame.add_accel_group(self.accel_group)
 			self.BanFrame.show()
 
-		self.Main6 = gtk.Frame()
-		self.Main6.show()
+		self.Main = gtk.Frame()
+		self.Main.show()
 
 		self.vbox91 = gtk.VBox(False, 0)
 		self.vbox91.show()
@@ -2168,15 +2168,15 @@ class BanFrame:
 
 		self.vbox91.pack_start(self.hbox146, False, False, 0)
 
-		self.Main6.add(self.vbox91)
+		self.Main.add(self.vbox91)
 
 		self.label218 = gtk.Label(_("Banning"))
 		self.label218.show()
-		self.Main6.set_label_widget(self.label218)
+		self.Main.set_label_widget(self.label218)
 
 
 		if create:
-			self.BanFrame.add(self.Main6)
+			self.BanFrame.add(self.Main)
 
 	def OnAddBanned(self, widget):
 		pass
@@ -2229,8 +2229,8 @@ class SearchFrame:
 			self.SearchFrame.add_accel_group(self.accel_group)
 			self.SearchFrame.show()
 
-		self.Main7 = gtk.Frame()
-		self.Main7.show()
+		self.Main = gtk.Frame()
+		self.Main.show()
 
 		self.vbox93 = gtk.VBox(False, 0)
 		self.vbox93.show()
@@ -2251,7 +2251,7 @@ class SearchFrame:
 		self.label225.show()
 		self.hbox147.pack_start(self.label225, False, False, 0)
 
-		self.MaxResults = gtk.SpinButton(gtk.Adjustment(value=50, lower=0, upper=100000, step_incr=1, page_incr=10, page_size=10))
+		self.MaxResults = gtk.SpinButton(gtk.Adjustment(value=50, lower=0, upper=100000, step_incr=1, page_incr=10))
 		self.MaxResults.show()
 		self.MaxResults.set_width_chars(6)
 
@@ -2274,7 +2274,7 @@ class SearchFrame:
 
 		self.hbox36.pack_start(self.ToggleDistributed, False, True, 0)
 
-		self.ToggleDistributedInterval = gtk.SpinButton(gtk.Adjustment(value=60, lower=30, upper=3600, step_incr=1, page_incr=10, page_size=10))
+		self.ToggleDistributedInterval = gtk.SpinButton(gtk.Adjustment(value=60, lower=30, upper=3600, step_incr=1, page_incr=10))
 		self.ToggleDistributedInterval.show()
 		self.ToggleDistributedInterval.set_width_chars(5)
 
@@ -2384,15 +2384,15 @@ class SearchFrame:
 
 		self.vbox93.pack_start(self.ReopenTabs, False, True, 0)
 
-		self.Main7.add(self.vbox93)
+		self.Main.add(self.vbox93)
 
 		self.label224 = gtk.Label(_("Searches"))
 		self.label224.show()
-		self.Main7.set_label_widget(self.label224)
+		self.Main.set_label_widget(self.label224)
 
 
 		if create:
-			self.SearchFrame.add(self.Main7)
+			self.SearchFrame.add(self.Main)
 
 	def OnToggleDistributed(self, widget):
 		pass
@@ -2462,6 +2462,12 @@ class SettingsWindow:
 		self.hbuttonbox2.set_spacing(5)
 		self.hbuttonbox2.set_layout(gtk.BUTTONBOX_END)
 
+		self.OkButton = gtk.Button(None, gtk.STOCK_OK)
+		self.OkButton.show()
+		self.OkButton.connect("clicked", self.OnOk)
+
+		self.hbuttonbox2.pack_start(self.OkButton)
+
 		self.ApplyButton = gtk.Button(None, gtk.STOCK_APPLY)
 		self.ApplyButton.show()
 		self.ApplyButton.connect("clicked", self.OnApply)
@@ -2474,25 +2480,19 @@ class SettingsWindow:
 
 		self.hbuttonbox2.pack_start(self.CancelButton)
 
-		self.OkButton = gtk.Button(None, gtk.STOCK_OK)
-		self.OkButton.show()
-		self.OkButton.connect("clicked", self.OnOk)
-
-		self.hbuttonbox2.pack_start(self.OkButton)
-
 		self.vbox94.pack_start(self.hbuttonbox2, False, False, 0)
 
 
 		if create:
 			self.SettingsWindow.add(self.vbox94)
 
+	def OnOk(self, widget):
+		pass
+
 	def OnApply(self, widget):
 		pass
 
 	def OnCancel(self, widget):
-		pass
-
-	def OnOk(self, widget):
 		pass
 
 	def get_custom_widget(self, id, string1, string2, int1, int2):
@@ -2516,8 +2516,8 @@ class AwayFrame:
 			self.AwayFrame.add_accel_group(self.accel_group)
 			self.AwayFrame.show()
 
-		self.Main8 = gtk.Frame()
-		self.Main8.show()
+		self.Main = gtk.Frame()
+		self.Main.show()
 
 		self.vbox95 = gtk.VBox(False, 0)
 		self.vbox95.show()
@@ -2532,7 +2532,7 @@ class AwayFrame:
 		self.label170.show()
 		self.hbox105.pack_start(self.label170, False, False, 0)
 
-		self.AutoAway = gtk.SpinButton(gtk.Adjustment(value=15, lower=0, upper=10000, step_incr=1, page_incr=10, page_size=10))
+		self.AutoAway = gtk.SpinButton(gtk.Adjustment(value=15, lower=0, upper=10000, step_incr=1, page_incr=10))
 		self.AutoAway.show()
 
 		self.hbox105.pack_start(self.AutoAway, False, False, 0)
@@ -2558,15 +2558,15 @@ class AwayFrame:
 
 		self.vbox95.pack_start(self.hbox107, False, True, 0)
 
-		self.Main8.add(self.vbox95)
+		self.Main.add(self.vbox95)
 
 		self.label235 = gtk.Label(_("Away mode"))
 		self.label235.show()
-		self.Main8.set_label_widget(self.label235)
+		self.Main.set_label_widget(self.label235)
 
 
 		if create:
-			self.AwayFrame.add(self.Main8)
+			self.AwayFrame.add(self.Main)
 
 	def get_custom_widget(self, id, string1, string2, int1, int2):
 		w = gtk.Label(_("(custom widget: %s)") % id)
@@ -2589,8 +2589,8 @@ class EventsFrame:
 			self.EventsFrame.add_accel_group(self.accel_group)
 			self.EventsFrame.show()
 
-		self.Main9 = gtk.Frame()
-		self.Main9.show()
+		self.Main = gtk.Frame()
+		self.Main.show()
 
 		self.vbox96 = gtk.VBox(False, 0)
 		self.vbox96.show()
@@ -2707,15 +2707,15 @@ class EventsFrame:
 
 		self.vbox96.pack_start(self.frame2, False, True, 0)
 
-		self.Main9.add(self.vbox96)
+		self.Main.add(self.vbox96)
 
 		self.label236 = gtk.Label(_("Events"))
 		self.label236.show()
-		self.Main9.set_label_widget(self.label236)
+		self.Main.set_label_widget(self.label236)
 
 
 		if create:
-			self.EventsFrame.add(self.Main9)
+			self.EventsFrame.add(self.Main)
 
 	def get_custom_widget(self, id, string1, string2, int1, int2):
 		w = gtk.Label(_("(custom widget: %s)") % id)
@@ -2738,8 +2738,8 @@ class GeoBlockFrame:
 			self.GeoBlockFrame.add_accel_group(self.accel_group)
 			self.GeoBlockFrame.show()
 
-		self.Main10 = gtk.Frame()
-		self.Main10.show()
+		self.Main = gtk.Frame()
+		self.Main.show()
 
 		self.vbox98 = gtk.VBox(False, 0)
 		self.vbox98.show()
@@ -2794,15 +2794,15 @@ class GeoBlockFrame:
 		self.label50.show()
 		self.vbox98.pack_start(self.label50, False, False, 0)
 
-		self.Main10.add(self.vbox98)
+		self.Main.add(self.vbox98)
 
 		self.label244 = gtk.Label(_("Geographical Blocking"))
 		self.label244.show()
-		self.Main10.set_label_widget(self.label244)
+		self.Main.set_label_widget(self.label244)
 
 
 		if create:
-			self.GeoBlockFrame.add(self.Main10)
+			self.GeoBlockFrame.add(self.Main)
 
 	def OnGeoBlockToggled(self, widget):
 		pass
@@ -2828,8 +2828,8 @@ class UrlCatchFrame:
 			self.UrlCatchFrame.add_accel_group(self.accel_group)
 			self.UrlCatchFrame.show()
 
-		self.Main11 = gtk.Frame()
-		self.Main11.show()
+		self.Main = gtk.Frame()
+		self.Main.show()
 
 		self.vbox99 = gtk.VBox(False, 0)
 		self.vbox99.show()
@@ -2965,15 +2965,15 @@ class UrlCatchFrame:
 
 		self.vbox99.pack_start(self.table3)
 
-		self.Main11.add(self.vbox99)
+		self.Main.add(self.vbox99)
 
 		self.label246 = gtk.Label(_("URL Catching:"))
 		self.label246.show()
-		self.Main11.set_label_widget(self.label246)
+		self.Main.set_label_widget(self.label246)
 
 
 		if create:
-			self.UrlCatchFrame.add(self.Main11)
+			self.UrlCatchFrame.add(self.Main)
 
 	def OnURLCatchingToggled(self, widget):
 		pass
@@ -3005,8 +3005,8 @@ class MiscFrame:
 			self.MiscFrame.add_accel_group(self.accel_group)
 			self.MiscFrame.show()
 
-		self.Main12 = gtk.Frame()
-		self.Main12.show()
+		self.Main = gtk.Frame()
+		self.Main.show()
 
 		self.alignment70 = gtk.Alignment(0, 0, 0, 0)
 		self.alignment70.set_padding(4, 1, 1, 1)
@@ -3040,16 +3040,16 @@ class MiscFrame:
 
 		self.alignment70.add(self.vbox102)
 
-		self.Main12.add(self.alignment70)
+		self.Main.add(self.alignment70)
 
 		self.label279 = gtk.Label("")
 		self.label279.set_markup(_("Miscellaneous Settings"))
 		self.label279.show()
-		self.Main12.set_label_widget(self.label279)
+		self.Main.set_label_widget(self.label279)
 
 
 		if create:
-			self.MiscFrame.add(self.Main12)
+			self.MiscFrame.add(self.Main)
 
 	def get_custom_widget(self, id, string1, string2, int1, int2):
 		w = gtk.Label(_("(custom widget: %s)") % id)
@@ -3072,8 +3072,8 @@ class ImportFrame:
 			self.ImportFrame.add_accel_group(self.accel_group)
 			self.ImportFrame.show()
 
-		self.Main13 = gtk.Frame()
-		self.Main13.show()
+		self.Main = gtk.Frame()
+		self.Main.show()
 
 		self.vbox112 = gtk.VBox(False, 0)
 		self.vbox112.show()
@@ -3229,15 +3229,15 @@ class ImportFrame:
 
 		self.vbox112.pack_start(self.hbox207, False, False, 0)
 
-		self.Main13.add(self.vbox112)
+		self.Main.add(self.vbox112)
 
 		self.label353 = gtk.Label(_("Import Config"))
 		self.label353.show()
-		self.Main13.set_label_widget(self.label353)
+		self.Main.set_label_widget(self.label353)
 
 
 		if create:
-			self.ImportFrame.add(self.Main13)
+			self.ImportFrame.add(self.Main)
 
 	def OnImportDirectory(self, widget):
 		pass
@@ -3266,8 +3266,8 @@ class SoundsFrame:
 			self.SoundsFrame.add_accel_group(self.accel_group)
 			self.SoundsFrame.show()
 
-		self.Main14 = gtk.Frame()
-		self.Main14.show()
+		self.Main = gtk.Frame()
+		self.Main.show()
 
 		self.vbox119 = gtk.VBox(False, 0)
 		self.vbox119.show()
@@ -3533,16 +3533,16 @@ class SoundsFrame:
 		self.audioPlayerCombo.set_text_column(0)
 		self.vbox119.pack_start(self.audioPlayerCombo, False, True, 0)
 
-		self.Main14.add(self.vbox119)
+		self.Main.add(self.vbox119)
 
 		self.label420 = gtk.Label("")
 		self.label420.set_markup(_("<b>Sounds:</b>"))
 		self.label420.show()
-		self.Main14.set_label_widget(self.label420)
+		self.Main.set_label_widget(self.label420)
 
 
 		if create:
-			self.SoundsFrame.add(self.Main14)
+			self.SoundsFrame.add(self.Main)
 
 	def OnSoundCheckToggled(self, widget):
 		pass
@@ -3574,8 +3574,8 @@ class IconsFrame:
 			self.IconsFrame.add_accel_group(self.accel_group)
 			self.IconsFrame.show()
 
-		self.Main15 = gtk.Frame()
-		self.Main15.show()
+		self.Main = gtk.Frame()
+		self.Main.show()
 
 		self.vbox125 = gtk.VBox(False, 0)
 		self.vbox125.show()
@@ -3796,15 +3796,15 @@ class IconsFrame:
 
 		self.vbox125.pack_start(self.table6)
 
-		self.Main15.add(self.vbox125)
+		self.Main.add(self.vbox125)
 
 		self.label464 = gtk.Label(_("Tray & Icons"))
 		self.label464.show()
-		self.Main15.set_label_widget(self.label464)
+		self.Main.set_label_widget(self.label464)
 
 
 		if create:
-			self.IconsFrame.add(self.Main15)
+			self.IconsFrame.add(self.Main)
 
 	def get_custom_widget(self, id, string1, string2, int1, int2):
 		w = gtk.Label(_("(custom widget: %s)") % id)
@@ -3827,8 +3827,8 @@ class CensorFrame:
 			self.CensorFrame.add_accel_group(self.accel_group)
 			self.CensorFrame.show()
 
-		self.Main16 = gtk.Frame()
-		self.Main16.show()
+		self.Main = gtk.Frame()
+		self.Main.show()
 
 		self.vbox7 = gtk.VBox(False, 0)
 		self.vbox7.show()
@@ -3975,15 +3975,15 @@ class CensorFrame:
 
 		self.vbox7.pack_start(self.hbox5)
 
-		self.Main16.add(self.vbox7)
+		self.Main.add(self.vbox7)
 
 		self.CensorLabel = gtk.Label(_("Censor List"))
 		self.CensorLabel.show()
-		self.Main16.set_label_widget(self.CensorLabel)
+		self.Main.set_label_widget(self.CensorLabel)
 
 
 		if create:
-			self.CensorFrame.add(self.Main16)
+			self.CensorFrame.add(self.Main)
 
 	def OnCensorCheck(self, widget):
 		pass
@@ -4018,8 +4018,8 @@ class ChatFrame:
 			self.ChatFrame.add_accel_group(self.accel_group)
 			self.ChatFrame.show()
 
-		self.Main17 = gtk.Frame()
-		self.Main17.show()
+		self.Main = gtk.Frame()
+		self.Main.show()
 
 		self.LabelsAlignment = gtk.Alignment(0, 0, 0, 0)
 		self.LabelsAlignment.set_padding(4, 1, 1, 1)
@@ -4038,21 +4038,21 @@ class ChatFrame:
 		self.AwayLabel.show()
 		self.LabelsVBox.pack_start(self.AwayLabel, False, False, 0)
 
-		self.LoggingLabel1 = gtk.Label("")
-		self.LoggingLabel1.set_alignment(0, 0)
-		self.LoggingLabel1.set_padding(8, 0)
-		self.LoggingLabel1.set_line_wrap(True)
-		self.LoggingLabel1.set_markup(_("Choose <b>Logging</b> to configure what's logged and where to save the logs."))
-		self.LoggingLabel1.show()
-		self.LabelsVBox.pack_start(self.LoggingLabel1, False, False, 0)
+		self.LoggingLabel = gtk.Label("")
+		self.LoggingLabel.set_alignment(0, 0)
+		self.LoggingLabel.set_padding(8, 0)
+		self.LoggingLabel.set_line_wrap(True)
+		self.LoggingLabel.set_markup(_("Choose <b>Logging</b> to configure what's logged and where to save the logs."))
+		self.LoggingLabel.show()
+		self.LabelsVBox.pack_start(self.LoggingLabel, False, False, 0)
 
-		self.CensorLabel1 = gtk.Label("")
-		self.CensorLabel1.set_alignment(0, 0)
-		self.CensorLabel1.set_padding(8, 0)
-		self.CensorLabel1.set_line_wrap(True)
-		self.CensorLabel1.set_markup(_("You can censor words unwanted words in the <b>Censor List</b>."))
-		self.CensorLabel1.show()
-		self.LabelsVBox.pack_start(self.CensorLabel1, False, False, 0)
+		self.CensorLabel = gtk.Label("")
+		self.CensorLabel.set_alignment(0, 0)
+		self.CensorLabel.set_padding(8, 0)
+		self.CensorLabel.set_line_wrap(True)
+		self.CensorLabel.set_markup(_("You can censor words unwanted words in the <b>Censor List</b>."))
+		self.CensorLabel.show()
+		self.LabelsVBox.pack_start(self.CensorLabel, False, False, 0)
 
 		self.AutoReplaceLabel = gtk.Label("")
 		self.AutoReplaceLabel.set_alignment(0, 0)
@@ -4072,16 +4072,16 @@ class ChatFrame:
 
 		self.LabelsAlignment.add(self.LabelsVBox)
 
-		self.Main17.add(self.LabelsAlignment)
+		self.Main.add(self.LabelsAlignment)
 
 		self.ChatLabel = gtk.Label("")
 		self.ChatLabel.set_markup(_("Chat Settings"))
 		self.ChatLabel.show()
-		self.Main17.set_label_widget(self.ChatLabel)
+		self.Main.set_label_widget(self.ChatLabel)
 
 
 		if create:
-			self.ChatFrame.add(self.Main17)
+			self.ChatFrame.add(self.Main)
 
 	def get_custom_widget(self, id, string1, string2, int1, int2):
 		w = gtk.Label(_("(custom widget: %s)") % id)
@@ -4104,8 +4104,8 @@ class AutoReplaceFrame:
 			self.AutoReplaceFrame.add_accel_group(self.accel_group)
 			self.AutoReplaceFrame.show()
 
-		self.Main18 = gtk.Frame()
-		self.Main18.show()
+		self.Main = gtk.Frame()
+		self.Main.show()
 
 		self.vbox11 = gtk.VBox(False, 0)
 		self.vbox11.show()
@@ -4250,15 +4250,15 @@ class AutoReplaceFrame:
 
 		self.vbox11.pack_start(self.hbox23)
 
-		self.Main18.add(self.vbox11)
+		self.Main.add(self.vbox11)
 
-		self.AutoReplaceLabel1 = gtk.Label(_("Auto-Replace List"))
-		self.AutoReplaceLabel1.show()
-		self.Main18.set_label_widget(self.AutoReplaceLabel1)
+		self.AutoReplaceLabel = gtk.Label(_("Auto-Replace List"))
+		self.AutoReplaceLabel.show()
+		self.Main.set_label_widget(self.AutoReplaceLabel)
 
 
 		if create:
-			self.AutoReplaceFrame.add(self.Main18)
+			self.AutoReplaceFrame.add(self.Main)
 
 	def OnReplaceCheck(self, widget):
 		pass
@@ -4296,8 +4296,8 @@ class CompletionFrame:
 			self.CompletionFrame.add_accel_group(self.accel_group)
 			self.CompletionFrame.show()
 
-		self.Main19 = gtk.Frame()
-		self.Main19.show()
+		self.Main = gtk.Frame()
+		self.Main.show()
 
 		self.vbox = gtk.VBox(False, 0)
 		self.vbox.show()
@@ -4376,7 +4376,7 @@ class CompletionFrame:
 		self.label6.show()
 		self.hbox13.pack_start(self.label6, False, True, 0)
 
-		self.CharactersCompletion = gtk.SpinButton(gtk.Adjustment(value=2, lower=1, upper=10, step_incr=1, page_incr=10, page_size=10))
+		self.CharactersCompletion = gtk.SpinButton(gtk.Adjustment(value=2, lower=1, upper=10, step_incr=1, page_incr=10))
 		self.CharactersCompletion.show()
 
 		self.hbox13.pack_start(self.CharactersCompletion, False, True, 0)
@@ -4397,15 +4397,15 @@ class CompletionFrame:
 
 		self.vbox.pack_start(self.DropdownExpander, False, True, 0)
 
-		self.Main19.add(self.vbox)
+		self.Main.add(self.vbox)
 
 		self.CompletionLabel = gtk.Label(_("Chat text completion"))
 		self.CompletionLabel.show()
-		self.Main19.set_label_widget(self.CompletionLabel)
+		self.Main.set_label_widget(self.CompletionLabel)
 
 
 		if create:
-			self.CompletionFrame.add(self.Main19)
+			self.CompletionFrame.add(self.Main)
 
 	def get_custom_widget(self, id, string1, string2, int1, int2):
 		w = gtk.Label(_("(custom widget: %s)") % id)
@@ -4428,8 +4428,8 @@ class NotebookFrame:
 			self.NotebookFrame.add_accel_group(self.accel_group)
 			self.NotebookFrame.show()
 
-		self.Main20 = gtk.Frame()
-		self.Main20.show()
+		self.Main = gtk.Frame()
+		self.Main.show()
 
 		self.vboxUI2 = gtk.VBox(False, 0)
 		self.vboxUI2.show()
@@ -4496,6 +4496,26 @@ class NotebookFrame:
 
 		self.vboxUI2.pack_start(self.TabColours, False, False, 0)
 
+		self.TabReorderable = gtk.CheckButton()
+		self.TabReorderable.show()
+
+		self.hboxReorderable = gtk.HBox(False, 0)
+		self.hboxReorderable.show()
+		self.hboxReorderable.set_spacing(5)
+
+		self.ReorderableIcon = gtk.Image()
+		self.ReorderableIcon.set_from_stock(gtk.STOCK_GO_FORWARD, 4)
+		self.ReorderableIcon.show()
+		self.hboxReorderable.pack_start(self.ReorderableIcon)
+
+		self.labelReorderable = gtk.Label(_("Tabs can be repositioned"))
+		self.labelReorderable.show()
+		self.hboxReorderable.pack_start(self.labelReorderable)
+
+		self.TabReorderable.add(self.hboxReorderable)
+
+		self.vboxUI2.pack_start(self.TabReorderable, False, False, 0)
+
 		self.mNoteHBox = gtk.HBox(False, 0)
 		self.mNoteHBox.show()
 		self.mNoteHBox.set_spacing(5)
@@ -4523,7 +4543,7 @@ class NotebookFrame:
 		self.MainAngleLabel.set_width_chars(12)
 		self.mNoteHBox.pack_start(self.MainAngleLabel, False, True, 0)
 
-		self.MainAngleSpin = gtk.SpinButton(gtk.Adjustment(value=0, lower=-90, upper=90, step_incr=90, page_incr=90, page_size=10))
+		self.MainAngleSpin = gtk.SpinButton(gtk.Adjustment(value=0, lower=-90, upper=90, step_incr=90, page_incr=90))
 		self.MainAngleSpin.show()
 		self.MainAngleSpin.set_width_chars(4)
 
@@ -4558,7 +4578,7 @@ class NotebookFrame:
 		self.ChatRoomsAngleLabel.set_width_chars(12)
 		self.cNoteHBox.pack_start(self.ChatRoomsAngleLabel, False, True, 0)
 
-		self.ChatRoomsAngleSpin = gtk.SpinButton(gtk.Adjustment(value=0, lower=-90, upper=90, step_incr=90, page_incr=90, page_size=10))
+		self.ChatRoomsAngleSpin = gtk.SpinButton(gtk.Adjustment(value=0, lower=-90, upper=90, step_incr=90, page_incr=90))
 		self.ChatRoomsAngleSpin.show()
 		self.ChatRoomsAngleSpin.set_width_chars(4)
 
@@ -4593,7 +4613,7 @@ class NotebookFrame:
 		self.PrivateChatAngleLabel.set_width_chars(12)
 		self.pNoteHBox.pack_start(self.PrivateChatAngleLabel, False, True, 0)
 
-		self.PrivateChatAngleSpin = gtk.SpinButton(gtk.Adjustment(value=0, lower=-90, upper=90, step_incr=90, page_incr=90, page_size=10))
+		self.PrivateChatAngleSpin = gtk.SpinButton(gtk.Adjustment(value=0, lower=-90, upper=90, step_incr=90, page_incr=90))
 		self.PrivateChatAngleSpin.show()
 		self.PrivateChatAngleSpin.set_width_chars(4)
 
@@ -4628,7 +4648,7 @@ class NotebookFrame:
 		self.SearchAngleLabel.set_width_chars(12)
 		self.SNoteHBox.pack_start(self.SearchAngleLabel, False, True, 0)
 
-		self.SearchAngleSpin = gtk.SpinButton(gtk.Adjustment(value=0, lower=-90, upper=90, step_incr=90, page_incr=90, page_size=10))
+		self.SearchAngleSpin = gtk.SpinButton(gtk.Adjustment(value=0, lower=-90, upper=90, step_incr=90, page_incr=90))
 		self.SearchAngleSpin.show()
 		self.SearchAngleSpin.set_width_chars(4)
 
@@ -4663,7 +4683,7 @@ class NotebookFrame:
 		self.UserInfoAngleLabel.set_width_chars(12)
 		self.iNoteHBox.pack_start(self.UserInfoAngleLabel, False, True, 0)
 
-		self.UserInfoAngleSpin = gtk.SpinButton(gtk.Adjustment(value=0, lower=-90, upper=90, step_incr=90, page_incr=90, page_size=10))
+		self.UserInfoAngleSpin = gtk.SpinButton(gtk.Adjustment(value=0, lower=-90, upper=90, step_incr=90, page_incr=90))
 		self.UserInfoAngleSpin.show()
 		self.UserInfoAngleSpin.set_width_chars(4)
 
@@ -4698,7 +4718,7 @@ class NotebookFrame:
 		self.UserBrowseAngleLabel.set_width_chars(12)
 		self.bNoteHBox.pack_start(self.UserBrowseAngleLabel, False, True, 0)
 
-		self.UserBrowseAngleSpin = gtk.SpinButton(gtk.Adjustment(value=0, lower=-90, upper=90, step_incr=90, page_incr=90, page_size=10))
+		self.UserBrowseAngleSpin = gtk.SpinButton(gtk.Adjustment(value=0, lower=-90, upper=90, step_incr=90, page_incr=90))
 		self.UserBrowseAngleSpin.show()
 		self.UserBrowseAngleSpin.set_width_chars(4)
 
@@ -4706,36 +4726,16 @@ class NotebookFrame:
 
 		self.vboxUI2.pack_start(self.bNoteHBox, False, True, 0)
 
-		self.TabReorderable = gtk.CheckButton()
-		self.TabReorderable.show()
-
-		self.hboxReorderable = gtk.HBox(False, 0)
-		self.hboxReorderable.show()
-		self.hboxReorderable.set_spacing(5)
-
-		self.ReorderableIcon = gtk.Image()
-		self.ReorderableIcon.set_from_stock(gtk.STOCK_GO_FORWARD, 4)
-		self.ReorderableIcon.show()
-		self.hboxReorderable.pack_start(self.ReorderableIcon)
-
-		self.labelReorderable = gtk.Label(_("Tabs can be repositioned"))
-		self.labelReorderable.show()
-		self.hboxReorderable.pack_start(self.labelReorderable)
-
-		self.TabReorderable.add(self.hboxReorderable)
-
-		self.vboxUI2.pack_start(self.TabReorderable, False, False, 0)
-
-		self.Main20.add(self.vboxUI2)
+		self.Main.add(self.vboxUI2)
 
 		self.label130 = gtk.Label("")
 		self.label130.set_markup(_("<b>Notebook Tabs</b>"))
 		self.label130.show()
-		self.Main20.set_label_widget(self.label130)
+		self.Main.set_label_widget(self.label130)
 
 
 		if create:
-			self.NotebookFrame.add(self.Main20)
+			self.NotebookFrame.add(self.Main)
 
 	def get_custom_widget(self, id, string1, string2, int1, int2):
 		w = gtk.Label(_("(custom widget: %s)") % id)
@@ -4757,8 +4757,8 @@ class ColoursFrame:
 			self.ColoursFrame.set_title(_("Colours"))
 			self.ColoursFrame.add_accel_group(self.accel_group)
 
-		self.Main21 = gtk.Frame()
-		self.Main21.show()
+		self.Main = gtk.Frame()
+		self.Main.show()
 
 		self.hbox9 = gtk.HBox(False, 0)
 		self.hbox9.show()
@@ -6133,16 +6133,16 @@ class ColoursFrame:
 
 		self.hbox9.pack_start(self.vboxColours)
 
-		self.Main21.add(self.hbox9)
+		self.Main.add(self.hbox9)
 
 		self.ColoursLabel = gtk.Label("")
 		self.ColoursLabel.set_markup(_("<b>Colours</b>"))
 		self.ColoursLabel.show()
-		self.Main21.set_label_widget(self.ColoursLabel)
+		self.Main.set_label_widget(self.ColoursLabel)
 
 
 		if create:
-			self.ColoursFrame.add(self.Main21)
+			self.ColoursFrame.add(self.Main)
 
 	def OnExpand(self, widget):
 		pass
