@@ -169,7 +169,7 @@ def write_widget_spinbutton(widget, my_class, *args):
 	global signals, indent
 	#{'digits': '0', 'climb_rate': '1', 'update_policy': 'GTK_UPDATE_ALWAYS', 'can_focus': 'True', 'numeric': 'False', 'visible': 'True', 'snap_to_ticks': 'False', 'wrap': 'False', 'adjustment': '0 0 255 1 10 10'}
 	value, min, max, step_incr, page_incr, page_size = widget.attrs["adjustment"].split(" ")
-	adjustment = "gtk.Adjustment(value=%s, lower=%s, upper=%s, step_incr=%s, page_incr=%s, page_size=%s)" % (value, min, max, step_incr, page_incr, page_size)
+	adjustment = "gtk.Adjustment(value=%s, lower=%s, upper=%s, step_incr=%s, page_incr=%s)" % (value, min, max, step_incr, page_incr)
 	restargs = ""
 	print indent + "%s = gtk.%s(%s)" % (widget.id, my_class, adjustment)
 	allowed = ["visible", "width_chars"]
