@@ -290,7 +290,7 @@ Finnish
 Euskara
  * The Librezale.org Team <librezale@librezale.org> http://librezale.org
  """)
- 		AppendLine(self.TransTextView, text, None, None, showstamp=False)
+		AppendLine(self.TransTextView, text, None, None, showstamp=False)
 		
 		translatorsLabel = gtk.Label(_("Translators"))
 		translatorsLabel.show()

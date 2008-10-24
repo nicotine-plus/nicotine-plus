@@ -1361,7 +1361,7 @@ class SharedFileList(PeerMessage):
 	def __init__(self, conn, shares = None):
 		self.conn = conn
 		self.list = shares
-	 	self.built = None
+		self.built = None
 		
 	def parseNetworkMessage(self, message, nozlib = 0):
 

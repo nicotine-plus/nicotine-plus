@@ -1073,7 +1073,7 @@ class Search(SearchTab):
 		num = model.get_value(iter, 0)
 		user = model.get_value(iter, 1)
 		fn = None
-  		for r in self.all_data:
+		for r in self.all_data:
 			if num != r[0] or user != r[1]:
 				continue
 			#user = r[1]

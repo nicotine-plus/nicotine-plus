@@ -178,7 +178,7 @@ class Downloads(TransferList):
 
 		filemanager = filemanager_config.split()[0]
 		filemanager_args = filemanager_config.split(filemanager)[1]
-                arg = filemanager_args.split('$')[0].strip()
+		arg = filemanager_args.split('$')[0].strip()
 		complete_path = os.path.join(downloaddir, transfer.path)
 		arg_list = []
 		arg_list.append(filemanager)

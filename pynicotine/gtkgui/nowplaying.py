@@ -763,7 +763,7 @@ class NowPlaying:
 			proxyobj = self.bus.get_object("org.gnome.Rhythmbox", "/org/gnome/Rhythmbox/Shell")
 			rbshell = Interface(proxyobj, "org.gnome.Rhythmbox.Shell")
 			proxyobj = self.bus.get_object('org.gnome.Rhythmbox', '/org/gnome/Rhythmbox/Player')
- 			rbplayer = Interface(proxyobj, 'org.gnome.Rhythmbox.Player')
+			rbplayer = Interface(proxyobj, 'org.gnome.Rhythmbox.Player')
 		except Exception, error:
 			self.frame.logMessage(_("ERROR while accessing the %(program)s DBus interface: %(error)s") % {"program": "Rhythmbox", "error": error })
 			return None

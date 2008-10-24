@@ -273,7 +273,7 @@ class NicotineFrame(MainWindow):
 		self.UserList.enable_model_drag_dest(TARGETS,  gtk.gdk.ACTION_COPY)
 		self.userlistvbox.pack_start(self.userlistSW, True, True, 0)
 		self.UserList.connect("drag_data_get", self.buddylist_drag_data_get_data)
-     		self.UserList.connect("drag_data_received", self.DragUserToBuddylist)
+		self.UserList.connect("drag_data_received", self.DragUserToBuddylist)
 		self.UserHbox = gtk.HBox(False, 3)
 		self.UserHbox.set_border_width(0)
 		self.UserHbox.show()
@@ -495,7 +495,7 @@ class NicotineFrame(MainWindow):
 		#data = (status, flag, user, speed, files, trusted, notify, privileged, lastseen, comments)
 		selection.set(selection.target, 8, user)
 		
-     	def DragUserToBuddylist(self, treeview, context, x, y, selection, info, etime):
+	def DragUserToBuddylist(self, treeview, context, x, y, selection, info, etime):
 		model = treeview.get_model()
 		user = selection.data
 		if user:
@@ -2682,7 +2682,7 @@ class TrayApp:
 				self.frame.MainWindow.present()
 			self.frame.MainWindow.grab_focus()
 			self.frame.is_mapped = 1
-   			self.frame.chatrooms.roomsctrl.ClearNotifications()
+			self.frame.chatrooms.roomsctrl.ClearNotifications()
 			self.frame.privatechats.ClearNotifications()
 			
 	def Create(self):
@@ -2875,7 +2875,7 @@ class TrayApp:
 			
 	def SetToolTip(self, string):
 		if self.pygtkicon and self.trayicon_module is not None:
-   			self.trayicon_module.set_tooltip(string)
+			self.trayicon_module.set_tooltip(string)
 		
 class gstreamer:
 	def __init__(self):
