@@ -46,7 +46,8 @@ class Plugin(BasePlugin):
         if start > -1:
             end = html.find('</title>')
             if end > -1:
-                information.append(deltags(html[start:end]))
+                clean = deltags(html[start:end])
+                information.append(clean.replace(' - ',' '))
         return ' '.join(information)
 
 # Debugging again

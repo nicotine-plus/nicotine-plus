@@ -51,8 +51,8 @@ class Plugin(BasePlugin):
                 if title[:9] == "allmusic ":
                     title = title[9:]
                 print "Title is now",title
-                title = title.rstrip(" )")
-                title = title.lstrip(" (")
+                title = title.replace('(',' ').replace(')',' ')
+                title = ' '.join([x.strip() for x in title.split(' ') if x.split()])
                 print "Title is now",title
                 (useful,split,junk) = title.partition(' > ')
                 information.append(useful)
