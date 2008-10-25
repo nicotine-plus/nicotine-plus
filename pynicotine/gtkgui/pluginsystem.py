@@ -141,7 +141,7 @@ class PluginHandler(object):
         else:
             return (nick, line)
     def OutgoingPrivateChatNotification(self, nick, line):
-        start_new_thread(self.TriggerEvent, ("OutgoingPublicChatEvent", (nick, line)))
+        start_new_thread(self.TriggerEvent, ("OutgoingPrivateChatNotification", (nick, line)))
     def OutgoingPublicChatEvent(self, room, line):
         return self.TriggerEvent("OutgoingPublicChatEvent", (room, line))
     def OutgoingPublicChatNotification(self, room, line):
