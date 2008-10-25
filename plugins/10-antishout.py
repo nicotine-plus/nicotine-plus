@@ -4,10 +4,11 @@ from pynicotine.gtkgui.pluginsystem import BasePlugin
 
 class Plugin(BasePlugin):
     __name__ = "Anti-SHOUT"
-    __version__ = "2008-07-05r00"
+    __version__ = "2008-10-26r00"
     __MAXSCORE__ = 0.6
     __MINLENGTH__ = 5
     def capitalize(self, text):
+        # Dont alter words that look like protocol links (fe http://, ftp://)
         if text.find('://') > -1:
             return text
         return text.capitalize()
