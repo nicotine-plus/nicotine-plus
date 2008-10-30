@@ -463,7 +463,7 @@ class Searches(IconNotebook):
 		return popup
 		
 	def on_tab_click(self, widget, event, child):
-		if event.type == gtk.gdk.BUTTON_PRESS and event.button == 3:
+		if event.type == gtk.gdk.BUTTON_PRESS:
 			id = None
 			n = self.page_num(child)
 			page = self.get_nth_page(n)
@@ -473,11 +473,16 @@ class Searches(IconNotebook):
 				if data[2].Main is page:
 					id = search
 					break
-			if id is not None:
+			if id is None:
+				print "ID is none"
+				return
+			if event.button == 2:
+				self.searches[id][2].OnClose(widget)
+				return True
+			if event.button == 3:
 				menu = self.TabPopup(id)
 				menu.popup(None, None, None, event.button, event.time)
 				return True
-			return False
 		return False
 	
 class Search(SearchTab):

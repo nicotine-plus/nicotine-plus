@@ -1693,6 +1693,7 @@ class ChatRooms(IconNotebook):
 			room = [room for room, tab in self.roomsctrl.joinedrooms.items() if tab.Main is page][0]
 			if event.button == 2:
 				self.roomsctrl.joinedrooms[room].OnLeave()
+				return True
 			if event.button == 3:
 				menu = self.TabPopup(room)
 				menu.popup(None, None, None, event.button, event.time)
