@@ -123,6 +123,9 @@ class PrivateChats(IconNotebook):
 			n = self.page_num(child)
 			page = self.get_nth_page(n)
 			username =  [user for user, tab in self.users.items() if tab.Main is page][0]
+			if event.button == 2:
+				self.users[username].OnClose(widget)
+				return True
 			if event.button == 3:
 				menu = self.TabPopup(username)
 				menu.popup(None, None, None, event.button, event.time)

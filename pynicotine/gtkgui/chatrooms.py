@@ -1692,7 +1692,7 @@ class ChatRooms(IconNotebook):
 			page = self.get_nth_page(n)
 			room = [room for room, tab in self.roomsctrl.joinedrooms.items() if tab.Main is page][0]
 			if event.button == 2:
-				self.roomsctrl.joinedrooms[room].OnLeave()
+				self.roomsctrl.joinedrooms[room].OnLeave(widget)
 				return True
 			if event.button == 3:
 				menu = self.TabPopup(room)
