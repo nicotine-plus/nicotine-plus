@@ -157,7 +157,7 @@ class PluginHandler(object):
     # other functions
     def log(self, text):
         self.frame.logMessage(text)
-    def SayChatroom(self, room, text):
+    def saychatroom(self, room, text):
         self.frame.np.queue.put(slskmessages.SayChatroom(room, text))
     
 class BasePlugin(object):
