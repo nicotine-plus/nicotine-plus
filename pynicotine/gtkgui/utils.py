@@ -775,7 +775,10 @@ class PopupMenu(gtk.Menu):
 			elif item[0] == "USER":
 				menuitem = gtk.MenuItem(item[1])
 				self.useritem = menuitem
-				menuitem.set_sensitive(False)
+				if len(item) >= 3:
+					self.handlers[menuitem] = menuitem.connect("activate", item[2])
+				else:
+					menuitem.set_sensitive(False)
 			elif item[0] == 1:
 				menuitem = gtk.MenuItem(item[1])
 				menuitem.set_submenu(item[2])
@@ -902,6 +905,9 @@ class PopupMenu(gtk.Menu):
 			
 	def OnVersion(self, widget):
 		self.frame.privatechats.SendMessage(self.user, "\x01VERSION\x01")
+		
+	def OnCopyUser(self, widget):
+		self.frame.clip.set_text(self.user)
 		
 	def OnGivePrivileges(self, widget):
 		self.frame.np.queue.put(slskmessages.CheckPrivileges())

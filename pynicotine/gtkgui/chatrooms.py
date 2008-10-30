@@ -714,7 +714,7 @@ class ChatRoom(ChatRoomTab):
 		self.popup_menu_privaterooms = PopupMenu(self.frame)
 		self.popup_menu = popup = PopupMenu(self.frame)
 		popup.setup(
-			("USER", ""),
+			("USER", "", popup.OnCopyUser),
 			("", None),
 			("#" + _("Send _message"), popup.OnSendMessage, gtk.STOCK_EDIT),
 			("", None),
