@@ -113,6 +113,7 @@ Others will not be able to see the lengths and the bitrates
 of Ogg Vorbis files that you share. You can get the from
 http://www.andrewchatham.com/pyogg/. 
 If you're using Debian, install the python-pyvorbis package.
+If you're using Gentoo, install nicotine+ with the vorbis USE flag.
 """)
 
 	try:
