@@ -25,4 +25,5 @@ There are two kinds of actinos you can hook into:
   being able to alter them. The plugin can take as long as it wants. This is
   the preferred action to hook into, only use Events if you really have to.
 
-For more help examine the pluginsystem.py and the example plugins.
+For more help examine the pluginsystem.py and the example plugins. There is no
+documentation except for the example plugins.
