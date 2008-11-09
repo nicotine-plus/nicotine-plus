@@ -1,11 +1,21 @@
 ChangeLog for Nicotine Plus
-Unreleased
+
+1.2.10 alpha (9 November 2008)
+
+Features
+ * Added last.fm to the now-player (gallows)
+ * Added first version of the plugin system
 
 Bugs
  * 'Send to player' failed because of missing quotes for finished downloads
  * Fixed a bug with tuple error message causing a traceback
  * Fixed a translation bug, caused by tabs positions top, left, etc that caused
    settings dialog to not work properly
+ * Fixed rhytmbox support with "Now Playing" (gallows)
+ * Fixed Audacious support with "Now Playing" (gallows)
+ * Fixed sending out the wrong username with search results
+ * Updated all server references to the new server
+ * A inverted port range no longer causes connection failures
 
 Buddylist
  * Radio buttons now allow the buddylist to be toggled as always visible, in own
