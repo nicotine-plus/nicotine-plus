@@ -17,10 +17,11 @@ returncode = {'break':0, # don't give other plugins the event, do let n+ process
 tupletype = type(('',''))
 
 class PluginHandler(object):
-    frame = None # static variable
+    frame = None # static variable... but should it be?
     def __init__(self, frame):
         self.frame = frame
         self.log("Loading plugin handler")
+        self.myUsername = self.frame.np.config.sections["server"]["login"]
         self.plugins = []
         if WIN32:
             mydir = (os.path.split(sys.argv[0]))[0]
@@ -118,30 +119,30 @@ class PluginHandler(object):
                          'trace':''.join(format_list(extract_stack())),
                          'area':''.join(format_list(extract_tb(sys.exc_info()[2])))})
         return hotpotato
-    def IncomingPrivateChatEvent(self, nick, line):
-        if nick != self.frame.np.config.sections["server"]["login"]:
+    def IncomingPrivateChatEvent(self, user, line):
+        if user != self.myUsername:
             # dont trigger the scripts on our own talking - we've got "Outgoing" for that
-            return self.TriggerEvent("IncomingPrivateChatEvent", (nick, line))
+            return self.TriggerEvent("IncomingPrivateChatEvent", (user, line))
         else:
-            return (nick, line)
-    def IncomingPrivateChatNotification(self, nick, line):
-        start_new_thread(self.TriggerEvent, ("IncomingPrivateChatNotification", (nick, line)))
-    def IncomingPublicChatEvent(self, room, nick, line):
-        if nick != self.frame.np.config.sections["server"]["login"]:
+            return (user, line)
+    def IncomingPrivateChatNotification(self, user, line):
+        start_new_thread(self.TriggerEvent, ("IncomingPrivateChatNotification", (user, line)))
+    def IncomingPublicChatEvent(self, room, user, line):
+        if user != self.myUsername:
             # dont trigger the scripts on our own talking - we've got "Outgoing" for that
-            return self.TriggerEvent("IncomingPublicChatEvent", (room, nick, line))
+            return self.TriggerEvent("IncomingPublicChatEvent", (room, user, line))
         else:
-            return (room, nick, line)
-    def IncomingPublicChatNotification(self, room, nick, line):
-        start_new_thread(self.TriggerEvent, ("IncomingPublicChatNotification", (room, nick, line)))
-    def OutgoingPrivateChatEvent(self, nick, line):
+            return (room, user, line)
+    def IncomingPublicChatNotification(self, room, user, line):
+        start_new_thread(self.TriggerEvent, ("IncomingPublicChatNotification", (room, user, line)))
+    def OutgoingPrivateChatEvent(self, user, line):
         if line != None:
             # if line is None nobody actually said anything
-            return self.TriggerEvent("OutgoingPrivateChatEvent", (nick, line))
+            return self.TriggerEvent("OutgoingPrivateChatEvent", (user, line))
         else:
-            return (nick, line)
-    def OutgoingPrivateChatNotification(self, nick, line):
-        start_new_thread(self.TriggerEvent, ("OutgoingPrivateChatNotification", (nick, line)))
+            return (user, line)
+    def OutgoingPrivateChatNotification(self, user, line):
+        start_new_thread(self.TriggerEvent, ("OutgoingPrivateChatNotification", (user, line)))
     def OutgoingPublicChatEvent(self, room, line):
         return self.TriggerEvent("OutgoingPublicChatEvent", (room, line))
     def OutgoingPublicChatNotification(self, room, line):
@@ -159,6 +160,8 @@ class PluginHandler(object):
         self.frame.logMessage(text)
     def saychatroom(self, room, text):
         self.frame.np.queue.put(slskmessages.SayChatroom(room, text))
+    def sayprivate(self, user, text):
+        self.frame.np.queue.put(slskmessages.MessageUser(user, text))
     
 class BasePlugin(object):
     __name__ = "BasePlugin"
@@ -168,21 +171,21 @@ class BasePlugin(object):
         self.parent = parent
     def LoadEvent(self):
         pass
-    def IncomingPrivateChatEvent(self, nick, line):
+    def IncomingPrivateChatEvent(self, user, line):
         pass
-    def IncomingPrivateChatNotification(self, nick, line):
+    def IncomingPrivateChatNotification(self, user, line):
         pass
-    def IncomingPublicChatEvent(self, room, nick, line):
+    def IncomingPublicChatEvent(self, room, user, line):
         pass
-    def IncomingPublicChatNotification(self, room, nick, line):
+    def IncomingPublicChatNotification(self, room, user, line):
         pass
-    def OutgoingPrivateChatEvent(self, nick, line):
+    def OutgoingPrivateChatEvent(self, user, line):
         pass
-    def OutgoingPrivateChatNotification(self, nick, line):
+    def OutgoingPrivateChatNotification(self, user, line):
         pass
-    def OutgoingPublicChatEvent(self, nick, line):
+    def OutgoingPublicChatEvent(self, user, line):
         pass
-    def OutgoingPublicChatNotification(self, nick, line):
+    def OutgoingPublicChatNotification(self, user, line):
         pass
     def OutgoingGlobalSearchEvent(self, text):
         pass
