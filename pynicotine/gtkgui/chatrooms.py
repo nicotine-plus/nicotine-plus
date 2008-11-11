@@ -265,7 +265,8 @@ class RoomsControl:
 	def OnPopupPrivateRoomDisown(self, widget):
 		if self.IsPrivateRoomOwned(self.popup_room):
 			self.frame.np.queue.put(slskmessages.PrivateRoomDisown(self.popup_room))
-			#self.PrivateRoom[self.popup_room]
+			del self.PrivateRooms[self.popup_room]
+			self.SetPrivateRooms()
 			
 	def OnPopupPrivateRoomDismember(self, widget):
 		if self.IsPrivateRoomMember(self.popup_room):
@@ -425,7 +426,7 @@ class RoomsControl:
 	def PrivateRoomRemoved(self, msg):
 		rooms = self.PrivateRooms
 		if msg.room in rooms:
-			rooms.remove(msg.room)
+			del rooms[msg.room]
 		self.SetPrivateRooms()
 		
 	def TogglePrivateRooms(self, enabled):
