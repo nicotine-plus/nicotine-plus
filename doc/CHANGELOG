@@ -1,5 +1,10 @@
 ChangeLog for Nicotine Plus
 
+SVN 
+
+Bugs
+ * Fixed bug #274, cancelling and disowning private rooms bug (fr3shpr1nc3)
+
 1.2.10 alpha (9 November 2008)
 
 Features
