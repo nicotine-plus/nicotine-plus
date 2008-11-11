@@ -5,6 +5,12 @@ ChangeLog for Nicotine Plus
 Features
  * Added last.fm to the now-player (gallows)
  * Added first version of the plugin system
+ * Tabs can be closed using the middle mouse button
+ * Usernames can be copied from the channel list (right click, select the
+   username from the menu)
+ * Added a popup that will inform users in case a local port cannot be bound
+ * Connections will be dropped when the maximum is approached, decreasing the
+   chance for "IOError" messages
 
 Bugs
  * 'Send to player' failed because of missing quotes for finished downloads
@@ -16,6 +22,7 @@ Bugs
  * Fixed sending out the wrong username with search results
  * Updated all server references to the new server
  * A inverted port range no longer causes connection failures
+ * Removed deprecated GTK calls
 
 Buddylist
  * Radio buttons now allow the buddylist to be toggled as always visible, in own
