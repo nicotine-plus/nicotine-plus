@@ -341,10 +341,15 @@ class TransferList:
 				elapsed = left = ""
 				elap = 0
 				salientstatus = ""
+				extensions = {}
 				for f in range(files):
 					iter = self.transfersmodel.iter_nth_child(self.users[user], f)
 					filename = self.transfersmodel.get_value(iter, 9)
-					
+					(name, ext) = filename.rsplit('.',1)
+					try:
+						extensions[ext.lower()] += 1
+					except KeyError:
+						extensions[ext.lower()] = 1
 					for transfer in self.list:
 						if [transfer.user, transfer.filename] == [user, filename] and transfer.timeelapsed is not None:
 							elap += transfer.timeelapsed
@@ -359,7 +364,7 @@ class TransferList:
 							ispeed += float(str_speed)
 						
 						left = self.transfersmodel.get_value(iter, 7)
-					if salientstatus in ('',):
+					if salientstatus in ('',_("Finished")): # we prefer anything over ''/finished
 						salientstatus = status
 					if status == _("Transferring"):
 						salientstatus = status
@@ -378,7 +383,19 @@ class TransferList:
 					left = self.frame.np.transfers.getTime((totalsize - position)/ispeed/1024)
 				elapsed = self.frame.np.transfers.getTime(elap)
 				
-				self.transfersmodel.set(self.users[user], 1, _("%s Files") % files , 2, salientstatus, 3, percent, 4, "%s / %s" % (self.Humanize(position, None), self.Humanize(totalsize, None )), 5, speed, 6, elapsed, 7, left, 11, ispeed, 13, True)
+				extensionlst = [(extensions[key], key) for key in extensions]
+				extensionlst.sort(reverse=True)
+				extensions = ", ".join([str(count) + " " + ext for (count, ext) in extensionlst])
+				self.transfersmodel.set(self.users[user],
+						1, _("%s Files") % files + ": " + extensions,
+						2, salientstatus,
+						3, percent,
+						4, "%s / %s" % (self.Humanize(position, None), self.Humanize(totalsize, None )),
+						5, speed,
+						6, elapsed,
+						7, left,
+						11, ispeed,
+						13, True)
 				
 				
 		self.frame.UpdateBandwidth()
