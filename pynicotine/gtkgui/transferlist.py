@@ -340,6 +340,7 @@ class TransferList:
 				percent = totalsize = position = 0
 				elapsed = left = ""
 				elap = 0
+				salientstatus = ""
 				for f in range(files):
 					iter = self.transfersmodel.iter_nth_child(self.users[user], f)
 					filename = self.transfersmodel.get_value(iter, 9)
@@ -358,7 +359,12 @@ class TransferList:
 							ispeed += float(str_speed)
 						
 						left = self.transfersmodel.get_value(iter, 7)
-					
+					if salientstatus in ('',):
+						salientstatus = status
+					if status == _("Transferring"):
+						salientstatus = status
+					if status == _("Banned"):
+						salientstatus = status
 				try:
 					speed = "%.1f" % ispeed
 				except TypeError:
@@ -372,7 +378,7 @@ class TransferList:
 					left = self.frame.np.transfers.getTime((totalsize - position)/ispeed/1024)
 				elapsed = self.frame.np.transfers.getTime(elap)
 				
-				self.transfersmodel.set(self.users[user], 2, _("%s Files") % files , 3, percent, 4, "%s / %s" % (self.Humanize(position, None), self.Humanize(totalsize, None )), 5, speed, 6, elapsed, 7, left, 11, ispeed, 13, True)
+				self.transfersmodel.set(self.users[user], 1, _("%s Files") % files , 2, salientstatus, 3, percent, 4, "%s / %s" % (self.Humanize(position, None), self.Humanize(totalsize, None )), 5, speed, 6, elapsed, 7, left, 11, ispeed, 13, True)
 				
 				
 		self.frame.UpdateBandwidth()
