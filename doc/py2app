@@ -1,0 +1,39 @@
+== Global
+
+1) Install py2app, fe. version 0.3.6
+2) Make setup.py: py2applet --make-setup nicotine.py files/nicotine_blue_upscaled.icns
+3) Test alias mode: python setup.py py2app -A
+   You should now find a .app folder in dist/ with an icon - opening this should start an instance of n+
+4) Pack: python setup.py py2app
+
+
+== Problem solving
+
+Problem: 
+    RuntimeError: Don't know how to handle ''/gentoo/usr/lib/python2.5/site-packages/gtk-2.0/gtk/_gtk.so''
+Solution:
+    Rename the .so to .bundle
+
+Problem:
+    RuntimeError: Don't know how to handle ''/gentoo/usr/lib/python2.5/site-packages/pygtk.py-2.0''
+Solution:
+    The dir will /gentoo/usr/lib/python2.5/site-packages/ look like this:
+        lrwxr-xr-x  1 gentoo staff    12 2008-11-14 20:41 pygtk.py -> pygtk.py-2.0
+        -rw-r--r--  1 gentoo staff  2946 2008-11-14 20:41 pygtk.py-2.0
+    Overwrite the pygtk.py symlink with the pygtk.py-2.0 file
+
+Problem:
+    Unknown load command: 27
+Solution:
+    Installed dev version of macholib: easy_install macholib==dev
+
+Problem:
+    ValueError: New Mach-O header is too large to relocate
+Solution:
+    Recompile offending library with LD="-headerpad_max_install_names", fe. by putting this in /gentoo/etc/make.conf
+    The offending library is not the latest one mentioned, but the ones that
+    has the "create" line in it, for me it crashed on atk but pygtk needed to
+    be recompiled
+
+Removing build/ and dist/ after changing stuff can solve problems as well
+
