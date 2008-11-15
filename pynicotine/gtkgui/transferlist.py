@@ -383,11 +383,14 @@ class TransferList:
 					left = self.frame.np.transfers.getTime((totalsize - position)/ispeed/1024)
 				elapsed = self.frame.np.transfers.getTime(elap)
 				
-				extensionlst = [(extensions[key], key) for key in extensions]
-				extensionlst.sort(reverse=True)
-				extensions = ", ".join([str(count) + " " + ext for (count, ext) in extensionlst])
+				if len(extensions) == 1:
+					extensions = _("All %(ext)s") % {'ext':extensions.keys()[0]}
+				else:
+					extensionlst = [(extensions[key], key) for key in extensions]
+					extensionlst.sort(reverse=True)
+					extensions = ", ".join([str(count) + " " + ext for (count, ext) in extensionlst])
 				self.transfersmodel.set(self.users[user],
-						1, _("%s Files") % files + ": " + extensions,
+						1, _("%(number)2s files ") % {'number':files} + " (" + extensions + ")",
 						2, salientstatus,
 						3, percent,
 						4, "%s / %s" % (self.Humanize(position, None), self.Humanize(totalsize, None )),
