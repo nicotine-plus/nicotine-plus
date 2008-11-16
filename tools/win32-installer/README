@@ -1,0 +1,3 @@
+Copy dist directory created when running python setup.py py2exe
+from the Windows box.
+Then run wine nsis-2.40/makensis.exe nicotine+.nsi
