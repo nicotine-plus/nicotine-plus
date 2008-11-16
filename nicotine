@@ -23,7 +23,14 @@ daelstorm@gmail.com
 """
 import platform, os
 import sys
+
 win32 = sys.platform.startswith("win")
+
+# Disable py2exe log feature by routing stdout/sterr to the special nul file
+if win32 and os.path.exists("disable_log"):
+	sys.stdout = open("nul", "w")
+	sys.stderr = open("nul", "w")
+
 LOAD_PSYCO = False
 if win32 and platform.architecture()[0] == "32bit":
 	LOAD_PSYCO = True
