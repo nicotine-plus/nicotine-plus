@@ -265,9 +265,9 @@ class Searches(IconNotebook):
 			if tuple != None:
 				text = tuple[0]
 		elif mode == 1:
-			tuple = self.frame.pluginhandler.OutgoingRoomSearchEvent(rooms, text)
+			tuple = self.frame.pluginhandler.OutgoingRoomSearchEvent(room, text)
 			if tuple != None:
-				(rooms, text) = tuple
+				(room, text) = tuple
 		elif mode == 2:
 			tuple = self.frame.pluginhandler.OutgoingBuddySearchEvent(text)
 			if tuple != None:
