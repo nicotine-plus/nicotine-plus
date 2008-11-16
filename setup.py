@@ -110,7 +110,7 @@ if __name__ == '__main__' :
           windows               = [ 
                                     {
                                       "script": "nicotine",
-                                      "icon_resources": [(0, "img/nicotine.ico")]
+                                      "icon_resources": [(0, "img/ico/nicotine+-.ico")]
                                     }
                                   ],
           options               = {
