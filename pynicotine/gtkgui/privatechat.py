@@ -19,6 +19,7 @@
 import os
 import gtk, gobject, pango
 import sets
+from time import daylight, altzone
 from nicotine_glade import PrivateChatTab
 from utils import AppendLine, IconNotebook, PopupMenu, WriteLog, expand_alias, is_alias, EncodingsMenu, SaveEncoding, fixpath
 from chatrooms import GetCompletion
@@ -401,9 +402,23 @@ class PrivateChat(PrivateChatTab):
 			line = "[%s] %s" % (self.user, self.frame.CensorChat(text))
 			speech = self.frame.CensorChat(text)
 			tag = self.tag_remote
-		line = self.frame.np.decode(line, self.encoding)
 		timestamp_format=self.frame.np.config.sections["logging"]["private_timestamp"]
-		AppendLine(self.ChatScroll, line, tag, timestamp=timestamp, timestamp_format=timestamp_format, username=self.user, usertag=self.tag_username)
+		if status and not self.offlinemessage:
+			AppendLine(self.ChatScroll, _("* Message(s) sent while you were offline. Timestamps are reported by the server and can be off."), self.tag_hilite, timestamp_format=timestamp_format)
+			self.offlinemessage = 1
+		if not status and self.offlinemessage:
+			self.offlinemessage = False
+		line = self.frame.np.decode(line, self.encoding)
+		if status:
+			# The timestamps from the server are off by a lot, so we'll only use them when this is an offline message
+			# Also, they are in UTC so we need to correct them
+			if daylight:
+				timestamp -= (3600*daylight)
+			else:
+				timestamp += altzone
+			AppendLine(self.ChatScroll, line, self.tag_hilite, timestamp=timestamp, timestamp_format=timestamp_format, username=self.user, usertag=self.tag_username)
+		else:
+			AppendLine(self.ChatScroll, line, tag, timestamp_format=timestamp_format, username=self.user, usertag=self.tag_username)
 		if self.Log.get_active():
 			self.logfile = WriteLog(self.logfile, self.frame.np.config.sections["logging"]["privatelogsdir"], self.user, line)
 		
@@ -411,10 +426,6 @@ class PrivateChat(PrivateChatTab):
 		if self.frame.away and not self.autoreplied and autoreply:
 			self.SendMessage("[Auto-Message] %s" % autoreply)
 			self.autoreplied = 1
-		if status and not self.offlinemessage:
-			
-			AppendLine(self.ChatScroll, _("* Message(s) sent while you were offline."), self.tag_hilite, timestamp_format=timestamp_format)
-			self.offlinemessage = 1
 		self.frame.new_tts(self.frame.np.config.sections["ui"]["speechprivate"] %{"user":self.frame.tts_clean(self.user), "message": self.frame.tts_clean(speech)} )
 
 	def SendMessage(self, text):
