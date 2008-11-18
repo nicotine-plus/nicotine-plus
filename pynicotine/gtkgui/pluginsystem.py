@@ -161,7 +161,9 @@ class PluginHandler(object):
     def saychatroom(self, room, text):
         self.frame.np.queue.put(slskmessages.SayChatroom(room, text))
     def sayprivate(self, user, text):
-        self.frame.np.queue.put(slskmessages.MessageUser(user, text))
+        # If we use the np the chat lines only show up on the receiving end, we won't see anything ourselves.
+        self.frame.privatechats.users[user].SendMessage(text)
+
     
 class BasePlugin(object):
     __name__ = "BasePlugin"
