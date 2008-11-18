@@ -4,9 +4,9 @@ from pynicotine.gtkgui.pluginsystem import BasePlugin
 
 class Plugin(BasePlugin):
     __name__ = "Anti-SHOUT"
-    __version__ = "2008-10-26r00"
+    __version__ = "2008-11-18r00"
     __MAXSCORE__ = 0.6
-    __MINLENGTH__ = 5
+    __MINLENGTH__ = 10
     def capitalize(self, text):
         # Dont alter words that look like protocol links (fe http://, ftp://)
         if text.find('://') > -1:
@@ -19,7 +19,9 @@ class Plugin(BasePlugin):
     def antishout(self, line):
         lowers = len([x for x in line if x.islower()])
         uppers = len([x for x in line if x.isupper()])
-        score = -1
+        score = -2 # unknown state (could be: no letters at all)
+        if (uppers > 0):
+            score = -1 # We have at least some upper letters
         if (lowers > 0):
             score = uppers/float(lowers)
         newline = line
