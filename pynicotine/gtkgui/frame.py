@@ -158,12 +158,12 @@ class NicotineFrame(MainWindow):
 		self.MainWindow.selection_add_target("PRIMARY", "STRING", 1)
 		self.MainWindow.set_geometry_hints(None, min_width=500, min_height=460)
 		self.MainWindow.connect("configure_event", self.OnWindowChange)
-		# Enabling RGBA is possible, you need up-to-date Murrine Engine for it from what I've heard
+		# Enabling RGBA if possible, you need up-to-date Murrine Engine for it from what I've heard
 		gtk_screen = self.MainWindow.get_screen()
 		colormap = gtk_screen.get_rgba_colormap()
 		if colormap:
 			print "Enabling RGBA"
-			gtk_screen.widget_set_default_colormap(colormap)
+			gtk_screen.set_default_colormap(colormap)
 		else:
 			print "Not enalbing RGBA"
 
