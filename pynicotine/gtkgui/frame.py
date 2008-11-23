@@ -218,21 +218,7 @@ class NicotineFrame(MainWindow):
 			label_tab.set_angle(config["ui"]["labelmain"])
 			
 		self.translux = None
-		# Enabling RGBA if possible, you need up-to-date Murrine Engine for it from what I've heard
-		rgbamode = False
-		try:
-			gtk_screen = self.MainWindow.get_screen()
-			colormap = gtk_screen.get_rgba_colormap()
-			if colormap:
-				print "Enabling RGBA"
-				gtk_screen.set_default_colormap(colormap)
-				rgbamode = True
-			else:
-				print "Not enalbing RGBA"
-		except AttributeErrr, inst:
-			print "RGBA code failed, do you have PyGTK 2.2 or greater? Problem: %s" % (inst)
-		if not rgbamode:
-			self.TransparentTint()
+		self.TransparentTint()
 		self.LogScrolledWindow = gtk.ScrolledWindow()
 		self.LogScrolledWindow.set_shadow_type(gtk.SHADOW_IN)
 		self.LogScrolledWindow.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
@@ -1244,6 +1230,17 @@ class NicotineFrame(MainWindow):
 		(width, height)= self.MainWindow.get_size()
 		self.np.config.sections["ui"]["height"] = height
 		self.np.config.sections["ui"]["width"] = width
+		# Enabling RGBA if possible, you need up-to-date Murrine Engine for it from what I've heard
+		###try:
+		###	gtk_screen = self.MainWindow.get_screen()
+		###	colormap = gtk_screen.get_rgba_colormap()
+		###	if colormap:
+		###		print "Enabling RGBA"
+		###		gtk_screen.set_default_colormap(colormap)
+		###	else:
+		###		print "Not enalbing RGBA"
+		###except AttributeErrr, inst:
+		###	print "RGBA code failed, do you have PyGTK 2.2 or greater? Problem: %s" % (inst)
 		
 	def OnDestroy(self, widget):
 		
