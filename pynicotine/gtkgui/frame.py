@@ -231,7 +231,7 @@ class NicotineFrame(MainWindow):
 				print "Not enalbing RGBA"
 		except AttributeErrr, inst:
 			print "RGBA code failed, do you have PyGTK 2.2 or greater? Problem: %s" % (inst)
-		if not rbgamode:
+		if not rgbamode:
 			self.TransparentTint()
 		self.LogScrolledWindow = gtk.ScrolledWindow()
 		self.LogScrolledWindow.set_shadow_type(gtk.SHADOW_IN)
