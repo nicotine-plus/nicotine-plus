@@ -163,11 +163,14 @@ class NicotineFrame(MainWindow):
 			gtk_screen = self.MainWindow.get_screen()
 			colormap = gtk_screen.get_rgba_colormap()
 			if colormap:
-				print "Enabling RGBA, disabling tray icon"
-				gtk_screen.set_default_colormap(colormap)
-				use_trayicon = False
+				if self.MainWindow.is_composited():
+					print "Enabling RGBA, disabling tray icon"
+					gtk_screen.set_default_colormap(colormap)
+					use_trayicon = False
+				else:
+					print "Your X can handle RGBA, but your window manager cannot. Not enabling transparancy."
 			else:
-				print "Not enalbing RGBA"
+				print "Your X cannot handle RGBA, not enabling transparency"
 		except AttributeErrr, inst:
 			print "RGBA code failed, do you have PyGTK 2.2 or greater? Problem: %s" % (inst)
 
