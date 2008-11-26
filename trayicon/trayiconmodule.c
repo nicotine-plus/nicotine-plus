@@ -3,23 +3,23 @@
 /* include this first, before NO_IMPORT_PYGOBJECT is defined */
 #include <pygobject.h>
 
-void trayicon_register_classes (PyObject *d);
+void trayicon_register_classes(PyObject * d);
 
 extern PyMethodDef trayicon_functions[];
 
-DL_EXPORT(void)
-inittrayicon(void)
+DL_EXPORT(void) inittrayicon(void)
 {
-    PyObject *m, *d;
-	
-    init_pygobject ();
+	PyObject *m,
+	   *d;
 
-    m = Py_InitModule ("trayicon", trayicon_functions);
-    d = PyModule_GetDict (m);
-	
-    trayicon_register_classes (d);
+	init_pygobject();
 
-    if (PyErr_Occurred ()) {
-	Py_FatalError ("can't initialise module trayicon :(");
-    }
+	m = Py_InitModule("trayicon", trayicon_functions);
+	d = PyModule_GetDict(m);
+
+	trayicon_register_classes(d);
+
+	if (PyErr_Occurred()) {
+		Py_FatalError("can't initialise module trayicon :(");
+	}
 }
