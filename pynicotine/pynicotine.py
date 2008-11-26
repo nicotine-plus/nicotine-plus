@@ -38,6 +38,7 @@ import utils
 from utils import _
 import os
 
+
 class PeerConnection:
 	"""
 	Holds information about a peer connection. Not every field may be set
@@ -959,7 +960,7 @@ class NetworkEventProcessor:
 			except:
 				message = _("IP address of %(user)s is %(ip)s, port %(port)i%(country)s") %{'user':msg.user, 'ip':msg.ip, 'port':msg.port, 'country':cc}
 			self.logMessage(message)
-		
+			self.frame.pluginhandler.UserResolveNotification(msg.user, msg.ip, msg.port, cc)
 			
 	def Relogged(self, msg):
 		self.logMessage(_("Someone else is logging in with the same nickname, server is going to disconnect us"))

@@ -155,6 +155,8 @@ class PluginHandler(object):
         return self.TriggerEvent("OutgoingBuddySearchEvent", (text,))
     def OutgoingUserSearchEvent(self, users):
         return self.TriggerEvent("OutgoingUserSearchEvent", (users,))
+    def UserResolveNotification(self, user, ip, port, country):
+        start_new_thread(self.TriggerEvent, ("UserResolveNotification", (user, ip, port, country)))
     # other functions
     def log(self, text):
         self.frame.logMessage(text)
@@ -168,9 +170,13 @@ class PluginHandler(object):
 class BasePlugin(object):
     __name__ = "BasePlugin"
     __desc__ = "Blank"
-    __version__ = "2008-07-05"
+    __version__ = "2008-11-26"
     def __init__(self, parent):
+        # Never override this function, override init() instead
         self.parent = parent
+        self.init()
+    def init(self):
+        pass
     def LoadEvent(self):
         pass
     def IncomingPrivateChatEvent(self, user, line):
@@ -197,7 +203,13 @@ class BasePlugin(object):
         pass
     def OutgoingUserSearchEvent(self, users):
         pass
+    def UserResolveNotification(self, user, ip, port, country):
+        pass
     def Command(self, command, args):
         pass
     def log(self, text):
         self.parent.log(self.__name__ + ": " + text)
+    def saychatroom(self, room, text):
+        self.parent.saychatroom(room, text)
+    def sayprivate(self, user, text):
+        self.parent.saychatroom(user, text)
