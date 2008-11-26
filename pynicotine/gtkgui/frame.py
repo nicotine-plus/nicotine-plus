@@ -159,20 +159,18 @@ class NicotineFrame(MainWindow):
 		self.MainWindow.set_geometry_hints(None, min_width=500, min_height=460)
 		self.MainWindow.connect("configure_event", self.OnWindowChange)
 		# Enabling RGBA if possible, you need up-to-date Murrine Engine for it from what I've heard
-		try:
-			gtk_screen = self.MainWindow.get_screen()
-			colormap = gtk_screen.get_rgba_colormap()
-			if colormap:
-				if self.MainWindow.is_composited():
-					print "Enabling RGBA, disabling tray icon"
-					gtk_screen.set_default_colormap(colormap)
-					use_trayicon = False
-				else:
-					print "Your X can handle RGBA, but your window manager cannot. Not enabling transparancy."
+		RGBA = False
+		gtk_screen = self.MainWindow.get_screen()
+		colormap = gtk_screen.get_rgba_colormap()
+		if colormap:
+			if self.MainWindow.is_composited():
+				RGBA = True
+				print "Enabling RGBA"
+				gtk_screen.set_default_colormap(colormap)
 			else:
-				print "Your X cannot handle RGBA, not enabling transparency"
-		except AttributeErrr, inst:
-			print "RGBA code failed, do you have PyGTK 2.2 or greater? Problem: %s" % (inst)
+				print "Your X can handle RGBA, but your window manager cannot. Not enabling transparancy."
+		else:
+			print "Your X cannot handle RGBA, not enabling transparency"
 
 		width = self.np.config.sections["ui"]["width"]
 		height = self.np.config.sections["ui"]["height"]
@@ -466,9 +464,15 @@ class NicotineFrame(MainWindow):
 		
 		
 		if use_trayicon and config["ui"]["trayicon"]:
+			if RGBA:
+				print "X11/GTK RGBA Bug workaround: Setting default colormap to RGB"
+				gtk_screen.set_default_colormap(gtk_screen.get_rgb_colormap())
 			self.TrayApp.CREATE_TRAYICON = 1
 			self.TrayApp.HAVE_TRAYICON = True
 			self.TrayApp.Create()
+			if RGBA:
+				print "X11/GTK RGBA Bug workaround: Restoring RGBA as default colormap."
+				gtk_screen.set_default_colormap(colormap)
 		if trerror is not None and trerror != "":
 			self.logMessage(trerror)
 		self.SetAllToolTips()
