@@ -25,5 +25,5 @@ class Plugin(BasePlugin):
             else:
                 self.log("Splitting lines.")
             for l in lines[:self.__MAXPUBLICLINES__]:
-                self.parent.saychatroom(room, l)
+                self.parent.saypublic(room, l)
             return returncode['zap']

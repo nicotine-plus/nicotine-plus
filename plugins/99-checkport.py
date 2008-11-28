@@ -33,14 +33,14 @@ class Plugin(BasePlugin):
             status = self.checkport(ip, port)
             if status in ('open',):
                 if self.checked[user] in (1,):
-                    self.saychatroom(self.checkroom, '%s: Your port is accessible, you can blame others in case of problems ;)' % (user,))
+                    self.saypublic(self.checkroom, '%s: Your port is accessible, you can blame others in case of problems ;)' % (user,))
                 else:
                     self.log("%s: Port is accessible, not reporting since this was an unrequested scan." % (user,))
             elif status in ('closed',):
-                self.saychatroom(self.checkroom, '%s: Alas, your firewall and/or router is not configured properly. I could not contact you at port %s' % (user, port))
+                self.saypublic(self.checkroom, '%s: Alas, your firewall and/or router is not configured properly. I could not contact you at port %s' % (user, port))
             else:
                 if self.checked[user] in (1,):
-                    self.saychatroom(self.checkroom, '%s: the server doesn\'t want to tell me your IP address, I cannot scan you.' % (user,))
+                    self.saypublic(self.checkroom, '%s: the server doesn\'t want to tell me your IP address, I cannot scan you.' % (user,))
                 else:
                     self.log("%s: Unknown port status on %s:%s" % (user, ip, port))
             self.checked[user] = 3
