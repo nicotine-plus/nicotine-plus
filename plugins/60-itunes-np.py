@@ -24,14 +24,14 @@ end tell """
     def PublicCommand(self, command, room, args):
         if command in ('itunes',):
             # We'll fork the osascript since it' slow as hell
-            start_new_thread(self.spam, ('public',room))
+            start_new_thread(self.spam, (self.saypublic,room))
             return returncode['zap']
     def PrivateCommand(self, command, user, args):
         if command in ('itunes',):
             # We'll fork the osascript since it' slow as hell
-            start_new_thread(self.spam, ('private',user))
+            start_new_thread(self.spam, (self.sayprivate,user))
             return returncode['zap']
-    def spam(self, type, destination):
+    def spam(self, callbackfunc, destination):
         self.log("Probing iTunes...")
         proc = Popen(['osascript','-e',self.osascript], stdout=PIPE)
         (out, err) = proc.communicate()
@@ -40,9 +40,4 @@ end tell """
             self.log("The output was empty.")
             return
         out = ' '.join(['iTunes:',out])
-        if type in ('public',):
-            self.saypublic(destination, out)
-        elif type in ('private',):
-            self.sayprivate(destination, out)
-        else:
-            self.log("Script error: unknown type '%s'" % type)
+        callbackfunc(destination, out)
