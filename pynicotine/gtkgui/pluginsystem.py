@@ -71,11 +71,15 @@ class PluginHandler(object):
         self.reread()
         self.plugins = []
         self.load(self.plugindir)
-    def TriggerCommand(self, command, args):
+    def TriggerPublicCommand(self, room, command, args):
+        return self._TriggerCommand("plugin.PublicCommand", command, room, args)
+    def TriggerPrivateCommand(self, user, command, args):
+        return self._TriggerCommand("plugin.PrivateCommand", command, user, args)
+    def _TriggerCommand(self, strfunc, command, source, args):
         for (module, plugin) in self.plugins:
             try:
-                func = eval("plugin.Command")
-                ret = func(command, args)
+                func = eval(strfunc)
+                ret = func(command, source, args)
                 if ret != None:
                     if ret == returncode['zap']:
                         return True
@@ -205,7 +209,9 @@ class BasePlugin(object):
         pass
     def UserResolveNotification(self, user, ip, port, country):
         pass
-    def Command(self, command, args):
+    def PublicCommand(self, command, room, args):
+        pass
+    def PrivateCommand(self, command, user, args):
         pass
     def log(self, text):
         self.parent.log(self.__name__ + ": " + text)

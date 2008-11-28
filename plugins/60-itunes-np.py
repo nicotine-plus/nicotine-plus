@@ -21,19 +21,28 @@ tell application "iTunes"
     set info to (the info & " [" & the mystate & "]")
 end tell """
 
-    def Command(self, command, args):
+    def PublicCommand(self, command, room, args):
         if command in ('itunes',):
             # We'll fork the osascript since it' slow as hell
-            start_new_thread(self.spam, ())
+            start_new_thread(self.spam, ('public',room))
             return returncode['zap']
-
-    def spam(self):
+    def PrivateCommand(self, command, user, args):
+        if command in ('itunes',):
+            # We'll fork the osascript since it' slow as hell
+            start_new_thread(self.spam, ('private',user))
+            return returncode['zap']
+    def spam(self, type, destination):
         self.log("Probing iTunes...")
         proc = Popen(['osascript','-e',self.osascript], stdout=PIPE)
         (out, err) = proc.communicate()
         out = out.rstrip('\r\n ')
-        self.log("I got: " + out)
-        if out:
-            self.saypublic('nicotine', out)
-        else:
+        if not out:
             self.log("The output was empty.")
+            return
+        out = ' '.join(['iTunes:',out])
+        if type in ('public',):
+            self.saypublic(destination, out)
+        elif type in ('private',):
+            self.sayprivate(destination, out)
+        else:
+            self.log("Script error: unknown type '%s'" % type)
