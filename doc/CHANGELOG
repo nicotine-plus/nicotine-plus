@@ -2,8 +2,14 @@ ChangeLog for Nicotine Plus
 
 SVN 
 
+Features
+ * Added support for RGBA, enabling Murrine users to use transparency and round menus
+
 Bugs
  * Fixed bug #274, cancelling and disowning private rooms bug (fr3shpr1nc3)
+ * Timestamps in private messages now are displayed correctly 
+ * Room searches work again (was broken in 1.2.10alpha)
+
 
 1.2.10 alpha (9 November 2008)
 
