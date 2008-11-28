@@ -209,7 +209,7 @@ class BasePlugin(object):
         pass
     def log(self, text):
         self.parent.log(self.__name__ + ": " + text)
-    def saychatroom(self, room, text):
+    def saypublic(self, room, text):
         self.parent.saychatroom(room, text)
     def sayprivate(self, user, text):
         self.parent.saychatroom(user, text)
