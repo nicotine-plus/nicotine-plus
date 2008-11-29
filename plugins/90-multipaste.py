@@ -15,7 +15,7 @@ class Plugin(BasePlugin):
             else:
                 self.log("Splitting lines.")
             for l in lines[:self.__MAXPRIVATELINES__]:
-                self.parent.sayprivate(nick, l)
+                self.sayprivate(nick, l)
             return returncode['zap']
     def OutgoingPublicChatEvent(self, room, line):
         lines = [x for x in line.split('\n') if x]
@@ -25,5 +25,5 @@ class Plugin(BasePlugin):
             else:
                 self.log("Splitting lines.")
             for l in lines[:self.__MAXPUBLICLINES__]:
-                self.parent.saypublic(room, l)
+                self.saypublic(room, l)
             return returncode['zap']

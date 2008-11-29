@@ -184,10 +184,8 @@ class BasePlugin(object):
         self.init()
         for (trigger, func) in self.__publiccommands__:
             self.frame.chatrooms.roomsctrl.CMDS.add('/'+trigger+' ')
-        self.log("Public: " + repr(self.frame.chatrooms.roomsctrl.CMDS))
         for (trigger, func) in self.__privatecommands__:
             self.frame.privatechats.CMDS.add('/'+trigger+' ')
-        self.log("Private: " + repr(self.frame.privatechats.CMDS))
     def init(self):
         pass
     def LoadEvent(self):
