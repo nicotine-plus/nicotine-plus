@@ -41,10 +41,10 @@ def GetCompletion(part, list):
 		return commonprefix([x.lower() for x in matches]), 0
 
 class RoomsControl:
-	CMDS = ["/alias ", "/unalias ", "/whois ", "/browse ", "/ip ", "/pm ", "/msg ", "/search ", "/usearch ", "/rsearch ",
-		"/bsearch ", "/join ", "/leave", "/add ", "/buddy ", "/rem ", "/unbuddy ", "/ban ", "/ignore ", "/unban ", "/unignore ", "/clear", "/part ", "/quit", "/exit",
-		"/rescan", "/tick", "/nsa", "/info", "/detach", "/attach"]
-	CMDS += ['/reload']
+	CMDS = set(["/alias ", "/unalias ", "/whois ", "/browse ", "/ip ", "/pm ", "/msg ", "/search ", "/usearch ", "/rsearch ",
+		"/bsearch ", "/join ", "/leave ", "/add ", "/buddy ", "/rem ", "/unbuddy ", "/ban ", "/ignore ", "/unban ", "/unignore ",
+		"/clear ", "/part ", "/quit ", "/exit ", "/rescan ", "/tick ", "/nsa ", "/info ", "/detach ", "/attach ", "/reload"])
+	
 	def __init__(self, frame, ChatNotebook):
 		self.frame = frame
 		self.joinedrooms = {}
@@ -1170,7 +1170,7 @@ class ChatRoom(ChatRoomTab):
 			self.frame.pluginhandler.reread()
 			reload(pluginsystem)
 			self.frame.pluginhandler = pluginsystem.PluginHandler(self.frame)
-		elif cmd[:1] == "/" and self.frame.pluginhandler.TriggerPublicCommand(self.room, cmd[1:], args):
+		elif cmd[:1] == "/" and self.frame.pluginhandler.TriggerPublicCommandEvent(self.room, cmd[1:], args):
 			pass
 		elif cmd and cmd[:1] == "/" and cmd != "/me" and cmd[:2] != "//":
 			self.frame.logMessage(_("Command %s is not recognized") % text)

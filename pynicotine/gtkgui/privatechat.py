@@ -27,9 +27,10 @@ from pynicotine import slskmessages
 from pynicotine.utils import _, version
 
 class PrivateChats(IconNotebook):
-	CMDS = ["/alias ", "/unalias ", "/whois ", "/browse ", "/ip ", "/pm ", "/msg ", "/search ", "/usearch ", "/rsearch ",
-		"/bsearch ", "/add ", "/buddy ", "/rem ", "/unbuddy ", "/ban ", "/ignore ", "/unban ", "/unignore ", "/clear", "/quit", "/exit", "/rescan", "/nsa", "/info", "/ctcpversion", "/join"]
-		
+	CMDS = set(["/alias ", "/unalias ", "/whois ", "/browse ", "/ip ", "/pm ", "/msg ", "/search ", "/usearch ", "/rsearch ",
+		"/bsearch ", "/add ", "/buddy ", "/rem ", "/unbuddy ", "/ban ", "/ignore ", "/unban ", "/unignore ", "/clear ",
+		"/quit ", "/exit ", "/rescan ", "/nsa ", "/info ", "/ctcpversion ", "/join "])
+	
 	def __init__(self, frame):
 		ui = frame.np.config.sections["ui"]
 		IconNotebook.__init__(self, frame.images, ui["labelprivate"], ui["tabclosers"], ui["tab_icons"], ui["tab_reorderable"])
@@ -584,6 +585,8 @@ class PrivateChat(PrivateChatTab):
 			self.Attach()
 		elif cmd == "/rescan":
 			self.frame.OnRescan()
+		elif cmd[:1] == "/" and self.frame.pluginhandler.TriggerPrivateCommandEvent(self.user, cmd[1:], args):
+			pass
 		elif cmd and cmd[:1] == "/" and cmd != "/me" and cmd[:2] != "//":
 			self.frame.logMessage(_("Command %s is not recognized") % text)
 			return

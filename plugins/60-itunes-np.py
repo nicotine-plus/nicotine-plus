@@ -20,20 +20,23 @@ tell application "iTunes"
     end if
     set info to (the info & " [" & the mystate & "]")
 end tell """
+    
 
-    def PublicCommand(self, command, room, args):
-        if command in ('itunes',):
-            # We'll fork the osascript since it' slow as hell
-            start_new_thread(self.spam, (self.saypublic,room))
-            return returncode['zap']
-    def PrivateCommand(self, command, user, args):
-        if command in ('itunes',):
-            # We'll fork the osascript since it' slow as hell
-            start_new_thread(self.spam, (self.sayprivate,user))
-            return returncode['zap']
+    def MyPublicCommand(self, room, args):
+        # We'll fork the osascript since it' slow as hell
+        start_new_thread(self.spam, (self.saypublic,room))
+        return returncode['zap']
+    def MyPrivateCommand(self, user, args):
+        # We'll fork the osascript since it' slow as hell
+        start_new_thread(self.spam, (self.sayprivate,user))
+        return returncode['zap']
     def spam(self, callbackfunc, destination):
         self.log("Probing iTunes...")
-        proc = Popen(['osascript','-e',self.osascript], stdout=PIPE)
+        try:
+            proc = Popen(['osascript','-e',self.osascript], stdout=PIPE)
+        except OSError, inst:
+            self.log("Probing failed (do you run MacOS?): " + str(inst))
+            return
         (out, err) = proc.communicate()
         out = out.rstrip('\r\n ')
         if not out:
@@ -41,3 +44,5 @@ end tell """
             return
         out = ' '.join(['iTunes:',out])
         callbackfunc(destination, out)
+    __publiccommands__ = [('itunes', MyPublicCommand)]
+    __privatecommands__ = [('itunes',MyPrivateCommand)]

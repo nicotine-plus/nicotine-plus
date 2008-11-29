@@ -71,10 +71,10 @@ class PluginHandler(object):
         self.reread()
         self.plugins = []
         self.load(self.plugindir)
-    def TriggerPublicCommand(self, room, command, args):
-        return self._TriggerCommand("plugin.PublicCommand", command, room, args)
-    def TriggerPrivateCommand(self, user, command, args):
-        return self._TriggerCommand("plugin.PrivateCommand", command, user, args)
+    def TriggerPublicCommandEvent(self, room, command, args):
+        return self._TriggerCommand("plugin.PublicCommandEvent", command, room, args)
+    def TriggerPrivateCommandEvent(self, user, command, args):
+        return self._TriggerCommand("plugin.PrivateCommandEvent", command, user, args)
     def _TriggerCommand(self, strfunc, command, source, args):
         for (module, plugin) in self.plugins:
             try:
@@ -175,10 +175,19 @@ class BasePlugin(object):
     __name__ = "BasePlugin"
     __desc__ = "Blank"
     __version__ = "2008-11-26"
+    __publiccommands__ = []
+    __privatecommands__ = []
     def __init__(self, parent):
         # Never override this function, override init() instead
         self.parent = parent
+        self.frame = parent.frame
         self.init()
+        for (trigger, func) in self.__publiccommands__:
+            self.frame.chatrooms.roomsctrl.CMDS.add('/'+trigger+' ')
+        self.log("Public: " + repr(self.frame.chatrooms.roomsctrl.CMDS))
+        for (trigger, func) in self.__privatecommands__:
+            self.frame.privatechats.CMDS.add('/'+trigger+' ')
+        self.log("Private: " + repr(self.frame.privatechats.CMDS))
     def init(self):
         pass
     def LoadEvent(self):
@@ -209,10 +218,14 @@ class BasePlugin(object):
         pass
     def UserResolveNotification(self, user, ip, port, country):
         pass
-    def PublicCommand(self, command, room, args):
-        pass
-    def PrivateCommand(self, command, user, args):
-        pass
+    def PublicCommandEvent(self, command, room, args):
+        for (trigger, func) in self.__publiccommands__:
+            if trigger == command:
+                return func(self, room, args)
+    def PrivateCommandEvent(self, command, user, args):
+        for (trigger, func) in self.__privatecommands__:
+            if trigger == command:
+                return func(self, user, args)
     def log(self, text):
         self.parent.log(self.__name__ + ": " + text)
     def saypublic(self, room, text):
