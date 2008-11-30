@@ -970,28 +970,27 @@ class ChatRoom(ChatRoomTab):
 		else:
 			tag = self.tag_remote
 		
-		if user != login and tag == self.tag_hilite:
-			self.frame.ChatNotebook.request_hilite(self.Main)
-			if self.frame.ChatNotebook.is_tab_detached(self.Main):
-				if not self.frame.ChatNotebook.is_detached_tab_focused(self.Main):
-					self.frame.Notification("rooms", user, self.room)
-			else:
-				self.frame.ChatRequestIcon(1)
-					
-				# add hilite to trayicon
-				if self.frame.ChatNotebook.get_current_page() != self.frame.ChatNotebook.page_num(self.roomsctrl.joinedrooms[self.room].Main) or self.frame.MainNotebook.get_current_page() != 0 or not self.frame.is_mapped:
-					if self.room not in self.frame.TrayApp.tray_status["hilites"]["rooms"]:
+		if user != login:
+			if tag == self.tag_hilite:
+				self.frame.ChatNotebook.request_hilite(self.Main)
+				if self.frame.ChatNotebook.is_tab_detached(self.Main):
+					if not self.frame.ChatNotebook.is_detached_tab_focused(self.Main):
 						self.frame.Notification("rooms", user, self.room)
-			#else:
-				#self.MainWindow.set_urgency_hint(False)
-				
-
-		else:
-			self.frame.ChatNotebook.request_changed(self.Main)
-			if self.frame.ChatNotebook.is_tab_detached(self.Main):
-				pass
+				else:
+					self.frame.ChatRequestIcon(1)
+						
+					# add hilite to trayicon
+					if self.frame.ChatNotebook.get_current_page() != self.frame.ChatNotebook.page_num(self.roomsctrl.joinedrooms[self.room].Main) or self.frame.MainNotebook.get_current_page() != 0 or not self.frame.is_mapped:
+						if self.room not in self.frame.TrayApp.tray_status["hilites"]["rooms"]:
+							self.frame.Notification("rooms", user, self.room)
+				#else:
+					#self.MainWindow.set_urgency_hint(False)
 			else:
-				self.frame.ChatRequestIcon(0)
+				self.frame.ChatNotebook.request_changed(self.Main)
+				if self.frame.ChatNotebook.is_tab_detached(self.Main):
+					pass
+				else:
+					self.frame.ChatRequestIcon(0)
 
 		if text[:4] == "/me ":
 			line = "* %s %s" % (user, text[4:])
