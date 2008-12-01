@@ -422,6 +422,7 @@
                         <property name="label" translatable="yes">_Chat Rooms</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="OnChatRooms"/>
+                        <accelerator key="1" modifiers="GDK_MOD1_MASK" signal="activate"/>
                         <child internal-child="image">
                           <widget class="GtkImage" id="image347">
                             <property name="visible">True</property>
@@ -437,6 +438,7 @@
                         <property name="label" translatable="yes">_Private Chat</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="OnPrivateChat"/>
+                        <accelerator key="2" modifiers="GDK_MOD1_MASK" signal="activate"/>
                         <child internal-child="image">
                           <widget class="GtkImage" id="image348">
                             <property name="visible">True</property>
@@ -452,6 +454,7 @@
                         <property name="label" translatable="yes">_Downloads</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="OnDownloads"/>
+                        <accelerator key="3" modifiers="GDK_MOD1_MASK" signal="activate"/>
                         <child internal-child="image">
                           <widget class="GtkImage" id="image349">
                             <property name="visible">True</property>
@@ -467,6 +470,7 @@
                         <property name="label" translatable="yes">_Uploads</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="OnUploads"/>
+                        <accelerator key="4" modifiers="GDK_MOD1_MASK" signal="activate"/>
                         <child internal-child="image">
                           <widget class="GtkImage" id="image350">
                             <property name="visible">True</property>
@@ -482,6 +486,7 @@
                         <property name="label" translatable="yes">_Search Files</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="OnSearchFiles"/>
+                        <accelerator key="5" modifiers="GDK_MOD1_MASK" signal="activate"/>
                         <child internal-child="image">
                           <widget class="GtkImage" id="image351">
                             <property name="visible">True</property>
@@ -497,6 +502,7 @@
                         <property name="label" translatable="yes">User I_nfo</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="OnUserInfo"/>
+                        <accelerator key="6" modifiers="GDK_MOD1_MASK" signal="activate"/>
                         <child internal-child="image">
                           <widget class="GtkImage" id="image352">
                             <property name="visible">True</property>
@@ -512,6 +518,7 @@
                         <property name="label" translatable="yes">User _Browse</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="OnUserBrowse"/>
+                        <accelerator key="7" modifiers="GDK_MOD1_MASK" signal="activate"/>
                         <child internal-child="image">
                           <widget class="GtkImage" id="image353">
                             <property name="visible">True</property>
@@ -527,6 +534,7 @@
                         <property name="label" translatable="yes">_Interests</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="OnInterests"/>
+                        <accelerator key="8" modifiers="GDK_MOD1_MASK" signal="activate"/>
                         <child internal-child="image">
                           <widget class="GtkImage" id="image354">
                             <property name="visible">True</property>
@@ -542,6 +550,7 @@
                         <property name="label" translatable="yes">Buddy _List</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="OnUserList"/>
+                        <accelerator key="9" modifiers="GDK_MOD1_MASK" signal="activate"/>
                         <child internal-child="image">
                           <widget class="GtkImage" id="image355">
                             <property name="visible">True</property>
@@ -2419,55 +2428,6 @@
                               </packing>
                             </child>
                             <child>
-                              <widget class="GtkButton" id="GlobalRecommendationsButton">
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="response_id">0</property>
-                                <signal name="clicked" handler="OnGlobalRecommendationsClicked"/>
-                                <child>
-                                  <widget class="GtkAlignment" id="alignment4">
-                                    <property name="visible">True</property>
-                                    <property name="xscale">0</property>
-                                    <property name="yscale">0</property>
-                                    <child>
-                                      <widget class="GtkHBox" id="hbox24">
-                                        <property name="visible">True</property>
-                                        <property name="spacing">2</property>
-                                        <child>
-                                          <widget class="GtkImage" id="image4">
-                                            <property name="visible">True</property>
-                                            <property name="stock">gtk-refresh</property>
-                                          </widget>
-                                          <packing>
-                                            <property name="expand">False</property>
-                                            <property name="fill">False</property>
-                                          </packing>
-                                        </child>
-                                        <child>
-                                          <widget class="GtkLabel" id="label33">
-                                            <property name="visible">True</property>
-                                            <property name="label" translatable="yes">Global recommendations</property>
-                                            <property name="use_underline">True</property>
-                                          </widget>
-                                          <packing>
-                                            <property name="expand">False</property>
-                                            <property name="fill">False</property>
-                                            <property name="position">1</property>
-                                          </packing>
-                                        </child>
-                                      </widget>
-                                    </child>
-                                  </widget>
-                                </child>
-                              </widget>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="fill">False</property>
-                                <property name="pack_type">GTK_PACK_END</property>
-                                <property name="position">1</property>
-                              </packing>
-                            </child>
-                            <child>
                               <widget class="GtkButton" id="RecommendationsButton">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
@@ -2496,6 +2456,55 @@
                                           <widget class="GtkLabel" id="label34">
                                             <property name="visible">True</property>
                                             <property name="label" translatable="yes">Recommendations</property>
+                                            <property name="use_underline">True</property>
+                                          </widget>
+                                          <packing>
+                                            <property name="expand">False</property>
+                                            <property name="fill">False</property>
+                                            <property name="position">1</property>
+                                          </packing>
+                                        </child>
+                                      </widget>
+                                    </child>
+                                  </widget>
+                                </child>
+                              </widget>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">False</property>
+                                <property name="pack_type">GTK_PACK_END</property>
+                                <property name="position">1</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkButton" id="GlobalRecommendationsButton">
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="response_id">0</property>
+                                <signal name="clicked" handler="OnGlobalRecommendationsClicked"/>
+                                <child>
+                                  <widget class="GtkAlignment" id="alignment4">
+                                    <property name="visible">True</property>
+                                    <property name="xscale">0</property>
+                                    <property name="yscale">0</property>
+                                    <child>
+                                      <widget class="GtkHBox" id="hbox24">
+                                        <property name="visible">True</property>
+                                        <property name="spacing">2</property>
+                                        <child>
+                                          <widget class="GtkImage" id="image4">
+                                            <property name="visible">True</property>
+                                            <property name="stock">gtk-refresh</property>
+                                          </widget>
+                                          <packing>
+                                            <property name="expand">False</property>
+                                            <property name="fill">False</property>
+                                          </packing>
+                                        </child>
+                                        <child>
+                                          <widget class="GtkLabel" id="label33">
+                                            <property name="visible">True</property>
+                                            <property name="label" translatable="yes">Global recommendations</property>
                                             <property name="use_underline">True</property>
                                           </widget>
                                           <packing>
@@ -3375,7 +3384,7 @@
     <property name="visible">True</property>
     <property name="title" translatable="yes">window1</property>
     <child>
-      <widget class="GtkVBox" id="Main">
+      <widget class="GtkVBox" id="Main1">
         <property name="visible">True</property>
         <child>
           <widget class="GtkScrolledWindow" id="scrolledwindow16">
@@ -3385,7 +3394,7 @@
             <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
             <property name="shadow_type">GTK_SHADOW_IN</property>
             <child>
-              <widget class="GtkTextView" id="ChatScroll">
+              <widget class="GtkTextView" id="ChatScroll1">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="editable">False</property>
@@ -3409,7 +3418,7 @@
               </widget>
             </child>
             <child>
-              <widget class="GtkComboBox" id="Encoding">
+              <widget class="GtkComboBox" id="Encoding1">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <signal name="changed" handler="OnEncodingChanged"/>
@@ -3437,7 +3446,7 @@
               </packing>
             </child>
             <child>
-              <widget class="GtkCheckButton" id="Log">
+              <widget class="GtkCheckButton" id="Log1">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="label" translatable="yes">Log</property>
@@ -3513,7 +3522,7 @@
     <property name="visible">True</property>
     <property name="title" translatable="yes">window1</property>
     <child>
-      <widget class="GtkVBox" id="Main">
+      <widget class="GtkVBox" id="Main2">
         <property name="visible">True</property>
         <property name="spacing">1</property>
         <child>
@@ -3901,7 +3910,7 @@
     <property name="visible">True</property>
     <property name="title" translatable="yes">window1</property>
     <child>
-      <widget class="GtkHBox" id="Main">
+      <widget class="GtkHBox" id="Main3">
         <property name="visible">True</property>
         <child>
           <widget class="GtkHPaned" id="hpaned5">
@@ -3924,7 +3933,7 @@
                           <widget class="GtkVBox" id="vbox16">
                             <property name="visible">True</property>
                             <child>
-                              <widget class="GtkComboBox" id="Encoding">
+                              <widget class="GtkComboBox" id="Encoding2">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <signal name="changed" handler="OnEncodingChanged"/>
@@ -4134,7 +4143,7 @@
                       </widget>
                     </child>
                     <child>
-                      <widget class="GtkLabel" id="label72">
+                      <widget class="GtkLabel" id="label1">
                         <property name="visible">True</property>
                         <property name="label" translatable="yes">Information:</property>
                       </widget>
@@ -4724,7 +4733,7 @@
     <property name="visible">True</property>
     <property name="title" translatable="yes">window1</property>
     <child>
-      <widget class="GtkVBox" id="Main">
+      <widget class="GtkVBox" id="Main4">
         <property name="visible">True</property>
         <child>
           <widget class="GtkHBox" id="hbox8">
@@ -4752,7 +4761,7 @@
               </packing>
             </child>
             <child>
-              <widget class="GtkComboBox" id="Encoding">
+              <widget class="GtkComboBox" id="Encoding3">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <signal name="changed" handler="OnEncodingChanged"/>
@@ -4781,7 +4790,7 @@
                     <property name="visible">True</property>
                     <property name="spacing">5</property>
                     <child>
-                      <widget class="GtkToggleButton" id="ExpandButton">
+                      <widget class="GtkToggleButton" id="ExpandButton1">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="tooltip" translatable="yes">Expand / Collapse all</property>
@@ -4967,7 +4976,7 @@
                       </packing>
                     </child>
                     <child>
-                      <widget class="GtkButton" id="CloseButton">
+                      <widget class="GtkButton" id="CloseButton1">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="response_id">0</property>
