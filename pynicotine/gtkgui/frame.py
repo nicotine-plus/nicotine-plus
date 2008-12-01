@@ -231,6 +231,7 @@ class NicotineFrame(MainWindow):
 				self.MainNotebook.set_tab_reorderable(tab, True)
 			except:
 				# Old gtk
+				pass
 
 		for label_tab in [self.ChatTabLabel, self.PrivateChatTabLabel, self.SearchTabLabel, self.UserInfoTabLabel, self.DownloadsTabLabel, self.UploadsTabLabel, self.UserBrowseTabLabel, self.InterestsTabLabel]:
 			label_tab.show_image(config["ui"]["tab_icons"])
