@@ -233,7 +233,7 @@ class UserList:
 			if event.button != 3:
 				if event.type == gtk.gdk._2BUTTON_PRESS:
 					self.frame.privatechats.SendMessage(user, None, 1)
-					self.frame.MainNotebook.set_current_page(1)
+					self.frame.ChangeMainPage(None, "private")
 				return
 			
 			self.popup_menu.set_user(user)

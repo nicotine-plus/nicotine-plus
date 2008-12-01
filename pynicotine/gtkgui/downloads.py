@@ -429,7 +429,7 @@ renamed, try looking in the download directory and match the original filename.
 		self.select_transfers()
 		for transfer in self.selected_transfers:
 			self.frame.SearchEntry.set_text(transfer.filename.rsplit("\\", 1)[1])
-			self.frame.MainNotebook.set_current_page(4)
+			self.frame.ChangeMainPage(None, "search")
 			break
 		
 	def OnRetryTransfer(self, widget):

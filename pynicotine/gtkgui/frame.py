@@ -225,7 +225,13 @@ class NicotineFrame(MainWindow):
 			w.set_tab_closers(config["ui"]["tabclosers"])
 			w.set_reorderable(config["ui"]["tab_reorderable"])
 			w.show_images(config["ui"]["tab_icons"])
-			
+
+		for tab in self.MainNotebook.get_children():
+			try:
+				self.MainNotebook.set_tab_reorderable(tab, True)
+			except:
+				# Old gtk
+
 		for label_tab in [self.ChatTabLabel, self.PrivateChatTabLabel, self.SearchTabLabel, self.UserInfoTabLabel, self.DownloadsTabLabel, self.UploadsTabLabel, self.UserBrowseTabLabel, self.InterestsTabLabel]:
 			label_tab.show_image(config["ui"]["tab_icons"])
 			label_tab.set_angle(config["ui"]["labelmain"])
@@ -940,7 +946,7 @@ class NicotineFrame(MainWindow):
 		default_text='', droplist=users)
 		if user is not None:
 			self.privatechats.SendMessage(user, None, 1)
-			self.MainNotebook.set_current_page(1)
+			self.ChangeMainPage(None, "chatrooms")
 			
 	def OnGetAUsersInfo(self, widget, prefix = ""):
 		# popup
@@ -2501,7 +2507,7 @@ class NicotineFrame(MainWindow):
 		if event.button != 3:
 			if event.type == gtk.gdk._2BUTTON_PRESS:
 				self.privatechats.SendMessage(user)
-				self.MainNotebook.set_current_page(1)
+				self.ChangeMainPage(None, "private")
 			return
 		self.ru_popup_menu.set_user(user)
 		items[7].set_active(user in [i[0] for i in self.np.config.sections["server"]["userlist"]])
@@ -2594,7 +2600,7 @@ class NicotineFrame(MainWindow):
 	def OnRecommendSearch(self, widget):
 		thing = widget.parent.get_user()
 		self.SearchEntry.set_text(thing)
-		self.MainNotebook.set_current_page(4)
+		self.ChangeMainPage(None, "search")
 
 	def OnPopupRMenu(self, widget, event):
 		if event.button != 3:
@@ -2643,33 +2649,58 @@ class NicotineFrame(MainWindow):
 			
 	def GivePrivileges(self, user, days):
 		self.np.queue.put(slskmessages.GivePrivileges(user, days))
-		
+	
+	def ChangeMainPage(self, widget, tab):
+
+		page_num  = self.MainNotebook.page_num
+		if tab == "chatrooms": 
+			child = self.hpaned1 # Chatrooms
+		elif tab == "private": 
+			child = self.privatevbox # Private rooms
+		elif tab == "downloads": 
+			child = self.vboxdownloads # Downloads
+		elif tab == "uploads": 
+			child = self.vboxuploads #  Uploads
+		elif tab == "search": 
+			child = self.searchvbox # Searches
+		elif tab == "userinfo": 
+			child = self.userinfovbox # Userinfo
+		elif tab == "userbrowse": 
+			child = self.userbrowsevbox # User browse
+		elif tab == "interests": 
+			child = self.interests # Interests
+		elif tab == "userlist": 
+			child = self.userlistvbox # Buddy list
+		if child in self.MainNotebook.get_children():
+			self.MainNotebook.set_current_page(page_num(child)) 
+		else:
+			print "Error:", tab, "isn't in MainNotebook"
+	
 	def OnChatRooms(self, widget):
-		self.MainNotebook.set_current_page(0)
+		self.ChangeMainPage(widget, "chatrooms")
 	
 	def OnPrivateChat(self, widget):
-		self.MainNotebook.set_current_page(1)
+		self.ChangeMainPage(widget, "private")
 	
 	def OnDownloads(self, widget):
-		self.MainNotebook.set_current_page(2)
+		self.ChangeMainPage(widget, "downloads")
 	
 	def OnUploads(self, widget):
-		self.MainNotebook.set_current_page(3)
+		self.ChangeMainPage(widget, "uploads")
 	
 	def OnSearchFiles(self, widget):
-		self.MainNotebook.set_current_page(4)
+		self.ChangeMainPage(widget, "search")
 	
 	def OnUserInfo(self, widget):
-		self.MainNotebook.set_current_page(5)
+		self.ChangeMainPage(widget, "userinfo")
 	
 	def OnUserBrowse(self, widget):
-		self.MainNotebook.set_current_page(6)
-	
+		self.ChangeMainPage(widget, "userbrowse")
 	def OnInterests(self, widget):
-		self.MainNotebook.set_current_page(7)
-	
+		self.ChangeMainPage(widget, "interests")
+
 	def OnUserList(self, widget):
-		self.MainNotebook.set_current_page(8)
+		self.ChangeMainPage(widget, "userlist")
 
 class TrayApp:
 	def __init__(self, frame):
