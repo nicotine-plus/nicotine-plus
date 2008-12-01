@@ -1369,32 +1369,6 @@ class MainWindow:
 
 		self.hbox12.pack_end(self.SimilarUsersButton, False, False, 0)
 
-		self.RecommendationsButton = gtk.Button()
-		self.RecommendationsButton.show()
-		self.RecommendationsButton.connect("clicked", self.OnRecommendationsClicked)
-
-		self.alignment5 = gtk.Alignment(0.5, 0.5, 0, 0)
-		self.alignment5.show()
-
-		self.hbox25 = gtk.HBox(False, 0)
-		self.hbox25.show()
-		self.hbox25.set_spacing(2)
-
-		self.image5 = gtk.Image()
-		self.image5.set_from_stock(gtk.STOCK_REFRESH, 4)
-		self.image5.show()
-		self.hbox25.pack_start(self.image5, False, False, 0)
-
-		self.label34 = gtk.Label(_("Recommendations"))
-		self.label34.show()
-		self.hbox25.pack_start(self.label34, False, False, 0)
-
-		self.alignment5.add(self.hbox25)
-
-		self.RecommendationsButton.add(self.alignment5)
-
-		self.hbox12.pack_end(self.RecommendationsButton, False, False, 0)
-
 		self.GlobalRecommendationsButton = gtk.Button()
 		self.GlobalRecommendationsButton.show()
 		self.GlobalRecommendationsButton.connect("clicked", self.OnGlobalRecommendationsClicked)
@@ -1420,6 +1394,32 @@ class MainWindow:
 		self.GlobalRecommendationsButton.add(self.alignment4)
 
 		self.hbox12.pack_end(self.GlobalRecommendationsButton, False, False, 0)
+
+		self.RecommendationsButton = gtk.Button()
+		self.RecommendationsButton.show()
+		self.RecommendationsButton.connect("clicked", self.OnRecommendationsClicked)
+
+		self.alignment5 = gtk.Alignment(0.5, 0.5, 0, 0)
+		self.alignment5.show()
+
+		self.hbox25 = gtk.HBox(False, 0)
+		self.hbox25.show()
+		self.hbox25.set_spacing(2)
+
+		self.image5 = gtk.Image()
+		self.image5.set_from_stock(gtk.STOCK_REFRESH, 4)
+		self.image5.show()
+		self.hbox25.pack_start(self.image5, False, False, 0)
+
+		self.label34 = gtk.Label(_("Recommendations"))
+		self.label34.show()
+		self.hbox25.pack_start(self.label34, False, False, 0)
+
+		self.alignment5.add(self.hbox25)
+
+		self.RecommendationsButton.add(self.alignment5)
+
+		self.hbox12.pack_end(self.RecommendationsButton, False, False, 0)
 
 		self.interests.pack_start(self.hbox12, False, True, 0)
 
@@ -1831,10 +1831,10 @@ class MainWindow:
 	def OnSimilarUsersClicked(self, widget):
 		pass
 
-	def OnRecommendationsClicked(self, widget):
+	def OnGlobalRecommendationsClicked(self, widget):
 		pass
 
-	def OnGlobalRecommendationsClicked(self, widget):
+	def OnRecommendationsClicked(self, widget):
 		pass
 
 	def OnAddThingILike(self, widget):
@@ -2156,22 +2156,22 @@ class PrivateChatTab:
 			self.PrivateChatTab.add_accel_group(self.accel_group)
 			self.PrivateChatTab.show()
 
-		self.Main1 = gtk.VBox(False, 0)
-		self.Main1.show()
+		self.Main = gtk.VBox(False, 0)
+		self.Main.show()
 
 		self.scrolledwindow16 = gtk.ScrolledWindow()
 		self.scrolledwindow16.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
 		self.scrolledwindow16.show()
 		self.scrolledwindow16.set_shadow_type(gtk.SHADOW_IN)
 
-		self.ChatScroll1 = gtk.TextView()
-		self.ChatScroll1.set_wrap_mode(gtk.WRAP_WORD)
-		self.ChatScroll1.set_cursor_visible(False)
-		self.ChatScroll1.set_editable(False)
-		self.ChatScroll1.show()
-		self.scrolledwindow16.add(self.ChatScroll1)
+		self.ChatScroll = gtk.TextView()
+		self.ChatScroll.set_wrap_mode(gtk.WRAP_WORD)
+		self.ChatScroll.set_cursor_visible(False)
+		self.ChatScroll.set_editable(False)
+		self.ChatScroll.show()
+		self.scrolledwindow16.add(self.ChatScroll)
 
-		self.Main1.pack_start(self.scrolledwindow16)
+		self.Main.pack_start(self.scrolledwindow16)
 
 		self.hbox5 = gtk.HBox(False, 0)
 		self.hbox5.show()
@@ -2184,16 +2184,16 @@ class PrivateChatTab:
 		self.ChatLine.connect("key_press_event", self.OnKeyPress)
 		self.hbox5.pack_start(self.ChatLine)
 
-		self.Encoding1_List = gtk.ListStore(gobject.TYPE_STRING)
-		self.Encoding1 = gtk.ComboBox()
-		self.Encoding1.show()
-		self.Encoding1.connect("changed", self.OnEncodingChanged)
+		self.Encoding_List = gtk.ListStore(gobject.TYPE_STRING)
+		self.Encoding = gtk.ComboBox()
+		self.Encoding.show()
+		self.Encoding.connect("changed", self.OnEncodingChanged)
 
-		self.Encoding1.set_model(self.Encoding1_List)
+		self.Encoding.set_model(self.Encoding_List)
 		cell = gtk.CellRendererText()
-		self.Encoding1.pack_start(cell, True)
-		self.Encoding1.add_attribute(cell, 'text', 0)
-		self.hbox5.pack_start(self.Encoding1, False, False, 0)
+		self.Encoding.pack_start(cell, True)
+		self.Encoding.add_attribute(cell, 'text', 0)
+		self.hbox5.pack_start(self.Encoding, False, False, 0)
 
 		self.PeerPrivateMessages = gtk.CheckButton()
 		self.tooltips.set_tip(self.PeerPrivateMessages, _("Send the private message directly to the user (not supported on most clients)"))
@@ -2202,12 +2202,12 @@ class PrivateChatTab:
 
 		self.hbox5.pack_start(self.PeerPrivateMessages, False, False, 0)
 
-		self.Log1 = gtk.CheckButton()
-		self.Log1.set_label(_("Log"))
-		self.Log1.show()
-		self.Log1.connect("toggled", self.OnLogToggled)
+		self.Log = gtk.CheckButton()
+		self.Log.set_label(_("Log"))
+		self.Log.show()
+		self.Log.connect("toggled", self.OnLogToggled)
 
-		self.hbox5.pack_start(self.Log1, False, False, 0)
+		self.hbox5.pack_start(self.Log, False, False, 0)
 
 		self.button1 = gtk.Button()
 		self.button1.show()
@@ -2235,11 +2235,11 @@ class PrivateChatTab:
 
 		self.hbox5.pack_start(self.button1, False, False, 0)
 
-		self.Main1.pack_start(self.hbox5, False, True, 0)
+		self.Main.pack_start(self.hbox5, False, True, 0)
 
 
 		if create:
-			self.PrivateChatTab.add(self.Main1)
+			self.PrivateChatTab.add(self.Main)
 
 	def OnEnter(self, widget):
 		pass
@@ -2277,9 +2277,9 @@ class SearchTab:
 			self.SearchTab.add_accel_group(self.accel_group)
 			self.SearchTab.show()
 
-		self.Main2 = gtk.VBox(False, 0)
-		self.Main2.show()
-		self.Main2.set_spacing(1)
+		self.Main = gtk.VBox(False, 0)
+		self.Main.show()
+		self.Main.set_spacing(1)
 
 		self.hbox6 = gtk.HBox(False, 0)
 		self.hbox6.show()
@@ -2392,7 +2392,7 @@ class SearchTab:
 
 		self.hbox6.pack_start(self.CloseButton, False, False, 0)
 
-		self.Main2.pack_start(self.hbox6, False, True, 3)
+		self.Main.pack_start(self.hbox6, False, True, 3)
 
 		self.Filters = gtk.HBox(False, 0)
 		self.Filters.set_spacing(2)
@@ -2484,7 +2484,7 @@ class SearchTab:
 
 		self.Filters.pack_start(self.FilterFreeSlot, False, False, 0)
 
-		self.Main2.pack_start(self.Filters, False, True, 3)
+		self.Main.pack_start(self.Filters, False, True, 3)
 
 		self.scrolledwindow17 = gtk.ScrolledWindow()
 		self.scrolledwindow17.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
@@ -2495,11 +2495,11 @@ class SearchTab:
 		self.ResultsList.show()
 		self.scrolledwindow17.add(self.ResultsList)
 
-		self.Main2.pack_start(self.scrolledwindow17)
+		self.Main.pack_start(self.scrolledwindow17)
 
 
 		if create:
-			self.SearchTab.add(self.Main2)
+			self.SearchTab.add(self.Main)
 
 	def OnToggleExpandAll(self, widget):
 		pass
@@ -2546,8 +2546,8 @@ class UserInfoTab:
 			self.UserInfoTab.add_accel_group(self.accel_group)
 			self.UserInfoTab.show()
 
-		self.Main3 = gtk.HBox(False, 0)
-		self.Main3.show()
+		self.Main = gtk.HBox(False, 0)
+		self.Main.show()
 
 		self.hpaned5 = gtk.HPaned()
 		self.hpaned5.show()
@@ -2566,16 +2566,16 @@ class UserInfoTab:
 		self.vbox16 = gtk.VBox(False, 0)
 		self.vbox16.show()
 
-		self.Encoding2_List = gtk.ListStore(gobject.TYPE_STRING)
-		self.Encoding2 = gtk.ComboBox()
-		self.Encoding2.show()
-		self.Encoding2.connect("changed", self.OnEncodingChanged)
+		self.Encoding_List = gtk.ListStore(gobject.TYPE_STRING)
+		self.Encoding = gtk.ComboBox()
+		self.Encoding.show()
+		self.Encoding.connect("changed", self.OnEncodingChanged)
 
-		self.Encoding2.set_model(self.Encoding2_List)
+		self.Encoding.set_model(self.Encoding_List)
 		cell = gtk.CellRendererText()
-		self.Encoding2.pack_start(cell, True)
-		self.Encoding2.add_attribute(cell, 'text', 0)
-		self.vbox16.pack_start(self.Encoding2, False, False, 0)
+		self.Encoding.pack_start(cell, True)
+		self.Encoding.add_attribute(cell, 'text', 0)
+		self.vbox16.pack_start(self.Encoding, False, False, 0)
 
 		self.scrolledwindow28 = gtk.ScrolledWindow()
 		self.scrolledwindow28.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
@@ -2683,9 +2683,9 @@ class UserInfoTab:
 
 		self.InformationExpander.add(self.frame2)
 
-		self.label1 = gtk.Label(_("Information:"))
-		self.label1.show()
-		self.InformationExpander.set_label_widget(self.label1)
+		self.label72 = gtk.Label(_("Information:"))
+		self.label72.show()
+		self.InformationExpander.set_label_widget(self.label72)
 
 		self.InfoVbox.pack_start(self.InformationExpander)
 
@@ -2760,7 +2760,7 @@ class UserInfoTab:
 
 		self.hpaned5.pack2(self.frame3, True, True)
 
-		self.Main3.pack_start(self.hpaned5)
+		self.Main.pack_start(self.hpaned5)
 
 		self.vbox9 = gtk.VBox(False, 0)
 		self.vbox9.show()
@@ -3006,11 +3006,11 @@ class UserInfoTab:
 
 		self.vbox9.pack_start(self.CloseUserinfo, False, False, 0)
 
-		self.Main3.pack_start(self.vbox9, False, True, 0)
+		self.Main.pack_start(self.vbox9, False, True, 0)
 
 
 		if create:
-			self.UserInfoTab.add(self.Main3)
+			self.UserInfoTab.add(self.Main)
 
 	def OnEncodingChanged(self, widget):
 		pass
@@ -3069,8 +3069,8 @@ class UserBrowseTab:
 			self.UserBrowseTab.add_accel_group(self.accel_group)
 			self.UserBrowseTab.show()
 
-		self.Main4 = gtk.VBox(False, 0)
-		self.Main4.show()
+		self.Main = gtk.VBox(False, 0)
+		self.Main.show()
 
 		self.hbox8 = gtk.HBox(False, 0)
 		self.hbox8.show()
@@ -3085,18 +3085,18 @@ class UserBrowseTab:
 		self.entry4.connect("activate", self.OnSearch)
 		self.hbox8.pack_start(self.entry4)
 
-		self.Encoding3_List = gtk.ListStore(gobject.TYPE_STRING)
-		self.Encoding3 = gtk.ComboBox()
-		self.Encoding3.show()
-		self.Encoding3.connect("changed", self.OnEncodingChanged)
+		self.Encoding_List = gtk.ListStore(gobject.TYPE_STRING)
+		self.Encoding = gtk.ComboBox()
+		self.Encoding.show()
+		self.Encoding.connect("changed", self.OnEncodingChanged)
 
-		self.Encoding3.set_model(self.Encoding3_List)
+		self.Encoding.set_model(self.Encoding_List)
 		cell = gtk.CellRendererText()
-		self.Encoding3.pack_start(cell, True)
-		self.Encoding3.add_attribute(cell, 'text', 0)
-		self.hbox8.pack_start(self.Encoding3, False, False, 5)
+		self.Encoding.pack_start(cell, True)
+		self.Encoding.add_attribute(cell, 'text', 0)
+		self.hbox8.pack_start(self.Encoding, False, False, 5)
 
-		self.Main4.pack_start(self.hbox8, False, True, 0)
+		self.Main.pack_start(self.hbox8, False, True, 0)
 
 		self.hpaned2 = gtk.HPaned()
 		self.hpaned2.show()
@@ -3108,17 +3108,17 @@ class UserBrowseTab:
 		self.hbox61.show()
 		self.hbox61.set_spacing(5)
 
-		self.ExpandButton1 = gtk.ToggleButton()
-		self.tooltips.set_tip(self.ExpandButton1, _("Expand / Collapse all"))
-		self.ExpandButton1.show()
-		self.ExpandButton1.connect("clicked", self.OnExpand)
+		self.ExpandButton = gtk.ToggleButton()
+		self.tooltips.set_tip(self.ExpandButton, _("Expand / Collapse all"))
+		self.ExpandButton.show()
+		self.ExpandButton.connect("clicked", self.OnExpand)
 
 		self.ExpandDirectoriesImage = gtk.Image()
 		self.ExpandDirectoriesImage.set_from_stock(gtk.STOCK_ADD, 4)
 		self.ExpandDirectoriesImage.show()
-		self.ExpandButton1.add(self.ExpandDirectoriesImage)
+		self.ExpandButton.add(self.ExpandDirectoriesImage)
 
-		self.hbox61.pack_start(self.ExpandButton1, False, False, 0)
+		self.hbox61.pack_start(self.ExpandButton, False, False, 0)
 
 		self.NumDirectories = gtk.Label(_("Dirs: Unknown"))
 		self.NumDirectories.set_alignment(0, 0.50)
@@ -3212,9 +3212,9 @@ class UserBrowseTab:
 
 		self.hbox9.pack_start(self.RefreshButton, False, False, 0)
 
-		self.CloseButton1 = gtk.Button()
-		self.CloseButton1.show()
-		self.CloseButton1.connect("clicked", self.OnClose)
+		self.CloseButton = gtk.Button()
+		self.CloseButton.show()
+		self.CloseButton.connect("clicked", self.OnClose)
 
 		self.alignment40 = gtk.Alignment(0.5, 0.5, 0, 0)
 		self.alignment40.show()
@@ -3234,9 +3234,9 @@ class UserBrowseTab:
 
 		self.alignment40.add(self.hbox62)
 
-		self.CloseButton1.add(self.alignment40)
+		self.CloseButton.add(self.alignment40)
 
-		self.hbox9.pack_start(self.CloseButton1, False, False, 0)
+		self.hbox9.pack_start(self.CloseButton, False, False, 0)
 
 		self.sMain.pack_start(self.hbox9, False, True, 0)
 
@@ -3253,11 +3253,11 @@ class UserBrowseTab:
 
 		self.hpaned2.pack2(self.sMain, True, True)
 
-		self.Main4.pack_start(self.hpaned2)
+		self.Main.pack_start(self.hpaned2)
 
 
 		if create:
-			self.UserBrowseTab.add(self.Main4)
+			self.UserBrowseTab.add(self.Main)
 
 	def OnSearch(self, widget):
 		pass
