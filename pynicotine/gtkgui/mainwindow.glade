@@ -1,7 +1,6 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--*- mode: xml -*-->
+<?xml version="1.0"?>
 <glade-interface>
+  <requires-version lib="gtk+" version="2.12"/>
   <widget class="GtkWindow" id="MainWindow">
     <property name="title" translatable="yes">Nicotine</property>
     <property name="window_position">GTK_WIN_POS_CENTER</property>
@@ -27,7 +26,6 @@
                         <property name="label" translatable="yes">_Connect</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="OnConnect"/>
-                        <accelerator key="C" modifiers="GDK_MOD1_MASK" signal="activate"/>
                         <child internal-child="image">
                           <widget class="GtkImage" id="image337">
                             <property name="visible">True</property>
@@ -35,6 +33,7 @@
                             <property name="icon_size">1</property>
                           </widget>
                         </child>
+                        <accelerator key="C" signal="activate" modifiers="GDK_MOD1_MASK"/>
                       </widget>
                     </child>
                     <child>
@@ -43,7 +42,6 @@
                         <property name="label" translatable="yes">_Disconnect</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="OnDisconnect"/>
-                        <accelerator key="D" modifiers="GDK_MOD1_MASK" signal="activate"/>
                         <child internal-child="image">
                           <widget class="GtkImage" id="image338">
                             <property name="visible">True</property>
@@ -51,6 +49,7 @@
                             <property name="icon_size">1</property>
                           </widget>
                         </child>
+                        <accelerator key="D" signal="activate" modifiers="GDK_MOD1_MASK"/>
                       </widget>
                     </child>
                     <child>
@@ -66,7 +65,6 @@
                         <property name="label" translatable="yes">_Away/Return</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="OnAway"/>
-                        <accelerator key="A" modifiers="GDK_MOD1_MASK" signal="activate"/>
                         <child internal-child="image">
                           <widget class="GtkImage" id="image339">
                             <property name="visible">True</property>
@@ -74,6 +72,7 @@
                             <property name="icon_size">1</property>
                           </widget>
                         </child>
+                        <accelerator key="A" signal="activate" modifiers="GDK_MOD1_MASK"/>
                       </widget>
                     </child>
                     <child>
@@ -102,7 +101,6 @@
                         <property name="label" translatable="yes">E_xit</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="OnExit"/>
-                        <accelerator key="Q" modifiers="GDK_CONTROL_MASK" signal="activate"/>
                         <child internal-child="image">
                           <widget class="GtkImage" id="image346">
                             <property name="visible">True</property>
@@ -110,6 +108,7 @@
                             <property name="icon_size">1</property>
                           </widget>
                         </child>
+                        <accelerator key="Q" signal="activate" modifiers="GDK_CONTROL_MASK"/>
                       </widget>
                     </child>
                   </widget>
@@ -129,7 +128,6 @@
                         <property name="label" translatable="yes">_Settings</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="OnSettings"/>
-                        <accelerator key="S" modifiers="GDK_MOD1_MASK" signal="activate"/>
                         <child internal-child="image">
                           <widget class="GtkImage" id="menu-item-image44">
                             <property name="visible">True</property>
@@ -137,6 +135,7 @@
                             <property name="icon_size">1</property>
                           </widget>
                         </child>
+                        <accelerator key="S" signal="activate" modifiers="GDK_MOD1_MASK"/>
                       </widget>
                     </child>
                     <child>
@@ -193,7 +192,7 @@
                         <property name="label" translatable="yes">_Hide log window</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="OnHideLog"/>
-                        <accelerator key="H" modifiers="GDK_MOD1_MASK" signal="activate"/>
+                        <accelerator key="H" signal="activate" modifiers="GDK_MOD1_MASK"/>
                       </widget>
                     </child>
                     <child>
@@ -215,7 +214,7 @@
                         <property name="label" translatable="yes">Hide room _list</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="OnHideRoomList"/>
-                        <accelerator key="R" modifiers="GDK_MOD1_MASK" signal="activate"/>
+                        <accelerator key="R" signal="activate" modifiers="GDK_MOD1_MASK"/>
                       </widget>
                     </child>
                     <child>
@@ -224,7 +223,7 @@
                         <property name="label" translatable="yes">Hide _tickers</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="OnHideTickers"/>
-                        <accelerator key="T" modifiers="GDK_MOD1_MASK" signal="activate"/>
+                        <accelerator key="T" signal="activate" modifiers="GDK_MOD1_MASK"/>
                       </widget>
                     </child>
                     <child>
@@ -233,7 +232,7 @@
                         <property name="label" translatable="yes">Hide chat room log and list toggles</property>
                         <property name="use_underline">True</property>
                         <signal name="toggled" handler="OnHideChatButtons"/>
-                        <accelerator key="B" modifiers="GDK_MOD1_MASK" signal="activate"/>
+                        <accelerator key="B" signal="activate" modifiers="GDK_MOD1_MASK"/>
                       </widget>
                     </child>
                     <child>
@@ -242,7 +241,7 @@
                         <property name="label" translatable="yes">Hide flag columns in user lists</property>
                         <property name="use_underline">True</property>
                         <signal name="toggled" handler="OnHideFlags"/>
-                        <accelerator key="g" modifiers="GDK_MOD1_MASK" signal="activate"/>
+                        <accelerator key="g" signal="activate" modifiers="GDK_MOD1_MASK"/>
                       </widget>
                     </child>
                     <child>
@@ -270,7 +269,7 @@
                         <property name="draw_as_radio">True</property>
                         <property name="group">buddylist_in_tab</property>
                         <signal name="toggled" handler="OnToggleBuddyList"/>
-                        <accelerator key="U" modifiers="GDK_MOD1_MASK" signal="activate"/>
+                        <accelerator key="U" signal="activate" modifiers="GDK_MOD1_MASK"/>
                       </widget>
                     </child>
                     <child>
@@ -568,7 +567,6 @@
                         <property name="label" translatable="yes">Offline Nicotine Plus Guide</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="OnNicotineGuide"/>
-                        <accelerator key="F1" modifiers="" signal="activate"/>
                         <child internal-child="image">
                           <widget class="GtkImage" id="image356">
                             <property name="visible">True</property>
@@ -576,6 +574,7 @@
                             <property name="icon_size">1</property>
                           </widget>
                         </child>
+                        <accelerator key="F1" signal="activate"/>
                       </widget>
                     </child>
                     <child>
@@ -790,12 +789,12 @@
                     <child>
                       <widget class="Custom" id="ChatTabLabel">
                         <property name="visible">True</property>
-                        <property name="string1">ImageLabel</property>
+                        <property name="string1">hpaned1</property>
                         <property name="string2">Chat rooms</property>
                       </widget>
                       <packing>
-                        <property name="type">tab</property>
                         <property name="tab_fill">False</property>
+                        <property name="type">tab</property>
                       </packing>
                     </child>
                     <child>
@@ -921,13 +920,13 @@
                     <child>
                       <widget class="Custom" id="PrivateChatTabLabel">
                         <property name="visible">True</property>
-                        <property name="string1">ImageLabel</property>
+                        <property name="string1">privatevbox</property>
                         <property name="string2">Private chat</property>
                       </widget>
                       <packing>
-                        <property name="type">tab</property>
                         <property name="position">1</property>
                         <property name="tab_fill">False</property>
+                        <property name="type">tab</property>
                       </packing>
                     </child>
                     <child>
@@ -1385,13 +1384,13 @@
                     <child>
                       <widget class="Custom" id="DownloadsTabLabel">
                         <property name="visible">True</property>
-                        <property name="string1">ImageLabel</property>
+                        <property name="string1">vboxdownloads</property>
                         <property name="string2">Downloads</property>
                       </widget>
                       <packing>
-                        <property name="type">tab</property>
                         <property name="position">2</property>
                         <property name="tab_fill">False</property>
+                        <property name="type">tab</property>
                       </packing>
                     </child>
                     <child>
@@ -1801,13 +1800,13 @@
                     <child>
                       <widget class="Custom" id="UploadsTabLabel">
                         <property name="visible">True</property>
-                        <property name="string1">ImageLabel</property>
+                        <property name="string1">vboxuploads</property>
                         <property name="string2">Uploads</property>
                       </widget>
                       <packing>
-                        <property name="type">tab</property>
                         <property name="position">3</property>
                         <property name="tab_fill">False</property>
+                        <property name="type">tab</property>
                       </packing>
                     </child>
                     <child>
@@ -1962,8 +1961,7 @@
                                 <property name="visible">True</property>
                                 <property name="sensitive">False</property>
                                 <child internal-child="entry">
-                                  <widget class="GtkEntry" id="RoomSearchEntry">
-                                  </widget>
+                                  <widget class="GtkEntry" id="RoomSearchEntry"/>
                                 </child>
                               </widget>
                               <packing>
@@ -2041,13 +2039,13 @@
                     <child>
                       <widget class="Custom" id="SearchTabLabel">
                         <property name="visible">True</property>
-                        <property name="string1">ImageLabel</property>
+                        <property name="string1">searchvbox</property>
                         <property name="string2">Search files</property>
                       </widget>
                       <packing>
-                        <property name="type">tab</property>
                         <property name="position">4</property>
                         <property name="tab_fill">False</property>
+                        <property name="type">tab</property>
                       </packing>
                     </child>
                     <child>
@@ -2172,13 +2170,13 @@
                     <child>
                       <widget class="Custom" id="UserInfoTabLabel">
                         <property name="visible">True</property>
-                        <property name="string1">ImageLabel</property>
+                        <property name="string1">userinfovbox</property>
                         <property name="string2">User info</property>
                       </widget>
                       <packing>
-                        <property name="type">tab</property>
                         <property name="position">5</property>
                         <property name="tab_fill">False</property>
+                        <property name="type">tab</property>
                       </packing>
                     </child>
                     <child>
@@ -2351,13 +2349,13 @@
                     <child>
                       <widget class="Custom" id="UserBrowseTabLabel">
                         <property name="visible">True</property>
-                        <property name="string1">ImageLabel</property>
+                        <property name="string1">userbrowsevbox</property>
                         <property name="string2">User browse</property>
                       </widget>
                       <packing>
-                        <property name="type">tab</property>
                         <property name="position">6</property>
                         <property name="tab_fill">False</property>
+                        <property name="type">tab</property>
                       </packing>
                     </child>
                     <child>
@@ -2813,13 +2811,13 @@
                     <child>
                       <widget class="Custom" id="InterestsTabLabel">
                         <property name="visible">True</property>
-                        <property name="string1">ImageLabel</property>
+                        <property name="string1">interests</property>
                         <property name="string2">Interests</property>
                       </widget>
                       <packing>
-                        <property name="type">tab</property>
                         <property name="position">7</property>
                         <property name="tab_fill">False</property>
+                        <property name="type">tab</property>
                       </packing>
                     </child>
                   </widget>

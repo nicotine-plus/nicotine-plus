@@ -180,7 +180,7 @@ class NicotineFrame(MainWindow):
 		self.MainWindow.set_position(gtk.WIN_POS_CENTER)
 		self.MainWindow.show()
 		self.minimized = False
-		
+		self.HiddenTabs = {}
 
 		self.clip = gtk.Clipboard(display=gtk.gdk.display_get_default(), selection="CLIPBOARD")
 		
@@ -236,8 +236,12 @@ class NicotineFrame(MainWindow):
 			pass
 
 		for label_tab in [self.ChatTabLabel, self.PrivateChatTabLabel, self.SearchTabLabel, self.UserInfoTabLabel, self.DownloadsTabLabel, self.UploadsTabLabel, self.UserBrowseTabLabel, self.InterestsTabLabel]:
-			label_tab.show_image(config["ui"]["tab_icons"])
-			label_tab.set_angle(config["ui"]["labelmain"])
+			if type(label_tab) is ImageLabel:
+				label_tab.show_image(config["ui"]["tab_icons"])
+				label_tab.set_angle(config["ui"]["labelmain"])
+			elif type(label_tab) is gtk.EventBox:
+				label_tab.child.show_image(config["ui"]["tab_icons"])
+				label_tab.child.set_angle(config["ui"]["labelmain"])
 			
 		self.translux = None
 		self.TransparentTint()
@@ -372,7 +376,10 @@ class NicotineFrame(MainWindow):
 			self.hide_room_list1.set_active(0)
 			
 		for l in [self.ChatTabLabel, self.PrivateChatTabLabel, self.DownloadsTabLabel, self.UploadsTabLabel, self.SearchTabLabel, self.UserInfoTabLabel, self.UserBrowseTabLabel, self.InterestsTabLabel]:
-			l.set_text_color(0)
+			if type(l) is ImageLabel:
+				l.set_text_color(0)
+			elif type(l) is gtk.EventBox:
+				l.child.set_text_color(0)
 		
 		if config["ticker"]["hide"]:
 			self.hide_tickers1.set_active(1)
@@ -1030,9 +1037,59 @@ class NicotineFrame(MainWindow):
 			return comboentry
 		elif string1 == "ImageLabel":
 			return ImageLabel(string2, self.images["empty"])
+		elif "TabLabel" in id:
+			label_tab = ImageLabel(string2, self.images["empty"])
+			eventbox = gtk.EventBox()
+			label_tab.show()
+			eventbox.add(label_tab)
+			eventbox.show()
+			eventbox.set_events(gtk.gdk.BUTTON_PRESS_MASK)
+			eventbox.connect('button_press_event', self.on_tab_click, id+"Menu", string1)
+			self.__dict__[id+"Menu"] = popup = utils.PopupMenu(self)
+			popup.setup(
+			("#" + _("Hide %(tab)s" % {"tab":string2}), self.HideTab, gtk.STOCK_REMOVE, [eventbox, string1]),
+			
+			)
+			popup.set_user(string1)
+			return eventbox
 		else:
-			return MainWindow.get_custom_widget(self, id, string1, string2, int1, int2)
+			return gtk.Label(_("(custom widget: %s)") % id)
+
+	def HideTab(self, widget, lista):
+		eventbox, child = lista
+		tab = self.__dict__[child]
+		if tab not in self.MainNotebook.get_children():
+			return
+		if tab in self.HiddenTabs:
+			return
+		#print child, eventbox
+		#print self.__dict__[child], eventbox
+		self.HiddenTabs[tab] =  eventbox
+		num = self.MainNotebook.page_num(tab )
+		#print self.MainNotebook.get_tab_label(self.__dict__[child]), eventbox
+		self.MainNotebook.remove_page(num)
+
+	def ShowTab(self, widget, lista):
+		name, child = lista
+		if child in self.MainNotebook.get_children():
+			return
+		if child not in self.HiddenTabs:
+			return
+		eventbox = self.HiddenTabs[child]
+
+		self.MainNotebook.append_page(child, eventbox)
+		self.MainNotebook.set_tab_reorderable(child, self.np.config.sections["ui"]["tab_reorderable"])
+		del self.HiddenTabs[child]
 		
+
+	def on_tab_click(self, widget, event, id, child):
+		#print widget, event, id, child 
+		if event.type == gtk.gdk.BUTTON_PRESS and event.button == 3:
+			self.__dict__[id].popup(None, None, None, event.button, event.time)
+		#if event.type == gtk.gdk.BUTTON_PRESS:
+			#widget.popup(None, None, None, event.button, event.time)
+		pass
+
 	def BuddiesCombosFill(self, nothing):
 		
 		for widget in self.BuddiesComboEntries:
@@ -1490,8 +1547,12 @@ class NicotineFrame(MainWindow):
 		n = [self.ChatNotebook, self.PrivatechatNotebook, None, None, self.SearchNotebook, self.UserInfoNotebook, self.UserBrowseNotebook, None, None][page_nr]
 		self.current_tab = l
 		if l is not None:
-			l.set_image(self.images["empty"])
-			l.set_text_color(0)
+			if type(l) is ImageLabel:
+				l.set_image(self.images["empty"])
+				l.set_text_color(0)
+			elif type(l) is gtk.EventBox:
+				l.child.set_image(self.images["empty"])
+				l.child.set_text_color(0)
 		if n is not None:
 			n.popup_disable()
 			n.popup_enable()
@@ -1802,8 +1863,12 @@ class NicotineFrame(MainWindow):
 			tabLabels.append(self.BuddiesTabLabel)
 			
 		for label_tab in tabLabels:
-			label_tab.show_image(config["ui"]["tab_icons"])
-			label_tab.set_text_color(None)
+			if type(label_tab) is ImageLabel:
+				label_tab.show_image(config["ui"]["tab_icons"])
+				label_tab.set_text_color(None)
+			elif type(label_tab) is gtk.EventBox:
+				label_tab.child.show_image(config["ui"]["tab_icons"])
+				label_tab.child.set_text_color(None)
 		self.SetTabPositions()
 
 		if self.np.transfers is not None:
@@ -1882,7 +1947,10 @@ class NicotineFrame(MainWindow):
 		self.ChatNotebook.set_tab_angle(ui["labelrooms"])
 		self.MainNotebook.set_tab_pos(self.getTabPosition(ui["tabmain"]))
 		for label_tab in[self.ChatTabLabel, self.PrivateChatTabLabel, self.SearchTabLabel, self.UserInfoTabLabel, self.DownloadsTabLabel, self.UploadsTabLabel, self.UserBrowseTabLabel, self.InterestsTabLabel]:
-			label_tab.set_angle(ui["labelmain"])
+			if type(label_tab) is ImageLabel:
+				label_tab.set_angle(ui["labelmain"])
+			elif type(label_tab) is gtk.EventBox:
+				label_tab.child.set_angle(ui["labelmain"])
 		if "BuddiesTabLabel" in self.__dict__:
 			self.BuddiesTabLabel.set_angle(ui["labelmain"])
 		self.PrivatechatNotebook.set_tab_pos(self.getTabPosition(ui["tabprivate"]))
@@ -2168,6 +2236,8 @@ class NicotineFrame(MainWindow):
 			self.BuddiesTabLabel.show()
 			if self.userlistvbox not in self.MainNotebook.get_children():
 				self.MainNotebook.append_page(self.userlistvbox, self.BuddiesTabLabel)
+			if self.userlistvbox in self.MainNotebook.get_children():
+				self.MainNotebook.set_tab_reorderable(self.userlistvbox, self.np.config.sections["ui"]["tab_reorderable"])
 			self.BuddiesLabel.hide()
 		
 			self.np.config.sections["ui"]["buddylistinchatrooms"] = 0
@@ -2652,7 +2722,8 @@ class NicotineFrame(MainWindow):
 			
 	def GivePrivileges(self, user, days):
 		self.np.queue.put(slskmessages.GivePrivileges(user, days))
-	
+
+
 	def ChangeMainPage(self, widget, tab):
 
 		page_num  = self.MainNotebook.page_num
@@ -2674,10 +2745,12 @@ class NicotineFrame(MainWindow):
 			child = self.interests # Interests
 		elif tab == "userlist": 
 			child = self.userlistvbox # Buddy list
+		else:
+			return
 		if child in self.MainNotebook.get_children():
 			self.MainNotebook.set_current_page(page_num(child)) 
 		else:
-			print "Error:", tab, "isn't in MainNotebook"
+			self.ShowTab(widget, [tab, child])
 	
 	def OnChatRooms(self, widget):
 		self.ChangeMainPage(widget, "chatrooms")

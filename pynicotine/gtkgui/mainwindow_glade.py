@@ -499,7 +499,7 @@ class MainWindow:
 
 		self.hpaned1.pack2(self.vpaned3, False, True)
 
-		self.ChatTabLabel = self.get_custom_widget("ChatTabLabel", "ImageLabel", _("Chat rooms"), 0, 0)
+		self.ChatTabLabel = self.get_custom_widget("ChatTabLabel", "hpaned1", _("Chat rooms"), 0, 0)
 		self.ChatTabLabel.show()
 		self.privatevbox = gtk.VBox(False, 0)
 		self.privatevbox.show()
@@ -567,7 +567,7 @@ class MainWindow:
 		self.PrivatechatNotebook.show()
 		self.privatevbox.pack_start(self.PrivatechatNotebook)
 
-		self.PrivateChatTabLabel = self.get_custom_widget("PrivateChatTabLabel", "ImageLabel", _("Private chat"), 0, 0)
+		self.PrivateChatTabLabel = self.get_custom_widget("PrivateChatTabLabel", "privatevbox", _("Private chat"), 0, 0)
 		self.PrivateChatTabLabel.show()
 		self.vboxdownloads = gtk.VBox(False, 0)
 		self.vboxdownloads.show()
@@ -806,7 +806,7 @@ class MainWindow:
 
 		self.vboxdownloads.pack_start(self.DownloadButtons, False, True, 3)
 
-		self.DownloadsTabLabel = self.get_custom_widget("DownloadsTabLabel", "ImageLabel", _("Downloads"), 0, 0)
+		self.DownloadsTabLabel = self.get_custom_widget("DownloadsTabLabel", "vboxdownloads", _("Downloads"), 0, 0)
 		self.DownloadsTabLabel.show()
 		self.vboxuploads = gtk.VBox(False, 0)
 		self.vboxuploads.show()
@@ -1020,7 +1020,7 @@ class MainWindow:
 
 		self.vboxuploads.pack_start(self.UploadButtons, False, True, 3)
 
-		self.UploadsTabLabel = self.get_custom_widget("UploadsTabLabel", "ImageLabel", _("Uploads"), 0, 0)
+		self.UploadsTabLabel = self.get_custom_widget("UploadsTabLabel", "vboxuploads", _("Uploads"), 0, 0)
 		self.UploadsTabLabel.show()
 		self.searchvbox = gtk.VBox(False, 0)
 		self.searchvbox.show()
@@ -1161,7 +1161,7 @@ class MainWindow:
 		self.SearchNotebook.show()
 		self.searchvbox.pack_start(self.SearchNotebook)
 
-		self.SearchTabLabel = self.get_custom_widget("SearchTabLabel", "ImageLabel", _("Search files"), 0, 0)
+		self.SearchTabLabel = self.get_custom_widget("SearchTabLabel", "searchvbox", _("Search files"), 0, 0)
 		self.SearchTabLabel.show()
 		self.userinfovbox = gtk.VBox(False, 0)
 		self.userinfovbox.show()
@@ -1229,7 +1229,7 @@ class MainWindow:
 		self.UserInfoNotebook.show()
 		self.userinfovbox.pack_start(self.UserInfoNotebook)
 
-		self.UserInfoTabLabel = self.get_custom_widget("UserInfoTabLabel", "ImageLabel", _("User info"), 0, 0)
+		self.UserInfoTabLabel = self.get_custom_widget("UserInfoTabLabel", "userinfovbox", _("User info"), 0, 0)
 		self.UserInfoTabLabel.show()
 		self.userbrowsevbox = gtk.VBox(False, 0)
 		self.userbrowsevbox.show()
@@ -1323,7 +1323,7 @@ class MainWindow:
 		self.UserBrowseNotebook.show()
 		self.userbrowsevbox.pack_start(self.UserBrowseNotebook)
 
-		self.UserBrowseTabLabel = self.get_custom_widget("UserBrowseTabLabel", "ImageLabel", _("User browse"), 0, 0)
+		self.UserBrowseTabLabel = self.get_custom_widget("UserBrowseTabLabel", "userbrowsevbox", _("User browse"), 0, 0)
 		self.UserBrowseTabLabel.show()
 		self.interests = gtk.VBox(False, 0)
 		self.interests.show()
@@ -1585,7 +1585,7 @@ class MainWindow:
 
 		self.interests.pack_start(self.hbox11)
 
-		self.InterestsTabLabel = self.get_custom_widget("InterestsTabLabel", "ImageLabel", _("Interests"), 0, 0)
+		self.InterestsTabLabel = self.get_custom_widget("InterestsTabLabel", "interests", _("Interests"), 0, 0)
 		self.InterestsTabLabel.show()
 		self.MainNotebook.append_page(self.hpaned1, self.ChatTabLabel)
 

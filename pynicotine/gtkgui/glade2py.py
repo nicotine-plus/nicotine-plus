@@ -619,7 +619,10 @@ def process_signal(child):
 
 def process_accelerator(child):
 	k = str(child.attributes["key"].nodeValue)
-	m = str(child.attributes["modifiers"].nodeValue).replace("GDK_", "gtk.gdk.")
+	if "modifiers" in child.attributes.keys():
+		m = str(child.attributes["modifiers"].nodeValue).replace("GDK_", "gtk.gdk.")
+	else:
+		m = ""
 	s = str(child.attributes["signal"].nodeValue)
 	return k, m, s
 		

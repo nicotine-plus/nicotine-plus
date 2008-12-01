@@ -734,7 +734,7 @@ class Search(SearchTab):
 		if res:
 			self.frame.Searches.request_changed(self.Main)
 			if self.frame.MainNotebook.get_current_page() != 4:
-				self.frame.SearchTabLabel.set_image(self.frame.images["online"])
+				self.frame.SearchTabLabel.child.set_image(self.frame.images["online"])
 			#self.frame.RequestIcon(self.frame.SearchTabLabel)
 
 		rows = len(self.all_data)
