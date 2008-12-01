@@ -20,7 +20,7 @@ import os
 import gtk, gobject, pango
 import sets
 from time import daylight, altzone
-from nicotine_glade import PrivateChatTab
+from privatechat_glade import PrivateChatTab
 from utils import AppendLine, IconNotebook, PopupMenu, WriteLog, expand_alias, is_alias, EncodingsMenu, SaveEncoding, fixpath
 from chatrooms import GetCompletion
 from pynicotine import slskmessages

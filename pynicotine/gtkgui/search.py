@@ -27,7 +27,7 @@ import random
 
 from pynicotine import slskmessages
 
-from nicotine_glade import SearchTab
+from search_glade import SearchTab
 from utils import InitialiseColumns, IconNotebook, PopupMenu, FastListModel, Humanize, HumanSpeed, HumanSize, PressHeader
 from dirchooser import ChooseDir
 from entrydialog import *

@@ -19,7 +19,9 @@
 import os
 
 import gtk
-from nicotine_glade import MainWindow, ChatRoomTab, RoomList
+from mainwindow_glade import MainWindow
+from chatrooms_glade import ChatRoomTab
+from roomlist_glade import RoomList
 from pynicotine.pynicotine import NetworkEventProcessor
 from pynicotine import slskmessages
 from pynicotine.utils import version
@@ -225,13 +227,13 @@ class NicotineFrame(MainWindow):
 			w.set_tab_closers(config["ui"]["tabclosers"])
 			w.set_reorderable(config["ui"]["tab_reorderable"])
 			w.show_images(config["ui"]["tab_icons"])
-
-		for tab in self.MainNotebook.get_children():
-			try:
-				self.MainNotebook.set_tab_reorderable(tab, True)
-			except:
-				# Old gtk
-				pass
+		
+		try:
+			for tab in self.MainNotebook.get_children():
+				self.MainNotebook.set_tab_reorderable(tab, config["ui"]["tab_reorderable"])
+		except:
+			# Old gtk
+			pass
 
 		for label_tab in [self.ChatTabLabel, self.PrivateChatTabLabel, self.SearchTabLabel, self.UserInfoTabLabel, self.DownloadsTabLabel, self.UploadsTabLabel, self.UserBrowseTabLabel, self.InterestsTabLabel]:
 			label_tab.show_image(config["ui"]["tab_icons"])

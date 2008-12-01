@@ -21,7 +21,7 @@ import gtk
 import tempfile
 import gobject
 
-from nicotine_glade import UserInfoTab
+from userinfo_glade import UserInfoTab
 from utils import IconNotebook, PopupMenu, EncodingsMenu, SaveEncoding,  Humanize, InitialiseColumns, AppendLine
 from pynicotine import slskmessages
 

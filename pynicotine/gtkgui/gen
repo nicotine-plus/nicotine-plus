@@ -1,13 +1,23 @@
 #! /bin/sh
 echo
-echo "Generating nicotine_glade.py from nicotine.glade"
-python glade2py.py nicotine.glade > nicotine_glade.py
+echo "Generating python from GLADE files.."
+# python glade2py.py nicotine.glade > nicotine_glade.py
+python glade2py.py mainwindow.glade > mainwindow_glade.py
+python glade2py.py chatrooms.glade > chatrooms_glade.py
+python glade2py.py privatechat.glade > privatechat_glade.py
+python glade2py.py userinfo.glade > userinfo_glade.py
+python glade2py.py search.glade > search_glade.py
+python glade2py.py userbrowse.glade > userbrowse_glade.py
+python glade2py.py roomlist.glade > roomlist_glade.py
+
 echo "Generating settings_glade.py from nicotine-settings.glade"
 python glade2py.py nicotine-settings.glade > settings_glade.py
 echo
 echo "  lines   words"
-wc -lw nicotine.glade nicotine-settings.glade
+# wc -lw nicotine.glade 
+wc -lw  mainwindow.glade chatrooms.glade privatechat.glade search.glade   userinfo.glade  userbrowse.glade  roomlist.glade nicotine-settings.glade
 echo
 echo "  lines   words"
-wc -lw nicotine_glade.py settings_glade.py
+# wc -lw nicotine_glade.py 
+wc -lw mainwindow_glade.py chatrooms_glade.py privatechat_glade.py search_glade.py  userinfo_glade.py  userbrowse_glade.py roomlist_glade.py settings_glade.py
 echo
