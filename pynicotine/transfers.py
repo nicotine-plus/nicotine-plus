@@ -819,14 +819,22 @@ class Transfers:
 			self.queue.put(slskmessages.ConnClose(msg.conn))
             
 	def SetIconDownloads(self):
-		if self.eventprocessor.frame.MainNotebook.get_current_page() == 2:
+		frame =  self.eventprocessor.frame
+		if frame.MainNotebook.get_current_page() == frame.MainNotebook.page_num(frame.vboxdownloads):
 			return
-		self.eventprocessor.frame.DownloadsTabLabel.set_image(self.eventprocessor.frame.images["online"])
+		tablabel = frame.GetTabLabel(frame.DownloadsTabLabel)
+		if not tablabel:
+			return
+		tablabel.set_image(frame.images["online"])
 		
 	def SetIconUploads(self):
-		if self.eventprocessor.frame.MainNotebook.get_current_page() == 3:
+		frame =  self.eventprocessor.frame
+		if frame.MainNotebook.get_current_page() == frame.MainNotebook.page_num(frame.vboxuploads):
 			return
-		self.eventprocessor.frame.UploadsTabLabel.set_image(self.eventprocessor.frame.images["online"])
+		tablabel = frame.GetTabLabel(frame.UploadsTabLabel)
+		if not tablabel:
+			return
+		tablabel.set_image(frame.images["online"])
 		
 	def CleanPath(self, path):
 		if win32:
