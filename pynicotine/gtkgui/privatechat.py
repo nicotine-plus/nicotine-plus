@@ -43,7 +43,7 @@ class PrivateChats(IconNotebook):
 		self.connect("switch-page", self.OnSwitchPage)
 
 	def OnSwitchPage(self, notebook, page, page_num, force = 0):
-		if self.frame.MainNotebook.get_current_page() != 1 and not force:
+		if self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.privatevbox) and not force:
 			return
 		page = notebook.get_nth_page(page_num)
 		
@@ -55,7 +55,7 @@ class PrivateChats(IconNotebook):
 					self.frame.ClearNotification("private", tab.user)
 					
 	def ClearNotifications(self):
-		if self.frame.MainNotebook.get_current_page() != 1:
+		if self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.privatevbox):
 			return
 		page = self.get_nth_page( self.get_current_page())
 		for user, tab in self.users.items():
@@ -160,7 +160,7 @@ class PrivateChats(IconNotebook):
 			self.frame.RequestIcon(self.frame.PrivateChatTabLabel)
 			# Show notifications if the private chats notebook isn't selected,
 			# the tab is not selected, or the main window isn't mapped
-			if self.get_current_page() != self.page_num(chat.Main) or self.frame.MainNotebook.get_current_page() != 1 or not self.frame.is_mapped:
+			if self.get_current_page() != self.page_num(chat.Main) or self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.privatevbox) or not self.frame.is_mapped:
 				self.frame.Notification("private", msg.user)
 
 		# SEND CLIENT VERSION to user if the following string is sent

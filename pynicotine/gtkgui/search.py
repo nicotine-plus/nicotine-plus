@@ -733,7 +733,7 @@ class Search(SearchTab):
 
 		if res:
 			self.frame.Searches.request_changed(self.Main)
-			if self.frame.MainNotebook.get_current_page() != 4:
+			if self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.searchvbox):
 				self.frame.SearchTabLabel.child.set_image(self.frame.images["online"])
 			#self.frame.RequestIcon(self.frame.SearchTabLabel)
 

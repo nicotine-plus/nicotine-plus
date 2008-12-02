@@ -1523,28 +1523,51 @@ class NicotineFrame(MainWindow):
 	def ChatRequestIcon(self, status = 0):
 		if status == 1 and not self.got_focus:
 			self.MainWindow.set_icon(self.images["hilite2"])
-		if self.MainNotebook.get_current_page() == 0:
+		if self.MainNotebook.get_current_page() == self.MainNotebook.page_num(self.hpaned1):
+			return
+		tablabel = self.GetTabLabel(self.ChatTabLabel)
+		if not tablabel:
 			return
 		if status == 0:
-			if self.ChatTabLabel.get_image() == self.images["hilite"]:
+			if tablabel.get_image() == self.images["hilite"]:
 				return
-		self.ChatTabLabel.set_image(status == 1 and self.images["hilite"] or self.images["online"])
-		self.ChatTabLabel.set_text_color(status+1)
+		tablabel.set_image(status == 1 and self.images["hilite"] or self.images["online"])
+		tablabel.set_text_color(status+1)
 
-	def RequestIcon(self, tablabel):
-		if tablabel == self.PrivateChatTabLabel and not self.got_focus:
+	def GetTabLabel(self, TabLabel):
+		tablabel = None
+		if type(TabLabel) is ImageLabel:
+			tablabel = TabLabel
+		elif type(TabLabel) is gtk.EventBox:
+			tablabel = TabLabel.child
+		return tablabel
+
+	def RequestIcon(self, TabLabel):
+		if TabLabel == self.PrivateChatTabLabel and not self.got_focus:
 			self.MainWindow.set_icon(self.images["hilite2"])
-		if self.current_tab != tablabel:
+		tablabel = self.GetTabLabel(TabLabel)
+		if not tablabel:
+			return
+		if self.current_tab != TabLabel:
 			tablabel.set_image(self.images["hilite"])
 			tablabel.set_text_color(2)
 			
 		
 	def OnSwitchPage(self, notebook, page, page_nr):
-		tabLabels = [self.ChatTabLabel, self.PrivateChatTabLabel, self.DownloadsTabLabel, self.UploadsTabLabel, self.SearchTabLabel, self.UserInfoTabLabel, self.UserBrowseTabLabel, self.InterestsTabLabel]
-		if "BuddiesTabLabel" in self.__dict__:
-			tabLabels.append(self.BuddiesTabLabel)
+		tabLabels = []
+		tabs = self.MainNotebook.get_children()
+		for i in tabs:
+			tabLabels.append(self.MainNotebook.get_tab_label(i))
+		#tabLabels = [self.ChatTabLabel, self.PrivateChatTabLabel, self.DownloadsTabLabel, self.UploadsTabLabel, self.SearchTabLabel, self.UserInfoTabLabel, self.UserBrowseTabLabel, self.InterestsTabLabel]
+		#if "BuddiesTabLabel" in self.__dict__:
+			#tabLabels.append(self.BuddiesTabLabel)
 		l = tabLabels[page_nr]
-		n = [self.ChatNotebook, self.PrivatechatNotebook, None, None, self.SearchNotebook, self.UserInfoNotebook, self.UserBrowseNotebook, None, None][page_nr]
+		#n = [self.ChatNotebook, self.PrivatechatNotebook, None, None, self.SearchNotebook, self.UserInfoNotebook, self.UserBrowseNotebook, None, None][page_nr]
+
+		compare = {self.ChatTabLabel: self.ChatNotebook, self.PrivateChatTabLabel: self.PrivatechatNotebook, self.DownloadsTabLabel: None, self.UploadsTabLabel: None, self.SearchTabLabel: self.SearchNotebook, self.UserInfoTabLabel: self.UserInfoNotebook, self.UserBrowseTabLabel: self.UserBrowseNotebook, self.InterestsTabLabel: None}
+		if "BuddiesTabLabel" in self.__dict__:
+			compare[self.BuddiesTabLabel] = None
+		n = compare[l]
 		self.current_tab = l
 		if l is not None:
 			if type(l) is ImageLabel:
@@ -1553,16 +1576,16 @@ class NicotineFrame(MainWindow):
 			elif type(l) is gtk.EventBox:
 				l.child.set_image(self.images["empty"])
 				l.child.set_text_color(0)
-		if n is not None:
+		if n is not None and type(n) is not gtk.HPaned:
 			n.popup_disable()
 			n.popup_enable()
 			if n.get_current_page() != -1:
 				n.dismiss_icon(n, None, n.get_current_page())
 				
-		if page_nr == 0 and self.chatrooms:
+		if page_nr == self.MainNotebook.page_num(self.hpaned1) and self.chatrooms:
 			p = n.get_current_page()
 			self.chatrooms.roomsctrl.OnSwitchPage(n, None, p, 1)
-		elif page_nr == 1:
+		elif page_nr == self.MainNotebook.page_num(self.privatevbox):
 			p = n.get_current_page()
 			self.privatechats.OnSwitchPage(n, None, p, 1)
 
