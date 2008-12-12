@@ -7,4 +7,4 @@ class Plugin(BasePlugin):
     __version__ = "2008-10-29r00"
     def IncomingPublicChatEvent(self, room, nick, line):
         if (line.lower() == 'test'):
-            self.parent.saypublic(room, 'Test failed.')
+            self.saypublic(room, 'Test failed.')
