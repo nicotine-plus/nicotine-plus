@@ -2,7 +2,7 @@
 
 import socket
 
-from pynicotine.gtkgui.pluginsystem import BasePlugin
+from pynicotine.gtkgui.pluginsystem import BasePlugin, returncode
 from pynicotine import slskmessages
 
 
@@ -44,6 +44,13 @@ class Plugin(BasePlugin):
                 else:
                     self.log("%s: Unknown port status on %s:%s" % (user, ip, port))
             self.checked[user] = 3
+    def MyPublicCommand(self, room, args):
+        if args:
+            self.checked[args] = 1
+            self.resolve(args)
+            return returncode['zap']
+        else:
+            self.log("Provide a user name as parameter.")
     def resolve(self, user):
         self.parent.frame.np.queue.put(slskmessages.GetPeerAddress(user))
     def checkport(self, ip, port):
@@ -60,3 +67,4 @@ class Plugin(BasePlugin):
             self.log("%s:%s: Port is closed." % (ip, port))
             return 'closed'
         s.close()
+    __publiccommands__ = [('port', MyPublicCommand)]
