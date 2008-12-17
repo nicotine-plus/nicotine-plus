@@ -855,13 +855,13 @@ class Search(SearchTab):
 			if filter[-1:].lower() == 'i':
 				base = 1000
 				filter = filter[:-1]
-			if filter.lower()[-1] == "g":
+			if filter.lower()[-1:] == "g":
 				factor = pow(base, 3)
 				filter = filter[:-1]
-			elif filter.lower()[-1] == "m":
+			elif filter.lower()[-1:] == "m":
 				factor = pow(base, 2)
 				filter = filter[:-1]
-			elif filter.lower()[-1] == "k":
+			elif filter.lower()[-1:] == "k":
 				factor = base
 				filter = filter[:-1]
 
