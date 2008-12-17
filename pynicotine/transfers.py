@@ -929,7 +929,7 @@ class Transfers:
 						command = config["transfers"]["afterfinish"].replace("$", utils.escapeCommand(newname))
 						os.system("%s &" % command)
 						self.eventprocessor.logMessage(_("Executed: %s") % self.decode(command))
-					if i.path and config["transfers"]["shownotification"] or config["transfers"]["afterfolder"]:
+					if i.path and (config["transfers"]["shownotificationperfolder"] or config["transfers"]["afterfolder"]):
 						# walk through downloads and break if any file in the same folder exists, else execute
 						for ia in self.downloads:
 							if ia.status not in ['Finished', 'Aborted', 'Paused', 'Filtered'] and ia.path and ia.path == i.path:
