@@ -633,7 +633,7 @@ class Search(SearchTab):
 			
 		for i in [0, 128, 160, 192, 256, 320]:
 			self.FilterBitrate.get_model().append([i])
-		for i in [">10000000", "<10000000", "<5000000", "<1000000", ">0"]:
+		for i in [">10M", "<10M", "<5M", "<1M", ">0"]:
 			self.FilterSize.get_model().append([i])
 		s_config = self.frame.np.config.sections["searches"]
 		
