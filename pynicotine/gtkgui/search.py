@@ -633,7 +633,7 @@ class Search(SearchTab):
 			
 		for i in [0, 128, 160, 192, 256, 320]:
 			self.FilterBitrate.get_model().append([i])
-		for i in [">10M", "<10M", "<5M", "<1M", ">0"]:
+		for i in [">10MiB", "<10MiB", "<5MiB", "<1MiB", ">0"]:
 			self.FilterSize.get_model().append([i])
 		s_config = self.frame.np.config.sections["searches"]
 		
@@ -849,23 +849,29 @@ class Search(SearchTab):
 
 		factor = 1
 		if factorize:
+			base = 1024
+			if filter[-1:].lower() == 'b':
+				filter = filter[:-1] # stripping off the b, we always assume it means bytes
+			if filter[-1:].lower() == 'i':
+				base = 1000
+				filter = filter[:-1]
 			if filter.lower()[-1] == "g":
-				factor = 1024*1024*1024
+				factor = pow(base, 3)
 				filter = filter[:-1]
 			elif filter.lower()[-1] == "m":
-				factor = 1024*1024
+				factor = pow(base, 2)
 				filter = filter[:-1]
 			elif filter.lower()[-1] == "k":
-				factor = 1024
+				factor = base
 				filter = filter[:-1]
 
 		if not filter:
 			return True
 
-		if not filter.isdigit():
+		try: 
+			filter = long(filter) * factor
+		except TypeError:
 			return True
-
-		filter = long(filter) * factor
 
 		if eval(str(value)+op+str(filter), {}):
 			return True
