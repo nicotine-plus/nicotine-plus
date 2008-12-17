@@ -935,7 +935,7 @@ class Transfers:
 							if ia.status not in ['Finished', 'Aborted', 'Paused', 'Filtered'] and ia.path and ia.path == i.path:
 								break
 						else:
-							if config["transfers"]["shownotification"]:
+							if config["transfers"]["shownotificationperfolder"]:
 								self.eventprocessor.frame.NewNotification(_("%(folder)s downloaded from %(user)s") % {'user':i.user, "folder":folder}, title=_("Nicotine+ :: directory completed"))
 							if config["transfers"]["afterfolder"]:
 								command = config["transfers"]["afterfolder"].replace("$", utils.escapeCommand(folder))

@@ -93,6 +93,7 @@ class Config:
 	"uploadslots": 2, \
 	"incompletedir": "", \
 	"shownotification": 0, \
+	"shownotificationperfolder": 0, \
 	"afterfinish": "", \
 	"afterfolder": "", \
 	"lock": 1, \

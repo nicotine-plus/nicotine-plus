@@ -1541,7 +1541,7 @@ class EventsFrame(settings_glade.EventsFrame):
 		self.p = parent
 		self.frame = parent.frame
 		settings_glade.EventsFrame.__init__(self, False)
-		self.options = {"transfers": { "shownotification": self.ShowNotification, "afterfinish": self.AfterDownload, "afterfolder": self.AfterFolder, "download_doubleclick": self.DownloadDoubleClick, "upload_doubleclick": self.UploadDoubleClick, },
+		self.options = {"transfers": { "shownotification": self.ShowNotification, "shownotificationperfolder": self.ShowNotificationPerFolder, "afterfinish": self.AfterDownload, "afterfolder": self.AfterFolder, "download_doubleclick": self.DownloadDoubleClick, "upload_doubleclick": self.UploadDoubleClick, },
 			"ui": {"filemanager": self.FileManagerCombo.child },}
 		
 		for executable in ["rox $", "konqueror $", "nautilus --no-desktop $", "thunar $", "xterm -e mc $", "emelfm2 -1 $", "krusader --left $", "gentoo -1 $" ]:
@@ -1550,8 +1550,10 @@ class EventsFrame(settings_glade.EventsFrame):
 	def SetSettings(self, config):
 		if self.frame.pynotify is not None:
 			self.ShowNotification.set_sensitive(True)
+			self.ShowNotificationPerFolder.set_sensitive(True)
 		else:
 			self.ShowNotification.set_sensitive(False)
+			self.ShowNotificationPerFolder.set_sensitive(False)
 		self.p.SetWidgetsData(config, self.options)
 		
 			
@@ -1559,6 +1561,7 @@ class EventsFrame(settings_glade.EventsFrame):
 		return {
 			"transfers": {
 				"shownotification" : self.ShowNotification.get_active(),
+				"shownotificationperfolder": self.ShowNotificationPerFolder.get_active(),
 				"afterfinish": self.AfterDownload.get_text(),
 				"afterfolder": self.AfterFolder.get_text(),
 				"download_doubleclick": self.DownloadDoubleClick.get_active(),

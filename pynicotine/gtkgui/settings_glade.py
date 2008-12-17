@@ -2613,6 +2613,12 @@ class EventsFrame:
 		self.AfterDownload.show()
 		self.vbox96.pack_start(self.AfterDownload, False, False, 0)
 
+		self.ShowNotificationPerFolder = gtk.CheckButton()
+		self.ShowNotificationPerFolder.set_label(_("Show notification popup in tray after each folder\n(requires python-notify and notification-daemon)"))
+		self.ShowNotificationPerFolder.show()
+
+		self.vbox96.pack_start(self.ShowNotificationPerFolder, False, True, 0)
+
 		self.label215 = gtk.Label(_("Run command after folder finishes ($ for folder path):"))
 		self.label215.set_alignment(0, 0.50)
 		self.label215.set_size_request(48, -1)
