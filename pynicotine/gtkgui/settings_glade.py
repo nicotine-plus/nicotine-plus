@@ -2597,11 +2597,22 @@ class EventsFrame:
 		self.vbox96.set_spacing(10)
 		self.vbox96.set_border_width(5)
 
+		self.label296 = gtk.Label(_("Show notification popup in tray after... (requires python-notify and notification-daemon)"))
+		self.label296.set_alignment(0, 0.50)
+		self.label296.show()
+		self.vbox96.pack_start(self.label296, False, False, 0)
+
 		self.ShowNotification = gtk.CheckButton()
-		self.ShowNotification.set_label(_("Show notification popup in tray after each download\n(requires python-notify and notification-daemon)"))
+		self.ShowNotification.set_label(_("...each file"))
 		self.ShowNotification.show()
 
 		self.vbox96.pack_start(self.ShowNotification, False, True, 0)
+
+		self.ShowNotificationPerFolder = gtk.CheckButton()
+		self.ShowNotificationPerFolder.set_label(_("...each directory"))
+		self.ShowNotificationPerFolder.show()
+
+		self.vbox96.pack_start(self.ShowNotificationPerFolder, False, True, 0)
 
 		self.label214 = gtk.Label(_("Run command after download finishes ($ for filename):"))
 		self.label214.set_alignment(0, 0.50)
@@ -2612,12 +2623,6 @@ class EventsFrame:
 		self.AfterDownload.set_size_request(313, -1)
 		self.AfterDownload.show()
 		self.vbox96.pack_start(self.AfterDownload, False, False, 0)
-
-		self.ShowNotificationPerFolder = gtk.CheckButton()
-		self.ShowNotificationPerFolder.set_label(_("Show notification popup in tray after each folder\n(requires python-notify and notification-daemon)"))
-		self.ShowNotificationPerFolder.show()
-
-		self.vbox96.pack_start(self.ShowNotificationPerFolder, False, True, 0)
 
 		self.label215 = gtk.Label(_("Run command after folder finishes ($ for folder path):"))
 		self.label215.set_alignment(0, 0.50)
