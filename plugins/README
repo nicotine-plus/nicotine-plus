@@ -1,9 +1,12 @@
 README Concerning plugins for N+
 
+
 FOR EVERYBODY
 
 The plugin system is in its infant stage, a lot of things aren't implemented yet
-and a few things might be buggy.
+and a few things might be buggy. The provided plugins should be regarder as
+documentation and shouldn't be loaded unless you're willing to break things.
+
 
 FOR END USERS
 
@@ -13,9 +16,10 @@ will be loaded upon startup, and can be reloaded with /reload. This reload
 command does not always completely reload the plugins due to the way Python
 works, in some cases a restart of N+ is needed to get new versions working.
 
+
 FOR DEVELOPERS
 
-There are two kinds of actinos you can hook into:
+There are two kinds of actions you can hook into:
 
 - Events: gives the plugin the ability to alter things. These are time
   critical, plugins should finish their execution as fast as possible. Let me
