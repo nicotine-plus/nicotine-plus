@@ -24,11 +24,11 @@ end tell """
 
     def MyPublicCommand(self, room, args):
         # We'll fork the osascript since it' slow as hell
-        start_new_thread(self.spam, (self.saypublic,room))
+        start_new_thread(self.spam, (self.saypublic, room))
         return returncode['zap']
     def MyPrivateCommand(self, user, args):
         # We'll fork the osascript since it' slow as hell
-        start_new_thread(self.spam, (self.sayprivate,user))
+        start_new_thread(self.spam, (self.sayprivate, user))
         return returncode['zap']
     def spam(self, callbackfunc, destination):
         self.log("Probing iTunes...")
