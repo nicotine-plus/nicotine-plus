@@ -1,12 +1,16 @@
 ChangeLog for Nicotine Plus
 
-SVN 
+1.2.10 (30 December 2008)
 
 Features
  * Added support for RGBA, enabling Murrine users to use transparency and round menus
+ * Tabs can be reorderen and can be hidden
 
 Bugs
+ * Fixed bug #177, notification popups are now split into file and directory notifications
  * Fixed bug #274, cancelling and disowning private rooms bug (fr3shpr1nc3)
+ * Fixed bug #226, file size dropdown in search filters are more readable now
+ * Fixed bug #310, activity icon no longer activates on our own typing
  * Timestamps in private messages now are displayed correctly 
  * Room searches work again (was broken in 1.2.10alpha)
 
