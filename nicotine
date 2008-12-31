@@ -28,7 +28,7 @@ import sys
 win32 = sys.platform.startswith("win")
 # Detect if we're running a packed exe created with py2exe
 py2exe = False
-if win32 and hasattr(sys, 'importers'):
+if win32 and hasattr(sys, 'frozen'):
 	py2exe = True
 	
 # Disable py2exe log feature by routing stdout/sterr to the special nul file
