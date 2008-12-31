@@ -163,6 +163,12 @@ http://www.nicotine-plus.org/newticket""")
 
 if __name__ == '__main__':
 	import locale
+	# Win32 hack to fix LANG and LC_ALL environnment variables with unix compliant language code
+	# See pynicotine/libi18n.py
+	if win32:
+		import pynicotine.libi18n
+		pynicotine.libi18n.fix_locale()
+		del pynicotine.libi18n
 	try:
 		locale.setlocale(locale.LC_ALL, '')
 	except:
