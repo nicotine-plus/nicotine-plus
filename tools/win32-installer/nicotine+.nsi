@@ -41,7 +41,6 @@ Section "Core" Core
   SetOverwrite on
   SetOutPath "$INSTDIR"
   File /r "dist\"
-  File "data\disable_log"
 SectionEnd
 
 Function ShortCuts
