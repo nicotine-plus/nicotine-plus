@@ -68,6 +68,15 @@ def ChangeTranslation(lang):
 	try:
 		langTranslation = gettext.translation('nicotine', languages=[language])
 		langTranslation.install()
+		# We need to force LANG/LC_ALL env variables to get buttons translated as well
+		# On Win32 we can't use os.environ, see pynicotine/libi18n.py
+		if win32:
+			import libi18n
+			libi18n._putenv('PATH',language)
+			libi18n._putenv('LC_ALL',language)
+		else:
+			os.environ['LANG'] = language
+			os.environ['LC_ALL'] = language
 	except IOError, e:
 		message = _("Translation not found for '%s': %s") % (language, e)
 		langTranslation = gettext
