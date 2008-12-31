@@ -24,10 +24,15 @@ daelstorm@gmail.com
 import platform, os
 import sys
 
+# Detect if we're running on Windows
 win32 = sys.platform.startswith("win")
-
+# Detect if we're running a packed exe created with py2exe
+py2exe = False
+if win32 and hasattr(sys, 'importers'):
+	py2exe = True
+	
 # Disable py2exe log feature by routing stdout/sterr to the special nul file
-if win32 and os.path.exists("disable_log"):
+if win32 and py2exe:
 	sys.stdout = open("nul", "w")
 	sys.stderr = open("nul", "w")
 
@@ -71,24 +76,24 @@ in an interpreter's module search path.
 what version of python was used to build the Nicotine 
 binary package and what you try to run Nicotine with.)""")
 
-    # EEK! Scary Win32 stuff
-	if win32:
+	# Windows stuff: detect GTK dll's path and add it to %PATH% if we're not running a py2exe package
+	if win32 and not py2exe:
 		# Fetchs gtk2 path from registry
-		try: import dbhash
-		except: print _("Warning: the Berkeley DB module, dbhash, could not be loaded.")
 		import _winreg
-		import msvcrt
 		try:
 			k = _winreg.OpenKey(_winreg.HKEY_LOCAL_MACHINE, "Software\\GTK\\2.0")
 		except EnvironmentError:
-			print _("You must install the Gtk+ 2.2 Runtime Environment to run this program")
-			while not msvcrt.kbhit():
-				pass
+			print _("You must install the Gtk+ 2.x Runtime Environment to run this program")
 			sys.exit(1)
 		else:
 			gtkdir = _winreg.QueryValueEx(k, "Path")
+			print "GTK DLLs found at %s" % (gtkdir[0])
 			import os
 			os.environ['PATH'] += ";%s/lib;%s/bin" % (gtkdir[0], gtkdir[0])
+
+	if win32:
+		try: import dbhash
+		except: print _("Warning: the Berkeley DB module, dbhash, could not be loaded.")
 
 	try:
 		if win32:
