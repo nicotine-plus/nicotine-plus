@@ -75,15 +75,27 @@ def ChangeTranslation(lang):
 		message = _("Translation was corrupted for '%s': %s") % (language, e)
 		langTranslation = gettext
 	else:
-		# We need to force LANG/LC_ALL env variables to get buttons translated as well
-		# On Win32 we can't use os.environ, see pynicotine/libi18n.py
+		# We need to force LC_ALL env variable to get buttons translated as well
+		# On Windows we can't use os.environ, see pynicotine/libi18n.py
 		if win32:
 			import libi18n
-			libi18n._putenv('PATH',language)
 			libi18n._putenv('LC_ALL',language)
+			del libi18n
+		# The Unix part is quite funny too...
 		else:
-			os.environ['LANG'] = language
-			os.environ['LC_ALL'] = language
+			import locale
+			# Let's try to force the locale with the right lang
+			# locale.normalize will return bla_BLA.USUAL_ENCODINGS, so we first want to try to use unicode
+			try:
+				locale.setlocale(locale.LC_ALL, locale.normalize(language).split('.')[0]+'.UTF-8')
+			except locale.Error, e:
+				# If it fails we'll trust normalize() and use its encoding
+				try:
+					locale.setlocale(locale.LC_ALL, locale.normalize(language))
+				# Sorry, please generate the right locales
+				except locale.Error, e:
+					message = _("Force lang failed: '%s' (%s and %s tested)" ) % (e, locale.normalize(language).split('.')[0]+'.UTF-8', locale.normalize(language))
+			del locale
 	return message
 ChangeTranslation(language)
 # Translation Function
