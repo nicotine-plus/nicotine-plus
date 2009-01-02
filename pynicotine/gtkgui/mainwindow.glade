@@ -713,6 +713,21 @@
                       </widget>
                     </child>
                     <child>
+                      <widget class="GtkImageMenuItem" id="report_bug">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Report a _bug</property>
+                        <property name="use_underline">True</property>
+                        <signal name="activate" handler="OnReportBug"/>
+                        <child internal-child="image">
+                          <widget class="GtkImage" id="image364">
+                            <property name="visible">True</property>
+                            <property name="stock">gtk-connect</property>
+                            <property name="icon_size">1</property>
+                          </widget>
+                        </child>
+                      </widget>
+                    </child>
+                    <child>
                       <widget class="GtkSeparatorMenuItem" id="scheidingslijn7">
                         <property name="visible">True</property>
                       </widget>

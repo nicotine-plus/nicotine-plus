@@ -456,6 +456,14 @@ class MainWindow:
 		self.check_latest1.set_image(img)
 		self.help1_menu.append(self.check_latest1)
 
+		self.report_bug = gtk.ImageMenuItem(_("Report a _bug"))
+		self.report_bug.show()
+		self.report_bug.connect("activate", self.OnReportBug)
+
+		img = gtk.image_new_from_stock(gtk.STOCK_CONNECT, gtk.ICON_SIZE_MENU)
+		self.report_bug.set_image(img)
+		self.help1_menu.append(self.report_bug)
+
 		self.scheidingslijn7 = gtk.MenuItem()
 		self.scheidingslijn7.show()
 
@@ -1790,6 +1798,9 @@ class MainWindow:
 		pass
 
 	def OnCheckLatest(self, widget):
+		pass
+
+	def OnReportBug(self, widget):
 		pass
 
 	def OnAbout(self, widget):

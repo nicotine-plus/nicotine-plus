@@ -32,6 +32,7 @@ import thread
 import urllib
 import signal
 import re
+import webbrowser
 from privatechat import PrivateChats
 from chatrooms import ChatRooms
 from userinfo import UserTabs, UserInfo
@@ -2374,7 +2375,8 @@ class NicotineFrame(MainWindow):
 		
 	def OnCheckLatest(self, widget):
 		checklatest(self.MainWindow)
-
+	def OnReportBug(self, widget):
+		webbrowser.open('http://www.nicotine-plus.org/newticket', autoraise=True)
 	def OnFocusIn(self, widget, event):
 		self.MainWindow.set_icon(self.images["n"])
 		self.got_focus = True
