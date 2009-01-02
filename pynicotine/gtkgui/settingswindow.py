@@ -1,3 +1,4 @@
+# coding=utf-8
 # Copyright (C) 2007 daelstorm. All rights reserved.
 #
 # This program is free software: you can redistribute it and/or modify
@@ -1280,6 +1281,21 @@ class NotebookFrame(settings_glade.NotebookFrame):
 
 	
 class BloatFrame(settings_glade.BloatFrame):
+	languagelookup = {
+			'Dansk (Danish)':'da',
+			'Deutsch (German)':'de',
+			'Español (Spanish)':'es',
+			'Euskara (Bask)':'eu',
+			'Français (French)':'fr',
+			'Italiano (Italian)':'it',
+			'Lietuvių kalba (Lithuanian)':'lt',
+			'Magyar nyelv (Hungarian)':'hu',
+			'Nederlands (Dutch)':'nl',
+			'Polszczyzna (Polish)':'pl',
+			'Português brasileiro (Brazilian Portuguese)':'pt_BR',
+			'Slovenčina (Slovak)':'sk',
+			'Svenska (Swedish)':'sv',
+			'Suomi (Finnish)':'fi',}
 	def __init__(self, parent):
 		self.p = parent
 		self.frame = parent.frame
@@ -1291,12 +1307,12 @@ class BloatFrame(settings_glade.BloatFrame):
 			"transfers": {"enabletransferbuttons": self.ShowTransferButtons},
 			"language": {"setlanguage": self.TranslationCheck, "language": self.TranslationComboEntry},
 			}
-
+    
 		for item in ["<None>", ",", ".", "<space>"]:
 			self.DecimalSep.append_text(item)
 
-		for item in ["", "de", "dk", "fi", "fr",  "hu", "it", "lt", "nl", "pl", "pt_BR", "sk", "sv" ]:
-			self.TranslationCombo.append_text(item)
+		for i in self.languagelookup:
+			self.TranslationCombo.append_text(i)
 		
 		self.DefaultFont.connect("clicked", self.OnDefaultFont)
 		self.SelectChatFont.connect("font-set", self.FontsColorsChanged)
@@ -1332,9 +1348,9 @@ class BloatFrame(settings_glade.BloatFrame):
 		try:
 			import gettext
 			message = ""
-			language = self.TranslationComboEntry.get_text()
-			if language != "":
-				langTranslation = gettext.translation('nicotine', languages=[language])
+			if self.TranslationCheck.get_active():
+				language = self.TranslationComboEntry.get_text()
+				langTranslation = gettext.translation('nicotine', languages=[self.languagelookup[language]])
 				langTranslation.install()
 		except IOError, e:
 			message = _("Translation not found for '%s': %s") % (language, e)
