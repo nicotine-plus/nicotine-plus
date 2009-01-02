@@ -67,6 +67,10 @@ class TransferList:
 		cols[7].set_sort_column_id(7)
 		cols[8].set_sort_column_id(8)
 		
+		self.transfersmodel.set_sort_func(10, self.progress_sort_func, 3)
+		#self.transfersmodel.set_sort_func(11, self.progress_sort_func, 11)
+		#self.transfersmodel.set_sort_func(12, self.progress_sort_func, 12)
+		#self.transfersmodel.set_sort_func(13, self.progress_sort_func, 13)
 		self.transfersmodel.set_sort_func(5, float_sort_func, 5)
 		#self.frame.CreateIconButton(gtk.STOCK_INDENT, "stock", self.OnToggleTree, "Group by Users")
 		#self.hbox1.pack_end(self.ToggleTree, False, False)
@@ -118,10 +122,25 @@ class TransferList:
 				return -len(self.status_tab)
 	
 	def status_sort_func(self, model, iter1, iter2, column):
-		val1 = self.get_status_index(model.get_value(iter1, 2))
-		val2 = self.get_status_index(model.get_value(iter2, 2))
+		val1 = self.get_status_index(model.get_value(iter1, column))
+		val2 = self.get_status_index(model.get_value(iter2, column))
 		return cmp(val1, val2)
-	
+	def progress_sort_func(self, model, iter1, iter2, column):
+		# We want 0% to be always below anything else,
+		# so we have to look up whether we are ascending or descending
+		ascending = True
+		if model.get_sort_column_id()[1] == gtk.SORT_DESCENDING:
+			ascending = False
+		val1 = self.get_status_index(model.get_value(iter1, column))
+		val2 = self.get_status_index(model.get_value(iter2, column))
+		if val1 == 0 and val2 == 0:
+			return 0
+		if val1 == 0:
+			return -1 + (ascending * 2)
+		if val2 == 0:
+			return 1 - (ascending * 2)
+		return cmp(val1, val2)
+
 	def InitInterface(self, list):
 		self.list = list
 		self.update()
