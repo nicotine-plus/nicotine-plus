@@ -1336,15 +1336,16 @@ class BloatFrame(settings_glade.BloatFrame):
 		ui = config["ui"]
 		transfers = config["transfers"]
 		language = config["language"]
+		self.SpellCheck.set_sensitive(self.frame.SEXY)
+		
+		self.p.SetWidgetsData(config, self.options)
+
 		for name, code in self.languagelookup.iteritems():
 			if language['language'] == code:
 				language['language'] == name
 				break
 		else:
 			language['language'] = self.languagelookup.keys()[0]
-		self.SpellCheck.set_sensitive(self.frame.SEXY)
-		
-		self.p.SetWidgetsData(config, self.options)
 
 		self.OnTranslationCheckToggled(self.TranslationCheck)
 
@@ -1355,7 +1356,9 @@ class BloatFrame(settings_glade.BloatFrame):
 			import gettext
 			message = ""
 			if self.TranslationCheck.get_active():
-				language = self.languagelookup[self.TranslationComboEntry.get_text()]
+				language = self.TranslationComboEntry.get_text()
+				if language not in self.languagelookup.values():
+					language = self.languagelookup[self.TranslationComboEntry.get_text()]
 				langTranslation = gettext.translation('nicotine', languages=[language])
 				langTranslation.install()
 		except IOError, e:
@@ -1364,9 +1367,12 @@ class BloatFrame(settings_glade.BloatFrame):
 		except IndexError, e:
 			message = _("Translation was corrupted for '%s': %s") % (language, e)
 			langTranslation = gettext
+		except KeyError, e:
+			message = _("Lookup failed for '%(language)s': %(error)s") % {'language':language, 'error':e}
+			langTranslation = gettext
 		if message is not None and message != "":
 			popupWarning(self.p.SettingsWindow, _("Warning: Missing translation"), _("Nicotine+ could not find your selected translation.\n%s") % message, self.frame.images["n"] )
-			raise UserWarning
+			#raise UserWarning
 	
 		return {
 			"ui": {
