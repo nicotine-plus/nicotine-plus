@@ -235,7 +235,7 @@
                 <property name="visible">True</property>
                 <child internal-child="entry">
                   <widget class="GtkEntry" id="FilterInEntry">
-                    <property name="tooltip" translatable="yes">. = any character, * = 0 or more of the proceeding character, | = seperator, [a-zA-Z] = any single latin character</property>
+                    <property name="tooltip" translatable="yes">. = any character, * = 0 or more of the proceeding character, | = separator, [a-zA-Z] = any single Latin character</property>
                     <signal name="activate" handler="OnRefilter"/>
                   </widget>
                 </child>

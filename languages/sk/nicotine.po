@@ -501,7 +501,7 @@ msgid "Filter in:"
 msgstr "Obsiahnutý text:"
 
 #: pynicotine/gtkgui/nicotine_glade.py:2184
-msgid ". = any character, * = 0 or more of the proceeding character, | = seperator, [a-zA-Z] = any single latin character"
+msgid ". = any character, * = 0 or more of the proceeding character, | = separator, [a-zA-Z] = any single Latin character"
 msgstr ". = ľubovoľný znak, * = 0 alebo viac predchádzajúcich znakov, | = oddeľovač, [a-zA-Z] = ľubovoľný samostatný znak latinky"
 
 #: pynicotine/gtkgui/nicotine_glade.py:2191
@@ -1091,7 +1091,7 @@ msgid "I can receive direct connections"
 msgstr "Môžem prijímať priame spojenia"
 
 #: pynicotine/gtkgui/settings_glade.py:152
-msgid "(only use if the above ports are remotely accessable)"
+msgid "(only use if the above ports are remotely accessible)"
 msgstr "(použite iba ak horeuvedené porty budú nedostupné)"
 
 #: pynicotine/gtkgui/settings_glade.py:161
@@ -1394,7 +1394,7 @@ msgid "Browse Font:"
 msgstr "Font pre prehliadač:"
 
 #: pynicotine/gtkgui/settings_glade.py:1387
-msgid "Decimal seperator:"
+msgid "Decimal separator:"
 msgstr "Desatinný oddeľovač:"
 
 #: pynicotine/gtkgui/settings_glade.py:1419
@@ -3473,7 +3473,7 @@ msgstr "Začať nové vyhľadávanie na 'dotaz'"
 
 #: pynicotine/gtkgui/about.py:439
 #: pynicotine/gtkgui/about.py:484
-msgid "Search the joined roms for 'query'"
+msgid "Search the joined rooms for 'query'"
 msgstr "Prehľadávať aktuálne miestnosti na výskyt dotazu"
 
 #: pynicotine/gtkgui/about.py:440

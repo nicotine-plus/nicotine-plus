@@ -436,7 +436,7 @@ class AboutRoomsDialog(GenericTableDialog):
 		"", "",
 		"<b>"+_("Search")+"</b>", "",
 		"/search /s '" + _("query")+"'", _("Start a new search for 'query'"),
-		"/rsearch /rs '" + _("query")+"'", _("Search the joined roms for 'query'"),
+		"/rsearch /rs '" + _("query")+"'", _("Search the joined rooms for 'query'"),
 		"/bsearch /bs '" + _("query")+"'", _("Search the buddy list for 'query'"),
 		"/usearch /us '" + _("user")+"' '" + _("query")+"'", _("Search a user's shares for 'query'"),
 		"", "",

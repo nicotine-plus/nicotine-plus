@@ -148,7 +148,7 @@ class SearchTab:
 		self.FilterIn.show()
 
 		self.FilterInEntry = self.FilterIn.child
-		self.tooltips.set_tip(self.FilterInEntry, _(". = any character, * = 0 or more of the proceeding character, | = seperator, [a-zA-Z] = any single latin character"))
+		self.tooltips.set_tip(self.FilterInEntry, _(". = any character, * = 0 or more of the proceeding character, | = separator, [a-zA-Z] = any single Latin character"))
 		self.FilterInEntry.connect("activate", self.OnRefilter)
 
 		self.FilterIn.set_model(self.FilterIn_List)

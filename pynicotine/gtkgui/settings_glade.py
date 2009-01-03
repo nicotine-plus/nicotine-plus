@@ -153,7 +153,7 @@ class ServerFrame:
 
 		self.ServerVbox.pack_start(self.DirectConnection, False, False, 0)
 
-		self.label271 = gtk.Label(_("(only use if the above ports are remotely accessable)"))
+		self.label271 = gtk.Label(_("(only use if the above ports are remotely accessible)"))
 		self.label271.set_alignment(0, 0)
 		self.label271.show()
 		self.ServerVbox.pack_start(self.label271, False, False, 0)
@@ -1337,7 +1337,7 @@ class BloatFrame:
 		self.hbox182.show()
 		self.hbox182.set_spacing(5)
 
-		self.label213 = gtk.Label(_("Decimal seperator:"))
+		self.label213 = gtk.Label(_("Decimal separator:"))
 		self.label213.set_alignment(0, 0.50)
 		self.label213.show()
 		self.hbox182.pack_start(self.label213, False, True, 0)

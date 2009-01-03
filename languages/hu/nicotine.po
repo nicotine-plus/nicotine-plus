@@ -499,7 +499,7 @@ msgid "Filter in:"
 msgstr "Beszűrés:"
 
 #: pynicotine/gtkgui/nicotine_glade.py:2184
-msgid ". = any character, * = 0 or more of the proceeding character, | = seperator, [a-zA-Z] = any single latin character"
+msgid ". = any character, * = 0 or more of the proceeding character, | = separator, [a-zA-Z] = any single Latin character"
 msgstr ". = bármely karakter, * = 0 vagy több egymásutáni karakter, | = elválasztó, [a-zA-Z] = bármely egyszerű latin karakter"
 
 #: pynicotine/gtkgui/nicotine_glade.py:2191
@@ -1089,7 +1089,7 @@ msgid "I can receive direct connections"
 msgstr "Közvetlen kapcsolatot tudok fogadni"
 
 #: pynicotine/gtkgui/settings_glade.py:152
-msgid "(only use if the above ports are remotely accessable)"
+msgid "(only use if the above ports are remotely accessible)"
 msgstr "(csak akkor használd, ha a fenti portok hozzáférhetőek)"
 
 #: pynicotine/gtkgui/settings_glade.py:161
@@ -1392,7 +1392,7 @@ msgid "Browse Font:"
 msgstr "Tallózás Betűtípusa:"
 
 #: pynicotine/gtkgui/settings_glade.py:1387
-msgid "Decimal seperator:"
+msgid "Decimal separator:"
 msgstr "Tizedesvessző elválasztó:"
 
 #: pynicotine/gtkgui/settings_glade.py:1419
@@ -3469,7 +3469,7 @@ msgstr "Új keresés indítása 'kérés' kéréshez"
 
 #: pynicotine/gtkgui/about.py:439
 #: pynicotine/gtkgui/about.py:484
-msgid "Search the joined roms for 'query'"
+msgid "Search the joined rooms for 'query'"
 msgstr "'kérés' keresése a belépett szobákban"
 
 #: pynicotine/gtkgui/about.py:440

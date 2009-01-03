@@ -27,6 +27,7 @@ Solution:
                 -rw-r--r--  1 gentoo staff  2946 2008-11-14 20:41 pygtk.py-2.0
             Overwrite the pygtk.py symlink with the pygtk.py-2.0 file
     Make sure you revert the changes after nicotine+ is packed, otherwise stuff will break down fast.
+    This *also* means you need to rename nicotine to nicotine.py if you ever want to be able to create an .app
 
 Problem:
     Unknown load command: 27

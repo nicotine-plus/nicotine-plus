@@ -516,8 +516,8 @@ msgstr "Zawiera:"
 
 #: pynicotine/gtkgui/nicotine_glade.py:2184
 msgid ""
-". = any character, * = 0 or more of the proceeding character, | = seperator, "
-"[a-zA-Z] = any single latin character"
+". = any character, * = 0 or more of the proceeding character, | = separator, "
+"[a-zA-Z] = any single Latin character"
 msgstr ""
 
 #: pynicotine/gtkgui/nicotine_glade.py:2191
@@ -1029,7 +1029,7 @@ msgid "I can receive direct connections"
 msgstr "Mogę przyjmować połączenia bezpośrednie"
 
 #: pynicotine/gtkgui/settings_glade.py:152
-msgid "(only use if the above ports are remotely accessable)"
+msgid "(only use if the above ports are remotely accessible)"
 msgstr "(używaj wyłącznie gdy powyższe porty są dostępne zdalnie)"
 
 #: pynicotine/gtkgui/settings_glade.py:161
@@ -1354,7 +1354,7 @@ msgid "Browse Font:"
 msgstr "Przeglądaj"
 
 #: pynicotine/gtkgui/settings_glade.py:1387
-msgid "Decimal seperator:"
+msgid "Decimal separator:"
 msgstr "Separator miejsc po przecinku:"
 
 #: pynicotine/gtkgui/settings_glade.py:1419
@@ -3356,7 +3356,7 @@ msgid "Start a new search for 'query'"
 msgstr "Rozpocznij na nowo szukanie: 'hasła'"
 
 #: pynicotine/gtkgui/about.py:439 pynicotine/gtkgui/about.py:484
-msgid "Search the joined roms for 'query'"
+msgid "Search the joined rooms for 'query'"
 msgstr "Szukaj 'hasła' na kanałach na których jesteś"
 
 #: pynicotine/gtkgui/about.py:440 pynicotine/gtkgui/about.py:485

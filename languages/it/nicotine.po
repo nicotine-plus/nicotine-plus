@@ -610,8 +610,8 @@ msgstr "Filtro in:"
 
 #: pynicotine/gtkgui/nicotine_glade.py:2184
 msgid ""
-". = any character, * = 0 or more of the proceeding character, | = seperator, "
-"[a-zA-Z] = any single latin character"
+". = any character, * = 0 or more of the proceeding character, | = separator, "
+"[a-zA-Z] = any single Latin character"
 msgstr ""
 
 # pynicotine/gtkgui/nicotine_glade.py
@@ -1314,7 +1314,7 @@ msgid "I can receive direct connections"
 msgstr "Posso ricevere connessioni dirette"
 
 #: pynicotine/gtkgui/settings_glade.py:152
-msgid "(only use if the above ports are remotely accessable)"
+msgid "(only use if the above ports are remotely accessible)"
 msgstr "(usa queste porte solo se sono accessibili dall'esterno)"
 
 # pynicotine/gtkgui/settings_glade.py
@@ -1681,7 +1681,7 @@ msgstr "Sfoglia"
 
 # pynicotine/gtkgui/settings_glade.py
 #: pynicotine/gtkgui/settings_glade.py:1387
-msgid "Decimal seperator:"
+msgid "Decimal separator:"
 msgstr "Separatore di decimali:"
 
 #: pynicotine/gtkgui/settings_glade.py:1419
@@ -3948,7 +3948,7 @@ msgstr "Comincia una nuova ricerca per 'interrogazione'"
 
 # pynicotine/gtkgui/about.py
 #: pynicotine/gtkgui/about.py:439 pynicotine/gtkgui/about.py:484
-msgid "Search the joined roms for 'query'"
+msgid "Search the joined rooms for 'query'"
 msgstr "Cerca nelle stanze la 'interrogazione'"
 
 # pynicotine/gtkgui/about.py
