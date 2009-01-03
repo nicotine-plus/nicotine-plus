@@ -1351,12 +1351,11 @@ class BloatFrame(settings_glade.BloatFrame):
 
 
 	def GetSettings(self):
-		
+		language = self.TranslationComboEntry.get_text()
 		try:
 			import gettext
 			message = ""
 			if self.TranslationCheck.get_active():
-				language = self.TranslationComboEntry.get_text()
 				if language not in self.languagelookup.values():
 					language = self.languagelookup[self.TranslationComboEntry.get_text()]
 				langTranslation = gettext.translation('nicotine', languages=[language])
