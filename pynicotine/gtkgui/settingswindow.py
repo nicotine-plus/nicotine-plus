@@ -1372,7 +1372,7 @@ class BloatFrame(settings_glade.BloatFrame):
 			langTranslation = gettext
 		if message is not None and message != "":
 			popupWarning(self.p.SettingsWindow, _("Warning: Missing translation"), _("Nicotine+ could not find your selected translation.\n%s") % message, self.frame.images["n"] )
-			#raise UserWarning
+			raise UserWarning
 	
 		return {
 			"ui": {
@@ -1390,7 +1390,7 @@ class BloatFrame(settings_glade.BloatFrame):
 			},
 			"language": {
 				"setlanguage": self.TranslationCheck.get_active(),
-				"language": self.languagelookup[self.TranslationComboEntry.get_text()],
+				"language": language,
 			}
 		}
 		
