@@ -1307,13 +1307,13 @@ class BloatFrame(settings_glade.BloatFrame):
 			"transfers": {"enabletransferbuttons": self.ShowTransferButtons},
 			"language": {"setlanguage": self.TranslationCheck, "language": self.TranslationComboEntry},
 			}
-    
+		
 		for item in ["<None>", ",", ".", "<space>"]:
 			self.DecimalSep.append_text(item)
 
 		for i in self.languagelookup:
 			self.TranslationCombo.append_text(i)
-		
+
 		self.DefaultFont.connect("clicked", self.OnDefaultFont)
 		self.SelectChatFont.connect("font-set", self.FontsColorsChanged)
 		
@@ -1336,6 +1336,12 @@ class BloatFrame(settings_glade.BloatFrame):
 		ui = config["ui"]
 		transfers = config["transfers"]
 		language = config["language"]
+		for name, code in self.languagelookup.iteritems():
+			if language['language'] == code:
+				language['language'] == name
+				break
+		else:
+			language['language'] = self.languagelookup.keys()[0]
 		self.SpellCheck.set_sensitive(self.frame.SEXY)
 		
 		self.p.SetWidgetsData(config, self.options)
@@ -1349,8 +1355,8 @@ class BloatFrame(settings_glade.BloatFrame):
 			import gettext
 			message = ""
 			if self.TranslationCheck.get_active():
-				language = self.TranslationComboEntry.get_text()
-				langTranslation = gettext.translation('nicotine', languages=[self.languagelookup[language]])
+				language = self.languagelookup[self.TranslationComboEntry.get_text()]
+				langTranslation = gettext.translation('nicotine', languages=[language])
 				langTranslation.install()
 		except IOError, e:
 			message = _("Translation not found for '%s': %s") % (language, e)
@@ -1378,7 +1384,7 @@ class BloatFrame(settings_glade.BloatFrame):
 			},
 			"language": {
 				"setlanguage": self.TranslationCheck.get_active(),
-				"language": self.TranslationComboEntry.get_text(),
+				"language": self.languagelookup[self.TranslationComboEntry.get_text()],
 			}
 		}
 		
