@@ -7108,7 +7108,7 @@ typed incorrectly or as an acronym</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                        <property name="label" translatable="yes">Complete rooms names in chat rooms</property>
+                        <property name="label" translatable="yes">Complete room names in chat rooms</property>
                         <property name="response_id">0</property>
                         <property name="draw_indicator">True</property>
                       </widget>
@@ -7121,7 +7121,7 @@ typed incorrectly or as an acronym</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                        <property name="label" translatable="yes">Complete Buddys' Names</property>
+                        <property name="label" translatable="yes">Complete Buddy Names</property>
                         <property name="response_id">0</property>
                         <property name="draw_indicator">True</property>
                       </widget>

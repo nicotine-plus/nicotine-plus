@@ -1987,11 +1987,11 @@ msgid "Enable tab-key completion"
 msgstr ""
 
 #: pynicotine/gtkgui/settings_glade.py:4294
-msgid "Complete rooms names in chat rooms"
+msgid "Complete room names in chat rooms"
 msgstr ""
 
 #: pynicotine/gtkgui/settings_glade.py:4300
-msgid "Complete Buddys' Names"
+msgid "Complete Buddy Names"
 msgstr ""
 
 #: pynicotine/gtkgui/settings_glade.py:4306

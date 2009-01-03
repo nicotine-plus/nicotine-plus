@@ -4849,11 +4849,11 @@ msgid "Enable tab-key completion"
 msgstr "Activer la touche TAB pour l'autocomplétion"
 
 #: pynicotine/gtkgui/settings_glade.py:4318
-msgid "Complete rooms names in chat rooms"
+msgid "Complete room names in chat rooms"
 msgstr "compléter les nom des salons dans les salons de discution"
 
 #: pynicotine/gtkgui/settings_glade.py:4324
-msgid "Complete Buddys' Names"
+msgid "Complete Buddy Names"
 msgstr "Compléter les noms d'Amis en liste"
 
 #: pynicotine/gtkgui/settings_glade.py:4330

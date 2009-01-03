@@ -1953,11 +1953,11 @@ msgid "Enable tab-key completion"
 msgstr "Įjungti užbaigimą Tab klavišu"
 
 #: pynicotine/gtkgui/settings_glade.py:4294
-msgid "Complete rooms names in chat rooms"
+msgid "Complete room names in chat rooms"
 msgstr "Užbaigti kambarių pavadinimus pokalbių kambariuose"
 
 #: pynicotine/gtkgui/settings_glade.py:4300
-msgid "Complete Buddys' Names"
+msgid "Complete Buddy Names"
 msgstr "Užbaigti bičiulių vardus"
 
 #: pynicotine/gtkgui/settings_glade.py:4306

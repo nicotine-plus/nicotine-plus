@@ -1971,11 +1971,11 @@ msgid "Enable tab-key completion"
 msgstr "Povoliť doplňovanie textu tabulátorom"
 
 #: pynicotine/gtkgui/settings_glade.py:4294
-msgid "Complete rooms names in chat rooms"
+msgid "Complete room names in chat rooms"
 msgstr "Doplňovať názvy miestností v chatovacích miestnostiach"
 
 #: pynicotine/gtkgui/settings_glade.py:4300
-msgid "Complete Buddys' Names"
+msgid "Complete Buddy Names"
 msgstr "Doplňovať mená kamarátov"
 
 #: pynicotine/gtkgui/settings_glade.py:4306

@@ -1967,11 +1967,11 @@ msgid "Enable tab-key completion"
 msgstr "Kiegészítés engedélyezése Tab-bal"
 
 #: pynicotine/gtkgui/settings_glade.py:4294
-msgid "Complete rooms names in chat rooms"
+msgid "Complete room names in chat rooms"
 msgstr "Szobanevek kieészítése a chatszobákban"
 
 #: pynicotine/gtkgui/settings_glade.py:4300
-msgid "Complete Buddys' Names"
+msgid "Complete Buddy Names"
 msgstr "Cimbik nevének kiegészítése"
 
 #: pynicotine/gtkgui/settings_glade.py:4306
