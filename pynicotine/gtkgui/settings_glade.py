@@ -1382,7 +1382,7 @@ class BloatFrame:
 
 		self.TranslationComboEntry = self.TranslationCombo.child
 		self.TranslationComboEntry.show()
-		self.TranslationComboEntry.set_width_chars(5)
+		self.TranslationComboEntry.set_width_chars(25)
 
 		self.TranslationCombo.set_model(self.TranslationCombo_List)
 		self.TranslationCombo.set_text_column(0)
