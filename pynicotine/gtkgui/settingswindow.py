@@ -1281,38 +1281,39 @@ class NotebookFrame(settings_glade.NotebookFrame):
 
 	
 class BloatFrame(settings_glade.BloatFrame):
-	languagelookup = {
-			'Dansk (Danish)':'da',
-			'Deutsch (German)':'de',
-			'Español (Spanish)':'es',
-			'Euskara (Bask)':'eu',
-			'Français (French)':'fr',
-			'Italiano (Italian)':'it',
-			'Lietuvių kalba (Lithuanian)':'lt',
-			'Magyar nyelv (Hungarian)':'hu',
-			'Nederlands (Dutch)':'nl',
-			'Polszczyzna (Polish)':'pl',
-			'Português brasileiro (Brazilian Portuguese)':'pt_BR',
-			'Slovenčina (Slovak)':'sk',
-			'Svenska (Swedish)':'sv',
-			'Suomi (Finnish)':'fi',}
+	languagelookup = [
+			('Dansk (Danish)','da'),
+			('Deutsch (German)','de'),
+			('Español (Spanish)','es'),
+			('Euskara (Bask)','eu'),
+			('Français (French)','fr'),
+			('Italiano (Italian)','it'),
+			('Lietuvių kalba (Lithuanian)','lt'),
+			('Magyar nyelv (Hungarian)','hu'),
+			('Nederlands (Dutch)','nl'),
+			('Polszczyzna (Polish)','pl'),
+			('Português brasileiro (Brazilian Portuguese)','pt_BR'),
+			('Slovenčina (Slovak)','sk'),
+			('Svenska (Swedish)','sv'),
+			('Suomi (Finnish)','fi'),]
 	def __init__(self, parent):
 		self.p = parent
 		self.frame = parent.frame
 		
 		settings_glade.BloatFrame.__init__(self, False)
+		self.TranslationCode = "haha"
 		self.options =  {
 			"ui": { "chatfont":self.SelectChatFont, "listfont": self.SelectListFont, "searchfont": self.SelectSearchFont, "transfersfont": self.SelectTransfersFont, "browserfont": self.SelectBrowserFont,  "decimalsep": self.DecimalSep, "spellcheck": self.SpellCheck, "tooltips": self.ShowTooltips,
 			},
 			"transfers": {"enabletransferbuttons": self.ShowTransferButtons},
-			"language": {"setlanguage": self.TranslationCheck, "language": self.TranslationComboEntry},
+			"language": {"setlanguage": self.TranslationCheck, "language": self.TranslationCombo},
 			}
 		
 		for item in ["<None>", ",", ".", "<space>"]:
 			self.DecimalSep.append_text(item)
 
-		for i in self.languagelookup:
-			self.TranslationCombo.append_text(i)
+		for name, code in self.languagelookup:
+			self.TranslationCombo.append_text(name)
 
 		self.DefaultFont.connect("clicked", self.OnDefaultFont)
 		self.SelectChatFont.connect("font-set", self.FontsColorsChanged)
@@ -1340,24 +1341,21 @@ class BloatFrame(settings_glade.BloatFrame):
 		
 		self.p.SetWidgetsData(config, self.options)
 
-		for name, code in self.languagelookup.iteritems():
+		for i in xrange(0, len(self.languagelookup)):
+			name, code = self.languagelookup[i]
 			if language['language'] == code:
-				language['language'] == name
+				self.TranslationCombo.set_active(i)
 				break
-		else:
-			language['language'] = self.languagelookup.keys()[0]
 
 		self.OnTranslationCheckToggled(self.TranslationCheck)
 
 
 	def GetSettings(self):
-		language = self.TranslationComboEntry.get_text()
+		language = self.languagelookup[self.TranslationCombo.get_active()][1]
 		try:
 			import gettext
 			message = ""
 			if self.TranslationCheck.get_active():
-				if language not in self.languagelookup.values():
-					language = self.languagelookup[self.TranslationComboEntry.get_text()]
 				langTranslation = gettext.translation('nicotine', languages=[language])
 				langTranslation.install()
 		except IOError, e:

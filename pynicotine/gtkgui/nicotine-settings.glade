@@ -2317,17 +2317,9 @@
                           </packing>
                         </child>
                         <child>
-                          <widget class="GtkComboBoxEntry" id="TranslationCombo">
+                          <widget class="GtkComboBox" id="TranslationCombo">
                             <property name="visible">True</property>
                             <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                            <child internal-child="entry">
-                              <widget class="GtkEntry" id="TranslationComboEntry">
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                                <property name="width_chars">25</property>
-                              </widget>
-                            </child>
                           </widget>
                           <packing>
                             <property name="expand">False</property>

@@ -1377,15 +1377,13 @@ class BloatFrame:
 		self.hbox3.pack_start(self.TranslationCheck)
 
 		self.TranslationCombo_List = gtk.ListStore(gobject.TYPE_STRING)
-		self.TranslationCombo = gtk.ComboBoxEntry()
+		self.TranslationCombo = gtk.ComboBox()
 		self.TranslationCombo.show()
 
-		self.TranslationComboEntry = self.TranslationCombo.child
-		self.TranslationComboEntry.show()
-		self.TranslationComboEntry.set_width_chars(25)
-
 		self.TranslationCombo.set_model(self.TranslationCombo_List)
-		self.TranslationCombo.set_text_column(0)
+		cell = gtk.CellRendererText()
+		self.TranslationCombo.pack_start(cell, True)
+		self.TranslationCombo.add_attribute(cell, 'text', 0)
 		self.hbox3.pack_start(self.TranslationCombo, False, True, 0)
 
 		self.alignment8.add(self.hbox3)
@@ -4329,13 +4327,13 @@ class CompletionFrame:
 		self.vbox3.show()
 
 		self.CompleteRoomNamesCheck = gtk.CheckButton()
-		self.CompleteRoomNamesCheck.set_label(_("Complete rooms names in chat rooms"))
+		self.CompleteRoomNamesCheck.set_label(_("Complete room names in chat rooms"))
 		self.CompleteRoomNamesCheck.show()
 
 		self.vbox3.pack_start(self.CompleteRoomNamesCheck, False, True, 0)
 
 		self.CompleteBuddiesCheck = gtk.CheckButton()
-		self.CompleteBuddiesCheck.set_label(_("Complete Buddys' Names"))
+		self.CompleteBuddiesCheck.set_label(_("Complete Buddy Names"))
 		self.CompleteBuddiesCheck.show()
 
 		self.vbox3.pack_start(self.CompleteBuddiesCheck, False, True, 0)
