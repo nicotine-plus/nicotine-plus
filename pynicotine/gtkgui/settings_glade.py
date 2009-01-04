@@ -3287,19 +3287,12 @@ class SoundsFrame:
 		self.hbox44.show()
 		self.hbox44.set_spacing(5)
 
-		self.SoundCheck = gtk.RadioButton()
+		self.SoundCheck = gtk.CheckButton()
 		self.SoundCheck.set_label(_("Enable Sound Effects"))
 		self.SoundCheck.show()
 		self.SoundCheck.connect("toggled", self.OnSoundCheckToggled)
 
 		self.hbox44.pack_start(self.SoundCheck, False, True, 0)
-
-		self.NoSounds = gtk.RadioButton(self.SoundCheck)
-		self.NoSounds.set_label(_("No Sounds"))
-		self.NoSounds.show()
-		self.NoSounds.connect("toggled", self.OnNoSoundToggled)
-
-		self.hbox44.pack_start(self.NoSounds)
 
 		self.vbox119.pack_start(self.hbox44, False, True, 0)
 
@@ -3393,7 +3386,7 @@ class SoundsFrame:
 
 		self.vbox119.pack_start(self.hbox1, False, True, 0)
 
-		self.TextToSpeech = gtk.RadioButton(self.SoundCheck)
+		self.TextToSpeech = gtk.CheckButton()
 		self.TextToSpeech.set_label(_("Enable Text To Speech"))
 		self.TextToSpeech.show()
 		self.TextToSpeech.connect("toggled", self.OnTextToSpeechToggled)
@@ -3554,9 +3547,6 @@ class SoundsFrame:
 			self.SoundsFrame.add(self.Main)
 
 	def OnSoundCheckToggled(self, widget):
-		pass
-
-	def OnNoSoundToggled(self, widget):
 		pass
 
 	def OnTextToSpeechToggled(self, widget):

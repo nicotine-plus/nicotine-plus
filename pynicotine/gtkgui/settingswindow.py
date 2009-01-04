@@ -784,10 +784,6 @@ class SoundsFrame(settings_glade.SoundsFrame):
 		self.DefaultPrivateMessage.connect("clicked", self.DefaultPrivate)
 		self.DefaultRoomMessage.connect("clicked", self.DefaultRooms)
 		
-	def OnNoSoundToggled(self, widget):
-		self.OnSoundCheckToggled(None)
-		self.OnTextToSpeechToggled(None)
-		
 	def OnSoundCheckToggled(self, widget):
 		sensitive = self.SoundCheck.get_active()
 		self.SoundCommand.set_sensitive(sensitive)
@@ -811,8 +807,8 @@ class SoundsFrame(settings_glade.SoundsFrame):
 		
 	def OnTextToSpeechToggled(self, widget):
 		sensitive = self.TextToSpeech.get_active()
-		for widget in [self.SoundCommand,  self.SoundDirectory,  self.SoundButton, self.DefaultSoundCommand, self.sndcmdLabel, self.snddirLabel]:
-			widget.set_sensitive(not sensitive and self.SoundCheck.get_active())
+		#for widget in [self.SoundCommand,  self.SoundDirectory,  self.SoundButton, self.DefaultSoundCommand, self.sndcmdLabel, self.snddirLabel]:
+		#	widget.set_sensitive(not sensitive and self.SoundCheck.get_active())
 		for widget in [self.roomMessageBox, self.privateMessageBox, self.ttsCommandBox]:
 			widget.set_sensitive(sensitive)
 		
