@@ -104,7 +104,7 @@ class BuddiesComboBoxEntry(gtk.ComboBoxEntry):
 		
 		
 class NicotineFrame(MainWindow):
-	def __init__(self, config, use_trayicon):
+	def __init__(self, config, use_trayicon, try_rgba):
 		
 		self.clip_data = ""
 		self.log_queue = []
@@ -163,17 +163,18 @@ class NicotineFrame(MainWindow):
 		self.MainWindow.connect("configure_event", self.OnWindowChange)
 		# Enabling RGBA if possible, you need up-to-date Murrine Engine for it from what I've heard
 		RGBA = False
-		gtk_screen = self.MainWindow.get_screen()
-		colormap = gtk_screen.get_rgba_colormap()
-		if colormap:
-			if self.MainWindow.is_composited():
-				RGBA = True
-				print "Enabling RGBA"
-				gtk_screen.set_default_colormap(colormap)
+		if try_rgba:
+			gtk_screen = self.MainWindow.get_screen()
+			colormap = gtk_screen.get_rgba_colormap()
+			if colormap:
+				if self.MainWindow.is_composited():
+					RGBA = True
+					print "Enabling RGBA"
+					gtk_screen.set_default_colormap(colormap)
+				else:
+					print "Your X can handle RGBA, but your window manager cannot. Not enabling transparancy."
 			else:
-				print "Your X can handle RGBA, but your window manager cannot. Not enabling transparancy."
-		else:
-			print "Your X cannot handle RGBA, not enabling transparency"
+				print "Your X cannot handle RGBA, not enabling transparency"
 
 		width = self.np.config.sections["ui"]["width"]
 		height = self.np.config.sections["ui"]["height"]
@@ -3065,8 +3066,8 @@ class gstreamer:
 			self.player.set_state(self.gst.STATE_NULL)
 			
 class MainApp:
-	def __init__(self, config, trayicon):
-		self.frame = NicotineFrame(config, trayicon)
+	def __init__(self, config, trayicon, rgbamode):
+		self.frame = NicotineFrame(config, trayicon, rgbamode)
 	
 	def MainLoop(self):
 		signal.signal(signal.SIGINT, signal.SIG_IGN)

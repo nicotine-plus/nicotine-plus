@@ -155,6 +155,7 @@ Usage: nicotine [OPTION]...
   -c file,	--config=file	Use non-default configuration file
   -t,		--enable-trayicon
   -d,		--disable-trayicon
+  -r,		--disable-rgba
   -v,		--version	Display version and exit
   -h,		--help		Display this help and exit
 
@@ -179,7 +180,7 @@ if __name__ == '__main__':
 
 	import sys, getopt, os.path
 	try:
-		opts, args = getopt.getopt(sys.argv[1:], "hc:tdv", ["help", "config=", "profile", "enable-trayicon", "disable-trayicon", "version"])
+		opts, args = getopt.getopt(sys.argv[1:], "hc:tdv", ["help", "config=", "profile", "enable-trayicon", "disable-trayicon", "disable-rgba", "version"])
 	except getopt.GetoptError:
 		# print help information and exit:
 		usage()
@@ -192,6 +193,7 @@ if __name__ == '__main__':
 		config = os.path.join(os.path.expanduser("~"),'.nicotine','config')
 	profile = 0
 	trayicon = 1
+	tryrgba = True
 	for o, a in opts:
 		if o in ("-h", "--help"):
 			usage()
@@ -202,8 +204,10 @@ if __name__ == '__main__':
 			profile = 1
 		if o in ("-t", "--enable-trayicon"):
 			trayicon=1
-		if o in ("-d", "--disable-trayicon"):	
+		if o in ("-d", "--disable-trayicon"):
 			trayicon=0
+		if o in ('-r', '--disable-rgba'):
+			tryrgba=False
 		if o in ("-v", "--version"):
 			version()
 			sys.exit()
@@ -211,7 +215,7 @@ if __name__ == '__main__':
 	if result is None:
 		from pynicotine.gtkgui import frame
 
-		app = frame.MainApp(config, trayicon)
+		app = frame.MainApp(config, trayicon, tryrgba)
 		if profile:
 			import hotshot
 			log = os.path.expanduser(config) + ".profile"
