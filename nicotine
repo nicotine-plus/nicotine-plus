@@ -155,7 +155,7 @@ Usage: nicotine [OPTION]...
   -c file,	--config=file	Use non-default configuration file
   -t,		--enable-trayicon
   -d,		--disable-trayicon
-  -r,		--disable-rgba
+  -r,		--disable-rgba	Try this when you get black menus
   -v,		--version	Display version and exit
   -h,		--help		Display this help and exit
 
@@ -193,24 +193,28 @@ if __name__ == '__main__':
 		config = os.path.join(os.path.expanduser("~"),'.nicotine','config')
 	profile = 0
 	trayicon = 1
-	tryrgba = True
+	tryrgba = False
 	for o, a in opts:
 		if o in ("-h", "--help"):
 			usage()
 			sys.exit()
-		if o in ("-c", "--config"):
+		elif o in ("-c", "--config"):
 			config = a
-		if o == "--profile":
+		elif o == "--profile":
 			profile = 1
-		if o in ("-t", "--enable-trayicon"):
+		elif o in ("-t", "--enable-trayicon"):
 			trayicon=1
-		if o in ("-d", "--disable-trayicon"):
+		elif o in ("-d", "--disable-trayicon"):
 			trayicon=0
-		if o in ('-r', '--disable-rgba'):
-			tryrgba=False
-		if o in ("-v", "--version"):
+		elif o in ('-r', '--enable-rgba'):
+			tryrgba = True
+		elif o in ('-x', '--disable-rgba'):
+			tryrgba = False
+		elif o in ("-v", "--version"):
 			version()
 			sys.exit()
+		else:
+			print _("Unknown startup parameter '%(parameter)s'") % {'parameter':o}
 	result = checkenv()
 	if result is None:
 		from pynicotine.gtkgui import frame
