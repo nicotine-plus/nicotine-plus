@@ -24,7 +24,11 @@ class PluginHandler(object):
         self.myUsername = self.frame.np.config.sections["server"]["login"]
         self.plugins = []
         if WIN32:
-            mydir = (os.path.split(sys.argv[0]))[0]
+            try:
+                mydir = os.path.join(os.environ['APPDATA'])
+            except KeyError:
+                # windows 9x?
+                mydir,x = os.path.split(sys.argv[0])
             self.plugindir = os.path.join(mydir, "plugins")
         else:
             self.plugindir = os.path.join(os.path.expanduser("~"),'.nicotine','plugins')

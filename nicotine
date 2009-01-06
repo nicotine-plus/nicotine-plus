@@ -188,8 +188,12 @@ if __name__ == '__main__':
 		sys.exit(2)
 
 	if win32:
-		mydir,x = os.path.split(sys.argv[0])
-		config = os.path.join(mydir, "config", "config")
+		try:
+			mydir = os.path.join(os.environ['APPDATA'])
+		except KeyError:
+			# windows 9x?
+			mydir,x = os.path.split(sys.argv[0])
+		config = os.path.join(os.environ['APPDATA'], "config", "config")
 	else:
 		config = os.path.join(os.path.expanduser("~"),'.nicotine','config')
 	profile = 0
