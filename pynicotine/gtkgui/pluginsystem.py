@@ -25,7 +25,7 @@ class PluginHandler(object):
         self.plugins = []
         if WIN32:
             try:
-                mydir = os.path.join(os.environ['APPDATA'])
+                mydir = os.path.join(os.environ['APPDATA'], 'nicotine')
             except KeyError:
                 # windows 9x?
                 mydir,x = os.path.split(sys.argv[0])
