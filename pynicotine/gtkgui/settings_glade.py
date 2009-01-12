@@ -225,96 +225,6 @@ class SharesFrame:
 		self.vbox77.set_spacing(7)
 		self.vbox77.set_border_width(5)
 
-		self.IncompleteDirLabel = gtk.Label(_("Incomplete file directory:"))
-		self.IncompleteDirLabel.set_alignment(0, 0.50)
-		self.IncompleteDirLabel.show()
-		self.vbox77.pack_start(self.IncompleteDirLabel, False, False, 0)
-
-		self.hbox109 = gtk.HBox(False, 0)
-		self.hbox109.show()
-		self.hbox109.set_spacing(5)
-
-		self.IncompleteDir = gtk.Entry()
-		self.IncompleteDir.set_size_request(250, -1)
-		self.tooltips.set_tip(self.IncompleteDir, _("Where incomplete downloads are stored temporarily"))
-		self.IncompleteDir.show()
-		self.hbox109.pack_start(self.IncompleteDir)
-
-		self.ChooseIncompleteDir = gtk.FileChooserButton(title=_("Select A Directory"))
-		self.ChooseIncompleteDir.show()
-		self.ChooseIncompleteDir.set_width_chars(15)
-		self.ChooseIncompleteDir.connect("current_folder_changed", self.OnChooseIncompleteDir)
-
-		self.ChooseIncompleteDir.set_action(gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER)
-
-		self.hbox109.pack_start(self.ChooseIncompleteDir, False, True, 0)
-
-		self.vbox77.pack_start(self.hbox109, False, False, 0)
-
-		self.DownloadDirLabel = gtk.Label(_("Download directory:"))
-		self.DownloadDirLabel.set_alignment(0, 0.50)
-		self.DownloadDirLabel.show()
-		self.vbox77.pack_start(self.DownloadDirLabel, False, False, 0)
-
-		self.hbox111 = gtk.HBox(False, 0)
-		self.hbox111.show()
-		self.hbox111.set_spacing(5)
-
-		self.DownloadDir = gtk.Entry()
-		self.DownloadDir.set_size_request(250, -1)
-		self.DownloadDir.show()
-		self.hbox111.pack_start(self.DownloadDir)
-
-		self.ChooseDownloadDir = gtk.FileChooserButton(title=_("Select A Directory"))
-		self.ChooseDownloadDir.show()
-		self.ChooseDownloadDir.set_width_chars(15)
-		self.ChooseDownloadDir.connect("current_folder_changed", self.OnChooseDownloadDir)
-
-		self.ChooseDownloadDir.set_action(gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER)
-
-		self.hbox111.pack_start(self.ChooseDownloadDir, False, True, 0)
-
-		self.vbox77.pack_start(self.hbox111, False, False, 0)
-
-		self.ShareDownloadDir = gtk.CheckButton()
-		self.ShareDownloadDir.set_label(_("Share download directory"))
-		self.ShareDownloadDir.show()
-		self.ShareDownloadDir.connect("toggled", self.OnShareDownloadDirToggled)
-
-		self.vbox77.pack_start(self.ShareDownloadDir, False, False, 0)
-
-		self.UploadDirLabel = gtk.Label(_("Upload directory:"))
-		self.UploadDirLabel.set_alignment(0, 0.50)
-		self.UploadDirLabel.show()
-		self.vbox77.pack_start(self.UploadDirLabel, False, False, 0)
-
-		self.hbox19 = gtk.HBox(False, 0)
-		self.hbox19.show()
-		self.hbox19.set_spacing(5)
-
-		self.UploadDir = gtk.Entry()
-		self.UploadDir.set_size_request(250, -1)
-		self.tooltips.set_tip(self.UploadDir, _("Where buddies' uploads will be stored (with a subdirectory for each buddy)"))
-		self.UploadDir.show()
-		self.hbox19.pack_start(self.UploadDir)
-
-		self.ChooseUploadDir = gtk.FileChooserButton(title=_("Select A Directory"))
-		self.ChooseUploadDir.show()
-		self.ChooseUploadDir.set_width_chars(15)
-		self.ChooseUploadDir.connect("current_folder_changed", self.OnChooseUploadDir)
-
-		self.ChooseUploadDir.set_action(gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER)
-
-		self.hbox19.pack_start(self.ChooseUploadDir, False, True, 0)
-
-		self.vbox77.pack_start(self.hbox19, False, False, 0)
-
-		self.RescanOnStartup = gtk.CheckButton()
-		self.RescanOnStartup.set_label(_("Rescan shares on startup"))
-		self.RescanOnStartup.show()
-
-		self.vbox77.pack_start(self.RescanOnStartup, False, False, 0)
-
 		self.hbox113 = gtk.HBox(False, 0)
 		self.hbox113.show()
 		self.hbox113.set_spacing(5)
@@ -474,6 +384,96 @@ class SharesFrame:
 
 		self.vbox77.pack_start(self.hbox166)
 
+		self.RescanOnStartup = gtk.CheckButton()
+		self.RescanOnStartup.set_label(_("Rescan shares on startup"))
+		self.RescanOnStartup.show()
+
+		self.vbox77.pack_start(self.RescanOnStartup, False, False, 0)
+
+		self.IncompleteDirLabel = gtk.Label(_("Incomplete file directory:"))
+		self.IncompleteDirLabel.set_alignment(0, 0.50)
+		self.IncompleteDirLabel.show()
+		self.vbox77.pack_start(self.IncompleteDirLabel, False, False, 0)
+
+		self.hbox109 = gtk.HBox(False, 0)
+		self.hbox109.show()
+		self.hbox109.set_spacing(5)
+
+		self.IncompleteDir = gtk.Entry()
+		self.IncompleteDir.set_size_request(250, -1)
+		self.tooltips.set_tip(self.IncompleteDir, _("Where incomplete downloads are stored temporarily"))
+		self.IncompleteDir.show()
+		self.hbox109.pack_start(self.IncompleteDir)
+
+		self.ChooseIncompleteDir = gtk.FileChooserButton(title=_("Select A Directory"))
+		self.ChooseIncompleteDir.show()
+		self.ChooseIncompleteDir.set_width_chars(15)
+		self.ChooseIncompleteDir.connect("current_folder_changed", self.OnChooseIncompleteDir)
+
+		self.ChooseIncompleteDir.set_action(gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER)
+
+		self.hbox109.pack_start(self.ChooseIncompleteDir, False, True, 0)
+
+		self.vbox77.pack_start(self.hbox109, False, False, 0)
+
+		self.DownloadDirLabel = gtk.Label(_("Download directory:"))
+		self.DownloadDirLabel.set_alignment(0, 0.50)
+		self.DownloadDirLabel.show()
+		self.vbox77.pack_start(self.DownloadDirLabel, False, False, 0)
+
+		self.hbox111 = gtk.HBox(False, 0)
+		self.hbox111.show()
+		self.hbox111.set_spacing(5)
+
+		self.DownloadDir = gtk.Entry()
+		self.DownloadDir.set_size_request(250, -1)
+		self.DownloadDir.show()
+		self.hbox111.pack_start(self.DownloadDir)
+
+		self.ChooseDownloadDir = gtk.FileChooserButton(title=_("Select A Directory"))
+		self.ChooseDownloadDir.show()
+		self.ChooseDownloadDir.set_width_chars(15)
+		self.ChooseDownloadDir.connect("current_folder_changed", self.OnChooseDownloadDir)
+
+		self.ChooseDownloadDir.set_action(gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER)
+
+		self.hbox111.pack_start(self.ChooseDownloadDir, False, True, 0)
+
+		self.vbox77.pack_start(self.hbox111, False, False, 0)
+
+		self.ShareDownloadDir = gtk.CheckButton()
+		self.ShareDownloadDir.set_label(_("Share download directory"))
+		self.ShareDownloadDir.show()
+		self.ShareDownloadDir.connect("toggled", self.OnShareDownloadDirToggled)
+
+		self.vbox77.pack_start(self.ShareDownloadDir, False, False, 0)
+
+		self.UploadDirLabel = gtk.Label(_("Upload directory:"))
+		self.UploadDirLabel.set_alignment(0, 0.50)
+		self.UploadDirLabel.show()
+		self.vbox77.pack_start(self.UploadDirLabel, False, False, 0)
+
+		self.hbox19 = gtk.HBox(False, 0)
+		self.hbox19.show()
+		self.hbox19.set_spacing(5)
+
+		self.UploadDir = gtk.Entry()
+		self.UploadDir.set_size_request(250, -1)
+		self.tooltips.set_tip(self.UploadDir, _("Where buddies' uploads will be stored (with a subdirectory for each buddy)"))
+		self.UploadDir.show()
+		self.hbox19.pack_start(self.UploadDir)
+
+		self.ChooseUploadDir = gtk.FileChooserButton(title=_("Select A Directory"))
+		self.ChooseUploadDir.show()
+		self.ChooseUploadDir.set_width_chars(15)
+		self.ChooseUploadDir.connect("current_folder_changed", self.OnChooseUploadDir)
+
+		self.ChooseUploadDir.set_action(gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER)
+
+		self.hbox19.pack_start(self.ChooseUploadDir, False, True, 0)
+
+		self.vbox77.pack_start(self.hbox19, False, False, 0)
+
 		self.Main.add(self.vbox77)
 
 		self.label175 = gtk.Label(_("Shares"))
@@ -483,18 +483,6 @@ class SharesFrame:
 
 		if create:
 			self.SharesFrame.add(self.Main)
-
-	def OnChooseIncompleteDir(self, widget):
-		pass
-
-	def OnChooseDownloadDir(self, widget):
-		pass
-
-	def OnShareDownloadDirToggled(self, widget):
-		pass
-
-	def OnChooseUploadDir(self, widget):
-		pass
 
 	def OnAddSharedDir(self, widget):
 		pass
@@ -509,6 +497,18 @@ class SharesFrame:
 		pass
 
 	def OnRemoveSharedBuddyDir(self, widget):
+		pass
+
+	def OnChooseIncompleteDir(self, widget):
+		pass
+
+	def OnChooseDownloadDir(self, widget):
+		pass
+
+	def OnShareDownloadDirToggled(self, widget):
+		pass
+
+	def OnChooseUploadDir(self, widget):
 		pass
 
 	def get_custom_widget(self, id, string1, string2, int1, int2):
@@ -1668,7 +1668,7 @@ class LogFrame:
 		self.label19 = gtk.Label(_("Log file format:"))
 		self.label19.set_alignment(0, 0.50)
 		self.label19.show()
-		self.label19.set_width_chars(16)
+		self.label19.set_width_chars(18)
 		self.hbox25.pack_start(self.label19, False, True, 0)
 
 		self.LogFileFormat = gtk.Entry()
@@ -1711,7 +1711,7 @@ class LogFrame:
 		self.label12 = gtk.Label(_("Chat room format:"))
 		self.label12.set_alignment(0, 0.50)
 		self.label12.show()
-		self.label12.set_width_chars(16)
+		self.label12.set_width_chars(18)
 		self.hbox17.pack_start(self.label12, False, True, 0)
 
 		self.ChatRoomFormat = gtk.Entry()
@@ -1754,7 +1754,7 @@ class LogFrame:
 		self.label14 = gtk.Label(_("Private chat format:"))
 		self.label14.set_alignment(0, 0.50)
 		self.label14.show()
-		self.label14.set_width_chars(16)
+		self.label14.set_width_chars(18)
 		self.hbox10.pack_start(self.label14, False, True, 0)
 
 		self.PrivateChatFormat = gtk.Entry()
@@ -2595,7 +2595,7 @@ class EventsFrame:
 		self.vbox96.set_spacing(10)
 		self.vbox96.set_border_width(5)
 
-		self.label296 = gtk.Label(_("Show notification popup in tray after... (requires python-notify and notification-daemon)"))
+		self.label296 = gtk.Label(_("Show notification popup in tray after...\n(requires python-notify and notification-daemon)"))
 		self.label296.set_alignment(0, 0.50)
 		self.label296.show()
 		self.vbox96.pack_start(self.label296, False, False, 0)
