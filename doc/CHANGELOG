@@ -5,6 +5,7 @@ SVN
 Behaviour
  * RGBA mode is no longer on by default, to use it pass the --enable-rgba flag when starting Nicotine+
  * Configuration files are now stored in the user's Application Data folder instead of the installation folder (bug #330)
+ * The configuration screen for shares has been rearranged in order to make it more logical (bug #341)
 
 Features
  * Windows components have been improved
