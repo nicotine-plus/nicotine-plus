@@ -1,5 +1,7 @@
+#!/usr/bin/env python
 import os
 import sys, string
+from os.path import isfile
 
 table = [
 	["away.png", "away"],
@@ -16,7 +18,9 @@ table = [
 ]
 flagtable = []
 for name in os.listdir(os.path.join("img", "geoip")):
-	flagtable.append( (os.path.join("img", "geoip", name), 'flag_%s' % name[:2].upper()) )
+	p = os.path.join("img", "geoip", name)
+	if isfile(p):
+		flagtable.append((os.path.join("img", "geoip", name), 'flag_%s' % name[:2].upper()))
 
 outf = open(os.path.join("pynicotine","gtkgui","imagedata.py"), "w")
 for image in table:
