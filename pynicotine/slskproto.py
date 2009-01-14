@@ -192,6 +192,9 @@ class SlskProtoThread(threading.Thread):
 		PrivateRoomOperatorAdded:145,
 		PrivateRoomOperatorRemoved:146,
 		PrivateRoomOwned:148,
+		JoinPublicRoom:150,
+		LeavePublicRoom:151,
+		PublicRoomMessage:152,
 		}
 		
 	peercodes = {

@@ -90,11 +90,13 @@ class RoomsControl:
 			("#" + _("Disown Private Room"), self.OnPopupPrivateRoomDisown, gtk.STOCK_CLOSE),
 			("#" + _("Cancel room membership"), self.OnPopupPrivateRoomDismember, gtk.STOCK_CANCEL),
 			( "", None ),
+			("#" + _("Join Public Room"), self.OnJoinPublicRoom, gtk.STOCK_DIALOG_WARNING),
+			( "", None ),
 			("#" + _("Refresh"), self.OnPopupRefresh, gtk.STOCK_REFRESH ),
 		)
 		
 		items = self.popup_menu.get_children()
-		self.Menu_Join, self.Menu_Leave, self.Menu_Empty1, self.Menu_PrivateRoom_Enable, self.Menu_PrivateRoom_Disable, self.Menu_Empty2, self.Menu_PrivateRoom_Create, self.Menu_PrivateRoom_Disown, self.Menu_PrivateRoom_Dismember, self.Menu_Empty3, self.Menu_Refresh = items
+		self.Menu_Join, self.Menu_Leave, self.Menu_Empty1, self.Menu_PrivateRoom_Enable, self.Menu_PrivateRoom_Disable, self.Menu_Empty2, self.Menu_PrivateRoom_Create, self.Menu_PrivateRoom_Disown, self.Menu_PrivateRoom_Dismember, self.Menu_Empty3, self.Menu_JoinPublicRoom, self.Menu_Empty4, self.Menu_Refresh = items
 		self.Menu_PrivateRoom_Enable.set_sensitive(False)
 		self.Menu_PrivateRoom_Disable.set_sensitive(False)
 		self.Menu_PrivateRoom_Create.set_sensitive(False)
@@ -251,7 +253,8 @@ class RoomsControl:
 		
 	def OnEnablePrivateRooms(self, widget):
 		self.frame.np.queue.put(slskmessages.PrivateRoomToggle(True))
-		
+	def OnJoinPublicRoom(self, widget):
+		self.frame.np.queue.put(slskmessages.JoinPublicRoom())
 	def OnDisablePrivateRooms(self, widget):
 		self.frame.np.queue.put(slskmessages.PrivateRoomToggle(False))
 		
@@ -477,7 +480,22 @@ class RoomsControl:
 			self.frame.pluginhandler.IncomingPublicChatNotification(msg.room, msg.user, text)
 		else:
 			print "Pluginsystem made me shut up" # DEBUG
-
+	def PublicRoomMessage(self, msg, text):
+		try:
+			room = self.joinedrooms['Public ']
+		except KeyError:
+			room = ChatRoom(self, 'Public ', {})
+			self.joinedrooms['Public '] = room
+			angle = 0
+			try:
+				angle = int(self.frame.np.config.sections["ui"]["labelrooms"])
+			except Exception, e:
+				print e
+				pass
+			self.frame.ChatNotebook.append_page(room.Main, 'Public ', room.OnLeave, angle)
+			room.CountUsers()
+		msg.user = "%s | %s" % (msg.room, msg.user)
+		room.SayChatRoom(msg, text)
 	
 	def UpdateColours(self):
 		self.frame.SetTextBG(self.frame.roomlist.RoomsList)
@@ -504,7 +522,8 @@ class RoomsControl:
 		self.frame.ChatNotebook.remove_page(room.Main)
 		room.destroy()
 		del self.joinedrooms[msg.room]
-		self.frame.RoomSearchCombo_List.remove(self.frame.searchroomslist[msg.room])
+		if msg.room != 'Public ':
+			self.frame.RoomSearchCombo_List.remove(self.frame.searchroomslist[msg.room])
 		if self.joinedrooms == {} and self.frame.hide_room_list1.get_active():
 			win = OptionDialog(self.frame, _("You aren't in any chat rooms.") + " " + _("Open Room List?"), modal=True, status=None, option=False, third="")
 			win.connect("response", self.frame.onOpenRoomList)
@@ -1424,13 +1443,24 @@ class ChatRoom(ChatRoomTab):
 	def OnLeave(self, widget = None):
 		if self.leaving:
 			return
+		if self.room == 'Public ':
+			self.OnPublicRoomLeave(widget)
+			return
 		self.frame.np.queue.put(slskmessages.LeaveRoom(self.room))
 		self.Leave.set_sensitive(False)
 		self.leaving = 1
 		config = self.frame.np.config.sections
 		if self.room in config["columns"]["chatrooms"]:
 			del config["columns"]["chatrooms"][self.room]
-			
+	def OnPublicRoomLeave(self, widget = None):
+		self.Leave.set_sensitive(False)
+		self.leaving = 1
+		config = self.frame.np.config.sections
+		if self.room in config["columns"]["chatrooms"]:
+			del config["columns"]["chatrooms"][self.room]
+		self.frame.np.queue.put(slskmessages.LeavePublicRoom())
+		self.roomsctrl.LeaveRoom(slskmessages.LeaveRoom('Public ')) # Faking protocol msg
+		
 	def saveColumns(self):
 		columns = []
 		for column in self.UserList.get_columns():

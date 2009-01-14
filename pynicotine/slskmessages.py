@@ -375,7 +375,24 @@ class AckNotifyPrivileges(ServerMessage):
 		pos, self.token = self.getObject(message, types.IntType)	
 	def makeNetworkMessage(self):
 		return self.packObject(self.token)
-
+class JoinPublicRoom(ServerMessage):
+	"""We want to join the Public Chat"""
+	def __init__(self, unknown = 0):
+		self.unknown = unknown
+	def makeNetworkMessage(self):
+		return self.packObject(self.unknown)
+class LeavePublicRoom(ServerMessage):
+	"""We want to leave the Public Chat"""
+	def __init__(self, unknown = 0):
+		self.unknown = unknown
+	def makeNetworkMessage(self):
+		return self.packObject(self.unknown)
+class PublicRoomMessage(ServerMessage):
+	"""The server sends us messages from random chatrooms"""
+	def parseNetworkMessage(self, message):
+		pos, self.room = self.getObject(message, types.StringType)
+		pos, self.user = self.getObject(message, types.StringType, pos)
+		pos, self.msg = self.getObject(message, types.StringType, pos)
 class SayChatroom(ServerMessage):
 	""" Either we want to say something in the chatroom, or someone did."""
 	def __init__(self, room = None, msg = None):

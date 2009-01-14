@@ -248,6 +248,7 @@ class NetworkEventProcessor:
 			slskmessages.PrivateRoomOperatorRemoved:self.PrivateRoomOperatorRemoved,
 			slskmessages.PrivateRoomAddOperator:self.PrivateRoomAddOperator,
 			slskmessages.PrivateRoomRemoveOperator:self.PrivateRoomRemoveOperator,
+			slskmessages.PublicRoomMessage:self.PublicRoomMessage,
 			}
 
 
@@ -653,7 +654,11 @@ class NetworkEventProcessor:
 		else:
 			self.logMessage("%s %s" %(msg.__class__, vars(msg)))
 
-
+	def PublicRoomMessage(self, msg):
+		if self.chatrooms is not None:
+			self.chatrooms.roomsctrl.PublicRoomMessage(msg, msg.msg)
+		else:
+			self.logMessage("%s %s" %(msg.__class__, vars(msg)))
 	def JoinRoom(self, msg):
 		if self.chatrooms is not None:
 			self.chatrooms.roomsctrl.JoinRoom(msg)
