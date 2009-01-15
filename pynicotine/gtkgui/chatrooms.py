@@ -254,6 +254,20 @@ class RoomsControl:
 	def OnEnablePrivateRooms(self, widget):
 		self.frame.np.queue.put(slskmessages.PrivateRoomToggle(True))
 	def OnJoinPublicRoom(self, widget):
+		# Everything but queue.put shouldn't be here, but the server doesn't send a confirmation when joining
+		# public room. It would be clearer if we faked such a message ourself somewhere in the core
+		if 'Public ' in self.joinedrooms:
+			return
+		room = ChatRoom(self, 'Public ', {}, meta = True)
+		self.joinedrooms['Public '] = room
+		angle = 0
+		try:
+			angle = int(self.frame.np.config.sections["ui"]["labelrooms"])
+		except Exception, e:
+			print e
+			pass
+		self.frame.ChatNotebook.append_page(room.Main, 'Public ', room.OnLeave, angle)
+		room.CountUsers()
 		self.frame.np.queue.put(slskmessages.JoinPublicRoom())
 	def OnDisablePrivateRooms(self, widget):
 		self.frame.np.queue.put(slskmessages.PrivateRoomToggle(False))
@@ -484,16 +498,7 @@ class RoomsControl:
 		try:
 			room = self.joinedrooms['Public ']
 		except KeyError:
-			room = ChatRoom(self, 'Public ', {})
-			self.joinedrooms['Public '] = room
-			angle = 0
-			try:
-				angle = int(self.frame.np.config.sections["ui"]["labelrooms"])
-			except Exception, e:
-				print e
-				pass
-			self.frame.ChatNotebook.append_page(room.Main, 'Public ', room.OnLeave, angle)
-			room.CountUsers()
+			return
 		msg.user = "%s | %s" % (msg.room, msg.user)
 		room.SayChatRoom(msg, text)
 	
@@ -611,7 +616,7 @@ def TickDialog(parent, default = ""):
 	return [t, result]
 
 class ChatRoom(ChatRoomTab):
-	def __init__(self, roomsctrl, room, users):
+	def __init__(self, roomsctrl, room, users, meta = False):
 		ChatRoomTab.__init__(self, False)
 		
 		self.roomsctrl = roomsctrl
@@ -622,6 +627,7 @@ class ChatRoom(ChatRoomTab):
 		self.lines = []
 		self.logfile = None
 		self.leaving = 0
+		self.meta = meta # not a real room if set to True
 		config = self.frame.np.config.sections
 		if not config["ticker"]["hide"]:
 			self.Ticker.show()
@@ -1443,24 +1449,19 @@ class ChatRoom(ChatRoomTab):
 	def OnLeave(self, widget = None):
 		if self.leaving:
 			return
-		if self.room == 'Public ':
-			self.OnPublicRoomLeave(widget)
-			return
-		self.frame.np.queue.put(slskmessages.LeaveRoom(self.room))
 		self.Leave.set_sensitive(False)
 		self.leaving = 1
 		config = self.frame.np.config.sections
 		if self.room in config["columns"]["chatrooms"]:
 			del config["columns"]["chatrooms"][self.room]
-	def OnPublicRoomLeave(self, widget = None):
-		self.Leave.set_sensitive(False)
-		self.leaving = 1
-		config = self.frame.np.config.sections
-		if self.room in config["columns"]["chatrooms"]:
-			del config["columns"]["chatrooms"][self.room]
-		self.frame.np.queue.put(slskmessages.LeavePublicRoom())
-		self.roomsctrl.LeaveRoom(slskmessages.LeaveRoom('Public ')) # Faking protocol msg
-		
+		if not self.meta:
+			self.frame.np.queue.put(slskmessages.LeaveRoom(self.room))
+		else:
+			if self.room == 'Public ':
+				self.frame.np.queue.put(slskmessages.LeavePublicRoom())
+				self.roomsctrl.LeaveRoom(slskmessages.LeaveRoom('Public ')) # Faking protocol msg
+			else:
+				print "Unknown meta chatroom closed."
 	def saveColumns(self):
 		columns = []
 		for column in self.UserList.get_columns():
