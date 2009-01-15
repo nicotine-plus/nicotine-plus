@@ -79,7 +79,6 @@ class UserBrowse(UserBrowseTab):
 		# GTK 2.10
 		if gtk.pygtk_version[0] >= 2 and gtk.pygtk_version[1] >= 10:
 			self.FolderTreeView.set_enable_tree_lines(True)
-		
 
 		cols = InitialiseColumns(self.FolderTreeView,
 			[_("Directories"), -1, "text", self.CellDataFunc], #0
@@ -142,8 +141,6 @@ class UserBrowse(UserBrowseTab):
 				("", None),
 				("#" + _("Copy _URL"), self.OnCopyDirURL, gtk.STOCK_COPY),
 				("#" + _("Open in File Manager"), self.OnFileManager, gtk.STOCK_OPEN),
-
-	
 			)
 		else:
 			self.folder_popup_menu.setup(
@@ -177,7 +174,6 @@ class UserBrowse(UserBrowseTab):
 			if parent:
 				parent.connect('button_press_event', PressHeader)
 			# Read Show / Hide column settings from last session
-			
 		self.FileTreeView.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
 
 		self.FileTreeView.set_headers_clickable(True)
@@ -206,7 +202,6 @@ class UserBrowse(UserBrowseTab):
 				(2, _("Download"), self.popup_menu_downloads_files, self.OnPopupMenuDummy, gtk.STOCK_GO_DOWN),
 				("", None),
 				("#" + _("Copy _URL"), self.OnCopyURL, gtk.STOCK_COPY),
-				
 			)
 		self.FileTreeView.connect("button_press_event", self.OnFileClicked)
 		self.ChangeColours()
@@ -248,7 +243,6 @@ class UserBrowse(UserBrowseTab):
 		
 		for i in range(3, 8):
 			items[i].set_sensitive(act)
-
 		return True
 		
 	def ChangeColours(self):
@@ -283,7 +277,6 @@ class UserBrowse(UserBrowseTab):
 				self.SetDirectory(dirs[0])
 			else:
 				self.SetDirectory(None)
-			
 			
 	def OnFolderClicked(self, widget, event):
 		if event.button == 1 and event.type == gtk.gdk._2BUTTON_PRESS:
@@ -396,15 +389,11 @@ class UserBrowse(UserBrowseTab):
 					self.directories[parent] =  self.DirStore.append(None, [self.decode(parent), parent])
 			parent = s[0]
 			for seq in s[1:]:
-				
-
 				path = "\\".join([parent, seq])
 				if parent == "":
 					parent = "\\"
 				if parent not in self.directories.keys():
 					self.directories[parent] =  self.DirStore.append(None, [self.decode(parent), parent])
-
-
 				if path not in children:
 					children.append(path)
 					self.directories[path] = self.DirStore.append(self.directories[parent], [self.decode(path.split("\\")[-1]), path ] )
@@ -413,14 +402,12 @@ class UserBrowse(UserBrowseTab):
 		sortlist.sort()
 		for files in self.shares.values():
 			for filedata in files:
-			
 				self.totalsize += filedata[2]
 		self.AmountShared.set_text(_("Shared: %s") % HumanizeBytes(self.totalsize))
 	
 		directory = sortlist[0]
 		return directory
 	
-			
 	def SetDirectory(self, directory):
 		self.selected_folder = directory
 		self.FileStore.clear()
@@ -429,7 +416,6 @@ class UserBrowse(UserBrowseTab):
 			return
 		
 		path = self.DirStore.get_path( self.directories[directory] )
-		
 
 		files = self.shares[directory]
 
@@ -441,8 +427,6 @@ class UserBrowse(UserBrowseTab):
 			f = [self.decode(file[1]), Humanize(size)]
 			if file[3] == "":
 				f += ["", ""]
-			
-			
 			else:
 				#file[4] is for file types such as 'mp3'
 				attrs = file[4]
@@ -454,13 +438,11 @@ class UserBrowse(UserBrowseTab):
 						try: rl = int(attrs[1])
 						except: rl = 0
 						l = "%i:%02i" % (rl / 60, rl % 60)
-						
 						f += [br, l]
 					else:
 						f += ["", ""]
 				else:
 					f += ["", ""]
-			
 			f += [long(size), rl, file[1]]
 
 			try:
@@ -468,7 +450,6 @@ class UserBrowse(UserBrowseTab):
 			except Exception, error:
 				displayTraceback()
 
-			
 	def OnSave(self, widget):
 		configdir, config = os.path.split(self.frame.np.config.filename)
 		sharesdir = os.path.abspath(configdir+os.sep+"usershares"+os.sep)
@@ -519,16 +500,13 @@ class UserBrowse(UserBrowseTab):
 
 	def OnSelectDir(self, selection):
 		model, iter = selection.get_selected()
-		
 		if iter is None:
 			self.selected_folder = None
 			return
-
 		path = model.get_path(iter)
 		directory = self.DirStore.get_value(self.DirStore.get_iter(path), 1)
 		self.FolderTreeView.expand_to_path(path)
 		self.SetDirectory(directory)
-		
 		
 	def OnResort(self, column, column_id):
 		model = self.FileTreeView.get_model()
@@ -567,7 +545,6 @@ class UserBrowse(UserBrowseTab):
 		go_ahead=0
 		if len(files) > 100:
 			FolderDownload(self.frame, title=_('Nicotine+')+': Download %(num)i files?' % {'num':numfiles}, message=_("Are you sure you wish to download %(num)i files from %(user)s's directory %(folder)s?" %{ 'num':numfiles, 'user':self.user, 'folder':dir } ), data=files, callback=self.folder_download_response )
-			
 		else:
 			# Good to go, we download these
 			for item in files:
@@ -606,12 +583,10 @@ class UserBrowse(UserBrowseTab):
 					length = "%i:%02i" % (rl / 60, rl % 60)
 
 				files.append(["\\".join([dir, file[1]]), localdir, file[2], bitrate, length])
-		
 		for directory in self.shares.keys():
 			if dir in directory and dir != directory:
 				files += self.DownloadDirectoryRecursive(directory, os.path.join(localdir, ""))
-	
-		return files	
+		return files
 		
 	def OnDownloadDirectoryTo(self, widget):
 		if self.selected_folder == None:
@@ -622,9 +597,7 @@ class UserBrowse(UserBrowseTab):
 
 		for directory in dir: # iterate over selected files
 			try:
- 				
 				self.DownloadDirectory(self.selected_folder, os.path.join(directory, ""))
-				
 			except IOError: # failed to open
 				self.frame.logMessage('failed to open %r for reading', directory) # notify user
 
@@ -634,9 +607,7 @@ class UserBrowse(UserBrowseTab):
 			return
 		for directory in dir: # iterate over selected files
 			try:
- 				
 				self.DownloadDirectory(self.selected_folder, os.path.join(directory, ""), 1)
-				
 			except IOError: # failed to open
 				self.frame.logMessage('failed to open %r for reading', directory) # notify user
 
@@ -662,7 +633,6 @@ class UserBrowse(UserBrowseTab):
 			return
 		for directory in self.shares.keys():
 			if dir in directory and dir != directory:
-	
 				self.DownloadDirectory(directory, os.path.join(ldir, ""), recurse)
 
 
@@ -688,18 +658,13 @@ class UserBrowse(UserBrowseTab):
 				length = "%i:%02i" % (int(rl / 60), rl % 60)
 			self.frame.np.transfers.getFile(self.user, path, prefix, size=size, bitrate=bitrate, length=length)
 
-	
 	def OnUploadDirectoryRecursiveTo(self, widget):
 		self.OnUploadDirectoryTo(widget, recurse=1)
-	
 	def UploadDirectoryTo(self, user, dir, recurse = 0):
 		if dir == "" or dir is None or user is None or user == "":
 			return
-
 		ldir = dir.split("\\")[-1]
-
 		if dir in self.shares.keys():
-
 			for file in self.shares[dir]:
 				path = "\\".join([dir, file[1]])
 				size = file[2]
@@ -707,7 +672,6 @@ class UserBrowse(UserBrowseTab):
 				self.frame.np.transfers.checkUploadQueue()
 		if not recurse:
 			return
-
 		for directory in self.shares.keys():
 			if dir in directory and dir != directory:
 				self.UploadDirectoryTo(user, directory, recurse)
@@ -763,23 +727,24 @@ class UserBrowse(UserBrowseTab):
 		
 	def OnDownloadFilesTo(self, widget):
 		
-		path, subdir = self.selected_folder.rsplit("\\", 1)
-		ldir = ChooseDir(self.frame.MainWindow, self.frame.np.config.sections["transfers"]["downloaddir"], create=True, name=subdir)
+		basedir, subdir = self.selected_folder.rsplit("\\", 1)
+		path = os.path.join(self.frame.np.config.sections["transfers"]["downloaddir"], subdir)
+		if os.path.exists(path) and os.path.isdir(path):
+			ldir = ChooseDir(self.frame.MainWindow, path)
+		else:
+			ldir = ChooseDir(self.frame.MainWindow, self.frame.np.config.sections["transfers"]["downloaddir"])
 
 		if ldir is None:
 			return
-
 		for directory in ldir: # iterate over selected files
 			try:
- 				self.OnDownloadFiles(widget, directory)
-				
+				self.OnDownloadFiles(widget, directory)
 			except IOError: # failed to open
 				self.frame.logMessage('failed to open %r for reading', directory) # notify user
 
 	def FindMatches(self):
 		self.search_list = []
 		for directory, files in self.shares.items():
-		
 			if self.query in directory.lower():
 				if directory not in self.search_list:
 					self.search_list.append(directory)
@@ -797,7 +762,6 @@ class UserBrowse(UserBrowseTab):
 			if self.query == "":
 				return
 			self.FindMatches()
-		
 
 		dir = self.selected_folder
 		
@@ -807,18 +771,13 @@ class UserBrowse(UserBrowseTab):
 			self.search_list.sort()
 			directory = self.search_list[self.search_position]
 			path = self.DirStore.get_path( self.directories[directory] )
-			
-
 			self.FolderTreeView.expand_to_path(path)
-
 			self.FolderTreeView.set_cursor(path)
-
 			# Get matching files in the current directory
 			resultfiles = []
 			for file in self.files.keys():
 				if query in file.lower():
 					resultfiles.append(file)
-					
 			sel = self.FileTreeView.get_selection()
 			sel.unselect_all()
 			l = 1
@@ -831,14 +790,10 @@ class UserBrowse(UserBrowseTab):
 					# Position cursor at first match
 					self.FileTreeView.scroll_to_cell(path, None, True, 0.5, 0.5)
 					l = 0
-
-
 		else:
 			self.search_position = 0
-				
 
 	def OnClose(self, widget):
-		
 		self.userbrowses.remove_page(self.Main)
 		del self.userbrowses.users[self.user]
 		self.frame.np.ClosePeerConnection(self.conn)
