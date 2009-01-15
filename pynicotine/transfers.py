@@ -888,44 +888,51 @@ class Transfers:
 						folder = os.path.join(downloaddir, self.encode(i.path))
 					if not os.access(folder, os.F_OK):
 						os.makedirs(folder)
-					newname = self.getRenamed(os.path.join(folder, basename))
-					try:
-						if win32:
-							os.rename(msg.file.name, u"%s" % newname)
-						else:
-							os.rename(msg.file.name, newname)
-					except OSError:
+					(newname, identicalfile) = self.getRenamedEnhanced(os.path.join(folder, basename), msg.file.name)
+					if newname:
 						try:
-							f1 = open(msg.file.name, "rb")
-							d = f1.read()
 							if win32:
-								f1 = open(u"%s" % newname, "wb")
+								os.rename(msg.file.name, u"%s" % newname)
 							else:
-								f1 = open(newname, "wb")
-							f1.write(d)
-							f1.close()
-							os.remove(msg.file.name)
+								os.rename(msg.file.name, newname)
 						except OSError:
-							self.eventprocessor.logMessage(_("Couldn't move '%(tempfile)s' to '%(file)s'") % {'tempfile':self.decode(msg.file.name), 'file':self.decode(newname)})
+							try:
+								f1 = open(msg.file.name, "rb")
+								d = f1.read()
+								if win32:
+									f1 = open(u"%s" % newname, "wb")
+								else:
+									f1 = open(newname, "wb")
+								f1.write(d)
+								f1.close()
+								os.remove(msg.file.name)
+							except OSError:
+								self.eventprocessor.logMessage(_("Couldn't move '%(tempfile)s' to '%(file)s'") % {'tempfile':self.decode(msg.file.name), 'file':self.decode(newname)})
 					i.status = "Finished"
-					self.eventprocessor.logMessage(_("Download finished: %(file)s") % {'file':self.decode(newname)})
-					self.eventprocessor.logTransfer(_("Download finished: user %(user)s, file %(file)s") % {'user':i.user, 'file':self.decode(i.filename)})
+					if newname:
+						self.eventprocessor.logMessage(_("Download finished: %(file)s") % {'file':self.decode(newname)})
+						self.eventprocessor.logTransfer(_("Download finished: user %(user)s, file %(file)s") % {'user':i.user, 'file':self.decode(i.filename)})
+					else:
+						self.eventprocessor.logMessage(_("File %(file)s is identical to %(identical)s, not saving.") % {'file':self.decode(msg.file.name), 'identical':identicalfile})
+						self.eventprocessor.logTransfer(_("Download finished but not saved since it's a duplicate: user %(user)s, file %(file)s") % {'user':i.user, 'file':self.decode(i.filename)})
+						
 					self.queue.put(slskmessages.ConnClose(msg.conn))
 					#if i.speed is not None:
 						#self.queue.put(slskmessages.SendSpeed(i.user, int(i.speed*1024)))
 						#Removed due to misuse. Replaced by SendUploadSpeed
 					i.conn = None
-					if win32:
-						self.addToShared(u"%s" % newname)
-					else:
-						self.addToShared(newname)
-					self.eventprocessor.sendNumSharedFoldersFiles()
+					if newname:
+						if win32:
+							self.addToShared(u"%s" % newname)
+						else:
+							self.addToShared(newname)
+						self.eventprocessor.sendNumSharedFoldersFiles()
 					self.SaveDownloads()
 					self.downloadspanel.update(i)
 					if config["transfers"]["shownotification"]:
 						self.eventprocessor.frame.NewNotification(_("%(file)s downloaded from %(user)s") % {'user':i.user, "file":newname.rsplit(os.sep, 1)[1]}, title=_("Nicotine+ :: file downloaded"))
 
-					if config["transfers"]["afterfinish"]:
+					if newname and config["transfers"]["afterfinish"]:
 						command = config["transfers"]["afterfinish"].replace("$", utils.escapeCommand(newname))
 						os.system("%s &" % command)
 						self.eventprocessor.logMessage(_("Executed: %s") % self.decode(command))
@@ -1408,7 +1415,40 @@ class Transfers:
 					break
 				n += 1
 			return newname
-			
+	def getRenamedEnhanced(self, name, originalfile):
+		""" When a transfer is finished, we remove INCOMPLETE~ or INCOMPLETE 
+		prefix from the file's name. 
+		
+		Returns a tuple (newname, identicalfile) where precisely one of the two
+		is None, and the other is a complete path. If newname is None a file
+		with the same checksum value already exists as identicalfile, if
+		identicalfile is None the file can be saved under newname."""
+		if win32 and not os.path.exists(u"%s" % name) and not os.path.exists(name):
+			# Filename doesn't exist, good for renaming
+			return (name, None)
+		elif not win32 and not os.path.exists(name):
+			return (name, None)
+		# A file with the same name already exists. First lets check whether it's a duplicate
+		ourchecksum = self.getChecksum(originalfile)
+		newname = name
+		n = 1
+		while n < 1000:
+			existingchecksum = self.getChecksum(newname)
+			if ourchecksum == existingchecksum:
+				return (None, newname)
+			newname = name+"."+str(n)
+			if not os.path.exists(newname):
+				break
+			n += 1
+		return (newname, None)
+	def getChecksum(self, path):
+		try:
+			h = open(path)
+			digest = md5.new(h.read(-1)).digest()
+			h.close()
+			return digest
+		except IOError:
+			return None
 
 	def PlaceInQueue(self, msg):
 		""" The server tells us our place in queue for a particular transfer."""
