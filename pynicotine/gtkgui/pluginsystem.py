@@ -233,4 +233,4 @@ class BasePlugin(object):
     def saypublic(self, room, text):
         self.parent.saychatroom(room, text)
     def sayprivate(self, user, text):
-        self.parent.saychatroom(user, text)
+        self.parent.sayprivate(user, text)
