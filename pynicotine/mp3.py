@@ -522,8 +522,3 @@ def detect_mp3(path):
 			"vbr": m.vbr,
 			"time": m.length,
 		}
-
-if __name__ == '__main__':
-    import sys
-    i = MP3Info(open(sys.argv[1], 'rb'))
-    print i.id3.tags

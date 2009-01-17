@@ -36,9 +36,9 @@ frame = 0
 log = 0
 language = ""
 try:
-	import _mp3 as mp3
-	print "Using C mp3 scanner"
+	import mp3_mutagen as mp3
 except ImportError:
+	print "Failed to import the Mutagen library, falling back to old library. To improve meta data please install Mutagen."
 	import mp3
 
 try:
