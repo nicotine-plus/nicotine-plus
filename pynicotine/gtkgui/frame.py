@@ -1382,7 +1382,7 @@ class NicotineFrame(MainWindow):
 		self.userlist.ConnClose()
 		self.userinfo.ConnClose()
 		self.userbrowse.ConnClose()
-		
+		self.pluginhandler.ServerDisconnectNotification()
 	def SetWidgetOnlineStatus(self, status):
 		self.connect1.set_sensitive(not status)
 		self.disconnect1.set_sensitive(status)
@@ -1417,6 +1417,7 @@ class NicotineFrame(MainWindow):
 		self.TrayApp.SetImage()
 		self.uploads.ConnClose()
 		self.downloads.ConnClose()
+		self.frame.pluginhandler.ServerDisconnectNotification()
 		
 	def SetUserStatus(self, status):
 		self.UserStatus.pop(self.user_context_id)
@@ -1448,6 +1449,7 @@ class NicotineFrame(MainWindow):
 		gobject.idle_add(self.FetchUserListStatus)
 		
 		AppendLine(self.LogWindow, self.np.decode(msg.banner), self.tag_log)
+		self.pluginhandler.ServerConnectNotification()
 		return self.privatechats, self.chatrooms, self.userinfo, self.userbrowse, self.Searches, self.downloads, self.uploads, self.userlist
 
 	def GetStatusImage(self, status):

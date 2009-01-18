@@ -165,6 +165,16 @@ class PluginHandler(object):
         return self.TriggerEvent("OutgoingUserSearchEvent", (users,))
     def UserResolveNotification(self, user, ip, port, country):
         start_new_thread(self.TriggerEvent, ("UserResolveNotification", (user, ip, port, country)))
+    def ServerConnectNotification(self):
+        return
+        # We're too early!
+        start_new_thread(self.TriggerEvent, ("ServerConnectNotification", (),))
+    def ServerDisconnectNotification(self):
+        start_new_thread(self.TriggerEvent, ("ServerDisconnectNotification", (),))
+    def JoinChatroomNotification(self, room):
+        start_new_thread(self.TriggerEvent, ("JoinChatroomNotification", (room,)))
+    def LeaveChatroomNotification(self, room): 
+        start_new_thread(self.TriggerEvent, ("LeaveChatroomNotification", (room,)))
     # other functions
     def log(self, text):
         self.frame.logMessage(text)
@@ -206,9 +216,9 @@ class BasePlugin(object):
         pass
     def OutgoingPrivateChatNotification(self, user, line):
         pass
-    def OutgoingPublicChatEvent(self, user, line):
+    def OutgoingPublicChatEvent(self, room, line):
         pass
-    def OutgoingPublicChatNotification(self, user, line):
+    def OutgoingPublicChatNotification(self, room, line):
         pass
     def OutgoingGlobalSearchEvent(self, text):
         pass
@@ -228,9 +238,26 @@ class BasePlugin(object):
         for (trigger, func) in self.__privatecommands__:
             if trigger == command:
                 return func(self, user, args)
+    def ServerConnectNotification(self):
+        pass
+    def ServerDisconnectNotification(self):
+        pass
+    def JoinChatroomNotification(self, room):
+        pass
+    def LeaveChatroomNotification(self, room):
+        pass
     def log(self, text):
         self.parent.log(self.__name__ + ": " + text)
     def saypublic(self, room, text):
         self.parent.saychatroom(room, text)
     def sayprivate(self, user, text):
         self.parent.sayprivate(user, text)
+    def fakepublic(self, room, user, text):
+        try:
+            room = self.frame.chatrooms.roomsctrl.joinedrooms[room]
+        except KeyError:
+            return False
+        msg = slskmessages.SayChatroom(room, text)
+        msg.user = user
+        room.SayChatRoom(msg, text)
+        return True

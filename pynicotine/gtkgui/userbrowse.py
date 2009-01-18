@@ -375,28 +375,29 @@ class UserBrowse(UserBrowseTab):
 		self.directories.clear()
 		directory = ""
 		self.totalsize = 0
+		dirseparator = '\\'
 		if sorted == []:
 			self.AmountShared.set_text(_("Shared: %s") % HumanizeBytes(self.totalsize))
 			return directory
 		for item in sorted:
-			s = item.split("\\")
+			s = item.split(dirseparator)
 			path = ''
 
 			parent = s[0]
 			if parent == '':
-				parent += "\\"
+				parent += dirseparator
 				if parent not in self.directories.keys():
 					self.directories[parent] =  self.DirStore.append(None, [self.decode(parent), parent])
 			parent = s[0]
 			for seq in s[1:]:
-				path = "\\".join([parent, seq])
+				path = dirseparator.join([parent, seq])
 				if parent == "":
-					parent = "\\"
+					parent = dirseparator
 				if parent not in self.directories.keys():
 					self.directories[parent] =  self.DirStore.append(None, [self.decode(parent), parent])
 				if path not in children:
 					children.append(path)
-					self.directories[path] = self.DirStore.append(self.directories[parent], [self.decode(path.split("\\")[-1]), path ] )
+					self.directories[path] = self.DirStore.append(self.directories[parent], [self.decode(path.split(dirseparator)[-1]), path ] )
 				parent = path
 		sortlist = list(self.directories.keys())
 		sortlist.sort()

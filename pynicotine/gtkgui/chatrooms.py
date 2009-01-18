@@ -324,7 +324,8 @@ class RoomsControl:
 				list = self.frame.np.config.sections["server"]["autojoin"]
 
 			for room in list:
-				self.frame.np.queue.put(slskmessages.JoinRoom(room))
+				if room[-1:] != ' ':
+					self.frame.np.queue.put(slskmessages.JoinRoom(room))
 		self.roomsmodel.clear()
 		self.frame.roomlist.RoomsList.set_model(None)
 		self.roomsmodel.set_default_sort_func(lambda *args: -1)
@@ -527,7 +528,7 @@ class RoomsControl:
 		self.frame.ChatNotebook.remove_page(room.Main)
 		room.destroy()
 		del self.joinedrooms[msg.room]
-		if msg.room != 'Public ':
+		if msg.room[-1:] != ' ': # meta rooms
 			self.frame.RoomSearchCombo_List.remove(self.frame.searchroomslist[msg.room])
 		if self.joinedrooms == {} and self.frame.hide_room_list1.get_active():
 			win = OptionDialog(self.frame, _("You aren't in any chat rooms.") + " " + _("Open Room List?"), modal=True, status=None, option=False, third="")
@@ -1459,9 +1460,10 @@ class ChatRoom(ChatRoomTab):
 		else:
 			if self.room == 'Public ':
 				self.frame.np.queue.put(slskmessages.LeavePublicRoom())
-				self.roomsctrl.LeaveRoom(slskmessages.LeaveRoom('Public ')) # Faking protocol msg
+				self.roomsctrl.LeaveRoom(slskmessages.LeaveRoom(self.room)) # Faking protocol msg
 			else:
 				print "Unknown meta chatroom closed."
+		self.frame.pluginhandler.LeaveChatroomNotification(self.room)
 	def saveColumns(self):
 		columns = []
 		for column in self.UserList.get_columns():
