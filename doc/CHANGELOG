@@ -6,17 +6,24 @@ Behaviour
  * RGBA mode is no longer on by default, to use it pass the --enable-rgba flag when starting Nicotine+
  * Configuration files are now stored in the user's Application Data folder instead of the installation folder (bug #330)
  * The configuration screen for shares has been rearranged in order to make it more logical (bug #341)
+ * Support for Mutagen has been added. This will result in more accurate information about bitrates and lengths (bug #259)
+
 
 Features
  * Windows components have been improved
  * The language selection now uses normal names instead of abbreviations (bug #332)
  * When switching languages GTK will be translated as well
+ * Hash checking to eliminate duplicates. When a file name conflict arises after a download finishes both files are hashed 
+   to make sure the new file is not identical to the old one.
+ * Public Room support has been added
+
 
 Bugs
  * The Danish translation is now stored under 'da'
  * Fixed sorting of percentage (bug #322)
  * A number of typographical errors have been corrected (bug #334 and #335)
  * When disabling sound this setting will be loaded correctly now (bug #285)
+ * Repaired sayprivate function from the pluginsystem 
 
 
 1.2.10 (30 December 2008)
