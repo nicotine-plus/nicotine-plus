@@ -64,7 +64,7 @@ class Plugin(BasePlugin):
                     self.sayprivate(destination, text)
                     self.fakepublic(self.__mergeroom__, self.joinPrivate(destination, self.parent.myUsername), realtext)
                 else:
-                    self.log("EEK, programming error. (%s, %s)" % self.lastmessage
+                    self.log("EEK, programming error. (%s, %s)" % self.lastmessage)
             else:
                 self.log("Nobody spoke so far, who am I supposed to send it to?")
         return returncode['zap']
