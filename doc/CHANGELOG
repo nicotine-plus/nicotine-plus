@@ -16,7 +16,9 @@ Features
  * Hash checking to eliminate duplicates. When a file name conflict arises after a download finishes both files are hashed 
    to make sure the new file is not identical to the old one.
  * Public Room support has been added
-
+ * The amount of tracked and displayed search results is now limited, which should allow nicotine+ to cope better with overly
+   generic search terms. Internally a maximum of 1500 are recorded, of which a maximum of 500 are shown. The other 1000 can be
+   retrieved by using the filters. (bug #284)
 
 Bugs
  * The Danish translation is now stored under 'da'
