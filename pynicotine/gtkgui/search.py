@@ -487,6 +487,8 @@ class Searches(IconNotebook):
 	
 class Search(SearchTab):
 	WAIT_BEFORE_DISPLAYING = 5000 # in milliseconds
+	MAX_DISPLAYED_RESULTS = 500
+	MAX_STORED_RESULTS = 1500
 	def __init__(self, Searches, text, id, mode, remember):
 		SearchTab.__init__(self, False)
 
@@ -694,7 +696,7 @@ class Search(SearchTab):
 			imdl = _("Y")
 		else:
 			imdl = _("N")
-		ix = len(self.all_data) + 1
+		#ix = len(self.all_data) + 1
 		decode = self.frame.np.decode
 		for result in msg.list:
 			name = result[1].split('\\')[-1]
@@ -710,7 +712,7 @@ class Search(SearchTab):
 				br = a[0]
 				length = '%i:%02i' %(a[1] / 60, a[1] % 60)
 			results.append([user, name, result[2], msg.ulspeed, msg.inqueue, imdl, bitrate, length, dir, br, result[1], country, self.Searches.users[user]])
-			ix += 1
+			#ix += 1
 			
 		
 		
@@ -756,13 +758,15 @@ class Search(SearchTab):
 		return self.frame.GetFlagImage(flag)
 		
 	def append(self, results):
-		ix = len(self.all_data) + 1
-		#l = len(self.data)
+		itercounter = len(self.all_data) + 1
+		displaycounter = len(self.resultsmodel)
+		print "Iter=%s, display=%s" % (itercounter, displaycounter)
 
 		encode = self.frame.np.encodeuser
 		
 		returned = 0
-		
+		if itercounter > self.MAX_STORED_RESULTS:
+			return returned
 		for r in results:
 
 			user, filename, size, speed, queue, immediatedl, h_bitrate, length, directory, bitrate, fullpath,  country, status = r
@@ -774,11 +778,14 @@ class Search(SearchTab):
 			h_queue = Humanize(queue)
 			if self.usersGroup.get_active() and user not in self.usersiters:
 				self.usersiters[user] = self.resultsmodel.append(None, [0, user, "", "", h_speed, h_queue, immediatedl, "", "", self.get_flag(user, country), "", 0, "", country, 0, speed, queue, status])
-			row = [ix, user, filename, h_size, h_speed, h_queue, immediatedl, h_bitrate, length, directory,  bitrate, fullpath, country,  size, speed, queue, status]
+			row = [itercounter, user, filename, h_size, h_speed, h_queue, immediatedl, h_bitrate, length,
+			       directory,  bitrate, fullpath, country,  size, speed, queue, status]
 
 			self.all_data.append(row)
-			if not self.filters or self.check_filter(row):
-				encoded_row = [ix, user, encode(filename, user), h_size, h_speed, h_queue, immediatedl, h_bitrate, length, self.get_flag(user, country), encode(directory, user), bitrate, encode(fullpath, user), country,  size, speed, queue, status]
+			if (displaycounter + returned < self.MAX_DISPLAYED_RESULTS) and (not self.filters or self.check_filter(row)):
+				encoded_row = [itercounter, user, encode(filename, user), h_size, h_speed, h_queue, immediatedl,
+				               h_bitrate, length, self.get_flag(user, country), encode(directory, user), bitrate,
+				               encode(fullpath, user), country,  size, speed, queue, status]
 				#print user, status
 				if user in self.usersiters:
 					iter = self.resultsmodel.append(self.usersiters[user], encoded_row)
@@ -789,8 +796,9 @@ class Search(SearchTab):
 					if self.usersGroup.get_active() and self.ExpandButton.get_active():
 						self.ResultsList.expand_to_path(path)
 				returned += 1
-			ix += 1
-		
+			itercounter += 1
+			if itercounter > self.MAX_STORED_RESULTS:
+				break
 		return returned
 			
 	def updateStatus(self, user, status):
@@ -947,6 +955,7 @@ class Search(SearchTab):
 		
 		#data = []
 		
+		displaycounter = 0
 		for row in self.all_data:
 			if self.check_filter(row):
 				ix, user, filename,  h_size, h_speed, h_queue, immediatedl, h_bitrate, length, directory,  bitrate, fullpath, country, size, speed, queue, status = row
@@ -961,7 +970,9 @@ class Search(SearchTab):
 					iter = self.resultsmodel.append(self.usersiters[user], encoded_row)
 				else:
 					iter = self.resultsmodel.append(None, encoded_row)
-					
+			displaycounter += 1
+			if displaycounter >= self.MAX_DISPLAYED_RESULTS:
+				break
 		
 
 	def OnPopupMenuUsers(self, widget):
