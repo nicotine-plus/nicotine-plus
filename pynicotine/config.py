@@ -258,6 +258,8 @@ class Config:
 	"listfont": "", \
 	"browserfont": "", \
 	"transfersfont": "", \
+	"modes_visible": {"chatrooms":1, "private":1, "downloads":1, "uploads":1, "search":1, "userinfo":1, "userbrowse":1, "interests":1}, \
+	"modes_order": ["chatrooms", "private", "downloads", "uploads", "search", "userinfo", "userbrowse", "interests", "userlist"], \
 	"searchoffline":"#aa0000", \
 	"showaway": 0, \
 	"tooltips": 1, \
@@ -386,7 +388,7 @@ class Config:
 					print message
 					if self.frame:
 						self.frame.logMessage(message)
-				elif j in ['login','passw','enc',  'downloaddir', 'uploaddir', 'customban','descr','pic','logsdir','roomlogsdir','privatelogsdir','incompletedir', 'autoreply', 'afterfinish', 'downloadregexp', 'afterfolder', 'default', 'chatfont', "npothercommand", "npplayer", "npformat", "private_timestamp", "rooms_timestamp", "log_timestamp"] or (i == "ui" and j not in ["roomlistcollapsed", "tabclosers", "tab_colors", 'tab_reorderable', 'buddylistinchatrooms', "trayicon", "showaway", "tooltips", "usernamehotspots", "exitdialog", "tab_icons", "spellcheck", "chat_hidebuttons", "notexists", "soundenabled", "transalpha",  "enabletrans", "speechenabled", "enablefilters",  "width", "height", "labelmain", "labelrooms", "labelprivate", "labelinfo", "labelbrowse", "labelsearch"]) or (i == "words" and j not in ["completion", "censorwords", "replacewords", "autoreplaced", "censored", "characters", "tab", "dropdown", "roomnames", "buddies", "roomusers", "commands", "aliases", "onematch"]) or (i == "language" and j not in ["definelanguage", "setlanguage"]):
+				elif j in ['login','passw','enc',  'downloaddir', 'uploaddir', 'customban','descr','pic','logsdir','roomlogsdir','privatelogsdir','incompletedir', 'autoreply', 'afterfinish', 'downloadregexp', 'afterfolder', 'default', 'chatfont', "npothercommand", "npplayer", "npformat", "private_timestamp", "rooms_timestamp", "log_timestamp"] or (i == "ui" and j not in ["roomlistcollapsed", "tabclosers", "tab_colors", 'tab_reorderable', 'buddylistinchatrooms', "trayicon", "showaway", "tooltips", "usernamehotspots", "exitdialog", "tab_icons", "spellcheck", "modes_order", "modes_visible", "chat_hidebuttons", "notexists", "soundenabled", "transalpha",  "enabletrans", "speechenabled", "enablefilters",  "width", "height", "labelmain", "labelrooms", "labelprivate", "labelinfo", "labelbrowse", "labelsearch"]) or (i == "words" and j not in ["completion", "censorwords", "replacewords", "autoreplaced", "censored", "characters", "tab", "dropdown", "roomnames", "buddies", "roomusers", "commands", "aliases", "onematch"]) or (i == "language" and j not in ["definelanguage", "setlanguage"]):
 
 					if val is not None and val != "None":
 						self.sections[i][j] = val

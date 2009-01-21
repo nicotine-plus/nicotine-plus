@@ -113,6 +113,7 @@ class NicotineFrame(MainWindow):
 		self.transfermsgspostedtime = 0
 		self.manualdisconnect = 0
 		self.away = 0
+		self.exiting = 0
 		self.showdebug = 0
 		self.current_tab = 0
 		self.rescanning = 0
@@ -136,7 +137,7 @@ class NicotineFrame(MainWindow):
 			
 		self.np = NetworkEventProcessor(self, self.callback, self.logMessage, self.SetStatusText, config)
 		config = self.np.config.sections
-		
+		self.temp_modes_order = config["ui"]["modes_order"]
 		utils.DECIMALSEP = config["ui"]["decimalsep"]
 		utils.CATCH_URLS = config["urls"]["urlcatching"]
 		utils.HUMANIZE_URLS = config["urls"]["humanizeurls"]
@@ -216,7 +217,10 @@ class NicotineFrame(MainWindow):
 		gobject.signal_new("network_event_lo", gtk.Window, gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_PYOBJECT,))
 		self.MainWindow.connect("network_event", self.OnNetworkEvent)
 		self.MainWindow.connect("network_event_lo", self.OnNetworkEvent)
-
+		
+		self.MainNotebook.connect("page-removed", self.OnPageRemoved)
+		self.MainNotebook.connect("page-reordered", self.OnPageReordered)
+		self.MainNotebook.connect("page-added", self.OnPageAdded)
 		#if sys.platform.startswith("win"):
 			#self.now_playing1.set_sensitive(False)
 		
@@ -376,7 +380,7 @@ class NicotineFrame(MainWindow):
 		else:
 			self.vpaned3.pack2(self.roomlist.vbox2,True, True)
 			self.hide_room_list1.set_active(0)
-			
+		self.SetMainTabsVisibility()
 		for l in [self.ChatTabLabel, self.PrivateChatTabLabel, self.DownloadsTabLabel, self.UploadsTabLabel, self.SearchTabLabel, self.UserInfoTabLabel, self.UserBrowseTabLabel, self.InterestsTabLabel]:
 			if type(l) is ImageLabel:
 				l.set_text_color(0)
@@ -494,7 +498,9 @@ class NicotineFrame(MainWindow):
 		if trerror is not None and trerror != "":
 			self.logMessage(trerror)
 		self.SetAllToolTips()
-	
+
+		
+
 	def on_delete_event(self, widget, event):
 		if not self.np.config.sections["ui"]["exitdialog"]:
 			return False
@@ -622,7 +628,8 @@ class NicotineFrame(MainWindow):
 		else:
 			self.RoomSearchCombo.hide()
 		self.RoomSearchCombo.set_sensitive(act)
-		
+	
+
 	def CreateRecommendationsWidgets(self):
 		self.likes = {}
 		self.likeslist = gtk.ListStore(gobject.TYPE_STRING)
@@ -1057,6 +1064,52 @@ class NicotineFrame(MainWindow):
 		else:
 			return gtk.Label(_("(custom widget: %s)") % id)
 
+	def OnPageRemoved(self, MainNotebook, child, page_num):
+		name = self.MatchMainNotebox(child)
+		self.np.config.sections["ui"]["modes_visible"][name] = 0 
+		self.OnPageReordered(MainNotebook, child, page_num)
+
+	def OnPageAdded(self, MainNotebook, child, page_num):
+		name = self.MatchMainNotebox(child)
+		self.np.config.sections["ui"]["modes_visible"][name] = 1 
+		self.OnPageReordered(MainNotebook, child, page_num)
+
+	def OnPageReordered(self, MainNotebook, child, page_num):
+		if self.exiting:
+			return
+		tabs = []
+		for children in self.MainNotebook.get_children():
+			tabs.append(self.MatchMainNotebox(children))
+		self.np.config.sections["ui"]["modes_order"] = tabs
+		#self.np.config.writeConfig()
+
+	def SetMainTabsVisibility(self):
+		tabs = self.temp_modes_order
+		#print type(tabs)
+		order = 0
+		for name in tabs:
+			#print name
+			tab = self.MatchMainNamePage(name)
+			#print tab
+			self.MainNotebook.reorder_child(tab, order)
+			order += 1
+
+		visible = self.np.config.sections["ui"]["modes_visible"]
+		for name in visible:
+			tab = self.MatchMainNamePage(name)
+			if tab is None:
+				continue
+			eventbox = self.MainNotebook.get_tab_label(tab)
+			if not visible[name]:
+				if tab not in self.MainNotebook.get_children():
+					return
+				if tab in self.HiddenTabs:
+					return
+		
+				self.HiddenTabs[tab] =  eventbox
+				num = self.MainNotebook.page_num(tab )
+				self.MainNotebook.remove_page(num)
+
 	def HideTab(self, widget, lista):
 		eventbox, child = lista
 		tab = self.__dict__[child]
@@ -1383,6 +1436,7 @@ class NicotineFrame(MainWindow):
 		self.userinfo.ConnClose()
 		self.userbrowse.ConnClose()
 		self.pluginhandler.ServerDisconnectNotification()
+
 	def SetWidgetOnlineStatus(self, status):
 		self.connect1.set_sensitive(not status)
 		self.disconnect1.set_sensitive(status)
@@ -1417,8 +1471,8 @@ class NicotineFrame(MainWindow):
 		self.TrayApp.SetImage()
 		self.uploads.ConnClose()
 		self.downloads.ConnClose()
-		self.frame.pluginhandler.ServerDisconnectNotification()
-		
+		self.pluginhandler.ServerDisconnectNotification()
+
 	def SetUserStatus(self, status):
 		self.UserStatus.pop(self.user_context_id)
 		self.UserStatus.push(self.user_context_id, status)
@@ -1514,6 +1568,7 @@ class NicotineFrame(MainWindow):
 
 		
 	def OnExit(self, widget):
+		self.exiting = 1
 		if sys.platform == "win32" and self.TrayApp.trayicon:
 			self.TrayApp.trayicon.hide_icon()
 		self.MainWindow.destroy()
@@ -1591,7 +1646,8 @@ class NicotineFrame(MainWindow):
 			self.chatrooms.roomsctrl.OnSwitchPage(n, None, p, 1)
 		elif page_nr == self.MainNotebook.page_num(self.privatevbox):
 			p = n.get_current_page()
-			self.privatechats.OnSwitchPage(n, None, p, 1)
+			if "privatechats" in self.__dict__:
+				self.privatechats.OnSwitchPage(n, None, p, 1)
 
 	def UpdateBandwidth(self):
 		def _calc(l):
@@ -2244,7 +2300,7 @@ class NicotineFrame(MainWindow):
 		if self.userlistvbox in self.MainNotebook.get_children():
 			if tab:
 				return
-			self.MainNotebook.remove_page(8)
+			self.MainNotebook.remove_page(self.MainNotebook.page_num(self.userlistvbox))
 			
 		if self.userlistvbox in self.vpanedm.get_children():
 			if always:
@@ -2268,7 +2324,7 @@ class NicotineFrame(MainWindow):
 			self.BuddiesLabel.hide()
 		
 			self.np.config.sections["ui"]["buddylistinchatrooms"] = 0
-				
+
 		if chatrooms:
 			self.vpaned3.show()
 			if self.userlistvbox not in self.vpaned3.get_children():
@@ -2751,6 +2807,53 @@ class NicotineFrame(MainWindow):
 	def GivePrivileges(self, user, days):
 		self.np.queue.put(slskmessages.GivePrivileges(user, days))
 
+	def MatchMainNotebox(self, tab):
+		if tab == self.hpaned1: 
+			name = "chatrooms" # Chatrooms
+		elif tab == self.privatevbox : 
+			name = "private"# Private rooms
+		elif tab == self.vboxdownloads: 
+			name =  "downloads" # Downloads
+		elif tab == self.vboxuploads: 
+			name = "uploads" #  Uploads
+		elif tab == self.searchvbox: 
+			name = "search" # Searches
+		elif tab == self.userinfovbox: 
+			name =  "userinfo"# Userinfo
+		elif tab == self.userbrowsevbox: 
+			name =  "userbrowse"# User browse
+		elif tab == self.interests: 
+			name = "interests" # Interests
+		elif tab == self.userlistvbox: 
+			name = "userlist" # Buddy list
+		else:
+			#this should never happen, unless you've renamed a widget
+			return
+		return name
+	def MatchMainNamePage(self, tab):
+	
+		if tab == "chatrooms": 
+			child = self.hpaned1 # Chatrooms
+		elif tab == "private": 
+			child = self.privatevbox # Private rooms
+		elif tab == "downloads": 
+			child = self.vboxdownloads # Downloads
+		elif tab == "uploads": 
+			child = self.vboxuploads #  Uploads
+		elif tab == "search": 
+			child = self.searchvbox # Searches
+		elif tab == "userinfo": 
+			child = self.userinfovbox # Userinfo
+		elif tab == "userbrowse": 
+			child = self.userbrowsevbox # User browse
+		elif tab == "interests": 
+			child = self.interests # Interests
+		elif tab == "userlist": 
+			child = self.userlistvbox # Buddy list
+		else:
+			#this should never happen, unless you've renamed a widget
+			return
+		return child 
 
 	def ChangeMainPage(self, widget, tab):
 
@@ -2774,6 +2877,7 @@ class NicotineFrame(MainWindow):
 		elif tab == "userlist": 
 			child = self.userlistvbox # Buddy list
 		else:
+			#this should never happen, unless you've renamed a widget
 			return
 		if child in self.MainNotebook.get_children():
 			self.MainNotebook.set_current_page(page_num(child)) 
