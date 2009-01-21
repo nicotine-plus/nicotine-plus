@@ -760,7 +760,6 @@ class Search(SearchTab):
 	def append(self, results):
 		itercounter = len(self.all_data) + 1
 		displaycounter = len(self.resultsmodel)
-		print "Iter=%s, display=%s" % (itercounter, displaycounter)
 
 		encode = self.frame.np.encodeuser
 		
@@ -970,7 +969,7 @@ class Search(SearchTab):
 					iter = self.resultsmodel.append(self.usersiters[user], encoded_row)
 				else:
 					iter = self.resultsmodel.append(None, encoded_row)
-			displaycounter += 1
+				displaycounter += 1
 			if displaycounter >= self.MAX_DISPLAYED_RESULTS:
 				break
 		
