@@ -51,6 +51,8 @@ if is_windows:
 			this = (os.path.join(gtksubdir,varroot[skip:]), [os.path.join(varroot, x) for x in varfiles])
 			if this[1]:
 				files.append(this)
+	# We need to include libjpeg
+	files.append(("",([os.path.join(gtkdir,'bin','jpeg62.dll')])))
 else:
 	# Manuals
 	manpages = glob.glob(os.path.join("manpages", "*.1"))
