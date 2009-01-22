@@ -40,7 +40,7 @@ Section "Core" Core
   SectionIn RO
   SetOverwrite on
   SetOutPath "$INSTDIR"
-  File /r "dist\"
+  File /r "..\..\dist\"
 SectionEnd
 
 Function ShortCuts
