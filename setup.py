@@ -4,7 +4,7 @@
 
 	# Install nicotine in regular *nix directories
         python setup.py install
-	
+
 	# Create exe files for windows in dist subdir
 	python setup.py py2exe
 
@@ -87,11 +87,11 @@ for file in doc_files:
 		files.append((os.path.join("share", "nicotine", "documentation"), [file]))
 	else:
 		files.append((os.path.join(sys.prefix, "share", "nicotine", "documentation"), [file]))
-				
+
 
 if __name__ == '__main__' :
     LONG_DESCRIPTION = \
-""" Nicotine-Plus is a client for SoulSeek filesharing system, forked from Nicotine. 
+""" Nicotine-Plus is a client for SoulSeek filesharing system, forked from Nicotine.
 """
 
     from pynicotine.utils import version
@@ -107,7 +107,7 @@ if __name__ == '__main__' :
           scripts               = [ 'nicotine','nicotine-import-winconfig'],
           long_description      = LONG_DESCRIPTION,
           data_files            = files,
-          windows               = [ 
+          windows               = [
                                     {
                                       "script": "nicotine",
                                       "icon_resources": [(0, "img/ico/nicotine+-.ico")]
