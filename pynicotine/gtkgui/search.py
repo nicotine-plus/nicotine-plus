@@ -696,7 +696,6 @@ class Search(SearchTab):
 			imdl = _("Y")
 		else:
 			imdl = _("N")
-		#ix = len(self.all_data) + 1
 		decode = self.frame.np.decode
 		for result in msg.list:
 			name = result[1].split('\\')[-1]
@@ -712,14 +711,10 @@ class Search(SearchTab):
 				br = a[0]
 				length = '%i:%02i' %(a[1] / 60, a[1] % 60)
 			results.append([user, name, result[2], msg.ulspeed, msg.inqueue, imdl, bitrate, length, dir, br, result[1], country, self.Searches.users[user]])
-			#ix += 1
-			
-		
-		
 		if results:
 			self.new_results += results
 			
-			if self._more_results == 0:
+			if self._more_results == 0 and len(self.resultsmodel) < self.MAX_DISPLAYED_RESULTS:
 				self._more_results = 1
 				gobject.timeout_add(self.WAIT_BEFORE_DISPLAYING, self._realaddresults)
 			return len(results)
