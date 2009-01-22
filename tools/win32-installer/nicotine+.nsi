@@ -1,5 +1,5 @@
 !define PRODUCT_NAME "Nicotine+"
-!define PRODUCT_VERSION "1.2.10svn"
+!define PRODUCT_VERSION "1.2.10.1"
 !define PRODUCT_PUBLISHER "Nicotine+ Team"
 !define PRODUCT_WEB_SITE "http://www.nicotine-plus.org"
 !define PRODUCT_DIR_REGKEY "Software\Nicotine+"
