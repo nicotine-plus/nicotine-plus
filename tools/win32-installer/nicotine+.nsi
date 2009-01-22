@@ -8,6 +8,7 @@
 
 !include "MUI.nsh"
 !include "LogicLib.nsh"
+!include "WinVer.nsh"
 
 !define MUI_ABORTWARNING
 !define MUI_WELCOMEPAGE_TITLE_3LINES
@@ -71,6 +72,10 @@ SectionEnd
 
 Function .onInit
   !insertmacro MUI_INSTALLOPTIONS_EXTRACT "shortcuts.ini"
+  ${IfNot} ${AtLeastWin2000}
+    MessageBox MB_OK "Nicotine+ requires Windows 2000 or later."
+    Quit
+  ${EndIf}
 FunctionEnd
 
 Function un.onUninstSuccess
