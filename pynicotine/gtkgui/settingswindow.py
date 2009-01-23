@@ -39,7 +39,6 @@ class ServerFrame(settings_glade.ServerFrame):
 		self.frame = parent.frame
 		settings_glade.ServerFrame.__init__(self, False)
 		self.Server.append_text("server.slsknet.org:2242")
-		self.Server.append_text("server.slsknet.org:2242")
 
 		self.Elist = {}
 		self.EncodingStore = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
