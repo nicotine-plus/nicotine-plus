@@ -21,11 +21,11 @@
 
 !insertmacro MUI_PAGE_WELCOME
 !insertmacro MUI_PAGE_LICENSE "..\..\COPYING"
-!insertmacro MUI_PAGE_DIRECTORY
-Page custom ShortCuts
 ; Validate installation directory
 !define MUI_DIRECTORYPAGE_VERIFYONLEAVE
 !define MUI_PAGE_CUSTOMFUNCTION_LEAVE ValidateInstDir
+!insertmacro MUI_PAGE_DIRECTORY
+Page custom ShortCuts
 !insertmacro MUI_PAGE_INSTFILES
 !insertmacro MUI_UNPAGE_INSTFILES
 !insertmacro MUI_LANGUAGE "English"
