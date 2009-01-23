@@ -73,7 +73,7 @@ SectionEnd
 Function .onInit
   !insertmacro MUI_INSTALLOPTIONS_EXTRACT "shortcuts.ini"
   ${IfNot} ${AtLeastWin2000}
-    MessageBox MB_OK "Nicotine+ requires Windows 2000 or later."
+    MessageBox MB_OK|MB_ICONEXCLAMATION "Nicotine+ requires Windows 2000 or later."
     Quit
   ${EndIf}
 FunctionEnd
