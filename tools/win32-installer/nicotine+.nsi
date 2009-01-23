@@ -23,6 +23,9 @@
 !insertmacro MUI_PAGE_LICENSE "..\..\COPYING"
 !insertmacro MUI_PAGE_DIRECTORY
 Page custom ShortCuts
+; Validate installation directory
+!define MUI_DIRECTORYPAGE_VERIFYONLEAVE
+!define MUI_PAGE_CUSTOMFUNCTION_LEAVE ValidateInstDir
 !insertmacro MUI_PAGE_INSTFILES
 !insertmacro MUI_UNPAGE_INSTFILES
 !insertmacro MUI_LANGUAGE "English"
@@ -43,6 +46,17 @@ Section "Core" Core
   SetOutPath "$INSTDIR"
   File /r "..\..\dist\"
 SectionEnd
+
+; This function check if python24.dll exists
+Function ValidateInstDir
+  IfFileExists "$INSTDIR\python24.dll" Exists DontExists
+    Exists:
+      MessageBox MB_OK|MB_ICONEXCLAMATION "The choosen directory contains python24.dll.$\n\
+This probably means you are installing over an old Nicotine+ (< 1.2.10) installation. It is not supported.$\n$\n\
+Please choose another directory or cancel this setup, uninstall the previous Nicotine+ version and then, install this one again."
+      Abort
+    DontExists:
+FunctionEnd
 
 Function ShortCuts
   !insertmacro MUI_HEADER_TEXT "Nicotine+ shortcuts" "Please choose where shortctus will be created"
