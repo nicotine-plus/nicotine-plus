@@ -787,7 +787,7 @@ class FileSearch(ServerMessage):
 	""" Server send this to tell us someone is searching for something."""
 	def __init__(self, requestid = None, text = None):
 		self.searchid = requestid
-		self.searchterm = text
+		self.searchterm = ' '.join([x for x in text.split() if x != '-'])
 	
 	def makeNetworkMessage(self):
 		return self.packObject(self.searchid)+self.packObject(self.searchterm)
@@ -1255,7 +1255,7 @@ class RoomSearch(ServerMessage):
 	def __init__(self, room=None, requestid = None, text = None):
 		self.room = room
 		self.searchid = requestid
-		self.searchterm = text
+		self.searchterm = ' '.join([x for x in text.split() if x != '-'])
 	
 	def makeNetworkMessage(self):
 		return self.packObject(self.room)+self.packObject(self.searchid)+self.packObject(self.searchterm)
