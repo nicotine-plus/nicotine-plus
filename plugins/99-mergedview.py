@@ -45,7 +45,7 @@ class Plugin(BasePlugin):
         if not self.active:
             return
         self._createIfNeeded()
-        self.fakepublic(self.__mergeroom__, self.joinPrivate(user, self.parent.myUsername), text)
+        self.fakepublic(self.__mergeroom__, self.joinPM(user, self.parent.myUsername), text)
         self.lastmessage = ('Message', user)
     def OutgoingPublicChatEvent(self, room, text):
         if not self.active:
@@ -70,7 +70,7 @@ class Plugin(BasePlugin):
     #        self.fakepublic(self.__mergeroom__, self.joinPublic(room, self.parent.myUsername), text)
     def OutgoingPrivateChatNotification(self, user, text):
         self._createIfNeeded()
-        self.fakepublic(self.__mergeroom__, self.joinPrivate(self.parent.myUsername, user), text)
+        self.fakepublic(self.__mergeroom__, self.joinPM(self.parent.myUsername, user), text)
     def LeaveChatroomNotification(self, room):
         if room == self.__mergeroom__:
             self.active = False
