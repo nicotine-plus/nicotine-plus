@@ -75,19 +75,20 @@ class Plugin(BasePlugin):
         if room == self.__mergeroom__:
             self.active = False
             self.roomsctrl.LeaveRoom(slskmessages.LeaveRoom(room)) # Faking protocol msg
-    def replyMessage(self, command, room, args):
+    def replyMessage(self, room, args):
         if self.lastmessage:
             (type, destination) = self.lastmessage
             if type == 'Public':
-                self.saypublic(destination, text)
-                self.fakepublic(self.__mergeroom__, self.joinPublic(destination, self.parent.myUsername), realtext)
+                self.saypublic(destination, args)
+                self.fakepublic(self.__mergeroom__, self.joinPublic(destination, self.parent.myUsername), args)
             elif type == 'PM':
-                self.sayprivate(destination, text)
-                self.fakepublic(self.__mergeroom__, self.joinPM(destination, self.parent.myUsername), realtext)
+                self.sayprivate(destination, args)
+                self.fakepublic(self.__mergeroom__, self.joinPM(destination, self.parent.myUsername), args)
             else:
                 self.log("EEK, programming error. (%s, %s)" % self.lastmessage)
         else:
             self.log("Nobody spoke so far, who am I supposed to send it to?")
+        return returncode['zap']
     def joinPublic(self, room, user):
         return "public %s | %s" % (room, user)
     def joinPM(self, source, destination):
