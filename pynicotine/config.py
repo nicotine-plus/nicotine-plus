@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Copyright (C) 2007 daelstorm. All rights reserved.
 #
 # This program is free software: you can redistribute it and/or modify
@@ -210,6 +211,7 @@ class Config:
 	"filterbr":[], \
 	"distrib_timer": 0, \
 	"distrib_ignore": 60, \
+	"search_results": 1, \
 	}, \
 \
 "ui":{ \

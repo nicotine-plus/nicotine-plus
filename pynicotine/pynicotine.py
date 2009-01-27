@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Copyright (C) 2007 daelstorm. All rights reserved.
 #
 # This program is free software: you can redistribute it and/or modify
@@ -1470,7 +1471,13 @@ class NetworkEventProcessor:
 		Toggle responding to distributed search each (default: 60sec)
 		interval
 		"""
-		if self.respondDistributedTimer is not None:
+		if not self.config.sections["searches"]["search_results"]:
+			# Don't return _any_ results when this option is disabled
+			if self.respondDistributedTimer is not None:
+				self.respondDistributedTimer.cancel()
+			self.respondDistributed = False
+			return
+		if self.respondDistributedTimer is not None :
 			self.respondDistributedTimer.cancel()
 		if self.config.sections["searches"]["distrib_timer"]:
 			if not settings:
@@ -1487,6 +1494,9 @@ class NetworkEventProcessor:
 			self.processSearchRequest(msg.searchterm, msg.user, msg.searchid, 0)
 	
 	def processSearchRequest(self, searchterm, user, searchid, direct = 0):
+		if not self.config.sections["searches"]["search_results"]:
+			# Don't return _any_ results when this option is disabled
+			return
 		if searchterm is None:
 			return
 

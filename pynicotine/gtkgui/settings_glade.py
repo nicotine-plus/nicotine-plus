@@ -46,9 +46,6 @@ class ServerFrame:
 		self.Server = gtk.ComboBoxEntry()
 		self.Server.show()
 
-		self.comboboxentry_entry1 = self.Server.child
-		self.comboboxentry_entry1.set_width_chars(25)
-
 		self.Server.set_model(self.Server_List)
 		self.Server.set_text_column(0)
 		self.hbox103.pack_start(self.Server, False, False, 0)
@@ -171,8 +168,6 @@ class ServerFrame:
 		self.Encoding = gtk.ComboBoxEntry()
 		self.Encoding.set_size_request(100, -1)
 		self.Encoding.show()
-
-		self.comboboxentry_entry2 = self.Encoding.child
 
 		self.Encoding.set_model(self.Encoding_List)
 		self.Encoding.set_text_column(0)
@@ -1347,9 +1342,6 @@ class BloatFrame:
 		self.DecimalSep.set_size_request(99, -1)
 		self.DecimalSep.show()
 
-		self.comboboxentry_entry3 = self.DecimalSep.child
-		self.comboboxentry_entry3.set_width_chars(5)
-
 		self.DecimalSep.set_model(self.DecimalSep_List)
 		self.DecimalSep.set_text_column(0)
 		self.hbox182.pack_start(self.DecimalSep, False, True, 0)
@@ -2240,14 +2232,21 @@ class SearchFrame:
 		self.label262.show()
 		self.vbox93.pack_start(self.label262, False, False, 0)
 
+		self.ToggleResults = gtk.CheckButton()
+		self.ToggleResults.set_label(_("Enable sending search results to other users"))
+		self.ToggleResults.show()
+		self.ToggleResults.connect("toggled", self.OnEnableSearchResults)
+
+		self.vbox93.pack_start(self.ToggleResults, False, True, 0)
+
 		self.hbox147 = gtk.HBox(False, 0)
 		self.hbox147.show()
 		self.hbox147.set_spacing(5)
 
-		self.label225 = gtk.Label(_("Send out a max of"))
-		self.label225.set_alignment(1, 0.50)
-		self.label225.show()
-		self.hbox147.pack_start(self.label225, False, False, 0)
+		self.MaxResultsL1 = gtk.Label(_("Send out a max of"))
+		self.MaxResultsL1.set_alignment(1, 0.50)
+		self.MaxResultsL1.show()
+		self.hbox147.pack_start(self.MaxResultsL1, False, False, 0)
 
 		self.MaxResults = gtk.SpinButton(gtk.Adjustment(value=50, lower=0, upper=100000, step_incr=1, page_incr=10))
 		self.MaxResults.show()
@@ -2255,9 +2254,9 @@ class SearchFrame:
 
 		self.hbox147.pack_start(self.MaxResults, False, True, 0)
 
-		self.label226 = gtk.Label(_("results per search request"))
-		self.label226.show()
-		self.hbox147.pack_start(self.label226, False, False, 0)
+		self.MaxResultsL2 = gtk.Label(_("results per search request"))
+		self.MaxResultsL2.show()
+		self.hbox147.pack_start(self.MaxResultsL2, False, False, 0)
 
 		self.vbox93.pack_start(self.hbox147, False, False, 0)
 
@@ -2392,6 +2391,9 @@ class SearchFrame:
 		if create:
 			self.SearchFrame.add(self.Main)
 
+	def OnEnableSearchResults(self, widget):
+		pass
+
 	def OnToggleDistributed(self, widget):
 		pass
 
@@ -2460,12 +2462,6 @@ class SettingsWindow:
 		self.hbuttonbox2.set_spacing(5)
 		self.hbuttonbox2.set_layout(gtk.BUTTONBOX_END)
 
-		self.OkButton = gtk.Button(None, gtk.STOCK_OK)
-		self.OkButton.show()
-		self.OkButton.connect("clicked", self.OnOk)
-
-		self.hbuttonbox2.pack_start(self.OkButton)
-
 		self.ApplyButton = gtk.Button(None, gtk.STOCK_APPLY)
 		self.ApplyButton.show()
 		self.ApplyButton.connect("clicked", self.OnApply)
@@ -2478,19 +2474,25 @@ class SettingsWindow:
 
 		self.hbuttonbox2.pack_start(self.CancelButton)
 
+		self.OkButton = gtk.Button(None, gtk.STOCK_OK)
+		self.OkButton.show()
+		self.OkButton.connect("clicked", self.OnOk)
+
+		self.hbuttonbox2.pack_start(self.OkButton)
+
 		self.vbox94.pack_start(self.hbuttonbox2, False, False, 0)
 
 
 		if create:
 			self.SettingsWindow.add(self.vbox94)
 
-	def OnOk(self, widget):
-		pass
-
 	def OnApply(self, widget):
 		pass
 
 	def OnCancel(self, widget):
+		pass
+
+	def OnOk(self, widget):
 		pass
 
 	def get_custom_widget(self, id, string1, string2, int1, int2):
@@ -2595,22 +2597,11 @@ class EventsFrame:
 		self.vbox96.set_spacing(10)
 		self.vbox96.set_border_width(5)
 
-		self.label296 = gtk.Label(_("Show notification popup in tray after...\n(requires python-notify and notification-daemon)"))
-		self.label296.set_alignment(0, 0.50)
-		self.label296.show()
-		self.vbox96.pack_start(self.label296, False, False, 0)
-
 		self.ShowNotification = gtk.CheckButton()
 		self.ShowNotification.set_label(_("...each file"))
 		self.ShowNotification.show()
 
 		self.vbox96.pack_start(self.ShowNotification, False, True, 0)
-
-		self.ShowNotificationPerFolder = gtk.CheckButton()
-		self.ShowNotificationPerFolder.set_label(_("...each directory"))
-		self.ShowNotificationPerFolder.show()
-
-		self.vbox96.pack_start(self.ShowNotificationPerFolder, False, True, 0)
 
 		self.label214 = gtk.Label(_("Run command after download finishes ($ for filename):"))
 		self.label214.set_alignment(0, 0.50)
@@ -2641,8 +2632,6 @@ class EventsFrame:
 		self.FileManagerCombo_List = gtk.ListStore(gobject.TYPE_STRING)
 		self.FileManagerCombo = gtk.ComboBoxEntry()
 		self.FileManagerCombo.show()
-
-		self.comboboxentry_entry5 = self.FileManagerCombo.child
 
 		self.FileManagerCombo.set_model(self.FileManagerCombo_List)
 		self.FileManagerCombo.set_text_column(0)
@@ -2715,6 +2704,17 @@ class EventsFrame:
 		self.frame2.set_label_widget(self.label45)
 
 		self.vbox96.pack_start(self.frame2, False, True, 0)
+
+		self.ShowNotificationPerFolder = gtk.CheckButton()
+		self.ShowNotificationPerFolder.set_label(_("...each directory"))
+		self.ShowNotificationPerFolder.show()
+
+		self.vbox96.pack_start(self.ShowNotificationPerFolder, False, True, 0)
+
+		self.label296 = gtk.Label(_("Show notification popup in tray after...\n(requires python-notify and notification-daemon)"))
+		self.label296.set_alignment(0, 0.50)
+		self.label296.show()
+		self.vbox96.pack_start(self.label296, False, False, 0)
 
 		self.Main.add(self.vbox96)
 
@@ -2919,8 +2919,6 @@ class UrlCatchFrame:
 		self.Handler = gtk.ComboBoxEntry()
 		self.Handler.show()
 
-		self.comboboxentry_entry6 = self.Handler.child
-
 		self.Handler.set_model(self.Handler_List)
 		self.Handler.set_text_column(0)
 		self.table3.attach(self.Handler, 1, 2, 1, 2, gtk.EXPAND|gtk.FILL, gtk.FILL, 0, 0)
@@ -2964,9 +2962,6 @@ class UrlCatchFrame:
 		self.ProtocolCombo_List = gtk.ListStore(gobject.TYPE_STRING)
 		self.ProtocolCombo = gtk.ComboBoxEntry()
 		self.ProtocolCombo.show()
-
-		self.Protocol = self.ProtocolCombo.child
-		self.Protocol.show()
 
 		self.ProtocolCombo.set_model(self.ProtocolCombo_List)
 		self.ProtocolCombo.set_text_column(0)
@@ -3308,8 +3303,6 @@ class SoundsFrame:
 		self.SoundCommand = gtk.ComboBoxEntry()
 		self.SoundCommand.show()
 
-		self.comboboxentry_entry7 = self.SoundCommand.child
-
 		self.SoundCommand.set_model(self.SoundCommand_List)
 		self.SoundCommand.set_text_column(0)
 		self.hbox228.pack_start(self.SoundCommand)
@@ -3404,8 +3397,6 @@ class SoundsFrame:
 		self.TTSCommand_List = gtk.ListStore(gobject.TYPE_STRING)
 		self.TTSCommand = gtk.ComboBoxEntry()
 		self.TTSCommand.show()
-
-		self.TTSCommandEntry = self.TTSCommand.child
 
 		self.TTSCommand.set_model(self.TTSCommand_List)
 		self.TTSCommand.set_text_column(0)
@@ -3528,8 +3519,6 @@ class SoundsFrame:
 		self.audioPlayerCombo_List = gtk.ListStore(gobject.TYPE_STRING)
 		self.audioPlayerCombo = gtk.ComboBoxEntry()
 		self.audioPlayerCombo.show()
-
-		self.comboboxentry_entry8 = self.audioPlayerCombo.child
 
 		self.audioPlayerCombo.set_model(self.audioPlayerCombo_List)
 		self.audioPlayerCombo.set_text_column(0)
@@ -3859,10 +3848,6 @@ class CensorFrame:
 		self.CensorReplaceCombo_List = gtk.ListStore(gobject.TYPE_STRING)
 		self.CensorReplaceCombo = gtk.ComboBoxEntry()
 		self.CensorReplaceCombo.show()
-
-		self.CensorReplaceEntry = self.CensorReplaceCombo.child
-		self.CensorReplaceEntry.show()
-		self.CensorReplaceEntry.set_width_chars(3)
 
 		self.CensorReplaceCombo.set_model(self.CensorReplaceCombo_List)
 		self.CensorReplaceCombo.set_text_column(0)
@@ -4475,26 +4460,6 @@ class NotebookFrame:
 
 		self.vboxUI2.pack_start(self.TabIcons, False, False, 0)
 
-		self.TabColours = gtk.CheckButton()
-		self.TabColours.show()
-
-		self.hbox43 = gtk.HBox(False, 0)
-		self.hbox43.show()
-		self.hbox43.set_spacing(5)
-
-		self.NotificationIcon2 = gtk.Image()
-		self.NotificationIcon2.set_from_stock(gtk.STOCK_SELECT_COLOR, 4)
-		self.NotificationIcon2.show()
-		self.hbox43.pack_start(self.NotificationIcon2)
-
-		self.label32 = gtk.Label(_("Notification changes the tab's text color"))
-		self.label32.show()
-		self.hbox43.pack_start(self.label32)
-
-		self.TabColours.add(self.hbox43)
-
-		self.vboxUI2.pack_start(self.TabColours, False, False, 0)
-
 		self.TabReorderable = gtk.CheckButton()
 		self.TabReorderable.show()
 
@@ -4725,6 +4690,26 @@ class NotebookFrame:
 
 		self.vboxUI2.pack_start(self.bNoteHBox, False, True, 0)
 
+		self.TabColours = gtk.CheckButton()
+		self.TabColours.show()
+
+		self.hbox43 = gtk.HBox(False, 0)
+		self.hbox43.show()
+		self.hbox43.set_spacing(5)
+
+		self.NotificationIcon2 = gtk.Image()
+		self.NotificationIcon2.set_from_stock(gtk.STOCK_SELECT_COLOR, 4)
+		self.NotificationIcon2.show()
+		self.hbox43.pack_start(self.NotificationIcon2)
+
+		self.label32 = gtk.Label(_("Notification changes the tab's text color"))
+		self.label32.show()
+		self.hbox43.pack_start(self.label32)
+
+		self.TabColours.add(self.hbox43)
+
+		self.vboxUI2.pack_start(self.TabColours, False, False, 0)
+
 		self.Main.add(self.vboxUI2)
 
 		self.label130 = gtk.Label("")
@@ -4909,8 +4894,6 @@ class ColoursFrame:
 		self.UsernameStyle_List = gtk.ListStore(gobject.TYPE_STRING)
 		self.UsernameStyle = gtk.ComboBoxEntry()
 		self.UsernameStyle.show()
-
-		self.comboboxentry_entry4 = self.UsernameStyle.child
 
 		self.UsernameStyle.set_model(self.UsernameStyle_List)
 		self.UsernameStyle.set_text_column(0)

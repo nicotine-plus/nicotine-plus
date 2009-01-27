@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # coding=utf-8
 # Copyright (C) 2007 daelstorm. All rights reserved.
 #
@@ -836,7 +837,7 @@ class SoundsFrame(settings_glade.SoundsFrame):
 				"soundtheme": self.SoundDirectory.get_text(),
 				"soundenabled": self.SoundCheck.get_active(),
 				"speechenabled": self.TextToSpeech.get_active(),
-				"speechcommand": self.TTSCommandEntry.get_text(),
+				"speechcommand": self.TTSCommand.child.get_text(),
 				"speechrooms": self.RoomMessage.get_text(),
 				"speechprivate": self.PrivateMessage.get_text(),
 			},
@@ -1482,7 +1483,7 @@ class SearchFrame(settings_glade.SearchFrame):
 		self.p = parent
 		self.frame = parent.frame
 		settings_glade.SearchFrame.__init__(self, False)
-		self.options = {"searches": {"maxresults": self.MaxResults, "enablefilters": self.EnableFilters, "re_filter": self.RegexpFilters, "defilter": None, "distrib_timer": self.ToggleDistributed, "distrib_ignore": self.ToggleDistributedInterval, "reopen_tabs": self.ReopenTabs}}
+		self.options = {"searches": {"maxresults": self.MaxResults, "enablefilters": self.EnableFilters, "re_filter": self.RegexpFilters, "defilter": None, "distrib_timer": self.ToggleDistributed, "distrib_ignore": self.ToggleDistributedInterval, "reopen_tabs": self.ReopenTabs, "search_results": self.ToggleResults}}
 
 	def SetSettings(self, config):
 		try:
@@ -1525,12 +1526,18 @@ class SearchFrame(settings_glade.SearchFrame):
 				"distrib_timer": self.ToggleDistributed.get_active(),
 				"distrib_ignore": self.ToggleDistributedInterval.get_value_as_int(),
 				"reopen_tabs": self.ReopenTabs.get_active(),
+				"search_results": self.ToggleResults.get_active(),
 			}
 		}
 
 	def OnEnableFiltersToggled(self, widget):
 		active = widget.get_active()
 		for w in self.FilterIn, self.FilterOut, self.FilterSize, self.FilterBR, self.FilterFree:
+			w.set_sensitive(active)
+
+	def OnEnableSearchResults(self, widget):
+		active = widget.get_active()
+		for w in self.MaxResults, self.MaxResultsL1, self.MaxResultsL2,self.ToggleDistributed, self.ToggleDistributedInterval, self.secondsLabel:
 			w.set_sensitive(active)
 
 class AwayFrame(settings_glade.AwayFrame):
@@ -1757,15 +1764,15 @@ class UrlCatchFrame(settings_glade.UrlCatchFrame):
 	def OnSelect(self, selection):
 		model, iter = selection.get_selected()
 		if iter == None:
-			self.Protocol.set_text("")
+			self.ProtocolCombo.child.set_text("")
 		else:
 			protocol = model.get_value(iter, 0)
 			handler = model.get_value(iter, 1)
-			self.Protocol.set_text(protocol)
+			self.ProtocolCombo.child.set_text(protocol)
 			self.Handler.child.set_text(handler)
 
 	def OnAdd(self, widget):
-		protocol = self.Protocol.get_text()
+		protocol = self.ProtocolCombo.child.get_text()
 		command = self.Handler.child.get_text()
 		if protocol in self.protocols:
 			iter = self.protocols[protocol]
@@ -1788,7 +1795,7 @@ class CensorFrame(settings_glade.CensorFrame):
 		self.p = parent
 		self.frame = parent.frame
 		settings_glade.CensorFrame.__init__(self, False)
-		self.options = {"words": {"censorfill": self.CensorReplaceEntry, "censored": self.CensorList, "censorwords": self.CensorCheck, }}
+		self.options = {"words": {"censorfill": self.CensorReplaceCombo.child, "censored": self.CensorList, "censorwords": self.CensorCheck, }}
 		self.censorlist = gtk.ListStore(gobject.TYPE_STRING)
 		cols = InitialiseColumns(self.CensorList,
 			[_("Pattern"), -1, "edit", self.frame.CellDataFunc],
@@ -1849,7 +1856,7 @@ class CensorFrame(settings_glade.CensorFrame):
 		return {
 			
 			"words": {
-				"censorfill": self.CensorReplaceEntry.get_text(),
+				"censorfill": self.CensorReplaceCombo.child.get_text(),
 				"censored": censored,
 				"censorwords": self.CensorCheck.get_active(),
 			}

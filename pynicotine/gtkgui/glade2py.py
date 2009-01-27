@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 # Copyright (C) 2007 daelstorm. All rights reserved.
 #
 # This program is free software: you can redistribute it and/or modify
@@ -33,12 +34,12 @@ attrs = [
 	["title", lambda w, v: "%s.set_title(_(\"%s\"))" %(w, v.replace("\"", "\\\""))],
 	["active", lambda w, v: "%s.set_active(%s)" % (w, v.capitalize())],
 	["label", lambda w, v: "%s.set_label(_(\"%s\"))" %(w, v.replace("\"", "\\\"").replace("\n", "\\n"))],
-	["window_position", lambda w,v: "%s.set_position(%s)" % (w, v.replace("GTK_", "gtk."))],
+	["window_position", lambda w,v: "%s.set_position(%s)" % (w, v.replace("none", "gtk.WIN_POS_NONE").replace("center", "gtk.WIN_POS_CENTER").replace("mouse", "gtk.WIN_POS_MOUSE").replace("center-always", "gtk.WIN_POS_CENTER_ALWAYS").replace("center-on-parent", "gtk.WIN_POS_CENTER_ON_PARENT").replace("GTK_", "gtk."))],
 	["tab_pos", lambda w,v: "%s.set_tab_pos(%s)" % (w, v.replace("GTK_", "gtk."))],
 	["has_resize_grip", lambda w,v: "%s.set_has_resize_grip(%s)" % (w,v.capitalize())],
 	["text", lambda w,v: ("%s.set_text(_(\"%s\"))" % (w, v.replace("\"", "\\\""))).replace("_(\"\")", "\"\"")],
 	["accel_group", lambda w,v: "%s.add_accel_group(%s)" % (w, v)],
-	["wrap_mode", lambda w,v: "%s.set_wrap_mode(%s)" % (w, v.replace("GTK_", "gtk."))],
+	["wrap_mode", lambda w,v: "%s.set_wrap_mode(%s)" % (w, v.replace("none", "gtk.WRAP_NONE").replace("char", "gtk.WRAP_CHAR").replace("word", "gtk.WRAP_WORD").replace("word-char", "gtk.WRAP_WORD_CHAR").replace("GTK_", "gtk."))],
 	["wrap", lambda w,v: "%s.set_line_wrap(%s)" % (w, v.capitalize())],
 	["set_markup", lambda w,v: "%s.set_markup(_(\"%s\"))" % (w, v)],
 	["cursor_visible", lambda w,v: "%s.set_cursor_visible(%s)" % (w, v.capitalize())],
@@ -57,8 +58,8 @@ attrs = [
 	["width_chars", lambda w,v: "%s.set_width_chars(%s)" % (w,v)],
 	["row_spacing", lambda w,v: "%s.set_row_spacings(%s)" % (w,v)],
 	["column_spacing", lambda w,v: "%s.set_col_spacings(%s)" % (w,v)],
-	["layout_style", lambda w,v: "%s.set_layout(%s)" % (w, v.replace("GTK_", "gtk."))],
-	["shadow_type", lambda w,v: "%s.set_shadow_type(%s)" % (w, v.replace("GTK_", "gtk."))],
+	["layout_style", lambda w,v: "%s.set_layout(%s)" % (w, v.replace("end", "gtk.BUTTONBOX_END").replace("default-style", "gtk.BUTTONBOX_DEFAULT_STYLE").replace("spread", "gtk.BUTTONBOX_SPREAD").replace("edge", "gtk.BUTTONBOX_EDGE").replace("start", "gtk.BUTTONBOX_START").replace("GTK_", "gtk."))],
+	["shadow_type", lambda w,v: "%s.set_shadow_type(%s)" % (w, v.replace("in", "gtk.SHADOW_IN").replace("none", "gtk.SHADOW_NONE").replace("etched-in", "gtk.SHADOW_ETCHED_IN").replace("etched-out", "gtk.SHADOW_ETCHED_OUT").replace("out", "gtk.SHADOW_OUT").replace("GTK_", "gtk."))],
 	["items", lambda w,v: "for i in [_(\"%s\")]:\n%s\t%s_List.append([i])" % ("\"), _(\"".join(v.replace("\"", "\\\"").split("\n")), indent, w)],
 ]
 
@@ -77,8 +78,8 @@ def write_widget_attrs(widget):
 		print indent + "%s.set_default_size(%s, %s)" % (widget.id, w, h)
 
 	if widget.attrs.has_key("hscrollbar_policy"):
-		h = widget.attrs["hscrollbar_policy"].replace("GTK_", "gtk.")
-		v = widget.attrs["vscrollbar_policy"].replace("GTK_", "gtk.")
+		h = widget.attrs["hscrollbar_policy"].replace("automatic", "gtk.POLICY_AUTOMATIC").replace("never", "gtk.POLICY_NEVER").replace("always", "gtk.POLICY_ALWAYS").replace("GTK_", "gtk.")
+		v = widget.attrs["vscrollbar_policy"].replace("automatic", "gtk.POLICY_AUTOMATIC").replace("never", "gtk.POLICY_NEVER").replace("always", "gtk.POLICY_ALWAYS").replace("GTK_", "gtk.")
 		print indent + "%s.set_policy(%s, %s)" % (widget.id, h, v)
 
 	if widget.my_class != "GtkAlignment":
@@ -472,7 +473,11 @@ def write_widget_filechooserbutton(widget):
 	del widget.attrs["title"]
 	write_widget_container(widget, "FileChooserButton", PM_ADD, title)
 	if widget.attrs.has_key("action"):
-		print indent + "%s.set_action(gtk.%s)" % (widget.id, widget.attrs["action"][4:].upper().replace("-", "_"))
+		#widget.attrs["action"].replace("select-folder", "gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER").replace("-", "_")
+		action = widget.attrs["action"]
+		if action[:4] != "GTK_":
+			action = "gtk.FILE_CHOOSER_ACTION_"+action.upper().replace("-", "_")
+		print indent + "%s.set_action(%s)" % (widget.id, action)
 	print
 	
 def write_widget_togglebutton(widget):
