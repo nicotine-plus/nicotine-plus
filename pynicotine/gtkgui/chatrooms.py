@@ -1646,6 +1646,7 @@ class ChatRoom(ChatRoomTab):
 		
 	def OnClearChatLog(self, widget):
 		self.ChatScroll.get_buffer().set_text("")
+		self.lines = []
 
 	def OnClearRoomLog(self, widget):
 		self.RoomLog.get_buffer().set_text("")
