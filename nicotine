@@ -165,13 +165,12 @@ http://www.nicotine-plus.org/newticket""")
 
 def renameprocess(newname, debug = False):
 	errors = []
-	renamed = False
 	# Renaming ourselves for ps et al.
 	try:
 		import procname
-	procname.setprocname(newname)
+		procname.setprocname(newname)
 	except:
-	errors.append("Failed procname module")
+		errors.append("Failed procname module")
 	# Renaming ourselves for pkill et al.
 	try:
 		import ctypes
