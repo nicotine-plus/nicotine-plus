@@ -163,7 +163,40 @@ Usage: nicotine [OPTION]...
 Please report any problems to our bugtracker :
 http://www.nicotine-plus.org/newticket""")
 
+def renameprocess(newname, debug = False):
+	errors = []
+	renamed = False
+	# Renaming ourselves for ps et al.
+	try:
+		import procname
+	procname.setprocname(newname)
+	except:
+	errors.append("Failed procname module")
+	# Renaming ourselves for pkill et al.
+	try:
+		import ctypes
+		# Linux style
+		libc = ctypes.CDLL('libc.so.6')
+		libc.prctl(15, newname, 0, 0, 0)
+	except:
+		errors.append("Failed linux style")
+	try:
+		import dl
+		# FreeBSD style
+		libc = dl.open('/lib/libc.so.6')
+		libc.call('setproctitle', newname + '\0')
+		renamed = True
+	except:
+		errors.append("Failed FreeBSD style")
+	if debug and errors:
+		print "Errors occured while trying to change process name:"
+		for i in errors:
+			print i
+
+
+
 if __name__ == '__main__':
+	renameprocess('nicotine')
 	import locale
 	# Win32 hack to fix LANG and LC_ALL environnment variables with unix compliant language code
 	# See pynicotine/libi18n.py
