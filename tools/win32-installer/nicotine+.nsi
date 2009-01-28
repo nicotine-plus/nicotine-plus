@@ -49,13 +49,12 @@ SectionEnd
 
 ; This function check if python24.dll exists
 Function ValidateInstDir
-  IfFileExists "$INSTDIR\python24.dll" Exists DontExists
-    Exists:
-      MessageBox MB_OK|MB_ICONEXCLAMATION "The choosen directory contains python24.dll.$\n\
+  ${If} ${FileExists} "$INSTDIR\python24.dll"
+    MessageBox MB_OK|MB_ICONEXCLAMATION "The choosen directory contains python24.dll.$\n\
 This probably means you are installing over an old Nicotine+ (< 1.2.10) installation. It is not supported.$\n$\n\
 Please choose another directory or cancel this setup, uninstall the previous Nicotine+ version and then, install this one again."
-      Abort
-    DontExists:
+    Abort
+  ${EndIf}    
 FunctionEnd
 
 Function ShortCuts
