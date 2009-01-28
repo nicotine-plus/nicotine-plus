@@ -27,7 +27,7 @@ class PrivateChatTab:
 		self.scrolledwindow16.set_shadow_type(gtk.SHADOW_IN)
 
 		self.ChatScroll = gtk.TextView()
-		self.ChatScroll.set_wrap_mode(gtk.WRAP_WORD)
+		self.ChatScroll.set_wrap_mode(gtk.WRAP_WORD_CHAR)
 		self.ChatScroll.set_cursor_visible(False)
 		self.ChatScroll.set_editable(False)
 		self.ChatScroll.show()

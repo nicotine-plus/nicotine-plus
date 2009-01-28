@@ -39,7 +39,7 @@ attrs = [
 	["has_resize_grip", lambda w,v: "%s.set_has_resize_grip(%s)" % (w,v.capitalize())],
 	["text", lambda w,v: ("%s.set_text(_(\"%s\"))" % (w, v.replace("\"", "\\\""))).replace("_(\"\")", "\"\"")],
 	["accel_group", lambda w,v: "%s.add_accel_group(%s)" % (w, v)],
-	["wrap_mode", lambda w,v: "%s.set_wrap_mode(%s)" % (w, v.replace("none", "gtk.WRAP_NONE").replace("char", "gtk.WRAP_CHAR").replace("word", "gtk.WRAP_WORD").replace("word-char", "gtk.WRAP_WORD_CHAR").replace("GTK_", "gtk."))],
+	["wrap_mode", lambda w,v: "%s.set_wrap_mode(%s)" % (w, v.replace("none", "gtk.WRAP_NONE").replace("word-char", "gtk.WRAP_WORD_CHAR").replace("char", "gtk.WRAP_CHAR").replace("word", "gtk.WRAP_WORD").replace("GTK_", "gtk."))],
 	["wrap", lambda w,v: "%s.set_line_wrap(%s)" % (w, v.capitalize())],
 	["set_markup", lambda w,v: "%s.set_markup(_(\"%s\"))" % (w, v)],
 	["cursor_visible", lambda w,v: "%s.set_cursor_visible(%s)" % (w, v.capitalize())],

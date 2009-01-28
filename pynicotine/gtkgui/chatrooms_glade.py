@@ -40,7 +40,7 @@ class ChatRoomTab:
 		self.hbox48.show()
 
 		self.SpeechIcon = gtk.Image()
-		self.SpeechIcon.set_from_stock(gtk.STOCK_MEDIA_PLAY, 1)
+		self.SpeechIcon.set_from_stock(gtk.STOCK_MEDIA_PLAY, 4)
 		self.SpeechIcon.show()
 		self.hbox48.pack_start(self.SpeechIcon, False, False, 0)
 
@@ -62,7 +62,7 @@ class ChatRoomTab:
 		self.hbox70.show()
 
 		self.HideUserListImage = gtk.Image()
-		self.HideUserListImage.set_from_stock(gtk.STOCK_GO_FORWARD, 1)
+		self.HideUserListImage.set_from_stock(gtk.STOCK_GO_FORWARD, 4)
 		self.HideUserListImage.show()
 		self.hbox70.pack_start(self.HideUserListImage, False, False, 0)
 
@@ -84,7 +84,7 @@ class ChatRoomTab:
 		self.hbox67.show()
 
 		self.HideStatusLogImage = gtk.Image()
-		self.HideStatusLogImage.set_from_stock(gtk.STOCK_GO_UP, 1)
+		self.HideStatusLogImage.set_from_stock(gtk.STOCK_GO_UP, 4)
 		self.HideStatusLogImage.show()
 		self.hbox67.pack_start(self.HideStatusLogImage, False, False, 0)
 
@@ -124,7 +124,7 @@ class ChatRoomTab:
 		self.ChatScrollWindow.set_shadow_type(gtk.SHADOW_IN)
 
 		self.ChatScroll = gtk.TextView()
-		self.ChatScroll.set_wrap_mode(gtk.WRAP_WORD)
+		self.ChatScroll.set_wrap_mode(gtk.WRAP_WORD_CHAR)
 		self.ChatScroll.set_cursor_visible(False)
 		self.ChatScroll.set_editable(False)
 		self.ChatScroll.show()
@@ -153,7 +153,7 @@ class ChatRoomTab:
 		self.hbox47.show()
 
 		self.image39 = gtk.Image()
-		self.image39.set_from_stock(gtk.STOCK_HELP, 1)
+		self.image39.set_from_stock(gtk.STOCK_HELP, 4)
 		self.image39.show()
 		self.hbox47.pack_start(self.image39, False, False, 0)
 
