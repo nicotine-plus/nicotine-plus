@@ -4255,7 +4255,7 @@ when new results come in</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="width_chars">6</property>
-                    <property name="adjustment">100 100 25000 1 100 100</property>
+                    <property name="adjustment">100 100 25000 10 100 100</property>
                   </widget>
                   <packing>
                     <property name="expand">False</property>

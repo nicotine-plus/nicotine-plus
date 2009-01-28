@@ -2425,7 +2425,7 @@ class SearchFrame:
 		self.MaxStoredLabel.show()
 		self.hbox4.pack_start(self.MaxStoredLabel, False, True, 0)
 
-		self.MaxStoredResults = gtk.SpinButton(gtk.Adjustment(value=100, lower=100, upper=25000, step_incr=1, page_incr=100))
+		self.MaxStoredResults = gtk.SpinButton(gtk.Adjustment(value=100, lower=100, upper=25000, step_incr=10, page_incr=100))
 		self.MaxStoredResults.show()
 		self.MaxStoredResults.set_width_chars(6)
 
