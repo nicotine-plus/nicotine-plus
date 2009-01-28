@@ -14,6 +14,8 @@ import sys
 import os
 import glob
 
+from os.path import isdir
+
 from distutils.core import setup
 from distutils.sysconfig import get_python_lib
 
@@ -44,13 +46,21 @@ files=[]
 if is_windows:
 	# Get Gtk+ path (we need to copy lib, share and etc subdir to binary path
 	gtkdir = _winreg.QueryValueEx(k, "Path")[0].strip(os.sep)
+	langdir = os.path.join(gtkdir,'share','locale')
+	langs = [x for x in listdir('languages') if isdir(os.path.join('languages',x))]
 	for gtksubdir in ["lib","share","etc"]:
 		gtkdirfull = os.path.join(gtkdir,gtksubdir)
 		skip = len(gtkdirfull)+1
-		for varroot, vardirs, varfiles in os.walk(gtkdirfull):
-			this = (os.path.join(gtksubdir,varroot[skip:]), [os.path.join(varroot, x) for x in varfiles])
-			if this[1]:
-				files.append(this)
+		for varroot, vardirs, varfiles in os.walk(gtkdirfull, topdown=True):
+			relativepath = os.path.join(gtksubdir,varroot[skip:])
+			absolutefiles = [os.path.join(varroot, x) for x in varfiles])
+			if varroot == langdir:
+				for d in vardirs:
+					if d not in langs:
+						print "Removing language " + d + " from list."
+						vardirs.remove(d)
+			if absolutefiles:
+				files.append((relativepath, absolutefiles))
 	# We need to include libjpeg
 	files.append(("",([os.path.join(gtkdir,'bin','jpeg62.dll')])))
 else:
