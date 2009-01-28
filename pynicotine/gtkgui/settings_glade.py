@@ -2425,7 +2425,7 @@ class SearchFrame:
 		self.MaxStoredLabel.show()
 		self.hbox4.pack_start(self.MaxStoredLabel, False, True, 0)
 
-		self.MaxStoredResults = gtk.SpinButton(gtk.Adjustment(value=100, lower=100, upper=25000, step_incr=0, page_incr=100))
+		self.MaxStoredResults = gtk.SpinButton(gtk.Adjustment(value=100, lower=100, upper=25000, step_incr=1, page_incr=100))
 		self.MaxStoredResults.show()
 		self.MaxStoredResults.set_width_chars(6)
 
@@ -2649,21 +2649,22 @@ class EventsFrame:
 		self.vbox96.set_spacing(10)
 		self.vbox96.set_border_width(5)
 
-		self.label296 = gtk.Label(_("Show notification popup in tray after...\n(requires python-notify and notification-daemon)"))
-		self.label296.set_alignment(0, 0.50)
-		self.label296.show()
-		self.vbox96.pack_start(self.label296, False, False, 0)
-
 		self.ShowNotification = gtk.CheckButton()
 		self.ShowNotification.set_label(_("...each file"))
 		self.ShowNotification.show()
 
 		self.vbox96.pack_start(self.ShowNotification, False, True, 0)
 
-		self.AfterDownload = gtk.Entry()
-		self.AfterDownload.set_size_request(313, -1)
-		self.AfterDownload.show()
-		self.vbox96.pack_start(self.AfterDownload, False, False, 0)
+		self.label214 = gtk.Label(_("Run command after download finishes ($ for filename):"))
+		self.label214.set_alignment(0, 0.50)
+		self.label214.show()
+		self.vbox96.pack_start(self.label214, False, False, 0)
+
+		self.ShowNotificationPerFolder = gtk.CheckButton()
+		self.ShowNotificationPerFolder.set_label(_("...each directory"))
+		self.ShowNotificationPerFolder.show()
+
+		self.vbox96.pack_start(self.ShowNotificationPerFolder, False, True, 0)
 
 		self.label215 = gtk.Label(_("Run command after folder finishes ($ for folder path):"))
 		self.label215.set_alignment(0, 0.50)
@@ -2757,16 +2758,15 @@ class EventsFrame:
 
 		self.vbox96.pack_start(self.frame2, False, True, 0)
 
-		self.ShowNotificationPerFolder = gtk.CheckButton()
-		self.ShowNotificationPerFolder.set_label(_("...each directory"))
-		self.ShowNotificationPerFolder.show()
+		self.AfterDownload = gtk.Entry()
+		self.AfterDownload.set_size_request(313, -1)
+		self.AfterDownload.show()
+		self.vbox96.pack_start(self.AfterDownload, False, False, 0)
 
-		self.vbox96.pack_start(self.ShowNotificationPerFolder, False, True, 0)
-
-		self.label214 = gtk.Label(_("Run command after download finishes ($ for filename):"))
-		self.label214.set_alignment(0, 0.50)
-		self.label214.show()
-		self.vbox96.pack_start(self.label214, False, False, 0)
+		self.label296 = gtk.Label(_("Show notification popup in tray after...\n(requires python-notify and notification-daemon)"))
+		self.label296.set_alignment(0, 0.50)
+		self.label296.show()
+		self.vbox96.pack_start(self.label296, False, False, 0)
 
 		self.Main.add(self.vbox96)
 
@@ -4512,25 +4512,25 @@ class NotebookFrame:
 
 		self.vboxUI2.pack_start(self.TabIcons, False, False, 0)
 
-		self.TabReorderable = gtk.CheckButton()
-		self.TabReorderable.show()
+		self.TabColours = gtk.CheckButton()
+		self.TabColours.show()
 
-		self.hboxReorderable = gtk.HBox(False, 0)
-		self.hboxReorderable.show()
-		self.hboxReorderable.set_spacing(5)
+		self.hbox43 = gtk.HBox(False, 0)
+		self.hbox43.show()
+		self.hbox43.set_spacing(5)
 
-		self.ReorderableIcon = gtk.Image()
-		self.ReorderableIcon.set_from_stock(gtk.STOCK_GO_FORWARD, 4)
-		self.ReorderableIcon.show()
-		self.hboxReorderable.pack_start(self.ReorderableIcon)
+		self.NotificationIcon2 = gtk.Image()
+		self.NotificationIcon2.set_from_stock(gtk.STOCK_SELECT_COLOR, 4)
+		self.NotificationIcon2.show()
+		self.hbox43.pack_start(self.NotificationIcon2)
 
-		self.labelReorderable = gtk.Label(_("Tabs can be repositioned"))
-		self.labelReorderable.show()
-		self.hboxReorderable.pack_start(self.labelReorderable)
+		self.label32 = gtk.Label(_("Notification changes the tab's text color"))
+		self.label32.show()
+		self.hbox43.pack_start(self.label32)
 
-		self.TabReorderable.add(self.hboxReorderable)
+		self.TabColours.add(self.hbox43)
 
-		self.vboxUI2.pack_start(self.TabReorderable, False, False, 0)
+		self.vboxUI2.pack_start(self.TabColours, False, False, 0)
 
 		self.mNoteHBox = gtk.HBox(False, 0)
 		self.mNoteHBox.show()
@@ -4742,25 +4742,25 @@ class NotebookFrame:
 
 		self.vboxUI2.pack_start(self.bNoteHBox, False, True, 0)
 
-		self.TabColours = gtk.CheckButton()
-		self.TabColours.show()
+		self.TabReorderable = gtk.CheckButton()
+		self.TabReorderable.show()
 
-		self.hbox43 = gtk.HBox(False, 0)
-		self.hbox43.show()
-		self.hbox43.set_spacing(5)
+		self.hboxReorderable = gtk.HBox(False, 0)
+		self.hboxReorderable.show()
+		self.hboxReorderable.set_spacing(5)
 
-		self.NotificationIcon2 = gtk.Image()
-		self.NotificationIcon2.set_from_stock(gtk.STOCK_SELECT_COLOR, 4)
-		self.NotificationIcon2.show()
-		self.hbox43.pack_start(self.NotificationIcon2)
+		self.ReorderableIcon = gtk.Image()
+		self.ReorderableIcon.set_from_stock(gtk.STOCK_GO_FORWARD, 4)
+		self.ReorderableIcon.show()
+		self.hboxReorderable.pack_start(self.ReorderableIcon)
 
-		self.label32 = gtk.Label(_("Notification changes the tab's text color"))
-		self.label32.show()
-		self.hbox43.pack_start(self.label32)
+		self.labelReorderable = gtk.Label(_("Tabs can be repositioned"))
+		self.labelReorderable.show()
+		self.hboxReorderable.pack_start(self.labelReorderable)
 
-		self.TabColours.add(self.hbox43)
+		self.TabReorderable.add(self.hboxReorderable)
 
-		self.vboxUI2.pack_start(self.TabColours, False, False, 0)
+		self.vboxUI2.pack_start(self.TabReorderable, False, False, 0)
 
 		self.Main.add(self.vboxUI2)
 

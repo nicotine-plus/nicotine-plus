@@ -4255,7 +4255,7 @@ when new results come in</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="width_chars">6</property>
-                    <property name="adjustment">100 100 25000 0 100 100</property>
+                    <property name="adjustment">100 100 25000 1 100 100</property>
                   </widget>
                   <packing>
                     <property name="expand">False</property>
@@ -4519,18 +4519,6 @@ when new results come in</property>
             <property name="border_width">5</property>
             <property name="spacing">10</property>
             <child>
-              <widget class="GtkLabel" id="label296">
-                <property name="visible">True</property>
-                <property name="xalign">0</property>
-                <property name="label" translatable="yes">Show notification popup in tray after...\n(requires python-notify and notification-daemon)</property>
-              </widget>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="position">1</property>
-              </packing>
-            </child>
-            <child>
               <widget class="GtkCheckButton" id="ShowNotification">
                 <property name="label" translatable="yes">...each file</property>
                 <property name="visible">True</property>
@@ -4545,14 +4533,28 @@ when new results come in</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkEntry" id="AfterDownload">
-                <property name="width_request">313</property>
+              <widget class="GtkLabel" id="label214">
                 <property name="visible">True</property>
-                <property name="can_focus">True</property>
+                <property name="xalign">0</property>
+                <property name="label" translatable="yes">Run command after download finishes ($ for filename):</property>
               </widget>
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkCheckButton" id="ShowNotificationPerFolder">
+                <property name="label" translatable="yes">...each directory</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">False</property>
+                <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                <property name="draw_indicator">True</property>
+              </widget>
+              <packing>
+                <property name="expand">False</property>
                 <property name="position">2</property>
               </packing>
             </child>
@@ -4717,24 +4719,22 @@ Clear</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkCheckButton" id="ShowNotificationPerFolder">
-                <property name="label" translatable="yes">...each directory</property>
+              <widget class="GtkEntry" id="AfterDownload">
+                <property name="width_request">313</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="receives_default">False</property>
-                <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                <property name="draw_indicator">True</property>
               </widget>
               <packing>
                 <property name="expand">False</property>
+                <property name="fill">False</property>
                 <property name="position">2</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkLabel" id="label214">
+              <widget class="GtkLabel" id="label296">
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
-                <property name="label" translatable="yes">Run command after download finishes ($ for filename):</property>
+                <property name="label" translatable="yes">Show notification popup in tray after...\n(requires python-notify and notification-daemon)</property>
               </widget>
               <packing>
                 <property name="expand">False</property>
@@ -7618,31 +7618,31 @@ typed incorrectly or as an acronym</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkCheckButton" id="TabReorderable">
+              <widget class="GtkCheckButton" id="TabColours">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
                 <property name="draw_indicator">True</property>
                 <child>
-                  <widget class="GtkHBox" id="hboxReorderable">
+                  <widget class="GtkHBox" id="hbox43">
                     <property name="visible">True</property>
                     <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                     <property name="spacing">5</property>
                     <child>
-                      <widget class="GtkImage" id="ReorderableIcon">
+                      <widget class="GtkImage" id="NotificationIcon2">
                         <property name="visible">True</property>
                         <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                        <property name="stock">gtk-go-forward</property>
+                        <property name="stock">gtk-select-color</property>
                       </widget>
                       <packing>
                         <property name="position">0</property>
                       </packing>
                     </child>
                     <child>
-                      <widget class="GtkLabel" id="labelReorderable">
+                      <widget class="GtkLabel" id="label32">
                         <property name="visible">True</property>
                         <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                        <property name="label" translatable="yes">Tabs can be repositioned</property>
+                        <property name="label" translatable="yes">Notification changes the tab's text color</property>
                       </widget>
                       <packing>
                         <property name="position">1</property>
@@ -8038,31 +8038,31 @@ Right</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkCheckButton" id="TabColours">
+              <widget class="GtkCheckButton" id="TabReorderable">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
                 <property name="draw_indicator">True</property>
                 <child>
-                  <widget class="GtkHBox" id="hbox43">
+                  <widget class="GtkHBox" id="hboxReorderable">
                     <property name="visible">True</property>
                     <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                     <property name="spacing">5</property>
                     <child>
-                      <widget class="GtkImage" id="NotificationIcon2">
+                      <widget class="GtkImage" id="ReorderableIcon">
                         <property name="visible">True</property>
                         <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                        <property name="stock">gtk-select-color</property>
+                        <property name="stock">gtk-go-forward</property>
                       </widget>
                       <packing>
                         <property name="position">0</property>
                       </packing>
                     </child>
                     <child>
-                      <widget class="GtkLabel" id="label32">
+                      <widget class="GtkLabel" id="labelReorderable">
                         <property name="visible">True</property>
                         <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                        <property name="label" translatable="yes">Notification changes the tab's text color</property>
+                        <property name="label" translatable="yes">Tabs can be repositioned</property>
                       </widget>
                       <packing>
                         <property name="position">1</property>
