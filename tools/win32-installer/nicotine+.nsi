@@ -70,6 +70,17 @@ Section -Post
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "DisplayVersion" "${PRODUCT_VERSION}"
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "URLInfoAbout" "${PRODUCT_WEB_SITE}"
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "Publisher" "${PRODUCT_PUBLISHER}"
+  ; Let's check if and old config exists and move it to APPDATA if possible
+  ${If} ${FileExists} "$INSTDIR\config"
+    DetailPrint "Old configuration detected."
+    ${If} ${FileExists} "$APPDATA\nicotine"
+      DetailPrint "Nicotine+ configuration already exists in APPDATA. Don't move the old one."
+    ${Else}
+      CreateDirectory "$APPDATA\nicotine"
+      Rename "$INSTDIR\config" "$APPDATA\nicotine\config"
+      DetailPrint  "Old Nicotine+ configuration moved to current user APPDATA."
+    ${EndIf}
+  ${EndIf}
   ReadINIStr $0 "$PLUGINSDIR\shortcuts.ini" "Field 2" "State"
   ${if} $0 = 1
     CreateShortCut "$SMPROGRAMS\Nicotine+.lnk" "$INSTDIR\nicotine.exe"
