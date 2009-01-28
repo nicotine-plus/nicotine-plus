@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Copyright (C) 2007 daelstorm. All rights reserved.
 #
 # This program is free software: you can redistribute it and/or modify
@@ -1915,7 +1916,8 @@ class NicotineFrame(MainWindow):
 				self.TrayApp.HAVE_TRAYICON = True
 				
 			self.TrayApp.Draw()
-		self.ChangeTranslation(config["language"]["language"])
+		if self.np.config.sections["language"]["setlanguage"]:
+			self.ChangeTranslation(config["language"]["language"])
 
 
 		if needcompletion:
