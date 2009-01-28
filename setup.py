@@ -14,6 +14,7 @@ import sys
 import os
 import glob
 
+from os import listdir
 from os.path import isdir
 
 from distutils.core import setup
@@ -53,12 +54,15 @@ if is_windows:
 		skip = len(gtkdirfull)+1
 		for varroot, vardirs, varfiles in os.walk(gtkdirfull, topdown=True):
 			relativepath = os.path.join(gtksubdir,varroot[skip:])
-			absolutefiles = [os.path.join(varroot, x) for x in varfiles])
+			absolutefiles = [os.path.join(varroot, x) for x in varfiles]
 			if varroot == langdir:
+				junk = []
 				for d in vardirs:
 					if d not in langs:
-						print "Removing language " + d + " from list."
-						vardirs.remove(d)
+						print "We don't have a language file for " + d + ", removing from list."
+						junk.append(d)
+				for j in junk:
+					vardirs.remove(j)
 			if absolutefiles:
 				files.append((relativepath, absolutefiles))
 	# We need to include libjpeg
