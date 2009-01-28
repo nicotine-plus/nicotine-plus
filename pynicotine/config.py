@@ -212,6 +212,8 @@ class Config:
 	"distrib_timer": 0, \
 	"distrib_ignore": 60, \
 	"search_results": 1, \
+	"max_displayed_results": 500, \
+	"max_stored_results": 1500, \
 	}, \
 \
 "ui":{ \

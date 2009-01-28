@@ -2227,38 +2227,44 @@ class SearchFrame:
 		self.vbox93.set_spacing(10)
 		self.vbox93.set_border_width(5)
 
-		self.label262 = gtk.Label(_("Network Searches:"))
-		self.label262.set_alignment(0, 0)
-		self.label262.show()
-		self.vbox93.pack_start(self.label262, False, False, 0)
+		self.NetworkSearchesFrame = gtk.Frame()
+		self.NetworkSearchesFrame.show()
+
+		self.alignment1 = gtk.Alignment(0, 0.5, 0, 0)
+		self.alignment1.set_padding(0, 0, 5, 0)
+		self.alignment1.show()
+
+		self.vbox1 = gtk.VBox(False, 0)
+		self.vbox1.show()
+		self.vbox1.set_spacing(5)
 
 		self.ToggleResults = gtk.CheckButton()
 		self.ToggleResults.set_label(_("Enable sending search results to other users"))
 		self.ToggleResults.show()
 		self.ToggleResults.connect("toggled", self.OnEnableSearchResults)
 
-		self.vbox93.pack_start(self.ToggleResults, False, True, 0)
+		self.vbox1.pack_start(self.ToggleResults, False, True, 0)
 
-		self.hbox147 = gtk.HBox(False, 0)
-		self.hbox147.show()
-		self.hbox147.set_spacing(5)
+		self.hbox1 = gtk.HBox(False, 0)
+		self.hbox1.show()
+		self.hbox1.set_spacing(5)
 
 		self.MaxResultsL1 = gtk.Label(_("Send out a max of"))
 		self.MaxResultsL1.set_alignment(1, 0.50)
 		self.MaxResultsL1.show()
-		self.hbox147.pack_start(self.MaxResultsL1, False, False, 0)
+		self.hbox1.pack_start(self.MaxResultsL1, False, False, 0)
 
 		self.MaxResults = gtk.SpinButton(gtk.Adjustment(value=50, lower=0, upper=100000, step_incr=1, page_incr=10))
 		self.MaxResults.show()
 		self.MaxResults.set_width_chars(6)
 
-		self.hbox147.pack_start(self.MaxResults, False, True, 0)
+		self.hbox1.pack_start(self.MaxResults, False, True, 0)
 
 		self.MaxResultsL2 = gtk.Label(_("results per search request"))
 		self.MaxResultsL2.show()
-		self.hbox147.pack_start(self.MaxResultsL2, False, False, 0)
+		self.hbox1.pack_start(self.MaxResultsL2, False, False, 0)
 
-		self.vbox93.pack_start(self.hbox147, False, False, 0)
+		self.vbox1.pack_start(self.hbox1, False, True, 0)
 
 		self.hbox36 = gtk.HBox(False, 0)
 		self.hbox36.show()
@@ -2281,7 +2287,18 @@ class SearchFrame:
 		self.secondsLabel.show()
 		self.hbox36.pack_start(self.secondsLabel, False, True, 0)
 
-		self.vbox93.pack_start(self.hbox36, False, True, 0)
+		self.vbox1.pack_start(self.hbox36, False, True, 0)
+
+		self.alignment1.add(self.vbox1)
+
+		self.NetworkSearchesFrame.add(self.alignment1)
+
+		self.label1 = gtk.Label("")
+		self.label1.set_markup(_("Network Searches:"))
+		self.label1.show()
+		self.NetworkSearchesFrame.set_label_widget(self.label1)
+
+		self.vbox93.pack_start(self.NetworkSearchesFrame, False, False, 0)
 
 		self.label263 = gtk.Label(_("Your Searches:"))
 		self.label263.set_alignment(0, 0.50)
@@ -2380,6 +2397,41 @@ class SearchFrame:
 		self.ReopenTabs.show()
 
 		self.vbox93.pack_start(self.ReopenTabs, False, True, 0)
+
+		self.hbox3 = gtk.HBox(False, 0)
+		self.hbox3.show()
+		self.hbox3.set_spacing(10)
+
+		self.MaxDisLabel = gtk.Label(_("Max visible results per search:"))
+		self.MaxDisLabel.set_alignment(0, 0.50)
+		self.MaxDisLabel.set_padding(1, 0)
+		self.MaxDisLabel.show()
+		self.hbox3.pack_start(self.MaxDisLabel, False, True, 0)
+
+		self.MaxDisplayedResults = gtk.SpinButton(gtk.Adjustment(value=100, lower=100, upper=25000, step_incr=10, page_incr=100))
+		self.MaxDisplayedResults.show()
+		self.MaxDisplayedResults.set_width_chars(6)
+
+		self.hbox3.pack_start(self.MaxDisplayedResults, False, False, 0)
+
+		self.vbox93.pack_start(self.hbox3, False, True, 0)
+
+		self.hbox4 = gtk.HBox(False, 0)
+		self.hbox4.show()
+		self.hbox4.set_spacing(10)
+
+		self.MaxStoredLabel = gtk.Label(_("Max stored results per search:"))
+		self.MaxStoredLabel.set_alignment(0, 0.50)
+		self.MaxStoredLabel.show()
+		self.hbox4.pack_start(self.MaxStoredLabel, False, True, 0)
+
+		self.MaxStoredResults = gtk.SpinButton(gtk.Adjustment(value=100, lower=100, upper=25000, step_incr=0, page_incr=100))
+		self.MaxStoredResults.show()
+		self.MaxStoredResults.set_width_chars(6)
+
+		self.hbox4.pack_start(self.MaxStoredResults, False, False, 0)
+
+		self.vbox93.pack_start(self.hbox4, False, True, 0)
 
 		self.Main.add(self.vbox93)
 
@@ -2597,16 +2649,16 @@ class EventsFrame:
 		self.vbox96.set_spacing(10)
 		self.vbox96.set_border_width(5)
 
+		self.label296 = gtk.Label(_("Show notification popup in tray after...\n(requires python-notify and notification-daemon)"))
+		self.label296.set_alignment(0, 0.50)
+		self.label296.show()
+		self.vbox96.pack_start(self.label296, False, False, 0)
+
 		self.ShowNotification = gtk.CheckButton()
 		self.ShowNotification.set_label(_("...each file"))
 		self.ShowNotification.show()
 
 		self.vbox96.pack_start(self.ShowNotification, False, True, 0)
-
-		self.label214 = gtk.Label(_("Run command after download finishes ($ for filename):"))
-		self.label214.set_alignment(0, 0.50)
-		self.label214.show()
-		self.vbox96.pack_start(self.label214, False, False, 0)
 
 		self.AfterDownload = gtk.Entry()
 		self.AfterDownload.set_size_request(313, -1)
@@ -2711,10 +2763,10 @@ class EventsFrame:
 
 		self.vbox96.pack_start(self.ShowNotificationPerFolder, False, True, 0)
 
-		self.label296 = gtk.Label(_("Show notification popup in tray after...\n(requires python-notify and notification-daemon)"))
-		self.label296.set_alignment(0, 0.50)
-		self.label296.show()
-		self.vbox96.pack_start(self.label296, False, False, 0)
+		self.label214 = gtk.Label(_("Run command after download finishes ($ for filename):"))
+		self.label214.set_alignment(0, 0.50)
+		self.label214.show()
+		self.vbox96.pack_start(self.label214, False, False, 0)
 
 		self.Main.add(self.vbox96)
 

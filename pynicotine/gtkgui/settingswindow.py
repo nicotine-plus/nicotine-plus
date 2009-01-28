@@ -1483,7 +1483,7 @@ class SearchFrame(settings_glade.SearchFrame):
 		self.p = parent
 		self.frame = parent.frame
 		settings_glade.SearchFrame.__init__(self, False)
-		self.options = {"searches": {"maxresults": self.MaxResults, "enablefilters": self.EnableFilters, "re_filter": self.RegexpFilters, "defilter": None, "distrib_timer": self.ToggleDistributed, "distrib_ignore": self.ToggleDistributedInterval, "reopen_tabs": self.ReopenTabs, "search_results": self.ToggleResults}}
+		self.options = {"searches": {"maxresults": self.MaxResults, "enablefilters": self.EnableFilters, "re_filter": self.RegexpFilters, "defilter": None, "distrib_timer": self.ToggleDistributed, "distrib_ignore": self.ToggleDistributedInterval, "reopen_tabs": self.ReopenTabs, "search_results": self.ToggleResults, "max_displayed_results": self.MaxDisplayedResults, "max_stored_results": self.MaxStoredResults }}
 
 	def SetSettings(self, config):
 		try:
@@ -1527,6 +1527,8 @@ class SearchFrame(settings_glade.SearchFrame):
 				"distrib_ignore": self.ToggleDistributedInterval.get_value_as_int(),
 				"reopen_tabs": self.ReopenTabs.get_active(),
 				"search_results": self.ToggleResults.get_active(),
+				"max_displayed_results": self.MaxDisplayedResults.get_value_as_int(),
+				"max_stored_results": self.MaxStoredResults.get_value_as_int(),
 			}
 		}
 

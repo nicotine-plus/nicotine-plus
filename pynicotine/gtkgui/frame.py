@@ -1886,7 +1886,7 @@ class NicotineFrame(MainWindow):
 		for (key, data) in config.items():
 			self.np.config.sections[key].update(data)
 		config = self.np.config.sections
-		
+		# Write utils.py options
 		utils.DECIMALSEP = config["ui"]["decimalsep"]
 		utils.CATCH_URLS = config["urls"]["urlcatching"]
 		utils.HUMANIZE_URLS = config["urls"]["humanizeurls"]
@@ -1904,6 +1904,7 @@ class NicotineFrame(MainWindow):
 			self.np.queue.put(slskmessages.SetGeoBlock(None))
 		self.np.queue.put(slskmessages.SetUploadLimit(uselimit,uploadlimit,limitby))
 		self.np.ToggleRespondDistributed(settings=True)
+		# Modify GUI
 		self.UpdateDownloadFilters()
 		self.TransparentTint(1)
 		self.np.config.writeConfig()

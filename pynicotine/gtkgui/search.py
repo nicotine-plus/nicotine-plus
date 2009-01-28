@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Copyright (C) 2007 daelstorm. All rights reserved.
 #
 # This program is free software: you can redistribute it and/or modify
@@ -487,8 +488,6 @@ class Searches(IconNotebook):
 	
 class Search(SearchTab):
 	WAIT_BEFORE_DISPLAYING = 5000 # in milliseconds
-	MAX_DISPLAYED_RESULTS = 500
-	MAX_STORED_RESULTS = 1500
 	def __init__(self, Searches, text, id, mode, remember):
 		SearchTab.__init__(self, False)
 
@@ -714,7 +713,7 @@ class Search(SearchTab):
 		if results:
 			self.new_results += results
 			
-			if self._more_results == 0 and len(self.resultsmodel) < self.MAX_DISPLAYED_RESULTS:
+			if self._more_results == 0 and len(self.resultsmodel) < self.frame.np.config.sections['searches']["max_displayed_results"]:
 				self._more_results = 1
 				gobject.timeout_add(self.WAIT_BEFORE_DISPLAYING, self._realaddresults)
 			return len(results)
@@ -759,7 +758,7 @@ class Search(SearchTab):
 		encode = self.frame.np.encodeuser
 		
 		returned = 0
-		if itercounter > self.MAX_STORED_RESULTS:
+		if itercounter > self.frame.np.config.sections['searches']["max_stored_results"]:
 			return returned
 		for r in results:
 
@@ -776,7 +775,7 @@ class Search(SearchTab):
 			       directory,  bitrate, fullpath, country,  size, speed, queue, status]
 
 			self.all_data.append(row)
-			if (displaycounter + returned < self.MAX_DISPLAYED_RESULTS) and (not self.filters or self.check_filter(row)):
+			if (displaycounter + returned < self.frame.np.config.sections['searches']["max_displayed_results"]) and (not self.filters or self.check_filter(row)):
 				encoded_row = [itercounter, user, encode(filename, user), h_size, h_speed, h_queue, immediatedl,
 				               h_bitrate, length, self.get_flag(user, country), encode(directory, user), bitrate,
 				               encode(fullpath, user), country,  size, speed, queue, status]
@@ -791,7 +790,7 @@ class Search(SearchTab):
 						self.ResultsList.expand_to_path(path)
 				returned += 1
 			itercounter += 1
-			if itercounter > self.MAX_STORED_RESULTS:
+			if itercounter > self.frame.np.config.sections['searches']["max_stored_results"]:
 				break
 		return returned
 			
@@ -965,7 +964,7 @@ class Search(SearchTab):
 				else:
 					iter = self.resultsmodel.append(None, encoded_row)
 				displaycounter += 1
-			if displaycounter >= self.MAX_DISPLAYED_RESULTS:
+			if displaycounter >= self.frame.np.config.sections['searches']["max_displayed_results"]:
 				break
 		
 
