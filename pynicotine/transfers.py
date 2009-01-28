@@ -838,9 +838,17 @@ class Transfers:
 		
 	def CleanPath(self, path):
 		if win32:
+			# Without hacks it is (up to Vista) not possible to have more
+			# than 26 drives mounted, so we can assume a '[a-zA-Z]:\' prefix
+			# for drives - we shouldn't escape that
+			drive = ''
+			if path[1:3] == ':\\' and path[0:1] and path[0].isalpha():
+				drive = path[:3]
+				path = path[3:]
 			chars = ["?", "\"", ":", ">", "<", "|", "*"]
 			for char in chars:
 				path = path.replace(char, "_")
+			path = ''.join([drive, path])
 		return path
         
 	def FileDownload(self, msg):
