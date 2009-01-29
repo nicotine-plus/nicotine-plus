@@ -185,7 +185,7 @@ class Transfers:
 
 
 	def getFile(self, user, filename, path="", transfer = None, size=None, bitrate=None, length=None):
-		path=self.CleanPath(path)
+		path=self.CleanPath(path, absolute=True)
 		self.transferFile(0, user, filename, path, transfer, size, bitrate, length)
 
 	def pushFile(self, user, filename, path="", transfer = None, size=None, bitrate=None, length=None ):
@@ -209,8 +209,7 @@ class Transfers:
 			status = self.users[user].status
 		else:
 			status = None
-	    
- # Download filter, added by Ceesjan.
+
 		if not direction and self.eventprocessor.config.sections["transfers"]["enablefilters"]:
 			# Only filter downloads, never uploads!
 			try:
@@ -836,13 +835,13 @@ class Transfers:
 			return
 		tablabel.set_image(frame.images["online"])
 		
-	def CleanPath(self, path):
+	def CleanPath(self, path, absolute=False):
 		if win32:
 			# Without hacks it is (up to Vista) not possible to have more
 			# than 26 drives mounted, so we can assume a '[a-zA-Z]:\' prefix
 			# for drives - we shouldn't escape that
 			drive = ''
-			if path[1:3] == ':\\' and path[0:1] and path[0].isalpha():
+			if absolute and path[1:3] == ':\\' and path[0:1] and path[0].isalpha():
 				drive = path[:3]
 				path = path[3:]
 			chars = ["?", "\"", ":", ">", "<", "|", "*"]
