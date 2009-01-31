@@ -120,6 +120,7 @@ if __name__ == '__main__' :
           author_email          = "daelstorm@gmail.com",
           url                   = "http://www.nicotine-plus.org/",
           packages              = [ 'pynicotine', 'pynicotine.gtkgui' ],
+          package_data          = {'pynicotine.gtkgui': ["*.py" , "*.glade"], },
           scripts               = [ 'nicotine','nicotine-import-winconfig'],
           long_description      = LONG_DESCRIPTION,
           data_files            = files,

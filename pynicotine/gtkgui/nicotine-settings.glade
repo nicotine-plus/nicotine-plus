@@ -3,7 +3,7 @@
   <!-- interface-requires gtk+ 2.16 -->
   <!-- interface-naming-policy toplevel-contextual -->
   <widget class="GtkWindow" id="ServerFrame">
-    <property name="visible">True</property>
+    <property name="visible">False</property>
     <property name="title" translatable="yes">Server Settings</property>
     <child>
       <widget class="GtkFrame" id="Main">
@@ -202,7 +202,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                    <property name="adjustment">2234 0 65535 1 10 10</property>
+                    <property name="adjustment">2234 0 65535 1 10 0</property>
                   </widget>
                   <packing>
                     <property name="expand">False</property>
@@ -227,7 +227,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                    <property name="adjustment">2239 0 65532 1 10 10</property>
+                    <property name="adjustment">2239 0 65535 1 10 0</property>
                   </widget>
                   <packing>
                     <property name="expand">False</property>
@@ -359,7 +359,7 @@
     </child>
   </widget>
   <widget class="GtkWindow" id="SharesFrame">
-    <property name="visible">True</property>
+    <property name="visible">False</property>
     <property name="title" translatable="yes">Shares</property>
     <child>
       <widget class="GtkFrame" id="Main">
@@ -849,7 +849,7 @@
     </child>
   </widget>
   <widget class="GtkWindow" id="TransfersFrame">
-    <property name="visible">True</property>
+    <property name="visible">False</property>
     <property name="title" translatable="yes">Transfers</property>
     <child>
       <widget class="GtkFrame" id="Main">
@@ -947,7 +947,7 @@
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                            <property name="adjustment">0 0 1000000 1 10 10</property>
+                            <property name="adjustment">0 0 1000000 1 10 0</property>
                           </widget>
                           <packing>
                             <property name="expand">False</property>
@@ -1000,7 +1000,7 @@
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                            <property name="adjustment">0 0 1000000 1 10 10</property>
+                            <property name="adjustment">0 0 1000000 1 10 0</property>
                           </widget>
                           <packing>
                             <property name="expand">False</property>
@@ -1052,7 +1052,7 @@
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                            <property name="adjustment">0 0 1000000 1 10 10</property>
+                            <property name="adjustment">0 0 1000000 1 10 0</property>
                           </widget>
                           <packing>
                             <property name="expand">False</property>
@@ -1140,7 +1140,7 @@
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                                    <property name="adjustment">0 0 1000000 1 10 10</property>
+                                    <property name="adjustment">0 0 1000000 1 10 0</property>
                                   </widget>
                                   <packing>
                                     <property name="expand">False</property>
@@ -1175,7 +1175,7 @@
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                                    <property name="adjustment">0 0 1000000 1 10 10</property>
+                                    <property name="adjustment">0 0 1000000 1 10 0</property>
                                   </widget>
                                   <packing>
                                     <property name="expand">False</property>
@@ -1795,7 +1795,7 @@
     </child>
   </widget>
   <widget class="GtkWindow" id="UserinfoFrame">
-    <property name="visible">True</property>
+    <property name="visible">False</property>
     <property name="title" translatable="yes">Userinfo</property>
     <child>
       <widget class="GtkFrame" id="Main">
@@ -1980,7 +1980,7 @@
     </child>
   </widget>
   <widget class="GtkWindow" id="BloatFrame">
-    <property name="visible">True</property>
+    <property name="visible">False</property>
     <property name="title" translatable="yes">Bloat</property>
     <child>
       <widget class="GtkFrame" id="Main">
@@ -2421,7 +2421,7 @@
     </child>
   </widget>
   <widget class="GtkWindow" id="LogFrame">
-    <property name="visible">True</property>
+    <property name="visible">False</property>
     <property name="title" translatable="yes">Log</property>
     <child>
       <widget class="GtkFrame" id="Main">
@@ -2781,7 +2781,7 @@
                     <property name="can_focus">True</property>
                     <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                     <property name="width_chars">4</property>
-                    <property name="adjustment">0 0 1000 1 10 10</property>
+                    <property name="adjustment">0 0 1000 1 10 0</property>
                   </widget>
                   <packing>
                     <property name="expand">False</property>
@@ -2842,7 +2842,7 @@
                     <property name="can_focus">True</property>
                     <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                     <property name="width_chars">4</property>
-                    <property name="adjustment">0 0 1000 1 10 10</property>
+                    <property name="adjustment">0 0 1000 1 10 0</property>
                   </widget>
                   <packing>
                     <property name="expand">False</property>
@@ -3162,7 +3162,7 @@
     </child>
   </widget>
   <widget class="GtkWindow" id="BanFrame">
-    <property name="visible">True</property>
+    <property name="visible">False</property>
     <property name="title" translatable="yes">Ban</property>
     <child>
       <widget class="GtkFrame" id="Main">
@@ -3791,7 +3791,7 @@
     </child>
   </widget>
   <widget class="GtkWindow" id="SearchFrame">
-    <property name="visible">True</property>
+    <property name="visible">False</property>
     <property name="title" translatable="yes">Search</property>
     <child>
       <widget class="GtkFrame" id="Main">
@@ -3852,7 +3852,7 @@
                                 <property name="can_focus">True</property>
                                 <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                                 <property name="width_chars">6</property>
-                                <property name="adjustment">50 0 100000 1 10 10</property>
+                                <property name="adjustment">50 0 100000 1 10 0</property>
                               </widget>
                               <packing>
                                 <property name="expand">False</property>
@@ -3902,7 +3902,7 @@
                                 <property name="can_focus">True</property>
                                 <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                                 <property name="width_chars">5</property>
-                                <property name="adjustment">60 30 3600 1 10 10</property>
+                                <property name="adjustment">60 30 3600 1 10 0</property>
                               </widget>
                               <packing>
                                 <property name="expand">False</property>
@@ -4218,7 +4218,7 @@ when new results come in</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="width_chars">6</property>
-                    <property name="adjustment">100 100 25000 10 100 100</property>
+                    <property name="adjustment">100 100 25000 10 100 0</property>
                   </widget>
                   <packing>
                     <property name="expand">False</property>
@@ -4255,7 +4255,7 @@ when new results come in</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="width_chars">6</property>
-                    <property name="adjustment">100 100 25000 10 100 100</property>
+                    <property name="adjustment">100 100 25000 10 100 0</property>
                   </widget>
                   <packing>
                     <property name="expand">False</property>
@@ -4292,7 +4292,7 @@ when new results come in</property>
     <property name="default_width">650</property>
     <property name="default_height">400</property>
     <child>
-      <widget class="GtkVBox" id="vbox94">
+      <widget class="GtkVBox" id="Main">
         <property name="visible">True</property>
         <property name="border_width">5</property>
         <property name="spacing">10</property>
@@ -4405,7 +4405,7 @@ when new results come in</property>
     </child>
   </widget>
   <widget class="GtkWindow" id="AwayFrame">
-    <property name="visible">True</property>
+    <property name="visible">False</property>
     <property name="title" translatable="yes">Away</property>
     <child>
       <widget class="GtkFrame" id="Main">
@@ -4436,7 +4436,7 @@ when new results come in</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                    <property name="adjustment">15 0 10000 1 10 10</property>
+                    <property name="adjustment">15 0 10000 1 10 0</property>
                   </widget>
                   <packing>
                     <property name="expand">False</property>
@@ -4507,7 +4507,7 @@ when new results come in</property>
     </child>
   </widget>
   <widget class="GtkWindow" id="EventsFrame">
-    <property name="visible">True</property>
+    <property name="visible">False</property>
     <property name="title" translatable="yes">Events</property>
     <child>
       <widget class="GtkFrame" id="Main">
@@ -4757,7 +4757,7 @@ Clear</property>
     </child>
   </widget>
   <widget class="GtkWindow" id="GeoBlockFrame">
-    <property name="visible">True</property>
+    <property name="visible">False</property>
     <property name="title" translatable="yes">GeoBlock</property>
     <child>
       <widget class="GtkFrame" id="Main">
@@ -4895,7 +4895,7 @@ Clear</property>
     </child>
   </widget>
   <widget class="GtkWindow" id="UrlCatchFrame">
-    <property name="visible">True</property>
+    <property name="visible">False</property>
     <property name="title" translatable="yes">UrlCatch</property>
     <child>
       <widget class="GtkFrame" id="Main">
@@ -5161,7 +5161,7 @@ Clear</property>
     </child>
   </widget>
   <widget class="GtkWindow" id="MiscFrame">
-    <property name="visible">True</property>
+    <property name="visible">False</property>
     <property name="title" translatable="yes">Misc</property>
     <child>
       <widget class="GtkFrame" id="Main">
@@ -5244,7 +5244,7 @@ Clear</property>
     </child>
   </widget>
   <widget class="GtkWindow" id="ImportFrame">
-    <property name="visible">True</property>
+    <property name="visible">False</property>
     <property name="title" translatable="yes">Import Config</property>
     <child>
       <widget class="GtkFrame" id="Main">
@@ -5582,7 +5582,7 @@ Clear</property>
     </child>
   </widget>
   <widget class="GtkWindow" id="SoundsFrame">
-    <property name="visible">True</property>
+    <property name="visible">False</property>
     <property name="title" translatable="yes">Sounds</property>
     <child>
       <widget class="GtkFrame" id="Main">
@@ -6079,7 +6079,7 @@ Clear</property>
     </child>
   </widget>
   <widget class="GtkWindow" id="IconsFrame">
-    <property name="visible">True</property>
+    <property name="visible">False</property>
     <property name="title" translatable="yes">Icons</property>
     <child>
       <widget class="GtkFrame" id="Main">
@@ -6624,7 +6624,7 @@ Clear</property>
     </child>
   </widget>
   <widget class="GtkWindow" id="CensorFrame">
-    <property name="visible">True</property>
+    <property name="visible">False</property>
     <property name="title" translatable="yes">Log</property>
     <child>
       <widget class="GtkFrame" id="Main">
@@ -6900,7 +6900,7 @@ Clear</property>
     </child>
   </widget>
   <widget class="GtkWindow" id="ChatFrame">
-    <property name="visible">True</property>
+    <property name="visible">False</property>
     <property name="title" translatable="yes">Chat</property>
     <child>
       <widget class="GtkFrame" id="Main">
@@ -7018,7 +7018,7 @@ Clear</property>
     </child>
   </widget>
   <widget class="GtkWindow" id="AutoReplaceFrame">
-    <property name="visible">True</property>
+    <property name="visible">False</property>
     <property name="title" translatable="yes">Log</property>
     <child>
       <widget class="GtkFrame" id="Main">
@@ -7297,7 +7297,7 @@ typed incorrectly or as an acronym</property>
     </child>
   </widget>
   <widget class="GtkWindow" id="CompletionFrame">
-    <property name="visible">True</property>
+    <property name="visible">False</property>
     <property name="title" translatable="yes">Text Completion</property>
     <child>
       <widget class="GtkFrame" id="Main">
@@ -7464,7 +7464,7 @@ typed incorrectly or as an acronym</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                            <property name="adjustment">2 1 10 1 10 10</property>
+                            <property name="adjustment">2 1 10 1 10 0</property>
                           </widget>
                           <packing>
                             <property name="expand">False</property>
@@ -7526,7 +7526,7 @@ typed incorrectly or as an acronym</property>
     </child>
   </widget>
   <widget class="GtkWindow" id="NotebookFrame">
-    <property name="visible">True</property>
+    <property name="visible">False</property>
     <property name="title" translatable="yes">Notebooks</property>
     <child>
       <widget class="GtkFrame" id="Main">
@@ -7708,7 +7708,7 @@ Right</property>
                     <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                     <property name="max_length">3</property>
                     <property name="width_chars">4</property>
-                    <property name="adjustment">0 -90 90 90 90 10</property>
+                    <property name="adjustment">0 -90 90 90 90 0</property>
                   </widget>
                   <packing>
                     <property name="expand">False</property>
@@ -7771,7 +7771,7 @@ Right</property>
                     <property name="can_focus">True</property>
                     <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                     <property name="width_chars">4</property>
-                    <property name="adjustment">0 -90 90 90 90 10</property>
+                    <property name="adjustment">0 -90 90 90 90 0</property>
                   </widget>
                   <packing>
                     <property name="expand">False</property>
@@ -7834,7 +7834,7 @@ Right</property>
                     <property name="can_focus">True</property>
                     <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                     <property name="width_chars">4</property>
-                    <property name="adjustment">0 -90 90 90 90 10</property>
+                    <property name="adjustment">0 -90 90 90 90 0</property>
                   </widget>
                   <packing>
                     <property name="expand">False</property>
@@ -7897,7 +7897,7 @@ Right</property>
                     <property name="can_focus">True</property>
                     <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                     <property name="width_chars">4</property>
-                    <property name="adjustment">0 -90 90 90 90 10</property>
+                    <property name="adjustment">0 -90 90 90 90 0</property>
                     <property name="update_policy">if-valid</property>
                   </widget>
                   <packing>
@@ -7961,7 +7961,7 @@ Right</property>
                     <property name="can_focus">True</property>
                     <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                     <property name="width_chars">4</property>
-                    <property name="adjustment">0 -90 90 90 90 10</property>
+                    <property name="adjustment">0 -90 90 90 90 0</property>
                   </widget>
                   <packing>
                     <property name="expand">False</property>
@@ -8024,7 +8024,7 @@ Right</property>
                     <property name="can_focus">True</property>
                     <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                     <property name="width_chars">4</property>
-                    <property name="adjustment">0 -90 90 90 90 10</property>
+                    <property name="adjustment">0 -90 90 90 90 0</property>
                   </widget>
                   <packing>
                     <property name="expand">False</property>

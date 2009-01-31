@@ -1335,7 +1335,7 @@ class ImportWinSlskConfig:
 		return 1
   
 	def check_slskdir(self):
-		
+		path = ""
 		# we check if the file queue2.cfg exists under the slsk dir
 		if self.Queue:
 			path = self.winpath('queue2.cfg')

@@ -22,7 +22,7 @@ import urllib
 import gobject
 import gc
 from userinfo import UserTabs
-from userbrowse_glade import UserBrowseTab
+#from userbrowse_glade import UserBrowseTab
 
 from utils import InitialiseColumns, PopupMenu, EncodingsMenu, SaveEncoding, Humanize, HumanizeBytes, PressHeader
 from dirchooser import ChooseDir
@@ -31,10 +31,16 @@ from pynicotine import slskmessages
 
 from pynicotine.utils import _, displayTraceback
 
-class UserBrowse(UserBrowseTab):
+class UserBrowse:
 	def __init__(self, userbrowses, user, conn):
-
-		UserBrowseTab.__init__(self, False)
+		self.wTree = gtk.glade.XML(os.path.join(os.path.dirname(os.path.realpath(__file__)), "userbrowse.glade" ) ) 
+		widgets = self.wTree.get_widget_prefix("")
+		for i in widgets:
+			name = gtk.glade.get_widget_name(i)
+			self.__dict__[name] = i
+		self.UserBrowseTab.remove(self.Main)
+		self.UserBrowseTab.destroy()
+		#UserBrowseTab.__init__(self, False)
 		
 		self.userbrowses = userbrowses
 

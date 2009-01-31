@@ -3,13 +3,12 @@
   <!-- interface-requires gtk+ 2.16 -->
   <!-- interface-naming-policy toplevel-contextual -->
   <widget class="GtkWindow" id="PrivateChatTab">
-    <property name="visible">True</property>
     <property name="title" translatable="yes">window1</property>
     <child>
       <widget class="GtkVBox" id="Main">
         <property name="visible">True</property>
         <child>
-          <widget class="GtkScrolledWindow" id="scrolledwindow16">
+          <widget class="GtkScrolledWindow" id="ChatScrollWindow">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="hscrollbar_policy">automatic</property>
@@ -90,7 +89,7 @@
               </packing>
             </child>
             <child>
-              <widget class="GtkButton" id="button1">
+              <widget class="GtkButton" id="CloseButton">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>

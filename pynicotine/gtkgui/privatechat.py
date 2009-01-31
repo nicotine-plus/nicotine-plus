@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Copyright (C) 2007 daelstorm. All rights reserved.
 #
 # This program is free software: you can redistribute it and/or modify
@@ -16,11 +17,12 @@
 # Original copyright below
 # Copyright (c) 2003-2004 Hyriand. All rights reserved.
 
-import os
-import gtk, gobject, pango
+import os, sys
+import gtk, gobject, pango, gtk.glade
 import sets
 from time import daylight, altzone
-from privatechat_glade import PrivateChatTab
+#from privatechat_glade import PrivateChatTab
+#from privatechat2 import PrivateChatTab
 from utils import AppendLine, IconNotebook, PopupMenu, WriteLog, expand_alias, is_alias, EncodingsMenu, SaveEncoding, fixpath
 from chatrooms import GetCompletion
 from pynicotine import slskmessages
@@ -223,15 +225,26 @@ class PrivateChats(IconNotebook):
 		for user in self.users.values():
 			user.GetCompletionList(clist=self.clist)
 			
-class PrivateChat(PrivateChatTab):
+class PrivateChat:
 	def __init__(self, chats, user):
-		PrivateChatTab.__init__(self, False)
-		
 		self.user = user
 		self.chats = chats
 		self.frame = chats.frame
+		self.tooltips = self.frame.tooltips
 		if not self.frame.np.config.sections["ui"]["tooltips"]:
 			self.tooltips.disable()
+
+		self.wTree = gtk.glade.XML(os.path.join(os.path.dirname(os.path.realpath(__file__)), "privatechat.glade" ) ) 
+		widgets = self.wTree.get_widget_prefix("")
+		for i in widgets:
+			name = gtk.glade.get_widget_name(i)
+			self.__dict__[name] = i
+		self.PrivateChatTab.remove(self.Main)
+		self.PrivateChatTab.destroy()
+		self.wTree.signal_autoconnect(self)
+
+
+
 		self.logfile = None
 		self.autoreplied = 0
 		self.offlinemessage = 0

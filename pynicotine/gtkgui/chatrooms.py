@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Copyright (C) 2007 daelstorm. All rights reserved.
 #
 # This program is free software: you can redistribute it and/or modify
@@ -21,7 +22,7 @@ import gobject
 import locale
 import pango
 from pynicotine import slskmessages
-from chatrooms_glade import ChatRoomTab
+#from chatrooms_glade import ChatRoomTab
 from utils import InitialiseColumns, AppendLine, PopupMenu, FastListModel, string_sort_func, WriteLog, int_sort_func, Humanize, HumanSpeed, expand_alias, is_alias, EncodingsMenu, SaveEncoding, PressHeader, fixpath, IconNotebook
 from pynicotine.utils import _
 from ticker import Ticker
@@ -616,12 +617,24 @@ def TickDialog(parent, default = ""):
 		
 	return [t, result]
 
-class ChatRoom(ChatRoomTab):
+class ChatRoom:
 	def __init__(self, roomsctrl, room, users, meta = False):
-		ChatRoomTab.__init__(self, False)
-		
 		self.roomsctrl = roomsctrl
 		self.frame = roomsctrl.frame
+		self.tooltips = self.frame.tooltips
+
+		gtk.glade.set_custom_handler(self.get_custom_widget)
+		
+		self.wTree = gtk.glade.XML(os.path.join(os.path.dirname(os.path.realpath(__file__)), "chatrooms.glade" ) ) 
+		widgets = self.wTree.get_widget_prefix("")
+		for i in widgets:
+			name = gtk.glade.get_widget_name(i)
+			self.__dict__[name] = i
+		self.ChatRoomTab.remove(self.Main)
+		self.ChatRoomTab.destroy()
+	
+		self.wTree.signal_autoconnect(self)
+		
 		if not self.frame.np.config.sections["ui"]["tooltips"]:
 			self.tooltips.disable()
 		self.room = room
@@ -857,12 +870,12 @@ class ChatRoom(ChatRoomTab):
 		#data = (status, flag, user, speed, files)
 		selection.set(selection.target, 8, user)
 			
-	def get_custom_widget(self, id, string1, string2, int1, int2):
+	def get_custom_widget(self, widget, string0, id, string1, string2, int1=None, int2=None, ):
 		if id == "Ticker":
 			t = Ticker()
 			return t
 		else:
-			return ChatRoomTab.get_custom_widget(self, id, string1, string2, int1, int2)
+			return gtk.Label(_("(custom widget: %s)") % id)
 			
 	def destroy(self):
 		if self.frame.translux and self.tlux_roomlog:

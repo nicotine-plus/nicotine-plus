@@ -21,7 +21,7 @@ import gtk
 import tempfile
 import gobject
 
-from userinfo_glade import UserInfoTab
+#from userinfo_glade import UserInfoTab
 from utils import IconNotebook, PopupMenu, EncodingsMenu, SaveEncoding,  Humanize, InitialiseColumns, AppendLine
 from pynicotine import slskmessages
 
@@ -143,10 +143,17 @@ class UserTabs(IconNotebook):
 			status = _("Offline")
 			self.set_text(tab.Main, "%s (%s)" % (user[:15], status))
 
-class UserInfo(UserInfoTab):
+class UserInfo:
 	def __init__(self, userinfos, user, conn):
-		UserInfoTab.__init__(self, False)
-		
+		#UserInfoTab.__init__(self, False)
+		self.wTree = gtk.glade.XML(os.path.join(os.path.dirname(os.path.realpath(__file__)), "userinfo.glade" ) ) 
+		widgets = self.wTree.get_widget_prefix("")
+		for i in widgets:
+			name = gtk.glade.get_widget_name(i)
+			self.__dict__[name] = i
+		self.UserInfoTab.remove(self.Main)
+		self.UserInfoTab.destroy()
+
 		self.userinfos = userinfos
 		self.frame = userinfos.frame
 		if not self.frame.np.config.sections["ui"]["tooltips"]:

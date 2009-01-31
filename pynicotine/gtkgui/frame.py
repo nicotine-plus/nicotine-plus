@@ -20,9 +20,9 @@
 import os
 
 import gtk
-from mainwindow_glade import MainWindow
-from chatrooms_glade import ChatRoomTab
-from roomlist_glade import RoomList
+#from mainwindow_glade import MainWindow
+#from chatrooms_glade import ChatRoomTab
+#from roomlist_glade import RoomList
 from pynicotine.pynicotine import NetworkEventProcessor
 from pynicotine import slskmessages
 from pynicotine.utils import version
@@ -61,10 +61,19 @@ except ImportError:
 	SEXY=False
 	print _("Note: Python Bindings for libsexy were not found. To enable spell checking, get them from http://www.chipx86.com/wiki/Libsexy or your distribution's package manager. Look for sexy-python or python-sexy.")
 
-class roomlist(RoomList):
+class roomlist:
 	def __init__(self, frame):
-		RoomList.__init__(self, False)
 		self.frame = frame
+		self.tooltips = self.frame.tooltips
+		self.wTree = gtk.glade.XML(os.path.join(os.path.dirname(os.path.realpath(__file__)), "roomlist.glade" ) ) 
+		widgets = self.wTree.get_widget_prefix("")
+		for i in widgets:
+			name = gtk.glade.get_widget_name(i)
+			self.__dict__[name] = i
+		self.RoomList.remove(self.vbox2)
+		self.RoomList.destroy()
+		self.wTree.signal_autoconnect(self)
+		
 	
 	def OnCreateRoom(self, widget):
 		room = widget.get_text()
@@ -104,7 +113,7 @@ class BuddiesComboBoxEntry(gtk.ComboBoxEntry):
 			del self.items[item]
 		
 		
-class NicotineFrame(MainWindow):
+class NicotineFrame:
 	def __init__(self, config, use_trayicon, try_rgba):
 		
 		self.clip_data = ""
@@ -155,14 +164,47 @@ class NicotineFrame(MainWindow):
 			trerror = self.ChangeTranslation(self.np.config.sections["language"]["language"])
 		
 		self.BuddiesComboEntries = []
+		self.accel_group = gtk.AccelGroup()
+		self.tooltips = gtk.Tooltips()
+		self.tooltips.enable()
 		self.roomlist = roomlist(self)
+		#MainWindow.__init__(self)
+		#self.SearchEntryCombo =  gtk.ComboBoxEntry()
+		gtk.glade.set_custom_handler(self.get_custom_widget)
+		self.wTree = gtk.glade.XML(os.path.join(os.path.dirname(os.path.realpath(__file__)), "mainwindow.glade" ), "SearchEntryCombo" ) 
+		self.SearchEntryCombo = self.wTree.get_widget("SearchEntryCombo")
+		self.SearchEntryCombo_List = gtk.ListStore(gobject.TYPE_STRING)
+		self.SearchEntryCombo.set_model(self.SearchEntryCombo_List)
+		self.SearchEntryCombo.set_text_column(0)
 		
-		MainWindow.__init__(self)
+		self.wTree = gtk.glade.XML(os.path.join(os.path.dirname(os.path.realpath(__file__)), "mainwindow.glade" ), "WishList" ) 
+		self.WishList = self.wTree.get_widget("WishList")
+
+		self.wTree = gtk.glade.XML(os.path.join(os.path.dirname(os.path.realpath(__file__)), "mainwindow.glade" ), "RoomSearchCombo" ) 
+		self.RoomSearchCombo = self.wTree.get_widget("RoomSearchCombo")
+		self.RoomSearchCombo_List = gtk.ListStore(gobject.TYPE_STRING)
+		self.RoomSearchCombo.set_model(self.RoomSearchCombo_List)
+		self.RoomSearchCombo.set_text_column(0)
+		self.wTree = gtk.glade.XML(os.path.join(os.path.dirname(os.path.realpath(__file__)), "mainwindow.glade" ) ) 
+		widgets = self.wTree.get_widget_prefix("")
+		
+		for i in widgets:
+			name = gtk.glade.get_widget_name(i)
+			self.__dict__[name] = i
+
+		self.SearchMethod_List = gtk.ListStore(gobject.TYPE_STRING)
+		for i in [_("")]:
+			self.SearchMethod_List.append([i])
+		self.SearchMethod.set_model(self.SearchMethod_List)
+		self.SearchEntry = self.SearchEntryCombo.child
+
 		self.MainWindow.set_title(_("Nicotine+") + " " + version)
 		self.MainWindow.set_icon(self.images["n"])
 		self.MainWindow.selection_add_target("PRIMARY", "STRING", 1)
 		self.MainWindow.set_geometry_hints(None, min_width=500, min_height=460)
 		self.MainWindow.connect("configure_event", self.OnWindowChange)
+		self.MainWindow.add_accel_group(self.accel_group)
+		self.wTree.signal_autoconnect(self)
 		# Enabling RGBA if possible, you need up-to-date Murrine Engine for it from what I've heard
 		RGBA = False
 		if try_rgba:
@@ -393,16 +435,19 @@ class NicotineFrame(MainWindow):
 		self.UpdateColours(1)
 		self.settingswindow = SettingsWindow(self)
 		self.settingswindow.SettingsWindow.connect("settings-closed", self.OnSettingsClosed)
-
 		self.chatrooms = self.ChatNotebook
+		self.chatrooms.show()
 		self.Searches = self.SearchNotebook
 		self.downloads = Downloads(self)
 		self.uploads = Uploads(self)
 		self.userlist = UserList(self)
 
 		self.privatechats = self.PrivatechatNotebook
+		self.privatechats.show()
 		self.userinfo = self.UserInfoNotebook
+		self.userinfo.show()
 		self.userbrowse = self.UserBrowseNotebook
+		self.userbrowse.show()
 
 		self.userinfo.SetTabLabel(self.UserInfoTabLabel)
 		self.userbrowse.SetTabLabel(self.UserBrowseTabLabel)
@@ -439,7 +484,7 @@ class NicotineFrame(MainWindow):
 		# with any possible real room, but if it's not translated with the space
 		# nothing awful will happen
 		self.searchroomslist[_("Joined Rooms ")] = self.RoomSearchCombo_List.append([_("Joined Rooms ")])
-		self.RoomSearchCombo.set_active_iter(self.searchroomslist[_("Joined Rooms ")])
+		#self.RoomSearchCombo.set_active_iter(self.searchroomslist[_("Joined Rooms ")])
 		for method in [_("Global"), _("Buddies"), _("Rooms"), _("User")]:
 			self.searchmethods[method] = self.SearchMethod_List.append([method])
 		self.SearchMethod.set_active_iter(self.searchmethods[_("Global")])
@@ -500,7 +545,9 @@ class NicotineFrame(MainWindow):
 			self.logMessage(trerror)
 		self.SetAllToolTips()
 
+
 		
+
 
 	def on_delete_event(self, widget, event):
 		if not self.np.config.sections["ui"]["exitdialog"]:
@@ -1026,7 +1073,7 @@ class NicotineFrame(MainWindow):
 
 
 				
-	def get_custom_widget(self, id, string1, string2, int1, int2):
+	def get_custom_widget(self, widget, string0, id, string1, string2, int1, int2):
 		ui = self.np.config.sections["ui"]
 		if id == "ChatNotebook":
 			return ChatRooms(self)
@@ -2268,6 +2315,8 @@ class NicotineFrame(MainWindow):
 		self.np.config.writeConfig()
 	
 	def OnHideFlags(self, widget):
+		if self.chatrooms is None:
+			return
 		active = widget.get_active()
 		self.np.config.sections["columns"]["hideflags"] = active
 		for room in self.chatrooms.roomsctrl.joinedrooms:

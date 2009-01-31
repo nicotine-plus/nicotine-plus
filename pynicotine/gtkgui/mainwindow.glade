@@ -1,6 +1,5 @@
 <?xml version="1.0"?>
 <glade-interface>
-  <requires-version lib="gtk+" version="2.12"/>
   <widget class="GtkWindow" id="MainWindow">
     <property name="title" translatable="yes">Nicotine</property>
     <property name="window_position">GTK_WIN_POS_CENTER</property>
@@ -26,6 +25,7 @@
                         <property name="label" translatable="yes">_Connect</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="OnConnect"/>
+                        <accelerator key="C" signal="activate" modifiers="GDK_MOD1_MASK"/>
                         <child internal-child="image">
                           <widget class="GtkImage" id="image337">
                             <property name="visible">True</property>
@@ -33,7 +33,6 @@
                             <property name="icon_size">1</property>
                           </widget>
                         </child>
-                        <accelerator key="C" signal="activate" modifiers="GDK_MOD1_MASK"/>
                       </widget>
                     </child>
                     <child>
@@ -42,6 +41,7 @@
                         <property name="label" translatable="yes">_Disconnect</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="OnDisconnect"/>
+                        <accelerator key="D" signal="activate" modifiers="GDK_MOD1_MASK"/>
                         <child internal-child="image">
                           <widget class="GtkImage" id="image338">
                             <property name="visible">True</property>
@@ -49,7 +49,6 @@
                             <property name="icon_size">1</property>
                           </widget>
                         </child>
-                        <accelerator key="D" signal="activate" modifiers="GDK_MOD1_MASK"/>
                       </widget>
                     </child>
                     <child>
@@ -65,6 +64,7 @@
                         <property name="label" translatable="yes">_Away/Return</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="OnAway"/>
+                        <accelerator key="A" signal="activate" modifiers="GDK_MOD1_MASK"/>
                         <child internal-child="image">
                           <widget class="GtkImage" id="image339">
                             <property name="visible">True</property>
@@ -72,7 +72,6 @@
                             <property name="icon_size">1</property>
                           </widget>
                         </child>
-                        <accelerator key="A" signal="activate" modifiers="GDK_MOD1_MASK"/>
                       </widget>
                     </child>
                     <child>
@@ -98,9 +97,10 @@
                     <child>
                       <widget class="GtkImageMenuItem" id="exit1">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">E_xit</property>
+                        <property name="label" translatable="yes">Quit</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="OnExit"/>
+                        <accelerator key="Q" signal="activate" modifiers="GDK_CONTROL_MASK"/>
                         <child internal-child="image">
                           <widget class="GtkImage" id="image346">
                             <property name="visible">True</property>
@@ -108,7 +108,6 @@
                             <property name="icon_size">1</property>
                           </widget>
                         </child>
-                        <accelerator key="Q" signal="activate" modifiers="GDK_CONTROL_MASK"/>
                       </widget>
                     </child>
                   </widget>
@@ -128,6 +127,7 @@
                         <property name="label" translatable="yes">_Settings</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="OnSettings"/>
+                        <accelerator key="S" signal="activate" modifiers="GDK_MOD1_MASK"/>
                         <child internal-child="image">
                           <widget class="GtkImage" id="menu-item-image44">
                             <property name="visible">True</property>
@@ -135,7 +135,6 @@
                             <property name="icon_size">1</property>
                           </widget>
                         </child>
-                        <accelerator key="S" signal="activate" modifiers="GDK_MOD1_MASK"/>
                       </widget>
                     </child>
                     <child>
@@ -567,6 +566,7 @@
                         <property name="label" translatable="yes">Offline Nicotine Plus Guide</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="OnNicotineGuide"/>
+                        <accelerator key="F1" signal="activate"/>
                         <child internal-child="image">
                           <widget class="GtkImage" id="image356">
                             <property name="visible">True</property>
@@ -574,7 +574,6 @@
                             <property name="icon_size">1</property>
                           </widget>
                         </child>
-                        <accelerator key="F1" signal="activate"/>
                       </widget>
                     </child>
                     <child>
