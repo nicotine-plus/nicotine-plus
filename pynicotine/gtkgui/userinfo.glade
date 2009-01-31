@@ -3,7 +3,7 @@
 <!--*- mode: xml -*-->
 <glade-interface>
   <widget class="GtkWindow" id="UserInfoTab">
-    <property name="visible">True</property>
+    <property name="visible">False</property>
     <property name="title" translatable="yes">window1</property>
     <child>
       <widget class="GtkHBox" id="Main">
