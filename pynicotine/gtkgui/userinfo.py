@@ -21,7 +21,6 @@ import gtk
 import tempfile
 import gobject
 
-#from userinfo_glade import UserInfoTab
 from utils import IconNotebook, PopupMenu, EncodingsMenu, SaveEncoding,  Humanize, InitialiseColumns, AppendLine
 from pynicotine import slskmessages
 
@@ -145,7 +144,6 @@ class UserTabs(IconNotebook):
 
 class UserInfo:
 	def __init__(self, userinfos, user, conn):
-		#UserInfoTab.__init__(self, False)
 		self.wTree = gtk.glade.XML(os.path.join(os.path.dirname(os.path.realpath(__file__)), "userinfo.glade" ) ) 
 		widgets = self.wTree.get_widget_prefix("")
 		for i in widgets:

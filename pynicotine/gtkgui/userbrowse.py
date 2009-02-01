@@ -22,7 +22,6 @@ import urllib
 import gobject
 import gc
 from userinfo import UserTabs
-#from userbrowse_glade import UserBrowseTab
 
 from utils import InitialiseColumns, PopupMenu, EncodingsMenu, SaveEncoding, Humanize, HumanizeBytes, PressHeader
 from dirchooser import ChooseDir

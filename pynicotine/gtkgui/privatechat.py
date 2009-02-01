@@ -18,11 +18,10 @@
 # Copyright (c) 2003-2004 Hyriand. All rights reserved.
 
 import os, sys
-import gtk, gobject, pango, gtk.glade
+import gtk, gobject, pango
 import sets
 from time import daylight, altzone
-#from privatechat_glade import PrivateChatTab
-#from privatechat2 import PrivateChatTab
+
 from utils import AppendLine, IconNotebook, PopupMenu, WriteLog, expand_alias, is_alias, EncodingsMenu, SaveEncoding, fixpath
 from chatrooms import GetCompletion
 from pynicotine import slskmessages

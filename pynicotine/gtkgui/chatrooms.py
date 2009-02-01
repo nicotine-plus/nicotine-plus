@@ -22,7 +22,6 @@ import gobject
 import locale
 import pango
 from pynicotine import slskmessages
-#from chatrooms_glade import ChatRoomTab
 from utils import InitialiseColumns, AppendLine, PopupMenu, FastListModel, string_sort_func, WriteLog, int_sort_func, Humanize, HumanSpeed, expand_alias, is_alias, EncodingsMenu, SaveEncoding, PressHeader, fixpath, IconNotebook
 from pynicotine.utils import _
 from ticker import Ticker

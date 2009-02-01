@@ -20,9 +20,7 @@
 import os
 
 import gtk
-#from mainwindow_glade import MainWindow
-#from chatrooms_glade import ChatRoomTab
-#from roomlist_glade import RoomList
+
 from pynicotine.pynicotine import NetworkEventProcessor
 from pynicotine import slskmessages
 from pynicotine.utils import version
