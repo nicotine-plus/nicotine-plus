@@ -662,9 +662,13 @@ class ChatRoom:
 		self.EncodingStore = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
 		self.Encoding.set_size_request(100, -1)
 		self.Encoding.set_model(self.EncodingStore)
+		cell = gtk.CellRendererText()
+		self.Encoding.pack_start(cell, True)
+		self.Encoding.add_attribute(cell, 'text', 0)
 		cell2 = gtk.CellRendererText()
 		self.Encoding.pack_start(cell2, False)
 		self.Encoding.add_attribute(cell2, 'text', 1)
+	
 		for item in m:
 			self.Elist[item[1]] = self.EncodingStore.append([item[1], item[0] ])
 			if self.encoding == item[1]:
