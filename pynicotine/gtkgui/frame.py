@@ -19,7 +19,7 @@
 
 import os
 
-import gtk
+import gtk, gtk.glade
 
 from pynicotine.pynicotine import NetworkEventProcessor
 from pynicotine import slskmessages
@@ -195,6 +195,11 @@ class NicotineFrame:
 			self.SearchMethod_List.append([i])
 		self.SearchMethod.set_model(self.SearchMethod_List)
 		self.SearchEntry = self.SearchEntryCombo.child
+
+		self.SearchEntryCombo.set_model(self.SearchEntryCombo_List)
+		self.SearchEntryCombo.set_text_column(0)
+		self.RoomSearchCombo.set_model(self.RoomSearchCombo_List)
+		self.RoomSearchCombo.set_text_column(0)
 
 		self.MainWindow.set_title(_("Nicotine+") + " " + version)
 		self.MainWindow.set_icon(self.images["n"])

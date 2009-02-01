@@ -485,15 +485,41 @@ class Searches(IconNotebook):
 				return True
 		return False
 	
-class Search(SearchTab):
+class Search:
 	WAIT_BEFORE_DISPLAYING = 5000 # in milliseconds
 	def __init__(self, Searches, text, id, mode, remember):
-		SearchTab.__init__(self, False)
-
-#		self.ResultsList.set_double_buffered(False)
-
 		self.Searches = Searches
 		self.frame = Searches.frame
+		self.tooltips = self.frame.tooltips
+		if not self.frame.np.config.sections["ui"]["tooltips"]:
+			self.tooltips.disable()
+
+		self.wTree = gtk.glade.XML(os.path.join(os.path.dirname(os.path.realpath(__file__)), "search.glade" ) ) 
+		widgets = self.wTree.get_widget_prefix("")
+		for i in widgets:
+			name = gtk.glade.get_widget_name(i)
+			self.__dict__[name] = i
+		self.SearchTab.remove(self.Main)
+		self.SearchTab.destroy()
+		self.FilterBitrate_List = gtk.ListStore(gobject.TYPE_STRING)
+		self.FilterBitrate.set_model(self.FilterBitrate_List)
+		self.FilterBitrate.set_text_column(0)
+		self.FilterSize_List = gtk.ListStore(gobject.TYPE_STRING)
+		self.FilterSize.set_model(self.FilterSize_List)
+		self.FilterSize.set_text_column(0)
+		self.FilterCountry_List = gtk.ListStore(gobject.TYPE_STRING)
+		self.FilterCountry.set_model(self.FilterCountry_List)
+		self.FilterCountry.set_text_column(0)
+		self.FilterIn_List = gtk.ListStore(gobject.TYPE_STRING)
+		self.FilterIn.set_model(self.FilterIn_List)
+		self.FilterIn.set_text_column(0)
+		self.FilterOut_List = gtk.ListStore(gobject.TYPE_STRING)
+		self.FilterOut.set_model(self.FilterOut_List)
+		self.FilterOut.set_text_column(0)
+		self.wTree.signal_autoconnect(self)
+#		self.ResultsList.set_double_buffered(False)
+
+
 		self.text = text
 		self.id = id
 		self.mode = mode
