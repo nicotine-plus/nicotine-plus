@@ -238,10 +238,11 @@ class Login(ServerMessage):
 		
 	def makeNetworkMessage(self):
 		try:
-			from hashlib import md5
+			import hashlib
+			m = hashlib.md5()
 		except:
 			import md5
-		m = md5.new()
+			m = md5.new()
 		m.update(self.username+self.passwd)
 		md5hash = m.hexdigest()
 		message = self.packObject(self.username)+ self.packObject(self.passwd) + self.packObject(self.version) + self.packObject(md5hash) + self.packObject(1)

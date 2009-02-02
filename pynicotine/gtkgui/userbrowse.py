@@ -40,7 +40,7 @@ class UserBrowse:
 		self.UserBrowseTab.remove(self.Main)
 		self.UserBrowseTab.destroy()
 		#UserBrowseTab.__init__(self, False)
-		
+		self.wTree.signal_autoconnect(self)
 		self.userbrowses = userbrowses
 
 		self.frame = userbrowses.frame

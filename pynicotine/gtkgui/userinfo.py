@@ -151,7 +151,7 @@ class UserInfo:
 			self.__dict__[name] = i
 		self.UserInfoTab.remove(self.Main)
 		self.UserInfoTab.destroy()
-
+		self.wTree.signal_autoconnect(self)
 		self.userinfos = userinfos
 		self.frame = userinfos.frame
 		if not self.frame.np.config.sections["ui"]["tooltips"]:
