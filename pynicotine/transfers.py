@@ -36,9 +36,11 @@ import mp3
 import locale
 import utils
 try:
-	from hashlib import md5
+	import hashlib
+	MD5 = hashlib.md5
 except:
 	import md5
+	MD5 = md5.new
 from utils import _
 from gtkgui.utils import recode2
 from time import sleep
@@ -737,7 +739,10 @@ class Transfers:
 					basename = self.encode(basename, i.user)
 					winfname = os.path.join(incompletedir, "INCOMPLETE~"+basename)
 					pyfname  = os.path.join(incompletedir, "INCOMPLETE"+basename)
-					pynewfname = os.path.join(incompletedir, "INCOMPLETE"+md5.new(i.filename+i.user).hexdigest()+basename)
+					m = MD5()
+					m.update(i.filename+i.user)
+					
+					pynewfname = os.path.join(incompletedir, "INCOMPLETE"+m.hexdigest()+basename)
 					try:
 						if os.access(winfname, os.F_OK):
 							fname = winfname
@@ -1454,7 +1459,9 @@ class Transfers:
 	def getChecksum(self, path):
 		try:
 			h = open(path)
-			digest = md5.new(h.read(-1)).digest()
+			m = MD5()
+			m.update(h.read(-1))
+			digest = m.digest()
 			h.close()
 			return digest
 		except IOError:
