@@ -177,6 +177,18 @@ class Searches(IconNotebook):
 		self.popup_enable()
 		#frame.SearchEntryCombo.disable_activate()
 		
+
+		self.WishListDialog = WishList(frame)
+		
+		self.UpdateColours()
+		self.show()
+
+	def LoadConfig(self):
+		"""
+		Add search history to SearchEntryCombo later and connect Wishlist, 
+		after widgets have been created by glade. (doing this in __init__ causes tracebacks 
+		during import with gtk.glade.XML in frame.py)
+		"""
 		items = self.frame.np.config.sections["searches"]["history"]
 		templist = []
 		for i in items:
@@ -184,11 +196,8 @@ class Searches(IconNotebook):
 				templist.append(i)
 		for i in templist:
 			self.frame.SearchEntryCombo.append_text(i)
-		self.WishListDialog = WishList(frame)
 		self.frame.WishList.connect("clicked", self.WishListDialog.Toggle)
-		self.UpdateColours()
-		self.show()
-		
+
 	def SetInterval(self, msg):
 		self.interval = msg.seconds
 		if not self.disconnected:
@@ -428,7 +437,8 @@ class Searches(IconNotebook):
 				continue
 			id[2].ChangeColours()
 		self.frame.SetTextBG(self.WishListDialog.WishlistView)
-			
+		
+
 	def saveColumns(self):
 		page_num = self.get_current_page()
 		if page_num is not None:
@@ -501,6 +511,8 @@ class Search:
 			self.__dict__[name] = i
 		self.SearchTab.remove(self.Main)
 		self.SearchTab.destroy()
+		self.wTree.signal_autoconnect(self)
+
 		self.FilterBitrate_List = gtk.ListStore(gobject.TYPE_STRING)
 		self.FilterBitrate.set_model(self.FilterBitrate_List)
 		self.FilterBitrate.set_text_column(0)

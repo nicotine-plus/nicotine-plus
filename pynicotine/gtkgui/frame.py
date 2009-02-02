@@ -166,40 +166,27 @@ class NicotineFrame:
 		self.tooltips = gtk.Tooltips()
 		self.tooltips.enable()
 		self.roomlist = roomlist(self)
-		#MainWindow.__init__(self)
-		#self.SearchEntryCombo =  gtk.ComboBoxEntry()
+		# Import glade widgets
 		gtk.glade.set_custom_handler(self.get_custom_widget)
-		self.wTree = gtk.glade.XML(os.path.join(os.path.dirname(os.path.realpath(__file__)), "mainwindow.glade" ), "SearchEntryCombo" ) 
-		self.SearchEntryCombo = self.wTree.get_widget("SearchEntryCombo")
-		self.SearchEntryCombo_List = gtk.ListStore(gobject.TYPE_STRING)
-		self.SearchEntryCombo.set_model(self.SearchEntryCombo_List)
-		self.SearchEntryCombo.set_text_column(0)
-		
-		self.wTree = gtk.glade.XML(os.path.join(os.path.dirname(os.path.realpath(__file__)), "mainwindow.glade" ), "WishList" ) 
-		self.WishList = self.wTree.get_widget("WishList")
-
-		self.wTree = gtk.glade.XML(os.path.join(os.path.dirname(os.path.realpath(__file__)), "mainwindow.glade" ), "RoomSearchCombo" ) 
-		self.RoomSearchCombo = self.wTree.get_widget("RoomSearchCombo")
-		self.RoomSearchCombo_List = gtk.ListStore(gobject.TYPE_STRING)
-		self.RoomSearchCombo.set_model(self.RoomSearchCombo_List)
-		self.RoomSearchCombo.set_text_column(0)
 		self.wTree = gtk.glade.XML(os.path.join(os.path.dirname(os.path.realpath(__file__)), "mainwindow.glade" ) ) 
 		widgets = self.wTree.get_widget_prefix("")
-		
 		for i in widgets:
 			name = gtk.glade.get_widget_name(i)
 			self.__dict__[name] = i
-
+		# Create Search combo ListStores
+		self.SearchEntryCombo_List = gtk.ListStore(gobject.TYPE_STRING)
+		self.SearchEntryCombo.set_model(self.SearchEntryCombo_List)
+		self.SearchEntryCombo.set_text_column(0)
+		self.SearchEntry = self.SearchEntryCombo.child
+		
+		self.RoomSearchCombo_List = gtk.ListStore(gobject.TYPE_STRING)
+		self.RoomSearchCombo.set_model(self.RoomSearchCombo_List)
+		self.RoomSearchCombo.set_text_column(0)
 		self.SearchMethod_List = gtk.ListStore(gobject.TYPE_STRING)
 		for i in [_("")]:
 			self.SearchMethod_List.append([i])
 		self.SearchMethod.set_model(self.SearchMethod_List)
-		self.SearchEntry = self.SearchEntryCombo.child
 
-		self.SearchEntryCombo.set_model(self.SearchEntryCombo_List)
-		self.SearchEntryCombo.set_text_column(0)
-		self.RoomSearchCombo.set_model(self.RoomSearchCombo_List)
-		self.RoomSearchCombo.set_text_column(0)
 
 		self.MainWindow.set_title(_("Nicotine+") + " " + version)
 		self.MainWindow.set_icon(self.images["n"])
@@ -441,6 +428,7 @@ class NicotineFrame:
 		self.chatrooms = self.ChatNotebook
 		self.chatrooms.show()
 		self.Searches = self.SearchNotebook
+		self.Searches.LoadConfig()
 		self.downloads = Downloads(self)
 		self.uploads = Uploads(self)
 		self.userlist = UserList(self)
