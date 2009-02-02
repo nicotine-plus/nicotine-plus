@@ -256,7 +256,7 @@ class SharesFrame(buildFrame):
 				self.needrescan = 1
 					
 	def OnAddSharedDir(self, widget):
-		dir1 = ChooseDir(self.Main.get_toplevel())
+		dir1 = ChooseDir(self.Main.get_toplevel(), title=_("Nicotine+")+": "+_("Add a shared directory"))
 		if dir1 is not None:
 			for directory in dir1:
 				if directory not in self.shareddirs:
@@ -265,7 +265,7 @@ class SharesFrame(buildFrame):
 					self.needrescan = 1
 			    
 	def OnAddSharedBuddyDir(self, widget):
-		dir1 = ChooseDir(self.Main.get_toplevel())
+		dir1 = ChooseDir(self.Main.get_toplevel(), title=_("Nicotine+")+": "+_("Add a shared buddy directory"))
 		if dir1 is not None:
 			for directory in dir1:
 				if directory not in self.bshareddirs:
@@ -623,7 +623,7 @@ class UserinfoFrame(buildFrame):
 
 		
 	def OnChooseImage(self, widget):
-		dlg = ChooseImage(initialfile=self.Image.get_text())
+		dlg = ChooseImage(initialfile=self.Image.get_text(), title=_("Nicotine+")+": "+_("Choose a user info image"))
 		if dlg:
 			for file in dlg:
 				self.Image.set_text(file)
@@ -876,7 +876,7 @@ class SoundsFrame(buildFrame):
 
 	
 	def OnChooseSoundDir(self, widget):
-		dir = ChooseDir(self.Main.get_toplevel(), self.SoundDirectory.get_text())
+		dir = ChooseDir(self.Main.get_toplevel(), self.SoundDirectory.get_text(), title=_("Nicotine+")+": "+_("Choose a sound effects directory"))
 		if dir is not None: 
 			for directory in dir: # iterate over selected files
 				self.SoundDirectory.set_text(recode(directory))
@@ -920,7 +920,7 @@ class IconsFrame(buildFrame):
 		self.IconTheme.set_text("")
 		
 	def OnChooseThemeDir(self, widget):
-		dir = ChooseDir(self.Main.get_toplevel(), self.IconTheme.get_text())
+		dir = ChooseDir(self.Main.get_toplevel(), self.IconTheme.get_text(), title=_("Nicotine+")+": "+_("Choose an icon theme directory"))
 		if dir is not None:
 			for directory in dir: # iterate over selected files
 				self.IconTheme.set_text(recode(directory))
@@ -1483,19 +1483,19 @@ class LogFrame(buildFrame):
 		}
 
 	def OnChooseLogDir(self, widget):
-		dir = ChooseDir(self.Main.get_toplevel(), self.LogDir.get_text())
+		dir = ChooseDir(self.Main.get_toplevel(), self.LogDir.get_text(), title=_("Nicotine+")+": "+_("Choose a directory to save your log files"))
 		if dir is not None:
 			for directory in dir: # iterate over selected files
 				self.LogDir.set_text(recode(directory))
 				
 	def OnChooseRoomLogDir(self, widget):
-		dir = ChooseDir(self.Main.get_toplevel(), self.LogDir.get_text())
+		dir = ChooseDir(self.Main.get_toplevel(), self.RoomLogDir.get_text(), title=_("Nicotine+")+": "+_("Choose a directory to save your log files"))
 		if dir is not None:
 			for directory in dir: # iterate over selected files
 				self.RoomLogDir.set_text(recode(directory))
 				
 	def OnChoosePrivateLogDir(self, widget):
-		dir = ChooseDir(self.Main.get_toplevel(), self.LogDir.get_text())
+		dir = ChooseDir(self.Main.get_toplevel(), self.PrivateLogDir.get_text(), title=_("Nicotine+")+": "+_("Choose a directory to save your log files"))
 		if dir is not None:
 			for directory in dir: # iterate over selected files
 				self.PrivateLogDir.set_text(recode(directory))
@@ -1666,13 +1666,14 @@ class ImportFrame(buildFrame):
 		return {}
 		
 	def OnImportDirectory(self, widget):
-		dir1 = ChooseDir(self.Main.get_toplevel(), self.ImportPath.get_text())
+		dir1 = ChooseDir(self.Main.get_toplevel(), self.ImportPath.get_text(), title=_("Nicotine+")+": "+_("Import Soulseek config from directory"))
 		if dir1 is not None:
 			for directory in dir1: # iterate over selected files
 				self.ImportPath.set_text(recode(directory))
 		directory = self.ImportPath.get_text()
 		if not os.path.exists(directory):
 			self.p.Hilight(self.ImportPath)
+
 	def OnImportConfig(self, widget):
 		Path = self.ImportPath.get_text()
 		Queue = self.ImportQueue.get_active()

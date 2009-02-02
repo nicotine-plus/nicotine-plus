@@ -27,8 +27,8 @@ from utils import recode, InputDialog
 from pynicotine.utils import _
 
 
-def ChooseDir(parent = None, initialdir = "~", create=False, name=None):
-	dialog = gtk.FileChooserDialog(parent=parent, action=gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER, buttons = (gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT, gtk.STOCK_OK, gtk.RESPONSE_ACCEPT))
+def ChooseDir(parent = None, initialdir = "~", create=False, name=None, title=None):
+	dialog = gtk.FileChooserDialog(title=title, parent=parent, action=gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER, buttons = (gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT, gtk.STOCK_OK, gtk.RESPONSE_ACCEPT))
 	if create:
 		dialog.set_action(gtk.FILE_CHOOSER_ACTION_CREATE_FOLDER)
 	else:
@@ -96,7 +96,7 @@ def SaveFile(parent = None, initialdir = "~", initialfile = "", title=None):
 
 	return res
 
-def ChooseImage(parent = None, initialdir = "~", initialfile = ""):
+def ChooseImage(parent = None, initialdir = "~", initialfile = "", title=None):
 	image = gtk.Image()
 	preview = gtk.ScrolledWindow()
 	preview.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
@@ -104,7 +104,7 @@ def ChooseImage(parent = None, initialdir = "~", initialfile = ""):
 	preview.add_with_viewport(image)
 	image.show()
 	preview.show()
-	dialog = gtk.FileChooserDialog(parent=parent, action=gtk.FILE_CHOOSER_ACTION_OPEN, buttons = (gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT, gtk.STOCK_OK, gtk.RESPONSE_ACCEPT))
+	dialog = gtk.FileChooserDialog(title=title, parent=parent, action=gtk.FILE_CHOOSER_ACTION_OPEN, buttons = (gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT, gtk.STOCK_OK, gtk.RESPONSE_ACCEPT))
 	dialog.set_action(gtk.FILE_CHOOSER_ACTION_OPEN)
 	dialog.set_select_multiple(False)
 	dialog.set_preview_widget(preview)

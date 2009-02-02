@@ -3,7 +3,6 @@
   <!-- interface-requires gtk+ 2.16 -->
   <!-- interface-naming-policy toplevel-contextual -->
   <widget class="GtkWindow" id="ServerFrame">
-    <property name="visible">False</property>
     <property name="title" translatable="yes">Server Settings</property>
     <child>
       <widget class="GtkFrame" id="Main">
@@ -359,7 +358,6 @@
     </child>
   </widget>
   <widget class="GtkWindow" id="SharesFrame">
-    <property name="visible">False</property>
     <property name="title" translatable="yes">Shares</property>
     <child>
       <widget class="GtkFrame" id="Main">
@@ -849,7 +847,6 @@
     </child>
   </widget>
   <widget class="GtkWindow" id="TransfersFrame">
-    <property name="visible">False</property>
     <property name="title" translatable="yes">Transfers</property>
     <child>
       <widget class="GtkFrame" id="Main">
@@ -1795,7 +1792,6 @@
     </child>
   </widget>
   <widget class="GtkWindow" id="UserinfoFrame">
-    <property name="visible">False</property>
     <property name="title" translatable="yes">Userinfo</property>
     <child>
       <widget class="GtkFrame" id="Main">
@@ -1980,7 +1976,6 @@
     </child>
   </widget>
   <widget class="GtkWindow" id="BloatFrame">
-    <property name="visible">False</property>
     <property name="title" translatable="yes">Bloat</property>
     <child>
       <widget class="GtkFrame" id="Main">
@@ -2421,7 +2416,6 @@
     </child>
   </widget>
   <widget class="GtkWindow" id="LogFrame">
-    <property name="visible">False</property>
     <property name="title" translatable="yes">Log</property>
     <child>
       <widget class="GtkFrame" id="Main">
@@ -2672,6 +2666,7 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>
+                        <signal name="clicked" handler="OnChoosePrivateLogDir"/>
                         <child>
                           <widget class="GtkAlignment" id="alignment24">
                             <property name="visible">True</property>
@@ -3162,7 +3157,6 @@
     </child>
   </widget>
   <widget class="GtkWindow" id="BanFrame">
-    <property name="visible">False</property>
     <property name="title" translatable="yes">Ban</property>
     <child>
       <widget class="GtkFrame" id="Main">
@@ -3791,7 +3785,6 @@
     </child>
   </widget>
   <widget class="GtkWindow" id="SearchFrame">
-    <property name="visible">False</property>
     <property name="title" translatable="yes">Search</property>
     <child>
       <widget class="GtkFrame" id="Main">
@@ -4405,7 +4398,6 @@ when new results come in</property>
     </child>
   </widget>
   <widget class="GtkWindow" id="AwayFrame">
-    <property name="visible">False</property>
     <property name="title" translatable="yes">Away</property>
     <child>
       <widget class="GtkFrame" id="Main">
@@ -4507,7 +4499,6 @@ when new results come in</property>
     </child>
   </widget>
   <widget class="GtkWindow" id="EventsFrame">
-    <property name="visible">False</property>
     <property name="title" translatable="yes">Events</property>
     <child>
       <widget class="GtkFrame" id="Main">
@@ -4518,20 +4509,6 @@ when new results come in</property>
             <property name="visible">True</property>
             <property name="border_width">5</property>
             <property name="spacing">10</property>
-            <child>
-              <widget class="GtkCheckButton" id="ShowNotification">
-                <property name="label" translatable="yes">...each file</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">False</property>
-                <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                <property name="draw_indicator">True</property>
-              </widget>
-              <packing>
-                <property name="expand">False</property>
-                <property name="position">1</property>
-              </packing>
-            </child>
             <child>
               <widget class="GtkLabel" id="label214">
                 <property name="visible">True</property>
@@ -4545,16 +4522,26 @@ when new results come in</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkCheckButton" id="ShowNotificationPerFolder">
-                <property name="label" translatable="yes">...each directory</property>
+              <widget class="GtkLabel" id="label296">
                 <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">False</property>
-                <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                <property name="draw_indicator">True</property>
+                <property name="xalign">0</property>
+                <property name="label" translatable="yes">Show notification popup in tray after...\n(requires python-notify and notification-daemon)</property>
               </widget>
               <packing>
                 <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkEntry" id="AfterDownload">
+                <property name="width_request">313</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+              </widget>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
                 <property name="position">2</property>
               </packing>
             </child>
@@ -4719,26 +4706,30 @@ Clear</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkEntry" id="AfterDownload">
-                <property name="width_request">313</property>
+              <widget class="GtkCheckButton" id="ShowNotificationPerFolder">
+                <property name="label" translatable="yes">...each directory</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
+                <property name="receives_default">False</property>
+                <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                <property name="draw_indicator">True</property>
               </widget>
               <packing>
                 <property name="expand">False</property>
-                <property name="fill">False</property>
                 <property name="position">2</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkLabel" id="label296">
+              <widget class="GtkCheckButton" id="ShowNotification">
+                <property name="label" translatable="yes">...each file</property>
                 <property name="visible">True</property>
-                <property name="xalign">0</property>
-                <property name="label" translatable="yes">Show notification popup in tray after...\n(requires python-notify and notification-daemon)</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">False</property>
+                <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                <property name="draw_indicator">True</property>
               </widget>
               <packing>
                 <property name="expand">False</property>
-                <property name="fill">False</property>
                 <property name="position">1</property>
               </packing>
             </child>
@@ -4757,7 +4748,6 @@ Clear</property>
     </child>
   </widget>
   <widget class="GtkWindow" id="GeoBlockFrame">
-    <property name="visible">False</property>
     <property name="title" translatable="yes">GeoBlock</property>
     <child>
       <widget class="GtkFrame" id="Main">
@@ -4895,7 +4885,6 @@ Clear</property>
     </child>
   </widget>
   <widget class="GtkWindow" id="UrlCatchFrame">
-    <property name="visible">False</property>
     <property name="title" translatable="yes">UrlCatch</property>
     <child>
       <widget class="GtkFrame" id="Main">
@@ -5161,7 +5150,6 @@ Clear</property>
     </child>
   </widget>
   <widget class="GtkWindow" id="MiscFrame">
-    <property name="visible">False</property>
     <property name="title" translatable="yes">Misc</property>
     <child>
       <widget class="GtkFrame" id="Main">
@@ -5244,7 +5232,6 @@ Clear</property>
     </child>
   </widget>
   <widget class="GtkWindow" id="ImportFrame">
-    <property name="visible">False</property>
     <property name="title" translatable="yes">Import Config</property>
     <child>
       <widget class="GtkFrame" id="Main">
@@ -5582,7 +5569,6 @@ Clear</property>
     </child>
   </widget>
   <widget class="GtkWindow" id="SoundsFrame">
-    <property name="visible">False</property>
     <property name="title" translatable="yes">Sounds</property>
     <child>
       <widget class="GtkFrame" id="Main">
@@ -6079,7 +6065,6 @@ Clear</property>
     </child>
   </widget>
   <widget class="GtkWindow" id="IconsFrame">
-    <property name="visible">False</property>
     <property name="title" translatable="yes">Icons</property>
     <child>
       <widget class="GtkFrame" id="Main">
@@ -6624,7 +6609,6 @@ Clear</property>
     </child>
   </widget>
   <widget class="GtkWindow" id="CensorFrame">
-    <property name="visible">False</property>
     <property name="title" translatable="yes">Log</property>
     <child>
       <widget class="GtkFrame" id="Main">
@@ -6900,7 +6884,6 @@ Clear</property>
     </child>
   </widget>
   <widget class="GtkWindow" id="ChatFrame">
-    <property name="visible">False</property>
     <property name="title" translatable="yes">Chat</property>
     <child>
       <widget class="GtkFrame" id="Main">
@@ -7018,7 +7001,6 @@ Clear</property>
     </child>
   </widget>
   <widget class="GtkWindow" id="AutoReplaceFrame">
-    <property name="visible">False</property>
     <property name="title" translatable="yes">Log</property>
     <child>
       <widget class="GtkFrame" id="Main">
@@ -7297,7 +7279,6 @@ typed incorrectly or as an acronym</property>
     </child>
   </widget>
   <widget class="GtkWindow" id="CompletionFrame">
-    <property name="visible">False</property>
     <property name="title" translatable="yes">Text Completion</property>
     <child>
       <widget class="GtkFrame" id="Main">
@@ -7526,7 +7507,6 @@ typed incorrectly or as an acronym</property>
     </child>
   </widget>
   <widget class="GtkWindow" id="NotebookFrame">
-    <property name="visible">False</property>
     <property name="title" translatable="yes">Notebooks</property>
     <child>
       <widget class="GtkFrame" id="Main">
@@ -7618,31 +7598,31 @@ typed incorrectly or as an acronym</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkCheckButton" id="TabColours">
+              <widget class="GtkCheckButton" id="TabReorderable">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
                 <property name="draw_indicator">True</property>
                 <child>
-                  <widget class="GtkHBox" id="hbox43">
+                  <widget class="GtkHBox" id="hboxReorderable">
                     <property name="visible">True</property>
                     <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                     <property name="spacing">5</property>
                     <child>
-                      <widget class="GtkImage" id="NotificationIcon2">
+                      <widget class="GtkImage" id="ReorderableIcon">
                         <property name="visible">True</property>
                         <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                        <property name="stock">gtk-select-color</property>
+                        <property name="stock">gtk-go-forward</property>
                       </widget>
                       <packing>
                         <property name="position">0</property>
                       </packing>
                     </child>
                     <child>
-                      <widget class="GtkLabel" id="label32">
+                      <widget class="GtkLabel" id="labelReorderable">
                         <property name="visible">True</property>
                         <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                        <property name="label" translatable="yes">Notification changes the tab's text color</property>
+                        <property name="label" translatable="yes">Tabs can be repositioned</property>
                       </widget>
                       <packing>
                         <property name="position">1</property>
@@ -8038,31 +8018,31 @@ Right</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkCheckButton" id="TabReorderable">
+              <widget class="GtkCheckButton" id="TabColours">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
                 <property name="draw_indicator">True</property>
                 <child>
-                  <widget class="GtkHBox" id="hboxReorderable">
+                  <widget class="GtkHBox" id="hbox43">
                     <property name="visible">True</property>
                     <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                     <property name="spacing">5</property>
                     <child>
-                      <widget class="GtkImage" id="ReorderableIcon">
+                      <widget class="GtkImage" id="NotificationIcon2">
                         <property name="visible">True</property>
                         <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                        <property name="stock">gtk-go-forward</property>
+                        <property name="stock">gtk-select-color</property>
                       </widget>
                       <packing>
                         <property name="position">0</property>
                       </packing>
                     </child>
                     <child>
-                      <widget class="GtkLabel" id="labelReorderable">
+                      <widget class="GtkLabel" id="label32">
                         <property name="visible">True</property>
                         <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                        <property name="label" translatable="yes">Tabs can be repositioned</property>
+                        <property name="label" translatable="yes">Notification changes the tab's text color</property>
                       </widget>
                       <packing>
                         <property name="position">1</property>
