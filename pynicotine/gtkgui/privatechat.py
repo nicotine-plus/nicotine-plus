@@ -19,7 +19,7 @@
 
 import os, sys
 import gtk, gobject, pango
-import sets
+
 from time import daylight, altzone
 
 from utils import AppendLine, IconNotebook, PopupMenu, WriteLog, expand_alias, is_alias, EncodingsMenu, SaveEncoding, fixpath
@@ -218,7 +218,7 @@ class PrivateChats(IconNotebook):
 			clist += self.frame.chatrooms.roomsctrl.rooms
 		
 		# no duplicates
-		self.clist = list(sets.Set(clist))
+		self.clist = list(set(clist))
 		self.clist.sort(key=str.lower)
 		
 		for user in self.users.values():

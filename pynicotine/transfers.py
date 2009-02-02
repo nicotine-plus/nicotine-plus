@@ -35,7 +35,10 @@ import time
 import mp3
 import locale
 import utils
-import md5
+try:
+	from hashlib import md5
+except:
+	import md5
 from utils import _
 from gtkgui.utils import recode2
 from time import sleep

@@ -28,7 +28,10 @@ from ticker import Ticker
 from entrydialog import OptionDialog, input_box
 from os.path import commonprefix
 import pluginsystem
-import sets, os, re, time
+import os, re, time, sys
+ver = sys.version_info 
+
+
 
 def GetCompletion(part, list):
 	lowerpart = part.lower()
@@ -1559,7 +1562,7 @@ class ChatRoom:
 			clist += list(self.users.keys())
 
 		# no duplicates
-		clist = list(sets.Set(clist))
+		clist = list(set(clist))
 		clist.sort(key=str.lower)
 		completion.set_popup_completion(False)
 		if config["dropdown"]:
