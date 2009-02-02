@@ -20,7 +20,6 @@
 
 import gtk
 import gobject
-import settings_glade
 import locale
 import re
 from dirchooser import *
