@@ -2034,6 +2034,7 @@ class NicotineFrame:
 				tips.enable()
 			else:
 				tips.disable()
+			
 		
 	def AutoReplace(self, message):
 		if self.np.config.sections["words"]["replacewords"]:

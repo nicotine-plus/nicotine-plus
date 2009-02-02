@@ -229,18 +229,24 @@ class PrivateChat:
 		self.user = user
 		self.chats = chats
 		self.frame = chats.frame
-		self.tooltips = self.frame.tooltips
-		if not self.frame.np.config.sections["ui"]["tooltips"]:
-			self.tooltips.disable()
+		
 
 		self.wTree = gtk.glade.XML(os.path.join(os.path.dirname(os.path.realpath(__file__)), "privatechat.glade" ) ) 
 		widgets = self.wTree.get_widget_prefix("")
 		for i in widgets:
 			name = gtk.glade.get_widget_name(i)
 			self.__dict__[name] = i
+			#print name, i
 		self.PrivateChatTab.remove(self.Main)
 		self.PrivateChatTab.destroy()
 		self.wTree.signal_autoconnect(self)
+		#Get glade widgets' tooltips
+		self.tooltips = gtk.tooltips_data_get(self.PeerPrivateMessages)[0]
+		#if not self.frame.np.config.sections["ui"]["tooltips"]:
+		self.tooltips.disable()
+		self.tooltips = gtk.tooltips_data_get(self.PeerPrivateMessages)[0]
+		if not self.frame.np.config.sections["ui"]["tooltips"]:
+			self.tooltips.disable()
 
 
 
