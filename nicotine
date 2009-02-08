@@ -153,6 +153,7 @@ def usage():
 	print _("""Nicotine-Plus is a Soulseek client.
 Usage: nicotine [OPTION]...
   -c file,	--config=file	Use non-default configuration file
+  -p dir,	--plugins=dir	Use non-default directory for plugins
   -t,		--enable-trayicon
   -d,		--disable-trayicon
   -r,		--enable-rgba 
@@ -213,7 +214,7 @@ if __name__ == '__main__':
 
 	import sys, getopt, os.path
 	try:
-		opts, args = getopt.getopt(sys.argv[1:], "hc:tdv", ["help", "config=", "profile", "enable-trayicon", "disable-trayicon", "enable-rgba", "disable-rgba", "version"])
+		opts, args = getopt.getopt(sys.argv[1:], "hc:p:tdv", ["help", "config=", "plugins=", "profile", "enable-trayicon", "disable-trayicon", "enable-rgba", "disable-rgba", "version"])
 	except getopt.GetoptError:
 		# print help information and exit:
 		usage()
@@ -226,8 +227,10 @@ if __name__ == '__main__':
 			# windows 9x?
 			mydir,x = os.path.split(sys.argv[0])
 		config = os.path.join(mydir, "config", "config")
+		plugins = os.path.join(mydir, "plugins")
 	else:
 		config = os.path.join(os.path.expanduser("~"),'.nicotine','config')
+		plugins = os.path.join(os.path.expanduser("~"),'.nicotine','plugins')
 	profile = 0
 	trayicon = 1
 	tryrgba = False
@@ -237,6 +240,8 @@ if __name__ == '__main__':
 			sys.exit()
 		if o in ("-c", "--config"):
 			config = a
+		if o in ("-p", "--plugins"):
+			plugins = a
 		if o == "--profile":
 			profile = 1
 		if o in ("-t", "--enable-trayicon"):
@@ -254,7 +259,7 @@ if __name__ == '__main__':
 	if result is None:
 		from pynicotine.gtkgui import frame
 
-		app = frame.MainApp(config, trayicon, tryrgba)
+		app = frame.MainApp(config, plugins, trayicon, tryrgba)
 		if profile:
 			import hotshot
 			log = os.path.expanduser(config) + ".profile"

@@ -112,7 +112,7 @@ class BuddiesComboBoxEntry(gtk.ComboBoxEntry):
 		
 		
 class NicotineFrame:
-	def __init__(self, config, use_trayicon, try_rgba):
+	def __init__(self, config, plugindir, use_trayicon, try_rgba):
 		
 		self.clip_data = ""
 		self.log_queue = []
@@ -488,7 +488,7 @@ class NicotineFrame:
 		self.check_privileges1.set_sensitive(0)
 
 		self.gstreamer = gstreamer()
-		self.pluginhandler = pluginsystem.PluginHandler(self)
+		self.pluginhandler = pluginsystem.PluginHandler(self, plugindir)
 
 
 		if config["ui"]["chat_hidebuttons"]:
@@ -3216,8 +3216,8 @@ class gstreamer:
 			self.player.set_state(self.gst.STATE_NULL)
 			
 class MainApp:
-	def __init__(self, config, trayicon, rgbamode):
-		self.frame = NicotineFrame(config, trayicon, rgbamode)
+	def __init__(self, config, plugindir, trayicon, rgbamode):
+		self.frame = NicotineFrame(config, plugindir, trayicon, rgbamode)
 	
 	def MainLoop(self):
 		signal.signal(signal.SIGINT, signal.SIG_IGN)

@@ -18,20 +18,23 @@ tupletype = type(('',''))
 
 class PluginHandler(object):
     frame = None # static variable... but should it be?
-    def __init__(self, frame):
+    def __init__(self, frame, plugindir=None):
         self.frame = frame
         self.log("Loading plugin handler")
         self.myUsername = self.frame.np.config.sections["server"]["login"]
         self.plugins = []
-        if WIN32:
-            try:
-                mydir = os.path.join(os.environ['APPDATA'], 'nicotine')
-            except KeyError:
-                # windows 9x?
-                mydir,x = os.path.split(sys.argv[0])
-            self.plugindir = os.path.join(mydir, "plugins")
+        if not plugindir:
+            if WIN32:
+                try:
+                    mydir = os.path.join(os.environ['APPDATA'], 'nicotine')
+                except KeyError:
+                    # windows 9x?
+                    mydir,x = os.path.split(sys.argv[0])
+                self.plugindir = os.path.join(mydir, "plugins")
+            else:
+                self.plugindir = os.path.join(os.path.expanduser("~"),'.nicotine','plugins')
         else:
-            self.plugindir = os.path.join(os.path.expanduser("~"),'.nicotine','plugins')
+            self.plugindir = plugindir
         if os.path.isdir(self.plugindir):
             self.load(self.plugindir)
         else:
