@@ -587,7 +587,7 @@ class NicotineFrame:
 		if self.pynotify is None:
 			return
 		n = self.pynotify.Notification(title, message)
-		n.set_icon_from_pixbuf(self.images["n"])
+		n.set_icon_from_pixbuf(self.images["notify"])
 		try: n.attach_to_status_icon(self.TrayApp.trayicon_module)
 		except:
 			try: n.attach_to_widget(self.TrayApp.trayicon_module)
@@ -619,7 +619,7 @@ class NicotineFrame:
 		self.flag_images = {}
 		self.flag_users = {}
 
-		for i in ["empty", "away", "online", "offline", "hilite", "hilite2", "connect", "disconnect", "away2", "n", "nicotinen"]:
+		for i in ["empty", "away", "online", "offline", "hilite", "hilite2", "connect", "disconnect", "away2", "n", "nicotinen", "notify"]:
 			try:
 				import imagedata
 			except Exception, e:

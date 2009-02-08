@@ -897,6 +897,7 @@ class IconsFrame(buildFrame):
 		self.Hilite2.set_from_pixbuf(self.frame.images["hilite2"])
 		self.Connect.set_from_pixbuf(self.frame.images["connect"])
 		self.Disconnect.set_from_pixbuf(self.frame.images["disconnect"])
+		self.Notify.set_from_pixbuf(self.frame.images["notify"])
 		
 	def SetSettings(self, config):
 		ui = config["ui"]
