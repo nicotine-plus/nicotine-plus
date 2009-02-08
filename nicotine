@@ -161,7 +161,7 @@ Usage: nicotine [OPTION]...
   -v,		--version	Display version and exit
   -h,		--help		Display this help and exit
 
-Please report any problems to our bugtracker :
+Please report any problems to our bugtracker:
 http://www.nicotine-plus.org/newticket""")
 
 def renameprocess(newname, debug = False):
@@ -193,9 +193,7 @@ def renameprocess(newname, debug = False):
 		for i in errors:
 			print i
 
-
-
-if __name__ == '__main__':
+def run():
 	renameprocess('nicotine')
 	import locale
 	# Win32 hack to fix LANG and LC_ALL environnment variables with unix compliant language code
@@ -270,3 +268,6 @@ if __name__ == '__main__':
 			app.MainLoop()
 	else:
 		print result
+
+if __name__ == '__main__':
+	run()
