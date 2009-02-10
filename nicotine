@@ -160,6 +160,7 @@ Usage: nicotine [OPTION]...
   -x,		--disable-rgba
   -v,		--version	Display version and exit
   -h,		--help		Display this help and exit
+  -s,		--hidden	Start n+ hidden
 
 Please report any problems to our bugtracker:
 http://www.nicotine-plus.org/newticket""")
@@ -212,7 +213,7 @@ def run():
 
 	import sys, getopt, os.path
 	try:
-		opts, args = getopt.getopt(sys.argv[1:], "hc:p:tdv", ["help", "config=", "plugins=", "profile", "enable-trayicon", "disable-trayicon", "enable-rgba", "disable-rgba", "version"])
+		opts, args = getopt.getopt(sys.argv[1:], "hc:p:tdvs", ["help", "config=", "plugins=", "profile", "enable-trayicon", "disable-trayicon", "enable-rgba", "disable-rgba", "version", "hidden"])
 	except getopt.GetoptError:
 		# print help information and exit:
 		usage()
@@ -232,6 +233,7 @@ def run():
 	profile = 0
 	trayicon = 1
 	tryrgba = False
+	hidden = False
 	for o, a in opts:
 		if o in ("-h", "--help"):
 			usage()
@@ -250,6 +252,8 @@ def run():
 			tryrgba = True
 		if o in ('-x', '--disable-rgba'):
 			tryrgba = False
+		if o in ('-s', '--hidden'):
+			hidden = True
 		if o in ("-v", "--version"):
 			version()
 			sys.exit()
@@ -257,7 +261,7 @@ def run():
 	if result is None:
 		from pynicotine.gtkgui import frame
 
-		app = frame.MainApp(config, plugins, trayicon, tryrgba)
+		app = frame.MainApp(config, plugins, trayicon, tryrgba, hidden)
 		if profile:
 			import hotshot
 			log = os.path.expanduser(config) + ".profile"

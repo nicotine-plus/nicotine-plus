@@ -112,7 +112,7 @@ class BuddiesComboBoxEntry(gtk.ComboBoxEntry):
 		
 		
 class NicotineFrame:
-	def __init__(self, config, plugindir, use_trayicon, try_rgba):
+	def __init__(self, config, plugindir, use_trayicon, try_rgba, start_hidden=False):
 		
 		self.clip_data = ""
 		self.log_queue = []
@@ -215,6 +215,10 @@ class NicotineFrame:
 		self.MainWindow.resize(width, height)
 		self.MainWindow.set_position(gtk.WIN_POS_CENTER)
 		self.MainWindow.show()
+		self.is_mapped = True
+		if start_hidden:
+			self.MainWindow.unmap()
+			self.is_mapped = False
 		self.minimized = False
 		self.HiddenTabs = {}
 
@@ -546,7 +550,7 @@ class NicotineFrame:
 		if self.TrayApp.HAVE_TRAYICON and self.np.config.sections["ui"]["exitdialog"] == 2:
 			if self.is_mapped:
 				self.MainWindow.unmap()
-				self.is_mapped = 0
+				self.is_mapped = False
 			return True
 		if self.TrayApp.HAVE_TRAYICON:
 			option = QuitBox(self, title=_('Close Nicotine-Plus?'), message=_('Are you sure you wish to exit Nicotine-Plus at this time?'),tray=True, status="question", third=_("Send to tray") )
@@ -915,7 +919,7 @@ class NicotineFrame:
 			
 			if self.is_mapped:
 				self.MainWindow.unmap()
-				self.is_mapped = 0
+				self.is_mapped = False
 
 	def on_clear_response(self, dialog, response, direction):
 		dialog.destroy()
@@ -2957,7 +2961,6 @@ class NicotineFrame:
 class TrayApp:
 	def __init__(self, frame):
 		self.frame = frame
-		self.frame.is_mapped = 1
 		self.current_image = None
 		self.pygtkicon = False
 		if gtk.pygtk_version[0] >= 2 and gtk.pygtk_version[1] >= 10:
@@ -2974,7 +2977,7 @@ class TrayApp:
 	def HideUnhideWindow(self, widget):
 		if self.frame.is_mapped:
 			self.frame.MainWindow.unmap()
-			self.frame.is_mapped = 0
+			self.frame.is_mapped = False
 		else:
 						
 			self.frame.MainWindow.map()
@@ -2983,7 +2986,7 @@ class TrayApp:
 			if self.frame.minimized:
 				self.frame.MainWindow.present()
 			self.frame.MainWindow.grab_focus()
-			self.frame.is_mapped = 1
+			self.frame.is_mapped = True
 			self.frame.chatrooms.roomsctrl.ClearNotifications()
 			self.frame.privatechats.ClearNotifications()
 			
@@ -3216,8 +3219,8 @@ class gstreamer:
 			self.player.set_state(self.gst.STATE_NULL)
 			
 class MainApp:
-	def __init__(self, config, plugindir, trayicon, rgbamode):
-		self.frame = NicotineFrame(config, plugindir, trayicon, rgbamode)
+	def __init__(self, config, plugindir, trayicon, rgbamode, start_hidden):
+		self.frame = NicotineFrame(config, plugindir, trayicon, rgbamode, start_hidden)
 	
 	def MainLoop(self):
 		signal.signal(signal.SIGINT, signal.SIG_IGN)
