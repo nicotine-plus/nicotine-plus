@@ -502,7 +502,7 @@ class FolderDownloadDialog( gtk.Dialog):
 def QuitBox(frame, title="Option Box", message="", default_text='', 
 	modal= True, status=None, tray=False, third="" ):
 	
-	win = OptionDialog(frame, message, modal=modal, status=status, option=tray, third=third)
+	win = OptionDialog(frame, message, modal=modal, status=status, option=tray, third=third, rememberbox=True)
 	win.connect("response", frame.on_quit_response)
 	win.set_title(title)
 	win.set_icon(frame.images["n"])
@@ -519,8 +519,8 @@ def ClearDialog(frame, title=_("Nicotine+"), message="", default_text='',
 	return win
 
 
-class OptionDialog( gtk.Dialog):
-	def __init__(self, frame, message="",modal= False, status=None, option=False, third=""):
+class OptionDialog(gtk.Dialog):
+	def __init__(self, frame, message="",modal= False, status=None, option=False, third="", rememberbox=False):
 		gtk.Dialog.__init__(self)
 		self.connect("destroy", self.quit)
 		self.connect("delete-event", self.quit)
@@ -553,7 +553,13 @@ class OptionDialog( gtk.Dialog):
 		hbox2 = gtk.HBox(spacing=5)
 		hbox2.set_border_width(5)
 		hbox2.show()
-		box.pack_start(hbox2)	
+		box.pack_start(hbox2)
+
+		# Storing under self. so we can find it easily later 
+		if rememberbox:
+			self.checkbox = gtk.CheckButton("Remember choice")
+			box.pack_start(self.checkbox)
+			self.checkbox.show()
 		
 		if option:
 			

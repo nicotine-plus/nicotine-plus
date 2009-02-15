@@ -903,10 +903,12 @@ class NicotineFrame:
 			self.np.transfers.FolderContentsResponse(data)
 			
 	def on_quit_response(self, dialog, response): 
+		checkbox = dialog.checkbox.get_active()
 		dialog.destroy()
 		
-			
 		if response == gtk.RESPONSE_OK:
+			if checkbox:
+				self.np.config.sections["ui"]["exitdialog"] = 0
 			if sys.platform == "win32" and self.TrayApp.trayicon:
 				self.TrayApp.trayicon.hide_icon()
 			self.MainWindow.destroy()
@@ -916,7 +918,8 @@ class NicotineFrame:
 			pass
 			
 		elif response == gtk.RESPONSE_REJECT:
-			
+			if checkbox:
+				self.np.config.sections["ui"]["exitdialog"] = 2
 			if self.is_mapped:
 				self.MainWindow.unmap()
 				self.is_mapped = False
