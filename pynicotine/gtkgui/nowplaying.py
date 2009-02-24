@@ -619,20 +619,19 @@ class NowPlaying:
 		output = self.exaile_command(commandlist)
 		if output is None:
 			return 0
-		if len(output) == len(commandlist):
-			pos = 0
-			for command in commandlist:
-				if command == "--get-title":
-					self.title["title"] = output[pos]
-				elif command == "--get-length":
-					self.title["length"] = output[pos]
-				elif command == "--get-artist":
-					self.title["artist"] = output[pos]
-				elif command == "--get-album":
-					self.title["album"] = output[pos]
-				pos += 1
-		else:
-			return 0
+
+		pos = 0
+		for command in commandlist:
+			if command == "--get-title":
+				self.title["title"] = output[pos]
+			elif command == "--get-artist":
+				self.title["artist"] = output[pos]
+			elif command == "--get-album":
+				self.title["album"] = output[pos]
+			elif command == "--get-length":
+				self.title["length"] = output[pos]
+			pos += 1
+
 		return 1
 		
 				
@@ -640,7 +639,7 @@ class NowPlaying:
 		command = ""
 		for i in commandlist:
 			command += i + " "
-		output = commands.getoutput("exaile %s" % command).split('\n')
+		output = commands.getoutput("exaile %s 2> /dev/null" % command).split('\n')
 	
 		return output
 		
