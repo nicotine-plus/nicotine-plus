@@ -4514,12 +4514,13 @@ when new results come in</property>
               <widget class="GtkLabel" id="label296">
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
-                <property name="label" translatable="yes">Show notification popup in tray after...\n(requires python-notify and notification-daemon)</property>
+                <property name="label" translatable="yes">Show notification popup in tray after...
+(requires python-notify and notification-daemon)</property>
               </widget>
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
-                <property name="position">1</property>
+                <property name="position">0</property>
               </packing>
             </child>
             <child>
@@ -4551,11 +4552,10 @@ when new results come in</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkLabel" id="label215">
-                <property name="width_request">48</property>
+              <widget class="GtkLabel" id="label214">
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
-                <property name="label" translatable="yes">Run command after folder finishes ($ for folder path):</property>
+                <property name="label" translatable="yes">Run command after download finishes ($ for filename):</property>
               </widget>
               <packing>
                 <property name="expand">False</property>
@@ -4564,7 +4564,7 @@ when new results come in</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkEntry" id="AfterFolder">
+              <widget class="GtkEntry" id="AfterDownload">
                 <property name="width_request">313</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
@@ -4576,10 +4576,11 @@ when new results come in</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkLabel" id="label376">
+              <widget class="GtkLabel" id="label215">
+                <property name="width_request">48</property>
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
-                <property name="label" translatable="yes">File Manager command ($ for folder path):</property>
+                <property name="label" translatable="yes">Run command after folder finishes ($ for folder path):</property>
               </widget>
               <packing>
                 <property name="expand">False</property>
@@ -4588,12 +4589,36 @@ when new results come in</property>
               </packing>
             </child>
             <child>
+              <widget class="GtkEntry" id="AfterFolder">
+                <property name="width_request">313</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+              </widget>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">6</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkLabel" id="label376">
+                <property name="visible">True</property>
+                <property name="xalign">0</property>
+                <property name="label" translatable="yes">File Manager command ($ for folder path):</property>
+              </widget>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">7</property>
+              </packing>
+            </child>
+            <child>
               <widget class="GtkComboBoxEntry" id="FileManagerCombo">
                 <property name="visible">True</property>
               </widget>
               <packing>
                 <property name="expand">False</property>
-                <property name="position">6</property>
+                <property name="position">8</property>
               </packing>
             </child>
             <child>
@@ -4707,31 +4732,7 @@ Clear</property>
               </widget>
               <packing>
                 <property name="expand">False</property>
-                <property name="position">7</property>
-              </packing>
-            </child>
-            <child>
-              <widget class="GtkEntry" id="AfterDownload">
-                <property name="width_request">313</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-              </widget>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="position">2</property>
-              </packing>
-            </child>
-            <child>
-              <widget class="GtkLabel" id="label214">
-                <property name="visible">True</property>
-                <property name="xalign">0</property>
-                <property name="label" translatable="yes">Run command after download finishes ($ for filename):</property>
-              </widget>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="position">1</property>
+                <property name="position">9</property>
               </packing>
             </child>
           </widget>
