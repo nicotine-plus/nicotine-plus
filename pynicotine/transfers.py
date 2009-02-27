@@ -44,6 +44,7 @@ except:
 from utils import _
 from gtkgui.utils import recode2
 from time import sleep
+from subprocess import Popen
 import gobject
 win32 = sys.platform.startswith("win")
 
@@ -948,8 +949,8 @@ class Transfers:
 						self.eventprocessor.frame.NewNotification(_("%(file)s downloaded from %(user)s") % {'user':i.user, "file":newname.rsplit(os.sep, 1)[1]}, title=_("Nicotine+ :: file downloaded"))
 
 					if newname and config["transfers"]["afterfinish"]:
-						command = config["transfers"]["afterfinish"].replace("$", utils.escapeCommand(newname))
-						os.system("%s &" % command)
+						command = [x.replace("$", newname) for x in config["transfers"]["afterfinish"].split(' ')]
+						proc = Popen(command)
 						self.eventprocessor.logMessage(_("Executed: %s") % self.decode(command))
 					if i.path and (config["transfers"]["shownotificationperfolder"] or config["transfers"]["afterfolder"]):
 						# walk through downloads and break if any file in the same folder exists, else execute
@@ -960,8 +961,8 @@ class Transfers:
 							if config["transfers"]["shownotificationperfolder"]:
 								self.eventprocessor.frame.NewNotification(_("%(folder)s downloaded from %(user)s") % {'user':i.user, "folder":folder}, title=_("Nicotine+ :: directory completed"))
 							if config["transfers"]["afterfolder"]:
-								command = config["transfers"]["afterfolder"].replace("$", utils.escapeCommand(folder))
-								os.system("%s &" % command)
+								command = [x.replace("$", folder) for x in config["transfers"]["afterfolder"].split(' ')]
+								proc = Popen(command)
 								self.eventprocessor.logMessage(_("Executed on folder: %s") % self.decode(command))
 								
 			except IOError, strerror:
