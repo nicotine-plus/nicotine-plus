@@ -20,6 +20,7 @@
 import os
 
 import gtk, gtk.glade
+from subprocess import Popen
 
 from pynicotine.pynicotine import NetworkEventProcessor
 from pynicotine import slskmessages
@@ -48,7 +49,7 @@ import utils, pynicotine.utils
 from utils import AppendLine, ImageLabel, IconNotebook, ScrollBottom, PopupMenu, Humanize, HumanSpeed, HumanSize, popupWarning
 import translux
 from dirchooser import ChooseFile, SaveFile
-from pynicotine.utils import _, ChangeTranslation
+from pynicotine.utils import _, ChangeTranslation, convertCommandToList
 import nowplaying
 import pluginsystem
 from entrydialog import  *
@@ -843,7 +844,8 @@ class NicotineFrame:
 		
 	def tts_player(self, message):
 		self.tts_playing = True
-		os.system(self.np.config.sections["ui"]["speechcommand"]  % message)
+		command = [x.replace('$', message) for x in convertCommandToList(self.np.config.sections["ui"]["speechcommand"])]
+		proc = Popen(command)
 
 		
 	def sound(self, message, user, place=None):

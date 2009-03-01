@@ -802,7 +802,7 @@ class SoundsFrame(buildFrame):
 			"players": {"default": self.audioPlayerCombo}}
 		for executable in ["xmms -e $", "audacious -e $", "amarok -a $"]:
 			self.audioPlayerCombo.append_text( executable )
-		for executable in ["flite -t \"%s\"", "echo \"%s\" | festival --tts"]:
+		for executable in ["flite -t $", "echo $ | festival --tts"]:
 			self.TTSCommand.append_text( executable )
 		for item in ["play -q", "ogg123 -q", "Gstreamer (gst-python)"]:
 			self.SoundCommand.append_text(item)

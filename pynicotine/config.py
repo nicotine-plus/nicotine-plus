@@ -277,7 +277,7 @@ class Config:
 	"speechenabled": 0, \
 	"speechprivate": "%(user)s told you.. %(message)s", \
 	"speechrooms": "In %(room)s, %(user)s said %(message)s", \
-	"speechcommand": "flite -t \"%s\"", \
+	"speechcommand": "flite -t $", \
 	"transtint": "#aaaaaa", \
 	"transalpha": 150, \
 	"transfilter": 0x00000000L, \
@@ -427,6 +427,12 @@ class Config:
 			if i not in self.sections["ui"]["speechrooms"]:
 				self.sections["ui"]["speechrooms"] = self.defaults["ui"]["speechrooms"]
 				
+		# Replacing old style %s with new $
+		try:
+			self.sections["ui"]["speechcommand"] = self.sections["ui"]["speechcommand"].replace('%s','$')
+		except KeyError:
+			pass
+
 		if "pyslsk" in autojoin and not "nicotine" in autojoin:
 			autojoin.append("nicotine")
 		

@@ -654,3 +654,29 @@ class SortedDict(UserDict):
 			self.__sorted__ = True
 		for key in self.__keys__:
 			yield key, self[key]
+
+def convertCommandToList(str):
+	"""Converts a command string to a list of arguments that can be used when calling Popen
+	
+	The list is separated on spaces, a double quotation mark can be used to embed
+	spaces in an argument.
+	
+	Examples:
+	Input: "C:\Program Files\WinAmp\WinAmp.exe" --xforce "--title=My Window Title" $
+	Output: ['C:\Program Files\WinAmp\WinAmp.exe', '--xforce', '--title=My Window Title', $]
+	Input : mplayer $
+	Output: ['mplayer','$']
+	Input:  "/home/user/bin/my applications/musicplayer" --input=$ 
+	Output: ['/home/user/bin/my applications/musicplayer', '--input=$']"""
+	unparsed = str
+	command = []
+	while unparsed.count('"') > 1:
+		(pre, argument, post) = unparsed.split('"', 2)
+		if pre:
+			command += pre.rstrip(' ').split(' ')
+		command.append(argument)
+		unparsed = post.lstrip(' ')
+	if unparsed:
+		command += unparsed.split(' ')
+	return command
+

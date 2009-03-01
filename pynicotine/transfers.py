@@ -41,7 +41,7 @@ try:
 except:
 	import md5
 	MD5 = md5.new
-from utils import _
+from utils import _, convertCommandToList
 from gtkgui.utils import recode2
 from time import sleep
 from subprocess import Popen
@@ -858,18 +858,6 @@ class Transfers:
 				path = path.replace(char, "_")
 			path = ''.join([drive, path])
 		return path
-	def CommandStringToList(self, str):
-		unparsed = str
-		command = []
-		while unparsed.count('"') > 1:
-			(pre, argument, post) = unparsed.split('"', 2)
-			if pre:
-				command += pre.rstrip(' ').split(' ')
-			command.append(argument)
-			unparsed = post.lstrip(' ')
-		if unparsed:
-			command += unparsed.split(' ')
-		return command
 	def FileDownload(self, msg):
 		""" A file download is in progress"""
 		needupdate = 1
@@ -960,7 +948,7 @@ class Transfers:
 						self.eventprocessor.frame.NewNotification(_("%(file)s downloaded from %(user)s") % {'user':i.user, "file":newname.rsplit(os.sep, 1)[1]}, title=_("Nicotine+ :: file downloaded"))
 
 					if newname and config["transfers"]["afterfinish"]:
-						command = [x.replace('$', newname) for x in self.CommandStringToList(config["transfers"]["afterfinish"])]
+						command = [x.replace('$', newname) for x in convertCommandToList(config["transfers"]["afterfinish"])]
 						proc = Popen(command)
 						self.eventprocessor.logMessage(_("Executed: %s") % self.decode(command))
 					if i.path and (config["transfers"]["shownotificationperfolder"] or config["transfers"]["afterfolder"]):
@@ -972,7 +960,7 @@ class Transfers:
 							if config["transfers"]["shownotificationperfolder"]:
 								self.eventprocessor.frame.NewNotification(_("%(folder)s downloaded from %(user)s") % {'user':i.user, "folder":folder}, title=_("Nicotine+ :: directory completed"))
 							if config["transfers"]["afterfolder"]:
-								command = [x.replace('$', folder) for x in self.CommandStringToList(config["transfers"]["afterfolder"])]
+								command = [x.replace('$', folder) for x in convertCommandToList(config["transfers"]["afterfolder"])]
 								proc = Popen(command)
 								self.eventprocessor.logMessage(_("Executed on folder: %s") % self.decode(command))
 								
