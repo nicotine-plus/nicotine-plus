@@ -472,9 +472,16 @@ class RoomsControl:
 		for room in self.joinedrooms.values():
 			room.SetUserFlag(user, flag)
 
+	def GetUserAddress(self, user):
+		if user not in self.frame.np.users:
+			self.frame.np.queue.put(slskmessages.GetPeerAddress(user))
+		elif self.frame.np.users[user].addr is None:
+			self.frame.np.queue.put(slskmessages.GetPeerAddress(user))
+
 	def UserJoinedRoom(self, msg):
 		if msg.room in self.joinedrooms:
 			self.joinedrooms[msg.room].UserJoinedRoom(msg.username, msg.userdata)
+			self.GetUserAddress(msg.username)
 	
 	def UserLeftRoom(self, msg):
 		self.joinedrooms[msg.room].UserLeftRoom(msg.username)
@@ -491,9 +498,17 @@ class RoomsControl:
 	def SayChatRoom(self, msg, text):
 		if msg.user in self.frame.np.config.sections["server"]["ignorelist"]:
 			return
-		tuple = self.frame.pluginhandler.IncomingPublicChatEvent(msg.room, msg.user, text)
-		if tuple != None:
-			(r, n, text) = tuple
+		# Ignore chat messages from users who've been ignore-by-ip, no matter whether their username has changed
+		# must have the user's IP for this to work.
+		if msg.user in self.frame.np.users and type(self.frame.np.users[msg.user].addr) is tuple:
+			ip, port = self.frame.np.users[msg.user].addr
+			if self.frame.np.ipIgnored(ip):
+				#print "ignored message from IP:", ip, msg.user
+				return
+
+		event = self.frame.pluginhandler.IncomingPublicChatEvent(msg.room, msg.user, text)
+		if event != None:
+			(r, n, text) = event
 			self.joinedrooms[msg.room].SayChatRoom(msg, text)
 			self.frame.pluginhandler.IncomingPublicChatNotification(msg.room, msg.user, text)
 		else:
@@ -750,6 +765,7 @@ class ChatRoom:
 			hfiles = Humanize(users[user].files)
 			iter = self.usersmodel.append([img, self.frame.GetFlagImage(flag), user, hspeed, hfiles, users[user].status, users[user].avgspeed, users[user].files, flag])
 			self.users[user] = iter
+			self.roomsctrl.GetUserAddress(user)
 		self.usersmodel.set_sort_column_id(2, gtk.SORT_ASCENDING)
 		
 		self.UpdateColours()
@@ -773,6 +789,7 @@ class ChatRoom:
 			("$" + _("_Ban this user"), popup.OnBanUser),
 			("$" + _("_Ignore this user"), popup.OnIgnoreUser),
 			("$" + _("B_lock this user's IP Address"), popup.OnBlockUser),
+			("$" + _("Ignore this user's IP Address"), popup.OnIgnoreIP),
 			("", None),
 			("#" + _("Sear_ch this user's files"), popup.OnSearchUser, gtk.STOCK_FIND),
 			(1, _("Private rooms"), self.popup_menu_privaterooms, self.OnPrivateRooms),
@@ -950,7 +967,9 @@ class ChatRoom:
 		items[11].set_active(user in self.frame.np.config.sections["server"]["ignorelist"])
 		items[12].set_active(self.frame.UserIpIsBlocked(user))
 		items[12].set_sensitive(not me)
-		items[15].set_sensitive(not me)
+		items[13].set_active(self.frame.UserIpIsIgnored(user))
+		items[13].set_sensitive(not me) 
+		items[16].set_sensitive(not me)
 		self.popup_menu.editing = False	
 		self.popup_menu.popup(None, None, None, event.button, event.time)
 		
@@ -1130,7 +1149,10 @@ class ChatRoom:
 				self.frame.OnUserInfo(None)
 		elif cmd == "/ip":
 			if args:
-				self.frame.np.queue.put(slskmessages.GetPeerAddress(args))
+				user = args
+				if user not in self.frame.np.ip_requested:
+					self.frame.np.ip_requested.append(user)
+				self.frame.np.queue.put(slskmessages.GetPeerAddress(user))
 		elif cmd == "/pm":
 			if args:
 				self.frame.privatechats.SendMessage(args, None, 1)
@@ -1181,6 +1203,9 @@ class ChatRoom:
 		elif cmd == "/ignore":
 			if args:
 				self.frame.IgnoreUser(args)
+		elif cmd == "/ignoreip":
+			if args:
+				self.frame.IgnoreIP(args)
 		elif cmd == "/nuke":
 			if args:
 				self.frame.BanUser(args)
@@ -1371,7 +1396,9 @@ class ChatRoom:
 			items[11].set_active(user in self.frame.np.config.sections["server"]["ignorelist"])
 			items[12].set_active(self.frame.UserIpIsBlocked(user))
 			items[12].set_sensitive(not me)
-			items[15].set_sensitive(not me)
+			items[13].set_active(self.frame.UserIpIsIgnored(user))
+			items[13].set_sensitive(not me) 
+			items[16].set_sensitive(not me)
 			self.popup_menu.editing = False
 			self.popup_menu.popup(None, None, None, event.button, event.time)
 		tag.last_event_type = event.type
@@ -1521,6 +1548,7 @@ class ChatRoom:
 			hfiles = Humanize(users[user].files)
 			iter = self.usersmodel.append([img, self.frame.GetFlagImage(flag), user, hspeed, hfiles, users[user].status, users[user].avgspeed, users[user].files, flag])
 			self.users[user] = iter
+			self.roomsctrl.GetUserAddress(user)
 		self.UserList.set_sensitive(True)
 		# Reinitialize sorting after loop is complet
 		self.usersmodel.set_sort_column_id(2, gtk.SORT_ASCENDING)
@@ -1533,6 +1561,8 @@ class ChatRoom:
 		# Update all username tags in chat log
 		for user in self.tag_users:
 			self.getUserTag(user)
+
+
 
 	def OnAutojoin(self, widget):
 		autojoin = self.frame.np.config.sections["server"]["autojoin"]

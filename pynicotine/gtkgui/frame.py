@@ -1751,10 +1751,70 @@ class NicotineFrame:
 				return ip
 		return None
 		
+	
+
+	def UserIpIsIgnored(self, user):
+		for ip, username in self.np.config.sections["server"]["ipignorelist"].items():
+			if user == username:
+				return True
+		return False
+		
+	def IgnoredUserIp(self, user):
+		for ip, username in self.np.config.sections["server"]["ipignorelist"].items():
+			if user == username:
+				return ip
+		return None
+
+	def IgnoreIP(self, ip):
+		if ip is None or ip == "" or ip.count(".") != 3:
+			return
+		ipignorelist = self.np.config.sections["server"]["ipignorelist"]
+		if ip not in ipignorelist:
+			ipignorelist[ip] = ""
+			self.np.config.writeConfig()
+			self.settingswindow.pages["Ignore List"].SetSettings(self.np.config.sections)
+
+	def OnIgnoreIP(self, user):
+		if user not in self.np.users.keys() or type(self.np.users[user].addr) is not tuple:
+			if user not in self.np.ipignore_requested:
+				self.np.ipignore_requested[user] = 0
+			self.np.queue.put(slskmessages.GetPeerAddress(user))
+			return
+		ipignorelist = self.np.config.sections["server"]["ipignorelist"]
+		ip, port = self.np.users[user].addr
+		if ip not in ipignorelist or self.np.config.sections["server"]["ipignorelist"][ip] != user:
+			self.np.config.sections["server"]["ipignorelist"][ip] = user
+			self.np.config.writeConfig()
+			self.settingswindow.pages["Ignore List"].SetSettings(self.np.config.sections)
+	
+
+	def OnUnIgnoreIP(self, user):
+		ipignorelist = self.np.config.sections["server"]["ipignorelist"]
+		if self.UserIpIsIgnored(user):
+			ip = self.IgnoredUserIp(user)
+			if ip is not None:
+				del ipignorelist[ip]
+				self.np.config.writeConfig()
+				self.settingswindow.pages["Ignore List"].SetSettings(self.np.config.sections)
+				return True
+			
+		if user not in self.np.users.keys():
+			if user not in self.np.ipignore_requested:
+				self.np.ipignore_requested[user] = 1
+			self.np.queue.put(slskmessages.GetPeerAddress(user))
+			return
+		if not type(self.np.users[user].addr) is tuple:
+			return
+		ip, port = self.np.users[user].addr
+		if ip in ipignorelist:
+			del ipignorelist[ip]
+			self.np.config.writeConfig()
+			self.settingswindow.pages["Ignore List"].SetSettings(self.np.config.sections)
+
 	def OnBlockUser(self, user):
 		if user not in self.np.users.keys() or type(self.np.users[user].addr) is not tuple:
-			if user not in self.np.ip_requested:
-				self.np.ip_requested[user] = 0
+			if user not in self.np.ipblock_requested:
+				self.np.ipblock_requested[user] = 0
 			self.np.queue.put(slskmessages.GetPeerAddress(user))
 			return
 
@@ -1762,7 +1822,7 @@ class NicotineFrame:
 		if ip not in self.np.config.sections["server"]["ipblocklist"] or self.np.config.sections["server"]["ipblocklist"][ip] != user:
 			self.np.config.sections["server"]["ipblocklist"][ip] = user
 			self.np.config.writeConfig()
-			self.settingswindow.pages["Ban / ignore"].SetSettings(self.np.config.sections)
+			self.settingswindow.pages["Ban List"].SetSettings(self.np.config.sections)
 			
 	def OnUnBlockUser(self, user):
 		if self.UserIpIsBlocked(user):
@@ -1770,12 +1830,12 @@ class NicotineFrame:
 			if ip is not None:
 				del self.np.config.sections["server"]["ipblocklist"][ip]
 				self.np.config.writeConfig()
-				self.settingswindow.pages["Ban / ignore"].SetSettings(self.np.config.sections)
+				self.settingswindow.pages["Ban List"].SetSettings(self.np.config.sections)
 				return True
 			
 		if user not in self.np.users.keys():
-			if user not in self.np.ip_requested:
-				self.np.ip_requested[user] = 1
+			if user not in self.np.ipblock_requested:
+				self.np.ipblock_requested[user] = 1
 			self.np.queue.put(slskmessages.GetPeerAddress(user))
 			return
 		if not type(self.np.users[user].addr) is tuple:
@@ -1784,7 +1844,7 @@ class NicotineFrame:
 		if ip in self.np.config.sections["server"]["ipblocklist"]:
 			del self.np.config.sections["server"]["ipblocklist"][ip]
 			self.np.config.writeConfig()
-			self.settingswindow.pages["Ban / ignore"].SetSettings(self.np.config.sections)
+			self.settingswindow.pages["Ban List"].SetSettings(self.np.config.sections)
 			
 	def UnbanUser(self, user):
 		if user in self.np.config.sections["server"]["banlist"]:
@@ -1911,10 +1971,14 @@ class NicotineFrame:
 	def OnSettingsLogging(self, widget):
 		self.settingswindow.SetSettings(self.np.config.sections)
 		self.settingswindow.SwitchToPage("Logging")
+
+	def OnSettingsIgnore(self, widget):
+		self.settingswindow.SetSettings(self.np.config.sections)
+		self.settingswindow.SwitchToPage("Ignore List")
 		
 	def OnSettingsBanIgnore(self, widget):
 		self.settingswindow.SetSettings(self.np.config.sections)
-		self.settingswindow.SwitchToPage("Ban / ignore")
+		self.settingswindow.SwitchToPage("Ban List")
 		
 	def OnSettings(self, widget):
 		self.settingswindow.SetSettings(self.np.config.sections)

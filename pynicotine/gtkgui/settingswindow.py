@@ -630,12 +630,123 @@ class UserinfoFrame(buildFrame):
 				break
 		self.GetImageSize()
 		
+
+class IgnoreFrame(buildFrame):
+	def __init__(self, parent):
+		self.p = parent
+		buildFrame.__init__(self, "IgnoreFrame")
+
+		self.options = {"server": { "ignorelist": self.IgnoredUsers, "ipignorelist": self.IgnoredIPs} }
+
+		self.ignored_users = []
+		self.ignorelist = gtk.ListStore(gobject.TYPE_STRING)
+		column = gtk.TreeViewColumn(_("Users"), gtk.CellRendererText(), text = 0)
+		self.IgnoredUsers.append_column(column)
+		self.IgnoredUsers.set_model(self.ignorelist)
+		self.IgnoredUsers.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
+
+		self.ignored_ips = {}
+		self.ignored_ips_list = gtk.ListStore(str, str)
+		cols = InitialiseColumns(self.IgnoredIPs,
+			[_("Addresses"), -1, "text", self.frame.CellDataFunc],
+			[_("Users"), -1, "text", self.frame.CellDataFunc],
+		)
+		cols[0].set_sort_column_id(0)
+		cols[1].set_sort_column_id(1)
+		self.IgnoredIPs.set_model(self.ignored_ips_list)
+		self.IgnoredIPs.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
+		
+	def SetSettings(self, config):
+		server = config["server"]
+		transfers = config["transfers"]
+
+		self.ignorelist.clear()
+		self.ignored_ips_list.clear()
+		self.ignored_users = []
+		self.ignored_ips = {}
+		self.p.SetWidgetsData(config, self.options)
+		
+
+		if server["ignorelist"] is not None:
+			self.ignored_users = server["ignorelist"][:]
+			for ignored in self.ignored_users:
+				self.ignorelist.append([ignored])
+		else:
+			self.p.Hilight(self.IgnoredUsers)
+		if server["ipignorelist"] is not None:
+			self.ignored_ips = server["ipignorelist"].copy()
+			for ip, user in self.ignored_ips.items():
+				self.ignored_ips_list.append([ip, user ])
+		else:
+			self.p.Hilight(self.IgnoredIPs)
+	
+	def GetSettings(self):
+		return {
+			"server": {
+				"ignorelist": self.ignored_users[:],
+				"ipignorelist": self.ignored_ips.copy(),
+			},
+		}
+	
+	def _AppendItem(self, model, path, iter, l):
+		l.append(iter)
+
+	def OnAddIgnored(self, widget):
+		user = InputDialog(self.Main.get_toplevel(), _("Ignore user..."), _("User:") )
+		if user and user not in self.ignored_users:
+			self.ignored_users.append(user)
+			self.ignorelist.append([user])
+	
+	def OnRemoveIgnored(self, widget):
+		iters = []
+		self.IgnoredUsers.get_selection().selected_foreach(self._AppendItem, iters)
+		for iter in iters:
+			user = self.ignorelist.get_value(iter, 0)
+			self.ignored_users.remove(user)
+			self.ignorelist.remove(iter)
+
+	def OnClearIgnored(self, widget):
+		self.ignored_users = []
+		self.ignorelist.clear()
+
+	def OnAddIgnoredIP(self, widget):
+		ip = InputDialog(self.Main.get_toplevel(), _("Ignore IP Address..."), _("IP:")+" "+_("* is a wildcard") )
+		if ip is None or ip == "" or ip.count(".") != 3:
+			return
+		for chars in ip.split("."):
+			if chars == "*":
+				continue
+			if not chars.isdigit():
+				return
+			try:
+				if int(chars) > 255:
+					return
+			except:
+				return
+		if ip not in self.ignored_ips:
+			self.ignored_ips[ip] = ""
+			self.ignored_ips_list.append([ip, ""])
+
+	
+	def OnRemoveIgnoredIP(self, widget):
+		iters = []
+		self.IgnoredIPs.get_selection().selected_foreach(self._AppendItem, iters)
+		for iter in iters:
+			ip = self.ignored_ips_list.get_value(iter, 0)
+			del self.ignored_ips[ip]
+			self.ignored_ips_list.remove(iter)
+
+	def OnClearIgnoredIP(self, widget):
+		self.ignored_ips = {}
+		self.ignored_ips_list.clear()
+		
+
 class BanFrame(buildFrame):
 	def __init__(self, parent):
 		self.p = parent
 		buildFrame.__init__(self, "BanFrame")
 
-		self.options = {"server": { "banlist" : self.Banned, "ignorelist": self.Ignored, "ipblocklist": self.Blocked},
+		self.options = {"server": { "banlist" : self.Banned, "ipblocklist": self.Blocked},
 			"transfers": {"usecustomban": self.UseCustomBan, "customban": self.CustomBan,}
 			}
 		self.banned = []
@@ -645,12 +756,7 @@ class BanFrame(buildFrame):
 		self.Banned.set_model(self.banlist)
 		self.Banned.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
 
-		self.ignored = []
-		self.ignorelist = gtk.ListStore(gobject.TYPE_STRING)
-		column = gtk.TreeViewColumn(_("Users"), gtk.CellRendererText(), text = 0)
-		self.Ignored.append_column(column)
-		self.Ignored.set_model(self.ignorelist)
-		self.Ignored.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
+	
 
 		self.blocked = {}
 		self.blockedlist = gtk.ListStore(str, str)
@@ -667,7 +773,7 @@ class BanFrame(buildFrame):
 		server = config["server"]
 		transfers = config["transfers"]
 		self.banlist.clear()
-		self.ignorelist.clear()
+	
 		self.blockedlist.clear()
 		self.p.SetWidgetsData(config, self.options)
 		
@@ -677,12 +783,7 @@ class BanFrame(buildFrame):
 				self.banlist.append([banned])
 		else:
 			self.p.Hilight(self.Banned)
-		if server["ignorelist"] is not None:
-			self.ignored = server["ignorelist"][:]
-			for ignored in server["ignorelist"]:
-				self.ignorelist.append([ignored])
-		else:
-			self.p.Hilight(self.Ignored)
+	
 		if server["ipblocklist"] is not None:
 			self.blocked = server["ipblocklist"].copy()
 			for blocked, user in server["ipblocklist"].items():
@@ -702,7 +803,6 @@ class BanFrame(buildFrame):
 		return {
 			"server": {
 				"banlist": self.banned[:],
-				"ignorelist": self.ignored[:],
 				"ipblocklist": self.blocked.copy(),
 			},
 			"transfers": {
@@ -732,23 +832,6 @@ class BanFrame(buildFrame):
 		self.banned = []
 		self.banlist.clear()
 
-	def OnAddIgnored(self, widget):
-		user = InputDialog(self.Main.get_toplevel(), _("Ignore user..."), _("User:") )
-		if user and user not in self.ignored:
-			self.ignored.append(user)
-			self.ignorelist.append([user])
-	
-	def OnRemoveIgnored(self, widget):
-		iters = []
-		self.Ignored.get_selection().selected_foreach(self._AppendItem, iters)
-		for iter in iters:
-			user = self.ignorelist.get_value(iter, 0)
-			self.ignored.remove(user)
-			self.ignorelist.remove(iter)
-
-	def OnClearIgnored(self, widget):
-		self.ignored = []
-		self.ignorelist.clear()
 
 	def OnUseCustomBanToggled(self, widget):
 		self.CustomBan.set_sensitive(widget.get_active())
@@ -2122,7 +2205,7 @@ class SettingsWindow:
 		self.tree["Shares"] = model.append(None, [_("Shares"), "Shares"])
 		
 		self.tree["Transfers"] = row = model.append(None, [_("Transfers"), "Transfers"])
-		
+		self.tree["Ban List"] = model.append(row, [_("Ban List"), "Ban List"])
 		self.tree["Events"] = model.append(row, [_("Events"), "Events"])
 		self.tree["Geo Block"] = model.append(row, [_("Geo Block"), "Geo Block"])
 		
@@ -2136,13 +2219,14 @@ class SettingsWindow:
 		self.tree["Chat"] = row = model.append(None, [_("Chat"), "Chat"])
 		self.tree["Away mode"] = model.append(row, [_("Away mode"), "Away mode"])
 		self.tree["Logging"] = model.append(row, [_("Logging"), "Logging"])
+		self.tree["Ignore List"] = model.append(row, [_("Ignore List"), "Ignore List"])
 		self.tree["Censor List"] = model.append(row, [_("Censor List"), "Censor List"])
 		self.tree["Auto-Replace"] = model.append(row, [_("Auto-Replace"), "Auto-Replace"])
 		self.tree["URL Catching"] = model.append(row, [_("URL Catching"), "URL Catching"])
 		self.tree["Completion"] = model.append(row, [_("Completion"), "Completion"])
 		
 		self.tree["Misc"] = row = model.append(None, [_("Misc"), "Misc"])
-		self.tree["Ban / ignore"] = model.append(row, [_("Ban / ignore"), "Ban / ignore"])
+
 		self.tree["Sounds"] = model.append(row, [_("Sounds"), "Sounds"])
 		self.tree["Searches"] = model.append(row, [_("Searches"), "Searches"])
 		self.tree["User info"] = model.append(row, [_("User info"), "User info"])
@@ -2153,7 +2237,8 @@ class SettingsWindow:
 		p["Transfers"] = TransfersFrame(self)
 		p["Geo Block"] = GeoBlockFrame(self)
 		p["User info"] = UserinfoFrame(self)
-		p["Ban / ignore"] = BanFrame(self)
+		p["Ban List"] = BanFrame(self)
+		p["Ignore List"] = IgnoreFrame(self)
 		p["Interface"] = BloatFrame(self)
 		p["Colours"] = ColoursFrame(self)
 		p["Notebook Tabs"] = NotebookFrame(self)

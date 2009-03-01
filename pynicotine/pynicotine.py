@@ -106,7 +106,9 @@ class NetworkEventProcessor:
 		self.waitport = None
 		self.peerconns = []
 		self.watchedusers = []
-		self.ip_requested = {}
+		self.ipblock_requested = {}
+		self.ipignore_requested = {}
+		self.ip_requested = [] 
 		self.users = {}
 		self.chatrooms = None
 		self.privatechat = None
@@ -291,7 +293,7 @@ class NetworkEventProcessor:
 				addr = self.users[user].addr
 				behindfw = self.users[user].behindfw
 			elif address is not None:
-				addr = address
+				self.users[user].addr = addr = address
 			if firewalled:
 				if addr is None:
 					self.queue.put(slskmessages.GetPeerAddress(user))
@@ -765,6 +767,32 @@ class NetworkEventProcessor:
 		else:
 			self.logMessage("%s %s" %(msg.__class__, vars(msg)))
 
+	def ipIgnored(self, address):
+		if address is None:
+			return True
+		ips = self.config.sections["server"]["ipignorelist"]
+		s_address = address.split(".")
+		for ip in ips:
+			# No Wildcard in IP
+			if "*" not in ip:
+				if address == ip:
+					return True
+				continue
+			# Wildcard in IP
+			parts = ip.split(".")
+			seg = 0
+			for part in parts:
+				# Stop if there's no wildcard or matching string number
+				if part not in ( s_address[seg],  "*"):
+					break
+				
+				seg += 1
+				# Last time around
+				if seg == 4:
+					# Wildcard blocked
+					return True
+		# Not blocked
+		return False
 
 	def SayChatRoom(self, msg):
 		if self.chatrooms is not None:
@@ -793,7 +821,7 @@ class NetworkEventProcessor:
 			self.GetUserStats(msg)
 		elif msg.userexists and msg.files is None:
 			self.queue.put(slskmessages.GetUserStats(msg.user))
-			
+		
 	def PrivilegedUsers(self, msg):
 		if self.transfers is not None:
 			self.transfers.setPrivilegedUsers(msg.users)
@@ -940,14 +968,24 @@ class NetworkEventProcessor:
 				self.users[msg.user].addr = (msg.ip, msg.port)
 			else:
 				self.users[msg.user] = UserAddr(addr = (msg.ip, msg.port) )
-			if msg.user in self.ip_requested:
-				if self.ip_requested[msg.user]:
+			if msg.user in self.ipblock_requested:
+				if self.ipblock_requested[msg.user]:
 					self.frame.OnUnBlockUser(msg.user)
 				else:
 					self.frame.OnBlockUser(msg.user)
-				del self.ip_requested[msg.user]
+				del self.ipblock_requested[msg.user]
 				return
-				
+			if msg.user in self.ipignore_requested:
+				if self.ipignore_requested[msg.user]:
+					self.frame.OnUnIgnoreUser(msg.user)
+				else:
+					self.frame.OnIgnoreUser(msg.user)
+				del self.ipignore_requested[msg.user]
+				return
+
+			if msg.user not in self.ip_requested:
+				return
+			self.ip_requested.remove(msg.user)
 			import socket
 			if self.geoip:
 				cc = self.geoip.country_name_by_addr(msg.ip)

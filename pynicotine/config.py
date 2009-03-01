@@ -74,6 +74,7 @@ class Config:
 	"userlist": [], \
 	"banlist": [], \
 	"ignorelist": [], \
+	"ipignorelist":{}, \
 	"ipblocklist":{}, \
 	"autojoin": ["nicotine"], \
 	"autoaway":15, \

@@ -107,17 +107,23 @@ class PrivateChats(IconNotebook):
 			("$" + _("Add user to list"), popup.OnAddToList),
 			("$" + _("Ban this user"), popup.OnBanUser),
 			("$" + _("Ignore this user"), popup.OnIgnoreUser),
+			("$" + _("B_lock this user's IP Address"), popup.OnBlockUser),
+			("$" + _("Ignore this user's IP Address"), popup.OnIgnoreIP),
 			("", None),
 			("#" + _("Detach this tab"), self.users[user].Detach, gtk.STOCK_REDO),
 			("#" + _("Close this tab"), self.users[user].OnClose, gtk.STOCK_CLOSE),
 		)
 		popup.set_user(user)
-		
+		me = (popup.user == None or popup.user == self.frame.np.config.sections["server"]["login"])
 		items = popup.get_children()
 		
 		items[6].set_active(user in [i[0] for i in self.frame.np.config.sections["server"]["userlist"]])
 		items[7].set_active(user in self.frame.np.config.sections["server"]["banlist"])
 		items[8].set_active(user in self.frame.np.config.sections["server"]["ignorelist"])
+		items[9].set_active(self.frame.UserIpIsBlocked(user))
+		items[9].set_sensitive(not me)
+		items[10].set_active(self.frame.UserIpIsIgnored(user))
+		items[10].set_sensitive(not me)
 	
 		return popup
 		
@@ -309,6 +315,8 @@ class PrivateChat:
 			("$" + _("Add user to list"), popup.OnAddToList),
 			("$" + _("Ban this user"), popup.OnBanUser),
 			("$" + _("Ignore this user"), popup.OnIgnoreUser),
+			("$" + _("B_lock this user's IP Address"), popup.OnBlockUser),
+			("$" + _("Ignore this user's IP Address"), popup.OnIgnoreIP),
 		)
 		popup.set_user(user)
 		self.popup_menu = popup = PopupMenu(self.frame)
@@ -390,10 +398,14 @@ class PrivateChat:
 	
 	def OnPopupMenuUser(self, widget):
 		items = self.popup_menu_user.get_children()
-		
+		me = ( self.popup_menu_user.user == None or self.popup_menu_user.user == self.frame.np.config.sections["server"]["login"])
 		items[6].set_active(self.user in [i[0] for i in self.frame.np.config.sections["server"]["userlist"]])
 		items[7].set_active(self.user in self.frame.np.config.sections["server"]["banlist"])
 		items[8].set_active(self.user in self.frame.np.config.sections["server"]["ignorelist"])
+		items[9].set_active(self.frame.UserIpIsBlocked(self.user))
+		items[9].set_sensitive(not me)
+		items[10].set_active(self.frame.UserIpIsIgnored(self.user))
+		items[10].set_sensitive(not me)
 	
 		return True
 	
@@ -534,7 +546,10 @@ class PrivateChat:
 				self.frame.OnUserBrowse(None)
 		elif cmd == "/ip":
 			if args:
-				self.frame.np.queue.put(slskmessages.GetPeerAddress(args))
+				user = args
+				if user not in self.frame.np.ip_requested:
+					self.frame.np.ip_requested.append(user)
+				self.frame.np.queue.put(slskmessages.GetPeerAddress(user))
 		elif cmd == "/nsa":
 			if args:
 				self.frame.LocalUserInfoRequest(args)
@@ -580,6 +595,9 @@ class PrivateChat:
 		elif cmd == "/ignore":
 			if args:
 				self.frame.IgnoreUser(args)
+		elif cmd == "/ignoreip":
+			if args:
+				self.frame.IgnoreIP(args)
 		elif cmd == "/unban":
 			if args:
 				self.frame.UnbanUser(args)

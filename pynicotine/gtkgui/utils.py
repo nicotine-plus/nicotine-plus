@@ -853,6 +853,8 @@ class PopupMenu(gtk.Menu):
 		self.frame.ChangeMainPage(None, "private")
 	
 	def OnShowIPaddress(self, widget):
+		if self.user not in self.frame.np.ip_requested:
+			self.frame.np.ip_requested.append(self.user)
 		self.frame.np.queue.put(slskmessages.GetPeerAddress(self.user))
 	
 	def OnGetUserInfo(self, widget):
@@ -895,7 +897,15 @@ class PopupMenu(gtk.Menu):
 			self.frame.OnBlockUser(self.user)
 		else:
 			self.frame.OnUnBlockUser(self.user)
-			
+
+	def OnIgnoreIP(self, widget):
+		if self.editing: return
+	
+		if widget.get_active():
+			self.frame.OnIgnoreIP(self.user)
+		else:
+			self.frame.OnUnIgnoreIP(self.user)
+
 	def OnIgnoreUser(self, widget):
 		if self.editing: return
 		if widget.get_active():

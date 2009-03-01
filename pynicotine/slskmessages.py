@@ -557,7 +557,7 @@ class PrivateRoomSomething(ServerMessage):
 	def parseNetworkMessage(self, message):
 		pos, self.room = self.getObject(message, types.StringType)
 		#pos, self.user = self.getObject(message, types.StringType, pos)
-		print message[pos:].__repr__()
+		#print message[pos:].__repr__()
 		
 class PrivateRoomRemoveUser(ServerMessage):
 	""" We get this when we've removed a user from a private room."""

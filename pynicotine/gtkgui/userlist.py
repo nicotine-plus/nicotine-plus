@@ -312,6 +312,7 @@ class UserList:
 		self.userlist.append([user, "", _("Never seen"), iter, self.frame.GetUserFlag(user)])
 		self.SaveUserList()
 		self.frame.np.queue.put(slskmessages.AddUser(user))
+		self.frame.np.queue.put(slskmessages.GetPeerAddress(user))
 
 		for widget in self.frame.BuddiesComboEntries:
 			gobject.idle_add(widget.Append, user)
