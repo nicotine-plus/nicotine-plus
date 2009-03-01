@@ -28,6 +28,7 @@ latesturl = "http://nicotine-plus.sourceforge.net/LATEST"
 
 import string
 from UserDict import UserDict
+from subprocess import Popen, PIPE
 import os, dircache
 import sys
 import gobject
@@ -655,28 +656,54 @@ class SortedDict(UserDict):
 		for key in self.__keys__:
 			yield key, self[key]
 
-def convertCommandToList(str):
-	"""Converts a command string to a list of arguments that can be used when calling Popen
+def executeCommand(command, replacement=None, placeholder='$'):
+	"""Executes a string with commands, with partial support for bash-style quoting and pipes
 	
-	The list is separated on spaces, a double quotation mark can be used to embed
-	spaces in an argument.
+	The different parts of the command should be separated by spaces, a double
+	quotation mark can be used to embed spaces in an argument. Pipes can be created
+	using the bar symbol (|).
+
+	If the 'replacement' argument is given, every occurance of 'placeholder'
+	will be replaced by 'replacement'.
 	
-	Examples:
-	Input: "C:\Program Files\WinAmp\WinAmp.exe" --xforce "--title=My Window Title" $
-	Output: ['C:\Program Files\WinAmp\WinAmp.exe', '--xforce', '--title=My Window Title', $]
-	Input : mplayer $
-	Output: ['mplayer','$']
-	Input:  "/home/user/bin/my applications/musicplayer" --input=$ 
-	Output: ['/home/user/bin/my applications/musicplayer', '--input=$']"""
-	unparsed = str
-	command = []
+	Example commands:
+	* "C:\Program Files\WinAmp\WinAmp.exe" --xforce "--title=My Window Title" 
+	* mplayer $
+	* echo $ | flite -t """
+	# Example command: "C:\Program Files\WinAmp\WinAmp.exe" --xforce "--title=My Title" $ | flite -t
+	unparsed = command
+	arguments = []
 	while unparsed.count('"') > 1:
 		(pre, argument, post) = unparsed.split('"', 2)
 		if pre:
-			command += pre.rstrip(' ').split(' ')
-		command.append(argument)
+			arguments += pre.rstrip(' ').split(' ')
+		arguments.append(argument)
 		unparsed = post.lstrip(' ')
 	if unparsed:
-		command += unparsed.split(' ')
-	return command
-
+		arguments += unparsed.split(' ')
+	# arguments is now: ['C:\Program Files\WinAmp\WinAmp.exe', '--xforce', '--title=My Title', '$', '|', 'flite', '-t']
+	subcommands = []
+	current = []
+	for argument in arguments:
+		if argument in ('|',):
+			subcommands.append(current)
+			current = []
+		else:
+			current.append(argument)
+	subcommands.append(current)
+	# subcommands is now: [['C:\Program Files\WinAmp\WinAmp.exe', '--xforce', '--title=My Title', '$'], ['flite', '-t']]
+	if replacement:
+		for i in xrange(0, len(subcommands)):
+			subcommands[i] = [x.replace(placeholder, replacement) for x in subcommands[i]]
+	# Chaining commands...
+	procs = []
+	try:
+		procs.append(Popen(subcommands[0], stdout=PIPE))
+		for subcommand in subcommands[1:]:
+			procs.append(Popen(subcommand, stdin=procs[-1].stdout, stdout=PIPE))
+	except:
+		print "Problem while executing command %s (%s of %s)" % (subcommands[len(procs)], len(procs)+1, len(subcommands))
+		return False
+	# Don't use this without forking:
+	#output = procs[-1].communicate()[0]
+	return True

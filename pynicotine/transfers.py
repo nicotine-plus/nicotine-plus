@@ -41,10 +41,9 @@ try:
 except:
 	import md5
 	MD5 = md5.new
-from utils import _, convertCommandToList
+from utils import _, executeCommand
 from gtkgui.utils import recode2
 from time import sleep
-from subprocess import Popen
 import gobject
 win32 = sys.platform.startswith("win")
 
@@ -948,9 +947,10 @@ class Transfers:
 						self.eventprocessor.frame.NewNotification(_("%(file)s downloaded from %(user)s") % {'user':i.user, "file":newname.rsplit(os.sep, 1)[1]}, title=_("Nicotine+ :: file downloaded"))
 
 					if newname and config["transfers"]["afterfinish"]:
-						command = [x.replace('$', newname) for x in convertCommandToList(config["transfers"]["afterfinish"])]
-						proc = Popen(command)
-						self.eventprocessor.logMessage(_("Executed: %s") % self.decode(command))
+						if not executeCommand(config["transfers"]["afterfinish"], newname):
+							self.eventprocessor.logMessage(_("Trouble executing '%s'") % config["transfers"]["afterfinish"])
+						else:
+							self.eventprocessor.logMessage(_("Executed: %s") % config["transfers"]["afterfinish"])
 					if i.path and (config["transfers"]["shownotificationperfolder"] or config["transfers"]["afterfolder"]):
 						# walk through downloads and break if any file in the same folder exists, else execute
 						for ia in self.downloads:
@@ -960,10 +960,10 @@ class Transfers:
 							if config["transfers"]["shownotificationperfolder"]:
 								self.eventprocessor.frame.NewNotification(_("%(folder)s downloaded from %(user)s") % {'user':i.user, "folder":folder}, title=_("Nicotine+ :: directory completed"))
 							if config["transfers"]["afterfolder"]:
-								command = [x.replace('$', folder) for x in convertCommandToList(config["transfers"]["afterfolder"])]
-								proc = Popen(command)
-								self.eventprocessor.logMessage(_("Executed on folder: %s") % self.decode(command))
-								
+								if not executeCommand(config["transfers"]["afterfolder"], folder):
+									self.eventprocessor.logMessage(_("Trouble executing on folder: %s") % config["transfers"]["afterfolder"])
+								else:
+									self.eventprocessor.logMessage(_("Executed on folder: %s") % config["transfers"]["afterfolder"])
 			except IOError, strerror:
 				self.eventprocessor.logMessage(_("Download I/O error: %s") % self.decode(strerror))
 				i.status = "Local file error"
