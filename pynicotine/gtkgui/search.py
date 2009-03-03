@@ -268,28 +268,28 @@ class Searches(IconNotebook):
 		else:
 			mode = 0
 			
-		tuple = None
+		feedback = None
 		if mode == 0:
-			tuple = self.frame.pluginhandler.OutgoingGlobalSearchEvent(text)
-			if tuple != None:
-				text = tuple[0]
+			feedback = self.frame.pluginhandler.OutgoingGlobalSearchEvent(text)
+			if feedback != None:
+				text = feedback[0]
 		elif mode == 1:
-			tuple = self.frame.pluginhandler.OutgoingRoomSearchEvent(room, text)
-			if tuple != None:
-				(room, text) = tuple
+			feedback = self.frame.pluginhandler.OutgoingRoomSearchEvent(room, text)
+			if feedback != None:
+				(room, text) = feedback
 		elif mode == 2:
-			tuple = self.frame.pluginhandler.OutgoingBuddySearchEvent(text)
-			if tuple != None:
-				text = tuple[0]
+			feedback = self.frame.pluginhandler.OutgoingBuddySearchEvent(text)
+			if feedback != None:
+				text = feedback[0]
 		elif mode == 3:
-			tuple = self.frame.pluginhandler.OutgoingUserSearchEvent(users)
-			if tuple != None:
-				users = tuple
+			feedback = self.frame.pluginhandler.OutgoingUserSearchEvent(users)
+			if feedback != None:
+				users = feedback[0]
 		else:
 			print "Unknown search mode, not using plugin system. Fix me!"
-			tuple = True
+			feedback = True
 			
-		if tuple != None:
+		if feedback != None:
 			self.DoSearch(text, mode, users, room)
 			self.frame.SearchEntry.set_text("")
 		#else:
@@ -334,7 +334,7 @@ class Searches(IconNotebook):
 		elif mode == 2:
 			self.DoBuddiesSearch(self.searchid, text)
 		elif mode == 3 and users != [] and users[0] != '':
-				self.DoPeerSearch(self.searchid, text, users)
+			self.DoPeerSearch(self.searchid, text, users)
 				
 		self.searchid += 1
 		
