@@ -45,7 +45,7 @@ def GetCompletion(part, list):
 
 class RoomsControl:
 	CMDS = set(["/alias ", "/unalias ", "/whois ", "/browse ", "/ip ", "/pm ", "/msg ", "/search ", "/usearch ", "/rsearch ",
-		"/bsearch ", "/join ", "/leave ", "/add ", "/buddy ", "/rem ", "/unbuddy ", "/ban ", "/ignore ", "/unban ", "/unignore ",
+		"/bsearch ", "/join ", "/leave ", "/add ", "/buddy ", "/rem ", "/unbuddy ", "/ban ", "/ignore ", "/ignoreip ", "/unban ", "/unignore ",
 		"/clear ", "/part ", "/quit ", "/exit ", "/rescan ", "/tick ", "/nsa ", "/info ", "/detach ", "/attach ", "/reload"])
 	
 	def __init__(self, frame, ChatNotebook):
