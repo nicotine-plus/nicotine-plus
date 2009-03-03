@@ -1824,7 +1824,7 @@ class NicotineFrame:
 			elif type(l) is gtk.EventBox:
 				l.child.set_image(self.images["empty"])
 				l.child.set_text_color(0)
-		if n is not None and type(n) is not gtk.HPaned:
+		if n is not None and type(n) not in [gtk.HPaned, gtk.VBox]:
 			n.popup_disable()
 			n.popup_enable()
 			if n.get_current_page() != -1:
