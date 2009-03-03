@@ -25,7 +25,10 @@ from pynicotine.pynicotine import NetworkEventProcessor
 from pynicotine import slskmessages
 from pynicotine.utils import version
 import time
-
+try:
+    import mozembed
+except ImportError:
+    mozembed = None
 import gobject
 import thread
 import urllib
@@ -110,9 +113,141 @@ class BuddiesComboBoxEntry(gtk.ComboBoxEntry):
 			self.get_model().remove(self.items[item] )
 			del self.items[item]
 		
+
+class BrowserWindow(gtk.VBox):
+	"""
+		An HTML browser
+	"""
+	def __init__(self, frame, url, nostyles=False):
+		"""
+		Initializes the window
+		"""
 		
+		gtk.VBox.__init__(self)
+		self.set_border_width(5)
+		self.set_spacing(3)
+		self.nostyles = nostyles
+		self.action_count = 0
+
+		self.frame = frame
+		if not nostyles:
+			top = gtk.HBox()
+			top.set_spacing(3)
+
+		self.back = gtk.Button()
+		image = gtk.Image()
+		image.set_from_stock('gtk-go-back', gtk.ICON_SIZE_SMALL_TOOLBAR)
+		self.back.set_image(image)
+		self.back.set_sensitive(False)
+		self.back.connect('clicked', self.on_back)
+		top.pack_start(self.back, False, False)
+
+		self.next = gtk.Button()
+		image = gtk.Image()
+		image.set_from_stock('gtk-go-forward', gtk.ICON_SIZE_SMALL_TOOLBAR)
+		self.next.set_image(image)
+		self.next.connect('clicked', self.on_next)
+		self.next.set_sensitive(False)
+		top.pack_start(self.next, False, False)
+
+		w = gtk.Button(_("Open Browser"))
+		w.connect('clicked', self.on_open_browser)
+		top.pack_start(w, False, False)
+
+		self.entry = gtk.Entry()
+		self.entry.connect('activate', self.entry_activate)
+		top.pack_start(self.entry, True, True)
+		self.pack_start(top, False, True)
+		try:
+			self.view = mozembed.MozClient()
+		except Exception,  e:
+			error = "Embedded Mozilla webrowser failed to load: " + str(e)
+			print error
+			self.frame.logMessage(error)
+		self.pack_start(self.view, True, True)
+		if not nostyles:
+			self.view.connect('location', self.on_location_change)
+
+		self.show_all()
+		#finish()
+		repeat=True
+		while gtk.events_pending():
+			gtk.main_iteration()
+			if not repeat: break
+
+		self.view.set_data('<html><body><b>' + _('Loading requested'
+		' information...') + '</b></body></html>', '')
+
+		self.view.connect('net-stop', self.on_net_stop)
+
+		self.server = ''
+
+		if url:
+			self.load_url(url, self.action_count, False)
+
+	def on_net_stop(self, *args):
+		"""
+		Called when mozilla is done loading the page
+		"""
+		self.view.stopped = True
+		pass
+
+	def set_text(self, text):
+		"""
+		Sets the text of the browser window
+
+		"""
+		self.view.set_data(text, '')
+
+	def entry_activate(self, *e):
+		"""
+		Called when the user presses enter in the address bar
+		"""
+		url = unicode(self.entry.get_text(), 'utf-8')
+		self.load_url(url, self.action_count)
+
+	def on_location_change(self, mozembed):
+		# Only called when not self.nostyles
+		self.entry.set_text(mozembed.get_location())
+		self.back.set_sensitive(self.view.can_go_back())
+		self.next.set_sensitive(self.view.can_go_forward())
+
+	def on_next(self, widget):
+		"""
+		Goes to the next entry in history
+		"""
+		self.view.go_forward()
+		
+	def on_back(self, widget):
+		"""
+		Goes to the previous entry in history
+		"""
+		self.view.go_back()
+
+	def on_open_browser(self, button):
+		"""
+		Opens the current URL in a new browser window (if possible).
+		"""
+		# This method is rarely used, so we only do the import when we need to.
+		import webbrowser
+		# "new=1" is to request new window.
+		webbrowser.open(self.view.get_location(), new=1)
+
+	def load_url(self, url, action_count, history=False):
+		"""
+		Loads a URL, either from the cache, or from the website specified
+		"""
+		self.view.load_url(url)
+
+		if not self.nostyles:
+			if self.view.can_go_back(): self.back.set_sensitive(True)
+			if not self.view.can_go_forward(): self.next.set_sensitive(False)
+		self.entry.set_sensitive(True)
+		self.entry.set_text(url)
+
+
 class NicotineFrame:
-	def __init__(self, config, plugindir, use_trayicon, try_rgba, start_hidden=False):
+	def __init__(self, config, plugindir, use_trayicon, try_rgba, start_hidden=False, webbrowser=True): 
 		
 		self.clip_data = ""
 		self.log_queue = []
@@ -417,6 +552,8 @@ class NicotineFrame:
 		else:
 			self.vpaned3.pack2(self.roomlist.vbox2,True, True)
 			self.hide_room_list1.set_active(0)
+		self.extravbox = gtk.VBox() # Web browser vbox
+
 		self.SetMainTabsVisibility()
 		for l in [self.ChatTabLabel, self.PrivateChatTabLabel, self.DownloadsTabLabel, self.UploadsTabLabel, self.SearchTabLabel, self.UserInfoTabLabel, self.UserBrowseTabLabel, self.InterestsTabLabel]:
 			if type(l) is ImageLabel:
@@ -539,9 +676,14 @@ class NicotineFrame:
 		if trerror is not None and trerror != "":
 			self.logMessage(trerror)
 		self.SetAllToolTips()
-
-
-		
+		self.WebBrowserTabLabel =  gtk.Label("Browser")
+		if webbrowser and config["ui"]["mozembed"] and mozembed != 0:
+			self.extravbox.show()
+			self.browser = BrowserWindow(self, "http://nicotine-plus.org")
+			self.extravbox.pack_start(self.browser, True, True)
+			self.extravbox.show_all()
+			self.MainNotebook.append_page(self.extravbox, self.WebBrowserTabLabel)
+			self.MainNotebook.set_tab_reorderable(self.extravbox, self.np.config.sections["ui"]["tab_reorderable"])
 
 
 	def on_delete_event(self, widget, event):
@@ -913,7 +1055,7 @@ class NicotineFrame:
 				self.TrayApp.trayicon.hide_icon()
 			self.MainWindow.destroy()
 			gtk.main_quit()
-			
+			sys.exit()
 		elif response == gtk.RESPONSE_CANCEL:
 			pass
 			
@@ -1431,6 +1573,7 @@ class NicotineFrame:
 			if self.TrayApp.trayicon:
 				self.TrayApp.trayicon.hide_icon()
 		gtk.main_quit()
+		sys.exit()
 		
 	def OnConnect(self, widget):
 		self.TrayApp.tray_status["status"] = "connect"
@@ -1669,7 +1812,7 @@ class NicotineFrame:
 		l = tabLabels[page_nr]
 		#n = [self.ChatNotebook, self.PrivatechatNotebook, None, None, self.SearchNotebook, self.UserInfoNotebook, self.UserBrowseNotebook, None, None][page_nr]
 
-		compare = {self.ChatTabLabel: self.ChatNotebook, self.PrivateChatTabLabel: self.PrivatechatNotebook, self.DownloadsTabLabel: None, self.UploadsTabLabel: None, self.SearchTabLabel: self.SearchNotebook, self.UserInfoTabLabel: self.UserInfoNotebook, self.UserBrowseTabLabel: self.UserBrowseNotebook, self.InterestsTabLabel: None}
+		compare = {self.ChatTabLabel: self.ChatNotebook, self.PrivateChatTabLabel: self.PrivatechatNotebook, self.DownloadsTabLabel: None, self.UploadsTabLabel: None, self.SearchTabLabel: self.SearchNotebook, self.UserInfoTabLabel: self.UserInfoNotebook, self.UserBrowseTabLabel: self.UserBrowseNotebook, self.InterestsTabLabel: None, self.WebBrowserTabLabel: self.extravbox}
 		if "BuddiesTabLabel" in self.__dict__:
 			compare[self.BuddiesTabLabel] = None
 		n = compare[l]
@@ -2941,6 +3084,8 @@ class NicotineFrame:
 			name = "interests" # Interests
 		elif tab == self.userlistvbox: 
 			name = "userlist" # Buddy list
+		elif tab == self.extravbox: 
+			name = "extra" # Buddy list
 		else:
 			#this should never happen, unless you've renamed a widget
 			return
@@ -2965,6 +3110,8 @@ class NicotineFrame:
 			child = self.interests # Interests
 		elif tab == "userlist": 
 			child = self.userlistvbox # Buddy list
+		elif tab == "extra": 
+			child = self.extravbox 
 		else:
 			#this should never happen, unless you've renamed a widget
 			return
@@ -2990,7 +3137,9 @@ class NicotineFrame:
 		elif tab == "interests": 
 			child = self.interests # Interests
 		elif tab == "userlist": 
-			child = self.userlistvbox # Buddy list
+			child = self.userlistbox # Buddy list
+		elif tab == "extra": 
+			child = self.extravbox 
 		else:
 			#this should never happen, unless you've renamed a widget
 			return
@@ -3286,8 +3435,8 @@ class gstreamer:
 			self.player.set_state(self.gst.STATE_NULL)
 			
 class MainApp:
-	def __init__(self, config, plugindir, trayicon, rgbamode, start_hidden):
-		self.frame = NicotineFrame(config, plugindir, trayicon, rgbamode, start_hidden)
+	def __init__(self, config, plugindir, trayicon, rgbamode, start_hidden, webbrowser):
+		self.frame = NicotineFrame(config, plugindir, trayicon, rgbamode, start_hidden, webbrowser)
 	
 	def MainLoop(self):
 		signal.signal(signal.SIGINT, signal.SIG_IGN)

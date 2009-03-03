@@ -29,7 +29,7 @@ from pynicotine.utils import _, version
 
 class PrivateChats(IconNotebook):
 	CMDS = set(["/alias ", "/unalias ", "/whois ", "/browse ", "/ip ", "/pm ", "/msg ", "/search ", "/usearch ", "/rsearch ",
-		"/bsearch ", "/add ", "/buddy ", "/rem ", "/unbuddy ", "/ban ", "/ignore ", "/unban ", "/unignore ", "/clear ",
+		"/bsearch ", "/add ", "/buddy ", "/rem ", "/unbuddy ", "/ban ", "/ignore ", "/ignoreip ", "/unban ", "/unignore ", "/clear ",
 		"/quit ", "/exit ", "/rescan ", "/nsa ", "/info ", "/ctcpversion ", "/join "])
 	
 	def __init__(self, frame):

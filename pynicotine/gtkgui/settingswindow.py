@@ -1418,7 +1418,7 @@ class BloatFrame(buildFrame):
 		self.DecimalSep.set_model(self.DecimalSep_List)
 
 		self.options =  {
-			"ui": { "chatfont":self.SelectChatFont, "listfont": self.SelectListFont, "searchfont": self.SelectSearchFont, "transfersfont": self.SelectTransfersFont, "browserfont": self.SelectBrowserFont,  "decimalsep": self.DecimalSep, "spellcheck": self.SpellCheck, "tooltips": self.ShowTooltips,
+			"ui": { "chatfont":self.SelectChatFont, "listfont": self.SelectListFont, "searchfont": self.SelectSearchFont, "transfersfont": self.SelectTransfersFont, "browserfont": self.SelectBrowserFont,  "decimalsep": self.DecimalSep, "spellcheck": self.SpellCheck, "mozembed": self.EnableMozEmbed, "tooltips": self.ShowTooltips,
 			},
 			"transfers": {"enabletransferbuttons": self.ShowTransferButtons},
 			"language": {"setlanguage": self.TranslationCheck, "language": self.TranslationCombo},
@@ -1490,6 +1490,7 @@ class BloatFrame(buildFrame):
 			"ui": {
 				"decimalsep": self.DecimalSep.child.get_text(),
 				"spellcheck": self.SpellCheck.get_active(),
+				"mozembed": self.EnableMozEmbed.get_active(),
 				"chatfont": self.SelectChatFont.get_font_name(),
 				"listfont": self.SelectListFont.get_font_name(),
 				"searchfont": self.SelectSearchFont.get_font_name(),

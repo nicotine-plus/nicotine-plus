@@ -213,7 +213,7 @@ def run():
 
 	import sys, getopt, os.path
 	try:
-		opts, args = getopt.getopt(sys.argv[1:], "hc:p:tdvs", ["help", "config=", "plugins=", "profile", "enable-trayicon", "disable-trayicon", "enable-rgba", "disable-rgba", "version", "hidden"])
+		opts, args = getopt.getopt(sys.argv[1:], "hc:p:tdvsw", ["help", "config=", "plugins=", "profile", "enable-trayicon", "disable-trayicon", "enable-rgba", "disable-rgba", "version", "hidden", "disable-webbrowser"])
 	except getopt.GetoptError:
 		# print help information and exit:
 		usage()
@@ -232,6 +232,7 @@ def run():
 		plugins = os.path.join(os.path.expanduser("~"),'.nicotine','plugins')
 	profile = 0
 	trayicon = 1
+	webbrowser = True
 	tryrgba = False
 	hidden = False
 	for o, a in opts:
@@ -248,6 +249,8 @@ def run():
 			trayicon=1
 		if o in ("-d", "--disable-trayicon"):
 			trayicon=0
+		if o in ("-w", "--disable-webbrowser"):
+			webbrowser = False
 		if o in ('-r', '--enable-rgba'):
 			tryrgba = True
 		if o in ('-x', '--disable-rgba'):
@@ -261,7 +264,7 @@ def run():
 	if result is None:
 		from pynicotine.gtkgui import frame
 
-		app = frame.MainApp(config, plugins, trayicon, tryrgba, hidden)
+		app = frame.MainApp(config, plugins, trayicon, tryrgba, hidden, webbrowser)
 		if profile:
 			import hotshot
 			log = os.path.expanduser(config) + ".profile"
