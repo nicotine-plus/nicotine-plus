@@ -258,15 +258,12 @@ class Downloads(TransferList):
 		downloaddir = self.frame.np.config.sections["transfers"]["downloaddir"]
 		if "$" not in executable:
 			return
-		commandargs = executable.split(" ")
-		pos = commandargs.index("$")
 		for fn in self.selected_transfers:
 			if fn.file is None:
 				continue
-			command = commandargs
+			playfile = None
 			if os.path.exists(fn.file.name):
-				# File exists, wrap with quotes
-				command[pos] = "\"%s\"" % fn.file.name
+				playfile = fn.file.name
 			else:
 				"""
 If this file doesn't exist anymore, it may have finished downloading and have been
@@ -275,13 +272,9 @@ renamed, try looking in the download directory and match the original filename.
 				basename = string.split(fn.filename, '\\')[-1]
 				path = os.sep.join([downloaddir, basename])
 				if os.path.exists(path):
-					# File exists, wrap with quotes
-					command[pos] = "\"%s\"" % path
-			if command[pos] == "$":
-				continue
-			os.system("%(args)s &" % {"args": " ".join(command)})
-			#os.spawnlp(os.P_NOWAIT, command[0], *command)
-
+					playfile = path
+			if playfile:
+				executeCommand(executable, path, background=False)
 
 	def OnPopupMenuUsers(self, widget):
 		

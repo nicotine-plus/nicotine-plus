@@ -21,7 +21,7 @@ import gtk
 from transferlist import TransferList
 from utils import PopupMenu, PressHeader
 import string, os
-from pynicotine.utils import _
+from pynicotine.utils import _, executeCommand
 from pynicotine import slskmessages
 from entrydialog import OptionDialog
 
@@ -106,12 +106,9 @@ class Uploads(TransferList):
 		
 		command = ""
 		if os.path.exists(transfer.path):
-
-			command = filemanager.replace("$", "\"%s\"" % transfer.path)
+			executeCommand(filemanager, transfer.path)
 		else:
-			command = filemanager.replace("$", "\"%s\"" % incompletedir)
-
-		os.system("%s  &" % command)
+			executeCommand(filemanager, incompletedir)
 		
 	def OnFileSearch(self, widget):
 		self.select_transfers()
@@ -221,16 +218,11 @@ class Uploads(TransferList):
 		executable = self.frame.np.config.sections["players"]["default"]
 		if "$" not in executable:
 			return
-		commandargs = executable.split(" ")
-		pos = commandargs.index("$")
 		for fn in self.selected_transfers:
-			command = commandargs
 			file = fn.filename.replace("\\", os.sep)
 			if os.path.exists(file):
-				command[pos] = "\"%s\"" % file
-				#os.spawnlp(os.P_NOWAIT, command[0], *command)
-				os.system("%(args)s &" % {"args": " ".join(command)})
-			
+				executeCommand(executable, file, background=False)
+	
 	def OnPopupMenuUsers(self, widget):
 		
 		self.selected_transfers = []

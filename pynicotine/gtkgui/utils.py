@@ -30,7 +30,7 @@ from struct import unpack
 import imghdr
 
 from pynicotine import slskmessages
-from pynicotine.utils import _
+from pynicotine.utils import _, executeCommand
 
 DECIMALSEP = ""
 
@@ -208,9 +208,7 @@ def UrlEvent(tag, widget, event, iter, url):
 			if PROTOCOL_HANDLERS[protocol].__class__ is types.MethodType:
 				PROTOCOL_HANDLERS[protocol](url.strip())
 			else:
-				cmd = '%s &' % (PROTOCOL_HANDLERS[protocol] % url)
-
-				os.system( cmd)
+				executeCommand(PROTOCOL_HANDLERS[protocol], url)
 		else:
 			try:
 				import gnomevfs

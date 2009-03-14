@@ -295,7 +295,7 @@ class Config:
 \
 "urls":{
 	"urlcatching":1, \
-	"protocols":{"http":"firefox \"%s\"", "https":"firefox \"%s\""}, \
+	"protocols":{"http":"firefox $", "https":"firefox $"}, \
 	"humanizeurls":1, \
 	}, \
 \
@@ -434,7 +434,11 @@ class Config:
 			self.sections["ui"]["speechcommand"] = self.sections["ui"]["speechcommand"].replace('%s','$')
 		except KeyError:
 			pass
-
+		try:
+			for (protocol, command) in self.sections["urls"]["protocols"].iteritems():
+				self.sections["urls"]["protocols"][protocol] = command.replace('%s','$')
+		except KeyError:
+			pass
 		if "pyslsk" in autojoin and not "nicotine" in autojoin:
 			autojoin.append("nicotine")
 		

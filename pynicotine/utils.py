@@ -656,12 +656,15 @@ class SortedDict(UserDict):
 		for key in self.__keys__:
 			yield key, self[key]
 
-def executeCommand(command, replacement=None, placeholder='$'):
+def executeCommand(command, replacement=None, background=True, placeholder='$'):
 	"""Executes a string with commands, with partial support for bash-style quoting and pipes
 	
 	The different parts of the command should be separated by spaces, a double
 	quotation mark can be used to embed spaces in an argument. Pipes can be created
 	using the bar symbol (|).
+
+	If background is false the function will wait for all the launches processes to end
+	before returning.
 
 	If the 'replacement' argument is given, every occurance of 'placeholder'
 	will be replaced by 'replacement'.
@@ -698,9 +701,15 @@ def executeCommand(command, replacement=None, placeholder='$'):
 	# Chaining commands...
 	procs = []
 	try:
-		procs.append(Popen(subcommands[0], stdout=PIPE))
-		for subcommand in subcommands[1:]:
-			procs.append(Popen(subcommand, stdin=procs[-1].stdout, stdout=PIPE))
+		if len(subcommands) == 1: # no need to fool around with pipes
+			Popen(subcommands[0])
+		else:
+			procs.append(Popen(subcommands[0], stdout=PIPE))
+			for subcommand in subcommands[1:-1]:
+				procs.append(Popen(subcommand, stdin=procs[-1].stdout, stdout=PIPE))
+			procs.append(Popen(subcommands[-1], stdin=procs[-1].stdout))
+		if not background:
+			procs[-1].wait()
 	except:
 		print "Problem while executing command %s (%s of %s)" % (subcommands[len(procs)], len(procs)+1, len(subcommands))
 		return False

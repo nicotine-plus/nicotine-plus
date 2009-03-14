@@ -2455,8 +2455,7 @@ class NicotineFrame:
 			if utils.PROTOCOL_HANDLERS["http"].__class__ is utils.types.MethodType:
 				utils.PROTOCOL_HANDLERS["http"](url)
 			else:
-				cmd = "%s &" % ( utils.PROTOCOL_HANDLERS["http"] % url)
-				os.system(cmd)
+				executeCommand(utils.PROTOCOL_HANDLERS["http"], url)
 		else:
 			try:
 				import gnomevfs

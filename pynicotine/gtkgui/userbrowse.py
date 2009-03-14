@@ -725,15 +725,10 @@ class UserBrowse:
 		executable = self.frame.np.config.sections["players"]["default"]
 		if "$" not in executable:
 			return
-		commandargs = executable.split(" ")
-		pos = commandargs.index("$")
 		for fn in self.selected_files:
 			file = os.sep.join([path, fn])
-			command = commandargs
-			command[pos] = "\"%s\"" % file
 			if os.path.exists(file):
-				#os.spawnlp(os.P_NOWAIT, command[0], *command)
-				os.system("%(args)s &" % {"args": " ".join(command)})
+				executeCommand(executable, file, background=False)
 		
 	def OnDownloadFilesTo(self, widget):
 		
@@ -835,8 +830,8 @@ class UserBrowse:
 		path = self.selected_folder.replace("\\", os.sep)
 		executable = self.frame.np.config.sections["ui"]["filemanager"]
 		if "$" in executable:
-			os.system("%s &" % executable.replace("$", "\"%s\"" % path))
-			
+			executeCommand(executable, path)
+	
 	def OnEncodingChanged(self, widget):
 		if gtk.pygtk_version[0] >= 2 and gtk.pygtk_version[1] >= 6:
 			# PyGTK 2.6
