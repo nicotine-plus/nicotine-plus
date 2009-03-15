@@ -17,6 +17,7 @@
 # Copyright (c) 2003-2004 Hyriand. All rights reserved.
 
 import gtk
+from thread import start_new_thread
 
 from transferlist import TransferList
 from utils import PopupMenu, PressHeader
@@ -215,6 +216,8 @@ class Uploads(TransferList):
 				self.OnAbortTransfer(widget, False, True)
 
 	def OnPlayFiles(self, widget, prefix = ""):
+		start_new_thread(self._OnPlayFiles, (widget, prefix))
+	def _OnPlayFiles(self, widget, prefix = ""):
 		executable = self.frame.np.config.sections["players"]["default"]
 		if "$" not in executable:
 			return

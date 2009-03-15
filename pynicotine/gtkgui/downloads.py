@@ -17,12 +17,13 @@
 # Copyright (c) 2003-2004 Hyriand. All rights reserved.
 
 import gtk
+from thread import start_new_thread
 
 from transferlist import TransferList
 from utils import PopupMenu, PressHeader
 from pynicotine import slskmessages
 import string, os
-from pynicotine.utils import _
+from pynicotine.utils import _, executeCommand
 from entrydialog import *
 
 class Downloads(TransferList):
@@ -254,6 +255,8 @@ class Downloads(TransferList):
 				self.OnAbortTransfer(widget, True, True)
 
 	def OnPlayFiles(self, widget, prefix = ""):
+		start_new_thread(self._OnPlayFiles, (widget, prefix))
+	def _OnPlayFiles(self, widget, prefix = ""):
 		executable = self.frame.np.config.sections["players"]["default"]
 		downloaddir = self.frame.np.config.sections["transfers"]["downloaddir"]
 		if "$" not in executable:
@@ -274,7 +277,7 @@ renamed, try looking in the download directory and match the original filename.
 				if os.path.exists(path):
 					playfile = path
 			if playfile:
-				executeCommand(executable, path, background=False)
+				executeCommand(executable, playfile, background=False)
 
 	def OnPopupMenuUsers(self, widget):
 		

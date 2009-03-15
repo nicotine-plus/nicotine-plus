@@ -27,6 +27,7 @@ from utils import InitialiseColumns, PopupMenu, EncodingsMenu, SaveEncoding, Hum
 from dirchooser import ChooseDir
 from entrydialog import *
 from pynicotine import slskmessages
+from thread import start_new_thread
 
 from pynicotine.utils import _, displayTraceback, executeCommand
 
@@ -721,6 +722,8 @@ class UserBrowse:
 				self.frame.np.transfers.checkUploadQueue()
 			
 	def OnPlayFiles(self, widget, prefix = ""):
+		start_new_thread(self._OnPlayFiles, (widget, prefix))
+	def _OnPlayFiles(self, widget, prefix = ""):
 		path = self.selected_folder.replace("\\", os.sep)
 		executable = self.frame.np.config.sections["players"]["default"]
 		if "$" not in executable:
