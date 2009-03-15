@@ -24,6 +24,8 @@
 transfer manager.
 """
 
+from __future__ import division
+
 import slskmessages
 import threading, thread
 from slskmessages import newId
@@ -1287,7 +1289,7 @@ class Transfers:
 		sec = int(seconds % 60)
 		minutes = int(seconds / 60 % 60)
 		hours = int(seconds / 3600 % 24)
-		days = int(seconds/86400)
+		days = int(seconds / 86400)
 		
 		time_string = "%02d:%02d:%02d" % (hours, minutes, sec)
 		if days > 0:
@@ -1530,7 +1532,7 @@ class Transfers:
 								rl = int(attrs[1])
 							except:
 								rl = 0
-							length = "%i:%02i" % (rl / 60, rl % 60)
+							length = "%i:%02i" % (rl // 60, rl % 60)
 						if directory[-1] == '\\':
 							self.getFile(username, directory + file[1], self.FolderDestination(username, directory), size=file[2], bitrate=bitrate, length=length)
 						else:
