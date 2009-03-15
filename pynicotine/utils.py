@@ -702,7 +702,7 @@ def executeCommand(command, replacement=None, background=True, placeholder='$'):
 	procs = []
 	try:
 		if len(subcommands) == 1: # no need to fool around with pipes
-			Popen(subcommands[0])
+			procs.append(Popen(subcommands[0]))
 		else:
 			procs.append(Popen(subcommands[0], stdout=PIPE))
 			for subcommand in subcommands[1:-1]:

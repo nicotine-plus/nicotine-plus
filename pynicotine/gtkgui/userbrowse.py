@@ -28,7 +28,7 @@ from dirchooser import ChooseDir
 from entrydialog import *
 from pynicotine import slskmessages
 
-from pynicotine.utils import _, displayTraceback
+from pynicotine.utils import _, displayTraceback, executeCommand
 
 class UserBrowse:
 	def __init__(self, userbrowses, user, conn):
