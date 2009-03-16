@@ -420,7 +420,7 @@ class NowPlaying:
 			if item == "$t":
 				legend += _("Title")
 			elif item == "$n":
-				legend += _("Now Playing (typically \"%s - %s\")") % (_("Artist"), _("Title"))
+				legend += _("Now Playing (typically \"%(artist)s - %(title)s\")") % {'artist':_("Artist"), 'title':_("Title")}
 			elif item == "$l":
 				legend += _("Length")
 			elif item == "$r":

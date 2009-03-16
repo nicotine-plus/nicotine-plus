@@ -779,7 +779,7 @@ class PrivateChat:
 		color = self.getUserStatusColor(self.status)
 		self.changecolour(self.tag_username, color)
 		statusword = [_("Offline"), _("Away"), _("Online")][status]
-		title = _("Nicotine+ Private Chat: %s (%s)") % (self.user, statusword)
+		title = _("Nicotine+ Private Chat: %(user)s (%(status)s)") % {'user':self.user, 'status':statusword}
 		self.chats.set_detached_tab_title(self.Main, title)
 
 	

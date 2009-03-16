@@ -70,10 +70,10 @@ def ChangeTranslation(lang):
 		langTranslation = gettext.translation('nicotine', languages=[language])
 		langTranslation.install()
 	except IOError, e:
-		message = _("Translation not found for '%s': %s") % (language, e)
+		message = _("Translation not found for '%(language)s': %(error)s") % {'language':language, 'error':e}
 		langTranslation = gettext
 	except IndexError, e:
-		message = _("Translation was corrupted for '%s': %s") % (language, e)
+		message = _("Translation was corrupted for '%(language)s': %(error)s") % {'language':language, 'error':e}
 		langTranslation = gettext
 	else:
 		# We need to force LC_ALL env variable to get buttons translated as well
@@ -95,7 +95,7 @@ def ChangeTranslation(lang):
 					locale.setlocale(locale.LC_ALL, locale.normalize(language))
 				# Sorry, please generate the right locales
 				except locale.Error, e:
-					message = _("Force lang failed: '%s' (%s and %s tested)" ) % (e, locale.normalize(language).split('.')[0]+'.UTF-8', locale.normalize(language))
+					message = _("Force lang failed: '%(language)s' (%(second)s and %(third)s tested)" ) % {'language':e, 'second':locale.normalize(language).split('.')[0]+'.UTF-8', 'third':locale.normalize(language)}
 			del locale
 	return message
 ChangeTranslation(language)
@@ -187,7 +187,7 @@ def getDirsMtimesUnicode(dirs, yieldcall = None):
 				contents = os.listdir(u_directory)
 				mtime = os.path.getmtime(str_directory)
 		except OSError, errtuple:
-			message = _("Scanning Directory Error: %s Path: %s") % (errtuple, u_directory)
+			message = _("Scanning Directory Error: %(error)s Path: %(path)s") % {'error':errtuple, 'path':u_directory}
 			print str(message)
 			if log:
 				log(message)
@@ -205,7 +205,7 @@ def getDirsMtimesUnicode(dirs, yieldcall = None):
 			try:
 				isdir = os.path.isdir(u_path)
 			except OSError, errtuple:
-				message = _("Scanning Error: %s Path: %s") % (errtuple, u_path)
+				message = _("Scanning Error: %(error)s Path: %(path)s") % {'error':errtuple, 'path':u_path}
 				print str(message)
 				if log:
 					log(message)
@@ -216,7 +216,7 @@ def getDirsMtimesUnicode(dirs, yieldcall = None):
 				try:
 					mtime = os.path.getmtime(s_path)
 				except OSError, errtuple:
-					message = _("Scanning Error: %s Path: %s") % (errtuple, u_path)
+					message = _("Scanning Error: %(error)s Path: %(path)s") % {'error':errtuple, 'path':u_path}
 					print str(message)
 					if log:
 						log(message)
@@ -244,7 +244,7 @@ def getDirsMtimes(dirs, yieldcall = None):
 			contents = dircache.listdir(directory)
 			mtime = os.path.getmtime(directory)
 		except OSError, errtuple:
-			message = _("Scanning Directory Error: %s Path: %s") % (errtuple, directory)
+			message = _("Scanning Directory Error: %(error)s Path: %(path)s") % {'error':errtuple, 'path':directory}
 			print str(message)
 			if log:
 				log(message)
@@ -260,7 +260,7 @@ def getDirsMtimes(dirs, yieldcall = None):
 			try:
 				isdir = os.path.isdir(path)
 			except OSError, errtuple:
-				message = _("Scanning Error: %s Path: %s") % (errtuple, path)
+				message = _("Scanning Error: %(error)s Path: %(path)s") % {'error':errtuple, 'path':path}
 				print str(message)
 				if log:
 					log(message)
@@ -274,9 +274,9 @@ def getDirsMtimes(dirs, yieldcall = None):
 				except OSError, errtuple2:
 					print errtuple2
 				if islink:
-					message = _("Scanning Error: Broken link to directory: \"%s\" from Path: \"%s\". Repair or remove this link.") % (os.readlink(path), path)
+					message = _("Scanning Error: Broken link to directory: \"%(link)s\" from Path: \"%(path)s\". Repair or remove this link.") % {'link':os.readlink(path), 'path':path}
 				else:
-					message = _("Scanning Error: %s Path: %s") % (errtuple, path)
+					message = _("Scanning Error: %(error)s Path: %(path)s") % {'error':errtuple, 'path':path}
 				print str(message)
 				if log:
 					log(message)
@@ -337,7 +337,7 @@ def getFilesList(mtimes, oldmtimes, oldlist, yieldcall = None, progress=None, re
 
 				isfile = os.path.isfile(path)
 			except OSError, errtuple:
-				message = _("Scanning Error: %s Path: %s") % (errtuple, path)
+				message = _("Scanning Error: %(error)s Path: %(path)s") % {'error':errtuple, 'path':path}
 				print str(message)
 				if log:
 					log(message)
@@ -402,7 +402,7 @@ def getFilesListUnicode(mtimes, oldmtimes, oldlist, yieldcall = None, progress=N
 				# try to force Unicode for reading from disk
 				isfile = os.path.isfile(ppath)
 			except OSError, errtuple:
-				message = _("Scanning Error: %s Path: %s") % (errtuple, ppath)
+				message = _("Scanning Error: %(error)s Path: %(path)s") % {'error':errtuple, 'path':path}
 				print str(message)
 				if log:
 					log(message)
@@ -459,7 +459,7 @@ def getFileInfoUnicode(name, pathname):
 			fileinfo = (name, size, None, None)
 		return fileinfo
 	except Exception, errtuple:
-		message = _("Scanning File Error: %s Path: %s") % (errtuple, pathname)
+		message = _("Scanning File Error: %(error)s Path: %(path)s") % {'error':errtuple, 'path':pathname}
 		if log:
 			log(message)
 		displayTraceback(sys.exc_info()[2])
@@ -488,7 +488,7 @@ def getFileInfo(name, pathname):
 			fileinfo = (name, size, None, None)
 		return fileinfo
 	except Exception, errtuple:
-		message = _("Scanning File Error: %s Path: %s") % (errtuple, pathname)
+		message = _("Scanning File Error: %(error)s Path: %(path)s") % {'error':errtuple, 'path':pathname}
 		if log:
 			log(message)
 		displayTraceback(sys.exc_info()[2])

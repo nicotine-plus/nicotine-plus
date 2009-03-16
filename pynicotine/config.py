@@ -349,7 +349,7 @@ class Config:
 						# Repair options set to None with defaults
 						if self.sections[i][j] is None and self.defaults[i][j] is not None:
 							self.sections[i][j] = self.defaults[i][j]
-							self.frame.logMessage(_("Config option reset to default: Section: %s, Option: %s, to: %s") % (i, j, self.sections[i][j]))
+							self.frame.logMessage(_("Config option reset to default: Section: %(section)s, Option: %(option)s, to: %(default)s") % {'section':i, 'option':j, 'default':self.sections[i][j]})
 							if errorlevel == 0:
 								errorlevel = 1
 						else:
@@ -357,7 +357,7 @@ class Config:
 								self.frame.logMessage(_("You need to configure your settings (Server, Username, Password, Download Directory) before connecting..."))
 								errorlevel = 2
 							
-							self.frame.logMessage(_("Config option unset: Section: %s, Option: %s") % (i, j))
+							self.frame.logMessage(_("Config option unset: Section: %(section)s, Option: %(option)s") % {'section':i, 'option':j})
 							self.frame.settingswindow.InvalidSettings(i, j)
 			
 		except Exception, error:

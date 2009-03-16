@@ -23,6 +23,8 @@
 This module implements SoulSeek networking protocol.
 """
 
+from __future__ import division
+
 from slskmessages import *
 import SocketServer
 import socket
@@ -555,7 +557,7 @@ class SlskProtoThread(threading.Thread):
 		conns[i].lastactive = time.time()
 		data = i.recv(conns[i].lastreadlength)
 		conns[i].ibuf = conns[i].ibuf + data
-		if len(data) >= conns[i].lastreadlength/2:
+		if len(data) >= conns[i].lastreadlength//2:
 			conns[i].lastreadlength = conns[i].lastreadlength * 2 
 		if not data:
 			self._ui_callback([ConnClose(i, conns[i].addr)])

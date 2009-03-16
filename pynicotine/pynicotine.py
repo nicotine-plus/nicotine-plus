@@ -24,6 +24,8 @@
 This is the actual client code. Actual GUI classes are in the separate modules
 """
 
+from __future__ import division
+
 import time
 import slskproto
 import slskmessages
@@ -839,9 +841,9 @@ class NetworkEventProcessor:
 			self.logMessage("%s %s" %(msg.__class__, vars(msg)))
 
 	def CheckPrivileges(self, msg):
-		mins = msg.seconds / 60
-		hours = mins / 60
-		days = hours / 24
+		mins = msg.seconds // 60
+		hours = mins // 60
+		days = hours // 24
 		if msg.seconds == 0:
 			self.logMessage(_("You have no privileges left. They are not needed for Nicotine+ to function properly. You can acquire privileges by donating at %(url)s") % {'url':'http://www.slsknet.org/userlogin.php?username='+self.config.sections["server"]["login"].replace(' ','+')})
 		else:
