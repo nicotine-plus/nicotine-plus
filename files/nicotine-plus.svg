@@ -9,13 +9,17 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="64px"
-   height="64px"
+   width="64"
+   height="64"
    id="svg3403"
    sodipodi:version="0.32"
    inkscape:version="0.46"
    sodipodi:docname="nicotine-plus.svg"
-   inkscape:output_extension="org.inkscape.output.svg.inkscape">
+   inkscape:output_extension="org.inkscape.output.svg.inkscape"
+   inkscape:export-filename="/home/quinox/chroot/opt/nicotine+/img/n.png"
+   inkscape:export-xdpi="135"
+   inkscape:export-ydpi="135"
+   version="1.0">
   <sodipodi:namedview
      id="base"
      pagecolor="#ffffff"
@@ -23,15 +27,15 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="4"
-     inkscape:cx="47.293861"
-     inkscape:cy="37.34"
+     inkscape:zoom="8"
+     inkscape:cx="28.99557"
+     inkscape:cy="31.465853"
      inkscape:current-layer="layer1"
      showgrid="true"
      inkscape:document-units="px"
      inkscape:grid-bbox="true"
      inkscape:window-width="1024"
-     inkscape:window-height="721"
+     inkscape:window-height="696"
      inkscape:window-x="0"
      inkscape:window-y="25"
      showguides="true"
@@ -39,7 +43,7 @@
      guidetolerance="5">
     <sodipodi:guide
        orientation="0,1"
-       position="25.986174,6.0104076"
+       position="-14.25,7"
        id="guide3212" />
     <sodipodi:guide
        orientation="1,0"
@@ -47,12 +51,24 @@
        id="guide3214" />
     <sodipodi:guide
        orientation="0,1"
-       position="56.391766,46.492271"
+       position="29,47.625"
        id="guide3248" />
     <sodipodi:guide
        orientation="0,1"
-       position="51.972348,58.866639"
+       position="9.0625,60"
        id="guide3266" />
+    <sodipodi:guide
+       orientation="0,1"
+       position="-19.25,32"
+       id="guide2404" />
+    <sodipodi:guide
+       orientation="1,0"
+       position="17,62.125"
+       id="guide2406" />
+    <sodipodi:guide
+       orientation="1,0"
+       position="47,54"
+       id="guide2408" />
   </sodipodi:namedview>
   <defs
      id="defs3405">
@@ -120,10 +136,10 @@
        inkscape:collect="always"
        xlink:href="#linearGradient3226"
        id="linearGradient3232"
-       x1="-51.027331"
-       y1="34.477971"
+       x1="-51.027332"
+       y1="34.47797"
        x2="-13.67767"
-       y2="34.477971"
+       y2="34.47797"
        gradientUnits="userSpaceOnUse" />
     <radialGradient
        inkscape:collect="always"
@@ -172,7 +188,7 @@
        sodipodi:rx="322.23865"
        sodipodi:ry="334.3605"
        d="M 699.02554,538.19452 A 322.23865,334.3605 0 1 1 54.548248,538.19452 A 322.23865,334.3605 0 1 1 699.02554,538.19452 z"
-       transform="matrix(8.90851e-2,0,0,3.9824197e-2,-1.569516,28.008556)" />
+       transform="matrix(8.90851e-2,0,0,3.9824197e-2,-1.5695163,29.214362)" />
     <path
        sodipodi:type="arc"
        style="fill:url(#radialGradient3258);fill-opacity:1;stroke:#833f00;stroke-width:0.89406782;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
@@ -182,16 +198,16 @@
        sodipodi:rx="21.875"
        sodipodi:ry="21.875"
        d="M -11.375,23.375 A 21.875,21.875 0 1 1 -55.125,23.375 A 21.875,21.875 0 1 1 -11.375,23.375 z"
-       transform="matrix(1.3839872,0,0,1.3839872,78.014156,-0.3931878)" />
+       transform="matrix(1.3839872,0,0,1.3839872,78.014156,-1.4096538)" />
     <path
        sodipodi:nodetypes="cccc"
        id="path3268"
-       d="M 17.147338,57.989592 L 17.147338,17.330952 C 17.147338,5.309812 46.492269,5.3088561 46.492269,17.507729 L 46.492269,57.989592"
+       d="M 17,57 L 17,16.375 C 17,4 47,3.9904551 47,16.375 L 47,57"
        style="fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#833f00;stroke-width:10;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     <path
        style="fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#ffffff;stroke-width:8;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="M 17.147338,57.989592 L 17.147338,17.330952 C 17.147338,5.309812 46.492269,5.3088561 46.492269,17.507729 L 46.492269,57.989592"
+       d="M 17,57 L 17,16.375 C 17,4 47,4.026874 47,16.401874 L 47,57"
        id="path3210"
-       sodipodi:nodetypes="cccc" />
+       sodipodi:nodetypes="ccsc" />
   </g>
 </svg>
