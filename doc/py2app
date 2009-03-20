@@ -1,5 +1,5 @@
 ======== How to build nicotine.app - notes by hedonist
-1. Install macports from http://www.macport.org
+1. Install macports from http://www.macports.org
 
 2. Patch the macports installation:
 $ cd /
