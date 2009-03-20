@@ -24,9 +24,9 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="4"
-     inkscape:cx="32.394737"
+     inkscape:cx="47.293861"
      inkscape:cy="37.34"
-     inkscape:current-layer="svg3403"
+     inkscape:current-layer="layer1"
      showgrid="true"
      inkscape:document-units="px"
      inkscape:grid-bbox="true"
@@ -116,28 +116,6 @@
        inkscape:vp_y="0 : 1000 : 0"
        inkscape:vp_x="0 : 32 : 1"
        sodipodi:type="inkscape:persp3d" />
-    <radialGradient
-       inkscape:collect="always"
-       xlink:href="#linearGradient3167"
-       id="radialGradient3206"
-       gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(1,0,0,1.0397319,0,-21.208506)"
-       cx="361.42856"
-       cy="533.79077"
-       fx="361.42856"
-       fy="533.79077"
-       r="287.64285" />
-    <radialGradient
-       inkscape:collect="always"
-       xlink:href="#linearGradient3183"
-       id="radialGradient3208"
-       gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(1,0,0,1.0376176,0,-20.245606)"
-       cx="376.7869"
-       cy="538.19452"
-       fx="376.7869"
-       fy="538.19452"
-       r="322.23865" />
     <linearGradient
        inkscape:collect="always"
        xlink:href="#linearGradient3226"
@@ -209,7 +187,7 @@
        sodipodi:nodetypes="cccc"
        id="path3268"
        d="M 17.147338,57.989592 L 17.147338,17.330952 C 17.147338,5.309812 46.492269,5.3088561 46.492269,17.507729 L 46.492269,57.989592"
-       style="fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#833f00;stroke-width:9;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+       style="fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#833f00;stroke-width:10;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     <path
        style="fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#ffffff;stroke-width:8;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        d="M 17.147338,57.989592 L 17.147338,17.330952 C 17.147338,5.309812 46.492269,5.3088561 46.492269,17.507729 L 46.492269,57.989592"
