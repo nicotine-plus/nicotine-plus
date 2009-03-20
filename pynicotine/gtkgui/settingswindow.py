@@ -60,10 +60,17 @@ class ServerFrame(buildFrame):
 		self.Server.append_text("server.slsknet.org:2240")
 		self.Elist = {}
 		self.EncodingStore = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
+		#self.Encoding.set_size_request(100, -1)
 		self.Encoding.set_model(self.EncodingStore)
+		#cell1 = gtk.CellRendererText()
+		#cell1.set_property("xalign", 0)
+		#self.Encoding.pack_start(cell1, True)
+		#self.Encoding.add_attribute(cell1, 'text', 0)
+		self.Encoding.set_text_column(0)
 		cell2 = gtk.CellRendererText()
-		self.Encoding.pack_start(cell2, False)
+		self.Encoding.pack_start(cell2, True)
 		self.Encoding.add_attribute(cell2, 'text', 1)
+		
 		for item in encodings:
 			self.Elist[item[1]] = self.EncodingStore.append([item[1], item[0] ])
 		self.options = {"server": { "server": None, "login": self.Login, "passw": self.Password, "enc": self.Encoding.child, "portrange": None, "firewalled": self.DirectConnection, "ctcpmsgs": self.ctcptogglebutton } }
@@ -1474,10 +1481,10 @@ class BloatFrame(buildFrame):
 				langTranslation = gettext.translation('nicotine', languages=[language])
 				langTranslation.install()
 		except IOError, e:
-			message = _("Translation not found for '%(language)s': %(error)s") % {'language':language, 'error':e}
+			message = _("Translation not found for '%s': %s") % (language, e)
 			langTranslation = gettext
 		except IndexError, e:
-			message = _("Translation was corrupted for '%(language)s': %(error)s") % {'language':language, 'error':e}
+			message = _("Translation was corrupted for '%s': %s") % (language, e)
 			langTranslation = gettext
 		except KeyError, e:
 			message = _("Lookup failed for '%(language)s': %(error)s") % {'language':language, 'error':e}
@@ -1804,7 +1811,7 @@ class UrlCatchFrame(buildFrame):
 
 		
 		self.handlermodel = gtk.ListStore(gobject.TYPE_STRING)
-		for item in ["firefox \"%s\"", "firefox -a firefox --remote 'openURL(%s,new-tab)'", "mozilla \"%s\"", "opera \"%s\"", "links -g \"%s\"", "dillo \"%s\"", "konqueror \"%s\"", "\"c:\Program Files\Mozilla Firefox\Firefox.exe\" %s"]:
+		for item in ["xdg-open \"%s\"", "firefox \"%s\"", "firefox -a firefox --remote 'openURL(%s,new-tab)'", "mozilla \"%s\"", "opera \"%s\"", "links -g \"%s\"", "dillo \"%s\"", "konqueror \"%s\"", "\"c:\Program Files\Mozilla Firefox\Firefox.exe\" %s"]:
 			self.handlermodel.append([item])
 		self.Handler.set_model(self.handlermodel)
 		self.Handler.set_text_column(0)

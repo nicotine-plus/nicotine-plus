@@ -554,7 +554,7 @@ class NicotineFrame:
 			self.hide_room_list1.set_active(0)
 		self.extravbox = gtk.VBox() # Web browser vbox
 
-		self.SetMainTabsVisibility()
+		
 		for l in [self.ChatTabLabel, self.PrivateChatTabLabel, self.DownloadsTabLabel, self.UploadsTabLabel, self.SearchTabLabel, self.UserInfoTabLabel, self.UserBrowseTabLabel, self.InterestsTabLabel]:
 			if type(l) is ImageLabel:
 				l.set_text_color(0)
@@ -684,6 +684,7 @@ class NicotineFrame:
 			self.extravbox.show_all()
 			self.MainNotebook.append_page(self.extravbox, self.WebBrowserTabLabel)
 			self.MainNotebook.set_tab_reorderable(self.extravbox, self.np.config.sections["ui"]["tab_reorderable"])
+		self.SetMainTabsVisibility()
 
 
 	def on_delete_event(self, widget, event):
