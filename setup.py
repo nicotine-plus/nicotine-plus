@@ -26,6 +26,11 @@ if sys.platform.startswith("win"):
 else:
 	is_windows = False
 
+if sys.platform == 'darwin':
+	is_osx = True
+else:
+	is_osx = False
+
 # If we're on windows, try to load py2exe and detects GTK+ path
 if is_windows:
 	import _winreg
@@ -40,6 +45,14 @@ if is_windows:
 	except EnvironmentError:
 		print "You must install the Gtk+ Runtime Environment to create Windows binaries."
 		print "Please go to: http://sourceforge.net/projects/gtk-win/"
+		sys.exit(1)
+
+if is_osx:
+	try:
+		import setuptools
+	except ImportError:
+		print "Setuptools not found."
+		print "Please read doc/py2app for installation instructions."
 		sys.exit(1)
 
 # Compute data_files (GTK for windows, man and stuff for *nix)
@@ -112,7 +125,20 @@ if __name__ == '__main__' :
 
     from pynicotine.utils import version
 
-    setup(name                  = "nicotine",
+    if is_osx:
+	setuptools.setup(app	= ['nicotine.py'],
+		data_files	= [],
+		options		= {'py2app': 
+			{'argv_emulation': True,
+			'includes': 'gtk, cairo, pangocairo, atk',
+			'iconfile': 'files/nicotine_blue_upscaled.icns',
+			'packages': 'pynicotine'
+			}
+		},
+		setup_requires	= ['py2app'],
+	)
+    else:
+        setup(name              = "nicotine",
           version               = version,
           license               = "GPLv3",
           description           = "Client for SoulSeek filesharing system.",

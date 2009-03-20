@@ -1,0 +1,23 @@
+--- opt.orig/local/share/macports/Tcl/port1.0/portconfigure.tcl	2008-12-14 04:42:30.000000000 +0200
++++ opt/local/share/macports/Tcl/port1.0/portconfigure.tcl	2009-03-18 23:48:58.000000000 +0200
+@@ -67,7 +67,7 @@
+ default configure.cppflags  {"-I${prefix}/include"}
+ default configure.cxxflags  {[configure_get_cflags]}
+ default configure.objcflags {[configure_get_cflags]}
+-default configure.ldflags   {"-L${prefix}/lib"}
++default configure.ldflags   {"-L${prefix}/lib -Xlinker -headerpad_max_install_names"}
+ default configure.libs      {}
+ default configure.fflags    {[configure_get_cflags]}
+ default configure.f90flags  {[configure_get_cflags]}
+--- opt.orig/local/var/macports/sources/rsync.macports.org/release/ports/x11/pango/Portfile	2009-03-04 15:37:10.000000000 +0200
++++ opt/local/var/macports/sources/rsync.macports.org/release/ports/x11/pango/Portfile	2009-03-20 20:14:11.000000000 +0200
+@@ -78,7 +78,8 @@
+     -bind_at_load
+ 
+ configure.args \
+-    --enable-static
++    --enable-static \
++    --with-included-modules
+ 
+ # AC_X_PATH blindly asks xmkmf where X11 is, and it always uses /usr/X11R6.
+ # This block helps us link correctly and setup our pc files correctly when we

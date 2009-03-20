@@ -1,3 +1,27 @@
+======== How to build nicotine.app - notes by hedonist
+1. Install macports from http://www.macport.org
+
+2. Patch the macports installation:
+$ cd /
+$ sudo patch -p 0 < /path/to/nicotine/tree/tools/macports.patch
+
+3. This will take a long time (hours) - run
+$ sudo port install py25-gtk +universal +quartz +no_x11 py25-py2app +universal +quartz +no_x11 py25-bz2 +universal +quartz +no_x11 py25-mutagen +universal +quartz +no_x11
+
+4. Run
+$ ./build-osxapp.sh
+
+5. The nicotine.app should be in the dist directory
+
+Thanks to 
+http://www.danplanet.com/home/82-codemonkeying/88-using-py2app-with-gtk
+and http://zorns-lemon.com/blog/2007/9/19/cells-gtk-on-mac-os-x/
+for the incredibly helpful hints.
+
+If you run into problems, open a ticket at http://www.nicotine-plus.org/newticket
+
+======== Old notes, might be irrelevant
+
 == Global
 
 1) Install py2app, fe. version 0.3.6
