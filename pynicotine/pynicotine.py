@@ -830,6 +830,8 @@ class NetworkEventProcessor:
 			self.logMessage(_("%i privileged users") %(len(msg.users)))
 			self.queue.put(slskmessages.HaveNoParent(1))
 			self.queue.put(slskmessages.GetUserStats(self.config.sections["server"]["login"]))
+			if sys.platform == 'darwin':
+				self.logMessage("If you like using Nicotine+ on OS X, please consider sending a postcard to the maintainer, here's the address:\nAlexander Kanavin\nVetehisenkuja 4 B29\n00530 Helsinki Finland")
 		else:
 			self.logMessage("%s %s" %(msg.__class__, vars(msg)))
 
