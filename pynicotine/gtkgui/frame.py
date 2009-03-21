@@ -17,6 +17,8 @@
 # Original copyright below
 # Copyright (c) 2003-2004 Hyriand. All rights reserved.
 
+log = []
+
 import os
 
 import gtk, gtk.glade
@@ -60,7 +62,9 @@ try:
 	import sexy
 except ImportError:
 	SEXY=False
-	print _("Note: Python Bindings for libsexy were not found. To enable spell checking, get them from http://www.chipx86.com/wiki/Libsexy or your distribution's package manager. Look for sexy-python or python-sexy.")
+	msg = _("Note: Python Bindings for libsexy were not found. To enable spell checking, get them from http://www.chipx86.com/wiki/Libsexy or your distribution's package manager. Look for sexy-python or python-sexy.")
+	print msg
+	log.append(msg)
 
 class roomlist:
 	def __init__(self, frame):
@@ -247,7 +251,7 @@ class BrowserWindow(gtk.VBox):
 
 
 class NicotineFrame:
-	def __init__(self, config, plugindir, use_trayicon, try_rgba, start_hidden=False, webbrowser=True): 
+	def __init__(self, config, plugindir, use_trayicon, try_rgba, start_hidden=False, webbrowser=True, initiallog=[]): 
 		
 		self.clip_data = ""
 		self.log_queue = []
@@ -341,9 +345,13 @@ class NicotineFrame:
 					print "Enabling RGBA"
 					gtk_screen.set_default_colormap(colormap)
 				else:
-					print "Your X can handle RGBA, but your window manager cannot. Not enabling transparancy."
+					msg = "Your X can handle RGBA, but your window manager cannot. Not enabling transparancy."
+					print msg
+					self.logMessage(_(msg))
 			else:
-				print "Your X cannot handle RGBA, not enabling transparency"
+				msg = "Your X cannot handle RGBA, not enabling transparency"
+				print msg
+				self.logMessage(_(msg))
 
 		width = self.np.config.sections["ui"]["width"]
 		height = self.np.config.sections["ui"]["height"]
@@ -435,8 +443,6 @@ class NicotineFrame:
 		
 		self.LogScrolledWindow.add(self.LogWindow)
 		self.LogWindow.connect("button-press-event", self.OnPopupLogMenu)
-		
-		
 
 		if self.translux:
 			self.LogScrolledWindow.get_vadjustment().connect("value-changed", lambda *args: self.LogWindow.queue_draw())
@@ -561,9 +567,12 @@ class NicotineFrame:
 			elif type(l) is gtk.EventBox:
 				l.child.set_text_color(0)
 		
+		
 		if config["ticker"]["hide"]:
 			self.hide_tickers1.set_active(1)
 		self.UpdateColours(1)
+		for l in initiallog:
+			self.logMessage(l)
 		self.settingswindow = SettingsWindow(self)
 		self.settingswindow.SettingsWindow.connect("settings-closed", self.OnSettingsClosed)
 		self.chatrooms = self.ChatNotebook
@@ -662,16 +671,19 @@ class NicotineFrame:
 			self.OnConnect(-1)
 		self.UpdateDownloadFilters()
 		
-		
 		if use_trayicon and config["ui"]["trayicon"]:
 			if RGBA:
-				print "X11/GTK RGBA Bug workaround: Setting default colormap to RGB"
+				msg = "X11/GTK RGBA Bug workaround: Setting default colormap to RGB"
+				print msg
+				self.logMessage(msg)
 				gtk_screen.set_default_colormap(gtk_screen.get_rgb_colormap())
 			self.TrayApp.CREATE_TRAYICON = 1
 			self.TrayApp.HAVE_TRAYICON = True
 			self.TrayApp.Create()
 			if RGBA:
-				print "X11/GTK RGBA Bug workaround: Restoring RGBA as default colormap."
+				msg = "X11/GTK RGBA Bug workaround: Restoring RGBA as default colormap."
+				print msg
+				self.logMessage(msg)
 				gtk_screen.set_default_colormap(colormap)
 		if trerror is not None and trerror != "":
 			self.logMessage(trerror)
@@ -3435,8 +3447,8 @@ class gstreamer:
 			self.player.set_state(self.gst.STATE_NULL)
 			
 class MainApp:
-	def __init__(self, config, plugindir, trayicon, rgbamode, start_hidden, webbrowser):
-		self.frame = NicotineFrame(config, plugindir, trayicon, rgbamode, start_hidden, webbrowser)
+	def __init__(self, config, plugindir, trayicon, rgbamode, start_hidden, webbrowser, initiallog):
+		self.frame = NicotineFrame(config, plugindir, trayicon, rgbamode, start_hidden, webbrowser, initiallog + log)
 	
 	def MainLoop(self):
 		signal.signal(signal.SIGINT, signal.SIG_IGN)

@@ -24,6 +24,8 @@ daelstorm@gmail.com
 import platform, os
 import sys
 
+log = []
+
 # Detect if we're running on Windows
 win32 = sys.platform.startswith("win")
 # Detect if we're running a packed exe created with py2exe
@@ -52,13 +54,15 @@ if LOAD_PSYCO:
 		import psyco
 		psyco.profile()
 	except ImportError:
-		print """Nicotine supports \"psyco\", an inline optimizer for python
+		msg = """Nicotine supports \"psyco\", an inline optimizer for python
 code, you can get it at http://sourceforge.net/projects/psyco/"""
+		print msg
+		log.append(msg)
 
 
 from gettext import gettext as _
 
-def checkenv():
+def checkenv(log=[]):
 
 	import sys, string
 	ver = sys.version_info[0]*100+sys.version_info[1]*10+sys.version_info[2]
@@ -87,13 +91,19 @@ binary package and what you try to run Nicotine with.)""")
 			sys.exit(1)
 		else:
 			gtkdir = _winreg.QueryValueEx(k, "Path")
-			print "GTK DLLs found at %s" % (gtkdir[0])
+			msg = "GTK DLLs found at %s" % (gtkdir[0])
+			print msg
+			log.append(msg)
 			import os
 			os.environ['PATH'] += ";%s/lib;%s/bin" % (gtkdir[0], gtkdir[0])
 
 	if win32:
-		try: import dbhash
-		except: print _("Warning: the Berkeley DB module, dbhash, could not be loaded.")
+		try:
+			import dbhash
+		except:
+			msg = _("Warning: the Berkeley DB module, dbhash, could not be loaded.")
+			print msg
+			log.append(msg)
 
 	try:
 		if win32:
@@ -120,27 +130,29 @@ binary package and what you try to run Nicotine with.)""")
 		try:
 			import _vorbis
 		except ImportError:
-			print _("""You do not have Python Vorbis bindings installed. 
+			msg = _("""You do not have Python Vorbis bindings installed. 
 Others will not be able to see the lengths and the bitrates 
 of Ogg Vorbis files that you share. You can get the from
 http://www.andrewchatham.com/pyogg/. 
 If you're using Debian, install the python-pyvorbis package.
 If you're using Gentoo, install nicotine+ with the vorbis USE flag.
 """)
-
+			print msg
+			log.append(msg)
 	try:
 		import GeoIP
 	except ImportError:
 		try:
 			import _GeoIP
 		except ImportError:
-			print _("""Nicotine supports a country code blocker but that
+			msg = _("""Nicotine supports a country code blocker but that
 	requires a (GPL'ed) library called GeoIP. You can find it here:
 	C library:       http://www.maxmind.com/app/c
 	Python bindings: http://www.maxmind.com/app/python
 	(the python bindings require the C library)
 	""")
-	
+			print msg
+			log.append(msg)
 	return None
 def version():
 	try:
@@ -195,6 +207,7 @@ def renameprocess(newname, debug = False):
 			print i
 
 def run():
+	global log
 	renameprocess('nicotine')
 	import locale
 	# Win32 hack to fix LANG and LC_ALL environnment variables with unix compliant language code
@@ -206,7 +219,9 @@ def run():
 	try:
 		locale.setlocale(locale.LC_ALL, '')
 	except:
-		print "Cannot set locale"
+		msg = "Cannot set locale"
+		print msg
+		log.append(msg)
 
 	import gettext
 	gettext.textdomain("nicotine")
@@ -260,16 +275,16 @@ def run():
 		if o in ("-v", "--version"):
 			version()
 			sys.exit()
-	result = checkenv()
+	result = checkenv(log)
 	if result is None:
 		from pynicotine.gtkgui import frame
 
-		app = frame.MainApp(config, plugins, trayicon, tryrgba, hidden, webbrowser)
+		app = frame.MainApp(config, plugins, trayicon, tryrgba, hidden, webbrowser, log)
 		if profile:
 			import hotshot
-			log = os.path.expanduser(config) + ".profile"
-			profiler = hotshot.Profile(log)
-			print _("Starting using the profiler (saving log to %s)") % log
+			logfile = os.path.expanduser(config) + ".profile"
+			profiler = hotshot.Profile(logfile)
+			print _("Starting using the profiler (saving log to %s)") % logfile
 			profiler.runcall(app.MainLoop)
 		else:
 			app.MainLoop()
