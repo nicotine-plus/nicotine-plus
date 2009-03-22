@@ -260,8 +260,10 @@ class SharesFrame(buildFrame):
 			self.incompletedir = directory
 			self.DownloadDir.set_text(recode(directory))
 			if self.ShareDownloadDir.get_active():
-				self.needrescan = 1
-					
+				# This function will be called upon creating the settings window, so only
+				# force a scan if the user changes his donwload directory
+				if directory != self.frame.np.config.sections["transfers"]["downloaddir"]:
+					self.needrescan = 1
 	def OnAddSharedDir(self, widget):
 		dir1 = ChooseDir(self.Main.get_toplevel(), title=_("Nicotine+")+": "+_("Add a shared directory"))
 		if dir1 is not None:
