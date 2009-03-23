@@ -147,12 +147,12 @@ if __name__ == '__main__' :
           url                   = "http://www.nicotine-plus.org/",
           packages              = [ 'pynicotine', 'pynicotine.gtkgui' ],
           package_data          = {'pynicotine.gtkgui': ["*.py" , "*.glade"], },
-          scripts               = [ 'nicotine','nicotine-import-winconfig'],
+          scripts               = [ 'nicotine.py','nicotine-import-winconfig'],
           long_description      = LONG_DESCRIPTION,
           data_files            = files,
           windows               = [
                                     {
-                                      "script": "nicotine",
+                                      "script": "nicotine.py",
                                       "icon_resources": [(0, "img/ico/nicotine+-.ico")]
                                     }
                                   ],
