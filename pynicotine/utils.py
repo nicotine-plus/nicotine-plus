@@ -656,7 +656,7 @@ class SortedDict(UserDict):
 		for key in self.__keys__:
 			yield key, self[key]
 
-def executeCommand(command, replacement=None, background=True, placeholder='$'):
+def executeCommand(command, replacement=None, background=True, returnoutput=False, placeholder='$'):
 	"""Executes a string with commands, with partial support for bash-style quoting and pipes
 	
 	The different parts of the command should be separated by spaces, a double
@@ -669,11 +669,27 @@ def executeCommand(command, replacement=None, background=True, placeholder='$'):
 	If the 'replacement' argument is given, every occurance of 'placeholder'
 	will be replaced by 'replacement'.
 	
+	If the command ends with the ampersand symbol background will be set to True. This should
+	only be done by the request of the user, if you want background to be true set the function
+	argument.
+
+	The only expected error to be thrown is the RuntimeError in case something goes wrong
+	while executing the command.
+
 	Example commands:
 	* "C:\Program Files\WinAmp\WinAmp.exe" --xforce "--title=My Window Title" 
 	* mplayer $
 	* echo $ | flite -t """
 	# Example command: "C:\Program Files\WinAmp\WinAmp.exe" --xforce "--title=My Title" $ | flite -t
+	if returnoutput:
+		background = False
+	command = command.strip()
+	if command.endswith("&"):
+		command = command[:-1]
+		if returnoutput:
+			print "Yikes, I was asked to return output but I'm also asked to launch the process in the background. returnoutput gets precedent."
+		else:
+			background = True
 	unparsed = command
 	arguments = []
 	while unparsed.count('"') > 1:
@@ -699,20 +715,22 @@ def executeCommand(command, replacement=None, background=True, placeholder='$'):
 		for i in xrange(0, len(subcommands)):
 			subcommands[i] = [x.replace(placeholder, replacement) for x in subcommands[i]]
 	# Chaining commands...
+	finalstdout = None
+	if returnoutput:
+		finalstdout = PIPE
 	procs = []
 	try:
 		if len(subcommands) == 1: # no need to fool around with pipes
-			procs.append(Popen(subcommands[0]))
+			procs.append(Popen(subcommands[0], stdout=finalstdout))
 		else:
 			procs.append(Popen(subcommands[0], stdout=PIPE))
 			for subcommand in subcommands[1:-1]:
 				procs.append(Popen(subcommand, stdin=procs[-1].stdout, stdout=PIPE))
-			procs.append(Popen(subcommands[-1], stdin=procs[-1].stdout))
-		if not background:
+			procs.append(Popen(subcommands[-1], stdin=procs[-1].stdout, stdout=finalstdout))
+		if not background and not returnoutput:
 			procs[-1].wait()
 	except:
-		print "Problem while executing command %s (%s of %s)" % (subcommands[len(procs)], len(procs)+1, len(subcommands))
-		return False
-	# Don't use this without forking:
-	#output = procs[-1].communicate()[0]
-	return True
+		raise RuntimeError("Problem while executing command %s (%s of %s)" % (subcommands[len(procs)], len(procs)+1, len(subcommands)))
+	if not returnoutput:
+		return True
+	return procs[-1].communicate()[0]
