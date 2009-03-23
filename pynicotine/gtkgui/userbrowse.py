@@ -632,7 +632,7 @@ class UserBrowse:
 		if self.frame.np.config.sections["transfers"]["prioritize"]:
 			for file in self.shares[dir]:
 				(junk, sep, ext) = file[1].rpartition('.')
-				if ext and ext in ['sfv','md5','nfo','txt']:
+				if sep and ext in ['sfv','md5','nfo','txt']:
 					priorityfiles.append(file)
 				else:
 					normalfiles.append(file)

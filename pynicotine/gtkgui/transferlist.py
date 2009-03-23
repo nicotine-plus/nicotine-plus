@@ -364,11 +364,12 @@ class TransferList:
 				for f in range(files):
 					iter = self.transfersmodel.iter_nth_child(self.users[user], f)
 					filename = self.transfersmodel.get_value(iter, 9)
-					(name, ext) = filename.rsplit('.',1)
-					try:
-						extensions[ext.lower()] += 1
-					except KeyError:
-						extensions[ext.lower()] = 1
+					(name, sep, ext) = filename.rpartition('.')
+					if sep:
+						try:
+							extensions[ext.lower()] += 1
+						except KeyError:
+							extensions[ext.lower()] = 1
 					for transfer in self.list:
 						if [transfer.user, transfer.filename] == [user, filename] and transfer.timeelapsed is not None:
 							elap += transfer.timeelapsed
@@ -402,7 +403,9 @@ class TransferList:
 					left = self.frame.np.transfers.getTime((totalsize - position)/ispeed/1024)
 				elapsed = self.frame.np.transfers.getTime(elap)
 				
-				if len(extensions) == 1:
+				if len(extensions) == 0:
+					extensions = "Unknown"
+				elif len(extensions) == 1:
 					extensions = _("All %(ext)s") % {'ext':extensions.keys()[0]}
 				else:
 					extensionlst = [(extensions[key], key) for key in extensions]
