@@ -14,8 +14,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import gtk, gobject
-import os, commands, sys, re, thread, threading
-from pynicotine.utils import _
+#import os, commands, sys, re, thread, threading
+import os, sys, re, thread, threading
+from pynicotine.utils import _, executeCommand
 
 class NowPlaying:
 	def __init__(self, frame):
@@ -599,7 +600,8 @@ class NowPlaying:
 
 		return 1
 	def mpd_command(self, command):
-		output = commands.getoutput("mpc --format %s" % command).split('\n')[0]
+		#output = commands.getoutput("mpc --format %s" % command).split('\n')[0]
+		output = executeCommand("mpc --format $", command, returnoutput=True).split('\n')[0]
 		if output == '' or output.startswith("MPD_HOST") or output.startswith("volume: "):
 			return None
 		return output
@@ -639,8 +641,8 @@ class NowPlaying:
 		command = ""
 		for i in commandlist:
 			command += i + " "
-		output = commands.getoutput("exaile %s 2> /dev/null" % command).split('\n')
-	
+		#output = commands.getoutput("exaile %s 2> /dev/null" % command).split('\n')
+		output = executeCommand('exaile $', command, returnoutput=True).split('\n')[0]
 		return output
 		
 	def amarok(self):
@@ -694,7 +696,8 @@ class NowPlaying:
 		
 				
 	def amarok_command(self, command):
-		output = commands.getoutput("dcop amarok player %s" % command).split('\n')[0]
+		#output = commands.getoutput("dcop amarok player %s" % command).split('\n')[0]
+		output = executeCommand("dcop amarok player $", command, returnoutput=True).split('\n')[0]
 		if output == 'call failed':
 			output = None
 		return output
@@ -743,7 +746,8 @@ class NowPlaying:
 		return 1
 		
 	def audacious_command(self, command, subcommand = ''):
-		output = commands.getoutput("audtool %s %s" % (command, subcommand)).split('\n')[0]
+		#output = commands.getoutput("audtool %s %s" % (command, subcommand)).split('\n')[0]
+		output = executeCommand("audtool %s %s" % (command, subcommand), returnoutput=True).split('\n')[0]
 		if output.startswith('audtool'):
 			output = None
 			self.audacious_running = False
@@ -872,12 +876,13 @@ class NowPlaying:
 			othercommand = self.NPCommand.get_text()
 			if othercommand == "":
 				return None
-			output = commands.getoutput("%s" % othercommand)
-			if output.startswith("sh: "):
-				raise Exception, output
-			else:
-				self.title["nowplaying"] = output 
-				return 1
+			#output = commands.getoutput("%s" % othercommand)
+			output = executeCommand(othercommand, returnoutput=True)
+			#if output.startswith("sh: "):
+			#	raise Exception, output
+			#else:
+			self.title["nowplaying"] = output 
+			return True
 		except Exception, error:
 			self.frame.logMessage(_("ERROR: Executing '%(command)s' failed: %(error)s") % {"command": othercommand, "error": error})
 			return None
