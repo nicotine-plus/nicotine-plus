@@ -1816,7 +1816,7 @@ class UrlCatchFrame(buildFrame):
 
 		
 		self.handlermodel = gtk.ListStore(gobject.TYPE_STRING)
-		for item in ["xdg-open \"%s\"", "firefox \"%s\"", "firefox -a firefox --remote 'openURL(%s,new-tab)'", "mozilla \"%s\"", "opera \"%s\"", "links -g \"%s\"", "dillo \"%s\"", "konqueror \"%s\"", "\"c:\Program Files\Mozilla Firefox\Firefox.exe\" %s"]:
+		for item in ["xdg-open $", "firefox $", "firefox -a firefox --remote \"openURL($,new-tab)\"", "mozilla $", "opera $", "links -g $", "dillo $", "konqueror $", "\"c:\Program Files\Mozilla Firefox\Firefox.exe\" $"]:
 			self.handlermodel.append([item])
 		self.Handler.set_model(self.handlermodel)
 		self.Handler.set_text_column(0)
