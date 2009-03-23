@@ -627,7 +627,22 @@ class UserBrowse:
 		if dir == None or dir not in self.shares:
 			return
 		ldir = prefix + dir.split("\\")[-1]
-		for file in self.shares[dir]:
+		priorityfiles = []
+		normalfiles = []
+		if self.frame.np.config.sections["transfers"]["prioritize"]:
+			for file in self.shares[dir]:
+				(junk, sep, ext) = file[1].rpartition('.')
+				if ext and ext in ['sfv','md5','nfo','txt']:
+					priorityfiles.append(file)
+				else:
+					normalfiles.append(file)
+		else:
+			normalfiles = self.shares[dir][:]
+		if self.frame.np.config.sections["transfers"]["reverseorder"]:
+			deco = [(x[1], x) for x in normalfiles]
+			deco.sort(reverse=True)
+			normalfiles = [x for junk, x in deco]
+		for file in priorityfiles + normalfiles:
 			length = bitrate = None
 			attrs = file[4]
 			if attrs != []:

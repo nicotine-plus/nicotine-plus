@@ -1521,7 +1521,23 @@ class Transfers:
 		for i in msg.list.keys():
 			for directory in msg.list[i].keys():
 				if os.path.commonprefix([i, directory]) == directory:
-					for file in msg.list[i][directory]:
+					priorityfiles = []
+					normalfiles = []
+					
+					if self.eventprocessor.config.sections["transfers"]["prioritize"]:
+						for file in msg.list[i][directory]:
+							(junk, sep, ext) = file[1].rpartition('.')
+							if ext and ext in ['sfv','md5','nfo','txt']:
+								priorityfiles.append(file)
+							else:
+								normalfiles.append(file)
+					else:
+						normalfiles = msg.list[i][directory][:]
+					if self.eventprocessor.config.sections["transfers"]["reverseorder"]:
+						deco = [(x[1], x) for x in normalfiles]
+						deco.sort(reverse=True)
+						normalfiles = [x for junk, x in deco]
+					for file in priorityfiles + normalfiles:
 						length = bitrate = None
 						attrs = file[4]
 						if attrs != []:

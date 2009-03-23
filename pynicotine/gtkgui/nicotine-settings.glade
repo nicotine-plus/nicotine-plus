@@ -1775,6 +1775,30 @@
                 <property name="position">3</property>
               </packing>
             </child>
+            <child>
+              <widget class="GtkCheckButton" id="DownloadReverseOrder">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="label" translatable="yes">Download folders in reverse alphanumerical order</property>
+                <property name="response_id">0</property>
+                <property name="draw_indicator">True</property>
+              </widget>
+              <packing>
+                <property name="position">4</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkCheckButton" id="DownloadChecksumsFirst">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="label" translatable="yes">Download SFV/MD5 before anything else</property>
+                <property name="response_id">0</property>
+                <property name="draw_indicator">True</property>
+              </widget>
+              <packing>
+                <property name="position">5</property>
+              </packing>
+            </child>
           </widget>
         </child>
         <child>

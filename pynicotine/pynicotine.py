@@ -1393,7 +1393,6 @@ class NetworkEventProcessor:
 
 	def FolderContentsResponse(self, msg):
 		if self.transfers is not None:
-			
 			for i in self.peerconns:
 				if i.conn is msg.conn.conn:
 					username = i.username
@@ -1408,15 +1407,9 @@ class NetworkEventProcessor:
 						numfiles = len(files)
 						if numfiles > 100:
 							many=1
-							
-							
 							folder = j
-							
-							
 			if many:
-		
 				self.frame.download_large_folder(username, folder, files, numfiles, msg)
-				
 			else:
 				self.transfers.FolderContentsResponse(msg)
 		else:

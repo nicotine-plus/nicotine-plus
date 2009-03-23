@@ -99,6 +99,8 @@ class Config:
 	"afterfinish": "", \
 	"afterfolder": "", \
 	"lock": 1, \
+	"reverseorder": 0,
+	"prioritize": 0,
 	"fifoqueue": 0, \
 	"usecustomban": 0, \
 	"limitby": 1, \
