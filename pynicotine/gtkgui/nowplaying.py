@@ -503,6 +503,7 @@ class NowPlaying:
 		title = title.replace("$r", self.title["bitrate"])
 		title = title.replace("$s", self.title["status"])
 		title = title.replace("$f", self.title["filename"])
+		title = ' '.join(title.strip('\n').split('\n'))
 		
 		if test:
 			self.label7.set_text(title)
