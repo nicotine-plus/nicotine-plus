@@ -7,7 +7,9 @@ Behaviour
  * Configuration files are now stored in the user's Application Data folder instead of the installation folder (bug #330)
  * The configuration screen for shares has been rearranged in order to make it more logical (bug #341)
  * Support for Mutagen has been added. This will result in more accurate information about bitrates and lengths (bug #259)
-
+ * Icons have been replaced, the alt-tab icon is increased.
+ * Most external calls now support pipes
+ * Improved German translation (bug #941)
 
 Features
  * Windows components have been improved
@@ -19,6 +21,15 @@ Features
  * The amount of tracked and displayed search results is now limited, which should allow nicotine+ to cope better with overly
    generic search terms. Internally a maximum of 1500 are recorded, of which a maximum of 500 are shown. The other 1000 can be
    retrieved by using the filters. (bug #284)
+ * Notebook tabs can be reordered and hidden, and these settings will be remembered.
+ * Search results are now limited. There are two different limits:
+   1) The show limit. This is the amount of results shown in the search tabs
+   2) The store limit. This is the amount of results stored internally. This is useful when using search filters
+   These limits are configurable from the configuration screen. (bug #284)
+ * Nicotine tries to rename itself from 'python' to 'nicotine' for programs like 'ps' (requires procname module) and 'pkill' (bug #355)
+ * 'Remember choice' option in the quit confirmation dialogue
+ * It is possible to ignore people based on their IP address
+ * Import warnings are now shows in the log window as well as in the console (bug #381)
 
 Bugs
  * The Danish translation is now stored under 'da'
@@ -26,7 +37,10 @@ Bugs
  * A number of typographical errors have been corrected (bug #334 and #335)
  * When disabling sound this setting will be loaded correctly now (bug #285)
  * Repaired sayprivate function from the pluginsystem 
-
+ * The Windows versions now comes with jpeg62.dll (bug #342)
+ * The word '-' is now filtered from search queries (bug #367)
+ * Handling of word wrapping of extremely long words is improved
+ * Tray icon menu on OSX
 
 1.2.10 (30 December 2008)
 
