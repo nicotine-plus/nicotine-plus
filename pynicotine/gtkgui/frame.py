@@ -3149,7 +3149,7 @@ class NicotineFrame:
 		elif tab == "interests": 
 			child = self.interests # Interests
 		elif tab == "userlist": 
-			child = self.userlistbox # Buddy list
+			child = self.userlistvbox # Buddy list
 		elif tab == "extra": 
 			child = self.extravbox 
 		else:
