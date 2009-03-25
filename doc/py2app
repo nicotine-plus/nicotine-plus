@@ -1,7 +1,7 @@
 ======== How to build nicotine.app - notes by hedonist
 1. Install macports from http://www.macports.org
 
-2. Patch the macports installation:
+2. Patch the macports installation (you need to re-do this each time you 'port selfupdate' macports):
 $ cd /
 $ sudo patch -p 0 < /path/to/nicotine/tree/tools/macports.patch
 

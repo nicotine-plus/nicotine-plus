@@ -3380,8 +3380,13 @@ class TrayApp:
 		self.HideUnhideWindow(None)
 		
 	def OnStatusIconPopup(self, status_icon, button, activate_time):
-		if button == 3 or sys.platform == 'darwin':
+		if button == 3:
 			self.tray_popup_menu.popup(None, None, None, button, activate_time)
+		if sys.platform == 'darwin':
+			if self.tray_popup_menu.get_property("visible") == False:
+				self.tray_popup_menu.popup(None, None, None, button, activate_time)
+			else:
+				self.tray_popup_menu.popdown()
 		
 	def OnTrayiconClicked(self, obj, event):
 		(w, h) = self.trayicon.get_size()
