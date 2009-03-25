@@ -194,7 +194,6 @@ def header_toggle(menuitem, column):
 
 	
 def ScrollBottom(widget):
-	widget.need_scroll = 1
 	va = widget.get_vadjustment()
 	va.set_value(va.upper - va.page_size)
 	return False
@@ -250,7 +249,7 @@ def AppendLine(textview, line, tag = None, timestamp = None, showstamp=True, tim
 	scrolledwindow = textview.get_parent()
 	va = scrolledwindow.get_vadjustment()
 	bottom = va.value >= (va.upper - int(va.page_size*1.5))
-		
+
 	buffer = textview.get_buffer()
 	linenr = buffer.get_line_count()
 	ME = 0
@@ -312,10 +311,7 @@ def AppendLine(textview, line, tag = None, timestamp = None, showstamp=True, tim
 		else:
 			_append(buffer, line, tag)
 	
-	if not hasattr(scrolledwindow, "need_scroll"):
-		scrolledwindow.need_scroll = 1
-	if scroll and bottom and scrolledwindow.need_scroll:
-		scrolledwindow.need_scroll = 0
+	if scroll and bottom:
 		gobject.idle_add(ScrollBottom, scrolledwindow)
 	
 	return linenr

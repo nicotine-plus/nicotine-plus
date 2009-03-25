@@ -1546,13 +1546,13 @@ class NicotineFrame:
 		for message in self.log_queue[:]:
 			old_msg, old_debug = message
 			if old_debug is None or self.showdebug:
-				AppendLine(self.LogWindow, old_msg, self.tag_log)
+				AppendLine(self.LogWindow, old_msg, self.tag_log, scroll=True)
 				if self.np.config.sections["logging"]["logcollapsed"]:
 					self.SetStatusText(old_msg)
 			self.log_queue.remove(message)
 		if debug is None or self.showdebug:
 
-			AppendLine(self.LogWindow, msg, self.tag_log)
+			AppendLine(self.LogWindow, msg, self.tag_log, scroll=True)
 			if self.np.config.sections["logging"]["logcollapsed"]:
 				self.SetStatusText(msg)
 		return False
