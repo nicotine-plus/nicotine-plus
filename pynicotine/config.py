@@ -320,6 +320,8 @@ class Config:
 	"npformat": "" \
 	} \
 }
+		if sys.platform == 'darwin':
+			self.sections["urls"]["protocols"] = {"http":"open -a Safari $", "https":"open -a Safari $"}
 		self.defaults = {}
 		for key, value in self.sections.items():
 			if type(value) is dict:
