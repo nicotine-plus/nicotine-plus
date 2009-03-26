@@ -669,6 +669,8 @@ class Transfers:
 							i.transfertimer.cancel()
 						self.uploads.remove(i)
 						self.uploadspanel.update()
+					if i in self.downloads:
+						self.eventprocessor.ProcessRequestToPeer(i.user, slskmessages.PlaceInQueueRequest(None, i.filename))
 				self.checkUploadQueue()
 				
 		elif msg.filesize != None:
