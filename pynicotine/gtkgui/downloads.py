@@ -141,7 +141,7 @@ class Downloads(TransferList):
 
 		user = model.get_value(iter, 0)
 		filename = model.get_value(iter, 1)
-		fullname = model.get_value(iter, 9)
+		fullname = model.get_value(iter, 10)
 		size = speed = "0"
 		length = bitrate = None
 		queue = immediate = num = country = bitratestr = ""

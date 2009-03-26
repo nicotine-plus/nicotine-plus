@@ -37,13 +37,14 @@ class TransferList:
 		self.users = {}
 		widget.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
 
-		columntypes = [gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_INT , gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING,  gobject.TYPE_INT, gobject.TYPE_INT, gobject.TYPE_INT, gobject.TYPE_BOOLEAN]
+		columntypes = [gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_INT , gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING,  gobject.TYPE_INT, gobject.TYPE_INT, gobject.TYPE_INT, gobject.TYPE_BOOLEAN]
 
 		self.transfersmodel = gtk.TreeStore(*columntypes)
 		self.cols = cols = InitialiseColumns(widget,
 			[_("User"), 100, "text", self.CellDataFunc],
 			[_("Filename"), 250, "text", self.CellDataFunc],
 			[_("Status"), 140, "text", self.CellDataFunc],
+			[_("Queue Position"), 50, "text", self.CellDataFunc],
 			[_("Percent"), 70, "progress"],
 			[_("Size"), 170, "text", self.CellDataFunc],
 			[_("Speed"), 50, "text", self.CellDataFunc],
@@ -51,27 +52,32 @@ class TransferList:
 			[_("Time left"), 70, "text", self.CellDataFunc],
 			[_("Path"), 1000, "text", self.CellDataFunc],
 		)
-		cols[0].set_sort_column_id(0)
-		cols[1].set_sort_column_id(1)
-		cols[2].set_sort_column_id(2)
+		self.col_user, self.col_filename , self.col_status, self.col_position, self.col_percent, self.col_human_size, self.col_human_speed, self.col_time_elapsed, self.col_time_left, self.col_path = cols
+		#, self.col_fullpath,  self.col_int_status, self.col_int_speed, self.col_current_size, self.col_visible 
+		self.col_user.set_sort_column_id(0)
+		self.col_filename.set_sort_column_id(1)
+		self.col_status.set_sort_column_id(2)
 		
 		# Only view progress renderer on transfers, not user tree parents
 		self.transfersmodel.set_sort_func(2, self.status_sort_func, 2)
-		cols[3].set_sort_column_id(10)
+		self.col_position.set_sort_column_id(3)
+		self.transfersmodel.set_sort_func(3, int_sort_func, 3)
+		self.col_percent.set_sort_column_id(11)
 		
-		cols[3].set_attributes(cols[3].get_cell_renderers()[0], value=3, visible=13)
+		self.col_percent.set_attributes(self.col_percent.get_cell_renderers()[0], value=4, visible=14)
+		#self.col_position.set_attributes(self.col_position.get_cell_renderers()[0], visible=14)
 		
-		cols[4].set_sort_column_id(11)
-		cols[5].set_sort_column_id(5)
-		cols[6].set_sort_column_id(6)
-		cols[7].set_sort_column_id(7)
-		cols[8].set_sort_column_id(8)
+		self.col_human_size.set_sort_column_id(12)
+		self.col_human_speed.set_sort_column_id(6)
+		self.col_time_elapsed.set_sort_column_id(7)
+		self.col_time_left.set_sort_column_id(8)
+		self.col_path.set_sort_column_id(9)
 		
-		self.transfersmodel.set_sort_func(10, self.progress_sort_func, 3)
+		self.transfersmodel.set_sort_func(11, self.progress_sort_func, 4)
 		#self.transfersmodel.set_sort_func(11, self.progress_sort_func, 11)
 		#self.transfersmodel.set_sort_func(12, self.progress_sort_func, 12)
 		#self.transfersmodel.set_sort_func(13, self.progress_sort_func, 13)
-		self.transfersmodel.set_sort_func(5, float_sort_func, 5)
+		self.transfersmodel.set_sort_func(6, float_sort_func, 6)
 		#self.frame.CreateIconButton(gtk.STOCK_INDENT, "stock", self.OnToggleTree, "Group by Users")
 		#self.hbox1.pack_end(self.ToggleTree, False, False)
 		
@@ -158,7 +164,7 @@ class TransferList:
 		
 	def SelectedTransfersCallback(self, model, path, iter):
 		user = model.get_value(iter, 0)
-		file = model.get_value(iter, 9)
+		file = model.get_value(iter, 10)
 		for i in self.list:
 			if i.user == user and i.filename == file:
 				self.selected_transfers.append(i)
@@ -176,7 +182,7 @@ class TransferList:
 				path, column, x, y = d
 				iter = self.transfersmodel.get_iter(path)
 				user = self.transfersmodel.get_value(iter, 0)
-				file = self.transfersmodel.get_value(iter, 9)
+				file = self.transfersmodel.get_value(iter, 10)
 				if path is not None:
 					sel = self.widget.get_selection()
 					sel.unselect_all()
@@ -264,6 +270,7 @@ class TransferList:
 			user = transfer.user
 			shortfn = self.frame.np.transfers.encode(fn.split("\\")[-1], user)
 			currentbytes = transfer.currentbytes
+			place = transfer.place
 			if currentbytes == None:
 				currentbytes = 0
 			
@@ -313,14 +320,16 @@ class TransferList:
 						self.list.remove(i[2])
 					i[2] = transfer
 					
-				self.transfersmodel.set(i[1], 1, shortfn, 2, status, 3, percent, 4, hsize, 5, speed, 6, elap, 7, left, 8, self.frame.np.decode(transfer.path), 10, istatus, 11, size, 12, currentbytes)
+				self.transfersmodel.set(i[1], 1, shortfn, 2, status, 3, place, 4, percent, 5, hsize, 6, speed, 7, elap, 8, left, 9, self.frame.np.decode(transfer.path), 11, istatus, 12, size, 13, currentbytes)
 				break
 			else:
 				if self.TreeUsers:
 					if user not in self.users:
 						# Create Parent if it doesn't exist
 						# ProgressRender not visible (last column sets 4th column)
-						self.users[user] = self.transfersmodel.append(None, [user, "", "", 0,  "", "", "", "", "", "", 0, 0, 0,  False])
+						self.users[user] = self.transfersmodel.append(None, [user, "", "", "", 0,  "", "", "", "", "", "", 0, 0, 0,  False])
+					
+						#self.col_position.set_attributes(self.col_position.get_cell_renderers()[0], visible=14)
 						
 					parent = self.users[user]
 				else:
@@ -328,7 +337,7 @@ class TransferList:
 				# Add a new transfer
 				
 				path = self.frame.np.decode(transfer.path)
-				iter = self.transfersmodel.append(parent, [user, shortfn, status, percent,  hsize, speed, elap, left, path, fn, istatus, size, icurrentbytes, True])
+				iter = self.transfersmodel.append(parent, [user, shortfn, status, place, percent,  hsize, speed, elap, left, path, fn, istatus, size, icurrentbytes, True])
 				
 				# Expand path
 				path = self.transfersmodel.get_path(iter)
@@ -363,7 +372,7 @@ class TransferList:
 				extensions = {}
 				for f in range(files):
 					iter = self.transfersmodel.iter_nth_child(self.users[user], f)
-					filename = self.transfersmodel.get_value(iter, 9)
+					filename = self.transfersmodel.get_value(iter, 10)
 					(name, sep, ext) = filename.rpartition('.')
 					if sep:
 						try:
@@ -374,16 +383,16 @@ class TransferList:
 						if [transfer.user, transfer.filename] == [user, filename] and transfer.timeelapsed is not None:
 							elap += transfer.timeelapsed
 							break
-					totalsize += self.transfersmodel.get_value(iter, 11)
-					position += self.transfersmodel.get_value(iter, 12)
+					totalsize += self.transfersmodel.get_value(iter, 12)
+					position += self.transfersmodel.get_value(iter, 13)
 					status = self.transfersmodel.get_value(iter, 2)
 						
 					if status == _("Transferring"):
-						str_speed = self.transfersmodel.get_value(iter, 5)
+						str_speed = self.transfersmodel.get_value(iter, 6)
 						if str_speed != "":
 							ispeed += float(str_speed)
 						
-						left = self.transfersmodel.get_value(iter, 7)
+						left = self.transfersmodel.get_value(iter, 8)
 					if salientstatus in ('',_("Finished")): # we prefer anything over ''/finished
 						salientstatus = status
 					if status == _("Transferring"):
@@ -414,13 +423,13 @@ class TransferList:
 				self.transfersmodel.set(self.users[user],
 						1, _("%(number)2s files ") % {'number':files} + " (" + extensions + ")",
 						2, salientstatus,
-						3, percent,
-						4, "%s / %s" % (self.Humanize(position, None), self.Humanize(totalsize, None )),
-						5, speed,
-						6, elapsed,
-						7, left,
-						11, ispeed,
-						13, True)
+						4, percent,
+						5, "%s / %s" % (self.Humanize(position, None), self.Humanize(totalsize, None )),
+						6, speed,
+						7, elapsed,
+						8, left,
+						12, ispeed,
+						14, True)
 				
 				
 		self.frame.UpdateBandwidth()

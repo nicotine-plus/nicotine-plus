@@ -72,7 +72,7 @@ class Transfer:
 		self.timequeued = timequeued
 		self.transfertimer = transfertimer
 		self.requestconn = None
-		self.place = place
+		self.place = place # Queue position
 		self.bitrate = bitrate
 		self.length = length
 
@@ -783,6 +783,7 @@ class Transfers:
 						#i.status = "%s" %(str(i.currentbytes))
 						i.status = "Transferring"
 						i.file = f
+						i.place = 0
 						i.offset = size
 						i.starttime = time.time()
 						self.eventprocessor.logMessage(_("Download started: %s") % (u"%s" % f.name))
@@ -1471,12 +1472,12 @@ class Transfers:
 
 	def PlaceInQueue(self, msg):
 		""" The server tells us our place in queue for a particular transfer."""
-		'''
+		
 		username = None
 		for i in self.peerconns:
-		if i.conn is msg.conn.conn:
-			username = i.username
-			break
+			if i.conn is msg.conn.conn:
+				username = i.username
+				break
 		
 		if username:
 			for i in self.downloads:
@@ -1488,8 +1489,8 @@ class Transfers:
 				#print i.filename.split('\\')[-1] 
 				i.place = msg.place
 				self.downloadspanel.update(i)
-		'''			
-		self.eventprocessor.logMessage(_("File: %(file)s, place in queue: %(place)s") % {'file':self.decode(msg.filename.split('\\')[-1]), 'place':msg.place})
+		
+		#self.eventprocessor.logMessage(_("File: %(file)s, place in queue: %(place)s") % {'file':self.decode(msg.filename.split('\\')[-1]), 'place':msg.place})
 
 	def FileError(self, msg):
 		""" Networking thread encountered a local file error"""
