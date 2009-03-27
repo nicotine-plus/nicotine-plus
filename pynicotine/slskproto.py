@@ -25,6 +25,8 @@ This module implements SoulSeek networking protocol.
 
 from __future__ import division
 
+from math import floor
+
 from slskmessages import *
 import SocketServer
 import socket
@@ -36,12 +38,14 @@ import threading
 import struct
 
 from errno import EINTR
-from utils import _
+from utils import _, win32
 
 MAXFILELIMIT = -1
+if win32:
+	import ctypes
+	MAXFILELIMIT = ctypes.cdll.msvcrt._getmaxstdio()
 try:
 	import resource
-	from math import floor
 	try:
 		(soft, MAXFILELIMIT) = resource.getrlimit(resource.RLIMIT_NOFILE)
 	except AttributeError:
@@ -56,7 +60,10 @@ if MAXFILELIMIT > 65535:
 	MAXFILELIMIT = 1024
 if MAXFILELIMIT > 0:
 	# Bumping soft limit
-	resource.setrlimit(resource.RLIMIT_NOFILE, (MAXFILELIMIT, MAXFILELIMIT))
+	try:
+		resource.setrlimit(resource.RLIMIT_NOFILE, (MAXFILELIMIT, MAXFILELIMIT))
+	except:
+		pass
 	# Since most people have a limit of 1024 or higher we can
 	# set it to 90% of the max limit and still get a workable amount of
 	# connections. We cannot set it to 100% because our connection count
@@ -64,8 +71,6 @@ if MAXFILELIMIT > 0:
 	# maybe because closed connections aren't closed on the spot.
 	#
 	MAXFILELIMIT = max(int(floor(MAXFILELIMIT*0.9)), 100)
-
-
 
 class Connection:
 	"""

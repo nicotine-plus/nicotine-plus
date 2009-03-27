@@ -2918,7 +2918,7 @@
             </child>
             <child>
               <widget class="GtkStatusbar" id="SocketStatus">
-                <property name="width_request">130</property>
+                <property name="width_request">140</property>
                 <property name="visible">True</property>
                 <property name="border_width">1</property>
                 <property name="has_resize_grip">False</property>

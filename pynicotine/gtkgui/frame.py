@@ -25,6 +25,7 @@ import gtk, gtk.glade
 
 from pynicotine.pynicotine import NetworkEventProcessor
 from pynicotine import slskmessages
+from pynicotine import slskproto
 from pynicotine.utils import version
 import time
 try:
@@ -1681,7 +1682,7 @@ class NicotineFrame:
 		
 	def SetSocketStatus(self, status):
 		self.SocketStatus.pop(self.socket_context_id)
-		self.SocketStatus.push(self.socket_context_id, _("%s Connections") % status)
+		self.SocketStatus.push(self.socket_context_id, _("%s/%s Connections") % (status, slskproto.MAXFILELIMIT))
 		
 	def InitInterface(self, msg):
 		if self.away == 0:
