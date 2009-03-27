@@ -38,17 +38,34 @@ import struct
 from errno import EINTR
 from utils import _
 
+MAXFILELIMIT = -1
 try:
 	import resource
 	from math import floor
-	(soft, hard) = resource.getrlimit(resource.RLIMIT_NOFILE)
+	try:
+		(soft, MAXFILELIMIT) = resource.getrlimit(resource.RLIMIT_NOFILE)
+	except AttributeError:
+		pass
+except ImportError:
+	pass
+
+# OSX reports INFINITE as hard limit, but supports up to 10240
+# Solaris supposedly reports 65535 and actually supports this
+# Linux usually reports 1024 and supports this.
+if MAXFILELIMIT > 65535:
+	MAXFILELIMIT = 1024
+if MAXFILELIMIT > 0:
+	# Bumping soft limit
+	resource.setrlimit(resource.RLIMIT_NOFILE, (MAXFILELIMIT, MAXFILELIMIT))
 	# Since most people have a limit of 1024 or higher we can
 	# set it to 90% of the max limit and still get a workable amount of
-	# connections. We cannot set it to 100% because connections that are being
-	# closed are not counted by us, but are still counted by the OS
-	MAXFILELIMIT = min(hard, max(int(floor(hard*0.9)), 100))
-except ImportError:
-	MAXFILELIMIT = -1
+	# connections. We cannot set it to 100% because our connection count
+	# doesn't agree with with the OS connection count (at least on Linux),
+	# maybe because closed connections aren't closed on the spot.
+	#
+	MAXFILELIMIT = max(int(floor(MAXFILELIMIT*0.9)), 100)
+
+
 
 class Connection:
 	"""
