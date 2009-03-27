@@ -16,6 +16,8 @@
 # Original copyright below
 # Copyright (c) 2003-2004 Hyriand. All rights reserved.
 
+import webbrowser
+
 import gtk
 import gobject
 import pango
@@ -206,8 +208,10 @@ def UrlEvent(tag, widget, event, iter, url):
 		if protocol in PROTOCOL_HANDLERS:
 			if PROTOCOL_HANDLERS[protocol].__class__ is types.MethodType:
 				PROTOCOL_HANDLERS[protocol](url.strip())
-			else:
+			elif PROTOCOL_HANDLERS[protocol]:
 				executeCommand(PROTOCOL_HANDLERS[protocol], url)
+			else:
+				webbrowser.open(url)
 		else:
 			try:
 				import gnomevfs
