@@ -4779,7 +4779,9 @@ Clear</property>
               <widget class="GtkLabel" id="label251">
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
-                <property name="label" translatable="yes">Protocols handlers:</property>
+                <property name="label" translatable="yes">Instances of $ will be replaced by the link, add empty handlers to use the system default web browser.
+Protocols handlers: </property>
+                <property name="wrap">True</property>
               </widget>
               <packing>
                 <property name="expand">False</property>

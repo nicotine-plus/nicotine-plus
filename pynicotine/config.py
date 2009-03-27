@@ -297,7 +297,7 @@ class Config:
 \
 "urls":{
 	"urlcatching":1, \
-	"protocols":{"http":"firefox $", "https":"firefox $"}, \
+	"protocols":{"http":"", "https":""}, \
 	"humanizeurls":1, \
 	}, \
 \
