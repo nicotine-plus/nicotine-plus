@@ -122,14 +122,10 @@ glade_files = glob.glob(os.path.join("pynicotine", "gtkgui", "*.glade"))
 files.append((os.path.join("pynicotine", "gtkgui"), glade_files))
 
 if __name__ == '__main__' :
-    LONG_DESCRIPTION = \
-""" Nicotine-Plus is a client for SoulSeek filesharing system, forked from Nicotine.
-"""
-
-    from pynicotine.utils import version
-
-    if is_osx:
-	setuptools.setup(app	= ['nicotine.py'],
+	from pynicotine.utils import version
+	LONG_DESCRIPTION = """Nicotine-Plus is a client for SoulSeek filesharing system, forked from Nicotine."""
+	if is_osx:
+		setuptools.setup(app	= ['nicotine.py'],
 		data_files	= [],
 		options		= {'py2app': 
 			{'argv_emulation': True,
@@ -140,30 +136,30 @@ if __name__ == '__main__' :
 		},
 		setup_requires	= ['py2app'],
 	)
-    else:
-        setup(name              = "nicotine",
-          version               = version,
-          license               = "GPLv3",
-          description           = "Client for SoulSeek filesharing system.",
-          author                = "daelstorm",
-          author_email          = "daelstorm@gmail.com",
-          url                   = "http://www.nicotine-plus.org/",
-          packages              = [ 'pynicotine', 'pynicotine.gtkgui' ],
-          package_data          = {'pynicotine.gtkgui': ["*.py"], },
-          scripts               = [ 'nicotine.py','nicotine-import-winconfig'],
-          long_description      = LONG_DESCRIPTION,
-          data_files            = files,
-          windows               = [
-                                    {
-                                      "script": "nicotine.py",
-                                      "icon_resources": [(0, "img/ico/nicotine+-.ico")]
-                                    }
-                                  ],
-          options               = {
-                                    'py2exe': {
-                                      'skip_archive':True,
-                                      'packages':'encodings',
-                                      'includes':'cairo, pango, pangocairo, atk, gobject, dbhash',
-                                    }
-                                  },
-         )
+	else:
+		setup(name              = "nicotine",
+			version               = version,
+			license               = "GPLv3",
+			description           = "Client for SoulSeek filesharing system.",
+			author                = "daelstorm",
+			author_email          = "daelstorm@gmail.com",
+			url                   = "http://www.nicotine-plus.org/",
+			packages              = [ 'pynicotine', 'pynicotine.gtkgui' ],
+			package_data          = {'pynicotine.gtkgui': ["*.py"], },
+			scripts               = [ 'nicotine.py','nicotine-import-winconfig'],
+			long_description      = LONG_DESCRIPTION,
+			data_files            = files,
+			windows               = [
+										{
+											"script": "nicotine.py",
+											"icon_resources": [(0, "img/ico/nicotine-plus-48x48.ico")]
+										}
+									],
+			options = {
+						'py2exe': {
+							'skip_archive':True,
+							'packages':'encodings',
+							'includes':'cairo, pango, pangocairo, atk, gobject, dbhash',
+						}
+					},
+		)
