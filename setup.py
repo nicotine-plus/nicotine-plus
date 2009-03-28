@@ -117,6 +117,9 @@ for file in doc_files:
 	else:
 		files.append((os.path.join(sys.prefix, "share", "nicotine", "documentation"), [file]))
 
+# Glade files (GUI)
+glade_files = glob.glob(os.path.join("pynicotine", "gtkgui", "*.glade"))
+files.append((os.path.join("pynicotine", "gtkgui"), glade_files))
 
 if __name__ == '__main__' :
     LONG_DESCRIPTION = \
@@ -146,7 +149,7 @@ if __name__ == '__main__' :
           author_email          = "daelstorm@gmail.com",
           url                   = "http://www.nicotine-plus.org/",
           packages              = [ 'pynicotine', 'pynicotine.gtkgui' ],
-          package_data          = {'pynicotine.gtkgui': ["*.py" , "*.glade"], },
+          package_data          = {'pynicotine.gtkgui': ["*.py"], },
           scripts               = [ 'nicotine.py','nicotine-import-winconfig'],
           long_description      = LONG_DESCRIPTION,
           data_files            = files,
@@ -158,8 +161,9 @@ if __name__ == '__main__' :
                                   ],
           options               = {
                                     'py2exe': {
+                                      'skip_archive':True,
                                       'packages':'encodings',
-                                      'includes': 'cairo, pango, pangocairo, atk, gobject, dbhash',
+                                      'includes':'cairo, pango, pangocairo, atk, gobject, dbhash',
                                     }
                                   },
          )
