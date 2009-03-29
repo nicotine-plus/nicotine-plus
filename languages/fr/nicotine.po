@@ -5529,8 +5529,8 @@ msgstr "Vous n'avez plus de privilèges restants"
 
 #: pynicotine/pynicotine.py:760
 #, python-format
-msgid "%(days)i days, %(hours)i hours, %(minutes)i minutes, %(seconds)i seconds of download privileges left"
-msgstr "%(days)i jours, %(hours)i heures, %(minutes)i minutes, %(seconds)i secondes restantes de privilèges de téléchargement"
+msgid "%(days)i days, %(hours)i hours, %(minutes)i minutes, %(seconds)i seconds of download privileges left."
+msgstr "%(days)i jours, %(hours)i heures, %(minutes)i minutes, %(seconds)i secondes restantes de privilèges de téléchargement."
 
 # pynicotine/pynicotine.py
 #: pynicotine/pynicotine.py:861

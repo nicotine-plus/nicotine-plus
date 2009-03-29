@@ -4548,8 +4548,8 @@ msgstr "Nezostali vám už žiadne privilégia"
 
 #: pynicotine/pynicotine.py:760
 #, python-format
-msgid "%(days)i days, %(hours)i hours, %(minutes)i minutes, %(seconds)i seconds of download privileges left"
-msgstr "Privilégia pre download platné %(days)i dní, %(hours)i hodín, %(minutes)i minút, %(seconds)i sekúnd"
+msgid "%(days)i days, %(hours)i hours, %(minutes)i minutes, %(seconds)i seconds of download privileges left."
+msgstr "Privilégia pre download platné %(days)i dní, %(hours)i hodín, %(minutes)i minút, %(seconds)i sekúnd."
 
 #: pynicotine/pynicotine.py:861
 #, python-format

@@ -4544,8 +4544,8 @@ msgstr "Még 0 másodperc maradt hátra elsőbbségben"
 
 #: pynicotine/pynicotine.py:760
 #, python-format
-msgid "%(days)i days, %(hours)i hours, %(minutes)i minutes, %(seconds)i seconds of download privileges left"
-msgstr "Még %(days)i nap, %(hours)i óra, %(minutes)i perc és %(seconds)i másodperc maradt hátra elsőbbségben"
+msgid "%(days)i days, %(hours)i hours, %(minutes)i minutes, %(seconds)i seconds of download privileges left."
+msgstr "Még %(days)i nap, %(hours)i óra, %(minutes)i perc és %(seconds)i másodperc maradt hátra elsőbbségben."
 
 #: pynicotine/pynicotine.py:861
 #, python-format
