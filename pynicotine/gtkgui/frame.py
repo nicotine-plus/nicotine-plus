@@ -81,16 +81,45 @@ class roomlist:
 			self.__dict__[name] = i
 		self.RoomList.remove(self.vbox2)
 		self.RoomList.destroy()
+		# self.RoomsList is the TreeView
 		self.wTree.signal_autoconnect(self)
-		
-	
+		self.search_iter = None
+		self.query = ""
+		self.room_model = self.RoomsList.get_model()
+		self.FindRoom.connect("clicked", self.OnSearchRoom)
+
 	def OnCreateRoom(self, widget):
 		room = widget.get_text()
 		if not room:
 			return
 		self.frame.np.queue.put(slskmessages.JoinRoom(room))
 		widget.set_text("")
-		
+
+	def OnSearchRoom(self, widget):
+		if self.room_model is not self.RoomsList.get_model():
+			self.room_model = self.RoomsList.get_model()
+			self.search_iter = self.room_model.get_iter_root()
+		room = self.SearchRooms.get_text().lower()
+		if not room:
+			return
+		if self.query == room:
+			if self.search_iter is None:
+				self.search_iter = self.room_model.get_iter_root()
+			else:
+				self.search_iter = self.room_model.iter_next(self.search_iter)
+		else: 
+			self.search_iter = self.room_model.get_iter_root()
+			self.query = room
+
+		while self.search_iter:
+			room_match, size =  self.room_model.get(self.search_iter, 0, 1)
+			if self.query in room_match.lower():
+				path = self.room_model.get_path(self.search_iter)
+				self.RoomsList.set_cursor(path)
+				#print room_match
+				break
+			self.search_iter = self.room_model.iter_next(self.search_iter)
+
 class BuddiesComboBoxEntry(gtk.ComboBoxEntry):
 	def __init__(self, frame):
 		self.frame = frame
@@ -1652,6 +1681,8 @@ class NicotineFrame:
 
 		self.roomlist.CreateRoomEntry.set_sensitive(status)
 		self.roomlist.RoomsList.set_sensitive(status)
+		self.roomlist.SearchRooms.set_sensitive(status)
+		self.roomlist.FindRoom.set_sensitive(status)
 		self.UserPrivateCombo.set_sensitive(status)
 		self.sPrivateChatButton.set_sensitive(status)
 		self.UserBrowseCombo.set_sensitive(status)
