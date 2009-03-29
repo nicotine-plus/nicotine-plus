@@ -12,9 +12,7 @@ files[""] = os.listdir("./")
 files["pynicotine/"] = os.listdir("./pynicotine")
 files["pynicotine/gtkgui/"] = os.listdir("./pynicotine/gtkgui")
 
-if os.path.exists("./nicotine"):
-	shutil.copy("./nicotine", "./nicotine.py")
-else:
+if not os.path.exists("./nicotine.py"):
 	print "Error: nicotine executable not found in this directory"
 	raise SystemExit
 def isPythonScript(dir, file):
@@ -38,6 +36,5 @@ for path in pythonscripts[:]:
 	goodpython += path + " "
 print "xgettext -k_ -kN_ -o languages/nicotine.pot %s" % goodpython
 r = os.system("xgettext -k_ -kN_ -o languages/nicotine.pot %s" % goodpython)
-os.remove("./nicotine.py")
 if r:
 	print "Error while creating nicotine.pot"
