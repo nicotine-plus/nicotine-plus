@@ -1807,6 +1807,7 @@ class UrlCatchFrame(buildFrame):
 		cols[1].set_sort_column_id(1)
 		self.ProtocolHandlers.set_model(self.protocolmodel)
 		self.ProtocolHandlers.get_selection().connect("changed", self.OnSelect)
+		self.OnToggleMozembed(self.EnableMozEmbed)
 
 
 		renderers = cols[1].get_cell_renderers()
