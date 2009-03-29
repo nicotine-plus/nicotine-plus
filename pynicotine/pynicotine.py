@@ -27,6 +27,7 @@ This is the actual client code. Actual GUI classes are in the separate modules
 from __future__ import division
 
 import time
+from urllib import urlencode
 import slskproto
 import slskmessages
 from slskmessages import newId
@@ -846,10 +847,11 @@ class NetworkEventProcessor:
 		mins = msg.seconds // 60
 		hours = mins // 60
 		days = hours // 24
+		wheretogetthem = " " + _("You can acquire privileges by donating at %(url)s") % {'url':'http://www.slsknet.org/userlogin.php?' + urlencode({'username':self.config.sections["server"]["login"]})}
 		if msg.seconds == 0:
-			self.logMessage(_("You have no privileges left. They are not needed for Nicotine+ to function properly. You can acquire privileges by donating at %(url)s") % {'url':'http://www.slsknet.org/userlogin.php?username='+self.config.sections["server"]["login"].replace(' ','+')})
+			self.logMessage(_("You have no privileges left. They are not needed for Nicotine+ to function properly.") + wheretogetthem)
 		else:
-			self.logMessage(_("%(days)i days, %(hours)i hours, %(minutes)i minutes, %(seconds)i seconds of download privileges left") %{'days':days, 'hours':hours % 24, 'minutes':mins % 60, 'seconds':msg.seconds % 60})
+			self.logMessage(_("%(days)i days, %(hours)i hours, %(minutes)i minutes, %(seconds)i seconds of download privileges left.") % {'days':days, 'hours':hours % 24, 'minutes':mins % 60, 'seconds':msg.seconds % 60} + wheretogetthem)
 		self.privileges_left = msg.seconds
 		
 	def AdminMessage(self, msg):
