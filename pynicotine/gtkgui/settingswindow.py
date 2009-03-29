@@ -1430,7 +1430,7 @@ class BloatFrame(buildFrame):
 		self.DecimalSep.set_model(self.DecimalSep_List)
 
 		self.options =  {
-			"ui": { "chatfont":self.SelectChatFont, "listfont": self.SelectListFont, "searchfont": self.SelectSearchFont, "transfersfont": self.SelectTransfersFont, "browserfont": self.SelectBrowserFont,  "decimalsep": self.DecimalSep, "spellcheck": self.SpellCheck, "mozembed": self.EnableMozEmbed, "tooltips": self.ShowTooltips,
+			"ui": { "chatfont":self.SelectChatFont, "listfont": self.SelectListFont, "searchfont": self.SelectSearchFont, "transfersfont": self.SelectTransfersFont, "browserfont": self.SelectBrowserFont,  "decimalsep": self.DecimalSep, "spellcheck": self.SpellCheck, "tooltips": self.ShowTooltips,
 			},
 			"transfers": {"enabletransferbuttons": self.ShowTransferButtons},
 			"language": {"setlanguage": self.TranslationCheck, "language": self.TranslationCombo},
@@ -1502,7 +1502,6 @@ class BloatFrame(buildFrame):
 			"ui": {
 				"decimalsep": self.DecimalSep.child.get_text(),
 				"spellcheck": self.SpellCheck.get_active(),
-				"mozembed": self.EnableMozEmbed.get_active(),
 				"chatfont": self.SelectChatFont.get_font_name(),
 				"listfont": self.SelectListFont.get_font_name(),
 				"searchfont": self.SelectSearchFont.get_font_name(),
@@ -1797,7 +1796,7 @@ class UrlCatchFrame(buildFrame):
 	def __init__(self, parent):
 		self.p = parent
 		buildFrame.__init__(self, "UrlCatchFrame")
-		self.options = {"urls": { "urlcatching": self.URLCatching, "humanizeurls": self.HumanizeURLs, "protocols": None},}
+		self.options = {"urls": { "urlcatching": self.URLCatching, "humanizeurls": self.HumanizeURLs, "protocols": None}, "ui": {"mozembed": self.EnableMozEmbed, "open_in_mozembed": self.EnableMozEmbedURLs, }, }
 		self.protocolmodel = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
 		self.protocols = {}
 		cols = InitialiseColumns(self.ProtocolHandlers,
@@ -1836,7 +1835,10 @@ class UrlCatchFrame(buildFrame):
 		iter = store.get_iter(index)
 		#print iter, index, value
 		store.set(iter, pos, value)
-		
+	
+	def OnToggleMozembed(self, widget):
+		self.EnableMozEmbedURLs.set_sensitive(widget.get_active())
+
 	def SetSettings(self, config):
 		self.protocolmodel.clear()
 		self.protocols.clear()
@@ -1878,6 +1880,10 @@ class UrlCatchFrame(buildFrame):
 		except:
 			pass
 		return {
+			"ui" : {
+				"mozembed": self.EnableMozEmbed.get_active(),
+				"open_in_mozembed": self.EnableMozEmbedURLs.get_active(),
+			},
 			"urls": {
 				"urlcatching": self.URLCatching.get_active(),
 				"humanizeurls": self.HumanizeURLs.get_active(),

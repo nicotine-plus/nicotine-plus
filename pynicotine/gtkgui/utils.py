@@ -206,6 +206,10 @@ def UrlEvent(tag, widget, event, iter, url):
 			url = "http://" + url
 		protocol = url[:url.find(":")]
 		if protocol in PROTOCOL_HANDLERS:
+			if NICOTINE.browser is not None and NICOTINE.np.config.sections["ui"]["open_in_mozembed"] and protocol == "http":
+				NICOTINE.browser.load_url(url, 0)
+				tag.last_event_type = event.type
+				return
 			if PROTOCOL_HANDLERS[protocol].__class__ is types.MethodType:
 				PROTOCOL_HANDLERS[protocol](url.strip())
 			elif PROTOCOL_HANDLERS[protocol]:

@@ -1775,10 +1775,10 @@
             </child>
             <child>
               <widget class="GtkCheckButton" id="DownloadReverseOrder">
+                <property name="label" translatable="yes">Download folders in reverse alphanumerical order</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="label" translatable="yes">Download folders in reverse alphanumerical order</property>
-                <property name="response_id">0</property>
+                <property name="receives_default">False</property>
                 <property name="draw_indicator">True</property>
               </widget>
               <packing>
@@ -1787,10 +1787,10 @@
             </child>
             <child>
               <widget class="GtkCheckButton" id="DownloadChecksumsFirst">
+                <property name="label" translatable="yes">Download SFV/MD5 before anything else</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="label" translatable="yes">Download SFV/MD5 before anything else</property>
-                <property name="response_id">0</property>
+                <property name="receives_default">False</property>
                 <property name="draw_indicator">True</property>
               </widget>
               <packing>
@@ -2078,19 +2078,10 @@
               </packing>
             </child>
             <child>
-              <widget class="GtkCheckButton" id="EnableMozEmbed">
-                <property name="label" translatable="yes">Enabled embedded Webrowser (unstable if misconfigured)</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">False</property>
-                <property name="tooltip" translatable="yes">You must have mozembed installed, and correctly set your LD_LIBRARY_PATH and MOZILLA_FIVE_HOME to the proper directory, or you may experience segfaults. Try setting them to: /usr/lib/xulrunner-x.x</property>
-                <property name="draw_indicator">True</property>
-              </widget>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="position">3</property>
-              </packing>
+              <placeholder/>
+            </child>
+            <child>
+              <placeholder/>
             </child>
             <child>
               <widget class="GtkHBox" id="hbox172">
@@ -2139,7 +2130,7 @@
               </widget>
               <packing>
                 <property name="expand">False</property>
-                <property name="position">4</property>
+                <property name="position">5</property>
               </packing>
             </child>
             <child>
@@ -2188,7 +2179,7 @@
               </widget>
               <packing>
                 <property name="expand">False</property>
-                <property name="position">5</property>
+                <property name="position">6</property>
               </packing>
             </child>
             <child>
@@ -2237,7 +2228,7 @@
               </widget>
               <packing>
                 <property name="expand">False</property>
-                <property name="position">6</property>
+                <property name="position">7</property>
               </packing>
             </child>
             <child>
@@ -2286,7 +2277,7 @@
               </widget>
               <packing>
                 <property name="expand">False</property>
-                <property name="position">7</property>
+                <property name="position">8</property>
               </packing>
             </child>
             <child>
@@ -2335,7 +2326,7 @@
               </widget>
               <packing>
                 <property name="expand">False</property>
-                <property name="position">8</property>
+                <property name="position">9</property>
               </packing>
             </child>
             <child>
@@ -2367,7 +2358,7 @@
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
-                <property name="position">9</property>
+                <property name="position">10</property>
               </packing>
             </child>
             <child>
@@ -2434,7 +2425,7 @@
               </widget>
               <packing>
                 <property name="expand">False</property>
-                <property name="position">10</property>
+                <property name="position">11</property>
               </packing>
             </child>
           </widget>
@@ -4983,7 +4974,41 @@ Protocols handlers: </property>
                 </child>
               </widget>
               <packing>
+                <property name="expand">False</property>
                 <property name="position">4</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkCheckButton" id="EnableMozEmbed">
+                <property name="label" translatable="yes">Enabled embedded Webrowser (unstable if misconfigured)</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">False</property>
+                <property name="has_tooltip">True</property>
+                <property name="tooltip" translatable="yes">You must have mozembed installed, and correctly set your LD_LIBRARY_PATH and MOZILLA_FIVE_HOME to the proper directory, or you may experience segfaults. Try setting them to: /usr/lib/xulrunner-x.x</property>
+                <property name="draw_indicator">True</property>
+                <signal name="toggled" handler="OnToggleMozembed"/>
+              </widget>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">5</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkCheckButton" id="EnableMozEmbedURLs">
+                <property name="label" translatable="yes">Open URLs in embedded Webrowser</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">False</property>
+                <property name="has_tooltip">True</property>
+                <property name="tooltip" translatable="yes">Overrides settings for HTTP urls</property>
+                <property name="draw_indicator">True</property>
+              </widget>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">6</property>
               </packing>
             </child>
           </widget>

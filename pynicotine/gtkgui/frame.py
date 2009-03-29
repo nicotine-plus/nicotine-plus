@@ -252,7 +252,7 @@ class BrowserWindow(gtk.VBox):
 
 
 class NicotineFrame:
-	def __init__(self, config, plugindir, use_trayicon, try_rgba, start_hidden=False, webbrowser=True, initiallog=[]): 
+	def __init__(self, config, plugindir, use_trayicon, try_rgba, start_hidden=False, WebBrowser=True, initiallog=[]): 
 		
 		self.clip_data = ""
 		self.log_queue = []
@@ -690,13 +690,15 @@ class NicotineFrame:
 			self.logMessage(trerror)
 		self.SetAllToolTips()
 		self.WebBrowserTabLabel =  gtk.Label("Browser")
-		if webbrowser and config["ui"]["mozembed"] and mozembed != 0:
+		if WebBrowser and config["ui"]["mozembed"] and mozembed != 0:
 			self.extravbox.show()
 			self.browser = BrowserWindow(self, "http://nicotine-plus.org")
 			self.extravbox.pack_start(self.browser, True, True)
 			self.extravbox.show_all()
 			self.MainNotebook.append_page(self.extravbox, self.WebBrowserTabLabel)
 			self.MainNotebook.set_tab_reorderable(self.extravbox, self.np.config.sections["ui"]["tab_reorderable"])
+		else:
+			self.browser = None
 		self.SetMainTabsVisibility()
 
 
@@ -2463,14 +2465,28 @@ class NicotineFrame:
 	def OnTrac(self, widget):
 		url = "http://nicotine-plus.org/"
 		self.OpenUrl(url)
-		
+	def OnCheckLatest(self, widget):
+		checklatest(self.MainWindow)
+	def OnReportBug(self, widget):
+		url = 'http://www.nicotine-plus.org/newticket?reporter=%s&keywords=%s' % (self.np.config.sections["server"]["login"], version)
+		if "svn" in version:
+			url += "&version=SVN"
+		else:
+			url += "&version=%s" % version
+		self.OpenUrl(url)
+		#webbrowser.open('http://www.nicotine-plus.org/newticket', autoraise=True)
 	def OpenUrl(self, url):
+		if self.browser is not None and self.np.config.sections["ui"]["open_in_mozembed"]:
+			self.browser.load_url(url, 0)
+			return
+
 		if "http" in utils.PROTOCOL_HANDLERS:
 			if utils.PROTOCOL_HANDLERS["http"].__class__ is utils.types.MethodType:
 				utils.PROTOCOL_HANDLERS["http"](url)
 			else:
-				executeCommand(utils.PROTOCOL_HANDLERS["http"], url)
+				webbrowser.open(url)
 		else:
+			
 			try:
 				import gnomevfs
 			except Exception, e:
@@ -2703,10 +2719,7 @@ class NicotineFrame:
 	def PrivateRoomRemoveOperator(self, room, user):
 		self.np.queue.put(slskmessages.PrivateRoomRemoveOperator(room, user))
 		
-	def OnCheckLatest(self, widget):
-		checklatest(self.MainWindow)
-	def OnReportBug(self, widget):
-		webbrowser.open('http://www.nicotine-plus.org/newticket', autoraise=True)
+
 	def OnFocusIn(self, widget, event):
 		self.MainWindow.set_icon(self.images["n"])
 		self.got_focus = True
@@ -3455,8 +3468,8 @@ class gstreamer:
 			self.player.set_state(self.gst.STATE_NULL)
 			
 class MainApp:
-	def __init__(self, config, plugindir, trayicon, rgbamode, start_hidden, webbrowser, initiallog):
-		self.frame = NicotineFrame(config, plugindir, trayicon, rgbamode, start_hidden, webbrowser, initiallog + log)
+	def __init__(self, config, plugindir, trayicon, rgbamode, start_hidden, WebBrowser, initiallog):
+		self.frame = NicotineFrame(config, plugindir, trayicon, rgbamode, start_hidden, WebBrowser, initiallog + log)
 	
 	def MainLoop(self):
 		signal.signal(signal.SIGINT, signal.SIG_IGN)
