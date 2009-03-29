@@ -12,6 +12,8 @@ Behaviour
  * Improved German translation (bug #941)
 
 Features
+ * Built-in Webbrowser (MozEmbed)
+ * Ignore by IP
  * Windows components have been improved
  * The language selection now uses normal names instead of abbreviations (bug #332)
  * When switching languages GTK will be translated as well
