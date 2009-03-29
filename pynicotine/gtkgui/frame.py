@@ -37,7 +37,10 @@ import thread
 import urllib
 import signal
 import re
-import webbrowser
+try:
+    import webbrowser
+except ImportError:
+    webbrowser = None
 from privatechat import PrivateChats
 from chatrooms import ChatRooms
 from userinfo import UserTabs, UserInfo
@@ -234,7 +237,6 @@ class BrowserWindow(gtk.VBox):
 		Opens the current URL in a new browser window (if possible).
 		"""
 		# This method is rarely used, so we only do the import when we need to.
-		import webbrowser
 		# "new=1" is to request new window.
 		webbrowser.open(self.view.get_location(), new=1)
 
@@ -2476,29 +2478,31 @@ class NicotineFrame:
 		self.OpenUrl(url)
 		#webbrowser.open('http://www.nicotine-plus.org/newticket', autoraise=True)
 	def OpenUrl(self, url):
+		protocol = url[:url.find(":")]
+
 		if self.browser is not None and self.np.config.sections["ui"]["open_in_mozembed"]:
 			self.browser.load_url(url, 0)
 			return
-
-		if "http" in utils.PROTOCOL_HANDLERS:
+		if protocol in PROTOCOL_HANDLERS:
 			if utils.PROTOCOL_HANDLERS["http"].__class__ is utils.types.MethodType:
 				utils.PROTOCOL_HANDLERS["http"](url)
-			else:
-				webbrowser.open(url)
+		elif webbrowser is not None:
+			webbrowser.open(url)
 		else:
-			
 			try:
 				import gnomevfs
 			except Exception, e:
 				try:
 					import gnome.vfs
-				except Exception, e:
+				except:
 					pass
 				else:
 					gnome.url_show(url)
 			else:
-				gnome.url_show(url)
-				
+				try:
+					gnomevfs.url_show(url)
+				except:
+					pass
 	def OnAbout(self, widget):
 		dlg = AboutDialog(self.MainWindow, self)
 		dlg.run()
