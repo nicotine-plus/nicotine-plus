@@ -379,13 +379,15 @@ class TransfersFrame(buildFrame):
 		else:
 			self.p.Hilight(self.FilterView)
 		self.OnEnableFiltersToggle(self.DownloadFilter)
-		
+		self.UploadsAllowed.set_sensitive(self.RemoteDownloads.get_active())
 
 			
 	def GetSettings(self):
 		try:
 			uploadallowed =  self.UploadsAllowed.get_active()
 		except:
+			uploadallowed = 0
+		if not self.RemoteDownloads.get_active():
 			uploadallowed = 0
 		return {
 			"transfers": {
@@ -410,6 +412,9 @@ class TransfersFrame(buildFrame):
 				"enablefilters": self.DownloadFilter.get_active(),
 			},
 		}
+	def OnRemoteDownloads(self, widget):
+		sensitive = widget.get_active()
+		self.UploadsAllowed.set_sensitive(sensitive)
 
 	def OnQueueUseSlotsToggled(self, widget):
 		sensitive = widget.get_active()
