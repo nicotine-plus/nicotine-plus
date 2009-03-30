@@ -293,7 +293,7 @@ class NicotineFrame:
 		self.manualdisconnect = 0
 		self.away = 0
 		self.exiting = 0
-		self.showdebug = 0
+		self.startup = True
 		self.current_tab = 0
 		self.rescanning = 0
 		self.brescanning = 0
@@ -603,8 +603,11 @@ class NicotineFrame:
 		if config["ticker"]["hide"]:
 			self.hide_tickers1.set_active(1)
 		self.UpdateColours(1)
+		self.show_debug_info1.set_active(self.np.config.sections["logging"]["debug"])
+		
 		for l in initiallog:
 			self.logMessage(l)
+		
 		self.settingswindow = SettingsWindow(self)
 		self.settingswindow.SettingsWindow.connect("settings-closed", self.OnSettingsClosed)
 		self.chatrooms = self.ChatNotebook
@@ -731,6 +734,7 @@ class NicotineFrame:
 		else:
 			self.browser = None
 		self.SetMainTabsVisibility()
+		self.startup=False
 
 
 	def on_delete_event(self, widget, event):
@@ -1579,12 +1583,12 @@ class NicotineFrame:
 			return False
 		for message in self.log_queue[:]:
 			old_msg, old_debug = message
-			if old_debug is None or self.showdebug:
+			if old_debug is None or self.np.config.sections["logging"]["debug"]:
 				AppendLine(self.LogWindow, old_msg, self.tag_log, scroll=True)
 				if self.np.config.sections["logging"]["logcollapsed"]:
 					self.SetStatusText(old_msg)
 			self.log_queue.remove(message)
-		if debug is None or self.showdebug:
+		if debug is None or self.np.config.sections["logging"]["debug"]:
 
 			AppendLine(self.LogWindow, msg, self.tag_log, scroll=True)
 			if self.np.config.sections["logging"]["logcollapsed"]:
@@ -1789,7 +1793,8 @@ class NicotineFrame:
 			return self.flag_images[flag]
 	
 	def OnShowDebug(self, widget):
-		self.showdebug = widget.get_active()
+		if not self.startup:
+			self.np.config.sections["logging"]["debug"] = widget.get_active()
 
 	def OnAway(self, widget):
 		self.away = (self.away+1) % 2

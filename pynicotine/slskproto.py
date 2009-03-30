@@ -136,6 +136,7 @@ class SlskProtoThread(threading.Thread):
 		SetWaitPort:2,
 		GetPeerAddress:3,
 		AddUser:5,
+		Unknown6:6,
 		GetUserStatus:7,
 		SayChatroom:13,
 		JoinRoom:14,
@@ -159,14 +160,14 @@ class SlskProtoThread(threading.Thread):
 		Recommendations:54,
 		GlobalRecommendations:56,
 		UserInterests:57,
-		PlaceInLineResponse:60,
+		PlaceInLineResponse:60, # Depreciated?
 		RoomAdded:62,
 		RoomRemoved:63,
 		RoomList:64,
 		ExactFileSearch:65,
 		AdminMessage:66,
-		GlobalUserList:67,
-		TunneledMessage:68,
+		GlobalUserList:67, # Depreciated?
+		TunneledMessage:68,  # Depreciated?
 		PrivilegedUsers:69,
 		HaveNoParent:71,
 		SearchParent:73,
@@ -180,8 +181,8 @@ class SlskProtoThread(threading.Thread):
 		DistribAliveInterval:90,
 		AddToPrivileged:91,
 		CheckPrivileges:92,
-		CantConnectToPeer:1001,
 		SearchRequest:93,
+		AcceptChildren:100,
 		NetInfo:102,
 		WishlistSearch:103,
 		WishlistInterval:104,
@@ -196,11 +197,13 @@ class SlskProtoThread(threading.Thread):
 		RemoveThingIHate:118,
 		RoomSearch:120, 
 		SendUploadSpeed:121,
+		UserPrivileged:122,
 		GivePrivileges:123,
 		NotifyPrivileges:124,
 		AckNotifyPrivileges:125,
-		Unknown126:126,
-		Unknown127:127,
+		BranchLevel:126,
+		BranchRoot:127,
+		ChildDepth:129,
 		#AnotherStatus:10,
 		PrivateRoomUsers:133,
 		PrivateRoomAddUser:134,
@@ -219,6 +222,7 @@ class SlskProtoThread(threading.Thread):
 		JoinPublicRoom:150,
 		LeavePublicRoom:151,
 		PublicRoomMessage:152,
+		CantConnectToPeer:1001,
 		}
 		
 	peercodes = {
@@ -243,7 +247,7 @@ class SlskProtoThread(threading.Thread):
 		Msg12547:12547
 		}
 
-	distribclasses = {0:DistribAlive, 3:DistribSearch, 4:DistribUnknown4, 5: DistribUnknown5}
+	distribclasses = {0:DistribAlive, 3:DistribSearch, 4:DistribBranchLevel, 5: DistribBranchRoot, 7: DistribChildDepth}
 
 	
 	def __init__(self, ui_callback, queue, config, eventprocessor):

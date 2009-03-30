@@ -326,6 +326,14 @@ class AddUser(ServerMessage):
 			if len(message[pos:]) > 0:
 				pos, self.country = self.getObject(message, types.StringType, pos)
 
+class Unknown6(ServerMessage):
+	def __init__(self):
+		pass
+
+	def parseNetworkMessage(self, message):
+		self.debug()
+		pass
+
 class RemoveUser(ServerMessage):
 	""" Used when we no longer want to be kept updated about a user's status."""
 	def __init__(self, user = None):
@@ -611,7 +619,7 @@ class PrivateRoomToggle(ServerMessage):
 
 
 class PrivateRoomAddOperator(ServerMessage):
-	""" We send this add privateroom operator abilities to a user"""
+	""" We send this to add private room operator abilities to a user"""
 	def __init__(self, room = None, user = None):
 		self.room = room
 		self.user = user
@@ -885,6 +893,7 @@ class PlaceInLineResponse(ServerMessage):
 		pos, self.user = self.getObject(message, types.StringType)
 		pos, self.req = self.getObject(message, types.IntType, pos)
 		pos, self.place = self.getObject(message, types.IntType, pos)
+		#print self.user, self.req, self.place
 
 class RoomAdded(ServerMessage):
 	""" Server tells us a new room has been added"""
@@ -1758,23 +1767,63 @@ class DistribSearch(DistribMessage):
 		pos, self.searchid = self.getObject(message, types.IntType, pos)
 		pos, self.searchterm = self.getObject(message, types.StringType, pos)
 
-class DistribUnknown4(DistribMessage):
+class DistribBranchLevel(DistribMessage):
 	def __init__(self, conn):
 		self.conn = conn
 	
 	def parseNetworkMessage(self, message):
-		pos, self.something = self.getObject(message, types.IntType)
+		pos, self.value = self.getObject(message, types.IntType)
 		#print message.__repr__()
 
-class DistribUnknown5(DistribMessage):
+class DistribBranchRoot(DistribMessage):
 	def __init__(self, conn):
 		self.conn = conn
 	
 	def parseNetworkMessage(self, message):
-		pos, self.something = self.getObject(message, types.IntType)
-		pos, self.user = self.getObject(message, types.StringType, pos)
+		#pos, self.value = self.getObject(message, types.IntType)
+		pos, self.user = self.getObject(message, types.StringType)
 		#print self.something, self.user
+
+class DistribChildDepth(DistribMessage):
+	def __init__(self, conn):
+		self.conn = conn
 	
+	def parseNetworkMessage(self, message):
+		pos, self.value = self.getObject(message, types.IntType)
+		#print self.something, self.user
+
+
+class BranchLevel(ServerMessage):
+	def __init__(self):
+		pass
+	
+	def parseNetworkMessage(self, message):
+		pos, self.value = self.getObject(message, types.IntType)
+		#print message.__repr__()
+
+class BranchRoot(ServerMessage):
+	def __init__(self):
+		pass
+	
+	def parseNetworkMessage(self, message):
+		#pos, self.value = self.getObject(message, types.IntType)
+		pos, self.user = self.getObject(message, types.StringType)
+		#print self.something, self.user
+
+class AcceptChildren(ServerMessage):
+	def __init__(self, enabled = None):
+		self.enabled = enabled
+
+	def makeNetworkMessage(self):
+		return chr(self.enabled)
+
+class ChildDepth(ServerMessage):
+	def __init__(self):
+		pass
+	
+	def parseNetworkMessage(self, message):
+		pos, self.value = self.getObject(message, types.IntType)
+
 
 class NetInfo(ServerMessage):
 	""" Information about what nodes have been added/removed in the network """
@@ -1802,7 +1851,22 @@ class SearchRequest(ServerMessage):
 		pos, self.user = self.getObject(message, types.StringType, pos)
 		pos, self.searchid = self.getObject(message, types.IntType, pos)
 		pos, self.searchterm = self.getObject(message, types.StringType, pos)
-	
+
+class UserPrivileged(ServerMessage):
+	""" Discover whether a user is privilged or not """
+	def __init__(self, user = None):
+		self.user = user
+		self.privileged = None
+
+	def makeNetworkMessage(self):
+		return self.packObject(self.user)
+
+
+	def parseNetworkMessage(self, message):
+		pos, self.user = self.getObject(message, types.StringType, pos)
+		pos, self.privileged = pos+1, bool(ord(message[pos]))
+
+
 class GivePrivileges(ServerMessage):
 	""" Give (part) of your privileges to another user on the network """
 	def __init__(self, user = None, days = None):

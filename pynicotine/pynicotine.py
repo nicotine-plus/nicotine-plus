@@ -132,6 +132,8 @@ class NetworkEventProcessor:
 		self.CompressShares("buddy")
 		self.newbuddyshares = self.newnormalshares = False
 		self.distribcache = {}
+		self.branchlevel = 0
+		self.branchroot = None
 		self.requestedShares = {}
 		self.requestedInfo = {}
 		self.requestedFolders = {}
@@ -208,8 +210,12 @@ class NetworkEventProcessor:
 			slskmessages.Msg89:self.DummyMessage,
 			slskmessages.WishlistInterval:self.WishlistInterval,
 			slskmessages.DistribAliveInterval:self.DummyMessage,
-			slskmessages.DistribUnknown4: self.DistribUnknown4,
-			slskmessages.DistribUnknown5: self.DistribUnknown5,
+			slskmessages.ChildDepth: self.ChildDepth,
+			slskmessages.BranchLevel: self.BranchLevel,
+			slskmessages.BranchRoot: self.BranchRoot,
+			slskmessages.DistribChildDepth: self.DistribChildDepth,
+			slskmessages.DistribBranchLevel: self.DistribBranchLevel,
+			slskmessages.DistribBranchRoot: self.DistribBranchRoot,
 			slskmessages.AdminMessage:self.AdminMessage,
 			slskmessages.TunneledMessage:self.TunneledMessage,
 			slskmessages.IncConn:self.IncConn,
@@ -239,10 +245,9 @@ class NetworkEventProcessor:
 			slskmessages.RoomTickerState:self.RoomTickerState,
 			slskmessages.RoomTickerAdd:self.RoomTickerAdd,
 			slskmessages.RoomTickerRemove:self.RoomTickerRemove,
+			slskmessages.UserPrivileged: self.UserPrivileged,
 			slskmessages.AckNotifyPrivileges:self.AckNotifyPrivileges,
 			slskmessages.NotifyPrivileges:self.NotifyPrivileges,
-			slskmessages.Unknown126:self.Unknown126,
-			slskmessages.Unknown127:self.Unknown127,
 			slskmessages.PrivateRoomUsers:self.PrivateRoomUsers,
 			slskmessages.PrivateRoomOwned:self.PrivateRoomOwned,
 			slskmessages.PrivateRoomAddUser:self.PrivateRoomAddUser,
@@ -614,7 +619,11 @@ class NetworkEventProcessor:
 	def NotifyPrivileges(self, msg):
 		if msg.token != None:
 			pass
-		
+	def UserPrivileged(self, msg):
+		if self.transfers is not None:
+			if msg.privileged is True:
+				self.transfers.addToPrivileged(msg.user)
+
 	def AckNotifyPrivileges(self, msg):
 		if msg.token != None:
 			pass
@@ -683,11 +692,6 @@ class NetworkEventProcessor:
 				self.queue.put(slskmessages.RoomTickerSet(msg.room, self.encode(ticker, encoding)))
 		else:
 			self.logMessage("%s %s" %(msg.__class__, vars(msg)))
-	def Unknown126(self, msg):
-		self.logMessage("%s %s" %(msg.__class__, vars(msg)))
-	def Unknown127(self, msg):
-		self.logMessage("%s %s" %(msg.__class__, vars(msg)))
-		
 
 		
 	def PrivateRoomUsers(self, msg):
@@ -861,11 +865,19 @@ class NetworkEventProcessor:
 		self.logMessage("%s" %(msg.msg))
 
 
-	def DistribUnknown4(self, msg):
+	def ChildDepth(self, msg):
 		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 1)
-	def DistribUnknown5(self, msg):
+	def BranchLevel(self, msg):
 		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 1)
-	
+	def BranchRoot(self, msg):
+		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 1)
+	def DistribChildDepth(self, msg):
+		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 1)
+	def DistribBranchLevel(self, msg):
+		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 1)
+	def DistribBranchRoot(self, msg):
+		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 1)
+
 	def DummyMessage(self, msg):
 		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 1)
 		
