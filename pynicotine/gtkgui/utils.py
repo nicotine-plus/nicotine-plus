@@ -197,6 +197,8 @@ def header_toggle(menuitem, column):
 	
 def ScrollBottom(widget):
 	va = widget.get_vadjustment()
+	if va is None:
+		return False
 	va.set_value(va.upper - va.page_size)
 	return False
 

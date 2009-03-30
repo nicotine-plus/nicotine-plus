@@ -296,7 +296,8 @@ class NetworkEventProcessor:
 				addr = self.users[user].addr
 				behindfw = self.users[user].behindfw
 			elif address is not None:
-				self.users[user].addr = addr = address
+				self.users[user] = UserAddr(status = -1, addr=address)
+				addr = address
 			if firewalled:
 				if addr is None:
 					self.queue.put(slskmessages.GetPeerAddress(user))
@@ -520,7 +521,7 @@ class NetworkEventProcessor:
 		self.serverconn = msg.conn
 		self.servertimeout = -1
 		self.users = {}
-		self.queue.put(slskmessages.Login(self.config.sections["server"]["login"], self.config.sections["server"]["passw"], 181)) #155, 156, 157, 180
+		self.queue.put(slskmessages.Login(self.config.sections["server"]["login"], self.config.sections["server"]["passw"],157)) #155, 156, 157, 180
 		if self.waitport is not None:	
 			self.queue.put(slskmessages.SetWaitPort(self.waitport))
 
@@ -809,7 +810,7 @@ class NetworkEventProcessor:
 		if not msg.userexists:
 			if msg.user not in self.users:
 				self.users[msg.user] = UserAddr(status = -1)
-			if self.search is not None:	
+			if self.search is not None:
 				self.search.NonExistantUser(msg.user)
 		if self.transfers is not None:
 			self.transfers.getAddUser(msg)
@@ -1536,7 +1537,7 @@ class NetworkEventProcessor:
 			return
 		if searchterm is None:
 			return
-
+		print searchterm
 		checkuser, reason = self.CheckUser(user, None)
 		if not checkuser:
 			return

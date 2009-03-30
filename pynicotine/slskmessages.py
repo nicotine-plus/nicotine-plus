@@ -245,7 +245,8 @@ class Login(ServerMessage):
 			m = md5.new()
 		m.update(self.username+self.passwd)
 		md5hash = m.hexdigest()
-		message = self.packObject(self.username)+ self.packObject(self.passwd) + self.packObject(self.version) + self.packObject(md5hash) + self.packObject(1)
+		message = self.packObject(self.username)+ self.packObject(self.passwd) + self.packObject(self.version) + self.packObject(md5hash) + self.packObject(17)
+		#print message.__repr__()
 		return message
 
 
