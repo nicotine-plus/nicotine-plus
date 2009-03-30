@@ -438,7 +438,6 @@ class SlskProtoThread(threading.Thread):
 							
 						
 						del connsinprogress[i]
-					
 			# Process Data
 			for i in conns.keys()[:]:
 				ip, port = self.getIpPort(conns[i].addr)
@@ -880,7 +879,9 @@ class SlskProtoThread(threading.Thread):
 					self._ui_callback([ConnClose(msgObj.conn, conns[msgObj.conn].addr)])
 					del conns[msgObj.conn]
 				elif msgObj.__class__ is OutConn:
-					if maxsockets == -1 or numsockets < maxsockets:
+					if msgObj.addr[1] == 0:
+						self._ui_callback([ConnectError(msgObj, (0, "Port cannot be zero"))])
+					elif maxsockets == -1 or numsockets < maxsockets:
 						try:
 							conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 							conn.setblocking(0)
