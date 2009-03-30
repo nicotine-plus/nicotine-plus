@@ -208,6 +208,8 @@ class NetworkEventProcessor:
 			slskmessages.Msg89:self.DummyMessage,
 			slskmessages.WishlistInterval:self.WishlistInterval,
 			slskmessages.DistribAliveInterval:self.DummyMessage,
+			slskmessages.DistribUnknown4: self.DistribUnknown4,
+			slskmessages.DistribUnknown5: self.DistribUnknown5,
 			slskmessages.AdminMessage:self.AdminMessage,
 			slskmessages.TunneledMessage:self.TunneledMessage,
 			slskmessages.IncConn:self.IncConn,
@@ -857,6 +859,12 @@ class NetworkEventProcessor:
 		
 	def AdminMessage(self, msg):
 		self.logMessage("%s" %(msg.msg))
+
+
+	def DistribUnknown4(self, msg):
+		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 1)
+	def DistribUnknown5(self, msg):
+		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 1)
 	
 	def DummyMessage(self, msg):
 		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 1)
@@ -1537,7 +1545,6 @@ class NetworkEventProcessor:
 			return
 		if searchterm is None:
 			return
-		print searchterm
 		checkuser, reason = self.CheckUser(user, None)
 		if not checkuser:
 			return

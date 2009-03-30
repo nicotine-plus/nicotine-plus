@@ -1758,14 +1758,24 @@ class DistribSearch(DistribMessage):
 		pos, self.searchid = self.getObject(message, types.IntType, pos)
 		pos, self.searchterm = self.getObject(message, types.StringType, pos)
 
-class DistribUnknown(DistribMessage):
+class DistribUnknown4(DistribMessage):
 	def __init__(self, conn):
 		self.conn = conn
 	
 	def parseNetworkMessage(self, message):
 		pos, self.something = self.getObject(message, types.IntType)
-		pass
+		#print message.__repr__()
+
+class DistribUnknown5(DistribMessage):
+	def __init__(self, conn):
+		self.conn = conn
 	
+	def parseNetworkMessage(self, message):
+		pos, self.something = self.getObject(message, types.IntType)
+		pos, self.user = self.getObject(message, types.StringType, pos)
+		#print self.something, self.user
+	
+
 class NetInfo(ServerMessage):
 	""" Information about what nodes have been added/removed in the network """
 	def __init__(self):

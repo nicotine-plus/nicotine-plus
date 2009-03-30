@@ -116,6 +116,7 @@ class RoomsControl:
 			pass
 		self.frame.SetTextBG(self.frame.roomlist.RoomsList)
 		self.frame.SetTextBG(self.frame.roomlist.CreateRoomEntry)
+		self.frame.SetTextBG(self.frame.roomlist.SearchRooms)
 		
 	def IsPrivateRoomOwned(self, room):
 		if room in self.PrivateRooms:
