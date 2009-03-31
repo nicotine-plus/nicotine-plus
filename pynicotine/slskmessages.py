@@ -479,10 +479,7 @@ class JoinRoom(ServerMessage):
 		for i in users:
 			usersdict[i[0]] = UserData(i[1:])
 		return usersdict
-class Unknown126(ServerMessage):
-	pass
-class Unknown127(ServerMessage):
-	pass
+
 
 class PrivateRoomUsers(ServerMessage):
 	""" We get this when we've created a private room."""
@@ -1792,6 +1789,17 @@ class DistribChildDepth(DistribMessage):
 		pos, self.value = self.getObject(message, types.IntType)
 		#print self.something, self.user
 
+class DistribMessage9(DistribMessage):
+	def __init__(self, conn):
+		self.conn = conn
+	
+	def parseNetworkMessage(self, message):
+		#pos, self.value = self.getObject(message, types.IntType)
+		x = zlib.decompress(message)
+		message =  x[4:]
+		pos, self.user = self.getObject(message, types.StringType)
+		self.debug()
+		#print self.something, self.user
 
 class BranchLevel(ServerMessage):
 	def __init__(self):

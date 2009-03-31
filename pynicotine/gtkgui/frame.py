@@ -475,7 +475,15 @@ class NicotineFrame:
 		
 		self.LogScrolledWindow.add(self.LogWindow)
 		self.LogWindow.connect("button-press-event", self.OnPopupLogMenu)
-
+		self.debugLogBox.pack_start(self.LogScrolledWindow)
+		self.debugWarnings.set_active((1 in config["logging"]["debugmodes"]))
+		self.debugSearches.set_active((2 in config["logging"]["debugmodes"]))
+		self.debugConnections.set_active((3 in config["logging"]["debugmodes"]))
+		self.debugMessages.set_active((4 in config["logging"]["debugmodes"]))
+		self.debugTransfers.set_active((5 in config["logging"]["debugmodes"]))
+		self.debugStatistics.set_active((6 in config["logging"]["debugmodes"]))
+		self.debugButtonsBox.hide()
+		
 		if self.translux:
 			self.LogScrolledWindow.get_vadjustment().connect("value-changed", lambda *args: self.LogWindow.queue_draw())
 			self.translux.subscribe(self.LogWindow, lambda: self.LogWindow.get_window(gtk.TEXT_WINDOW_TEXT))
@@ -483,7 +491,7 @@ class NicotineFrame:
 		if config["logging"]["logcollapsed"]:
 			self.hide_log_window1.set_active(1)
 		else:
-			self.vpaned1.pack2(self.LogScrolledWindow, False, True)
+			#self.vpaned1.pack2(self.LogScrolledWindow, False, True)
 			self.hide_log_window1.set_active(0)
 		
 		
@@ -603,6 +611,7 @@ class NicotineFrame:
 		if config["ticker"]["hide"]:
 			self.hide_tickers1.set_active(1)
 		self.UpdateColours(1)
+		
 		self.show_debug_info1.set_active(self.np.config.sections["logging"]["debug"])
 		
 		for l in initiallog:
@@ -735,7 +744,56 @@ class NicotineFrame:
 			self.browser = None
 		self.SetMainTabsVisibility()
 		self.startup=False
+	
+	def AddDebugLevel(self, debugLevel):
+		if debugLevel not in self.np.config.sections["logging"]["debugmodes"]:
+			self.np.config.sections["logging"]["debugmodes"].append(debugLevel)
 
+	def RemoveDebugLevel(self, debugLevel):
+		if debugLevel in self.np.config.sections["logging"]["debugmodes"]:
+			self.np.config.sections["logging"]["debugmodes"].remove(debugLevel)
+
+	def OnDebugWarnings(self, widget):
+		if self.startup: return
+		if widget.get_active():
+			self.AddDebugLevel(1)
+		else:
+			self.RemoveDebugLevel(1)
+
+	def OnDebugSearches(self, widget):
+		if self.startup: return
+		if widget.get_active():
+			self.AddDebugLevel(2)
+		else:
+			self.RemoveDebugLevel(2)
+
+	def OnDebugConnections(self, widget):
+		if self.startup: return
+		if widget.get_active():
+			self.AddDebugLevel(3)
+		else:
+			self.RemoveDebugLevel(3)
+
+	def OnDebugMessages(self, widget):
+		if self.startup: return
+		if widget.get_active():
+			self.AddDebugLevel(4)
+		else:
+			self.RemoveDebugLevel(4)
+
+	def OnDebugTransfers(self, widget):
+		if self.startup: return
+		if widget.get_active():
+			self.AddDebugLevel(5)
+		else:
+			self.RemoveDebugLevel(5)
+
+	def OnDebugStatistics(self, widget):
+		if self.startup: return
+		if widget.get_active():
+			self.AddDebugLevel(6)
+		else:
+			self.RemoveDebugLevel(6)
 
 	def on_delete_event(self, widget, event):
 		if not self.np.config.sections["ui"]["exitdialog"]:
@@ -1577,19 +1635,28 @@ class NicotineFrame:
 		dialog.format_secondary_text(popup.message)
 		dialog.connect('response', lambda dialog, response: dialog.destroy())
 		dialog.show()
-	def logMessage(self, msg, debug = None):
+
+	def logMessage(self, msg, debugLevel = None):
+		''' Logging Options
+		0 - Normal messages and (Human-Readable) Errors
+		1 - Warnings & Tracebacks
+		2 - Search Results
+		3 - Peer Connections
+		4 - Message Contents
+		5 - Transfers
+		6 - Connection, Bandwidth and Usage Statistics
+		'''
 		if "LogWindow" not in self.__dict__:
-			self.log_queue.append((msg, debug))
+			self.log_queue.append((msg, debugLevel))
 			return False
 		for message in self.log_queue[:]:
 			old_msg, old_debug = message
-			if old_debug is None or self.np.config.sections["logging"]["debug"]:
+			if old_debug is None or self.np.config.sections["logging"]["debug"] and debugLevel in self.np.config.sections["logging"]["debugmodes"]:
 				AppendLine(self.LogWindow, old_msg, self.tag_log, scroll=True)
 				if self.np.config.sections["logging"]["logcollapsed"]:
 					self.SetStatusText(old_msg)
 			self.log_queue.remove(message)
-		if debug is None or self.np.config.sections["logging"]["debug"]:
-
+		if debugLevel is None or self.np.config.sections["logging"]["debug"] and debugLevel in self.np.config.sections["logging"]["debugmodes"]:
 			AppendLine(self.LogWindow, msg, self.tag_log, scroll=True)
 			if self.np.config.sections["logging"]["logcollapsed"]:
 				self.SetStatusText(msg)
@@ -1794,7 +1861,11 @@ class NicotineFrame:
 	
 	def OnShowDebug(self, widget):
 		if not self.startup:
-			self.np.config.sections["logging"]["debug"] = widget.get_active()
+			self.np.config.sections["logging"]["debug"] = self.show_debug_info1.get_active()
+		if self.show_debug_info1.get_active():
+			self.debugButtonsBox.show()
+		else:
+			self.debugButtonsBox.hide()
 
 	def OnAway(self, widget):
 		self.away = (self.away+1) % 2
@@ -2178,6 +2249,8 @@ class NicotineFrame:
 	def OnSettings(self, widget):
 		self.settingswindow.SetSettings(self.np.config.sections)
 		self.settingswindow.SettingsWindow.show()
+		self.settingswindow.SettingsWindow.deiconify()
+
 	
 	def OnSettingsClosed(self, widget, msg):
 		if msg == "cancel":
@@ -2503,8 +2576,10 @@ class NicotineFrame:
 	def OnTrac(self, widget):
 		url = "http://nicotine-plus.org/"
 		self.OpenUrl(url)
+
 	def OnCheckLatest(self, widget):
 		checklatest(self.MainWindow)
+
 	def OnReportBug(self, widget):
 		url = 'http://www.nicotine-plus.org/newticket?reporter=%s&keywords=%s' % (self.np.config.sections["server"]["login"], version)
 		if "svn" in version:
@@ -2519,9 +2594,11 @@ class NicotineFrame:
 		if self.browser is not None and self.np.config.sections["ui"]["open_in_mozembed"]:
 			self.browser.load_url(url, 0)
 			return
-		if protocol in PROTOCOL_HANDLERS:
-			if utils.PROTOCOL_HANDLERS["http"].__class__ is utils.types.MethodType:
-				utils.PROTOCOL_HANDLERS["http"](url)
+		if protocol in utils.PROTOCOL_HANDLERS:
+			if utils.PROTOCOL_HANDLERS[protocol].__class__ is utils.types.MethodType:
+				utils.PROTOCOL_HANDLERS[protocol](url.strip())
+			elif utils.PROTOCOL_HANDLERS[protocol]:
+				utils.executeCommand(utils.PROTOCOL_HANDLERS[protocol], url)
 		elif webbrowser is not None:
 			webbrowser.open(url)
 		else:
@@ -2581,11 +2658,11 @@ class NicotineFrame:
 		active = widget.get_active()
 		self.np.config.sections["logging"]["logcollapsed"] = active
 		if active:
-			if self.LogScrolledWindow in self.vpaned1.get_children():
-				self.vpaned1.remove(self.LogScrolledWindow)
+			if self.debugLogBox in self.vpaned1.get_children():
+				self.vpaned1.remove(self.debugLogBox)
 		else:
-			if not self.LogScrolledWindow in self.vpaned1.get_children():
-				self.vpaned1.pack2(self.LogScrolledWindow, False, True)
+			if not self.debugLogBox in self.vpaned1.get_children():
+				self.vpaned1.pack2(self.debugLogBox, False, True)
 				ScrollBottom(self.LogScrolledWindow)
 		self.np.config.writeConfig()
 	

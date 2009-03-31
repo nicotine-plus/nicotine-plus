@@ -247,7 +247,7 @@ class SlskProtoThread(threading.Thread):
 		Msg12547:12547
 		}
 
-	distribclasses = {0:DistribAlive, 3:DistribSearch, 4:DistribBranchLevel, 5: DistribBranchRoot, 7: DistribChildDepth}
+	distribclasses = {0:DistribAlive, 3:DistribSearch, 4:DistribBranchLevel, 5: DistribBranchRoot, 7: DistribChildDepth, 9:DistribMessage9}
 
 	
 	def __init__(self, ui_callback, queue, config, eventprocessor):
@@ -372,6 +372,7 @@ class SlskProtoThread(threading.Thread):
 				if p is not None:
 					numsockets += 1
 				numsockets += len(conns) + len(connsinprogress)
+
 				self._ui_callback([InternalData(numsockets)])
 				#print "Sockets open:", len(conns.keys()+connsinprogress.keys()+[p]+outsock), len(conns.keys()),  len(connsinprogress.keys())
 			except select.error, error:
@@ -803,7 +804,7 @@ class SlskProtoThread(threading.Thread):
 
 	def process_queue(self, queue, conns, connsinprogress, server_socket, maxsockets=MAXFILELIMIT):
 		""" Processes messages sent by UI thread. server_socket is a server connection
-		socket object, queue holds the messages, conns ans connsinprogess 
+		socket object, queue holds the messages, conns and connsinprogress 
 		are dictionaries holding Connection and PeerConnectionInProgress 
 		messages."""
 		msgList = []

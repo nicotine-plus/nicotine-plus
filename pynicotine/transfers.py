@@ -163,7 +163,7 @@ class Transfers:
 	def getAddUser(self, msg):
 		""" Server tells us it'll notify us about a change in user's status """
 		if not msg.userexists and self.eventprocessor.config.sections["ui"]["notexists"]:
-			self.eventprocessor.logMessage(_("User %s does not exist") % (msg.user))
+			self.eventprocessor.logMessage(_("User %s does not exist") % (msg.user), 1)
 
 	def GetUserStatus(self, msg):
 		""" We get a status of a user and if he's online, we request a file from him """
@@ -222,7 +222,7 @@ class Transfers:
 			try:
 				downloadregexp = re.compile(self.eventprocessor.config.sections["transfers"]["downloadregexp"], re.I)
 				if downloadregexp.search(filename) is not None:
-					self.eventprocessor.logMessage(_("Filtering: %s") % filename)
+					self.eventprocessor.logMessage(_("Filtering: %s") % filename, 5)
 					self.AbortTransfer(transfer)
 					# The string to be displayed on the GUI
 					transfer.status = 'Filtered'
@@ -387,7 +387,7 @@ class Transfers:
 			conn = None
 			addr = "127.0.0.1"
 		if user is None:
-			self.eventprocessor.logMessage(_("Got transfer request %s but cannot determine requestor") % vars(msg), 1)
+			self.eventprocessor.logMessage(_("Got transfer request %s but cannot determine requestor") % vars(msg), 5)
 			return
 	
 		if msg.direction == 1:
@@ -437,7 +437,7 @@ class Transfers:
 				
 			else:
 				response = slskmessages.TransferResponse(conn, 0, reason = "Cancelled", req = msg.req)
-				self.eventprocessor.logMessage(_("Denied file request: %s") % str(vars(msg)), 1)
+				self.eventprocessor.logMessage(_("Denied file request: %s") % str(vars(msg)), 5)
 		return response
 		
 	def TransferRequestUploads(self, msg, user, conn, addr):
@@ -483,7 +483,7 @@ class Transfers:
 			self.uploads[-1].transfertimer.start()
 			self.uploadspanel.update(self.uploads[-1])
 			
-		self.eventprocessor.logMessage(_("Upload request: %s") % str(vars(msg)), 1)
+		self.eventprocessor.logMessage(_("Upload request: %s") % str(vars(msg)), 5)
 		return response
 
 	def fileIsQueued(self, user, file):
@@ -541,7 +541,7 @@ class Transfers:
 				self.addQueued(user, msg.file)
 			else:
 				self.queue.put(slskmessages.QueueFailed(conn = msg.conn.conn, file = msg.file, reason = "File not shared" ))
-		self.eventprocessor.logMessage(_("Queued upload request: %s") % str(vars(msg)), 1)
+		self.eventprocessor.logMessage(_("Queued upload request: %s") % str(vars(msg)), 5)
 		self.checkUploadQueue()
 
 	def UploadQueueNotification(self, msg):
@@ -693,7 +693,7 @@ class Transfers:
 				self.checkUploadQueue()
 				break
 			else:
-				self.eventprocessor.logMessage(_("Got unknown transfer response: %s") % str(vars(msg)), 1)
+				self.eventprocessor.logMessage(_("Got unknown transfer response: %s") % str(vars(msg)), 5)
 
 	def TransferTimeout(self, msg):
 		for i in (self.downloads+self.uploads)[:]:
@@ -788,9 +788,9 @@ class Transfers:
 						i.place = 0
 						i.offset = size
 						i.starttime = time.time()
-						self.eventprocessor.logMessage(_("Download started: %s") % (u"%s" % f.name))
+						self.eventprocessor.logMessage(_("Download started: %s") % (u"%s" % f.name), 5)
 
-						self.eventprocessor.logTransfer(_("Download started: user %(user)s, file %(file)s") % {'user':i.user, 'file':u"%s" % f.name})
+						self.eventprocessor.logTransfer(_("Download started: user %(user)s, file %(file)s") % {'user':i.user, 'file':u"%s" % f.name}, 5)
 				self.SetIconDownloads()
 				self.downloadspanel.update(i)
 				
@@ -929,7 +929,7 @@ class Transfers:
 								self.eventprocessor.logMessage(_("Couldn't move '%(tempfile)s' to '%(file)s'") % {'tempfile':self.decode(msg.file.name), 'file':self.decode(newname)})
 					i.status = "Finished"
 					if newname:
-						self.eventprocessor.logMessage(_("Download finished: %(file)s") % {'file':self.decode(newname)})
+						self.eventprocessor.logMessage(_("Download finished: %(file)s") % {'file':self.decode(newname)}, 5)
 						self.eventprocessor.logTransfer(_("Download finished: user %(user)s, file %(file)s") % {'user':i.user, 'file':self.decode(i.filename)})
 					else:
 						self.eventprocessor.logMessage(_("File %(file)s is identical to %(identical)s, not saving.") % {'file':self.decode(msg.file.name), 'identical':identicalfile})

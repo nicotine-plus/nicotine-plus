@@ -171,6 +171,7 @@ class Config:
 \
 "logging": { \
 	"debug": 0, \
+	"debugmodes": [0, 1], \
 	"logcollapsed": 0, \
 	"logsdir": os.path.expanduser(LOGDIR), \
 	"rooms_timestamp": "%H:%M:%S", \
