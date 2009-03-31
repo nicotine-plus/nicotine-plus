@@ -150,7 +150,7 @@ class InternalData(InternalMessage):
 		self.msg = msg
 
 class DebugMessage(InternalMessage):
-	def __init__(self, msg, debugLevel):
+	def __init__(self, msg, debugLevel = None):
 		''' debugLevel Options
 		0/None - Normal messages and (Human-Readable) Errors
 		1 - Warnings & Tracebacks
