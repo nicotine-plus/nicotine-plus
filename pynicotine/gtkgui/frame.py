@@ -455,6 +455,8 @@ class NicotineFrame:
 			# Old gtk
 			pass
 
+		self.SetTranslatableTabNames()
+
 		for label_tab in [self.ChatTabLabel, self.PrivateChatTabLabel, self.SearchTabLabel, self.UserInfoTabLabel, self.DownloadsTabLabel, self.UploadsTabLabel, self.UserBrowseTabLabel, self.InterestsTabLabel]:
 			if type(label_tab) is ImageLabel:
 				label_tab.show_image(config["ui"]["tab_icons"])
@@ -746,7 +748,17 @@ class NicotineFrame:
 			self.browser = None
 		self.SetMainTabsVisibility()
 		self.startup=False
-	
+
+	def SetTranslatableTabNames(self):
+		# Custom widgets, such as these tab labels aren't translated
+		labels = {self.ChatTabLabel: _("Chat rooms"), self.PrivateChatTabLabel: _("Private chat"), self.SearchTabLabel: _("Search files"), self.UserInfoTabLabel: _("User info"), self.DownloadsTabLabel:_("Downloads") , self.UploadsTabLabel: _("Uploads"),  self.UserBrowseTabLabel:_("User browse") , self.InterestsTabLabel: _("Interests")}
+		for label_tab, string in labels.items():
+			if type(label_tab) is ImageLabel:
+				label_tab.set_text(string)
+			elif type(label_tab) is gtk.EventBox:
+				label_tab.child.set_text(string)
+		#self.ChatTabLabel, self.PrivateChatTabLabel, self.SearchTabLabel, self.UserInfoTabLabel, self.DownloadsTabLabel, self.UploadsTabLabel, self.UserBrowseTabLabel, self.InterestsTabLabel
+		pass
 	def AddDebugLevel(self, debugLevel):
 		if debugLevel not in self.np.config.sections["logging"]["debugmodes"]:
 			self.np.config.sections["logging"]["debugmodes"].append(debugLevel)
