@@ -16,7 +16,7 @@ if not os.path.exists("./nicotine.py"):
 	print "Error: nicotine executable not found in this directory"
 	raise SystemExit
 def isPythonScript(dir, file):
-	if file.rsplit(".")[-1].lower() == "py":
+	if file.rsplit(".")[-1].lower() == "py" or file.rsplit(".")[-1].lower() == "glade":
 		return dir + file
 	return None
 pythonscripts = []
