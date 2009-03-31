@@ -311,9 +311,10 @@ class NicotineFrame:
 			import pynotify
 			pynotify.init("Nicotine+")
 			self.pynotify = pynotify
+			self.pynotifyBox = None
 		except ImportError:
 			self.pynotify = None
-			
+		
 		self.np = NetworkEventProcessor(self, self.callback, self.logMessage, self.SetStatusText, config)
 		config = self.np.config.sections
 		self.temp_modes_order = config["ui"]["modes_order"]
@@ -855,14 +856,17 @@ class NicotineFrame:
 	def NewNotification(self, message, title="Nicotine+"):
 		if self.pynotify is None:
 			return
-		n = self.pynotify.Notification(title, message)
-		n.set_icon_from_pixbuf(self.images["notify"])
-		try: n.attach_to_status_icon(self.TrayApp.trayicon_module)
-		except:
-			try: n.attach_to_widget(self.TrayApp.trayicon_module)
-			except: pass
+		if self.pynotifyBox is None:
+			self.pynotifyBox = self.pynotify.Notification(title, message)
+			self.pynotifyBox.set_icon_from_pixbuf(self.images["notify"])
+			try: n.attach_to_status_icon(self.TrayApp.trayicon_module)
+			except:
+				try: n.attach_to_widget(self.TrayApp.trayicon_module)
+				except: pass
+		else:
+			self.pynotifyBox.update(title, message)
 		try:
-			n.show()
+			self.pynotifyBox.show()
 		except gobject.GError, error:
 			self.logMessage(_("Notification Error: %s") % str(error))
 				

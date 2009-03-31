@@ -732,12 +732,18 @@ class Transfers:
 				try:
 					if not os.access(incompletedir, os.F_OK):
 						os.makedirs(incompletedir)
+					if not os.access(incompletedir, os.R_OK | os.W_OK | os.X_OK):
+						raise OSError, "Download directory %s Permissions error.\nDir Permissions: %s" % (incompletedir, oct( os.stat(incompletedir)[stat.ST_MODE] & 0777))
+						
 				except OSError, strerror:
 					self.eventprocessor.logMessage(_("OS error: %s") % strerror)
 					i.status = "Download directory error"
 					i.conn = None
 					self.queue.put(slskmessages.ConnClose(msg.conn))
+					self.eventprocessor.frame.NewNotification(_("OS error: %s") % strerror, title=_("Nicotine+ :: Directory download error"))
+				
 				else: 
+					
 					# also check for a windows-style incomplete transfer
 					basename = string.split(i.filename,'\\')[-1]
 					basename = self.encode(basename, i.user)
