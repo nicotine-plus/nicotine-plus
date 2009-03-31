@@ -148,7 +148,21 @@ class Notify(InternalMessage):
 class InternalData(InternalMessage):
 	def __init__(self, msg):
 		self.msg = msg
-		
+
+class DebugMessage(InternalMessage):
+	def __init__(self, msg, debugLevel):
+		''' debugLevel Options
+		0/None - Normal messages and (Human-Readable) Errors
+		1 - Warnings & Tracebacks
+		2 - Search Results
+		3 - Peer Connections
+		4 - Message Contents
+		5 - Transfers
+		6 - Connection, Bandwidth and Usage Statistics
+		'''
+		self.msg = msg
+		self.debugLevel = debugLevel
+
 class SlskMessage:
 	""" This is a parent class for all protocol messages. """
 	

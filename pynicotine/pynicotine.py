@@ -237,6 +237,7 @@ class NetworkEventProcessor:
 			str:self.Notify,
 			slskmessages.PopupMessage:self.PopupMessage,
 			slskmessages.InternalData:self.DisplaySockets,
+			slskmessages.DebugMessage:self.DebugMessage,
 			slskmessages.GlobalRecommendations:self.GlobalRecommendations,
 			slskmessages.Recommendations:self.Recommendations,
 			slskmessages.ItemRecommendations:self.ItemRecommendations,
@@ -470,6 +471,9 @@ class NetworkEventProcessor:
 	def PopupMessage(self, msg):
 		self.setStatus(_(msg.title))
 		self.frame.PopupMessage(msg)
+
+	def DebugMessage(self, msg):
+		self.logMessage(msg.msg, msg.debugLevel)
 
 	def DisplaySockets(self, msg):
 		self.frame.SetSocketStatus(msg.msg)
@@ -1062,17 +1066,17 @@ class NetworkEventProcessor:
 				i.msgs = []
 				break
 		
-		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
+		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 3)
 
 	def IncConn(self, msg):
-		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
+		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 3)
 
 	def ConnectToPeer(self, msg):
 		init = slskmessages.PeerInit(None, msg.user, msg.type, 0)
 		self.queue.put(slskmessages.OutConn(None, (msg.ip, msg.port), init))
 		self.peerconns.append(PeerConnection(addr = (msg.ip, msg.port), username = msg.user, msgs = [], token = msg.token, init = init))
 	
-		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
+		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 3)
 
 	def CheckUser(self, user, addr):
 		"""
@@ -1307,7 +1311,7 @@ class NetworkEventProcessor:
 				i.msgs = []
 				break
 
-		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
+		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 3)
 
 	def CantConnectToPeer(self, msg):
 		for i in self.peerconns[:]:

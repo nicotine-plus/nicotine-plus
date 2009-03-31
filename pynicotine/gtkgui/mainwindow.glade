@@ -60,6 +60,7 @@
                       <widget class="GtkImageMenuItem" id="awayreturn1">
                         <property name="label">_Away/Return</property>
                         <property name="visible">True</property>
+                        <property name="use_underline">True</property>
                         <property name="use_stock">False</property>
                         <signal name="activate" handler="OnAway"/>
                         <accelerator key="A" signal="activate" modifiers="GDK_MOD1_MASK"/>
