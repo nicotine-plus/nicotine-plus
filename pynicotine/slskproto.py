@@ -382,7 +382,7 @@ class SlskProtoThread(threading.Thread):
 				# Error recieved; terminate networking loop
 				print error
 				self._want_abort = 1
-				self._ui_callback([_("Major Socket Error: Networking terminated! %s" % str(error)) ])
+				self._ui_callback([DebugMessage(_("Major Socket Error: Networking terminated! %s" % str(error))) ])
 			except ValueError, error:
 				# Possibly opened too many sockets
 				print error
@@ -404,8 +404,8 @@ class SlskProtoThread(threading.Thread):
 				else:
 					ip, port = self.getIpPort(incaddr)
 					if self.ipBlocked(ip):
-						self._ui_callback(["ignore connection request from blocked ip address %s %s" %( ip, port)])
-						pass
+						self._ui_callback([DebugMessage("Ignoring connection request from blocked IP Address %s:%s" %( ip, port), 3)])
+						
 					else:
 						conns[incconn] = PeerConnection(incconn, incaddr, "", "")
 						self._ui_callback([IncConn(incconn, incaddr)])
@@ -430,7 +430,7 @@ class SlskProtoThread(threading.Thread):
 							ip, port = self.getIpPort(msgObj.addr)
 							if self.ipBlocked(ip):
 								message = "Blocking peer connection in progress to IP: %(ip)s Port: %(port)s" % { "ip":ip, "port":port}
-								self._ui_callback([message])
+								self._ui_callback([DebugMessage(message, 3)])
 								i.close()
 				
 							else:
@@ -445,7 +445,7 @@ class SlskProtoThread(threading.Thread):
 				if self.ipBlocked(ip) and i is not self._server_socket:
 					message = "Blocking peer connection to IP: %(ip)s Port: %(port)s" % { "ip":ip, "port":port}
 					print message
-					self._ui_callback([message])
+					self._ui_callback([DebugMessage(message, 3)])
 					i.close()
 					del conns[i]
 					continue
@@ -843,7 +843,7 @@ class SlskProtoThread(threading.Thread):
 						conns[msgObj.conn].filereq = msgObj
 						msg = msgObj.makeNetworkMessage()
 						conns[msgObj.conn].obuf = conns[msgObj.conn].obuf + msg
-						self._ui_callback([msgObj])
+						self._ui_callback([DebugMessage(msgObj, 5)])
 					else:
 						checkuser = 1
 						if msgObj.__class__ is FileSearchResult and msgObj.geoip and self.geoip and self._geoip:
@@ -858,7 +858,7 @@ class SlskProtoThread(threading.Thread):
 				else:
 					if msgObj.__class__ not in [PeerInit, PierceFireWall, FileSearchResult]:
 						#self._ui_callback([Notify(_("Can't send the message over the closed connection: %s %s") %(msgObj.__class__, vars(msgObj)))])
-						self._ui_callback([_("Can't send the message over the closed connection: %(type)s %(msg_obj)s") %{'type':msgObj.__class__, 'msg_obj':vars(msgObj)}])
+						self._ui_callback([DebugMessage(_("Can't send the message over the closed connection: %(type)s %(msg_obj)s") %{'type':msgObj.__class__, 'msg_obj':vars(msgObj)}, 3)])
 			elif issubclass(msgObj.__class__, InternalMessage):
 				socketwarning = False
 				if msgObj.__class__ is ServerConn:
