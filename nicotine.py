@@ -40,14 +40,13 @@ if win32 and py2exe:
 
 LOAD_PSYCO = False
 if win32 and platform.architecture()[0] == "32bit":
-	LOAD_PSYCO = True
+  LOAD_PSYCO = True
 else:
-	try:
-		if os.uname()[4] in ("i386", "i586", "i686") and platform.architecture()[0] == "32bit":
-			LOAD_PSYCO = True
-		
-	except AttributeError, error:
-		pass
+  try:
+    if os.uname()[4] in ("i386", "i586", "i686") and platform.architecture()[0] == "32bit":
+       LOAD_PSYCO = True
+  except AttributeError, error:
+    pass
 		
 if LOAD_PSYCO:
 	try:
