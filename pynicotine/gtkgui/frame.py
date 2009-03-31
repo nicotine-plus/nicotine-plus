@@ -349,7 +349,7 @@ class NicotineFrame:
 		self.SearchEntryCombo.set_model(self.SearchEntryCombo_List)
 		self.SearchEntryCombo.set_text_column(0)
 		self.SearchEntry = self.SearchEntryCombo.child
-		
+		self.SearchEntry.connect("activate", self.OnSearch)
 		self.RoomSearchCombo_List = gtk.ListStore(gobject.TYPE_STRING)
 		self.RoomSearchCombo.set_model(self.RoomSearchCombo_List)
 		self.RoomSearchCombo.set_text_column(0)
@@ -363,6 +363,8 @@ class NicotineFrame:
 		self.MainWindow.set_icon(self.images["n"])
 		self.MainWindow.selection_add_target("PRIMARY", "STRING", 1)
 		self.MainWindow.set_geometry_hints(None, min_width=500, min_height=460)
+		self.MainWindow.connect("focus_in_event", self.OnFocusIn)
+		self.MainWindow.connect("focus_out_event", self.OnFocusOut)
 		self.MainWindow.connect("configure_event", self.OnWindowChange)
 		self.MainWindow.add_accel_group(self.accel_group)
 		self.wTree.signal_autoconnect(self)
@@ -1164,7 +1166,8 @@ class NicotineFrame:
 				self.TrayApp.trayicon.hide_icon()
 			self.MainWindow.destroy()
 			gtk.main_quit()
-			sys.exit()
+			if self.browser is not None:
+				sys.exit()
 		elif response == gtk.RESPONSE_CANCEL:
 			pass
 			
@@ -1691,7 +1694,8 @@ class NicotineFrame:
 			if self.TrayApp.trayicon:
 				self.TrayApp.trayicon.hide_icon()
 		gtk.main_quit()
-		sys.exit()
+		if self.browser is not None:
+			sys.exit()
 		
 	def OnConnect(self, widget):
 		self.TrayApp.tray_status["status"] = "connect"
