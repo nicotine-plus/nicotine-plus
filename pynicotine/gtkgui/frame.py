@@ -757,8 +757,8 @@ class NicotineFrame:
 				label_tab.set_text(string)
 			elif type(label_tab) is gtk.EventBox:
 				label_tab.child.set_text(string)
-		#self.ChatTabLabel, self.PrivateChatTabLabel, self.SearchTabLabel, self.UserInfoTabLabel, self.DownloadsTabLabel, self.UploadsTabLabel, self.UserBrowseTabLabel, self.InterestsTabLabel
-		pass
+	
+	
 	def AddDebugLevel(self, debugLevel):
 		if debugLevel not in self.np.config.sections["logging"]["debugmodes"]:
 			self.np.config.sections["logging"]["debugmodes"].append(debugLevel)

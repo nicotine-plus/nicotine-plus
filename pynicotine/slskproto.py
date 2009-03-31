@@ -846,7 +846,7 @@ class SlskProtoThread(threading.Thread):
 						conns[msgObj.conn].filereq = msgObj
 						msg = msgObj.makeNetworkMessage()
 						conns[msgObj.conn].obuf = conns[msgObj.conn].obuf + msg
-						self._ui_callback([DebugMessage(msgObj, 5)])
+						self._ui_callback([msgObj])
 					else:
 						checkuser = 1
 						if msgObj.__class__ is FileSearchResult and msgObj.geoip and self.geoip and self._geoip:
