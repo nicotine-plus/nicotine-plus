@@ -643,7 +643,7 @@ class ChatRoom:
 
 		gtk.glade.set_custom_handler(self.get_custom_widget)
 		
-		self.wTree = gtk.glade.XML(os.path.join(os.path.dirname(os.path.realpath(__file__)), "chatrooms.glade" ) ) 
+		self.wTree = gtk.glade.XML(os.path.join(os.path.dirname(os.path.realpath(__file__)), "chatrooms.glade" ), None, 'nicotine' ) 
 		widgets = self.wTree.get_widget_prefix("")
 		for i in widgets:
 			name = gtk.glade.get_widget_name(i)

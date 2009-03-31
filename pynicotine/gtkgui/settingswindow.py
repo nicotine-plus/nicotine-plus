@@ -38,7 +38,7 @@ class buildFrame:
 	def __init__(self, window):
 		self.frame = self.p.frame
 		self.tooltips = self.frame.tooltips
-		self.wTree = gtk.glade.XML(os.path.join(dir_location, "nicotine-settings.glade" ), window ) 
+		self.wTree = gtk.glade.XML(os.path.join(dir_location, "nicotine-settings.glade" ), window, "nicotine" ) 
 		widgets = self.wTree.get_widget_prefix("")
 		for i in widgets:
 			name = gtk.glade.get_widget_name(i)
@@ -2204,7 +2204,7 @@ class SettingsWindow:
 	def __init__(self, frame):
 		self.frame = frame
 		self.tooltips = self.frame.tooltips
-		self.wTree = gtk.glade.XML(os.path.join(dir_location, "nicotine-settings.glade" ), "SettingsWindow" ) 
+		self.wTree = gtk.glade.XML(os.path.join(dir_location, "nicotine-settings.glade" ), "SettingsWindow", "nicotine" ) 
 		widgets = self.wTree.get_widget_prefix("")
 		for i in widgets:
 			name = gtk.glade.get_widget_name(i)

@@ -237,7 +237,7 @@ class PrivateChat:
 		self.frame = chats.frame
 		
 
-		self.wTree = gtk.glade.XML(os.path.join(os.path.dirname(os.path.realpath(__file__)), "privatechat.glade" ) ) 
+		self.wTree = gtk.glade.XML(os.path.join(os.path.dirname(os.path.realpath(__file__)), "privatechat.glade" ), None, 'nicotine' ) 
 		widgets = self.wTree.get_widget_prefix("")
 		for i in widgets:
 			name = gtk.glade.get_widget_name(i)

@@ -16,16 +16,25 @@ if not os.path.exists("./nicotine.py"):
 	print "Error: nicotine executable not found in this directory"
 	raise SystemExit
 def isPythonScript(dir, file):
-	if file.rsplit(".")[-1].lower() == "py" or file.rsplit(".")[-1].lower() == "glade":
+	if file.rsplit(".")[-1].lower() in ("py"):
+		return dir + file
+	return None
+def isGlade(dir, file):
+	if file.rsplit(".")[-1].lower() in ("glade"):
 		return dir + file
 	return None
 pythonscripts = []
+gladescripts = []
 blacklist = ["icondata", "imagedata", "__init__"]
 for dir, files in files.items():
 	for file in files:
 		ispy = isPythonScript(dir, file)
 		if ispy is not None:
 			pythonscripts.append(ispy)
+		isglade = isGlade(dir, file)
+		if isglade is not None:
+			gladescripts.append(isglade)
+
 
 for item in blacklist:
 	for path in pythonscripts[:]:
@@ -34,7 +43,14 @@ for item in blacklist:
 goodpython = ""
 for path in pythonscripts[:]:
 	goodpython += path + " "
-print "xgettext -k_ -kN_ -o languages/nicotine.pot %s" % goodpython
-r = os.system("xgettext -k_ -kN_ -o languages/nicotine.pot %s" % goodpython)
+print "xgettext -k_ -kN_ -o languages/nicotine-python.pot %s" % goodpython
+
+r = os.system("xgettext -k_ -kN_  -o languages/nicotine-python.pot %s" % goodpython)
+gladestring = ""
+for path in gladescripts[:]:
+	gladestring += path + " "
+print "xgettext -a -k_ -kN_ -L Glade  -o languages/nicotine-glade.pot %s" % gladestring
+r = os.system("xgettext -k_ -kN_ -L Glade  -o languages/nicotine-glade.pot %s" % gladestring)
+r = os.system("msgcat languages/nicotine-glade.pot  languages/nicotine-python.pot -o languages/nicotine.pot")
 if r:
 	print "Error while creating nicotine.pot"
