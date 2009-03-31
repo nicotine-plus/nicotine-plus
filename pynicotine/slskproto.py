@@ -412,18 +412,18 @@ class SlskProtoThread(threading.Thread):
 					
 			# Manage Connections
 			curtime = time.time()
-			for i in connsinprogress.keys()[:]:
+			for connection_in_progress in connsinprogress.keys()[:]:
 				try:
-					msgObj = connsinprogress[i].msgObj
-					if i in input:
-						i.recv(0)
+					msgObj = connsinprogress[connection_in_progress].msgObj
+					if connection_in_progress in input:
+						connection_in_progress.recv(0)
 				except socket.error, err:
 					self._ui_callback([ConnectError(msgObj, err)])
-					i.close()
-					del connsinprogress[i]
+					connection_in_progress.close()
+					del connsinprogress[connection_in_progress]
 				else:
-					if i in output:
-						if i is server_socket:
+					if connection_in_progress in output:
+						if connection_in_progress is server_socket:
 							conns[server_socket] = ServerConnection(server_socket, msgObj.addr, "","")
 							self._ui_callback([ServerConn(server_socket, msgObj.addr)])
 						else:
@@ -431,46 +431,46 @@ class SlskProtoThread(threading.Thread):
 							if self.ipBlocked(ip):
 								message = "Blocking peer connection in progress to IP: %(ip)s Port: %(port)s" % { "ip":ip, "port":port}
 								self._ui_callback([DebugMessage(message, 3)])
-								i.close()
+								connection_in_progress.close()
 				
 							else:
-								conns[i] = PeerConnection(i, msgObj.addr, "", "", msgObj.init)
-								self._ui_callback([OutConn(i, msgObj.addr)])
+								conns[connection_in_progress] = PeerConnection(connection_in_progress, msgObj.addr, "", "", msgObj.init)
+								self._ui_callback([OutConn(connection_in_progress, msgObj.addr)])
 							
 						
-						del connsinprogress[i]
+						del connsinprogress[connection_in_progress]
 			# Process Data
-			for i in conns.keys()[:]:
-				ip, port = self.getIpPort(conns[i].addr)
-				if self.ipBlocked(ip) and i is not self._server_socket:
+			for connection in conns.keys()[:]:
+				ip, port = self.getIpPort(conns[connection].addr)
+				if self.ipBlocked(ip) and connection is not self._server_socket:
 					message = "Blocking peer connection to IP: %(ip)s Port: %(port)s" % { "ip":ip, "port":port}
 					print message
 					self._ui_callback([DebugMessage(message, 3)])
-					i.close()
-					del conns[i]
+					connection.close()
+					del conns[connection]
 					continue
 
-				if i in input:
+				if connection in input:
 					try:
-						self.readData(conns, i)
+						self.readData(conns, connection)
 					except socket.error, err:
-						self._ui_callback([ConnectError(conns[i], err)])
-				if i in conns and len(conns[i].ibuf) > 0:
-					if i is server_socket:
+						self._ui_callback([ConnectError(conns[connection], err)])
+				if connection in conns and len(conns[connection].ibuf) > 0:
+					if connection is server_socket:
 						msgs, conns[server_socket].ibuf = self.process_server_input(conns[server_socket].ibuf)
 						self._ui_callback(msgs)
 					else:
-						if conns[i].init is None or conns[i].init.type not in ['F', 'D']:
-							msgs, conns[i] = self.process_peer_input(conns[i], conns[i].ibuf)
+						if conns[connection].init is None or conns[connection].init.type not in ['F', 'D']:
+							msgs, conns[connection] = self.process_peer_input(conns[connection], conns[connection].ibuf)
 							self._ui_callback(msgs)
-						if conns[i].init is not None and conns[i].init.type == 'F':
-							msgs, conns[i] = self.process_file_input(conns[i], conns[i].ibuf)
+						if conns[connection].init is not None and conns[connection].init.type == 'F':
+							msgs, conns[connection] = self.process_file_input(conns[connection], conns[connection].ibuf)
 							self._ui_callback(msgs)
-						if conns[i].init is not None and conns[i].init.type == 'D':
-							msgs, conns[i] = self.process_distrib_input(conns[i], conns[i].ibuf)
+						if conns[connection].init is not None and conns[connection].init.type == 'D':
+							msgs, conns[connection] = self.process_distrib_input(conns[connection], conns[connection].ibuf)
 							self._ui_callback(msgs)
-						if conns[i].conn == None:
-							del conns[i]
+						if conns[connection].conn == None:
+							del conns[connection]
 
 			# ---------------------------
 			# Server Pings used to get us banned
@@ -479,20 +479,23 @@ class SlskProtoThread(threading.Thread):
 			curtime = time.time()
 			connsockets = len(conns.keys())
 			num = 0
-			for i in conns.keys()[:]:
-				if i is not server_socket and i is not p:
-					if curtime - conns[i].lastactive > 60:
+			for connection in conns.keys()[:]:
+				if connection is not server_socket and connection is not p:
+					if curtime - conns[connection].lastactive > 60:
 
-						self._ui_callback([ConnClose(i, conns[i].addr)])
-						i.close()
+						self._ui_callback([ConnClose(connection, conns[connection].addr)])
+						connection.close()
 						#print "Closed_run", conns[i].addr
-						del conns[i]
-				else:
+						del conns[connection]
+			
 					#  Was 30 seconds
-					if curtime - conns[server_socket].lastping > 120:
-						conns[server_socket].lastping = curtime
-						queue.put(ServerPing())
+			
 				num += 1
+			if server_socket in conns.keys():
+				if curtime - conns[server_socket].lastping > 120:
+					conns[server_socket].lastping = curtime
+					queue.put(ServerPing())
+					
 			self._ui_callback([])
 
 		# Close Server Port
