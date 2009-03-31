@@ -1809,10 +1809,13 @@ class DistribMessage9(DistribMessage):
 	
 	def parseNetworkMessage(self, message):
 		#pos, self.value = self.getObject(message, types.IntType)
-		x = zlib.decompress(message)
-		message =  x[4:]
-		pos, self.user = self.getObject(message, types.StringType)
-		self.debug()
+		try:
+			x = zlib.decompress(message)
+		except:
+			self.debug()
+		#message =  x[4:]
+		#pos, self.user = self.getObject(message, types.StringType)
+		#self.debug()
 		#print self.something, self.user
 
 class BranchLevel(ServerMessage):

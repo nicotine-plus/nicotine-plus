@@ -380,12 +380,12 @@ class SlskProtoThread(threading.Thread):
 					# Error recieved; but we don't care :)
 					continue
 				# Error recieved; terminate networking loop
-				print error
+				print time.strftime("%H:%M:%S"), "select.error", error
 				self._want_abort = 1
 				self._ui_callback([DebugMessage(_("Major Socket Error: Networking terminated! %s" % str(error))) ])
 			except ValueError, error:
 				# Possibly opened too many sockets
-				print error
+				print time.strftime("%H:%M:%S"), "select ValueError:",  error
 				continue
 				#print len(conns.keys()), len(connsinprogress.keys())
 			# Write Output

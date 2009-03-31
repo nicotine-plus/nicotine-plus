@@ -802,7 +802,8 @@ class Search:
 			user, filename, size, speed, queue, immediatedl, h_bitrate, length, directory, bitrate, fullpath,  country, status = r
 			if user in self.Searches.users.keys() and status != self.Searches.users[user]:
 				status = self.Searches.users[user]
-				
+			if status is None:
+				status = 0
 			h_size = HumanSize(long(size))
 			h_speed = HumanSpeed(speed)
 			h_queue = Humanize(queue)
@@ -820,7 +821,13 @@ class Search:
 				if user in self.usersiters:
 					iter = self.resultsmodel.append(self.usersiters[user], encoded_row)
 				else:
-					iter = self.resultsmodel.append(None, encoded_row)
+					try:
+						iter = self.resultsmodel.append(None, encoded_row)
+					except Exception, e:
+						print "Search row error", e, encoded_row
+						print 
+						iter=None
+
 				path = self.resultsmodel.get_path(iter)
 				if path is not None:
 					if self.usersGroup.get_active() and self.ExpandButton.get_active():
