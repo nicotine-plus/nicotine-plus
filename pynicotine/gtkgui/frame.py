@@ -2343,6 +2343,13 @@ class NicotineFrame:
 			w.show_images(config["ui"]["tab_icons"])
 			w.set_text_colors(None)
 		
+		try:
+			for tab in self.MainNotebook.get_children():
+				self.MainNotebook.set_tab_reorderable(tab, config["ui"]["tab_reorderable"])
+		except:
+			# Old gtk
+			pass
+
 		tabLabels = [self.ChatTabLabel, self.PrivateChatTabLabel, self.DownloadsTabLabel, self.UploadsTabLabel, self.SearchTabLabel, self.UserInfoTabLabel, self.UserBrowseTabLabel, self.InterestsTabLabel]
 		if "BuddiesTabLabel" in self.__dict__:
 			tabLabels.append(self.BuddiesTabLabel)
