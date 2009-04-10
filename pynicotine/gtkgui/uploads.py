@@ -178,7 +178,7 @@ class Uploads(TransferList):
 			if user in self.frame.np.transfers.getTransferringUsers():
 				continue
 			self.frame.np.ProcessRequestToPeer(user, slskmessages.UploadQueueNotification(None))
-			self.frame.np.transfers.pushFile(user, filename, path)
+			self.frame.np.transfers.pushFile(user, filename, path, transfer)
 		self.frame.np.transfers.checkUploadQueue()
 
 			
