@@ -316,10 +316,7 @@ class TransferList:
 				if i[0] != key:
 					continue
 				if i[2] != transfer:
-					if i[2] in self.list:
-						self.list.remove(i[2])
-					i[2] = transfer
-					
+					continue	
 				self.transfersmodel.set(i[1], 1, shortfn, 2, status, 3, place, 4, percent, 5, hsize, 6, speed, 7, elap, 8, left, 9, self.frame.np.decode(transfer.path), 11, istatus, 12, size, 13, currentbytes)
 				break
 			else:
