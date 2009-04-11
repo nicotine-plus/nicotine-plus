@@ -124,11 +124,7 @@ class Transfers:
 		self.users = users
 		self.downloadspanel = None
 		self.uploadspanel = None
-		self.uploadQueueTimer = threading.Timer(60.0, self.checkUploadQueueTimer)
-		self.uploadQueueTimer.start()
 		
-		self.downloadQueueTimer = threading.Timer(180.0, self.checkDowloadQueueTimer)
-		self.downloadQueueTimer.start()
 # queue sizes
 		self.privcount = 0
 		self.oggcount = 0
@@ -1126,14 +1122,6 @@ class Transfers:
 			self.eventprocessor.config.sections["server"]["banlist"].append(user)
 			self.eventprocessor.config.writeConfig()
 	
-	def checkDowloadQueueTimer(self):
-		self.downloadQueueTimer.cancel()
-
-		self.checkDownloadQueue()
-		
-		self.downloadQueueTimer = threading.Timer(180.0, self.checkDowloadQueueTimer)
-		self.downloadQueueTimer.start()
-		
 	# Find failed downloads and attempt to queue them
 	def checkDownloadQueue(self):
 		if self.eventprocessor.config.sections["transfers"]["autoretry_downloads"]:
@@ -1146,14 +1134,6 @@ class Transfers:
 			
 			self.SaveDownloads()
 					
-	def checkUploadQueueTimer(self):
-		self.uploadQueueTimer.cancel()
-
-		self.checkUploadQueue()
-		
-		self.uploadQueueTimer = threading.Timer(60.0, self.checkUploadQueueTimer)
-		self.uploadQueueTimer.start()
-		
 	# Find next file to upload
 	def checkUploadQueue(self):
 		if self.bandwidthLimitReached() or self.transferNegotiating():
