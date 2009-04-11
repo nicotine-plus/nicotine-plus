@@ -268,30 +268,11 @@ class Transfers:
 			if i.req == req:
 				i.status = "Getting address"
 				self.downloadspanel.update(i)
-				self.startTimeout(i)
 		for i in self.uploads:
 			if i.req == req:
 				i.status = "Getting address"
 				self.uploadspanel.update(i)
-				self.startTimeout(i)
 
-	def startTimeout(self, transfer, delay=30.0):
-		# Request user's details (if not doing so) and start timer
-		
-		if transfer.user not in self.eventprocessor.watchedusers:
-			self.queue.put(slskmessages.AddUser(transfer.user))
-		transfertimeout = TransferTimeout(transfer.req, self.eventprocessor.frame.callback)
-		if transfer.transfertimer is not None:
-			transfer.transfertimer.cancel()
-		if self.eventprocessor.transfers is None:
-			return
-		transfer.transfertimer = threading.Timer(delay, transfertimeout.timeout)
-		try:
-			transfer.transfertimer.start()
-		except thread.error, error:
-			print "Cannot start new timer thread:", error
-
-		
 	def gotAddress(self, req):
 		""" A connection is in progress, we got the address for a user we need
 		to connect to."""
@@ -313,12 +294,10 @@ class Transfers:
 			if i.req == req:
 				i.status = "Waiting for peer to connect"
 				self.downloadspanel.update(i)
-				self.startTimeout(i)
 		for i in self.uploads:
 			if i.req == req:
 				i.status = "Waiting for peer to connect"
 				self.uploadspanel.update(i)
-				self.startTimeout(i)
 
 	def gotCantConnect(self, req):
 		""" We can't connect to the user, either way. """
@@ -352,12 +331,10 @@ class Transfers:
 			if i.req == req:
 				i.status = "Initializing transfer"
 				self.downloadspanel.update(i)
-				self.startTimeout(i)
 		for i in self.uploads:
 			if i.req == req:
 				i.status = "Initializing transfer"
 				self.uploadspanel.update(i)
-				self.startTimeout(i)
 
 	def gotConnect(self, req, conn):
 		""" A connection has been established, now exchange initialisation
@@ -367,13 +344,11 @@ class Transfers:
 				i.status = "Requesting file"
 				i.requestconn = conn
 				self.downloadspanel.update(i)
-				self.startTimeout(i)
 		for i in self.uploads:
 			if i.req == req:
 				i.status = "Requesting file"
 				i.requestconn = conn
 				self.uploadspanel.update(i)
-				self.startTimeout(i)
 	
 	def TransferRequest(self, msg):
 		user = response = None
@@ -820,7 +795,6 @@ class Transfers:
 					self.queue.put(slskmessages.UploadFile(i.conn, file = f, size = i.size))
 					i.status = "Initializing transfer"
 					i.file = f
-					self.startTimeout(i, delay=60)
 					self.eventprocessor.logTransfer(_("Upload started: user %(user)s, file %(file)s") % {'user':i.user, 'file':self.decode(i.filename)})
 				except IOError, strerror:
 					self.eventprocessor.logMessage(_("Upload I/O error: %s") % strerror)
