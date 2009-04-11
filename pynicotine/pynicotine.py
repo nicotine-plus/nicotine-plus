@@ -275,7 +275,7 @@ class NetworkEventProcessor:
 	
 		conn = None
 		for i in self.peerconns:
-			if i.username == user and i.init.type == 'P' and message.__class__ is not slskmessages.FileRequest and message.__class__ is not slskmessages.FileSearchResult:
+			if i.username == user and i.init.type == 'P' and message.__class__ is not slskmessages.FileRequest:
 				conn = i
 				break
 		if conn is not None:
@@ -320,7 +320,7 @@ class NetworkEventProcessor:
 			conn = PeerConnection(addr = addr, username = user, msgs = [message], token = token, init = init)
 			self.peerconns.append(conn)
 			if token is not None:
-				timeout = 300.0
+				timeout = 120.0
 				conntimeout = ConnectToPeerTimeout(self.peerconns[-1], self.callback)
 				timer = threading.Timer(timeout, conntimeout.timeout)
 				self.peerconns[-1].conntimer = timer
@@ -500,7 +500,7 @@ class NetworkEventProcessor:
 							if j.__class__ is slskmessages.TransferRequest and self.transfers is not None:
 								self.transfers.gotConnectError(j.req)
 						conntimeout = ConnectToPeerTimeout(i, self.callback)
-						timer = threading.Timer(300.0, conntimeout.timeout)
+						timer = threading.Timer(120.0, conntimeout.timeout)
 						timer.start()
 						if i.conntimer is not None:
 							i.conntimer.cancel()

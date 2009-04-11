@@ -255,7 +255,7 @@ class Transfers:
 		else:
 			return
 		for i in self.downloads:
-			if i.user == user and i.filename == msg.file and (i.conn is not None or i.status in ["Connection closed by peer", "Establishing connection"]):
+			if i.user == user and i.filename == msg.file and (i.conn is not None or i.status in ["Connection closed by peer", "Establishing connection", "Waiting for download"]):
 				self.AbortTransfer(i)
 				self.getFile(i.user, i.filename, i.path, i)
 				self.eventprocessor.logTransfer(_("Retrying failed download: user %(user)s, file %(file)s") %{'user':i.user, 'file':self.decode(i.filename)}, 1)
