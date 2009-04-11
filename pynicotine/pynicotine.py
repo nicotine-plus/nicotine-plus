@@ -61,13 +61,23 @@ class PeerConnection:
 		self.conntimer = conntimer
 		self.tryaddr = tryaddr
 
-class ConnectToPeerTimeout:
-	def __init__(self, conn, callback):
-		self.conn = conn
+class Timeout:
+	def __init__(self, callback):
 		self.callback = callback
 	
 	def timeout(self):
 		self.callback([self])
+
+class ConnectToPeerTimeout(Timeout):
+	def __init__(self, conn, callback):
+		self.conn = conn
+		self.callback = callback
+
+class CloseSearchResultsTimeout(Timeout):
+	pass
+
+class RespondToDistributedSearchesTimeout(Timeout):
+	pass
 
 class NetworkEventProcessor:
 	""" This class contains handlers for various messages from the networking
@@ -140,10 +150,12 @@ class NetworkEventProcessor:
 		self.speed = 0
 		self.translatepunctuation = string.maketrans(string.punctuation, string.join([' ' for i in string.punctuation],''))
 		self.searchResultsConnections = []
-		self.searchResultsTimer = threading.Timer(10, self.closeSearchResults)
+		searchresultstimeout = CloseSearchResultsTimeout(self.callback)
+		self.searchResultsTimer = threading.Timer(10, searchresultstimeout.timeout)
 		self.searchResultsTimer.start()
 		self.respondDistributed = True
-		self.respondDistributedTimer = threading.Timer(60, self.ToggleRespondDistributed)
+		responddistributedtimeout = RespondToDistributedSearchesTimeout(self.callback)
+		self.respondDistributedTimer = threading.Timer(60, responddistributedtimeout.timeout)
 		self.respondDistributedTimer.start()
 		
 				
@@ -231,6 +243,8 @@ class NetworkEventProcessor:
 			slskmessages.DistribAlive:self.DistribAlive,
 			slskmessages.DistribSearch:self.DistribSearch,
 			ConnectToPeerTimeout:self.ConnectToPeerTimeout,
+			RespondToDistributedSearchesTimeout:self.ToggleRespondDistributed,
+			CloseSearchResultsTimeout:self.closeSearchResults,
 			transfers.TransferTimeout:self.TransferTimeout,
 			slskmessages.RescanShares:self.RescanShares,
 			slskmessages.RescanBuddyShares:self.RescanBuddyShares,
@@ -335,13 +349,14 @@ class NetworkEventProcessor:
 			else:
 				self.transfers.gotConnectError(message.req)
 
-	def closeSearchResults(self):
+	def closeSearchResults(self, msg):
 		if self.searchResultsTimer is not None:
 			self.searchResultsTimer.cancel()
 		for conn in self.searchResultsConnections[:]:
 			self.searchResultsConnections.remove(conn)
 			self.ClosePeerConnection(conn)
-		self.searchResultsTimer = threading.Timer(10, self.closeSearchResults)
+		searchresultstimeout = CloseSearchResultsTimeout(self.callback)
+		self.searchResultsTimer = threading.Timer(10, searchresultstimeout.timeout)
 		self.searchResultsTimer.start()
 		
 	def setServerTimer(self):
@@ -369,10 +384,7 @@ class NetworkEventProcessor:
 			self.respondDistributedTimer.cancel()
 		if self.transfers is not None:
 			self.transfers.AbortTransfers()
-			if self.transfers.uploadQueueTimer is not None:
-				self.transfers.uploadQueueTimer.cancel()
-			if self.transfers.downloadQueueTimer is not None:
-				self.transfers.downloadQueueTimer.cancel()
+
 	def ConnectToServer(self, msg):
 		self.frame.OnConnect(None)
 
@@ -565,10 +577,6 @@ class NetworkEventProcessor:
 			if self.transfers is not None:
 				self.transfers.AbortTransfers()
 				self.transfers.SaveDownloads()
-				if self.transfers.uploadQueueTimer is not None:
-					self.transfers.uploadQueueTimer.cancel()
-				if self.transfers.downloadQueueTimer is not None:
-					self.transfers.downloadQueueTimer.cancel()
 			self.privatechat = self.chatrooms = self.userinfo = self.userbrowse = self.search = self.transfers = self.userlist = None
 			self.frame.ConnClose(conn, addr)
 		else:
@@ -1531,7 +1539,7 @@ class NetworkEventProcessor:
 	def SearchRequest(self, msg):
 		self.processSearchRequest(msg.searchterm, msg.user, msg.searchid, 0)
 		
-	def ToggleRespondDistributed(self, settings=False):
+	def ToggleRespondDistributed(self, msg, settings=False):
 		"""
 		Toggle responding to distributed search each (default: 60sec)
 		interval
@@ -1548,7 +1556,8 @@ class NetworkEventProcessor:
 			if not settings:
 				# Don't toggle when just changing the settings
 				self.respondDistributed = not self.respondDistributed
-			self.respondDistributedTimer = threading.Timer(self.config.sections["searches"]["distrib_ignore"], self.ToggleRespondDistributed)
+			responddistributedtimeout = RespondToDistributedSearchesTimeout(self.callback)
+			self.respondDistributedTimer = threading.Timer(self.config.sections["searches"]["distrib_ignore"], responddistributedtimeout.timeout)
 			self.respondDistributedTimer.start()
 		else:
 			# Always respond

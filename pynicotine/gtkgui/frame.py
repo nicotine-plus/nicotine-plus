@@ -2302,7 +2302,7 @@ class NicotineFrame:
 		else:
 			self.np.queue.put(slskmessages.SetGeoBlock(None))
 		self.np.queue.put(slskmessages.SetUploadLimit(uselimit,uploadlimit,limitby))
-		self.np.ToggleRespondDistributed(settings=True)
+		self.np.ToggleRespondDistributed(None, settings=True)
 		# Modify GUI
 		self.UpdateDownloadFilters()
 		self.TransparentTint(1)
