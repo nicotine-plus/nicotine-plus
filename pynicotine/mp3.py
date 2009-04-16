@@ -509,7 +509,7 @@ class MP3Info:
             elif tag == 'TEN' or tag == 'TENC':
                 self.encoder = self.id3.tags[tag]
 
-def detect_mp3(path):
+def detect(path):
 	try:
 		f = open(path, "r")
 		m = MPEG(f)

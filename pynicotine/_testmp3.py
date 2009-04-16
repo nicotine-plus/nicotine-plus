@@ -4,7 +4,7 @@ import sys
 from os import listdir
 from os.path import isdir, join
 import mp3 as mp3original
-import mp3_mutagen as mp3mutagen
+import metadata_mutagen as mp3mutagen
 
 TOLERANCE = 10
 
@@ -29,8 +29,8 @@ if __name__ == '__main__':
     else:
         lst = [sys.argv[1]]
     for i in lst:
-        ori = mp3original.detect_mp3(i)
-        mut = mp3mutagen.detect_mp3(i)
+        ori = mp3original.detect(i)
+        mut = mp3mutagen.detect(i)
         if str(ori) == str(mut):
             print "  " + i
         else:

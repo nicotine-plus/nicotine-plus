@@ -37,20 +37,10 @@ frame = 0
 log = 0
 language = ""
 try:
-	import mp3_mutagen as mp3
+	import metadata_mutagen as metadata
 except ImportError:
 	print "Failed to import the Mutagen library, falling back to old library. To improve meta data please install Mutagen."
-	import mp3
-
-try:
-	import ogg.vorbis
-	vorbis = ogg.vorbis
-except:
-	try:
-		import _vorbis
-		vorbis = _vorbis
-	except:
-		vorbis = None
+	import mp3 as metadata
 
 import gettext
 tr_cache = {}
@@ -432,29 +422,13 @@ def getFileInfoUnicode(name, pathname):
 		except:
 			size = os.path.getsize(pathname)
 			
-		if name[-4:].lower() == ".mp3":
-			try:
-				mp3info = mp3.detect_mp3(pathname_f)
-			except:
-				mp3info = mp3.detect_mp3(pathname)
-			if mp3info:
-				bitrateinfo = (mp3info["bitrate"], mp3info["vbr"])
-				fileinfo = (name, size, bitrateinfo, mp3info["time"])
-			else:
-				fileinfo = (name, size, None, None)
-		
-		elif vorbis and (name[-4:].lower() == ".ogg"):
-
-			try:
-				try:
-					vf = vorbis.VorbisFile(pathname_f)
-				except:
-					vf = vorbis.VorbisFile(pathname)
-				time = int(vf.time_total(0))
-				bitrate = vf.bitrate(0)/1000
-				fileinfo = (name, size, (bitrate, 0), time)
-			except:
-				fileinfo = (name, size, None, None)
+		try:
+			info = metadata.detect(pathname_f)
+		except:
+			info = metadata.detect(pathname)
+		if info:
+			bitrateinfo = (info["bitrate"], info["vbr"])
+			fileinfo = (name, size, bitrateinfo, info["time"])
 		else:
 			fileinfo = (name, size, None, None)
 		return fileinfo
@@ -468,22 +442,10 @@ def getFileInfoUnicode(name, pathname):
 def getFileInfo(name, pathname):
 	try:
 		size = os.path.getsize(pathname)
-			
-		if name[-4:].lower() == ".mp3":
-			mp3info = mp3.detect_mp3(pathname)
-			if mp3info:
-				bitrateinfo = (mp3info["bitrate"], mp3info["vbr"])
-				fileinfo = (name, size, bitrateinfo, mp3info["time"])
-			else:
-				fileinfo = (name, size, None, None)
-		elif vorbis and (name[-4:].lower() == ".ogg"):
-			try:
-				vf = vorbis.VorbisFile(pathname)
-				time = int(vf.time_total(0))
-				bitrate = vf.bitrate(0)/1000
-				fileinfo = (name, size, (bitrate, 0), time)
-			except:
-				fileinfo = (name, size, None, None)
+		info = metadata.detect(pathname)
+		if info:
+			bitrateinfo = (info["bitrate"], info["vbr"])
+			fileinfo = (name, size, bitrateinfo, info["time"])
 		else:
 			fileinfo = (name, size, None, None)
 		return fileinfo
