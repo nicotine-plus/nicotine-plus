@@ -124,21 +124,6 @@ binary package and what you try to run Nicotine with.)""")
 		return _("Your PyGTK is too old, upgrade to at least PyGTK 1.99.16")
 
 	try:
-		import ogg.vorbis
-	except:
-		try:
-			import _vorbis
-		except ImportError:
-			msg = _("""You do not have Python Vorbis bindings installed. 
-Others will not be able to see the lengths and the bitrates 
-of Ogg Vorbis files that you share. You can get the from
-http://www.andrewchatham.com/pyogg/. 
-If you're using Debian, install the python-pyvorbis package.
-If you're using Gentoo, install nicotine+ with the vorbis USE flag.
-""")
-			print msg
-			log.append(msg)
-	try:
 		import GeoIP
 	except ImportError:
 		try:
