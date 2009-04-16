@@ -16,7 +16,7 @@
 # Original copyright below
 # Copyright (c) 2003-2004 Hyriand. All rights reserved.
 
-from future import division
+from __future__ import division
 
 import webbrowser
 
