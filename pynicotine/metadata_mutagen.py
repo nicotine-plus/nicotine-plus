@@ -37,7 +37,7 @@ def processGeneric(audio):
 		return {
 			"bitrate": (audio.info.bitrate/1000),
 			"vbr": False,
-			"time": int(audio.info.length),
+			"time": audio.info.length,
 		}
 	except AttributeError:
 		return None
@@ -45,7 +45,7 @@ def processMusepack(audio):
 	return {
 		"bitrate": (audio.info.bitrate/1000),
 		"vbr": True,
-		"time": int(audio.info.length),
+		"time": audio.info.length,
 	}
 def processMPEG(audio):
 	vbr = False
@@ -61,23 +61,23 @@ def processMPEG(audio):
 	return {
 		"bitrate": (audio.info.bitrate/1000),
 		"vbr": vbr,
-		"time": int(audio.info.length),
+		"time": audio.info.length,
 	}
 def processFlac(audio):
 	return {
 		"bitrate": (audio.info.bits_per_sample * audio.info.sample_rate / 1000),
 		"vbr": False,
-		"time": int(audio.info.length),
+		"time": audio.info.length,
 	}
 def processVorbis(audio):
 	return {
 		"bitrate": (audio.info.bitrate/1000),
 		"vbr": True,
-		"time": int(audio.info.length),
+		"time": audio.info.length,
 	}
 def processMonkeys(audio):
 	info = {
-		"time": int(audio.info.length),
+		"time": audio.info.length,
 		"vbr": True,
 		"bitrate": 0,
 	}
