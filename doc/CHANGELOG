@@ -9,7 +9,9 @@ Behaviour
  * Support for Mutagen has been added. This will result in more accurate information about bitrates and lengths (bug #259)
  * Icons have been replaced, the alt-tab icon is increased.
  * Most external calls now support pipes
- * Improved German translation (bug #941)
+ * Improved German translation (bug #394)
+ * The dependency for PyVorbis has been removed in favour of Mutagen (bug #409)
+ * Notification popups will no longer stack but a single popup will be updated
 
 Features
  * Built-in Webbrowser (MozEmbed)
