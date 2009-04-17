@@ -427,7 +427,7 @@ def getFileInfoUnicode(name, pathname):
 		except:
 			info = metadata.detect(pathname)
 		if info:
-			bitrateinfo = (info["bitrate"], (info["vbr"] * 1)) # Turning boolean into int
+			bitrateinfo = (info["bitrate"], int(info["vbr"]))
 			fileinfo = (name, size, bitrateinfo, int(info["time"]))
 		else:
 			fileinfo = (name, size, None, None)
@@ -444,7 +444,7 @@ def getFileInfo(name, pathname):
 		size = os.path.getsize(pathname)
 		info = metadata.detect(pathname)
 		if info:
-			bitrateinfo = (info["bitrate"], (info["vbr"] * 1)) # Turning boolean into int
+			bitrateinfo = (info["bitrate"], int(info["vbr"]))
 			fileinfo = (name, size, bitrateinfo, int(info["time"]))
 		else:
 			fileinfo = (name, size, None, None)
