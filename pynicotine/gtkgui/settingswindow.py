@@ -2125,13 +2125,15 @@ class CompletionFrame(buildFrame):
 	def __init__(self, parent):
 		self.p = parent
 		buildFrame.__init__(self, "CompletionFrame")
-		self.options = {"words": { "tab": self.CompletionTabCheck, 
+		self.options = {"words": {
+"tab": self.CompletionTabCheck, "cycle": self.CompletionCycleCheck,
 "dropdown": self.CompletionDropdownCheck, "characters": self.CharactersCompletion, 
 "roomnames": self.CompleteRoomNamesCheck, "buddies": self.CompleteBuddiesCheck, 
 "roomusers": self.CompleteUsersInRoomsCheck, "commands": self.CompleteCommandsCheck, 
 "aliases": self.CompleteAliasesCheck, "onematch": self.OneMatchCheck,}
 		}
 		self.CompletionTabCheck.connect("toggled", self.OnCompletionDropdownCheck)
+		self.CompletionCycleCheck.connect("toggled", self.OnCompletionCycleCheck)
 		self.CompletionDropdownCheck.connect("toggled", self.OnCompletionDropdownCheck)
 		self.CharactersCompletion.connect("changed", self.OnCompletionChanged)
 		self.CompleteAliasesCheck.connect("toggled", self.OnCompletionChanged)
@@ -2152,21 +2154,26 @@ class CompletionFrame(buildFrame):
 		sensitive = self.CompletionTabCheck.get_active()
 		self.needcompletion = 1
 		
+		self.CompletionCycleCheck.set_sensitive(sensitive)
 		self.CompleteRoomNamesCheck.set_sensitive(sensitive)
 		self.CompleteBuddiesCheck.set_sensitive(sensitive)
 		self.CompleteUsersInRoomsCheck.set_sensitive(sensitive)
 		self.CompleteCommandsCheck.set_sensitive(sensitive)
 		self.CompleteAliasesCheck.set_sensitive(sensitive)
-		self.DropdownExpander.set_sensitive(sensitive)
 		self.CompletionDropdownCheck.set_sensitive(sensitive)
 		
-		sensitive = self.CompletionDropdownCheck.get_active()
+		self.OnCompletionCycleCheck(widget)
+
+	def OnCompletionCycleCheck(self, widget):
+		sensitive = (self.CompletionTabCheck.get_active() and not self.CompletionCycleCheck.get_active())
+		self.CompletionDropdownCheck.set_sensitive(sensitive)
 		self.CharactersCompletion.set_sensitive(sensitive)
 		self.OneMatchCheck.set_sensitive(sensitive)
 		
 	def GetSettings(self):
 		return { "words": {
 			"tab": self.CompletionTabCheck.get_active(),
+			"cycle": self.CompletionCycleCheck.get_active(),
 			"dropdown": self.CompletionDropdownCheck.get_active(),
 			"characters": self.CharactersCompletion.get_value_as_int(),
 			"roomnames": self.CompleteRoomNamesCheck.get_active(),

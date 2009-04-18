@@ -35,13 +35,17 @@ ver = sys.version_info
 
 def GetCompletion(part, list):
 	lowerpart = part.lower()
-	matches = [x for x in set(list) if x.lower().startswith(lowerpart) and len(x) > len(part)]
+	matches = [x for x in set(list) if x.lower().startswith(lowerpart) and len(x) >= len(part)]
 	if len(matches) == 0:
 		return None, 0
 	if len(matches) == 1:
 		return matches[0], 1
 	else:
 		return commonprefix([x.lower() for x in matches]), 0
+def GetCompletions(part, list):
+	lowerpart = part.lower()
+	matches = [x for x in set(list) if x.lower().startswith(lowerpart) and len(x) >= len(part)]
+	return matches
 
 class RoomsControl:
 	CMDS = set(["/alias ", "/unalias ", "/whois ", "/browse ", "/ip ", "/pm ", "/msg ", "/search ", "/usearch ", "/rsearch ",
@@ -708,6 +712,8 @@ class ChatRoom:
 			self.ChatEntryBox.pack_start(self.ChatEntry, True, True, 0)
 			
 		
+		self.midwaycompletion = False # True if the user just used tab completion
+		self.completions = {} # Holds temp. information about tab completoin
 		completion = gtk.EntryCompletion()
 		self.ChatEntry.set_completion(completion)
 		liststore = gtk.ListStore(gobject.TYPE_STRING)
@@ -1617,6 +1623,7 @@ class ChatRoom:
 				new = max
 			adj.set_value(new)
 		if event.keyval != gtk.gdk.keyval_from_name("Tab"):
+			self.midwaycompletion = False
 			return False
 		config = self.frame.np.config.sections["words"]
 		if not config["tab"]:
@@ -1625,17 +1632,31 @@ class ChatRoom:
 		text = widget.get_text()[:ix].split(" ")[-1]
 		preix = ix - len(text)
 
-		completion, single = GetCompletion(text, self.clist)
-
-		if completion:
-			if single:
-				if ix == len(text) and text[:1] != "/":
-					completion += ": "
-			widget.delete_text(preix, ix)
-			widget.insert_text(completion, preix)
-			widget.set_position(preix + len(completion))
+		if not config["cycle"]:
+			completion, single = GetCompletion(text, self.clist)
+			if completion:
+				if single:
+					if ix == len(text) and text[:1] != "/":
+						completion += ": "
+				widget.delete_text(preix, ix)
+				widget.insert_text(completion, preix)
+				widget.set_position(preix + len(completion))
+		else:
+			if not self.midwaycompletion:
+				self.completions['completions'] = GetCompletions(text, self.clist)
+				if self.completions['completions']:
+					self.midwaycompletion = True
+					self.completions['currentindex'] = -1
+					currentnick = text
+			else:
+				currentnick = self.completions['completions'][self.completions['currentindex']]
+			if self.midwaycompletion:
+				widget.delete_text(ix - len(currentnick), ix)
+				self.completions['currentindex'] = (self.completions['currentindex']+1) % len(self.completions['completions'])
+				newnick = self.completions['completions'][self.completions['currentindex']]
+				widget.insert_text(newnick, ix)
+				widget.set_position(preix + len(newnick))
 		widget.emit_stop_by_name("key_press_event")
-
 		return True
 
 	def OnLogToggled(self, widget):
