@@ -676,6 +676,7 @@ class Transfers:
 				continue
 			i.status = "Cannot connect"
 			i.req = None
+			curtime = time.time()
 			for j in self.uploads:
 				if j.user == i.user:
 					j.timequeued = curtime
@@ -1377,6 +1378,7 @@ class Transfers:
 						self.eventprocessor.logTransfer(_("Retrying failed download: %(user)s, file %(file)s") % {'user':i.user, 'file':self.decode(i.filename)}, 1)
 						
 						self.getFile(i.user, i.filename, i.path, i)
+			curtime = time.time()
 			for j in self.uploads:
 				if j.user == i.user:
 					j.timequeued = curtime
