@@ -152,22 +152,23 @@ class Config:
 	"language": "", \
 	},
 \
-"words": { \
-	"censored": [], \
-	"autoreplaced": {"teh ": "the ", "taht ": "that ", "tihng": "thing", "youre": "you're", "jsut": "just", "thier": "their", "tihs": "this"},  \
-	"censorfill": "*", \
-	"censorwords": False, \
-	"replacewords": False, \
-	"tab": True, \
-	"dropdown": True, \
-	"characters": 2, \
-	"roomnames": True, \
-	"buddies": True, \
-	"roomusers": True, \
-	"commands": True, \
-	"aliases": True, \
-	"onematch": True, \
-	}, \
+"words": {
+	"censored": [],
+	"autoreplaced": {"teh ": "the ", "taht ": "that ", "tihng": "thing", "youre": "you're", "jsut": "just", "thier": "their", "tihs": "this"},
+	"censorfill": "*",
+	"censorwords": False,
+	"replacewords": False,
+	"tab": True,
+	"cycle": False,
+	"dropdown": True,
+	"characters": 2,
+	"roomnames": True,
+	"buddies": True,
+	"roomusers": True,
+	"commands": True,
+	"aliases": True,
+	"onematch": True,
+	},
 \
 "logging": { \
 	"debug": 0, \
@@ -404,7 +405,7 @@ class Config:
 					print message
 					if self.frame:
 						self.frame.logMessage(message)
-				elif j in ['login','passw','enc',  'downloaddir', 'uploaddir', 'customban','descr','pic','logsdir','roomlogsdir','privatelogsdir','incompletedir', 'autoreply', 'afterfinish', 'downloadregexp', 'afterfolder', 'default', 'chatfont', "npothercommand", "npplayer", "npformat", "private_timestamp", "rooms_timestamp", "log_timestamp"] or (i == "ui" and j not in ["roomlistcollapsed", "tabclosers", "tab_colors", 'tab_reorderable', 'buddylistinchatrooms', "trayicon", "showaway", "tooltips", "usernamehotspots", "exitdialog", "tab_icons", "spellcheck", "modes_order", "modes_visible", "chat_hidebuttons", "notexists", "mozembed", "open_in_mozembed", "soundenabled", "transalpha",  "enabletrans", "speechenabled", "enablefilters",  "width", "height", "labelmain", "labelrooms", "labelprivate", "labelinfo", "labelbrowse", "labelsearch"]) or (i == "words" and j not in ["completion", "censorwords", "replacewords", "autoreplaced", "censored", "characters", "tab", "dropdown", "roomnames", "buddies", "roomusers", "commands", "aliases", "onematch"]) or (i == "language" and j not in ["definelanguage", "setlanguage"]):
+				elif j in ['login','passw','enc',  'downloaddir', 'uploaddir', 'customban','descr','pic','logsdir','roomlogsdir','privatelogsdir','incompletedir', 'autoreply', 'afterfinish', 'downloadregexp', 'afterfolder', 'default', 'chatfont', "npothercommand", "npplayer", "npformat", "private_timestamp", "rooms_timestamp", "log_timestamp"] or (i == "ui" and j not in ["roomlistcollapsed", "tabclosers", "tab_colors", 'tab_reorderable', 'buddylistinchatrooms', "trayicon", "showaway", "tooltips", "usernamehotspots", "exitdialog", "tab_icons", "spellcheck", "modes_order", "modes_visible", "chat_hidebuttons", "notexists", "mozembed", "open_in_mozembed", "soundenabled", "transalpha",  "enabletrans", "speechenabled", "enablefilters",  "width", "height", "labelmain", "labelrooms", "labelprivate", "labelinfo", "labelbrowse", "labelsearch"]) or (i == "words" and j not in ["completion", "censorwords", "replacewords", "autoreplaced", "censored", "characters", "tab", "cycle", "dropdown", "roomnames", "buddies", "roomusers", "commands", "aliases", "onematch"]) or (i == "language" and j not in ["definelanguage", "setlanguage"]):
 
 					if val is not None and val != "None":
 						self.sections[i][j] = val
