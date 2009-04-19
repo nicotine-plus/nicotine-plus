@@ -676,6 +676,9 @@ class Transfers:
 				continue
 			i.status = "Cannot connect"
 			i.req = None
+			for j in self.uploads:
+				if j.user == i.user:
+					j.timequeued = curtime
 			if i.user not in self.eventprocessor.watchedusers:
 				self.queue.put(slskmessages.AddUser(i.user))
 			self.queue.put(slskmessages.GetUserStatus(i.user))
@@ -1374,6 +1377,9 @@ class Transfers:
 						self.eventprocessor.logTransfer(_("Retrying failed download: %(user)s, file %(file)s") % {'user':i.user, 'file':self.decode(i.filename)}, 1)
 						
 						self.getFile(i.user, i.filename, i.path, i)
+			for j in self.uploads:
+				if j.user == i.user:
+					j.timequeued = curtime
 			i.conn = None
 			self.downloadspanel.update(i)
 			self.uploadspanel.update(i)
