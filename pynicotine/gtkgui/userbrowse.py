@@ -16,6 +16,8 @@
 # Original copyright below
 # Copyright (c) 2003-2004 Hyriand. All rights reserved.
 
+from __future__ import division
+
 import gtk
 import os, sys
 import urllib
@@ -591,7 +593,7 @@ class UserBrowse:
 						bitrate += _(" (vbr)")
 					try: rl = int(attrs[1])
 					except: rl = 0
-					length = "%i:%02i" % (rl / 60, rl % 60)
+					length = "%i:%02i" % (rl // 60, rl % 60)
 
 				files.append(["\\".join([dir, file[1]]), localdir, file[2], bitrate, length])
 		for directory in self.shares.keys():
@@ -653,7 +655,7 @@ class UserBrowse:
 					rl = int(attrs[1])
 				except:
 					rl = 0
-				length = "%i:%02i" % (int(rl / 60), rl % 60)
+				length = "%i:%02i" % (int(rl // 60), rl % 60)
 			self.frame.np.transfers.getFile(self.user, "\\".join([dir, file[1]]), ldir, size=file[2], bitrate=bitrate, length=length)
 		if not recurse:
 			return
@@ -681,7 +683,7 @@ class UserBrowse:
 					rl = int(attrs[1])
 				except:
 					rl = 0
-				length = "%i:%02i" % (int(rl / 60), rl % 60)
+				length = "%i:%02i" % (int(rl // 60), rl % 60)
 			self.frame.np.transfers.getFile(self.user, path, prefix, size=size, bitrate=bitrate, length=length)
 
 	def OnUploadDirectoryRecursiveTo(self, widget):

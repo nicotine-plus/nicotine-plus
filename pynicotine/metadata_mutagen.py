@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+
+from __future__ import division
+
 import mutagen
 
 from mutagen.mp3 import MP3, MPEGInfo

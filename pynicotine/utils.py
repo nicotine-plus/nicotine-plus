@@ -23,6 +23,8 @@
 This module contains utility fuctions.
 """
 
+from __future__ import division
+
 version = "1.2.12svn"
 latesturl = "http://nicotine-plus.sourceforge.net/LATEST"
 
@@ -427,7 +429,7 @@ def getFileInfoUnicode(name, pathname):
 		except:
 			info = metadata.detect(pathname)
 		if info:
-			bitrateinfo = (info["bitrate"], int(info["vbr"]))
+			bitrateinfo = (int(info["bitrate"]), int(info["vbr"]))
 			fileinfo = (name, size, bitrateinfo, int(info["time"]))
 		else:
 			fileinfo = (name, size, None, None)
@@ -444,7 +446,7 @@ def getFileInfo(name, pathname):
 		size = os.path.getsize(pathname)
 		info = metadata.detect(pathname)
 		if info:
-			bitrateinfo = (info["bitrate"], int(info["vbr"]))
+			bitrateinfo = (int(info["bitrate"]), int(info["vbr"]))
 			fileinfo = (name, size, bitrateinfo, int(info["time"]))
 		else:
 			fileinfo = (name, size, None, None)

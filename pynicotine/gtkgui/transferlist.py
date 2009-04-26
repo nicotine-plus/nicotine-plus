@@ -17,6 +17,8 @@
 # Original copyright below
 # Copyright (c) 2003-2004 Hyriand. All rights reserved.
 
+from __future__ import division
+
 import gtk
 import gobject
 from types import StringType
