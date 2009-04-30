@@ -23,8 +23,7 @@ daelstorm@gmail.com
 """
 import platform, os
 import sys
-
-log = []
+from pynicotine.logfacility import log
 
 # Detect if we're running on Windows
 win32 = sys.platform.startswith("win")
@@ -37,6 +36,8 @@ if win32 and hasattr(sys, 'frozen'):
 if win32 and py2exe:
 	sys.stdout = open("nul", "w")
 	sys.stderr = open("nul", "w")
+
+from gettext import gettext as _
 
 LOAD_PSYCO = False
 if win32 and platform.architecture()[0] == "32bit":
@@ -53,16 +54,12 @@ if LOAD_PSYCO:
 		import psyco
 		psyco.profile()
 	except ImportError:
-		msg = """Nicotine supports \"psyco\", an inline optimizer for python
-code, you can get it at http://sourceforge.net/projects/psyco/"""
-		print msg
-		log.append(msg)
+		log.addwarning(_("""Nicotine supports \"psyco\", an inline optimizer for python
+code, you can get it at http://sourceforge.net/projects/psyco/"""))
 
 
-from gettext import gettext as _
 
-def checkenv(log=[]):
-
+def checkenv():
 	import sys, string
 	ver = sys.version_info[0]*100+sys.version_info[1]*10+sys.version_info[2]
 	if ver < 220:
@@ -91,8 +88,7 @@ binary package and what you try to run Nicotine with.)""")
 		else:
 			gtkdir = _winreg.QueryValueEx(k, "Path")
 			msg = "GTK DLLs found at %s" % (gtkdir[0])
-			print msg
-			log.append(msg)
+			log.add(msg)
 			import os
 			os.environ['PATH'] += ";%s/lib;%s/bin" % (gtkdir[0], gtkdir[0])
 
@@ -100,9 +96,7 @@ binary package and what you try to run Nicotine with.)""")
 		try:
 			import dbhash
 		except:
-			msg = _("Warning: the Berkeley DB module, dbhash, could not be loaded.")
-			print msg
-			log.append(msg)
+			log.add(_("Warning: the Berkeley DB module, dbhash, could not be loaded."))
 
 	try:
 		if win32:
@@ -129,14 +123,11 @@ binary package and what you try to run Nicotine with.)""")
 		try:
 			import _GeoIP
 		except ImportError:
-			msg = _("""Nicotine supports a country code blocker but that
-	requires a (GPL'ed) library called GeoIP. You can find it here:
+			msg = _("""Nicotine supports a country code blocker but that requires a (GPL'ed) library called GeoIP. You can find it here:
 	C library:       http://www.maxmind.com/app/c
 	Python bindings: http://www.maxmind.com/app/python
-	(the python bindings require the C library)
-	""")
-			print msg
-			log.append(msg)
+	(the python bindings require the C library)""")
+			log.addwarning(msg)
 	return None
 def version():
 	try:
@@ -186,12 +177,11 @@ def renameprocess(newname, debug = False):
 	except:
 		errors.append("Failed FreeBSD style")
 	if debug and errors:
-		print "Errors occured while trying to change process name:"
+		msg = [_("Errors occured while trying to change process name:")]
 		for i in errors:
-			print i
-
+			msg.append("%s" % (i,))
+		log.addwarning('\n'.join(msg))
 def run():
-	global log
 	renameprocess('nicotine')
 	import locale
 	# Win32 hack to fix LANG and LC_ALL environnment variables with unix compliant language code
@@ -203,9 +193,7 @@ def run():
 	try:
 		locale.setlocale(locale.LC_ALL, '')
 	except:
-		msg = "Cannot set locale"
-		print msg
-		log.append(msg)
+		log.addwarning(_("Cannot set locale"))
 
 	import gettext
 	gettext.textdomain("nicotine")
@@ -259,16 +247,16 @@ def run():
 		if o in ("-v", "--version"):
 			version()
 			sys.exit()
-	result = checkenv(log)
+	result = checkenv()
 	if result is None:
 		from pynicotine.gtkgui import frame
 
-		app = frame.MainApp(config, plugins, trayicon, tryrgba, hidden, webbrowser, log)
+		app = frame.MainApp(config, plugins, trayicon, tryrgba, hidden, webbrowser)
 		if profile:
 			import hotshot
 			logfile = os.path.expanduser(config) + ".profile"
 			profiler = hotshot.Profile(logfile)
-			print _("Starting using the profiler (saving log to %s)") % logfile
+			log.add(_("Starting using the profiler (saving log to %s)") % logfile)
 			profiler.runcall(app.MainLoop)
 		else:
 			app.MainLoop()

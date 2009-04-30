@@ -17,8 +17,6 @@
 # Original copyright below
 # Copyright (c) 2003-2004 Hyriand. All rights reserved.
 
-log = []
-
 import os
 
 import gtk, gtk.glade
@@ -60,6 +58,7 @@ from dirchooser import ChooseFile, SaveFile
 from pynicotine.utils import _, ChangeTranslation, executeCommand
 import nowplaying
 import pluginsystem
+from pynicotine.logfacility import log
 from entrydialog import  *
 SEXY=True
 try:
@@ -67,8 +66,7 @@ try:
 except ImportError:
 	SEXY=False
 	msg = _("Note: Python Bindings for libsexy were not found. To enable spell checking, get them from http://www.chipx86.com/wiki/Libsexy or your distribution's package manager. Look for sexy-python or python-sexy.")
-	print msg
-	log.append(msg)
+	log.addwarning(msg)
 
 class roomlist:
 	def __init__(self, frame):
@@ -281,9 +279,8 @@ class BrowserWindow(gtk.VBox):
 		self.entry.set_sensitive(True)
 		self.entry.set_text(url)
 
-
 class NicotineFrame:
-	def __init__(self, config, plugindir, use_trayicon, try_rgba, start_hidden=False, WebBrowser=True, initiallog=[]): 
+	def __init__(self, config, plugindir, use_trayicon, try_rgba, start_hidden=False, WebBrowser=True): 
 		
 		self.clip_data = ""
 		self.log_queue = []
@@ -473,6 +470,9 @@ class NicotineFrame:
 		self.LogScrolledWindow.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
 		self.LogScrolledWindow.show()
 
+		for (timestamp, level, msg) in log.history:
+			self.updateLog(msg, level)
+		log.addlistener(self.logCallback)
 		self.LogWindow = gtk.TextView()
 		self.LogWindow.set_wrap_mode(gtk.WRAP_WORD)
 		self.LogWindow.set_cursor_visible(False)
@@ -618,9 +618,6 @@ class NicotineFrame:
 		self.UpdateColours(1)
 		
 		self.show_debug_info1.set_active(self.np.config.sections["logging"]["debug"])
-		
-		for l in initiallog:
-			self.logMessage(l)
 		
 		self.settingswindow = SettingsWindow(self)
 		self.settingswindow.SettingsWindow.connect("settings-closed", self.OnSettingsClosed)
@@ -1655,7 +1652,11 @@ class NicotineFrame:
 		dialog.connect('response', lambda dialog, response: dialog.destroy())
 		dialog.show()
 
-	def logMessage(self, msg, debugLevel = None):
+	def logCallback(self, timestamp, level, msg):
+		self.updateLog(msg, level)
+	def logMessage(self, msg, debugLevel = 0):
+		log.add(msg, debugLevel)
+	def updateLog(self, msg, debugLevel = None):
 		''' Logging Options
 		0 - Normal messages and (Human-Readable) Errors
 		1 - Warnings & Tracebacks
@@ -3612,8 +3613,8 @@ class gstreamer:
 			self.player.set_state(self.gst.STATE_NULL)
 			
 class MainApp:
-	def __init__(self, config, plugindir, trayicon, rgbamode, start_hidden, WebBrowser, initiallog):
-		self.frame = NicotineFrame(config, plugindir, trayicon, rgbamode, start_hidden, WebBrowser, initiallog + log)
+	def __init__(self, config, plugindir, trayicon, rgbamode, start_hidden, WebBrowser):
+		self.frame = NicotineFrame(config, plugindir, trayicon, rgbamode, start_hidden, WebBrowser)
 	
 	def MainLoop(self):
 		signal.signal(signal.SIGINT, signal.SIG_IGN)

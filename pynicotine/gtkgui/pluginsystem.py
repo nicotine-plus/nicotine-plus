@@ -7,6 +7,7 @@ from thread import start_new_thread
 from traceback import extract_stack, extract_tb, format_list
 from pynicotine import slskmessages
 from utils import _
+from pynicotine.logfacility import log
 
 WIN32 = sys.platform.startswith("win")
 
@@ -20,7 +21,7 @@ class PluginHandler(object):
     frame = None # static variable... but should it be?
     def __init__(self, frame, plugindir=None):
         self.frame = frame
-        self.log("Loading plugin handler")
+        log.add("Loading plugin handler")
         self.myUsername = self.frame.np.config.sections["server"]["login"]
         self.plugins = []
         if not plugindir:
@@ -38,7 +39,7 @@ class PluginHandler(object):
         if os.path.isdir(self.plugindir):
             self.load(self.plugindir)
         else:
-            self.log("It appears '%s' is not a directory, not loading plugins." % self.plugindir)
+            log.add("It appears '%s' is not a directory, not loading plugins." % self.plugindir)
     def load(self, directory):
         """Loads all plugins in the given directory."""
         pyfiles = [x for x in os.listdir(directory) if x[-3:] == '.py' and len(x) > 3]
@@ -51,27 +52,27 @@ class PluginHandler(object):
                 module = __import__(modulename,[],[],[],0)
                 instance = module.Plugin(self)
                 instance.LoadEvent()
-                self.log("Loaded plugin %s (version %s) from %s" % (instance.__name__, instance.__version__, modulename))
+                log.add("Loaded plugin %s (version %s) from %s" % (instance.__name__, instance.__version__, modulename))
                 self.plugins.append((module, instance))
             except:
-                self.log("While loading %s an error occurred, %s: %s.\nTrace: %s\nProblem area:%s" %
+                log.add("While loading %s an error occurred, %s: %s.\nTrace: %s\nProblem area:%s" %
                        (modulename,
                         sys.exc_info()[0],
                         sys.exc_info()[1],
                         ''.join(format_list(extract_stack())),
                         ''.join(format_list(extract_tb(sys.exc_info()[2])))))
             sys.path.pop(0)
-        self.log("Loaded " + str(len(self.plugins)) + " plugins.")
+        log.add("Loaded " + str(len(self.plugins)) + " plugins.")
     def reread(self):
         """Reloads plugins so changes in the .py files are processed. Might not
         actually work (see python docs on reloading)"""
-        self.log("Rereading plugins.")
+        log.add("Rereading plugins.")
         sys.path.insert(0, self.plugindir)
         for (module, plugin) in self.plugins:
             try:
                 module = reload(module)
             except:
-                self.log("Failed to reload module " + repr(module))
+                log.add("Failed to reload module " + repr(module))
         sys.path.pop(0)
     def reload(self):
         """Reloads already loaded plugins."""
@@ -93,9 +94,9 @@ class PluginHandler(object):
                     elif ret == returncode['pass']:
                         pass
                     else:
-                        self.log(_("Plugin %(module) returned something weird, '%(value)', ignoring") % {'module':module, 'value':ret})
+                        log.add(_("Plugin %(module) returned something weird, '%(value)', ignoring") % {'module':module, 'value':ret})
             except:
-                self.log(_("Plugin %(module)s failed with error %(errortype)s: %(error)s.\nTrace: %(trace)s\nProblem area:%(area)s") %
+                log.add(_("Plugin %(module)s failed with error %(errortype)s: %(error)s.\nTrace: %(trace)s\nProblem area:%(area)s") %
                         {'module':module,
                          'errortype':sys.exc_info()[0],
                          'error':sys.exc_info()[1],
@@ -119,11 +120,11 @@ class PluginHandler(object):
                     elif ret == returncode['pass']:
                         pass
                     else:
-                        self.log(_("Plugin %(module) returned something weird, '%(value)', ignoring") % {'module':module, 'value':ret})
+                        log.add(_("Plugin %(module) returned something weird, '%(value)', ignoring") % {'module':module, 'value':ret})
                 if ret != None:
                     hotpotato = ret
             except:
-                self.log(_("Plugin %(module)s failed with error %(errortype)s: %(error)s.\nTrace: %(trace)s\nProblem area:%(area)s") %
+                log.add(_("Plugin %(module)s failed with error %(errortype)s: %(error)s.\nTrace: %(trace)s\nProblem area:%(area)s") %
                         {'module':module,
                          'errortype':sys.exc_info()[0],
                          'error':sys.exc_info()[1],
@@ -180,7 +181,7 @@ class PluginHandler(object):
         start_new_thread(self.TriggerEvent, ("LeaveChatroomNotification", (room,)))
     # other functions
     def log(self, text):
-        self.frame.logMessage(text)
+        log.add(text)
     def saychatroom(self, room, text):
         self.frame.np.queue.put(slskmessages.SayChatroom(room, text))
     def sayprivate(self, user, text):

@@ -34,6 +34,10 @@ from subprocess import Popen, PIPE
 import os, dircache
 import sys
 import gobject
+
+from logfacility import log as logfacility
+
+
 win32 = sys.platform.startswith("win")
 frame = 0
 log = 0
@@ -41,7 +45,7 @@ language = ""
 try:
 	import metadata_mutagen as metadata
 except ImportError:
-	print "Failed to import the Mutagen library, falling back to old library. To improve meta data please install Mutagen."
+	logfacility.addwarning("Failed to import the Mutagen library, falling back to old library. To improve meta data please install Mutagen.")
 	import mp3 as metadata
 
 import gettext

@@ -41,6 +41,7 @@ import locale
 import utils
 from utils import _
 import os
+import logging
 
 
 class PeerConnection:
@@ -366,7 +367,7 @@ class NetworkEventProcessor:
 			self.servertimeout = self.servertimeout * 2
 		self.servertimer = threading.Timer(self.servertimeout, self.ServerTimeout)
 		self.servertimer.start()
-		self.logMessage(_("The server seems to be down or not responding, retrying in %i seconds") %(self.servertimeout))
+		logging.info(_("The server seems to be down or not responding, retrying in %i seconds") %(self.servertimeout))
 	
 	def ServerTimeout(self):
 		if self.config.needConfig() <= 1:
