@@ -39,6 +39,7 @@ import struct
 
 from errno import EINTR
 from utils import _, win32
+from logfacility import log
 
 MAXFILELIMIT = -1
 if win32:
@@ -924,7 +925,7 @@ class SlskProtoThread(threading.Thread):
 					self._uploadlimit = (cb, msgObj.limit)
 				if socketwarning and time.time() - self.lastsocketwarning > 60:
 					self.lastsocketwarning = time.time()
-					self._ui_callback([_("You have just hit your connection limit of %(limit)s. Nicotine+ will drop connections for your protection. If you get this message often you should search for less generic terms, or increase your per-process file descriptor limit.") % {'limit':maxsockets}])
+					log.addwarning(_("You have just hit your connection limit of %(limit)s. Nicotine+ will drop connections for your protection. If you get this message often you should search for less generic terms, or increase your per-process file descriptor limit.") % {'limit':maxsockets})
 		if needsleep:
 			time.sleep(1)
 		
