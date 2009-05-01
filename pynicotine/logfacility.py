@@ -59,17 +59,4 @@ try:
     log
 except NameError:
     log = logger()
-
-log.addlistener(consolelogger)
-if __name__ == "__main__":
-    log.add("Nicotine+ can use Psyco", 1)
-    log.add("Tee hee")
-    log.removelistener(consolelogger)
-    log.removelistener(consolelogger)
-    log.add("Does a tree make a sound where there is noone to hear it?")
-    log.addlistener(consolelogger)
-    log.add("Bang!")
-    
-    print "History:"
-    for (timestamp, level, msg) in log.history:
-        print ">> %s %s %s" % (time.asctime(timestamp), level, msg)
+log.addlistener(consolelogger) # by default let's display important stuff in the console
