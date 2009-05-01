@@ -545,7 +545,7 @@ class Search:
 		self.filters = None
 		# num, user, filename, h_size, h_speed, h_queue, immediatedl, h_bitrate, length, self.get_flag(user, country), directory, bitrate, fullpath, country,  size, speed, queue, status]
 		self.COLUMN_TYPES = [int, str, str, str, str, str, str, str, str, gtk.gdk.Pixbuf, str,
-			int, str, str, long, int, int, int]
+			int, str, str, gobject.TYPE_ULONG, int, int, int]
 		self.resultsmodel = gtk.TreeStore(* self.COLUMN_TYPES )
 
 		
