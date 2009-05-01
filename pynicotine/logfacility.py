@@ -15,7 +15,7 @@ import time
 from collections import deque
 
 class logger(object):
-    def __init__(self, maxlogitems=1):
+    def __init__(self, maxlogitems=100):
         # self.pop is used to support older verions of python
         self.listeners = set()
         try:
