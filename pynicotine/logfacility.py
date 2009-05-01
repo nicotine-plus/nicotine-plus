@@ -15,20 +15,23 @@ import time
 from collections import deque
 
 class logger(object):
+    """Coordinates log messages. Has a message history for listeners that are
+    not yet present right at startup."""
     def __init__(self, maxlogitems=100):
-        # self.pop is used to support older verions of python
+        # self.pop is used to support older versions of python
         self.listeners = set()
         try:
             self.history = deque([], maxlogitems)
             self.pop = -1 # -1 means 'let python do the popping'
         except TypeError:
             self.history = deque([])
-            self.pop = maxlogitems+1 # 100 more items before we start popping. Python < 2.6 support
+            self.pop = maxlogitems+1 # value is how many items to go before we start popping. Python < 2.6 support
         self.add("Initializing logging facility")
     def addwarning(self, msg):
+        """Add a message with the level corresponding to warnings."""
         self.add(msg, 1)
     def add(self, msg, level=0):
-        ''' Logging levels
+        """Add a message. The list of logging levels is as follows: 
         None - Deprecated (calls that haven't been updated yet)
         0    - Normal messages and (Human-Readable) Errors
         1    - Warnings & Tracebacks
@@ -37,7 +40,7 @@ class logger(object):
         4    - Message Contents
         5    - Transfers
         6    - Connection, Bandwidth and Usage Statistics
-        '''
+        """
         timestamp = time.localtime()
         self.history.append((timestamp, level, msg))
         if self.pop > 0:
@@ -45,11 +48,11 @@ class logger(object):
         if self.pop == 0:
             self.history.popleft()
         for callback in self.listeners:
-            #try:
+            try:
                 callback(timestamp, level, msg)
-            #except:
-            #    print "Callback on %s failed" % (callback,)
-            #    pass
+            except:
+                print "Callback on %s failed" % (callback,)
+                pass
     def addlistener(self, callback):
         self.add("Adding listener %s" % (callback,))
         self.listeners.add(callback)
@@ -69,4 +72,4 @@ try:
     log
 except NameError:
     log = logger()
-log.addlistener(consolelogger) # by default let's display important stuff in the console
+    log.addlistener(consolelogger) # by default let's display important stuff in the console
