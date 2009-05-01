@@ -15,9 +15,15 @@ import time
 from collections import deque
 
 class logger(object):
-    def __init__(self):
+    def __init__(self, maxlogitems=1):
+        # self.pop is used to support older verions of python
         self.listeners = set()
-        self.history = deque([], 100)
+        try:
+            self.history = deque([], maxlogitems)
+            self.pop = -1 # -1 means 'let python do the popping'
+        except TypeError:
+            self.history = deque([])
+            self.pop = maxlogitems+1 # 100 more items before we start popping. Python < 2.6 support
         self.add("Initializing logging facility")
     def addwarning(self, msg):
         self.add(msg, 1)
@@ -34,6 +40,10 @@ class logger(object):
         '''
         timestamp = time.localtime()
         self.history.append((timestamp, level, msg))
+        if self.pop > 0:
+            self.pop -= 1
+        if self.pop == 0:
+            self.history.popleft()
         for callback in self.listeners:
             #try:
                 callback(timestamp, level, msg)
