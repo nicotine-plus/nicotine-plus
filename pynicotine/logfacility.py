@@ -62,8 +62,8 @@ class logger(object):
         except KeyError:
             self.add("Failed to remove listener %s, does not exist." % (callback,), 1)
 def consolelogger(timestamp, level, msg):
-    if level in (None,):
-        print "-- %s %s" % (time.asctime(timestamp), msg)
+    #if level in (None,):
+    #    print "FIX MY SOURCE -- %s %s" % (time.asctime(timestamp), msg)
     elif level in (1,):
         print "%s %s" % (time.asctime(timestamp), msg)
     else:
