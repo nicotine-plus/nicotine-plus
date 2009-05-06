@@ -1654,17 +1654,11 @@ class NicotineFrame:
 
 	def logCallback(self, timestamp, level, msg):
 		self.updateLog(msg, level)
-	def logMessage(self, msg, debugLevel = None):
+	def logMessage(self, msg, debugLevel = 0):
 		log.add(msg, debugLevel)
 	def updateLog(self, msg, debugLevel = None):
-		''' Logging Options
-		0 - Normal messages and (Human-Readable) Errors
-		1 - Warnings & Tracebacks
-		2 - Search Results
-		3 - Peer Connections
-		4 - Message Contents
-		5 - Transfers
-		6 - Connection, Bandwidth and Usage Statistics
+		'''For information about debug levels see 
+		pydoc pynicotine.logfacility.logger.add
 		'''
 		if "LogWindow" not in self.__dict__:
 			self.log_queue.append((msg, debugLevel))
@@ -1676,7 +1670,7 @@ class NicotineFrame:
 				if self.np.config.sections["logging"]["logcollapsed"]:
 					self.SetStatusText(old_msg)
 			self.log_queue.remove(message)
-		if debugLevel is None or self.np.config.sections["logging"]["debug"] and debugLevel in self.np.config.sections["logging"]["debugmodes"]:
+		if debugLevel in (None, 0) or self.np.config.sections["logging"]["debug"] and debugLevel in self.np.config.sections["logging"]["debugmodes"]:
 			AppendLine(self.LogWindow, msg, self.tag_log, scroll=True)
 			if self.np.config.sections["logging"]["logcollapsed"]:
 				self.SetStatusText(msg)
