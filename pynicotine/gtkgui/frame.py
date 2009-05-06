@@ -1654,7 +1654,7 @@ class NicotineFrame:
 
 	def logCallback(self, timestamp, level, msg):
 		self.updateLog(msg, level)
-	def logMessage(self, msg, debugLevel = 0):
+	def logMessage(self, msg, debugLevel = None):
 		log.add(msg, debugLevel)
 	def updateLog(self, msg, debugLevel = None):
 		''' Logging Options
