@@ -64,7 +64,7 @@ class logger(object):
 def consolelogger(timestamp, level, msg):
     #if level in (None,):
     #    print "FIX MY SOURCE -- %s %s" % (time.asctime(timestamp), msg)
-    elif level in (1,):
+    if level in (1,):
         print "%s %s" % (time.asctime(timestamp), msg)
     else:
         pass
