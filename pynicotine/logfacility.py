@@ -26,7 +26,6 @@ class logger(object):
         except TypeError:
             self.history = deque([])
             self.pop = maxlogitems+1 # value is how many items to go before we start popping. Python < 2.6 support
-        self.add("Initializing logging facility")
     def addwarning(self, msg):
         """Add a message with the level corresponding to warnings."""
         self.add(msg, 1)
@@ -54,7 +53,6 @@ class logger(object):
                 print "Callback on %s failed" % (callback,)
                 pass
     def addlistener(self, callback):
-        self.add("Adding listener %s" % (callback,))
         self.listeners.add(callback)
     def removelistener(self, callback):
         try:

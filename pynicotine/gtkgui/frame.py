@@ -283,7 +283,6 @@ class NicotineFrame:
 	def __init__(self, config, plugindir, use_trayicon, try_rgba, start_hidden=False, WebBrowser=True): 
 		
 		self.clip_data = ""
-		self.log_queue = []
 		self.configfile = config
 		self.transfermsgs = {}
 		self.transfermsgspostedtime = 0
@@ -470,8 +469,6 @@ class NicotineFrame:
 		self.LogScrolledWindow.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
 		self.LogScrolledWindow.show()
 
-		for (timestamp, level, msg) in log.history:
-			self.updateLog(msg, level)
 		log.addlistener(self.logCallback)
 		self.LogWindow = gtk.TextView()
 		self.LogWindow.set_wrap_mode(gtk.WRAP_WORD)
@@ -616,6 +613,8 @@ class NicotineFrame:
 		if config["ticker"]["hide"]:
 			self.hide_tickers1.set_active(1)
 		self.UpdateColours(1)
+		for (timestamp, level, msg) in log.history:
+			self.updateLog(msg, level)
 		
 		self.show_debug_info1.set_active(self.np.config.sections["logging"]["debug"])
 		
@@ -1660,20 +1659,16 @@ class NicotineFrame:
 		'''For information about debug levels see 
 		pydoc pynicotine.logfacility.logger.add
 		'''
-		if "LogWindow" not in self.__dict__:
-			self.log_queue.append((msg, debugLevel))
-			return False
-		for message in self.log_queue[:]:
-			old_msg, old_debug = message
-			if old_debug is None or self.np.config.sections["logging"]["debug"] and debugLevel in self.np.config.sections["logging"]["debugmodes"]:
-				AppendLine(self.LogWindow, old_msg, self.tag_log, scroll=True)
+		if self.np.config.sections["logging"]["debug"]:
+			if debugLevel in (None, 0) or debugLevel in self.np.config.sections["logging"]["debugmodes"]:
+				AppendLine(self.LogWindow, msg, self.tag_log, scroll=True)
 				if self.np.config.sections["logging"]["logcollapsed"]:
-					self.SetStatusText(old_msg)
-			self.log_queue.remove(message)
-		if debugLevel in (None, 0, 1) or self.np.config.sections["logging"]["debug"] and debugLevel in self.np.config.sections["logging"]["debugmodes"]:
-			AppendLine(self.LogWindow, msg, self.tag_log, scroll=True)
-			if self.np.config.sections["logging"]["logcollapsed"]:
-				self.SetStatusText(msg)
+					self.SetStatusText(msg)
+		else:
+			if debugLevel in (None, 0, 1):
+				AppendLine(self.LogWindow, msg, self.tag_log, scroll=True)
+				if self.np.config.sections["logging"]["logcollapsed"]:
+					self.SetStatusText(msg)
 		return False
 			
 	def ScrollBottom(self, widget):
