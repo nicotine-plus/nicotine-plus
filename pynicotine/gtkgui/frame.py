@@ -1670,7 +1670,7 @@ class NicotineFrame:
 				if self.np.config.sections["logging"]["logcollapsed"]:
 					self.SetStatusText(old_msg)
 			self.log_queue.remove(message)
-		if debugLevel in (None, 0) or self.np.config.sections["logging"]["debug"] and debugLevel in self.np.config.sections["logging"]["debugmodes"]:
+		if debugLevel in (None, 0, 1) or self.np.config.sections["logging"]["debug"] and debugLevel in self.np.config.sections["logging"]["debugmodes"]:
 			AppendLine(self.LogWindow, msg, self.tag_log, scroll=True)
 			if self.np.config.sections["logging"]["logcollapsed"]:
 				self.SetStatusText(msg)
