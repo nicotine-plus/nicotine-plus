@@ -24,6 +24,7 @@
 This module contains configuration classes for Nicotine.
 """
 
+from logfacility import log
 import ConfigParser
 import string
 import os, time
@@ -387,24 +388,15 @@ class Config:
 			if not os.path.isdir(path):
 				os.makedirs(path)
 		except OSError, msg:
-			message = "Can't create directory '%s', reported error: %s" % (path, msg)
-			print message
-			if self.frame:
-				self.frame.logMessage(message)
+			log.addwarning("Can't create directory '%s', reported error: %s" % (path, msg))
 		
 		for i in self.parser.sections():
 			for j in self.parser.options(i):
 				val = self.parser.get(i, j, raw = 1)
 				if i not in self.sections.keys():
-					message = "Unknown config section:", i
-					print message
-					if self.frame:
-						self.frame.logMessage(message)
+					log.addwarning("Unknown config section '%s'" % (i,))
 				elif j not in self.sections[i].keys() and j != "filter":
-					message = "Unknown config option '%s' in section '%s'" %(j, i)
-					print message
-					if self.frame:
-						self.frame.logMessage(message)
+					log.addwarning("Unknown config option '%s' in section '%s'" % (j, i))
 				elif j in ['login','passw','enc',  'downloaddir', 'uploaddir', 'customban','descr','pic','logsdir','roomlogsdir','privatelogsdir','incompletedir', 'autoreply', 'afterfinish', 'downloadregexp', 'afterfolder', 'default', 'chatfont', "npothercommand", "npplayer", "npformat", "private_timestamp", "rooms_timestamp", "log_timestamp"] or (i == "ui" and j not in ["roomlistcollapsed", "tabclosers", "tab_colors", 'tab_reorderable', 'buddylistinchatrooms', "trayicon", "showaway", "tooltips", "usernamehotspots", "exitdialog", "tab_icons", "spellcheck", "modes_order", "modes_visible", "chat_hidebuttons", "notexists", "mozembed", "open_in_mozembed", "soundenabled", "transalpha",  "enabletrans", "speechenabled", "enablefilters",  "width", "height", "labelmain", "labelrooms", "labelprivate", "labelinfo", "labelbrowse", "labelsearch"]) or (i == "words" and j not in ["completion", "censorwords", "replacewords", "autoreplaced", "censored", "characters", "tab", "cycle", "dropdown", "roomnames", "buddies", "roomusers", "commands", "aliases", "onematch"]) or (i == "language" and j not in ["definelanguage", "setlanguage"]):
 
 					if val is not None and val != "None":
@@ -416,10 +408,7 @@ class Config:
 						self.sections[i][j] = eval(val, {})
 					except:
 						self.sections[i][j] = None
-						message = "CONFIG ERROR: Couldn't decode %s section %s value %s" % (str(j), str(i), str(val))
-						print message
-						if self.frame:
-							self.frame.logMessage(message)
+						log.addwarning("CONFIG ERROR: Couldn't decode '%s' section '%s' value '%s'" % (str(j), str(i), str(val)))
 		autojoin = self.sections["server"]["autojoin"]
 		# Old config file format
 		for user in self.sections["server"]["userlist"]:
@@ -486,10 +475,7 @@ class Config:
 			sharedmtimes = shelve.open(self.filename+".mtimes.db")
 			bsharedmtimes = shelve.open(self.filename+".buddymtimes.db")
 		except:
-			message = _("Shared files database seems to be corrupted, rescan your shares")
-			print message
-			if self.frame:
-				self.frame.logMessage(message)
+			log.addwarning(_("Shared files database seems to be corrupted, rescan your shares"))
 			files = self.clearShares(sharedfiles, bsharedfiles, sharedfilesstreams, bsharedfilesstreams, wordindex, bwordindex, fileindex, bfileindex, sharedmtimes, bsharedmtimes)
 			if files is not None:
 				sharedfiles, bsharedfiles, sharedfilesstreams, bsharedfilesstreams, wordindex, bwordindex, fileindex, bfileindex, sharedmtimes, bsharedmtimes = files
@@ -590,10 +576,7 @@ class Config:
 				pass
 			bsharedmtimes = shelve.open(self.filename+".buddymtimes.db", flag='n')
 		except Exception, error:
-			message = _("Error while writing database files: %s") % error
-			print message
-			if self.frame:
-				self.frame.logMessage(message)
+			log.addwarning(_("Error while writing database files: %s") % error)
 			return None
 		return sharedfiles, bsharedfiles, sharedfilesstreams, bsharedfilesstreams, wordindex, bwordindex, fileindex, bfileindex, sharedmtimes, bsharedmtimes
 			
@@ -613,30 +596,21 @@ class Config:
 			if not os.path.isdir(path):
 				os.makedirs(path)
 		except OSError, msg:
-			message = _("Can't create directory '%(path)s', reported error: %(error)s") % {'path':path, 'error':msg}
-			print message
-			if self.frame:
-				self.frame.logMessage(message)
+			log.addwarning(_("Can't create directory '%(path)s', reported error: %(error)s") % {'path':path, 'error':msg})
 		
 		oldumask = os.umask(0077)
 	
 		try:
 			f = open(self.filename + ".new", "w")
 		except IOError, e:
-			message = _("Can't save config file, I/O error: %s") % e
-			print message
-			if self.frame:
-				self.frame.logMessage(message)
+			log.addwarning(_("Can't save config file, I/O error: %s") % e)
 			self.config_lock.release()
 			return
 		else:
 			try:
 				self.parser.write(f)
 			except IOError, e:
-				message = _("Can't save config file, I/O error: %s") % e
-				print message
-				if self.frame:
-					self.frame.logMessage(message)
+				log.addwarning(_("Can't save config file, I/O error: %s") % e)
 				self.config_lock.release()
 				return
 			else:
@@ -655,28 +629,18 @@ class Config:
 					if os.path.exists(self.filename + ".old"):
 						os.remove(self.filename + ".old")
 				except OSError, error:
-					message = _("Can't remove %s" % self.filename + ".old")
-					print message
-					if self.frame:
-						self.frame.logMessage(message)
-		
+					log.addwarning(_("Can't remove %s" % self.filename + ".old"))
 				try:
 					os.rename(self.filename, self.filename + ".old")
 				except OSError, error:
-					message = _("Can't back config file up, error: %s") % error
-					print message
-					if self.frame:
-						self.frame.logMessage(message)
+					log.addwarning(_("Can't back config file up, error: %s") % error)
 		except OSError:
 			pass
 	
 		try:
 			os.rename(self.filename + ".new", self.filename)
 		except OSError, error:
-			message = _("Can't rename config file, error: %s") % error
-			print message
-			if self.frame:
-				self.frame.logMessage(message)
+			log.addwarning(_("Can't rename config file, error: %s") % error)
 	
 		self.config_lock.release()
 	
