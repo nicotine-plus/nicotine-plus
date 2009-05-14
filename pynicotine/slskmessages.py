@@ -287,6 +287,18 @@ class Login(ServerMessage):
 				# Not an official client on the official server
 				pass
 
+class ChangePassword(ServerMessage):
+	""" We sent this to the server to change our password 
+	We receive a response if our password changes. """
+	
+	def __init__(self, password=None):
+		self.password = password
+
+	def makeNetworkMessage(self):
+		return self.packObject(self.password)
+
+	def parseNetworkMessage(self, message):
+		pos, self.password = self.getObject(message, types.StringType)
 
 class SetWaitPort(ServerMessage):
 	""" Send this to server to indicate port number that we listen on."""

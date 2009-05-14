@@ -169,6 +169,7 @@ class NetworkEventProcessor:
 			slskmessages.ServerConn:self.ServerConn,
 			slskmessages.ConnClose:self.ConnClose,
 			slskmessages.Login:self.Login,
+			slskmessages.ChangePassword:self.ChangePassword,
 			slskmessages.MessageUser:self.MessageUser,
 			slskmessages.PMessageUser:self.PMessageUser,
 			slskmessages.ExactFileSearch:self.ExactFileSearch,
@@ -630,6 +631,10 @@ class NetworkEventProcessor:
 			#self.frame.settingswindow.Hilight(self.frame.settingswindow.pages["Server"].Login)
 			self.frame.settingswindow.Hilight(self.frame.settingswindow.pages["Server"].Password)
 				
+	def ChangePassword(self, msg):
+		password = msg.password
+		self.frame.PopupMessage2( _("Your password has been changed"), "Password is %s" % password)
+
 	def NotifyPrivileges(self, msg):
 		if msg.token != None:
 			pass

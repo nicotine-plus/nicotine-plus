@@ -1651,6 +1651,13 @@ class NicotineFrame:
 		dialog.connect('response', lambda dialog, response: dialog.destroy())
 		dialog.show()
 
+	def PopupMessage2(self, title, message):
+		dialog = gtk.MessageDialog(type=gtk.MESSAGE_WARNING, buttons=gtk.BUTTONS_OK, message_format=title)
+		dialog.set_title("Nicotine+: " +title)
+		dialog.format_secondary_text(message)
+		dialog.connect('response', lambda dialog, response: dialog.destroy())
+		dialog.show()
+
 	def logCallback(self, timestamp, level, msg):
 		self.updateLog(msg, level)
 	def logMessage(self, msg, debugLevel = 0):
@@ -2374,6 +2381,9 @@ class NicotineFrame:
 				self.connect1.set_sensitive(1)
 		self.SetAllToolTips()
 	
+	def OnChangePassword(self, password):
+		self.np.queue.put(slskmessages.ChangePassword(password))
+
 	def OnBackupConfig(self, widget=None):
 		response = SaveFile(self.MainWindow.get_toplevel(), os.path.dirname(self.np.config.filename), title="Pick a filename for config backup, or cancel to use a timestamp")
 		if response:

@@ -129,16 +129,43 @@
                       </packing>
                     </child>
                     <child>
-                      <widget class="GtkEntry" id="Password">
-                        <property name="width_request">100</property>
+                      <widget class="GtkHBox" id="hbox1">
                         <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="max_length">18</property>
-                        <property name="visibility">False</property>
-                        <property name="width_chars">10</property>
+                        <property name="spacing">5</property>
+                        <child>
+                          <widget class="GtkEntry" id="Password">
+                            <property name="width_request">100</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="max_length">18</property>
+                            <property name="visibility">False</property>
+                            <property name="invisible_char">&#x2022;</property>
+                            <property name="width_chars">10</property>
+                          </widget>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <widget class="GtkButton" id="ChangePassword">
+                            <property name="label" translatable="yes">gtk-apply</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">True</property>
+                            <property name="has_tooltip">True</property>
+                            <property name="tooltip" translatable="yes">Change password</property>
+                            <property name="use_stock">True</property>
+                            <signal name="clicked" handler="OnChangePassword"/>
+                            <signal name="activate" handler="OnChangePassword"/>
+                          </widget>
+                          <packing>
+                            <property name="pack_type">end</property>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
                       </widget>
                       <packing>
-                        <property name="expand">False</property>
                         <property name="position">1</property>
                       </packing>
                     </child>
@@ -4196,6 +4223,8 @@ when new results come in</property>
                 <signal name="clicked" handler="OnApply"/>
               </widget>
               <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
                 <property name="position">0</property>
               </packing>
             </child>
@@ -4210,6 +4239,8 @@ when new results come in</property>
                 <signal name="clicked" handler="OnCancel"/>
               </widget>
               <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
                 <property name="position">1</property>
               </packing>
             </child>
@@ -4224,6 +4255,8 @@ when new results come in</property>
                 <signal name="clicked" handler="OnOk"/>
               </widget>
               <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
                 <property name="position">2</property>
               </packing>
             </child>
@@ -7522,31 +7555,31 @@ typed incorrectly or as an acronym</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkCheckButton" id="TabColours">
+              <widget class="GtkCheckButton" id="TabReorderable">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
                 <property name="draw_indicator">True</property>
                 <child>
-                  <widget class="GtkHBox" id="hbox43">
+                  <widget class="GtkHBox" id="hboxReorderable">
                     <property name="visible">True</property>
                     <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                     <property name="spacing">5</property>
                     <child>
-                      <widget class="GtkImage" id="NotificationIcon2">
+                      <widget class="GtkImage" id="ReorderableIcon">
                         <property name="visible">True</property>
                         <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                        <property name="stock">gtk-select-color</property>
+                        <property name="stock">gtk-go-forward</property>
                       </widget>
                       <packing>
                         <property name="position">0</property>
                       </packing>
                     </child>
                     <child>
-                      <widget class="GtkLabel" id="label32">
+                      <widget class="GtkLabel" id="labelReorderable">
                         <property name="visible">True</property>
                         <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                        <property name="label" translatable="yes">Notification changes the tab's text color</property>
+                        <property name="label" translatable="yes">Tabs can be repositioned</property>
                       </widget>
                       <packing>
                         <property name="position">1</property>
@@ -7942,31 +7975,31 @@ Right</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkCheckButton" id="TabReorderable">
+              <widget class="GtkCheckButton" id="TabColours">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
                 <property name="draw_indicator">True</property>
                 <child>
-                  <widget class="GtkHBox" id="hboxReorderable">
+                  <widget class="GtkHBox" id="hbox43">
                     <property name="visible">True</property>
                     <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                     <property name="spacing">5</property>
                     <child>
-                      <widget class="GtkImage" id="ReorderableIcon">
+                      <widget class="GtkImage" id="NotificationIcon2">
                         <property name="visible">True</property>
                         <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                        <property name="stock">gtk-go-forward</property>
+                        <property name="stock">gtk-select-color</property>
                       </widget>
                       <packing>
                         <property name="position">0</property>
                       </packing>
                     </child>
                     <child>
-                      <widget class="GtkLabel" id="labelReorderable">
+                      <widget class="GtkLabel" id="label32">
                         <property name="visible">True</property>
                         <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                        <property name="label" translatable="yes">Tabs can be repositioned</property>
+                        <property name="label" translatable="yes">Notification changes the tab's text color</property>
                       </widget>
                       <packing>
                         <property name="position">1</property>

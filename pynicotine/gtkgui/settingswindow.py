@@ -48,6 +48,7 @@ class buildFrame:
 		self.__dict__[window].destroy()
 		self.wTree.signal_autoconnect(self)
 
+
 class ServerFrame(buildFrame):
 	def __init__(self, parent, encodings):
 		self.p = parent
@@ -145,6 +146,9 @@ class ServerFrame(buildFrame):
 			}
 		}
 
+	def OnChangePassword(self, widget):
+		self.frame.OnChangePassword(self.Password.get_text())
+		
 class SharesFrame(buildFrame):
 	def __init__(self, parent):
 		self.p = parent

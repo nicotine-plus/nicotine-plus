@@ -215,6 +215,7 @@ class SlskProtoThread(threading.Thread):
 		PrivateRoomAdded:139,
 		PrivateRoomRemoved:140,
 		PrivateRoomToggle:141,
+		ChangePassword:142,
 		PrivateRoomAddOperator:143,
 		PrivateRoomRemoveOperator:144,
 		PrivateRoomOperatorAdded:145,
