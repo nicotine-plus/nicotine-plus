@@ -1,5 +1,5 @@
---- opt.orig/local/share/macports/Tcl/port1.0/portconfigure.tcl	2008-12-14 04:42:30.000000000 +0200
-+++ opt/local/share/macports/Tcl/port1.0/portconfigure.tcl	2009-03-18 23:48:58.000000000 +0200
+--- /opt.orig/local/share/macports/Tcl/port1.0/portconfigure.tcl	2009-05-16 16:21:45.000000000 +0300
++++ /opt/local/share/macports/Tcl/port1.0/portconfigure.tcl	2009-05-14 23:50:42.000000000 +0300
 @@ -67,7 +67,7 @@
  default configure.cppflags  {"-I${prefix}/include"}
  default configure.cxxflags  {[configure_get_cflags]}
@@ -9,15 +9,23 @@
  default configure.libs      {}
  default configure.fflags    {[configure_get_cflags]}
  default configure.f90flags  {[configure_get_cflags]}
---- opt.orig/local/var/macports/sources/rsync.macports.org/release/ports/x11/pango/Portfile	2009-03-04 15:37:10.000000000 +0200
-+++ opt/local/var/macports/sources/rsync.macports.org/release/ports/x11/pango/Portfile	2009-03-20 20:14:11.000000000 +0200
-@@ -78,7 +78,8 @@
+--- /opt.orig/local/var/macports/sources/rsync.macports.org/release/ports/x11/gtk2/Portfile	2009-05-16 16:20:51.000000000 +0300
++++ /opt/local/var/macports/sources/rsync.macports.org/release/ports/x11/gtk2/Portfile	2009-05-16 16:24:33.000000000 +0300
+@@ -90,6 +90,7 @@
+ depends_run     port:shared-mime-info
+ 
+ configure.args  --enable-static \
++                --with-included-loaders \
+                 --disable-glibtest
+ 
+ if { [variant_isset universal] } {
+--- /opt.orig/local/var/macports/sources/rsync.macports.org/release/ports/x11/pango/Portfile	2009-05-16 16:22:18.000000000 +0300
++++ /opt/local/var/macports/sources/rsync.macports.org/release/ports/x11/pango/Portfile	2009-05-15 10:43:06.000000000 +0300
+@@ -114,6 +114,7 @@
      -bind_at_load
  
  configure.args \
--    --enable-static
-+    --enable-static \
-+    --with-included-modules
++    --with-included-modules \
+     --enable-static \
+     --x-include=${prefix}/include --x-lib=${prefix}/lib
  
- # AC_X_PATH blindly asks xmkmf where X11 is, and it always uses /usr/X11R6.
- # This block helps us link correctly and setup our pc files correctly when we

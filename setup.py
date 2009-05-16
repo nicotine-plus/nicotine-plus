@@ -129,7 +129,7 @@ if __name__ == '__main__' :
 		data_files	= [],
 		options		= {'py2app': 
 			{'argv_emulation': True,
-			'includes': 'gtk, cairo, pangocairo, atk',
+			'includes': 'gtk, cairo, pangocairo, atk, gio',
 			'iconfile': 'files/nicotine_blue_upscaled.icns',
 			'packages': 'pynicotine'
 			}
