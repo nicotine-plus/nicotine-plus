@@ -1094,7 +1094,7 @@ def HumanSize(number):
 		elif s >= 1000:
 			r = _("%.2f KiB") % (s / 1024.0)
 		else:
-			r = "%d Bytes" % s
+			r = _("%d Bytes") % s
 		return r
 	except Exception, e:
 		return number
@@ -1109,7 +1109,7 @@ def HumanSpeed(number):
 		elif s >= 1000:
 			r = _("%.2f KiB/s") % (s / 1024.0)
 		else:
-			r = str(number)
+			r = _("%d B/s") % (number)
 		return r
 	except Exception, e:
 		return number
