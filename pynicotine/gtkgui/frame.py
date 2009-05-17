@@ -27,9 +27,9 @@ from pynicotine import slskproto
 from pynicotine.utils import version
 import time
 try:
-    import mozembed
+    import gtkmozembed
 except ImportError:
-    mozembed = None
+    gtkmozembed = None
 import gobject
 import thread
 import urllib
@@ -194,7 +194,8 @@ class BrowserWindow(gtk.VBox):
 		top.pack_start(self.entry, True, True)
 		self.pack_start(top, False, True)
 		try:
-			self.view = mozembed.MozClient()
+			gtkmozembed.set_profile_path("/tmp", "nicotine+mozembed")
+			self.view = gtkmozembed.MozEmbed()
 		except Exception,  e:
 			error = "Embedded Mozilla webrowser failed to load: " + str(e)
 			print error
@@ -204,28 +205,38 @@ class BrowserWindow(gtk.VBox):
 			self.view.connect('location', self.on_location_change)
 
 		self.show_all()
-		#finish()
+		self.finish()
 		repeat=True
-		while gtk.events_pending():
-			gtk.main_iteration()
-			if not repeat: break
-
+		
 		self.view.set_data('<html><body><b>' + _('Loading requested'
 		' information...') + '</b></body></html>', '')
 
 		self.view.connect('net-stop', self.on_net_stop)
+		self.cache_dir = '/tmp'
 
 		self.server = ''
 
 		if url:
 			self.load_url(url, self.action_count, False)
+	def finish(self, repeat=True):
+		"""
+			Waits for current pending gtk events to finish
+		"""
+		while gtk.events_pending():
+			gtk.main_iteration()
+			if not repeat: break
+	def shutdown(self):
+		self.view.stop_load()
+		self.view.is_realize = False
+		self.finish()
+		
 
 	def on_net_stop(self, *args):
 		"""
 		Called when mozilla is done loading the page
 		"""
 		self.view.stopped = True
-		pass
+
 
 	def set_text(self, text):
 		"""
@@ -734,7 +745,7 @@ class NicotineFrame:
 			self.logMessage(trerror)
 		self.SetAllToolTips()
 		self.WebBrowserTabLabel =  gtk.Label("Browser")
-		if WebBrowser and config["ui"]["mozembed"] and mozembed != 0:
+		if WebBrowser and config["ui"]["mozembed"] and gtkmozembed != 0:
 			self.extravbox.show()
 			self.browser = BrowserWindow(self, "http://nicotine-plus.org")
 			self.extravbox.pack_start(self.browser, True, True)
@@ -1174,12 +1185,20 @@ class NicotineFrame:
 		if response == gtk.RESPONSE_OK:
 			if checkbox:
 				self.np.config.sections["ui"]["exitdialog"] = 0
-			if sys.platform == "win32" and self.TrayApp.trayicon:
-				self.TrayApp.trayicon.hide_icon()
+			if self.TrayApp.trayicon:
+				if sys.platform == "win32":
+					self.TrayApp.trayicon.hide_icon()
+				else:
+					self.TrayApp.destroy_trayicon()
 			self.MainWindow.destroy()
-			gtk.main_quit()
+			
 			if self.browser is not None:
-				sys.exit()
+				self.browser.shutdown()
+				#sys.exit()
+			
+			gtk.gdk.threads_leave()
+			gtk.main_quit()
+
 		elif response == gtk.RESPONSE_CANCEL:
 			pass
 			
@@ -1703,12 +1722,18 @@ class NicotineFrame:
 			self.OnDisconnect(None)
 		self.np.config.writeConfig()
 		self.np.protothread.abort()
-		if sys.platform == "win32":
-			if self.TrayApp.trayicon:
+			
+		if self.TrayApp.trayicon:
+			if sys.platform == "win32":
 				self.TrayApp.trayicon.hide_icon()
-		gtk.main_quit()
+			else:
+				self.TrayApp.destroy_trayicon()
 		if self.browser is not None:
-			sys.exit()
+			self.browser.shutdown()
+			#sys.exit()
+		
+		gtk.gdk.threads_leave()
+		gtk.main_quit()
 		
 	def OnConnect(self, widget):
 		self.TrayApp.tray_status["status"] = "connect"
