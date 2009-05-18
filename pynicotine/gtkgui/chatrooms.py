@@ -58,11 +58,8 @@ class RoomsControl:
 		self.autojoin = 1
 		self.rooms = []
 		config = self.frame.np.config.sections
-		if type(config["private_rooms"]["owned"]) is list:
-			config["private_rooms"]["owned"] = {}
-		if type(config["private_rooms"]["membership"]) is list:
-			config["private_rooms"]["membership"] = {}
-		self.PrivateRooms = {}
+		self.PrivateRooms =  config["private_rooms"]["rooms"]
+			
 		#self.PrivateRoomsOperator = config["private_rooms"]["operator"]
 		#self.PrivateRoomsMembership = config["private_rooms"]["membership"]
 		
@@ -409,43 +406,51 @@ class RoomsControl:
 		if msg.room in rooms.keys():
 			if msg.user not in rooms[msg.room]["users"]:
 				rooms[msg.room]["users"].append(msg.user)
-		
+		self.SetPrivateRooms()
 	def PrivateRoomRemoveUser(self, msg):
 		rooms = self.PrivateRooms
 		if msg.room in rooms.keys():
 			if msg.user in rooms[msg.room]["users"]:
 				rooms[msg.room]["users"].remove(msg.user)
-				
+		self.SetPrivateRooms()
 	def PrivateRoomOperatorAdded(self, msg):
 		rooms = self.PrivateRooms
 		if msg.room in rooms.keys():
 			rooms[msg.room]["operator"] = True
 		
-		
+		self.SetPrivateRooms()
+
 	def PrivateRoomOperatorRemoved(self, msg):
 		rooms = self.PrivateRooms
 		if msg.room in rooms.keys():
 			rooms[msg.room]["operator"] = False
 
-				
+		self.SetPrivateRooms()
+
 	def PrivateRoomAddOperator(self, msg):
 		rooms = self.PrivateRooms
 		if msg.room in rooms.keys():
 			if msg.user not in rooms[msg.room]["operators"]:
 				rooms[msg.room]["operators"].append(msg.user)
-		
+			if msg.user == self.frame.np.config.sections["server"]["login"]:
+				rooms[room]["operator"] = True
+		self.SetPrivateRooms()
+
 	def PrivateRoomRemoveOperator(self, msg):
 		rooms = self.PrivateRooms
 		if msg.room in rooms.keys():
 			if msg.user in rooms[msg.room]["operators"]:
 				rooms[msg.room]["operators"].remove(msg.user)
-				
+			if msg.user == self.frame.np.config.sections["server"]["login"]:
+				rooms[room]["operator"] = False
+		self.SetPrivateRooms()
+
 	def PrivateRoomAdded(self, msg):
 		rooms = self.PrivateRooms
 		room = msg.room
 		if room not in rooms:
 			self.CreatePrivateRoom(room)
-			rooms[room]["operator"] = True
+			#rooms[room]["operator"] = True
 		self.SetPrivateRooms()
 
 		
@@ -731,7 +736,7 @@ class ChatRoom:
 		self.cols = cols = InitialiseColumns(self.UserList, 
 			[_("Status"), 20, "pixbuf"],
 			[_("Country"), 25, "pixbuf"],
-			[_("User"), 100, "text", self.frame.CellDataFunc],
+			[_("User"), 100, "text", self.UserColumnDraw],
 			[_("Speed"), 0, "text", self.frame.CellDataFunc],
 			[_("Files"), 0, "text", self.frame.CellDataFunc],
 		)
@@ -1333,7 +1338,30 @@ class ChatRoom:
 			self.LabelPeople.set_text(_("You are alone"))
 		else:
 			self.LabelPeople.hide()
-		
+
+	def UserColumnDraw(self, column, cellrenderer, model, iter):
+		user = self.usersmodel.get_value(iter, 2)
+		if self.room in self.roomsctrl.PrivateRooms:
+			if user == self.frame.np.config.sections["server"]["login"] and (self.roomsctrl.PrivateRooms[self.room]["owned"]):
+				cellrenderer.set_property("underline", pango.UNDERLINE_SINGLE)
+				cellrenderer.set_property("weight", pango.WEIGHT_BOLD)
+			elif user in (self.roomsctrl.PrivateRooms[self.room]["operators"]):
+				cellrenderer.set_property("weight", pango.WEIGHT_BOLD)
+				cellrenderer.set_property("underline", pango.UNDERLINE_NONE)
+			else:
+				cellrenderer.set_property("weight", pango.WEIGHT_NORMAL)
+				cellrenderer.set_property("underline", pango.UNDERLINE_NONE)
+		else:
+				cellrenderer.set_property("weight", pango.WEIGHT_NORMAL)
+				cellrenderer.set_property("underline", pango.UNDERLINE_NONE)
+
+		self.frame.CellDataFunc(column, cellrenderer, model, iter)
+
+	def GetUserHeirarchy(self, user):
+		if user not in self.users:
+			return
+		self.usersmodel.set(self.users[user], 3, HumanSpeed(avgspeed), 4, Humanize(files), 6, avgspeed, 7, files)
+
 	def GetUserStats(self, user, avgspeed, files):
 		if user not in self.users:
 			return
