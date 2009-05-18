@@ -20,6 +20,7 @@
 import os
 
 import gtk, gtk.glade
+from tempfile import gettempdir
 
 from pynicotine.pynicotine import NetworkEventProcessor
 from pynicotine import slskmessages
@@ -194,7 +195,7 @@ class BrowserWindow(gtk.VBox):
 		top.pack_start(self.entry, True, True)
 		self.pack_start(top, False, True)
 		try:
-			gtkmozembed.set_profile_path("/tmp", "nicotine+mozembed")
+			gtkmozembed.set_profile_path(gettempdir(), "nicotine+mozembed")
 			self.view = gtkmozembed.MozEmbed()
 		except Exception,  e:
 			error = "Embedded Mozilla webrowser failed to load: " + str(e)
@@ -212,7 +213,7 @@ class BrowserWindow(gtk.VBox):
 		' information...') + '</b></body></html>', '')
 
 		self.view.connect('net-stop', self.on_net_stop)
-		self.cache_dir = '/tmp'
+		self.cache_dir = gettempdir()
 
 		self.server = ''
 
