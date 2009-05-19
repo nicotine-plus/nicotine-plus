@@ -22,8 +22,9 @@
 import struct
 import types
 import zlib
-from utils import _
 import os
+from utils import _
+from logfacility import log
 
 """ This module contains message classes, that networking and UI thread
 exchange. Basically there are three types of messages: internal messages,
@@ -106,7 +107,7 @@ class UploadFile(InternalMessage):
 		self.offset = offset
 
 class FileError(InternalMessage):
-	""" Sent by networking thread to indicate that a file error occured during
+	""" Sent by networking thread to indicate that a file error occurred during
 	filetransfer. """
 	def __init__(self, conn = None, file = None, strerror = None):
 		self.conn = conn
@@ -187,7 +188,7 @@ class SlskMessage:
 			else:
 				return start, None
 		except struct.error, error:
-			print self.__class__, error
+			log.addwarning("%s %s" % (self.__class__, error))
 			return start, None
 
 	def packObject(self, object):
@@ -200,21 +201,21 @@ class SlskMessage:
 		elif type(object) is types.StringType:
 			return struct.pack("<i", len(object))+object
 		elif type(object) is types.UnicodeType:
-			print _("Warning: networking thread has to convert unicode string %(object)s message %(type)s") % {'object':object, 'type':self.__class__}
+			log.addwarning(_("Warning: networking thread has to convert unicode string %(object)s message %(type)s") % {'object':object, 'type':self.__class__})
 			encoded = object.encode("utf-8",'replace')
 			return struct.pack("<i", len(encoded))+encoded
-		print _("Warning: unknown object type %s") % type(object) +" "+ ("in message %(type)s") % {'type':self.__class__}
+		log.addwarning(_("Warning: unknown object type %s") % type(object) +" "+ ("in message %(type)s") % {'type':self.__class__})
 		return ""
         
 	def makeNetworkMessage(self):
 		""" Returns binary array, that can be sent over the network"""
-		print _("Empty message made, class %s") % self.__class__
+		log.addwarning(_("Empty message made, class %s") % (self.__class__,))
 		return None
     
 	def parseNetworkMessage(self, message):
 		""" Extracts information from the message and sets up fields 
 		in an object"""
-		print _("Can't parse incoming messages, class %s") % self.__class__
+		log.addwarning(_("Can't parse incoming messages, class %s") % (self.__class__,))
 	
 	def strrev(self, str):
 		strlist = list(str)
@@ -277,7 +278,7 @@ class Login(ServerMessage):
 				pos, self.ip = pos+4, socket.inet_ntoa(self.strrev(message[pos:pos+4]))
 				# Unknown number
 			except Exception, error:
-				print "Error unpacking IP address", error
+				log.addwarning("Error unpacking IP address: %s" % (error,))
 			try:
 				# MD5 hexdigest of the password you sent
 				if len(message[pos:]) > 0:
@@ -411,7 +412,7 @@ class AckNotifyPrivileges(ServerMessage):
 	def __init__(self, token = None):
 		self.token = token
 	def parseNetworkMessage(self, message):
-		pos, self.token = self.getObject(message, types.IntType)	
+		pos, self.token = self.getObject(message, types.IntType)
 	def makeNetworkMessage(self):
 		return self.packObject(self.token)
 class JoinPublicRoom(ServerMessage):
@@ -857,7 +858,7 @@ class SendSpeed(ServerMessage):
 
 class SendUploadSpeed(ServerMessage):
 	""" We now send this after a finished upload to let the server update
-	the spped statistics for a user"""
+	the speed statistics for a user"""
 	def __init__(self, speed = None):
 		self.speed = speed
 	
@@ -961,8 +962,8 @@ class RoomList(ServerMessage):
 			for i in range(numprivateroomusers):
 				pos, usercount = self.getObject(message, types.IntType, pos)
 				self.privaterooms[i][1] = usercount
-		except Exception, e:
-			print e
+		except Exception, error:
+			log.addwarning(_("Exception during parsing %(area)s: %(exception)s") % {'area':'RoomList', 'exception':error})
 			pass
 
 class ExactFileSearch(ServerMessage):
@@ -1108,7 +1109,7 @@ class WishlistInterval(ServerMessage):
 		pos, self.seconds = self.getObject(message, types.IntType)
 
 class PrivilegedUsers(ServerMessage):
-	""" A list of thise who made a donation """
+	""" A list of those who made a donation """
 	def __init__(self):
 		pass
 	
@@ -1201,7 +1202,7 @@ class UserInterests(ServerMessage):
 		return self.packObject(self.user)
 	
 	def parseNetworkMessage(self, message, pos=0):
-		# Recieve a users' interests
+		# Receive a users' interests
 		pos, self.user = self.getObject(message, types.StringType, pos)
 		pos, likesnum = self.getObject(message, types.IntType, pos)
 		self.likes = []
@@ -1427,7 +1428,7 @@ class SharedFileList(PeerMessage):
 			try:
 				message=zlib.decompress(message)
 			except Exception, error:
-				print error
+				log.addwarning(_("Exception during parsing %(area)s: %(exception)s") % {'area':'SharedFileList', 'exception':error})
 				self.list={}
 				return
 
@@ -1458,7 +1459,7 @@ class SharedFileList(PeerMessage):
 	def makeNetworkMessage(self, nozlib = 0, rebuild=False):
 		# Elaborate hack, to save CPU
 		# Store packed message contents in self.built, and use
-		# instead of repacking it, unles rebuild is True
+		# instead of repacking it, unless rebuild is True
 		if not rebuild and self.built is not None:
 			return self.built
 		msg = ""
@@ -1518,7 +1519,7 @@ class FileSearchResult(PeerMessage):
 		try:
 			message = zlib.decompress(message)
 		except Exception, error:
-			print error
+			log.addwarning(_("Exception during parsing %(area)s: %(exception)s") % {'area':'FileSearchResult', 'exception':error})
 			self.list = {}
 			return
 	
@@ -1608,7 +1609,7 @@ class FolderContentsResponse(PeerMessage):
 		try:
 			message = zlib.decompress(message)
 		except Exception, error:
-			print error
+			log.addwarning(_("Exception during parsing %(area)s: %(exception)s") % {'area':'FolderContentsResponse', 'exception':error})
 			self.list = {}
 			return
 	#        f = open("ttt","w")
@@ -1890,7 +1891,7 @@ class SearchRequest(ServerMessage):
 		pos, self.searchterm = self.getObject(message, types.StringType, pos)
 
 class UserPrivileged(ServerMessage):
-	""" Discover whether a user is privilged or not """
+	""" Discover whether a user is privileged or not """
 	def __init__(self, user = None):
 		self.user = user
 		self.privileged = None
