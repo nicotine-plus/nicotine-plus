@@ -54,8 +54,7 @@ if LOAD_PSYCO:
 		import psyco
 		psyco.profile()
 	except ImportError:
-		log.addwarning(_("""Nicotine supports \"psyco\", an inline optimizer for python
-code, you can get it at http://sourceforge.net/projects/psyco/"""))
+		log.addwarning(_("""Nicotine supports \"psyco\", an inline optimizer for python code, you can get it at http://sourceforge.net/projects/psyco/"""))
 
 
 

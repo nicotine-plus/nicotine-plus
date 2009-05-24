@@ -11,7 +11,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
+import textwrap
 import time
+from sys import stdout
+
 from collections import deque
 
 class logger(object):
@@ -59,11 +63,33 @@ class logger(object):
             self.listeners.remove(callback)
         except KeyError:
             self.add("Failed to remove listener %s, does not exist." % (callback,), 1)
+
+
+CONSOLEENCODING = stdout.encoding
+if not CONSOLEENCODING or CONSOLEENCODING.lower() == 'ascii':
+    # ASCII is quite improbable, lets just hope the user hasnt set up
+    # everything properly and its really UTF8
+    CONSOLEENCODING = 'UTF8'
+CONSOLEWIDTH = 80
+try:
+    CONSOLEWIDTH = os.environ['COLUMNS']
+except KeyError:
+    pass
+TIMEFORMAT = "%a %H:%M "
+
+wrapper = textwrap.TextWrapper()
+wrapper.width = CONSOLEWIDTH
+wrapper.subsequent_indent = " " * len(time.strftime(TIMEFORMAT))
+wrapper.expand_tabs = False
+wrapper.replace_whitespace = True
+
 def consolelogger(timestamp, level, msg):
     #if level in (None,):
     #    print "FIX MY SOURCE -- %s %s" % (time.asctime(timestamp), msg)
     if level in (1,):
-        print "%s %s" % (time.asctime(timestamp), msg)
+        wrapper.initial_indent = time.strftime(TIMEFORMAT, timestamp)
+        for i in wrapper.wrap(msg):
+            print i.encode(CONSOLEENCODING, 'replace')
     else:
         pass
 try:
