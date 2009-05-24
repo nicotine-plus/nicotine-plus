@@ -144,7 +144,7 @@ class UserTabs(IconNotebook):
 
 class UserInfo:
 	def __init__(self, userinfos, user, conn):
-		self.wTree = gtk.glade.XML(os.path.join(os.path.dirname(os.path.realpath(__file__)), "userinfo.glade" ) ) 
+		self.wTree = gtk.glade.XML(os.path.join(os.path.dirname(os.path.realpath(__file__)), "userinfo.glade" ), None, "nicotine" ) 
 		widgets = self.wTree.get_widget_prefix("")
 		for i in widgets:
 			name = gtk.glade.get_widget_name(i)
