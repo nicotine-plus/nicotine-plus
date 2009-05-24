@@ -504,8 +504,9 @@ class Config:
 		self.config_lock.release()
 
 	def removeOldOption(self, section, option):
-		if option in self.parser.options(section):
-			self.parser.remove_option(section, option)
+		if section in self.parser.sections():
+			if option in self.parser.options(section):
+				self.parser.remove_option(section, option)
 
 	def clearShares(self, sharedfiles, bsharedfiles, sharedfilesstreams, bsharedfilesstreams, wordindex, bwordindex, fileindex, bfileindex, sharedmtimes, bsharedmtimes):
 		try:
