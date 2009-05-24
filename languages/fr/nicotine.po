@@ -11,7 +11,7 @@ msgstr ""
 "Last-Translator: ><((((*> <zniavre2048@gmail.com>\n"
 "Language-Team: Hyriand <hyriand@thegraveyard.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=ISO-8859-1\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Poedit-Bookmarks: -1,180,-1,-1,-1,-1,-1,-1,-1,-1\n"
@@ -775,7 +775,6 @@ msgstr "Format des dialogues privés:"
 msgid "<b>Logging</b>"
 msgstr "<b>Enregistrement:</b>"
 
-# pynicotine/gtkgui/nicotine_glade.py
 msgid "Ban"
 msgstr "Bannir"
 
