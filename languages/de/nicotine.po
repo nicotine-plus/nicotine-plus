@@ -16,7 +16,7 @@ msgstr ""
 "Last-Translator: daelstorm <daelstorm@gmail.com>\n"
 "Language-Team: German\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=ISO-8859-1\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 msgid "Nicotine"
