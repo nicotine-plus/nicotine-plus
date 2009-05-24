@@ -180,7 +180,7 @@
                                 <child>
                                   <widget class="GtkLabel" id="label70">
                                     <property name="visible">True</property>
-                                    <property name="label">Save</property>
+                                    <property name="label" translatable="yes">Save</property>
                                     <property name="use_underline">True</property>
                                   </widget>
                                   <packing>
@@ -228,7 +228,7 @@
                                 <child>
                                   <widget class="GtkLabel" id="label71">
                                     <property name="visible">True</property>
-                                    <property name="label">Refresh</property>
+                                    <property name="label" translatable="yes">Refresh</property>
                                     <property name="use_underline">True</property>
                                   </widget>
                                   <packing>
@@ -276,7 +276,7 @@
                                 <child>
                                   <widget class="GtkLabel" id="label69">
                                     <property name="visible">True</property>
-                                    <property name="label">Close</property>
+                                    <property name="label" translatable="yes">Close</property>
                                     <property name="use_underline">True</property>
                                   </widget>
                                   <packing>

@@ -20,7 +20,7 @@
                   <widget class="GtkMenu" id="file1_menu">
                     <child>
                       <widget class="GtkImageMenuItem" id="connect1">
-                        <property name="label">_Connect</property>
+                        <property name="label" translatable="yes">_Connect</property>
                         <property name="visible">True</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">False</property>
@@ -36,7 +36,7 @@
                     </child>
                     <child>
                       <widget class="GtkImageMenuItem" id="disconnect1">
-                        <property name="label">_Disconnect</property>
+                        <property name="label" translatable="yes">_Disconnect</property>
                         <property name="visible">True</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">False</property>
@@ -58,7 +58,7 @@
                     </child>
                     <child>
                       <widget class="GtkImageMenuItem" id="awayreturn1">
-                        <property name="label">_Away/Return</property>
+                        <property name="label" translatable="yes">_Away/Return</property>
                         <property name="visible">True</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">False</property>
@@ -74,7 +74,7 @@
                     </child>
                     <child>
                       <widget class="GtkImageMenuItem" id="check_privileges1">
-                        <property name="label">Check _privileges</property>
+                        <property name="label" translatable="yes">Check _privileges</property>
                         <property name="visible">True</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">False</property>
@@ -94,7 +94,7 @@
                     </child>
                     <child>
                       <widget class="GtkImageMenuItem" id="exit1">
-                        <property name="label">Quit</property>
+                        <property name="label" translatable="yes">Quit</property>
                         <property name="visible">True</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">False</property>
@@ -121,7 +121,7 @@
                   <widget class="GtkMenu" id="edit_menu">
                     <child>
                       <widget class="GtkImageMenuItem" id="settings1">
-                        <property name="label">_Settings</property>
+                        <property name="label" translatable="yes">_Settings</property>
                         <property name="visible">True</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">False</property>
@@ -137,7 +137,7 @@
                     </child>
                     <child>
                       <widget class="GtkImageMenuItem" id="now_playing1">
-                        <property name="label">Configure _Now Playing</property>
+                        <property name="label" translatable="yes">Configure _Now Playing</property>
                         <property name="visible">True</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">False</property>
@@ -157,7 +157,7 @@
                     </child>
                     <child>
                       <widget class="GtkImageMenuItem" id="BackupConfig">
-                        <property name="label">Backup Config</property>
+                        <property name="label" translatable="yes">Backup Config</property>
                         <property name="visible">True</property>
                         <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                         <property name="use_underline">True</property>
@@ -297,7 +297,7 @@
                     <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                     <child>
                       <widget class="GtkImageMenuItem" id="ConfigureShares">
-                        <property name="label">Configure Shares</property>
+                        <property name="label" translatable="yes">Configure Shares</property>
                         <property name="visible">True</property>
                         <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                         <property name="use_underline">True</property>
@@ -319,7 +319,7 @@
                     </child>
                     <child>
                       <widget class="GtkImageMenuItem" id="rescan1">
-                        <property name="label">_Rescan shares</property>
+                        <property name="label" translatable="yes">_Rescan shares</property>
                         <property name="visible">True</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">False</property>
@@ -334,7 +334,7 @@
                     </child>
                     <child>
                       <widget class="GtkImageMenuItem" id="rescan_buddy">
-                        <property name="label">_Rescan Buddy shares</property>
+                        <property name="label" translatable="yes">_Rescan Buddy shares</property>
                         <property name="visible">True</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">False</property>
@@ -354,7 +354,7 @@
                     </child>
                     <child>
                       <widget class="GtkImageMenuItem" id="rebuild1">
-                        <property name="label">Rebuild shares</property>
+                        <property name="label" translatable="yes">Rebuild shares</property>
                         <property name="visible">True</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">False</property>
@@ -369,7 +369,7 @@
                     </child>
                     <child>
                       <widget class="GtkImageMenuItem" id="rebuild_buddy">
-                        <property name="label">Rebuild Buddy shares</property>
+                        <property name="label" translatable="yes">Rebuild Buddy shares</property>
                         <property name="visible">True</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">False</property>
@@ -389,7 +389,7 @@
                     </child>
                     <child>
                       <widget class="GtkImageMenuItem" id="browse_my_shares1">
-                        <property name="label">_Browse my shares</property>
+                        <property name="label" translatable="yes">_Browse my shares</property>
                         <property name="visible">True</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">False</property>
@@ -415,7 +415,7 @@
                   <widget class="GtkMenu" id="modes1_menu">
                     <child>
                       <widget class="GtkImageMenuItem" id="chat_rooms1">
-                        <property name="label">_Chat Rooms</property>
+                        <property name="label" translatable="yes">_Chat Rooms</property>
                         <property name="visible">True</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">False</property>
@@ -430,7 +430,7 @@
                     </child>
                     <child>
                       <widget class="GtkImageMenuItem" id="private_chat1">
-                        <property name="label">_Private Chat</property>
+                        <property name="label" translatable="yes">_Private Chat</property>
                         <property name="visible">True</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">False</property>
@@ -445,7 +445,7 @@
                     </child>
                     <child>
                       <widget class="GtkImageMenuItem" id="downloads1">
-                        <property name="label">_Downloads</property>
+                        <property name="label" translatable="yes">_Downloads</property>
                         <property name="visible">True</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">False</property>
@@ -460,7 +460,7 @@
                     </child>
                     <child>
                       <widget class="GtkImageMenuItem" id="uploads1">
-                        <property name="label">_Uploads</property>
+                        <property name="label" translatable="yes">_Uploads</property>
                         <property name="visible">True</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">False</property>
@@ -475,7 +475,7 @@
                     </child>
                     <child>
                       <widget class="GtkImageMenuItem" id="search_files1">
-                        <property name="label">_Search Files</property>
+                        <property name="label" translatable="yes">_Search Files</property>
                         <property name="visible">True</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">False</property>
@@ -490,7 +490,7 @@
                     </child>
                     <child>
                       <widget class="GtkImageMenuItem" id="user_info1">
-                        <property name="label">User I_nfo</property>
+                        <property name="label" translatable="yes">User I_nfo</property>
                         <property name="visible">True</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">False</property>
@@ -505,7 +505,7 @@
                     </child>
                     <child>
                       <widget class="GtkImageMenuItem" id="user_browse1">
-                        <property name="label">User _Browse</property>
+                        <property name="label" translatable="yes">User _Browse</property>
                         <property name="visible">True</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">False</property>
@@ -520,7 +520,7 @@
                     </child>
                     <child>
                       <widget class="GtkImageMenuItem" id="interests1">
-                        <property name="label">_Interests</property>
+                        <property name="label" translatable="yes">_Interests</property>
                         <property name="visible">True</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">False</property>
@@ -535,7 +535,7 @@
                     </child>
                     <child>
                       <widget class="GtkImageMenuItem" id="user_list1">
-                        <property name="label">Buddy _List</property>
+                        <property name="label" translatable="yes">Buddy _List</property>
                         <property name="visible">True</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">False</property>
@@ -561,7 +561,7 @@
                   <widget class="GtkMenu" id="help1_menu">
                     <child>
                       <widget class="GtkImageMenuItem" id="nicotine_guide1">
-                        <property name="label">Offline Nicotine Plus Guide</property>
+                        <property name="label" translatable="yes">Offline Nicotine Plus Guide</property>
                         <property name="visible">True</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">False</property>
@@ -577,7 +577,7 @@
                     </child>
                     <child>
                       <widget class="GtkImageMenuItem" id="nicotine_guide3">
-                        <property name="label">Online Nicotine Plus Guide</property>
+                        <property name="label" translatable="yes">Online Nicotine Plus Guide</property>
                         <property name="visible">True</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">False</property>
@@ -592,7 +592,7 @@
                     </child>
                     <child>
                       <widget class="GtkImageMenuItem" id="SourceForgeProject">
-                        <property name="label">Sourceforge Project Website</property>
+                        <property name="label" translatable="yes">Sourceforge Project Website</property>
                         <property name="visible">True</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">False</property>
@@ -607,7 +607,7 @@
                     </child>
                     <child>
                       <widget class="GtkImageMenuItem" id="Trac">
-                        <property name="label">Nicotine-Plus Trac Website</property>
+                        <property name="label" translatable="yes">Nicotine-Plus Trac Website</property>
                         <property name="visible">True</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">False</property>
@@ -627,7 +627,7 @@
                     </child>
                     <child>
                       <widget class="GtkImageMenuItem" id="about_chatroom_commands1">
-                        <property name="label">About _chat room commands</property>
+                        <property name="label" translatable="yes">About _chat room commands</property>
                         <property name="visible">True</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">False</property>
@@ -642,7 +642,7 @@
                     </child>
                     <child>
                       <widget class="GtkImageMenuItem" id="about_private_chat_command1">
-                        <property name="label">About _private chat commands</property>
+                        <property name="label" translatable="yes">About _private chat commands</property>
                         <property name="visible">True</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">False</property>
@@ -657,7 +657,7 @@
                     </child>
                     <child>
                       <widget class="GtkImageMenuItem" id="about_dependencies">
-                        <property name="label">About _optional dependencies</property>
+                        <property name="label" translatable="yes">About _optional dependencies</property>
                         <property name="visible">True</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">False</property>
@@ -677,7 +677,7 @@
                     </child>
                     <child>
                       <widget class="GtkImageMenuItem" id="about_search_filters1">
-                        <property name="label">About _search filters</property>
+                        <property name="label" translatable="yes">About _search filters</property>
                         <property name="visible">True</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">False</property>
@@ -697,7 +697,7 @@
                     </child>
                     <child>
                       <widget class="GtkImageMenuItem" id="check_latest1">
-                        <property name="label">Check _latest</property>
+                        <property name="label" translatable="yes">Check _latest</property>
                         <property name="visible">True</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">False</property>
@@ -712,7 +712,7 @@
                     </child>
                     <child>
                       <widget class="GtkImageMenuItem" id="report_bug">
-                        <property name="label">Report a _bug</property>
+                        <property name="label" translatable="yes">Report a _bug</property>
                         <property name="visible">True</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">False</property>
@@ -732,7 +732,7 @@
                     </child>
                     <child>
                       <widget class="GtkImageMenuItem" id="about_nicotine1">
-                        <property name="label">About _Nicotine</property>
+                        <property name="label" translatable="yes">About _Nicotine</property>
                         <property name="visible">True</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">False</property>
