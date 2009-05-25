@@ -1,18 +1,18 @@
 ChangeLog for Nicotine Plus
 
-SVN
+1.2.10 (26 May 2009)
 
 Behaviour
  * RGBA mode is no longer on by default, to use it pass the --enable-rgba flag when starting Nicotine+
- * Configuration files are now stored in the user's Application Data folder instead of the installation folder (bug #330)
+ * On Windows, configuration files are now stored in the user's Application Data folder instead of the installation folder (bug #330)
  * The configuration screen for shares has been rearranged in order to make it more logical (bug #341)
  * Support for Mutagen has been added. This will result in more accurate information about bitrates and lengths (bug #259)
  * Icons have been replaced, the alt-tab icon is increased.
  * Most external calls now support pipes
- * Improved German translation (bug #394)
+ * Improved German (bug #394) and French translation (thanks goes to ><((((*>)
  * The dependency for PyVorbis has been removed in favour of Mutagen (bug #409)
  * Notification popups will no longer stack but a single popup will be updated
-
+ 
 Features
  * Built-in Webbrowser (MozEmbed)
  * Ignore by IP
@@ -34,6 +34,11 @@ Features
  * 'Remember choice' option in the quit confirmation dialogue
  * It is possible to ignore people based on their IP address
  * Import warnings are now shows in the log window as well as in the console (bug #381)
+ * New logging functionality, which means no more messages should get lost in the console
+ * You can change your password now (bug #424) 
+ * Misc. improvements to transfer handling
+ * Tab completion can be done by in-line replacement instead of dropdown list
+ * Transfer views now have a 'Place in line' column
 
 Bugs
  * The Danish translation is now stored under 'da'
@@ -45,6 +50,7 @@ Bugs
  * The word '-' is now filtered from search queries (bug #367)
  * Handling of word wrapping of extremely long words is improved
  * Tray icon menu on OSX
+ * Private Room handling has improved (bug #432)
 
 1.2.10 (30 December 2008)
 
