@@ -28,18 +28,18 @@ from pynicotine import slskproto
 from pynicotine.utils import version
 import time
 try:
-    import gtkmozembed
+	import gtkmozembed
 except ImportError:
-    gtkmozembed = None
+	gtkmozembed = None
 import gobject
 import thread
 import urllib
 import signal
 import re
 try:
-    import webbrowser
+	import webbrowser
 except ImportError:
-    webbrowser = None
+	webbrowser = None
 from privatechat import PrivateChats
 from chatrooms import ChatRooms
 from userinfo import UserTabs, UserInfo
@@ -58,7 +58,7 @@ import translux
 from dirchooser import ChooseFile, SaveFile
 from pynicotine.utils import _, ChangeTranslation, executeCommand
 import nowplaying
-import pluginsystem
+from pynicotine import pluginsystem
 from pynicotine.logfacility import log
 from entrydialog import  *
 SEXY=True
@@ -1521,12 +1521,12 @@ class NicotineFrame:
 			self.MainWindow.emit("network_event_lo", lo)
 		return False
 	
-        ## Recieved a network event via emit_network_event 
-        ## with at least one, but possibly more messages
-        ## call the appropriate event class for these message
-        # @param self NicotineFrame (Class)
-        # @param widget the main window
-        # @param msgs a list of messages 
+	## Recieved a network event via emit_network_event 
+	## with at least one, but possibly more messages
+	## call the appropriate event class for these message
+	# @param self NicotineFrame (Class)
+	# @param widget the main window
+	# @param msgs a list of messages 
 	def OnNetworkEvent(self, widget, msgs):
 		for i in msgs:
 			if i.__class__ in self.np.events:
@@ -1785,7 +1785,7 @@ class NicotineFrame:
 		self.userlist.ConnClose()
 		self.userinfo.ConnClose()
 		self.userbrowse.ConnClose()
-		self.pluginhandler.ServerDisconnectNotification()
+		#self.pluginhandler.ServerDisconnectNotification()
 
 	def SetWidgetOnlineStatus(self, status):
 		self.connect1.set_sensitive(not status)
@@ -1823,7 +1823,7 @@ class NicotineFrame:
 		self.TrayApp.SetImage()
 		self.uploads.ConnClose()
 		self.downloads.ConnClose()
-		self.pluginhandler.ServerDisconnectNotification()
+		#self.pluginhandler.ServerDisconnectNotification()
 
 	def SetUserStatus(self, status):
 		self.UserStatus.pop(self.user_context_id)
@@ -1855,7 +1855,7 @@ class NicotineFrame:
 		gobject.idle_add(self.FetchUserListStatus)
 		
 		AppendLine(self.LogWindow, self.np.decode(msg.banner), self.tag_log)
-		self.pluginhandler.ServerConnectNotification()
+		#self.pluginhandler.ServerConnectNotification()
 		return self.privatechats, self.chatrooms, self.userinfo, self.userbrowse, self.Searches, self.downloads, self.uploads, self.userlist
 
 	def GetStatusImage(self, status):
@@ -2346,7 +2346,7 @@ class NicotineFrame:
 		if needcompletion:
 			self.chatrooms.roomsctrl.UpdateCompletions()
 			self.privatechats.UpdateCompletions()
-  	
+		
 		if needcolors:
 			self.chatrooms.roomsctrl.UpdateColours()
 			self.privatechats.UpdateColours()
@@ -2357,7 +2357,7 @@ class NicotineFrame:
 			self.userbrowse.UpdateColours()
 			self.settingswindow.UpdateColours()
 			self.UpdateColours()
-  	
+		
 		self.OnHideChatButtons()
 
 		for w in [self.ChatNotebook, self.PrivatechatNotebook, self.UserInfoNotebook, self.UserBrowseNotebook, self.SearchNotebook]:

@@ -146,11 +146,6 @@ class PrivateChats(IconNotebook):
 	def ShowMessage(self, msg, text, status=None):
 		if msg.user in self.frame.np.config.sections["server"]["ignorelist"]:
 			return
-		tuple = self.frame.pluginhandler.IncomingPrivateChatEvent(msg.user, text)
-		if tuple == None:
-			#print "Pluginsystem made me silence."
-			return
-		(u, text) = tuple
 
 		self.SendMessage(msg.user, None)
 		chat = self.users[msg.user]
@@ -178,7 +173,6 @@ class PrivateChats(IconNotebook):
 		self.users[msg.user].ShowMessage(text, status, msg.timestamp)	
 		if ctcpversion and self.frame.np.config.sections["server"]["ctcpmsgs"] == 0:
 			self.SendMessage(msg.user, "Nicotine-Plus %s" % version)
-		self.frame.pluginhandler.IncomingPrivateChatNotification(msg.user, text)
 
 	def UpdateColours(self):
 		for chat in self.users.values():

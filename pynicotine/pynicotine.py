@@ -616,11 +616,10 @@ class NetworkEventProcessor:
 			for thing in self.config.sections["interests"]["dislikes"]:
 				self.queue.put(slskmessages.AddThingIHate(self.encode(thing)))
 			if not len(self.distribcache):
-   				self.queue.put(slskmessages.HaveNoParent(1))
+				self.queue.put(slskmessages.HaveNoParent(1))
 			self.queue.put(slskmessages.NotifyPrivileges(1, self.config.sections["server"]["login"]))
 			self.privatechat.Login()
 			self.queue.put(slskmessages.CheckPrivileges())
-			
 			self.queue.put(slskmessages.PrivateRoomToggle(self.config.sections["server"]["private_chatrooms"]))
 		else:
 			self.frame.manualdisconnect = 1
@@ -683,7 +682,11 @@ class NetworkEventProcessor:
 				status = 1
 		
 		if self.privatechat is not None:
-			self.privatechat.ShowMessage(msg, msg.msg, status=status)
+			tuple = self.frame.pluginhandler.IncomingPrivateChatEvent(msg.user, msg.msg)
+			if tuple != None:
+				(u, msg.msg) = tuple
+				self.privatechat.ShowMessage(msg, msg.msg, status=status)
+				self.frame.pluginhandler.IncomingPrivateChatNotification(msg.user, msg.msg)
 			self.queue.put(slskmessages.MessageAcked(msg.msgid))
 		else:
 			self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
@@ -828,7 +831,11 @@ class NetworkEventProcessor:
 
 	def SayChatRoom(self, msg):
 		if self.chatrooms is not None:
-			self.chatrooms.roomsctrl.SayChatRoom(msg, msg.msg)
+			event = self.frame.pluginhandler.IncomingPublicChatEvent(msg.room, msg.user, msg.msg)
+			if event != None:
+				(r, n, msg.msg) = event
+				self.chatrooms.roomsctrl.SayChatRoom(msg, msg.msg)
+				self.frame.pluginhandler.IncomingPublicChatNotification(msg.room, msg.user, msg.msg)
 		else:
 			self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
 
@@ -862,6 +869,7 @@ class NetworkEventProcessor:
 			self.queue.put(slskmessages.GetUserStats(self.config.sections["server"]["login"]))
 			if sys.platform == 'darwin':
 				self.logMessage("If you like using Nicotine+ on OS X, please consider sending a postcard to the maintainer, here's the address:\nAlexander Kanavin\nVetehisenkuja 4 B29\n00530 Helsinki Finland")
+			self.frame.pluginhandler.ServerConnectNotification()
 		else:
 			self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
 
@@ -1059,6 +1067,7 @@ class NetworkEventProcessor:
 	def Relogged(self, msg):
 		self.logMessage(_("Someone else is logging in with the same nickname, server is going to disconnect us"))
 		self.frame.manualdisconnect = 1
+		self.frame.pluginhandler.ServerDisconnectNotification(False)
 
 	def OutConn(self, msg):
 		for i in self.peerconns:

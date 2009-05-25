@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from pynicotine.gtkgui.pluginsystem import BasePlugin
+from pynicotine.pluginsystem import BasePlugin
 
 class Plugin(BasePlugin):
     __name__ = "Test Replyer"

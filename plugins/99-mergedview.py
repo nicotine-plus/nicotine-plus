@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from pynicotine.gtkgui.pluginsystem import BasePlugin, returncode
+from pynicotine.pluginsystem import BasePlugin, returncode
 from pynicotine.gtkgui.chatrooms import ChatRoom
 from pynicotine import slskmessages
 
@@ -32,8 +32,8 @@ class Plugin(BasePlugin):
         else:
             self.log("Already active.")
         return returncode['zap']
-    #def ServerDisconnectNotification(self):
-    #    self.log('Were disconnected, merge needs to be destroyed')
+    def ServerConnectNotification(self):
+        self._createIfNeeded()
     def IncomingPublicChatNotification(self, room, user, text):
         if not self.active:
             return

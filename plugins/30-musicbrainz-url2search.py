@@ -10,7 +10,7 @@ class FakePlugin(object):
 
 from urllib import urlopen
 try:
-    from pynicotine.gtkgui.pluginsystem import BasePlugin
+    from pynicotine.pluginsystem import BasePlugin
 except ImportError:
     NPLUS = False
     print "It seems this plugin is not loaded from within n+. Faking events..."

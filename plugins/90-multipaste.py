@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from pynicotine.gtkgui.pluginsystem import BasePlugin, returncode
+from pynicotine.pluginsystem import BasePlugin, returncode
 
 class Plugin(BasePlugin):
     __name__ = "Multi Paste"

@@ -2,7 +2,7 @@
 
 import socket
 
-from pynicotine.gtkgui.pluginsystem import BasePlugin, returncode
+from pynicotine.pluginsystem import BasePlugin, returncode
 from pynicotine import slskmessages
 
 

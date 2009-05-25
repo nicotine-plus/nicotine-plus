@@ -7,7 +7,7 @@ from thread import start_new_thread
 from traceback import extract_stack, extract_tb, format_list
 from pynicotine import slskmessages
 from utils import _
-from pynicotine.logfacility import log
+from logfacility import log
 
 WIN32 = sys.platform.startswith("win")
 
@@ -140,11 +140,7 @@ class PluginHandler(object):
     def IncomingPrivateChatNotification(self, user, line):
         start_new_thread(self.TriggerEvent, ("IncomingPrivateChatNotification", (user, line)))
     def IncomingPublicChatEvent(self, room, user, line):
-        if user != self.myUsername:
-            # dont trigger the scripts on our own talking - we've got "Outgoing" for that
-            return self.TriggerEvent("IncomingPublicChatEvent", (room, user, line))
-        else:
-            return (room, user, line)
+        return self.TriggerEvent("IncomingPublicChatEvent", (room, user, line))
     def IncomingPublicChatNotification(self, room, user, line):
         start_new_thread(self.TriggerEvent, ("IncomingPublicChatNotification", (room, user, line)))
     def OutgoingPrivateChatEvent(self, user, line):
@@ -170,8 +166,6 @@ class PluginHandler(object):
     def UserResolveNotification(self, user, ip, port, country):
         start_new_thread(self.TriggerEvent, ("UserResolveNotification", (user, ip, port, country)))
     def ServerConnectNotification(self):
-        return
-        # We're too early!
         start_new_thread(self.TriggerEvent, ("ServerConnectNotification", (),))
     def ServerDisconnectNotification(self):
         start_new_thread(self.TriggerEvent, ("ServerDisconnectNotification", (),))
@@ -234,14 +228,6 @@ class BasePlugin(object):
         pass
     def UserResolveNotification(self, user, ip, port, country):
         pass
-    def PublicCommandEvent(self, command, room, args):
-        for (trigger, func) in self.__publiccommands__:
-            if trigger == command:
-                return func(self, room, args)
-    def PrivateCommandEvent(self, command, user, args):
-        for (trigger, func) in self.__privatecommands__:
-            if trigger == command:
-                return func(self, user, args)
     def ServerConnectNotification(self):
         pass
     def ServerDisconnectNotification(self):
@@ -250,6 +236,8 @@ class BasePlugin(object):
         pass
     def LeaveChatroomNotification(self, room):
         pass
+    # The following are functions to make your life easier,
+    # you shouldn't override them.
     def log(self, text):
         self.parent.log(self.__name__ + ": " + text)
     def saypublic(self, room, text):
@@ -265,3 +253,13 @@ class BasePlugin(object):
         msg.user = user
         room.SayChatRoom(msg, text)
         return True
+    # The following are functions used by the plugin system,
+    # you are not allowed to override these.
+    def PublicCommandEvent(self, command, room, args):
+        for (trigger, func) in self.__publiccommands__:
+            if trigger == command:
+                return func(self, room, args)
+    def PrivateCommandEvent(self, command, user, args):
+        for (trigger, func) in self.__privatecommands__:
+            if trigger == command:
+                return func(self, user, args)

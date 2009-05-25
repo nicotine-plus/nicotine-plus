@@ -292,8 +292,6 @@ class Searches(IconNotebook):
 		if feedback != None:
 			self.DoSearch(text, mode, users, room)
 			self.frame.SearchEntry.set_text("")
-		#else:
-		#	print "search got cancelled by plugin system"
 		
 	def NewWish(self, wish):
 		if wish in self.frame.np.config.sections["server"]["autosearch"]:

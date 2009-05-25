@@ -27,7 +27,6 @@ from pynicotine.utils import _
 from ticker import Ticker
 from entrydialog import OptionDialog, input_box
 from os.path import commonprefix
-import pluginsystem
 import os, re, time, sys
 ver = sys.version_info 
 
@@ -519,14 +518,7 @@ class RoomsControl:
 			if self.frame.np.ipIgnored(ip):
 				#print "ignored message from IP:", ip, msg.user
 				return
-
-		event = self.frame.pluginhandler.IncomingPublicChatEvent(msg.room, msg.user, text)
-		if event != None:
-			(r, n, text) = event
 			self.joinedrooms[msg.room].SayChatRoom(msg, text)
-			self.frame.pluginhandler.IncomingPublicChatNotification(msg.room, msg.user, text)
-		else:
-			print "Pluginsystem made me shut up" # DEBUG
 	def PublicRoomMessage(self, msg, text):
 		try:
 			room = self.joinedrooms['Public ']
@@ -1254,7 +1246,6 @@ class ChatRoom:
 			self.frame.np.queue.put(slskmessages.RoomTickerSet(self.room, self.frame.np.encode(args, self.encoding)))
 		elif cmd in ('/reload',):
 			self.frame.pluginhandler.reread()
-			reload(pluginsystem)
 			self.frame.pluginhandler = pluginsystem.PluginHandler(self.frame)
 		elif cmd[:1] == "/" and self.frame.pluginhandler.TriggerPublicCommandEvent(self.room, cmd[1:], args):
 			pass

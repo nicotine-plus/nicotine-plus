@@ -3,7 +3,7 @@
 from subprocess import Popen, PIPE
 from thread import start_new_thread
 
-from pynicotine.gtkgui.pluginsystem import BasePlugin, returncode
+from pynicotine.pluginsystem import BasePlugin, returncode
 
 class Plugin(BasePlugin):
     __name__ = "iTunes OSX Now Playing"
