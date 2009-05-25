@@ -29,8 +29,10 @@ from __future__ import division
 import slskmessages
 import threading, thread
 from slskmessages import newId
+from logfacility import log
 
 import os, stat, sys
+import shutil
 import os.path
 import string, re
 import time
@@ -892,23 +894,12 @@ class Transfers:
 					(newname, identicalfile) = self.getRenamedEnhanced(os.path.join(folder, basename), msg.file.name)
 					if newname:
 						try:
-							if win32:
-								os.rename(msg.file.name, u"%s" % newname)
-							else:
-								os.rename(msg.file.name, newname)
-						except OSError:
-							try:
-								f1 = open(msg.file.name, "rb")
-								d = f1.read()
-								if win32:
-									f1 = open(u"%s" % newname, "wb")
-								else:
-									f1 = open(newname, "wb")
-								f1.write(d)
-								f1.close()
-								os.remove(msg.file.name)
-							except OSError:
-								self.eventprocessor.logMessage(_("Couldn't move '%(tempfile)s' to '%(file)s'") % {'tempfile':self.decode(msg.file.name), 'file':self.decode(newname)})
+							shutil.move(msg.file.name, newname)
+						except (IOError, OSError), inst:
+								try:
+									shutil.move(msg.file.name, u"%s" % newname)
+								except (IOError, OSError), inst:
+									log.addwarning(_("Couldn't move '%(tempfile)s' to '%(file)s': %(error)s") % {'tempfile':self.decode(msg.file.name), 'file':self.decode(newname), 'error':str(inst)})
 					i.status = "Finished"
 					if newname:
 						self.eventprocessor.logMessage(_("Download finished: %(file)s") % {'file':self.decode(newname)}, 5)
