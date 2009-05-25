@@ -25,7 +25,7 @@ This module contains utility fuctions.
 
 from __future__ import division
 
-version = "1.2.12"
+version = "1.2.13svn"
 latesturl = "http://nicotine-plus.sourceforge.net/LATEST"
 
 import string
