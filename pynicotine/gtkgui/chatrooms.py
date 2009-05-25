@@ -436,7 +436,7 @@ class RoomsControl:
 			if msg.user not in rooms[msg.room]["operators"]:
 				rooms[msg.room]["operators"].append(msg.user)
 			if msg.user == self.frame.np.config.sections["server"]["login"]:
-				rooms[room]["operator"] = True
+				rooms[msg.room]["operator"] = True
 		self.SetPrivateRooms()
 
 	def PrivateRoomRemoveOperator(self, msg):
