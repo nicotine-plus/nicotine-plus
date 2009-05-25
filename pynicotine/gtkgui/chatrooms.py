@@ -72,10 +72,10 @@ class RoomsControl:
 			[_("Users"), -1, "text", self.RoomStatus],
 		)
 		self.cols[0].set_sort_column_id(0)
-		self.cols[1].set_sort_column_id(2)
+		self.cols[1].set_sort_column_id(1)
 		self.roomsmodel.set_sort_func(1, self.PrivateRoomsSort, 1)
-		self.roomsmodel.set_sort_column_id(1, gtk.SORT_DESCENDING)
-		self.cols[1].set_sort_indicator(True)
+		#self.roomsmodel.set_sort_column_id(1, gtk.SORT_DESCENDING)
+		#self.cols[1].set_sort_indicator(True)
 		
 		for i in range (2):
 			parent = self.cols[i].get_widget().get_ancestor(gtk.Button)
@@ -139,11 +139,13 @@ class RoomsControl:
 		
 	def PrivateRoomsSort(self, model, iter1, iter2, column):
 		try:
-			private1 = model.get_value(iter1, 2)
+			private1 = model.get_value(iter1, 2) * 10000
+			private1 += model.get_value(iter1, 1)
 		except:
 			private1 = 0
 		try:
-			private2 = model.get_value(iter2, 2)
+			private2 = model.get_value(iter2, 2) * 10000
+			private2 += model.get_value(iter2, 1)
 		except:
 			private2 = 0
 		return cmp(private1, private2)
@@ -152,10 +154,10 @@ class RoomsControl:
 
 	def RoomStatus(self, column, cellrenderer, model, iter):
 
-		if self.roomsmodel.get_value(iter, 2) >= 20000:
+		if self.roomsmodel.get_value(iter, 2) >= 2:
 			cellrenderer.set_property("underline", pango.UNDERLINE_SINGLE)
 			cellrenderer.set_property("weight", pango.WEIGHT_BOLD)
-		elif self.roomsmodel.get_value(iter, 2) >= 10000:
+		elif self.roomsmodel.get_value(iter, 2) >= 1:
 			cellrenderer.set_property("weight", pango.WEIGHT_BOLD)
 			cellrenderer.set_property("underline", pango.UNDERLINE_NONE)
 		else:
@@ -293,7 +295,8 @@ class RoomsControl:
 	def OnPopupPrivateRoomDismember(self, widget):
 		if self.IsPrivateRoomMember(self.popup_room):
 			self.frame.np.queue.put(slskmessages.PrivateRoomDismember(self.popup_room))
-			#del self.PrivateRoom[self.popup_room]
+			del self.PrivateRooms[self.popup_room]
+			self.SetPrivateRooms(msg.privaterooms)
 			
 	def OnPopupLeave(self, widget):
 		self.frame.np.queue.put(slskmessages.LeaveRoom(self.popup_room))
@@ -339,14 +342,15 @@ class RoomsControl:
 
 		self.rooms = []
 		for room, users in msg.rooms:
-			self.roomsmodel.append([room, users, users])
+			self.roomsmodel.append([room, users, 0])
 			self.rooms.append(room)
 
 		self.SetPrivateRooms(msg.privaterooms)
 		self.frame.roomlist.RoomsList.set_model(self.roomsmodel)
 		self.roomsmodel.set_sort_func(1, self.PrivateRoomsSort, 1)
 		self.roomsmodel.set_sort_column_id(1, gtk.SORT_DESCENDING)
-		self.cols[1].set_sort_indicator(True)
+		self.roomsmodel.set_default_sort_func(None)
+		#self.cols[1].set_sort_indicator(True)
 
 		if self.frame.np.config.sections["words"]["roomnames"]:
 			self.frame.chatrooms.roomsctrl.UpdateCompletions()
@@ -367,9 +371,9 @@ class RoomsControl:
 		for room in self.PrivateRooms:
 			num = self.PrivateRooms[room]["joined"]
 			if self.IsPrivateRoomOwned(room):
-				self.roomsmodel.prepend([room, num, 20000 + num])
+				self.roomsmodel.prepend([room, num, 2])
 			elif self.IsPrivateRoomMember(room):
-				self.roomsmodel.prepend([room, num, 10000 + num])
+				self.roomsmodel.prepend([room, num, 1])
 				
 	def CreatePrivateRoom(self, room):
 		if room in self.PrivateRooms:
@@ -834,7 +838,8 @@ class ChatRoom:
 		self.GetCompletionList(clist=list(self.roomsctrl.clist))
 		if config["logging"]["readroomlogs"]:
 			self.ReadRoomLogs()
-	
+		self.CountUsers()
+
 	def RoomStatus(self, column, cellrenderer, model, iter):
 
 		cellrenderer.set_property("weight", colour)
@@ -1338,6 +1343,19 @@ class ChatRoom:
 			self.LabelPeople.set_text(_("You are alone"))
 		else:
 			self.LabelPeople.hide()
+		if self.room in self.roomsctrl.rooms:
+			iter = self.roomsctrl.roomsmodel.get_iter_first()
+			while iter:
+				if self.roomsctrl.roomsmodel.get_value(iter, 0) == self.room:
+					self.roomsctrl.roomsmodel.set(iter, 1, numusers)
+					break
+				iter = self.roomsctrl.roomsmodel.iter_next(iter)
+		else:
+			self.roomsctrl.roomsmodel.append([self.room, numusers, 0])
+			self.roomsctrl.rooms.append(self.room)
+
+
+
 
 	def UserColumnDraw(self, column, cellrenderer, model, iter):
 		user = self.usersmodel.get_value(iter, 2)
@@ -1587,6 +1605,7 @@ class ChatRoom:
 		self.UserList.set_sensitive(True)
 		# Reinitialize sorting after loop is complet
 		self.usersmodel.set_sort_column_id(2, gtk.SORT_ASCENDING)
+		self.usersmodel.set_default_sort_func(None)
 		# Spit this line into chat log
 		AppendLine(self.ChatScroll, _("--- reconnected ---"), self.tag_hilite)
 		# Update user count

@@ -43,14 +43,14 @@ for item in blacklist:
 goodpython = ""
 for path in pythonscripts[:]:
 	goodpython += path + " "
-print "xgettext -k_ -kN_ -o languages/nicotine-python.pot %s" % goodpython
+print "xgettext --no-location -k_ -kN_ -o languages/nicotine-python.pot %s" % goodpython
 
-r = os.system("xgettext -k_ -kN_  -o languages/nicotine-python.pot %s" % goodpython)
+r = os.system("xgettext --no-location -k_ -kN_  -o languages/nicotine-python.pot %s" % goodpython)
 gladestring = ""
 for path in gladescripts[:]:
 	gladestring += path + " "
-print "xgettext -a -k_ -kN_ -L Glade  -o languages/nicotine-glade.pot %s" % gladestring
-r = os.system("xgettext -k_ -kN_ -L Glade  -o languages/nicotine-glade.pot %s" % gladestring)
+print "xgettext --no-location -k_ -kN_ -L Glade  -o languages/nicotine-glade.pot %s" % gladestring
+r = os.system("xgettext --no-location -k_ -kN_ -L Glade  -o languages/nicotine-glade.pot %s" % gladestring)
 r = os.system("msgcat languages/nicotine-glade.pot  languages/nicotine-python.pot -o languages/nicotine.pot")
 if r:
 	print "Error while creating nicotine.pot"
