@@ -118,8 +118,8 @@ for file in doc_files:
 		files.append((os.path.join(sys.prefix, "share", "nicotine", "documentation"), [file]))
 
 # Glade files (GUI)
-#glade_files = glob.glob(os.path.join("pynicotine", "gtkgui", "*.glade"))
-#files.append((os.path.join("pynicotine", "gtkgui"), glade_files))
+glade_files = glob.glob(os.path.join("pynicotine", "gtkgui", "*.glade"))
+files.append((os.path.join("pynicotine", "gtkgui"), glade_files))
 
 if __name__ == '__main__' :
 	from pynicotine.utils import version
