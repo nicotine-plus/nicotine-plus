@@ -1691,8 +1691,10 @@ class ChatRoom:
 			if new > max:
 				new = max
 			adj.set_value(new)
-		if event.keyval != gtk.gdk.keyval_from_name("Tab"):
-			self.midwaycompletion = False
+		# ISO_Left_Tab normally corresponds with shift+tab
+		if event.keyval not in (gtk.gdk.keyval_from_name("Tab"), gtk.gdk.keyval_from_name("ISO_Left_Tab")):
+			if event.keyval not in (gtk.gdk.keyval_from_name("Shift_L"), gtk.gdk.keyval_from_name("Shift_R")):
+				self.midwaycompletion = False
 			return False
 		config = self.frame.np.config.sections["words"]
 		if not config["tab"]:
@@ -1721,7 +1723,11 @@ class ChatRoom:
 				currentnick = self.completions['completions'][self.completions['currentindex']]
 			if self.midwaycompletion:
 				widget.delete_text(ix - len(currentnick), ix)
-				self.completions['currentindex'] = (self.completions['currentindex']+1) % len(self.completions['completions'])
+				direction = 1 # Forward cycle
+				if event.keyval == gtk.gdk.keyval_from_name("ISO_Left_Tab"):
+					direction = -1 # Backward cycle
+				self.completions['currentindex'] = (self.completions['currentindex'] + direction) % len(self.completions['completions'])
+
 				newnick = self.completions['completions'][self.completions['currentindex']]
 				widget.insert_text(newnick, ix)
 				widget.set_position(preix + len(newnick))
