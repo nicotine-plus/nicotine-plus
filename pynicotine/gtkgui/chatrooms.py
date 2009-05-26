@@ -295,7 +295,7 @@ class RoomsControl:
 		if self.IsPrivateRoomMember(self.popup_room):
 			self.frame.np.queue.put(slskmessages.PrivateRoomDismember(self.popup_room))
 			del self.PrivateRooms[self.popup_room]
-			self.SetPrivateRooms(msg.privaterooms)
+			self.SetPrivateRooms()
 			
 	def OnPopupLeave(self, widget):
 		self.frame.np.queue.put(slskmessages.LeaveRoom(self.popup_room))

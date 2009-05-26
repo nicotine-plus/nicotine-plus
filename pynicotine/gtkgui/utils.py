@@ -940,6 +940,31 @@ class PopupMenu(gtk.Menu):
 			except Exception, e:
 				print e
 
+	def OnPrivateRooms(self, widget):
+		if self.user == None or self.user == self.frame.np.config.sections["server"]["login"]:
+			return False
+		user = self.user
+		items = []
+		popup = self.frame.userlist.Popup_Menu_PrivateRooms
+		popup.clear()
+		popup.set_user(self.user)
+		#print self.roomsctrl.PrivateRooms
+		for room in self.frame.chatrooms.roomsctrl.PrivateRooms:
+			if not (self.frame.chatrooms.roomsctrl.IsPrivateRoomOwned(room) or self.frame.chatrooms.roomsctrl.IsPrivateRoomOperator(room)):
+				continue
+			if self.user in self.frame.chatrooms.roomsctrl.PrivateRooms[room]["users"]:
+				items.append(("#" + _("Remove from private room %s" %room), popup.OnPrivateRoomRemoveUser, gtk.STOCK_REMOVE, room))
+			else:
+				items.append(("#" + _("Add to private room %s" %room), popup.OnPrivateRoomAddUser, gtk.STOCK_ADD, room))
+			if self.frame.chatrooms.roomsctrl.IsPrivateRoomOwned(room):
+				if self.user in self.frame.chatrooms.roomsctrl.PrivateRooms[room]["operators"]:
+					items.append(("#" + _("Remove as operator of %s" %room), popup.OnPrivateRoomRemoveOperator, gtk.STOCK_REMOVE, room))
+				else:
+					items.append(("#" + _("Add as operator of %s" %room), popup.OnPrivateRoomAddOperator, gtk.STOCK_ADD, room))
+
+		popup.setup(*items)
+		
+		return True
 
 def InputDialog(parent, title, message, default = ""):
 	dlg = gtk.Dialog(title = title, parent = parent,

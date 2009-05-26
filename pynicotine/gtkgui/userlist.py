@@ -120,6 +120,7 @@ class UserList:
 			iter = self.usersmodel.append(row)
 			self.userlist.append([user[0], user[1], last_seen, iter, flag])
 		self.usersmodel.set_sort_column_id(2, gtk.SORT_ASCENDING)
+		self.Popup_Menu_PrivateRooms = PopupMenu(self.frame)
 		self.popup_menu = popup = PopupMenu(frame)
 		popup.setup(
 			("#" + _("Send _message"), popup.OnSendMessage, gtk.STOCK_EDIT),
@@ -137,7 +138,23 @@ class UserList:
 			("", None),
 			("#" + _("Edit _comments"), self.OnEditComments, gtk.STOCK_EDIT),
 			("#" + _("_Remove"), self.OnRemoveUser, gtk.STOCK_CANCEL),
+			(1, _("Private rooms"), self.Popup_Menu_PrivateRooms, popup.OnPrivateRooms),
 		)
+		items = self.popup_menu.get_children()
+		self.Menu_SendMessage = items[0]
+		self.Menu_ShowIPaddress = items[2]
+		self.Menu_GetUserInfo = items[3]
+		self.Menu_BrowseUser = items[4]
+		self.Menu_GivePrivileges = items[5]
+		self.Menu_BanUser = items[6]
+		self.Menu_IgnoreUser = items[7]
+		self.Menu_OnNotify = items[9]
+		self.Menu_OnPrivileged = items[10]
+		self.Menu_Trusted = items[11]
+		self.Menu_EditComments = items[13]
+		self.Menu_RemoveUser = items[14]
+		self.Menu_PrivateRooms = items[15]
+
 		self.frame.UserList.connect("button_press_event", self.OnPopupMenu)
 		
 	def CellDataFunc(self, column, cellrenderer, model, iter):
@@ -239,13 +256,22 @@ class UserList:
 			self.popup_menu.set_user(user)
 			
 			items = self.popup_menu.get_children()
+			me = (self.popup_menu.user == None or self.popup_menu.user == self.frame.np.config.sections["server"]["login"])
 			
-			items[6].set_active(user in self.frame.np.config.sections["server"]["banlist"])
-			items[7].set_active(user in self.frame.np.config.sections["server"]["ignorelist"])
-			items[9].set_active(user in self.notify)
-			items[10].set_active(user in self.privileged)
-			items[11].set_active(user in self.trusted)
-			
+			#self.Menu_SendMessage
+			#self.Menu_ShowIPaddress
+			#self.Menu_GetUserInfo
+			#self.Menu_BrowseUser
+			#self.Menu_GivePrivileges
+			self.Menu_BanUser.set_active(user in self.frame.np.config.sections["server"]["banlist"])
+			self.Menu_IgnoreUser.set_active(user in self.frame.np.config.sections["server"]["ignorelist"])
+			self.Menu_OnNotify.set_active(user in self.notify)
+			self.Menu_OnPrivileged.set_active(user in self.privileged)
+			self.Menu_Trusted.set_active(user in self.trusted)
+			#self.Menu_EditComments
+			#self.Menu_RemoveUser
+			self.Menu_PrivateRooms.set_sensitive(not me) # Private rooms
+
 			self.popup_menu.popup(None, None, None, event.button, event.time)
 		
 	def GetIter(self, user):
