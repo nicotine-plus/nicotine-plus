@@ -14,7 +14,7 @@
 import os
 import textwrap
 import time
-from sys import stdout
+from sys import stdout, platform
 
 from collections import deque
 
@@ -64,7 +64,7 @@ class logger(object):
         except KeyError:
             self.add("Failed to remove listener %s, does not exist." % (callback,), 1)
 
-if py2exe:
+if platform.startswith("win") and hasattr(sys, 'frozen'):
     import locale, codecs
     enc = locale.getdefaultlocale()[1]
     if enc.startswith('cp'):            # "cp***" ?
