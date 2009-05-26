@@ -802,6 +802,20 @@ class ChatRoom:
 			("#" + _("Sear_ch this user's files"), popup.OnSearchUser, gtk.STOCK_FIND),
 			(1, _("Private rooms"), self.popup_menu_privaterooms, self.OnPrivateRooms),
 		)
+		items = self.popup_menu.get_children()
+		self.Menu_SendMessage = items[2]
+		self.Menu_ShowIPaddress = items[4]
+		self.Menu_GetUserInfo = items[5]
+		self.Menu_BrowseUser = items[6]
+		self.Menu_GivePrivileges = items[7]
+		self.Menu_AddToList = items[9]
+		self.Menu_BanUser = items[10]
+		self.Menu_IgnoreUser = items[11]
+		self.Menu_BlockUser = items[12]
+		self.Menu_IgnoreIP = items[13]
+		self.Menu_SearchUser = items[15]
+		self.Menu_PrivateRooms = items[16]
+
 		self.UserList.connect("button_press_event", self.OnPopupMenu)
 
 		self.ChatEntry.grab_focus()
@@ -971,14 +985,22 @@ class ChatRoom:
 		self.popup_menu.set_user(user)
 		me = (self.popup_menu.user == None or self.popup_menu.user == self.frame.np.config.sections["server"]["login"])
 		
-		items[9].set_active(user in [i[0] for i in self.frame.np.config.sections["server"]["userlist"]])
-		items[10].set_active(user in self.frame.np.config.sections["server"]["banlist"])
-		items[11].set_active(user in self.frame.np.config.sections["server"]["ignorelist"])
-		items[12].set_active(self.frame.UserIpIsBlocked(user))
-		items[12].set_sensitive(not me)
-		items[13].set_active(self.frame.UserIpIsIgnored(user))
-		items[13].set_sensitive(not me) 
-		items[16].set_sensitive(not me)
+		#self.Menu_SendMessage
+		#self.Menu_ShowIPaddress
+		#self.Menu_GetUserInfo
+		#self.Menu_BrowseUser
+		#self.Menu_GivePrivileges
+
+		self.Menu_AddToList.set_active(user in [i[0] for i in self.frame.np.config.sections["server"]["userlist"]])
+		self.Menu_BanUser.set_active(user in self.frame.np.config.sections["server"]["banlist"])
+		self.Menu_IgnoreUser.set_active(user in self.frame.np.config.sections["server"]["ignorelist"])
+		self.Menu_BlockUser.set_active(self.frame.UserIpIsBlocked(user))
+		self.Menu_BlockUser.set_sensitive(not me)
+		self.Menu_IgnoreIP.set_active(self.frame.UserIpIsIgnored(user))
+		self.Menu_IgnoreIP.set_sensitive(not me) 
+		#self.Menu_SearchUser
+		self.Menu_PrivateRooms.set_sensitive(not me)
+
 		self.popup_menu.editing = False	
 		self.popup_menu.popup(None, None, None, event.button, event.time)
 		
@@ -1429,20 +1451,29 @@ class ChatRoom:
 	def UserNameEvent(self, tag, widget, event, iter, user):
 
 		if tag.last_event_type == gtk.gdk.BUTTON_PRESS and event.type == gtk.gdk.BUTTON_RELEASE and event.button in (1, 2):
-			items = self.popup_menu.get_children()
+			#items = self.popup_menu.get_children()
 			# Chat, Userlists use the normal popup system
 			self.popup_menu.editing = True
 			self.popup_menu.set_user(user)
 			me = (self.popup_menu.user == None or self.popup_menu.user == self.frame.np.config.sections["server"]["login"])
 			
-			items[9].set_active(user in [i[0] for i in self.frame.np.config.sections["server"]["userlist"]])
-			items[10].set_active(user in self.frame.np.config.sections["server"]["banlist"])
-			items[11].set_active(user in self.frame.np.config.sections["server"]["ignorelist"])
-			items[12].set_active(self.frame.UserIpIsBlocked(user))
-			items[12].set_sensitive(not me)
-			items[13].set_active(self.frame.UserIpIsIgnored(user))
-			items[13].set_sensitive(not me) 
-			items[16].set_sensitive(not me)
+
+			#self.Menu_SendMessage
+			#self.Menu_ShowIPaddress
+			#self.Menu_GetUserInfo
+			#self.Menu_BrowseUser
+			#self.Menu_GivePrivileges
+
+			self.Menu_AddToList.set_active(user in [i[0] for i in self.frame.np.config.sections["server"]["userlist"]])
+			self.Menu_BanUser.set_active(user in self.frame.np.config.sections["server"]["banlist"])
+			self.Menu_IgnoreUser.set_active(user in self.frame.np.config.sections["server"]["ignorelist"])
+			self.Menu_BlockUser.set_active(self.frame.UserIpIsBlocked(user))
+			self.Menu_BlockUser.set_sensitive(not me)
+			self.Menu_IgnoreIP.set_active(self.frame.UserIpIsIgnored(user))
+			self.Menu_IgnoreIP.set_sensitive(not me) 
+			#self.Menu_SearchUser
+			self.Menu_PrivateRooms.set_sensitive(not me)
+
 			self.popup_menu.editing = False
 			self.popup_menu.popup(None, None, None, event.button, event.time)
 		tag.last_event_type = event.type
