@@ -64,17 +64,30 @@ class logger(object):
         except KeyError:
             self.add("Failed to remove listener %s, does not exist." % (callback,), 1)
 
+if py2exe:
+    import locale, codecs
+    enc = locale.getdefaultlocale()[1]
+    if enc.startswith('cp'):            # "cp***" ?
+        try:
+            codecs.lookup(enc)
+        except LookupError:
+            import encodings
+            encodings._cache[enc] = encodings._unknown
+            encodings.aliases.aliases[enc] = 'mbcs'
+    CONSOLEENCODING  = enc
+else:
+    CONSOLEENCODING = stdout.encoding
+    if not CONSOLEENCODING or CONSOLEENCODING.lower() == 'ascii':
+        # ASCII is quite improbable, lets just hope the user hasnt set up
+        # everything properly and its really UTF8
+        CONSOLEENCODING = 'UTF8'
 
-CONSOLEENCODING = stdout.encoding
-if not CONSOLEENCODING or CONSOLEENCODING.lower() == 'ascii':
-    # ASCII is quite improbable, lets just hope the user hasnt set up
-    # everything properly and its really UTF8
-    CONSOLEENCODING = 'UTF8'
 CONSOLEWIDTH = 80
 try:
     CONSOLEWIDTH = os.environ['COLUMNS']
 except KeyError:
     pass
+
 TIMEFORMAT = "%a %H:%M "
 
 wrapper = textwrap.TextWrapper()
