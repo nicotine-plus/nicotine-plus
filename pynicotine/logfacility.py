@@ -64,37 +64,32 @@ class logger(object):
         except KeyError:
             self.add("Failed to remove listener %s, does not exist." % (callback,), 1)
 
-if platform.startswith("win") and hasattr(sys, 'frozen'):
-    import locale, codecs
-    enc = locale.getdefaultlocale()[1]
-    if enc.startswith('cp'):            # "cp***" ?
-        try:
-            codecs.lookup(enc)
-        except LookupError:
-            import encodings
-            encodings._cache[enc] = encodings._unknown
-            encodings.aliases.aliases[enc] = 'mbcs'
-    CONSOLEENCODING  = enc
-else:
+useconsole = True
+try:
     CONSOLEENCODING = stdout.encoding
+except AttributeError:
+    # Can happen with fe. py2exe
+    print "stdout does not have an encoding attribute - disabling console logging."
+    useconsole = False
+
+if useconsole:
     if not CONSOLEENCODING or CONSOLEENCODING.lower() == 'ascii':
         # ASCII is quite improbable, lets just hope the user hasnt set up
         # everything properly and its really UTF8
         CONSOLEENCODING = 'UTF8'
-
-CONSOLEWIDTH = 80
-try:
-    CONSOLEWIDTH = os.environ['COLUMNS']
-except KeyError:
-    pass
-
-TIMEFORMAT = "%a %H:%M "
-
-wrapper = textwrap.TextWrapper()
-wrapper.width = CONSOLEWIDTH
-wrapper.subsequent_indent = " " * len(time.strftime(TIMEFORMAT))
-wrapper.expand_tabs = False
-wrapper.replace_whitespace = True
+    CONSOLEWIDTH = 80
+    try:
+        CONSOLEWIDTH = os.environ['COLUMNS']
+    except KeyError:
+        pass
+    
+    TIMEFORMAT = "%a %H:%M "
+    
+    wrapper = textwrap.TextWrapper()
+    wrapper.width = CONSOLEWIDTH
+    wrapper.subsequent_indent = " " * len(time.strftime(TIMEFORMAT))
+    wrapper.expand_tabs = False
+    wrapper.replace_whitespace = True
 
 def consolelogger(timestamp, level, msg):
     #if level in (None,):
@@ -109,4 +104,5 @@ try:
     log
 except NameError:
     log = logger()
-    log.addlistener(consolelogger) # by default let's display important stuff in the console
+    if useconsole:
+        log.addlistener(consolelogger) # by default let's display important stuff in the console
