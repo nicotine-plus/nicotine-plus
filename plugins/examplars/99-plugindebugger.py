@@ -3,8 +3,8 @@
 from pynicotine.pluginsystem import BasePlugin
 
 class Plugin(BasePlugin):
-    __name__ = "Plugin Tester"
-    __version__ = "2009-05-25r00"
+    __name__ = "Plugin Debugger"
+    __version__ = "2009-05-27r00"
     def init(self):
         self.log('init')
     def LoadEvent(self):
@@ -52,8 +52,8 @@ class Plugin(BasePlugin):
     def ServerConnectNotification(self):
         self.log('ServerConnectNotification')
         pass
-    def ServerDisconnectNotification(self):
-        self.log('ServerDisconnectNotification')
+    def ServerDisconnectNotification(self, userchoice):
+        self.log('ServerDisconnectNotification, userchoice=%s' % (userchoice,))
         pass
     def JoinChatroomNotification(self, room):
         self.log('JoinChatroomNotification, room=%s' % (room,))
