@@ -1735,7 +1735,10 @@ class NicotineFrame:
 		
 		gtk.gdk.threads_leave()
 		gtk.main_quit()
-		
+		if sys.platform.startswith("win"):
+			# Hack. main_quit works on Linux but not on Windows, needs to be resolved properly.
+			sys.exit()
+
 	def OnConnect(self, widget):
 		self.TrayApp.tray_status["status"] = "connect"
 		self.TrayApp.SetImage()
