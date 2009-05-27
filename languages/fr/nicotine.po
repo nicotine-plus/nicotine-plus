@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nicotine\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-05-25 13:44+0200\n"
-"PO-Revision-Date: 2009-05-25 14:58+0100\n"
+"POT-Creation-Date: 2009-05-25 15:06+0200\n"
+"PO-Revision-Date: 2009-05-27 21:37+0100\n"
 "Last-Translator: ><(((*> <zniavre2048@gmail.com>\n"
 "Language-Team: Hyriand <hyriand@thegraveyard.org>\n"
 "MIME-Version: 1.0\n"
@@ -311,7 +311,7 @@ msgstr "Grouper par utilisateurs"
 # pynicotine/gtkgui/downloads.py
 # pynicotine/gtkgui/uploads.py
 msgid "Auto-retry failed"
-msgstr "Retenter les fichiers en erreurs"
+msgstr "Retenter les fichiers en erreur"
 
 msgid "Every 3 minutes"
 msgstr "Toutes les 3 minutes"
@@ -2369,7 +2369,7 @@ msgid "Select User's Transfers"
 msgstr "Sélectionner les transferts de cet utilsateur"
 
 msgid "Note: Python Bindings for libsexy were not found. To enable spell checking, get them from http://www.chipx86.com/wiki/Libsexy or your distribution's package manager. Look for sexy-python or python-sexy."
-msgstr "Note: Python Bindings for libsexy n'a pas été trouvé.Pour activer le correcteur, il vous faut les instalées à partir du site: http://www.chipx86.com/wiki/Libsexy ou à parit du gestionnaire de paquets de votre distribution (rechercher: sexy-python ou python-sexy)."
+msgstr "Note: Python Bindings for libsexy n'a pas été trouvé.Pour activer le correcteur, il vous faut les instaler à partir du site: http://www.chipx86.com/wiki/Libsexy ou à partir du gestionnaire de paquets de votre distribution (rechercher: sexy-python ou python-sexy)."
 
 # pynicotine/gtkgui/nicotine_glade.py
 msgid "Open Browser"
@@ -2769,7 +2769,7 @@ msgstr "Recherche les fichiers de cet utilisateur"
 
 # pynicotine/gtkgui/nicotine_glade.py
 msgid "Private rooms"
-msgstr "Discussions privées"
+msgstr "Salons privées"
 
 msgid "--- old messages above ---"
 msgstr "---  messages précédant au dessus ---"
@@ -2840,16 +2840,6 @@ msgstr "--- reconnecté ---"
 # pynicotine/gtkgui/chatrooms.py
 msgid "Leave this room"
 msgstr "Quitter ce salon"
-
-msgid "Plugin %(module) returned something weird, '%(value)', ignoring"
-msgstr ""
-
-#, python-format
-msgid ""
-"Plugin %(module)s failed with error %(errortype)s: %(error)s.\n"
-"Trace: %(trace)s\n"
-"Problem area:%(area)s"
-msgstr ""
 
 # pynicotine/gtkgui/userinfo.py
 msgid "Queue Position"
@@ -3017,7 +3007,7 @@ msgid "Warning: Invalid ports"
 msgstr "Attention: Ports invalide"
 
 msgid "Client ports are invalid."
-msgstr "Port Client invalides."
+msgstr "Ports Client invalides."
 
 # pynicotine/gtkgui/nicotine_glade.py
 msgid "Buddy Uploads"
@@ -3176,7 +3166,7 @@ msgid "Imported Soulseek Config"
 msgstr "Configuration de soulseek importée"
 
 msgid "Config was imported. You may need to restart for changes to take effect. If you changed your user name, buddy list or queue then you should restart immediately."
-msgstr "La configuration a été importée. Vous devez redémarrer pour que les changements prenent effet."
+msgstr "La configuration a été importée. Vous devez redémarrer pour que les changements prennent effet."
 
 msgid "No options were selected"
 msgstr "Aucunes options n'ont été sélectionnées"
@@ -4182,7 +4172,7 @@ msgstr "L'adresse IP de %(user)s est %(ip)s, port %(port)i%(country)s"
 
 # pynicotine/pynicotine.py
 msgid "Someone else is logging in with the same nickname, server is going to disconnect us"
-msgstr "Quelqu'un d'autre se connecte avec le même pseudonyme, nous allons être déconnectés"
+msgstr "Quelqu'un d'autre se connecte avec le même pseudonyme, vous allez être déconnecté"
 
 # pynicotine/gtkgui/settings_glade.py
 #, python-format
@@ -4389,8 +4379,8 @@ msgid "Unknown file request: %s"
 msgstr "Requête de fichier inconnue: %s"
 
 # pynicotine/transfers.py
-#, python-format
-msgid "Couldn't move '%(tempfile)s' to '%(file)s'"
+#, fuzzy, python-format
+msgid "Couldn't move '%(tempfile)s' to '%(file)s': %(error)s"
 msgstr "N'a pas pu déplacer '%(tempfile)s' vers '%(file)s'"
 
 # pynicotine/transfers.py
@@ -4540,6 +4530,16 @@ msgstr "Alias %(alias)s enlevé: %(action)s\n"
 #, python-format
 msgid "No such alias (%(alias)s)\n"
 msgstr "Ne trouve pas l'alias (%(alias)s)\n"
+
+msgid "Plugin %(module) returned something weird, '%(value)', ignoring"
+msgstr ""
+
+#, python-format
+msgid ""
+"Plugin %(module)s failed with error %(errortype)s: %(error)s.\n"
+"Trace: %(trace)s\n"
+"Problem area:%(area)s"
+msgstr ""
 
 msgid "Could not bind to a local port, aborting connection"
 msgstr ""
