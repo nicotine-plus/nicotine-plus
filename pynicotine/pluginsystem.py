@@ -167,8 +167,8 @@ class PluginHandler(object):
         start_new_thread(self.TriggerEvent, ("UserResolveNotification", (user, ip, port, country)))
     def ServerConnectNotification(self):
         start_new_thread(self.TriggerEvent, ("ServerConnectNotification", (),))
-    def ServerDisconnectNotification(self):
-        start_new_thread(self.TriggerEvent, ("ServerDisconnectNotification", (),))
+    def ServerDisconnectNotification(self, userchoice):
+        start_new_thread(self.TriggerEvent, ("ServerDisconnectNotification", (userchoice, )))
     def JoinChatroomNotification(self, room):
         start_new_thread(self.TriggerEvent, ("JoinChatroomNotification", (room,)))
     def LeaveChatroomNotification(self, room): 
@@ -230,7 +230,7 @@ class BasePlugin(object):
         pass
     def ServerConnectNotification(self):
         pass
-    def ServerDisconnectNotification(self):
+    def ServerDisconnectNotification(self, userchoice):
         pass
     def JoinChatroomNotification(self, room):
         pass

@@ -566,6 +566,7 @@ class NetworkEventProcessor:
 	def ClosedConnection(self, conn, addr):
 		if conn == self.serverconn:
 			self.setStatus(_("Disconnected from server %(host)s:%(port)s") %{'host':addr[0], 'port':addr[1]})
+			userchoice = bool(self.frame.manualdisconnect)
 			if not self.frame.manualdisconnect:
 				self.setServerTimer()
 			else:
@@ -581,6 +582,7 @@ class NetworkEventProcessor:
 				self.transfers.SaveDownloads()
 			self.privatechat = self.chatrooms = self.userinfo = self.userbrowse = self.search = self.transfers = self.userlist = None
 			self.frame.ConnClose(conn, addr)
+			self.frame.pluginhandler.ServerDisconnectNotification(userchoice)
 		else:
 			for i in self.peerconns[:]:
 				if i.conn == conn:
