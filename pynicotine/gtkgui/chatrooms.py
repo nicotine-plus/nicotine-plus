@@ -864,7 +864,7 @@ class ChatRoom:
 			loglines = logfile.split("\n")
 			for l in loglines[ - roomlines : -1 ]:
 				# Try to parse line for username
-				if l[10].isspace() and l[11].isdigit() and l[20] in ("[", "*"):
+				if len(l) > 20 and l[10].isspace() and l[11].isdigit() and l[20] in ("[", "*"):
 					line = l[11:]
 					if l[20] == "[" and l[20:].find("] ") != -1:
 						namepos = l[20:].find("] ")
