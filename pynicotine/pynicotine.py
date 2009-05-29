@@ -123,6 +123,7 @@ class NetworkEventProcessor:
 		self.ipblock_requested = {}
 		self.ipignore_requested = {}
 		self.ip_requested = [] 
+		self.PrivateMessageQueue = {}
 		self.users = {}
 		self.chatrooms = None
 		self.privatechat = None
@@ -804,6 +805,21 @@ class NetworkEventProcessor:
 		else:
 			self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
 
+	def PrivateMessageQueueAdd(self, msg, text):
+		user = msg.user
+		if user not in self.PrivateMessageQueue:
+			self.PrivateMessageQueue[user] = [[msg, text]]
+		else:
+			self.PrivateMessageQueue[user].append([msg, text])
+
+	def PrivateMessageQueueProcess(self, user):
+		if user in self.PrivateMessageQueue:
+			for data in self.PrivateMessageQueue[user][:]:
+				msg, text = data
+				self.PrivateMessageQueue[user].remove(data)
+				self.privatechat.ShowMessage(msg, text, status=0)
+				
+
 	def ipIgnored(self, address):
 		if address is None:
 			return True
@@ -1042,7 +1058,8 @@ class NetworkEventProcessor:
 					self.frame.OnIgnoreUser(msg.user)
 				del self.ipignore_requested[msg.user]
 				return
-
+			if msg.user in self.PrivateMessageQueue:
+				self.PrivateMessageQueueProcess(msg.user)
 			if msg.user not in self.ip_requested:
 				return
 			self.ip_requested.remove(msg.user)

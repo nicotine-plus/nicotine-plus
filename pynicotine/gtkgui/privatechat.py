@@ -146,6 +146,21 @@ class PrivateChats(IconNotebook):
 	def ShowMessage(self, msg, text, status=None):
 		if msg.user in self.frame.np.config.sections["server"]["ignorelist"]:
 			return
+		if msg.user in self.frame.np.users and type(self.frame.np.users[msg.user].addr) is tuple:
+			ip, port = self.frame.np.users[msg.user].addr
+			if self.frame.np.ipIgnored(ip):
+				#print "ignored message from IP:", ip, msg.user
+				return
+		else:
+			self.frame.np.queue.put(slskmessages.GetPeerAddress(msg.user))
+			self.frame.np.PrivateMessageQueueAdd(msg, text)
+			return
+
+		user_text = self.frame.pluginhandler.IncomingPrivateChatEvent(msg.user, text)
+		if user_text == None:
+			#print "Pluginsystem made me silence."
+			return
+		(u, text) = user_text
 
 		self.SendMessage(msg.user, None)
 		chat = self.users[msg.user]
@@ -173,6 +188,7 @@ class PrivateChats(IconNotebook):
 		self.users[msg.user].ShowMessage(text, status, msg.timestamp)	
 		if ctcpversion and self.frame.np.config.sections["server"]["ctcpmsgs"] == 0:
 			self.SendMessage(msg.user, "Nicotine-Plus %s" % version)
+		self.frame.pluginhandler.IncomingPrivateChatNotification(msg.user, text)
 
 	def UpdateColours(self):
 		for chat in self.users.values():
@@ -457,10 +473,10 @@ class PrivateChat:
 		self.frame.new_tts(self.frame.np.config.sections["ui"]["speechprivate"] %{"user":self.frame.tts_clean(self.user), "message": self.frame.tts_clean(speech)} )
 
 	def SendMessage(self, text):
-		tuple = self.frame.pluginhandler.OutgoingPrivateChatEvent(self.user, text)
-		if tuple == None:
+		user_text = self.frame.pluginhandler.OutgoingPrivateChatEvent(self.user, text)
+		if user_text == None:
 			return
-		(u, text) = tuple
+		(u, text) = user_text
 
 		my_username = self.frame.np.config.sections["server"]["login"]
 		if text[:4] == "/me ":

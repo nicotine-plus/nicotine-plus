@@ -518,7 +518,7 @@ class RoomsControl:
 			if self.frame.np.ipIgnored(ip):
 				#print "ignored message from IP:", ip, msg.user
 				return
-			self.joinedrooms[msg.room].SayChatRoom(msg, text)
+		self.joinedrooms[msg.room].SayChatRoom(msg, text)
 	def PublicRoomMessage(self, msg, text):
 		try:
 			room = self.joinedrooms['Public ']
