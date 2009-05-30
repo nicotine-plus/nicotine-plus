@@ -28,8 +28,6 @@ from __future__ import division
 
 import time
 from urllib import urlencode
-from thread import start_new_thread
-
 import slskproto
 import slskmessages
 from slskmessages import newId
@@ -1065,27 +1063,25 @@ class NetworkEventProcessor:
 			if msg.user not in self.ip_requested:
 				return
 			self.ip_requested.remove(msg.user)
-			start_new_thread(self._resolvePeerAddress, (msg, ))
-	def _resolvePeerAddress(self, msg):
-		import socket
-		if self.geoip:
-			cc = self.geoip.country_name_by_addr(msg.ip)
-			cn = self.geoip.country_code_by_addr(msg.ip)
-			if cn is not None:
-				self.frame.HasUserFlag(msg.user, "flag_"+cn)
-		else:
-			cc = ""
-		if cc:
-			cc = " (%s)" % cc
-		else:
-			cc = ""
-		try:
-			hostname = socket.gethostbyaddr(msg.ip)[0]
-			message = _("IP address of %(user)s is %(ip)s, name %(host)s, port %(port)i%(country)s") %{'user':msg.user, 'ip':msg.ip, 'host':hostname, 'port':msg.port, 'country':cc}
-		except:
-			message = _("IP address of %(user)s is %(ip)s, port %(port)i%(country)s") %{'user':msg.user, 'ip':msg.ip, 'port':msg.port, 'country':cc}
-		self.logMessage(message)
-		self.frame.pluginhandler.UserResolveNotification(msg.user, msg.ip, msg.port, cc)
+			import socket
+			if self.geoip:
+				cc = self.geoip.country_name_by_addr(msg.ip)
+				cn = self.geoip.country_code_by_addr(msg.ip)
+				if cn is not None:
+					self.frame.HasUserFlag(msg.user, "flag_"+cn)
+			else:
+				cc = ""
+			if cc:
+				cc = " (%s)" % cc
+			else:
+				cc = ""
+			try:
+				hostname = socket.gethostbyaddr(msg.ip)[0]
+				message = _("IP address of %(user)s is %(ip)s, name %(host)s, port %(port)i%(country)s") %{'user':msg.user, 'ip':msg.ip, 'host':hostname, 'port':msg.port, 'country':cc}
+			except:
+				message = _("IP address of %(user)s is %(ip)s, port %(port)i%(country)s") %{'user':msg.user, 'ip':msg.ip, 'port':msg.port, 'country':cc}
+			self.logMessage(message)
+			self.frame.pluginhandler.UserResolveNotification(msg.user, msg.ip, msg.port, cc)
 			
 	def Relogged(self, msg):
 		self.logMessage(_("Someone else is logging in with the same nickname, server is going to disconnect us"))
