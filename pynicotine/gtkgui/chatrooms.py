@@ -1312,8 +1312,8 @@ class ChatRoom:
 				self.clist.append(username)
 				if self.frame.np.config.sections["words"]["dropdown"]:
 					self.ChatEntry.get_completion().get_model().append([username])
-			
-		AppendLine(self.RoomLog, _("%s joined the room") % username, self.tag_log)
+		if username not in self.frame.np.config.sections["server"]["ignorelist"] and not self.frame.UserIpIsIgnored(username):
+			AppendLine(self.RoomLog, _("%s joined the room") % username, self.tag_log)
 		img = self.frame.GetStatusImage(userdata.status)
 		flag = userdata.country
 		if flag is not None:
@@ -1345,8 +1345,8 @@ class ChatRoom:
 							liststore.remove(iter)
 							break
 						iter = liststore.iter_next(iter)
-			
-		AppendLine(self.RoomLog, _("%s left the room") % username, self.tag_log)
+		if username not in self.frame.np.config.sections["server"]["ignorelist"] and not self.frame.UserIpIsIgnored(username):
+			AppendLine(self.RoomLog, _("%s left the room") % username, self.tag_log)
 		self.usersmodel.remove(self.users[username])
 		del self.users[username]
 		self.getUserTag(username)
@@ -1414,7 +1414,8 @@ class ChatRoom:
 			action = _("%s has gone away")
 		else:
 			action = _("%s has returned")
-		AppendLine(self.RoomLog, action % user, self.tag_log)
+		if user not in self.frame.np.config.sections["server"]["ignorelist"] and not self.frame.UserIpIsIgnored(user):
+			AppendLine(self.RoomLog, action % user, self.tag_log)
 		if user in self.tag_users.keys():
 			color = self.getUserStatusColor(status)
 			self.changecolour(self.tag_users[user], color)
