@@ -662,3 +662,78 @@ class Shares:
 		for x in words:
 			d[x] = x
 		return d.values()
+		
+	def addToShared(self, name):
+		""" Add a file to the normal shares database """
+		config = self.config.sections
+		if not config["transfers"]["sharedownloaddir"]:
+			return
+		
+		shared = config["transfers"]["sharedfiles"]
+		sharedstreams = config["transfers"]["sharedfilesstreams"]
+		wordindex = config["transfers"]["wordindex"]
+		fileindex = config["transfers"]["fileindex"]
+		shareddirs = config["transfers"]["shared"] + [config["transfers"]["downloaddir"]]
+		sharedmtimes = config["transfers"]["sharedmtimes"]
+
+		dir = str(os.path.expanduser(os.path.dirname(name)))
+		str_name = str(name)
+		file = str(os.path.basename(name))
+		size = os.path.getsize(name)
+
+		shared[dir] = shared.get(dir, [])
+
+		if file not in [i[0] for i in shared[dir]]:
+			fileinfo = self.getFileInfo(file, name)
+			shared[dir] = shared[dir] + [fileinfo]
+			sharedstreams[dir] = self.getDirStream(shared[dir])
+			words = self.getIndexWords(dir, file, shareddirs)
+			self.addToIndex(wordindex, fileindex, words, dir, fileinfo)
+			sharedmtimes[dir] = os.path.getmtime(dir)
+			self.newnormalshares = True
+			
+		if config["transfers"]["enablebuddyshares"]:
+			self.addToBuddyShared(name)
+			
+		self.config.writeShares()
+		
+	def addToBuddyShared(self, name):
+		""" Add a file to the buddy shares database """
+		config = self.config.sections
+		if not config["transfers"]["sharedownloaddir"]:
+			return
+		bshared = config["transfers"]["bsharedfiles"]
+		bsharedstreams = config["transfers"]["bsharedfilesstreams"]
+		bwordindex = config["transfers"]["bwordindex"]
+		bfileindex = config["transfers"]["bfileindex"]
+		bshareddirs = config["transfers"]["buddyshared"] + config["transfers"]["shared"] + [config["transfers"]["downloaddir"]]
+		bsharedmtimes = config["transfers"]["bsharedmtimes"]
+		
+		dir = str(os.path.expanduser(os.path.dirname(name)))
+		str_name = str(name)
+		file = str(os.path.basename(name))
+		size = os.path.getsize(name)
+		
+		bshared[dir] = bshared.get(dir, [])
+		
+		if file not in [i[0] for i in bshared[dir]]:
+			fileinfo = self.getFileInfo(file, name)
+			bshared[dir] = bshared[dir] + [fileinfo]
+			bsharedstreams[dir] = self.getDirStream(bshared[dir])
+			words = self.getIndexWords(dir, file, bshareddirs)
+			self.addToIndex(bwordindex, bfileindex, words, dir, fileinfo)
+			bsharedmtimes[dir] = os.path.getmtime(dir)
+			
+			self.newbuddyshares = True
+			
+
+	def addToIndex(self, wordindex, fileindex, words, dir, fileinfo):
+		index = len(fileindex.keys())
+		for i in words:
+			if i not in wordindex:
+				wordindex[i] = [index]
+			else:
+				wordindex[i] = wordindex[i] + [index]
+		fileindex[str(index)] = (os.path.join(dir, fileinfo[0]),)+fileinfo[1:]
+
+
