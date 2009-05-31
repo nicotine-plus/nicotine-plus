@@ -4,7 +4,7 @@ import slskmessages
 import string, sys, os
 import gobject
 import dircache
-
+from logfacility import log as logfacility
 from utils import _, displayTraceback
 try:
 	import metadata_mutagen as metadata
