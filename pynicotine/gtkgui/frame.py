@@ -3648,6 +3648,6 @@ class MainApp:
 		signal.signal(signal.SIGINT, signal.SIG_IGN)
 		self.frame.MainWindow.show()
 		gtk.gdk.threads_init()
-		gtk.gdk.threads_enter()
+		#gtk.gdk.threads_enter()
 		gtk.main()
-		gtk.gdk.threads_leave()
+		#gtk.gdk.threads_leave()
