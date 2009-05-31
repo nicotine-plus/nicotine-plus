@@ -2204,7 +2204,7 @@ class NicotineFrame:
 			if i not in cleanedshares:
 				cleanedshares.append(i)
 		msg = slskmessages.RescanShares(cleanedshares, lambda: None)
-		thread.start_new_thread(self.np.RescanShares, (msg, rebuild))
+		thread.start_new_thread(self.np.shares.RescanShares, (msg, rebuild))
 		
 	def OnRebuild(self, widget = None):
 		self.OnRescan(widget, rebuild=True)
@@ -2226,7 +2226,7 @@ class NicotineFrame:
 			if i not in cleanedshares:
 				cleanedshares.append(i)
 		msg = slskmessages.RescanBuddyShares(cleanedshares, lambda: None)
-		thread.start_new_thread(self.np.RescanBuddyShares, (msg, rebuild))
+		thread.start_new_thread(self.np.shares.RescanBuddyShares, (msg, rebuild))
 	
 	def OnBuddyRebuild(self, widget = None):
 		self.OnBuddyRescan(widget, rebuild=True)
@@ -2239,11 +2239,11 @@ class NicotineFrame:
 		self.rescan_buddy.set_sensitive(True)
 		self.rebuild_buddy.set_sensitive(True)
 		if self.np.transfers is not None:
-			self.np.sendNumSharedFoldersFiles()
+			self.np.shares.sendNumSharedFoldersFiles()
 		self.brescanning = 0
 		self.logMessage(_("Rescanning Buddy Shares finished"))
 		self.BuddySharesProgress.hide()
-		self.np.CompressShares("buddy")
+		self.np.shares.CompressShares("buddy")
 
 	def _RescanFinished(self, data):
 		self.np.config.setShares(*data)
@@ -2252,11 +2252,11 @@ class NicotineFrame:
 		self.rescan1.set_sensitive(True)
 		self.rebuild1.set_sensitive(True)
 		if self.np.transfers is not None:
-			self.np.sendNumSharedFoldersFiles()
+			self.np.shares.sendNumSharedFoldersFiles()
 		self.rescanning = 0
 		self.logMessage(_("Rescanning finished"))
 		self.SharesProgress.hide()
-		self.np.CompressShares("normal")
+		self.np.shares.CompressShares("normal")
 		
 	def RescanFinished(self, data, type):
 		if type == "buddy":

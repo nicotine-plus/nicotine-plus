@@ -39,6 +39,7 @@ import string
 import types
 import locale
 import utils
+from shares import Shares
 from utils import _
 import os
 import logging
@@ -93,8 +94,8 @@ class NetworkEventProcessor:
 		self.config = Config(configfile)
 		self.config.frame = frame
 		self.config.readConfig()
-	
 		self.queue = Queue.Queue(0)
+		self.shares = Shares(self)
 		try:
 			import GeoIP
 			self.geoip = GeoIP.new(GeoIP.GEOIP_MEMORY_CACHE)
@@ -139,18 +140,15 @@ class NetworkEventProcessor:
 		self.servertimer = None
 		self.servertimeout = -1
 		
-		self.CompressedSharesBuddy = self.CompressedSharesNormal = None
-		self.CompressShares("normal")
-		self.CompressShares("buddy")
-		self.newbuddyshares = self.newnormalshares = False
+		
 		self.distribcache = {}
 		self.branchlevel = 0
 		self.branchroot = None
-		self.requestedShares = {}
+		
 		self.requestedInfo = {}
 		self.requestedFolders = {}
 		self.speed = 0
-		self.translatepunctuation = string.maketrans(string.punctuation, string.join([' ' for i in string.punctuation],''))
+		
 		self.searchResultsConnections = []
 		searchresultstimeout = CloseSearchResultsTimeout(self.callback)
 		self.searchResultsTimer = threading.Timer(10, searchresultstimeout.timeout)
@@ -187,7 +185,7 @@ class NetworkEventProcessor:
 			slskmessages.CantConnectToPeer:self.CantConnectToPeer,
 			slskmessages.PeerTransfer:self.PeerTransfer,
 			slskmessages.SharedFileList:self.SharedFileList,
-			slskmessages.GetSharedFileList:self.GetSharedFileList,
+			slskmessages.GetSharedFileList:self.shares.GetSharedFileList,
 			slskmessages.FileSearchRequest:self.FileSearchRequest,
 			slskmessages.FileSearchResult:self.FileSearchResult,
 			slskmessages.ConnectToPeer:self.ConnectToPeer,
@@ -206,7 +204,7 @@ class NetworkEventProcessor:
 			slskmessages.PlaceInQueue:self.PlaceInQueue,
 			slskmessages.FileError:self.FileError,
 			slskmessages.FolderContentsResponse:self.FolderContentsResponse,
-			slskmessages.FolderContentsRequest:self.FolderContentsRequest,
+			slskmessages.FolderContentsRequest:self.shares.FolderContentsRequest,
 			slskmessages.RoomList:self.RoomList,
 			slskmessages.LeaveRoom:self.LeaveRoom,
 			slskmessages.GlobalUserList:self.GlobalUserList,
@@ -249,8 +247,8 @@ class NetworkEventProcessor:
 			RespondToDistributedSearchesTimeout:self.ToggleRespondDistributed,
 			CloseSearchResultsTimeout:self.closeSearchResults,
 			transfers.TransferTimeout:self.TransferTimeout,
-			slskmessages.RescanShares:self.RescanShares,
-			slskmessages.RescanBuddyShares:self.RescanBuddyShares,
+			slskmessages.RescanShares:self.shares.RescanShares,
+			slskmessages.RescanBuddyShares:self.shares.RescanBuddyShares,
 			str:self.Notify,
 			slskmessages.PopupMessage:self.PopupMessage,
 			slskmessages.InternalData:self.DisplaySockets,
@@ -351,6 +349,7 @@ class NetworkEventProcessor:
 				self.transfers.gotAddress(message.req)
 			else:
 				self.transfers.gotConnectError(message.req)
+
 
 	def closeSearchResults(self, msg):
 		if self.searchResultsTimer is not None:
@@ -485,63 +484,6 @@ class NetworkEventProcessor:
 		['International', 'utf-7'], \
 		['International', 'utf-8']]
 
-	def sendNumSharedFoldersFiles(self):
-		"""
-		Send number of files in buddy shares if only buddies can
-		download, and buddy-shares are enabled.
-		"""
-		conf = self.config.sections
-
-		if conf["transfers"]["enablebuddyshares"] and conf["transfers"]["friendsonly"]:
-			shared_db = "bsharedfiles"
-		else:
-			shared_db = "sharedfiles"
-		sharedfolders = len(conf["transfers"][shared_db])
-		sharedfiles = 0
-		for i in conf["transfers"][shared_db].keys():
-			sharedfiles += len(conf["transfers"][shared_db][i])
-		self.queue.put(slskmessages.SharedFoldersFiles(sharedfolders, sharedfiles))
-
-	def RescanShares(self, msg, rebuild=False):
-		import utils
-		utils.frame = self.frame
-		utils.log = self.logMessage
-		files, streams, wordindex, fileindex, mtimes = utils.rescandirs(msg.shared, self.config.sections["transfers"]["sharedmtimes"], self.config.sections["transfers"]["sharedfiles"], self.config.sections["transfers"]["sharedfilesstreams"], msg.yieldfunction, self.frame.SharesProgress, name=_("Shares"), rebuild=rebuild)
-		self.frame.RescanFinished([files, streams, wordindex, fileindex, mtimes], "normal")
-		
-	def RebuildShares(self, msg):
-		self.RescanShares(msg, rebuild=True)
-	
-	def RebuildBuddyShares(self, msg):
-		self.RescanBuddyShares(msg, rebuild=True)
-	
-	def RescanBuddyShares(self, msg, rebuild=False):
-		import utils
-		utils.frame = self.frame
-		utils.log = self.logMessage
-		files, streams, wordindex, fileindex, mtimes = utils.rescandirs(msg.shared, self.config.sections["transfers"]["bsharedmtimes"], self.config.sections["transfers"]["bsharedfiles"], self.config.sections["transfers"]["bsharedfilesstreams"], msg.yieldfunction, self.frame.BuddySharesProgress, name=_("Buddy Shares"), rebuild=rebuild)
-		self.frame.RescanFinished([files, streams, wordindex, fileindex, mtimes], "buddy")
-		
-	def CompressShares(self, sharestype):
-		if sharestype == "normal":
-			streams = self.config.sections["transfers"]["sharedfilesstreams"]
-		elif sharestype == "buddy":
-			streams = self.config.sections["transfers"]["bsharedfilesstreams"]
-
-		if streams is None:
-			message = _("ERROR: No %(type)s shares database available") % {"type": sharestype}
-			print message
-			self.logMessage(message, None)
-			return
-		
-		m = slskmessages.SharedFileList(None, streams)
-		m.makeNetworkMessage(nozlib=0, rebuild=True)
-		
-		if sharestype == "normal":
-			self.CompressedSharesNormal = m
-		elif sharestype == "buddy":
-			self.CompressedSharesBuddy = m
-        
 	## Notify user of error when recieving or sending a message
 	# @param self NetworkEventProcessor (Class)
 	# @param string a string containing an error message
@@ -677,7 +619,7 @@ class NetworkEventProcessor:
 			self.privatechat, self.chatrooms, self.userinfo, self.userbrowse, self.search, downloads, uploads, self.userlist = self.frame.InitInterface(msg)
 		
 			self.transfers.setTransferPanels(downloads, uploads)
-			self.sendNumSharedFoldersFiles()
+			self.shares.sendNumSharedFoldersFiles()
 			self.queue.put(slskmessages.SetStatus((not self.frame.away)+1))
 			for thing in self.config.sections["interests"]["likes"]:
 				self.queue.put(slskmessages.AddThingILike(self.encode(thing)))
@@ -1235,68 +1177,7 @@ class NetworkEventProcessor:
 						return 1
 		return 0
 	
-	def GetSharedFileList(self, msg):
-		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
-		user = ip = port = None
-		# Get peer's username, ip and port
-		for i in self.peerconns:
-			if i.conn is msg.conn.conn:
-				
-				user = i.username
-				if i.addr is not None:
-					if len(i.addr) != 2:
-						break
-					ip, port = i.addr
-				break
-		if user == None:
-			# No peer connection
-			return
-		requestTime = time.time()
-		if user in self.requestedShares:
-			if not requestTime >  10 + self.requestedShares[user]:
-				# Ignoring request, because it's 10 or less seconds since the
-				# last one by this user
-				return
-		self.requestedShares[user] = requestTime
-		# Check address is spoofed, if possible
-		#if self.CheckSpoof(user, ip, port):
-			# Message IS spoofed
-		#	return
-		if user == self.config.sections["server"]["login"]:
-			if ip != None and port != None:
-				self.logMessage(_("%(user)s is making a BrowseShares request, blocking possible spoofing attempt from IP %(ip)s port %(port)s") %{'user':user, 'ip':ip, 'port':port}, 1)
-			else:
-				self.logMessage(_("%(user)s is making a BrowseShares request, blocking possible spoofing attempt from an unknown IP & port") %{'user':user}, None)
-			if msg.conn.conn != None:
-				self.queue.put(slskmessages.ConnClose(msg.conn.conn))
-			return
-		self.logMessage(_("%(user)s is making a BrowseShares request") %{'user':user}, 1)
-		addr = msg.conn.addr[0]
-		checkuser, reason = self.CheckUser(user, addr)
-	
-		if checkuser == 1:
-			## Send Normal Shares
-			if self.newnormalshares:
-				self.CompressShares("normal")
-				self.newnormalshares = False
-			m = self.CompressedSharesNormal
 
-		elif checkuser == 2:
-			## Send Buddy Shares
-			if self.newbuddyshares:
-				self.CompressShares("buddy")
-				self.newbuddyshares = False
-			m = self.CompressedSharesBuddy
-
-		else:
-			## Nyah, Nyah
-			m = slskmessages.SharedFileList(msg.conn.conn, {})
-			m.makeNetworkMessage(nozlib=0)
-
-
-		m.conn = msg.conn.conn
-		self.queue.put(m)
-		
 		
 	def ClosePeerConnection(self, peerconn, force=False):
 		if peerconn == None:
@@ -1554,48 +1435,6 @@ class NetworkEventProcessor:
 		else:
 			self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
 
-	def FolderContentsRequest(self, msg):
-		username = None
-		checkuser = None
-		reason = ""
-		for i in self.peerconns:
-			if i.conn is msg.conn.conn:
-				username = i.username
-				checkuser, reason = self.CheckUser(username, None)
-				break
-		if not username:
-			return
-		if not checkuser:
-			self.queue.put(slskmessages.MessageUser(username, "[Automatic Message] "+reason) )
-			return
-		else:
-			self.queue.put(slskmessages.MessageUser(username, "Please try browsing me if you get 'File not shared' errors. This is an automatic message, you don't have to reply to it." ) )
-			
-		if checkuser == 1:
-			shares = self.config.sections["transfers"]["sharedfiles"]
-		elif checkuser == 2:
-			shares = self.config.sections["transfers"]["bsharedfiles"]
-		else:
-			response = self.queue.put(slskmessages.TransferResponse(msg.conn.conn, 0, reason = reason, req=0) )
-			shares = {}
-		
-		if checkuser:
-			if msg.dir.replace("\\", os.sep)[:-1] in shares:
-				self.queue.put(slskmessages.FolderContentsResponse(msg.conn.conn, msg.dir, shares[msg.dir.replace("\\", os.sep)[:-1]]))
-			elif msg.dir.replace("\\", os.sep) in shares:
-				self.queue.put(slskmessages.FolderContentsResponse(msg.conn.conn, msg.dir, shares[msg.dir.replace("\\", os.sep)]))
-			else:
-				if checkuser == 2:
-					shares = self.config.sections["transfers"]["sharedfiles"]
-					if msg.dir.replace("\\", os.sep)[:-1] in shares:
-						self.queue.put(slskmessages.FolderContentsResponse(msg.conn.conn, msg.dir, shares[msg.dir.replace("\\", os.sep)[:-1]]))
-					elif msg.dir.replace("\\", os.sep) in shares:
-						self.queue.put(slskmessages.FolderContentsResponse(msg.conn.conn, msg.dir, shares[msg.dir.replace("\\", os.sep)]))
-					
-				
-		
-		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
-
 	def RoomList(self, msg):
 		if self.chatrooms is not None:
 			self.chatrooms.roomsctrl.SetRoomList(msg)
@@ -1635,11 +1474,11 @@ class NetworkEventProcessor:
 		for i in self.peerconns:
 			if i.conn == msg.conn.conn:
 				user = i.username
-				self.processSearchRequest(msg.searchterm, user, msg.searchid, 1)
+				self.shares.processSearchRequest(msg.searchterm, user, msg.searchid, 1)
 		
 	
 	def SearchRequest(self, msg):
-		self.processSearchRequest(msg.searchterm, msg.user, msg.searchid, 0)
+		self.shares.processSearchRequest(msg.searchterm, msg.user, msg.searchid, 0)
 		
 	def ToggleRespondDistributed(self, msg, settings=False):
 		"""
@@ -1667,58 +1506,8 @@ class NetworkEventProcessor:
 			
 	def DistribSearch(self, msg):
 		if self.respondDistributed: # set in ToggleRespondDistributed
-			self.processSearchRequest(msg.searchterm, msg.user, msg.searchid, 0)
-	
-	def processSearchRequest(self, searchterm, user, searchid, direct = 0):
-		if not self.config.sections["searches"]["search_results"]:
-			# Don't return _any_ results when this option is disabled
-			return
-		if searchterm is None:
-			return
-		checkuser, reason = self.CheckUser(user, None)
-		if not checkuser:
-			return
-		if reason == "geoip":
-			geoip = 1
-		else:
-			geoip = 0
-		maxresults = self.config.sections["searches"]["maxresults"]
-		if checkuser == 2:
-			wordindex = self.config.sections["transfers"]["bwordindex"]
-			fileindex = self.config.sections["transfers"]["bfileindex"]
-		else:
-			wordindex = self.config.sections["transfers"]["wordindex"]
-			fileindex = self.config.sections["transfers"]["fileindex"]
-		fifoqueue = self.config.sections["transfers"]["fifoqueue"]
-		if maxresults == 0:
-			return
-		terms = searchterm.translate(self.translatepunctuation).lower().split()
-		list = [wordindex[i][:] for i in terms if i in wordindex]
-		if len(list) != len(terms) or len(list) == 0:
-			#self.logMessage(_("User %(user)s is searching for %(query)s, returning no results") %{'user':user, 'query':self.decode(searchterm)}, 2)
-			return
-		min = list[0]
-		for i in list[1:]:
-			if len(i) < len(min):
-				min = i
-		list.remove(min)
-		for i in min[:]:
-			for j in list:
-				if i not in j:
-					min.remove(i)
-					break
-		results = min[:maxresults]
-		if len(results) > 0 and self.transfers is not None:
-			queuesizes = self.transfers.getUploadQueueSizes()
-			slotsavail = int(not self.transfers.bandwidthLimitReached())
-			if len(results) > 0:
-				message = slskmessages.FileSearchResult(None, self.config.sections["server"]["login"], geoip, searchid, results, fileindex, slotsavail, self.speed, queuesizes, fifoqueue)
-				self.ProcessRequestToPeer(user, message)
-				if direct:
-					self.logMessage(_("User %(user)s is directly searching for %(query)s, returning %(num)i results") %{'user':user, 'query':self.decode(searchterm), 'num':len(results)}, 2)
-				else:
-					self.logMessage(_("User %(user)s is searching for %(query)s, returning %(num)i results") %{'user':user, 'query':self.decode(searchterm), 'num':len(results)}, 2)
-					
+			self.shares.processSearchRequest(msg.searchterm, msg.user, msg.searchid, 0)
+
 	def NetInfo(self, msg):
 		#print msg.list
 		self.distribcache.update(msg.list)
