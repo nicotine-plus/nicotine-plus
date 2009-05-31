@@ -1043,12 +1043,18 @@ class ChatRoom:
 	
 	def TickerSet(self, msg):
 		self.Ticker.set_ticker({})
-		for m in msg.msgs.keys():
-			self.Ticker.add_ticker(m, self.frame.np.decode(msg.msgs[m], self.encoding))
+		for user in msg.msgs.keys():
+			if user in self.frame.np.config.sections["server"]["ignorelist"] or self.frame.UserIpIsIgnored(user):
+				# User ignored, ignore Ticker messages
+				return
+			self.Ticker.add_ticker(user, self.frame.np.decode(msg.msgs[user], self.encoding))
 
 	def TickerAdd(self, msg):
-		text = self.frame.np.decode(msg.msg, self.encoding)
-		self.Ticker.add_ticker(msg.user, text)
+		user = msg.user
+		if user in self.frame.np.config.sections["server"]["ignorelist"] or self.frame.UserIpIsIgnored(user):
+			# User ignored, ignore Ticker messages
+			return
+		self.Ticker.add_ticker(msg.user, self.frame.np.decode(msg.msg, self.encoding))
 
 	def TickerRemove(self, msg):
 		self.Ticker.remove_ticker(msg.user)

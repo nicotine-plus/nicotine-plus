@@ -54,7 +54,8 @@ class Ticker(gtk.EventBox):
 		self.messages[user] = message
 
 	def remove_ticker(self, user):
-		del self.messages[user]
+		if user in self.messages:
+			del self.messages[user]
 
 	def set_ticker(self, msgs):
 		self.messages = msgs
