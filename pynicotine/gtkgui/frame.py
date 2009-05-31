@@ -1197,7 +1197,7 @@ class NicotineFrame:
 				self.browser.shutdown()
 				#sys.exit()
 			
-			gtk.gdk.threads_leave()
+			#gtk.gdk.threads_leave()
 			gtk.main_quit()
 
 		elif response == gtk.RESPONSE_CANCEL:
@@ -1535,13 +1535,13 @@ class NicotineFrame:
 				self.logMessage("No handler for class %s %s" % (i.__class__, vars(i)))
 
 	def callback(self, msgs):
-		gtk.gdk.threads_enter()
+		#gtk.gdk.threads_enter()
 		if len(msgs) > 0:
 			gobject.idle_add(self.emit_network_event, msgs[:])
-		gtk.gdk.threads_leave()
+		#gtk.gdk.threads_leave()
 
 	def networkcallback(self,msgs):
-		gtk.gdk.threads_enter()
+		#gtk.gdk.threads_enter()
 		curtime = time.time()
 		for i in msgs[:]:
 			if i.__class__ is slskmessages.DownloadFile or i.__class__ is slskmessages.UploadFile:
@@ -1553,7 +1553,7 @@ class NicotineFrame:
 			msgs = self.postTransferMsgs(msgs,curtime)
 		if len(msgs) > 0:
 			gobject.idle_add(self.emit_network_event, msgs[:])
-		gtk.gdk.threads_leave()
+		#gtk.gdk.threads_leave()
 
 	def postTransferMsgs(self,msgs,curtime):
 		trmsgs = []
@@ -1714,15 +1714,14 @@ class NicotineFrame:
 		self.np.config.sections["ui"]["width"] = width
 		
 	def OnDestroy(self, widget):
-		
+		self.np.config.sections["privatechat"]["users"] = list(self.privatechats.users.keys())
+		self.np.protothread.abort()
 		self.np.StopTimers()
 		
-		
-		self.np.config.sections["privatechat"]["users"] = list(self.privatechats.users.keys())
 		if not self.manualdisconnect:
 			self.OnDisconnect(None)
 		self.np.config.writeConfig()
-		self.np.protothread.abort()
+		
 			
 		if self.TrayApp.trayicon:
 			if sys.platform == "win32":
@@ -1731,10 +1730,12 @@ class NicotineFrame:
 				self.TrayApp.destroy_trayicon()
 		if self.browser is not None:
 			self.browser.shutdown()
+			gtk.gdk.threads_leave()
 			#sys.exit()
-		
-		gtk.gdk.threads_leave()
+		#import time
+		#time.sleep(4)
 		gtk.main_quit()
+		#gtk.gdk.threads_leave()
 		if sys.platform.startswith("win"):
 			# Hack. main_quit works on Linux but not on Windows, needs to be resolved properly.
 			sys.exit()

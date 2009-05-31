@@ -503,6 +503,7 @@ class SlskProtoThread(threading.Thread):
 		# Close Server Port
 		if server_socket is not None:
 			server_socket.close()
+		#print "Networking thread aborted"
 		self._stopped = 1
 		
 	def checkTimeSinceActive(self, conn):
