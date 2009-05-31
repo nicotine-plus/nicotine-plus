@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 import os
 import sys
+import gtk
 
 from thread import start_new_thread
-
 from traceback import extract_stack, extract_tb, format_list
+
 from pynicotine import slskmessages
 from utils import _
 from logfacility import log
@@ -175,12 +176,16 @@ class PluginHandler(object):
         start_new_thread(self.TriggerEvent, ("LeaveChatroomNotification", (room,)))
     # other functions
     def log(self, text):
+        gtk.gdk.threads_enter()
         log.add(text)
+        gtk.gdk.threads_leave()
     def saychatroom(self, room, text):
         self.frame.np.queue.put(slskmessages.SayChatroom(room, text))
     def sayprivate(self, user, text):
         # If we use the np the chat lines only show up on the receiving end, we won't see anything ourselves.
+        gtk.gdk.threads_enter()
         self.frame.privatechats.users[user].SendMessage(text)
+        gtk.gdk.threads_leave()
 
     
 class BasePlugin(object):
