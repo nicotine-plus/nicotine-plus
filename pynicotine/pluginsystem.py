@@ -2,6 +2,7 @@
 import os
 import sys
 import gtk
+import gobject
 
 from thread import start_new_thread
 from traceback import extract_stack, extract_tb, format_list
@@ -20,6 +21,7 @@ tupletype = type(('',''))
 
 class PluginHandler(object):
     frame = None # static variable... but should it be?
+    guiqueue = [] # fifo isn't supported by older python
     def __init__(self, frame, plugindir=None):
         self.frame = frame
         log.add("Loading plugin handler")
@@ -175,19 +177,36 @@ class PluginHandler(object):
     def LeaveChatroomNotification(self, room): 
         start_new_thread(self.TriggerEvent, ("LeaveChatroomNotification", (room,)))
     # other functions
+    def appendqueue(self, item):
+        # We cannot do a test after adding the item since it's possible
+        # this function will be called twice simultanious - and then
+        # len(self.guiqueue) might be 2 for both calls.
+        # Calling the processQueue twice is not a problem though.
+        addidle = False
+        if len(self.guiqueue) == 0:
+            addidle = True
+        self.guiqueue.append(item)
+        if addidle:
+            #print "Adding idle_add"
+            gobject.idle_add(self.processQueue)
     def log(self, text):
-        #gtk.gdk.threads_enter()
-        log.add(text)
-        #gtk.gdk.threads_leave()
+        self.appendqueue({'type':'logtext', 'text':text})
     def saychatroom(self, room, text):
         self.frame.np.queue.put(slskmessages.SayChatroom(room, text))
     def sayprivate(self, user, text):
-        # If we use the np the chat lines only show up on the receiving end, we won't see anything ourselves.
-        #gtk.gdk.threads_enter()
-        self.frame.privatechats.users[user].SendMessage(text)
-        #gtk.gdk.threads_leave()
-
-    
+        self.appendqueue({'type':'sayprivate', 'user':user, 'text':text})
+    def processQueue(self):
+        while len(self.guiqueue) > 0:
+            i = self.guiqueue.pop(0)
+            if i['type'] == 'logtext':
+                log.add(i['text'])
+            elif i['type'] == 'sayprivate':
+                # If we use the np the chat lines only show up on the receiving end, we won't see anything ourselves.
+                self.frame.privatechats.users[i['user']].SendMessage(i['text'])
+            else:
+                log.add(_('Unknown queue item %s: %s' % (i['type'], repr(i))))
+        #print "Removing idle_add"
+        return False
 class BasePlugin(object):
     __name__ = "BasePlugin"
     __desc__ = "Blank"
