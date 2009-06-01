@@ -1,9 +1,13 @@
 # -*- coding: utf-8 -*-
 
-import slskmessages
-import string, sys, os
-import gobject
+# System imports
 import dircache
+import gobject
+import string, sys, os
+import time
+
+# N+ imports
+import slskmessages
 from logfacility import log as logfacility
 from utils import _, displayTraceback
 try:
@@ -86,7 +90,7 @@ class Shares:
 		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
 		user = ip = port = None
 		# Get peer's username, ip and port
-		for i in self.peerconns:
+		for i in self.np.peerconns:
 			if i.conn is msg.conn.conn:
 				
 				user = i.username
@@ -119,7 +123,7 @@ class Shares:
 			return
 		self.logMessage(_("%(user)s is making a BrowseShares request") %{'user':user}, 1)
 		addr = msg.conn.addr[0]
-		checkuser, reason = self.CheckUser(user, addr)
+		checkuser, reason = self.np.CheckUser(user, addr)
 	
 		if checkuser == 1:
 			## Send Normal Shares
@@ -149,10 +153,10 @@ class Shares:
 		username = None
 		checkuser = None
 		reason = ""
-		for i in self.peerconns:
+		for i in self.np.peerconns:
 			if i.conn is msg.conn.conn:
 				username = i.username
-				checkuser, reason = self.CheckUser(username, None)
+				checkuser, reason = self.np.CheckUser(username, None)
 				break
 		if not username:
 			return
