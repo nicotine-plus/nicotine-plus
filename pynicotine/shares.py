@@ -8,12 +8,12 @@ import time
 
 # N+ imports
 import slskmessages
-from logfacility import log as logfacility
+from logfacility import log
 from utils import _, displayTraceback
 try:
 	import metadata_mutagen as metadata
 except ImportError:
-	logfacility.addwarning("Failed to import the Mutagen library, falling back to old library. To improve meta data please install Mutagen.")
+	log.addwarning("Failed to import the Mutagen library, falling back to old library. To improve meta data please install Mutagen.")
 	import mp3 as metadata
 
 win32 = sys.platform.startswith("win")
