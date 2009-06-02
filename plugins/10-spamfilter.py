@@ -5,10 +5,17 @@ from pynicotine.pluginsystem import BasePlugin, returncode
 class Plugin(BasePlugin):
     __name__ = "Spamfilter"
     __version__ = "2009-01-28r00"
-    def init(self):
-        self.minlength = 200
-        self.maxlength = 400
-        self.maxdiffcharacters = 10
+    settings = {'minlength':200,
+                'maxlength':400,
+                'maxdiffcharacters':10,
+               }
+    metasettings = [('minlength', 'The minimum length of a line before it\'s considered as ASCII spam', int),
+                    ('maxdiffcharacters', 'The maximum number of different characters that is still considered ASCII spam', int),
+                    ('<hr>'),
+                    ('maxlength', 'The maximum length of a line before it\'s considered as spam.', int),
+                   ]
+    def LoadNotification(self):
+        self.log('A line should be  at least %s long with a maximum of %s different characters before it\'s considered ASCII spam.' % (self.settings['minlength'], self.settings['maxdiffcharacters']))
     def IncomingPublicChatEvent(self, room, user, line):
         if len(line) >= self.minlength and len(set(line)) < self.maxdiffcharacters:
             self.log('Filtered ASCII spam from "%s" in room "%s"' % (user, room))

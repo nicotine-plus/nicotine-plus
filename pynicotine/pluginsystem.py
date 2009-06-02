@@ -54,7 +54,29 @@ class PluginHandler(object):
             try:
                 module = __import__(modulename,[],[],[],0)
                 instance = module.Plugin(self)
-                instance.LoadEvent()
+                try:
+                    customsettings = self.frame.np.config.sections["plugins"][instance.__id__]
+                    for details in instance.metasettings:
+                        if details not in ('<hr>',):
+                            try:
+                                value = customsettings[details[0]]
+                                try:
+                                    value = details[2](value)
+                                    instance.settings[details[0]] = value
+                                except ValueError:
+                                    log.add(_("Failed to cast the value '%(value)s', stored under '%(name)s', to %(type)s. Using default value." %
+                                            {'value':value, 'name':details[0], 'type':details[2]}))
+                            except KeyError:
+                                pass
+                    for key in customsettings:
+                        try:
+                            instance.settings[key]
+                        except KeyError:
+                            log.add(_("Stored setting '%(name)s' is no longer present in the plugin") % {'name':key})
+                except KeyError:
+                    #log.add("No custom settings found for %s" % (instance.__name__,))
+                    pass
+                instance.LoadNotification()
                 log.add("Loaded plugin %s (version %s) from %s" % (instance.__name__, instance.__version__, modulename))
                 self.plugins.append((module, instance))
             except:
@@ -207,9 +229,11 @@ class PluginHandler(object):
                 log.add(_('Unknown queue item %s: %s' % (i['type'], repr(i))))
         #print "Removing idle_add"
         return False
+
 class BasePlugin(object):
     __name__ = "BasePlugin"
     __desc__ = "Blank"
+    #__id__ = "baseplugin_original" # you normally don't have to set this manually
     __version__ = "2008-11-26"
     __publiccommands__ = []
     __privatecommands__ = []
@@ -217,6 +241,12 @@ class BasePlugin(object):
         # Never override this function, override init() instead
         self.parent = parent
         self.frame = parent.frame
+        try:
+            self.__id__
+        except AttributeError:
+            # See http://docs.python.org/library/configparser.html
+            # %(name)s will lead to replacements so we need to filter out those symbols.
+            self.__id__ = self.__name__.lower().replace(' ', '_').replace('%', '_').replace('=', '_')
         self.init()
         for (trigger, func) in self.__publiccommands__:
             self.frame.chatrooms.roomsctrl.CMDS.add('/'+trigger+' ')
@@ -224,7 +254,7 @@ class BasePlugin(object):
             self.frame.privatechats.CMDS.add('/'+trigger+' ')
     def init(self):
         pass
-    def LoadEvent(self):
+    def LoadNotification(self):
         pass
     def IncomingPrivateChatEvent(self, user, line):
         pass

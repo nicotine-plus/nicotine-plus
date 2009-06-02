@@ -5,8 +5,9 @@ from pynicotine.pluginsystem import BasePlugin
 class Plugin(BasePlugin):
     __name__ = "Anti-SHOUT"
     __version__ = "2008-11-18r00"
-    __MAXSCORE__ = 0.6
-    __MINLENGTH__ = 10
+    settings = {'maxscore':0.6,
+                'minlength':10,
+               }
     def capitalize(self, text):
         # Dont alter words that look like protocol links (fe http://, ftp://)
         if text.find('://') > -1:
@@ -25,7 +26,7 @@ class Plugin(BasePlugin):
         if (lowers > 0):
             score = uppers/float(lowers)
         newline = line
-        if len(line) > self.__MINLENGTH__ and (score == -1 or score > self.__MAXSCORE__):
+        if len(line) > self.settings['minlength'] and (score == -1 or score > self.settings['maxscore']):
             newline = '. '.join([self.capitalize(x) for x in line.split('. ')])
         if newline == line:
             return newline

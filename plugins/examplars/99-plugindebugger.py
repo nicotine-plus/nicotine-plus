@@ -7,8 +7,8 @@ class Plugin(BasePlugin):
     __version__ = "2009-05-27r00"
     def init(self):
         self.log('init')
-    def LoadEvent(self):
-        self.log('LoadEvent')
+    def LoadNotification(self):
+        self.log('LoadNotification')
         pass
     def IncomingPrivateChatEvent(self, user, line):
         self.log('IncomingPrivateChatEvent user=%s, line=%s' % (user, line))

@@ -322,7 +322,8 @@ class Config:
 	"npplayer": "infopipe", \
 	"npformatlist": [], \
 	"npformat": "" \
-	} \
+	},
+"plugins": {},
 }
 		# OS Specific settings
 		if sys.platform == 'darwin':
@@ -394,7 +395,7 @@ class Config:
 				val = self.parser.get(i, j, raw = 1)
 				if i not in self.sections.keys():
 					log.addwarning("Unknown config section '%s'" % (i,))
-				elif j not in self.sections[i].keys() and j != "filter":
+				elif j not in self.sections[i].keys() and not (j == "filter" or i in ('plugins',)):
 					log.addwarning("Unknown config option '%s' in section '%s'" % (j, i))
 				elif j in ['login','passw','enc',  'downloaddir', 'uploaddir', 'customban','descr','pic','logsdir','roomlogsdir','privatelogsdir','incompletedir', 'autoreply', 'afterfinish', 'downloadregexp', 'afterfolder', 'default', 'chatfont', "npothercommand", "npplayer", "npformat", "private_timestamp", "rooms_timestamp", "log_timestamp"] or (i == "ui" and j not in ["roomlistcollapsed", "tabclosers", "tab_colors", 'tab_reorderable', 'buddylistinchatrooms', "trayicon", "showaway", "tooltips", "usernamehotspots", "exitdialog", "tab_icons", "spellcheck", "modes_order", "modes_visible", "chat_hidebuttons", "notexists", "mozembed", "open_in_mozembed", "soundenabled", "transalpha",  "enabletrans", "speechenabled", "enablefilters",  "width", "height", "labelmain", "labelrooms", "labelprivate", "labelinfo", "labelbrowse", "labelsearch"]) or (i == "words" and j not in ["completion", "censorwords", "replacewords", "autoreplaced", "censored", "characters", "tab", "cycle", "dropdown", "roomnames", "buddies", "roomusers", "commands", "aliases", "onematch"]) or (i == "language" and j not in ["definelanguage", "setlanguage"]):
 

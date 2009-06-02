@@ -5,25 +5,29 @@ from pynicotine.pluginsystem import BasePlugin, returncode
 class Plugin(BasePlugin):
     __name__ = "Multi Paste"
     __version__ = "2008-07-03r00"
-    __MAXPUBLICLINES__ = 4
-    __MAXPRIVATELINES__ = 8
+    settings = {'maxpubliclines':4,
+                'maxprivatelines':8,
+               }
+    metasettings = [('maxpubliclines', 'The maximum number of lines that will pasted in public', int),
+                    ('maxprivatelines', 'The maximum number of lines that will be pasted in private', int),
+                   ]
     def OutgoingPrivateChatEvent(self, nick, line):
         lines = [x for x in line.split('\n') if x]
         if len(lines) > 1:
-            if len(lines) > self.__MAXPRIVATELINES__:
-                self.log("Posting " + str(self.__MAXPRIVATELINES__) + " of " + str(len(lines)) + " lines.")
+            if len(lines) > self.settings['maxprivatelines']:
+                self.log("Posting " + str(self.settings['maxprivatelines']) + " of " + str(len(lines)) + " lines.")
             else:
                 self.log("Splitting lines.")
-            for l in lines[:self.__MAXPRIVATELINES__]:
+            for l in lines[:self.settings['maxprivatelines']]:
                 self.sayprivate(nick, l)
             return returncode['zap']
     def OutgoingPublicChatEvent(self, room, line):
         lines = [x for x in line.split('\n') if x]
         if len(lines) > 1:
-            if len(lines) > self.__MAXPUBLICLINES__:
-                self.log("Posting " + str(self.__MAXPUBLICLINES__) + " of " + str(len(lines)) + " lines.")
+            if len(lines) > self.settings['maxpubliclines']:
+                self.log("Posting " + str(self.settings['maxpubliclines']) + " of " + str(len(lines)) + " lines.")
             else:
                 self.log("Splitting lines.")
-            for l in lines[:self.__MAXPUBLICLINES__]:
+            for l in lines[:self.settings['maxpubliclines']]:
                 self.saypublic(room, l)
             return returncode['zap']
