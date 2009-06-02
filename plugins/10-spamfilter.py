@@ -8,7 +8,7 @@ class Plugin(BasePlugin):
     settings = {'minlength':200,
                 'maxlength':400,
                 'maxdiffcharacters':10,
-                'badprivatephrases':['buy viagra now','mybrute.com','mybrute.es']
+                'badprivatephrases':['buy viagra now','mybrute.com','mybrute.es','0daymusic.biz']
                }
     metasettings = [('minlength', 'The minimum length of a line before it\'s considered as ASCII spam', int),
                     ('maxdiffcharacters', 'The maximum number of different characters that is still considered ASCII spam', int),
