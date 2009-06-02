@@ -905,7 +905,7 @@ class NicotineFrame:
 				import imagedata
 			except Exception, e:
 				print e
-			loader = gtk.gdk.PixbufLoader("png")
+			loader = gtk.gdk.PixbufLoader()
 			if "icontheme" in self.np.config.sections["ui"]:
 				path = os.path.expanduser(os.path.join(self.np.config.sections["ui"]["icontheme"], i +".png"))
 				if os.path.exists(path):
