@@ -265,7 +265,7 @@ Spanish
  * Dreslo
 French
  * ManWell (2007)
- * ><((((*> (2007)
+ * ><((((*> (2007-2009)
  * flashfr
  * systr
 Italian
@@ -502,10 +502,9 @@ class AboutDependenciesDialog(GenericTableDialog):
 		"", "",
 		"<b>%s</b>" %_("Spell Checking"), "<i>%s</i>" % _("Libsexy, sexy-python") +"\n"+ _("Website:")+" "+"http://www.chipx86.com/wiki/Libsexy",
 		"<b>%s</b>" %_("Speed Up"), "<i>%s</i>" % _("Psyco")+"\n"+_("Website:")+" "+"http://psyco.sourceforge.net/",
-	        "<b>%s</b>" %_("IP Address Geolocation"), "<i>%s</i>" % _("GeoIP-Python")+"\n"+_("Website:")+" "+"http://www.maxmind.com/app/python",
-		"<b>%s</b>" %_("OGG Metadata"), "<i>%s</i>" % _("PyVorbis") +" "+ _("(Warning: May be unstable)")+"\n"+_("Website:")+" "+ "http://ekyo.nerim.net/software/pyogg/",
-	        "<b>%s</b>" %_("Download Notifications"), "<i>%s</i>" % _("notification-daemon, notify-python, libnotify") +"\n"+_("Website:")+" "+"http://www.galago-project.org/downloads.php",
-
+		"<b>%s</b>" %_("IP Address Geolocation"), "<i>%s</i>" % _("GeoIP-Python")+"\n"+_("Website:")+" "+"http://www.maxmind.com/app/python",
+		"<b>%s</b>" %_("Meta data for files other than MP3"), "<i>%s</i>\n%s: %s" % (_("Mutagen"), _("Website"), "http://code.google.com/p/quodlibet/wiki/Mutagen"),
+		"<b>%s</b>" %_("Download Notifications"), "<i>%s</i>" % _("notification-daemon, notify-python, libnotify") +"\n"+_("Website:")+" "+"http://www.galago-project.org/downloads.php",
 	]
 
 	def __init__(self, parent):
