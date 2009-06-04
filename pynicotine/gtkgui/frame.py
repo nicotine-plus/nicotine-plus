@@ -903,44 +903,45 @@ class NicotineFrame:
 		self.flag_images = {}
 		self.flag_users = {}
 
-		for i in ["empty", "away", "online", "offline", "hilite", "hilite2", "connect", "disconnect", "away2", "n", "nicotinen", "notify"]:
-			try:
-				import imagedata
-			except Exception, e:
-				print e
+		def loadStatic(name):
 			loader = gtk.gdk.PixbufLoader()
-			if "icontheme" in self.np.config.sections["ui"]:
-				path = os.path.expanduser(os.path.join(self.np.config.sections["ui"]["icontheme"], i +".svg"))
-				if not os.path.exists(path):
-					path = os.path.expanduser(os.path.join(self.np.config.sections["ui"]["icontheme"], i +".png"))
-				if os.path.exists(path):
-					data = open(path, 'rb')
-					s = data.read()
-					loader.write(s, len(s))
-					data.close()
-					del s
-				else:
-					# default icons
-					try:
-						data = getattr(imagedata, i)
-						loader.write(data, len(data))
-					except gobject.GError:
-						data = getattr(imagedata, "%s_png" % (i,))
-						loader.write(data, len(data))
-			else:
-				# default icons
-				try:
-					data = getattr(imagedata, i)
-					loader.write(data, len(data))
-				except gobject.GError:
-					data = getattr(imagedata, "%s_png" % (i,))
-					loader.write(data, len(data))
-			
-			
+			try:
+				data = getattr(imagedata, "%s_vector" % (name,))
+				loader.write(data, len(data))
+			except (gobject.GError, AttributeError):
+				data = getattr(imagedata, "%s" % (name,))
+				loader.write(data, len(data))
 			loader.close()
-			self.images[i] = loader.get_pixbuf()
+			return loader.get_pixbuf()
+		names = ["empty", "away", "online", "offline", "hilite", "hilite2", "connect", "disconnect", "away2", "n", "nicotinen", "notify"]
+		if "icontheme" in self.np.config.sections["ui"]:
+			extensions = ["jpg", "jpeg", "bmp", "png", "svg"]
+			for name in names:
+				path = None
+				exts = extensions[:]
+				loaded = False
+				while not path or (exts and not loaded):
+					path = os.path.expanduser(os.path.join(self.np.config.sections["ui"]["icontheme"], "%s.%s" % (name, exts.pop())))
+					if os.path.exists(path):
+						data = open(path, 'rb')
+						s = data.read()
+						data.close()
+						loader = gtk.gdk.PixbufLoader()
+						try:
+							loader.write(s, len(s))
+							loader.close()
+							self.images[name] = loader.get_pixbuf()
+							loaded = True
+						except gobject.GError:
+							pass
+						del loader
+						del s
+				if not name in self.images:
+					self.images[name] = loadStatic(name)
+		else:
+			for name in names:
+				self.images[name] = loadStatic(name)
 
-		
 	def SaveColumns(self):
 		for i in [self.userlist, self.chatrooms.roomsctrl, self.downloads, self.uploads, self.Searches]:
 			i.saveColumns()
