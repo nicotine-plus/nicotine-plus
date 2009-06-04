@@ -910,7 +910,9 @@ class NicotineFrame:
 				print e
 			loader = gtk.gdk.PixbufLoader()
 			if "icontheme" in self.np.config.sections["ui"]:
-				path = os.path.expanduser(os.path.join(self.np.config.sections["ui"]["icontheme"], i +".png"))
+				path = os.path.expanduser(os.path.join(self.np.config.sections["ui"]["icontheme"], i +".svg"))
+				if not os.path.exists(path):
+					path = os.path.expanduser(os.path.join(self.np.config.sections["ui"]["icontheme"], i +".png"))
 				if os.path.exists(path):
 					data = open(path, 'rb')
 					s = data.read()
