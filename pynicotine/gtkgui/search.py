@@ -715,7 +715,7 @@ class Search:
 		if user in self.users:
 			return
 		if user not in self.Searches.users.keys():
-			if user in self.frame.np.users.keys():
+			if user in self.frame.np.users.keys() and self.frame.np.users[user].status is not None:
 				self.Searches.users[user] = self.frame.np.users[user].status
 			else:
 				self.Searches.users[user] = 0
@@ -1001,10 +1001,16 @@ class Search:
 					self.usersiters[user] = self.resultsmodel.append(None, [0, user, "", "", h_speed, h_queue, immediatedl, "", "", self.get_flag(user, country), "", 0, "", country, 0, speed, queue, status])
 				encoded_row = [ix, user, encode(filename, user), h_size, h_speed, h_queue, immediatedl, h_bitrate, length, self.get_flag(user, country), encode(directory, user), bitrate, encode( fullpath, user), country,  size, speed, queue, status]
 
-				if user in self.usersiters:
-					iter = self.resultsmodel.append(self.usersiters[user], encoded_row)
-				else:
-					iter = self.resultsmodel.append(None, encoded_row)
+				try:
+					if user in self.usersiters:
+						iter = self.resultsmodel.append(self.usersiters[user], encoded_row)
+					else:
+						iter = self.resultsmodel.append(None, encoded_row)
+				except Exception, e:
+					print "Search row error", e
+					for i in encoded_row:
+						print i, type(i),
+					print
 				displaycounter += 1
 			if displaycounter >= self.frame.np.config.sections['searches']["max_displayed_results"]:
 				break

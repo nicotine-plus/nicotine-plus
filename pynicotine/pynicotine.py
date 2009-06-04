@@ -94,6 +94,13 @@ class NetworkEventProcessor:
 		self.config = Config(configfile)
 		self.config.frame = frame
 		self.config.readConfig()
+		self.peerconns = []
+		self.watchedusers = []
+		self.ipblock_requested = {}
+		self.ipignore_requested = {}
+		self.ip_requested = [] 
+		self.PrivateMessageQueue = {}
+		self.users = {}
 		self.queue = Queue.Queue(0)
 		self.shares = Shares(self)
 		try:
@@ -119,13 +126,8 @@ class NetworkEventProcessor:
 
 		self.serverconn = None
 		self.waitport = None
-		self.peerconns = []
-		self.watchedusers = []
-		self.ipblock_requested = {}
-		self.ipignore_requested = {}
-		self.ip_requested = [] 
-		self.PrivateMessageQueue = {}
-		self.users = {}
+		
+		
 		self.chatrooms = None
 		self.privatechat = None
 		self.globallist = None
