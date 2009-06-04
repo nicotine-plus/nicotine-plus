@@ -320,6 +320,8 @@ class NicotineFrame:
 			pynotify.init("Nicotine+")
 			self.pynotify = pynotify
 			self.pynotifyBox = None
+			from xml.dom.minidom import getDOMImplementation
+			self.xmldocument = getDOMImplementation().createDocument(None, None, None)
 		except ImportError:
 			self.pynotify = None
 		
@@ -864,15 +866,16 @@ class NicotineFrame:
 	def NewNotification(self, message, title="Nicotine+"):
 		if self.pynotify is None:
 			return
+		xmlmessage = self.xmldocument.createTextNode(message).toxml()
 		if self.pynotifyBox is None:
-			self.pynotifyBox = self.pynotify.Notification(title, message)
+			self.pynotifyBox = self.pynotify.Notification(title, xmlmessage)
 			self.pynotifyBox.set_icon_from_pixbuf(self.images["notify"])
 			try: n.attach_to_status_icon(self.TrayApp.trayicon_module)
 			except:
 				try: n.attach_to_widget(self.TrayApp.trayicon_module)
 				except: pass
 		else:
-			self.pynotifyBox.update(title, message)
+			self.pynotifyBox.update(title, xmlmessage)
 		try:
 			self.pynotifyBox.show()
 		except gobject.GError, error:
