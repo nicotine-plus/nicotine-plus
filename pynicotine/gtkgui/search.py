@@ -571,7 +571,12 @@ class Search:
 		self.FilterSize.connect("changed", self.OnFilterChanged)
 		self.FilterBitrate.connect("changed", self.OnFilterChanged)
 		self.FilterCountry.connect("changed", self.OnFilterChanged)
-		
+		self.FilterIn.child.connect("activate", self.OnRefilter)
+		self.FilterOut.child.connect("activate", self.OnRefilter)
+		self.FilterSize.child.connect("activate", self.OnRefilter)
+		self.FilterBitrate.child.connect("activate", self.OnRefilter)
+		self.FilterCountry.child.connect("activate", self.OnRefilter)
+
 		self.selected_results = []
 		self.selected_users = []
 
@@ -722,7 +727,7 @@ class Search:
 				self.frame.np.queue.put(slskmessages.AddUser(user))
 			if user == self.frame.np.config.sections["server"]["login"]:
 				self.Searches.users[user] = 1
-				
+		
 		self.users.append(user)
 		results = []
 
@@ -834,6 +839,8 @@ class Search:
 			itercounter += 1
 			if itercounter > self.frame.np.config.sections['searches']["max_stored_results"]:
 				break
+		
+		self.CountVisibleResults()
 		return returned
 			
 	def updateStatus(self, user, status):
@@ -1014,7 +1021,20 @@ class Search:
 				displaycounter += 1
 			if displaycounter >= self.frame.np.config.sections['searches']["max_displayed_results"]:
 				break
+		self.CountVisibleResults()
 		
+	def CountVisibleResults(self):
+		if self.usersGroup.get_active():
+			iter_count = 0
+			user_count = self.resultsmodel.iter_n_children(None)
+
+			for i in range(user_count):
+				iters = self.resultsmodel.iter_nth_child(None, i)
+				iter_count += self.resultsmodel.iter_n_children(iters)
+		
+			self.Counter.set_text("Results: %d/%d" %(iter_count ,len(self.all_data)) )
+		else:
+			self.Counter.set_text("Results: %d/%d" %(self.resultsmodel.iter_n_children(None) ,len(self.all_data)) )
 
 	def OnPopupMenuUsers(self, widget):
 		
