@@ -16,7 +16,8 @@ table = [
 	["nicotine+.png", "nicotinen"],
 	["n.png", "n"],
 	["nicotine-plus.svg", "notify"],
-]
+	["notify.png", "notify_png"],
+	]
 flagtable = []
 for name in os.listdir(os.path.join("img", "geoip")):
 	p = os.path.join("img", "geoip", name)

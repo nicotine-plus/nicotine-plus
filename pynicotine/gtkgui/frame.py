@@ -921,12 +921,20 @@ class NicotineFrame:
 					del s
 				else:
 					# default icons
-					data = getattr(imagedata, i)
-					loader.write(data, len(data))
+					try:
+						data = getattr(imagedata, i)
+						loader.write(data, len(data))
+					except gobject.GError:
+						data = getattr(imagedata, "%s_png" % (i,))
+						loader.write(data, len(data))
 			else:
 				# default icons
-				data = getattr(imagedata, i)
-				loader.write(data, len(data))
+				try:
+					data = getattr(imagedata, i)
+					loader.write(data, len(data))
+				except gobject.GError:
+					data = getattr(imagedata, "%s_png" % (i,))
+					loader.write(data, len(data))
 			
 			
 			loader.close()
