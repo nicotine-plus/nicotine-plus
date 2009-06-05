@@ -47,6 +47,10 @@ class PluginHandler(object):
         """Loads all plugins in the given directory."""
         pyfiles = [x for x in os.listdir(directory) if x[-3:] == '.py' and len(x) > 3]
         pyfiles.sort()
+        type2cast = {'integer':int,'int':int,
+                     'float':float,
+                     'string':str,'str':str,
+                    }
         for f in pyfiles:
             (modulename, sep, ext) = f.rpartition('.')
             # http://mail.python.org/pipermail/python-list/2005-July/331818.html
@@ -58,14 +62,26 @@ class PluginHandler(object):
                     customsettings = self.frame.np.config.sections["plugins"][instance.__id__]
                     for details in instance.metasettings:
                         if details not in ('<hr>',):
+                            settingname = details[0]
+                            settingdescr = details[1]
+                            settinginfo = details[2]
                             try:
-                                value = customsettings[details[0]]
+                                value = customsettings[settingname]
                                 try:
-                                    value = details[2](value)
-                                    instance.settings[details[0]] = value
+                                    if settinginfo['type'].startswith('list '):
+                                        value = list(value)
+                                        (junk, junk, listtype) = settinginfo['type'].partition(' ')
+                                        index = 0
+                                        for index in xrange(0, len(value)):
+                                            value[index] = type2cast[listtype](value[index])
+                                    else:
+                                        value = type2cast[settinginfo['type']](value)
+                                        instance.settings[settingname] = value
                                 except ValueError:
                                     log.add(_("Failed to cast the value '%(value)s', stored under '%(name)s', to %(type)s. Using default value." %
-                                            {'value':value, 'name':details[0], 'type':details[2]}))
+                                            {'value':value, 'name':settingname, 'type':settinginfo['type']}))
+                                except KeyError:
+                                    log.add(_("Unknown setting type '%(type)s'." % {'type':settinginfo['type']}))
                             except KeyError:
                                 pass
                     for key in customsettings:

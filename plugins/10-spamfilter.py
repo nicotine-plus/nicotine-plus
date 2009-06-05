@@ -10,11 +10,11 @@ class Plugin(BasePlugin):
                 'maxdiffcharacters':10,
                 'badprivatephrases':['buy viagra now','mybrute.com','mybrute.es','0daymusic.biz']
                }
-    metasettings = [('minlength', 'The minimum length of a line before it\'s considered as ASCII spam', int),
-                    ('maxdiffcharacters', 'The maximum number of different characters that is still considered ASCII spam', int),
+    metasettings = [('minlength', 'The minimum length of a line before it\'s considered as ASCII spam', {'type':'integer'}),
+                    ('maxdiffcharacters', 'The maximum number of different characters that is still considered ASCII spam', {'type':'integer'}),
                     ('<hr>'),
-                    ('maxlength', 'The maximum length of a line before it\'s considered as spam.', int),
-                    ('badprivatephrases', 'Things people you in private that is spam.', list),
+                    ('maxlength', 'The maximum length of a line before it\'s considered as spam.', {'type':'integer'}),
+                    ('badprivatephrases', 'Things people you in private that is spam.', {'type':'list string'}),
                    ]
     def LoadNotification(self):
         self.log('A line should be  at least %s long with a maximum of %s different characters before it\'s considered ASCII spam.' % (self.settings['minlength'], self.settings['maxdiffcharacters']))

@@ -8,8 +8,8 @@ class Plugin(BasePlugin):
     settings = {'maxpubliclines':4,
                 'maxprivatelines':8,
                }
-    metasettings = [('maxpubliclines', 'The maximum number of lines that will pasted in public', int),
-                    ('maxprivatelines', 'The maximum number of lines that will be pasted in private', int),
+    metasettings = [('maxpubliclines', 'The maximum number of lines that will pasted in public', {'type':'int'}),
+                    ('maxprivatelines', 'The maximum number of lines that will be pasted in private', {'type':'int'}),
                    ]
     def OutgoingPrivateChatEvent(self, nick, line):
         lines = [x for x in line.split('\n') if x]

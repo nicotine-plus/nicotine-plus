@@ -8,6 +8,9 @@ class Plugin(BasePlugin):
     settings = {'maxscore':0.6,
                 'minlength':10,
                }
+    metasettings = [('maxratio', 'The maximum ratio capitals/noncapitals before fixing capitalization', {'type':'integer', 'minimum':0, 'maximum':1, 'stepsize':0.1}),
+                    ('minlength','Lines shorter than this never not be altered', {'type':'integer', 'minimum':0, 'stepsize':1}),
+                   ]
     def capitalize(self, text):
         # Dont alter words that look like protocol links (fe http://, ftp://)
         if text.find('://') > -1:
