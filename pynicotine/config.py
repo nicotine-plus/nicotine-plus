@@ -188,6 +188,7 @@ class Config:
 	"readroomlogs": 1, \
 	"readroomlines": 15, \
 	"readprivatelines": 15, \
+	"rooms": [], \
 	}, \
 \
 "privatechat":{ \

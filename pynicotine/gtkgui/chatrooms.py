@@ -22,6 +22,7 @@ import gobject
 import locale
 import pango
 from pynicotine import slskmessages
+from pynicotine import pluginsystem
 from utils import InitialiseColumns, AppendLine, PopupMenu, FastListModel, string_sort_func, WriteLog, int_sort_func, Humanize, HumanSpeed, expand_alias, is_alias, EncodingsMenu, SaveEncoding, PressHeader, fixpath, IconNotebook
 from pynicotine.utils import _
 from ticker import Ticker
@@ -725,7 +726,9 @@ class ChatRoom:
 		completion.connect("match-selected", self.frame.EntryCompletionFoundMatch, self.ChatEntry)
 		
 		self.Log.set_active(config["logging"]["chatrooms"])
-		
+		if not self.Log.get_active():
+			self.Log.set_active((self.room in config["logging"]["rooms"]))
+
 		if room in config["server"]["autojoin"]:
 			self.AutoJoin.set_active(True)
 			
@@ -1742,10 +1745,16 @@ class ChatRoom:
 		return True
 
 	def OnLogToggled(self, widget):
-		if not widget.get_active() and self.logfile is not None:
-			self.logfile.close()
-			self.logfile = None
-	
+		if not widget.get_active():
+			if self.logfile is not None:
+				self.logfile.close()
+				self.logfile = None
+			if self.room in self.frame.np.config.sections["logging"]["rooms"]:
+				self.frame.np.config.sections["logging"]["rooms"].remove(self.room)
+		elif widget.get_active():
+			if self.room not in self.frame.np.config.sections["logging"]["rooms"]:
+				self.frame.np.config.sections["logging"]["rooms"].append(self.room)
+		
 	def OnEncodingChanged(self, widget):
 		try:
 			# PyGTK 2.6
