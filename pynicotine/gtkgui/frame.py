@@ -1908,11 +1908,15 @@ class NicotineFrame:
 		if flag is None: return
 		if flag not in self.flag_images:
 			if hasattr(imagedata, flag):
-				loader = gtk.gdk.PixbufLoader("png")
-				data = getattr(imagedata, flag)
-				loader.write(data, len(data))
-				loader.close()
-				img = loader.get_pixbuf()
+				img = None
+				try:
+					loader = gtk.gdk.PixbufLoader("png")
+					data = getattr(imagedata, flag)
+					loader.write(data, len(data))
+					loader.close()
+					img = loader.get_pixbuf()
+				except Exception, e:
+					print "Error loading image for %s" % flag, e
 				self.flag_images[flag] = img
 				return img
 			else:
