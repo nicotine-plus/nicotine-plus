@@ -29,6 +29,7 @@ def deltags(string):
 class Plugin(BasePlugin):
     __name__ = "AllMusic url2search"
     __version__ = "2008-07-06r00"
+    __author__ = "quinox"
     __desc__ = """Enables you to enter AllMusic URLs in the search window which will be converted to albums, artists of both."""
     def OutgoingGlobalSearchEvent(self, search):
         terms = search.split()

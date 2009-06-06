@@ -4,7 +4,7 @@ README Concerning plugins for N+
 FOR EVERYBODY
 
 The plugin system is in its infant stage, a lot of things aren't implemented yet
-and a few things might be buggy. The provided plugins should be regarder as
+and a few things might be buggy. The provided plugins should be regarded as
 documentation and shouldn't be loaded unless you're willing to break things.
 
 

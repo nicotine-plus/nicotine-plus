@@ -9,6 +9,7 @@ from pynicotine import slskmessages
 class Plugin(BasePlugin):
     __name__ = "Port Checker"
     __version__ = "2008-11-26r00"
+    __author__ = "quinox"
     __desc__ = """By examining chatroom messages this plugin tries to find people that have a potential firewall/router problem, and if found tests their port. If a closed port is encountered a message will be sent to him/her."""
     def init(self):
         self.checked = {} # keys are users, value of 1 means pending requested scan, 2 means pending unrequested scan and 3 means the user was scanned
