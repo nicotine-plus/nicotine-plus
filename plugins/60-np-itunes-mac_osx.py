@@ -8,6 +8,9 @@ from pynicotine.pluginsystem import BasePlugin, returncode
 class Plugin(BasePlugin):
     __name__ = "iTunes OSX Now Playing"
     __version__ = "2008-11-28r00"
+    __desc__ = """NowPlaying command to use with iTunes on OSX (other operating systems not supported).
+
+Usage: after enabling this plugin you can type /itunes in a chatroom or private conversation to show the world what you're listening to."""
     osascript = """
 tell application "iTunes"
     set myartist to the artist of current track as string

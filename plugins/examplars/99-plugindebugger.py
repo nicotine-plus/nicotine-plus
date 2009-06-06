@@ -5,6 +5,7 @@ from pynicotine.pluginsystem import BasePlugin
 class Plugin(BasePlugin):
     __name__ = "Plugin Debugger"
     __version__ = "2009-05-27r00"
+    __desc__ = """Plugin to examine the flow of events of the plugin system. Not useful if you're not a programmer."""
     def init(self):
         self.log('init')
     def LoadNotification(self):

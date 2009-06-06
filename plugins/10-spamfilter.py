@@ -5,6 +5,11 @@ from pynicotine.pluginsystem import BasePlugin, returncode
 class Plugin(BasePlugin):
     __name__ = "Spamfilter"
     __version__ = "2009-01-28r00"
+    __desc__ = """The plugin blocks a number of diffrent kind of spam:
+
+1) It blocks ASCII art spam. These are messages in chatrooms that are made up of a few characters that together form pictures like a christmas tree or a middle finger.
+2) It blocks extremely long sentences uttered in chatrooms, filtering out copy/paste spam like long rants
+3) It blocks private messages containing sentences you consider spam, for example messages trying to sell you foobar."""
     settings = {'minlength':200,
                 'maxlength':400,
                 'maxdiffcharacters':10,

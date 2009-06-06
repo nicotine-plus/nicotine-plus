@@ -5,6 +5,7 @@ from pynicotine.pluginsystem import BasePlugin, returncode
 class Plugin(BasePlugin):
     __name__ = "Multi Paste"
     __version__ = "2008-07-03r00"
+    __desc__ = """This plugin intercepts messages you send with newlines in them, and splits them up in separate messages."""
     settings = {'maxpubliclines':4,
                 'maxprivatelines':8,
                }
