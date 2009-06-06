@@ -2188,6 +2188,69 @@ class CompletionFrame(buildFrame):
 			"onematch": self.OneMatchCheck.get_active(),
 			},
 		}
+
+class PluginFrame(buildFrame):
+	def __init__(self, parent):
+		self.p = parent
+		buildFrame.__init__(self, "PluginFrame")
+		self.options = {}
+		self.pluginlist = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_BOOLEAN )
+		self.plugins = []
+		self.pluginsiters = {}
+		self.selected_plugin = None
+		cols = InitialiseColumns(self.PluginTreeView,
+			[_("Plugins"), 150, "text"],
+			[_("Enabled"), 40, "toggle"],
+		)
+		cols[0].set_sort_column_id(0)
+		cols[1].set_sort_column_id(1)
+		renderers = cols[1].get_cell_renderers()
+		for render in renderers:
+			render.connect('toggled', self.cell_toggle_callback, self.PluginTreeView, 1)
+		self.PluginTreeView.set_model(self.pluginlist)
+		#self.PluginTreeView.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
+		self.PluginTreeView.get_selection().connect("changed", self.OnSelectPlugin)
+
+	def OnSelectPlugin(self, selection):
+		model, iter = selection.get_selected()
+		if iter is None:
+			self.selected_plugin = None
+			return
+		path = model.get_path(iter)
+		plugin_name = self.pluginlist.get_value(self.pluginlist.get_iter(path), 0)
+		#self.PluginTreeView.expand_to_path(path)
+		self.SetPlugin(plugin_name)
+	
+	def SetPlugin(self, plugin_name):
+		self.selected_plugin = plugin_name
+		for (module, plugin) in self.frame.pluginhandler.plugins:
+			if plugin.__name__ == plugin_name:
+				self.PluginName.set_markup("<b>%(name)s</b>" % {"name": plugin.__name__} )
+				self.PluginVersion.set_markup("<b>%(version)s</b>"  % { "version": plugin.__version__} )
+				#self.PluginDescription.get_buffer().set_text("%(description)s" % { "description": plugin.__desc__ })
+				#self.PluginAuthor.set_markup("<b>%(author)s</b>" % { "author": plugin.__author__ })
+
+	def cell_toggle_callback(self, widget, index, treeview, pos):
+		
+		iter = self.pluginlist.get_iter(index)
+		#user = self.usersmodel.get_value(iter, 1)
+		value = self.pluginlist.get_value(iter, pos)
+		self.pluginlist.set(iter, pos, not value)
+
+	def SetSettings(self, config):
+		#for (module, plugin) in self.frame.pluginhandler.plugins:
+			#print plugin.__name__, plugin.__version__, plugin.settings
+		self.pluginsiters = {}
+		self.pluginlist.clear()
+		for (module, plugin) in self.frame.pluginhandler.plugins:
+			self.pluginsiters[filter] = self.pluginlist.append([plugin.__name__, True])
+		#else:
+			#self.p.Hilight(self.PluginTreeView)
+
+		return {}
+	def GetSettings(self):
+		
+		return {}
 	
 class ChatFrame(buildFrame):
 	def __init__(self, parent):
@@ -2262,7 +2325,7 @@ class SettingsWindow:
 		self.tree["Completion"] = model.append(row, [_("Completion"), "Completion"])
 		
 		self.tree["Misc"] = row = model.append(None, [_("Misc"), "Misc"])
-
+		self.tree["Plugins"] = model.append(row, [_("Plugins"), "Plugins"])
 		self.tree["Sounds"] = model.append(row, [_("Sounds"), "Sounds"])
 		self.tree["Searches"] = model.append(row, [_("Searches"), "Searches"])
 		self.tree["User info"] = model.append(row, [_("User info"), "User info"])
@@ -2290,7 +2353,7 @@ class SettingsWindow:
 		p["Chat"] = ChatFrame(self)
 		p["Events"] = EventsFrame(self)
 		p["Import Config"] = ImportFrame(self)
-
+		p["Plugins"] = PluginFrame(self)
 		p["Misc"] = MiscFrame(self)
 		
 		column = gtk.TreeViewColumn(_("Categories"), gtk.CellRendererText(), text = 0)
