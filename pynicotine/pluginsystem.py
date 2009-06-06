@@ -248,7 +248,7 @@ class PluginHandler(object):
 
 class BasePlugin(object):
     __name__ = "BasePlugin"
-    __desc__ = "Blank"
+    __desc__ = "No description provided"
     #__id__ = "baseplugin_original" # you normally don't have to set this manually
     __version__ = "2008-11-26"
     __publiccommands__ = []
