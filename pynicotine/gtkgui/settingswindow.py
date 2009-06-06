@@ -2227,7 +2227,7 @@ class PluginFrame(buildFrame):
 			if plugin.__name__ == plugin_name:
 				self.PluginName.set_markup("<b>%(name)s</b>" % {"name": plugin.__name__} )
 				self.PluginVersion.set_markup("<b>%(version)s</b>"  % { "version": plugin.__version__} )
-				#self.PluginDescription.get_buffer().set_text("%(description)s" % { "description": plugin.__desc__ })
+				self.PluginDescription.get_buffer().set_text("%(description)s" % { "description": plugin.__desc__ })
 				#self.PluginAuthor.set_markup("<b>%(author)s</b>" % { "author": plugin.__author__ })
 
 	def cell_toggle_callback(self, widget, index, treeview, pos):

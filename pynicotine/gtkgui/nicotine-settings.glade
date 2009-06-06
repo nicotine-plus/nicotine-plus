@@ -11439,6 +11439,7 @@ Right</property>
                                                   <widget class="GtkTextView" id="PluginDescription">
                                                     <property name="visible">True</property>
                                                     <property name="can_focus">True</property>
+                                                    <property name="wrap_mode">word</property>
                                                   </widget>
                                                 </child>
                                               </widget>
