@@ -3667,6 +3667,6 @@ class MainApp:
 		signal.signal(signal.SIGINT, signal.SIG_IGN)
 		self.frame.MainWindow.show()
 		gtk.gdk.threads_init()
-		#gtk.gdk.threads_enter()
+		gtk.gdk.threads_enter() # Without this N+ hangs on XP (Vista and Linux don't have that problem)
 		gtk.main()
-		#gtk.gdk.threads_leave()
+		gtk.gdk.threads_leave()
