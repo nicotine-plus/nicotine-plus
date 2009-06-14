@@ -923,18 +923,25 @@ class NetworkEventProcessor:
 
 
 	def ChildDepth(self, msg):
+		# Todo: Distributed search messages need to implemented
 		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
 	def BranchLevel(self, msg):
+		# Todo: Distributed search messages need to implemented
 		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
 	def BranchRoot(self, msg):
+		# Todo: Distributed search messages need to implemented
 		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
 	def DistribChildDepth(self, msg):
+		# Todo: Distributed search messages need to implemented
 		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
 	def DistribBranchLevel(self, msg):
+		# Todo: Distributed search messages need to implemented
 		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
 	def DistribBranchRoot(self, msg):
+		# Todo: Distributed search messages need to implemented
 		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
 	def DistribMessage9(self, msg):
+		# Todo: Distributed search messages need to implemented
 		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
 	def DummyMessage(self, msg):
 		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
