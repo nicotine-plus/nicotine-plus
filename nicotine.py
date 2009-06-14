@@ -31,7 +31,7 @@ win32 = sys.platform.startswith("win")
 py2exe = False
 if win32 and hasattr(sys, 'frozen'):
 	py2exe = True
-	
+
 # Disable py2exe log feature by routing stdout/sterr to the special nul file
 if win32 and py2exe:
 	sys.stdout = open("nul", "w")
@@ -41,14 +41,13 @@ from gettext import gettext as _
 
 LOAD_PSYCO = False
 if win32 and platform.architecture()[0] == "32bit":
-  LOAD_PSYCO = True
+	LOAD_PSYCO = True
 else:
-  try:
-    if os.uname()[4] in ("i386", "i586", "i686") and platform.architecture()[0] == "32bit":
-       LOAD_PSYCO = True
-  except AttributeError, error:
-    pass
-		
+	try:
+		if os.uname()[4] in ("i386", "i586", "i686") and platform.architecture()[0] == "32bit":
+			LOAD_PSYCO = True
+	except AttributeError, error:
+		pass
 if LOAD_PSYCO:
 	try:
 		import psyco
@@ -138,15 +137,15 @@ def version():
 def usage():
 	print _("""Nicotine-Plus is a Soulseek client.
 Usage: nicotine [OPTION]...
-  -c file,	--config=file	Use non-default configuration file
-  -p dir,	--plugins=dir	Use non-default directory for plugins
-  -t,		--enable-trayicon
-  -d,		--disable-trayicon
-  -r,		--enable-rgba 
-  -x,		--disable-rgba
-  -v,		--version	Display version and exit
-  -h,		--help		Display this help and exit
-  -s,		--hidden	Start n+ hidden
+  -c file, --config=file      Use non-default configuration file
+  -p dir,  --plugins=dir      Use non-default directory for plugins
+  -t,      --enable-trayicon
+  -d,      --disable-trayicon
+  -r,      --enable-rgba 
+  -x,      --disable-rgba
+  -v,      --version          Display version and exit
+  -h,      --help             Display this help and exit
+  -s,      --hidden           Start n+ hidden
 
 Please report any problems to our bugtracker:
 http://www.nicotine-plus.org/newticket""")
