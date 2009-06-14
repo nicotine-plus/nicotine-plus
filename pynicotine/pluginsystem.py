@@ -55,7 +55,6 @@ class PluginHandler(object):
 			self.load_enabled()
 		else:
 			log.add("It appears '%s' is not a directory, not loading plugins." % self.plugindir)
-		print self.plugindirs
 
 	def __findplugin(self, pluginname):
 		for dir in self.plugindirs:
@@ -242,9 +241,7 @@ class PluginHandler(object):
 		hotpotato = args
 		for module, plugin in self.enabled_plugins.items():
 			try:
-				print module, plugin
 				func = eval("plugin.PLUGIN." + function)
-				print func
 				ret = func(*hotpotato)
 				if ret != None and type(ret) != tupletype:
 					if ret == returncode['zap']:
