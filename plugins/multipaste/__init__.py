@@ -2,11 +2,17 @@
 
 from pynicotine.pluginsystem import BasePlugin, returncode
 
+def enable(plugins):
+    global PLUGIN
+    PLUGIN = Plugin(plugins)
+
+                    
+def disable(plugins):
+    global PLUGIN
+    PLUGIN = None
+
 class Plugin(BasePlugin):
-    __name__ = "Multi Paste"
-    __version__ = "2008-07-03r00"
-    __author__ = "quinox"
-    __desc__ = """This plugin intercepts messages you send with newlines in them, and splits them up in separate messages. This is useful on the official Soulseek servers since they block messages with newlines."""
+    __name__ = "Multipaste"
     settings = {'maxpubliclines':4,
                 'maxprivatelines':8,
                }

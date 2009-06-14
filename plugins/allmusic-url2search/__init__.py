@@ -16,6 +16,14 @@ except ImportError:
     print "It seems this plugin is not loaded from within n+. Faking events..."
     BasePlugin = FakePlugin
 
+def enable(frame):
+    global PLUGIN
+    PLUGIN = Plugin(frame)
+
+                    
+def disable(frame):
+    global PLUGIN
+    PLUGIN = None
 # The real plugin
 def deltags(string):
     open = 0
@@ -27,38 +35,44 @@ def deltags(string):
     return string.strip()
 
 class Plugin(BasePlugin):
-    __name__ = "Discogs url2search"
-    __version__ = "2008-07-06r00"
-    __author__ = "quinox"
-    __desc__ = """Enables you to enter Discogs URLs in the search window which will be converted to albums, artists of both."""
+    __name__ = "AllMusic url2search"
+
     def OutgoingGlobalSearchEvent(self, search):
         terms = search.split()
         for i in xrange(0,len(terms)):
             lowerterm = terms[i].lower()
-            if lowerterm[:30] == "http://www.discogs.com/artist/" or lowerterm[:31] == "http://www.discogs.com/release/":
+            if lowerterm[:23] == "http://allmusic.com/cg/" or lowerterm[:27] == "http://www.allmusic.com/cg/":
                 self.log("Fetching " + terms[i])
-                terms[i] = self.discogs2search(terms[i])
+                terms[i] = self.allmusic2search(terms[i])
         return (' '.join(terms),)
-    def discogs2search(self, url):
+    def allmusic2search(self, url):
         print "Opening url " +url
         f = urlopen(url)
         html = f.read()
         information = []
-        start = html.find('<title>')
+        start = html.find('<TITLE>')
         if start > -1:
-            end = html.find('</title>')
+            end = html.find('</TITLE>')
             if end > -1:
-                clean = deltags(html[start:end])
-                information.append(clean.replace(' - ',' '))
+                title = deltags(html[start:end])
+                print "Title is now",title
+                if title[:9] == "allmusic ":
+                    title = title[9:]
+                print "Title is now",title
+                title = title.replace('(',' ').replace(')',' ')
+                title = ' '.join([x.strip() for x in title.split(' ') if x.split()])
+                print "Title is now",title
+                (useful,split,junk) = title.partition(' > ')
+                information.append(useful)
         return ' '.join(information)
 
 # Debugging again
 if not NPLUS:
     print "Faking search events"
     instance = Plugin()
-    urls = ['http://www.discogs.com/artist/Dulce+Liquido',
-            'http://www.discogs.com/release/174106',
-            'http://www.discogs.com/release/1225584']
+    urls = ['http://www.allmusic.com/cg/amg.dll?p=amg&sql=10:gifwxqwhldhe',
+            'http://allmusic.com/cg/amg.dll?p=amg&sql=10:kjfwxzljldte~T2',
+            'http://allmusic.com/cg/amg.dll?p=amg&sql=11:dxfrxql5ldae']
     for url in urls:
         print "Searching for '" + url + "'..."
         print "... " + repr(instance.OutgoingGlobalSearchEvent(url))

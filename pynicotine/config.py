@@ -324,7 +324,7 @@ class Config:
 	"npformatlist": [], \
 	"npformat": "" \
 	},
-"plugins": {},
+"plugins": {"enabled": []},
 }
 		# OS Specific settings
 		if sys.platform == 'darwin':

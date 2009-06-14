@@ -3,10 +3,10 @@ import os
 import sys
 import gtk
 import gobject
-
+import zipimport, imp
 from thread import start_new_thread
 from traceback import extract_stack, extract_tb, format_list
-
+import traceback
 from pynicotine import slskmessages
 from utils import _
 from logfacility import log
@@ -26,10 +26,13 @@ class PluginHandler(object):
 		self.frame = frame
 		log.add("Loading plugin handler")
 		self.myUsername = self.frame.np.config.sections["server"]["login"]
-		self.plugins = []
+		self.plugindirs = []
+		self.enabled_plugins = {}
+		self.loaded_plugins = {}
 		self.type2cast = {'integer':int,'int':int,
 		'float':float, 'string':str,'str':str,
 			}
+			
 		if not plugindir:
 			if WIN32:
 				try:
@@ -42,90 +45,172 @@ class PluginHandler(object):
 				self.plugindir = os.path.join(os.path.expanduser("~"),'.nicotine','plugins')
 		else:
 			self.plugindir = plugindir
+		try:
+			os.makedirs(self.plugindir)
+		except:
+			pass
+		self.plugindirs.append(self.plugindir)
 		if os.path.isdir(self.plugindir):
-			self.load_directory(self.plugindir)
+			#self.load_directory(self.plugindir)
+			self.load_enabled()
 		else:
 			log.add("It appears '%s' is not a directory, not loading plugins." % self.plugindir)
+		print self.plugindirs
 
-	def load(self, modulename, directory=None):
-		if directory is not None:
-			sys.path.insert(0, directory)
+	def __findplugin(self, pluginname):
+		for dir in self.plugindirs:
+			if os.path.exists(os.path.join(dir, pluginname)):
+				return os.path.join(dir, pluginname)
+		return None
+
+	def load_plugin(self, pluginname, reload=False):
+		if not reload and pluginname in self.loaded_plugins:
+			return self.loaded_plugins[pluginname]
+
+		path = self.__findplugin(pluginname)
+		if path is None:
+			return False
+		sys.path.insert(0, path)
+		plugin = imp.load_source(pluginname, os.path.join(path,'__init__.py'))
+		instance = plugin.Plugin(self)
+		self.plugin_settings(instance)
+		instance.LoadNotification()
+		#log.add("Loaded plugin %s (version %s) from %s" % (instance.__name__, instance.__version__, modulename))
+		#self.plugins.append((module, instance))
+		sys.path = sys.path[1:]
+		self.loaded_plugins[pluginname] = plugin
+		return plugin
+		
+	def install_plugin(self, path):
 		try:
-			module = __import__(modulename,[],[],[],0)
-			instance = module.Plugin(self)
+			tar = tarfile.open(path, "r:*") #transparently supports gz, bz2
+		except (tarfile.ReadError, OSError):
+			raise InvalidPluginError(_('Plugin archive is not in the correct '
+				'format'))
+
+		#ensure the paths in the archive are sane
+		mems = tar.getmembers()
+		base = os.path.basename(path)[:-4]
+		if os.path.isdir(os.path.join(self.plugindirs[0], base)):
+			raise InvalidPluginError(_('A plugin with the name "%s" is '
+				'already installed') % base)
+
+		for m in mems:
+			if not m.name.startswith(base):
+				raise InvalidPluginError(_("Plugin archive contains an unsafe"
+					" path"))
+
+		tar.extractall(self.plugindirs[0])
+
+	def uninstall_plugin(self, pluginname):
+		self.disable_plugin(pluginname)
+		for dir in self.plugindirs:
 			try:
-				customsettings = self.frame.np.config.sections["plugins"][instance.__id__]
-				for details in instance.metasettings:
-					if details not in ('<hr>',):
-						settingname = details[0]
-						settingdescr = details[1]
-						settinginfo = details[2]
-						try:
-							value = customsettings[settingname]
-							try:
-								if settinginfo['type'].startswith('list '):
-									value = list(value)
-									(junk, junk, listtype) = settinginfo['type'].partition(' ')
-									index = 0
-									for index in xrange(0, len(value)):
-										value[index] = self.type2cast[listtype](value[index])
-								else:
-									value = self.type2cast[settinginfo['type']](value)
-									instance.settings[settingname] = value
-							except ValueError:
-								log.add(_("Failed to cast the value '%(value)s', stored under '%(name)s', to %(type)s. Using default value." %
-									{'value':value, 'name':settingname, 'type':settinginfo['type']}))
-							except KeyError:
-								log.add(_("Unknown setting type '%(type)s'." % {'type':settinginfo['type']}))
-						except KeyError:
-							pass
-				for key in customsettings:
-					try:
-						instance.settings[key]
-					except KeyError:
-						log.add(_("Stored setting '%(name)s' is no longer present in the plugin") % {'name':key})
-			except KeyError:
-				#log.add("No custom settings found for %s" % (instance.__name__,))
-				pass
-			instance.LoadNotification()
-			log.add("Loaded plugin %s (version %s) from %s" % (instance.__name__, instance.__version__, modulename))
-			self.plugins.append((module, instance))
-		except:
-			log.add("While loading %s an error occurred, %s: %s.\nTrace: %s\nProblem area:%s" %
-			(modulename,
-			sys.exc_info()[0],
-			sys.exc_info()[1],
-			''.join(format_list(extract_stack())),
-			''.join(format_list(extract_tb(sys.exc_info()[2])))))
-		if directory is not None:
-			sys.path.pop(0)
-		
-	def load_directory(self, directory):
-		"""Loads all plugins in the given directory."""
-		pyfiles = [x for x in os.listdir(directory) if x[-3:] == '.py' and len(x) > 3]
-		pyfiles.sort()
-		
-		for f in pyfiles:
-			(modulename, sep, ext) = f.rpartition('.')
-			# http://mail.python.org/pipermail/python-list/2005-July/331818.html
-			self.load(modulename, directory)
-		log.add("Loaded " + str(len(self.plugins)) + " plugins.")
-	def reread(self):
-		"""Reloads plugins so changes in the .py files are processed. Might not
-		actually work (see python docs on reloading)"""
-		log.add("Rereading plugins.")
-		sys.path.insert(0, self.plugindir)
-		for (module, plugin) in self.plugins:
-			try:
-				module = reload(module)
+				shutil.rmtree(self.__findplugin(pluginname))
+				return True
 			except:
-				log.add("Failed to reload module " + repr(module))
-		sys.path.pop(0)
-	def reload(self):
-		"""Reloads already loaded plugins."""
-		self.reread()
-		self.plugins = []
-		self.load_directory(self.plugindir)
+				pass
+		return False
+
+	def enable_plugin(self, pluginname):
+		try:
+			plugin = self.load_plugin(pluginname)
+			if not plugin: raise Exception("Error loading plugin")
+			plugin.enable(self)
+			self.enabled_plugins[pluginname] = plugin
+			log.add(_("Loaded plugin %s")%pluginname)
+		except:
+			traceback.print_exc()
+			log.addwarning(_("Unable to enable plugin %s")%pluginname)
+			#common.log_exception(logger)
+			return False
+		return True
+		
+	def list_installed_plugins(self):
+		pluginlist = []
+		for dir in self.plugindirs:
+			if os.path.exists(dir):
+				for file in os.listdir(dir):
+					if file not in pluginlist and os.path.isdir(os.path.join(dir, file)):
+						pluginlist.append(file)
+		return pluginlist
+
+	def disable_plugin(self, pluginname):
+		try:
+			plugin = self.enabled_plugins[pluginname]
+			del self.enabled_plugins[pluginname]
+			plugin.disable(self)
+		except:
+			traceback.print_exc()
+			log.addwarning(_("Unable to fully disable plugin %s")%pluginname)
+			#common.log_exception(logger)
+			return False
+		return True
+
+	def get_plugin_info(self, pluginname):
+		path = os.path.join(self.__findplugin(pluginname), 'PLUGININFO')
+		f = open(path)
+		infodict = {}
+		for line in f:
+			try:
+				key, val = line.split("=",1)
+				infodict[key] = eval(val)
+			except ValueError:
+				pass # this happens on blank lines
+		return infodict
+
+
+	def save_enabled(self):
+		self.frame.np.config.sections["plugins"]["enabled"] = self.enabled_plugins.keys()
+
+	def load_enabled(self):
+		to_enable = self.frame.np.config.sections["plugins"]["enabled"]
+		for plugin in to_enable:
+			self.enable_plugin(plugin)
+			
+	def plugin_settings(self, plugin):
+		try:
+			#customsettings = self.frame.np.config.sections["plugins"][plugin.__id__]
+			if not hasattr(plugin, "settings"):
+				return
+			if plugin.__id__ not in self.frame.np.config.sections["plugins"]:
+				customsettings = self.frame.np.config.sections["plugins"][plugin.__id__] = plugin.settings
+			customsettings = self.frame.np.config.sections["plugins"][plugin.__id__]
+			#if customsettings = self.frame.np.config.sections["plugins"][plugin.__id__]
+			for details in plugin.metasettings:
+				
+				if details not in ('<hr>',):
+					settingname = details[0]
+					settingdescr = details[1]
+					settinginfo = details[2]
+					try:
+						value = customsettings[settingname]
+						try:
+							if settinginfo['type'].startswith('list '):
+								value = list(value)
+								(junk, junk, listtype) = settinginfo['type'].partition(' ')
+								index = 0
+								for index in xrange(0, len(value)):
+									value[index] = self.type2cast[listtype](value[index])
+							else:
+								value = self.type2cast[settinginfo['type']](value)
+								plugin.settings[settingname] = value
+						except ValueError:
+							log.add(_("Failed to cast the value '%(value)s', stored under '%(name)s', to %(type)s. Using default value." %
+								{'value':value, 'name':settingname, 'type':settinginfo['type']}))
+						except KeyError:
+							log.add(_("Unknown setting type '%(type)s'." % {'type':settinginfo['type']}))
+					except KeyError:
+						pass
+			for key in customsettings:
+				try:
+					plugin.settings[key]
+				except KeyError:
+					log.add(_("Stored setting '%(name)s' is no longer present in the plugin") % {'name':key})
+		except KeyError:
+			log.add("No custom settings found for %s" % (plugin.__name__,))
+			pass
+	
 	def TriggerPublicCommandEvent(self, room, command, args):
 		return self._TriggerCommand("plugin.PublicCommandEvent", command, room, args)
 	def TriggerPrivateCommandEvent(self, user, command, args):
@@ -155,9 +240,11 @@ class PluginHandler(object):
 		are precisely the same except for how n+ responds to them, both can be
 		triggered by this function."""
 		hotpotato = args
-		for (module, plugin) in self.plugins:
+		for module, plugin in self.enabled_plugins.items():
 			try:
-				func = eval("plugin." + function)
+				print module, plugin
+				func = eval("plugin.PLUGIN." + function)
+				print func
 				ret = func(*hotpotato)
 				if ret != None and type(ret) != tupletype:
 					if ret == returncode['zap']:

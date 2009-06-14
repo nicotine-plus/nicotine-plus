@@ -16,6 +16,16 @@ except ImportError:
     print "It seems this plugin is not loaded from within n+. Faking events..."
     BasePlugin = FakePlugin
 
+
+def enable(frame):
+    global PLUGIN
+    PLUGIN = Plugin(frame)
+
+                    
+def disable(frame):
+    global PLUGIN
+    PLUGIN = None
+	
 # The real plugin
 def deltags(string):
     open = 0
@@ -28,9 +38,6 @@ def deltags(string):
 
 class Plugin(BasePlugin):
     __name__ = "MusicBrainz url2search"
-    __version__ = "2008-07-06r00"
-    __author__ = "quinox"
-    __desc__ = """Enables you to enter MusicBrainz URLs in the search window which will be converted to albums, artists of both."""
     def OutgoingGlobalSearchEvent(self, search):
         terms = search.split()
         for i in xrange(0,len(terms)):

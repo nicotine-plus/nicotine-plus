@@ -11312,7 +11312,7 @@ Right</property>
                             </child>
                           </widget>
                           <packing>
-                            <property name="resize">False</property>
+                            <property name="resize">True</property>
                             <property name="shrink">True</property>
                           </packing>
                         </child>
@@ -11454,6 +11454,8 @@ Right</property>
                                     <child>
                                       <widget class="GtkLabel" id="PluginName">
                                         <property name="visible">True</property>
+                                        <property name="xalign">0</property>
+                                        <property name="xpad">12</property>
                                         <property name="label" translatable="yes">&lt;b&gt;No Plugin Selected&lt;/b&gt;</property>
                                         <property name="use_markup">True</property>
                                       </widget>
@@ -11582,7 +11584,7 @@ Right</property>
                             </child>
                           </widget>
                           <packing>
-                            <property name="resize">True</property>
+                            <property name="resize">False</property>
                             <property name="shrink">True</property>
                           </packing>
                         </child>
@@ -11621,7 +11623,7 @@ Right</property>
                         </child>
                       </widget>
                       <packing>
-                        <property name="resize">False</property>
+                        <property name="resize">True</property>
                         <property name="shrink">True</property>
                       </packing>
                     </child>
@@ -11848,6 +11850,9 @@ Right</property>
                       </packing>
                     </child>
                   </widget>
+                  <packing>
+                    <property name="position">1</property>
+                  </packing>
                 </child>
                 <child>
                   <widget class="GtkLabel" id="label2">
@@ -11878,7 +11883,7 @@ Right</property>
                         </child>
                       </widget>
                       <packing>
-                        <property name="resize">False</property>
+                        <property name="resize">True</property>
                         <property name="shrink">True</property>
                       </packing>
                     </child>
@@ -12105,6 +12110,9 @@ Right</property>
                       </packing>
                     </child>
                   </widget>
+                  <packing>
+                    <property name="position">2</property>
+                  </packing>
                 </child>
                 <child>
                   <widget class="GtkLabel" id="label3">
@@ -12131,6 +12139,55 @@ Right</property>
           </widget>
           <packing>
             <property name="type">label_item</property>
+          </packing>
+        </child>
+      </widget>
+    </child>
+  </widget>
+  <widget class="GtkWindow" id="PluginProperties">
+    <property name="type">popup</property>
+    <property name="title" translatable="yes">Plugin Properties</property>
+    <child>
+      <widget class="GtkVBox" id="Main">
+        <property name="visible">True</property>
+        <property name="orientation">vertical</property>
+        <child>
+          <placeholder/>
+        </child>
+        <child>
+          <widget class="GtkHBox" id="ButtonBox">
+            <property name="visible">True</property>
+            <child>
+              <placeholder/>
+            </child>
+            <child>
+              <widget class="GtkButton" id="Okay">
+                <property name="label" translatable="yes">gtk-ok</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="use_stock">True</property>
+              </widget>
+              <packing>
+                <property name="position">1</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkButton" id="Cancel">
+                <property name="label" translatable="yes">gtk-cancel</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="use_stock">True</property>
+              </widget>
+              <packing>
+                <property name="position">2</property>
+              </packing>
+            </child>
+          </widget>
+          <packing>
+            <property name="expand">False</property>
+            <property name="position">1</property>
           </packing>
         </child>
       </widget>

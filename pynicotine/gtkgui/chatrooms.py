@@ -1275,9 +1275,9 @@ class ChatRoom:
 			self.frame.BothRescan()
 		elif cmd in ["/tick", "/t"]:
 			self.frame.np.queue.put(slskmessages.RoomTickerSet(self.room, self.frame.np.encode(args, self.encoding)))
-		elif cmd in ('/reload',):
-			self.frame.pluginhandler.reread()
-			self.frame.pluginhandler = pluginsystem.PluginHandler(self.frame)
+		#elif cmd in ('/reload',):
+			#self.frame.pluginhandler.reread()
+			#self.frame.pluginhandler = pluginsystem.PluginHandler(self.frame)
 		elif cmd[:1] == "/" and self.frame.pluginhandler.TriggerPublicCommandEvent(self.room, cmd[1:], args):
 			pass
 		elif cmd and cmd[:1] == "/" and cmd != "/me" and cmd[:2] != "//":

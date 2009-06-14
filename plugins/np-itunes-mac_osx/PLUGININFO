@@ -1,0 +1,4 @@
+Version="2008-11-28r00"
+Authors=['quinox']
+Name="iTunes OSX Now Playing"
+Description="NowPlaying command to use with iTunes on OSX (other operating systems not supported).\n\nUsage: after enabling this plugin you can type /itunes in a chatroom or private conversation to show the world what you're listening to."

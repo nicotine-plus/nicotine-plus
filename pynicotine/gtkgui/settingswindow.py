@@ -25,6 +25,7 @@ import re
 from dirchooser import *
 from utils import InputDialog, InitialiseColumns, recode, recode2, popupWarning, ImportWinSlskConfig, Humanize
 from entrydialog import *
+from pynicotine.logfacility import log
 import os, sys
 win32 = sys.platform.startswith("win")
 if win32:
@@ -2194,14 +2195,16 @@ class PluginFrame(buildFrame):
 		self.p = parent
 		buildFrame.__init__(self, "PluginFrame")
 		self.options = {}
-		self.pluginlist = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_BOOLEAN )
+		self.pluginlist = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_BOOLEAN, gobject.TYPE_STRING )
 		self.plugins = []
 		self.pluginsiters = {}
 		self.selected_plugin = None
 		cols = InitialiseColumns(self.PluginTreeView,
 			[_("Plugins"), 150, "text"],
 			[_("Enabled"), 40, "toggle"],
+
 		)
+		
 		cols[0].set_sort_column_id(0)
 		cols[1].set_sort_column_id(1)
 		renderers = cols[1].get_cell_renderers()
@@ -2210,47 +2213,76 @@ class PluginFrame(buildFrame):
 		self.PluginTreeView.set_model(self.pluginlist)
 		#self.PluginTreeView.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
 		self.PluginTreeView.get_selection().connect("changed", self.OnSelectPlugin)
-
+	
 	def OnSelectPlugin(self, selection):
 		model, iter = selection.get_selected()
 		if iter is None:
 			self.selected_plugin = None
 			return
-		path = model.get_path(iter)
-		plugin_name = self.pluginlist.get_value(self.pluginlist.get_iter(path), 0)
-		#self.PluginTreeView.expand_to_path(path)
-		self.SetPlugin(plugin_name)
-	
-	def SetPlugin(self, plugin_name):
-		self.selected_plugin = plugin_name
-		for (module, plugin) in self.frame.pluginhandler.plugins:
-			if plugin.__name__ == plugin_name:
-				self.PluginName.set_markup("<b>%(name)s</b>" % {"name": plugin.__name__} )
-				self.PluginVersion.set_markup("<b>%(version)s</b>"  % { "version": plugin.__version__} )
-				self.PluginDescription.get_buffer().set_text("%(description)s" % { "description": plugin.__desc__ })
-				#self.PluginAuthor.set_markup("<b>%(author)s</b>" % { "author": plugin.__author__ })
+
+		pluginname = model.get_value(iter, 2)
+		info = self.frame.pluginhandler.get_plugin_info(pluginname)
+		self.PluginVersion.set_markup("<b>%(version)s</b>"  % { "version": info['Version']})
+		self.PluginName.set_markup("<b>%(name)s</b>" % {"name": info['Name']} )
+		self.PluginDescription.get_buffer().set_text("%(description)s" % { "description": info['Description'].replace(r'\n', "\n")})
+		self.PluginAuthor.set_markup("<b>%(author)s</b>" % { "author": ", ".join(info['Authors'])})
+
+
+    #def toggle_cb(self, cell, path, model):
+        #"""
+            #Called when the checkbox is toggled
+        #"""
+        #plugin = model[path][2]
+        #enable = not model[path][1]
+
+        #if enable:
+            #if not self.frame.pluginhandler.enable_plugin(plugin):
+                #self.p.log.add(_('Could not enable plugin.'))
+                #return
+        #else:
+            #if not self.frame.pluginhandler.disable_plugin(plugin):
+                #self.p.log.add(_('Could not disable plugin.'))
+                #return
+
+        #model[path][1] = enable
 
 	def cell_toggle_callback(self, widget, index, treeview, pos):
 		
 		iter = self.pluginlist.get_iter(index)
-		#user = self.usersmodel.get_value(iter, 1)
-		value = self.pluginlist.get_value(iter, pos)
+		plugin = self.pluginlist.get_value(iter, 2)
+		value = self.pluginlist.get_value(iter, 1)
 		self.pluginlist.set(iter, pos, not value)
+		if not value:
+			if not self.frame.pluginhandler.enable_plugin(plugin):
+				log.add(_('Could not enable plugin.'))
+				return
+		else:
+			if not self.frame.pluginhandler.disable_plugin(plugin):
+				log.add(_('Could not disable plugin.'))
+				return
 
 	def SetSettings(self, config):
 		#for (module, plugin) in self.frame.pluginhandler.plugins:
-			#print plugin.__name__, plugin.__version__, plugin.settings
+		#print plugin.__name__, plugin.__version__, plugin.settings
 		self.pluginsiters = {}
 		self.pluginlist.clear()
-		for (module, plugin) in self.frame.pluginhandler.plugins:
-			self.pluginsiters[filter] = self.pluginlist.append([plugin.__name__, True])
+		plugins = self.frame.pluginhandler.list_installed_plugins()
+		plugins.sort()
+		for plugin in plugins:
+			try:
+				info = self.frame.pluginhandler.get_plugin_info(plugin)
+			except IOError:
+				continue
+			enabled = plugin in self.frame.pluginhandler.enabled_plugins.keys()
+			self.pluginsiters[filter] = self.pluginlist.append([info['Name'], enabled, plugin])
 		#else:
 			#self.p.Hilight(self.PluginTreeView)
 
 		return {}
+
 	def GetSettings(self):
 		
-		return {}
+		return { "plugins": { "enabled": self.frame.pluginhandler.enabled_plugins.keys() } }
 	
 class ChatFrame(buildFrame):
 	def __init__(self, parent):
@@ -2567,7 +2599,7 @@ class SettingsWindow:
 				"players": {},
 				"words": {},
 				"language": {},
-				
+				"plugins": {},
 			}
 			
 			for page in self.pages.values():
