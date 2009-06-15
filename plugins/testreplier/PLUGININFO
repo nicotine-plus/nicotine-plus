@@ -1,0 +1,4 @@
+Version="2008-10-29r00"
+Authors=['quinox']
+Name="Test Replyer"
+Description="Replies to messages 'test' in chatrooms with the message 'Test failed.'"

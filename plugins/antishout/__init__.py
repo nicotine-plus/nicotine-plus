@@ -2,6 +2,14 @@
 
 from pynicotine.pluginsystem import BasePlugin
 
+def enable(plugins):
+    global PLUGIN
+    PLUGIN = Plugin(plugins)
+def disable(plugins):
+    global PLUGIN
+    PLUGIN = None
+
+
 class Plugin(BasePlugin):
     __name__ = "Anti-SHOUT"
     __version__ = "2008-11-18r00"
@@ -10,9 +18,9 @@ class Plugin(BasePlugin):
     settings = {'maxscore':0.6,
                 'minlength':10,
                }
-    metasettings = [('maxratio', 'The maximum ratio capitals/noncapitals before fixing capitalization', {'type':'float', 'minimum':0, 'maximum':1, 'stepsize':0.1}),
-                    ('minlength','Lines shorter than this never not be altered', {'type':'integer', 'minimum':0}),
-                   ]
+    metasettings = {'maxratio':{'description':'The maximum ratio capitals/noncapitals before fixing capitalization', 'type':'float', 'minimum':0, 'maximum':1, 'stepsize':0.1},
+                    'minlength':{'description':'Lines shorter than this never not be altered', 'type':'integer', 'minimum':0},
+                   }
     def capitalize(self, text):
         # Dont alter words that look like protocol links (fe http://, ftp://)
         if text.find('://') > -1:

@@ -2,6 +2,14 @@
 
 from pynicotine.pluginsystem import BasePlugin
 
+def enable(plugins):
+    global PLUGIN
+    PLUGIN = Plugin(plugins)
+def disable(plugins):
+    global PLUGIN
+    PLUGIN = None
+
+
 class Plugin(BasePlugin):
     __name__ = "Plugin Debugger"
     __version__ = "2009-05-27r00"
