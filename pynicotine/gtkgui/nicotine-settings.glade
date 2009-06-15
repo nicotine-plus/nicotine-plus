@@ -11435,11 +11435,13 @@ Right</property>
                                                 <property name="can_focus">True</property>
                                                 <property name="hscrollbar_policy">automatic</property>
                                                 <property name="vscrollbar_policy">automatic</property>
+                                                <property name="shadow_type">in</property>
                                                 <child>
                                                   <widget class="GtkTextView" id="PluginDescription">
                                                     <property name="visible">True</property>
                                                     <property name="can_focus">True</property>
-                                                    <property name="wrap_mode">word</property>
+                                                    <property name="editable">False</property>
+                                                    <property name="wrap_mode">word-char</property>
                                                   </widget>
                                                 </child>
                                               </widget>
@@ -11700,10 +11702,13 @@ Right</property>
                                             <property name="can_focus">True</property>
                                             <property name="hscrollbar_policy">automatic</property>
                                             <property name="vscrollbar_policy">automatic</property>
+                                            <property name="shadow_type">in</property>
                                             <child>
                                               <widget class="GtkTextView" id="PluginInstallDescription">
                                                 <property name="visible">True</property>
                                                 <property name="can_focus">True</property>
+                                                <property name="editable">False</property>
+                                                <property name="wrap_mode">word-char</property>
                                               </widget>
                                             </child>
                                           </widget>
@@ -11799,7 +11804,7 @@ Right</property>
                         </child>
                       </widget>
                       <packing>
-                        <property name="resize">True</property>
+                        <property name="resize">False</property>
                         <property name="shrink">True</property>
                       </packing>
                     </child>
@@ -11960,10 +11965,13 @@ Right</property>
                                             <property name="can_focus">True</property>
                                             <property name="hscrollbar_policy">automatic</property>
                                             <property name="vscrollbar_policy">automatic</property>
+                                            <property name="shadow_type">in</property>
                                             <child>
                                               <widget class="GtkTextView" id="PluginUpdateDescription">
                                                 <property name="visible">True</property>
                                                 <property name="can_focus">True</property>
+                                                <property name="editable">False</property>
+                                                <property name="wrap_mode">word-char</property>
                                               </widget>
                                             </child>
                                           </widget>
@@ -12059,7 +12067,7 @@ Right</property>
                         </child>
                       </widget>
                       <packing>
-                        <property name="resize">True</property>
+                        <property name="resize">False</property>
                         <property name="shrink">True</property>
                       </packing>
                     </child>

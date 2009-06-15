@@ -117,7 +117,7 @@ class PluginHandler(object):
 			if not plugin: raise Exception("Error loading plugin")
 			plugin.enable(self)
 			self.enabled_plugins[pluginname] = plugin
-			log.add(_("Loaded plugin %s")%pluginname)
+			log.add(_("Loaded plugin %s") % plugin.PLUGIN.__name__)
 		except:
 			traceback.print_exc()
 			log.addwarning(_("Unable to enable plugin %s")%pluginname)
@@ -180,37 +180,41 @@ class PluginHandler(object):
 			if not hasattr(plugin, "settings"):
 				return
 			if plugin.__id__ not in self.frame.np.config.sections["plugins"]:
-				customsettings = self.frame.np.config.sections["plugins"][plugin.__id__] = plugin.settings
+				self.frame.np.config.sections["plugins"][plugin.__id__] = plugin.settings
+			for i in plugin.settings:
+				if i not in self.frame.np.config.sections["plugins"][plugin.__id__]:
+					self.frame.np.config.sections["plugins"][plugin.__id__][i] = plugin.settings[i]
 			customsettings = self.frame.np.config.sections["plugins"][plugin.__id__]
 			#if customsettings = self.frame.np.config.sections["plugins"][plugin.__id__]
-			for settingname, info in plugin.metasettings.items():
+			#for settingname, info in plugin.metasettings.items():
 				
-				if settingname not in ('<hr>',):
-					settingdescr = info["description"]
-					settingtype = info["type"]
-					try:
-						value = customsettings[settingname]
-						try:
-							if settingtype.startswith('list '):
-								value = list(value)
-								(junk, junk, listtype) = settingtype.partition(' ')
-								index = 0
-								for index in xrange(0, len(value)):
-									value[index] = self.type2cast[listtype](value[index])
-							else:
-								value = self.type2cast[settingtype](value)
-								plugin.settings[settingname] = value
-						except ValueError:
-							log.add(_("Failed to cast the value '%(value)s', stored under '%(name)s', to %(type)s. Using default value." %
-								{'value':value, 'name':settingname, 'type':settingtype}))
-						except KeyError:
-							log.add(_("Unknown setting type '%(type)s'." % {'type':settingtype}))
-					except KeyError:
-						pass
+				#if settingname not in ('<hr>',):
+					#settingdescr = info["description"]
+					#settingtype = info["type"]
+					#try:
+						#value = customsettings[settingname]
+						#try:
+							#if settingtype.startswith('list '):
+								#value = list(value)
+								#(junk, junk, listtype) = settingtype.partition(' ')
+								#index = 0
+								#for index in xrange(0, len(value)):
+									#value[index] = self.type2cast[listtype](value[index])
+							#else:
+								#value = self.type2cast[settingtype](value)
+								#plugin.settings[settingname] = value
+						#except ValueError:
+							#log.add(_("Failed to cast the value '%(value)s', stored under '%(name)s', to %(type)s. Using default value." %
+								#{'value':value, 'name':settingname, 'type':settingtype}))
+						#except KeyError:
+							#log.add(_("Unknown setting type '%(type)s'." % {'type':settingtype}))
+					#except KeyError:
+						#pass
 			for key in customsettings:
-				try:
-					plugin.settings[key]
-				except KeyError:
+				if key in plugin.settings.keys():
+					plugin.settings[key] = customsettings[key]
+					
+				else:
 					log.add(_("Stored setting '%(name)s' is no longer present in the plugin") % {'name':key})
 		except KeyError:
 			log.add("No custom settings found for %s" % (plugin.__name__,))
@@ -366,6 +370,8 @@ class BasePlugin(object):
 			self.frame.privatechats.CMDS.add('/'+trigger+' ')
 	def init(self):
 		pass
+	def LoadSettings(self, settings):
+		self.settings = settings
 	def LoadNotification(self):
 		pass
 	def IncomingPrivateChatEvent(self, user, line):

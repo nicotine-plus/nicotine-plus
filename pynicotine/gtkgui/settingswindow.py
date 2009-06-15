@@ -1976,11 +1976,12 @@ class CensorFrame(buildFrame):
 		self.censorlist.clear()
 		self.p.SetWidgetsData(config, self.options)
 		words = config["words"]
-		if words["censored"] is not None:
-			for word in words["censored"]:
-				self.censorlist.append([word])
-		else:
-			self.p.Hilight(self.CensorList)
+		#if words["censored"] is not None:
+			
+			#for word in words["censored"]:
+				#self.censorlist.append([word])
+		#else:
+			#self.p.Hilight(self.CensorList)
 		
 		self.OnCensorCheck(self.CensorCheck)
 		
@@ -2193,65 +2194,113 @@ class buildDialog(gtk.Dialog):
 	def __init__(self, parent ):
 
 		window = "PluginProperties"
-		self.app = parent.p
-		self.tooltips = self.app.tooltips
+		self.settings = parent.p
+		self.tooltips = self.settings.tooltips
 		self.wTree = gtk.glade.XML(os.path.join(dir_location, "nicotine-settings.glade" ), window, "nicotine" ) 
 	
 		widgets = self.wTree.get_widget_prefix("")
 		for i in widgets:
 			name = gtk.glade.get_widget_name(i)
 			self.__dict__[name] = i
-
+		
 		self.wTree.signal_autoconnect(self)
-
+		self.PluginProperties.set_icon(self.settings.frame.images["n"])
+		self.PluginProperties.set_transient_for(self.settings.SettingsWindow)
 		self.tw = {}
 		self.options = {}
+		self.plugin = None
+
+	def GenerateLabel(self, text):
+		label = gtk.Label(text)
+		label.set_line_wrap(True)
+		return label
+
+	def GenerateTreeView(self, name, description, value, c=0):
+		self.tw["box%d"%c] = gtk.VBox(False, 5)
+		self.tw[name+"SW"] = gtk.ScrolledWindow()
+		self.tw[name+"SW"].set_shadow_type(gtk.SHADOW_IN)
+		self.tw[name+"SW"].set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+		self.tw[name] = gtk.TreeView()
+		self.tw[name].set_model(gtk.ListStore(gobject.TYPE_STRING))
+		self.tw[name+"SW"].add(self.tw[name])
+		self.tw["box%d"%c ].pack_start(self.tw[name+"SW"], True, 5)
+		cols = InitialiseColumns(self.tw[name], [description, 150, "edit"], )
+		try:
+			self.settings.SetWidget(self.tw[name], value )
+		except:
+			pass
+		self.addButton = gtk.Button(_("Add"), gtk.STOCK_ADD)
+		self.removeButton = gtk.Button(_("Remove"), gtk.STOCK_REMOVE)
+		self.tw["vbox%d"%c]= gtk.HBox(False, 5)
+		self.tw["vbox%d"%c].pack_start(self.addButton, False, False)
+		self.tw["vbox%d"%c].pack_start(self.removeButton, False, False)
+		self.Main.pack_start(self.tw["box%d" %c], True, True)
+		self.Main.pack_start(self.tw["vbox%d"%c], False, False)
+
+		renderers = cols[0].get_cell_renderers()
+		for render in renderers:
+			render.connect('edited', self.cell_edited_callback, self.tw[name])
+		self.addButton.connect("clicked", self.OnAdd, self.tw[name])
+		self.removeButton.connect("clicked", self.OnRemove, self.tw[name])
+	
+		
+	def cell_edited_callback(self, widget, index, value, treeview):
+		store = treeview.get_model()
+		iter = store.get_iter(index)
+		store.set(iter, 0, value)
+
+	def OnAdd(self, widget, treeview):
+		iter = treeview.get_model().append([""])
+		col = treeview.get_column(0)
+		#path = treeview.get_model().get_path(iter)
+		#if path is not None:
+			#sel.select_path(path)
+			#treeview.scroll_to_cell(path, None, True, 0.5, 0.5)
+		treeview.set_cursor(treeview.get_model().get_path(iter), focus_column=col, start_editing=True)
+
+	def OnRemove(self, widget, treeview):
+		selection = treeview.get_selection()
+		iter = selection.get_selected()[1]
+		if iter is not None:
+			treeview.get_model().remove(iter)
 
 	def addOptions(self, plugin, options = {}):
 		for i in self.tw:
 			self.tw[i].destroy()
 		self.options = options
+		self.plugin = plugin
 		self.PluginLabel.set_markup("<b>%s</b>" % plugin)
 		c = 0
 		for name, data in options.items():
 			#print name, data
-			self.tw["box%d"%c] = gtk.HBox(False, 5)
+			if plugin not in self.settings.frame.np.config.sections["plugins"] or name not in self.settings.frame.np.config.sections["plugins"][plugin]:
+				continue
+			""" We currently support SpinButtons, TreeView (one per plugin), and Checkboxes, but there's no reason more widgets cannot be added, and we can use self.settings.SetWidget and self.settings.GetWidgetData to set and get values
+
+			Todo: gtk.Entry, gtk.ComboBox, and gtk.RadioButton
+			"""
+			value = self.settings.frame.np.config.sections["plugins"][plugin][name]
 			if data["type"] in ("integer", "int"):
-				
-
-				self.tw["label%d"%c] = gtk.Label(data["description"])
-				self.tw["label%d"%c].set_line_wrap(True)
+				self.tw["box%d"%c] = gtk.HBox(False, 5)
+				self.tw["label%d"%c] =  self.GenerateLabel(data["description"])
 				self.tw["box%d"%c].pack_start(self.tw["label%d"%c], False, False)
-
+				
 				self.tw[name] = gtk.SpinButton(gtk.Adjustment(0, 0, 99999, 1, 10, 10))
-				if plugin in self.app.frame.np.config.sections["plugins"]:
-					self.app.SetWidget(self.tw[name], self.app.frame.np.config.sections["plugins"][plugin][name])
+				self.settings.SetWidget(self.tw[name], self.settings.frame.np.config.sections["plugins"][plugin][name])
 				self.tw["box%d"%c ].pack_start(self.tw[name], False, False)
 				self.Main.pack_start(self.tw["box%d" %c], False, False)
-				
-			elif data["type"] in ("list string"):
-				self.tw["box%d"%c] = gtk.VBox(False, 5)
-				self.tw["label%d"%c] = gtk.Label(data["description"])
-				self.tw["label%d"%c].set_line_wrap(True)
+			elif data["type"] in ("bool"):
+				self.tw["box%d"%c] = gtk.HBox(False, 5)
+				self.tw["label%d"%c] =  self.GenerateLabel(data["description"])
 				self.tw["box%d"%c].pack_start(self.tw["label%d"%c], False, False)
-				self.tw[name+"SW"] = gtk.ScrolledWindow()
-				self.tw[name+"SW"].set_shadow_type(gtk.SHADOW_IN)
-				self.tw[name+"SW"].set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
-				self.tw[name] = gtk.TreeView()
-				self.tw[name].set_model(gtk.ListStore(gobject.TYPE_STRING))
-				self.tw[name+"SW"].add(self.tw[name])
-				self.tw["box%d"%c ].pack_start(self.tw[name+"SW"], True, 5)
-				cols = InitialiseColumns(self.tw[name],
-				["", 150, "edit"],
-				)
-				if plugin in self.app.frame.np.config.sections["plugins"]:
-					self.app.SetWidget(self.tw[name], self.app.frame.np.config.sections["plugins"][plugin][name])
-					#for string in self.app.frame.np.config.sections["plugins"][plugin][name]:
-						#self.tw[name].get_model().append
-				self.Main.pack_start(self.tw["box%d" %c], True, True)
-			#else:
-				#print name, data["type"]
-			
+				self.tw[name] = gtk.CheckButton()
+				self.settings.SetWidget(self.tw[name], self.settings.frame.np.config.sections["plugins"][plugin][name])
+				self.tw["box%d"%c ].pack_start(self.tw[name], False, False)
+				self.Main.pack_start(self.tw["box%d" %c], False, False)
+			elif data["type"] in ("list string"):
+				
+				self.GenerateTreeView(name, data["description"], value, c)
+	
 			c += 1
 		self.PluginProperties.show_all()
 
@@ -2259,9 +2308,13 @@ class buildDialog(gtk.Dialog):
 		self.PluginProperties.hide()
 
 	def OnOkay(self, widget):
-		for i in self.options:
-			print self.tw[i]
+		for name in self.options:
+			#print self.tw[name], 
+			value = self.settings.GetWidgetData(self.tw[name])
+			if value is not None:
+				self.settings.frame.np.config.sections["plugins"][self.plugin][name] = value
 		self.PluginProperties.hide()
+		self.settings.frame.pluginhandler.plugin_settings(self.settings.frame.pluginhandler.loaded_plugins[self.plugin].PLUGIN)
 
 	def Show(self):
 		self.PluginProperties.show()
@@ -2609,6 +2662,31 @@ class SettingsWindow:
 					self.SetWidget(widget, config[section][key])
 					self.Dehilight(widget)
 					
+	def GetWidgetData(self, widget):
+		if type(widget) is gtk.Entry:
+			return widget.get_text()
+		elif type(widget) is gtk.SpinButton:
+			return int(widget.get_value())
+		elif type(widget) is gtk.CheckButton:
+			return widget.get_active()
+		elif type(widget) is gtk.RadioButton:
+			return widget.get_active()
+		elif type(widget) is gtk.ComboBoxEntry:
+			return widget.child.get_text()
+		elif type(widget) is gtk.ComboBox:
+			return widget.get_active_text()
+		elif type(widget) is gtk.FontButton:
+			widget.get_font_name()
+		elif type(widget) is gtk.TreeView  and widget.get_model().get_n_columns() == 1:
+			wlist = []
+			iter = widget.get_model().get_iter_root()
+			while iter:
+				word = widget.get_model().get_value(iter, 0)
+				if word is not None:
+					wlist.append(word)
+				iter = widget.get_model().iter_next(iter)
+			return wlist
+
 	def ClearWidget(self, widget):
 		if type(widget) is gtk.Entry:
 			widget.set_text("")
