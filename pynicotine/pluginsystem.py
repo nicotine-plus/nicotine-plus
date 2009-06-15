@@ -145,7 +145,14 @@ class PluginHandler(object):
 			#common.log_exception(logger)
 			return False
 		return True
+		
+	def get_plugin_settings(self, pluginname):
+		if pluginname in self.enabled_plugins:
+			plugin = self.enabled_plugins[pluginname]
+			if hasattr(plugin.PLUGIN, "metasettings"):
+				return plugin.PLUGIN.metasettings
 
+		
 	def get_plugin_info(self, pluginname):
 		path = os.path.join(self.__findplugin(pluginname), 'PLUGININFO')
 		f = open(path)
@@ -176,29 +183,28 @@ class PluginHandler(object):
 				customsettings = self.frame.np.config.sections["plugins"][plugin.__id__] = plugin.settings
 			customsettings = self.frame.np.config.sections["plugins"][plugin.__id__]
 			#if customsettings = self.frame.np.config.sections["plugins"][plugin.__id__]
-			for details in plugin.metasettings:
+			for settingname, info in plugin.metasettings.items():
 				
-				if details not in ('<hr>',):
-					settingname = details[0]
-					settingdescr = details[1]
-					settinginfo = details[2]
+				if settingname not in ('<hr>',):
+					settingdescr = info["description"]
+					settingtype = info["type"]
 					try:
 						value = customsettings[settingname]
 						try:
-							if settinginfo['type'].startswith('list '):
+							if settingtype.startswith('list '):
 								value = list(value)
-								(junk, junk, listtype) = settinginfo['type'].partition(' ')
+								(junk, junk, listtype) = settingtype.partition(' ')
 								index = 0
 								for index in xrange(0, len(value)):
 									value[index] = self.type2cast[listtype](value[index])
 							else:
-								value = self.type2cast[settinginfo['type']](value)
+								value = self.type2cast[settingtype](value)
 								plugin.settings[settingname] = value
 						except ValueError:
 							log.add(_("Failed to cast the value '%(value)s', stored under '%(name)s', to %(type)s. Using default value." %
-								{'value':value, 'name':settingname, 'type':settinginfo['type']}))
+								{'value':value, 'name':settingname, 'type':settingtype}))
 						except KeyError:
-							log.add(_("Unknown setting type '%(type)s'." % {'type':settinginfo['type']}))
+							log.add(_("Unknown setting type '%(type)s'." % {'type':settingtype}))
 					except KeyError:
 						pass
 			for key in customsettings:

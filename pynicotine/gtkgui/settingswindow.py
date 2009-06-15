@@ -2189,6 +2189,82 @@ class CompletionFrame(buildFrame):
 			"onematch": self.OneMatchCheck.get_active(),
 			},
 		}
+class buildDialog(gtk.Dialog):
+	def __init__(self, parent ):
+
+		window = "PluginProperties"
+		self.app = parent.p
+		self.tooltips = self.app.tooltips
+		self.wTree = gtk.glade.XML(os.path.join(dir_location, "nicotine-settings.glade" ), window, "nicotine" ) 
+	
+		widgets = self.wTree.get_widget_prefix("")
+		for i in widgets:
+			name = gtk.glade.get_widget_name(i)
+			self.__dict__[name] = i
+
+		self.wTree.signal_autoconnect(self)
+
+		self.tw = {}
+		self.options = {}
+
+	def addOptions(self, plugin, options = {}):
+		for i in self.tw:
+			self.tw[i].destroy()
+		self.options = options
+		self.PluginLabel.set_markup("<b>%s</b>" % plugin)
+		c = 0
+		for name, data in options.items():
+			#print name, data
+			self.tw["box%d"%c] = gtk.HBox(False, 5)
+			if data["type"] in ("integer", "int"):
+				
+
+				self.tw["label%d"%c] = gtk.Label(data["description"])
+				self.tw["label%d"%c].set_line_wrap(True)
+				self.tw["box%d"%c].pack_start(self.tw["label%d"%c], False, False)
+
+				self.tw[name] = gtk.SpinButton(gtk.Adjustment(0, 0, 99999, 1, 10, 10))
+				if plugin in self.app.frame.np.config.sections["plugins"]:
+					self.app.SetWidget(self.tw[name], self.app.frame.np.config.sections["plugins"][plugin][name])
+				self.tw["box%d"%c ].pack_start(self.tw[name], False, False)
+				self.Main.pack_start(self.tw["box%d" %c], False, False)
+				
+			elif data["type"] in ("list string"):
+				self.tw["box%d"%c] = gtk.VBox(False, 5)
+				self.tw["label%d"%c] = gtk.Label(data["description"])
+				self.tw["label%d"%c].set_line_wrap(True)
+				self.tw["box%d"%c].pack_start(self.tw["label%d"%c], False, False)
+				self.tw[name+"SW"] = gtk.ScrolledWindow()
+				self.tw[name+"SW"].set_shadow_type(gtk.SHADOW_IN)
+				self.tw[name+"SW"].set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+				self.tw[name] = gtk.TreeView()
+				self.tw[name].set_model(gtk.ListStore(gobject.TYPE_STRING))
+				self.tw[name+"SW"].add(self.tw[name])
+				self.tw["box%d"%c ].pack_start(self.tw[name+"SW"], True, 5)
+				cols = InitialiseColumns(self.tw[name],
+				["", 150, "edit"],
+				)
+				if plugin in self.app.frame.np.config.sections["plugins"]:
+					self.app.SetWidget(self.tw[name], self.app.frame.np.config.sections["plugins"][plugin][name])
+					#for string in self.app.frame.np.config.sections["plugins"][plugin][name]:
+						#self.tw[name].get_model().append
+				self.Main.pack_start(self.tw["box%d" %c], True, True)
+			#else:
+				#print name, data["type"]
+			
+			c += 1
+		self.PluginProperties.show_all()
+
+	def OnCancel(self, widget):
+		self.PluginProperties.hide()
+
+	def OnOkay(self, widget):
+		for i in self.options:
+			print self.tw[i]
+		self.PluginProperties.hide()
+
+	def Show(self):
+		self.PluginProperties.show()
 
 class PluginFrame(buildFrame):
 	def __init__(self, parent):
@@ -2213,38 +2289,34 @@ class PluginFrame(buildFrame):
 		self.PluginTreeView.set_model(self.pluginlist)
 		#self.PluginTreeView.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
 		self.PluginTreeView.get_selection().connect("changed", self.OnSelectPlugin)
+		
+		self.dialog = buildDialog(self)
 	
+	def OnPluginProperties(self, widget):
+		if self.selected_plugin is None:
+			return
+
+		self.dialog.addOptions(self.selected_plugin, self.frame.pluginhandler.get_plugin_settings(self.selected_plugin))
+		self.dialog.Show()
+
 	def OnSelectPlugin(self, selection):
 		model, iter = selection.get_selected()
 		if iter is None:
 			self.selected_plugin = None
 			return
 
-		pluginname = model.get_value(iter, 2)
-		info = self.frame.pluginhandler.get_plugin_info(pluginname)
+		self.selected_plugin = model.get_value(iter, 2)
+		info = self.frame.pluginhandler.get_plugin_info(self.selected_plugin)
 		self.PluginVersion.set_markup("<b>%(version)s</b>"  % { "version": info['Version']})
 		self.PluginName.set_markup("<b>%(name)s</b>" % {"name": info['Name']} )
 		self.PluginDescription.get_buffer().set_text("%(description)s" % { "description": info['Description'].replace(r'\n', "\n")})
 		self.PluginAuthor.set_markup("<b>%(author)s</b>" % { "author": ", ".join(info['Authors'])})
+		settings = self.frame.pluginhandler.get_plugin_settings(self.selected_plugin)
+		if settings is not None:
+			self.PluginProperties.set_sensitive(True)
+		else:
+			self.PluginProperties.set_sensitive(False)
 
-
-    #def toggle_cb(self, cell, path, model):
-        #"""
-            #Called when the checkbox is toggled
-        #"""
-        #plugin = model[path][2]
-        #enable = not model[path][1]
-
-        #if enable:
-            #if not self.frame.pluginhandler.enable_plugin(plugin):
-                #self.p.log.add(_('Could not enable plugin.'))
-                #return
-        #else:
-            #if not self.frame.pluginhandler.disable_plugin(plugin):
-                #self.p.log.add(_('Could not disable plugin.'))
-                #return
-
-        #model[path][1] = enable
 
 	def cell_toggle_callback(self, widget, index, treeview, pos):
 		
@@ -2573,7 +2645,12 @@ class SettingsWindow:
 				widget.set_active(value)
 		elif type(widget) is gtk.FontButton:
 			widget.set_font_name(value)
-			
+		elif type(widget) is gtk.TreeView and type(value) is list and widget.get_model().get_n_columns() == 1:
+			for item in value:
+				widget.get_model().append([item])
+		#else:
+			#print "Undefined widget type:", widget, value
+
 	def InvalidSettings(self, domain, key):
 		for name, page in self.pages.items():
 			if domain in page.options.keys():

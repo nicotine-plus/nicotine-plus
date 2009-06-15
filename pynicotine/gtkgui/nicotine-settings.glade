@@ -11478,12 +11478,15 @@ Right</property>
                                 <property name="visible">True</property>
                                 <property name="spacing">5</property>
                                 <child>
+                                  <placeholder/>
+                                </child>
+                                <child>
                                   <widget class="GtkButton" id="PluginProperties">
                                     <property name="visible">True</property>
                                     <property name="sensitive">False</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">True</property>
-                                    <signal name="activate" handler="OnPluginProperties"/>
+                                    <signal name="clicked" handler="OnPluginProperties"/>
                                     <child>
                                       <widget class="GtkAlignment" id="alignment2">
                                         <property name="visible">True</property>
@@ -11525,55 +11528,6 @@ Right</property>
                                     <property name="expand">False</property>
                                     <property name="pack_type">end</property>
                                     <property name="position">1</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <widget class="GtkButton" id="PluginAbout">
-                                    <property name="visible">True</property>
-                                    <property name="sensitive">False</property>
-                                    <property name="can_focus">True</property>
-                                    <property name="receives_default">True</property>
-                                    <child>
-                                      <widget class="GtkAlignment" id="alignment3">
-                                        <property name="visible">True</property>
-                                        <property name="xscale">0</property>
-                                        <property name="yscale">0</property>
-                                        <child>
-                                          <widget class="GtkHBox" id="hbox5">
-                                            <property name="visible">True</property>
-                                            <property name="spacing">2</property>
-                                            <child>
-                                              <widget class="GtkImage" id="image3">
-                                                <property name="visible">True</property>
-                                                <property name="stock">gtk-about</property>
-                                              </widget>
-                                              <packing>
-                                                <property name="expand">False</property>
-                                                <property name="fill">False</property>
-                                                <property name="position">0</property>
-                                              </packing>
-                                            </child>
-                                            <child>
-                                              <widget class="GtkLabel" id="About">
-                                                <property name="visible">True</property>
-                                                <property name="label" translatable="yes">About</property>
-                                                <property name="use_underline">True</property>
-                                              </widget>
-                                              <packing>
-                                                <property name="expand">False</property>
-                                                <property name="fill">False</property>
-                                                <property name="position">1</property>
-                                              </packing>
-                                            </child>
-                                          </widget>
-                                        </child>
-                                      </widget>
-                                    </child>
-                                  </widget>
-                                  <packing>
-                                    <property name="expand">False</property>
-                                    <property name="pack_type">end</property>
-                                    <property name="position">0</property>
                                   </packing>
                                 </child>
                               </widget>
@@ -12144,22 +12098,64 @@ Right</property>
       </widget>
     </child>
   </widget>
-  <widget class="GtkWindow" id="PluginProperties">
-    <property name="type">popup</property>
-    <property name="title" translatable="yes">Plugin Properties</property>
-    <child>
-      <widget class="GtkVBox" id="Main">
+  <widget class="GtkDialog" id="PluginProperties">
+    <property name="border_width">5</property>
+    <property name="title" translatable="yes">Nicotine+ - Plugin Properties</property>
+    <property name="modal">True</property>
+    <property name="window_position">center-on-parent</property>
+    <property name="destroy_with_parent">True</property>
+    <property name="type_hint">normal</property>
+    <child internal-child="vbox">
+      <widget class="GtkVBox" id="Mains">
         <property name="visible">True</property>
         <property name="orientation">vertical</property>
+        <property name="spacing">2</property>
         <child>
-          <placeholder/>
-        </child>
-        <child>
-          <widget class="GtkHBox" id="ButtonBox">
+          <widget class="GtkFrame" id="frame1">
             <property name="visible">True</property>
+            <property name="label_xalign">0</property>
+            <property name="shadow_type">none</property>
             <child>
-              <placeholder/>
+              <widget class="GtkAlignment" id="alignment1">
+                <property name="visible">True</property>
+                <property name="left_padding">12</property>
+                <child>
+                  <widget class="GtkVBox" id="Main">
+                    <property name="visible">True</property>
+                    <property name="orientation">vertical</property>
+                    <property name="spacing">5</property>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                  </widget>
+                </child>
+              </widget>
             </child>
+            <child>
+              <widget class="GtkLabel" id="PluginLabel">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">Plugin</property>
+                <property name="use_markup">True</property>
+              </widget>
+              <packing>
+                <property name="type">label_item</property>
+              </packing>
+            </child>
+          </widget>
+          <packing>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child internal-child="action_area">
+          <widget class="GtkHButtonBox" id="dialog-action_area1">
+            <property name="visible">True</property>
+            <property name="layout_style">end</property>
             <child>
               <widget class="GtkButton" id="Okay">
                 <property name="label" translatable="yes">gtk-ok</property>
@@ -12167,9 +12163,10 @@ Right</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="use_stock">True</property>
+                <signal name="clicked" handler="OnOkay"/>
               </widget>
               <packing>
-                <property name="position">1</property>
+                <property name="position">0</property>
               </packing>
             </child>
             <child>
@@ -12179,15 +12176,18 @@ Right</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="use_stock">True</property>
+                <signal name="clicked" handler="OnCancel"/>
               </widget>
               <packing>
-                <property name="position">2</property>
+                <property name="position">1</property>
               </packing>
             </child>
           </widget>
           <packing>
             <property name="expand">False</property>
-            <property name="position">1</property>
+            <property name="fill">False</property>
+            <property name="pack_type">end</property>
+            <property name="position">0</property>
           </packing>
         </child>
       </widget>
