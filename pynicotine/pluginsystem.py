@@ -221,12 +221,14 @@ class PluginHandler(object):
 			pass
 	
 	def TriggerPublicCommandEvent(self, room, command, args):
-		return self._TriggerCommand("plugin.PublicCommandEvent", command, room, args)
+		return self._TriggerCommand("plugin.PLUGIN.PublicCommandEvent", command, room, args)
 	def TriggerPrivateCommandEvent(self, user, command, args):
-		return self._TriggerCommand("plugin.PrivateCommandEvent", command, user, args)
+		return self._TriggerCommand("plugin.PLUGIN.PrivateCommandEvent", command, user, args)
 	def _TriggerCommand(self, strfunc, command, source, args):
-		for (module, plugin) in self.plugins:
+		for module, plugin in self.enabled_plugins.items():
 			try:
+				if plugin.PLUGIN is None:
+					continue
 				func = eval(strfunc)
 				ret = func(command, source, args)
 				if ret != None:
@@ -235,7 +237,7 @@ class PluginHandler(object):
 					elif ret == returncode['pass']:
 						pass
 				else:
-					log.add(_("Plugin %(module) returned something weird, '%(value)', ignoring") % {'module':module, 'value':ret})
+					log.add(_("Plugin %(module)s returned something weird, '%(value)s', ignoring") % {'module':module, 'value':str(ret)})
 			except:
 				log.add(_("Plugin %(module)s failed with error %(errortype)s: %(error)s.\nTrace: %(trace)s\nProblem area:%(area)s") %
 					{'module':module,
