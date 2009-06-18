@@ -16,12 +16,12 @@ def disable(frame):
 class Plugin(BasePlugin):
 	__name__ = "XMPlay (Windows) Now Playing"
 	settings = {
-				'format':'XMPlay: %artist - %title [%album]',
+				'format':'XMPlay: {%artist - }{%title }{[%album]}',
 				'pythonbin':'C:\\Python26\\Python.exe',
 				'helperpath':'C:\\xmplaynp.py',
 				}
 	metasettings = {
-					'format': {'description': 'The layout of your np-message', 'type':'string'},
+					'format': {'description': 'The layout of your np-message. Things between curly brackets will be removed if they did not change after filling in the information.', 'type':'string'},
 					'pythonbin': {'description': 'Path to your python executable', 'type':'file'},
 					'helperpath': {'description': 'Path to the helper file for this script', 'type':'file'},
 					}
