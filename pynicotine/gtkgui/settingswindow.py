@@ -2302,7 +2302,6 @@ class buildDialog(gtk.Dialog):
 				self.tw["box%d"%c ].pack_start(self.tw[name], False, False)
 				self.Main.pack_start(self.tw["box%d" %c], False, False)
 			elif data['type'] in ('str', 'string', 'file'):
-				print "Adding str"
 				self.tw["box%d"%c] = gtk.HBox(False, 5)
 				self.tw["label%d"%c] =  self.GenerateLabel(data["description"])
 				self.tw["box%d"%c].pack_start(self.tw["label%d"%c], False, False)
