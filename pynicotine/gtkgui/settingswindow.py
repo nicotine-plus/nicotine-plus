@@ -2272,8 +2272,11 @@ class buildDialog(gtk.Dialog):
 		self.PluginLabel.set_markup("<b>%s</b>" % plugin)
 		c = 0
 		for name, data in options.items():
-			#print name, data
 			if plugin not in self.settings.frame.np.config.sections["plugins"] or name not in self.settings.frame.np.config.sections["plugins"][plugin]:
+				if plugin not in self.settings.frame.np.config.sections["plugins"]:
+					print "No1 " + plugin + ", " + repr(self.settings.frame.np.config.sections["plugins"].keys())
+				elif name not in self.settings.frame.np.config.sections["plugins"][plugin]:
+					print "No2 " + name + ", " + repr(self.settings.frame.np.config.sections["plugins"][plugin].keys())
 				continue
 			""" We currently support SpinButtons, TreeView (one per plugin), and Checkboxes, but there's no reason more widgets cannot be added, and we can use self.settings.SetWidget and self.settings.GetWidgetData to set and get values
 
@@ -2289,17 +2292,29 @@ class buildDialog(gtk.Dialog):
 				self.settings.SetWidget(self.tw[name], self.settings.frame.np.config.sections["plugins"][plugin][name])
 				self.tw["box%d"%c ].pack_start(self.tw[name], False, False)
 				self.Main.pack_start(self.tw["box%d" %c], False, False)
-			elif data["type"] in ("bool"):
+			elif data["type"] in ("bool",):
 				self.tw["box%d"%c] = gtk.HBox(False, 5)
 				self.tw["label%d"%c] =  self.GenerateLabel(data["description"])
 				self.tw["box%d"%c].pack_start(self.tw["label%d"%c], False, False)
+				
 				self.tw[name] = gtk.CheckButton()
 				self.settings.SetWidget(self.tw[name], self.settings.frame.np.config.sections["plugins"][plugin][name])
 				self.tw["box%d"%c ].pack_start(self.tw[name], False, False)
 				self.Main.pack_start(self.tw["box%d" %c], False, False)
-			elif data["type"] in ("list string"):
+			elif data['type'] in ('str', 'string', 'file'):
+				print "Adding str"
+				self.tw["box%d"%c] = gtk.HBox(False, 5)
+				self.tw["label%d"%c] =  self.GenerateLabel(data["description"])
+				self.tw["box%d"%c].pack_start(self.tw["label%d"%c], False, False)
 				
+				self.tw[name] = gtk.Entry()
+				self.settings.SetWidget(self.tw[name], self.settings.frame.np.config.sections["plugins"][plugin][name])
+				self.tw["box%d"%c ].pack_start(self.tw[name], False, False)
+				self.Main.pack_start(self.tw["box%d" %c], False, False)
+			elif data["type"] in ("list string",):
 				self.GenerateTreeView(name, data["description"], value, c)
+			else:
+				print "Unknown setting type '%s', data '%s'" % (name, data)
 	
 			c += 1
 		self.PluginProperties.show_all()

@@ -15,6 +15,7 @@ def disable(frame):
 	
 class Plugin(BasePlugin):
 	__name__ = "XMPlay (Windows) Now Playing"
+	__id__ = "np-xmplay-windows"
 	settings = {
 				'format':'XMPlay: {%artist - }{%title }{[%album]}',
 				'pythonbin':'C:\\Python26\\Python.exe',
@@ -25,8 +26,6 @@ class Plugin(BasePlugin):
 					'pythonbin': {'description': 'Path to your python executable', 'type':'file'},
 					'helperpath': {'description': 'Path to the helper file for this script', 'type':'file'},
 					}
-	def init(self):
-		self.MyPrivateCommand('quinox','hei')
 	def OutgoingPublicChatEvent(self, room, line):
 		# Workaround!
 		if line in ('-xm', '-xmplay'):
