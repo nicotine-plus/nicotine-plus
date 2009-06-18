@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 if __name__ == "__main__":
 	import win32ui
 	import dde
@@ -7,7 +9,7 @@ if __name__ == "__main__":
 	if len(argv) > 1:
 		layout = argv[1]
 	layout = layout.replace('{','{{').replace('}','}}') # double curly brackets are not that likely to exist in tags
-	optionals = [] # Will be removed later it the content wasn't replaced.
+	optionals = [] # Elements in this list will be removed from the output
 	open = -2
 	while open == -2 or open > -1:
 		open = layout.find('{{', open+2)
@@ -16,7 +18,7 @@ if __name__ == "__main__":
 			optionals.append(layout[open:close+2])
 
 	server = dde.CreateServer()
-	server.Create("nicotine")
+	server.Create("xmplaynp")
 	conversation = dde.CreateConversation(server)
 	info = {}
 	conversation.ConnectTo("xmplay", "info0")
