@@ -69,7 +69,7 @@ class RoomsControl:
 		
 		self.cols = InitialiseColumns(frame.roomlist.RoomsList,
 			[_("Room"), 150, "text", self.RoomStatus],
-			[_("Users"), -1, "text", self.RoomStatus],
+			[_("Users"), -1, "number", self.RoomStatus],
 		)
 		self.cols[0].set_sort_column_id(0)
 		self.cols[1].set_sort_column_id(1)
@@ -736,8 +736,8 @@ class ChatRoom:
 			[_("Status"), 20, "pixbuf"],
 			[_("Country"), 25, "pixbuf"],
 			[_("User"), 100, "text", self.UserColumnDraw],
-			[_("Speed"), 0, "text", self.frame.CellDataFunc],
-			[_("Files"), 0, "text", self.frame.CellDataFunc],
+			[_("Speed"), 0, "number", self.frame.CellDataFunc],
+			[_("Files"), 0, "number", self.frame.CellDataFunc],
 		)
 		cols[0].set_sort_column_id(5)
 		cols[1].set_sort_column_id(8)
@@ -818,7 +818,9 @@ class ChatRoom:
 		self.Menu_IgnoreIP = items[13]
 		self.Menu_SearchUser = items[15]
 		self.Menu_PrivateRooms = items[16]
-
+		img = gtk.Image()
+		img.set_from_pixbuf(self.frame.images["money"])
+		self.Menu_GivePrivileges.set_image(img)
 		self.UserList.connect("button_press_event", self.OnPopupMenu)
 
 		self.ChatEntry.grab_focus()

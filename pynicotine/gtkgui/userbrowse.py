@@ -172,15 +172,15 @@ class UserBrowse:
 		self.FileTreeView.set_model(self.FileStore)
 		cols = InitialiseColumns(self.FileTreeView,
 			[_("Filename"), 250, "text", self.CellDataFunc],
-			[_("Size"), 100, "text", self.CellDataFunc],
-			[_("Bitrate"), 50, "text", self.CellDataFunc],
-			[_("Length"), 50, "text", self.CellDataFunc],
+			[_("Size"), 100, "number", self.CellDataFunc],
+			[_("Bitrate"), 70, "text", self.CellDataFunc],
+			[_("Length"), 50, "number", self.CellDataFunc],
 		)
 		cols[0].set_sort_column_id(0)
 		cols[1].set_sort_column_id(4)
 		cols[2].set_sort_column_id(2)
 		cols[3].set_sort_column_id(5)
-
+		self.FileStore.set_sort_column_id(0, gtk.SORT_ASCENDING)
 		for i in range (4):
 			parent = cols[i].get_widget().get_ancestor(gtk.Button)
 			if parent:

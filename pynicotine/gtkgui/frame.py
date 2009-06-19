@@ -710,6 +710,13 @@ class NicotineFrame:
 		img = gtk.Image()
 		img.set_from_pixbuf(self.images["away2"])
 		self.awayreturn1.set_image(img)
+		img = gtk.Image()
+		img.set_from_pixbuf(self.images["bug"])
+		self.report_bug.set_image(img)
+		img = gtk.Image()
+		img.set_from_pixbuf(self.images["money"])
+		self.check_privileges1.set_image(img)
+
 		self.now = nowplaying.NowPlaying(self)
 		self.SetTabPositions()
 
@@ -913,7 +920,7 @@ class NicotineFrame:
 				loader.write(data, len(data))
 			loader.close()
 			return loader.get_pixbuf()
-		names = ["empty", "away", "online", "offline", "hilite", "hilite2", "connect", "disconnect", "away2", "n", "nicotinen", "notify"]
+		names = ["empty", "away", "online", "offline", "hilite", "hilite2", "hilite3", "connect", "disconnect", "away2", "n", "nicotinen", "notify", "bug", "money", "plugin" ]
 		if "icontheme" in self.np.config.sections["ui"]:
 			extensions = ["jpg", "jpeg", "bmp", "png", "svg"]
 			for name in names:
@@ -2428,6 +2435,7 @@ class NicotineFrame:
 			if self.np.transfers is None:
 				self.connect1.set_sensitive(1)
 		self.SetAllToolTips()
+		self.pluginhandler.check_enabled()
 	
 	def OnChangePassword(self, password):
 		self.np.queue.put(slskmessages.ChangePassword(password))

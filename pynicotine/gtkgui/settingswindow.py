@@ -1000,6 +1000,7 @@ class IconsFrame(buildFrame):
 		self.Offline.set_from_pixbuf(self.frame.images["offline"])
 		self.Hilite.set_from_pixbuf(self.frame.images["hilite"])
 		self.Hilite2.set_from_pixbuf(self.frame.images["hilite2"])
+		self.Hilite3.set_from_pixbuf(self.frame.images["hilite3"])
 		self.Connect.set_from_pixbuf(self.frame.images["connect"])
 		self.Disconnect.set_from_pixbuf(self.frame.images["disconnect"])
 		self.Notify.set_from_pixbuf(self.frame.images["notify"])
@@ -1380,7 +1381,7 @@ class NotebookFrame(buildFrame):
 		self.options = { "ui": { 
 			"tabmain": self.MainPosition, "tabrooms": self.ChatRoomsPosition, "tabprivate": self.PrivateChatPosition, "tabinfo": self.UserInfoPosition, "tabbrowse": self.UserBrowsePosition, "tabsearch": self.SearchPosition, 
 			"labelmain": self.MainAngleSpin, "labelrooms": self.ChatRoomsAngleSpin, "labelprivate": self.PrivateChatAngleSpin, "labelinfo": self.UserInfoAngleSpin, "labelbrowse": self.UserBrowseAngleSpin, "labelsearch": self.SearchAngleSpin,
-			"tabclosers": self.TabClosers, "tab_icons": self.TabIcons, "tab_colors": self.TabColours, "tab_reorderable": self.TabReorderable}
+			"tabclosers": self.TabClosers, "tab_icons": self.TabIcons, "tab_colors": self.TabColours, "tab_reorderable": self.TabReorderable, "tab_status_icons": self.TabStatusIcons}
 			
 		}
 		
@@ -1407,6 +1408,7 @@ class NotebookFrame(buildFrame):
 				"tab_icons": self.TabIcons.get_active(),
 				"tab_colors": self.TabColours.get_active(),
 				"tab_reorderable": self.TabReorderable.get_active(),
+				"tab_status_icons": self.TabStatusIcons.get_active(),
 			}
 		}
 
@@ -2280,7 +2282,7 @@ class buildDialog(gtk.Dialog):
 				continue
 			""" We currently support SpinButtons, TreeView (one per plugin), and Checkboxes, but there's no reason more widgets cannot be added, and we can use self.settings.SetWidget and self.settings.GetWidgetData to set and get values
 
-			Todo: gtk.Entry, gtk.ComboBox, and gtk.RadioButton
+			Todo: gtk.ComboBox, and gtk.RadioButton
 			"""
 			value = self.settings.frame.np.config.sections["plugins"][plugin][name]
 			if data["type"] in ("integer", "int"):
@@ -2288,7 +2290,7 @@ class buildDialog(gtk.Dialog):
 				self.tw["label%d"%c] =  self.GenerateLabel(data["description"])
 				self.tw["box%d"%c].pack_start(self.tw["label%d"%c], False, False)
 				
-				self.tw[name] = gtk.SpinButton(gtk.Adjustment(0, 0, 99999, 1, 10, 10))
+				self.tw[name] = gtk.SpinButton(gtk.Adjustment(0, 0, 99999, 1, 10, 0))
 				self.settings.SetWidget(self.tw[name], self.settings.frame.np.config.sections["plugins"][plugin][name])
 				self.tw["box%d"%c ].pack_start(self.tw[name], False, False)
 				self.Main.pack_start(self.tw["box%d" %c], False, False)
@@ -2337,7 +2339,7 @@ class PluginFrame(buildFrame):
 	def __init__(self, parent):
 		self.p = parent
 		buildFrame.__init__(self, "PluginFrame")
-		self.options = {}
+		self.options = {"plugins": {"enable": self.PluginsEnable} }
 		self.pluginlist = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_BOOLEAN, gobject.TYPE_STRING )
 		self.plugins = []
 		self.pluginsiters = {}
@@ -2378,6 +2380,7 @@ class PluginFrame(buildFrame):
 		self.PluginName.set_markup("<b>%(name)s</b>" % {"name": info['Name']} )
 		self.PluginDescription.get_buffer().set_text("%(description)s" % { "description": info['Description'].replace(r'\n', "\n")})
 		self.PluginAuthor.set_markup("<b>%(author)s</b>" % { "author": ", ".join(info['Authors'])})
+		self.PluginImage.set_from_pixbuf(self.frame.images["plugin"])
 		settings = self.frame.pluginhandler.get_plugin_settings(self.selected_plugin)
 		if settings is not None:
 			self.PluginProperties.set_sensitive(True)
@@ -2403,6 +2406,8 @@ class PluginFrame(buildFrame):
 	def SetSettings(self, config):
 		#for (module, plugin) in self.frame.pluginhandler.plugins:
 		#print plugin.__name__, plugin.__version__, plugin.settings
+		self.p.SetWidgetsData(config, self.options)
+		self.OnPluginsEnable(None)
 		self.pluginsiters = {}
 		self.pluginlist.clear()
 		plugins = self.frame.pluginhandler.list_installed_plugins()
@@ -2419,9 +2424,15 @@ class PluginFrame(buildFrame):
 
 		return {}
 
+	def OnPluginsEnable(self, widget):
+		self.notebook1.set_sensitive(self.PluginsEnable.get_active())
+
 	def GetSettings(self):
 		
-		return { "plugins": { "enabled": self.frame.pluginhandler.enabled_plugins.keys() } }
+		return { "plugins": {
+			"enable": self.PluginsEnable.get_active(),
+			"enabled": self.frame.pluginhandler.enabled_plugins.keys() },
+		 }
 	
 class ChatFrame(buildFrame):
 	def __init__(self, parent):

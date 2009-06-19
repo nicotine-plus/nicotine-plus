@@ -34,7 +34,7 @@ class PrivateChats(IconNotebook):
 	
 	def __init__(self, frame):
 		ui = frame.np.config.sections["ui"]
-		IconNotebook.__init__(self, frame.images, ui["labelprivate"], ui["tabclosers"], ui["tab_icons"], ui["tab_reorderable"])
+		IconNotebook.__init__(self, frame.images, ui["labelprivate"], ui["tabclosers"], ui["tab_icons"], ui["tab_reorderable"], ui["tab_status_icons"])
 		self.popup_enable()
 
 		self.frame = frame
@@ -77,7 +77,11 @@ class PrivateChats(IconNotebook):
 		if msg.user in self.users:
 			tab = self.users[msg.user]
 			status = [_("Offline"), _("Away"), _("Online")][msg.status]
-			self.set_text(tab.Main, "%s (%s)" % (msg.user[:15], status))
+			if not self.frame.np.config.sections["ui"]["tab_status_icons"]:
+				self.set_text(tab.Main, "%s (%s)" % (msg.user[:15], status))
+			else:
+				self.set_text(tab.Main, msg.user)
+			self.set_status_image(tab.Main, msg.status)
 			tab.GetUserStatus(msg.status)
 
 	def SendMessage(self, user, text = None, direction = None):
@@ -219,6 +223,7 @@ class PrivateChats(IconNotebook):
 			self.users[user].ConnClose()
 			tab = self.users[user]
 			self.set_text(tab.Main, "%s (%s)" % (user[:15], _("Offline")))
+			self.set_status_image(tab.Main, 0)
 			tab.GetUserStatus(0)
 			
 	def UpdateCompletions(self):
@@ -791,6 +796,7 @@ class PrivateChat:
 		statusword = [_("Offline"), _("Away"), _("Online")][status]
 		title = _("Nicotine+ Private Chat: %(user)s (%(status)s)") % {'user':self.user, 'status':statusword}
 		self.chats.set_detached_tab_title(self.Main, title)
+		
 
 	
 	def OnClose(self, widget):

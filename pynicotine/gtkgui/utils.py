@@ -124,6 +124,10 @@ def InitialiseColumns(treeview, *args):
 		if c[2] == "text":
 			renderer = gtk.CellRendererText()
 			column = gtk.TreeViewColumn(c[0], renderer, text = i)
+		elif c[2] == "number":
+			renderer = gtk.CellRendererText()
+			column = gtk.TreeViewColumn(c[0], renderer, text = i)
+			renderer.set_property("xalign", 1)
 		elif c[2] == "colored":
 			renderer = gtk.CellRendererText()
 			column = gtk.TreeViewColumn(c[0], renderer, text = i, foreground = c[3][0], background = c[3][1])
@@ -142,6 +146,7 @@ def InitialiseColumns(treeview, *args):
 		elif c[2] == "toggle":
 			renderer = gtk.CellRendererToggle()
 			column = gtk.TreeViewColumn(c[0], renderer, active = i)
+			renderer.set_property("xalign", 1)
 		else:
 			renderer = gtk.CellRendererPixbuf()
 			column = gtk.TreeViewColumn(c[0], renderer, pixbuf = i)
@@ -329,19 +334,21 @@ def AppendLine(textview, line, tag = None, timestamp = None, showstamp=True, tim
 	return linenr
 	
 class ImageLabel(gtk.HBox):
-	def __init__(self, label = "", image = None, onclose = None, closebutton = False, angle = 0, show_image = True):
+	def __init__(self, label = "", image = None, onclose = None, closebutton = False, angle = 0, show_image = True, statusimage=None, show_status_image=False):
 		gtk.HBox.__init__(self)
 		
 		self.closebutton = closebutton
 		self.angle = angle
 		self._show_image = show_image
+		self._show_status_image = show_status_image
 		self.notify = 0
 		
 		self._entered = 0
 		self._pressed = 0
 		
 		self.onclose = onclose
-		
+		self.status_img = None
+		self.statusimage = gtk.Image()
 		self.label = gtk.Label()
 		self.text = label
 		if NICOTINE.np.config.sections["ui"]["tab_colors"]:
@@ -357,12 +364,16 @@ class ImageLabel(gtk.HBox):
 		self.label.set_angle(angle)
 		self.label.show()
 
+		if self._show_status_image:
+			self.set_status_image(statusimage)
+			self.statusimage.show()
+
 		self.image = gtk.Image()
 		self.set_image(image)
 		
 		if self._show_image:
 			self.image.show()
-
+			
 
 		self._pack_children()
 		self._order_children()
@@ -385,7 +396,8 @@ class ImageLabel(gtk.HBox):
 		self.Box.set_spacing(2)
 		self.add(self.Box)
 		self.Box.show()
-		
+
+		self.Box.pack_start(self.statusimage, False, False)
 		self.Box.pack_start(self.label, True, True)
 		self.Box.pack_start(self.image, False, False)
 		if self.closebutton and self.onclose is not None:
@@ -398,14 +410,18 @@ class ImageLabel(gtk.HBox):
 				self.Box.reorder_child(self.button, 0)
 				self.Box.reorder_child(self.image, 1)
 				self.Box.reorder_child(self.label, 2)
+				self.Box.reorder_child(self.statusimage, 3)
 			else:
 				self.Box.reorder_child(self.image, 0)
 				self.Box.reorder_child(self.label, 1)
+				self.Box.reorder_child(self.statusimage, 2)
 		else:
-			self.Box.reorder_child(self.label, 0)
-			self.Box.reorder_child(self.image, 1)
+			self.Box.reorder_child(self.statusimage, 0)
+			self.Box.reorder_child(self.label, 1)
+			self.Box.reorder_child(self.image, 2)
 			if "button" in self.__dict__ and self.closebutton != 0:
-				self.Box.reorder_child(self.button, 2)
+				self.Box.reorder_child(self.button, 3)
+				
 
 				
 	def set_onclose(self, closebutton):
@@ -485,10 +501,24 @@ class ImageLabel(gtk.HBox):
 	def set_image(self, img):
 		self.img = img
 		self.image.set_from_pixbuf(img)
-	
+
 	def get_image(self):
 		return self.img
 		
+	def set_status_image(self, img):
+		if img is self.status_img:
+			return
+		if NICOTINE:
+			if NICOTINE.np.config.sections["ui"]["tab_status_icons"]:
+				self.statusimage.show()
+			else:
+				self.statusimage.hide()
+		self.status_img = img
+		self.statusimage.set_from_pixbuf(img)
+
+	def get_status_image(self):
+		return self.status_img
+
 	def set_text(self, lbl):
 		if NICOTINE.np.config.sections["ui"]["tab_colors"]:
 			self.set_text_color( notify = None, text = lbl)
@@ -500,12 +530,13 @@ class ImageLabel(gtk.HBox):
 		return self.label.get_text()
 	
 class IconNotebook(gtk.Notebook):
-	def __init__(self, images, angle = 0, tabclosers = False, show_image = True, reorderable = True):
+	def __init__(self, images, angle = 0, tabclosers = False, show_image = True, reorderable = True, show_status_image = False):
 		self.tabclosers = tabclosers
 		self.reorderable = reorderable
 		gtk.Notebook.__init__(self)
 		self.images = images
 		self._show_image = show_image
+		self._show_status_image = show_status_image
 		self.pages = []
 		self.detached_tabs = []
 		self.connect("switch-page", self.dismiss_icon)
@@ -559,7 +590,7 @@ class IconNotebook(gtk.Notebook):
 		self.set_tab_angle(angle)
 		closebutton = self.tabclosers
 
-		label_tab = ImageLabel(label, self.images["empty"], onclose, closebutton = closebutton, angle = angle, show_image = self._show_image)
+		label_tab = ImageLabel(label, self.images["empty"], onclose, closebutton = closebutton, angle = angle, show_image = self._show_image, statusimage=None, show_status_image=self._show_status_image)
 		# menu for all tabs
 		label_tab_menu = ImageLabel(label, self.images["empty"])
 		self.pages.append([page, label_tab, 0, label_tab_menu])
@@ -697,9 +728,17 @@ class IconNotebook(gtk.Notebook):
 				
 	def on_tab_click(self, widget, event, child):
 		pass
-	
+
+	def set_status_image(self, page, status):
+		image = self.images[("offline", "away", "online")[status]]
+		for i in self.pages:
+			if page == i[0]:
+				i[1].set_status_image(image)
+				i[3].set_status_image(image)
+				return
+
 	def set_image(self, page, status):
-		image = self.images[("empty", "online", "hilite")[status]]
+		image = self.images[("empty", "hilite3", "hilite")[status]]
 		for i in self.pages:
 			if page == i[0]:
 				if status == 1 and i[2] == 2:

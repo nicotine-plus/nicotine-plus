@@ -30,7 +30,7 @@ from pynicotine.utils import _
 class UserTabs(IconNotebook):
 	def __init__(self, frame, subwindow):
 		ui = frame.np.config.sections["ui"]
-		IconNotebook.__init__(self, frame.images, ui["labelinfo"], ui["tabclosers"], ui["tab_icons"], ui["tab_reorderable"])
+		IconNotebook.__init__(self, frame.images, ui["labelinfo"], ui["tabclosers"], ui["tab_icons"], ui["tab_reorderable"], ui["tab_status_icons"])
 		self.popup_enable()
 		
 		self.subwindow = subwindow
@@ -53,7 +53,11 @@ class UserTabs(IconNotebook):
 			tab = self.users[msg.user]
 			tab.status = msg.status
 			status = [_("Offline"), _("Away"), _("Online")][msg.status]
-			self.set_text(tab.Main, "%s (%s)" % (msg.user[:15], status))
+			if not self.frame.np.config.sections["ui"]["tab_status_icons"]:
+				self.set_text(tab.Main, "%s (%s)" % (msg.user[:15], status))
+			else:
+				self.set_text(tab.Main, msg.user)
+			self.set_status_image(tab.Main, msg.status)
 
 	def InitWindow(self, user, conn):
 		if user in self.users:

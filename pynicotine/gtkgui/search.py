@@ -584,15 +584,15 @@ class Search:
 		self.ResultsList.set_property("show-expanders", False)
 		self.ResultsList.set_property("rules-hint", True)
 		cols = InitialiseColumns(self.ResultsList,
-			[_("Number"), 50, "text", self.CellDataFunc],
+			[_("Number"), 50, "number", self.CellDataFunc],
 			[_("User"), 100, "text", self.CellDataFunc],
 			[_("Filename"), 250, "text", self.CellDataFunc],
-			[_("Size"), 100, "text", self.CellDataFunc],
+			[_("Size"), 100, "number", self.CellDataFunc],
 			[_("Speed"), 90, "text", self.CellDataFunc],
-			[_("In queue"), 50, "text", self.CellDataFunc],
+			[_("In queue"), 50, "number", self.CellDataFunc],
 			[_("Immediate Download"), 20, "text", self.CellDataFunc],
 			[_("Bitrate"), 50, "text", self.CellDataFunc],
-			[_("Length"), 50, "text", self.CellDataFunc],
+			[_("Length"), 50, "number", self.CellDataFunc],
 			[_("Country"), 25, "pixbuf"],
 			[_("Directory"), 1000, "text", self.CellDataFunc],
 			
@@ -612,8 +612,8 @@ class Search:
 			#col.connect("clicked", self.OnResort, ix)
 			#for r in col.get_cell_renderers():
 				#r.set_fixed_height_from_font(1)
-		for r in self.col_num.get_cell_renderers() + self.col_size.get_cell_renderers() +  self.col_length.get_cell_renderers():
-			r.set_property("xalign",1)
+		#for r in self.col_num.get_cell_renderers() + self.col_size.get_cell_renderers() +  self.col_length.get_cell_renderers():
+			#r.set_property("xalign",1)
 
 		self.col_num.set_sort_column_id(0)
 		self.col_user.set_sort_column_id(1)

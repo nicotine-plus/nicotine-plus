@@ -6207,7 +6207,7 @@ Protocols handlers: </property>
               <widget class="GtkTable" id="table6">
                 <property name="visible">True</property>
                 <property name="border_width">3</property>
-                <property name="n_rows">6</property>
+                <property name="n_rows">9</property>
                 <property name="n_columns">4</property>
                 <property name="column_spacing">10</property>
                 <property name="row_spacing">3</property>
@@ -6322,65 +6322,11 @@ Protocols handlers: </property>
                   <widget class="GtkLabel" id="label474">
                     <property name="visible">True</property>
                     <property name="xalign">0</property>
-                    <property name="label" translatable="yes">Hilite:</property>
+                    <property name="label" translatable="yes">Nick Hilite:</property>
                   </widget>
                   <packing>
                     <property name="top_attach">4</property>
                     <property name="bottom_attach">5</property>
-                    <property name="x_options">GTK_FILL</property>
-                    <property name="y_options"></property>
-                  </packing>
-                </child>
-                <child>
-                  <widget class="GtkImage" id="N">
-                    <property name="visible">True</property>
-                    <property name="stock">gtk-missing-image</property>
-                  </widget>
-                  <packing>
-                    <property name="left_attach">1</property>
-                    <property name="right_attach">2</property>
-                    <property name="top_attach">5</property>
-                    <property name="bottom_attach">6</property>
-                    <property name="x_options">GTK_FILL</property>
-                    <property name="y_options">GTK_FILL</property>
-                  </packing>
-                </child>
-                <child>
-                  <widget class="GtkLabel" id="label473">
-                    <property name="visible">True</property>
-                    <property name="xalign">0</property>
-                    <property name="label" translatable="yes">Window:</property>
-                  </widget>
-                  <packing>
-                    <property name="top_attach">5</property>
-                    <property name="bottom_attach">6</property>
-                    <property name="x_options">GTK_FILL</property>
-                    <property name="y_options"></property>
-                  </packing>
-                </child>
-                <child>
-                  <widget class="GtkImage" id="Notify">
-                    <property name="visible">True</property>
-                    <property name="stock">gtk-missing-image</property>
-                  </widget>
-                  <packing>
-                    <property name="left_attach">1</property>
-                    <property name="right_attach">2</property>
-                    <property name="top_attach">6</property>
-                    <property name="bottom_attach">7</property>
-                    <property name="x_options">GTK_FILL</property>
-                    <property name="y_options">GTK_FILL</property>
-                  </packing>
-                </child>
-                <child>
-                  <widget class="GtkLabel" id="label478">
-                    <property name="visible">True</property>
-                    <property name="xalign">0</property>
-                    <property name="label" translatable="yes">Notify:</property>
-                  </widget>
-                  <packing>
-                    <property name="top_attach">6</property>
-                    <property name="bottom_attach">7</property>
                     <property name="x_options">GTK_FILL</property>
                     <property name="y_options"></property>
                   </packing>
@@ -6514,6 +6460,105 @@ Protocols handlers: </property>
                     <property name="x_options">GTK_FILL</property>
                     <property name="y_options"></property>
                   </packing>
+                </child>
+                <child>
+                  <widget class="GtkLabel" id="label478">
+                    <property name="visible">True</property>
+                    <property name="xalign">0</property>
+                    <property name="label" translatable="yes">Notify:</property>
+                  </widget>
+                  <packing>
+                    <property name="top_attach">8</property>
+                    <property name="bottom_attach">9</property>
+                    <property name="x_options">GTK_FILL</property>
+                    <property name="y_options"></property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkImage" id="Notify">
+                    <property name="visible">True</property>
+                    <property name="stock">gtk-missing-image</property>
+                  </widget>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="right_attach">2</property>
+                    <property name="top_attach">8</property>
+                    <property name="bottom_attach">9</property>
+                    <property name="x_options">GTK_FILL</property>
+                    <property name="y_options">GTK_FILL</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkImage" id="N">
+                    <property name="visible">True</property>
+                    <property name="stock">gtk-missing-image</property>
+                  </widget>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="right_attach">2</property>
+                    <property name="top_attach">7</property>
+                    <property name="bottom_attach">8</property>
+                    <property name="x_options">GTK_FILL</property>
+                    <property name="y_options">GTK_FILL</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkLabel" id="label473">
+                    <property name="visible">True</property>
+                    <property name="xalign">0</property>
+                    <property name="label" translatable="yes">Window:</property>
+                  </widget>
+                  <packing>
+                    <property name="top_attach">7</property>
+                    <property name="bottom_attach">8</property>
+                    <property name="x_options">GTK_FILL</property>
+                    <property name="y_options"></property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkLabel" id="label1">
+                    <property name="visible">True</property>
+                    <property name="xalign">0</property>
+                    <property name="label" translatable="yes">Hilite:</property>
+                  </widget>
+                  <packing>
+                    <property name="top_attach">5</property>
+                    <property name="bottom_attach">6</property>
+                    <property name="x_options">GTK_FILL</property>
+                    <property name="y_options"></property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkImage" id="Hilite3">
+                    <property name="visible">True</property>
+                    <property name="stock">gtk-missing-image</property>
+                  </widget>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="right_attach">2</property>
+                    <property name="top_attach">5</property>
+                    <property name="bottom_attach">6</property>
+                    <property name="x_options">GTK_FILL</property>
+                    <property name="y_options">GTK_FILL</property>
+                  </packing>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
+                <child>
+                  <placeholder/>
                 </child>
                 <child>
                   <placeholder/>
@@ -7556,6 +7601,46 @@ typed incorrectly or as an acronym</property>
               </packing>
             </child>
             <child>
+              <widget class="GtkCheckButton" id="TabReorderable">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">False</property>
+                <property name="draw_indicator">True</property>
+                <child>
+                  <widget class="GtkHBox" id="hboxReorderable">
+                    <property name="visible">True</property>
+                    <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                    <property name="spacing">5</property>
+                    <child>
+                      <widget class="GtkImage" id="ReorderableIcon">
+                        <property name="visible">True</property>
+                        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                        <property name="stock">gtk-go-forward</property>
+                      </widget>
+                      <packing>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <widget class="GtkLabel" id="labelReorderable">
+                        <property name="visible">True</property>
+                        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                        <property name="label" translatable="yes">Tabs can be repositioned</property>
+                      </widget>
+                      <packing>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                  </widget>
+                </child>
+              </widget>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">2</property>
+              </packing>
+            </child>
+            <child>
               <widget class="GtkCheckButton" id="TabColours">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
@@ -7592,7 +7677,37 @@ typed incorrectly or as an acronym</property>
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
-                <property name="position">2</property>
+                <property name="position">3</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkCheckButton" id="TabStatusIcons">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">False</property>
+                <property name="draw_indicator">True</property>
+                <child>
+                  <widget class="GtkHBox" id="hboxReorderable1">
+                    <property name="visible">True</property>
+                    <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                    <property name="spacing">5</property>
+                    <child>
+                      <widget class="GtkLabel" id="labelReorderable1">
+                        <property name="visible">True</property>
+                        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                        <property name="label" translatable="yes">Show user status icons instead of status text</property>
+                      </widget>
+                      <packing>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                  </widget>
+                </child>
+              </widget>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">4</property>
               </packing>
             </child>
             <child>
@@ -7656,7 +7771,7 @@ Right</property>
               </widget>
               <packing>
                 <property name="expand">False</property>
-                <property name="position">3</property>
+                <property name="position">5</property>
               </packing>
             </child>
             <child>
@@ -7719,7 +7834,7 @@ Right</property>
               </widget>
               <packing>
                 <property name="expand">False</property>
-                <property name="position">4</property>
+                <property name="position">7</property>
               </packing>
             </child>
             <child>
@@ -7782,7 +7897,7 @@ Right</property>
               </widget>
               <packing>
                 <property name="expand">False</property>
-                <property name="position">5</property>
+                <property name="position">7</property>
               </packing>
             </child>
             <child>
@@ -7846,7 +7961,7 @@ Right</property>
               </widget>
               <packing>
                 <property name="expand">False</property>
-                <property name="position">6</property>
+                <property name="position">9</property>
               </packing>
             </child>
             <child>
@@ -7909,7 +8024,7 @@ Right</property>
               </widget>
               <packing>
                 <property name="expand">False</property>
-                <property name="position">7</property>
+                <property name="position">9</property>
               </packing>
             </child>
             <child>
@@ -7972,47 +8087,7 @@ Right</property>
               </widget>
               <packing>
                 <property name="expand">False</property>
-                <property name="position">8</property>
-              </packing>
-            </child>
-            <child>
-              <widget class="GtkCheckButton" id="TabReorderable">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">False</property>
-                <property name="draw_indicator">True</property>
-                <child>
-                  <widget class="GtkHBox" id="hboxReorderable">
-                    <property name="visible">True</property>
-                    <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                    <property name="spacing">5</property>
-                    <child>
-                      <widget class="GtkImage" id="ReorderableIcon">
-                        <property name="visible">True</property>
-                        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                        <property name="stock">gtk-go-forward</property>
-                      </widget>
-                      <packing>
-                        <property name="position">0</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <widget class="GtkLabel" id="labelReorderable">
-                        <property name="visible">True</property>
-                        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                        <property name="label" translatable="yes">Tabs can be repositioned</property>
-                      </widget>
-                      <packing>
-                        <property name="position">1</property>
-                      </packing>
-                    </child>
-                  </widget>
-                </child>
-              </widget>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="position">2</property>
+                <property name="position">10</property>
               </packing>
             </child>
           </widget>
@@ -11454,12 +11529,29 @@ Right</property>
                                       </widget>
                                     </child>
                                     <child>
-                                      <widget class="GtkLabel" id="PluginName">
+                                      <widget class="GtkHBox" id="hbox1">
                                         <property name="visible">True</property>
-                                        <property name="xalign">0</property>
-                                        <property name="xpad">12</property>
-                                        <property name="label" translatable="yes">&lt;b&gt;No Plugin Selected&lt;/b&gt;</property>
-                                        <property name="use_markup">True</property>
+                                        <child>
+                                          <widget class="GtkLabel" id="PluginName">
+                                            <property name="visible">True</property>
+                                            <property name="xalign">0</property>
+                                            <property name="xpad">12</property>
+                                            <property name="label" translatable="yes">&lt;b&gt;No Plugin Selected&lt;/b&gt;</property>
+                                            <property name="use_markup">True</property>
+                                          </widget>
+                                          <packing>
+                                            <property name="position">0</property>
+                                          </packing>
+                                        </child>
+                                        <child>
+                                          <widget class="GtkImage" id="PluginImage">
+                                            <property name="visible">True</property>
+                                            <property name="stock">gtk-missing-image</property>
+                                          </widget>
+                                          <packing>
+                                            <property name="position">1</property>
+                                          </packing>
+                                        </child>
                                       </widget>
                                       <packing>
                                         <property name="type">label_item</property>
@@ -12174,6 +12266,8 @@ Right</property>
                 <signal name="clicked" handler="OnOkay"/>
               </widget>
               <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
                 <property name="position">0</property>
               </packing>
             </child>
@@ -12187,6 +12281,8 @@ Right</property>
                 <signal name="clicked" handler="OnCancel"/>
               </widget>
               <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
                 <property name="position">1</property>
               </packing>
             </child>

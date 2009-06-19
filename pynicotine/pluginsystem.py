@@ -112,7 +112,10 @@ class PluginHandler(object):
 		return False
 
 	def enable_plugin(self, pluginname):
+		if pluginname in self.enabled_plugins:
+			return
 		try:
+			
 			plugin = self.load_plugin(pluginname)
 			if not plugin: raise Exception("Error loading plugin")
 			plugin.enable(self)
@@ -169,7 +172,18 @@ class PluginHandler(object):
 	def save_enabled(self):
 		self.frame.np.config.sections["plugins"]["enabled"] = self.enabled_plugins.keys()
 
+	def check_enabled(self):
+		if self.frame.np.config.sections["plugins"]["enable"]:
+			self.load_enabled()
+		else:
+			to_enable = self.frame.np.config.sections["plugins"]["enabled"]
+			for plugin in self.enabled_plugins:
+				self.enabled_plugins[plugin].disable(self)
+				print "Disabled plugin: %s" %plugin
 	def load_enabled(self):
+		enable = self.frame.np.config.sections["plugins"]["enable"]
+		if not enable:
+			return
 		to_enable = self.frame.np.config.sections["plugins"]["enabled"]
 		for plugin in to_enable:
 			self.enable_plugin(plugin)
