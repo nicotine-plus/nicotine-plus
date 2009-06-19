@@ -1,2 +1,2 @@
-find ./ -iname *.po -exec  msgmerge -U {} nicotine.pot \;
+find ./ -iname *.po -exec  msgmerge  -U --no-location  {} nicotine.pot \;
 echo "Merged template into translations"
