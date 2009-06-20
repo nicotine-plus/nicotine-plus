@@ -245,13 +245,13 @@ class PluginHandler(object):
 					continue
 				func = eval(strfunc)
 				ret = func(command, source, args)
-				if ret != None:
+				if ret is not None:
 					if ret == returncode['zap']:
 						return True
 					elif ret == returncode['pass']:
 						pass
-				else:
-					log.add(_("Plugin %(module)s returned something weird, '%(value)s', ignoring") % {'module':module, 'value':str(ret)})
+					else:
+						log.add(_("Plugin %(module)s returned something weird, '%(value)s', ignoring") % {'module':module, 'value':str(ret)})
 			except:
 				log.add(_("Plugin %(module)s failed with error %(errortype)s: %(error)s.\nTrace: %(trace)s\nProblem area:%(area)s") %
 					{'module':module,
