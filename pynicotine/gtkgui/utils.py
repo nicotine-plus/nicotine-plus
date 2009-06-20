@@ -714,7 +714,7 @@ class IconNotebook(gtk.Notebook):
 		return False
 	
 	def set_detached_icon(self, page, status):
-		image = self.images[("empty", "online", "hilite")[status]]
+		image = self.images[("empty", "hilite3", "hilite")[status]]
 		for item in self.detached_tabs:
 			if item[0] is page:
 				window = item[2]
