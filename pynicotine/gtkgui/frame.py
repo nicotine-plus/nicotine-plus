@@ -1976,7 +1976,7 @@ class NicotineFrame:
 		if status == 0:
 			if tablabel.get_image() == self.images["hilite"]:
 				return
-		tablabel.set_image(status == 1 and self.images["hilite"] or self.images["online"])
+		tablabel.set_image(status == 1 and self.images["hilite"] or self.images["hilite3"])
 		tablabel.set_text_color(status+1)
 
 	def GetTabLabel(self, TabLabel):
