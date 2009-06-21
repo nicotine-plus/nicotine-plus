@@ -755,6 +755,7 @@ class NicotineFrame:
 			self.logMessage(trerror)
 		self.SetAllToolTips()
 		self.WebBrowserTabLabel =  gtk.Label("Browser")
+		self.WebBrowserTabLabel.set_property("xalign", 0)
 		if WebBrowser and config["ui"]["mozembed"] and gtkmozembed != 0:
 			self.extravbox.show()
 			self.browser = BrowserWindow(self, "http://nicotine-plus.org")

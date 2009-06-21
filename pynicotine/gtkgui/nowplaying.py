@@ -22,11 +22,21 @@ class NowPlaying:
 	def __init__(self, frame):
 		self.frame = frame
 		self.accel_group = gtk.AccelGroup()
-		self.NowPlaying = gtk.Window(gtk.WINDOW_TOPLEVEL)
-		self.NowPlaying.set_title(_("Nicotine+: Configure Now Playing"))
+		self.wTree = gtk.glade.XML(os.path.join(os.path.dirname(os.path.realpath(__file__)), "nowplaying.glade" ), None, 'nicotine' ) 
+		widgets = self.wTree.get_widget_prefix("")
+		for i in widgets:
+			name = gtk.glade.get_widget_name(i)
+			self.__dict__[name] = i
+			#print name, i
+		#self.PrivateChatTab.remove(self.Main)
+		#self.PrivateChatTab.destroy()
+		self.wTree.signal_autoconnect(self)
+
+		#self.NowPlaying = gtk.Window(gtk.WINDOW_TOPLEVEL)
+		#self.NowPlaying.set_title(_("Nicotine+: Configure Now Playing"))
 		self.NowPlaying.set_icon(self.frame.images["n"])
 		self.NowPlaying.set_position(gtk.WIN_POS_NONE)
-		self.NowPlaying.set_modal(True)
+		#self.NowPlaying.set_modal(True)
 		self.NowPlaying.set_transient_for(self.frame.MainWindow)
 		self.NowPlaying.add_accel_group(self.accel_group)
 	
@@ -40,249 +50,18 @@ class NowPlaying:
 		except Exception, e:
 			self.bus = None
 		self.NowPlaying.set_resizable(False)
-		self.vbox1 = gtk.VBox(False, 5)
-		self.vbox1.show()
-		self.vbox1.set_spacing(5)
-	
-		self.label6 = gtk.Label(_("Display what your Media Player is playing in Chat with the /now command"))
-		self.label6.set_alignment(0, 0.5)
-		self.label6.set_padding(5, 3)
-		self.label6.set_line_wrap(True)
-		self.label6.show()
-		self.vbox1.pack_start(self.label6, False, False, 0)
-	
-		self.hbox1 = gtk.HBox(False, 5)
-		self.hbox1.show()
-		self.hbox1.set_spacing(5)
-		self.hbox1.set_border_width(3)
-		
-		self.label2 = gtk.Label()
-	
-		self.NP_infopipe = gtk.RadioButton()
-		self.NP_infopipe.set_active(False)
-		self.NP_infopipe.set_label(_("XMMS / Infopipe"))
-		self.NP_infopipe.show()
-		self.NP_infopipe.connect("clicked", self.OnNPPlayer)
-	
-		self.hbox1.pack_start(self.NP_infopipe, False, False, 0)
-	
-		self.NP_amarok = gtk.RadioButton(self.NP_infopipe)
-		self.NP_amarok.set_active(False)
-		self.NP_amarok.set_label(_("Amarok"))
-		self.NP_amarok.show()
-		self.NP_amarok.connect("clicked", self.OnNPPlayer)
-	
-		self.hbox1.pack_start(self.NP_amarok, False, False, 0)
 
-		self.NP_audacious = gtk.RadioButton(self.NP_infopipe)
-		self.NP_audacious.set_active(False)
-		self.NP_audacious.set_label(_("Audacious"))
-		self.NP_audacious.show()
-		self.NP_audacious.connect("clicked", self.OnNPPlayer)
-	
-		self.hbox1.pack_start(self.NP_audacious, False, False, 0)
-	
-		self.NP_mpd = gtk.RadioButton(self.NP_infopipe)
-		self.NP_mpd.set_active(False)
-		self.NP_mpd.set_label(_("MPD via mpc"))
-		self.NP_mpd.show()
-		self.NP_mpd.connect("clicked", self.OnNPPlayer)
-	
-		self.hbox1.pack_start(self.NP_mpd, False, False, 0)
-
-		self.vbox1.pack_start(self.hbox1, False, True, 0)
-	
-		self.hbox2 = gtk.HBox(False, 5)
-		self.hbox2.show()
-		self.hbox2.set_spacing(5)
-		self.hbox2.set_border_width(3)
-	
-		#self.NP_mp3blaster = gtk.RadioButton(self.NP_infopipe)
-		#self.NP_mp3blaster.set_active(False)
-		#self.NP_mp3blaster.set_label(_("MP3Blaster"))
-		#self.NP_mp3blaster.show()
-		#self.NP_mp3blaster.connect("clicked", self.OnNPPlayer)
-		## mp3blaster disabled
-		#self.NP_mp3blaster.set_sensitive(False)
-	
-		#self.hbox2.pack_start(self.NP_mp3blaster, False, False, 0)
-	
-		self.NP_bmpx = gtk.RadioButton(self.NP_infopipe)
-		self.NP_bmpx.set_active(False)
-		self.NP_bmpx.set_label(_("BMPx"))
-		self.NP_bmpx.show()
-		self.NP_bmpx.connect("clicked", self.OnNPPlayer)
-	
-		self.hbox2.pack_start(self.NP_bmpx, False, False, 0)
-	
-		self.NP_rhythmbox = gtk.RadioButton(self.NP_infopipe)
-		self.NP_rhythmbox.set_active(False)
-		self.NP_rhythmbox.set_label(_("Rhythmbox"))
-		self.NP_rhythmbox.show()
-		self.NP_rhythmbox.connect("clicked", self.OnNPPlayer)
-		
-		self.hbox2.pack_start(self.NP_rhythmbox, False, False, 0)
-		
-		self.NP_exaile = gtk.RadioButton(self.NP_infopipe)
-		self.NP_exaile.set_active(False)
-		self.NP_exaile.set_label(_("Exaile"))
-		self.NP_exaile.show()
-		self.NP_exaile.connect("clicked", self.OnNPPlayer)
-	
-		self.hbox2.pack_start(self.NP_exaile, False, False, 0)
-		
-		self.NP_lastfm = gtk.RadioButton(self.NP_infopipe)
-		self.NP_lastfm.set_active(False)
-		self.NP_lastfm.set_label(_("last.fm"))
-		self.NP_lastfm.show()
-		self.NP_lastfm.connect("clicked", self.OnNPPlayer)
-
-		self.hbox2.pack_start(self.NP_lastfm, False, False, 0)
-				
-		self.NP_other = gtk.RadioButton(self.NP_infopipe)
-		self.NP_other.set_active(False)
-		self.NP_other.set_label(_("Other"))
-		self.NP_other.show()
-		self.NP_other.connect("clicked", self.OnNPPlayer)
-	
-		self.hbox2.pack_start(self.NP_other, False, False, 0)
-	
-		self.vbox1.pack_start(self.hbox2, False, True, 0)
-	
-		self.hbox5 = gtk.HBox(False, 5)
-		self.hbox5.show()
-		self.hbox5.set_spacing(5)
-		self.hbox5.set_border_width(3)
-	
-		self.label5 = gtk.Label(_("Player Command/Username"))
-		self.label5.set_padding(0, 0)
-		self.label5.set_line_wrap(False)
-		self.label5.show()
-		self.hbox5.pack_start(self.label5, False, False, 0)
-	
-		self.NPCommand = gtk.Entry()
-		self.NPCommand.set_text("")
-		self.NPCommand.set_editable(True)
-		self.NPCommand.show()
-		self.NPCommand.set_visibility(True)
-		self.hbox5.pack_start(self.NPCommand, True, True, 0)
-	
-		self.vbox1.pack_start(self.hbox5, False, False, 0)
-	
-		self.hbox4 = gtk.HBox(False, 5)
-		self.hbox4.show()
-		self.hbox4.set_spacing(5)
-		self.hbox4.set_border_width(3)
-	
-		self.label3 = gtk.Label(_("Legend:"))
-		self.label3.set_alignment(0, 0.5)
-		self.label3.set_padding(5, 5)
-		self.label3.set_line_wrap(False)
-		self.label3.show()
-		self.hbox4.pack_start(self.label3, False, False, 0)
-	
-		
-		
-		self.label2.set_alignment(0, 0.5)
-		self.label2.set_padding(0, 0)
-		self.label2.set_line_wrap(False)
-		self.label2.show()
-		self.hbox4.pack_start(self.label2, False, False, 0)
-	
-		self.vbox1.pack_start(self.hbox4, False, False, 0)
-	
-		self.label4 = gtk.Label(_("Now playing format:"))
-		self.label4.set_alignment(0, 0.5)
-		self.label4.set_padding(5, 5)
-		self.label4.set_line_wrap(False)
-		self.label4.show()
-		self.vbox1.pack_start(self.label4, False, False, 0)
-	
+		self.defaultlist = [ "$n", "$a - $t", "[$a] $t", "Now $s: [$a] $t", "Now $s: $n", "$a - $b - $t", "$a - $b - $t ($l/$rKBps) from $y $c" ]
+		self.title_clear()
+		self.player_replacers = []
 		self.NPFormat_List = gtk.ListStore(gobject.TYPE_STRING)
-		self.NPFormat = gtk.ComboBoxEntry()
-		self.NPFormat.show()
-		
-		
-
-	
 		self.NPFormat.set_model(self.NPFormat_List)
 		self.NPFormat.set_text_column(0)
 		self.NPFormat.child.connect("activate", self.OnAddFormat)
 		self.NPFormat.child.connect("changed", self.OnModifyFormat)
-		self.vbox1.set_border_width(5)
-		self.vbox1.pack_start(self.NPFormat, False, False, 0)
-
-		self.hbox6 = gtk.HBox(False, 5)
-		self.hbox6.show()
-		self.hbox6.set_spacing(5)
-		
-		self.label6 = gtk.Label(_("Example:"))
-		self.label6.set_alignment(0, 0.5)
-		self.label6.set_padding(5, 5)
-		self.label6.set_line_wrap(False)
-		self.label6.show()
-		
-		self.label7 = gtk.Label()
-		self.label7.set_alignment(0, 0.5)
-		self.label7.set_padding(5, 5)
-		self.label7.set_line_wrap(False)
-		self.label7.show()
-		self.hbox6.pack_start(self.label6, False, False, 0)
-		self.hbox6.pack_start(self.label7, False, False, 0)
-		self.vbox1.pack_start(self.hbox6, False, False, 0)
-	
-	
-		self.hbox3 = gtk.HBox(False, 5)
-		self.hbox3.show()
-		self.hbox3.set_spacing(5)
-	
-		self.NPCancel = gtk.Button(None, gtk.STOCK_CANCEL)
-		self.NPCancel.show()
-		self.NPCancel.connect("clicked", self.OnNPCancel)
-	
-		self.hbox3.pack_end(self.NPCancel, False, False, 0)
-	
-		self.NPSave = gtk.Button(None, gtk.STOCK_SAVE)
-		self.NPSave.show()
-		self.NPSave.connect("clicked", self.OnNPSave)
-	
-		self.hbox3.pack_end(self.NPSave, False, False, 0)
-		
-		self.NPTest = gtk.Button()
-		self.NPTest.show()
-		self.NPTest.connect("clicked", self.OnNPTest)
-		
-		self.alignment16 = gtk.Alignment(0.5, 0.5, 0, 0)
-		self.alignment16.show()
-	
-		self.hbox36 = gtk.HBox(False, 2)
-		self.hbox36.show()
-		self.hbox36.set_spacing(2)
-	
-		self.image16 = gtk.Image()
-		self.image16.set_padding(0, 0)
-		self.image16.set_from_stock(gtk.STOCK_JUMP_TO, 4)
-		self.image16.show()
-		self.hbox36.pack_start(self.image16, False, False, 0)
-	
-		self.label45 = gtk.Label(_("Test"))
-		self.label45.set_padding(0, 0)
-		self.label45.set_line_wrap(False)
-		self.label45.show()
-		self.hbox36.pack_start(self.label45, False, False, 0)
-	
-		self.alignment16.add(self.hbox36)
-		self.NPTest.add(self.alignment16)
-	
-		self.hbox3.pack_end(self.NPTest, False, False, 0)
-	
-		self.vbox1.pack_start(self.hbox3, False, True, 0)
-		self.defaultlist = [ "$n", "$a - $t", "[$a] $t", "Now $s: [$a] $t", "Now $s: $n", "$a - $b - $t", "$a - $b - $t ($l/$rKBps) from $y $c" ]
-		self.title_clear()
-		self.player_replacers = []
 		self.OnNPPlayer(None)
 	
-		self.NowPlaying.add(self.vbox1)
+		#self.NowPlaying.add(self.vbox1)
 		
 		# Set the active radio button
 		config = self.frame.np.config.sections
@@ -319,7 +98,7 @@ class NowPlaying:
 			widget.modify_fg(gtk.STATE_NORMAL, colour)
 
 	def title_clear(self):
-		self.label7.set_text("")
+		self.Example.set_text("")
 		self.title = { "title": "", "artist": "", "comment": "", "year": "", "album": "", "track":"", "length": "", "nowplaying": "", "status": "", "bitrate": "", "filename": ""}
 		
 	def SetPlayer(self, player):
@@ -441,9 +220,9 @@ class NowPlaying:
 			elif item == "$s":
 				legend += _("Status")
 			legend += "\n"
-		self.label2.set_text(legend)
+		self.Legend.set_text(legend)
 		if not set:
-			self.label2.set_text("")
+			self.Legend.set_text("")
 		self.OnModifyFormat(self.NPFormat.child)
 			
 	def OnNPCancel(self, widget):
@@ -506,7 +285,7 @@ class NowPlaying:
 		title = ' '.join([x for x in title.replace('\r', '\n').split('\n') if x])
 		
 		if test:
-			self.label7.set_text(title)
+			self.Example.set_text(title)
 			return None
 		if title:
 			if callback:
@@ -618,32 +397,27 @@ class NowPlaying:
 			commandlist.append("--get-artist")
 		if "$b" in slist:
 			commandlist.append("--get-album")
-
-		output = self.exaile_command(commandlist)
-		if output is None:
-			return 0
-
-		pos = 0
 		for command in commandlist:
+			output = self.exaile_command(command) #.split("\n")
+			if output is None:
+				continue
+		#pos = 0
+		#for command in commandlist:
 			if command == "--get-title":
-				self.title["title"] = output[pos]
+				self.title["title"] = output[0]
 			elif command == "--get-artist":
-				self.title["artist"] = output[pos]
+				self.title["artist"] = output[0]
 			elif command == "--get-album":
-				self.title["album"] = output[pos]
+				self.title["album"] = output[0]
 			elif command == "--get-length":
-				self.title["length"] = output[pos]
-			pos += 1
+				self.title["length"] = output[0]
+			#pos += 1
 
 		return 1
 		
 				
-	def exaile_command(self, commandlist):
-		command = ""
-		for i in commandlist:
-			command += i + " "
-		#output = commands.getoutput("exaile %s 2> /dev/null" % command).split('\n')
-		output = executeCommand('exaile $', command, returnoutput=True).split('\n')[0]
+	def exaile_command(self, command):
+		output = executeCommand('exaile $', command, returnoutput=True).split('\n') #[0]
 		return output
 		
 	def amarok(self):

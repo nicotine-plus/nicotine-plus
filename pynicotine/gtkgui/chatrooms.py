@@ -531,6 +531,7 @@ class RoomsControl:
 	def UpdateColours(self):
 		self.frame.SetTextBG(self.frame.roomlist.RoomsList)
 		self.frame.SetTextBG(self.frame.roomlist.CreateRoomEntry)
+		self.frame.SetTextBG(self.frame.roomlist.SearchRooms)
 
 		for room in self.joinedrooms.values():
 			room.ChangeColours()
