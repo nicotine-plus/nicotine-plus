@@ -1038,9 +1038,9 @@ class NicotineFrame:
 		self.UnrecommendationsList.connect("button_press_event", self.OnPopupUnRecMenu)
 		self.RecommendationsExpander.connect("activate", self.RecommendationsExpanderStatus)
 		self.UnrecommendationsExpander.connect("activate", self.RecommendationsExpanderStatus)
-
+		statusiconwidth = self.images["offline"].get_width()+4
 		cols = utils.InitialiseColumns(self.RecommendationUsersList, 
-			["", 20, "pixbuf"],
+			["", statusiconwidth, "pixbuf"],
 			[_("User"), 100, "text", self.CellDataFunc],
 			[_("Speed"), 0, "text", self.CellDataFunc],
 			[_("Files"), 0, "text", self.CellDataFunc],

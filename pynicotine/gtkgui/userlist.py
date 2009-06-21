@@ -32,8 +32,9 @@ class UserList:
 		self.userlist = []
 		
 		self.usersmodel = gtk.ListStore(gtk.gdk.Pixbuf, gtk.gdk.Pixbuf, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_BOOLEAN, gobject.TYPE_BOOLEAN, gobject.TYPE_BOOLEAN, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_INT, gobject.TYPE_INT, gobject.TYPE_INT, gobject.TYPE_INT, gobject.TYPE_STRING)
+		statusiconwidth = self.frame.images["offline"].get_width()+4
 		self.cols = cols = InitialiseColumns(self.frame.UserList,
-			[_("Status"), 20, "pixbuf"],
+			[_("Status"), statusiconwidth, "pixbuf"],
 			[_("Country"), 25, "pixbuf"],
 			[_("User"), 120, "text", self.CellDataFunc],
 			[_("Speed"), 0, "number", self.CellDataFunc],

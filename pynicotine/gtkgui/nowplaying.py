@@ -27,9 +27,7 @@ class NowPlaying:
 		for i in widgets:
 			name = gtk.glade.get_widget_name(i)
 			self.__dict__[name] = i
-			#print name, i
-		#self.PrivateChatTab.remove(self.Main)
-		#self.PrivateChatTab.destroy()
+
 		self.wTree.signal_autoconnect(self)
 
 		#self.NowPlaying = gtk.Window(gtk.WINDOW_TOPLEVEL)

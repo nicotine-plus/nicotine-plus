@@ -732,9 +732,9 @@ class ChatRoom:
 
 		if room in config["server"]["autojoin"]:
 			self.AutoJoin.set_active(True)
-			
+		statusiconwidth = self.frame.images["offline"].get_width()+4
 		self.cols = cols = InitialiseColumns(self.UserList, 
-			[_("Status"), 20, "pixbuf"],
+			[_("Status"), statusiconwidth, "pixbuf"],
 			[_("Country"), 25, "pixbuf"],
 			[_("User"), 100, "text", self.UserColumnDraw],
 			[_("Speed"), 0, "number", self.frame.CellDataFunc],
