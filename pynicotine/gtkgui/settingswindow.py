@@ -348,7 +348,7 @@ class TransfersFrame(buildFrame):
 		cols[1].set_sort_column_id(1)
 		renderers = cols[1].get_cell_renderers()
 		for render in renderers:
-			render.connect('toggled', self.cell_toggle_callback, self.frame.UserList, 1)
+			render.connect('toggled', self.cell_toggle_callback, self.filterlist, 1)
 		self.FilterView.set_model(self.filterlist)
 		self.FilterView.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
 		
@@ -799,11 +799,8 @@ class BanFrame(buildFrame):
 		self.blockedlist.clear()
 		self.p.SetWidgetsData(config, self.options)
 		
-		if server["banlist"] is not None:
-			self.banned = server["banlist"][:]
-			for banned in server["banlist"]:
-				self.banlist.append([banned])
-		else:
+		if server["banlist"] is None:
+		
 			self.p.Hilight(self.Banned)
 	
 		if server["ipblocklist"] is not None:

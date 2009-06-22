@@ -512,102 +512,6 @@ class NicotineFrame:
 		
 		
 		self.LogWindow.show()
-
-		self.userlistvbox = gtk.VBox(False, 0)
-		self.userlistvbox.show()
-		self.userlistvbox.set_spacing(3)
-		self.userlistvbox.set_border_width(0)
-		
-		self.BuddiesLabel = gtk.Label()
-		self.BuddiesLabel.set_markup("<b>"+_("Buddies")+"</b>")
-		self.BuddiesLabel.set_padding(0, 0)
-		
-		self.userlistvbox.pack_start(self.BuddiesLabel, False, False)
-		
-		self.userlistSW = gtk.ScrolledWindow()
-		self.userlistSW.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
-		self.userlistSW.show()
-		self.userlistSW.set_shadow_type(gtk.SHADOW_NONE)
-
-		self.UserList = gtk.TreeView()
-		self.UserList.show()
-		self.UserList.set_headers_visible(True)
-		self.userlistSW.add(self.UserList)
-		
-		TARGETS = [('text/plain', 0, 1)]
-		self.UserList.enable_model_drag_source(gtk.gdk.BUTTON1_MASK, TARGETS, gtk.gdk.ACTION_COPY)
-		self.UserList.enable_model_drag_dest(TARGETS,  gtk.gdk.ACTION_COPY)
-		self.userlistvbox.pack_start(self.userlistSW, True, True, 0)
-		self.UserList.connect("drag_data_get", self.buddylist_drag_data_get_data)
-		self.UserList.connect("drag_data_received", self.DragUserToBuddylist)
-		self.UserHbox = gtk.HBox(False, 3)
-		self.UserHbox.set_border_width(0)
-		self.UserHbox.show()
-	
-		self.label12 = gtk.Label(_("Add Buddy: "))
-		self.label12.set_padding(0, 0)
-		self.label12.show()
-		self.UserHbox.pack_start(self.label12, False, False)
-	
-		self.AddUserEntry = gtk.Entry()
-		self.AddUserEntry.set_text("")
-		self.AddUserEntry.set_editable(True)
-		self.AddUserEntry.show()
-		self.AddUserEntry.set_visibility(True)
-		self.AddUserEntry.connect("activate", self.OnAddUser)
-		self.UserHbox.pack_start(self.AddUserEntry, True, True)
-
-		self.MoveList = gtk.ToggleButton()
-		self.MoveList.show()
-		self.MoveListAlignment = gtk.Alignment(0.5, 0.5, 0, 0)
-		self.MoveListAlignment.show()
-
-		self.MoveListImage = gtk.Image()
-		self.MoveListImage.set_from_stock(gtk.STOCK_JUMP_TO, 1)
-		self.MoveListImage.show()
-
-	
-		self.MoveListAlignment.add(self.MoveListImage)
-
-		self.MoveList.add(self.MoveListAlignment)
-		
-		
-
-		self.UserHbox.pack_start(self.MoveList, False, True)
-		
-		self.configureUsers = gtk.Button()
-		self.configureUsers.show()
-		self.configureUsers.connect("clicked", self.OnSettingsBanIgnore)
-
-		self.alignmentUsers = gtk.Alignment(0.5, 0.5, 0, 0)
-		self.alignmentUsers.show()
-
-		self.hboxUsers = gtk.HBox(False, 0)
-		self.hboxUsers.show()
-		self.hboxUsers.set_spacing(2)
-
-		self.image44 = gtk.Image()
-		self.image44.set_from_stock(gtk.STOCK_PREFERENCES, 4)
-		self.image44.show()
-		self.hboxUsers.pack_start(self.image44, False, False, 0)
-
-		self.alignmentUsers.add(self.hboxUsers)
-
-		self.configureUsers.add(self.alignmentUsers)
-
-		self.UserHbox.pack_end(self.configureUsers, False, False, 0)
-		
-		self.MoveList.connect("toggled", self.OnMoveList)
-		
-		self.userlistvbox.pack_start(self.UserHbox, False, True)
-		
-		buddylist = config["ui"]["buddylistinchatrooms"]
-		if buddylist == 1:
-			self.buddylist_in_chatrooms1.set_active(1)
-		elif buddylist == 2:
-			self.buddylist_always_visible.set_active(1)
-		elif buddylist == 0:
-			self.buddylist_in_tab.set_active(1)
 		
 		if config["ui"]["roomlistcollapsed"]:
 			self.hide_room_list1.set_active(1)
@@ -626,7 +530,7 @@ class NicotineFrame:
 		
 		if config["ticker"]["hide"]:
 			self.hide_tickers1.set_active(1)
-		self.UpdateColours(1)
+	
 		for (timestamp, level, msg) in log.history:
 			self.updateLog(msg, level)
 		
@@ -641,7 +545,7 @@ class NicotineFrame:
 		self.downloads = Downloads(self)
 		self.uploads = Uploads(self)
 		self.userlist = UserList(self)
-
+		self.UpdateColours(1)
 		self.privatechats = self.PrivatechatNotebook
 		self.privatechats.show()
 		self.userinfo = self.UserInfoNotebook
@@ -660,6 +564,15 @@ class NicotineFrame:
 		
 		self.sSharesButton.connect("clicked", self.OnGetShares)
 		self.UserBrowseCombo.child.connect("activate", self.OnGetShares)
+
+		buddylist = config["ui"]["buddylistinchatrooms"]
+		if buddylist == 1:
+			self.buddylist_in_chatrooms1.set_active(1)
+		elif buddylist == 2:
+			self.buddylist_always_visible.set_active(1)
+		elif buddylist == 0:
+			self.buddylist_in_tab.set_active(1)
+		
 
 		if config["columns"]["hideflags"]:
 			self.HideFlags.set_active(1)
@@ -698,7 +611,7 @@ class NicotineFrame:
 
 		self.gstreamer = gstreamer()
 		self.pluginhandler = pluginsystem.PluginHandler(self, plugindir)
-
+		
 
 		if config["ui"]["chat_hidebuttons"]:
 			self.HideChatButtons.set_active(1)
@@ -857,19 +770,7 @@ class NicotineFrame:
 		user = model.get_value(iter, 1)
 		#data = (status, flag, user, speed, files, trusted, notify, privileged, lastseen, comments)
 		selection.set(selection.target, 8, user)
-	
-	def buddylist_drag_data_get_data(self, treeview, context, selection, target_id, etime):
-		treeselection = treeview.get_selection()
-		model, iter = treeselection.get_selected()
-		status, flag, user, speed, files, trusted, notify, privileged, lastseen, comments = model.get(iter, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9)
-		#data = (status, flag, user, speed, files, trusted, notify, privileged, lastseen, comments)
-		selection.set(selection.target, 8, user)
-		
-	def DragUserToBuddylist(self, treeview, context, x, y, selection, info, etime):
-		model = treeview.get_model()
-		user = selection.data
-		if user:
-			self.userlist.AddToList(user)
+
 			
 	def NewNotification(self, message, title="Nicotine+"):
 		if self.pynotify is None:
@@ -888,22 +789,7 @@ class NicotineFrame:
 			self.pynotifyBox.show()
 		except gobject.GError, error:
 			self.logMessage(_("Notification Error: %s") % str(error))
-				
-	def OnMoveList(self, widget):
-		tab = always = chatrooms = False
-		if self.buddylist_in_tab.get_active():
-			tab = True
-		if self.buddylist_always_visible.get_active():
-			always = True
-		if self.buddylist_in_chatrooms1.get_active():
-			chatrooms = True
-		if tab:
-			self.buddylist_in_chatrooms1.set_active(True)
-			self.OnChatRooms(None)
-		if always:
-			self.buddylist_in_tab.set_active(True)
-		if chatrooms:
-			self.buddylist_always_visible.set_active(True)
+
 		
 	def LoadIcons(self):
 		self.images = {}
@@ -1634,9 +1520,9 @@ class NicotineFrame:
 
 		
 		self.SetTextBG(self.LogWindow)
-		self.SetTextBG(self.UserList)
+		self.SetTextBG(self.userlist.UserList)
 		#self.ChangeListFont( self.UserList, self.frame.np.config.sections["ui"]["listfont"])
-		for listview in [self.UserList, self.RecommendationsList, self.UnrecommendationsList, self.RecommendationUsersList, self.LikesList, self.DislikesList, self.roomlist.RoomsList]:
+		for listview in [self.userlist.UserList, self.RecommendationsList, self.UnrecommendationsList, self.RecommendationUsersList, self.LikesList, self.DislikesList, self.roomlist.RoomsList]:
 			self.ChangeListFont(listview, self.np.config.sections["ui"]["listfont"])
 				
 		self.SetTextBG(self.RecommendationsList)
@@ -1647,7 +1533,7 @@ class NicotineFrame:
 		self.SetTextBG(self.UserPrivateCombo.child)
 		self.SetTextBG(self.UserInfoCombo.child)
 		self.SetTextBG(self.UserBrowseCombo.child)
-		self.SetTextBG(self.AddUserEntry)
+		
 		self.SetTextBG(self.SearchEntry)
 		
 		
@@ -1715,9 +1601,12 @@ class NicotineFrame:
 					self.SetStatusText(msg)
 		else:
 			if debugLevel in (None, 0, 1):
-				AppendLine(self.LogWindow, msg, self.tag_log, scroll=True)
-				if self.np.config.sections["logging"]["logcollapsed"]:
-					self.SetStatusText(msg)
+				try:
+					AppendLine(self.LogWindow, msg, self.tag_log, scroll=True)
+					if self.np.config.sections["logging"]["logcollapsed"]:
+						self.SetStatusText(msg)
+				except Exception, e:
+					print e
 		return False
 			
 	def ScrollBottom(self, widget):
@@ -2200,12 +2089,6 @@ class NicotineFrame:
 			self.np.config.sections["server"]["ignorelist"].remove(user)
 			self.np.config.writeConfig()
 
-	def OnAddUser(self, widget):
-		text = widget.get_text()
-		if not text:
-			return
-		widget.set_text("")
-		self.userlist.AddToList(text)
 		
 	def BothRescan(self):
 		self.OnRescan()
@@ -2386,6 +2269,7 @@ class NicotineFrame:
 			self.userinfo.UpdateColours()
 			self.userbrowse.UpdateColours()
 			self.settingswindow.UpdateColours()
+			self.userlist.UpdateColours()
 			self.UpdateColours()
 		
 		self.OnHideChatButtons()
@@ -2769,7 +2653,7 @@ class NicotineFrame:
 		if active:
 			if self.roomlist.vbox2 in self.vpaned3.get_children():
 				self.vpaned3.remove(self.roomlist.vbox2)
-			if self.userlistvbox not in self.vpaned3.get_children():
+			if self.userlist.userlistvbox not in self.vpaned3.get_children():
 				self.vpaned3.hide()
 		else:
 			if not self.roomlist.vbox2 in self.vpaned3.get_children():
@@ -2785,19 +2669,19 @@ class NicotineFrame:
 			always = True
 		if self.buddylist_in_chatrooms1.get_active():
 			chatrooms = True
-		if self.userlistvbox in self.MainNotebook.get_children():
+		if self.userlist.userlistvbox in self.MainNotebook.get_children():
 			if tab:
 				return
-			self.MainNotebook.remove_page(self.MainNotebook.page_num(self.userlistvbox))
+			self.MainNotebook.remove_page(self.MainNotebook.page_num(self.userlist.userlistvbox))
 			
-		if self.userlistvbox in self.vpanedm.get_children():
+		if self.userlist.userlistvbox in self.vpanedm.get_children():
 			if always:
 				return
-			self.vpanedm.remove(self.userlistvbox)
-		if self.userlistvbox in self.vpaned3.get_children():
+			self.vpanedm.remove(self.userlist.userlistvbox)
+		if self.userlist.userlistvbox in self.vpaned3.get_children():
 			if chatrooms:
 				return
-			self.vpaned3.remove(self.userlistvbox)
+			self.vpaned3.remove(self.userlist.userlistvbox)
 		if self.hide_room_list1.get_active():
 			#
 			if not chatrooms:
@@ -2805,25 +2689,25 @@ class NicotineFrame:
 		if tab:
 			self.BuddiesTabLabel = ImageLabel(_("Buddy list"), self.images["empty"])
 			self.BuddiesTabLabel.show()
-			if self.userlistvbox not in self.MainNotebook.get_children():
-				self.MainNotebook.append_page(self.userlistvbox, self.BuddiesTabLabel)
-			if self.userlistvbox in self.MainNotebook.get_children():
-				self.MainNotebook.set_tab_reorderable(self.userlistvbox, self.np.config.sections["ui"]["tab_reorderable"])
-			self.BuddiesLabel.hide()
+			if self.userlist.userlistvbox not in self.MainNotebook.get_children():
+				self.MainNotebook.append_page(self.userlist.userlistvbox, self.BuddiesTabLabel)
+			if self.userlist.userlistvbox in self.MainNotebook.get_children():
+				self.MainNotebook.set_tab_reorderable(self.userlist.userlistvbox, self.np.config.sections["ui"]["tab_reorderable"])
+			self.userlist.BuddiesLabel.hide()
 		
 			self.np.config.sections["ui"]["buddylistinchatrooms"] = 0
 
 		if chatrooms:
 			self.vpaned3.show()
-			if self.userlistvbox not in self.vpaned3.get_children():
-				self.vpaned3.pack1(self.userlistvbox, True, True)
-			self.BuddiesLabel.show()
+			if self.userlist.userlistvbox not in self.vpaned3.get_children():
+				self.vpaned3.pack1(self.userlist.userlistvbox, True, True)
+			self.userlist.BuddiesLabel.show()
 			self.np.config.sections["ui"]["buddylistinchatrooms"] = 1
 		if always:
 			self.vpanedm.show()
-			if self.userlistvbox not in self.vpanedm.get_children():
-				self.vpanedm.pack2(self.userlistvbox, True, True)
-			self.BuddiesLabel.show()
+			if self.userlist.userlistvbox not in self.vpanedm.get_children():
+				self.vpanedm.pack2(self.userlist.userlistvbox, True, True)
+			self.userlist.BuddiesLabel.show()
 			self.np.config.sections["ui"]["buddylistinchatrooms"] = 2
 		else:
 			self.vpanedm.hide()
@@ -3309,7 +3193,7 @@ class NicotineFrame:
 			name =  "userbrowse"# User browse
 		elif tab == self.interests: 
 			name = "interests" # Interests
-		elif tab == self.userlistvbox: 
+		elif tab == self.userlist.userlistvbox: 
 			name = "userlist" # Buddy list
 		elif tab == self.extravbox: 
 			name = "extra" # Buddy list
@@ -3336,7 +3220,7 @@ class NicotineFrame:
 		elif tab == "interests": 
 			child = self.interests # Interests
 		elif tab == "userlist": 
-			child = self.userlistvbox # Buddy list
+			child = self.userlist.userlistvbox # Buddy list
 		elif tab == "extra": 
 			child = self.extravbox 
 		else:
@@ -3364,7 +3248,7 @@ class NicotineFrame:
 		elif tab == "interests": 
 			child = self.interests # Interests
 		elif tab == "userlist": 
-			child = self.userlistvbox # Buddy list
+			child = self.userlist.userlistvbox # Buddy list
 		elif tab == "extra": 
 			child = self.extravbox 
 		else:

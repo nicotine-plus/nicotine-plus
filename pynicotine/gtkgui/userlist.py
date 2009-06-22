@@ -19,7 +19,7 @@
 import gtk
 import gobject
 import time
-import sys
+import sys, os
 
 from pynicotine import slskmessages
 from utils import InitialiseColumns, PopupMenu, InputDialog, Humanize, HumanSpeed, PressHeader
@@ -29,11 +29,27 @@ from pynicotine.utils import _
 class UserList:
 	def __init__(self, frame):
 		self.frame = frame
+		self.wTree = gtk.glade.XML(os.path.join(os.path.dirname(os.path.realpath(__file__)), "buddylist.glade" ), None, 'nicotine' ) 
+		widgets = self.wTree.get_widget_prefix("")
+		for i in widgets:
+			name = gtk.glade.get_widget_name(i)
+			self.__dict__[name] = i
+			#print name, i
+		self.TempWindow.remove(self.userlistvbox)
+		self.TempWindow.destroy()
+		self.wTree.signal_autoconnect(self)
+
+		TARGETS = [('text/plain', 0, 1)]
+		self.UserList.enable_model_drag_source(gtk.gdk.BUTTON1_MASK, TARGETS, gtk.gdk.ACTION_COPY)
+		self.UserList.enable_model_drag_dest(TARGETS,  gtk.gdk.ACTION_COPY)
+		self.UserList.connect("drag_data_get", self.buddylist_drag_data_get_data)
+		self.UserList.connect("drag_data_received", self.DragUserToBuddylist)
+
 		self.userlist = []
 		
 		self.usersmodel = gtk.ListStore(gtk.gdk.Pixbuf, gtk.gdk.Pixbuf, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_BOOLEAN, gobject.TYPE_BOOLEAN, gobject.TYPE_BOOLEAN, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_INT, gobject.TYPE_INT, gobject.TYPE_INT, gobject.TYPE_INT, gobject.TYPE_STRING)
 		statusiconwidth = self.frame.images["offline"].get_width()+4
-		self.cols = cols = InitialiseColumns(self.frame.UserList,
+		self.cols = cols = InitialiseColumns(self.UserList,
 			[_("Status"), statusiconwidth, "pixbuf"],
 			[_("Country"), 25, "pixbuf"],
 			[_("User"), 120, "text", self.CellDataFunc],
@@ -69,16 +85,16 @@ class UserList:
 			cols[1].set_visible(0)
 			config["columns"]["userlist"][1] = 0
 		for render in self.col_trusted.get_cell_renderers():
-			render.connect('toggled', self.cell_toggle_callback, self.frame.UserList, 5)
+			render.connect('toggled', self.cell_toggle_callback, self.UserList, 5)
 		for render in self.col_notify.get_cell_renderers():
-			render.connect('toggled', self.cell_toggle_callback, self.frame.UserList, 6)
+			render.connect('toggled', self.cell_toggle_callback, self.UserList, 6)
 		for render in self.col_privileged.get_cell_renderers():
-			render.connect('toggled', self.cell_toggle_callback, self.frame.UserList, 7)
+			render.connect('toggled', self.cell_toggle_callback, self.UserList, 7)
 		renderers = self.col_comments.get_cell_renderers()
 		for render in renderers:
-			render.connect('edited', self.cell_edited_callback, self.frame.UserList, 9)
-		self.frame.UserList.set_model(self.usersmodel)
-		self.frame.UserList.set_property("rules-hint", True)
+			render.connect('edited', self.cell_edited_callback, self.UserList, 9)
+		self.UserList.set_model(self.usersmodel)
+		self.UserList.set_property("rules-hint", True)
 		self.privileged = []
 		self.notify = []
 		self.trusted = []
@@ -156,8 +172,49 @@ class UserList:
 		self.Menu_RemoveUser = items[14]
 		self.Menu_PrivateRooms = items[15]
 
-		self.frame.UserList.connect("button_press_event", self.OnPopupMenu)
+		self.UserList.connect("button_press_event", self.OnPopupMenu)
+
+	def OnMoveList(self, widget):
+		tab = always = chatrooms = False
+		if self.frame.buddylist_in_tab.get_active():
+			tab = True
+		if self.frame.buddylist_always_visible.get_active():
+			always = True
+		if self.frame.buddylist_in_chatrooms1.get_active():
+			chatrooms = True
+		if tab:
+			self.frame.buddylist_in_chatrooms1.set_active(True)
+			self.frame.OnChatRooms(None)
+		if always:
+			self.frame.buddylist_in_tab.set_active(True)
+		if chatrooms:
+			self.frame.buddylist_always_visible.set_active(True)
+
+	def OnAddUser(self, widget):
+		text = widget.get_text()
+		if not text:
+			return
+		widget.set_text("")
+		self.AddToList(text)
+
+	def UpdateColours(self):
+		self.SetTextBG(self.AddUserEntry)
+	
+	def buddylist_drag_data_get_data(self, treeview, context, selection, target_id, etime):
+		treeselection = treeview.get_selection()
+		model, iter = treeselection.get_selected()
+		status, flag, user, speed, files, trusted, notify, privileged, lastseen, comments = model.get(iter, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9)
+		#data = (status, flag, user, speed, files, trusted, notify, privileged, lastseen, comments)
+		selection.set(selection.target, 8, user)
 		
+	def DragUserToBuddylist(self, treeview, context, x, y, selection, info, etime):
+		model = treeview.get_model()
+		user = selection.data
+		if user:
+			self.AddToList(user)
+	def OnSettingsBanIgnore(self, widget):
+		self.frame.OnSettingsBanIgnore(widget)
+
 	def CellDataFunc(self, column, cellrenderer, model, iter):
 		colour = self.frame.np.config.sections["ui"]["search"]
 		if colour == "":
@@ -242,11 +299,11 @@ class UserList:
 	
 	def OnPopupMenu(self, widget, event):
 		items = self.popup_menu.get_children()
-		d = self.frame.UserList.get_path_at_pos(int(event.x), int(event.y))
+		d = self.UserList.get_path_at_pos(int(event.x), int(event.y))
 
 		if d:
 			path, column, x, y = d
-			user = self.frame.UserList.get_model().get_value(self.frame.UserList.get_model().get_iter(path), 2)
+			user = self.UserList.get_model().get_value(self.UserList.get_model().get_iter(path), 2)
 			
 			if event.button != 3:
 				if event.type == gtk.gdk._2BUTTON_PRESS:
@@ -377,7 +434,7 @@ class UserList:
 		
 	def saveColumns(self):
 		columns = []
-		for column in self.frame.UserList.get_columns():
+		for column in self.UserList.get_columns():
 			columns.append(column.get_visible())
 		self.frame.np.config.sections["columns"]["userlist"] = columns
 		

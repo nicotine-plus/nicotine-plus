@@ -194,7 +194,7 @@ class NowPlaying:
 		
 		legend = ""
 		for item in self.player_replacers:
-			legend += item + " "
+			legend += item + "\t"
 			if item == "$t":
 				legend += _("Title")
 			elif item == "$n":
