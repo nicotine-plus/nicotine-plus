@@ -198,9 +198,7 @@ class BrowserWindow(gtk.VBox):
 			gtkmozembed.set_profile_path(gettempdir(), "nicotine+mozembed")
 			self.view = gtkmozembed.MozEmbed()
 		except Exception,  e:
-			error = "Embedded Mozilla webrowser failed to load: " + str(e)
-			print error
-			self.frame.logMessage(error)
+			log.addwarning(_('Embedded Mozilla webrowser failed to load: %s(error)') % {'error':e})
 		self.pack_start(self.view, True, True)
 		if not nostyles:
 			self.view.connect('location', self.on_location_change)
@@ -339,9 +337,10 @@ class NicotineFrame:
 		
 		self.LoadIcons()
 		self.ChangeTranslation = ChangeTranslation
-		trerror = ""
 		if self.np.config.sections["language"]["setlanguage"]:
 			trerror = self.ChangeTranslation(self.np.config.sections["language"]["language"])
+			if trerror:
+				log.add(' '.join(['TError:', trerror]))
 		
 		self.BuddiesComboEntries = []
 		self.accel_group = gtk.AccelGroup()
@@ -387,16 +386,12 @@ class NicotineFrame:
 			if colormap:
 				if self.MainWindow.is_composited():
 					RGBA = True
-					print "Enabling RGBA"
+					log.add('Enabling RGBA')
 					gtk_screen.set_default_colormap(colormap)
 				else:
-					msg = "Your X can handle RGBA, but your window manager cannot. Not enabling transparancy."
-					print msg
-					self.logMessage(_(msg))
+					log.add('Your X can handle RGBA, but your window manager cannot. Not enabling transparancy.')
 			else:
-				msg = "Your X cannot handle RGBA, not enabling transparency"
-				print msg
-				self.logMessage(_(msg))
+				log.add('Your X cannot handle RGBA, not enabling transparency')
 
 		width = self.np.config.sections["ui"]["width"]
 		height = self.np.config.sections["ui"]["height"]
@@ -483,7 +478,6 @@ class NicotineFrame:
 		self.LogScrolledWindow.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
 		self.LogScrolledWindow.show()
 
-		log.addlistener(self.logCallback)
 		self.LogWindow = gtk.TextView()
 		self.LogWindow.set_wrap_mode(gtk.WRAP_WORD)
 		self.LogWindow.set_cursor_visible(False)
@@ -531,9 +525,6 @@ class NicotineFrame:
 		if config["ticker"]["hide"]:
 			self.hide_tickers1.set_active(1)
 	
-		for (timestamp, level, msg) in log.history:
-			self.updateLog(msg, level)
-		
 		self.show_debug_info1.set_active(self.np.config.sections["logging"]["debug"])
 		
 		self.settingswindow = SettingsWindow(self)
@@ -652,20 +643,14 @@ class NicotineFrame:
 		
 		if use_trayicon and config["ui"]["trayicon"]:
 			if RGBA:
-				msg = "X11/GTK RGBA Bug workaround: Setting default colormap to RGB"
-				print msg
-				self.logMessage(msg)
+				log.add('X11/GTK RGBA Bug workaround: Setting default colormap to RGB')
 				gtk_screen.set_default_colormap(gtk_screen.get_rgb_colormap())
 			self.TrayApp.CREATE_TRAYICON = 1
 			self.TrayApp.HAVE_TRAYICON = True
 			self.TrayApp.Create()
 			if RGBA:
-				msg = "X11/GTK RGBA Bug workaround: Restoring RGBA as default colormap."
-				print msg
-				self.logMessage(msg)
+				log.add('X11/GTK RGBA Bug workaround: Restoring RGBA as default colormap.')
 				gtk_screen.set_default_colormap(colormap)
-		if trerror is not None and trerror != "":
-			self.logMessage(trerror)
 		self.SetAllToolTips()
 		self.WebBrowserTabLabel =  gtk.Label("Browser")
 		self.WebBrowserTabLabel.set_property("xalign", 0)
@@ -680,6 +665,9 @@ class NicotineFrame:
 			self.browser = None
 		self.SetMainTabsVisibility()
 		self.startup=False
+		for (timestamp, level, msg) in log.history:
+			self.updateLog(msg, level)
+		log.addlistener(self.logCallback)
 
 	def SetTranslatableTabNames(self):
 		# Custom widgets, such as these tab labels aren't translated
@@ -1154,9 +1142,7 @@ class NicotineFrame:
 			if not os.path.exists(sharesdir):
 				os.mkdir(sharesdir)
 		except Exception, msg:
-			error = _("Can't create directory '%(folder)s', reported error: %(error)s" % {'folder':sharesdir, 'error':msg})
-			print error
-			self.logMessage(error)
+			log.addwarning(_("Can't create directory '%(folder)s', reported error: %(error)s") % {'folder':sharesdir, 'error':msg})
 		shares = ChooseFile(self.MainWindow.get_toplevel(), sharesdir)
 		if shares is None:
 			return
@@ -1176,9 +1162,7 @@ class NicotineFrame:
 			if username in self.userbrowse.users:
 				self.userbrowse.users[username].LoadShares(list1)
 		except Exception, msg:
-			error = _("Loading Shares from disk failed: %(error)s" % {'error':msg})
-			self.logMessage(error)
-			print error
+			log.addwarning(_("Loading Shares from disk failed: %(error)s") % {'error':msg})
 			
 	def OnNowPlayingConfigure(self, widget):
 		
@@ -1261,7 +1245,7 @@ class NicotineFrame:
 				# Tell calling code that we have not handled this event pass it on.
 			return False
 		except Exception,e:
-			print "button_press error", e
+			log.addwarning(_("button_press error, %(error)s") % {'error':e})
 
 
 				
@@ -1813,7 +1797,7 @@ class NicotineFrame:
 					loader.close()
 					img = loader.get_pixbuf()
 				except Exception, e:
-					print "Error loading image for %s" % flag, e
+					log.addwarning(_("Error loading image for %(flag)s: %(error)s") % {'flag':flag, 'error':e})
 				self.flag_images[flag] = img
 				return img
 			else:
@@ -2422,7 +2406,7 @@ class NicotineFrame:
 				if self.LogWindow not in self.translux.subscribers.keys():
 					self.translux.subscribe(self.LogWindow, lambda: self.LogWindow.get_window(gtk.TEXT_WINDOW_TEXT))
 		except Exception, e:
-			print e
+			log.addwarning(_('Translux error: %(error)s') % {'error':e})
 		if self.translux is None and tint is not None:
 			self.translux = translux.Translux(self.MainWindow, tint)
 			
@@ -2653,8 +2637,11 @@ class NicotineFrame:
 		if active:
 			if self.roomlist.vbox2 in self.vpaned3.get_children():
 				self.vpaned3.remove(self.roomlist.vbox2)
-			if self.userlist.userlistvbox not in self.vpaned3.get_children():
-				self.vpaned3.hide()
+			try:
+				if self.userlist.userlistvbox not in self.vpaned3.get_children():
+					self.vpaned3.hide()
+			except AttributeError:
+				pass # Happens when the roomlist is hidden on startup
 		else:
 			if not self.roomlist.vbox2 in self.vpaned3.get_children():
 				self.vpaned3.pack2(self.roomlist.vbox2, True, True)
@@ -3344,9 +3331,7 @@ class TrayApp:
 			except ImportError, error:
 				self.TRAYICON_FAILED = True
 				self.HAVE_TRAYICON = False
-				message = _("Note: Trayicon Python module was not found in the pynicotine directory: %s") % error
-				print message
-				self.frame.logMessage(message)
+				log.add(_("Note: Trayicon Python module was not found in the pynicotine directory: %s") % error)
 			
 	def destroy_trayicon(self):
 		if not self.TRAYICON_CREATED:
@@ -3439,7 +3424,7 @@ class TrayApp:
 					self.eventbox.add(self.current_image)
 					self.eventbox.show()
 		except Exception,e:
-			print "ERROR: SetImage", e
+			log.addwarning(_("ERROR: SetImage, %(error)s") % {'error':e})
 			
 	def CreateMenu(self):
 		try:
@@ -3463,7 +3448,7 @@ class TrayApp:
 			)
 		
 		except Exception,e:
-			print "ERROR: tray menu", e
+			log.addwarning(_('ERROR: tray menu, %(error)s') % {'error':e})
 			
 	def OnPopupServer(self, widget):
 		items = self.tray_popup_menu_server.get_children()
@@ -3532,7 +3517,7 @@ class gstreamer:
 			fakesink = gst.element_factory_make('fakesink', "my-fakesink")
 			self.player.set_property("video-sink", fakesink)
 		except Exception, error:
-			print _("ERROR: Gstreamer-python could not play:"), error
+			log.addwarning(_("ERROR: Gstreamer-python could not play: %(error)s") % {'error':error})
 			self.gst = self.player = None
 			return
 		
