@@ -507,11 +507,6 @@ class NicotineFrame:
 		
 		self.LogWindow.show()
 		
-		if config["ui"]["roomlistcollapsed"]:
-			self.hide_room_list1.set_active(1)
-		else:
-			self.vpaned3.pack2(self.roomlist.vbox2,True, True)
-			self.hide_room_list1.set_active(0)
 		self.extravbox = gtk.VBox() # Web browser vbox
 
 		
@@ -555,6 +550,13 @@ class NicotineFrame:
 		
 		self.sSharesButton.connect("clicked", self.OnGetShares)
 		self.UserBrowseCombo.child.connect("activate", self.OnGetShares)
+		
+		
+		if config["ui"]["roomlistcollapsed"]:
+			self.hide_room_list1.set_active(1)
+		else:
+			self.vpaned3.pack2(self.roomlist.vbox2,True, True)
+			self.hide_room_list1.set_active(0)
 
 		buddylist = config["ui"]["buddylistinchatrooms"]
 		if buddylist == 1:
@@ -784,7 +786,7 @@ class NicotineFrame:
 		self.icons = {}
 		self.flag_images = {}
 		self.flag_users = {}
-
+		scale = None
 		def loadStatic(name):
 			loader = gtk.gdk.PixbufLoader()
 			try:
@@ -794,7 +796,12 @@ class NicotineFrame:
 				data = getattr(imagedata, "%s" % (name,))
 				loader.write(data, len(data))
 			loader.close()
-			return loader.get_pixbuf()
+			pixbuf = loader.get_pixbuf()
+			if scale:
+				w, h = pixbuf.get_width(), pixbuf.get_height()
+				if w == h:
+					pixbuf = pixbuf.scale_simple(scale,scale,gtk.gdk.INTERP_BILINEAR)
+			return pixbuf
 		names = ["empty", "away", "online", "offline", "hilite", "hilite2", "hilite3", "connect", "disconnect", "away2", "n", "nicotinen", "notify", "bug", "money", "plugin" ]
 		if "icontheme" in self.np.config.sections["ui"]:
 			extensions = ["jpg", "jpeg", "bmp", "png", "svg"]
@@ -812,7 +819,12 @@ class NicotineFrame:
 						try:
 							loader.write(s, len(s))
 							loader.close()
-							self.images[name] = loader.get_pixbuf()
+							pixbuf = loader.get_pixbuf()
+							if scale:
+								w, h = pixbuf.get_width(), pixbuf.get_height()
+								if w == h:
+									pixbuf = pixbuf.scale_simple(scale,scale,gtk.gdk.INTERP_BILINEAR)
+							self.images[name] = pixbuf
 							loaded = True
 						except gobject.GError:
 							pass
@@ -2637,11 +2649,11 @@ class NicotineFrame:
 		if active:
 			if self.roomlist.vbox2 in self.vpaned3.get_children():
 				self.vpaned3.remove(self.roomlist.vbox2)
-			try:
-				if self.userlist.userlistvbox not in self.vpaned3.get_children():
-					self.vpaned3.hide()
-			except AttributeError:
-				pass # Happens when the roomlist is hidden on startup
+			#try:
+			if self.userlist.userlistvbox not in self.vpaned3.get_children():
+				self.vpaned3.hide()
+			#except AttributeError:
+				#pass # Happens when the roomlist is hidden on startup
 		else:
 			if not self.roomlist.vbox2 in self.vpaned3.get_children():
 				self.vpaned3.pack2(self.roomlist.vbox2, True, True)
