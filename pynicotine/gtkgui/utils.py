@@ -263,6 +263,23 @@ def AppendLine(textview, line, tag = None, timestamp = None, showstamp=True, tim
 		else:
 			buffer.insert(iter, text)
 
+	def _usertag(buffer, line):
+		# Tag usernames with popup menu creating tag, and away/online/offline colors
+		if USERNAMEHOTSPOTS and username != None and usertag != None:
+			np = re.compile(re.escape(username))
+			match = np.search(line)
+			if match != None:
+				start2 = line[:match.start()]
+				name = match.group()[:]
+				start = line[match.end():]
+				_append(buffer, start2, tag)
+				_append(buffer, name, usertag)
+				_append(buffer, start, tag)
+			else:
+				_append(buffer, line, tag)
+		else:
+			_append(buffer, line, tag)
+
 	scrolledwindow = textview.get_parent()
 	va = scrolledwindow.get_vadjustment()
 	bottom = va.value >= (va.upper - int(va.page_size*1.5))
@@ -273,36 +290,28 @@ def AppendLine(textview, line, tag = None, timestamp = None, showstamp=True, tim
 
 	if line.startswith("* "):
 		ME = 1
+	TIMESTAMP = None
+	TS = 0 
 	if NICOTINE.np.config.sections["logging"]["timestamps"] and showstamp:
 		if timestamp_format and not timestamp:
-			line = "%s %s\n" % (recode(time.strftime(timestamp_format)), line)
+			TIMESTAMP = recode(time.strftime(timestamp_format))
+			line = "%s %s\n" % (TIMESTAMP, line)
 		elif timestamp_format and timestamp:
-			line = "%s %s\n" % (recode(time.strftime(timestamp_format, time.localtime(timestamp))), line)
+			TIMESTAMP = recode(time.strftime(timestamp_format, time.localtime(timestamp)))
+			line = "%s %s\n" % (TIMESTAMP, line)
 	else:
 		line += "\n"
-		
+	if TIMESTAMP is not None:
+		TS = len(TIMESTAMP)
 	match = URL_RE.search(line)
 	# Highlight urls, if found and tag them
 	while CATCH_URLS and match:
-		start = line[:match.start()]
+		start = line[TS:][:match.start()]
 		url = match.group()[:-1]
 		urltag = _makeurltag(buffer, tag, url)
 		line = line[match.end()-1:]
-		
-		if USERNAMEHOTSPOTS and username != None and usertag != None and not ME:
-			np = re.compile(re.escape(username))
-			match = np.search(start)
-			if match != None:
-				start2 = start[:match.start()]
-				name = match.group()[:]
-				start = start[match.end():]
-				_append(buffer, start2, tag)
-				_append(buffer, name, usertag)
-				_append(buffer, start, tag)
-			else:
-				_append(buffer, start, tag)
-		else:
-			_append(buffer, start, tag)
+		_usertag(buffer, start)
+
 		if url.startswith("slsk://") and HUMANIZE_URLS:
 			
 			url = urllib.url2pathname( url)
@@ -312,21 +321,8 @@ def AppendLine(textview, line, tag = None, timestamp = None, showstamp=True, tim
 	
 	
 	if line:
-		
-		if USERNAMEHOTSPOTS and username != None and usertag != None and not ME:
-			np = re.compile(re.escape(username))
-			match = np.search(line)
-			if match != None:
-				start = line[:match.start()]
-				name = match.group()[:]
-				line = line[match.end():]
-				_append(buffer, start, tag)
-				_append(buffer, name, usertag)
-				_append(buffer, line, tag)
-			else:
-				_append(buffer, line, tag)
-		else:
-			_append(buffer, line, tag)
+		_append(buffer, line[:TS], tag)
+		_usertag(buffer, line[TS:])
 	
 	if scroll and bottom:
 		gobject.idle_add(ScrollBottom, scrolledwindow)
