@@ -271,6 +271,21 @@
                     <property name="position">3</property>
                   </packing>
                 </child>
+                <child>
+                  <widget class="GtkButton" id="CheckPortButton">
+                    <property name="label">Check port status</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="can_default">True</property>
+                    <property name="receives_default">False</property>
+                    <signal name="clicked" handler="OnCheckPort"/>
+                  </widget>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="position">4</property>
+                  </packing>
+                </child>
               </widget>
               <packing>
                 <property name="expand">False</property>

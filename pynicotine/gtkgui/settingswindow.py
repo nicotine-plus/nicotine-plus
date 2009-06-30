@@ -22,6 +22,7 @@ import gtk
 import gobject
 import locale
 import re
+import webbrowser
 from dirchooser import *
 from utils import InputDialog, InitialiseColumns, recode, recode2, popupWarning, ImportWinSlskConfig, Humanize
 from entrydialog import *
@@ -2647,6 +2648,9 @@ class SettingsWindow:
 			
 	def OnApply(self, widget):
 		self.SettingsWindow.emit("settings-closed", "apply")
+
+	def OnCheckPort(self, widget):
+		webbrowser.open('='.join(["http://tools.slsknet.org/porttest.php?port", str(self.frame.np.waitport)]))
 
 	def OnOk(self, widget):
 		self.SettingsWindow.emit("settings-closed", "ok")
