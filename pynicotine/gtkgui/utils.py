@@ -263,22 +263,22 @@ def AppendLine(textview, line, tag = None, timestamp = None, showstamp=True, tim
 		else:
 			buffer.insert(iter, text)
 
-	def _usertag(buffer, line):
+	def _usertag(buffer, section):
 		# Tag usernames with popup menu creating tag, and away/online/offline colors
 		if USERNAMEHOTSPOTS and username != None and usertag != None:
 			np = re.compile(re.escape(username))
-			match = np.search(line)
+			match = np.search(section)
 			if match != None:
-				start2 = line[:match.start()]
+				start2 = section[:match.start()]
 				name = match.group()[:]
-				start = line[match.end():]
+				start = section[match.end():]
 				_append(buffer, start2, tag)
 				_append(buffer, name, usertag)
 				_append(buffer, start, tag)
 			else:
-				_append(buffer, line, tag)
+				_append(buffer, section, tag)
 		else:
-			_append(buffer, line, tag)
+			_append(buffer, section, tag)
 
 	scrolledwindow = textview.get_parent()
 	va = scrolledwindow.get_vadjustment()
@@ -303,26 +303,31 @@ def AppendLine(textview, line, tag = None, timestamp = None, showstamp=True, tim
 		line += "\n"
 	if TIMESTAMP is not None:
 		TS = len(TIMESTAMP)
+	# Append timestamp, if one exists, cut it from remaining line (to avoid matching against username)
+	_append(buffer, line[:TS], tag)
+	line = line[TS:]
+	# Match first url
 	match = URL_RE.search(line)
 	# Highlight urls, if found and tag them
 	while CATCH_URLS and match:
-		start = line[TS:][:match.start()]
+		start = line[:match.start()]
+		_usertag(buffer, start)
 		url = match.group()[:-1]
 		urltag = _makeurltag(buffer, tag, url)
 		line = line[match.end()-1:]
-		_usertag(buffer, start)
+		
 
 		if url.startswith("slsk://") and HUMANIZE_URLS:
 			
 			url = urllib.url2pathname( url)
 
 		_append(buffer, url, urltag)
+		# Match remaining url
 		match = URL_RE.search(line)
 	
 	
 	if line:
-		_append(buffer, line[:TS], tag)
-		_usertag(buffer, line[TS:])
+		_usertag(buffer, line)
 	
 	if scroll and bottom:
 		gobject.idle_add(ScrollBottom, scrolledwindow)
