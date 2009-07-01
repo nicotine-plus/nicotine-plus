@@ -151,6 +151,10 @@ class ServerFrame(buildFrame):
 	def OnChangePassword(self, widget):
 		self.frame.OnChangePassword(self.Password.get_text())
 		
+
+	def OnCheckPort(self, widget):
+		webbrowser.open('='.join(["http://tools.slsknet.org/porttest.php?port", str(self.frame.np.waitport)]))
+
 class SharesFrame(buildFrame):
 	def __init__(self, parent):
 		self.p = parent
@@ -2648,9 +2652,6 @@ class SettingsWindow:
 			
 	def OnApply(self, widget):
 		self.SettingsWindow.emit("settings-closed", "apply")
-
-	def OnCheckPort(self, widget):
-		webbrowser.open('='.join(["http://tools.slsknet.org/porttest.php?port", str(self.frame.np.waitport)]))
 
 	def OnOk(self, widget):
 		self.SettingsWindow.emit("settings-closed", "ok")
