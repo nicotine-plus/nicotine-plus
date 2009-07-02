@@ -337,9 +337,10 @@ class PluginHandler(object):
 		# len(self.guiqueue) might be 2 for both calls.
 		# Calling the processQueue twice is not a problem though.
 		addidle = False
-		if len(self.guiqueue) == 0:
+		
+		self.guiqueue.append(item)
+		if len(self.guiqueue) >= 0:
 			addidle = True
-			self.guiqueue.append(item)
 		if addidle:
 			#print "Adding idle_add"
 			gobject.idle_add(self.processQueue)
