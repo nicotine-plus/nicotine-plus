@@ -1,4 +1,4 @@
-# Copyright (C) 2007 daelstorm. All rights reserved.
+# Copyright (C) 2007-2009 daelstorm. All rights reserved.
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -30,8 +30,6 @@ class NowPlaying:
 
 		self.wTree.signal_autoconnect(self)
 
-		#self.NowPlaying = gtk.Window(gtk.WINDOW_TOPLEVEL)
-		#self.NowPlaying.set_title(_("Nicotine+: Configure Now Playing"))
 		self.NowPlaying.set_icon(self.frame.images["n"])
 		self.NowPlaying.set_position(gtk.WIN_POS_NONE)
 		#self.NowPlaying.set_modal(True)

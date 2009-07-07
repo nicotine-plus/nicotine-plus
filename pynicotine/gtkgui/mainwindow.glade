@@ -68,7 +68,7 @@
                           <widget class="GtkImage" id="image30">
                             <property name="visible">True</property>
                             <property name="stock">gtk-missing-image</property>
-                            <property name="icon-size">1</property>
+                            <property name="icon-size">4</property>
                           </widget>
                         </child>
                       </widget>

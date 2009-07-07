@@ -22,8 +22,9 @@
 import struct
 import types
 import zlib
-import os
+import os, sys
 from utils import _
+from utils import *
 from logfacility import log
 
 """ This module contains message classes, that networking and UI thread
@@ -189,6 +190,8 @@ class SlskMessage:
 				return start, None
 		except struct.error, error:
 			log.addwarning("%s %s" % (self.__class__, error))
+			displayTraceback(sys.exc_info()[2])
+
 			return start, None
 
 	def packObject(self, object):
@@ -466,7 +469,8 @@ class JoinRoom(ServerMessage):
 	def __init__(self, room = None, private = None):
 		self.room = room
 		self.private = private
-	
+		self.owner = None
+		self.operators = []
 	def makeNetworkMessage(self):
 		if self.private is not None:
 			return self.packObject(self.room) + self.packObject(self.private)
@@ -474,8 +478,19 @@ class JoinRoom(ServerMessage):
 	
 	def parseNetworkMessage(self, message):
 		pos, self.room = self.getObject(message, types.StringType)
-		self.users = self.getUsers(message[pos:])
-	
+		pos1 = pos
+		pos, self.users = self.getUsers(message[pos:])
+		pos = pos1 + pos
+		
+		if len(message[pos:]) > 0:
+			self.private=True
+			pos, self.owner = self.getObject(message, types.StringType, pos)
+		if len(message[pos:]) > 0 and self.private:
+			pos, numops = self.getObject(message, types.IntType, pos)
+			for i in range(numops):
+				pos, operator = self.getObject(message, types.StringType, pos)
+				self.operators.append(operator)
+
 	def getUsers(self, message):
 		pos, numusers = self.getObject(message, types.IntType)
 		users = []
@@ -489,7 +504,6 @@ class JoinRoom(ServerMessage):
 		pos, statslen = self.getObject(message, types.IntType, pos)
 		for i in range(statslen):
 			pos, users[i][2] = self.getObject(message, types.IntType, pos, getsignedint=1)
-		#            pos, users[i][2] = self.getObject(message, types.IntType, pos)
 			pos, users[i][3] = self.getObject(message, types.IntType, pos)
 			pos, users[i][4] = self.getObject(message, types.IntType, pos)
 			pos, users[i][5] = self.getObject(message, types.IntType, pos)
@@ -500,12 +514,14 @@ class JoinRoom(ServerMessage):
 			pos, users[i][7] = self.getObject(message, types.IntType, pos)
 		if len(message[pos:]) > 0:
 			pos, countrylen = self.getObject(message, types.IntType, pos)
-			for i in range(numusers):
+			for i in range(countrylen):
 				pos, users[i][8] = self.getObject(message, types.StringType, pos)
+	
 		usersdict={}
 		for i in users:
 			usersdict[i[0]] = UserData(i[1:])
-		return usersdict
+
+		return pos, usersdict
 
 
 class PrivateRoomUsers(ServerMessage):
@@ -514,10 +530,7 @@ class PrivateRoomUsers(ServerMessage):
 		self.room = room
 		self.numusers = numusers
 		self.users = users
-			
-	#def makeNetworkMessage(self):
-		#return self.packObject(self.room)
-	
+		
 	def parseNetworkMessage(self, message):
 		pos, self.room = self.getObject(message, types.StringType)
 		pos, self.numusers = self.getObject(message, types.IntType, pos)
@@ -525,8 +538,7 @@ class PrivateRoomUsers(ServerMessage):
 		for i in range(self.numusers):
 			pos, user = self.getObject(message, types.StringType, pos)
 			self.users.append(user)
-
-	
+		
 class PrivateRoomOwned(ServerMessage):
 	""" We get this when we've created a private room."""
 	def __init__(self, room = None, number = None):
@@ -540,8 +552,6 @@ class PrivateRoomOwned(ServerMessage):
 		for i in range(self.number):
 			pos, user = self.getObject(message, types.StringType, pos)
 			self.operators.append(user)
-		#self.debug()
-	
 		
 class PrivateRoomAddUser(ServerMessage):
 	""" We get / receive this when we add a user to a private room."""
@@ -577,10 +587,9 @@ class PrivateRoomDisown(ServerMessage):
 	
 	def parseNetworkMessage(self, message):
 		pos, self.room = self.getObject(message, types.StringType)
-
 		
 class PrivateRoomSomething(ServerMessage):
-	""" We get this when we've removed a user from a private room."""
+	"""Unknown"""
 	def __init__(self, room = None):
 		self.room = room
 
@@ -589,8 +598,7 @@ class PrivateRoomSomething(ServerMessage):
 	
 	def parseNetworkMessage(self, message):
 		pos, self.room = self.getObject(message, types.StringType)
-		#pos, self.user = self.getObject(message, types.StringType, pos)
-		#print message[pos:].__repr__()
+		self.debug()
 		
 class PrivateRoomRemoveUser(ServerMessage):
 	""" We get this when we've removed a user from a private room."""
@@ -638,10 +646,7 @@ class PrivateRoomToggle(ServerMessage):
 	def parseNetworkMessage(self, message):
 		# When this is received, we store it in the config, and disable the appropriate menu item
 		pos, self.enabled = 1, bool(ord(message[0]))
-
-
-
-
+		
 class PrivateRoomAddOperator(ServerMessage):
 	""" We send this to add private room operator abilities to a user"""
 	def __init__(self, room = None, user = None):
@@ -678,7 +683,6 @@ class PrivateRoomOperatorAdded(ServerMessage):
 	
 	def parseNetworkMessage(self, message):
 		pos, self.room = self.getObject(message, types.StringType)
-		#pos, self.username = self.getObject(message, types.StringType, pos)
 		
 class PrivateRoomOperatorRemoved(ServerMessage):
 	""" We receive this when privateroom operator abilities are removed"""
@@ -992,7 +996,7 @@ class GlobalUserList(JoinRoom):
 		return ""
 	
 	def parseNetworkMessage(self, message):
-		self.users = self.getUsers(message)
+		pos, self.users = self.getUsers(message)
 
 
 class TunneledMessage(ServerMessage):

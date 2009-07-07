@@ -59,8 +59,12 @@ class RoomsControl:
 		self.rooms = []
 		config = self.frame.np.config.sections
 		self.PrivateRooms =  config["private_rooms"]["rooms"]
-			
-		#self.PrivateRoomsOperator = config["private_rooms"]["operator"]
+		# Config cleanup
+		for room,data in self.PrivateRooms.items():
+			if "owner" not in data:
+				self.PrivateRooms[room]["owner"] = None
+			if "operator" in data:
+				del self.PrivateRooms[room]["operator"]
 		#self.PrivateRoomsMembership = config["private_rooms"]["membership"]
 		
 		self.clist = []
@@ -122,7 +126,7 @@ class RoomsControl:
 	def IsPrivateRoomOwned(self, room):
 		if room in self.PrivateRooms:
 			#print self.PrivateRooms[room]
-			if self.PrivateRooms[room]["owned"] == True:
+			if self.PrivateRooms[room]["owner"] == self.frame.np.config.sections["server"]["login"]:
 				return True
 		return False
 		
@@ -133,7 +137,7 @@ class RoomsControl:
 	
 	def IsPrivateRoomOperator(self, room):
 		if room in self.PrivateRooms:
-			if self.PrivateRooms[room]["operator"] == True:
+			if self.frame.np.config.sections["server"]["login"] in self.PrivateRooms[room]["operators"]:
 				return True
 		return False
 		
@@ -310,6 +314,8 @@ class RoomsControl:
 			return
 		tab = ChatRoom(self, msg.room, msg.users)
 		self.joinedrooms[msg.room] = tab
+		if msg.private is not None:
+			self.CreatePrivateRoom(msg.room, msg.owner, msg.operators)
 		angle = 0
 		try:
 			angle = int(self.frame.np.config.sections["ui"]["labelrooms"])
@@ -359,7 +365,7 @@ class RoomsControl:
 	def SetPrivateRooms(self, rooms=[]):
 		for room in rooms:
 			if room[0] not in self.PrivateRooms.keys():
-				self.PrivateRooms[room[0]] = {"users": [], "joined": room[1], "operators": [], "owned":True, "operator":False}
+				self.PrivateRooms[room[0]] = {"users": [], "joined": room[1], "operators": [],  "owner": None}
 		iter = self.roomsmodel.get_iter_root()
 		while iter is not None:
 			room = self.roomsmodel.get_value(iter, 0)
@@ -375,10 +381,15 @@ class RoomsControl:
 			elif self.IsPrivateRoomMember(room):
 				self.roomsmodel.prepend([room, num, 1])
 				
-	def CreatePrivateRoom(self, room):
+	def CreatePrivateRoom(self, room, owner=None, operators=[]):
 		if room in self.PrivateRooms:
+			if operators is not None:
+				for operator in operators:
+					if operator not in self.PrivateRooms[room]["operators"]:
+						self.PrivateRooms[room]["operators"].append(operator)
+			self.PrivateRooms[room]["owner"] = owner
 			return
-		self.PrivateRooms[room] = {"users": [], "joined": 0, "operators": [], "owned":False, "operator":False}
+		self.PrivateRooms[room] = {"users": [], "joined": 0, "operators": operators, "owned":False, "owner":owner}
 		
 	def PrivateRoomUsers(self, msg):
 		rooms = self.PrivateRooms
@@ -420,14 +431,16 @@ class RoomsControl:
 	def PrivateRoomOperatorAdded(self, msg):
 		rooms = self.PrivateRooms
 		if msg.room in rooms.keys():
-			rooms[msg.room]["operator"] = True
+			if self.frame.np.config.sections["server"]["login"] not in rooms[msg.room]["operators"]:
+				rooms[msg.room]["operators"].append(self.frame.np.config.sections["server"]["login"])
 		
 		self.SetPrivateRooms()
 
 	def PrivateRoomOperatorRemoved(self, msg):
 		rooms = self.PrivateRooms
 		if msg.room in rooms.keys():
-			rooms[msg.room]["operator"] = False
+			if self.frame.np.config.sections["server"]["login"] in rooms[msg.room]["operators"]:
+				rooms[msg.room]["operators"].remove(self.frame.np.config.sections["server"]["login"])
 
 		self.SetPrivateRooms()
 
@@ -436,8 +449,6 @@ class RoomsControl:
 		if msg.room in rooms.keys():
 			if msg.user not in rooms[msg.room]["operators"]:
 				rooms[msg.room]["operators"].append(msg.user)
-			if msg.user == self.frame.np.config.sections["server"]["login"]:
-				rooms[msg.room]["operator"] = True
 		self.SetPrivateRooms()
 
 	def PrivateRoomRemoveOperator(self, msg):
@@ -445,8 +456,7 @@ class RoomsControl:
 		if msg.room in rooms.keys():
 			if msg.user in rooms[msg.room]["operators"]:
 				rooms[msg.room]["operators"].remove(msg.user)
-			if msg.user == self.frame.np.config.sections["server"]["login"]:
-				rooms[msg.room]["operator"] = False
+
 		self.SetPrivateRooms()
 
 	def PrivateRoomAdded(self, msg):
@@ -455,6 +465,7 @@ class RoomsControl:
 		if room not in rooms:
 			self.CreatePrivateRoom(room)
 			#rooms[room]["operator"] = True
+			self.frame.logMessage(_("You have been added to a private room: %(room)s") % {"room":room} )
 		self.SetPrivateRooms()
 
 		
@@ -472,7 +483,8 @@ class RoomsControl:
 		
 	def PrivateRoomDisown(self, msg):
 		if msg.room in self.PrivateRooms.keys():
-			self.PrivateRooms[msg.room]["owner"] = False
+			if self.PrivateRooms[msg.room]["owner"] == self.frame.np.config.sections["server"]["login"]:
+				self.PrivateRooms[msg.room]["owner"] = None
 	
 	def GetUserStats(self, msg):
 		for room in self.joinedrooms.values():
@@ -1385,7 +1397,7 @@ class ChatRoom:
 	def UserColumnDraw(self, column, cellrenderer, model, iter):
 		user = self.usersmodel.get_value(iter, 2)
 		if self.room in self.roomsctrl.PrivateRooms:
-			if user == self.frame.np.config.sections["server"]["login"] and (self.roomsctrl.PrivateRooms[self.room]["owned"]):
+			if user == self.roomsctrl.PrivateRooms[self.room]["owner"]:
 				cellrenderer.set_property("underline", pango.UNDERLINE_SINGLE)
 				cellrenderer.set_property("weight", pango.WEIGHT_BOLD)
 			elif user in (self.roomsctrl.PrivateRooms[self.room]["operators"]):

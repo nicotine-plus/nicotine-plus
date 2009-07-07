@@ -199,9 +199,11 @@ class BrowserWindow(gtk.VBox):
 			self.view = gtkmozembed.MozEmbed()
 		except Exception,  e:
 			log.addwarning(_('Embedded Mozilla webrowser failed to load: %s(error)') % {'error':e})
-		self.pack_start(self.view, True, True)
-		if not nostyles:
-			self.view.connect('location', self.on_location_change)
+			return
+		else:
+			self.pack_start(self.view, True, True)
+			if not nostyles:
+				self.view.connect('location', self.on_location_change)
 
 		self.show_all()
 		self.finish()
@@ -656,7 +658,7 @@ class NicotineFrame:
 		self.SetAllToolTips()
 		self.WebBrowserTabLabel =  gtk.Label("Browser")
 		self.WebBrowserTabLabel.set_property("xalign", 0)
-		if WebBrowser and config["ui"]["mozembed"] and gtkmozembed != 0:
+		if WebBrowser and config["ui"]["mozembed"] and gtkmozembed is not None:
 			self.extravbox.show()
 			self.browser = BrowserWindow(self, "http://nicotine-plus.org")
 			self.extravbox.pack_start(self.browser, True, True)

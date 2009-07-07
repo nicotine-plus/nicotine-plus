@@ -53,8 +53,8 @@ class logger(object):
         for callback in self.listeners:
             try:
                 callback(timestamp, level, msg)
-            except:
-                print "Callback on %s failed" % (callback,)
+            except Exception, e:
+                print "Callback on %s failed: %s %s\n%s" % (callback, level, msg, e)
                 pass
     def addlistener(self, callback):
         self.listeners.add(callback)
