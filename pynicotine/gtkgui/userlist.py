@@ -198,7 +198,7 @@ class UserList:
 		self.AddToList(text)
 
 	def UpdateColours(self):
-		self.SetTextBG(self.AddUserEntry)
+		self.frame.SetTextBG(self.AddUserEntry)
 	
 	def buddylist_drag_data_get_data(self, treeview, context, selection, target_id, etime):
 		treeselection = treeview.get_selection()
