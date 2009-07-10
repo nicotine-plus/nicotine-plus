@@ -64,6 +64,7 @@ class Config:
 	"server": ('server.slsknet.org', 2242), \
 	"login": None, \
 	"passw": None, \
+	"serverlist": ["server.slsknet.org:2242", "server.slsknet.org:2240"], \
 	"firewalled": 1,  \
 	"ctcpmsgs": 0,  \
 	"autosearch": [], \

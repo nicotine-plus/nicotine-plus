@@ -537,8 +537,8 @@ class RoomsControl:
 			room = self.joinedrooms['Public ']
 		except KeyError:
 			return
-		msg.user = "%s | %s" % (msg.room, msg.user)
-		room.SayChatRoom(msg, text)
+		#msg.user = "%s | %s" % (msg.room, msg.user)
+		room.SayChatRoom(msg, text, public=True)
 	
 	def UpdateColours(self):
 		self.frame.SetTextBG(self.frame.roomlist.RoomsList)
@@ -1077,7 +1077,7 @@ class ChatRoom:
 	def TickerRemove(self, msg):
 		self.Ticker.remove_ticker(msg.user)
 		
-	def SayChatRoom(self, msg, text):
+	def SayChatRoom(self, msg, text, public=False):
 		text = re.sub("\s\s+", "  ", text)
 		login = self.frame.np.config.sections["server"]["login"]
 		user = msg.user
@@ -1112,11 +1112,17 @@ class ChatRoom:
 					self.frame.ChatRequestIcon(0)
 
 		if text[:4] == "/me ":
-			line = "* %s %s" % (user, text[4:])
+			if public:
+				line = "%s | * %s %s" % (msg.room, user, text[4:])
+			else:
+				line = "* %s %s" % (user, text[4:])
 			speech = line[2:]
 			tag = self.tag_me
 		else:
-			line = "[%s] %s" % (user, text)
+			if public:
+				line = "%s | [%s] %s" % (msg.room, user, text)
+			else:
+				line = "[%s] %s" % (user, text)
 			speech = text
 
 		if len(self.lines) >= 400:
@@ -1629,7 +1635,7 @@ class ChatRoom:
 			
 		for tag in self.tag_users.values():
 			self.changecolour(tag, "useroffline")
-			
+		self.Ticker.set_ticker({})
 	def Rejoined(self, users):
 		# Update user list with an inexpensive sorting function
 		self.usersmodel.set_default_sort_func(lambda *args: -1)

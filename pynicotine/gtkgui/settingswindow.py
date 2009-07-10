@@ -59,8 +59,8 @@ class ServerFrame(buildFrame):
 		self.Server_List = gtk.ListStore(gobject.TYPE_STRING)
 		self.Server.set_model(self.Server_List)
 		self.Server.set_text_column(0)
-		self.Server.append_text("server.slsknet.org:2242")
-		self.Server.append_text("server.slsknet.org:2240")
+		#self.Server.append_text("server.slsknet.org:2242")
+		#self.Server.append_text("server.slsknet.org:2240")
 		self.Elist = {}
 		self.EncodingStore = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
 		#self.Encoding.set_size_request(100, -1)
@@ -76,15 +76,18 @@ class ServerFrame(buildFrame):
 		
 		for item in encodings:
 			self.Elist[item[1]] = self.EncodingStore.append([item[1], item[0] ])
-		self.options = {"server": { "server": None, "login": self.Login, "passw": self.Password, "enc": self.Encoding.child, "portrange": None, "firewalled": self.DirectConnection, "ctcpmsgs": self.ctcptogglebutton } }
+		self.options = {"server": { "server": None, "serverlist": self.Server, "login": self.Login, "passw": self.Password, "enc": self.Encoding.child, "portrange": None, "firewalled": self.DirectConnection, "ctcpmsgs": self.ctcptogglebutton } }
 			
 	def SetSettings(self, config):
 		self.p.SetWidgetsData(config, self.options)
+		self.Server.get_model().clear()
 		server = config["server"]
 		if server["server"] is not None:
 			self.Server.child.set_text("%s:%i" % (server["server"][0], server["server"][1]))
 		else:
 			self.Server.child.set_text("server.slsknet.org:2242")
+		for servername in server["serverlist"]:
+			self.Server.append_text(servername)
 		if self.frame.np.waitport is None:
 			self.CurrentPort.set_markup(_("Client port is not set"))
 		else:
@@ -123,7 +126,17 @@ class ServerFrame(buildFrame):
 			server = tuple(server)
 		except:
 			server = None
-			
+		serverlist=[]
+		servername = self.Server.child.get_text()
+		if servername not in serverlist:
+			serverlist.append(servername)
+		iter = self.Server.get_model().get_iter_root()
+		while iter is not None:
+			servername = self.Server.get_model().get_value(iter, 0)
+			if servername not in serverlist:
+				serverlist.append(servername)
+			iter = self.Server.get_model().iter_next(iter)
+		serverlist = serverlist[:10]
 		if str(self.Login.get_text()) == "None":
 			popupWarning(self.p.SettingsWindow, _("Warning: Bad Username"), _("Username 'None' is not a good one, please pick another."), self.frame.images["n"] )
 			raise UserWarning
@@ -139,6 +152,7 @@ class ServerFrame(buildFrame):
 		return {
 			"server": {
 				"server": server,
+				"serverlist": serverlist,
 				"login": self.Login.get_text(),
 				"passw": self.Password.get_text(),
 				"enc": self.Encoding.child.get_text(),
