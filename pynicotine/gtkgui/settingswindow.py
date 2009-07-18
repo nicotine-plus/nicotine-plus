@@ -1664,6 +1664,7 @@ class SearchFrame(buildFrame):
 			self.p.Hilight(self.FilterBR)
 			self.p.Hilight(self.FilterFree)
 			self.p.Hilight(self.FilterCC)
+		self.OnEnableSearchResults(self.ToggleResults)
 
 	def GetSettings(self):
 		maxresults = self.MaxResults.get_value_as_int()
