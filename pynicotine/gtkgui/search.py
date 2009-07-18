@@ -510,7 +510,7 @@ class Search:
 		self.SearchTab.remove(self.Main)
 		self.SearchTab.destroy()
 		self.wTree.signal_autoconnect(self)
-
+		self._first_results = True
 		self.FilterBitrate_List = gtk.ListStore(gobject.TYPE_STRING)
 		self.FilterBitrate.set_model(self.FilterBitrate_List)
 		self.FilterBitrate.set_text_column(0)
@@ -755,7 +755,11 @@ class Search:
 			
 			if self._more_results == 0 and len(self.resultsmodel) < self.frame.np.config.sections['searches']["max_displayed_results"]:
 				self._more_results = 1
-				gobject.timeout_add(self.WAIT_BEFORE_DISPLAYING, self._realaddresults)
+				if self._first_results:
+					gobject.timeout_add(0, self._realaddresults)
+					self._first_results = False
+				else:
+					gobject.timeout_add(self.WAIT_BEFORE_DISPLAYING, self._realaddresults)
 			return len(results)
 	
 	def _realaddresults(self):
