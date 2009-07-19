@@ -57,7 +57,7 @@ def checklatest(frame):
 		return
 	myversion = makeversion(version)
 	if latest > myversion:
-		dlg = gtk.MessageDialog(frame, 0, gtk.MESSAGE_WARNING, gtk.BUTTONS_OK, _("A newer version ('%s') is available. Check\nthe Nicotine+ homepage, ( http://nicotine-plus.sourceforge.net ) for the latest version.") % data)
+		dlg = gtk.MessageDialog(frame, 0, gtk.MESSAGE_WARNING, gtk.BUTTONS_OK, _("A newer version ('%s') is available. Check\nthe Nicotine+ homepage, ( http://nicotine-plus.sourceforge.net ) or the Wiki, Trac and Subversion repository at http://nicotine-plus.org for the latest version.") % data)
 		
 	elif myversion > latest:
 		dlg = gtk.MessageDialog(frame, 0, gtk.MESSAGE_WARNING, gtk.BUTTONS_OK, _("You appear to be using a development version of Nicotine+.\nCheck out the latest version from the Subversion repository at http://nicotine-plus.org"))
