@@ -896,7 +896,7 @@
             <property name="border_width">5</property>
             <property name="spacing">5</property>
             <child>
-              <widget class="GtkExpander" id="expander5">
+              <widget class="GtkExpander" id="Uploads">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="expanded">True</property>
@@ -1390,7 +1390,7 @@
               </packing>
             </child>
             <child>
-              <widget class="GtkExpander" id="expander7">
+              <widget class="GtkExpander" id="DownloadFilters">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <child>

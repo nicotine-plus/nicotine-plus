@@ -1046,7 +1046,7 @@
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
-                                <signal name="clicked" handler="OnSettingsTransfers"/>
+                                <signal name="clicked" handler="OnSettingsDownloads"/>
                                 <child>
                                   <widget class="GtkAlignment" id="alignment46">
                                     <property name="visible">True</property>
@@ -1520,7 +1520,7 @@
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
-                                <signal name="clicked" handler="OnSettingsTransfers"/>
+                                <signal name="clicked" handler="OnSettingsUploads"/>
                                 <child>
                                   <widget class="GtkAlignment" id="alignment49">
                                     <property name="visible">True</property>

@@ -1307,7 +1307,7 @@ class RoomSearch(ServerMessage):
 		return self.packObject(self.room)+self.packObject(self.searchid)+self.packObject(self.searchterm)
 	
 	def parseNetworkMessage(self, message):
-		pos, self.user = self.getObject(message, types.StringType)
+		pos, self.room = self.getObject(message, types.StringType)
 		pos, self.searchid = self.getObject(message, types.IntType, pos)
 		pos, self.searchterm = self.getObject(message, types.StringType, pos)
 
