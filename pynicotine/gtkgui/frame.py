@@ -2184,12 +2184,16 @@ class NicotineFrame:
 		self.settingswindow.SetSettings(self.np.config.sections)
 		self.settingswindow.SwitchToPage("Transfers")
 		self.settingswindow.pages["Transfers"].DownloadFilters.set_expanded(True)
+		self.settingswindow.pages["Transfers"].OnExpand(self.settingswindow.pages["Transfers"].DownloadFilters)
 		self.settingswindow.pages["Transfers"].Uploads.set_expanded(False)
+
 	def OnSettingsUploads(self, widget):
 		self.settingswindow.SetSettings(self.np.config.sections)
 		self.settingswindow.SwitchToPage("Transfers")
 		self.settingswindow.pages["Transfers"].DownloadFilters.set_expanded(False)
+		self.settingswindow.pages["Transfers"].OnExpand(self.settingswindow.pages["Transfers"].DownloadFilters)
 		self.settingswindow.pages["Transfers"].Uploads.set_expanded(True)
+
 	def OnSettingsUserinfo(self, widget):
 		self.settingswindow.SetSettings(self.np.config.sections)
 		self.settingswindow.SwitchToPage("User info")

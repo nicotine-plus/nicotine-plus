@@ -370,7 +370,15 @@ class TransfersFrame(buildFrame):
 			render.connect('toggled', self.cell_toggle_callback, self.filterlist, 1)
 		self.FilterView.set_model(self.filterlist)
 		self.FilterView.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
-		
+		self.DownloadFilters.connect("activate", self.OnExpand)
+		#self.Uploads.connect("activate", self.OnExpand)
+
+	def OnExpand(self, widget):
+		if widget.get_expanded():
+			self.TransfersVbox.set_child_packing(widget, True, True, 0, 0)
+		else:
+			self.TransfersVbox.set_child_packing(widget, False, True, 0, 0)
+
 	def cell_toggle_callback(self, widget, index, treeview, pos):
 		
 		iter = self.filterlist.get_iter(index)
