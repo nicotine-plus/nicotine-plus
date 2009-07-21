@@ -919,13 +919,21 @@ class ChatRoom:
 			gobject.idle_add(self.frame.ScrollBottom, self.ChatScroll.get_parent())
 		except IOError, e:
 			pass
-		
-	def OnFindLogWindow(self, widget):
 
-		self.frame.OnFindTextview(widget, self.RoomLog)
+	def on_key_press_event(self, widget, event):
+		key = gtk.gdk.keyval_name(event.keyval)
+		# Match against capslock + control and control
+		if key in ( "f", "F") and event.state  in (gtk.gdk.CONTROL_MASK, gtk.gdk.LOCK_MASK|gtk.gdk.CONTROL_MASK) :
+			self.OnFind(widget)
+
+	def OnFind(self, widget):
+		self.frame.OnFindTextview(None, widget)
+
+	def OnFindLogWindow(self, widget):
+		self.frame.OnFindTextview(None, self.RoomLog)
 		
 	def OnFindChatLog(self, widget):
-		self.frame.OnFindTextview(widget, self.ChatScroll)
+		self.frame.OnFindTextview(None, self.ChatScroll)
 		
 	def drag_data_get_data(self, treeview, context, selection, target_id, etime):
 		treeselection = treeview.get_selection()

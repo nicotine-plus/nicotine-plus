@@ -2876,7 +2876,7 @@ class NicotineFrame:
 	
 	def OnFindLogWindow(self, widget):
 
-		self.OnFindTextview(widget, self.LogWindow)
+		self.OnFindTextview(None, self.LogWindow)
 				
 	def OnFindTextview(self, widget, textview):
 
@@ -2886,7 +2886,7 @@ class NicotineFrame:
 			self.FindDialog.set_icon(self.images["n"])
 			self.FindDialog.set_default_size(300, 100)
 			self.FindDialog.show()
-			
+			self.FindDialog.set_transient_for(self.MainWindow)
 			self.FindDialog.connect("find-click", self.OnFindClicked)
 			return
 		
@@ -2895,7 +2895,7 @@ class NicotineFrame:
 		self.FindDialog.nextPosition = None
 		self.FindDialog.entry.set_text("")
 		self.FindDialog.show()
-
+		self.FindDialog.deiconify()
 		
 	def OnFindClicked(self, widget, direction):
 

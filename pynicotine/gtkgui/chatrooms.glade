@@ -3,7 +3,6 @@
   <!-- interface-requires gtk+ 2.16 -->
   <!-- interface-naming-policy toplevel-contextual -->
   <widget class="GtkWindow" id="ChatRoomTab">
-    <property name="visible">False</property>
     <property name="title" translatable="yes">window1</property>
     <child>
       <widget class="GtkVBox" id="Main">
@@ -170,6 +169,7 @@
                         <property name="visible">True</property>
                         <property name="editable">False</property>
                         <property name="cursor_visible">False</property>
+                        <signal name="key_press_event" handler="on_key_press_event"/>
                       </widget>
                     </child>
                   </widget>
@@ -194,6 +194,7 @@
                             <property name="editable">False</property>
                             <property name="wrap_mode">word-char</property>
                             <property name="cursor_visible">False</property>
+                            <signal name="key_press_event" handler="on_key_press_event"/>
                           </widget>
                         </child>
                       </widget>
