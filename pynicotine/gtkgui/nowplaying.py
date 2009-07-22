@@ -362,7 +362,7 @@ class NowPlaying:
 			if output:
 				self.title["title"] = output
 		if "$n" in format:
-			output = self.mpd_command("%artist%\ \-\ %title%")
+			output = self.mpd_command("%artist% - %title%")
 			if output:
 				self.title["nowplaying"] = output
 		if "$f" in format:
