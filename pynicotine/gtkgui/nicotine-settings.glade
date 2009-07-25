@@ -540,23 +540,48 @@
                 </child>
               </widget>
               <packing>
-                <property name="position">1</property>
+                <property name="position">0</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkCheckButton" id="enableBuddyShares">
-                <property name="label" translatable="yes">Enable Buddy-Only shares</property>
+              <widget class="GtkHBox" id="hbox1">
                 <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">False</property>
-                <property name="use_underline">True</property>
-                <property name="draw_indicator">True</property>
-                <signal name="toggled" handler="OnEnabledBuddySharesToggled"/>
+                <child>
+                  <widget class="GtkCheckButton" id="FriendsOnly">
+                    <property name="label" translatable="yes">Share to buddies only</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">False</property>
+                    <property name="has_tooltip">True</property>
+                    <property name="tooltip" translatable="yes">If buddy shares are enabled, they will be shared. Otherwise normal shares will be used.</property>
+                    <property name="use_underline">True</property>
+                    <property name="draw_indicator">True</property>
+                    <signal name="toggled" handler="OnFriendsOnlyToggled"/>
+                  </widget>
+                  <packing>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkCheckButton" id="enableBuddyShares">
+                    <property name="label" translatable="yes">Enable Buddy-Only shares</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">False</property>
+                    <property name="use_underline">True</property>
+                    <property name="draw_indicator">True</property>
+                    <signal name="toggled" handler="OnEnabledBuddySharesToggled"/>
+                  </widget>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
               </widget>
               <packing>
                 <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="position">2</property>
+                <property name="position">1</property>
               </packing>
             </child>
             <child>
@@ -586,11 +611,12 @@
                 <child>
                   <widget class="GtkVBox" id="vbox103">
                     <property name="visible">True</property>
+                    <property name="orientation">vertical</property>
                     <child>
                       <widget class="GtkButton" id="addBuddySharesButton">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <property name="receives_default">False</property>
+                        <property name="receives_default">True</property>
                         <signal name="clicked" handler="OnAddSharedBuddyDir"/>
                         <child>
                           <widget class="GtkAlignment" id="alignment71">
@@ -639,7 +665,7 @@
                       <widget class="GtkButton" id="removeBuddySharesButton">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <property name="receives_default">False</property>
+                        <property name="receives_default">True</property>
                         <signal name="clicked" handler="OnRemoveSharedBuddyDir"/>
                         <child>
                           <widget class="GtkAlignment" id="alignment72">
@@ -693,7 +719,7 @@
                 </child>
               </widget>
               <packing>
-                <property name="position">3</property>
+                <property name="position">2</property>
               </packing>
             </child>
             <child>
@@ -708,19 +734,7 @@
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
-                <property name="position">4</property>
-              </packing>
-            </child>
-            <child>
-              <widget class="GtkLabel" id="IncompleteDirLabel">
-                <property name="visible">True</property>
-                <property name="xalign">0</property>
-                <property name="label" translatable="yes">Incomplete file directory:</property>
-              </widget>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="position">5</property>
+                <property name="position">3</property>
               </packing>
             </child>
             <child>
@@ -728,13 +742,14 @@
                 <property name="visible">True</property>
                 <property name="spacing">5</property>
                 <child>
-                  <widget class="GtkEntry" id="IncompleteDir">
-                    <property name="width_request">250</property>
+                  <widget class="GtkLabel" id="IncompleteDirLabel">
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="tooltip" translatable="yes">Where incomplete downloads are stored temporarily</property>
+                    <property name="xalign">0</property>
+                    <property name="label" translatable="yes">Incomplete file directory:</property>
                   </widget>
                   <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
                     <property name="position">0</property>
                   </packing>
                 </child>
@@ -749,6 +764,7 @@
                   </widget>
                   <packing>
                     <property name="expand">False</property>
+                    <property name="pack_type">end</property>
                     <property name="position">1</property>
                   </packing>
                 </child>
@@ -756,19 +772,20 @@
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
-                <property name="position">6</property>
+                <property name="position">4</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkLabel" id="DownloadDirLabel">
+              <widget class="GtkEntry" id="IncompleteDir">
+                <property name="width_request">250</property>
                 <property name="visible">True</property>
-                <property name="xalign">0</property>
-                <property name="label" translatable="yes">Download directory:</property>
+                <property name="can_focus">True</property>
+                <property name="tooltip" translatable="yes">Where incomplete downloads are stored temporarily</property>
+                <property name="invisible_char">&#x2022;</property>
               </widget>
               <packing>
                 <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="position">7</property>
+                <property name="position">5</property>
               </packing>
             </child>
             <child>
@@ -776,12 +793,14 @@
                 <property name="visible">True</property>
                 <property name="spacing">5</property>
                 <child>
-                  <widget class="GtkEntry" id="DownloadDir">
-                    <property name="width_request">250</property>
+                  <widget class="GtkLabel" id="DownloadDirLabel">
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
+                    <property name="xalign">0</property>
+                    <property name="label" translatable="yes">Download directory:</property>
                   </widget>
                   <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
                     <property name="position">0</property>
                   </packing>
                 </child>
@@ -796,6 +815,7 @@
                   </widget>
                   <packing>
                     <property name="expand">False</property>
+                    <property name="pack_type">end</property>
                     <property name="position">1</property>
                   </packing>
                 </child>
@@ -803,7 +823,19 @@
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
-                <property name="position">8</property>
+                <property name="position">6</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkEntry" id="DownloadDir">
+                <property name="width_request">250</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="invisible_char">&#x2022;</property>
+              </widget>
+              <packing>
+                <property name="expand">False</property>
+                <property name="position">7</property>
               </packing>
             </child>
             <child>
@@ -819,19 +851,7 @@
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
-                <property name="position">9</property>
-              </packing>
-            </child>
-            <child>
-              <widget class="GtkLabel" id="UploadDirLabel">
-                <property name="visible">True</property>
-                <property name="xalign">0</property>
-                <property name="label" translatable="yes">Upload directory:</property>
-              </widget>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="position">10</property>
+                <property name="position">8</property>
               </packing>
             </child>
             <child>
@@ -839,13 +859,14 @@
                 <property name="visible">True</property>
                 <property name="spacing">5</property>
                 <child>
-                  <widget class="GtkEntry" id="UploadDir">
-                    <property name="width_request">250</property>
+                  <widget class="GtkLabel" id="UploadDirLabel">
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="tooltip" translatable="yes">Where buddies' uploads will be stored (with a subdirectory for each buddy)</property>
+                    <property name="xalign">0</property>
+                    <property name="label" translatable="yes">Upload directory:</property>
                   </widget>
                   <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
                     <property name="position">0</property>
                   </packing>
                 </child>
@@ -860,6 +881,7 @@
                   </widget>
                   <packing>
                     <property name="expand">False</property>
+                    <property name="pack_type">end</property>
                     <property name="position">1</property>
                   </packing>
                 </child>
@@ -867,7 +889,20 @@
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
-                <property name="position">11</property>
+                <property name="position">9</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkEntry" id="UploadDir">
+                <property name="width_request">250</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="tooltip" translatable="yes">Where buddies' uploads will be stored (with a subdirectory for each buddy)</property>
+                <property name="invisible_char">&#x2022;</property>
+              </widget>
+              <packing>
+                <property name="expand">False</property>
+                <property name="position">10</property>
               </packing>
             </child>
           </widget>
@@ -1087,7 +1122,7 @@
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                            <property name="adjustment">0 0 1000000 1 10 0</property>
+                            <property name="adjustment">3 0 1000000 1 10 0</property>
                           </widget>
                           <packing>
                             <property name="expand">False</property>
@@ -1334,23 +1369,6 @@
                         <property name="visible">True</property>
                         <property name="spacing">5</property>
                         <child>
-                          <widget class="GtkCheckButton" id="FriendsOnly">
-                            <property name="label" translatable="yes">Share to friends only</property>
-                            <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="receives_default">False</property>
-                            <property name="tooltip" translatable="yes">If buddy shares are enabled, they will be shared. Otherwise normal shares will be used.</property>
-                            <property name="use_underline">True</property>
-                            <property name="draw_indicator">True</property>
-                            <signal name="toggled" handler="OnFriendsOnlyToggled"/>
-                          </widget>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">False</property>
-                            <property name="position">0</property>
-                          </packing>
-                        </child>
-                        <child>
                           <widget class="GtkCheckButton" id="PreferFriends">
                             <property name="label" translatable="yes">Privilege all my friends</property>
                             <property name="visible">True</property>
@@ -1363,8 +1381,11 @@
                           <packing>
                             <property name="expand">False</property>
                             <property name="fill">False</property>
-                            <property name="position">1</property>
+                            <property name="position">0</property>
                           </packing>
+                        </child>
+                        <child>
+                          <placeholder/>
                         </child>
                       </widget>
                       <packing>
@@ -1796,6 +1817,7 @@
                 </child>
               </widget>
               <packing>
+                <property name="expand">False</property>
                 <property name="position">2</property>
               </packing>
             </child>

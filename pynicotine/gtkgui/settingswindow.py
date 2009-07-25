@@ -194,7 +194,9 @@ class SharesFrame(buildFrame):
 		self.BuddyShares.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
 		self.DownloadDir.connect("changed", self.DownloadDirChanged)
 		
-		self.options = {"transfers": {"incompletedir": self.IncompleteDir, "downloaddir": self.DownloadDir, "uploaddir": self.UploadDir, "sharedownloaddir": self.ShareDownloadDir, "shared": self.Shares, "rescanonstartup": self.RescanOnStartup, "buddyshared": self.BuddyShares, "enablebuddyshares": self.enableBuddyShares} }
+		self.options = {"transfers": {"incompletedir": self.IncompleteDir, "downloaddir": self.DownloadDir, "uploaddir": self.UploadDir, "sharedownloaddir": self.ShareDownloadDir, "shared": self.Shares, 
+		"friendsonly": self.FriendsOnly,
+		"rescanonstartup": self.RescanOnStartup, "buddyshared": self.BuddyShares, "enablebuddyshares": self.enableBuddyShares} }
 
 	def DownloadDirChanged(self, widget):
 		transfers = self.frame.np.config.sections["transfers"]
@@ -207,6 +209,8 @@ class SharesFrame(buildFrame):
 		self.shareslist.clear()
 		self.bshareslist.clear()
 		self.p.SetWidgetsData(config, self.options)
+		#self.OnEnabledBuddySharesToggled(self.enableBuddyShares)
+		self.OnFriendsOnlyToggled(self.FriendsOnly)
 		if transfers["incompletedir"]:
 			self.ChooseIncompleteDir.set_current_folder(transfers["incompletedir"])
 		if transfers["uploaddir"]:
@@ -227,7 +231,7 @@ class SharesFrame(buildFrame):
 		else:
 			self.p.Hilight(self.BuddyShares)
 	
-		self.OnEnabledBuddySharesToggled(self.enableBuddyShares)
+		
 
 		self.needrescan = 0
 
@@ -255,6 +259,7 @@ class SharesFrame(buildFrame):
 				"rescanonstartup": self.RescanOnStartup.get_active(),
 				"buddyshared": self.bshareddirs[:],
 				"enablebuddyshares": self.enableBuddyShares.get_active(),
+				"friendsonly": self.FriendsOnly.get_active(),
 			}
 		}
 
@@ -332,6 +337,16 @@ class SharesFrame(buildFrame):
 	def OnShareDownloadDirToggled(self, widget):
 		self.needrescan = 1
 
+	
+	def OnFriendsOnlyToggled(self, widget):
+		sensitive = not widget.get_active()
+		#self.PreferFriends.set_sensitive(sensitive)
+		self.enableBuddyShares.set_sensitive(sensitive)
+		enabled = self.enableBuddyShares.get_active()
+		self.BuddyShares.set_sensitive(sensitive and enabled)
+		self.addBuddySharesButton.set_sensitive(sensitive and enabled)
+		self.removeBuddySharesButton.set_sensitive(sensitive and enabled)
+
 class TransfersFrame(buildFrame):
 	def __init__(self, parent):
 		self.p = parent
@@ -344,7 +359,7 @@ class TransfersFrame(buildFrame):
 "uploadslots": self.QueueSlots, "uselimit": self.Limit, "uploadlimit": self.LimitSpeed,
 "fifoqueue": self.FirstInFirstOut, "limitby": self.LimitTotalTransfers,
 "queuelimit": self.MaxUserQueue, "filelimit": self.MaxUserFiles,
-"friendsnolimits": self.FriendsNoLimits, "friendsonly": self.FriendsOnly,
+"friendsnolimits": self.FriendsNoLimits, 
 "preferfriends": self.PreferFriends, "lock":self.LockIncoming,
 "reverseorder":self.DownloadReverseOrder, "prioritize":self.DownloadChecksumsFirst,
 "remotedownloads": self.RemoteDownloads, "uploadallowed": self.UploadsAllowed,
@@ -375,9 +390,9 @@ class TransfersFrame(buildFrame):
 
 	def OnExpand(self, widget):
 		if widget.get_expanded():
-			self.TransfersVbox.set_child_packing(widget, True, True, 0, 0)
+			self.TransfersVbox.set_child_packing(widget, False, False, 0, 0)
 		else:
-			self.TransfersVbox.set_child_packing(widget, False, True, 0, 0)
+			self.TransfersVbox.set_child_packing(widget, True, True, 0, 0)
 
 	def cell_toggle_callback(self, widget, index, treeview, pos):
 		
@@ -397,7 +412,7 @@ class TransfersFrame(buildFrame):
 
 		self.OnQueueUseSlotsToggled(self.QueueUseSlots)
 		self.OnLimitToggled(self.Limit)
-		self.OnFriendsOnlyToggled(self.FriendsOnly)
+		
 		if transfers["uploadallowed"] is not None:
 			self.UploadsAllowed.set_active(transfers["uploadallowed"])
 		else:
@@ -433,7 +448,6 @@ class TransfersFrame(buildFrame):
 				"queuelimit": self.MaxUserQueue.get_value_as_int(),
 				"filelimit": self.MaxUserFiles.get_value_as_int(),
 				"friendsnolimits": self.FriendsNoLimits.get_active(),
-				"friendsonly": self.FriendsOnly.get_active(),
 				"preferfriends": self.PreferFriends.get_active(),
 				"lock": self.LockIncoming.get_active(),
 				"reverseorder":self.DownloadReverseOrder.get_active(),
@@ -459,10 +473,6 @@ class TransfersFrame(buildFrame):
 		sensitive = widget.get_active()
 		for w in self.LimitSpeed, self.LimitPerTransfer, self.LimitTotalTransfers:
 			w.set_sensitive(sensitive)
-	
-	def OnFriendsOnlyToggled(self, widget):
-		sensitive = not widget.get_active()
-		self.PreferFriends.set_sensitive(sensitive)
 
 	def OnEnableFiltersToggle(self, widget):
 		sensitive = widget.get_active()

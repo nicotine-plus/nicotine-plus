@@ -357,9 +357,11 @@ class AddUser(ServerMessage):
 				pos, self.country = self.getObject(message, types.StringType, pos)
 
 class Unknown6(ServerMessage):
-	def __init__(self):
-		pass
-
+	""" Message 6 """
+	def __init__(self, user=None):
+		self.user = user
+	def makeNetworkMessage(self):
+		return self.packObject(self.user)
 	def parseNetworkMessage(self, message):
 		self.debug()
 		pass
@@ -419,18 +421,21 @@ class AckNotifyPrivileges(ServerMessage):
 	def makeNetworkMessage(self):
 		return self.packObject(self.token)
 class JoinPublicRoom(ServerMessage):
+	""" Message 116 """
 	"""We want to join the Public Chat"""
 	def __init__(self, unknown = 0):
 		self.unknown = unknown
 	def makeNetworkMessage(self):
 		return self.packObject(self.unknown)
 class LeavePublicRoom(ServerMessage):
+	""" Message 151 """
 	"""We want to leave the Public Chat"""
 	def __init__(self, unknown = 0):
 		self.unknown = unknown
 	def makeNetworkMessage(self):
 		return self.packObject(self.unknown)
 class PublicRoomMessage(ServerMessage):
+	""" Message 152 """
 	"""The server sends us messages from random chatrooms"""
 	def parseNetworkMessage(self, message):
 		pos, self.room = self.getObject(message, types.StringType)
@@ -697,6 +702,7 @@ class PrivateRoomOperatorRemoved(ServerMessage):
 		#pos, self.username = self.getObject(message, types.StringType, pos)
 		
 class LeaveRoom(ServerMessage):
+	""" Message 15 """
 	""" We send this when we want to leave a room."""
 	def __init__(self, room = None):
 		self.room = room
@@ -709,6 +715,7 @@ class LeaveRoom(ServerMessage):
 
 
 class UserJoinedRoom(ServerMessage):
+	""" Message 16 """
 	""" Server tells us someone has just joined the room."""
 	def parseNetworkMessage(self, message):
 		pos, self.room = self.getObject(message, types.StringType)
@@ -723,12 +730,14 @@ class UserJoinedRoom(ServerMessage):
 		self.userdata = UserData(i)
 
 class UserLeftRoom(ServerMessage):
+	""" Message 17 """
 	""" Well, the opposite."""
 	def parseNetworkMessage(self, message):
 		pos, self.room = self.getObject(message, types.StringType)
 		pos, self.username = self.getObject(message, types.StringType, pos)
 
 class RoomTickerState(ServerMessage):
+	""" Message 113 """
 	def __init__(self):
 		self.room = None
 		self.user = None
@@ -743,6 +752,7 @@ class RoomTickerState(ServerMessage):
 			self.msgs[user] = msg
 
 class RoomTickerAdd(ServerMessage):
+	""" Message 114 """
 	def __init__(self):
 		self.room = None
 		self.user = None
@@ -754,6 +764,7 @@ class RoomTickerAdd(ServerMessage):
 		pos, self.msg = self.getObject(message, types.StringType, pos)
 
 class RoomTickerRemove(ServerMessage):
+	""" Message 115 """
 	def __init__(self, room = None):
 		self.user = None
 		self.room = room
@@ -763,6 +774,7 @@ class RoomTickerRemove(ServerMessage):
 		pos, self.user = self.getObject(message, types.StringType, pos)
 
 class RoomTickerSet(ServerMessage):
+	""" Message 116 """
 	def __init__(self, room = None, msg = None):
 		self.room = room
 		if not msg:
@@ -901,6 +913,7 @@ class GetUserStats(ServerMessage):
 		pos, self.dirs = self.getObject(message, types.IntType, pos)
 
 class Relogged(ServerMessage):
+	""" Message 41 """
 	""" Server sends this if someone else logged in under our nickname
 	and then disconnects us """
 	def parseNetworkMessage(self, message):
@@ -1019,7 +1032,7 @@ class TunneledMessage(ServerMessage):
 		pos, self.msg = self.getObject(message, types.StringType, pos)
 
 class ParentMinSpeed(ServerMessage):
-	# 83
+	""" Message 83 """
 	def __init__(self):
 		pass
 	
@@ -1027,7 +1040,7 @@ class ParentMinSpeed(ServerMessage):
 		pos, self.num = self.getObject(message, types.IntType)
 
 class ParentSpeedRatio(ParentMinSpeed):
-	# 84
+	""" Message 84 """
 	def __init__(self):
 		pass
 	
@@ -1035,7 +1048,7 @@ class ParentSpeedRatio(ParentMinSpeed):
 		pos, self.num = self.getObject(message, types.IntType)
 
 class SearchParent(ServerMessage):
-	# 73
+	""" Message 73 """
 	def __init__(self, parentip = None):
 		self.parentip = parentip
 	
@@ -1097,7 +1110,7 @@ class Msg89(ServerMessage):
 		pass
 
 class DistribAliveInterval(ServerMessage):
-	# 90
+	""" Message 90 """
 	def __init__(self):
 		pass
 	
@@ -1106,6 +1119,7 @@ class DistribAliveInterval(ServerMessage):
 
 
 class WishlistInterval(ServerMessage):
+	""" Message 104"""
 	def __init__(self):
 		pass
 		
@@ -1113,6 +1127,7 @@ class WishlistInterval(ServerMessage):
 		pos, self.seconds = self.getObject(message, types.IntType)
 
 class PrivilegedUsers(ServerMessage):
+	""" Message 69 """
 	""" A list of those who made a donation """
 	def __init__(self):
 		pass
@@ -1130,6 +1145,7 @@ class PrivilegedUsers(ServerMessage):
 			self.users.append(user)
 
 class CheckPrivileges(ServerMessage):
+	""" Message 92 """
 	def __init__(self):
 		pass
 	
@@ -1140,6 +1156,7 @@ class CheckPrivileges(ServerMessage):
 		pos, self.seconds = self.getObject(message, types.IntType)
 
 class AddToPrivileged(ServerMessage):
+	""" Message 91 """
 	def __init__(self):
 		pass
 	
@@ -1147,6 +1164,7 @@ class AddToPrivileged(ServerMessage):
 		l2, self.user = self.getObject(message, types.StringType)
 
 class CantConnectToPeer(ServerMessage):
+	""" Message 1001 """
 	""" We send this to say we can't connect to peer after it has asked us
 	to connect. We receive this if we asked peer to connect and it can't do
 	this. So this message means a connection can't be established either way.
@@ -1161,12 +1179,13 @@ class CantConnectToPeer(ServerMessage):
 	def parseNetworkMessage(self, message):
 		pos, self.token = self.getObject(message, types.IntType)
 
-class CantCreateRoom(ServerMessage):
-	""" Server tells us a new room cannot be created"""
-	def parseNetworkMessage(self, message):
-		self.room = self.getObject(message, types.StringType)[1]
+#class CantCreateRoom(ServerMessage):
+	#""" Server tells us a new room cannot be created"""
+	#def parseNetworkMessage(self, message):
+		#self.room = self.getObject(message, types.StringType)[1]
 
 class ServerPing(ServerMessage):
+	""" Message 32 """
 	def makeNetworkMessage(self):
 		return ""
 		
@@ -1770,7 +1789,7 @@ class FileRequest(PeerMessage):
 		msg = self.packObject(self.req)
 		return msg
 
-class HaveNoParent(ServerMessage):
+class HaveNoParent(ServerMessage): #71
 	def __init__(self, noparent = None):
 		self.noparent = noparent
 	
