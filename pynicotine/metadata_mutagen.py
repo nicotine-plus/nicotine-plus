@@ -10,6 +10,7 @@ from mutagen.flac import FLAC, StreamInfo
 #from mutagen.apev2 import APEv2, APEv2File
 from mutagen.oggvorbis import OggVorbisInfo
 from mutagen.musepack import MusepackInfo
+from mutagen.asf import ASFInfo
 from mutagen.monkeysaudio import MonkeysAudioInfo
 from mutagen.mp4 import MP4Info
 
@@ -23,17 +24,20 @@ def detect(path):
 		return None
 	if type(audio.info) == MPEGInfo:
 		return processMPEG(audio)
-	if type(audio.info) == StreamInfo:
+	elif type(audio.info) == StreamInfo:
 		return processFlac(audio)
-	if type(audio.info) == OggVorbisInfo:
+	elif type(audio.info) == OggVorbisInfo:
 		return processVorbis(audio)
-	if type(audio.info) == MusepackInfo:
+	elif type(audio.info) == MusepackInfo:
 		return processMusepack(audio)
-	if type(audio.info) == MonkeysAudioInfo:
+	elif type(audio.info) == MonkeysAudioInfo:
 		return processMonkeys(audio)
-	if type(audio.info) == MP4Info:
+	elif type(audio.info) == MP4Info:
 		return processMP4(audio)
-	print "EEK, what should I do with " + str(type(audio.info)) + "?"
+	elif type(audio.info) == ASFInfo:
+		return processASF(audio)
+	else:
+		print "EEK, what should I do with %(type)s (%(file)s)?" %{"type": str(type(audio.info)), "file":path} 
 	return processGeneric(audio)
 def processGeneric(audio):
 	try:
@@ -91,6 +95,12 @@ def processMonkeys(audio):
 		pass
 	return info
 def processMP4(audio):
+	return {
+		"bitrate": audio.info.bitrate,
+		"vbr": True,
+		"time": audio.info.length,
+	}
+def processASF(audio):
 	return {
 		"bitrate": audio.info.bitrate,
 		"vbr": True,
