@@ -169,35 +169,41 @@ class ServerFrame(buildFrame):
 	def OnCheckPort(self, widget):
 		webbrowser.open('='.join(["http://tools.slsknet.org/porttest.php?port", str(self.frame.np.waitport)]))
 
-class SharesFrame(buildFrame):
+class DownloadsFrame(buildFrame):
 	def __init__(self, parent):
 		self.p = parent
 	
-		buildFrame.__init__(self, "SharesFrame")
+		buildFrame.__init__(self, "DownloadsFrame")
 		
 			
 		self.needrescan = 0
-		self.shareslist = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
-		self.shareddirs = []
-		
-		self.bshareslist = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
-		self.bshareddirs = []
 
-		column = gtk.TreeViewColumn("Shared dirs", gtk.CellRendererText(), text = 0)
-		self.Shares.append_column(column)
-		self.Shares.set_model(self.shareslist)
-		self.Shares.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
 		
-		bcolumn = gtk.TreeViewColumn("Buddy Shared dirs", gtk.CellRendererText(), text = 0)
-		self.BuddyShares.append_column(bcolumn)
-		self.BuddyShares.set_model(self.bshareslist)
-		self.BuddyShares.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
+		self.options = {"transfers": {"incompletedir": self.IncompleteDir, "downloaddir": self.DownloadDir, "sharedownloaddir": self.ShareDownloadDir, "downloadfilters": self.FilterView, "enablefilters": self.DownloadFilter,} }
+		self.filterlist = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_BOOLEAN )
+		self.downloadfilters = []
+		
+		cols = InitialiseColumns(self.FilterView,
+			[_("Filter"), 250, "text"],
+			[_("Escaped"), 40, "toggle"],
+		)
+		cols[0].set_sort_column_id(0)
+		cols[1].set_sort_column_id(1)
+		renderers = cols[1].get_cell_renderers()
+		for render in renderers:
+			render.connect('toggled', self.cell_toggle_callback, self.filterlist, 1)
+		self.FilterView.set_model(self.filterlist)
+		self.FilterView.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
+		self.DownloadFilters.connect("activate", self.OnExpand)
 		self.DownloadDir.connect("changed", self.DownloadDirChanged)
-		
-		self.options = {"transfers": {"incompletedir": self.IncompleteDir, "downloaddir": self.DownloadDir, "uploaddir": self.UploadDir, "sharedownloaddir": self.ShareDownloadDir, "shared": self.Shares, 
-		"friendsonly": self.FriendsOnly,
-		"rescanonstartup": self.RescanOnStartup, "buddyshared": self.BuddyShares, "enablebuddyshares": self.enableBuddyShares} }
 
+	def OnExpand(self, widget):
+		if widget.get_expanded():
+			self.DownloadsVbox.set_child_packing(widget, False, False, 0, 0)
+		else:
+			self.DownloadsVbox.set_child_packing(widget, True, True, 0, 0)
+
+		
 	def DownloadDirChanged(self, widget):
 		transfers = self.frame.np.config.sections["transfers"]
 		if transfers["uploaddir"] is not None and transfers["uploaddir"] != "":
@@ -206,33 +212,23 @@ class SharesFrame(buildFrame):
 		
 	def SetSettings(self, config):
 		transfers = config["transfers"]
-		self.shareslist.clear()
-		self.bshareslist.clear()
+	
 		self.p.SetWidgetsData(config, self.options)
-		#self.OnEnabledBuddySharesToggled(self.enableBuddyShares)
-		self.OnFriendsOnlyToggled(self.FriendsOnly)
 		if transfers["incompletedir"]:
 			self.ChooseIncompleteDir.set_current_folder(transfers["incompletedir"])
-		if transfers["uploaddir"]:
-			self.ChooseUploadDir.set_current_folder(transfers["uploaddir"])
+
 		if transfers["downloaddir"]:
 			self.ChooseDownloadDir.set_current_folder(transfers["downloaddir"])
-		
-		if transfers["shared"] is not None:
-			for share in transfers["shared"]:
-				self.shareslist.append([recode(share), share])
-			self.shareddirs = transfers["shared"][:]
-		else:
-			self.p.Hilight(self.Shares)
-		if transfers["buddyshared"] is not None:
-			for share in transfers["buddyshared"]:
-				self.bshareslist.append([recode(share), share])
-			self.bshareddirs = transfers["buddyshared"][:]
-		else:
-			self.p.Hilight(self.BuddyShares)
-	
-		
 
+		self.filtersiters = {}
+		self.filterlist.clear()
+		if transfers["downloadfilters"] != []:
+			for dfilter in transfers["downloadfilters"]:
+				filter, escaped = dfilter
+				self.filtersiters[filter] = self.filterlist.append([filter, escaped])
+		else:
+			self.p.Hilight(self.FilterView)
+		self.OnEnableFiltersToggle(self.DownloadFilter)
 		self.needrescan = 0
 
 	def GetSettings(self):
@@ -245,38 +241,19 @@ class SharesFrame(buildFrame):
 		if homedir == recode2(self.DownloadDir.get_text()) and self.ShareDownloadDir.get_active():
 			popupWarning(self.p.SettingsWindow, _("Warning"),_("Security Risk: you should not share your %s directory!")  %place, self.frame.images["n"])
 			raise UserWarning
-		for share in self.shareddirs+self.bshareddirs:
-			if homedir == share:
-				popupWarning(self.p.SettingsWindow, _("Warning"),_("Security Risk: you should not share your %s directory!") %place, self.frame.images["n"])
-				raise UserWarning
 		return {
 			"transfers": {
 				"incompletedir": recode2(self.IncompleteDir.get_text()),
 				"downloaddir": recode2(self.DownloadDir.get_text()),
-				"uploaddir": recode2(self.UploadDir.get_text()),
 				"sharedownloaddir": self.ShareDownloadDir.get_active(),
-				"shared": self.shareddirs[:],
-				"rescanonstartup": self.RescanOnStartup.get_active(),
-				"buddyshared": self.bshareddirs[:],
-				"enablebuddyshares": self.enableBuddyShares.get_active(),
-				"friendsonly": self.FriendsOnly.get_active(),
+				"downloadfilters": self.GetFilterList(),
+				"enablefilters": self.DownloadFilter.get_active(),
 			}
 		}
 
-	def OnEnabledBuddySharesToggled(self, widget):
-		sensitive = widget.get_active()
-		self.BuddyShares.set_sensitive(sensitive)
-		self.addBuddySharesButton.set_sensitive(sensitive)
-		self.removeBuddySharesButton.set_sensitive(sensitive)
-		
 	def GetNeedRescan(self):
 		return self.needrescan
 
-	def OnChooseUploadDir(self, widget):
-		directory = self.ChooseUploadDir.get_current_folder()
-		if directory is not None:
-			self.UploadDir.set_text(recode(directory))
-			
 	def OnChooseIncompleteDir(self, widget):
 		directory = self.ChooseIncompleteDir.get_current_folder()
 		if directory is not None:
@@ -293,186 +270,9 @@ class SharesFrame(buildFrame):
 				# force a scan if the user changes his donwload directory
 				if directory != self.frame.np.config.sections["transfers"]["downloaddir"]:
 					self.needrescan = 1
-	def OnAddSharedDir(self, widget):
-		dir1 = ChooseDir(self.Main.get_toplevel(), title=_("Nicotine+")+": "+_("Add a shared directory"))
-		if dir1 is not None:
-			for directory in dir1:
-				if directory not in self.shareddirs:
-					self.shareslist.append([recode(directory), directory])
-					self.shareddirs.append(directory)
-					self.needrescan = 1
-			    
-	def OnAddSharedBuddyDir(self, widget):
-		dir1 = ChooseDir(self.Main.get_toplevel(), title=_("Nicotine+")+": "+_("Add a shared buddy directory"))
-		if dir1 is not None:
-			for directory in dir1:
-				if directory not in self.bshareddirs:
-					self.bshareslist.append([recode(directory), directory])
-					self.bshareddirs.append(directory)
-					self.needrescan = 1
-			    
-	def _RemoveSharedDir(self, model, path, iter, list):
-		list.append(iter)
 
-	def OnRemoveSharedDir(self, widget):
-		iters = []
-		self.Shares.get_selection().selected_foreach(self._RemoveSharedDir, iters)
-		for iter in iters:
-			dir = self.shareslist.get_value(iter, 1)
-			self.shareddirs.remove(dir)
-			self.shareslist.remove(iter)
-		if iters:
-			self.needrescan =1
-			
-	def OnRemoveSharedBuddyDir(self, widget):
-		iters = []
-		self.BuddyShares.get_selection().selected_foreach(self._RemoveSharedDir, iters)
-		for iter in iters:
-			dir = self.bshareslist.get_value(iter, 1)
-			self.bshareddirs.remove(dir)
-			self.bshareslist.remove(iter)
-		if iters:
-			self.needrescan =1
-			
 	def OnShareDownloadDirToggled(self, widget):
 		self.needrescan = 1
-
-	
-	def OnFriendsOnlyToggled(self, widget):
-		sensitive = not widget.get_active()
-		#self.PreferFriends.set_sensitive(sensitive)
-		self.enableBuddyShares.set_sensitive(sensitive)
-		enabled = self.enableBuddyShares.get_active()
-		self.BuddyShares.set_sensitive(sensitive and enabled)
-		self.addBuddySharesButton.set_sensitive(sensitive and enabled)
-		self.removeBuddySharesButton.set_sensitive(sensitive and enabled)
-
-class TransfersFrame(buildFrame):
-	def __init__(self, parent):
-		self.p = parent
-	
-		buildFrame.__init__(self, "TransfersFrame")
-		self.UploadsAllowed_List = gtk.ListStore(gobject.TYPE_STRING)
-		self.UploadsAllowed.set_model(self.UploadsAllowed_List)
-		self.options = {
-			"transfers": {"uploadbandwidth": self.QueueBandwidth, "useupslots": self.QueueUseSlots,
-"uploadslots": self.QueueSlots, "uselimit": self.Limit, "uploadlimit": self.LimitSpeed,
-"fifoqueue": self.FirstInFirstOut, "limitby": self.LimitTotalTransfers,
-"queuelimit": self.MaxUserQueue, "filelimit": self.MaxUserFiles,
-"friendsnolimits": self.FriendsNoLimits, 
-"preferfriends": self.PreferFriends, "lock":self.LockIncoming,
-"reverseorder":self.DownloadReverseOrder, "prioritize":self.DownloadChecksumsFirst,
-"remotedownloads": self.RemoteDownloads, "uploadallowed": self.UploadsAllowed,
-"downloadfilters": self.FilterView, "enablefilters": self.DownloadFilter,}
-			}
-		self.UploadsAllowed_List.clear()
-		self.alloweduserslist = [_("No one"), _("Everyone"), _("Users in list"), _("Trusted Users")]
-
-		for item in self.alloweduserslist:
-			self.UploadsAllowed_List.append([item])
-
-		self.filterlist = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_BOOLEAN )
-		self.downloadfilters = []
-		
-		cols = InitialiseColumns(self.FilterView,
-			[_("Filter"), 250, "text"],
-			[_("Escaped"), 40, "toggle"],
-		)
-		cols[0].set_sort_column_id(0)
-		cols[1].set_sort_column_id(1)
-		renderers = cols[1].get_cell_renderers()
-		for render in renderers:
-			render.connect('toggled', self.cell_toggle_callback, self.filterlist, 1)
-		self.FilterView.set_model(self.filterlist)
-		self.FilterView.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
-		self.DownloadFilters.connect("activate", self.OnExpand)
-		#self.Uploads.connect("activate", self.OnExpand)
-
-	def OnExpand(self, widget):
-		if widget.get_expanded():
-			self.TransfersVbox.set_child_packing(widget, False, False, 0, 0)
-		else:
-			self.TransfersVbox.set_child_packing(widget, True, True, 0, 0)
-
-	def cell_toggle_callback(self, widget, index, treeview, pos):
-		
-		iter = self.filterlist.get_iter(index)
-		#user = self.usersmodel.get_value(iter, 1)
-		value = self.filterlist.get_value(iter, pos)
-		self.filterlist.set(iter, pos, not value)
-		
-		self.OnVerifyFilter(self.VerifyFilters)
-		
-		
-	def SetSettings(self, config):
-		transfers = config["transfers"]
-		server = config["server"]
-		self.p.SetWidgetsData(config, self.options)
-					
-
-		self.OnQueueUseSlotsToggled(self.QueueUseSlots)
-		self.OnLimitToggled(self.Limit)
-		
-		if transfers["uploadallowed"] is not None:
-			self.UploadsAllowed.set_active(transfers["uploadallowed"])
-		else:
-			self.p.Hilight(self.UploadsAllowed)
-		self.filtersiters = {}
-		self.filterlist.clear()
-		if transfers["downloadfilters"] != []:
-			for dfilter in transfers["downloadfilters"]:
-				filter, escaped = dfilter
-				self.filtersiters[filter] = self.filterlist.append([filter, escaped])
-		else:
-			self.p.Hilight(self.FilterView)
-		self.OnEnableFiltersToggle(self.DownloadFilter)
-		self.UploadsAllowed.set_sensitive(self.RemoteDownloads.get_active())
-
-			
-	def GetSettings(self):
-		try:
-			uploadallowed =  self.UploadsAllowed.get_active()
-		except:
-			uploadallowed = 0
-		if not self.RemoteDownloads.get_active():
-			uploadallowed = 0
-		return {
-			"transfers": {
-				"uploadbandwidth": self.QueueBandwidth.get_value_as_int(),
-				"useupslots": self.QueueUseSlots.get_active(),
-				"uploadslots": self.QueueSlots.get_value_as_int(),
-				"uselimit": self.Limit.get_active(),
-				"uploadlimit": self.LimitSpeed.get_value_as_int(),
-				"fifoqueue": self.FirstInFirstOut.get_active(),
-				"limitby": self.LimitTotalTransfers.get_active(),
-				"queuelimit": self.MaxUserQueue.get_value_as_int(),
-				"filelimit": self.MaxUserFiles.get_value_as_int(),
-				"friendsnolimits": self.FriendsNoLimits.get_active(),
-				"preferfriends": self.PreferFriends.get_active(),
-				"lock": self.LockIncoming.get_active(),
-				"reverseorder":self.DownloadReverseOrder.get_active(),
-				"prioritize":self.DownloadChecksumsFirst.get_active(),
-				"remotedownloads": self.RemoteDownloads.get_active(),
-				"uploadallowed": uploadallowed,
-				"downloadfilters": self.GetFilterList(),
-				"enablefilters": self.DownloadFilter.get_active(),
-			},
-		}
-	def OnRemoteDownloads(self, widget):
-		sensitive = widget.get_active()
-		self.UploadsAllowed.set_sensitive(sensitive)
-
-	def OnQueueUseSlotsToggled(self, widget):
-		sensitive = widget.get_active()
-		self.QueueSlots.set_sensitive(sensitive)
-		self.QueueBandwidth.set_sensitive(not sensitive)
-		self.label185.set_sensitive(not sensitive)
-		self.label186.set_sensitive(not sensitive)
-		
-	def OnLimitToggled(self, widget):
-		sensitive = widget.get_active()
-		for w in self.LimitSpeed, self.LimitPerTransfer, self.LimitTotalTransfers:
-			w.set_sensitive(sensitive)
 
 	def OnEnableFiltersToggle(self, widget):
 		sensitive = widget.get_active()
@@ -597,7 +397,253 @@ class TransfersFrame(buildFrame):
 		else:
 			self.VerifiedLabel.set_markup("<b>Filters Successful</b>")
 
+	def cell_toggle_callback(self, widget, index, treeview, pos):
+		
+		iter = self.filterlist.get_iter(index)
+		#user = self.usersmodel.get_value(iter, 1)
+		value = self.filterlist.get_value(iter, pos)
+		self.filterlist.set(iter, pos, not value)
+		
+		self.OnVerifyFilter(self.VerifyFilters)
 	
+class SharesFrame(buildFrame):
+	def __init__(self, parent):
+		self.p = parent
+	
+		buildFrame.__init__(self, "SharesFrame")
+		
+			
+		self.needrescan = 0
+		self.shareslist = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
+		self.shareddirs = []
+		
+		self.bshareslist = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
+		self.bshareddirs = []
+
+		column = gtk.TreeViewColumn("Shared dirs", gtk.CellRendererText(), text = 0)
+		self.Shares.append_column(column)
+		self.Shares.set_model(self.shareslist)
+		self.Shares.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
+		
+		bcolumn = gtk.TreeViewColumn("Buddy Shared dirs", gtk.CellRendererText(), text = 0)
+		self.BuddyShares.append_column(bcolumn)
+		self.BuddyShares.set_model(self.bshareslist)
+		self.BuddyShares.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
+		
+		self.options = {"transfers": {"shared": self.Shares, 
+		"friendsonly": self.FriendsOnly,
+		"rescanonstartup": self.RescanOnStartup, "buddyshared": self.BuddyShares, "enablebuddyshares": self.enableBuddyShares} }
+
+	def DownloadDirChanged(self, widget):
+		transfers = self.frame.np.config.sections["transfers"]
+		if transfers["uploaddir"] is not None and transfers["uploaddir"] != "":
+			return
+		self.UploadDir.set_text(os.sep.join([self.DownloadDir.get_text(), _("Buddy Uploads")]))
+		
+	def SetSettings(self, config):
+		transfers = config["transfers"]
+		self.shareslist.clear()
+		self.bshareslist.clear()
+		self.p.SetWidgetsData(config, self.options)
+		self.OnEnabledBuddySharesToggled(self.enableBuddyShares)
+		self.OnFriendsOnlyToggled(self.FriendsOnly)
+
+		
+		if transfers["shared"] is not None:
+			for share in transfers["shared"]:
+				self.shareslist.append([recode(share), share])
+			self.shareddirs = transfers["shared"][:]
+		else:
+			self.p.Hilight(self.Shares)
+		if transfers["buddyshared"] is not None:
+			for share in transfers["buddyshared"]:
+				self.bshareslist.append([recode(share), share])
+			self.bshareddirs = transfers["buddyshared"][:]
+		else:
+			self.p.Hilight(self.BuddyShares)
+	
+		
+
+		self.needrescan = 0
+
+	def GetSettings(self):
+		if win32:
+			place = "Windows"
+			homedir = "C:\windows"
+		else:
+			place = "Home"
+			homedir = pwd.getpwuid(os.getuid())[5]
+
+		for share in self.shareddirs+self.bshareddirs:
+			if homedir == share:
+				popupWarning(self.p.SettingsWindow, _("Warning"),_("Security Risk: you should not share your %s directory!") %place, self.frame.images["n"])
+				raise UserWarning
+		return {
+			"transfers": {
+				"shared": self.shareddirs[:],
+				"rescanonstartup": self.RescanOnStartup.get_active(),
+				"buddyshared": self.bshareddirs[:],
+				"enablebuddyshares": self.enableBuddyShares.get_active(),
+				"friendsonly": self.FriendsOnly.get_active(),
+			}
+		}
+
+	def OnEnabledBuddySharesToggled(self, widget):
+		self.OnFriendsOnlyToggled(widget)
+
+	def OnFriendsOnlyToggled(self, widget):
+		sensitive = self.FriendsOnly.get_active()
+		buddiesonly = self.enableBuddyShares.get_active()
+		self.Shares.set_sensitive(not (sensitive and buddiesonly))
+		self.addSharesButton.set_sensitive(not (sensitive and buddiesonly))
+		self.removeSharesButton.set_sensitive(not (sensitive and buddiesonly))
+		self.BuddyShares.set_sensitive(buddiesonly)
+		self.addBuddySharesButton.set_sensitive(buddiesonly)
+		self.removeBuddySharesButton.set_sensitive(buddiesonly)
+
+	def GetNeedRescan(self):
+		return self.needrescan
+
+	
+	def OnAddSharedDir(self, widget):
+		dir1 = ChooseDir(self.Main.get_toplevel(), title=_("Nicotine+")+": "+_("Add a shared directory"))
+		if dir1 is not None:
+			for directory in dir1:
+				if directory not in self.shareddirs:
+					self.shareslist.append([recode(directory), directory])
+					self.shareddirs.append(directory)
+					self.needrescan = 1
+			    
+	def OnAddSharedBuddyDir(self, widget):
+		dir1 = ChooseDir(self.Main.get_toplevel(), title=_("Nicotine+")+": "+_("Add a shared buddy directory"))
+		if dir1 is not None:
+			for directory in dir1:
+				if directory not in self.bshareddirs:
+					self.bshareslist.append([recode(directory), directory])
+					self.bshareddirs.append(directory)
+					self.needrescan = 1
+			    
+	def _RemoveSharedDir(self, model, path, iter, list):
+		list.append(iter)
+
+	def OnRemoveSharedDir(self, widget):
+		iters = []
+		self.Shares.get_selection().selected_foreach(self._RemoveSharedDir, iters)
+		for iter in iters:
+			dir = self.shareslist.get_value(iter, 1)
+			self.shareddirs.remove(dir)
+			self.shareslist.remove(iter)
+		if iters:
+			self.needrescan =1
+			
+	def OnRemoveSharedBuddyDir(self, widget):
+		iters = []
+		self.BuddyShares.get_selection().selected_foreach(self._RemoveSharedDir, iters)
+		for iter in iters:
+			dir = self.bshareslist.get_value(iter, 1)
+			self.bshareddirs.remove(dir)
+			self.bshareslist.remove(iter)
+		if iters:
+			self.needrescan =1
+
+
+class TransfersFrame(buildFrame):
+	def __init__(self, parent):
+		self.p = parent
+	
+		buildFrame.__init__(self, "TransfersFrame")
+		self.UploadsAllowed_List = gtk.ListStore(gobject.TYPE_STRING)
+		self.UploadsAllowed.set_model(self.UploadsAllowed_List)
+		self.options = {
+			"transfers": {"uploadbandwidth": self.QueueBandwidth, "useupslots": self.QueueUseSlots,
+"uploadslots": self.QueueSlots, "uselimit": self.Limit, "uploadlimit": self.LimitSpeed,
+"fifoqueue": self.FirstInFirstOut, "limitby": self.LimitTotalTransfers,
+"queuelimit": self.MaxUserQueue, "filelimit": self.MaxUserFiles,
+"friendsnolimits": self.FriendsNoLimits, 
+"preferfriends": self.PreferFriends, "lock":self.LockIncoming,
+"reverseorder":self.DownloadReverseOrder, "prioritize":self.DownloadChecksumsFirst,
+"remotedownloads": self.RemoteDownloads, "uploadallowed": self.UploadsAllowed,
+"uploaddir": self.UploadDir,
+}
+			}
+		self.UploadsAllowed_List.clear()
+		self.alloweduserslist = [_("No one"), _("Everyone"), _("Users in list"), _("Trusted Users")]
+
+		for item in self.alloweduserslist:
+			self.UploadsAllowed_List.append([item])
+
+
+		#self.Uploads.connect("activate", self.OnExpand)
+
+		
+	def SetSettings(self, config):
+		transfers = config["transfers"]
+		server = config["server"]
+		self.p.SetWidgetsData(config, self.options)
+					
+
+		self.OnQueueUseSlotsToggled(self.QueueUseSlots)
+		self.OnLimitToggled(self.Limit)
+		if transfers["uploaddir"]:
+			self.ChooseUploadDir.set_current_folder(transfers["uploaddir"])
+		if transfers["uploadallowed"] is not None:
+			self.UploadsAllowed.set_active(transfers["uploadallowed"])
+		else:
+			self.p.Hilight(self.UploadsAllowed)
+		
+		self.UploadsAllowed.set_sensitive(self.RemoteDownloads.get_active())
+
+			
+	def GetSettings(self):
+		try:
+			uploadallowed =  self.UploadsAllowed.get_active()
+		except:
+			uploadallowed = 0
+		if not self.RemoteDownloads.get_active():
+			uploadallowed = 0
+		return {
+			"transfers": {
+				"uploadbandwidth": self.QueueBandwidth.get_value_as_int(),
+				"useupslots": self.QueueUseSlots.get_active(),
+				"uploadslots": self.QueueSlots.get_value_as_int(),
+				"uselimit": self.Limit.get_active(),
+				"uploadlimit": self.LimitSpeed.get_value_as_int(),
+				"fifoqueue": self.FirstInFirstOut.get_active(),
+				"limitby": self.LimitTotalTransfers.get_active(),
+				"queuelimit": self.MaxUserQueue.get_value_as_int(),
+				"filelimit": self.MaxUserFiles.get_value_as_int(),
+				"friendsnolimits": self.FriendsNoLimits.get_active(),
+				"preferfriends": self.PreferFriends.get_active(),
+				"lock": self.LockIncoming.get_active(),
+				"reverseorder":self.DownloadReverseOrder.get_active(),
+				"prioritize":self.DownloadChecksumsFirst.get_active(),
+				"remotedownloads": self.RemoteDownloads.get_active(),
+				"uploadallowed": uploadallowed,
+				"uploaddir": recode2(self.UploadDir.get_text()),
+			},
+		}
+
+	def OnChooseUploadDir(self, widget):
+		directory = self.ChooseUploadDir.get_current_folder()
+		if directory is not None:
+			self.UploadDir.set_text(recode(directory))
+
+	def OnRemoteDownloads(self, widget):
+		sensitive = widget.get_active()
+		self.UploadsAllowed.set_sensitive(sensitive)
+
+	def OnQueueUseSlotsToggled(self, widget):
+		sensitive = widget.get_active()
+		self.QueueSlots.set_sensitive(sensitive)
+		self.QueueBandwidth.set_sensitive(not sensitive)
+		self.label185.set_sensitive(not sensitive)
+		self.label186.set_sensitive(not sensitive)
+		
+	def OnLimitToggled(self, widget):
+		sensitive = widget.get_active()
+		for w in self.LimitSpeed, self.LimitPerTransfer, self.LimitTotalTransfers:
+			w.set_sensitive(sensitive)
+
 class GeoBlockFrame(buildFrame):
 	def __init__(self, parent):
 		self.p = parent
@@ -2521,6 +2567,7 @@ class SettingsWindow:
 		self.tree["Shares"] = model.append(None, [_("Shares"), "Shares"])
 		
 		self.tree["Transfers"] = row = model.append(None, [_("Transfers"), "Transfers"])
+		self.tree["Downloads"] = model.append(row, [_("Downloads"), "Downloads"])
 		self.tree["Ban List"] = model.append(row, [_("Ban List"), "Ban List"])
 		self.tree["Events"] = model.append(row, [_("Events"), "Events"])
 		self.tree["Geo Block"] = model.append(row, [_("Geo Block"), "Geo Block"])
@@ -2551,6 +2598,7 @@ class SettingsWindow:
 		p["Server"] = ServerFrame(self, frame.np.getencodings())
 		p["Shares"] = SharesFrame(self)
 		p["Transfers"] = TransfersFrame(self)
+		p["Downloads"] = DownloadsFrame(self)
 		p["Geo Block"] = GeoBlockFrame(self)
 		p["User info"] = UserinfoFrame(self)
 		p["Ban List"] = BanFrame(self)
