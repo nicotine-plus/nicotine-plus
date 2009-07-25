@@ -433,21 +433,14 @@ class FindDialog( gtk.Dialog):
 		Cancelbutton = self.nicotine.CreateIconButton(gtk.STOCK_CANCEL, "stock", self.quit, _("Cancel"))
 		Cancelbutton.set_flags(gtk.CAN_DEFAULT)
 		self.action_area.pack_start(Cancelbutton)
-
-		self.query = None
 		
 	def quit(self, w=None, event=None):
-		self.query = None
 		self.hide()
 		
 	def next(self, button):
-		
-		self.query = self.entry.get_text()
 		self.emit("find-click", "next")
 			
 	def previous(self, button):
-		
-		self.query = self.entry.get_text()
 		self.emit("find-click", "previous")
 
 

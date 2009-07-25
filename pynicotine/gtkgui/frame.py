@@ -2905,7 +2905,7 @@ class NicotineFrame:
 		textview = self.FindDialog.textview
 		buffer = textview.get_buffer()
 		start, end = buffer.get_bounds()
-		query = self.FindDialog.query
+		query = self.FindDialog.entry.get_text()
 		
 		textview.emit("select-all", False)
 		if self.FindDialog.currentPosition is None:
