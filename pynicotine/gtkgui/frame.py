@@ -2874,7 +2874,7 @@ class NicotineFrame:
 
 		self.OnFindTextview(None, self.LogWindow)
 				
-	def OnFindTextview(self, widget, textview):
+	def OnFindTextview(self, widget, textview, repeat=False):
 
 		if "FindDialog" not in self.__dict__:
 			self.FindDialog = FindDialog(self, _('Enter the string to search for:'), "", textview=textview, modal=False)
@@ -2885,18 +2885,23 @@ class NicotineFrame:
 			self.FindDialog.set_transient_for(self.MainWindow)
 			self.FindDialog.connect("find-click", self.OnFindClicked)
 			return
-		
+		if textview is not self.FindDialog.textview:
+			repeat = False
 		self.FindDialog.textview = textview
 		self.FindDialog.currentPosition = None
 		self.FindDialog.nextPosition = None
-		self.FindDialog.entry.set_text("")
+		
 		self.FindDialog.show()
 		self.FindDialog.deiconify()
-		
+		if repeat:
+			self.OnFindClicked(widget, self.FindDialog.lastdirection)
+		else:
+			self.FindDialog.entry.set_text("")
 	def OnFindClicked(self, widget, direction):
 
 		if self.FindDialog.textview is None:
 			return
+		self.FindDialog.lastdirection = direction
 		textview = self.FindDialog.textview
 		buffer = textview.get_buffer()
 		start, end = buffer.get_bounds()
@@ -2913,12 +2918,19 @@ class NicotineFrame:
 			iter = buffer.get_iter_at_mark(current)
 			match1 = iter.forward_search(query, gtk.TEXT_SEARCH_TEXT_ONLY, limit=None)
 			if match1 is not None and len(match1) == 2:
-				
 				match_start, match_end = match1
 				buffer.place_cursor(match_end)
 				buffer.select_range( match_end, match_start)
 				textview.scroll_to_iter(match_start, 0)
-		
+			else:
+				iter = start
+				match1 = iter.forward_search(query, gtk.TEXT_SEARCH_TEXT_ONLY, limit=None)
+				if match1 is not None and len(match1) == 2:
+					match_start, match_end = match1
+					buffer.place_cursor(match_end)
+					buffer.select_range( match_end, match_start)
+					textview.scroll_to_iter(match_start, 0)
+
 		elif direction == "previous":
 			current = buffer.get_mark("insert")
 			iter = buffer.get_iter_at_mark(current)

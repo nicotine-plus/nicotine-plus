@@ -446,7 +446,7 @@ class SharesFrame(buildFrame):
 		self.bshareslist.clear()
 		self.p.SetWidgetsData(config, self.options)
 		self.OnEnabledBuddySharesToggled(self.enableBuddyShares)
-		self.OnFriendsOnlyToggled(self.FriendsOnly)
+		#self.OnFriendsOnlyToggled(self.FriendsOnly)
 
 		
 		if transfers["shared"] is not None:

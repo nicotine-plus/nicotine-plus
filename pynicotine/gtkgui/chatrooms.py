@@ -925,9 +925,11 @@ class ChatRoom:
 		# Match against capslock + control and control
 		if key in ( "f", "F") and event.state  in (gtk.gdk.CONTROL_MASK, gtk.gdk.LOCK_MASK|gtk.gdk.CONTROL_MASK) :
 			self.OnFind(widget)
+		elif key in ( "F3"):
+			self.OnFind(widget, repeat=True)
 
-	def OnFind(self, widget):
-		self.frame.OnFindTextview(None, widget)
+	def OnFind(self, widget, repeat=False):
+		self.frame.OnFindTextview(None, widget, repeat=repeat)
 
 	def OnFindLogWindow(self, widget):
 		self.frame.OnFindTextview(None, self.RoomLog)

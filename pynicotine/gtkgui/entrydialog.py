@@ -402,7 +402,7 @@ class FindDialog( gtk.Dialog):
 		
 		self.nextPosition = None	
 		self.currentPosition = None
-
+		self.lastdirection = "next"
 		if modal:
 			self.set_modal(True)
 		box = gtk.VBox(spacing=10)
@@ -419,7 +419,7 @@ class FindDialog( gtk.Dialog):
 		box.pack_start(self.entry, False, False)
 		self.entry.show()
 		self.entry.grab_focus()
-		self.entry.connect("activate", self.previous)
+		self.entry.connect("activate", self.next)
 		Previousbutton = self.nicotine.CreateIconButton(gtk.STOCK_GO_BACK, "stock", self.previous, _("Previous"))
 		Previousbutton.set_flags(gtk.CAN_DEFAULT)
 		self.action_area.pack_start(Previousbutton)
