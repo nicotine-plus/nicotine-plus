@@ -31,9 +31,9 @@ class Shares:
 		self.newbuddyshares = self.newnormalshares = False
 		self.translatepunctuation = string.maketrans(string.punctuation, string.join([' ' for i in string.punctuation],''))
 		
-	def logMessage(self, message):
+	def logMessage(self, message, debugLevel=0):
 		if self.LogMessage is not None:
-			gobject.idle_add(self.LogMessage, message)
+			gobject.idle_add(self.LogMessage, message, debugLevel)
 	def sendNumSharedFoldersFiles(self):
 		"""
 		Send number of files in buddy shares if only buddies can
