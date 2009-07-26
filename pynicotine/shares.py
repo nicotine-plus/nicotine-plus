@@ -23,14 +23,17 @@ class Shares:
 		self.np = np
 		self.config = self.np.config
 		self.queue = self.np.queue
-		self.logMessage = self.np.logMessage
+		self.LogMessage = self.np.logMessage
 		self.CompressedSharesBuddy = self.CompressedSharesNormal = None
 		self.CompressShares("normal")
 		self.CompressShares("buddy")
 		self.requestedShares = {}
 		self.newbuddyshares = self.newnormalshares = False
 		self.translatepunctuation = string.maketrans(string.punctuation, string.join([' ' for i in string.punctuation],''))
-
+		
+	def logMessage(self, message):
+		if self.LogMessage is not None:
+			gobject.idle_add(self.LogMessage, message)
 	def sendNumSharedFoldersFiles(self):
 		"""
 		Send number of files in buddy shares if only buddies can
@@ -50,7 +53,7 @@ class Shares:
 
 	def RescanShares(self, msg, rebuild=False):
 		files, streams, wordindex, fileindex, mtimes = self.rescandirs(msg.shared, self.config.sections["transfers"]["sharedmtimes"], self.config.sections["transfers"]["sharedfiles"], self.config.sections["transfers"]["sharedfilesstreams"], msg.yieldfunction, self.np.frame.SharesProgress, name=_("Shares"), rebuild=rebuild)
-		
+		time.sleep(0.5)
 		self.np.frame.RescanFinished([files, streams, wordindex, fileindex, mtimes], "normal")
 		
 	def RebuildShares(self, msg):
@@ -61,7 +64,7 @@ class Shares:
 	
 	def RescanBuddyShares(self, msg, rebuild=False):
 		files, streams, wordindex, fileindex, mtimes = self.rescandirs(msg.shared, self.config.sections["transfers"]["bsharedmtimes"], self.config.sections["transfers"]["bsharedfiles"], self.config.sections["transfers"]["bsharedfilesstreams"], msg.yieldfunction, self.np.frame.BuddySharesProgress, name=_("Buddy Shares"), rebuild=rebuild)
-		
+		time.sleep(0.5)
 		self.np.frame.RescanFinished([files, streams, wordindex, fileindex, mtimes], "buddy")
 		
 	def CompressShares(self, sharestype):
@@ -191,7 +194,10 @@ class Shares:
 		
 		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
 
-		
+	def processExactSearchRequest(self, searchterm, user, searchid,  direct = 0, checksum=None):
+		print searchterm, user, searchid, checksum
+		pass
+	
 	def processSearchRequest(self, searchterm, user, searchid, direct = 0):
 		if not self.config.sections["searches"]["search_results"]:
 			# Don't return _any_ results when this option is disabled
@@ -254,11 +260,12 @@ class Shares:
 		gobject.idle_add(progress.set_text, _("Checking for changes"))
 		gobject.idle_add(progress.show)
 		gobject.idle_add(progress.set_fraction, 0)
-
+		self.logMessage("Rescanning: Checking %(num)s directories" % {"num": len(oldmtimes)})
 		if win32:
 			newmtimes = self.getDirsMtimesUnicode(shared_directories, yieldfunction)
 		else:
 			newmtimes = self.getDirsMtimes(shared_directories, yieldfunction)
+		self.logMessage("Rescanning: Found %(num)s directories" % {"num": len(newmtimes)})
 		gobject.idle_add(progress.set_text, _("Scanning %s") % name)
 		# Get list of files
 		# returns dict in format { Directory : { File : metadata, ... }, ... }
@@ -276,7 +283,8 @@ class Shares:
 		# keys in newfileindex
 		# newfileindex is a dict in format { num: (path, size, (bitrate, vbr), length), ... }
 		gobject.idle_add(progress.set_text, _("Building Index"))
-		newwordindex, newfileindex = self.getFilesIndex(newmtimes, oldmtimes, shared_directories, newsharedfiles, yieldfunction)
+		gobject.idle_add(progress.set_fraction, 0.0)
+		newwordindex, newfileindex = self.getFilesIndex(newmtimes, oldmtimes, shared_directories, newsharedfiles, yieldfunction, progress)
 		gobject.idle_add(progress.set_fraction, 1.0)
 
 		return newsharedfiles, newsharedfilesstreams, newwordindex, newfileindex, newmtimes
@@ -303,8 +311,7 @@ class Shares:
 			except OSError, errtuple:
 				message = _("Scanning Directory Error: %(error)s Path: %(path)s") % {'error':errtuple, 'path':u_directory}
 				print str(message)
-				if self.logMessage:
-					self.logMessage(message)
+				self.logMessage(message)
 				displayTraceback(sys.exc_info()[2])
 				continue
 			list[str_directory] = mtime
@@ -321,8 +328,7 @@ class Shares:
 				except OSError, errtuple:
 					message = _("Scanning Error: %(error)s Path: %(path)s") % {'error':errtuple, 'path':u_path}
 					print str(message)
-					if self.logMessage:
-						self.logMessage(message)
+					self.logMessage(message)
 					continue
 				try:
 					mtime = os.path.getmtime(u_path)
@@ -332,8 +338,7 @@ class Shares:
 					except OSError, errtuple:
 						message = _("Scanning Error: %(error)s Path: %(path)s") % {'error':errtuple, 'path':u_path}
 						print str(message)
-						if self.logMessage:
-							self.logMessage(message)
+						self.logMessage(message)
 						continue
 				else:
 					if isdir:
@@ -360,8 +365,7 @@ class Shares:
 			except OSError, errtuple:
 				message = _("Scanning Directory Error: %(error)s Path: %(path)s") % {'error':errtuple, 'path':directory}
 				print str(message)
-				if self.logMessage:
-					self.logMessage(message)
+				self.logMessage(message)
 				displayTraceback(sys.exc_info()[2])
 				continue
 
@@ -376,8 +380,7 @@ class Shares:
 				except OSError, errtuple:
 					message = _("Scanning Error: %(error)s Path: %(path)s") % {'error':errtuple, 'path':path}
 					print str(message)
-					if self.logMessage:
-						self.logMessage(message)
+					self.logMessage(message)
 					continue
 				try:
 					mtime = os.path.getmtime(path)
@@ -392,8 +395,7 @@ class Shares:
 					else:
 						message = _("Scanning Error: %(error)s Path: %(path)s") % {'error':errtuple, 'path':path}
 					print str(message)
-					if self.logMessage:
-						self.logMessage(message)
+					self.logMessage(message)
 					continue
 				else:
 					if isdir:
@@ -410,15 +412,14 @@ class Shares:
 		""" Get a list of files with their filelength and 
 		(if mp3) bitrate and track length in seconds """
 		list = {}
-		if len(mtimes):
-			percent = 1.0 / len(mtimes)
-		
+		count = 0
 		for directory in mtimes:
 			directory = os.path.expanduser(directory)
+			count +=1
 			if progress:
-				#print progress.get_fraction()+percent
-				if progress.get_fraction()+percent <= 1.0:
-					gobject.idle_add(progress.set_fraction,progress.get_fraction()+percent)
+				percent = float(count)/len(mtimes)
+				if percent <= 1.0:
+					gobject.idle_add(progress.set_fraction, percent)
 
 			if self.hiddenCheck(directory):
 				continue
@@ -438,8 +439,7 @@ class Shares:
 				contents = os.listdir(directory)
 			except OSError, errtuple:
 				print str(errtuple)
-				if self.logMessage:
-					self.logMessage(str(errtuple))
+				self.logMessage(str(errtuple))
 				continue
 
 			for filename in contents:
@@ -453,8 +453,7 @@ class Shares:
 				except OSError, errtuple:
 					message = _("Scanning Error: %(error)s Path: %(path)s") % {'error':errtuple, 'path':path}
 					print str(message)
-					if self.logMessage:
-						self.logMessage(message)
+					self.logMessage(message)
 					displayTraceback(sys.exc_info()[2])
 					continue
 				else:
@@ -473,15 +472,15 @@ class Shares:
 		""" Get a list of files with their filelength and 
 		(if mp3) bitrate and track length in seconds """
 		list = {}
-		if len(mtimes):
-			percent = 1.0 / len(mtimes)
-		
+
+		count = 0
 		for directory in mtimes:
 			directory = os.path.expanduser(directory)
+			count +=1
 			if progress:
-				#print progress.get_fraction()+percent
-				if progress.get_fraction()+percent <= 1.0:
-					gobject.idle_add(progress.set_fraction,progress.get_fraction()+percent)
+				percent = float(count)/len(mtimes)
+				if percent <= 1.0:
+					gobject.idle_add(progress.set_fraction, percent)
 					
 			# force Unicode for reading from disk
 			u_directory = u"%s" %directory
@@ -500,8 +499,7 @@ class Shares:
 				contents = os.listdir(u_directory)
 			except OSError, errtuple:
 				print str(errtuple)
-				if self.logMessage:
-					self.logMessage(str(errtuple))
+				self.logMessage(str(errtuple))
 				continue
 
 			for filename in contents:
@@ -518,8 +516,7 @@ class Shares:
 				except OSError, errtuple:
 					message = _("Scanning Error: %(error)s Path: %(path)s") % {'error':errtuple, 'path':path}
 					print str(message)
-					if self.logMessage:
-						self.logMessage(message)
+					self.logMessage(message)
 					displayTraceback(sys.exc_info()[2])
 					continue
 				else:
@@ -558,8 +555,7 @@ class Shares:
 			return fileinfo
 		except Exception, errtuple:
 			message = _("Scanning File Error: %(error)s Path: %(path)s") % {'error':errtuple, 'path':pathname}
-			if self.logMessage:
-				self.logMessage(message)
+			self.logMessage(message)
 			displayTraceback(sys.exc_info()[2])
 
 	# Get metadata for mp3s and oggs
@@ -575,8 +571,7 @@ class Shares:
 			return fileinfo
 		except Exception, errtuple:
 			message = _("Scanning File Error: %(error)s Path: %(path)s") % {'error':errtuple, 'path':pathname}
-			if self.logMessage:
-				self.logMessage(message)
+			self.logMessage(message)
 			displayTraceback(sys.exc_info()[2])
 			
 	def getFilesStreams(self, mtimes, oldmtimes, oldstreams, newsharedfiles, yieldcall = None):
@@ -623,26 +618,30 @@ class Shares:
 	def getByteStream(self, fileinfo):
 		message = slskmessages.SlskMessage()
 		
-		size = fileinfo[1]
-		size1 = size & 0xffffffff
-		size2 = size >> 32
+		#size = long(fileinfo[1])
+		#size1 = size & 0xffffffff
+		#size2 = size >> 32
 		
-		stream = chr(1) + message.packObject(fileinfo[0]) + message.packObject(size1) + message.packObject(size2)
+		stream = chr(1) + message.packObject(fileinfo[0]) + message.packObject(long(fileinfo[1]))
 		if fileinfo[2] is not None:
-			stream = stream + message.packObject('mp3') + message.packObject(3)
-			stream = stream + message.packObject(0)+ message.packObject(fileinfo[2][0])+message.packObject(1)+ message.packObject(fileinfo[3])+message.packObject(2)+message.packObject(fileinfo[2][1])
+			stream += message.packObject('mp3') + message.packObject(3)
+			stream += message.packObject(0) + message.packObject(fileinfo[2][0]) + message.packObject(1) + message.packObject(fileinfo[3]) + message.packObject(2) + message.packObject(fileinfo[2][1])
 		else:
 			stream = stream + message.packObject('') + message.packObject(0)
 		return stream
 
 	# Update Search index with new files
-	def getFilesIndex(self, mtimes, oldmtimes, shareddirs, newsharedfiles, yieldcall = None):
+	def getFilesIndex(self, mtimes, oldmtimes, shareddirs, newsharedfiles, yieldcall = None, progress=None):
 		wordindex = {}
 		fileindex = {}
 		index = 0
-		
+		count = 0
 		for directory in mtimes.keys():
-			
+			if progress:
+				percent = float(count)/len(mtimes)
+				if percent <= 1.0:
+					gobject.idle_add(progress.set_fraction, percent)
+			count +=1
 			if self.hiddenCheck(directory):
 				continue
 			for j in newsharedfiles[directory]:

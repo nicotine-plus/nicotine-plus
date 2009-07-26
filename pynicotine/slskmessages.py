@@ -181,7 +181,7 @@ class SlskMessage:
 				else:
 					return intsize+start, struct.unpack("<I", message[start:start+intsize])[0]
 			elif type is types.LongType:
-				return struct.calcsize("<L")+start, struct.unpack("<L", message[start:start+struct.calcsize("<L")])[0]
+				return struct.calcsize("<Q")+start, struct.unpack("<Q", message[start:start+struct.calcsize("<Q")])[0]
 			elif type is types.StringType:
 				length = struct.unpack("<I", message[start:start+intsize])[0]
 				string = message[start+intsize:start+length+intsize]
@@ -200,7 +200,7 @@ class SlskMessage:
 		if type(object) is types.IntType:
 			return struct.pack("<i", object)
 		elif type(object) is types.LongType:
-			return struct.pack("<L", object)
+			return struct.pack("<Q", object)
 		elif type(object) is types.StringType:
 			return struct.pack("<i", len(object))+object
 		elif type(object) is types.UnicodeType:
@@ -347,10 +347,8 @@ class AddUser(ServerMessage):
 		if len(message[pos:]) > 0:
 			pos, self.status = self.getObject(message, types.IntType, pos)
 			pos, self.avgspeed = self.getObject(message, types.IntType, pos)
-			pos, size1 = self.getObject(message, types.LongType, pos)
-			pos, size2 = self.getObject(message, types.LongType, pos)
-			#self.downloads = (size2 << 32) + size1
-			self.downloadnum = size2 + size1
+			pos, self.downloadnum = self.getObject(message, types.LongType, pos)
+
 			pos, self.files = self.getObject(message, types.IntType, pos)
 			pos, self.dirs = self.getObject(message, types.IntType, pos)
 			if len(message[pos:]) > 0:
@@ -903,12 +901,7 @@ class GetUserStats(ServerMessage):
 	def parseNetworkMessage(self, message):
 		pos, self.user = self.getObject(message, types.StringType)
 		pos, self.avgspeed = self.getObject(message, types.IntType, pos, getsignedint = 1)
-		#pos, self.downloadnum = self.getObject(message, types.IntType, pos)
-		#pos, self.something = self.getObject(message, types.IntType, pos)
-		pos, size1 = self.getObject(message, types.LongType, pos)
-		pos, size2 = self.getObject(message, types.LongType, pos)
-		#self.downloads = (size2 << 32) + size1
-		self.downloadnum = size2 + size1
+		pos, self.downloadnum = self.getObject(message, types.LongType, pos)
 		pos, self.files = self.getObject(message, types.IntType, pos)
 		pos, self.dirs = self.getObject(message, types.IntType, pos)
 
@@ -990,9 +983,7 @@ class ExactFileSearch(ServerMessage):
 		pos, self.req = self.getObject(message, types.IntType, pos)
 		pos, self.file = self.getObject(message, types.StringType, pos)
 		pos, self.folder = self.getObject(message, types.StringType, pos)
-		pos, size1 = self.getObject(message, types.IntType, pos)
-		pos, size2 = self.getObject(message, types.IntType, pos)
-		self.size = size1 + size2
+		pos, self.size = self.getObject(message, types.LongType, pos)
 		pos, self.checksum = self.getObject(message, types.IntType, pos)
 
 class AdminMessage(ServerMessage):
@@ -1464,11 +1455,7 @@ class SharedFileList(PeerMessage):
 			for j in range(nfiles):
 				pos, code = pos+1, ord(message[pos])
 				pos, name = self.getObject(message, types.StringType, pos)
-				pos, size1 = self.getObject(message, types.LongType, pos)
-				pos, size2 = self.getObject(message, types.LongType, pos)
-				#size = (size2 << 32) + size1
-				size = size2 + size1
-		
+				pos, size = self.getObject(message, types.LongType, pos)
 				pos, ext = self.getObject(message, types.StringType, pos)
 				pos, numattr = self.getObject(message, types.IntType, pos)
 				attrs = []
@@ -1551,13 +1538,9 @@ class FileSearchResult(PeerMessage):
 		pos, nfiles = self.getObject(message, types.IntType, pos)
 		shares = []
 		for i in range(nfiles):
-			size = size1 = size2 = 0
 			pos, code = pos+1, ord(message[pos])
 			pos, name = self.getObject(message, types.StringType, pos)
-			pos, size1 = self.getObject(message, types.LongType, pos)
-			pos, size2 = self.getObject(message, types.LongType, pos)
-			#size = (size2 << 32) + size1
-			size = size2 + size1
+			pos, size = self.getObject(message, types.LongType, pos)
 
 			pos, ext = self.getObject(message, types.StringType, pos)
 			pos, numattr = self.getObject(message, types.IntType, pos)
@@ -1650,13 +1633,9 @@ class FolderContentsResponse(PeerMessage):
 				pos, nfiles = self.getObject(message, types.IntType, pos)
 				shares[folder][directory] = []
 				for j in range(nfiles):
-					size = size1 = size2 = 0
 					pos, code = pos+1, ord(message[pos])
 					pos, name = self.getObject(message, types.StringType, pos)
-					pos, size1 = self.getObject(message, types.LongType, pos)
-					pos, size2 = self.getObject(message, types.LongType, pos)
-					#size = (size2 << 32) + size1
-					size = size2 + size1
+					pos, size = self.getObject(message, types.LongType, pos)
 					pos, ext = self.getObject(message, types.StringType, pos)
 					pos, numattr = self.getObject(message, types.IntType, pos)
 					attrs = []
