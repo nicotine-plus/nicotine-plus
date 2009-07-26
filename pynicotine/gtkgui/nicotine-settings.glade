@@ -3731,7 +3731,7 @@ when new results come in</property>
                 <property name="shadow_type">in</property>
                 <child>
                   <widget class="GtkTreeView" id="SettingsTreeview">
-                    <property name="width_request">150</property>
+                    <property name="width_request">160</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="headers_visible">False</property>

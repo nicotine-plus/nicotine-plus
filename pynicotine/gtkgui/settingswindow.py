@@ -2631,6 +2631,7 @@ class SettingsWindow:
 		self.SettingsTreeview.expand_row((2,), True)
 		self.SettingsTreeview.expand_row((3,), True)
 		self.SettingsTreeview.expand_row((4,), True)
+		self.SettingsTreeview.expand_row((5,), True)
 
 		self.SettingsTreeview.get_selection().connect("changed", self.switch_page)
 		self.UpdateColours()
