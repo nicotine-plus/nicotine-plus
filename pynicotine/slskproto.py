@@ -486,9 +486,9 @@ class SlskProtoThread(threading.Thread):
 						limit = self._downloadlimit[0](conns, connection)
 						if limit is None or limit > 0:
 							self._dlimits[connection] = limit
-							if connection in self._dlimits:
+							#if connection in self._dlimits:
 								#Todo: fix this Ugly download limit hack (sleep)
-								time.sleep(1.0)
+								#time.sleep(1.0)
 								
 						try:
 							self.readData(conns, connection)
@@ -541,6 +541,7 @@ class SlskProtoThread(threading.Thread):
 					queue.put(ServerPing())
 					
 			self._ui_callback([])
+			time.sleep(1.0)
 
 		# Close Server Port
 		if server_socket is not None:

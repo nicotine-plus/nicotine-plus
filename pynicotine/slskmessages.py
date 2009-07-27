@@ -1585,12 +1585,15 @@ class FileSearchResult(PeerMessage):
 
 		msg = self.packObject(self.user)+self.packObject(self.token)+self.packObject(len(filelist))
 		for i in filelist:
-			msg = msg+chr(1)+self.packObject(i[0].replace(os.sep,"\\"))+self.packObject(i[1])+self.packObject(0)
+			# Code, Filename, Size (Long Long), 
+			msg = msg+chr(1)+self.packObject(i[0].replace(os.sep,"\\"))+self.packObject(i[1])
 			if i[2] is None:
 				# No metadata
 				msg = msg + self.packObject('')+self.packObject(0)
 			else:
+				#FileExtension, NumAttributes, 
 				msg = msg + self.packObject("mp3") + self.packObject(3)
+				#AttributeNum 0, Bitrate, AttributeNum 1, Length, AttributeNum 2, Variable Bitrate,
 				msg = msg + self.packObject(0) + self.packObject(i[2][0])+self.packObject(1)+ self.packObject(i[3])+self.packObject(2)+self.packObject(i[2][1])
 		msg = msg+chr(self.freeulslots)+self.packObject(self.ulspeed)+self.packObject(queuesize)
 		return zlib.compress(msg)
@@ -1676,7 +1679,7 @@ class TransferRequest(PeerMessage):
 	def makeNetworkMessage(self):
 		msg = self.packObject(self.direction)+self.packObject(self.req)+self.packObject(self.file)
 		if self.filesize is not None and self.direction == 1:
-			msg = msg+self.packObject(self.filesize) + self.packObject(0)
+			msg = msg+self.packObject(self.filesize)
 		return msg
 	
 	def parseNetworkMessage(self, message):
@@ -1702,7 +1705,7 @@ class TransferResponse(PeerMessage):
 		if self.reason is not None:
 			msg = msg + self.packObject(self.reason)
 		if self.filesize is not None:
-			msg = msg + self.packObject(self.filesize) + self.packObject(0)
+			msg = msg + self.packObject(self.filesize)
 		return msg
 	
 	def parseNetworkMessage(self, message):

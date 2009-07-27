@@ -1109,7 +1109,21 @@ class Transfers:
 		for i in self.peerconns:
 			if i.conn is msg.conn.conn:
 				user = i.username
-			
+		def listUsers():
+			users = []
+			for i in self.uploads:
+				if i.user not in users:
+					users.append(i.user)
+			return users
+
+		def countTransfers(username):
+			transfers = []
+			for i in self.uploads:
+				if i.status == "Queued":
+					if i.user == username:
+						transfers.append(i)
+			return len(transfers)
+
 		if self.eventprocessor.config.sections["transfers"]["fifoqueue"]:
 			# Number of transfers queued by non-privileged users
 			count = 0
@@ -1138,41 +1152,44 @@ class Transfers:
 			# Debugging
 			#print i.user, i.filename, count, countpriv, place
 		else:
-
+			# Todo
 			list = listogg = listpriv = {user:time.time()}
 			countogg = 0
 			countpriv = 0
-			
+			trusers = self.getTransferringUsers()
+			count = 0
+			place = 0
+			transfers = 0
 			for i in self.uploads:
 				# Ignore non-queued files
 				if i.status == "Queued":
-					if i.user in listpriv.keys() or self.isPrivileged(i.user):
-						listpriv[i.user] = i.timequeued
-						countpriv += 1
-					elif i.filename[-4:].lower() == ".ogg":
-						listogg[i.user] = i.timequeued
-						countogg += 1
-					else:
-						list[i.user] = i.timequeued
-			place = 0
-			if self.isPrivileged(user):
-				# Only have priv'd files in the list
-				list = listpriv
-			elif msg.file[-4:].lower() == ".ogg":
-				# Only have ogg files in the list
-				list = listogg
-				# Add priv'd numbers to place, since
-				# They won't be in the list
-				place += countpriv
-			else:
-				# If file is not ogg and user is not privileged
-				# Add priv'd and ogg numbers to place, since
-				# They won't be in the list
-				place += countpriv + countogg
-				
-			for i in list.keys():
-				if list[i] < list[user]:
-					place += 1
+					if i.user == user:
+						if self.isPrivileged(user):
+							# User is privileged so we only 
+							# count priv'd transfers
+							listpriv[i.user] = i.timequeued
+							place += 1
+						else:
+							# Count all transfers
+							place += 1 
+						# Stop counting on the matching file
+						if i.filename == msg.file:
+							break
+			uploadUsers = listUsers()
+			userTransfers = {}
+			for username in uploadUsers:
+				userTransfers[username] = countTransfers(username)
+				if username is not user:
+					if userTransfers[username] >= place:
+						if username not in trusers:
+							#print username, place
+							transfers += place
+					#else:
+						#transfers += userTransfers[username]
+			#print userTransfers, place, transfers
+			place += transfers
+			#print place
+			#print trusers
 	
 		self.queue.put(slskmessages.PlaceInQueue(msg.conn.conn, msg.file, place))
 

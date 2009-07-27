@@ -742,7 +742,7 @@ class Search:
 			bitrate = ""
 			length = ""
 			br = 0
-			if result[3] == "mp3" and len(result[4]) == 3:
+			if result[3] != "" and len(result[4]) == 3:
 				a = result[4]
 				if a[2] == 1:
 					bitrate = _(" (vbr)")
