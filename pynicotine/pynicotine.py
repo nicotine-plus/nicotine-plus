@@ -117,6 +117,7 @@ class NetworkEventProcessor:
 		uploadlimit = self.config.sections["transfers"]["uploadlimit"]
 		limitby = self.config.sections["transfers"]["limitby"]
 		self.queue.put(slskmessages.SetUploadLimit(uselimit, uploadlimit, limitby))
+		self.queue.put(slskmessages.SetDownloadLimit( self.config.sections["transfers"]["downloadlimit"]))
 		if self.config.sections["transfers"]["geoblock"]:
 			panic = self.config.sections["transfers"]["geopanic"]
 			cc = self.config.sections["transfers"]["geoblockcc"]
@@ -652,6 +653,7 @@ class NetworkEventProcessor:
 	def NotifyPrivileges(self, msg):
 		if msg.token != None:
 			pass
+		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
 	def UserPrivileged(self, msg):
 		if self.transfers is not None:
 			if msg.privileged is True:
@@ -659,10 +661,10 @@ class NetworkEventProcessor:
 
 	def AckNotifyPrivileges(self, msg):
 		if msg.token != None:
-			pass
 			# Until I know the syntax, sending this message is probably a bad idea
-			#self.queue.put(slskmessages.AckNotifyPrivileges(msg.token))
-			
+			self.queue.put(slskmessages.AckNotifyPrivileges(msg.token))
+		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
+
 	def PMessageUser(self, msg):
 		user = ip = port = None
 		# Get peer's username, ip and port
@@ -1477,17 +1479,24 @@ class NetworkEventProcessor:
 
 	def ExactFileSearch(self, msg):
 		''' Depreciated '''
-		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
 		
-	def FileSearchRequest(self, msg):
+		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
 		for i in self.peerconns:
 			if i.conn == msg.conn.conn:
 				user = i.username
-				self.shares.processSearchRequest(msg.searchterm, user, msg.searchid, 1)
+				self.shares.processExactSearchRequest(msg.searchterm, user, msg.searchid, direct=1, checksum=msg.checksum)
+
+	def FileSearchRequest(self, msg):
+		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
+		for i in self.peerconns:
+			if i.conn == msg.conn.conn:
+				user = i.username
+				self.shares.processSearchRequest(msg.searchterm, user, msg.searchid, direct=1)
 		
 	
 	def SearchRequest(self, msg):
-		self.shares.processSearchRequest(msg.searchterm, msg.user, msg.searchid, 0)
+		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
+		self.shares.processSearchRequest(msg.searchterm, msg.user, msg.searchid, direct=0)
 		
 	def ToggleRespondDistributed(self, msg, settings=False):
 		"""

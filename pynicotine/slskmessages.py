@@ -122,6 +122,11 @@ class SetUploadLimit(InternalMessage):
 		self.limit = limit
 		self.limitby = limitby
 
+class SetDownloadLimit(InternalMessage):
+	""" Sent by the GUI thread to indicate changes in bandwidth shaping rules"""
+	def __init__(self, limit):
+		self.limit = limit
+
 class SetGeoBlock(InternalMessage):
 	""" Sent by the GUI thread to indicate changes in GeoIP blocking"""
 	def __init__(self, config):

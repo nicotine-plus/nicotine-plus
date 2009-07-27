@@ -92,6 +92,7 @@ class Config:
 	"uploadbandwidth": 10, \
 	"uselimit": 0, \
 	"uploadlimit": 150, \
+	"downloadlimit": 0, \
 	"preferfriends": 0, \
 	"useupslots": 0, \
 	"uploadslots": 2, \

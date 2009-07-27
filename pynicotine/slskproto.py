@@ -110,6 +110,7 @@ class PeerConnection(Connection):
 	
 		self.starttime = None # Used for upload bandwidth management
 		self.sentbytes2 = 0
+		self.readbytes2 = 0
 
 
 class PeerConnectionInProgress:
@@ -276,7 +277,9 @@ class SlskProtoThread(threading.Thread):
 		self._conns = {}
 		self._connsinprogress = {}
 		self._uploadlimit = (self._calcLimitNone, 0)
+		self._downloadlimit = (self._calcDLimitByTotal, self._config.sections["transfers"]["downloadlimit"])
 		self._limits = {}
+		self._dlimits = {}
 		# GeoIP Config
 		self._geoip = None
 		# GeoIP Module
@@ -304,7 +307,10 @@ class SlskProtoThread(threading.Thread):
 	
 	def _isUpload(self, conn):
 		return conn.__class__ is PeerConnection and conn.fileupl is not None
-	
+	def _isDownload(self, conn):
+		return conn.__class__ is PeerConnection and conn.filedown is not None
+
+
 	def _calcUploadSpeed(self, i):
 		curtime = time.time()
 		if i.starttime is None:
@@ -332,7 +338,28 @@ class SlskProtoThread(threading.Thread):
 		if limit < 1024.0:
 			return long(0)
 		return long(limit)
-	
+
+	def _calcDownloadSpeed(self, i):
+		curtime = time.time()
+		if i.starttime is None:
+			i.starttime = curtime
+		elapsed = curtime - i.starttime
+		if elapsed == 0:
+			return 0
+		else:
+			return i.readbytes2 / elapsed
+
+	def _calcDLimitByTotal(self, conns, i):
+		max = self._downloadlimit[1] * 1024.0
+		bw = 0.0
+		for j in conns:
+			if self._isDownload(j):
+				bw += self._calcDownloadSpeed(j)
+		limit = max - bw + 1023
+		if limit < 1024.0:
+			return long(0)
+		return long(limit)
+
 	def _calcLimitNone(self, conns, i):
 		return None
 	
@@ -356,12 +383,14 @@ class SlskProtoThread(threading.Thread):
 			outsocks = [i for i in conns.keys() if len(conns[i].obuf) > 0 or (i is not server_socket and conns[i].fileupl is not None and conns[i].fileupl.offset is not None)]
 			outsock = []
 			self._limits = {}
+			self._dlimits = {}
 			for i in outsocks:
 				if self._isUpload(conns[i]):
 					limit = self._uploadlimit[0](conns, conns[i])
 					if limit is None or limit > 0:
 						self._limits[i] = limit
 						outsock.append(i)
+				
 				else:
 					outsock.append(i)
 			try:
@@ -453,10 +482,23 @@ class SlskProtoThread(threading.Thread):
 					continue
 
 				if connection in input:
-					try:
-						self.readData(conns, connection)
-					except socket.error, err:
-						self._ui_callback([ConnectError(conns[connection], err)])
+					if self._isDownload(conns[connection]):
+						limit = self._downloadlimit[0](conns, connection)
+						if limit is None or limit > 0:
+							self._dlimits[connection] = limit
+							if connection in self._dlimits:
+								#Todo: fix this Ugly download limit hack (sleep)
+								time.sleep(1.0)
+								
+						try:
+							self.readData(conns, connection)
+						except socket.error, err:
+							self._ui_callback([ConnectError(conns[connection], err)])
+					else:
+						try:
+							self.readData(conns, connection)
+						except socket.error, err:
+							self._ui_callback([ConnectError(conns[connection], err)])
 				if connection in conns and len(conns[connection].ibuf) > 0:
 					if connection is server_socket:
 						msgs, conns[server_socket].ibuf = self.process_server_input(conns[server_socket].ibuf)
@@ -586,11 +628,24 @@ class SlskProtoThread(threading.Thread):
 					self._ui_callback([conns[i].fileupl])
 
 	def readData(self, conns, i):
+		# Check for a download limit
+		if i in self._dlimits:
+			limit = self._dlimits[i]
+		else:
+			limit = None
 		conns[i].lastactive = time.time()
-		data = i.recv(conns[i].lastreadlength)
-		conns[i].ibuf = conns[i].ibuf + data
-		if len(data) >= conns[i].lastreadlength//2:
-			conns[i].lastreadlength = conns[i].lastreadlength * 2 
+		if limit is None:
+			# Unlimited download data
+			data = i.recv(conns[i].lastreadlength)
+			conns[i].ibuf = conns[i].ibuf + data
+			if len(data) >= conns[i].lastreadlength//2:
+				conns[i].lastreadlength = conns[i].lastreadlength * 2 
+		else:
+			# Speed Limited Download data (transfers)
+			data = i.recv(conns[i].lastreadlength )
+			conns[i].ibuf += data
+			conns[i].lastreadlength = limit
+			conns[i].readbytes2 += len(data)
 		if not data:
 			self._ui_callback([ConnClose(i, conns[i].addr)])
 			i.close()
@@ -807,6 +862,9 @@ class SlskProtoThread(threading.Thread):
 			if self._isUpload(i):
 				i.starttime = curtime
 				i.sentbytes2 = 0
+			if self._isDownload(i):
+				i.starttime = curtime
+				i.sentbytes2 = 0
 
 	def process_queue(self, queue, conns, connsinprogress, server_socket, maxsockets=MAXFILELIMIT):
 		""" Processes messages sent by UI thread. server_socket is a server connection
@@ -925,6 +983,8 @@ class SlskProtoThread(threading.Thread):
 						cb = self._calcLimitNone
 					self._resetCounters(conns)
 					self._uploadlimit = (cb, msgObj.limit)
+				elif msgObj.__class__ is SetDownloadLimit:
+					self._downloadlimit = (self._calcDLimitByTotal, msgObj.limit)
 				if socketwarning and time.time() - self.lastsocketwarning > 60:
 					self.lastsocketwarning = time.time()
 					log.addwarning(_("You have just hit your connection limit of %(limit)s. Nicotine+ will drop connections for your protection. If you get this message often you should search for less generic terms, or increase your per-process file descriptor limit.") % {'limit':maxsockets})

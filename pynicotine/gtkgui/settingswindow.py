@@ -179,7 +179,7 @@ class DownloadsFrame(buildFrame):
 		self.needrescan = 0
 
 		
-		self.options = {"transfers": {"incompletedir": self.IncompleteDir, "downloaddir": self.DownloadDir, "sharedownloaddir": self.ShareDownloadDir, "downloadfilters": self.FilterView, "enablefilters": self.DownloadFilter,} }
+		self.options = {"transfers": {"incompletedir": self.IncompleteDir, "downloaddir": self.DownloadDir, "sharedownloaddir": self.ShareDownloadDir, "downloadfilters": self.FilterView, "enablefilters": self.DownloadFilter, "downloadlimit": self.DownloadSpeed} }
 		self.filterlist = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_BOOLEAN )
 		self.downloadfilters = []
 		
@@ -248,6 +248,7 @@ class DownloadsFrame(buildFrame):
 				"sharedownloaddir": self.ShareDownloadDir.get_active(),
 				"downloadfilters": self.GetFilterList(),
 				"enablefilters": self.DownloadFilter.get_active(),
+				"downloadlimit": self.DownloadSpeed.get_value_as_int(),
 			}
 		}
 
