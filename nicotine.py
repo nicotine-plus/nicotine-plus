@@ -96,18 +96,27 @@ binary package and what you try to run Nicotine with.)""")
 		except:
 			log.add(_("Warning: the Berkeley DB module, dbhash, could not be loaded."))
 
+	innerexception = None
 	try:
 		if win32:
 			try:
 				import gtk
-			except:
+			except Exception, e:
+				innerexception = e
 				import pygtk
 		else:
 			import pygtk
 			pygtk.require("2.0")
-	except:
+	except Exception, e:
 		import sys
-		return _("Can not find required PyGTK. The current search path is \n%s") % (sys.path)
+		msg = [_("Can not find required PyGTK. The current search path is \n%s") % (sys.path,),
+		       "\n" + _("Exception: %s") % (e,)]
+		if win32 and innerexception:
+			msg.append("\n")
+			msg.append(_("Second exception: %s") % (innerexception))
+			msg.append("\n")
+			msg.append("You have to solve either the first or the second exception.")
+		return ''.join(msg)
 
 	import gtk
 	major, minor, micro = gtk.pygtk_version
