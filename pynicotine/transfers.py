@@ -171,7 +171,7 @@ class Transfers:
 					if i.status not in ["Queued", 'Aborted', 'Cannot connect', 'Paused' ]:
 						self.getFile(i.user, i.filename, i.path, i)
 				else:
-					if i.status not in ['Aborted']:
+					if i.status not in ['Aborted', 'Filtered']:
 						i.status = "User logged off"
 						self.downloadspanel.update(i)
 

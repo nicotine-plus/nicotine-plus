@@ -196,7 +196,7 @@ class SlskMessage:
 		except struct.error, error:
 			log.addwarning("%s %s" % (self.__class__, error))
 			displayTraceback(sys.exc_info()[2])
-
+			self.debug(message)
 			return start, None
 
 	def packObject(self, object):

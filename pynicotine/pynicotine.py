@@ -685,8 +685,7 @@ class NetworkEventProcessor:
 		if self.privatechat is not None:
 			self.privatechat.ShowMessage(msg, text, status=0)
 			
-		else:
-			self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
+		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
 			
 	def MessageUser(self, msg):
 		status = 0
@@ -702,14 +701,12 @@ class NetworkEventProcessor:
 				self.privatechat.ShowMessage(msg, msg.msg, status=status)
 				self.frame.pluginhandler.IncomingPrivateChatNotification(msg.user, msg.msg)
 			self.queue.put(slskmessages.MessageAcked(msg.msgid))
-		else:
-			self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
+		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
 
 	def UserJoinedRoom(self, msg):
 		if self.chatrooms is not None:
 			self.chatrooms.roomsctrl.UserJoinedRoom(msg)
-		else:
-			self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
+		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
 
 	def PublicRoomMessage(self, msg):
 		if self.chatrooms is not None:
@@ -729,82 +726,69 @@ class NetworkEventProcessor:
 				if msg.room in self.config.sections["server"]["roomencoding"]:
 					encoding = self.config.sections["server"]["roomencoding"][msg.room]
 				self.queue.put(slskmessages.RoomTickerSet(msg.room, self.encode(ticker, encoding)))
-		else:
-			self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
+		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
 
 		
 	def PrivateRoomUsers(self, msg):
 		if self.chatrooms is not None:
 			self.chatrooms.roomsctrl.PrivateRoomUsers(msg)
-		else:
-			self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
+		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
 	def PrivateRoomOwned(self, msg):
 		if self.chatrooms is not None:
 			self.chatrooms.roomsctrl.PrivateRoomOwned(msg)
-		else:
-			self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
+		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
 		
 	def PrivateRoomAddUser(self, msg):
 		if self.chatrooms is not None:
 			self.chatrooms.roomsctrl.PrivateRoomAddUser(msg)
-		else:
-			self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
+		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
 		
 	def PrivateRoomRemoveUser(self, msg):
 		if self.chatrooms is not None:
 			self.chatrooms.roomsctrl.PrivateRoomRemoveUser(msg)
-		else:
-			self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
+		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
 				
 	def PrivateRoomOperatorAdded(self, msg):
 		if self.chatrooms is not None:
 			self.chatrooms.roomsctrl.PrivateRoomOperatorAdded(msg)
-		else:
-			self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
+		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
 		
 		
 	def PrivateRoomOperatorRemoved(self, msg):
 		if self.chatrooms is not None:
 			self.chatrooms.roomsctrl.PrivateRoomOperatorRemoved(msg)
-		else:
-			self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
+		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
 
 				
 	def PrivateRoomAddOperator(self, msg):
 		if self.chatrooms is not None:
 			self.chatrooms.roomsctrl.PrivateRoomAddOperator(msg)
-		else:
-			self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
+		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
 		
 	def PrivateRoomRemoveOperator(self, msg):
 		if self.chatrooms is not None:
 			self.chatrooms.roomsctrl.PrivateRoomRemoveOperator(msg)
-		else:
-			self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
+		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
 				
 	def PrivateRoomAdded(self, msg):
 		if self.chatrooms is not None:
 			self.chatrooms.roomsctrl.PrivateRoomAdded(msg)
-		else:
-			self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
+		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
 		
 	def PrivateRoomRemoved(self, msg):
 		if self.chatrooms is not None:
 			self.chatrooms.roomsctrl.PrivateRoomRemoved(msg)
-		else:
-			self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
+		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
 			
 	def PrivateRoomDisown(self, msg):
 		if self.chatrooms is not None:
 			self.chatrooms.roomsctrl.PrivateRoomDisown(msg)
-		else:
-			self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
+		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
 	
 	def PrivateRoomToggle(self, msg):
 		if self.chatrooms is not None:
 			self.chatrooms.roomsctrl.TogglePrivateRooms(msg.enabled)
-		else:
-			self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
+		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
 	
 	def PrivateRoomSomething(self, msg):
 		#msg.debug()
@@ -1576,20 +1560,17 @@ class NetworkEventProcessor:
 	def RoomTickerState(self, msg):
 		if self.chatrooms is not None:
 			self.chatrooms.roomsctrl.TickerSet(msg)
-		else:
-			self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
+		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
 	
 	def RoomTickerAdd(self, msg):
 		if self.chatrooms is not None:
 			self.chatrooms.roomsctrl.TickerAdd(msg)
-		else:
-			self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
+		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
 	
 	def RoomTickerRemove(self, msg):
 		if self.chatrooms is not None:
 			self.chatrooms.roomsctrl.TickerRemove(msg)
-		else:
-			self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
+		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
 
 	def logTransfer(self, message, toUI = 0):
 		if self.config.sections["logging"]["transfers"]:
