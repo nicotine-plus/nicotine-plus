@@ -1,5 +1,5 @@
 .\" 
-.TH "NICOTINE" "1" "September 2007" "Version 1.2.9" ""
+.TH "NICOTINE" "1" "July 2009" "Version 1.2.13" ""
 .SH "NAME"
 .B nicotine
 is a graphical client for the SoulSeek peer\-to\-peer network.
@@ -11,15 +11,33 @@ is a graphical client for the SoulSeek peer\-to\-peer network.
 is a GTK\-based client for the SoulSeek peer\-to\-peer network written in Python.
 .SH "OPTIONS"
 .TP 
-.I \-h, \-\-help
+.BI \-c " <file>" "\fR,\fP \-\^\-config=" <file>
+Use <file> as configuration file. If <file> does not exists a new empty configuration file will be created.
+.TP 
+.B \-d, \-\^\-disable\-trayicon
+.TP 
+.B \-t, \-\^\-enable\-trayicon
+Enable/disable the tray icon.
+.TP 
+.B \-h, \-\^\-help
 Show help and exit.
-.TP 
-.I \-c <file>, \-\-config=<file>
-Use <file> as configuration file. If <file> do not exists a new empty configuration file will be created.
-.TP 
-.I \-t, \-\-enable\-trayicon
-.TP 
-.I \-d, \-\-disable\-trayicon
+.TP
+.B \-r, \-\^\-enable\-rgba
+.TP
+.B \-x, \-\^\-disable\-rgba
+Enable/disable RGBA mode, for full program transparency. Default is not to use RGBA.
+.TP
+.B \-s, \-\^\-hidden
+Start the program hidden so only the tray icon is shown.
+.TP
+.B \-v, \-\^\-version
+Show version number and exit.
+.SH "EXIT STATUS"
+Normally the exit status of the program will be 0. In case required
+dependencies are not present it returns 1, if the given list of arguments
+cannot be parsed it returns 2.
+.SH "FILES"
+All personal files are stored in the folder ~/.nicotine/
 .SH "AUTHOR"
 This manual page was written by Adam Cecile <gandalf@le\-vert.net> for the Nicotine+ project.
 .br 
