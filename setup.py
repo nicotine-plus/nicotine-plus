@@ -160,7 +160,7 @@ if __name__ == '__main__' :
 						'py2exe': {
 							'skip_archive':True,
 							'packages':'encodings',
-							'includes':'cairo, pango, pangocairo, atk, gobject, dbhash',
+							'includes':'cairo, pango, pangocairo, atk, gobject, dbhash, mutagen',
 						}
 					},
 		)
