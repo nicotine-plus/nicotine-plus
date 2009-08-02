@@ -23,10 +23,12 @@ import gtk
 import gobject
 from types import StringType
 import string
+from time import time
 
 from utils import InitialiseColumns, int_sort_func, float_sort_func
 
 from pynicotine.utils import _
+from pynicotine.logfacility import log
 
 class TransferList:
 	def __init__(self, frame, widget):
@@ -266,86 +268,10 @@ class TransferList:
 		
 	def update(self, transfer = None):
 		if transfer is not None:
-			if not transfer in self.list:
-				return
-			fn = transfer.filename
-			user = transfer.user
-			shortfn = self.frame.np.transfers.encode(fn.split("\\")[-1], user)
-			currentbytes = transfer.currentbytes
-			place = transfer.place
-			if currentbytes == None:
-				currentbytes = 0
-			
-			key = [user, fn]
-			
-			status = self.Humanize(self.TranslateStatus(transfer.status), None)
-			istatus = self.get_status_index(transfer.status)
-			try:
-				size = int(transfer.size)
-			except TypeError:
-				size = 0
-			hsize = "%s / %s" % (self.Humanize(currentbytes, None), self.Humanize(size, transfer.modifier ))
-			#self.Humanize(transfer.size, transfer.modifier)
-			try:
-				speed = "%.1f" % transfer.speed
-			except TypeError:
-				speed = str(transfer.speed)
-
-			elap = transfer.timeelapsed
-			left = str(transfer.timeleft)
-			
-			if speed == "None":
-				speed = ""
-			if elap == None:
-				elap = 0
-			elap = self.frame.np.transfers.getTime(elap)
-			if left == "None":
-				left = ""
-			try:
-                                #print currentbytes
-				icurrentbytes = int(currentbytes)
-				if  icurrentbytes == int(transfer.size):
-					percent = 100
-				else:
-					percent = ((100 * icurrentbytes)/ int(size))
-			except Exception, e:
-                                #print e
-				icurrentbytes = 0
-				percent = 0
-
-			# Modify old transfer
-			for i in self.transfers:
-				if i[0] != key:
-					continue
-				if i[2] != transfer:
-					continue	
-				self.transfersmodel.set(i[1], 1, shortfn, 2, status, 3, place, 4, percent, 5, hsize, 6, speed, 7, elap, 8, left, 9, self.frame.np.decode(transfer.path), 11, istatus, 12, size, 13, currentbytes)
-				break
-			else:
-				if self.TreeUsers:
-					if user not in self.users:
-						# Create Parent if it doesn't exist
-						# ProgressRender not visible (last column sets 4th column)
-						self.users[user] = self.transfersmodel.append(None, [user, "", "", "", 0,  "", "", "", "", "", "", 0, 0, 0,  False])
-					
-						#self.col_position.set_attributes(self.col_position.get_cell_renderers()[0], visible=14)
-						
-					parent = self.users[user]
-				else:
-					parent = None
-				# Add a new transfer
-				
-				path = self.frame.np.decode(transfer.path)
-				iter = self.transfersmodel.append(parent, [user, shortfn, status, place, percent,  hsize, speed, elap, left, path, fn, istatus, size, icurrentbytes, True])
-				
-				# Expand path
-				path = self.transfersmodel.get_path(iter)
-				if path is not None:
-					self.widget.expand_to_path(path)
-
-				self.transfers.append([key, iter, transfer])
-
+			self.update_specific(transfer)
 		elif self.list is not None:
+			# This seems to me to be O(n^2), perhaps constructing a temp. dict
+			# from self.list would be better?
 			for i in self.transfers[:]:
 				for j in self.list:
 					if [j.user, j.filename] == i[0]:
@@ -355,7 +281,7 @@ class TransferList:
 					self.transfersmodel.remove(i[1])
 					self.transfers.remove(i)
 			for i in self.list:
-				self.update(i)
+				self.update_specific(i)
 		# Remove empty parent rows
 		for user in self.users.keys()[:]:
 			if not self.transfersmodel.iter_has_child(self.users[user]):
@@ -432,6 +358,85 @@ class TransferList:
 				
 				
 		self.frame.UpdateBandwidth()
+	def update_specific(self, transfer = None):
+		if not transfer in self.list:
+			return
+		fn = transfer.filename
+		user = transfer.user
+		shortfn = self.frame.np.transfers.encode(fn.split("\\")[-1], user)
+		currentbytes = transfer.currentbytes
+		place = transfer.place
+		if currentbytes == None:
+			currentbytes = 0
+		
+		key = [user, fn]
+		
+		status = self.Humanize(self.TranslateStatus(transfer.status), None)
+		istatus = self.get_status_index(transfer.status)
+		try:
+			size = int(transfer.size)
+		except TypeError:
+			size = 0
+		hsize = "%s / %s" % (self.Humanize(currentbytes, None), self.Humanize(size, transfer.modifier ))
+		#self.Humanize(transfer.size, transfer.modifier)
+		try:
+			speed = "%.1f" % transfer.speed
+		except TypeError:
+			speed = str(transfer.speed)
+
+		elap = transfer.timeelapsed
+		left = str(transfer.timeleft)
+		
+		if speed == "None":
+			speed = ""
+		if elap == None:
+			elap = 0
+		elap = self.frame.np.transfers.getTime(elap)
+		if left == "None":
+			left = ""
+		try:
+			#print currentbytes
+			icurrentbytes = int(currentbytes)
+			if  icurrentbytes == int(transfer.size):
+				percent = 100
+			else:
+				percent = ((100 * icurrentbytes)/ int(size))
+		except Exception, e:
+			#print e
+			icurrentbytes = 0
+			percent = 0
+
+		# Modify old transfer
+		for i in self.transfers:
+			if i[0] != key:
+				continue
+			if i[2] != transfer:
+				continue
+			self.transfersmodel.set(i[1], 1, shortfn, 2, status, 3, place, 4, percent, 5, hsize, 6, speed, 7, elap, 8, left, 9, self.frame.np.decode(transfer.path), 11, istatus, 12, size, 13, currentbytes)
+			break
+		else:
+			if self.TreeUsers:
+				if user not in self.users:
+					# Create Parent if it doesn't exist
+					# ProgressRender not visible (last column sets 4th column)
+					self.users[user] = self.transfersmodel.append(None, [user, "", "", "", 0,  "", "", "", "", "", "", 0, 0, 0,  False])
+				
+					#self.col_position.set_attributes(self.col_position.get_cell_renderers()[0], visible=14)
+					
+				parent = self.users[user]
+			else:
+				parent = None
+			# Add a new transfer
+			
+			path = self.frame.np.decode(transfer.path)
+			iter = self.transfersmodel.append(parent, [user, shortfn, status, place, percent,  hsize, speed, elap, left, path, fn, istatus, size, icurrentbytes, True])
+			
+			# Expand path
+			path = self.transfersmodel.get_path(iter)
+			if path is not None:
+				self.widget.expand_to_path(path)
+			self.transfers.append([key, iter, transfer])
+
 
 		
 	def Clear(self):
@@ -498,8 +503,10 @@ class TransferList:
 		self.ClearTransfers(statuslist)
 
 	def OnClearFinishedAborted(self, widget):
+		#begin = time()
 		statuslist = ["Aborted","Cancelled", "Finished", "Filtered"]
 		self.ClearTransfers(statuslist)
+		#log.addwarning("Clearing took %f seconds" % (time() - begin))
 
 	def OnClearQueued(self, widget):
 		self.ClearTransfers(["Queued"])
