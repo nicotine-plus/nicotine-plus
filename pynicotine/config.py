@@ -296,6 +296,8 @@ class Config:
 	"transfilter": 0x00000000L, \
 	"width": 800, \
 	"height": 600, \
+	"xposition": -1,
+	"yposition": -1,
 	}, \
 \
 "private_rooms": { \

@@ -398,7 +398,13 @@ class NicotineFrame:
 		width = self.np.config.sections["ui"]["width"]
 		height = self.np.config.sections["ui"]["height"]
 		self.MainWindow.resize(width, height)
-		self.MainWindow.set_position(gtk.WIN_POS_CENTER)
+		xpos = self.np.config.sections["ui"]["xposition"]
+		ypos = self.np.config.sections["ui"]["yposition"]
+		# According to the pygtk doc this will be ignored my many window managers since the move takes place before we do a show()
+		if min(xpos, ypos) < 0:
+			self.MainWindow.set_position(gtk.WIN_POS_CENTER)
+		else:
+			self.MainWindow.set_position(xpos, ypos)
 		self.MainWindow.show()
 		self.is_mapped = True
 		if start_hidden:
@@ -1618,9 +1624,12 @@ class NicotineFrame:
 		self.Statusbar.push(self.status_context_id, str(msg))
 		
 	def OnWindowChange(self, widget, blag):
-		(width, height)= self.MainWindow.get_size()
+		(width, height) = self.MainWindow.get_size()
 		self.np.config.sections["ui"]["height"] = height
 		self.np.config.sections["ui"]["width"] = width
+		(xpos, ypos) = self.MainWindow.get_position()
+		self.np.config.sections["ui"]["xposition"] = xpos
+		self.np.config.sections["ui"]["yposition"] = ypos
 		
 	def OnDestroy(self, widget):
 		self.np.config.sections["privatechat"]["users"] = list(self.privatechats.users.keys())
