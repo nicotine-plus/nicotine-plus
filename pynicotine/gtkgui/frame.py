@@ -404,7 +404,7 @@ class NicotineFrame:
 		if min(xpos, ypos) < 0:
 			self.MainWindow.set_position(gtk.WIN_POS_CENTER)
 		else:
-			self.MainWindow.set_position(xpos, ypos)
+			self.MainWindow.move(xpos, ypos)
 		self.MainWindow.show()
 		self.is_mapped = True
 		if start_hidden:
