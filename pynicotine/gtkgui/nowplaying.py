@@ -518,7 +518,10 @@ class NowPlaying:
 		
 	def audacious_command(self, command, subcommand = ''):
 		#output = commands.getoutput("audtool %s %s" % (command, subcommand)).split('\n')[0]
-		output = executeCommand("audtool %s %s" % (command, subcommand), returnoutput=True).split('\n')[0]
+		try:
+			output = executeCommand("audtool %s %s" % (command, subcommand), returnoutput=True).split('\n')[0]
+		except RuntimeError:
+			output = executeCommand("audtool2 %s %s" % (command, subcommand), returnoutput=True).split('\n')[0]
 		if output.startswith('audtool'):
 			output = None
 			self.audacious_running = False
