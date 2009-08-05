@@ -785,10 +785,10 @@ class SlskProtoThread(threading.Thread):
 							host = port = _("unknown")
 							msgname = str(self.peerclasses[msgtype]).split(".")[-1]
 							print "Error parsing %s:" % msgname, error
-							if "addr" in conn.init.conn.__dict__:
-								if conn.init.conn.addr is not None:
-									host = conn.init.conn.addr[0]
-									port = conn.init.conn.addr[1]
+							if "addr" in conn.__dict__:
+								if conn.addr is not None:
+									host = conn.addr[0]
+									port = conn.addr[1]
 							debugmessage = _("There was an error while unpacking Peer message type %(type)s size %(size)i contents %(msgBuffer)s from user: %(user)s, %(host)s:%(port)s") %{'type':msgname, 'size':msgsize-4, 'msgBuffer':msgBuffer[8:msgsize+4].__repr__(), 'user':conn.init.user, 'host': host, 'port': port}
 							print debugmessage
 							msgs.append(debugmessage)

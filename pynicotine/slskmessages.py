@@ -172,7 +172,6 @@ class DebugMessage(InternalMessage):
 
 class SlskMessage:
 	""" This is a parent class for all protocol messages. """
-	
 	def getObject(self, message, type, start=0, getintasshort=0, getsignedint=0):
 		""" Returns object of specified type, extracted from message (which is
 		a binary array). start is an offset."""
@@ -186,7 +185,10 @@ class SlskMessage:
 				else:
 					return intsize+start, struct.unpack("<I", message[start:start+intsize])[0]
 			elif type is types.LongType:
-				return struct.calcsize("<Q")+start, struct.unpack("<Q", message[start:start+struct.calcsize("<Q")])[0]
+				if getsignedint:
+					return struct.calcsize("<Q")+start, struct.unpack("<Q", message[start:start+struct.calcsize("<Q")])[0]
+				else:
+					return struct.calcsize("<L")+start, struct.unpack("<L", message[start:start+struct.calcsize("<L")])[0]
 			elif type is types.StringType:
 				length = struct.unpack("<I", message[start:start+intsize])[0]
 				string = message[start+intsize:start+length+intsize]
@@ -194,7 +196,7 @@ class SlskMessage:
 			else:
 				return start, None
 		except struct.error, error:
-			log.addwarning("%s %s" % (self.__class__, error))
+			log.addwarning("%s %s at %s" % (self.__class__, error, start))
 			displayTraceback(sys.exc_info()[2])
 			self.debug(message)
 			return start, None
@@ -352,7 +354,7 @@ class AddUser(ServerMessage):
 		if len(message[pos:]) > 0:
 			pos, self.status = self.getObject(message, types.IntType, pos)
 			pos, self.avgspeed = self.getObject(message, types.IntType, pos)
-			pos, self.downloadnum = self.getObject(message, types.LongType, pos)
+			pos, self.downloadnum = self.getObject(message, types.LongType, pos, getsignedint = 1)
 
 			pos, self.files = self.getObject(message, types.IntType, pos)
 			pos, self.dirs = self.getObject(message, types.IntType, pos)
@@ -906,7 +908,7 @@ class GetUserStats(ServerMessage):
 	def parseNetworkMessage(self, message):
 		pos, self.user = self.getObject(message, types.StringType)
 		pos, self.avgspeed = self.getObject(message, types.IntType, pos, getsignedint = 1)
-		pos, self.downloadnum = self.getObject(message, types.LongType, pos)
+		pos, self.downloadnum = self.getObject(message, types.LongType, pos, getsignedint = 1)
 		pos, self.files = self.getObject(message, types.IntType, pos)
 		pos, self.dirs = self.getObject(message, types.IntType, pos)
 
@@ -988,7 +990,7 @@ class ExactFileSearch(ServerMessage):
 		pos, self.req = self.getObject(message, types.IntType, pos)
 		pos, self.file = self.getObject(message, types.StringType, pos)
 		pos, self.folder = self.getObject(message, types.StringType, pos)
-		pos, self.size = self.getObject(message, types.LongType, pos)
+		pos, self.size = self.getObject(message, types.LongType, pos, getsignedint = 1)
 		pos, self.checksum = self.getObject(message, types.IntType, pos)
 
 class AdminMessage(ServerMessage):
@@ -1460,7 +1462,7 @@ class SharedFileList(PeerMessage):
 			for j in range(nfiles):
 				pos, code = pos+1, ord(message[pos])
 				pos, name = self.getObject(message, types.StringType, pos)
-				pos, size = self.getObject(message, types.LongType, pos)
+				pos, size = self.getObject(message, types.LongType, pos, getsignedint = 1)
 				pos, ext = self.getObject(message, types.StringType, pos)
 				pos, numattr = self.getObject(message, types.IntType, pos)
 				attrs = []
@@ -1529,7 +1531,7 @@ class FileSearchResult(PeerMessage):
 		self.ulspeed = ulspeed 
 		self.inqueue = inqueue
 		self.fifoqueue = fifoqueue
-	
+		self.pos = 0
 	def parseNetworkMessage(self, message):
 		try:
 			message = zlib.decompress(message)
@@ -1537,30 +1539,45 @@ class FileSearchResult(PeerMessage):
 			log.addwarning(_("Exception during parsing %(area)s: %(exception)s") % {'area':'FileSearchResult', 'exception':error})
 			self.list = {}
 			return
-	
-		pos, self.user = self.getObject(message, types.StringType)
-		pos, self.token = self.getObject(message, types.IntType, pos)
-		pos, nfiles = self.getObject(message, types.IntType, pos)
+
+		self.pos, self.user = self.getObject(message, types.StringType)
+		self.pos, self.token = self.getObject(message, types.IntType, self.pos)
+		self.pos, nfiles = self.getObject(message, types.IntType, self.pos)
 		shares = []
 		for i in range(nfiles):
-			pos, code = pos+1, ord(message[pos])
-			pos, name = self.getObject(message, types.StringType, pos)
-			pos, size = self.getObject(message, types.LongType, pos)
-
-			pos, ext = self.getObject(message, types.StringType, pos)
-			pos, numattr = self.getObject(message, types.IntType, pos)
+			self.pos, code = self.pos+1, ord(message[self.pos])
+			self.pos, name = self.getObject(message, types.StringType, self.pos)
+			pos1, size1 = self.getObject(message, types.LongType, self.pos, getsignedint=1)
+			pos2, size2 = self.getObject(message, types.LongType, self.pos)
+			if size1 != size2:
+				size = size2
+				self.pos = pos2
+			else:
+				size = size1
+				self.pos = pos1
+			try:
+				pos1, extInt = self.getObject(message, types.IntType, self.pos)
+				if extInt > 0:
+					self.pos, ext = self.getObject(message, types.StringType, self.pos)
+				else:
+					self.pos = pos1
+					ext = ""
+			except:
+				self.pos = pos+4
+				ext = ""
+			self.pos, numattr = self.getObject(message, types.IntType, self.pos)
 			attrs = []
 			if numattr:
 				for j in range(numattr):
-					pos, attrnum = self.getObject(message, types.IntType, pos)
-					pos, attr = self.getObject(message, types.IntType, pos)
+					self.pos, attrnum = self.getObject(message, types.IntType, self.pos)
+					self.pos, attr = self.getObject(message, types.IntType, self.pos)
 					attrs.append(attr)
 			shares.append([code, name, size, ext, attrs])
 		self.list = shares
-		pos, self.freeulslots = pos+1, ord(message[pos])
-		pos, self.ulspeed = self.getObject(message, types.IntType, pos, getsignedint=1)
-		pos, self.inqueue = self.getObject(message, types.IntType, pos)
-        
+		self.pos, self.freeulslots = self.pos+1, ord(message[self.pos])
+		self.pos, self.ulspeed = self.getObject(message, types.IntType, self.pos, getsignedint=1)
+		self.pos, self.inqueue = self.getObject(message, types.IntType, self.pos)
+
 	def makeNetworkMessage(self):
 		filelist = []
 		for i in self.list:
@@ -1643,7 +1660,7 @@ class FolderContentsResponse(PeerMessage):
 				for j in range(nfiles):
 					pos, code = pos+1, ord(message[pos])
 					pos, name = self.getObject(message, types.StringType, pos)
-					pos, size = self.getObject(message, types.LongType, pos)
+					pos, size = self.getObject(message, types.LongType, pos, getsignedint = 1)
 					pos, ext = self.getObject(message, types.StringType, pos)
 					pos, numattr = self.getObject(message, types.IntType, pos)
 					attrs = []

@@ -1274,7 +1274,7 @@ class NetworkEventProcessor:
 					country = ""
 				self.search.ShowResult(msg, i.username, country)
 				self.ClosePeerConnection(i.conn)
-
+		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
 	def PierceFireWall(self, msg):
 		for i in self.peerconns:
 			if i.token == msg.token and i.conn is None:

@@ -239,7 +239,7 @@ class Searches(IconNotebook):
 		self.frame.np.config.sections["searches"]["history"] = []
 		self.frame.np.config.writeConfig()
 		self.frame.SearchEntryCombo.get_model().clear()
-	
+		self.frame.SearchEntryCombo.append_text("")
 	def OnSearch(self):
 		text = self.frame.SearchEntry.get_text().strip()
 		
