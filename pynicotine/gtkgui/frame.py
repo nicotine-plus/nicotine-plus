@@ -505,15 +505,15 @@ class NicotineFrame:
 		if self.translux:
 			self.LogScrolledWindow.get_vadjustment().connect("value-changed", lambda *args: self.LogWindow.queue_draw())
 			self.translux.subscribe(self.LogWindow, lambda: self.LogWindow.get_window(gtk.TEXT_WINDOW_TEXT))
-	        
+	    
 		if config["logging"]["logcollapsed"]:
-			self.hide_log_window1.set_active(1)
+			self.show_log_window1.set_active(False)
 		else:
 			#self.vpaned1.pack2(self.LogScrolledWindow, False, True)
-			self.hide_log_window1.set_active(0)
-		
+			self.show_log_window1.set_active(True)
 		
 		self.LogWindow.show()
+		self.OnShowLog(self.show_log_window1)
 		
 		self.extravbox = gtk.VBox() # Web browser vbox
 
@@ -525,8 +525,7 @@ class NicotineFrame:
 				l.child.set_text_color(0)
 		
 		
-		if config["ticker"]["hide"]:
-			self.hide_tickers1.set_active(1)
+		self.show_tickers1.set_active(not config["ticker"]["hide"])
 	
 		self.show_debug_info1.set_active(self.np.config.sections["logging"]["debug"])
 		
@@ -561,24 +560,24 @@ class NicotineFrame:
 		
 		
 		if config["ui"]["roomlistcollapsed"]:
-			self.hide_room_list1.set_active(1)
+			self.show_room_list1.set_active(False)
 		else:
 			self.vpaned3.pack2(self.roomlist.vbox2,True, True)
-			self.hide_room_list1.set_active(0)
+			self.show_room_list1.set_active(True)
 
 		buddylist = config["ui"]["buddylistinchatrooms"]
 		if buddylist == 1:
-			self.buddylist_in_chatrooms1.set_active(1)
+			self.buddylist_in_chatrooms1.set_active(True)
 		elif buddylist == 2:
-			self.buddylist_always_visible.set_active(1)
+			self.buddylist_always_visible.set_active(True)
 		elif buddylist == 0:
-			self.buddylist_in_tab.set_active(1)
+			self.buddylist_in_tab.set_active(True)
 		
 
 		if config["columns"]["hideflags"]:
-			self.HideFlags.set_active(1)
+			self.ShowFlags.set_active(False)
 		else:
-			self.HideFlags.set_active(0)
+			self.ShowFlags.set_active(True)
 			
 		self.SetUserStatus(_("Offline"))
 		self.TrayApp = TrayApp(self)
@@ -614,10 +613,7 @@ class NicotineFrame:
 		self.pluginhandler = pluginsystem.PluginHandler(self, plugindir)
 		
 
-		if config["ui"]["chat_hidebuttons"]:
-			self.HideChatButtons.set_active(1)
-		else:
-			self.HideChatButtons.set_active(0)
+		self.ShowChatButtons.set_active(not config["ui"]["chat_hidebuttons"])
 
 		if config["transfers"]["rescanonstartup"]:
 			self.BothRescan()
@@ -1138,7 +1134,7 @@ class NicotineFrame:
 	def onOpenRoomList(self, dialog, response):
 		dialog.destroy()
 		if response == gtk.RESPONSE_OK:
-			self.hide_room_list1.set_active(0)
+			self.show_room_list1.set_active(True)
 	
 			
 	def OnGetUserInfo(self, widget):
@@ -2286,7 +2282,7 @@ class NicotineFrame:
 			self.userlist.UpdateColours()
 			self.UpdateColours()
 		
-		self.OnHideChatButtons()
+		self.OnShowChatButtons()
 
 		for w in [self.ChatNotebook, self.PrivatechatNotebook, self.UserInfoNotebook, self.UserBrowseNotebook, self.SearchNotebook]:
 			w.set_tab_closers(config["ui"]["tabclosers"])
@@ -2625,21 +2621,21 @@ class NicotineFrame:
 		dlg.run()
 		dlg.destroy()
 		
-	def OnHideChatButtons(self, widget=None):
+	def OnShowChatButtons(self, widget=None):
 		if widget is not None:
-			hide = widget.get_active()
-			self.np.config.sections["ui"]["chat_hidebuttons"] = hide
+			show = widget.get_active()
+			self.np.config.sections["ui"]["chat_hidebuttons"] = (not show)
 		if self.chatrooms is None:
 			return
 		for room in self.chatrooms.roomsctrl.joinedrooms.values():
-			room.OnHideChatButtons(self.np.config.sections["ui"]["chat_hidebuttons"])
+			room.OnShowChatButtons(not self.np.config.sections["ui"]["chat_hidebuttons"])
 
 		self.np.config.writeConfig()
 		
-	def OnHideLog(self, widget):
-		active = widget.get_active()
-		self.np.config.sections["logging"]["logcollapsed"] = active
-		if active:
+	def OnShowLog(self, widget):
+		show = widget.get_active()
+		self.np.config.sections["logging"]["logcollapsed"] = (not show)
+		if not show:
 			if self.debugLogBox in self.vpaned1.get_children():
 				self.vpaned1.remove(self.debugLogBox)
 		else:
@@ -2648,23 +2644,22 @@ class NicotineFrame:
 				ScrollBottom(self.LogScrolledWindow)
 		self.np.config.writeConfig()
 	
-	def OnHideFlags(self, widget):
+	def OnShowFlags(self, widget):
 		if self.chatrooms is None:
 			return
-		active = widget.get_active()
-		self.np.config.sections["columns"]["hideflags"] = active
+		show = widget.get_active()
+		self.np.config.sections["columns"]["hideflags"] = (not show)
 		for room in self.chatrooms.roomsctrl.joinedrooms:
-			self.chatrooms.roomsctrl.joinedrooms[room].cols[1].set_visible(int(not active))
-			self.np.config.sections["columns"]["chatrooms"][room][1] = int(not active)
-		self.userlist.cols[1].set_visible(int(not active))
-		self.np.config.sections["columns"]["userlist"][1] = int(not active)
+			self.chatrooms.roomsctrl.joinedrooms[room].cols[1].set_visible(show)
+			self.np.config.sections["columns"]["chatrooms"][room][1] = int(show)
+		self.userlist.cols[1].set_visible(show)
+		self.np.config.sections["columns"]["userlist"][1] = int(show)
 		self.np.config.writeConfig()
 		
-	def OnHideRoomList(self, widget):
-		
-		active = widget.get_active()
-		self.np.config.sections["ui"]["roomlistcollapsed"] = active
-		if active:
+	def OnShowRoomList(self, widget):
+		show = widget.get_active()
+		self.np.config.sections["ui"]["roomlistcollapsed"] = (not show)
+		if not show:
 			if self.roomlist.vbox2 in self.vpaned3.get_children():
 				self.vpaned3.remove(self.roomlist.vbox2)
 			#try:
@@ -2699,7 +2694,7 @@ class NicotineFrame:
 			if chatrooms:
 				return
 			self.vpaned3.remove(self.userlist.userlistvbox)
-		if self.hide_room_list1.get_active():
+		if not self.show_room_list1.get_active():
 			#
 			if not chatrooms:
 				self.vpaned3.hide()
@@ -3187,14 +3182,14 @@ class NicotineFrame:
 		items[1].set_active(thing in self.np.config.sections["interests"]["dislikes"])
 		self.ur_popup_menu.popup(None, None, None, event.button, event.time)
 		
-	def OnHideTickers(self, widget):
+	def OnShowTickers(self, widget):
 		if not self.chatrooms:
 			return
-		hide = widget.get_active()
-		self.np.config.sections["ticker"]["hide"] = hide
+		show = widget.get_active()
+		self.np.config.sections["ticker"]["hide"] = (not show)
 		self.np.config.writeConfig()
 		for room in self.chatrooms.roomsctrl.joinedrooms.values():
-			room.ShowTicker(not hide)
+			room.ShowTicker(show)
 			
 	def RecommendationsExpanderStatus(self, widget):
 		if widget.get_property("expanded"):

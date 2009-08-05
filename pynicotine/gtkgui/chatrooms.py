@@ -111,7 +111,7 @@ class RoomsControl:
 		frame.roomlist.RoomsList.connect("button_press_event", self.OnListClicked)
 		frame.roomlist.RoomsList.set_headers_clickable(True)
 
-		frame.roomlist.HideRoomList.connect("clicked", self.OnHideRoomList)
+		frame.roomlist.HideRoomList.connect("clicked", self.OnShowRoomList)
 
 		ChatNotebook.connect("switch-page", self.OnSwitchPage)
 		try:
@@ -217,9 +217,9 @@ class RoomsControl:
 			if room.Main == page:
 				self.frame.ClearNotification("rooms", name)
 			
-	def OnHideRoomList(self, widget):
+	def OnShowRoomList(self, widget):
 
-		self.frame.hide_room_list1.set_active(1)
+		self.frame.show_room_list1.set_active(1)
 		
 	def OnListClicked(self, widget, event):
 		if event.button == 1 and event.type == gtk.gdk._2BUTTON_PRESS:
@@ -568,7 +568,7 @@ class RoomsControl:
 		del self.joinedrooms[msg.room]
 		if msg.room[-1:] != ' ': # meta rooms
 			self.frame.RoomSearchCombo_List.remove(self.frame.searchroomslist[msg.room])
-		if self.joinedrooms == {} and self.frame.hide_room_list1.get_active():
+		if self.joinedrooms == {} and not self.frame.show_room_list1.get_active():
 			win = OptionDialog(self.frame, _("You aren't in any chat rooms.") + " " + _("Open Room List?"), modal=True, status=None, option=False, third="")
 			win.connect("response", self.frame.onOpenRoomList)
 			win.set_title(_("Nicotine+")+": "+_("Open Room List?"))
@@ -683,7 +683,7 @@ class ChatRoom:
 		if not config["ticker"]["hide"]:
 			self.Ticker.show()
 		
-		self.OnHideChatButtons(hide=config["ui"]["chat_hidebuttons"])
+		self.OnShowChatButtons(show=(not config["ui"]["chat_hidebuttons"]))
 			
 		if self.frame.translux:
 			self.tlux_roomlog = lambda: self.RoomLog.get_window(gtk.TEXT_WINDOW_TEXT)
@@ -1037,13 +1037,13 @@ class ChatRoom:
 	def OnShowChatHelp(self, widget):
 		self.frame.OnAboutChatroomCommands(widget, self.GetTabParent(self.Main))
 
-	def OnHideChatButtons(self, hide=False):
+	def OnShowChatButtons(self, show=True):
 		for widget in self.HideStatusLog, self.HideUserList, self.ShowChatHelp:
-			if hide:
-				widget.hide()
-			else:
+			if show:
 				widget.show()
-		if self.frame.np.config.sections["ui"]["speechenabled"] and not hide:
+			else:
+				widget.hide()
+		if self.frame.np.config.sections["ui"]["speechenabled"] and show:
 			self.Speech.show()
 		else:
 			self.Speech.hide()

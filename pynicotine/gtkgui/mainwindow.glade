@@ -180,18 +180,18 @@
               <widget class="GtkMenuItem" id="View">
                 <property name="visible">True</property>
                 <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                <property name="label" translatable="yes">View</property>
+                <property name="label" translatable="yes">_View</property>
                 <property name="use_underline">True</property>
                 <child>
                   <widget class="GtkMenu" id="menu2">
                     <property name="visible">True</property>
                     <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                     <child>
-                      <widget class="GtkCheckMenuItem" id="hide_log_window1">
+                      <widget class="GtkCheckMenuItem" id="show_log_window1">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">_Hide log window</property>
+                        <property name="label" translatable="yes">_Show log window</property>
                         <property name="use_underline">True</property>
-                        <signal name="activate" handler="OnHideLog"/>
+                        <signal name="activate" handler="OnShowLog"/>
                         <accelerator key="H" signal="activate" modifiers="GDK_MOD1_MASK"/>
                       </widget>
                     </child>
@@ -209,38 +209,38 @@
                       </widget>
                     </child>
                     <child>
-                      <widget class="GtkCheckMenuItem" id="hide_room_list1">
+                      <widget class="GtkCheckMenuItem" id="show_room_list1">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">Hide room _list</property>
+                        <property name="label" translatable="yes">Show room _list</property>
                         <property name="use_underline">True</property>
-                        <signal name="activate" handler="OnHideRoomList"/>
+                        <signal name="activate" handler="OnShowRoomList"/>
                         <accelerator key="R" signal="activate" modifiers="GDK_MOD1_MASK"/>
                       </widget>
                     </child>
                     <child>
-                      <widget class="GtkCheckMenuItem" id="hide_tickers1">
+                      <widget class="GtkCheckMenuItem" id="show_tickers1">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">Hide _tickers</property>
+                        <property name="label" translatable="yes">Show _tickers</property>
                         <property name="use_underline">True</property>
-                        <signal name="activate" handler="OnHideTickers"/>
+                        <signal name="activate" handler="OnShowTickers"/>
                         <accelerator key="T" signal="activate" modifiers="GDK_MOD1_MASK"/>
                       </widget>
                     </child>
                     <child>
-                      <widget class="GtkCheckMenuItem" id="HideChatButtons">
+                      <widget class="GtkCheckMenuItem" id="ShowChatButtons">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">Hide chat room log and list toggles</property>
+                        <property name="label" translatable="yes">Show chat room log and list toggles</property>
                         <property name="use_underline">True</property>
-                        <signal name="toggled" handler="OnHideChatButtons"/>
-                        <accelerator key="T" signal="activate" modifiers="GDK_MOD1_MASK"/>
+                        <signal name="toggled" handler="OnShowChatButtons"/>
+                        <accelerator key="E" signal="activate" modifiers="GDK_MOD1_MASK"/>
                       </widget>
                     </child>
                     <child>
-                      <widget class="GtkCheckMenuItem" id="HideFlags">
+                      <widget class="GtkCheckMenuItem" id="ShowFlags">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">Hide flag columns in user lists</property>
+                        <property name="label" translatable="yes">Show flag columns in user lists</property>
                         <property name="use_underline">True</property>
-                        <signal name="toggled" handler="OnHideFlags"/>
+                        <signal name="toggled" handler="OnShowFlags"/>
                         <accelerator key="g" signal="activate" modifiers="GDK_MOD1_MASK"/>
                       </widget>
                     </child>
