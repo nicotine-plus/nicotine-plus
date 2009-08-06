@@ -1272,6 +1272,8 @@ class NetworkEventProcessor:
 						country = ""
 				else:
 					country = ""
+				if country is None:
+					country = ""
 				self.search.ShowResult(msg, i.username, country)
 				self.ClosePeerConnection(i.conn)
 		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)

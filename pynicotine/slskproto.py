@@ -792,6 +792,7 @@ class SlskProtoThread(threading.Thread):
 							debugmessage = _("There was an error while unpacking Peer message type %(type)s size %(size)i contents %(msgBuffer)s from user: %(user)s, %(host)s:%(port)s") %{'type':msgname, 'size':msgsize-4, 'msgBuffer':msgBuffer[8:msgsize+4].__repr__(), 'user':conn.init.user, 'host': host, 'port': port}
 							print debugmessage
 							msgs.append(debugmessage)
+							del msg
 						else:
 							msgs.append(msg)
 					except Exception, error:

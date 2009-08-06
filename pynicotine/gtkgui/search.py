@@ -543,7 +543,7 @@ class Search:
 		self.filters = None
 		# num, user, filename, h_size, h_speed, h_queue, immediatedl, h_bitrate, length, self.get_flag(user, country), directory, bitrate, fullpath, country,  size, speed, queue, status]
 		self.COLUMN_TYPES = [int, str, str, str, str, str, str, str, str, gtk.gdk.Pixbuf, str,
-			int, str, str, gobject.TYPE_ULONG, int, int, int]
+			int, str, str, gobject.TYPE_UINT64, int, int, int]
 		self.resultsmodel = gtk.TreeStore(* self.COLUMN_TYPES )
 
 		
@@ -821,21 +821,22 @@ class Search:
 
 			self.all_data.append(row)
 			if (displaycounter + returned < self.frame.np.config.sections['searches']["max_displayed_results"]) and (not self.filters or self.check_filter(row)):
-				encoded_row = [itercounter, user, encode(filename, user), h_size, h_speed, h_queue, immediatedl,
-				               h_bitrate, length, self.get_flag(user, country), encode(directory, user), bitrate,
-				               encode(fullpath, user), country,  size, speed, queue, status]
-				#print user, status
-				if user in self.usersiters:
-					iter = self.resultsmodel.append(self.usersiters[user], encoded_row)
-				else:
-					try:
+				encoded_row = [itercounter, user, encode(filename, user), h_size, h_speed, h_queue, immediatedl, h_bitrate, length, self.get_flag(user, country), encode(directory, user), bitrate, encode(fullpath, user), country,  size, speed, queue, status]
+				try:
+					if user in self.usersiters:
+						iter = self.resultsmodel.append(self.usersiters[user], encoded_row)
+					else:
 						iter = self.resultsmodel.append(None, encoded_row)
-					except Exception, e:
-						print "Search row error", e, encoded_row
-						print 
-						iter=None
-
-				path = self.resultsmodel.get_path(iter)
+				except Exception, e:
+					types=[]
+					for i in encoded_row:
+						types.append( type(i))
+					#print types
+					print "Search row error:", e, encoded_row
+					iter=None
+				path = None
+				if iter is not None:
+					path = self.resultsmodel.get_path(iter)
 				if path is not None:
 					if self.usersGroup.get_active() and self.ExpandButton.get_active():
 						self.ResultsList.expand_to_path(path)
@@ -1018,7 +1019,7 @@ class Search:
 					else:
 						iter = self.resultsmodel.append(None, encoded_row)
 				except Exception, e:
-					print "Search row error", e
+					print "Filters: Search row error:", e
 					for i in encoded_row:
 						print i, type(i),
 					print

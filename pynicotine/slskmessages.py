@@ -196,10 +196,11 @@ class SlskMessage:
 			else:
 				return start, None
 		except struct.error, error:
-			log.addwarning("%s %s at %s" % (self.__class__, error, start))
-			displayTraceback(sys.exc_info()[2])
+			log.addwarning("%s %s trying to unpack %s at '%s' at %s/%s" % (self.__class__, error, type, message[start:].__repr__(), self.pos, len(message)))
+			#displayTraceback(sys.exc_info()[2])
 			self.debug(message)
-			return start, None
+			raise struct.error, error
+			#return start, None
 
 	def packObject(self, object):
 		""" Returns object (integer, long or string packed into a 
@@ -1535,49 +1536,38 @@ class FileSearchResult(PeerMessage):
 	def parseNetworkMessage(self, message):
 		try:
 			message = zlib.decompress(message)
+		
+
+			self.pos, self.user = self.getObject(message, types.StringType)
+			self.pos, self.token = self.getObject(message, types.IntType, self.pos)
+			self.pos, nfiles = self.getObject(message, types.IntType, self.pos)
+			shares = []
+			for i in range(nfiles):
+				self.pos, code = self.pos+1, ord(message[self.pos])
+				self.pos, name = self.getObject(message, types.StringType, self.pos)
+				#self.pos, size = self.getObject(message, types.LongType, self.pos, getsignedint=1)
+				self.pos, size2 = self.getObject(message, types.LongType, self.pos)
+				self.pos, size3 = self.getObject(message, types.LongType, self.pos)
+				size = long(size2 + size3)
+
+				self.pos, ext = self.getObject(message, types.StringType, self.pos)
+				self.pos, numattr = self.getObject(message, types.IntType, self.pos)
+				attrs = []
+				if numattr:
+					for j in range(numattr):
+						self.pos, attrnum = self.getObject(message, types.IntType, self.pos)
+						self.pos, attr = self.getObject(message, types.IntType, self.pos)
+						attrs.append(attr)
+				shares.append([code, name, size, ext, attrs])
+			self.list = shares
+			self.pos, self.freeulslots = self.pos+1, ord(message[self.pos])
+			self.pos, self.ulspeed = self.getObject(message, types.IntType, self.pos, getsignedint=1)
+			self.pos, self.inqueue = self.getObject(message, types.IntType, self.pos)
 		except Exception, error:
+			print error
 			log.addwarning(_("Exception during parsing %(area)s: %(exception)s") % {'area':'FileSearchResult', 'exception':error})
 			self.list = {}
 			return
-
-		self.pos, self.user = self.getObject(message, types.StringType)
-		self.pos, self.token = self.getObject(message, types.IntType, self.pos)
-		self.pos, nfiles = self.getObject(message, types.IntType, self.pos)
-		shares = []
-		for i in range(nfiles):
-			self.pos, code = self.pos+1, ord(message[self.pos])
-			self.pos, name = self.getObject(message, types.StringType, self.pos)
-			pos1, size1 = self.getObject(message, types.LongType, self.pos, getsignedint=1)
-			pos2, size2 = self.getObject(message, types.LongType, self.pos)
-			if size1 != size2:
-				size = size2
-				self.pos = pos2
-			else:
-				size = size1
-				self.pos = pos1
-			try:
-				pos1, extInt = self.getObject(message, types.IntType, self.pos)
-				if extInt > 0:
-					self.pos, ext = self.getObject(message, types.StringType, self.pos)
-				else:
-					self.pos = pos1
-					ext = ""
-			except:
-				self.pos = pos+4
-				ext = ""
-			self.pos, numattr = self.getObject(message, types.IntType, self.pos)
-			attrs = []
-			if numattr:
-				for j in range(numattr):
-					self.pos, attrnum = self.getObject(message, types.IntType, self.pos)
-					self.pos, attr = self.getObject(message, types.IntType, self.pos)
-					attrs.append(attr)
-			shares.append([code, name, size, ext, attrs])
-		self.list = shares
-		self.pos, self.freeulslots = self.pos+1, ord(message[self.pos])
-		self.pos, self.ulspeed = self.getObject(message, types.IntType, self.pos, getsignedint=1)
-		self.pos, self.inqueue = self.getObject(message, types.IntType, self.pos)
-
 	def makeNetworkMessage(self):
 		filelist = []
 		for i in self.list:
