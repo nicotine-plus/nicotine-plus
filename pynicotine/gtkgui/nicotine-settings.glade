@@ -149,7 +149,7 @@
                         </child>
                         <child>
                           <widget class="GtkButton" id="ChangePassword">
-                            <property name="label" translatable="yes">gtk-apply</property>
+                            <property name="label" translatable="yes">Change password</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
