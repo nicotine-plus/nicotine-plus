@@ -650,21 +650,23 @@ class IconNotebook(gtk.Notebook):
 		window.show()
 		
 	def OnFocusIn(self, widget, event):
-		widget.set_icon(NICOTINE.images["n"])
+		
 		for item in self.detached_tabs:
 			if item[2] == widget:
 				item[3] = True
-				self.Focused(item[0], True)
+				self.OnFocused(item)
 				
 	def OnFocusOut(self, widget, event):
 		for item in self.detached_tabs:
 			if item[2] == widget:
 				item[3] = False
-				self.Focused(item[0], False)
+				#self.OnFocused(item)
 
-	def Focused(self, page, focused):
-		pass
-	
+	def OnFocused(self, item):
+		(page, label, window, focused) = item
+		self.frame.Notifications.ClearPage(self, item)
+		self.set_detached_icon(page, 0)
+
 	def attach_tab(self, page, destroying=False):
 		pagewidget = label_tab = label_tab_menu = label = status = None
 
@@ -715,7 +717,7 @@ class IconNotebook(gtk.Notebook):
 		return False
 	
 	def set_detached_icon(self, page, status):
-		image = self.images[("empty", "hilite3", "hilite")[status]]
+		image = self.images[("n", "hilite3", "hilite")[status]]
 		for item in self.detached_tabs:
 			if item[0] is page:
 				window = item[2]
@@ -775,9 +777,10 @@ class IconNotebook(gtk.Notebook):
 
 	def request_hilite(self, page):
 		if self.is_tab_detached(page):
-			if self.is_detached_tab_focused(page):
-				return
-			self.set_detached_icon(page, 2)
+			if not self.is_detached_tab_focused(page):
+				self.set_detached_icon(page, 2)
+			return
+			# Don't set 'tab' notification icons for detached tabs
 		current = self.get_nth_page(self.get_current_page())
 		if current == page:
 			return
@@ -786,9 +789,10 @@ class IconNotebook(gtk.Notebook):
 
 	def request_changed(self, page):
 		if self.is_tab_detached(page):
-			if self.is_detached_tab_focused(page):
-				return
-			self.set_detached_icon(page, 1)
+			if not self.is_detached_tab_focused(page):
+				self.set_detached_icon(page, 1)
+			return
+			# Don't set 'tab' notification icons for detached tabs
 		current = self.get_nth_page(self.get_current_page())
 		if current == page:
 			return

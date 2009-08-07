@@ -53,7 +53,7 @@ class PrivateChats(IconNotebook):
 				gobject.idle_add(tab.ChatLine.grab_focus)
 				# Remove hilite if selected tab belongs to a user in the hilite list
 				if user in self.frame.TrayApp.tray_status["hilites"]["private"]:
-					self.frame.ClearNotification("private", tab.user)
+					self.frame.Notifications.Clear("private", tab.user)
 					
 	def ClearNotifications(self):
 		if self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.privatevbox):
@@ -63,7 +63,7 @@ class PrivateChats(IconNotebook):
 			if tab.Main == page:
 				# Remove hilite
 				if user in self.frame.TrayApp.tray_status["hilites"]["private"]:
-					self.frame.ClearNotification("private", tab.user)
+					self.frame.Notifications.Clear("private", tab.user)
 					
 	def Focused(self, page, focused):
 		if not focused:
@@ -71,7 +71,7 @@ class PrivateChats(IconNotebook):
 		for user, tab in self.users.items():
 			if tab.Main == page:
 				if user in self.frame.TrayApp.tray_status["hilites"]["private"]:
-					self.frame.ClearNotification("private", tab.user)
+					self.frame.Notifications.Clear("private", tab.user)
 					
 	def GetUserStatus(self, msg):
 		if msg.user in self.users:
@@ -174,15 +174,15 @@ class PrivateChats(IconNotebook):
 			# Only show notifications if window is not focused, and don't
 			# highlight main window
 			if not self.is_detached_tab_focused(chat.Main):
-				self.frame.Notification("private", msg.user)
+				self.frame.Notifications.Add("private", msg.user)
 		else:
 			# If tab isn't detached
 			# Hilight main private chats Label 
-			self.frame.RequestIcon(self.frame.PrivateChatTabLabel)
+			self.frame.PrivateRequestIcon(self.frame.PrivateChatTabLabel, chat.Main)
 			# Show notifications if the private chats notebook isn't selected,
 			# the tab is not selected, or the main window isn't mapped
 			if self.get_current_page() != self.page_num(chat.Main) or self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.privatevbox) or not self.frame.is_mapped:
-				self.frame.Notification("private", msg.user)
+				self.frame.Notifications.Add("private", msg.user)
 
 		# SEND CLIENT VERSION to user if the following string is sent
 		ctcpversion = 0
@@ -201,7 +201,7 @@ class PrivateChats(IconNotebook):
 	def RemoveTab(self, tab):
 		self.remove_page(tab.Main)
 		if tab.user in self.frame.TrayApp.tray_status["hilites"]["private"]:
-			self.frame.ClearNotification("private", tab.user)
+			self.frame.Notifications.Clear("private", tab.user)
 		del self.users[tab.user]
 		if tab.user in self.frame.np.config.sections["privatechat"]["users"]:
 			self.frame.np.config.sections["privatechat"]["users"].remove(tab.user)
@@ -475,7 +475,7 @@ class PrivateChat:
 		if self.frame.away and not self.autoreplied and autoreply:
 			self.SendMessage("[Auto-Message] %s" % autoreply)
 			self.autoreplied = 1
-		self.frame.new_tts(self.frame.np.config.sections["ui"]["speechprivate"] %{"user":self.frame.tts_clean(self.user), "message": self.frame.tts_clean(speech)} )
+		self.frame.Notifications.new_tts(self.frame.np.config.sections["ui"]["speechprivate"] %{"user":self.frame.Notifications.tts_clean(self.user), "message": self.frame.Notifications.tts_clean(speech)} )
 
 	def SendMessage(self, text):
 		user_text = self.frame.pluginhandler.OutgoingPrivateChatEvent(self.user, text)

@@ -199,7 +199,7 @@ class RoomsControl:
 			if room.Main == page:
 				gobject.idle_add(room.ChatEntry.grab_focus)
 				# Remove hilite
-				self.frame.ClearNotification("rooms", None, name)
+				self.frame.Notifications.Clear("rooms", None, name)
 					
 	def ClearNotifications(self):
 		if self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.hpaned1):
@@ -208,14 +208,14 @@ class RoomsControl:
 		for name, room in self.joinedrooms.items():
 			if room.Main == page:
 				# Remove hilite
-				self.frame.ClearNotification("rooms", None, name)
+				self.frame.Notifications.Clear("rooms", None, name)
 				
 	def Focused(self, page, focused):
 		if not focused:
 			return
 		for name, room in self.users.items():
 			if room.Main == page:
-				self.frame.ClearNotification("rooms", name)
+				self.frame.Notifications.Clear("rooms", name)
 			
 	def OnShowRoomList(self, widget):
 
@@ -1104,14 +1104,14 @@ class ChatRoom:
 				self.frame.ChatNotebook.request_hilite(self.Main)
 				if self.frame.ChatNotebook.is_tab_detached(self.Main):
 					if not self.frame.ChatNotebook.is_detached_tab_focused(self.Main):
-						self.frame.Notification("rooms", user, self.room)
+						self.frame.Notifications.Add("rooms", user, self.room, tab=False)
 				else:
-					self.frame.ChatRequestIcon(1)
+					self.frame.ChatRequestIcon(1, self.Main)
 						
 					# add hilite to trayicon
 					if self.frame.ChatNotebook.get_current_page() != self.frame.ChatNotebook.page_num(self.roomsctrl.joinedrooms[self.room].Main) or self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.hpaned1) or not self.frame.is_mapped:
 						if self.room not in self.frame.TrayApp.tray_status["hilites"]["rooms"]:
-							self.frame.Notification("rooms", user, self.room)
+							self.frame.Notifications.Add("rooms", user, self.room, tab=True)
 				#else:
 					#self.MainWindow.set_urgency_hint(False)
 			else:
@@ -1150,7 +1150,7 @@ class ChatRoom:
 		if user != login:
 			self.lines.append(AppendLine(self.ChatScroll, self.frame.CensorChat(self.frame.np.decode(line, self.encoding)), tag, username=user, usertag=self.tag_users[user], timestamp_format=timestamp_format))
 			if self.Speech.get_active():
-				self.frame.new_tts(self.frame.np.config.sections["ui"]["speechrooms"] % {"room": self.room, "user": self.frame.tts_clean(user), "message": self.frame.tts_clean(self.frame.np.decode(speech, self.encoding))} )
+				self.frame.Notifications.new_tts(self.frame.np.config.sections["ui"]["speechrooms"] % {"room": self.room, "user": self.frame.Notifications.tts_clean(user), "message": self.frame.Notifications.tts_clean(self.frame.np.decode(speech, self.encoding))} )
 		else:
 			self.lines.append(AppendLine(self.ChatScroll, self.frame.np.decode(line, self.encoding), tag, username=user, usertag=self.tag_users[user], timestamp_format=timestamp_format))
 		

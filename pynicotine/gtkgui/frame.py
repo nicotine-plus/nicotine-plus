@@ -310,8 +310,6 @@ class NicotineFrame:
 		self.awaytimer = None
 		self.SEXY = SEXY
 		self.chatrooms = None
-		self.tts = []
-		self.tts_playing = self.continue_playing = False
 
 		self.got_focus = False
 
@@ -580,6 +578,7 @@ class NicotineFrame:
 			self.ShowFlags.set_active(True)
 			
 		self.SetUserStatus(_("Offline"))
+		self.Notifications = Notifications(self)
 		self.TrayApp = TrayApp(self)
 		self.UpdateBandwidth()
 		self.UpdateTransferButtons()
@@ -651,9 +650,7 @@ class NicotineFrame:
 			if RGBA:
 				log.add('X11/GTK RGBA Bug workaround: Setting default colormap to RGB')
 				gtk_screen.set_default_colormap(gtk_screen.get_rgb_colormap())
-			self.TrayApp.CREATE_TRAYICON = 1
-			self.TrayApp.HAVE_TRAYICON = True
-			self.TrayApp.Create()
+			self.TrayApp.Create(True)
 			if RGBA:
 				log.add('X11/GTK RGBA Bug workaround: Restoring RGBA as default colormap.')
 				gtk_screen.set_default_colormap(colormap)
@@ -958,126 +955,7 @@ class NicotineFrame:
 		)
 		self.RecommendationUsersList.connect("button_press_event", self.OnPopupRUMenu)
 		
-	def Notification(self, location, user, room=None):
-		hilites = self.TrayApp.tray_status["hilites"]
-		if location == "rooms" and room != None and user != None:
-			if room not in hilites["rooms"]:
-				hilites["rooms"].append(room)
-				self.sound("room_nick", user, place=room)
-				self.TrayApp.SetImage()
-				#self.MainWindow.set_urgency_hint(True)
-		elif location == "private":
-			if user in hilites[location]:
-				hilites[location].remove(user)
-				hilites[location].append(user)
-			if user not in hilites[location]: 
-				hilites[location].append(user)
-				self.sound(location, user)
-				self.TrayApp.SetImage()
-				#self.MainWindow.set_urgency_hint(True)
-		self.TitleNotification(user)
-		
-	def ClearNotification(self, location, user, room=None):
-		if location == "rooms" and room != None:
-			if room in self.TrayApp.tray_status["hilites"]["rooms"]:
-				self.TrayApp.tray_status["hilites"]["rooms"].remove(room)
-		elif location == "private":	
-			if user in self.TrayApp.tray_status["hilites"]["private"]: 
-				self.TrayApp.tray_status["hilites"]["private"].remove(user)
-		self.TitleNotification(user)
-		self.TrayApp.SetImage()
-		
-	def TitleNotification(self, user=None):
-		if self.TrayApp.tray_status["hilites"]["rooms"] == [] and self.TrayApp.tray_status["hilites"]["private"] == []:
-			# Reset Title
-			if self.MainWindow.get_title() != _("Nicotine+") + " " + version:  
-				self.MainWindow.set_title(_("Nicotine+") + " " + version)
-		else:
-			# Private Chats have a higher priority
-			if len(self.TrayApp.tray_status["hilites"]["private"]) > 0:
-				user = self.TrayApp.tray_status["hilites"]["private"][-1]
-				self.MainWindow.set_title(_("Nicotine+") + " " + version+ " :: " +  _("Private Message from %(user)s" % {'user':user} ) )
-			# Allow for the possibility the username is not available
-			elif len(self.TrayApp.tray_status["hilites"]["rooms"]) > 0:
-				room = self.TrayApp.tray_status["hilites"]["rooms"][-1]
-				if user == None:
-					self.MainWindow.set_title(_("Nicotine+") + " " + version+ " :: " +  _("You've been mentioned in the %(room)s room" % {'room':room} ) )
-				else:
-					self.MainWindow.set_title(_("Nicotine+") + " " + version+ " :: " +  _("%(user)s mentioned you in the %(room)s room" % {'user':user, 'room':room } ) )
-					
-	def new_tts(self, message):
-		if not self.np.config.sections["ui"]["speechenabled"]:
-			return
-		if message not in self.tts:
-			self.tts.append(message)
-			thread.start_new_thread(self.play_tts, ())
-			
-	def play_tts(self):
-		if self.tts_playing:
-			self.continue_playing = True
-			return
-		for message in self.tts[:]:
-			self.tts_player(message)
-			if message in self.tts:
-				self.tts.remove(message)
-		self.tts_playing = False
-		if self.continue_playing:
-			self.continue_playing = False
-			self.play_tts()
-			
-	def tts_clean(self, message):
-		for i in ["_", "[", "]", "(", ")"]:
-			message = message.replace(i, " ")
-		return message
-		
-	def tts_player(self, message):
-		self.tts_playing = True
-		executeCommand(self.np.config.sections["ui"]["speechcommand"], message)
 
-		
-	def sound(self, message, user, place=None):
-		if sys.platform == "win32":
-			return
-		
-		if self.np.config.sections["ui"]["speechenabled"]:
-			if message == "room_nick" and place is not None:
-				self.new_tts(_("%(myusername)s, the user, %(username)s has mentioned your name in the room, %(place)s.") %{ "myusername": self.np.config.sections[ "server"]["login"], "username": user, "place": place} )
-			elif message == "private":
-				self.new_tts("%(myusername)s, you have recieved a private message from %(username)s." % {"myusername":self.np.config.sections["server"]["login"], "username":user } )
-			return
-		if "soundenabled" not in self.np.config.sections["ui"] or not self.np.config.sections["ui"]["soundenabled"]:
-			return
-		if "soundcommand" not in self.np.config.sections["ui"]:
-			return
-		command = self.np.config.sections["ui"]["soundcommand"]
-		path = None
-		exists = 0
-		if message == "private":
-			soundtitle = "private"
-		elif message == "room_nick":
-			soundtitle = "room_nick"
-			
-		if "soundtheme" in self.np.config.sections["ui"]:
-			path = os.path.expanduser(os.path.join(self.np.config.sections["ui"]["soundtheme"], "%s.ogg" % soundtitle))
-			if os.path.exists(path): exists = 1
-			else: path = None	
-		if not exists:
-			path = "%s/share/nicotine/sounds/default/%s.ogg" %(sys.prefix, soundtitle)
-			if os.path.exists(path): exists = 1
-			else: path = None
-		if not exists:
-			path = "sounds/default/%s.ogg" % soundtitle
-			if os.path.exists(path): exists = 1
-			else: path = None
-		if path != None and exists:
-			if command == "Gstreamer (gst-python)":
-				if self.gstreamer.player is None:
-					return
-				self.gstreamer.play(path)
-			else:
-				os.system("%s %s &" % ( command, path))
-
-	
 			
 	def download_large_folder(self, username, folder, files, numfiles, msg):
 		FolderDownload(self, title=_('Nicotine+')+': Download %(num)i files?' %{'num':numfiles}, message=_("Are you sure you wish to download %(num)i files from %(user)s's directory %(folder)s?") %{'num': numfiles, 'user':username, 'folder':folder } , modal=True, data=msg, callback=self.folder_download_response )
@@ -1858,11 +1736,12 @@ class NicotineFrame:
 	def OnClearSearchHistory(self, widget):
 		self.Searches.OnClearSearchHistory()
 		
-	def ChatRequestIcon(self, status = 0):
+	def ChatRequestIcon(self, status = 0, widget=None):
 		if status == 1 and not self.got_focus:
 			self.MainWindow.set_icon(self.images["hilite2"])
 		if self.MainNotebook.get_current_page() == self.MainNotebook.page_num(self.hpaned1):
 			return
+
 		tablabel = self.GetTabLabel(self.ChatTabLabel)
 		if not tablabel:
 			return
@@ -1880,12 +1759,13 @@ class NicotineFrame:
 			tablabel = TabLabel.child
 		return tablabel
 
-	def RequestIcon(self, TabLabel):
+	def PrivateRequestIcon(self, TabLabel, widget=None):
 		if TabLabel == self.PrivateChatTabLabel and not self.got_focus:
 			self.MainWindow.set_icon(self.images["hilite2"])
 		tablabel = self.GetTabLabel(TabLabel)
 		if not tablabel:
 			return
+
 		if self.current_tab != TabLabel:
 			tablabel.set_image(self.images["hilite"])
 			tablabel.set_text_color(2)
@@ -2820,7 +2700,9 @@ class NicotineFrame:
 	def OnFocusIn(self, widget, event):
 		self.MainWindow.set_icon(self.images["n"])
 		self.got_focus = True
-	
+		if self.MainWindow.get_urgency_hint():
+			self.MainWindow.set_urgency_hint(False)
+
 	def OnFocusOut(self, widget, event):
 		self.got_focus = False
 		
@@ -3309,6 +3191,147 @@ class NicotineFrame:
 	def OnUserList(self, widget):
 		self.ChangeMainPage(widget, "userlist")
 
+
+class Notifications:
+	def __init__(self, frame):
+		self.frame = frame
+		self.tts = []
+		self.tts_playing = False
+		self.continue_playing = False
+
+	def Add(self, location, user, room=None, tab=True):
+		hilites = self.frame.TrayApp.tray_status["hilites"]
+		if location == "rooms" and room != None and user != None:
+			if room not in hilites["rooms"]:
+				hilites["rooms"].append(room)
+				self.sound("room_nick", user, place=room)
+				self.frame.TrayApp.SetImage()
+		elif location == "private":
+			if user in hilites[location]:
+				hilites[location].remove(user)
+				hilites[location].append(user)
+			elif user not in hilites[location]: 
+				hilites[location].append(user)
+				self.sound(location, user)
+				self.frame.TrayApp.SetImage()
+		if tab and not self.frame.got_focus:
+			self.frame.MainWindow.set_urgency_hint(True)
+		self.SetTitle(user)
+
+	def ClearPage(self, notebook, item):
+		(page, label, window, focused) = item
+		#print notebook, page, label, window, focused
+		location=None
+		if notebook is self.frame.ChatNotebook:
+			location = "rooms"
+			self.Clear(location, room=label)
+		elif notebook is self.frame.PrivatechatNotebook:
+			location = "private"
+			self.Clear(location, user=label)
+
+	def Clear(self, location, user=None, room=None):
+		if location == "rooms" and room != None:
+			if room in self.frame.TrayApp.tray_status["hilites"]["rooms"]:
+				self.frame.TrayApp.tray_status["hilites"]["rooms"].remove(room)
+			self.SetTitle(room)
+		elif location == "private":	
+			if user in self.frame.TrayApp.tray_status["hilites"]["private"]: 
+				self.frame.TrayApp.tray_status["hilites"]["private"].remove(user)
+			self.SetTitle(user)
+		self.frame.TrayApp.SetImage()
+		
+	def SetTitle(self, user=None):
+		if self.frame.TrayApp.tray_status["hilites"]["rooms"] == [] and self.frame.TrayApp.tray_status["hilites"]["private"] == []:
+			# Reset Title
+			if self.frame.MainWindow.get_title() != _("Nicotine+") + " " + version:  
+				self.frame.MainWindow.set_title(_("Nicotine+") + " " + version)
+		else:
+			# Private Chats have a higher priority
+			if len(self.frame.TrayApp.tray_status["hilites"]["private"]) > 0:
+				user = self.frame.TrayApp.tray_status["hilites"]["private"][-1]
+				self.frame.MainWindow.set_title(_("Nicotine+") + " " + version+ " :: " +  _("Private Message from %(user)s" % {'user':user} ) )
+			# Allow for the possibility the username is not available
+			elif len(self.frame.TrayApp.tray_status["hilites"]["rooms"]) > 0:
+				room = self.frame.TrayApp.tray_status["hilites"]["rooms"][-1]
+				if user == None:
+					self.frame.MainWindow.set_title(_("Nicotine+") + " " + version+ " :: " +  _("You've been mentioned in the %(room)s room" % {'room':room} ) )
+				else:
+					self.frame.MainWindow.set_title(_("Nicotine+") + " " + version+ " :: " +  _("%(user)s mentioned you in the %(room)s room" % {'user':user, 'room':room } ) )
+					
+	def new_tts(self, message):
+		if not self.frame.np.config.sections["ui"]["speechenabled"]:
+			return
+		if message not in self.tts:
+			self.tts.append(message)
+			thread.start_new_thread(self.play_tts, ())
+			
+	def play_tts(self):
+		if self.tts_playing:
+			self.continue_playing = True
+			return
+		for message in self.tts[:]:
+			self.tts_player(message)
+			if message in self.tts:
+				self.tts.remove(message)
+		self.tts_playing = False
+		if self.continue_playing:
+			self.continue_playing = False
+			self.play_tts()
+			
+	def tts_clean(self, message):
+		for i in ["_", "[", "]", "(", ")"]:
+			message = message.replace(i, " ")
+		return message
+		
+	def tts_player(self, message):
+		self.tts_playing = True
+		executeCommand(self.frame.np.config.sections["ui"]["speechcommand"], message)
+
+		
+	def sound(self, message, user, place=None):
+		if sys.platform == "win32":
+			return
+		
+		if self.frame.np.config.sections["ui"]["speechenabled"]:
+			if message == "room_nick" and place is not None:
+				self.new_tts(_("%(myusername)s, the user, %(username)s has mentioned your name in the room, %(place)s.") %{ "myusername": self.frame.np.config.sections[ "server"]["login"], "username": user, "place": place} )
+			elif message == "private":
+				self.new_tts("%(myusername)s, you have recieved a private message from %(username)s." % {"myusername":self.frame.np.config.sections["server"]["login"], "username":user } )
+			return
+		if "soundenabled" not in self.frame.np.config.sections["ui"] or not self.frame.np.config.sections["ui"]["soundenabled"]:
+			return
+		if "soundcommand" not in self.frame.np.config.sections["ui"]:
+			return
+		command = self.frame.np.config.sections["ui"]["soundcommand"]
+		path = None
+		exists = 0
+		if message == "private":
+			soundtitle = "private"
+		elif message == "room_nick":
+			soundtitle = "room_nick"
+			
+		if "soundtheme" in self.frame.np.config.sections["ui"]:
+			path = os.path.expanduser(os.path.join(self.frame.np.config.sections["ui"]["soundtheme"], "%s.ogg" % soundtitle))
+			if os.path.exists(path): exists = 1
+			else: path = None	
+		if not exists:
+			path = "%s/share/nicotine/sounds/default/%s.ogg" %(sys.prefix, soundtitle)
+			if os.path.exists(path): exists = 1
+			else: path = None
+		if not exists:
+			path = "sounds/default/%s.ogg" % soundtitle
+			if os.path.exists(path): exists = 1
+			else: path = None
+		if path != None and exists:
+			if command == "Gstreamer (gst-python)":
+				if self.frame.gstreamer.player is None:
+					return
+				self.frame.gstreamer.play(path)
+			else:
+				os.system("%s %s &" % ( command, path))
+
+	
+
 class TrayApp:
 	def __init__(self, frame):
 		self.frame = frame
@@ -3341,7 +3364,9 @@ class TrayApp:
 			self.frame.chatrooms.roomsctrl.ClearNotifications()
 			self.frame.privatechats.ClearNotifications()
 			
-	def Create(self):
+	def Create(self, create=False):
+		if create:
+			self.HAVE_TRAYICON = self.CREATE_TRAYICON = True
 		if self.CREATE_TRAYICON:
 			self.Load()
 		if self.HAVE_TRAYICON:
