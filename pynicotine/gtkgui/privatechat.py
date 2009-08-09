@@ -178,7 +178,7 @@ class PrivateChats(IconNotebook):
 		else:
 			# If tab isn't detached
 			# Hilight main private chats Label 
-			self.frame.PrivateRequestIcon(self.frame.PrivateChatTabLabel, chat.Main)
+			self.frame.RequestIcon(self.frame.PrivateChatTabLabel, chat.Main)
 			# Show notifications if the private chats notebook isn't selected,
 			# the tab is not selected, or the main window isn't mapped
 			if self.get_current_page() != self.page_num(chat.Main) or self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.privatevbox) or not self.frame.is_mapped:

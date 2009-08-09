@@ -1759,7 +1759,7 @@ class NicotineFrame:
 			tablabel = TabLabel.child
 		return tablabel
 
-	def PrivateRequestIcon(self, TabLabel, widget=None):
+	def RequestIcon(self, TabLabel, widget=None):
 		if TabLabel == self.PrivateChatTabLabel and not self.got_focus:
 			self.MainWindow.set_icon(self.images["hilite2"])
 		tablabel = self.GetTabLabel(TabLabel)
