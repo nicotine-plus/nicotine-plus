@@ -359,7 +359,7 @@ class ImageLabel(gtk.HBox):
 		if not color:
 			self.label.set_text("%s" % self.text)
 		else:
-			self.label.set_markup("<span foreground=\"%s\">%s</span>" % (color, self.text.replace("<", "&lt;").replace(">", "&gt;")))
+			self.label.set_markup("<span foreground=\"%s\">%s</span>" % (color, self.text.replace("<", "&lt;").replace(">", "&gt;").replace("&", "&amp;")))
 			
 		self.label.set_alignment(0.0, 0.50)
 		self.label.set_angle(angle)
@@ -497,7 +497,7 @@ class ImageLabel(gtk.HBox):
 			self.label.set_text("%s" % self.text)
 			
 		else:
-			self.label.set_markup("<span foreground=\"%s\">%s</span>" % (color, self.text.replace("<", "&lt;").replace(">", "&gt;")))
+			self.label.set_markup("<span foreground=\"%s\">%s</span>" % (color, self.text.replace("<", "&lt;").replace(">", "&gt;").replace("&", "&amp;")))
 			
 	def set_image(self, img):
 		self.img = img
