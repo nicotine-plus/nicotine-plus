@@ -278,5 +278,3 @@ if __name__ == '__main__':
 	except: # BaseException doesn't exist in python2.4
 		import traceback
 		traceback.print_exc()
-
-
