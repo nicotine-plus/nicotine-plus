@@ -53,7 +53,7 @@ from about import *
 from checklatest import checklatest
 from pynicotine.config import *
 import utils, pynicotine.utils
-from utils import AppendLine, ImageLabel, IconNotebook, ScrollBottom, PopupMenu, Humanize, HumanSpeed, HumanSize, popupWarning
+from utils import AppendLine, ImageLabel, IconNotebook, ScrollBottom, PopupMenu, Humanize, HumanSpeed, HumanSize, popupWarning, OpenUri
 import translux
 from dirchooser import ChooseFile, SaveFile
 from pynicotine.utils import _, ChangeTranslation, executeCommand
@@ -2418,22 +2418,22 @@ class NicotineFrame:
 			if os.path.exists(os.sep.join([path, "doc", file])):
 				url = "file:%s/%s/%s" % (urllib.pathname2url(path).replace("|", ":") ,"doc", file)
 
-				self.OpenUrl(url)
+				OpenUri(url)
 				return
 		else:
 			popupWarning(None, _("Cannot Find Guide"), _("The Nicotine Offline Guide ( NicotinePlusGuide.html ) was not found in either the following directories:\n\n<u>%(pwd)s\n</u><b>and</b>\n<u>%(prefix)s/share/nicotine/documentation/</u>\n\nEither install Nicotine-Plus, or start from inside the Nicotine-Plus source directory." % {'pwd':path1, 'prefix':sys.prefix } ) )
 	
 	def OnOnlineNicotineGuide(self, widget):
 		url = "http://nicotine-plus.sourceforge.net/NicotinePlusGuide/"
-		self.OpenUrl(url)
+		OpenUri(url)
 			
 	def OnSourceForgeProject(self, widget):
 		url = "http://sourceforge.net/projects/nicotine-plus/"
-		self.OpenUrl(url)
+		OpenUri(url)
 		
 	def OnTrac(self, widget):
 		url = "http://nicotine-plus.org/"
-		self.OpenUrl(url)
+		OpenUri(url)
 
 	def OnCheckLatest(self, widget):
 		checklatest(self.MainWindow)
@@ -2444,36 +2444,8 @@ class NicotineFrame:
 			url += "&version=SVN"
 		else:
 			url += "&version=%s" % version
-		self.OpenUrl(url)
-		#webbrowser.open('http://www.nicotine-plus.org/newticket', autoraise=True)
-	def OpenUrl(self, url):
-		protocol = url[:url.find(":")]
+		OpenUri(url)
 
-		if self.browser is not None and self.np.config.sections["ui"]["open_in_mozembed"]:
-			self.browser.load_url(url, 0)
-			return
-		if protocol in utils.PROTOCOL_HANDLERS:
-			if utils.PROTOCOL_HANDLERS[protocol].__class__ is utils.types.MethodType:
-				utils.PROTOCOL_HANDLERS[protocol](url.strip())
-			elif utils.PROTOCOL_HANDLERS[protocol]:
-				utils.executeCommand(utils.PROTOCOL_HANDLERS[protocol], url)
-		elif webbrowser is not None:
-			webbrowser.open(url)
-		else:
-			try:
-				import gnomevfs
-			except Exception, e:
-				try:
-					import gnome.vfs
-				except:
-					pass
-				else:
-					gnome.url_show(url)
-			else:
-				try:
-					gnomevfs.url_show(url)
-				except:
-					pass
 	def OnAbout(self, widget):
 		dlg = AboutDialog(self.MainWindow, self)
 		dlg.run()

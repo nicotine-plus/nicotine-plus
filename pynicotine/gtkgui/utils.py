@@ -213,35 +213,45 @@ def UrlEvent(tag, widget, event, iter, url):
 	if tag.last_event_type == gtk.gdk.BUTTON_PRESS and event.type == gtk.gdk.BUTTON_RELEASE and event.button == 1:
 		if url[:4] == "www.":
 			url = "http://" + url
-		protocol = url[:url.find(":")]
-		if protocol in PROTOCOL_HANDLERS:
-			if NICOTINE.browser is not None and NICOTINE.np.config.sections["ui"]["open_in_mozembed"] and protocol == "http":
-				NICOTINE.browser.load_url(url, 0)
-				tag.last_event_type = event.type
-				return
-			if PROTOCOL_HANDLERS[protocol].__class__ is types.MethodType:
-				PROTOCOL_HANDLERS[protocol](url.strip())
-			elif PROTOCOL_HANDLERS[protocol]:
-				executeCommand(PROTOCOL_HANDLERS[protocol], url)
-			else:
-				webbrowser.open(url)
-		else:
-			try:
-				import gnomevfs
-			except Exception, e:
-				try:
-					import gnome.vfs
-				except:
-					pass
-				else:
-					gnome.url_show(url)
-			else:
-				try:
-					gnomevfs.url_show(url)
-				except:
-					pass
-				
+		OpenUri(url)
 	tag.last_event_type = event.type
+
+def OpenUri(uri):
+	"""Open a URI in an external (web) browser. The given argument has
+	to be a properly formed URI including the scheme (fe. HTTP).
+	
+	As of now failures will be silently discarded."""
+	# Situation 1, user defined a way of handling the protocol
+	protocol = uri[:uri.find(":")]
+	if protocol in PROTOCOL_HANDLERS:
+		if NICOTINE.browser is not None and NICOTINE.np.config.sections["ui"]["open_in_mozembed"] and protocol in ("http", 'https'):
+			NICOTINE.browser.load_url(uri, 0)
+			return
+		if PROTOCOL_HANDLERS[protocol].__class__ is types.MethodType:
+			PROTOCOL_HANDLERS[protocol](uri.strip())
+			return
+		if PROTOCOL_HANDLERS[protocol]:
+			executeCommand(PROTOCOL_HANDLERS[protocol], uri)
+			return
+	# Situation 2, user did not define a way of handling the protocol, we'll leave it up to python
+	if webbrowser:
+		webbrowser.open(uri)
+		return
+	# Situation 3a, we let Gnome (new way?) deal with it
+	try:
+		import gnomevfs
+		gnomevfs.url_show(uri)
+		return
+	except Exception, e:
+		pass
+	# Situation 3b, we let Gnome (old way?) deal with it
+	try:
+		# import gnome.vfs <-- doesn't make sense, vfs was never used!
+		import gnome
+		gnome.url_show(uri)
+		return
+	except:
+		pass
 
 def AppendLine(textview, line, tag = None, timestamp = None, showstamp=True, timestamp_format = "%H:%M:%S", username=None, usertag=None, scroll=True):
 	line = str(line) # Error messages are sometimes tuples
