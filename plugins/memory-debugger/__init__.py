@@ -26,5 +26,15 @@ Current thresholds: %s
 Current counts: %s
 Enabling GB debug output (check stderr)""" % (str(gc.isenabled()), repr(gc.get_threshold()), repr(gc.get_count())))
         self.log("Enabling GB debug output (check stderr)")
-        gc.set_debug(gc.DEBUG_LEAK)
-        self.log("All done. See terminal for GB debug output.")
+        gc.set_debug(gc.DEBUG_LEAK | gc.DEBUG_STATS)
+        self.log("Forcing collection of generation 0...")
+        gc.collect(0)
+        self.log("Forcing collection of generation 1...")
+        gc.collect(1)
+        self.log("Forcing collection of generation 2...")
+        gc.collect(2)
+        unclaimed = ['Objects that could not be freed:']
+        for i in gc.garbage:
+            unclaimed.append('%i: %i (%i)' % (type(i), str(i), repr(i)))
+        self.log('\n'.join(unclaimed))
+        self.log("Done.")
