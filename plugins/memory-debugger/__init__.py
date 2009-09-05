@@ -35,6 +35,6 @@ Enabling GB debug output (check stderr)""" % (str(gc.isenabled()), repr(gc.get_t
         gc.collect(2)
         unclaimed = ['A total of %s objects that could not be freed:' % (len(gc.garbage),)]
         for i in gc.garbage:
-            unclaimed.append('%i: %i (%i)' % (type(i), str(i), repr(i)))
+            unclaimed.append('%s: %s (%s)' % (type(i), str(i), repr(i)))
         self.log('\n'.join(unclaimed))
         self.log("Done.")
