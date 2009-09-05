@@ -24,15 +24,15 @@ if __name__ == "__main__":
 	conversation.ConnectTo("xmplay", "info0")
 	reply = conversation.Request("info0")
 	for tuple in reply.split('\n'):
-		(item, tab, value) = tuple.partition('\t')
-		item = item.strip()
+		parts = tuple.split('\t', 1)
+		item = parts[0].strip()
 		if item:
 			info[item.lower()] = value
 	conversation.ConnectTo("xmplay", "info1")
 	reply = conversation.Request("info1")
 	for tuple in reply.split('\n'):
-		(item, tab, value) = tuple.partition('\t')
-		item = item.strip()
+		parts = tuple.split('\t', 1)
+		item = parts[0].strip()
 		if item:
 			info[item.lower()] = value
 		

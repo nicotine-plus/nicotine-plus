@@ -1438,8 +1438,8 @@ class Transfers:
 					
 					if self.eventprocessor.config.sections["transfers"]["prioritize"]:
 						for file in msg.list[i][directory]:
-							(junk, sep, ext) = file[1].rpartition('.')
-							if sep and ext in ['sfv','md5','nfo']:
+							parts = file[1].rsplit('.', 1)
+							if len(parts) == 2 and parts[1] in ['sfv','md5','nfo']:
 								priorityfiles.append(file)
 							else:
 								normalfiles.append(file)

@@ -62,8 +62,8 @@ class Plugin(BasePlugin):
                 title = title.replace('(',' ').replace(')',' ')
                 title = ' '.join([x.strip() for x in title.split(' ') if x.split()])
                 print "Title is now",title
-                (useful,split,junk) = title.partition(' > ')
-                information.append(useful)
+                parts = title.split(' > ', 1)
+                information.append(parts[0])
         return ' '.join(information)
 
 # Debugging again

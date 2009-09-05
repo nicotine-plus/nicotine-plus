@@ -33,7 +33,7 @@ Enabling GB debug output (check stderr)""" % (str(gc.isenabled()), repr(gc.get_t
         gc.collect(1)
         self.log("Forcing collection of generation 2...")
         gc.collect(2)
-        unclaimed = ['Objects that could not be freed:']
+        unclaimed = ['A total of %s objects that could not be freed:' % (len(gc.garbage),)]
         for i in gc.garbage:
             unclaimed.append('%i: %i (%i)' % (type(i), str(i), repr(i)))
         self.log('\n'.join(unclaimed))

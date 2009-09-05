@@ -298,8 +298,9 @@ class TransferList:
 				for f in range(files):
 					iter = self.transfersmodel.iter_nth_child(self.users[user], f)
 					filename = self.transfersmodel.get_value(iter, 10)
-					(name, sep, ext) = filename.rpartition('.')
-					if sep:
+					parts = filename.rsplit('.', 1)
+					if len(parts) == 2:
+						ext = parts[1]
 						try:
 							extensions[ext.lower()] += 1
 						except KeyError:
