@@ -20,7 +20,7 @@ class Plugin(BasePlugin):
     #metasettings = {'maxpubliclines': {"description": 'The maximum number of lines that will pasted in public', 'type':'int'},
     #                'maxprivatelines': {"description": 'The maximum number of lines that will be pasted in private', 'type':'int'},
     #               }
-    def LoadNotification(self):
+    def init(self):
         self.log("""Tweaking garbage collection. Is it currently turned on? %s
 Current thresholds: %s
 Current counts: %s
