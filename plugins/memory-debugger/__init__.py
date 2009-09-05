@@ -25,8 +25,8 @@ class Plugin(BasePlugin):
 Current thresholds: %s
 Current counts: %s
 Enabling GB debug output (check stderr)""" % (str(gc.isenabled()), repr(gc.get_threshold()), repr(gc.get_count())))
-        self.log("Enabling GB debug output (check stderr)")
-        gc.set_debug(gc.DEBUG_LEAK | gc.DEBUG_STATS)
+        #self.log("Enabling GB debug output (check stderr)")
+        gc.set_debug(gc.DEBUG_STATS)
         self.log("Forcing collection of generation 0...")
         gc.collect(0)
         self.log("Forcing collection of generation 1...")
