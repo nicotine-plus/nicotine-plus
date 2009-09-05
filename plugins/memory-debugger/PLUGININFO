@@ -1,0 +1,4 @@
+Version="2009-09-05r00"
+Authors=['quinox']
+Name="Memory Debugger"
+Description="Plugin to find memory leaks"
