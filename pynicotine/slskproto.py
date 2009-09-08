@@ -541,7 +541,7 @@ class SlskProtoThread(threading.Thread):
 					queue.put(ServerPing())
 					
 			self._ui_callback([])
-			time.sleep(1.0)
+			time.sleep(0.1)
 
 		# Close Server Port
 		if server_socket is not None:
@@ -874,7 +874,7 @@ class SlskProtoThread(threading.Thread):
 		are dictionaries holding Connection and PeerConnectionInProgress 
 		messages."""
 		msgList = []
-		needsleep = 0
+		needsleep = False
 		numsockets = 0
 		if server_socket is not None:
 			numsockets += 1
@@ -889,7 +889,7 @@ class SlskProtoThread(threading.Thread):
 						conns[server_socket].obuf = conns[server_socket].obuf + struct.pack("<ii", len(msg)+4, self.servercodes[msgObj.__class__]) + msg
 					else:
 						queue.put(msgObj)
-						needsleep = 1
+						needsleep = True
 				except Exception, error:
 					self._ui_callback([_("Error packaging message: %(type)s %(msg_obj)s, %(error)s") %{'type':msgObj.__class__, 'msg_obj':vars(msgObj), 'error': str(error)}])
 			elif issubclass(msgObj.__class__, PeerMessage):
@@ -960,7 +960,7 @@ class SlskProtoThread(threading.Thread):
 							import errno
 							if errno.errorcode.get(errnum,"") == 'EMFILE':
 								queue.put(msgObj)
-								needsleep = 1
+								needsleep = True
 							else:
 								self._ui_callback([ConnectError(msgObj, (errnum, strerror))])
 					else:
