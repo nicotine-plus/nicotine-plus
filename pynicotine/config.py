@@ -389,6 +389,14 @@ class Config:
 
 	def readConfig(self):
 		self.config_lock.acquire()
+
+		try:
+			with open(self.filename+'.transfers.pickle') as handle:
+				self.sections['transfers']['downloads'] = cPickle.load(handle)
+		except Exception, inst:
+			log.addwarning(_("Something went wrong while loading your transfer list: %(error)s") % {'error':str(inst)})
+			self.sections['transfers']['downloads'] = []
+		
 		path, fn = os.path.split(self.filename)
 		try:
 			if not os.path.isdir(path):
@@ -402,6 +410,7 @@ class Config:
 			'words':["completion", "censorwords", "replacewords", "autoreplaced", "censored", "characters", "tab", "cycle", "dropdown", "roomnames", "buddies", "roomusers", "commands", "aliases", "onematch"],
 			'language':["definelanguage", "setlanguage"],
 		}
+		
 		for i in self.parser.sections():
 			for j in self.parser.options(i):
 				val = self.parser.get(i, j, raw = 1)
@@ -507,7 +516,7 @@ class Config:
 		self.sections["transfers"]["bwordindex"] = bwordindex
 		self.sections["transfers"]["bfileindex"] = bfileindex
 		self.sections["transfers"]["bsharedmtimes"] = bsharedmtimes
-			
+		
 		if self.sections["server"]["server"][0] == "mail.slsknet.org":
 			self.sections["server"]["server"] = ('server.slsknet.org', 2242)
 		
@@ -603,11 +612,20 @@ class Config:
 			
 	def writeConfig(self):
 		self.config_lock.acquire()
+
+		try:
+			with open(self.filename+'.transfers.pickle', 'w') as handle:
+				cPickle.dump(self.sections['transfers']['downloads'], handle)
+		except Exception, inst:
+			log.addwarning(_("Something went wrong while writing your transfer list: %(error)s") % {'error':str(inst)})
+			self.sections['transfers']['downloads'] = []
+
+		external_sections =  ["sharedfiles", "sharedfilesstreams", "wordindex", "fileindex", "sharedmtimes", "bsharedfiles", "bsharedfilesstreams", "bwordindex", "bfileindex", "bsharedmtimes", "downloads"]
 		for i in self.sections.keys():
 			if not self.parser.has_section(i):
 				self.parser.add_section(i)
 			for j in self.sections[i].keys():
-				if j not in ["sharedfiles", "sharedfilesstreams", "wordindex", "fileindex", "sharedmtimes", "bsharedfiles", "bsharedfilesstreams", "bwordindex", "bfileindex", "bsharedmtimes"]:
+				if j not in external_sections:
 					self.parser.set(i, j, self.sections[i][j])
 				else:
 					self.parser.remove_option(i, j)
@@ -662,7 +680,7 @@ class Config:
 			os.rename(self.filename + ".new", self.filename)
 		except OSError, error:
 			log.addwarning(_("Can't rename config file, error: %s") % error)
-	
+		
 		self.config_lock.release()
 	
 	def writeConfigBackup(self, filename=None):
