@@ -396,11 +396,18 @@ class Config:
 		if exists(self.filename+'.transfers.pickle'):
 			# <1.2.13 stored transfers inside the main config
 			try:
-				with open(self.filename+'.transfers.pickle') as handle:
+				handle = open(self.filename+'.transfers.pickle')
+			except IOError, inst:
+				log.addwarning(_("Something went wrong while opening your transfer list: %(error)s") % {'error':str(inst)})
+			else:
+				try:
 					self.sections['transfers']['downloads'] = cPickle.load(handle)
-			except Exception, inst:
-				log.addwarning(_("Something went wrong while loading your transfer list: %(error)s") % {'error':str(inst)})
-		
+				except (IOError, EOFError), inst:
+					log.addwarning(_("Something went wrong while reading your transfer list: %(error)s") % {'error':str(inst)})
+			try:
+				handle.close()
+			except:
+				pass
 		path, fn = os.path.split(self.filename)
 		try:
 			if not os.path.isdir(path):
@@ -616,13 +623,19 @@ class Config:
 			
 	def writeConfig(self):
 		self.config_lock.acquire()
-
 		try:
-			with open(self.filename+'.transfers.pickle', 'w') as handle:
+			handle = open(self.filename+'.transfers.pickle', 'w')
+		except IOError, inst:
+			log.addwarning(_("Something went wrong while opening your transfer list: %(error)s") % {'error':str(inst)})
+		else:
+			try:
 				cPickle.dump(self.sections['transfers']['downloads'], handle)
-		except Exception, inst:
-			log.addwarning(_("Something went wrong while writing your transfer list: %(error)s") % {'error':str(inst)})
-			self.sections['transfers']['downloads'] = []
+			except IOError, inst:
+				log.addwarning(_("Something went wrong while writing your transfer list: %(error)s") % {'error':str(inst)})
+		try:
+			handle.close()
+		except:
+			pass
 
 		external_sections =  ["sharedfiles", "sharedfilesstreams", "wordindex", "fileindex", "sharedmtimes", "bsharedfiles", "bsharedfilesstreams", "bwordindex", "bfileindex", "bsharedmtimes", "downloads"]
 		for i in self.sections.keys():
