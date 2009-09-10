@@ -24,7 +24,6 @@
 This module contains configuration classes for Nicotine.
 """
 
-from logfacility import log
 import ConfigParser
 import string
 import os, time
@@ -33,6 +32,9 @@ import shelve
 import sys
 import thread
 
+from os.path import exists
+
+from logfacility import log
 from utils import _
 
 class Config:
@@ -390,12 +392,14 @@ class Config:
 	def readConfig(self):
 		self.config_lock.acquire()
 
-		try:
-			with open(self.filename+'.transfers.pickle') as handle:
-				self.sections['transfers']['downloads'] = cPickle.load(handle)
-		except Exception, inst:
-			log.addwarning(_("Something went wrong while loading your transfer list: %(error)s") % {'error':str(inst)})
-			self.sections['transfers']['downloads'] = []
+		self.sections['transfers']['downloads'] = []
+		if exists(self.filename+'.transfers.pickle'):
+			# <1.2.13 stored transfers inside the main config
+			try:
+				with open(self.filename+'.transfers.pickle') as handle:
+					self.sections['transfers']['downloads'] = cPickle.load(handle)
+			except Exception, inst:
+				log.addwarning(_("Something went wrong while loading your transfer list: %(error)s") % {'error':str(inst)})
 		
 		path, fn = os.path.split(self.filename)
 		try:
