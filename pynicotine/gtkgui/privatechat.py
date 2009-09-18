@@ -262,12 +262,12 @@ class PrivateChat:
 		self.PrivateChatTab.destroy()
 		self.wTree.signal_autoconnect(self)
 		#Get glade widgets' tooltips
-		self.tooltips = gtk.tooltips_data_get(self.PeerPrivateMessages)[0]
+		#self.tooltips = gtk.tooltips_data_get(self.PeerPrivateMessages)[0]
 		#if not self.frame.np.config.sections["ui"]["tooltips"]:
-		self.tooltips.disable()
-		self.tooltips = gtk.tooltips_data_get(self.PeerPrivateMessages)[0]
-		if not self.frame.np.config.sections["ui"]["tooltips"]:
-			self.tooltips.disable()
+		#self.tooltips.disable()
+		#self.tooltips = gtk.tooltips_data_get(self.PeerPrivateMessages)[0]
+		#if not self.frame.np.config.sections["ui"]["tooltips"]:
+		#	self.tooltips.disable()
 
 
 

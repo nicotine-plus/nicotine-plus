@@ -82,7 +82,7 @@ class WishList( gtk.Dialog):
 		self.mainVbox.pack_start(self.RemoveWishButton, False, False, 0)
 
 
-		self.ClearWishesButton = self.nicotine.CreateIconButton(gtk.STOCK_CLEAR, "stock", self.OnClearWishes, _("Clear"))
+		self.ClearWishesButton = self.nicotine.CreateIconButton(gtk.STOCK_CLEAR, "stock", self.OnClearWishes, _("Clear all"))
 
 		
 		self.mainVbox.pack_start(self.ClearWishesButton, False, False, 0)
@@ -498,9 +498,9 @@ class Search:
 	def __init__(self, Searches, text, id, mode, remember):
 		self.Searches = Searches
 		self.frame = Searches.frame
-		self.tooltips = self.frame.tooltips
-		if not self.frame.np.config.sections["ui"]["tooltips"]:
-			self.tooltips.disable()
+		#self.tooltips = self.frame.tooltips
+		#if not self.frame.np.config.sections["ui"]["tooltips"]:
+		#	self.tooltips.disable()
 
 		self.wTree = gtk.glade.XML(os.path.join(os.path.dirname(os.path.realpath(__file__)), "search.glade" ), None, 'nicotine' ) 
 		widgets = self.wTree.get_widget_prefix("")

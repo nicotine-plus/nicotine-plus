@@ -658,7 +658,7 @@ class ChatRoom:
 	def __init__(self, roomsctrl, room, users, meta = False):
 		self.roomsctrl = roomsctrl
 		self.frame = roomsctrl.frame
-		self.tooltips = self.frame.tooltips
+		#self.tooltips = self.frame.tooltips
 
 		gtk.glade.set_custom_handler(self.get_custom_widget)
 		
@@ -672,8 +672,8 @@ class ChatRoom:
 	
 		self.wTree.signal_autoconnect(self)
 		
-		if not self.frame.np.config.sections["ui"]["tooltips"]:
-			self.tooltips.disable()
+		#if not self.frame.np.config.sections["ui"]["tooltips"]:
+		#	self.tooltips.disable()
 		self.room = room
 		self.lines = []
 		self.logfile = None

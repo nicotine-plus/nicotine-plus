@@ -158,9 +158,9 @@ class UserInfo:
 		self.wTree.signal_autoconnect(self)
 		self.userinfos = userinfos
 		self.frame = userinfos.frame
-		self.tooltips = self.frame.tooltips
-		if not self.frame.np.config.sections["ui"]["tooltips"]:
-			self.tooltips.disable()
+		#self.tooltips = self.frame.tooltips
+		#if not self.frame.np.config.sections["ui"]["tooltips"]:
+		#	self.tooltips.disable()
 		self.frame.np.queue.put(slskmessages.UserInterests(user))
 		self.user = user
 		self.conn = conn

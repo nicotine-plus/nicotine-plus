@@ -47,9 +47,9 @@ class UserBrowse:
 		self.userbrowses = userbrowses
 
 		self.frame = userbrowses.frame
-		self.tooltips = self.frame.tooltips
-		if not self.frame.np.config.sections["ui"]["tooltips"]:
-			self.tooltips.disable()
+		#self.tooltips = self.frame.tooltips
+		#if not self.frame.np.config.sections["ui"]["tooltips"]:
+		#	self.tooltips.disable()
 		self.user = user
 		self.conn = conn
 		self.selected_folder = None

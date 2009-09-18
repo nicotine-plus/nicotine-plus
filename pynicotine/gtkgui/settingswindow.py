@@ -39,7 +39,7 @@ dir_location = os.path.dirname(os.path.realpath(__file__))
 class buildFrame:
 	def __init__(self, window):
 		self.frame = self.p.frame
-		self.tooltips = self.frame.tooltips
+		#self.tooltips = self.frame.tooltips
 		self.wTree = gtk.glade.XML(os.path.join(dir_location, "nicotine-settings.glade" ), window, "nicotine" ) 
 		widgets = self.wTree.get_widget_prefix("")
 		for i in widgets:
@@ -2279,7 +2279,7 @@ class buildDialog(gtk.Dialog):
 
 		window = "PluginProperties"
 		self.settings = parent.p
-		self.tooltips = self.settings.tooltips
+		#self.tooltips = self.settings.tooltips
 		self.wTree = gtk.glade.XML(os.path.join(dir_location, "nicotine-settings.glade" ), window, "nicotine" ) 
 	
 		widgets = self.wTree.get_widget_prefix("")
@@ -2541,7 +2541,7 @@ class MiscFrame(buildFrame):
 class SettingsWindow:
 	def __init__(self, frame):
 		self.frame = frame
-		self.tooltips = self.frame.tooltips
+		#self.tooltips = self.frame.tooltips
 		self.wTree = gtk.glade.XML(os.path.join(dir_location, "nicotine-settings.glade" ), "SettingsWindow", "nicotine" ) 
 		widgets = self.wTree.get_widget_prefix("")
 		for i in widgets:

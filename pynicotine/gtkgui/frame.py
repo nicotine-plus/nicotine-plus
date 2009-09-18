@@ -72,7 +72,7 @@ except ImportError:
 class roomlist:
 	def __init__(self, frame):
 		self.frame = frame
-		self.tooltips = self.frame.tooltips
+		#self.tooltips = self.frame.tooltips
 		self.wTree = gtk.glade.XML(os.path.join(os.path.dirname(os.path.realpath(__file__)), "roomlist.glade" ), None, 'nicotine' ) 
 		widgets = self.wTree.get_widget_prefix("")
 		for i in widgets:
@@ -344,8 +344,8 @@ class NicotineFrame:
 		
 		self.BuddiesComboEntries = []
 		self.accel_group = gtk.AccelGroup()
-		self.tooltips = gtk.Tooltips()
-		self.tooltips.enable()
+		#self.tooltips = gtk.Tooltips()
+		#self.tooltips.enable()
 		self.roomlist = roomlist(self)
 		# Import glade widgets
 		gtk.glade.set_custom_handler(self.get_custom_widget)
@@ -654,7 +654,7 @@ class NicotineFrame:
 			if RGBA:
 				log.add('X11/GTK RGBA Bug workaround: Restoring RGBA as default colormap.')
 				gtk_screen.set_default_colormap(colormap)
-		self.SetAllToolTips()
+		#self.SetAllToolTips()
 		self.WebBrowserTabLabel =  gtk.Label("Browser")
 		self.WebBrowserTabLabel.set_property("xalign", 0)
 		if WebBrowser and config["ui"]["mozembed"] and gtkmozembed is not None:
@@ -2209,7 +2209,7 @@ class NicotineFrame:
 		else:
 			if self.np.transfers is None:
 				self.connect1.set_sensitive(1)
-		self.SetAllToolTips()
+		#self.SetAllToolTips()
 		self.pluginhandler.check_enabled()
 	
 	def OnChangePassword(self, password):
@@ -2228,11 +2228,12 @@ class NicotineFrame:
 	
 	def SetAllToolTips(self):
 		act = self.np.config.sections["ui"]["tooltips"]
-		for tips in [self.tooltips, self.roomlist.tooltips] + [page.tooltips for page in self.settingswindow.pages.values()] + [room.tooltips for room in self.chatrooms.roomsctrl.joinedrooms.values()] + [private.tooltips for private in self.privatechats.users.values()]  + [user.tooltips for user in self.userinfo.users.values()]  + [user.tooltips for user in self.userbrowse.users.values()] + [data[2].tooltips for data in self.Searches.searches.values() if data[2] is not None]:
-			if act:
-				tips.enable()
-			else:
-				tips.disable()
+		self.logMessage("I dont konw what to do with SetAllToolTips")
+		#for tips in [self.tooltips, self.roomlist.tooltips] + [page.tooltips for page in self.settingswindow.pages.values()] + [room.tooltips for room in self.chatrooms.roomsctrl.joinedrooms.values()] + [private.tooltips for private in self.privatechats.users.values()]  + [user.tooltips for user in self.userinfo.users.values()]  + [user.tooltips for user in self.userbrowse.users.values()] + [data[2].tooltips for data in self.Searches.searches.values() if data[2] is not None]:
+		#	if act:
+		#		tips.enable()
+		#	else:
+		#		tips.disable()
 			
 		
 	def AutoReplace(self, message):
