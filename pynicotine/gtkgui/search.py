@@ -82,10 +82,10 @@ class WishList( gtk.Dialog):
 		self.mainVbox.pack_start(self.RemoveWishButton, False, False, 0)
 
 
-		self.ClearWishesButton = self.nicotine.CreateIconButton(gtk.STOCK_CLEAR, "stock", self.OnClearWishes, _("Clear all"))
+		self.SelectAllWishesButton = self.nicotine.CreateIconButton(gtk.STOCK_DND_MULTIPLE, "stock", self.OnSelectAllWishes, _("Select all"))
 
 		
-		self.mainVbox.pack_start(self.ClearWishesButton, False, False, 0)
+		self.mainVbox.pack_start(self.SelectAllWishesButton, False, False, 0)
 
 		self.CloseButton = self.nicotine.CreateIconButton(gtk.STOCK_CLOSE, "stock", self.quit, _("Close"))
 		self.mainVbox.pack_end(self.CloseButton, False, False, 0)
@@ -140,18 +140,9 @@ class WishList( gtk.Dialog):
 			self.removeWish(wish)
 	
 
-	def OnClearWishes(self, widget):
-		self.wishes = {}
-		self.store.clear()
-		for number, search in self.nicotine.Searches.searches.items():
-			search[4] = 0
-			self.nicotine.Searches.searches[number] = search
-			if search[2] is not None:
-				search[2].RememberCheckButton.set_active(False)
-
-		self.nicotine.np.config.sections["server"]["autosearch"] = []
-		self.nicotine.np.config.writeConfig()
-		
+	def OnSelectAllWishes(self, widget):
+		self.WishlistView.get_selection().select_all()
+	
 	def quit(self, w=None, event=None):
 
 		self.hide()
