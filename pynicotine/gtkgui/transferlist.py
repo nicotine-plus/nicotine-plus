@@ -468,10 +468,7 @@ class TransferList:
 				for t in self.list[:]:
 					if i.user == t.user and i.filename == t.filename:
 						self.list.remove(t)
-			else:
-				self.update(i)
-		if clear:
-			self.update()
+		self.update()
 
 	def OnClearTransfer(self, widget):
 		self.OnAbortTransfer(widget, False, True)
