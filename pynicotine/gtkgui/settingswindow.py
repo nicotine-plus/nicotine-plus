@@ -775,8 +775,6 @@ class IgnoreFrame(buildFrame):
 
 		if server["ignorelist"] is not None:
 			self.ignored_users = server["ignorelist"][:]
-			for ignored in self.ignored_users:
-				self.ignorelist.append([ignored])
 		else:
 			self.p.Hilight(self.IgnoredUsers)
 		if server["ipignorelist"] is not None:
