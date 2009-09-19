@@ -840,7 +840,7 @@ class NicotineFrame:
 	def SaveColumns(self):
 		for i in [self.userlist, self.chatrooms.roomsctrl, self.downloads, self.uploads, self.Searches]:
 			i.saveColumns()
-		self.np.config.writeConfig()
+		self.np.config.writeConfiguration()
 		
 	def OnSearchMethod(self, widget):
 		act = False
@@ -1882,7 +1882,7 @@ class NicotineFrame:
 		ipignorelist = self.np.config.sections["server"]["ipignorelist"]
 		if ip not in ipignorelist:
 			ipignorelist[ip] = ""
-			self.np.config.writeConfig()
+			self.np.config.writeConfiguration()
 			self.settingswindow.pages["Ignore List"].SetSettings(self.np.config.sections)
 
 	def OnIgnoreIP(self, user):
@@ -1895,7 +1895,7 @@ class NicotineFrame:
 		ip, port = self.np.users[user].addr
 		if ip not in ipignorelist or self.np.config.sections["server"]["ipignorelist"][ip] != user:
 			self.np.config.sections["server"]["ipignorelist"][ip] = user
-			self.np.config.writeConfig()
+			self.np.config.writeConfiguration()
 			self.settingswindow.pages["Ignore List"].SetSettings(self.np.config.sections)
 	
 
@@ -1905,7 +1905,7 @@ class NicotineFrame:
 			ip = self.IgnoredUserIp(user)
 			if ip is not None:
 				del ipignorelist[ip]
-				self.np.config.writeConfig()
+				self.np.config.writeConfiguration()
 				self.settingswindow.pages["Ignore List"].SetSettings(self.np.config.sections)
 				return True
 			
@@ -1919,7 +1919,7 @@ class NicotineFrame:
 		ip, port = self.np.users[user].addr
 		if ip in ipignorelist:
 			del ipignorelist[ip]
-			self.np.config.writeConfig()
+			self.np.config.writeConfiguration()
 			self.settingswindow.pages["Ignore List"].SetSettings(self.np.config.sections)
 
 	def OnBlockUser(self, user):
@@ -1932,7 +1932,7 @@ class NicotineFrame:
 		ip, port = self.np.users[user].addr
 		if ip not in self.np.config.sections["server"]["ipblocklist"] or self.np.config.sections["server"]["ipblocklist"][ip] != user:
 			self.np.config.sections["server"]["ipblocklist"][ip] = user
-			self.np.config.writeConfig()
+			self.np.config.writeConfiguration()
 			self.settingswindow.pages["Ban List"].SetSettings(self.np.config.sections)
 			
 	def OnUnBlockUser(self, user):
@@ -1940,7 +1940,7 @@ class NicotineFrame:
 			ip = self.BlockedUserIp(user)
 			if ip is not None:
 				del self.np.config.sections["server"]["ipblocklist"][ip]
-				self.np.config.writeConfig()
+				self.np.config.writeConfiguration()
 				self.settingswindow.pages["Ban List"].SetSettings(self.np.config.sections)
 				return True
 			
@@ -1954,23 +1954,23 @@ class NicotineFrame:
 		ip, port = self.np.users[user].addr
 		if ip in self.np.config.sections["server"]["ipblocklist"]:
 			del self.np.config.sections["server"]["ipblocklist"][ip]
-			self.np.config.writeConfig()
+			self.np.config.writeConfiguration()
 			self.settingswindow.pages["Ban List"].SetSettings(self.np.config.sections)
 			
 	def UnbanUser(self, user):
 		if user in self.np.config.sections["server"]["banlist"]:
 			self.np.config.sections["server"]["banlist"].remove(user)
-			self.np.config.writeConfig()
+			self.np.config.writeConfiguration()
 
 	def IgnoreUser(self, user):
 		if user not in self.np.config.sections["server"]["ignorelist"]:
 			self.np.config.sections["server"]["ignorelist"].append(user)
-			self.np.config.writeConfig()
+			self.np.config.writeConfiguration()
 
 	def UnignoreUser(self, user):
 		if user in self.np.config.sections["server"]["ignorelist"]:
 			self.np.config.sections["server"]["ignorelist"].remove(user)
-			self.np.config.writeConfig()
+			self.np.config.writeConfiguration()
 
 		
 	def BothRescan(self):
@@ -2132,7 +2132,7 @@ class NicotineFrame:
 		# Modify GUI
 		self.UpdateDownloadFilters()
 		self.TransparentTint(1)
-		self.np.config.writeConfig()
+		self.np.config.writeConfiguration()
 		if not config["ui"]["trayicon"] and self.TrayApp.HAVE_TRAYICON:
 			self.TrayApp.destroy_trayicon()
 		elif config["ui"]["trayicon"] and not self.TrayApp.HAVE_TRAYICON:
@@ -2483,7 +2483,7 @@ class NicotineFrame:
 		for room in self.chatrooms.roomsctrl.joinedrooms.values():
 			room.OnShowChatButtons(not self.np.config.sections["ui"]["chat_hidebuttons"])
 
-		self.np.config.writeConfig()
+		self.np.config.writeConfiguration()
 		
 	def OnShowLog(self, widget):
 		show = widget.get_active()
@@ -2495,7 +2495,7 @@ class NicotineFrame:
 			if not self.debugLogBox in self.vpaned1.get_children():
 				self.vpaned1.pack2(self.debugLogBox, False, True)
 				ScrollBottom(self.LogScrolledWindow)
-		self.np.config.writeConfig()
+		self.np.config.writeConfiguration()
 	
 	def OnShowFlags(self, widget):
 		if self.chatrooms is None:
@@ -2507,7 +2507,7 @@ class NicotineFrame:
 			self.np.config.sections["columns"]["chatrooms"][room][1] = int(show)
 		self.userlist.cols[1].set_visible(show)
 		self.np.config.sections["columns"]["userlist"][1] = int(show)
-		self.np.config.writeConfig()
+		self.np.config.writeConfiguration()
 		
 	def OnShowRoomList(self, widget):
 		show = widget.get_active()
@@ -2524,7 +2524,7 @@ class NicotineFrame:
 			if not self.roomlist.vbox2 in self.vpaned3.get_children():
 				self.vpaned3.pack2(self.roomlist.vbox2, True, True)
 				self.vpaned3.show()
-		self.np.config.writeConfig()
+		self.np.config.writeConfiguration()
 		
 	def OnToggleBuddyList(self, widget):
 		tab = always = chatrooms = False
@@ -2576,7 +2576,7 @@ class NicotineFrame:
 			self.np.config.sections["ui"]["buddylistinchatrooms"] = 2
 		else:
 			self.vpanedm.hide()
-		self.np.config.writeConfig()
+		self.np.config.writeConfiguration()
 
 	def OnCheckPrivileges(self, widget):
 		self.np.queue.put(slskmessages.CheckPrivileges())
@@ -2825,7 +2825,7 @@ class NicotineFrame:
 			thing = thing.lower()
 			self.np.config.sections["interests"]["likes"].append(thing)
 			self.likes[thing] = self.likeslist.append([thing])
-			self.np.config.writeConfig()
+			self.np.config.writeConfiguration()
 			self.np.queue.put(slskmessages.AddThingILike(self.np.encode(thing)))
 
 	def OnAddThingIDislike(self, widget):
@@ -2834,7 +2834,7 @@ class NicotineFrame:
 			thing = thing.lower()
 			self.np.config.sections["interests"]["dislikes"].append(thing)
 			self.dislikes[thing] = self.dislikeslist.append([thing])
-			self.np.config.writeConfig()
+			self.np.config.writeConfiguration()
 			self.np.queue.put(slskmessages.AddThingIHate(self.np.encode(thing)))
 
 	def SetRecommendations(self, title, recom):
@@ -2927,7 +2927,7 @@ class NicotineFrame:
 		self.likeslist.remove(self.likes[thing])
 		del self.likes[thing]
 		self.np.config.sections["interests"]["likes"].remove(thing)
-		self.np.config.writeConfig()
+		self.np.config.writeConfiguration()
 		self.np.queue.put(slskmessages.RemoveThingILike(self.np.encode(thing)))
 	
 	def OnRecommendItem(self, widget):
@@ -2954,7 +2954,7 @@ class NicotineFrame:
 		self.dislikeslist.remove(self.dislikes[thing])
 		del self.dislikes[thing]
 		self.np.config.sections["interests"]["dislikes"].remove(thing)
-		self.np.config.writeConfig()
+		self.np.config.writeConfiguration()
 		self.np.queue.put(slskmessages.RemoveThingIHate(self.np.encode(thing)))
 	
 	def OnPopupTIDLMenu(self, widget, event):
@@ -2974,13 +2974,13 @@ class NicotineFrame:
 		if widget.get_active() and thing not in self.np.config.sections["interests"]["likes"]:
 			self.np.config.sections["interests"]["likes"].append(thing)
 			self.likes[thing] = self.likeslist.append([thing])
-			self.np.config.writeConfig()
+			self.np.config.writeConfiguration()
 			self.np.queue.put(slskmessages.AddThingILike(self.np.encode(thing)))
 		elif not widget.get_active() and thing in self.np.config.sections["interests"]["likes"]:
 			self.likeslist.remove(self.likes[thing])
 			del self.likes[thing]
 			self.np.config.sections["interests"]["likes"].remove(thing)
-			self.np.config.writeConfig()
+			self.np.config.writeConfiguration()
 			self.np.queue.put(slskmessages.RemoveThingILike(self.np.encode(thing)))
 
 	def OnDislikeRecommendation(self, widget):
@@ -2988,13 +2988,13 @@ class NicotineFrame:
 		if widget.get_active() and thing not in self.np.config.sections["interests"]["dislikes"]:
 			self.np.config.sections["interests"]["dislikes"].append(thing)
 			self.dislikes[thing] = self.dislikeslist.append([thing])
-			self.np.config.writeConfig()
+			self.np.config.writeConfiguration()
 			self.np.queue.put(slskmessages.AddThingIHate(self.np.encode(thing)))
 		elif not widget.get_active() and thing in self.np.config.sections["interests"]["dislikes"]:
 			self.dislikeslist.remove(self.dislikes[thing])
 			del self.dislikes[thing]
 			self.np.config.sections["interests"]["dislikes"].remove(thing)
-			self.np.config.writeConfig()
+			self.np.config.writeConfiguration()
 			self.np.queue.put(slskmessages.RemoveThingIHate(self.np.encode(thing)))
 
 	def OnRecommendRecommendation(self, widget):
@@ -3042,7 +3042,7 @@ class NicotineFrame:
 			return
 		show = widget.get_active()
 		self.np.config.sections["ticker"]["hide"] = (not show)
-		self.np.config.writeConfig()
+		self.np.config.writeConfiguration()
 		for room in self.chatrooms.roomsctrl.joinedrooms.values():
 			room.ShowTicker(show)
 			

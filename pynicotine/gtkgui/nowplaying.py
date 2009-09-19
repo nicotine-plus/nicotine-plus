@@ -146,7 +146,7 @@ class NowPlaying:
 		items.insert(0, text)
 		self.frame.np.config.sections["players"]["npformat"] = text
 		del items[15:]
-		self.frame.np.config.writeConfig()
+		self.frame.np.config.writeConfiguration()
 		# Repopulate the combo list
 		self.NPFormat.get_model().clear()
 		templist = []
@@ -314,7 +314,7 @@ class NowPlaying:
 		self.frame.np.config.sections["players"]["npplayer"] = player
 		self.frame.np.config.sections["players"]["npothercommand"] = self.NPCommand.get_text()
 		self.frame.np.config.sections["players"]["npformat"] = self.NPFormat.child.get_text()
-		self.frame.np.config.writeConfig()
+		self.frame.np.config.writeConfiguration()
 		self.quit(None)
 		
 	

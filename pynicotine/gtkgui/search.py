@@ -228,7 +228,7 @@ class Searches(IconNotebook):
 	def OnClearSearchHistory(self):
 		self.frame.SearchEntry.set_text("")
 		self.frame.np.config.sections["searches"]["history"] = []
-		self.frame.np.config.writeConfig()
+		self.frame.np.config.writeConfiguration()
 		self.frame.SearchEntryCombo.get_model().clear()
 		self.frame.SearchEntryCombo.append_text("")
 	def OnSearch(self):
@@ -301,7 +301,7 @@ class Searches(IconNotebook):
 		items.insert(0, text)
 		# Clear old items
 		del items[15:]
-		self.frame.np.config.writeConfig()
+		self.frame.np.config.writeConfiguration()
 		# Repopulate the combo list
 		self.frame.SearchEntryCombo.get_model().clear()
 		templist = []
@@ -389,7 +389,7 @@ class Searches(IconNotebook):
 		search = self.searches[id]
 		if search[1] in self.frame.np.config.sections["server"]["autosearch"]:
 			self.frame.np.config.sections["server"]["autosearch"].remove(search[1])
-			self.frame.np.config.writeConfig()
+			self.frame.np.config.writeConfiguration()
 		search[4] = 0
 		self.WishListDialog.removeWish(search[1])
 		
@@ -416,7 +416,7 @@ class Searches(IconNotebook):
 		if i[1] in self.frame.np.config.sections["server"]["autosearch"]:
 			return
 		self.frame.np.config.sections["server"]["autosearch"].append(i[1])
-		self.frame.np.config.writeConfig()
+		self.frame.np.config.writeConfiguration()
 		i[4] = 1
 		self.WishListDialog.addWish(i[1])
 		

@@ -1689,7 +1689,7 @@ class ChatRoom:
 		else:
 			if not self.room in autojoin:
 				autojoin.append(self.room)
-		self.frame.np.config.writeConfig()
+		self.frame.np.config.writeConfiguration()
 		
 
 	def GetCompletionList(self, ix=0, text="", clist=[]):
@@ -1871,12 +1871,12 @@ class ChatRoom:
 						del config["ticker"]["rooms"][self.room]
 				else:
 					config["ticker"]["rooms"][self.room] = result
-				self.frame.np.config.writeConfig()
+				self.frame.np.config.writeConfiguration()
 			elif t == 2:
 				if self.room in config["ticker"]["rooms"]:
 					del config["ticker"]["rooms"][self.room]
 				config["ticker"]["default"] = result
-				self.frame.np.config.writeConfig()
+				self.frame.np.config.writeConfiguration()
 			self.frame.np.queue.put(slskmessages.RoomTickerSet(self.room, self.frame.np.encode(result, self.encoding)))
 		return True
 

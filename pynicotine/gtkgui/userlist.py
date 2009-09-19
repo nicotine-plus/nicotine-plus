@@ -430,7 +430,7 @@ class UserList:
 			user, comment, seen, iter, flag = i
 			l.append([user, comment, (user in self.notify), (user in self.privileged), (user in self.trusted), seen, flag])
 		self.frame.np.config.sections["server"]["userlist"] = l
-		self.frame.np.config.writeConfig()
+		self.frame.np.config.writeConfiguration()
 		
 	def saveColumns(self):
 		columns = []

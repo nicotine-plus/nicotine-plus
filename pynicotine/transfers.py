@@ -1517,7 +1517,7 @@ class Transfers:
 	def SaveDownloads(self):
 		""" Save list of files to be downloaded """
 		self.eventprocessor.config.sections["transfers"]["downloads"] = self.GetDownloads()
-		self.eventprocessor.config.writeConfig()
+		self.eventprocessor.config.writeTransfers()
 	
 	def decode(self, string):
 		try:

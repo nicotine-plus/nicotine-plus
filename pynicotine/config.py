@@ -45,7 +45,9 @@ class Config:
 	needConfig() - returns true if configuration information is incomplete
 	readConfig() - reads configuration information from ~/.nicotine/config
 	setConfig(config_info_dict) - sets configuration information
-	writeConfig - writes configuration information to ~/.nicotine/config
+	writeConfiguration - writes configuration information to ~/.nicotine/config
+	writeTransfers - writes download queue to ~/.nicotine/config.transfers.pickle
+	writeConfig - calls writeConfiguration followed by writeTransfers
 	
 	The actual configuration information is stored as a two-level dictionary.
 	First-level keys are config sections, second-level keys are config 
@@ -620,8 +622,11 @@ class Config:
 			log.addwarning(_("Error while writing database files: %s") % error)
 			return None
 		return sharedfiles, bsharedfiles, sharedfilesstreams, bsharedfilesstreams, wordindex, bwordindex, fileindex, bfileindex, sharedmtimes, bsharedmtimes
-			
+	
 	def writeConfig(self):
+		self.writeConfiguration()
+		self.writeTransfers()
+	def writeTransfers(self):
 		self.config_lock.acquire()
 		try:
 			handle = open(self.filename+'.transfers.pickle', 'w')
@@ -636,6 +641,9 @@ class Config:
 			handle.close()
 		except:
 			pass
+		self.config_lock.release()
+	def writeConfiguration(self):
+		self.config_lock.acquire()
 
 		external_sections =  ["sharedfiles", "sharedfilesstreams", "wordindex", "fileindex", "sharedmtimes", "bsharedfiles", "bsharedfilesstreams", "bwordindex", "bfileindex", "bsharedmtimes", "downloads"]
 		for i in self.sections.keys():

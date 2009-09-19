@@ -1347,7 +1347,7 @@ def SaveEncoding(np, section, entry, encoding):
 		np.config.sections["server"][section][entry] = encoding
 	elif entry in np.config.sections["server"][section]:
 		del np.config.sections["server"][section][entry]
-	np.config.writeConfig()
+	np.config.writeConfiguration()
 	
 class ImportWinSlskConfig:
 	def __init__(self, config, Path, Queue, Login, Rooms, BuddyList, BanList, IgnoreList, UserInfo, UserImage):
