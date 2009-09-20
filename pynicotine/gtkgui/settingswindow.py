@@ -24,7 +24,7 @@ import locale
 import re
 import webbrowser
 from dirchooser import *
-from utils import InputDialog, InitialiseColumns, recode, recode2, popupWarning, ImportWinSlskConfig, Humanize
+from utils import InputDialog, InitialiseColumns, recode, recode2, popupWarning, ImportWinSlskConfig, Humanize, OpenUri
 from entrydialog import *
 from pynicotine.logfacility import log
 import os, sys
@@ -167,7 +167,7 @@ class ServerFrame(buildFrame):
 		
 
 	def OnCheckPort(self, widget):
-		webbrowser.open('='.join(["http://tools.slsknet.org/porttest.php?port", str(self.frame.np.waitport)]))
+		OpenUri('='.join(['http://tools.slsknet.org/porttest.php?port', str(self.frame.np.waitport)]))
 
 class DownloadsFrame(buildFrame):
 	def __init__(self, parent):
