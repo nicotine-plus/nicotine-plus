@@ -121,7 +121,7 @@ class PeerConnectionInProgress:
 	def __init__(self, conn = None, msgObj = None):
 		self.conn = conn
 		self.msgObj = msgObj
-		#self.lastactive = time.time()
+		self.lastactive = time.time()
 		
 class SlskProtoThread(threading.Thread):
 	""" This is a netwroking thread that actually does all the communication.
@@ -252,7 +252,12 @@ class SlskProtoThread(threading.Thread):
 
 	distribclasses = {0:DistribAlive, 3:DistribSearch, 4:DistribBranchLevel, 5: DistribBranchRoot, 7: DistribChildDepth, 9:DistribMessage9}
 
-	
+	IN_PROGRESS_STALE_AFTER = 30
+	# The value of 30 was pulled out of thin air. When we let the OS handle this:
+	# - Linux seems okay, stale in progress conns get killed after a minute or two
+	# - With Windows, based on #473, it would seem these connections are never removed
+	CONNECTION_MAX_IDLE = 60
+
 	def __init__(self, ui_callback, queue, config, eventprocessor):
 		""" ui_callback is a UI callback function to be called with messages 
 		list as a parameter. queue is Queue object that holds messages from UI
@@ -405,7 +410,7 @@ class SlskProtoThread(threading.Thread):
 				numsockets += len(conns) + len(connsinprogress)
 
 				self._ui_callback([InternalData(numsockets)])
-				#print "Sockets open:", len(conns.keys()+connsinprogress.keys()+[p]+outsock), len(conns.keys()),  len(connsinprogress.keys())
+				#print "Sockets open: %s = %s + %s + %s (+1)" % (len(conns.keys()+connsinprogress.keys()+[p]+outsock), len(conns.keys()),  len(connsinprogress.keys()), len(outsock))
 			except select.error, error:
 				if len(error.args) == 2 and error.args[0] == EINTR:
 					# Error recieved; but we don't care :)
@@ -444,6 +449,10 @@ class SlskProtoThread(threading.Thread):
 			# Manage Connections
 			curtime = time.time()
 			for connection_in_progress in connsinprogress.keys()[:]:
+				if (curtime - connsinprogress[connection_in_progress].lastactive) > self.IN_PROGRESS_STALE_AFTER:
+					connection_in_progress.close()
+					del connsinprogress[connection_in_progress]
+					continue
 				try:
 					msgObj = connsinprogress[connection_in_progress].msgObj
 					if connection_in_progress in input:
@@ -463,12 +472,9 @@ class SlskProtoThread(threading.Thread):
 								message = "Blocking peer connection in progress to IP: %(ip)s Port: %(port)s" % { "ip":ip, "port":port}
 								self._ui_callback([DebugMessage(message, 3)])
 								connection_in_progress.close()
-				
 							else:
 								conns[connection_in_progress] = PeerConnection(connection_in_progress, msgObj.addr, "", "", msgObj.init)
 								self._ui_callback([OutConn(connection_in_progress, msgObj.addr)])
-							
-						
 						del connsinprogress[connection_in_progress]
 			# Process Data
 			for connection in conns.keys()[:]:
@@ -522,19 +528,14 @@ class SlskProtoThread(threading.Thread):
 			# Timeout Connections
 			curtime = time.time()
 			connsockets = len(conns.keys())
-			num = 0
 			for connection in conns.keys()[:]:
 				if connection is not server_socket and connection is not p:
-					if curtime - conns[connection].lastactive > 60:
-
+					if curtime - conns[connection].lastactive > self.CONNECTION_MAX_IDLE:
 						self._ui_callback([ConnClose(connection, conns[connection].addr)])
 						connection.close()
 						#print "Closed_run", conns[i].addr
 						del conns[connection]
-			
 					#  Was 30 seconds
-			
-				num += 1
 			if server_socket in conns.keys():
 				if curtime - conns[server_socket].lastping > 120:
 					conns[server_socket].lastping = curtime
@@ -548,12 +549,6 @@ class SlskProtoThread(threading.Thread):
 			server_socket.close()
 		#print "Networking thread aborted"
 		self._stopped = 1
-		
-	def checkTimeSinceActive(self, conn):
-		for i in self._conns.keys():
-			if i == conn:
-				return self._conns[conn].lastactive
-		return None
 		
 	def socketStillActive(self, conn):
 		for i in self._conns.keys():
