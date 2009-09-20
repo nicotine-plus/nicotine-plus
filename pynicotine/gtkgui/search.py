@@ -1380,7 +1380,7 @@ class Search:
 	def PushHistory(self, widget, title):
 		text = widget.child.get_text()
 		if not text.strip():
-        		return None
+			return None
 		text = text.strip()
 		history = self.frame.np.config.sections["searches"][title]
 		self.frame.np.config.pushHistory(history, text, 5)
