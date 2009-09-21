@@ -267,17 +267,21 @@ class NowPlaying:
 			return None
 
 		title = self.NPFormat.child.get_text()
-		title = title.replace("$t", self.title["title"])
-		title = title.replace("$a", self.title["artist"])
-		title = title.replace("$b", self.title["album"])
-		title = title.replace("$c", self.title["comment"])
-		title = title.replace("$n", self.title["nowplaying"])
-		title = title.replace("$k", self.title["track"])
-		title = title.replace("$l", self.title["length"])
-		title = title.replace("$y", self.title["year"])
-		title = title.replace("$r", self.title["bitrate"])
-		title = title.replace("$s", self.title["status"])
-		title = title.replace("$f", self.title["filename"])
+		title = title.replace("%", "%%") # Escaping user supplied % symbols
+		#print "Title1: " + title
+		title = title.replace("$t", "%(title)s")
+		title = title.replace("$a", "%(artist)s")
+		title = title.replace("$b", "%(album)s")
+		title = title.replace("$c", "%(comment)s")
+		title = title.replace("$n", "%(nowplaying)s")
+		title = title.replace("$k", "%(track)s")
+		title = title.replace("$l", "%(length)s")
+		title = title.replace("$y", "%(year)s")
+		title = title.replace("$r", "%(bitrate)s")
+		title = title.replace("$s", "%(status)s")
+		title = title.replace("$f", "%(filename)s")
+		#print "Title2: " + title
+		title = title % self.title
 		title = ' '.join([x for x in title.replace('\r', '\n').split('\n') if x])
 		
 		if test:
@@ -384,37 +388,13 @@ class NowPlaying:
 	
 	def exaile(self):
 		slist = self.NPFormat.child.get_text()
-		commandlist = []
-		if "$t" in slist:
-			commandlist.append("--get-title")
-		if "$l" in slist:
-			commandlist.append("--get-length")
-		if "$a" in slist:
-			commandlist.append("--get-artist")
-		if "$b" in slist:
-			commandlist.append("--get-album")
-		for command in commandlist:
-			output = self.exaile_command(command) #.split("\n")
-			if output is None:
-				continue
-		#pos = 0
-		#for command in commandlist:
-			if command == "--get-title":
-				self.title["title"] = output[0]
-			elif command == "--get-artist":
-				self.title["artist"] = output[0]
-			elif command == "--get-album":
-				self.title["album"] = output[0]
-			elif command == "--get-length":
-				self.title["length"] = output[0]
-			#pos += 1
-
-		return 1
-		
-				
-	def exaile_command(self, command):
-		output = executeCommand('exaile $', command, returnoutput=True).split('\n') #[0]
-		return output
+		output = executeCommand('exaile --get-album --get-artist --get-length --get-title', returnoutput=True)
+		output = output.split('\n')
+		self.title["title"] =  output[0]
+		self.title["artist"] = output[1]
+		self.title["album"] =  output[2]
+		self.title["length"] = output[3]
+		return True
 		
 	def amarok(self):
 		slist = self.NPFormat.child.get_text()
