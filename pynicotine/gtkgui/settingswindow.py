@@ -984,7 +984,7 @@ class SoundsFrame(buildFrame):
 
 		self.options = {"ui": {"soundcommand": self.SoundCommand, "soundtheme": self.SoundDirectory, "soundenabled": self.SoundCheck, "speechenabled": self.TextToSpeech, "speechcommand": self.TTSCommand, "speechrooms": self.RoomMessage, "speechprivate": self.PrivateMessage},
 			"players": {"default": self.audioPlayerCombo}}
-		for executable in ["xmms -e $", "audacious -e $", "amarok -a $"]:
+		for executable in ["xmms -e $", "audacious -e $", "amarok -a $", 'exaile $']:
 			self.audioPlayerCombo.append_text( executable )
 		for executable in ["flite -t $", "echo $ | festival --tts"]:
 			self.TTSCommand.append_text( executable )

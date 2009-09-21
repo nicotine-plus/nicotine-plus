@@ -542,7 +542,8 @@ class SlskProtoThread(threading.Thread):
 					queue.put(ServerPing())
 					
 			self._ui_callback([])
-			time.sleep(0.1)
+			if self._downloadlimit[1] and self._downloadlimit[1] > 0:
+				time.sleep(0.1)
 
 		# Close Server Port
 		if server_socket is not None:
