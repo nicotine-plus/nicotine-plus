@@ -1686,7 +1686,8 @@ class TransferRequest(PeerMessage):
 	def makeNetworkMessage(self):
 		msg = self.packObject(self.direction)+self.packObject(self.req)+self.packObject(self.file)
 		if self.filesize is not None and self.direction == 1:
-			msg = msg+self.packObject(self.filesize)
+			# BORKED Uploads to the official client: msg = msg+self.packObject(self.filesize)
+			msg = msg+self.packObject(self.filesize) + self.packObject(0)
 		return msg
 	
 	def parseNetworkMessage(self, message):
@@ -1712,7 +1713,8 @@ class TransferResponse(PeerMessage):
 		if self.reason is not None:
 			msg = msg + self.packObject(self.reason)
 		if self.filesize is not None:
-			msg = msg + self.packObject(self.filesize)
+			# BORKED Uploads to the official client: msg = msg + self.packObject(self.filesize)
+			msg = msg + self.packObject(self.filesize) + self.packObject(0)
 		return msg
 	
 	def parseNetworkMessage(self, message):
