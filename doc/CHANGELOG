@@ -1,5 +1,33 @@
 ChangeLog for Nicotine Plus
 
+1.2.13 (22 Sept 2009)
+
+Behaviour
+ * Download queue is stored independently from the normal configuration file (ticket #467)
+ * Non-working connections are cleaned up more aggressively (ticket #473)
+
+Features
+ * Themes can now use a range of image types, including SVG
+ * Ownership of private rooms is now displayed
+ * Search chatroom logs by pressing F3
+ * ASF Support in case Mutagen is used
+ * The location of Nicotine+ is restored on startup
+ * Rudimentary download rate limiter
+ * The NowPlaying code for Audacious now supports audtool2 as well
+
+Bugs
+ * Notifications failed when a user had <> in the name
+ * Highlight icon kept on blinking with detached windows
+ * Fixed links in the Help menu that didn't work (ticket #459)
+ * A few different GUI related bugs that should make Nicotine+ much more responsive and use less CPU: Startup time reduced when there is a queue, queueing many items at a timer, pressing buttons like "Clear Finished" and "Abort User's Upload(s)"
+ * ...and lots of tiny bugs
+
+Translations
+ * Žygimantas updated Lithuanian translation
+ * Kenny updated Dutch translation
+ * Nils updated Hungarian translation
+
+
 1.2.12 (26 May 2009)
 
 Behaviour
@@ -51,6 +79,7 @@ Bugs
  * Handling of word wrapping of extremely long words is improved
  * Tray icon menu on OSX
  * Private Room handling has improved (bug #432)
+
 
 1.2.10 (30 December 2008)
 
@@ -130,7 +159,8 @@ Settings
    
 Translations
  * Slovak Translation Updated (Jozef)
- 
+
+
 1.2.9 Release (22 September 2007)
 Licensing
  * Relicensed all code under GPLv3 and LGPLv3
@@ -253,6 +283,7 @@ Bug Fixes
  * Readded "/" to pasted folder slsk:// URLs
  * Reading slsk.exe's cfg files should now work on Windows
 
+
 1.2.8 Release (1st June 2007)
 
 GENERAL CHANGES
@@ -348,6 +379,7 @@ TRANSLATIONS
  * Nicola updated the Italian translation
  * Žygimantas updated the Lithuanian translation
  
+
 1.2.7 Release (25th February 2007)
 
 GENERAL CHANGES
