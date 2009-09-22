@@ -29,3 +29,5 @@ tar -czf "nicotine+-$VERSION.tar.gz" "$NICDIR" || die "Failed to create GZip"
 
 echo "Nicotine+ $VERSION packed in $TMPDIR"
 
+echo "Don't forget to tag the SVN repository:"
+echo "  svn copy http://nicotine-plus.org/svn/trunk/nicotine+ http://nicotine-plus.org/svn/tags/$VERSION/"
