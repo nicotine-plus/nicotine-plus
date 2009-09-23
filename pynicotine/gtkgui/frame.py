@@ -1044,10 +1044,10 @@ class NicotineFrame:
 			share1 = share
 			break
 		try:
-			
-			import pickle, bz2
+			import cPickle as mypickle
+			import bz2
 			sharefile = bz2.BZ2File(share1)
-			list1 = pickle.load(sharefile)
+			list1 = mypickle.load(sharefile)
 			sharefile.close()
 			if not isinstance(list1, dict):
 				raise TypeError, "Bad data in file %(sharesdb)s" % {'sharesdb':share1}

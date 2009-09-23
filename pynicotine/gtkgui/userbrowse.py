@@ -398,14 +398,18 @@ class UserBrowse:
 			parent = s[0]
 			if parent == '':
 				parent += dirseparator
-				if parent not in self.directories.keys():
+				try:
+					self.directories[parent]
+				except KeyError:
 					self.directories[parent] =  self.DirStore.append(None, [self.decode(parent), parent])
 			parent = s[0]
 			for seq in s[1:]:
 				path = dirseparator.join([parent, seq])
 				if parent == "":
 					parent = dirseparator
-				if parent not in self.directories.keys():
+				try:
+					self.directories[parent]
+				except KeyError:
 					self.directories[parent] =  self.DirStore.append(None, [self.decode(parent), parent])
 				if path not in children:
 					children.append(path)
@@ -475,10 +479,10 @@ class UserBrowse:
 			print error
 			self.frame.logMessage(error)
 		try:
-			import pickle
+			import cPickle as mypickle
 			import bz2
 			sharesfile = bz2.BZ2File(os.path.join(sharesdir, self.encode(self.user)), 'w' )
-			pickle.dump(self.shares, sharesfile)
+			mypickle.dump(self.shares, sharesfile)
 			sharesfile.close()
 		except Exception, msg:
 			error = _("Can't save shares, '%(user)s', reported error: %(error)s" % {'user':self.user, 'error':msg} )
