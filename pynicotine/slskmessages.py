@@ -1463,7 +1463,16 @@ class SharedFileList(PeerMessage):
 			for j in range(nfiles):
 				pos, code = pos+1, ord(message[pos])
 				pos, name = self.getObject(message, types.StringType, pos)
-				pos, size = self.getObject(message, types.LongType, pos, getsignedint = 1)
+				pos, size = self.getObject(message, types.LongType, pos, getsignedint = True)
+				if message[pos-1] == '\xff':
+					# Buggy SLSK?
+					# Some file sizes will be huge if unpacked as a signed
+					# LongType, namely somewhere in the area of 17179869 Terabytes.
+					# It would seem these files are indeed big, but in the Gigabyte range.
+					# The following will undo the damage (and if we fuck up it
+					# doesn't matter, it can never be worse than reporting 17
+					# exabytes for a single file)
+					size = struct.unpack("Q", '\xff'*struct.calcsize("Q"))[0] - size
 				pos, ext = self.getObject(message, types.StringType, pos)
 				pos, numattr = self.getObject(message, types.IntType, pos)
 				attrs = []

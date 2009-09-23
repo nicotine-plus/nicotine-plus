@@ -419,13 +419,10 @@ class UserBrowse:
 		sortlist.sort()
 		for files in self.shares.values():
 			for filedata in files:
-				# A number of people have these weird filesizes in their list.
-				# The numbers aren't identical, so it's probably a counter
-				# breaking some limit (and not a MAXINT value)
 				if filedata[2] < 18446744000000000000:
 					self.totalsize += filedata[2]
-				#else:
-				#	print "Unbelievable filesize: %s, %s" % (HumanizeBytes(filedata[2]), repr(filedata))
+				else:
+					print "Unbelievable filesize: %s, %s" % (HumanizeBytes(filedata[2]), repr(filedata))
 		self.AmountShared.set_text(_("Shared: %s") % HumanizeBytes(self.totalsize))
 	
 		directory = sortlist[0]
