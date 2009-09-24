@@ -27,6 +27,9 @@ for name in os.listdir(os.path.join("img", "geoip")):
 	p = os.path.join("img", "geoip", name)
 	if isfile(p):
 		flagtable.append((os.path.join("img", "geoip", name), 'flag_%s' % name[:2].upper()))
+missing = os.path.join("img", "missingflag.png")
+if isfile(missing):
+	flagtable.append(((missing), 'flag_'))
 
 outf = open(os.path.join("pynicotine","gtkgui","imagedata.py"), "w")
 for image in table:
