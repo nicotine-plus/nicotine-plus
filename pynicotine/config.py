@@ -218,7 +218,7 @@ class Config:
 	"enablefilters": 0, \
 	 "defilter":["","","","",0,""], \
 	 "filtercc":[], \
-	"reopen_tabs": 1, \
+	"reopen_tabs": False,
 	"filterin":[], \
 	"filterout":[], \
 	"filtersize":[], \
