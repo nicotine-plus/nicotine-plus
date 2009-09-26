@@ -28,6 +28,7 @@ class Ticker(gtk.EventBox):
 		self.entry.show()
 		self.add(self.entry)
 		self.messages = {}
+		self.sortedmessages = []
 		self.ix = 0
 		self.source = None
 		self.enable()
@@ -41,10 +42,7 @@ class Ticker(gtk.EventBox):
 			return True
 		if self.ix >= len(self.messages):
 			self.ix = 0
-		messages = self.messages.keys()
-		messages.sort(key=str.lower)
-		user = messages[self.ix]
-		message = self.messages[user]
+		(user, message) = self.sortedmessages[self.ix]
 		self.entry.set_text("[%s]: %s" % (user, message))
 		self.ix += 1
 		return True
@@ -52,10 +50,19 @@ class Ticker(gtk.EventBox):
 	def add_ticker(self, user, message):
 		message = message.replace("\n", " ")
 		self.messages[user] = message
+		self.updatesorted()
 
 	def remove_ticker(self, user):
-		if user in self.messages:
+		try:
 			del self.messages[user]
+		except KeyError:
+			return
+		self.updatesorted()
+
+	def updatesorted(self):
+		lst = [(user, msg) for user, msg in self.messages.iteritems()]
+		lst.sort(cmp=lambda x,y: len(x[1])-len(y[1]))
+		self.sortedmessages = lst
 
 	def set_ticker(self, msgs):
 		self.messages = msgs
