@@ -841,10 +841,11 @@ class Transfers:
 			if absolute and path[1:3] == ':\\' and path[0:1] and path[0].isalpha():
 				drive = path[:3]
 				path = path[3:]
-			chars = ["?", "\"", ":", ">", "<", "|", "*"]
-			for char in chars:
+			for char in utils.illegalwinchars:
 				path = path.replace(char, "_")
 			path = ''.join([drive, path])
+			# Path can never end in a period on Windows machines
+			path = path.rstrip('.')
 		return path
 	def FileDownload(self, msg):
 		""" A file download is in progress"""
@@ -1312,6 +1313,10 @@ class Transfers:
 				if i.user in self.users and self.users[i.user].status == 0:
 					i.status = "User logged off"
 				else:
+					#if i.status == 'Initializing transfer':
+					#	illegal = set(utils.illegalwinchars).intersection(i.filename)
+					#	if len(illegal) > 0:
+					#		log.add(_("File transfer of %(file)s might have failed because of the %(chars)s characters in the name and because the other client is buggy.") % {'file':self.decode(i.filename), 'chars':''.join(illegal)})
 					i.status = "Connection closed by peer"
 					if i in self.downloads:
 						self.eventprocessor.logTransfer(_("Retrying failed download: %(user)s, file %(file)s") % {'user':i.user, 'file':self.decode(i.filename)}, 1)

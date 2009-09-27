@@ -46,7 +46,7 @@ language = ""
 import gettext
 tr_cache = {}
 
-
+illegalwinchars = ["?", "\"", ":", ">", "<", "|", "*"]
 
 def ChangeTranslation(lang):
 	global language
