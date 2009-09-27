@@ -76,6 +76,7 @@ class Config:
 	"roomencoding": {}, \
 	"userencoding": {}, \
 	"portrange": (2234,2239), \
+	"upnp": False,
 	"enc": "utf-8", \
 	"userlist": [], \
 	"banlist": [], \
