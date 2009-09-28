@@ -549,6 +549,7 @@ class NetworkEventProcessor:
 	def IncPort(self, msg):
 		self.waitport = msg.port
 		self.setStatus(_("Listening on port %i") %(msg.port))
+		print "Now reporting %s to the server" % (msg.port,)
 
 	def ServerConn(self, msg):
 		self.setStatus(_("Connected to server %(host)s:%(port)s, logging in...") % {'host':msg.addr[0], 'port': msg.addr[1]})

@@ -641,10 +641,11 @@ class NicotineFrame:
 				self.OnSettings(None)
 			else:
 				# Connect anyway
-				self.OnConnect(-1)
+				#self.OnConnect(-1)
+				self.OnFirstConnect(-1)
 		else:
-			#self.OnFirstConnect(-1)
-			self.OnConnect(-1)
+			#self.OnConnect(-1)
+			self.OnFirstConnect(-1)
 		self.UpdateDownloadFilters()
 		
 		if use_trayicon and config["ui"]["trayicon"]:
@@ -1534,27 +1535,29 @@ class NicotineFrame:
 			sys.exit()
 
 	def OnFirstConnect(self, widget):
-		self.np.config.sections["server"]["upnp"] = True
 		if not self.np.config.sections["server"]["upnp"]:
-			log.add("You do not have UPnP enabled.")
+			log.add("You do not have UPnP enabled in your configuration file")
 			self.OnConnect(-1)
 			return
 		log.add("Figuring out UPnP!")
 		thread.start_new_thread(self.Fixportmapping, ())
 	def Fixportmapping(self):
+		time.sleep(3) # Wait for the GUI to come alive
 		print "Fixing ports..."
-		time.sleep(10)
+		internalport = self.np.protothread._p.getsockname()[1] # Internal LAN port
+		externalport = internalport # External LAN port
 		try:
 			mapping = upnp.fixportmapping(self.np.protothread._p.getsockname()[1])
 			if not mapping:
 				log.add('Failed to automate port forwarding, sorry.')
 			else:
-				(externalip, self.externalport) = mapping
+				(externalip, externalport) = mapping
 				log.add('Managed to forward port: %s' % (repr(mapping)))
+				self.networkcallback([slskmessages.IncPort(externalport)])
 		except Exception, e:
 			log.add('UPNP Exception (should never happen): %s' % (e,))
 		print "Done fixing ports"
-
+		self.OnConnect(-1)
 	def OnConnect(self, widget):
 		self.TrayApp.tray_status["status"] = "connect"
 		self.TrayApp.SetImage()
