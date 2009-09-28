@@ -26,13 +26,15 @@ def fixportmapping(internallanport):
 		log.addwarning(_('Could not load miniupnpc module: %(error)s') % {'error':str(e)})
 		return None
 	u = miniupnpc.UPnP()
-	u.discoverdelay = 200
+	u.discoverdelay = 2000
 	try:
 		print "Discovering... delay=%ums" % u.discoverdelay
 		ndevices = u.discover()
 		print "%s device(s) detected" % ndevices
 		u.selectigd()
-		print "Selecting one of the IGD. Local address: %s External address: %s" % (u.lanaddr, u.externalipaddress())
+		lanaddr = u.lanaddr
+		externalipaddress = u.externalipaddress()
+		print "Selecting one of the IGD. Local address: %s External address: %s" % (lanaddr, externalipaddress)
 		print "Misc: %s\n%s" % (u.statusinfo(), u.connectiontype())
 		print "Selecting random external port..."
 		eport = 15000
@@ -45,8 +47,8 @@ def fixportmapping(internallanport):
 				return
 			r = u.getspecificportmapping(eport, 'TCP')
 			print "Conseq. r: %s" % (str(r),)
-		print "trying to redirect %s port %u TCP => %s port %u TCP" % (externalipaddress, eport, u.lanaddr, internallanport)
-		b = u.addportmapping(eport, 'TCP', u.lanaddr, internallanport, 'Nicotine+', '')
+		print "trying to redirect %s port %u TCP => %s port %u TCP" % (externalipaddress, eport, lanaddr, internallanport)
+		b = u.addportmapping(eport, 'TCP', lanaddr, internallanport, 'Nicotine+', '')
 		if b:
 			print "Success?"
 			return (externalipaddress, eport)
