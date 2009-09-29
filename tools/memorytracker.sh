@@ -38,3 +38,5 @@ echo ""
 pidstat -r -p "$PID" "$POLLTIME" | while read line ; do 
 	writelog "$line" 
 done
+
+writelog "`date +%H:%M:%S` EOF"
