@@ -4,7 +4,7 @@ LOGFILE="/tmp/nicotine_memoryusage.`date +%Y-%m-%d_%H-%M-%S`.log"
 POLLTIME="15"
 
 getpid() {
-	PID=`ps -C nicotine -o pid=` # in case we managed to rename the process with procname
+	PID=`ps -C nicotine -o pid= | sed 's/ *//g'` # in case we managed to rename the process with procname
 	if [ -z "$PID" ]; then
 		# We use p[y]thon since that way we will not encounter our own sed command in the list
 		PID=`ps u | sed -n '/p[y]thon.*nicotine/{s/^[^ ]\+[ ]*//;s/ .*//;p;q}'`
