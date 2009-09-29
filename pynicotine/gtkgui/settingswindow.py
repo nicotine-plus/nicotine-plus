@@ -113,17 +113,11 @@ class ServerFrame(buildFrame):
 			self.p.Hilight(self.LastPort)
 			
 		if server["firewalled"] is not None:
-			if server["upnp"]:
-				self.DirectConnection.set_sensitive(False)
-				self.DirectConnection.set_active(True)
-			else:
-				self.DirectConnection.set_active(not server["firewalled"])
-				self.DirectConnection.set_sensitive(True)
-		
+			self.DirectConnection.set_active(not server["firewalled"])
 		if server["ctcpmsgs"] is not None:
 			self.ctcptogglebutton.set_active(not server["ctcpmsgs"])
 		self.UseUPnP.set_active(server["upnp"])
-			
+		self.OnUPnPToggled(None)
 	def GetSettings(self):
 		try:
 			server = self.Server.child.get_text().split(":")
@@ -177,7 +171,15 @@ class ServerFrame(buildFrame):
 
 	def OnCheckPort(self, widget):
 		OpenUri('='.join(['http://tools.slsknet.org/porttest.php?port', str(self.frame.np.waitport)]))
-
+	def OnUPnPToggled(self, widget):
+		if self.UseUPnP.get_active():
+			self.Requirement.set_sensitive(False)
+			self.DirectConnection.set_sensitive(False)
+			self.DirectConnection.set_active(True)
+		else:
+			self.Requirement.set_sensitive(True)
+			self.DirectConnection.set_sensitive(True)
+		
 class DownloadsFrame(buildFrame):
 	def __init__(self, parent):
 		self.p = parent

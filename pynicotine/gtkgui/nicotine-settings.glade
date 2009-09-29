@@ -313,6 +313,7 @@
                 <property name="receives_default">False</property>
                 <property name="use_underline">True</property>
                 <property name="draw_indicator">True</property>
+                <signal name="toggled" handler="OnUPnPToggled"/>
               </widget>
               <packing>
                 <property name="expand">False</property>
@@ -336,7 +337,7 @@
               </packing>
             </child>
             <child>
-              <widget class="GtkLabel" id="label271">
+              <widget class="GtkLabel" id="Requirement">
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
                 <property name="yalign">0</property>
@@ -346,6 +347,21 @@
                 <property name="expand">False</property>
                 <property name="fill">False</property>
                 <property name="position">9</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkCheckButton" id="ctcptogglebutton">
+                <property name="label" translatable="yes">Enable CTCP-like PM responses (Client Version)</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">False</property>
+                <property name="use_underline">True</property>
+                <property name="draw_indicator">True</property>
+              </widget>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">10</property>
               </packing>
             </child>
             <child>
@@ -361,7 +377,7 @@
                   <packing>
                     <property name="expand">False</property>
                     <property name="fill">False</property>
-                    <property name="position">11</property>
+                    <property name="position">0</property>
                   </packing>
                 </child>
                 <child>
@@ -378,22 +394,7 @@
                 <property name="expand">False</property>
                 <property name="fill">False</property>
                 <property name="padding">5</property>
-                <property name="position">1</property>
-              </packing>
-            </child>
-            <child>
-              <widget class="GtkCheckButton" id="ctcptogglebutton">
-                <property name="label" translatable="yes">Enable CTCP-like PM responses (Client Version)</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">False</property>
-                <property name="use_underline">True</property>
-                <property name="draw_indicator">True</property>
-              </widget>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="position">10</property>
+                <property name="position">11</property>
               </packing>
             </child>
           </widget>
