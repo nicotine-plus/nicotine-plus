@@ -306,8 +306,8 @@
               </packing>
             </child>
             <child>
-              <widget class="GtkCheckButton" id="DirectConnection">
-                <property name="label" translatable="yes">I can receive direct connections</property>
+              <widget class="GtkCheckButton" id="UseUPnP">
+                <property name="label" translatable="yes">Use UPnP to fix portmapping (required MiniUPnPc with python bindings)</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
@@ -321,6 +321,21 @@
               </packing>
             </child>
             <child>
+              <widget class="GtkCheckButton" id="DirectConnection">
+                <property name="label" translatable="yes">I can receive direct connections</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">False</property>
+                <property name="use_underline">True</property>
+                <property name="draw_indicator">True</property>
+              </widget>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">8</property>
+              </packing>
+            </child>
+            <child>
               <widget class="GtkLabel" id="label271">
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
@@ -330,7 +345,7 @@
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
-                <property name="position">8</property>
+                <property name="position">9</property>
               </packing>
             </child>
             <child>
@@ -346,7 +361,7 @@
                   <packing>
                     <property name="expand">False</property>
                     <property name="fill">False</property>
-                    <property name="position">0</property>
+                    <property name="position">11</property>
                   </packing>
                 </child>
                 <child>
@@ -363,7 +378,7 @@
                 <property name="expand">False</property>
                 <property name="fill">False</property>
                 <property name="padding">5</property>
-                <property name="position">9</property>
+                <property name="position">1</property>
               </packing>
             </child>
             <child>

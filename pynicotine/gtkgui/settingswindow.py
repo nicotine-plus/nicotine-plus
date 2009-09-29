@@ -76,7 +76,7 @@ class ServerFrame(buildFrame):
 		
 		for item in encodings:
 			self.Elist[item[1]] = self.EncodingStore.append([item[1], item[0] ])
-		self.options = {"server": { "server": None, "serverlist": self.Server, "login": self.Login, "passw": self.Password, "enc": self.Encoding.child, "portrange": None, "firewalled": self.DirectConnection, "ctcpmsgs": self.ctcptogglebutton } }
+		self.options = {"server": { "server": None, "serverlist": self.Server, "login": self.Login, "passw": self.Password, "enc": self.Encoding.child, "portrange": None, "firewalled": self.DirectConnection, "upnp": self.UseUPnP, "ctcpmsgs": self.ctcptogglebutton } }
 			
 	def SetSettings(self, config):
 		self.p.SetWidgetsData(config, self.options)
@@ -113,11 +113,16 @@ class ServerFrame(buildFrame):
 			self.p.Hilight(self.LastPort)
 			
 		if server["firewalled"] is not None:
-			self.DirectConnection.set_active(not server["firewalled"])
+			if server["upnp"]:
+				self.DirectConnection.set_sensitive(False)
+				self.DirectConnection.set_active(True)
+			else:
+				self.DirectConnection.set_active(not server["firewalled"])
+				self.DirectConnection.set_sensitive(True)
 		
 		if server["ctcpmsgs"] is not None:
 			self.ctcptogglebutton.set_active(not server["ctcpmsgs"])
-		
+		self.UseUPnP.set_active(server["upnp"])
 			
 	def GetSettings(self):
 		try:
@@ -148,7 +153,10 @@ class ServerFrame(buildFrame):
 			portrange = None
 			popupWarning(self.p.SettingsWindow, _("Warning: Invalid ports"), _("Client ports are invalid."), self.frame.images["n"] )
 			raise UserWarning
-		
+		if self.UseUPnP.get_active():
+			firewalled = False
+		else:
+			firewalled = not self.DirectConnection.get_active()
 		return {
 			"server": {
 				"server": server,
@@ -157,7 +165,8 @@ class ServerFrame(buildFrame):
 				"passw": self.Password.get_text(),
 				"enc": self.Encoding.child.get_text(),
 				"portrange": portrange,
-				"firewalled": not self.DirectConnection.get_active(),
+				"firewalled": firewalled,
+				"upnp": self.UseUPnP.get_active(),
 				"ctcpmsgs": not self.ctcptogglebutton.get_active(),
 			}
 		}
