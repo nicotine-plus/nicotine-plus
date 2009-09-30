@@ -197,12 +197,14 @@ class UglyTreeModel(gtk.GenericTreeModel):
 #		print "on_get_iter(self, %s):" % (path,)
 		node = None
 		for i in path:
-			try:
-				level, number = self.GetChild(node)
-				node = (level, number + i)
-			except TypeError, e:
-				print 'TypeError in on_get_iter for path %s: %s' % (path, str(e))
-				node = None
+			#try:
+				returnvalue = self.GetChild(node)
+				if returnvalue:
+					level, number = self.GetChild(node)
+					node = (level, number + i)
+			#except TypeError, e:
+			#	print 'TypeError in on_get_iter for path %s: %s' % (path, str(e))
+			#	node = None
 		return node
 	def on_get_value(self, node, column):
 		'''returns the value stored in a particular column for the node'''
