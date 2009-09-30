@@ -1043,22 +1043,20 @@ class NicotineFrame:
 		if shares is None:
 			return
 		for share in shares:
-			start = time.time()
 			try:
 				import cPickle as mypickle
 				import bz2
 				sharefile = bz2.BZ2File(share)
-				list1 = mypickle.load(sharefile)
+				mylist = mypickle.load(sharefile)
 				sharefile.close()
-				if not isinstance(list1, dict):
+				if not isinstance(mylist, (list, dict)):
 					raise TypeError, "Bad data in file %(sharesdb)s" % {'sharesdb':share}
 				username = share.split(os.sep)[-1]
 				self.userbrowse.InitWindow(username, None)
 				if username in self.userbrowse.users:
-					self.userbrowse.users[username].LoadShares(list1)
+					self.userbrowse.users[username].LoadShares(mylist)
 			except Exception, msg:
 				log.addwarning(_("Loading Shares from disk failed: %(error)s") % {'error':msg})
-			print "Duration %16s: %7.3f" % (share.split(os.sep)[-1], time.time()-start)
 	def OnNowPlayingConfigure(self, widget):
 		
 		self.now.NowPlaying.show()

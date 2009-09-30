@@ -30,8 +30,8 @@ from dirchooser import ChooseDir
 from entrydialog import *
 from pynicotine import slskmessages
 from thread import start_new_thread
-
 from pynicotine.utils import _, displayTraceback, executeCommand
+import uglytree
 
 class UserBrowse:
 	def __init__(self, userbrowses, user, conn):
@@ -52,16 +52,15 @@ class UserBrowse:
 		#	self.tooltips.disable()
 		self.user = user
 		self.conn = conn
+		# selected_folder is a path for TreeStore, i.e. a tuple
 		self.selected_folder = None
 		self.search_list = []
 		self.query = None
 		self.search_position = 0
 		self.selected_files = []
 		
-		self.shares = {}
+		self.shares = []
 		self.Elist = {}
-		# Iters for current DirStore
-		self.directories = {}
 		# Iters for current FileStore
 		self.files = {}
 		self.totalsize = 0
@@ -83,11 +82,11 @@ class UserBrowse:
 			if self.encoding == item[1]:
 				self.Encoding.set_active_iter(self.Elist[self.encoding])
 		
-		self.DirStore = gtk.TreeStore(  str, str )
+# Is there a need for this here?
+		self.DirStore = uglytree.UglyTreeModel( [] )
 		self.FolderTreeView.set_model(self.DirStore)
 
 		self.FolderTreeView.set_headers_visible(True)
-		self.DirStore.set_sort_column_id(0, gtk.SORT_ASCENDING)
 		# GTK 2.10
 		if gtk.pygtk_version[0] >= 2 and gtk.pygtk_version[1] >= 10:
 			self.FolderTreeView.set_enable_tree_lines(True)
@@ -95,7 +94,6 @@ class UserBrowse:
 		cols = InitialiseColumns(self.FolderTreeView,
 			[_("Directories"), -1, "text", self.CellDataFunc], #0
 		)
-		cols[0].set_sort_column_id(0)
 		
 		self.popup_menu_users = PopupMenu(self.frame)
 		self.popup_menu_users2 = PopupMenu(self.frame)
@@ -283,10 +281,9 @@ class UserBrowse:
 			self.FolderTreeView.collapse_all()
 			self.ExpandDirectoriesImage.set_from_stock(gtk.STOCK_ADD, 4)
 
-			dirs = list(self.directories.keys())
-			dirs.sort()
-			if dirs != []:
-				self.SetDirectory(dirs[0])
+			nchildren, node = self.DirStore.GetChildren(0,0)
+			if nchildren > 0:
+				self.SetDirectory((0,))
 			else:
 				self.SetDirectory(None)
 			
@@ -353,22 +350,31 @@ class UserBrowse:
 		return True
 
 	def MakeNewModel(self, list):
-
 		self.shares = list
 		self.selected_folder = None
 		self.selected_files = []
-		self.directories.clear()
 		self.files.clear()
-		self.DirStore.clear()
+#		self.DirStore.clear()
+		self.DirStore=None
 		
-		# Select first directory
-		currentdir = self.BrowseGetDirs()
+		self.FolderTreeView.set_model(None)
+		self.DirStore = uglytree.UglyTreeModel(list)
+
+		for dir, files in self.shares:
+			for filedata in files:
+				if filedata[2] < 18446744000000000000:
+					self.totalsize += filedata[2]
+				else:
+					print "Unbelievable filesize: %s, %s" % (HumanizeBytes(filedata[2]), repr(filedata))
+		self.AmountShared.set_text(_("Shared: %s") % HumanizeBytes(self.totalsize))
+		self.NumDirectories.set_text(_("Dirs: %s") % len(self.shares))
+
+		self.FolderTreeView.set_model(self.DirStore)
 		sel = self.FolderTreeView.get_selection()
 		sel.unselect_all()
-		if currentdir in  self.directories:
-			path = self.DirStore.get_path(self.directories[currentdir])
-			if path is not None:
-				sel.select_path(path)
+		# Select first directory
+		if self.DirStore.on_get_iter((0,)) is not None:
+			sel.select_path((0,))
 				
 		self.FolderTreeView.set_sensitive(True)
 		self.FileTreeView.set_sensitive(True)
@@ -379,71 +385,23 @@ class UserBrowse:
 		else:
 			self.FolderTreeView.collapse_all()
 		
-	def BrowseGetDirs(self):
-		sorted = list(self.shares.keys())
-		sorted.sort()
-		self.NumDirectories.set_text(_("Dirs: %s") % len(self.shares))
-		children = []
-		self.directories.clear()
-		directory = ""
-		self.totalsize = 0
-		dirseparator = '\\'
-		if sorted == []:
-			self.AmountShared.set_text(_("Shared: %s") % HumanizeBytes(self.totalsize))
-			return directory
-		for item in sorted:
-			s = item.split(dirseparator)
-			path = ''
-
-			parent = s[0]
-			if parent == '':
-				parent += dirseparator
-				try:
-					self.directories[parent]
-				except KeyError:
-					self.directories[parent] =  self.DirStore.append(None, [self.decode(parent), parent])
-			parent = s[0]
-			for seq in s[1:]:
-				path = dirseparator.join([parent, seq])
-				if parent == "":
-					parent = dirseparator
-				try:
-					self.directories[parent]
-				except KeyError:
-					self.directories[parent] =  self.DirStore.append(None, [self.decode(parent), parent])
-				if path not in children:
-					children.append(path)
-					self.directories[path] = self.DirStore.append(self.directories[parent], [self.decode(path.split(dirseparator)[-1]), path ] )
-				parent = path
-		sortlist = list(self.directories.keys())
-		sortlist.sort()
-		for files in self.shares.values():
-			for filedata in files:
-				if filedata[2] < 18446744000000000000:
-					self.totalsize += filedata[2]
-				else:
-					print "Unbelievable filesize: %s, %s" % (HumanizeBytes(filedata[2]), repr(filedata))
-		self.AmountShared.set_text(_("Shared: %s") % HumanizeBytes(self.totalsize))
-	
-		directory = sortlist[0]
-		return directory
-	
-	def SetDirectory(self, directory):
-		self.selected_folder = directory
+	def SetDirectory(self, path):
+		self.selected_folder = path
 		self.FileStore.clear()
 		self.files.clear()
-		if directory not in self.shares:
-			return
 		
-		path = self.DirStore.get_path( self.directories[directory] )
+		node = self.DirStore.on_get_iter(path)
+		if node == None or node == (0,0):
+			return
 
-		files = self.shares[directory]
-
+		files = self.DirStore.GetData(node)
 		for file in files:
 			# DecodedFilename, HSize, Bitrate, HLength, Size, Length, RawFilename
 			rl = 0
-			try: size = int(file[2])
-			except: size = 0
+			try:
+				size = int(file[2])
+			except ValueError:
+				size = 0
 			f = [self.decode(file[1]), Humanize(size)]
 			if file[3] == "":
 				f += ["", ""]
@@ -455,8 +413,10 @@ class UserBrowse:
 						br = str(attrs[0])
 						if attrs[2]:
 							br = br + _(" (vbr)")
-						try: rl = int(attrs[1])
-						except: rl = 0
+						try:
+							rl = int(attrs[1])
+						except ValueError:
+							rl = 0
 						l = "%i:%02i" % (rl / 60, rl % 60)
 						f += [br, l]
 					else:
@@ -506,8 +466,15 @@ class UserBrowse:
 		self.conn = None
 		self.MakeNewModel(msg.list)
 		
-	def LoadShares(self, list):
-		self.MakeNewModel(list)
+	def ConvertHistoricModel(self, dict):
+		return [(dirname, dirlist) for dirname, dirlist in dict.iteritems()]
+	def LoadShares(self, input):
+		if isinstance(input, list):
+			self.MakeNewModel(input)
+		elif isinstance(input, dict):
+			self.MakeNewModel(self.ConvertHistoricModel(input))
+		else:
+			log.addwarning("Programming error, a usershare of type %s is unknown to me" % (type(input)))
 		
 	def UpdateGauge(self, msg):
 		if msg.total == 0 or msg.bytes == 0:
@@ -524,9 +491,8 @@ class UserBrowse:
 			self.selected_folder = None
 			return
 		path = model.get_path(iter)
-		directory = self.DirStore.get_value(self.DirStore.get_iter(path), 1)
 		self.FolderTreeView.expand_to_path(path)
-		self.SetDirectory(directory)
+		self.SetDirectory(path)
 		
 	def OnResort(self, column, column_id):
 		model = self.FileTreeView.get_model()
@@ -585,27 +551,31 @@ class UserBrowse:
 			
 	def DownloadDirectoryRecursive(self, dir, prefix = ""):
 		# Find all files and add them to list
-		if dir == None:
+		node = self.DirStore.on_get_iter(dir)
+		if node == None or node == (0,0):
 			return
-		localdir = prefix + dir.split("\\")[-1]
+		localdir = prefix + self.DirStore.GetValue(node)
+		dirfiles = self.DirStore.GetData(node)
 
 		files = []
-		if dir in self.shares.keys():
-			for file in self.shares[dir]:
-				length = bitrate = None
-				attrs = file[4]
-				if attrs != []:
-					bitrate = str(attrs[0])
-					if attrs[2]:
-						bitrate += _(" (vbr)")
-					try: rl = int(attrs[1])
-					except: rl = 0
-					length = "%i:%02i" % (rl // 60, rl % 60)
+		for file in dirfiles:
+			length = bitrate = None
+			attrs = file[4]
+			if attrs != []:
+				bitrate = str(attrs[0])
+				if attrs[2]:
+					bitrate += _(" (vbr)")
+				try:
+					rl = int(attrs[1])
+				except ValueError:
+					rl = 0
+				length = "%i:%02i" % (rl // 60, rl % 60)
 
-				files.append(["\\".join([dir, file[1]]), localdir, file[2], bitrate, length])
-		for directory in self.shares.keys():
-			if dir in directory and dir != directory:
-				files += self.DownloadDirectoryRecursive(directory, os.path.join(localdir, ""))
+			files.append(["\\".join([self.DirStore.GetPathString(dir), file[1]]), localdir, file[2], bitrate, length])
+		node = self.DirStore.GetChildren(node)
+		while node != None :
+			files += self.DownloadDirectoryRecursive(self.DirStore.on_get_path(node), os.path.join(localdir, ""), recurse)
+			node = self.DirStore.GetNext(node)
 		return files
 		
 	def OnDownloadDirectoryTo(self, widget):
@@ -633,20 +603,22 @@ class UserBrowse:
 
 	
 	def DownloadDirectory(self, dir, prefix = "", recurse = 0):
-		if dir == None or dir not in self.shares:
+		node = self.DirStore.on_get_iter(dir)
+		if node == None or node == (0,0):
 			return
-		ldir = prefix + dir.split("\\")[-1]
+		ldir = prefix + self.DirStore.GetValue(node)
+		files = self.DirStore.GetData(node)
 		priorityfiles = []
 		normalfiles = []
 		if self.frame.np.config.sections["transfers"]["prioritize"]:
-			for file in self.shares[dir]:
+			for file in files:
 				parts = file[1].rsplit('.', 1)
 				if len(parts) == 2 and parts[1] in ['sfv','md5','nfo']:
 					priorityfiles.append(file)
 				else:
 					normalfiles.append(file)
 		else:
-			normalfiles = self.shares[dir][:]
+			normalfiles = files[:]
 		if self.frame.np.config.sections["transfers"]["reverseorder"]:
 			deco = [(x[1], x) for x in normalfiles]
 			deco.sort(reverse=True)
@@ -660,25 +632,27 @@ class UserBrowse:
 					bitrate += _(" (vbr)")
 				try:
 					rl = int(attrs[1])
-				except:
+				except ValueError:
 					rl = 0
 				length = "%i:%02i" % (int(rl // 60), rl % 60)
-			self.frame.np.transfers.getFile(self.user, "\\".join([dir, file[1]]), ldir, size=file[2], bitrate=bitrate, length=length)
+			self.frame.np.transfers.getFile(self.user, "\\".join([self.DirStore.GetPathString(dir), file[1]]), ldir, size=file[2], bitrate=bitrate, length=length)
 		if not recurse:
 			return
-		for directory in self.shares.keys():
-			if dir in directory and dir != directory:
-				self.DownloadDirectory(directory, os.path.join(ldir, ""), recurse)
+		node = self.DirStore.GetChildren(node)
+		while node != None :
+			self.DownloadDirectory(self.DirStore.on_get_path(node), os.path.join(ldir, ""), recurse)
+			node = self.DirStore.GetNext(node)
 
 
 	def OnDownloadFiles(self, widget, prefix = ""):
-		dir = self.selected_folder
+		dir = self.DirStore.GetPathString(self.selected_folder)
+		files = self.DirStore.GetData(self.DirStore.on_get_iter(self.selected_folder))
 		for fn in self.selected_files:
-			file = [i for i in self.shares[dir] if i[1] == fn][0]
+			file = [i for i in files if i[1] == fn][0]
 			path = "\\".join([dir, fn])
 			#size = None
 			size = file[2]
-			#size_l = [i[2] for i in self.shares[dir] if i[1] == fn]
+			#size_l = [i[2] for i in files if i[1] == fn]
 			#if size_l != []: size = size_l[0]
 			length = bitrate = None
 			attrs = file[4]
@@ -688,7 +662,7 @@ class UserBrowse:
 					bitrate += _(" (vbr)")
 				try:
 					rl = int(attrs[1])
-				except:
+				except ValueError:
 					rl = 0
 				length = "%i:%02i" % (int(rl // 60), rl % 60)
 			self.frame.np.transfers.getFile(self.user, path, prefix, size=size, bitrate=bitrate, length=length)
@@ -696,24 +670,28 @@ class UserBrowse:
 	def OnUploadDirectoryRecursiveTo(self, widget):
 		self.OnUploadDirectoryTo(widget, recurse=1)
 	def UploadDirectoryTo(self, user, dir, recurse = 0):
-		if dir == "" or dir is None or user is None or user == "":
+		node = self.DirStore.on_get_iter(dir)
+		if node == None or node == (0,0) or user is None or user == "":
 			return
-		ldir = dir.split("\\")[-1]
-		if dir in self.shares.keys():
-			for file in self.shares[dir]:
-				path = "\\".join([dir, file[1]])
-				size = file[2]
-				self.frame.np.transfers.pushFile(user, path, ldir, size=size)
-				self.frame.np.transfers.checkUploadQueue()
+		ldir = self.DirStore.GetValue(node)
+		files = self.DirStore.GetData(node)
+		dirname = self.DirStore.GetPathString(dir)
+		for file in files:
+			path = "\\".join([dirname, file[1]])
+			size = file[2]
+			self.frame.np.transfers.pushFile(user, path, ldir, size=size)
+			self.frame.np.transfers.checkUploadQueue()
 		if not recurse:
 			return
-		for directory in self.shares.keys():
-			if dir in directory and dir != directory:
-				self.UploadDirectoryTo(user, directory, recurse)
+
+		node = self.DirStore.GetChildren(node)
+		while node != None :
+			self.UploadDirectoryTo(user, self.DirStore.on_get_path(node), recurse)
+			node = self.DirStore.GetNext(node)
 				
 	def OnUploadDirectoryTo(self, widget, recurse = 0):
 		dir = self.selected_folder
-		if dir is None:
+		if dir is None or dir == ():
 			return
 	
 		users = []
@@ -730,6 +708,7 @@ class UserBrowse:
 				
 	def OnUploadFiles(self, widget, prefix = ""):
 		dir = self.selected_folder
+		dirname = self.DirStore.GetPathString(dir)
 		users = []
 		for entry in self.frame.np.config.sections["server"]["userlist"]:
 			users.append(entry[0])
@@ -742,13 +721,13 @@ class UserBrowse:
 		else:
 			self.frame.np.ProcessRequestToPeer(user, slskmessages.UploadQueueNotification(None)  )
 			for fn in self.selected_files:
-				self.frame.np.transfers.pushFile(user, "\\".join([dir, fn]), prefix)
+				self.frame.np.transfers.pushFile(user, "\\".join([dirname, fn]), prefix)
 				self.frame.np.transfers.checkUploadQueue()
 			
 	def OnPlayFiles(self, widget, prefix = ""):
 		start_new_thread(self._OnPlayFiles, (widget, prefix))
 	def _OnPlayFiles(self, widget, prefix = ""):
-		path = self.selected_folder.replace("\\", os.sep)
+		path = self.DirStore.GetPathString(self.selected_folder).replace("\\", os.sep)
 		executable = self.frame.np.config.sections["players"]["default"]
 		if "$" not in executable:
 			return
@@ -758,8 +737,10 @@ class UserBrowse:
 				executeCommand(executable, file, background=False)
 		
 	def OnDownloadFilesTo(self, widget):
-		
-		basedir, subdir = self.selected_folder.rsplit("\\", 1)
+		node = self.DirStore.on_get_iter(self.selected_folder)
+		if node == None or node == (0,0):
+			return
+		subdir = self.DirStore.GetValue(node)
 		path = os.path.join(self.frame.np.config.sections["transfers"]["downloaddir"], subdir)
 		if os.path.exists(path) and os.path.isdir(path):
 			ldir = ChooseDir(self.frame.MainWindow, path)
@@ -774,16 +755,6 @@ class UserBrowse:
 			except IOError: # failed to open
 				self.frame.logMessage('failed to open %r for reading', directory) # notify user
 
-	def FindMatches(self):
-		self.search_list = []
-		for directory, files in self.shares.items():
-			if self.query in directory.lower():
-				if directory not in self.search_list:
-					self.search_list.append(directory)
-			for file in files:
-				if self.query in file[1].lower():
-					if directory not in self.search_list:
-						self.search_list.append(directory)
 	def OnSearch(self, widget):
 		query = widget.get_text().lower()
 		if self.query == query:
@@ -793,7 +764,7 @@ class UserBrowse:
 			self.query = query
 			if self.query == "":
 				return
-			self.FindMatches()
+			self.search_list = self.DirStore.FindMatches(query)
 
 		dir = self.selected_folder
 		
@@ -802,9 +773,8 @@ class UserBrowse:
 				self.search_position = 0
 			self.search_list.sort()
 			directory = self.search_list[self.search_position]
-			path = self.DirStore.get_path( self.directories[directory] )
-			self.FolderTreeView.expand_to_path(path)
-			self.FolderTreeView.set_cursor(path)
+			self.FolderTreeView.expand_to_path(directory)
+			self.FolderTreeView.set_cursor(directory)
 			# Get matching files in the current directory
 			resultfiles = []
 			for file in self.files.keys():
@@ -840,7 +810,7 @@ class UserBrowse:
 
 	def OnCopyURL(self, widget):
 		if self.selected_files != [] and self.selected_files != None: 
-			path = "\\".join([self.selected_folder, self.selected_files[0]])
+			path = "\\".join([self.DirStore.GetPathString(self.selected_folder), self.selected_files[0]])
 			self.frame.SetClipboardURL(self.user, path)
 
 	def OnCopyDirURL(self, widget):

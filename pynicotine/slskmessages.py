@@ -1454,12 +1454,12 @@ class SharedFileList(PeerMessage):
 				self.list={}
 				return
 
-		shares = {}
+		shares = []
 		pos, ndir = self.getObject(message, types.IntType)
 		for i in range(ndir):
 			pos, directory = self.getObject(message, types.StringType, pos)
 			pos, nfiles = self.getObject(message, types.IntType, pos)
-			shares[directory] = []
+			files = []
 			for j in range(nfiles):
 				pos, code = pos+1, ord(message[pos])
 				pos, name = self.getObject(message, types.StringType, pos)
@@ -1480,7 +1480,9 @@ class SharedFileList(PeerMessage):
 					pos, attrnum = self.getObject(message, types.IntType, pos)
 					pos, attr = self.getObject(message, types.IntType, pos)
 					attrs.append(attr)
-				shares[directory].append([code, name, size, ext, attrs])
+				files.append([code, name, size, ext, attrs])
+			shares.append((directory, files))
+
 		self.list = shares
 
 	def makeNetworkMessage(self, nozlib = 0, rebuild=False):
