@@ -53,10 +53,10 @@ def ChooseDir(parent = None, initialdir = "~", create=False, name=None, title=No
 
 	return res
 
-def ChooseFile(parent = None, initialdir = "~", initialfile = ""):
+def ChooseFile(parent = None, initialdir = "~", initialfile = "", multiple = False):
 	dialog = gtk.FileChooserDialog(parent=parent, action=gtk.FILE_CHOOSER_ACTION_OPEN, buttons = (gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT, gtk.STOCK_OK, gtk.RESPONSE_ACCEPT))
 	dialog.set_action(gtk.FILE_CHOOSER_ACTION_OPEN)
-	dialog.set_select_multiple(False)
+	dialog.set_select_multiple(multiple)
 	dir = os.path.expanduser(initialdir)
 	if os.path.exists(dir):
 		dialog.set_current_folder(dir)

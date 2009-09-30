@@ -1039,27 +1039,26 @@ class NicotineFrame:
 				os.mkdir(sharesdir)
 		except Exception, msg:
 			log.addwarning(_("Can't create directory '%(folder)s', reported error: %(error)s") % {'folder':sharesdir, 'error':msg})
-		shares = ChooseFile(self.MainWindow.get_toplevel(), sharesdir)
+		shares = ChooseFile(self.MainWindow.get_toplevel(), sharesdir, multiple = True)
 		if shares is None:
 			return
-		for share in shares: # iterate over selected files
-			share1 = share
-			break
-		try:
-			import cPickle as mypickle
-			import bz2
-			sharefile = bz2.BZ2File(share1)
-			list1 = mypickle.load(sharefile)
-			sharefile.close()
-			if not isinstance(list1, dict):
-				raise TypeError, "Bad data in file %(sharesdb)s" % {'sharesdb':share1}
-			username = share1.split(os.sep)[-1]
-			self.userbrowse.InitWindow(username, None)
-			if username in self.userbrowse.users:
-				self.userbrowse.users[username].LoadShares(list1)
-		except Exception, msg:
-			log.addwarning(_("Loading Shares from disk failed: %(error)s") % {'error':msg})
-			
+		for share in shares:
+			start = time.time()
+			try:
+				import cPickle as mypickle
+				import bz2
+				sharefile = bz2.BZ2File(share)
+				list1 = mypickle.load(sharefile)
+				sharefile.close()
+				if not isinstance(list1, dict):
+					raise TypeError, "Bad data in file %(sharesdb)s" % {'sharesdb':share}
+				username = share.split(os.sep)[-1]
+				self.userbrowse.InitWindow(username, None)
+				if username in self.userbrowse.users:
+					self.userbrowse.users[username].LoadShares(list1)
+			except Exception, msg:
+				log.addwarning(_("Loading Shares from disk failed: %(error)s") % {'error':msg})
+			print "Duration %16s: %7.3f" % (share.split(os.sep)[-1], time.time()-start)
 	def OnNowPlayingConfigure(self, widget):
 		
 		self.now.NowPlaying.show()
