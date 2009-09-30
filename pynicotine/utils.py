@@ -46,7 +46,33 @@ language = ""
 import gettext
 tr_cache = {}
 
-illegalwinchars = ["?", "\"", ":", ">", "<", "|", "*"]
+illegalpathchars = []
+if win32:
+	illegalpathchars += ["?", ":", ">", "<", "|", "*"]
+illegafilechars = illegalpathchars + ["\\", "/"]
+replacementchar = '_'
+
+def CleanFile(filename):
+	for char in illegafilechars:
+		filename = filename.replace(char, replacementchar)
+	return filename
+
+def CleanPath(path, absolute=False):
+	if win32:
+		# Without hacks it is (up to Vista) not possible to have more
+		# than 26 drives mounted, so we can assume a '[a-zA-Z]:\' prefix
+		# for drives - we shouldn't escape that
+		drive = ''
+		if absolute and path[1:3] == ':\\' and path[0:1] and path[0].isalpha():
+			drive = path[:3]
+			path = path[3:]
+		for char in illegalpathchars:
+			path = path.replace(char, replacementchar)
+		path = ''.join([drive, path])
+		# Path can never end in a period on Windows machines
+		path = path.rstrip('.')
+	return path
+
 
 def ChangeTranslation(lang):
 	global language

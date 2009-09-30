@@ -190,7 +190,7 @@ class Transfers:
 
 
 	def getFile(self, user, filename, path="", transfer = None, size=None, bitrate=None, length=None):
-		path=self.CleanPath(path, absolute=True)
+		path=utils.CleanPath(path, absolute=True)
 		self.transferFile(0, user, filename, path, transfer, size, bitrate, length)
 
 	def pushFile(self, user, filename, path="", transfer = None, size=None, bitrate=None, length=None ):
@@ -704,9 +704,9 @@ class Transfers:
 					i.transfertimer.cancel()
 				if not incompletedir:
 					if i.path and i.path[0] == '/':
-						incompletedir = self.CleanPath(i.path)
+						incompletedir = utils.CleanPath(i.path)
 					else:
-						incompletedir = os.path.join(downloaddir, self.CleanPath(i.path))
+						incompletedir = os.path.join(downloaddir, utils.CleanPath(i.path))
 				incompletedir = self.encode(incompletedir, i.user)
 				try:
 					if not os.access(incompletedir, os.F_OK):
@@ -832,21 +832,6 @@ class Transfers:
 			return
 		tablabel.set_image(frame.images["online"])
 		
-	def CleanPath(self, path, absolute=False):
-		if win32:
-			# Without hacks it is (up to Vista) not possible to have more
-			# than 26 drives mounted, so we can assume a '[a-zA-Z]:\' prefix
-			# for drives - we shouldn't escape that
-			drive = ''
-			if absolute and path[1:3] == ':\\' and path[0:1] and path[0].isalpha():
-				drive = path[:3]
-				path = path[3:]
-			for char in utils.illegalwinchars:
-				path = path.replace(char, "_")
-			path = ''.join([drive, path])
-			# Path can never end in a period on Windows machines
-			path = path.rstrip('.')
-		return path
 	def FileDownload(self, msg):
 		""" A file download is in progress"""
 		needupdate = 1
@@ -884,10 +869,10 @@ class Transfers:
 					i.status = "Transferring"
 				else:
 					msg.file.close()
-					basename = self.CleanPath(self.encode(string.split(i.filename,'\\')[-1], i.user))
+					basename = utils.CleanPath(self.encode(string.split(i.filename,'\\')[-1], i.user))
 					downloaddir = config["transfers"]["downloaddir"]
 					if i.path and i.path[0] == '/':
-						folder = self.CleanPath(i.path)
+						folder = utils.CleanPath(i.path)
 					else:
 						folder = os.path.join(downloaddir, self.encode(i.path))
 					if not os.access(folder, os.F_OK):

@@ -30,7 +30,7 @@ from dirchooser import ChooseDir
 from entrydialog import *
 from pynicotine import slskmessages
 from thread import start_new_thread
-from pynicotine.utils import _, displayTraceback, executeCommand
+from pynicotine.utils import _, displayTraceback, executeCommand, CleanFile
 import uglytree
 
 class UserBrowse:
@@ -373,9 +373,8 @@ class UserBrowse:
 		sel = self.FolderTreeView.get_selection()
 		sel.unselect_all()
 		# Select first directory
-		if self.DirStore.on_get_iter((0,)) is not None:
-			sel.select_path((0,))
-				
+		sel.select_path((0,))
+		
 		self.FolderTreeView.set_sensitive(True)
 		self.FileTreeView.set_sensitive(True)
 		self.SaveButton.set_sensitive(True)
@@ -444,23 +443,13 @@ class UserBrowse:
 		try:
 			import cPickle as mypickle
 			import bz2
-			sharesfile = bz2.BZ2File(os.path.join(sharesdir, self.encode(self.user)), 'w' )
+			sharesfile = bz2.BZ2File(os.path.join(sharesdir, CleanFile(self.user)), 'w' )
 			mypickle.dump(self.shares, sharesfile, mypickle.HIGHEST_PROTOCOL)
 			sharesfile.close()
 		except Exception, msg:
 			error = _("Can't save shares, '%(user)s', reported error: %(error)s" % {'user':self.user, 'error':msg} )
 			print error
 			self.frame.logMessage(error)
-			
-	def encode(self, path):
-		try:
-			if sys.platform == "win32":
-				chars = ["?", "\/", "\"", ":", ">", "<", "|", "*"]
-				for char in chars:
-					path = path.replace(char, "_")
-			return path
-		except:
-			return path
 	
 	def ShowInfo(self, msg):
 		self.conn = None
