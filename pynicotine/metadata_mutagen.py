@@ -50,7 +50,7 @@ def processGeneric(audio):
 		return None
 def processMusepack(audio):
 	return {
-		"bitrate": (audio.info.bitrate/1000),
+		"bitrate": audio.info.bitrate,
 		"vbr": True,
 		"time": audio.info.length,
 	}
