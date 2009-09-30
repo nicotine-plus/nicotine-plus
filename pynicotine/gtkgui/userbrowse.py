@@ -796,6 +796,7 @@ class UserBrowse:
 			self.search_position = 0
 
 	def OnClose(self, widget):
+		self.DirStore.invalidate_iters()
 		self.userbrowses.remove_page(self.Main)
 		del self.userbrowses.users[self.user]
 		self.frame.np.ClosePeerConnection(self.conn)
