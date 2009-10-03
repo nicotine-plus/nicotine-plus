@@ -35,8 +35,19 @@ Id = 99
 
 def newId():
 	global Id
-	Id = Id + 1
+	Id += 1
 	return Id
+
+# New object type to fix Ticket #486, "Search don't work"
+class NetworkIntType(object):
+	def __init__(self, value):
+		self.value = value
+class NetworkLongType(object):
+	def __init__(self, value):
+		self.value = value
+class NetworkLongLongType(object):
+	def __init__(self, value):
+		self.value = value
 
 class InternalMessage:
 	pass
@@ -215,6 +226,12 @@ class SlskMessage:
 			log.addwarning(_("Warning: networking thread has to convert unicode string %(object)s message %(type)s") % {'object':object, 'type':self.__class__})
 			encoded = object.encode("utf-8",'replace')
 			return struct.pack("<i", len(encoded))+encoded
+		elif type(object) is NetworkIntType:
+			return struct.pack("<i", object.value)
+		elif type(object) is NetworkLongType:
+			return struct.pack("<L", object.value)
+		elif type(object) is NetworkLongLongType:
+			return struct.pack("<Q", object.value)
 		log.addwarning(_("Warning: unknown object type %s") % type(object) +" "+ ("in message %(type)s") % {'type':self.__class__})
 		return ""
         
@@ -845,7 +862,7 @@ class FileSearch(ServerMessage):
 	""" We send this to the server when we search for something."""
 	""" Server send this to tell us someone is searching for something."""
 	def __init__(self, requestid = None, text = None):
-		self.searchid = requestid
+		self.searchid = NetworkLongType(requestid)
 		self.searchterm = text
 		if text:
 			self.searchterm = ' '.join([x for x in text.split() if x != '-'])
@@ -857,7 +874,7 @@ class FileSearch(ServerMessage):
 		pos, self.user = self.getObject(message, types.StringType)
 		pos, self.searchid = self.getObject(message, types.IntType, pos)
 		pos, self.searchterm = self.getObject(message, types.StringType, pos)
-		
+				
 class WishlistSearch(FileSearch):
 	pass
 
