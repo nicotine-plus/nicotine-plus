@@ -1,5 +1,22 @@
 ChangeLog for Nicotine Plus
 
+1.2.14 (4th October 2009)
+
+Behaviour
+ * A corrupt configuration file will no longer make Nicotine+ fail on startup (ticket #483)
+ * Multiple shares can now be loaded from the harddrive at the same time
+
+Features
+ * Support for UPnP through MiniUPnPc (ticket #230)
+
+Bugs
+ * Search failed to work on certain combinations of OS and processor (ticket #486)
+ * Implemented our own filelist iterator, dramatically reducing the amount of CPU cycles needed to open filelists. Thanks goes to Nick Voronin (ticket #480)
+ * Bitrates for Musepack audio were scanned incorrectly
+ * Saving file lists from users with slashes in the name didn't work
+ * Filesize was incorrect for files around 2 gigabytes and up in userbrowse.
+
+
 1.2.13 (22 Sept 2009)
 
 Behaviour
