@@ -19,19 +19,30 @@ from time import sleep
 from logfacility import log
 from utils import _, executeCommand
 
+upnppossible = False
 miniupnpc = None
+miniupnpc_errors = []
 try:
 	import miniupnpc
+	upnppossible = True
 except ImportError, e:
-	miniupnpc_error = str(e)
+	miniupnpc_errors.append(_("Failed to import miniupnpc module: %(error)s") % {'error':str(e)})
+	try:
+		executeCommand("upnpc", returnoutput=True)
+		upnppossible = True
+	except RuntimeError, e:
+		miniupnpc_errors.append(_("Failed to run upnpc binary: %(error)s") % {'error':str(e)})
 
 def fixportmapping(internallanport, externallanport = None):
+	if not upnppossible:
+		log.addwarning(_('Both MiniUPnPc python module and MiniUPnPc binary failed - automatic portmapping is not possible. Errors: %(errors)s') % {'error':"\n".join(miniupnpc_errors)})
+		return
 	if not externallanport:
 		externallanport = internallanport
 	if miniupnpc:
 		return miniupnpcmodule(internallanport, externallanport)
-	log.addwarning(_('MiniUPnPc module was not imported: %(error)s. Trying binary...') % {'error':miniupnpc_error})
-	return miniupnpcbinary(internallanport, externallanport)
+	else:
+		return miniupnpcbinary(internallanport, externallanport)
 def miniupnpcbinary(internallanport, externallanport):
 	command = "upnpc -r %s %s" % (internallanport, externallanport)
 	try:
@@ -46,15 +57,9 @@ def miniupnpcbinary(internallanport, externallanport):
 			external = lst[1].split(':')
 			if len(external) == 2 and len(internal) == 2:
 				return (external[0], external[1])
-	log.addwarning('UPnPc output, could not parse output: %s' % (output,))
+	log.addwarning('UPnPc binary failed, could not parse output: %s' % (output,))
 	return None
-
 def miniupnpcmodule(internallanport, externallanport):
-	try:
-		import miniupnpc
-	except ImportError, e:
-		log.addwarning(_('Could not load miniupnpc module: %(error)s') % {'error':str(e)})
-		return None
 	u = miniupnpc.UPnP()
 	u.discoverdelay = 2000
 	try:

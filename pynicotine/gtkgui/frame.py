@@ -1543,7 +1543,7 @@ class NicotineFrame:
 			self.OnConnect(-1)
 			return
 		log.add(_("Figuring out UPnP..."))
-		time.sleep(3) # Wait for the GUI to come alive
+		time.sleep(0.5) # Wait for the GUI to come alive
 		print "Fixing ports..."
 		internalport = self.np.protothread._p.getsockname()[1] # Internal LAN port
 		externalport = internalport # External LAN port
