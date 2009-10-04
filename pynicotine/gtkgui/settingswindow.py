@@ -26,6 +26,7 @@ import webbrowser
 from dirchooser import *
 from utils import InputDialog, InitialiseColumns, recode, recode2, popupWarning, ImportWinSlskConfig, Humanize, OpenUri
 from entrydialog import *
+from pynicotine import upnp
 from pynicotine.logfacility import log
 import os, sys
 win32 = sys.platform.startswith("win")
@@ -116,7 +117,10 @@ class ServerFrame(buildFrame):
 			self.DirectConnection.set_active(not server["firewalled"])
 		if server["ctcpmsgs"] is not None:
 			self.ctcptogglebutton.set_active(not server["ctcpmsgs"])
-		self.UseUPnP.set_active(server["upnp"])
+		
+		self.UseUPnP.set_active(server["upnp"] and upnp.upnppossible)
+		self.UseUPnP.set_sensitive(upnp.upnppossible)
+		self.labelRequirementsUPnP.set_sensitive(not upnp.upnppossible)
 		self.OnUPnPToggled(None)
 	def GetSettings(self):
 		try:

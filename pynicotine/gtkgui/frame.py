@@ -1536,9 +1536,13 @@ class NicotineFrame:
 			log.add("You do not have UPnP enabled in your configuration file")
 			self.OnConnect(-1)
 			return
-		log.add("Figuring out UPnP!")
 		thread.start_new_thread(self.Fixportmapping, ())
 	def Fixportmapping(self):
+		if not upnp.upnppossible:
+			log.add(_('Not using UPnP to fix portmapping due to errors: %(errors)s') % {'errors':'\n'.join(upnp.miniupnpc_errors)})
+			self.OnConnect(-1)
+			return
+		log.add(_("Figuring out UPnP..."))
 		time.sleep(3) # Wait for the GUI to come alive
 		print "Fixing ports..."
 		internalport = self.np.protothread._p.getsockname()[1] # Internal LAN port
