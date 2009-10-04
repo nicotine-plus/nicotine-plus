@@ -27,10 +27,12 @@ This is the actual client code. Actual GUI classes are in the separate modules
 from __future__ import division
 
 import time
+import datetime
+import shutil
 from urllib import urlencode
 import slskproto
 import slskmessages
-from slskmessages import newId
+from slskmessages import newId, PopupMessage
 import transfers
 import Queue
 import threading
@@ -40,10 +42,11 @@ import types
 import locale
 import utils
 from shares import Shares
-from utils import _
+from utils import _, CleanFile
 import os
 import logging
 
+from ConfigParser import Error as ConfigParserError
 
 class PeerConnection:
 	"""
@@ -91,7 +94,17 @@ class NetworkEventProcessor:
 		self.logMessage = writelog
 		self.setStatus = setstatus
 	
-		self.config = Config(configfile)
+		try:
+			self.config = Config(configfile)
+		except ConfigParserError:
+			#corruptfile = configfile+CleanFile("." + str(datetime.datetime.isoformat(datetime.datetime.now()) + ".corrupt"))
+			corruptfile = ".".join([configfile, CleanFile(datetime.datetime.now().strftime("%Y-%M-%d_%H:%M:%S")), "corrupt"])
+			shutil.move(configfile, corruptfile)
+			short = _("Your config file is corrupt")
+			long = _("We're sorry, but it seems your configuration file is corrupt. Please reconfigure Nicotine+.\n\nWe renamed your old configuration file to\n%(corrupt)s\nIf you open this file with a text editor you might be able to rescue some of your settings.") % {'corrupt':corruptfile}
+			log.addwarning(long)
+			self.config = Config(configfile)
+			self.callback([PopupMessage(short, long)])
 		self.config.frame = frame
 		self.config.readConfig()
 		self.peerconns = []
@@ -549,7 +562,7 @@ class NetworkEventProcessor:
 	def IncPort(self, msg):
 		self.waitport = msg.port
 		self.setStatus(_("Listening on port %i") %(msg.port))
-		print "Now reporting %s to the server" % (msg.port,)
+		#print "Now reporting %s to the server" % (msg.port,)
 
 	def ServerConn(self, msg):
 		self.setStatus(_("Connected to server %(host)s:%(port)s, logging in...") % {'host':msg.addr[0], 'port': msg.addr[1]})
