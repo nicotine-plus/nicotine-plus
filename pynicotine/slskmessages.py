@@ -207,7 +207,7 @@ class SlskMessage:
 			else:
 				return start, None
 		except struct.error, error:
-			log.addwarning("%s %s trying to unpack %s at '%s' at %s/%s" % (self.__class__, error, type, message[start:].__repr__(), self.start, len(message)))
+			log.addwarning("%s %s trying to unpack %s at '%s' at %s/%s" % (self.__class__, error, type, message[start:].__repr__(), start, len(message)))
 			#displayTraceback(sys.exc_info()[2])
 			self.debug(message)
 			raise struct.error, error
