@@ -1,17 +1,19 @@
---- /opt.orig/local/share/macports/Tcl/port1.0/portconfigure.tcl	2009-05-16 16:21:45.000000000 +0300
-+++ /opt/local/share/macports/Tcl/port1.0/portconfigure.tcl	2009-05-14 23:50:42.000000000 +0300
-@@ -67,7 +67,7 @@
- default configure.cppflags  {"-I${prefix}/include"}
- default configure.cxxflags  {[configure_get_cflags]}
- default configure.objcflags {[configure_get_cflags]}
--default configure.ldflags   {"-L${prefix}/lib"}
+diff -uNr opt.orig/local/share/macports/Tcl/port1.0/portconfigure.tcl opt/local/share/macports/Tcl/port1.0/portconfigure.tcl
+--- opt.orig/local/share/macports/Tcl/port1.0/portconfigure.tcl	2009-10-07 00:55:12.000000000 +0300
++++ opt/local/share/macports/Tcl/port1.0/portconfigure.tcl	2009-10-07 00:59:26.000000000 +0300
+@@ -133,7 +133,7 @@
+ default configure.cppflags  {-I${prefix}/include}
+ default configure.cxxflags  {${configure.optflags}}
+ default configure.objcflags {${configure.optflags}}
+-default configure.ldflags   {-L${prefix}/lib}
 +default configure.ldflags   {"-L${prefix}/lib -Xlinker -headerpad_max_install_names"}
  default configure.libs      {}
- default configure.fflags    {[configure_get_cflags]}
- default configure.f90flags  {[configure_get_cflags]}
---- /opt.orig/local/var/macports/sources/rsync.macports.org/release/ports/x11/gtk2/Portfile	2009-05-16 16:20:51.000000000 +0300
-+++ /opt/local/var/macports/sources/rsync.macports.org/release/ports/x11/gtk2/Portfile	2009-05-16 16:24:33.000000000 +0300
-@@ -90,6 +90,7 @@
+ default configure.fflags    {${configure.optflags}}
+ default configure.f90flags  {${configure.optflags}}
+diff -uNr opt.orig/local/var/macports/sources/rsync.macports.org/release/ports/x11/gtk2/Portfile opt/local/var/macports/sources/rsync.macports.org/release/ports/x11/gtk2/Portfile
+--- opt.orig/local/var/macports/sources/rsync.macports.org/release/ports/x11/gtk2/Portfile	2009-10-07 00:56:21.000000000 +0300
++++ opt/local/var/macports/sources/rsync.macports.org/release/ports/x11/gtk2/Portfile	2009-10-07 01:00:41.000000000 +0300
+@@ -85,6 +85,7 @@
  depends_run     port:shared-mime-info
  
  configure.args  --enable-static \
@@ -19,13 +21,14 @@
                  --disable-glibtest
  
  if { [variant_isset universal] } {
---- /opt.orig/local/var/macports/sources/rsync.macports.org/release/ports/x11/pango/Portfile	2009-05-16 16:22:18.000000000 +0300
-+++ /opt/local/var/macports/sources/rsync.macports.org/release/ports/x11/pango/Portfile	2009-05-15 10:43:06.000000000 +0300
-@@ -114,6 +114,7 @@
-     -bind_at_load
+diff -uNr opt.orig/local/var/macports/sources/rsync.macports.org/release/ports/x11/pango/Portfile opt/local/var/macports/sources/rsync.macports.org/release/ports/x11/pango/Portfile
+--- opt.orig/local/var/macports/sources/rsync.macports.org/release/ports/x11/pango/Portfile	2009-10-07 00:56:22.000000000 +0300
++++ opt/local/var/macports/sources/rsync.macports.org/release/ports/x11/pango/Portfile	2009-10-07 01:01:53.000000000 +0300
+@@ -118,6 +118,7 @@
  
  configure.args \
-+    --with-included-modules \
      --enable-static \
++    --with-included-modules \
      --x-include=${prefix}/include --x-lib=${prefix}/lib
  
+ variant no_x11 {
