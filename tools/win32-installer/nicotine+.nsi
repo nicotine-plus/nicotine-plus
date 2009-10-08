@@ -86,7 +86,7 @@ Section -Post
   ${endif}
   ReadINIStr $0 "$PLUGINSDIR\shortcuts.ini" "Field 3" "State"
   ${if} $0 = 1
-    CreateShortCut "$DESKTOP\Nicotine+.lnk" "$INSTDIR\nicotine.exe"
+    CreateShortCut "$DESKTOP\Nicotine+.lnk" "$INSTDIR\nicotine.exe" "" "$INSTDIR\img\ico\nicotine+-.ico" 0
   ${endif}
 SectionEnd
 
