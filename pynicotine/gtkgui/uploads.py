@@ -117,16 +117,18 @@ class Uploads(TransferList):
 			self.frame.SearchEntry.set_text(transfer.filename.rsplit("\\", 1)[1])
 			self.frame.ChangeMainPage(None, "search")
 			break
-		
+	def expandcollapse(self, path):
+		if self.frame.ExpandUploads.get_active():
+			self.frame.UploadList.expand_row(path, True)
+		else:
+			self.frame.UploadList.collapse_row(path)
 	def OnExpandUploads(self, widget):
-
 		if self.frame.ExpandUploads.get_active():
 			self.frame.UploadList.expand_all()
 			self.frame.ExpandUploadsImage.set_from_stock(gtk.STOCK_REMOVE, 4)
 		else:
 			self.frame.UploadList.collapse_all()
 			self.frame.ExpandUploadsImage.set_from_stock(gtk.STOCK_ADD, 4)
-			
 	def OnToggleAutoclear(self, widget):
 		self.frame.np.config.sections["transfers"]["autoclear_uploads"] = self.frame.ToggleAutoclear.get_active()
 

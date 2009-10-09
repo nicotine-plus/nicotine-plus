@@ -416,12 +416,13 @@ class TransferList:
 			self.transfersmodel.set(i[1], 1, shortfn, 2, status, 3, place, 4, percent, 5, hsize, 6, speed, 7, elap, 8, left, 9, self.frame.np.decode(transfer.path), 11, istatus, 12, size, 13, currentbytes)
 			break
 		else:
+			newparent = False
 			if self.TreeUsers:
 				if user not in self.users:
 					# Create Parent if it doesn't exist
 					# ProgressRender not visible (last column sets 4th column)
 					self.users[user] = self.transfersmodel.append(None, [user, "", "", "", 0,  "", "", "", "", "", "", 0, 0, 0,  False])
-				
+					newparent = True
 					#self.col_position.set_attributes(self.col_position.get_cell_renderers()[0], visible=14)
 					
 				parent = self.users[user]
@@ -434,12 +435,10 @@ class TransferList:
 			
 			# Expand path
 			path = self.transfersmodel.get_path(iter)
-			if path is not None:
-				self.widget.expand_to_path(path)
 			self.transfers.append([key, iter, transfer])
+			if newparent:
+				self.expandcollapse(self.transfersmodel.get_path(parent))
 
-
-		
 	def Clear(self):
 		self.users.clear()
 		self.transfers = []

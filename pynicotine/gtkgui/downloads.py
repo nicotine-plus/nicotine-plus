@@ -107,16 +107,18 @@ class Downloads(TransferList):
 		win.set_title(_("Nicotine+")+": "+_("Clear Queued Transfers"))
 		win.set_icon( self.frame.images["n"])
 		win.show()
-		
+	def expandcollapse(self, path):
+		if self.frame.ExpandDownloads.get_active():
+			self.frame.DownloadList.expand_row(path, True)
+		else:
+			self.frame.DownloadList.collapse_row(path)
 	def OnExpandDownloads(self, widget):
-
 		if self.frame.ExpandDownloads.get_active():
 			self.frame.DownloadList.expand_all()
 			self.frame.ExpandDownloadsImage.set_from_stock(gtk.STOCK_REMOVE, 4)
 		else:
 			self.frame.DownloadList.collapse_all()
 			self.frame.ExpandDownloadsImage.set_from_stock(gtk.STOCK_ADD, 4)
-		
 	def OnToggleTree(self, widget):
 		self.TreeUsers = self.frame.ToggleTreeDownloads.get_active()
 		self.frame.np.config.sections["transfers"]["groupdownloads"] = self.TreeUsers
@@ -237,8 +239,6 @@ class Downloads(TransferList):
 				sel.select_path(ix,)
 					
 		self.select_transfers()
-	
-	
 	def on_key_press_event(self, widget, event):
 		key = gtk.gdk.keyval_name(event.keyval)
 
