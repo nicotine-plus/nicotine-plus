@@ -147,6 +147,8 @@ class Config:
 		["albumart(_{........-....-....-....-............}_)?(_?(large|small))?\.jpg", 0]], \
 	"download_doubleclick": 1,\
 	"upload_doubleclick": 1,\
+	"downloadsexpanded": True,
+	"uploadsexpanded": True,
 	}, \
 \
 "userinfo":{ \
