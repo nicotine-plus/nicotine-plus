@@ -140,7 +140,7 @@ if __name__ == '__main__' :
 		setup(name              = "nicotine",
 			version               = version,
 			license               = "GPLv3",
-			description           = "Client for SoulSeek filesharing system.",
+			description           = "Nicotine+, a client for the SoulSeek filesharing network.",
 			author                = "daelstorm",
 			author_email          = "daelstorm@gmail.com",
 			url                   = "http://www.nicotine-plus.org/",
