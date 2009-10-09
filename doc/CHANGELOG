@@ -1,5 +1,13 @@
 ChangeLog for Nicotine Plus
 
+SVN
+
+Behaviour
+ * Changed the description for our .exe files so it shows up as Nicotine+ in firewalls (ticket #498)
+
+Bugs
+ * Collapse mode in upload/download didn't work for newly added files, wasn't remembered with restart (ticket #205)
+
 1.2.14 (4th October 2009)
 
 Behaviour
