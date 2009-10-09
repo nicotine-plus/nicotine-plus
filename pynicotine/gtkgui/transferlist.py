@@ -321,9 +321,7 @@ class TransferList:
 						left = self.transfersmodel.get_value(iter, 8)
 					if salientstatus in ('',_("Finished")): # we prefer anything over ''/finished
 						salientstatus = status
-					if status == _("Transferring"):
-						salientstatus = status
-					if status == _("Banned"):
+					if status in (_("Transferring"), _("Banned"), _("Getting address")):
 						salientstatus = status
 				try:
 					speed = "%.1f" % ispeed
