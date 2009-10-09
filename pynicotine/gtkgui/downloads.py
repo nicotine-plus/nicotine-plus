@@ -87,9 +87,9 @@ class Downloads(TransferList):
 		self.frame.ToggleTreeDownloads.set_active(self.frame.np.config.sections["transfers"]["groupdownloads"])
 		frame.ToggleTreeDownloads.connect("toggled", self.OnToggleTree)
 		self.OnToggleTree(None)
-		self.frame.ExpandDownloads.set_active(True)
+		self.frame.ExpandDownloads.set_active(self.frame.np.config.sections["transfers"]["downloadsexpanded"] )
 		frame.ExpandDownloads.connect("toggled", self.OnExpandDownloads)
-		self.expanded = False
+		self.OnExpandDownloads(None)
 		
 	def saveColumns(self):
 		columns = []
@@ -113,12 +113,15 @@ class Downloads(TransferList):
 		else:
 			self.frame.DownloadList.collapse_row(path)
 	def OnExpandDownloads(self, widget):
-		if self.frame.ExpandDownloads.get_active():
+		expanded = self.frame.ExpandDownloads.get_active()
+		if expanded:
 			self.frame.DownloadList.expand_all()
 			self.frame.ExpandDownloadsImage.set_from_stock(gtk.STOCK_REMOVE, 4)
 		else:
 			self.frame.DownloadList.collapse_all()
 			self.frame.ExpandDownloadsImage.set_from_stock(gtk.STOCK_ADD, 4)
+		self.frame.np.config.sections["transfers"]["downloadsexpanded"] = expanded
+		self.frame.np.config.writeConfiguration()
 	def OnToggleTree(self, widget):
 		self.TreeUsers = self.frame.ToggleTreeDownloads.get_active()
 		self.frame.np.config.sections["transfers"]["groupdownloads"] = self.TreeUsers

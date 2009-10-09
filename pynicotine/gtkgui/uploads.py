@@ -78,9 +78,9 @@ class Uploads(TransferList):
 		self.frame.ToggleTreeUploads.set_active(self.frame.np.config.sections["transfers"]["groupuploads"])
 		frame.ToggleTreeUploads.connect("toggled", self.OnToggleTree)
 		self.OnToggleTree(None)
-		self.frame.ExpandUploads.set_active(True)
+		self.frame.ExpandUploads.set_active(self.frame.np.config.sections["transfers"]["uploadsexpanded"])
 		frame.ExpandUploads.connect("toggled", self.OnExpandUploads)
-		self.expanded = False
+		self.OnExpandUploads(None)
 
 	def saveColumns(self):
 		columns = []
@@ -123,12 +123,16 @@ class Uploads(TransferList):
 		else:
 			self.frame.UploadList.collapse_row(path)
 	def OnExpandUploads(self, widget):
-		if self.frame.ExpandUploads.get_active():
+		expanded = self.frame.ExpandUploads.get_active()
+		if expanded:
 			self.frame.UploadList.expand_all()
 			self.frame.ExpandUploadsImage.set_from_stock(gtk.STOCK_REMOVE, 4)
 		else:
 			self.frame.UploadList.collapse_all()
 			self.frame.ExpandUploadsImage.set_from_stock(gtk.STOCK_ADD, 4)
+		self.frame.np.config.sections["transfers"]["uploadsexpanded"] = expanded
+		self.frame.np.config.writeConfiguration()
+
 	def OnToggleAutoclear(self, widget):
 		self.frame.np.config.sections["transfers"]["autoclear_uploads"] = self.frame.ToggleAutoclear.get_active()
 
