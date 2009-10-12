@@ -498,10 +498,8 @@ class TransferList:
 		self.ClearTransfers(statuslist)
 
 	def OnClearFinishedAborted(self, widget):
-		#begin = time()
 		statuslist = ["Aborted","Cancelled", "Finished", "Filtered"]
 		self.ClearTransfers(statuslist)
-		#log.addwarning("Clearing took %f seconds" % (time() - begin))
 
 	def OnClearQueued(self, widget):
 		self.ClearTransfers(["Queued"])

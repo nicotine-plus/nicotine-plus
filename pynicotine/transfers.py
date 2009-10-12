@@ -58,7 +58,6 @@ class Transfer:
 		self.filename = filename
 		self.conn = conn
 		self.path = path
-		self.status = status
 		self.modifier = modifier
 		self.req = req
 		self.size = size
@@ -77,7 +76,13 @@ class Transfer:
 		self.place = place # Queue position
 		self.bitrate = bitrate
 		self.length = length
-
+		self.setstatus(status)
+	def setstatus(self, status):
+		self.__status = status
+		self.laststatuschange = time.time()
+	def getstatus(self):
+		return self.__status
+	status = property(getstatus, setstatus)
 class TransferTimeout:
 	def __init__(self, req, callback):
 		self.req = req
@@ -599,7 +604,18 @@ class Transfers:
 		return [i.user for i in self.uploads if i.req is not None or i.conn is not None or i.status == 'Getting status'] #some file is being transfered
 	
 	def transferNegotiating(self):
-		return len([i for i in self.uploads if i.req is not None or (i.conn is not None and i.speed is None) or i.status == 'Getting status']) > 0 #some file is being negotiated
+		# some file is being negotiated
+		#return len([i for i in self.uploads if i.req is not None or (i.conn is not None and i.speed is None) or i.status == 'Getting status']) > 0 
+		now = time.time()
+		for i in self.uploads:
+			if (now - i.laststatuschange) < 10: # if a status hasn't changed in the last 10 seconds the connection is probably never going to work, ignoring it.
+				if i.req is not None:
+					return True
+				if i.conn is not None and i.speed is None:
+					return True
+				if i.status == 'Getting status':
+					return True
+		return False
 
 	def bandwidthLimitReached(self):
 		maxbandwidth = self.eventprocessor.config.sections["transfers"]["uploadbandwidth"]
