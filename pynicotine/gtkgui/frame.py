@@ -1533,7 +1533,6 @@ class NicotineFrame:
 
 	def OnFirstConnect(self, widget):
 		if not self.np.config.sections["server"]["upnp"]:
-			log.add("You do not have UPnP enabled in your configuration file")
 			self.OnConnect(-1)
 			return
 		thread.start_new_thread(self.Fixportmapping, ())

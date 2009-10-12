@@ -8,6 +8,7 @@ import time
 
 # N+ imports
 import slskmessages
+from slskmessages import NetworkIntType, NetworkLongLongType
 from logfacility import log
 from utils import _, displayTraceback
 try:
@@ -622,10 +623,10 @@ class Shares:
 		#size1 = size & 0xffffffff
 		#size2 = size >> 32
 		
-		stream = chr(1) + message.packObject(fileinfo[0]) + message.packObject(long(fileinfo[1]))
+		stream = chr(1) + message.packObject(fileinfo[0]) + message.packObject(NetworkLongLongType(fileinfo[1]))
 		if fileinfo[2] is not None:
 			stream += message.packObject('mp3') + message.packObject(3)
-			stream += message.packObject(0) + message.packObject(fileinfo[2][0]) + message.packObject(1) + message.packObject(fileinfo[3]) + message.packObject(2) + message.packObject(fileinfo[2][1])
+			stream += message.packObject(0) + message.packObject(NetworkIntType(fileinfo[2][0])) + message.packObject(1) + message.packObject(NetworkIntType(fileinfo[3])) + message.packObject(2) + message.packObject(NetworkIntType(fileinfo[2][1]))
 		else:
 			stream = stream + message.packObject('') + message.packObject(0)
 		return stream

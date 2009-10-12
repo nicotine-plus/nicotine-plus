@@ -38,14 +38,18 @@ def newId():
 	Id += 1
 	return Id
 
-# New object type to fix Ticket #486, "Search don't work"
+# Python objects cannot be used as a source to determine the network object,
+# since diff. OS/Arch will have diff. ranges for Integers, Longs, etc.
 class NetworkIntType(object):
+	"""Cast to <i, little-endian integer"""
 	def __init__(self, value):
 		self.value = value
 class NetworkLongType(object):
+	"""Cast to <L, little-endian unsigned long"""
 	def __init__(self, value):
 		self.value = value
 class NetworkLongLongType(object):
+	"""Cast to <Q, little-endian unsigned long long"""
 	def __init__(self, value):
 		self.value = value
 
