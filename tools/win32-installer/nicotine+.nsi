@@ -16,8 +16,8 @@
 !define MUI_HEADERIMAGE_RIGHT
 !define MUI_ICON "..\..\img\ico\nicotine+-installer.ico"
 !define MUI_UNICON "..\..\img/ico\nicotine+-installer.ico"
-!define MUI_HEADERIMAGE_BITMAP "artwork\modern-header.bmp"
-!define MUI_WELCOMEFINISHPAGE_BITMAP "artwork\modern-wizard.bmp"
+!define MUI_HEADERIMAGE_BITMAP "artwork\modern-header.png"
+!define MUI_WELCOMEFINISHPAGE_BITMAP "artwork\modern-wizard.png"
 
 !insertmacro MUI_PAGE_WELCOME
 !insertmacro MUI_PAGE_LICENSE "..\..\COPYING"
