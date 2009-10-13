@@ -23,6 +23,7 @@ import locale
 import pango
 from pynicotine import slskmessages
 from pynicotine import pluginsystem
+from pynicotine.slskmessages import ToBeEncoded
 from utils import InitialiseColumns, AppendLine, PopupMenu, FastListModel, string_sort_func, WriteLog, int_sort_func, Humanize, HumanSpeed, expand_alias, is_alias, EncodingsMenu, SaveEncoding, PressHeader, fixpath, IconNotebook
 from pynicotine.utils import _
 from ticker import Ticker
@@ -1173,12 +1174,16 @@ class ChatRoom:
 			return
 		if text[:2] == "//":
 			text = text[1:]
-		self.frame.np.queue.put(slskmessages.SayChatroom(self.room, self.frame.AutoReplace(text)))
+		self.frame.np.queue.put(slskmessages.SayChatroom(self.room, ToBeEncoded(self.frame.AutoReplace(text), self.encoding)))
 
 			
 	def OnEnter(self, widget):
-		text = self.frame.np.encode(widget.get_text(), self.encoding)
-
+		bytes = widget.get_text()
+		try:
+			text = unicode(bytes, "UTF-8")
+		except UnicodeDecodeError:
+			log.addwarning("We have a problem, PyGTK get_text does not seem to return UTF-8. Please file a bug report.")
+			text = unicode(bytes, "UTF-8", "replace")
 		if not text:
 			widget.set_text("")
 			return
@@ -1320,7 +1325,7 @@ class ChatRoom:
 			tuple = self.frame.pluginhandler.OutgoingPublicChatEvent(self.room, text)
 			if tuple != None:
 				(r, text) = tuple
-				self.Say(self.frame.AutoReplace(text))
+				self.Say(ToBeEncoded(self.frame.AutoReplace(text), self.encoding))
 				self.frame.pluginhandler.OutgoingPublicChatNotification(self.room, text)
 			#else:
 			#	self.frame.logMessage(_("Pluginsystem decided to shut me up"))
@@ -1330,9 +1335,9 @@ class ChatRoom:
 		self.frame.ChatNotebook.detach_tab(self.Main, _("Nicotine+ Chatroom: %s") % self.room)
 		gobject.idle_add(self.frame.ScrollBottom, self.ChatScroll.get_parent())
 		
-	def Say(self, text):
-		line = re.sub("\s\s+", "  ", text)
-		self.frame.np.queue.put(slskmessages.SayChatroom(self.room, line))
+	def Say(self, tobeencoded):
+		tobeencoded.unicode = re.sub("\s\s+", "  ", tobeencoded.unicode)
+		self.frame.np.queue.put(slskmessages.SayChatroom(self.room, tobeencoded))
 		
 	def NowPlayingThread(self):
 		self.frame.now.DisplayNowPlaying(None, test=0, callback=self.Say)

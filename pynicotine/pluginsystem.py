@@ -8,6 +8,7 @@ from thread import start_new_thread
 from traceback import extract_stack, extract_tb, format_list
 import traceback
 from pynicotine import slskmessages
+from slskmessages import ToBeEncoded
 from utils import _
 from logfacility import log
 
@@ -347,7 +348,7 @@ class PluginHandler(object):
 	def log(self, text):
 		self.appendqueue({'type':'logtext', 'text':text})
 	def saychatroom(self, room, text):
-		self.frame.np.queue.put(slskmessages.SayChatroom(room, text))
+		self.frame.np.queue.put(slskmessages.SayChatroom(room, ToBeEncoded(text, 'UTF-8')))
 	def sayprivate(self, user, text):
 		self.appendqueue({'type':'sayprivate', 'user':user, 'text':text})
 	def processQueue(self):
@@ -438,7 +439,7 @@ class BasePlugin(object):
 			room = self.frame.chatrooms.roomsctrl.joinedrooms[room]
 		except KeyError:
 			return False
-		msg = slskmessages.SayChatroom(room, text)
+		msg = slskmessages.SayChatroom(room, ToBeEncoded(text, 'UTF-8'))
 		msg.user = user
 		room.SayChatRoom(msg, text)
 		return True

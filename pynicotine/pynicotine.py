@@ -1264,11 +1264,7 @@ class NetworkEventProcessor:
 			else:
 				uploadallowed = ua
 			self.queue.put(slskmessages.UserInfoReply(msg.conn.conn, descr, pic, totalupl, queuesize, slotsavail, uploadallowed))
-	
 		self.logMessage(_("%(user)s is making a UserInfo request") %{'user':user}, 1)
-		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 1)
-		
-
 
 	def SharedFileList(self, msg):
 		for i in self.peerconns:
