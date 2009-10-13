@@ -82,6 +82,7 @@ class UserTabs(IconNotebook):
 		self.request_changed(self.users[user].Main)
 		if self.mytab is not None:
 			self.frame.RequestIcon(self.mytab)
+		self.frame.ShowTab(None, ['userinfo', self.frame.userinfovbox])
 			
 	def ShowInterests(self, msg):
 		if msg.user in self.users:
