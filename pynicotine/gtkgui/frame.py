@@ -3213,7 +3213,7 @@ class Notifications:
 				hilites[location].append(user)
 				self.sound(location, user)
 				self.frame.TrayApp.SetImage()
-		if tab and not self.frame.got_focus:
+		if tab and self.frame.np.config.sections["ui"]["urgencyhint"] and not self.frame.got_focus:
 			self.frame.MainWindow.set_urgency_hint(True)
 		self.SetTitle(user)
 
@@ -3233,7 +3233,7 @@ class Notifications:
 			if room in self.frame.TrayApp.tray_status["hilites"]["rooms"]:
 				self.frame.TrayApp.tray_status["hilites"]["rooms"].remove(room)
 			self.SetTitle(room)
-		elif location == "private":	
+		elif location == "private":
 			if user in self.frame.TrayApp.tray_status["hilites"]["private"]: 
 				self.frame.TrayApp.tray_status["hilites"]["private"].remove(user)
 			self.SetTitle(user)
