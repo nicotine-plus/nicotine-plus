@@ -480,26 +480,23 @@ class TransferList:
 		
 	def OnClearFinished(self, widget):
 		self.ClearTransfers(["Finished"])
-	
 	def OnClearAborted(self, widget):
 		statuslist = ["Aborted","Cancelled"]
 		self.ClearTransfers(statuslist)
-		
 	def OnClearFiltered(self, widget):
 		statuslist = ["Filtered"]
 		self.ClearTransfers(statuslist)
-
 	def OnClearFailed(self, widget):
 		statuslist = ["Cannot connect", 'Connection closed by peer', "Local file error", "Getting address", "Waiting for peer to connect", "Initializing transfer"]
 		self.ClearTransfers(statuslist)
-		
 	def OnClearPaused(self, widget):
 		statuslist = ["Paused"]
 		self.ClearTransfers(statuslist)
-
 	def OnClearFinishedAborted(self, widget):
 		statuslist = ["Aborted","Cancelled", "Finished", "Filtered"]
 		self.ClearTransfers(statuslist)
-
+	def OnClearFinishedErred(self, widget):
+		statuslist = ["Aborted","Cancelled", "Finished", "Filtered", "Cannot connect", 'Connection closed by peer', "Local file error"]
+		self.ClearTransfers(statuslist)
 	def OnClearQueued(self, widget):
 		self.ClearTransfers(["Queued"])

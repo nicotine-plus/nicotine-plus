@@ -1583,7 +1583,7 @@
                             <property name="visible">True</property>
                             <property name="spacing">5</property>
                             <child>
-                              <widget class="GtkButton" id="clearUploadFinishedAbortedButton">
+                              <widget class="GtkButton" id="clearUploadFinishedErredButton">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
@@ -1610,7 +1610,7 @@
                                         <child>
                                           <widget class="GtkLabel" id="label49">
                                             <property name="visible">True</property>
-                                            <property name="label" translatable="yes">Clear Finished / Aborted</property>
+                                            <property name="label" translatable="yes">Clear Finished / Erred</property>
                                             <property name="use_underline">True</property>
                                           </widget>
                                           <packing>

@@ -33,7 +33,8 @@ class Uploads(TransferList):
 		self.frame.UploadList.set_property("rules-hint", True)
 		self.popup_menu2 = popup2 = PopupMenu(frame)
 		popup2.setup( 
-		        ("#" + _("Clear finished/aborted"), self.OnClearFinishedAborted, gtk.STOCK_CLEAR),
+			("#" + _("Clear finished/erred"), self.OnClearFinishedErred, gtk.STOCK_CLEAR),
+			("#" + _("Clear finished/aborted"), self.OnClearFinishedAborted, gtk.STOCK_CLEAR),
 			("#" + _("Clear finished"), self.OnClearFinished, gtk.STOCK_CLEAR),
 			("#" + _("Clear aborted"), self.OnClearAborted, gtk.STOCK_CLEAR),
 			("#" + _("Clear queued"), self.OnClearQueued, gtk.STOCK_CLEAR),
@@ -66,7 +67,7 @@ class Uploads(TransferList):
 				parent.connect('button_press_event', PressHeader)
 			# Read Show / Hide column settings from last session
 			cols[i].set_visible(self.frame.np.config.sections["columns"]["uploads"][i])
-		frame.clearUploadFinishedAbortedButton.connect("clicked", self.OnClearFinishedAborted)
+		frame.clearUploadFinishedErredButton.connect("clicked", self.OnClearFinishedErred)
 		frame.clearUploadQueueButton.connect("clicked", self.OnTryClearQueued)
 		frame.abortUploadButton.connect("clicked", self.OnAbortTransfer)
 		frame.abortUserUploadButton.connect("clicked", self.OnAbortUser)
