@@ -214,6 +214,8 @@ Le Vert
 \t(Webhosting, packager)
 \t<gandalf@le-vert.net>
 \thttp://www.le-vert.net
+OffHand
+\t(Windows and OSX packager, tester)
 QuinoX
 \t(Code contributer)
 \thttp://index.qtea.nl
