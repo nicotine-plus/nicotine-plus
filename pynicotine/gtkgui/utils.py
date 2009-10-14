@@ -254,7 +254,8 @@ def OpenUri(uri):
 		pass
 
 def AppendLine(textview, line, tag = None, timestamp = None, showstamp=True, timestamp_format = "%H:%M:%S", username=None, usertag=None, scroll=True):
-	line = str(line) # Error messages are sometimes tuples
+	if type(line) not in (type(""), type(u"")):
+		line = str(line) # Error messages are sometimes tuples
 	def _makeurltag(buffer, tag, url):
 		props = {}
 
