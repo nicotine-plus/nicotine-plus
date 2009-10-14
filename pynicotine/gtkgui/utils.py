@@ -1148,7 +1148,8 @@ def WriteLog(logfile, logsdir, fn, msg):
 		logfile = open(os.path.join(logsdir, fixpath(fn.replace(os.sep, "-")) + ".log"), 'a', 0)
 		os.umask(oldumask)
 	
-	logfile.write("%s %s\n" % (recode(time.strftime(NICOTINE.np.config.sections["logging"]["log_timestamp"])), msg))
+	text = "%s %s\n" % (recode(time.strftime(NICOTINE.np.config.sections["logging"]["log_timestamp"])), msg)
+	logfile.write(text.encode('UTF-8'))
 	logfile.flush()
 	return logfile
 		

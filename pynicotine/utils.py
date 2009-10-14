@@ -146,15 +146,6 @@ def getServerList(url):
 	except:
 		return []
 
-def escapeCommand(filename):
-	"""Escapes special characters for command execution"""
-	escaped = ""
-	for ch in filename:
-		if ch not in string.ascii_letters+string.digits+"/":
-			escaped += "\\"
-		escaped += ch
-	return escaped
-
 def displayTraceback(exception=None):
 	global log
 	import traceback
@@ -177,7 +168,7 @@ def displayTraceback(exception=None):
 	traceback.print_exc()
 
 ## Dictionary that's sorted alphabetically
-# @param UserDict dictionary to be alphabetized	
+# @param UserDict dictionary to be alphabetized
 class SortedDict(UserDict):
 	## Constructor
 	# @param self SortedDict
@@ -297,3 +288,19 @@ def executeCommand(command, replacement=None, background=True, returnoutput=Fals
 	if not returnoutput:
 		return True
 	return procs[-1].communicate()[0]
+
+def findBestEncoding(bytes, encodings, fallback=None):
+	"""Tries to convert the bytes with the encodings, the first successful conversion is returned.
+	
+	If none match the fallback encoding will be used with the 'replace' argument. If no fallback is
+	given the first encoding from the list is used."""
+	for encoding in encodings:
+		try:
+			return unicode(bytes, encoding)
+		except (UnicodeDecodeError, LookupError), e:
+			pass
+	# None were successful
+	if fallback:
+		return unicode(bytes, fallback, 'replace')
+	else:
+		return unicode(bytes, encodings[0], 'replace')

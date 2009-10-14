@@ -56,7 +56,8 @@ class ToBeEncoded(object):
 	"""Holds text and the desired eventual encoding"""
 	def __init__(self, uni, encoding):
 		if type(uni) != type(u""):
-			print "ZOMG, you really don't know what you're doing! %s is NOT unicode, its a %s" % (uni, type(uni))
+			print "ZOMG, you really don't know what you're doing! %s is NOT unicode, its a %s: %s" % (uni, type(uni), repr(uni))
+			raise(Exception("Programming bug"))
 		self.unicode = uni
 		self.encoding = encoding
 		self.cached = None
@@ -64,6 +65,7 @@ class ToBeEncoded(object):
 		if self.cached:
 			return self.cached
 		self.cached = self.unicode.encode(self.encoding, "replace")
+		#print "The bytes of %s are %s" % (self.unicode, repr(self.cached))
 		return self.cached
 	def dont(self):
 		print "Dont do that"
@@ -78,18 +80,23 @@ class JustDecoded(object):
 	"""Holds text, the original bytes and its supposed encoding"""
 	def __init__(self, bytes, encoding):
 		if type(bytes) != type(""):
-			print "ZOMG, you really don't know what you're doing! %s is NOT string, its a %s" % (bytes, type(bytes))
+			print "ZOMG, you really don't know what you're doing! %s is NOT string, its a %s: %s" % (bytes, type(bytes), repr(bytes))
+			raise(Exception("Programming bug"))
 		self.bytes = bytes
 		self.encoding = encoding
 		self.cached = None
+		self.modified = False
 	def getunicode(self):
 		if self.cached:
 			return self.cached
 		self.cached = self.bytes.decode(self.encoding, "replace")
 		return self.cached
-	def dont(self):
-		print "Dont do that"
-	unicode = property(getunicode, dont)
+	def setunicode(self, uni):
+		if type(uni) != type(u""):
+			print "ZOMG, you really don't know what you're doing! %s is NOT unicode, its a %s: %s" % (uni, type(uni), repr(bytes))
+			raise(Exception("Programming bug"))
+		self.cached = uni
+	unicode = property(getunicode, setunicode)
 	def __getitem__(self, key):
 		return self.unicode[key]
 	def __str__(self):
@@ -271,6 +278,7 @@ class SlskMessage:
 		elif type(object) is types.StringType:
 			return struct.pack("<i", len(object))+object
 		elif type(object) is ToBeEncoded:
+			# The server seeems to cut off strings at \x00!
 			return struct.pack("<i", len(object.bytes))+object.bytes
 		elif type(object) is types.UnicodeType:
 			log.addwarning(_("Warning: networking thread has to convert unicode string %(object)s message %(type)s") % {'object':object, 'type':self.__class__})
@@ -527,7 +535,6 @@ class SayChatroom(ServerMessage):
 		pos, self.room = self.getObject(message, types.StringType)
 		pos, self.user = self.getObject(message, types.StringType, pos)
 		pos, self.msg = self.getObject(message, types.StringType, pos)
-		#self.msg = JustDecoded(self.msg, 'UTF-8')
 
 class UserData:
 	""" When we join a room the server send us a bunch of these, 

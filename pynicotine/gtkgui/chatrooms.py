@@ -25,7 +25,7 @@ from pynicotine import slskmessages
 from pynicotine import pluginsystem
 from pynicotine.slskmessages import ToBeEncoded
 from utils import InitialiseColumns, AppendLine, PopupMenu, FastListModel, string_sort_func, WriteLog, int_sort_func, Humanize, HumanSpeed, expand_alias, is_alias, EncodingsMenu, SaveEncoding, PressHeader, fixpath, IconNotebook
-from pynicotine.utils import _
+from pynicotine.utils import _, findBestEncoding
 from ticker import Ticker
 from entrydialog import OptionDialog, input_box
 from os.path import commonprefix
@@ -649,10 +649,13 @@ def TickDialog(parent, default = ""):
 			t = 1
 		elif r3.get_active():
 			t = 2
-		result = entry.get_text()
-		
+		bytes = entry.get_text()
+		try:
+			result = unicode(bytes, "UTF-8")
+		except UnicodeDecodeError:
+			log.addwarning("We have a problem, PyGTK get_text does not seem to return UTF-8. Please file a bug report.")
+			result = unicode(bytes, "UTF-8", "replace")
 	dlg.destroy()
-		
 	return [t, result]
 
 class ChatRoom:
@@ -877,11 +880,17 @@ class ChatRoom:
 		except:
 			roomlines = 15
 		try:
+			encodings = ['UTF-8'] # New style logging, always in UTF-8
+			try:
+				encodings.append(config["server"]["roomencoding"][self.room]) # Old style logging, room dependent
+			except KeyError:
+				pass
 			f = open(log, "r")
 			logfile = f.read()
 			f.close()
 			loglines = logfile.split("\n")
-			for l in loglines[ - roomlines : -1 ]:
+			for bytes in loglines[ - roomlines : -1 ]:
+				l = findBestEncoding(bytes, encodings)
 				# Try to parse line for username
 				if len(l) > 20 and l[10].isspace() and l[11].isdigit() and l[20] in ("[", "*"):
 					line = l[11:]
@@ -912,9 +921,9 @@ class ChatRoom:
 				line = re.sub("\s\s+", "  ", line)
 				line += "\n"
 				if user != config["server"]["login"]:
-					self.lines.append(AppendLine(self.ChatScroll, self.frame.CensorChat(self.frame.np.decode(line, self.encoding)), tag, username=user, usertag=usertag, timestamp_format=""))
+					self.lines.append(AppendLine(self.ChatScroll, self.frame.CensorChat(line), tag, username=user, usertag=usertag, timestamp_format=""))
 				else:
-					self.lines.append(AppendLine(self.ChatScroll, self.frame.np.decode(line, self.encoding), tag, username=user, usertag=usertag, timestamp_format=""))
+					self.lines.append(AppendLine(self.ChatScroll, line, tag, username=user, usertag=usertag, timestamp_format=""))
 			if len(loglines[ - roomlines : -1 ]) > 0:
 				self.lines.append(AppendLine(self.ChatScroll, _("--- old messages above ---"), self.tag_hilite))
 			gobject.idle_add(self.frame.ScrollBottom, self.ChatScroll.get_parent())
@@ -1076,14 +1085,14 @@ class ChatRoom:
 			if user in self.frame.np.config.sections["server"]["ignorelist"] or self.frame.UserIpIsIgnored(user):
 				# User ignored, ignore Ticker messages
 				return
-			self.Ticker.add_ticker(user, self.frame.np.decode(msg.msgs[user], self.encoding))
+			self.Ticker.add_ticker(user, msg.msgs[user])
 
 	def TickerAdd(self, msg):
 		user = msg.user
 		if user in self.frame.np.config.sections["server"]["ignorelist"] or self.frame.UserIpIsIgnored(user):
 			# User ignored, ignore Ticker messages
 			return
-		self.Ticker.add_ticker(msg.user, self.frame.np.decode(msg.msg, self.encoding))
+		self.Ticker.add_ticker(msg.user, msg.msg)
 
 	def TickerRemove(self, msg):
 		self.Ticker.remove_ticker(msg.user)
@@ -1149,11 +1158,11 @@ class ChatRoom:
 		self.getUserTag(user)
 		timestamp_format=self.frame.np.config.sections["logging"]["rooms_timestamp"]
 		if user != login:
-			self.lines.append(AppendLine(self.ChatScroll, self.frame.CensorChat(self.frame.np.decode(line, self.encoding)), tag, username=user, usertag=self.tag_users[user], timestamp_format=timestamp_format))
+			self.lines.append(AppendLine(self.ChatScroll, self.frame.CensorChat(line), tag, username=user, usertag=self.tag_users[user], timestamp_format=timestamp_format))
 			if self.Speech.get_active():
-				self.frame.Notifications.new_tts(self.frame.np.config.sections["ui"]["speechrooms"] % {"room": self.room, "user": self.frame.Notifications.tts_clean(user), "message": self.frame.Notifications.tts_clean(self.frame.np.decode(speech, self.encoding))} )
+				self.frame.Notifications.new_tts(self.frame.np.config.sections["ui"]["speechrooms"] % {"room": self.room, "user": self.frame.Notifications.tts_clean(user), "message": self.frame.Notifications.tts_clean(speech)} )
 		else:
-			self.lines.append(AppendLine(self.ChatScroll, self.frame.np.decode(line, self.encoding), tag, username=user, usertag=self.tag_users[user], timestamp_format=timestamp_format))
+			self.lines.append(AppendLine(self.ChatScroll, line, tag, username=user, usertag=self.tag_users[user], timestamp_format=timestamp_format))
 		
 			
 	def getUserTag(self, user):
@@ -1310,7 +1319,7 @@ class ChatRoom:
 		elif cmd == "/rescan":
 			self.frame.BothRescan()
 		elif cmd in ["/tick", "/t"]:
-			self.frame.np.queue.put(slskmessages.RoomTickerSet(self.room, self.frame.np.encode(args, self.encoding)))
+			self.frame.np.queue.put(slskmessages.RoomTickerSet(self.room, ToBeEncoded(args, self.encoding)))
 		#elif cmd in ('/reload',):
 			#self.frame.pluginhandler.reread()
 			#self.frame.pluginhandler = pluginsystem.PluginHandler(self.frame)
@@ -1882,7 +1891,7 @@ class ChatRoom:
 					del config["ticker"]["rooms"][self.room]
 				config["ticker"]["default"] = result
 				self.frame.np.config.writeConfiguration()
-			self.frame.np.queue.put(slskmessages.RoomTickerSet(self.room, self.frame.np.encode(result, self.encoding)))
+			self.frame.np.queue.put(slskmessages.RoomTickerSet(self.room, ToBeEncoded(result, self.encoding)))
 		return True
 
 	def ShowTicker(self, visible):

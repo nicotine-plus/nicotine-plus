@@ -25,7 +25,9 @@ from time import daylight, altzone
 from utils import AppendLine, IconNotebook, PopupMenu, WriteLog, expand_alias, is_alias, EncodingsMenu, SaveEncoding, fixpath
 from chatrooms import GetCompletion
 from pynicotine import slskmessages
+from pynicotine.slskmessages import ToBeEncoded
 from pynicotine.utils import _, version
+from pynicotine.logfacility import log
 
 class PrivateChats(IconNotebook):
 	CMDS = set(["/alias ", "/unalias ", "/whois ", "/browse ", "/ip ", "/pm ", "/msg ", "/search ", "/usearch ", "/rsearch ",
@@ -457,7 +459,6 @@ class PrivateChat:
 			self.offlinemessage = 1
 		if not status and self.offlinemessage:
 			self.offlinemessage = False
-		line = self.frame.np.decode(line, self.encoding)
 		if status:
 			# The timestamps from the server are off by a lot, so we'll only use them when this is an offline message
 			# Also, they are in UTC so we need to correct them
@@ -487,7 +488,6 @@ class PrivateChat:
 		if text[:4] == "/me ":
 			line = "* %s %s" % (my_username, text[4:])
 			usertag = tag = self.tag_me
-			message = self.frame.np.decode(line, self.encoding)
 		else:
 			
 			if text == "\x01VERSION\x01":
@@ -496,17 +496,17 @@ class PrivateChat:
 				line = text
 			tag = self.tag_local
 			usertag = self.tag_my_username
-			message = "[" + my_username + "] " + self.frame.np.decode(line, self.encoding)
+			line = "[%s] %s" % (my_username, line)
 		timestamp_format=self.frame.np.config.sections["logging"]["private_timestamp"]
-		AppendLine(self.ChatScroll, message, tag, timestamp_format=timestamp_format, username=my_username, usertag=usertag)
+		AppendLine(self.ChatScroll, line, tag, timestamp_format=timestamp_format, username=my_username, usertag=usertag)
 		if self.Log.get_active():
-			self.logfile = WriteLog(self.logfile, self.frame.np.config.sections["logging"]["privatelogsdir"], self.user, message)
+			self.logfile = WriteLog(self.logfile, self.frame.np.config.sections["logging"]["privatelogsdir"], self.user, line)
 		
 		if self.PeerPrivateMessages.get_active():
 			# not in the soulseek protocol
-			self.frame.np.ProcessRequestToPeer(self.user, slskmessages.PMessageUser(None, my_username, self.frame.AutoReplace(text)))
+			self.frame.np.ProcessRequestToPeer(self.user, slskmessages.PMessageUser(None, my_username, ToBeEncoded(self.frame.AutoReplace(text), self.encoding)))
 		else:
-			self.frame.np.queue.put(slskmessages.MessageUser(self.user, self.frame.AutoReplace(text)))
+			self.frame.np.queue.put(slskmessages.MessageUser(self.user, ToBeEncoded(self.frame.AutoReplace(text), self.encoding)))
 			
 
 		
@@ -520,7 +520,13 @@ class PrivateChat:
 
 			
 	def OnEnter(self, widget):
-		text = self.frame.np.encode(widget.get_text(), self.encoding)
+		bytes = widget.get_text()
+		try:
+			text = unicode(bytes, "UTF-8")
+		except UnicodeDecodeError:
+			log.addwarning("We have a problem, PyGTK get_text does not seem to return UTF-8. Please file a bug report. Bytes: %s" % (repr(bytes)))
+
+			text = unicode(bytes, "UTF-8", "replace")
 
 		if not text:
 			widget.set_text("")

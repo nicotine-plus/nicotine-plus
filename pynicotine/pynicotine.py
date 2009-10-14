@@ -32,7 +32,7 @@ import shutil
 from urllib import urlencode
 import slskproto
 import slskmessages
-from slskmessages import newId, PopupMessage
+from slskmessages import newId, PopupMessage, ToBeEncoded
 import transfers
 import Queue
 import threading
@@ -42,7 +42,7 @@ import types
 import locale
 import utils
 from shares import Shares
-from utils import _, CleanFile
+from utils import _, CleanFile, findBestEncoding
 import os
 import logging
 
@@ -702,6 +702,12 @@ class NetworkEventProcessor:
 		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
 			
 	def MessageUser(self, msg):
+		if msg.user in self.config.sections["server"]["userencoding"]:
+			encodings = [self.config.sections["server"]["userencoding"][msg.user]] + self.config.sections["server"]["fallbackencodings"]
+			encodings.append(self.config.sections["server"]["enc"])
+		else:
+			encodings = [self.config.sections["server"]["enc"]] + self.config.sections["server"]["fallbackencodings"]
+		msg.msg = findBestEncoding(msg.msg, encodings)
 		status = 0
 		if self.logintime:
 			if time.time() <= self.logintime + 2:
@@ -723,6 +729,7 @@ class NetworkEventProcessor:
 		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
 
 	def PublicRoomMessage(self, msg):
+		msg.msg = findBestEncoding(msg.msg, [self.config.sections["server"]["enc"]] + self.config.sections["server"]["fallbackencodings"])
 		if self.chatrooms is not None:
 			self.chatrooms.roomsctrl.PublicRoomMessage(msg, msg.msg)
 		else:
@@ -739,7 +746,7 @@ class NetworkEventProcessor:
 				encoding = self.config.sections["server"]["enc"]
 				if msg.room in self.config.sections["server"]["roomencoding"]:
 					encoding = self.config.sections["server"]["roomencoding"][msg.room]
-				self.queue.put(slskmessages.RoomTickerSet(msg.room, self.encode(ticker, encoding)))
+				self.queue.put(slskmessages.RoomTickerSet(msg.room, ToBeEncoded(ticker, encoding)))
 		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
 
 		
@@ -857,6 +864,12 @@ class NetworkEventProcessor:
 		return False
 
 	def SayChatRoom(self, msg):
+		if msg.room in self.config.sections["server"]["roomencoding"]:
+			encodings = [self.config.sections["server"]["roomencoding"][msg.room]] + self.config.sections["server"]["fallbackencodings"]
+			encodings.append(self.config.sections["server"]["enc"])
+		else:
+			encodings = [self.config.sections["server"]["enc"]] + self.config.sections["server"]["fallbackencodings"]
+		msg.msg = findBestEncoding(msg.msg, encodings)
 		if self.chatrooms is not None:
 			event = self.frame.pluginhandler.IncomingPublicChatEvent(msg.room, msg.user, msg.msg)
 			if event != None:
@@ -1570,11 +1583,26 @@ class NetworkEventProcessor:
 		self.frame.ItemSimilarUsers(msg)
 	
 	def RoomTickerState(self, msg):
+		if msg.room in self.config.sections["server"]["roomencoding"]:
+			encodings = [self.config.sections["server"]["roomencoding"][msg.room]] + self.config.sections["server"]["fallbackencodings"]
+			encodings.append(self.config.sections["server"]["enc"])
+		else:
+			encodings = [self.config.sections["server"]["enc"]] + self.config.sections["server"]["fallbackencodings"]
+		unicodes = {}
+		for user, bytes in msg.msgs.iteritems():
+			unicodes[user] = findBestEncoding(bytes, encodings)
+		msg.msgs = unicodes
 		if self.chatrooms is not None:
 			self.chatrooms.roomsctrl.TickerSet(msg)
 		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
 	
 	def RoomTickerAdd(self, msg):
+		if msg.room in self.config.sections["server"]["roomencoding"]:
+			encodings = [self.config.sections["server"]["roomencoding"][msg.room]] + self.config.sections["server"]["fallbackencodings"]
+			encodings.append(self.config.sections["server"]["enc"])
+		else:
+			encodings = [self.config.sections["server"]["enc"]] + self.config.sections["server"]["fallbackencodings"]
+		msg.msg = findBestEncoding(msg.msg, encodings)
 		if self.chatrooms is not None:
 			self.chatrooms.roomsctrl.TickerAdd(msg)
 		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)

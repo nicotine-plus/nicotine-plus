@@ -35,7 +35,7 @@ import thread
 from os.path import exists
 
 from logfacility import log
-from utils import _
+from utils import _, findBestEncoding
 
 class Config:
 	""" 
@@ -74,6 +74,7 @@ class Config:
 	"autosearch": [], \
 	"autoreply": "", \
 	"roomencoding": {}, \
+	"fallbackencodings": ['utf-8', 'cp1252'], # Put the multi-byte encodings up front - they are the most likely to err
 	"userencoding": {}, \
 	"portrange": (2234,2239), \
 	"upnp": False,
@@ -484,6 +485,21 @@ class Config:
 		if "pyslsk" in autojoin and not "nicotine" in autojoin:
 			autojoin.append("nicotine")
 		
+		# Decode bytes into unicode (1.2.15)
+		try:
+			self.sections["ticker"]["default"] = findBestEncoding(self.sections["ticker"]["default"], ['utf-8'])
+		except TypeError:
+			pass # Already unicode
+		for room in self.sections["ticker"]["rooms"]:
+			encodings = ['utf-8']
+			try:
+				encodings.append(self.sections["server"]["roomencoding"][room])
+			except KeyError:
+				pass
+			try:
+				self.sections["ticker"]["rooms"][room] = findBestEncoding(self.sections["ticker"]["rooms"][room], encodings)
+			except TypeError:
+				pass # already unicode
 		# decode the userinfo from local encoding to utf8 (1.0.3 -> 1.0.4 change)
 		if not self.sections["userinfo"]["descrutf8"]:
 			try:
