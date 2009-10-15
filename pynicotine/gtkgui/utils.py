@@ -1150,7 +1150,7 @@ def WriteLog(logfile, logsdir, fn, msg):
 		os.umask(oldumask)
 	
 	text = "%s %s\n" % (recode(time.strftime(NICOTINE.np.config.sections["logging"]["log_timestamp"])), msg)
-	logfile.write(text.encode('UTF-8'))
+	logfile.write(text.encode('UTF-8', 'replace'))
 	logfile.flush()
 	return logfile
 		
