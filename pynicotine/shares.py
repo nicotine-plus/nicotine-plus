@@ -609,7 +609,9 @@ class Shares:
 	# Pack all files and metadata in directory
 	def getDirStream(self, dir):
 		msg = slskmessages.SlskMessage()
-		stream = msg.packObject(len(dir))
+		#X print "stream-" + repr(msg.packObject(len(dir)))
+		#X print "stream+" + repr(msg.packObject(NetworkIntType(len(dir))))
+		stream = msg.packObject(NetworkIntType(len(dir)))
 		
 		for file_and_meta in dir:
 			stream += self.getByteStream(file_and_meta)
@@ -623,12 +625,21 @@ class Shares:
 		#size1 = size & 0xffffffff
 		#size2 = size >> 32
 		
+		#X print "chr1-" + repr(chr(1) + message.packObject(fileinfo[0]) + message.packObject(fileinfo[1]))
+		#X print "chr1+" + repr(chr(1) + message.packObject(fileinfo[0]) + message.packObject(NetworkIntType(fileinfo[1])))
 		stream = chr(1) + message.packObject(fileinfo[0]) + message.packObject(NetworkLongLongType(fileinfo[1]))
 		if fileinfo[2] is not None:
 			stream += message.packObject('mp3') + message.packObject(3)
-			stream += message.packObject(0) + message.packObject(NetworkIntType(fileinfo[2][0])) + message.packObject(1) + message.packObject(NetworkIntType(fileinfo[3])) + message.packObject(2) + message.packObject(NetworkIntType(fileinfo[2][1]))
+			#X print "net-" + repr(message.packObject(0) + message.packObject(fileinfo[2][0]) + message.packObject(1) + message.packObject(fileinfo[3]) + message.packObject(2) + message.packObject(fileinfo[2][1]))
+			#X print "net+" + repr(message.packObject(0) + message.packObject(NetworkIntType(fileinfo[2][0])) + message.packObject(1) + message.packObject(NetworkIntType(fileinfo[3])) + message.packObject(2) + message.packObject(NetworkIntType(fileinfo[2][1])))
+			stream += (message.packObject(0) +
+			           message.packObject(NetworkIntType(fileinfo[2][0])) +
+			           message.packObject(1) +
+			           message.packObject(NetworkIntType(fileinfo[3])) +
+			           message.packObject(2) +
+			           message.packObject(NetworkIntType(fileinfo[2][1])))
 		else:
-			stream = stream + message.packObject('') + message.packObject(0)
+			stream += message.packObject('') + message.packObject(0)
 		return stream
 
 	# Update Search index with new files

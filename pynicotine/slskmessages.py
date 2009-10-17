@@ -40,18 +40,25 @@ def newId():
 
 # Python objects cannot be used as a source to determine the network object,
 # since diff. OS/Arch will have diff. ranges for Integers, Longs, etc.
-class NetworkIntType(object):
-	"""Cast to <i, little-endian integer"""
+#
+# By default they are all unsigned unless noted otherwise
+class NetworkBaseType(object):
+	"""Base class for other network types."""
 	def __init__(self, value):
 		self.value = value
-class NetworkLongType(object):
-	"""Cast to <L, little-endian unsigned long"""
-	def __init__(self, value):
-		self.value = value
-class NetworkLongLongType(object):
-	"""Cast to <Q, little-endian unsigned long long"""
-	def __init__(self, value):
-		self.value = value
+
+class NetowrkShortIntTye(NetworkBaseType):
+	"""Cast to <H, little-endian unsigned short integer (2 bytes)"""
+	pass
+class NetworkIntType(NetworkBaseType):
+	"""Cast to <I, little-endian unsigned integer (4 bytes)"""
+	pass
+class NetworkSignedIntType(NetworkBaseType):
+	"""Cast to <i, little-endian signed integer (4 bytes)"""
+	pass
+class NetworkLongLongType(NetworkBaseType):
+	"""Cast to <Q, little-endian unsigned long long (8 bytes)"""
+	pass
 class ToBeEncoded(object):
 	"""Holds text and the desired eventual encoding"""
 	def __init__(self, uni, encoding):
@@ -285,9 +292,9 @@ class SlskMessage:
 			encoded = object.encode("utf-8",'replace')
 			return struct.pack("<i", len(encoded))+encoded
 		elif type(object) is NetworkIntType:
+			return struct.pack("<I", object.value)
+		elif type(object) is NetworkSignedIntType:
 			return struct.pack("<i", object.value)
-		elif type(object) is NetworkLongType:
-			return struct.pack("<L", object.value)
 		elif type(object) is NetworkLongLongType:
 			return struct.pack("<Q", object.value)
 		log.addwarning(_("Warning: unknown object type %s") % type(object) +" "+ ("in message %(type)s") % {'type':self.__class__})
@@ -393,7 +400,9 @@ class SetWaitPort(ServerMessage):
 		self.port = port
 	
 	def makeNetworkMessage(self):
-		return self.packObject(self.port)
+		#print "22-" + repr(self.packObject(self.port))
+		#print "22+" + repr(self.packObject(NetworkIntType(self.port)))
+		return self.packObject(NetworkIntType(self.port))
 
 class GetPeerAddress(ServerMessage):
 	""" Used to find out a peer's (ip, port) address."""
@@ -492,6 +501,8 @@ class NotifyPrivileges(ServerMessage):
 		pos, self.token = self.getObject(message, types.IntType)
 		pos, self.user = self.getObject(message, types.StringType, pos)
 	def makeNetworkMessage(self):
+		#print "21-" + repr(self.packObject(self.token))
+		#print "21+" + repr(self.packObject(NetworkIntType(self.token)))
 		return self.packObject(self.token) + self.packObject(self.user)
 	
 class AckNotifyPrivileges(ServerMessage):
@@ -500,21 +511,27 @@ class AckNotifyPrivileges(ServerMessage):
 	def parseNetworkMessage(self, message):
 		pos, self.token = self.getObject(message, types.IntType)
 	def makeNetworkMessage(self):
-		return self.packObject(self.token)
+		#print "20-" + repr(self.packObject(self.token))
+		#print "20+" + repr(self.packObject(NetworkIntType(self.token)))
+		return self.packObject(NetworkIntType(self.token))
 class JoinPublicRoom(ServerMessage):
 	""" Message 116 """
 	"""We want to join the Public Chat"""
 	def __init__(self, unknown = 0):
 		self.unknown = unknown
 	def makeNetworkMessage(self):
-		return self.packObject(self.unknown)
+		print "19-" + repr(self.packObject(self.unknown))
+		print "19+" + repr(self.packObject(NetworkIntType(self.unknown)))
+		return self.packObject(NetworkIntType(self.unknown))
 class LeavePublicRoom(ServerMessage):
 	""" Message 151 """
 	"""We want to leave the Public Chat"""
 	def __init__(self, unknown = 0):
 		self.unknown = unknown
 	def makeNetworkMessage(self):
-		return self.packObject(self.unknown)
+		print "18-" + repr(self.packObject(self.unknown))
+		print "18+" + repr(self.packObject(NetworkIntType(self.unknown)))
+		return self.packObject(NetworkIntType(self.unknown))
 class PublicRoomMessage(ServerMessage):
 	""" Message 152 """
 	"""The server sends us messages from random chatrooms"""
@@ -878,7 +895,9 @@ class ConnectToPeer(ServerMessage):
 		self.type = type
 	
 	def makeNetworkMessage(self):
-		return self.packObject(self.token)+self.packObject(self.user)+self.packObject(self.type)
+		#X print "17-" + repr(self.packObject(self.token)+self.packObject(self.user)+self.packObject(self.type))
+		#X print "17+" + repr(self.packObject(NetworkIntType(self.token))+self.packObject(self.user)+self.packObject(self.type))
+		return self.packObject(NetworkIntType(self.token))+self.packObject(self.user)+self.packObject(self.type)
 	
 	def parseNetworkMessage(self, message):
 		pos, self.user = self.getObject(message, types.StringType)
@@ -914,19 +933,23 @@ class MessageAcked(ServerMessage):
 		self.msgid = msgid
 	
 	def makeNetworkMessage(self):
-		return self.packObject(self.msgid)
+		print "16-" + repr(self.packObject(self.msgid))
+		print "16+" + repr(self.packObject(NetworkIntType(self.msgid)))
+		return self.packObject(NetworkIntType(self.msgid))
 
 class FileSearch(ServerMessage):
 	""" We send this to the server when we search for something."""
 	""" Server send this to tell us someone is searching for something."""
 	def __init__(self, requestid = None, text = None):
-		self.searchid = NetworkLongType(requestid)
+		self.searchid = requestid
 		self.searchterm = text
 		if text:
 			self.searchterm = ' '.join([x for x in text.split() if x != '-'])
 	
 	def makeNetworkMessage(self):
-		return self.packObject(self.searchid)+self.packObject(self.searchterm)
+		#X print "15-" + repr(self.packObject(self.searchid)+self.packObject(self.searchterm))
+		#X print "15+" + repr(self.packObject(NetworkIntType(self.searchid))+self.packObject(self.searchterm))
+		return self.packObject(NetworkIntType(self.searchid))+self.packObject(self.searchterm)
 	
 	def parseNetworkMessage(self, message):
 		pos, self.user = self.getObject(message, types.StringType)
@@ -951,7 +974,9 @@ class SendSpeed(ServerMessage):
 		self.speed = speed
 	
 	def makeNetworkMessage(self):
-		return self.packObject(self.user)+self.packObject(self.speed)
+		print "14-" + repr(self.packObject(self.user)+self.packObject(self.speed))
+		print "14+" + repr(self.packObject(self.user)+self.packObject(NetworkIntType(self.speed)))
+		return self.packObject(self.user)+self.packObject(NetworkIntType(self.speed))
 
 class SendUploadSpeed(ServerMessage):
 	""" We now send this after a finished upload to let the server update
@@ -960,7 +985,9 @@ class SendUploadSpeed(ServerMessage):
 		self.speed = speed
 	
 	def makeNetworkMessage(self):
-		return self.packObject(self.speed)
+		#X print "13-" + repr(self.packObject(self.speed))
+		#X print "13+" + repr(self.packObject(NetworkIntType(self.speed)))
+		return self.packObject(NetworkIntType(self.speed))
     
 class SharedFoldersFiles(ServerMessage):
 	""" We send this to server to indicate the number of folder and files
@@ -970,7 +997,9 @@ class SharedFoldersFiles(ServerMessage):
 		self.files = files
 	
 	def makeNetworkMessage(self):
-		return self.packObject(self.folders)+self.packObject(self.files)
+		#print "12-" + repr(self.packObject(self.folders)+self.packObject(self.files))
+		#print "12+" + repr(self.packObject(NetworkIntType(self.folders))+self.packObject(NetworkIntType(self.files)))
+		return self.packObject(NetworkIntType(self.folders))+self.packObject(NetworkIntType(self.files))
 
 class GetUserStats(ServerMessage):
 	""" Server sends this to indicate change in user's statistics"""
@@ -1004,7 +1033,9 @@ class PlaceInLineResponse(ServerMessage):
 		self.place = place
 	
 	def makeNetworkMessage(self):
-		return self.packObject(self.user)+self.packObject(self.req)+self.packObject(self.place)
+		print "11-" + repr(self.packObject(self.user)+self.packObject(self.req)+self.packObject(self.place))
+		print "11+" + repr(self.packObject(self.user)+self.packObject(NetworkIntType(self.req))+self.packObject(NetworkIntType(self.place)))
+		return self.packObject(self.user)+self.packObject(NetworkIntType(self.req))+self.packObject(NetworkIntType(self.place))
 	
 	def parseNetworkMessage(self, message):
 		pos, self.user = self.getObject(message, types.StringType)
@@ -1094,7 +1125,12 @@ class TunneledMessage(ServerMessage):
 		self.msg = msg
 	
 	def makeNetworkMessage(self, message):
-		return self.packObject(self.user)+self.packObject(self.req)+self.packObject(self.code)+self.packObject(self.msg)
+		print "10-" + repr(self.packObject(self.req)+self.packObject(self.code))
+		print "10+" + repr(self.packObject(NetworkInttype(self.req))+self.packObject(NetworkIntType(self.code)))
+		return (self.packObject(self.user) +
+		        self.packObject(NetworkInttype(self.req)) +
+		        self.packObject(NetworkIntType(self.code)) +
+		        self.packObject(self.msg))
 
 	def parseNetworkMessage(self, message):
 		pos, self.user = self.getObject(message, types.StringType)
@@ -1248,7 +1284,10 @@ class CantConnectToPeer(ServerMessage):
 		self.user = user
 	
 	def makeNetworkMessage(self):
-		return self.packObject(self.token)+self.packObject(self.user)
+		#X print "9-" + repr(self.packObject(self.token))
+		#X print "9+" + repr(self.packObject(NetworkIntType(self.token)))
+		return (self.packObject(NetworkIntType(self.token)) + 
+		        self.packObject(self.user))
 	
 	def parseNetworkMessage(self, message):
 		pos, self.token = self.getObject(message, types.IntType)
@@ -1397,7 +1436,11 @@ class RoomSearch(ServerMessage):
 			self.searchterm = ' '.join([x for x in text.split() if x != '-'])
 	
 	def makeNetworkMessage(self):
-		return self.packObject(self.room)+self.packObject(self.searchid)+self.packObject(self.searchterm)
+		print "8-" + repr(self.packObject(self.searchid))
+		print "8+" + repr(self.packObject(NetworkIntType(self.searchid)))
+		return (self.packObject(self.room) + 
+		        self.packObject(NetworkIntType(self.searchid)) +
+		        self.packObject(self.searchterm))
 	
 	def parseNetworkMessage(self, message):
 		pos, self.room = self.getObject(message, types.StringType)
@@ -1411,7 +1454,11 @@ class UserSearch(ServerMessage):
 		self.searchterm = text
 	
 	def makeNetworkMessage(self):
-		return self.packObject(self.suser)+self.packObject(self.searchid)+self.packObject(self.searchterm)
+		print "7-" + repr(self.packObject(self.searchid))
+		print "7+" + repr(self.packObject(NetworkIntType(self.searchid)))
+		return (self.packObject(self.suser) +
+		        self.packObject(NetworkIntType(self.searchid)) +
+		        self.packObject(self.searchterm))
 	
 	def parseNetworkMessage(self, message):
 		pos, self.user = self.getObject(message, types.StringType)
@@ -1428,7 +1475,9 @@ class PierceFireWall(PeerMessage):
 		self.token = token
 	
 	def makeNetworkMessage(self):
-		return self.packObject(self.token)
+		#X print "6-" + repr(self.packObject(self.token))
+		#X print "6+" + repr(self.packObject(NetworkIntType(self.token)))
+		return self.packObject(NetworkIntType(self.token))
 		
 	def parseNetworkMessage(self, message):
 		pos, self.token = self.getObject(message, types.IntType)
@@ -1445,7 +1494,11 @@ class PeerInit(PeerMessage):
 		self.token = token
 	
 	def makeNetworkMessage(self):
-		return self.packObject(self.user)+self.packObject(self.type)+self.packObject(self.token)
+		#X print "5-" + repr(self.packObject(self.token))
+		#X print "5+" + repr(self.packObject(NetworkIntType(self.token)))
+		return (self.packObject(self.user) + 
+		        self.packObject(self.type) + 
+		        self.packObject(NetworkIntType(self.token)))
 	
 	def parseNetworkMessage(self, message):
 		pos, self.user = self.getObject(message, types.StringType)
@@ -1460,7 +1513,10 @@ class PMessageUser(PeerMessage):
 		self.msg = msg
 	
 	def makeNetworkMessage(self):
-		return self.packObject(0)+self.packObject(0)+self.packObject(self.user)+self.packObject(self.msg)
+		return (self.packObject(0) +
+		        self.packObject(0) +
+		        self.packObject(self.user) +
+		        self.packObject(self.msg))
 	
 	def parseNetworkMessage(self, message):
 		pos, self.msgid = self.getObject(message, types.IntType)
@@ -1509,7 +1565,15 @@ class UserInfoReply(PeerMessage):
 			pic = chr(1) + self.packObject(self.pic)
 		else:
 			pic = chr(0)
-		return self.packObject(self.descr)+pic+self.packObject(self.totalupl)+self.packObject(self.queuesize)+chr(self.slotsavail)+self.packObject(self.uploadallowed)
+		print "4-" + repr(self.packObject(self.descr) + pic + self.packObject(self.totalupl) + self.packObject(self.queuesize) + chr(self.slotsavail) + self.packObject(self.uploadallowed))
+		print "4+" + repr(self.packObject(self.descr) + pic + self.packObject(NetworkIntType(self.totalupl)) + self.packObject(NetworkIntType(self.queuesize)) + chr(self.slotsavail) + self.packObject(NetworkIntType(self.uploadallowed)))
+
+		return (self.packObject(self.descr) +
+		        pic +
+		        self.packObject(NetworkIntType(self.totalupl)) +
+		        self.packObject(NetworkIntType(self.queuesize)) +
+		        chr(self.slotsavail) +
+		        self.packObject(NetworkIntType(self.uploadallowed)))
 
 
 class SharedFileList(PeerMessage):
@@ -1567,6 +1631,8 @@ class SharedFileList(PeerMessage):
 		if not rebuild and self.built is not None:
 			return self.built
 		msg = ""
+		#X print "3-" + repr(self.packObject(len(self.list.keys())))
+		#X print "3+" + repr(self.packObject(NetworkIntType(len(self.list.keys()))))
 		msg = msg + self.packObject(len(self.list.keys()))
 		for i in self.list.keys():
 			msg = msg + self.packObject(i.replace(os.sep,"\\")) + self.list[i]
@@ -1598,7 +1664,9 @@ class FileSearchRequest(PeerMessage):
 		self.text = text
 	
 	def makeNetworkMessage(self):
-		return self.packObject(self.requestid)+self.packObject(self.text)
+		print "2-" + repr(self.packObject(self.requestid)+self.packObject(self.text))
+		print "2+" + repr(self.packObject(NetworkIntType(self.requestid))+self.packObject(self.text))
+		return self.packObject(NetworkIntType(self.requestid))+self.packObject(self.text)
 	
 	def parseNetworkMessage(self, message):
 		pos, self.searchid = self.getObject(message, types.IntType)
@@ -1773,7 +1841,10 @@ class TransferRequest(PeerMessage):
 		msg = self.packObject(self.direction)+self.packObject(self.req)+self.packObject(self.file)
 		if self.filesize is not None and self.direction == 1:
 			# BORKED Uploads to the official client: msg = msg+self.packObject(self.filesize)
-			msg = msg+self.packObject(self.filesize) + self.packObject(0)
+			#X print "b-" + repr(msg + self.packObject(self.filesize) + self.packObject(0))
+			#X print "b+" + repr(msg + self.packObject(NetworkLongLongType(self.filesize)))
+			#msg = msg+self.packObject(self.filesize) + self.packObject(0)
+			msg = msg + self.packObject(NetworkLongLongType(self.filesize))
 		return msg
 	
 	def parseNetworkMessage(self, message):
@@ -1795,12 +1866,17 @@ class TransferResponse(PeerMessage):
 		self.filesize = filesize
 	
 	def makeNetworkMessage(self):
-		msg = self.packObject(self.req) + chr(self.allowed)
+		print "1-" + repr(self.packObject(self.req) + chr(self.allowed))
+		print "1+" + repr(self.packObject(NetworkIntType(self.req)) + chr(self.allowed))
+		msg = self.packObject(NetworkIntType(self.req)) + chr(self.allowed)
 		if self.reason is not None:
 			msg = msg + self.packObject(self.reason)
 		if self.filesize is not None:
 			# BORKED Uploads to the official client: msg = msg + self.packObject(self.filesize)
-			msg = msg + self.packObject(self.filesize) + self.packObject(0)
+			print "a-" + repr(msg + self.packObject(self.filesize) + self.packObject(0))
+			print "a+" + repr(msg + self.packObject(NetworkLongLongType(self.filesize)))
+			#msg = msg + self.packObject(self.filesize) + self.packObject(0)
+			msg = msg + self.packObject(NetworkLongLongType(self.filesize))
 		return msg
 	
 	def parseNetworkMessage(self, message):
@@ -1837,7 +1913,9 @@ class PlaceInQueue(PeerMessage):
 		self.place = place
 	
 	def makeNetworkMessage(self):
-		return self.packObject(self.filename) + self.packObject(self.place)
+		print "0-" + repr(self.packObject(self.filename) + self.packObject(self.place))
+		print "0+" + repr(self.packObject(self.filename) + self.packObject(NetworkIntType(self.place)))
+		return self.packObject(self.filename) + self.packObject(NetworkIntType(self.place))
 	
 	def parseNetworkMessage(self, message):
 		pos, self.filename = self.getObject(message, types.StringType)
