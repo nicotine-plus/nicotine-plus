@@ -933,8 +933,8 @@ class MessageAcked(ServerMessage):
 		self.msgid = msgid
 	
 	def makeNetworkMessage(self):
-		print "16-" + repr(self.packObject(self.msgid))
-		print "16+" + repr(self.packObject(NetworkIntType(self.msgid)))
+		#X print "16-" + repr(self.packObject(self.msgid))
+		#X print "16+" + repr(self.packObject(NetworkIntType(self.msgid)))
 		return self.packObject(NetworkIntType(self.msgid))
 
 class FileSearch(ServerMessage):
