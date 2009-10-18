@@ -33,6 +33,15 @@ class UglyTreeModel(gtk.GenericTreeModel):
 	def MakeTree(self, list):
 		'''input:  [(full path, data), ...]
 		   output: ([(dir name, parent, data), ...], [(nchildren, firstchild), ...])'''
+		# Keep these local for improved speeds
+		def _insensitivesort(x):
+			if x[0][-1] != dirseparator:
+				return (x[0]+dirseparator).lower()
+			return x[0].lower()
+		def _sensitivesort(x):
+			if x[0][-1] != dirseparator:
+				return x[0]+dirseparator
+			return x[0]
 		dirseparator = '\\'
 		# I need this hack to sort items so 'dir1' will be after 'dir1 bis' and 
 		# right before 'dir1\\dir2', emulating proper depth-first tree traversal
@@ -42,12 +51,12 @@ class UglyTreeModel(gtk.GenericTreeModel):
 			top = list[0][0].split(dirseparator)[0]
 			if len(top) == 2 and top[1] == ':':
 				# for path in form x:\\... assume win32 platform and make case insensitive sort
-				list.sort(key=lambda x: (x[0]+dirseparator).lower() if x[0][-1] != dirseparator else x[0].lower())
+				list.sort(key=_insensitivesort)
 			else:
 				# case sensitive sort looks very unnatural for me, but it's important for proper tree traversal
 				# in case there are directories which names differ only in case.
 				# Maybe I can do additional sorting of formed tree later
-				list.sort(key=lambda x: x[0]+dirseparator if x[0][-1] != dirseparator else x[0])
+				list.sort(key=_sensitivesort)
 #		list.sort(key=lambda x: x[0].split(dirseparator))
 		empty = []
 		old_s = []
