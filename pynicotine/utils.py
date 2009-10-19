@@ -48,7 +48,7 @@ tr_cache = {}
 
 illegalpathchars = []
 if win32:
-	illegalpathchars += ["?", ":", ">", "<", "|", "*"]
+	illegalpathchars += ["?", ":", ">", "<", "|", "*", '"']
 illegafilechars = illegalpathchars + ["\\", "/"]
 replacementchar = '_'
 

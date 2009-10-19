@@ -24,7 +24,7 @@ import gobject
 from utils import IconNotebook, PopupMenu, EncodingsMenu, SaveEncoding,  Humanize, InitialiseColumns, AppendLine
 from pynicotine import slskmessages
 
-from pynicotine.utils import _
+from pynicotine.utils import _, CleanFile
 
 # User Info and User Browse Notebooks
 class UserTabs(IconNotebook):
@@ -420,20 +420,10 @@ class UserInfo:
 		if self.image is None or self.image_pixbuf is None:
 			return
 		#pixbuf = self.image.get_pixbuf()
-		name = os.path.join(self.frame.np.config.sections["transfers"]["downloaddir"], self.encode(self.user)) + ".jpg"
+		name = os.path.join(self.frame.np.config.sections["transfers"]["downloaddir"], CleanFile(self.user + ".jpg"))
 		self.image_pixbuf.save(name, "jpeg", {"quality": "100"})
 		self.frame.logMessage("Picture saved to " + name)
-		
-	def encode(self, path):
-		try:
-			if sys.platform == "win32":
-				chars = ["?", "\/", "\"", ":", ">", "<", "|", "*"]
-				for char in chars:
-					path = path.replace(char, "_")
-			return path
-		except:
-			return path
-			
+	
 	def OnEncodingChanged(self, widget):
 		try:
 			# PyGTK 2.6
