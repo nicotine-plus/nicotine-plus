@@ -245,7 +245,7 @@ class DebugMessage(InternalMessage):
 
 class SlskMessage:
 	""" This is a parent class for all protocol messages. """
-	def getObject(self, message, type, start=0, getintasshort=0, getsignedint=0):
+	def getObject(self, message, type, start=0, getintasshort=0, getsignedint=0, printerror=True):
 		""" Returns object of specified type, extracted from message (which is
 		a binary array). start is an offset."""
 		intsize = struct.calcsize("<I")
@@ -266,12 +266,18 @@ class SlskMessage:
 				length = struct.unpack("<I", message[start:start+intsize])[0]
 				string = message[start+intsize:start+length+intsize]
 				return length+intsize+start, string
+			elif type is NetworkIntType:
+				return intsize+start, struct.unpack("<I", message[start:start+intsize])[0]
+			elif type is NetworkSignedIntType:
+				return intsize+start, struct.unpack("<i", message[start:start+intsize])[0]
+			elif type is NetworkLongLongType:
+				return struct.calcsize("<Q")+start, struct.unpack("<Q", message[start:start+struct.calcsize("<Q")])[0]
 			else:
 				return start, None
 		except struct.error, error:
-			log.addwarning("%s %s trying to unpack %s at '%s' at %s/%s" % (self.__class__, error, type, message[start:].__repr__(), start, len(message)))
-			#displayTraceback(sys.exc_info()[2])
-			self.debug(message)
+			if printerror:
+				log.addwarning("%s %s trying to unpack %s at '%s' at %s/%s" % (self.__class__, error, type, message[start:].__repr__(), start, len(message)))
+				self.debug(message)
 			raise struct.error, error
 			#return start, None
 
@@ -285,7 +291,7 @@ class SlskMessage:
 		elif type(object) is types.StringType:
 			return struct.pack("<i", len(object))+object
 		elif type(object) is ToBeEncoded:
-			# The server seeems to cut off strings at \x00!
+			# The server seeems to cut off strings at \x00 regardless of the length
 			return struct.pack("<i", len(object.bytes))+object.bytes
 		elif type(object) is types.UnicodeType:
 			log.addwarning(_("Warning: networking thread has to convert unicode string %(object)s message %(type)s") % {'object':object, 'type':self.__class__})
@@ -1565,8 +1571,8 @@ class UserInfoReply(PeerMessage):
 			pic = chr(1) + self.packObject(self.pic)
 		else:
 			pic = chr(0)
-		print "4-" + repr(self.packObject(self.descr) + pic + self.packObject(self.totalupl) + self.packObject(self.queuesize) + chr(self.slotsavail) + self.packObject(self.uploadallowed))
-		print "4+" + repr(self.packObject(self.descr) + pic + self.packObject(NetworkIntType(self.totalupl)) + self.packObject(NetworkIntType(self.queuesize)) + chr(self.slotsavail) + self.packObject(NetworkIntType(self.uploadallowed)))
+		#X print "4-" + repr(self.packObject(self.descr) + pic + self.packObject(self.totalupl) + self.packObject(self.queuesize) + chr(self.slotsavail) + self.packObject(self.uploadallowed))
+		#X print "4+" + repr(self.packObject(self.descr) + pic + self.packObject(NetworkIntType(self.totalupl)) + self.packObject(NetworkIntType(self.queuesize)) + chr(self.slotsavail) + self.packObject(NetworkIntType(self.uploadallowed)))
 
 		return (self.packObject(self.descr) +
 		        pic +
@@ -1688,40 +1694,42 @@ class FileSearchResult(PeerMessage):
 		self.fifoqueue = fifoqueue
 		self.pos = 0
 	def parseNetworkMessage(self, message):
+		message = zlib.decompress(message)
 		try:
-			message = zlib.decompress(message)
-		
-
-			self.pos, self.user = self.getObject(message, types.StringType)
-			self.pos, self.token = self.getObject(message, types.IntType, self.pos)
-			self.pos, nfiles = self.getObject(message, types.IntType, self.pos)
-			shares = []
-			for i in range(nfiles):
-				self.pos, code = self.pos+1, ord(message[self.pos])
-				self.pos, name = self.getObject(message, types.StringType, self.pos)
-				#self.pos, size = self.getObject(message, types.LongType, self.pos, getsignedint=1)
-				self.pos, size2 = self.getObject(message, types.LongType, self.pos)
-				self.pos, size3 = self.getObject(message, types.LongType, self.pos)
-				size = long(size2 + size3)
-
-				self.pos, ext = self.getObject(message, types.StringType, self.pos)
-				self.pos, numattr = self.getObject(message, types.IntType, self.pos)
-				attrs = []
-				if numattr:
-					for j in range(numattr):
-						self.pos, attrnum = self.getObject(message, types.IntType, self.pos)
-						self.pos, attr = self.getObject(message, types.IntType, self.pos)
-						attrs.append(attr)
-				shares.append([code, name, size, ext, attrs])
-			self.list = shares
-			self.pos, self.freeulslots = self.pos+1, ord(message[self.pos])
-			self.pos, self.ulspeed = self.getObject(message, types.IntType, self.pos, getsignedint=1)
-			self.pos, self.inqueue = self.getObject(message, types.IntType, self.pos)
-		except Exception, error:
-			print error
-			log.addwarning(_("Exception during parsing %(area)s: %(exception)s") % {'area':'FileSearchResult', 'exception':error})
-			self.list = {}
-			return
+			self._parseNetworkMessage(message, NetworkLongLongType)
+		except struct.error, e:
+			try:
+				self._parseNetworkMessage(message, NetworkIntType)
+			except struct.error, f:
+				lines = []
+				lines.append(_("Exception during parsing %(area)s: %(exception)s") % {'area':'FileSearchResult1', 'exception':e})
+				lines.append(_("Exception during parsing %(area)s: %(exception)s") % {'area':'FileSearchResult2', 'exception':f})
+				lines.append(_("Offending package: %(bytes)s") % {'bytes':repr(message)})
+				log.addwarning("\n".join(lines))
+				self.list = {}
+	def _parseNetworkMessage(self, message, sizetype):
+		self.pos, self.user = self.getObject(message, types.StringType)
+		self.pos, self.token = self.getObject(message, types.IntType, self.pos)
+		self.pos, nfiles = self.getObject(message, types.IntType, self.pos)
+		shares = []
+		for i in range(nfiles):
+			self.pos, code = self.pos+1, ord(message[self.pos])
+			self.pos, name = self.getObject(message, types.StringType, self.pos)
+			# suppressing errors with unpacking, can be caused by incorrect sizetype
+			self.pos, size = self.getObject(message, sizetype, self.pos, printerror=False)
+			self.pos, ext = self.getObject(message, types.StringType, self.pos, printerror=False)
+			self.pos, numattr = self.getObject(message, types.IntType, self.pos, printerror=False)
+			attrs = []
+			if numattr:
+				for j in range(numattr):
+					self.pos, attrnum = self.getObject(message, types.IntType, self.pos, printerror=False)
+					self.pos, attr = self.getObject(message, types.IntType, self.pos, printerror=False)
+					attrs.append(attr)
+			shares.append([code, name, size, ext, attrs])
+		self.list = shares
+		self.pos, self.freeulslots = self.pos+1, ord(message[self.pos])
+		self.pos, self.ulspeed = self.getObject(message, types.IntType, self.pos, getsignedint=1)
+		self.pos, self.inqueue = self.getObject(message, types.IntType, self.pos)
 	def makeNetworkMessage(self):
 		filelist = []
 		for i in self.list:
@@ -1866,15 +1874,15 @@ class TransferResponse(PeerMessage):
 		self.filesize = filesize
 	
 	def makeNetworkMessage(self):
-		print "1-" + repr(self.packObject(self.req) + chr(self.allowed))
-		print "1+" + repr(self.packObject(NetworkIntType(self.req)) + chr(self.allowed))
+		#X print "1-" + repr(self.packObject(self.req) + chr(self.allowed))
+		#X print "1+" + repr(self.packObject(NetworkIntType(self.req)) + chr(self.allowed))
 		msg = self.packObject(NetworkIntType(self.req)) + chr(self.allowed)
 		if self.reason is not None:
 			msg = msg + self.packObject(self.reason)
 		if self.filesize is not None:
 			# BORKED Uploads to the official client: msg = msg + self.packObject(self.filesize)
-			print "a-" + repr(msg + self.packObject(self.filesize) + self.packObject(0))
-			print "a+" + repr(msg + self.packObject(NetworkLongLongType(self.filesize)))
+			#X print "a-" + repr(msg + self.packObject(self.filesize) + self.packObject(0))
+			#X print "a+" + repr(msg + self.packObject(NetworkLongLongType(self.filesize)))
 			#msg = msg + self.packObject(self.filesize) + self.packObject(0)
 			msg = msg + self.packObject(NetworkLongLongType(self.filesize))
 		return msg
@@ -1913,8 +1921,8 @@ class PlaceInQueue(PeerMessage):
 		self.place = place
 	
 	def makeNetworkMessage(self):
-		print "0-" + repr(self.packObject(self.filename) + self.packObject(self.place))
-		print "0+" + repr(self.packObject(self.filename) + self.packObject(NetworkIntType(self.place)))
+		#X print "0-" + repr(self.packObject(self.filename) + self.packObject(self.place))
+		#X print "0+" + repr(self.packObject(self.filename) + self.packObject(NetworkIntType(self.place)))
 		return self.packObject(self.filename) + self.packObject(NetworkIntType(self.place))
 	
 	def parseNetworkMessage(self, message):
