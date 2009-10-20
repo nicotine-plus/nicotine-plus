@@ -137,6 +137,22 @@
                       </widget>
                     </child>
                     <child>
+                      <widget class="GtkImageMenuItem" id="fastconfigure">
+                        <property name="label" translatable="yes">_Fast Configure</property>
+                        <property name="visible">True</property>
+                        <property name="use_underline">True</property>
+                        <property name="use_stock">False</property>
+                        <signal name="activate" handler="OnFastConfigure"/>
+                        <accelerator key="s" signal="activate" modifiers="GDK_MOD1_MASK"/>
+                        <child internal-child="image">
+                          <widget class="GtkImage" id="image63">
+                            <property name="visible">True</property>
+                            <property name="stock">gtk-page-setup</property>
+                          </widget>
+                        </child>
+                      </widget>
+                    </child>
+                    <child>
                       <widget class="GtkImageMenuItem" id="now_playing1">
                         <property name="label" translatable="yes">Configure _Now Playing</property>
                         <property name="visible">True</property>
@@ -144,7 +160,7 @@
                         <property name="use_stock">False</property>
                         <signal name="activate" handler="OnNowPlayingConfigure"/>
                         <child internal-child="image">
-                          <widget class="GtkImage" id="image27">
+                          <widget class="GtkImage" id="image28">
                             <property name="visible">True</property>
                             <property name="stock">gtk-preferences</property>
                           </widget>

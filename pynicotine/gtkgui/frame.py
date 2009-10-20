@@ -49,6 +49,7 @@ from uploads import Uploads
 from userlist import UserList
 from userbrowse import UserBrowse
 from settingswindow import SettingsWindow
+from fastconfigure import FastConfigureAssistant
 from about import *
 from checklatest import checklatest
 from pynicotine.config import *
@@ -531,6 +532,8 @@ class NicotineFrame:
 		
 		self.settingswindow = SettingsWindow(self)
 		self.settingswindow.SettingsWindow.connect("settings-closed", self.OnSettingsClosed)
+		self.fastconfigure = FastConfigureAssistant(self)
+
 		self.chatrooms = self.ChatNotebook
 		self.chatrooms.show()
 		self.Searches = self.SearchNotebook
@@ -2117,12 +2120,12 @@ class NicotineFrame:
 		self.settingswindow.SetSettings(self.np.config.sections)
 		self.settingswindow.SwitchToPage("Ban List")
 		
+	def OnFastConfigure(self, widget):
+		self.fastconfigure.FastConfigureWindow.show()
 	def OnSettings(self, widget):
 		self.settingswindow.SetSettings(self.np.config.sections)
 		self.settingswindow.SettingsWindow.show()
 		self.settingswindow.SettingsWindow.deiconify()
-
-	
 	def OnSettingsClosed(self, widget, msg):
 		if msg == "cancel":
 			self.settingswindow.SettingsWindow.hide()
