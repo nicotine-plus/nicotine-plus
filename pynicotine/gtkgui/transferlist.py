@@ -40,6 +40,7 @@ class TransferList:
 		self.selected_users = []
 		self.users = {}
 		self.lastupdate = 0
+		self.finalupdatetimerid = None
 		widget.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
 
 		columntypes = [gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_INT , gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING,  gobject.TYPE_INT, gobject.TYPE_INT, gobject.TYPE_INT, gobject.TYPE_BOOLEAN]
@@ -267,6 +268,16 @@ class TransferList:
 			newstatus = status
 		return newstatus
 		
+	def finalupdate(self):
+		now = time()
+		if now - self.lastupdate < 2:
+			# The list has been updated recently,
+			# trying again later.
+			return True 
+		#print "final update!"
+		self.update()
+		self.finalupdatetimerid = None
+		return False # Stopping timeout
 	def update(self, transfer = None):
 		now = time()
 		if transfer is not None:
@@ -284,9 +295,16 @@ class TransferList:
 					self.transfers.remove(i)
 			for i in self.list:
 				self.update_specific(i)
-		# Remove empty parent rows
+		# The rest is just summarizing so it's not too important.
+		# It's fairly CPU intensive though, so we only do it if we haven't updated it recently
 		if now - self.lastupdate < 0.5:
+			#print "recently updated, not doing it again"
+			if not self.finalupdatetimerid:
+				#print "there's no timeout active, adding one"
+				self.finalupdatetimerid = True # I'm not sure if gobject returns fast enough
+				self.finalupdatetimerid = gobject.timeout_add(1000, self.finalupdate)
 			return
+		# Remove empty parent rows
 		self.lastupdate = now
 		for user in self.users.keys()[:]:
 			if not self.transfersmodel.iter_has_child(self.users[user]):
