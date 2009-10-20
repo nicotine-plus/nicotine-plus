@@ -39,6 +39,7 @@ class TransferList:
 		self.selected_transfers = []
 		self.selected_users = []
 		self.users = {}
+		self.lastupdate = 0
 		widget.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
 
 		columntypes = [gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_INT , gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING,  gobject.TYPE_INT, gobject.TYPE_INT, gobject.TYPE_INT, gobject.TYPE_BOOLEAN]
@@ -267,6 +268,7 @@ class TransferList:
 		return newstatus
 		
 	def update(self, transfer = None):
+		now = time()
 		if transfer is not None:
 			self.update_specific(transfer)
 		elif self.list is not None:
@@ -283,6 +285,9 @@ class TransferList:
 			for i in self.list:
 				self.update_specific(i)
 		# Remove empty parent rows
+		if now - self.lastupdate < 0.5:
+			return
+		self.lastupdate = now
 		for user in self.users.keys()[:]:
 			if not self.transfersmodel.iter_has_child(self.users[user]):
 				self.transfersmodel.remove(self.users[user])
@@ -354,8 +359,6 @@ class TransferList:
 						8, left,
 						12, ispeed,
 						14, True)
-				
-				
 		self.frame.UpdateBandwidth()
 	def update_specific(self, transfer = None):
 		if not transfer in self.list:

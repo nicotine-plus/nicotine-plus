@@ -150,8 +150,7 @@ class Uploads(TransferList):
 		if self.frame.np.transfers is None:
 			return
 		self.Clear()
-		for transfer in self.frame.np.transfers.uploads:
-			self.update(transfer)
+		self.update()
 			
 	def select_transfers(self):
 		self.selected_transfers = []
