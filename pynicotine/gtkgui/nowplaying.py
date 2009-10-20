@@ -16,6 +16,9 @@
 import gtk, gobject
 #import os, commands, sys, re, thread, threading
 import os, sys, re, thread, threading
+import copy
+import sys
+
 from pynicotine.utils import _, executeCommand
 
 class NowPlaying:
@@ -102,6 +105,8 @@ class NowPlaying:
 			self.NP_infopipe.set_active(1)
 		elif player == "amarok":
 			self.NP_amarok.set_active(1)
+		elif player == "amarok2":
+			self.NP_amarok2.set_active(1)
 		elif player == "audacious":
 			self.NP_audacious.set_active(1)
 		elif player == "mpd":
@@ -166,6 +171,9 @@ class NowPlaying:
 			self.player_replacers = ["$n", "$t", "$a", "$b",  "$f", "$k"]
 			set = 1
 		elif self.NP_amarok.get_active():
+			self.player_replacers = ["$n", "$t", "$l", "$a", "$b", "$c", "$k", "$y", "$r", "$f", "$s"]
+			set = 1
+		elif self.NP_amarok2.get_active():
 			self.player_replacers = ["$n", "$t", "$l", "$a", "$b", "$c", "$k", "$y", "$r", "$f", "$s"]
 			set = 1
 		elif self.NP_audacious.get_active():
@@ -247,6 +255,8 @@ class NowPlaying:
 			result = self.xmms()
 		elif self.NP_amarok.get_active():
 			result = self.amarok()
+		elif self.NP_amarok2.get_active():
+			result = self.amarok2()
 		elif self.NP_audacious.get_active():
 			result = self.audacious()
 		elif self.NP_mpd.get_active():
@@ -265,7 +275,16 @@ class NowPlaying:
 			result = self.other()
 		if not result:
 			return None
-
+		# Since we need unicode instead of bytes we'll try to force such a
+		# conversion. Individual player commands should have done this already
+		# - this is a failsafe.
+		oldtitle = copy.copy(self.title)
+		self.title_clear()
+		for key, value in oldtitle.iteritems():
+			try:
+				self.title[key] = unicode(value, "UTF-8", "replace")
+			except TypeError:
+				self.title[key] = value # already unicode
 		title = self.NPFormat.child.get_text()
 		title = title.replace("%", "%%") # Escaping user supplied % symbols
 		#print "Title1: " + title
@@ -298,6 +317,8 @@ class NowPlaying:
 			player = "infopipe"
 		elif self.NP_amarok.get_active():
 			player = "amarok"
+		elif self.NP_amarok2.get_active():
+			player = "amarok2"
 		elif self.NP_audacious.get_active():
 			player = "audacious"
 		elif self.NP_mpd.get_active():
@@ -396,6 +417,17 @@ class NowPlaying:
 		self.title["length"] = output[3]
 		return True
 		
+	def amarok2(self):
+		if not self.bus:
+			log.addwarning("Failed to import DBus, cannot read out Amarok2")
+			return
+		bus = self.dbus.SessionBus()
+		player = dbus.Interface(bus.get_object('org.mpris.amarok', '/Player'), dbus_interface='org.freedesktop.MediaPlayer')
+		md = player.GetMetadata()
+		for key, value in md.iteritems():
+			self.title[key] = unicode(value, 'iso8859-15', 'replace')
+		return True
+	
 	def amarok(self):
 		slist = self.NPFormat.child.get_text()
 		
@@ -445,9 +477,7 @@ class NowPlaying:
 					self.title["status"] = "unknown"
 		return 1
 		
-				
 	def amarok_command(self, command):
-		#output = commands.getoutput("dcop amarok player %s" % command).split('\n')[0]
 		output = executeCommand("dcop amarok player $", command, returnoutput=True).split('\n')[0]
 		if output == 'call failed':
 			output = None
@@ -622,19 +652,14 @@ class NowPlaying:
 			self.title["artist"] = artist
 		if "$s" in slist:
 			self.title["status"] = (_("paused"), _("playing"))[status]
-		
 		return 1
 
 	def other(self):
-		try: 
+		try:
 			othercommand = self.NPCommand.get_text()
 			if othercommand == "":
 				return None
-			#output = commands.getoutput("%s" % othercommand)
 			output = executeCommand(othercommand, returnoutput=True)
-			#if output.startswith("sh: "):
-			#	raise Exception, output
-			#else:
 			self.title["nowplaying"] = output 
 			return True
 		except Exception, error:

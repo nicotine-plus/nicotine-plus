@@ -241,8 +241,13 @@ class PrivateChats(IconNotebook):
 			clist += self.frame.chatrooms.roomsctrl.rooms
 		
 		# no duplicates
+		def _combilower(x):
+			try:
+				return str.lower(x)
+			except:
+				return unicode.lower(x)
 		self.clist = list(set(clist))
-		self.clist.sort(key=str.lower)
+		self.clist.sort(key=_combilower)
 		
 		for user in self.users.values():
 			user.GetCompletionList(clist=self.clist)

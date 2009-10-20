@@ -1334,7 +1334,7 @@ class ChatRoom:
 			tuple = self.frame.pluginhandler.OutgoingPublicChatEvent(self.room, text)
 			if tuple != None:
 				(r, text) = tuple
-				self.Say(ToBeEncoded(self.frame.AutoReplace(text), self.encoding))
+				self.Say(self.frame.AutoReplace(text))
 				self.frame.pluginhandler.OutgoingPublicChatNotification(self.room, text)
 			#else:
 			#	self.frame.logMessage(_("Pluginsystem decided to shut me up"))
@@ -1344,8 +1344,9 @@ class ChatRoom:
 		self.frame.ChatNotebook.detach_tab(self.Main, _("Nicotine+ Chatroom: %s") % self.room)
 		gobject.idle_add(self.frame.ScrollBottom, self.ChatScroll.get_parent())
 		
-	def Say(self, tobeencoded):
-		tobeencoded.unicode = re.sub("\s\s+", "  ", tobeencoded.unicode)
+	def Say(self, text):
+		text = re.sub("\s\s+", "  ", text)
+		tobeencoded = ToBeEncoded(text, self.encoding)
 		self.frame.np.queue.put(slskmessages.SayChatroom(self.room, tobeencoded))
 		
 	def NowPlayingThread(self):
@@ -1723,8 +1724,13 @@ class ChatRoom:
 			clist += list(self.users.keys())
 
 		# no duplicates
+		def _combilower(x):
+			try:
+				return str.lower(x)
+			except:
+				return unicode.lower(x)
 		clist = list(set(clist))
-		clist.sort(key=str.lower)
+		clist.sort(key=_combilower)
 		completion.set_popup_completion(False)
 		if config["dropdown"]:
 			for word in clist:
