@@ -411,8 +411,8 @@ renamed, try looking in the download directory and match the original filename.
 
 		return True
 		
-	def update(self, transfer = None):
-		TransferList.update(self, transfer)
+	def update(self, transfer = None, forced = False):
+		TransferList.update(self, transfer, forced)
 		if transfer is None and self.frame.np.transfers is not None:
 			self.frame.np.transfers.SaveDownloads()
 

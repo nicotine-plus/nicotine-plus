@@ -24,6 +24,7 @@ import gobject
 from types import StringType
 import string
 from time import time
+from math import ceil
 
 from utils import InitialiseColumns, int_sort_func, float_sort_func
 
@@ -31,6 +32,8 @@ from pynicotine.utils import _
 from pynicotine.logfacility import log
 
 class TransferList:
+	MINIMUM_GUI_DELAY = 0.3 # in seconds
+	MINIMUM_GUI_DELAY_SLEEP = int(ceil(MINIMUM_GUI_DELAY * 2000)) # in ms
 	def __init__(self, frame, widget):
 		self.frame = frame
 		self.widget = widget
@@ -267,18 +270,22 @@ class TransferList:
 		else:
 			newstatus = status
 		return newstatus
-		
-	def finalupdate(self):
+	
+	
+	def finalupdate(self, func):
 		now = time()
-		if now - self.lastupdate < 2:
+		# I had a logical explanation about why it has to be 3*delay, but I
+		# forgot. Something to do with the timeout being 2*delay
+		if now - self.lastupdate < 3*self.MINIMUM_GUI_DELAY:
 			# The list has been updated recently,
 			# trying again later.
+			#print "sleeping..."
 			return True 
 		#print "final update!"
-		self.update()
+		self.update(forced=True) # delayed updates can never trigger a new timer
 		self.finalupdatetimerid = None
 		return False # Stopping timeout
-	def update(self, transfer = None):
+	def update(self, transfer = None, forced = False):
 		now = time()
 		if transfer is not None:
 			self.update_specific(transfer)
@@ -297,12 +304,12 @@ class TransferList:
 				self.update_specific(i)
 		# The rest is just summarizing so it's not too important.
 		# It's fairly CPU intensive though, so we only do it if we haven't updated it recently
-		if now - self.lastupdate < 0.5:
+		if not forced and now - self.lastupdate < self.MINIMUM_GUI_DELAY:
 			#print "recently updated, not doing it again"
 			if not self.finalupdatetimerid:
-				#print "there's no timeout active, adding one"
 				self.finalupdatetimerid = True # I'm not sure if gobject returns fast enough
-				self.finalupdatetimerid = gobject.timeout_add(1000, self.finalupdate)
+				#print "there's no timeout active, adding one"
+				self.finalupdatetimerid = gobject.timeout_add(self.MINIMUM_GUI_DELAY_SLEEP, self.finalupdate, self.update)
 			return
 		# Remove empty parent rows
 		self.lastupdate = now
