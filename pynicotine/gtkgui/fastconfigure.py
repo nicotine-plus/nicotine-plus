@@ -42,6 +42,12 @@ class FastConfigureAssistant:
 		name = widget.get_name()
 		print "Changed %s, %s" % (widget, name)
 		if name == "usernameentry":
-			pass
+			self.updatecompleteness(True)
 		if name == "passwordentry":
-			pass
+			self.updatecompleteness(True)
+	def updatecompleteness(self, bool):
+		# This is fucked up
+		pageid = self.FastConfigureWindow.get_current_page()
+		page = self.FastConfigureWindow.get_nth_page(pageid)
+		self.FastConfigureWindow.set_page_complete(page, bool)
+
