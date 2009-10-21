@@ -48,7 +48,11 @@ This should only take about 60 seconds.</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="invisible_char">&#x25CF;</property>
-                    <signal name="insert_at_cursor" handler="OnInsertAtCursor"/>
+                    <signal name="backspace" handler="OnEntryChanged"/>
+                    <signal name="cut_clipboard" handler="OnEntryChanged"/>
+                    <signal name="delete_from_cursor" handler="OnEntryChanged"/>
+                    <signal name="insert_at_cursor" handler="OnEntryChanged"/>
+                    <signal name="paste_clipboard" handler="OnEntryChanged"/>
                   </object>
                   <packing>
                     <property name="position">1</property>
@@ -78,7 +82,11 @@ This should only take about 60 seconds.</property>
                     <property name="can_focus">True</property>
                     <property name="visibility">False</property>
                     <property name="invisible_char">&#x25CF;</property>
-                    <signal name="insert_at_cursor" handler="OnInsertAtCursor"/>
+                    <signal name="backspace" handler="OnEntryChanged"/>
+                    <signal name="cut_clipboard" handler="OnEntryChanged"/>
+                    <signal name="delete_from_cursor" handler="OnEntryChanged"/>
+                    <signal name="insert_at_cursor" handler="OnEntryChanged"/>
+                    <signal name="paste_clipboard" handler="OnEntryChanged"/>
                   </object>
                   <packing>
                     <property name="position">1</property>

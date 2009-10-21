@@ -38,3 +38,10 @@ class FastConfigureAssistant:
 		self.FastConfigureWindow.set_page_complete(page, False)
 		if type(page) == gtk.Label:
 			self.FastConfigureWindow.set_page_complete(page, True)
+	def OnEntryChanged(self, widget, param1 = None, param2 = None, param3 = None):
+		name = widget.get_name()
+		print "Changed %s, %s" % (widget, name)
+		if name == "usernameentry":
+			pass
+		if name == "passwordentry":
+			pass
