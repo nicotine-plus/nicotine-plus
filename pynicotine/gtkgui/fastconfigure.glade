@@ -8,6 +8,7 @@
     <property name="title" translatable="yes">WindowTitleThingy</property>
     <property name="window_position">center</property>
     <signal name="apply" handler="OnFastConfigureApply"/>
+    <signal name="prepare" handler="OnFastConfigurePrepare"/>
     <signal name="cancel" handler="OnFastConfigureCancel"/>
     <signal name="close" handler="OnFastConfigureClose"/>
     <child>

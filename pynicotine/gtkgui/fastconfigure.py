@@ -34,4 +34,7 @@ class FastConfigureAssistant:
 		self.FastConfigureWindow.hide()
 	def OnFastConfigureCancel(self, widget):
 		self.FastConfigureWindow.hide()
-
+	def OnFastConfigurePrepare(self, widget, page):
+		self.FastConfigureWindow.set_page_complete(page, False)
+		if type(page) == gtk.Label:
+			self.FastConfigureWindow.set_page_complete(page, True)
