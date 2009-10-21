@@ -12,6 +12,9 @@
     <signal name="cancel" handler="OnFastConfigureCancel"/>
     <signal name="close" handler="OnFastConfigureClose"/>
     <child>
+      <placeholder/>
+    </child>
+    <child>
       <object class="GtkLabel" id="label1">
         <property name="visible">True</property>
         <property name="label" translatable="yes">Welcome to Nicotine+. In order to start you need to fill in a few details. Please press Forward to start configuring Nicotine+. 
@@ -48,6 +51,7 @@ This should only take about 60 seconds.</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="invisible_char">&#x25CF;</property>
+                    <signal name="insert_at_cursor" handler="OnInsertAtCursor" object="username"/>
                   </object>
                   <packing>
                     <property name="position">1</property>
@@ -75,7 +79,9 @@ This should only take about 60 seconds.</property>
                   <object class="GtkEntry" id="entry2">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
+                    <property name="visibility">False</property>
                     <property name="invisible_char">&#x25CF;</property>
+                    <signal name="insert_at_cursor" handler="OnInsertAtCursor" object="password"/>
                   </object>
                   <packing>
                     <property name="position">1</property>
