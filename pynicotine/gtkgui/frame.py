@@ -2121,11 +2121,13 @@ class NicotineFrame:
 		self.settingswindow.SwitchToPage("Ban List")
 		
 	def OnFastConfigure(self, widget):
-		self.fastconfigure.FastConfigureWindow.show()
+		if not self.settingswindow.SettingsWindow.get_property("visible"):
+			self.fastconfigure.FastConfigureWindow.show()
 	def OnSettings(self, widget):
-		self.settingswindow.SetSettings(self.np.config.sections)
-		self.settingswindow.SettingsWindow.show()
-		self.settingswindow.SettingsWindow.deiconify()
+		if not self.fastconfigure.FastConfigureWindow.get_property("visible"):
+			self.settingswindow.SetSettings(self.np.config.sections)
+			self.settingswindow.SettingsWindow.show()
+			self.settingswindow.SettingsWindow.deiconify()
 	def OnSettingsClosed(self, widget, msg):
 		if msg == "cancel":
 			self.settingswindow.SettingsWindow.hide()
