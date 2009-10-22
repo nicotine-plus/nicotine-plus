@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <interface>
-  <requires lib="gtk+" version="2.16"/>
+  <!-- interface-requires gtk+ 2.12 -->
   <!-- interface-naming-policy project-wide -->
   <object class="GtkAssistant" id="FastConfigureAssistant">
     <property name="border_width">12</property>

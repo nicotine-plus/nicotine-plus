@@ -22,7 +22,7 @@ import gtk
 import os, sys
 dir_location = os.path.dirname(os.path.realpath(__file__))
 
-class FastConfigureAssistant:
+class FastConfigureAssistant(object):
 	def __init__(self, frame):
 		builder = gtk.Builder()
 		builder.add_from_file(os.path.join(dir_location, "fastconfigure.glade"))
