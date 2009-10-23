@@ -51,6 +51,7 @@ This should only take about 60 seconds.</property>
                     <signal name="delete_from_cursor" handler="OnEntryChanged"/>
                     <signal name="insert_at_cursor" handler="OnEntryChanged"/>
                     <signal name="paste_clipboard" handler="OnEntryChanged"/>
+                    <signal name="key_press_event" handler="OnEntryChanged"/>
                   </object>
                   <packing>
                     <property name="position">1</property>
@@ -85,6 +86,7 @@ This should only take about 60 seconds.</property>
                     <signal name="delete_from_cursor" handler="OnEntryChanged"/>
                     <signal name="insert_at_cursor" handler="OnEntryChanged"/>
                     <signal name="paste_clipboard" handler="OnEntryChanged"/>
+                    <signal name="key_press_event" handler="OnEntryChanged"/>
                   </object>
                   <packing>
                     <property name="position">1</property>
