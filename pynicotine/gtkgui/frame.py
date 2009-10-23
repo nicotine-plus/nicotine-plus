@@ -799,6 +799,15 @@ class NicotineFrame:
 				data = getattr(imagedata, "%s_vector" % (name,))
 				loader.write(data, len(data))
 			except (gobject.GError, AttributeError):
+				try:
+					# If we reuse the loader for the PNG we get an GtkWarning about a failing assertion
+					# If we let the loader go out of scope we get a GtkWarning about not finalizing  the loader
+					# If we close the loader it throws an exception on invalid data... 
+					loader.close()
+				except gobject.GError, e:
+					# always happens -_-
+					pass
+				loader = gtk.gdk.PixbufLoader()
 				data = getattr(imagedata, "%s" % (name,))
 				loader.write(data, len(data))
 			loader.close()
