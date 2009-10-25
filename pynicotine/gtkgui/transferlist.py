@@ -27,6 +27,7 @@ from time import time
 from math import ceil
 
 from utils import InitialiseColumns, int_sort_func, float_sort_func
+from uglytree import UglyTree
 
 from pynicotine.utils import _
 from pynicotine.logfacility import log
@@ -49,6 +50,7 @@ class TransferList:
 		columntypes = [gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_INT , gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING,  gobject.TYPE_INT, gobject.TYPE_INT, gobject.TYPE_INT, gobject.TYPE_BOOLEAN]
 
 		self.transfersmodel = gtk.TreeStore(*columntypes)
+		#self.transfersmodel = UglyTree(columntypes)
 		self.cols = cols = InitialiseColumns(widget,
 			[_("User"), 100, "text", self.CellDataFunc],
 			[_("Filename"), 250, "text", self.CellDataFunc],

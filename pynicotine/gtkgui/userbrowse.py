@@ -31,7 +31,7 @@ from entrydialog import *
 from pynicotine import slskmessages
 from thread import start_new_thread
 from pynicotine.utils import _, displayTraceback, executeCommand, CleanFile
-import uglytree
+from uglytree import UglyTree
 
 class UserBrowse:
 	def __init__(self, userbrowses, user, conn):
@@ -82,8 +82,8 @@ class UserBrowse:
 			if self.encoding == item[1]:
 				self.Encoding.set_active_iter(self.Elist[self.encoding])
 		
-# Is there a need for this here?
-		self.DirStore = uglytree.UglyTreeModel( [] )
+		# Is there a need for this here?
+		self.DirStore = UglyTree([gobject.TYPE_STRING, gobject.TYPE_STRING])
 		self.FolderTreeView.set_model(self.DirStore)
 
 		self.FolderTreeView.set_headers_visible(True)
@@ -358,7 +358,7 @@ class UserBrowse:
 		self.DirStore=None
 		
 		self.FolderTreeView.set_model(None)
-		self.DirStore = uglytree.UglyTreeModel(list)
+		self.DirStore = UglyTree([gobject.TYPE_STRING, gobject.TYPE_STRING], list)
 
 		for dir, files in self.shares:
 			for filedata in files:
