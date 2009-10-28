@@ -39,8 +39,6 @@ class FastConfigureAssistant(object):
 	def store(self):
 		self.config.sections["server"]["login"] = self.kids['username'].get_text()
 		self.config.sections["server"]["passw"] = self.kids['password'].get_text()
-	def OnClose(self, widget):
-		self.window.destroy()
 	def OnApply(self, widget):
 		self.store()
 		self.window.hide()
