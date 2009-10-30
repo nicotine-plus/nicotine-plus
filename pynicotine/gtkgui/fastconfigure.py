@@ -19,6 +19,7 @@ import gtk
 import os, sys
 from time import time
 
+from pynicotine.utils import _
 from utils import OpenUri
 dir_location = os.path.dirname(os.path.realpath(__file__))
 
@@ -40,6 +41,9 @@ class FastConfigureAssistant(object):
 			page = self.window.get_nth_page(n)
 			template = self.window.get_page_title(page)
 			self.window.set_page_title(page, template % {'page':(n+1), 'pages':numpages})
+		self.templates = {
+				'listenport': self.kids['listenport'].get_text(),
+			}
 		self.initphase = False
 	def show(self):
 		self.initphase = True
@@ -47,8 +51,10 @@ class FastConfigureAssistant(object):
 		self.initphase = False
 		self.window.show()
 	def _populate(self):
+		# userpasspage
 		self.kids['username'].set_text(self.config.sections["server"]["login"])
 		self.kids['password'].set_text(self.config.sections["server"]["passw"])
+		# portpage
 		if (time() - self.config.sections["server"]["lastportstatuscheck"]) > (60 * 60 * 24 * 31):
 			# More than a month ago since our last port status check
 			self.kids['hiddenport'].set_active(True)
@@ -57,6 +63,7 @@ class FastConfigureAssistant(object):
 				self.kids['portclosed'].set_active(True)
 			else:
 				self.kids['portopen'].set_active(True)
+		self.kids['listenport'].set_markup(_(self.templates['listenport']) % {'listenport':'<b>'+str(self.frame.np.waitport)+'</b>'})
 	def store(self):
 		# userpasspage
 		self.config.sections["server"]["login"] = self.kids['username'].get_text()
