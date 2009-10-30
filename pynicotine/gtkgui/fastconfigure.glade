@@ -19,6 +19,7 @@ This should only take about 60 seconds.</property>
       </object>
       <packing>
         <property name="page_type">intro</property>
+        <property name="title">Introduction (%(page)s of %(pages)s)</property>
       </packing>
     </child>
     <child>
@@ -115,6 +116,9 @@ If you already have an account at the server fill in those details.</property>
           </packing>
         </child>
       </object>
+      <packing>
+        <property name="title">Username (%(page)s of %(pages)s)</property>
+      </packing>
     </child>
     <child>
       <object class="GtkVBox" id="portpage">
@@ -133,12 +137,12 @@ To test your port please press the following button. It will open a page in your
           </packing>
         </child>
         <child>
-          <object class="GtkButton" id="button1">
-            <property name="label" translatable="yes">Check my port</property>
+          <object class="GtkButton" id="checkmyport">
+            <property name="label" translatable="yes">Check my port (opens in your webbrowser)</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
-            <signal name="activate" handler="OnButtonPressed"/>
+            <signal name="clicked" handler="OnButtonPressed"/>
           </object>
           <packing>
             <property name="position">1</property>
@@ -148,41 +152,43 @@ To test your port please press the following button. It will open a page in your
           <object class="GtkHBox" id="portselection">
             <property name="visible">True</property>
             <child>
-              <object class="GtkRadioButton" id="radiobutton1">
+              <object class="GtkRadioButton" id="portopen">
                 <property name="label" translatable="yes">The page says my port is open</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
                 <property name="active">True</property>
                 <property name="draw_indicator">True</property>
+                <signal name="toggled" handler="OnButtonPressed"/>
               </object>
               <packing>
                 <property name="position">0</property>
               </packing>
             </child>
             <child>
-              <object class="GtkRadioButton" id="radiobutton2">
+              <object class="GtkRadioButton" id="portclosed">
                 <property name="label" translatable="yes">The page says my port is closed</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
                 <property name="active">True</property>
                 <property name="draw_indicator">True</property>
-                <property name="group">radiobutton1</property>
+                <property name="group">portopen</property>
+                <signal name="toggled" handler="OnButtonPressed"/>
               </object>
               <packing>
                 <property name="position">1</property>
               </packing>
             </child>
             <child>
-              <object class="GtkRadioButton" id="radiobutton3">
+              <object class="GtkRadioButton" id="hiddenport">
                 <property name="label" translatable="yes">X</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
                 <property name="active">True</property>
                 <property name="draw_indicator">True</property>
-                <property name="group">radiobutton1</property>
+                <property name="group">portopen</property>
               </object>
               <packing>
                 <property name="position">2</property>
@@ -252,12 +258,18 @@ To test your port please press the following button. It will open a page in your
           </packing>
         </child>
       </object>
+      <packing>
+        <property name="title">Connection details (%(page)s of %(pages)s)</property>
+      </packing>
     </child>
     <child>
       <object class="GtkLabel" id="sharepage">
         <property name="visible">True</property>
         <property name="label" translatable="yes">shares and download dirs?</property>
       </object>
+      <packing>
+        <property name="title">Shares (%(page)s of %(pages)s)</property>
+      </packing>
     </child>
     <child>
       <object class="GtkLabel" id="summarypage">
@@ -267,6 +279,7 @@ To test your port please press the following button. It will open a page in your
       </object>
       <packing>
         <property name="page_type">confirm</property>
+        <property name="title">Overview (%(page)s of %(pages)s)</property>
       </packing>
     </child>
   </object>

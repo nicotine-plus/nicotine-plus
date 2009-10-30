@@ -87,6 +87,7 @@ class Config:
 	"autojoin": ["nicotine"], \
 	"autoaway":15, \
 	"private_chatrooms": 0, \
+	"lastportstatuscheck": 0,
 	}, \
 \
 "transfers":{ \

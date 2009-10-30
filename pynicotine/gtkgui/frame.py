@@ -2131,8 +2131,7 @@ class NicotineFrame:
 		
 	def OnFastConfigure(self, widget):
 		if not self.settingswindow.SettingsWindow.get_property("visible"):
-			self.fastconfigure.populate()
-			self.fastconfigure.window.show()
+			self.fastconfigure.show()
 	def OnSettings(self, widget):
 		if not self.fastconfigure.window.get_property("visible"):
 			self.settingswindow.SetSettings(self.np.config.sections)
