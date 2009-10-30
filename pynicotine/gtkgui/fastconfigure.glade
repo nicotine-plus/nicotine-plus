@@ -10,9 +10,6 @@
     <signal name="cancel" handler="OnCancel"/>
     <signal name="close" handler="OnClose"/>
     <child>
-      <placeholder/>
-    </child>
-    <child>
       <object class="GtkLabel" id="welcomepage">
         <property name="visible">True</property>
         <property name="label" translatable="yes">Welcome to Nicotine+. In order to start you need to fill in a few details. Please press Forward to start configuring Nicotine+. 
