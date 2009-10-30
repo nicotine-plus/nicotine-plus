@@ -49,9 +49,9 @@ This should only take about 60 seconds.</property>
                     <signal name="backspace" handler="OnEntryChanged"/>
                     <signal name="cut_clipboard" handler="OnEntryChanged"/>
                     <signal name="delete_from_cursor" handler="OnEntryChanged"/>
+                    <signal name="key_press_event" handler="OnEntryChanged"/>
                     <signal name="insert_at_cursor" handler="OnEntryChanged"/>
                     <signal name="paste_clipboard" handler="OnEntryChanged"/>
-                    <signal name="key_press_event" handler="OnEntryChanged"/>
                   </object>
                   <packing>
                     <property name="position">1</property>
@@ -84,9 +84,9 @@ This should only take about 60 seconds.</property>
                     <signal name="backspace" handler="OnEntryChanged"/>
                     <signal name="cut_clipboard" handler="OnEntryChanged"/>
                     <signal name="delete_from_cursor" handler="OnEntryChanged"/>
+                    <signal name="key_press_event" handler="OnEntryChanged"/>
                     <signal name="insert_at_cursor" handler="OnEntryChanged"/>
                     <signal name="paste_clipboard" handler="OnEntryChanged"/>
-                    <signal name="key_press_event" handler="OnEntryChanged"/>
                   </object>
                   <packing>
                     <property name="position">1</property>
@@ -117,9 +117,126 @@ If you already have an account at the server fill in those details.</property>
       </object>
     </child>
     <child>
-      <object class="GtkLabel" id="portpage">
+      <object class="GtkVBox" id="vbox1">
         <property name="visible">True</property>
-        <property name="label" translatable="yes">ports?</property>
+        <property name="orientation">vertical</property>
+        <child>
+          <object class="GtkLabel" id="label1">
+            <property name="visible">True</property>
+            <property name="label" translatable="yes">The Nicotine+ port is called open when other people can connect to your computer without being blocked by your firewall or router. An open port is crucial to prevent connection trouble.
+
+To test your port please press the following button. It will open a page in your webbrowser that will tell your port status. </property>
+            <property name="wrap">True</property>
+          </object>
+          <packing>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton" id="button1">
+            <property name="label" translatable="yes">Check my port</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">True</property>
+            <signal name="activate" handler="OnButtonPressed"/>
+          </object>
+          <packing>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkHBox" id="portselection">
+            <property name="visible">True</property>
+            <child>
+              <object class="GtkRadioButton" id="radiobutton1">
+                <property name="label" translatable="yes">The page says my port is open</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">False</property>
+                <property name="active">True</property>
+                <property name="draw_indicator">True</property>
+              </object>
+              <packing>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkRadioButton" id="radiobutton2">
+                <property name="label" translatable="yes">The page says my port is closed</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">False</property>
+                <property name="active">True</property>
+                <property name="draw_indicator">True</property>
+                <property name="group">radiobutton1</property>
+              </object>
+              <packing>
+                <property name="position">1</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="position">2</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkExpander" id="expander1">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <child>
+              <object class="GtkHBox" id="hbox2">
+                <property name="visible">True</property>
+                <child>
+                  <object class="GtkLabel" id="label6">
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">Use the first available port in the range from </property>
+                  </object>
+                  <packing>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkSpinButton" id="lowerportrange">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="invisible_char">&#x25CF;</property>
+                  </object>
+                  <packing>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="label7">
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">to</property>
+                  </object>
+                  <packing>
+                    <property name="position">2</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkSpinButton" id="upperportrange">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="invisible_char">&#x25CF;</property>
+                  </object>
+                  <packing>
+                    <property name="position">3</property>
+                  </packing>
+                </child>
+              </object>
+            </child>
+            <child type="label">
+              <object class="GtkLabel" id="label5">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">Change what port Nicotine+ uses.</property>
+              </object>
+            </child>
+          </object>
+          <packing>
+            <property name="position">3</property>
+          </packing>
+        </child>
       </object>
     </child>
     <child>
