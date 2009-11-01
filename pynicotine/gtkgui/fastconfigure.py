@@ -47,8 +47,8 @@ class FastConfigureAssistant(object):
 				'listenport': self.kids['listenport'].get_text(),
 			}
 		self.initphase = False
-		self.show() # DEBUG
-		self.window.set_current_page(2)
+		#self.show() # DEBUG
+		#self.window.set_current_page(2) # DEBUG
 	def show(self):
 		self.initphase = True
 		self._populate()
