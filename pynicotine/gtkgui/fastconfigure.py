@@ -34,8 +34,10 @@ class FastConfigureAssistant(object):
 		builder.connect_signals(self)
 		self.kids = {}
 		for i in builder.get_objects():
-			self.kids[i.get_name()] = i
-		self.kids['hiddenport'].hide()
+			try:
+				self.kids[i.get_name()] = i
+			except AttributeError:
+				pass
 		numpages = self.window.get_n_pages()
 		for n in xrange(numpages):
 			page = self.window.get_nth_page(n)
@@ -45,6 +47,8 @@ class FastConfigureAssistant(object):
 				'listenport': self.kids['listenport'].get_text(),
 			}
 		self.initphase = False
+		self.show() # DEBUG
+		self.window.set_current_page(2)
 	def show(self):
 		self.initphase = True
 		self._populate()
@@ -55,15 +59,20 @@ class FastConfigureAssistant(object):
 		self.kids['username'].set_text(self.config.sections["server"]["login"])
 		self.kids['password'].set_text(self.config.sections["server"]["passw"])
 		# portpage
-		if (time() - self.config.sections["server"]["lastportstatuscheck"]) > (60 * 60 * 24 * 31):
+		self.kids['advancedports'].set_expanded(self.config.sections["server"]["upnp"])
+		if (time() - self.config.sections["server"]["lastportstatuscheck"]) > (60 * 60 * 24 * 31) or self.config.sections["server"]["upnp"]:
 			# More than a month ago since our last port status check
-			self.kids['hiddenport'].set_active(True)
+			self.kids['portopen'].set_active(False)
+			self.kids['portclosed'].set_active(False)
 		else:
 			if self.config.sections["server"]["firewalled"]:
 				self.kids['portclosed'].set_active(True)
 			else:
 				self.kids['portopen'].set_active(True)
 		self.kids['listenport'].set_markup(_(self.templates['listenport']) % {'listenport':'<b>'+str(self.frame.np.waitport)+'</b>'})
+		self.kids['lowerport'].set_value(self.config.sections["server"]["portrange"][0])
+		self.kids['upperport'].set_value(self.config.sections["server"]["portrange"][1])
+		self.kids['useupnp'].set_active(self.config.sections["server"]["upnp"])
 	def store(self):
 		# userpasspage
 		self.config.sections["server"]["login"] = self.kids['username'].get_text()
@@ -78,27 +87,37 @@ class FastConfigureAssistant(object):
 		self.window.hide()
 	def OnCancel(self, widget):
 		self.window.hide()
-	def resetcompleteness(self, page):
+	def resetcompleteness(self, page = None):
 		"""Turns on the complete flag if everything required is filled in."""
+		complete = False
+		if not page:
+			pageid = self.window.get_current_page()
+			page = self.window.get_nth_page(pageid)
+			if not page:
+				return
 		name = page.get_name()
 		if name in ('welcomepage', 'summarypage'):
-			self.window.set_page_complete(page, True)
+			complete = True
 		elif name == 'userpasspage':
 			if (len(self.kids['username'].get_text()) > 0 and
 				len(self.kids['password'].get_text()) > 0):
-				self.window.set_page_complete(page, True)
+				complete = True
 		elif name == 'portpage':
-			if self.kids['portopen'].get_active() or self.kids['portclosed'].get_active():
-				self.window.set_page_complete(page, True)
+			if self.kids['useupnp']:
+				complete = True
+			else:
+				if self.kids['portopen'].get_active() or self.kids['portclosed'].get_active():
+					complete = True
 		elif name == 'sharepage':
-			self.window.set_page_complete(page, True)
+			complete = True
+		self.window.set_page_complete(page, complete)
 	def OnPrepare(self, widget, page):
 		self.window.set_page_complete(page, False)
 		self.resetcompleteness(page)
 	def OnEntryChanged(self, widget, param1 = None, param2 = None, param3 = None):
 		name = widget.get_name()
 		print "Changed %s, %s" % (widget, name)
-		self.updatecompleteness(True)
+		self.resetcompleteness()
 	def OnButtonPressed(self, widget):
 		if self.initphase:
 			return
@@ -106,10 +125,43 @@ class FastConfigureAssistant(object):
 		print "Pressed %s" % (name)
 		if name == "checkmyport":
 			OpenUri('='.join(['http://tools.slsknet.org/porttest.php?port', str(self.frame.np.waitport)]))
-		self.updatecompleteness(True)
-	def updatecompleteness(self, bool):
-		# very pretty -_-
-		pageid = self.window.get_current_page()
-		page = self.window.get_nth_page(pageid)
-		self.window.set_page_complete(page, bool)
-
+		self.resetcompleteness()
+	def OnToggled(self, widget):
+		name = widget.get_name()
+		if name == 'useupnp':
+			# Setting active state
+			if widget.get_active():
+				self.kids['portopen'].set_inconsistent(True)
+				self.kids['portclosed'].set_inconsistent(True)
+			else:
+				self.kids['portopen'].set_inconsistent(False)
+				self.kids['portclosed'].set_inconsistent(False)
+			# Setting sensitive state
+			inverse = not widget.get_active()
+			self.kids['portopen'].set_sensitive(inverse)
+			self.kids['portclosed'].set_sensitive(inverse)
+			self.kids['checkmyport'].set_sensitive(inverse)
+			self.resetcompleteness()
+		if self.initphase:
+			return
+		# Setting changing
+		print "toggled on " + name
+		self.resetcompleteness()
+	def OnSpinbuttonChangeValue(self, widget, scrolltype):
+		if self.initphase:
+			return
+		name = widget.get_name()
+		print "pre spinval on " + name
+		self.resetcompleteness()
+	def OnSpinbuttonValueChanged(self, widget):
+		if self.initphase:
+			return
+		name = widget.get_name()
+		print "post spinval on " + name
+		if name == "lowerport":
+			if widget.get_value() > self.kids['upperport'].get_value():
+				self.kids['upperport'].set_value(widget.get_value())
+		if name == "upperport":
+			if widget.get_value() < self.kids['lowerport'].get_value():
+				self.kids['lowerport'].set_value(widget.get_value())
+		self.resetcompleteness()
