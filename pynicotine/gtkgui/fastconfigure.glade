@@ -2,20 +2,6 @@
 <interface>
   <!-- interface-requires gtk+ 2.12 -->
   <!-- interface-naming-policy project-wide -->
-  <object class="GtkListStore" id="sharedirectoriesstore">
-    <columns>
-      <!-- column-name Path -->
-      <column type="GObject"/>
-      <!-- column-name Size -->
-      <column type="GObject"/>
-    </columns>
-    <data>
-      <row>
-        <col id="0"/>
-        <col id="1"/>
-      </row>
-    </data>
-  </object>
   <object class="GtkAssistant" id="FastConfigureAssistant">
     <property name="border_width">12</property>
     <property name="title" translatable="yes">Nicotine+ Fast Configure</property>
@@ -26,18 +12,13 @@
     <signal name="cancel" handler="OnCancel"/>
     <signal name="close" handler="OnClose"/>
     <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
       <object class="GtkLabel" id="welcomepage">
         <property name="visible">True</property>
         <property name="label" translatable="yes">Welcome to Nicotine+. In order to start you need to fill in a few details. Please press Forward to start configuring Nicotine+. 
 
 This should only take about 60 seconds.</property>
         <property name="wrap">True</property>
+        <property name="width_chars">60</property>
       </object>
       <packing>
         <property name="page_type">intro</property>
@@ -132,6 +113,7 @@ This should only take about 60 seconds.</property>
 
 If you already have an account at the server fill in those details.</property>
             <property name="wrap">True</property>
+            <property name="width_chars">60</property>
           </object>
           <packing>
             <property name="position">1</property>
@@ -153,6 +135,7 @@ If you already have an account at the server fill in those details.</property>
 
 To test your port please press the following button. It will open a page in your webbrowser that will tell your port status. </property>
             <property name="wrap">True</property>
+            <property name="width_chars">60</property>
           </object>
           <packing>
             <property name="position">0</property>
@@ -167,6 +150,8 @@ To test your port please press the following button. It will open a page in your
             <signal name="clicked" handler="OnButtonPressed"/>
           </object>
           <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
             <property name="position">1</property>
           </packing>
         </child>
@@ -319,13 +304,13 @@ To test your port please press the following button. It will open a page in your
       </packing>
     </child>
     <child>
-      <object class="GtkVBox" id="vbox4">
+      <object class="GtkVBox" id="sharepage">
         <property name="visible">True</property>
         <property name="orientation">vertical</property>
         <child>
           <object class="GtkLabel" id="label8">
             <property name="visible">True</property>
-            <property name="label" translatable="yes">Download to store downloads in:</property>
+            <property name="label" translatable="yes">Download to the following directory:</property>
           </object>
           <packing>
             <property name="position">0</property>
@@ -343,7 +328,7 @@ To test your port please press the following button. It will open a page in your
         <child>
           <object class="GtkLabel" id="label9">
             <property name="visible">True</property>
-            <property name="label" translatable="yes">Directories to share with other people:</property>
+            <property name="label" translatable="yes">Share the following directories:</property>
             <property name="width_chars">0</property>
           </object>
           <packing>
@@ -357,7 +342,6 @@ To test your port please press the following button. It will open a page in your
               <object class="GtkTreeView" id="shareddirectriestree">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="model">sharedirectoriesstore</property>
                 <property name="rubber_banding">True</property>
               </object>
               <packing>
@@ -370,23 +354,29 @@ To test your port please press the following button. It will open a page in your
                 <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkButton" id="button1">
-                    <property name="label" translatable="yes">Add directory...</property>
+                    <property name="label">gtk-add</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
+                    <property name="use_stock">True</property>
                   </object>
                   <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
                     <property name="position">0</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkButton" id="button2">
-                    <property name="label" translatable="yes">Remove selected</property>
+                    <property name="label">gtk-remove</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
+                    <property name="use_stock">True</property>
                   </object>
                   <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
                     <property name="position">1</property>
                   </packing>
                 </child>
@@ -399,6 +389,8 @@ To test your port please press the following button. It will open a page in your
                     <property name="draw_indicator">True</property>
                   </object>
                   <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
                     <property name="position">2</property>
                   </packing>
                 </child>
@@ -413,6 +405,9 @@ To test your port please press the following button. It will open a page in your
           </packing>
         </child>
       </object>
+      <packing>
+        <property name="title" translatable="yes">Directories (page %(page)s of %(pages)s)</property>
+      </packing>
     </child>
     <child>
       <object class="GtkLabel" id="summarypage">
