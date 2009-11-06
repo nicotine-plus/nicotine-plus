@@ -167,8 +167,8 @@ class Shares:
 		if not checkuser:
 			self.queue.put(slskmessages.MessageUser(username, "[Automatic Message] "+reason) )
 			return
-		else:
-			self.queue.put(slskmessages.MessageUser(username, "Please try browsing me if you get 'File not shared' errors. This is an automatic message, you don't have to reply to it." ) )
+		elif self.config.sections["transfers"]["pmqueueddir"]:
+			self.queue.put(slskmessages.MessageUser(username, "[Automatic Message] "+"Please try browsing me if you get 'File not shared' errors. You don't have to reply to this message." ) )
 			
 		if checkuser == 1:
 			shares = self.config.sections["transfers"]["sharedfiles"]
