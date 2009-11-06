@@ -19,6 +19,8 @@
   <object class="GtkAssistant" id="FastConfigureAssistant">
     <property name="border_width">12</property>
     <property name="title" translatable="yes">Nicotine+ Fast Configure</property>
+    <property name="modal">True</property>
+    <property name="window_position">center-always</property>
     <signal name="apply" handler="OnApply"/>
     <signal name="prepare" handler="OnPrepare"/>
     <signal name="cancel" handler="OnCancel"/>
@@ -233,6 +235,8 @@ To test your port please press the following button. It will open a page in your
                         <property name="label" translatable="yes">Use the first available port in the range from </property>
                       </object>
                       <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">False</property>
                         <property name="position">0</property>
                       </packing>
                     </child>
@@ -241,6 +245,7 @@ To test your port please press the following button. It will open a page in your
                         <property name="width_request">5</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
+                        <property name="max_length">5</property>
                         <property name="invisible_char">&#x25CF;</property>
                         <property name="adjustment">lowerportadjuster</property>
                         <property name="numeric">True</property>
@@ -257,6 +262,8 @@ To test your port please press the following button. It will open a page in your
                         <property name="label" translatable="yes">to</property>
                       </object>
                       <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">False</property>
                         <property name="position">2</property>
                       </packing>
                     </child>
@@ -423,12 +430,10 @@ To test your port please press the following button. It will open a page in your
     <property name="upper">65535</property>
     <property name="step_increment">1</property>
     <property name="page_increment">100</property>
-    <property name="page_size">0</property>
   </object>
   <object class="GtkAdjustment" id="upperportadjuster">
     <property name="upper">65535</property>
     <property name="step_increment">1</property>
     <property name="page_increment">100</property>
-    <property name="page_size">0</property>
   </object>
 </interface>

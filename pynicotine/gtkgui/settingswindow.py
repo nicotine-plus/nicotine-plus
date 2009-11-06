@@ -579,7 +579,7 @@ class TransfersFrame(buildFrame):
 "preferfriends": self.PreferFriends, "lock":self.LockIncoming,
 "reverseorder":self.DownloadReverseOrder, "prioritize":self.DownloadChecksumsFirst,
 "remotedownloads": self.RemoteDownloads, "uploadallowed": self.UploadsAllowed,
-"uploaddir": self.UploadDir,
+"uploaddir": self.UploadDir, "pmqueueddir": self.PMFolderContentsRequest,
 }
 			}
 		self.UploadsAllowed_List.clear()
@@ -630,6 +630,7 @@ class TransfersFrame(buildFrame):
 				"filelimit": self.MaxUserFiles.get_value_as_int(),
 				"friendsnolimits": self.FriendsNoLimits.get_active(),
 				"preferfriends": self.PreferFriends.get_active(),
+				"pmqueueddir": self.PMFolderContentsRequest.get_active(),
 				"lock": self.LockIncoming.get_active(),
 				"reverseorder":self.DownloadReverseOrder.get_active(),
 				"prioritize":self.DownloadChecksumsFirst.get_active(),

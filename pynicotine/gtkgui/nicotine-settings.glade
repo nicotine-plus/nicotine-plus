@@ -858,8 +858,8 @@
                   <widget class="GtkFileChooserButton" id="ChooseUploadDir">
                     <property name="visible">True</property>
                     <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                    <property name="show_hidden">True</property>
                     <property name="action">select-folder</property>
+                    <property name="show_hidden">True</property>
                     <property name="title" translatable="yes">Select A Directory</property>
                     <property name="width_chars">15</property>
                     <signal name="current_folder_changed" handler="OnChooseUploadDir"/>
@@ -1282,7 +1282,20 @@
                       </packing>
                     </child>
                     <child>
-                      <placeholder/>
+                      <widget class="GtkCheckButton" id="PMFolderContentsRequest">
+                        <property name="label" translatable="yes">Send a private message to users who queue a directory</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">False</property>
+                        <property name="tooltip" translatable="yes">[Automatic Message] Please try browsing me if you get 'File not shared' errors. You don't have to reply to this message</property>
+                        <property name="use_underline">True</property>
+                        <property name="draw_indicator">True</property>
+                      </widget>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">False</property>
+                        <property name="position">7</property>
+                      </packing>
                     </child>
                   </widget>
                 </child>
@@ -11929,8 +11942,8 @@ Right</property>
                           <widget class="GtkFileChooserButton" id="ChooseIncompleteDir">
                             <property name="visible">True</property>
                             <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                            <property name="show_hidden">True</property>
                             <property name="action">select-folder</property>
+                            <property name="show_hidden">True</property>
                             <property name="title" translatable="yes">Select A Directory</property>
                             <property name="width_chars">15</property>
                             <signal name="current_folder_changed" handler="OnChooseIncompleteDir"/>
@@ -11979,8 +11992,8 @@ Right</property>
                           <widget class="GtkFileChooserButton" id="ChooseDownloadDir">
                             <property name="visible">True</property>
                             <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                            <property name="show_hidden">True</property>
                             <property name="action">select-folder</property>
+                            <property name="show_hidden">True</property>
                             <property name="title" translatable="yes">Select A Directory</property>
                             <property name="width_chars">15</property>
                             <signal name="current_folder_changed" handler="OnChooseDownloadDir"/>
