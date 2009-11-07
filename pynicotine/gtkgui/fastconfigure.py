@@ -80,8 +80,8 @@ class FastConfigureAssistant(object):
 		self.kids['shareddirectoriestree'].set_model(self.sharelist)
 		self.kids['shareddirectoriestree'].get_selection().set_mode(gtk.SELECTION_MULTIPLE)
 		self.initphase = False
-		self.show() # DEBUG
-		self.window.set_current_page(3) # DEBUG
+		#self.show() # DEBUG
+		#self.window.set_current_page(3) # DEBUG
 	def show(self):
 		self.initphase = True
 		self._populate()
