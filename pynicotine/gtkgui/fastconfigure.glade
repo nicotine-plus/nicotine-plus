@@ -9,6 +9,7 @@
     <property name="window_position">center-always</property>
     <signal name="apply" handler="OnApply"/>
     <signal name="prepare" handler="OnPrepare"/>
+    <signal name="key_press_event" handler="OnKeyPress"/>
     <signal name="cancel" handler="OnCancel"/>
     <signal name="close" handler="OnClose"/>
     <child>
@@ -142,12 +143,38 @@ To test your port please press the following button. It will open a page in your
           </packing>
         </child>
         <child>
-          <object class="GtkButton" id="checkmyport">
-            <property name="label" translatable="yes">Check my port (opens in your webbrowser)</property>
+          <object class="GtkHBox" id="hbox4">
             <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">True</property>
-            <signal name="clicked" handler="OnButtonPressed"/>
+            <child>
+              <object class="GtkHSeparator" id="hseparator1">
+                <property name="visible">True</property>
+              </object>
+              <packing>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="checkmyport">
+                <property name="label" translatable="yes">Check my port (opens in your webbrowser)</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <signal name="clicked" handler="OnButtonPressed"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkHSeparator" id="hseparator2">
+                <property name="visible">True</property>
+              </object>
+              <packing>
+                <property name="position">2</property>
+              </packing>
+            </child>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -313,6 +340,7 @@ To test your port please press the following button. It will open a page in your
             <property name="label" translatable="yes">Download to the following directory:</property>
           </object>
           <packing>
+            <property name="fill">False</property>
             <property name="position">0</property>
           </packing>
         </child>
@@ -322,6 +350,8 @@ To test your port please press the following button. It will open a page in your
             <property name="action">select-folder</property>
           </object>
           <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
             <property name="position">1</property>
           </packing>
         </child>
@@ -332,6 +362,7 @@ To test your port please press the following button. It will open a page in your
             <property name="width_chars">0</property>
           </object>
           <packing>
+            <property name="fill">False</property>
             <property name="position">2</property>
           </packing>
         </child>
@@ -339,7 +370,7 @@ To test your port please press the following button. It will open a page in your
           <object class="GtkHBox" id="hbox3">
             <property name="visible">True</property>
             <child>
-              <object class="GtkTreeView" id="shareddirectriestree">
+              <object class="GtkTreeView" id="shareddirectoriestree">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="rubber_banding">True</property>
@@ -353,12 +384,13 @@ To test your port please press the following button. It will open a page in your
                 <property name="visible">True</property>
                 <property name="orientation">vertical</property>
                 <child>
-                  <object class="GtkButton" id="button1">
+                  <object class="GtkButton" id="addshare">
                     <property name="label">gtk-add</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
                     <property name="use_stock">True</property>
+                    <signal name="clicked" handler="OnButtonPressed"/>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -367,12 +399,13 @@ To test your port please press the following button. It will open a page in your
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkButton" id="button2">
+                  <object class="GtkButton" id="removeshares">
                     <property name="label">gtk-remove</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
                     <property name="use_stock">True</property>
+                    <signal name="clicked" handler="OnButtonPressed"/>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -381,7 +414,7 @@ To test your port please press the following button. It will open a page in your
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkCheckButton" id="checkbutton1">
+                  <object class="GtkCheckButton" id="onlysharewithfriends">
                     <property name="label" translatable="yes">Only share with friends</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
@@ -396,6 +429,8 @@ To test your port please press the following button. It will open a page in your
                 </child>
               </object>
               <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
                 <property name="position">1</property>
               </packing>
             </child>
@@ -414,6 +449,7 @@ To test your port please press the following button. It will open a page in your
         <property name="visible">True</property>
         <property name="label" translatable="yes">Summary of the settings, explanation about where to get help and the big setting window etc.</property>
         <property name="wrap">True</property>
+        <property name="width_chars">60</property>
       </object>
       <packing>
         <property name="page_type">confirm</property>

@@ -16,20 +16,41 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import gtk
+import gobject
 import os, sys
+from os.path import exists, join
 from time import time
 
 from pynicotine.utils import _
-from utils import OpenUri
+from dirchooser import ChooseDir
+from utils import OpenUri, InitialiseColumns, recode, HumanizeBytes
 dir_location = os.path.dirname(os.path.realpath(__file__))
 
+def dirstats(directory):
+	from os.path import join, getsize
+	totaldirs = 0
+	totalfiles = 0
+	totalsize = 0
+	extensions = {}
+	for root, dirs, files in os.walk(directory):
+		totaldirs += len(dirs)
+		totalfiles += len(files)
+		for f in files:
+			totalsize += getsize(join(root, f))
+			parts = f.rsplit('.', 1)
+			if len(parts) == 2 and len(parts[1]) < 5:
+				try:
+					extensions[parts[1]] += 1
+				except KeyError:
+					extensions[parts[1]] = 1
+	return totaldirs, totalfiles, totalsize, extensions
 class FastConfigureAssistant(object):
 	def __init__(self, frame):
 		self.frame = frame
 		self.initphase = True # don't respond to signals unless False
 		self.config = frame.np.config
 		builder = gtk.Builder()
-		builder.add_from_file(os.path.join(dir_location, "fastconfigure.glade"))
+		builder.add_from_file(join(dir_location, "fastconfigure.glade"))
 		self.window = builder.get_object("FastConfigureAssistant")
 		builder.connect_signals(self)
 		self.kids = {}
@@ -46,9 +67,21 @@ class FastConfigureAssistant(object):
 		self.templates = {
 				'listenport': self.kids['listenport'].get_text(),
 			}
+		# Page specific, sharepage
+		# column -1 is the raw byte/unicode object for the folder (not shown)
+		self.sharelist = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING)
+		columns = InitialiseColumns(self.kids['shareddirectoriestree'],
+			[_("Directory"), 0, "text"],
+			[_("Size"), 0, "text"],
+			[_("Files"), 0, "text"],
+			[_("Dirs"), 0, "text"],
+			[_("File types"), 0, "text"],
+		)
+		self.kids['shareddirectoriestree'].set_model(self.sharelist)
+		self.kids['shareddirectoriestree'].get_selection().set_mode(gtk.SELECTION_MULTIPLE)
 		self.initphase = False
-		#self.show() # DEBUG
-		#self.window.set_current_page(2) # DEBUG
+		self.show() # DEBUG
+		self.window.set_current_page(3) # DEBUG
 	def show(self):
 		self.initphase = True
 		self._populate()
@@ -73,6 +106,15 @@ class FastConfigureAssistant(object):
 		self.kids['lowerport'].set_value(self.config.sections["server"]["portrange"][0])
 		self.kids['upperport'].set_value(self.config.sections["server"]["portrange"][1])
 		self.kids['useupnp'].set_active(self.config.sections["server"]["upnp"])
+		# sharepage
+		self.sharelist.clear()
+		if self.config.sections["transfers"]["friendsonly"] and self.config.sections["transfers"]["enablebuddyshares"]:
+			for directory in self.config.sections["transfers"]["buddyshared"]:
+				self.addshareddir(directory)
+		else:
+			for directory in self.config.sections["transfers"]["shared"]:
+				self.addshareddir(directory)
+		self.kids['onlysharewithfriends'].set_active(self.config.sections["transfers"]["friendsonly"])
 	def store(self):
 		# userpasspage
 		self.config.sections["server"]["login"] = self.kids['username'].get_text()
@@ -80,6 +122,12 @@ class FastConfigureAssistant(object):
 		# portpage
 		self.config.sections['server']['firewalled'] = not self.kids['portopen'].get_active()
 		self.config.sections['server']['lastportstatuscheck'] = time()
+		# sharepage
+		self.config.sections["transfers"]["friendsonly"] = self.kids['onlysharewithfriends'].get_active()
+		if self.config.sections["transfers"]["friendsonly"] and self.config.sections["transfers"]["enablebuddyshares"]:
+			self.config.sections["transfers"]["buddyshared"] = self.getshareddirs()
+		else:
+			self.config.sections["transfers"]["shared"] = self.getshareddirs()
 	def OnClose(self, widget):
 		self.window.hide()
 	def OnApply(self, widget):
@@ -109,7 +157,8 @@ class FastConfigureAssistant(object):
 				if self.kids['portopen'].get_active() or self.kids['portclosed'].get_active():
 					complete = True
 		elif name == 'sharepage':
-			complete = True
+			if exists(self.kids['downloaddir'].get_filename()):
+				complete = True
 		self.window.set_page_complete(page, complete)
 	def OnPrepare(self, widget, page):
 		self.window.set_page_complete(page, False)
@@ -118,6 +167,28 @@ class FastConfigureAssistant(object):
 		name = widget.get_name()
 		print "Changed %s, %s" % (widget, name)
 		self.resetcompleteness()
+	def getshareddirs(self):
+		iter = self.sharelist.get_iter_root()
+		dirs = []
+		while iter is not None:
+			dirs.append(self.sharelist.get_value(iter, 5))
+			iter = self.sharelist.iter_next(iter)
+		return dirs
+	def addshareddir(self, directory):
+		iter = self.sharelist.get_iter_root()
+		while iter is not None:
+			if directory == self.sharelist.get_value(iter, 5):
+				return
+			iter = self.sharelist.iter_next(iter)
+		subdirs, files, size, extensions = dirstats(directory)
+		exts = []
+		for ext, count in extensions.iteritems():
+			exts.append((count, ext))
+		exts.sort(reverse=True)
+		extstring = ", ".join(["%s %s" % (count, ext) for count, ext in exts[:5]])
+		if len(exts) > 5:
+			extstring += ", ..."
+		self.sharelist.append([recode(directory), HumanizeBytes(size), files, subdirs, extstring, directory])
 	def OnButtonPressed(self, widget):
 		if self.initphase:
 			return
@@ -125,6 +196,16 @@ class FastConfigureAssistant(object):
 		print "Pressed %s" % (name)
 		if name == "checkmyport":
 			OpenUri('='.join(['http://tools.slsknet.org/porttest.php?port', str(self.frame.np.waitport)]))
+		if name == "addshare":
+			selected = ChooseDir(self.window.get_toplevel(), title=_("Nicotine+")+": "+_("Add a shared directory"))
+			if selected:
+				for directory in selected:
+					self.addshareddir(directory)
+		if name == "removeshares":
+			model, paths = self.kids['shareddirectoriestree'].get_selection().get_selected_rows()
+			refs = [gtk.TreeRowReference(model, x) for x in paths]
+			for i in refs:
+				self.sharelist.remove(self.sharelist.get_iter(i.get_path()))
 		self.resetcompleteness()
 	def OnToggled(self, widget):
 		name = widget.get_name()
@@ -165,3 +246,6 @@ class FastConfigureAssistant(object):
 			if widget.get_value() < self.kids['lowerport'].get_value():
 				self.kids['lowerport'].set_value(widget.get_value())
 		self.resetcompleteness()
+	def OnKeyPress(self, widget, event):
+		if event.keyval == gtk.gdk.keyval_from_name("Esc"):
+			self.OnCancel(None)
