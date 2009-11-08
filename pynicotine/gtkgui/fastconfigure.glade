@@ -496,7 +496,7 @@ To test your port please press the following button. It will open a page in your
           <object class="GtkLabel" id="labelnoshare">
             <property name="visible">True</property>
             <property name="xalign">0.10000000149011612</property>
-            <property name="label" translatable="yes">You do not share any files. In itself this is not a problem but many people will ban you if you're downloading from them for this reason.</property>
+            <property name="label" translatable="yes">You do not publicly share any files. In itself this is not a problem but many people will ban you if you're downloading from them for this reason.</property>
             <property name="use_markup">True</property>
             <property name="wrap">True</property>
             <property name="width_chars">60</property>
