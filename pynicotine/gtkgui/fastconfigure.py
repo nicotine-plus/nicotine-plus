@@ -108,13 +108,19 @@ class FastConfigureAssistant(object):
 		self.kids['useupnp'].set_active(self.config.sections["server"]["upnp"])
 		# sharepage
 		self.sharelist.clear()
-		if self.config.sections["transfers"]["friendsonly"] and self.config.sections["transfers"]["enablebuddyshares"]:
-			for directory in self.config.sections["transfers"]["buddyshared"]:
-				self.addshareddir(directory)
-		else:
-			for directory in self.config.sections["transfers"]["shared"]:
-				self.addshareddir(directory)
+		if self.config.sections["transfers"]["friendsonly"] and self.config.sections["transfers"]["enablebuddyshares"]: 
+			for directory in self.config.sections["transfers"]["buddyshared"]: 
+				self.addshareddir(directory) 
+		else: 
+			for directory in self.config.sections["transfers"]["shared"]: 
+				self.addshareddir(directory) 
 		self.kids['onlysharewithfriends'].set_active(self.config.sections["transfers"]["friendsonly"])
+		# If the user has a public share and a buddy share we cannot update this from FastConfigure (we only have 1 list of dirs)
+		self.caneditshare = (not self.config.sections["transfers"]["enablebuddyshares"] or self.config.sections["transfers"]["friendsonly"])
+		self.kids['onlysharewithfriends'].set_sensitive(self.caneditshare)
+		self.kids['addshare'].set_sensitive(self.caneditshare)
+		self.kids['removeshares'].set_sensitive(self.caneditshare)
+		self.kids['shareddirectoriestree'].set_sensitive(self.caneditshare)
 	def store(self):
 		# userpasspage
 		self.config.sections["server"]["login"] = self.kids['username'].get_text()
@@ -123,11 +129,12 @@ class FastConfigureAssistant(object):
 		self.config.sections['server']['firewalled'] = not self.kids['portopen'].get_active()
 		self.config.sections['server']['lastportstatuscheck'] = time()
 		# sharepage
-		self.config.sections["transfers"]["friendsonly"] = self.kids['onlysharewithfriends'].get_active()
-		if self.config.sections["transfers"]["friendsonly"] and self.config.sections["transfers"]["enablebuddyshares"]:
-			self.config.sections["transfers"]["buddyshared"] = self.getshareddirs()
-		else:
-			self.config.sections["transfers"]["shared"] = self.getshareddirs()
+		if self.caneditshare:
+			self.config.sections["transfers"]["friendsonly"] = self.kids['onlysharewithfriends'].get_active()
+			if self.config.sections["transfers"]["friendsonly"] and self.config.sections["transfers"]["enablebuddyshares"]:
+				self.config.sections["transfers"]["buddyshared"] = self.getshareddirs()
+			else:
+				self.config.sections["transfers"]["shared"] = self.getshareddirs()
 	def OnClose(self, widget):
 		self.window.hide()
 	def OnApply(self, widget):
