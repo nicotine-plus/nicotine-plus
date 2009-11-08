@@ -144,6 +144,7 @@ class FastConfigureAssistant(object):
 		self.window.hide()
 	def resetcompleteness(self, page = None):
 		"""Turns on the complete flag if everything required is filled in."""
+		# Never use self.config.sections here, only self.kids. 
 		complete = False
 		if not page:
 			pageid = self.window.get_current_page()
@@ -151,14 +152,14 @@ class FastConfigureAssistant(object):
 			if not page:
 				return
 		name = page.get_name()
-		if name in ('welcomepage', 'summarypage'):
+		if name == 'welcomepage':
 			complete = True
 		elif name == 'userpasspage':
 			if (len(self.kids['username'].get_text()) > 0 and
 				len(self.kids['password'].get_text()) > 0):
 				complete = True
 		elif name == 'portpage':
-			if self.kids['useupnp']:
+			if self.kids['useupnp'].get_active():
 				complete = True
 			else:
 				if self.kids['portopen'].get_active() or self.kids['portclosed'].get_active():
@@ -166,13 +167,31 @@ class FastConfigureAssistant(object):
 		elif name == 'sharepage':
 			if exists(self.kids['downloaddir'].get_filename()):
 				complete = True
+		elif name == 'summarypage':
+			complete = True
+			showcpwarning = (self.kids['portclosed'].get_active() and not self.kids['useupnp'].get_active())
+			if showcpwarning:
+				self.kids['labelclosedport'].show()
+				self.kids['warningclosedport'].show()
+			else:
+				self.kids['labelclosedport'].hide()
+				self.kids['warningclosedport'].hide()
+			shownfwarning = (self.kids['onlysharewithfriends'].get_active() or len(self.getshareddirs()) == 0)
+			if shownfwarning:
+				self.kids['labelnoshare'].show()
+				self.kids['warningnoshare'].show()
+			else:
+				self.kids['labelnoshare'].hide()
+				self.kids['warningnoshare'].hide()
+		#else:
+		#	print "Unknown page with name " + name
 		self.window.set_page_complete(page, complete)
 	def OnPrepare(self, widget, page):
 		self.window.set_page_complete(page, False)
 		self.resetcompleteness(page)
 	def OnEntryChanged(self, widget, param1 = None, param2 = None, param3 = None):
 		name = widget.get_name()
-		print "Changed %s, %s" % (widget, name)
+		#print "Changed %s, %s" % (widget, name)
 		self.resetcompleteness()
 	def getshareddirs(self):
 		iter = self.sharelist.get_iter_root()
@@ -200,7 +219,7 @@ class FastConfigureAssistant(object):
 		if self.initphase:
 			return
 		name = widget.get_name()
-		print "Pressed %s" % (name)
+		#print "Pressed %s" % (name)
 		if name == "checkmyport":
 			OpenUri('='.join(['http://tools.slsknet.org/porttest.php?port', str(self.frame.np.waitport)]))
 		if name == "addshare":
@@ -233,19 +252,19 @@ class FastConfigureAssistant(object):
 		if self.initphase:
 			return
 		# Setting changing
-		print "toggled on " + name
+		#print "toggled on " + name
 		self.resetcompleteness()
 	def OnSpinbuttonChangeValue(self, widget, scrolltype):
 		if self.initphase:
 			return
 		name = widget.get_name()
-		print "pre spinval on " + name
+		#print "pre spinval on " + name
 		self.resetcompleteness()
 	def OnSpinbuttonValueChanged(self, widget):
 		if self.initphase:
 			return
 		name = widget.get_name()
-		print "post spinval on " + name
+		#print "post spinval on " + name
 		if name == "lowerport":
 			if widget.get_value() > self.kids['upperport'].get_value():
 				self.kids['upperport'].set_value(widget.get_value())

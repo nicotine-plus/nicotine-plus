@@ -445,15 +445,138 @@ To test your port please press the following button. It will open a page in your
       </packing>
     </child>
     <child>
-      <object class="GtkLabel" id="summarypage">
+      <placeholder/>
+    </child>
+    <child>
+      <object class="GtkTable" id="summarypage">
         <property name="visible">True</property>
-        <property name="label" translatable="yes">Summary of the settings, explanation about where to get help and the big setting window etc.</property>
-        <property name="wrap">True</property>
-        <property name="width_chars">60</property>
+        <property name="n_rows">5</property>
+        <property name="n_columns">2</property>
+        <child>
+          <object class="GtkLabel" id="label10">
+            <property name="visible">True</property>
+            <property name="label" translatable="yes">*</property>
+          </object>
+          <packing>
+            <property name="top_attach">1</property>
+            <property name="bottom_attach">2</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLabel" id="label12">
+            <property name="visible">True</property>
+            <property name="xalign">0.10000000149011612</property>
+            <property name="label" translatable="yes">Transfer speeds depend on the users you are downloading from. Some users will be fast while others will be slow.</property>
+            <property name="wrap">True</property>
+            <property name="width_chars">60</property>
+          </object>
+          <packing>
+            <property name="left_attach">1</property>
+            <property name="right_attach">2</property>
+            <property name="top_attach">1</property>
+            <property name="bottom_attach">2</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLabel" id="labelclosedport">
+            <property name="visible">True</property>
+            <property name="xalign">0.10000000149011612</property>
+            <property name="label" translatable="yes">Since your port is closed you will be unable to connect to roughly 50% of the people. This is inherent to Peer-2-Peer and not specifically a problem of Nicotine+.</property>
+            <property name="wrap">True</property>
+            <property name="width_chars">60</property>
+          </object>
+          <packing>
+            <property name="left_attach">1</property>
+            <property name="right_attach">2</property>
+            <property name="top_attach">3</property>
+            <property name="bottom_attach">4</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLabel" id="labelnoshare">
+            <property name="visible">True</property>
+            <property name="xalign">0.10000000149011612</property>
+            <property name="label" translatable="yes">You do not share any files. In itself this is not a problem but many people will ban you if you're downloading from them for this reason.</property>
+            <property name="use_markup">True</property>
+            <property name="wrap">True</property>
+            <property name="width_chars">60</property>
+          </object>
+          <packing>
+            <property name="left_attach">1</property>
+            <property name="right_attach">2</property>
+            <property name="top_attach">4</property>
+            <property name="bottom_attach">5</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLabel" id="warningclosedport">
+            <property name="visible">True</property>
+            <property name="label" translatable="yes">&lt;b&gt;Warning&lt;/b&gt;</property>
+            <property name="use_markup">True</property>
+          </object>
+          <packing>
+            <property name="top_attach">3</property>
+            <property name="bottom_attach">4</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLabel" id="warningnoshare">
+            <property name="visible">True</property>
+            <property name="label" translatable="yes">&lt;b&gt;Warning&lt;/b&gt;</property>
+            <property name="use_markup">True</property>
+          </object>
+          <packing>
+            <property name="top_attach">4</property>
+            <property name="bottom_attach">5</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLabel" id="label16">
+            <property name="visible">True</property>
+            <property name="xalign">0.10000000149011612</property>
+            <property name="label" translatable="yes">&lt;b&gt;You are now ready to use Nicotine+!&lt;/b&gt;</property>
+            <property name="use_markup">True</property>
+          </object>
+          <packing>
+            <property name="left_attach">1</property>
+            <property name="right_attach">2</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLabel" id="label17">
+            <property name="visible">True</property>
+            <property name="label" translatable="yes">*</property>
+          </object>
+          <packing>
+            <property name="top_attach">2</property>
+            <property name="bottom_attach">3</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLabel" id="label18">
+            <property name="visible">True</property>
+            <property name="xalign">0.10000000149011612</property>
+            <property name="label" translatable="yes">If you find any bugs, especially if you run Windows or OSX, please let us know via Help -&gt; Report A Bug</property>
+            <property name="wrap">True</property>
+            <property name="width_chars">60</property>
+          </object>
+          <packing>
+            <property name="left_attach">1</property>
+            <property name="right_attach">2</property>
+            <property name="top_attach">2</property>
+            <property name="bottom_attach">3</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLabel" id="label19">
+            <property name="visible">True</property>
+            <property name="label" translatable="yes">	</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="page_type">confirm</property>
-        <property name="title">Overview (%(page)s of %(pages)s)</property>
+        <property name="title" translatable="yes">Summary (page %(page)s of %(pages)s)</property>
       </packing>
     </child>
   </object>
