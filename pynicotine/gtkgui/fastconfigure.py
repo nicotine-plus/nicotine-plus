@@ -23,7 +23,7 @@ from time import time
 
 from pynicotine.utils import _
 from dirchooser import ChooseDir
-from utils import OpenUri, InitialiseColumns, recode, HumanizeBytes
+from utils import OpenUri, InitialiseColumns, recode, HumanSize
 dir_location = os.path.dirname(os.path.realpath(__file__))
 
 def dirstats(directory):
@@ -214,7 +214,7 @@ class FastConfigureAssistant(object):
 		extstring = ", ".join(["%s %s" % (count, ext) for count, ext in exts[:5]])
 		if len(exts) > 5:
 			extstring += ", ..."
-		self.sharelist.append([recode(directory), HumanizeBytes(size), files, subdirs, extstring, directory])
+		self.sharelist.append([recode(directory), HumanSize(size), files, subdirs, extstring, directory])
 	def OnButtonPressed(self, widget):
 		if self.initphase:
 			return
