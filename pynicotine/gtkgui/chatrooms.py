@@ -1202,12 +1202,17 @@ class ChatRoom:
 			widget.set_text("")
 			return
 		
-		s = text.split(" ", 1)
+		s = text.split(" ", 1) # string
 		cmd = s[0]
 		if len(s) == 2:
 			args = s[1]
 		else:
 			args = ""
+		s = bytes.split(" ", 1) # bytes
+		if len(s) == 2:
+			byteargs = s[1]
+		else:
+			byteargs = ""
 
 		if cmd in ("/alias", "/al"):
 			AppendLine(self.ChatScroll, self.frame.np.config.AddAlias(args), self.tag_remote, "")
@@ -1220,31 +1225,31 @@ class ChatRoom:
 				self.frame.chatrooms.roomsctrl.UpdateCompletions()
 				self.frame.privatechats.UpdateCompletions()
 		elif cmd in ["/w", "/whois", "/info"]:
-			if args:
-				self.frame.LocalUserInfoRequest(args)
+			if byteargs:
+				self.frame.LocalUserInfoRequest(byteargs)
 				self.frame.OnUserInfo(None)
 		elif cmd in ["/b", "/browse"]:
-			if args:
-				self.frame.BrowseUser(args)
+			if byteargs:
+				self.frame.BrowseUser(byteargs)
 				self.frame.OnUserBrowse(None)
 		elif cmd == "/nsa":
-			if args:
-				self.frame.LocalUserInfoRequest(args)
-				self.frame.BrowseUser(args)
+			if byteargs:
+				self.frame.LocalUserInfoRequest(byteargs)
+				self.frame.BrowseUser(byteargs)
 				self.frame.OnUserInfo(None)
 		elif cmd == "/ip":
-			if args:
-				user = args
+			if byteargs:
+				user = byteargs
 				if user not in self.frame.np.ip_requested:
 					self.frame.np.ip_requested.append(user)
 				self.frame.np.queue.put(slskmessages.GetPeerAddress(user))
 		elif cmd == "/pm":
-			if args:
-				self.frame.privatechats.SendMessage(args, None, 1)
+			if byteargs:
+				self.frame.privatechats.SendMessage(byteargs, None, 1)
 				self.frame.OnPrivateChat(None)
 		elif cmd in ["/m", "/msg"]:
-			if args:
-				s = args.split(" ", 1)
+			if byteargs:
+				s = byteargs.split(" ", 1)
 				user = s[0]
 				if len(s) == 2:
 					msg = s[1]
@@ -1256,7 +1261,7 @@ class ChatRoom:
 				self.frame.Searches.DoSearch(args, 0)
 				self.frame.OnSearch(None)
 		elif cmd in ["/us", "/usearch"]:
-			s = args.split(" ", 1)
+			s = byteargs.split(" ", 1)
 			if len(s) == 2:
 				self.frame.Searches.DoSearch(s[1], 3, [s[0]])
 				self.frame.OnSearch(None)
@@ -1269,38 +1274,38 @@ class ChatRoom:
 				self.frame.Searches.DoSearch(args, 2)
 				self.frame.OnSearch(None)
 		elif cmd in ["/j", "/join"]:
-			if args:
-				self.frame.np.queue.put(slskmessages.JoinRoom(args))
+			if byteargs:
+				self.frame.np.queue.put(slskmessages.JoinRoom(byteargs))
 		elif cmd in ["/l", "/leave", "/p", "/part"]:
-			if args:
-				self.frame.np.queue.put(slskmessages.LeaveRoom(args))
+			if byteargs:
+				self.frame.np.queue.put(slskmessages.LeaveRoom(byteargs))
 			else:
 				self.frame.np.queue.put(slskmessages.LeaveRoom(self.room))
 		elif cmd in ["/ad", "/add", "/buddy"]:
-			if args:
-				self.frame.userlist.AddToList(args)
+			if byteargs:
+				self.frame.userlist.AddToList(byteargs)
 		elif cmd in ["/rem", "/unbuddy"]:
-			if args:
-				self.frame.userlist.RemoveFromList(args)
+			if byteargs:
+				self.frame.userlist.RemoveFromList(byteargs)
 		elif cmd == "/ban":
-			if args:
-				self.frame.BanUser(args)
+			if byteargs:
+				self.frame.BanUser(byteargs)
 		elif cmd == "/ignore":
-			if args:
-				self.frame.IgnoreUser(args)
+			if byteargs:
+				self.frame.IgnoreUser(byteargs)
 		elif cmd == "/ignoreip":
-			if args:
-				self.frame.IgnoreIP(args)
+			if byteargs:
+				self.frame.IgnoreIP(byteargs)
 		elif cmd == "/nuke":
-			if args:
-				self.frame.BanUser(args)
-				self.frame.IgnoreUser(args)
+			if byteargs:
+				self.frame.BanUser(byteargs)
+				self.frame.IgnoreUser(byteargs)
 		elif cmd == "/unban":
-			if args:
-				self.frame.UnbanUser(args)
+			if byteargs:
+				self.frame.UnbanUser(byteargs)
 		elif cmd == "/unignore":
-			if args:
-				self.frame.UnignoreUser(args)
+			if byteargs:
+				self.frame.UnignoreUser(byteargs)
 		elif cmd in ["/clear", "/cl"]:
 			self.ChatScroll.get_buffer().set_text("")
 			self.lines = []
