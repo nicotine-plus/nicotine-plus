@@ -1325,6 +1325,8 @@ class ChatRoom:
 			self.frame.BothRescan()
 		elif cmd in ["/tick", "/t"]:
 			self.frame.np.queue.put(slskmessages.RoomTickerSet(self.room, ToBeEncoded(args, self.encoding)))
+		elif cmd in ("/tickers",):
+			self.showTickers()
 		#elif cmd in ('/reload',):
 			#self.frame.pluginhandler.reread()
 			#self.frame.pluginhandler = pluginsystem.PluginHandler(self.frame)
@@ -1344,7 +1346,11 @@ class ChatRoom:
 			#else:
 			#	self.frame.logMessage(_("Pluginsystem decided to shut me up"))
 		self.ChatEntry.set_text("")
-		
+	
+	def showTickers(self):
+		tickers = self.Ticker.get_tickers()
+		header = _("All ticker messages for %(room)s:") % {'room':self.room}
+		self.frame.logMessage("%s\n%s" % (header, "\n".join(["%s: %s" % (user, msg) for (user, msg) in tickers])))
 	def Detach(self, widget = None):
 		self.frame.ChatNotebook.detach_tab(self.Main, _("Nicotine+ Chatroom: %s") % self.room)
 		gobject.idle_add(self.frame.ScrollBottom, self.ChatScroll.get_parent())

@@ -64,6 +64,8 @@ class Ticker(gtk.EventBox):
 		lst.sort(cmp=lambda x,y: len(x[1])-len(y[1]))
 		self.sortedmessages = lst
 
+	def get_tickers(self):
+		return [x for x in self.messages.iteritems()]
 	def set_ticker(self, msgs):
 		self.messages = msgs
 		self.ix = 0
