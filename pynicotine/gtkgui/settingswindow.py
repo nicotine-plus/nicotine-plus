@@ -876,8 +876,6 @@ class BanFrame(buildFrame):
 		self.Banned.set_model(self.banlist)
 		self.Banned.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
 
-	
-
 		self.blocked = {}
 		self.blockedlist = gtk.ListStore(str, str)
 		cols = InitialiseColumns(self.Blocked,
@@ -893,12 +891,12 @@ class BanFrame(buildFrame):
 		server = config["server"]
 		transfers = config["transfers"]
 		self.banlist.clear()
-	
 		self.blockedlist.clear()
+
+		self.banned = server["banlist"][:]
 		self.p.SetWidgetsData(config, self.options)
 		
 		if server["banlist"] is None:
-		
 			self.p.Hilight(self.Banned)
 	
 		if server["ipblocklist"] is not None:
