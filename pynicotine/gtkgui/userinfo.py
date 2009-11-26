@@ -395,6 +395,8 @@ class UserInfo:
 		self.frame.privatechats.SendMessage(self.user)
 	
 	def OnShowIPaddress(self, widget):
+		if self.user not in self.frame.np.ip_requested:
+			self.frame.np.ip_requested.append(self.user)
 		self.frame.np.queue.put(slskmessages.GetPeerAddress(self.user))
 	
 	def OnRefresh(self, widget):
