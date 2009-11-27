@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-06-19 10:52-0500\n"
+"POT-Creation-Date: 2009-11-27 23:30+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,163 +16,19 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-msgid "Nicotine"
+msgid "Buddies"
 msgstr ""
 
-msgid "_File"
+msgid "Add Buddy: "
 msgstr ""
 
-msgid "_Connect"
+msgid "window1"
 msgstr ""
 
-msgid "_Disconnect"
+msgid "Query"
 msgstr ""
 
-msgid "_Away/Return"
-msgstr ""
-
-msgid "Check _privileges"
-msgstr ""
-
-msgid "Quit"
-msgstr ""
-
-msgid "_Edit"
-msgstr ""
-
-msgid "_Settings"
-msgstr ""
-
-msgid "Configure _Now Playing"
-msgstr ""
-
-msgid "Backup Config"
-msgstr ""
-
-msgid "View"
-msgstr ""
-
-msgid "_Hide log window"
-msgstr ""
-
-msgid "Show _debug info"
-msgstr ""
-
-msgid "Hide room _list"
-msgstr ""
-
-msgid "Hide _tickers"
-msgstr ""
-
-msgid "Hide chat room log and list toggles"
-msgstr ""
-
-msgid "Hide flag columns in user lists"
-msgstr ""
-
-msgid "Buddylist in separate tab"
-msgstr ""
-
-msgid "Buddylist in Chatrooms"
-msgstr ""
-
-msgid "Buddylist always visible"
-msgstr ""
-
-msgid "Shares"
-msgstr ""
-
-msgid "Configure Shares"
-msgstr ""
-
-msgid "_Rescan shares"
-msgstr ""
-
-msgid "_Rescan Buddy shares"
-msgstr ""
-
-msgid "Rebuild shares"
-msgstr ""
-
-msgid "Rebuild Buddy shares"
-msgstr ""
-
-msgid "_Browse my shares"
-msgstr ""
-
-msgid "_Modes"
-msgstr ""
-
-msgid "_Chat Rooms"
-msgstr ""
-
-msgid "_Private Chat"
-msgstr ""
-
-msgid "_Downloads"
-msgstr ""
-
-msgid "_Uploads"
-msgstr ""
-
-msgid "_Search Files"
-msgstr ""
-
-msgid "User I_nfo"
-msgstr ""
-
-msgid "User _Browse"
-msgstr ""
-
-msgid "_Interests"
-msgstr ""
-
-msgid "Buddy _List"
-msgstr ""
-
-msgid "Hel_p"
-msgstr ""
-
-msgid "Offline Nicotine Plus Guide"
-msgstr ""
-
-msgid "Online Nicotine Plus Guide"
-msgstr ""
-
-msgid "Sourceforge Project Website"
-msgstr ""
-
-msgid "Nicotine-Plus Trac Website"
-msgstr ""
-
-msgid "About _chat room commands"
-msgstr ""
-
-msgid "About _private chat commands"
-msgstr ""
-
-msgid "About _optional dependencies"
-msgstr ""
-
-msgid "About _search filters"
-msgstr ""
-
-msgid "Check _latest"
-msgstr ""
-
-msgid "Report a _bug"
-msgstr ""
-
-msgid "About _Nicotine"
-msgstr ""
-
-msgid "Start Message"
-msgstr ""
-
-msgid "Users: 0"
-msgstr ""
-
-msgid "Files: 0"
+msgid "Results: 0/0"
 msgstr ""
 
 msgid "Expand / Collapse all"
@@ -181,97 +37,49 @@ msgstr ""
 msgid "Group by Users"
 msgstr ""
 
-msgid "Auto-retry failed"
+msgid "Enable filters"
 msgstr ""
 
-msgid "Every 3 minutes"
+msgid "Wish"
 msgstr ""
 
-msgid "Clear Finished / Aborted"
+msgid ""
+"This search will be opened the next time you start Nicotine+ and will send "
+"out new search requests after a server-set intervals (usually around one "
+"hour)"
 msgstr ""
 
-msgid "Clear Queued"
+msgid "Clear all results"
 msgstr ""
 
-msgid "Retry"
+msgid "Stop new search results from being displayed"
 msgstr ""
 
-msgid "Abort"
+msgid "Ignore"
 msgstr ""
 
-msgid "Abort & Delete"
+msgid "Close search tab; press ignore to prevent this tab from reopening"
 msgstr ""
 
-msgid "Ban User(s)"
+msgid "Close"
 msgstr ""
 
-msgid "Autoclear Finished"
+msgid "Filter in:"
 msgstr ""
 
-msgid "Abort User's Upload(s)"
+msgid "Filter out:"
 msgstr ""
 
-msgid "WishList"
+msgid "Size:"
 msgstr ""
 
-msgid "Search patterns: with a word = term, without a word = -term"
+msgid "Bitrate:"
 msgstr ""
 
-msgid "Clear all searches attempts"
+msgid "Country:"
 msgstr ""
 
-msgid "Search"
-msgstr ""
-
-msgid "Get Userinfo"
-msgstr ""
-
-msgid "Browse Shares"
-msgstr ""
-
-msgid "Load From Disk"
-msgstr ""
-
-msgid "Similar users"
-msgstr ""
-
-msgid "Global recommendations"
-msgstr ""
-
-msgid "Recommendations"
-msgstr ""
-
-msgid "Add"
-msgstr ""
-
-msgid "Unrecommendations"
-msgstr ""
-
-msgid "Debug output:"
-msgstr ""
-
-msgid "Warnings"
-msgstr ""
-
-msgid "Search results"
-msgstr ""
-
-msgid "Connections"
-msgstr ""
-
-msgid "Messages"
-msgstr ""
-
-msgid "Transfers"
-msgstr ""
-
-msgid "Statistics"
-msgstr ""
-
-msgid "Scanning Shares"
-msgstr ""
-
-msgid "Scanning Buddy Shares"
+msgid "Free slot"
 msgstr ""
 
 msgid "Server Settings"
@@ -284,9 +92,6 @@ msgid "Login:"
 msgstr ""
 
 msgid "Password:"
-msgstr ""
-
-msgid "gtk-apply"
 msgstr ""
 
 msgid "Change password"
@@ -312,19 +117,33 @@ msgstr ""
 msgid "Use the above ports to configure your router or firewall."
 msgstr ""
 
+msgid "Use UPnP to fix portmapping (required MiniUPnPc with python bindings)"
+msgstr ""
+
+msgid ""
+"If you wish to use UPnP to fix portmapping on your router please install "
+"MiniUPnP client binary or the MiniUPnP client module for Python."
+msgstr ""
+
 msgid "I can receive direct connections"
 msgstr ""
 
 msgid "(only use if the above ports are remotely accessible)"
 msgstr ""
 
-msgid "Network Character Encoding (utf-8 is a good choice)"
-msgstr ""
-
 msgid "Enable CTCP-like PM responses (Client Version)"
 msgstr ""
 
+msgid "Network Character Encoding (utf-8 is a good choice)"
+msgstr ""
+
 msgid "Server"
+msgstr ""
+
+msgid "Shares"
+msgstr ""
+
+msgid "<b>Public Shares</b>"
 msgstr ""
 
 msgid "Add..."
@@ -333,25 +152,24 @@ msgstr ""
 msgid "Remove"
 msgstr ""
 
-msgid "Enable Buddy-Only shares"
-msgstr ""
-
 msgid "Rescan shares on startup"
 msgstr ""
 
-msgid "Incomplete file directory:"
+msgid "Share only to buddies"
 msgstr ""
 
-msgid "Where incomplete downloads are stored temporarily"
+msgid ""
+"If buddy shares are enabled, they will be shared. Otherwise normal shares "
+"will be used."
 msgstr ""
 
-msgid "Select A Directory"
+msgid "Enable Buddy-Only shares"
 msgstr ""
 
-msgid "Download directory:"
+msgid "<b>Buddies-Only Shares</b>"
 msgstr ""
 
-msgid "Share download directory"
+msgid "Transfers"
 msgstr ""
 
 msgid "Upload directory:"
@@ -359,6 +177,9 @@ msgstr ""
 
 msgid ""
 "Where buddies' uploads will be stored (with a subdirectory for each buddy)"
+msgstr ""
+
+msgid "Select A Directory"
 msgstr ""
 
 msgid "Upload Queue type:"
@@ -422,15 +243,15 @@ msgid ""
 "into the Buddy Uploads subdirectory in your Download directory"
 msgstr ""
 
-msgid "<b>Upload Queue:</b>"
-msgstr ""
-
-msgid "Share to friends only"
+msgid "Send a private message to users who queue a directory"
 msgstr ""
 
 msgid ""
-"If buddy shares are enabled, they will be shared. Otherwise normal shares "
-"will be used."
+"[Automatic Message] Please try browsing me if you get 'File not shared' "
+"errors. You don't have to reply to this message"
+msgstr ""
+
+msgid "<b>Upload Queue:</b>"
 msgstr ""
 
 msgid "Privilege all my friends"
@@ -442,33 +263,6 @@ msgid ""
 msgstr ""
 
 msgid "<b>Privileges:</b>"
-msgstr ""
-
-msgid "<b>Do not download these file types:</b>"
-msgstr ""
-
-msgid "Enable Filters"
-msgstr ""
-
-msgid ""
-"<b>Syntax:</b> Letters are Case Insensitive, All Python Regular Expressions "
-"are supported if escaping is disabled. For simple filters, keep escaping "
-"enabled."
-msgstr ""
-
-msgid "Verify Filters"
-msgstr ""
-
-msgid "<b>Unverified</b>"
-msgstr ""
-
-msgid "Edit Filter"
-msgstr ""
-
-msgid "Load Defaults"
-msgstr ""
-
-msgid "<b>Download Filters:</b>"
 msgstr ""
 
 msgid "Lock incoming files (turn off for NFS)"
@@ -626,6 +420,9 @@ msgstr ""
 msgid "Banning"
 msgstr ""
 
+msgid "Search"
+msgstr ""
+
 msgid "Enable sending search results to other users"
 msgstr ""
 
@@ -651,24 +448,6 @@ msgid "Use regular expressions for filter in & out"
 msgstr ""
 
 msgid "Enable filters by default"
-msgstr ""
-
-msgid "Country:"
-msgstr ""
-
-msgid "Free slot"
-msgstr ""
-
-msgid "Bitrate:"
-msgstr ""
-
-msgid "Size:"
-msgstr ""
-
-msgid "Filter out:"
-msgstr ""
-
-msgid "Filter in:"
 msgstr ""
 
 msgid ""
@@ -800,13 +579,16 @@ msgid ""
 "Protocols handlers: "
 msgstr ""
 
+msgid "Add"
+msgstr ""
+
 msgid "Handler:"
 msgstr ""
 
 msgid "Protocol:"
 msgstr ""
 
-msgid "Enabled embedded Webrowser (unstable if misconfigured)"
+msgid "Enabled embedded Webbrowser (unstable if misconfigured)"
 msgstr ""
 
 msgid ""
@@ -815,7 +597,7 @@ msgid ""
 "Try setting them to: /usr/lib/xulrunner-x.x"
 msgstr ""
 
-msgid "Open URLs in embedded Webrowser"
+msgid "Open URLs in embedded Webbrowser"
 msgstr ""
 
 msgid "Overrides settings for HTTP urls"
@@ -825,9 +607,6 @@ msgid "URL Catching:"
 msgstr ""
 
 msgid "Misc"
-msgstr ""
-
-msgid "Choose Ban / ignore to manage your ban list and ignore list."
 msgstr ""
 
 msgid "Choose User info to add text and an image to your personal info."
@@ -851,8 +630,8 @@ msgid ""
 msgstr ""
 
 msgid ""
-"Select the directory that contains slsk.exe and the .cfg files: Ex: C:\\"
-"\\Program Files\\\\SoulSeek"
+"Select the directory that contains slsk.exe and the .cfg files: (Ex: C:\\"
+"\\Program Files\\\\SoulSeek)"
 msgstr ""
 
 msgid "Import Directory"
@@ -927,7 +706,7 @@ msgstr ""
 msgid "Show confirmation dialog when closing the main window"
 msgstr ""
 
-msgid "Always send Nicotine+ to tray, when main window is closed"
+msgid "Always send Nicotine+ to tray when main window is closed"
 msgstr ""
 
 msgid "Always quit when main window is closed"
@@ -979,8 +758,8 @@ msgid "Enable Censorship"
 msgstr ""
 
 msgid ""
-"Add spaces around words, if you don't wish to match strings inside words "
-"(may fail at beginning and end of lines)"
+"Add spaces around words if you don't wish to match strings inside words (may "
+"fail at beginning and end of lines)"
 msgstr ""
 
 msgid "Replace censored letters with:"
@@ -999,12 +778,12 @@ msgid ""
 "Choose <b>Logging</b> to configure what's logged and where to save the logs."
 msgstr ""
 
-msgid "You can censor words unwanted words in the <b>Censor List</b>."
+msgid "You can censor unwanted words in the <b>Censor List</b>."
 msgstr ""
 
 msgid ""
-"You can auto-replace words (such as for common typos) unwanted words in the "
-"<b>Auto-Replace</b> List."
+"You can auto-replace words (such as common typos) in the <b>Auto-Replace</b> "
+"List."
 msgstr ""
 
 msgid ""
@@ -1018,6 +797,9 @@ msgstr ""
 msgid ""
 "Enable automatic replacement of chat words you've\n"
 "typed incorrectly or as an acronym"
+msgstr ""
+
+msgid "Load Defaults"
 msgstr ""
 
 msgid "Auto-Replace List"
@@ -1270,6 +1052,51 @@ msgstr ""
 msgid "gtk-cancel"
 msgstr ""
 
+msgid "Incomplete file directory:"
+msgstr ""
+
+msgid "Where incomplete downloads are stored temporarily"
+msgstr ""
+
+msgid "Download directory:"
+msgstr ""
+
+msgid "Share download directory"
+msgstr ""
+
+msgid "Limit total download speeds to:"
+msgstr ""
+
+msgid "<b>Directories</b>"
+msgstr ""
+
+msgid "<b>Do not download these file types:</b>"
+msgstr ""
+
+msgid "Enable Filters"
+msgstr ""
+
+msgid ""
+"<b>Syntax:</b> Letters are Case Insensitive, All Python Regular Expressions "
+"are supported if escaping is disabled. For simple filters, keep escaping "
+"enabled."
+msgstr ""
+
+msgid "Verify Filters"
+msgstr ""
+
+msgid "<b>Unverified</b>"
+msgstr ""
+
+msgid "Edit Filter"
+msgstr ""
+
+msgid "<b>Download Filters:</b>"
+msgstr ""
+
+msgid "Downloads"
+msgstr ""
+
 msgid "PrivateChat"
 msgstr ""
 
@@ -1280,40 +1107,389 @@ msgid ""
 "Send the private message directly to the user (not supported on most clients)"
 msgstr ""
 
-msgid "Close"
+msgid "Create: "
 msgstr ""
 
-msgid "window1"
+msgid "Hide room list"
 msgstr ""
 
-msgid "Query"
+msgid "Search: "
 msgstr ""
 
-msgid "Results: 0/0"
+msgid "label"
 msgstr ""
 
-msgid "Enable filters"
+msgid "button"
 msgstr ""
 
-msgid "Wish"
+msgid "Nicotine+ Fast Configure"
 msgstr ""
 
 msgid ""
-"This search will be opened the next time you start Nicotine+ and will send "
-"out new search requests after a server-set intervals (usually around one "
-"hour)"
+"Welcome to Nicotine+. In order to start you need to fill in a few details. "
+"Please press Forward to start configuring Nicotine+. \n"
+"\n"
+"This should only take about 60 seconds."
 msgstr ""
 
-msgid "Clear all results"
+msgid "Username"
 msgstr ""
 
-msgid "Stop new search results from being displayed"
+msgid "Password"
 msgstr ""
 
-msgid "Ignore"
+msgid ""
+"To create a new user just fill in the username and password you want.\n"
+"\n"
+"If you already have an account at the server fill in those details."
 msgstr ""
 
-msgid "Close search tab; press ignore to prevent this tab from reopening"
+msgid ""
+"The Nicotine+ port is called open when other people can connect to your "
+"computer without being blocked by your firewall or router. An open port is "
+"crucial to prevent connection trouble.\n"
+"\n"
+"To test your port please press the following button. It will open a page in "
+"your webbrowser that will tell your port status. "
+msgstr ""
+
+msgid "Check my port (opens in your webbrowser)"
+msgstr ""
+
+msgid "The page says my port is open"
+msgstr ""
+
+msgid "The page says my port is closed"
+msgstr ""
+
+msgid "Nicotine+ is currently listening on port %(listenport)s."
+msgstr ""
+
+msgid "Use the first available port in the range from "
+msgstr ""
+
+msgid "Use UPnP to map the port on my router (requires MiniUPnPc)"
+msgstr ""
+
+msgid "Advanced port settings"
+msgstr ""
+
+msgid "Download to the following directory:"
+msgstr ""
+
+msgid "Share the following directories:"
+msgstr ""
+
+msgid "Only share with friends"
+msgstr ""
+
+msgid "Directories (page %(page)s of %(pages)s)"
+msgstr ""
+
+msgid "*"
+msgstr ""
+
+msgid ""
+"Transfer speeds depend on the users you are downloading from. Some users "
+"will be fast while others will be slow."
+msgstr ""
+
+msgid ""
+"Since your port is closed you will be unable to connect to roughly 50% of "
+"the people. This is inherent to Peer-2-Peer and not specifically a problem "
+"of Nicotine+."
+msgstr ""
+
+msgid ""
+"You do not publicly share any files. In itself this is not a problem but "
+"many people will ban you if you're downloading from them for this reason."
+msgstr ""
+
+msgid "<b>Warning</b>"
+msgstr ""
+
+msgid "<b>You are now ready to use Nicotine+!</b>"
+msgstr ""
+
+msgid ""
+"If you find any bugs, especially if you run Windows or OSX, please let us "
+"know via Help -> Report A Bug"
+msgstr ""
+
+msgid "\t"
+msgstr ""
+
+msgid "Summary (page %(page)s of %(pages)s)"
+msgstr ""
+
+msgid "UserBrowse"
+msgstr ""
+
+msgid "Search file and folder names (exact match):"
+msgstr ""
+
+msgid "Dirs: Unknown"
+msgstr ""
+
+msgid "Shared: Unknown"
+msgstr ""
+
+msgid "Save"
+msgstr ""
+
+msgid "Refresh"
+msgstr ""
+
+msgid "Content page"
+msgstr ""
+
+msgid "Confirmation page"
+msgstr ""
+
+msgid "Nicotine"
+msgstr ""
+
+msgid "_File"
+msgstr ""
+
+msgid "_Connect"
+msgstr ""
+
+msgid "_Disconnect"
+msgstr ""
+
+msgid "_Away/Return"
+msgstr ""
+
+msgid "Check _privileges"
+msgstr ""
+
+msgid "Quit"
+msgstr ""
+
+msgid "_Edit"
+msgstr ""
+
+msgid "_Settings"
+msgstr ""
+
+msgid "_Fast Configure"
+msgstr ""
+
+msgid "Configure _Now Playing"
+msgstr ""
+
+msgid "Backup Config"
+msgstr ""
+
+msgid "_View"
+msgstr ""
+
+msgid "_Show log window"
+msgstr ""
+
+msgid "Show _debug info"
+msgstr ""
+
+msgid "Show room _list"
+msgstr ""
+
+msgid "Show _tickers"
+msgstr ""
+
+msgid "Show chat room log and list toggles"
+msgstr ""
+
+msgid "Show flag columns in user lists"
+msgstr ""
+
+msgid "Buddylist in separate tab"
+msgstr ""
+
+msgid "Buddylist in Chatrooms"
+msgstr ""
+
+msgid "Buddylist always visible"
+msgstr ""
+
+msgid "Configure Shares"
+msgstr ""
+
+msgid "_Rescan shares"
+msgstr ""
+
+msgid "_Rescan Buddy shares"
+msgstr ""
+
+msgid "Rebuild shares"
+msgstr ""
+
+msgid "Rebuild Buddy shares"
+msgstr ""
+
+msgid "_Browse my shares"
+msgstr ""
+
+msgid "_Modes"
+msgstr ""
+
+msgid "_Chat Rooms"
+msgstr ""
+
+msgid "_Private Chat"
+msgstr ""
+
+msgid "_Downloads"
+msgstr ""
+
+msgid "_Uploads"
+msgstr ""
+
+msgid "_Search Files"
+msgstr ""
+
+msgid "User I_nfo"
+msgstr ""
+
+msgid "User _Browse"
+msgstr ""
+
+msgid "_Interests"
+msgstr ""
+
+msgid "Buddy _List"
+msgstr ""
+
+msgid "Hel_p"
+msgstr ""
+
+msgid "Offline Nicotine Plus Guide"
+msgstr ""
+
+msgid "Online Nicotine Plus Guide"
+msgstr ""
+
+msgid "Sourceforge Project Website"
+msgstr ""
+
+msgid "Nicotine-Plus Trac Website"
+msgstr ""
+
+msgid "About _chat room commands"
+msgstr ""
+
+msgid "About _private chat commands"
+msgstr ""
+
+msgid "About _optional dependencies"
+msgstr ""
+
+msgid "About _search filters"
+msgstr ""
+
+msgid "Check _latest"
+msgstr ""
+
+msgid "Report a _bug"
+msgstr ""
+
+msgid "About _Nicotine"
+msgstr ""
+
+msgid "Start Message"
+msgstr ""
+
+msgid "Users: 0"
+msgstr ""
+
+msgid "Files: 0"
+msgstr ""
+
+msgid "Auto-retry failed"
+msgstr ""
+
+msgid "Every 3 minutes"
+msgstr ""
+
+msgid "Clear Finished / Aborted"
+msgstr ""
+
+msgid "Clear Queued"
+msgstr ""
+
+msgid "Retry"
+msgstr ""
+
+msgid "Abort"
+msgstr ""
+
+msgid "Abort & Delete"
+msgstr ""
+
+msgid "Ban User(s)"
+msgstr ""
+
+msgid "Autoclear Finished"
+msgstr ""
+
+msgid "Clear Finished / Failed"
+msgstr ""
+
+msgid "Abort User's Upload(s)"
+msgstr ""
+
+msgid "WishList"
+msgstr ""
+
+msgid "Search patterns: with a word = term, without a word = -term"
+msgstr ""
+
+msgid "Clear all searches attempts"
+msgstr ""
+
+msgid "Get Userinfo"
+msgstr ""
+
+msgid "Browse Shares"
+msgstr ""
+
+msgid "Load From Disk"
+msgstr ""
+
+msgid "Similar users"
+msgstr ""
+
+msgid "Global recommendations"
+msgstr ""
+
+msgid "Recommendations"
+msgstr ""
+
+msgid "Unrecommendations"
+msgstr ""
+
+msgid "Debug output:"
+msgstr ""
+
+msgid "Warnings"
+msgstr ""
+
+msgid "Search results"
+msgstr ""
+
+msgid "Connections"
+msgstr ""
+
+msgid "Messages"
+msgstr ""
+
+msgid "Statistics"
+msgstr ""
+
+msgid "Scanning Shares"
+msgstr ""
+
+msgid "Scanning Buddy Shares"
 msgstr ""
 
 msgid "Total uploads allowed: unknown"
@@ -1361,24 +1537,6 @@ msgstr ""
 msgid "Save pic"
 msgstr ""
 
-msgid "Refresh"
-msgstr ""
-
-msgid "UserBrowse"
-msgstr ""
-
-msgid "Search file and folder names (exact match):"
-msgstr ""
-
-msgid "Dirs: Unknown"
-msgstr ""
-
-msgid "Shared: Unknown"
-msgstr ""
-
-msgid "Save"
-msgstr ""
-
 msgid "Toggle Text-To-Speech"
 msgstr ""
 
@@ -1400,13 +1558,61 @@ msgstr ""
 msgid "Leave"
 msgstr ""
 
-msgid "Create: "
+msgid "Nicotine+: Configure Now Playing"
 msgstr ""
 
-msgid "Hide room list"
+msgid "Display what your Media Player is playing in Chat with the /now command"
 msgstr ""
 
-msgid "Search: "
+msgid "XMMS / Infopipe"
+msgstr ""
+
+msgid "You must have the Infopipe plugin enabled for this to work"
+msgstr ""
+
+msgid "Amarok"
+msgstr ""
+
+msgid "Audacious"
+msgstr ""
+
+msgid "MPD via mpc"
+msgstr ""
+
+msgid "BMPx"
+msgstr ""
+
+msgid "Rhythmbox"
+msgstr ""
+
+msgid "Exaile"
+msgstr ""
+
+msgid "last.fm"
+msgstr ""
+
+msgid "Other"
+msgstr ""
+
+msgid "Amarok2"
+msgstr ""
+
+msgid "Player Command/Username"
+msgstr ""
+
+msgid "Legend:"
+msgstr ""
+
+msgid "Now playing format:"
+msgstr ""
+
+msgid "Example:"
+msgstr ""
+
+msgid "Test"
+msgstr ""
+
+msgid "gtk-save"
 msgstr ""
 
 msgid ""
@@ -1439,6 +1645,14 @@ msgstr ""
 msgid ""
 "Can not find required PyGTK. The current search path is \n"
 "%s"
+msgstr ""
+
+#, python-format
+msgid "Exception: %s"
+msgstr ""
+
+#, python-format
+msgid "Second exception: %s"
 msgstr ""
 
 msgid "Your PyGTK is too old, upgrade to at least PyGTK 1.99.16"
@@ -1486,25 +1700,822 @@ msgstr ""
 msgid "Starting using the profiler (saving log to %s)"
 msgstr ""
 
+msgid "Clear finished/erred"
+msgstr ""
+
+msgid "Clear finished/aborted"
+msgstr ""
+
+msgid "Clear finished"
+msgstr ""
+
+msgid "Clear aborted"
+msgstr ""
+
+msgid "Clear queued"
+msgstr ""
+
+msgid "Clear failed"
+msgstr ""
+
+msgid "Copy _URL"
+msgstr ""
+
+msgid "Copy folder URL"
+msgstr ""
+
+msgid "Send to _player"
+msgstr ""
+
+msgid "Open Directory"
+msgstr ""
+
+msgid "User(s)"
+msgstr ""
+
+msgid "Abor_t"
+msgstr ""
+
+msgid "_Clear"
+msgstr ""
+
+msgid "_Retry"
+msgstr ""
+
+msgid "Clear Groups"
+msgstr ""
+
+msgid "Clear All Queued Uploads?"
+msgstr ""
+
+msgid "Nicotine+"
+msgstr ""
+
+msgid "Clear Queued Transfers"
+msgstr ""
+
+msgid "Send _message"
+msgstr ""
+
+msgid "Show IP a_ddress"
+msgstr ""
+
+msgid "Get user i_nfo"
+msgstr ""
+
+msgid "Brow_se files"
+msgstr ""
+
+msgid "Gi_ve privileges"
+msgstr ""
+
+msgid "_Add user to list"
+msgstr ""
+
+msgid "_Ban this user"
+msgstr ""
+
+msgid "_Ignore this user"
+msgstr ""
+
+msgid "Select User's Transfers"
+msgstr ""
+
+#, python-format
+msgid ""
+"Could not retrieve version information!\n"
+"Error: %s"
+msgstr ""
+
+msgid "Check Latest Version"
+msgstr ""
+
+#, python-format
+msgid ""
+"A newer version ('%s') is available. Check\n"
+"the Nicotine+ homepage, ( http://nicotine-plus.sourceforge.net ) or the "
+"Wiki, Trac and Subversion repository at http://nicotine-plus.org for the "
+"latest version."
+msgstr ""
+
+msgid ""
+"You appear to be using a development version of Nicotine+.\n"
+"Check out the latest version from the Subversion repository at http://"
+"nicotine-plus.org"
+msgstr ""
+
+msgid "You are using the latest version of Nicotine+."
+msgstr ""
+
+msgid "Title"
+msgstr ""
+
+#, python-format
+msgid "Now Playing (typically \"%(artist)s - %(title)s\")"
+msgstr ""
+
+msgid "Artist"
+msgstr ""
+
+msgid "Length"
+msgstr ""
+
+msgid "Bitrate"
+msgstr ""
+
+msgid "Comment"
+msgstr ""
+
+msgid "Album"
+msgstr ""
+
+msgid "Track Number"
+msgstr ""
+
+msgid "Year"
+msgstr ""
+
+msgid "Filename (URI)"
+msgstr ""
+
+msgid "Status"
+msgstr ""
+
+#, python-format
+msgid "(custom widget: %s)"
+msgstr ""
+
+msgid "ERROR: DBus not available:"
+msgstr ""
+
+msgid "cannot be contacted"
+msgstr ""
+
+#, python-format
+msgid "ERROR while accessing the %(program)s DBus interface: %(error)s"
+msgstr ""
+
+#, python-format
+msgid "ERROR while reading data from the %(program)s DBus interface: %(error)s"
+msgstr ""
+
+msgid "ERROR: audtool didn't detect a running Audacious session."
+msgstr ""
+
+#, python-format
+msgid "ERROR while loading socket module: %(error)s"
+msgstr ""
+
+#, python-format
+msgid "ERROR: could not connect to audioscrobbler: %s"
+msgstr ""
+
+msgid "Last played"
+msgstr ""
+
+msgid "Now playing"
+msgstr ""
+
+msgid "paused"
+msgstr ""
+
+msgid "playing"
+msgstr ""
+
+#, python-format
+msgid "ERROR: Executing '%(command)s' failed: %(error)s"
+msgstr ""
+
+msgid ""
+"ERROR: /tmp/xmms-info does not exist. Is the Infopipe plugin installed and "
+"is XMMS running?"
+msgstr ""
+
+msgid ""
+"ERROR: /tmp/xmms-info is empty. Is the Infopipe plugin installed and is XMMS "
+"running?"
+msgstr ""
+
+msgid "<b>List Position:</b>"
+msgstr ""
+
+msgid "<b>File Name:</b>"
+msgstr ""
+
+msgid "<b>Directory:</b>"
+msgstr ""
+
+msgid "<b>File Size:</b>"
+msgstr ""
+
+msgid "<b>Length:</b>"
+msgstr ""
+
+msgid "<b>Bitrate:</b>"
+msgstr ""
+
+msgid "<b>Immediate Downloads:</b>"
+msgstr ""
+
+msgid "<b>Queue:</b>"
+msgstr ""
+
+msgid "<b>Last Speed:</b>"
+msgstr ""
+
+msgid "Download"
+msgstr ""
+
+msgid "Download All"
+msgstr ""
+
+#, python-format
+msgid "<b>%s</b> File(s) Selected"
+msgstr ""
+
+msgid "Previous"
+msgstr ""
+
+msgid "Next"
+msgstr ""
+
+msgid "<b>Country Code:</b> "
+msgstr ""
+
+msgid "OK"
+msgstr ""
+
+msgid "Cancel"
+msgstr ""
+
+msgid "Directories"
+msgstr ""
+
+msgid "_Download directory"
+msgstr ""
+
+msgid "Download directory _to..."
+msgstr ""
+
+msgid "Download _recursive"
+msgstr ""
+
+msgid "Download r_ecursive to..."
+msgstr ""
+
+msgid "_Download file(s)"
+msgstr ""
+
+msgid "Download _to..."
+msgstr ""
+
+msgid "Upload Directory to..."
+msgstr ""
+
+msgid "Upload Directory recursive to..."
+msgstr ""
+
+msgid "Up_load file(s)"
+msgstr ""
+
 msgid "User"
+msgstr ""
+
+msgid "Upload"
+msgstr ""
+
+msgid "Open in File Manager"
 msgstr ""
 
 msgid "Filename"
 msgstr ""
 
-msgid "Status"
+msgid "Size"
+msgstr ""
+
+#, python-format
+msgid "Nicotine+ User Browse: %s (%s)"
+msgstr ""
+
+#, python-format
+msgid "Shared: %s"
+msgstr ""
+
+#, python-format
+msgid "Dirs: %s"
+msgstr ""
+
+msgid " (vbr)"
+msgstr ""
+
+#, python-format
+msgid "Can't create directory '%(folder)s', reported error: %(error)s"
+msgstr ""
+
+#, python-format
+msgid "Can't save shares, '%(user)s', reported error: %(error)s"
+msgstr ""
+
+#, python-format
+msgid ""
+"Are you sure you wish to download %(num)i files from %(user)s's directory %"
+"(folder)s?"
+msgstr ""
+
+msgid "Nicotine: Upload Directory's Contents"
+msgstr ""
+
+msgid "Enter the User you wish to upload to:"
+msgstr ""
+
+msgid "Nicotine: Upload File(s)"
+msgstr ""
+
+msgid "Client Version"
+msgstr ""
+
+msgid "Add user to list"
+msgstr ""
+
+msgid "Ban this user"
+msgstr ""
+
+msgid "Ignore this user"
+msgstr ""
+
+msgid "B_lock this user's IP Address"
+msgstr ""
+
+msgid "Ignore this user's IP Address"
+msgstr ""
+
+msgid "Detach this tab"
+msgstr ""
+
+msgid "Close this tab"
+msgstr ""
+
+msgid "Find"
+msgstr ""
+
+msgid "Copy"
+msgstr ""
+
+msgid "Copy All"
+msgstr ""
+
+msgid "Clear log"
+msgstr ""
+
+msgid "--- reconnected ---"
+msgstr ""
+
+msgid "--- disconnected ---"
+msgstr ""
+
+msgid ""
+"* Message(s) sent while you were offline. Timestamps are reported by the "
+"server and can be off."
+msgstr ""
+
+#, python-format
+msgid "Command %s is not recognized"
+msgstr ""
+
+#, python-format
+msgid "Nicotine+ Private Chat: %s (%s)"
+msgstr ""
+
+#, python-format
+msgid "Nicotine+ Private Chat: %(user)s (%(status)s)"
+msgstr ""
+
+msgid "Directory"
+msgstr ""
+
+msgid "Dirs"
+msgstr ""
+
+msgid "File types"
+msgstr ""
+
+msgid "listenport"
+msgstr ""
+
+msgid "Add a shared directory"
+msgstr ""
+
+#, python-format
+msgid "%s GB"
+msgstr ""
+
+#, python-format
+msgid "%s MB"
+msgstr ""
+
+#, python-format
+msgid "%s KB"
+msgstr ""
+
+#, python-format
+msgid "%s  B"
+msgstr ""
+
+#, python-format
+msgid "Column #%i"
+msgstr ""
+
+msgid "Unknown"
+msgstr ""
+
+msgid "Give privileges"
+msgstr ""
+
+#, python-format
+msgid "to %(user)s"
+msgstr ""
+
+msgid "Give how many days of global privileges to this user?"
+msgstr ""
+
+#, python-format
+msgid "%(days)s days left"
+msgstr ""
+
+#, python-format
+msgid "Remove from private room %s"
+msgstr ""
+
+#, python-format
+msgid "Add to private room %s"
+msgstr ""
+
+#, python-format
+msgid "Remove as operator of %s"
+msgstr ""
+
+#, python-format
+msgid "Add as operator of %s"
+msgstr ""
+
+#, python-format
+msgid "%.2f GiB"
+msgstr ""
+
+#, python-format
+msgid "%.2f MiB"
+msgstr ""
+
+#, python-format
+msgid "%.2f KiB"
+msgstr ""
+
+#, python-format
+msgid "%d Bytes"
+msgstr ""
+
+#, python-format
+msgid "%.2f GiB/s"
+msgstr ""
+
+#, python-format
+msgid "%.2f MiB/s"
+msgstr ""
+
+#, python-format
+msgid "%.2f KiB/s"
+msgstr ""
+
+#, python-format
+msgid "%d B/s"
+msgstr ""
+
+msgid ""
+"Note: Python Bindings for libsexy were not found. To enable spell checking, "
+"get them from http://www.chipx86.com/wiki/Libsexy or your distribution's "
+"package manager. Look for sexy-python or python-sexy."
+msgstr ""
+
+msgid "Open Browser"
+msgstr ""
+
+#, python-format
+msgid "Embedded Mozilla webrowser failed to load: %s(error)"
+msgstr ""
+
+msgid "Loading requested information..."
+msgstr ""
+
+msgid "Joined Rooms "
+msgstr ""
+
+msgid "Global"
+msgstr ""
+
+msgid "Rooms"
+msgstr ""
+
+msgid "Search files"
+msgstr ""
+
+msgid "Uploads"
+msgstr ""
+
+msgid "Interests"
+msgstr ""
+
+msgid "Close Nicotine-Plus?"
+msgstr ""
+
+msgid "Are you sure you wish to exit Nicotine-Plus at this time?"
+msgstr ""
+
+msgid "Send to tray"
+msgstr ""
+
+#, python-format
+msgid "Notification Error: %s"
+msgstr ""
+
+msgid "I like"
+msgstr ""
+
+msgid "_Remove this item"
+msgstr ""
+
+msgid "Re_commendations for this item"
+msgstr ""
+
+msgid "_Search for this item"
+msgstr ""
+
+msgid "I dislike"
+msgstr ""
+
+msgid "Item"
+msgstr ""
+
+msgid "Rating"
+msgstr ""
+
+msgid "I _like this"
+msgstr ""
+
+msgid "I _don't like this"
+msgstr ""
+
+msgid "_Recommendations for this item"
+msgstr ""
+
+msgid "Speed"
+msgstr ""
+
+#, python-format
+msgid "Loading Shares from disk failed: %(error)s"
+msgstr ""
+
+msgid "Nicotine+:"
+msgstr ""
+
+msgid "Enter the User who you wish to send a private message:"
+msgstr ""
+
+msgid "Nicotine+: Get User Info"
+msgstr ""
+
+msgid "Enter the User whose User Info you wish to recieve:"
+msgstr ""
+
+msgid "Nicotine+: Get A User's IP"
+msgstr ""
+
+msgid "Enter the User whose IP Address you wish to recieve:"
+msgstr ""
+
+msgid "Nicotine+: Get A User's Shares List"
+msgstr ""
+
+msgid "Enter the User whose Shares List you wish to recieve:"
+msgstr ""
+
+#, python-format
+msgid "button_press error, %(error)s"
+msgstr ""
+
+#, python-format
+msgid "Hide %(tab)s"
+msgstr ""
+
+#, python-format
+msgid "Not using UPnP to fix portmapping due to errors: %(errors)s"
+msgstr ""
+
+msgid "Figuring out UPnP..."
+msgstr ""
+
+#, python-format
+msgid "Connecting to %(host)s:%(port)s"
+msgstr ""
+
+#, python-format
+msgid "%s/%s Connections"
+msgstr ""
+
+#, python-format
+msgid "Error loading image for %(flag)s: %(error)s"
+msgstr ""
+
+#, python-format
+msgid "Users: %s"
+msgstr ""
+
+#, python-format
+msgid "Files: %s"
+msgstr ""
+
+#, python-format
+msgid "Down: %(num)i users, %(speed).1f KB/s"
+msgstr ""
+
+#, python-format
+msgid "Up: %(num)i users, %(speed).1f KB/s"
+msgstr ""
+
+#, python-format
+msgid "Nicotine+ Transfers: %(speeddown).1f KB/s Down, %(speedup).1f KB/s Up"
+msgstr ""
+
+msgid "Rescanning started"
+msgstr ""
+
+msgid "Rescanning Buddy Shares started"
+msgstr ""
+
+msgid "Rescanning Buddy Shares finished"
+msgstr ""
+
+msgid "Rescanning finished"
+msgstr ""
+
+msgid "Top"
+msgstr ""
+
+msgid "Bottom"
+msgstr ""
+
+msgid "Left"
+msgstr ""
+
+msgid "Right"
+msgstr ""
+
+#, python-format
+msgid "Translux error: %(error)s"
+msgstr ""
+
+#, python-format
+msgid "Error: %(num)d Download filters failed! %(error)s "
+msgstr ""
+
+#, python-format
+msgid "Error: Download Filter failed! Verify your filters. Reason: %s"
+msgstr ""
+
+msgid "Cannot Find Guide"
+msgstr ""
+
+#, python-format
+msgid ""
+"The Nicotine Offline Guide ( NicotinePlusGuide.html ) was not found in "
+"either the following directories:\n"
+"\n"
+"<u>%(pwd)s\n"
+"</u><b>and</b>\n"
+"<u>%(prefix)s/share/nicotine/documentation/</u>\n"
+"\n"
+"Either install Nicotine-Plus, or start from inside the Nicotine-Plus source "
+"directory."
+msgstr ""
+
+msgid "Buddy list"
+msgstr ""
+
+#, python-format
+msgid "Invalid SoulSeek meta-url: %s"
+msgstr ""
+
+msgid "Enter the string to search for:"
+msgstr ""
+
+msgid "Nicotine+: Find string"
+msgstr ""
+
+msgid "Add thing I like"
+msgstr ""
+
+msgid "Add thing I don't like"
+msgstr ""
+
+msgid "I don't like"
+msgstr ""
+
+#, python-format
+msgid "Recommendations for %s"
+msgstr ""
+
+#, python-format
+msgid "Private Message from %(user)s"
+msgstr ""
+
+#, python-format
+msgid "You've been mentioned in the %(room)s room"
+msgstr ""
+
+#, python-format
+msgid "%(user)s mentioned you in the %(room)s room"
+msgstr ""
+
+#, python-format
+msgid ""
+"%(myusername)s, the user, %(username)s has mentioned your name in the room, %"
+"(place)s."
+msgstr ""
+
+#, python-format
+msgid ""
+"Note: Trayicon Python module was not found in the pynicotine directory: %s"
+msgstr ""
+
+#, python-format
+msgid "ERROR: SetImage, %(error)s"
+msgstr ""
+
+msgid "Connect"
+msgstr ""
+
+msgid "Disconnect"
+msgstr ""
+
+msgid "Hide / Unhide Nicotine"
+msgstr ""
+
+msgid "Settings"
+msgstr ""
+
+msgid "Send Message"
+msgstr ""
+
+msgid "Lookup a User's IP"
+msgstr ""
+
+msgid "Lookup a User's Info"
+msgstr ""
+
+msgid "Lookup a User's Shares"
+msgstr ""
+
+msgid "Toggle Away"
+msgstr ""
+
+#, python-format
+msgid "ERROR: tray menu, %(error)s"
+msgstr ""
+
+#, python-format
+msgid "ERROR: Gstreamer-python could not play: %(error)s"
+msgstr ""
+
+msgid "Clear paused"
+msgstr ""
+
+msgid "Clear filtered"
+msgstr ""
+
+msgid "Get place in _queue"
+msgstr ""
+
+msgid "View Metadata of file(s)"
+msgstr ""
+
+msgid "Abort and remove _file(s)"
+msgstr ""
+
+msgid "Clear All Queued Downloads?"
+msgstr ""
+
+msgid " KB/s"
+msgstr ""
+
+msgid "Downloads Metadata"
+msgstr ""
+
+msgid "<b>Metadata</b> for Downloads"
 msgstr ""
 
 msgid "Queue Position"
 msgstr ""
 
 msgid "Percent"
-msgstr ""
-
-msgid "Size"
-msgstr ""
-
-msgid "Speed"
 msgstr ""
 
 msgid "Time elapsed"
@@ -1602,481 +2613,323 @@ msgstr ""
 msgid "%(number)2s files "
 msgstr ""
 
-msgid "Clear finished/aborted"
+#, python-format
+msgid "Client port is <b>%(port)s</b>"
 msgstr ""
 
-msgid "Clear finished"
+#, python-format
+msgid "Your IP address is <b>%(ip)s</b>"
 msgstr ""
 
-msgid "Clear aborted"
+msgid "Warning: Bad Username"
 msgstr ""
 
-msgid "Clear paused"
+msgid "Username 'None' is not a good one, please pick another."
 msgstr ""
 
-msgid "Clear filtered"
+msgid "Warning: Invalid ports"
 msgstr ""
 
-msgid "Clear queued"
+msgid "Client ports are invalid."
 msgstr ""
 
-msgid "Get place in _queue"
+msgid "Filter"
 msgstr ""
 
-msgid "Copy _URL"
+msgid "Escaped"
 msgstr ""
 
-msgid "Copy folder URL"
+msgid "Buddy Uploads"
 msgstr ""
 
-msgid "Send to _player"
+msgid "Warning"
 msgstr ""
 
-msgid "View Metadata of file(s)"
+#, python-format
+msgid "Security Risk: you should not share your %s directory!"
 msgstr ""
 
-msgid "Open Directory"
+msgid "Nicotine+: Add a download filter"
 msgstr ""
 
-msgid "User(s)"
+msgid "Enter a new download filter:"
 msgstr ""
 
-msgid "_Retry"
+msgid "Nicotine+: Edit a download filter"
 msgstr ""
 
-msgid "Abor_t"
+msgid "Modify this download filter:"
 msgstr ""
 
-msgid "Abort and remove _file(s)"
+#, python-format
+msgid "%(num)d Failed! %(error)s "
 msgstr ""
 
-msgid "_Clear"
+msgid "Add a shared buddy directory"
 msgstr ""
 
-msgid "Clear Groups"
+msgid "No one"
 msgstr ""
 
-msgid "Clear All Queued Downloads?"
+msgid "Everyone"
 msgstr ""
 
-msgid "Nicotine+"
+msgid "Users in list"
 msgstr ""
 
-msgid "Clear Queued Transfers"
+msgid "Trusted Users"
 msgstr ""
 
-msgid " KB/s"
+#, python-format
+msgid "Size: %s KB"
 msgstr ""
 
-msgid "Nicotine+:"
-msgstr ""
-
-msgid "Downloads Metadata"
-msgstr ""
-
-msgid "<b>Metadata</b> for Downloads"
-msgstr ""
-
-msgid "Send _message"
-msgstr ""
-
-msgid "Show IP a_ddress"
-msgstr ""
-
-msgid "Get user i_nfo"
-msgstr ""
-
-msgid "Brow_se files"
-msgstr ""
-
-msgid "Gi_ve privileges"
-msgstr ""
-
-msgid "_Add user to list"
-msgstr ""
-
-msgid "_Ban this user"
-msgstr ""
-
-msgid "_Ignore this user"
-msgstr ""
-
-msgid "Select User's Transfers"
-msgstr ""
-
-msgid "Nicotine+ Wishlist"
-msgstr ""
-
-msgid "Search Wishlist"
-msgstr ""
-
-msgid "Wishs"
-msgstr ""
-
-msgid "Add Wish..."
-msgstr ""
-
-msgid "Wish:"
-msgstr ""
-
-msgid "Global"
-msgstr ""
-
-msgid "Rooms"
-msgstr ""
-
-msgid "Joined Rooms "
-msgstr ""
-
-msgid "Buddies"
+msgid "Choose a user info image"
 msgstr ""
 
 msgid "Users"
 msgstr ""
 
-msgid "Detach this tab"
+msgid "Addresses"
 msgstr ""
 
-msgid "Close this tab"
+msgid "Ignore user..."
 msgstr ""
 
-msgid "Number"
+msgid "User:"
 msgstr ""
 
-msgid "In queue"
+msgid "Ignore IP Address..."
 msgstr ""
 
-msgid "Immediate Download"
+msgid "IP:"
 msgstr ""
 
-msgid "Bitrate"
+msgid "* is a wildcard"
 msgstr ""
 
-msgid "Length"
+msgid "Ban user..."
+msgstr ""
+
+msgid "Block IP Address..."
+msgstr ""
+
+msgid "Gstreamer-python is not installed"
+msgstr ""
+
+msgid "Choose a sound effects directory"
+msgstr ""
+
+msgid "Choose an icon theme directory"
+msgstr ""
+
+msgid "Pick a colour, any colour"
+msgstr ""
+
+#, python-format
+msgid "Translation not found for '%s': %s"
+msgstr ""
+
+#, python-format
+msgid "Translation was corrupted for '%s': %s"
+msgstr ""
+
+#, python-format
+msgid "Lookup failed for '%(language)s': %(error)s"
+msgstr ""
+
+msgid "Warning: Missing translation"
+msgstr ""
+
+#, python-format
+msgid ""
+"Nicotine+ could not find your selected translation.\n"
+"%s"
+msgstr ""
+
+msgid "Choose a directory to save your log files"
+msgstr ""
+
+msgid "Import Soulseek config from directory"
+msgstr ""
+
+msgid "Nothing Imported"
+msgstr ""
+
+#, python-format
+msgid "Config files for the official Soulseek client not found in \"%s\""
+msgstr ""
+
+msgid "Imported Soulseek Config"
+msgstr ""
+
+msgid ""
+"Config was imported. You may need to restart for changes to take effect. If "
+"you changed your user name, buddy list or queue then you should restart "
+"immediately."
+msgstr ""
+
+msgid "No options were selected"
+msgstr ""
+
+msgid "Protocol"
+msgstr ""
+
+msgid "Handler"
+msgstr ""
+
+msgid "Pattern"
+msgstr ""
+
+msgid "Replacement"
+msgstr ""
+
+msgid "Plugins"
+msgstr ""
+
+msgid "Enabled"
+msgstr ""
+
+msgid "Could not enable plugin."
+msgstr ""
+
+msgid "Could not disable plugin."
+msgstr ""
+
+msgid "Ban List"
+msgstr ""
+
+msgid "Geo Block"
+msgstr ""
+
+msgid "Interface"
+msgstr ""
+
+msgid "Notebook Tabs"
+msgstr ""
+
+msgid "Logging"
+msgstr ""
+
+msgid "Ignore List"
+msgstr ""
+
+msgid "Auto-Replace"
+msgstr ""
+
+msgid "URL Catching"
+msgstr ""
+
+msgid "Completion"
+msgstr ""
+
+msgid "Categories"
+msgstr ""
+
+#, python-format
+msgid "Speed: %s"
+msgstr ""
+
+#, python-format
+msgid "Directories: %s"
+msgstr ""
+
+msgid "Hates"
+msgstr ""
+
+msgid "Likes"
+msgstr ""
+
+msgid "Zoom 1:1"
+msgstr ""
+
+msgid "Zoom In"
+msgstr ""
+
+msgid "Zoom Out"
+msgstr ""
+
+msgid "Save Image"
+msgstr ""
+
+#, python-format
+msgid "Nicotine+ Userinfo: %s (%s)"
+msgstr ""
+
+#, python-format
+msgid "Total uploads allowed: %i"
+msgstr ""
+
+#, python-format
+msgid "Queue size: %i"
+msgstr ""
+
+msgid "Yes"
+msgstr ""
+
+msgid "No"
+msgstr ""
+
+#, python-format
+msgid "Slots free: %s"
+msgstr ""
+
+#, python-format
+msgid "%s"
 msgstr ""
 
 msgid "Country"
 msgstr ""
 
-msgid "Directory"
+msgid "Trusted"
 msgstr ""
 
-msgid "_Download file(s)"
+msgid "Notify"
 msgstr ""
 
-msgid "Download file(s) _to..."
+msgid "Privileged"
 msgstr ""
 
-msgid "Download containing _folder(s)"
+msgid "Last seen"
 msgstr ""
 
-msgid "Download containing f_older(s) to..."
+msgid "Comments"
 msgstr ""
 
-msgid "Copy folder U_RL"
+msgid "Never seen"
 msgstr ""
 
-#, python-format
-msgid "Nicotine+ %s Search: %s"
+msgid "_Online notify"
 msgstr ""
 
-msgid "Y"
+msgid "_Privileged"
 msgstr ""
 
-msgid "N"
+msgid "_Trusted"
 msgstr ""
 
-msgid " (vbr)"
+msgid "Edit _comments"
 msgstr ""
 
-msgid "Select User's Results"
+msgid "_Remove"
 msgstr ""
 
-msgid "Nicotine+: Search Results"
-msgstr ""
-
-#, python-format
-msgid "<b>Metadata</b> for Search Query: <i>%s</i>"
-msgstr ""
-
-msgid ""
-"Note: Python Bindings for libsexy were not found. To enable spell checking, "
-"get them from http://www.chipx86.com/wiki/Libsexy or your distribution's "
-"package manager. Look for sexy-python or python-sexy."
-msgstr ""
-
-msgid "Open Browser"
-msgstr ""
-
-msgid "Loading requested information..."
-msgstr ""
-
-msgid "Find"
-msgstr ""
-
-msgid "Copy"
-msgstr ""
-
-msgid "Copy All"
-msgstr ""
-
-msgid "Clear log"
-msgstr ""
-
-msgid "Add Buddy: "
-msgstr ""
-
-msgid "Search files"
-msgstr ""
-
-msgid "Downloads"
-msgstr ""
-
-msgid "Uploads"
-msgstr ""
-
-msgid "Interests"
-msgstr ""
-
-msgid "Close Nicotine-Plus?"
-msgstr ""
-
-msgid "Are you sure you wish to exit Nicotine-Plus at this time?"
-msgstr ""
-
-msgid "Send to tray"
+msgid "Private rooms"
 msgstr ""
 
 #, python-format
-msgid "Notification Error: %s"
-msgstr ""
-
-msgid "I like"
-msgstr ""
-
-msgid "_Remove this item"
-msgstr ""
-
-msgid "Re_commendations for this item"
-msgstr ""
-
-msgid "_Search for this item"
-msgstr ""
-
-msgid "I dislike"
-msgstr ""
-
-msgid "Item"
-msgstr ""
-
-msgid "Rating"
-msgstr ""
-
-msgid "I _like this"
-msgstr ""
-
-msgid "I _don't like this"
-msgstr ""
-
-msgid "_Recommendations for this item"
+msgid "User %s is offline"
 msgstr ""
 
 #, python-format
-msgid "Private Message from %(user)s"
+msgid "User %s is away"
 msgstr ""
 
 #, python-format
-msgid "You've been mentioned in the %(room)s room"
+msgid "User %s is online"
 msgstr ""
 
-#, python-format
-msgid "%(user)s mentioned you in the %(room)s room"
-msgstr ""
-
-#, python-format
-msgid ""
-"%(myusername)s, the user, %(username)s has mentioned your name in the room, %"
-"(place)s."
-msgstr ""
-
-#, python-format
-msgid ""
-"Are you sure you wish to download %(num)i files from %(user)s's directory %"
-"(folder)s?"
-msgstr ""
-
-#, python-format
-msgid "Can't create directory '%(folder)s', reported error: %(error)s"
-msgstr ""
-
-#, python-format
-msgid "Loading Shares from disk failed: %(error)s"
-msgstr ""
-
-msgid "Enter the User who you wish to send a private message:"
-msgstr ""
-
-msgid "Nicotine+: Get User Info"
-msgstr ""
-
-msgid "Enter the User whose User Info you wish to recieve:"
-msgstr ""
-
-msgid "Nicotine+: Get A User's IP"
-msgstr ""
-
-msgid "Enter the User whose IP Address you wish to recieve:"
-msgstr ""
-
-msgid "Nicotine+: Get A User's Shares List"
-msgstr ""
-
-msgid "Enter the User whose Shares List you wish to recieve:"
-msgstr ""
-
-#, python-format
-msgid "Hide %(tab)s"
-msgstr ""
-
-#, python-format
-msgid "(custom widget: %s)"
-msgstr ""
-
-#, python-format
-msgid "Connecting to %(host)s:%(port)s"
-msgstr ""
-
-#, python-format
-msgid "%s/%s Connections"
-msgstr ""
-
-#, python-format
-msgid "Users: %s"
-msgstr ""
-
-#, python-format
-msgid "Files: %s"
-msgstr ""
-
-#, python-format
-msgid "Down: %(num)i users, %(speed).1f KB/s"
-msgstr ""
-
-#, python-format
-msgid "Up: %(num)i users, %(speed).1f KB/s"
-msgstr ""
-
-#, python-format
-msgid "Nicotine+ Transfers: %(speeddown).1f KB/s Down, %(speedup).1f KB/s Up"
-msgstr ""
-
-msgid "Rescanning started"
-msgstr ""
-
-msgid "Rescanning Buddy Shares started"
-msgstr ""
-
-msgid "Rescanning Buddy Shares finished"
-msgstr ""
-
-msgid "Rescanning finished"
-msgstr ""
-
-msgid "Top"
-msgstr ""
-
-msgid "Bottom"
-msgstr ""
-
-msgid "Left"
-msgstr ""
-
-msgid "Right"
-msgstr ""
-
-#, python-format
-msgid "Error: %(num)d Download filters failed! %(error)s "
-msgstr ""
-
-#, python-format
-msgid "Error: Download Filter failed! Verify your filters. Reason: %s"
-msgstr ""
-
-msgid "Cannot Find Guide"
-msgstr ""
-
-#, python-format
-msgid ""
-"The Nicotine Offline Guide ( NicotinePlusGuide.html ) was not found in "
-"either the following directories:\n"
-"\n"
-"<u>%(pwd)s\n"
-"</u><b>and</b>\n"
-"<u>%(prefix)s/share/nicotine/documentation/</u>\n"
-"\n"
-"Either install Nicotine-Plus, or start from inside the Nicotine-Plus source "
-"directory."
-msgstr ""
-
-msgid "Buddy list"
-msgstr ""
-
-#, python-format
-msgid "Invalid SoulSeek meta-url: %s"
-msgstr ""
-
-msgid "Enter the string to search for:"
-msgstr ""
-
-msgid "Nicotine+: Find string"
-msgstr ""
-
-msgid "Add thing I like"
-msgstr ""
-
-msgid "Add thing I don't like"
-msgstr ""
-
-msgid "I don't like"
-msgstr ""
-
-#, python-format
-msgid "Recommendations for %s"
-msgstr ""
-
-#, python-format
-msgid ""
-"Note: Trayicon Python module was not found in the pynicotine directory: %s"
-msgstr ""
-
-msgid "Connect"
-msgstr ""
-
-msgid "Disconnect"
-msgstr ""
-
-msgid "Hide / Unhide Nicotine"
-msgstr ""
-
-msgid "Settings"
-msgstr ""
-
-msgid "Send Message"
-msgstr ""
-
-msgid "Lookup a User's IP"
-msgstr ""
-
-msgid "Lookup a User's Info"
-msgstr ""
-
-msgid "Lookup a User's Shares"
-msgstr ""
-
-msgid "Toggle Away"
-msgstr ""
-
-msgid "ERROR: Gstreamer-python could not play:"
+msgid "Edit comments"
 msgstr ""
 
 msgid "Room"
@@ -2109,6 +2962,10 @@ msgstr ""
 msgid "Enter the name of the private room you wish to create"
 msgstr ""
 
+#, python-format
+msgid "You have been added to a private room: %(room)s"
+msgstr ""
+
 msgid "You aren't in any chat rooms."
 msgstr ""
 
@@ -2130,39 +2987,14 @@ msgstr ""
 msgid "Default for all channels"
 msgstr ""
 
-msgid "B_lock this user's IP Address"
-msgstr ""
-
-msgid "Ignore this user's IP Address"
-msgstr ""
-
 msgid "Sear_ch this user's files"
-msgstr ""
-
-msgid "Private rooms"
 msgstr ""
 
 msgid "--- old messages above ---"
 msgstr ""
 
 #, python-format
-msgid "Remove from private room %s"
-msgstr ""
-
-#, python-format
-msgid "Add to private room %s"
-msgstr ""
-
-#, python-format
-msgid "Remove as operator of %s"
-msgstr ""
-
-#, python-format
-msgid "Add as operator of %s"
-msgstr ""
-
-#, python-format
-msgid "Command %s is not recognized"
+msgid "All ticker messages for %(room)s:"
 msgstr ""
 
 #, python-format
@@ -2192,93 +3024,70 @@ msgstr ""
 msgid "%s has returned"
 msgstr ""
 
-msgid "--- disconnected ---"
-msgstr ""
-
-msgid "--- reconnected ---"
+#, python-format
+msgid "Unknown (%(countrycode)s)"
 msgstr ""
 
 msgid "Leave this room"
 msgstr ""
 
-#, python-format
-msgid ""
-"Could not retrieve version information!\n"
-"Error: %s"
+msgid "Nicotine+ Wishlist"
 msgstr ""
 
-msgid "Check Latest Version"
+msgid "Search Wishlist"
 msgstr ""
 
-#, python-format
-msgid ""
-"A newer version ('%s') is available. Check\n"
-"the Nicotine+ homepage, ( http://nicotine-plus.sourceforge.net ) for the "
-"latest version."
+msgid "Select all"
 msgstr ""
 
-msgid ""
-"You appear to be using a development version of Nicotine+.\n"
-"Check out the latest version from the Subversion repository at http://"
-"nicotine-plus.org"
+msgid "Wishs"
 msgstr ""
 
-msgid "You are using the latest version of Nicotine+."
+msgid "Add Wish..."
 msgstr ""
 
-msgid "Username"
+msgid "Wish:"
 msgstr ""
 
-msgid "<b>List Position:</b>"
+msgid "Number"
 msgstr ""
 
-msgid "<b>File Name:</b>"
+msgid "In queue"
 msgstr ""
 
-msgid "<b>Directory:</b>"
+msgid "Immediate Download"
 msgstr ""
 
-msgid "<b>File Size:</b>"
+msgid "Download file(s) _to..."
 msgstr ""
 
-msgid "<b>Length:</b>"
+msgid "Download containing _folder(s)"
 msgstr ""
 
-msgid "<b>Bitrate:</b>"
+msgid "Download containing f_older(s) to..."
 msgstr ""
 
-msgid "<b>Immediate Downloads:</b>"
-msgstr ""
-
-msgid "<b>Queue:</b>"
-msgstr ""
-
-msgid "<b>Last Speed:</b>"
-msgstr ""
-
-msgid "Download"
-msgstr ""
-
-msgid "Download All"
+msgid "Copy folder U_RL"
 msgstr ""
 
 #, python-format
-msgid "<b>%s</b> File(s) Selected"
+msgid "Nicotine+ %s Search: %s"
 msgstr ""
 
-msgid "Previous"
+msgid "Y"
 msgstr ""
 
-msgid "Next"
+msgid "N"
 msgstr ""
 
-msgid "<b>Country Code:</b> "
+msgid "Select User's Results"
 msgstr ""
 
-msgid "OK"
+msgid "Nicotine+: Search Results"
 msgstr ""
 
-msgid "Cancel"
+#, python-format
+msgid "<b>Metadata</b> for Search Query: <i>%s</i>"
 msgstr ""
 
 #, python-format
@@ -2322,6 +3131,8 @@ msgid ""
 "\t(Webhosting, packager)\n"
 "\t<gandalf@le-vert.net>\n"
 "\thttp://www.le-vert.net\n"
+"OffHand\n"
+"\t(Windows and OSX packager, tester)\n"
 "QuinoX\n"
 "\t(Code contributer)\n"
 "\thttp://index.qtea.nl\n"
@@ -2633,614 +3444,242 @@ msgstr ""
 msgid "About optional dependencies"
 msgstr ""
 
-#, python-format
-msgid "Speed: %s"
+msgid "Buddy Shares"
 msgstr ""
 
 #, python-format
-msgid "Directories: %s"
-msgstr ""
-
-msgid "Client Version"
-msgstr ""
-
-msgid "Add user to list"
-msgstr ""
-
-msgid "Ban this user"
-msgstr ""
-
-msgid "Ignore this user"
-msgstr ""
-
-msgid "Hates"
-msgstr ""
-
-msgid "Likes"
-msgstr ""
-
-msgid "Zoom 1:1"
-msgstr ""
-
-msgid "Zoom In"
-msgstr ""
-
-msgid "Zoom Out"
-msgstr ""
-
-msgid "Save Image"
-msgstr ""
-
-#, python-format
-msgid "Nicotine+ Userinfo: %s (%s)"
-msgstr ""
-
-#, python-format
-msgid "Total uploads allowed: %i"
-msgstr ""
-
-#, python-format
-msgid "Queue size: %i"
-msgstr ""
-
-msgid "Yes"
-msgstr ""
-
-msgid "No"
-msgstr ""
-
-#, python-format
-msgid "Slots free: %s"
-msgstr ""
-
-msgid "No one"
-msgstr ""
-
-msgid "Everyone"
-msgstr ""
-
-msgid "Users in list"
-msgstr ""
-
-msgid "Trusted Users"
-msgstr ""
-
-#, python-format
-msgid "%s"
-msgstr ""
-
-#, python-format
-msgid "%s GB"
-msgstr ""
-
-#, python-format
-msgid "%s MB"
-msgstr ""
-
-#, python-format
-msgid "%s KB"
-msgstr ""
-
-#, python-format
-msgid "%s  B"
-msgstr ""
-
-#, python-format
-msgid "Column #%i"
-msgstr ""
-
-msgid "Unknown"
-msgstr ""
-
-msgid "Give privileges"
-msgstr ""
-
-#, python-format
-msgid "to %(user)s"
-msgstr ""
-
-msgid "Give how many days of global privileges to this user?"
-msgstr ""
-
-#, python-format
-msgid "%(days)s days left"
-msgstr ""
-
-#, python-format
-msgid "%.2f GiB"
-msgstr ""
-
-#, python-format
-msgid "%.2f MiB"
-msgstr ""
-
-#, python-format
-msgid "%.2f KiB"
-msgstr ""
-
-#, python-format
-msgid "%d Bytes"
-msgstr ""
-
-#, python-format
-msgid "%.2f GiB/s"
-msgstr ""
-
-#, python-format
-msgid "%.2f MiB/s"
-msgstr ""
-
-#, python-format
-msgid "%.2f KiB/s"
-msgstr ""
-
-#, python-format
-msgid "%d B/s"
-msgstr ""
-
-msgid "Directories"
-msgstr ""
-
-msgid "_Download directory"
-msgstr ""
-
-msgid "Download directory _to..."
-msgstr ""
-
-msgid "Download _recursive"
-msgstr ""
-
-msgid "Download r_ecursive to..."
-msgstr ""
-
-msgid "Download _to..."
-msgstr ""
-
-msgid "Upload Directory to..."
-msgstr ""
-
-msgid "Upload Directory recursive to..."
-msgstr ""
-
-msgid "Up_load file(s)"
-msgstr ""
-
-msgid "Upload"
-msgstr ""
-
-msgid "Open in File Manager"
-msgstr ""
-
-#, python-format
-msgid "Nicotine+ User Browse: %s (%s)"
-msgstr ""
-
-#, python-format
-msgid "Dirs: %s"
-msgstr ""
-
-#, python-format
-msgid "Shared: %s"
-msgstr ""
-
-#, python-format
-msgid "Can't save shares, '%(user)s', reported error: %(error)s"
-msgstr ""
-
-msgid "Nicotine: Upload Directory's Contents"
-msgstr ""
-
-msgid "Enter the User you wish to upload to:"
-msgstr ""
-
-msgid "Nicotine: Upload File(s)"
-msgstr ""
-
-#, python-format
-msgid "Client port is <b>%(port)s</b>"
-msgstr ""
-
-#, python-format
-msgid "Your IP address is <b>%(ip)s</b>"
-msgstr ""
-
-msgid "Warning: Bad Username"
-msgstr ""
-
-msgid "Username 'None' is not a good one, please pick another."
-msgstr ""
-
-msgid "Warning: Invalid ports"
-msgstr ""
-
-msgid "Client ports are invalid."
-msgstr ""
-
-msgid "Buddy Uploads"
-msgstr ""
-
-msgid "Warning"
-msgstr ""
-
-#, python-format
-msgid "Security Risk: you should not share your %s directory!"
-msgstr ""
-
-msgid "Add a shared directory"
-msgstr ""
-
-msgid "Add a shared buddy directory"
-msgstr ""
-
-msgid "Filter"
-msgstr ""
-
-msgid "Escaped"
-msgstr ""
-
-msgid "Nicotine+: Add a download filter"
-msgstr ""
-
-msgid "Enter a new download filter:"
-msgstr ""
-
-msgid "Nicotine+: Edit a download filter"
-msgstr ""
-
-msgid "Modify this download filter:"
-msgstr ""
-
-#, python-format
-msgid "%(num)d Failed! %(error)s "
-msgstr ""
-
-#, python-format
-msgid "Size: %s KB"
-msgstr ""
-
-msgid "Choose a user info image"
-msgstr ""
-
-msgid "Addresses"
-msgstr ""
-
-msgid "Ignore user..."
-msgstr ""
-
-msgid "User:"
-msgstr ""
-
-msgid "Ignore IP Address..."
-msgstr ""
-
-msgid "IP:"
-msgstr ""
-
-msgid "* is a wildcard"
-msgstr ""
-
-msgid "Ban user..."
-msgstr ""
-
-msgid "Block IP Address..."
-msgstr ""
-
-msgid "Gstreamer-python is not installed"
-msgstr ""
-
-msgid "Choose a sound effects directory"
-msgstr ""
-
-msgid "Choose an icon theme directory"
-msgstr ""
-
-msgid "Pick a colour, any colour"
-msgstr ""
-
-#, python-format
-msgid "Translation not found for '%s': %s"
-msgstr ""
-
-#, python-format
-msgid "Translation was corrupted for '%s': %s"
-msgstr ""
-
-#, python-format
-msgid "Lookup failed for '%(language)s': %(error)s"
-msgstr ""
-
-msgid "Warning: Missing translation"
+msgid "ERROR: No %(type)s shares database available"
 msgstr ""
 
 #, python-format
 msgid ""
-"Nicotine+ could not find your selected translation.\n"
-"%s"
-msgstr ""
-
-msgid "Choose a directory to save your log files"
-msgstr ""
-
-msgid "Import Soulseek config from directory"
-msgstr ""
-
-msgid "Nothing Imported"
+"%(user)s is making a BrowseShares request, blocking possible spoofing "
+"attempt from IP %(ip)s port %(port)s"
 msgstr ""
 
 #, python-format
-msgid "Config files for the official Soulseek client not found in \"%s\""
+msgid ""
+"%(user)s is making a BrowseShares request, blocking possible spoofing "
+"attempt from an unknown IP & port"
 msgstr ""
 
-msgid "Imported Soulseek Config"
+#, python-format
+msgid "%(user)s is making a BrowseShares request"
+msgstr ""
+
+#, python-format
+msgid ""
+"User %(user)s is directly searching for %(query)s, returning %(num)i results"
+msgstr ""
+
+#, python-format
+msgid "User %(user)s is searching for %(query)s, returning %(num)i results"
+msgstr ""
+
+msgid "Checking for changes"
+msgstr ""
+
+#, python-format
+msgid "Scanning %s"
+msgstr ""
+
+msgid "Building DataBase"
+msgstr ""
+
+msgid "Building Index"
+msgstr ""
+
+#, python-format
+msgid "Scanning Directory Error: %(error)s Path: %(path)s"
+msgstr ""
+
+#, python-format
+msgid "Scanning Error: %(error)s Path: %(path)s"
+msgstr ""
+
+#, python-format
+msgid ""
+"Scanning Error: Broken link to directory: \"%(link)s\" from Path: \"%(path)s"
+"\". Repair or remove this link."
+msgstr ""
+
+#, python-format
+msgid "Scanning File Error: %(error)s Path: %(path)s"
+msgstr ""
+
+msgid "Your config file is corrupt"
+msgstr ""
+
+#, python-format
+msgid ""
+"We're sorry, but it seems your configuration file is corrupt. Please "
+"reconfigure Nicotine+.\n"
+"\n"
+"We renamed your old configuration file to\n"
+"%(corrupt)s\n"
+"If you open this file with a text editor you might be able to rescue some of "
+"your settings."
+msgstr ""
+
+#, python-format
+msgid "The server seems to be down or not responding, retrying in %i seconds"
+msgstr ""
+
+#, python-format
+msgid "Can't connect to server %(host)s:%(port)s: %(error)s"
 msgstr ""
 
 msgid ""
-"Config was imported. You may need to restart for changes to take effect. If "
-"you changed your user name, buddy list or queue then you should restart "
-"immediately."
-msgstr ""
-
-msgid "No options were selected"
-msgstr ""
-
-msgid "Protocol"
-msgstr ""
-
-msgid "Handler"
-msgstr ""
-
-msgid "Pattern"
-msgstr ""
-
-msgid "Replacement"
-msgstr ""
-
-msgid "Plugins"
-msgstr ""
-
-msgid "Enabled"
-msgstr ""
-
-msgid "Could not enable plugin."
-msgstr ""
-
-msgid "Could not disable plugin."
-msgstr ""
-
-msgid "Ban List"
-msgstr ""
-
-msgid "Geo Block"
-msgstr ""
-
-msgid "Interface"
-msgstr ""
-
-msgid "Notebook Tabs"
-msgstr ""
-
-msgid "Logging"
-msgstr ""
-
-msgid "Ignore List"
-msgstr ""
-
-msgid "Auto-Replace"
-msgstr ""
-
-msgid "URL Catching"
-msgstr ""
-
-msgid "Completion"
-msgstr ""
-
-msgid "Categories"
-msgstr ""
-
-msgid "Choose a plugin"
-msgstr ""
-
-msgid "Choose"
-msgstr ""
-
-msgid "Plugin Archives"
-msgstr ""
-
-msgid "All Files"
-msgstr ""
-
-msgid "The selected plugin doesn't have any configuration options"
-msgstr ""
-
-msgid "Clear failed"
-msgstr ""
-
-msgid "Clear All Queued Uploads?"
-msgstr ""
-
-msgid "Trusted"
-msgstr ""
-
-msgid "Notify"
-msgstr ""
-
-msgid "Privileged"
-msgstr ""
-
-msgid "Last seen"
-msgstr ""
-
-msgid "Comments"
-msgstr ""
-
-msgid "Never seen"
-msgstr ""
-
-msgid "_Online notify"
-msgstr ""
-
-msgid "_Privileged"
-msgstr ""
-
-msgid "_Trusted"
-msgstr ""
-
-msgid "Edit _comments"
-msgstr ""
-
-msgid "_Remove"
+"WARNING: You tried to connect to the old server, which might have been shut "
+"down. To connect to the new Soulseek server edit your settings and change "
+"the server port from 2240 to 2242"
 msgstr ""
 
 #, python-format
-msgid "User %s is offline"
+msgid "Can't connect to %s, sending notification via the server"
 msgstr ""
 
 #, python-format
-msgid "User %s is away"
+msgid "Listening on port %i"
 msgstr ""
 
 #, python-format
-msgid "User %s is online"
-msgstr ""
-
-msgid "Edit comments"
-msgstr ""
-
-msgid "Nicotine+: Configure Now Playing"
-msgstr ""
-
-msgid "Display what your Media Player is playing in Chat with the /now command"
-msgstr ""
-
-msgid "XMMS / Infopipe"
-msgstr ""
-
-msgid "Amarok"
-msgstr ""
-
-msgid "Audacious"
-msgstr ""
-
-msgid "MPD via mpc"
-msgstr ""
-
-msgid "BMPx"
-msgstr ""
-
-msgid "Rhythmbox"
-msgstr ""
-
-msgid "Exaile"
-msgstr ""
-
-msgid "last.fm"
-msgstr ""
-
-msgid "Other"
-msgstr ""
-
-msgid "Player Command/Username"
-msgstr ""
-
-msgid "Legend:"
-msgstr ""
-
-msgid "Now playing format:"
-msgstr ""
-
-msgid "Example:"
-msgstr ""
-
-msgid "Test"
-msgstr ""
-
-msgid "Title"
-msgstr ""
-
-#, python-format
-msgid "Now Playing (typically \"%(artist)s - %(title)s\")"
-msgstr ""
-
-msgid "Artist"
-msgstr ""
-
-msgid "Comment"
-msgstr ""
-
-msgid "Album"
-msgstr ""
-
-msgid "Track Number"
-msgstr ""
-
-msgid "Year"
-msgstr ""
-
-msgid "Filename (URI)"
-msgstr ""
-
-msgid "ERROR: DBus not available:"
-msgstr ""
-
-msgid "cannot be contacted"
-msgstr ""
-
-#, python-format
-msgid "ERROR while accessing the %(program)s DBus interface: %(error)s"
-msgstr ""
-
-#, python-format
-msgid "ERROR while reading data from the %(program)s DBus interface: %(error)s"
-msgstr ""
-
-msgid "ERROR: audtool didn't detect a running Audacious session."
-msgstr ""
-
-#, python-format
-msgid "ERROR while loading socket module: %(error)s"
-msgstr ""
-
-#, python-format
-msgid "ERROR: could not connect to audioscrobbler: %s"
-msgstr ""
-
-msgid "Last played"
-msgstr ""
-
-msgid "Now playing"
-msgstr ""
-
-msgid "paused"
-msgstr ""
-
-msgid "playing"
-msgstr ""
-
-#, python-format
-msgid "ERROR: Executing '%(command)s' failed: %(error)s"
+msgid "Connected to server %(host)s:%(port)s, logging in..."
 msgstr ""
 
 msgid ""
-"ERROR: /tmp/xmms-info does not exist. Is the Infopipe plugin installed and "
-"is XMMS running?"
-msgstr ""
-
-msgid ""
-"ERROR: /tmp/xmms-info is empty. Is the Infopipe plugin installed and is XMMS "
-"running?"
-msgstr ""
-
-msgid ""
-"* Message(s) sent while you were offline. Timestamps are reported by the "
-"server and can be off."
+"WARNING: You are connected to the old server, which will most likely be shut "
+"down in the near future. To connect to the new Soulseek server edit your "
+"settings and change the server port from 2240 to 2242"
 msgstr ""
 
 #, python-format
-msgid "Nicotine+ Private Chat: %s (%s)"
+msgid "Disconnected from server %(host)s:%(port)s"
 msgstr ""
 
 #, python-format
-msgid "Nicotine+ Private Chat: %(user)s (%(status)s)"
+msgid "Connection closed by peer: %s"
+msgstr ""
+
+#, python-format
+msgid "Removed connection closed by peer: %(conn_obj)s %(address)s"
+msgstr ""
+
+msgid "Logged in, getting the list of rooms..."
+msgstr ""
+
+#, python-format
+msgid "Can not log in, reason: %s"
+msgstr ""
+
+msgid "Your password has been changed"
+msgstr ""
+
+#, python-format
+msgid "(Warning: %(realuser)s is attempting to spoof %(fakeuser)s) "
+msgstr ""
+
+#, python-format
+msgid "%i privileged users"
+msgstr ""
+
+#, python-format
+msgid "You can acquire privileges by donating at %(url)s"
+msgstr ""
+
+msgid ""
+"You have no privileges left. They are not needed for Nicotine+ to function "
+"properly."
+msgstr ""
+
+#, python-format
+msgid ""
+"%(days)i days, %(hours)i hours, %(minutes)i minutes, %(seconds)i seconds of "
+"download privileges left."
+msgstr ""
+
+#, python-format
+msgid "Server reported port 0 for the 10th time for user %(user)s, giving up"
+msgstr ""
+
+#, python-format
+msgid "Server reported non-zero port for user %(user)s after %(tries)i retries"
+msgstr ""
+
+#, python-format
+msgid "Server reported port 0 for user %(user)s, retrying"
+msgstr ""
+
+#, python-format
+msgid ""
+"IP address of %(user)s is %(ip)s, name %(host)s, port %(port)i%(country)s"
+msgstr ""
+
+#, python-format
+msgid "IP address of %(user)s is %(ip)s, port %(port)i%(country)s"
+msgstr ""
+
+msgid ""
+"Someone else is logging in with the same nickname, server is going to "
+"disconnect us"
+msgstr ""
+
+#, python-format
+msgid "Banned (%s)"
+msgstr ""
+
+msgid "Sorry, friends only"
+msgstr ""
+
+msgid "geoip"
+msgstr ""
+
+msgid "Sorry, geographical paranoia"
+msgstr ""
+
+msgid "Sorry, your country is blocked"
+msgstr ""
+
+#, python-format
+msgid ""
+"IP %(ip)s:%(port)s is spoofing user %(user)s with a peer request, blocking "
+"because it does not match IP: %(real_ip)s"
+msgstr ""
+
+#, python-format
+msgid ""
+"Blocking %(user)s from making a UserInfo request, possible spoofing attempt "
+"from IP %(ip)s port %(port)s"
+msgstr ""
+
+#, python-format
+msgid ""
+"Blocking %s from making a UserInfo request, possible spoofing attempt from "
+"an unknown IP & port"
+msgstr ""
+
+#, python-format
+msgid "%(user)s is banned, but is making a UserInfo request"
+msgstr ""
+
+#, python-format
+msgid "%(user)s is making a UserInfo request"
+msgstr ""
+
+#, python-format
+msgid "Can't connect to %s (either way), giving up"
+msgstr ""
+
+#, python-format
+msgid "User %s does not respond to connect request, giving up"
+msgstr ""
+
+#, python-format
+msgid "Unknown tunneled message: %s"
+msgstr ""
+
+#, python-format
+msgid "Couldn't write to transfer log: %s"
 msgstr ""
 
 #, python-format
@@ -3393,10 +3832,6 @@ msgid "Upload finished: %(user)s, file %(file)s"
 msgstr ""
 
 #, python-format
-msgid "Banned (%s)"
-msgstr ""
-
-#, python-format
 msgid "Retrying failed download: %(user)s, file %(file)s"
 msgstr ""
 
@@ -3412,205 +3847,16 @@ msgstr ""
 msgid "Download aborted, user %(user)s file %(file)s"
 msgstr ""
 
-msgid "Plugin archive is not in the correct format"
+#, python-format
+msgid "Translation not found for '%(language)s': %(error)s"
 msgstr ""
 
 #, python-format
-msgid "A plugin with the name \"%s\" is already installed"
-msgstr ""
-
-msgid "Plugin archive contains an unsafe path"
+msgid "Translation was corrupted for '%(language)s': %(error)s"
 msgstr ""
 
 #, python-format
-msgid "Loaded plugin %s"
-msgstr ""
-
-#, python-format
-msgid "Unable to enable plugin %s"
-msgstr ""
-
-#, python-format
-msgid "Unable to fully disable plugin %s"
-msgstr ""
-
-#, python-format
-msgid "Stored setting '%(name)s' is no longer present in the plugin"
-msgstr ""
-
-#, python-format
-msgid "Plugin %(module)s returned something weird, '%(value)s', ignoring"
-msgstr ""
-
-#, python-format
-msgid ""
-"Plugin %(module)s failed with error %(errortype)s: %(error)s.\n"
-"Trace: %(trace)s\n"
-"Problem area:%(area)s"
-msgstr ""
-
-msgid "Plugin %(module) returned something weird, '%(value)', ignoring"
-msgstr ""
-
-#, python-format
-msgid "Unknown queue item %s: %s"
-msgstr ""
-
-#, python-format
-msgid "The server seems to be down or not responding, retrying in %i seconds"
-msgstr ""
-
-#, python-format
-msgid "Can't connect to server %(host)s:%(port)s: %(error)s"
-msgstr ""
-
-msgid ""
-"WARNING: You tried to connect to the old server, which might have been shut "
-"down. To connect to the new Soulseek server edit your settings and change "
-"the server port from 2240 to 2242"
-msgstr ""
-
-#, python-format
-msgid "Can't connect to %s, sending notification via the server"
-msgstr ""
-
-#, python-format
-msgid "Listening on port %i"
-msgstr ""
-
-#, python-format
-msgid "Connected to server %(host)s:%(port)s, logging in..."
-msgstr ""
-
-msgid ""
-"WARNING: You are connected to the old server, which will most likely be shut "
-"down in the near future. To connect to the new Soulseek server edit your "
-"settings and change the server port from 2240 to 2242"
-msgstr ""
-
-#, python-format
-msgid "Disconnected from server %(host)s:%(port)s"
-msgstr ""
-
-#, python-format
-msgid "Connection closed by peer: %s"
-msgstr ""
-
-#, python-format
-msgid "Removed connection closed by peer: %(conn_obj)s %(address)s"
-msgstr ""
-
-msgid "Logged in, getting the list of rooms..."
-msgstr ""
-
-#, python-format
-msgid "Can not log in, reason: %s"
-msgstr ""
-
-msgid "Your password has been changed"
-msgstr ""
-
-#, python-format
-msgid "(Warning: %(realuser)s is attempting to spoof %(fakeuser)s) "
-msgstr ""
-
-#, python-format
-msgid "%i privileged users"
-msgstr ""
-
-#, python-format
-msgid "You can acquire privileges by donating at %(url)s"
-msgstr ""
-
-msgid ""
-"You have no privileges left. They are not needed for Nicotine+ to function "
-"properly."
-msgstr ""
-
-#, python-format
-msgid ""
-"%(days)i days, %(hours)i hours, %(minutes)i minutes, %(seconds)i seconds of "
-"download privileges left."
-msgstr ""
-
-#, python-format
-msgid "Server reported port 0 for the 10th time for user %(user)s, giving up"
-msgstr ""
-
-#, python-format
-msgid "Server reported non-zero port for user %(user)s after %(tries)i retries"
-msgstr ""
-
-#, python-format
-msgid "Server reported port 0 for user %(user)s, retrying"
-msgstr ""
-
-#, python-format
-msgid ""
-"IP address of %(user)s is %(ip)s, name %(host)s, port %(port)i%(country)s"
-msgstr ""
-
-#, python-format
-msgid "IP address of %(user)s is %(ip)s, port %(port)i%(country)s"
-msgstr ""
-
-msgid ""
-"Someone else is logging in with the same nickname, server is going to "
-"disconnect us"
-msgstr ""
-
-msgid "Sorry, friends only"
-msgstr ""
-
-msgid "geoip"
-msgstr ""
-
-msgid "Sorry, geographical paranoia"
-msgstr ""
-
-msgid "Sorry, your country is blocked"
-msgstr ""
-
-#, python-format
-msgid ""
-"IP %(ip)s:%(port)s is spoofing user %(user)s with a peer request, blocking "
-"because it does not match IP: %(real_ip)s"
-msgstr ""
-
-#, python-format
-msgid ""
-"Blocking %(user)s from making a UserInfo request, possible spoofing attempt "
-"from IP %(ip)s port %(port)s"
-msgstr ""
-
-#, python-format
-msgid ""
-"Blocking %s from making a UserInfo request, possible spoofing attempt from "
-"an unknown IP & port"
-msgstr ""
-
-#, python-format
-msgid "%(user)s is banned, but is making a UserInfo request"
-msgstr ""
-
-#, python-format
-msgid "%(user)s is making a UserInfo request"
-msgstr ""
-
-#, python-format
-msgid "Can't connect to %s (either way), giving up"
-msgstr ""
-
-#, python-format
-msgid "User %s does not respond to connect request, giving up"
-msgstr ""
-
-#, python-format
-msgid "Unknown tunneled message: %s"
-msgstr ""
-
-#, python-format
-msgid "Couldn't write to transfer log: %s"
+msgid "Force lang failed: '%(language)s' (%(second)s and %(third)s tested)"
 msgstr ""
 
 msgid "Could not bind to a local port, aborting connection"
@@ -3678,103 +3924,6 @@ msgid ""
 "limit."
 msgstr ""
 
-msgid "Buddy Shares"
-msgstr ""
-
-#, python-format
-msgid "ERROR: No %(type)s shares database available"
-msgstr ""
-
-#, python-format
-msgid ""
-"%(user)s is making a BrowseShares request, blocking possible spoofing "
-"attempt from IP %(ip)s port %(port)s"
-msgstr ""
-
-#, python-format
-msgid ""
-"%(user)s is making a BrowseShares request, blocking possible spoofing "
-"attempt from an unknown IP & port"
-msgstr ""
-
-#, python-format
-msgid "%(user)s is making a BrowseShares request"
-msgstr ""
-
-#, python-format
-msgid ""
-"User %(user)s is directly searching for %(query)s, returning %(num)i results"
-msgstr ""
-
-#, python-format
-msgid "User %(user)s is searching for %(query)s, returning %(num)i results"
-msgstr ""
-
-msgid "Checking for changes"
-msgstr ""
-
-#, python-format
-msgid "Scanning %s"
-msgstr ""
-
-msgid "Building DataBase"
-msgstr ""
-
-msgid "Building Index"
-msgstr ""
-
-#, python-format
-msgid "Scanning Directory Error: %(error)s Path: %(path)s"
-msgstr ""
-
-#, python-format
-msgid "Scanning Error: %(error)s Path: %(path)s"
-msgstr ""
-
-#, python-format
-msgid ""
-"Scanning Error: Broken link to directory: \"%(link)s\" from Path: \"%(path)s"
-"\". Repair or remove this link."
-msgstr ""
-
-#, python-format
-msgid "Scanning File Error: %(error)s Path: %(path)s"
-msgstr ""
-
-#, python-format
-msgid ""
-"Warning: networking thread has to convert unicode string %(object)s message %"
-"(type)s"
-msgstr ""
-
-#, python-format
-msgid "Warning: unknown object type %s"
-msgstr ""
-
-#, python-format
-msgid "Empty message made, class %s"
-msgstr ""
-
-#, python-format
-msgid "Can't parse incoming messages, class %s"
-msgstr ""
-
-#, python-format
-msgid "Exception during parsing %(area)s: %(exception)s"
-msgstr ""
-
-#, python-format
-msgid "Translation not found for '%(language)s': %(error)s"
-msgstr ""
-
-#, python-format
-msgid "Translation was corrupted for '%(language)s': %(error)s"
-msgstr ""
-
-#, python-format
-msgid "Force lang failed: '%(language)s' (%(second)s and %(third)s tested)"
-msgstr ""
-
 #, python-format
 msgid ""
 "Config option reset to default: Section: %(section)s, Option: %(option)s, "
@@ -3794,11 +3943,23 @@ msgstr ""
 msgid "Config error: %s"
 msgstr ""
 
+#, python-format
+msgid "Something went wrong while opening your transfer list: %(error)s"
+msgstr ""
+
+#, python-format
+msgid "Something went wrong while reading your transfer list: %(error)s"
+msgstr ""
+
 msgid "Shared files database seems to be corrupted, rescan your shares"
 msgstr ""
 
 #, python-format
 msgid "Error while writing database files: %s"
+msgstr ""
+
+#, python-format
+msgid "Something went wrong while writing your transfer list: %(error)s"
 msgstr ""
 
 #, python-format
@@ -3834,4 +3995,88 @@ msgstr ""
 
 #, python-format
 msgid "No such alias (%(alias)s)\n"
+msgstr ""
+
+#, python-format
+msgid ""
+"Warning: networking thread has to convert unicode string %(object)s message %"
+"(type)s"
+msgstr ""
+
+#, python-format
+msgid "Warning: unknown object type %s"
+msgstr ""
+
+#, python-format
+msgid "Empty message made, class %s"
+msgstr ""
+
+#, python-format
+msgid "Can't parse incoming messages, class %s"
+msgstr ""
+
+#, python-format
+msgid "Exception during parsing %(area)s: %(exception)s"
+msgstr ""
+
+#, python-format
+msgid "Offending package: %(bytes)s"
+msgstr ""
+
+#, python-format
+msgid "Failed to import miniupnpc module: %(error)s"
+msgstr ""
+
+#, python-format
+msgid "Failed to run upnpc binary: %(error)s"
+msgstr ""
+
+#, python-format
+msgid ""
+"Both MiniUPnPc python module and MiniUPnPc binary failed - automatic "
+"portmapping is not possible. Errors: %(errors)s"
+msgstr ""
+
+msgid "Plugin archive is not in the correct format"
+msgstr ""
+
+#, python-format
+msgid "A plugin with the name \"%s\" is already installed"
+msgstr ""
+
+msgid "Plugin archive contains an unsafe path"
+msgstr ""
+
+#, python-format
+msgid "Loaded plugin %s"
+msgstr ""
+
+#, python-format
+msgid "Unable to enable plugin %s"
+msgstr ""
+
+#, python-format
+msgid "Unable to fully disable plugin %s"
+msgstr ""
+
+#, python-format
+msgid "Stored setting '%(name)s' is no longer present in the plugin"
+msgstr ""
+
+#, python-format
+msgid "Plugin %(module)s returned something weird, '%(value)s', ignoring"
+msgstr ""
+
+#, python-format
+msgid ""
+"Plugin %(module)s failed with error %(errortype)s: %(error)s.\n"
+"Trace: %(trace)s\n"
+"Problem area:%(area)s"
+msgstr ""
+
+msgid "Plugin %(module) returned something weird, '%(value)', ignoring"
+msgstr ""
+
+#, python-format
+msgid "Unknown queue item %s: %s"
 msgstr ""
