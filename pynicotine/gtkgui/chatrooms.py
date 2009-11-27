@@ -32,7 +32,7 @@ from os.path import commonprefix
 import os, re, time, sys
 ver = sys.version_info 
 
-
+from countrycodes import code2name
 
 def GetCompletion(part, list):
 	lowerpart = part.lower()
@@ -1806,6 +1806,29 @@ class ChatRoom:
 		widget.emit_stop_by_name("key_press_event")
 		return True
 
+	def OnTooltip(self, widget, x, y, keyboard_mode, tooltip):
+		try:
+			(incorrectpath, column, cx, cy) = widget.get_path_at_pos(x, y) # the returned path is not correct since it calculates it pretending there's no header!
+			(path, droppos) = widget.get_dest_row_at_pos(x, y) # the return path of this func is okay, but we also need to column name -_-
+		except TypeError:
+			# Either function returned None
+			return False
+		title = column.get_title()
+		if (title != "Country"):
+			return False
+		model = widget.get_model()
+		iter = model.get_iter(path)
+		value = model.get_value(iter, 8)
+		if not value.startswith('flag_'):
+			tooltip.set_text(_("Unknown"))
+			return True
+		value = value[5:]
+		print "Looking up %s" % (value,)
+		countryname = code2name(value)
+		if not countryname:
+			countryname = "Unknown"
+		tooltip.set_text(_(countryname))
+		return True
 	def OnLogToggled(self, widget):
 		if not widget.get_active():
 			if self.logfile is not None:
