@@ -1834,9 +1834,11 @@ class ChatRoom:
 			countryname = code2name(value)
 		else:
 			countryname = "World"
-		if not countryname:
-			countryname = "Unknown (%s)" % (value)
-		tooltip.set_text(_(countryname))
+		if countryname:
+			countryname = _(countryname)
+		else countryname:
+			countryname = _("Unknown (%(countrycode)s)") % {'countrycode':value}
+		tooltip.set_text(countryname)
 		return True
 	def OnLogToggled(self, widget):
 		if not widget.get_active():
