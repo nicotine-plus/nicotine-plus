@@ -1823,10 +1823,12 @@ class ChatRoom:
 			tooltip.set_text(_("Unknown"))
 			return True
 		value = value[5:]
-		print "Looking up %s" % (value,)
 		countryname = code2name(value)
 		if not countryname:
-			countryname = "Unknown"
+			if value:
+				countryname = "Unknown (%s)" % (value)
+			else:
+				countryname = "World"
 		tooltip.set_text(_(countryname))
 		return True
 	def OnLogToggled(self, widget):
