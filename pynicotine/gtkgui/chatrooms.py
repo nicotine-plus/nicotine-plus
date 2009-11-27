@@ -1821,7 +1821,7 @@ class ChatRoom:
 			# Either function returned None
 			return False
 		title = column.get_title()
-		if (title != "Country"):
+		if (title != _("Country")):
 			return False
 		model = widget.get_model()
 		iter = model.get_iter(path)
