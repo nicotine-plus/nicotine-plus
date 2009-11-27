@@ -1808,8 +1808,15 @@ class ChatRoom:
 
 	def OnTooltip(self, widget, x, y, keyboard_mode, tooltip):
 		try:
-			(incorrectpath, column, cx, cy) = widget.get_path_at_pos(x, y) # the returned path is not correct since it calculates it pretending there's no header!
-			(path, droppos) = widget.get_dest_row_at_pos(x, y) # the return path of this func is okay, but we also need to column name -_-
+			# the returned path of widget.get_path_at_pos is not correct since
+			# this function pretends there's no header!  This also means we
+			# cannot look up the column for the very last user in the list
+			# since the y is too big. Therefore we'll use a y-value of 0 on all
+			# lookups
+			(incorrectpath, column, cx, cy) = widget.get_path_at_pos(x, 0)
+			# the return path of this func is okay, but it doesn't return the
+			# column -_-
+			(path, droppos) = widget.get_dest_row_at_pos(x, y)
 		except TypeError:
 			# Either function returned None
 			return False
@@ -1823,12 +1830,12 @@ class ChatRoom:
 			tooltip.set_text(_("Unknown"))
 			return True
 		value = value[5:]
-		countryname = code2name(value)
+		if value:
+			countryname = code2name(value)
+		else:
+			countryname = "World"
 		if not countryname:
-			if value:
-				countryname = "Unknown (%s)" % (value)
-			else:
-				countryname = "World"
+			countryname = "Unknown (%s)" % (value)
 		tooltip.set_text(_(countryname))
 		return True
 	def OnLogToggled(self, widget):
