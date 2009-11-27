@@ -1836,7 +1836,7 @@ class ChatRoom:
 			countryname = "World"
 		if countryname:
 			countryname = _(countryname)
-		else countryname:
+		else:
 			countryname = _("Unknown (%(countrycode)s)") % {'countrycode':value}
 		tooltip.set_text(countryname)
 		return True
