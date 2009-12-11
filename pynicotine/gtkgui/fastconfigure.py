@@ -97,6 +97,7 @@ class FastConfigureAssistant(object):
 			# More than a month ago since our last port status check
 			self.kids['portopen'].set_active(False)
 			self.kids['portclosed'].set_active(False)
+			self.kids['porthidden'].set_active(True)
 		else:
 			if self.config.sections["server"]["firewalled"]:
 				self.kids['portclosed'].set_active(True)
@@ -107,6 +108,8 @@ class FastConfigureAssistant(object):
 		self.kids['upperport'].set_value(self.config.sections["server"]["portrange"][1])
 		self.kids['useupnp'].set_active(self.config.sections["server"]["upnp"])
 		# sharepage
+		if self.config.sections['transfers']['downloaddir']:
+			self.kids['downloaddir'].set_current_folder(self.config.sections['transfers']['downloaddir'])
 		self.sharelist.clear()
 		if self.config.sections["transfers"]["friendsonly"] and self.config.sections["transfers"]["enablebuddyshares"]: 
 			for directory in self.config.sections["transfers"]["buddyshared"]: 
@@ -129,6 +132,7 @@ class FastConfigureAssistant(object):
 		self.config.sections['server']['firewalled'] = not self.kids['portopen'].get_active()
 		self.config.sections['server']['lastportstatuscheck'] = time()
 		# sharepage
+		self.config.sections['transfers']['downloaddir'] = self.kids['downloaddir'].get_current_folder()
 		if self.caneditshare:
 			self.config.sections["transfers"]["friendsonly"] = self.kids['onlysharewithfriends'].get_active()
 			if self.config.sections["transfers"]["friendsonly"] and self.config.sections["transfers"]["enablebuddyshares"]:

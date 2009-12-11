@@ -191,7 +191,7 @@ To test your port please press the following button. It will open a page in your
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
-                <property name="active">True</property>
+                <property name="active">False</property>
                 <property name="draw_indicator">True</property>
                 <signal name="toggled" handler="OnButtonPressed"/>
               </object>
@@ -205,13 +205,28 @@ To test your port please press the following button. It will open a page in your
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
-                <property name="active">True</property>
+                <property name="active">False</property>
                 <property name="draw_indicator">True</property>
                 <property name="group">portopen</property>
                 <signal name="toggled" handler="OnButtonPressed"/>
               </object>
               <packing>
                 <property name="position">1</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkRadioButton" id="porthidden">
+                <property name="label" translatable="yes">(If you can see this option something is wrong)</property>
+                <property name="visible">False</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">False</property>
+                <property name="active">True</property>
+                <property name="draw_indicator">True</property>
+                <property name="group">portopen</property>
+                <signal name="toggled" handler="OnButtonPressed"/>
+              </object>
+              <packing>
+                <property name="position">2</property>
               </packing>
             </child>
           </object>

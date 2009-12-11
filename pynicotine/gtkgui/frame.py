@@ -639,9 +639,8 @@ class NicotineFrame:
 			if ConfigUnset > 1:
 				self.connect1.set_sensitive(False)
 				self.rescan1.set_sensitive(True)
-					
-				# Display Settings dialog
-				self.OnSettings(None)
+				# Display FastConfigure
+				self.OnFastConfigure(None)
 			else:
 				# Connect anyway
 				#self.OnConnect(-1)
@@ -2244,8 +2243,8 @@ class NicotineFrame:
 		if ConfigUnset > 1:
 			if self.np.transfers is not None:
 				self.connect1.set_sensitive(0)
-			self.OnSettings(None)
-
+			#self.OnSettings(None)
+			self.OnFastConfigure(None)
 		else:
 			if self.np.transfers is None:
 				self.connect1.set_sensitive(1)

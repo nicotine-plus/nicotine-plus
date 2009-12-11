@@ -66,8 +66,8 @@ class Config:
 		self.sections = {
 "server":{ \
 	"server": ('server.slsknet.org', 2242), \
-	"login": None, \
-	"passw": None, \
+	"login": '',
+	"passw": '',
 	"serverlist": ["server.slsknet.org:2242", "server.slsknet.org:2240"], \
 	"firewalled": 1,  \
 	"ctcpmsgs": 0,  \
@@ -92,9 +92,9 @@ class Config:
 \
 "transfers":{ \
 	"downloaddir": None, \
-	"uploaddir": None, \
+	"uploaddir": os.path.join(os.path.expanduser("~"),'.nicotine','uploads'),
 	"sharedownloaddir": 1, \
-	"shared": None, \
+	"shared": [],
 	"buddyshared": [], \
 	"uploadbandwidth": 10, \
 	"uselimit": 0, \
@@ -103,7 +103,7 @@ class Config:
 	"preferfriends": 0, \
 	"useupslots": 0, \
 	"uploadslots": 2, \
-	"incompletedir": "", \
+	"incompletedir": os.path.join(os.path.expanduser("~"),'.nicotine','incompletefiles'),
 	"shownotification": 0, \
 	"shownotificationperfolder": 0, \
 	"afterfinish": "", \
@@ -347,6 +347,8 @@ class Config:
 			self.sections["urls"]["protocols"] = {"http":"open -a Safari $", "https":"open -a Safari $"}
 		if sys.platform.startswith('win'):
 			self.sections['ui']['filemanager'] = 'explorer $'
+			self.sections['transfers']['incompletedir'] = os.path.join(os.environ['APPDATA'], 'nicotine', 'incompletefiles')
+			self.sections['transfers']['uploaddir'] = os.path.join(os.environ['APPDATA'], 'nicotine', 'uploads')
 		self.defaults = {}
 		for key, value in self.sections.items():
 			if type(value) is dict:
