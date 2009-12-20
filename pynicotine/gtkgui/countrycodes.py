@@ -88,7 +88,7 @@ lookup = {
 		'er':'Eritrea',
 		'es':'Spain',
 		'et':'Ethiopia',
-		'eu':'Europe (SSGFI only)',
+		'eu':'Europe',
 		'fi':'Finland',
 		'fj':'Fiji',
 		'fk':'Falkland Islands (Malvinas)',
