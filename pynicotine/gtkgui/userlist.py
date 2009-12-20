@@ -22,7 +22,7 @@ import time
 import sys, os
 
 from pynicotine import slskmessages
-from utils import InitialiseColumns, PopupMenu, InputDialog, Humanize, HumanSpeed, PressHeader
+from utils import InitialiseColumns, PopupMenu, InputDialog, Humanize, HumanSpeed, PressHeader, showCountryTooltip
 
 from pynicotine.utils import _
 
@@ -173,7 +173,8 @@ class UserList:
 		self.Menu_PrivateRooms = items[15]
 
 		self.UserList.connect("button_press_event", self.OnPopupMenu)
-
+	def OnTooltip(self, widget, x, y, keyboard_mode, tooltip):
+		return showCountryTooltip(widget, x, y, tooltip, 14, 'flag_')
 	def OnMoveList(self, widget):
 		tab = always = chatrooms = False
 		if self.frame.buddylist_in_tab.get_active():

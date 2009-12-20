@@ -24,15 +24,13 @@ import pango
 from pynicotine import slskmessages
 from pynicotine import pluginsystem
 from pynicotine.slskmessages import ToBeEncoded
-from utils import InitialiseColumns, AppendLine, PopupMenu, FastListModel, string_sort_func, WriteLog, int_sort_func, Humanize, HumanSpeed, expand_alias, is_alias, EncodingsMenu, SaveEncoding, PressHeader, fixpath, IconNotebook
+from utils import InitialiseColumns, AppendLine, PopupMenu, FastListModel, string_sort_func, WriteLog, int_sort_func, Humanize, HumanSpeed, expand_alias, is_alias, EncodingsMenu, SaveEncoding, PressHeader, fixpath, IconNotebook, showCountryTooltip
 from pynicotine.utils import _, findBestEncoding
 from ticker import Ticker
 from entrydialog import OptionDialog, input_box
 from os.path import commonprefix
 import os, re, time, sys
 ver = sys.version_info 
-
-from countrycodes import code2name
 
 def GetCompletion(part, list):
 	lowerpart = part.lower()
@@ -1807,39 +1805,7 @@ class ChatRoom:
 		return True
 
 	def OnTooltip(self, widget, x, y, keyboard_mode, tooltip):
-		try:
-			# the returned path of widget.get_path_at_pos is not correct since
-			# this function pretends there's no header!  This also means we
-			# cannot look up the column for the very last user in the list
-			# since the y is too big. Therefore we'll use a y-value of 0 on all
-			# lookups
-			(incorrectpath, column, cx, cy) = widget.get_path_at_pos(x, 0)
-			# the return path of this func is okay, but it doesn't return the
-			# column -_-
-			(path, droppos) = widget.get_dest_row_at_pos(x, y)
-		except TypeError:
-			# Either function returned None
-			return False
-		title = column.get_title()
-		if (title != _("Country")):
-			return False
-		model = widget.get_model()
-		iter = model.get_iter(path)
-		value = model.get_value(iter, 8)
-		if not value.startswith('flag_'):
-			tooltip.set_text(_("Unknown"))
-			return True
-		value = value[5:]
-		if value:
-			countryname = code2name(value)
-		else:
-			countryname = "World"
-		if countryname:
-			countryname = _(countryname)
-		else:
-			countryname = _("Unknown (%(countrycode)s)") % {'countrycode':value}
-		tooltip.set_text(countryname)
-		return True
+		return showCountryTooltip(widget, x, y, tooltip, 8)
 	def OnLogToggled(self, widget):
 		if not widget.get_active():
 			if self.logfile is not None:

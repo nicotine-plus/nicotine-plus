@@ -370,6 +370,8 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="enable_search">False</property>
+                <property name="has_tooltip">True</property>
+                <signal name="query_tooltip" handler="OnTooltip"/>
               </widget>
             </child>
           </widget>

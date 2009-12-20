@@ -35,6 +35,7 @@ import imghdr
 
 from pynicotine import slskmessages
 from pynicotine.utils import _, executeCommand
+from countrycodes import code2name
 
 DECIMALSEP = ""
 
@@ -83,7 +84,51 @@ def numfmt(value):
 		return v[:5]
 	else:
 		return v[:i+2]
-	
+
+# we could move this into a new class
+previouscountrypath = None
+def showCountryTooltip(widget, x, y, tooltip, sourcecolumn, stripprefix='flag_'):
+	global previouscountrypath
+	try:
+		# the returned path of widget.get_path_at_pos is not correct since
+		# this function pretends there's no header!  This also means we
+		# cannot look up the column for the very last user in the list
+		# since the y is too big. Therefore we'll use a y-value of 0 on all
+		# lookups
+		(incorrectpath, column, cx, cy) = widget.get_path_at_pos(x, 0)
+		# the return path of this func is okay, but it doesn't return the
+		# column -_-
+		(path, droppos) = widget.get_dest_row_at_pos(x, y)
+	except TypeError:
+		# Either function returned None
+		return False
+	# If the mouse is pointing at a new path destroy the tooltip so it can be recreated next time
+	if path != previouscountrypath:
+		previouscountrypath = path
+		return False
+	title = column.get_title()
+	if (title != _("Country")):
+		#print "Title %s is not country" % (title)
+		return False
+	model = widget.get_model()
+	iter = model.get_iter(path)
+	value = model.get_value(iter, sourcecolumn)
+	if not value.startswith(stripprefix):
+		#print "Value %s doesn't have '%s' as prefix." % (value, stripprefix)
+		tooltip.set_text(_("Unknown"))
+		return True
+	value = value[len(stripprefix):]
+	if value:
+		countryname = code2name(value)
+	else:
+		countryname = "World"
+	if countryname:
+		countryname = _(countryname)
+	else:
+		countryname = _("Unknown (%(countrycode)s)") % {'countrycode':value}
+	tooltip.set_text(countryname)
+	return True
+
 def HumanizeBytes(size):
 	if size is None:
 		return None

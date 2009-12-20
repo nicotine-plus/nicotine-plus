@@ -32,7 +32,7 @@ from utils import InitialiseColumns, IconNotebook, PopupMenu, FastListModel, Hum
 from dirchooser import ChooseDir
 from entrydialog import *
 from pynicotine.utils import _
-from utils import InputDialog
+from utils import InputDialog, showCountryTooltip
 
 from time import time
 
@@ -644,7 +644,8 @@ class Search:
 		self._more_results = 0
 		self.new_results = []
 		self.ChangeColours()
-		
+	def OnTooltip(self, widget, x, y, keyboard_mode, tooltip):
+		return showCountryTooltip(widget, x, y, tooltip, 13, stripprefix='')
 	def OnFilterChanged(self, widget):
 		model = widget.get_model()
 		iter = widget.get_active_iter()
