@@ -1,10 +1,9 @@
 [Desktop Entry]
-Encoding=UTF-8
 Name=Nicotine-Plus
 Comment=SoulSeek filesharing client
 Exec=nicotine.py
-Icon=nicotine-plus-32px.png
+Icon=nicotine-plus-32px
 Terminal=false
 Type=Application
-Categories=Application;Network;
+Categories=Network;
 StartupNotify=true
