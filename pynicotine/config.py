@@ -295,7 +295,7 @@ class Config:
 	"soundenabled": 1, \
 	"soundtheme": "", \
 	"soundcommand": "play -q", \
-	"filemanager": "rox $", \
+	"filemanager": "xdg-open $", \
 	"enabletrans": 0, \
 	"speechenabled": 0, \
 	"speechprivate": "%(user)s told you.. %(message)s", \
@@ -334,7 +334,7 @@ class Config:
 	}, \
 \
 "players": { \
-	"default": "xmms -e $", \
+	"default": "xdg-open $", \
 	"npothercommand": "", \
 	"npplayer": "infopipe", \
 	"npformatlist": [], \
