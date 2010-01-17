@@ -2455,9 +2455,13 @@ class NicotineFrame:
 		winpath = "C:\Program Files\Nicotine+" 
 		paths.append(winpath)
 		for path in paths:
+			# 
 			if os.path.exists(os.sep.join([path, "doc", file])):
 				url = "file:%s/%s/%s" % (urllib.pathname2url(path).replace("|", ":") ,"doc", file)
-
+				OpenUri(url)
+				return
+			if os.path.exists(os.sep.join([path, file])):
+				url = "file:%s/%s" % (urllib.pathname2url(path).replace("|", ":"), file)
 				OpenUri(url)
 				return
 		else:
