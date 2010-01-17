@@ -89,7 +89,7 @@ else:
 	files.append((os.path.join(sys.prefix, "share", "applications"), ["files/nicotine.desktop"]))
 
 # data_files (translations)
-mo_dirs = glob.glob(os.path.join("languages", "*"))
+mo_dirs = [x for x in glob.glob(os.path.join("languages", "*")) if isdir(x)]
 for mo in mo_dirs:
 	p, lang = os.path.split(mo)
 	if lang in ("msgfmtall.py", "mergeall", "nicotine.pot"):
@@ -116,10 +116,6 @@ for file in doc_files:
 		files.append((os.path.join("share", "nicotine", "documentation"), [file]))
 	else:
 		files.append((os.path.join(sys.prefix, "share", "nicotine", "documentation"), [file]))
-
-# Glade files (GUI)
-glade_files = glob.glob(os.path.join("pynicotine", "gtkgui", "*.glade"))
-files.append((os.path.join("pynicotine", "gtkgui"), glade_files))
 
 if __name__ == '__main__' :
 	from pynicotine.utils import version
