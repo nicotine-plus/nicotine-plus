@@ -1789,7 +1789,6 @@ class FolderContentsResponse(PeerMessage):
 		self.conn = conn
 		self.dir = directory
 		self.list = shares
-
 	def parseNetworkMessage(self, message):
 		try:
 			message = zlib.decompress(message)
@@ -1797,9 +1796,19 @@ class FolderContentsResponse(PeerMessage):
 			log.addwarning(_("Exception during parsing %(area)s: %(exception)s") % {'area':'FolderContentsResponse', 'exception':error})
 			self.list = {}
 			return
-	#        f = open("ttt","w")
-	#        f.write(message)
-	#        f.close()
+		try:
+			self._parseNetworkMessage(message, NetworkLongLongType)
+		except struct.error, e:
+			try:
+				self._parseNetworkMessage(message, NetworkIntType)
+			except struct.error, f:
+				lines = []
+				lines.append(_("Exception during parsing %(area)s: %(exception)s") % {'area':'FolderContentsResponse1', 'exception':e})
+				lines.append(_("Exception during parsing %(area)s: %(exception)s") % {'area':'FolderContentsResponse2', 'exception':f})
+				lines.append(_("Offending package: %(bytes)s") % {'bytes':repr(message)})
+				log.addwarning("\n".join(lines))
+				self.list = {}
+	def _parseNetworkMessage(self, message, sizetype):
 		shares = {}
 		pos, nfolders = self.getObject(message, types.IntType)
 		for h in range(nfolders):
@@ -1813,14 +1822,14 @@ class FolderContentsResponse(PeerMessage):
 				shares[folder][directory] = []
 				for j in range(nfiles):
 					pos, code = pos+1, ord(message[pos])
-					pos, name = self.getObject(message, types.StringType, pos)
-					pos, size = self.getObject(message, types.LongType, pos, getsignedint = 1)
-					pos, ext = self.getObject(message, types.StringType, pos)
-					pos, numattr = self.getObject(message, types.IntType, pos)
+					pos, name = self.getObject(message, types.StringType, pos, printerror=False)
+					pos, size = self.getObject(message, sizetype, pos, getsignedint = 1, printerror=False)
+					pos, ext = self.getObject(message, types.StringType, pos, printerror=False)
+					pos, numattr = self.getObject(message, types.IntType, pos, printerror=False)
 					attrs = []
 					for k in range(numattr):
-						pos, attrnum = self.getObject(message, types.IntType, pos)
-						pos, attr = self.getObject(message, types.IntType, pos)
+						pos, attrnum = self.getObject(message, types.IntType, pos, printerror=False)
+						pos, attr = self.getObject(message, types.IntType, pos, printerror=False)
 						attrs.append(attr)
 					shares[folder][directory].append([code, name, size, ext, attrs])
 		self.list = shares
