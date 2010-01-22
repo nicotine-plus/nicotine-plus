@@ -417,7 +417,7 @@ class Transfers:
 				
 			else:
 				response = slskmessages.TransferResponse(conn, 0, reason = "Cancelled", req = msg.req)
-				self.eventprocessor.logMessage(_("Denied file request: %s") % str(vars(msg)), 5)
+				self.eventprocessor.logMessage(_("Denied file request: User %s, %s") % (user, str(vars(msg))), 5)
 		return response
 		
 	def TransferRequestUploads(self, msg, user, conn, addr):
@@ -521,7 +521,7 @@ class Transfers:
 				self.addQueued(user, msg.file)
 			else:
 				self.queue.put(slskmessages.QueueFailed(conn = msg.conn.conn, file = msg.file, reason = "File not shared" ))
-		self.eventprocessor.logMessage(_("Queued upload request: %s") % str(vars(msg)), 5)
+		self.eventprocessor.logMessage(_("Queued upload request: User %s, %s") % (user, str(vars(msg))), 5)
 		self.checkUploadQueue()
 
 	def UploadQueueNotification(self, msg):
