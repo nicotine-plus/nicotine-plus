@@ -608,7 +608,7 @@ class Transfers:
 		#return len([i for i in self.uploads if i.req is not None or (i.conn is not None and i.speed is None) or i.status == 'Getting status']) > 0 
 		now = time.time()
 		for i in self.uploads:
-			if (now - i.laststatuschange) < 10: # if a status hasn't changed in the last 10 seconds the connection is probably never going to work, ignoring it.
+			if (now - i.laststatuschange) < 30: # if a status hasn't changed in the last 30 seconds the connection is probably never going to work, ignoring it.
 				if i.req is not None:
 					return True
 				if i.conn is not None and i.speed is None:
