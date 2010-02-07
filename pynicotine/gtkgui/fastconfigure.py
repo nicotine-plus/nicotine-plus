@@ -103,7 +103,6 @@ class FastConfigureAssistant(object):
 				self.kids['portclosed'].set_active(True)
 			else:
 				self.kids['portopen'].set_active(True)
-		self.kids['listenport'].set_markup(_(self.templates['listenport']) % {'listenport':'<b>'+str(self.frame.np.waitport)+'</b>'})
 		self.kids['lowerport'].set_value(self.config.sections["server"]["portrange"][0])
 		self.kids['upperport'].set_value(self.config.sections["server"]["portrange"][1])
 		self.kids['useupnp'].set_active(self.config.sections["server"]["upnp"])
@@ -144,8 +143,19 @@ class FastConfigureAssistant(object):
 	def OnApply(self, widget):
 		self.store()
 		self.window.hide()
+		if not self.frame.np.serverconn:
+			self.frame.OnFirstConnect(-1)
 	def OnCancel(self, widget):
 		self.window.hide()
+	def updatepage(self, page):
+		"""Updates information on the given page with. Use _populate if possible"""
+		if not page:
+			return
+		name = page.get_name()
+		if name == 'portpage':
+			self.kids['listenport'].set_markup(_(self.templates['listenport']) % {'listenport':'<b>'+str(self.frame.np.waitport)+'</b>'})
+		#else:
+		#	print "Unknown page %s" % (name,)
 	def resetcompleteness(self, page = None):
 		"""Turns on the complete flag if everything required is filled in."""
 		# Never use self.config.sections here, only self.kids. 
@@ -192,6 +202,7 @@ class FastConfigureAssistant(object):
 		self.window.set_page_complete(page, complete)
 	def OnPrepare(self, widget, page):
 		self.window.set_page_complete(page, False)
+		self.updatepage(page)
 		self.resetcompleteness(page)
 	def OnEntryChanged(self, widget, param1 = None, param2 = None, param3 = None):
 		name = widget.get_name()
