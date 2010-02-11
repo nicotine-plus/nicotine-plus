@@ -33,6 +33,7 @@ from dirchooser import ChooseDir
 from entrydialog import *
 from pynicotine.utils import _
 from utils import InputDialog, showCountryTooltip
+from pynicotine.logfacility import log
 
 from time import time
 
@@ -123,7 +124,6 @@ class WishList( gtk.Dialog):
 					search[4] = 0
 					self.nicotine.Searches.searches[number] = search
 					if search[2] is not None:
-				
 						search[2].RememberCheckButton.set_active(False)
 					break
 
@@ -1357,8 +1357,11 @@ class Search:
 				self.ResultsList.collapse_all()
 
 	def OnIgnore(self, widget):
-		if self.id in self.Searches.searches.keys():
+		try:
 			del self.Searches.searches[self.id]
+		except KeyError:
+			pass
+		self.Searches.WishListDialog.removeWish(self.text)
 		widget.set_sensitive(False)
 		
 	def OnClear(self, widget):
@@ -1368,7 +1371,8 @@ class Search:
 
 	def OnClose(self, widget):
 		if not self.frame.np.config.sections["searches"]["reopen_tabs"]:
-			self.OnIgnore(widget)
+			if self.text not in self.frame.np.config.sections["server"]["autosearch"]:
+				self.OnIgnore(widget)
 		self.Searches.RemoveTab(self)
 
 	def OnToggleRemember(self, widget):
