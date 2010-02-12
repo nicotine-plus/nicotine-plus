@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: nicotine\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-11-28 09:01+0100\n"
-"PO-Revision-Date: 2009-11-28 22:21+0100\n"
+"PO-Revision-Date: 2010-02-12 22:31+0100\n"
 "Last-Translator: ><((((*> <zniavre2048@gmail.com>\n"
 "Language-Team: Hyriand <hyriand@thegraveyard.org>\n"
 "MIME-Version: 1.0\n"
@@ -377,7 +377,7 @@ msgid "Unrecommendations"
 msgstr "Déconseillés"
 
 msgid "Debug output:"
-msgstr ""
+msgstr "Sortie de débogage"
 
 # pynicotine/gtkgui/settings_glade.py
 msgid "Warnings"
@@ -4809,7 +4809,7 @@ msgid "No such alias (%(alias)s)\n"
 msgstr "Ne trouve pas l'alias (%(alias)s)\n"
 
 msgid "Your config file is corrupt"
-msgstr ""
+msgstr "Votre fichier de configuration est corrompu."
 
 #, python-format
 msgid ""
