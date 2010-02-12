@@ -56,7 +56,10 @@ class FastConfigureAssistant(object):
 		self.kids = {}
 		for i in builder.get_objects():
 			try:
-				self.kids[i.get_name()] = i
+				try:
+					self.kids[gtk.Buildable.get_name(i)] = i # New GTK way
+				except TypeError:
+					self.kids[i.get_name()] = i # Old GTK way
 			except AttributeError:
 				pass
 		numpages = self.window.get_n_pages()
