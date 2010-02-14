@@ -3,7 +3,8 @@ ChangeLog for Nicotine Plus
 SVN
 
 Behaviour
- * Changed the description for our .exe files so it shows up as Nicotine+ in firewalls (ticket #498)
+ * Changed the description for our .exe files so it shows up as Nicotine+ in
+   firewalls (ticket #498)
  * When using an upload slot limit, uploads that don't start within 30 seconds
    are no longer counted as a used slot. This stops a single faulty user from
    preventing other connections
@@ -19,19 +20,23 @@ Features
  * Now-Playing support for Banshee
 
 Bugs
- * Collapse mode in upload/download didn't work for newly added files, wasn't remembered with restart (ticket #205)
+ * Collapse mode in upload/download didn't work for newly added files, wasn't
+   remembered with restart (ticket #205)
  * The packing/unpacking of network messages has been made more explicit. This
    should make Nicotine+ less likely to fail on different processor types and
    operating systems (Tickets #486 #493 #518 #540 #548)
  * Double quotation marks weren't filtered from filenames on Windows systems
  * Ban list got unintentionally deleted sometimes (Ticket #519)
  * "Show IP" didn't not work on the userinfo page (Ticket #522)
- * Wishlist searches would stop working if the setting "Reopen search tabs" was disabled and the user closed the search tab (Ticket #552)
+ * Wishlist searches would stop working if the setting "Reopen search tabs" was
+   disabled and the user closed the search tab (Ticket #552)
  * Incoming RoomSearch raised exceptions
 
 Translations
  * ><((((*> updated the French translation
  * djbaloo updated the Hungarian translation
+
+
 1.2.14 (4th October 2009)
 
 Behaviour
