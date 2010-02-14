@@ -1454,6 +1454,8 @@ class RoomSearch(ServerMessage):
 		pos, self.room = self.getObject(message, types.StringType)
 		pos, self.searchid = self.getObject(message, types.IntType, pos)
 		pos, self.searchterm = self.getObject(message, types.StringType, pos)
+	def __repr__(self):
+		return "RoomSearch(room=%s, requestid=%s, text=%s)" % (self.room, self.searchid, self.searchterm)
 
 class UserSearch(ServerMessage):
 	def __init__(self, user=None, requestid = None, text = None):
@@ -1590,9 +1592,7 @@ class SharedFileList(PeerMessage):
 		self.conn = conn
 		self.list = shares
 		self.built = None
-		
-	def parseNetworkMessage(self, message, nozlib = 0):
-
+	def parseNetworkMessage(self, message, nozlib = False):
 		if not nozlib:
 			try:
 				message=zlib.decompress(message)
@@ -1600,7 +1600,19 @@ class SharedFileList(PeerMessage):
 				log.addwarning(_("Exception during parsing %(area)s: %(exception)s") % {'area':'SharedFileList', 'exception':error})
 				self.list={}
 				return
-
+		try:
+			self._parseNetworkMessage(message, NetworkLongLongType)
+		except struct.error, e:
+			try:
+				self._parseNetworkMessage(message, NetworkIntType)
+			except struct.error, f:
+				lines = []
+				lines.append(_("Exception during parsing %(area)s: %(exception)s") % {'area':'SharedFileList1', 'exception':e})
+				lines.append(_("Exception during parsing %(area)s: %(exception)s") % {'area':'SharedFileList2', 'exception':f})
+				lines.append(_("Offending package: %(bytes)s") % {'bytes':repr(message)})
+				log.addwarning("\n".join(lines))
+				self.list = {}
+	def _parseNetworkMessage(self, message, sizetype):
 		shares = []
 		pos, ndir = self.getObject(message, types.IntType)
 		for i in range(ndir):
@@ -1610,7 +1622,7 @@ class SharedFileList(PeerMessage):
 			for j in range(nfiles):
 				pos, code = pos+1, ord(message[pos])
 				pos, name = self.getObject(message, types.StringType, pos)
-				pos, size = self.getObject(message, types.LongType, pos, getsignedint = True)
+				pos, size = self.getObject(message, sizetype, pos, getsignedint = True, printerror=False)
 				if message[pos-1] == '\xff':
 					# Buggy SLSK?
 					# Some file sizes will be huge if unpacked as a signed
@@ -1620,16 +1632,15 @@ class SharedFileList(PeerMessage):
 					# doesn't matter, it can never be worse than reporting 17
 					# exabytes for a single file)
 					size = struct.unpack("Q", '\xff'*struct.calcsize("Q"))[0] - size
-				pos, ext = self.getObject(message, types.StringType, pos)
-				pos, numattr = self.getObject(message, types.IntType, pos)
+				pos, ext = self.getObject(message, types.StringType, pos, printerror=False)
+				pos, numattr = self.getObject(message, types.IntType, pos, printerror=False)
 				attrs = []
 				for k in range(numattr):
-					pos, attrnum = self.getObject(message, types.IntType, pos)
-					pos, attr = self.getObject(message, types.IntType, pos)
+					pos, attrnum = self.getObject(message, types.IntType, pos, printerror=False)
+					pos, attr = self.getObject(message, types.IntType, pos, printerror=False)
 					attrs.append(attr)
 				files.append([code, name, size, ext, attrs])
 			shares.append((directory, files))
-
 		self.list = shares
 
 	def makeNetworkMessage(self, nozlib = 0, rebuild=False):
