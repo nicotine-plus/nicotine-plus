@@ -4,12 +4,11 @@ SVN
 
 Behaviour
  * Changed the description for our .exe files so it shows up as Nicotine+ in firewalls (ticket #498)
- * Uploads that don't start within 30 seconds 
  * When using an upload slot limit, uploads that don't start within 30 seconds
    are no longer counted as a used slot. This stops a single faulty user from
    preventing other connections
  * The clear button in the upload view now clears erred transfers too
- * Show user info tab when a new userinfo is received
+ * Unhide user info tab when a new userinfo is received
  * Transfer views update less frequently reducing the amount of CPU needed.
  * xdg-open is now used by default to open folders and play music
 
