@@ -337,7 +337,25 @@ class ServerMessage(SlskMessage):
 	pass
 
 class PeerMessage(SlskMessage):
-	pass
+	def doubleParseNetworkMessage(self, message):
+		"""Calls self._parseNetworkMessage first with a NetworkLongLongType, if that fails with NetworkIntType."""
+		messagename = str(self)
+		try:
+			#log.add('Decoding %s with LongLong...' % messagename)
+			self._parseNetworkMessage(message, NetworkLongLongType)
+		except struct.error, e:
+			try:
+				#log.add('Decoding %s with Int...' % messagename)
+				self._parseNetworkMessage(message, NetworkIntType)
+			except struct.error, f:
+				lines = []
+				lines.append(_("Exception during parsing %(area)s: %(exception)s") % {'area':'first ' + messagename, 'exception':e})
+				lines.append(_("Exception during parsing %(area)s: %(exception)s") % {'area':'second ' +messagename, 'exception':f})
+				lines.append(_("Offending package: %(bytes)s") % {'bytes':repr(message)})
+				log.addwarning("\n".join(lines))
+				return False
+		#log.add('Successfully decoded %s' % messagename)
+		return True
 
 class DistribMessage(SlskMessage):
 	pass
@@ -1586,6 +1604,7 @@ class UserInfoReply(PeerMessage):
 		        self.packObject(NetworkIntType(self.uploadallowed)))
 
 
+
 class SharedFileList(PeerMessage):
 	""" Peer responds with this when asked for a filelist."""
 	def __init__(self, conn, shares = None):
@@ -1600,18 +1619,8 @@ class SharedFileList(PeerMessage):
 				log.addwarning(_("Exception during parsing %(area)s: %(exception)s") % {'area':'SharedFileList', 'exception':error})
 				self.list={}
 				return
-		try:
-			self._parseNetworkMessage(message, NetworkLongLongType)
-		except struct.error, e:
-			try:
-				self._parseNetworkMessage(message, NetworkIntType)
-			except struct.error, f:
-				lines = []
-				lines.append(_("Exception during parsing %(area)s: %(exception)s") % {'area':'SharedFileList1', 'exception':e})
-				lines.append(_("Exception during parsing %(area)s: %(exception)s") % {'area':'SharedFileList2', 'exception':f})
-				lines.append(_("Offending package: %(bytes)s") % {'bytes':repr(message)})
-				log.addwarning("\n".join(lines))
-				self.list = {}
+		if not self.doubleParseNetworkMessage(message):
+			self.list = {}
 	def _parseNetworkMessage(self, message, sizetype):
 		shares = []
 		pos, ndir = self.getObject(message, types.IntType)
@@ -1708,18 +1717,8 @@ class FileSearchResult(PeerMessage):
 		self.pos = 0
 	def parseNetworkMessage(self, message):
 		message = zlib.decompress(message)
-		try:
-			self._parseNetworkMessage(message, NetworkLongLongType)
-		except struct.error, e:
-			try:
-				self._parseNetworkMessage(message, NetworkIntType)
-			except struct.error, f:
-				lines = []
-				lines.append(_("Exception during parsing %(area)s: %(exception)s") % {'area':'FileSearchResult1', 'exception':e})
-				lines.append(_("Exception during parsing %(area)s: %(exception)s") % {'area':'FileSearchResult2', 'exception':f})
-				lines.append(_("Offending package: %(bytes)s") % {'bytes':repr(message)})
-				log.addwarning("\n".join(lines))
-				self.list = {}
+		if not self.doubleParseNetworkMessage(message):
+			self.list = {}
 	def _parseNetworkMessage(self, message, sizetype):
 		self.pos, self.user = self.getObject(message, types.StringType)
 		self.pos, self.token = self.getObject(message, types.IntType, self.pos)
@@ -1807,18 +1806,8 @@ class FolderContentsResponse(PeerMessage):
 			log.addwarning(_("Exception during parsing %(area)s: %(exception)s") % {'area':'FolderContentsResponse', 'exception':error})
 			self.list = {}
 			return
-		try:
-			self._parseNetworkMessage(message, NetworkLongLongType)
-		except struct.error, e:
-			try:
-				self._parseNetworkMessage(message, NetworkIntType)
-			except struct.error, f:
-				lines = []
-				lines.append(_("Exception during parsing %(area)s: %(exception)s") % {'area':'FolderContentsResponse1', 'exception':e})
-				lines.append(_("Exception during parsing %(area)s: %(exception)s") % {'area':'FolderContentsResponse2', 'exception':f})
-				lines.append(_("Offending package: %(bytes)s") % {'bytes':repr(message)})
-				log.addwarning("\n".join(lines))
-				self.list = {}
+		if not self.doubleParseNetworkMessage(message):
+			self.list = {}
 	def _parseNetworkMessage(self, message, sizetype):
 		shares = {}
 		pos, nfolders = self.getObject(message, types.IntType)
