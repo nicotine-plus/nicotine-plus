@@ -4,10 +4,33 @@ SVN
 
 Behaviour
  * Changed the description for our .exe files so it shows up as Nicotine+ in firewalls (ticket #498)
+ * Uploads that don't start within 30 seconds 
+ * When using an upload slot limit, uploads that don't start within 30 seconds
+   are no longer counted as a used slot. This stops a single faulty user from
+   preventing other connections
+ * The clear button in the upload view now clears erred transfers too
+ * Show user info tab when a new userinfo is received
+ * Transfer views update less frequently reducing the amount of CPU needed.
+ * xdg-open is now used by default to open folders and play music
+
+Features
+ * Now-Playing support for Amarok2 (Ticket #423)
+ * FastConfigure dialog for new users (Ticket #482)
+ * Country flags now have tooltips (Ticket #521)
 
 Bugs
  * Collapse mode in upload/download didn't work for newly added files, wasn't remembered with restart (ticket #205)
+ * The packing/unpacking of network messages has been made more explicit. This
+   should make Nicotine+ less likely to fail on different processor types and
+   operating systems (Tickets #486 #493 #518 #540 #548)
+ * Double quotation marks weren't filtered from filenames on Windows systems
+ * Ban list got unintentionally deleted sometimes (Ticket #519)
+ * "Show IP" didn't not work on the userinfo page (Ticket #522)
+ * Wishlist searches would stop working if the setting "Reopen search tabs" was disabled and the user closed the search tab (Ticket #552)
 
+Translations
+ * ><((((*> updated the French translation
+ * djbaloo updated the Hungarian translation
 1.2.14 (4th October 2009)
 
 Behaviour
@@ -19,7 +42,8 @@ Features
 
 Bugs
  * Search failed to work on certain combinations of OS and processor (ticket #486)
- * Implemented our own filelist iterator, dramatically reducing the amount of CPU cycles needed to open filelists. Thanks goes to Nick Voronin (ticket #480)
+ * Implemented our own filelist iterator, dramatically reducing the amount of
+   CPU cycles needed to open filelists. Thanks goes to Nick Voronin (ticket #480)
  * Bitrates for Musepack audio were scanned incorrectly
  * Saving file lists from users with slashes in the name didn't work
  * Filesize was incorrect for files around 2 gigabytes and up in userbrowse.
@@ -44,7 +68,10 @@ Bugs
  * Notifications failed when a user had <> in the name
  * Highlight icon kept on blinking with detached windows
  * Fixed links in the Help menu that didn't work (ticket #459)
- * A few different GUI related bugs that should make Nicotine+ much more responsive and use less CPU: Startup time reduced when there is a queue, queueing many items at a timer, pressing buttons like "Clear Finished" and "Abort User's Upload(s)"
+ * A few different GUI related bugs that should make Nicotine+ much more
+   responsive and use less CPU: Startup time reduced when there is a queue,
+   queueing many items at a timer, pressing buttons like "Clear Finished" and
+   "Abort User's Upload(s)"
  * ...and lots of tiny bugs
 
 Translations
