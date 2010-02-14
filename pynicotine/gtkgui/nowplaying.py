@@ -111,6 +111,8 @@ class NowPlaying:
 			self.NP_audacious.set_active(1)
 		elif player == "mpd":
 			self.NP_mpd.set_active(1)
+		elif player == "banshee":
+			self.NP_banshee.set_active(1)
 		#elif player == "mp3blaster":
 		#	self.NP_mp3blaster.set_active(1)
 		elif player == "rhythmbox":
@@ -169,6 +171,9 @@ class NowPlaying:
 			set = 1
 		elif self.NP_mpd.get_active():
 			self.player_replacers = ["$n", "$t", "$a", "$b",  "$f", "$k"]
+			set = 1
+		elif self.NP_banshee.get_active():
+			self.player_replacers = ["$n", "$t", "$l", "$a", "$b", "$k", "$y", "$r", "$f", "$s"]
 			set = 1
 		elif self.NP_amarok.get_active():
 			self.player_replacers = ["$n", "$t", "$l", "$a", "$b", "$c", "$k", "$y", "$r", "$f", "$s"]
@@ -261,6 +266,8 @@ class NowPlaying:
 			result = self.audacious()
 		elif self.NP_mpd.get_active():
 			result = self.mpd()
+		elif self.NP_banshee.get_active():
+			result = self.banshee()
 		#elif self.NP_mp3blaster.get_active():
 		#	result = self.mp3blaster()
 		elif self.NP_rhythmbox.get_active():
@@ -323,6 +330,8 @@ class NowPlaying:
 			player = "audacious"
 		elif self.NP_mpd.get_active():
 			player = "mpd"
+		elif self.NP_banshee.get_active():
+			player = "banshee"
 		#elif self.NP_mp3blaster.get_active():
 		#	player = "mp3blaster"
 		elif self.NP_rhythmbox.get_active():
@@ -407,6 +416,62 @@ class NowPlaying:
 			return None
 		return output
 	
+	def banshee(self):
+		slist = self.NPFormat.child.get_text()
+		if "$n" in slist:
+			commandlist = ["--query-artist", "--query-title"]
+		else:
+			commandlist = []
+			if "$t" in slist:
+				commandlist.append("--query-title")
+			if "$a" in slist:
+				commandlist.append("--query-artist")
+			if "$b" in slist:
+				commandlist.append("--query-album")
+			if "$k" in slist:
+				commandlist.append("--query-track-count")
+			if "$l" in slist:
+				commandlist.append("--query-duration")
+			if "$y" in slist:
+				commandlist.append("--query-year")
+			if "$r" in slist:
+				commandlist.append("--query-bit-rate")
+			if "$f" in slist:
+				commandlist.append("--query-uri")
+		
+		if not commandlist:
+			return 0
+		
+		output = self.banshee_command(commandlist)
+
+		print "'"+output+"'"
+		matches = {}
+		[ matches.__setitem__(i[0].split(':')[0], filter(len, i[1:])[0]) for i in re.findall(r"(?m)^(title: (?P<title>.*?)|artist: (?P<artist>.*?)|album: (?P<album>.*?)|track-number: (?P<track>.*?)|duration: (?P<length>.*?)|year: (?P<year>.*?)|bit-rate: (?P<bitrate>.*?)|uri: (?P<filename>.*?))$", output) ]
+		print matches
+
+		if matches:
+			print matches
+			if "$n" in slist:
+				self.title["nowplaying"] = "%(artist)s - %(title)s" % matches
+
+			for key, value in matches.iteritems():
+				if key == "duration":
+					# Convert seconds to minutes:seconds
+					self.title[key] = "%s:%02d" % (int(round(float(value)/60)), float(value)-(round(float(value)/60)*60))
+				elif key == "filename":
+					# Convert URI path to normal path
+					self.title[key] = value.split('%')[0]+''.join([i[:2].decode('hex')+i[2:] for i in value.split('%')[1:] ]).split('://')[1]
+				else:
+					self.title[key] = value
+			return 1
+		else:
+			return 0
+    
+	def banshee_command(self, commands):
+		return executeCommand("banshee $", " ".join(commands), returnoutput=True)
+		#return subprocess.Popen(["banshee"]+commands, stdout=subprocess.PIPE).communicate()[0]
+	    
+	    
 	def exaile(self):
 		slist = self.NPFormat.child.get_text()
 		output = executeCommand('exaile --get-album --get-artist --get-length --get-title', returnoutput=True)

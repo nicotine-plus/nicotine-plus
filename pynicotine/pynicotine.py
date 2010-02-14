@@ -254,7 +254,7 @@ class NetworkEventProcessor:
 			slskmessages.UploadQueueNotification:self.UploadQueueNotification,
 			slskmessages.SearchRequest:self.SearchRequest,
 			slskmessages.FileSearch:self.SearchRequest,
-			slskmessages.RoomSearch:self.SearchRequest,
+			slskmessages.RoomSearch:self.RoomSearchRequest,
 			slskmessages.UserSearch:self.SearchRequest,
 			slskmessages.NetInfo:self.NetInfo,
 			slskmessages.DistribAlive:self.DistribAlive,
@@ -1501,12 +1501,14 @@ class NetworkEventProcessor:
 			if i.conn == msg.conn.conn:
 				user = i.username
 				self.shares.processSearchRequest(msg.searchterm, user, msg.searchid, direct=1)
-		
 	
 	def SearchRequest(self, msg):
 		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
 		self.shares.processSearchRequest(msg.searchterm, msg.user, msg.searchid, direct=0)
-		
+	def RoomSearchRequest(self, msg):
+		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
+		self.shares.processSearchRequest(msg.searchterm, msg.room, msg.searchid, direct=0)
+
 	def ToggleRespondDistributed(self, msg, settings=False):
 		"""
 		Toggle responding to distributed search each (default: 60sec)

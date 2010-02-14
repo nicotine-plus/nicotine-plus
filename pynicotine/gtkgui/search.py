@@ -210,6 +210,7 @@ class Searches(IconNotebook):
 	def OnAutoSearch(self, *args):
 		# Wishlists supported by server?
 		if self.interval == 0:
+			log.addwarning("The server forbid us from doing wishlist searches.")
 			return False
 		
 		searches = self.frame.np.config.sections["server"]["autosearch"]
