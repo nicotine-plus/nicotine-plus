@@ -1475,7 +1475,7 @@ class NicotineFrame:
 		dialog.show()
 
 	def logCallback(self, timestamp, level, msg):
-		self.updateLog(msg, level)
+		gobject.idle_add(self.updateLog, msg, level, priority=gobject.PRIORITY_HIGH)
 	def logMessage(self, msg, debugLevel = 0):
 		log.add(msg, debugLevel)
 	def updateLog(self, msg, debugLevel = None):
