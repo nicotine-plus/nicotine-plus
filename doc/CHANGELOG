@@ -16,6 +16,7 @@ Features
  * Now-Playing support for Amarok2 (Ticket #423)
  * FastConfigure dialog for new users (Ticket #482)
  * Country flags now have tooltips (Ticket #521)
+ * Now-Playing support for Banshee
 
 Bugs
  * Collapse mode in upload/download didn't work for newly added files, wasn't remembered with restart (ticket #205)
@@ -26,6 +27,7 @@ Bugs
  * Ban list got unintentionally deleted sometimes (Ticket #519)
  * "Show IP" didn't not work on the userinfo page (Ticket #522)
  * Wishlist searches would stop working if the setting "Reopen search tabs" was disabled and the user closed the search tab (Ticket #552)
+ * Incoming RoomSearch raised exceptions
 
 Translations
  * ><((((*> updated the French translation
