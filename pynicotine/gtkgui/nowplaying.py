@@ -20,6 +20,7 @@ import copy
 import sys
 
 from pynicotine.utils import _, executeCommand
+from pynicotine.logfacility import log
 
 class NowPlaying:
 	def __init__(self, frame):
@@ -256,30 +257,34 @@ class NowPlaying:
 			
 	def GetNP(self, widget, test=None, callback=None):
 		self.title_clear()
-		if self.NP_infopipe.get_active():
-			result = self.xmms()
-		elif self.NP_amarok.get_active():
-			result = self.amarok()
-		elif self.NP_amarok2.get_active():
-			result = self.amarok2()
-		elif self.NP_audacious.get_active():
-			result = self.audacious()
-		elif self.NP_mpd.get_active():
-			result = self.mpd()
-		elif self.NP_banshee.get_active():
-			result = self.banshee()
-		#elif self.NP_mp3blaster.get_active():
-		#	result = self.mp3blaster()
-		elif self.NP_rhythmbox.get_active():
-			result = self.rhythmbox()
-		elif self.NP_bmpx.get_active():
-			result = self.bmpx()
-		elif self.NP_exaile.get_active():
-			result = self.exaile()
-		elif self.NP_lastfm.get_active():
-			result = self.lastfm()
-		elif self.NP_other.get_active():
-			result = self.other()
+		try:
+			if self.NP_infopipe.get_active():
+				result = self.xmms()
+			elif self.NP_amarok.get_active():
+				result = self.amarok()
+			elif self.NP_amarok2.get_active():
+				result = self.amarok2()
+			elif self.NP_audacious.get_active():
+				result = self.audacious()
+			elif self.NP_mpd.get_active():
+				result = self.mpd()
+			elif self.NP_banshee.get_active():
+				result = self.banshee()
+			#elif self.NP_mp3blaster.get_active():
+			#	result = self.mp3blaster()
+			elif self.NP_rhythmbox.get_active():
+				result = self.rhythmbox()
+			elif self.NP_bmpx.get_active():
+				result = self.bmpx()
+			elif self.NP_exaile.get_active():
+				result = self.exaile()
+			elif self.NP_lastfm.get_active():
+				result = self.lastfm()
+			elif self.NP_other.get_active():
+				result = self.other()
+		except RuntimeError:
+			log.addwarning("ERROR: Could not execute now playing code. Are you sure you picked the right player?")
+			result = None
 		if not result:
 			return None
 		# Since we need unicode instead of bytes we'll try to force such a
@@ -444,10 +449,10 @@ class NowPlaying:
 		
 		output = self.banshee_command(commandlist)
 
-		print "'"+output+"'"
+		#print "'"+output+"'"
 		matches = {}
 		[ matches.__setitem__(i[0].split(':')[0], filter(len, i[1:])[0]) for i in re.findall(r"(?m)^(title: (?P<title>.*?)|artist: (?P<artist>.*?)|album: (?P<album>.*?)|track-number: (?P<track>.*?)|duration: (?P<length>.*?)|year: (?P<year>.*?)|bit-rate: (?P<bitrate>.*?)|uri: (?P<filename>.*?))$", output) ]
-		print matches
+		#print matches
 
 		if matches:
 			print matches
@@ -468,9 +473,7 @@ class NowPlaying:
 			return 0
     
 	def banshee_command(self, commands):
-		return executeCommand("banshee $", " ".join(commands), returnoutput=True)
-		#return subprocess.Popen(["banshee"]+commands, stdout=subprocess.PIPE).communicate()[0]
-	    
+		return executeCommand(" ".join(["banshee"] + commands), returnoutput=True)
 	    
 	def exaile(self):
 		slist = self.NPFormat.child.get_text()

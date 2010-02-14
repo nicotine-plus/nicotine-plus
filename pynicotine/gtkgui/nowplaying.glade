@@ -188,7 +188,7 @@
               <placeholder/>
             </child>
             <child>
-              <widget class="GtkRadioButton" id="NP_Banshee">
+              <widget class="GtkRadioButton" id="NP_banshee">
                 <property name="label" translatable="yes">Banshee</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
