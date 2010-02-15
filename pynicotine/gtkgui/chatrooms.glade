@@ -337,6 +337,7 @@
                       <widget class="GtkComboBox" id="Encoding">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
+                        <property name="tooltip" translatable="yes">Character encoding</property>
                         <signal name="changed" handler="OnEncodingChanged"/>
                       </widget>
                       <packing>

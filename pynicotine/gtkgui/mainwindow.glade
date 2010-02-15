@@ -900,6 +900,7 @@
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
+                                <property name="tooltip" translatable="yes">Configure logging</property>
                                 <signal name="clicked" handler="OnSettingsLogging"/>
                                 <child>
                                   <widget class="GtkAlignment" id="alignment38">
@@ -1062,6 +1063,7 @@
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
+                                <property name="tooltip" translatable="yes">Configure downloads</property>
                                 <signal name="clicked" handler="OnSettingsDownloads"/>
                                 <child>
                                   <widget class="GtkAlignment" id="alignment46">
@@ -1536,6 +1538,7 @@
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
+                                <property name="tooltip" translatable="yes">Configure uploads</property>
                                 <signal name="clicked" handler="OnSettingsUploads"/>
                                 <child>
                                   <widget class="GtkAlignment" id="alignment49">
@@ -2022,6 +2025,7 @@
                             <child>
                               <widget class="GtkComboBox" id="SearchMethod">
                                 <property name="visible">True</property>
+                                <property name="tooltip" translatable="yes">Search scope</property>
                                 <property name="items" translatable="yes"></property>
                               </widget>
                               <packing>
@@ -2035,6 +2039,7 @@
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
+                                <property name="tooltip" translatable="yes">Configure searches</property>
                                 <signal name="clicked" handler="OnSettingsSearches"/>
                                 <child>
                                   <widget class="GtkAlignment" id="alignment50">
@@ -2170,6 +2175,7 @@
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
+                                <property name="tooltip" translatable="yes">Configure user info</property>
                                 <signal name="clicked" handler="OnSettingsUserinfo"/>
                                 <child>
                                   <widget class="GtkAlignment" id="alignment51">
@@ -2354,6 +2360,7 @@
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
+                                <property name="tooltip" translatable="yes">Configure shares</property>
                                 <signal name="clicked" handler="OnSettingsShares"/>
                                 <child>
                                   <widget class="GtkAlignment" id="alignment52">

@@ -90,6 +90,7 @@
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <signal name="clicked" handler="OnSettingsBanIgnore"/>
+                <property name="tooltip" translatable="yes">Configure banned users</property>
                 <child>
                   <widget class="GtkImage" id="image2">
                     <property name="visible">True</property>
