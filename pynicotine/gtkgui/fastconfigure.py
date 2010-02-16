@@ -37,7 +37,10 @@ def dirstats(directory):
 		totaldirs += len(dirs)
 		totalfiles += len(files)
 		for f in files:
-			totalsize += getsize(join(root, f))
+			try:
+				totalsize += getsize(join(root, f))
+			except OSError:
+				pass
 			parts = f.rsplit('.', 1)
 			if len(parts) == 2 and len(parts[1]) < 5:
 				try:
