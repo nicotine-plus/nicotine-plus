@@ -91,8 +91,9 @@ class Config:
 	}, \
 \
 "transfers":{ \
-	"downloaddir": None, \
-	"uploaddir": os.path.join(os.path.expanduser("~"),'.nicotine','uploads'),
+	"incompletedir": os.path.join(os.path.expanduser("~"),'.nicotine','incompletefiles'),
+	"downloaddir": os.path.join(os.path.expanduser("~"), 'nicotine-downloads'),
+	"uploaddir": os.path.join(os.path.expanduser("~"), 'nicotine-uploads'),
 	"sharedownloaddir": 1, \
 	"shared": [],
 	"buddyshared": [], \
@@ -103,7 +104,6 @@ class Config:
 	"preferfriends": 0, \
 	"useupslots": 0, \
 	"uploadslots": 2, \
-	"incompletedir": os.path.join(os.path.expanduser("~"),'.nicotine','incompletefiles'),
 	"shownotification": 0, \
 	"shownotificationperfolder": 0, \
 	"afterfinish": "", \
@@ -348,6 +348,7 @@ class Config:
 		if sys.platform.startswith('win'):
 			self.sections['ui']['filemanager'] = 'explorer $'
 			self.sections['transfers']['incompletedir'] = os.path.join(os.environ['APPDATA'], 'nicotine', 'incompletefiles')
+			self.sections['transfers']['downloaddir'] = os.path.join(os.environ['APPDATA'], 'nicotine', 'uploads')
 			self.sections['transfers']['uploaddir'] = os.path.join(os.environ['APPDATA'], 'nicotine', 'uploads')
 		self.defaults = {}
 		for key, value in self.sections.items():
