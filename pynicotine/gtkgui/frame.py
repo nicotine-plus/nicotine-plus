@@ -2095,45 +2095,32 @@ class NicotineFrame:
 			gobject.idle_add(self._RescanFinished, data)
 			
 	def OnSettingsShares(self, widget):
-		self.settingswindow.SetSettings(self.np.config.sections)
-		self.settingswindow.SwitchToPage("Shares")
-	
+		self.OnSettings(widget, 'Shares')
 	def OnSettingsSearches(self, widget):
-		self.settingswindow.SetSettings(self.np.config.sections)
-		self.settingswindow.SwitchToPage("Searches")
-		
+		self.OnSettings(widget, 'Searches')
 	def OnSettingsDownloads(self, widget):
-		self.settingswindow.SetSettings(self.np.config.sections)
-		self.settingswindow.SwitchToPage("Downloads")
+		self.OnSettings(widget, 'Downloads')
 		self.settingswindow.pages["Downloads"].DownloadFilters.set_expanded(True)
-
 	def OnSettingsUploads(self, widget):
-		self.settingswindow.SetSettings(self.np.config.sections)
-		self.settingswindow.SwitchToPage("Transfers")
+		self.OnSettings(widget, 'Transfers')
 		self.settingswindow.pages["Transfers"].Uploads.set_expanded(True)
-
 	def OnSettingsUserinfo(self, widget):
-		self.settingswindow.SetSettings(self.np.config.sections)
-		self.settingswindow.SwitchToPage("User info")
-	
+		self.OnSettings(widget, 'User info')
 	def OnSettingsLogging(self, widget):
-		self.settingswindow.SetSettings(self.np.config.sections)
-		self.settingswindow.SwitchToPage("Logging")
-
+		self.OnSettings(widget, 'Logging')
 	def OnSettingsIgnore(self, widget):
-		self.settingswindow.SetSettings(self.np.config.sections)
-		self.settingswindow.SwitchToPage("Ignore List")
-		
+		self.OnSettings(widget, 'Ingore List')
 	def OnSettingsBanIgnore(self, widget):
-		self.settingswindow.SetSettings(self.np.config.sections)
-		self.settingswindow.SwitchToPage("Ban List")
+		self.OnSettings(widget, 'Ban List')
 		
 	def OnFastConfigure(self, widget):
 		if not self.settingswindow.SettingsWindow.get_property("visible"):
 			self.fastconfigure.show()
-	def OnSettings(self, widget):
+	def OnSettings(self, widget, page=None):
 		if not self.fastconfigure.window.get_property("visible"):
 			self.settingswindow.SetSettings(self.np.config.sections)
+			if page:
+				self.settingswindow.SwitchToPage(page)
 			self.settingswindow.SettingsWindow.show()
 			self.settingswindow.SettingsWindow.deiconify()
 	def OnSettingsClosed(self, widget, msg):
