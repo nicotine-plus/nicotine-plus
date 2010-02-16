@@ -11,6 +11,8 @@ VERSION=`sed -n "/^version \?=/{s/.* //;s/^['\"]//;s/['\"]$//;p}" pynicotine/uti
 [ -z "$VERSION" ] && die "Could not retrieve version number"
 [ "$VERSION" != "${VERSION/svn/}" ] && die "It seems your repository still carries the SVN tag in the version: $VERSION"
 
+grep --fixed-strings "$VERSION" doc/CHANGELOG >/dev/null || die "It seems doc/CHANGELOG does not mention version $VERSION"
+
 TMPDIR="/tmp/nic_$RANDOM"
 mkdir "$TMPDIR" || die "Failed to create temp dir $TMPDIR"
 
