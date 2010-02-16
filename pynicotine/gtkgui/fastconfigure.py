@@ -18,6 +18,7 @@
 import gtk
 import gobject
 import os, sys
+import thread
 from os.path import exists, join
 from time import time
 
@@ -224,6 +225,9 @@ class FastConfigureAssistant(object):
 			if directory == self.sharelist.get_value(iter, 5):
 				return
 			iter = self.sharelist.iter_next(iter)
+		self.sharelist.append([recode(directory), "", "", "", _("Counting files..."), directory])
+		thread.start_new_thread(self._addsharedir, (directory,))
+	def _addsharedir(self, directory):
 		subdirs, files, size, extensions = dirstats(directory)
 		exts = []
 		for ext, count in extensions.iteritems():
@@ -232,7 +236,15 @@ class FastConfigureAssistant(object):
 		extstring = ", ".join(["%s %s" % (count, ext) for count, ext in exts[:5]])
 		if len(exts) > 5:
 			extstring += ", ..."
-		self.sharelist.append([recode(directory), HumanSize(size), files, subdirs, extstring, directory])
+		gobject.idle_add(self._updatedirstats, directory, recode(directory), HumanSize(size), files, subdirs, extstring)
+	def _updatedirstats(self, directory, directorystring, size, files, subdirs, extensions):
+		iter = self.sharelist.get_iter_root()
+		while iter is not None:
+			if directory == self.sharelist.get_value(iter, 5):
+				self.sharelist.insert_after(iter, [recode(directory), HumanSize(size), files, subdirs, extensions, directory])
+				self.sharelist.remove(iter)
+				return
+			iter = self.sharelist.iter_next(iter)
 	def OnButtonPressed(self, widget):
 		if self.initphase:
 			return
