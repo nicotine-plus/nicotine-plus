@@ -45,6 +45,13 @@ def dirstats(directory):
 				except KeyError:
 					extensions[parts[1]] = 1
 	return totaldirs, totalfiles, totalsize, extensions
+def widgetname(widget):
+	"""Raises AttributeError if given widget has no name property whatsoever."""
+	try:
+		return gtk.Buildable.get_name(widget) # New GTK way
+	except TypeError:
+		return widget.get_name() # Old GTK way
+    
 class FastConfigureAssistant(object):
 	def __init__(self, frame):
 		self.frame = frame
@@ -57,10 +64,7 @@ class FastConfigureAssistant(object):
 		self.kids = {}
 		for i in builder.get_objects():
 			try:
-				try:
-					self.kids[gtk.Buildable.get_name(i)] = i # New GTK way
-				except TypeError:
-					self.kids[i.get_name()] = i # Old GTK way
+				self.kids[widgetname(i)] = i
 			except AttributeError:
 				pass
 		numpages = self.window.get_n_pages()
@@ -155,7 +159,7 @@ class FastConfigureAssistant(object):
 		"""Updates information on the given page with. Use _populate if possible"""
 		if not page:
 			return
-		name = page.get_name()
+		name = widgetname(page)
 		if name == 'portpage':
 			self.kids['listenport'].set_markup(_(self.templates['listenport']) % {'listenport':'<b>'+str(self.frame.np.waitport)+'</b>'})
 		#else:
@@ -169,7 +173,7 @@ class FastConfigureAssistant(object):
 			page = self.window.get_nth_page(pageid)
 			if not page:
 				return
-		name = page.get_name()
+		name = widgetname(page)
 		if name == 'welcomepage':
 			complete = True
 		elif name == 'userpasspage':
@@ -209,7 +213,7 @@ class FastConfigureAssistant(object):
 		self.updatepage(page)
 		self.resetcompleteness(page)
 	def OnEntryChanged(self, widget, param1 = None, param2 = None, param3 = None):
-		name = widget.get_name()
+		name = widgetname(widget)
 		#print "Changed %s, %s" % (widget, name)
 		self.resetcompleteness()
 	def getshareddirs(self):
@@ -248,7 +252,7 @@ class FastConfigureAssistant(object):
 	def OnButtonPressed(self, widget):
 		if self.initphase:
 			return
-		name = widget.get_name()
+		name = widgetname(widget)
 		#print "Pressed %s" % (name)
 		if name == "checkmyport":
 			OpenUri('='.join(['http://tools.slsknet.org/porttest.php?port', str(self.frame.np.waitport)]))
@@ -264,7 +268,7 @@ class FastConfigureAssistant(object):
 				self.sharelist.remove(self.sharelist.get_iter(i.get_path()))
 		self.resetcompleteness()
 	def OnToggled(self, widget):
-		name = widget.get_name()
+		name = widgetname(widget)
 		if name == 'useupnp':
 			# Setting active state
 			if widget.get_active():
@@ -287,13 +291,13 @@ class FastConfigureAssistant(object):
 	def OnSpinbuttonChangeValue(self, widget, scrolltype):
 		if self.initphase:
 			return
-		name = widget.get_name()
+		name = widgetname(widget)
 		#print "pre spinval on " + name
 		self.resetcompleteness()
 	def OnSpinbuttonValueChanged(self, widget):
 		if self.initphase:
 			return
-		name = widget.get_name()
+		name = widgetname(widget)
 		#print "post spinval on " + name
 		if name == "lowerport":
 			if widget.get_value() > self.kids['upperport'].get_value():
