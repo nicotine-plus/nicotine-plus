@@ -984,7 +984,7 @@ class Transfers:
 				try:
 					i.speed = (i.currentbytes - i.lastbytes)/(curtime - i.lasttime)/1024
 				except ZeroDivisionError:
-					i.speed = 0
+					i.speed = lastspeed # too fast!
 				if i.speed <= 0.0 and (i.currentbytes != i.size or lastspeed == 0):
 					i.timeleft = "∞"
 				else:
