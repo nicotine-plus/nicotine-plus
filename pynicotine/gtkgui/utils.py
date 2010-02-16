@@ -915,7 +915,7 @@ class PopupMenu(gtk.Menu):
 					img = gtk.image_new_from_stock(item[2], gtk.ICON_SIZE_MENU)
 					menuitem.set_image(img)
 				elif item[0][0] == "%":
-					menuitem = gtk.ImageMenuItem(item[0][1:])	
+					menuitem = gtk.ImageMenuItem(item[0][1:])
 					img = gtk.Image()
 					img.set_from_pixbuf(item[2])
 					menuitem.set_image(img)

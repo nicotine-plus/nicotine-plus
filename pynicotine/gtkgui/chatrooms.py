@@ -895,7 +895,7 @@ class ChatRoom:
 					if l[20] == "[" and l[20:].find("] ") != -1:
 						namepos = l[20:].find("] ")
 						user = l[21:20+namepos].strip()
-						
+						user = user.encode('UTF-8') # this could go screwy! But there's no other way without logging raw bytes in the log file
 						self.getUserTag(user)
 						usertag = self.tag_users[user]
 					else:
@@ -1382,7 +1382,6 @@ class ChatRoom:
 		hspeed = HumanSpeed(userdata.avgspeed)
 		hfiles = Humanize(userdata.files)
 		self.users[username] = self.usersmodel.append([img, self.frame.GetFlagImage(flag), username, hspeed, hfiles, userdata.status, userdata.avgspeed, userdata.files, flag])
-
 		self.getUserTag(username)
 
 		self.CountUsers()
