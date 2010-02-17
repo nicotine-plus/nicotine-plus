@@ -871,7 +871,10 @@ class Transfers:
 				oldelapsed = i.timeelapsed
 				i.timeelapsed = curtime - i.starttime
 				if curtime > i.starttime and i.currentbytes > i.offset:
-					i.speed = (i.currentbytes - i.lastbytes)/(curtime - i.lasttime)/1024
+					try:
+						i.speed = (i.currentbytes - i.lastbytes)/(curtime - i.lasttime)/1024
+					except ZeroDivisionError:
+						i.speed = 0
 					if i.speed <= 0.0:
 						i.timeleft = "∞"
 					else:
