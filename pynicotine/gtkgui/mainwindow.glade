@@ -67,7 +67,7 @@
                         <child internal-child="image">
                           <widget class="GtkImage" id="image30">
                             <property name="visible">True</property>
-                            <property name="stock">gtk-missing-image</property>
+                            <property name="stock">gtk-info</property>
                             <property name="icon-size">4</property>
                           </widget>
                         </child>
@@ -632,7 +632,7 @@
                         <child internal-child="image">
                           <widget class="GtkImage" id="image55">
                             <property name="visible">True</property>
-                            <property name="stock">gtk-info</property>
+                            <property name="stock">gtk-home</property>
                           </widget>
                         </child>
                       </widget>
@@ -652,7 +652,7 @@
                         <child internal-child="image">
                           <widget class="GtkImage" id="image56">
                             <property name="visible">True</property>
-                            <property name="stock">gtk-about</property>
+                            <property name="stock">gtk-info</property>
                           </widget>
                         </child>
                       </widget>
@@ -667,7 +667,7 @@
                         <child internal-child="image">
                           <widget class="GtkImage" id="image57">
                             <property name="visible">True</property>
-                            <property name="stock">gtk-about</property>
+                            <property name="stock">gtk-info</property>
                           </widget>
                         </child>
                       </widget>
@@ -682,7 +682,7 @@
                         <child internal-child="image">
                           <widget class="GtkImage" id="image58">
                             <property name="visible">True</property>
-                            <property name="stock">gtk-about</property>
+                            <property name="stock">gtk-info</property>
                           </widget>
                         </child>
                       </widget>
@@ -702,7 +702,7 @@
                         <child internal-child="image">
                           <widget class="GtkImage" id="image59">
                             <property name="visible">True</property>
-                            <property name="stock">gtk-about</property>
+                            <property name="stock">gtk-info</property>
                           </widget>
                         </child>
                       </widget>
@@ -757,7 +757,7 @@
                         <child internal-child="image">
                           <widget class="GtkImage" id="image62">
                             <property name="visible">True</property>
-                            <property name="stock">gtk-missing-image</property>
+                            <property name="stock">gtk-about</property>
                           </widget>
                         </child>
                       </widget>
