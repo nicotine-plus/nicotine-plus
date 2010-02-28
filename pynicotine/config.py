@@ -490,11 +490,14 @@ class Config:
 		if "pyslsk" in autojoin and not "nicotine" in autojoin:
 			autojoin.append("nicotine")
 		
-		# Decode bytes into unicode (1.2.15)
-		try:
-			self.sections["ticker"]["default"] = findBestEncoding(self.sections["ticker"]["default"], ['utf-8'])
-		except TypeError:
-			pass # Already unicode
+		# If we stored any of the following as bytes (pre 1.2.15, pre 1.2.16), convert them to unicode
+		unicodes = [('ticker','default'), ('server','autoreply')]
+		for (section, subsection) in unicodes:
+			try:
+				self.sections[section][subsection] = findBestEncoding(self.sections[section][subsection], ['utf-8'])
+			except TypeError:
+				pass # Already unicode
+		
 		for room in self.sections["ticker"]["rooms"]:
 			encodings = ['utf-8']
 			try:
