@@ -561,10 +561,11 @@ class UserBrowse:
 				length = "%i:%02i" % (rl // 60, rl % 60)
 
 			files.append(["\\".join([self.DirStore.GetPathString(dir), file[1]]), localdir, file[2], bitrate, length])
-		node = self.DirStore.GetChildren(node)
-		while node != None :
-			files += self.DownloadDirectoryRecursive(self.DirStore.on_get_path(node), os.path.join(localdir, ""), recurse)
-			node = self.DirStore.GetNext(node)
+		nchildren, node = self.DirStore.GetChildren(node)
+		if nchildren != 0:
+			while node is not None:
+				files += self.DownloadDirectoryRecursive(self.DirStore.on_get_path(node), os.path.join(localdir, ""))
+				node = self.DirStore.GetNext(node)
 		return files
 		
 	def OnDownloadDirectoryTo(self, widget):

@@ -161,6 +161,7 @@ class UglyTree(gtk.GenericTreeModel):
 			node = (0,0)
 		level, number = node
 		nchildren, firstchild = self.tree2[level][number]
+		#print "level=%s, nchildren=%s, firstchild=%s" % (level, nchildren, firstchild)
 		return (nchildren, (level+1, firstchild))
 	def GetNext(self, node):
 		#print "GetNext(self, node=%s):" % (node,)
@@ -171,7 +172,7 @@ class UglyTree(gtk.GenericTreeModel):
 				return None
 			return (level, number+1)
 	def GetOffset(self, node):
-		#print "GetOffset(self, node):"
+		#print "GetOffset(self, node=%s):" % (node,)
 		assert node != None and node[0] > 0
 		level, number = node
 		p_level, p_number = self.GetChild(self.GetParent(node))
