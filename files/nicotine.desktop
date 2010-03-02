@@ -2,7 +2,7 @@
 Name=Nicotine-Plus
 Comment=SoulSeek filesharing client
 Exec=nicotine.py
-Icon=nicotine-plus-32px
+Icon=nicotine-plus
 Terminal=false
 Type=Application
 Categories=Network;
