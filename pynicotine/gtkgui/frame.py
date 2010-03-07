@@ -601,7 +601,7 @@ class NicotineFrame:
 		# with any possible real room, but if it's not translated with the space
 		# nothing awful will happen
 		self.searchroomslist[_("Joined Rooms ")] = self.RoomSearchCombo_List.append([_("Joined Rooms ")])
-		#self.RoomSearchCombo.set_active_iter(self.searchroomslist[_("Joined Rooms ")])
+		self.RoomSearchCombo.set_active_iter(self.searchroomslist[_("Joined Rooms ")])
 		for method in [_("Global"), _("Buddies"), _("Rooms"), _("User")]:
 			self.searchmethods[method] = self.SearchMethod_List.append([method])
 		self.SearchMethod.set_active_iter(self.searchmethods[_("Global")])
