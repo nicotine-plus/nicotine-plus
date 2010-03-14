@@ -79,12 +79,12 @@ install: build
 
 
 for i in "$EXPORTDIR"/*.py; do 
-	echo "	cp '$EXPORTDIR/$file' '$pns/usr/bin/$i'" >> "$DEBIANDIR/rules"
+	echo "	cp '$EXPORTDIR/$i' '$pns/usr/bin/$i'" >> "$DEBIANDIR/rules"
 done
 echo "usr/bin" >> "$DEBIANDIR/dirs"
 
 for i in "$EXPORTDIR/manpages/"*.1; do
-	echo "	cp '$EXPORTDIR/$file' '$pns/usr/share/man/man1/$i'" >> "$DEBIANDIR/rules"
+	echo "	cp '$EXPORTDIR/$i' '$pns/usr/share/man/man1/$i'" >> "$DEBIANDIR/rules"
 done
 echo "usr/share/man/man1" >> "$DEBIANDIR/dirs"
 
@@ -128,7 +128,7 @@ done
 echo "usr/share/sounds/nicotine/default" >> "$DEBIANDIR/dirs"
 
 for i in "$EXPORTDIR/pynicotine/"*.py do
-	echo "	cp '$EXPORTDIR/$file' '$pns/usr/share/pyshared/pynicotine/$i'" >> "$DEBIANDIR/rules"
+	echo "	cp '$EXPORTDIR/$i' '$pns/usr/share/pyshared/pynicotine/$i'" >> "$DEBIANDIR/rules"
 	echo "/usr/share/pyshared/pynicotine/$i" >> "$pynicotine/nicotine.public"
 done
 echo "usr/share/pyshared/pynicotine" >> "$DEBIANDIR/dirs"
