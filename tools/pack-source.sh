@@ -1,34 +1,21 @@
 #!/bin/bash
+source `dirname $0`/"_library.sh"
 
-die() {
-	echo "Failure: $1"
-	exit 1
-}
+verifyChangelog
+exportSvn
 
-cd "${PWD%%/tools}" # if we're in /tools we go 1 up, otherwise we stay were we are
 
-VERSION=`sed -n "/^version \?=/{s/.* //;s/^['\"]//;s/['\"]$//;p}" pynicotine/utils.py`
-[ -z "$VERSION" ] && die "Could not retrieve version number"
-[ "$VERSION" != "${VERSION/svn/}" ] && die "It seems your repository still carries the SVN tag in the version: $VERSION"
+BZ2="$TMPDIR/nicotine+-$VERSION.tar.bz2"
+progress1 "Tarring (BZip2)..."
+tar --create --bzip2 --directory="$TMPDIR" --file "$BZ2" "$EXPORTFOLDER" || die "Failed to create BZip2"
+progress2 "Done: $BZ2"
 
-grep --fixed-strings "$VERSION" doc/CHANGELOG >/dev/null || die "It seems doc/CHANGELOG does not mention version $VERSION"
+GZ="$TMPDIR/nicotine+-$VERSION.tar.gz"
+progress1 "Tarring (GZip)..."
+tar --create --gzip --directory="$TMPDIR" --file "$GZ" "$EXPORTFOLDER" || die "Failed to create GZip"
+progress2 "Done: $GZ"
 
-TMPDIR="/tmp/nic_$RANDOM"
-mkdir "$TMPDIR" || die "Failed to create temp dir $TMPDIR"
-
-NICDIR="nicotine+-$VERSION"
-SRCDIR="$TMPDIR/$NICDIR"
-
-echo "Exporting SVN..."
-svn export . "$SRCDIR" || die "Failed to export SVN to $SRCDIR"
-
-cd "$TMPDIR"
-
-echo "Tarring (BZip2)..."
-tar -cjf "nicotine+-$VERSION.tar.bz2" "$NICDIR" || die "Failed to create BZip2"
-echo "Tarring (GZip)..."
-tar -czf "nicotine+-$VERSION.tar.gz" "$NICDIR" || die "Failed to create GZip"
-
+echo ""
 echo "Nicotine+ $VERSION packed in $TMPDIR"
 
 echo "Don't forget to tag the SVN repository:"
