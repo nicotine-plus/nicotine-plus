@@ -9,9 +9,9 @@
 ##  Needs to be run as 'root'.  sudo will not work.  I may 
 ##  fix this in the future.
 ##
-##	Dependencies:
-##	
-##	dh-make, debhelper, alien
+##  Dependencies:
+## 
+##  dh-make, debhelper, alien
 ##
 ##  Todo:  
 ##  1) Make this generate properly 'debianized' packages and
@@ -23,7 +23,11 @@
 ##
 ##  Edit these as necessary
 
-current="1.2.15"
+source `dirname $0`/"_library.sh"
+
+verifyChangelog
+exportSvn
+
 depends="python (>= 2.4), python-support (>= 1.0.3), python-gtk2 (>= 2.16.0), x11-utils, menu"
 recommends="python-pyvorbis, python-geoip, python-notify, xdg-utils"
 suggests="python-psyco, python-gnome2, python-sexy, python-dbus, python-gst0.10"
@@ -36,133 +40,143 @@ pemail="mchesky@gmail.com"
 ## ------------------------
 
 
-mkdir -p ~/autodeb
-cd ~/autodeb
-wget http://129.125.101.92/nicotine+/nicotine+-$current.tar.gz
-tar zxvf *.gz
-rm *.gz
-cd nic*
-mkdir debian
-pns=$(pwd)/debian/nicotine
+DEBIANDIR="$EXPORTDIR/debian"
+PNS="$EXPORTDIR/debian/nicotine"
+mkdir "$DEBIANDIR"
 
 ## debian/rules
-echo "#!/usr/bin/make -f" > debian/rules
-echo "# -*- makefile -*" >> debian/rules
-echo "export DH_VERBOSE=0" >> debian/rules
-echo "configure: configure-stamp" >> debian/rules
-echo "configure-stamp:" >> debian/rules
-echo "	dh_testdir" >> debian/rules
-echo "	touch configure-stamp" >> debian/rules
-echo "build: build-stamp" >> debian/rules
-echo "build-stamp: configure-stamp" >> debian/rules
-echo "	dh_testdir" >> debian/rules
-echo "	touch build-stamp" >> debian/rules
-echo "clean:" >> debian/rules
-echo "	dh_testdir" >> debian/rules
-echo "	dh_testroot" >> debian/rules
-echo "	rm -f build-stamp configure-stamp" >> debian/rules
-echo "	dh_clean" >> debian/rules
-echo "install: build" >> debian/rules
-echo "	dh_testdir" >> debian/rules
-echo "	dh_testroot" >> debian/rules
-echo "	dh_clean -k" >> debian/rules
-echo "	dh_installdirs" >> debian/rules
-echo "
-" >> debian/rules
-echo "	mkdir -p" $pns"/usr/share/python-support" >> debian/rules
-echo "	mkdir -p" $pns"/usr/share/pyshared/pynicotine" >> debian/rules
-echo "	mkdir -p" $pns"/usr/share/pyshared/pynicotine/gtkgui" >> debian/rules
-echo "	mkdir -p" $pns"/usr/bin" >> debian/rules
-echo "	mkdir -p" $pns"/usr/share/man/man1" >> debian/rules
-echo "	mkdir -p" $pns"/usr/share/doc/nicotine" >> debian/rules
-echo "	mkdir -p" $pns"/usr/share/menu" >> debian/rules
-echo "	mkdir -p" $pns"/usr/share/pixmaps/" >> debian/rules
-echo "	mkdir -p" $pns"/usr/share/sounds/nicotine/default" >> debian/rules
-for file in $( ls *.py ); do 
-	echo "	cp" $(pwd)"/"$file $pns"/usr/bin/"$( echo $file | sed 's!.*/!!' ) >> debian/rules
+echo "#!/usr/bin/make -f
+# -*- makefile -*
+export DH_VERBOSE=0
+configure: configure-stamp
+configure-stamp:
+	dh_testdir
+	touch configure-stamp
+build: build-stamp
+build-stamp: configure-stamp
+	dh_testdir
+	touch build-stamp
+clean:
+	dh_testdir
+	dh_testroot
+	rm -f build-stamp configure-stamp
+	dh_clean
+install: build
+	dh_testdir
+	dh_testroot
+	dh_clean -k
+	dh_installdirs
+
+	mkdir -p \"$pns/usr/share/python-support\"
+	mkdir -p \"$pns/usr/share/pyshared/pynicotine\"
+	mkdir -p \"$pns/usr/share/pyshared/pynicotine/gtkgui\"
+	mkdir -p \"$pns/usr/bin\"
+	mkdir -p \"$pns/usr/share/man/man1\"
+	mkdir -p \"$pns/usr/share/doc/nicotine\"
+	mkdir -p \"$pns/usr/share/menu\"
+	mkdir -p \"$pns/usr/share/pixmaps/\"
+	mkdir -p \"$pns/usr/share/sounds/nicotine/default\"" >> "$DEBIANDIR/rules"
+
+
+for i in "$EXPORTDIR"/*.py; do 
+	echo "	cp '$EXPORTDIR/$file' '$pns/usr/bin/$i'" >> "$DEBIANDIR/rules"
 done
-echo "usr/bin" > debian/dirs
-for file in $( ls manpages/*.1 ); do
-	echo "	cp" $(pwd)"/"$file $pns"/usr/share/man/man1/"$( echo $file | sed 's!.*/!!' ) >> debian/rules
+echo "usr/bin" >> "$DEBIANDIR/dirs"
+
+for i in "$EXPORTDIR/manpages/"*.1; do
+	echo "	cp '$EXPORTDIR/$file' '$pns/usr/share/man/man1/$i'" >> "$DEBIANDIR/rules"
 done
-echo "usr/share/man/man1" >> debian/dirs
-rm languages/mergeall languages/msgfmtall.py languages/nicotine.pot ## Would love a less destructive solution but I'm lazy...
-for dir in $( ls languages ); do
-	echo "	mkdir -p" $pns"/usr/share/locale/"$dir"/LC_MESSAGES" >> debian/rules
-	echo "usr/share/locale/"$dir"/LC_MESSAGES" >> debian/dirs
-	for mo in $( ls languages/$dir/*.mo ); do
-		echo "	cp" $(pwd)"/"$mo $pns"/usr/share/locale/"$dir"/LC_MESSAGES/nicotine.mo" >> debian/rules
-	done
+echo "usr/share/man/man1" >> "$DEBIANDIR/dirs"
+
+for i in "$EXPORTDIR/languages/"*; do
+	if [ -d "$i" ]; then
+		echo "  mkdir -p '$pns/usr/share/locale/$i/LC_MESSAGES'" >> "$DEBIANDIR/rules"
+		echo "usr/share/locale/$dir/LC_MESSAGES" >> "$DEBIANDIR/dirs"
+		for mo in "$EXPORTDIR/languages/$i"/*.mo; do
+			echo "  cp '$EXPORTDIR/$mo' '$pns/usr/share/locale/$dir/LC_MESSAGES/nicotine.mo'" >> "$DEBIANDIR/rules"
+		done
+	fi
 done
-for file in $( ls doc/* ); do
-	echo "	cp" $(pwd)"/"$file $pns"/usr/share/doc/nicotine/"$( echo $file | sed 's!.*/!!' ) >> debian/rules
+
+for i in "$EXPORTDIR/doc/"* ; do
+	echo "	cp '$EXPORTDIR/$i' '$pns/usr/share/doc/nicotine/$i'" >> "$DEBIANDIR/rules"
 done
-echo "usr/share/doc/nicotine" >> debian/dirs
-echo "	cp nicotine.py" $pns"/usr/share/menu/nicotine" >> debian/rules
-echo "usr/share/menu/nicotine" >> debian/dirs
-for file in $( ls files/*.png ); do
-	echo "	cp" $(pwd)"/"$file $pns"/usr/share/pixmaps/"$( echo $file | sed 's!.*/!!' ) >> debian/rules
+echo "usr/share/doc/nicotine" >> "$DEBIANDIR/dirs"
+
+# THIS IS NOT RIGHT
+# Copying our startup file as menu item? No wonder people see n+ popping around every time they use a package manager
+echo "	cp nicotine.py '$pns/usr/share/menu/nicotine'" >> "$DEBIANDIR/rules"
+die "*** You just corrupted this .deb ***"
+echo "usr/share/menu/nicotine" >> "$DEBIANDIR/dirs"
+
+for i in "$EXPORTDIR/files/"*.png; do
+	echo "	cp '$EXPORTDIR/$i' '$pns/usr/share/pixmaps/$i'" >> "$DEBIANDIR/rules"
 done
-echo "usr/share/pixmaps" >> debian/dirs
-for file in $( ls img/*.png ); do
-	echo "	cp" $(pwd)"/"$file $pns"/usr/share/pixmaps/"$( echo $file | sed 's!.*/!!' ) >> debian/rules
+echo "usr/share/pixmaps" >> "$DEBIANDIR/dirs"
+
+for i in "$EXPORTDIR/img/"*.png; do
+	echo "	cp '$EXPORTDIR/$i' '$pns/usr/share/pixmaps/$i'" >> "$DEBIANDIR/rules"
 done
-for file in $( ls files/*.desktop ); do
-	echo "	cp" $(pwd)"/"$file $pns"/usr/share/"$( echo $file | sed 's!.*/!!' ) >> debian/rules
+
+for i in "$EXPORTDIR/files/"*.desktop; do
+	echo "	cp '$EXPORTDIR/$i' '$pns/usr/share/$i'" >> "$DEBIANDIR/rules"
 done
-for file in $( ls sounds/default/*.ogg ); do
-	echo "	cp" $(pwd)"/"$file $pns"/usr/share/sounds/nicotine/default/"$( echo $file | sed 's!.*/!!' ) >> debian/rules
+
+for i in "$EXPORTDIR/sounds/default/"*.ogg; do
+	echo "	cp '$EXPORTDIR/$i '$pns/usr/share/sounds/nicotine/default/$i'" >> "$DEBIANDIR/rules"
 done
-echo "usr/share/sounds/nicotine/default" >> debian/dirs
-for file in $( ls pynicotine/*.py ); do
-	echo "	cp" $(pwd)"/"$file $pns"/usr/share/pyshared/pynicotine/"$( echo $file | sed 's!.*/!!' ) >> debian/rules
-	echo "/usr/share/pyshared/pynicotine/"$( echo $file | sed 's!.*/!!' ) >> pynicotine/nicotine.public
+echo "usr/share/sounds/nicotine/default" >> "$DEBIANDIR/dirs"
+
+for i in "$EXPORTDIR/pynicotine/"*.py do
+	echo "	cp '$EXPORTDIR/$file' '$pns/usr/share/pyshared/pynicotine/$i'" >> "$DEBIANDIR/rules"
+	echo "/usr/share/pyshared/pynicotine/$i" >> "$pynicotine/nicotine.public"
 done
-echo "usr/share/pyshared/pynicotine" >> debian/dirs
-for file in $( ls pynicotine/gtkgui/* ); do
-	echo "	cp" $(pwd)"/"$file $pns"/usr/share/pyshared/"$file >> debian/rules
-	echo "/usr/share/pyshared/"$file >> pynicotine/nicotine.public
+echo "usr/share/pyshared/pynicotine" >> "$DEBIANDIR/dirs"
+for i in "$EXPORTDIR/pynicotine/gtkgui/"*;  do
+	echo "	cp '$EXPORTDIR/$i' '$pns/usr/share/pyshared/$i'" >> "$DEBIANDIR/rules"
+	echo "/usr/share/pyshared/$i" >> "$EXPORTDIR/pynicotine/nicotine.public"
 done
-for file in $( ls pynicotine/*.public ); do
-	echo "	cp" $(pwd)"/"$file $pns"/usr/share/python-support/"$( echo $file | sed 's!.*/!!' ) >> debian/rules
+for i in "$EXPORTDIR/pynicotine/"*.public; do
+	echo "	cp '$EXPORTDIR/$i' '$pns/usr/share/python-support/$i'" >> "$DEBIANDIR/rules"
 done
-echo "binary-indep: build install" >> debian/rules
-echo "binary-arch: build install" >> debian/rules
-echo "	dh_testdir" >> debian/rules
-echo "	dh_testroot" >> debian/rules
-echo "	dh_installchangelogs" >> debian/rules
-echo "	dh_installdocs" >> debian/rules
-echo "	dh_installexamples" >> debian/rules
-echo "	dh_installmenu" >> debian/rules
-echo "	dh_pycentral" >> debian/rules
-echo "	dh_pysupport" >> debian/rules
-echo "	dh_installman" >> debian/rules
-echo "	dh_link" >> debian/rules
-echo "	dh_strip" >> debian/rules
-echo "	dh_compress" >> debian/rules
-echo "	dh_fixperms" >> debian/rules
-echo "	dh_installdeb" >> debian/rules
-echo "	dh_shlibdeps" >> debian/rules
-echo "	dh_gencontrol" >> debian/rules
-echo "	dh_md5sums" >> debian/rules
-echo "	dh_builddeb" >> debian/rules
-echo "binary: binary-indep binary-arch" >> debian/rules
-echo ".PHONY: build clean binary-indep binary-arch binary install configure" >> debian/rules
+
+echo "binary-indep: build install
+binary-arch: build install
+	dh_testdir
+	dh_testroot
+	dh_installchangelogs
+	dh_installdocs
+	dh_installexamples
+	dh_installmenu
+	dh_pycentral
+	dh_pysupport
+	dh_installman
+	dh_link
+	dh_strip
+	dh_compress
+	dh_fixperms
+	dh_installdeb
+	dh_shlibdeps
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+binary: binary-indep binary-arch
+.PHONY: build clean binary-indep binary-arch binary install configure" >> "$DEBIANDIR/rules"
 
 ##  debian/control
 echo "Source: nicotine
 Section: net
 Priority: extra
-Maintainer: "$pname" <"$pemail">
-Build-Depends: "$depends"
+Maintainer: $pname <$pemail>
+Build-Depends: $depends
 Standards-Version: 3.7.3
 Homepage: http://www.nicotine-plus.org/
 
 Package: nicotine
 Architecture: all
-Depends: "$depends"
-Recommends: "$recommends"
-Suggests: "$suggests"
+Depends: $depends
+Recommends: $recommends
+Suggests: $suggests
 Description: graphical client for the SoulSeek peer-to-peer system
  Nicotine is a client for SoulSeek, a light and efficient file sharing
  system, written in Python and using the GTK2 toolkit, based on the
@@ -172,11 +186,11 @@ Description: graphical client for the SoulSeek peer-to-peer system
  strict bandwidth control, and tries to look like PySoulSeek.
  .
  URL: http://www.nicotine-plus.org/
-" > debian/control
+" > "$DEBIANDIR/control"
 
 ## debian/compat
 echo "7
-" > debian/compat
+" > "$DEBIANDIR/compat"
 
 ## debian/copyright
 echo "Upstream Author(s):
@@ -185,7 +199,7 @@ echo "Upstream Author(s):
 
 Copyright:
 
-    <Copyright (C) "$( date +%Y )" Daelstorm>
+    <Copyright (C) $( date +%Y ) Daelstorm>
 
 License:
 
@@ -204,22 +218,24 @@ License:
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 
 
-The Debian/RPM packaging is (C) "$( date +%Y )", "$pname" <"$pemail"> and
+The Debian/RPM packaging is (C) $( date +%Y ), $pname <$pemail> and
 is licensed under the GPL, see above.
-" > debian/copyright
+" > "$DEBIANDIR/copyright"
 
 ## debian/changelog
-echo "nicotine ("$current"-1ubuntu1) intrepid; urgency=low
+echo "nicotine ($VERSION-1ubuntu1) intrepid; urgency=low
 
-  * nicotine_"$current"-1_all.deb
+  * nicotine_$VERSION-1_all.deb
 
- -- "$pname" <"$pemail">  "$( date -R )"
+ -- $pname <$pemail>  $( date -R )
 
-" > debian/changelog
+" > "$DEBIANDIR/changelog"
+
 export DEBEMAIL=$pemail
 export DEBFULLNAME=$pname
 dh_clean
 dh_make -r -s -i
 dpkg-buildpackage
+die "cd'ing into relative dirs isn't safe"
 cd ..
 alien -r *.deb
