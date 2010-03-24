@@ -351,7 +351,7 @@ class PeerMessage(SlskMessage):
 				lines = []
 				lines.append(_("Exception during parsing %(area)s: %(exception)s") % {'area':'first ' + messagename, 'exception':e})
 				lines.append(_("Exception during parsing %(area)s: %(exception)s") % {'area':'second ' +messagename, 'exception':f})
-				lines.append(_("Offending package: %(bytes)s") % {'bytes':repr(message)})
+				lines.append(_("Offending package: %(bytes)s") % {'bytes':repr(message[:1000])})
 				log.addwarning("\n".join(lines))
 				return False
 		#log.add('Successfully decoded %s' % messagename)
