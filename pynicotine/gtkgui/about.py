@@ -216,7 +216,7 @@ Le Vert
 \thttp://www.le-vert.net
 OffHand
 \t(Windows and OSX packager, tester)
-QuinoX
+quinox
 \t(Code contributer)
 \thttp://index.qtea.nl
 infinito
@@ -234,6 +234,9 @@ Alexander Kanavin
 \thttp://sensi.org/~ak/
 Amun-Ra
 \t(Code contributer)
+
+
+Country flags provided by http://flags.blogpotato.de/ , distributed under a Creative Commens Attribution-Share Alike 3.0 Unported license.
 """)
 		AppendLine(self.DevTextView, text, None, None, showstamp=False)
 		
