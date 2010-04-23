@@ -307,7 +307,7 @@
             </child>
             <child>
               <widget class="GtkCheckButton" id="UseUPnP">
-                <property name="label" translatable="yes">Use UPnP to fix portmapping (required MiniUPnPc with python bindings)</property>
+                <property name="label" translatable="yes">Use UPnP to fix portmapping (requires MiniUPnPc, preferably with python bindings)</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
