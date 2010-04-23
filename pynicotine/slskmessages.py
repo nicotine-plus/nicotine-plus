@@ -1764,31 +1764,25 @@ class FileSearchResult(PeerMessage):
 			else:
 				queuesize = self.inqueue[0]
 
-		msg = self.packObject(self.user)+self.packObject(self.token)+self.packObject(len(filelist))
+		msg = (self.packObject(self.user) + 
+		       self.packObject(NetworkIntType(self.token)) + 
+		       self.packObject(NetworkIntType(len(filelist))))
 		for i in filelist:
-			# Code, Filename, Size (Long Long), 
-			#print "Z-" + repr(chr(1)+self.packObject(i[0].replace(os.sep,"\\"))+self.packObject(i[1]))
-			#print "Z+" + repr(chr(1)+self.packObject(i[0].replace(os.sep,"\\"))+self.packObject(NetworkIntType(i[1])))
 			msg += (chr(1) +
 			        self.packObject(i[0].replace(os.sep,"\\")) + 
-			        self.packObject(NetworkIntType(i[1])))
+			        self.packObject(NetworkLongLongType(i[1])))
 			if i[2] is None:
 				# No metadata
-				msg = msg + self.packObject('')+self.packObject(0)
+				msg += self.packObject('')+self.packObject(0)
 			else:
 				#FileExtension, NumAttributes, 
-				msg = msg + self.packObject("mp3") + self.packObject(3)
-				#AttributeNum 0, Bitrate, AttributeNum 1, Length, AttributeNum 2, Variable Bitrate,
-				#print "X-" + repr(self.packObject(0) + self.packObject(i[2][0])+self.packObject(1)+ self.packObject(i[3])+self.packObject(2)+self.packObject(i[2][1]))
-				#print "X+" + repr(self.packObject(0) + self.packObject(NetworkIntType(i[2][0]))+self.packObject(1)+ self.packObject(NetworkIntType(i[3]))+self.packObject(2)+self.packObject(i[2][1]))
+				msg += self.packObject("mp3") + self.packObject(3)
 				msg += (self.packObject(0) +
 				        self.packObject(NetworkIntType(i[2][0])) +
 				        self.packObject(1) +
 				        self.packObject(NetworkIntType(i[3])) + 
 				        self.packObject(2) + 
 				        self.packObject(i[2][1]))
-		#print "Y-" + repr(chr(self.freeulslots)+self.packObject(self.ulspeed)+self.packObject(queuesize))
-		#print "Y+" + repr(chr(self.freeulslots)+self.packObject(NetworkIntType(self.ulspeed))+self.packObject(NetworkIntType(queuesize)))
 		msg += (chr(self.freeulslots) + 
 		        self.packObject(NetworkIntType(self.ulspeed)) +
 		        self.packObject(NetworkIntType(queuesize)))
