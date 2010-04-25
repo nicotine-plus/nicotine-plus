@@ -33,8 +33,7 @@ import os, re, time, sys
 ver = sys.version_info 
 
 def GetCompletion(part, list):
-	lowerpart = part.lower()
-	matches = [x for x in set(list) if x.lower().startswith(lowerpart) and len(x) >= len(part)]
+	matches = GetCompletions(part, list)
 	if len(matches) == 0:
 		return None, 0
 	if len(matches) == 1:
@@ -1768,6 +1767,14 @@ class ChatRoom:
 		config = self.frame.np.config.sections["words"]
 		if not config["tab"]:
 			return False
+		# "Hello there Miss<tab> how are you doing"
+		# "0  3  6  9  12 15      18 21 24 27 30 33
+		#   1  4  7  10 13      16 19 22 25 28 31
+		#    2  5  8  11 14      17 20 23 26 29 32
+		#
+		# ix = 16
+		# text = Miss
+		# preix = 12
 		ix = widget.get_position()
 		text = widget.get_text()[:ix].split(" ")[-1]
 		preix = ix - len(text)
@@ -1798,7 +1805,7 @@ class ChatRoom:
 				self.completions['currentindex'] = (self.completions['currentindex'] + direction) % len(self.completions['completions'])
 
 				newnick = self.completions['completions'][self.completions['currentindex']]
-				widget.insert_text(newnick, ix)
+				widget.insert_text(newnick, preix)
 				widget.set_position(preix + len(newnick))
 		widget.emit_stop_by_name("key_press_event")
 		return True
