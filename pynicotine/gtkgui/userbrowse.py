@@ -807,7 +807,8 @@ class UserBrowse:
 	def OnCopyDirURL(self, widget):
 		if self.selected_folder is None:
 			return
-		path = self.selected_folder
+		node = self.selected_folder
+		path = self.DirStore.GetPathString(node)
 		if path[:-1] != "/":
 			path += "/"
 		self.frame.SetClipboardURL(self.user, path)
