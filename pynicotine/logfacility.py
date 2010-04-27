@@ -33,6 +33,9 @@ class logger(object):
     def addwarning(self, msg):
         """Add a message with the level corresponding to warnings."""
         self.add(msg, 1)
+    def adddebug(self, msg):
+        """Add a message with the level corresponding to debug info."""
+        self.add(msg, 6)
     def add(self, msg, level=0):
         """Add a message. The list of logging levels is as follows: 
         None - Deprecated (calls that haven't been updated yet)

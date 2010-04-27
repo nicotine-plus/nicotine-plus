@@ -418,7 +418,8 @@ class SlskProtoThread(threading.Thread):
 				# Error recieved; terminate networking loop
 				print time.strftime("%H:%M:%S"), "select.error", error
 				self._want_abort = 1
-				self._ui_callback([DebugMessage(_("Major Socket Error: Networking terminated! %s" % str(error))) ])
+				message = _("Major Socket Error: Networking terminated! %s" % str(error))
+				log.addwarning(message)
 			except ValueError, error:
 				# Possibly opened too many sockets
 				print time.strftime("%H:%M:%S"), "select ValueError:",  error
@@ -440,8 +441,8 @@ class SlskProtoThread(threading.Thread):
 				else:
 					ip, port = self.getIpPort(incaddr)
 					if self.ipBlocked(ip):
-						self._ui_callback([DebugMessage("Ignoring connection request from blocked IP Address %s:%s" %( ip, port), 3)])
-						
+						message = _("Ignoring connection request from blocked IP Address %s:%s" %( ip, port))
+						log.add(message, 3)
 					else:
 						conns[incconn] = PeerConnection(incconn, incaddr, "", "")
 						self._ui_callback([IncConn(incconn, incaddr)])
@@ -470,7 +471,7 @@ class SlskProtoThread(threading.Thread):
 							ip, port = self.getIpPort(msgObj.addr)
 							if self.ipBlocked(ip):
 								message = "Blocking peer connection in progress to IP: %(ip)s Port: %(port)s" % { "ip":ip, "port":port}
-								self._ui_callback([DebugMessage(message, 3)])
+								log.add(message, 3)
 								connection_in_progress.close()
 							else:
 								conns[connection_in_progress] = PeerConnection(connection_in_progress, msgObj.addr, "", "", msgObj.init)
@@ -481,8 +482,7 @@ class SlskProtoThread(threading.Thread):
 				ip, port = self.getIpPort(conns[connection].addr)
 				if self.ipBlocked(ip) and connection is not self._server_socket:
 					message = "Blocking peer connection to IP: %(ip)s Port: %(port)s" % { "ip":ip, "port":port}
-					print message
-					self._ui_callback([DebugMessage(message, 3)])
+					log.add(message, 3)
 					connection.close()
 					del conns[connection]
 					continue
@@ -919,8 +919,8 @@ class SlskProtoThread(threading.Thread):
 							conns[msgObj.conn].obuf += struct.pack("<ii", len(msg) + 4, self.peercodes[msgObj.__class__]) + msg
 				else:
 					if msgObj.__class__ not in [PeerInit, PierceFireWall, FileSearchResult]:
-						#self._ui_callback([Notify(_("Can't send the message over the closed connection: %s %s") %(msgObj.__class__, vars(msgObj)))])
-						self._ui_callback([DebugMessage(_("Can't send the message over the closed connection: %(type)s %(msg_obj)s") %{'type':msgObj.__class__, 'msg_obj':vars(msgObj)}, 3)])
+						message = _("Can't send the message over the closed connection: %(type)s %(msg_obj)s") %{'type':msgObj.__class__, 'msg_obj':vars(msgObj)}
+						log.add(message, 3)
 			elif issubclass(msgObj.__class__, InternalMessage):
 				socketwarning = False
 				if msgObj.__class__ is ServerConn:
