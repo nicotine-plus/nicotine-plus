@@ -44,7 +44,9 @@ def fixportmapping(internallanport, externallanport = None):
 	else:
 		return miniupnpcbinary(internallanport, externallanport)
 def miniupnpcbinary(internallanport, externallanport):
-	command = "upnpc -r %s %s" % (internallanport, externallanport)
+	if internallanport != externallanport:
+		log.addWarning(_('UPnPc binary cannot be used since the internal port (%s) is not identical to the external port (%s)') % (internallanport, externallanport))
+	command = 'upnpc -r %s tcp'
 	try:
 		output = executeCommand(command, returnoutput=True)
 	except RuntimeError, e:
@@ -55,8 +57,12 @@ def miniupnpcbinary(internallanport, externallanport):
 		if line.startswith("external ") and line.find(" is redirected to internal ") > -1:
 			lst = line.split()
 			external = lst[1].split(':')
-			if len(external) == 2 and len(internal) == 2:
-				return (external[0], external[1])
+			#internal = lst[7].split(':')
+			try:
+				return (external[0], int(external[1]))
+			except (ValueError, IndexError):
+				log.addwarning(_('UPnPc binary failed, could not decompose %s into IP and port.') % (external))
+				return None
 	log.addwarning('UPnPc binary failed, could not parse output: %s' % (output,))
 	return None
 def miniupnpcmodule(internallanport, externallanport):

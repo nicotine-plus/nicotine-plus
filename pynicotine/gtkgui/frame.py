@@ -1563,7 +1563,7 @@ class NicotineFrame:
 				log.add('Failed to automate port forwarding, sorry.')
 			else:
 				(externalip, externalport) = mapping
-				log.add('Managed to forward port: %s' % (repr(mapping)))
+				log.add('Managed to forward port %s, your external IP is %s.' % (externalport, externalip))
 				self.networkcallback([slskmessages.IncPort(externalport)])
 		except Exception, e:
 			log.add('UPNP Exception (should never happen): %s' % (e,))
