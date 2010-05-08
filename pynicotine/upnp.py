@@ -46,9 +46,9 @@ def fixportmapping(internallanport, externallanport = None):
 def miniupnpcbinary(internallanport, externallanport):
 	if internallanport != externallanport:
 		log.addWarning(_('UPnPc binary cannot be used since the internal port (%s) is not identical to the external port (%s)') % (internallanport, externallanport))
-	command = 'upnpc -r %s tcp'
+	command = 'upnpc -r $ tcp'
 	try:
-		output = executeCommand(command, returnoutput=True)
+		output = executeCommand(command, replacement=str(externallanport), returnoutput=True)
 	except RuntimeError, e:
 		log.addwarning('Failed to use UPnPc binary: %s' % (str(e),))
 		return
