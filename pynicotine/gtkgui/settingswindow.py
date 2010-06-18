@@ -1168,7 +1168,7 @@ class ColoursFrame(buildFrame):
 "searchq": self.Drawing_Queue, "searchoffline": self.Drawing_OfflineSearchEntry,  "useraway": self.Drawing_AwayColor,
 "useronline": self.Drawing_OnlineColor, "useroffline": self.Drawing_OfflineColor,
 "showaway": self.DisplayAwayColours, "urlcolor": self.Drawing_URL,
-"enabletrans": self.EnableTransparent, "transtint": self.Drawing_TintColor, "transalpha": self.TintAlpha, 
+"enabletrans": self.EnableTransparent, "transtint": self.Drawing_TintColor, 
 "tab_default": self.Drawing_DefaultTab, "tab_hilite": self.Drawing_HighlightTab, "tab_changed": self.Drawing_ChangedTab }, }
 		self.colors = ["chatlocal", "chatremote", "urlcolor", "chatme", "chathilite", "textbg", "inputcolor", "search", "searchq", "searchoffline", "useraway", "useronline", "useroffline", "tab_default", "tab_changed", "tab_hilite", "transtint"]
 		for item in ["bold", "italic", "underline", "normal"]:
@@ -1251,6 +1251,10 @@ class ColoursFrame(buildFrame):
 						colour = None
 					drawingarea.modify_bg(gtk.STATE_NORMAL, colour)
 					break
+		try:
+			self.TintAlpha.set_value(config['ui']['transalpha'])
+		except KeyError:
+			pass
 		self.ToggledAwayColours(self.DisplayAwayColours)
 		self.OnEnableTransparentToggled(self.EnableTransparent)
 		self.ColourScale("")
@@ -1337,7 +1341,6 @@ class ColoursFrame(buildFrame):
 			
 		
 	def OnClearAllColours(self, widget):
-		
 		for option in self.colors:
 			for section, value in self.options.items():
 				if option in value:
@@ -1388,7 +1391,6 @@ class ColoursFrame(buildFrame):
 		self.PickOnline.set_sensitive(sensitive)
 		self.PickOffline.set_sensitive(sensitive)
 
-		
 	def PickColour(self, widget, entry, drawingarea):
 		dlg = gtk.ColorSelectionDialog(_("Pick a colour, any colour"))
 		colour = entry.get_text()
@@ -1404,7 +1406,6 @@ class ColoursFrame(buildFrame):
 				return
 			else:
 				dlg.colorsel.set_current_color(colour)
-			
 		if dlg.run() == gtk.RESPONSE_OK:
 			colour = dlg.colorsel.get_current_color()
 			#print colour.red, colour.red / 256, colour.green,  colour.green / 256, colour.blue, colour.blue / 256
@@ -1420,12 +1421,8 @@ class ColoursFrame(buildFrame):
 						drawingarea = self.colorsd[section][key]
 						drawingarea.modify_bg(gtk.STATE_NORMAL, colour)
 						break
-
-			
-		
 		if entry is self.TintColor:
 			alpha = dlg.colorsel.get_current_alpha()
-
 			self.TintAlpha.set_value(alpha /256)
 			self.ColourScale("")
 		dlg.destroy()
