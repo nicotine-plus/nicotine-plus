@@ -277,7 +277,10 @@ class Shares:
 		# Pack shares data
 		# returns dict in format { Directory : hex string of files+metadata, ... }
 		gobject.idle_add(progress.set_text, _("Building DataBase"))
-		newsharedfilesstreams = self.getFilesStreams(newmtimes, oldmtimes, sharedfilesstreams, newsharedfiles, yieldfunction)
+		if win32:
+			newsharedfilesstreams = self.getFilesStreamsUnicode(newmtimes, oldmtimes, sharedfilesstreams, newsharedfiles, yieldfunction)
+		else:
+			newsharedfilesstreams = self.getFilesStreams(newmtimes, oldmtimes, sharedfilesstreams, newsharedfiles, yieldfunction)
 		
 		# Update Search Index
 		# newwordindex is a dict in format {word: [num, num, ..], ... } with num matching
@@ -287,7 +290,15 @@ class Shares:
 		gobject.idle_add(progress.set_fraction, 0.0)
 		newwordindex, newfileindex = self.getFilesIndex(newmtimes, oldmtimes, shared_directories, newsharedfiles, yieldfunction, progress)
 		gobject.idle_add(progress.set_fraction, 1.0)
-
+		print("sf: %s" % (repr(newsharedfiles)))
+		print("")
+		print("st: %s" % (repr(newsharedfilesstreams)))
+		print("")
+		print("wi: %s" % (repr(newwordindex)))
+		print("")
+		print("fi: %s" % (repr(newfileindex)))
+		print("")
+		print("mt: %s" % (newmtimes))
 		return newsharedfiles, newsharedfilesstreams, newwordindex, newfileindex, newmtimes
 	
 
@@ -575,6 +586,34 @@ class Shares:
 			self.logMessage(message)
 			displayTraceback(sys.exc_info()[2])
 			
+	def getFilesStreamsUnicode(self, mtimes, oldmtimes, oldstreams, newsharedfiles, yieldcall = None):
+		streams = {}
+		for directory in mtimes.keys():
+			# force Unicode for reading from disk
+			u_directory = u"%s" % directory
+			str_directory = str(directory)
+			
+			if self.hiddenCheck(directory):
+				continue
+
+			if directory in oldmtimes and directory not in oldstreams:
+				# Partial information, happened with unicode paths that N+ couldn't handle properly
+				del oldmtimes[directory]
+			
+			if directory in oldmtimes:
+				if mtimes[directory] == oldmtimes[directory]:
+					if os.path.exists(u_directory):
+						# No change
+						streams[directory] = oldstreams[directory]
+						continue
+					else:
+						print "2U. Dropping missing directory %s %s" % (type(u_directory), repr(u_directory))
+						continue
+			print("2U. Adding %s" % (directory))
+			streams[directory] = self.getDirStream(newsharedfiles[directory])
+			if yieldcall is not None:
+				yieldcall()
+		return streams
 	def getFilesStreams(self, mtimes, oldmtimes, oldstreams, newsharedfiles, yieldcall = None):
 		streams = {}
 		for directory in mtimes.keys():
@@ -588,14 +627,14 @@ class Shares:
 						streams[directory] = oldstreams[directory]
 						continue
 					else:
-						print "Dropping missing directory %s" % directory
+						print "2S. Dropping missing directory %s" % directory
 						continue
 					
 			streams[directory] = self.getDirStream(newsharedfiles[directory])
 			if yieldcall is not None:
 				yieldcall()
 		return streams
-
+	
 	# Stop any dot directories
 	def hiddenCheck(self, direct):
 		dirs = direct.split(os.sep)
