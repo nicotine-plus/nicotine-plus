@@ -356,6 +356,7 @@ class UserBrowse:
 		self.files.clear()
 #		self.DirStore.clear()
 		self.DirStore=None
+		self.totalsize = 0
 		
 		self.FolderTreeView.set_model(None)
 		self.DirStore = UglyTree([gobject.TYPE_STRING, gobject.TYPE_STRING], list)
