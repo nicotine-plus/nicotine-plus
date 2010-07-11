@@ -290,15 +290,6 @@ class Shares:
 		gobject.idle_add(progress.set_fraction, 0.0)
 		newwordindex, newfileindex = self.getFilesIndex(newmtimes, oldmtimes, shared_directories, newsharedfiles, yieldfunction, progress)
 		gobject.idle_add(progress.set_fraction, 1.0)
-		print("sf: %s" % (repr(newsharedfiles)))
-		print("")
-		print("st: %s" % (repr(newsharedfilesstreams)))
-		print("")
-		print("wi: %s" % (repr(newwordindex)))
-		print("")
-		print("fi: %s" % (repr(newfileindex)))
-		print("")
-		print("mt: %s" % (newmtimes))
 		return newsharedfiles, newsharedfilesstreams, newwordindex, newfileindex, newmtimes
 	
 
