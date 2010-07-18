@@ -34,8 +34,14 @@ if win32 and hasattr(sys, 'frozen'):
 
 # Disable py2exe log feature by routing stdout/sterr to the special nul file
 if win32 and py2exe:
-	sys.stdout = open("nul", "w")
-	sys.stderr = open("nul", "w")
+	try:
+		sys.stdout = open("nul", "w")
+	except:
+		print('Failed to close stdout (not so bad if you are using PyInstaller)')
+	try:
+		sys.stderr = open("nul", "w")
+	except:
+		print('Failed to close stderr (not so bad if you are using PyInstaller)')
 
 from gettext import gettext as _
 
