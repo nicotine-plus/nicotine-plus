@@ -414,7 +414,7 @@ class Config:
 			else:
 				try:
 					self.sections['transfers']['downloads'] = cPickle.load(handle)
-				except (IOError, EOFError), inst:
+				except (IOError, EOFError, ValueError), inst:
 					log.addwarning(_("Something went wrong while reading your transfer list: %(error)s") % {'error':str(inst)})
 			try:
 				handle.close()
