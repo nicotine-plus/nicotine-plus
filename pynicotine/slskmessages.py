@@ -317,26 +317,6 @@ class SlskMessage:
 		""" Extracts information from the message and sets up fields 
 		in an object"""
 		log.addwarning(_("Can't parse incoming messages, class %s") % (self.__class__,))
-	
-	def strrev(self, str):
-		strlist = list(str)
-		strlist.reverse()
-		return ''.join(strlist)
-	
-	def strunreverse(self, string):
-		strlist = string.split(".")
-		strlist.reverse()
-		return '.'.join(strlist)
-	
-	def debug(self, message=None):
-		print self, self.__dict__	
-		if message:
-			print "Message contents:", message.__repr__()
-		
-class ServerMessage(SlskMessage):
-	pass
-
-class PeerMessage(SlskMessage):
 	def doubleParseNetworkMessage(self, message):
 		"""Calls self._parseNetworkMessage first with a NetworkLongLongType, if that fails with NetworkIntType."""
 		messagename = str(self)
@@ -356,7 +336,26 @@ class PeerMessage(SlskMessage):
 				return False
 		#log.add('Successfully decoded %s' % messagename)
 		return True
-
+	
+	def strrev(self, str):
+		strlist = list(str)
+		strlist.reverse()
+		return ''.join(strlist)
+	
+	def strunreverse(self, string):
+		strlist = string.split(".")
+		strlist.reverse()
+		return '.'.join(strlist)
+	
+	def debug(self, message=None):
+		print self, self.__dict__
+		if message:
+			print "Message contents:", message.__repr__()
+		
+class ServerMessage(SlskMessage):
+	pass
+class PeerMessage(SlskMessage):
+	pass
 class DistribMessage(SlskMessage):
 	pass
 
@@ -1995,12 +1994,15 @@ class DistribSearch(DistribMessage):
 	""" Search request that arrives through the distributed network """
 	def __init__(self, conn):
 		self.conn = conn
-	
 	def parseNetworkMessage(self, message):
-		pos, self.something = self.getObject(message, types.IntType)
-		pos, self.user = self.getObject(message, types.StringType, pos)
-		pos, self.searchid = self.getObject(message, types.IntType, pos)
-		pos, self.searchterm = self.getObject(message, types.StringType, pos)
+		if not self.doubleParseNetworkMessage(message):
+			log.addwarning(u'Hitme')
+			return False
+	def _parseNetworkMessage(self, message, sizetype):
+		pos, self.something = self.getObject(message, sizetype, printerror=False)
+		pos, self.user = self.getObject(message, types.StringType, pos, printerror=False)
+		pos, self.searchid = self.getObject(message, sizetype, pos, printerror=False)
+		pos, self.searchterm = self.getObject(message, types.StringType, pos, printerror=False)
 
 class DistribBranchLevel(DistribMessage):
 	def __init__(self, conn):
