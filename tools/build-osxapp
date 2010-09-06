@@ -1,0 +1,179 @@
+#! /bin/bash
+# This marvellous installation tool has been brought to you by Julian.
+
+python_location=/opt/local/Library/Frameworks/Python.framework/Versions/2.6
+
+install_platypus () {
+    echo
+    echo -n "I need your help to install the platypus command line tool. This is our plan: I open the GUI app, then you go to the preferences panel, hit the 'Install' button, and quit the app. You'll then automatically return to me. Hit enter when you feel ready. > "
+    read
+    open -Wa $platypus
+    echo Thank you.
+}
+
+echo
+echo Welcome to the custom interactive Mac OS X app building tool for Nicotine+.
+
+nicotine_path=$PWD
+echo -n "Did you run me from the base directory of your nicotine+ working copy? (yes|no) > "
+read -n 1 choice ; echo
+if [ $choice == n ]
+then
+    echo "Please enter the path to the base directory (relative is fine)."
+    echo -n "> "
+    read nicotine_path
+    cd $nicotine_path
+fi
+
+echo -n "I'm about to check whether you have all preliminaries installed. Do you want that? (yes|no) > "
+read -n 1 choice ; echo
+if [ $choice == y ]
+then
+
+    if [ -d/Developer ]
+    then
+        echo !! You have the Apple developer tools installed. I assume they are up to date.
+    else
+        echo "You don't even have the Apple developer tools! Go get them first."
+        echo ; exit 1
+    fi
+
+    if [ `echo $PATH | grep -c /opt/local/bin` == 0 ]
+    then
+        export PATH=/opt/local/bin:$PATH
+    fi
+
+    if [ ! `which port` ]
+    then
+        echo -n "You don't seem to have MacPorts installed. Want me to help you get it? (yes|no) > "
+        read -n 1 choice ; echo
+        if [ $choice == y ]
+        then
+            echo -n "What is your OS version? (snow|leopard|tiger) > "
+            read -n 1 choice ; echo
+            echo -n "Downloading the MacPorts dmg... "
+            case $choice
+            in
+                s)
+                curl -s http://distfiles.macports.org/MacPorts/MacPorts-1.9.1-10.6-SnowLeopard.dmg >macports.dmg ;;
+                l)
+                curl -s http://distfiles.macports.org/MacPorts/MacPorts-1.9.1-10.5-Leopard.dmg >macports.dmg ;;
+                t)
+                curl -s http://distfiles.macports.org/MacPorts/MacPorts-1.9.1-10.4-Tiger.dmg >macports.dmg ;;
+            esac
+            echo done.
+            echo -n "I'm about to launch the disk image for you. Hit enter, run the installer, unmount the disk image and come back to me. > "
+            read
+            open macports.dmg
+            echo -n "Hit enter again if you have unmounted the disk image. > "
+            read
+            rm -f macports.dmg
+            echo "!! Just to let you know: I already deleted the image for you."
+        else
+            echo In that case I give up at this point. Please install MacPorts by yourself.
+            echo ; exit 2
+        fi
+    fi
+    echo MacPorts present.
+
+    echo -n "Checking whether you have the right ports installed... "
+    ports_present=`port list active | grep -c "py26-gtk\|py26-mutagen"`
+    echo done.
+    if [ $ports_present != 2 ]
+    then
+        echo -n "You're missing py26-gtk or py26-mutagen, or both. I can install them for you, but you must have sudo privilege and you'll have to enter your password. Installing py26-gtk can take very long. Do it? (yes|no) > "
+        read -n 1 choice ; echo
+        if [ $choice == y ]
+        then
+            sudo echo -n "Installing... "
+            sudo port selfupdate >macports_log.txt 2>&1
+            sudo port install py26-gtk py26-mutagen python_select >>macports_log.txt 2>&1
+            sudo python_select python26 >>macports_log.txt 2>&1
+            echo done.
+            echo "!! Because in theory the installation might have failed, I saved the MacPorts output to $PWD/macports_log.txt."
+        else
+            echo "I'm afraid our journey ends here. Come back when you've installed the packages."
+            echo ; exit 3
+        fi
+    fi
+
+    if [ ! `which platypus` ]
+    then
+        if [ `ls /Applications | grep -c Platypus` == 0 ]
+        then
+            echo -n "You don't have Platypus installed. Shall I do it for you? (yes|no) > "
+            read -n 1 choice ; echo
+            if [ $choice == y ]
+            then
+                echo -n "Downloading... "
+                curl -s http://stsw.danielrichman.com/platypus.zip >platypus.zip
+                unzip -q platypus.zip
+                rm -f platypus.zip
+                echo done.
+                platypus=Platypus-4.4/Platypus.app
+                install_platypus
+                echo "!! I have left the GUI app in $PWD. If you want to move it, you can do that after we're done."
+            else
+                echo So long, and thanks for all the fish. ; echo ; exit 4
+            fi
+        else
+            platypus=Platypus
+            install_platypus
+        fi
+    fi
+
+    echo All preliminaries are complete.
+else
+    echo
+fi
+
+echo -n "Building the Platypus application frame... "
+platypus -a Nicotine -c mac_platypus.sh -o None -i files/nicotine_blue_upscaled.icns -V 1.2.16svn -u "nicotine+" -I "org.nicotine-plus.Nicotine" -FBly ../Nicotine.app
+echo done.
+
+echo -n "Populating the Resources folder.. "
+svn export -q . ../exp_nicotine
+cd ..
+rm -rf exp_nicotine/tools
+mv exp_nicotine/* Nicotine.app/Contents/Resources/
+rm -r exp_nicotine
+echo done.
+
+echo -n "Populating the Frameworks folder.. "
+cd Nicotine.app/Contents
+mkdir Frameworks ; mkdir Frameworks/Python.framework ; mkdir Frameworks/Python.framework/Versions
+cd Frameworks/Python.framework/Versions
+cp -r $python_location .
+echo done.
+
+cd 2.6
+echo
+echo -n "You must do something for me. I'll open the site-packages folder and you are going to remove the directories that are not needed (i.e. everything NOT cairo, distribute, gtk, mutagen, nose, numpy, setuptools). Everything with a name ending on egg-info can be removed as well. After that you can come back to me. Start by hitting enter. > "
+read
+open $PWD/lib/python2.6/site-packages
+echo -n "When you're done, hit enter again. > "
+read
+
+echo -n "Shrinking the remainder of the Frameworks folder... "
+rm -rf Headers Python Resources include share
+cd lib ; rm -rf pygtk ; cd python2.6
+rm -rf plat-mac distutils/command/wininst* test* */test* */*/test* */*/*/test* */*/*/*/test* *.txt */*.txt */*/*.txt */*/*/*.txt */*/*/*/*.txt *.pyo */*.pyo */*/*.pyo */*/*/*.pyo */*/*/*/*.pyo *.pyc */*.pyc */*/*.pyc */*/*/*.pyc */*/*/*/*.pyc
+# the .py files should be removed instead of the .pyo files, but as long as readline is borked we can't afford that.
+echo done.
+
+cd ../../../../../..
+echo
+echo -n "Almost there. We have to edit the AppSettings file a bit. I will launch it. You have to switch off RemainRunningAfterCompletion. Quit the editor when done. Now go! > "
+read
+open -W Resources/AppSettings.plist
+
+cd ..
+echo -n "The app is ready, I saved it at $PWD. I'm going to quit after this prompt. Shall I reveal the app in the Finder? (yes|no) > "
+read -n 1 choice ; echo
+if [ $choice == y ]
+then
+    open -R $PWD
+fi
+
+echo Goodbye.
+echo
