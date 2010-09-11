@@ -121,7 +121,7 @@ def showCountryTooltip(widget, x, y, tooltip, sourcecolumn, stripprefix='flag_')
 	if value:
 		countryname = code2name(value)
 	else:
-		countryname = "World"
+		countryname = "Earth"
 	if countryname:
 		countryname = _(countryname)
 	else:
