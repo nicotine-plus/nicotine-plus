@@ -7,7 +7,7 @@ install_platypus () {
     echo
     echo -n "I need your help to install the platypus command line tool. This is our plan: I open the GUI app, then you go to the preferences panel and hit the 'Install' button. You may then return to me. Hit enter when you feel ready. > "
     read
-    open -a $platypus
+    open $platypus
     echo -n "Hit enter if you're done. > "
     read
     echo Thank you.
@@ -25,6 +25,17 @@ then
     echo -n "> "
     read nicotine_path
     cd $nicotine_path
+fi
+
+echo -n "Which variant do you wish to build? Quartz is advised for Tiger, X11 is advised for Leopard and up. (quartz|x11) > "
+read -n 1 choice ; echo
+if [ choice == q ]
+then
+    ports="py26-gtk +no_x11 +quartz py26-mutagen python_select"
+    appisUIelement=""
+else
+    ports="py26-gtk py26-mutagen python-select"
+    appisUIelement=B
 fi
 
 echo -n "I'm about to check whether you have all preliminaries installed. Do you want that? (yes|no) > "
@@ -45,8 +56,10 @@ then
         export PATH=/opt/local/bin:$PATH
     fi
 
-    if [ ! `which port` ]
+    if which port | grep /opt/local/bin/port >/dev/null
     then
+        :  # nothing to do
+    else
         echo -n "You don't seem to have MacPorts installed. Want me to help you get it? (yes|no) > "
         read -n 1 choice ; echo
         if [ $choice == y ]
@@ -86,20 +99,47 @@ then
         read -n 1 choice ; echo
         if [ $choice == y ]
         then
-            sudo echo -n "Installing... "
+            sudo echo -n "Selfupdating macports... "
             sudo port selfupdate >macports_log.txt 2>&1
-            sudo port install py26-gtk py26-mutagen python_select >>macports_log.txt 2>&1
+            echo done.
+
+            echo -n "Testdriving ports installation... "
+            if port install -y $ports >>macports_log.txt 2>&1
+            then
+                echo done.
+            else
+                echo "fail! :("
+                echo You might suffer from circular dependencies. Review the log at $PWD/macports_log.txt for a first impression. For further analysis, I suggest you run the following command:
+                echo port rdeps --full $ports
+                echo "(Since the problem may indeed be caused by a circular dependency, I strongly recommend that you sit ready to hit ^C directly after running the above command.)"
+                echo Farewell. ; echo ; exit 6
+            fi
+
+            sudo echo -n "Now really installing the ports... "
+            if sudo port install $ports >>macports_log.txt 2>&1
+            then
+                echo done.
+            else
+                echo "fail! :("
+                echo Review the log at $PWD/macports_log.txt to see what went wrong.
+                echo Good luck... ; echo ; exit 7
+            fi
+
+            sudo echo -n "Selecting python26... "
             sudo python_select python26 >>macports_log.txt 2>&1
             echo done.
-            echo " !! Because in theory the installation might have failed, I saved the MacPorts output to $PWD/macports_log.txt."
+
+            echo " !! Just in case something doesn't work, I saved the MacPorts output to $PWD/macports_log.txt."
         else
             echo "I'm afraid our journey ends here. Come back when you've installed the packages."
             echo ; exit 3
         fi
     fi
 
-    if [ ! `which platypus` ]
+    if which platypus | grep /usr/local/bin/platypus >/dev/null
     then
+        : # nothing to do
+    else
         if [ `ls /Applications | grep -c Platypus` == 0 ]
         then
             echo -n "You don't have Platypus installed. Shall I do it for you? (yes|no) > "
@@ -118,7 +158,7 @@ then
                 echo So long, and thanks for all the fish. ; echo ; exit 4
             fi
         else
-            platypus=Platypus
+            platypus="-a Platypus"
             install_platypus
         fi
     fi
@@ -129,7 +169,7 @@ else
 fi
 
 echo -n "Building the Platypus application frame... "
-platypus -a Nicotine -c mac_platypus.sh -o None -i files/nicotine_blue_upscaled.icns -V 1.2.16svn -u "nicotine+" -I "org.nicotine-plus.Nicotine" -FBly ../Nicotine.app
+platypus -a Nicotine -c mac_platypus.sh -o None -i files/nicotine_blue_upscaled.icns -V 1.2.16svn -u "nicotine+" -I "org.nicotine-plus.Nicotine" -Fly$appisUIelement ../Nicotine.app
 echo done.
 
 echo -n "Populating the Resources folder.. "
@@ -137,7 +177,7 @@ svn export -q . ../exp_nicotine
 cd ..
 rm -rf exp_nicotine/tools
 mv exp_nicotine/* Nicotine.app/Contents/Resources/
-rm -r exp_nicotine
+rm -rf exp_nicotine
 echo done.
 
 app_location=$PWD
@@ -172,7 +212,7 @@ open AppSettings.plist
 echo
 echo -n "When you hit enter I'll launch the app. Wait until it has fully launched and try out a few things. Then come back to me and hit enter again. > "
 read
-open -a $app_location/Nicotine.app
+open $app_location/Nicotine.app
 echo -n "(I'm going to do a final bit of dirty shrinkage after this one.) > "
 read
 cd pynicotine
