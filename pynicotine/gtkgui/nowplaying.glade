@@ -185,9 +185,6 @@
               </packing>
             </child>
             <child>
-              <placeholder/>
-            </child>
-            <child>
               <widget class="GtkRadioButton" id="NP_banshee">
                 <property name="label" translatable="yes">Banshee</property>
                 <property name="visible">True</property>
@@ -197,6 +194,23 @@
                 <property name="group">NP_infopipe</property>
               </widget>
               <packing>
+                <property name="top_attach">3</property>
+                <property name="bottom_attach">4</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkRadioButton" id="NP_foobar">
+                <property name="label" translatable="yes">foobar</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">False</property>
+                <property name="draw_indicator">True</property>
+                <property name="group">NP_infopipe</property>
+                <signal name="clicked" handler="OnNPPlayer"/>
+              </widget>
+              <packing>
+                <property name="left_attach">1</property>
+                <property name="right_attach">2</property>
                 <property name="top_attach">3</property>
                 <property name="bottom_attach">4</property>
               </packing>
@@ -324,9 +338,6 @@
           <widget class="GtkHBox" id="hbox5">
             <property name="visible">True</property>
             <property name="spacing">5</property>
-            <child>
-              <placeholder/>
-            </child>
             <child>
               <widget class="GtkButton" id="NPTest">
                 <property name="visible">True</property>

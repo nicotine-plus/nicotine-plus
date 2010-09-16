@@ -19,6 +19,14 @@ import os, sys, re, thread, threading
 import copy
 import sys
 
+if sys.platform == "win32":
+	HAS_WIN32GUI = False
+	try: 
+		from win32gui import *
+		HAS_WIN32GUI = True
+	except: 
+		pass
+
 from pynicotine.utils import _, executeCommand
 from pynicotine.logfacility import log
 
@@ -124,6 +132,8 @@ class NowPlaying:
 			self.NP_exaile.set_active(1)
 		elif player == "lastfm":
 			self.NP_lastfm.set_active(1)
+		elif player == "foobar":
+			self.NP_foobar.set_active(1)
 		elif player == "other":
 			self.NP_other.set_active(1)
 			self.player_replacers = ["$n"]
@@ -196,6 +206,9 @@ class NowPlaying:
 			set = 1
 		elif self.NP_lastfm.get_active():
 			self.player_replacers = ["$n", "$s", "$t", "$a"]
+			set = 1
+		elif self.NP_foobar.get_active():
+			self.player_replacers = ["$n"]
 			set = 1
 		elif self.NP_other.get_active():
 			self.player_replacers = ["$n"]
@@ -280,6 +293,8 @@ class NowPlaying:
 				result = self.exaile()
 			elif self.NP_lastfm.get_active():
 				result = self.lastfm()
+			elif self.NP_foobar.get_active():
+				result = self.foobar()
 			elif self.NP_other.get_active():
 				result = self.other()
 		except RuntimeError:
@@ -347,6 +362,8 @@ class NowPlaying:
 			player = "exaile"
 		elif self.NP_lastfm.get_active():
 			player = "lastfm"
+		elif self.NP_foobar.get_active():
+			player = "foobar"
 		elif self.NP_other.get_active():
 			player = "other"
 			
@@ -384,7 +401,7 @@ class NowPlaying:
 			self.title["year"] = str(metadata["date"])
 			self.title["album"] = metadata["album"]
 			self.title["filename"] = metadata["location"]
-			return 1 
+			return True
 		except Exception, error:
 			self.frame.logMessage(_("ERROR while reading data from the %(program)s DBus interface: %(error)s") % {"program": "BMPx", "error": error})
 			return None
@@ -413,7 +430,7 @@ class NowPlaying:
 			if output:
 				self.title["album"] = output	
 
-		return 1
+		return True
 	def mpd_command(self, command):
 		#output = commands.getoutput("mpc --format %s" % command).split('\n')[0]
 		output = executeCommand("mpc --format $", command, returnoutput=True).split('\n')[0]
@@ -445,7 +462,7 @@ class NowPlaying:
 				commandlist.append("--query-uri")
 		
 		if not commandlist:
-			return 0
+			return False
 		
 		output = self.banshee_command(commandlist)
 
@@ -468,9 +485,9 @@ class NowPlaying:
 					self.title[key] = value.split('%')[0]+''.join([i[:2].decode('hex')+i[2:] for i in value.split('%')[1:] ]).split('://')[1]
 				else:
 					self.title[key] = value
-			return 1
+			return True
 		else:
-			return 0
+			return False
     
 	def banshee_command(self, commands):
 		return executeCommand(" ".join(["banshee"] + commands), returnoutput=True)
@@ -543,7 +560,7 @@ class NowPlaying:
 					self.title["status"] = "playing"
 				else:
 					self.title["status"] = "unknown"
-		return 1
+		return True
 		
 	def amarok_command(self, command):
 		output = executeCommand("dcop amarok player $", command, returnoutput=True).split('\n')[0]
@@ -591,8 +608,8 @@ class NowPlaying:
 			if output: self.title["status"] = output
 		if not self.audacious_running:
 			self.frame.logMessage(_("ERROR: audtool didn't detect a running Audacious session."))
-			return 0
-		return 1
+			return False
+		return True
 		
 	def audacious_command(self, command, subcommand = ''):
 		#output = commands.getoutput("audtool %s %s" % (command, subcommand)).split('\n')[0]
@@ -639,11 +656,36 @@ class NowPlaying:
 				self.title["status"] = "playing"
 			else:
 				self.title["status"] = "paused"
-			return 1
+			return True
 		except Exception, error:
 			self.frame.logMessage(_("ERROR while accessing the %(program)s DBus interface: %(error)s") % {"program": "Rhythmbox", "error": error })
 			return None
+	
+	def foobar(self):
+		if HAS_WIN32GUI:
+			wnd_ids = [
+				'{DA7CD0DE-1602-45e6-89A1-C2CA151E008E}',
+				'{97E27FAA-C0B3-4b8e-A693-ED7881E99FC1}',
+				'{E7076D1C-A7BF-4f39-B771-BCBE88F2A2A8}'
+			]
 		
+			metadata = None
+			
+			for wnd_id in wnd_ids:
+				wnd_txt = GetWindowText(FindWindow(wnd_id, None))
+				if wnd_txt:
+					m = re.match("(.*)\s+\[foobar.*", wnd_txt)
+					if m:
+						metadata = m.groups(0)[0].strip()
+						
+			if metadata:
+				self.title["nowplaying"] = "now playing: " + metadata
+				return True
+			else:
+				return None
+		else:
+			return None
+				
 	def get_length_time(self, length):
 		if length != '' and length != None:
 			minutes = int(length)/60
@@ -720,7 +762,7 @@ class NowPlaying:
 			self.title["artist"] = artist
 		if "$s" in slist:
 			self.title["status"] = (_("paused"), _("playing"))[status]
-		return 1
+		return True
 
 	def other(self):
 		try:
@@ -766,7 +808,7 @@ class NowPlaying:
 			filename = infolist[13][7:]
 			self.title = { "title": "",  "artist": "", "comment": "", "year": "", "album": "", "track":"", "nowplaying": title, "length": time, "bitrate": bitrate, "channels": channels, "position": position, "filename": filename, "status": status}
 
-			return 1
+			return True
 		except:
 			return None
 		
