@@ -82,8 +82,11 @@ if useconsole:
         CONSOLEENCODING = 'UTF8'
     CONSOLEWIDTH = 80
     try:
-        CONSOLEWIDTH = os.environ['COLUMNS']
-    except KeyError:
+        # Fixed, you better not resize your window!
+        import sys,fcntl,termios,struct
+        data = fcntl.ioctl(sys.stdout.fileno(), termios.TIOCGWINSZ, '1234')
+        CONSOLEWIDTH = struct.unpack('hh',data)[1]
+    except IOError:
         pass
     
     TIMEFORMAT = "%a %H:%M "
