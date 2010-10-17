@@ -86,7 +86,7 @@ if useconsole:
         import sys,fcntl,termios,struct
         data = fcntl.ioctl(sys.stdout.fileno(), termios.TIOCGWINSZ, '1234')
         CONSOLEWIDTH = struct.unpack('hh',data)[1]
-    except IOError:
+    except:
         pass
     
     TIMEFORMAT = "%a %H:%M "
