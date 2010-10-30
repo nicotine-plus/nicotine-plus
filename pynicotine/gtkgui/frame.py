@@ -745,7 +745,7 @@ class NicotineFrame:
 				self.is_mapped = False
 			return True
 		if self.TrayApp.HAVE_TRAYICON:
-			option = QuitBox(self, title=_('Close Nicotine-Plus?'), message=_('Are you sure you wish to exit Nicotine-Plus at this time?'),tray=True, status="question", third=_("Send to tray") )
+			option = QuitBox(self, title=_('Close Nicotine-Plus?'), message=_('Are you sure you wish to exit Nicotine-Plus at this time?'), tray=True, status="question", third=_("Send to tray") )
 		else:
 			option = QuitBox(self, title=_('Close Nicotine-Plus?'), message=_('Are you sure you wish to exit Nicotine-Plus at this time?'), tray=False, status="question" )
 		
@@ -1253,6 +1253,7 @@ class NicotineFrame:
 		self.MainNotebook.remove_page(num)
 
 	def ShowTab(self, widget, lista):
+		name, child = lista
 		if child in self.MainNotebook.get_children():
 			return
 		if child not in self.HiddenTabs:
