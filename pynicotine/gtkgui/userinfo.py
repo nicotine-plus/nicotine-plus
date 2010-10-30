@@ -16,15 +16,19 @@
 # Original copyright below
 # Copyright (c) 2003-2004 Hyriand. All rights reserved.
 
-import os
-import gtk
+# Python core
 import tempfile
+import os
+
+# Python modules
+import gtk
 import gobject
 
+# Application specific
 from utils import IconNotebook, PopupMenu, EncodingsMenu, SaveEncoding,  Humanize, InitialiseColumns, AppendLine
 from pynicotine import slskmessages
-
 from pynicotine.utils import _, CleanFile
+from pynicotine.logfacility import log
 
 # User Info and User Browse Notebooks
 class UserTabs(IconNotebook):
@@ -427,8 +431,21 @@ class UserInfo:
 			return
 		#pixbuf = self.image.get_pixbuf()
 		name = os.path.join(self.frame.np.config.sections["transfers"]["downloaddir"], CleanFile(self.user + ".jpg"))
-		self.image_pixbuf.save(name, "jpeg", {"quality": "100"})
-		self.frame.logMessage("Picture saved to " + name)
+		if os.path.exists(name):
+			question = "There is already a file present at %s, do you want to replace it?" % name
+			dialog = gtk.MessageDialog(parent=self.frame.MainWindow, type=gtk.MESSAGE_QUESTION, buttons=gtk.BUTTONS_YES_NO, message_format=question)
+			dialog.set_modal(True)
+			dialog.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
+			response = dialog.run() # modal
+			dialog.hide()
+			if response == gtk.RESPONSE_YES:
+				log.add(_("Removing %s") % name)
+				os.unlink(name)
+			else:
+				log.add(_("Not saving the picture of user %s") % self.user)
+		if not os.path.exists(name):
+			self.image_pixbuf.save(name, "jpeg", {"quality": "100"})
+			log.add(_("Picture saved to %s") % name)
 	
 	def OnEncodingChanged(self, widget):
 		try:
