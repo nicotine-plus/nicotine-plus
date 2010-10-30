@@ -1087,33 +1087,37 @@ class RoomList(ServerMessage):
 		return ""
 	
 	def parseNetworkMessage(self, message):
-	
 		pos, numrooms = self.getObject(message, types.IntType)
 		self.rooms = []
+		self.ownedprivaterooms = []
+		self.otherprivaterooms = []
 		for i in range(numrooms):
 			pos, room = self.getObject(message, types.StringType, pos)
 			self.rooms.append([room, None])
-	
 		pos, numusercounts = self.getObject(message, types.IntType, pos)
 		for i in range(numusercounts):
 			pos, usercount = self.getObject(message, types.IntType, pos)
 			self.rooms[i][1] = usercount
-		self.privaterooms = []
-		
+		if len(message[pos:]) == 0:
+			return
+		(pos, self.ownedprivaterooms) = self._getRooms(pos, message)
+		(pos, self.otherprivaterooms) = self._getRooms(pos, message)
+
+	def _getRooms(self, originalpos, message):
 		try:
-			if len(message[pos:]) == 0:
-				return
-			pos, numprivateroom = self.getObject(message, types.IntType, pos)
-			for i in range(numprivateroom):
+			pos, numberofrooms = self.getObject(message, types.IntType, originalpos)
+			rooms = []
+			for i in range(numberofrooms):
 				pos, room = self.getObject(message, types.StringType, pos)
-				self.privaterooms.append([room, None])
-			pos, numprivateroomusers = self.getObject(message, types.IntType, pos)
-			for i in range(numprivateroomusers):
+				rooms.append([room, None])
+			pos, numberofusers = self.getObject(message, types.IntType, pos)
+			for i in range(numberofusers):
 				pos, usercount = self.getObject(message, types.IntType, pos)
-				self.privaterooms[i][1] = usercount
+				rooms[i][1] = usercount
+			return (pos, rooms)
 		except Exception, error:
 			log.addwarning(_("Exception during parsing %(area)s: %(exception)s") % {'area':'RoomList', 'exception':error})
-			pass
+			return (originalpos, [])
 
 class ExactFileSearch(ServerMessage):
 	""" Someone is searching for a file with an exact name """

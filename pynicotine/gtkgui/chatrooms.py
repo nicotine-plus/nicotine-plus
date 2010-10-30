@@ -17,10 +17,18 @@
 # Original copyright below
 # Copyright (c) 2003-2004 Hyriand. All rights reserved.
 
+# Python core
+from os.path import commonprefix
+import os, re, time, sys
+
+# Python modules
 import gtk
 import gobject
 import locale
 import pango
+
+# Application specific
+from pynicotine.logfacility import log
 from pynicotine import slskmessages
 from pynicotine import pluginsystem
 from pynicotine.slskmessages import ToBeEncoded
@@ -28,8 +36,7 @@ from utils import InitialiseColumns, AppendLine, PopupMenu, FastListModel, strin
 from pynicotine.utils import _, findBestEncoding
 from ticker import Ticker
 from entrydialog import OptionDialog, input_box
-from os.path import commonprefix
-import os, re, time, sys
+
 ver = sys.version_info 
 
 def GetCompletion(part, list):
@@ -349,7 +356,7 @@ class RoomsControl:
 			self.roomsmodel.append([room, users, 0])
 			self.rooms.append(room)
 
-		self.SetPrivateRooms(msg.privaterooms)
+		self.SetPrivateRooms(msg.ownedprivaterooms, msg.otherprivaterooms)
 		self.frame.roomlist.RoomsList.set_model(self.roomsmodel)
 		self.roomsmodel.set_sort_func(1, self.PrivateRoomsSort, 1)
 		self.roomsmodel.set_sort_column_id(1, gtk.SORT_DESCENDING)
@@ -360,14 +367,34 @@ class RoomsControl:
 			self.frame.chatrooms.roomsctrl.UpdateCompletions()
 			self.frame.privatechats.UpdateCompletions()
 			
-	def SetPrivateRooms(self, rooms=[]):
-		for room in rooms:
-			if room[0] not in self.PrivateRooms.keys():
+	def SetPrivateRooms(self, ownedrooms=[], otherrooms=[]):
+		myusername = self.frame.np.config.sections["server"]["login"]
+		for room in ownedrooms:
+			try:
+				self.PrivateRooms[room[0]]['joined'] = room[1]
+				if self.PrivateRooms[room[0]]['owner'] != myusername:
+					log.addwarning(_("I remember the room %(room)s being owned by %(previous)s, but the server says its owned by %(new)s.") % {
+							'room': room[0],
+							'previous': self.PrivateRooms[room[0]]['owner'],
+							'new': myusername
+						})
+				self.PrivateRooms[room[0]]['owner'] = myusername
+			except KeyError:
+				self.PrivateRooms[room[0]] = {"users": [], "joined": room[1], "operators": [],  "owner": myusername}
+		for room in otherrooms:
+			try:
+				self.PrivateRooms[room[0]]['joined'] = room[1]
+				if self.PrivateRooms[room[0]]['owner'] == myusername:
+					log.addwarning(_("I remember the room %(room)s being owned by %(old)s, but the server says that's not true.") % {
+							'room': room[0],
+							'old': self.PrivateRooms[room[0]]['owner'],
+						})
+					self.PrivateRooms[room[0]]['owner'] = None
+			except KeyError:
 				self.PrivateRooms[room[0]] = {"users": [], "joined": room[1], "operators": [],  "owner": None}
 		iter = self.roomsmodel.get_iter_root()
 		while iter is not None:
 			room = self.roomsmodel.get_value(iter, 0)
-			
 			lastiter = iter
 			iter = self.roomsmodel.iter_next(iter)
 			if self.IsPrivateRoomOwned(room) or self.IsPrivateRoomMember(room):
