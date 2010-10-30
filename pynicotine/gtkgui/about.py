@@ -209,7 +209,7 @@ gallows
 hyriand
 \t(Former lead developer, contributer, author of Nicotine)
 \t<iksteen@gmail.com>
-\thttp://www.thegraveyard.org
+\thttp://thegraveyard.org
 Le Vert
 \t(Webhosting, packager)
 \t<gandalf@le-vert.net>

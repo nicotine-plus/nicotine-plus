@@ -8,10 +8,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-11-27 23:30+0100\n"
+"POT-Creation-Date: 2010-10-30 14:41+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -20,6 +21,9 @@ msgid "Buddies"
 msgstr ""
 
 msgid "Add Buddy: "
+msgstr ""
+
+msgid "Configure banned users"
 msgstr ""
 
 msgid "window1"
@@ -117,7 +121,9 @@ msgstr ""
 msgid "Use the above ports to configure your router or firewall."
 msgstr ""
 
-msgid "Use UPnP to fix portmapping (required MiniUPnPc with python bindings)"
+msgid ""
+"Use UPnP to fix portmapping (requires MiniUPnPc, preferably with python "
+"bindings)"
 msgstr ""
 
 msgid ""
@@ -1100,6 +1106,9 @@ msgstr ""
 msgid "PrivateChat"
 msgstr ""
 
+msgid "Character encoding"
+msgstr ""
+
 msgid "Direct"
 msgstr ""
 
@@ -1114,12 +1123,6 @@ msgid "Hide room list"
 msgstr ""
 
 msgid "Search: "
-msgstr ""
-
-msgid "label"
-msgstr ""
-
-msgid "button"
 msgstr ""
 
 msgid "Nicotine+ Fast Configure"
@@ -1160,6 +1163,9 @@ msgid "The page says my port is open"
 msgstr ""
 
 msgid "The page says my port is closed"
+msgstr ""
+
+msgid "(If you can see this option something is wrong)"
 msgstr ""
 
 msgid "Nicotine+ is currently listening on port %(listenport)s."
@@ -1238,12 +1244,6 @@ msgid "Save"
 msgstr ""
 
 msgid "Refresh"
-msgstr ""
-
-msgid "Content page"
-msgstr ""
-
-msgid "Confirmation page"
 msgstr ""
 
 msgid "Nicotine"
@@ -1399,6 +1399,9 @@ msgstr ""
 msgid "Start Message"
 msgstr ""
 
+msgid "Configure logging"
+msgstr ""
+
 msgid "Users: 0"
 msgstr ""
 
@@ -1409,6 +1412,9 @@ msgid "Auto-retry failed"
 msgstr ""
 
 msgid "Every 3 minutes"
+msgstr ""
+
+msgid "Configure downloads"
 msgstr ""
 
 msgid "Clear Finished / Aborted"
@@ -1432,6 +1438,9 @@ msgstr ""
 msgid "Autoclear Finished"
 msgstr ""
 
+msgid "Configure uploads"
+msgstr ""
+
 msgid "Clear Finished / Failed"
 msgstr ""
 
@@ -1447,13 +1456,25 @@ msgstr ""
 msgid "Clear all searches attempts"
 msgstr ""
 
+msgid "Search scope"
+msgstr ""
+
+msgid "Configure searches"
+msgstr ""
+
 msgid "Get Userinfo"
+msgstr ""
+
+msgid "Configure user info"
 msgstr ""
 
 msgid "Browse Shares"
 msgstr ""
 
 msgid "Load From Disk"
+msgstr ""
+
+msgid "Configure shares"
 msgstr ""
 
 msgid "Similar users"
@@ -1597,6 +1618,12 @@ msgstr ""
 msgid "Amarok2"
 msgstr ""
 
+msgid "Banshee"
+msgstr ""
+
+msgid "foobar"
+msgstr ""
+
 msgid "Player Command/Username"
 msgstr ""
 
@@ -1610,9 +1637,6 @@ msgid "Example:"
 msgstr ""
 
 msgid "Test"
-msgstr ""
-
-msgid "gtk-save"
 msgstr ""
 
 msgid ""
@@ -1664,6 +1688,10 @@ msgid ""
 "\tC library:       http://www.maxmind.com/app/c\n"
 "\tPython bindings: http://www.maxmind.com/app/python\n"
 "\t(the python bindings require the C library)"
+msgstr ""
+
+#, python-format
+msgid "Disabled UPnP support due to errors: %(errors)s"
 msgstr ""
 
 #, python-format
@@ -2018,8 +2046,8 @@ msgstr ""
 
 #, python-format
 msgid ""
-"Are you sure you wish to download %(num)i files from %(user)s's directory %"
-"(folder)s?"
+"Are you sure you wish to download %(num)i files from %(user)s's directory "
+"%(folder)s?"
 msgstr ""
 
 msgid "Nicotine: Upload Directory's Contents"
@@ -2099,10 +2127,20 @@ msgstr ""
 msgid "File types"
 msgstr ""
 
-msgid "listenport"
+msgid "Counting files..."
 msgstr ""
 
 msgid "Add a shared directory"
+msgstr ""
+
+msgid "Country"
+msgstr ""
+
+msgid "Unknown"
+msgstr ""
+
+#, python-format
+msgid "Unknown (%(countrycode)s)"
 msgstr ""
 
 #, python-format
@@ -2123,9 +2161,6 @@ msgstr ""
 
 #, python-format
 msgid "Column #%i"
-msgstr ""
-
-msgid "Unknown"
 msgstr ""
 
 msgid "Give privileges"
@@ -2437,8 +2472,8 @@ msgstr ""
 
 #, python-format
 msgid ""
-"%(myusername)s, the user, %(username)s has mentioned your name in the room, %"
-"(place)s."
+"%(myusername)s, the user, %(username)s has mentioned your name in the room, "
+"%(place)s."
 msgstr ""
 
 #, python-format
@@ -2878,9 +2913,6 @@ msgstr ""
 msgid "%s"
 msgstr ""
 
-msgid "Country"
-msgstr ""
-
 msgid "Trusted"
 msgstr ""
 
@@ -2963,6 +2995,18 @@ msgid "Enter the name of the private room you wish to create"
 msgstr ""
 
 #, python-format
+msgid ""
+"I remember the room %(room)s being owned by %(previous)s, but the server "
+"says its owned by %(new)s."
+msgstr ""
+
+#, python-format
+msgid ""
+"I remember the room %(room)s being owned by %(old)s, but the server says "
+"that's not true."
+msgstr ""
+
+#, python-format
 msgid "You have been added to a private room: %(room)s"
 msgstr ""
 
@@ -3022,10 +3066,6 @@ msgstr ""
 
 #, python-format
 msgid "%s has returned"
-msgstr ""
-
-#, python-format
-msgid "Unknown (%(countrycode)s)"
 msgstr ""
 
 msgid "Leave this room"
@@ -3126,14 +3166,14 @@ msgid ""
 "hyriand\n"
 "\t(Former lead developer, contributer, author of Nicotine)\n"
 "\t<iksteen@gmail.com>\n"
-"\thttp://www.thegraveyard.org\n"
+"\thttp://thegraveyard.org\n"
 "Le Vert\n"
 "\t(Webhosting, packager)\n"
 "\t<gandalf@le-vert.net>\n"
 "\thttp://www.le-vert.net\n"
 "OffHand\n"
 "\t(Windows and OSX packager, tester)\n"
-"QuinoX\n"
+"quinox\n"
 "\t(Code contributer)\n"
 "\thttp://index.qtea.nl\n"
 "infinito\n"
@@ -3151,6 +3191,10 @@ msgid ""
 "\thttp://sensi.org/~ak/\n"
 "Amun-Ra\n"
 "\t(Code contributer)\n"
+"\n"
+"\n"
+"Country flags provided by http://flags.blogpotato.de/ , distributed under a "
+"Creative Commens Attribution-Share Alike 3.0 Unported license.\n"
 msgstr ""
 
 msgid "Developers"
@@ -3683,171 +3727,6 @@ msgid "Couldn't write to transfer log: %s"
 msgstr ""
 
 #, python-format
-msgid "User %s does not exist"
-msgstr ""
-
-#, python-format
-msgid "Filtering: %s"
-msgstr ""
-
-#, python-format
-msgid "Retrying failed download: user %(user)s, file %(file)s"
-msgstr ""
-
-#, python-format
-msgid "Failed download: user %(user)s, file %(file)s"
-msgstr ""
-
-#, python-format
-msgid "Got transfer request %s but cannot determine requestor"
-msgstr ""
-
-#, python-format
-msgid "Denied file request: %s"
-msgstr ""
-
-#, python-format
-msgid "Upload request: %s"
-msgstr ""
-
-#, python-format
-msgid "Queued upload request: %s"
-msgstr ""
-
-#, python-format
-msgid "Your buddy, %s, is attempting to upload file(s) to you."
-msgstr ""
-
-msgid "[Automatic Message] "
-msgstr ""
-
-msgid "You are not allowed to send me files."
-msgstr ""
-
-#, python-format
-msgid ""
-"%s is not allowed to send you file(s), but is attempting to, anyway. Warning "
-"Sent."
-msgstr ""
-
-#, python-format
-msgid "Got unknown transfer response: %s"
-msgstr ""
-
-#, python-format
-msgid "OS error: %s"
-msgstr ""
-
-msgid "Nicotine+ :: Directory download error"
-msgstr ""
-
-#, python-format
-msgid "Download I/O error: %s"
-msgstr ""
-
-#, python-format
-msgid "Can't get an exclusive lock on file - I/O error: %s"
-msgstr ""
-
-#, python-format
-msgid "Download started: %s"
-msgstr ""
-
-#, python-format
-msgid "Download started: user %(user)s, file %(file)s"
-msgstr ""
-
-#, python-format
-msgid "Upload started: user %(user)s, file %(file)s"
-msgstr ""
-
-#, python-format
-msgid "Upload I/O error: %s"
-msgstr ""
-
-#, python-format
-msgid "Unknown file request: %s"
-msgstr ""
-
-#, python-format
-msgid "Couldn't move '%(tempfile)s' to '%(file)s': %(error)s"
-msgstr ""
-
-#, python-format
-msgid "Download finished: %(file)s"
-msgstr ""
-
-#, python-format
-msgid "Download finished: user %(user)s, file %(file)s"
-msgstr ""
-
-#, python-format
-msgid "File %(file)s is identical to %(identical)s, not saving."
-msgstr ""
-
-#, python-format
-msgid ""
-"Download finished but not saved since it's a duplicate: user %(user)s, file %"
-"(file)s"
-msgstr ""
-
-#, python-format
-msgid "%(file)s downloaded from %(user)s"
-msgstr ""
-
-msgid "Nicotine+ :: file downloaded"
-msgstr ""
-
-#, python-format
-msgid "Trouble executing '%s'"
-msgstr ""
-
-#, python-format
-msgid "Executed: %s"
-msgstr ""
-
-#, python-format
-msgid "%(folder)s downloaded from %(user)s"
-msgstr ""
-
-msgid "Nicotine+ :: directory completed"
-msgstr ""
-
-#, python-format
-msgid "Trouble executing on folder: %s"
-msgstr ""
-
-#, python-format
-msgid "Executed on folder: %s"
-msgstr ""
-
-msgid "(privileged)"
-msgstr ""
-
-msgid "(friend)"
-msgstr ""
-
-#, python-format
-msgid "Upload finished: %(user)s, file %(file)s"
-msgstr ""
-
-#, python-format
-msgid "Retrying failed download: %(user)s, file %(file)s"
-msgstr ""
-
-#, python-format
-msgid "I/O error: %s"
-msgstr ""
-
-#, python-format
-msgid "Upload aborted, user %(user)s file %(file)s"
-msgstr ""
-
-#, python-format
-msgid "Download aborted, user %(user)s file %(file)s"
-msgstr ""
-
-#, python-format
 msgid "Translation not found for '%(language)s': %(error)s"
 msgstr ""
 
@@ -3876,6 +3755,10 @@ msgstr ""
 
 #, python-format
 msgid "Major Socket Error: Networking terminated! %s"
+msgstr ""
+
+#, python-format
+msgid "Ignoring connection request from blocked IP Address %s:%s"
 msgstr ""
 
 #, python-format
@@ -3999,8 +3882,8 @@ msgstr ""
 
 #, python-format
 msgid ""
-"Warning: networking thread has to convert unicode string %(object)s message %"
-"(type)s"
+"Warning: networking thread has to convert unicode string %(object)s message "
+"%(type)s"
 msgstr ""
 
 #, python-format
@@ -4035,6 +3918,181 @@ msgstr ""
 msgid ""
 "Both MiniUPnPc python module and MiniUPnPc binary failed - automatic "
 "portmapping is not possible. Errors: %(errors)s"
+msgstr ""
+
+#, python-format
+msgid ""
+"UPnPc binary cannot be used since the internal port (%s) is not identical to "
+"the external port (%s)"
+msgstr ""
+
+#, python-format
+msgid "UPnPc binary failed, could not decompose %s into IP and port."
+msgstr ""
+
+#, python-format
+msgid "User %s does not exist"
+msgstr ""
+
+#, python-format
+msgid "Filtering: %s"
+msgstr ""
+
+#, python-format
+msgid "Retrying failed download: user %(user)s, file %(file)s"
+msgstr ""
+
+#, python-format
+msgid "Failed download: user %(user)s, file %(file)s"
+msgstr ""
+
+#, python-format
+msgid "Got transfer request %s but cannot determine requestor"
+msgstr ""
+
+#, python-format
+msgid "Denied file request: User %s, %s"
+msgstr ""
+
+#, python-format
+msgid "Upload request: %s"
+msgstr ""
+
+#, python-format
+msgid "Queued upload request: User %s, %s"
+msgstr ""
+
+#, python-format
+msgid "Your buddy, %s, is attempting to upload file(s) to you."
+msgstr ""
+
+msgid "[Automatic Message] "
+msgstr ""
+
+msgid "You are not allowed to send me files."
+msgstr ""
+
+#, python-format
+msgid ""
+"%s is not allowed to send you file(s), but is attempting to, anyway. Warning "
+"Sent."
+msgstr ""
+
+#, python-format
+msgid "Got unknown transfer response: %s"
+msgstr ""
+
+#, python-format
+msgid "OS error: %s"
+msgstr ""
+
+msgid "Nicotine+ :: Directory download error"
+msgstr ""
+
+#, python-format
+msgid "Download I/O error: %s"
+msgstr ""
+
+#, python-format
+msgid "Can't get an exclusive lock on file - I/O error: %s"
+msgstr ""
+
+#, python-format
+msgid "Download started: %s"
+msgstr ""
+
+#, python-format
+msgid "Download started: user %(user)s, file %(file)s"
+msgstr ""
+
+#, python-format
+msgid "Upload started: user %(user)s, file %(file)s"
+msgstr ""
+
+#, python-format
+msgid "Upload I/O error: %s"
+msgstr ""
+
+#, python-format
+msgid "Unknown file request: %s"
+msgstr ""
+
+#, python-format
+msgid "Couldn't move '%(tempfile)s' to '%(file)s': %(error)s"
+msgstr ""
+
+#, python-format
+msgid "Download finished: %(file)s"
+msgstr ""
+
+#, python-format
+msgid "Download finished: user %(user)s, file %(file)s"
+msgstr ""
+
+#, python-format
+msgid "File %(file)s is identical to %(identical)s, not saving."
+msgstr ""
+
+#, python-format
+msgid ""
+"Download finished but not saved since it's a duplicate: user %(user)s, file "
+"%(file)s"
+msgstr ""
+
+#, python-format
+msgid "%(file)s downloaded from %(user)s"
+msgstr ""
+
+msgid "Nicotine+ :: file downloaded"
+msgstr ""
+
+#, python-format
+msgid "Trouble executing '%s'"
+msgstr ""
+
+#, python-format
+msgid "Executed: %s"
+msgstr ""
+
+#, python-format
+msgid "%(folder)s downloaded from %(user)s"
+msgstr ""
+
+msgid "Nicotine+ :: directory completed"
+msgstr ""
+
+#, python-format
+msgid "Trouble executing on folder: %s"
+msgstr ""
+
+#, python-format
+msgid "Executed on folder: %s"
+msgstr ""
+
+msgid "(privileged)"
+msgstr ""
+
+msgid "(friend)"
+msgstr ""
+
+#, python-format
+msgid "Upload finished: %(user)s, file %(file)s"
+msgstr ""
+
+#, python-format
+msgid "Retrying failed download: %(user)s, file %(file)s"
+msgstr ""
+
+#, python-format
+msgid "I/O error: %s"
+msgstr ""
+
+#, python-format
+msgid "Upload aborted, user %(user)s file %(file)s"
+msgstr ""
+
+#, python-format
+msgid "Download aborted, user %(user)s file %(file)s"
 msgstr ""
 
 msgid "Plugin archive is not in the correct format"

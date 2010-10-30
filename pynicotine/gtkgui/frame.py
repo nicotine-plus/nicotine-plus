@@ -1253,7 +1253,6 @@ class NicotineFrame:
 		self.MainNotebook.remove_page(num)
 
 	def ShowTab(self, widget, lista):
-		name, child = lista
 		if child in self.MainNotebook.get_children():
 			return
 		if child not in self.HiddenTabs:
@@ -3111,7 +3110,6 @@ class NicotineFrame:
 			return
 		return name
 	def MatchMainNamePage(self, tab):
-	
 		if tab == "chatrooms": 
 			child = self.hpaned1 # Chatrooms
 		elif tab == "private": 
@@ -3138,7 +3136,6 @@ class NicotineFrame:
 		return child 
 
 	def ChangeMainPage(self, widget, tab):
-
 		page_num  = self.MainNotebook.page_num
 		if tab == "chatrooms": 
 			child = self.hpaned1 # Chatrooms
