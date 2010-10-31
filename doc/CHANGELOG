@@ -1,6 +1,34 @@
 ChangeLog for Nicotine Plus
 
-1.2.16 (16th February 2010)
+1.2.16 (31th October 2010)
+
+Behaviour
+ * Updated most country flags (#599)
+ * All messages should now be properly timestamped in the log (#602)
+ * Saving user pictures now appends a timestamp so pictures aren't overwritten
+
+Features
+ * Foobar support for NowPlaying (#644)
+
+Bugs
+ * Division-by-zero errors broke transfers (#561)
+ * Some packets were packed incorrectly (#570)
+ * Recursive downloads didn't work (#571)
+ * Search results were improperly formatted (#594)
+ * Copying folder URLS didn't work (#574)
+ * Mid sentence tab completion destroyed input (#562)
+ * Portmapping with MiniUPnPc (the binary) didn't work (#593)
+ * Deprecated raise statements using strings (#613)
+ * Transparency wasn't saved properly (#615)
+ * Shares didn't work properly with out-of-ASCII characters (#623, #345)
+ * Fileshare counter increased on refreshing a filelist (#617)
+ * Program failed to start with a corrupt transfer file (#628)
+ * Network loop crashed on invalid DistribSearch packets
+ * Private rooms often didn't show up in the room list (#641)
+ * nicotine.desktop was missing P2P and Network sub categories (#660)
+
+
+1.2.15 (16th February 2010)
 
 Behaviour
  * Changed the description for our .exe files so it shows up as Nicotine+ in
