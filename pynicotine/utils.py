@@ -69,7 +69,7 @@ def CleanPath(path, absolute=False):
 		for char in illegalpathchars:
 			path = path.replace(char, replacementchar)
 		path = ''.join([drive, path])
-		# Path can never end in a period on Windows machines
+		# Path can never end with a period on Windows machines
 		path = path.rstrip('.')
 	return path
 

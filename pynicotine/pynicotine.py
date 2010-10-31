@@ -1087,9 +1087,12 @@ class NetworkEventProcessor:
 					self.frame.OnIgnoreUser(msg.user)
 				del self.ipignore_requested[msg.user]
 				return
+			# From this point on all paths should call
+			# self.frame.pluginhandler.UserResolveNotification precisely once
 			if msg.user in self.PrivateMessageQueue:
 				self.PrivateMessageQueueProcess(msg.user)
 			if msg.user not in self.ip_requested:
+				self.frame.pluginhandler.UserResolveNotification(msg.user, msg.ip, msg.port)
 				return
 			self.ip_requested.remove(msg.user)
 			import socket

@@ -336,7 +336,10 @@ class PluginHandler(object):
 		return self.TriggerEvent("OutgoingBuddySearchEvent", (text,))
 	def OutgoingUserSearchEvent(self, users):
 		return self.TriggerEvent("OutgoingUserSearchEvent", (users,))
-	def UserResolveNotification(self, user, ip, port, country):
+	def UserResolveNotification(self, user, ip, port, country=None):
+		"""Notification for user IP:Port resolving.
+
+		Note that country is only set when the user requested the resolving"""
 		start_new_thread(self.TriggerEvent, ("UserResolveNotification", (user, ip, port, country)))
 	def ServerConnectNotification(self):
 		start_new_thread(self.TriggerEvent, ("ServerConnectNotification", (),))
