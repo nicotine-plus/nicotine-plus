@@ -19,6 +19,7 @@
 # Python core
 import tempfile
 import os
+import time
 
 # Python modules
 import gtk
@@ -430,22 +431,13 @@ class UserInfo:
 		if self.image is None or self.image_pixbuf is None:
 			return
 		#pixbuf = self.image.get_pixbuf()
-		name = os.path.join(self.frame.np.config.sections["transfers"]["downloaddir"], CleanFile(self.user + ".jpg"))
-		if os.path.exists(name):
-			question = "There is already a file present at %s, do you want to replace it?" % name
-			dialog = gtk.MessageDialog(parent=self.frame.MainWindow, type=gtk.MESSAGE_QUESTION, buttons=gtk.BUTTONS_YES_NO, message_format=question)
-			dialog.set_modal(True)
-			dialog.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
-			response = dialog.run() # modal
-			dialog.hide()
-			if response == gtk.RESPONSE_YES:
-				log.add(_("Removing %s") % name)
-				os.unlink(name)
-			else:
-				log.add(_("Not saving the picture of user %s") % self.user)
-		if not os.path.exists(name):
-			self.image_pixbuf.save(name, "jpeg", {"quality": "100"})
-			log.add(_("Picture saved to %s") % name)
+		filename = "%s %s.jpg" % (self.user, time.strftime("%Y-%m-%d %H:%M:%S"))
+		pathname = os.path.join(self.frame.np.config.sections["transfers"]["downloaddir"], CleanFile(filename))
+		if not os.path.exists(pathname):
+			self.image_pixbuf.save(pathname, "jpeg", {"quality": "100"})
+			log.add(_("Picture saved to %s") % pathname)
+		else:
+			log.add(_("Picture not saved, %s already exists.") % pathname)
 	
 	def OnEncodingChanged(self, widget):
 		try:
