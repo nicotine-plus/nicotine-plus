@@ -16,4 +16,4 @@ class Plugin(BasePlugin):
     __desc__ = """Replies to messages 'test' in chatrooms with the message 'Test failed.'"""
     def IncomingPublicChatEvent(self, room, nick, line):
         if (line.lower() == 'test'):
-            self.saypublic(room, 'Test failed.')
+            self.saypublic(room, u'Test failed.')
