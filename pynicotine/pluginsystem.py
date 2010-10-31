@@ -20,6 +20,21 @@ returncode = {'break':0, # don't give other plugins the event, do let n+ process
                          # returning nothing is the same as 'pass'
 tupletype = type(('',''))
 
+def cast_to_unicode_if_needed(text, logfunc):
+	if type(text) == type(u''):
+		return text
+	try:
+		better = str.decode(text, 'utf8')
+		logfunc("Plugin problem: casting '%s' to unicode!" % repr(text))
+		return better
+	except UnicodeError:
+		better = str.decode(text, 'utf8', 'replace')
+		logfunc("Plugin problem: casting '%s' to unicode, losing characters in the process." % repr(text))
+		return better
+	except:
+		logfunc("Plugin problem: failed to completely cast '%s', you're on your own from here on." % repr(text))
+		return text
+
 class PluginHandler(object):
 	frame = None # static variable... but should it be?
 	guiqueue = [] # fifo isn't supported by older python
@@ -348,6 +363,7 @@ class PluginHandler(object):
 	def log(self, text):
 		self.appendqueue({'type':'logtext', 'text':text})
 	def saychatroom(self, room, text):
+		text = cast_to_unicode_if_needed(text, log.addwarning)
 		self.frame.np.queue.put(slskmessages.SayChatroom(room, ToBeEncoded(text, 'UTF-8')))
 	def sayprivate(self, user, text):
 		self.appendqueue({'type':'sayprivate', 'user':user, 'text':text})
@@ -439,6 +455,7 @@ class BasePlugin(object):
 			room = self.frame.chatrooms.roomsctrl.joinedrooms[room]
 		except KeyError:
 			return False
+		text = cast_to_unicode_if_needed(text, self.log)
 		msg = slskmessages.SayChatroom(room, ToBeEncoded(text, 'UTF-8'))
 		msg.user = user
 		room.SayChatRoom(msg, text)
