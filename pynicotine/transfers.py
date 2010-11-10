@@ -51,7 +51,7 @@ from time import sleep
 import gobject
 win32 = sys.platform.startswith("win")
 
-class Transfer:
+class Transfer(object):
 	""" This class holds information about a single transfer. """
 	def __init__(self, conn = None, user = None, filename = None, path = None, status = None, req=None, size = None, file = None, starttime = None, offset = None, currentbytes = None, speed = None, timeelapsed = None, timeleft = None, timequeued = None, transfertimer = None, requestconn = None, modifier = None, place = 0, bitrate = None, length = None):
 		self.user = user
