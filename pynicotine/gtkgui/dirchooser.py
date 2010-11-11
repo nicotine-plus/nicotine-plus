@@ -74,7 +74,7 @@ def ChooseFile(parent = None, initialdir = "~", initialfile = "", multiple = Fal
 	return res
 
 def SaveFile(parent = None, initialdir = "~", initialfile = "", title=None):
-	dialog = gtk.FileChooserDialog(parent=parent, action=gtk.FILE_CHOOSER_ACTION_SAVE, buttons = (gtk.STOCK_OK, gtk.RESPONSE_ACCEPT, gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT))
+	dialog = gtk.FileChooserDialog(parent=parent, action=gtk.FILE_CHOOSER_ACTION_SAVE, buttons = (gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT, gtk.STOCK_OK, gtk.RESPONSE_ACCEPT))
 	dialog.set_action(gtk.FILE_CHOOSER_ACTION_SAVE)
 	dialog.set_select_multiple(False)
 	dialog.set_show_hidden(True)
