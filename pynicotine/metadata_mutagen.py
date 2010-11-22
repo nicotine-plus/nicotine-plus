@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 
+# Python core
 from __future__ import division
 
+# Python modules
 import mutagen
 
 from mutagen.mp3 import MP3, MPEGInfo
@@ -14,11 +16,17 @@ from mutagen.asf import ASFInfo
 from mutagen.monkeysaudio import MonkeysAudioInfo
 from mutagen.mp4 import MP4Info
 
+# Application specific
+from logfacility import log
+
+
 def detect(path):
 	try:
 		audio = mutagen.File(path)
 	except IOError:
 		return None
+	except Exception, e:
+		log.addwarning("Mutagen crashed on '%s': %s" % (path, e))
 	# mutagen didn't think the file was audio
 	if not audio:
 		return None
