@@ -27,8 +27,9 @@ def detect(path):
 		return None
 	except Exception, e:
 		log.addwarning("Mutagen crashed on '%s': %s" % (path, e))
-	# mutagen didn't think the file was audio
+		return None
 	if not audio:
+		# mutagen didn't think the file was audio
 		return None
 	if type(audio.info) == MPEGInfo:
 		return processMPEG(audio)
