@@ -53,9 +53,13 @@ class Shares:
 		self.queue.put(slskmessages.SharedFoldersFiles(sharedfolders, sharedfiles))
 
 	def RescanShares(self, msg, rebuild=False):
-		files, streams, wordindex, fileindex, mtimes = self.rescandirs(msg.shared, self.config.sections["transfers"]["sharedmtimes"], self.config.sections["transfers"]["sharedfiles"], self.config.sections["transfers"]["sharedfilesstreams"], msg.yieldfunction, self.np.frame.SharesProgress, name=_("Shares"), rebuild=rebuild)
-		time.sleep(0.5)
-		self.np.frame.RescanFinished([files, streams, wordindex, fileindex, mtimes], "normal")
+		try:
+			files, streams, wordindex, fileindex, mtimes = self.rescandirs(msg.shared, self.config.sections["transfers"]["sharedmtimes"], self.config.sections["transfers"]["sharedfiles"], self.config.sections["transfers"]["sharedfilesstreams"], msg.yieldfunction, self.np.frame.SharesProgress, name=_("Shares"), rebuild=rebuild)
+			time.sleep(0.5)
+			self.np.frame.RescanFinished([files, streams, wordindex, fileindex, mtimes], "normal")
+		except:
+			log.addwarning('Failed to rebuild share, serious error occurred. If this problem persists delete ~/.nicotine/*.db and try again. If you want to make a bug report please include the stack trace that shows up in your terminal after this message.')
+			raise
 		
 	def RebuildShares(self, msg):
 		self.RescanShares(msg, rebuild=True)
