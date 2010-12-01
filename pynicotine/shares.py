@@ -5,6 +5,7 @@ import dircache
 import gobject
 import string, sys, os
 import time
+import struct
 
 # N+ imports
 import slskmessages
@@ -655,23 +656,26 @@ class Shares:
 	def getByteStream(self, fileinfo):
 		message = slskmessages.SlskMessage()
 		
-		#size = long(fileinfo[1])
-		#size1 = size & 0xffffffff
-		#size2 = size >> 32
-		
-		#X print "chr1-" + repr(chr(1) + message.packObject(fileinfo[0]) + message.packObject(fileinfo[1]))
-		#X print "chr1+" + repr(chr(1) + message.packObject(fileinfo[0]) + message.packObject(NetworkIntType(fileinfo[1])))
 		stream = chr(1) + message.packObject(fileinfo[0]) + message.packObject(NetworkLongLongType(fileinfo[1]))
 		if fileinfo[2] is not None:
-			stream += message.packObject('mp3') + message.packObject(3)
-			#X print "net-" + repr(message.packObject(0) + message.packObject(fileinfo[2][0]) + message.packObject(1) + message.packObject(fileinfo[3]) + message.packObject(2) + message.packObject(fileinfo[2][1]))
-			#X print "net+" + repr(message.packObject(0) + message.packObject(NetworkIntType(fileinfo[2][0])) + message.packObject(1) + message.packObject(NetworkIntType(fileinfo[3])) + message.packObject(2) + message.packObject(NetworkIntType(fileinfo[2][1])))
-			stream += (message.packObject(0) +
-			           message.packObject(NetworkIntType(fileinfo[2][0])) +
-			           message.packObject(1) +
-			           message.packObject(NetworkIntType(fileinfo[3])) +
-			           message.packObject(2) +
-			           message.packObject(NetworkIntType(fileinfo[2][1])))
+			try:
+				msgbytes = ''
+				msgbytes += message.packObject('mp3') + message.packObject(3)
+				msgbytes += (message.packObject(0) +
+						message.packObject(NetworkIntType(fileinfo[2][0])) +
+						message.packObject(1) +
+						message.packObject(NetworkIntType(fileinfo[3])) +
+						message.packObject(2) +
+						message.packObject(NetworkIntType(fileinfo[2][1])))
+				stream += msgbytes
+			except struct.error:
+				log.addwarning(_("Found meta data that couldn't be encoded, possible corrupt file: '%(file)s' has a bitrate of %(bitrate)s kbs, a length of %(length)s seconds and a VBR of %(vbr)s" % {
+						'file':    fileinfo[0],
+						'bitrate': fileinfo[2][0],
+						'length':  fileinfo[3],
+						'vbr':     fileinfo[2][1]
+					}))
+				stream += message.packObject('') + message.packObject(0)
 		else:
 			stream += message.packObject('') + message.packObject(0)
 		return stream
