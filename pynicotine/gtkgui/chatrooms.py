@@ -1202,8 +1202,7 @@ class ChatRoom:
 	
 		
 	def threadAlias(self, alias):
-		raw = expand_alias(self.frame.np.config.aliases, alias)
-		text = findBestEncoding(raw, ['UTF-8', 'ASCII'])
+		text = expand_alias(self.frame.np.config.aliases, alias)
 		if not text:
 			log.add('Alias "%s" returned nothing' % alias)
 			return

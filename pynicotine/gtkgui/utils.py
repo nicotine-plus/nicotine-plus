@@ -34,7 +34,7 @@ from struct import unpack
 import imghdr
 
 from pynicotine import slskmessages
-from pynicotine.utils import _, executeCommand
+from pynicotine.utils import _, executeCommand, findBestEncoding
 from countrycodes import code2name
 
 DECIMALSEP = ""
@@ -1270,6 +1270,9 @@ def is_alias(aliases, cmd):
 	return False
 
 def expand_alias(aliases, cmd):
+	output = _expand_alias(aliases, cmd)
+	return findBestEncoding(output, ['UTF-8', 'ASCII'])
+def _expand_alias(aliases, cmd):
 	def getpart(line):
 		if line[0] != "(":
 			return ""
