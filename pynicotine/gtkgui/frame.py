@@ -295,7 +295,7 @@ class BrowserWindow(gtk.VBox):
 		self.entry.set_text(url)
 
 class NicotineFrame:
-	def __init__(self, config, plugindir, use_trayicon, try_rgba, start_hidden=False, WebBrowser=True): 
+	def __init__(self, config, plugindir, use_trayicon, try_rgba, start_hidden=False, WebBrowser=True, bindip=None): 
 		
 		self.clip_data = ""
 		self.configfile = config
@@ -313,7 +313,7 @@ class NicotineFrame:
 		self.awaytimer = None
 		self.SEXY = SEXY
 		self.chatrooms = None
-
+		self.bindip = bindip
 		self.got_focus = False
 
 		try:
@@ -326,7 +326,7 @@ class NicotineFrame:
 		except ImportError:
 			self.pynotify = None
 		
-		self.np = NetworkEventProcessor(self, self.callback, self.logMessage, self.SetStatusText, config)
+		self.np = NetworkEventProcessor(self, self.callback, self.logMessage, self.SetStatusText, self.bindip, config)
 		config = self.np.config.sections
 		self.temp_modes_order = config["ui"]["modes_order"]
 		utils.DECIMALSEP = config["ui"]["decimalsep"]
@@ -3601,8 +3601,8 @@ class gstreamer:
 			self.player.set_state(self.gst.STATE_NULL)
 			
 class MainApp:
-	def __init__(self, config, plugindir, trayicon, rgbamode, start_hidden, WebBrowser):
-		self.frame = NicotineFrame(config, plugindir, trayicon, rgbamode, start_hidden, WebBrowser)
+	def __init__(self, config, plugindir, trayicon, rgbamode, start_hidden, WebBrowser, bindip):
+		self.frame = NicotineFrame(config, plugindir, trayicon, rgbamode, start_hidden, WebBrowser, bindip)
 	
 	def MainLoop(self):
 		signal.signal(signal.SIGINT, signal.SIG_IGN)

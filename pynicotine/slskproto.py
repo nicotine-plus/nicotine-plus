@@ -258,7 +258,7 @@ class SlskProtoThread(threading.Thread):
 	# - With Windows, based on #473, it would seem these connections are never removed
 	CONNECTION_MAX_IDLE = 60
 
-	def __init__(self, ui_callback, queue, config, eventprocessor):
+	def __init__(self, ui_callback, queue, bindip, config, eventprocessor):
 		""" ui_callback is a UI callback function to be called with messages 
 		list as a parameter. queue is Queue object that holds messages from UI
 		thread.
@@ -268,6 +268,7 @@ class SlskProtoThread(threading.Thread):
 		self._queue = queue
 		self._want_abort = 0
 		self._stopped = 0
+		self._bindip = bindip
 		self._config = config
 		self._eventprocessor = eventprocessor
 		portrange = config.sections["server"]["portrange"]
@@ -927,6 +928,8 @@ class SlskProtoThread(threading.Thread):
 					if maxsockets == -1 or numsockets < maxsockets:
 						try:
 							server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+							if self._bindip:
+								server_socket.bind((self._bindip, 0))
 							server_socket.setblocking(0)
 							server_socket.connect_ex(msgObj.addr)
 							server_socket.setblocking(1)
@@ -948,6 +951,8 @@ class SlskProtoThread(threading.Thread):
 						try:
 							conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 							conn.setblocking(0)
+							if self._bindip:
+								conn.bind((self._bindip, 0))
 							conn.connect_ex(msgObj.addr)
 							conn.setblocking(1)
 							connsinprogress[conn] = PeerConnectionInProgress(conn, msgObj)
