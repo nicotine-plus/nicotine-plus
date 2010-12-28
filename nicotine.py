@@ -166,6 +166,7 @@ Usage: nicotine [OPTION]...
   -v,      --version          Display version and exit
   -h,      --help             Display this help and exit
   -s,      --hidden           Start n+ hidden
+  -b ip,   --bindip=ip        Bind sockets to the given IP (useful for VPN)
 
 Please report any problems to our bugtracker:
 http://www.nicotine-plus.org/newticket""")
@@ -218,7 +219,7 @@ def run():
 
 	import sys, getopt, os.path
 	try:
-		opts, args = getopt.getopt(sys.argv[1:], "hc:p:tdvsw", ["help", "config=", "plugins=", "profile", "enable-trayicon", "disable-trayicon", "enable-rgba", "disable-rgba", "version", "hidden", "disable-webbrowser"])
+		opts, args = getopt.getopt(sys.argv[1:], "hc:p:tdvswb:", ["help", "config=", "plugins=", "profile", "enable-trayicon", "disable-trayicon", "enable-rgba", "disable-rgba", "version", "hidden", "disable-webbrowser", "bindip="])
 	except getopt.GetoptError:
 		# print help information and exit:
 		usage()
@@ -240,6 +241,7 @@ def run():
 	webbrowser = True
 	tryrgba = False
 	hidden = False
+	bindip = None
 	for o, a in opts:
 		if o in ("-h", "--help"):
 			usage()
@@ -248,6 +250,8 @@ def run():
 			config = a
 		if o in ("-p", "--plugins"):
 			plugins = a
+		if o in ("-b", "--bindip"):
+			bindip = a
 		if o == "--profile":
 			profile = 1
 		if o in ("-t", "--enable-trayicon"):
@@ -269,7 +273,7 @@ def run():
 	if result is None:
 		from pynicotine.gtkgui import frame
 
-		app = frame.MainApp(config, plugins, trayicon, tryrgba, hidden, webbrowser)
+		app = frame.MainApp(config, plugins, trayicon, tryrgba, hidden, webbrowser, bindip)
 		if profile:
 			import hotshot
 			logfile = os.path.expanduser(config) + ".profile"
