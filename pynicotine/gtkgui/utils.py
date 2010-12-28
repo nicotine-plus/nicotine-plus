@@ -1020,7 +1020,7 @@ class PopupMenu(gtk.Menu):
 			self.frame.UnignoreUser(self.user)
 			
 	def OnVersion(self, widget):
-		self.frame.privatechats.SendMessage(self.user, "\x01VERSION\x01")
+		self.frame.privatechats.SendMessage(self.user, "\x01VERSION\x01", bytestring=True)
 		
 	def OnCopyUser(self, widget):
 		self.frame.clip.set_text(self.user)

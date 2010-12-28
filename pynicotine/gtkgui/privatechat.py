@@ -29,6 +29,9 @@ from pynicotine.slskmessages import ToBeEncoded
 from pynicotine.utils import _, version
 from pynicotine.logfacility import log
 
+CTCP_VERSION = "\x01VERSION\x01"
+
+
 class PrivateChats(IconNotebook):
 	CMDS = set(["/alias ", "/unalias ", "/whois ", "/browse ", "/ip ", "/pm ", "/msg ", "/search ", "/usearch ", "/rsearch ",
 		"/bsearch ", "/add ", "/buddy ", "/rem ", "/unbuddy ", "/ban ", "/ignore ", "/ignoreip ", "/unban ", "/unignore ", "/clear ",
@@ -86,7 +89,7 @@ class PrivateChats(IconNotebook):
 			self.set_status_image(tab.Main, msg.status)
 			tab.GetUserStatus(msg.status)
 
-	def SendMessage(self, user, text = None, direction = None):
+	def SendMessage(self, user, text = None, direction = None, bytestring = False):
 		if user not in self.users:
 			tab = PrivateChat(self, user)
 			self.users[user] = tab
@@ -97,7 +100,7 @@ class PrivateChats(IconNotebook):
 			if self.get_current_page() != self.page_num(self.users[user].Main):
 				self.set_current_page(self.page_num(self.users[user].Main))
 		if text is not None:
-			self.users[user].SendMessage(text)
+			self.users[user].SendMessage(text, bytestring=bytestring)
 	
 	def TabPopup(self, user):
 		if user not in self.users:
@@ -188,12 +191,12 @@ class PrivateChats(IconNotebook):
 
 		# SEND CLIENT VERSION to user if the following string is sent
 		ctcpversion = 0
-		if text == "\x01VERSION\x01":
+		if text == CTCP_VERSION:
 			ctcpversion = 1
 			text = "CTCP VERSION"
 		self.users[msg.user].ShowMessage(text, status, msg.timestamp)	
 		if ctcpversion and self.frame.np.config.sections["server"]["ctcpmsgs"] == 0:
-			self.SendMessage(msg.user, "Nicotine-Plus %s" % version)
+			self.SendMessage(msg.user, u"Nicotine-Plus %s" % version)
 		self.frame.pluginhandler.IncomingPrivateChatNotification(msg.user, text)
 
 	def UpdateColours(self):
@@ -479,11 +482,11 @@ class PrivateChat:
 		
 		autoreply = self.frame.np.config.sections["server"]["autoreply"]
 		if self.frame.away and not self.autoreplied and autoreply:
-			self.SendMessage("[Auto-Message] %s" % autoreply)
+			self.SendMessage(u"[Auto-Message] %s" % autoreply)
 			self.autoreplied = 1
 		self.frame.Notifications.new_tts(self.frame.np.config.sections["ui"]["speechprivate"] %{"user":self.frame.Notifications.tts_clean(self.user), "message": self.frame.Notifications.tts_clean(speech)} )
 
-	def SendMessage(self, text):
+	def SendMessage(self, text, bytestring=False):
 		user_text = self.frame.pluginhandler.OutgoingPrivateChatEvent(self.user, text)
 		if user_text == None:
 			return
@@ -495,7 +498,7 @@ class PrivateChat:
 			usertag = tag = self.tag_me
 		else:
 			
-			if text == "\x01VERSION\x01":
+			if text == CTCP_VERSION:
 				line = "CTCP VERSION"
 			else:
 				line = text
@@ -507,12 +510,16 @@ class PrivateChat:
 		if self.Log.get_active():
 			self.logfile = WriteLog(self.logfile, self.frame.np.config.sections["logging"]["privatelogsdir"], self.user, line)
 		
+		if bytestring:
+			payload = text
+		else:
+			payload = ToBeEncoded(self.frame.AutoReplace(text), self.encoding)
+
 		if self.PeerPrivateMessages.get_active():
 			# not in the soulseek protocol
-			self.frame.np.ProcessRequestToPeer(self.user, slskmessages.PMessageUser(None, my_username, ToBeEncoded(self.frame.AutoReplace(text), self.encoding)))
+			self.frame.np.ProcessRequestToPeer(self.user, slskmessages.PMessageUser(None, my_username, payload))
 		else:
-			self.frame.np.queue.put(slskmessages.MessageUser(self.user, ToBeEncoded(self.frame.AutoReplace(text), self.encoding)))
-			
+			self.frame.np.queue.put(slskmessages.MessageUser(self.user, payload))
 
 		
 	def threadAlias(self, alias):
@@ -632,7 +639,7 @@ class PrivateChat:
 				self.frame.UnignoreUser(args)
 		elif cmd == "/ctcpversion":
 			if args:
-				self.frame.privatechats.SendMessage(args, "\x01VERSION\x01", 1)
+				self.frame.privatechats.SendMessage(args, CTCP_VERSION, 1, bytestring=True)
 		elif cmd in ["/clear", "/cl"]:
 			self.ChatScroll.get_buffer().set_text("")
 		elif cmd in ["/a", "/away"]:

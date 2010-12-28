@@ -1274,11 +1274,10 @@ class ChatRoom:
 				self.frame.OnPrivateChat(None)
 		elif cmd in ["/m", "/msg"]:
 			if byteargs:
-				s = byteargs.split(" ", 1)
-				user = s[0]
-				if len(s) == 2:
-					msg = s[1]
-				else:
+				user = byteargs.split(" ", 1)[0]
+				try:
+					msg = args.split(" ", 1)[1]
+				except IndexError:
 					msg = None
 				self.frame.privatechats.SendMessage(user, msg)
 		elif cmd in ["/s", "/search"]:
