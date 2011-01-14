@@ -474,6 +474,8 @@ class Transfers:
 
 	def queueLimitReached(self, user):
 		uploadslimit = self.eventprocessor.config.sections["transfers"]["queuelimit"]*1024*1024
+		if not uploadslimit:
+			return False
 		sizelist = [i.size for i in self.uploads if i.user == user and i.status == "Queued"]
 		
 		size = sum(sizelist)
@@ -482,6 +484,8 @@ class Transfers:
 	
 	def fileLimitReached(self, user):
 		filelimit = self.eventprocessor.config.sections["transfers"]["filelimit"]
+		if not filelimit:
+			return False
 		numfiles = len([i for i in self.uploads if i.user == user and i.status == "Queued"])
 		
 		return numfiles >= filelimit
