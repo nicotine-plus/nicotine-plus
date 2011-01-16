@@ -69,8 +69,9 @@ try:
 	import sexy
 except ImportError:
 	SEXY=False
-	msg = _("Note: Python Bindings for libsexy were not found. To enable spell checking, get them from http://www.chipx86.com/wiki/Libsexy or your distribution's package manager. Look for sexy-python or python-sexy.")
-	log.addwarning(msg)
+	# LibSexy is deprecated, we should try to find a replacement
+	#msg = _("Note: Python Bindings for libsexy were not found. To enable spell checking, get them from http://www.chipx86.com/wiki/Libsexy or your distribution's package manager. Look for sexy-python or python-sexy.")
+	#log.addwarning(msg)
 
 class roomlist:
 	def __init__(self, frame):
