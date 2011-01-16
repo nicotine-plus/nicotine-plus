@@ -79,7 +79,7 @@ class FastConfigureAssistant(object):
 				'listenport': self.kids['listenport'].get_text(),
 			}
 		# Page specific, sharepage
-		# column -1 is the raw byte/unicode object for the folder (not shown)
+		# the lsat column is the raw byte/unicode object for the folder (not shown)
 		self.sharelist = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING)
 		columns = InitialiseColumns(self.kids['shareddirectoriestree'],
 			[_("Directory"), 0, "text"],

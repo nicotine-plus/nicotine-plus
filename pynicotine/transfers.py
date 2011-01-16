@@ -436,9 +436,10 @@ class Transfers:
 		checkuser, reason = self.eventprocessor.CheckUser(user, addr)
 		# checkuser is 1 if allowed
 		# reason is a string
+		realpath = self.eventprocessor.shares.virtual2real(msg.file)
 		if not checkuser:
 			response = slskmessages.TransferResponse(conn, 0, reason = reason, req=msg.req)
-		elif not self.fileIsShared(user, msg.file):
+		elif not self.fileIsShared(user, msg.file, realpath):
 			response = slskmessages.TransferResponse(conn, 0, reason = "File not shared", req = msg.req)
 		elif self.fileIsQueued(user, msg.file):
 			response = slskmessages.TransferResponse(conn, 0, reason = "Queued", req = msg.req)
@@ -451,14 +452,14 @@ class Transfers:
 			response = slskmessages.TransferResponse(conn, 0, reason = limitmsg, req = msg.req)
 		elif user in self.getTransferringUsers() or self.bandwidthLimitReached() or self.transferNegotiating():
 			response = slskmessages.TransferResponse(conn, 0, reason = "Queued", req = msg.req)
-			self.uploads.append(Transfer(user = user, filename = msg.file, path = os.path.dirname(msg.file.replace('\\', os.sep)), status = "Queued", timequeued = time.time(), size = self.getFileSize(msg.file), place = len(self.uploads)))
+			self.uploads.append(Transfer(user = user, filename = realpath, path = os.path.dirname(realpath), status = "Queued", timequeued = time.time(), size = self.getFileSize(msg.file), place = len(self.uploads)))
 			self.uploadspanel.update(self.uploads[-1])
 			self.addQueued(user, msg.file)
 		else:
-			size = self.getFileSize(msg.file)
+			size = self.getFileSize(realpath)
 			response = slskmessages.TransferResponse(conn, 1, req = msg.req, filesize = size)
 			transfertimeout = TransferTimeout(msg.req, self.eventprocessor.frame.callback) 
-			self.uploads.append(Transfer(user = user, filename = msg.file, path = os.path.dirname(msg.file.replace('\\', os.sep)), status = "Waiting for upload", req = msg.req, size = size, place = len(self.uploads)))
+			self.uploads.append(Transfer(user = user, filename = realpath, path = os.path.dirname(realpath), status = "Waiting for upload", req = msg.req, size = size, place = len(self.uploads)))
 			self.uploads[-1].transfertimer = threading.Timer(30.0, transfertimeout.timeout)
 			self.uploads[-1].transfertimer.start()
 			self.uploadspanel.update(self.uploads[-1])
@@ -501,6 +502,7 @@ class Transfers:
 		if user is None:
 			return
 		addr = msg.conn.addr[0]
+		realpath = self.eventprocessor.shares.virtual2real(msg.file)
 		if not self.fileIsQueued(user, msg.file):
 			friend = user in [i[0] for i in self.eventprocessor.userlist.userlist]
 			if friend and self.eventprocessor.config.sections["transfers"]["friendsnolimits"]:
@@ -519,8 +521,8 @@ class Transfers:
 				filelimit = self.eventprocessor.config.sections["transfers"]["filelimit"]
 				limitmsg = "User limit of %i files exceeded" %(filelimit)
 				self.queue.put(slskmessages.QueueFailed(conn = msg.conn.conn, file = msg.file, reason = limitmsg))
-			elif self.fileIsShared(user, msg.file):
-				self.uploads.append(Transfer(user = user, filename = msg.file, path = os.path.dirname(msg.file.replace('\\', os.sep)), status = "Queued", timequeued = time.time(), size = self.getFileSize(msg.file)))
+			elif self.fileIsShared(user, msg.file, realpath):
+				self.uploads.append(Transfer(user = user, filename = realpath, path = os.path.dirname(realpath), status = "Queued", timequeued = time.time(), size = self.getFileSize(msg.file)))
 				self.uploadspanel.update(self.uploads[-1])
 				self.addQueued(user, msg.file)
 			else:
@@ -582,16 +584,19 @@ class Transfers:
 				break
 
 
-	def fileIsShared(self, user, filename):
+	def fileIsShared(self, user, virtualfilename, realfilename):
 		if win32:
-			u_filename= u"%s" % filename
+			u_realfilename    = u"%s" % realfilename
+			u_virtualfilename = u"%s" % virtualfilename
 		else:
-			u_filename = filename
-		u_filename = u_filename.replace("\\", os.sep)
-		if not os.access(u_filename, os.R_OK):
+			u_realfilename    = realfilename
+			u_virtualfilename = virtualfilename
+		u_realfilename = u_realfilename.replace("\\", os.sep)
+		u_virtualfilename = u_virtualfilename.replace("\\", os.sep)
+		if not os.access(u_realfilename, os.R_OK):
 			return False
-		dir = os.path.dirname(u_filename)
-		file = os.path.basename(u_filename)
+		dir = os.path.dirname(u_virtualfilename)
+		file = os.path.basename(u_virtualfilename)
 		if self.eventprocessor.config.sections["transfers"]["enablebuddyshares"]:
 			if user in [i[0] for i in self.eventprocessor.config.sections["server"]["userlist"]]:
 				bshared = self.eventprocessor.config.sections["transfers"]["bsharedfiles"]

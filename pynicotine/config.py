@@ -517,7 +517,16 @@ class Config:
 			except:
 				pass
 			self.sections["userinfo"]["descrutf8"] = 1
-			
+		# Convert fs-based shared to virtual shared (pre 1.2.17)
+		def _convert_to_virtual(x):
+			if isinstance(x, tuple):
+				return x
+			virtual = x.replace('/', '_').replace('\\', '_').strip('_')
+			log.addwarning("Renaming shared folder '%s' to '%s'. A rescan of your share is required." % (x, virtual))
+			return (virtual, x)
+		self.sections["transfers"]["shared"] = [_convert_to_virtual(x) for x in self.sections["transfers"]["shared"]]
+		self.sections["transfers"]["buddyshared"] = [_convert_to_virtual(x) for x in self.sections["transfers"]["buddyshared"]]
+
 		sharedfiles = None
 		bsharedfiles = None
 		sharedfilesstreams = None

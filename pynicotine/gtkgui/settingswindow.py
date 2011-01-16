@@ -430,19 +430,28 @@ class SharesFrame(buildFrame):
 		
 			
 		self.needrescan = 0
-		self.shareslist = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
+		# last column is the raw byte/unicode object for the folder (not shown)
+		self.shareslist = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING)
 		self.shareddirs = []
 		
-		self.bshareslist = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
+		# last column is the raw byte/unicode object for the folder (not shown)
+		self.bshareslist = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING)
 		self.bshareddirs = []
 
 		column = gtk.TreeViewColumn("Shared dirs", gtk.CellRendererText(), text = 0)
-		self.Shares.append_column(column)
+		columns = InitialiseColumns(self.Shares, 
+				[_("Virtual Directory"), 0, "text"],
+				[_("Directory"), 0, "text"],
+				[_("Size"), 0, "text"],
+			)
 		self.Shares.set_model(self.shareslist)
 		self.Shares.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
 		
-		bcolumn = gtk.TreeViewColumn("Buddy Shared dirs", gtk.CellRendererText(), text = 0)
-		self.BuddyShares.append_column(bcolumn)
+		bcolumns = InitialiseColumns(self.BuddyShares,
+				[_("Virtual Directory"), 0, "text"],
+				[_("Directory"), 0, "text"],
+				[_("Size"), 0, "text"],
+			)
 		self.BuddyShares.set_model(self.bshareslist)
 		self.BuddyShares.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
 		
@@ -466,14 +475,14 @@ class SharesFrame(buildFrame):
 
 		
 		if transfers["shared"] is not None:
-			for share in transfers["shared"]:
-				self.shareslist.append([recode(share), share])
+			for (virtual, actual) in transfers["shared"]:
+				self.shareslist.append([virtual, recode(actual), -1, actual])
 			self.shareddirs = transfers["shared"][:]
 		else:
 			self.p.Hilight(self.Shares)
 		if transfers["buddyshared"] is not None:
-			for share in transfers["buddyshared"]:
-				self.bshareslist.append([recode(share), share])
+			for (virtual, actual) in transfers["buddyshared"]:
+				self.bshareslist.append([virtual, recode(actual), -1, actual])
 			self.bshareddirs = transfers["buddyshared"][:]
 		else:
 			self.p.Hilight(self.BuddyShares)
@@ -526,8 +535,9 @@ class SharesFrame(buildFrame):
 		if dir1 is not None:
 			for directory in dir1:
 				if directory not in self.shareddirs:
-					self.shareslist.append([recode(directory), directory])
-					self.shareddirs.append(directory)
+					virtual = input_box(self.frame, title=_("Virtual name"), message=_("Enter virtual name for '%(dir)s':") % {'dir': directory})
+					self.shareslist.append([virtual, recode(directory), -2, directory])
+					self.shareddirs.append((virtual, directory))
 					self.needrescan = 1
 			    
 	def OnAddSharedBuddyDir(self, widget):
@@ -535,19 +545,36 @@ class SharesFrame(buildFrame):
 		if dir1 is not None:
 			for directory in dir1:
 				if directory not in self.bshareddirs:
-					self.bshareslist.append([recode(directory), directory])
-					self.bshareddirs.append(directory)
-					self.needrescan = 1
+					virtual = input_box(self.frame, title=_("Virtual name"), message=_("Enter virtual name for '%(dir)s':") % {'dir': directory})
+					self.bshareslist.append([virtual, recode(directory), -4, directory])
+					self.bshareddirs.append((virtual, directory))
+					self.needrescan = True
 			    
 	def _RemoveSharedDir(self, model, path, iter, list):
 		list.append(iter)
 
+	def OnRenameVirtuals(self, widget):
+		iters = []
+		self.Shares.get_selection().selected_foreach(self._RemoveSharedDir, iters)
+		for iter in iters:
+			oldvirtual = self.shareslist.get_value(iter, 0)
+			directory  = self.shareslist.get_value(iter, 3)
+			oldmapping = (oldvirtual, directory)
+			virtual = input_box(self.frame, title=_("Virtual name"), message=_("Enter new virtual name for '%(dir)s':") % {'dir': directory})
+			newmapping = (virtual, directory)
+			self.shareslist.set_value(iter, 0, virtual)
+			self.shareddirs.remove(oldmapping)
+			self.shareddirs.append(newmapping)
+			self.needrescan = True
 	def OnRemoveSharedDir(self, widget):
 		iters = []
 		self.Shares.get_selection().selected_foreach(self._RemoveSharedDir, iters)
 		for iter in iters:
-			dir = self.shareslist.get_value(iter, 1)
-			self.shareddirs.remove(dir)
+			virtual = self.shareslist.get_value(iter, 0)
+			actual  = self.shareslist.get_value(iter, 3)
+			mapping = (virtual, actual)
+			print("Mapping: " + repr(mapping))
+			self.shareddirs.remove(mapping)
 			self.shareslist.remove(iter)
 		if iters:
 			self.needrescan =1
@@ -556,8 +583,11 @@ class SharesFrame(buildFrame):
 		iters = []
 		self.BuddyShares.get_selection().selected_foreach(self._RemoveSharedDir, iters)
 		for iter in iters:
-			dir = self.bshareslist.get_value(iter, 1)
-			self.bshareddirs.remove(dir)
+			virtual = self.bshareslist.get_value(iter, 0)
+			actual  = self.bshareslist.get_value(iter, 3)
+			mapping = (virtual, actual)
+			print("Mapping: " + repr(mapping))
+			self.bshareddirs.remove(mapping)
 			self.bshareslist.remove(iter)
 		if iters:
 			self.needrescan =1

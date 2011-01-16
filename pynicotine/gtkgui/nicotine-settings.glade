@@ -457,7 +457,6 @@
                           <widget class="GtkTreeView" id="Shares">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <property name="headers_visible">False</property>
                           </widget>
                         </child>
                       </widget>
@@ -576,6 +575,55 @@
                         <property name="position">2</property>
                       </packing>
                     </child>
+                    <child>
+                      <widget class="GtkButton" id="renameVirtualsButton">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                        <signal name="clicked" handler="OnRenameVirtuals"/>
+                        <child>
+                          <widget class="GtkAlignment" id="alignment999">
+                            <property name="visible">True</property>
+                            <property name="xscale">0</property>
+                            <property name="yscale">0</property>
+                            <child>
+                              <widget class="GtkHBox" id="hbox999">
+                                <property name="visible">True</property>
+                                <property name="spacing">2</property>
+                                <child>
+                                  <widget class="GtkImage" id="image999">
+                                    <property name="visible">True</property>
+                                    <property name="stock">gtk-convert</property>
+                                  </widget>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">False</property>
+                                    <property name="position">0</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <widget class="GtkLabel" id="label999">
+                                    <property name="visible">True</property>
+                                    <property name="label" translatable="yes">Rename</property>
+                                    <property name="use_underline">True</property>
+                                  </widget>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">False</property>
+                                    <property name="position">1</property>
+                                  </packing>
+                                </child>
+                              </widget>
+                            </child>
+                          </widget>
+                        </child>
+                      </widget>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">False</property>
+                        <property name="position">3</property>
+                      </packing>
+                    </child>
                   </widget>
                   <packing>
                     <property name="type">label_item</property>
@@ -666,7 +714,6 @@
                               <widget class="GtkTreeView" id="BuddyShares">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
-                                <property name="headers_visible">False</property>
                               </widget>
                             </child>
                           </widget>

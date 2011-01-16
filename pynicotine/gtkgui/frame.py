@@ -2028,11 +2028,11 @@ class NicotineFrame:
 		
 		shared = self.np.config.sections["transfers"]["shared"][:]
 		if self.np.config.sections["transfers"]["sharedownloaddir"]:
-			shared.append(self.np.config.sections["transfers"]["downloaddir"])
+			shared.append((_('Downloaded'), self.np.config.sections["transfers"]["downloaddir"]))
 		cleanedshares = []
-		for i in shared:
-			if i not in cleanedshares:
-				cleanedshares.append(i)
+		for combo in shared:
+			if combo not in cleanedshares:
+				cleanedshares.append(combo)
 		msg = slskmessages.RescanShares(cleanedshares, lambda: None)
 		thread.start_new_thread(self.np.shares.RescanShares, (msg, rebuild))
 		

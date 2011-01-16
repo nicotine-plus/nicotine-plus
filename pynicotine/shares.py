@@ -20,6 +20,7 @@ except ImportError:
 
 win32 = sys.platform.startswith("win")
 
+
 class Shares:
 	def __init__(self, np):
 		self.np = np
@@ -32,7 +33,29 @@ class Shares:
 		self.requestedShares = {}
 		self.newbuddyshares = self.newnormalshares = False
 		self.translatepunctuation = string.maketrans(string.punctuation, string.join([' ' for i in string.punctuation],''))
-		
+	def real2virtual(self, path):
+		for (virtual, real) in self._virtualmapping():
+			if path == real:
+				return virtual
+			if path.startswith(real + os.sep):
+				virtualpath = virtual + path[len(real):]
+				return virtualpath
+		return "???" + path
+	def virtual2real(self, path):
+		for (virtual, real) in self._virtualmapping():
+			if path == virtual:
+				return real
+			if path.startswith(virtual + '\\'):
+				realpath = real + path[len(virtual):].replace('\\', os.sep)
+				return realpath
+		return "__INTERNAL_ERROR__" + path
+	def _virtualmapping(self):
+		mapping = self.config.sections["transfers"]["shared"][:]
+		if self.config.sections["transfers"]["enablebuddyshares"]:
+			mapping += self.config.sections["transfers"]["buddyshared"]
+		if self.config.sections["transfers"]["sharedownloaddir"]:
+			mapping += [(_("Downloaded"), self.config.sections["transfers"]["downloaddir"])]
+		return mapping
 	def logMessage(self, message, debugLevel=0):
 		if self.LogMessage is not None:
 			gobject.idle_add(self.LogMessage, message, debugLevel)
@@ -58,8 +81,8 @@ class Shares:
 			files, streams, wordindex, fileindex, mtimes = self.rescandirs(msg.shared, self.config.sections["transfers"]["sharedmtimes"], self.config.sections["transfers"]["sharedfiles"], self.config.sections["transfers"]["sharedfilesstreams"], msg.yieldfunction, self.np.frame.SharesProgress, name=_("Shares"), rebuild=rebuild)
 			time.sleep(0.5)
 			self.np.frame.RescanFinished([files, streams, wordindex, fileindex, mtimes], "normal")
-		except:
-			log.addwarning("Failed to rebuild share, serious error occurred. If this problem persists delete ~/.nicotine/*.db and try again. If that doesn't help please file a bug report with the stack trace included (see terminal output after this message)")
+		except Exception, ex:
+			log.addwarning("Failed to rebuild share, serious error occurred. If this problem persists delete ~/.nicotine/*.db and try again. If that doesn't help please file a bug report with the stack trace included (see terminal output after this message). Technical details: %s" % ex)
 			raise
 		
 	def RebuildShares(self, msg):
@@ -256,13 +279,14 @@ class Shares:
 					
 
 	# Rescan directories in shared databases
-	def rescandirs(self, shared_directories, oldmtimes, oldfiles, sharedfilesstreams, yieldfunction, progress=None, name="", rebuild=False):
+	def rescandirs(self, shared, oldmtimes, oldfiles, sharedfilesstreams, yieldfunction, progress=None, name="", rebuild=False):
 		"""
 		Check for modified or new files via OS's last mtime on a directory,
 		or, if rebuild is True, all directories
 		"""
 		#returns dict in format:  { Directory : mtime, ... }
-		
+		shared_directories = [x[1] for x in shared]
+
 		gobject.idle_add(progress.set_text, _("Checking for changes"))
 		gobject.idle_add(progress.show)
 		gobject.idle_add(progress.set_fraction, 0)
@@ -378,11 +402,8 @@ class Shares:
 				continue
 
 			list[directory] = mtime
-
 			for filename in contents:
 				path = os.path.join(directory, filename)
-
-
 				try:
 					isdir = os.path.isdir(path)
 				except OSError, errtuple:
@@ -422,6 +443,7 @@ class Shares:
 		list = {}
 		count = 0
 		for directory in mtimes:
+			virtualdir = self.real2virtual(directory)
 			directory = os.path.expanduser(directory)
 			count +=1
 			if progress:
@@ -434,14 +456,16 @@ class Shares:
 			if not rebuild and directory in oldmtimes:
 				if mtimes[directory] == oldmtimes[directory]:
 					if os.path.exists(directory):
-						
-						list[directory] = oldlist[directory]
-						continue
+						try:
+							list[virtualdir] = oldlist[virtualdir]
+							continue
+						except KeyError:
+							log.addwarning("Inconsistent cache for '%s', rebuilding '%s'" % (virtualdir, directory))
 					else:
 						print "Dropping removed directory %s" % directory
 						continue
 
-			list[directory] = []
+			list[virtualdir] = []
 
 			try:
 				contents = os.listdir(directory)
@@ -469,7 +493,7 @@ class Shares:
 						# It's a file, check if it is mp3 or ogg
 						data = self.getFileInfo(filename, path)
 						if data is not None:
-							list[directory].append(data)
+							list[virtualdir].append(data)
 				if yieldcall is not None:
 					yieldcall()
 
@@ -612,7 +636,11 @@ class Shares:
 		return streams
 	def getFilesStreams(self, mtimes, oldmtimes, oldstreams, newsharedfiles, yieldcall = None):
 		streams = {}
+		shared = self.config.sections["transfers"]["shared"]
+		virtual_dirs = [x[0] for x in shared]
+		actual_dirs  = [x[1] for x in shared]
 		for directory in mtimes.keys():
+			virtualdir = self.real2virtual(directory)
 			if self.hiddenCheck(directory):
 				continue
 
@@ -620,13 +648,16 @@ class Shares:
 				if mtimes[directory] == oldmtimes[directory]:
 					if os.path.exists(directory):
 						# No change
-						streams[directory] = oldstreams[directory]
-						continue
+						try:
+							streams[virtualdir] = oldstreams[virtualdir]
+							continue
+						except KeyError:
+							log.addwarning("Inconsistent cache for '%s', rebuilding '%s'" % (virtualdir, directory))
 					else:
 						print "2S. Dropping missing directory %s" % directory
 						continue
 					
-			streams[directory] = self.getDirStream(newsharedfiles[directory])
+			streams[virtualdir] = self.getDirStream(newsharedfiles[virtualdir])
 			if yieldcall is not None:
 				yieldcall()
 		return streams
@@ -634,12 +665,10 @@ class Shares:
 	# Stop any dot directories
 	def hiddenCheck(self, direct):
 		dirs = direct.split(os.sep)
-		hidden = 0
 		for dir in dirs:
 			if dir.startswith("."):
-				hidden = 1
-				break
-		return hidden
+				return True
+		return False
 
 	# Pack all files and metadata in directory
 	def getDirStream(self, dir):
@@ -687,6 +716,7 @@ class Shares:
 		index = 0
 		count = 0
 		for directory in mtimes.keys():
+			virtualdir = self.real2virtual(directory)
 			if progress:
 				percent = float(count)/len(mtimes)
 				if percent <= 1.0:
@@ -694,11 +724,11 @@ class Shares:
 			count +=1
 			if self.hiddenCheck(directory):
 				continue
-			for j in newsharedfiles[directory]:
-				indexes = self.getIndexWords(directory, j[0], shareddirs)
+			for j in newsharedfiles[virtualdir]:
+				indexes = self.getIndexWords(virtualdir, j[0], shareddirs)
 				for k in indexes:
 					wordindex.setdefault(k, []).append(index)
-				fileindex[str(index)] = (os.path.join(directory, j[0]), )+j[1:]
+				fileindex[str(index)] = (os.path.join(virtualdir, j[0]), )+j[1:]
 				index += 1
 			if yieldcall is not None:
 				yieldcall()
