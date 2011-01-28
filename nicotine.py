@@ -59,7 +59,9 @@ if LOAD_PSYCO:
 		import psyco
 		psyco.profile()
 	except ImportError:
-		log.addwarning(_("""Nicotine supports \"psyco\", an inline optimizer for python code, you can get it at http://sourceforge.net/projects/psyco/"""))
+		# Deprecated
+		#log.addwarning(_("""Nicotine supports \"psyco\", an inline optimizer for python code, you can get it at http://sourceforge.net/projects/psyco/"""))
+		pass
 
 
 
@@ -286,6 +288,14 @@ def run():
 		print result
 
 if __name__ == '__main__':
+	log.addwarning('#     #     #     ######   #     #  ###  #     #   #####   ')
+	log.addwarning('#  #  #    # #    #     #  ##    #   #   ##    #  #     #  ')
+	log.addwarning('#  #  #   #   #   #     #  # #   #   #   # #   #  #        ')
+	log.addwarning('#  #  #  #     #  ######   #  #  #   #   #  #  #  #  ####  ')
+	log.addwarning('#  #  #  #######  #   #    #   # #   #   #   # #  #     #  ')
+	log.addwarning('#  #  #  #     #  #    #   #    ##   #   #    ##  #     #  ')
+	log.addwarning(' ## ##   #     #  #     #  #     #  ###  #     #   #####   ')
+	log.addwarning("This revision is severely broken, if you want to use N+ please fall back to r1459.")
 	try:
 		run()
 	except SystemExit:
