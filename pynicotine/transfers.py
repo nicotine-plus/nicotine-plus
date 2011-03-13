@@ -53,11 +53,12 @@ win32 = sys.platform.startswith("win")
 
 class Transfer(object):
 	""" This class holds information about a single transfer. """
-	def __init__(self, conn = None, user = None, filename = None, path = None, status = None, req=None, size = None, file = None, starttime = None, offset = None, currentbytes = None, speed = None, timeelapsed = None, timeleft = None, timequeued = None, transfertimer = None, requestconn = None, modifier = None, place = 0, bitrate = None, length = None):
+	def __init__(self, conn = None, user = None, realfilename = None, filename = None, path = None, status = None, req=None, size = None, file = None, starttime = None, offset = None, currentbytes = None, speed = None, timeelapsed = None, timeleft = None, timequeued = None, transfertimer = None, requestconn = None, modifier = None, place = 0, bitrate = None, length = None):
 		self.user = user
+		self.realfilename = realfilename # Sent as is to the user announcing what file we're sending
 		self.filename = filename
 		self.conn = conn
-		self.path = path
+		self.path = path                       # Used for ???
 		self.modifier = modifier
 		self.req = req
 		self.size = size
@@ -184,7 +185,7 @@ class Transfers:
 			if msg.user == i.user and i.status != 'Finished':
 				if msg.status != 0:
 					if i.status == 'Getting status':
-						self.pushFile(i.user, i.filename, i.path, i)
+						self.pushFile(i.user, i.filename, i.realfilename, i.path, i)
 				else:
 					if i.transfertimer is not None:
 						i.transfertimer.cancel()
@@ -195,15 +196,15 @@ class Transfers:
 
 
 	def getFile(self, user, filename, path="", transfer = None, size=None, bitrate=None, length=None):
-		path=utils.CleanPath(path, absolute=True)
+		path = utils.CleanPath(path, absolute=True)
 		self.transferFile(0, user, filename, path, transfer, size, bitrate, length)
 
-	def pushFile(self, user, filename, path="", transfer = None, size=None, bitrate=None, length=None ):
+	def pushFile(self, user, filename, realfilename, path="", transfer = None, size=None, bitrate=None, length=None ):
 		if size is None:
 			size = self.getFileSize(filename)
-		self.transferFile(1, user, filename, path, transfer, size, bitrate, length)
+		self.transferFile(1, user, filename, path, transfer, size, bitrate, length, realfilename)
 
-	def transferFile(self, direction, user, filename, path="", transfer = None, size=None, bitrate=None, length=None):
+	def transferFile(self, direction, user, filename, path="", transfer = None, size=None, bitrate=None, length=None, realfilename = None):
 		""" Get a single file. path is a local path. if transfer object is 
 		not None, update it, otherwise create a new one."""
 		if transfer is None:
@@ -243,12 +244,13 @@ class Transfers:
 			self.queue.put(slskmessages.GetUserStatus(user))
 		if transfer.status is not 'Filtered':
 			transfer.req = newId()
-			self.eventprocessor.ProcessRequestToPeer(user, slskmessages.TransferRequest(None, direction, transfer.req, filename, self.getFileSize(filename)))
+			realpath = self.eventprocessor.shares.virtual2real(filename)
+			request = slskmessages.TransferRequest(None, direction, transfer.req, filename, self.getFileSize(realpath), realpath)
+			self.eventprocessor.ProcessRequestToPeer(user, request)
 		if direction == 0:
 			self.downloadspanel.update(transfer)
 		else:
 			self.uploadspanel.update(transfer)
-
 
 	def UploadFailed(self, msg):
 		for i in self.peerconns:
@@ -352,7 +354,6 @@ class Transfers:
 				i.status = "Requesting file"
 				i.requestconn = conn
 				self.uploadspanel.update(i)
-	
 	def TransferRequest(self, msg):
 		user = response = None
 		transfers = self.eventprocessor.config.sections["transfers"]
@@ -452,14 +453,15 @@ class Transfers:
 			response = slskmessages.TransferResponse(conn, 0, reason = limitmsg, req = msg.req)
 		elif user in self.getTransferringUsers() or self.bandwidthLimitReached() or self.transferNegotiating():
 			response = slskmessages.TransferResponse(conn, 0, reason = "Queued", req = msg.req)
-			self.uploads.append(Transfer(user = user, filename = realpath, path = os.path.dirname(realpath), status = "Queued", timequeued = time.time(), size = self.getFileSize(msg.file), place = len(self.uploads)))
-			self.uploadspanel.update(self.uploads[-1])
-			self.addQueued(user, msg.file)
+			newupload = Transfer(user = user, realfilename = realpath, filename = realpath, path = os.path.dirname(realpath), status = "Queued", timequeued = time.time(), size = self.getFileSize(realpath), place = len(self.uploads))
+			self.uploads.append(newupload)
+			self.uploadspanel.update(newupload)
+			self.addQueued(user, realpath)
 		else:
 			size = self.getFileSize(realpath)
 			response = slskmessages.TransferResponse(conn, 1, req = msg.req, filesize = size)
 			transfertimeout = TransferTimeout(msg.req, self.eventprocessor.frame.callback) 
-			self.uploads.append(Transfer(user = user, filename = realpath, path = os.path.dirname(realpath), status = "Waiting for upload", req = msg.req, size = size, place = len(self.uploads)))
+			self.uploads.append(Transfer(user = user, realfilename = realpath, filename = realpath, path = os.path.dirname(realpath), status = "Waiting for upload", req = msg.req, size = size, place = len(self.uploads)))
 			self.uploads[-1].transfertimer = threading.Timer(30.0, transfertimeout.timeout)
 			self.uploads[-1].transfertimer.start()
 			self.uploadspanel.update(self.uploads[-1])
@@ -522,8 +524,9 @@ class Transfers:
 				limitmsg = "User limit of %i files exceeded" %(filelimit)
 				self.queue.put(slskmessages.QueueFailed(conn = msg.conn.conn, file = msg.file, reason = limitmsg))
 			elif self.fileIsShared(user, msg.file, realpath):
-				self.uploads.append(Transfer(user = user, filename = realpath, path = os.path.dirname(realpath), status = "Queued", timequeued = time.time(), size = self.getFileSize(msg.file)))
-				self.uploadspanel.update(self.uploads[-1])
+				newupload = Transfer(user = user, filename = msg.file, realfilename = realpath, path = os.path.dirname(realpath), status = "Queued", timequeued = time.time(), size = self.getFileSize(realpath))
+				self.uploads.append(newupload)
+				self.uploadspanel.update(newupload)
 				self.addQueued(user, msg.file)
 			else:
 				self.queue.put(slskmessages.QueueFailed(conn = msg.conn.conn, file = msg.file, reason = "File not shared" ))
@@ -592,11 +595,10 @@ class Transfers:
 			u_realfilename    = realfilename
 			u_virtualfilename = virtualfilename
 		u_realfilename = u_realfilename.replace("\\", os.sep)
-		u_virtualfilename = u_virtualfilename.replace("\\", os.sep)
+		u_virtualfilename = u_virtualfilename
 		if not os.access(u_realfilename, os.R_OK):
 			return False
-		dir = os.path.dirname(u_virtualfilename)
-		file = os.path.basename(u_virtualfilename)
+		(dir, sep, file) = u_virtualfilename.rpartition('\\')
 		if self.eventprocessor.config.sections["transfers"]["enablebuddyshares"]:
 			if user in [i[0] for i in self.eventprocessor.config.sections["server"]["userlist"]]:
 				bshared = self.eventprocessor.config.sections["transfers"]["bsharedfiles"]
@@ -815,10 +817,10 @@ class Transfers:
 				try:
 					# Open File
 					if win32:
-						filename = u"%s" % i.filename.replace("\\", os.sep)
+						filename = u"%s" % i.realfilename.replace("\\", os.sep)
 					else:
-						filename = i.filename.replace("\\", os.sep)
-					f = open(filename,"rb")
+						filename = i.realfilename.replace("\\", os.sep)
+					f = open(filename, "rb")
 					self.queue.put(slskmessages.UploadFile(i.conn, file = f, size = i.size))
 					i.status = "Initializing transfer"
 					i.file = f
@@ -1119,7 +1121,7 @@ class Transfers:
 					mintimequeued = i.timequeued
 					
 		if transfercandidate is not None:
-			self.pushFile(user = transfercandidate.user, filename = transfercandidate.filename, transfer = transfercandidate)
+			self.pushFile(user = transfercandidate.user, filename = transfercandidate.filename, realfilename = transfercandidate.realfilename, transfer = transfercandidate)
 			self.removeQueued(transfercandidate.user, transfercandidate.filename)
 
 	def PlaceInQueueRequest(self, msg):

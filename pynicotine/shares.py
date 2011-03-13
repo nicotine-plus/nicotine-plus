@@ -11,7 +11,7 @@ import struct
 import slskmessages
 from slskmessages import NetworkIntType, NetworkLongLongType
 from logfacility import log
-from utils import _, displayTraceback
+from utils import _, displayTraceback, strace
 try:
 	import metadata_mutagen as metadata
 except ImportError:
@@ -38,7 +38,7 @@ class Shares:
 			if path == real:
 				return virtual
 			if path.startswith(real + os.sep):
-				virtualpath = virtual + path[len(real):]
+				virtualpath = virtual + '\\' + path[len(real + os.sep):]
 				return virtualpath
 		return "???" + path
 	def virtual2real(self, path):
@@ -728,7 +728,7 @@ class Shares:
 				indexes = self.getIndexWords(virtualdir, j[0], shareddirs)
 				for k in indexes:
 					wordindex.setdefault(k, []).append(index)
-				fileindex[str(index)] = (os.path.join(virtualdir, j[0]), )+j[1:]
+				fileindex[str(index)] = ((virtualdir + '\\' + j[0]), )+j[1:]
 				index += 1
 			if yieldcall is not None:
 				yieldcall()

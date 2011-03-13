@@ -304,3 +304,15 @@ def findBestEncoding(bytes, encodings, fallback=None):
 		return unicode(bytes, fallback, 'replace')
 	else:
 		return unicode(bytes, encodings[0], 'replace')
+
+def strace(function):
+	"""Decorator for debugging"""
+	from itertools import chain
+	def newfunc(*args, **kwargs):
+		name = function.__name__
+		print("%s(%s)" % (name, ", ".join(map(repr, chain(args, kwargs.values())))))
+		retvalue = function(*args, **kwargs)
+		print("%s(%s): %s" % (name, ", ".join(map(repr, chain(args, kwargs.values()))), repr(retvalue)))
+		return retvalue
+	return newfunc
+

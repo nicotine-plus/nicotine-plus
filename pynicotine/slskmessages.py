@@ -1861,25 +1861,21 @@ class FolderContentsResponse(PeerMessage):
 class TransferRequest(PeerMessage):
 	""" Request a file from peer, or tell a peer that we want to send a file to
 	them. """
-	def __init__(self, conn, direction = None, req = None, file = None, filesize = None):
+	def __init__(self, conn, direction = None, req = None, file = None, filesize = None, realfile = None):
 		self.conn = conn
 		self.direction = direction
 		self.req = req
-		self.file = file
+		self.file = file # virtual file
+		self.realfile = realfile
 		self.filesize = filesize
 	
 	def makeNetworkMessage(self):
 		msg = self.packObject(self.direction)+self.packObject(self.req)+self.packObject(self.file)
 		if self.filesize is not None and self.direction == 1:
-			# BORKED Uploads to the official client: msg = msg+self.packObject(self.filesize)
-			#X print "b-" + repr(msg + self.packObject(self.filesize) + self.packObject(0))
-			#X print "b+" + repr(msg + self.packObject(NetworkLongLongType(self.filesize)))
-			#msg = msg+self.packObject(self.filesize) + self.packObject(0)
 			msg = msg + self.packObject(NetworkLongLongType(self.filesize))
 		return msg
 	
 	def parseNetworkMessage(self, message):
-	
 		pos, self.direction = self.getObject(message, types.IntType)
 		pos, self.req = self.getObject(message, types.IntType, pos)
 		pos, self.file = self.getObject(message, types.StringType, pos)
@@ -1897,16 +1893,10 @@ class TransferResponse(PeerMessage):
 		self.filesize = filesize
 	
 	def makeNetworkMessage(self):
-		#X print "1-" + repr(self.packObject(self.req) + chr(self.allowed))
-		#X print "1+" + repr(self.packObject(NetworkIntType(self.req)) + chr(self.allowed))
 		msg = self.packObject(NetworkIntType(self.req)) + chr(self.allowed)
 		if self.reason is not None:
 			msg = msg + self.packObject(self.reason)
 		if self.filesize is not None:
-			# BORKED Uploads to the official client: msg = msg + self.packObject(self.filesize)
-			#X print "a-" + repr(msg + self.packObject(self.filesize) + self.packObject(0))
-			#X print "a+" + repr(msg + self.packObject(NetworkLongLongType(self.filesize)))
-			#msg = msg + self.packObject(self.filesize) + self.packObject(0)
 			msg = msg + self.packObject(NetworkLongLongType(self.filesize))
 		return msg
 	
@@ -1944,8 +1934,6 @@ class PlaceInQueue(PeerMessage):
 		self.place = place
 	
 	def makeNetworkMessage(self):
-		#X print "0-" + repr(self.packObject(self.filename) + self.packObject(self.place))
-		#X print "0+" + repr(self.packObject(self.filename) + self.packObject(NetworkIntType(self.place)))
 		return self.packObject(self.filename) + self.packObject(NetworkIntType(self.place))
 	
 	def parseNetworkMessage(self, message):

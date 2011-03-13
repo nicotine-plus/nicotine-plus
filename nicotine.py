@@ -288,14 +288,6 @@ def run():
 		print result
 
 if __name__ == '__main__':
-	log.addwarning('#     #     #     ######   #     #  ###  #     #   #####   ')
-	log.addwarning('#  #  #    # #    #     #  ##    #   #   ##    #  #     #  ')
-	log.addwarning('#  #  #   #   #   #     #  # #   #   #   # #   #  #        ')
-	log.addwarning('#  #  #  #     #  ######   #  #  #   #   #  #  #  #  ####  ')
-	log.addwarning('#  #  #  #######  #   #    #   # #   #   #   # #  #     #  ')
-	log.addwarning('#  #  #  #     #  #    #   #    ##   #   #    ##  #     #  ')
-	log.addwarning(' ## ##   #     #  #     #  #     #  ###  #     #   #####   ')
-	log.addwarning("This revision is severely broken, if you want to use N+ please fall back to r1459.")
 	try:
 		run()
 	except SystemExit:
