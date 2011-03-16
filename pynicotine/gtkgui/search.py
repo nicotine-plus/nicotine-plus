@@ -664,7 +664,7 @@ class Search:
 				self.FilterCountry.child.set_text(filter[5])
 			self.filtersCheck.set_active(1)
 			
-		for i in [0, 128, 160, 192, 256, 320]:
+		for i in ['0', '128', '160', '192', '256', '320']:
 			self.FilterBitrate.get_model().append([i])
 		for i in [">10MiB", "<10MiB", "<5MiB", "<1MiB", ">0"]:
 			self.FilterSize.get_model().append([i])

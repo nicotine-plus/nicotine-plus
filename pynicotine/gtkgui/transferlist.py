@@ -441,7 +441,7 @@ class TransferList:
 				continue
 			if i[2] != transfer:
 				continue
-			self.transfersmodel.set(i[1], 1, shortfn, 2, status, 3, place, 4, percent, 5, hsize, 6, speed, 7, elap, 8, left, 9, self.frame.np.decode(transfer.path), 11, istatus, 12, size, 13, currentbytes)
+			self.transfersmodel.set(i[1], 1, shortfn, 2, status, 3, str(place), 4, percent, 5, str(hsize), 6, speed, 7, elap, 8, left, 9, self.frame.np.decode(transfer.path), 11, istatus, 12, size, 13, currentbytes)
 			break
 		else:
 			newparent = False
@@ -459,7 +459,7 @@ class TransferList:
 			# Add a new transfer
 			
 			path = self.frame.np.decode(transfer.path)
-			iter = self.transfersmodel.append(parent, [user, shortfn, status, place, percent,  hsize, speed, elap, left, path, fn, istatus, size, icurrentbytes, True])
+			iter = self.transfersmodel.append(parent, [user, shortfn, status, str(place), percent, str(hsize), speed, elap, left, path, fn, istatus, size, icurrentbytes, True])
 			
 			# Expand path
 			path = self.transfersmodel.get_path(iter)
