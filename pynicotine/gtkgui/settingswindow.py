@@ -476,13 +476,13 @@ class SharesFrame(buildFrame):
 		
 		if transfers["shared"] is not None:
 			for (virtual, actual) in transfers["shared"]:
-				self.shareslist.append([virtual, recode(actual), -1, actual])
+				self.shareslist.append([virtual, recode(actual), '-1', actual])
 			self.shareddirs = transfers["shared"][:]
 		else:
 			self.p.Hilight(self.Shares)
 		if transfers["buddyshared"] is not None:
 			for (virtual, actual) in transfers["buddyshared"]:
-				self.bshareslist.append([virtual, recode(actual), -1, actual])
+				self.bshareslist.append([virtual, recode(actual), '-1', actual])
 			self.bshareddirs = transfers["buddyshared"][:]
 		else:
 			self.p.Hilight(self.BuddyShares)
@@ -536,7 +536,7 @@ class SharesFrame(buildFrame):
 			for directory in dir1:
 				if directory not in self.shareddirs:
 					virtual = input_box(self.frame, title=_("Virtual name"), message=_("Enter virtual name for '%(dir)s':") % {'dir': directory})
-					self.shareslist.append([virtual, recode(directory), -2, directory])
+					self.shareslist.append([virtual, recode(directory), '-2', directory])
 					self.shareddirs.append((virtual, directory))
 					self.needrescan = 1
 			    
@@ -546,7 +546,7 @@ class SharesFrame(buildFrame):
 			for directory in dir1:
 				if directory not in self.bshareddirs:
 					virtual = input_box(self.frame, title=_("Virtual name"), message=_("Enter virtual name for '%(dir)s':") % {'dir': directory})
-					self.bshareslist.append([virtual, recode(directory), -4, directory])
+					self.bshareslist.append([virtual, recode(directory), '-4', directory])
 					self.bshareddirs.append((virtual, directory))
 					self.needrescan = True
 			    
