@@ -1178,6 +1178,7 @@ class NicotineFrame:
 		elif "TabLabel" in id:
 			label_tab = ImageLabel(string2, self.images["empty"])
 			eventbox = gtk.EventBox()
+			eventbox.set_visible_window(False)
 			label_tab.show()
 			eventbox.add(label_tab)
 			eventbox.show()

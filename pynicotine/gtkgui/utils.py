@@ -652,6 +652,7 @@ class IconNotebook(gtk.Notebook):
 		label_tab_menu = ImageLabel(label, self.images["empty"])
 		self.pages.append([page, label_tab, 0, label_tab_menu])
 		eventbox = gtk.EventBox()
+		eventbox.set_visible_window(False)
 		label_tab.show()
 		eventbox.add(label_tab)
 		eventbox.show()
@@ -745,6 +746,7 @@ class IconNotebook(gtk.Notebook):
 		
 		#self.pages.append([page, label_tab, status, label_tab_menu])
 		eventbox = gtk.EventBox()
+		eventbox.set_visible_window(False)
 		label_tab.show()
 		eventbox.add(label_tab)
 		eventbox.show()
