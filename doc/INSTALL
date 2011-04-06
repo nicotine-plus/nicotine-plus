@@ -15,7 +15,7 @@ The recommended way of running Nicotine is from the source tree, which might
 seem strange, but is no problem at all, especially if you are the only user of
 the system that is interested in running Nicotine. From the source tree run:
 
-python ./nicotine
+python ./nicotine.py
 
 
 Another option would be that you create an RPM from the source tree:
