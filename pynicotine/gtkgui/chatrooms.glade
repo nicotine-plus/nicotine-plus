@@ -158,6 +158,7 @@
               <widget class="GtkVPaned" id="Vpaned">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
+                <property name="orientation">vertical</property>
                 <child>
                   <widget class="GtkScrolledWindow" id="RoomLogWindow">
                     <property name="visible">True</property>
