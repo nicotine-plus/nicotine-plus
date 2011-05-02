@@ -12,6 +12,7 @@
           <widget class="GtkVBox" id="ServerVbox">
             <property name="visible">True</property>
             <property name="border_width">5</property>
+            <property name="orientation">vertical</property>
             <property name="spacing">7</property>
             <child>
               <widget class="GtkLabel" id="label166">
@@ -30,7 +31,7 @@
               </packing>
             </child>
             <child>
-              <widget class="GtkHBox" id="hbox103">
+              <widget class="GtkHBox" id="hbox10">
                 <property name="visible">True</property>
                 <property name="spacing">5</property>
                 <child>
@@ -68,6 +69,7 @@
                 <child>
                   <widget class="GtkVBox" id="vbox73">
                     <property name="visible">True</property>
+                    <property name="orientation">vertical</property>
                     <child>
                       <widget class="GtkLabel" id="label167">
                         <property name="width_request">57</property>
@@ -114,6 +116,7 @@
                 <child>
                   <widget class="GtkVBox" id="vbox74">
                     <property name="visible">True</property>
+                    <property name="orientation">vertical</property>
                     <child>
                       <widget class="GtkLabel" id="label168">
                         <property name="width_request">5</property>
@@ -149,7 +152,7 @@
                         </child>
                         <child>
                           <widget class="GtkButton" id="ChangePassword">
-                            <property name="label" translatable="yes">Change password</property>
+                            <property name="label">Change password</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
@@ -436,6 +439,7 @@
           <widget class="GtkVBox" id="vbox77">
             <property name="visible">True</property>
             <property name="border_width">5</property>
+            <property name="orientation">vertical</property>
             <property name="spacing">7</property>
             <child>
               <widget class="GtkFrame" id="frame1">
@@ -872,6 +876,7 @@
           <widget class="GtkVBox" id="TransfersVbox">
             <property name="visible">True</property>
             <property name="border_width">5</property>
+            <property name="orientation">vertical</property>
             <property name="spacing">5</property>
             <child>
               <widget class="GtkLabel" id="UploadDirLabel">
@@ -932,6 +937,7 @@
                 <child>
                   <widget class="GtkVBox" id="vbox114">
                     <property name="visible">True</property>
+                    <property name="orientation">vertical</property>
                     <property name="spacing">3</property>
                     <child>
                       <widget class="GtkHBox" id="hbox171">
@@ -1137,6 +1143,7 @@
                           <widget class="GtkVBox" id="vbox5">
                             <property name="visible">True</property>
                             <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                            <property name="orientation">vertical</property>
                             <child>
                               <widget class="GtkRadioButton" id="LimitPerTransfer">
                                 <property name="label" translatable="yes">per transfer</property>
@@ -1195,6 +1202,7 @@
                           <widget class="GtkVBox" id="vbox9">
                             <property name="visible">True</property>
                             <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                            <property name="orientation">vertical</property>
                             <child>
                               <widget class="GtkHBox" id="hbox40">
                                 <property name="visible">True</property>
@@ -1371,6 +1379,7 @@
                 <child>
                   <widget class="GtkVBox" id="vbox117">
                     <property name="visible">True</property>
+                    <property name="orientation">vertical</property>
                     <child>
                       <widget class="GtkHBox" id="hbox176">
                         <property name="visible">True</property>
@@ -1482,10 +1491,12 @@
           <widget class="GtkVBox" id="vbox84">
             <property name="visible">True</property>
             <property name="border_width">5</property>
+            <property name="orientation">vertical</property>
             <property name="spacing">10</property>
             <child>
               <widget class="GtkVBox" id="vbox85">
                 <property name="visible">True</property>
+                <property name="orientation">vertical</property>
                 <child>
                   <widget class="GtkLabel" id="label193">
                     <property name="visible">True</property>
@@ -1666,6 +1677,7 @@
           <widget class="GtkVBox" id="vboxUI">
             <property name="visible">True</property>
             <property name="border_width">5</property>
+            <property name="orientation">vertical</property>
             <property name="spacing">5</property>
             <child>
               <widget class="GtkCheckButton" id="SpellCheck">
@@ -1775,7 +1787,7 @@
                 </child>
                 <child>
                   <widget class="GtkButton" id="DefaultFont">
-                    <property name="label" translatable="yes">gtk-clear</property>
+                    <property name="label">gtk-clear</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
@@ -1825,7 +1837,7 @@
                 </child>
                 <child>
                   <widget class="GtkButton" id="DefaultListFont">
-                    <property name="label" translatable="yes">gtk-clear</property>
+                    <property name="label">gtk-clear</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
@@ -1874,7 +1886,7 @@
                 </child>
                 <child>
                   <widget class="GtkButton" id="DefaultTransfersFont">
-                    <property name="label" translatable="yes">gtk-clear</property>
+                    <property name="label">gtk-clear</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
@@ -1923,7 +1935,7 @@
                 </child>
                 <child>
                   <widget class="GtkButton" id="DefaultSearchFont">
-                    <property name="label" translatable="yes">gtk-clear</property>
+                    <property name="label">gtk-clear</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
@@ -1972,7 +1984,7 @@
                 </child>
                 <child>
                   <widget class="GtkButton" id="DefaultBrowserFont">
-                    <property name="label" translatable="yes">gtk-clear</property>
+                    <property name="label">gtk-clear</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
@@ -2113,6 +2125,7 @@
           <widget class="GtkVBox" id="vbox89">
             <property name="visible">True</property>
             <property name="border_width">5</property>
+            <property name="orientation">vertical</property>
             <property name="spacing">5</property>
             <child>
               <widget class="GtkCheckButton" id="LogRooms">
@@ -2162,6 +2175,7 @@
             <child>
               <widget class="GtkVBox" id="vbox90">
                 <property name="visible">True</property>
+                <property name="orientation">vertical</property>
                 <child>
                   <widget class="GtkLabel" id="LogDirLabel">
                     <property name="visible">True</property>
@@ -2854,6 +2868,7 @@
           <widget class="GtkVBox" id="vbox91">
             <property name="visible">True</property>
             <property name="border_width">5</property>
+            <property name="orientation">vertical</property>
             <property name="spacing">10</property>
             <child>
               <widget class="GtkHBox" id="hbox141">
@@ -2863,6 +2878,7 @@
                   <widget class="GtkVBox" id="vbox92">
                     <property name="width_request">150</property>
                     <property name="visible">True</property>
+                    <property name="orientation">vertical</property>
                     <child>
                       <widget class="GtkLabel" id="label219">
                         <property name="visible">True</property>
@@ -3059,6 +3075,7 @@
                   <widget class="GtkVBox" id="BlockedVbox">
                     <property name="width_request">150</property>
                     <property name="visible">True</property>
+                    <property name="orientation">vertical</property>
                     <child>
                       <widget class="GtkLabel" id="BlockedLabel">
                         <property name="visible">True</property>
@@ -3314,6 +3331,7 @@
           <widget class="GtkVBox" id="vbox93">
             <property name="visible">True</property>
             <property name="border_width">5</property>
+            <property name="orientation">vertical</property>
             <property name="spacing">10</property>
             <child>
               <widget class="GtkFrame" id="NetworkSearchesFrame">
@@ -3327,6 +3345,7 @@
                     <child>
                       <widget class="GtkVBox" id="vbox1">
                         <property name="visible">True</property>
+                        <property name="orientation">vertical</property>
                         <property name="spacing">5</property>
                         <child>
                           <widget class="GtkCheckButton" id="ToggleResults">
@@ -3808,6 +3827,7 @@ when new results come in</property>
       <widget class="GtkVBox" id="Main">
         <property name="visible">True</property>
         <property name="border_width">5</property>
+        <property name="orientation">vertical</property>
         <property name="spacing">10</property>
         <child>
           <widget class="GtkHPaned" id="hpaned1">
@@ -3933,6 +3953,7 @@ when new results come in</property>
           <widget class="GtkVBox" id="vbox95">
             <property name="visible">True</property>
             <property name="border_width">5</property>
+            <property name="orientation">vertical</property>
             <property name="spacing">10</property>
             <child>
               <widget class="GtkHBox" id="hbox105">
@@ -4034,6 +4055,7 @@ when new results come in</property>
           <widget class="GtkVBox" id="vbox96">
             <property name="visible">True</property>
             <property name="border_width">5</property>
+            <property name="orientation">vertical</property>
             <property name="spacing">10</property>
             <child>
               <widget class="GtkLabel" id="label296">
@@ -4162,6 +4184,7 @@ when new results come in</property>
                       <widget class="GtkVBox" id="DCVBox">
                         <property name="visible">True</property>
                         <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                        <property name="orientation">vertical</property>
                         <child>
                           <widget class="GtkHBox" id="DownloadDCBox">
                             <property name="visible">True</property>
@@ -4284,6 +4307,7 @@ Clear</property>
           <widget class="GtkVBox" id="vbox98">
             <property name="visible">True</property>
             <property name="border_width">5</property>
+            <property name="orientation">vertical</property>
             <property name="spacing">10</property>
             <child>
               <widget class="GtkCheckButton" id="GeoBlock">
@@ -4421,6 +4445,7 @@ Clear</property>
           <widget class="GtkVBox" id="vbox99">
             <property name="visible">True</property>
             <property name="border_width">5</property>
+            <property name="orientation">vertical</property>
             <property name="spacing">10</property>
             <child>
               <widget class="GtkCheckButton" id="URLCatching">
@@ -4493,6 +4518,7 @@ Protocols handlers: </property>
                   <widget class="GtkVBox" id="vbox1">
                     <property name="visible">True</property>
                     <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                    <property name="orientation">vertical</property>
                     <child>
                       <widget class="GtkButton" id="RemoveHandler">
                         <property name="visible">True</property>
@@ -4731,6 +4757,7 @@ Protocols handlers: </property>
               <widget class="GtkVBox" id="vbox102">
                 <property name="visible">True</property>
                 <property name="border_width">2</property>
+                <property name="orientation">vertical</property>
                 <property name="spacing">6</property>
                 <child>
                   <widget class="GtkLabel" id="label278">
@@ -4792,6 +4819,7 @@ Protocols handlers: </property>
           <widget class="GtkVBox" id="vbox112">
             <property name="visible">True</property>
             <property name="border_width">5</property>
+            <property name="orientation">vertical</property>
             <property name="spacing">10</property>
             <child>
               <widget class="GtkLabel" id="label354">
@@ -5130,6 +5158,7 @@ Protocols handlers: </property>
           <widget class="GtkVBox" id="vbox119">
             <property name="visible">True</property>
             <property name="border_width">5</property>
+            <property name="orientation">vertical</property>
             <property name="spacing">5</property>
             <child>
               <widget class="GtkHBox" id="hbox44">
@@ -5626,6 +5655,7 @@ Protocols handlers: </property>
           <widget class="GtkVBox" id="vbox125">
             <property name="visible">True</property>
             <property name="border_width">5</property>
+            <property name="orientation">vertical</property>
             <property name="spacing">5</property>
             <child>
               <widget class="GtkHBox" id="hbox258">
@@ -6248,6 +6278,7 @@ Protocols handlers: </property>
           <widget class="GtkVBox" id="vbox7">
             <property name="visible">True</property>
             <property name="border_width">5</property>
+            <property name="orientation">vertical</property>
             <property name="spacing">3</property>
             <child>
               <widget class="GtkCheckButton" id="CensorCheck">
@@ -6339,6 +6370,7 @@ Protocols handlers: </property>
                   <widget class="GtkVBox" id="vbox6">
                     <property name="visible">True</property>
                     <property name="border_width">3</property>
+                    <property name="orientation">vertical</property>
                     <property name="spacing">3</property>
                     <child>
                       <widget class="GtkButton" id="AddCensor">
@@ -6638,6 +6670,7 @@ Protocols handlers: </property>
           <widget class="GtkVBox" id="vbox11">
             <property name="visible">True</property>
             <property name="border_width">5</property>
+            <property name="orientation">vertical</property>
             <property name="spacing">10</property>
             <child>
               <widget class="GtkCheckButton" id="ReplaceCheck">
@@ -6683,6 +6716,7 @@ typed incorrectly or as an acronym</property>
                   <widget class="GtkVBox" id="vbox12">
                     <property name="visible">True</property>
                     <property name="border_width">3</property>
+                    <property name="orientation">vertical</property>
                     <property name="spacing">3</property>
                     <child>
                       <widget class="GtkButton" id="AddReplacement">
@@ -6916,6 +6950,7 @@ typed incorrectly or as an acronym</property>
           <widget class="GtkVBox" id="vbox">
             <property name="visible">True</property>
             <property name="border_width">5</property>
+            <property name="orientation">vertical</property>
             <property name="spacing">3</property>
             <child>
               <widget class="GtkCheckButton" id="CompletionTabCheck">
@@ -6955,6 +6990,7 @@ typed incorrectly or as an acronym</property>
                   <widget class="GtkVBox" id="vbox3">
                     <property name="visible">True</property>
                     <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                    <property name="orientation">vertical</property>
                     <child>
                       <widget class="GtkCheckButton" id="CompleteRoomNamesCheck">
                         <property name="label" translatable="yes">Complete room names in chat rooms</property>
@@ -7053,6 +7089,7 @@ typed incorrectly or as an acronym</property>
                   <widget class="GtkVBox" id="vbox4">
                     <property name="visible">True</property>
                     <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                    <property name="orientation">vertical</property>
                     <child>
                       <widget class="GtkCheckButton" id="CompletionDropdownCheck">
                         <property name="label" translatable="yes">Enable completion drop-down list</property>
@@ -7158,6 +7195,7 @@ typed incorrectly or as an acronym</property>
           <widget class="GtkVBox" id="vboxUI2">
             <property name="visible">True</property>
             <property name="border_width">5</property>
+            <property name="orientation">vertical</property>
             <property name="spacing">5</property>
             <child>
               <widget class="GtkCheckButton" id="TabClosers">
@@ -7759,6 +7797,7 @@ Right</property>
               <widget class="GtkVBox" id="vboxColours">
                 <property name="visible">True</property>
                 <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                <property name="orientation">vertical</property>
                 <property name="spacing">3</property>
                 <child>
                   <widget class="GtkHBox" id="ColorButtonsHbox">
@@ -10230,6 +10269,7 @@ Right</property>
                       <widget class="GtkVBox" id="vboxTrans">
                         <property name="visible">True</property>
                         <property name="border_width">3</property>
+                        <property name="orientation">vertical</property>
                         <property name="spacing">3</property>
                         <child>
                           <widget class="GtkLabel" id="label343">
@@ -11897,7 +11937,7 @@ Right</property>
             <property name="layout_style">end</property>
             <child>
               <widget class="GtkButton" id="Okay">
-                <property name="label" translatable="yes">gtk-ok</property>
+                <property name="label">gtk-ok</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
@@ -11912,7 +11952,7 @@ Right</property>
             </child>
             <child>
               <widget class="GtkButton" id="Cancel">
-                <property name="label" translatable="yes">gtk-cancel</property>
+                <property name="label">gtk-cancel</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>

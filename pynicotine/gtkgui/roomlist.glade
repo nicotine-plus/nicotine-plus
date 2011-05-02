@@ -7,6 +7,7 @@
     <child>
       <widget class="GtkVBox" id="vbox2">
         <property name="visible">True</property>
+        <property name="orientation">vertical</property>
         <property name="spacing">3</property>
         <child>
           <widget class="GtkScrolledWindow" id="scrolledwindow10">

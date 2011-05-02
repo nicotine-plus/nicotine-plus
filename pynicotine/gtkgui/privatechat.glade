@@ -1,12 +1,13 @@
 <?xml version="1.0"?>
 <glade-interface>
+  <!-- interface-requires gtk+ 2.6 -->
   <!-- interface-naming-policy toplevel-contextual -->
   <widget class="GtkWindow" id="PrivateChatTab">
-    <property name="visible">False</property>
     <property name="title" translatable="yes">PrivateChat</property>
     <child>
       <widget class="GtkVBox" id="Main">
         <property name="visible">True</property>
+        <property name="orientation">vertical</property>
         <child>
           <widget class="GtkScrolledWindow" id="ChatScrollWindow">
             <property name="visible">True</property>

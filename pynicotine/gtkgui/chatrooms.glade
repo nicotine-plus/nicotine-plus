@@ -8,6 +8,7 @@
       <widget class="GtkVBox" id="Main">
         <property name="visible">True</property>
         <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+        <property name="orientation">vertical</property>
         <child>
           <widget class="GtkHBox" id="hbox7">
             <property name="visible">True</property>
@@ -181,6 +182,7 @@
                 <child>
                   <widget class="GtkVBox" id="vbox6">
                     <property name="visible">True</property>
+                    <property name="orientation">vertical</property>
                     <child>
                       <widget class="GtkScrolledWindow" id="ChatScrollWindow">
                         <property name="visible">True</property>
@@ -238,7 +240,6 @@
                                       <widget class="GtkImage" id="image39">
                                         <property name="visible">True</property>
                                         <property name="stock">gtk-help</property>
-                                        <property name="icon-size">4</property>
                                       </widget>
                                       <packing>
                                         <property name="expand">False</property>
@@ -280,6 +281,7 @@
             <child>
               <widget class="GtkVBox" id="vbox5">
                 <property name="visible">True</property>
+                <property name="orientation">vertical</property>
                 <child>
                   <widget class="GtkLabel" id="LabelPeople">
                     <property name="visible">True</property>
