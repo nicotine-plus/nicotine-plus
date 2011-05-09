@@ -38,7 +38,7 @@ class Shares:
 			if path == real:
 				return virtual
 			if path.startswith(real + os.sep):
-				virtualpath = virtual + '\\' + path[len(real + os.sep):]
+				virtualpath = virtual + '\\' + path[len(real + os.sep):].replace(os.sep, '\\')
 				return virtualpath
 		return "???" + path
 	def virtual2real(self, path):
