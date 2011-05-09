@@ -443,8 +443,8 @@ class Shares:
 		list = {}
 		count = 0
 		for directory in mtimes:
-			virtualdir = self.real2virtual(directory)
 			directory = os.path.expanduser(directory)
+			virtualdir = self.real2virtual(directory)
 			count +=1
 			if progress:
 				percent = float(count)/len(mtimes)
@@ -508,6 +508,7 @@ class Shares:
 		count = 0
 		for directory in mtimes:
 			directory = os.path.expanduser(directory)
+			virtualdir = self.real2virtual(directory)
 			count +=1
 			if progress:
 				percent = float(count)/len(mtimes)
@@ -522,10 +523,10 @@ class Shares:
 				continue
 			if not rebuild and directory in oldmtimes:
 				if mtimes[directory] == oldmtimes[directory]:
-					list[directory] = oldlist[directory]
+					list[virtualdir] = oldlist[virtualdir]
 					continue
 
-			list[directory] = []
+			list[virtualdir] = []
 
 			try:
 				contents = os.listdir(u_directory)
@@ -556,7 +557,7 @@ class Shares:
 						# It's a file, check if it is mp3
 						data = self.getFileInfoUnicode(s_filename, s_path)
 						if data is not None:
-							list[directory].append(data)
+							list[virtualdir].append(data)
 				if yieldcall is not None:
 					yieldcall()
 		return list
@@ -608,7 +609,10 @@ class Shares:
 			
 	def getFilesStreamsUnicode(self, mtimes, oldmtimes, oldstreams, newsharedfiles, yieldcall = None):
 		streams = {}
+		shared = self.config.sections["transfers"]["shared"]
+		virtual_dirs = [x[0] for x in shared]
 		for directory in mtimes.keys():
+			virtualdir = self.real2virtual(directory)
 			# force Unicode for reading from disk
 			u_directory = u"%s" % directory
 			str_directory = str(directory)
@@ -624,21 +628,21 @@ class Shares:
 				if mtimes[directory] == oldmtimes[directory]:
 					if os.path.exists(u_directory):
 						# No change
-						streams[directory] = oldstreams[directory]
-						continue
+						try:
+							streams[virtualdir] = oldstreams[virtualdir]
+							continue
+						except KeyError:
+							log.addwarning("Inconsistent cache for '%s', rebuilding '%s'" % (virtualdir, directory))
 					else:
 						print "2U. Dropping missing directory %s %s" % (type(u_directory), repr(u_directory))
 						continue
-			print("2U. Adding %s" % (directory))
-			streams[directory] = self.getDirStream(newsharedfiles[directory])
+			streams[virtualdir] = self.getDirStream(newsharedfiles[virtualdir])
 			if yieldcall is not None:
 				yieldcall()
 		return streams
 	def getFilesStreams(self, mtimes, oldmtimes, oldstreams, newsharedfiles, yieldcall = None):
 		streams = {}
 		shared = self.config.sections["transfers"]["shared"]
-		virtual_dirs = [x[0] for x in shared]
-		actual_dirs  = [x[1] for x in shared]
 		for directory in mtimes.keys():
 			virtualdir = self.real2virtual(directory)
 			if self.hiddenCheck(directory):
