@@ -4369,7 +4369,7 @@ msgstr "%(user)s is making a BrowseShares request, blocking possible spoofing at
 
 #, python-format
 msgid "%(user)s is making a BrowseShares request"
-msgstr "%(user)s parcourre vos fichiers"
+msgstr "%(user)s parcourt vos fichiers"
 
 # pynicotine/pynicotine.py
 #, python-format
