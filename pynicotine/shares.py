@@ -268,7 +268,7 @@ class Shares:
 		results = min[:maxresults]
 		if len(results) > 0 and self.np.transfers is not None:
 			queuesizes = self.np.transfers.getUploadQueueSizes()
-			slotsavail = int(not self.np.transfers.bandwidthLimitReached())
+			slotsavail = self.np.transfers.allowNewUploads()
 			if len(results) > 0:
 				message = slskmessages.FileSearchResult(None, self.config.sections["server"]["login"], geoip, searchid, results, fileindex, slotsavail, self.np.speed, queuesizes, fifoqueue)
 				self.np.ProcessRequestToPeer(user, message)

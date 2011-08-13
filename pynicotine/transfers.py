@@ -426,47 +426,51 @@ class Transfers:
 		Remote peer is requesting to download a file through
 		your Upload queue
 		"""
-		
-		# Check if the user is a buddy
+		response = self._TransferRequestUploads(msg, user, conn, addr)
+		self.eventprocessor.logMessage(_("Upload request: %s Response: %s") % (str(vars(msg)), response), 5)
+		return response
+
+	def _TransferRequestUploads(self, msg, user, conn, addr):                     
+		# Is user alllowed to download?
+		checkuser, reason = self.eventprocessor.CheckUser(user, addr)
+		if not checkuser:
+			return slskmessages.TransferResponse(conn, 0, reason = reason, req=msg.req)
+		# Do we actually share that file with the world?
+		realpath = self.eventprocessor.shares.virtual2real(msg.file)
+		if not self.fileIsShared(user, msg.file, realpath):
+			return slskmessages.TransferResponse(conn, 0, reason = "File not shared", req = msg.req)
+		# Is that file already in the queue?
+		if self.fileIsQueued(user, msg.file):
+			return slskmessages.TransferResponse(conn, 0, reason = "Queued", req = msg.req)
+		# Has user hit queue limit?
 		friend = user in [i[0] for i in self.eventprocessor.userlist.userlist]
 		if friend and self.eventprocessor.config.sections["transfers"]["friendsnolimits"]:
-			limits = 0
+			limits = False
 		else:
-			limits = 1
-		# Check user 'permissions'
-		checkuser, reason = self.eventprocessor.CheckUser(user, addr)
-		# checkuser is 1 if allowed
-		# reason is a string
-		realpath = self.eventprocessor.shares.virtual2real(msg.file)
-		if not checkuser:
-			response = slskmessages.TransferResponse(conn, 0, reason = reason, req=msg.req)
-		elif not self.fileIsShared(user, msg.file, realpath):
-			response = slskmessages.TransferResponse(conn, 0, reason = "File not shared", req = msg.req)
-		elif self.fileIsQueued(user, msg.file):
-			response = slskmessages.TransferResponse(conn, 0, reason = "Queued", req = msg.req)
-		elif limits and self.queueLimitReached(user):
+			limits = True
+		if limits and self.queueLimitReached(user):
 			uploadslimit = self.eventprocessor.config.sections["transfers"]["queuelimit"]
-			response = slskmessages.TransferResponse(conn, 0, reason = "User limit of %i megabytes exceeded" %(uploadslimit), req = msg.req)
-		elif limits and self.fileLimitReached(user):
+			return slskmessages.TransferResponse(conn, 0, reason = "User limit of %i megabytes exceeded" %(uploadslimit), req = msg.req)
+		if limits and self.fileLimitReached(user):
 			filelimit = self.eventprocessor.config.sections["transfers"]["filelimit"]
 			limitmsg = "User limit of %i files exceeded" %(filelimit)
-			response = slskmessages.TransferResponse(conn, 0, reason = limitmsg, req = msg.req)
-		elif user in self.getTransferringUsers() or self.bandwidthLimitReached() or self.transferNegotiating():
+			return slskmessages.TransferResponse(conn, 0, reason = limitmsg, req = msg.req)
+		# Is user already downloading/negotiating a download?
+		if not self.allowNewUploads() or user in self.getTransferringUsers():
 			response = slskmessages.TransferResponse(conn, 0, reason = "Queued", req = msg.req)
 			newupload = Transfer(user = user, realfilename = realpath, filename = realpath, path = os.path.dirname(realpath), status = "Queued", timequeued = time.time(), size = self.getFileSize(realpath), place = len(self.uploads))
 			self.uploads.append(newupload)
 			self.uploadspanel.update(newupload)
 			self.addQueued(user, realpath)
-		else:
-			size = self.getFileSize(realpath)
-			response = slskmessages.TransferResponse(conn, 1, req = msg.req, filesize = size)
-			transfertimeout = TransferTimeout(msg.req, self.eventprocessor.frame.callback) 
-			self.uploads.append(Transfer(user = user, realfilename = realpath, filename = realpath, path = os.path.dirname(realpath), status = "Waiting for upload", req = msg.req, size = size, place = len(self.uploads)))
-			self.uploads[-1].transfertimer = threading.Timer(30.0, transfertimeout.timeout)
-			self.uploads[-1].transfertimer.start()
-			self.uploadspanel.update(self.uploads[-1])
-			
-		self.eventprocessor.logMessage(_("Upload request: %s") % str(vars(msg)), 5)
+			return response
+		# All checks passed, starting a new upload.
+		size = self.getFileSize(realpath)
+		response = slskmessages.TransferResponse(conn, 1, req = msg.req, filesize = size)
+		transfertimeout = TransferTimeout(msg.req, self.eventprocessor.frame.callback) 
+		self.uploads.append(Transfer(user = user, realfilename = realpath, filename = realpath, path = os.path.dirname(realpath), status = "Waiting for upload", req = msg.req, size = size, place = len(self.uploads)))
+		self.uploads[-1].transfertimer = threading.Timer(30.0, transfertimeout.timeout)
+		self.uploads[-1].transfertimer.start()
+		self.uploadspanel.update(self.uploads[-1])
 		return response
 
 	def fileIsQueued(self, user, file):
@@ -628,17 +632,23 @@ class Transfers:
 					return True
 		return False
 
-	def bandwidthLimitReached(self):
-		maxbandwidth = self.eventprocessor.config.sections["transfers"]["uploadbandwidth"]
-		maxupslots = self.eventprocessor.config.sections["transfers"]["uploadslots"]
-		useupslots = self.eventprocessor.config.sections["transfers"]["useupslots"]
+	def allowNewUploads(self):
+		limit_upload_slots = self.eventprocessor.config.sections["transfers"]["useupslots"]
+		limit_upload_speed = self.eventprocessor.config.sections["transfers"]["uselimit"]
 		bandwidthlist = [i.speed for i in self.uploads if i.conn is not None and i.speed is not None]
-		slotsreached = len(bandwidthlist) >= maxupslots
-		if useupslots:
-			return slotsreached
-		else:
-			return (sum(bandwidthlist) > maxbandwidth)
-
+		if limit_upload_slots:
+			maxupslots = self.eventprocessor.config.sections["transfers"]["uploadslots"]
+			if len(bandwidthlist) >= maxupslots:
+				return False
+		if limit_upload_speed:
+			max_upload_speed = self.eventprocessor.config.sections["transfers"]["uploadlimit"]
+			if sum(bandwidthlist) >= max_upload_speed:
+				return False
+		maxbandwidth = self.eventprocessor.config.sections["transfers"]["uploadbandwidth"]
+		if maxbandwidth:
+			if sum(bandwidthlist) >= maxbandwidth:
+				return False
+		return True
 	
 	def getFileSize(self, filename):
 		try:
@@ -1081,7 +1091,7 @@ class Transfers:
 					
 	# Find next file to upload
 	def checkUploadQueue(self):
-		if self.bandwidthLimitReached() or self.transferNegotiating():
+		if not self.allowNewUploads():
 			return
 		transfercandidate = None
 		trusers = self.getTransferringUsers()
@@ -1286,10 +1296,10 @@ class Transfers:
 			maxupslots = self.eventprocessor.config.sections["transfers"]["uploadslots"]
 			return maxupslots
 		else:
-			if self.bandwidthLimitReached():
-				return len(list)
+			if self.allowNewUploads():
+				return len(list) + 1
 			else:
-				return len(list)+1
+				return len(list)
 	    
 	
 	def UserListPrivileged(self, user):

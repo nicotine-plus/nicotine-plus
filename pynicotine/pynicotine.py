@@ -1274,7 +1274,7 @@ class NetworkEventProcessor:
 		if self.transfers is not None:
 			totalupl = self.transfers.getTotalUploadsAllowed()
 			queuesize = self.transfers.getUploadQueueSizes()[0]
-			slotsavail = (not self.transfers.bandwidthLimitReached())
+			slotsavail = self.transfers.allowNewUploads()
 			ua = self.frame.np.config.sections["transfers"]["remotedownloads"]
 			if ua:
 				uploadallowed = self.frame.np.config.sections["transfers"]["uploadallowed"]

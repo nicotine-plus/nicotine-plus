@@ -2661,7 +2661,7 @@ class NicotineFrame:
 				
 				totalupl = self.np.transfers.getTotalUploadsAllowed()
 				queuesize = self.np.transfers.getUploadQueueSizes()[0]
-				slotsavail = not self.np.transfers.bandwidthLimitReached()
+				slotsavail = self.np.transfers.allowNewUploads()
 				ua = self.np.config.sections["transfers"]["remotedownloads"]
 				if ua:
 					uploadallowed = self.np.config.sections["transfers"]["uploadallowed"]
