@@ -95,6 +95,8 @@ class TransferTimeout:
 
 class Transfers:
 	""" This is the transfers manager"""
+	FAILED_TRANSFERS = ["Cannot connect", 'Connection closed by peer', "Local file error"]
+	COMPLETED_TRANSFERS = ['Finished', 'Filtered', 'Aborted', 'Cancelled']
 	def __init__(self, downloads, peerconns, queue, eventprocessor, users):
 		self.peerconns = peerconns
 		self.queue = queue
@@ -636,14 +638,19 @@ class Transfers:
 		limit_upload_slots = self.eventprocessor.config.sections["transfers"]["useupslots"]
 		limit_upload_speed = self.eventprocessor.config.sections["transfers"]["uselimit"]
 		bandwidthlist = [i.speed for i in self.uploads if i.conn is not None and i.speed is not None]
+		currently_negotiating = self.transferNegotiating()
 		if limit_upload_slots:
 			maxupslots = self.eventprocessor.config.sections["transfers"]["uploadslots"]
 			if len(bandwidthlist) >= maxupslots:
 				return False
-		if limit_upload_speed:
-			max_upload_speed = self.eventprocessor.config.sections["transfers"]["uploadlimit"]
-			if sum(bandwidthlist) >= max_upload_speed:
+			if currently_negotiating:
 				return False
+		#if limit_upload_speed:
+		#	max_upload_speed = self.eventprocessor.config.sections["transfers"]["uploadlimit"]
+		#	if sum(bandwidthlist) >= max_upload_speed:
+		#		return False
+		#	if currently_negotiating:
+		#		return False
 		maxbandwidth = self.eventprocessor.config.sections["transfers"]["uploadbandwidth"]
 		if maxbandwidth:
 			if sum(bandwidthlist) >= maxbandwidth:
@@ -711,7 +718,7 @@ class Transfers:
 		for i in (self.downloads+self.uploads)[:]:
 			if i.req != msg.req:
 				continue
-			if i.status in ["Queued", 'User logged off', 'Finished', 'Filtered', 'Aborted', 'Paused', 'Cancelled']:
+			if i.status in ["Queued", 'User logged off', 'Paused'] + self.COMPLETED_TRANSFERS:
 				continue
 			i.status = "Cannot connect"
 			i.req = None
@@ -871,7 +878,7 @@ class Transfers:
 		
 	def FileDownload(self, msg):
 		""" A file download is in progress"""
-		needupdate = 1
+		needupdate = True
 		config = self.eventprocessor.config.sections
 		for i in self.downloads:
 			if i.conn != msg.conn:
@@ -904,7 +911,7 @@ class Transfers:
 				i.lasttime = curtime
 				if i.size > i.currentbytes:
 					if oldelapsed == i.timeelapsed:
-						needupdate = 0
+						needupdate = False
 					#i.status = str(i.currentbytes)
 					i.status = "Transferring"
 				else:
@@ -1080,7 +1087,7 @@ class Transfers:
 	# Find failed downloads and attempt to queue them
 	def checkDownloadQueue(self):
 		if self.eventprocessor.config.sections["transfers"]["autoretry_downloads"]:
-			statuslist = ["Cannot connect", 'Connection closed by peer', "Local file error", "Getting address", "Waiting for peer to connect", "Initializing transfer"]
+			statuslist = self.FAILED_TRANSFERS + ["Getting address", "Waiting for peer to connect", "Initializing transfer"]
 			for transfer in self.downloads:
 				if transfer.status in statuslist:
 					self.AbortTransfer(transfer)
@@ -1288,18 +1295,16 @@ class Transfers:
 				del self.usersqueued[user]
 
 	def getTotalUploadsAllowed(self):
-		list = [i for i in self.uploads if i.conn is not None]
-
 		useupslots = self.eventprocessor.config.sections["transfers"]["useupslots"]
-
 		if useupslots:
 			maxupslots = self.eventprocessor.config.sections["transfers"]["uploadslots"]
 			return maxupslots
 		else:
+			lst = [i for i in self.uploads if i.conn is not None]
 			if self.allowNewUploads():
-				return len(list) + 1
+				return len(lst) + 1
 			else:
-				return len(list)
+				return len(lst)
 	    
 	
 	def UserListPrivileged(self, user):
