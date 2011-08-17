@@ -475,11 +475,12 @@ class Transfers:
 		self.uploadspanel.update(self.uploads[-1])
 		return response
 
-	def fileIsQueued(self, user, file):
+	def fileIsQueued(self, user, filename):
 		for i in self.uploads:
-			if i.user == user and i.filename == file and i.status == "Queued":
-				return 1
-		return 0
+			if i.user == user and i.filename == filename and i.status == "Queued":
+				print("User %s has already queued %s" % (user, filename))
+				return True
+		return False
 
 	def queueLimitReached(self, user):
 		uploadslimit = self.eventprocessor.config.sections["transfers"]["queuelimit"]*1024*1024
@@ -564,23 +565,23 @@ class Transfers:
 				# Users in userlist
 				if user not in [i[0] for i in self.eventprocessor.userlist.userlist]:
 					# Not a buddy
-					return
-			elif transfers["uploadallowed"] == 0:
+					return False
+			if transfers["uploadallowed"] == 0:
 				# No One can sent files to you
-				return
-			elif transfers["uploadallowed"] == 1:
+				return False
+			if transfers["uploadallowed"] == 1:
 				# Everyone can sent files to you
-				pass
-			elif transfers["uploadallowed"] == 3:
+				return True
+			if transfers["uploadallowed"] == 3:
 				# Trusted Users
 				if user not in [i[0] for i in self.eventprocessor.userlist.userlist]:
 					# Not a buddy
-					return
+					return False
 				if user not in self.eventprocessor.userlist.trusted:
 					# Not Trusted
-					return
-			return 1
-		return 0
+					return False
+			return True
+		return False
 			
 	def QueueFailed(self, msg):
 		for i in self.peerconns:
@@ -624,15 +625,16 @@ class Transfers:
 		# some file is being negotiated
 		#return len([i for i in self.uploads if i.req is not None or (i.conn is not None and i.speed is None) or i.status == 'Getting status']) > 0 
 		now = time.time()
+		count = 0
 		for i in self.uploads:
 			if (now - i.laststatuschange) < 30: # if a status hasn't changed in the last 30 seconds the connection is probably never going to work, ignoring it.
 				if i.req is not None:
-					return True
-				if i.conn is not None and i.speed is None:
-					return True
+					count += 1
+				elif i.conn is not None and i.speed is None:
+					count += 1
 				if i.status == 'Getting status':
-					return True
-		return False
+					count += 1
+		return count
 
 	def allowNewUploads(self):
 		limit_upload_slots = self.eventprocessor.config.sections["transfers"]["useupslots"]
@@ -641,16 +643,14 @@ class Transfers:
 		currently_negotiating = self.transferNegotiating()
 		if limit_upload_slots:
 			maxupslots = self.eventprocessor.config.sections["transfers"]["uploadslots"]
-			if len(bandwidthlist) >= maxupslots:
+			if len(bandwidthlist)+currently_negotiating >= maxupslots:
+				return False
+		if limit_upload_speed:
+			max_upload_speed = self.eventprocessor.config.sections["transfers"]["uploadlimit"]
+			if sum(bandwidthlist) >= max_upload_speed:
 				return False
 			if currently_negotiating:
 				return False
-		#if limit_upload_speed:
-		#	max_upload_speed = self.eventprocessor.config.sections["transfers"]["uploadlimit"]
-		#	if sum(bandwidthlist) >= max_upload_speed:
-		#		return False
-		#	if currently_negotiating:
-		#		return False
 		maxbandwidth = self.eventprocessor.config.sections["transfers"]["uploadbandwidth"]
 		if maxbandwidth:
 			if sum(bandwidthlist) >= maxbandwidth:
@@ -1314,11 +1314,11 @@ class Transfers:
 		# Only privileged users
 		userlist = [i[0] for i in self.eventprocessor.config.sections["server"]["userlist"]]
 		if user not in userlist:
-			return 0
+			return False
 		if self.eventprocessor.config.sections["server"]["userlist"][userlist.index(user)][3]:
-			return 1
+			return True
 		else:
-			return 0
+			return False
 		
 	def isPrivileged(self, user):
 		if user in self.privilegedusers or self.UserListPrivileged(user):
