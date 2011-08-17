@@ -478,7 +478,6 @@ class Transfers:
 	def fileIsQueued(self, user, filename):
 		for i in self.uploads:
 			if i.user == user and i.filename == filename and i.status == "Queued":
-				print("User %s has already queued %s" % (user, filename))
 				return True
 		return False
 
