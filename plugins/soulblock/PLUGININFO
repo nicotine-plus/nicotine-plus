@@ -1,0 +1,4 @@
+Version="2011-08-6r20"
+Authors=['test1234567654321']
+Name="soulblock"
+Description="Blocking spam in style.\n\n\n   - filter nicks\n   - filter content\n   - track IPs \n   - echo spam back"
