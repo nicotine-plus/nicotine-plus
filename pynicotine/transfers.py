@@ -460,7 +460,7 @@ class Transfers:
 		# Is user already downloading/negotiating a download?
 		if not self.allowNewUploads() or user in self.getTransferringUsers():
 			response = slskmessages.TransferResponse(conn, 0, reason = "Queued", req = msg.req)
-			newupload = Transfer(user = user, realfilename = realpath, filename = realpath, path = os.path.dirname(realpath), status = "Queued", timequeued = time.time(), size = self.getFileSize(realpath), place = len(self.uploads))
+			newupload = Transfer(user = user, filename = msg.file, realfilename = realpath, path = os.path.dirname(realpath), status = "Queued", timequeued = time.time(), size = self.getFileSize(realpath), place = len(self.uploads))
 			self.uploads.append(newupload)
 			self.uploadspanel.update(newupload)
 			self.addQueued(user, realpath)
