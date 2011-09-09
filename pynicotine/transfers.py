@@ -49,6 +49,7 @@ from utils import _, executeCommand
 from gtkgui.utils import recode2
 from time import sleep
 import gobject
+from temporary import HybridListDictionaryTransferMonstrosity
 win32 = sys.platform.startswith("win")
 
 class Transfer(object):
@@ -101,8 +102,8 @@ class Transfers:
 		self.peerconns = peerconns
 		self.queue = queue
 		self.eventprocessor = eventprocessor
-		self.downloads = []
-		self.uploads = []
+		self.downloads = HybridListDictionaryTransferMonstrosity()
+		self.uploads = HybridListDictionaryTransferMonstrosity()
 		self.privilegedusers = []
 		self.RequestedUploadQueue = []
 		getstatus = {}
