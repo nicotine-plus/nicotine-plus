@@ -98,8 +98,8 @@ class Transfers:
 	""" This is the transfers manager"""
 	FAILED_TRANSFERS = ["Cannot connect", 'Connection closed by peer', "Local file error"]
 	COMPLETED_TRANSFERS = ['Finished', 'Filtered', 'Aborted', 'Cancelled']
-	PRE_TRANSFER = ['Requesting file', 'Queued']
-	TRANSFER = ['Transferring']
+	PRE_TRANSFER = ['Queued']
+	TRANSFER = ['Requesting file', 'Initializing transfer', 'Transferring']
 	POST_TRANSFER = FAILED_TRANSFERS + COMPLETED_TRANSFERS
 
 	def __init__(self, downloads, peerconns, queue, eventprocessor, users):
