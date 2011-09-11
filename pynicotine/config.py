@@ -184,7 +184,7 @@ class Config:
 	},
 \
 "logging": { \
-	"debug": 0, \
+	"debug": False, \
 	"debugmodes": [0, 1], \
 	"logcollapsed": 0, \
 	"logsdir": os.path.expanduser(LOGDIR), \

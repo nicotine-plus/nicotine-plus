@@ -28,10 +28,11 @@ class HybridListDictionaryMonstrosity(object):
         key = self.__getkey__(obj)
         try:
             self._dict[key]
-            raise Exception("That object is already present!")
-        except:
-            self._dict[key] = obj
-            self._list.append(obj)
+            #print("WARNING: Key %s is already present. I've added it, but you need to fix the calling code." % repr(key))
+        except KeyError:
+            pass
+        self._dict[key] = obj
+        self._list.append(obj)
     def remove(self, obj):
         """List func."""
         self._list.remove(obj)
@@ -39,7 +40,8 @@ class HybridListDictionaryMonstrosity(object):
         try:
             del self._dict[key]
         except KeyError:
-            print("WARNING: Cannot remove %s from dictionary, at one point it was present multiple times in the list" % repr(key))
+            #print("WARNING: Cannot remove %s from dictionary, at one point it was present multiple times in the list" % repr(key))
+            pass
     def __iter__(self):
         """List func.
         
@@ -60,7 +62,7 @@ class HybridListDictionaryMonstrosity(object):
         """Dict func."""
         try:
             self._dict[key]
-            print("WARNING: Key %s is already present. Not adding it to the list." % repr(key))
+            #print("WARNING: Key %s is already present. Not adding it to the list." % repr(key))
         except KeyError:
             self._list.append(obj)
         self._dict.__setitem__(key, obj)

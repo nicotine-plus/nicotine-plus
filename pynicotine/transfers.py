@@ -449,10 +449,10 @@ class Transfers:
 		# Is that file already in the queue?
 		try:
 			current_transfer = self.uploads[(user, msg.file)]
-			print("%s is already in the queue: %s" % (repr(msg), repr(current_transfer)))
+			#print("%s is already in the queue: %s" % (repr(msg), repr(current_transfer)))
 		except KeyError:
 			current_transfer = None
-			print("%s is not yet queued." % (repr(msg)))
+			#print("%s is not yet queued." % (repr(msg)))
 		if self.fileIsUploadQueued(user, msg.file):
 			return slskmessages.TransferResponse(conn, 0, reason = "Queued", req = msg.req)
 		# Has user hit queue limit?
@@ -490,11 +490,11 @@ class Transfers:
 		key = (user, filename)
 		try:
 			transfer = self.uploads[key]
-			print("fileIsUploadQueued: %s is listed as '%s'" % (key, transfer.status))
+			#print("fileIsUploadQueued: %s is listed as '%s'" % (key, transfer.status))
 			if transfer.status in self.PRE_TRANSFER + self.TRANSFER:
 				return True
 		except KeyError:
-			print("fileIsUploadQueued: %s is not yet listed" % (key, ))
+			#print("fileIsUploadQueued: %s is not yet listed" % (key, ))
 			return False
 
 	def queueLimitReached(self, user):
