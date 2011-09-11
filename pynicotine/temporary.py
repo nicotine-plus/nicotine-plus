@@ -4,16 +4,16 @@ from utils import strace
 class HybridListDictionaryMonstrosity(object):
     """A hybrid mix between a list and a dictionary.
     
-    Should be used temporarily while rewriting code, can be used to replace
-    lists with dictionaries.  Note that this class is not complete, you have
-    overwrite __getkey__ to get a complete working class.
+    Should be used temporarily while rewriting code. It can be used to refactor
+    code to replace lists with dictionaries.  Note that this is only a partial
+    class, you have overwrite __getkey__ to get a complete working class.
     
     This class will show a perfect implementation of a list, for all those list
     features that are used by Nicotine+. It will only partly implement
     dictionary-type behaviour, but those will behave precisely like regular
-    dictionaries (except for the part that slices and integer canont be used as
+    dictionaries (except for the part that slices and integer cannot be used as
     keys, since that would conflict with the requirement that it behaves
-    identical to lists for lists functions)
+    identical to lists for lists functions).
     """
 
     def __init__(self, *args, **kwargs):

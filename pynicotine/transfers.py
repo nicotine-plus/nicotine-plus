@@ -98,6 +98,10 @@ class Transfers:
 	""" This is the transfers manager"""
 	FAILED_TRANSFERS = ["Cannot connect", 'Connection closed by peer', "Local file error"]
 	COMPLETED_TRANSFERS = ['Finished', 'Filtered', 'Aborted', 'Cancelled']
+	PRE_TRANSFER = ['Requesting file', 'Queued']
+	TRANSFER = ['Transferring']
+	POST_TRANSFER = FAILED_TRANSFERS + COMPLETED_TRANSFERS
+
 	def __init__(self, downloads, peerconns, queue, eventprocessor, users):
 		self.peerconns = peerconns
 		self.queue = queue
@@ -443,7 +447,13 @@ class Transfers:
 		if not self.fileIsShared(user, msg.file, realpath):
 			return slskmessages.TransferResponse(conn, 0, reason = "File not shared", req = msg.req)
 		# Is that file already in the queue?
-		if self.fileIsQueued(user, msg.file):
+		try:
+			current_transfer = self.uploads[(user, msg.file)]
+			print("%s is already in the queue: %s" % (repr(msg), repr(current_transfer)))
+		except KeyError:
+			current_transfer = None
+			print("%s is not yet queued." % (repr(msg)))
+		if self.fileIsUploadQueued(user, msg.file):
 			return slskmessages.TransferResponse(conn, 0, reason = "Queued", req = msg.req)
 		# Has user hit queue limit?
 		friend = user in [i[0] for i in self.eventprocessor.userlist.userlist]
@@ -476,11 +486,16 @@ class Transfers:
 		self.uploadspanel.update(self.uploads[-1])
 		return response
 
-	def fileIsQueued(self, user, filename):
-		for i in self.uploads:
-			if i.user == user and i.filename == filename and i.status == "Queued":
+	def fileIsUploadQueued(self, user, filename):
+		key = (user, filename)
+		try:
+			transfer = self.uploads[key]
+			print("fileIsUploadQueued: %s is listed as '%s'" % (key, transfer.status))
+			if transfer.status in self.PRE_TRANSFER + self.TRANSFER:
 				return True
-		return False
+		except KeyError:
+			print("fileIsUploadQueued: %s is not yet listed" % (key, ))
+			return False
 
 	def queueLimitReached(self, user):
 		uploadslimit = self.eventprocessor.config.sections["transfers"]["queuelimit"]*1024*1024
@@ -512,7 +527,7 @@ class Transfers:
 			return
 		addr = msg.conn.addr[0]
 		realpath = self.eventprocessor.shares.virtual2real(msg.file)
-		if not self.fileIsQueued(user, msg.file):
+		if not self.fileIsUploadQueued(user, msg.file):
 			friend = user in [i[0] for i in self.eventprocessor.userlist.userlist]
 			if friend and self.eventprocessor.config.sections["transfers"]["friendsnolimits"]:
 				limits = 0
