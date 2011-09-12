@@ -33,6 +33,9 @@ class HybridListDictionaryMonstrosity(object):
             pass
         self._dict[key] = obj
         self._list.append(obj)
+    def index(self, obj):
+        """List func."""
+        return self._list.index(obj)
     def remove(self, obj):
         """List func."""
         self._list.remove(obj)
@@ -50,22 +53,32 @@ class HybridListDictionaryMonstrosity(object):
     def keys(self):
         """Dict func."""
         return self._dict.keys()
-    def __getitem__(self, key):
+    def __getitem__(self, index_or_key):
         """Dict/list func."""
-        if isinstance(key, int):
-            return self._list.__getitem__(key)
-        elif isinstance(key, slice):
-            return self._list.__getitem__(key)
+        if isinstance(index_or_key, int):
+            index = index_or_key
+            return self._list.__getitem__(index)
+        elif isinstance(index_or_key, slice):
+            index = index_or_key
+            return self._list.__getitem__(index)
         else:
+            key = index_or_key
             return self._dict.__getitem__(key)
-    def __setitem__(self, key, obj):
-        """Dict func."""
-        try:
-            self._dict[key]
-            #print("WARNING: Key %s is already present. Not adding it to the list." % repr(key))
-        except KeyError:
-            self._list.append(obj)
-        self._dict.__setitem__(key, obj)
+    def __setitem__(self, index_or_key, obj):
+        """Dictlist func."""
+        if isinstance(index_or_key, int):
+            index = index_or_key
+            key = self.__getkey__(self._list[index])
+            self._list[index] = obj
+            self._dict[key] = obj
+        else:
+            key = index_or_key
+            try:
+                self._dict[key]
+                #print("WARNING: Key %s is already present. Not adding it to the list." % repr(key))
+            except KeyError:
+                self._list.append(obj)
+            self._dict.__setitem__(key, obj)
     def __delitem__(self, key):
         """Dict func."""
         obj = self._dict[key]
@@ -111,12 +124,14 @@ def test():
     for i in indices:
         normal.remove(i)
         monster.remove(i)
-    normal = normal + normal
-    monster = monster + monster
     tuples = [('wolf', 'parade')]
     for t in tuples:
         normal  += t
         monster += t
+    tuples = [(('duck', 'sauce'), ('lion', 'fever'))]
+    for (fromtuple, totuple) in tuples:
+        normal[normal.index(fromtuple)] = totuple
+        monster[monster.index(fromtuple)] = totuple
 
     print("=== Verifying correctness with lists ===")
     for i, obj in enumerate(normal):
@@ -125,18 +140,15 @@ def test():
         print("monster %3s: %25s | normal:       %25s. Matches: %s" % (i, obj, normal[i],  obj == normal[i]))
     print("last normal: %25s | last monster: %25s. Matches: %s" % (normal[-1], monster[-1], normal[-1] == monster[-1]))
     print("len normal:  %25s | len monster:  %25s. Matches: %s" % (len(normal), len(monster), len(normal) == len(monster)))
+    print("normal+normal equals monster+monster. Matches: %s" % ((normal+normal) == (monster+monster)))
     tuples = [('duck', 'sauce'), ('bee', 'gees')]
     for t in tuples:
         normal_answer = (t in normal)
         monster_answer = (t in monster)
         print("%20s in normal:  %5s | in monster: %27s. Matches: %s" % (t, normal_answer, monster_answer, normal_answer == monster_answer))
-    print("[:] of normal:  %s" % repr(normal[:]))
-    for i in normal[:]:
-        print("...%s" % repr(i))
-    print("[:] of monster: %s" % repr(monster[:]))
-    for i in monster[:]:
-        print("...%s" % repr(i))
-
+    print("[:] of normal:  %s" % repr(normal[slice(0, -1, 1)]))
+    print("[:] of monster: %s" % repr(monster[slice(0, -1, 1)]))
+    exit(3)
 
     print('\n')
     print("=== Interacting with dicts ===")

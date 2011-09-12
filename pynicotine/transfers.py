@@ -221,7 +221,7 @@ class Transfers:
 				self.downloads.append(transfer)
 				self.SaveDownloads()
 			else:
-				self.uploads.append(transfer)
+				self._updateOrAppendUpload(user, filename, transferobj)
 		else:
 			transfer.status = 'Getting status'
 		
@@ -447,12 +447,6 @@ class Transfers:
 		if not self.fileIsShared(user, msg.file, realpath):
 			return slskmessages.TransferResponse(conn, 0, reason = "File not shared", req = msg.req)
 		# Is that file already in the queue?
-		try:
-			current_transfer = self.uploads[(user, msg.file)]
-			#print("%s is already in the queue: %s" % (repr(msg), repr(current_transfer)))
-		except KeyError:
-			current_transfer = None
-			#print("%s is not yet queued." % (repr(msg)))
 		if self.fileIsUploadQueued(user, msg.file):
 			return slskmessages.TransferResponse(conn, 0, reason = "Queued", req = msg.req)
 		# Has user hit queue limit?
@@ -472,7 +466,7 @@ class Transfers:
 		if not self.allowNewUploads() or user in self.getTransferringUsers():
 			response = slskmessages.TransferResponse(conn, 0, reason = "Queued", req = msg.req)
 			newupload = Transfer(user = user, filename = msg.file, realfilename = realpath, path = os.path.dirname(realpath), status = "Queued", timequeued = time.time(), size = self.getFileSize(realpath), place = len(self.uploads))
-			self.uploads.append(newupload)
+			self._updateOrAppendUpload(user, msg.file, newupload)
 			self.uploadspanel.update(newupload)
 			self.addQueued(user, realpath)
 			return response
@@ -480,11 +474,21 @@ class Transfers:
 		size = self.getFileSize(realpath)
 		response = slskmessages.TransferResponse(conn, 1, req = msg.req, filesize = size)
 		transfertimeout = TransferTimeout(msg.req, self.eventprocessor.frame.callback) 
-		self.uploads.append(Transfer(user = user, realfilename = realpath, filename = realpath, path = os.path.dirname(realpath), status = "Waiting for upload", req = msg.req, size = size, place = len(self.uploads)))
-		self.uploads[-1].transfertimer = threading.Timer(30.0, transfertimeout.timeout)
-		self.uploads[-1].transfertimer.start()
-		self.uploadspanel.update(self.uploads[-1])
+		transferobj = Transfer(user = user, realfilename = realpath, filename = realpath, path = os.path.dirname(realpath), status = "Waiting for upload", req = msg.req, size = size, place = len(self.uploads))
+		self._updateOrAppendUpload(user, msg.file, transferobj)
+		transferobj.transfertimer = threading.Timer(30.0, transfertimeout.timeout)
+		transferobj.transfertimer.start()
+		self.uploadspanel.update(transferobj)
 		return response
+	def _updateOrAppendUpload(self, user, file, transferobj):
+		try:
+			existing = self.uploads[(user, file)]
+			#print("Replacing %s with %s. %s -> %s" % ((user, file), transferobj, existing.status, transferobj.status))
+			index = self.uploads.index(existing)
+			self.uploads[index] = transferobj
+			self.uploadspanel.replace(existing, transferobj)
+		except KeyError:
+			self.uploads.append(transferobj)
 
 	def fileIsUploadQueued(self, user, filename):
 		key = (user, filename)
@@ -494,7 +498,6 @@ class Transfers:
 			if transfer.status in self.PRE_TRANSFER + self.TRANSFER:
 				return True
 		except KeyError:
-			#print("fileIsUploadQueued: %s is not yet listed" % (key, ))
 			return False
 
 	def queueLimitReached(self, user):
@@ -547,7 +550,7 @@ class Transfers:
 				self.queue.put(slskmessages.QueueFailed(conn = msg.conn.conn, file = msg.file, reason = limitmsg))
 			elif self.fileIsShared(user, msg.file, realpath):
 				newupload = Transfer(user = user, filename = msg.file, realfilename = realpath, path = os.path.dirname(realpath), status = "Queued", timequeued = time.time(), size = self.getFileSize(realpath))
-				self.uploads.append(newupload)
+				self._updateOrAppendUpload(user, msg.file, newupload)
 				self.uploadspanel.update(newupload)
 				self.addQueued(user, msg.file)
 			else:

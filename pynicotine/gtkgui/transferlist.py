@@ -287,6 +287,14 @@ class TransferList:
 		self.update(forced=True) # delayed updates can never trigger a new timer
 		self.finalupdatetimerid = None
 		return False # Stopping timeout
+	def replace(self, oldtransfer, newtransfer):
+		for i in self.transfers:
+			if i[2] == oldtransfer:
+				i[2] = newtransfer
+				self.update_specific(newtransfer)
+				return
+		else:
+			print("WARNING: Could not find transfer %s." % oldtransfer)
 	def update(self, transfer = None, forced = False):
 		now = time()
 		if transfer is not None:
