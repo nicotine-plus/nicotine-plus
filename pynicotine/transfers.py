@@ -221,7 +221,7 @@ class Transfers:
 				self.downloads.append(transfer)
 				self.SaveDownloads()
 			else:
-				self._updateOrAppendUpload(user, filename, transferobj)
+				self._updateOrAppendUpload(user, filename, transfer)
 		else:
 			transfer.status = 'Getting status'
 		
