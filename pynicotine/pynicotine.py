@@ -1441,7 +1441,7 @@ class NetworkEventProcessor:
 				if i.conn is msg.conn.conn:
 					username = i.username
 			# Check for a large number of files
-			many=0
+			many = False
 			folder = ""
 			files = []
 			for i in msg.list.keys():
@@ -1450,7 +1450,7 @@ class NetworkEventProcessor:
 						files = msg.list[i][j]
 						numfiles = len(files)
 						if numfiles > 100:
-							many=1
+							many = True
 							folder = j
 			if many:
 				self.frame.download_large_folder(username, folder, files, numfiles, msg)

@@ -207,10 +207,10 @@ class Shares:
 			shares = {}
 		
 		if checkuser:
-			if msg.dir.replace("\\", os.sep)[:-1] in shares:
-				self.queue.put(slskmessages.FolderContentsResponse(msg.conn.conn, msg.dir, shares[msg.dir.replace("\\", os.sep)[:-1]]))
-			elif msg.dir.replace("\\", os.sep) in shares:
-				self.queue.put(slskmessages.FolderContentsResponse(msg.conn.conn, msg.dir, shares[msg.dir.replace("\\", os.sep)]))
+			if msg.dir in shares:
+				self.queue.put(slskmessages.FolderContentsResponse(msg.conn.conn, msg.dir, shares[msg.dir]))
+			elif msg.dir.rstrip('\\') in shares:
+				self.queue.put(slskmessages.FolderContentsResponse(msg.conn.conn, msg.dir, shares[msg.dir.rstrip('\\')]))
 			else:
 				if checkuser == 2:
 					shares = self.config.sections["transfers"]["sharedfiles"]
@@ -218,9 +218,6 @@ class Shares:
 						self.queue.put(slskmessages.FolderContentsResponse(msg.conn.conn, msg.dir, shares[msg.dir.replace("\\", os.sep)[:-1]]))
 					elif msg.dir.replace("\\", os.sep) in shares:
 						self.queue.put(slskmessages.FolderContentsResponse(msg.conn.conn, msg.dir, shares[msg.dir.replace("\\", os.sep)]))
-					
-				
-		
 		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
 
 	def processExactSearchRequest(self, searchterm, user, searchid,  direct = 0, checksum=None):
