@@ -90,70 +90,72 @@ class Config:
 	"lastportstatuscheck": 0,
 	}, \
 \
-"transfers":{ \
+"transfers":{
 	"incompletedir": os.path.join(os.path.expanduser("~"),'.nicotine','incompletefiles'),
 	"downloaddir": os.path.join(os.path.expanduser("~"), 'nicotine-downloads'),
 	"uploaddir": os.path.join(os.path.expanduser("~"), 'nicotine-uploads'),
-	"sharedownloaddir": 1, \
+	"sharedownloaddir": 1,
 	"shared": [],
-	"buddyshared": [], \
-	"uploadbandwidth": 10, \
-	"uselimit": 0, \
-	"uploadlimit": 150, \
-	"downloadlimit": 0, \
-	"preferfriends": 0, \
-	"useupslots": 0, \
-	"uploadslots": 2, \
-	"shownotification": 0, \
-	"shownotificationperfolder": 0, \
-	"afterfinish": "", \
-	"afterfolder": "", \
-	"lock": 1, \
+	"buddyshared": [],
+	"uploadbandwidth": 10,
+	"uselimit": 0,
+	"uploadlimit": 150,
+	"downloadlimit": 0,
+	"preferfriends": 0,
+	"useupslots": 0,
+	"uploadslots": 2,
+	"shownotification": 0,
+	"shownotificationperfolder": 0,
+	"afterfinish": "",
+	"afterfolder": "",
+	"lock": 1,
 	"reverseorder": 0,
 	"prioritize": 0,
-	"fifoqueue": 0, \
-	"usecustomban": 0, \
-	"limitby": 1, \
-	"customban": "Banned, don't bother retrying", \
-	"queuelimit": 100, \
-	"filelimit": 1000, \
-	"friendsonly":0, \
-	"friendsnolimits":0, \
-	"enablebuddyshares": 0, \
-	"enabletransferbuttons": 1, \
-	"groupdownloads": 0, \
-	"groupuploads": 1, \
-	"geoblock": 0, \
-	"geopanic": 0, \
-	"geoblockcc": [""], \
-	"remotedownloads": 1, \
-	"uploadallowed": 2, \
-	"autoclear_uploads": 0, \
-	"autoretry_downloads": 0, \
-	"downloads":[], \
-	"sharedfiles":{}, \
-	"sharedfilesstreams":{}, \
-	"uploadsinsubdirs": 1, \
-	"wordindex":{}, \
-	"fileindex":{}, \
-	"sharedmtimes":{}, \
-	"bsharedfiles":{}, \
-	"bsharedfilesstreams":{}, \
-	"bwordindex":{}, \
-	"bfileindex":{}, \
-	"bsharedmtimes":{}, \
-	"rescanonstartup":0, \
-	"enablefilters": 1, \
-	"downloadregexp": "", \
-	"downloadfilters": [["desktop.ini",1], ["folder.jpg", 1], ["*.url", 1], ["thumbs.db", 1], \
-		["albumart(_{........-....-....-....-............}_)?(_?(large|small))?\.jpg", 0]], \
-	"download_doubleclick": 1,\
-	"upload_doubleclick": 1,\
+	"fifoqueue": 0,
+	"usecustomban": 0,
+	"limitby": 1,
+	"customban": "Banned, don't bother retrying",
+	"queuelimit": 100,
+	"filelimit": 1000,
+	"friendsonly":0,
+	"friendsnolimits":0,
+	"enablebuddyshares": 0,
+	"enabletransferbuttons": 1,
+	"groupdownloads": 0,
+	"groupuploads": 1,
+	"geoblock": 0,
+	"geopanic": 0,
+	"geoblockcc": [""],
+	"remotedownloads": 1,
+	"uploadallowed": 2,
+	"autoclear_uploads": 0,
+	"autoretry_downloads": 0,
+	"downloads":[],
+	"sharedfiles":{},
+	"sharedfilesstreams":{},
+	"uploadsinsubdirs": 1,
+	"wordindex":{},
+	"fileindex":{},
+	"sharedmtimes":{},
+	"lowercase": {},
+	"bsharedfiles":{},
+	"bsharedfilesstreams":{},
+	"bwordindex":{},
+	"bfileindex":{},
+	"bsharedmtimes":{},
+	"blowercase": {},
+	"rescanonstartup":0,
+	"enablefilters": 1,
+	"downloadregexp": "",
+	"downloadfilters": [["desktop.ini",1], ["folder.jpg", 1], ["*.url", 1], ["thumbs.db", 1],
+		["albumart(_{........-....-....-....-............}_)?(_?(large|small))?\.jpg", 0]],
+	"download_doubleclick": 1,
+	"upload_doubleclick": 1,
 	"downloadsexpanded": True,
 	"uploadsexpanded": True,
 	"pmqueueddir": False,
-	}, \
-\
+	},
+
 "userinfo":{ \
 	"descr": "''", \
 	"pic":"", \
@@ -537,6 +539,8 @@ class Config:
 		bfileindex = None
 		sharedmtimes = None
 		bsharedmtimes = None
+		lowercase = None
+		blowercase = None
 		
 		try:
 			sharedfiles = shelve.open(self.filename+".files.db")
@@ -549,6 +553,8 @@ class Config:
 			bfileindex = shelve.open(self.filename+".buddyfileindex.db")
 			sharedmtimes = shelve.open(self.filename+".mtimes.db")
 			bsharedmtimes = shelve.open(self.filename+".buddymtimes.db")
+			lowercase = shelve.open(self.filename+".lowercase_mapping.db")
+			blowercase = shelve.open(self.filename+".blowercase_mapping.db")
 		except:
 			log.addwarning(_("Shared files database seems to be corrupted, rescan your shares"))
 			files = self.clearShares(sharedfiles, bsharedfiles, sharedfilesstreams, bsharedfilesstreams, wordindex, bwordindex, fileindex, bfileindex, sharedmtimes, bsharedmtimes)
@@ -560,12 +566,14 @@ class Config:
 		self.sections["transfers"]["wordindex"] = wordindex
 		self.sections["transfers"]["fileindex"] = fileindex
 		self.sections["transfers"]["sharedmtimes"] = sharedmtimes
+		self.sections["transfers"]["lowercase"] = lowercase
 		
 		self.sections["transfers"]["bsharedfiles"] = bsharedfiles
 		self.sections["transfers"]["bsharedfilesstreams"] = bsharedfilesstreams
 		self.sections["transfers"]["bwordindex"] = bwordindex
 		self.sections["transfers"]["bfileindex"] = bfileindex
 		self.sections["transfers"]["bsharedmtimes"] = bsharedmtimes
+		self.sections["transfers"]["blowercase"] = blowercase
 		
 		if self.sections["server"]["server"][0] == "mail.slsknet.org":
 			self.sections["server"]["server"] = ('server.slsknet.org', 2242)
@@ -773,62 +781,42 @@ class Config:
 		self.config_lock.release()
 		return (0, filename)
 	
-	def setBuddyShares(self, files, streams, wordindex, fileindex, mtimes):
+	def setBuddyShares(self, files, streams, wordindex, fileindex, mtimes, lowercase_mapping):
 		if self.sections["transfers"]["bsharedfiles"] == files:
 			return
+		storable_objects = [
+				(files,             "bsharedfiles",        ".buddyfiles.db"),
+				(streams,           "bsharedfilesstreams", ".buddystreams.db"),
+				(mtimes,            "bsharedmtimes",       ".buddymtimes.db"),
+				(wordindex,         "bwordindex",          ".buddywordindex.db"),
+				(fileindex,         "bfileindex",          ".buddyfileindex"),
+				(lowercase_mapping, "blowercase",          ".buddylowercase_mapping.db"),
+			]
 		self.config_lock.acquire()
-		self.sections["transfers"]["bsharedfiles"].close()
-		self.sections["transfers"]["bsharedfilesstreams"].close()
-		self.sections["transfers"]["bsharedmtimes"].close()
-		self.sections["transfers"]["bwordindex"].close()
-		self.sections["transfers"]["bfileindex"].close()
-		
-		self.sections["transfers"]["bsharedfiles"] = shelve.open(self.filename+".buddyfiles.db",'n')
-		self.sections["transfers"]["bsharedfilesstreams"] = shelve.open(self.filename+".buddystreams.db",'n')
-		self.sections["transfers"]["bsharedmtimes"] = shelve.open(self.filename+".buddymtimes.db",'n')
-		self.sections["transfers"]["bwordindex"] = shelve.open(self.filename+".buddywordindex.db",'n')
-		self.sections["transfers"]["bfileindex"] = shelve.open(self.filename+".buddyfileindex.db",'n')
-		
-		for (i, j) in files.items():
-			self.sections["transfers"]["bsharedfiles"][i] = j
-		for (i, j) in streams.items():
-			self.sections["transfers"]["bsharedfilesstreams"][i] = j
-		for (i, j) in mtimes.items():
-			self.sections["transfers"]["bsharedmtimes"][i] = j
-		for (i, j) in wordindex.items():
-			self.sections["transfers"]["bwordindex"][i] = j
-		for (i, j) in fileindex.items():
-			self.sections["transfers"]["bfileindex"][i] = j
+		self._storeObjects(storable_objects)
 		self.config_lock.release()
 		
-	def setShares(self, files, streams, wordindex, fileindex, mtimes):
-		if self.sections["transfers"]["sharedfiles"] == files:
-			return
-		
+	def setShares(self, files, streams, wordindex, fileindex, mtimes, lowercase_mapping):
+		#if self.sections["transfers"]["sharedfiles"] == files:
+		#	return
+		storable_objects = [
+				(files,             "sharedfiles",        ".files.db"),
+				(streams,           "sharedfilesstreams", ".streams.db"),
+				(mtimes,            "sharedmtimes",       ".mtimes.db"),
+				(wordindex,         "wordindex",          ".wordindex.db"),
+				(fileindex,         "fileindex",          ".fileindex.db"),
+				(lowercase_mapping, "lowercase",          ".lowercase_mapping.db"),
+			]
 		self.config_lock.acquire()
-		self.sections["transfers"]["sharedfiles"].close()
-		self.sections["transfers"]["sharedfilesstreams"].close()
-		self.sections["transfers"]["sharedmtimes"].close()
-		self.sections["transfers"]["wordindex"].close()
-		self.sections["transfers"]["fileindex"].close()
-		self.sections["transfers"]["sharedfiles"] = shelve.open(self.filename+".files.db",'n')
-		self.sections["transfers"]["sharedfilesstreams"] = shelve.open(self.filename+".streams.db",'n')
-		self.sections["transfers"]["sharedmtimes"] = shelve.open(self.filename+".mtimes.db",'n')
-		self.sections["transfers"]["wordindex"] = shelve.open(self.filename+".wordindex.db",'n')
-		self.sections["transfers"]["fileindex"] = shelve.open(self.filename+".fileindex.db",'n')
-	
-		for (i, j) in files.items():
-			self.sections["transfers"]["sharedfiles"][i] = j
-		for (i, j) in streams.items():
-			self.sections["transfers"]["sharedfilesstreams"][i] = j
-		for (i, j) in mtimes.items():
-			self.sections["transfers"]["sharedmtimes"][i] = j
-		for (i, j) in wordindex.items():
-			self.sections["transfers"]["wordindex"][i] = j
-		for (i, j) in fileindex.items():
-			self.sections["transfers"]["fileindex"][i] = j
-	
+		self._storeObjects(storable_objects)
 		self.config_lock.release()
+
+	def _storeObjects(self, storable_objects):
+		for (source, destination, prefix) in storable_objects:
+			self.sections["transfers"][destination].close()
+			self.sections["transfers"][destination] = shelve.open(self.filename + prefix, flag='n')
+			for (key, value) in source.iteritems():
+				self.sections["transfers"][destination][key] = value
 
 	def writeShares(self):
 		self.config_lock.acquire()
@@ -837,12 +825,14 @@ class Config:
 		self.sections["transfers"]["wordindex"].sync()
 		self.sections["transfers"]["fileindex"].sync()
 		self.sections["transfers"]["sharedmtimes"].sync()
+		self.sections["transfers"]["lowercase"].sync()
 		
 		self.sections["transfers"]["bsharedfiles"].sync()
 		self.sections["transfers"]["bsharedfilesstreams"].sync()
 		self.sections["transfers"]["bwordindex"].sync()
 		self.sections["transfers"]["bfileindex"].sync()
 		self.sections["transfers"]["bsharedmtimes"].sync()
+		self.sections["transfers"]["blowercase"].sync()
 		if sys.platform == 'darwin': # sync() doesn't seem to be enough on OS X
 			self.sections["transfers"]["sharedfiles"].close()
 			self.sections["transfers"]["sharedfilesstreams"].close()
@@ -854,6 +844,7 @@ class Config:
 			self.sections["transfers"]["sharedmtimes"] = shelve.open(self.filename+".mtimes.db")
 			self.sections["transfers"]["wordindex"] = shelve.open(self.filename+".wordindex.db")
 			self.sections["transfers"]["fileindex"] = shelve.open(self.filename+".fileindex.db")
+			self.sections["transfers"]["lowercase"] = shelve.open(self.filename+".lowercase_mapping.db")
 			self.sections["transfers"]["bsharedfiles"].close()
 			self.sections["transfers"]["bsharedfilesstreams"].close()
 			self.sections["transfers"]["bsharedmtimes"].close()
@@ -864,6 +855,7 @@ class Config:
 			self.sections["transfers"]["bsharedmtimes"] = shelve.open(self.filename+".buddymtimes.db")
 			self.sections["transfers"]["bwordindex"] = shelve.open(self.filename+".buddywordindex.db")
 			self.sections["transfers"]["bfileindex"] = shelve.open(self.filename+".buddyfileindex.db")
+			self.sections["transfers"]["blowercase"] = shelve.open(self.filename+".buddylowercase_mapping.db")
 				
 		self.config_lock.release()
 

@@ -620,7 +620,7 @@ class Transfers:
 			u_realfilename    = realfilename
 			u_virtualfilename = virtualfilename
 		u_realfilename = u_realfilename.replace("\\", os.sep)
-		u_virtualfilename = u_virtualfilename
+		u_virtualfilename = self.eventprocessor.shares.correctPath(u_virtualfilename)
 		if not os.access(u_realfilename, os.R_OK):
 			return False
 		(dir, sep, file) = u_virtualfilename.rpartition('\\')
