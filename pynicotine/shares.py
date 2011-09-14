@@ -337,6 +337,7 @@ class Shares:
 				else:
 					contents = os.listdir(u_directory)
 					mtime = os.path.getmtime(str_directory)
+				contents.sort()
 			except OSError, errtuple:
 				message = _("Scanning Directory Error: %(error)s Path: %(path)s") % {'error':errtuple, 'path':u_directory}
 				print str(message)
@@ -397,6 +398,7 @@ class Shares:
 				self.logMessage(message)
 				displayTraceback(sys.exc_info()[2])
 				continue
+			contents.sort()
 
 			list[directory] = mtime
 			for filename in contents:
@@ -470,6 +472,7 @@ class Shares:
 				print str(errtuple)
 				self.logMessage(str(errtuple))
 				continue
+			contents.sort()
 
 			for filename in contents:
 
@@ -531,6 +534,7 @@ class Shares:
 				print str(errtuple)
 				self.logMessage(str(errtuple))
 				continue
+			contents.sort()
 
 			for filename in contents:
 				if self.hiddenCheck(filename):
