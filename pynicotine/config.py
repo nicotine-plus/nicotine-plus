@@ -153,7 +153,6 @@ class Config:
 	"upload_doubleclick": 1,
 	"downloadsexpanded": True,
 	"uploadsexpanded": True,
-	"pmqueueddir": False,
 },
 
 "userinfo":{

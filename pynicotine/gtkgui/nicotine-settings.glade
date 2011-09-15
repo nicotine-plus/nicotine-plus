@@ -1336,22 +1336,6 @@
                         <property name="position">6</property>
                       </packing>
                     </child>
-                    <child>
-                      <widget class="GtkCheckButton" id="PMFolderContentsRequest">
-                        <property name="label" translatable="yes">Send a private message to users who queue a directory</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">False</property>
-                        <property name="tooltip" translatable="yes">[Automatic Message] Please try browsing me if you get 'File not shared' errors. You don't have to reply to this message</property>
-                        <property name="use_underline">True</property>
-                        <property name="draw_indicator">True</property>
-                      </widget>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">False</property>
-                        <property name="position">7</property>
-                      </packing>
-                    </child>
                   </widget>
                 </child>
                 <child>
