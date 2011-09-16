@@ -28,16 +28,17 @@ import os, sys
 from utils import _
 from utils import *
 from logfacility import log
+from itertools import count
 
 """ This module contains message classes, that networking and UI thread
 exchange. Basically there are three types of messages: internal messages,
 server messages and p2p messages (between clients)."""
 
-Id = 99
+counter = count(100)
 
 def newId():
-	global Id
-	Id += 1
+	global counter
+	Id = counter.next()
 	return Id
 
 # Python objects cannot be used as a source to determine the network object,
