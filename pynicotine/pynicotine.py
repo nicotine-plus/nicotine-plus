@@ -71,7 +71,10 @@ class Timeout:
 		self.callback = callback
 	
 	def timeout(self):
-		self.callback([self])
+		try:
+			self.callback([self])
+		except Exception, e:
+			print("Exception in callback %s: %s" % (self.callback, e))
 
 class ConnectToPeerTimeout(Timeout):
 	def __init__(self, conn, callback):

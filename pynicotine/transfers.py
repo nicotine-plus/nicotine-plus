@@ -49,7 +49,7 @@ from utils import _, executeCommand
 from gtkgui.utils import recode2
 from time import sleep
 import gobject
-from temporary import HybridListDictionaryTransferMonstrosity
+from temporary import HybridListDictionaryTransferMonstrosity, ReqidManager
 win32 = sys.platform.startswith("win")
 
 class Transfer(object):
@@ -108,6 +108,7 @@ class Transfers:
 		self.eventprocessor = eventprocessor
 		self.downloads = HybridListDictionaryTransferMonstrosity()
 		self.uploads = HybridListDictionaryTransferMonstrosity()
+		self.transfers = ReqidManager()
 		self.privilegedusers = []
 		self.RequestedUploadQueue = []
 		getstatus = {}
@@ -225,9 +226,9 @@ class Transfers:
 		else:
 			transfer.status = 'Getting status'
 		
-		if user in self.users:
+		try:
 			status = self.users[user].status
-		else:
+		except KeyError:
 			status = None
 
 		if not direction and self.eventprocessor.config.sections["transfers"]["enablefilters"]:
@@ -251,6 +252,7 @@ class Transfers:
 			self.queue.put(slskmessages.GetUserStatus(user))
 		if transfer.status is not 'Filtered':
 			transfer.req = newId()
+			self.transfers.add(transfer)
 			realpath = self.eventprocessor.shares.virtual2real(filename)
 			request = slskmessages.TransferRequest(None, direction, transfer.req, filename, self.getFileSize(realpath), realpath)
 			self.eventprocessor.ProcessRequestToPeer(user, request)
@@ -275,7 +277,39 @@ class Transfers:
 		else:
 			self.eventprocessor.logTransfer(_("Failed download: user %(user)s, file %(file)s") %{'user':user, 'file':self.decode(msg.file)}, 1)
 
+	def _findTransfer(self, req):
+		try:
+			transfer = self.transfers[req]
+		except KeyError:
+			print("Failed to lookup %s in self.transfers" % req)
+			return (None, None)
+		key = (transfer.user, transfer.filename)
+		try:
+			self.downloads[key]
+			return (transfer, 'down')
+		except KeyError:
+			pass
+		try:
+			self.uploads[key]
+			return (transfer, 'up')
+		except KeyError:
+			pass
+		print("WARNING: Could not find %s in uploads nor downloads!" % (key, ))
+		return (None, None)
+	def _updateStatus(self, req, status):
+		(transfer, direction) = self._findTransfer(req)
+		if transfer is not None:
+			transfer.status = status
+			if direction == 'down':
+				self.downloadspanel.update(transfer)
+			else:
+				self.uploadspanel.update(transfer)
+			return True
+		return False
 	def gettingAddress(self, req):
+		if self._updateStatus(req, 'Getting address'):
+			return
+		print("Entering old part gettingAddress")
 		for i in self.downloads:
 			if i.req == req:
 				i.status = "Getting address"
@@ -288,6 +322,9 @@ class Transfers:
 	def gotAddress(self, req):
 		""" A connection is in progress, we got the address for a user we need
 		to connect to."""
+		if self._updateStatus(req, 'Connecting'):
+			return
+		print("Entering old part gotAddress")
 		for i in self.downloads:
 			if i.req == req:
 				i.status = "Connecting"
@@ -297,11 +334,13 @@ class Transfers:
 				i.status = "Connecting"
 				self.uploadspanel.update(i)
 
-
 	def gotConnectError(self, req):
 		""" We couldn't connect to the user, now we are waitng for him to 
 		connect to us. Note that all this logic is handled by the network
 		event processor, we just provide a visual feedback to the user."""
+		if self._updateStatus(req, 'Waiting for peer to connect'):
+			return
+		print("Entering old part gotConnectError")
 		for i in self.downloads:
 			if i.req == req:
 				i.status = "Waiting for peer to connect"
@@ -313,32 +352,46 @@ class Transfers:
 
 	def gotCantConnect(self, req):
 		""" We can't connect to the user, either way. """
+		(transfer, direction) = self._findTransfer(req)
+		if transfer is not None:
+			if direction == 'down':
+				self._getCantConnectDownload(transfer)
+			else:
+				self._getCantConnectUpload(transfer)
+			return
+		print("Entering old part gotConnect")
 		for i in self.downloads:
 			if i.req == req:
-				i.status = "Cannot connect"
-				i.req = None
-				self.downloadspanel.update(i)
-				if i.user not in self.eventprocessor.watchedusers:
-					self.queue.put(slskmessages.AddUser(i.user))
-				self.queue.put(slskmessages.GetUserStatus(i.user))
+				self._getCantConnectDownload(i)
 		for i in self.uploads:
 			if i.req == req:
-				i.status = "Cannot connect"
-				i.req = None
-				curtime = time.time()
-				for j in self.uploads:
-					if j.user == i.user:
-						j.timequeued = curtime
-				self.uploadspanel.update(i)
-				if i.user not in self.eventprocessor.watchedusers:
-					self.queue.put(slskmessages.AddUser(i.user))
-				self.queue.put(slskmessages.GetUserStatus(i.user))
-				self.checkUploadQueue()
-
+				self._getCantConnectUpload(i)
+	def _getCantConnectDownload(self, i):
+		i.status = "Cannot connect"
+		i.req = None
+		self.downloadspanel.update(i)
+		if i.user not in self.eventprocessor.watchedusers:
+			self.queue.put(slskmessages.AddUser(i.user))
+		self.queue.put(slskmessages.GetUserStatus(i.user))
+	def _getCantConnectUpload(self, i):
+		i.status = "Cannot connect"
+		i.req = None
+		curtime = time.time()
+		for j in self.uploads:
+			if j.user == i.user:
+				j.timequeued = curtime
+		self.uploadspanel.update(i)
+		if i.user not in self.eventprocessor.watchedusers:
+			self.queue.put(slskmessages.AddUser(i.user))
+		self.queue.put(slskmessages.GetUserStatus(i.user))
+		self.checkUploadQueue()
 
 	def gotFileConnect(self, req, conn):
 		""" A transfer connection has been established, 
 		now exchange initialisation messages."""
+		if self._updateStatus(req, 'Initializing transfer'):
+			return
+		print("Entering old part gotFileConnect")
 		for i in self.downloads:
 			if i.req == req:
 				i.status = "Initializing transfer"
@@ -351,6 +404,16 @@ class Transfers:
 	def gotConnect(self, req, conn):
 		""" A connection has been established, now exchange initialisation
 		messages."""
+		(transfer, direction) = self._findTransfer(req)
+		if transfer is not None:
+			transfer.status = "Requesting file"
+			transfer.requestconn = conn
+			if direction == 'down':
+				self.downloadspanel.update(transfer)
+			else:
+				self.uploadspanel.update(transfer)
+			return
+		print("Entering old part gotConnect")
 		for i in self.downloads:
 			if i.req == req:
 				i.status = "Requesting file"
@@ -754,114 +817,76 @@ class Transfers:
 	def FileRequest(self, msg):
 		""" Got an incoming file request. Could be an upload request or a 
 		request to get the file that was previously queued"""
-	
+		(transfer, direction) = self._findTransfer(msg.req)
+		if transfer is not None:
+			if direction == 'down':
+				self._FileRequestDownload(transfer)
+			else:
+				self._FileRequestUpload(msg, transfer)
+			return
+		print("Entering old part FileRequest")
+		for i in self.downloads:
+			if msg.req == i.req:
+				self._FileRequestDownload(msg, i)
+				return
+		for i in self.uploads:
+			if msg.req == i.req:
+				self._FileRequestUpload(msg, i)
+				return
+		self.eventprocessor.logMessage(_("Unknown file request: %s") % str(vars(msg)), 1)
+		self.queue.put(slskmessages.ConnClose(msg.conn))
+	def _FileRequestDownload(self, msg, i):
 		downloaddir = self.eventprocessor.config.sections["transfers"]["downloaddir"]
 		incompletedir = self.eventprocessor.config.sections["transfers"]["incompletedir"]
-
-		for i in self.downloads:
-			if msg.req == i.req and i.conn is None and i.size is not None:
-				i.conn = msg.conn
-				i.req = None
-				if i.transfertimer is not None:
-					i.transfertimer.cancel()
-				if not incompletedir:
-					if i.path and i.path[0] == '/':
-						incompletedir = utils.CleanPath(i.path)
-					else:
-						incompletedir = os.path.join(downloaddir, utils.CleanPath(i.path))
-				incompletedir = self.encode(incompletedir, i.user)
-				try:
-					if not os.access(incompletedir, os.F_OK):
-						os.makedirs(incompletedir)
-					if not os.access(incompletedir, os.R_OK | os.W_OK | os.X_OK):
-						raise OSError, "Download directory %s Permissions error.\nDir Permissions: %s" % (incompletedir, oct( os.stat(incompletedir)[stat.ST_MODE] & 0777))
-						
-				except OSError, strerror:
-					self.eventprocessor.logMessage(_("OS error: %s") % strerror)
-					i.status = "Download directory error"
-					i.conn = None
-					self.queue.put(slskmessages.ConnClose(msg.conn))
-					self.eventprocessor.frame.NewNotification(_("OS error: %s") % strerror, title=_("Nicotine+ :: Directory download error"))
-				
-				else: 
+		if i.conn is None and i.size is not None:
+			i.conn = msg.conn
+			i.req = None
+			if i.transfertimer is not None:
+				i.transfertimer.cancel()
+			if not incompletedir:
+				if i.path and i.path[0] == '/':
+					incompletedir = utils.CleanPath(i.path)
+				else:
+					incompletedir = os.path.join(downloaddir, utils.CleanPath(i.path))
+			incompletedir = self.encode(incompletedir, i.user)
+			try:
+				if not os.access(incompletedir, os.F_OK):
+					os.makedirs(incompletedir)
+				if not os.access(incompletedir, os.R_OK | os.W_OK | os.X_OK):
+					raise OSError, "Download directory %s Permissions error.\nDir Permissions: %s" % (incompletedir, oct( os.stat(incompletedir)[stat.ST_MODE] & 0777))
 					
-					# also check for a windows-style incomplete transfer
-					basename = string.split(i.filename,'\\')[-1]
-					basename = self.encode(basename, i.user)
-					winfname = os.path.join(incompletedir, "INCOMPLETE~"+basename)
-					pyfname  = os.path.join(incompletedir, "INCOMPLETE"+basename)
-					m = MD5()
-					m.update(i.filename+i.user)
-					
-					pynewfname = os.path.join(incompletedir, "INCOMPLETE"+m.hexdigest()+basename)
-					try:
-						if os.access(winfname, os.F_OK):
-							fname = winfname
-						elif os.access(pyfname, os.F_OK):
-							fname = pyfname
-						else:
-							fname = pynewfname
-						
-						if win32:
-							f = open(u"%s" % fname, 'ab+')
-						else:
-							f = open(fname, 'ab+')
-					except IOError, strerror:
-						self.eventprocessor.logMessage(_("Download I/O error: %s") % strerror)
-						i.status = "Local file error"
-						try:
-							f.close()
-						except:
-							pass
-						i.conn = None
-						self.queue.put(slskmessages.ConnClose(msg.conn))
-					else:
-						if self.eventprocessor.config.sections["transfers"]["lock"]:
-							try:
-								import fcntl
-								try:
-									fcntl.lockf(f, fcntl.LOCK_EX|fcntl.LOCK_NB)
-								except IOError, strerror:
-									self.eventprocessor.logMessage(_("Can't get an exclusive lock on file - I/O error: %s") % strerror)
-							except ImportError:
-								pass
-						f.seek(0, 2)
-						size = f.tell()
-						self.queue.put(slskmessages.DownloadFile(i.conn, size, f, i.size))
-						i.currentbytes = size
-						#i.status = "%s" %(str(i.currentbytes))
-						i.status = "Transferring"
-						i.file = f
-						i.place = 0
-						i.offset = size
-						i.starttime = time.time()
-						self.eventprocessor.logMessage(_("Download started: %s") % (u"%s" % f.name), 5)
-
-						self.eventprocessor.logTransfer(_("Download started: user %(user)s, file %(file)s") % {'user':i.user, 'file':u"%s" % f.name}, 5)
-				self.SetIconDownloads()
-				self.downloadspanel.update(i)
-				
-				return
+			except OSError, strerror:
+				self.eventprocessor.logMessage(_("OS error: %s") % strerror)
+				i.status = "Download directory error"
+				i.conn = None
+				self.queue.put(slskmessages.ConnClose(msg.conn))
+				self.eventprocessor.frame.NewNotification(_("OS error: %s") % strerror, title=_("Nicotine+ :: Directory download error"))
 			
-		for i in self.uploads:
-			if msg.req == i.req and i.conn is None:
-				i.conn = msg.conn
-				i.req = None
-				if i.transfertimer is not None:
-					i.transfertimer.cancel()
+			else: 
+				
+				# also check for a windows-style incomplete transfer
+				basename = string.split(i.filename,'\\')[-1]
+				basename = self.encode(basename, i.user)
+				winfname = os.path.join(incompletedir, "INCOMPLETE~"+basename)
+				pyfname  = os.path.join(incompletedir, "INCOMPLETE"+basename)
+				m = MD5()
+				m.update(i.filename+i.user)
+				
+				pynewfname = os.path.join(incompletedir, "INCOMPLETE"+m.hexdigest()+basename)
 				try:
-					# Open File
-					if win32:
-						filename = u"%s" % i.realfilename.replace("\\", os.sep)
+					if os.access(winfname, os.F_OK):
+						fname = winfname
+					elif os.access(pyfname, os.F_OK):
+						fname = pyfname
 					else:
-						filename = i.realfilename.replace("\\", os.sep)
-					f = open(filename, "rb")
-					self.queue.put(slskmessages.UploadFile(i.conn, file = f, size = i.size))
-					i.status = "Initializing transfer"
-					i.file = f
-					self.eventprocessor.logTransfer(_("Upload started: user %(user)s, file %(file)s") % {'user':i.user, 'file':self.decode(i.filename)})
+						fname = pynewfname
+					
+					if win32:
+						f = open(u"%s" % fname, 'ab+')
+					else:
+						f = open(fname, 'ab+')
 				except IOError, strerror:
-					self.eventprocessor.logMessage(_("Upload I/O error: %s") % strerror)
+					self.eventprocessor.logMessage(_("Download I/O error: %s") % strerror)
 					i.status = "Local file error"
 					try:
 						f.close()
@@ -869,11 +894,64 @@ class Transfers:
 						pass
 					i.conn = None
 					self.queue.put(slskmessages.ConnClose(msg.conn))
-				self.SetIconUploads()
-				self.uploadspanel.update(i)
-				break
+				else:
+					if self.eventprocessor.config.sections["transfers"]["lock"]:
+						try:
+							import fcntl
+							try:
+								fcntl.lockf(f, fcntl.LOCK_EX|fcntl.LOCK_NB)
+							except IOError, strerror:
+								self.eventprocessor.logMessage(_("Can't get an exclusive lock on file - I/O error: %s") % strerror)
+						except ImportError:
+							pass
+					f.seek(0, 2)
+					size = f.tell()
+					self.queue.put(slskmessages.DownloadFile(i.conn, size, f, i.size))
+					i.currentbytes = size
+					#i.status = "%s" %(str(i.currentbytes))
+					i.status = "Transferring"
+					i.file = f
+					i.place = 0
+					i.offset = size
+					i.starttime = time.time()
+					self.eventprocessor.logMessage(_("Download started: %s") % (u"%s" % f.name), 5)
+
+					self.eventprocessor.logTransfer(_("Download started: user %(user)s, file %(file)s") % {'user':i.user, 'file':u"%s" % f.name}, 5)
+			self.SetIconDownloads()
+			self.downloadspanel.update(i)
 		else:
-			self.eventprocessor.logMessage(_("Unknown file request: %s") % str(vars(msg)), 1)
+			self.eventprocessor.logMessage(_("Download error formally known as 'Unknown file request': %s (%s: %s)") % (str(vars(msg)), i.user, i.filename), 1)
+			self.queue.put(slskmessages.ConnClose(msg.conn))
+	def _FileRequestUpload(self, msg, i):
+		if i.conn is None:
+			i.conn = msg.conn
+			i.req = None
+			if i.transfertimer is not None:
+				i.transfertimer.cancel()
+			try:
+				# Open File
+				if win32:
+					filename = u"%s" % i.realfilename.replace("\\", os.sep)
+				else:
+					filename = i.realfilename.replace("\\", os.sep)
+				f = open(filename, "rb")
+				self.queue.put(slskmessages.UploadFile(i.conn, file = f, size = i.size))
+				i.status = "Initializing transfer"
+				i.file = f
+				self.eventprocessor.logTransfer(_("Upload started: user %(user)s, file %(file)s") % {'user':i.user, 'file':self.decode(i.filename)})
+			except IOError, strerror:
+				self.eventprocessor.logMessage(_("Upload I/O error: %s") % strerror)
+				i.status = "Local file error"
+				try:
+					f.close()
+				except:
+					pass
+				i.conn = None
+				self.queue.put(slskmessages.ConnClose(msg.conn))
+			self.SetIconUploads()
+			self.uploadspanel.update(i)
+		else:
+			self.eventprocessor.logMessage(_("Upload error formally known as 'Unknown file request': %s (%s: %s)") % (str(vars(msg), i.user, i.filename)), 1)
 			self.queue.put(slskmessages.ConnClose(msg.conn))
             
 	def SetIconDownloads(self):
@@ -1011,7 +1089,7 @@ class Transfers:
 	
 	def FileUpload(self, msg):
 		""" A file upload is in progress"""
-		needupdate = 1
+		needupdate = True
 	
 		for i in self.uploads:
 			if i.conn != msg.conn:
@@ -1045,7 +1123,7 @@ class Transfers:
 			i.lasttime = curtime
 			if i.size > i.currentbytes:
 				if oldelapsed == i.timeelapsed:
-					needupdate = 0
+					needupdate = False
 				#i.status = str(i.currentbytes)
 				i.status = "Transferring"
 			

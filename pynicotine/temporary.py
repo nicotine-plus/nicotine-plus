@@ -104,10 +104,33 @@ class HybridListDictionaryMonstrosity(object):
 class HybridListDictionaryTransferMonstrosity(HybridListDictionaryMonstrosity):
     def __getkey__(self, obj):
         return (obj.user, obj.filename) # We use the virtual path since the real path could be shared under multiple virtual paths
+
+class ReqidManager(dict):
+    def __getitem__(self, key):
+        obj = super(ReqidManager, self).__getitem__(key)
+        try:
+            if key != obj.req:
+                print("ReqidManager: Transfer %s lost its ID!")
+                print("%s (key) != %s (answer.req)" % (key, obj.req))
+                raise KeyError
+            return obj
+        except Exception, e:
+            print("ReqidManager exception in __getkey__: %s" % e)
+            raise
+    def __setitem__(self, key, obj):
+        try:
+            super(ReqidManager, self).__getitem__(key)
+            print("WARNING: You are reusing reqid %s, but IDs are supposed to be unique!" % key)
+        except KeyError:
+            pass
+        super(ReqidManager, self).__setitem__(key, obj)
+    def add(self, obj):
+        self.__setitem__(obj.req, obj)
+
 class HybridListDictionaryTupleMonstrosity(HybridListDictionaryMonstrosity):
     def __getkey__(self, obj):
         return obj[0]
-
+    
 def test():
     print("=== Interacting with lists ===")
     #
