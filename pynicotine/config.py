@@ -672,19 +672,35 @@ class Config:
 		self.writeTransfers()
 	def writeTransfers(self):
 		self.config_lock.acquire()
+		realfile = self.filename + '.transfers.pickle'
+		tmpfile = realfile + '.tmp'
+		backupfile = realfile + ' .backup'
 		try:
-			handle = open(self.filename+'.transfers.pickle', 'w')
+			handle = open(tmpfile, 'w')
 		except IOError, inst:
 			log.addwarning(_("Something went wrong while opening your transfer list: %(error)s") % {'error':str(inst)})
 		else:
 			try:
 				cPickle.dump(self.sections['transfers']['downloads'], handle)
+				handle.close()
+				try:
+					# Please let it be atomic...
+					os.rename(tmpfile, realfile)
+				except OSError, inst:
+					# ...ugh. Okay, how about...
+					try:
+						os.unlink(backupfile)
+					except:
+						pass
+					os.rename(realfile, backupfile)
+					os.rename(tmpfile, realfile)
 			except IOError, inst:
 				log.addwarning(_("Something went wrong while writing your transfer list: %(error)s") % {'error':str(inst)})
-		try:
-			handle.close()
-		except:
-			pass
+		finally:
+			try:
+				handle.close()
+			except:
+				pass
 		self.config_lock.release()
 	def writeConfiguration(self):
 		self.config_lock.acquire()
