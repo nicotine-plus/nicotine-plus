@@ -105,12 +105,13 @@ class HybridListDictionaryTransferMonstrosity(HybridListDictionaryMonstrosity):
     def __getkey__(self, obj):
         return (obj.user, obj.filename) # We use the virtual path since the real path could be shared under multiple virtual paths
 
+
 class ReqidManager(dict):
     def __getitem__(self, key):
         obj = super(ReqidManager, self).__getitem__(key)
         try:
             if key != obj.req:
-                print("ReqidManager: Transfer %s lost its ID!")
+                print("ReqidManager: Transfer %s lost its ID!" % obj)
                 print("%s (key) != %s (answer.req)" % (key, obj.req))
                 raise KeyError
             return obj
@@ -126,7 +127,7 @@ class ReqidManager(dict):
         super(ReqidManager, self).__setitem__(key, obj)
     def add(self, obj):
         self.__setitem__(obj.req, obj)
-
+    
 class HybridListDictionaryTupleMonstrosity(HybridListDictionaryMonstrosity):
     def __getkey__(self, obj):
         return obj[0]
