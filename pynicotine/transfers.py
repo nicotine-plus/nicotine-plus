@@ -362,9 +362,11 @@ class Transfers:
 		print("Entering old part gotConnect")
 		for i in self.downloads:
 			if i.req == req:
+				#print("Found it in downloads: %s" % i)
 				self._getCantConnectDownload(i)
 		for i in self.uploads:
 			if i.req == req:
+				#print("Found it in uploads: %s" % i)
 				self._getCantConnectUpload(i)
 	def _getCantConnectDownload(self, i):
 		i.status = "Cannot connect"
@@ -820,7 +822,7 @@ class Transfers:
 		(transfer, direction) = self._findTransfer(msg.req)
 		if transfer is not None:
 			if direction == 'down':
-				self._FileRequestDownload(transfer)
+				self._FileRequestDownload(msg, transfer)
 			else:
 				self._FileRequestUpload(msg, transfer)
 			return
