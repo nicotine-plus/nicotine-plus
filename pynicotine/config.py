@@ -677,7 +677,7 @@ class Config:
 		backupfile = realfile + ' .backup'
 		try:
 			handle = open(tmpfile, 'w')
-		except IOError, inst:
+		except Exception, inst:
 			log.addwarning(_("Something went wrong while opening your transfer list: %(error)s") % {'error':str(inst)})
 		else:
 			try:
@@ -686,7 +686,7 @@ class Config:
 				try:
 					# Please let it be atomic...
 					os.rename(tmpfile, realfile)
-				except OSError, inst:
+				except Exception, inst:
 					# ...ugh. Okay, how about...
 					try:
 						os.unlink(backupfile)
@@ -694,7 +694,7 @@ class Config:
 						pass
 					os.rename(realfile, backupfile)
 					os.rename(tmpfile, realfile)
-			except IOError, inst:
+			except Exception, inst:
 				log.addwarning(_("Something went wrong while writing your transfer list: %(error)s") % {'error':str(inst)})
 		finally:
 			try:
