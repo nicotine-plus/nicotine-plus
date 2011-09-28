@@ -705,7 +705,7 @@ class Config:
 	def writeConfiguration(self):
 		self.config_lock.acquire()
 
-		external_sections =  ["sharedfiles", "sharedfilesstreams", "wordindex", "fileindex", "sharedmtimes", "bsharedfiles", "bsharedfilesstreams", "bwordindex", "bfileindex", "bsharedmtimes", "downloads"]
+		external_sections =  ["sharedfiles", "sharedfilesstreams", "wordindex", "fileindex", "sharedmtimes", 'lowercase', "bsharedfiles", "bsharedfilesstreams", "bwordindex", "bfileindex", "bsharedmtimes", "blowercase", "downloads"]
 		for i in self.sections.keys():
 			if not self.parser.has_section(i):
 				self.parser.add_section(i)
@@ -804,7 +804,7 @@ class Config:
 				(streams,           "bsharedfilesstreams", ".buddystreams.db"),
 				(mtimes,            "bsharedmtimes",       ".buddymtimes.db"),
 				(wordindex,         "bwordindex",          ".buddywordindex.db"),
-				(fileindex,         "bfileindex",          ".buddyfileindex"),
+				(fileindex,         "bfileindex",          ".buddyfileindex.db"),
 				(lowercase_mapping, "blowercase",          ".buddylowercase_mapping.db"),
 			]
 		self.config_lock.acquire()
