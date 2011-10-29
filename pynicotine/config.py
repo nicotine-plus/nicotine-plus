@@ -528,38 +528,67 @@ class Config:
 		self.sections["transfers"]["shared"] = [_convert_to_virtual(x) for x in self.sections["transfers"]["shared"]]
 		self.sections["transfers"]["buddyshared"] = [_convert_to_virtual(x) for x in self.sections["transfers"]["buddyshared"]]
 
-		sharedfiles = None
-		bsharedfiles = None
-		sharedfilesstreams = None
+		sharedfiles =         None
+		bsharedfiles =        None
+		sharedfilesstreams =  None
 		bsharedfilesstreams = None
-		wordindex = None
-		bwordindex = None
-		fileindex = None
-		bfileindex = None
-		sharedmtimes = None
-		bsharedmtimes = None
-		lowercase = None
-		blowercase = None
+		wordindex =           None
+		bwordindex =          None
+		fileindex =           None
+		bfileindex =          None
+		sharedmtimes =        None
+		bsharedmtimes =       None
+		lowercase =           None
+		blowercase =          None
 		
-		try:
-			sharedfiles = shelve.open(self.filename+".files.db")
-			bsharedfiles = shelve.open(self.filename+".buddyfiles.db")
-			sharedfilesstreams =shelve.open(self.filename+".streams.db")
-			bsharedfilesstreams =shelve.open(self.filename+".buddystreams.db")
-			wordindex = shelve.open(self.filename+".wordindex.db")
-			bwordindex = shelve.open(self.filename+".buddywordindex.db")
-			fileindex = shelve.open(self.filename+".fileindex.db")
-			bfileindex = shelve.open(self.filename+".buddyfileindex.db")
-			sharedmtimes = shelve.open(self.filename+".mtimes.db")
-			bsharedmtimes = shelve.open(self.filename+".buddymtimes.db")
-			lowercase = shelve.open(self.filename+".lowercase_mapping.db")
-			blowercase = shelve.open(self.filename+".blowercase_mapping.db")
-		except:
-			log.addwarning(_("Shared files database seems to be corrupted, rescan your shares"))
+
+		shelves = [
+				self.filename + ".files.db",
+				self.filename + ".buddyfiles.db",
+				self.filename + ".streams.db",
+				self.filename + ".buddystreams.db",
+				self.filename + ".wordindex.db",
+				self.filename + ".buddywordindex.db",
+				self.filename + ".fileindex.db",
+				self.filename + ".buddyfileindex.db",
+				self.filename + ".mtimes.db",
+				self.filename + ".buddymtimes.db",
+				self.filename + ".lowercase_mapping.db",
+				self.filename + ".blowercase_mapping.db",
+			]
+
+		_opened_shelves = []
+		_errors = []
+		for shelvefile in shelves:
+			try:
+				_opened_shelves.append(shelve.open(shelvefile, flag='n'))
+			except:
+				_errors.append(shelvefile)
+				try:
+					os.unlink(shelvefile)
+					_opened_shelves.append(shelve.open(shelvefile, flag='n'))
+				except Exception, ex:
+					print("Failed to unlink %s: %s" % (shelvefile, ex))
+		sharedfiles =         _opened_shelves.pop(0)
+		bsharedfiles =        _opened_shelves.pop(0)
+		sharedfilesstreams =  _opened_shelves.pop(0)
+		bsharedfilesstreams = _opened_shelves.pop(0)
+		wordindex =           _opened_shelves.pop(0)
+		bwordindex =          _opened_shelves.pop(0)
+		fileindex =           _opened_shelves.pop(0)
+		bfileindex =          _opened_shelves.pop(0)
+		sharedmtimes =        _opened_shelves.pop(0)
+		bsharedmtimes =       _opened_shelves.pop(0)
+		lowercase =           _opened_shelves.pop(0)
+		blowercase =          _opened_shelves.pop(0)
+
+		if _errors:
+			log.addwarning(_("Failed to process the following databases: %(names)s") % {'names': '\n'.join(_errors)})
 			files = self.clearShares(sharedfiles, bsharedfiles, sharedfilesstreams, bsharedfilesstreams, wordindex, bwordindex, fileindex, bfileindex, sharedmtimes, bsharedmtimes)
 			if files is not None:
 				sharedfiles, bsharedfiles, sharedfilesstreams, bsharedfilesstreams, wordindex, bwordindex, fileindex, bfileindex, sharedmtimes, bsharedmtimes = files
-			
+			log.addwarning(_("Shared files database seems to be corrupted, rescan your shares"))
+		
 		self.sections["transfers"]["sharedfiles"] = sharedfiles
 		self.sections["transfers"]["sharedfilesstreams"] = sharedfilesstreams
 		self.sections["transfers"]["wordindex"] = wordindex
@@ -854,23 +883,23 @@ class Config:
 			self.sections["transfers"]["sharedmtimes"].close()
 			self.sections["transfers"]["wordindex"].close()
 			self.sections["transfers"]["fileindex"].close()
-			self.sections["transfers"]["sharedfiles"] = shelve.open(self.filename+".files.db")
-			self.sections["transfers"]["sharedfilesstreams"] = shelve.open(self.filename+".streams.db")
-			self.sections["transfers"]["sharedmtimes"] = shelve.open(self.filename+".mtimes.db")
-			self.sections["transfers"]["wordindex"] = shelve.open(self.filename+".wordindex.db")
-			self.sections["transfers"]["fileindex"] = shelve.open(self.filename+".fileindex.db")
-			self.sections["transfers"]["lowercase"] = shelve.open(self.filename+".lowercase_mapping.db")
+			self.sections["transfers"]["sharedfiles"] = shelve.open(self.filename+".files.db", flag='n')
+			self.sections["transfers"]["sharedfilesstreams"] = shelve.open(self.filename+".streams.db", flag='n')
+			self.sections["transfers"]["sharedmtimes"] = shelve.open(self.filename+".mtimes.db", flag='n')
+			self.sections["transfers"]["wordindex"] = shelve.open(self.filename+".wordindex.db", flag='n')
+			self.sections["transfers"]["fileindex"] = shelve.open(self.filename+".fileindex.db", flag='n')
+			self.sections["transfers"]["lowercase"] = shelve.open(self.filename+".lowercase_mapping.db", flag='n')
 			self.sections["transfers"]["bsharedfiles"].close()
 			self.sections["transfers"]["bsharedfilesstreams"].close()
 			self.sections["transfers"]["bsharedmtimes"].close()
 			self.sections["transfers"]["bwordindex"].close()
 			self.sections["transfers"]["bfileindex"].close()
-			self.sections["transfers"]["bsharedfiles"] = shelve.open(self.filename+".buddyfiles.db")
-			self.sections["transfers"]["bsharedfilesstreams"] = shelve.open(self.filename+".buddystreams.db")
-			self.sections["transfers"]["bsharedmtimes"] = shelve.open(self.filename+".buddymtimes.db")
-			self.sections["transfers"]["bwordindex"] = shelve.open(self.filename+".buddywordindex.db")
-			self.sections["transfers"]["bfileindex"] = shelve.open(self.filename+".buddyfileindex.db")
-			self.sections["transfers"]["blowercase"] = shelve.open(self.filename+".buddylowercase_mapping.db")
+			self.sections["transfers"]["bsharedfiles"] = shelve.open(self.filename+".buddyfiles.db", flag='n')
+			self.sections["transfers"]["bsharedfilesstreams"] = shelve.open(self.filename+".buddystreams.db", flag='n')
+			self.sections["transfers"]["bsharedmtimes"] = shelve.open(self.filename+".buddymtimes.db", flag='n')
+			self.sections["transfers"]["bwordindex"] = shelve.open(self.filename+".buddywordindex.db", flag='n')
+			self.sections["transfers"]["bfileindex"] = shelve.open(self.filename+".buddyfileindex.db", flag='n')
+			self.sections["transfers"]["blowercase"] = shelve.open(self.filename+".buddylowercase_mapping.db", flag='n')
 				
 		self.config_lock.release()
 
