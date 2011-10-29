@@ -45,10 +45,8 @@ class PluginHandler(object):
 		self.plugindirs = []
 		self.enabled_plugins = {}
 		self.loaded_plugins = {}
-		self.type2cast = {'integer':int,'int':int,
-		'float':float, 'string':str,'str':str,
-			}
-			
+		self.type2cast = {'integer':int,'int':int, 'float':float, 'string':str,'str':str, }
+		
 		if not plugindir:
 			if WIN32:
 				try:
@@ -102,8 +100,7 @@ class PluginHandler(object):
 		try:
 			tar = tarfile.open(path, "r:*") #transparently supports gz, bz2
 		except (tarfile.ReadError, OSError):
-			raise InvalidPluginError(_('Plugin archive is not in the correct '
-				'format'))
+			raise InvalidPluginError(_('Plugin archive is not in the correct format'))
 
 		#ensure the paths in the archive are sane
 		mems = tar.getmembers()
@@ -114,8 +111,7 @@ class PluginHandler(object):
 
 		for m in mems:
 			if not m.name.startswith(base):
-				raise InvalidPluginError(_("Plugin archive contains an unsafe"
-					" path"))
+				raise InvalidPluginError(_("Plugin archive contains an unsafe path"))
 
 		tar.extractall(self.plugindirs[0])
 
@@ -172,7 +168,6 @@ class PluginHandler(object):
 			if hasattr(plugin.PLUGIN, "metasettings"):
 				return plugin.PLUGIN.metasettings
 
-		
 	def get_plugin_info(self, pluginname):
 		path = os.path.join(self.__findplugin(pluginname), 'PLUGININFO')
 		f = open(path)
@@ -350,10 +345,14 @@ class PluginHandler(object):
 		start_new_thread(self.TriggerEvent, ("JoinChatroomNotification", (room,)))
 	def LeaveChatroomNotification(self, room): 
 		start_new_thread(self.TriggerEvent, ("LeaveChatroomNotification", (room,)))
+	def UploadQueuedNotification(self, user, virtualfile, realfile):
+		start_new_thread(self.TriggerEvent, ("UploadQueuedNotification", (user, virtualfile, realfile)))
+	def UserStatsNotification(self, user, stats):
+		start_new_thread(self.TriggerEvent, ("UserStatsNotification", (user, stats)))
 	# other functions
 	def appendqueue(self, item):
 		# We cannot do a test after adding the item since it's possible
-		# this function will be called twice simultanious - and then
+		# this function will be called twice simultaneously - and then
 		# len(self.guiqueue) might be 2 for both calls.
 		# Calling the processQueue twice is not a problem though.
 		addidle = False
@@ -370,7 +369,11 @@ class PluginHandler(object):
 		text = cast_to_unicode_if_needed(text, log.addwarning)
 		self.frame.np.queue.put(slskmessages.SayChatroom(room, ToBeEncoded(text, 'UTF-8')))
 	def sayprivate(self, user, text):
+		'''Send user message in private (showing up in GUI)'''
 		self.appendqueue({'type':'sayprivate', 'user':user, 'text':text})
+	def sendprivate(self, user, text):
+		'''Send user message in private (not showing up in GUI)'''
+		self.appendqueue({'type':'sendprivate', 'user':user, 'text':text})
 	def processQueue(self):
 		while len(self.guiqueue) > 0:
 			i = self.guiqueue.pop(0)
@@ -379,9 +382,10 @@ class PluginHandler(object):
 			elif i['type'] == 'sayprivate':
 				# If we use the np the chat lines only show up on the receiving end, we won't see anything ourselves.
 				self.frame.privatechats.users[i['user']].SendMessage(i['text'])
+			elif i['type'] == 'sendprivate':
+				self.frame.privatechats.SendMessage(i['user'], i['text'])
 			else:
 				log.add(_('Unknown queue item %s: %s' % (i['type'], repr(i))))
-		#print "Removing idle_add"
 		return False
 
 class BasePlugin(object):
@@ -446,6 +450,10 @@ class BasePlugin(object):
 		pass
 	def LeaveChatroomNotification(self, room):
 		pass
+	def UploadQueuedNotification(self, user, virtualfile, realfile):
+		pass
+	def UserStatsNotification(self, user, stats):
+		pass
 	# The following are functions to make your life easier,
 	# you shouldn't override them.
 	def log(self, text):
@@ -453,7 +461,11 @@ class BasePlugin(object):
 	def saypublic(self, room, text):
 		self.parent.saychatroom(room, text)
 	def sayprivate(self, user, text):
+		'''Send user message in private (shows up in GUI)'''
 		self.parent.sayprivate(user, text)
+	def sendprivate(self, user, text):
+		'''Send user message in private (doesn't show up in GUI)'''
+		self.parent.sendprivate(user, text)
 	def fakepublic(self, room, user, text):
 		try:
 			room = self.frame.chatrooms.roomsctrl.joinedrooms[room]

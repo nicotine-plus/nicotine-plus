@@ -202,7 +202,6 @@ class Transfers:
 		if msg.status == 0:
 			self.checkUploadQueue()
 
-
 	def getFile(self, user, filename, path="", transfer = None, size=None, bitrate=None, length=None):
 		path = utils.CleanPath(path, absolute=True)
 		self.transferFile(0, user, filename, path, transfer, size, bitrate, length)
@@ -527,6 +526,8 @@ class Transfers:
 			filelimit = self.eventprocessor.config.sections["transfers"]["filelimit"]
 			limitmsg = "User limit of %i files exceeded" %(filelimit)
 			return slskmessages.TransferResponse(conn, 0, reason = limitmsg, req = msg.req)
+		# All checks passed, user can queue file!
+		self.eventprocessor.frame.pluginhandler.UploadQueuedNotification(user, msg.file, realpath)
 		# Is user already downloading/negotiating a download?
 		if not self.allowNewUploads() or user in self.getTransferringUsers():
 			response = slskmessages.TransferResponse(conn, 0, reason = "Queued", req = msg.req)
@@ -618,6 +619,7 @@ class Transfers:
 				self._updateOrAppendUpload(user, msg.file, newupload)
 				self.uploadspanel.update(newupload)
 				self.addQueued(user, msg.file)
+				self.eventprocessor.frame.pluginhandler.UploadQueuedNotification(user, msg.file, realpath)
 			else:
 				self.queue.put(slskmessages.QueueFailed(conn = msg.conn.conn, file = msg.file, reason = "File not shared" ))
 		self.eventprocessor.logMessage(_("Queued upload request: User %s, %s") % (user, str(vars(msg))), 5)
@@ -1159,13 +1161,15 @@ class Transfers:
 			if needupdate:
 				self.uploadspanel.update(i)
 
-	def BanUser(self, user):
+	def BanUser(self, user, ban_message=None):
 		"""
 		Ban a user, cancel all the user's uploads, send a 'Banned'
 		message via the transfers, and clear the transfers from the
 		uploads list.
 		"""
-		if self.eventprocessor.config.sections["transfers"]["usecustomban"]:
+		if ban_message:
+			banmsg = _("Banned (%s)") % ban_message
+		elif self.eventprocessor.config.sections["transfers"]["usecustomban"]:
 			banmsg = _("Banned (%s)") % self.eventprocessor.config.sections["transfers"]["customban"]
 		else:
 			banmsg = _("Banned")

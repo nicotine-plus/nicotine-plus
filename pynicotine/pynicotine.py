@@ -1036,6 +1036,13 @@ class NetworkEventProcessor:
 			self.userlist.GetUserStats(msg)
 		else:
 			self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
+		stats = {
+			'avgspeed': msg.avgspeed,
+			'downloadnum': msg.downloadnum,
+			'files': msg.files,
+			'dirs': msg.dirs,
+		}
+		self.frame.pluginhandler.UserStatsNotification(msg.user, stats)
 
 	def UserLeftRoom(self, msg):
 		if self.chatrooms is not None:
