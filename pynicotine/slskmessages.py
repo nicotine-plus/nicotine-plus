@@ -500,7 +500,6 @@ class GetUserStatus(ServerMessage):
 		return self.packObject(self.user)
 
 	def parseNetworkMessage(self, message):
-	
 		pos, self.user = self.getObject(message, types.StringType)
 		pos, self.status = self.getObject(message, types.IntType, pos)
 		# Exception handler is for Soulfind compatibility
@@ -541,25 +540,18 @@ class AckNotifyPrivileges(ServerMessage):
 		#print "20+" + repr(self.packObject(NetworkIntType(self.token)))
 		return self.packObject(NetworkIntType(self.token))
 class JoinPublicRoom(ServerMessage):
-	""" Message 116 """
 	"""We want to join the Public Chat"""
 	def __init__(self, unknown = 0):
 		self.unknown = unknown
 	def makeNetworkMessage(self):
-		print "19-" + repr(self.packObject(self.unknown))
-		print "19+" + repr(self.packObject(NetworkIntType(self.unknown)))
 		return self.packObject(NetworkIntType(self.unknown))
 class LeavePublicRoom(ServerMessage):
-	""" Message 151 """
 	"""We want to leave the Public Chat"""
 	def __init__(self, unknown = 0):
 		self.unknown = unknown
 	def makeNetworkMessage(self):
-		print "18-" + repr(self.packObject(self.unknown))
-		print "18+" + repr(self.packObject(NetworkIntType(self.unknown)))
 		return self.packObject(NetworkIntType(self.unknown))
 class PublicRoomMessage(ServerMessage):
-	""" Message 152 """
 	"""The server sends us messages from random chatrooms"""
 	def parseNetworkMessage(self, message):
 		pos, self.room = self.getObject(message, types.StringType)
@@ -629,7 +621,6 @@ class JoinRoom(ServerMessage):
 		pos, statuslen = self.getObject(message, types.IntType, pos)
 		for i in range(statuslen):
 			pos, users[i][1] = self.getObject(message, types.IntType, pos)
-	#	pos, something = self.getObject(message, types.StringType, pos)
 		pos, statslen = self.getObject(message, types.IntType, pos)
 		for i in range(statslen):
 			pos, users[i][2] = self.getObject(message, types.IntType, pos, getsignedint=1)
@@ -637,7 +628,6 @@ class JoinRoom(ServerMessage):
 			pos, users[i][4] = self.getObject(message, types.IntType, pos)
 			pos, users[i][5] = self.getObject(message, types.IntType, pos)
 			pos, users[i][6] = self.getObject(message, types.IntType, pos)
-	#        pos, something = self.getObject(message, types.StringType, pos)
 		pos, slotslen = self.getObject(message, types.IntType, pos)
 		for i in range(slotslen):
 			pos, users[i][7] = self.getObject(message, types.IntType, pos)
@@ -826,7 +816,6 @@ class PrivateRoomOperatorRemoved(ServerMessage):
 		#pos, self.username = self.getObject(message, types.StringType, pos)
 		
 class LeaveRoom(ServerMessage):
-	""" Message 15 """
 	""" We send this when we want to leave a room."""
 	def __init__(self, room = None):
 		self.room = room
@@ -839,7 +828,6 @@ class LeaveRoom(ServerMessage):
 
 
 class UserJoinedRoom(ServerMessage):
-	""" Message 16 """
 	""" Server tells us someone has just joined the room."""
 	def parseNetworkMessage(self, message):
 		pos, self.room = self.getObject(message, types.StringType)
@@ -854,8 +842,7 @@ class UserJoinedRoom(ServerMessage):
 		self.userdata = UserData(i)
 
 class UserLeftRoom(ServerMessage):
-	""" Message 17 """
-	""" Well, the opposite."""
+	""" Server tells us someone has just left the room."""
 	def parseNetworkMessage(self, message):
 		pos, self.room = self.getObject(message, types.StringType)
 		pos, self.username = self.getObject(message, types.StringType, pos)
@@ -921,8 +908,6 @@ class ConnectToPeer(ServerMessage):
 		self.type = type
 	
 	def makeNetworkMessage(self):
-		#X print "17-" + repr(self.packObject(self.token)+self.packObject(self.user)+self.packObject(self.type))
-		#X print "17+" + repr(self.packObject(NetworkIntType(self.token))+self.packObject(self.user)+self.packObject(self.type))
 		return self.packObject(NetworkIntType(self.token))+self.packObject(self.user)+self.packObject(self.type)
 	
 	def parseNetworkMessage(self, message):
@@ -959,8 +944,6 @@ class MessageAcked(ServerMessage):
 		self.msgid = msgid
 	
 	def makeNetworkMessage(self):
-		#X print "16-" + repr(self.packObject(self.msgid))
-		#X print "16+" + repr(self.packObject(NetworkIntType(self.msgid)))
 		return self.packObject(NetworkIntType(self.msgid))
 
 class FileSearch(ServerMessage):
@@ -973,8 +956,6 @@ class FileSearch(ServerMessage):
 			self.searchterm = ' '.join([x for x in text.split() if x != '-'])
 	
 	def makeNetworkMessage(self):
-		#X print "15-" + repr(self.packObject(self.searchid)+self.packObject(self.searchterm))
-		#X print "15+" + repr(self.packObject(NetworkIntType(self.searchid))+self.packObject(self.searchterm))
 		return self.packObject(NetworkIntType(self.searchid))+self.packObject(self.searchterm)
 	
 	def parseNetworkMessage(self, message):
@@ -1011,8 +992,6 @@ class SendUploadSpeed(ServerMessage):
 		self.speed = speed
 	
 	def makeNetworkMessage(self):
-		#X print "13-" + repr(self.packObject(self.speed))
-		#X print "13+" + repr(self.packObject(NetworkIntType(self.speed)))
 		return self.packObject(NetworkIntType(self.speed))
     
 class SharedFoldersFiles(ServerMessage):
@@ -1023,8 +1002,6 @@ class SharedFoldersFiles(ServerMessage):
 		self.files = files
 	
 	def makeNetworkMessage(self):
-		#print "12-" + repr(self.packObject(self.folders)+self.packObject(self.files))
-		#print "12+" + repr(self.packObject(NetworkIntType(self.folders))+self.packObject(NetworkIntType(self.files)))
 		return self.packObject(NetworkIntType(self.folders))+self.packObject(NetworkIntType(self.files))
 
 class GetUserStats(ServerMessage):

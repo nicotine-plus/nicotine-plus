@@ -87,7 +87,6 @@ class Connection:
 		self.ibuf = ibuf
 		self.obuf = obuf
 		self.init = None
-	#	self.lastwritelength = 10*1024
 		self.lastreadlength = 100*1024
 
 class ServerConnection(Connection):
