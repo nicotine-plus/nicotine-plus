@@ -73,9 +73,10 @@ class PluginHandler(object):
 			log.add("It appears '%s' is not a directory, not loading plugins." % self.plugindir)
 
 	def __findplugin(self, pluginname):
-		for dir in self.plugindirs:
-			if os.path.exists(os.path.join(dir, pluginname)):
-				return os.path.join(dir, pluginname)
+		for directory in self.plugindirs:
+			fullpath = os.path.join(directory, pluginname)
+			if os.path.exists(fullpath):
+				return fullpath
 		return None
 
 	def load_plugin(self, pluginname, reload=False):
@@ -84,6 +85,7 @@ class PluginHandler(object):
 
 		path = self.__findplugin(pluginname)
 		if path is None:
+			log.add("Failed to load plugin '%s', could not find it." % (pluginname, ))
 			return False
 		sys.path.insert(0, path)
 		plugin = imp.load_source(pluginname, os.path.join(path,'__init__.py'))
@@ -131,9 +133,8 @@ class PluginHandler(object):
 		if pluginname in self.enabled_plugins:
 			return
 		try:
-			
 			plugin = self.load_plugin(pluginname)
-			if not plugin: raise Exception("Error loading plugin")
+			if not plugin: raise Exception("Error loading plugin '%s'" % pluginname)
 			plugin.enable(self)
 			self.enabled_plugins[pluginname] = plugin
 			log.add(_("Loaded plugin %s") % plugin.PLUGIN.__name__)
