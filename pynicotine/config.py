@@ -561,7 +561,7 @@ class Config:
 		_errors = []
 		for shelvefile in shelves:
 			try:
-				_opened_shelves.append(shelve.open(shelvefile, flag='n'))
+				_opened_shelves.append(shelve.open(shelvefile))
 			except:
 				_errors.append(shelvefile)
 				try:
@@ -883,23 +883,23 @@ class Config:
 			self.sections["transfers"]["sharedmtimes"].close()
 			self.sections["transfers"]["wordindex"].close()
 			self.sections["transfers"]["fileindex"].close()
-			self.sections["transfers"]["sharedfiles"] = shelve.open(self.filename+".files.db", flag='n')
-			self.sections["transfers"]["sharedfilesstreams"] = shelve.open(self.filename+".streams.db", flag='n')
-			self.sections["transfers"]["sharedmtimes"] = shelve.open(self.filename+".mtimes.db", flag='n')
-			self.sections["transfers"]["wordindex"] = shelve.open(self.filename+".wordindex.db", flag='n')
-			self.sections["transfers"]["fileindex"] = shelve.open(self.filename+".fileindex.db", flag='n')
-			self.sections["transfers"]["lowercase"] = shelve.open(self.filename+".lowercase_mapping.db", flag='n')
+			self.sections["transfers"]["sharedfiles"] = shelve.open(self.filename+".files.db")
+			self.sections["transfers"]["sharedfilesstreams"] = shelve.open(self.filename+".streams.db")
+			self.sections["transfers"]["sharedmtimes"] = shelve.open(self.filename+".mtimes.db")
+			self.sections["transfers"]["wordindex"] = shelve.open(self.filename+".wordindex.db")
+			self.sections["transfers"]["fileindex"] = shelve.open(self.filename+".fileindex.db")
+			self.sections["transfers"]["lowercase"] = shelve.open(self.filename+".lowercase_mapping.db")
 			self.sections["transfers"]["bsharedfiles"].close()
 			self.sections["transfers"]["bsharedfilesstreams"].close()
 			self.sections["transfers"]["bsharedmtimes"].close()
 			self.sections["transfers"]["bwordindex"].close()
 			self.sections["transfers"]["bfileindex"].close()
-			self.sections["transfers"]["bsharedfiles"] = shelve.open(self.filename+".buddyfiles.db", flag='n')
-			self.sections["transfers"]["bsharedfilesstreams"] = shelve.open(self.filename+".buddystreams.db", flag='n')
-			self.sections["transfers"]["bsharedmtimes"] = shelve.open(self.filename+".buddymtimes.db", flag='n')
-			self.sections["transfers"]["bwordindex"] = shelve.open(self.filename+".buddywordindex.db", flag='n')
-			self.sections["transfers"]["bfileindex"] = shelve.open(self.filename+".buddyfileindex.db", flag='n')
-			self.sections["transfers"]["blowercase"] = shelve.open(self.filename+".buddylowercase_mapping.db", flag='n')
+			self.sections["transfers"]["bsharedfiles"] = shelve.open(self.filename+".buddyfiles.db")
+			self.sections["transfers"]["bsharedfilesstreams"] = shelve.open(self.filename+".buddystreams.db")
+			self.sections["transfers"]["bsharedmtimes"] = shelve.open(self.filename+".buddymtimes.db")
+			self.sections["transfers"]["bwordindex"] = shelve.open(self.filename+".buddywordindex.db")
+			self.sections["transfers"]["bfileindex"] = shelve.open(self.filename+".buddyfileindex.db")
+			self.sections["transfers"]["blowercase"] = shelve.open(self.filename+".buddylowercase_mapping.db")
 				
 		self.config_lock.release()
 
