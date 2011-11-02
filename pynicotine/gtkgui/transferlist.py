@@ -278,7 +278,7 @@ class TransferList:
 		now = time()
 		# I had a logical explanation about why it has to be 3*delay, but I
 		# forgot. Something to do with the timeout being 2*delay
-		if now - self.lastupdate < 3*self.MINIMUM_GUI_DELAY:
+		if (now - self.lastupdate) < (3 * self.MINIMUM_GUI_DELAY):
 			# The list has been updated recently,
 			# trying again later.
 			#print "sleeping..."
@@ -297,6 +297,8 @@ class TransferList:
 			print("WARNING: Could not find transfer %s." % oldtransfer)
 	def update(self, transfer = None, forced = False):
 		now = time()
+		if forced:
+			self.lastupdate = time() # ...we're working...
 		if transfer is not None:
 			self.update_specific(transfer)
 		elif self.list is not None:
@@ -314,15 +316,15 @@ class TransferList:
 				self.update_specific(i)
 		# The rest is just summarizing so it's not too important.
 		# It's fairly CPU intensive though, so we only do it if we haven't updated it recently
-		if not forced and now - self.lastupdate < self.MINIMUM_GUI_DELAY:
+		if not forced and (now - self.lastupdate) < self.MINIMUM_GUI_DELAY:
 			#print "recently updated, not doing it again"
 			if not self.finalupdatetimerid:
 				self.finalupdatetimerid = True # I'm not sure if gobject returns fast enough
 				#print "there's no timeout active, adding one"
 				self.finalupdatetimerid = gobject.timeout_add(self.MINIMUM_GUI_DELAY_SLEEP, self.finalupdate, self.update)
 			return
+		self.lastupdate = time() # ...we're working...
 		# Remove empty parent rows
-		self.lastupdate = now
 		for user in self.users.keys()[:]:
 			if not self.transfersmodel.iter_has_child(self.users[user]):
 				self.transfersmodel.remove(self.users[user])
@@ -394,7 +396,9 @@ class TransferList:
 						8, left,
 						12, ispeed,
 						14, True)
+		self.lastupdate = time() # ...we're working...
 		self.frame.UpdateBandwidth()
+		self.lastupdate = time() # ...and we're done
 	def update_specific(self, transfer = None):
 		if not transfer in self.list:
 			return
