@@ -301,7 +301,7 @@ class TransferList:
 		if (current_page == my_page):
 			self._update(transfer, forced)
 		self.frame.UpdateBandwidth()
-	def _update(self, transfer = None, forced = False):
+	def _update(self, transfer = None, forced = True):
 		now = time()
 		if forced:
 			self.lastupdate = time() # ...we're working...
