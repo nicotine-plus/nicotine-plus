@@ -1839,13 +1839,18 @@ class NicotineFrame:
 			if n.get_current_page() != -1:
 				n.dismiss_icon(n, None, n.get_current_page())
 				
-		if page_nr == self.MainNotebook.page_num(self.hpaned1) and self.chatrooms:
-			p = n.get_current_page()
-			self.chatrooms.roomsctrl.OnSwitchPage(n, None, p, 1)
+		if page_nr == self.MainNotebook.page_num(self.hpaned1):
+			if self.chatrooms:
+				p = n.get_current_page()
+				self.chatrooms.roomsctrl.OnSwitchPage(n, None, p, 1)
 		elif page_nr == self.MainNotebook.page_num(self.privatevbox):
 			p = n.get_current_page()
 			if "privatechats" in self.__dict__:
 				self.privatechats.OnSwitchPage(n, None, p, 1)
+		elif page_nr == self.MainNotebook.page_num(self.vboxuploads):
+			self.uploads._update()
+		elif page_nr == self.MainNotebook.page_num(self.vboxdownloads):
+			self.downloads._update()
 
 	def UpdateBandwidth(self):
 		def _calc(l):

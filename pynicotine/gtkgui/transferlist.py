@@ -296,6 +296,12 @@ class TransferList:
 		else:
 			print("WARNING: Could not find transfer %s." % oldtransfer)
 	def update(self, transfer = None, forced = False):
+		current_page = self.frame.MainNotebook.get_current_page()
+		my_page = self.frame.MainNotebook.page_num(self.myvbox)
+		if (current_page == my_page):
+			self._update(transfer, forced)
+		self.frame.UpdateBandwidth()
+	def _update(self, transfer = None, forced = False):
 		now = time()
 		if forced:
 			self.lastupdate = time() # ...we're working...
@@ -396,8 +402,6 @@ class TransferList:
 						8, left,
 						12, ispeed,
 						14, True)
-		self.lastupdate = time() # ...we're working...
-		self.frame.UpdateBandwidth()
 		self.lastupdate = time() # ...and we're done
 	def update_specific(self, transfer = None):
 		if not transfer in self.list:

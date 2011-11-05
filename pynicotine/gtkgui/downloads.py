@@ -29,6 +29,7 @@ from entrydialog import *
 class Downloads(TransferList):
 	def __init__(self, frame):
 		TransferList.__init__(self, frame, frame.DownloadList)
+		self.myvbox = self.frame.vboxdownloads
 		self.frame.DownloadList.set_property("rules-hint", True)
 		self.accel_group = gtk.AccelGroup()
 		
