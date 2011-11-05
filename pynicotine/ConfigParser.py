@@ -195,7 +195,7 @@ class ConfigParser:
 		Raise DuplicateSectionError if a section by the specified name
 		already exists.
 		"""
-		if section in self.__sections.keys():
+		if section in self.__sections:
 			raise DuplicateSectionError(section)
 		self.__sections[section] = {}
 
@@ -204,7 +204,7 @@ class ConfigParser:
 
 		The DEFAULT section is not acknowledged.
 		"""
-		return section in self.__sections.keys()
+		return (section in self.__sections)
 
 	def options(self, section):
 		"""Return a list of option names for the given section name."""
@@ -213,7 +213,7 @@ class ConfigParser:
 		except KeyError:
 			raise NoSectionError(section)
 		opts.update(self.__defaults)
-		if '__name__' in opts.keys():
+		if '__name__' in opts:
 			del opts['__name__']
 		return opts.keys()
 
@@ -325,13 +325,13 @@ class ConfigParser:
 		"""Check for the existence of a given option in a given section."""
 		if not section or section == DEFAULTSECT:
 			option = self.optionxform(option)
-			return option in self.__defaults.keys()
-		elif section not in self.__sections.keys():
-			return 0
+			return (option in self.__defaults)
+		elif section not in self.__sections:
+			return False
 		else:
 			option = self.optionxform(option)
 			return (option in self.__sections[section]
-					or option in self.__defaults.keys())
+					or option in self.__defaults)
 
 	def set(self, section, option, value):
 		"""Set an option."""
@@ -351,9 +351,9 @@ class ConfigParser:
 			for (key, value) in self.__defaults.items():
 				fp.write("%s = %s\n" % (key, str(value).replace('\n', '\n\t')))
 			fp.write("\n")
-		for section in self.__sections.keys():
+		for (section, data) in self.__sections.iteritems():
 			fp.write("[%s]\n" % section)
-			keys = self.__sections[section].keys()
+			keys = data.keys()
 			keys.sort()
 			for key in keys:
 				value = self.__sections[section][key]
@@ -379,7 +379,7 @@ class ConfigParser:
 
 	def remove_section(self, section):
 		"""Remove a file section."""
-		existed = section in self.__sections.keys()
+		existed = (section in self.__sections)
 		if existed:
 			del self.__sections[section]
 		return existed
@@ -437,7 +437,7 @@ class ConfigParser:
 				mo = self.SECTCRE.match(line)
 				if mo:
 					sectname = mo.group('header')
-					if sectname in self.__sections.keys():
+					if sectname in self.__sections:
 						cursect = self.__sections[sectname]
 					elif sectname == DEFAULTSECT:
 						cursect = self.__defaults

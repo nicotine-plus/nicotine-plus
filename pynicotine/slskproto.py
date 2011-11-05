@@ -426,14 +426,13 @@ class SlskProtoThread(threading.Thread):
 				# Possibly opened too many sockets
 				print time.strftime("%H:%M:%S"), "select ValueError:",  error
 				continue
-				#print len(conns.keys()), len(connsinprogress.keys())
 			# Write Output
-			for i in conns.keys():
-				if i in output:
+			for (key, value) in conns.iteritems():
+				if key in output:
 					try:
-						self.writeData(server_socket, conns, i)
+						self.writeData(server_socket, conns, key)
 					except socket.error, err:
-						self._ui_callback([ConnectError(conns[i], err)])
+						self._ui_callback([ConnectError(value, err)])
 			# Listen / Peer Port
 			if p in input[:]:
 				try:
@@ -538,7 +537,7 @@ class SlskProtoThread(threading.Thread):
 						#print "Closed_run", conns[i].addr
 						del conns[connection]
 					#  Was 30 seconds
-			if server_socket in conns.keys():
+			if server_socket in conns:
 				if curtime - conns[server_socket].lastping > 120:
 					conns[server_socket].lastping = curtime
 					queue.put(ServerPing())
@@ -554,11 +553,11 @@ class SlskProtoThread(threading.Thread):
 		self._stopped = 1
 		
 	def socketStillActive(self, conn):
-		for i in self._conns.keys():
-			if i == conn:
-				if len(self._conns[conn].obuf) > 0 or len(self._conns[conn].ibuf) > 0:
-					return True
-		return False
+		try:
+			connection = self._conns[conn]
+		except KeyError:
+			return False
+		return (len(connection.obuf) > 0 or len(connection.ibuf) > 0)
 		
 	def ipBlocked(self, address):
 		if address is None:

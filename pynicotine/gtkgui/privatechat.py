@@ -219,7 +219,7 @@ class PrivateChats(IconNotebook):
 		if self.frame.np.config.sections["privatechat"]["store"]:
 			self.frame.np.config.sections["privatechat"]["users"].sort()
 			for user in self.frame.np.config.sections["privatechat"]["users"]:
-				if user not in self.users.keys():
+				if user not in self.users:
 					self.SendMessage(user, None, 1)
 					
 	def ConnClose(self):

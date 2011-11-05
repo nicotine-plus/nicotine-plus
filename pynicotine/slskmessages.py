@@ -1640,11 +1640,9 @@ class SharedFileList(PeerMessage):
 		if not rebuild and self.built is not None:
 			return self.built
 		msg = ""
-		#X print "3-" + repr(self.packObject(len(self.list.keys())))
-		#X print "3+" + repr(self.packObject(NetworkIntType(len(self.list.keys()))))
 		msg = msg + self.packObject(len(self.list.keys()))
-		for i in self.list.keys():
-			msg = msg + self.packObject(i.replace(os.sep,"\\")) + self.list[i]
+		for (key, value) in self.list.iteritems():
+			msg = msg + self.packObject(key.replace(os.sep,"\\")) + value
 		if not nozlib:
 			self.built = zlib.compress(msg)
 		else:

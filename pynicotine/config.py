@@ -46,8 +46,8 @@ class Config:
 	readConfig() - reads configuration information from ~/.nicotine/config
 	setConfig(config_info_dict) - sets configuration information
 	writeConfiguration - writes configuration information to ~/.nicotine/config
-	writeTransfers - writes download queue to ~/.nicotine/config.transfers.pickle
-	writeConfig - calls writeConfiguration followed by writeTransfers
+	writeDownloadQueue - writes download queue to ~/.nicotine/config.transfers.pickle
+	writeConfig - calls writeConfiguration followed by writeDownloadQueue
 	
 	The actual configuration information is stored as a two-level dictionary.
 	First-level keys are config sections, second-level keys are config 
@@ -354,7 +354,7 @@ class Config:
 		self.defaults = {}
 		for key, value in self.sections.items():
 			if type(value) is dict:
-				if key not in self.defaults.keys():
+				if key not in self.defaults:
 					self.defaults[key] = {}
 				
 				for key2, value2 in value.items():
@@ -438,11 +438,11 @@ class Config:
 		for i in self.parser.sections():
 			for j in self.parser.options(i):
 				val = self.parser.get(i, j, raw = 1)
-				if i not in self.sections.keys():
+				if i not in self.sections:
 					log.addwarning("Unknown config section '%s'" % (i,))
-				elif j not in self.sections[i].keys() and not (j == "filter" or i in ('plugins',)):
+				elif j not in self.sections[i] and not (j == "filter" or i in ('plugins',)):
 					log.addwarning("Unknown config option '%s' in section '%s'" % (j, i))
-				elif j in unknown1 or (i in unknown2.keys() and j not in unknown2[i]):
+				elif j in unknown1 or (i in unknown2 and j not in unknown2[i]):
 					if val is not None and val != "None":
 						self.sections[i][j] = val
 					else:
@@ -698,8 +698,8 @@ class Config:
 	
 	def writeConfig(self):
 		self.writeConfiguration()
-		self.writeTransfers()
-	def writeTransfers(self):
+		self.writeDownloadQueue()
+	def writeDownloadQueue(self):
 		self.config_lock.acquire()
 		realfile = self.filename + '.transfers.pickle'
 		tmpfile = realfile + '.tmp'
@@ -932,8 +932,8 @@ class Config:
 				return _("No such alias (%s)") % rest + "\n"
 		else:
 			m = "\n" + _("Aliases:") + "\n"
-			for i in self.aliases.keys():
-				m = m + "%s: %s\n" % (i, self.aliases[i])
+			for (key, value) in self.aliases.iteritems():
+				m = m + "%s: %s\n" % (key, value)
 			return m+"\n"
 
 	def Unalias(self, rest):

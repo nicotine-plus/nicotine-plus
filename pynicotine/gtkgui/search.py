@@ -711,8 +711,8 @@ class Search:
 	def AddResult(self, msg, user, country):
 		if user in self.users:
 			return
-		if user not in self.Searches.users.keys():
-			if user in self.frame.np.users.keys() and self.frame.np.users[user].status is not None:
+		if user not in self.Searches.users:
+			if user in self.frame.np.users and self.frame.np.users[user].status is not None:
 				self.Searches.users[user] = self.frame.np.users[user].status
 			else:
 				self.Searches.users[user] = 0
@@ -798,7 +798,7 @@ class Search:
 		for r in results:
 
 			user, filename, size, speed, queue, immediatedl, h_bitrate, length, directory, bitrate, fullpath,  country, status = r
-			if user in self.Searches.users.keys() and status != self.Searches.users[user]:
+			if user in self.Searches.users and status != self.Searches.users[user]:
 				status = self.Searches.users[user]
 			if status is None:
 				status = 0
@@ -997,7 +997,7 @@ class Search:
 		for row in self.all_data:
 			if self.check_filter(row):
 				ix, user, filename,  h_size, h_speed, h_queue, immediatedl, h_bitrate, length, directory,  bitrate, fullpath, country, size, speed, queue, status = row
-				if user in self.Searches.users.keys() and status != self.Searches.users[user]:
+				if user in self.Searches.users and status != self.Searches.users[user]:
 					status = self.Searches.users[user]
 				#user, filename, size, speed, queue, immediatedl, h_bitrate, length, directory, bitrate, fullpath,  country, status
 				if  self.usersGroup.get_active() and user not in self.usersiters:

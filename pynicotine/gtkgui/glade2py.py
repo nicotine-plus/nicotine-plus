@@ -148,8 +148,7 @@ def write_widget_attrs(widget):
 			if v:
 				print indent + "%s" % v
 
-	for signal in widget.signals.keys():
-		callback = widget.signals[signal]
+	for (signal, callback) in widget.signals.iteritems():
 		print indent + "%s.connect(\"%s\", self.%s)" % (widget.id, signal, callback)
 		if not callback in signals:
 			signals.append(callback)
@@ -182,8 +181,7 @@ def write_widget_spinbutton(widget, my_class, *args):
 				v = i[1](widget.id, widget.attrs[i[0]])
 				if v:
 					print indent + "%s" % v
-	for signal in widget.signals.keys():
-		callback = widget.signals[signal]
+	for (signal, callback) in widget.signals.iteritems():
 		print indent + "%s.connect(\"%s\", self.%s)" % (widget.id, signal, callback)
 		if not callback in signals:
 			signals.append(callback)
@@ -225,7 +223,7 @@ def write_widget_generic(widget, my_class, *args):
 				arg= "0"
 		elif arg[0] == "$":
 			
-			if not arg[1:] in widget.attrs.keys():
+			if not arg[1:] in widget.attrs:
 				continue
 			s = widget.attrs[arg[1:]].replace("\"", "\\\"").replace("\n", "\\n")
 			
@@ -338,8 +336,7 @@ def write_widget_container(widget, my_class, pack, *args):
 					yopts = "gtk.EXPAND"
 			print indent + "%s.attach(%s, %s, %s, %s, %s, %s, %s, %s, %s)" % (widget.id, w.id, la, ra, ta, ba, xopts, yopts, "0", "0")
 		print
-	for wid in widget.internalchildren.keys():
-		w = widget.internalchildren[wid]
+	for (wid, w) in widget.internalchildren.iteritems():
 		if my_class == "ComboBoxEntry":
 			wid = "child"
 		print indent + "%s = %s.%s" % (w.id, widget.id, wid)
@@ -624,7 +621,7 @@ def process_signal(child):
 
 def process_accelerator(child):
 	k = str(child.attributes["key"].nodeValue)
-	if "modifiers" in child.attributes.keys():
+	if "modifiers" in child.attributes:
 		m = str(child.attributes["modifiers"].nodeValue).replace("GDK_", "gtk.gdk.")
 	else:
 		m = ""

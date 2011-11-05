@@ -1189,14 +1189,16 @@ class Transfers:
 	# Find failed downloads and attempt to queue them
 	def checkDownloadQueue(self):
 		if self.eventprocessor.config.sections["transfers"]["autoretry_downloads"]:
+			changed = False
 			statuslist = self.FAILED_TRANSFERS + ["Getting address", "Waiting for peer to connect", "Initializing transfer"]
 			for transfer in self.downloads:
 				if transfer.status in statuslist:
 					self.AbortTransfer(transfer)
 					transfer.req = None
 					self.getFile(transfer.user, transfer.filename, transfer.path, transfer)
-			
-			self.SaveDownloads()
+					changed = True
+			if changed:
+				self.SaveDownloads()
 					
 	# Find next file to upload
 	def checkUploadQueue(self):
@@ -1431,7 +1433,6 @@ class Transfers:
 	def ConnClose(self, conn, addr):
 		""" The remote user has closed the connection either because
 		he logged off, or because there's a network problem."""
-		self.SaveDownloads()
 		for i in self.downloads + self.uploads:
 			if i.requestconn == conn and i.status == 'Requesting file':
 				i.requestconn = None
@@ -1657,7 +1658,7 @@ class Transfers:
 	def SaveDownloads(self):
 		""" Save list of files to be downloaded """
 		self.eventprocessor.config.sections["transfers"]["downloads"] = self.GetDownloads()
-		self.eventprocessor.config.writeTransfers()
+		self.eventprocessor.config.writeDownloadQueue()
 	
 	def decode(self, string):
 		try:

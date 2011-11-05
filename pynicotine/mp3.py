@@ -482,32 +482,32 @@ class MP3Info:
         if self.id3 is None:
             return
         
-        for tag in self.id3.tags.keys():
+        for (tag, value) in self.id3.tags.iteritems():
             if tag == 'TT2' or tag == 'TIT2':
-                self.title = self.id3.tags[tag]
+                self.title = value
             elif tag == 'TP1' or tag == 'TPE1':
-                self.artist = self.id3.tags[tag]
+                self.artist = value
             elif tag == 'TRK' or tag == 'TRCK':
-                self.track = self.id3.tags[tag]
+                self.track = value
             elif tag == 'TYE' or tag == 'TYER':
-                self.year = self.id3.tags[tag]
+                self.year = value
             elif tag == 'COM' or tag == 'COMM':
-                self.comment = self.id3.tags[tag]
+                self.comment = value
             elif tag == 'TCM':
-                self.composer = self.id3.tags[tag]
+                self.composer = value
             elif tag == 'TAL' or tag == 'TALB':
-                self.album = self.id3.tags[tag]
+                self.album = value
             elif tag == 'TPA':
-                self.disc = self.id3.tags[tag]
+                self.disc = value
             elif tag == 'TCO' or tag == 'TCON':
-                self.genre = self.id3.tags[tag]
+                self.genre = value
                 if self.genre and self.genre[0] == '(' and self.genre[-1] == ')':
                     try:
                         self.genre = _genres[int(self.genre[1:-1])]
                     except IndexError:
                         self.genre = ""
             elif tag == 'TEN' or tag == 'TENC':
-                self.encoder = self.id3.tags[tag]
+                self.encoder = value
 
 def detect(path):
 	try:

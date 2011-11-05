@@ -89,9 +89,7 @@ class Shares:
 		else:
 			shared_db = "sharedfiles"
 		sharedfolders = len(conf["transfers"][shared_db])
-		sharedfiles = 0
-		for i in conf["transfers"][shared_db].keys():
-			sharedfiles += len(conf["transfers"][shared_db][i])
+		sharedfiles = sum([len(x) for x in conf["transfers"][shared_db].values()])
 		self.queue.put(slskmessages.SharedFoldersFiles(sharedfolders, sharedfiles))
 
 	def RescanShares(self, msg, rebuild=False):

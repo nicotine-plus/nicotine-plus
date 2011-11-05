@@ -932,8 +932,8 @@ class PopupMenu(gtk.Menu):
 		return self
 				
 	def clear(self):
-		for widget in self.handlers.keys():
-			widget.disconnect(self.handlers[widget])
+		for (w, widget) in self.handlers.iteritems():
+			w.disconnect(widget)
 			
 		self.handlers.clear()
 		for widget in self.get_children():

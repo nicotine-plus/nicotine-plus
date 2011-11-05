@@ -237,7 +237,7 @@ class PluginHandler(object):
 					#except KeyError:
 						#pass
 			for key in customsettings:
-				if key in plugin.settings.keys():
+				if key in plugin.settings:
 					plugin.settings[key] = customsettings[key]
 					
 				else:

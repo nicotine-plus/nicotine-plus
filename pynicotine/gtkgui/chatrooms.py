@@ -232,7 +232,7 @@ class RoomsControl:
 			if d:
 				path, column, x, y = d
 				room = self.roomsmodel.get_value(self.roomsmodel.get_iter(path), 0)
-				if not room in self.joinedrooms.keys():
+				if not room in self.joinedrooms:
 					self.frame.np.queue.put(slskmessages.JoinRoom(room))
 			return True
 		elif event.button == 3:
@@ -247,7 +247,7 @@ class RoomsControl:
 		if d:
 			path, column, x, y = d
 			room = self.roomsmodel.get_value(self.roomsmodel.get_iter(path), 0)
-			if room in self.joinedrooms.keys():
+			if room in self.joinedrooms:
 				act = (False, True)
 			else:
 				act = (True, False)
@@ -337,7 +337,7 @@ class RoomsControl:
 		
 		if self.autojoin:
 			self.autojoin = 0
-			if self.joinedrooms.keys():
+			if self.joinedrooms:
 				list = self.joinedrooms.keys()
 			else:
 				list = self.frame.np.config.sections["server"]["autojoin"]
@@ -418,7 +418,7 @@ class RoomsControl:
 		
 	def PrivateRoomUsers(self, msg):
 		rooms = self.PrivateRooms
-		if msg.room not in rooms.keys():
+		if msg.room not in rooms:
 			self.CreatePrivateRoom(msg.room)
 			rooms[msg.room]["users"] = msg.users
 			rooms[msg.room]["joined"] = msg.numusers
@@ -432,7 +432,7 @@ class RoomsControl:
 		
 	def PrivateRoomOwned(self, msg):
 		rooms = self.PrivateRooms
-		if msg.room not in rooms.keys():
+		if msg.room not in rooms:
 			self.CreatePrivateRoom(msg.room)
 			rooms[msg.room]["operators"] = msg.operators
 		else:
@@ -443,19 +443,19 @@ class RoomsControl:
 		self.SetPrivateRooms()
 	def PrivateRoomAddUser(self, msg):
 		rooms = self.PrivateRooms
-		if msg.room in rooms.keys():
+		if msg.room in rooms:
 			if msg.user not in rooms[msg.room]["users"]:
 				rooms[msg.room]["users"].append(msg.user)
 		self.SetPrivateRooms()
 	def PrivateRoomRemoveUser(self, msg):
 		rooms = self.PrivateRooms
-		if msg.room in rooms.keys():
+		if msg.room in rooms:
 			if msg.user in rooms[msg.room]["users"]:
 				rooms[msg.room]["users"].remove(msg.user)
 		self.SetPrivateRooms()
 	def PrivateRoomOperatorAdded(self, msg):
 		rooms = self.PrivateRooms
-		if msg.room in rooms.keys():
+		if msg.room in rooms:
 			if self.frame.np.config.sections["server"]["login"] not in rooms[msg.room]["operators"]:
 				rooms[msg.room]["operators"].append(self.frame.np.config.sections["server"]["login"])
 		
@@ -463,7 +463,7 @@ class RoomsControl:
 
 	def PrivateRoomOperatorRemoved(self, msg):
 		rooms = self.PrivateRooms
-		if msg.room in rooms.keys():
+		if msg.room in rooms:
 			if self.frame.np.config.sections["server"]["login"] in rooms[msg.room]["operators"]:
 				rooms[msg.room]["operators"].remove(self.frame.np.config.sections["server"]["login"])
 
@@ -471,14 +471,14 @@ class RoomsControl:
 
 	def PrivateRoomAddOperator(self, msg):
 		rooms = self.PrivateRooms
-		if msg.room in rooms.keys():
+		if msg.room in rooms:
 			if msg.user not in rooms[msg.room]["operators"]:
 				rooms[msg.room]["operators"].append(msg.user)
 		self.SetPrivateRooms()
 
 	def PrivateRoomRemoveOperator(self, msg):
 		rooms = self.PrivateRooms
-		if msg.room in rooms.keys():
+		if msg.room in rooms:
 			if msg.user in rooms[msg.room]["operators"]:
 				rooms[msg.room]["operators"].remove(msg.user)
 
@@ -507,7 +507,7 @@ class RoomsControl:
 		self.Menu_PrivateRoom_Create.set_sensitive(enabled)
 		
 	def PrivateRoomDisown(self, msg):
-		if msg.room in self.PrivateRooms.keys():
+		if msg.room in self.PrivateRooms:
 			if self.PrivateRooms[msg.room]["owner"] == self.frame.np.config.sections["server"]["login"]:
 				self.PrivateRooms[msg.room]["owner"] = None
 	
@@ -575,7 +575,7 @@ class RoomsControl:
 			
 	def saveColumns(self):
 		for room in self.frame.np.config.sections["columns"]["chatrooms"].keys()[:]:
-			if room not in self.joinedrooms.keys():
+			if room not in self.joinedrooms:
 				del self.frame.np.config.sections["columns"]["chatrooms"][room]
 		for room in self.joinedrooms.values():
 			room.saveColumns()
@@ -804,20 +804,19 @@ class ChatRoom:
 
 		self.usersmodel = gtk.ListStore(gtk.gdk.Pixbuf, gtk.gdk.Pixbuf, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_INT, gobject.TYPE_INT, gobject.TYPE_INT, gobject.TYPE_STRING)
 
-		for user in users.keys():
-			img = self.frame.GetStatusImage(users[user].status)
-			flag = users[user].country
+		for (username, user) in users.iteritems():
+			img = self.frame.GetStatusImage(user.status)
+			flag = user.country
 			if flag is not None:
 				flag = "flag_"+flag
-				self.frame.flag_users[user] = flag
+				self.frame.flag_users[username] = flag
 			else:
-				flag = self.frame.GetUserFlag(user)
-			#hspeed = Humanize(users[user].avgspeed)
-			hspeed = HumanSpeed(users[user].avgspeed)
-			hfiles = Humanize(users[user].files)
-			iter = self.usersmodel.append([img, self.frame.GetFlagImage(flag), user, hspeed, hfiles, users[user].status, users[user].avgspeed, users[user].files, flag])
-			self.users[user] = iter
-			self.roomsctrl.GetUserAddress(user)
+				flag = self.frame.GetUserFlag(username)
+			hspeed = HumanSpeed(user.avgspeed)
+			hfiles = Humanize(user.files)
+			iter = self.usersmodel.append([img, self.frame.GetFlagImage(flag), username, hspeed, hfiles, user.status, user.avgspeed, user.files, flag])
+			self.users[username] = iter
+			self.roomsctrl.GetUserAddress(username)
 		self.usersmodel.set_sort_column_id(2, gtk.SORT_ASCENDING)
 		
 		self.UpdateColours()
@@ -1499,7 +1498,7 @@ class ChatRoom:
 			action = _("%s has returned")
 		if user not in self.frame.np.config.sections["server"]["ignorelist"] and not self.frame.UserIpIsIgnored(user):
 			AppendLine(self.RoomLog, action % user, self.tag_log)
-		if user in self.tag_users.keys():
+		if user in self.tag_users:
 			color = self.getUserStatusColor(status)
 			self.changecolour(self.tag_users[user], color)
 		self.usersmodel.set(self.users[user], 0, img, 5, status)
@@ -1699,21 +1698,21 @@ class ChatRoom:
 		# Update user list with an inexpensive sorting function
 		self.usersmodel.set_default_sort_func(lambda *args: -1)
 		self.usersmodel.set_sort_column_id(-1, gtk.SORT_ASCENDING)
-		for user in users.keys():
-			if user in self.users:
-				self.usersmodel.remove(self.users[user])
-			img = self.frame.GetStatusImage(users[user].status)
-			flag = users[user].country
+		for (username, user) in users.keys():
+			if username in self.users:
+				self.usersmodel.remove(self.users[username])
+			img = self.frame.GetStatusImage(user.status)
+			flag = user.country
 			if flag is not None:
 				flag = "flag_"+flag
-				self.frame.flag_users[user] = flag
+				self.frame.flag_users[username] = flag
 			else:
-				flag = self.frame.GetUserFlag(user)
-			hspeed = HumanSpeed(users[user].avgspeed)
-			hfiles = Humanize(users[user].files)
-			iter = self.usersmodel.append([img, self.frame.GetFlagImage(flag), user, hspeed, hfiles, users[user].status, users[user].avgspeed, users[user].files, flag])
-			self.users[user] = iter
-			self.roomsctrl.GetUserAddress(user)
+				flag = self.frame.GetUserFlag(username)
+			hspeed = HumanSpeed(user.avgspeed)
+			hfiles = Humanize(user.files)
+			myiter = self.usersmodel.append([img, self.frame.GetFlagImage(flag), username, hspeed, hfiles, user.status, user.avgspeed, user.files, flag])
+			self.users[username] = myiter
+			self.roomsctrl.GetUserAddress(username)
 		self.UserList.set_sensitive(True)
 		# Reinitialize sorting after loop is complet
 		self.usersmodel.set_sort_column_id(2, gtk.SORT_ASCENDING)

@@ -306,7 +306,7 @@ class DownloadsFrame(buildFrame):
 		if type(response) is list:
 			filter = response[0]
 			escaped = response[1]
-			if filter in self.filtersiters.keys():
+			if filter in self.filtersiters:
 				self.filterlist.set(self.filtersiters[filter], 0, filter, 1, escaped)
 			else:
 				self.filtersiters[filter] = self.filterlist.append([filter, escaped])
@@ -333,7 +333,7 @@ class DownloadsFrame(buildFrame):
 			default_text=dfilter, option=True, optionvalue=escapedvalue, optionmessage="Escape this filter?", droplist=self.filtersiters.keys())
 			if type(response) is list:
 				filter, escaped = response
-				if filter in self.filtersiters.keys():
+				if filter in self.filtersiters:
 					self.filterlist.set(self.filtersiters[filter], 0, filter, 1, escaped)
 				else:
 					self.filtersiters[filter] = self.filterlist.append([filter, escaped])
@@ -1441,7 +1441,7 @@ class ColoursFrame(buildFrame):
 			colourtext = "#%02X%02X%02X" % (colour.red / 256, colour.green / 256, colour.blue / 256)
 			entry.set_text(colourtext)
 			for section in self.options.keys():
-				if section not in self.colorsd.keys():
+				if section not in self.colorsd:
 					continue
 				for key, value in self.options[section].items():
 					if key not in self.colorsd[section]:
@@ -2537,7 +2537,7 @@ class PluginFrame(buildFrame):
 				info = self.frame.pluginhandler.get_plugin_info(plugin)
 			except IOError:
 				continue
-			enabled = plugin in self.frame.pluginhandler.enabled_plugins.keys()
+			enabled = (plugin in self.frame.pluginhandler.enabled_plugins)
 			self.pluginsiters[filter] = self.pluginlist.append([info['Name'], enabled, plugin])
 		#else:
 			#self.p.Hilight(self.PluginTreeView)
@@ -2707,7 +2707,7 @@ class SettingsWindow:
 		
 	def Dehilight(self, widget, *args):
 		self.SetTextBG(widget, "", "")
-		if widget not in self.handler_ids.keys():
+		if widget not in self.handler_ids:
 			return
 		for handler_id in self.handler_ids[widget][:]:
 			if type(widget) is gtk.TreeView:
@@ -2879,7 +2879,7 @@ class SettingsWindow:
 
 	def InvalidSettings(self, domain, key):
 		for name, page in self.pages.items():
-			if domain in page.options.keys():
+			if domain in page.options:
 				if key in page.options[domain]:
 					self.SwitchToPage(name)
 					break

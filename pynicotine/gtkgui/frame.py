@@ -1355,8 +1355,8 @@ class NicotineFrame:
 
 	def postTransferMsgs(self,msgs,curtime):
 		trmsgs = []
-		for i in self.transfermsgs.keys():
-			trmsgs.append(self.transfermsgs[i])
+		for (key, value) in self.transfermsgs.iteritems():
+			trmsgs.append(value)
 		msgs = trmsgs+msgs
 		self.transfermsgs = {}
 		self.transfermsgspostedtime = curtime
@@ -1930,7 +1930,7 @@ class NicotineFrame:
 			self.settingswindow.pages["Ignore List"].SetSettings(self.np.config.sections)
 
 	def OnIgnoreIP(self, user):
-		if user not in self.np.users.keys() or type(self.np.users[user].addr) is not tuple:
+		if user not in self.np.users or type(self.np.users[user].addr) is not tuple:
 			if user not in self.np.ipignore_requested:
 				self.np.ipignore_requested[user] = 0
 			self.np.queue.put(slskmessages.GetPeerAddress(user))
@@ -1953,7 +1953,7 @@ class NicotineFrame:
 				self.settingswindow.pages["Ignore List"].SetSettings(self.np.config.sections)
 				return True
 			
-		if user not in self.np.users.keys():
+		if user not in self.np.users:
 			if user not in self.np.ipignore_requested:
 				self.np.ipignore_requested[user] = 1
 			self.np.queue.put(slskmessages.GetPeerAddress(user))
@@ -1967,7 +1967,7 @@ class NicotineFrame:
 			self.settingswindow.pages["Ignore List"].SetSettings(self.np.config.sections)
 
 	def OnBlockUser(self, user):
-		if user not in self.np.users.keys() or type(self.np.users[user].addr) is not tuple:
+		if user not in self.np.users or type(self.np.users[user].addr) is not tuple:
 			if user not in self.np.ipblock_requested:
 				self.np.ipblock_requested[user] = 0
 			self.np.queue.put(slskmessages.GetPeerAddress(user))
@@ -1988,7 +1988,7 @@ class NicotineFrame:
 				self.settingswindow.pages["Ban List"].SetSettings(self.np.config.sections)
 				return True
 			
-		if user not in self.np.users.keys():
+		if user not in self.np.users:
 			if user not in self.np.ipblock_requested:
 				self.np.ipblock_requested[user] = 1
 			self.np.queue.put(slskmessages.GetPeerAddress(user))
@@ -2343,7 +2343,7 @@ class NicotineFrame:
 	
 			if update and self.translux:
 				self.translux.changeTint(tint)
-				if self.LogWindow not in self.translux.subscribers.keys():
+				if self.LogWindow not in self.translux.subscribers:
 					self.translux.subscribe(self.LogWindow, lambda: self.LogWindow.get_window(gtk.TEXT_WINDOW_TEXT))
 		except Exception, e:
 			log.addwarning(_('Translux error: %(error)s') % {'error':e})
@@ -2876,16 +2876,14 @@ class NicotineFrame:
 
 	def SetRecommendations(self, title, recom):
 		self.recommendationslist.clear()
-		for thing in recom.keys():
-			rating = recom[thing]
+		for (thing, rating) in recom.iteritems():
 			thing = self.np.decode(thing)
 			self.recommendationslist.append([thing, Humanize(rating), rating])
 		self.recommendationslist.set_sort_column_id(2, gtk.SORT_DESCENDING)
 		
 	def SetUnrecommendations(self, title, recom):
 		self.unrecommendationslist.clear()
-		for thing in recom.keys():
-			rating = recom[thing]
+		for (thing, rating) in recom.iteritems():
 			thing = self.np.decode(thing)
 			self.unrecommendationslist.append([thing, Humanize(rating), rating])
 		self.unrecommendationslist.set_sort_column_id(2, gtk.SORT_ASCENDING)

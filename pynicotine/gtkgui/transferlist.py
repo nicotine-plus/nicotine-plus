@@ -331,12 +331,12 @@ class TransferList:
 			return
 		self.lastupdate = time() # ...we're working...
 		# Remove empty parent rows
-		for user in self.users.keys()[:]:
-			if not self.transfersmodel.iter_has_child(self.users[user]):
-				self.transfersmodel.remove(self.users[user])
-				del self.users[user]
+		for (username, user) in [x for x in self.users.iteritems()]:
+			if not self.transfersmodel.iter_has_child(user):
+				self.transfersmodel.remove(user)
+				del self.users[username]
 			else:
-				files = self.transfersmodel.iter_n_children(self.users[user])
+				files = self.transfersmodel.iter_n_children(user)
 				ispeed = 0.0
 				percent = totalsize = position = 0
 				elapsed = left = ""
@@ -344,7 +344,7 @@ class TransferList:
 				salientstatus = ""
 				extensions = {}
 				for f in range(files):
-					iter = self.transfersmodel.iter_nth_child(self.users[user], f)
+					iter = self.transfersmodel.iter_nth_child(user, f)
 					filename = self.transfersmodel.get_value(iter, 10)
 					parts = filename.rsplit('.', 1)
 					if len(parts) == 2:
@@ -354,7 +354,7 @@ class TransferList:
 						except KeyError:
 							extensions[ext.lower()] = 1
 					for transfer in self.list:
-						if [transfer.user, transfer.filename] == [user, filename] and transfer.timeelapsed is not None:
+						if [transfer.user, transfer.filename] == [username, filename] and transfer.timeelapsed is not None:
 							elap += transfer.timeelapsed
 							break
 					totalsize += self.transfersmodel.get_value(iter, 12)
@@ -392,7 +392,7 @@ class TransferList:
 					extensionlst = [(extensions[key], key) for key in extensions]
 					extensionlst.sort(reverse=True)
 					extensions = ", ".join([str(count) + " " + ext for (count, ext) in extensionlst])
-				self.transfersmodel.set(self.users[user],
+				self.transfersmodel.set(user,
 						1, _("%(number)2s files ") % {'number':files} + " (" + extensions + ")",
 						2, salientstatus,
 						4, percent,
