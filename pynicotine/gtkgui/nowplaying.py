@@ -31,8 +31,21 @@ from pynicotine.utils import _, executeCommand
 from pynicotine.logfacility import log
 
 class NowPlaying:
-	def __init__(self, frame):
+	def __init__(self, frame, fake=False):
+		"""Create NowPlayer interface
+
+If faked=True it will only create a partial instance, enough to debug NP-code with from the command line"""
+		# Only configure things here that are required for a faked instance
 		self.frame = frame
+		try:
+			import dbus
+			import dbus.glib
+			self.bus = dbus.SessionBus()
+		except Exception, e:
+			self.bus = None
+		if fake:
+			return
+		# All things that aren't needed for a faked instance
 		self.accel_group = gtk.AccelGroup()
 		self.wTree = gtk.glade.XML(os.path.join(os.path.dirname(os.path.realpath(__file__)), "nowplaying.glade" ), None, 'nicotine' ) 
 		widgets = self.wTree.get_widget_prefix("")
@@ -51,12 +64,6 @@ class NowPlaying:
 		self.NowPlaying.connect("destroy", self.quit)
 		self.NowPlaying.connect("destroy-event", self.quit)
 		self.NowPlaying.connect("delete-event", self.quit)
-		try:
-			import dbus
-			import dbus.glib
-			self.bus = dbus.SessionBus()
-		except Exception, e:
-			self.bus = None
 		self.NowPlaying.set_resizable(False)
 
 		self.defaultlist = [ "$n", "$a - $t", "[$a] $t", "Now $s: [$a] $t", "Now $s: $n", "$a - $b - $t", "$a - $b - $t ($l/$rKBps) from $y $c" ]
@@ -134,6 +141,8 @@ class NowPlaying:
 			self.NP_lastfm.set_active(1)
 		elif player == "foobar":
 			self.NP_foobar.set_active(1)
+		elif player == "mpris":
+			self.NP_mpris.set_active(1)
 		elif player == "other":
 			self.NP_other.set_active(1)
 			self.player_replacers = ["$n"]
@@ -143,7 +152,7 @@ class NowPlaying:
 	def OnModifyFormat(self, widget):
 		text = self.NPFormat.child.get_text().strip()
 		replacers = []
-		for replacer in ["$n", "$t", "$l", "$a", "$b", "$c", "$k", "$y", "$r", "$f", "$s"]:
+		for replacer in ["$n", "$t", "$l", "$a", "$b", "$c", "$k", "$y", "$r", "$f", "$s", "$p"]:
 			if replacer in text:
 				replacers.append(replacer)
 		for replacer in replacers:
@@ -176,46 +185,55 @@ class NowPlaying:
 			self.NPFormat.append_text(i)
 			
 	def OnNPPlayer(self, widget):
-		set = 0 
+		isset = False
 		if self.NP_infopipe.get_active():
 			self.player_replacers = ["$n",  "$l", "$b", "$c", "$k", "$r", "$f", "$s"]
-			set = 1
+			isset = True
 		elif self.NP_mpd.get_active():
 			self.player_replacers = ["$n", "$t", "$a", "$b",  "$f", "$k"]
-			set = 1
+			isset = True
 		elif self.NP_banshee.get_active():
 			self.player_replacers = ["$n", "$t", "$l", "$a", "$b", "$k", "$y", "$r", "$f", "$s"]
-			set = 1
+			isset = True
 		elif self.NP_amarok.get_active():
 			self.player_replacers = ["$n", "$t", "$l", "$a", "$b", "$c", "$k", "$y", "$r", "$f", "$s"]
-			set = 1
+			isset = True
 		elif self.NP_amarok2.get_active():
 			self.player_replacers = ["$n", "$t", "$l", "$a", "$b", "$c", "$k", "$y", "$r", "$f", "$s"]
-			set = 1
+			isset = True
 		elif self.NP_audacious.get_active():
 			self.player_replacers = ["$n", "$t", "$l", "$a", "$b", "$c", "$k", "$y", "$r", "$f", "$s"]
-			set = 1
+			isset = True
 		elif self.NP_rhythmbox.get_active():
 			self.player_replacers = ["$n", "$t", "$l", "$a", "$b", "$c", "$k", "$y", "$r", "$f", "$s"]
-			set = 1
+			isset = True
 		elif self.NP_bmpx.get_active():
 			self.player_replacers = ["$n", "$t", "$l", "$a", "$b", "$k", "$y", "$r", "$f"]
-			set = 1
+			isset = True
 		elif self.NP_exaile.get_active():
 			self.player_replacers = ["$t", "$l", "$a", "$b"]
-			set = 1
+			isset = True
 		elif self.NP_lastfm.get_active():
 			self.player_replacers = ["$n", "$s", "$t", "$a"]
-			set = 1
+			self.player_input.set_text(_("Username:"))
+			isset = True
 		elif self.NP_foobar.get_active():
 			self.player_replacers = ["$n"]
-			set = 1
+			isset = True
+		elif self.NP_mpris.get_active():
+			self.player_replacers = ['$p', '$a', '$b', '$t', '$c', '$r', '$k', '$l']
+			self.player_input.set_text(_("Client name (empty = auto):"))
+			isset = True
 		elif self.NP_other.get_active():
 			self.player_replacers = ["$n"]
-			set = 1
+			self.player_input.set_text(_("Command:"))
+			isset = True
 
-		self.NPCommand.set_sensitive(self.NP_lastfm.get_active() or
-					     self.NP_other.get_active())
+		self.NPCommand.set_sensitive(
+			self.NP_lastfm.get_active() or
+			self.NP_other.get_active() or
+			self.NP_mpris.get_active()
+		)
 		
 		legend = ""
 		for item in self.player_replacers:
@@ -242,9 +260,11 @@ class NowPlaying:
 				legend += _("Filename (URI)")
 			elif item == "$s":
 				legend += _("Status")
+			elif item == "$p":
+				legend += _("Program")
 			legend += "\n"
 		self.Legend.set_text(legend)
-		if not set:
+		if not isset:
 			self.Legend.set_text("")
 		self.OnModifyFormat(self.NPFormat.child)
 			
@@ -261,7 +281,9 @@ class NowPlaying:
 		
 	def DisplayNowPlaying(self, widget, test=0, callback=None):
 
-		if self.NP_rhythmbox.get_active() or self.NP_bmpx.get_active():
+		if (self.NP_rhythmbox.get_active() or
+				self.NP_bmpx.get_active() or
+				self.NP_mpris.get_active()):
 			# dbus (no threads, please)
 			self.GetNP(None, test, callback)
 		else:
@@ -271,32 +293,12 @@ class NowPlaying:
 	def GetNP(self, widget, test=None, callback=None):
 		self.title_clear()
 		try:
-			if self.NP_infopipe.get_active():
-				result = self.xmms()
-			elif self.NP_amarok.get_active():
-				result = self.amarok()
-			elif self.NP_amarok2.get_active():
-				result = self.amarok2()
-			elif self.NP_audacious.get_active():
-				result = self.audacious()
-			elif self.NP_mpd.get_active():
-				result = self.mpd()
-			elif self.NP_banshee.get_active():
-				result = self.banshee()
-			#elif self.NP_mp3blaster.get_active():
-			#	result = self.mp3blaster()
-			elif self.NP_rhythmbox.get_active():
+			if self.NP_rhythmbox.get_active():
 				result = self.rhythmbox()
 			elif self.NP_bmpx.get_active():
 				result = self.bmpx()
-			elif self.NP_exaile.get_active():
-				result = self.exaile()
-			elif self.NP_lastfm.get_active():
-				result = self.lastfm()
-			elif self.NP_foobar.get_active():
-				result = self.foobar()
-			elif self.NP_other.get_active():
-				result = self.other()
+			elif self.NP_mpris.get_active():
+				result = self.mpris()
 		except RuntimeError:
 			log.addwarning("ERROR: Could not execute now playing code. Are you sure you picked the right player?")
 			result = None
@@ -326,6 +328,7 @@ class NowPlaying:
 		title = title.replace("$r", "%(bitrate)s")
 		title = title.replace("$s", "%(status)s")
 		title = title.replace("$f", "%(filename)s")
+		title = title.replace("$p", "%(program)s")
 		#print "Title2: " + title
 		title = title % self.title
 		title = ' '.join([x for x in title.replace('\r', '\n').split('\n') if x])
@@ -364,6 +367,8 @@ class NowPlaying:
 			player = "lastfm"
 		elif self.NP_foobar.get_active():
 			player = "foobar"
+		elif self.NP_mpris.get_active():
+			player = "mpris"
 		elif self.NP_other.get_active():
 			player = "other"
 			
@@ -625,6 +630,61 @@ class NowPlaying:
 	def mp3blaster(self):
 		return None
 	
+	def mpris(self):
+		from dbus import Interface
+		player = self.NPCommand.get_text()
+		mpris_prefix = u'org.mpris.MediaPlayer2.'
+		mpris_player = u'org.mpris.MediaPlayer2.Player'
+		if not player:
+			names = self.bus.list_names()
+			players = []
+			for dbus_name in names:
+				name = unicode(dbus_name)
+				if name.startswith(mpris_prefix):
+					players.append(name[len(mpris_prefix):])
+			if not players:
+				self.frame.logMessage(_("Could not find a suitable MPIS player."))
+				return None
+			player = players[0]
+			if len(players) > 1:
+				self.frame.logMessage(_("Found multiple MPRIS players: %s. Using: %s") % (players, player))
+			else:
+				self.frame.logMessage(_("Auto-detected MPRIS player: %s.") % player)
+		try:
+			proxyobj = self.bus.get_object(mpris_prefix + player, "/org/mpris/MediaPlayer2")
+			metadata = proxyobj.Get(mpris_player, "Metadata")
+		except Exception, exception:
+			self.frame.logMessage(_("Something went wrong while querying %s: %s" % (player, exception)))
+			return None
+		print(metadata)
+		# See: http://mms2.org/wiki/MPRIS_Metadata
+		self.title['program'] = player
+		list_mapping = [('xesam:artist', 'artist')]
+		for (source, dest) in list_mapping:
+			try:
+				self.title[dest] = '+'.join(metadata[source])
+			except KeyError:
+				self.title[dest] = '?'
+		mapping = [
+				('xesam:title', 'title'),
+				('xesam:album', 'album'),
+				('xesam:comment', 'comment'),
+				('xesam:audioBitrate', 'bitrate'),
+				('xesak:trackNumber', 'track'),
+			]
+		for (source, dest) in mapping:
+			try:
+				self.title[dest] = unicode(metadata[source])
+			except KeyError:
+				self.title[dest] = '?'
+		# Misc
+		try:
+			self.title['length'] = self.get_length_time(metadata['mpris:length'] / 1000)
+		except KeyError:
+			self.title['length'] = '?'
+		#
+		return True
+
 	def rhythmbox(self):
 		from dbus import Interface
 		
@@ -695,7 +755,7 @@ class NowPlaying:
 			length = str(minutes)+":"+str(seconds)
 		else:
 			length = "0:00"
-		return length	
+		return length
 		
 	def lastfm(self):
 		def lastfm_parse(buf):
@@ -741,7 +801,7 @@ class NowPlaying:
 			sock.connect(host)
 		except Exception, error:
 			self.frame.logMessage(_("ERROR: could not connect to audioscrobbler: %s")) % error[1]
-			return None		     
+			return None
 				    
 		sock.send(req)
 		data = sock.recv(1024)
@@ -811,4 +871,24 @@ class NowPlaying:
 			return True
 		except:
 			return None
-		
+
+if __name__ == "__main__":
+	print("Debug mode.")
+	class FakeInputBox(object):
+		def __init__(self, text=''):
+			self.set_text(text)
+		def get_text(self):
+			return self.text
+		def set_text(self, text):
+			self.text = text
+	class FakeFrame(object):
+		@classmethod
+		def logMessage(cls, text):
+			print("logMessage: %s" % text)
+	fakenp = NowPlaying(FakeFrame(), fake=True)
+	fakenp.NPCommand = FakeInputBox('') # if not empty specifies the player
+	fakenp.Example = FakeInputBox()
+	fakenp.title_clear()
+	answer = fakenp.mpris()
+	print("MPIS answered: %s" % answer)
+	print("Meta-info: %s" % fakenp.title)

@@ -215,6 +215,21 @@
                 <property name="bottom_attach">4</property>
               </packing>
             </child>
+            <child>
+              <widget class="GtkRadioButton" id="NP_mpris">
+                <property name="label" translatable="yes">MPRIS</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">False</property>
+                <property name="draw_indicator">True</property>
+                <property name="group">NP_infopipe</property>
+                <signal name="clicked" handler="OnNPPlayer"/>
+              </widget>
+              <packing>
+                <property name="top_attach">4</property>
+                <property name="bottom_attach">5</property>
+              </packing>
+            </child>
           </widget>
           <packing>
             <property name="position">1</property>
@@ -225,7 +240,7 @@
             <property name="visible">True</property>
             <property name="spacing">5</property>
             <child>
-              <widget class="GtkLabel" id="label2">
+              <widget class="GtkLabel" id="player_input">
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">Player Command/Username</property>
               </widget>
