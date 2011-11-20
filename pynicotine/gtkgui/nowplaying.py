@@ -511,8 +511,7 @@ If faked=True it will only create a partial instance, enough to debug NP-code wi
 		if not self.bus:
 			log.addwarning("Failed to import DBus, cannot read out Amarok2")
 			return
-		bus = self.dbus.SessionBus()
-		player = dbus.Interface(bus.get_object('org.mpris.amarok', '/Player'), dbus_interface='org.freedesktop.MediaPlayer')
+		player = self.bus.Interface(bus.get_object('org.mpris.amarok', '/Player'), dbus_interface='org.freedesktop.MediaPlayer')
 		md = player.GetMetadata()
 		for key, value in md.iteritems():
 			self.title[key] = unicode(value, 'iso8859-15', 'replace')
@@ -633,15 +632,16 @@ If faked=True it will only create a partial instance, enough to debug NP-code wi
 	def mpris(self):
 		from dbus import Interface
 		player = self.NPCommand.get_text()
-		mpris_prefix = u'org.mpris.MediaPlayer2.'
-		mpris_player = u'org.mpris.MediaPlayer2.Player'
+		dbus_mpris_service = u'org.mpris.MediaPlayer2.'
+		dbus_mpris_player_service = u'org.mpris.MediaPlayer2.Player'
+		dbus_mpris_path = u'/org/mpris/MediaPlayer2'
+		dbus_property = u'org.freedesktop.DBus.Properties'
 		if not player:
 			names = self.bus.list_names()
 			players = []
-			for dbus_name in names:
-				name = unicode(dbus_name)
-				if name.startswith(mpris_prefix):
-					players.append(name[len(mpris_prefix):])
+			for name in names:
+				if name.startswith(dbus_mpris_service):
+					players.append(name[len(dbus_mpris_service):])
 			if not players:
 				self.frame.logMessage(_("Could not find a suitable MPIS player."))
 				return None
@@ -651,8 +651,9 @@ If faked=True it will only create a partial instance, enough to debug NP-code wi
 			else:
 				self.frame.logMessage(_("Auto-detected MPRIS player: %s.") % player)
 		try:
-			proxyobj = self.bus.get_object(mpris_prefix + player, "/org/mpris/MediaPlayer2")
-			metadata = proxyobj.Get(mpris_player, "Metadata")
+			player_obj          = self.bus.get_object(dbus_mpris_service + player, dbus_mpris_path)
+			player_property_obj = Interface(player_obj, dbus_interface=dbus_property)
+			metadata            = player_property_obj.Get(dbus_mpris_player_service, "Metadata")
 		except Exception, exception:
 			self.frame.logMessage(_("Something went wrong while querying %s: %s" % (player, exception)))
 			return None
