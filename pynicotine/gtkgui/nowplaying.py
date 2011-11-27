@@ -596,7 +596,7 @@ If faked=True it will only create a partial instance, enough to debug NP-code wi
 			output = self.audacious_command('current-song-tuple-data', 'comment')
 			if output: self.title["comment"] = output
 		if "$k" in slist:
-			output = self.audacious_command('current-song-tuple-data', 'track_number')
+			output = self.audacious_command('current-song-tuple-data', 'track-number')
 			if output: self.title["track"] = output
 		if "$y" in slist:
 			output = self.audacious_command('current-song-tuple-data', 'year')
