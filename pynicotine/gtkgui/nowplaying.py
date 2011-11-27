@@ -293,10 +293,30 @@ If faked=True it will only create a partial instance, enough to debug NP-code wi
 	def GetNP(self, widget, test=None, callback=None):
 		self.title_clear()
 		try:
-			if self.NP_rhythmbox.get_active():
+			if self.NP_infopipe.get_active(): 
+					result = self.xmms() 
+			elif self.NP_amarok.get_active(): 
+					result = self.amarok() 
+			elif self.NP_amarok2.get_active(): 
+					result = self.amarok2() 
+			elif self.NP_audacious.get_active(): 
+					result = self.audacious() 
+			elif self.NP_mpd.get_active(): 
+					result = self.mpd() 
+			elif self.NP_banshee.get_active(): 
+					result = self.banshee() 
+			elif self.NP_rhythmbox.get_active():
 				result = self.rhythmbox()
 			elif self.NP_bmpx.get_active():
 				result = self.bmpx()
+			elif self.NP_exaile.get_active(): 
+					result = self.exaile() 
+			elif self.NP_lastfm.get_active(): 
+					result = self.lastfm() 
+			elif self.NP_foobar.get_active(): 
+					result = self.foobar() 
+			elif self.NP_other.get_active(): 
+					result = self.other() 
 			elif self.NP_mpris.get_active():
 				result = self.mpris()
 		except RuntimeError:
@@ -493,10 +513,10 @@ If faked=True it will only create a partial instance, enough to debug NP-code wi
 			return True
 		else:
 			return False
-    
+	
 	def banshee_command(self, commands):
 		return executeCommand(" ".join(["banshee"] + commands), returnoutput=True)
-	    
+		
 	def exaile(self):
 		slist = self.NPFormat.child.get_text()
 		output = executeCommand('exaile --get-album --get-artist --get-length --get-title', returnoutput=True)
@@ -803,7 +823,7 @@ If faked=True it will only create a partial instance, enough to debug NP-code wi
 		except Exception, error:
 			self.frame.logMessage(_("ERROR: could not connect to audioscrobbler: %s")) % error[1]
 			return None
-				    
+					
 		sock.send(req)
 		data = sock.recv(1024)
 		sock.close()
