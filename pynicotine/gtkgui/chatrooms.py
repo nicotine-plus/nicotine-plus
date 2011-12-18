@@ -1698,7 +1698,7 @@ class ChatRoom:
 		# Update user list with an inexpensive sorting function
 		self.usersmodel.set_default_sort_func(lambda *args: -1)
 		self.usersmodel.set_sort_column_id(-1, gtk.SORT_ASCENDING)
-		for (username, user) in users.keys():
+		for (username, user) in users.iteritems():
 			if username in self.users:
 				self.usersmodel.remove(self.users[username])
 			img = self.frame.GetStatusImage(user.status)
