@@ -60,7 +60,7 @@ class Downloads(TransferList):
 			("#" + _("_Retry"), self.OnRetryTransfer, gtk.STOCK_REDO),
 			("", None),
 			("#" + _("Abor_t"), self.OnAbortTransfer, gtk.STOCK_CANCEL),
-			("#" + _("Abort and remove _file(s)"), self.OnAbortRemoveTransfer, gtk.STOCK_DELETE),
+			("#" + _("Abort & delete"), self.OnAbortRemoveTransfer, gtk.STOCK_DELETE),
 			("#" + _("_Clear"), self.OnClearTransfer, gtk.STOCK_CLEAR),
 			("", None),
 			(1, _("Clear Groups"), self.popup_menu2, None),
