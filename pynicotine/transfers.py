@@ -261,9 +261,9 @@ class Transfers:
 
 	def UploadFailed(self, msg):
 		try:
-			i = self.eventprocessor.peerconns_by_conn[conn]
+			i = self.eventprocessor.peerconns_by_conn[msg.conn]
 		except KeyError:
-			print("I don't know jack: %s" % conn)
+			print("I don't know jack: %s" % msg.conn)
 			return
 		user = i.username
 		for i in self.downloads:
