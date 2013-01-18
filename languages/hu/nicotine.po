@@ -1,18 +1,23 @@
+# translation of nicotine.po to Hungarian
+# Nicotine translation template
+# Copyright (C) 2003, Hyriand
+# This file is distributed under the same license as the Nicotine package.
+# Hyriand <hyriand@thegraveyard.org>, 2003.
+# lippel, 2004.
+# Meo, 2007
+#
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: Nicotine+ 1.2.12\n"
+"Project-Id-Version: nicotine\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-05-24 14:14-0500\n"
-"PO-Revision-Date: 2010-02-12 00:33+0100\n"
+"PO-Revision-Date: 2012-06-23 02:56+0100\n"
 "Last-Translator: Baloo <djbaloo@mailbox.hu>\n"
-"Language-Team: djbaloo <djbaloo@mailbox.hu>\n"
+"Language-Team: Hungarian\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Poedit-Language: Hungarian\n"
-"X-Poedit-Country: HUNGARY\n"
-"X-Poedit-SourceCharset: utf-8\n"
-"Plural-Forms: k\n"
 
 msgid "Nicotine"
 msgstr "Nicotine"
@@ -42,10 +47,10 @@ msgid "_Settings"
 msgstr "_Beállítások"
 
 msgid "Configure _Now Playing"
-msgstr "Most _Játszott beállítása"
+msgstr "„Now Playing“ beállítása"
 
 msgid "Backup Config"
-msgstr "Archiválás Beállítás"
+msgstr "Biztonsági beállítások"
 
 msgid "View"
 msgstr "Nézet"
@@ -81,7 +86,7 @@ msgid "Shares"
 msgstr "Megosztások"
 
 msgid "Configure Shares"
-msgstr "Megosztás Beállítás"
+msgstr "Megosztás beállításai"
 
 msgid "_Rescan shares"
 msgstr "_Megosztás aktualizálása"
@@ -123,10 +128,10 @@ msgid "User _Browse"
 msgstr "User _tallózása"
 
 msgid "_Interests"
-msgstr "_Érdeklődések"
+msgstr "_Érdeklődési kör"
 
 msgid "Buddy _List"
-msgstr "Barát _Lista"
+msgstr "Barát_lista"
 
 msgid "Hel_p"
 msgstr "Sú_gó"
@@ -162,7 +167,7 @@ msgid "Report a _bug"
 msgstr "Hi_bajelentés"
 
 msgid "About _Nicotine"
-msgstr "A _Nicotine-ról"
+msgstr "_Névjegy"
 
 msgid "Start Message"
 msgstr "Üzenet Indítása"
@@ -213,7 +218,7 @@ msgid "WishList"
 msgstr "Kívánságlista"
 
 msgid "Search patterns: with a word = term, without a word = -term"
-msgstr "Keresési példák: tartalmaz egy szót = kifejezés, ne tartalmazza a szót = -kifejezés"
+msgstr "Keresési minták: tartalmaz egy szót = kifejezés, ne tartalmazza a szót = -kifejezés"
 
 msgid "Clear all searches attempts"
 msgstr "Minden keresési kísérlet törlése"
@@ -246,7 +251,7 @@ msgid "Unrecommendations"
 msgstr "Ellenjavaslatok"
 
 msgid "Debug output:"
-msgstr "Debug kimenet:"
+msgstr "Hibakeresés kimenete:"
 
 msgid "Warnings"
 msgstr "Figyelmeztetések"
@@ -285,10 +290,10 @@ msgid "Password:"
 msgstr "Jelszó:"
 
 msgid "gtk-apply"
-msgstr "gtk-apply"
+msgstr ""
 
 msgid "Change password"
-msgstr "Jelszóváltoztatás"
+msgstr "Jelszó változtatás"
 
 msgid ""
 "For a new account \n"
@@ -298,13 +303,13 @@ msgstr ""
 " írja be a kívánt adatokat"
 
 msgid "Your IP address has not been retrieved from the server"
-msgstr "Az IP-címét nem lehet megszerezni a szerverről"
+msgstr "Az Ön IP-címét nem lehet megszerezni a szerverről"
 
 msgid "Use the first available listening port from the following range:"
 msgstr "Használja az első elérhető portot az alábbi tartományból:"
 
 msgid "to"
-msgstr "és"
+msgstr "-"
 
 msgid "Client port is not set"
 msgstr "Kliens portok nincsenek beállítva"
@@ -316,7 +321,7 @@ msgid "I can receive direct connections"
 msgstr "Közvetlen kapcsolatot tudok fogadni"
 
 msgid "(only use if the above ports are remotely accessible)"
-msgstr "(csak akkor használja, ha a fenti portok hozzáférhetőek!)"
+msgstr "(csak akkor használja, ha a fenti portok hozzáférhetőek)"
 
 msgid "Network Character Encoding (utf-8 is a good choice)"
 msgstr "Hálózati Karakterkódolás (utf-8 a jó választás)"
@@ -334,7 +339,7 @@ msgid "Remove"
 msgstr "Eltávolít"
 
 msgid "Enable Buddy-Only shares"
-msgstr "Csak-Barátoknak megosztás engedélyezése"
+msgstr "„Csak Barátoknak“ megosztás engedélyezése"
 
 msgid "Rescan shares on startup"
 msgstr "Megosztás aktualizálása indításkor"
@@ -367,7 +372,7 @@ msgid "Round Robin"
 msgstr "Round Robin (várakozási módszer)"
 
 msgid "Users will be sent one file and then another user will be selected"
-msgstr "Egy user fájlt küld, és utána egy másik ki lesz jelölve"
+msgstr "Az usereknek küldenek egy fájlt, és utána egy másik user lesz kijelölve"
 
 msgid "First In, First Out"
 msgstr "FIFO várakozási mód"
@@ -412,7 +417,7 @@ msgid "Queue size limit does not apply to friends"
 msgstr "Várakozási mérethatár nem érvényes a barátokra"
 
 msgid "Allow these users to send you files:"
-msgstr "Ezek az userek engedélyezik a fájlküldést:"
+msgstr "Ezeknek az usereknek a fájlküldés engedélyezve:"
 
 msgid "The users will be able to send you files. These files will be downloaded into the Buddy Uploads subdirectory in your Download directory"
 msgstr "A felhasználók képesek lesznek Önnek fájlokat küldeni. Ezek a fájlok a Barátok Feltöltései almappába lesznek letöltve a Letöltési mappában"
@@ -442,7 +447,7 @@ msgid "Enable Filters"
 msgstr "Szűrők engedélyezése"
 
 msgid "<b>Syntax:</b> Letters are Case Insensitive, All Python Regular Expressions are supported if escaping is disabled. For simple filters, keep escaping enabled."
-msgstr "<b>Szintaxis:</b> A betűk közömbösek, Minden Python Pontos Kifejezés támogatva van, ha a kilépés le van tiltva. Egyszerű szűrőkhöz, hagyja engedélyezve a kilépést."
+msgstr "<b>Szintaxis:</b> A betűk közömbösek, Minden Python Pontos Kifejezés támogatva van, ha a kilépés le van tiltva. Egyszerű szűrőkhöz hagyja engedélyezve a kilépést."
 
 msgid "Verify Filters"
 msgstr "Szűrők Ellenőrzése"
@@ -494,7 +499,7 @@ msgid ""
 "libsexy and sexy-python bindings required."
 msgstr ""
 "Libsexy Weboldal: http://www.chipx86.com/wiki/Libsexy \n"
-"libsexy és sexy-python kötődés szükséges."
+"libsexy és sexy-python-bindings szükséges."
 
 msgid "Enable spell checker (requires a restart)"
 msgstr "Helyesírás ellenőrzés engedélyezése (újraindítás szükséges)"
@@ -512,7 +517,7 @@ msgid "Chat Font:"
 msgstr "Chat Betűtípus:"
 
 msgid "gtk-clear"
-msgstr "gtk-clear"
+msgstr ""
 
 msgid "List Font:"
 msgstr "Lista Betűtípus:"
@@ -539,7 +544,7 @@ msgid "<b>Language</b>"
 msgstr "<b>Nyelv</b>"
 
 msgid "Extra stuff for your comfort"
-msgstr "Extra cucc a kényelméért"
+msgstr "Extrák a kényelméért"
 
 msgid "Log"
 msgstr "Napló"
@@ -575,7 +580,7 @@ msgid "Reopen last Private Chat messages"
 msgstr "Utolsó privát üzenetek megnyitása"
 
 msgid "<b>Timestamps</b>"
-msgstr "<b>Időbélyegzők</b>"
+msgstr "<b>Időbélyegek</b>"
 
 msgid "Display timestamps"
 msgstr "Időbélyegek megjelenítése"
@@ -599,7 +604,7 @@ msgid "<b>Logging</b>"
 msgstr "<b>Naplózás</b>"
 
 msgid "Ban"
-msgstr "Kitilt"
+msgstr "Kitiltás"
 
 msgid "Banned Users:"
 msgstr "Kitiltott userek:"
@@ -626,10 +631,10 @@ msgid "results per search request"
 msgstr "eredmény, keresési kérésenként"
 
 msgid "Toggle responding to distributed searches every"
-msgstr "Kapcsoló reagál minden elosztott keresésre"
+msgstr "Kapcsoló reagál az elosztott keresésre minden"
 
 msgid "seconds"
-msgstr "másodpercek"
+msgstr "másodpercben"
 
 msgid "Network Searches:"
 msgstr "Hálózati Keresések:"
@@ -681,13 +686,13 @@ msgid "Nicotine Settings"
 msgstr "Nicotine Beállítások"
 
 msgid "Away"
-msgstr "Távol"
+msgstr "Távollét"
 
 msgid "Toggle away after "
-msgstr "'Távollét' után"
+msgstr "Kapcsoljon be a Távollét"
 
 msgid " minutes of inactivity"
-msgstr "perccel inaktívba kapcsol"
+msgstr "perc inaktivitás után"
 
 msgid "Auto-reply when away:  "
 msgstr "Automata válasz távollétkor:"
@@ -768,13 +773,13 @@ msgid "Enable geographical blocker"
 msgstr "Országkód-tiltás engedélyezése"
 
 msgid "Geographical paranoia (block unresolvable IPs)"
-msgstr "\"Geográfiai paranoia\" (Blokkolja a feloldhatatlan IP-ket)"
+msgstr "\"Földrajzi paranoia\" (Blokkolja a feloldhatatlan IP-ket)"
 
 msgid "Country codes to block (comma separated):"
 msgstr "Országkódokat tiltani (vesszővel elválasztva):"
 
 msgid "Geo Block (if available) controls from which countries users are allowed access to your shares."
-msgstr "Geo Block (ha elérhető) ellenőrzi, melyik országok userei érhetik el a megosztását."
+msgstr "Geo Block (ha elérhető) ellenőrzi, mely országok userei érhetik el a megosztását."
 
 msgid "If you wish to use Geo Block, install GeoIP and it's Python Bindings from your distro's packaging tool or from:"
 msgstr "Ha szeretné használni a Geo Blockot, telepítse a GeoIP-t a Python függőségeivel a disztród csomagkezelőjével, vagy innen:"
@@ -829,7 +834,7 @@ msgid "Misc"
 msgstr "Egyebek"
 
 msgid "Choose Ban / ignore to manage your ban list and ignore list."
-msgstr "Válassza a Tilt / mellőz opciót a tiltó és mellőző listáid kezeléséhez."
+msgstr "Válassza a Tilt / mellőz opciót a tiltó és mellőző listái kezeléséhez."
 
 msgid "Choose User info to add text and an image to your personal info."
 msgstr "Válassza az Userinfót bemutatkozás és kép hozzáadásához a személyes infóba."
@@ -847,7 +852,7 @@ msgid "Importing the config files from the official client will overwrite some o
 msgstr "A konfig fájlok importálása a hivatalos kliensből felül fog írni pár beállítást (Bejelentkezés, Jelszó, Userinfó, User Kép). Használja óvatosan ezt a funkciót!"
 
 msgid "Select the directory that contains slsk.exe and the .cfg files: Ex: C:\\\\Program Files\\\\SoulSeek"
-msgstr "Válassza ki a könyvtárat, ami tartalmazza az slsk.exe és a .cfg fájlokat! Pl. C:\\Program Files\\SoulSeek"
+msgstr "Válassza ki a könyvtárat, ami tartalmazza az slsk.exe és a .cfg fájlokat! Pl.: C:\\Program Files\\SoulSeek"
 
 msgid "Import Directory"
 msgstr "Import Könyvtár"
@@ -877,7 +882,7 @@ msgid "User Image"
 msgstr "Kép"
 
 msgid "Restart Nicotine to see all changes take effect"
-msgstr "Indítsa újra a Nicotine+ -t az összes változtatás érvényesítéséhez"
+msgstr "Indítsa újra a Nicotine-t az összes változtatás érvényesítéséhez"
 
 msgid "Sounds"
 msgstr "Hangok"
@@ -940,7 +945,7 @@ msgid "Online:"
 msgstr "Elérhető:"
 
 msgid "Away:"
-msgstr "Távol:"
+msgstr "Távollét:"
 
 msgid "Offline:"
 msgstr "Nem elérhető:"
@@ -982,7 +987,7 @@ msgid "Chat"
 msgstr "Chat"
 
 msgid "Choose <b>Away</b> mode to configure your auto-away settings."
-msgstr "Válassza a <b>Távol</b> módot az auto-távoli mód beállításaihoz."
+msgstr "Válassza a <b>Távollét</b> módot a távollét mód beállításaihoz."
 
 msgid "Choose <b>Logging</b> to configure what's logged and where to save the logs."
 msgstr "Válassza a <b>Naplózás</b> parancsot a naplózás konfigurációjához, és hogy hová mentse a naplókat."
@@ -1019,7 +1024,7 @@ msgid "Cycle completions instead of showing a dropdown"
 msgstr "Ciklus kiegészítés legördülőmenü mutatása helyett"
 
 msgid "Complete room names in chat rooms"
-msgstr "Szobanevek kieészítése a chatszobákban"
+msgstr "Szobanevek kiegészítése a chatszobákban"
 
 msgid "Complete Buddy Names"
 msgstr "Barátok nevének kiegészítése"
@@ -1093,10 +1098,10 @@ msgid "User browse"
 msgstr "User tallózása"
 
 msgid "Tabs can be repositioned"
-msgstr "A fülek újrapozícionálhatók"
+msgstr "Újrapozícionálható fülek"
 
 msgid "<b>Notebook Tabs</b>"
-msgstr "<b>Notebook Fülek</b>"
+msgstr "<b>Fülek</b>"
 
 msgid "Colours"
 msgstr "Színek"
@@ -1219,7 +1224,7 @@ msgid "Close"
 msgstr "Bezár"
 
 msgid "window1"
-msgstr "ablak1"
+msgstr "window1"
 
 msgid "Query"
 msgstr "Kérés"
@@ -1231,7 +1236,7 @@ msgid "This search will be opened the next time you start Nicotine+ and will sen
 msgstr "A keresés a Nicotine+ legközelebbi indításánál megnyílik, és új keresést indít a szerver-frissítési periódusoknál (általában óránként)"
 
 msgid "Wish"
-msgstr "Kívánság"
+msgstr "Kívánságlista"
 
 msgid "Clear all results"
 msgstr "Minden eredmény tisztítása"
@@ -1246,7 +1251,7 @@ msgid "Close search tab; press ignore to prevent this tab from reopening"
 msgstr "Keresési fül bezárás; nyomja meg a mellőzést, hogy a fül ne nyíljon meg újra"
 
 msgid ". = any character, * = 0 or more of the proceeding character, | = separator, [a-zA-Z] = any single Latin character"
-msgstr ". = bármely karakter, * = 0 vagy több egymásutáni karakter, | = elválasztó, [a-zA-Z] = bármely egyszerű latin karakter"
+msgstr ". = bármely karakter; * = 0 vagy több egymásutáni karakter; | = elválasztó, [a-zA-Z] = bármely latin karakter"
 
 msgid "Total uploads allowed: unknown"
 msgstr "Összes feltöltés megengedve: ismeretlen"
@@ -1306,7 +1311,7 @@ msgid "Dirs: Unknown"
 msgstr "Könyvtárak: ismeretlen"
 
 msgid "Shared: Unknown"
-msgstr "Megosztott könyvtárak: ismeretlen"
+msgstr "Megosztások: ismeretlen"
 
 msgid "Save"
 msgstr "Mentés"
@@ -1327,7 +1332,7 @@ msgid "0 people in room"
 msgstr "Senki nincs a szobában"
 
 msgid "Auto-join"
-msgstr "Auto-belépés"
+msgstr "Automatikus belépés"
 
 msgid "Leave"
 msgstr "Elhagy"
@@ -1342,15 +1347,15 @@ msgid "Search: "
 msgstr "Keresés:"
 
 msgid "Nicotine supports \"psyco\", an inline optimizer for python code, you can get it at http://sourceforge.net/projects/psyco/"
-msgstr "Nicotine támogatja a \"psyco\"-t, a python-kód optimalizálót, melyet letölthet innen: http://sourceforge.net/projects/psyco/"
+msgstr "A Nicotine támogatja a \"psyco\"-t, a python-kód optimalizálót, melyet letölthet innen: http://sourceforge.net/projects/psyco/"
 
 #, python-format
 msgid ""
 "You're using an old version of Python interpreter (%s).\n"
 "You should install Python 2.2.0 or newer."
 msgstr ""
-"Ön a Python fordító egy régebbi verzióját használja (%s).\n"
-"Telepítse a Python 2.2.0-t vagy az újabbat."
+"Ön a Python fordító egy régebbi, (%s) verzióját használja.\n"
+"Telepítse a Python 2.2.0-t vagy újabbat."
 
 msgid ""
 "Can not find Nicotine modules. \n"
@@ -1379,7 +1384,7 @@ msgid ""
 "%s"
 msgstr ""
 "Nem található a szükséges PyGTK. A jelenlegi keresési útvonal: \n"
-"%s "
+"%s"
 
 msgid "Your PyGTK is too old, upgrade to at least PyGTK 1.99.16"
 msgstr "A PyGTK csomag túl régi, frissítse a legutóbbi PyGTK 1.99.16-ra"
@@ -1390,14 +1395,15 @@ msgid ""
 "\tPython bindings: http://www.maxmind.com/app/python\n"
 "\t(the python bindings require the C library)"
 msgstr ""
-"A Nicotine támogatja az országkód blokkolót, de ehhez szükséges egy (GPL-es) GeoIP program, amit itt talál:\n"
+"A Nicotine támogatja az országkód blokkolót, de ehhez \n"
+"\tszükséges egy (GPL-es) GeoIP program, amit itt talál:\n"
 "\tC-könyvtár: http://www.maxmind.com/app/c\n"
 "\tPython-ban írva: http://www.maxmind.com/app/python\n"
 "\t(a pythonos csomaghoz szükséges a C-könyvtár)"
 
 #, python-format
 msgid "Nicotine-Plus version %s"
-msgstr "Nicotine-Plus verzió %s"
+msgstr "Nicotine+, %s verzió"
 
 msgid "Cannot find the pynicotine.utils module."
 msgstr "A pynicotine.utils modul nem található."
@@ -1418,17 +1424,15 @@ msgid ""
 "Please report any problems to our bugtracker:\n"
 "http://www.nicotine-plus.org/newticket"
 msgstr ""
-"A Nicotine-Plus egy Soulseek-kliens.\n"
+"A Nicotine+ egy Soulseek-kliens.\n"
 "Használat: nicotine [OPCIÓ]...\n"
 "  -c file,\t--config=file\tNem alapértelmezett konfigurációs fájlt használ\n"
 "  -p dir,\t--plugins=dir\tNem alapértelmezett könyvtárat használ a pluginokhoz\n"
 "  -t,\t\t--enable-trayicon\n"
 "  -d,\t\t--disable-trayicon\n"
-"  -r,\t\t--enable-rgba \n"
-"  -x,\t\t--disable-rgba\n"
 "  -v,\t\t--version\tKiírja a verziót és kilép\n"
 "  -h,\t\t--help\t\tKiírja ezt a segítséget és kilép\n"
-"  -s,\t\t--hidden\tRejtve indítja a Nicotine-Plust\n"
+"  -s,\t\t--hidden\tNicotine+ rejtve indítása\n"
 "\n"
 "Kérjük, küldjön bármilyen problémát a hibatrackerünkre:\n"
 "http://www.nicotine-plus.org/newticket"
@@ -1560,10 +1564,10 @@ msgid "%(number)2s files "
 msgstr "%(number)2s fájl"
 
 msgid "Clear finished/aborted"
-msgstr "Befejezett/megszakított tisztítása"
+msgstr "Letöltöttek/megszakított tisztítása"
 
 msgid "Clear finished"
-msgstr "Befejezett tisztítása"
+msgstr "Letöltöttek tisztítása"
 
 msgid "Clear aborted"
 msgstr "Megszakított tisztítása"
@@ -1590,7 +1594,7 @@ msgid "Send to _player"
 msgstr "Küldés a _lejátszóba"
 
 msgid "View Metadata of file(s)"
-msgstr "Metadat(ok) nézete"
+msgstr "Metaadat(ok) nézete"
 
 msgid "Open Directory"
 msgstr "Könyvtár megnyitása"
@@ -1672,7 +1676,7 @@ msgid ""
 msgstr ""
 "A(z) %(module)s plugin hibás az alábbi típussal: %(errortype)s: %(error)s.\n"
 "Útvonal: %(trace)s\n"
-"Problémás terület:%(area)s"
+"Problémás terület: %(area)s"
 
 msgid "Nicotine+ Wishlist"
 msgstr "Nicotine+ Kívánságlista"
@@ -1770,7 +1774,7 @@ msgid "<b>Metadata</b> for Search Query: <i>%s</i>"
 msgstr "<b>Metaadat</b> Keresési Kérésekhez: <i>%s</i>"
 
 msgid "Note: Python Bindings for libsexy were not found. To enable spell checking, get them from http://www.chipx86.com/wiki/Libsexy or your distribution's package manager. Look for sexy-python or python-sexy."
-msgstr "Megjegyzés: 'Python Bindings for libsexy' nem található. A helyesírás ellenőrzés engedélyezéséhez töltse le a http://www.chipx86.com/wiki/Libsexy webcímről vagy a disztribúció csomagkezelőjéből. 'Sexy-python'-t, vagy 'python-sexy'-t keressen."
+msgstr "Megjegyzés: 'Python Bindings for libsexy' nem található. A helyesírás ellenőrzés engedélyezéséhez töltse le a http://www.chipx86.com/wiki/Libsexy címről vagy a disztribúció csomagkezelőjéből. 'Sexy-python'-t, vagy 'python-sexy'-t keressen."
 
 msgid "Open Browser"
 msgstr "Böngésző Megnyitása"
@@ -1809,10 +1813,10 @@ msgid "Close Nicotine-Plus?"
 msgstr "Bezárja a programot?"
 
 msgid "Are you sure you wish to exit Nicotine-Plus at this time?"
-msgstr "Biztosan ki akar lépni a Nicotine+ -ból?"
+msgstr "Valóban ki akar lépni a Nicotine-ból?"
 
 msgid "Send to tray"
-msgstr "Küldés a Tálcára"
+msgstr "Küldés a tálcára"
 
 #, python-format
 msgid "Notification Error: %s"
@@ -1854,7 +1858,7 @@ msgstr "Privát Üzenet %(user)s -tól/től"
 
 #, python-format
 msgid "You've been mentioned in the %(room)s room"
-msgstr "Említették Önt a %(room)s szobában"
+msgstr "Említették az Ön nevét a %(room)s szobában"
 
 #, python-format
 msgid "%(user)s mentioned you in the %(room)s room"
@@ -1946,16 +1950,16 @@ msgid "Rescanning finished"
 msgstr "Aktualizálás befejeződött"
 
 msgid "Top"
-msgstr "Fel"
+msgstr "Fent"
 
 msgid "Bottom"
-msgstr "Alul"
+msgstr "Lent"
 
 msgid "Left"
-msgstr "Bal"
+msgstr "Balra"
 
 msgid "Right"
-msgstr "Jobb"
+msgstr "Jobbra"
 
 #, python-format
 msgid "Error: %(num)d Download filters failed! %(error)s "
@@ -1980,14 +1984,14 @@ msgid ""
 msgstr ""
 "A Nicotine Offline Útmutató ( NicotinePlusGuide.html ) nem található egyik könyvtárban sem:\n"
 "\n"
-"<u>%(pwd)s\n"
+"<u>%(pwd)s/doc/\n"
 "</u><b>és</b>\n"
 "<u>%(prefix)s/share/nicotine/documentation/</u>\n"
 "\n"
 "Telepítse valamelyik Nicotine+-t, vagy indítsa el a Nicotine+ forráskönyvtárából."
 
 msgid "Buddy list"
-msgstr "Barát lista"
+msgstr "Barátok"
 
 #, python-format
 msgid "Invalid SoulSeek meta-url: %s"
@@ -2041,7 +2045,7 @@ msgid "Lookup a User's Shares"
 msgstr "User megosztásának kikeresése"
 
 msgid "Toggle Away"
-msgstr "'Távollét' ki/be"
+msgstr "Távollét ki/be"
 
 msgid "ERROR: Gstreamer-python could not play:"
 msgstr "HIBA: Gstreamer-python nem tudja lejátszani:"
@@ -2104,13 +2108,13 @@ msgid "Ignore this user's IP Address"
 msgstr "User IP-címének mellőzése"
 
 msgid "Sear_ch this user's files"
-msgstr "User fájljainak keresése"
+msgstr "User fájljainak _keresése"
 
 msgid "Private rooms"
 msgstr "Privát szobák"
 
 msgid "--- old messages above ---"
-msgstr "-- régebbi üzenetek felül --"
+msgstr "--- régebbi üzenetek felül ---"
 
 #, python-format
 msgid "Remove from private room %s"
@@ -2173,11 +2177,11 @@ msgid ""
 "Could not retrieve version information!\n"
 "Error: %s"
 msgstr ""
-"Nem lehet helyrehozni a verzióinformációt!\n"
+"Nem lehetett megszerezni a verzióinformációt!\n"
 "Hiba: %s"
 
 msgid "Check Latest Version"
-msgstr "Friss Verzió Ellenőrzése"
+msgstr "Új Verzió Ellenőrzése"
 
 #, python-format
 msgid ""
@@ -2195,7 +2199,7 @@ msgstr ""
 "Elérheti a legújabb verziót a Subversion tárolóból a http://nicotine-plus.org címen"
 
 msgid "You are using the latest version of Nicotine+."
-msgstr "A legújabb Nicotine+-verziót használja."
+msgstr "Ön a legújabb Nicotine+ verziót használja."
 
 msgid "Username"
 msgstr "Usernév"
@@ -2324,7 +2328,7 @@ msgid ""
 "\t(Code contributer)\n"
 msgstr ""
 "daelstorm\n"
-"\t(Fő fejlesztő)\n"
+"\t(Vezető fejlesztő)\n"
 "\t<daelstorm@gmail.com>\n"
 "\thttp://daelstorm.thegraveyard.org/\n"
 "gallows\n"
@@ -2388,7 +2392,7 @@ msgid ""
 "Swedish\n"
 " * alimony <markus@samsonrourke.com>\n"
 "Hungarian\n"
-" * djbaloo <dj_baloo@freemail.hu>\n"
+" * djbaloo <djbaloo@mailbox.hu>\n"
 "Slovak \n"
 " * Josef Riha (2006) <jose1711@gmail.com>\n"
 "Portuguese Brazilian\n"
@@ -2427,7 +2431,7 @@ msgstr ""
 "Svéd\n"
 " * alimony <markus@samsonrourke.com>\n"
 "Magyar\n"
-" * djbaloo <dj_baloo@freemail.hu>\n"
+" * djbaloo <djbaloo@mailbox.hu>\n"
 "Szlovák \n"
 " * Josef Riha (2006) <jose1711@gmail.com>\n"
 "Portugál Brazil\n"
@@ -2541,10 +2545,10 @@ msgid "room"
 msgstr "szoba"
 
 msgid "Join room 'room'"
-msgstr "Belépés a 'szoba' szobába"
+msgstr "Belépés a szobába"
 
 msgid "Leave room 'room'"
-msgstr "Kilépés a 'szoba' szobából"
+msgstr "Kilépés a szobából"
 
 msgid "Clear the chat window"
 msgstr "Chat-ablak törlése"
@@ -2565,7 +2569,7 @@ msgid "Say something in the third-person"
 msgstr "Mond valamit harmadik személyben"
 
 msgid "Display the Now Playing script's output"
-msgstr "Most Játszott script kimenetének megjelenítése"
+msgstr "Now Playing script kimenetének megjelenítése"
 
 msgid "user"
 msgstr "user"
@@ -2625,22 +2629,22 @@ msgid "Start a new search for 'query'"
 msgstr "Új keresés indítása 'kérés' kéréshez"
 
 msgid "Search the joined rooms for 'query'"
-msgstr "'kérés' keresése a belépett szobákban"
+msgstr "Keresés a belépett szobákban"
 
 msgid "Search the buddy list for 'query'"
-msgstr "'kérés' keresése a barát listában"
+msgstr "Keresés a barátlistában"
 
 msgid "Search a user's shares for 'query'"
-msgstr "'kérés' keresése egy user megosztásában"
+msgstr "Keresés egy user megosztásában"
 
 msgid "Private Chat"
 msgstr "Privát Chat"
 
 msgid "Send message 'message' to user 'user'"
-msgstr "'Üzenet' üzenet küldése a(z) 'User' userhez"
+msgstr "Üzenet küldése az usernek"
 
 msgid "Open private chat window for user 'user'"
-msgstr "Privát chat-ablak nyitása a(z) 'User' userhez"
+msgstr "Privát chat-ablak nyitása az usernek"
 
 msgid "Toggles your away status"
 msgstr "Átkapcsolja a távoli állapotot"
@@ -3055,7 +3059,7 @@ msgstr "Nincs importálva semmi"
 
 #, python-format
 msgid "Config files for the official Soulseek client not found in \"%s\""
-msgstr "Nem található konfigurációs fájl a hivatalos Soulseek klienshez itt: \"%s\""
+msgstr "Nem található konfigurációs fájl a hivatalos Soulseek klienshez: \"%s\""
 
 msgid "Imported Soulseek Config"
 msgstr "Importált Soulseek Konfiguráció"
@@ -3283,7 +3287,7 @@ msgid "ERROR: /tmp/xmms-info is empty. Is the Infopipe plugin installed and is X
 msgstr "HIBA: /tmp/xmms-info üres. Az Infopipe plugin telepítve van és fut az XMMS?"
 
 msgid "* Message(s) sent while you were offline. Timestamps are reported by the server and can be off."
-msgstr "* Üzenet(ek)et kapott, amíg nem volt elérhető. Az időbélyegek elküldve a szerver által."
+msgstr "* Üzenet(ek)et kapott, amíg nem volt elérhető. Az időbélyegeket a szerver jelzi és kikapcsolható."
 
 #, python-format
 msgid "Nicotine+ Private Chat: %s (%s)"
@@ -3348,7 +3352,7 @@ msgid "OS error: %s"
 msgstr "Operációs rendszer hiba: %s"
 
 msgid "Nicotine+ :: Directory download error"
-msgstr "Nicotine+ :: Könyvtárletöltési hiba"
+msgstr "Nicotine+: Könyvtárletöltési hiba"
 
 #, python-format
 msgid "Download I/O error: %s"
@@ -3396,14 +3400,14 @@ msgstr "%(file)s fájl megegyezik ezzel: %(identical)s, nincs lementve."
 
 #, python-format
 msgid "Download finished but not saved since it's a duplicate: user %(user)s, file %(file)s"
-msgstr "Letöltés befejeződött, de nincs mentve, amióta ez egy másolat: user %(user)s, fájl %(file)s"
+msgstr "Letöltés befejeződött, de nincs mentve, mert ez egy másolat: user %(user)s, fájl %(file)s"
 
 #, python-format
 msgid "%(file)s downloaded from %(user)s"
 msgstr "%(file)s letöltve tőle: %(user)s"
 
 msgid "Nicotine+ :: file downloaded"
-msgstr "Nicotine+ :: fájl letöltve"
+msgstr "Nicotine+: fájl letöltve"
 
 #, python-format
 msgid "Trouble executing '%s'"
@@ -3515,7 +3519,7 @@ msgstr "A jelszava megváltozott"
 
 #, python-format
 msgid "(Warning: %(realuser)s is attempting to spoof %(fakeuser)s) "
-msgstr "(Vigyázat: %(realuser)s user megpróbálja becsapni! hamis név: %(fakeuser)s) "
+msgstr "(Vigyázat: %(realuser)s user megpróbálja becsapni! Hamis név: %(fakeuser)s) "
 
 #, python-format
 msgid "%i privileged users"
@@ -3793,22 +3797,31 @@ msgstr "Nincs ilyen álnév (%(alias)s)\n"
 
 #~ msgid "E_xit"
 #~ msgstr "_Kilépés"
+
 #~ msgid "%s Files"
 #~ msgstr "%s Fájl"
+
 #~ msgid "Client connection ports (use first available):"
 #~ msgstr "Kliens kapcsolódási portok (első elérhetőt használja):"
+
 #~ msgid "-"
 #~ msgstr "-"
+
 #~ msgid "Protocols handlers:"
 #~ msgstr "Protokoll kezelők:"
+
 #~ msgid "No Sounds"
 #~ msgstr "Nincsenek Hangok"
+
 #~ msgid "Ban / ignore"
 #~ msgstr "Kitilt / mellőz"
+
 #~ msgid "File: %(file)s, place in queue: %(place)s"
 #~ msgstr "File: %(file)s, hely a várakozásban: %(place)s"
+
 #~ msgid "You have no privileges left"
-#~ msgstr "Még 0 másodperc maradt hátra elsőbbségben"
+#~ msgstr "Önnek nincs elsőbbsége"
+
 #~ msgid ""
 #~ "You need to finish configuring your settings (Server, Username, Password, "
 #~ "Download Directory) before connecting... but if this message persists, "
@@ -3816,10 +3829,13 @@ msgstr "Nincs ilyen álnév (%(alias)s)\n"
 #~ msgstr ""
 #~ "Be kell fejeznie a konfigurációt (Szerver, Név, Jelszó, Letöltési "
 #~ "könyvtár) mielőtt csatlakozik..."
+
 #~ msgid "Update"
 #~ msgstr "Frissítés"
+
 #~ msgid "Remember"
 #~ msgstr "Emlékez"
+
 #~ msgid ""
 #~ "Nicotine+ %s\n"
 #~ "\n"
@@ -3857,83 +3873,104 @@ msgstr "Nincs ilyen álnév (%(alias)s)\n"
 #~ "\n"
 #~ "Megjelent a GNU Public Licensz (GPL) alatt\n"
 #~ "\n"
-#~ "Nézd meg a MAINTAINERS file-t a közreműködők listájához"
+#~ "Nézze meg a MAINTAINERS file-t a közreműködők listájához"
+
 #~ msgid "ImageLabel"
 #~ msgstr "ImageLabel"
+
 #~ msgid ""
 #~ "Choose Server to configure the server you wish to connect to, your "
 #~ "username, password and connection ports."
 #~ msgstr ""
-#~ "Válaszd a Szervert a szerver csatlakozási, nicknév, jelszó és a "
+#~ "Válassza a Szervert a szerver csatlakozási, nicknév, jelszó és a "
 #~ "csatlakozási portok beállításaihoz."
+
 #~ msgid "Choose Shares to configure your Download and Shared directories."
 #~ msgstr ""
-#~ "Válaszd a Megosztásokat a Letöltési és Megosztott könyvtárak "
+#~ "Válassza a Megosztásokat a Letöltési és Megosztott könyvtárak "
 #~ "konfigurálásához."
+
 #~ msgid ""
 #~ "Choose Transfers to configure how uploads are queued and what privileges "
 #~ "are given to your friends."
 #~ msgstr ""
-#~ "Válaszd az Átvitelek opciót a feltöltések várakozásának, és az "
+#~ "Válassza az Átvitelek opciót a feltöltések várakozásának, és az "
 #~ "elsőbbségek megtekintéséhez."
+
 #~ msgid ""
 #~ "Choose Geo Block (if available) to control from which countries users are "
 #~ "allowed access to your shares."
 #~ msgstr ""
-#~ "Válaszd a Geo Blockot (ha elérhető), hogy ellenőrizd, melyik országokból "
-#~ "látják a megosztásodat."
+#~ "Válassza a Geo Blockot (ha elérhető), hogy ellenőrizze, mely országokból "
+#~ "látják a megosztását."
+
 #~ msgid "Connection Settings"
 #~ msgstr "Kapcsolat Beállítások"
+
 #~ msgid "UI"
 #~ msgstr "UI"
+
 #~ msgid "Choose Interface to configure text color and other settings."
 #~ msgstr ""
-#~ "Válaszd a Felület opciót a szövegszín konfigurálásához, és egyéb "
+#~ "Válassza a Felület opciót a szövegszín konfigurálásához, és egyéb "
 #~ "beállításokhoz."
+
 #~ msgid ""
 #~ "Choose URL Catching to configure the programs used when clicking on links."
 #~ msgstr ""
-#~ "Válaszd az URL Elfogást a programok használatának konfigurálásához, ha "
-#~ "egy linkre kattintasz."
+#~ "Válassza az URL Elfogást a programok használatának konfigurálásához, ha "
+#~ "egy linkre kattint."
+
 #~ msgid "User Interface Settings"
 #~ msgstr "Személyes Beállítások"
+
 #~ msgid "Choose Away mode to configure your auto-away settings."
-#~ msgstr "Válaszd a Távol módot az auto-távoli beállítások konfigurálásához."
+#~ msgstr "Válassza a Távollét módot az automatikus távolléti beállítások konfigurálásához."
+
 #~ msgid ""
 #~ "Choose Logging to configure what's logged and where to save the logs."
 #~ msgstr ""
-#~ "Válaszd a Naplózás parancsot a naplózás konfigurációjához, és hgy hová "
+#~ "Válassza a Naplózás parancsot a naplózás beállításaihoz, és hogy hová "
 #~ "mentse a naplókat."
+
 #~ msgid ""
 #~ "Choose Events to configure what commands are executed upon the completion "
 #~ "of downloads."
 #~ msgstr ""
-#~ "Válaszd az Események parancsot, hogy beállítsd, milyen parancsot hajtson "
+#~ "Válassza az Események parancsot, hogy beállítsa, milyen parancsot hajtson "
 #~ "végre a program a letöltés végeztével."
+
 #~ msgid ""
 #~ "Please try browsing me if you get 'File not shared' errors. This is an "
 #~ "automatic message, you don't have to reply to it."
 #~ msgstr ""
-#~ "Kérlek, próbáld újra a megosztás tallózását, ha 'File nincs megosztva' "
-#~ "hibaüzenetet kapsz.Ez egy automatikus üzenet, ne válaszolj rá."
+#~ "Próbálja újra a megosztás tallózását, ha 'File nincs megosztva' "
+#~ "hibaüzenetet kap. Ez egy automatikus üzenet, ne válaszoljon rá."
 
-#, fuzzy
 #~ msgid "<b>Icon and Sound Themes</b>"
 #~ msgstr "Ikon és Hang témák"
+
 #~ msgid "Ok"
 #~ msgstr "OK"
+
 #~ msgid "User limit of %i megabytes exceeded"
 #~ msgstr "Felhasználó %i MB korlátja túllépve"
+
 #~ msgid "Files Shared: %s"
 #~ msgstr "Fájlok megosztva: %s"
+
 #~ msgid "Slots available: %i"
 #~ msgstr "Elérhető szálak: %i"
+
 #~ msgid "If Uploads are sent at"
-#~ msgstr "Ha a Feltöltési követelmény %s"
+#~ msgstr "Ha a Feltöltések sebessége %s"
+
 #~ msgid "KBytes/sec then other uploads will be queued."
-#~ msgstr "más feltöltések várakozni fognak."
+#~ msgstr "kB/s, akkor más feltöltések várakozni fognak."
+
 #~ msgid "Immediate DL"
 #~ msgstr "Azonnali DL"
+
 #~ msgid ""
 #~ "You do not have Python Vorbis bindings installed. \n"
 #~ "Others will not be able to see the lengths and the bitrates \n"
@@ -3942,33 +3979,44 @@ msgstr "Nincs ilyen álnév (%(alias)s)\n"
 #~ "If you're using Debian, install the python-pyvorbis package.\n"
 #~ msgstr ""
 #~ "Nincs Python-Vorbis telepítve. \n"
-#~ "Mások nem fogják látni azoknak az Ogg Vorbis file-oknak a hosszát és "
+#~ "Mások nem fogják látni azoknak az Ogg Vorbis fájloknak a hosszát és "
 #~ "bitrátáját,\n"
-#~ " amiket megosztasz. Erről az oldalról letöltheted:\n"
+#~ " amiket megoszt. Erről az oldalról letöltheti:\n"
 #~ "http://www.andrewchatham.com/pyogg/ \n"
-#~ "Ha Debiant használsz, telepítsd a python-pyvorbis csomagot.\n"
+#~ "Ha Debiant használ, telepítse a python-pyvorbis csomagot.\n"
+
 #~ msgid "Share tree"
 #~ msgstr "Megosztási fa"
+
 #~ msgid "User %s added to privileged list"
 #~ msgstr "%s felhasználó hozzáadva az elsőbbségi listához"
+
 #~ msgid "Limit download speed to"
 #~ msgstr "Letöltési sebesség korlátozása erre:"
+
 #~ msgid "for total transfers"
 #~ msgstr "összes átvitelhez"
+
 #~ msgid "Get user info"
 #~ msgstr "Userinfó lekérése"
+
 #~ msgid "Browse files"
 #~ msgstr "Fájlok tallózása"
+
 #~ msgid "KBytes/sec then"
 #~ msgstr "KB/s, akkor"
+
 #~ msgid "_Give privileges"
 #~ msgstr "Elsőbbség _adása"
+
 #~ msgid "Clean Queue:"
 #~ msgstr "Várakozók Tisztítása:"
+
 #~ msgid "Manage selected Downloads:"
 #~ msgstr "Kijelölt Letöltések kezelése:"
+
 #~ msgid "Manage selected Uploads:"
 #~ msgstr "Kijelölt Feltöltések kezelése:"
+
 #~ msgid "Get Shares"
 #~ msgstr "Megosztások Lekérése"
-
