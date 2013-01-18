@@ -403,9 +403,9 @@ class SlskProtoThread(threading.Thread):
 			try:
 				# Select Networking Input and Output sockets
 				if sys.platform == "win32":
-					input, output, exc = multiselect(conns.keys() + connsinprogress.keys() + [p], connsinprogress.keys() + outsock, [], 0.5)
+					input, output, exc = multiselect(conns.keys() + connsinprogress.keys()+ [p], connsinprogress.keys() + outsock, [], 0.5)
 				else:
-					input, output, exc = select.select(conns.keys() + connsinprogress.keys() + [p], connsinprogress.keys() + outsock, [], 0.5)
+					input, output, exc = select.select(conns.keys() + connsinprogress.keys() +[p], connsinprogress.keys() + outsock, [], 0.5)
 				numsockets = 0
 				if p is not None:
 					numsockets += 1

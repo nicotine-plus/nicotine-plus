@@ -102,7 +102,8 @@ class Transfers:
 	TRANSFER = ['Requesting file', 'Initializing transfer', 'Transferring']
 	POST_TRANSFER = FAILED_TRANSFERS + COMPLETED_TRANSFERS
 
-	def __init__(self, downloads, queue, eventprocessor, users):
+	def __init__(self, downloads, peerconns, queue, eventprocessor, users):
+		self.peerconns = peerconns
 		self.queue = queue
 		self.eventprocessor = eventprocessor
 		self.downloads = HybridListDictionaryTransferMonstrosity()
@@ -260,12 +261,12 @@ class Transfers:
 			self.uploadspanel.update(transfer)
 
 	def UploadFailed(self, msg):
-		try:
-			i = self.eventprocessor.peerconns_by_conn[msg.conn]
-		except KeyError:
-			print("I don't know jack: %s" % msg.conn)
+		for i in self.peerconns:
+			if i.conn is msg.conn.conn:
+				user = i.username
+				break
+		else:
 			return
-		user = i.username
 		for i in self.downloads:
 			if i.user == user and i.filename == msg.file and (i.conn is not None or i.status in ["Connection closed by peer", "Establishing connection", "Waiting for download"]):
 				self.AbortTransfer(i)
@@ -425,17 +426,14 @@ class Transfers:
 				i.requestconn = conn
 				self.uploadspanel.update(i)
 	def TransferRequest(self, msg):
-		user = None
-		response = None
+		user = response = None
 		transfers = self.eventprocessor.config.sections["transfers"]
 		if msg.conn is not None:
-			try:
-				i = self.eventprocessor.get_peerconn_by_conn(msg.conn)
-				user = i.username
-				conn = msg.conn.conn
-				addr = msg.conn.addr[0]
-			except KeyError:
-				print("Out of gas: %s" % msg.conn)
+			for i in self.peerconns:
+				if i.conn is msg.conn.conn:
+					user = i.username
+					conn = msg.conn.conn
+					addr = msg.conn.addr[0]
 		elif msg.tunneleduser is not None:
 			user = msg.tunneleduser
 			conn = None
@@ -591,12 +589,11 @@ class Transfers:
 		Peer remotely(?) queued a download (upload here)
 		"""
 		user = None
-		try:
-			i = self.eventprocessor.peerconns_by_conn[msg.conn.conn]
-		except KeyError:
-			print("Lets burn somthing down: %s" % msg.conn.conn)
+		for i in self.peerconns:
+			if i.conn is msg.conn.conn:
+				user = i.username
+		if user is None:
 			return
-		user = i.username
 		addr = msg.conn.addr[0]
 		realpath = self.eventprocessor.shares.virtual2real(msg.file)
 		if not self.fileIsUploadQueued(user, msg.file):
@@ -630,12 +627,12 @@ class Transfers:
 
 	def UploadQueueNotification(self, msg):
 		username = None
-		try:
-			i = self.eventprocessor.peerconns_by_conn[msg.conn.conn]
-		except KeyError:
-			print("Last stand on Zanzibar: %s" % msg.conn.conn)
+		for i in self.peerconns:
+			if i.conn is msg.conn.conn:
+				username = i.username
+				break
+		if username is None:
 			return
-		username = i.username
 		if self.CanUpload(username):
 			self.eventprocessor.logMessage(_("Your buddy, %s, is attempting to upload file(s) to you.")%(username), None)
 			if username not in self.RequestedUploadQueue:
@@ -672,12 +669,9 @@ class Transfers:
 		return False
 			
 	def QueueFailed(self, msg):
-		try:
-			i = self.eventprocessor.peerconns_by_conn[msg.conn.conn]
-		except KeyError:
-			print("Something's not right... %s" % msg.conn.conn)
-			return
-		user = i.username
+		for i in self.peerconns:
+			if i.conn is msg.conn.conn:
+				user = i.username
 		for i in self.downloads:
 			if i.user == user and i.filename == msg.file and i.status == "Queued":
 				i.status = msg.reason
@@ -1252,11 +1246,9 @@ class Transfers:
 			self.removeQueued(transfercandidate.user, transfercandidate.filename)
 
 	def PlaceInQueueRequest(self, msg):
-		try:
-			i = self.eventprocessor.peerconns_by_conn[msg.conn.conn]
-			user = i.username
-		except KeyError:
-			print("Im dead: %s" % msg.conn.conn)
+		for i in self.peerconns:
+			if i.conn is msg.conn.conn:
+				user = i.username
 		def listUsers():
 			users = []
 			for i in self.uploads:
@@ -1534,12 +1526,10 @@ class Transfers:
 		""" The server tells us our place in queue for a particular transfer."""
 		
 		username = None
-		try:
-			i = self.eventprocessor.peerconns_by_conn[msg.conn.conn]
-		except KeyError:
-			print("HAsta la vistA: %s" % msg.conn.conn)
-			return
-		username = i.username
+		for i in self.peerconns:
+			if i.conn is msg.conn.conn:
+				username = i.username
+				break
 		
 		if username:
 			for i in self.downloads:
@@ -1576,12 +1566,11 @@ class Transfers:
 		""" When we got a contents of a folder, get all the files in it, but
 		skip the files in subfolders"""
 		username = None
-		try:
-			i = self.eventprocessor.peerconns_by_conn[msg.conn.conn]
-		except KeyError:
-			print("lpt on fire: %s" % msg.conn.conn)
+		for i in self.peerconns:
+			if i.conn is msg.conn.conn:
+				username = i.username
+		if username is None:
 			return
-		username = i.username
 		for i in msg.list.keys():
 			for directory in msg.list[i].keys():
 				if os.path.commonprefix([i, directory]) == directory:
