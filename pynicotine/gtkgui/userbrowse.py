@@ -411,7 +411,7 @@ class UserBrowse:
 				if attrs != [] and type(attrs) is list:
 					if len(attrs) >= 3:
 						br = str(attrs[0])
-						if attrs[2]:
+						if len(attrs) > 2 and attrs[2]:
 							br = br + _(" (vbr)")
 						try:
 							rl = int(attrs[1])
@@ -553,7 +553,7 @@ class UserBrowse:
 			attrs = file[4]
 			if attrs != []:
 				bitrate = str(attrs[0])
-				if attrs[2]:
+				if len(attrs) > 2 and attrs[2]:
 					bitrate += _(" (vbr)")
 				try:
 					rl = int(attrs[1])
@@ -619,7 +619,7 @@ class UserBrowse:
 			attrs = file[4]
 			if attrs != []:
 				bitrate = str(attrs[0])
-				if attrs[2]:
+				if len(attrs) > 2 and attrs[2]:
 					bitrate += _(" (vbr)")
 				try:
 					rl = int(attrs[1])
@@ -649,7 +649,7 @@ class UserBrowse:
 			attrs = file[4]
 			if attrs != []:
 				bitrate = str(attrs[0])
-				if attrs[2]:
+				if len(attrs) > 2 and attrs[2]:
 					bitrate += _(" (vbr)")
 				try:
 					rl = int(attrs[1])
