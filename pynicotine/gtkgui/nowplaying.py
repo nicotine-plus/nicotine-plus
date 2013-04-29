@@ -528,13 +528,25 @@ If faked=True it will only create a partial instance, enough to debug NP-code wi
 		return True
 		
 	def amarok2(self):
+		slist = self.NPFormat.child.get_text()
 		if not self.bus:
 			log.addwarning("Failed to import DBus, cannot read out Amarok2")
 			return
-		player = self.bus.Interface(bus.get_object('org.mpris.amarok', '/Player'), dbus_interface='org.freedesktop.MediaPlayer')
+		player = self.bus.get_object('org.mpris.amarok', '/Player')
 		md = player.GetMetadata()
 		for key, value in md.iteritems():
-			self.title[key] = unicode(value, 'iso8859-15', 'replace')
+			if key == 'mtime':
+				# Convert seconds to minutes:seconds
+				value = float(value) / 1000
+				m, s = divmod(value, 60)
+				self.title['length'] = "%d:%02d" % (m, s)
+			elif key == 'audio-bitrate':
+				self.title['bitrate'] = value
+			elif key == "location":
+				self.title['filename']
+			else:
+				self.title[key] = value
+			self.title['nowplaying'] = self.title['artist']+' - '+self.title['title']
 		return True
 	
 	def amarok(self):
