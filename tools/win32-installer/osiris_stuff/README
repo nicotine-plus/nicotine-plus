@@ -1,0 +1,48 @@
+README for Nicotine+ Win32 Installer/Standalone Executable
+===========================
+
+With this installer, only GTK+ is required.
+
+Dependencies
+
+ * For instructions on the required dependencies see DEPENDENCIES
+
+Build Nicotine.exe with py2exe
+
+ * make_exe.bat  - checks for needed dependencies and generates nicotine.exe
+ * make_exe.py - setup file containing arguments for building nicotine.exe
+ * nicotine.ico  - Icon for nicotine.exe
+ * README - this file
+  
+Windows Installer Creation 
+
+ * installerscript.nsi Script for NSIS ( install from http://nsis.sourceforge.net )
+ * copying.rtf - GPLv2 License
+
+Graphics for the installer
+ * NicotinePlusInstall.ico 
+ * NicotinePlusUninstall.ico
+ * Wizard.bmp
+ * wizard.xcf (Change Version here)
+ * header.xcf
+ * Header_L.bmp
+ * Header_R.bmp
+
+
+Steps:
+ 1. Install all dependencies (Python 2.4 is the best choice for getting all 
+    dependencies as of 7th March 2007) 
+    1A. If you choose not to use Python 2.4, modify make_exe.bat, make_exe.py 
+        and installerscript.nsi to reflect the dll name changes, path changes, 
+        dll removals and additions. 
+    1B. If a dependency for your chosen version of Python doesn't exist, you'll
+        have to remove it.
+ 2. Copy all files from this directory to the 'tools' subdirectory in the
+    nicotine+ source directory.
+ 3. Modify the version in the installerscript.nsi with a text editor
+ 4. Modify version in wizard.xcf (save as Wizard.bmp)
+
+ 5. Run make_exe.bat and press a key when the processed is paused
+ 6. Compile installerscript.nsi
+ 7. Test installation, uninstallation
+ 8. Done
