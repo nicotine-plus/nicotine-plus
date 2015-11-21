@@ -425,6 +425,8 @@ class SlskProtoThread(threading.Thread):
 			except ValueError, error:
 				# Possibly opened too many sockets
 				print time.strftime("%H:%M:%S"), "select ValueError:",  error
+				if not self.killOverflowConnection(connsinprogress):
+					self.killOverflowConnection(conns)
 				continue
 			# Write Output
 			for (key, value) in conns.iteritems():
@@ -551,7 +553,35 @@ class SlskProtoThread(threading.Thread):
 			server_socket.close()
 		#print "Networking thread aborted"
 		self._stopped = 1
-		
+
+        # randomly selects a safe connection to kill and closes the socket--
+        # Will not kill upload, download, or server connections
+        def killOverflowConnection(self, conns):
+		victim_conn = None
+		for (k, v) in conns.iteritems():
+			if self._isUpload(v):
+			        continue
+			if self._isDownload(v):
+				continue
+			if k is self._server_socket:
+				continue
+			victim_conn = k
+			break
+
+		if victim_conn is None:
+			return False
+
+		del conns[victim_conn]
+		# if endpoint is not connected, will get an exception on sockets...
+		try:
+			pn = victim_conn.getpeername()
+			print 'Killing overflow connection ', pn
+			victim_conn.shutdown(socket.SHUT_RDWR)
+			victim_conn.close()
+		except:
+			return False
+		return True
+
 	def socketStillActive(self, conn):
 		try:
 			connection = self._conns[conn]
