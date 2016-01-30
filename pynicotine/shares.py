@@ -725,7 +725,7 @@ class Shares:
 						message.packObject(2) +
 						message.packObject(NetworkIntType(fileinfo[2][1])))
 				stream += msgbytes
-			except struct.error:
+			except:
 				log.addwarning(_("Found meta data that couldn't be encoded, possible corrupt file: '%(file)s' has a bitrate of %(bitrate)s kbs, a length of %(length)s seconds and a VBR of %(vbr)s" % {
 						'file':    fileinfo[0],
 						'bitrate': fileinfo[2][0],
