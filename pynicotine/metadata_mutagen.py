@@ -5,6 +5,7 @@ from __future__ import division
 
 # Python modules
 import mutagen
+import os
 
 from mutagen.mp3 import MP3, MPEGInfo
 from mutagen.mp4 import MP4StreamInfoError
@@ -28,9 +29,12 @@ def detect(path):
 	except Exception, e:
 		log.addwarning("Mutagen crashed on '%s': %s" % (path, e))
 		return None
-	if not audio:
+	try:
+		audio.info
+	except:
 		# mutagen didn't think the file was audio
 		return None
+
 	if type(audio.info) == MPEGInfo:
 		return processMPEG(audio)
 	elif type(audio.info) == StreamInfo:
@@ -80,8 +84,17 @@ def processMPEG(audio):
 		"time": audio.info.length,
 	}
 def processFlac(audio):
+	filesize = os.path.getsize(audio.filename)
+
+	duration = audio.info.length
+
+	if duration > 0:
+		bitrate = filesize / duration * 8 / 1000
+	else:
+		bitrate = None
+
 	return {
-		"bitrate": (audio.info.bits_per_sample * audio.info.sample_rate / 1000),
+		"bitrate": bitrate,
 		"vbr": False,
 		"time": audio.info.length,
 	}
@@ -105,13 +118,22 @@ def processMonkeys(audio):
 	return info
 def processMP4(audio):
 	return {
-		"bitrate": audio.info.bitrate,
+		"bitrate": (audio.info.bitrate/1000),
 		"vbr": True,
 		"time": audio.info.length,
 	}
 def processASF(audio):
+	filesize = os.path.getsize(audio.filename)
+
+	duration = audio.info.length
+
+	if duration > 0:
+		bitrate = filesize / duration / 1000
+	else:
+		bitrate = None
+
 	return {
-		"bitrate": audio.info.bitrate,
+		"bitrate": bitrate,
 		"vbr": True,
 		"time": audio.info.length,
 	}
