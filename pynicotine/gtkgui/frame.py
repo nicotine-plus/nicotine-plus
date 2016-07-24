@@ -1653,7 +1653,7 @@ class NicotineFrame:
 		
 	def SetSocketStatus(self, status):
 		self.SocketStatus.pop(self.socket_context_id)
-		self.SocketStatus.push(self.socket_context_id, _("%s/%s Connections") % (status, slskproto.MAXFILELIMIT))
+		self.SocketStatus.push(self.socket_context_id, _("%(current)s/%(limit)s Connections") % {'current': status, 'limit': slskproto.MAXFILELIMIT})
 		
 	def InitInterface(self, msg):
 		if self.away == 0:

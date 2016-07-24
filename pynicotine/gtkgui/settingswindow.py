@@ -1640,13 +1640,13 @@ class BloatFrame(buildFrame):
 				langTranslation = gettext.translation('nicotine', languages=[language])
 				langTranslation.install()
 		except IOError, e:
-			message = _("Translation not found for '%s': %s") % (language, e)
+			message = _("Translation not found for '%(language)s': %(error)s") % {'language': language, 'error': e}
 			langTranslation = gettext
 		except IndexError, e:
-			message = _("Translation was corrupted for '%s': %s") % (language, e)
+			message = _("Translation was corrupted for '%(language)s': %(error)s") % {'language': language, 'error': e}
 			langTranslation = gettext
 		except KeyError, e:
-			message = _("Lookup failed for '%(language)s': %(error)s") % {'language':language, 'error':e}
+			message = _("Lookup failed for '%(language)s': %(error)s") % {'language': language, 'error': e}
 			langTranslation = gettext
 		if message is not None and message != "":
 			popupWarning(self.p.SettingsWindow, _("Warning: Missing translation"), _("Nicotine+ could not find your selected translation.\n%s") % message, self.frame.images["n"] )
