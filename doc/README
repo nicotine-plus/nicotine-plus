@@ -1,6 +1,6 @@
 Nicotine+ is a client for the SoulSeek filesharing network. It was "forked"
-from Nicotine, Hyriand's Soulseek client, which in turn was forked from the 
-PySoulSeek project by Alexander Kanavin. 
+from Nicotine, Hyriand's Soulseek client, which in turn was forked from the
+PySoulSeek project by Alexander Kanavin.
 
 Dependencies:
  To use it on Linux/Unix and X11 you'll need the following:
@@ -11,7 +11,7 @@ Dependencies:
   * Python 2.2.3 or newer  http://www.python.org/
   * pygtk-2.10 or newer (may work with older version, but is *UNTESTED*)
     http://www.pygtk.org/
- 
+
  Optional:
   * PyOGG and PyVorbis (OGG metadata support for your shares)
     http://ekyo.nerim.net/software/pyogg/
@@ -35,7 +35,7 @@ General Usage:
  invokes nickname auto-completion.
 
 Translations:
- Translators, please read the TRANSLATORS and TRANSLATIONS files.
+ Translators, please read the TRANSLATORS and TRANSLATIONS.md files.
 
 Config Conversion:
  If you wish to import your config from the official Windows client,
@@ -60,6 +60,3 @@ The homepage of PySoulSeek is: http://sensi.org/~ak/pyslsk/
 
 
 ps. Please remember, not sharing kills P2P!
-
-
-
