@@ -1,0 +1,6 @@
+# Temporary translation files
+languages/nicotine-glade.pot
+languages/nicotine-python.pot
+
+# Python byte code files
+*.pyc
