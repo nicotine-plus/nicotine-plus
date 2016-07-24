@@ -141,7 +141,7 @@ class UPnPPortMapping:
         try:
             functiontocall()
         except Exception as e:
-            log.addwarning(_('%(error)s') % {'error': str(e)})
+            log.addwarning(_('UPnP exception: %(error)s') % {'error': str(e)})
             log.addwarning(
                 _('Failed to automate the creation of ' +
                     'UPnP Port Mapping rule.'))
@@ -251,8 +251,8 @@ class UPnPPortMapping:
                     )
                 )
 
-        # Find a suitable external WAN port to map to based on the existing
-        # mappings
+        # Find a suitable external WAN port to map to based
+        # on the existing mappings
         self.FindSuitableExternalWANPort()
 
         # Do the port mapping
