@@ -62,7 +62,7 @@ import nowplaying
 from pynicotine import pluginsystem
 from pynicotine.logfacility import log
 from entrydialog import  *
-import pynicotine.upnp as upnp
+from pynicotine.upnp import UPnPPortMapping
 
 SEXY=True
 try:
@@ -644,13 +644,11 @@ class NicotineFrame:
 				self.OnFastConfigure(None)
 			else:
 				# Connect anyway
-				#self.OnConnect(-1)
 				self.OnFirstConnect(-1)
 		else:
-			#self.OnConnect(-1)
 			self.OnFirstConnect(-1)
 		self.UpdateDownloadFilters()
-		
+
 		if use_trayicon and config["ui"]["trayicon"]:
 			if RGBA:
 				log.add('X11/GTK RGBA Bug workaround: Setting default colormap to RGB')
@@ -676,6 +674,7 @@ class NicotineFrame:
 		for (timestamp, level, msg) in log.history:
 			self.updateLog(msg, level)
 		log.addlistener(self.logCallback)
+
 
 	def SetTranslatableTabNames(self):
 		# Custom widgets, such as these tab labels aren't translated
@@ -1521,23 +1520,24 @@ class NicotineFrame:
 		self.np.config.sections["privatechat"]["users"] = list(self.privatechats.users.keys())
 		self.np.protothread.abort()
 		self.np.StopTimers()
-		
+
 		if not self.manualdisconnect:
 			self.OnDisconnect(None)
 		self.np.config.writeConfig()
-		
-			
+
+		# Cleaning up the trayicon
 		if self.TrayApp.trayicon:
 			if sys.platform == "win32":
 				self.TrayApp.trayicon.hide_icon()
 			else:
 				self.TrayApp.destroy_trayicon()
+
+		# Cleaning up the internal browser
 		if self.browser is not None:
 			self.browser.shutdown()
 			gtk.gdk.threads_leave()
-			#sys.exit()
-		#import time
-		#time.sleep(4)
+
+		# Exiting GTK
 		gtk.main_quit()
 		#gtk.gdk.threads_leave()
 		if sys.platform.startswith("win"):
@@ -1545,32 +1545,19 @@ class NicotineFrame:
 			sys.exit()
 
 	def OnFirstConnect(self, widget):
-		if not self.np.config.sections["server"]["upnp"]:
+
+		# Initialiase a UPnPPortMapping object
+		upnp = UPnPPortMapping()
+
+		# Test if we want and are able to apply port mapping
+		if not self.np.config.sections["server"]["upnp"] or not upnp.IsPossible():
+			# If not we connect without changing anything
 			self.OnConnect(-1)
 			return
-		thread.start_new_thread(self.Fixportmapping, ())
-	def Fixportmapping(self):
-		if not upnp.upnppossible:
-			log.add(_('Not using UPnP to fix portmapping due to errors: %(errors)s') % {'errors':'\n'.join(upnp.miniupnpc_errors)})
-			self.OnConnect(-1)
-			return
-		log.add(_("Figuring out UPnP..."))
-		time.sleep(0.5) # Wait for the GUI to come alive
-		print "Fixing ports..."
-		internalport = self.np.protothread._p.getsockname()[1] # Internal LAN port
-		externalport = internalport # External LAN port
-		try:
-			mapping = upnp.fixportmapping(self.np.protothread._p.getsockname()[1])
-			if not mapping:
-				log.add('Failed to automate port forwarding, sorry.')
-			else:
-				(externalip, externalport) = mapping
-				log.add('Managed to forward port %s, your external IP is %s.' % (externalport, externalip))
-				self.networkcallback([slskmessages.IncPort(externalport)])
-		except Exception, e:
-			log.add('UPNP Exception (should never happen): %s' % (e,))
-		print "Done fixing ports"
-		self.OnConnect(-1)
+
+		# Do the port mapping
+		thread.start_new_thread(upnp.AddPortMapping, (self, self.np))
+
 	def OnConnect(self, widget):
 		self.TrayApp.tray_status["status"] = "connect"
 		self.TrayApp.SetImage()
@@ -1762,13 +1749,12 @@ class NicotineFrame:
 		self.np.queue.put(slskmessages.SetStatus(self.away and 1 or 2))
 		self.privatechats.UpdateColours()
 
-		
 	def OnExit(self, widget):
 		self.exiting = 1
 		if sys.platform == "win32" and self.TrayApp.trayicon:
 			self.TrayApp.trayicon.hide_icon()
 		self.MainWindow.destroy()
-	
+
 	def OnSearch(self, widget):
 		self.Searches.OnSearch()
 		
@@ -2694,9 +2680,8 @@ class NicotineFrame:
 
 	def OnBrowseMyShares(self, widget):
 		self.BrowseUser(None)
-		
-	
-				
+
+
 	def PrivateRoomRemoveUser(self, room, user):
 		self.np.queue.put(slskmessages.PrivateRoomRemoveUser(room, user))
 	def PrivateRoomAddUser(self, room, user):
@@ -2735,7 +2720,7 @@ class NicotineFrame:
 		if item_text.lower().startswith(split_key) and item_text.lower() != split_key:
 			return True
 		return False
-#
+
 	def EntryCompletionFoundMatch(self, completion, model, iter, widget):
 		current_text = widget.get_text()
 		ix = widget.get_position()
