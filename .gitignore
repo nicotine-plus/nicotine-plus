@@ -4,3 +4,6 @@ languages/nicotine-python.pot
 
 # Python byte code files
 *.pyc
+
+# Pot bakckup
+*.po~
