@@ -94,7 +94,7 @@ class WishList( gtk.Dialog):
 		
 
 		self.store = gtk.ListStore(gobject.TYPE_STRING)
-		column = gtk.TreeViewColumn(_("Wishs"), gtk.CellRendererText(), text = 0)
+		column = gtk.TreeViewColumn(_("Wishes"), gtk.CellRendererText(), text = 0)
 		self.WishlistView.append_column(column)
 		self.WishlistView.set_model(self.store)
 		self.WishlistView.get_selection().set_mode(gtk.SELECTION_MULTIPLE)

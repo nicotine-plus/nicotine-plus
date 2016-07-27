@@ -486,7 +486,7 @@ class AboutPrivateDialog(GenericTableDialog):
 		"", "",
 		"<b>"+_("Search")+"</b>", "",
 		"/search /s '" + _("query")+"'", _("Start a new search for 'query'"),
-		"/rsearch /rs '" + _("query")+"'", _("Search the joined roms for 'query'"),
+		"/rsearch /rs '" + _("query")+"'", _("Search the joined rooms for 'query'"),
 		"/bsearch /bs '" + _("query")+"'", _("Search the buddy list for 'query'"),
 		"/usearch /us '" + _("query")+"'", _("Search a user's shares for 'query'"),
 		"", "",
@@ -508,7 +508,7 @@ class AboutDependenciesDialog(GenericTableDialog):
 		"<b>%s</b>" %_("Spell Checking"), "<i>%s</i>" % _("Libsexy, sexy-python") +"\n"+ _("Website:")+" "+"http://www.chipx86.com/wiki/Libsexy",
 		"<b>%s</b>" %_("Speed Up"), "<i>%s</i>" % _("Psyco")+"\n"+_("Website:")+" "+"http://psyco.sourceforge.net/",
 		"<b>%s</b>" %_("IP Address Geolocation"), "<i>%s</i>" % _("GeoIP-Python")+"\n"+_("Website:")+" "+"http://www.maxmind.com/app/python",
-		"<b>%s</b>" %_("Meta data for files other than MP3"), "<i>%s</i>\n%s: %s" % (_("Mutagen"), _("Website"), "http://code.google.com/p/quodlibet/wiki/Mutagen"),
+		"<b>%s</b>" %_("Metadata for files other than MP3"), "<i>%s</i>\n%s: %s" % (_("Mutagen"), _("Website"), "http://code.google.com/p/quodlibet/wiki/Mutagen"),
 		"<b>%s</b>" %_("Download Notifications"), "<i>%s</i>" % _("notification-daemon, notify-python, libnotify") +"\n"+_("Website:")+" "+"http://www.galago-project.org/downloads.php",
 	]
 

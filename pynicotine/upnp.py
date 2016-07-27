@@ -284,8 +284,8 @@ class UPnPPortMapping:
             if line.find(" failed with code ") > -1:
                 log.adddebug('Failed')
                 raise RuntimeError(
-                    _('Failed to map the external WAN port: %(line)s') %
-                    {'line': str(line)})
+                    _('Failed to map the external WAN port: %(error)s') %
+                    {'error': str(line)})
 
         raise AssertionError(
             _('UPnPc binary failed, could not parse output: %(output)s') %
@@ -312,7 +312,7 @@ class UPnPPortMapping:
             log.adddebug('%s device(s) detected' % u.discover())
         except Exception as e:
             raise RuntimeError(
-                _('UPNP Exception (should never happen): %(error)s') %
+                _('UPnP exception (should never happen): %(error)s') %
                 {'error': str(e)})
 
         # Select an IGD

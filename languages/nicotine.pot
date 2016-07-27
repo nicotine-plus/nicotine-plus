@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-07-25 18:27+0200\n"
+"POT-Creation-Date: 2016-07-27 23:25+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -61,7 +61,7 @@ msgstr ""
 
 msgid ""
 "Welcome to Nicotine+. In order to start you need to fill in a few details. "
-"Please press Forward to start configuring Nicotine+. \n"
+"Please press Forward to start configuring Nicotine+.\n"
 "\n"
 "This should only take about 60 seconds."
 msgstr ""
@@ -463,7 +463,7 @@ msgid "Change password"
 msgstr ""
 
 msgid ""
-"For a new account \n"
+"For a new account\n"
 " enter desired details"
 msgstr ""
 
@@ -1252,10 +1252,10 @@ msgstr ""
 msgid "<b>Notebook Tabs</b>"
 msgstr ""
 
-msgid "Colours"
+msgid "Colors"
 msgstr ""
 
-msgid "Default Colours"
+msgid "Default Colors"
 msgstr ""
 
 msgid "URL Link text"
@@ -1270,7 +1270,7 @@ msgstr ""
 msgid "Online"
 msgstr ""
 
-msgid "Username Colours and Hotspots"
+msgid "Username Colors and Hotspots"
 msgstr ""
 
 msgid "Display away colors"
@@ -1288,7 +1288,7 @@ msgstr ""
 msgid "Remote text"
 msgstr ""
 
-msgid "<b>Chat colours</b>"
+msgid "<b>Chat colors</b>"
 msgstr ""
 
 msgid "Input Text"
@@ -1297,7 +1297,7 @@ msgstr ""
 msgid "Background"
 msgstr ""
 
-msgid "Input and lists colours"
+msgid "Input and lists colors"
 msgstr ""
 
 msgid "Offline Search"
@@ -1309,10 +1309,10 @@ msgstr ""
 msgid "List Text"
 msgstr ""
 
-msgid "<b>List and search colours</b>"
+msgid "<b>List and search colors</b>"
 msgstr ""
 
-msgid "Notebook tab labels change to these colours."
+msgid "Notebook tab labels change to these colors."
 msgstr ""
 
 msgid "Changed"
@@ -1321,7 +1321,7 @@ msgstr ""
 msgid "Highlight"
 msgstr ""
 
-msgid "<b>Tab colours</b>"
+msgid "<b>Tab colors</b>"
 msgstr ""
 
 msgid ""
@@ -1351,7 +1351,7 @@ msgstr ""
 msgid "<b>Transparent Log Windows</b>"
 msgstr ""
 
-msgid "<b>Colours</b>"
+msgid "<b>Colors</b>"
 msgstr ""
 
 msgid "Ignored users:"
@@ -1640,7 +1640,7 @@ msgid ""
 "in an interpreter's module search path. \n"
 "(there could be a version mismatch between \n"
 "what version of python was used to build the Nicotine \n"
-"binary package and what you try to run Nicotine with.)"
+"binary package and what you try to run Nicotine with)."
 msgstr ""
 
 msgid "You must install the Gtk+ 2.x Runtime Environment to run this program"
@@ -2013,9 +2013,6 @@ msgstr ""
 msgid "Close the current private chat"
 msgstr ""
 
-msgid "Search the joined roms for 'query'"
-msgstr ""
-
 msgid "Chat Rooms"
 msgstr ""
 
@@ -2055,7 +2052,7 @@ msgstr ""
 msgid "GeoIP-Python"
 msgstr ""
 
-msgid "Meta data for files other than MP3"
+msgid "Metadata for files other than MP3"
 msgstr ""
 
 msgid "Mutagen"
@@ -2535,19 +2532,19 @@ msgstr ""
 msgid "Nicotine+: Get User Info"
 msgstr ""
 
-msgid "Enter the User whose User Info you wish to recieve:"
+msgid "Enter the User whose User Info you wish to receive:"
 msgstr ""
 
 msgid "Nicotine+: Get A User's IP"
 msgstr ""
 
-msgid "Enter the User whose IP Address you wish to recieve:"
+msgid "Enter the User whose IP Address you wish to receive:"
 msgstr ""
 
 msgid "Nicotine+: Get A User's Shares List"
 msgstr ""
 
-msgid "Enter the User whose Shares List you wish to recieve:"
+msgid "Enter the User whose Shares List you wish to receive:"
 msgstr ""
 
 #, python-format
@@ -2704,7 +2701,7 @@ msgstr ""
 msgid "Disconnect"
 msgstr ""
 
-msgid "Hide / Unhide Nicotine"
+msgid "Hide / Show Nicotine"
 msgstr ""
 
 msgid "Settings"
@@ -2793,7 +2790,7 @@ msgstr ""
 msgid "ERROR: audtool didn't detect a running Audacious session."
 msgstr ""
 
-msgid "Could not find a suitable MPIS player."
+msgid "Could not find a suitable MPRIS player."
 msgstr ""
 
 #, python-format
@@ -2879,7 +2876,7 @@ msgstr ""
 msgid "Select all"
 msgstr ""
 
-msgid "Wishs"
+msgid "Wishes"
 msgstr ""
 
 msgid "Add Wish..."
@@ -3059,7 +3056,7 @@ msgstr ""
 msgid "Choose an icon theme directory"
 msgstr ""
 
-msgid "Pick a colour, any colour"
+msgid "Pick a color, any color"
 msgstr ""
 
 #, python-format
@@ -3625,9 +3622,6 @@ msgid ""
 "Problem area:%(area)s"
 msgstr ""
 
-msgid "Plugin %(module) returned something weird, '%(value)', ignoring"
-msgstr ""
-
 #, python-format
 msgid "Unknown queue item %s: %s"
 msgstr ""
@@ -4175,7 +4169,7 @@ msgid "Failed to use UPnPc binary: %(error)s"
 msgstr ""
 
 #, python-format
-msgid "Failed to map the external WAN port: %(line)s"
+msgid "Failed to map the external WAN port: %(error)s"
 msgstr ""
 
 #, python-format
@@ -4183,15 +4177,11 @@ msgid "UPnPc binary failed, could not parse output: %(output)s"
 msgstr ""
 
 #, python-format
-msgid "UPNP Exception (should never happen): %(error)s"
+msgid "UPnP exception (should never happen): %(error)s"
 msgstr ""
 
 #, python-format
 msgid "Cannot select an IGD : %(error)s"
-msgstr ""
-
-#, python-format
-msgid "Failed to map the external WAN port: %(error)s"
 msgstr ""
 
 msgid "Failed to find a suitable external WAN port, bailing out."

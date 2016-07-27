@@ -15,7 +15,7 @@
     <child>
       <object class="GtkLabel" id="welcomepage">
         <property name="visible">True</property>
-        <property name="label" translatable="yes">Welcome to Nicotine+. In order to start you need to fill in a few details. Please press Forward to start configuring Nicotine+. 
+        <property name="label" translatable="yes">Welcome to Nicotine+. In order to start you need to fill in a few details. Please press Forward to start configuring Nicotine+.
 
 This should only take about 60 seconds.</property>
         <property name="wrap">True</property>
@@ -560,7 +560,7 @@ To test your port please press the following button. It will open a page in your
         <child>
           <object class="GtkLabel" id="label17">
             <property name="visible">True</property>
-            <property name="label" translatable="yes">*</property>
+            <property name="label">*</property>
           </object>
           <packing>
             <property name="top_attach">2</property>

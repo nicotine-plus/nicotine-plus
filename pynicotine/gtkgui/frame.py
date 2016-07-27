@@ -1102,7 +1102,7 @@ class NicotineFrame:
 			users.append(entry[0])
 		users.sort()
 		user = input_box(self, title=_('Nicotine+: Get User Info'),
-		message=_('Enter the User whose User Info you wish to recieve:'),
+		message=_('Enter the User whose User Info you wish to receive:'),
 		default_text='', droplist=users)
 		if user is None:
 			pass
@@ -1115,7 +1115,7 @@ class NicotineFrame:
 			users.append(entry[0])
 		users.sort()
 		user = input_box(self, title=_("Nicotine+: Get A User's IP"),
-		message=_('Enter the User whose IP Address you wish to recieve:'),
+		message=_('Enter the User whose IP Address you wish to receive:'),
 		default_text='', droplist=users)
 		if user is None:
 			pass
@@ -1129,7 +1129,7 @@ class NicotineFrame:
 			users.append(entry[0])
 		users.sort()
 		user = input_box(self, title=_("Nicotine+: Get A User's Shares List"),
-		message=_('Enter the User whose Shares List you wish to recieve:'),
+		message=_('Enter the User whose Shares List you wish to receive:'),
 		default_text='', droplist=users)
 		if user is None:
 			pass
@@ -3489,7 +3489,7 @@ class TrayApp:
 			)
 			self.tray_popup_menu = popup = PopupMenu(self)
 			popup.setup(
-				("#" + _("Hide / Unhide Nicotine"), self.HideUnhideWindow, gtk.STOCK_GOTO_BOTTOM),
+				("#" + _("Hide / Show Nicotine"), self.HideUnhideWindow, gtk.STOCK_GOTO_BOTTOM),
 				(1, _("Server"), self.tray_popup_menu_server, self.OnPopupServer),
 				("#" + _("Settings"), self.frame.OnSettings, gtk.STOCK_PREFERENCES),
 				("#" + _("Send Message"), self.frame.OnOpenPrivateChat, gtk.STOCK_EDIT),

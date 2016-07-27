@@ -15,7 +15,7 @@ from utils import _, displayTraceback, strace
 try:
 	import metadata_mutagen as metadata
 except ImportError:
-	log.addwarning("Failed to import the Mutagen library, falling back to old library. To improve meta data please install Mutagen.")
+	log.addwarning("Failed to import the Mutagen library, falling back to old library. To improve metadata please install Mutagen.")
 	import mp3 as metadata
 
 win32 = sys.platform.startswith("win")
@@ -846,5 +846,3 @@ class Shares:
 			else:
 				wordindex[i] = wordindex[i] + [index]
 		fileindex[str(index)] = (os.path.join(dir, fileinfo[0]),)+fileinfo[1:]
-
-

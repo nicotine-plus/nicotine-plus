@@ -289,7 +289,7 @@ class PluginHandler(object):
 					elif ret == returncode['pass']:
 						pass
 					else:
-						log.add(_("Plugin %(module) returned something weird, '%(value)', ignoring") % {'module':module, 'value':ret})
+						log.add(_("Plugin %(module)s returned something weird, '%(value)s', ignoring") % {'module':module, 'value':ret})
 				if ret != None:
 					hotpotato = ret
 			except:
