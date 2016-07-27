@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nicotine\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-07-24 22:10+0200\n"
-"PO-Revision-Date: 2016-07-27 22:16+0200\n"
+"POT-Creation-Date: 2016-07-27 23:25+0200\n"
+"PO-Revision-Date: 2016-07-27 23:31+0200\n"
 "Last-Translator: Michael LABOUEBE <gfarmerfr@free.fr>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -30,7 +30,6 @@ msgstr "Configuration des utilisateurs bannis"
 
 # pynicotine/gtkgui/nicotine_glade.py
 # pynicotine/gtkgui/settings_glade.py
-#, fuzzy
 msgid "window1"
 msgstr "fenêtre1"
 
@@ -72,7 +71,7 @@ msgstr "Nicotine+ Configuration Rapide"
 
 msgid ""
 "Welcome to Nicotine+. In order to start you need to fill in a few details. "
-"Please press Forward to start configuring Nicotine+. \n"
+"Please press Forward to start configuring Nicotine+.\n"
 "\n"
 "This should only take about 60 seconds."
 msgstr ""
@@ -161,7 +160,6 @@ msgstr "Partager uniquement avec mes amis"
 msgid "Directories (page %(page)s of %(pages)s)"
 msgstr "Répertoires (page %(page)s sur %(pages)s)"
 
-#, fuzzy
 msgid "*"
 msgstr "*"
 
@@ -203,7 +201,6 @@ msgstr ""
 "Si vous trouvez des bogues, spécialement si vous utilisez Windows ou OSX, "
 "s'il vous plait faites le nous savoir > via Aide > Rapporter un bogue."
 
-#, fuzzy
 msgid "\t"
 msgstr "\t"
 
@@ -369,7 +366,6 @@ msgstr "Guide de Nicotine+ en ligne"
 msgid "Sourceforge Project Website"
 msgstr "Site internet du projet sur Sourceforge"
 
-#, fuzzy
 msgid "Nicotine-Plus Trac Website"
 msgstr "Site internet de Nicotine+ Trac"
 
@@ -604,7 +600,7 @@ msgid "Change password"
 msgstr "Modifiez votre mot de passe"
 
 msgid ""
-"For a new account \n"
+"For a new account\n"
 " enter desired details"
 msgstr ""
 "Pour un nouveau compte \n"
@@ -1631,13 +1627,11 @@ msgid "<b>Notebook Tabs</b>"
 msgstr "<b>Barre des onglets</b>"
 
 # pynicotine/gtkgui/settings_glade.py
-#, fuzzy
-msgid "Colours"
+msgid "Colors"
 msgstr "Couleurs"
 
 # pynicotine/gtkgui/settings_glade.py
-#, fuzzy
-msgid "Default Colours"
+msgid "Default Colors"
 msgstr "Couleurs par défaut"
 
 msgid "URL Link text"
@@ -1654,8 +1648,7 @@ msgstr "Hors ligne"
 msgid "Online"
 msgstr "Présent"
 
-#, fuzzy
-msgid "Username Colours and Hotspots"
+msgid "Username Colors and Hotspots"
 msgstr "Couleurs des noms d'utilisateurs (zone cliquable)"
 
 msgid "Display away colors"
@@ -1678,7 +1671,7 @@ msgid "Remote text"
 msgstr "Texte reçu"
 
 # pynicotine/gtkgui/settings_glade.py
-msgid "<b>Chat colours</b>"
+msgid "<b>Chat colors</b>"
 msgstr "<b>Couleurs des salons</b>"
 
 msgid "Input Text"
@@ -1687,9 +1680,8 @@ msgstr "Zone de saisie"
 msgid "Background"
 msgstr "Arrière-plan"
 
-#, fuzzy
-msgid "Input and lists colours"
-msgstr "Couleurs des saisies et des listes"
+msgid "Input and lists colors"
+msgstr "Couleurs des saisies et listes"
 
 # pynicotine/gtkgui/frame.py
 msgid "Offline Search"
@@ -1703,13 +1695,11 @@ msgid "List Text"
 msgstr "Liste d'utilisateurs"
 
 # pynicotine/gtkgui/settings_glade.py
-#, fuzzy
-msgid "<b>List and search colours</b>"
-msgstr "<b>Liste et choix des couleurs</b>"
+msgid "<b>List and search colors</b>"
+msgstr "<b>Couleurs des listes et recherches</b>"
 
-#, fuzzy
-msgid "Notebook tab labels change to these colours."
-msgstr "Changer en ces couleurs les étiquettes des onglets"
+msgid "Notebook tab labels change to these colors."
+msgstr "Couleurs des étiquettes des onglets."
 
 msgid "Changed"
 msgstr "Modifié"
@@ -1719,8 +1709,7 @@ msgid "Highlight"
 msgstr "Surbrillance"
 
 # pynicotine/gtkgui/settings_glade.py
-#, fuzzy
-msgid "<b>Tab colours</b>"
+msgid "<b>Tab colors</b>"
 msgstr "<b>Couleurs des onglets</b>"
 
 msgid ""
@@ -1754,8 +1743,7 @@ msgid "<b>Transparent Log Windows</b>"
 msgstr "<b>Fenêtre des messages transparente</b>"
 
 # pynicotine/gtkgui/settings_glade.py
-#, fuzzy
-msgid "<b>Colours</b>"
+msgid "<b>Colors</b>"
 msgstr "<b>Couleurs</b>"
 
 # pynicotine/gtkgui/settings_glade.py
@@ -1930,7 +1918,6 @@ msgstr "Commande/Profile pour le lecteur"
 msgid "Legend:"
 msgstr "Légende:"
 
-#, fuzzy
 msgid "Now playing format:"
 msgstr "Now Playing format:"
 
@@ -2101,14 +2088,13 @@ msgstr ""
 "Vous devriez installer Python 2.2.0, ou une version plus récente."
 
 # nicotine
-#, fuzzy
 msgid ""
 "Can not find Nicotine modules. \n"
 "Perhaps they're installed in a directory which is not \n"
 "in an interpreter's module search path. \n"
 "(there could be a version mismatch between \n"
 "what version of python was used to build the Nicotine \n"
-"binary package and what you try to run Nicotine with.)"
+"binary package and what you try to run Nicotine with)."
 msgstr ""
 "Impossible de trouver les modules de Nicotine.\n"
 "Ils sont peut-être installés dans un répertoire qui\n"
@@ -2166,15 +2152,14 @@ msgstr ""
 msgid "Disabled UPnP support due to errors… See above"
 msgstr "UPnP a été désactivé à cause d'erreurs... Voyez au-dessus"
 
-#, fuzzy, python-format
+#, python-format
 msgid "Nicotine-Plus version %s"
-msgstr "Nicotine-Plus version %s"
+msgstr "Nicotine+ version %s"
 
 msgid "Cannot find the pynicotine.utils module."
 msgstr "Impossible de trouver le module pynicotine.utils."
 
 # nicotine
-#, fuzzy
 msgid ""
 "Nicotine-Plus is a Soulseek client.\n"
 "Usage: nicotine [OPTION]…\n"
@@ -2264,7 +2249,6 @@ msgstr "Licence"
 msgid "Credits"
 msgstr "Crédits"
 
-#, fuzzy
 msgid ""
 "daelstorm\n"
 "\t(Lead developer)\n"
@@ -2347,7 +2331,6 @@ msgstr ""
 msgid "Developers"
 msgstr "Développeurs"
 
-#, fuzzy
 msgid ""
 "Dutch\n"
 " * nince78 (2007)\n"
@@ -2434,7 +2417,6 @@ msgstr ""
 msgid "Translators"
 msgstr "Traducteurs"
 
-#, fuzzy
 msgid ""
 "GNU General Public License version 3 notice\n"
 "\n"
@@ -2596,7 +2578,6 @@ msgstr "message"
 msgid "Say something in the third-person"
 msgstr "Parler à la troisième-personne"
 
-#, fuzzy
 msgid "Display the Now Playing script's output"
 msgstr "Afficher la sortie du script du Now Playing"
 
@@ -2724,11 +2705,6 @@ msgstr "Commandes des salons de discussion"
 msgid "Close the current private chat"
 msgstr "Ferme la fenêtre de dialogue privé courante"
 
-# pynicotine/gtkgui/about.py
-#, fuzzy
-msgid "Search the joined roms for 'query'"
-msgstr "Recherche 'requête' dans les salons joints"
-
 # pynicotine/gtkgui/nicotine_glade.py
 msgid "Chat Rooms"
 msgstr "Salons des discussions"
@@ -2774,8 +2750,7 @@ msgstr "Géolocalisation d'adresse IP"
 msgid "GeoIP-Python"
 msgstr "GeoIP-Python"
 
-#, fuzzy
-msgid "Meta data for files other than MP3"
+msgid "Metadata for files other than MP3"
 msgstr "Méta-données pour les fichiers autres que les MP3"
 
 msgid "Mutagen"
@@ -3354,11 +3329,9 @@ msgstr "Envois"
 msgid "Interests"
 msgstr "Centres d'intérêts"
 
-#, fuzzy
 msgid "Close Nicotine-Plus?"
 msgstr "Fermer Nicotine+?"
 
-#, fuzzy
 msgid "Are you sure you wish to exit Nicotine-Plus at this time?"
 msgstr "Etes vous sûr de vouloir fermer Nicotine+?"
 
@@ -3431,26 +3404,23 @@ msgstr ""
 msgid "Nicotine+: Get User Info"
 msgstr "Nicotine+ Rechercher ses informations"
 
-#, fuzzy
-msgid "Enter the User whose User Info you wish to recieve:"
+msgid "Enter the User whose User Info you wish to receive:"
 msgstr ""
 "Entrer le nom de l'utilisateur dont vous souhaitez voir les informations:"
 
 msgid "Nicotine+: Get A User's IP"
 msgstr "Nicotine+ Voir l'adresse IP de l'utilisateur"
 
-#, fuzzy
-msgid "Enter the User whose IP Address you wish to recieve:"
-msgstr "Entrer le nom de l'utilisateur dont vous souhaitez voir l'adresse IP"
+msgid "Enter the User whose IP Address you wish to receive:"
+msgstr "Entrer le nom de l'utilisateur dont vous souhaitez voir l'adresse IP:"
 
 msgid "Nicotine+: Get A User's Shares List"
 msgstr "Nicotine+ Voir le partage de l'utilisateur"
 
-#, fuzzy
-msgid "Enter the User whose Shares List you wish to recieve:"
-msgstr "Entrer le nom de l'utilisateur dont vous souhaitez voir les fichiers"
+msgid "Enter the User whose Shares List you wish to receive:"
+msgstr "Entrer le nom de l'utilisateur dont vous souhaitez voir les fichiers:"
 
-#, fuzzy, python-format
+#, python-format
 msgid "button_press error, %(error)s"
 msgstr "button_press error, %(error)s"
 
@@ -3535,7 +3505,7 @@ msgstr "Gauche"
 msgid "Right"
 msgstr "Droite"
 
-#, fuzzy, python-format
+#, python-format
 msgid "Translux error: %(error)s"
 msgstr "Erreur Translux: %(error)s"
 
@@ -3551,7 +3521,7 @@ msgstr ""
 msgid "Cannot Find Guide"
 msgstr "Impossible de trouver le Guide"
 
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "The Nicotine Offline Guide ( NicotinePlusGuide.html ) was not found in "
 "either the following directories:\n"
@@ -3642,8 +3612,7 @@ msgstr "Se connecter"
 msgid "Disconnect"
 msgstr "Se déconnecter"
 
-#, fuzzy
-msgid "Hide / Unhide Nicotine"
+msgid "Hide / Show Nicotine"
 msgstr "Cacher / Montrer Nicotine+"
 
 # pynicotine/gtkgui/nicotine_glade.py
@@ -3770,9 +3739,8 @@ msgstr ""
 msgid "ERROR: audtool didn't detect a running Audacious session."
 msgstr "Erreur: audtool n'a pas détecté de session en cours d'Audacious"
 
-#, fuzzy
-msgid "Could not find a suitable MPIS player."
-msgstr "Impossible de trouver un lecteur MPRIS"
+msgid "Could not find a suitable MPRIS player."
+msgstr "Impossible de trouver un lecteur MPRIS."
 
 #, python-format
 msgid "Found multiple MPRIS players: %(players)s. Using: %(player)s"
@@ -3891,8 +3859,7 @@ msgstr "Rechercher dans la liste des souhaits"
 msgid "Select all"
 msgstr "Sélectionner tout"
 
-#, fuzzy
-msgid "Wishs"
+msgid "Wishes"
 msgstr "Souhaits"
 
 # pynicotine/gtkgui/settings_glade.py
@@ -3971,7 +3938,7 @@ msgstr "Sélectionner les résultats de cet utilisateur"
 msgid "Nicotine+: Search Results"
 msgstr "Nicotine+ Résultats des recherches"
 
-#, fuzzy, python-format
+#, python-format
 msgid "<b>Metadata</b> for Search Query: <i>%s</i>"
 msgstr "<b>Méta-données</b> pour une requête de recherche sur: <i>%s</i>"
 
@@ -4137,8 +4104,7 @@ msgstr "Choisir un répertoire pour les effets sonores"
 msgid "Choose an icon theme directory"
 msgstr "Choisir un répertoire pour le thème d'icônes"
 
-#, fuzzy
-msgid "Pick a colour, any colour"
+msgid "Pick a color, any color"
 msgstr "Choisissez une couleur, n'importe laquelle"
 
 #, python-format
@@ -4565,7 +4531,7 @@ msgstr "Non"
 msgid "Slots free: %s"
 msgstr "Places disponibles: %s"
 
-#, fuzzy, python-format
+#, python-format
 msgid "%s"
 msgstr "%s"
 
@@ -4865,12 +4831,6 @@ msgstr ""
 "L'extension %(module)s a échouée avec l'erreur %(errortype)s: %(error)s.\n"
 "Trace: %(trace)s\n"
 "Zone du problème:%(area)s"
-
-#, fuzzy
-msgid "Plugin %(module) returned something weird, '%(value)', ignoring"
-msgstr ""
-"L'extension %(module)s a remontée quelque chose d'étrange, '%(value)s', "
-"ignoré"
 
 # pynicotine/pynicotine.py
 #, python-format
@@ -5185,7 +5145,7 @@ msgstr ""
 msgid "Scanning File Error: %(error)s Path: %(path)s"
 msgstr "Erreur lors de l'examen des fichiers: %(error)s Chemin: %(path)s"
 
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Found meta data that couldn't be encoded, possible corrupt file: '%(file)s' "
 "has a bitrate of %(bitrate)s kbs, a length of %(length)s seconds and a VBR "
@@ -5573,8 +5533,8 @@ msgid "Failed to use UPnPc binary: %(error)s"
 msgstr "Erreur lors de l'utilisation du binaire upnpc: %(error)s"
 
 #, python-format
-msgid "Failed to map the external WAN port: %(line)s"
-msgstr "Échec de redirection du port WAN externe: %(line)s"
+msgid "Failed to map the external WAN port: %(error)s"
+msgstr "Échec de redirection du port WAN externe: %(error)s"
 
 #, python-format
 msgid "UPnPc binary failed, could not parse output: %(output)s"
@@ -5582,17 +5542,13 @@ msgstr ""
 "Erreur lors de l'utilisation du binaire UPnPc, impossible d'analyser la "
 "sortie: %(output)s"
 
-#, fuzzy, python-format
-msgid "UPNP Exception (should never happen): %(error)s"
+#, python-format
+msgid "UPnP exception (should never happen): %(error)s"
 msgstr "UPnP Exception (ne devrait jamais arriver): %(error)s"
 
 #, python-format
 msgid "Cannot select an IGD : %(error)s"
 msgstr "Impossible de selectionner un IGD : %(error)s"
-
-#, fuzzy, python-format
-msgid "Failed to map the external WAN port: %(error)s"
-msgstr "Échec de redirection du port WAN externe: %(error)s"
 
 msgid "Failed to find a suitable external WAN port, bailing out."
 msgstr ""
@@ -5602,3 +5558,15 @@ msgstr ""
 msgid "Force lang failed: '%(language)s' (%(second)s and %(third)s tested)"
 msgstr ""
 "Échec du forçage du langage: '%(language)s' (%(second)s et %(third)s testés)"
+
+# pynicotine/gtkgui/about.py
+#~ msgid "Search the joined roms for 'query'"
+#~ msgstr "Recherche 'requête' dans les salons joints"
+
+#~ msgid "Plugin %(module) returned something weird, '%(value)', ignoring"
+#~ msgstr ""
+#~ "L'extension %(module)s a remontée quelque chose d'étrange, '%(value)s', "
+#~ "ignoré"
+
+#~ msgid "Failed to map the external WAN port: %(line)s"
+#~ msgstr "Échec de redirection du port WAN externe: %(line)s"
