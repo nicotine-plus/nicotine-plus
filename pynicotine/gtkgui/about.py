@@ -269,6 +269,7 @@ Spanish
  * Silvio Orta (2007)
  * Dreslo
 French
+ * Michael Labouebe (2016) <gfarmerfr@free.fr>
  * ManWell (2007)
  * ><((((*> (2007-2009)
  * flashfr
@@ -287,13 +288,13 @@ Hungarian
 Slovak 
  * Josef Riha (2006) <jose1711@gmail.com>
 Portuguese Brazilian
- * Suicide|Solution <felipe@bunghole.com.br> (2006) http://suicide.bunghole.com.br
+ * Suicide|Solution (2006) <felipe@bunghole.com.br>
 Lithuanian
  * Žygimantas Beručka (2006) <uid0@akl.lt>
 Finnish
  * Kalevi <mr_auer@welho.net>
 Euskara
- * The Librezale.org Team <librezale@librezale.org> http://librezale.org
+ * The Librezale.org Team <librezale@librezale.org>
  """)
 		AppendLine(self.TransTextView, text, None, None, showstamp=False)
 		
