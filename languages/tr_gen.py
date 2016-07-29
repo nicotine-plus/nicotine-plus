@@ -26,7 +26,7 @@ import sys
 from os import listdir, system
 from os.path import isfile, join
 
-print "Generating nicotine.pot …"
+print "Generating nicotine.pot ..."
 
 files = {}
 

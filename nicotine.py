@@ -147,7 +147,7 @@ binary package and what you try to run Nicotine with).""")
 
 	from pynicotine.upnp import UPnPPortMapping
 	if not UPnPPortMapping().IsPossible():
-		log.addwarning(_('Disabled UPnP support due to errors… See above'))
+		log.addwarning(_('Disabled UPnP support due to errors... See above'))
 
 	return None
 
@@ -160,7 +160,7 @@ def version():
 
 def usage():
 	print _("""Nicotine-Plus is a Soulseek client.
-Usage: nicotine [OPTION]…
+Usage: nicotine [OPTION]...
   -c file, --config=file      Use non-default configuration file
   -p dir,  --plugins=dir      Use non-default directory for plugins
   -t,      --enable-trayicon
