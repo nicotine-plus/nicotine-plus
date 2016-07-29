@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-07-28 23:47+0200\n"
+"POT-Creation-Date: 2016-07-29 18:21+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-msgid "Buddies"
+msgid "Buddy List"
 msgstr ""
 
 msgid "Add Buddy: "
@@ -474,6 +474,9 @@ msgid "Use the first available listening port from the following range:"
 msgstr ""
 
 msgid "Client port is not set"
+msgstr ""
+
+msgid "Check port status"
 msgstr ""
 
 msgid "Use the above ports to configure your router or firewall."
@@ -1003,9 +1006,6 @@ msgid "Login / Password"
 msgstr ""
 
 msgid "Joined Chat Rooms"
-msgstr ""
-
-msgid "Buddy List"
 msgstr ""
 
 msgid "Banned List"
@@ -1674,7 +1674,7 @@ msgid ""
 "\t(the python bindings require the C library)"
 msgstr ""
 
-msgid "Disabled UPnP support due to errors… See above"
+msgid "Disabled UPnP support due to errors... See above"
 msgstr ""
 
 #, python-format
@@ -1686,7 +1686,7 @@ msgstr ""
 
 msgid ""
 "Nicotine-Plus is a Soulseek client.\n"
-"Usage: nicotine [OPTION]…\n"
+"Usage: nicotine [OPTION]...\n"
 "  -c file, --config=file      Use non-default configuration file\n"
 "  -p dir,  --plugins=dir      Use non-default directory for plugins\n"
 "  -t,      --enable-trayicon\n"
@@ -1710,6 +1710,9 @@ msgstr ""
 
 #, python-format
 msgid "Starting using the profiler (saving log to %s)"
+msgstr ""
+
+msgid "About Nicotine"
 msgstr ""
 
 #, python-format
@@ -2457,6 +2460,9 @@ msgstr ""
 msgid "Global"
 msgstr ""
 
+msgid "Buddies"
+msgstr ""
+
 msgid "Rooms"
 msgstr ""
 
@@ -2640,9 +2646,6 @@ msgid ""
 "\n"
 "Either install Nicotine-Plus, or start from inside the Nicotine-Plus source "
 "directory."
-msgstr ""
-
-msgid "Buddy list"
 msgstr ""
 
 #, python-format
@@ -4147,7 +4150,7 @@ msgstr ""
 msgid "Failed to run upnpc binary: %(error)s"
 msgstr ""
 
-msgid "Creating Port Mapping rule via UPnP…"
+msgid "Creating Port Mapping rule via UPnP..."
 msgstr ""
 
 #, python-format

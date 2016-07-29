@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nicotine\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-07-28 23:25+0200\n"
-"PO-Revision-Date: 2016-07-28 23:26+0200\n"
+"POT-Creation-Date: 2016-07-29 17:56+0200\n"
+"PO-Revision-Date: 2016-07-29 18:05+0200\n"
 "Last-Translator: Michael LABOUEBE <gfarmerfr@free.fr>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -17,8 +17,8 @@ msgstr ""
 "X-Generator: Poedit 1.8.8\n"
 
 # pynicotine/gtkgui/nicotine_glade.py
-msgid "Buddies"
-msgstr "Amis"
+msgid "Buddy List"
+msgstr "Liste des amis"
 
 # pynicotine/gtkgui/nicotine_glade.py
 msgid "Add Buddy: "
@@ -615,6 +615,10 @@ msgstr "Utilise le premier port disponible parmi cette plage:"
 msgid "Client port is not set"
 msgstr "Le port client n'est pas paramétré"
 
+# pynicotine/gtkgui/nicotine_glade.py
+msgid "Check port status"
+msgstr "État du port"
+
 msgid "Use the above ports to configure your router or firewall."
 msgstr ""
 "Utiliser les ports ci-dessus pour configurer votre routeur ou pare-feu."
@@ -855,7 +859,7 @@ msgid "Enable spell checker (requires a restart)"
 msgstr "Activer le correcteur (redémarrage nécessaire)"
 
 msgid "Show Buttons in Transfers Tabs"
-msgstr "Montrer les Boutons dans la fenêtre des transferts"
+msgstr "Montrer les boutons dans la fenêtre des transferts"
 
 msgid "Show tooltips"
 msgstr "Montrer les bulles d'aides"
@@ -1324,10 +1328,6 @@ msgstr "Utilisateur / Mot de passe"
 # pynicotine/gtkgui/nicotine_glade.py
 msgid "Joined Chat Rooms"
 msgstr "Salons de discussion joints"
-
-# pynicotine/gtkgui/nicotine_glade.py
-msgid "Buddy List"
-msgstr "Amis"
 
 # pynicotine/gtkgui/settings_glade.py
 msgid "Banned List"
@@ -2149,7 +2149,7 @@ msgstr ""
 "Module python:  http://www.maxmind.com/app/python\n"
 "(le module python nécessite la bibliothèque C)"
 
-msgid "Disabled UPnP support due to errors… See above"
+msgid "Disabled UPnP support due to errors... See above"
 msgstr "UPnP a été désactivé à cause d'erreurs... Voyez au-dessus"
 
 #, python-format
@@ -2162,7 +2162,7 @@ msgstr "Impossible de trouver le module pynicotine.utils."
 # nicotine
 msgid ""
 "Nicotine-Plus is a Soulseek client.\n"
-"Usage: nicotine [OPTION]…\n"
+"Usage: nicotine [OPTION]...\n"
 "  -c file, --config=file      Use non-default configuration file\n"
 "  -p dir,  --plugins=dir      Use non-default directory for plugins\n"
 "  -t,      --enable-trayicon\n"
@@ -2211,6 +2211,10 @@ msgstr "Ne peut déterminer la localisation"
 #, python-format
 msgid "Starting using the profiler (saving log to %s)"
 msgstr "Début d'utilisation du traceur (enregistre les journaux dans %s)"
+
+# pynicotine/gtkgui/nicotine_glade.py
+msgid "About Nicotine"
+msgstr "À propos"
 
 #, python-format
 msgid ""
@@ -3315,6 +3319,10 @@ msgid "Global"
 msgstr "Global"
 
 # pynicotine/gtkgui/nicotine_glade.py
+msgid "Buddies"
+msgstr "Amis"
+
+# pynicotine/gtkgui/nicotine_glade.py
 msgid "Rooms"
 msgstr "Salons"
 
@@ -3542,10 +3550,6 @@ msgstr ""
 "\n"
 "Tentez de réinstaller Nicotine+ ou démarrez Nicotine+ depuis le répertoire "
 "source."
-
-# pynicotine/gtkgui/nicotine_glade.py
-msgid "Buddy list"
-msgstr "Liste des amis"
 
 # pynicotine/gtkgui/frame.py
 #, python-format
@@ -5507,8 +5511,8 @@ msgstr "Erreur lors de l'import du module miniupnpc: %(error)s"
 msgid "Failed to run upnpc binary: %(error)s"
 msgstr "Erreur d'exécution du binaire upnpc: %(error)s"
 
-msgid "Creating Port Mapping rule via UPnP…"
-msgstr "Création de la règle de redirection de port via UPnP…"
+msgid "Creating Port Mapping rule via UPnP..."
+msgstr "Création de la règle de redirection de port via UPnP..."
 
 # pynicotine/transfers.py
 #, python-format
@@ -5558,3 +5562,7 @@ msgstr ""
 msgid "Force lang failed: '%(language)s' (%(second)s and %(third)s tested)"
 msgstr ""
 "Échec du forçage du langage: '%(language)s' (%(second)s et %(third)s testés)"
+
+# pynicotine/gtkgui/nicotine_glade.py
+#~ msgid "Buddy list"
+#~ msgstr "Liste des amis"
