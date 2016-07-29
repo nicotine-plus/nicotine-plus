@@ -2571,7 +2571,7 @@ class NicotineFrame:
 			if not chatrooms:
 				self.vpaned3.hide()
 		if tab:
-			self.BuddiesTabLabel = ImageLabel(_("Buddy list"), self.images["empty"])
+			self.BuddiesTabLabel = ImageLabel(_("Buddy List"), self.images["empty"])
 			self.BuddiesTabLabel.show()
 			if self.userlist.userlistvbox not in self.MainNotebook.get_children():
 				self.MainNotebook.append_page(self.userlist.userlistvbox, self.BuddiesTabLabel)
