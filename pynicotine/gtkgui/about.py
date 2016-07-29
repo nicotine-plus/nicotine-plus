@@ -38,7 +38,7 @@ class GenericAboutDialog(gtk.Dialog):
 class AboutDialog(gtk.Dialog):
 	def __init__(self, parent, nicotine):
 		self.nicotine = nicotine
-		gtk.Dialog.__init__(self, "About Nicotine", parent, gtk.DIALOG_MODAL)
+		gtk.Dialog.__init__(self, _("About Nicotine"), parent, gtk.DIALOG_MODAL)
 		
 		self.set_resizable(False)
 		self.set_position(gtk.WIN_POS_CENTER)

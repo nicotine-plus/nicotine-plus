@@ -1152,14 +1152,11 @@ class NicotineFrame:
 			log.addwarning(_("button_press error, %(error)s") % {'error':e})
 
 
-				
 	def get_custom_widget(self, widget, string0, id, string1, string2, int1, int2):
-		ui = self.np.config.sections["ui"]
 		if id == "ChatNotebook":
 			return ChatRooms(self)
 		elif id == "SearchNotebook":
 			return Searches(self)
-		#IconNotebook(self.images, ui["labelsearch"], ui["tabclosers"])
 		elif id == "PrivatechatNotebook":
 			return PrivateChats(self)
 		elif id == "UserInfoNotebook":
@@ -1185,8 +1182,7 @@ class NicotineFrame:
 			eventbox.connect('button_press_event', self.on_tab_click, id+"Menu", string1)
 			self.__dict__[id+"Menu"] = popup = utils.PopupMenu(self)
 			popup.setup(
-			("#" + _("Hide %(tab)s" % {"tab":string2}), self.HideTab, gtk.STOCK_REMOVE, [eventbox, string1]),
-			
+				("#" + _("Hide %(tab)s") % {"tab": _(string2)}, self.HideTab, gtk.STOCK_REMOVE, [eventbox, string1]),
 			)
 			popup.set_user(string1)
 			return eventbox

@@ -151,7 +151,7 @@
                         </child>
                         <child>
                           <widget class="GtkButton" id="ChangePassword">
-                            <property name="label">Change password</property>
+                            <property name="label" translatable="yes">Change password</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
@@ -275,7 +275,7 @@
                 </child>
                 <child>
                   <widget class="GtkButton" id="CheckPortButton">
-                    <property name="label">Check port status</property>
+                    <property name="label" translatable="yes">Check port status</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="can_default">True</property>
