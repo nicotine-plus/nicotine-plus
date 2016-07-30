@@ -12,11 +12,7 @@ import slskmessages
 from slskmessages import NetworkIntType, NetworkLongLongType
 from logfacility import log
 from utils import _, displayTraceback, strace
-try:
-	import metadata_mutagen as metadata
-except ImportError:
-	log.addwarning("Failed to import the Mutagen library, falling back to old library. To improve metadata please install Mutagen.")
-	import mp3 as metadata
+import metadata_mutagen as metadata
 
 win32 = sys.platform.startswith("win")
 
