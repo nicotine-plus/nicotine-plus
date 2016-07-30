@@ -504,12 +504,12 @@ class AboutPrivateDialog(GenericTableDialog):
 
 class AboutDependenciesDialog(GenericTableDialog):
 	items = [
-	        "<b>%s</b>" % _("Sound Effects"), "<i>%s</i>" % _("Gstreamer-python, gstreamer")+"\n"+ _("Website:")+" "+ "http://gstreamer.freedesktop.org/modules/gst-python.html" +"\n"+ "<i>%s</i>" % _("SoX")+"\n"+_("Website:")+" "+"http://sox.sourceforge.net/"+"\n"+ "<i>%s</i>" % _("Any other command-executable OGG player"),
+	    "<b>%s</b>" % _("Sound Effects"), "<i>%s</i>" % _("Gstreamer-python, gstreamer")+"\n"+ _("Website:")+" "+ "http://gstreamer.freedesktop.org/modules/gst-python.html" +"\n"+ "<i>%s</i>" % _("SoX")+"\n"+_("Website:")+" "+"http://sox.sourceforge.net/"+"\n"+ "<i>%s</i>" % _("Any other command-executable OGG player"),
 		"", "",
 		"<b>%s</b>" %_("Spell Checking"), "<i>%s</i>" % _("Libsexy, sexy-python") +"\n"+ _("Website:")+" "+"http://www.chipx86.com/wiki/Libsexy",
 		"<b>%s</b>" %_("Speed Up"), "<i>%s</i>" % _("Psyco")+"\n"+_("Website:")+" "+"http://psyco.sourceforge.net/",
 		"<b>%s</b>" %_("IP Address Geolocation"), "<i>%s</i>" % _("GeoIP-Python")+"\n"+_("Website:")+" "+"http://www.maxmind.com/app/python",
-		"<b>%s</b>" %_("Metadata for files other than MP3"), "<i>%s</i>\n%s: %s" % (_("Mutagen"), _("Website"), "http://code.google.com/p/quodlibet/wiki/Mutagen"),
+		"<b>%s</b>" %_("Metadata for files"), "<i>%s</i>\n%s: %s" % (_("Mutagen"), _("Website"), "https://github.com/quodlibet/mutagen"),
 		"<b>%s</b>" %_("Download Notifications"), "<i>%s</i>" % _("notification-daemon, notify-python, libnotify") +"\n"+_("Website:")+" "+"http://www.galago-project.org/downloads.php",
 	]
 
