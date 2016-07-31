@@ -2418,7 +2418,7 @@ class NicotineFrame:
 			
 	def OnNicotineGuide(self, widget):
 		paths = []
-		file = "NicotinePlusGuide.html"
+		file = "NicotinePlusGuide/NicotineGuide.htm"
 		path1 = os.getcwd()
 		path1split = path1.rsplit(os.sep, 1)
 
@@ -2431,7 +2431,6 @@ class NicotineFrame:
 		winpath = "C:\Program Files\Nicotine+" 
 		paths.append(winpath)
 		for path in paths:
-			# 
 			if os.path.exists(os.sep.join([path, "doc", file])):
 				url = "file:%s/%s/%s" % (urllib.pathname2url(path).replace("|", ":") ,"doc", file)
 				OpenUri(url)
@@ -2441,7 +2440,7 @@ class NicotineFrame:
 				OpenUri(url)
 				return
 		else:
-			popupWarning(None, _("Cannot Find Guide"), _("The Nicotine Offline Guide ( NicotinePlusGuide.html ) was not found in either the following directories:\n\n<u>%(pwd)s\n</u><b>and</b>\n<u>%(prefix)s/share/nicotine/documentation/</u>\n\nEither install Nicotine-Plus, or start from inside the Nicotine-Plus source directory." % {'pwd':path1, 'prefix':sys.prefix } ) )
+			popupWarning(None, _("Cannot Find Guide"), _("The Nicotine Offline Guide ( NicotineGuide.htm ) was not found in either the following directories:\n\n<u>%(pwd)s\n</u><b>and</b>\n<u>%(prefix)s/share/nicotine/documentation/</u>\n\nEither install Nicotine-Plus, or start from inside the Nicotine-Plus source directory." % {'pwd':path1, 'prefix':sys.prefix } ) )
 	
 	def OnOnlineNicotineGuide(self, widget):
 		url = "http://nicotine-plus.sourceforge.net/NicotinePlusGuide/"
