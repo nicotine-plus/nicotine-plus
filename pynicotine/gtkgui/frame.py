@@ -1102,7 +1102,7 @@ class NicotineFrame:
 			users.append(entry[0])
 		users.sort()
 		user = input_box(self, title=_('Nicotine+: Get User Info'),
-		message=_('Enter the User whose User Info you wish to recieve:'),
+		message=_('Enter the User whose User Info you wish to receive:'),
 		default_text='', droplist=users)
 		if user is None:
 			pass
@@ -1115,7 +1115,7 @@ class NicotineFrame:
 			users.append(entry[0])
 		users.sort()
 		user = input_box(self, title=_("Nicotine+: Get A User's IP"),
-		message=_('Enter the User whose IP Address you wish to recieve:'),
+		message=_('Enter the User whose IP Address you wish to receive:'),
 		default_text='', droplist=users)
 		if user is None:
 			pass
@@ -1129,7 +1129,7 @@ class NicotineFrame:
 			users.append(entry[0])
 		users.sort()
 		user = input_box(self, title=_("Nicotine+: Get A User's Shares List"),
-		message=_('Enter the User whose Shares List you wish to recieve:'),
+		message=_('Enter the User whose Shares List you wish to receive:'),
 		default_text='', droplist=users)
 		if user is None:
 			pass
@@ -1152,14 +1152,11 @@ class NicotineFrame:
 			log.addwarning(_("button_press error, %(error)s") % {'error':e})
 
 
-				
 	def get_custom_widget(self, widget, string0, id, string1, string2, int1, int2):
-		ui = self.np.config.sections["ui"]
 		if id == "ChatNotebook":
 			return ChatRooms(self)
 		elif id == "SearchNotebook":
 			return Searches(self)
-		#IconNotebook(self.images, ui["labelsearch"], ui["tabclosers"])
 		elif id == "PrivatechatNotebook":
 			return PrivateChats(self)
 		elif id == "UserInfoNotebook":
@@ -1185,8 +1182,7 @@ class NicotineFrame:
 			eventbox.connect('button_press_event', self.on_tab_click, id+"Menu", string1)
 			self.__dict__[id+"Menu"] = popup = utils.PopupMenu(self)
 			popup.setup(
-			("#" + _("Hide %(tab)s" % {"tab":string2}), self.HideTab, gtk.STOCK_REMOVE, [eventbox, string1]),
-			
+				("#" + _("Hide %(tab)s") % {"tab": _(string2)}, self.HideTab, gtk.STOCK_REMOVE, [eventbox, string1]),
 			)
 			popup.set_user(string1)
 			return eventbox
@@ -2575,7 +2571,7 @@ class NicotineFrame:
 			if not chatrooms:
 				self.vpaned3.hide()
 		if tab:
-			self.BuddiesTabLabel = ImageLabel(_("Buddy list"), self.images["empty"])
+			self.BuddiesTabLabel = ImageLabel(_("Buddy List"), self.images["empty"])
 			self.BuddiesTabLabel.show()
 			if self.userlist.userlistvbox not in self.MainNotebook.get_children():
 				self.MainNotebook.append_page(self.userlist.userlistvbox, self.BuddiesTabLabel)
@@ -3489,7 +3485,7 @@ class TrayApp:
 			)
 			self.tray_popup_menu = popup = PopupMenu(self)
 			popup.setup(
-				("#" + _("Hide / Unhide Nicotine"), self.HideUnhideWindow, gtk.STOCK_GOTO_BOTTOM),
+				("#" + _("Hide / Show Nicotine"), self.HideUnhideWindow, gtk.STOCK_GOTO_BOTTOM),
 				(1, _("Server"), self.tray_popup_menu_server, self.OnPopupServer),
 				("#" + _("Settings"), self.frame.OnSettings, gtk.STOCK_PREFERENCES),
 				("#" + _("Send Message"), self.frame.OnOpenPrivateChat, gtk.STOCK_EDIT),

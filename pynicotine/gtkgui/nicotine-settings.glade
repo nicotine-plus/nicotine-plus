@@ -151,7 +151,7 @@
                         </child>
                         <child>
                           <widget class="GtkButton" id="ChangePassword">
-                            <property name="label">Change password</property>
+                            <property name="label" translatable="yes">Change password</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
@@ -180,7 +180,7 @@
                 <child>
                   <widget class="GtkLabel" id="label29">
                     <property name="visible">True</property>
-                    <property name="label" translatable="yes">For a new account 
+                    <property name="label" translatable="yes">For a new account
  enter desired details</property>
                   </widget>
                   <packing>
@@ -275,7 +275,7 @@
                 </child>
                 <child>
                   <widget class="GtkButton" id="CheckPortButton">
-                    <property name="label">Check port status</property>
+                    <property name="label" translatable="yes">Check port status</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="can_default">True</property>
@@ -7767,7 +7767,7 @@ Right</property>
   </widget>
   <widget class="GtkWindow" id="ColoursFrame">
     <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-    <property name="title" translatable="yes">Colours</property>
+    <property name="title" translatable="yes">Colors</property>
     <child>
       <widget class="GtkFrame" id="Main">
         <property name="visible">True</property>
@@ -7815,7 +7815,7 @@ Right</property>
                                 <child>
                                   <widget class="GtkLabel" id="label3">
                                     <property name="visible">True</property>
-                                    <property name="label" translatable="yes">Default Colours</property>
+                                    <property name="label" translatable="yes">Default Colors</property>
                                     <property name="use_underline">True</property>
                                   </widget>
                                   <packing>
@@ -8682,7 +8682,7 @@ Right</property>
                                 <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                                 <child>
                                   <widget class="GtkCheckButton" id="UsernameHotspots">
-                                    <property name="label" translatable="yes">Username Colours and Hotspots</property>
+                                    <property name="label" translatable="yes">Username Colors and Hotspots</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">False</property>
@@ -9050,7 +9050,7 @@ Right</property>
                       <widget class="GtkLabel" id="label5">
                         <property name="visible">True</property>
                         <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                        <property name="label" translatable="yes">&lt;b&gt;Chat colours&lt;/b&gt;</property>
+                        <property name="label" translatable="yes">&lt;b&gt;Chat colors&lt;/b&gt;</property>
                         <property name="use_markup">True</property>
                       </widget>
                       <packing>
@@ -9521,7 +9521,7 @@ Right</property>
                                 <property name="visible">True</property>
                                 <property name="xalign">0</property>
                                 <property name="ypad">5</property>
-                                <property name="label" translatable="yes">Input and lists colours</property>
+                                <property name="label" translatable="yes">Input and lists colors</property>
                                 <property name="use_markup">True</property>
                               </widget>
                               <packing>
@@ -9769,7 +9769,7 @@ Right</property>
                       <widget class="GtkLabel" id="label121">
                         <property name="visible">True</property>
                         <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                        <property name="label" translatable="yes">&lt;b&gt;List and search colours&lt;/b&gt;</property>
+                        <property name="label" translatable="yes">&lt;b&gt;List and search colors&lt;/b&gt;</property>
                         <property name="use_markup">True</property>
                       </widget>
                       <packing>
@@ -9858,7 +9858,7 @@ Right</property>
                                 <property name="visible">True</property>
                                 <property name="xalign">0</property>
                                 <property name="ypad">5</property>
-                                <property name="label" translatable="yes">Notebook tab labels change to these colours.</property>
+                                <property name="label" translatable="yes">Notebook tab labels change to these colors.</property>
                                 <property name="use_markup">True</property>
                               </widget>
                               <packing>
@@ -10229,7 +10229,7 @@ Right</property>
                       <widget class="GtkLabel" id="label64">
                         <property name="visible">True</property>
                         <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                        <property name="label" translatable="yes">&lt;b&gt;Tab colours&lt;/b&gt;</property>
+                        <property name="label" translatable="yes">&lt;b&gt;Tab colors&lt;/b&gt;</property>
                         <property name="use_markup">True</property>
                       </widget>
                       <packing>
@@ -10577,7 +10577,7 @@ Right</property>
         <child>
           <widget class="GtkLabel" id="ColoursLabel">
             <property name="visible">True</property>
-            <property name="label" translatable="yes">&lt;b&gt;Colours&lt;/b&gt;</property>
+            <property name="label" translatable="yes">&lt;b&gt;Colors&lt;/b&gt;</property>
             <property name="use_markup">True</property>
           </widget>
           <packing>

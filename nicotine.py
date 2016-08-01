@@ -81,7 +81,7 @@ Perhaps they're installed in a directory which is not
 in an interpreter's module search path. 
 (there could be a version mismatch between 
 what version of python was used to build the Nicotine 
-binary package and what you try to run Nicotine with.)""")
+binary package and what you try to run Nicotine with).""")
 
 	# Windows stuff: detect GTK dll's path and add it to %PATH% if we're not running a py2exe package
 	if win32 and not py2exe:
@@ -147,7 +147,7 @@ binary package and what you try to run Nicotine with.)""")
 
 	from pynicotine.upnp import UPnPPortMapping
 	if not UPnPPortMapping().IsPossible():
-		log.addwarning(_('Disabled UPnP support due to errors… See above'))
+		log.addwarning(_('Disabled UPnP support due to errors... See above'))
 
 	return None
 
@@ -160,7 +160,7 @@ def version():
 
 def usage():
 	print _("""Nicotine-Plus is a Soulseek client.
-Usage: nicotine [OPTION]…
+Usage: nicotine [OPTION]...
   -c file, --config=file      Use non-default configuration file
   -p dir,  --plugins=dir      Use non-default directory for plugins
   -t,      --enable-trayicon

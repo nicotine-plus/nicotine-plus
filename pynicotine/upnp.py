@@ -26,7 +26,7 @@ from logfacility import log
 from utils import _, executeCommand
 
 import re
-import socket
+from socket import gethostbyname, gethostname
 
 
 class UPnPPortMapping:
@@ -42,7 +42,7 @@ class UPnPPortMapping:
         self.externalwanport = 15000
 
         # Local LAN IP
-        self.internalipaddress = socket.gethostbyname(socket.gethostname())
+        self.internalipaddress = gethostbyname(gethostname())
 
         # List of existing port mappings
         self.existingportsmappings = []
@@ -126,10 +126,10 @@ class UPnPPortMapping:
         BTW since we don't recheck periodically ports mappings
         while nicotine+ runs, any UPnP port mapping done with IGDv2
         (any modern router does that) will expire after 7 days.
-        The client won't be able to send/receive files anymore…
+        The client won't be able to send/receive files anymore...
         """
 
-        log.add(_('Creating Port Mapping rule via UPnP…'))
+        log.add(_('Creating Port Mapping rule via UPnP...'))
 
         # Store the Local LAN port
         self.internallanport = np.protothread._p.getsockname()[1]
@@ -181,7 +181,7 @@ class UPnPPortMapping:
         """
 
         # Listing existing ports mappings
-        log.adddebug('Listing existing Ports Mappings…')
+        log.adddebug('Listing existing Ports Mappings...')
 
         command = 'upnpc -l'
         try:
@@ -198,9 +198,9 @@ class UPnPPortMapping:
         # Also get the external WAN IP
         #
         # Output format :
-        # …
+        # ...
         # ExternalIPAddress = X.X.X.X
-        # …
+        # ...
         #  i protocol exPort->inAddr:inPort description remoteHost leaseTime
         #  0 TCP 15000->192.168.0.1:2234  'Nicotine+' '' 0
 
@@ -284,8 +284,8 @@ class UPnPPortMapping:
             if line.find(" failed with code ") > -1:
                 log.adddebug('Failed')
                 raise RuntimeError(
-                    _('Failed to map the external WAN port: %(line)s') %
-                    {'line': str(line)})
+                    _('Failed to map the external WAN port: %(error)s') %
+                    {'error': str(line)})
 
         raise AssertionError(
             _('UPnPc binary failed, could not parse output: %(output)s') %
@@ -306,13 +306,13 @@ class UPnPPortMapping:
         u.discoverdelay = self.discoverdelay
 
         # Discovering devices
-        log.adddebug('Discovering… delay=%sms' % u.discoverdelay)
+        log.adddebug('Discovering... delay=%sms' % u.discoverdelay)
 
         try:
             log.adddebug('%s device(s) detected' % u.discover())
         except Exception as e:
             raise RuntimeError(
-                _('UPNP Exception (should never happen): %(error)s') %
+                _('UPnP exception (should never happen): %(error)s') %
                 {'error': str(e)})
 
         # Select an IGD
@@ -328,7 +328,7 @@ class UPnPPortMapping:
                      (self.externalipaddress))
 
         # Build existing ports mappings list
-        log.adddebug('Listing existing Ports Mappings…')
+        log.adddebug('Listing existing Ports Mappings...')
 
         i = 0
         while True:

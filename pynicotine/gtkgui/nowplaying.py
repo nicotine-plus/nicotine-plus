@@ -675,7 +675,7 @@ If faked=True it will only create a partial instance, enough to debug NP-code wi
 				if name.startswith(dbus_mpris_service):
 					players.append(name[len(dbus_mpris_service):])
 			if not players:
-				self.frame.logMessage(_("Could not find a suitable MPIS player."))
+				self.frame.logMessage(_("Could not find a suitable MPRIS player."))
 				return None
 			player = players[0]
 			if len(players) > 1:

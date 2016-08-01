@@ -11,7 +11,7 @@
         <child>
           <widget class="GtkLabel" id="BuddiesLabel">
             <property name="visible">True</property>
-            <property name="label" translatable="yes">Buddies</property>
+            <property name="label" translatable="yes">Buddy List</property>
             <property name="use_markup">True</property>
           </widget>
           <packing>

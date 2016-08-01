@@ -1,6 +1,6 @@
 # Nicotine+ TRANSLATIONS
 
-For a list of translators see 'doc/TRANSLATORS'
+For a list of translators see [TRANSLATORS](TRANSLATORS.md)
 
 # HowTo translate
 
@@ -20,7 +20,7 @@ For a list of translators see 'doc/TRANSLATORS'
 ##### To update just the language .po file you are working on:
 * Change to the directory of the translation and run `msgmerge -U nicotine.po ../nicotine.pot`
 * When finished editing the .po, in the language's subdirectory, do the following command: `msgfmt nicotine.po -o nicotine.mo`
-* After nicotine has been installed, the new .mo files will be in `/usr/shares/locale/$LANGUAGE/LC_MESSAGES/`
+* After nicotine has been installed, the new .mo files will be in `/usr/share/locale/$LANGUAGE/LC_MESSAGES/`
 * For testing, you can copy them there, yourself (if you have permissions)
 
 # USERS
@@ -30,43 +30,43 @@ For Nicotine to know you want a certain translation, your locale needs to be set
 If your operating system doesn't have it set already, starting with these commands will force an operating system to load.
 
 ##### ENGLISH
-LC_ALL=en_US nicotine
+LC_ALL=en_US.UTF-8 nicotine
 
 ##### DANISH
-LC_ALL=dk_DK nicotine
+LC_ALL=dk_DK.UTF-8 nicotine
 
 ##### DUTCH
-LC_ALL=nl_NL nicotine
+LC_ALL=nl_NL.UTF-8 nicotine
 
 ##### Euskara (Basque)
-LC_ALL=eu nicotine
+LC_ALL=eu.UTF-8 nicotine
 
 ##### FRENCH
-LC_ALL=fr_FR nicotine
+LC_ALL=fr_FR.UTF-8 nicotine
 
 ##### GERMAN
-LC_ALL=de_DE nicotine
+LC_ALL=de_DE.UTF-8 nicotine
 
 ##### HUNGARIAN
-LC_ALL=hu_HU nicotine
+LC_ALL=hu_HU.UTF-8 nicotine
 
 ##### ITALIAN
-LC_ALL=it_IT nicotine
+LC_ALL=it_IT.UTF-8 nicotine
 
 ##### Lithuanian
-LC_ALL=lt_LT nicotine
+LC_ALL=lt_LT.UTF-8 nicotine
 
 ##### POLISH
-LC_ALL=pl_PL nicotine
+LC_ALL=pl_PL.UTF-8 nicotine
 
 ##### Portuguese Brazilian
-LC_ALL=pt_BR nicotine
+LC_ALL=pt_BR.UTF-8 nicotine
 
 ##### SLOVAK:
-LC_ALL=sk_SK nicotine
+LC_ALL=sk_SK.UTF-8 nicotine
 
 ##### SPANISH
-LC_ALL=es_ES nicotine
+LC_ALL=es_ES.UTF-8 nicotine
 
 ##### SWEDISH
-LC_ALL=sv_SE nicotine
+LC_ALL=sv_SE.UTF-8 nicotine

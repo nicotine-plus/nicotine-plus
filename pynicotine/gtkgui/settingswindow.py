@@ -1444,7 +1444,7 @@ class ColoursFrame(buildFrame):
 		self.PickOffline.set_sensitive(sensitive)
 
 	def PickColour(self, widget, entry, drawingarea):
-		dlg = gtk.ColorSelectionDialog(_("Pick a colour, any colour"))
+		dlg = gtk.ColorSelectionDialog(_("Pick a color, any color"))
 		colour = entry.get_text()
 		if entry is self.TintColor:
 			dlg.colorsel.set_has_opacity_control(True)
@@ -1460,7 +1460,6 @@ class ColoursFrame(buildFrame):
 				dlg.colorsel.set_current_color(colour)
 		if dlg.run() == gtk.RESPONSE_OK:
 			colour = dlg.colorsel.get_current_color()
-			#print colour.red, colour.red / 256, colour.green,  colour.green / 256, colour.blue, colour.blue / 256
 			colourtext = "#%02X%02X%02X" % (colour.red / 256, colour.green / 256, colour.blue / 256)
 			entry.set_text(colourtext)
 			for section in self.options.keys():
@@ -2636,7 +2635,7 @@ class SettingsWindow:
 		
 					
 		self.tree["Interface"] = row =  model.append(None, [_("Interface"), "Interface"])
-		self.tree["Colours"] = model.append(row, [_("Colours"), "Colours"])
+		self.tree["Colours"] = model.append(row, [_("Colors"), "Colours"])
 		self.tree["Icons"] = model.append(row, [_("Icons"), "Icons"])
 		self.tree["Notebook Tabs"] = model.append(row, [_("Notebook Tabs"), "Notebook Tabs"])
 		

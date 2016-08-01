@@ -38,7 +38,7 @@ class GenericAboutDialog(gtk.Dialog):
 class AboutDialog(gtk.Dialog):
 	def __init__(self, parent, nicotine):
 		self.nicotine = nicotine
-		gtk.Dialog.__init__(self, "About Nicotine", parent, gtk.DIALOG_MODAL)
+		gtk.Dialog.__init__(self, _("About Nicotine"), parent, gtk.DIALOG_MODAL)
 		
 		self.set_resizable(False)
 		self.set_position(gtk.WIN_POS_CENTER)
@@ -269,6 +269,7 @@ Spanish
  * Silvio Orta (2007)
  * Dreslo
 French
+ * Michael Labouebe (2016) <gfarmerfr@free.fr>
  * ManWell (2007)
  * ><((((*> (2007-2009)
  * flashfr
@@ -287,13 +288,13 @@ Hungarian
 Slovak 
  * Josef Riha (2006) <jose1711@gmail.com>
 Portuguese Brazilian
- * Suicide|Solution <felipe@bunghole.com.br> (2006) http://suicide.bunghole.com.br
+ * Suicide|Solution (2006) <felipe@bunghole.com.br>
 Lithuanian
  * Žygimantas Beručka (2006) <uid0@akl.lt>
 Finnish
  * Kalevi <mr_auer@welho.net>
 Euskara
- * The Librezale.org Team <librezale@librezale.org> http://librezale.org
+ * The Librezale.org Team <librezale@librezale.org>
  """)
 		AppendLine(self.TransTextView, text, None, None, showstamp=False)
 		
@@ -486,7 +487,7 @@ class AboutPrivateDialog(GenericTableDialog):
 		"", "",
 		"<b>"+_("Search")+"</b>", "",
 		"/search /s '" + _("query")+"'", _("Start a new search for 'query'"),
-		"/rsearch /rs '" + _("query")+"'", _("Search the joined roms for 'query'"),
+		"/rsearch /rs '" + _("query")+"'", _("Search the joined rooms for 'query'"),
 		"/bsearch /bs '" + _("query")+"'", _("Search the buddy list for 'query'"),
 		"/usearch /us '" + _("query")+"'", _("Search a user's shares for 'query'"),
 		"", "",
@@ -508,7 +509,7 @@ class AboutDependenciesDialog(GenericTableDialog):
 		"<b>%s</b>" %_("Spell Checking"), "<i>%s</i>" % _("Libsexy, sexy-python") +"\n"+ _("Website:")+" "+"http://www.chipx86.com/wiki/Libsexy",
 		"<b>%s</b>" %_("Speed Up"), "<i>%s</i>" % _("Psyco")+"\n"+_("Website:")+" "+"http://psyco.sourceforge.net/",
 		"<b>%s</b>" %_("IP Address Geolocation"), "<i>%s</i>" % _("GeoIP-Python")+"\n"+_("Website:")+" "+"http://www.maxmind.com/app/python",
-		"<b>%s</b>" %_("Meta data for files other than MP3"), "<i>%s</i>\n%s: %s" % (_("Mutagen"), _("Website"), "http://code.google.com/p/quodlibet/wiki/Mutagen"),
+		"<b>%s</b>" %_("Metadata for files other than MP3"), "<i>%s</i>\n%s: %s" % (_("Mutagen"), _("Website"), "http://code.google.com/p/quodlibet/wiki/Mutagen"),
 		"<b>%s</b>" %_("Download Notifications"), "<i>%s</i>" % _("notification-daemon, notify-python, libnotify") +"\n"+_("Website:")+" "+"http://www.galago-project.org/downloads.php",
 	]
 
