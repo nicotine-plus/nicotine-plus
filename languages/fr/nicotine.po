@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nicotine\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-07-29 17:56+0200\n"
-"PO-Revision-Date: 2016-07-29 18:05+0200\n"
+"POT-Creation-Date: 2016-07-29 20:12+0200\n"
+"PO-Revision-Date: 2016-07-30 15:02+0200\n"
 "Last-Translator: Michael LABOUEBE <gfarmerfr@free.fr>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -386,7 +386,7 @@ msgstr "Filtres de recherche"
 
 # pynicotine/gtkgui/nicotine_glade.py
 msgid "Check _latest"
-msgstr "Vérifier _la dernière version"
+msgstr "Vérifier la dernière version"
 
 msgid "Report a _bug"
 msgstr "Rapporter un _bogue"
@@ -2754,8 +2754,8 @@ msgstr "Géolocalisation d'adresse IP"
 msgid "GeoIP-Python"
 msgstr "GeoIP-Python"
 
-msgid "Metadata for files other than MP3"
-msgstr "Méta-données pour les fichiers autres que les MP3"
+msgid "Metadata for files"
+msgstr "Voir les méta-données du(des) fichier(s)"
 
 msgid "Mutagen"
 msgstr "Mutagen"
@@ -3683,7 +3683,7 @@ msgstr "Artiste"
 # pynicotine/gtkgui/search.py
 # pynicotine/gtkgui/userbrowse.py
 msgid "Length"
-msgstr "Taille"
+msgstr "Durée"
 
 # pynicotine/gtkgui/nicotine_glade.py
 # pynicotine/gtkgui/search.py
@@ -5562,7 +5562,3 @@ msgstr ""
 msgid "Force lang failed: '%(language)s' (%(second)s and %(third)s tested)"
 msgstr ""
 "Échec du forçage du langage: '%(language)s' (%(second)s et %(third)s testés)"
-
-# pynicotine/gtkgui/nicotine_glade.py
-#~ msgid "Buddy list"
-#~ msgstr "Liste des amis"

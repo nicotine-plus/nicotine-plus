@@ -36,7 +36,6 @@ import shutil
 import os.path
 import string, re
 import time
-import mp3
 import locale
 import utils
 try:
