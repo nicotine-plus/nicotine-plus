@@ -679,7 +679,7 @@ If faked=True it will only create a partial instance, enough to debug NP-code wi
 				return None
 			player = players[0]
 			if len(players) > 1:
-				self.frame.logMessage(_("Found multiple MPRIS players: %s. Using: %s") % (players, player))
+				self.frame.logMessage(_("Found multiple MPRIS players: %(players)s. Using: %(player)s") % {'players': players, 'player': player})
 			else:
 				self.frame.logMessage(_("Auto-detected MPRIS player: %s.") % player)
 		try:
@@ -687,7 +687,7 @@ If faked=True it will only create a partial instance, enough to debug NP-code wi
 			player_property_obj = Interface(player_obj, dbus_interface=dbus_property)
 			metadata            = player_property_obj.Get(dbus_mpris_player_service, "Metadata")
 		except Exception, exception:
-			self.frame.logMessage(_("Something went wrong while querying %s: %s" % (player, exception)))
+			self.frame.logMessage(_("Something went wrong while querying %(player)s: %(exception)s") % {'player': player, 'exception': exception})
 			return None
 		print(metadata)
 		# See: http://mms2.org/wiki/MPRIS_Metadata

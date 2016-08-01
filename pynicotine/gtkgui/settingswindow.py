@@ -26,7 +26,7 @@ import webbrowser
 from dirchooser import *
 from utils import InputDialog, InitialiseColumns, recode, recode2, popupWarning, ImportWinSlskConfig, Humanize, OpenUri
 from entrydialog import *
-from pynicotine import upnp
+from pynicotine.upnp import UPnPPortMapping
 from pynicotine.logfacility import log
 import os, sys
 win32 = sys.platform.startswith("win")
@@ -117,11 +117,20 @@ class ServerFrame(buildFrame):
 			self.DirectConnection.set_active(not server["firewalled"])
 		if server["ctcpmsgs"] is not None:
 			self.ctcptogglebutton.set_active(not server["ctcpmsgs"])
-		
-		self.UseUPnP.set_active(server["upnp"] and upnp.upnppossible)
-		self.UseUPnP.set_sensitive(upnp.upnppossible)
-		self.labelRequirementsUPnP.set_sensitive(not upnp.upnppossible)
+
+		if UPnPPortMapping().IsPossible():
+			# If we can do a port mapping the field is active if the config said so
+			self.UseUPnP.set_active(server["upnp"])
+			self.UseUPnP.set_sensitive(True)
+		else:
+			# If we cant do a port mapping: highlight the requirements & disable the choice
+			self.UseUPnP.set_active(False)
+			self.UseUPnP.set_sensitive(False)
+			self.labelRequirementsUPnP.set_sensitive(True)
+
+		# Handle the switch between direct connections ans upnp ones
 		self.OnUPnPToggled(None)
+
 	def GetSettings(self):
 		try:
 			server = self.Server.child.get_text().split(":")
@@ -175,15 +184,29 @@ class ServerFrame(buildFrame):
 
 	def OnCheckPort(self, widget):
 		OpenUri('='.join(['http://tools.slsknet.org/porttest.php?port', str(self.frame.np.waitport)]))
+
 	def OnUPnPToggled(self, widget):
+
 		if self.UseUPnP.get_active():
-			self.Requirement.set_sensitive(False)
-			self.DirectConnection.set_sensitive(False)
+
+			# If we want to use upnp remove hint highlight since its possible to do it
+			self.labelRequirementsUPnP.set_sensitive(False)
+
+			# We set direct connection to True since now its possible to establish them
 			self.DirectConnection.set_active(True)
+
+			# Also desactivate direct connections options
+			self.DirectConnection.set_sensitive(False)
+			self.Requirement.set_sensitive(False)
 		else:
+
+			# If we want dont want to use upnp restore the hint for it
+			self.labelRequirementsUPnP.set_sensitive(True)
+
+			# Also activate direct connections
 			self.Requirement.set_sensitive(True)
 			self.DirectConnection.set_sensitive(True)
-		
+
 class DownloadsFrame(buildFrame):
 	def __init__(self, parent):
 		self.p = parent
@@ -1617,13 +1640,13 @@ class BloatFrame(buildFrame):
 				langTranslation = gettext.translation('nicotine', languages=[language])
 				langTranslation.install()
 		except IOError, e:
-			message = _("Translation not found for '%s': %s") % (language, e)
+			message = _("Translation not found for '%(language)s': %(error)s") % {'language': language, 'error': e}
 			langTranslation = gettext
 		except IndexError, e:
-			message = _("Translation was corrupted for '%s': %s") % (language, e)
+			message = _("Translation was corrupted for '%(language)s': %(error)s") % {'language': language, 'error': e}
 			langTranslation = gettext
 		except KeyError, e:
-			message = _("Lookup failed for '%(language)s': %(error)s") % {'language':language, 'error':e}
+			message = _("Lookup failed for '%(language)s': %(error)s") % {'language': language, 'error': e}
 			langTranslation = gettext
 		if message is not None and message != "":
 			popupWarning(self.p.SettingsWindow, _("Warning: Missing translation"), _("Nicotine+ could not find your selected translation.\n%s") % message, self.frame.images["n"] )
