@@ -1,5 +1,17 @@
  ChangeLog for Nicotine+ Documents
 
+September 24, 2006
+    * added pages
+      * 6.1.5 6.1.5 Nicotine+ Extra's: Add On, nSearch
+    * updated pages
+      * 2.1 Nicotine+ Dependencies (ogg123 as 1.2.5 dependencies)
+      * 2.2.4 Nicotine+ on Slax (packages/installation)
+      * 2.2.5 Nicotine+ on Slackware (packages/installation)
+      * 2.2.6 Nicotine+ on Ubuntu (packages/installation)
+      * 2.2.7 Nicotine+ on Suse Linux (packages/installation)
+      * 4.3.1 Nicotine+ Settings: Interface (Sound Effects, new screenshot)
+      * 4.3.2 Nicotine+ Settings: URL Catching (mozilla changed in firefox, "start firefox" for windows, new screenshot)
+
 September 14, 2006
    * removed pages
      * 4.2 Nicotine+ Settings: Connection
@@ -11,9 +23,9 @@ September 14, 2006
      * 4.2.3 Nicotine+ Settings: Transfers (new screenshot, Queue type, show transfer buttons)
      * 4.3.1 Nicotine+ Settings: Interface (new screenshot, Display Tray Icon, Decimal seperator)
      * 4.3.2 Nicotine+ Settings: URL Catching (new screenshot, windows note, removed list of protocls & handlers)
-     * 4.4.6 Nicotine+ Settings: Events (new screenshot, windows note)
+     * 
    * new screenshots for
-     * 4.1, 4.2.4, 4.4.1/2/3/4/5
+     * 4.1, 4.2.4, 4.4.1/2/3/4/5/6
  
 Septermer 13, 2006
   * Nicotine+ Guide one-page HTML (finished last 3 sub-chapters)

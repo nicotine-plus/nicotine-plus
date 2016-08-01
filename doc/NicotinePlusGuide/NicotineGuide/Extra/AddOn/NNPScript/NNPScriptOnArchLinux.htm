@@ -1,0 +1,67 @@
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<meta http-equiv=Content-Type content='text/html; charset=utf-8'>
+<title>NicotineGuide</title>
+<link rel="stylesheet" href="../../../../css/trac.css" type="text/css" />
+<link rel="stylesheet" href="../../../../css/wiki.css" type="text/css" />
+</head>
+<body>
+<div id="header">
+<img src="../../../../img/nicotine_banner.png" width="364" height="75" alt="Nicotine Logo" />
+</div><br />
+<hr />
+<div id="content" class="wiki">
+<div class="wikipage">
+<div><h1><span class="underline"> 6.1.1.2 Nicotine+ Extra's: Plug-ins, Now Playing, ArchLinux</span></h1>
+<h2>NNPScript for XMMS</h2>
+<p>For XMMS you need to install XMMS InfoPipe</p>
+<p>XMMS InfoPipe is a plugin that reports XMMS status via named pipe.<br />
+	Useful if you want to add interesting real-time information for a<br />
+	personal web page, or a web cam page. <a href="http://www.beastwithin.org/users/wwwwolf/code/xmms/infopipe.html">more info</a></p>
+	
+<h3>XMMS InfoPipe installation</h3>
+<ul>
+<li>1. You can get xmms-infopipe via repositories<pre class="wiki">pacman -S xmms-infopipe</pre></li>
+<li>2. restart xmms</li>
+<li>3. in xmms: CTRL + P --> General plugins --> enable InfoPipe 1.3 --> OK</li>
+</ul>
+<h3>NNPScript installation</h3>
+<ul>
+<li>1. Start Nicotine+</li>
+<li>2. In chat input-field:<br />
+<pre class="wiki">/alias np //me 's XMMS |(cat /tmp/xmms-info | grep 'Title\|Status'|cut -d ':' -f2 | tr '\n' ' ' | sed -r 's/^(.+)  (.+)/Now\1: \2/')</pre></li>
+<li>3. Test the script by running your XMMS along with Nicotine+. Typ in chat input field the following command.<br />
+<pre class="wiki">/np</pre></li></ul>
+<hr />
+<h2>NNPScript for MPC</h2>
+<h3>MPC installation</h3>
+<ul>
+<li>You can get MPC via repositories<pre class="wiki">pacman -S mpc</pre></li>
+</ul>
+<h3>Install NNPScript</h3>
+<ul>
+<li>1. Start Nicotine+</li>
+<li>2. In chat input-field:<br />
+<pre class="wiki">/alias op //me 's MPD Now Playing: |(mpc --format "[[%artist% - ]%title%]|file" | head -n 1 | sed -r 's/$/ /')</pre></li>
+<li>3. Test the script by running your mpc along with Nicotine+. Typ in chat input field the following command.<br />
+<pre class="wiki">/np</pre></li></ul>
+<hr />
+<h2>NNPScript for Amarok</h2>
+<h3>NNPScript Installation</h3>
+<ul>
+<li>1. Start Nicotine+</li>
+<li>2. In chat input-field:<br />
+<pre class="wiki">/al np //me is now playing |(artist=`dcop amarok player artist` ; title=`dcop amarok player title` ; echo " $title by $artist")</pre></li>
+<li>3. Test the script by running Amarok along with Nicotine+. Typ in chat input field the following command.<br />
+<pre class="wiki">/np</pre></li></ul>
+<br /><br /><br /><br />
+Back to <a class="wiki" href="../../../../NicotineGuide.htm">Nicotine Guide</a>
+</div></div></div></div>
+<div id="footer">
+ <hr />
+</div>
+ </body>
+</html>

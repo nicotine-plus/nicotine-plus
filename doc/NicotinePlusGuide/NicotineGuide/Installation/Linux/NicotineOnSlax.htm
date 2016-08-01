@@ -1,0 +1,65 @@
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<meta http-equiv=Content-Type content='text/html; charset=utf-8'>
+<title>NicotineGuide</title>
+<link rel="stylesheet" href="../../../css/trac.css" type="text/css" />
+<link rel="stylesheet" href="../../../css/wiki.css" type="text/css" />
+</head>
+<body>
+<div id="header">
+<img src="../../../img/nicotine_banner.png" width="364" height="75" alt="Nicotine Logo" />
+</div><br />
+<hr />
+<div id="content" class="wiki">
+<div class="wikipage">
+<div><p>
+<img src="../../../img/DistroLogos/slax.png" style="float: left;">
+<br>
+</p>
+<h2 id="NicotineonSlax">Nicotine+ on <a class="wiki" href="http://www.slax.org/">Slax</a></h2>
+<br /><br /><br />
+<h2>Nicotine+ Modules</h2>
+Download latest stable modules @ <a href="http://sourceforge.net/project/showfiles.php?group_id=171906&package_id=196557">sourceforge.net</a><br />
+Unstable modules you can download @ <a href="http://osiris.codedchaos.com">osiris.network</a>
+<h2>Required modules</h2>
+<ul><li><a class="wiki" href="http://slax.linux-live.org/modules.php?action=download&amp;id=1092">Python 2.4</a> module for Slax
+</li><li><a class="wiki" href="http://slax.linux-live.org/modules.php?action=download&amp;id=670">PyGTK 2.6.2</a> module for Slax
+</li><li><a class="wiki" href="http://slax.linux-live.org/modules.php?action=download&amp;id=433">GTK+2 2.6.8</a> module for Slax
+</li></ul>
+<h2>Optional modules</h2>
+if you want others to see the bitrate of ogg/vorbis files you're sharing
+<ul><li><a class="wiki" href="http://slax.linux-live.org/modules.php?action=download&amp;id=1226">python-ogg 1.3-2</a> module for Slax 
+</li><li><a class="wiki" href="http://slax.linux-live.org/modules.php?action=download&amp;id=1227">python-vorbis 1.3-2</a> module for Slax (if you want others to see the bitrate of ogg/vorbis files you're sharing)
+</li></ul>
+if you want to block users from specific countries
+<ul><li><a class="wiki" href="http://slax.linux-live.org/modules.php?action=download&amp;id=1228">GeoIP C Libary 1.3.16-1</a> module for Slax
+</li><li><a class="wiki" href="http://slax.linux-live.org/modules.php?action=download&amp;id=1225">python-geoip 1.2.16-1</a> module for Slax
+</li></ul>
+<h2>Installation</h2>
+Download required modules and put them in /modules of Slax. If you
+want, you can also download the optional modules and put them in
+/modules as well. Now go to you Slax folder:
+<pre class="wiki">root@slax:~# cd /path/to/slax/folder</pre>
+Generate the modified Slax:
+<pre class="wiki">root@slax:/path/to/slax/folder# ./make_iso.sh</pre>
+Burn on CD and enjoy!
+<h2>Another way</h2>
+Another way how to use Nicotine+ SLAX module is by executing uselivemod command. Syntax is following:
+<pre class="wiki">root@slax:~# uselivemod /path/module.mo</pre>
+The module will be inserted into live filesystem immediately, so the<br />
+application will look like it would be installed. You will need to run<br />
+the application by apropriate command. Unfortunately using modules on<br />
+the fly by uselivemod can sometimes hang your machine, it's some Slax<br />
+bug which needs to be fixed. It's NOT a Nicotine+ bug!!<br /><br />
+If you are using SLAX Standard Edition (or any other edition with
+KDE) you can doubleclick the module.mo file in konqueror, this will do
+the trick too.
+<br /><br /><br /><br />
+Back to <a class="wiki" href="../../../NicotineGuide.htm">Nicotine Guide</a>
+</div></div></div></div>
+<div id="footer">
+</div>
+ </body></html>
