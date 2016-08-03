@@ -321,7 +321,7 @@ class AboutLicenseDialog(GenericAboutDialog):
 		self.TextView.show()
 		self.ScrolledWindow.add(self.TextView)
 		
-		text = _("""GNU General Public License version 3 notice
+		text = """GNU General Public License version 3 notice
 
 Copyright (C) 2007 daelstorm. All rights reserved.
 
@@ -336,7 +336,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.  If not, see < http://www.gnu.org/licenses/ >.""")
+along with this program.  If not, see < http://www.gnu.org/licenses/ >."""
 		AppendLine(self.TextView, text, None, None, showstamp=False)
 		self.vbox.pack_start(self.ScrolledWindow)
 		self.show_all()
