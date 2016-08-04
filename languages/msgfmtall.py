@@ -20,15 +20,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
-import sys
-import dircache
+from os import getcwd, listdir, system
+from os.path import exists, isdir, join
 
-contents = dircache.listdir("./")
+contents = listdir(getcwd())
 
-for filename in contents:
-    if os.path.isdir(filename):
-        pofile = os.path.join(filename, "nicotine.po")
-        mofile = os.path.join(filename, "nicotine.mo")
-        if os.path.exists(pofile):
-            os.system("msgfmt \"%s\" -o \"%s\" " % (pofile, mofile))
+for lang in contents:
+    lc_messages = join(lang, "LC_MESSAGES")
+    if isdir(lc_messages):
+        pofile = join(lc_messages, "nicotine.po")
+        mofile = join(lc_messages, "nicotine.mo")
+        if exists(pofile):
+            system("msgfmt \"%s\" -o \"%s\" " % (pofile, mofile))

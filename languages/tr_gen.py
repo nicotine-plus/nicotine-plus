@@ -23,7 +23,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import sys
-from os import listdir, system
+from os import listdir, remove, system
 from os.path import isfile, join
 
 print "Generating nicotine.pot ..."
@@ -95,4 +95,5 @@ r = system("msgcat nicotine-glade.pot nicotine-python.pot -o nicotine.pot")
 if r:
     print "Error while creating nicotine.pot"
 else:
-    print "You can remove nicotine-glade.pot nicotine-python.pot files"
+    remove('nicotine-python.pot')
+    remove('nicotine-glade.pot')
