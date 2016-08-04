@@ -6,8 +6,8 @@ languages/nicotine-python.pot
 *.pyc
 
 # Pot backup & mo files
-languages/*.po~
-languages/*.mo
+*.po~
+*.mo
 
 # Ignore venv files
 venv/*
