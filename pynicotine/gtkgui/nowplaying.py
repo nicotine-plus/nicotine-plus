@@ -14,7 +14,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import gtk, gobject
-#import os, commands, sys, re, thread, threading
 import os, sys, re, thread, threading
 import copy
 import sys
@@ -27,7 +26,7 @@ if sys.platform == "win32":
 	except: 
 		pass
 
-from pynicotine.utils import _, executeCommand
+from pynicotine.utils import executeCommand
 from pynicotine.logfacility import log
 
 class NowPlaying:

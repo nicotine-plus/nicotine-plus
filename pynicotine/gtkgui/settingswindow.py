@@ -34,7 +34,6 @@ if win32:
 	pass
 else:
 	import pwd
-from pynicotine.utils import _
 dir_location = os.path.dirname(os.path.realpath(__file__))
 
 class buildFrame:

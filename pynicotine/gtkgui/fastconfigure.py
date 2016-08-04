@@ -22,7 +22,6 @@ import thread
 from os.path import exists, join
 from time import time
 
-from pynicotine.utils import _
 from dirchooser import ChooseDir
 from utils import OpenUri, InitialiseColumns, recode, HumanSize
 dir_location = os.path.dirname(os.path.realpath(__file__))

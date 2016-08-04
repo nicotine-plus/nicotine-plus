@@ -44,7 +44,7 @@ try:
 except:
 	import md5
 	MD5 = md5.new
-from utils import _, executeCommand
+from utils import executeCommand
 from gtkgui.utils import recode2
 from time import sleep
 import gobject

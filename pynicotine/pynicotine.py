@@ -42,7 +42,7 @@ import types
 import locale
 import utils
 from shares import Shares
-from utils import _, CleanFile, findBestEncoding
+from utils import CleanFile, findBestEncoding
 import os
 import logging
 

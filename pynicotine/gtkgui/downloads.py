@@ -23,7 +23,7 @@ from transferlist import TransferList
 from utils import PopupMenu, PressHeader
 from pynicotine import slskmessages
 import string, os
-from pynicotine.utils import _, executeCommand
+from pynicotine.utils import executeCommand
 from entrydialog import *
 
 class Downloads(TransferList):

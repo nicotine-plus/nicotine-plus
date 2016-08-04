@@ -28,7 +28,7 @@ import gobject
 # Application specific
 from utils import IconNotebook, PopupMenu, EncodingsMenu, SaveEncoding,  Humanize, InitialiseColumns, AppendLine
 from pynicotine import slskmessages
-from pynicotine.utils import _, CleanFile
+from pynicotine.utils import CleanFile
 from pynicotine.logfacility import log
 
 # User Info and User Browse Notebooks

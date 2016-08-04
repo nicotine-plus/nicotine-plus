@@ -22,8 +22,6 @@ import os
 from pynicotine.utils import version
 import imagedata
 
-from pynicotine.utils import _
-
 
 class MetaDialog( gtk.Dialog):
 	def __init__(self, frame, message="", data=None, modal= True, Search=True):

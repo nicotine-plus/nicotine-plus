@@ -34,7 +34,7 @@ from struct import unpack
 import imghdr
 
 from pynicotine import slskmessages
-from pynicotine.utils import _, executeCommand, findBestEncoding
+from pynicotine.utils import executeCommand, findBestEncoding
 from countrycodes import code2name
 
 DECIMALSEP = ""
@@ -1657,4 +1657,3 @@ class ImportWinSlskConfig:
 			if user == i[0]:
 				return 1
 		return 0
-

@@ -30,7 +30,7 @@ from dirchooser import ChooseDir
 from entrydialog import *
 from pynicotine import slskmessages
 from thread import start_new_thread
-from pynicotine.utils import _, displayTraceback, executeCommand, CleanFile
+from pynicotine.utils import displayTraceback, executeCommand, CleanFile
 from uglytree import UglyTree
 
 class UserBrowse:

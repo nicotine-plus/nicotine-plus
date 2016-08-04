@@ -9,7 +9,6 @@ from traceback import extract_stack, extract_tb, format_list
 import traceback
 from pynicotine import slskmessages
 from slskmessages import ToBeEncoded
-from utils import _
 from logfacility import log
 
 WIN32 = sys.platform.startswith("win")

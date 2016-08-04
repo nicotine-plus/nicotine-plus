@@ -22,7 +22,7 @@ from thread import start_new_thread
 from transferlist import TransferList
 from utils import PopupMenu, PressHeader
 import string, os
-from pynicotine.utils import _, executeCommand
+from pynicotine.utils import executeCommand
 from pynicotine import slskmessages
 from entrydialog import OptionDialog
 

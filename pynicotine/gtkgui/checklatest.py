@@ -19,7 +19,7 @@
 import gtk
 import urllib
 
-from pynicotine.utils import version, latesturl, _
+from pynicotine.utils import version, latesturl
 
 def makeversion(version):
 	build = 255

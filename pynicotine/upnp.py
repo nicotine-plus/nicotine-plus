@@ -23,7 +23,7 @@
 from pynicotine import slskmessages
 
 from logfacility import log
-from utils import _, executeCommand
+from utils import executeCommand
 
 import re
 from socket import gethostbyname, gethostname

@@ -11,7 +11,7 @@ import struct
 import slskmessages
 from slskmessages import NetworkIntType, NetworkLongLongType
 from logfacility import log
-from utils import _, displayTraceback, strace
+from utils import displayTraceback, strace
 import metadata_mutagen as metadata
 
 win32 = sys.platform.startswith("win")

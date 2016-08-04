@@ -26,7 +26,7 @@ from utils import AppendLine, IconNotebook, PopupMenu, WriteLog, expand_alias, i
 from chatrooms import GetCompletion
 from pynicotine import slskmessages
 from pynicotine.slskmessages import ToBeEncoded
-from pynicotine.utils import _, version
+from pynicotine.utils import version
 from pynicotine.logfacility import log
 
 CTCP_VERSION = "\x01VERSION\x01"

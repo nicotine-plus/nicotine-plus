@@ -706,6 +706,5 @@ import sys
 dom = parse(sys.argv[1])
 
 print "import gtk, gobject"
-print "from pynicotine.utils import _"
 print
 process_interface(dom.getElementsByTagName("glade-interface")[0])

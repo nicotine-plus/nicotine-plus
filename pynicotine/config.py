@@ -35,7 +35,7 @@ import thread
 from os.path import exists
 
 from logfacility import log
-from utils import _, findBestEncoding
+from utils import findBestEncoding
 
 class Config:
 	""" 

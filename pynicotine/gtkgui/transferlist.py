@@ -29,7 +29,6 @@ from math import ceil
 from utils import InitialiseColumns, int_sort_func, float_sort_func
 from uglytree import UglyTree
 
-from pynicotine.utils import _
 from pynicotine.logfacility import log
 
 class TransferList:

@@ -24,7 +24,6 @@ import sys, os
 from pynicotine import slskmessages
 from utils import InitialiseColumns, PopupMenu, InputDialog, Humanize, HumanSpeed, PressHeader, showCountryTooltip
 
-from pynicotine.utils import _
 
 class UserList:
 	def __init__(self, frame):

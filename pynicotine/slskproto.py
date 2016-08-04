@@ -38,7 +38,7 @@ import threading
 import struct
 
 from errno import EINTR
-from utils import _, win32
+from utils import win32
 from logfacility import log
 
 MAXFILELIMIT = -1

@@ -25,7 +25,6 @@ import struct
 import types
 import zlib
 import os, sys
-from utils import _
 from utils import *
 from logfacility import log
 from itertools import count
@@ -2100,4 +2099,3 @@ class PopupMessage(object):
 	def __init__(self, title, message):
 		self.title = title
 		self.message = message
-
