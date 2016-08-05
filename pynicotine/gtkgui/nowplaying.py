@@ -46,7 +46,7 @@ If faked=True it will only create a partial instance, enough to debug NP-code wi
 			return
 		# All things that aren't needed for a faked instance
 		self.accel_group = gtk.AccelGroup()
-		self.wTree = gtk.glade.XML(os.path.join(os.path.dirname(os.path.realpath(__file__)), "nowplaying.glade" ), None, 'nicotine' ) 
+		self.wTree = gtk.glade.XML(os.path.join(os.path.dirname(os.path.realpath(__file__)), "nowplaying.glade"), None)
 		widgets = self.wTree.get_widget_prefix("")
 		for i in widgets:
 			name = gtk.glade.get_widget_name(i)

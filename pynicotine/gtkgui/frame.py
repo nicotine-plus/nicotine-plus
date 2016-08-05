@@ -77,7 +77,7 @@ class roomlist:
 	def __init__(self, frame):
 		self.frame = frame
 		#self.tooltips = self.frame.tooltips
-		self.wTree = gtk.glade.XML(os.path.join(os.path.dirname(os.path.realpath(__file__)), "roomlist.glade" ), None, 'nicotine' ) 
+		self.wTree = gtk.glade.XML(os.path.join(os.path.dirname(os.path.realpath(__file__)), "roomlist.glade"), None)
 		widgets = self.wTree.get_widget_prefix("")
 		for i in widgets:
 			name = gtk.glade.get_widget_name(i)
@@ -353,7 +353,7 @@ class NicotineFrame:
 		self.roomlist = roomlist(self)
 		# Import glade widgets
 		gtk.glade.set_custom_handler(self.get_custom_widget)
-		self.wTree = gtk.glade.XML(os.path.join(os.path.dirname(os.path.realpath(__file__)), "mainwindow.glade" ), None, 'nicotine' ) 
+		self.wTree = gtk.glade.XML(os.path.join(os.path.dirname(os.path.realpath(__file__)), "mainwindow.glade"), None)
 		widgets = self.wTree.get_widget_prefix("")
 		for i in widgets:
 			name = gtk.glade.get_widget_name(i)

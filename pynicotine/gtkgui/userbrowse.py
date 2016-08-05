@@ -35,7 +35,7 @@ from uglytree import UglyTree
 
 class UserBrowse:
 	def __init__(self, userbrowses, user, conn):
-		self.wTree = gtk.glade.XML(os.path.join(os.path.dirname(os.path.realpath(__file__)), "userbrowse.glade" ), None, "nicotine" ) 
+		self.wTree = gtk.glade.XML(os.path.join(os.path.dirname(os.path.realpath(__file__)), "userbrowse.glade"), None)
 		widgets = self.wTree.get_widget_prefix("")
 		for i in widgets:
 			name = gtk.glade.get_widget_name(i)
