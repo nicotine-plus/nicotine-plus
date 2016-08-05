@@ -29,11 +29,13 @@ from entrydialog import *
 from pynicotine.upnp import UPnPPortMapping
 from pynicotine.logfacility import log
 import os, sys
+
 win32 = sys.platform.startswith("win")
 if win32:
 	pass
 else:
 	import pwd
+
 dir_location = os.path.dirname(os.path.realpath(__file__))
 
 class buildFrame:
@@ -76,8 +78,21 @@ class ServerFrame(buildFrame):
 		
 		for item in encodings:
 			self.Elist[item[1]] = self.EncodingStore.append([item[1], item[0] ])
-		self.options = {"server": { "server": None, "serverlist": self.Server, "login": self.Login, "passw": self.Password, "enc": self.Encoding.child, "portrange": None, "firewalled": self.DirectConnection, "upnp": self.UseUPnP, "ctcpmsgs": self.ctcptogglebutton } }
-			
+
+		self.options = {
+			"server": {
+				"server": None,
+				"serverlist": self.Server,
+				"login": self.Login,
+				"passw": self.Password,
+				"enc": self.Encoding.child,
+				"portrange": None,
+				"firewalled": self.DirectConnection,
+				"upnp": self.UseUPnP,
+				"ctcpmsgs": self.ctcptogglebutton
+			}
+		}
+
 	def SetSettings(self, config):
 		self.p.SetWidgetsData(config, self.options)
 		self.Server.get_model().clear()
@@ -211,12 +226,20 @@ class DownloadsFrame(buildFrame):
 		self.p = parent
 	
 		buildFrame.__init__(self, "DownloadsFrame")
-		
-			
+
 		self.needrescan = 0
 
-		
-		self.options = {"transfers": {"incompletedir": self.IncompleteDir, "downloaddir": self.DownloadDir, "sharedownloaddir": self.ShareDownloadDir, "downloadfilters": self.FilterView, "enablefilters": self.DownloadFilter, "downloadlimit": self.DownloadSpeed} }
+		self.options = {
+			"transfers": {
+				"incompletedir": self.IncompleteDir,
+				"downloaddir": self.DownloadDir,
+				"sharedownloaddir": self.ShareDownloadDir,
+				"downloadfilters": self.FilterView,
+				"enablefilters": self.DownloadFilter,
+				"downloadlimit": self.DownloadSpeed
+			}
+		}
+
 		self.filterlist = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_BOOLEAN )
 		self.downloadfilters = []
 		
@@ -278,6 +301,7 @@ class DownloadsFrame(buildFrame):
 		if homedir == recode2(self.DownloadDir.get_text()) and self.ShareDownloadDir.get_active():
 			popupWarning(self.p.SettingsWindow, _("Warning"),_("Security Risk: you should not share your %s directory!")  %place, self.frame.images["n"])
 			raise UserWarning
+
 		return {
 			"transfers": {
 				"incompletedir": recode2(self.IncompleteDir.get_text()),
@@ -285,7 +309,7 @@ class DownloadsFrame(buildFrame):
 				"sharedownloaddir": self.ShareDownloadDir.get_active(),
 				"downloadfilters": self.GetFilterList(),
 				"enablefilters": self.DownloadFilter.get_active(),
-				"downloadlimit": self.DownloadSpeed.get_value_as_int(),
+				"downloadlimit": self.DownloadSpeed.get_value_as_int()
 			}
 		}
 
@@ -387,7 +411,14 @@ class DownloadsFrame(buildFrame):
 	def OnDefaultFilters(self, widget):
 		self.filtersiters = {}
 		self.filterlist.clear()
-		default_filters = [["desktop.ini", 1], ["folder.jpg", 1], ["*.url", 1], ["thumbs.db", 1], ["albumart(_{........-....-....-....-............}_)?(_?(large|small))?\.jpg", 0]]
+		default_filters = [
+			["desktop.ini", 1],
+			["folder.jpg", 1],
+			["*.url", 1],
+			["thumbs.db", 1],
+			["albumart(_{........-....-....-....-............}_)?(_?(large|small))?\.jpg", 0]
+		]
+
 		for dfilter in default_filters:
 			filter, escaped = dfilter
 			self.filtersiters[filter] = self.filterlist.append([filter, escaped])
@@ -447,10 +478,9 @@ class DownloadsFrame(buildFrame):
 class SharesFrame(buildFrame):
 	def __init__(self, parent):
 		self.p = parent
-	
+
 		buildFrame.__init__(self, "SharesFrame")
-		
-			
+
 		self.needrescan = 0
 		# last column is the raw byte/unicode object for the folder (not shown)
 		self.shareslist = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING)
@@ -508,8 +538,6 @@ class SharesFrame(buildFrame):
 			self.bshareddirs = transfers["buddyshared"][:]
 		else:
 			self.p.Hilight(self.BuddyShares)
-	
-		
 
 		self.needrescan = 0
 
@@ -525,13 +553,14 @@ class SharesFrame(buildFrame):
 			if homedir == share:
 				popupWarning(self.p.SettingsWindow, _("Warning"),_("Security Risk: you should not share your %s directory!") %place, self.frame.images["n"])
 				raise UserWarning
+
 		return {
 			"transfers": {
 				"shared": self.shareddirs[:],
 				"rescanonstartup": self.RescanOnStartup.get_active(),
 				"buddyshared": self.bshareddirs[:],
 				"enablebuddyshares": self.enableBuddyShares.get_active(),
-				"friendsonly": self.FriendsOnly.get_active(),
+				"friendsonly": self.FriendsOnly.get_active()
 			}
 		}
 
@@ -623,23 +652,37 @@ class TransfersFrame(buildFrame):
 		self.UploadsAllowed_List = gtk.ListStore(gobject.TYPE_STRING)
 		self.UploadsAllowed.set_model(self.UploadsAllowed_List)
 		self.options = {
-			"transfers": {"uploadbandwidth": self.QueueBandwidth, "useupslots": self.QueueUseSlots,
-"uploadslots": self.QueueSlots, "uselimit": self.Limit, "uploadlimit": self.LimitSpeed,
-"fifoqueue": self.FirstInFirstOut, "limitby": self.LimitTotalTransfers,
-"queuelimit": self.MaxUserQueue, "filelimit": self.MaxUserFiles,
-"friendsnolimits": self.FriendsNoLimits, 
-"preferfriends": self.PreferFriends, "lock":self.LockIncoming,
-"reverseorder":self.DownloadReverseOrder, "prioritize":self.DownloadChecksumsFirst,
-"remotedownloads": self.RemoteDownloads, "uploadallowed": self.UploadsAllowed,
-"uploaddir": self.UploadDir
-}
+			"transfers": {
+				"uploadbandwidth": self.QueueBandwidth,
+				"useupslots": self.QueueUseSlots,
+				"uploadslots": self.QueueSlots,
+				"uselimit": self.Limit,
+				"uploadlimit": self.LimitSpeed,
+				"fifoqueue": self.FirstInFirstOut,
+				"limitby": self.LimitTotalTransfers,
+				"queuelimit": self.MaxUserQueue,
+				"filelimit": self.MaxUserFiles,
+				"friendsnolimits": self.FriendsNoLimits,
+				"preferfriends": self.PreferFriends,
+				"lock":self.LockIncoming,
+				"reverseorder":self.DownloadReverseOrder,
+				"prioritize":self.DownloadChecksumsFirst,
+				"remotedownloads": self.RemoteDownloads,
+				"uploadallowed": self.UploadsAllowed,
+				"uploaddir": self.UploadDir
 			}
+		}
+
 		self.UploadsAllowed_List.clear()
-		self.alloweduserslist = [_("No one"), _("Everyone"), _("Users in list"), _("Trusted Users")]
+		self.alloweduserslist = [
+			_("No one"),
+			_("Everyone"),
+			_("Users in list"),
+			_("Trusted Users")
+		]
 
 		for item in self.alloweduserslist:
 			self.UploadsAllowed_List.append([item])
-
 
 		#self.Uploads.connect("activate", self.OnExpand)
 
@@ -669,6 +712,7 @@ class TransfersFrame(buildFrame):
 			uploadallowed = 0
 		if not self.RemoteDownloads.get_active():
 			uploadallowed = 0
+
 		return {
 			"transfers": {
 				"uploadbandwidth": self.QueueBandwidth.get_value_as_int(),
@@ -687,8 +731,8 @@ class TransfersFrame(buildFrame):
 				"prioritize":self.DownloadChecksumsFirst.get_active(),
 				"remotedownloads": self.RemoteDownloads.get_active(),
 				"uploadallowed": uploadallowed,
-				"uploaddir": recode2(self.UploadDir.get_text()),
-			},
+				"uploaddir": recode2(self.UploadDir.get_text())
+			}
 		}
 
 	def OnChooseUploadDir(self, widget):
@@ -717,10 +761,16 @@ class GeoBlockFrame(buildFrame):
 		self.p = parent
 		buildFrame.__init__(self, "GeoBlockFrame")
 
-		self.options = {"transfers": { "geoblock": self.GeoBlock, "geopanic": self.GeoPanic, "geoblockcc": self.GeoBlockCC,} }
+		self.options = {
+			"transfers": {
+				"geoblock": self.GeoBlock,
+				"geopanic": self.GeoPanic,
+				"geoblockcc": self.GeoBlockCC
+			}
+		}
+
 		try:
 			import GeoIP
-			
 		except ImportError:
 			try:
 				import _GeoIP
@@ -744,7 +794,7 @@ class GeoBlockFrame(buildFrame):
 			"transfers": {
 				"geoblock": self.GeoBlock.get_active(),
 				"geopanic": self.GeoPanic.get_active(),
-				"geoblockcc": [self.GeoBlockCC.get_text().upper()],
+				"geoblockcc": [self.GeoBlockCC.get_text().upper()]
 			}
 		}
 
@@ -758,7 +808,13 @@ class UserinfoFrame(buildFrame):
 		self.p = parent
 		buildFrame.__init__(self, "UserinfoFrame")
 
-		self.options = {"userinfo": {"descr":None, "pic": self.Image, "descrutf8": None } }
+		self.options = {
+			"userinfo": {
+				"descr": None,
+				"pic": self.Image,
+				"descrutf8": None
+			}
+		}
 		self.Image.connect("changed", self.GetImageSize)
 		
 	def SetSettings(self, config):
@@ -786,11 +842,12 @@ class UserinfoFrame(buildFrame):
 		start = buffer.get_start_iter()
 		end = buffer.get_end_iter()
 		descr = buffer.get_text(start, end).replace("; ", ", ").__repr__()
+
 		return {
 			"userinfo": {
 				"descr": descr,
 				"pic": recode2(self.Image.get_text()),
-				"descrutf8": 1,
+				"descrutf8": 1
 			}
 		}
 
@@ -809,7 +866,12 @@ class IgnoreFrame(buildFrame):
 		self.p = parent
 		buildFrame.__init__(self, "IgnoreFrame")
 
-		self.options = {"server": { "ignorelist": self.IgnoredUsers, "ipignorelist": self.IgnoredIPs} }
+		self.options = {
+			"server": {
+				"ignorelist": self.IgnoredUsers,
+				"ipignorelist": self.IgnoredIPs
+			}
+		}
 
 		self.ignored_users = []
 		self.ignorelist = gtk.ListStore(gobject.TYPE_STRING)
@@ -855,8 +917,8 @@ class IgnoreFrame(buildFrame):
 		return {
 			"server": {
 				"ignorelist": self.ignored_users[:],
-				"ipignorelist": self.ignored_ips.copy(),
-			},
+				"ipignorelist": self.ignored_ips.copy()
+			}
 		}
 	
 	def _AppendItem(self, model, path, iter, l):
@@ -917,9 +979,17 @@ class BanFrame(buildFrame):
 		self.p = parent
 		buildFrame.__init__(self, "BanFrame")
 
-		self.options = {"server": { "banlist" : self.Banned, "ipblocklist": self.Blocked},
-			"transfers": {"usecustomban": self.UseCustomBan, "customban": self.CustomBan,}
+		self.options = {
+			"server": {
+				"banlist" : self.Banned,
+				"ipblocklist": self.Blocked
+			},
+			"transfers": {
+				"usecustomban": self.UseCustomBan,
+				"customban": self.CustomBan
 			}
+		}
+
 		self.banned = []
 		self.banlist = gtk.ListStore(gobject.TYPE_STRING)
 		column = gtk.TreeViewColumn(_("Users"), gtk.CellRendererText(), text = 0)
@@ -969,11 +1039,11 @@ class BanFrame(buildFrame):
 		return {
 			"server": {
 				"banlist": self.banned[:],
-				"ipblocklist": self.blocked.copy(),
+				"ipblocklist": self.blocked.copy()
 			},
 			"transfers": {
 				"usecustomban": self.UseCustomBan.get_active(),
-				"customban": self.CustomBan.get_text(),
+				"customban": self.CustomBan.get_text()
 			}
 		}
 	
@@ -1047,8 +1117,21 @@ class SoundsFrame(buildFrame):
 		self.SoundCommand.set_model(self.SoundCommand_List)
 		self.SoundCommand.set_text_column(0)
 
-		self.options = {"ui": {"soundcommand": self.SoundCommand, "soundtheme": self.SoundDirectory, "soundenabled": self.SoundCheck, "speechenabled": self.TextToSpeech, "speechcommand": self.TTSCommand, "speechrooms": self.RoomMessage, "speechprivate": self.PrivateMessage},
-			"players": {"default": self.audioPlayerCombo}}
+		self.options = {
+			"ui": {
+				"soundcommand": self.SoundCommand,
+				"soundtheme": self.SoundDirectory,
+				"soundenabled": self.SoundCheck,
+				"speechenabled": self.TextToSpeech,
+				"speechcommand": self.TTSCommand,
+				"speechrooms": self.RoomMessage,
+				"speechprivate": self.PrivateMessage
+			},
+			"players": {
+				"default": self.audioPlayerCombo
+			}
+		}
+
 		for executable in ["xmms -e $", "audacious -e $", "amarok -a $", 'exaile $']:
 			self.audioPlayerCombo.append_text( executable )
 		for executable in ["flite -t $", "echo $ | festival --tts"]:
@@ -1116,10 +1199,10 @@ class SoundsFrame(buildFrame):
 				"speechenabled": self.TextToSpeech.get_active(),
 				"speechcommand": self.TTSCommand.child.get_text(),
 				"speechrooms": self.RoomMessage.get_text(),
-				"speechprivate": self.PrivateMessage.get_text(),
+				"speechprivate": self.PrivateMessage.get_text()
 			},
 			"players": {
-				"default": self.audioPlayerCombo.child.get_text(),
+				"default": self.audioPlayerCombo.child.get_text()
 			},
 		}
 
@@ -1188,8 +1271,8 @@ class IconsFrame(buildFrame):
 			"ui": {
 				"icontheme": self.IconTheme.get_text(),
 				"trayicon": self.TrayiconCheck.get_active(),
-				"exitdialog": mainwindow_close,
-			},
+				"exitdialog": mainwindow_close
+			}
 		}
 
 
@@ -1202,26 +1285,77 @@ class ColoursFrame(buildFrame):
 		self.UsernameStyle.set_text_column(0)
 
 		self.needcolors = 0
-		self.options = { "ui": {"chatlocal":self.Local,
-"chatremote": self.Remote, "chatme": self.Me, "chathilite": self.Highlight,
-"textbg":self.BackgroundColor, "inputcolor": self.InputColor, "search": self.Immediate,
-"searchq": self.Queue, "searchoffline": self.OfflineSearchEntry,  "useraway": self.AwayColor,
-"useronline": self.OnlineColor, "useroffline": self.OfflineColor,
-"usernamehotspots": self.UsernameHotspots, "usernamestyle": self.UsernameStyle,
-"showaway": self.DisplayAwayColours, "urlcolor": self.URL,
-"enabletrans": self.EnableTransparent, "transtint": self.TintColor, "transalpha": self.TintAlpha, 
-"tab_default": self.DefaultTab, "tab_hilite": self.HighlightTab, "tab_changed": self.ChangedTab, 
-		},
+		self.options = {
+			"ui": {
+				"chatlocal":self.Local,
+				"chatremote": self.Remote,
+				"chatme": self.Me,
+				"chathilite": self.Highlight,
+				"textbg":self.BackgroundColor,
+				"inputcolor": self.InputColor,
+				"search": self.Immediate,
+				"searchq": self.Queue,
+				"searchoffline": self.OfflineSearchEntry,
+				"useraway": self.AwayColor,
+				"useronline": self.OnlineColor,
+				"useroffline": self.OfflineColor,
+				"usernamehotspots": self.UsernameHotspots,
+				"usernamestyle": self.UsernameStyle,
+				"showaway": self.DisplayAwayColours,
+				"urlcolor": self.URL,
+				"enabletrans": self.EnableTransparent,
+				"transtint": self.TintColor,
+				"transalpha": self.TintAlpha,
+				"tab_default": self.DefaultTab,
+				"tab_hilite": self.HighlightTab,
+				"tab_changed": self.ChangedTab
+			}
 		}
-		self.colorsd = { "ui": {"chatlocal":self.Drawing_Local,
-"chatremote": self.Drawing_Remote, "chatme": self.Drawing_Me, "chathilite": self.Drawing_Highlight,
-"textbg":self.Drawing_BackgroundColor, "inputcolor": self.Drawing_InputColor, "search": self.Drawing_Immediate,
-"searchq": self.Drawing_Queue, "searchoffline": self.Drawing_OfflineSearchEntry,  "useraway": self.Drawing_AwayColor,
-"useronline": self.Drawing_OnlineColor, "useroffline": self.Drawing_OfflineColor,
-"showaway": self.DisplayAwayColours, "urlcolor": self.Drawing_URL,
-"enabletrans": self.EnableTransparent, "transtint": self.Drawing_TintColor, 
-"tab_default": self.Drawing_DefaultTab, "tab_hilite": self.Drawing_HighlightTab, "tab_changed": self.Drawing_ChangedTab }, }
-		self.colors = ["chatlocal", "chatremote", "urlcolor", "chatme", "chathilite", "textbg", "inputcolor", "search", "searchq", "searchoffline", "useraway", "useronline", "useroffline", "tab_default", "tab_changed", "tab_hilite", "transtint"]
+
+		self.colorsd = {
+			"ui": {
+				"chatlocal":self.Drawing_Local,
+				"chatremote": self.Drawing_Remote,
+				"chatme": self.Drawing_Me,
+				"chathilite": self.Drawing_Highlight,
+				"textbg":self.Drawing_BackgroundColor,
+				"inputcolor": self.Drawing_InputColor,
+				"search": self.Drawing_Immediate,
+				"searchq": self.Drawing_Queue,
+				"searchoffline": self.Drawing_OfflineSearchEntry,
+				"useraway": self.Drawing_AwayColor,
+				"useronline": self.Drawing_OnlineColor,
+				"useroffline": self.Drawing_OfflineColor,
+				"showaway": self.DisplayAwayColours,
+				"urlcolor": self.Drawing_URL,
+				"enabletrans": self.EnableTransparent,
+				"transtint": self.Drawing_TintColor,
+				"tab_default": self.Drawing_DefaultTab,
+				"tab_hilite": self.Drawing_HighlightTab,
+				"tab_changed": self.Drawing_ChangedTab
+			}
+		}
+
+		self.colors = [
+			"chatlocal",
+			"chatremote",
+			"urlcolor",
+			"chatme",
+			"chathilite",
+			"textbg",
+			"inputcolor",
+			"search",
+			"searchq",
+			"searchoffline",
+			"useraway",
+			"useronline",
+			"useroffline",
+			"tab_default",
+			"tab_changed",
+			"tab_hilite",
+			"transtint"
+		]
+
 		for item in ["bold", "italic", "underline", "normal"]:
 			self.UsernameStyle.append_text(item)
 		self.UsernameStyle.child.set_editable(False)
@@ -1326,6 +1460,7 @@ class ColoursFrame(buildFrame):
 			self.vboxColours.set_child_packing(self.TransparentExpander, False, False, 0, 0)
 		else:
 			self.vboxColours.set_child_packing(self.TransparentExpander, False, True, 0, 0)
+
 	def GetSettings(self):
 		return {
 			"ui": {
@@ -1350,9 +1485,9 @@ class ColoursFrame(buildFrame):
 				"transalpha": self.TintAlpha.get_value(),
 				"tab_hilite": self.HighlightTab.get_text(),
 				"tab_default": self.DefaultTab.get_text(),
-				"tab_changed": self.ChangedTab.get_text(),
-				}
+				"tab_changed": self.ChangedTab.get_text()
 			}
+		}
 			
 	def ToggledAwayColours(self, widget):
 		sensitive = widget.get_active()
@@ -1518,11 +1653,26 @@ class NotebookFrame(buildFrame):
 		self.p = parent
 		buildFrame.__init__(self, "NotebookFrame")
 		self.NotificationIcon.set_from_pixbuf(self.frame.images["online"])
-		self.options = { "ui": { 
-			"tabmain": self.MainPosition, "tabrooms": self.ChatRoomsPosition, "tabprivate": self.PrivateChatPosition, "tabinfo": self.UserInfoPosition, "tabbrowse": self.UserBrowsePosition, "tabsearch": self.SearchPosition, 
-			"labelmain": self.MainAngleSpin, "labelrooms": self.ChatRoomsAngleSpin, "labelprivate": self.PrivateChatAngleSpin, "labelinfo": self.UserInfoAngleSpin, "labelbrowse": self.UserBrowseAngleSpin, "labelsearch": self.SearchAngleSpin,
-			"tabclosers": self.TabClosers, "tab_icons": self.TabIcons, "tab_colors": self.TabColours, "tab_reorderable": self.TabReorderable, "tab_status_icons": self.TabStatusIcons}
-			
+		self.options = {
+			"ui": {
+				"tabmain": self.MainPosition,
+				"tabrooms": self.ChatRoomsPosition,
+				"tabprivate": self.PrivateChatPosition,
+				"tabinfo": self.UserInfoPosition,
+				"tabbrowse": self.UserBrowsePosition,
+				"tabsearch": self.SearchPosition,
+				"labelmain": self.MainAngleSpin,
+				"labelrooms": self.ChatRoomsAngleSpin,
+				"labelprivate": self.PrivateChatAngleSpin,
+				"labelinfo": self.UserInfoAngleSpin,
+				"labelbrowse": self.UserBrowseAngleSpin,
+				"labelsearch": self.SearchAngleSpin,
+				"tabclosers": self.TabClosers,
+				"tab_icons": self.TabIcons,
+				"tab_colors": self.TabColours,
+				"tab_reorderable": self.TabReorderable,
+				"tab_status_icons": self.TabStatusIcons
+			}
 		}
 		
 	def SetSettings(self, config):
@@ -1582,11 +1732,24 @@ class BloatFrame(buildFrame):
 		self.DecimalSep.set_model(self.DecimalSep_List)
 
 		self.options =  {
-			"ui": { "chatfont":self.SelectChatFont, "listfont": self.SelectListFont, "searchfont": self.SelectSearchFont, "transfersfont": self.SelectTransfersFont, "browserfont": self.SelectBrowserFont,  "decimalsep": self.DecimalSep, "spellcheck": self.SpellCheck, "tooltips": self.ShowTooltips,
+			"ui": {
+				"chatfont":self.SelectChatFont,
+				"listfont": self.SelectListFont,
+				"searchfont": self.SelectSearchFont,
+				"transfersfont": self.SelectTransfersFont,
+				"browserfont": self.SelectBrowserFont,
+				"decimalsep": self.DecimalSep,
+				"spellcheck": self.SpellCheck,
+				"tooltips": self.ShowTooltips
 			},
-			"transfers": {"enabletransferbuttons": self.ShowTransferButtons},
-			"language": {"setlanguage": self.TranslationCheck, "language": self.TranslationCombo},
+			"transfers": {
+				"enabletransferbuttons": self.ShowTransferButtons
+			},
+			"language": {
+				"setlanguage": self.TranslationCheck,
+				"language": self.TranslationCombo
 			}
+		}
 		
 		for item in ["<None>", ",", ".", "<space>"]:
 			self.DecimalSep.append_text(item)
@@ -1612,6 +1775,7 @@ class BloatFrame(buildFrame):
 		self.needcolors = 0
 
 	def SetSettings(self, config):
+
 		self.needcolors = 0
 		ui = config["ui"]
 		transfers = config["transfers"]
@@ -1659,14 +1823,14 @@ class BloatFrame(buildFrame):
 				"searchfont": self.SelectSearchFont.get_font_name(),
 				"transfersfont": self.SelectTransfersFont.get_font_name(),
 				"browserfont": self.SelectBrowserFont.get_font_name(),
-				"tooltips": self.ShowTooltips.get_active(),
+				"tooltips": self.ShowTooltips.get_active()
 			},
 			"transfers": {
-				"enabletransferbuttons": self.ShowTransferButtons.get_active(),
+				"enabletransferbuttons": self.ShowTransferButtons.get_active()
 			},
 			"language": {
 				"setlanguage": self.TranslationCheck.get_active(),
-				"language": language,
+				"language": language
 			}
 		}
 		
@@ -1701,8 +1865,26 @@ class LogFrame(buildFrame):
 	def __init__(self, parent):
 		self.p = parent
 		buildFrame.__init__(self, "LogFrame")
-		self.options = {"logging": { "privatechat": self.LogPrivate, "chatrooms": self.LogRooms, "logsdir": self.LogDir, "roomlogsdir": self.RoomLogDir, "privatelogsdir": self.PrivateLogDir, "transfers": self.LogTransfers, "rooms_timestamp":self.ChatRoomFormat, "private_timestamp":self.PrivateChatFormat, "log_timestamp": self.LogFileFormat, "timestamps": self.ShowTimeStamps, "readroomlines": self.RoomLogLines,  "readprivatelines": self.PrivateLogLines, "readroomlogs": self.ReadRoomLogs},
-					"privatechat": {"store": self.ReopenPrivateChats},}
+		self.options = {
+			"logging": {
+				"privatechat": self.LogPrivate,
+				"chatrooms": self.LogRooms,
+				"logsdir": self.LogDir,
+				"roomlogsdir": self.RoomLogDir,
+				"privatelogsdir": self.PrivateLogDir,
+				"transfers": self.LogTransfers,
+				"rooms_timestamp":self.ChatRoomFormat,
+				"private_timestamp":self.PrivateChatFormat,
+				"log_timestamp": self.LogFileFormat,
+				"timestamps": self.ShowTimeStamps,
+				"readroomlines": self.RoomLogLines,
+				"readprivatelines": self.PrivateLogLines,
+				"readroomlogs": self.ReadRoomLogs
+			},
+			"privatechat": {
+				"store": self.ReopenPrivateChats
+			}
+		}
 
 	def SetSettings(self, config):
 		
@@ -1723,10 +1905,10 @@ class LogFrame(buildFrame):
 				"private_timestamp": self.PrivateChatFormat.get_text(),
 				"rooms_timestamp": self.ChatRoomFormat.get_text(),
 				"log_timestamp": self.LogFileFormat.get_text(),
-				"timestamps": self.ShowTimeStamps.get_active(),
+				"timestamps": self.ShowTimeStamps.get_active()
 			},
 			"privatechat": {
-				"store": self.ReopenPrivateChats.get_active(),
+				"store": self.ReopenPrivateChats.get_active()
 			},
 		}
 
@@ -1764,7 +1946,20 @@ class SearchFrame(buildFrame):
 	def __init__(self, parent):
 		self.p = parent
 		buildFrame.__init__(self, "SearchFrame")
-		self.options = {"searches": {"maxresults": self.MaxResults, "enablefilters": self.EnableFilters, "re_filter": self.RegexpFilters, "defilter": None, "distrib_timer": self.ToggleDistributed, "distrib_ignore": self.ToggleDistributedInterval, "reopen_tabs": self.ReopenTabs, "search_results": self.ToggleResults, "max_displayed_results": self.MaxDisplayedResults, "max_stored_results": self.MaxStoredResults }}
+		self.options = {
+			"searches": {
+				"maxresults": self.MaxResults,
+				"enablefilters": self.EnableFilters,
+				"re_filter": self.RegexpFilters,
+				"defilter": None,
+				"distrib_timer": self.ToggleDistributed,
+				"distrib_ignore": self.ToggleDistributedInterval,
+				"reopen_tabs": self.ReopenTabs,
+				"search_results": self.ToggleResults,
+				"max_displayed_results": self.MaxDisplayedResults,
+				"max_stored_results": self.MaxStoredResults
+			}
+		}
 
 	def SetSettings(self, config):
 		try:
@@ -1803,14 +1998,14 @@ class SearchFrame(buildFrame):
 					self.FilterSize.get_text(),
 					self.FilterBR.get_text(),
 					self.FilterFree.get_active(),
-					self.FilterCC.get_text(),
+					self.FilterCC.get_text()
 				],
 				"distrib_timer": self.ToggleDistributed.get_active(),
 				"distrib_ignore": self.ToggleDistributedInterval.get_value_as_int(),
 				"reopen_tabs": self.ReopenTabs.get_active(),
 				"search_results": self.ToggleResults.get_active(),
 				"max_displayed_results": self.MaxDisplayedResults.get_value_as_int(),
-				"max_stored_results": self.MaxStoredResults.get_value_as_int(),
+				"max_stored_results": self.MaxStoredResults.get_value_as_int()
 			}
 		}
 
@@ -1828,7 +2023,12 @@ class AwayFrame(buildFrame):
 	def __init__(self, parent):
 		self.p = parent
 		buildFrame.__init__(self, "AwayFrame")
-		self.options = {"server": {"autoaway": self.AutoAway, "autoreply": self.AutoReply}}
+		self.options = {
+			"server": {
+				"autoaway": self.AutoAway,
+				"autoreply": self.AutoReply
+			}
+		}
 	
 	def SetSettings(self, config):		
 		server = config["server"]
@@ -1842,7 +2042,7 @@ class AwayFrame(buildFrame):
 		return {
 			"server": {
 				"autoaway": autoaway,
-				"autoreply": self.AutoReply.get_text(),
+				"autoreply": self.AutoReply.get_text()
 			}
 		}
 
@@ -1853,8 +2053,19 @@ class EventsFrame(buildFrame):
 		self.FileManagerCombo_List = gtk.ListStore(gobject.TYPE_STRING)
 		self.FileManagerCombo.set_model(self.FileManagerCombo_List)
 		self.FileManagerCombo.set_text_column(0)
-		self.options = {"transfers": { "shownotification": self.ShowNotification, "shownotificationperfolder": self.ShowNotificationPerFolder, "afterfinish": self.AfterDownload, "afterfolder": self.AfterFolder, "download_doubleclick": self.DownloadDoubleClick, "upload_doubleclick": self.UploadDoubleClick, },
-			"ui": {"filemanager": self.FileManagerCombo.child },}
+		self.options = {
+			"transfers": {
+				"shownotification": self.ShowNotification,
+				"shownotificationperfolder": self.ShowNotificationPerFolder,
+				"afterfinish": self.AfterDownload,
+				"afterfolder": self.AfterFolder,
+				"download_doubleclick": self.DownloadDoubleClick,
+				"upload_doubleclick": self.UploadDoubleClick
+			},
+			"ui": {
+				"filemanager": self.FileManagerCombo.child
+			}
+		}
 
 		for executable in ["rox $", "konqueror $", "nautilus --no-desktop $", "thunar $", "xterm -e mc $", "emelfm2 -1 $", "krusader --left $", "gentoo -1 $" ]:
 			self.FileManagerCombo.append_text( executable ) 
@@ -1877,13 +2088,11 @@ class EventsFrame(buildFrame):
 				"afterfinish": self.AfterDownload.get_text(),
 				"afterfolder": self.AfterFolder.get_text(),
 				"download_doubleclick": self.DownloadDoubleClick.get_active(),
-				"upload_doubleclick": self.UploadDoubleClick.get_active(),
-				
+				"upload_doubleclick": self.UploadDoubleClick.get_active()
 			},
 			"ui": {
-				"filemanager": self.FileManagerCombo.child.get_text(),
-			},
-		
+				"filemanager": self.FileManagerCombo.child.get_text()
+			}
 		}
 
 
@@ -1949,7 +2158,18 @@ class UrlCatchFrame(buildFrame):
 	def __init__(self, parent):
 		self.p = parent
 		buildFrame.__init__(self, "UrlCatchFrame")
-		self.options = {"urls": { "urlcatching": self.URLCatching, "humanizeurls": self.HumanizeURLs, "protocols": None}, "ui": {"mozembed": self.EnableMozEmbed, "open_in_mozembed": self.EnableMozEmbedURLs, }, }
+		self.options = {
+			"urls": {
+				"urlcatching": self.URLCatching,
+				"humanizeurls": self.HumanizeURLs,
+				"protocols": None
+			},
+			"ui": {
+				"mozembed": self.EnableMozEmbed,
+				"open_in_mozembed": self.EnableMozEmbedURLs
+			}
+		}
+
 		self.protocolmodel = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
 		self.protocols = {}
 		cols = InitialiseColumns(self.ProtocolHandlers,
@@ -2033,15 +2253,16 @@ class UrlCatchFrame(buildFrame):
 				iter = self.protocolmodel.iter_next(iter)
 		except:
 			pass
+
 		return {
 			"ui" : {
 				"mozembed": self.EnableMozEmbed.get_active(),
-				"open_in_mozembed": self.EnableMozEmbedURLs.get_active(),
+				"open_in_mozembed": self.EnableMozEmbedURLs.get_active()
 			},
 			"urls": {
 				"urlcatching": self.URLCatching.get_active(),
 				"humanizeurls": self.HumanizeURLs.get_active(),
-				"protocols": protocols,
+				"protocols": protocols
 			}
 		}
 
@@ -2088,7 +2309,14 @@ class CensorFrame(buildFrame):
 	def __init__(self, parent):
 		self.p = parent
 		buildFrame.__init__(self, "CensorFrame")
-		self.options = {"words": {"censorfill": self.CensorReplaceCombo.child, "censored": self.CensorList, "censorwords": self.CensorCheck, }}
+		self.options = {
+			"words": {
+				"censorfill": self.CensorReplaceCombo.child,
+				"censored": self.CensorList,
+				"censorwords": self.CensorCheck
+			}
+		}
+
 		self.censorlist = gtk.ListStore(gobject.TYPE_STRING)
 		cols = InitialiseColumns(self.CensorList,
 			[_("Pattern"), -1, "edit", self.frame.CellDataFunc],
@@ -2149,13 +2377,13 @@ class CensorFrame(buildFrame):
 			pass
 			
 		return {
-			
 			"words": {
 				"censorfill": self.CensorReplaceCombo.child.get_text(),
 				"censored": censored,
-				"censorwords": self.CensorCheck.get_active(),
+				"censorwords": self.CensorCheck.get_active()
 			}
 		}
+
 	def OnAdd(self, widget):
 		iter = self.censorlist.append([""])
 		selection = self.CensorList.get_selection()
@@ -2179,7 +2407,13 @@ class AutoReplaceFrame(buildFrame):
 	def __init__(self, parent):
 		self.p = parent
 		buildFrame.__init__(self, "AutoReplaceFrame")
-		self.options = {"words": {"autoreplaced": self.ReplacementList, "replacewords": self.ReplaceCheck,} }
+		self.options = {
+			"words": {
+				"autoreplaced": self.ReplacementList,
+				"replacewords": self.ReplaceCheck
+			}
+		}
+
 		self.replacelist = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
 		cols = InitialiseColumns(self.ReplacementList,
 			[_("Pattern"), 150, "edit", self.frame.CellDataFunc],
@@ -2237,10 +2471,9 @@ class AutoReplaceFrame(buildFrame):
 			autoreplaced.clear()
 			
 		return {
-			
 			"words": {
 				"autoreplaced": autoreplaced,
-				"replacewords": self.ReplaceCheck.get_active(),
+				"replacewords": self.ReplaceCheck.get_active()
 			}
 		}
 		
@@ -2274,13 +2507,21 @@ class CompletionFrame(buildFrame):
 	def __init__(self, parent):
 		self.p = parent
 		buildFrame.__init__(self, "CompletionFrame")
-		self.options = {"words": {
-"tab": self.CompletionTabCheck, "cycle": self.CompletionCycleCheck,
-"dropdown": self.CompletionDropdownCheck, "characters": self.CharactersCompletion, 
-"roomnames": self.CompleteRoomNamesCheck, "buddies": self.CompleteBuddiesCheck, 
-"roomusers": self.CompleteUsersInRoomsCheck, "commands": self.CompleteCommandsCheck, 
-"aliases": self.CompleteAliasesCheck, "onematch": self.OneMatchCheck,}
+		self.options = {
+			"words": {
+				"tab": self.CompletionTabCheck,
+				"cycle": self.CompletionCycleCheck,
+				"dropdown": self.CompletionDropdownCheck,
+				"characters": self.CharactersCompletion,
+				"roomnames": self.CompleteRoomNamesCheck,
+				"buddies": self.CompleteBuddiesCheck,
+				"roomusers": self.CompleteUsersInRoomsCheck,
+				"commands": self.CompleteCommandsCheck,
+				"aliases": self.CompleteAliasesCheck,
+				"onematch": self.OneMatchCheck
+			}
 		}
+
 		self.CompletionTabCheck.connect("toggled", self.OnCompletionDropdownCheck)
 		self.CompletionCycleCheck.connect("toggled", self.OnCompletionCycleCheck)
 		self.CompletionDropdownCheck.connect("toggled", self.OnCompletionDropdownCheck)
@@ -2320,19 +2561,21 @@ class CompletionFrame(buildFrame):
 		self.OneMatchCheck.set_sensitive(sensitive)
 		
 	def GetSettings(self):
-		return { "words": {
-			"tab": self.CompletionTabCheck.get_active(),
-			"cycle": self.CompletionCycleCheck.get_active(),
-			"dropdown": self.CompletionDropdownCheck.get_active(),
-			"characters": self.CharactersCompletion.get_value_as_int(),
-			"roomnames": self.CompleteRoomNamesCheck.get_active(),
-			"buddies": self.CompleteBuddiesCheck.get_active(),
-			"roomusers": self.CompleteUsersInRoomsCheck.get_active(),
-			"commands": self.CompleteCommandsCheck.get_active(),
-			"aliases": self.CompleteAliasesCheck.get_active(),
-			"onematch": self.OneMatchCheck.get_active(),
-			},
+		return {
+			"words": {
+				"tab": self.CompletionTabCheck.get_active(),
+				"cycle": self.CompletionCycleCheck.get_active(),
+				"dropdown": self.CompletionDropdownCheck.get_active(),
+				"characters": self.CharactersCompletion.get_value_as_int(),
+				"roomnames": self.CompleteRoomNamesCheck.get_active(),
+				"buddies": self.CompleteBuddiesCheck.get_active(),
+				"roomusers": self.CompleteUsersInRoomsCheck.get_active(),
+				"commands": self.CompleteCommandsCheck.get_active(),
+				"aliases": self.CompleteAliasesCheck.get_active(),
+				"onematch": self.OneMatchCheck.get_active()
+			}
 		}
+
 class buildDialog(gtk.Dialog):
 	def __init__(self, parent ):
 
@@ -2480,7 +2723,12 @@ class PluginFrame(buildFrame):
 	def __init__(self, parent):
 		self.p = parent
 		buildFrame.__init__(self, "PluginFrame")
-		self.options = {"plugins": {"enable": self.PluginsEnable} }
+		self.options = {
+			"plugins": {
+				"enable": self.PluginsEnable
+			}
+		}
+
 		self.pluginlist = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_BOOLEAN, gobject.TYPE_STRING )
 		self.plugins = []
 		self.pluginsiters = {}
@@ -2488,7 +2736,6 @@ class PluginFrame(buildFrame):
 		cols = InitialiseColumns(self.PluginTreeView,
 			[_("Plugins"), 150, "text"],
 			[_("Enabled"), 40, "toggle"],
-
 		)
 		
 		cols[0].set_sort_column_id(0)
@@ -2569,10 +2816,11 @@ class PluginFrame(buildFrame):
 		self.notebook1.set_sensitive(self.PluginsEnable.get_active())
 
 	def GetSettings(self):
-		
-		return { "plugins": {
-			"enable": self.PluginsEnable.get_active(),
-			"enabled": self.frame.pluginhandler.enabled_plugins.keys() },
+		return {
+			"plugins": {
+				"enable": self.PluginsEnable.get_active(),
+				"enabled": self.frame.pluginhandler.enabled_plugins.keys()
+			}
 		 }
 	
 class ChatFrame(buildFrame):
@@ -2594,9 +2842,7 @@ class MiscFrame(buildFrame):
 		return {}
 	def GetSettings(self):
 		return {}
-		
-		
-		
+
 class SettingsWindow:
 	def __init__(self, frame):
 		self.frame = frame
@@ -2923,7 +3169,7 @@ class SettingsWindow:
 				"players": {},
 				"words": {},
 				"language": {},
-				"plugins": {},
+				"plugins": {}
 			}
 			
 			for page in self.pages.values():
