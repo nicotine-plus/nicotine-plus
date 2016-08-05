@@ -676,7 +676,12 @@ class PrivateChat:
 		gobject.idle_add(self.frame.ScrollBottom, self.ChatScroll.get_parent())
 		
 	def Detach(self, widget=None):
-		self.chats.detach_tab(self.Main, _("Nicotine+ Private Chat: %s (%s)") % (self.user, [_("Offline"), _("Away"), _("Online")][self.status]))
+		self.chats.detach_tab(self.Main,
+			_("Nicotine+ Private Chat: %(user)s (%(status)s)") % {
+				'user': self.user,
+				'status': [_("Offline"), _("Away"), _("Online")][self.status]
+			}
+		)
 		gobject.idle_add(self.frame.ScrollBottom, self.ChatScroll.get_parent())
 		
 	def NowPlayingThread(self):

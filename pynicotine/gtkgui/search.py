@@ -704,9 +704,14 @@ class Search:
 
 		
 	def Detach(self, widget=None):
-		self.Searches.detach_tab(self.Main, _("Nicotine+ %s Search: %s") % ([_("Global"), _("Rooms"), _("Buddies"), self.Searches.GetUserSearchName(self.id)][self.mode], self.text))
-		
-		
+		self.Searches.detach_tab(self.Main,
+			_("Nicotine+ %(mode)s Search: %(term)s") % {
+				'mode': [_("Global"), _("Rooms"), _("Buddies"),	self.Searches.GetUserSearchName(self.id)][self.mode],
+				'term': self.text
+			}
+		)
+
+
 	def AddResult(self, msg, user, country):
 		if user in self.users:
 			return
