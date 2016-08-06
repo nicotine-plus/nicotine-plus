@@ -56,11 +56,11 @@ Long term / permanent term:
   * Keep up with protocol changes [DONE!]
 
   * Undetermined term:
-	* Win32 packages and installer (requires a magical speed-up first, which 
+	* Win32 packages and installer (requires a magical speed-up first, which
 	  isn't going to happen any time soon, but with core/gui separation, a
 	  native win32 gui should be possible) [DONE!]
 
 -----------------------------------------------------------------
 
 Client in C/C++  :::  done-> (Museek & Museeq)
-NCurses GUI      ::: done->( museekchat / Mucous )
+NCurses GUI      ::: done->(museekchat / Mucous)

@@ -6,4 +6,4 @@
 It may even cause Nicotine-Plus to crash or enter a cpu-hogging loop
 Win32's socket limit is very easy to reach. since it's quite low.
 
-Check the Github for issues: https://github.com/eLvErDe/nicotine-plus/issues
+Check Github for issues: https://github.com/eLvErDe/nicotine-plus/issues

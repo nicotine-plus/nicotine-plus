@@ -1,0 +1,99 @@
+# Nicotine+ MAINTAINERS
+
+### Active
+
+Michael Labouebe (aka gfarmerfr)
+	- Developer
+	- Doc update
+	- [gfarmerfr(at)free(dot)fr]
+
+eL_vErDe
+	- Provides Nicotine+ Website
+	- Migrated source code from SVN to Github
+	- Developer (retired ?)
+	- http://www.nicotine-plus.org
+
+### Retired
+
+daelstorm
+	- Developer
+	- [daelstorm(at)gmail(dot)com]
+
+gallows (aka 'burp O')
+	- Developer, Packager
+	- [g4ll0ws(at)gmail(dot)com]
+	- Submitted Slack.Build file
+
+QuinoX
+	- Developer
+
+hedonist (formerly known as alexbk)
+	- OS X nicotine.app maintainer / developer
+	- [ak(at)sensi(dot)org]
+	- Author of original pyslsk, which is used for nicotine core
+
+lee8oi		
+	- Bash Commander		
+	- [winslaya(at)gmail(dot)com]
+	- New and updated /alias
+
+INMCM
+	- Nicotine+ topic maintainer on ubuntuforums.org
+	- http://ubuntuforums.org/showthread.php?t=196835
+
+suser-guru
+    - Suse Linux packager
+    - https://dev-loki.blogspot.fr/
+    - Nicotine+ RPM's for Suse 9.1, 9.2, 9.3, 10.0, 10.1
+
+osiris
+	- handy-man, documentation, some GNU/Linux packaging, author of Nicotine+ Guide, Nicotine+ on win32
+	- [osiris.contact(at)gmail(dot)com]
+
+---
+
+# Nicotine MAINTAINERS
+
+### Retired
+
+Hyriand
+	- Founder
+	- [hyriand(at)thegraveyard(dot)org]
+
+osiris
+	- handy-man
+	- [osiris.contact(at)gmail(dot)com]
+
+SmackleFunky
+	- Beta tester
+
+Wretched
+	- Beta tester
+	- Bringer of great ideas
+
+(va)\*10^3
+	* Beta tester		
+	* Designer of the old nicotine homepage and artwork (logos)
+
+sierracat
+	- MacOSX tester
+	- Developed soulseeX
+
+Gustavo
+	- [gjc(at)inescporto(dot)pt]
+	- Made the exception dialog
+
+SeeSchloss
+	- Developer
+	- Made 1.0.8 win32 installer
+	- Created [Soulfind](http://seeschloss.org/soulfind.html), opensource Soulseek Server written in D
+
+vasi
+	- Mac developer
+	- [djvasi@gmail.com]
+	- Packaged nicotine on OSX PowerPc
+
+
+# Contact info
+Have you done something for Nicotine or Nicotine+ and your name is forgotten?
+Please let us know.
