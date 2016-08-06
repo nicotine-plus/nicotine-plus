@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-06 10:52+0200\n"
+"POT-Creation-Date: 2016-08-06 21:43+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2332,9 +2332,6 @@ msgstr ""
 msgid "Abor_t"
 msgstr ""
 
-msgid "Abort & delete"
-msgstr ""
-
 msgid "_Clear"
 msgstr ""
 
@@ -3269,7 +3266,7 @@ msgid "Open in File Manager"
 msgstr ""
 
 #, python-format
-msgid "Nicotine+ User Browse: %s (%s)"
+msgid "Nicotine+ User Browse: %(user)s (%(status)s)"
 msgstr ""
 
 #, python-format
@@ -3320,7 +3317,7 @@ msgid "Save Image"
 msgstr ""
 
 #, python-format
-msgid "Nicotine+ Userinfo: %s (%s)"
+msgid "Nicotine+ Userinfo: %(user)s (%(status)s)"
 msgstr ""
 
 #, python-format
@@ -3589,7 +3586,7 @@ msgid ""
 msgstr ""
 
 #, python-format
-msgid "Unknown queue item %s: %s"
+msgid "Unknown queue item %(type)s: %(item)s"
 msgstr ""
 
 msgid "Your config file is corrupt"
@@ -3883,7 +3880,7 @@ msgid "Major Socket Error: Networking terminated! %s"
 msgstr ""
 
 #, python-format
-msgid "Ignoring connection request from blocked IP Address %s:%s"
+msgid "Ignoring connection request from blocked IP Address %(ip)s:%(port)s"
 msgstr ""
 
 #, python-format
@@ -3953,15 +3950,15 @@ msgid "Got transfer request %s but cannot determine requestor"
 msgstr ""
 
 #, python-format
-msgid "Denied file request: User %s, %s"
+msgid "Denied file request: User %(user)s, %(msg)s"
 msgstr ""
 
 #, python-format
-msgid "Upload request: %s Response: %s"
+msgid "Upload request: %(req)s Response: %(resp)s"
 msgstr ""
 
 #, python-format
-msgid "Queued upload request: User %s, %s"
+msgid "Queued upload request: User %(user)s, %(msg)s"
 msgstr ""
 
 #, python-format
@@ -4012,7 +4009,9 @@ msgid "Download started: user %(user)s, file %(file)s"
 msgstr ""
 
 #, python-format
-msgid "Download error formally known as 'Unknown file request': %s (%s: %s)"
+msgid ""
+"Download error formally known as 'Unknown file request': %(req)s (%(user)s: "
+"%(file)s)"
 msgstr ""
 
 #, python-format
@@ -4024,7 +4023,9 @@ msgid "Upload I/O error: %s"
 msgstr ""
 
 #, python-format
-msgid "Upload error formally known as 'Unknown file request': %s (%s: %s)"
+msgid ""
+"Upload error formally known as 'Unknown file request': %(req)s (%(user)s: "
+"%(file)s)"
 msgstr ""
 
 #, python-format

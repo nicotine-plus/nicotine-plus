@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nicotine\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-06 10:54+0200\n"
-"PO-Revision-Date: 2016-08-06 10:54+0200\n"
+"POT-Creation-Date: 2016-08-06 21:52+0200\n"
+"PO-Revision-Date: 2016-08-06 21:52+0200\n"
 "Last-Translator: Michael LABOUEBE <gfarmerfr@free.fr>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -3147,9 +3147,6 @@ msgstr "_Réessayer"
 msgid "Abor_t"
 msgstr "Annuler"
 
-msgid "Abort & delete"
-msgstr "Annuler et effacer"
-
 # pynicotine/gtkgui/downloads.py
 # pynicotine/gtkgui/settings_glade.py
 # pynicotine/gtkgui/uploads.py
@@ -4385,8 +4382,8 @@ msgid "Open in File Manager"
 msgstr "Ouvrir dans le navigateur de fichiers"
 
 #, python-format
-msgid "Nicotine+ User Browse: %s (%s)"
-msgstr "Nicotine+ Partage de l'utilisateur: %s (%s)"
+msgid "Nicotine+ User Browse: %(user)s (%(status)s)"
+msgstr "Nicotine+ Partage de l'utilisateur: %(user)s (%(status)s)"
 
 #, python-format
 msgid "Shared: %s"
@@ -4450,16 +4447,9 @@ msgstr "Zoom arrière"
 msgid "Save Image"
 msgstr "Sauvegarder l'image"
 
-# pynicotine/gtkgui/chatrooms.py
-# pynicotine/gtkgui/downloads.py
-# pynicotine/gtkgui/privatechat.py
-# pynicotine/gtkgui/search.py
-# pynicotine/gtkgui/uploads.py
-# pynicotine/gtkgui/userbrowse.py
-# pynicotine/gtkgui/userlist.py
 #, python-format
-msgid "Nicotine+ Userinfo: %s (%s)"
-msgstr "Nicotine+ Informations sur l'utilisateur %s (%s)"
+msgid "Nicotine+ Userinfo: %(user)s (%(status)s)"
+msgstr "Nicotine+ Informations utilisateur: %(user)s (%(status)s)"
 
 # pynicotine/gtkgui/userinfo.py
 #, python-format
@@ -4786,8 +4776,8 @@ msgstr ""
 
 # pynicotine/pynicotine.py
 #, python-format
-msgid "Unknown queue item %s: %s"
-msgstr "Message encapsulé inconnu: %s: %s"
+msgid "Unknown queue item %(type)s: %(item)s"
+msgstr "Message encapsulé inconnu: %(type)s: %(item)s"
 
 msgid "Your config file is corrupt"
 msgstr "Votre fichier de configuration est corrompu."
@@ -5164,8 +5154,10 @@ msgid "Major Socket Error: Networking terminated! %s"
 msgstr "Erreur majeure de socket: réseau déconnecté! %s"
 
 #, python-format
-msgid "Ignoring connection request from blocked IP Address %s:%s"
-msgstr "Requête de connexion ignorée provenant de l'adresse IP bloquée %s:%s"
+msgid "Ignoring connection request from blocked IP Address %(ip)s:%(port)s"
+msgstr ""
+"Requête de connexion ignorée provenant de l'adresse IP bloquée %(ip)s:"
+"%(port)s"
 
 # pynicotine/slskproto.py
 #, python-format
@@ -5268,19 +5260,20 @@ msgstr ""
 
 # pynicotine/transfers.py
 #, python-format
-msgid "Denied file request: User %s, %s"
-msgstr "La requête de fichier a été refusée: Utilisateur %s, %s"
+msgid "Denied file request: User %(user)s, %(msg)s"
+msgstr "La requête de fichier a été refusée: Utilisateur %(user)s, %(msg)s"
 
 # pynicotine/transfers.py
 #, python-format
-msgid "Upload request: %s Response: %s"
-msgstr "Requête d'envoi: %s Réponse: %s"
+msgid "Upload request: %(req)s Response: %(resp)s"
+msgstr "Requête d'envoi: %(req)s Réponse: %(resp)s"
 
 # pynicotine/transfers.py
 #, python-format
-msgid "Queued upload request: User %s, %s"
+msgid "Queued upload request: User %(user)s, %(msg)s"
 msgstr ""
-"La requête d'upload a été mise dans la file d'attente: Utilisateur %s, %s"
+"La requête d'upload a été mise dans la file d'attente: Utilisateur %(user)s, "
+"%(msg)s"
 
 #, python-format
 msgid "Your buddy, %s, is attempting to upload file(s) to you."
@@ -5338,10 +5331,12 @@ msgid "Download started: user %(user)s, file %(file)s"
 msgstr "Téléchargement commencé: utilisateur %(user)s, fichier %(file)s"
 
 #, python-format
-msgid "Download error formally known as 'Unknown file request': %s (%s: %s)"
+msgid ""
+"Download error formally known as 'Unknown file request': %(req)s (%(user)s: "
+"%(file)s)"
 msgstr ""
 "Erreur de téléchargement formellement connue sous le nom 'Unknown file "
-"request': %s (%s: %s)"
+"request': %(req)s (%(user)s: %(file)s)"
 
 #, python-format
 msgid "Upload started: user %(user)s, file %(file)s"
@@ -5353,10 +5348,12 @@ msgid "Upload I/O error: %s"
 msgstr "Erreur d'E/S lors de l'envoi: %s"
 
 #, python-format
-msgid "Upload error formally known as 'Unknown file request': %s (%s: %s)"
+msgid ""
+"Upload error formally known as 'Unknown file request': %(req)s (%(user)s: "
+"%(file)s)"
 msgstr ""
-"Erreur d'envoi formellement connue sous le nom 'Unknown file request': %s "
-"(%s: %s)"
+"Erreur d'envoi formellement connue sous le nom 'Unknown file request': "
+"%(req)s (%(user)s: %(file)s)"
 
 # pynicotine/transfers.py
 #, python-format
