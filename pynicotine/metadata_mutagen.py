@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 # Python core
 from __future__ import division
 

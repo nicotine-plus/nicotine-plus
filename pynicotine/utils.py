@@ -1,4 +1,3 @@
-#!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
 # COPYRIGHT (c) 2016 Michael Labouebe <gfarmerfr@free.fr>
