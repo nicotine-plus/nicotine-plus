@@ -1,72 +1,93 @@
-# Nicotine+ TRANSLATIONS
+## For a list of translators see [TRANSLATORS](TRANSLATORS.md)
 
-For a list of translators see [TRANSLATORS](TRANSLATORS.md)
+If you're name is missing: please contact us.
 
-# HowTo translate
+---
 
-##### To update the .pot file (template):
-* Run the `languages/tr_gen.py` script from the languages/ directory.
+# Translators
+
+### HowTo translate
 
 ##### To create a new language:
-* Create a subdirectory under `languages/` for your translation.
-* Copy the `nicotine.pot` to that subdirectory and rename it to `nicotine.po`.
-* Edit this file with poedit or the editor of your choice.
 
-##### To update all language .po files:
-* Run the `languages/mergeall` script from the  `languages/` directory.
-* Run the `languages/msgfmtall.py` script from the `languages/` directory.
-* Then, each `nicotine.po` will need to be updated with the new translations.
+1. Create a directory `languages/$(your_lang)/LC_MESSAGES/` for your translation.
 
-##### To update just the language .po file you are working on:
-* Change to the directory of the translation and run `msgmerge -U nicotine.po ../nicotine.pot`
-* When finished editing the .po, in the language's subdirectory, do the following command: `msgfmt nicotine.po -o nicotine.mo`
-* After nicotine has been installed, the new .mo files will be in `/usr/share/locale/$LANGUAGE/LC_MESSAGES/`
-* For testing, you can copy them there, yourself (if you have permissions)
+2. Copy the `nicotine.pot` to that subdirectory and rename it to `nicotine.po`.
 
-# USERS
+3. Edit this file.
 
-For Nicotine to know you want a certain translation, your locale needs to be set to that language.
+4. **PLEASE** make sure that you are using UNIX style line ending and UTF-8 encoding.
 
-If your operating system doesn't have it set already, starting with these commands will force an operating system to load.
+##### To update the language you are working on:
 
-##### ENGLISH
-LC_ALL=en_US.UTF-8 nicotine
+1. To update your translated .po file from the template you have two choices:
 
-##### DANISH
-LC_ALL=dk_DK.UTF-8 nicotine
+    * Go to the directory of the translation and run:
 
-##### DUTCH
-LC_ALL=nl_NL.UTF-8 nicotine
+    `msgmerge -U nicotine.po ../../nicotine.pot`
 
-##### Euskara (Basque)
-LC_ALL=eu.UTF-8 nicotine
+    * Or if using poedit use `Catalog -> Update from POT file` menu.
 
-##### FRENCH
-LC_ALL=fr_FR.UTF-8 nicotine
+2. Edit your translation.
 
-##### GERMAN
-LC_ALL=de_DE.UTF-8 nicotine
+3. **PLEASE** make sure that you are using UNIX style line ending and UTF-8 encoding.
 
-##### HUNGARIAN
-LC_ALL=hu_HU.UTF-8 nicotine
+### How to test translations
 
-##### ITALIAN
-LC_ALL=it_IT.UTF-8 nicotine
+When finished editing the .po file you must compile the language file to a .mo file.
 
-##### Lithuanian
-LC_ALL=lt_LT.UTF-8 nicotine
+You can do this either by:
 
-##### POLISH
-LC_ALL=pl_PL.UTF-8 nicotine
+* Running `msgfmt nicotine.po -o nicotine.mo` from the command line.
 
-##### Portuguese Brazilian
-LC_ALL=pt_BR.UTF-8 nicotine
+* Using poedit `File -> Compile to MO` menu.
 
-##### SLOVAK:
-LC_ALL=sk_SK.UTF-8 nicotine
+When restarting Nicotine+ you should see the fruit of your labor :)
 
-##### SPANISH
-LC_ALL=es_ES.UTF-8 nicotine
+---
 
-##### SWEDISH
-LC_ALL=sv_SE.UTF-8 nicotine
+# Developers
+
+##### To update the .pot file (template):
+
+* Run the `tr_gen.py` script from the `languages` directory.
+
+##### To update all languages .po files:
+
+* Run the `mergeall` script from the `languages` directory.
+
+* Then, each `nicotine.po` will need to be updated by translators.
+
+##### To compile all languages .po files:
+
+* Run the `msgfmtall.py` script from the `languages` directory.
+
+---
+
+# More on translation
+
+Nicotine+ will try to autodetect your language based on what locale you're using.
+
+For testing purposes Nicotine+ can be forced to use a specific language.
+
+You can do it either by:
+
+* Setting the language via the GUI `Preferences -> Language`.
+
+* Setting your locale before starting Nicotine+ ex:
+
+    * English: `LC_ALL=en_US.UTF-8 python nicotine.py`
+    * French: `LC_ALL=fr_FR.UTF-8 python nicotine.py`
+    * ...
+
+Nicotine+ will first try to find your translation files in your project directory.
+It's particularily usefull for testing translations from a git clone of the repo or if your are using python virtualenv framework.
+
+Your translation file should be located in:
+`$(your_git_clone_path)/languages/$(lang)/LC_MESSAGES/nicotine.{mo,po}`.
+
+If Nicotine+ don't find the translation files in your project directory it will fall back to searching in your system locale path which is OS specific. A GNU/Linux distribution package will put them in the system locale path.
+
+* On GNU/Linux: `/usr/share/locale/$(lang)/LC_MESSAGES/nicotine.{mo,po}`.
+
+* On Windows: `%PYTHONHOME%\share\locale\$(lang)\LC_MESSAGES`.
