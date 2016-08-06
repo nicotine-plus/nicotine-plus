@@ -18,7 +18,8 @@
 # Copyright (c) 2003-2004 Hyriand. All rights reserved.
 
 import gtk
-import gobject, pango
+import gobject
+import pango
 
 import re
 import sre_constants
@@ -36,7 +37,9 @@ from pynicotine.logfacility import log
 
 from time import time
 
-class WishList( gtk.Dialog):
+
+class WishList(gtk.Dialog):
+
 	def __init__(self, frame):
 		gtk.Dialog.__init__(self)
 		self.set_title(_("Nicotine+ Wishlist"))
@@ -49,8 +52,6 @@ class WishList( gtk.Dialog):
 		self.set_size_request(250, 250)
 		self.mainHbox = gtk.HBox(False, 5)
 		self.mainHbox.show()
-		
-		
 
 		self.WishLabel = gtk.Label(_("Search Wishlist"))
 		self.WishLabel.set_padding(0, 0)
@@ -102,16 +103,16 @@ class WishList( gtk.Dialog):
 		self.wishes = {}
 		for wish in self.nicotine.np.config.sections["server"]["autosearch"]:
 			self.wishes[wish] = self.store.append([wish])
-		
+
 	def OnAddWish(self, widget):
 		wish = InputDialog(self.vbox.get_toplevel(), _("Add Wish..."), _("Wish:") )
 		if wish and wish not in self.wishes:
 			self.wishes[wish] = self.store.append([wish])
 			self.nicotine.Searches.NewWish(wish)
-	
+
 	def _RemoveWish(self, model, path, iter, l):
 		l.append(iter)
-		
+
 	def removeWish(self, wish):
 		if wish in self.wishes:
 			self.store.remove(self.wishes[wish])
@@ -126,24 +127,21 @@ class WishList( gtk.Dialog):
 						search[2].RememberCheckButton.set_active(False)
 					break
 
-		
 	def addWish(self, wish):
 		if wish and wish not in self.wishes:
 			self.wishes[wish] = self.store.append([wish])
-		
+
 	def OnRemoveWish(self, widget):
 		iters = []
 		self.WishlistView.get_selection().selected_foreach(self._RemoveWish, iters)
 		for iter in iters:
 			wish = self.store.get_value(iter, 0)
 			self.removeWish(wish)
-	
 
 	def OnSelectAllWishes(self, widget):
 		self.WishlistView.get_selection().select_all()
-	
-	def quit(self, w=None, event=None):
 
+	def quit(self, w=None, event=None):
 		self.hide()
 		return True
 
@@ -152,7 +150,10 @@ class WishList( gtk.Dialog):
 			self.hide()
 		else:
 			self.show()
+
+
 class Searches(IconNotebook):
+
 	def __init__(self, frame):
 		self.frame = frame
 		self.interval = 0
@@ -166,7 +167,6 @@ class Searches(IconNotebook):
 		IconNotebook.__init__(self, frame.images, ui["labelprivate"], ui["tabclosers"], ui["tab_icons"], ui["tab_reorderable"])
 		self.popup_enable()
 		#frame.SearchEntryCombo.disable_activate()
-		
 
 		self.WishListDialog = WishList(frame)
 		
@@ -199,13 +199,13 @@ class Searches(IconNotebook):
 		
 		self.OnAutoSearch()
 		self.timer = gobject.timeout_add(self.interval*1000, self.OnAutoSearch)
-	
+
 	def ConnClose(self):
 		self.disconnected = 1
 		if self.timer is not None:
 			gobject.source_remove(self.timer)
 			self.timer = None
-	
+
 	def OnAutoSearch(self, *args):
 		# Wishlists supported by server?
 		if self.interval == 0:
@@ -224,13 +224,14 @@ class Searches(IconNotebook):
 					oldsearch = searches.pop()
 					searches.insert(0, oldsearch)
 		return True
-	
+
 	def OnClearSearchHistory(self):
 		self.frame.SearchEntry.set_text("")
 		self.frame.np.config.sections["searches"]["history"] = []
 		self.frame.np.config.writeConfiguration()
 		self.frame.SearchEntryCombo.get_model().clear()
 		self.frame.SearchEntryCombo.append_text("")
+
 	def OnSearch(self):
 		text = self.frame.SearchEntry.get_text().strip()
 		
@@ -283,7 +284,7 @@ class Searches(IconNotebook):
 		if feedback != None:
 			self.DoSearch(text, mode, users, room)
 			self.frame.SearchEntry.set_text("")
-		
+
 	def NewWish(self, wish):
 		if wish in self.frame.np.config.sections["server"]["autosearch"]:
 			return
@@ -293,7 +294,7 @@ class Searches(IconNotebook):
 		self.searches[self.searchid] = [self.searchid, wish, None, 0, True]
 			
 		self.DoWishListSearch(self.searchid, wish)
-		
+
 	def DoSearch(self, text, mode, users = [], room = None):
 		items = self.frame.np.config.sections["searches"]["history"]
 		if text in items:
@@ -326,31 +327,28 @@ class Searches(IconNotebook):
 			self.DoPeerSearch(self.searchid, text, users)
 				
 		self.searchid += 1
-		
+
 	def DoGlobalSearch(self, id, text):
 		self.frame.np.queue.put(slskmessages.FileSearch(id, text))
-		
+
 	def DoWishListSearch(self, id, text):
 		self.frame.np.queue.put(slskmessages.WishlistSearch(id, text))
-		
-	def DoRoomsSearch(self, id, text, room = None):
 
+	def DoRoomsSearch(self, id, text, room = None):
 		if room != None:
 			self.frame.np.queue.put(slskmessages.RoomSearch(room, id, text))
 		else:
 			for room in self.frame.chatrooms.roomsctrl.joinedrooms.keys():
 				self.frame.np.queue.put(slskmessages.RoomSearch(room, id, text))
 
-
 	def DoBuddiesSearch(self, id, text):
 		for users in self.frame.userlist.userlist:
 			self.frame.np.queue.put(slskmessages.UserSearch(users[0], id, text))
 
-	
 	def DoPeerSearch(self, id, text, users):
 		for user in users:
 			self.frame.np.ProcessRequestToPeer(user, slskmessages.FileSearchRequest(None,id,text))
-			
+
 	def GetUserSearchName(self, id):
 		if id in self.usersearches:
 			users = self.usersearches[id]
@@ -359,7 +357,7 @@ class Searches(IconNotebook):
 			elif len(users) == 1:
 				return users[0]
 		return _("User")
-		
+
 	def CreateTab(self, id, text, mode, remember = False):
 		tab = Search(self, text, id, mode, remember)
 
@@ -372,7 +370,7 @@ class Searches(IconNotebook):
 		search = [id, text, tab, mode, remember]
 		self.searches[id] = search
 		return search
-		
+
 	def ShowResult(self, msg, username, country):
 		if msg.token not in self.searches:
 			return
@@ -392,7 +390,7 @@ class Searches(IconNotebook):
 			self.frame.np.config.writeConfiguration()
 		search[4] = 0
 		self.WishListDialog.removeWish(search[1])
-		
+
 	def RemoveTab(self, tab):
 		import gc
 		if tab.id in self.searches:
@@ -419,14 +417,13 @@ class Searches(IconNotebook):
 		self.frame.np.config.writeConfiguration()
 		i[4] = 1
 		self.WishListDialog.addWish(i[1])
-		
+
 	def UpdateColours(self):
 		for id in self.searches.values():
 			if id[2] is None:
 				continue
 			id[2].ChangeColours()
 		self.frame.SetTextBG(self.WishListDialog.WishlistView)
-		
 
 	def saveColumns(self):
 		page_num = self.get_current_page()
@@ -438,29 +435,28 @@ class Searches(IconNotebook):
 				if search[2].Main == page:
 					search[2].saveColumns()
 					break
+
 	def GetUserStatus(self, msg):
 		for number, search in self.searches.items():
 			if search[2] is None:
 				continue
 			search[2].GetUserStatus(msg)
-			
+
 	def NonExistantUser(self, user):
 		for number, search in self.searches.items():
 			if search[2] is None:
 				continue
 			search[2].NonExistantUser(user)
-			
+
 	def TabPopup(self, id):
 		popup = PopupMenu(self.frame)
 		popup.setup(
 			("#" + _("Detach this tab"), self.searches[id][2].Detach, gtk.STOCK_REDO),
 			("#" + _("Close this tab"), self.searches[id][2].OnClose, gtk.STOCK_CLOSE),
 		)
-		
 		items = popup.get_children()
-	
 		return popup
-		
+
 	def on_tab_click(self, widget, event, child):
 		if event.type == gtk.gdk.BUTTON_PRESS:
 			id = None
@@ -483,15 +479,18 @@ class Searches(IconNotebook):
 				menu.popup(None, None, None, event.button, event.time)
 				return True
 		return False
-	
+
+
 class Search:
+
 	WAIT_BEFORE_DISPLAYING = 5000 # in milliseconds
+
 	def __init__(self, Searches, text, id, mode, remember):
 		self.Searches = Searches
 		self.frame = Searches.frame
-		#self.tooltips = self.frame.tooltips
-		#if not self.frame.np.config.sections["ui"]["tooltips"]:
-		#	self.tooltips.disable()
+		# self.tooltips = self.frame.tooltips
+		# if not self.frame.np.config.sections["ui"]["tooltips"]:
+		# self.tooltips.disable()
 
 		self.wTree = gtk.glade.XML(os.path.join(os.path.dirname(os.path.realpath(__file__)), "search.glade"), None)
 		widgets = self.wTree.get_widget_prefix("")
@@ -517,8 +516,7 @@ class Search:
 		self.FilterOut.set_model(self.FilterOut_List)
 		self.FilterOut.set_text_column(0)
 		self.wTree.signal_autoconnect(self)
-#		self.ResultsList.set_double_buffered(False)
-
+		# self.ResultsList.set_double_buffered(False)
 
 		self.text = text
 		self.id = id
@@ -535,8 +533,6 @@ class Search:
 		self.COLUMN_TYPES = [int, str, str, str, str, str, str, str, str, gtk.gdk.Pixbuf, str,
 			int, str, str, gobject.TYPE_UINT64, int, int, int]
 		self.resultsmodel = gtk.TreeStore(* self.COLUMN_TYPES )
-
-		
 
 		if mode > 0:
 			self.RememberCheckButton.set_sensitive(False)
@@ -584,18 +580,19 @@ class Search:
 			[_("Bitrate"), 50, "text", self.CellDataFunc],
 			[_("Length"), 50, "number", self.CellDataFunc],
 			[_("Country"), 25, "pixbuf"],
-			[_("Directory"), 1000, "text", self.CellDataFunc],
-			
+			[_("Directory"), 1000, "text", self.CellDataFunc]
 		)
+
 		self.col_num, self.col_user, self.col_file, self.col_size, self.col_speed, self.col_queue, self.col_immediate, self.col_bitrate, self.col_length, self.col_country, self.col_directory = cols
 		cols[0].get_widget().hide()
+
 		for i in range (10):
-			
 			parent = cols[i].get_widget().get_ancestor(gtk.Button)
 			if parent:
 				parent.connect('button_press_event', PressHeader)
 			# Read Show / Hide column settings from last session
 			cols[i].set_visible(self.frame.np.config.sections["columns"]["search"][i])
+
 		self.ResultsList.set_model(self.resultsmodel)
 		#for ix in range(len(cols)):
 			#col = cols[ix]
@@ -619,7 +616,6 @@ class Search:
 		self.col_directory.set_sort_column_id(10)
 		if gtk.pygtk_version[0] >= 2 and gtk.pygtk_version[1] >= 10:
 			self.ResultsList.set_enable_tree_lines(True)
-		
 
 		self.ResultsList.set_headers_clickable(True)
 		self.popup_menu_users = PopupMenu(self.frame)
@@ -634,23 +630,24 @@ class Search:
 			("#" + _("Copy _URL"), self.OnCopyURL, gtk.STOCK_COPY),
 			("#" + _("Copy folder U_RL"), self.OnCopyDirURL, gtk.STOCK_COPY),
 			("", None),
-			(1, _("User(s)"), self.popup_menu_users, self.OnPopupMenuUsers),
+			(1, _("User(s)"), self.popup_menu_users, self.OnPopupMenuUsers)
 		)
 
-			
 		self.ResultsList.connect("button_press_event", self.OnListClicked)
 		
 		self._more_results = 0
 		self.new_results = []
 		self.ChangeColours()
+
 	def OnTooltip(self, widget, x, y, keyboard_mode, tooltip):
 		return showCountryTooltip(widget, x, y, tooltip, 13, stripprefix='')
+
 	def OnFilterChanged(self, widget):
 		model = widget.get_model()
 		iter = widget.get_active_iter()
 		if iter:
 			self.OnRefilter(None)
-			
+
 	def PopulateFilters(self):
 		if self.frame.np.config.sections["searches"]["enablefilters"]:
 			filter = self.frame.np.config.sections["searches"]["defilter"]
@@ -679,7 +676,7 @@ class Search:
 			self.AddCombo(self.FilterBitrate, i, True)
 		for i in s_config["filtercc"]:
 			self.AddCombo(self.FilterCountry ,i, True)
-			
+
 	def AddCombo(self, ComboboxEntry, text, list=False):
 		text = text.strip()
 		if not text:
@@ -697,12 +694,10 @@ class Search:
 				model.append([text])
 			else:
 				model.prepend([text])
-	
-		
+
 	def Attach(self, widget=None):
 		self.Searches.attach_tab(self.Main)
 
-		
 	def Detach(self, widget=None):
 		self.Searches.detach_tab(self.Main,
 			_("Nicotine+ %(mode)s Search: %(term)s") % {
@@ -710,7 +705,6 @@ class Search:
 				'term': self.text
 			}
 		)
-
 
 	def AddResult(self, msg, user, country):
 		if user in self.users:
@@ -756,7 +750,7 @@ class Search:
 				else:
 					gobject.timeout_add(self.WAIT_BEFORE_DISPLAYING, self._realaddresults)
 			return len(results)
-	
+
 	def _realaddresults(self):
 		if "_more_results" not in self.__dict__:
 			return
@@ -779,7 +773,7 @@ class Search:
 					r.set_fixed_height_from_font(1)
 
 		return False
-		
+
 	def get_flag(self, user, flag=None):
 		#flag = users[user].country
 		if flag is not None:
@@ -789,7 +783,7 @@ class Search:
 			flag = self.frame.GetUserFlag(user)
 
 		return self.frame.GetFlagImage(flag)
-		
+
 	def append(self, results):
 		itercounter = len(self.all_data) + 1
 		displaycounter = len(self.resultsmodel)
@@ -842,7 +836,7 @@ class Search:
 		
 		self.CountVisibleResults()
 		return returned
-			
+
 	def updateStatus(self, user, status):
 		self.Searches.users[user] = status
 		pos = 0
@@ -866,7 +860,7 @@ class Search:
 						self.resultsmodel.set_value(child, 17, status)
 					child = self.resultsmodel.iter_next(child)
 			iter = self.resultsmodel.iter_next(iter)
-		
+
 	def sort(self):
 		col = self.sort_col
 		order = self.sort_order
@@ -955,9 +949,8 @@ class Search:
 				elif cc.upper() != row[12].upper():
 					return False
 		return True
-	
+
 	def set_filters(self, enable, f_in, f_out, size, bitrate, freeslot, country):
-		
 
 		if self.frame.np.transfers is None:
 			encode = self.frame.np.encode
@@ -1022,7 +1015,7 @@ class Search:
 			if displaycounter >= self.frame.np.config.sections['searches']["max_displayed_results"]:
 				break
 		self.CountVisibleResults()
-		
+
 	def CountVisibleResults(self):
 		if self.usersGroup.get_active():
 			iter_count = 0
@@ -1059,13 +1052,13 @@ class Search:
 					("$" + _("_Ban this user"), popup.OnBanUser),
 					("$" + _("_Ignore this user"), popup.OnIgnoreUser),
 					("#" + _("Select User's Results"), self.OnSelectUserResults, gtk.STOCK_INDEX),
-					)
+				)
 				popup.set_user(user)
 
 				items.append((1, user, popup, self.OnPopupMenuUser, popup))
 			self.popup_menu_users.setup(*items)
 		return True
-		
+
 	def OnPopupMenuUser(self, widget, popup=None):
 		if popup is None:
 			return
@@ -1088,7 +1081,7 @@ class Search:
 		for i in range(4, 9):
 			items[i].set_sensitive(act)
 		return True
-		
+
 	def OnSelectUserResults(self, widget):
 		if len(self.selected_users) == 0:
 			return
@@ -1116,12 +1109,12 @@ class Search:
 			iter = self.resultsmodel.iter_next(iter)
 
 		self.select_results()
-		
+
 	def select_results(self):
 		self.selected_results = []
 		self.selected_users = []
 		self.ResultsList.get_selection().selected_foreach(self.SelectedResultsCallback)
-		
+
 	def ChangeColours(self):
 		self.frame.SetTextBG(self.ResultsList)
 		self.frame.SetTextBG(self.FilterIn.child)
@@ -1134,24 +1127,24 @@ class Search:
 		font = self.frame.np.config.sections["ui"]["searchfont"]
 
 		self.frame.ChangeListFont(self.ResultsList, font)
-		
+
 	def GetUserStatus(self, msg):
 		if msg.user not in self.users:
 			return
 
 		self.updateStatus(msg.user, msg.status)
-		
+
 	def NonExistantUser(self, user):
 		if user not in self.users:
 			return
 		self.updateStatus(user, -1)
-		
+
 	def saveColumns(self):
 		columns = []
 		for column in self.ResultsList.get_columns():
 			columns.append(column.get_visible())
 		self.frame.np.config.sections["columns"]["search"] = columns
-		
+
 	def SelectedResultsCallback(self, model, path, iter):
 		num = model.get_value(iter, 0)
 		user = model.get_value(iter, 1)
@@ -1173,9 +1166,7 @@ class Search:
 		if fn is None or fn == "":
 			return
 		self.selected_results.append((user, fn, size, bitrate, length))
-		
-		
-	
+
 	def OnListClicked(self, widget, event):
 		if event.button == 1 and event.type == gtk.gdk._2BUTTON_PRESS:
 			self.select_results()
@@ -1185,7 +1176,7 @@ class Search:
 		elif event.button == 3:
 			return self.OnPopupMenu(widget, event)
 		return False
-		
+
 	def OnPopupMenu(self, widget, event):
 		if event.button != 3:
 			return False
@@ -1232,7 +1223,7 @@ class Search:
 		win.show()
 		gtk.main()
 		return win.ret
-	
+
 	def SelectedResultsAllData(self, model, path, iter, data):
 		num = model.get_value(iter, 0)
 		filename = model.get_value(iter, 2)
@@ -1249,7 +1240,6 @@ class Search:
 		country = model.get_value(iter, 13)
 		data[len(data)] = {"user":user, "fn": fn, "position":num, "filename":filename, "directory":directory, "size":size, "speed":speed, "queue":queue, "immediate":immediate, "bitrate":bitratestr, "length":length, "country":country}
 
-			
 	def OnSearchMeta(self, widget):
 		if not self.frame.np.transfers:
 			return
@@ -1258,14 +1248,14 @@ class Search:
 
 		if data != {}:	
 			self.MetaBox(title=_("Nicotine+: Search Results"), message=_("<b>Metadata</b> for Search Query: <i>%s</i>") % self.text, data=data, modal=True)
-			
+
 	def OnDownloadFiles(self, widget, prefix = ""):
 		
 		if not self.frame.np.transfers:
 			return
 		for file in self.selected_results:
 			self.frame.np.transfers.getFile(file[0], file[1], prefix, size=file[2], bitrate=file[3], length=file[4])
-	
+
 	def OnDownloadFilesTo(self, widget):
 		subdir = None
 		for file in self.selected_results:
@@ -1277,7 +1267,7 @@ class Search:
 		for dirs in dir:
 			self.OnDownloadFiles(widget, dirs)
 			break
-	
+
 	def OnDownloadFolders(self, widget):
 		folders = []
 		for i in self.selected_results:
@@ -1313,7 +1303,7 @@ class Search:
 				self.frame.np.requestedFolders[user] = {}
 			self.frame.np.requestedFolders[user][dir] = destination
 			self.frame.np.ProcessRequestToPeer(user, slskmessages.FolderContentsRequest(None, dir))
-		
+
 	def OnCopyURL(self, widget):
 		user, path = self.selected_results[0][:2]
 		self.frame.SetClipboardURL(user, path)
@@ -1324,7 +1314,7 @@ class Search:
 		if path[:-1] != "/":
 			path += "/"
 		self.frame.SetClipboardURL(user, path)
-		
+
 	def OnGroup(self, widget):
 		self.OnRefilter(widget)
 		
@@ -1335,7 +1325,7 @@ class Search:
 		else:
 			self.ResultsList.get_columns()[0].set_visible(True)
 			self.ExpandButton.hide()
-			
+
 	def OnToggleExpandAll(self, widget):
 		if self.ExpandButton.get_active():
 			self.ResultsList.expand_all()
@@ -1343,7 +1333,7 @@ class Search:
 		else:
 			self.ResultsList.collapse_all()
 			self.expandImage.set_from_stock(gtk.STOCK_ADD, 4)
-		
+
 	def OnToggleFilters(self, widget):
 		if widget.get_active():
 			self.Filters.show()
@@ -1397,7 +1387,7 @@ class Search:
 	
 		widget.child.set_text(text)
 		return text
-		
+
 	def OnRefilter(self, widget):
 		f_in = self.PushHistory(self.FilterIn, "filterin")
 		f_out = self.PushHistory(self.FilterOut, "filterout")
