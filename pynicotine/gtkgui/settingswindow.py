@@ -1,5 +1,5 @@
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
-# coding=utf-8
 # Copyright (C) 2007 daelstorm. All rights reserved.
 #
 # This program is free software: you can redistribute it and/or modify
@@ -20,12 +20,12 @@
 
 import gtk
 import gobject
-import locale
 import re
 import webbrowser
 from dirchooser import *
 from utils import InputDialog, InitialiseColumns, recode, recode2, popupWarning, ImportWinSlskConfig, Humanize, OpenUri
 from entrydialog import *
+from pynicotine.utils import CheckTranslationAvailability
 from pynicotine.upnp import UPnPPortMapping
 from pynicotine.logfacility import log
 import os, sys
@@ -1698,29 +1698,33 @@ class NotebookFrame(buildFrame):
 				"tab_icons": self.TabIcons.get_active(),
 				"tab_colors": self.TabColours.get_active(),
 				"tab_reorderable": self.TabReorderable.get_active(),
-				"tab_status_icons": self.TabStatusIcons.get_active(),
+				"tab_status_icons": self.TabStatusIcons.get_active()
 			}
 		}
 
 	
 class BloatFrame(buildFrame):
+
 	languagelookup = [
-			('Dansk (Danish)','da'),
-			('Deutsch (German)','de'),
-			('Español (Spanish)','es'),
-			('Euskara (Bask)','eu'),
-			('Français (French)','fr'),
-			('Italiano (Italian)','it'),
-			('Lietuvių kalba (Lithuanian)','lt'),
-			('Magyar nyelv (Hungarian)','hu'),
-			('Nederlands (Dutch)','nl'),
-			('Polszczyzna (Polish)','pl'),
-			('Português brasileiro (Brazilian Portuguese)','pt_BR'),
-			('Slovenčina (Slovak)','sk'),
-			('Svenska (Swedish)','sv'),
-			('Suomi (Finnish)','fi'),]
+		('Dansk (Danish)', 'da'),
+		('Deutsch (German)', 'de'),
+		('English (English)', 'en'),
+		('Español (Spanish)', 'es'),
+		('Euskara (Bask)', 'eu'),
+		('Français (French)', 'fr'),
+		('Italiano (Italian)', 'it'),
+		('Lietuvių kalba (Lithuanian)', 'lt'),
+		('Magyar nyelv (Hungarian)', 'hu'),
+		('Nederlands (Dutch)', 'nl'),
+		('Polszczyzna (Polish)', 'pl'),
+		('Português brasileiro (Brazilian Portuguese)', 'pt_BR'),
+		('Slovenčina (Slovak)', 'sk'),
+		('Svenska (Swedish)', 'sv'),
+		('Suomi (Finnish)', 'fi')
+	]
 
 	def __init__(self, parent):
+
 		self.p = parent
 		buildFrame.__init__(self, "BloatFrame")
 		self.TranslationCombo_List = gtk.ListStore(gobject.TYPE_STRING)
@@ -1792,26 +1796,14 @@ class BloatFrame(buildFrame):
 
 		self.OnTranslationCheckToggled(self.TranslationCheck)
 
-
 	def GetSettings(self):
+
 		language = self.languagelookup[self.TranslationCombo.get_active()][1]
-		try:
-			import gettext
-			message = ""
-			if self.TranslationCheck.get_active():
-				langTranslation = gettext.translation('nicotine', languages=[language])
-				langTranslation.install()
-		except IOError, e:
-			message = _("Translation not found for '%(language)s': %(error)s") % {'language': language, 'error': e}
-			langTranslation = gettext
-		except IndexError, e:
-			message = _("Translation was corrupted for '%(language)s': %(error)s") % {'language': language, 'error': e}
-			langTranslation = gettext
-		except KeyError, e:
-			message = _("Lookup failed for '%(language)s': %(error)s") % {'language': language, 'error': e}
-			langTranslation = gettext
+
+		message = CheckTranslationAvailability(language)
+
 		if message is not None and message != "":
-			popupWarning(self.p.SettingsWindow, _("Warning: Missing translation"), _("Nicotine+ could not find your selected translation.\n%s") % message, self.frame.images["n"] )
+			popupWarning(self.p.SettingsWindow, _("Warning: Missing translation"), message, self.frame.images["n"] )
 			raise UserWarning
 	
 		return {

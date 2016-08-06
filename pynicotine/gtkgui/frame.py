@@ -18,10 +18,12 @@
 # Copyright (c) 2003-2004 Hyriand. All rights reserved.
 
 import os
+import gettext
+import gtk
+import gtk.glade
 
-import gtk, gtk.glade
+from pynicotine.utils import ApplyTranslation
 from tempfile import gettempdir
-
 from pynicotine.pynicotine import NetworkEventProcessor
 from pynicotine import slskmessages
 from pynicotine import slskproto
@@ -57,7 +59,7 @@ import utils, pynicotine.utils
 from utils import AppendLine, ImageLabel, IconNotebook, ScrollBottom, PopupMenu, Humanize, HumanSpeed, HumanSize, popupWarning, OpenUri
 import translux
 from dirchooser import ChooseFile, SaveFile
-from pynicotine.utils import _, ChangeTranslation, executeCommand
+from pynicotine.utils import executeCommand
 import nowplaying
 from pynicotine import pluginsystem
 from pynicotine.logfacility import log
@@ -70,8 +72,7 @@ try:
 except ImportError:
 	SEXY=False
 	# LibSexy is deprecated, we should try to find a replacement
-	#msg = _("Note: Python Bindings for libsexy were not found. To enable spell checking, get them from http://www.chipx86.com/wiki/Libsexy or your distribution's package manager. Look for sexy-python or python-sexy.")
-	#log.addwarning(msg)
+
 
 class roomlist:
 	def __init__(self, frame):
@@ -123,6 +124,7 @@ class roomlist:
 				break
 			self.search_iter = self.room_model.iter_next(self.search_iter)
 
+
 class BuddiesComboBoxEntry(gtk.ComboBoxEntry):
 	def __init__(self, frame):
 		self.frame = frame
@@ -152,7 +154,7 @@ class BuddiesComboBoxEntry(gtk.ComboBoxEntry):
 		if item in self.items:
 			self.get_model().remove(self.items[item] )
 			del self.items[item]
-		
+
 
 class BrowserWindow(gtk.VBox):
 	"""
@@ -295,6 +297,7 @@ class BrowserWindow(gtk.VBox):
 		self.entry.set_sensitive(True)
 		self.entry.set_text(url)
 
+
 class NicotineFrame:
 	def __init__(self, config, plugindir, use_trayicon, try_rgba, start_hidden=False, WebBrowser=True, bindip=None): 
 		
@@ -340,11 +343,10 @@ class NicotineFrame:
 		pynicotine.utils.log = self.logMessage
 		
 		self.LoadIcons()
-		self.ChangeTranslation = ChangeTranslation
+
+		# Initialize custom language chosen by the user
 		if self.np.config.sections["language"]["setlanguage"]:
-			trerror = self.ChangeTranslation(self.np.config.sections["language"]["language"])
-			if trerror:
-				log.add(' '.join(['TError:', trerror]))
+			ApplyTranslation(self.np.config.sections["language"]["language"])
 		
 		self.BuddiesComboEntries = []
 		self.accel_group = gtk.AccelGroup()
@@ -969,7 +971,6 @@ class NicotineFrame:
 		self.RecommendationUsersList.connect("button_press_event", self.OnPopupRUMenu)
 		
 
-			
 	def download_large_folder(self, username, folder, files, numfiles, msg):
 		FolderDownload(self, title=_('Nicotine+')+': Download %(num)i files?' %{'num':numfiles}, message=_("Are you sure you wish to download %(num)i files from %(user)s's directory %(folder)s?") %{'num': numfiles, 'user':username, 'folder':folder } , modal=True, data=msg, callback=self.folder_download_response )
 		
@@ -1068,13 +1069,13 @@ class NicotineFrame:
 					self.userbrowse.users[username].LoadShares(mylist)
 			except Exception, msg:
 				log.addwarning(_("Loading Shares from disk failed: %(error)s") % {'error':msg})
+
 	def OnNowPlayingConfigure(self, widget):
 		
 		self.now.NowPlaying.show()
 		self.now.NowPlaying.deiconify()
-		
-		
-		
+
+
 	def OnGetPrivateChat(self, widget):
 		text = self.UserPrivateCombo.child.get_text()
 		if not text:
@@ -1420,9 +1421,8 @@ class NicotineFrame:
 		self.SetTextBG(self.UserBrowseCombo.child)
 		
 		self.SetTextBG(self.SearchEntry)
-		
-		
-		
+
+
 	def SetTextBG(self, widget, bgcolor="", fgcolor=""):
 		if bgcolor == "" and self.np.config.sections["ui"]["textbg"] == "":
 			colour = None
@@ -1473,8 +1473,10 @@ class NicotineFrame:
 
 	def logCallback(self, timestamp, level, msg):
 		gobject.idle_add(self.updateLog, msg, level, priority=gobject.PRIORITY_DEFAULT)
+
 	def logMessage(self, msg, debugLevel = 0):
 		log.add(msg, debugLevel)
+
 	def updateLog(self, msg, debugLevel = None):
 		'''For information about debug levels see 
 		pydoc pynicotine.logfacility.logger.add
@@ -1887,8 +1889,7 @@ class NicotineFrame:
 			if user == username:
 				return ip
 		return None
-		
-	
+
 
 	def UserIpIsIgnored(self, user):
 		for ip, username in self.np.config.sections["server"]["ipignorelist"].items():
@@ -2085,26 +2086,34 @@ class NicotineFrame:
 			
 	def OnSettingsShares(self, widget):
 		self.OnSettings(widget, 'Shares')
+
 	def OnSettingsSearches(self, widget):
 		self.OnSettings(widget, 'Searches')
+
 	def OnSettingsDownloads(self, widget):
 		self.OnSettings(widget, 'Downloads')
 		self.settingswindow.pages["Downloads"].DownloadFilters.set_expanded(True)
+
 	def OnSettingsUploads(self, widget):
 		self.OnSettings(widget, 'Transfers')
 		self.settingswindow.pages["Transfers"].Uploads.set_expanded(True)
+
 	def OnSettingsUserinfo(self, widget):
 		self.OnSettings(widget, 'User info')
+
 	def OnSettingsLogging(self, widget):
 		self.OnSettings(widget, 'Logging')
+
 	def OnSettingsIgnore(self, widget):
 		self.OnSettings(widget, 'Ingore List')
+
 	def OnSettingsBanIgnore(self, widget):
 		self.OnSettings(widget, 'Ban List')
 		
 	def OnFastConfigure(self, widget):
 		if not self.settingswindow.SettingsWindow.get_property("visible"):
 			self.fastconfigure.show()
+
 	def OnSettings(self, widget, page=None):
 		if not self.fastconfigure.window.get_property("visible"):
 			self.settingswindow.SetSettings(self.np.config.sections)
@@ -2112,6 +2121,7 @@ class NicotineFrame:
 				self.settingswindow.SwitchToPage(page)
 			self.settingswindow.SettingsWindow.show()
 			self.settingswindow.SettingsWindow.deiconify()
+
 	def OnSettingsClosed(self, widget, msg):
 		if msg == "cancel":
 			self.settingswindow.SettingsWindow.hide()
@@ -2157,9 +2167,6 @@ class NicotineFrame:
 				self.TrayApp.HAVE_TRAYICON = True
 				
 			self.TrayApp.Draw()
-		if self.np.config.sections["language"]["setlanguage"]:
-			self.ChangeTranslation(config["language"]["language"])
-
 
 		if needcompletion:
 			self.chatrooms.roomsctrl.UpdateCompletions()
@@ -2250,7 +2257,7 @@ class NicotineFrame:
 		#	else:
 		#		tips.disable()
 			
-		
+
 	def AutoReplace(self, message):
 		if self.np.config.sections["words"]["replacewords"]:
 			autoreplaced = self.np.config.sections["words"]["autoreplaced"]
@@ -2415,7 +2422,8 @@ class NicotineFrame:
 		else:
 			self.UploadButtons.hide()
 			self.DownloadButtons.hide()
-			
+
+	# TODO: check if it's working on windows
 	def OnNicotineGuide(self, widget):
 		paths = []
 		file = "NicotinePlusGuide/NicotineGuide.htm"
@@ -2679,10 +2687,13 @@ class NicotineFrame:
 
 	def PrivateRoomRemoveUser(self, room, user):
 		self.np.queue.put(slskmessages.PrivateRoomRemoveUser(room, user))
+
 	def PrivateRoomAddUser(self, room, user):
 		self.np.queue.put(slskmessages.PrivateRoomAddUser(room, user))
+
 	def PrivateRoomAddOperator(self, room, user):
 		self.np.queue.put(slskmessages.PrivateRoomAddOperator(room, user))
+
 	def PrivateRoomRemoveOperator(self, room, user):
 		self.np.queue.put(slskmessages.PrivateRoomRemoveOperator(room, user))
 		
@@ -2748,7 +2759,6 @@ class NicotineFrame:
 		return True
 	
 	def OnFindLogWindow(self, widget):
-
 		self.OnFindTextview(None, self.LogWindow)
 				
 	def OnFindTextview(self, widget, textview, repeat=False):
@@ -2774,6 +2784,7 @@ class NicotineFrame:
 			self.OnFindClicked(widget, self.FindDialog.lastdirection)
 		else:
 			self.FindDialog.entry.set_text("")
+
 	def OnFindClicked(self, widget, direction):
 
 		if self.FindDialog.textview is None:
@@ -3095,6 +3106,7 @@ class NicotineFrame:
 			#this should never happen, unless you've renamed a widget
 			return
 		return name
+
 	def MatchMainNamePage(self, tab):
 		if tab == "chatrooms": 
 			child = self.hpaned1 # Chatrooms
@@ -3171,6 +3183,7 @@ class NicotineFrame:
 	
 	def OnUserBrowse(self, widget):
 		self.ChangeMainPage(widget, "userbrowse")
+
 	def OnInterests(self, widget):
 		self.ChangeMainPage(widget, "interests")
 
@@ -3316,7 +3329,6 @@ class Notifications:
 			else:
 				os.system("%s %s &" % ( command, path))
 
-	
 
 class TrayApp:
 	def __init__(self, frame):
@@ -3548,7 +3560,8 @@ class TrayApp:
 	def SetToolTip(self, string):
 		if self.pygtkicon and self.trayicon_module is not None:
 			self.trayicon_module.set_tooltip(string)
-		
+
+
 class gstreamer:
 	def __init__(self):
 		self.player = None
@@ -3584,7 +3597,8 @@ class gstreamer:
 			
 		elif t == self.gst.MESSAGE_ERROR:
 			self.player.set_state(self.gst.STATE_NULL)
-			
+
+
 class MainApp:
 	def __init__(self, config, plugindir, trayicon, rgbamode, start_hidden, WebBrowser, bindip):
 		self.frame = NicotineFrame(config, plugindir, trayicon, rgbamode, start_hidden, WebBrowser, bindip)
