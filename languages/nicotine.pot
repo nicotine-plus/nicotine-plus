@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-02 19:12+0200\n"
+"POT-Creation-Date: 2016-08-06 10:52+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1628,6 +1628,12 @@ msgstr ""
 msgid "Save pic"
 msgstr ""
 
+msgid "Failed to close stdout (not so bad if you are using PyInstaller)"
+msgstr ""
+
+msgid "Failed to close stderr (not so bad if you are using PyInstaller)"
+msgstr ""
+
 #, python-format
 msgid ""
 "You're using an old version of Python interpreter (%s).\n"
@@ -1651,8 +1657,9 @@ msgstr ""
 
 #, python-format
 msgid ""
-"Can not find required PyGTK. The current search path is \n"
-"%s"
+"Can not find required PyGTK.\n"
+"The current search path is \n"
+"%s\n"
 msgstr ""
 
 #, python-format
@@ -1668,10 +1675,10 @@ msgstr ""
 
 msgid ""
 "Nicotine supports a country code blocker.\n"
-"    That requires a (GPL'ed) library called GeoIP. You can find it here:\n"
-"    C library:       http://www.maxmind.com/app/c\n"
-"    Python bindings: http://www.maxmind.com/app/python\n"
-"    (the python bindings require the C library)"
+"That requires a (GPL'ed) library called GeoIP. You can find it here:\n"
+"C library:       http://www.maxmind.com/app/c\n"
+"Python bindings: http://www.maxmind.com/app/python\n"
+"(the python bindings require the C library)"
 msgstr ""
 
 msgid "Disabled UPnP support due to errors... See above"
@@ -1825,25 +1832,6 @@ msgid ""
 msgstr ""
 
 msgid "Translators"
-msgstr ""
-
-msgid ""
-"GNU General Public License version 3 notice\n"
-"\n"
-"Copyright (C) 2007 daelstorm. All rights reserved.\n"
-"\n"
-"This program is free software: you can redistribute it and/or modify\n"
-"it under the terms of the GNU General Public License as published by\n"
-"the Free Software Foundation, either version 3 of the License, or\n"
-"(at your option) any later version.\n"
-"\n"
-"This program is distributed in the hope that it will be useful,\n"
-"but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
-"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
-"GNU General Public License for more details.\n"
-"\n"
-"You should have received a copy of the GNU General Public License\n"
-"along with this program.  If not, see < http://www.gnu.org/licenses/ >."
 msgstr ""
 
 msgid "About search filters"
@@ -2860,10 +2848,6 @@ msgid ""
 msgstr ""
 
 #, python-format
-msgid "Nicotine+ Private Chat: %s (%s)"
-msgstr ""
-
-#, python-format
 msgid "Nicotine+ Private Chat: %(user)s (%(status)s)"
 msgstr ""
 
@@ -2913,7 +2897,7 @@ msgid "Copy folder U_RL"
 msgstr ""
 
 #, python-format
-msgid "Nicotine+ %s Search: %s"
+msgid "Nicotine+ %(mode)s Search: %(term)s"
 msgstr ""
 
 msgid "Y"
@@ -3059,25 +3043,7 @@ msgstr ""
 msgid "Pick a color, any color"
 msgstr ""
 
-#, python-format
-msgid "Translation not found for '%(language)s': %(error)s"
-msgstr ""
-
-#, python-format
-msgid "Translation was corrupted for '%(language)s': %(error)s"
-msgstr ""
-
-#, python-format
-msgid "Lookup failed for '%(language)s': %(error)s"
-msgstr ""
-
 msgid "Warning: Missing translation"
-msgstr ""
-
-#, python-format
-msgid ""
-"Nicotine+ could not find your selected translation.\n"
-"%s"
 msgstr ""
 
 msgid "Choose a directory to save your log files"
@@ -4185,4 +4151,8 @@ msgid "Cannot select an IGD : %(error)s"
 msgstr ""
 
 msgid "Failed to find a suitable external WAN port, bailing out."
+msgstr ""
+
+#, python-format
+msgid "Translation for '%s' not found."
 msgstr ""

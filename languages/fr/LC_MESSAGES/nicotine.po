@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nicotine\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-02 19:12+0200\n"
-"PO-Revision-Date: 2016-08-02 19:19+0200\n"
+"POT-Creation-Date: 2016-08-06 10:54+0200\n"
+"PO-Revision-Date: 2016-08-06 10:54+0200\n"
 "Last-Translator: Michael LABOUEBE <gfarmerfr@free.fr>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -2078,6 +2078,16 @@ msgstr "Ajouter à la liste"
 msgid "Save pic"
 msgstr "Sauver l'image"
 
+msgid "Failed to close stdout (not so bad if you are using PyInstaller)"
+msgstr ""
+"Impossible de fermer la sortie standard (pas si grave si vous utiliser "
+"PyInstaller)"
+
+msgid "Failed to close stderr (not so bad if you are using PyInstaller)"
+msgstr ""
+"Impossible de fermer la sortie d'erreur (pas si grave si vous utiliser "
+"PyInstaller)"
+
 # nicotine
 #, python-format
 msgid ""
@@ -2114,11 +2124,13 @@ msgstr "Attention: le module Berkeley DB, dbhash, n'a pu être chargé."
 # nicotine
 #, python-format
 msgid ""
-"Can not find required PyGTK. The current search path is \n"
-"%s"
+"Can not find required PyGTK.\n"
+"The current search path is \n"
+"%s\n"
 msgstr ""
-"Impossible de trouver le module PyGTK. Le chemin de recherche actuel est \n"
-"%s"
+"Impossible de trouver le module PyGTK.\n"
+"Le chemin de recherche actuel est \n"
+"%s\n"
 
 # pynicotine/transfers.py
 #, python-format
@@ -2137,10 +2149,10 @@ msgstr ""
 # nicotine
 msgid ""
 "Nicotine supports a country code blocker.\n"
-"    That requires a (GPL'ed) library called GeoIP. You can find it here:\n"
-"    C library:       http://www.maxmind.com/app/c\n"
-"    Python bindings: http://www.maxmind.com/app/python\n"
-"    (the python bindings require the C library)"
+"That requires a (GPL'ed) library called GeoIP. You can find it here:\n"
+"C library:       http://www.maxmind.com/app/c\n"
+"Python bindings: http://www.maxmind.com/app/python\n"
+"(the python bindings require the C library)"
 msgstr ""
 "Nicotine supporte un bloqueur géographique\n"
 "Cela nécessite une librairie (GPL) appelée GeoIP.\n"
@@ -2415,41 +2427,6 @@ msgstr ""
 # pynicotine/gtkgui/settingswindow.py
 msgid "Translators"
 msgstr "Traducteurs"
-
-msgid ""
-"GNU General Public License version 3 notice\n"
-"\n"
-"Copyright (C) 2007 daelstorm. All rights reserved.\n"
-"\n"
-"This program is free software: you can redistribute it and/or modify\n"
-"it under the terms of the GNU General Public License as published by\n"
-"the Free Software Foundation, either version 3 of the License, or\n"
-"(at your option) any later version.\n"
-"\n"
-"This program is distributed in the hope that it will be useful,\n"
-"but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
-"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
-"GNU General Public License for more details.\n"
-"\n"
-"You should have received a copy of the GNU General Public License\n"
-"along with this program.  If not, see < http://www.gnu.org/licenses/ >."
-msgstr ""
-"GNU General Public License version 3 notice\n"
-"\n"
-"Copyright (C) 2007 daelstorm. All rights reserved.\n"
-"\n"
-"This program is free software: you can redistribute it and/or modify\n"
-"it under the terms of the GNU General Public License as published by\n"
-"the Free Software Foundation, either version 3 of the License, or\n"
-"(at your option) any later version.\n"
-"\n"
-"This program is distributed in the hope that it will be useful,\n"
-"but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
-"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
-"GNU General Public License for more details.\n"
-"\n"
-"You should have received a copy of the GNU General Public License\n"
-"along with this program.  If not, see < http://www.gnu.org/licenses/ >."
 
 # pynicotine/gtkgui/nicotine_glade.py
 msgid "About search filters"
@@ -3839,10 +3816,6 @@ msgstr ""
 "hors-ligne. L'horodatage est défini par le serveur et peut être décalé."
 
 #, python-format
-msgid "Nicotine+ Private Chat: %s (%s)"
-msgstr "Nicotine+ Dialogue privé: %s (%s)"
-
-#, python-format
 msgid "Nicotine+ Private Chat: %(user)s (%(status)s)"
 msgstr "Nicotine+ Dialogue privé: %(user)s (%(status)s)"
 
@@ -3914,8 +3887,8 @@ msgstr "Copier l'U_RL du dossier"
 
 # pynicotine/gtkgui/settings_glade.py
 #, python-format
-msgid "Nicotine+ %s Search: %s"
-msgstr "Nicotine+ %s résultats des recherches: %s"
+msgid "Nicotine+ %(mode)s Search: %(term)s"
+msgstr "Nicotine+ %(mode)s Termes de recherche: %(term)s"
 
 # pynicotine/gtkgui/search.py
 msgid "Y"
@@ -4106,28 +4079,8 @@ msgstr "Choisir un répertoire pour le thème d'icônes"
 msgid "Pick a color, any color"
 msgstr "Choisissez une couleur, n'importe laquelle"
 
-#, python-format
-msgid "Translation not found for '%(language)s': %(error)s"
-msgstr "Traduction non trouvée pour '%(language)s': %(error)s"
-
-#, python-format
-msgid "Translation was corrupted for '%(language)s': %(error)s"
-msgstr "Traduction corrompue pour '%(language)s': %(error)s"
-
-#, python-format
-msgid "Lookup failed for '%(language)s': %(error)s"
-msgstr "Traduction introuvable pour '%(language)s': %(error)s"
-
 msgid "Warning: Missing translation"
 msgstr "Attention: Traduction manquante"
-
-#, python-format
-msgid ""
-"Nicotine+ could not find your selected translation.\n"
-"%s"
-msgstr ""
-"Nicotine+ ne peut trouver votre choix de traduction.\n"
-"%s "
 
 msgid "Choose a directory to save your log files"
 msgstr "Choisir un répertoire de sauvegarde des journalisations"
@@ -5553,12 +5506,6 @@ msgid "Failed to find a suitable external WAN port, bailing out."
 msgstr ""
 "Impossible de trouver un port WAN externe disponible à rediriger, abandon."
 
-# pynicotine/transfers.py
-# pynicotine/gtkgui/transferlist.py
-#~ msgid "Cannot set locale"
-#~ msgstr "Ne peut déterminer la localisation"
-
-#~ msgid "Force lang failed: '%(language)s' (%(second)s and %(third)s tested)"
-#~ msgstr ""
-#~ "Échec du forçage du langage: '%(language)s' (%(second)s et %(third)s "
-#~ "testés)"
+#, python-format
+msgid "Translation for '%s' not found."
+msgstr "Traduction pour '%s' non trouvée"
