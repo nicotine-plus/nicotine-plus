@@ -226,10 +226,17 @@ class UserBrowse:
 	def Attach(self, widget=None):
 		self.userbrowses.attach_tab(self.Main)
 
-		
+
 	def Detach(self, widget=None):
-		self.userbrowses.detach_tab(self.Main, _("Nicotine+ User Browse: %s (%s)") % (self.user, [_("Offline"), _("Away"), _("Online")][self.status]))
-		
+		self.userbrowses.detach_tab(
+			self.Main,
+			_("Nicotine+ User Browse: %(user)s (%(status)s)") % {
+				'user': self.user,
+				'status': [_("Offline"), _("Away"), _("Online")][self.status]
+			}
+		)
+
+
 	def ConnClose(self):
 		pass
 		

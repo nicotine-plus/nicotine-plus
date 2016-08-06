@@ -488,7 +488,10 @@ class Transfers:
 				
 			else:
 				response = slskmessages.TransferResponse(conn, 0, reason = "Cancelled", req = msg.req)
-				self.eventprocessor.logMessage(_("Denied file request: User %s, %s") % (user, str(vars(msg))), 5)
+				self.eventprocessor.logMessage(_("Denied file request: User %(user)s, %(msg)s") % {
+					'user': user,
+					'msg': str(vars(msg))
+				}, 5)
 		return response
 		
 	def TransferRequestUploads(self, msg, user, conn, addr):
@@ -497,7 +500,10 @@ class Transfers:
 		your Upload queue
 		"""
 		response = self._TransferRequestUploads(msg, user, conn, addr)
-		self.eventprocessor.logMessage(_("Upload request: %s Response: %s") % (str(vars(msg)), response), 5)
+		self.eventprocessor.logMessage(_("Upload request: %(req)s Response: %(resp)s") % {
+			'req': str(vars(msg)),
+			'resp': response
+		}, 5)
 		return response
 
 	def _TransferRequestUploads(self, msg, user, conn, addr):                     
@@ -621,7 +627,10 @@ class Transfers:
 				self.eventprocessor.frame.pluginhandler.UploadQueuedNotification(user, msg.file, realpath)
 			else:
 				self.queue.put(slskmessages.QueueFailed(conn = msg.conn.conn, file = msg.file, reason = "File not shared" ))
-		self.eventprocessor.logMessage(_("Queued upload request: User %s, %s") % (user, str(vars(msg))), 5)
+		self.eventprocessor.logMessage(_("Queued upload request: User %(user)s, %(msg)s") % {
+			'user': user,
+			'msg': str(vars(msg))
+		}, 5)
 		self.checkUploadQueue()
 
 	def UploadQueueNotification(self, msg):
@@ -923,8 +932,13 @@ class Transfers:
 			self.SetIconDownloads()
 			self.downloadspanel.update(i)
 		else:
-			self.eventprocessor.logMessage(_("Download error formally known as 'Unknown file request': %s (%s: %s)") % (str(vars(msg)), i.user, i.filename), 1)
+			self.eventprocessor.logMessage(_("Download error formally known as 'Unknown file request': %(req)s (%(user)s: %(file)s)") % {
+				'req': str(vars(msg)),
+				'user': i.user,
+				'file': i.filename
+			}, 1)
 			self.queue.put(slskmessages.ConnClose(msg.conn))
+
 	def _FileRequestUpload(self, msg, i):
 		if i.conn is None:
 			i.conn = msg.conn
@@ -954,7 +968,11 @@ class Transfers:
 			self.SetIconUploads()
 			self.uploadspanel.update(i)
 		else:
-			self.eventprocessor.logMessage(_("Upload error formally known as 'Unknown file request': %s (%s: %s)") % (str(vars(msg), i.user, i.filename)), 1)
+			self.eventprocessor.logMessage(_("Upload error formally known as 'Unknown file request': %(req)s (%(user)s: %(file)s)") % {
+				'req': str(vars(msg)),
+				'user': i.user,
+				'file': i.filename
+			}, 1)
 			self.queue.put(slskmessages.ConnClose(msg.conn))
             
 	def SetIconDownloads(self):

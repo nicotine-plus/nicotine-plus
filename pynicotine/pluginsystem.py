@@ -13,10 +13,12 @@ from logfacility import log
 
 WIN32 = sys.platform.startswith("win")
 
-returncode = {'break':0, # don't give other plugins the event, do let n+ process it
-              'zap':1,   # don't give other plugins the event, don't let n+ process it
-              'pass':2}  # do give other plugins the event, do let n+ process it
-                         # returning nothing is the same as 'pass'
+returncode = {
+	'break': 0,  # don't give other plugins the event, do let n+ process it
+	'zap': 1,	# don't give other plugins the event, don't let n+ process it
+	'pass': 2	# do give other plugins the event, do let n+ process it
+}				# returning nothing is the same as 'pass'
+
 tupletype = type(('',''))
 
 def cast_to_unicode_if_needed(text, logfunc):
@@ -373,6 +375,8 @@ class PluginHandler(object):
 	def sendprivate(self, user, text):
 		'''Send user message in private (not showing up in GUI)'''
 		self.appendqueue({'type':'sendprivate', 'user':user, 'text':text})
+
+
 	def processQueue(self):
 		while len(self.guiqueue) > 0:
 			i = self.guiqueue.pop(0)
@@ -384,8 +388,12 @@ class PluginHandler(object):
 			elif i['type'] == 'sendprivate':
 				self.frame.privatechats.SendMessage(i['user'], i['text'])
 			else:
-				log.add(_('Unknown queue item %s: %s' % (i['type'], repr(i))))
+				log.add(_('Unknown queue item %(type)s: %(item)s' % {
+					'type': i['type'],
+					'item': repr(i)
+				}))
 		return False
+
 
 class BasePlugin(object):
 	__name__ = "BasePlugin"

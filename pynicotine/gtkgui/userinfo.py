@@ -274,11 +274,17 @@ class UserInfo:
 	def Attach(self, widget=None):
 		self.userinfos.attach_tab(self.Main)
 
-		
-	def Detach(self, widget=None):
-		self.userinfos.detach_tab(self.Main, _("Nicotine+ Userinfo: %s (%s)") % (self.user, [_("Offline"), _("Away"), _("Online")][self.status]))
 
-		
+	def Detach(self, widget=None):
+		self.userinfos.detach_tab(
+			self.Main,
+			_("Nicotine+ Userinfo: %(user)s (%(status)s)") % {
+				'user': self.user,
+				'status': [_("Offline"), _("Away"), _("Online")][self.status]
+			}
+		)
+
+
 	def CellDataFunc(self, column, cellrenderer, model, iter):
 		colour = self.frame.np.config.sections["ui"]["search"]
 		if colour == "":

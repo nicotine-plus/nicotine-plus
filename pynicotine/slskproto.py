@@ -444,7 +444,10 @@ class SlskProtoThread(threading.Thread):
 				else:
 					ip, port = self.getIpPort(incaddr)
 					if self.ipBlocked(ip):
-						message = _("Ignoring connection request from blocked IP Address %s:%s" %( ip, port))
+						message = _("Ignoring connection request from blocked IP Address %(ip)s:%(port)s" % {
+							'ip': ip,
+							'port': port
+						})
 						log.add(message, 3)
 					else:
 						conns[incconn] = PeerConnection(incconn, incaddr, "", "")
