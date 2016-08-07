@@ -419,7 +419,7 @@ class NicotineFrame:
 
 		self.clip = gtk.Clipboard(display=gtk.gdk.display_get_default(), selection="CLIPBOARD")
 		
-		
+		# Popup menu on the log windows
 		self.logpopupmenu = PopupMenu(self).setup(
 			("#" + _("Find"), self.OnFindLogWindow, gtk.STOCK_FIND),
 			("", None),
@@ -2757,10 +2757,34 @@ class NicotineFrame:
 		widget.emit_stop_by_name("button-press-event")
 		self.logpopupmenu.popup(None, None, None, event.button, event.time)
 		return True
-	
+
+
+	#
+	# Everything related to the log window
+	#
 	def OnFindLogWindow(self, widget):
 		self.OnFindTextview(None, self.LogWindow)
-				
+
+	def OnCopyLogWindow(self, widget):
+		bound = self.LogWindow.get_buffer().get_selection_bounds()
+		if bound is not None and len(bound) == 2:
+			start, end = bound
+			log = self.LogWindow.get_buffer().get_text(start, end)
+			self.clip.set_text(log)
+
+	def OnCopyAllLogWindow(self, widget):
+		start, end = self.LogWindow.get_buffer().get_bounds()
+		log = self.LogWindow.get_buffer().get_text(start, end)
+		self.clip.set_text(log)
+
+	def OnClearLogWindow(self, widget):
+		self.LogWindow.get_buffer().set_text("")
+
+
+	#
+	# Finding text in a text view
+	# Used in private msg, chatrooms and log window
+	#
 	def OnFindTextview(self, widget, textview, repeat=False):
 
 		if "FindDialog" not in self.__dict__:
@@ -2768,18 +2792,22 @@ class NicotineFrame:
 			self.FindDialog.set_title(_('Nicotine+: Find string'))
 			self.FindDialog.set_icon(self.images["n"])
 			self.FindDialog.set_default_size(300, 100)
-			self.FindDialog.show()
 			self.FindDialog.set_transient_for(self.MainWindow)
+			self.FindDialog.show()
 			self.FindDialog.connect("find-click", self.OnFindClicked)
 			return
+
 		if textview is not self.FindDialog.textview:
 			repeat = False
+
 		self.FindDialog.textview = textview
 		self.FindDialog.currentPosition = None
 		self.FindDialog.nextPosition = None
-		
+
+		self.FindDialog.set_transient_for(self.MainWindow)
 		self.FindDialog.show()
 		self.FindDialog.deiconify()
+
 		if repeat:
 			self.OnFindClicked(widget, self.FindDialog.lastdirection)
 		else:
@@ -2789,22 +2817,26 @@ class NicotineFrame:
 
 		if self.FindDialog.textview is None:
 			return
+
 		self.FindDialog.lastdirection = direction
 		textview = self.FindDialog.textview
 		buffer = textview.get_buffer()
 		start, end = buffer.get_bounds()
 		query = self.FindDialog.entry.get_text()
-		
-		textview.emit("select-all", False)
-		if self.FindDialog.currentPosition is None:
 
+		textview.emit("select-all", False)
+
+		if self.FindDialog.currentPosition is None:
 			self.FindDialog.currentPosition = buffer.create_mark(None, start, False)
 			self.FindDialog.nextPosition = buffer.create_mark(None, start, False)
+
 		second = 0
+
 		if direction == "next":
 			current = buffer.get_mark("insert")
 			iter = buffer.get_iter_at_mark(current)
 			match1 = iter.forward_search(query, gtk.TEXT_SEARCH_TEXT_ONLY, limit=None)
+
 			if match1 is not None and len(match1) == 2:
 				match_start, match_end = match1
 				buffer.place_cursor(match_end)
@@ -2813,6 +2845,7 @@ class NicotineFrame:
 			else:
 				iter = start
 				match1 = iter.forward_search(query, gtk.TEXT_SEARCH_TEXT_ONLY, limit=None)
+
 				if match1 is not None and len(match1) == 2:
 					match_start, match_end = match1
 					buffer.place_cursor(match_end)
@@ -2820,32 +2853,18 @@ class NicotineFrame:
 					textview.scroll_to_iter(match_start, 0)
 
 		elif direction == "previous":
+
 			current = buffer.get_mark("insert")
 			iter = buffer.get_iter_at_mark(current)
 			match1 = iter.backward_search(query, gtk.TEXT_SEARCH_TEXT_ONLY, limit=None)
+
 			if match1 is not None and len(match1) == 2:
-				
 				match_start, match_end = match1
 				buffer.place_cursor(match_start)
 				buffer.select_range(match_start, match_end)
 				textview.scroll_to_iter(match_start, 0)
 			return
-	
 
-	def OnCopyLogWindow(self, widget):
-		bound = self.LogWindow.get_buffer().get_selection_bounds()
-		if bound is not None and len(bound) == 2:
-			start, end = bound
-			log = self.LogWindow.get_buffer().get_text(start, end)
-			self.clip.set_text(log)
-			
-	def OnCopyAllLogWindow(self, widget):
-		start, end = self.LogWindow.get_buffer().get_bounds()
-		log = self.LogWindow.get_buffer().get_text(start, end)
-		self.clip.set_text(log)
-		
-	def OnClearLogWindow(self, widget):
-		self.LogWindow.get_buffer().set_text("")
 
 	def OnAddThingILike(self, widget):
 		thing = utils.InputDialog(self.MainWindow, _("Add thing I like"), _("I like")+":")

@@ -23,7 +23,8 @@ from pynicotine.utils import version
 import imagedata
 
 
-class MetaDialog( gtk.Dialog):
+class MetaDialog(gtk.Dialog):
+
 	def __init__(self, frame, message="", data=None, modal= True, Search=True):
 		
 		gtk.Dialog.__init__(self)
@@ -71,16 +72,15 @@ class MetaDialog( gtk.Dialog):
 		self.PositionLabel, self.Position = self.MakeLabelStaticEntry( hbox2, _("<b>List Position:</b>"), "", expand=False, width=7, xalign=1)
 		
 		vbox3.pack_start(hbox2, False, False)
-		
-		
-		
+
+
 		hbox3 = gtk.HBox(spacing=5)
 		hbox3.show()
 		vbox3.pack_start(hbox3, False, False)
 
 		self.FilenameLabel, self.Filename = self.MakeLabelStaticEntry( hbox3, _("<b>File Name:</b>"), "", fill=True)
-		
-		
+
+
 		hbox5 = gtk.HBox(spacing=5)
 		hbox5.show()
 		vbox3.pack_start(hbox5, False, False)
@@ -159,7 +159,6 @@ class MetaDialog( gtk.Dialog):
 		
 	def OnDownloadItem(self, widget):
 		meta = self.data[self.current]
-
 		self.nicotine.np.transfers.getFile(meta["user"], meta["fn"], "")
 		
 	def OnBrowseUser(self, widget):
@@ -181,7 +180,6 @@ class MetaDialog( gtk.Dialog):
 
 				ix -= 1
 
-					
 				if ix < 0:
 					ix = -1
 				elif ix >= len(_list):
@@ -202,7 +200,6 @@ class MetaDialog( gtk.Dialog):
 
 				ix += 1
 
-					
 				if ix < 0:
 					ix = -1
 				elif ix >= len(_list):
@@ -320,7 +317,8 @@ class MetaDialog( gtk.Dialog):
 		parent.pack_start(entry, expand, fill)
 		return label, entry
 		
-class EntryDialog( gtk.Dialog):
+class EntryDialog(gtk.Dialog):
+
 	def __init__(self, frame, message="", default_text='', modal= True, option=False, optionmessage="", optionvalue=False, droplist=[]):
 		gtk.Dialog.__init__(self)
 		self.connect("destroy", self.quit)
@@ -345,8 +343,8 @@ class EntryDialog( gtk.Dialog):
 		box.pack_start(self.combo, False, False)
 		self.combo.show()
 		self.combo.grab_focus()
-		
-		
+
+
 		self.option = gtk.CheckButton()
 		self.option.set_active(optionvalue)
 		self.option.set_label(optionmessage)
@@ -378,6 +376,7 @@ class EntryDialog( gtk.Dialog):
 			self.ret = self.combo.child.get_text()
 		self.quit()
 
+
 def input_box(frame, title="Input Box", message="", default_text='', 
 	modal= True, option=False, optionmessage="", optionvalue=False, droplist=[]):
 
@@ -389,35 +388,52 @@ def input_box(frame, title="Input Box", message="", default_text='',
 	gtk.main()
 	return win.ret
 
-class FindDialog( gtk.Dialog):
+
+class FindDialog(gtk.Dialog):
+
 	def __init__(self, frame, message="", default_text='', textview=None, modal= True):
+
 		gtk.Dialog.__init__(self)
-		gobject.signal_new("find-click", gtk.Window, gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_STRING,))
+
+		# Test if the signal is already binded since we do not clear it
+		# when we destroy FindDialog
+		if not gobject.signal_lookup("find-click", gtk.Window):
+			gobject.signal_new("find-click", gtk.Window, gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_STRING,))
+
 		self.textview = textview
 		self.nicotine = frame
-		self.connect("destroy", self.quit)
+
 		self.connect("delete-event", self.quit)
-		
+
+		# The destroy event shoul clean up the reference to FindDialog in
+		# the NicotineFrame object
+		self.connect("destroy", self.destroy)
+
 		self.nextPosition = None	
 		self.currentPosition = None
 		self.lastdirection = "next"
+
 		if modal:
 			self.set_modal(True)
+
 		box = gtk.VBox(spacing=10)
 		box.set_border_width(10)
 		self.vbox.pack_start(box)
 		box.show()
+
 		if message:
 			label = gtk.Label(message)
 			box.pack_start(label, False, False)
 			label.set_line_wrap(True)
 			label.show()
+
 		self.entry = gtk.Entry()
-	
+
 		box.pack_start(self.entry, False, False)
 		self.entry.show()
 		self.entry.grab_focus()
 		self.entry.connect("activate", self.next)
+
 		Previousbutton = self.nicotine.CreateIconButton(gtk.STOCK_GO_BACK, "stock", self.previous, _("Previous"))
 		Previousbutton.set_flags(gtk.CAN_DEFAULT)
 		self.action_area.pack_start(Previousbutton)
@@ -426,20 +442,23 @@ class FindDialog( gtk.Dialog):
 		Nextbutton.set_flags(gtk.CAN_DEFAULT)
 		self.action_area.pack_start(Nextbutton)
 		Nextbutton.grab_default()
-		
-		
+
 		Cancelbutton = self.nicotine.CreateIconButton(gtk.STOCK_CANCEL, "stock", self.quit, _("Cancel"))
 		Cancelbutton.set_flags(gtk.CAN_DEFAULT)
 		self.action_area.pack_start(Cancelbutton)
-		
-	def quit(self, w=None, event=None):
-		self.hide()
-		
+
 	def next(self, button):
 		self.emit("find-click", "next")
-			
+
 	def previous(self, button):
 		self.emit("find-click", "previous")
+
+	def quit(self, w=None, event=None):
+		self.hide()
+
+	def destroy(self, w=None, event=None):
+		if "FindDialog" in self.nicotine.__dict__:
+			del self.nicotine.FindDialog
 
 
 def FolderDownload(frame, title="Option Box", message="", default_text='', modal= True, data=None, callback=None ):
@@ -449,8 +468,10 @@ def FolderDownload(frame, title="Option Box", message="", default_text='', modal
 	win.set_title(title)
 	win.set_icon(frame.images["n"])
 	win.show()
-	
-class FolderDownloadDialog( gtk.Dialog):
+
+
+class FolderDownloadDialog(gtk.Dialog):
+
 	def __init__(self, frame, message="",modal= False, ):
 		gtk.Dialog.__init__(self)
 		self.connect("destroy", self.quit)
@@ -486,10 +507,11 @@ class FolderDownloadDialog( gtk.Dialog):
 		cancel_button = self.add_button(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL)
 		ok_button = self.add_button(gtk.STOCK_OK, gtk.RESPONSE_OK)
 		ok_button.grab_default()
-		
+
 	def quit(self, *args):
 		self.destroy()
-		
+
+
 def QuitBox(frame, title="Option Box", message="", default_text='', 
 	modal= True, status=None, tray=False, third="" ):
 	
@@ -499,6 +521,7 @@ def QuitBox(frame, title="Option Box", message="", default_text='',
 	win.set_icon(frame.images["n"])
 	win.show()
 	return win
+
 
 def ClearDialog(frame, title=_("Nicotine+"), message="", default_text='',
 	modal= True, status=None, tray=False, third="", direction=None):
@@ -511,6 +534,7 @@ def ClearDialog(frame, title=_("Nicotine+"), message="", default_text='',
 
 
 class OptionDialog(gtk.Dialog):
+
 	def __init__(self, frame, message="",modal= False, status=None, option=False, third="", rememberbox=False):
 		gtk.Dialog.__init__(self)
 		self.connect("destroy", self.quit)
