@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nicotine\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-06 21:52+0200\n"
-"PO-Revision-Date: 2016-08-06 21:52+0200\n"
+"POT-Creation-Date: 2016-08-07 17:53+0200\n"
+"PO-Revision-Date: 2016-08-07 17:53+0200\n"
 "Last-Translator: Michael LABOUEBE <gfarmerfr@free.fr>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -15,56 +15,6 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Poedit-Bookmarks: 1121,180,724,-1,-1,-1,-1,-1,-1,-1\n"
 "X-Generator: Poedit 1.8.8\n"
-
-# pynicotine/gtkgui/nicotine_glade.py
-msgid "Buddy List"
-msgstr "Liste des amis"
-
-# pynicotine/gtkgui/nicotine_glade.py
-msgid "Add Buddy: "
-msgstr "Ajouter un ami:"
-
-# pynicotine/gtkgui/frame.py
-msgid "Configure banned users"
-msgstr "Configuration des utilisateurs bannis"
-
-# pynicotine/gtkgui/nicotine_glade.py
-# pynicotine/gtkgui/settings_glade.py
-msgid "window1"
-msgstr "fenêtre1"
-
-msgid "Toggle Text-To-Speech"
-msgstr "Activer la synthèse vocale"
-
-# pynicotine/gtkgui/nicotine_glade.py
-msgid "Hide/Show User list"
-msgstr "Cacher/montrer la liste des utilisateurs"
-
-msgid "Hide/Show Status log"
-msgstr "Cacher/montrer les statuts"
-
-# pynicotine/gtkgui/about.py
-msgid "Chat room command help"
-msgstr "Commandes des salons de discussion"
-
-# pynicotine/gtkgui/chatrooms.py
-msgid "0 people in room"
-msgstr "0 utilisateur dans le salon"
-
-# pynicotine/gtkgui/nicotine_glade.py
-msgid "Log"
-msgstr "Enregistrement"
-
-msgid "Character encoding"
-msgstr "Encodage de caractères"
-
-# pynicotine/gtkgui/nicotine_glade.py
-msgid "Auto-join"
-msgstr "Auto-joindre"
-
-# pynicotine/gtkgui/nicotine_glade.py
-msgid "Leave"
-msgstr "Sortir"
 
 msgid "Nicotine+ Fast Configure"
 msgstr "Nicotine+ Configuration Rapide"
@@ -79,6 +29,9 @@ msgstr ""
 "informations. Pressez Suivant pour démarrer la configuration de nicotine+. \n"
 "\n"
 "Ceci ne devrait pas dépasser les 60 secondes."
+
+msgid "Introduction (%(page)s of %(pages)s)"
+msgstr "Introduction (page %(page)s sur %(pages)s)"
 
 # pynicotine/gtkgui/chatrooms.py
 # pynicotine/gtkgui/search.py
@@ -100,6 +53,9 @@ msgstr ""
 "de passe désiré.\n"
 "\n"
 "Si vous avez déjà un compte, remplissez les valeurs adéquates."
+
+msgid "Username (%(page)s of %(pages)s)"
+msgstr "Informations utilisateur (page %(page)s sur %(pages)s)"
 
 msgid ""
 "The Nicotine+ port is called open when other people can connect to your "
@@ -144,6 +100,9 @@ msgstr ""
 
 msgid "Advanced port settings"
 msgstr "Paramètres avancés du port"
+
+msgid "Connection details (%(page)s of %(pages)s)"
+msgstr "Détails de connexion (page %(page)s sur %(pages)s)"
 
 # pynicotine/gtkgui/settings_glade.py
 msgid "Download to the following directory:"
@@ -206,6 +165,56 @@ msgstr "\t"
 
 msgid "Summary (page %(page)s of %(pages)s)"
 msgstr "Sommaire (page %(page)s sur %(pages)s)"
+
+# pynicotine/gtkgui/nicotine_glade.py
+msgid "Buddy List"
+msgstr "Liste des amis"
+
+# pynicotine/gtkgui/nicotine_glade.py
+msgid "Add Buddy: "
+msgstr "Ajouter un ami:"
+
+# pynicotine/gtkgui/frame.py
+msgid "Configure banned users"
+msgstr "Configuration des utilisateurs bannis"
+
+# pynicotine/gtkgui/nicotine_glade.py
+# pynicotine/gtkgui/settings_glade.py
+msgid "window1"
+msgstr "fenêtre1"
+
+msgid "Toggle Text-To-Speech"
+msgstr "Activer la synthèse vocale"
+
+# pynicotine/gtkgui/nicotine_glade.py
+msgid "Hide/Show User list"
+msgstr "Cacher/montrer la liste des utilisateurs"
+
+msgid "Hide/Show Status log"
+msgstr "Cacher/montrer les statuts"
+
+# pynicotine/gtkgui/about.py
+msgid "Chat room command help"
+msgstr "Commandes des salons de discussion"
+
+# pynicotine/gtkgui/chatrooms.py
+msgid "0 people in room"
+msgstr "0 utilisateur dans le salon"
+
+# pynicotine/gtkgui/nicotine_glade.py
+msgid "Log"
+msgstr "Enregistrement"
+
+msgid "Character encoding"
+msgstr "Encodage de caractères"
+
+# pynicotine/gtkgui/nicotine_glade.py
+msgid "Auto-join"
+msgstr "Auto-joindre"
+
+# pynicotine/gtkgui/nicotine_glade.py
+msgid "Leave"
+msgstr "Sortir"
 
 # pynicotine/gtkgui/frame.py
 # pynicotine/gtkgui/nicotine_glade.py

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-06 21:43+0200\n"
+"POT-Creation-Date: 2016-08-07 17:50+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,45 +16,6 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-
-msgid "Buddy List"
-msgstr ""
-
-msgid "Add Buddy: "
-msgstr ""
-
-msgid "Configure banned users"
-msgstr ""
-
-msgid "window1"
-msgstr ""
-
-msgid "Toggle Text-To-Speech"
-msgstr ""
-
-msgid "Hide/Show User list"
-msgstr ""
-
-msgid "Hide/Show Status log"
-msgstr ""
-
-msgid "Chat room command help"
-msgstr ""
-
-msgid "0 people in room"
-msgstr ""
-
-msgid "Log"
-msgstr ""
-
-msgid "Character encoding"
-msgstr ""
-
-msgid "Auto-join"
-msgstr ""
-
-msgid "Leave"
-msgstr ""
 
 msgid "Nicotine+ Fast Configure"
 msgstr ""
@@ -64,6 +25,9 @@ msgid ""
 "Please press Forward to start configuring Nicotine+.\n"
 "\n"
 "This should only take about 60 seconds."
+msgstr ""
+
+msgid "Introduction (%(page)s of %(pages)s)"
 msgstr ""
 
 msgid "Username"
@@ -76,6 +40,9 @@ msgid ""
 "To create a new user just fill in the username and password you want.\n"
 "\n"
 "If you already have an account at the server fill in those details."
+msgstr ""
+
+msgid "Username (%(page)s of %(pages)s)"
 msgstr ""
 
 msgid ""
@@ -112,6 +79,9 @@ msgid "Use UPnP to map the port on my router (requires MiniUPnPc)"
 msgstr ""
 
 msgid "Advanced port settings"
+msgstr ""
+
+msgid "Connection details (%(page)s of %(pages)s)"
 msgstr ""
 
 msgid "Download to the following directory:"
@@ -160,6 +130,45 @@ msgid "\t"
 msgstr ""
 
 msgid "Summary (page %(page)s of %(pages)s)"
+msgstr ""
+
+msgid "Buddy List"
+msgstr ""
+
+msgid "Add Buddy: "
+msgstr ""
+
+msgid "Configure banned users"
+msgstr ""
+
+msgid "window1"
+msgstr ""
+
+msgid "Toggle Text-To-Speech"
+msgstr ""
+
+msgid "Hide/Show User list"
+msgstr ""
+
+msgid "Hide/Show Status log"
+msgstr ""
+
+msgid "Chat room command help"
+msgstr ""
+
+msgid "0 people in room"
+msgstr ""
+
+msgid "Log"
+msgstr ""
+
+msgid "Character encoding"
+msgstr ""
+
+msgid "Auto-join"
+msgstr ""
+
+msgid "Leave"
 msgstr ""
 
 msgid "Nicotine"
