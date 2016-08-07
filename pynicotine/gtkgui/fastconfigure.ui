@@ -1,20 +1,38 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <!-- interface-requires gtk+ 2.12 -->
+  <requires lib="gtk+" version="2.24"/>
   <!-- interface-naming-policy project-wide -->
+  <object class="GtkAdjustment" id="lowerportadjuster">
+    <property name="upper">65535</property>
+    <property name="step_increment">1</property>
+    <property name="page_increment">100</property>
+  </object>
+  <object class="GtkAdjustment" id="upperportadjuster">
+    <property name="upper">65535</property>
+    <property name="step_increment">1</property>
+    <property name="page_increment">100</property>
+  </object>
   <object class="GtkAssistant" id="FastConfigureAssistant">
+    <property name="can_focus">False</property>
     <property name="border_width">12</property>
     <property name="title" translatable="yes">Nicotine+ Fast Configure</property>
     <property name="modal">True</property>
     <property name="window_position">center-always</property>
-    <signal name="apply" handler="OnApply"/>
-    <signal name="prepare" handler="OnPrepare"/>
-    <signal name="key_press_event" handler="OnKeyPress"/>
-    <signal name="cancel" handler="OnCancel"/>
-    <signal name="close" handler="OnClose"/>
+    <signal name="close" handler="OnClose" swapped="no"/>
+    <signal name="apply" handler="OnApply" swapped="no"/>
+    <signal name="key-press-event" handler="OnKeyPress" swapped="no"/>
+    <signal name="prepare" handler="OnPrepare" swapped="no"/>
+    <signal name="cancel" handler="OnCancel" swapped="no"/>
+    <child>
+      <placeholder/>
+    </child>
+    <child>
+      <placeholder/>
+    </child>
     <child>
       <object class="GtkLabel" id="welcomepage">
         <property name="visible">True</property>
+        <property name="can_focus">False</property>
         <property name="label" translatable="yes">Welcome to Nicotine+. In order to start you need to fill in a few details. Please press Forward to start configuring Nicotine+.
 
 This should only take about 60 seconds.</property>
@@ -23,26 +41,30 @@ This should only take about 60 seconds.</property>
       </object>
       <packing>
         <property name="page_type">intro</property>
-        <property name="title">Introduction (%(page)s of %(pages)s)</property>
+        <property name="title" translatable="yes">Introduction (%(page)s of %(pages)s)</property>
       </packing>
     </child>
     <child>
       <object class="GtkVBox" id="userpasspage">
         <property name="visible">True</property>
-        <property name="orientation">vertical</property>
+        <property name="can_focus">False</property>
         <child>
           <object class="GtkHBox" id="hbox1">
             <property name="visible">True</property>
+            <property name="can_focus">False</property>
             <child>
               <object class="GtkVBox" id="vbox2">
                 <property name="visible">True</property>
-                <property name="orientation">vertical</property>
+                <property name="can_focus">False</property>
                 <child>
                   <object class="GtkLabel" id="label2">
                     <property name="visible">True</property>
+                    <property name="can_focus">False</property>
                     <property name="label" translatable="yes">Username</property>
                   </object>
                   <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
                     <property name="position">0</property>
                   </packing>
                 </child>
@@ -50,33 +72,44 @@ This should only take about 60 seconds.</property>
                   <object class="GtkEntry" id="username">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <property name="invisible_char">&#x25CF;</property>
-                    <signal name="backspace" handler="OnEntryChanged"/>
-                    <signal name="cut_clipboard" handler="OnEntryChanged"/>
-                    <signal name="delete_from_cursor" handler="OnEntryChanged"/>
-                    <signal name="key_press_event" handler="OnEntryChanged"/>
-                    <signal name="insert_at_cursor" handler="OnEntryChanged"/>
-                    <signal name="paste_clipboard" handler="OnEntryChanged"/>
+                    <property name="invisible_char">●</property>
+                    <property name="primary_icon_activatable">False</property>
+                    <property name="secondary_icon_activatable">False</property>
+                    <property name="primary_icon_sensitive">True</property>
+                    <property name="secondary_icon_sensitive">True</property>
+                    <signal name="delete-from-cursor" handler="OnEntryChanged" swapped="no"/>
+                    <signal name="insert-at-cursor" handler="OnEntryChanged" swapped="no"/>
+                    <signal name="key-press-event" handler="OnEntryChanged" swapped="no"/>
+                    <signal name="paste-clipboard" handler="OnEntryChanged" swapped="no"/>
+                    <signal name="cut-clipboard" handler="OnEntryChanged" swapped="no"/>
+                    <signal name="backspace" handler="OnEntryChanged" swapped="no"/>
                   </object>
                   <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
                     <property name="position">1</property>
                   </packing>
                 </child>
               </object>
               <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
                 <property name="position">0</property>
               </packing>
             </child>
             <child>
               <object class="GtkVBox" id="vbox3">
                 <property name="visible">True</property>
-                <property name="orientation">vertical</property>
+                <property name="can_focus">False</property>
                 <child>
                   <object class="GtkLabel" id="label3">
                     <property name="visible">True</property>
+                    <property name="can_focus">False</property>
                     <property name="label" translatable="yes">Password</property>
                   </object>
                   <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
                     <property name="position">0</property>
                   </packing>
                 </child>
@@ -85,31 +118,42 @@ This should only take about 60 seconds.</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="visibility">False</property>
-                    <property name="invisible_char">&#x25CF;</property>
-                    <signal name="backspace" handler="OnEntryChanged"/>
-                    <signal name="cut_clipboard" handler="OnEntryChanged"/>
-                    <signal name="delete_from_cursor" handler="OnEntryChanged"/>
-                    <signal name="key_press_event" handler="OnEntryChanged"/>
-                    <signal name="insert_at_cursor" handler="OnEntryChanged"/>
-                    <signal name="paste_clipboard" handler="OnEntryChanged"/>
+                    <property name="invisible_char">●</property>
+                    <property name="primary_icon_activatable">False</property>
+                    <property name="secondary_icon_activatable">False</property>
+                    <property name="primary_icon_sensitive">True</property>
+                    <property name="secondary_icon_sensitive">True</property>
+                    <signal name="delete-from-cursor" handler="OnEntryChanged" swapped="no"/>
+                    <signal name="insert-at-cursor" handler="OnEntryChanged" swapped="no"/>
+                    <signal name="key-press-event" handler="OnEntryChanged" swapped="no"/>
+                    <signal name="paste-clipboard" handler="OnEntryChanged" swapped="no"/>
+                    <signal name="cut-clipboard" handler="OnEntryChanged" swapped="no"/>
+                    <signal name="backspace" handler="OnEntryChanged" swapped="no"/>
                   </object>
                   <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
                     <property name="position">1</property>
                   </packing>
                 </child>
               </object>
               <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
                 <property name="position">1</property>
               </packing>
             </child>
           </object>
           <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
             <property name="position">0</property>
           </packing>
         </child>
         <child>
           <object class="GtkLabel" id="label4">
             <property name="visible">True</property>
+            <property name="can_focus">False</property>
             <property name="label" translatable="yes">To create a new user just fill in the username and password you want.
 
 If you already have an account at the server fill in those details.</property>
@@ -117,21 +161,24 @@ If you already have an account at the server fill in those details.</property>
             <property name="width_chars">60</property>
           </object>
           <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
             <property name="position">1</property>
           </packing>
         </child>
       </object>
       <packing>
-        <property name="title">Username (%(page)s of %(pages)s)</property>
+        <property name="title" translatable="yes">Username (%(page)s of %(pages)s)</property>
       </packing>
     </child>
     <child>
       <object class="GtkVBox" id="portpage">
         <property name="visible">True</property>
-        <property name="orientation">vertical</property>
+        <property name="can_focus">False</property>
         <child>
           <object class="GtkLabel" id="label1">
             <property name="visible">True</property>
+            <property name="can_focus">False</property>
             <property name="label" translatable="yes">The Nicotine+ port is called open when other people can connect to your computer without being blocked by your firewall or router. An open port is crucial to prevent connection trouble.
 
 To test your port please press the following button. It will open a page in your webbrowser that will tell your port status. </property>
@@ -139,17 +186,23 @@ To test your port please press the following button. It will open a page in your
             <property name="width_chars">60</property>
           </object>
           <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
             <property name="position">0</property>
           </packing>
         </child>
         <child>
           <object class="GtkHBox" id="hbox4">
             <property name="visible">True</property>
+            <property name="can_focus">False</property>
             <child>
               <object class="GtkHSeparator" id="hseparator1">
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
               </object>
               <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
                 <property name="position">0</property>
               </packing>
             </child>
@@ -159,7 +212,7 @@ To test your port please press the following button. It will open a page in your
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <signal name="clicked" handler="OnButtonPressed"/>
+                <signal name="clicked" handler="OnButtonPressed" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -170,8 +223,11 @@ To test your port please press the following button. It will open a page in your
             <child>
               <object class="GtkHSeparator" id="hseparator2">
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
               </object>
               <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
                 <property name="position">2</property>
               </packing>
             </child>
@@ -185,17 +241,19 @@ To test your port please press the following button. It will open a page in your
         <child>
           <object class="GtkHBox" id="portselection">
             <property name="visible">True</property>
+            <property name="can_focus">False</property>
             <child>
               <object class="GtkRadioButton" id="portopen">
                 <property name="label" translatable="yes">The page says my port is open</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
-                <property name="active">False</property>
                 <property name="draw_indicator">True</property>
-                <signal name="toggled" handler="OnButtonPressed"/>
+                <signal name="toggled" handler="OnButtonPressed" swapped="no"/>
               </object>
               <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
                 <property name="position">0</property>
               </packing>
             </child>
@@ -205,32 +263,36 @@ To test your port please press the following button. It will open a page in your
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
-                <property name="active">False</property>
                 <property name="draw_indicator">True</property>
                 <property name="group">portopen</property>
-                <signal name="toggled" handler="OnButtonPressed"/>
+                <signal name="toggled" handler="OnButtonPressed" swapped="no"/>
               </object>
               <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
                 <property name="position">1</property>
               </packing>
             </child>
             <child>
               <object class="GtkRadioButton" id="porthidden">
                 <property name="label" translatable="yes">(If you can see this option something is wrong)</property>
-                <property name="visible">False</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
                 <property name="active">True</property>
                 <property name="draw_indicator">True</property>
                 <property name="group">portopen</property>
-                <signal name="toggled" handler="OnButtonPressed"/>
+                <signal name="toggled" handler="OnButtonPressed" swapped="no"/>
               </object>
               <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
                 <property name="position">2</property>
               </packing>
             </child>
           </object>
           <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
             <property name="position">2</property>
           </packing>
         </child>
@@ -241,23 +303,28 @@ To test your port please press the following button. It will open a page in your
             <child>
               <object class="GtkVBox" id="vbox1">
                 <property name="visible">True</property>
-                <property name="orientation">vertical</property>
+                <property name="can_focus">False</property>
                 <child>
                   <object class="GtkLabel" id="listenport">
                     <property name="visible">True</property>
+                    <property name="can_focus">False</property>
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">Nicotine+ is currently listening on port %(listenport)s.</property>
                   </object>
                   <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
                     <property name="position">0</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkHBox" id="hbox2">
                     <property name="visible">True</property>
+                    <property name="can_focus">False</property>
                     <child>
                       <object class="GtkLabel" id="label6">
                         <property name="visible">True</property>
+                        <property name="can_focus">False</property>
                         <property name="xalign">0</property>
                         <property name="label" translatable="yes">Use the first available port in the range from </property>
                       </object>
@@ -273,19 +340,26 @@ To test your port please press the following button. It will open a page in your
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="max_length">5</property>
-                        <property name="invisible_char">&#x25CF;</property>
+                        <property name="invisible_char">●</property>
+                        <property name="primary_icon_activatable">False</property>
+                        <property name="secondary_icon_activatable">False</property>
+                        <property name="primary_icon_sensitive">True</property>
+                        <property name="secondary_icon_sensitive">True</property>
                         <property name="adjustment">lowerportadjuster</property>
                         <property name="numeric">True</property>
-                        <signal name="value_changed" handler="OnSpinbuttonValueChanged"/>
-                        <signal name="change_value" handler="OnSpinbuttonChangeValue"/>
+                        <signal name="change-value" handler="OnSpinbuttonChangeValue" swapped="no"/>
+                        <signal name="value-changed" handler="OnSpinbuttonValueChanged" swapped="no"/>
                       </object>
                       <packing>
+                        <property name="expand">True</property>
+                        <property name="fill">True</property>
                         <property name="position">1</property>
                       </packing>
                     </child>
                     <child>
                       <object class="GtkLabel" id="label7">
                         <property name="visible">True</property>
+                        <property name="can_focus">False</property>
                         <property name="label" translatable="yes">to</property>
                       </object>
                       <packing>
@@ -299,18 +373,26 @@ To test your port please press the following button. It will open a page in your
                         <property name="width_request">5</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <property name="invisible_char">&#x25CF;</property>
+                        <property name="invisible_char">●</property>
+                        <property name="primary_icon_activatable">False</property>
+                        <property name="secondary_icon_activatable">False</property>
+                        <property name="primary_icon_sensitive">True</property>
+                        <property name="secondary_icon_sensitive">True</property>
                         <property name="adjustment">upperportadjuster</property>
                         <property name="numeric">True</property>
-                        <signal name="value_changed" handler="OnSpinbuttonValueChanged"/>
-                        <signal name="change_value" handler="OnSpinbuttonChangeValue"/>
+                        <signal name="change-value" handler="OnSpinbuttonChangeValue" swapped="no"/>
+                        <signal name="value-changed" handler="OnSpinbuttonValueChanged" swapped="no"/>
                       </object>
                       <packing>
+                        <property name="expand">True</property>
+                        <property name="fill">True</property>
                         <property name="position">3</property>
                       </packing>
                     </child>
                   </object>
                   <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
                     <property name="position">1</property>
                   </packing>
                 </child>
@@ -321,9 +403,11 @@ To test your port please press the following button. It will open a page in your
                     <property name="can_focus">True</property>
                     <property name="receives_default">False</property>
                     <property name="draw_indicator">True</property>
-                    <signal name="toggled" handler="OnToggled"/>
+                    <signal name="toggled" handler="OnToggled" swapped="no"/>
                   </object>
                   <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
                     <property name="position">2</property>
                   </packing>
                 </child>
@@ -332,29 +416,34 @@ To test your port please press the following button. It will open a page in your
             <child type="label">
               <object class="GtkLabel" id="label5">
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
                 <property name="label" translatable="yes">Advanced port settings</property>
               </object>
             </child>
           </object>
           <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
             <property name="position">3</property>
           </packing>
         </child>
       </object>
       <packing>
-        <property name="title">Connection details (%(page)s of %(pages)s)</property>
+        <property name="title" translatable="yes">Connection details (%(page)s of %(pages)s)</property>
       </packing>
     </child>
     <child>
       <object class="GtkVBox" id="sharepage">
         <property name="visible">True</property>
-        <property name="orientation">vertical</property>
+        <property name="can_focus">False</property>
         <child>
           <object class="GtkLabel" id="label8">
             <property name="visible">True</property>
+            <property name="can_focus">False</property>
             <property name="label" translatable="yes">Download to the following directory:</property>
           </object>
           <packing>
+            <property name="expand">True</property>
             <property name="fill">False</property>
             <property name="position">0</property>
           </packing>
@@ -362,6 +451,7 @@ To test your port please press the following button. It will open a page in your
         <child>
           <object class="GtkFileChooserButton" id="downloaddir">
             <property name="visible">True</property>
+            <property name="can_focus">False</property>
             <property name="action">select-folder</property>
           </object>
           <packing>
@@ -373,10 +463,12 @@ To test your port please press the following button. It will open a page in your
         <child>
           <object class="GtkLabel" id="label9">
             <property name="visible">True</property>
+            <property name="can_focus">False</property>
             <property name="label" translatable="yes">Share the following directories:</property>
             <property name="width_chars">0</property>
           </object>
           <packing>
+            <property name="expand">True</property>
             <property name="fill">False</property>
             <property name="position">2</property>
           </packing>
@@ -384,6 +476,7 @@ To test your port please press the following button. It will open a page in your
         <child>
           <object class="GtkHBox" id="hbox3">
             <property name="visible">True</property>
+            <property name="can_focus">False</property>
             <child>
               <object class="GtkTreeView" id="shareddirectoriestree">
                 <property name="visible">True</property>
@@ -391,13 +484,15 @@ To test your port please press the following button. It will open a page in your
                 <property name="rubber_banding">True</property>
               </object>
               <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
                 <property name="position">0</property>
               </packing>
             </child>
             <child>
               <object class="GtkVBox" id="vbox5">
                 <property name="visible">True</property>
-                <property name="orientation">vertical</property>
+                <property name="can_focus">False</property>
                 <child>
                   <object class="GtkButton" id="addshare">
                     <property name="label">gtk-add</property>
@@ -405,7 +500,7 @@ To test your port please press the following button. It will open a page in your
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
                     <property name="use_stock">True</property>
-                    <signal name="clicked" handler="OnButtonPressed"/>
+                    <signal name="clicked" handler="OnButtonPressed" swapped="no"/>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -420,7 +515,7 @@ To test your port please press the following button. It will open a page in your
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
                     <property name="use_stock">True</property>
-                    <signal name="clicked" handler="OnButtonPressed"/>
+                    <signal name="clicked" handler="OnButtonPressed" swapped="no"/>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -451,6 +546,8 @@ To test your port please press the following button. It will open a page in your
             </child>
           </object>
           <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
             <property name="position">3</property>
           </packing>
         </child>
@@ -465,11 +562,13 @@ To test your port please press the following button. It will open a page in your
     <child>
       <object class="GtkTable" id="summarypage">
         <property name="visible">True</property>
+        <property name="can_focus">False</property>
         <property name="n_rows">5</property>
         <property name="n_columns">2</property>
         <child>
           <object class="GtkLabel" id="label10">
             <property name="visible">True</property>
+            <property name="can_focus">False</property>
             <property name="label" translatable="yes">*</property>
           </object>
           <packing>
@@ -480,6 +579,7 @@ To test your port please press the following button. It will open a page in your
         <child>
           <object class="GtkLabel" id="label12">
             <property name="visible">True</property>
+            <property name="can_focus">False</property>
             <property name="xalign">0.10000000149011612</property>
             <property name="label" translatable="yes">Transfer speeds depend on the users you are downloading from. Some users will be fast while others will be slow.</property>
             <property name="wrap">True</property>
@@ -495,6 +595,7 @@ To test your port please press the following button. It will open a page in your
         <child>
           <object class="GtkLabel" id="labelclosedport">
             <property name="visible">True</property>
+            <property name="can_focus">False</property>
             <property name="xalign">0.10000000149011612</property>
             <property name="label" translatable="yes">Since your port is closed you will be unable to connect to roughly 50% of the people. This is inherent to Peer-2-Peer and not specifically a problem of Nicotine+.</property>
             <property name="wrap">True</property>
@@ -510,6 +611,7 @@ To test your port please press the following button. It will open a page in your
         <child>
           <object class="GtkLabel" id="labelnoshare">
             <property name="visible">True</property>
+            <property name="can_focus">False</property>
             <property name="xalign">0.10000000149011612</property>
             <property name="label" translatable="yes">You do not publicly share any files. In itself this is not a problem but many people will ban you if you're downloading from them for this reason.</property>
             <property name="use_markup">True</property>
@@ -526,6 +628,7 @@ To test your port please press the following button. It will open a page in your
         <child>
           <object class="GtkLabel" id="warningclosedport">
             <property name="visible">True</property>
+            <property name="can_focus">False</property>
             <property name="label" translatable="yes">&lt;b&gt;Warning&lt;/b&gt;</property>
             <property name="use_markup">True</property>
           </object>
@@ -537,6 +640,7 @@ To test your port please press the following button. It will open a page in your
         <child>
           <object class="GtkLabel" id="warningnoshare">
             <property name="visible">True</property>
+            <property name="can_focus">False</property>
             <property name="label" translatable="yes">&lt;b&gt;Warning&lt;/b&gt;</property>
             <property name="use_markup">True</property>
           </object>
@@ -548,6 +652,7 @@ To test your port please press the following button. It will open a page in your
         <child>
           <object class="GtkLabel" id="label16">
             <property name="visible">True</property>
+            <property name="can_focus">False</property>
             <property name="xalign">0.10000000149011612</property>
             <property name="label" translatable="yes">&lt;b&gt;You are now ready to use Nicotine+!&lt;/b&gt;</property>
             <property name="use_markup">True</property>
@@ -560,6 +665,7 @@ To test your port please press the following button. It will open a page in your
         <child>
           <object class="GtkLabel" id="label17">
             <property name="visible">True</property>
+            <property name="can_focus">False</property>
             <property name="label">*</property>
           </object>
           <packing>
@@ -570,6 +676,7 @@ To test your port please press the following button. It will open a page in your
         <child>
           <object class="GtkLabel" id="label18">
             <property name="visible">True</property>
+            <property name="can_focus">False</property>
             <property name="xalign">0.10000000149011612</property>
             <property name="label" translatable="yes">If you find any bugs, especially if you run Windows or OSX, please let us know via Help -&gt; Report A Bug</property>
             <property name="wrap">True</property>
@@ -585,6 +692,7 @@ To test your port please press the following button. It will open a page in your
         <child>
           <object class="GtkLabel" id="label19">
             <property name="visible">True</property>
+            <property name="can_focus">False</property>
             <property name="label" translatable="yes">	</property>
           </object>
         </child>
@@ -594,15 +702,5 @@ To test your port please press the following button. It will open a page in your
         <property name="title" translatable="yes">Summary (page %(page)s of %(pages)s)</property>
       </packing>
     </child>
-  </object>
-  <object class="GtkAdjustment" id="lowerportadjuster">
-    <property name="upper">65535</property>
-    <property name="step_increment">1</property>
-    <property name="page_increment">100</property>
-  </object>
-  <object class="GtkAdjustment" id="upperportadjuster">
-    <property name="upper">65535</property>
-    <property name="step_increment">1</property>
-    <property name="page_increment">100</property>
   </object>
 </interface>
