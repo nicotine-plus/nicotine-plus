@@ -26,8 +26,6 @@ import sys
 from os import listdir, remove, system
 from os.path import isfile, join
 
-print "Generating nicotine.pot ..."
-
 files = {}
 
 files["../"] = [
@@ -56,17 +54,31 @@ def isGlade(dir, file):
         return dir + file
     return None
 
+
+def isBuilder(dir, file):
+    if file.rsplit(".")[-1].lower() in ("ui"):
+        return dir + file
+    return None
+
 pythonscripts = []
 gladescripts = []
+builderscripts = []
 
 for dir, files in files.items():
+
     for file in files:
+
         ispy = isPythonScript(dir, file)
         if ispy is not None:
             pythonscripts.append(ispy)
+
         isglade = isGlade(dir, file)
         if isglade is not None:
             gladescripts.append(isglade)
+
+        isbuilder = isBuilder(dir, file)
+        if isbuilder is not None:
+            builderscripts.append(isbuilder)
 
 blacklist = ["icondata", "imagedata", "__init__"]
 
@@ -79,8 +91,13 @@ goodpython = ""
 for path in pythonscripts[:]:
     goodpython += path + " "
 
+print "Generating nicotine-python.pot ...\n"
+
 print "xgettext --no-location -o nicotine-python.pot %s" % goodpython
 r = system("xgettext --no-location -o nicotine-python.pot %s" % goodpython)
+
+
+print "\nGenerating nicotine-glade.pot ...\n"
 
 gladestring = ""
 for path in gladescripts[:]:
@@ -90,10 +107,26 @@ print "xgettext --no-location -L Glade -o nicotine-glade.pot %s" % gladestring
 r = system(
     "xgettext --no-location -L Glade -o nicotine-glade.pot %s" % gladestring)
 
-r = system("msgcat nicotine-glade.pot nicotine-python.pot -o nicotine.pot")
+print "\nGenerating nicotine-builder.pot ...\n"
+
+builderstring = ""
+for path in builderscripts[:]:
+    builderstring += path + " "
+
+print "xgettext --no-location -o nicotine-builder.pot %s" % builderstring
+r = system(
+    "xgettext --no-location -o nicotine-builder.pot %s" % builderstring)
+
+print "\nGenerating nicotine.pot ...\n"
+
+r = system(
+    "msgcat nicotine-builder.pot nicotine-glade.pot nicotine-python.pot " +
+    "-o nicotine.pot"
+)
 
 if r:
     print "Error while creating nicotine.pot"
 else:
-    remove('nicotine-python.pot')
+    remove('nicotine-builder.pot')
     remove('nicotine-glade.pot')
+    remove('nicotine-python.pot')
