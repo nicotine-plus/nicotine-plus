@@ -37,8 +37,6 @@ from pynicotine.utils import findBestEncoding
 from ticker import Ticker
 from entrydialog import OptionDialog, input_box
 
-ver = sys.version_info 
-
 def GetCompletion(part, list):
 	matches = GetCompletions(part, list)
 	if len(matches) == 0:

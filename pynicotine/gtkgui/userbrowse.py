@@ -87,9 +87,7 @@ class UserBrowse:
 		self.FolderTreeView.set_model(self.DirStore)
 
 		self.FolderTreeView.set_headers_visible(True)
-		# GTK 2.10
-		if gtk.pygtk_version[0] >= 2 and gtk.pygtk_version[1] >= 10:
-			self.FolderTreeView.set_enable_tree_lines(True)
+		self.FolderTreeView.set_enable_tree_lines(True)
 
 		cols = InitialiseColumns(self.FolderTreeView,
 			[_("Directories"), -1, "text", self.CellDataFunc], #0
@@ -830,14 +828,8 @@ class UserBrowse:
 			executeCommand(executable, path)
 	
 	def OnEncodingChanged(self, widget):
-		if gtk.pygtk_version[0] >= 2 and gtk.pygtk_version[1] >= 6:
-			# PyGTK 2.6
-			encoding = self.Encoding.get_active_text()
-		else:
-			# PyGTK 2.4
-			iterator = self.Encoding.get_active_iter()
-			encoding_model = self.Encoding.get_model()
-			encoding = encoding_model.get_value(iterator, 0)
+
+		encoding = self.Encoding.get_active_text()
 			
 		if encoding != self.encoding:
 			self.encoding = encoding

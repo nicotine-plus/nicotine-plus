@@ -143,7 +143,7 @@ class Plugin(BasePlugin):
 		#self.log("compile prefs completed.")
 	metasettings_adjusted = False
 	def fixupmetasettings(self):
-		if (sys.version_info < (2, 7)) or self.metasettings_adjusted: return
+		if self.metasettings_adjusted: return
 		from collections import OrderedDict
 		newmetasettings = OrderedDict()
 		for m in self.metasettings_order:

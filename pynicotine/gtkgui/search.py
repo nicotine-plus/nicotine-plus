@@ -614,8 +614,7 @@ class Search:
 		self.col_length.set_sort_column_id(8)
 		self.col_country.set_sort_column_id(13)
 		self.col_directory.set_sort_column_id(10)
-		if gtk.pygtk_version[0] >= 2 and gtk.pygtk_version[1] >= 10:
-			self.ResultsList.set_enable_tree_lines(True)
+		self.ResultsList.set_enable_tree_lines(True)
 
 		self.ResultsList.set_headers_clickable(True)
 		self.popup_menu_users = PopupMenu(self.frame)

@@ -1274,6 +1274,7 @@ def is_alias(aliases, cmd):
 def expand_alias(aliases, cmd):
 	output = _expand_alias(aliases, cmd)
 	return findBestEncoding(output, ['UTF-8', 'ASCII'])
+
 def _expand_alias(aliases, cmd):
 	def getpart(line):
 		if line[0] != "(":
@@ -1338,41 +1339,22 @@ def _expand_alias(aliases, cmd):
 				for j in range(len(cmd)-1, -1, -1):
 					arg = arg.replace("$%i" % j, cmd[j])
 				arg = arg.replace("$@", string.join(cmd[1:], " "))
-				version = sys.version_info
-				if version[0] == 3 or (version[0] >= 2 and version[1] >= 4):
-					import subprocess
-	
-					p = subprocess.Popen(arg, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, close_fds=(not sys.platform.startswith("win")))
-					exit = p.wait()
 
-					(stdout, stdin) = (p.stdout, p.stdin)
-					v = stdout.read().split("\n")
-					r = ""
-					for l in v:
-						l = l.strip()
-						if l:
-							r = r + l + "\n"
-					ret = ret + r.strip()
-					stdin.close()
-					stdout.close()
-				
-				else:
-					stdin, stdout = os.popen2(arg)
-					v = stdout.read().split("\n")
-					r = ""
-					for l in v:
-						l = l.strip()
-						if l:
-							r = r + l + "\n"
-					ret = ret + r.strip()
-					stdin.close()
-					stdout.close()
-					try:
-						os.wait()
-					except OSError, error:
-						pass
-					except Exception, error:
-						pass
+				import subprocess
+
+				p = subprocess.Popen(arg, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, close_fds=(not sys.platform.startswith("win")))
+				exit = p.wait()
+
+				(stdout, stdin) = (p.stdout, p.stdin)
+				v = stdout.read().split("\n")
+				r = ""
+				for l in v:
+					l = l.strip()
+					if l:
+						r = r + l + "\n"
+				ret = ret + r.strip()
+				stdin.close()
+				stdout.close()
 			else:
 				ret = ret + alias[i]
 				i = i + 1

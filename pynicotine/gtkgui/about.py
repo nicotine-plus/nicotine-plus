@@ -93,11 +93,7 @@ Based on code from Nicotine and PySoulSeek""") % version
         self.expander = gtk.Expander(_("Dependencies"))
         self.expander.show()
 
-        pythonversion = "%d.%d.%d" % (
-            sys.version_info[0],
-            sys.version_info[1],
-            sys.version_info[2]
-        )
+        pythonversion = '.'.join(map(str, sys.version_info[:3]))
 
         self.vbox2 = gtk.VBox()
         self.vbox2.set_spacing(5)
@@ -120,11 +116,7 @@ Based on code from Nicotine and PySoulSeek""") % version
         hboxgtk = gtk.HBox(5)
         hboxgtk.show()
 
-        gtkversion = "%d.%d.%d" % (
-            gtk.gtk_version[0],
-            gtk.gtk_version[1],
-            gtk.gtk_version[2]
-        )
+        gtkversion = '.'.join(map(str, gtk.gtk_version[:3]))
 
         VersionGTK = gtk.Label(gtkversion)
 
@@ -141,11 +133,7 @@ Based on code from Nicotine and PySoulSeek""") % version
         hboxpygtk = gtk.HBox(5)
         hboxpygtk.show()
 
-        pygtkversion = "%d.%d.%d" % (
-            gtk.pygtk_version[0],
-            gtk.pygtk_version[1],
-            gtk.pygtk_version[2]
-        )
+        pygtkversion = '.'.join(map(str, gtk.pygtk_version[:3]))
 
         VersionPyGTK = gtk.Label(pygtkversion)
 

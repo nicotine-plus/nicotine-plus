@@ -3353,9 +3353,8 @@ class TrayApp:
 	def __init__(self, frame):
 		self.frame = frame
 		self.current_image = None
-		self.pygtkicon = False
-		if gtk.pygtk_version[0] >= 2 and gtk.pygtk_version[1] >= 10:
-			self.pygtkicon = True
+		# TODO: self.pygtkicon is always True now
+		self.pygtkicon = True
 		self.trayicon = None
 		self.trayicon_module = None
 		self.TRAYICON_CREATED = 0
