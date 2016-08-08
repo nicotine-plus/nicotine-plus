@@ -11,7 +11,6 @@ eL_vErDe
 - Provides Nicotine+ Website
 - Migrated source code from SVN to Github
 - Developer (retired ?)
-- http://www.nicotine-plus.org
 
 ### Retired
 
@@ -32,8 +31,8 @@ hedonist (formerly known as alexbk)
 - [ak(at)sensi(dot)org]
 - Author of original pyslsk, which is used for nicotine core
 
-lee8oi		
-- Bash Commander		
+lee8oi
+- Bash Commander
 - [winslaya(at)gmail(dot)com]
 - New and updated /alias
 
@@ -47,7 +46,8 @@ suser-guru
 - Nicotine+ RPM's for Suse 9.1, 9.2, 9.3, 10.0, 10.1
 
 osiris
-- handy-man, documentation, some GNU/Linux packaging, author of Nicotine+ Guide, Nicotine+ on win32
+- handy-man, documentation, some GNU/Linux packaging, Nicotine+ on win32
+- Author of Nicotine+ Guide
 - [osiris.contact(at)gmail(dot)com]
 
 ---
@@ -72,7 +72,7 @@ Wretched
 - Bringer of great ideas
 
 (va)\*10^3
-- Beta tester		
+- Beta tester
 - Designer of the old nicotine homepage and artwork (logos)
 
 sierracat
