@@ -2,25 +2,6 @@ Nicotine+ is a client for the SoulSeek filesharing network. It was "forked"
 from Nicotine, Hyriand's Soulseek client, which in turn was forked from the
 PySoulSeek project by Alexander Kanavin.
 
-Dependencies:
- To use it on Linux/Unix and X11 you'll need the following:
-
- Required:
-  * An X server            http://www.x.org/
-  * Gtk+ 2.10 or newer     http://www.gtk.org/
-  * Python 2.2.3 or newer  http://www.python.org/
-  * pygtk-2.10 or newer (may work with older version, but is *UNTESTED*)
-    http://www.pygtk.org/
-  * python-mutagen         https://github.com/quodlibet/mutagen
-
- Optional:
-  * GeoIP python bindings (Country lookup) http://www.maxmind.com/app/python
-  * Psyco (speeds up Python code) http://psyco.sourceforge.net/
-  * TrayIcon (included with Nicotine+) is a System Tray app that requires a
-    Python module to be compiled. Read README.trayicon for more information.
-    However, with PyGTK 2.10, that module is no longer used. Instead,
-    gtk.SystemIcon is used.
-
 After installing nicotine (see INSTALL for that), the executable
 to run is named 'nicotine'.
 
@@ -42,7 +23,6 @@ PySoulSeek Config:
 
 # nicotine -c ~/.pyslsk
 
-The homepage of Nicotine is:   http://nicotine.thegraveyard.org/ (dead)
 The homepage of PySoulSeek is: http://sensi.org/~ak/pyslsk/
 
 ps. Please remember, not sharing kills P2P!

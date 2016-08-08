@@ -16,3 +16,18 @@ Code & Bug Tracker: https://github.com/eLvErDe/nicotine-plus
 Nicotine+ is not translated in your language? See: [TRANSLATIONS](doc/TRANSLATIONS.md)
 
 You want to contact someone? See: [MAINTAINERS](doc/MAINTAINERS.md)
+
+### Dependencies
+
+##### Required
+
+* [Python 2.7.X](https://www.python.org/)
+* [Gtk+ 2.24.X](http://www.gtk.org/)
+* [PyGTK 2.24.X](http://www.pygtk.org/)
+* [mutagen](https://github.com/quodlibet/mutagen)
+
+##### Optional (will be update or dropped soon)
+
+* [GeoIP python bindings](https://dev.maxmind.com/geoip/legacy/downloadable/) for Country lookup.
+* [Psyco](http://psyco.sourceforge.net/) for speeds up Python code under Windows.
+* TrayIcon (included with Nicotine+) is a System Tray app that requires a Python module to be compiled. Read [README.trayicon](doc/README.trayicon) for more information.
