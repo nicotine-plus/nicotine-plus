@@ -36,7 +36,7 @@ from pynicotine.utils import ApplyTranslation
 ApplyTranslation()
 
 # Detect if we're running on Windows
-win32 = sys.platform.startswith("win")
+win32 = platform.system().startswith("Win")
 
 # Detect if we're running a packed exe created with py2exe
 py2exe = False
@@ -76,14 +76,53 @@ if LOAD_PSYCO:
 
 def checkenv():
 
-    import string
+    # Require Python 2.7
+    try:
+        assert sys.version_info[:2] == (2, 7), '.'.join(
+            map(str, sys.version_info[:3])
+        )
+    except AssertionError as e:
+        return _("""You're using an unsupported version of Python (%s).
+You should install Python 2.7.X.""") % (e)
 
-    ver = sys.version_info[0] * 100 + \
-        sys.version_info[1] * 10 + sys.version_info[2]
-    if ver < 220:
-        return _("""You're using an old version of Python interpreter (%s).
-You should install Python 2.2.0 or newer.""") % (string.split(sys.version)[0])
+    # Require GTK+ 2.24
+    try:
+        import gtk
+    except Exception as e:
+        return _("Cannot find GTK+ 2.24.X, please install it.")
+    else:
+        try:
+            assert gtk.gtk_version[:2] == (2, 24), '.'.join(
+                map(str, gtk.gtk_version[:3])
+            )
+        except AssertionError as e:
+            return _("""You're using an unsupported version of GTK (%s).
+You should install GTK 2.24.X.""") % (e)
 
+    # Require PyGTK 2.24
+    try:
+        import pygtk
+    except Exception as e:
+        return _("Cannot find PyGTK 2.24.X, please install it.")
+    else:
+        try:
+            assert gtk.pygtk_version[:2] == (2, 24), '.'.join(
+                map(str, gtk.pygtk_version[:3])
+            )
+        except AssertionError as e:
+            return _("""You're using an unsupported version of PyGTK (%s).
+You should install PyGTK 2.24.X.""") % (e)
+
+    # On windows dbhash might be a good choice
+    if win32:
+        try:
+            import dbhash
+        except:
+            log.add(
+                _("Warning: the Berkeley DB module, dbhash, " +
+                  "could not be loaded."))
+
+    # Require pynicotine
     try:
         import pynicotine
     except ImportError, e:
@@ -94,64 +133,7 @@ in an interpreter's module search path.
 what version of python was used to build the Nicotine
 binary package and what you try to run Nicotine with).""")
 
-    # Windows stuff: detect GTK dll's path and
-    # add it to %PATH% if we're not running a py2exe package
-    if win32 and not py2exe:
-        # Fetchs gtk2 path from registry
-        import _winreg
-        try:
-            k = _winreg.OpenKey(_winreg.HKEY_LOCAL_MACHINE,
-                                "Software\\GTK\\2.0")
-        except EnvironmentError:
-            print _("You must install the Gtk+ 2.x Runtime Environment " +
-                    "to run this program")
-            sys.exit(1)
-        else:
-            gtkdir = _winreg.QueryValueEx(k, "Path")
-            msg = "GTK DLLs found at %s" % (gtkdir[0])
-            log.add(msg)
-            os.environ['PATH'] += ";%s/lib;%s/bin" % (gtkdir[0], gtkdir[0])
-
-    if win32:
-        try:
-            import dbhash
-        except:
-            log.add(
-                _("Warning: the Berkeley DB module, dbhash, " +
-                  "could not be loaded."))
-
-    innerexception = None
-    try:
-        if win32:
-            try:
-                import gtk
-            except Exception, e:
-                innerexception = e
-                import pygtk
-        else:
-            import pygtk
-            pygtk.require("2.0")
-    except Exception, e:
-        msg = [
-               _("Can not find required PyGTK.\n" +
-                 "The current search path is \n" +
-                 "%s\n") % (sys.path,),
-               _("Exception: %s") % (e,)
-              ]
-        if win32 and innerexception:
-            msg.append("\n")
-            msg.append(_("Second exception: %s") % (innerexception))
-            msg.append("\n")
-            msg.append(
-                "You have to solve either the first or the second exception.")
-        return ''.join(msg)
-
-    import gtk
-    major, minor, micro = gtk.pygtk_version
-    v = (major << 16) + (minor << 8) + micro
-    if v < ((1 << 16) + (99 << 8) + 16):
-        return _("Your PyGTK is too old, upgrade to at least PyGTK 1.99.16")
-
+    # Require GeoIP
     try:
         import GeoIP
     except ImportError:
@@ -192,14 +174,13 @@ Usage: nicotine [OPTION]...
   -v,      --version          Display version and exit
   -h,      --help             Display this help and exit
   -s,      --hidden           Start n+ hidden
-  -b ip,   --bindip=ip        Bind sockets to the given IP (useful for VPN)
-
-Please report any problems to our bugtracker:
-http://www.nicotine-plus.org/newticket""")
+  -b ip,   --bindip=ip        Bind sockets to the given IP (useful for VPN)""")
 
 
 def renameprocess(newname, debug=False):
+
     errors = []
+
     # Renaming ourselves for ps et al.
     try:
         import procname
@@ -257,7 +238,7 @@ def run():
                                    ]
                                    )
     except getopt.GetoptError:
-        # print help information and exit:
+        # print help information and exit
         usage()
         sys.exit(2)
 
@@ -265,7 +246,6 @@ def run():
         try:
             mydir = os.path.join(os.environ['APPDATA'], 'nicotine')
         except KeyError:
-            # windows 9x?
             mydir, x = os.path.split(sys.argv[0])
         config = os.path.join(mydir, "config", "config")
         plugins = os.path.join(mydir, "plugins")
