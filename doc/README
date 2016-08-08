@@ -13,11 +13,6 @@ General Usage:
  will not be available). Pressing the tab key in a chatroom or a private chat
  invokes nickname auto-completion.
 
-Config Conversion:
- If you wish to import your config from the official Windows client,
- use the nicotine-import-winconfig script. Read the README.import-winconfig
- for more information.
-
 PySoulSeek Config:
  If you want Nicotine to use your PySoulSeek configuration files, use:
 

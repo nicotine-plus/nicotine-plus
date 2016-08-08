@@ -143,7 +143,7 @@ if __name__ == '__main__' :
 			packages              = ['pynicotine', 'pynicotine.gtkgui'],
 			package_dir           = {'pynicotine.gtkgui':'pynicotine/gtkgui'},
 			package_data          = {'pynicotine.gtkgui': ["*.py","*.glade"], },
-			scripts               = [ 'nicotine.py','nicotine-import-winconfig'],
+			scripts               = [ 'nicotine.py'],
 			long_description      = LONG_DESCRIPTION,
 			data_files            = files,
 			windows               = [
