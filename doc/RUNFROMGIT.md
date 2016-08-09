@@ -1,6 +1,6 @@
 # Run from git
 
-## To run it from git master:
+## To run Nicotine+ from git master:
 
 ## Linux
 
@@ -19,6 +19,6 @@
     * [mutagen](https://github.com/quodlibet/mutagen) via pip: ` C:\Python27\Scripts\pip.exe install mutagen`.
 
 
-* Launch nicotine.py either via:
-    * Right click =>  'open with' and find `python.exe` in `C:\Python27`.
-    * Run via cmd.exe or Powershell `python.exe nicotine.py` from the git root folder.
+* Launch Nicotine+ either via:
+    * Right click =>  'Open with' and find `python.exe` in `C:\Python27`.
+    * From the git root folder run via cmd.exe or Powershell `python.exe nicotine.py`.
