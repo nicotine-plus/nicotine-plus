@@ -2428,7 +2428,6 @@ class NicotineFrame:
 			self.UploadButtons.hide()
 			self.DownloadButtons.hide()
 
-	# TODO: check if it's working on windows
 	def OnNicotineGuide(self, widget):
 		paths = []
 		file = "NicotinePlusGuide/NicotineGuide.htm"
@@ -3355,6 +3354,7 @@ class Notifications:
 
 
 class TrayApp:
+
 	def __init__(self, frame):
 		self.frame = frame
 		self.current_image = None
@@ -3370,6 +3370,7 @@ class TrayApp:
 		self.CreateMenu()
 				
 	def HideUnhideWindow(self, widget):
+
 		if self.frame.is_mapped:
 			self.frame.MainWindow.unmap()
 			self.frame.is_mapped = False
@@ -3386,6 +3387,7 @@ class TrayApp:
 			self.frame.privatechats.ClearNotifications()
 			
 	def Create(self, create=False):
+
 		if create:
 			self.HAVE_TRAYICON = self.CREATE_TRAYICON = True
 		if self.CREATE_TRAYICON:
@@ -3394,6 +3396,7 @@ class TrayApp:
 			self.Draw()
 			
 	def Load(self):
+
 		if self.TRAYICON_FAILED:
 			return
 
@@ -3417,8 +3420,10 @@ class TrayApp:
 				log.add(_("Note: Trayicon Python module was not found in the pynicotine directory: %s") % error)
 			
 	def destroy_trayicon(self):
+
 		if not self.TRAYICON_CREATED:
 			return
+
 		self.TRAYICON_CREATED = 0
 		self.HAVE_TRAYICON = False
 		self.current_image = None
@@ -3437,10 +3442,11 @@ class TrayApp:
 		
 		self.tray_popup_menu.destroy()
 
-		
 	def Draw(self):
+
 		if not self.HAVE_TRAYICON or self.trayicon_module == None or self.TRAYICON_CREATED:
 			return
+
 		self.TRAYICON_CREATED = 1
 	
 		
@@ -3466,14 +3472,15 @@ class TrayApp:
 			
 		self.SetImage(self.tray_status["status"])
 
-					
 	def SetImage(self, status=None):
+
 		# Abort if Trayicon module wasn't loaded
 		if not self.HAVE_TRAYICON or self.trayicon_module == None or not self.TRAYICON_CREATED:
 			return
 		try:
 			if status != None:
 				self.tray_status["status"] = status
+
 			# Check for hilites, and display hilite icon if there is a room or private hilite
 			if self.tray_status["hilites"]["rooms"] == [] and self.tray_status["hilites"]["private"] == []:
 				# If there is no hilite, display the status
@@ -3510,14 +3517,18 @@ class TrayApp:
 			log.addwarning(_("ERROR: SetImage, %(error)s") % {'error':e})
 			
 	def CreateMenu(self):
+
 		try:
 
 			self.tray_popup_menu_server = popup0 = PopupMenu(self)
+
 			popup0.setup(
 				("#" + _("Connect"), self.frame.OnConnect, gtk.STOCK_CONNECT),
 				("#" + _("Disconnect"), self.frame.OnDisconnect, gtk.STOCK_DISCONNECT),
 			)
+
 			self.tray_popup_menu = popup = PopupMenu(self)
+
 			popup.setup(
 				("#" + _("Hide / Show Nicotine"), self.HideUnhideWindow, gtk.STOCK_GOTO_BOTTOM),
 				(1, _("Server"), self.tray_popup_menu_server, self.OnPopupServer),
@@ -3534,9 +3545,9 @@ class TrayApp:
 			log.addwarning(_('ERROR: tray menu, %(error)s') % {'error':e})
 			
 	def OnPopupServer(self, widget):
+
 		items = self.tray_popup_menu_server.get_children()
-		
-		
+
 		if self.tray_status["status"] == "disconnect":
 			items[0].set_sensitive(True)
 			items[1].set_sensitive(False)
@@ -3558,7 +3569,9 @@ class TrayApp:
 				self.tray_popup_menu.popdown()
 		
 	def OnTrayiconClicked(self, obj, event):
+
 		(w, h) = self.trayicon.get_size()
+
 		if event.x < 0 or event.y < 0 or event.x >= w or event.y >= h:
 			return
 
