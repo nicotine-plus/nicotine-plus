@@ -26,8 +26,7 @@ You want to contact someone? See: [MAINTAINERS](doc/MAINTAINERS.md)
 * [PyGTK 2.24.X](http://www.pygtk.org/)
 * [mutagen](https://github.com/quodlibet/mutagen)
 
-##### Optional (will be update or dropped soon)
+##### Optional
 
-* [GeoIP python bindings](https://dev.maxmind.com/geoip/legacy/downloadable/) for Country lookup.
-* [Psyco](http://psyco.sourceforge.net/) for speeds up Python code under Windows.
-* TrayIcon (included with Nicotine+) is a System Tray app that requires a Python module to be compiled. Read [README.trayicon](doc/README.trayicon) for more information.
+* [GeoIP python bindings](https://dev.maxmind.com/geoip/legacy/downloadable/) for Country lookup: need an alternative (unmaintained).
+* [Psyco](http://psyco.sourceforge.net/) for speeding up Python under Windows: will be dropped (unmaintained and not needed anymore).
