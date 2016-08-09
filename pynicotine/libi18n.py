@@ -76,7 +76,6 @@ def SetLocaleEnv(lang=None):
     if lang is None:
 
         # If no lang is provided we just fix LC_ALL to be sure
-        # FIXME: need to take care of encoding of translation
         if win32:
 
             # On windows Python can get a normalize tuple
@@ -89,6 +88,9 @@ def SetLocaleEnv(lang=None):
             # Fix environnement variables
             os.environ['LC_ALL'] = locale_win_gettext
             _putenv_win('LC_ALL', locale_win_gettext)
+
+            # Fix the locale
+            locale.setlocale(locale.LC_ALL, '')
 
         else:
             # On UNIX like systems
