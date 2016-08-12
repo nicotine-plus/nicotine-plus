@@ -66,16 +66,15 @@ def processMusepack(audio):
 		"time": audio.info.length,
 	}
 def processMPEG(audio):
-	vbr = False
-	if audio.info.bitrate % 1000 != 0:
-		vbr = True
+	if hasattr(audio.info, 'bitrate_mode'):
+		from mutagen.mp3 import BitrateMode
+		vbr = audio.info.bitrate_mode == BitrateMode.VBR
 	else:
-		rates = audio.info._MPEGInfo__BITRATE[(audio.info.version, audio.info.layer)]
-		vbr = (audio.info.bitrate / 1000) not in rates
-	if vbr:
-		vbr = True
-	else:
-		vbr = False
+		if audio.info.bitrate % 1000 != 0:
+			vbr = True
+		else:
+			rates = audio.info._MPEGInfo__BITRATE[(audio.info.version, audio.info.layer)]
+			vbr = (audio.info.bitrate / 1000) not in rates
 	return {
 		"bitrate": (audio.info.bitrate/1000),
 		"vbr": vbr,
