@@ -1186,7 +1186,7 @@ class SoundsFrame(buildFrame):
 
 		soundcommand = self.SoundCommand.child.get_text()
 		if soundcommand == "Gstreamer (gst-python)":
-			if self.frame.gstreamer.player is None:
+			if self.SoundCheck.get_active() and self.frame.gstreamer.player is None:
 				popupWarning(self.p.SettingsWindow, _("Warning"), _("Gstreamer-python is not installed") , self.frame.images["n"] )
 				raise UserWarning
 		
@@ -1801,7 +1801,7 @@ class BloatFrame(buildFrame):
 
 		message = CheckTranslationAvailability(language)
 
-		if message is not None and message != "":
+		if self.TranslationCheck.get_active() and message is not None and message != "":
 			popupWarning(self.p.SettingsWindow, _("Warning: Missing translation"), message, self.frame.images["n"] )
 			raise UserWarning
 	
