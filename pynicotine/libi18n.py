@@ -29,6 +29,31 @@ import platform
 import locale
 from logfacility import log
 
+# Python 2.7.X is build via Visual Studio 2010 on Windows:
+# https://stackoverflow.com/questions/32037573/load-gtk-glade-translations-in-windows-using-python-pygobject
+# The locales table for VS200 can be found here:
+# https://msdn.microsoft.com/en-us/goglobal/bb896001.aspx
+
+# For the time being we put into it only the languages
+# we have translation for in N+
+UNIX_TO_WINDOWS_LOCALES = {
+    'da': 'dnk',
+    'de': 'deu',
+    'en': 'usa',
+    'es': 'esp',
+    'eu': 'euq',
+    'fi': 'fin',
+    'fr': 'fra',
+    'hu': 'hun',
+    'it': 'ita',
+    'lt': 'lth',
+    'nl': 'nld',
+    'pl': 'pol',
+    'pt_BR': 'bra',
+    'sk': 'svk',
+    'sv': 'swe'
+}
+
 
 def _build_localename_win(localetuple):
     """ Builds a locale code from the given tuple (language code, encoding).
@@ -78,7 +103,7 @@ def SetLocaleEnv(lang=None):
         # If no lang is provided we just fix LC_ALL to be sure
         if win32:
 
-            # On windows Python can get a normalize tuple
+            # On windows python can get a normalize tuple
             # (language code, encoding)
             locale_win = locale.getdefaultlocale()
 
@@ -93,7 +118,8 @@ def SetLocaleEnv(lang=None):
             locale.setlocale(locale.LC_ALL, '')
 
         else:
-            # On UNIX like systems
+            # On UNIX we simply set the current locale
+            # or fallback to C.UTF-8
             try:
                 locale.setlocale(locale.LC_ALL, '')
             except Exception as e:
@@ -105,11 +131,22 @@ def SetLocaleEnv(lang=None):
                 os.environ['LC_ALL'] = 'C'
     else:
         # If a lang is provided
-        # we nomalize it and add UTF-8 encoding
         if win32:
-            # FIXME: need to check what to do
-            pass
+
+            # On Windows we normalize the language in unix format
+            # for env variables used by glade
+            wanted_lang = locale.normalize(lang).split('.')[0]
+
+            # Fix environnement variables
+            os.environ['LC_ALL'] = wanted_lang
+            _putenv_win('LC_ALL', wanted_lang)
+
+            # We fix the locale using the locales conversion table
+            # since VS2010 doesn't support unix format locales
+            locale.setlocale(locale.LC_ALL, UNIX_TO_WINDOWS_LOCALES[lang])
         else:
+
+            # On Unix we nomalize it and add UTF-8 encoding
             try:
                 locale.setlocale(locale.LC_ALL,
                                  locale.normalize(lang).split('.')[0]+'.UTF-8')
