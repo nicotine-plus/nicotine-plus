@@ -7,6 +7,10 @@ Nicotine+ is an attempt to keep Nicotine working with the latest libraries,
 kill bugs, keep current with the Soulseek protocol
 and add some new features that users want and/or need.
 
+### Run it from git
+
+To run it from git master see: [RUNFROMGIT](doc/RUNFROMGIT.md)
+
 ### Links
 
 Website: http://www.nicotine-plus.org

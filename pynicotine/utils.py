@@ -169,6 +169,9 @@ def ApplyTranslation(lang=None):
                     # If we can't find the translation for the current locale
                     # we fall back to no translation at all
                     gettext.install(PACKAGE)
+
+                    # And we reset locale to english
+                    SetLocaleEnv("en")
     else:
 
         # The user has forced a language to be used
@@ -202,6 +205,9 @@ def ApplyTranslation(lang=None):
                     # If we can't find the translation for the specified
                     # language: we fall back to no translation at all
                     gettext.install(PACKAGE)
+
+                    # And we reset locale to english
+                    SetLocaleEnv("en")
 
     # Now we bind glade to the nicotine domain
     # Same method than before, try the local then global path
