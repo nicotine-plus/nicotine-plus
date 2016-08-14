@@ -3,6 +3,7 @@
 # COPYRIGHT (c) 2016 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (c) 2008-2010 Quinox <quinox@users.sf.net>
 # COPYRIGHT (C) 2006-2008 Daelstorm <daelstorm@gmail.com>
+# COPYRIGHT (C) 2003-2004 Hyriand <hyriand@thegraveyard.org>
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
