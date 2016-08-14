@@ -33,4 +33,3 @@ You want to contact someone? See: [MAINTAINERS](doc/MAINTAINERS.md)
 ##### Optional
 
 * [GeoIP python bindings](https://dev.maxmind.com/geoip/legacy/downloadable/) for Country lookup: need an alternative (unmaintained).
-* [Psyco](http://psyco.sourceforge.net/) for speeding up Python under Windows: will be dropped (unmaintained and not needed anymore).

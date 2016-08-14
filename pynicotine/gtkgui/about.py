@@ -647,12 +647,6 @@ class AboutDependenciesDialog(GenericTableDialog):
             _("Website"),
             "http://www.chipx86.com/wiki/Libsexy"
         ),
-        "<b>%s</b>" % _("Speed Up"),
-        "<i>%s</i>\n%s: %s" % (
-            "Psyco",
-            _("Website"),
-            "http://psyco.sourceforge.net/"
-        ),
         "<b>%s</b>" % _("IP Address Geolocation"),
         "<i>%s</i>\n%s: %s" % (
             "GeoIP-Python",
