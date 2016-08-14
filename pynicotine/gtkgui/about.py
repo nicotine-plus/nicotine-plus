@@ -653,12 +653,6 @@ class AboutDependenciesDialog(GenericTableDialog):
             _("Website"),
             "http://www.maxmind.com/app/python"
         ),
-        "<b>%s</b>" % _("Metadata for files"),
-        "<i>%s</i>\n%s: %s" % (
-            "Mutagen",
-            _("Website"),
-            "https://github.com/quodlibet/mutagen"
-        ),
         "<b>%s</b>" % _("Download Notifications"),
         "<i>%s</i>\n%s: %s" % (
             "notification-daemon, notify-python, libnotify",
