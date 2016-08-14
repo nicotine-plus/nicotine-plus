@@ -6,32 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"#-#-#-#-#  nicotine-builder.pot (PACKAGE VERSION)  #-#-#-#-#\n"
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-08 17:54+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
-"Content-Transfer-Encoding: 8bit\n"
-"#-#-#-#-#  nicotine-glade.pot (PACKAGE VERSION)  #-#-#-#-#\n"
-"Project-Id-Version: PACKAGE VERSION\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-08 17:53+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
-"Content-Transfer-Encoding: 8bit\n"
-"#-#-#-#-#  nicotine-python.pot (PACKAGE VERSION)  #-#-#-#-#\n"
-"Project-Id-Version: PACKAGE VERSION\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-08 17:53+0200\n"
+"POT-Creation-Date: 2016-08-14 10:19+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1668,8 +1645,29 @@ msgstr ""
 
 #, python-format
 msgid ""
-"You're using an old version of Python interpreter (%s).\n"
-"You should install Python 2.2.0 or newer."
+"You're using an unsupported version of Python (%s).\n"
+"You should install Python 2.7.X."
+msgstr ""
+
+msgid "Cannot find GTK+ 2.24.X, please install it."
+msgstr ""
+
+#, python-format
+msgid ""
+"You're using an unsupported version of GTK (%s).\n"
+"You should install GTK 2.24.X."
+msgstr ""
+
+msgid "Cannot find PyGTK 2.24.X, please install it."
+msgstr ""
+
+#, python-format
+msgid ""
+"You're using an unsupported version of PyGTK (%s).\n"
+"You should install PyGTK 2.24.X."
+msgstr ""
+
+msgid "Warning: the Berkeley DB module, dbhash, could not be loaded."
 msgstr ""
 
 msgid ""
@@ -1679,30 +1677,6 @@ msgid ""
 "(there could be a version mismatch between\n"
 "what version of python was used to build the Nicotine\n"
 "binary package and what you try to run Nicotine with)."
-msgstr ""
-
-msgid "You must install the Gtk+ 2.x Runtime Environment to run this program"
-msgstr ""
-
-msgid "Warning: the Berkeley DB module, dbhash, could not be loaded."
-msgstr ""
-
-#, python-format
-msgid ""
-"Can not find required PyGTK.\n"
-"The current search path is \n"
-"%s\n"
-msgstr ""
-
-#, python-format
-msgid "Exception: %s"
-msgstr ""
-
-#, python-format
-msgid "Second exception: %s"
-msgstr ""
-
-msgid "Your PyGTK is too old, upgrade to at least PyGTK 1.99.16"
 msgstr ""
 
 msgid ""
@@ -1735,10 +1709,7 @@ msgid ""
 "  -v,      --version          Display version and exit\n"
 "  -h,      --help             Display this help and exit\n"
 "  -s,      --hidden           Start n+ hidden\n"
-"  -b ip,   --bindip=ip        Bind sockets to the given IP (useful for VPN)\n"
-"\n"
-"Please report any problems to our bugtracker:\n"
-"http://www.nicotine-plus.org/newticket"
+"  -b ip,   --bindip=ip        Bind sockets to the given IP (useful for VPN)"
 msgstr ""
 
 msgid "Errors occured while trying to change process name:"
@@ -1956,13 +1927,7 @@ msgstr ""
 msgid "Spell Checking"
 msgstr ""
 
-msgid "Speed Up"
-msgstr ""
-
 msgid "IP Address Geolocation"
-msgstr ""
-
-msgid "Metadata for files"
 msgstr ""
 
 msgid "Download Notifications"
@@ -2585,12 +2550,7 @@ msgid ""
 msgstr ""
 
 #, python-format
-msgid ""
-"Note: Trayicon Python module was not found in the pynicotine directory: %s"
-msgstr ""
-
-#, python-format
-msgid "ERROR: SetImage, %(error)s"
+msgid "ERROR: cannot set trayicon image: %(error)s"
 msgstr ""
 
 msgid "Connect"

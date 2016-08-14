@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nicotine\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-07 22:21+0200\n"
-"PO-Revision-Date: 2016-08-08 17:55+0200\n"
+"POT-Creation-Date: 2016-08-14 10:19+0200\n"
+"PO-Revision-Date: 2016-08-14 10:30+0200\n"
 "Last-Translator: Michael LABOUEBE <gfarmerfr@free.fr>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -2100,11 +2100,38 @@ msgstr ""
 # nicotine
 #, python-format
 msgid ""
-"You're using an old version of Python interpreter (%s).\n"
-"You should install Python 2.2.0 or newer."
+"You're using an unsupported version of Python (%s).\n"
+"You should install Python 2.7.X."
 msgstr ""
-"Vous utilisez une ancienne version de l'interpréteur Python (%s).\n"
-"Vous devriez installer Python 2.2.0, ou une version plus récente."
+"Vous utilisez une version non supportée de l'interpréteur Python (%s).\n"
+"Vous devriez installer Python 2.7.X."
+
+msgid "Cannot find GTK+ 2.24.X, please install it."
+msgstr "Impossible de trouver GTK+ 2.24.X, veuillez l'installer."
+
+# nicotine
+#, python-format
+msgid ""
+"You're using an unsupported version of GTK (%s).\n"
+"You should install GTK 2.24.X."
+msgstr ""
+"Vous utilisez une version non supportée de GTK (%s).\n"
+"Vous devriez installer GTK 2.24.X."
+
+msgid "Cannot find PyGTK 2.24.X, please install it."
+msgstr "Impossible de trouver PyGTK 2.24.X, veuillez l'installer."
+
+# nicotine
+#, python-format
+msgid ""
+"You're using an unsupported version of PyGTK (%s).\n"
+"You should install PyGTK 2.24.X."
+msgstr ""
+"Vous utilisez une version non supportée de PyGTK (%s).\n"
+"Vous devriez installer PyGTK 2.24.X."
+
+msgid "Warning: the Berkeley DB module, dbhash, could not be loaded."
+msgstr "Attention: le module Berkeley DB, dbhash, n'a pu être chargé."
 
 # nicotine
 msgid ""
@@ -2121,39 +2148,6 @@ msgstr ""
 "(le paquet binaire de Nicotine n'a peut-être pas été\n"
 "produit par la même version de python que celle que vous\n"
 "utilisez en ce moment)."
-
-# nicotine
-msgid "You must install the Gtk+ 2.x Runtime Environment to run this program"
-msgstr ""
-"Vous devez installer l'environnement d'exécution Gtk+ 2.X pour ce programme"
-
-msgid "Warning: the Berkeley DB module, dbhash, could not be loaded."
-msgstr "Attention: le module Berkeley DB, dbhash, n'a pu être chargé."
-
-# nicotine
-#, python-format
-msgid ""
-"Can not find required PyGTK.\n"
-"The current search path is \n"
-"%s\n"
-msgstr ""
-"Impossible de trouver le module PyGTK.\n"
-"Le chemin de recherche actuel est \n"
-"%s\n"
-
-# pynicotine/transfers.py
-#, python-format
-msgid "Exception: %s"
-msgstr "Exception: %s"
-
-#, python-format
-msgid "Second exception: %s"
-msgstr "Seconde exception: %s"
-
-# nicotine
-msgid "Your PyGTK is too old, upgrade to at least PyGTK 1.99.16"
-msgstr ""
-"Votre version de PyGTK est trop ancienne, installez au moins PyGTK 1.99.16"
 
 # nicotine
 msgid ""
@@ -2193,10 +2187,7 @@ msgid ""
 "  -v,      --version          Display version and exit\n"
 "  -h,      --help             Display this help and exit\n"
 "  -s,      --hidden           Start n+ hidden\n"
-"  -b ip,   --bindip=ip        Bind sockets to the given IP (useful for VPN)\n"
-"\n"
-"Please report any problems to our bugtracker:\n"
-"http://www.nicotine-plus.org/newticket"
+"  -b ip,   --bindip=ip        Bind sockets to the given IP (useful for VPN)"
 msgstr ""
 "Nicotine+ est un client accédant au réseau Soulseek.\n"
 "Utilisation: nicotine [OPTION]...\n"
@@ -2215,10 +2206,7 @@ msgstr ""
 "quitte\n"
 "  -s, --hidden                                  Démarre N+ minimisé\n"
 "  -b ip,  --bindip=ip                         Attache nicotine à l'IP "
-"spécifiée (utile pour les VPN)\n"
-"\n"
-"Rapporter les bogues à l'adresse suivante:\n"
-"http://www.nicotine-plus.org/newticket"
+"spécifiée (utile pour les VPN)"
 
 msgid "Errors occured while trying to change process name:"
 msgstr ""
@@ -2537,18 +2525,8 @@ msgstr "Site internet"
 msgid "Spell Checking"
 msgstr "Correcteur orthographique"
 
-# pynicotine/gtkgui/chatrooms.py
-# pynicotine/gtkgui/search.py
-# pynicotine/gtkgui/transferlist.py
-# pynicotine/gtkgui/userlist.py
-msgid "Speed Up"
-msgstr "Accélérer"
-
 msgid "IP Address Geolocation"
 msgstr "Géolocalisation d'adresse IP"
-
-msgid "Metadata for files"
-msgstr "Voir les méta-données du(des) fichier(s)"
 
 # pynicotine/gtkgui/settings_glade.py
 msgid "Download Notifications"
@@ -3380,14 +3358,9 @@ msgstr ""
 "salon de discussion, %(place)s."
 
 #, python-format
-msgid ""
-"Note: Trayicon Python module was not found in the pynicotine directory: %s"
+msgid "ERROR: cannot set trayicon image: %(error)s"
 msgstr ""
-"Note: Le module Trayicon n'a pas été trouvé dans le répertoire pynicotine: %s"
-
-#, python-format
-msgid "ERROR: SetImage, %(error)s"
-msgstr "Erreur: SetImage, %(error)s"
+"Erreur: impossible de modifier l'image de la zone de notification: %(error)s"
 
 # pynicotine/gtkgui/nicotine_glade.py
 msgid "Connect"
@@ -3426,7 +3399,7 @@ msgstr "Voir le partage de l'utilisateur"
 
 # pynicotine/gtkgui/settings_glade.py
 msgid "Toggle Away"
-msgstr "En absence après "
+msgstr "Passer Absent/Présent"
 
 #, python-format
 msgid "ERROR: tray menu, %(error)s"
