@@ -37,11 +37,11 @@
 
 ## Optional dependencies
 
-* On Redhat/Fedora based distros:
+* On Redhat/Fedora based distributions:
 
     `sudo dnf install notify-python python-GeoIP python-miniupnpc`
 
-* On Debian/Ubuntu based distros:
+* On Debian/Ubuntu based distributions:
 
     `sudo apt-get install python-notify python-geoip python-miniupnpc`
 
