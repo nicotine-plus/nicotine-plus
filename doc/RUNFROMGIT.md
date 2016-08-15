@@ -18,7 +18,7 @@
 
 * In the git root folder run `python nicotine.py`.
 
-### Windows
+## Windows
 
 * Install all the required dependencies:
 
@@ -35,7 +35,7 @@
     * Right click =>  'Open with' and find `python.exe` in `C:\Python27`.
     * From the git root folder run via cmd.exe or Powershell `python.exe nicotine.py`.
 
-#### Optional dependencies
+## Optional dependencies
 
 * On Redhat/Fedora based distros:
 
