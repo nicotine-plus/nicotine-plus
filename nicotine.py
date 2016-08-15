@@ -130,10 +130,6 @@ Python bindings: http://www.maxmind.com/app/python
 (the python bindings require the C library)""")
             log.addwarning(msg)
 
-    from pynicotine.upnp import UPnPPortMapping
-    if not UPnPPortMapping().IsPossible():
-        log.addwarning(_('Disabled UPnP support due to errors... See above'))
-
     return None
 
 
