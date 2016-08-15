@@ -1555,16 +1555,26 @@ class NicotineFrame:
 		upnp = UPnPPortMapping()
 
 		# Check if we can do a port mapping
-		self.upnppossible = upnp.IsPossible()
+		(self.upnppossible, errors) = upnp.IsPossible()
 
-		# Test if we want and are able to apply port mapping
-		if not self.np.config.sections["server"]["upnp"] or not self.upnppossible:
+		# Test if we want to do a port mapping
+		if self.np.config.sections["server"]["upnp"]:
+
+			# Test if we are able to do a port mapping
+			if self.upnppossible:
+				# Do the port mapping
+				thread.start_new_thread(upnp.AddPortMapping, (self, self.np))
+			else:
+				# Display errors
+				if errors is not None:
+					for err in errors:
+						log.addwarning(err)
+
+				# If not we connect without changing anything
+				self.OnConnect(-1)
+		else:
 			# If not we connect without changing anything
 			self.OnConnect(-1)
-			return
-
-		# Do the port mapping
-		thread.start_new_thread(upnp.AddPortMapping, (self, self.np))
 
 	def OnConnect(self, widget):
 

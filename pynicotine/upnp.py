@@ -20,7 +20,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from pynicotine import slskmessages
-
 from logfacility import log
 from utils import executeCommand
 
@@ -70,22 +69,22 @@ class UPnPPortMapping:
                 executeCommand("upnpc")
             except RuntimeError as e2:
                 # Nothing works :/
-                log.addwarning(
+                errors = [
                     _('Failed to import miniupnpc module: %(error)s') %
-                    {'error': str(e1)})
-                log.addwarning(
+                    {'error': str(e1)},
                     _('Failed to run upnpc binary: %(error)s') %
-                    {'error': str(e2)})
-                return False
+                    {'error': str(e2)}
+                ]
+                return (False, errors)
             else:
                 # If the binary is available we define the resulting mode
                 self.mode = 'Binary'
-                return True
+                return (True, None)
         else:
             # If the python binding import is successful we define the
             # resulting mode
             self.mode = 'Module'
-            return True
+            return (True, None)
 
     def AddPortMapping(self, frame, np):
         """Wrapper to redirect the Port Mapping creation to either:
