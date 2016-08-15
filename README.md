@@ -33,3 +33,5 @@ You want to contact someone? See: [MAINTAINERS](doc/MAINTAINERS.md)
 ##### Optional
 
 * [GeoIP python bindings](https://dev.maxmind.com/geoip/legacy/downloadable/) for Country lookup: need an alternative (unmaintained).
+* [python-notify](http://www.galago-project.org) for notification support: need an alternative (unmaintained).
+* [MiniUPnPc python module or binary](https://miniupnp.tuxfamily.org/) for opening ports on your router.
