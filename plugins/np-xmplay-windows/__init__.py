@@ -18,7 +18,7 @@ class Plugin(BasePlugin):
 	__id__ = "np-xmplay-windows"
 	settings = {
 				'format':'XMPlay: {%artist - }{%title }{[%album]}',
-				'pythonbin':'C:\\Python26\\Python.exe',
+				'pythonbin':'C:\\Python27\\Python.exe',
 				'helperpath':'C:\\xmplaynp.py',
 				}
 	metasettings = {

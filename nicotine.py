@@ -295,6 +295,6 @@ if __name__ == '__main__':
         run()
     except SystemExit:
         raise
-    except:  # BaseException doesn't exist in python2.4
+    except Exception:
         import traceback
         traceback.print_exc()
