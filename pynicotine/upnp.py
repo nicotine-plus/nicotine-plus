@@ -76,6 +76,7 @@ class UPnPPortMapping:
                 log.addwarning(
                     _('Failed to run upnpc binary: %(error)s') %
                     {'error': str(e2)})
+                return False
             else:
                 # If the binary is available we define the resulting mode
                 self.mode = 'Binary'

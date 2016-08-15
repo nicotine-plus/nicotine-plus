@@ -1554,8 +1554,11 @@ class NicotineFrame:
 		# Initialiase a UPnPPortMapping object
 		upnp = UPnPPortMapping()
 
+		# Check if we can do a port mapping
+		self.upnppossible = upnp.IsPossible()
+
 		# Test if we want and are able to apply port mapping
-		if not self.np.config.sections["server"]["upnp"] or not upnp.IsPossible():
+		if not self.np.config.sections["server"]["upnp"] or not self.upnppossible:
 			# If not we connect without changing anything
 			self.OnConnect(-1)
 			return

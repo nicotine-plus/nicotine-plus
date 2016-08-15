@@ -25,7 +25,6 @@ from dirchooser import *
 from utils import InputDialog, InitialiseColumns, recode, recode2, popupWarning, ImportWinSlskConfig, Humanize, OpenUri
 from entrydialog import *
 from pynicotine.utils import CheckTranslationAvailability
-from pynicotine.upnp import UPnPPortMapping
 from pynicotine.logfacility import log
 import os, sys
 
@@ -36,6 +35,7 @@ else:
 	import pwd
 
 dir_location = os.path.dirname(os.path.realpath(__file__))
+
 
 class buildFrame:
 	def __init__(self, window):
@@ -93,45 +93,52 @@ class ServerFrame(buildFrame):
 		}
 
 	def SetSettings(self, config):
+
 		self.p.SetWidgetsData(config, self.options)
 		self.Server.get_model().clear()
 		server = config["server"]
+
 		if server["server"] is not None:
 			self.Server.child.set_text("%s:%i" % (server["server"][0], server["server"][1]))
 		else:
 			self.Server.child.set_text("server.slsknet.org:2242")
+
 		for servername in server["serverlist"]:
 			self.Server.append_text(servername)
+
 		if self.frame.np.waitport is None:
 			self.CurrentPort.set_markup(_("Client port is not set"))
 		else:
 			self.CurrentPort.set_markup(_("Client port is <b>%(port)s</b>") % {"port": self.frame.np.waitport})
+
 		if self.frame.np.ipaddress is None:
 			self.YourIP.set_markup(_("Your IP address has not been retrieved from the server"))
 		else:
 			self.YourIP.set_markup(_("Your IP address is <b>%(ip)s</b>") % {"ip": self.frame.np.ipaddress})
+
 		if server["login"] is not None:
 			self.Login.set_text(server["login"])
-		
+
 		if server["passw"] is not None:
 			self.Password.set_text(server["passw"])
-		
+
 		if server["enc"] is not None:
 			self.Encoding.child.set_text(server["enc"])
-		
+
 		if server["portrange"] is not None:
 			self.FirstPort.set_value(server["portrange"][0])
 			self.LastPort.set_value(server["portrange"][1])
 		else:
 			self.p.Hilight(self.FirstPort)
 			self.p.Hilight(self.LastPort)
-			
+
 		if server["firewalled"] is not None:
 			self.DirectConnection.set_active(not server["firewalled"])
+
 		if server["ctcpmsgs"] is not None:
 			self.ctcptogglebutton.set_active(not server["ctcpmsgs"])
 
-		if UPnPPortMapping().IsPossible():
+		if self.frame.upnppossible:
 			# If we can do a port mapping the field is active if the config said so
 			self.UseUPnP.set_active(server["upnp"])
 			self.UseUPnP.set_sensitive(True)
@@ -141,7 +148,7 @@ class ServerFrame(buildFrame):
 			self.UseUPnP.set_sensitive(False)
 			self.labelRequirementsUPnP.set_sensitive(True)
 
-		# Handle the switch between direct connections ans upnp ones
+		# Handle the switch between direct connections and upnp ones
 		self.OnUPnPToggled(None)
 
 	def GetSettings(self):
@@ -219,6 +226,7 @@ class ServerFrame(buildFrame):
 			# Also activate direct connections
 			self.Requirement.set_sensitive(True)
 			self.DirectConnection.set_sensitive(True)
+
 
 class DownloadsFrame(buildFrame):
 	def __init__(self, parent):
@@ -473,7 +481,8 @@ class DownloadsFrame(buildFrame):
 		self.filterlist.set(iter, pos, not value)
 		
 		self.OnVerifyFilter(self.VerifyFilters)
-	
+
+
 class SharesFrame(buildFrame):
 	def __init__(self, parent):
 		self.p = parent
@@ -755,6 +764,7 @@ class TransfersFrame(buildFrame):
 		for w in self.LimitSpeed, self.LimitPerTransfer, self.LimitTotalTransfers:
 			w.set_sensitive(sensitive)
 
+
 class GeoBlockFrame(buildFrame):
 	def __init__(self, parent):
 		self.p = parent
@@ -801,6 +811,7 @@ class GeoBlockFrame(buildFrame):
 		sensitive = widget.get_active()
 		self.GeoPanic.set_sensitive(sensitive)
 		self.GeoBlockCC.set_sensitive(sensitive)
+
 
 class UserinfoFrame(buildFrame):
 	def __init__(self, parent):
@@ -858,7 +869,7 @@ class UserinfoFrame(buildFrame):
 				self.Image.set_text(file)
 				break
 		self.GetImageSize()
-		
+
 
 class IgnoreFrame(buildFrame):
 	def __init__(self, parent):
@@ -971,7 +982,7 @@ class IgnoreFrame(buildFrame):
 	def OnClearIgnoredIP(self, widget):
 		self.ignored_ips = {}
 		self.ignored_ips_list.clear()
-		
+
 
 class BanFrame(buildFrame):
 	def __init__(self, parent):
@@ -1101,7 +1112,8 @@ class BanFrame(buildFrame):
 	def OnClearBlocked(self, widget):
 		self.blocked = {}
 		self.blockedlist.clear()
-		
+
+
 class SoundsFrame(buildFrame):
 	def __init__(self, parent):
 		self.p = parent
@@ -1211,7 +1223,8 @@ class SoundsFrame(buildFrame):
 		if dir is not None: 
 			for directory in dir: # iterate over selected files
 				self.SoundDirectory.set_text(recode(directory))
-				
+
+
 class IconsFrame(buildFrame):
 	def __init__(self, parent):
 		self.p = parent
@@ -1646,7 +1659,8 @@ class ColoursFrame(buildFrame):
 					self.SetDefaultColor(key)
 					return
 		entry.set_text("")
-		
+
+
 class NotebookFrame(buildFrame):
 	def __init__(self, parent):
 		self.p = parent
@@ -1701,7 +1715,7 @@ class NotebookFrame(buildFrame):
 			}
 		}
 
-	
+
 class BloatFrame(buildFrame):
 
 	languagelookup = [
@@ -1851,7 +1865,8 @@ class BloatFrame(buildFrame):
 		
 	def FontsColorsChanged(self, widget):
 		self.needcolors = 1
-			
+
+
 class LogFrame(buildFrame):
 	def __init__(self, parent):
 		self.p = parent
@@ -1932,7 +1947,8 @@ class LogFrame(buildFrame):
 	def OnPrivateDefaultTimestamp(self, widget):
 		defaults = self.frame.np.config.defaults
 		self.PrivateChatFormat.set_text(defaults["logging"]["private_timestamp"])
-		
+
+
 class SearchFrame(buildFrame):
 	def __init__(self, parent):
 		self.p = parent
@@ -2010,6 +2026,7 @@ class SearchFrame(buildFrame):
 		for w in self.MaxResults, self.MaxResultsL1, self.MaxResultsL2,self.ToggleDistributed, self.ToggleDistributedInterval, self.secondsLabel:
 			w.set_sensitive(active)
 
+
 class AwayFrame(buildFrame):
 	def __init__(self, parent):
 		self.p = parent
@@ -2036,6 +2053,7 @@ class AwayFrame(buildFrame):
 				"autoreply": self.AutoReply.get_text()
 			}
 		}
+
 
 class EventsFrame(buildFrame):
 	def __init__(self, parent):
@@ -2296,6 +2314,7 @@ class UrlCatchFrame(buildFrame):
 			self.protocolmodel.remove(iter)
 			del self.protocols[protocol]
 
+
 class CensorFrame(buildFrame):
 	def __init__(self, parent):
 		self.p = parent
@@ -2393,7 +2412,8 @@ class CensorFrame(buildFrame):
 
 	def OnClear(self, widget):
 		self.censorlist.clear()
-	
+
+
 class AutoReplaceFrame(buildFrame):
 	def __init__(self, parent):
 		self.p = parent
@@ -2492,7 +2512,7 @@ class AutoReplaceFrame(buildFrame):
 		defaults = {"teh ": "the ", "taht ": "that ", "tihng": "thing", "youre": "you're", "jsut": "just", "thier": "their", "tihs": "this"}
 		for word, replacement in defaults.items():
 			self.replacelist.append([word, replacement])
-    
+
 
 class CompletionFrame(buildFrame):
 	def __init__(self, parent):
@@ -2566,6 +2586,7 @@ class CompletionFrame(buildFrame):
 				"onematch": self.OneMatchCheck.get_active()
 			}
 		}
+
 
 class buildDialog(gtk.Dialog):
 	def __init__(self, parent ):
@@ -2710,6 +2731,7 @@ class buildDialog(gtk.Dialog):
 	def Show(self):
 		self.PluginProperties.show()
 
+
 class PluginFrame(buildFrame):
 	def __init__(self, parent):
 		self.p = parent
@@ -2813,7 +2835,8 @@ class PluginFrame(buildFrame):
 				"enabled": self.frame.pluginhandler.enabled_plugins.keys()
 			}
 		 }
-	
+
+
 class ChatFrame(buildFrame):
 	def __init__(self, parent):
 		self.p = parent
@@ -2823,7 +2846,8 @@ class ChatFrame(buildFrame):
 		return {}
 	def GetSettings(self):
 		return {}
-	
+
+
 class MiscFrame(buildFrame):
 	def __init__(self, parent):
 		self.p = parent
@@ -2833,6 +2857,7 @@ class MiscFrame(buildFrame):
 		return {}
 	def GetSettings(self):
 		return {}
+
 
 class SettingsWindow:
 	def __init__(self, frame):
