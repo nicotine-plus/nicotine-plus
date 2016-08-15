@@ -37,8 +37,8 @@ class Shares:
 				virtualpath = virtual + '\\' + path[len(real + os.sep):].replace(os.sep, '\\')
 				return virtualpath
 		return "__INTERNAL_ERROR__" + path
-	def virtual2real(self, possibly_borked_path):
-		path = self.correctPath(possibly_borked_path)
+
+	def virtual2real(self, path):
 		for (virtual, real) in self._virtualmapping():
 			if path == virtual:
 				return real
@@ -46,23 +46,7 @@ class Shares:
 				realpath = real + path[len(virtual):].replace('\\', os.sep)
 				return realpath
 		return "__INTERNAL_ERROR__" + path
-	def correctPath(self, path):
-		"""Converts all lowercase paths to the correct versions if possible.
 
-		Some Windows clients screw up filename cases on FolderRequests, casting
-		all letters to lower-case. This will bork file checking on case
-		sensitive filesystems as are used on most non-Windows OSes. This
-		function tries to fix that damage"""
-		try:
-			return self.config.sections["transfers"]["lowercase"][path]
-		except KeyError:
-			pass
-		if self.config.sections["transfers"]["enablebuddyshares"]:
-			try:
-				return self.config.sections["transfers"]["blowercase"][path]
-			except KeyError:
-				pass
-		return path
 	def _virtualmapping(self):
 		mapping = self.config.sections["transfers"]["shared"][:]
 		if self.config.sections["transfers"]["enablebuddyshares"]:
@@ -90,24 +74,24 @@ class Shares:
 
 	def RescanShares(self, msg, rebuild=False):
 		try:
-			files, streams, wordindex, fileindex, mtimes, lowercase = self.rescandirs(msg.shared, self.config.sections["transfers"]["sharedmtimes"], self.config.sections["transfers"]["sharedfiles"], self.config.sections["transfers"]["sharedfilesstreams"], msg.yieldfunction, self.np.frame.SharesProgress, name=_("Shares"), rebuild=rebuild)
+			files, streams, wordindex, fileindex, mtimes = self.rescandirs(msg.shared, self.config.sections["transfers"]["sharedmtimes"], self.config.sections["transfers"]["sharedfiles"], self.config.sections["transfers"]["sharedfilesstreams"], msg.yieldfunction, self.np.frame.SharesProgress, name=_("Shares"), rebuild=rebuild)
 			time.sleep(0.5)
-			self.np.frame.RescanFinished([files, streams, wordindex, fileindex, mtimes, lowercase], "normal")
+			self.np.frame.RescanFinished([files, streams, wordindex, fileindex, mtimes], "normal")
 		except Exception, ex:
 			log.addwarning("Failed to rebuild share, serious error occurred. If this problem persists delete ~/.nicotine/*.db and try again. If that doesn't help please file a bug report with the stack trace included (see terminal output after this message). Technical details: %s" % ex)
 			raise
-		
+
 	def RebuildShares(self, msg):
 		self.RescanShares(msg, rebuild=True)
 	
 	def RebuildBuddyShares(self, msg):
 		self.RescanBuddyShares(msg, rebuild=True)
-	
+
 	def RescanBuddyShares(self, msg, rebuild=False):
-		files, streams, wordindex, fileindex, mtimes, lowercase = self.rescandirs(msg.shared, self.config.sections["transfers"]["bsharedmtimes"], self.config.sections["transfers"]["bsharedfiles"], self.config.sections["transfers"]["bsharedfilesstreams"], msg.yieldfunction, self.np.frame.BuddySharesProgress, name=_("Buddy Shares"), rebuild=rebuild)
+		files, streams, wordindex, fileindex, mtimes = self.rescandirs(msg.shared, self.config.sections["transfers"]["bsharedmtimes"], self.config.sections["transfers"]["bsharedfiles"], self.config.sections["transfers"]["bsharedfilesstreams"], msg.yieldfunction, self.np.frame.BuddySharesProgress, name=_("Buddy Shares"), rebuild=rebuild)
 		time.sleep(0.5)
-		self.np.frame.RescanFinished([files, streams, wordindex, fileindex, mtimes, lowercase], "buddy")
-		
+		self.np.frame.RescanFinished([files, streams, wordindex, fileindex, mtimes], "buddy")
+
 	def CompressShares(self, sharestype):
 		if sharestype == "normal":
 			streams = self.config.sections["transfers"]["sharedfilesstreams"]
@@ -323,20 +307,12 @@ class Shares:
 		# keys in newfileindex
 		# newfileindex is a dict in format { num: (path, size, (bitrate, vbr), length), ... }
 		gobject.idle_add(progress.set_text, _("Building Index"))
+
 		gobject.idle_add(progress.set_fraction, 0.0)
 		newwordindex, newfileindex = self.getFilesIndex(newmtimes, oldmtimes, shared_directories, newsharedfiles, yieldfunction, progress)
-		gobject.idle_add(progress.set_fraction, 0.5)
-		new_lowercase_to_virtual = self.getLowercaseToVirtual(newsharedfiles)
+
 		gobject.idle_add(progress.set_fraction, 1.0)
-		return newsharedfiles, newsharedfilesstreams, newwordindex, newfileindex, newmtimes, new_lowercase_to_virtual
-	
-	def getLowercaseToVirtual(self, filesstreams):
-		mapping = {}
-		for (dirname, files) in filesstreams.iteritems():
-			for f in files:
-				fullpath = dirname + '\\' + f[0]
-				mapping[fullpath.lower()] = fullpath
-		return mapping
+		return newsharedfiles, newsharedfilesstreams, newwordindex, newfileindex, newmtimes
 
 	# Get Modification Times
 	def getDirsMtimesUnicode(self, dirs, yieldcall = None):
