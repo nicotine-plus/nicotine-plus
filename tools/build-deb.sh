@@ -3,17 +3,17 @@
 ## Automagical deb/rpm creator for Nicotine+
 ## (C) Matthew Chesky 2010
 ## mchesky@gmail.com
-## Use whatever you need however you see fit..  
+## Use whatever you need however you see fit..
 
 
-##  Needs to be run as 'root'.  sudo will not work.  I may 
+##  Needs to be run as 'root'.  sudo will not work.  I may
 ##  fix this in the future.
 ##
 ##  Dependencies:
-## 
+##
 ##  dh-make, debhelper, alien
 ##
-##  Todo:  
+##  Todo:
 ##  1) Make this generate properly 'debianized' packages and
 ##  pass them through linitian for verification
 ##  2) Get rid of the annoying 'Press enter to continue' from dh_make
@@ -30,11 +30,11 @@ exportSvn
 
 depends="python (>= 2.4), python-support (>= 1.0.3), python-gtk2 (>= 2.16.0), x11-utils, menu"
 recommends="python-pyvorbis, python-geoip, python-notify, xdg-utils"
-suggests="python-psyco, python-gnome2, python-sexy, python-dbus, python-gst0.10"
+suggests="python-gnome2, python-sexy, python-dbus, python-gst0.10"
 pname="Matthew Chesky"
 pemail="mchesky@gmail.com"
 
-## Shouldn't need to edit anything past this point..  Might be worth a 
+## Shouldn't need to edit anything past this point..  Might be worth a
 ## look if there has been major changes to the source/hierarchy
 ##
 ## ------------------------
@@ -78,7 +78,7 @@ install: build
 	mkdir -p \"$pns/usr/share/sounds/nicotine/default\"" >> "$DEBIANDIR/rules"
 
 
-for i in "$EXPORTDIR"/*.py; do 
+for i in "$EXPORTDIR"/*.py; do
 	echo "	cp '$EXPORTDIR/$i' '$pns/usr/bin/$i'" >> "$DEBIANDIR/rules"
 done
 echo "usr/bin" >> "$DEBIANDIR/dirs"

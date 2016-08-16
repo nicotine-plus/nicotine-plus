@@ -91,7 +91,7 @@ ShowUnInstDetails show
 Function .onInit
 System::Call 'kernel32::CreateMutexA(i 0, i 0, t "myMutex") i .r1 ?e'
  Pop $R0
- 
+
  StrCmp $R0 0 +3
    MessageBox MB_OK|MB_ICONEXCLAMATION "The installer is already running."
    Abort
@@ -131,24 +131,23 @@ Section "Client" SEC01
   File "${TAG}\_gtk.pyd"
   File "${TAG}\_ssl.pyd"
   File "${TAG}\_socket.pyd"
-  File "${TAG}\_psyco.pyd"
   File "${TAG}\_ogg.pyd"
   File "${TAG}\_win32sysloader.pyd"
   SetOverwrite on
   SetOutPath "$INSTDIR\doc"
-  
+
   File "${TAG}\doc\NicotinePlusGuide.html"
   File "${TAG}\doc\CHANGELOG"
-  
+
   SetOutPath "$INSTDIR\share\locale\fr\LC_MESSAGES"
   File "${TAG}\fr\LC_MESSAGES\nicotine.mo"
-  
+
   SetOutPath "$INSTDIR\share\locale\nl\LC_MESSAGES"
   File "${TAG}\nl\LC_MESSAGES\nicotine.mo"
-  
+
   SetOutPath "$INSTDIR\share\locale\de\LC_MESSAGES"
   File "${TAG}\de\LC_MESSAGES\nicotine.mo"
-  
+
   SetOutPath "$INSTDIR\share\locale\sk\LC_MESSAGES"
   File "${TAG}\sk\LC_MESSAGES\nicotine.mo"
 
@@ -162,22 +161,22 @@ Section "Client" SEC01
   File "${TAG}\pt_BR\LC_MESSAGES\nicotine.mo"
 
   SetOutPath "$INSTDIR\share\locale\pl\LC_MESSAGES"
-  File "${TAG}\pl\LC_MESSAGES\nicotine.mo"  
+  File "${TAG}\pl\LC_MESSAGES\nicotine.mo"
 
   SetOutPath "$INSTDIR\share\locale\fi\LC_MESSAGES"
-  File "${TAG}\fi\LC_MESSAGES\nicotine.mo"  
-  
+  File "${TAG}\fi\LC_MESSAGES\nicotine.mo"
+
   SetOutPath "$INSTDIR\share\locale\es\LC_MESSAGES"
-  File "${TAG}\es\LC_MESSAGES\nicotine.mo"  
-  
+  File "${TAG}\es\LC_MESSAGES\nicotine.mo"
+
   SetOutPath "$INSTDIR\share\locale\it\LC_MESSAGES"
-  File "${TAG}\it\LC_MESSAGES\nicotine.mo"  
-  
+  File "${TAG}\it\LC_MESSAGES\nicotine.mo"
+
   SetOutPath "$INSTDIR\share\locale\eu\LC_MESSAGES"
-  File "${TAG}\eu\LC_MESSAGES\nicotine.mo"  
-  
+  File "${TAG}\eu\LC_MESSAGES\nicotine.mo"
+
   SetOutPath "$INSTDIR\share\locale\hu\LC_MESSAGES"
-  File "${TAG}\hu\LC_MESSAGES\nicotine.mo"  
+  File "${TAG}\hu\LC_MESSAGES\nicotine.mo"
 SectionEnd
 
 Section "Source" SEC02
@@ -223,7 +222,7 @@ FunctionEnd
 
 Section Uninstall
   Delete "$INSTDIR\${NAME}.url"
-  
+
   Delete "$INSTDIR\nicotine+-${VERSION}.tar.bz2"
   Delete "$INSTDIR\nicotine.exe"
   Delete "$INSTDIR\w9xpopen.exe"
@@ -247,13 +246,12 @@ Section Uninstall
   Delete "$INSTDIR\_gtk.pyd"
   Delete "$INSTDIR\_ssl.pyd"
   Delete "$INSTDIR\_socket.pyd"
-  Delete "$INSTDIR\_psyco.pyd"
   Delete "$INSTDIR\_ogg.pyd"
   Delete "$INSTDIR\_win32sysloader.pyd"
-  
+
   Delete "$INSTDIR\doc\NicotinePlusGuide.html"
   Delete "$INSTDIR\doc\CHANGELOG"
-  
+
   Delete "$SMPROGRAMS\Nicotine+\Uninstall.lnk"
   Delete "$SMPROGRAMS\Nicotine+\Website.lnk"
   Delete "$DESKTOP\Nicotine+.lnk"
