@@ -23,10 +23,9 @@
 * Install all the required dependencies:
 
     * [Python 2.7.X](https://www.python.org/downloads/windows/) **(32bits version)**.
-    * [GTK+ 2.24.X](https://sourceforge.net/projects/gtk-win/) (last sourceforge bundle).
 
-      (will check if we can use [the hexchat build](https://github.com/hexchat/gtk-win32) which is more up to date)
     * [PyGTK 2.24.X](http://ftp.gnome.org/pub/GNOME/binaries/win32/pygtk/2.24/) **(will not found python install path if you're using python x86-64)**.
+
     * [mutagen](https://github.com/quodlibet/mutagen) via pip: `python.exe -m pip install mutagen`.
 
 

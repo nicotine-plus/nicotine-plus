@@ -38,24 +38,6 @@ ApplyTranslation()
 # Detect if we're running on Windows
 win32 = platform.system().startswith("Win")
 
-# Detect if we're running a packed exe created with py2exe
-py2exe = False
-if win32 and hasattr(sys, 'frozen'):
-    py2exe = True
-
-# Disable py2exe log feature by routing stdout/sterr to the special nul file
-if win32 and py2exe:
-    try:
-        sys.stdout = open("nul", "w")
-    except:
-        print _('Failed to close stdout ' +
-                '(not so bad if you are using PyInstaller)')
-    try:
-        sys.stderr = open("nul", "w")
-    except:
-        print _('Failed to close stderr ' +
-                '(not so bad if you are using PyInstaller)')
-
 
 def checkenv():
 

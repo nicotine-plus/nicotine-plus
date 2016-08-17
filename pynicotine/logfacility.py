@@ -18,26 +18,31 @@ from sys import stdout, platform
 
 from collections import deque
 
+
 class logger(object):
     """Coordinates log messages. Has a message history for listeners that are
     not yet present right at startup."""
+
     def __init__(self, maxlogitems=100):
         # self.pop is used to support older versions of python
         self.listeners = set()
         try:
             self.history = deque([], maxlogitems)
-            self.pop = -1 # -1 means 'let python do the popping'
+            self.pop = -1  # -1 means 'let python do the popping'
         except TypeError:
             self.history = deque([])
-            self.pop = maxlogitems+1 # value is how many items to go before we start popping. Python < 2.6 support
+            self.pop = maxlogitems+1  # value is how many items to go before we start popping. Python < 2.6 support
+
     def addwarning(self, msg):
         """Add a message with the level corresponding to warnings."""
         self.add(msg, 1)
+
     def adddebug(self, msg):
         """Add a message with the level corresponding to debug info."""
         self.add(msg, 6)
+
     def add(self, msg, level=0):
-        """Add a message. The list of logging levels is as follows: 
+        """Add a message. The list of logging levels is as follows:
         None - Deprecated (calls that haven't been updated yet)
         0    - Normal messages and (Human-Readable) Errors
         1    - Warnings & Tracebacks
@@ -59,8 +64,10 @@ class logger(object):
             except Exception, e:
                 print "Callback on %s failed: %s %s\n%s" % (callback, level, msg, e)
                 pass
+
     def addlistener(self, callback):
         self.listeners.add(callback)
+
     def removelistener(self, callback):
         try:
             self.listeners.remove(callback)
@@ -71,7 +78,6 @@ useconsole = True
 try:
     CONSOLEENCODING = stdout.encoding
 except AttributeError:
-    # Can happen with fe. py2exe
     print "stdout does not have an encoding attribute - disabling console logging."
     useconsole = False
 
@@ -83,22 +89,23 @@ if useconsole:
     CONSOLEWIDTH = 80
     try:
         # Fixed, you better not resize your window!
-        import sys,fcntl,termios,struct
+        import sys, fcntl, termios, struct
         data = fcntl.ioctl(sys.stdout.fileno(), termios.TIOCGWINSZ, '1234')
-        CONSOLEWIDTH = struct.unpack('hh',data)[1]
+        CONSOLEWIDTH = struct.unpack('hh', data)[1]
     except:
         pass
-    
+
     TIMEFORMAT = "%a %H:%M "
-    
+
     wrapper = textwrap.TextWrapper()
     wrapper.width = CONSOLEWIDTH
     wrapper.subsequent_indent = " " * len(time.strftime(TIMEFORMAT))
     wrapper.expand_tabs = False
     wrapper.replace_whitespace = True
 
+
 def consolelogger(timestamp, level, msg):
-    #if level in (None,):
+    # if level in (None,):
     #    print "FIX MY SOURCE -- %s %s" % (time.asctime(timestamp), msg)
     if level in (1,):
         wrapper.initial_indent = time.strftime(TIMEFORMAT, timestamp)
@@ -111,4 +118,4 @@ try:
 except NameError:
     log = logger()
     if useconsole:
-        log.addlistener(consolelogger) # by default let's display important stuff in the console
+        log.addlistener(consolelogger)  # by default let's display important stuff in the console
