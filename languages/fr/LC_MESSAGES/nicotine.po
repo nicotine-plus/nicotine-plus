@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nicotine\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-17 11:09+0200\n"
-"PO-Revision-Date: 2016-08-17 11:10+0200\n"
+"POT-Creation-Date: 2016-08-17 11:16+0200\n"
+"PO-Revision-Date: 2016-08-17 11:18+0200\n"
 "Last-Translator: Michael LABOUEBE <gfarmerfr@free.fr>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -25,7 +25,7 @@ msgid ""
 "\n"
 "This should only take about 60 seconds."
 msgstr ""
-"Bienvenu dans Nicotine+. Avant de démarrer vous devez rentrer quelques "
+"Bienvenue dans Nicotine+. Avant de démarrer vous devez rentrer quelques "
 "informations. Pressez Suivant pour démarrer la configuration de nicotine+. \n"
 "\n"
 "Ceci ne devrait pas dépasser les 60 secondes."
@@ -2201,8 +2201,8 @@ msgid "Starting using the profiler (saving log to %s)"
 msgstr "Début d'utilisation du traceur (enregistre les journaux dans %s)"
 
 # pynicotine/gtkgui/nicotine_glade.py
-msgid "About Nicotine"
-msgstr "À propos"
+msgid "About Nicotine+"
+msgstr "À propos de Nicotine+"
 
 #, python-format
 msgid ""
@@ -2481,7 +2481,7 @@ msgid "Rescan shares"
 msgstr "Réexaminer mes partages"
 
 # pynicotine/gtkgui/about.py
-msgid "Quit Nicotine"
+msgid "Quit Nicotine+"
 msgstr "Quitter Nicotine+"
 
 # pynicotine/gtkgui/about.py
