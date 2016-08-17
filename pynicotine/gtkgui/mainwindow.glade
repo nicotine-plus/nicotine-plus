@@ -593,27 +593,12 @@
                       </widget>
                     </child>
                     <child>
-                      <widget class="GtkImageMenuItem" id="nicotine_guide3">
-                        <property name="label" translatable="yes">Online Nicotine Plus Guide</property>
+                      <widget class="GtkImageMenuItem" id="ProjectWebsite">
+                        <property name="label" translatable="yes">Project Website</property>
                         <property name="visible">True</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">False</property>
-                        <signal name="activate" handler="OnOnlineNicotineGuide"/>
-                        <child internal-child="image">
-                          <widget class="GtkImage" id="image53">
-                            <property name="visible">True</property>
-                            <property name="stock">gtk-help</property>
-                          </widget>
-                        </child>
-                      </widget>
-                    </child>
-                    <child>
-                      <widget class="GtkImageMenuItem" id="SourceForgeProject">
-                        <property name="label" translatable="yes">Sourceforge Project Website</property>
-                        <property name="visible">True</property>
-                        <property name="use_underline">True</property>
-                        <property name="use_stock">False</property>
-                        <signal name="activate" handler="OnSourceForgeProject"/>
+                        <signal name="activate" handler="OnProjectWebsite"/>
                         <child internal-child="image">
                           <widget class="GtkImage" id="image54">
                             <property name="visible">True</property>
@@ -623,12 +608,12 @@
                       </widget>
                     </child>
                     <child>
-                      <widget class="GtkImageMenuItem" id="Trac">
-                        <property name="label" translatable="yes">Nicotine-Plus Trac Website</property>
+                      <widget class="GtkImageMenuItem" id="ProjectGithubPage">
+                        <property name="label" translatable="yes">Project Github Page</property>
                         <property name="visible">True</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">False</property>
-                        <signal name="activate" handler="OnTrac"/>
+                        <signal name="activate" handler="onProjectGithubPage"/>
                         <child internal-child="image">
                           <widget class="GtkImage" id="image55">
                             <property name="visible">True</property>
