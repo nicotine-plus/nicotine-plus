@@ -503,9 +503,9 @@ class Config:
             for j in self.parser.options(i):
                 val = self.parser.get(i, j, raw=1)
                 if i not in self.sections:
-                    log.addwarning("Unknown config section '%s'" % (i,))
+                    log.addwarning(_("Unknown config section '%s'") % i)
                 elif j not in self.sections[i] and not (j == "filter" or i in ('plugins',)):
-                    log.addwarning("Unknown config option '%s' in section '%s'" % (j, i))
+                    log.addwarning(_("Unknown config option '%(option)s' in section '%(section)s'") % {'option': j, 'section': i})
                 elif j in unknown1 or (i in unknown2 and j not in unknown2[i]):
                     if val is not None and val != "None":
                         self.sections[i][j] = val
@@ -517,6 +517,7 @@ class Config:
                     except:
                         self.sections[i][j] = None
                         log.addwarning("CONFIG ERROR: Couldn't decode '%s' section '%s' value '%s'" % (str(j), str(i), str(val)))
+
         autojoin = self.sections["server"]["autojoin"]
 
         # Old config file format
