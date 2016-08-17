@@ -734,7 +734,7 @@
                     </child>
                     <child>
                       <widget class="GtkImageMenuItem" id="about_nicotine1">
-                        <property name="label" translatable="yes">About _Nicotine</property>
+                        <property name="label" translatable="yes">About _Nicotine+</property>
                         <property name="visible">True</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">False</property>
