@@ -2501,11 +2501,7 @@ class NicotineFrame:
 		checklatest(self.MainWindow)
 
 	def OnReportBug(self, widget):
-		url = 'http://www.nicotine-plus.org/newticket?reporter=%s&keywords=%s' % (self.np.config.sections["server"]["login"], version)
-		if "svn" in version:
-			url += "&version=SVN"
-		else:
-			url += "&version=%s" % version
+		url = "https://github.com/eLvErDe/nicotine-plus/issues"
 		OpenUri(url)
 
 	def OnAbout(self, widget):
