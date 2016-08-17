@@ -18,6 +18,7 @@ win32 = sys.platform.startswith("win")
 
 
 class Shares:
+
 	def __init__(self, np):
 		self.np = np
 		self.config = self.np.config
@@ -29,6 +30,7 @@ class Shares:
 		self.requestedShares = {}
 		self.newbuddyshares = self.newnormalshares = False
 		self.translatepunctuation = string.maketrans(string.punctuation, string.join([' ' for i in string.punctuation],''))
+
 	def real2virtual(self, path):
 		for (virtual, real) in self._virtualmapping():
 			if path == real:
@@ -54,9 +56,11 @@ class Shares:
 		if self.config.sections["transfers"]["sharedownloaddir"]:
 			mapping += [(_("Downloaded"), self.config.sections["transfers"]["downloaddir"])]
 		return mapping
+
 	def logMessage(self, message, debugLevel=0):
 		if self.LogMessage is not None:
 			gobject.idle_add(self.LogMessage, message, debugLevel)
+
 	def sendNumSharedFoldersFiles(self):
 		"""
 		Send number of files in buddy shares if only buddies can
@@ -78,12 +82,12 @@ class Shares:
 			time.sleep(0.5)
 			self.np.frame.RescanFinished([files, streams, wordindex, fileindex, mtimes], "normal")
 		except Exception, ex:
-			log.addwarning("Failed to rebuild share, serious error occurred. If this problem persists delete ~/.nicotine/*.db and try again. If that doesn't help please file a bug report with the stack trace included (see terminal output after this message). Technical details: %s" % ex)
+			log.addwarning(_("Failed to rebuild share, serious error occurred. If this problem persists delete ~/.nicotine/*.db and try again. If that doesn't help please file a bug report with the stack trace included (see terminal output after this message). Technical details: %s") % ex)
 			raise
 
 	def RebuildShares(self, msg):
 		self.RescanShares(msg, rebuild=True)
-	
+
 	def RebuildBuddyShares(self, msg):
 		self.RescanBuddyShares(msg, rebuild=True)
 
@@ -111,8 +115,6 @@ class Shares:
 			self.CompressedSharesNormal = m
 		elif sharestype == "buddy":
 			self.CompressedSharesBuddy = m
-        
-
 
 	def GetSharedFileList(self, msg):
 		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
@@ -172,10 +174,8 @@ class Shares:
 			m = slskmessages.SharedFileList(msg.conn.conn, {})
 			m.makeNetworkMessage(nozlib=0)
 
-
 		m.conn = msg.conn.conn
 		self.queue.put(m)
-		
 
 	def FolderContentsRequest(self, msg):
 		username = None
@@ -217,7 +217,7 @@ class Shares:
 	def processExactSearchRequest(self, searchterm, user, searchid,  direct = 0, checksum=None):
 		print searchterm, user, searchid, checksum
 		pass
-	
+
 	def processSearchRequest(self, searchterm, user, searchid, direct = 0):
 		if not self.config.sections["searches"]["search_results"]:
 			# Don't return _any_ results when this option is disabled
@@ -244,7 +244,7 @@ class Shares:
 		terms = searchterm.translate(self.translatepunctuation).lower().split()
 		list = [wordindex[i][:] for i in terms if i in wordindex]
 		if len(list) != len(terms) or len(list) == 0:
-			#self.logMessage(_("User %(user)s is searching for %(query)s, returning no results") %{'user':user, 'query':self.decode(searchterm)}, 2)
+			# self.logMessage(_("User %(user)s is searching for %(query)s, returning no results") %{'user':user, 'query':self.decode(searchterm)}, 2)
 			return
 		min = list[0]
 		for i in list[1:]:
@@ -267,7 +267,6 @@ class Shares:
 					self.logMessage(_("User %(user)s is directly searching for %(query)s, returning %(num)i results") %{'user':user, 'query':self.np.decode(searchterm), 'num':len(results)}, 2)
 				else:
 					self.logMessage(_("User %(user)s is searching for %(query)s, returning %(num)i results") %{'user':user, 'query':self.np.decode(searchterm), 'num':len(results)}, 2)
-					
 
 	# Rescan directories in shared databases
 	def rescandirs(self, shared, oldmtimes, oldfiles, sharedfilesstreams, yieldfunction, progress=None, name="", rebuild=False):
@@ -281,12 +280,16 @@ class Shares:
 		gobject.idle_add(progress.set_text, _("Checking for changes"))
 		gobject.idle_add(progress.show)
 		gobject.idle_add(progress.set_fraction, 0)
-		self.logMessage("Rescanning: Checking %(num)s directories" % {"num": len(oldmtimes)})
+
+		self.logMessage(_("Rescanning: Checking %(num)s directories") % {"num": len(oldmtimes)})
+
 		if win32:
 			newmtimes = self.getDirsMtimesUnicode(shared_directories, yieldfunction)
 		else:
 			newmtimes = self.getDirsMtimes(shared_directories, yieldfunction)
-		self.logMessage("Rescanning: Found %(num)s directories" % {"num": len(newmtimes)})
+
+		self.logMessage(_("Rescanning: Found %(num)s directories") % {"num": len(newmtimes)})
+
 		gobject.idle_add(progress.set_text, _("Scanning %s") % name)
 		# Get list of files
 		# returns dict in format { Directory : { File : metadata, ... }, ... }
@@ -429,7 +432,7 @@ class Shares:
 					if yieldcall is not None:
 						yieldcall()
 		return list
-					
+
 	# Check for new files
 	def getFilesList(self, mtimes, oldmtimes, oldlist, yieldcall = None, progress=None, rebuild=False):
 		""" Get a list of files with their filelength and 
@@ -557,7 +560,7 @@ class Shares:
 				if yieldcall is not None:
 					yieldcall()
 		return list
-				
+
 	# Get metadata for mp3s and oggs
 	def getFileInfoUnicode(self, name, pathname):
 		try:
@@ -602,7 +605,7 @@ class Shares:
 			message = _("Scanning File Error: %(error)s Path: %(path)s") % {'error':errtuple, 'path':pathname}
 			self.logMessage(message)
 			displayTraceback(sys.exc_info()[2])
-			
+
 	def getFilesStreamsUnicode(self, mtimes, oldmtimes, oldstreams, newsharedfiles, yieldcall = None):
 		streams = {}
 		shared = self.config.sections["transfers"]["shared"]
@@ -636,6 +639,7 @@ class Shares:
 			if yieldcall is not None:
 				yieldcall()
 		return streams
+
 	def getFilesStreams(self, mtimes, oldmtimes, oldstreams, newsharedfiles, yieldcall = None):
 		streams = {}
 		shared = self.config.sections["transfers"]["shared"]
@@ -661,7 +665,7 @@ class Shares:
 			if yieldcall is not None:
 				yieldcall()
 		return streams
-	
+
 	# Stop any dot directories
 	def hiddenCheck(self, direct):
 		dirs = direct.split(os.sep)
@@ -733,7 +737,7 @@ class Shares:
 			if yieldcall is not None:
 				yieldcall()
 		return wordindex, fileindex
-			
+
 	# Collect words from filenames for Search index
 	def getIndexWords(self, dir, file, shareddirs):
 		for i in shareddirs:
@@ -745,7 +749,7 @@ class Shares:
 		for x in words:
 			d[x] = x
 		return d.values()
-		
+
 	def addToShared(self, name):
 		""" Add a file to the normal shares database """
 		config = self.config.sections
@@ -779,7 +783,7 @@ class Shares:
 			self.addToBuddyShared(name)
 			
 		self.config.writeShares()
-		
+
 	def addToBuddyShared(self, name):
 		""" Add a file to the buddy shares database """
 		config = self.config.sections
@@ -808,7 +812,6 @@ class Shares:
 			bsharedmtimes[dir] = os.path.getmtime(dir)
 			
 			self.newbuddyshares = True
-			
 
 	def addToIndex(self, wordindex, fileindex, words, dir, fileinfo):
 		index = len(fileindex.keys())
