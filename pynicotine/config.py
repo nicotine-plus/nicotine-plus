@@ -137,13 +137,11 @@ class Config:
 	"wordindex":{},
 	"fileindex":{},
 	"sharedmtimes":{},
-	"lowercase": {},
 	"bsharedfiles":{},
 	"bsharedfilesstreams":{},
 	"bwordindex":{},
 	"bfileindex":{},
 	"bsharedmtimes":{},
-	"blowercase": {},
 	"rescanonstartup":0,
 	"enablefilters": 1,
 	"downloadregexp": "",
@@ -538,24 +536,19 @@ class Config:
 		bfileindex =          None
 		sharedmtimes =        None
 		bsharedmtimes =       None
-		lowercase =           None
-		blowercase =          None
-		
 
 		shelves = [
-				self.filename + ".files.db",
-				self.filename + ".buddyfiles.db",
-				self.filename + ".streams.db",
-				self.filename + ".buddystreams.db",
-				self.filename + ".wordindex.db",
-				self.filename + ".buddywordindex.db",
-				self.filename + ".fileindex.db",
-				self.filename + ".buddyfileindex.db",
-				self.filename + ".mtimes.db",
-				self.filename + ".buddymtimes.db",
-				self.filename + ".lowercase_mapping.db",
-				self.filename + ".blowercase_mapping.db",
-			]
+			self.filename + ".files.db",
+			self.filename + ".buddyfiles.db",
+			self.filename + ".streams.db",
+			self.filename + ".buddystreams.db",
+			self.filename + ".wordindex.db",
+			self.filename + ".buddywordindex.db",
+			self.filename + ".fileindex.db",
+			self.filename + ".buddyfileindex.db",
+			self.filename + ".mtimes.db",
+			self.filename + ".buddymtimes.db"
+		]
 
 		_opened_shelves = []
 		_errors = []
@@ -579,8 +572,6 @@ class Config:
 		bfileindex =          _opened_shelves.pop(0)
 		sharedmtimes =        _opened_shelves.pop(0)
 		bsharedmtimes =       _opened_shelves.pop(0)
-		lowercase =           _opened_shelves.pop(0)
-		blowercase =          _opened_shelves.pop(0)
 
 		if _errors:
 			log.addwarning(_("Failed to process the following databases: %(names)s") % {'names': '\n'.join(_errors)})
@@ -594,14 +585,12 @@ class Config:
 		self.sections["transfers"]["wordindex"] = wordindex
 		self.sections["transfers"]["fileindex"] = fileindex
 		self.sections["transfers"]["sharedmtimes"] = sharedmtimes
-		self.sections["transfers"]["lowercase"] = lowercase
 		
 		self.sections["transfers"]["bsharedfiles"] = bsharedfiles
 		self.sections["transfers"]["bsharedfilesstreams"] = bsharedfilesstreams
 		self.sections["transfers"]["bwordindex"] = bwordindex
 		self.sections["transfers"]["bfileindex"] = bfileindex
 		self.sections["transfers"]["bsharedmtimes"] = bsharedmtimes
-		self.sections["transfers"]["blowercase"] = blowercase
 		
 		if self.sections["server"]["server"][0] == "mail.slsknet.org":
 			self.sections["server"]["server"] = ('server.slsknet.org', 2242)
@@ -731,10 +720,11 @@ class Config:
 			except:
 				pass
 		self.config_lock.release()
+
 	def writeConfiguration(self):
 		self.config_lock.acquire()
 
-		external_sections =  ["sharedfiles", "sharedfilesstreams", "wordindex", "fileindex", "sharedmtimes", 'lowercase', "bsharedfiles", "bsharedfilesstreams", "bwordindex", "bfileindex", "bsharedmtimes", "blowercase", "downloads"]
+		external_sections =  ["sharedfiles", "sharedfilesstreams", "wordindex", "fileindex", "sharedmtimes", "bsharedfiles", "bsharedfilesstreams", "bwordindex", "bfileindex", "bsharedmtimes", "downloads"]
 		for i in self.sections.keys():
 			if not self.parser.has_section(i):
 				self.parser.add_section(i)
@@ -825,7 +815,7 @@ class Config:
 		self.config_lock.release()
 		return (0, filename)
 	
-	def setBuddyShares(self, files, streams, wordindex, fileindex, mtimes, lowercase_mapping):
+	def setBuddyShares(self, files, streams, wordindex, fileindex, mtimes):
 		if self.sections["transfers"]["bsharedfiles"] == files:
 			return
 		storable_objects = [
@@ -833,14 +823,13 @@ class Config:
 				(streams,           "bsharedfilesstreams", ".buddystreams.db"),
 				(mtimes,            "bsharedmtimes",       ".buddymtimes.db"),
 				(wordindex,         "bwordindex",          ".buddywordindex.db"),
-				(fileindex,         "bfileindex",          ".buddyfileindex.db"),
-				(lowercase_mapping, "blowercase",          ".buddylowercase_mapping.db"),
-			]
+				(fileindex,         "bfileindex",          ".buddyfileindex.db")
+		]
 		self.config_lock.acquire()
 		self._storeObjects(storable_objects)
 		self.config_lock.release()
 		
-	def setShares(self, files, streams, wordindex, fileindex, mtimes, lowercase_mapping):
+	def setShares(self, files, streams, wordindex, fileindex, mtimes):
 		if self.sections["transfers"]["sharedfiles"] == files:
 			return
 		storable_objects = [
@@ -848,9 +837,8 @@ class Config:
 				(streams,           "sharedfilesstreams", ".streams.db"),
 				(mtimes,            "sharedmtimes",       ".mtimes.db"),
 				(wordindex,         "wordindex",          ".wordindex.db"),
-				(fileindex,         "fileindex",          ".fileindex.db"),
-				(lowercase_mapping, "lowercase",          ".lowercase_mapping.db"),
-			]
+				(fileindex,         "fileindex",          ".fileindex.db")
+		]
 		self.config_lock.acquire()
 		self._storeObjects(storable_objects)
 		self.config_lock.release()
@@ -869,14 +857,12 @@ class Config:
 		self.sections["transfers"]["wordindex"].sync()
 		self.sections["transfers"]["fileindex"].sync()
 		self.sections["transfers"]["sharedmtimes"].sync()
-		self.sections["transfers"]["lowercase"].sync()
 		
 		self.sections["transfers"]["bsharedfiles"].sync()
 		self.sections["transfers"]["bsharedfilesstreams"].sync()
 		self.sections["transfers"]["bwordindex"].sync()
 		self.sections["transfers"]["bfileindex"].sync()
 		self.sections["transfers"]["bsharedmtimes"].sync()
-		self.sections["transfers"]["blowercase"].sync()
 		if sys.platform == 'darwin': # sync() doesn't seem to be enough on OS X
 			self.sections["transfers"]["sharedfiles"].close()
 			self.sections["transfers"]["sharedfilesstreams"].close()
@@ -888,7 +874,6 @@ class Config:
 			self.sections["transfers"]["sharedmtimes"] = shelve.open(self.filename+".mtimes.db")
 			self.sections["transfers"]["wordindex"] = shelve.open(self.filename+".wordindex.db")
 			self.sections["transfers"]["fileindex"] = shelve.open(self.filename+".fileindex.db")
-			self.sections["transfers"]["lowercase"] = shelve.open(self.filename+".lowercase_mapping.db")
 			self.sections["transfers"]["bsharedfiles"].close()
 			self.sections["transfers"]["bsharedfilesstreams"].close()
 			self.sections["transfers"]["bsharedmtimes"].close()
@@ -899,7 +884,6 @@ class Config:
 			self.sections["transfers"]["bsharedmtimes"] = shelve.open(self.filename+".buddymtimes.db")
 			self.sections["transfers"]["bwordindex"] = shelve.open(self.filename+".buddywordindex.db")
 			self.sections["transfers"]["bfileindex"] = shelve.open(self.filename+".buddyfileindex.db")
-			self.sections["transfers"]["blowercase"] = shelve.open(self.filename+".buddylowercase_mapping.db")
 				
 		self.config_lock.release()
 
