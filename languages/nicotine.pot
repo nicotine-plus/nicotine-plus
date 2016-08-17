@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-14 10:19+0200\n"
+"POT-Creation-Date: 2016-08-17 09:56+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -294,13 +294,10 @@ msgstr ""
 msgid "Offline Nicotine Plus Guide"
 msgstr ""
 
-msgid "Online Nicotine Plus Guide"
+msgid "Project Website"
 msgstr ""
 
-msgid "Sourceforge Project Website"
-msgstr ""
-
-msgid "Nicotine-Plus Trac Website"
+msgid "Project Github Page"
 msgstr ""
 
 msgid "About _chat room commands"
@@ -1637,12 +1634,6 @@ msgstr ""
 msgid "Save pic"
 msgstr ""
 
-msgid "Failed to close stdout (not so bad if you are using PyInstaller)"
-msgstr ""
-
-msgid "Failed to close stderr (not so bad if you are using PyInstaller)"
-msgstr ""
-
 #, python-format
 msgid ""
 "You're using an unsupported version of Python (%s).\n"
@@ -1685,9 +1676,6 @@ msgid ""
 "C library:       http://www.maxmind.com/app/c\n"
 "Python bindings: http://www.maxmind.com/app/python\n"
 "(the python bindings require the C library)"
-msgstr ""
-
-msgid "Disabled UPnP support due to errors... See above"
 msgstr ""
 
 #, python-format
@@ -3372,6 +3360,14 @@ msgid "Something went wrong while reading your transfer list: %(error)s"
 msgstr ""
 
 #, python-format
+msgid "Unknown config section '%s'"
+msgstr ""
+
+#, python-format
+msgid "Unknown config option '%(option)s' in section '%(section)s'"
+msgstr ""
+
+#, python-format
 msgid "Failed to process the following databases: %(names)s"
 msgstr ""
 
@@ -3419,6 +3415,17 @@ msgstr ""
 
 #, python-format
 msgid "No such alias (%(alias)s)\n"
+msgstr ""
+
+msgid "Loading plugin handler"
+msgstr ""
+
+#, python-format
+msgid "It appears '%s' is not a directory, not loading plugins."
+msgstr ""
+
+#, python-format
+msgid "Failed to load plugin '%s', could not find it."
 msgstr ""
 
 msgid "Plugin archive is not in the correct format"
@@ -3637,6 +3644,14 @@ msgstr ""
 msgid "Couldn't write to transfer log: %s"
 msgstr ""
 
+#, python-format
+msgid ""
+"Failed to rebuild share, serious error occurred. If this problem persists "
+"delete ~/.nicotine/*.db and try again. If that doesn't help please file a "
+"bug report with the stack trace included (see terminal output after this "
+"message). Technical details: %s"
+msgstr ""
+
 msgid "Buddy Shares"
 msgstr ""
 
@@ -3670,6 +3685,14 @@ msgid "User %(user)s is searching for %(query)s, returning %(num)i results"
 msgstr ""
 
 msgid "Checking for changes"
+msgstr ""
+
+#, python-format
+msgid "Rescanning: Checking %(num)s directories"
+msgstr ""
+
+#, python-format
+msgid "Rescanning: Found %(num)s directories"
 msgstr ""
 
 #, python-format

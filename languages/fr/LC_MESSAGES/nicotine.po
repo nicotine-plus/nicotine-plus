@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nicotine\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-14 10:19+0200\n"
-"PO-Revision-Date: 2016-08-14 10:30+0200\n"
+"POT-Creation-Date: 2016-08-17 09:59+0200\n"
+"PO-Revision-Date: 2016-08-17 09:59+0200\n"
 "Last-Translator: Michael LABOUEBE <gfarmerfr@free.fr>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -369,14 +369,11 @@ msgstr "Aid_e"
 msgid "Offline Nicotine Plus Guide"
 msgstr "Guide de Nicotine+ hors ligne"
 
-msgid "Online Nicotine Plus Guide"
-msgstr "Guide de Nicotine+ en ligne"
+msgid "Project Website"
+msgstr "Site internet du projet"
 
-msgid "Sourceforge Project Website"
-msgstr "Site internet du projet sur Sourceforge"
-
-msgid "Nicotine-Plus Trac Website"
-msgstr "Site internet de Nicotine+ Trac"
+msgid "Project Github Page"
+msgstr "Page Github du projet"
 
 # pynicotine/gtkgui/about.py
 msgid "About _chat room commands"
@@ -2087,16 +2084,6 @@ msgstr "Ajouter à la liste"
 msgid "Save pic"
 msgstr "Sauver l'image"
 
-msgid "Failed to close stdout (not so bad if you are using PyInstaller)"
-msgstr ""
-"Impossible de fermer la sortie standard (pas si grave si vous utiliser "
-"PyInstaller)"
-
-msgid "Failed to close stderr (not so bad if you are using PyInstaller)"
-msgstr ""
-"Impossible de fermer la sortie d'erreur (pas si grave si vous utiliser "
-"PyInstaller)"
-
 # nicotine
 #, python-format
 msgid ""
@@ -2163,9 +2150,6 @@ msgstr ""
 "Bibliothèque C: http://www.maxmind.com/app/c\n"
 "Module python:  http://www.maxmind.com/app/python\n"
 "(le module python nécessite la bibliothèque C)"
-
-msgid "Disabled UPnP support due to errors... See above"
-msgstr "UPnP a été désactivé à cause d'erreurs... Voyez au-dessus"
 
 #, python-format
 msgid "Nicotine-Plus version %s"
@@ -4455,6 +4439,16 @@ msgstr ""
 "Quelque chose s'est mal passé lors de la lecture de votre liste de "
 "transferts: %(error)s"
 
+# pynicotine/transfers.py
+#, python-format
+msgid "Unknown config section '%s'"
+msgstr "Section de configuration inconnue '%s'"
+
+#, python-format
+msgid "Unknown config option '%(option)s' in section '%(section)s'"
+msgstr ""
+"Option de configuration inconnue %(option)s' dans la section '%(section)s'"
+
 #, python-format
 msgid "Failed to process the following databases: %(names)s"
 msgstr "Impossible de traiter les bases de données suivantes: %(names)s"
@@ -4515,6 +4509,18 @@ msgstr "Alias %(alias)s enlevé: %(action)s\n"
 #, python-format
 msgid "No such alias (%(alias)s)\n"
 msgstr "Ne trouve pas l'alias (%(alias)s)\n"
+
+msgid "Loading plugin handler"
+msgstr "Chargement du gestionnaire d'extensions"
+
+#, python-format
+msgid "It appears '%s' is not a directory, not loading plugins."
+msgstr ""
+"'%s' ne semble pas être un répertoire, les extensions ne seront pas chargées."
+
+#, python-format
+msgid "Failed to load plugin '%s', could not find it."
+msgstr "Impossible de charger l'extension '%s', impossible de la localiser."
 
 msgid "Plugin archive is not in the correct format"
 msgstr "L'archive de l'extension n'est pas au bon format"
@@ -4797,6 +4803,19 @@ msgstr "Message encapsulé inconnu: %s"
 msgid "Couldn't write to transfer log: %s"
 msgstr "Écriture du journal des transferts impossible : %s"
 
+#, python-format
+msgid ""
+"Failed to rebuild share, serious error occurred. If this problem persists "
+"delete ~/.nicotine/*.db and try again. If that doesn't help please file a "
+"bug report with the stack trace included (see terminal output after this "
+"message). Technical details: %s"
+msgstr ""
+"Une erreur sérieuse est survenue: impossible de reconstruire le partage. Si "
+"le problème persiste: supprimez ~/.nicotine/*.db et retentez. Si le problème "
+"persiste toujours, veuillez signalez le bogue en incluant la trace "
+"d’exécution (dans la sortie du terminal après ce message). Détails "
+"techniques: %s"
+
 # pynicotine/gtkgui/frame.py
 msgid "Buddy Shares"
 msgstr "Partages pour amis"
@@ -4840,6 +4859,14 @@ msgstr "L'utilisateur %(user)s cherche %(query)s, envoi de %(num)i résultats"
 
 msgid "Checking for changes"
 msgstr "Recherche des modifications"
+
+#, python-format
+msgid "Rescanning: Checking %(num)s directories"
+msgstr "Réexamen: Vérification de %(num)s répertoires"
+
+#, python-format
+msgid "Rescanning: Found %(num)s directories"
+msgstr "Réexamen: %(num)s répertoires trouvés"
 
 # pynicotine/gtkgui/frame.py
 #, python-format
