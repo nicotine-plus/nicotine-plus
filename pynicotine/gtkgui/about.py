@@ -50,7 +50,7 @@ class AboutDialog(gtk.Dialog):
 
         self.nicotine = nicotine
 
-        gtk.Dialog.__init__(self, _("About Nicotine"), parent,
+        gtk.Dialog.__init__(self, _("About Nicotine+"), parent,
                             gtk.DIALOG_MODAL)
 
         self.set_resizable(True)
@@ -571,7 +571,7 @@ class AboutRoomsDialog(GenericTableDialog):
         "", "",
         "/away /a", _("Toggles your away status"),
         "/rescan", _("Rescan shares"),
-        "/quit /q /exit", _("Quit Nicotine")
+        "/quit /q /exit", _("Quit Nicotine+")
     ]
 
     def __init__(self, parent):
@@ -621,7 +621,7 @@ class AboutPrivateDialog(GenericTableDialog):
         "", "",
         "/away /a", _("Toggles your away status"),
         "/rescan", _("Rescan shares"),
-        "/quit /q /exit", _("Quit Nicotine")
+        "/quit /q /exit", _("Quit Nicotine+")
     ]
 
     def __init__(self, parent):
