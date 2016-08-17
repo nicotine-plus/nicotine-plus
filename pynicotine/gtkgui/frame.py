@@ -757,9 +757,9 @@ class NicotineFrame:
 			return True
 
 		if self.TrayApp.HAVE_TRAYICON:
-			option = QuitBox(self, title=_('Close Nicotine-Plus?'), message=_('Are you sure you wish to exit Nicotine-Plus at this time?'), tray=True, status="question", third=_("Send to tray") )
+			option = QuitBox(self, title=_('Close Nicotine+?'), message=_('Are you sure you wish to exit Nicotine+ at this time?'), tray=True, status="question", third=_("Send to tray") )
 		else:
-			option = QuitBox(self, title=_('Close Nicotine-Plus?'), message=_('Are you sure you wish to exit Nicotine-Plus at this time?'), tray=False, status="question" )
+			option = QuitBox(self, title=_('Close Nicotine+?'), message=_('Are you sure you wish to exit Nicotine+ at this time?'), tray=False, status="question" )
 		
 		return True
 
@@ -2487,7 +2487,7 @@ class NicotineFrame:
 				OpenUri(url)
 				return
 		else:
-			popupWarning(None, _("Cannot Find Guide"), _("The Nicotine Offline Guide ( NicotineGuide.htm ) was not found in either the following directories:\n\n<u>%(pwd)s\n</u><b>and</b>\n<u>%(prefix)s/share/nicotine/documentation/</u>\n\nEither install Nicotine-Plus, or start from inside the Nicotine-Plus source directory." % {'pwd':path1, 'prefix':sys.prefix } ) )
+			popupWarning(None, _("Cannot Find Guide"), _("The Nicotine+ Offline Guide ( NicotineGuide.htm ) was not found in either the following directories:\n\n<u>%(pwd)s\n</u><b>and</b>\n<u>%(prefix)s/share/nicotine/documentation/</u>\n\nEither install Nicotine+, or start from inside the Nicotine+ source directory." % {'pwd':path1, 'prefix':sys.prefix } ) )
 	
 	def OnProjectWebsite(self, widget):
 		url = "http://nicotine-plus.org/"
@@ -3498,7 +3498,7 @@ class TrayApp:
 			self.tray_popup_menu = popup = PopupMenu(self)
 
 			popup.setup(
-				("#" + _("Hide / Show Nicotine"), self.HideUnhideWindow, gtk.STOCK_GOTO_BOTTOM),
+				("#" + _("Hide / Show Nicotine+"), self.HideUnhideWindow, gtk.STOCK_GOTO_BOTTOM),
 				(1, _("Server"), self.tray_popup_menu_server, self.OnPopupServer),
 				("#" + _("Settings"), self.frame.OnSettings, gtk.STOCK_PREFERENCES),
 				("#" + _("Send Message"), self.frame.OnOpenPrivateChat, gtk.STOCK_EDIT),

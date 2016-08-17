@@ -578,7 +578,7 @@
                   <widget class="GtkMenu" id="help1_menu">
                     <child>
                       <widget class="GtkImageMenuItem" id="nicotine_guide1">
-                        <property name="label" translatable="yes">Offline Nicotine Plus Guide</property>
+                        <property name="label" translatable="yes">Offline Nicotine+ Guide</property>
                         <property name="visible">True</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">False</property>

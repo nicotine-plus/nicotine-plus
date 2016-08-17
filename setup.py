@@ -2,7 +2,7 @@
 
 """To use this setup script to install Nicotine:
 
-	# Install nicotine in regular *nix directories
+	# Install Nicotine+ in regular *nix directories
         python setup.py install
 
 	# Create exe files for windows in dist subdir
@@ -119,7 +119,7 @@ for file in doc_files:
 
 if __name__ == '__main__' :
 	from pynicotine.utils import version
-	LONG_DESCRIPTION = """Nicotine-Plus is a client for SoulSeek filesharing system, forked from Nicotine."""
+	LONG_DESCRIPTION = """Nicotine+ is a client for SoulSeek filesharing system, forked from Nicotine."""
 	if is_osx:
 		setuptools.setup(app	= ['nicotine.py'],
 		data_files	= [],

@@ -3802,7 +3802,7 @@ when new results come in</property>
     </child>
   </widget>
   <widget class="GtkWindow" id="SettingsWindow">
-    <property name="title" translatable="yes">Nicotine Settings</property>
+    <property name="title" translatable="yes">Nicotine+ Settings</property>
     <property name="window_position">center</property>
     <property name="default_width">650</property>
     <property name="default_height">400</property>
@@ -5052,7 +5052,7 @@ Protocols handlers: </property>
                 <child>
                   <widget class="GtkLabel" id="label358">
                     <property name="visible">True</property>
-                    <property name="label" translatable="yes">Restart Nicotine to see all changes take effect</property>
+                    <property name="label" translatable="yes">Restart Nicotine+ to see all changes take effect</property>
                   </widget>
                   <packing>
                     <property name="expand">False</property>

@@ -23,7 +23,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
-Nicotine Launcher.
+Nicotine+ Launcher.
 """
 
 import os
@@ -91,12 +91,12 @@ You should install PyGTK 2.24.X.""") % (e)
     try:
         import pynicotine
     except ImportError, e:
-        return _("""Can not find Nicotine modules.
+        return _("""Can not find Nicotine+ modules.
 Perhaps they're installed in a directory which is not
 in an interpreter's module search path.
 (there could be a version mismatch between
 what version of python was used to build the Nicotine
-binary package and what you try to run Nicotine with).""")
+binary package and what you try to run Nicotine+ with).""")
 
     # Require GeoIP
     try:
@@ -105,7 +105,7 @@ binary package and what you try to run Nicotine with).""")
         try:
             import _GeoIP
         except ImportError:
-            msg = _("""Nicotine supports a country code blocker.
+            msg = _("""Nicotine+ supports a country code blocker.
 That requires a (GPL'ed) library called GeoIP. You can find it here:
 C library:       http://www.maxmind.com/app/c
 Python bindings: http://www.maxmind.com/app/python
@@ -118,13 +118,13 @@ Python bindings: http://www.maxmind.com/app/python
 def version():
     try:
         import pynicotine.utils
-        print _("Nicotine-Plus version %s" % pynicotine.utils.version)
+        print _("Nicotine+ version %s" % pynicotine.utils.version)
     except ImportError, error:
         print _("Cannot find the pynicotine.utils module.")
 
 
 def usage():
-    print _("""Nicotine-Plus is a Soulseek client.
+    print _("""Nicotine+ is a Soulseek client.
 Usage: nicotine [OPTION]...
   -c file, --config=file      Use non-default configuration file
   -p dir,  --plugins=dir      Use non-default directory for plugins

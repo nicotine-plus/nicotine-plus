@@ -196,7 +196,7 @@ class PrivateChats(IconNotebook):
 			text = "CTCP VERSION"
 		self.users[msg.user].ShowMessage(text, status, msg.timestamp)	
 		if ctcpversion and self.frame.np.config.sections["server"]["ctcpmsgs"] == 0:
-			self.SendMessage(msg.user, u"Nicotine-Plus %s" % version)
+			self.SendMessage(msg.user, u"Nicotine+ %s" % version)
 		self.frame.pluginhandler.IncomingPrivateChatNotification(msg.user, text)
 
 	def UpdateColours(self):

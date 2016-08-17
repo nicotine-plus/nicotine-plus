@@ -1632,8 +1632,8 @@ class ImportWinSlskConfig:
 		"""Checks if USER is in USER_LIST, ignoring the comment field"""
 		for i in user_list:
 			if type(i) == type(''):
-				sys.stderr.write("\nError: The nicotine userlist is in an old pyslsk format.\n" +
-				"Please run Nicotine once before running this script.\n" +
+				sys.stderr.write("\nError: The Nicotine+ userlist is in an old pyslsk format.\n" +
+				"Please run Nicotine+ once before running this script.\n" +
 				"Config file not updated.\n")
 				break
 			if user == i[0]:
