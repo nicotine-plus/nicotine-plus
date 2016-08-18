@@ -11,13 +11,17 @@ and add some new features that users want and/or need.
 
 To run it from git master see: [RUNFROMGIT](doc/RUNFROMGIT.md)
 
+### Help wanted
+
+You want to help ? See a list of things [TODO](doc/TODO.md)
+
+Nicotine+ is not translated in your language ? See: [TRANSLATIONS](doc/TRANSLATIONS.md)
+
 ### Links
 
 Website: http://www.nicotine-plus.org
 
 Code & Bug Tracker: https://github.com/eLvErDe/nicotine-plus
-
-Nicotine+ is not translated in your language? See: [TRANSLATIONS](doc/TRANSLATIONS.md)
 
 You want to contact someone? See: [MAINTAINERS](doc/MAINTAINERS.md)
 
