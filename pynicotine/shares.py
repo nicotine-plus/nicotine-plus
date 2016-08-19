@@ -329,12 +329,8 @@ class Shares:
 				continue
 
 			try:
-				if win32:
-					contents = dircache.listdir(u_directory)
-					mtime = os.path.getmtime(u_directory)
-				else:
-					contents = os.listdir(u_directory)
-					mtime = os.path.getmtime(str_directory)
+				contents = dircache.listdir(u_directory)
+				mtime = os.path.getmtime(u_directory)
 				contents.sort()
 			except OSError, errtuple:
 				message = _("Scanning Directory Error: %(error)s Path: %(path)s") % {'error':errtuple, 'path':u_directory}
