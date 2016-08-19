@@ -27,7 +27,7 @@ import gobject
 import re
 import webbrowser
 from dirchooser import *
-from utils import InputDialog, InitialiseColumns, recode, recode2, popupWarning, ImportWinSlskConfig, Humanize, OpenUri
+from utils import InputDialog, InitialiseColumns, recode, recode2, popupWarning, ImportWinSlskConfig, Humanize, OpenUri, HumanSize
 from entrydialog import *
 from pynicotine.upnp import UPnPPortMapping
 from pynicotine.utils import CheckTranslationAvailability
@@ -591,7 +591,15 @@ class SharesFrame(buildFrame):
         if transfers["shared"] is not None:
 
             for (virtual, actual) in transfers["shared"]:
-                self.shareslist.append([virtual, recode(actual), '-1', actual])
+                self.shareslist.append(
+                    [
+                        virtual,
+                        recode(actual),
+                        HumanSize(self.GetDirectorySize(actual)),
+                        actual
+                    ]
+                )
+
             self.shareddirs = transfers["shared"][:]
         else:
             self.p.Hilight(self.Shares)
@@ -599,7 +607,15 @@ class SharesFrame(buildFrame):
         if transfers["buddyshared"] is not None:
 
             for (virtual, actual) in transfers["buddyshared"]:
-                self.bshareslist.append([virtual, recode(actual), '-1', actual])
+                self.bshareslist.append(
+                    [
+                        virtual,
+                        recode(actual),
+                        HumanSize(self.GetDirectorySize(actual)),
+                        actual
+                    ]
+                )
+
             self.bshareddirs = transfers["buddyshared"][:]
         else:
             self.p.Hilight(self.BuddyShares)
@@ -659,8 +675,22 @@ class SharesFrame(buildFrame):
         if dir1 is not None:
             for directory in dir1:
                 if directory not in self.shareddirs:
-                    virtual = input_box(self.frame, title=_("Virtual name"), message=_("Enter virtual name for '%(dir)s':") % {'dir': directory})
-                    self.shareslist.append([virtual, recode(directory), '-2', directory])
+
+                    virtual = input_box(
+                        self.frame,
+                        title=_("Virtual name"),
+                        message=_("Enter virtual name for '%(dir)s':") % {'dir': directory}
+                    )
+
+                    self.shareslist.append(
+                        [
+                            virtual,
+                            recode(directory),
+                            HumanSize(self.GetDirectorySize(directory)),
+                            directory
+                        ]
+                    )
+
                     self.shareddirs.append((virtual, directory))
                     self.needrescan = 1
 
@@ -673,8 +703,22 @@ class SharesFrame(buildFrame):
         if dir1 is not None:
             for directory in dir1:
                 if directory not in self.bshareddirs:
-                    virtual = input_box(self.frame, title=_("Virtual name"), message=_("Enter virtual name for '%(dir)s':") % {'dir': directory})
-                    self.bshareslist.append([virtual, recode(directory), '-4', directory])
+
+                    virtual = input_box(
+                        self.frame,
+                        title=_("Virtual name"),
+                        message=_("Enter virtual name for '%(dir)s':") % {'dir': directory}
+                    )
+
+                    self.bshareslist.append(
+                        [
+                            virtual,
+                            recode(directory),
+                            HumanSize(self.GetDirectorySize(directory)),
+                            directory
+                        ]
+                    )
+
                     self.bshareddirs.append((virtual, directory))
                     self.needrescan = True
 
@@ -725,6 +769,17 @@ class SharesFrame(buildFrame):
             self.bshareslist.remove(iter)
         if iters:
             self.needrescan = 1
+
+    def GetDirectorySize(self, directory):
+
+        total_size = 0
+
+        for dirpath, dirnames, filenames in os.walk(directory):
+            for f in filenames:
+                fp = os.path.join(dirpath, f)
+                total_size += os.path.getsize(fp)
+
+        return total_size
 
 
 class TransfersFrame(buildFrame):
