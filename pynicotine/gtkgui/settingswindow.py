@@ -510,33 +510,50 @@ class DownloadsFrame(buildFrame):
 class SharesFrame(buildFrame):
 
     def __init__(self, parent):
+
         self.p = parent
 
         buildFrame.__init__(self, "SharesFrame")
 
         self.needrescan = 0
+
         # last column is the raw byte/unicode object for the folder (not shown)
-        self.shareslist = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING)
+        self.shareslist = gtk.ListStore(
+            gobject.TYPE_STRING, gobject.TYPE_STRING,
+            gobject.TYPE_STRING, gobject.TYPE_STRING
+        )
+
         self.shareddirs = []
 
         # last column is the raw byte/unicode object for the folder (not shown)
-        self.bshareslist = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING)
+        self.bshareslist = gtk.ListStore(
+            gobject.TYPE_STRING, gobject.TYPE_STRING,
+            gobject.TYPE_STRING, gobject.TYPE_STRING
+        )
+
         self.bshareddirs = []
 
-        column = gtk.TreeViewColumn("Shared dirs", gtk.CellRendererText(), text = 0)
-        columns = InitialiseColumns(self.Shares,
-                                    [_("Virtual Directory"), 0, "text"],
-                                    [_("Directory"), 0, "text"],
-                                    [_("Size"), 0, "text"]
-                                    )
+        column = gtk.TreeViewColumn(
+            "Shared dirs", gtk.CellRendererText(), text=0
+        )
+
+        columns = InitialiseColumns(
+            self.Shares,
+            [_("Virtual Directory"), 0, "text"],
+            [_("Directory"), 0, "text"],
+            [_("Size"), 0, "text"]
+        )
+
         self.Shares.set_model(self.shareslist)
         self.Shares.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
 
-        bcolumns = InitialiseColumns(self.BuddyShares,
-                                     [_("Virtual Directory"), 0, "text"],
-                                     [_("Directory"), 0, "text"],
-                                     [_("Size"), 0, "text"]
-                                    )
+        bcolumns = InitialiseColumns(
+            self.BuddyShares,
+            [_("Virtual Directory"), 0, "text"],
+            [_("Directory"), 0, "text"],
+            [_("Size"), 0, "text"]
+        )
+
         self.BuddyShares.set_model(self.bshareslist)
         self.BuddyShares.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
 
@@ -551,26 +568,36 @@ class SharesFrame(buildFrame):
         }
 
     def DownloadDirChanged(self, widget):
+
         transfers = self.frame.np.config.sections["transfers"]
+
         if transfers["uploaddir"] is not None and transfers["uploaddir"] != "":
             return
-        self.UploadDir.set_text(os.sep.join([self.DownloadDir.get_text(), _("Buddy Uploads")]))
+
+        self.UploadDir.set_text(
+            os.sep.join([self.DownloadDir.get_text(), _("Buddy Uploads")])
+        )
 
     def SetSettings(self, config):
+
         transfers = config["transfers"]
         self.shareslist.clear()
         self.bshareslist.clear()
+
         self.p.SetWidgetsData(config, self.options)
         self.OnEnabledBuddySharesToggled(self.enableBuddyShares)
         # self.OnFriendsOnlyToggled(self.FriendsOnly)
 
         if transfers["shared"] is not None:
+
             for (virtual, actual) in transfers["shared"]:
                 self.shareslist.append([virtual, recode(actual), '-1', actual])
             self.shareddirs = transfers["shared"][:]
         else:
             self.p.Hilight(self.Shares)
+
         if transfers["buddyshared"] is not None:
+
             for (virtual, actual) in transfers["buddyshared"]:
                 self.bshareslist.append([virtual, recode(actual), '-1', actual])
             self.bshareddirs = transfers["buddyshared"][:]
@@ -589,7 +616,12 @@ class SharesFrame(buildFrame):
 
         for share in self.shareddirs+self.bshareddirs:
             if homedir == share:
-                popupWarning(self.p.SettingsWindow, _("Warning"),_("Security Risk: you should not share your %s directory!") %place, self.frame.images["n"])
+                popupWarning(
+                    self.p.SettingsWindow,
+                    _("Warning"),
+                    _("Security Risk: you should not share your %s directory!") % place,
+                    self.frame.images["n"]
+                )
                 raise UserWarning
 
         return {
@@ -619,7 +651,11 @@ class SharesFrame(buildFrame):
         return self.needrescan
 
     def OnAddSharedDir(self, widget):
-        dir1 = ChooseDir(self.Main.get_toplevel(), title=_("Nicotine+")+": "+_("Add a shared directory"))
+        dir1 = ChooseDir(
+            self.Main.get_toplevel(),
+            title=_("Nicotine+") + ": " + _("Add a shared directory")
+        )
+
         if dir1 is not None:
             for directory in dir1:
                 if directory not in self.shareddirs:
@@ -629,7 +665,11 @@ class SharesFrame(buildFrame):
                     self.needrescan = 1
 
     def OnAddSharedBuddyDir(self, widget):
-        dir1 = ChooseDir(self.Main.get_toplevel(), title=_("Nicotine+")+": "+_("Add a shared buddy directory"))
+        dir1 = ChooseDir(
+            self.Main.get_toplevel(),
+            title=_("Nicotine+") + ": " + _("Add a shared buddy directory")
+        )
+
         if dir1 is not None:
             for directory in dir1:
                 if directory not in self.bshareddirs:
@@ -644,11 +684,18 @@ class SharesFrame(buildFrame):
     def OnRenameVirtuals(self, widget):
         iters = []
         self.Shares.get_selection().selected_foreach(self._RemoveSharedDir, iters)
+
         for iter in iters:
             oldvirtual = self.shareslist.get_value(iter, 0)
             directory = self.shareslist.get_value(iter, 3)
             oldmapping = (oldvirtual, directory)
-            virtual = input_box(self.frame, title=_("Virtual name"), message=_("Enter new virtual name for '%(dir)s':") % {'dir': directory})
+
+            virtual = input_box(
+                self.frame,
+                title=_("Virtual name"),
+                message=_("Enter new virtual name for '%(dir)s':") % {'dir': directory}
+            )
+
             newmapping = (virtual, directory)
             self.shareslist.set_value(iter, 0, virtual)
             self.shareddirs.remove(oldmapping)
@@ -662,7 +709,6 @@ class SharesFrame(buildFrame):
             virtual = self.shareslist.get_value(iter, 0)
             actual = self.shareslist.get_value(iter, 3)
             mapping = (virtual, actual)
-            print("Mapping: " + repr(mapping))
             self.shareddirs.remove(mapping)
             self.shareslist.remove(iter)
         if iters:
@@ -675,7 +721,6 @@ class SharesFrame(buildFrame):
             virtual = self.bshareslist.get_value(iter, 0)
             actual = self.bshareslist.get_value(iter, 3)
             mapping = (virtual, actual)
-            print("Mapping: " + repr(mapping))
             self.bshareddirs.remove(mapping)
             self.bshareslist.remove(iter)
         if iters:
