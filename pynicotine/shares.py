@@ -76,11 +76,15 @@ class Shares:
         return "__INTERNAL_ERROR__" + path
 
     def _virtualmapping(self):
+
         mapping = self.config.sections["transfers"]["shared"][:]
+
         if self.config.sections["transfers"]["enablebuddyshares"]:
             mapping += self.config.sections["transfers"]["buddyshared"]
+
         if self.config.sections["transfers"]["sharedownloaddir"]:
             mapping += [(_("Downloaded"), self.config.sections["transfers"]["downloaddir"])]
+
         return mapping
 
     def logMessage(self, message, debugLevel=0):
@@ -421,8 +425,6 @@ class Shares:
 
             u_directory = u"%s" % directory
             str_directory = str(directory)
-            if self.hiddenCheck(u_directory):
-                continue
 
             try:
                 contents = dircache.listdir(u_directory)
@@ -626,9 +628,6 @@ class Shares:
             u_directory = u"%s" % directory
             str_directory = str(directory)
 
-            if self.hiddenCheck(directory):
-                continue
-
             if not rebuild and directory in oldmtimes:
                 if mtimes[directory] == oldmtimes[directory]:
                     list[virtualdir] = oldlist[virtualdir]
@@ -646,9 +645,6 @@ class Shares:
             contents.sort()
 
             for filename in contents:
-
-                if self.hiddenCheck(filename):
-                    continue
 
                 path = os.path.join(directory, filename)
                 s_path = str(path)
@@ -739,9 +735,6 @@ class Shares:
             # force Unicode for reading from disk
             u_directory = u"%s" % directory
             str_directory = str(directory)
-
-            if self.hiddenCheck(directory):
-                continue
 
             if directory in oldmtimes and directory not in oldstreams:
                 # Partial information, happened with unicode paths that N+ couldn't handle properly
