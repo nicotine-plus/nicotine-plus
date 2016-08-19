@@ -248,6 +248,7 @@ class ServerFrame(buildFrame):
 class DownloadsFrame(buildFrame):
 
     def __init__(self, parent):
+
         self.p = parent
 
         buildFrame.__init__(self, "DownloadsFrame")
@@ -276,8 +277,10 @@ class DownloadsFrame(buildFrame):
         cols[0].set_sort_column_id(0)
         cols[1].set_sort_column_id(1)
         renderers = cols[1].get_cell_renderers()
+
         for render in renderers:
             render.connect('toggled', self.cell_toggle_callback, self.filterlist, 1)
+
         self.FilterView.set_model(self.filterlist)
         self.FilterView.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
         self.DownloadFilters.connect("activate", self.OnExpand)
@@ -290,12 +293,18 @@ class DownloadsFrame(buildFrame):
             self.DownloadsVbox.set_child_packing(widget, True, True, 0, 0)
 
     def DownloadDirChanged(self, widget):
+
         transfers = self.frame.np.config.sections["transfers"]
+
         if transfers["uploaddir"] is not None and transfers["uploaddir"] != "":
             return
-        self.UploadDir.set_text(os.sep.join([self.DownloadDir.get_text(), _("Buddy Uploads")]))
+
+        self.UploadDir.set_text(
+            os.sep.join([self.DownloadDir.get_text(), _("Buddy Uploads")])
+        )
 
     def SetSettings(self, config):
+
         transfers = config["transfers"]
 
         self.p.SetWidgetsData(config, self.options)
@@ -307,16 +316,19 @@ class DownloadsFrame(buildFrame):
 
         self.filtersiters = {}
         self.filterlist.clear()
+
         if transfers["downloadfilters"] != []:
             for dfilter in transfers["downloadfilters"]:
                 filter, escaped = dfilter
                 self.filtersiters[filter] = self.filterlist.append([filter, escaped])
         else:
             self.p.Hilight(self.FilterView)
+
         self.OnEnableFiltersToggle(self.DownloadFilter)
         self.needrescan = 0
 
     def GetSettings(self):
+
         if win32:
             place = "Windows"
             homedir = "C:\windows"
@@ -324,7 +336,12 @@ class DownloadsFrame(buildFrame):
             place = "Home"
             homedir = pwd.getpwuid(os.getuid())[5]
         if homedir == recode2(self.DownloadDir.get_text()) and self.ShareDownloadDir.get_active():
-            popupWarning(self.p.SettingsWindow, _("Warning"),_("Security Risk: you should not share your %s directory!")  %place, self.frame.images["n"])
+            popupWarning(
+                self.p.SettingsWindow,
+                _("Warning"),
+                _("Security Risk: you should not share your %s directory!") % place,
+                self.frame.images["n"]
+            )
             raise UserWarning
 
         return {
@@ -348,10 +365,14 @@ class DownloadsFrame(buildFrame):
             self.IncompleteDir.set_text(recode(directory))
 
     def OnChooseDownloadDir(self, widget):
+
         directory = self.ChooseDownloadDir.get_current_folder()
+
         if directory is not None:
+
             self.incompletedir = directory
             self.DownloadDir.set_text(recode(directory))
+
             if self.ShareDownloadDir.get_active():
                 # This function will be called upon creating the settings window, so only
                 # force a scan if the user changes his donwload directory
@@ -372,13 +393,16 @@ class DownloadsFrame(buildFrame):
         self.FilterView.set_sensitive(sensitive)
 
     def OnAddFilter(self, widget):
-        response = input_box(self.frame,
-                             title=_('Nicotine+: Add a download filter'),
-                             message=_('Enter a new download filter:'),
-                             default_text='', option=True, optionvalue=True,
-                             optionmessage="Escape this filter?",
-                             droplist=self.filtersiters.keys()
-                             )
+
+        response = input_box(
+            self.frame,
+            title=_('Nicotine+: Add a download filter'),
+            message=_('Enter a new download filter:'),
+            default_text='', option=True, optionvalue=True,
+            optionmessage="Escape this filter?",
+            droplist=self.filtersiters.keys()
+        )
+
         if type(response) is list:
             filter = response[0]
             escaped = response[1]
@@ -404,14 +428,16 @@ class DownloadsFrame(buildFrame):
         if dfilter:
             iter = self.filtersiters[dfilter]
             escapedvalue = self.filterlist.get_value(iter, 1)
-            response = input_box(self.frame,
-                                 title=_('Nicotine+: Edit a download filter'),
-                                 message=_('Modify this download filter:'),
-                                 default_text=dfilter, option=True,
-                                 optionvalue=escapedvalue,
-                                 optionmessage="Escape this filter?",
-                                 droplist=self.filtersiters.keys()
-                                 )
+
+            response = input_box(
+                self.frame,
+                title=_('Nicotine+: Edit a download filter'),
+                message=_('Modify this download filter:'),
+                default_text=dfilter, option=True, optionvalue=escapedvalue,
+                optionmessage="Escape this filter?",
+                droplist=self.filtersiters.keys()
+            )
+
             if type(response) is list:
                 filter, escaped = response
                 if filter in self.filtersiters:
@@ -491,8 +517,8 @@ class DownloadsFrame(buildFrame):
         if len(failed.keys()) >= 1:
             errors = ""
             for filter, error in failed.items():
-                errors += "Filter: %(filter)s Error: %(error)s " % {'filter':filter, 'error':error}
-            error = _("%(num)d Failed! %(error)s " %{'num':len(failed.keys()), 'error':errors} )
+                errors += "Filter: %(filter)s Error: %(error)s " % {'filter': filter, 'error': error}
+            error = _("%(num)d Failed! %(error)s " % {'num': len(failed.keys()), 'error': errors})
             self.VerifiedLabel.set_markup("<span color=\"red\" weight=\"bold\">%s</span>" % error)
         else:
             self.VerifiedLabel.set_markup("<b>Filters Successful</b>")
