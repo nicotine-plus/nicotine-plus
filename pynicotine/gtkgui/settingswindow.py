@@ -24,6 +24,7 @@ import webbrowser
 from dirchooser import *
 from utils import InputDialog, InitialiseColumns, recode, recode2, popupWarning, ImportWinSlskConfig, Humanize, OpenUri
 from entrydialog import *
+from pynicotine.upnp import UPnPPortMapping
 from pynicotine.utils import CheckTranslationAvailability
 from pynicotine.logfacility import log
 import os, sys
@@ -137,6 +138,17 @@ class ServerFrame(buildFrame):
 
 		if server["ctcpmsgs"] is not None:
 			self.ctcptogglebutton.set_active(not server["ctcpmsgs"])
+
+		# We need to check if the frame has the upnppossible attribute
+		# Most of the time OnFirstConnect has been called
+		# and the attibute is set. But in case of a first time install
+		# OnFirstConnect is not called and the code throw an AttributeError
+		if not hasattr(self.frame, 'upnppossible'):
+			# Initialiase a UPnPPortMapping object
+			upnp = UPnPPortMapping()
+
+			# Check if we can do a port mapping
+			(self.frame.upnppossible, errors) = upnp.IsPossible()
 
 		if self.frame.upnppossible:
 			# If we can do a port mapping the field is active if the config said so
