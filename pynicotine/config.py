@@ -893,8 +893,7 @@ class Config:
         return (0, filename)
 
     def setBuddyShares(self, files, streams, wordindex, fileindex, mtimes):
-        if self.sections["transfers"]["bsharedfiles"] == files:
-            return
+
         storable_objects = [
                 (files,     "bsharedfiles",        ".buddyfiles.db"),
                 (streams,   "bsharedfilesstreams", ".buddystreams.db"),
@@ -902,13 +901,13 @@ class Config:
                 (wordindex, "bwordindex",          ".buddywordindex.db"),
                 (fileindex, "bfileindex",          ".buddyfileindex.db")
         ]
+
         self.config_lock.acquire()
         self._storeObjects(storable_objects)
         self.config_lock.release()
 
     def setShares(self, files, streams, wordindex, fileindex, mtimes):
-        if self.sections["transfers"]["sharedfiles"] == files:
-            return
+
         storable_objects = [
                 (files,     "sharedfiles",        ".files.db"),
                 (streams,   "sharedfilesstreams", ".streams.db"),
@@ -916,6 +915,7 @@ class Config:
                 (wordindex, "wordindex",          ".wordindex.db"),
                 (fileindex, "fileindex",          ".fileindex.db")
         ]
+
         self.config_lock.acquire()
         self._storeObjects(storable_objects)
         self.config_lock.release()
