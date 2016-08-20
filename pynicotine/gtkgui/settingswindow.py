@@ -746,7 +746,7 @@ class SharesFrame(buildFrame):
                     )
 
                     self.bshareddirs.append((virtual, directory))
-                    self.needrescan = True
+                    self.needrescan = 1
 
     def _RemoveSharedDir(self, model, path, iter, list):
         list.append(iter)
@@ -770,7 +770,7 @@ class SharesFrame(buildFrame):
             self.shareslist.set_value(iter, 0, virtual)
             self.shareddirs.remove(oldmapping)
             self.shareddirs.append(newmapping)
-            self.needrescan = True
+            self.needrescan = 1
 
     def OnRemoveSharedDir(self, widget):
         iters = []
