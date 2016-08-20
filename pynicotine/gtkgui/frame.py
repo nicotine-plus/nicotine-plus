@@ -1542,6 +1542,15 @@ class NicotineFrame:
 			self.browser.shutdown()
 			gtk.gdk.threads_leave()
 
+		# Closing up all shelves db
+		for db in [
+			"sharedfiles", "sharedfilesstreams", "wordindex",
+			"fileindex", "sharedmtimes",
+			"bsharedfiles", "bsharedfilesstreams", "bwordindex",
+			"bfileindex", "bsharedmtimes"
+		]:
+			self.np.config.sections["transfers"][db].close()
+
 		# Exiting GTK
 		gtk.main_quit()
 		#gtk.gdk.threads_leave()
