@@ -1531,6 +1531,7 @@ class NicotineFrame:
 
 		if not self.manualdisconnect:
 			self.OnDisconnect(None)
+
 		self.np.config.writeConfig()
 
 		# Cleaning up the trayicon
@@ -1553,10 +1554,6 @@ class NicotineFrame:
 
 		# Exiting GTK
 		gtk.main_quit()
-		#gtk.gdk.threads_leave()
-		if sys.platform.startswith("win"):
-			# Hack. main_quit works on Linux but not on Windows, needs to be resolved properly.
-			sys.exit()
 
 	def OnFirstConnect(self, widget):
 
