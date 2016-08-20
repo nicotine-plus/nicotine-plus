@@ -916,10 +916,12 @@ class Shares:
             sharedmtimes[dir] = os.path.getmtime(dir)
             self.newnormalshares = True
 
+        self.config.setShares(
+            shared, sharedstreams, wordindex, fileindex, sharedmtimes
+        )
+
         if config["transfers"]["enablebuddyshares"]:
             self.addToBuddyShared(name)
-
-        self.config.writeShares()
 
     def addToBuddyShared(self, name):
         """ Add a file to the buddy shares database """
@@ -950,6 +952,10 @@ class Shares:
             self.addToIndex(bwordindex, bfileindex, words, dir, fileinfo)
             bsharedmtimes[dir] = os.path.getmtime(dir)
             self.newbuddyshares = True
+
+        self.config.setBuddyShares(
+            bshared, bsharedstreams, bwordindex, bfileindex, bsharedmtimes
+        )
 
     def addToIndex(self, wordindex, fileindex, words, dir, fileinfo):
         index = len(fileindex.keys())
