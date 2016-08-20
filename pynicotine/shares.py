@@ -376,14 +376,14 @@ class Shares:
         gobject.idle_add(progress.show)
         gobject.idle_add(progress.set_fraction, 0)
 
-        self.logMessage(_("Rescanning: Checking %(num)s directories") % {"num": len(oldmtimes)})
+        self.logMessage(_("%(num)s directories found before rescan/rebuild") % {"num": len(oldmtimes)})
 
         if win32:
             newmtimes = self.getDirsMtimesUnicode(shared_directories, yieldfunction)
         else:
             newmtimes = self.getDirsMtimes(shared_directories, yieldfunction)
 
-        self.logMessage(_("Rescanning: Found %(num)s directories") % {"num": len(newmtimes)})
+        self.logMessage(_("%(num)s directories found after rescan/rebuild") % {"num": len(newmtimes)})
 
         gobject.idle_add(progress.set_text, _("Scanning %s") % name)
 
@@ -415,7 +415,7 @@ class Shares:
 
         return newsharedfiles, newsharedfilesstreams, newwordindex, newfileindex, newmtimes
 
-    # Get Modification Times
+    # Get Modification Times on Windows
     def getDirsMtimesUnicode(self, dirs, yieldcall=None):
 
         list = {}
@@ -476,7 +476,7 @@ class Shares:
 
         return list
 
-    # Get Modification Times
+    # Get Modification Times on Unix
     def getDirsMtimes(self, dirs, yieldcall=None):
 
         list = {}
@@ -537,7 +537,7 @@ class Shares:
 
         return list
 
-    # Check for new files
+    # Check for new files on Unix
     def getFilesList(self, mtimes, oldmtimes, oldlist, yieldcall=None, progress=None, rebuild=False):
         """ Get a list of files with their filelength and
         (if mp3) bitrate and track length in seconds """
@@ -596,7 +596,7 @@ class Shares:
                     continue
                 else:
                     if isfile:
-                        # It's a file, check if it is mp3 or ogg
+                        # Get the metadata of the file via mutagen
                         data = self.getFileInfo(filename, path)
                         if data is not None:
                             list[virtualdir].append(data)
@@ -606,7 +606,7 @@ class Shares:
 
         return list
 
-    # Check for new files
+    # Check for new files on Windows
     def getFilesListUnicode(self, mtimes, oldmtimes, oldlist, yieldcall=None, progress=None, rebuild=False):
         """ Get a list of files with their filelength and
         (if mp3) bitrate and track length in seconds """
@@ -662,7 +662,7 @@ class Shares:
                     continue
                 else:
                     if isfile:
-                        # It's a file, check if it is mp3
+                        # Get the metadata of the file via mutagen
                         data = self.getFileInfoUnicode(s_filename, s_path)
                         if data is not None:
                             list[virtualdir].append(data)
@@ -672,7 +672,7 @@ class Shares:
 
         return list
 
-    # Get metadata for mp3s and oggs
+    # Get metadata via mutagen on Windows
     def getFileInfoUnicode(self, name, pathname):
 
         try:
@@ -705,7 +705,7 @@ class Shares:
             self.logMessage(message)
             displayTraceback(sys.exc_info()[2])
 
-    # Get metadata for mp3s and oggs
+    # Get metadata via mutagen on Unix
     def getFileInfo(self, name, pathname):
 
         try:
@@ -724,6 +724,7 @@ class Shares:
             self.logMessage(message)
             displayTraceback(sys.exc_info()[2])
 
+    # Get streams of files on Windows
     def getFilesStreamsUnicode(self, mtimes, oldmtimes, oldstreams, newsharedfiles, yieldcall=None):
 
         streams = {}
@@ -760,6 +761,7 @@ class Shares:
 
         return streams
 
+    # Get streams of files on Unix
     def getFilesStreams(self, mtimes, oldmtimes, oldstreams, newsharedfiles, yieldcall=None):
 
         streams = {}
@@ -790,7 +792,7 @@ class Shares:
 
         return streams
 
-    # Stop any dot directories
+    # Stop sharing any dot directories on Unix
     def hiddenCheck(self, direct):
         dirs = direct.split(os.sep)
         for dir in dirs:
