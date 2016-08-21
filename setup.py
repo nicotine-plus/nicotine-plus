@@ -25,11 +25,6 @@ if sys.platform.startswith("win"):
 else:
     is_windows = False
 
-if sys.platform == 'darwin':
-    is_osx = True
-else:
-    is_osx = False
-
 # If we're on windows, try to load py2exe and detects GTK+ path
 if is_windows:
     import _winreg
@@ -44,14 +39,6 @@ if is_windows:
     except EnvironmentError:
         print "You must install the Gtk+ Runtime Environment to create Windows binaries."
         print "Please go to: http://sourceforge.net/projects/gtk-win/"
-        sys.exit(1)
-
-if is_osx:
-    try:
-        import setuptools
-    except ImportError:
-        print "Setuptools not found."
-        print "Please read doc/py2app for installation instructions."
         sys.exit(1)
 
 # Compute data_files (GTK for windows, man and stuff for *nix)
@@ -122,46 +109,48 @@ if __name__ == '__main__':
     from pynicotine.utils import version
     LONG_DESCRIPTION = """Nicotine+ is a client for SoulSeek filesharing system, forked from Nicotine."""
 
-    if is_osx:
-        setuptools.setup(
-            app=['nicotine.py'],
-            data_files=[],
-            options={
-                'py2app': {
-                    'argv_emulation': True,
-                    'includes': 'gtk, cairo, pangocairo, atk, gio',
-                    'iconfile': 'files/nicotine_blue_upscaled.icns',
-                    'packages': 'pynicotine'
-                }
-            },
-            setup_requires=['py2app']
-        )
-    else:
+    if is_windows:
         setup(
-            name             = "nicotine",
-            version          = version,
-            license          = "GPLv3",
-            description      = "Nicotine+, a client for the SoulSeek filesharing network.",
-            author           = "daelstorm",
-            author_email     = "daelstorm@gmail.com",
-            url              = "http://www.nicotine-plus.org/",
-            packages         = ['pynicotine', 'pynicotine.gtkgui'],
-            package_dir      = {'pynicotine.gtkgui':'pynicotine/gtkgui'},
-            package_data     = {'pynicotine.gtkgui': ["*.py","*.glade"], },
-            scripts          = [ 'nicotine.py'],
-            long_description = LONG_DESCRIPTION,
-            data_files       = files,
-            windows          = [
+            name="nicotine",
+            version=version,
+            license="GPLv3",
+            description="Nicotine+, a client for the SoulSeek filesharing network.",
+            author="daelstorm",
+            author_email="daelstorm@gmail.com",
+            url="http://www.nicotine-plus.org/",
+            packages=['pynicotine', 'pynicotine.gtkgui'],
+            package_dir={'pynicotine.gtkgui': 'pynicotine/gtkgui'},
+            package_data={'pynicotine.gtkgui': ["*.py", "*.glade", "*.ui"]},
+            scripts=['nicotine.py'],
+            long_description=LONG_DESCRIPTION,
+            data_files=files,
+            windows=[
                 {
                     "script": "nicotine.py",
                     "icon_resources": [(0, "img/ico/nicotine-plus-48x48.ico")]
                 }
             ],
-            options = {
+            options={
                 'py2exe': {
                     'skip_archive': True,
                     'packages': 'encodings',
                     'includes': 'cairo, pango, pangocairo, atk, gobject, dbhash, mutagen'
                 }
             }
+        )
+    else:
+        setup(
+            name="nicotine",
+            version=version,
+            license="GPLv3",
+            description="Nicotine+, a client for the SoulSeek filesharing network.",
+            author="daelstorm",
+            author_email="daelstorm@gmail.com",
+            url="http://www.nicotine-plus.org/",
+            packages=['pynicotine', 'pynicotine.gtkgui'],
+            package_dir={'pynicotine.gtkgui': 'pynicotine/gtkgui'},
+            package_data={'pynicotine.gtkgui': ["*.py", "*.glade", "*.ui"]},
+            scripts=['nicotine.py'],
+            long_description=LONG_DESCRIPTION,
+            data_files=files
         )
