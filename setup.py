@@ -71,13 +71,13 @@ else:
     # Manuals
     manpages = glob.glob(os.path.join("manpages", "*.1"))
     for man in manpages:
-        files.append((os.path.join(sys.prefix, "share", "man", "man1"), [man]))
+        files.append((os.path.join(sys.prefix, "share/man/man1"), [man]))
 
     # Icons with fixed size
     for sizeicons in ["16x16", "32x32", "48x48", "64x64", "96x96"]:
         files.append(
             (
-                os.path.join(sys.prefix, "share", "icons", "hicolor", sizeicons, "apps"),
+                os.path.join(sys.prefix, "share/icons/hicolor", sizeicons, "apps"),
                 ["files/icons/" + sizeicons + "/nicotine-plus.png"]
             )
         )
@@ -85,13 +85,13 @@ else:
     # Scalable icons
     files.append(
         (
-            os.path.join(sys.prefix, "share", "icons", "hicolor", "scalable", "apps"),
+            os.path.join(sys.prefix, "share/icons/hicolor/scalable/apps"),
             ["files/icons/scalable/nicotine-plus.svg"]
         )
     )
 
     # Desktop file
-    files.append((os.path.join(sys.prefix, "share", "applications"), ["files/nicotine.desktop"]))
+    files.append((os.path.join(sys.prefix, "share/applications"), ["files/nicotine.desktop"]))
 
 
 # Translation files
@@ -115,7 +115,7 @@ for mo in mo_dirs:
     else:
         files.append(
             (
-                os.path.join(sys.prefix, "share", "locale", lang, "LC_MESSAGES"),
+                os.path.join(sys.prefix, "share/locale", lang, "LC_MESSAGES"),
                 [os.path.join(lc_messages_path, "nicotine.mo")]
             )
         )
@@ -129,7 +129,7 @@ for sounds in sound_dirs:
         if is_windows:
             files.append((os.path.join("share", "nicotine", "sounds", theme), [os.path.join(sounds, file)]))
         else:
-            files.append((os.path.join(sys.prefix, "share", "nicotine", "sounds", theme), [os.path.join(sounds, file)]))
+            files.append((os.path.join(sys.prefix, "share/nicotine/sounds", theme), [os.path.join(sounds, file)]))
 
 # Documentation on GNU/Linux
 if not is_windows:
