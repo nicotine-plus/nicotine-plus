@@ -77,14 +77,29 @@ else:
 
 # data_files (translations)
 mo_dirs = [x for x in glob.glob(os.path.join("languages", "*")) if isdir(x)]
+
 for mo in mo_dirs:
+
     p, lang = os.path.split(mo)
-    if lang in ("msgfmtall.py", "mergeall", "nicotine.pot"):
+    lc_messages_path = os.path.join(mo, "LC_MESSAGES")
+
+    if lang in ("msgfmtall.py", "tr_gen.py", "mergeall", "nicotine.pot"):
         continue
+
     if is_windows:
-        files.append((os.path.join("share", "locale", lang, "LC_MESSAGES"), [os.path.join(mo, "nicotine.mo")]))
+        files.append(
+            (
+                os.path.join("share", "locale", lang, "LC_MESSAGES"),
+                [os.path.join(lc_messages_path, "nicotine.mo")]
+            )
+        )
     else:
-        files.append((os.path.join(sys.prefix, "share", "locale", lang, "LC_MESSAGES"), [os.path.join(mo, "nicotine.mo")]))
+        files.append(
+            (
+                os.path.join(sys.prefix, "share", "locale", lang, "LC_MESSAGES"),
+                [os.path.join(lc_messages_path, "nicotine.mo")]
+            )
+        )
 
 # data_files (sounds)
 sound_dirs = glob.glob(os.path.join("sounds", "*"))
