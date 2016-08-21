@@ -1,9 +1,10 @@
 #!/usr/bin/python
 
-"""To use this setup script to install Nicotine:
+"""
+    To use this setup script to install Nicotine:
 
-    # Install Nicotine+ in regular *nix directories
-    python setup.py install
+    # Install Nicotine+ in regular GNU/Linux directories
+    sudo python setup.py install
 
     # Create exe files for windows in dist subdir
     python setup.py py2exe
@@ -141,7 +142,7 @@ if not is_windows:
         for f in docfiles:
             files.append(
                 (
-                    os.path.join(sys.prefix, "share", "nicotine", "documentation", dst_path),
+                    os.path.join(sys.prefix, "share/doc/nicotine", dst_path),
                     [os.path.join(path, f)]
                 )
             )
