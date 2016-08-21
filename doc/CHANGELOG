@@ -23,7 +23,6 @@ Github:
 * File transfers are failing (#19)
 * Fix variable bitrate detection for MP3 files (#20)
 * Information On nicotine-plus.org (#21)
-* Build fails on archlinux, can't copy mo file (#22)
 
 Trac:
  * "Abort & Delete" button is mislabeled (#194)
