@@ -131,14 +131,20 @@ for sounds in sound_dirs:
         else:
             files.append((os.path.join(sys.prefix, "share", "nicotine", "sounds", theme), [os.path.join(sounds, file)]))
 
-# Documentation
-doc_files = glob.glob(os.path.join("doc", "*"))
+# Documentation on GNU/Linux
+if not is_windows:
 
-for file in doc_files:
-    if is_windows:
-        files.append((os.path.join("share", "nicotine", "documentation"), [file]))
-    else:
-        files.append((os.path.join(sys.prefix, "share", "nicotine", "documentation"), [file]))
+    for (path, dirs, docfiles) in os.walk("doc"):
+
+        dst_path = os.sep.join(path.split("/")[1:])
+
+        for f in docfiles:
+            files.append(
+                (
+                    os.path.join(sys.prefix, "share", "nicotine", "documentation", dst_path),
+                    [os.path.join(path, f)]
+                )
+            )
 
 
 if __name__ == '__main__':
