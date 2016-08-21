@@ -80,7 +80,7 @@ for dir, files in files.items():
         if isbuilder is not None:
             builderscripts.append(isbuilder)
 
-blacklist = ["icondata", "imagedata", "__init__"]
+blacklist = ["imagedata", "__init__"]
 
 for item in blacklist:
     for path in pythonscripts[:]:
