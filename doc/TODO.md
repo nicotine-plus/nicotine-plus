@@ -4,7 +4,6 @@ A list of stuff & things todo (not in any particular order):
 
 #### Short term goals
 
-* Refresh setuptools installer/builder.
 * Finish the port of FastConfigure to use virtual shares.
 * Drop the bundle Configparser module (upstream as all the patches).
 * Convert libsexy spellcheck stuff to pygtkspell.
@@ -15,6 +14,7 @@ A list of stuff & things todo (not in any particular order):
 * Our sounds are dropped by downstream packagers for being non-free: investigate.
 * Convert old (unmaintained) python-GeoIP code to an up to date version.
 * Drop the embeded Web browser: does work anymore, outdated and security nightmare.
+* **DONE**: Refresh setuptools installer/builder (Done on the GNU/Lonux side).
 * **DONE**: Drop in-house mp3 metadata parsing: replaced by mutagen.
 * **DONE**: Drop the old trayicon module: use the GTK included one.
 * **DONE**: Drop psyco (code speed up for Windows): unmaintained and not usefull anymore.
@@ -44,6 +44,8 @@ PyInstaller:
     * Translations files.
     * MiniUPnPc binary for upnp support.
     * Glade and gtkbuilder files.
+
+* Refresh setuptools installer/builder.
 
 NSIS installer:
 * Test & refresh Quinox stuff.
