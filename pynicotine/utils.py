@@ -119,7 +119,7 @@ def ApplyTranslation(lang=None):
     In both case if something goes wrong we fall back to no translation.
 
     This function also try to find translation files in the project path first:
-    $(PROJECT_PATH)/languages/$(LANG)/LC_MESSAGES/nicontine.mo
+    $(PROJECT_PATH)/languages/$(LANG)/LC_MESSAGES/nicotine.mo
 
     If no translations are found we fall back to the system path for locates:
     GNU/Linux: /usr/share/locale/$(LANG)/LC_MESSAGES
