@@ -128,14 +128,14 @@ def usage():
 Usage: nicotine [OPTION]...
   -c file, --config=file      Use non-default configuration file
   -p dir,  --plugins=dir      Use non-default directory for plugins
-  -t,      --enable-trayicon
-  -d,      --disable-trayicon
-  -r,      --enable-rgba
-  -x,      --disable-rgba
-  -v,      --version          Display version and exit
-  -h,      --help             Display this help and exit
-  -s,      --hidden           Start n+ hidden
-  -b ip,   --bindip=ip        Bind sockets to the given IP (useful for VPN)""")
+  -t,      --enable-trayicon  Enable the tray icon
+  -d,      --disable-trayicon Disable the tray icon
+  -r,      --enable-rgba      Enable RGBA mode, for full program transparency
+  -x,      --disable-rgba     Disable RGBA mode, default mode
+  -h,      --help             Show help and exit
+  -s,      --hidden           Start the program hidden so only the tray icon is shown
+  -b ip,   --bindip=ip        Bind sockets to the given IP (useful for VPN)
+  -v,      --version          Display version and exit""")
 
 
 def renameprocess(newname, debug=False):

@@ -1,46 +1,51 @@
-.\" 
-.TH "NICOTINE" "1" "July 2009" "Version 1.2.13" ""
+.\"
+.TH "NICOTINE+" "1" "August 2016" "Version 1.2.16" ""
 .SH "NAME"
-.B nicotine
+.B Nicotine+
 is a graphical client for the SoulSeek peer\-to\-peer network.
 .SH "SYNOPSIS"
 .B nicotine
 [options]
 .SH "DESCRIPTION"
-.BI nicotine
+.BI Nicotine+
 is a GTK\-based client for the SoulSeek peer\-to\-peer network written in Python.
 .SH "OPTIONS"
-.TP 
+.TP
 .BI \-c " <file>" "\fR,\fP \-\^\-config=" <file>
 Use <file> as configuration file. If <file> does not exists a new empty configuration file will be created.
-.TP 
-.B \-d, \-\^\-disable\-trayicon
-.TP 
+.TP
 .B \-t, \-\^\-enable\-trayicon
-Enable/disable the tray icon.
-.TP 
+Enable the tray icon.
+.TP
+.B \-d, \-\^\-disable\-trayicon
+Disable the tray icon.
+.TP
 .B \-h, \-\^\-help
 Show help and exit.
 .TP
 .B \-r, \-\^\-enable\-rgba
+Enable RGBA mode, for full program transparency.
 .TP
 .B \-x, \-\^\-disable\-rgba
-Enable/disable RGBA mode, for full program transparency. Default is not to use RGBA.
+Disable RGBA mode, default mode.
 .TP
 .B \-s, \-\^\-hidden
 Start the program hidden so only the tray icon is shown.
 .TP
+.BI \-b " <ip>" "\fR,\fP \-\^\-bindip=" <ip>
+Bind sockets to the given <ip> (useful for VPN).
+.TP
 .B \-v, \-\^\-version
 Show version number and exit.
 .SH "EXIT STATUS"
-Normally the exit status of the program will be 0. In case required
-dependencies are not present it returns 1, if the given list of arguments
-cannot be parsed it returns 2.
+Normally the exit status of the program will be 0.
+.br
+If required dependencies are not present it returns 1.
+.br
+If the given list of arguments cannot be parsed it returns 2.
 .SH "FILES"
 All personal files are stored in the folder ~/.nicotine/
 .SH "AUTHOR"
 This manual page was initially written by Adam Cecile <gandalf@le\-vert.net> for the Nicotine+ project.
-.br 
-Permission is granted to copy, distribute and/or modify this document under the terms of the GNU General Public License, Version 2 or any later version published by the Free Software Foundation.
-.SH "SEE ALSO"
-.B nicotine\-import\-winconfig(1)
+.br
+Permission is granted to copy, distribute and/or modify this document under the terms of the GNU General Public License, Version 3 or any later version published by the Free Software Foundation.
