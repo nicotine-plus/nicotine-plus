@@ -284,7 +284,7 @@ class UserBrowse:
             self.FolderTreeView.collapse_all()
             self.ExpandDirectoriesImage.set_from_stock(gtk.STOCK_ADD, 4)
 
-            nchildren, node = self.DirStore.GetChildren(0, 0)
+            nchildren, node = self.DirStore.GetChildren(None)
             if nchildren > 0:
                 self.SetDirectory((0,))
             else:
