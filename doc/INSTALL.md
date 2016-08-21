@@ -23,13 +23,9 @@ the system that is interested in running Nicotine. From the source tree run:
 
 ##### Building a source distribution
 
-To build source distribution (.tar.bz2) run:
+To build source distribution (.tar.bz2 + .tar.gz) run:
 
-`python setup.py sdist --formats=bztar`
-
-To build source distribution (.tar.bz2) run:
-
-`python setup.py sdist --formats=gztar`
+`python setup.py sdist --formats=bztar,gztar`
 
 ##### Building a rpm package
 
