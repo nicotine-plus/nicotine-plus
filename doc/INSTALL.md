@@ -4,36 +4,33 @@
 
 ##### Installation
 
-To install Nicotine, from the source tree run:
+To install Nicotine from the git repository run:
 
-`python setup.py install --prefix=wanteddir`
+`sudo python setup.py install`
 
-**If you omit --prefix Nicotine will be installed into the python system
-directory (typically /usr).**
-
-This is not recommended however, as there is no way to uninstall things easily this way.
-
-##### Launching Nicotine+
-
-The recommended way of running Nicotine is from the source tree, which might
-seem strange, but is no problem at all, especially if you are the only user of
-the system that is interested in running Nicotine. From the source tree run:
-
-`python ./nicotine.py`
+**WARNING**: Nicotine+ will be installed into the python system directory (typically /usr). There is no easy way to remove it once installed this way.
 
 ##### Building a source distribution
 
-To build source distribution (.tar.bz2 + .tar.gz) run:
+To build source distribution files (.tar.bz2 & .tar.gz) from the git repository run:
 
 `python setup.py sdist --formats=bztar,gztar`
 
-##### Building a rpm package
+The source distribution files will be located in the `dist` subdirectory of your git repository.
 
-To create an RPM from the source tree run:
+##### Building a RPM package
+
+You need to install the RPM building tools first:
+
+* On Redhat/Fedora based distributions: `sudo dnf install rpm-build`
+
+* On Debian/Ubuntu based distributions: `sudo apt-get install rpm`
+
+Then you can create an RPM with:
 
 `python setup.py bdist_rpm`
 
-This will create a binary RPM in the dist subdirectory of the source tree.
+The RPM package will be located in the `dist` subdirectory of of your git repository.
 
 
 ### Windows
