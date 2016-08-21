@@ -9,3 +9,8 @@ languages/nicotine-*.pot
 
 # Ignore venv files
 venv/*
+
+# Ignore packaging directories and files
+MANIFEST
+build/
+dist/
