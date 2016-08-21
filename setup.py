@@ -72,10 +72,29 @@ else:
     manpages = glob.glob(os.path.join("manpages", "*.1"))
     for man in manpages:
         files.append((os.path.join(sys.prefix, "share", "man", "man1"), [man]))
-    files.append((os.path.join(sys.prefix, "share", "pixmaps"), ["files/nicotine-plus-32px.png"]))
+
+    # Icons with fixed size
+    for sizeicons in ["16x16", "32x32", "48x48", "64x64", "96x96"]:
+        files.append(
+            (
+                os.path.join(sys.prefix, "share", "icons", "hicolor", sizeicons, "apps"),
+                ["files/icons/" + sizeicons + "/nicotine-plus.png"]
+            )
+        )
+
+    # Scalable icons
+    files.append(
+        (
+            os.path.join(sys.prefix, "share", "icons", "hicolor", "scalable", "apps"),
+            ["files/icons/scalable/nicotine-plus.svg"]
+        )
+    )
+
+    # Desktop file
     files.append((os.path.join(sys.prefix, "share", "applications"), ["files/nicotine.desktop"]))
 
-# data_files (translations)
+
+# Translation files
 mo_dirs = [x for x in glob.glob(os.path.join("languages", "*")) if isdir(x)]
 
 for mo in mo_dirs:
@@ -101,8 +120,9 @@ for mo in mo_dirs:
             )
         )
 
-# data_files (sounds)
+# Sounds
 sound_dirs = glob.glob(os.path.join("sounds", "*"))
+
 for sounds in sound_dirs:
     p, theme = os.path.split(sounds)
     for file in ["private.ogg", "room_nick.ogg", "details.txt", "license.txt"]:
@@ -111,13 +131,15 @@ for sounds in sound_dirs:
         else:
             files.append((os.path.join(sys.prefix, "share", "nicotine", "sounds", theme), [os.path.join(sounds, file)]))
 
-# data_files (documentation)
+# Documentation
 doc_files = glob.glob(os.path.join("doc", "*"))
+
 for file in doc_files:
     if is_windows:
         files.append((os.path.join("share", "nicotine", "documentation"), [file]))
     else:
         files.append((os.path.join(sys.prefix, "share", "nicotine", "documentation"), [file]))
+
 
 if __name__ == '__main__':
 
