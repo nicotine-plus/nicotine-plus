@@ -47,7 +47,9 @@ Once PyInstaller is installed go to the git root folder and run via cmd.exe or P
 
 `C:\Python27\Scripts\pyinstaller.exe .\tools\nicotine+-win32.spec`
 
-When the frozen application finish to build you will find it under the `dist/Nicotine+` subdirectory.
+When the frozen application finish to build you will find it under the `dist\Nicotine+` subdirectory.
+
+If you want to run the frozen application you can launch the executable `dist\Nicotine+\Nicotine+.exe`.
 
 ##### Building a NSIS installer from the frozen application
 

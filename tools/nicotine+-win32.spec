@@ -3,11 +3,12 @@
 block_cipher = None
 
 added_files = [
-         ( '../pynicotine/gtkgui/*.glade', 'pynicotine/gtkgui' ),
-         ( '../pynicotine/gtkgui/*.ui', 'pynicotine/gtkgui' ),
-         ( '../doc', 'doc' ),
-         ( '../languages', 'languages' ),
-         ( '../files/win32', 'files/win32' )
+    ( '../pynicotine/gtkgui/*.glade', 'pynicotine/gtkgui' ),
+    ( '../pynicotine/gtkgui/*.ui', 'pynicotine/gtkgui' ),
+    ( '../doc', 'doc' ),
+    ( '../languages', 'languages' ),
+    ( '../files/win32', 'files/win32' ),
+    ( '../COPYING', '.' )
 ]
 
 a = Analysis(['../nicotine.py'],
