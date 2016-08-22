@@ -169,7 +169,7 @@ else
 fi
 
 echo -n "Building the Platypus application frame... "
-platypus -a Nicotine -c mac_platypus.sh -o None -i files/nicotine_blue_upscaled.icns -V 1.2.16svn -u "nicotine+" -I "org.nicotine-plus.Nicotine" -Fly$appisUIelement ../Nicotine.app
+platypus -a Nicotine -c mac_platypus.sh -o None -i files/mac/nicotine_blue_upscaled.icns -V 1.2.16svn -u "nicotine+" -I "org.nicotine-plus.Nicotine" -Fly$appisUIelement ../Nicotine.app
 echo done.
 
 echo -n "Populating the Resources folder.. "
@@ -200,7 +200,7 @@ read
 echo -n "Shrinking the remainder of the Frameworks folder... "
 rm -rf Headers Python Resources include share
 cd lib ; rm -rf pygtk pkgconfig ; cd python2.6
-rm -rf compiler config ctypes/macholib curses distutils email hotshot idlelib json lib-tk lib2to3 multiprocessing plat-darwin plat-mac sqlite3 wsgiref* xml test* */test* */*/test* */*/*/test* *.txt */*.txt */*/*.txt */*/*/*.txt *.pyo */*.pyo */*/*.pyo */*/*/*.pyo *.pyc */*.pyc */*/*.pyc */*/*/*.pyc 
+rm -rf compiler config ctypes/macholib curses distutils email hotshot idlelib json lib-tk lib2to3 multiprocessing plat-darwin plat-mac sqlite3 wsgiref* xml test* */test* */*/test* */*/*/test* *.txt */*.txt */*/*.txt */*/*/*.txt *.pyo */*.pyo */*/*.pyo */*/*/*.pyo *.pyc */*.pyc */*/*.pyc */*/*/*.pyc
 echo done.
 
 cd ../../../../../../Resources
