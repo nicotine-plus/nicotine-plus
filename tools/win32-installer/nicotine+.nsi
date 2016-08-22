@@ -14,10 +14,10 @@
 !define MUI_WELCOMEPAGE_TITLE_3LINES
 !define MUI_HEADERIMAGE
 !define MUI_HEADERIMAGE_RIGHT
-!define MUI_ICON "..\..\img\ico\nicotine+-installer.ico"
-!define MUI_UNICON "..\..\img/ico\nicotine+-installer.ico"
-!define MUI_HEADERIMAGE_BITMAP "artwork\modern-header.bmp"
-!define MUI_WELCOMEFINISHPAGE_BITMAP "artwork\modern-wizard.bmp"
+!define MUI_ICON "..\..\files\win32\nicotine-installer.ico"
+!define MUI_UNICON "..\..\files\win32\nicotine-installer.ico"
+!define MUI_HEADERIMAGE_BITMAP "..\..\files\win32\modern-header.bmp"
+!define MUI_WELCOMEFINISHPAGE_BITMAP "..\..\files\win32\modern-wizard.bmp"
 
 !insertmacro MUI_PAGE_WELCOME
 !insertmacro MUI_PAGE_LICENSE "..\..\COPYING"
@@ -54,7 +54,7 @@ Function ValidateInstDir
 This probably means you are installing over an old Nicotine+ (< 1.2.10) installation. It is not supported.$\n$\n\
 Please choose another directory or cancel this setup, uninstall the previous Nicotine+ version and then, install this one again."
     Abort
-  ${EndIf}    
+  ${EndIf}
 FunctionEnd
 
 Function ShortCuts
@@ -86,7 +86,7 @@ Section -Post
   ${endif}
   ReadINIStr $0 "$PLUGINSDIR\shortcuts.ini" "Field 3" "State"
   ${if} $0 = 1
-    CreateShortCut "$DESKTOP\Nicotine+.lnk" "$INSTDIR\nicotine.exe" "" "$INSTDIR\img\ico\nicotine+-.ico" 0
+    CreateShortCut "$DESKTOP\Nicotine+.lnk" "$INSTDIR\nicotine.exe" "" "$INSTDIR\files\win32\nicotine.ico" 0
   ${endif}
 SectionEnd
 
