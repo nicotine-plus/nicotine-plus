@@ -21,11 +21,12 @@
 
 from pynicotine import slskmessages
 from logfacility import log
-from utils import executeCommand
 
 import platform
 import re
+import subprocess
 from socket import gethostbyname, gethostname
+from subprocess import Popen, PIPE, STDOUT
 
 
 class UPnPPortMapping:
@@ -50,14 +51,32 @@ class UPnPPortMapping:
         # client
         self.foundexistingmapping = False
 
+        # Detect if we're on Windpws
+        self.iswin32 = platform.system().startswith("Win")
+
         # Defining where the miniupnpc binary might be
-        if platform.system().startswith("Win"):
+        if self.iswin32:
             # On windows we use a static build of upnpc
             # That needs to be put in the upnpc subfolder
-            self.upnpcbinary = 'files/win32/upnpc/upnpc-static.exe'
+            self.upnpcbinary = 'files\\win32\\upnpc\\upnpc-static.exe'
         else:
             # On GNU/linux we try to find it in the $PATH
             self.upnpcbinary = 'upnpc'
+
+    def run_binary(self, cmd):
+
+        if self.iswin32:
+            # Ugly hack to hide the command prompt on Windows
+            info = subprocess.STARTUPINFO()
+            info.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+
+            p = Popen(cmd, stdout=PIPE, stderr=STDOUT, startupinfo=info)
+        else:
+            p = Popen(cmd, stdout=PIPE, stderr=STDOUT)
+
+        (out, err) = p.communicate()
+
+        return out.rstrip()
 
     def IsPossible(self):
         """Function to check the requirements for doing a port mapping.
@@ -73,11 +92,8 @@ class UPnPPortMapping:
         except ImportError as e1:
             try:
                 # We fail to import the python module: fallback to the binary.
-                # FIXME: the executeCommand function seems broken a little bit:
-                # it prints the output in the terminal whatever options are
-                # passed
-                executeCommand(self.upnpcbinary)
-            except RuntimeError as e2:
+                self.run_binary(self.upnpcbinary)
+            except Exception as e2:
                 # Nothing works :/
                 errors = [
                     _('Failed to import miniupnpc module: %(error)s') %
@@ -194,8 +210,8 @@ class UPnPPortMapping:
 
         command = self.upnpcbinary + ' -l'
         try:
-            output = executeCommand(command, returnoutput=True)
-        except RuntimeError as e:
+            output = self.run_binary(command)
+        except Exception as e:
             raise RuntimeError(
                 _('Failed to use UPnPc binary: %(error)s') % {'error': str(e)})
 
@@ -280,8 +296,8 @@ class UPnPPortMapping:
             str(self.externalwanport) + ' TCP'
 
         try:
-            output = executeCommand(command, returnoutput=True)
-        except RuntimeError as e:
+            output = self.run_binary(command)
+        except Exception as e:
             raise RuntimeError(
                 _('Failed to use UPnPc binary: %(error)s') % {'error': str(e)})
 
