@@ -1,0 +1,45 @@
+Created by daelstorm (released under GPLv2+ and upgraded to GPLv3+)
+
+archive/birdies.xcf
+archive/away2.ico
+archive/connect.ico
+archive/disconnect.ico
+archive/hilite2.ico
+
+Created by Quinox (released under GPLv2+ and upgraded to GPLv3+)
+
+archive/nicotine-plus-48px.ico
+archive/nicotine-32px.ico
+archive/nicotine-48px.ico
+archive/nicotine-64px.ico
+
+icons/*
+
+win32/modern-header.bmp
+win32/modern-header.svg
+win32/modern-wizard.bmp
+win32/modern-wizard.svg
+
+Created by eLvErDe (released under GPLv2+ and upgraded to GPLv3+)
+
+win32/nicotine.ico
+win32/nicotine-installer.ico
+
+Created by gfarmerfr (released under GPLv3+)
+
+win32/nicotine-plus-128px.ico (derived from icons/scalable/nicotine-plus.svg)
+
+Created by contact@nilux.org / Unknown license:
+
+archive/nicotine-proposal1.png
+archive/nicotine-proposal2.png
+
+Unknown license / origin (dates back from the svn rebuild):
+
+archive/nicotine.ico
+archive/nicotine.png
+archive/nicotine_blue.png
+archive/nicotine_blue_upscaled.png
+archive/nicotine_clear.png
+archive/nicotine_orange.png
+mac/nicotine_blue_upscaled.icns
