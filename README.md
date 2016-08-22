@@ -11,6 +11,10 @@ and add some new features that users want and/or need.
 
 To run it from git master see: [RUNFROMGIT](doc/RUNFROMGIT.md)
 
+### Installation / Packaging
+
+For installation / packaging instruction see: [INSTALL](doc/INSTALL.md)
+
 ### Help wanted
 
 You want to help ? See a list of things [TODO](doc/TODO.md)
