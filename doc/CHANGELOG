@@ -9,7 +9,8 @@ Behaviour
  * Send a private message to users who queue a directory has been removed
 
 Features
- * Translations works on windows
+ * Translations works on Windows
+ * UPnP support out of the box on Windows
  * Virtual share system implemented
 
 Bugs

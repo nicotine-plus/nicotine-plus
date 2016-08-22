@@ -31,25 +31,22 @@ A list of stuff & things todo (not in any particular order):
 * Switch to GTK3.
 * Switch to Gstreamer 1.X (require GTK3).
 * Switch from python-notify to an up to date alternative.
-* Use pip and venv for build/tests purposes.
-* Make as much as possible optionnal dependencies work on Windows.
-* Build the OSX version (I've no Mac).
+* **IN PROGRESS**: Use pip and venv for build/tests purposes.
+* **IN PROGRESS**: Make as much as possible optionnal dependencies work on Windows.
+* **STALLED**: Build the OSX version: I've no Mac.
 
 #### Windows specific stuff
 
+NSIS installer:
+* Test & refresh Quinox stuff.
+
 PyInstaller:
-* **IN PROGRESS**: Document how to build a frozen app.
-* **IN PROGRESS**: Write a spec file including:
+* **DONE**: Document how to build a frozen app.
+* **DONE**: Write a spec file including:
     * The Nicotine Guide.
     * Translations files.
     * MiniUPnPc binary for upnp support.
     * Glade and gtkbuilder files.
 
-* Refresh setuptools installer/builder.
-
-NSIS installer:
-* Test & refresh Quinox stuff.
-* Check for VS2010 runtime availability.
-
 UPnP:
-* **IN PROGRESS**: Test using the precompiled binary from upstream.
+* **DONE**: Test using the precompiled binary from upstream.
