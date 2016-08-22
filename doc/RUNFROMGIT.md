@@ -40,8 +40,12 @@
 
     `sudo dnf install notify-python python-GeoIP python-miniupnpc`
 
+
 * On Debian/Ubuntu based distributions:
 
     `sudo apt-get install python-notify python-geoip python-miniupnpc`
 
-* On Windows: I'm working on it :)
+
+* On Windows:
+    * The miniupnpc client is now included in the `files/win32/upnpc` subdirectory and should work out of the box.
+    * Other optional dependencies: I'm working on it :)

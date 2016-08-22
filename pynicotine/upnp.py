@@ -23,6 +23,7 @@ from pynicotine import slskmessages
 from logfacility import log
 from utils import executeCommand
 
+import platform
 import re
 from socket import gethostbyname, gethostname
 
@@ -49,6 +50,15 @@ class UPnPPortMapping:
         # client
         self.foundexistingmapping = False
 
+        # Defining where the miniupnpc binary might be
+        if platform.system().startswith("Win"):
+            # On windows we use a static build of upnpc
+            # That needs to be put in the upnpc subfolder
+            self.upnpcbinary = 'files/win32/upnpc/upnpc-static.exe'
+        else:
+            # On GNU/linux we try to find it in the $PATH
+            self.upnpcbinary = 'upnpc'
+
     def IsPossible(self):
         """Function to check the requirements for doing a port mapping.
 
@@ -66,7 +76,7 @@ class UPnPPortMapping:
                 # FIXME: the executeCommand function seems broken a little bit:
                 # it prints the output in the terminal whatever options are
                 # passed
-                executeCommand("upnpc")
+                executeCommand(self.upnpcbinary)
             except RuntimeError as e2:
                 # Nothing works :/
                 errors = [
@@ -182,7 +192,7 @@ class UPnPPortMapping:
         # Listing existing ports mappings
         log.adddebug('Listing existing Ports Mappings...')
 
-        command = 'upnpc -l'
+        command = self.upnpcbinary + ' -l'
         try:
             output = executeCommand(command, returnoutput=True)
         except RuntimeError as e:
@@ -264,7 +274,7 @@ class UPnPPortMapping:
                      )
                      )
 
-        command = 'upnpc -e "Nicotine+" -a ' + \
+        command = self.upnpcbinary + ' -e "Nicotine+" -a ' + \
             str(self.internalipaddress) + ' ' + \
             str(self.internallanport) + ' ' + \
             str(self.externalwanport) + ' TCP'
