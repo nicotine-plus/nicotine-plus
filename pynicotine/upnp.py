@@ -21,6 +21,7 @@
 
 from pynicotine import slskmessages
 from logfacility import log
+from utils import findBestEncoding
 
 import platform
 import re
@@ -99,7 +100,12 @@ class UPnPPortMapping:
                     _('Failed to import miniupnpc module: %(error)s') %
                     {'error': str(e1)},
                     _('Failed to run upnpc binary: %(error)s') %
-                    {'error': str(e2)}
+                    {
+                        'error': findBestEncoding(
+                            str(e2),
+                            ['utf-8', 'ascii', 'iso8859-1']
+                        )
+                    }
                 ]
                 return (False, errors)
             else:
