@@ -93,7 +93,7 @@ class UPnPPortMapping:
         except ImportError as e1:
             try:
                 # We fail to import the python module: fallback to the binary.
-                self.run_binary(self.upnpcbinary)
+                self.run_binary([self.upnpcbinary])
             except Exception as e2:
                 # Nothing works :/
                 errors = [
@@ -214,7 +214,7 @@ class UPnPPortMapping:
         # Listing existing ports mappings
         log.adddebug('Listing existing Ports Mappings...')
 
-        command = self.upnpcbinary + ' -l'
+        command = [self.upnpcbinary, '-l']
         try:
             output = self.run_binary(command)
         except Exception as e:
@@ -296,10 +296,16 @@ class UPnPPortMapping:
                      )
                      )
 
-        command = self.upnpcbinary + ' -e "Nicotine+" -a ' + \
-            str(self.internalipaddress) + ' ' + \
-            str(self.internallanport) + ' ' + \
-            str(self.externalwanport) + ' TCP'
+        command = [
+            self.upnpcbinary,
+            '-e',
+            '"Nicotine+"',
+            '-a',
+            str(self.internalipaddress),
+            str(self.internallanport),
+            str(self.externalwanport),
+            'TCP'
+        ]
 
         try:
             output = self.run_binary(command)
