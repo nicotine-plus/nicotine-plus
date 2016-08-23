@@ -65,6 +65,13 @@ class UPnPPortMapping:
             self.upnpcbinary = 'upnpc'
 
     def run_binary(self, cmd):
+        """Function used to call the upnpc binary.
+
+        Redirect stderr to stdout since we don't really care having
+        two distinct streams.
+
+        Also prevent the command prompt from being shown on Windows.
+        """
 
         if self.iswin32:
             # Ugly hack to hide the command prompt on Windows
