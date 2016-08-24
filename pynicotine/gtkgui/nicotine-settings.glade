@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <glade-interface>
-  <!-- interface-requires gtk+ 2.16 -->
+  <!-- interface-requires gtk+ 2.24 -->
   <!-- interface-naming-policy toplevel-contextual -->
   <widget class="GtkWindow" id="AutoReplaceFrame">
     <property name="can_focus">False</property>
@@ -25,7 +25,7 @@ typed incorrectly or as an acronym</property>
                 <property name="receives_default">False</property>
                 <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                 <property name="draw_indicator">True</property>
-                <signal name="toggled" handler="OnReplaceCheck" swapped="no"/>
+                <signal name="toggled" handler="OnReplaceCheck"/>
               </widget>
               <packing>
                 <property name="expand">False</property>
@@ -71,8 +71,8 @@ typed incorrectly or as an acronym</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>
-                        <signal name="activate" handler="OnAdd" swapped="no"/>
-                        <signal name="clicked" handler="OnAdd" swapped="no"/>
+                        <signal name="activate" handler="OnAdd"/>
+                        <signal name="clicked" handler="OnAdd"/>
                         <child>
                           <widget class="GtkAlignment" id="alignment19">
                             <property name="visible">True</property>
@@ -126,8 +126,8 @@ typed incorrectly or as an acronym</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>
-                        <signal name="activate" handler="OnRemove" swapped="no"/>
-                        <signal name="clicked" handler="OnRemove" swapped="no"/>
+                        <signal name="activate" handler="OnRemove"/>
+                        <signal name="clicked" handler="OnRemove"/>
                         <child>
                           <widget class="GtkAlignment" id="alignment21">
                             <property name="visible">True</property>
@@ -181,8 +181,8 @@ typed incorrectly or as an acronym</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>
-                        <signal name="activate" handler="OnClear" swapped="no"/>
-                        <signal name="clicked" handler="OnClear" swapped="no"/>
+                        <signal name="activate" handler="OnClear"/>
+                        <signal name="clicked" handler="OnClear"/>
                         <child>
                           <widget class="GtkAlignment" id="alignment22">
                             <property name="visible">True</property>
@@ -236,8 +236,8 @@ typed incorrectly or as an acronym</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>
-                        <signal name="activate" handler="OnDefaults" swapped="no"/>
-                        <signal name="clicked" handler="OnDefaults" swapped="no"/>
+                        <signal name="activate" handler="OnDefaults"/>
+                        <signal name="clicked" handler="OnDefaults"/>
                         <child>
                           <widget class="GtkAlignment" id="alignment23">
                             <property name="visible">True</property>
@@ -505,7 +505,7 @@ typed incorrectly or as an acronym</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
-                            <signal name="clicked" handler="OnAddBanned" swapped="no"/>
+                            <signal name="clicked" handler="OnAddBanned"/>
                             <child>
                               <widget class="GtkAlignment" id="alignment62">
                                 <property name="visible">True</property>
@@ -558,7 +558,7 @@ typed incorrectly or as an acronym</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
-                            <signal name="clicked" handler="OnRemoveBanned" swapped="no"/>
+                            <signal name="clicked" handler="OnRemoveBanned"/>
                             <child>
                               <widget class="GtkAlignment" id="alignment63">
                                 <property name="visible">True</property>
@@ -611,7 +611,7 @@ typed incorrectly or as an acronym</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
-                            <signal name="clicked" handler="OnClearBanned" swapped="no"/>
+                            <signal name="clicked" handler="OnClearBanned"/>
                             <child>
                               <widget class="GtkAlignment" id="alignment64">
                                 <property name="visible">True</property>
@@ -720,7 +720,7 @@ typed incorrectly or as an acronym</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
-                            <signal name="clicked" handler="OnAddBlocked" swapped="no"/>
+                            <signal name="clicked" handler="OnAddBlocked"/>
                             <child>
                               <widget class="GtkAlignment" id="alignmentAddIP">
                                 <property name="visible">True</property>
@@ -773,7 +773,7 @@ typed incorrectly or as an acronym</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
-                            <signal name="clicked" handler="OnRemoveBlocked" swapped="no"/>
+                            <signal name="clicked" handler="OnRemoveBlocked"/>
                             <child>
                               <widget class="GtkAlignment" id="alignmentRemoveIP">
                                 <property name="visible">True</property>
@@ -826,7 +826,7 @@ typed incorrectly or as an acronym</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
-                            <signal name="clicked" handler="OnClearBlocked" swapped="no"/>
+                            <signal name="clicked" handler="OnClearBlocked"/>
                             <child>
                               <widget class="GtkAlignment" id="alignmentClearIPs">
                                 <property name="visible">True</property>
@@ -907,7 +907,7 @@ typed incorrectly or as an acronym</property>
                     <property name="receives_default">False</property>
                     <property name="use_underline">True</property>
                     <property name="draw_indicator">True</property>
-                    <signal name="toggled" handler="OnUseCustomBanToggled" swapped="no"/>
+                    <signal name="toggled" handler="OnUseCustomBanToggled"/>
                   </widget>
                   <packing>
                     <property name="expand">False</property>
@@ -1090,7 +1090,7 @@ typed incorrectly or as an acronym</property>
                     <property name="receives_default">True</property>
                     <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                     <property name="use_stock">True</property>
-                    <signal name="clicked" handler="OnDefaultFont" swapped="no"/>
+                    <signal name="clicked" handler="OnDefaultFont"/>
                   </widget>
                   <packing>
                     <property name="expand">False</property>
@@ -1399,7 +1399,7 @@ typed incorrectly or as an acronym</property>
                             <property name="tooltip" translatable="yes">Loading translations requires a restart</property>
                             <property name="xalign">0</property>
                             <property name="draw_indicator">True</property>
-                            <signal name="toggled" handler="OnTranslationCheckToggled" swapped="no"/>
+                            <signal name="toggled" handler="OnTranslationCheckToggled"/>
                           </widget>
                           <packing>
                             <property name="expand">True</property>
@@ -1480,7 +1480,7 @@ typed incorrectly or as an acronym</property>
                 <property name="receives_default">False</property>
                 <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                 <property name="draw_indicator">True</property>
-                <signal name="toggled" handler="OnCensorCheck" swapped="no"/>
+                <signal name="toggled" handler="OnCensorCheck"/>
               </widget>
               <packing>
                 <property name="expand">False</property>
@@ -1589,8 +1589,8 @@ typed incorrectly or as an acronym</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>
-                        <signal name="activate" handler="OnAdd" swapped="no"/>
-                        <signal name="clicked" handler="OnAdd" swapped="no"/>
+                        <signal name="activate" handler="OnAdd"/>
+                        <signal name="clicked" handler="OnAdd"/>
                         <child>
                           <widget class="GtkAlignment" id="alignment5">
                             <property name="visible">True</property>
@@ -1644,8 +1644,8 @@ typed incorrectly or as an acronym</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>
-                        <signal name="activate" handler="OnRemove" swapped="no"/>
-                        <signal name="clicked" handler="OnRemove" swapped="no"/>
+                        <signal name="activate" handler="OnRemove"/>
+                        <signal name="clicked" handler="OnRemove"/>
                         <child>
                           <widget class="GtkAlignment" id="alignment12">
                             <property name="visible">True</property>
@@ -1699,8 +1699,8 @@ typed incorrectly or as an acronym</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>
-                        <signal name="activate" handler="OnClear" swapped="no"/>
-                        <signal name="clicked" handler="OnClear" swapped="no"/>
+                        <signal name="activate" handler="OnClear"/>
+                        <signal name="clicked" handler="OnClear"/>
                         <child>
                           <widget class="GtkAlignment" id="alignment13">
                             <property name="visible">True</property>
@@ -2056,7 +2056,7 @@ typed incorrectly or as an acronym</property>
                     <property name="can_focus">True</property>
                     <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                     <property name="expanded">True</property>
-                    <signal name="activate" handler="OnExpand" swapped="no"/>
+                    <signal name="activate" handler="OnExpand"/>
                     <child>
                       <widget class="GtkAlignment" id="alignment2">
                         <property name="visible">True</property>
@@ -2942,7 +2942,7 @@ typed incorrectly or as an acronym</property>
                                     <property name="receives_default">False</property>
                                     <property name="use_underline">True</property>
                                     <property name="draw_indicator">True</property>
-                                    <signal name="toggled" handler="OnUsernameHotspotsToggled" swapped="no"/>
+                                    <signal name="toggled" handler="OnUsernameHotspotsToggled"/>
                                   </widget>
                                   <packing>
                                     <property name="expand">True</property>
@@ -3353,7 +3353,7 @@ typed incorrectly or as an acronym</property>
                     <property name="can_focus">True</property>
                     <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                     <property name="use_markup">True</property>
-                    <signal name="activate" handler="OnExpand" swapped="no"/>
+                    <signal name="activate" handler="OnExpand"/>
                     <child>
                       <widget class="GtkAlignment" id="alignment6">
                         <property name="visible">True</property>
@@ -4646,7 +4646,7 @@ typed incorrectly or as an acronym</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="use_markup">True</property>
-                    <signal name="activate" handler="OnExpand" swapped="no"/>
+                    <signal name="activate" handler="OnExpand"/>
                     <child>
                       <widget class="GtkVBox" id="vboxTrans">
                         <property name="visible">True</property>
@@ -4677,7 +4677,7 @@ typed incorrectly or as an acronym</property>
                             <property name="border_width">3</property>
                             <property name="use_underline">True</property>
                             <property name="draw_indicator">True</property>
-                            <signal name="toggled" handler="OnEnableTransparentToggled" swapped="no"/>
+                            <signal name="toggled" handler="OnEnableTransparentToggled"/>
                           </widget>
                           <packing>
                             <property name="expand">False</property>
@@ -4695,7 +4695,7 @@ typed incorrectly or as an acronym</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
-                                <signal name="clicked" handler="OnPickTint" swapped="no"/>
+                                <signal name="clicked" handler="OnPickTint"/>
                                 <child>
                                   <widget class="GtkAlignment" id="alignment89">
                                     <property name="visible">True</property>
@@ -4780,7 +4780,7 @@ typed incorrectly or as an acronym</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
-                                <signal name="clicked" handler="OnDefaultTint" swapped="no"/>
+                                <signal name="clicked" handler="OnDefaultTint"/>
                                 <child>
                                   <widget class="GtkAlignment" id="alignment90">
                                     <property name="visible">True</property>
@@ -4861,7 +4861,7 @@ typed incorrectly or as an acronym</property>
                                     <property name="can_focus">True</property>
                                     <property name="adjustment">0 0 255 1 20 0</property>
                                     <property name="digits">0</property>
-                                    <signal name="value_changed" handler="ScaleColour" swapped="no"/>
+                                    <signal name="value_changed" handler="ScaleColour"/>
                                   </widget>
                                   <packing>
                                     <property name="expand">True</property>
@@ -4898,7 +4898,7 @@ typed incorrectly or as an acronym</property>
                                     <property name="can_focus">True</property>
                                     <property name="adjustment">0 0 255 1 20 0</property>
                                     <property name="digits">0</property>
-                                    <signal name="value_changed" handler="ScaleColour" swapped="no"/>
+                                    <signal name="value_changed" handler="ScaleColour"/>
                                   </widget>
                                   <packing>
                                     <property name="expand">True</property>
@@ -4936,7 +4936,7 @@ typed incorrectly or as an acronym</property>
                                     <property name="can_focus">True</property>
                                     <property name="adjustment">0 0 255 1 20 0</property>
                                     <property name="digits">0</property>
-                                    <signal name="value_changed" handler="ScaleColour" swapped="no"/>
+                                    <signal name="value_changed" handler="ScaleColour"/>
                                   </widget>
                                   <packing>
                                     <property name="expand">True</property>
@@ -4973,7 +4973,7 @@ typed incorrectly or as an acronym</property>
                                     <property name="can_focus">True</property>
                                     <property name="adjustment">0 0 255 1 20 0</property>
                                     <property name="digits">0</property>
-                                    <signal name="value_changed" handler="ScaleColour" swapped="no"/>
+                                    <signal name="value_changed" handler="ScaleColour"/>
                                   </widget>
                                   <packing>
                                     <property name="expand">True</property>
@@ -5379,7 +5379,7 @@ typed incorrectly or as an acronym</property>
                             <property name="show_hidden">True</property>
                             <property name="title" translatable="yes">Select A Directory</property>
                             <property name="width_chars">15</property>
-                            <signal name="current_folder_changed" handler="OnChooseIncompleteDir" swapped="no"/>
+                            <signal name="current_folder_changed" handler="OnChooseIncompleteDir"/>
                           </widget>
                           <packing>
                             <property name="expand">False</property>
@@ -5439,7 +5439,7 @@ typed incorrectly or as an acronym</property>
                             <property name="show_hidden">True</property>
                             <property name="title" translatable="yes">Select A Directory</property>
                             <property name="width_chars">15</property>
-                            <signal name="current_folder_changed" handler="OnChooseDownloadDir" swapped="no"/>
+                            <signal name="current_folder_changed" handler="OnChooseDownloadDir"/>
                           </widget>
                           <packing>
                             <property name="expand">False</property>
@@ -5582,7 +5582,7 @@ typed incorrectly or as an acronym</property>
                             <property name="receives_default">False</property>
                             <property name="use_underline">True</property>
                             <property name="draw_indicator">True</property>
-                            <signal name="toggled" handler="OnEnableFiltersToggle" swapped="no"/>
+                            <signal name="toggled" handler="OnEnableFiltersToggle"/>
                           </widget>
                           <packing>
                             <property name="expand">False</property>
@@ -5631,7 +5631,7 @@ typed incorrectly or as an acronym</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">True</property>
-                                <signal name="clicked" handler="OnVerifyFilter" swapped="no"/>
+                                <signal name="clicked" handler="OnVerifyFilter"/>
                                 <child>
                                   <widget class="GtkAlignment" id="alignment99">
                                     <property name="visible">True</property>
@@ -5748,7 +5748,7 @@ typed incorrectly or as an acronym</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">True</property>
-                                <signal name="clicked" handler="OnAddFilter" swapped="no"/>
+                                <signal name="clicked" handler="OnAddFilter"/>
                                 <child>
                                   <widget class="GtkAlignment" id="alignment95">
                                     <property name="visible">True</property>
@@ -5801,7 +5801,7 @@ typed incorrectly or as an acronym</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">True</property>
-                                <signal name="clicked" handler="OnEditFilter" swapped="no"/>
+                                <signal name="clicked" handler="OnEditFilter"/>
                                 <child>
                                   <widget class="GtkAlignment" id="alignment96">
                                     <property name="visible">True</property>
@@ -5854,7 +5854,7 @@ typed incorrectly or as an acronym</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">True</property>
-                                <signal name="clicked" handler="OnRemoveFilter" swapped="no"/>
+                                <signal name="clicked" handler="OnRemoveFilter"/>
                                 <child>
                                   <widget class="GtkAlignment" id="alignment97">
                                     <property name="visible">True</property>
@@ -5907,7 +5907,7 @@ typed incorrectly or as an acronym</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">True</property>
-                                <signal name="clicked" handler="OnDefaultFilters" swapped="no"/>
+                                <signal name="clicked" handler="OnDefaultFilters"/>
                                 <child>
                                   <widget class="GtkAlignment" id="alignment98">
                                     <property name="visible">True</property>
@@ -6331,7 +6331,7 @@ Clear</property>
                 <property name="receives_default">False</property>
                 <property name="use_underline">True</property>
                 <property name="draw_indicator">True</property>
-                <signal name="toggled" handler="OnGeoBlockToggled" swapped="no"/>
+                <signal name="toggled" handler="OnGeoBlockToggled"/>
               </widget>
               <packing>
                 <property name="expand">False</property>
@@ -7197,7 +7197,7 @@ Clear</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
-                        <signal name="clicked" handler="OnAddIgnored" swapped="no"/>
+                        <signal name="clicked" handler="OnAddIgnored"/>
                         <child>
                           <widget class="GtkAlignment" id="alignment65">
                             <property name="visible">True</property>
@@ -7250,7 +7250,7 @@ Clear</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
-                        <signal name="clicked" handler="OnRemoveIgnored" swapped="no"/>
+                        <signal name="clicked" handler="OnRemoveIgnored"/>
                         <child>
                           <widget class="GtkAlignment" id="alignment66">
                             <property name="visible">True</property>
@@ -7303,7 +7303,7 @@ Clear</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
-                        <signal name="clicked" handler="OnClearIgnored" swapped="no"/>
+                        <signal name="clicked" handler="OnClearIgnored"/>
                         <child>
                           <widget class="GtkAlignment" id="alignment67">
                             <property name="visible">True</property>
@@ -7401,7 +7401,7 @@ Clear</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
-                        <signal name="clicked" handler="OnAddIgnoredIP" swapped="no"/>
+                        <signal name="clicked" handler="OnAddIgnoredIP"/>
                         <child>
                           <widget class="GtkAlignment" id="alignment1">
                             <property name="visible">True</property>
@@ -7454,7 +7454,7 @@ Clear</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
-                        <signal name="clicked" handler="OnRemoveIgnoredIP" swapped="no"/>
+                        <signal name="clicked" handler="OnRemoveIgnoredIP"/>
                         <child>
                           <widget class="GtkAlignment" id="alignment2">
                             <property name="visible">True</property>
@@ -7507,7 +7507,7 @@ Clear</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
-                        <signal name="clicked" handler="OnClearIgnoredIP" swapped="no"/>
+                        <signal name="clicked" handler="OnClearIgnoredIP"/>
                         <child>
                           <widget class="GtkAlignment" id="alignment3">
                             <property name="visible">True</property>
@@ -7657,7 +7657,7 @@ Clear</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">False</property>
-                    <signal name="clicked" handler="OnImportDirectory" swapped="no"/>
+                    <signal name="clicked" handler="OnImportDirectory"/>
                     <child>
                       <widget class="GtkAlignment" id="alignment91">
                         <property name="visible">True</property>
@@ -7882,7 +7882,7 @@ Clear</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">False</property>
-                    <signal name="clicked" handler="OnImportConfig" swapped="no"/>
+                    <signal name="clicked" handler="OnImportConfig"/>
                     <child>
                       <widget class="GtkAlignment" id="alignment92">
                         <property name="visible">True</property>
@@ -8054,7 +8054,7 @@ Clear</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>
-                        <signal name="clicked" handler="OnChooseLogDir" swapped="no"/>
+                        <signal name="clicked" handler="OnChooseLogDir"/>
                         <child>
                           <widget class="GtkAlignment" id="alignment54">
                             <property name="visible">True</property>
@@ -8147,7 +8147,7 @@ Clear</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>
-                        <signal name="clicked" handler="OnChooseRoomLogDir" swapped="no"/>
+                        <signal name="clicked" handler="OnChooseRoomLogDir"/>
                         <child>
                           <widget class="GtkAlignment" id="alignment17">
                             <property name="visible">True</property>
@@ -8240,7 +8240,7 @@ Clear</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>
-                        <signal name="clicked" handler="OnChoosePrivateLogDir" swapped="no"/>
+                        <signal name="clicked" handler="OnChoosePrivateLogDir"/>
                         <child>
                           <widget class="GtkAlignment" id="alignment24">
                             <property name="visible">True</property>
@@ -8538,7 +8538,7 @@ Clear</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">False</property>
-                    <signal name="clicked" handler="OnDefaultTimestamp" swapped="no"/>
+                    <signal name="clicked" handler="OnDefaultTimestamp"/>
                     <child>
                       <widget class="GtkAlignment" id="alignment25">
                         <property name="visible">True</property>
@@ -8636,7 +8636,7 @@ Clear</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">False</property>
-                    <signal name="clicked" handler="OnRoomDefaultTimestamp" swapped="no"/>
+                    <signal name="clicked" handler="OnRoomDefaultTimestamp"/>
                     <child>
                       <widget class="GtkAlignment" id="alignment27">
                         <property name="visible">True</property>
@@ -8734,7 +8734,7 @@ Clear</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">False</property>
-                    <signal name="clicked" handler="OnPrivateDefaultTimestamp" swapped="no"/>
+                    <signal name="clicked" handler="OnPrivateDefaultTimestamp"/>
                     <child>
                       <widget class="GtkAlignment" id="alignment28">
                         <property name="visible">True</property>
@@ -9612,7 +9612,7 @@ Right</property>
                 <property name="receives_default">False</property>
                 <property name="use_underline">True</property>
                 <property name="draw_indicator">True</property>
-                <signal name="toggled" handler="OnPluginsEnable" swapped="no"/>
+                <signal name="toggled" handler="OnPluginsEnable"/>
               </widget>
               <packing>
                 <property name="expand">False</property>
@@ -9873,7 +9873,7 @@ Right</property>
                                     <property name="sensitive">False</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">True</property>
-                                    <signal name="clicked" handler="OnPluginProperties" swapped="no"/>
+                                    <signal name="clicked" handler="OnPluginProperties"/>
                                     <child>
                                       <widget class="GtkAlignment" id="alignment2">
                                         <property name="visible">True</property>
@@ -10594,7 +10594,7 @@ Right</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="use_stock">True</property>
-                <signal name="clicked" handler="OnOkay" swapped="no"/>
+                <signal name="clicked" handler="OnOkay"/>
               </widget>
               <packing>
                 <property name="expand">False</property>
@@ -10609,7 +10609,7 @@ Right</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="use_stock">True</property>
-                <signal name="clicked" handler="OnCancel" swapped="no"/>
+                <signal name="clicked" handler="OnCancel"/>
               </widget>
               <packing>
                 <property name="expand">False</property>
@@ -10713,7 +10713,7 @@ Right</property>
                             <property name="receives_default">False</property>
                             <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                             <property name="draw_indicator">True</property>
-                            <signal name="toggled" handler="OnEnableSearchResults" swapped="no"/>
+                            <signal name="toggled" handler="OnEnableSearchResults"/>
                           </widget>
                           <packing>
                             <property name="expand">False</property>
@@ -10790,7 +10790,7 @@ Right</property>
                                 <property name="receives_default">False</property>
                                 <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                                 <property name="draw_indicator">True</property>
-                                <signal name="toggled" handler="OnToggleDistributed" swapped="no"/>
+                                <signal name="toggled" handler="OnToggleDistributed"/>
                               </widget>
                               <packing>
                                 <property name="expand">False</property>
@@ -10894,7 +10894,7 @@ Right</property>
                 <property name="receives_default">False</property>
                 <property name="use_underline">True</property>
                 <property name="draw_indicator">True</property>
-                <signal name="toggled" handler="OnEnableFiltersToggled" swapped="no"/>
+                <signal name="toggled" handler="OnEnableFiltersToggled"/>
               </widget>
               <packing>
                 <property name="expand">False</property>
@@ -11436,8 +11436,8 @@ when new results come in</property>
                             <property name="has_tooltip">True</property>
                             <property name="tooltip" translatable="yes">Change password</property>
                             <property name="use_stock">True</property>
-                            <signal name="activate" handler="OnChangePassword" swapped="no"/>
-                            <signal name="clicked" handler="OnChangePassword" swapped="no"/>
+                            <signal name="activate" handler="OnChangePassword"/>
+                            <signal name="clicked" handler="OnChangePassword"/>
                           </widget>
                           <packing>
                             <property name="expand">True</property>
@@ -11582,7 +11582,7 @@ when new results come in</property>
                     <property name="can_focus">True</property>
                     <property name="can_default">True</property>
                     <property name="receives_default">False</property>
-                    <signal name="clicked" handler="OnCheckPort" swapped="no"/>
+                    <signal name="clicked" handler="OnCheckPort"/>
                   </widget>
                   <packing>
                     <property name="expand">False</property>
@@ -11619,7 +11619,7 @@ when new results come in</property>
                 <property name="receives_default">False</property>
                 <property name="use_underline">True</property>
                 <property name="draw_indicator">True</property>
-                <signal name="toggled" handler="OnUPnPToggled" swapped="no"/>
+                <signal name="toggled" handler="OnUPnPToggled"/>
               </widget>
               <packing>
                 <property name="expand">False</property>
@@ -11829,7 +11829,7 @@ when new results come in</property>
                 <property name="can_default">True</property>
                 <property name="receives_default">False</property>
                 <property name="use_stock">True</property>
-                <signal name="clicked" handler="OnApply" swapped="no"/>
+                <signal name="clicked" handler="OnApply"/>
               </widget>
               <packing>
                 <property name="expand">False</property>
@@ -11845,7 +11845,7 @@ when new results come in</property>
                 <property name="can_default">True</property>
                 <property name="receives_default">False</property>
                 <property name="use_stock">True</property>
-                <signal name="clicked" handler="OnCancel" swapped="no"/>
+                <signal name="clicked" handler="OnCancel"/>
               </widget>
               <packing>
                 <property name="expand">False</property>
@@ -11861,7 +11861,7 @@ when new results come in</property>
                 <property name="can_default">True</property>
                 <property name="receives_default">False</property>
                 <property name="use_stock">True</property>
-                <signal name="clicked" handler="OnOk" swapped="no"/>
+                <signal name="clicked" handler="OnOk"/>
               </widget>
               <packing>
                 <property name="expand">False</property>
@@ -11944,7 +11944,7 @@ when new results come in</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
-                        <signal name="clicked" handler="OnAddSharedDir" swapped="no"/>
+                        <signal name="clicked" handler="OnAddSharedDir"/>
                         <child>
                           <widget class="GtkAlignment" id="alignment60">
                             <property name="visible">True</property>
@@ -11997,7 +11997,7 @@ when new results come in</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
-                        <signal name="clicked" handler="OnRemoveSharedDir" swapped="no"/>
+                        <signal name="clicked" handler="OnRemoveSharedDir"/>
                         <child>
                           <widget class="GtkAlignment" id="alignment61">
                             <property name="visible">True</property>
@@ -12050,7 +12050,7 @@ when new results come in</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
-                        <signal name="clicked" handler="OnRenameVirtuals" swapped="no"/>
+                        <signal name="clicked" handler="OnRenameVirtuals"/>
                         <child>
                           <widget class="GtkAlignment" id="alignment999">
                             <property name="visible">True</property>
@@ -12139,7 +12139,7 @@ when new results come in</property>
                     <property name="tooltip" translatable="yes">If buddy shares are enabled, they will be shared. Otherwise normal shares will be used.</property>
                     <property name="use_underline">True</property>
                     <property name="draw_indicator">True</property>
-                    <signal name="toggled" handler="OnFriendsOnlyToggled" swapped="no"/>
+                    <signal name="toggled" handler="OnFriendsOnlyToggled"/>
                   </widget>
                   <packing>
                     <property name="expand">True</property>
@@ -12155,7 +12155,7 @@ when new results come in</property>
                     <property name="receives_default">False</property>
                     <property name="use_underline">True</property>
                     <property name="draw_indicator">True</property>
-                    <signal name="toggled" handler="OnEnabledBuddySharesToggled" swapped="no"/>
+                    <signal name="toggled" handler="OnEnabledBuddySharesToggled"/>
                   </widget>
                   <packing>
                     <property name="expand">False</property>
@@ -12233,7 +12233,7 @@ when new results come in</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
-                        <signal name="clicked" handler="OnAddSharedBuddyDir" swapped="no"/>
+                        <signal name="clicked" handler="OnAddSharedBuddyDir"/>
                         <child>
                           <widget class="GtkAlignment" id="alignment71">
                             <property name="visible">True</property>
@@ -12286,7 +12286,7 @@ when new results come in</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
-                        <signal name="clicked" handler="OnRemoveSharedBuddyDir" swapped="no"/>
+                        <signal name="clicked" handler="OnRemoveSharedBuddyDir"/>
                         <child>
                           <widget class="GtkAlignment" id="alignment72">
                             <property name="visible">True</property>
@@ -12390,7 +12390,7 @@ when new results come in</property>
                     <property name="receives_default">False</property>
                     <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                     <property name="draw_indicator">True</property>
-                    <signal name="toggled" handler="OnSoundCheckToggled" swapped="no"/>
+                    <signal name="toggled" handler="OnSoundCheckToggled"/>
                   </widget>
                   <packing>
                     <property name="expand">False</property>
@@ -12614,7 +12614,7 @@ when new results come in</property>
                 <property name="receives_default">False</property>
                 <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                 <property name="draw_indicator">True</property>
-                <signal name="toggled" handler="OnTextToSpeechToggled" swapped="no"/>
+                <signal name="toggled" handler="OnTextToSpeechToggled"/>
               </widget>
               <packing>
                 <property name="expand">False</property>
@@ -13015,7 +13015,7 @@ when new results come in</property>
                     <property name="show_hidden">True</property>
                     <property name="title" translatable="yes">Select A Directory</property>
                     <property name="width_chars">15</property>
-                    <signal name="current_folder_changed" handler="OnChooseUploadDir" swapped="no"/>
+                    <signal name="current_folder_changed" handler="OnChooseUploadDir"/>
                   </widget>
                   <packing>
                     <property name="expand">False</property>
@@ -13169,7 +13169,7 @@ when new results come in</property>
                             <property name="tooltip" translatable="yes">If disabled, slots will automatically be determined by available bandwidth limitations</property>
                             <property name="use_underline">True</property>
                             <property name="draw_indicator">True</property>
-                            <signal name="toggled" handler="OnQueueUseSlotsToggled" swapped="no"/>
+                            <signal name="toggled" handler="OnQueueUseSlotsToggled"/>
                           </widget>
                           <packing>
                             <property name="expand">False</property>
@@ -13228,7 +13228,7 @@ when new results come in</property>
                             <property name="use_underline">True</property>
                             <property name="yalign">0</property>
                             <property name="draw_indicator">True</property>
-                            <signal name="toggled" handler="OnLimitToggled" swapped="no"/>
+                            <signal name="toggled" handler="OnLimitToggled"/>
                           </widget>
                           <packing>
                             <property name="expand">False</property>
@@ -13464,7 +13464,7 @@ when new results come in</property>
                             <property name="tooltip" translatable="yes">The users will be able to send you files. These files will be downloaded into the Buddy Uploads subdirectory in your Download directory</property>
                             <property name="use_underline">True</property>
                             <property name="draw_indicator">True</property>
-                            <signal name="toggled" handler="OnRemoteDownloads" swapped="no"/>
+                            <signal name="toggled" handler="OnRemoteDownloads"/>
                           </widget>
                           <packing>
                             <property name="expand">False</property>
@@ -13652,7 +13652,7 @@ when new results come in</property>
                 <property name="receives_default">False</property>
                 <property name="use_underline">True</property>
                 <property name="draw_indicator">True</property>
-                <signal name="toggled" handler="OnURLCatchingToggled" swapped="no"/>
+                <signal name="toggled" handler="OnURLCatchingToggled"/>
               </widget>
               <packing>
                 <property name="expand">False</property>
@@ -13725,7 +13725,7 @@ Protocols handlers: </property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>
-                        <signal name="clicked" handler="OnRemove" swapped="no"/>
+                        <signal name="clicked" handler="OnRemove"/>
                         <child>
                           <widget class="GtkAlignment" id="alignment75">
                             <property name="visible">True</property>
@@ -13825,7 +13825,7 @@ Protocols handlers: </property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">False</property>
-                    <signal name="clicked" handler="OnAdd" swapped="no"/>
+                    <signal name="clicked" handler="OnAdd"/>
                     <child>
                       <widget class="GtkAlignment" id="alignment74">
                         <property name="visible">True</property>
@@ -13937,7 +13937,7 @@ Protocols handlers: </property>
                 <property name="has_tooltip">True</property>
                 <property name="tooltip" translatable="yes">You must have mozembed installed, and correctly set your LD_LIBRARY_PATH and MOZILLA_FIVE_HOME to the proper directory, or you may experience segfaults. Try setting them to: /usr/lib/xulrunner-x.x</property>
                 <property name="draw_indicator">True</property>
-                <signal name="toggled" handler="OnToggleMozembed" swapped="no"/>
+                <signal name="toggled" handler="OnToggleMozembed"/>
               </widget>
               <packing>
                 <property name="expand">False</property>
@@ -14118,7 +14118,7 @@ Protocols handlers: </property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">False</property>
-                    <signal name="clicked" handler="OnChooseImage" swapped="no"/>
+                    <signal name="clicked" handler="OnChooseImage"/>
                     <child>
                       <widget class="GtkAlignment" id="alignment57">
                         <property name="visible">True</property>
