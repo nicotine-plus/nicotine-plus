@@ -3119,6 +3119,13 @@ class SettingsWindow:
         self.SettingsTreeview.expand_all()
 
         self.SettingsTreeview.get_selection().connect("changed", self.switch_page)
+
+        # Set the cursor to the first element of the TreeViewColumn.
+        # On Debian/Ubuntu there is patch (042_treeview_single-focus.patch)
+        # on top of upstream GTK2 that disable the default selection
+        # of the first element in a Treeview.
+        self.SettingsTreeview.set_cursor((0,))
+
         self.UpdateColours()
 
     def Hilight(self, widget):
