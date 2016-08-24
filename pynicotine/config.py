@@ -552,8 +552,6 @@ class Config:
                 self.sections["urls"]["protocols"][protocol] = command.replace('%s', '$')
         except KeyError:
             pass
-        if "pyslsk" in autojoin and not "nicotine" in autojoin:
-            autojoin.append("nicotine")
 
         # If we stored any of the following as bytes (pre 1.2.15, pre 1.2.16), convert them to unicode
         unicodes = [('ticker', 'default'), ('server', 'autoreply')]
