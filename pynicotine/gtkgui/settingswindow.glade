@@ -11753,8 +11753,8 @@ when new results come in</property>
     <property name="can_focus">False</property>
     <property name="title" translatable="yes">Nicotine+ Settings</property>
     <property name="window_position">center</property>
-    <property name="default_width">650</property>
-    <property name="default_height">400</property>
+    <property name="default_width">950</property>
+    <property name="default_height">600</property>
     <child>
       <widget class="GtkVBox" id="Main">
         <property name="visible">True</property>
@@ -11767,6 +11767,7 @@ when new results come in</property>
             <property name="can_focus">True</property>
             <child>
               <widget class="GtkScrolledWindow" id="scrolledwindow11">
+                <property name="width_request">250</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="hscrollbar_policy">automatic</property>
@@ -11774,7 +11775,6 @@ when new results come in</property>
                 <property name="shadow_type">in</property>
                 <child>
                   <widget class="GtkTreeView" id="SettingsTreeview">
-                    <property name="width_request">160</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="headers_visible">False</property>
@@ -11794,6 +11794,7 @@ when new results come in</property>
                 <property name="vscrollbar_policy">automatic</property>
                 <child>
                   <widget class="GtkViewport" id="viewport1">
+                    <property name="width_request">600</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="shadow_type">none</property>

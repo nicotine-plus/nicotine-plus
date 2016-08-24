@@ -3038,8 +3038,6 @@ class SettingsWindow:
         gobject.signal_new("settings-closed", gtk.Window, gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_STRING,))
 
         self.SettingsWindow.set_transient_for(frame.MainWindow)
-        self.SettingsWindow.set_geometry_hints(None, min_width=600, min_height=400)
-        self.SettingsWindow.set_default_size(700, 550)
         self.SettingsWindow.connect("delete-event", self.OnDelete)
 
         self.empty_label = gtk.Label("")
@@ -3111,12 +3109,7 @@ class SettingsWindow:
         self.SettingsTreeview.set_model(model)
         self.SettingsTreeview.append_column(column)
 
-        self.SettingsTreeview.expand_row((0,), True)
-        self.SettingsTreeview.expand_row((1,), True)
-        self.SettingsTreeview.expand_row((2,), True)
-        self.SettingsTreeview.expand_row((3,), True)
-        self.SettingsTreeview.expand_row((4,), True)
-        self.SettingsTreeview.expand_row((5,), True)
+        self.SettingsTreeview.expand_all()
 
         self.SettingsTreeview.get_selection().connect("changed", self.switch_page)
         self.UpdateColours()
