@@ -71,12 +71,7 @@ class ServerFrame(buildFrame):
         self.Server.set_text_column(0)
         self.Elist = {}
         self.EncodingStore = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
-        # self.Encoding.set_size_request(100, -1)
         self.Encoding.set_model(self.EncodingStore)
-        # cell1 = gtk.CellRendererText()
-        # cell1.set_property("xalign", 0)
-        # self.Encoding.pack_start(cell1, True)
-        # self.Encoding.add_attribute(cell1, 'text', 0)
         self.Encoding.set_text_column(0)
         cell2 = gtk.CellRendererText()
         self.Encoding.pack_start(cell2, True)
@@ -170,16 +165,19 @@ class ServerFrame(buildFrame):
         self.OnUPnPToggled(None)
 
     def GetSettings(self):
+
         try:
             server = self.Server.child.get_text().split(":")
             server[1] = int(server[1])
             server = tuple(server)
         except:
             server = None
+
         serverlist = []
         servername = self.Server.child.get_text()
         if servername not in serverlist:
             serverlist.append(servername)
+
         iter = self.Server.get_model().get_iter_root()
         while iter is not None:
             servername = self.Server.get_model().get_value(iter, 0)
@@ -187,9 +185,16 @@ class ServerFrame(buildFrame):
                 serverlist.append(servername)
             iter = self.Server.get_model().iter_next(iter)
         serverlist = serverlist[:10]
+
         if str(self.Login.get_text()) == "None":
-            popupWarning(self.p.SettingsWindow, _("Warning: Bad Username"), _("Username 'None' is not a good one, please pick another."), self.frame.images["n"] )
+            popupWarning(
+                self.p.SettingsWindow,
+                _("Warning: Bad Username"),
+                _("Username 'None' is not a good one, please pick another."),
+                self.frame.images["n"]
+            )
             raise UserWarning
+
         try:
             firstport = min(self.FirstPort.get_value_as_int(), self.LastPort.get_value_as_int())
             lastport = max(self.FirstPort.get_value_as_int(), self.LastPort.get_value_as_int())
@@ -198,10 +203,12 @@ class ServerFrame(buildFrame):
             portrange = None
             popupWarning(self.p.SettingsWindow, _("Warning: Invalid ports"), _("Client ports are invalid."), self.frame.images["n"] )
             raise UserWarning
+
         if self.UseUPnP.get_active():
             firewalled = False
         else:
             firewalled = not self.DirectConnection.get_active()
+
         return {
             "server": {
                 "server": server,
