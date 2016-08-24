@@ -1,6 +1,6 @@
 ## For a list of translators see [TRANSLATORS](TRANSLATORS.md)
 
-If you're name is missing: please contact us.
+If your name is missing: please contact us.
 
 ---
 
@@ -81,7 +81,7 @@ You can do it either by:
     * ...
 
 Nicotine+ will first try to find your translation files in your project directory.
-It's particularily usefull for testing translations from a git clone of the repo or if your are using python virtualenv framework.
+It's particularly useful for testing translations from the git source tree or if your are using python virtualenv framework.
 
 Your translation file should be located in:
 `$(your_git_clone_path)/languages/$(lang)/LC_MESSAGES/nicotine.{mo,po}`.

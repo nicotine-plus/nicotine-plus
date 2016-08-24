@@ -30,7 +30,7 @@ Then you can create an RPM with:
 
 `python setup.py bdist_rpm`
 
-The RPM package will be located in the `dist` subdirectory of of your git repository.
+The RPM package will be located in the `dist` subdirectory of your git repository.
 
 
 ### Windows
@@ -53,4 +53,4 @@ If you want to run the frozen application you can launch the executable `dist\Ni
 
 ##### Building a NSIS installer from the frozen application
 
-Comming soon...
+Coming soon...

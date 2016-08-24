@@ -4,7 +4,7 @@ git master (unreleased)
 
 The old Trac instance is read-only: for new bugs go to https://github.com/eLvErDe/nicotine-plus/issues
 
-Behaviour
+Behavior
  * Showing first 25 results right away to make N+ seem FAST
  * Send a private message to users who queue a directory has been removed
 
