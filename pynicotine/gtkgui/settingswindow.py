@@ -715,17 +715,20 @@ class SharesFrame(buildFrame):
                         message=_("Enter virtual name for '%(dir)s':") % {'dir': directory}
                     )
 
-                    self.shareslist.append(
-                        [
-                            virtual,
-                            recode(directory),
-                            HumanSize(self.GetDirectorySize(directory)),
-                            directory
-                        ]
-                    )
+                    if virtual == '':
+                        pass
+                    else:
+                        self.shareslist.append(
+                            [
+                                virtual,
+                                recode(directory),
+                                HumanSize(self.GetDirectorySize(directory)),
+                                directory
+                            ]
+                        )
 
-                    self.shareddirs.append((virtual, directory))
-                    self.needrescan = 1
+                        self.shareddirs.append((virtual, directory))
+                        self.needrescan = 1
 
     def OnAddSharedBuddyDir(self, widget):
         dir1 = ChooseDir(
@@ -743,17 +746,20 @@ class SharesFrame(buildFrame):
                         message=_("Enter virtual name for '%(dir)s':") % {'dir': directory}
                     )
 
-                    self.bshareslist.append(
-                        [
-                            virtual,
-                            recode(directory),
-                            HumanSize(self.GetDirectorySize(directory)),
-                            directory
-                        ]
-                    )
+                    if virtual == '':
+                        pass
+                    else:
+                        self.bshareslist.append(
+                            [
+                                virtual,
+                                recode(directory),
+                                HumanSize(self.GetDirectorySize(directory)),
+                                directory
+                            ]
+                        )
 
-                    self.bshareddirs.append((virtual, directory))
-                    self.needrescan = 1
+                        self.bshareddirs.append((virtual, directory))
+                        self.needrescan = 1
 
     def _RemoveSharedDir(self, model, path, iter, list):
         list.append(iter)
@@ -773,11 +779,14 @@ class SharesFrame(buildFrame):
                 message=_("Enter new virtual name for '%(dir)s':") % {'dir': directory}
             )
 
-            newmapping = (virtual, directory)
-            self.shareslist.set_value(iter, 0, virtual)
-            self.shareddirs.remove(oldmapping)
-            self.shareddirs.append(newmapping)
-            self.needrescan = 1
+            if virtual == '':
+                pass
+            else:
+                newmapping = (virtual, directory)
+                self.shareslist.set_value(iter, 0, virtual)
+                self.shareddirs.remove(oldmapping)
+                self.shareddirs.append(newmapping)
+                self.needrescan = 1
 
     def OnRemoveSharedDir(self, widget):
         iters = []
