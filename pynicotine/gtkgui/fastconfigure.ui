@@ -17,18 +17,12 @@
     <property name="border_width">12</property>
     <property name="title" translatable="yes">Nicotine+ Fast Configure</property>
     <property name="modal">True</property>
-    <property name="window_position">center-always</property>
+    <property name="window_position">center</property>
     <signal name="close" handler="OnClose" swapped="no"/>
     <signal name="apply" handler="OnApply" swapped="no"/>
     <signal name="key-press-event" handler="OnKeyPress" swapped="no"/>
     <signal name="prepare" handler="OnPrepare" swapped="no"/>
     <signal name="cancel" handler="OnCancel" swapped="no"/>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
     <child>
       <object class="GtkLabel" id="welcomepage">
         <property name="visible">True</property>
@@ -77,12 +71,12 @@ This should only take about 60 seconds.</property>
                     <property name="secondary_icon_activatable">False</property>
                     <property name="primary_icon_sensitive">True</property>
                     <property name="secondary_icon_sensitive">True</property>
-                    <signal name="delete-from-cursor" handler="OnEntryChanged" swapped="no"/>
-                    <signal name="insert-at-cursor" handler="OnEntryChanged" swapped="no"/>
                     <signal name="key-press-event" handler="OnEntryChanged" swapped="no"/>
+                    <signal name="insert-at-cursor" handler="OnEntryChanged" swapped="no"/>
+                    <signal name="backspace" handler="OnEntryChanged" swapped="no"/>
+                    <signal name="delete-from-cursor" handler="OnEntryChanged" swapped="no"/>
                     <signal name="paste-clipboard" handler="OnEntryChanged" swapped="no"/>
                     <signal name="cut-clipboard" handler="OnEntryChanged" swapped="no"/>
-                    <signal name="backspace" handler="OnEntryChanged" swapped="no"/>
                   </object>
                   <packing>
                     <property name="expand">True</property>
@@ -123,12 +117,12 @@ This should only take about 60 seconds.</property>
                     <property name="secondary_icon_activatable">False</property>
                     <property name="primary_icon_sensitive">True</property>
                     <property name="secondary_icon_sensitive">True</property>
-                    <signal name="delete-from-cursor" handler="OnEntryChanged" swapped="no"/>
-                    <signal name="insert-at-cursor" handler="OnEntryChanged" swapped="no"/>
                     <signal name="key-press-event" handler="OnEntryChanged" swapped="no"/>
+                    <signal name="insert-at-cursor" handler="OnEntryChanged" swapped="no"/>
+                    <signal name="backspace" handler="OnEntryChanged" swapped="no"/>
+                    <signal name="delete-from-cursor" handler="OnEntryChanged" swapped="no"/>
                     <signal name="paste-clipboard" handler="OnEntryChanged" swapped="no"/>
                     <signal name="cut-clipboard" handler="OnEntryChanged" swapped="no"/>
-                    <signal name="backspace" handler="OnEntryChanged" swapped="no"/>
                   </object>
                   <packing>
                     <property name="expand">True</property>
