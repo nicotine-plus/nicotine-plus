@@ -29,6 +29,7 @@ from time import time
 
 from dirchooser import ChooseDir
 from utils import OpenUri, InitialiseColumns, recode, HumanSize
+from entrydialog import input_box
 dir_location = os.path.dirname(os.path.realpath(__file__))
 
 
@@ -110,11 +111,13 @@ class FastConfigureAssistant(object):
             gobject.TYPE_STRING,
             gobject.TYPE_STRING,
             gobject.TYPE_STRING,
+            gobject.TYPE_STRING,
             gobject.TYPE_STRING
         )
 
         columns = InitialiseColumns(
             self.kids['shareddirectoriestree'],
+            [_("Virtual Directory"), 0, "text"],
             [_("Directory"), 0, "text"],
             [_("Size"), 0, "text"],
             [_("Files"), 0, "text"],
@@ -348,61 +351,66 @@ class FastConfigureAssistant(object):
 
         while iter is not None:
 
-            if directory == self.sharelist.get_value(iter, 5):
+            if directory[1] == self.sharelist.get_value(iter, 6):
                 return
 
             iter = self.sharelist.iter_next(iter)
 
         self.sharelist.append([
-            recode(directory),
+            recode(directory[0]),
+            recode(directory[1]),
             "",
             "",
             "",
             _("Counting files..."),
-            directory
+            directory[1]
         ])
 
         thread.start_new_thread(self._addsharedir, (directory,))
 
     def _addsharedir(self, directory):
 
-        subdirs, files, size, extensions = dirstats(directory)
+        subdirs, files, size, extensions = dirstats(directory[1])
         exts = []
 
         for ext, count in extensions.iteritems():
             exts.append((count, ext))
 
         exts.sort(reverse=True)
-        extstring = ", ".join(["%s %s" % (count, ext)
-                               for count, ext in exts[:5]])
+        extstring = ", ".join(
+            ["%s %s" % (count, ext) for count, ext in exts[:5]]
+        )
+
         if len(exts) > 5:
             extstring += ", ..."
 
         gobject.idle_add(
             self._updatedirstats,
             directory,
-            recode(directory),
             HumanSize(size),
             files,
             subdirs,
             extstring
         )
 
-    def _updatedirstats(self, directory, directorystring,
-                        size, files, subdirs, extensions):
+    def _updatedirstats(self, directory, size, files, subdirs, extensions):
 
         iter = self.sharelist.get_iter_root()
 
         while iter is not None:
-            if directory == self.sharelist.get_value(iter, 5):
+
+            if directory[1] == self.sharelist.get_value(iter, 6):
+
                 self.sharelist.insert_after(iter, [
-                    recode(directory),
+                    recode(directory[0]),
+                    recode(directory[1]),
                     HumanSize(size),
                     files,
                     subdirs,
                     extensions,
-                    directory
+                    directory[1]
                 ])
+
                 self.sharelist.remove(iter)
                 return
 
@@ -430,13 +438,24 @@ class FastConfigureAssistant(object):
 
             if selected:
                 for directory in selected:
-                    self.addshareddir(directory)
+
+                    virtual = input_box(
+                        self.frame,
+                        title=_("Virtual name"),
+                        message=_("Enter virtual name for '%(dir)s':") % {'dir': directory}
+                    )
+
+                    if virtual == '':
+                        pass
+                    else:
+                        self.addshareddir((virtual, directory))
 
         if name == "removeshares":
             model, paths = self.kids['shareddirectoriestree'].get_selection().get_selected_rows()
             refs = [gtk.TreeRowReference(model, x) for x in paths]
             for i in refs:
                 self.sharelist.remove(self.sharelist.get_iter(i.get_path()))
+
         self.resetcompleteness()
 
     def OnToggled(self, widget):
