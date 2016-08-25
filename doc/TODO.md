@@ -13,7 +13,7 @@ A list of stuff & things todo (not in any particular order):
 * Convert all the libglade files to GTKBuilder.
 * Our sounds are dropped by downstream packagers for being non-free: investigate.
 * Convert old (unmaintained) python-GeoIP code to an up to date version.
-* Drop the embeded Web browser: does work anymore, outdated and security nightmare.
+* Drop the embeded Web browser: doesn't work anymore, outdated and security nightmare.
 * **DONE**: Refresh setuptools installer.
 * **DONE**: Drop in-house mp3 metadata parsing: replaced by mutagen.
 * **DONE**: Drop the old trayicon module: use the GTK included one.
