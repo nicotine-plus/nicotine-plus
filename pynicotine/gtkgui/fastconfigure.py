@@ -103,7 +103,7 @@ class FastConfigureAssistant(object):
         }
 
         # Page specific, sharepage
-        # the last column is the raw byte/unicode object
+        # The last column is the raw byte/unicode object
         # for the folder (not shown)
         self.sharelist = gtk.ListStore(
             gobject.TYPE_STRING,
@@ -210,29 +210,24 @@ class FastConfigureAssistant(object):
     def store(self):
 
         # userpasspage
-        self.config.sections["server"][
-            "login"] = self.kids['username'].get_text()
-        self.config.sections["server"][
-            "passw"] = self.kids['password'].get_text()
+        self.config.sections["server"]["login"] = self.kids['username'].get_text()
+        self.config.sections["server"]["passw"] = self.kids['password'].get_text()
 
         # portpage
-        self.config.sections['server'][
-            'firewalled'] = not self.kids['portopen'].get_active()
+        self.config.sections['server']['firewalled'] = not self.kids['portopen'].get_active()
         self.config.sections['server']['lastportstatuscheck'] = time()
 
         # sharepage
-        self.config.sections['transfers']['downloaddir'] = self.kids[
-            'downloaddir'].get_current_folder()
+        self.config.sections['transfers']['downloaddir'] = self.kids['downloaddir'].get_current_folder()
+
         if self.caneditshare:
-            self.config.sections["transfers"]["friendsonly"] = self.kids[
-                'onlysharewithfriends'].get_active()
+            self.config.sections["transfers"]["friendsonly"] = self.kids['onlysharewithfriends'].get_active()
+
             if self.config.sections["transfers"]["friendsonly"] and \
                self.config.sections["transfers"]["enablebuddyshares"]:
-                self.config.sections["transfers"][
-                    "buddyshared"] = self.getshareddirs()
+                self.config.sections["transfers"]["buddyshared"] = self.getshareddirs()
             else:
-                self.config.sections["transfers"][
-                    "shared"] = self.getshareddirs()
+                self.config.sections["transfers"]["shared"] = self.getshareddirs()
 
     def OnClose(self, widget):
         self.window.hide()
