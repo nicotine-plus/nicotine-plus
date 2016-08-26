@@ -5379,7 +5379,7 @@ typed incorrectly or as an acronym</property>
                             <property name="show_hidden">True</property>
                             <property name="title" translatable="yes">Select A Directory</property>
                             <property name="width_chars">15</property>
-                            <signal name="current_folder_changed" handler="OnChooseIncompleteDir"/>
+                            <signal name="selection_changed" handler="OnChooseIncompleteDir"/>
                           </widget>
                           <packing>
                             <property name="expand">False</property>
@@ -5439,7 +5439,7 @@ typed incorrectly or as an acronym</property>
                             <property name="show_hidden">True</property>
                             <property name="title" translatable="yes">Select A Directory</property>
                             <property name="width_chars">15</property>
-                            <signal name="current_folder_changed" handler="OnChooseDownloadDir"/>
+                            <signal name="selection_changed" handler="OnChooseDownloadDir"/>
                           </widget>
                           <packing>
                             <property name="expand">False</property>
@@ -13016,7 +13016,7 @@ when new results come in</property>
                     <property name="show_hidden">True</property>
                     <property name="title" translatable="yes">Select A Directory</property>
                     <property name="width_chars">15</property>
-                    <signal name="current_folder_changed" handler="OnChooseUploadDir"/>
+                    <signal name="selection_changed" handler="OnChooseUploadDir"/>
                   </widget>
                   <packing>
                     <property name="expand">False</property>

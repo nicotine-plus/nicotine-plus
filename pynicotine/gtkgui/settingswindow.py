@@ -368,24 +368,39 @@ class DownloadsFrame(buildFrame):
         return self.needrescan
 
     def OnChooseIncompleteDir(self, widget):
-        directory = self.ChooseIncompleteDir.get_current_folder()
-        if directory is not None:
-            self.incompletedir = directory
-            self.IncompleteDir.set_text(recode(directory))
+
+        # Get a gio.File object from gtk.FileChooser
+        dir_gio = self.ChooseIncompleteDir.get_file()
+
+        # Convert the gio.File to a string that can be displayed
+        # and stored in the config file
+        dir_disp = dir_gio.get_path()
+
+        if dir_gio is not None:
+
+            # Convert the gio.File to a string that can be displayed
+            self.incompletedir = dir_disp
+            self.IncompleteDir.set_text(dir_disp)
 
     def OnChooseDownloadDir(self, widget):
 
-        directory = self.ChooseDownloadDir.get_current_folder()
+        # Get a gio.File object from gtk.FileChooser
+        dir_gio = self.ChooseDownloadDir.get_file()
 
-        if directory is not None:
+        # Convert the gio.File to a string that can be displayed
+        # and stored in the config file
+        dir_disp = dir_gio.get_path()
 
-            self.incompletedir = directory
-            self.DownloadDir.set_text(recode(directory))
+        if dir_gio is not None:
+
+            self.downloaddir = dir_disp
+            self.DownloadDir.set_text(dir_disp)
 
             if self.ShareDownloadDir.get_active():
-                # This function will be called upon creating the settings window, so only
-                # force a scan if the user changes his donwload directory
-                if directory != self.frame.np.config.sections["transfers"]["downloaddir"]:
+                # This function will be called upon creating
+                # the settings window, so only force a scan
+                # if the user changes his donwload directory
+                if dir_disp != self.frame.np.config.sections["transfers"]["downloaddir"]:
                     self.needrescan = 1
 
     def OnShareDownloadDirToggled(self, widget):
@@ -921,9 +936,19 @@ class TransfersFrame(buildFrame):
         }
 
     def OnChooseUploadDir(self, widget):
-        directory = self.ChooseUploadDir.get_current_folder()
-        if directory is not None:
-            self.UploadDir.set_text(recode(directory))
+
+        # Get a gio.File object from gtk.FileChooser
+        dir_gio = self.ChooseUploadDir.get_file()
+
+        # Convert the gio.File to a string that can be displayed
+        # and stored in the config file
+        dir_disp = dir_gio.get_path()
+
+        if dir_gio is not None:
+
+            # Convert the gio.File to a string that can be displayed
+            self.uploaddir = dir_disp
+            self.UploadDir.set_text(dir_disp)
 
     def OnRemoteDownloads(self, widget):
         sensitive = widget.get_active()
