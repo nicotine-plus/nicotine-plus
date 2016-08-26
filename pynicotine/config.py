@@ -518,10 +518,14 @@ class Config:
                         self.sections[i][j] = None
                         log.addwarning("CONFIG ERROR: Couldn't decode '%s' section '%s' value '%s'" % (str(j), str(i), str(val)))
 
+        # Transition from 1.2.16 -> 1.2.16+
+        self.removeOldOption("transfers", "pmqueueddir")
+
         # Old config file format
         for user in self.sections["server"]["userlist"]:
             if len(user) == 2:
                 user += [0, 0, 0, "", ""]
+
         if len(self.sections["columns"]["userlist"]) < len(self.defaults["columns"]["userlist"]):
             self.sections["columns"]["userlist"] += [True] * (len(self.defaults["columns"]["userlist"]) - len(self.sections["columns"]["userlist"]))
 
