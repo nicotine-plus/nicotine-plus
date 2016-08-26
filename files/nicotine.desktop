@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Nicotine-Plus
-Comment=SoulSeek filesharing client
+GenericName=Soulseek Filesharing Client
+Comment=SoulSeek Filesharing Client
 Exec=nicotine.py
 Icon=nicotine-plus
 Terminal=false
