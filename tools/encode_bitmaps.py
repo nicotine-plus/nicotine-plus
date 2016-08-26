@@ -47,7 +47,7 @@ table = [
 ]
 
 flagtable = []
-for name in os.listdir(os.path.join("img", "geoip")):
+for name in sorted(os.listdir(os.path.join("img", "geoip"))):
     p = os.path.join("img", "geoip", name)
     if isfile(p):
         flagtable.append((os.path.join("img", "geoip", name), 'flag_%s' % name[:2].upper()))
@@ -58,12 +58,11 @@ if isfile(missing):
 
 outf = open(os.path.join("pynicotine", "gtkgui", "imagedata.py"), "w")
 
-for image in table:
+for image in sorted(table):
     print image[0]
     f = open(os.path.join("img", image[0]), "rb")
-    d = f.read()
+    outf.write("%s = %r\n" % (image[1], f.read()))
     f.close()
-    outf.write("%s = %s\n" % (image[1], `d`))
 
 for image in flagtable:
     print image[0]
