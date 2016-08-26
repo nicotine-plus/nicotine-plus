@@ -518,8 +518,6 @@ class Config:
                         self.sections[i][j] = None
                         log.addwarning("CONFIG ERROR: Couldn't decode '%s' section '%s' value '%s'" % (str(j), str(i), str(val)))
 
-        autojoin = self.sections["server"]["autojoin"]
-
         # Old config file format
         for user in self.sections["server"]["userlist"]:
             if len(user) == 2:
