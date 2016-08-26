@@ -529,9 +529,6 @@ class Config:
         if len(self.sections["columns"]["userlist"]) < len(self.defaults["columns"]["userlist"]):
             self.sections["columns"]["userlist"] += [True] * (len(self.defaults["columns"]["userlist"]) - len(self.sections["columns"]["userlist"]))
 
-        self.removeOldOption("private_rooms", "membership")
-        self.removeOldOption("private_rooms", "owned")
-
         if type(self.sections["server"]["ipblocklist"]) is list:
             ipblocklist = self.sections["server"]["ipblocklist"][:]
             self.sections["server"]["ipblocklist"] = {}
