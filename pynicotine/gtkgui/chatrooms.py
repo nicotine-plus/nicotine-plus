@@ -116,11 +116,7 @@ class RoomsControl:
 		frame.roomlist.HideRoomList.connect("clicked", self.OnShowRoomList)
 
 		ChatNotebook.connect("switch-page", self.OnSwitchPage)
-		try:
-			ChatNotebook.connect("page-reordered", self.OnReorderedPage)
-		except:
-			# No PyGTK 2.10! Gosh, you really need to get with the times!
-			pass
+		ChatNotebook.connect("page-reordered", self.OnReorderedPage)
 		self.frame.SetTextBG(self.frame.roomlist.RoomsList)
 		self.frame.SetTextBG(self.frame.roomlist.CreateRoomEntry)
 		self.frame.SetTextBG(self.frame.roomlist.SearchRooms)
@@ -1842,14 +1838,9 @@ class ChatRoom:
 				self.frame.np.config.sections["logging"]["rooms"].append(self.room)
 		
 	def OnEncodingChanged(self, widget):
-		try:
-			# PyGTK 2.6
-			encoding = self.Encoding.get_active_text()
-		except:
-			# PyGTK 2.4
-			iter = self.Encoding.get_active_iter()
-			encoding_model = self.Encoding.get_model()
-			encoding = encoding_model.get_value(iter, 0)
+
+		encoding = self.Encoding.get_active_text()
+
 		if encoding != self.encoding:
 			self.encoding = encoding
 			SaveEncoding(self.frame.np, "roomencoding", self.room, self.encoding)

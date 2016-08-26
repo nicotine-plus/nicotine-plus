@@ -446,14 +446,9 @@ class UserInfo:
 			log.add(_("Picture not saved, %s already exists.") % pathname)
 	
 	def OnEncodingChanged(self, widget):
-		try:
-			# PyGTK 2.6
-			encoding = self.Encoding.get_active_text()
-		except:
-			# PyGTK 2.4
-			iter = self.Encoding.get_active_iter()
-			encoding_model = self.Encoding.get_model()
-			encoding = encoding_model.get_value(iter, 0)
+
+		encoding = self.Encoding.get_active_text()
+
 		if encoding != self.encoding:
 			self.encoding = encoding
 			buffer = self.descr.get_buffer()

@@ -698,12 +698,8 @@ class IconNotebook(gtk.Notebook):
         eventbox.set_events(gtk.gdk.BUTTON_PRESS_MASK)
         eventbox.connect('button_press_event', self.on_tab_click, page)
         gtk.Notebook.append_page_menu(self, page, eventbox, label_tab_menu)
-        try:
-            self.set_tab_reorderable(page, self.reorderable)
-            # self.set_tab_detachable(page, True)
-        except:
-            # Old PyGTK2
-            pass
+        self.set_tab_reorderable(page, self.reorderable)
+        # self.set_tab_detachable(page, True)
 
     def OnTabWindowDestroy(self, widget, page):
         if self.is_tab_detached(page):
@@ -791,11 +787,7 @@ class IconNotebook(gtk.Notebook):
         eventbox.set_events(gtk.gdk.BUTTON_PRESS_MASK)
         eventbox.connect('button_press_event', self.on_tab_click, page)
         gtk.Notebook.append_page_menu(self, pagewidget, eventbox, label_tab_menu)
-        try:
-            self.set_tab_reorderable(page, self.reorderable)
-        except:
-            # Old PyGTK2
-            pass
+        self.set_tab_reorderable(page, self.reorderable)
         self.detached_tabs.remove(item)
         if not destroying:
             window.destroy()
