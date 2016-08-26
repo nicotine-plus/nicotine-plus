@@ -218,7 +218,7 @@ class FastConfigureAssistant(object):
         self.config.sections['server']['lastportstatuscheck'] = time()
 
         # sharepage
-        self.config.sections['transfers']['downloaddir'] = self.kids['downloaddir'].get_current_folder()
+        self.config.sections['transfers']['downloaddir'] = self.kids['downloaddir'].get_file().get_path()
 
         if self.caneditshare:
             self.config.sections["transfers"]["friendsonly"] = self.kids['onlysharewithfriends'].get_active()
