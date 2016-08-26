@@ -335,7 +335,12 @@ class FastConfigureAssistant(object):
         dirs = []
 
         while iter is not None:
-            dirs.append(self.sharelist.get_value(iter, 5))
+            dirs.append(
+                (
+                    self.sharelist.get_value(iter, 0),
+                    self.sharelist.get_value(iter, 6)
+                )
+            )
             iter = self.sharelist.iter_next(iter)
 
         return dirs
@@ -352,7 +357,7 @@ class FastConfigureAssistant(object):
             iter = self.sharelist.iter_next(iter)
 
         self.sharelist.append([
-            recode(directory[0]),
+            directory[0],
             recode(directory[1]),
             "",
             "",
@@ -397,7 +402,7 @@ class FastConfigureAssistant(object):
             if directory[1] == self.sharelist.get_value(iter, 6):
 
                 self.sharelist.insert_after(iter, [
-                    recode(directory[0]),
+                    directory[0],
                     recode(directory[1]),
                     HumanSize(size),
                     files,
