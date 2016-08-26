@@ -68,8 +68,7 @@ class RoomsControl:
 				self.PrivateRooms[room]["owner"] = None
 			if "operator" in data:
 				del self.PrivateRooms[room]["operator"]
-		#self.PrivateRoomsMembership = config["private_rooms"]["membership"]
-		
+
 		self.clist = []
 		self.roomsmodel = gtk.ListStore(str, int, int)
 		frame.roomlist.RoomsList.set_model(self.roomsmodel)
@@ -128,7 +127,6 @@ class RoomsControl:
 		
 	def IsPrivateRoomOwned(self, room):
 		if room in self.PrivateRooms:
-			#print self.PrivateRooms[room]
 			if self.PrivateRooms[room]["owner"] == self.frame.np.config.sections["server"]["login"]:
 				return True
 		return False
@@ -426,7 +424,6 @@ class RoomsControl:
 			rooms[msg.room]["joined"] = msg.numusers
 		#self.PrivateRoomsOwned[msg.room]["users"] = msg.users
 		self.SetPrivateRooms()
-		#msg.debug()
 		
 	def PrivateRoomOwned(self, msg):
 		rooms = self.PrivateRooms
@@ -435,9 +432,7 @@ class RoomsControl:
 			rooms[msg.room]["operators"] = msg.operators
 		else:
 			rooms[msg.room]["operators"] = msg.operators
-		
-		#msg.debug()
-		
+
 		self.SetPrivateRooms()
 	def PrivateRoomAddUser(self, msg):
 		rooms = self.PrivateRooms
@@ -552,7 +547,6 @@ class RoomsControl:
 		if msg.user in self.frame.np.users and type(self.frame.np.users[msg.user].addr) is tuple:
 			ip, port = self.frame.np.users[msg.user].addr
 			if self.frame.np.ipIgnored(ip):
-				#print "ignored message from IP:", ip, msg.user
 				return
 		self.joinedrooms[msg.room].SayChatRoom(msg, text)
 	def PublicRoomMessage(self, msg, text):
@@ -997,7 +991,7 @@ class ChatRoom:
 		popup = self.popup_menu_privaterooms
 		popup.clear()
 		popup.set_user(self.popup_menu.user)
-		#print self.roomsctrl.PrivateRooms
+
 		for room in self.roomsctrl.PrivateRooms:
 			if not (self.roomsctrl.IsPrivateRoomOwned(room) or self.roomsctrl.IsPrivateRoomOperator(room)):
 				continue
