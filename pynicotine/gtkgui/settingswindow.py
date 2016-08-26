@@ -276,10 +276,11 @@ class DownloadsFrame(buildFrame):
         self.filterlist = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_BOOLEAN)
         self.downloadfilters = []
 
-        cols = InitialiseColumns(self.FilterView,
-                                 [_("Filter"), 250, "text"],
-                                 [_("Escaped"), 40, "toggle"]
-                                 )
+        cols = InitialiseColumns(
+            self.FilterView,
+            [_("Filter"), 250, "text"],
+            [_("Escaped"), 40, "toggle"]
+        )
 
         cols[0].set_sort_column_id(0)
         cols[1].set_sort_column_id(1)
@@ -342,6 +343,7 @@ class DownloadsFrame(buildFrame):
         else:
             place = "Home"
             homedir = pwd.getpwuid(os.getuid())[5]
+
         if homedir == recode2(self.DownloadDir.get_text()) and self.ShareDownloadDir.get_active():
             popupWarning(
                 self.p.SettingsWindow,
@@ -827,11 +829,13 @@ class SharesFrame(buildFrame):
 class TransfersFrame(buildFrame):
 
     def __init__(self, parent):
+
         self.p = parent
 
         buildFrame.__init__(self, "TransfersFrame")
         self.UploadsAllowed_List = gtk.ListStore(gobject.TYPE_STRING)
         self.UploadsAllowed.set_model(self.UploadsAllowed_List)
+
         self.options = {
             "transfers": {
                 "uploadbandwidth": self.QueueBandwidth,
@@ -865,17 +869,18 @@ class TransfersFrame(buildFrame):
         for item in self.alloweduserslist:
             self.UploadsAllowed_List.append([item])
 
-        # self.Uploads.connect("activate", self.OnExpand)
-
     def SetSettings(self, config):
+
         transfers = config["transfers"]
         server = config["server"]
         self.p.SetWidgetsData(config, self.options)
 
         self.OnQueueUseSlotsToggled(self.QueueUseSlots)
         self.OnLimitToggled(self.Limit)
+
         if transfers["uploaddir"]:
             self.ChooseUploadDir.set_current_folder(transfers["uploaddir"])
+
         if transfers["uploadallowed"] is not None:
             self.UploadsAllowed.set_active(transfers["uploadallowed"])
         else:
@@ -884,10 +889,12 @@ class TransfersFrame(buildFrame):
         self.UploadsAllowed.set_sensitive(self.RemoteDownloads.get_active())
 
     def GetSettings(self):
+
         try:
             uploadallowed = self.UploadsAllowed.get_active()
         except:
             uploadallowed = 0
+
         if not self.RemoteDownloads.get_active():
             uploadallowed = 0
 
