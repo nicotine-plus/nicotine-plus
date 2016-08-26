@@ -634,6 +634,9 @@ class NicotineFrame:
 		img.set_from_pixbuf(self.images["away2"])
 		self.awayreturn1.set_image(img)
 		img = gtk.Image()
+		img.set_from_pixbuf(self.images["notify"])
+		self.about_nicotine1.set_image(img)
+		img = gtk.Image()
 		img.set_from_pixbuf(self.images["bug"])
 		self.report_bug.set_image(img)
 		img = gtk.Image()
@@ -796,38 +799,28 @@ class NicotineFrame:
 		except gobject.GError, error:
 			self.logMessage(_("Notification Error: %s") % str(error))
 
-		
+
 	def LoadIcons(self):
 		self.images = {}
 		self.icons = {}
 		self.flag_images = {}
 		self.flag_users = {}
 		scale = None
+
 		def loadStatic(name):
 			loader = gtk.gdk.PixbufLoader()
-			try:
-				data = getattr(imagedata, "%s_vector" % (name,))
-				loader.write(data, len(data))
-			except (gobject.GError, AttributeError):
-				try:
-					# If we reuse the loader for the PNG we get an GtkWarning about a failing assertion
-					# If we let the loader go out of scope we get a GtkWarning about not finalizing  the loader
-					# If we close the loader it throws an exception on invalid data... 
-					loader.close()
-				except gobject.GError, e:
-					# always happens -_-
-					pass
-				loader = gtk.gdk.PixbufLoader()
-				data = getattr(imagedata, "%s" % (name,))
-				loader.write(data, len(data))
+			data = getattr(imagedata, "%s" % (name,))
+			loader.write(data, len(data))
 			loader.close()
 			pixbuf = loader.get_pixbuf()
 			if scale:
 				w, h = pixbuf.get_width(), pixbuf.get_height()
 				if w == h:
-					pixbuf = pixbuf.scale_simple(scale,scale,gtk.gdk.INTERP_BILINEAR)
+					pixbuf = pixbuf.scale_simple(scale, scale, gtk.gdk.INTERP_BILINEAR)
 			return pixbuf
-		names = ["empty", "away", "online", "offline", "hilite", "hilite2", "hilite3", "connect", "disconnect", "away2", "n", "nicotinen", "notify", "bug", "money", "plugin" ]
+
+		names = ["empty", "away", "online", "offline", "hilite", "hilite2", "hilite3", "connect", "disconnect", "away2", "n", "nicotinen", "notify", "bug", "money", "plugin"]
+
 		if "icontheme" in self.np.config.sections["ui"]:
 			extensions = ["jpg", "jpeg", "bmp", "png", "svg"]
 			for name in names:
@@ -848,7 +841,7 @@ class NicotineFrame:
 							if scale:
 								w, h = pixbuf.get_width(), pixbuf.get_height()
 								if w == h:
-									pixbuf = pixbuf.scale_simple(scale,scale,gtk.gdk.INTERP_BILINEAR)
+									pixbuf = pixbuf.scale_simple(scale, scale, gtk.gdk.INTERP_BILINEAR)
 							self.images[name] = pixbuf
 							loaded = True
 						except gobject.GError:
@@ -860,6 +853,7 @@ class NicotineFrame:
 		else:
 			for name in names:
 				self.images[name] = loadStatic(name)
+
 
 	def SaveColumns(self):
 		for i in [self.userlist, self.chatrooms.roomsctrl, self.downloads, self.uploads, self.Searches]:
