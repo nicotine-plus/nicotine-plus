@@ -721,9 +721,9 @@ class Search:
 		results = []
 
 		if msg.freeulslots:
-			imdl = _("Y")
+			imdl = "Y"
 		else:
-			imdl = _("N")
+			imdl = "N"
 		decode = self.frame.np.decode
 		for result in msg.list:
 			name = result[1].split('\\')[-1]
@@ -734,7 +734,7 @@ class Search:
 			if result[3] != "" and len(result[4]) == 3:
 				a = result[4]
 				if a[2] == 1:
-					bitrate = _(" (vbr)")
+					bitrate = " (vbr)"
 				bitrate = str(a[0]) + bitrate
 				br = a[0]
 				length = '%i:%02i' %(a[1] / 60, a[1] % 60)
@@ -1201,7 +1201,7 @@ class Search:
 
 		status = model.get_value(iter, 17)
 		imdl = model.get_value(iter, 6)
-		color = imdl == _("Y") and "search" or "searchq"
+		color = imdl == "Y" and "search" or "searchq"
 		colour = None
 		if status == 0:
 			colour = self.frame.np.config.sections["ui"]["searchoffline"]
