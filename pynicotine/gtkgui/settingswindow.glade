@@ -1810,10 +1810,9 @@ typed incorrectly or as an acronym</property>
                     <property name="xalign">0</property>
                     <property name="yalign">0</property>
                     <property name="xpad">8</property>
-                    <property name="label" translatable="yes">Choose &lt;b&gt;Away&lt;/b&gt; mode to configure your auto-away settings.</property>
+                    <property name="label" translatable="yes">Choose &lt;b&gt;Away mode&lt;/b&gt; to configure your auto-away settings.</property>
                     <property name="use_markup">True</property>
-                    <property name="wrap">True</property>
-                    <property name="wrap_mode">word-char</property>
+                    <property name="single_line_mode">True</property>
                   </widget>
                   <packing>
                     <property name="expand">False</property>
@@ -1830,7 +1829,7 @@ typed incorrectly or as an acronym</property>
                     <property name="xpad">8</property>
                     <property name="label" translatable="yes">Choose &lt;b&gt;Logging&lt;/b&gt; to configure what's logged and where to save the logs.</property>
                     <property name="use_markup">True</property>
-                    <property name="wrap">True</property>
+                    <property name="single_line_mode">True</property>
                   </widget>
                   <packing>
                     <property name="expand">False</property>
@@ -1839,20 +1838,37 @@ typed incorrectly or as an acronym</property>
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkLabel" id="CensorLabel">
+                  <widget class="GtkLabel" id="IgnoreListLabel">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="xalign">0</property>
                     <property name="yalign">0</property>
                     <property name="xpad">8</property>
-                    <property name="label" translatable="yes">You can censor unwanted words in the &lt;b&gt;Censor List&lt;/b&gt;.</property>
+                    <property name="label" translatable="yes">Choose &lt;b&gt;Ignore List&lt;/b&gt; to configure users and/or IPs you want to ignore.</property>
                     <property name="use_markup">True</property>
-                    <property name="wrap">True</property>
+                    <property name="single_line_mode">True</property>
                   </widget>
                   <packing>
                     <property name="expand">False</property>
                     <property name="fill">True</property>
                     <property name="position">2</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkLabel" id="CensorListLabel">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="xalign">0</property>
+                    <property name="yalign">0</property>
+                    <property name="xpad">8</property>
+                    <property name="label" translatable="yes">Choose &lt;b&gt;Censor List&lt;/b&gt; to configure what unwanted words you want to censor.</property>
+                    <property name="use_markup">True</property>
+                    <property name="single_line_mode">True</property>
+                  </widget>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">3</property>
                   </packing>
                 </child>
                 <child>
@@ -1862,14 +1878,14 @@ typed incorrectly or as an acronym</property>
                     <property name="xalign">0</property>
                     <property name="yalign">0</property>
                     <property name="xpad">8</property>
-                    <property name="label" translatable="yes">You can auto-replace words (such as common typos) in the &lt;b&gt;Auto-Replace&lt;/b&gt; List.</property>
+                    <property name="label" translatable="yes">Choose &lt;b&gt;Auto-Replace&lt;/b&gt; to configure auto-replacement of words (such as common typos).</property>
                     <property name="use_markup">True</property>
-                    <property name="wrap">True</property>
+                    <property name="single_line_mode">True</property>
                   </widget>
                   <packing>
                     <property name="expand">False</property>
                     <property name="fill">True</property>
-                    <property name="position">3</property>
+                    <property name="position">4</property>
                   </packing>
                 </child>
                 <child>
@@ -1881,13 +1897,29 @@ typed incorrectly or as an acronym</property>
                     <property name="xpad">8</property>
                     <property name="label" translatable="yes">Choose &lt;b&gt;URL Catching&lt;/b&gt; to configure the programs used when clicking on links.</property>
                     <property name="use_markup">True</property>
-                    <property name="wrap">True</property>
-                    <property name="wrap_mode">word-char</property>
+                    <property name="single_line_mode">True</property>
                   </widget>
                   <packing>
                     <property name="expand">False</property>
                     <property name="fill">True</property>
-                    <property name="position">4</property>
+                    <property name="position">5</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkLabel" id="CompletionLabel">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="xalign">0</property>
+                    <property name="yalign">0</property>
+                    <property name="xpad">8</property>
+                    <property name="label" translatable="yes">Choose &lt;b&gt;Completion&lt;/b&gt; to configure auto-completion in chats.</property>
+                    <property name="use_markup">True</property>
+                    <property name="single_line_mode">True</property>
+                  </widget>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">6</property>
                   </packing>
                 </child>
               </widget>
@@ -8830,39 +8862,89 @@ Clear</property>
                 <property name="border_width">2</property>
                 <property name="spacing">6</property>
                 <child>
-                  <widget class="GtkLabel" id="label278">
+                  <widget class="GtkLabel" id="PluginsLabel">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="xalign">0</property>
                     <property name="yalign">0</property>
                     <property name="xpad">8</property>
-                    <property name="label" translatable="yes">Choose User info to add text and an image to your personal info.</property>
-                    <property name="wrap">True</property>
+                    <property name="label" translatable="yes">Choose &lt;b&gt;Plugins&lt;/b&gt; to activate additionals plugins (experimental).</property>
+                    <property name="use_markup">True</property>
+                    <property name="single_line_mode">True</property>
                   </widget>
                   <packing>
                     <property name="expand">False</property>
-                    <property name="fill">False</property>
+                    <property name="fill">True</property>
                     <property name="position">0</property>
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkLabel" id="label282">
+                  <widget class="GtkLabel" id="SoundsLabel">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="xalign">0</property>
                     <property name="yalign">0</property>
                     <property name="xpad">8</property>
-                    <property name="label" translatable="yes">Choose Searches to configure search settings and to set default search filters.</property>
-                    <property name="wrap">True</property>
+                    <property name="label" translatable="yes">Choose &lt;b&gt;Sounds&lt;/b&gt; to configure sounds notifications and Text-to-Speech.</property>
+                    <property name="use_markup">True</property>
+                    <property name="single_line_mode">True</property>
                   </widget>
                   <packing>
                     <property name="expand">False</property>
-                    <property name="fill">False</property>
+                    <property name="fill">True</property>
                     <property name="position">1</property>
                   </packing>
                 </child>
                 <child>
-                  <placeholder/>
+                  <widget class="GtkLabel" id="SearchesLabel">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="xalign">0</property>
+                    <property name="yalign">0</property>
+                    <property name="xpad">8</property>
+                    <property name="label" translatable="yes">Choose &lt;b&gt;Searches&lt;/b&gt; to configure search settings and to set default search filters.</property>
+                    <property name="use_markup">True</property>
+                    <property name="single_line_mode">True</property>
+                  </widget>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">2</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkLabel" id="UserinfoLabel">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="xalign">0</property>
+                    <property name="yalign">0</property>
+                    <property name="xpad">8</property>
+                    <property name="label" translatable="yes">Choose &lt;b&gt;User info&lt;/b&gt; to add text and an image to your personal info.</property>
+                    <property name="use_markup">True</property>
+                    <property name="single_line_mode">True</property>
+                  </widget>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">3</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkLabel" id="ImportConfigLabel">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="xalign">0</property>
+                    <property name="yalign">0</property>
+                    <property name="xpad">8</property>
+                    <property name="label" translatable="yes">Choose &lt;b&gt;Import Config&lt;/b&gt; to import the configuration from the official Soulseek client.</property>
+                    <property name="use_markup">True</property>
+                    <property name="single_line_mode">True</property>
+                  </widget>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">4</property>
+                  </packing>
                 </child>
               </widget>
             </child>
