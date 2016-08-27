@@ -372,13 +372,14 @@ class Searches(IconNotebook):
 		return search
 
 	def ShowResult(self, msg, username, country):
+
 		if msg.token not in self.searches:
 			return
-		
+
 		search = self.searches[msg.token]
 		if search[2] == None:
 			search = self.CreateTab(search[0], search[1], search[3], search[4])
-		
+
 		search[2].AddResult(msg, username, country)
 
 	def RemoveAutoSearch(self, id):
@@ -529,10 +530,28 @@ class Search:
 
 		self.all_data = []
 		self.filters = None
-		# num, user, filename, h_size, h_speed, h_queue, immediatedl, h_bitrate, length, self.get_flag(user, country), directory, bitrate, fullpath, country,  size, speed, queue, status]
-		self.COLUMN_TYPES = [int, str, str, str, str, str, str, str, str, gtk.gdk.Pixbuf, str,
-			int, str, str, gobject.TYPE_UINT64, int, int, int]
-		self.resultsmodel = gtk.TreeStore(* self.COLUMN_TYPES )
+		self.COLUMN_TYPES = [
+			int,  # num
+			str,  # user
+			str,  # filename
+			str,  # h_size
+			str,  # h_speed
+			str,  # h_queue
+			str,  # immediatedl
+			str,  # h_bitrate
+			str,  # length
+			gtk.gdk.Pixbuf,  # self.get_flag(user, country)
+			str,  # directory
+			int,  # bitrate
+			str,  # fullpath
+			str,  # country
+			gobject.TYPE_UINT64,  # size
+			int,  # speed
+			int,  # queue
+			int   # status
+		]
+
+		self.resultsmodel = gtk.TreeStore(* self.COLUMN_TYPES)
 
 		if mode > 0:
 			self.RememberCheckButton.set_sensitive(False)
@@ -569,7 +588,9 @@ class Search:
 		self.ResultsList.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
 		self.ResultsList.set_property("show-expanders", False)
 		self.ResultsList.set_property("rules-hint", True)
-		cols = InitialiseColumns(self.ResultsList,
+
+		cols = InitialiseColumns(
+			self.ResultsList,
 			[_("Number"), 50, "number", self.CellDataFunc],
 			[_("User"), 100, "text", self.CellDataFunc],
 			[_("Filename"), 250, "text", self.CellDataFunc],
@@ -706,17 +727,21 @@ class Search:
 		)
 
 	def AddResult(self, msg, user, country):
+
 		if user in self.users:
 			return
+
 		if user not in self.Searches.users:
+
 			if user in self.frame.np.users and self.frame.np.users[user].status is not None:
 				self.Searches.users[user] = self.frame.np.users[user].status
 			else:
 				self.Searches.users[user] = 0
 				self.frame.np.queue.put(slskmessages.AddUser(user))
+
 			if user == self.frame.np.config.sections["server"]["login"]:
 				self.Searches.users[user] = 1
-		
+
 		self.users.append(user)
 		results = []
 
@@ -724,13 +749,16 @@ class Search:
 			imdl = "Y"
 		else:
 			imdl = "N"
+
 		decode = self.frame.np.decode
+
 		for result in msg.list:
 			name = result[1].split('\\')[-1]
 			dir = result[1][:-len(name)]
 			bitrate = ""
 			length = ""
 			br = 0
+
 			if result[3] != "" and len(result[4]) == 3:
 				a = result[4]
 				if a[2] == 1:
@@ -738,21 +766,27 @@ class Search:
 				bitrate = str(a[0]) + bitrate
 				br = a[0]
 				length = '%i:%02i' %(a[1] / 60, a[1] % 60)
+
 			results.append([user, name, result[2], msg.ulspeed, msg.inqueue, imdl, bitrate, length, dir, br, result[1], country, self.Searches.users[user]])
+
 		if results:
+
 			self.new_results += results
 			
 			if self._more_results == 0 and len(self.resultsmodel) < self.frame.np.config.sections['searches']["max_displayed_results"]:
 				self._more_results = 1
-				if len(self.resultsmodel) < 25: # Showing the first 50 results right away, buffering the rest
+				if len(self.resultsmodel) < 25:  # Showing the first 25 results right away, buffering the rest
 					gobject.timeout_add(0, self._realaddresults)
 				else:
 					gobject.timeout_add(self.WAIT_BEFORE_DISPLAYING, self._realaddresults)
+
 			return len(results)
 
 	def _realaddresults(self):
+
 		if "_more_results" not in self.__dict__:
 			return
+
 		self._more_results = 0
 		r = self.new_results
 		self.new_results = []
@@ -763,9 +797,8 @@ class Search:
 			self.frame.Searches.request_changed(self.Main)
 			if self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.searchvbox):
 				self.frame.SearchTabLabel.child.set_image(self.frame.images["online"])
-			#self.frame.RequestIcon(self.frame.SearchTabLabel)
+			# self.frame.RequestIcon(self.frame.SearchTabLabel)
 
-		rows = len(self.all_data)
 		for c in self.ResultsList.get_columns():
 			for r in c.get_cell_renderers():
 				if type(r) is not gtk.CellRendererPixbuf:
@@ -784,6 +817,7 @@ class Search:
 		return self.frame.GetFlagImage(flag)
 
 	def append(self, results):
+
 		itercounter = len(self.all_data) + 1
 		displaycounter = len(self.resultsmodel)
 
@@ -792,22 +826,28 @@ class Search:
 		returned = 0
 		if itercounter > self.frame.np.config.sections['searches']["max_stored_results"]:
 			return returned
+
 		for r in results:
 
 			user, filename, size, speed, queue, immediatedl, h_bitrate, length, directory, bitrate, fullpath,  country, status = r
+
 			if user in self.Searches.users and status != self.Searches.users[user]:
 				status = self.Searches.users[user]
 			if status is None:
 				status = 0
+
 			h_size = HumanSize(long(size))
 			h_speed = HumanSpeed(speed)
 			h_queue = Humanize(queue)
+
 			if self.usersGroup.get_active() and user not in self.usersiters:
 				self.usersiters[user] = self.resultsmodel.append(None, [0, user, "", "", h_speed, h_queue, immediatedl, "", "", self.get_flag(user, country), "", 0, "", country, 0, speed, queue, status])
+
 			row = [itercounter, user, filename, h_size, h_speed, h_queue, immediatedl, h_bitrate, length,
 			       directory,  bitrate, fullpath, country,  size, speed, queue, status]
 
 			self.all_data.append(row)
+
 			if (displaycounter + returned < self.frame.np.config.sections['searches']["max_displayed_results"]) and (not self.filters or self.check_filter(row)):
 				encoded_row = [itercounter, user, encode(filename, user), h_size, h_speed, h_queue, immediatedl, h_bitrate, length, self.get_flag(user, country), encode(directory, user), bitrate, encode(fullpath, user), country,  size, speed, queue, status]
 				try:
@@ -816,12 +856,12 @@ class Search:
 					else:
 						iter = self.resultsmodel.append(None, encoded_row)
 				except Exception, e:
-					types=[]
+					types = []
 					for i in encoded_row:
-						types.append( type(i))
-					#print types
+						types.append(type(i))
 					print "Search row error:", e, encoded_row
-					iter=None
+					iter = None
+
 				path = None
 				if iter is not None:
 					path = self.resultsmodel.get_path(iter)
@@ -829,11 +869,13 @@ class Search:
 					if self.usersGroup.get_active() and self.ExpandButton.get_active():
 						self.ResultsList.expand_to_path(path)
 				returned += 1
+
 			itercounter += 1
 			if itercounter > self.frame.np.config.sections['searches']["max_stored_results"]:
 				break
 		
 		self.CountVisibleResults()
+
 		return returned
 
 	def updateStatus(self, user, status):
@@ -1212,6 +1254,7 @@ class Search:
 		else:
 			colour = self.frame.np.config.sections["ui"][color] or None
 			cellrenderer.set_property("background", None)
+
 		cellrenderer.set_property("foreground", colour)
 
 	def MetaBox(self, title="Meta Data", message="", data=None, modal= True):
@@ -1355,7 +1398,7 @@ class Search:
 			pass
 		self.Searches.WishListDialog.removeWish(self.text)
 		widget.set_sensitive(False)
-		
+
 	def OnClear(self, widget):
 		self.all_data = []
 		self.usersiters.clear()
