@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-21 21:26+0200\n"
+"POT-Creation-Date: 2016-08-27 15:16+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -453,1009 +453,6 @@ msgstr ""
 msgid "Scanning Buddy Shares"
 msgstr ""
 
-msgid "Server Settings"
-msgstr ""
-
-msgid "Server: (use server.slsknet.org:2242 for the main server)"
-msgstr ""
-
-msgid "Login:"
-msgstr ""
-
-msgid "Password:"
-msgstr ""
-
-msgid "Change password"
-msgstr ""
-
-msgid ""
-"For a new account\n"
-" enter desired details"
-msgstr ""
-
-msgid "Your IP address has not been retrieved from the server"
-msgstr ""
-
-msgid "Use the first available listening port from the following range:"
-msgstr ""
-
-msgid "Client port is not set"
-msgstr ""
-
-msgid "Check port status"
-msgstr ""
-
-msgid "Use the above ports to configure your router or firewall."
-msgstr ""
-
-msgid ""
-"Use UPnP to fix portmapping (requires MiniUPnPc, preferably with python "
-"bindings)"
-msgstr ""
-
-msgid ""
-"If you wish to use UPnP to fix portmapping on your router please install "
-"MiniUPnP client binary or the MiniUPnP client module for Python."
-msgstr ""
-
-msgid "I can receive direct connections"
-msgstr ""
-
-msgid "(only use if the above ports are remotely accessible)"
-msgstr ""
-
-msgid "Enable CTCP-like PM responses (Client Version)"
-msgstr ""
-
-msgid "Network Character Encoding (utf-8 is a good choice)"
-msgstr ""
-
-msgid "Server"
-msgstr ""
-
-msgid "<b>Public Shares</b>"
-msgstr ""
-
-msgid "Add..."
-msgstr ""
-
-msgid "Remove"
-msgstr ""
-
-msgid "Rename"
-msgstr ""
-
-msgid "Rescan shares on startup"
-msgstr ""
-
-msgid "Share only to buddies"
-msgstr ""
-
-msgid ""
-"If buddy shares are enabled, they will be shared. Otherwise normal shares "
-"will be used."
-msgstr ""
-
-msgid "Enable Buddy-Only shares"
-msgstr ""
-
-msgid "<b>Buddies-Only Shares</b>"
-msgstr ""
-
-msgid "Upload directory:"
-msgstr ""
-
-msgid ""
-"Where buddies' uploads will be stored (with a subdirectory for each buddy)"
-msgstr ""
-
-msgid "Select A Directory"
-msgstr ""
-
-msgid "Upload Queue type:"
-msgstr ""
-
-msgid "Round Robin"
-msgstr ""
-
-msgid "Users will be sent one file and then another user will be selected"
-msgstr ""
-
-msgid "First In, First Out"
-msgstr ""
-
-msgid "Files will be sent in the order they were queued"
-msgstr ""
-
-msgid "Queue Uploads if total transfer speed reaches"
-msgstr ""
-
-msgid "KBytes/sec"
-msgstr ""
-
-msgid "Limit number of upload slots to"
-msgstr ""
-
-msgid ""
-"If disabled, slots will automatically be determined by available bandwidth "
-"limitations"
-msgstr ""
-
-msgid "(NOT RECOMMENDED)"
-msgstr ""
-
-msgid "Limit uploads speed to"
-msgstr ""
-
-msgid "per transfer"
-msgstr ""
-
-msgid "total transfers"
-msgstr ""
-
-msgid "Each user may queue a maximum of"
-msgstr ""
-
-msgid "Megabytes"
-msgstr ""
-
-msgid "Files"
-msgstr ""
-
-msgid "Queue size limit does not apply to friends"
-msgstr ""
-
-msgid "Allow these users to send you files:"
-msgstr ""
-
-msgid ""
-"The users will be able to send you files. These files will be downloaded "
-"into the Buddy Uploads subdirectory in your Download directory"
-msgstr ""
-
-msgid "<b>Upload Queue:</b>"
-msgstr ""
-
-msgid "Privilege all my friends"
-msgstr ""
-
-msgid ""
-"Friends will have higher priority in the queue, the same as globally "
-"privileged users"
-msgstr ""
-
-msgid "<b>Privileges:</b>"
-msgstr ""
-
-msgid "Lock incoming files (turn off for NFS)"
-msgstr ""
-
-msgid "Download folders in reverse alphanumerical order"
-msgstr ""
-
-msgid "Download SFV/MD5 before anything else"
-msgstr ""
-
-msgid "Userinfo"
-msgstr ""
-
-msgid "Self description:"
-msgstr ""
-
-msgid "Image:"
-msgstr ""
-
-msgid "Size: 0"
-msgstr ""
-
-msgid "Choose..."
-msgstr ""
-
-msgid "Personal settings"
-msgstr ""
-
-msgid "Bloat"
-msgstr ""
-
-msgid ""
-"Libsexy Website: http://www.chipx86.com/wiki/Libsexy \\nlibsexy and sexy-"
-"python bindings required."
-msgstr ""
-
-msgid "Enable spell checker (requires a restart)"
-msgstr ""
-
-msgid "Show Buttons in Transfers Tabs"
-msgstr ""
-
-msgid "Show tooltips"
-msgstr ""
-
-msgid "Hey, you really should disable this!"
-msgstr ""
-
-msgid "Chat Font:"
-msgstr ""
-
-msgid "List Font:"
-msgstr ""
-
-msgid "Transfers Font:"
-msgstr ""
-
-msgid "Search Font:"
-msgstr ""
-
-msgid "Browse Font:"
-msgstr ""
-
-msgid "Decimal separator:"
-msgstr ""
-
-msgid "Translate to another language"
-msgstr ""
-
-msgid "Loading translations requires a restart"
-msgstr ""
-
-msgid "<b>Language</b>"
-msgstr ""
-
-msgid "Extra stuff for your comfort"
-msgstr ""
-
-msgid "Log chatrooms by default"
-msgstr ""
-
-msgid "Log private chat by default"
-msgstr ""
-
-msgid "Log transfers"
-msgstr ""
-
-msgid "Logs directory:"
-msgstr ""
-
-msgid "Chatroom Logs directory:"
-msgstr ""
-
-msgid "Private Chat Logs directory:"
-msgstr ""
-
-msgid "Display logged chat room messages when a room is rejoined"
-msgstr ""
-
-msgid "Read"
-msgstr ""
-
-msgid "lines"
-msgstr ""
-
-msgid "Reopen last Private Chat messages"
-msgstr ""
-
-msgid "<b>Timestamps</b>"
-msgstr ""
-
-msgid "Display timestamps"
-msgstr ""
-
-msgid "Log file format:"
-msgstr ""
-
-msgid "http://docs.python.org/lib/module-time.html"
-msgstr ""
-
-msgid "Default"
-msgstr ""
-
-msgid "Chat room format:"
-msgstr ""
-
-msgid "Private chat format:"
-msgstr ""
-
-msgid "<b>Logging</b>"
-msgstr ""
-
-msgid "Ban"
-msgstr ""
-
-msgid "Banned Users:"
-msgstr ""
-
-msgid "Clear"
-msgstr ""
-
-msgid "Blocked IP Addresses:"
-msgstr ""
-
-msgid "Use custom ban message:"
-msgstr ""
-
-msgid "Banning"
-msgstr ""
-
-msgid "Enable sending search results to other users"
-msgstr ""
-
-msgid "Send out a max of"
-msgstr ""
-
-msgid "results per search request"
-msgstr ""
-
-msgid "Toggle responding to distributed searches every"
-msgstr ""
-
-msgid "seconds"
-msgstr ""
-
-msgid "Network Searches:"
-msgstr ""
-
-msgid "Your Searches:"
-msgstr ""
-
-msgid "Use regular expressions for filter in & out"
-msgstr ""
-
-msgid "Enable filters by default"
-msgstr ""
-
-msgid "Country:"
-msgstr ""
-
-msgid "Free slot"
-msgstr ""
-
-msgid "Bitrate:"
-msgstr ""
-
-msgid "Size:"
-msgstr ""
-
-msgid "Filter out:"
-msgstr ""
-
-msgid "Filter in:"
-msgstr ""
-
-msgid ""
-"Reopen closed search tabs that haven't been ignored\n"
-"when new results come in"
-msgstr ""
-
-msgid "Max visible results per search:"
-msgstr ""
-
-msgid "Max stored results per search:"
-msgstr ""
-
-msgid "Searches"
-msgstr ""
-
-msgid "Nicotine+ Settings"
-msgstr ""
-
-msgid "Away"
-msgstr ""
-
-msgid "Toggle away after "
-msgstr ""
-
-msgid " minutes of inactivity"
-msgstr ""
-
-msgid "Auto-reply when away:  "
-msgstr ""
-
-msgid "Away mode"
-msgstr ""
-
-msgid "Events"
-msgstr ""
-
-msgid ""
-"Show notification popup in tray after...\n"
-"(requires python-notify and notification-daemon)"
-msgstr ""
-
-msgid "...each file"
-msgstr ""
-
-msgid "...each directory"
-msgstr ""
-
-msgid "Run command after download finishes ($ for filename):"
-msgstr ""
-
-msgid "Run command after folder finishes ($ for folder path):"
-msgstr ""
-
-msgid "File Manager command ($ for folder path):"
-msgstr ""
-
-msgid "Download transfers"
-msgstr ""
-
-msgid ""
-"Nothing\n"
-"Send to player\n"
-"Open Directory\n"
-"Search\n"
-"Abort\n"
-"Clear\n"
-"Retry"
-msgstr ""
-
-msgid "Upload transfers"
-msgstr ""
-
-msgid ""
-"Nothing\n"
-"Send to player\n"
-"Open Directory\n"
-"Search\n"
-"Abort\n"
-"Clear"
-msgstr ""
-
-msgid "Double-clicking on..."
-msgstr ""
-
-msgid "GeoBlock"
-msgstr ""
-
-msgid "Enable geographical blocker"
-msgstr ""
-
-msgid "Geographical paranoia (block unresolvable IPs)"
-msgstr ""
-
-msgid "Country codes to block (comma separated):"
-msgstr ""
-
-msgid ""
-"Geo Block (if available) controls from which countries users are allowed "
-"access to your shares."
-msgstr ""
-
-msgid ""
-"If you wish to use Geo Block, install GeoIP and it's Python Bindings from "
-"your distro's packaging tool or from:"
-msgstr ""
-
-msgid "http://www.maxmind.com/app/c"
-msgstr ""
-
-msgid "http://www.maxmind.com/app/python"
-msgstr ""
-
-msgid "Geographical Blocking"
-msgstr ""
-
-msgid "UrlCatch"
-msgstr ""
-
-msgid "Enable URL catching"
-msgstr ""
-
-msgid "Humanize slsk:// urls"
-msgstr ""
-
-msgid ""
-"Instances of $ will be replaced by the link, add empty handlers to use the "
-"system default web browser.\n"
-"Protocols handlers: "
-msgstr ""
-
-msgid "Handler:"
-msgstr ""
-
-msgid "Protocol:"
-msgstr ""
-
-msgid "Enabled embedded Webbrowser (unstable if misconfigured)"
-msgstr ""
-
-msgid ""
-"You must have mozembed installed, and correctly set your LD_LIBRARY_PATH and "
-"MOZILLA_FIVE_HOME to the proper directory, or you may experience segfaults. "
-"Try setting them to: /usr/lib/xulrunner-x.x"
-msgstr ""
-
-msgid "Open URLs in embedded Webbrowser"
-msgstr ""
-
-msgid "Overrides settings for HTTP urls"
-msgstr ""
-
-msgid "URL Catching:"
-msgstr ""
-
-msgid "Misc"
-msgstr ""
-
-msgid "Choose User info to add text and an image to your personal info."
-msgstr ""
-
-msgid ""
-"Choose Searches to configure search settings and to set default search "
-"filters."
-msgstr ""
-
-msgid "Miscellaneous Settings"
-msgstr ""
-
-msgid "Import Config"
-msgstr ""
-
-msgid ""
-"Importing the config files from the official client will overwrite some of "
-"your settings (Login, Password, User Info, User Image). Use caution with "
-"this feature."
-msgstr ""
-
-msgid ""
-"Select the directory that contains slsk.exe and the .cfg files: (Ex: C:\\"
-"\\Program Files\\\\SoulSeek)"
-msgstr ""
-
-msgid "Import Directory"
-msgstr ""
-
-msgid "Queue"
-msgstr ""
-
-msgid "Login / Password"
-msgstr ""
-
-msgid "Joined Chat Rooms"
-msgstr ""
-
-msgid "Banned List"
-msgstr ""
-
-msgid "Ignored List"
-msgstr ""
-
-msgid "User Info"
-msgstr ""
-
-msgid "User Image"
-msgstr ""
-
-msgid "Restart Nicotine+ to see all changes take effect"
-msgstr ""
-
-msgid "Sounds"
-msgstr ""
-
-msgid "Enable Sound Effects"
-msgstr ""
-
-msgid "Sound Effects command:"
-msgstr ""
-
-msgid "Sound Effects Directory:"
-msgstr ""
-
-msgid "Select"
-msgstr ""
-
-msgid "Enable Text To Speech"
-msgstr ""
-
-msgid "Text To Speech command:"
-msgstr ""
-
-msgid "Chat room message:"
-msgstr ""
-
-msgid "Private chat message:"
-msgstr ""
-
-msgid "Audio Player Command ($ for filename):"
-msgstr ""
-
-msgid "<b>Sounds:</b>"
-msgstr ""
-
-msgid "Icons"
-msgstr ""
-
-msgid "Display Tray Icon"
-msgstr ""
-
-msgid "Show confirmation dialog when closing the main window"
-msgstr ""
-
-msgid "Always send Nicotine+ to tray when main window is closed"
-msgstr ""
-
-msgid "Always quit when main window is closed"
-msgstr ""
-
-msgid "Icon Theme Directory (requires restart):"
-msgstr ""
-
-msgid "Current Icons:"
-msgstr ""
-
-msgid "<b>Status</b>"
-msgstr ""
-
-msgid "Online:"
-msgstr ""
-
-msgid "Away:"
-msgstr ""
-
-msgid "Offline:"
-msgstr ""
-
-msgid "Nick Hilite:"
-msgstr ""
-
-msgid "Hilite:"
-msgstr ""
-
-msgid "Disconnected:"
-msgstr ""
-
-msgid "Connected:"
-msgstr ""
-
-msgid "<b>Trayicon</b>"
-msgstr ""
-
-msgid "Notify:"
-msgstr ""
-
-msgid "Window:"
-msgstr ""
-
-msgid "Tray & Icons"
-msgstr ""
-
-msgid "Enable Censorship"
-msgstr ""
-
-msgid ""
-"Add spaces around words if you don't wish to match strings inside words (may "
-"fail at beginning and end of lines)"
-msgstr ""
-
-msgid "Replace censored letters with:"
-msgstr ""
-
-msgid "Censor List"
-msgstr ""
-
-msgid "Chat"
-msgstr ""
-
-msgid "Choose <b>Away</b> mode to configure your auto-away settings."
-msgstr ""
-
-msgid ""
-"Choose <b>Logging</b> to configure what's logged and where to save the logs."
-msgstr ""
-
-msgid "You can censor unwanted words in the <b>Censor List</b>."
-msgstr ""
-
-msgid ""
-"You can auto-replace words (such as common typos) in the <b>Auto-Replace</b> "
-"List."
-msgstr ""
-
-msgid ""
-"Choose <b>URL Catching</b> to configure the programs used when clicking on "
-"links."
-msgstr ""
-
-msgid "Chat Settings"
-msgstr ""
-
-msgid ""
-"Enable automatic replacement of chat words you've\n"
-"typed incorrectly or as an acronym"
-msgstr ""
-
-msgid "Load Defaults"
-msgstr ""
-
-msgid "Auto-Replace List"
-msgstr ""
-
-msgid "Text Completion"
-msgstr ""
-
-msgid "Enable tab-key completion"
-msgstr ""
-
-msgid "Cycle completions instead of showing a dropdown"
-msgstr ""
-
-msgid "Complete room names in chat rooms"
-msgstr ""
-
-msgid "Complete Buddy Names"
-msgstr ""
-
-msgid "Complete usernames in chat rooms"
-msgstr ""
-
-msgid "Complete built-in /Commands"
-msgstr ""
-
-msgid "Complete alias /Commands"
-msgstr ""
-
-msgid "Allowed Completions"
-msgstr ""
-
-msgid "Enable completion drop-down list"
-msgstr ""
-
-msgid "Minimum characters required to display drop-down:"
-msgstr ""
-
-msgid "Hide drop-down when only one matches"
-msgstr ""
-
-msgid "Drop-down list"
-msgstr ""
-
-msgid "Chat text completion"
-msgstr ""
-
-msgid "Notebooks"
-msgstr ""
-
-msgid "Close-buttons on tabs"
-msgstr ""
-
-msgid "Notification icons on tabs"
-msgstr ""
-
-msgid "Tabs can be repositioned"
-msgstr ""
-
-msgid "Notification changes the tab's text color"
-msgstr ""
-
-msgid "Show user status icons instead of status text"
-msgstr ""
-
-msgid "Main"
-msgstr ""
-
-msgid ""
-"Top\n"
-"Bottom\n"
-"Left\n"
-"Right"
-msgstr ""
-
-msgid "Label Angle:"
-msgstr ""
-
-msgid "Chat rooms"
-msgstr ""
-
-msgid "Private chat"
-msgstr ""
-
-msgid "User info"
-msgstr ""
-
-msgid "User browse"
-msgstr ""
-
-msgid "<b>Notebook Tabs</b>"
-msgstr ""
-
-msgid "Colors"
-msgstr ""
-
-msgid "Default Colors"
-msgstr ""
-
-msgid "URL Link text"
-msgstr ""
-
-msgid "Username Font Style:"
-msgstr ""
-
-msgid "Offline"
-msgstr ""
-
-msgid "Online"
-msgstr ""
-
-msgid "Username Colors and Hotspots"
-msgstr ""
-
-msgid "Display away colors"
-msgstr ""
-
-msgid "Highlight text"
-msgstr ""
-
-msgid "/me text"
-msgstr ""
-
-msgid "Local text"
-msgstr ""
-
-msgid "Remote text"
-msgstr ""
-
-msgid "<b>Chat colors</b>"
-msgstr ""
-
-msgid "Input Text"
-msgstr ""
-
-msgid "Background"
-msgstr ""
-
-msgid "Input and lists colors"
-msgstr ""
-
-msgid "Offline Search"
-msgstr ""
-
-msgid "With queue"
-msgstr ""
-
-msgid "List Text"
-msgstr ""
-
-msgid "<b>List and search colors</b>"
-msgstr ""
-
-msgid "Notebook tab labels change to these colors."
-msgstr ""
-
-msgid "Changed"
-msgstr ""
-
-msgid "Highlight"
-msgstr ""
-
-msgid "<b>Tab colors</b>"
-msgstr ""
-
-msgid ""
-"<b>Warning:</b> This feature is resource intensive and may be very slow. If "
-"Nicotine<b>+</b> is started with this feature disabled, you will need to "
-"enable it and restart to see its effects."
-msgstr ""
-
-msgid "Enable Transparent Textviews"
-msgstr ""
-
-msgid "Tint Color"
-msgstr ""
-
-msgid "Red"
-msgstr ""
-
-msgid "Green"
-msgstr ""
-
-msgid "Blue"
-msgstr ""
-
-msgid "Alpha"
-msgstr ""
-
-msgid "<b>Transparent Log Windows</b>"
-msgstr ""
-
-msgid "<b>Colors</b>"
-msgstr ""
-
-msgid "Ignored users:"
-msgstr ""
-
-msgid "Ignored IPs:"
-msgstr ""
-
-msgid "Ignoring"
-msgstr ""
-
-msgid "Enable Plugins"
-msgstr ""
-
-msgid "Version: "
-msgstr ""
-
-msgid "Author(s): "
-msgstr ""
-
-msgid "Description: "
-msgstr ""
-
-msgid "<b>No Plugin Selected</b>"
-msgstr ""
-
-msgid "Properties"
-msgstr ""
-
-msgid "Installed plugins"
-msgstr ""
-
-msgid "Install"
-msgstr ""
-
-msgid "Available plugins"
-msgstr ""
-
-msgid "Install Updates"
-msgstr ""
-
-msgid "Updates"
-msgstr ""
-
-msgid "Plugin Manager"
-msgstr ""
-
-msgid "Nicotine+ - Plugin Properties"
-msgstr ""
-
-msgid "Plugin"
-msgstr ""
-
-msgid "Incomplete file directory:"
-msgstr ""
-
-msgid "Where incomplete downloads are stored temporarily"
-msgstr ""
-
-msgid "Download directory:"
-msgstr ""
-
-msgid "Share download directory"
-msgstr ""
-
-msgid "Limit total download speeds to:"
-msgstr ""
-
-msgid "<b>Directories</b>"
-msgstr ""
-
-msgid "<b>Do not download these file types:</b>"
-msgstr ""
-
-msgid "Enable Filters"
-msgstr ""
-
-msgid ""
-"<b>Syntax:</b> Letters are Case Insensitive, All Python Regular Expressions "
-"are supported if escaping is disabled. For simple filters, keep escaping "
-"enabled."
-msgstr ""
-
-msgid "Verify Filters"
-msgstr ""
-
-msgid "<b>Unverified</b>"
-msgstr ""
-
-msgid "Edit Filter"
-msgstr ""
-
-msgid "<b>Download Filters:</b>"
-msgstr ""
-
-msgid "Downloads"
-msgstr ""
-
 msgid "Nicotine+: Configure Now Playing"
 msgstr ""
 
@@ -1569,6 +566,1030 @@ msgid "Ignore"
 msgstr ""
 
 msgid "Close search tab; press ignore to prevent this tab from reopening"
+msgstr ""
+
+msgid "Filter in:"
+msgstr ""
+
+msgid "Filter out:"
+msgstr ""
+
+msgid "Size:"
+msgstr ""
+
+msgid "Bitrate:"
+msgstr ""
+
+msgid "Country:"
+msgstr ""
+
+msgid "Free slot"
+msgstr ""
+
+msgid ""
+"Enable automatic replacement of chat words you've\n"
+"typed incorrectly or as an acronym"
+msgstr ""
+
+msgid "Add..."
+msgstr ""
+
+msgid "Remove"
+msgstr ""
+
+msgid "Clear"
+msgstr ""
+
+msgid "Load Defaults"
+msgstr ""
+
+msgid "Auto-Replace List"
+msgstr ""
+
+msgid "Away"
+msgstr ""
+
+msgid "Toggle away after "
+msgstr ""
+
+msgid " minutes of inactivity"
+msgstr ""
+
+msgid "Auto-reply when away:  "
+msgstr ""
+
+msgid "Away mode"
+msgstr ""
+
+msgid "Ban"
+msgstr ""
+
+msgid "Banned Users:"
+msgstr ""
+
+msgid "Blocked IP Addresses:"
+msgstr ""
+
+msgid "Use custom ban message:"
+msgstr ""
+
+msgid "Banning"
+msgstr ""
+
+msgid "Bloat"
+msgstr ""
+
+msgid ""
+"Libsexy Website: http://www.chipx86.com/wiki/Libsexy \\nlibsexy and sexy-"
+"python bindings required."
+msgstr ""
+
+msgid "Enable spell checker (requires a restart)"
+msgstr ""
+
+msgid "Show Buttons in Transfers Tabs"
+msgstr ""
+
+msgid "Show tooltips"
+msgstr ""
+
+msgid "Hey, you really should disable this!"
+msgstr ""
+
+msgid "Chat Font:"
+msgstr ""
+
+msgid "List Font:"
+msgstr ""
+
+msgid "Transfers Font:"
+msgstr ""
+
+msgid "Search Font:"
+msgstr ""
+
+msgid "Browse Font:"
+msgstr ""
+
+msgid "Decimal separator:"
+msgstr ""
+
+msgid "Translate to another language"
+msgstr ""
+
+msgid "Loading translations requires a restart"
+msgstr ""
+
+msgid "<b>Language</b>"
+msgstr ""
+
+msgid "Extra stuff for your comfort"
+msgstr ""
+
+msgid "Enable Censorship"
+msgstr ""
+
+msgid ""
+"Add spaces around words if you don't wish to match strings inside words (may "
+"fail at beginning and end of lines)"
+msgstr ""
+
+msgid "Replace censored letters with:"
+msgstr ""
+
+msgid "Censor List"
+msgstr ""
+
+msgid "Chat"
+msgstr ""
+
+msgid "Choose <b>Away mode</b> to configure your auto-away settings."
+msgstr ""
+
+msgid ""
+"Choose <b>Logging</b> to configure what's logged and where to save the logs."
+msgstr ""
+
+msgid ""
+"Choose <b>Ignore List</b> to configure users and/or IPs you want to ignore."
+msgstr ""
+
+msgid ""
+"Choose <b>Censor List</b> to configure what unwanted words you want to "
+"censor."
+msgstr ""
+
+msgid ""
+"Choose <b>Auto-Replace</b> to configure auto-replacement of words (such as "
+"common typos)."
+msgstr ""
+
+msgid ""
+"Choose <b>URL Catching</b> to configure the programs used when clicking on "
+"links."
+msgstr ""
+
+msgid "Choose <b>Completion</b> to configure auto-completion in chats."
+msgstr ""
+
+msgid "Chat Settings"
+msgstr ""
+
+msgid "Colors"
+msgstr ""
+
+msgid "Default Colors"
+msgstr ""
+
+msgid "URL Link text"
+msgstr ""
+
+msgid "Default"
+msgstr ""
+
+msgid "Username Font Style:"
+msgstr ""
+
+msgid "Offline"
+msgstr ""
+
+msgid "Online"
+msgstr ""
+
+msgid "Username Colors and Hotspots"
+msgstr ""
+
+msgid "Display away colors"
+msgstr ""
+
+msgid "Highlight text"
+msgstr ""
+
+msgid "/me text"
+msgstr ""
+
+msgid "Local text"
+msgstr ""
+
+msgid "Remote text"
+msgstr ""
+
+msgid "<b>Chat colors</b>"
+msgstr ""
+
+msgid "Input Text"
+msgstr ""
+
+msgid "Background"
+msgstr ""
+
+msgid "Input and lists colors"
+msgstr ""
+
+msgid "Offline Search"
+msgstr ""
+
+msgid "With queue"
+msgstr ""
+
+msgid "List Text"
+msgstr ""
+
+msgid "<b>List and search colors</b>"
+msgstr ""
+
+msgid "Notebook tab labels change to these colors."
+msgstr ""
+
+msgid "Changed"
+msgstr ""
+
+msgid "Highlight"
+msgstr ""
+
+msgid "<b>Tab colors</b>"
+msgstr ""
+
+msgid ""
+"<b>Warning:</b> This feature is resource intensive and may be very slow. If "
+"Nicotine<b>+</b> is started with this feature disabled, you will need to "
+"enable it and restart to see its effects."
+msgstr ""
+
+msgid "Enable Transparent Textviews"
+msgstr ""
+
+msgid "Tint Color"
+msgstr ""
+
+msgid "Red"
+msgstr ""
+
+msgid "Green"
+msgstr ""
+
+msgid "Blue"
+msgstr ""
+
+msgid "Alpha"
+msgstr ""
+
+msgid "<b>Transparent Log Windows</b>"
+msgstr ""
+
+msgid "<b>Colors</b>"
+msgstr ""
+
+msgid "Text Completion"
+msgstr ""
+
+msgid "Enable tab-key completion"
+msgstr ""
+
+msgid "Cycle completions instead of showing a dropdown"
+msgstr ""
+
+msgid "Complete room names in chat rooms"
+msgstr ""
+
+msgid "Complete Buddy Names"
+msgstr ""
+
+msgid "Complete usernames in chat rooms"
+msgstr ""
+
+msgid "Complete built-in /Commands"
+msgstr ""
+
+msgid "Complete alias /Commands"
+msgstr ""
+
+msgid "Allowed Completions"
+msgstr ""
+
+msgid "Enable completion drop-down list"
+msgstr ""
+
+msgid "Minimum characters required to display drop-down:"
+msgstr ""
+
+msgid "Hide drop-down when only one matches"
+msgstr ""
+
+msgid "Drop-down list"
+msgstr ""
+
+msgid "Chat text completion"
+msgstr ""
+
+msgid "Incomplete file directory:"
+msgstr ""
+
+msgid "Where incomplete downloads are stored temporarily"
+msgstr ""
+
+msgid "Select A Directory"
+msgstr ""
+
+msgid "Download directory:"
+msgstr ""
+
+msgid "Share download directory"
+msgstr ""
+
+msgid "Limit total download speeds to:"
+msgstr ""
+
+msgid "KBytes/sec"
+msgstr ""
+
+msgid "<b>Directories</b>"
+msgstr ""
+
+msgid "<b>Do not download these file types:</b>"
+msgstr ""
+
+msgid "Enable Filters"
+msgstr ""
+
+msgid ""
+"<b>Syntax:</b> Letters are Case Insensitive, All Python Regular Expressions "
+"are supported if escaping is disabled. For simple filters, keep escaping "
+"enabled."
+msgstr ""
+
+msgid "Verify Filters"
+msgstr ""
+
+msgid "<b>Unverified</b>"
+msgstr ""
+
+msgid "Edit Filter"
+msgstr ""
+
+msgid "<b>Download Filters:</b>"
+msgstr ""
+
+msgid "Downloads"
+msgstr ""
+
+msgid "Events"
+msgstr ""
+
+msgid ""
+"Show notification popup in tray after...\n"
+"(requires python-notify and notification-daemon)"
+msgstr ""
+
+msgid "...each file"
+msgstr ""
+
+msgid "...each directory"
+msgstr ""
+
+msgid "Run command after download finishes ($ for filename):"
+msgstr ""
+
+msgid "Run command after folder finishes ($ for folder path):"
+msgstr ""
+
+msgid "File Manager command ($ for folder path):"
+msgstr ""
+
+msgid "Download transfers"
+msgstr ""
+
+msgid ""
+"Nothing\n"
+"Send to player\n"
+"Open Directory\n"
+"Search\n"
+"Abort\n"
+"Clear\n"
+"Retry"
+msgstr ""
+
+msgid "Upload transfers"
+msgstr ""
+
+msgid ""
+"Nothing\n"
+"Send to player\n"
+"Open Directory\n"
+"Search\n"
+"Abort\n"
+"Clear"
+msgstr ""
+
+msgid "Double-clicking on..."
+msgstr ""
+
+msgid "GeoBlock"
+msgstr ""
+
+msgid "Enable geographical blocker"
+msgstr ""
+
+msgid "Geographical paranoia (block unresolvable IPs)"
+msgstr ""
+
+msgid "Country codes to block (comma separated):"
+msgstr ""
+
+msgid ""
+"Geo Block (if available) controls from which countries users are allowed "
+"access to your shares."
+msgstr ""
+
+msgid ""
+"If you wish to use Geo Block, install GeoIP and it's Python Bindings from "
+"your distro's packaging tool or from:"
+msgstr ""
+
+msgid "http://www.maxmind.com/app/c"
+msgstr ""
+
+msgid "http://www.maxmind.com/app/python"
+msgstr ""
+
+msgid "Geographical Blocking"
+msgstr ""
+
+msgid "Icons"
+msgstr ""
+
+msgid "Display Tray Icon"
+msgstr ""
+
+msgid "Show confirmation dialog when closing the main window"
+msgstr ""
+
+msgid "Always send Nicotine+ to tray when main window is closed"
+msgstr ""
+
+msgid "Always quit when main window is closed"
+msgstr ""
+
+msgid "Icon Theme Directory (requires restart):"
+msgstr ""
+
+msgid "Select"
+msgstr ""
+
+msgid "Current Icons:"
+msgstr ""
+
+msgid "<b>Status</b>"
+msgstr ""
+
+msgid "Online:"
+msgstr ""
+
+msgid "Away:"
+msgstr ""
+
+msgid "Offline:"
+msgstr ""
+
+msgid "Nick Hilite:"
+msgstr ""
+
+msgid "Hilite:"
+msgstr ""
+
+msgid "Disconnected:"
+msgstr ""
+
+msgid "Connected:"
+msgstr ""
+
+msgid "<b>Trayicon</b>"
+msgstr ""
+
+msgid "Notify:"
+msgstr ""
+
+msgid "Window:"
+msgstr ""
+
+msgid "Tray & Icons"
+msgstr ""
+
+msgid "Ignored users:"
+msgstr ""
+
+msgid "Ignored IPs:"
+msgstr ""
+
+msgid "Ignoring"
+msgstr ""
+
+msgid "Import Config"
+msgstr ""
+
+msgid ""
+"Importing the config files from the official client will overwrite some of "
+"your settings (Login, Password, User Info, User Image). Use caution with "
+"this feature."
+msgstr ""
+
+msgid ""
+"Select the directory that contains slsk.exe and the .cfg files: (Ex: C:\\"
+"\\Program Files\\\\SoulSeek)"
+msgstr ""
+
+msgid "Import Directory"
+msgstr ""
+
+msgid "Queue"
+msgstr ""
+
+msgid "Login / Password"
+msgstr ""
+
+msgid "Joined Chat Rooms"
+msgstr ""
+
+msgid "Banned List"
+msgstr ""
+
+msgid "Ignored List"
+msgstr ""
+
+msgid "User Info"
+msgstr ""
+
+msgid "User Image"
+msgstr ""
+
+msgid "Restart Nicotine+ to see all changes take effect"
+msgstr ""
+
+msgid "Log chatrooms by default"
+msgstr ""
+
+msgid "Log private chat by default"
+msgstr ""
+
+msgid "Log transfers"
+msgstr ""
+
+msgid "Logs directory:"
+msgstr ""
+
+msgid "Choose..."
+msgstr ""
+
+msgid "Chatroom Logs directory:"
+msgstr ""
+
+msgid "Private Chat Logs directory:"
+msgstr ""
+
+msgid "Display logged chat room messages when a room is rejoined"
+msgstr ""
+
+msgid "Read"
+msgstr ""
+
+msgid "lines"
+msgstr ""
+
+msgid "Reopen last Private Chat messages"
+msgstr ""
+
+msgid "<b>Timestamps</b>"
+msgstr ""
+
+msgid "Display timestamps"
+msgstr ""
+
+msgid "Log file format:"
+msgstr ""
+
+msgid "http://docs.python.org/lib/module-time.html"
+msgstr ""
+
+msgid "Chat room format:"
+msgstr ""
+
+msgid "Private chat format:"
+msgstr ""
+
+msgid "<b>Logging</b>"
+msgstr ""
+
+msgid "Misc"
+msgstr ""
+
+msgid "Choose <b>Plugins</b> to activate additional plugins (experimental)."
+msgstr ""
+
+msgid ""
+"Choose <b>Sounds</b> to configure sounds notifications and Text-to-Speech."
+msgstr ""
+
+msgid ""
+"Choose <b>Searches</b> to configure search settings and to set default "
+"search filters."
+msgstr ""
+
+msgid "Choose <b>User info</b> to add text and an image to your personal info."
+msgstr ""
+
+msgid ""
+"Choose <b>Import Config</b> to import the configuration from the official "
+"Soulseek client."
+msgstr ""
+
+msgid "Miscellaneous Settings"
+msgstr ""
+
+msgid "Notebooks"
+msgstr ""
+
+msgid "Close-buttons on tabs"
+msgstr ""
+
+msgid "Notification icons on tabs"
+msgstr ""
+
+msgid "Tabs can be repositioned"
+msgstr ""
+
+msgid "Notification changes the tab's text color"
+msgstr ""
+
+msgid "Show user status icons instead of status text"
+msgstr ""
+
+msgid "Main"
+msgstr ""
+
+msgid ""
+"Top\n"
+"Bottom\n"
+"Left\n"
+"Right"
+msgstr ""
+
+msgid "Label Angle:"
+msgstr ""
+
+msgid "Chat rooms"
+msgstr ""
+
+msgid "Private chat"
+msgstr ""
+
+msgid "User info"
+msgstr ""
+
+msgid "User browse"
+msgstr ""
+
+msgid "<b>Notebook Tabs</b>"
+msgstr ""
+
+msgid "UrlCatch"
+msgstr ""
+
+msgid "Enable Plugins"
+msgstr ""
+
+msgid "Version: "
+msgstr ""
+
+msgid "Author(s): "
+msgstr ""
+
+msgid "Description: "
+msgstr ""
+
+msgid "<b>No Plugin Selected</b>"
+msgstr ""
+
+msgid "Properties"
+msgstr ""
+
+msgid "Installed plugins"
+msgstr ""
+
+msgid "Install"
+msgstr ""
+
+msgid "Available plugins"
+msgstr ""
+
+msgid "Install Updates"
+msgstr ""
+
+msgid "Updates"
+msgstr ""
+
+msgid "Plugin Manager"
+msgstr ""
+
+msgid "Nicotine+ - Plugin Properties"
+msgstr ""
+
+msgid "Plugin"
+msgstr ""
+
+msgid "Enable sending search results to other users"
+msgstr ""
+
+msgid "Send out a max of"
+msgstr ""
+
+msgid "results per search request"
+msgstr ""
+
+msgid "Toggle responding to distributed searches every"
+msgstr ""
+
+msgid "seconds"
+msgstr ""
+
+msgid "Network Searches:"
+msgstr ""
+
+msgid "Your Searches:"
+msgstr ""
+
+msgid "Use regular expressions for filter in & out"
+msgstr ""
+
+msgid "Enable filters by default"
+msgstr ""
+
+msgid ""
+"Reopen closed search tabs that haven't been ignored\n"
+"when new results come in"
+msgstr ""
+
+msgid "Max visible results per search:"
+msgstr ""
+
+msgid "Max stored results per search:"
+msgstr ""
+
+msgid "Searches"
+msgstr ""
+
+msgid "Server Settings"
+msgstr ""
+
+msgid "Server: (use server.slsknet.org:2242 for the main server)"
+msgstr ""
+
+msgid "Login:"
+msgstr ""
+
+msgid "Password:"
+msgstr ""
+
+msgid "Change password"
+msgstr ""
+
+msgid ""
+"For a new account\n"
+" enter desired details"
+msgstr ""
+
+msgid "Your IP address has not been retrieved from the server"
+msgstr ""
+
+msgid "Use the first available listening port from the following range:"
+msgstr ""
+
+msgid "Client port is not set"
+msgstr ""
+
+msgid "Check port status"
+msgstr ""
+
+msgid "Use the above ports to configure your router or firewall."
+msgstr ""
+
+msgid ""
+"Use UPnP to fix portmapping (requires MiniUPnPc, preferably with python "
+"bindings)"
+msgstr ""
+
+msgid ""
+"If you wish to use UPnP to fix portmapping on your router please install "
+"MiniUPnP client binary or the MiniUPnP client module for Python."
+msgstr ""
+
+msgid "I can receive direct connections"
+msgstr ""
+
+msgid "(only use if the above ports are remotely accessible)"
+msgstr ""
+
+msgid "Enable CTCP-like PM responses (Client Version)"
+msgstr ""
+
+msgid "Network Character Encoding (utf-8 is a good choice)"
+msgstr ""
+
+msgid "Server"
+msgstr ""
+
+msgid "Nicotine+ Settings"
+msgstr ""
+
+msgid "<b>Public Shares</b>"
+msgstr ""
+
+msgid "Rename"
+msgstr ""
+
+msgid "Rescan shares on startup"
+msgstr ""
+
+msgid "Share only to buddies"
+msgstr ""
+
+msgid ""
+"If buddy shares are enabled, they will be shared. Otherwise normal shares "
+"will be used."
+msgstr ""
+
+msgid "Enable Buddy-Only shares"
+msgstr ""
+
+msgid "<b>Buddies-Only Shares</b>"
+msgstr ""
+
+msgid "Sounds"
+msgstr ""
+
+msgid "Enable Sound Effects"
+msgstr ""
+
+msgid "Sound Effects command:"
+msgstr ""
+
+msgid "Sound Effects Directory:"
+msgstr ""
+
+msgid "Enable Text To Speech"
+msgstr ""
+
+msgid "Text To Speech command:"
+msgstr ""
+
+msgid "Chat room message:"
+msgstr ""
+
+msgid "Private chat message:"
+msgstr ""
+
+msgid "Audio Player Command ($ for filename):"
+msgstr ""
+
+msgid "<b>Sounds:</b>"
+msgstr ""
+
+msgid "Upload directory:"
+msgstr ""
+
+msgid ""
+"Where buddies' uploads will be stored (with a subdirectory for each buddy)"
+msgstr ""
+
+msgid "Upload Queue type:"
+msgstr ""
+
+msgid "Round Robin"
+msgstr ""
+
+msgid "Users will be sent one file and then another user will be selected"
+msgstr ""
+
+msgid "First In, First Out"
+msgstr ""
+
+msgid "Files will be sent in the order they were queued"
+msgstr ""
+
+msgid "Queue Uploads if total transfer speed reaches"
+msgstr ""
+
+msgid "Limit number of upload slots to"
+msgstr ""
+
+msgid ""
+"If disabled, slots will automatically be determined by available bandwidth "
+"limitations"
+msgstr ""
+
+msgid "(NOT RECOMMENDED)"
+msgstr ""
+
+msgid "Limit uploads speed to"
+msgstr ""
+
+msgid "per transfer"
+msgstr ""
+
+msgid "total transfers"
+msgstr ""
+
+msgid "Each user may queue a maximum of"
+msgstr ""
+
+msgid "Megabytes"
+msgstr ""
+
+msgid "Files"
+msgstr ""
+
+msgid "Queue size limit does not apply to friends"
+msgstr ""
+
+msgid "Allow these users to send you files:"
+msgstr ""
+
+msgid ""
+"The users will be able to send you files. These files will be downloaded "
+"into the Buddy Uploads subdirectory in your Download directory"
+msgstr ""
+
+msgid "<b>Upload Queue:</b>"
+msgstr ""
+
+msgid "Privilege all my friends"
+msgstr ""
+
+msgid ""
+"Friends will have higher priority in the queue, the same as globally "
+"privileged users"
+msgstr ""
+
+msgid "<b>Privileges:</b>"
+msgstr ""
+
+msgid "Lock incoming files (turn off for NFS)"
+msgstr ""
+
+msgid "Download folders in reverse alphanumerical order"
+msgstr ""
+
+msgid "Download SFV/MD5 before anything else"
+msgstr ""
+
+msgid "Enable URL catching"
+msgstr ""
+
+msgid "Humanize slsk:// urls"
+msgstr ""
+
+msgid ""
+"Instances of $ will be replaced by the link, add empty handlers to use the "
+"system default web browser.\n"
+"Protocols handlers: "
+msgstr ""
+
+msgid "Handler:"
+msgstr ""
+
+msgid "Protocol:"
+msgstr ""
+
+msgid "Enabled embedded Webbrowser (unstable if misconfigured)"
+msgstr ""
+
+msgid ""
+"You must have mozembed installed, and correctly set your LD_LIBRARY_PATH and "
+"MOZILLA_FIVE_HOME to the proper directory, or you may experience segfaults. "
+"Try setting them to: /usr/lib/xulrunner-x.x"
+msgstr ""
+
+msgid "Open URLs in embedded Webbrowser"
+msgstr ""
+
+msgid "Overrides settings for HTTP urls"
+msgstr ""
+
+msgid "URL Catching:"
+msgstr ""
+
+msgid "Userinfo"
+msgstr ""
+
+msgid "Self description:"
+msgstr ""
+
+msgid "Image:"
+msgstr ""
+
+msgid "Size: 0"
+msgstr ""
+
+msgid "Personal settings"
 msgstr ""
 
 msgid "UserBrowse"
@@ -2276,6 +2297,9 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
+msgid "Virtual Directory"
+msgstr ""
+
 msgid "Directory"
 msgstr ""
 
@@ -2292,6 +2316,13 @@ msgid "Counting files..."
 msgstr ""
 
 msgid "Add a shared directory"
+msgstr ""
+
+msgid "Virtual name"
+msgstr ""
+
+#, python-format
+msgid "Enter virtual name for '%(dir)s':"
 msgstr ""
 
 msgid "Open Browser"
@@ -2795,9 +2826,6 @@ msgstr ""
 msgid "Escaped"
 msgstr ""
 
-msgid "Buddy Uploads"
-msgstr ""
-
 msgid "Warning"
 msgstr ""
 
@@ -2819,16 +2847,6 @@ msgstr ""
 
 #, python-format
 msgid "%(num)d Failed! %(error)s "
-msgstr ""
-
-msgid "Virtual Directory"
-msgstr ""
-
-msgid "Virtual name"
-msgstr ""
-
-#, python-format
-msgid "Enter virtual name for '%(dir)s':"
 msgstr ""
 
 msgid "Add a shared buddy directory"
