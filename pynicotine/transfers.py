@@ -1612,7 +1612,7 @@ class Transfers:
 						if attrs != []:
 							bitrate = str(attrs[0])
 							if attrs[2]:
-								bitrate += _(" (vbr)")
+								bitrate += " (vbr)"
 							try:
 								rl = int(attrs[1])
 							except:

@@ -415,7 +415,7 @@ class UserBrowse:
                     if len(attrs) >= 3:
                         br = str(attrs[0])
                         if len(attrs) > 2 and attrs[2]:
-                            br = br + _(" (vbr)")
+                            br = br + " (vbr)"
                         try:
                             rl = int(attrs[1])
                         except ValueError:
@@ -563,7 +563,7 @@ class UserBrowse:
             if attrs != []:
                 bitrate = str(attrs[0])
                 if len(attrs) > 2 and attrs[2]:
-                    bitrate += _(" (vbr)")
+                    bitrate += " (vbr)"
                 try:
                     rl = int(attrs[1])
                 except ValueError:
@@ -628,7 +628,7 @@ class UserBrowse:
             if attrs != []:
                 bitrate = str(attrs[0])
                 if len(attrs) > 2 and attrs[2]:
-                    bitrate += _(" (vbr)")
+                    bitrate += " (vbr)"
                 try:
                     rl = int(attrs[1])
                 except ValueError:
@@ -657,7 +657,7 @@ class UserBrowse:
             if attrs != []:
                 bitrate = str(attrs[0])
                 if len(attrs) > 2 and attrs[2]:
-                    bitrate += _(" (vbr)")
+                    bitrate += " (vbr)"
                 try:
                     rl = int(attrs[1])
                 except ValueError:
