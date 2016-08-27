@@ -292,24 +292,12 @@ class DownloadsFrame(buildFrame):
         self.FilterView.set_model(self.filterlist)
         self.FilterView.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
         self.DownloadFilters.connect("activate", self.OnExpand)
-        self.DownloadDir.connect("changed", self.DownloadDirChanged)
 
     def OnExpand(self, widget):
         if widget.get_expanded():
             self.DownloadsVbox.set_child_packing(widget, False, False, 0, 0)
         else:
             self.DownloadsVbox.set_child_packing(widget, True, True, 0, 0)
-
-    def DownloadDirChanged(self, widget):
-
-        transfers = self.frame.np.config.sections["transfers"]
-
-        if transfers["uploaddir"] is not None and transfers["uploaddir"] != "":
-            return
-
-        self.UploadDir.set_text(
-            os.sep.join([self.DownloadDir.get_text(), _("Buddy Uploads")])
-        )
 
     def SetSettings(self, config):
 
@@ -368,6 +356,9 @@ class DownloadsFrame(buildFrame):
         return self.needrescan
 
     def OnChooseIncompleteDir(self, widget):
+        """
+        Function called when the incomplete download directory is modified.
+        """
 
         # Get a gio.File object from gtk.FileChooser
         dir_gio = self.ChooseIncompleteDir.get_file()
@@ -383,6 +374,9 @@ class DownloadsFrame(buildFrame):
             self.IncompleteDir.set_text(dir_disp)
 
     def OnChooseDownloadDir(self, widget):
+        """
+        Function called when the download directory is modified.
+        """
 
         # Get a gio.File object from gtk.FileChooser
         dir_gio = self.ChooseDownloadDir.get_file()
@@ -393,14 +387,17 @@ class DownloadsFrame(buildFrame):
 
         if dir_gio is not None:
 
+            # Set both the attribute and the text for the GtkEntry
             self.downloaddir = dir_disp
             self.DownloadDir.set_text(dir_disp)
 
+            # Get the transfers section
+            transfers = self.frame.np.config.sections["transfers"]
+
+            # This function will be called upon creating the settings window,
+            # so only force a scan if the user changes his donwload directory
             if self.ShareDownloadDir.get_active():
-                # This function will be called upon creating
-                # the settings window, so only force a scan
-                # if the user changes his donwload directory
-                if dir_disp != self.frame.np.config.sections["transfers"]["downloaddir"]:
+                if dir_disp != transfers["downloaddir"]:
                     self.needrescan = 1
 
     def OnShareDownloadDirToggled(self, widget):
@@ -616,17 +613,6 @@ class SharesFrame(buildFrame):
                 "enablebuddyshares": self.enableBuddyShares
             }
         }
-
-    def DownloadDirChanged(self, widget):
-
-        transfers = self.frame.np.config.sections["transfers"]
-
-        if transfers["uploaddir"] is not None and transfers["uploaddir"] != "":
-            return
-
-        self.UploadDir.set_text(
-            os.sep.join([self.DownloadDir.get_text(), _("Buddy Uploads")])
-        )
 
     def SetSettings(self, config):
 
@@ -887,7 +873,7 @@ class TransfersFrame(buildFrame):
     def SetSettings(self, config):
 
         transfers = config["transfers"]
-        server = config["server"]
+
         self.p.SetWidgetsData(config, self.options)
 
         self.OnQueueUseSlotsToggled(self.QueueUseSlots)
@@ -936,6 +922,9 @@ class TransfersFrame(buildFrame):
         }
 
     def OnChooseUploadDir(self, widget):
+        """
+        Function called when the upload directory is modified.
+        """
 
         # Get a gio.File object from gtk.FileChooser
         dir_gio = self.ChooseUploadDir.get_file()
