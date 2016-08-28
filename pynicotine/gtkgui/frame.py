@@ -305,7 +305,7 @@ class BrowserWindow(gtk.VBox):
 
 class NicotineFrame:
 
-	def __init__(self, config, plugindir, use_trayicon, try_rgba, start_hidden=False, WebBrowser=True, bindip=None): 
+	def __init__(self, config, plugindir, use_trayicon, try_rgba, start_hidden=False, WebBrowser=True, bindip=None):
 		
 		self.clip_data = ""
 		self.configfile = config
@@ -335,7 +335,7 @@ class NicotineFrame:
 			self.xmldocument = getDOMImplementation().createDocument(None, None, None)
 		except ImportError:
 			self.pynotify = None
-		
+
 		self.np = NetworkEventProcessor(self, self.callback, self.logMessage, self.SetStatusText, self.bindip, config)
 		config = self.np.config.sections
 		self.temp_modes_order = config["ui"]["modes_order"]
@@ -347,13 +347,13 @@ class NicotineFrame:
 		utils.USERNAMEHOTSPOTS = config["ui"]["usernamehotspots"]
 		utils.NICOTINE = self
 		pynicotine.utils.log = self.logMessage
-		
+
 		self.LoadIcons()
 
 		# Initialize custom language chosen by the user
 		if self.np.config.sections["language"]["setlanguage"]:
 			ApplyTranslation(self.np.config.sections["language"]["language"])
-		
+
 		self.BuddiesComboEntries = []
 		self.accel_group = gtk.AccelGroup()
 		#self.tooltips = gtk.Tooltips()
@@ -376,10 +376,11 @@ class NicotineFrame:
 		self.RoomSearchCombo.set_model(self.RoomSearchCombo_List)
 		self.RoomSearchCombo.set_text_column(0)
 		self.SearchMethod_List = gtk.ListStore(gobject.TYPE_STRING)
-		for i in [_("")]:
-			self.SearchMethod_List.append([i])
-		self.SearchMethod.set_model(self.SearchMethod_List)
 
+		for i in [""]:
+			self.SearchMethod_List.append([i])
+
+		self.SearchMethod.set_model(self.SearchMethod_List)
 
 		self.MainWindow.set_title(_("Nicotine+") + " " + version)
 		self.MainWindow.set_icon(self.images["n"])
