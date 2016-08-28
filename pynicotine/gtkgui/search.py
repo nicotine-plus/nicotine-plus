@@ -975,7 +975,7 @@ class Search:
 			return False
 		if filters[3] and not self.checkDigit(filters[3], row[10], False):
 			return False
-		if filters[4] and row[6] != _("Y"):
+		if filters[4] and row[6] != "Y":
 			return False
 		if filters[5]:
 			for cc in filters[5]:
