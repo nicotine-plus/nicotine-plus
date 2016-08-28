@@ -155,11 +155,13 @@ class ServerFrame(buildFrame):
             (self.frame.upnppossible, errors) = upnp.IsPossible()
 
         if self.frame.upnppossible:
-            # If we can do a port mapping the field is active if the config said so
+            # If we can do a port mapping the field is active
+            # if the config said so
             self.UseUPnP.set_active(server["upnp"])
             self.UseUPnP.set_sensitive(True)
         else:
-            # If we cant do a port mapping: highlight the requirements & disable the choice
+            # If we cant do a port mapping: highlight the requirements
+            # & disable the choice
             self.UseUPnP.set_active(False)
             self.UseUPnP.set_sensitive(False)
             self.labelRequirementsUPnP.set_sensitive(True)
@@ -204,7 +206,12 @@ class ServerFrame(buildFrame):
             portrange = (firstport, lastport)
         except:
             portrange = None
-            popupWarning(self.p.SettingsWindow, _("Warning: Invalid ports"), _("Client ports are invalid."), self.frame.images["n"] )
+            popupWarning(
+                self.p.SettingsWindow,
+                _("Warning: Invalid ports"),
+                _("Client ports are invalid."),
+                self.frame.images["n"]
+            )
             raise UserWarning
 
         if self.UseUPnP.get_active():
@@ -236,10 +243,12 @@ class ServerFrame(buildFrame):
 
         if self.UseUPnP.get_active():
 
-            # If we want to use upnp remove hint highlight since its possible to do it
+            # If we want to use upnp remove hint highlight
+            # since its possible to do it
             self.labelRequirementsUPnP.set_sensitive(False)
 
-            # We set direct connection to True since now its possible to establish them
+            # We set direct connection to True
+            # since now its possible to establish them
             self.DirectConnection.set_active(True)
 
             # Also desactivate direct connections options
@@ -276,7 +285,10 @@ class DownloadsFrame(buildFrame):
             }
         }
 
-        self.filterlist = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_BOOLEAN)
+        self.filterlist = gtk.ListStore(
+            gobject.TYPE_STRING,
+            gobject.TYPE_BOOLEAN
+        )
         self.downloadfilters = []
 
         cols = InitialiseColumns(
@@ -428,12 +440,15 @@ class DownloadsFrame(buildFrame):
         )
 
         if type(response) is list:
+
             filter = response[0]
             escaped = response[1]
+
             if filter in self.filtersiters:
                 self.filterlist.set(self.filtersiters[filter], 0, filter, 1, escaped)
             else:
                 self.filtersiters[filter] = self.filterlist.append([filter, escaped])
+
             self.OnVerifyFilter(self.VerifyFilters)
 
     def GetFilterList(self):
@@ -463,13 +478,16 @@ class DownloadsFrame(buildFrame):
             )
 
             if type(response) is list:
+
                 filter, escaped = response
+
                 if filter in self.filtersiters:
                     self.filterlist.set(self.filtersiters[filter], 0, filter, 1, escaped)
                 else:
                     self.filtersiters[filter] = self.filterlist.append([filter, escaped])
                     del self.filtersiters[dfilter]
                     self.filterlist.remove(iter)
+
                 self.OnVerifyFilter(self.VerifyFilters)
 
     def _SelectedFilter(self, model, path, iter, list):
@@ -505,6 +523,7 @@ class DownloadsFrame(buildFrame):
         for dfilter in default_filters:
             filter, escaped = dfilter
             self.filtersiters[filter] = self.filterlist.append([filter, escaped])
+
         self.OnVerifyFilter(self.VerifyFilters)
 
     def OnVerifyFilter(self, widget):
@@ -514,13 +533,16 @@ class DownloadsFrame(buildFrame):
         df.sort()
         proccessedfilters = []
         failed = {}
+
         for filter in df:
             iter = self.filtersiters[filter]
             dfilter = self.filterlist.get_value(iter, 0)
             escaped = self.filterlist.get_value(iter, 1)
+
             if escaped:
                 dfilter = re.escape(dfilter)
                 dfilter = dfilter.replace("\*", ".*")
+
             try:
                 re.compile("("+dfilter+")")
                 outfilter += dfilter
@@ -530,6 +552,7 @@ class DownloadsFrame(buildFrame):
 
             if filter is not df[-1]:
                 outfilter += "|"
+
         outfilter += ")$)"
 
         try:
@@ -540,9 +563,18 @@ class DownloadsFrame(buildFrame):
 
         if len(failed.keys()) >= 1:
             errors = ""
+
             for filter, error in failed.items():
-                errors += "Filter: %(filter)s Error: %(error)s " % {'filter': filter, 'error': error}
-            error = _("%(num)d Failed! %(error)s " % {'num': len(failed.keys()), 'error': errors})
+                errors += "Filter: %(filter)s Error: %(error)s " % {
+                    'filter': filter,
+                    'error': error
+                }
+
+            error = _("%(num)d Failed! %(error)s " % {
+                'num': len(failed.keys()),
+                'error': errors}
+            )
+
             self.VerifiedLabel.set_markup("<span color=\"red\" weight=\"bold\">%s</span>" % error)
         else:
             self.VerifiedLabel.set_markup("<b>Filters Successful</b>")
@@ -797,24 +829,28 @@ class SharesFrame(buildFrame):
     def OnRemoveSharedDir(self, widget):
         iters = []
         self.Shares.get_selection().selected_foreach(self._RemoveSharedDir, iters)
+
         for iter in iters:
             virtual = self.shareslist.get_value(iter, 0)
             actual = self.shareslist.get_value(iter, 3)
             mapping = (virtual, actual)
             self.shareddirs.remove(mapping)
             self.shareslist.remove(iter)
+
         if iters:
             self.needrescan = 1
 
     def OnRemoveSharedBuddyDir(self, widget):
         iters = []
         self.BuddyShares.get_selection().selected_foreach(self._RemoveSharedDir, iters)
+
         for iter in iters:
             virtual = self.bshareslist.get_value(iter, 0)
             actual = self.bshareslist.get_value(iter, 3)
             mapping = (virtual, actual)
             self.bshareddirs.remove(mapping)
             self.bshareslist.remove(iter)
+
         if iters:
             self.needrescan = 1
 
@@ -1058,11 +1094,17 @@ class UserinfoFrame(buildFrame):
         }
 
     def OnChooseImage(self, widget):
-        dlg = ChooseImage(initialfile=self.Image.get_text(), title=_("Nicotine+") + ": " + _("Choose a user info image"))
+
+        dlg = ChooseImage(
+            initialfile=self.Image.get_text(),
+            title=_("Nicotine+") + ": " + _("Choose a user info image")
+        )
+
         if dlg:
             for file in dlg:
                 self.Image.set_text(file)
                 break
+
         self.GetImageSize()
 
 
@@ -1131,7 +1173,13 @@ class IgnoreFrame(buildFrame):
         l.append(iter)
 
     def OnAddIgnored(self, widget):
-        user = InputDialog(self.Main.get_toplevel(), _("Ignore user..."), _("User:"))
+
+        user = InputDialog(
+            self.Main.get_toplevel(),
+            _("Ignore user..."),
+            _("User:")
+        )
+
         if user and user not in self.ignored_users:
             self.ignored_users.append(user)
             self.ignorelist.append([user])
@@ -1149,19 +1197,29 @@ class IgnoreFrame(buildFrame):
         self.ignorelist.clear()
 
     def OnAddIgnoredIP(self, widget):
-        ip = InputDialog(self.Main.get_toplevel(), _("Ignore IP Address..."), _("IP:") + " " + _("* is a wildcard"))
+
+        ip = InputDialog(
+            self.Main.get_toplevel(),
+            _("Ignore IP Address..."),
+            _("IP:") + " " + _("* is a wildcard")
+        )
+
         if ip is None or ip == "" or ip.count(".") != 3:
             return
+
         for chars in ip.split("."):
+
             if chars == "*":
                 continue
             if not chars.isdigit():
                 return
+
             try:
                 if int(chars) > 255:
                     return
             except:
                 return
+
         if ip not in self.ignored_ips:
             self.ignored_ips[ip] = ""
             self.ignored_ips_list.append([ip, ""])
@@ -1255,7 +1313,13 @@ class BanFrame(buildFrame):
         }
 
     def OnAddBanned(self, widget):
-        user = InputDialog(self.Main.get_toplevel(), _("Ban user..."), _("User:"))
+
+        user = InputDialog(
+            self.Main.get_toplevel(),
+            _("Ban user..."),
+            _("User:")
+        )
+
         if user and user not in self.banned:
             self.banned.append(user)
             self.banlist.append([user])
@@ -1279,14 +1343,23 @@ class BanFrame(buildFrame):
         self.CustomBan.set_sensitive(widget.get_active())
 
     def OnAddBlocked(self, widget):
-        ip = InputDialog(self.Main.get_toplevel(), _("Block IP Address..."), _("IP:") + " " + _("* is a wildcard"))
+
+        ip = InputDialog(
+            self.Main.get_toplevel(),
+            _("Block IP Address..."),
+            _("IP:") + " " + _("* is a wildcard")
+        )
+
         if ip is None or ip == "" or ip.count(".") != 3:
             return
+
         for chars in ip.split("."):
+
             if chars == "*":
                 continue
             if not chars.isdigit():
                 return
+
             try:
                 if int(chars) > 255:
                     return
@@ -1313,8 +1386,10 @@ class BanFrame(buildFrame):
 class SoundsFrame(buildFrame):
 
     def __init__(self, parent):
+
         self.p = parent
         buildFrame.__init__(self, "SoundsFrame")
+
         self.audioPlayerCombo_List = gtk.ListStore(gobject.TYPE_STRING)
         self.audioPlayerCombo.set_model(self.audioPlayerCombo_List)
         self.audioPlayerCombo.set_text_column(0)
@@ -1342,10 +1417,13 @@ class SoundsFrame(buildFrame):
 
         for executable in ["xmms -e $", "audacious -e $", "amarok -a $", 'exaile $']:
             self.audioPlayerCombo.append_text(executable)
+
         for executable in ["flite -t $", "echo $ | festival --tts"]:
             self.TTSCommand.append_text(executable)
+
         for item in ["play -q", "ogg123 -q", "Gstreamer (gst-python)"]:
             self.SoundCommand.append_text(item)
+
         self.SoundButton.connect("clicked", self.OnChooseSoundDir)
         self.DefaultSoundCommand.connect("clicked", self.DefaultSound)
         self.DefaultTTSCommand.connect("clicked", self.DefaultTTS)
@@ -1393,9 +1471,15 @@ class SoundsFrame(buildFrame):
     def GetSettings(self):
 
         soundcommand = self.SoundCommand.child.get_text()
+
         if soundcommand == "Gstreamer (gst-python)":
             if self.SoundCheck.get_active() and self.frame.gstreamer.player is None:
-                popupWarning(self.p.SettingsWindow, _("Warning"), _("Gstreamer-python is not installed") , self.frame.images["n"] )
+                popupWarning(
+                    self.p.SettingsWindow,
+                    _("Warning"),
+                    _("Gstreamer-python is not installed"),
+                    self.frame.images["n"]
+                )
                 raise UserWarning
 
         return {
@@ -1414,7 +1498,13 @@ class SoundsFrame(buildFrame):
         }
 
     def OnChooseSoundDir(self, widget):
-        dir = ChooseDir(self.Main.get_toplevel(), self.SoundDirectory.get_text(), title=_("Nicotine+")+": "+_("Choose a sound effects directory"))
+
+        dir = ChooseDir(
+            self.Main.get_toplevel(),
+            self.SoundDirectory.get_text(),
+            title=_("Nicotine+") + ": " + _("Choose a sound effects directory")
+        )
+
         if dir is not None:
             for directory in dir:  # iterate over selected files
                 self.SoundDirectory.set_text(recode(directory))
@@ -1467,14 +1557,22 @@ class IconsFrame(buildFrame):
         self.IconTheme.set_text("")
 
     def OnChooseThemeDir(self, widget):
-        dir = ChooseDir(self.Main.get_toplevel(), self.IconTheme.get_text(), title=_("Nicotine+") + ": " + _("Choose an icon theme directory"))
+
+        dir = ChooseDir(
+            self.Main.get_toplevel(),
+            self.IconTheme.get_text(),
+            title=_("Nicotine+") + ": " + _("Choose an icon theme directory")
+        )
+
         if dir is not None:
-            for directory in dir: # iterate over selected files
+            for directory in dir:  # iterate over selected files
                 self.IconTheme.set_text(recode(directory))
 
     def GetSettings(self):
+
         mainwindow_close = 0
-        widgets = [ self.QuitOnClose, self.DialogOnClose, self.SendToTrayOnClose]
+        widgets = [self.QuitOnClose, self.DialogOnClose, self.SendToTrayOnClose]
+
         for i in widgets:
             if i.get_active():
                 mainwindow_close = widgets.index(i)
@@ -1572,7 +1670,9 @@ class ColoursFrame(buildFrame):
 
         for item in ["bold", "italic", "underline", "normal"]:
             self.UsernameStyle.append_text(item)
+
         self.UsernameStyle.child.set_editable(False)
+
         self.PickRemote.connect("clicked", self.PickColour, self.Remote, self.Drawing_Remote)
         self.PickLocal.connect("clicked", self.PickColour, self.Local, self.Drawing_Local)
         self.PickMe.connect("clicked", self.PickColour, self.Me, self.Drawing_Me)
@@ -1666,10 +1766,12 @@ class ColoursFrame(buildFrame):
             self.vboxColours.set_child_packing(self.ListExpander, False, False, 0, 0)
         else:
             self.vboxColours.set_child_packing(self.ListExpander, False, True, 0, 0)
+
         if self.ChatExpander.get_property("expanded"):
             self.vboxColours.set_child_packing(self.ChatExpander, False, False, 0, 0)
         else:
             self.vboxColours.set_child_packing(self.ChatExpander, False, True, 0, 0)
+
         if self.TransparentExpander.get_property("expanded"):
             self.vboxColours.set_child_packing(self.TransparentExpander, False, False, 0, 0)
         else:
@@ -1787,12 +1889,15 @@ class ColoursFrame(buildFrame):
         self.PickOffline.set_sensitive(sensitive)
 
     def PickColour(self, widget, entry, drawingarea):
+
         dlg = gtk.ColorSelectionDialog(_("Pick a color, any color"))
         colour = entry.get_text()
+
         if entry is self.TintColor:
             dlg.colorsel.set_has_opacity_control(True)
             dlg.colorsel.set_current_alpha(int(self.TintAlpha.get_value()) * 256)
-        if colour != None and colour !='':
+
+        if colour != None and colour != '':
             try:
                 colour = gtk.gdk.color_parse(colour)
             except:
@@ -1801,13 +1906,17 @@ class ColoursFrame(buildFrame):
                 return
             else:
                 dlg.colorsel.set_current_color(colour)
+
         if dlg.run() == gtk.RESPONSE_OK:
             colour = dlg.colorsel.get_current_color()
             colourtext = "#%02X%02X%02X" % (colour.red / 256, colour.green / 256, colour.blue / 256)
             entry.set_text(colourtext)
+
             for section in self.options.keys():
+
                 if section not in self.colorsd:
                     continue
+
                 for key, value in self.options[section].items():
                     if key not in self.colorsd[section]:
                         continue
@@ -1815,10 +1924,12 @@ class ColoursFrame(buildFrame):
                         drawingarea = self.colorsd[section][key]
                         drawingarea.modify_bg(gtk.STATE_NORMAL, colour)
                         break
+
         if entry is self.TintColor:
             alpha = dlg.colorsel.get_current_alpha()
             self.TintAlpha.set_value(alpha / 256)
             self.ColourScale("")
+
         dlg.destroy()
 
     def ColourScale(self, widget):
@@ -2012,7 +2123,12 @@ class BloatFrame(buildFrame):
         message = CheckTranslationAvailability(language)
 
         if self.TranslationCheck.get_active() and message is not None and message != "":
-            popupWarning(self.p.SettingsWindow, _("Warning: Missing translation"), message, self.frame.images["n"] )
+            popupWarning(
+                self.p.SettingsWindow,
+                _("Warning: Missing translation"),
+                message,
+                self.frame.images["n"]
+            )
             raise UserWarning
 
         return {
@@ -2115,19 +2231,37 @@ class LogFrame(buildFrame):
         }
 
     def OnChooseLogDir(self, widget):
-        dir = ChooseDir(self.Main.get_toplevel(), self.LogDir.get_text(), title=_("Nicotine+")+": "+_("Choose a directory to save your log files"))
+
+        dir = ChooseDir(
+            self.Main.get_toplevel(),
+            self.LogDir.get_text(),
+            title=_("Nicotine+") + ": " + _("Choose a directory to save your log files")
+        )
+
         if dir is not None:
             for directory in dir:  # iterate over selected files
                 self.LogDir.set_text(recode(directory))
 
     def OnChooseRoomLogDir(self, widget):
-        dir = ChooseDir(self.Main.get_toplevel(), self.RoomLogDir.get_text(), title=_("Nicotine+")+": "+_("Choose a directory to save your log files"))
+
+        dir = ChooseDir(
+            self.Main.get_toplevel(),
+            self.RoomLogDir.get_text(),
+            title=_("Nicotine+") + ": " + _("Choose a directory to save your log files")
+        )
+
         if dir is not None:
             for directory in dir:  # iterate over selected files
                 self.RoomLogDir.set_text(recode(directory))
 
     def OnChoosePrivateLogDir(self, widget):
-        dir = ChooseDir(self.Main.get_toplevel(), self.PrivateLogDir.get_text(), title=_("Nicotine+")+": "+_("Choose a directory to save your log files"))
+
+        dir = ChooseDir(
+            self.Main.get_toplevel(),
+            self.PrivateLogDir.get_text(),
+            title=_("Nicotine+") + ": " + _("Choose a directory to save your log files")
+        )
+
         if dir is not None:
             for directory in dir:  # iterate over selected files
                 self.PrivateLogDir.set_text(recode(directory))
@@ -2256,11 +2390,14 @@ class AwayFrame(buildFrame):
 class EventsFrame(buildFrame):
 
     def __init__(self, parent):
+
         self.p = parent
         buildFrame.__init__(self, "EventsFrame")
+
         self.FileManagerCombo_List = gtk.ListStore(gobject.TYPE_STRING)
         self.FileManagerCombo.set_model(self.FileManagerCombo_List)
         self.FileManagerCombo.set_text_column(0)
+
         self.options = {
             "transfers": {
                 "shownotification": self.ShowNotification,
@@ -2275,7 +2412,10 @@ class EventsFrame(buildFrame):
             }
         }
 
-        for executable in ["rox $", "konqueror $", "nautilus --no-desktop $", "thunar $", "xterm -e mc $", "emelfm2 -1 $", "krusader --left $", "gentoo -1 $" ]:
+        for executable in [
+            "rox $", "konqueror $", "nautilus --no-desktop $", "thunar $",
+            "xterm -e mc $", "emelfm2 -1 $", "krusader --left $", "gentoo -1 $"
+        ]:
             self.FileManagerCombo.append_text(executable)
 
     def SetSettings(self, config):
@@ -2288,6 +2428,7 @@ class EventsFrame(buildFrame):
         self.p.SetWidgetsData(config, self.options)
 
     def GetSettings(self):
+
         return {
             "transfers": {
                 "shownotification": self.ShowNotification.get_active(),
@@ -2331,14 +2472,17 @@ class ImportFrame(buildFrame):
         return {}
 
     def OnImportDirectory(self, widget):
+
         dir1 = ChooseDir(
             self.Main.get_toplevel(),
             self.ImportPath.get_text(),
             title=_("Nicotine+") + ": " + _("Import Soulseek config from directory")
         )
+
         if dir1 is not None:
             for directory in dir1:  # iterate over selected files
                 self.ImportPath.set_text(recode(directory))
+
         directory = self.ImportPath.get_text()
         if not os.path.exists(directory):
             self.p.Hilight(self.ImportPath)
@@ -2354,22 +2498,45 @@ class ImportFrame(buildFrame):
         UserInfo = self.ImportUserInfo.get_active()
         UserImage = self.ImportUserImage.get_active()
 
-        Import = ImportWinSlskConfig(self.config, Path, Queue, Login, Rooms, BuddyList, BanList, IgnoreList, UserInfo, UserImage)
+        Import = ImportWinSlskConfig(
+            self.config,
+            Path, Queue, Login, Rooms,
+            BuddyList, BanList, IgnoreList,
+            UserInfo, UserImage
+        )
         response = Import.Run()
+
         if response == 0:
-            popupWarning(self.p.SettingsWindow, _("Nothing Imported"), _("Config files for the official Soulseek client not found in \"%s\"") % Path, self.frame.images["n"])
+            popupWarning(
+                self.p.SettingsWindow,
+                _("Nothing Imported"),
+                _("Config files for the official Soulseek client not found in \"%s\"") % Path,
+                self.frame.images["n"]
+            )
         elif response == 1:
-            popupWarning(self.p.SettingsWindow, _("Imported Soulseek Config"), _("Config was imported. You may need to restart for changes to take effect. If you changed your user name, buddy list or queue then you should restart immediately."), self.frame.images["n"])
+            popupWarning(
+                self.p.SettingsWindow,
+                _("Imported Soulseek Config"),
+                _("Config was imported. You may need to restart for changes to take effect. If you changed your user name, buddy list or queue then you should restart immediately."),
+                self.frame.images["n"]
+            )
             self.p.SetSettings(self.frame.np.config.sections)
         elif response == 2:
-            popupWarning(self.p.SettingsWindow, _("Nothing Imported"), _("No options were selected") , self.frame.images["n"])
+            popupWarning(
+                self.p.SettingsWindow,
+                _("Nothing Imported"),
+                _("No options were selected"),
+                self.frame.images["n"]
+            )
 
 
 class UrlCatchFrame(buildFrame):
 
     def __init__(self, parent):
+
         self.p = parent
         buildFrame.__init__(self, "UrlCatchFrame")
+
         self.options = {
             "urls": {
                 "urlcatching": self.URLCatching,
@@ -2382,7 +2549,11 @@ class UrlCatchFrame(buildFrame):
             }
         }
 
-        self.protocolmodel = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
+        self.protocolmodel = gtk.ListStore(
+            gobject.TYPE_STRING,
+            gobject.TYPE_STRING
+        )
+
         self.protocols = {}
         cols = InitialiseColumns(
             self.ProtocolHandlers,
@@ -2400,8 +2571,20 @@ class UrlCatchFrame(buildFrame):
             render.connect('edited', self.cell_edited_callback, self.ProtocolHandlers, 1)
 
         self.handlermodel = gtk.ListStore(gobject.TYPE_STRING)
-        for item in ["xdg-open $", "firefox $", "firefox -a firefox --remote \"openURL($,new-tab)\"", "mozilla $", "opera $", "links -g $", "dillo $", "konqueror $", "\"c:\Program Files\Mozilla Firefox\Firefox.exe\" $"]:
+
+        for item in [
+            "xdg-open $",
+            "firefox $",
+            "firefox -a firefox --remote \"openURL($,new-tab)\"",
+            "mozilla $",
+            "opera $",
+            "links -g $",
+            "dillo $",
+            "konqueror $",
+            "\"c:\Program Files\Mozilla Firefox\Firefox.exe\" $"
+        ]:
             self.handlermodel.append([item])
+
         self.Handler.set_model(self.handlermodel)
         self.Handler.set_text_column(0)
         renderers = cols[1].get_cell_renderers()
@@ -2411,6 +2594,7 @@ class UrlCatchFrame(buildFrame):
         self.protomodel = gtk.ListStore(gobject.TYPE_STRING)
         for item in ["http", "https", "ftp", "sftp", "news", "irc"]:
             self.protomodel.append([item])
+
         self.ProtocolCombo.set_model(self.protomodel)
         self.ProtocolCombo.set_text_column(0)
 
@@ -2615,8 +2799,10 @@ class CensorFrame(buildFrame):
 class AutoReplaceFrame(buildFrame):
 
     def __init__(self, parent):
+
         self.p = parent
         buildFrame.__init__(self, "AutoReplaceFrame")
+
         self.options = {
             "words": {
                 "autoreplaced": self.ReplacementList,
@@ -2624,7 +2810,11 @@ class AutoReplaceFrame(buildFrame):
             }
         }
 
-        self.replacelist = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
+        self.replacelist = gtk.ListStore(
+            gobject.TYPE_STRING,
+            gobject.TYPE_STRING
+        )
+
         cols = InitialiseColumns(
             self.ReplacementList,
             [_("Pattern"), 150, "edit", self.frame.CellDataFunc],
@@ -2640,11 +2830,17 @@ class AutoReplaceFrame(buildFrame):
                 render.connect('edited', self.cell_edited_callback, self.ReplacementList, cols.index(column))
 
     def cell_edited_callback(self, widget, index, value, treeview, pos):
+
         store = treeview.get_model()
         iter = store.get_iter(index)
         store.set(iter, pos, value)
+
         if pos == 0:
-            treeview.set_cursor(store.get_path(iter), treeview.get_column(1), start_editing=True)
+            treeview.set_cursor(
+                store.get_path(iter),
+                treeview.get_column(1),
+                start_editing=True
+            )
 
     def SetSettings(self, config):
         self.replacelist.clear()
@@ -2705,8 +2901,18 @@ class AutoReplaceFrame(buildFrame):
         self.replacelist.clear()
 
     def OnDefaults(self, widget):
+
         self.replacelist.clear()
-        defaults = {"teh ": "the ", "taht ": "that ", "tihng": "thing", "youre": "you're", "jsut": "just", "thier": "their", "tihs": "this"}
+        defaults = {
+            "teh ": "the ",
+            "taht ": "that ",
+            "tihng": "thing",
+            "youre": "you're",
+            "jsut": "just",
+            "thier": "their",
+            "tihs": "this"
+        }
+
         for word, replacement in defaults.items():
             self.replacelist.append([word, replacement])
 
@@ -2714,8 +2920,10 @@ class AutoReplaceFrame(buildFrame):
 class CompletionFrame(buildFrame):
 
     def __init__(self, parent):
+
         self.p = parent
         buildFrame.__init__(self, "CompletionFrame")
+
         self.options = {
             "words": {
                 "tab": self.CompletionTabCheck,
@@ -2788,7 +2996,7 @@ class CompletionFrame(buildFrame):
 
 class buildDialog(gtk.Dialog):
 
-    def __init__(self, parent ):
+    def __init__(self, parent):
 
         window = "PluginProperties"
         self.settings = parent.p
@@ -2813,30 +3021,39 @@ class buildDialog(gtk.Dialog):
         return label
 
     def GenerateTreeView(self, name, description, value, c=0):
+
         self.tw["box%d" % c] = gtk.VBox(False, 5)
+
         self.tw[name+"SW"] = gtk.ScrolledWindow()
         self.tw[name+"SW"].set_shadow_type(gtk.SHADOW_IN)
         self.tw[name+"SW"].set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+
         self.tw[name] = gtk.TreeView()
         self.tw[name].set_model(gtk.ListStore(gobject.TYPE_STRING))
         self.tw[name+"SW"].add(self.tw[name])
+
         self.tw["box%d" % c].pack_start(self.tw[name+"SW"], True, 5)
         cols = InitialiseColumns(self.tw[name], [description, 150, "edit"], )
+
         try:
             self.settings.SetWidget(self.tw[name], value)
         except:
             pass
+
         self.addButton = gtk.Button(_("Add"), gtk.STOCK_ADD)
         self.removeButton = gtk.Button(_("Remove"), gtk.STOCK_REMOVE)
+
         self.tw["vbox%d" % c] = gtk.HBox(False, 5)
         self.tw["vbox%d" % c].pack_start(self.addButton, False, False)
         self.tw["vbox%d" % c].pack_start(self.removeButton, False, False)
+
         self.Main.pack_start(self.tw["box%d" % c], True, True)
         self.Main.pack_start(self.tw["vbox%d" % c], False, False)
 
         renderers = cols[0].get_cell_renderers()
         for render in renderers:
             render.connect('edited', self.cell_edited_callback, self.tw[name])
+
         self.addButton.connect("clicked", self.OnAdd, self.tw[name])
         self.removeButton.connect("clicked", self.OnRemove, self.tw[name])
 
@@ -2846,13 +3063,19 @@ class buildDialog(gtk.Dialog):
         store.set(iter, 0, value)
 
     def OnAdd(self, widget, treeview):
+
         iter = treeview.get_model().append([""])
         col = treeview.get_column(0)
+
         # path = treeview.get_model().get_path(iter)
         # if path is not None:
         #     sel.select_path(path)
         #     treeview.scroll_to_cell(path, None, True, 0.5, 0.5)
-        treeview.set_cursor(treeview.get_model().get_path(iter), focus_column=col, start_editing=True)
+        treeview.set_cursor(
+            treeview.get_model().get_path(iter),
+            focus_column=col,
+            start_editing=True
+        )
 
     def OnRemove(self, widget, treeview):
         selection = treeview.get_selection()
@@ -2861,12 +3084,16 @@ class buildDialog(gtk.Dialog):
             treeview.get_model().remove(iter)
 
     def addOptions(self, plugin, options={}):
+
         for i in self.tw:
             self.tw[i].destroy()
+
         self.options = options
         self.plugin = plugin
         self.PluginLabel.set_markup("<b>%s</b>" % plugin)
+
         c = 0
+
         for name, data in options.items():
             if plugin not in self.settings.frame.np.config.sections["plugins"] or name not in self.settings.frame.np.config.sections["plugins"][plugin]:
                 if plugin not in self.settings.frame.np.config.sections["plugins"]:
@@ -2874,11 +3101,15 @@ class buildDialog(gtk.Dialog):
                 elif name not in self.settings.frame.np.config.sections["plugins"][plugin]:
                     print "No2 " + name + ", " + repr(self.settings.frame.np.config.sections["plugins"][plugin].keys())
                 continue
-            """ We currently support SpinButtons, TreeView (one per plugin), and Checkboxes, but there's no reason more widgets cannot be added, and we can use self.settings.SetWidget and self.settings.GetWidgetData to set and get values
 
-            Todo: gtk.ComboBox, and gtk.RadioButton
-            """
+            # We currently support SpinButtons, TreeView (one per plugin) and Checkboxes.
+            # There's no reason more widgets cannot be added,
+            # and we can use self.settings.SetWidget and self.settings.GetWidgetData to set and get values
+            #
+            # Todo: gtk.ComboBox, and gtk.RadioButton
+
             value = self.settings.frame.np.config.sections["plugins"][plugin][name]
+
             if data["type"] in ("integer", "int"):
                 self.tw["box%d" % c] = gtk.HBox(False, 5)
                 self.tw["label%d" % c] = self.GenerateLabel(data["description"])
@@ -2912,6 +3143,7 @@ class buildDialog(gtk.Dialog):
                 print "Unknown setting type '%s', data '%s'" % (name, data)
 
             c += 1
+
         self.PluginProperties.show_all()
 
     def OnCancel(self, widget):
@@ -2932,18 +3164,26 @@ class buildDialog(gtk.Dialog):
 class PluginFrame(buildFrame):
 
     def __init__(self, parent):
+
         self.p = parent
         buildFrame.__init__(self, "PluginFrame")
+
         self.options = {
             "plugins": {
                 "enable": self.PluginsEnable
             }
         }
 
-        self.pluginlist = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_BOOLEAN, gobject.TYPE_STRING)
+        self.pluginlist = gtk.ListStore(
+            gobject.TYPE_STRING,
+            gobject.TYPE_BOOLEAN,
+            gobject.TYPE_STRING
+        )
+
         self.plugins = []
         self.pluginsiters = {}
         self.selected_plugin = None
+
         cols = InitialiseColumns(
             self.PluginTreeView,
             [_("Plugins"), 150, "text"],
@@ -2952,9 +3192,11 @@ class PluginFrame(buildFrame):
 
         cols[0].set_sort_column_id(0)
         cols[1].set_sort_column_id(1)
+
         renderers = cols[1].get_cell_renderers()
         for render in renderers:
             render.connect('toggled', self.cell_toggle_callback, self.PluginTreeView, 1)
+
         self.PluginTreeView.set_model(self.pluginlist)
         # self.PluginTreeView.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
         self.PluginTreeView.get_selection().connect("changed", self.OnSelectPlugin)
@@ -2965,10 +3207,15 @@ class PluginFrame(buildFrame):
         if self.selected_plugin is None:
             return
 
-        self.dialog.addOptions(self.selected_plugin, self.frame.pluginhandler.get_plugin_settings(self.selected_plugin))
+        self.dialog.addOptions(
+            self.selected_plugin,
+            self.frame.pluginhandler.get_plugin_settings(self.selected_plugin)
+        )
+
         self.dialog.Show()
 
     def OnSelectPlugin(self, selection):
+
         model, iter = selection.get_selected()
         if iter is None:
             self.selected_plugin = None
@@ -2976,12 +3223,15 @@ class PluginFrame(buildFrame):
 
         self.selected_plugin = model.get_value(iter, 2)
         info = self.frame.pluginhandler.get_plugin_info(self.selected_plugin)
+
         self.PluginVersion.set_markup("<b>%(version)s</b>" % {"version": info['Version']})
         self.PluginName.set_markup("<b>%(name)s</b>" % {"name": info['Name']})
         self.PluginDescription.get_buffer().set_text("%(description)s" % {"description": info['Description'].replace(r'\n', "\n")})
         self.PluginAuthor.set_markup("<b>%(author)s</b>" % {"author": ", ".join(info['Authors'])})
         self.PluginImage.set_from_pixbuf(self.frame.images["plugin"])
+
         settings = self.frame.pluginhandler.get_plugin_settings(self.selected_plugin)
+
         if settings is not None:
             self.PluginProperties.set_sensitive(True)
         else:
@@ -3003,14 +3253,14 @@ class PluginFrame(buildFrame):
                 return
 
     def SetSettings(self, config):
-        # for (module, plugin) in self.frame.pluginhandler.plugins:
-        #     print plugin.__name__, plugin.__version__, plugin.settings
+
         self.p.SetWidgetsData(config, self.options)
         self.OnPluginsEnable(None)
         self.pluginsiters = {}
         self.pluginlist.clear()
         plugins = self.frame.pluginhandler.list_installed_plugins()
         plugins.sort()
+
         for plugin in plugins:
             try:
                 info = self.frame.pluginhandler.get_plugin_info(plugin)
@@ -3173,7 +3423,6 @@ class SettingsWindow:
             self.handler_ids[widget] = []
             self.handler_ids[widget].append(widget.connect("activate", self.Dehilight))
             self.handler_ids[widget].append(widget.connect("value-changed", self.Dehilight))
-
         elif type(widget) is gtk.CheckButton:
             self.Dehilight(widget)
             self.handler_ids[widget] = []
@@ -3183,6 +3432,7 @@ class SettingsWindow:
             self.Dehilight(widget)
             self.handler_ids[widget] = []
             self.handler_ids[widget].append(model.connect("row-inserted", self.DehilightTree))
+
         self.SetTextBG(widget, "red", "white")
 
     def DehilightTree(self, model, *args):
@@ -3203,15 +3453,18 @@ class SettingsWindow:
             self.handler_ids[widget].remove(handler_id)
 
     def ColourWidgets(self, widget):
+
         if type(widget) in (gtk.Entry, gtk.SpinButton, gtk.TextView, gtk.TreeView, gtk.CheckButton, gtk.RadioButton):
             self.SetTextBG(widget)
         if type(widget) is gtk.TreeView:
             self.frame.ChangeListFont(widget, self.frame.np.config.sections["ui"]["listfont"])
 
     def UpdateColours(self):
+
         for widget in self.__dict__.values():
             # if type(widget) in (gtk.Entry, gtk.SpinButton, gtk.TextView, gtk.TreeView, gtk.CheckButton, gtk.RadioButton):
             self.ColourWidgets(widget)
+
         for name, page in self.pages.items():
             for widget in page.__dict__.values():
                 self.ColourWidgets(widget)
@@ -3291,6 +3544,7 @@ class SettingsWindow:
                     self.Dehilight(widget)
 
     def GetWidgetData(self, widget):
+
         if type(widget) is gtk.Entry:
             return widget.get_text()
         elif type(widget) is gtk.SpinButton:
@@ -3332,6 +3586,7 @@ class SettingsWindow:
             widget.set_font_name("")
 
     def SetWidget(self, widget, value):
+
         if type(widget) is gtk.Entry:
             if type(value) in (int, str):
                 widget.set_text(value)
@@ -3369,6 +3624,7 @@ class SettingsWindow:
             page.SetSettings(config)
 
     def GetSettings(self):
+
         try:
             config = {
                 "server": {},
