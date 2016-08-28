@@ -1551,14 +1551,14 @@ class NicotineFrame:
 
 	def OnFirstConnect(self, widget):
 
-		# Initialiase a UPnPPortMapping object
-		upnp = UPnPPortMapping()
-
-		# Check if we can do a port mapping
-		(self.upnppossible, errors) = upnp.IsPossible()
-
 		# Test if we want to do a port mapping
 		if self.np.config.sections["server"]["upnp"]:
+
+			# Initialiase a UPnPPortMapping object
+			upnp = UPnPPortMapping()
+
+			# Check if we can do a port mapping
+			(self.upnppossible, errors) = upnp.IsPossible()
 
 			# Test if we are able to do a port mapping
 			if self.upnppossible:

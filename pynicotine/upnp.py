@@ -42,9 +42,6 @@ class UPnPPortMapping:
         # Default requested external WAN port
         self.externalwanport = 15000
 
-        # Local LAN IP
-        self.internalipaddress = gethostbyname(gethostname())
-
         # List of existing port mappings
         self.existingportsmappings = []
 
@@ -168,6 +165,9 @@ class UPnPPortMapping:
         """
 
         log.add(_('Creating Port Mapping rule via UPnP...'))
+
+        # Local LAN IP
+        self.internalipaddress = gethostbyname(gethostname())
 
         # Store the Local LAN port
         self.internallanport = np.protothread._p.getsockname()[1]

@@ -141,10 +141,13 @@ class ServerFrame(buildFrame):
             self.ctcptogglebutton.set_active(not server["ctcpmsgs"])
 
         # We need to check if the frame has the upnppossible attribute
-        # Most of the time OnFirstConnect has been called
-        # and the attibute is set. But in case of a first time install
-        # OnFirstConnect is not called and the code throw an AttributeError
+        # If UPnP port mapping is wanted, OnFirstConnect has been called
+        # and the attibute is set.
+        # Otherwise we need to check if we have the prerequisites for allowing it.
+        # The initialization of the UPnPPortMapping object and the check
+        # don't generate any unwanted network traffic.
         if not hasattr(self.frame, 'upnppossible'):
+
             # Initialiase a UPnPPortMapping object
             upnp = UPnPPortMapping()
 
