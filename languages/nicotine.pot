@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-27 15:16+0200\n"
+"POT-Creation-Date: 2016-08-28 12:09+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2779,15 +2779,6 @@ msgstr ""
 
 #, python-format
 msgid "Nicotine+ %(mode)s Search: %(term)s"
-msgstr ""
-
-msgid "Y"
-msgstr ""
-
-msgid "N"
-msgstr ""
-
-msgid " (vbr)"
 msgstr ""
 
 msgid "Select User's Results"

@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nicotine\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-27 15:16+0200\n"
-"PO-Revision-Date: 2016-08-27 15:17+0200\n"
+"POT-Creation-Date: 2016-08-28 12:09+0200\n"
+"PO-Revision-Date: 2016-08-28 12:10+0200\n"
 "Last-Translator: Michael LABOUEBE <gfarmerfr@free.fr>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -3688,19 +3688,6 @@ msgstr "Copier l'U_RL du dossier"
 #, python-format
 msgid "Nicotine+ %(mode)s Search: %(term)s"
 msgstr "Nicotine+ %(mode)s Termes de recherche: %(term)s"
-
-# pynicotine/gtkgui/search.py
-msgid "Y"
-msgstr "O"
-
-# pynicotine/gtkgui/search.py
-msgid "N"
-msgstr "N"
-
-# pynicotine/gtkgui/browsetreemodels.py
-# pynicotine/gtkgui/search.py
-msgid " (vbr)"
-msgstr " (vbr)"
 
 msgid "Select User's Results"
 msgstr "Sélectionner les résultats de cet utilisateur"
