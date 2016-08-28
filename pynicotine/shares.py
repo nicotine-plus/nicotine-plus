@@ -817,21 +817,26 @@ class Shares:
             if subdir.startswith("."):
                 return True
 
-        # On Windows check the directories attributes also
+        # On Windows check the directories attributes
+        # if the win32file module is available
         if win32:
 
-            from win32file import GetFileAttributes
+            try:
+                from win32file import GetFileAttributes
+            except ImportError as e:
+                pass
+            else:
 
-            dirattr = GetFileAttributes(directory.replace('\\', '\\\\'))
+                dirattr = GetFileAttributes(directory.replace('\\', '\\\\'))
 
-            # Set a mask to check the 2nd bit
-            # See https://msdn.microsoft.com/en-us/library/windows/desktop/gg258117(v=vs.85).aspx
-            # FILE_ATTRIBUTE_HIDDEN
-            # 2 (0x2)
-            mask = 1 << 1
+                # Set a mask to check the 2nd bit
+                # See https://msdn.microsoft.com/en-us/library/windows/desktop/gg258117(v=vs.85).aspx
+                # FILE_ATTRIBUTE_HIDDEN
+                # 2 (0x2)
+                mask = 1 << 1
 
-            if dirattr & mask:
-                return True
+                if dirattr & mask:
+                    return True
 
         return False
 
