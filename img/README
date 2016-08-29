@@ -7,13 +7,23 @@ http://creativecommons.org/licenses/by/2.5/
 The Icons taken from Silk and modified:
 
 away2.png
-connect.png
-disconnect.png
 hilite2.png
 
 Not modified:
 
 hilite.png (renamed from lightbulb.png)
+
+---
+
+Created by gfarmerfr (released under LGPLv3+)
+
+These icons are a combined work between the n.png icons and the gnome-icon-theme
+which is licensed under LGPLv3+.
+
+trayicon_connect.png
+trayicon_disconnect.png
+
+---
 
 Created by daelstorm (released under GPLv2+ and upgraded to GPLv3+)
 away.png
@@ -26,11 +36,15 @@ offline.png
 online.png
 plugin.png
 
+---
+
 Created by Quinox (released under GPLv2+ and upgraded to GPLv3+)
 n.png
 nicotine+.png
 notify.png
 notify.svg
+
+---
 
 Country flags under the geoip directory are provided by http://flags.blogpotato.de/
 and distributed under a Creative Commons Attribution-Share Alike 3.0 Unported.

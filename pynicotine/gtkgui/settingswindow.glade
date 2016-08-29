@@ -6915,7 +6915,7 @@ Clear</property>
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkImage" id="Connect">
+                  <widget class="GtkImage" id="Trayicon_Connect">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="stock">gtk-missing-image</property>
@@ -6960,7 +6960,7 @@ Clear</property>
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkImage" id="Disconnect">
+                  <widget class="GtkImage" id="Trayicon_Disconnect">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="stock">gtk-missing-image</property>

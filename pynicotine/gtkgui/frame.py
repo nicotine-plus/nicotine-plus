@@ -820,7 +820,7 @@ class NicotineFrame:
 					pixbuf = pixbuf.scale_simple(scale, scale, gtk.gdk.INTERP_BILINEAR)
 			return pixbuf
 
-		names = ["empty", "away", "online", "offline", "hilite", "hilite2", "hilite3", "connect", "disconnect", "away2", "n", "nicotinen", "notify", "bug", "money", "plugin"]
+		names = ["empty", "away", "online", "offline", "hilite", "hilite2", "hilite3", "trayicon_connect", "trayicon_disconnect", "away2", "n", "nicotinen", "notify", "bug", "money", "plugin"]
 
 		if "icontheme" in self.np.config.sections["ui"]:
 			extensions = ["jpg", "jpeg", "bmp", "png", "svg"]
@@ -1579,7 +1579,7 @@ class NicotineFrame:
 
 	def OnConnect(self, widget):
 
-		self.TrayApp.tray_status["status"] = "connect"
+		self.TrayApp.tray_status["status"] = "trayicon_connect"
 		self.TrayApp.SetImage()
 
 		if self.np.serverconn is not None:
@@ -1622,7 +1622,7 @@ class NicotineFrame:
 		
 		self.SetUserStatus(_("Offline"))
 
-		self.TrayApp.tray_status["status"] = "disconnect"
+		self.TrayApp.tray_status["status"] = "trayicon_disconnect"
 		self.TrayApp.SetImage()
 
 		self.Searches.interval = 0
@@ -1670,7 +1670,7 @@ class NicotineFrame:
 		
 		self.SetUserStatus(_("Offline"))
 
-		self.TrayApp.tray_status["status"] = "disconnect"
+		self.TrayApp.tray_status["status"] = "trayicon_disconnect"
 		self.TrayApp.SetImage()
 
 		self.uploads.ConnClose()
@@ -1690,7 +1690,7 @@ class NicotineFrame:
 		if self.away == 0:
 			self.SetUserStatus(_("Online"))
 
-			self.TrayApp.tray_status["status"] = "connect"
+			self.TrayApp.tray_status["status"] = "trayicon_connect"
 			self.TrayApp.SetImage()
 
 			autoaway = self.np.config.sections["server"]["autoaway"]
@@ -1778,7 +1778,7 @@ class NicotineFrame:
 		if self.away == 0:
 			self.SetUserStatus(_("Online"))
 
-			self.TrayApp.tray_status["status"] = "connect"
+			self.TrayApp.tray_status["status"] = "trayicon_connect"
 			self.TrayApp.SetImage()
 		else:
 			self.SetUserStatus(_("Away"))
@@ -3398,8 +3398,8 @@ class TrayApp:
 				"rooms": [],
 				"private": []
 			},
-			"status": "disconnect",
-			"last": "disconnect"
+			"status": "trayicon_disconnect",
+			"last": "trayicon_disconnect"
 		}
 		self.CreateMenu()
 
@@ -3514,7 +3514,7 @@ class TrayApp:
 
 		items = self.tray_popup_menu_server.get_children()
 
-		if self.tray_status["status"] == "disconnect":
+		if self.tray_status["status"] == "trayicon_disconnect":
 			items[0].set_sensitive(True)
 			items[1].set_sensitive(False)
 		else:

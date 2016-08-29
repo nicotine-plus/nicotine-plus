@@ -1532,8 +1532,8 @@ class IconsFrame(buildFrame):
         self.Hilite.set_from_pixbuf(self.frame.images["hilite"])
         self.Hilite2.set_from_pixbuf(self.frame.images["hilite2"])
         self.Hilite3.set_from_pixbuf(self.frame.images["hilite3"])
-        self.Connect.set_from_pixbuf(self.frame.images["connect"])
-        self.Disconnect.set_from_pixbuf(self.frame.images["disconnect"])
+        self.Trayicon_Connect.set_from_pixbuf(self.frame.images["trayicon_connect"])
+        self.Trayicon_Disconnect.set_from_pixbuf(self.frame.images["trayicon_disconnect"])
         self.Notify.set_from_pixbuf(self.frame.images["notify"])
 
     def SetSettings(self, config):
