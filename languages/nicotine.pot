@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-28 12:09+0200\n"
+"POT-Creation-Date: 2016-08-29 21:59+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2558,6 +2558,10 @@ msgstr ""
 msgid ""
 "%(myusername)s, the user, %(username)s has mentioned your name in the room, "
 "%(place)s."
+msgstr ""
+
+#, python-format
+msgid "%(myusername)s, you have recieved a private message from %(username)s."
 msgstr ""
 
 #, python-format
