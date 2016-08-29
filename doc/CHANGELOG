@@ -1,17 +1,17 @@
-ChangeLog for Nicotine+
-
 git master (unreleased)
 
-The old Trac instance is read-only: for new bugs go to https://github.com/eLvErDe/nicotine-plus/issues
+The old Trac instance is read-only.
+For reporting bugs go to https://github.com/eLvErDe/nicotine-plus/issues
 
 Behavior
- * Showing first 25 results right away to make N+ seem FAST
- * Send a private message to users who queue a directory has been removed
+ * Showing first 25 results right away to make N+ seem FAST.
+ * Send a private message to users who queue a directory has been removed.
+ * Tray icons have been modified to be easier to distribute under debian (DFSG compliant).
 
 Features
- * Translations works on Windows
- * UPnP support out of the box on Windows
- * Virtual share system implemented
+ * Translations works on Windows.
+ * UPnP support out of the box on Windows.
+ * Virtual share system implemented.
 
 Bugs
 
@@ -25,6 +25,7 @@ Github:
 * Fix variable bitrate detection for MP3 files (#20)
 * Information On nicotine-plus.org (#21)
 * Build fails on archlinux, can't copy mo file... (#22)
+* upnp functionality is used despite being config'd as False (#24)
 
 Trac:
  * "Abort & Delete" button is mislabeled (#194)
