@@ -45,7 +45,10 @@ added_files = [
     ( GTK2_RUNTIME + 'share\\themes\\MS-Windows', 'share/themes/MS-Windows'),
 
     # GTK2 WIMP engine
-    ( GTK2_RUNTIME + 'lib\\gtk-2.0\\2.10.0\\engines\\libwimp.dll', 'lib/gtk-2.0/2.10.0/engines')
+    ( GTK2_RUNTIME + 'lib\\gtk-2.0\\2.10.0\\engines\\libwimp.dll', 'lib/gtk-2.0/2.10.0/engines'),
+
+    # GTK2 locales for translations of buttons
+    ( GTK2_RUNTIME + 'share\\locale', 'share/locale')
 ]
 
 # Analysis pass
