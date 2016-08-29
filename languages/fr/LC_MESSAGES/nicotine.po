@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nicotine\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-28 12:09+0200\n"
-"PO-Revision-Date: 2016-08-28 12:10+0200\n"
+"POT-Creation-Date: 2016-08-29 21:59+0200\n"
+"PO-Revision-Date: 2016-08-29 22:01+0200\n"
 "Last-Translator: Michael LABOUEBE <gfarmerfr@free.fr>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -3373,6 +3373,10 @@ msgid ""
 msgstr ""
 "%(myusername)s, l'utilisateur %(username)s a mentionné votre nom dans le "
 "salon de discussion, %(place)s."
+
+#, python-format
+msgid "%(myusername)s, you have recieved a private message from %(username)s."
+msgstr "%(myusername)s, vous avez reçu une message privé de %(username)s."
 
 #, python-format
 msgid "ERROR: cannot set trayicon image: %(error)s"
