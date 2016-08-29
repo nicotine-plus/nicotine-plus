@@ -11,6 +11,7 @@ Behavior
 Features
  * Translations works on Windows.
  * UPnP support out of the box on Windows.
+ * Refreshed icon and GTK2 theme on Windows.
  * Virtual share system implemented.
 
 Bugs

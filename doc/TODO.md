@@ -37,16 +37,14 @@ A list of stuff & things todo (not in any particular order):
 
 #### Windows specific goals
 
-* Theming
-
-    * Find a GTK2 theme to apply to the frozen app so it doesn't look bad.
-    * Same goes for fonts.
-
-
 * NSIS installer:
 
     * Test & refresh Quinox stuff.
 
+* **DONE**: Theming
+
+    * Find a GTK2 theme to apply to the frozen app so it doesn't look bad.
+    * Same goes for fonts.
 
 * **DONE**: PyInstaller:
 
