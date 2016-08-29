@@ -11511,7 +11511,7 @@ when new results come in</property>
                         </child>
                         <child>
                           <widget class="GtkButton" id="ChangePassword">
-                            <property name="label">Change password</property>
+                            <property name="label" translatable="yes">Change password</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
