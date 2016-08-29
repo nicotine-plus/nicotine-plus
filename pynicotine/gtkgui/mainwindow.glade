@@ -68,7 +68,7 @@
                         <child internal-child="image">
                           <widget class="GtkImage" id="image30">
                             <property name="visible">True</property>
-                            <property name="stock">gtk-info</property>
+                            <property name="stock">gtk-media-pause</property>
                           </widget>
                         </child>
                       </widget>

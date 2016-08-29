@@ -631,9 +631,7 @@ class NicotineFrame:
 
 		if config["transfers"]["rescanonstartup"]:
 			self.BothRescan()
-		img = gtk.Image()
-		img.set_from_pixbuf(self.images["away2"])
-		self.awayreturn1.set_image(img)
+
 		img = gtk.Image()
 		img.set_from_pixbuf(self.images["notify"])
 		self.about_nicotine1.set_image(img)
@@ -820,7 +818,24 @@ class NicotineFrame:
 					pixbuf = pixbuf.scale_simple(scale, scale, gtk.gdk.INTERP_BILINEAR)
 			return pixbuf
 
-		names = ["empty", "away", "online", "offline", "hilite", "hilite2", "hilite3", "trayicon_connect", "trayicon_disconnect", "away2", "n", "nicotinen", "notify", "bug", "money", "plugin"]
+		names = [
+			"empty",
+			"away",
+			"online",
+			"offline",
+			"hilite",
+			"hilite2",
+			"hilite3",
+			"trayicon_away",
+			"trayicon_connect",
+			"trayicon_disconnect",
+			"n",
+			"nicotinen",
+			"notify",
+			"bug",
+			"money",
+			"plugin"
+		]
 
 		if "icontheme" in self.np.config.sections["ui"]:
 			extensions = ["jpg", "jpeg", "bmp", "png", "svg"]
@@ -1702,7 +1717,7 @@ class NicotineFrame:
 		else:
 			self.SetUserStatus(_("Away"))
 
-			self.TrayApp.tray_status["status"] = "away2"
+			self.TrayApp.tray_status["status"] = "trayicon_away"
 			self.TrayApp.SetImage()
 
 		self.SetWidgetOnlineStatus(True)
@@ -1783,7 +1798,7 @@ class NicotineFrame:
 		else:
 			self.SetUserStatus(_("Away"))
 
-			self.TrayApp.tray_status["status"] = "away2"
+			self.TrayApp.tray_status["status"] = "trayicon_away"
 			self.TrayApp.SetImage()
 
 		self.np.queue.put(slskmessages.SetStatus(self.away and 1 or 2))
@@ -3503,7 +3518,7 @@ class TrayApp:
 				("#" + _("Lookup a User's IP"), self.frame.OnGetAUsersIP, gtk.STOCK_NETWORK),
 				("#" + _("Lookup a User's Info"), self.frame.OnGetAUsersInfo, gtk.STOCK_DIALOG_INFO),
 				("#" + _("Lookup a User's Shares"), self.frame.OnGetAUsersShares, gtk.STOCK_HARDDISK),
-				("%" + _("Toggle Away"), self.frame.OnAway, self.frame.images["away2"] ),
+				("%" + _("Toggle Away"), self.frame.OnAway, self.frame.images["trayicon_away"]),
 				("#" + _("Quit"), self.frame.OnExit, gtk.STOCK_QUIT),
 			)
 

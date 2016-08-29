@@ -6930,7 +6930,7 @@ Clear</property>
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkImage" id="Away2">
+                  <widget class="GtkImage" id="Trayicon_Away">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="stock">gtk-missing-image</property>
