@@ -33,8 +33,14 @@ class GenericAboutDialog(gtk.Dialog):
 
     def __init__(self, parent, title="", nicotine=None):
 
-        gtk.Dialog.__init__(self, title, parent, gtk.DIALOG_MODAL,
-                            (gtk.STOCK_OK, gtk.RESPONSE_OK))
+        gtk.Dialog.__init__(
+            self,
+            title,
+            parent,
+            gtk.DIALOG_MODAL,
+            (gtk.STOCK_OK, gtk.RESPONSE_OK)
+        )
+
         if nicotine:
             self.set_icon(nicotine.images["n"])
 
@@ -50,21 +56,22 @@ class AboutDialog(gtk.Dialog):
 
         self.nicotine = nicotine
 
-        gtk.Dialog.__init__(self, _("About Nicotine+"), parent,
-                            gtk.DIALOG_MODAL)
+        gtk.Dialog.__init__(self, _("About Nicotine+"), parent, gtk.DIALOG_MODAL)
 
         self.set_resizable(True)
         self.set_position(gtk.WIN_POS_CENTER)
         self.vbox.set_spacing(10)
         self.set_border_width(5)
+
         img = gtk.Image()
-        img.set_from_pixbuf(self.nicotine.images["nicotinen"])
+        img.set_from_pixbuf(self.nicotine.images["n"])
 
         ScrolledWindow = gtk.ScrolledWindow()
         ScrolledWindow.set_shadow_type(gtk.SHADOW_IN)
         ScrolledWindow.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
         ScrolledWindow.show()
-        ScrolledWindow.set_size_request(250, -1)
+        ScrolledWindow.set_size_request(400, 250)
+
         TextView = gtk.TextView()
         TextView.set_wrap_mode(gtk.WRAP_WORD)
         TextView.set_cursor_visible(False)
@@ -409,7 +416,7 @@ class AboutLicenseDialog(GenericAboutDialog):
         self.nicotine = nicotine
         GenericAboutDialog.__init__(self, parent, _("License"), self.nicotine)
         self.set_resizable(True)
-        self.resize(550, 400)
+        self.resize(550, 450)
         self.ScrolledWindow = gtk.ScrolledWindow()
         self.ScrolledWindow.set_shadow_type(gtk.SHADOW_IN)
         self.ScrolledWindow.set_policy(gtk.POLICY_AUTOMATIC,

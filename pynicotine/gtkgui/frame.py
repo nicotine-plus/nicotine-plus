@@ -892,7 +892,6 @@ class NicotineFrame:
             "trayicon_disconnect",
             "trayicon_msg",
             "n",
-            "nicotinen",
             "notify",
             "bug",
             "money",

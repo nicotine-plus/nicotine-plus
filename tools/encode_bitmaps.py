@@ -40,7 +40,6 @@ table = [
     ["bug.png", "bug"],
     ["money.png", "money"],
     ["plugin.png", "plugin"],
-    ["nicotine+.png", "nicotinen"],
     ["n.png", "n"],
     ["notify.png", "notify"]
 ]
