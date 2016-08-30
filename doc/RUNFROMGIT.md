@@ -47,5 +47,12 @@
 
 
 * On Windows:
+
     * The miniupnpc client is now included in the `files/win32/upnpc` subdirectory and should work out of the box.
+
+    * Directories beginning with a dot '.' are not shared on any OS.
+
+    Additionally if you want your hidden directories (Windows attribute) not to be shared you should install 'Python for Windows Extensions' via pip:
+
+    `python.exe -m pip install pypiwin32`
     * Other optional dependencies: I'm working on it :)

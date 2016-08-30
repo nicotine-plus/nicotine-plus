@@ -43,3 +43,4 @@ You want to contact someone? See: [MAINTAINERS](doc/MAINTAINERS.md)
 * [GeoIP python bindings](https://dev.maxmind.com/geoip/legacy/downloadable/) for Country lookup: need an alternative (unmaintained).
 * [python-notify](http://www.galago-project.org) for notification support: need an alternative (unmaintained).
 * [MiniUPnPc python module or binary](https://miniupnp.tuxfamily.org/) for opening ports on your router.
+* [Python for Windows Extensions](https://sourceforge.net/projects/pywin32/) for hidding directories from your shares (Windows only).

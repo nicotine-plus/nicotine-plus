@@ -6,6 +6,7 @@ For reporting bugs go to https://github.com/eLvErDe/nicotine-plus/issues
 Behavior
  * Showing first 25 results right away to make N+ seem FAST.
  * Send a private message to users who queue a directory has been removed.
+ * Hidden directories on Windows are not shared provided you have the pypiwin32 module installed.
  * Tray icons have been modified to be easier to distribute under debian (DFSG compliant).
 
 Features
@@ -26,6 +27,7 @@ Github:
 * Fix variable bitrate detection for MP3 files (#20)
 * Information On nicotine-plus.org (#21)
 * Build fails on archlinux, can't copy mo file... (#22)
+* Hidden directory files now showing up in file shares (Windows) (#23)
 * upnp functionality is used despite being config'd as False (#24)
 
 Trac:
