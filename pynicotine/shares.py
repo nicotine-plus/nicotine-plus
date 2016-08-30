@@ -426,6 +426,9 @@ class Shares:
             u_directory = u"%s" % directory
             str_directory = str(directory)
 
+            if self.hiddenCheck(u_directory):
+                continue
+
             try:
                 contents = dircache.listdir(u_directory)
                 mtime = os.path.getmtime(u_directory)
@@ -628,6 +631,9 @@ class Shares:
             u_directory = u"%s" % directory
             str_directory = str(directory)
 
+            if self.hiddenCheck(directory):
+                continue
+
             if not rebuild and directory in oldmtimes:
                 if mtimes[directory] == oldmtimes[directory]:
                     list[virtualdir] = oldlist[virtualdir]
@@ -645,6 +651,9 @@ class Shares:
             contents.sort()
 
             for filename in contents:
+
+                if self.hiddenCheck(filename):
+                    continue
 
                 path = os.path.join(directory, filename)
                 s_path = str(path)
@@ -737,6 +746,9 @@ class Shares:
             u_directory = u"%s" % directory
             str_directory = str(directory)
 
+            if self.hiddenCheck(directory):
+                continue
+
             if directory in oldmtimes and directory not in oldstreams:
                 # Partial information, happened with unicode paths that N+ couldn't handle properly
                 del oldmtimes[directory]
@@ -792,12 +804,40 @@ class Shares:
 
         return streams
 
-    # Stop sharing any dot directories on Unix
-    def hiddenCheck(self, direct):
-        dirs = direct.split(os.sep)
-        for dir in dirs:
-            if dir.startswith("."):
+    # Stop sharing any dot/hidden directories
+    def hiddenCheck(self, directory):
+
+        dirs = directory.split(os.sep)
+
+        # If any subpart of the directory structure start with a dot
+        # we exclude it
+        for subdir in dirs:
+
+            # Exclude dot directories on any OS
+            if subdir.startswith("."):
                 return True
+
+        # On Windows check the directories attributes
+        # if the win32file module is available
+        if win32:
+
+            try:
+                from win32file import GetFileAttributes
+            except ImportError as e:
+                pass
+            else:
+
+                dirattr = GetFileAttributes(directory.replace('\\', '\\\\'))
+
+                # Set a mask to check the 2nd bit
+                # See https://msdn.microsoft.com/en-us/library/windows/desktop/gg258117(v=vs.85).aspx
+                # FILE_ATTRIBUTE_HIDDEN
+                # 2 (0x2)
+                mask = 1 << 1
+
+                if dirattr & mask:
+                    return True
+
         return False
 
     # Pack all files and metadata in directory
