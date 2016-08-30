@@ -42,8 +42,7 @@ table = [
     ["plugin.png", "plugin"],
     ["nicotine+.png", "nicotinen"],
     ["n.png", "n"],
-    ["notify.png", "notify"],
-    ["notify.svg", "notify_vector"],
+    ["notify.png", "notify"]
 ]
 
 flagtable = []
