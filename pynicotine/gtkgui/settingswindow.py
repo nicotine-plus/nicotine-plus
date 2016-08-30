@@ -1529,11 +1529,11 @@ class IconsFrame(buildFrame):
         self.Online.set_from_pixbuf(self.frame.images["online"])
         self.Offline.set_from_pixbuf(self.frame.images["offline"])
         self.Hilite.set_from_pixbuf(self.frame.images["hilite"])
-        self.Hilite2.set_from_pixbuf(self.frame.images["hilite2"])
         self.Hilite3.set_from_pixbuf(self.frame.images["hilite3"])
         self.Trayicon_Away.set_from_pixbuf(self.frame.images["trayicon_away"])
         self.Trayicon_Connect.set_from_pixbuf(self.frame.images["trayicon_connect"])
         self.Trayicon_Disconnect.set_from_pixbuf(self.frame.images["trayicon_disconnect"])
+        self.Trayicon_Msg.set_from_pixbuf(self.frame.images["trayicon_msg"])
         self.Notify.set_from_pixbuf(self.frame.images["notify"])
 
     def SetSettings(self, config):

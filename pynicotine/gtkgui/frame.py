@@ -886,11 +886,11 @@ class NicotineFrame:
             "online",
             "offline",
             "hilite",
-            "hilite2",
             "hilite3",
             "trayicon_away",
             "trayicon_connect",
             "trayicon_disconnect",
+            "trayicon_msg",
             "n",
             "nicotinen",
             "notify",
@@ -1950,7 +1950,7 @@ class NicotineFrame:
 
     def ChatRequestIcon(self, status=0, widget=None):
         if status == 1 and not self.got_focus:
-            self.MainWindow.set_icon(self.images["hilite2"])
+            self.MainWindow.set_icon(self.images["hilite"])
         if self.MainNotebook.get_current_page() == self.MainNotebook.page_num(self.hpaned1):
             return
 
@@ -1973,7 +1973,7 @@ class NicotineFrame:
 
     def RequestIcon(self, TabLabel, widget=None):
         if TabLabel == self.PrivateChatTabLabel and not self.got_focus:
-            self.MainWindow.set_icon(self.images["hilite2"])
+            self.MainWindow.set_icon(self.images["hilite"])
         tablabel = self.GetTabLabel(TabLabel)
         if not tablabel:
             return
@@ -3694,7 +3694,7 @@ class TrayApp:
                 icon = self.tray_status["status"]
                 self.trayicon.set_blinking(False)
             else:
-                icon = "hilite2"
+                icon = "trayicon_msg"
                 self.trayicon.set_blinking(True)
 
             if icon != self.tray_status["last"]:
