@@ -658,8 +658,6 @@ class NetworkEventProcessor:
 			self.logMessage(_("Can not log in, reason: %s") %(msg.reason))
 			self.frame.settingswindow.SetSettings(self.config.sections)
 			self.frame.settingswindow.SwitchToPage("Server")
-			#self.frame.settingswindow.Hilight(self.frame.settingswindow.pages["Server"].Login)
-			self.frame.settingswindow.Hilight(self.frame.settingswindow.pages["Server"].Password)
 				
 	def ChangePassword(self, msg):
 		password = msg.password

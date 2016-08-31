@@ -63,9 +63,10 @@ class buildFrame:
 class ServerFrame(buildFrame):
 
     def __init__(self, parent, encodings):
-        self.p = parent
 
+        self.p = parent
         buildFrame.__init__(self, "ServerFrame")
+
         self.Server_List = gtk.ListStore(gobject.TYPE_STRING)
         self.Server.set_model(self.Server_List)
         self.Server.set_text_column(0)
@@ -130,9 +131,6 @@ class ServerFrame(buildFrame):
         if server["portrange"] is not None:
             self.FirstPort.set_value(server["portrange"][0])
             self.LastPort.set_value(server["portrange"][1])
-        else:
-            self.p.Hilight(self.FirstPort)
-            self.p.Hilight(self.LastPort)
 
         if server["firewalled"] is not None:
             self.DirectConnection.set_active(not server["firewalled"])
@@ -332,8 +330,6 @@ class DownloadsFrame(buildFrame):
             for dfilter in transfers["downloadfilters"]:
                 filter, escaped = dfilter
                 self.filtersiters[filter] = self.filterlist.append([filter, escaped])
-        else:
-            self.p.Hilight(self.FilterView)
 
         self.OnEnableFiltersToggle(self.DownloadFilter)
         self.needrescan = 0
@@ -672,8 +668,6 @@ class SharesFrame(buildFrame):
                 )
 
             self.shareddirs = transfers["shared"][:]
-        else:
-            self.p.Hilight(self.Shares)
 
         if transfers["buddyshared"] is not None:
 
@@ -688,8 +682,6 @@ class SharesFrame(buildFrame):
                 )
 
             self.bshareddirs = transfers["buddyshared"][:]
-        else:
-            self.p.Hilight(self.BuddyShares)
 
         self.needrescan = 0
 
@@ -923,8 +915,6 @@ class TransfersFrame(buildFrame):
 
         if transfers["uploadallowed"] is not None:
             self.UploadsAllowed.set_active(transfers["uploadallowed"])
-        else:
-            self.p.Hilight(self.UploadsAllowed)
 
         self.UploadsAllowed.set_sensitive(self.RemoteDownloads.get_active())
 
@@ -1068,8 +1058,6 @@ class UserinfoFrame(buildFrame):
         if userinfo["descr"] is not None:
             descr = eval(userinfo["descr"], {})
             self.Description.get_buffer().set_text(descr)
-        else:
-            self.p.Hilight(self.Description)
 
         self.GetImageSize()
 
@@ -1079,7 +1067,6 @@ class UserinfoFrame(buildFrame):
             self.ImageSize.set_text(_("Size: %s KB") % Humanize(size/1024))
         else:
             self.ImageSize.set_text(_("Size: %s KB") % 0)
-            self.p.Hilight(self.Image)
 
     def GetSettings(self):
         buffer = self.Description.get_buffer()
@@ -1112,6 +1099,7 @@ class UserinfoFrame(buildFrame):
 class IgnoreFrame(buildFrame):
 
     def __init__(self, parent):
+
         self.p = parent
         buildFrame.__init__(self, "IgnoreFrame")
 
@@ -1153,14 +1141,11 @@ class IgnoreFrame(buildFrame):
 
         if server["ignorelist"] is not None:
             self.ignored_users = server["ignorelist"][:]
-        else:
-            self.p.Hilight(self.IgnoredUsers)
+
         if server["ipignorelist"] is not None:
             self.ignored_ips = server["ipignorelist"].copy()
             for ip, user in self.ignored_ips.items():
                 self.ignored_ips_list.append([ip, user])
-        else:
-            self.p.Hilight(self.IgnoredIPs)
 
     def GetSettings(self):
         return {
@@ -1283,15 +1268,10 @@ class BanFrame(buildFrame):
         self.banned = server["banlist"][:]
         self.p.SetWidgetsData(config, self.options)
 
-        if server["banlist"] is None:
-            self.p.Hilight(self.Banned)
-
         if server["ipblocklist"] is not None:
             self.blocked = server["ipblocklist"].copy()
             for blocked, user in server["ipblocklist"].items():
                 self.blockedlist.append([blocked, user])
-        else:
-            self.p.Hilight(self.Blocked)
 
         if transfers["usecustomban"] is not None:
             self.UseCustomBan.set_active(transfers["usecustomban"])
@@ -1549,10 +1529,6 @@ class IconsFrame(buildFrame):
                 self.SendToTrayOnClose.set_active(True)
             elif exitdialog == 0:
                 self.QuitOnClose.set_active(True)
-        else:
-            self.p.Hilight(self.DialogOnClose)
-            self.p.Hilight(self.SendToTrayOnClose)
-            self.p.Hilight(self.QuitOnClose)
 
     def OnDefaultTheme(self, widget):
         self.IconTheme.set_text("")
@@ -1902,7 +1878,6 @@ class ColoursFrame(buildFrame):
             try:
                 colour = gtk.gdk.color_parse(colour)
             except:
-                self.p.Hilight(entry)
                 dlg.destroy()
                 return
             else:
@@ -2315,13 +2290,7 @@ class SearchFrame(buildFrame):
             self.FilterFree.set_active(searches["defilter"][4])
             if(len(searches["defilter"]) > 5):
                 self.FilterCC.set_text(searches["defilter"][5])
-        else:
-            self.p.Hilight(self.FilterIn)
-            self.p.Hilight(self.FilterOut)
-            self.p.Hilight(self.FilterSize)
-            self.p.Hilight(self.FilterBR)
-            self.p.Hilight(self.FilterFree)
-            self.p.Hilight(self.FilterCC)
+
         self.OnEnableSearchResults(self.ToggleResults)
 
     def GetSettings(self):
@@ -2451,8 +2420,6 @@ class ImportFrame(buildFrame):
         self.p = parent
         buildFrame.__init__(self, "ImportFrame")
         self.options = {}
-        self.ImportPath.connect("activate", self.CheckPath)
-        self.ImportPath.connect("changed", self.CheckPath)
 
     def SetSettings(self, config):
 
@@ -2460,14 +2427,6 @@ class ImportFrame(buildFrame):
         path = "C:\Program Files\SoulSeek"
         if os.path.exists(path):
             self.ImportPath.set_text(path)
-        else:
-            self.CheckPath(self.ImportPath)
-
-    def CheckPath(self, widget):
-        if not os.path.exists(widget.get_text()):
-            self.p.SetTextBG(self.ImportPath, "red", "white")
-        else:
-            self.p.SetTextBG(widget, "", "")
 
     def GetSettings(self):
         return {}
@@ -2485,8 +2444,6 @@ class ImportFrame(buildFrame):
                 self.ImportPath.set_text(recode(directory))
 
         directory = self.ImportPath.get_text()
-        if not os.path.exists(directory):
-            self.p.Hilight(self.ImportPath)
 
     def OnImportConfig(self, widget):
         Path = self.ImportPath.get_text()
@@ -2623,8 +2580,7 @@ class UrlCatchFrame(buildFrame):
 
                 iter = self.protocolmodel.append([key, command])
                 self.protocols[key] = iter
-        else:
-            self.p.Hilight(self.ProtocolHandlers)
+
         self.OnURLCatchingToggled(self.URLCatching)
         selection = self.ProtocolHandlers.get_selection()
         selection.unselect_all()
@@ -2745,8 +2701,6 @@ class CensorFrame(buildFrame):
         # if words["censored"] is not None:
         #     for word in words["censored"]:
         #         self.censorlist.append([word])
-        # else:
-        #     self.p.Hilight(self.CensorList)
 
         self.OnCensorCheck(self.CensorCheck)
 
@@ -2850,8 +2804,6 @@ class AutoReplaceFrame(buildFrame):
         if words["autoreplaced"] is not None:
             for word, replacement in words["autoreplaced"].items():
                 self.replacelist.append([word, replacement])
-        else:
-            self.p.Hilight(self.ReplacementList)
 
         self.OnReplaceCheck(self.ReplaceCheck)
 
@@ -3269,8 +3221,6 @@ class PluginFrame(buildFrame):
                 continue
             enabled = (plugin in self.frame.pluginhandler.enabled_plugins)
             self.pluginsiters[filter] = self.pluginlist.append([info['Name'], enabled, plugin])
-        # else:
-        #     self.p.Hilight(self.PluginTreeView)
 
         return {}
 
@@ -3412,47 +3362,6 @@ class SettingsWindow:
 
         self.UpdateColours()
 
-    def Hilight(self, widget):
-
-        if type(widget) is gtk.Entry:
-            self.Dehilight(widget)
-            self.handler_ids[widget] = []
-            self.handler_ids[widget].append(widget.connect("activate", self.Dehilight))
-            self.handler_ids[widget].append(widget.connect("changed", self.Dehilight))
-        elif type(widget) is gtk.SpinButton:
-            self.Dehilight(widget)
-            self.handler_ids[widget] = []
-            self.handler_ids[widget].append(widget.connect("activate", self.Dehilight))
-            self.handler_ids[widget].append(widget.connect("value-changed", self.Dehilight))
-        elif type(widget) is gtk.CheckButton:
-            self.Dehilight(widget)
-            self.handler_ids[widget] = []
-            self.handler_ids[widget].append(widget.connect("toggled", self.Dehilight))
-        elif type(widget) is gtk.TreeView:
-            model = widget.get_model()
-            self.Dehilight(widget)
-            self.handler_ids[widget] = []
-            self.handler_ids[widget].append(model.connect("row-inserted", self.DehilightTree))
-
-        self.SetTextBG(widget, "red", "white")
-
-    def DehilightTree(self, model, *args):
-        for widget in self.handler_ids.keys():
-            if type(widget) is gtk.TreeView and widget.get_model() is model:
-                self.Dehilight(widget)
-                break
-
-    def Dehilight(self, widget, *args):
-        self.SetTextBG(widget, "", "")
-        if widget not in self.handler_ids:
-            return
-        for handler_id in self.handler_ids[widget][:]:
-            if type(widget) is gtk.TreeView:
-                widget.get_model().disconnect(handler_id)
-            else:
-                widget.disconnect(handler_id)
-            self.handler_ids[widget].remove(handler_id)
-
     def ColourWidgets(self, widget):
 
         if type(widget) in (gtk.Entry, gtk.SpinButton, gtk.TextView, gtk.TreeView, gtk.CheckButton, gtk.RadioButton):
@@ -3538,11 +3447,9 @@ class SettingsWindow:
                 if widget is None:
                     continue
                 if config[section][key] is None:
-                    self.Hilight(widget)
                     self.ClearWidget(widget)
                 else:
                     self.SetWidget(widget, config[section][key])
-                    self.Dehilight(widget)
 
     def GetWidgetData(self, widget):
 
