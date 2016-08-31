@@ -25,7 +25,6 @@ import os
 import sys
 import thread
 from os.path import exists, getsize, join
-from time import time
 
 from dirchooser import ChooseDir
 from utils import OpenUri, InitialiseColumns, recode, HumanSize
@@ -153,16 +152,10 @@ class FastConfigureAssistant(object):
             self.config.sections["server"]["upnp"]
         )
 
-        if (time() - self.config.sections["server"]["lastportstatuscheck"]) > (60 * 60 * 24 * 31) or self.config.sections["server"]["upnp"]:
-            # More than a month ago since our last port status check
-            self.kids['portopen'].set_active(False)
-            self.kids['portclosed'].set_active(False)
-            self.kids['porthidden'].set_active(True)
+        if self.config.sections["server"]["firewalled"]:
+            self.kids['portclosed'].set_active(True)
         else:
-            if self.config.sections["server"]["firewalled"]:
-                self.kids['portclosed'].set_active(True)
-            else:
-                self.kids['portopen'].set_active(True)
+            self.kids['portopen'].set_active(True)
 
         self.kids['lowerport'].set_value(
             self.config.sections["server"]["portrange"][0]
@@ -215,7 +208,6 @@ class FastConfigureAssistant(object):
 
         # portpage
         self.config.sections['server']['firewalled'] = not self.kids['portopen'].get_active()
-        self.config.sections['server']['lastportstatuscheck'] = time()
 
         # sharepage
         self.config.sections['transfers']['downloaddir'] = self.kids['downloaddir'].get_file().get_path()

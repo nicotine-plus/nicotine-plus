@@ -90,8 +90,7 @@ class Config:
                 "ipblocklist": {"72.172.88.*": "MediaDefender Bots"},
                 "autojoin": ["nicotine"],
                 "autoaway": 15,
-                "private_chatrooms": 0,
-                "lastportstatuscheck": 0
+                "private_chatrooms": 0
             },
 
             "transfers": {
@@ -448,6 +447,7 @@ class Config:
         self.config_lock.acquire()
 
         self.sections['transfers']['downloads'] = []
+
         if exists(self.filename+'.transfers.pickle'):
             # <1.2.13 stored transfers inside the main config
             try:
@@ -463,6 +463,7 @@ class Config:
                 handle.close()
             except:
                 pass
+
         path, fn = os.path.split(self.filename)
         try:
             if not os.path.isdir(path):
@@ -520,6 +521,7 @@ class Config:
 
         # Transition from 1.2.16 -> 1.2.16+
         self.removeOldOption("transfers", "pmqueueddir")
+        self.removeOldOption("server", "lastportstatuscheck")
 
         # Old config file format
         for user in self.sections["server"]["userlist"]:

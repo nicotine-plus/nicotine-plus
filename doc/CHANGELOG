@@ -39,6 +39,7 @@ Trac:
  * Rescanning shares stalls/fails in some cases (#671)
  * slskmessages.py:69:__init__:Exception: Programming bug (#697)
  * upload queue size limits can't be set to "unlimited" (#706)
+ * Impossible to install nicotine without a mouse (#712)
  * Tray icon is lost after explorer is terminated, doesn't return after explorer is restarted (#715)
  * nicotine crashed with TypeError in PopulateFilters(): value is of wrong type for this column (#726)
  * Dont draw eventbox background for tab labels (#727)
