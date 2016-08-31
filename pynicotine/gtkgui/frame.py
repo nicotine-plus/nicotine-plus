@@ -546,7 +546,6 @@ class NicotineFrame:
         if config["logging"]["logcollapsed"]:
             self.show_log_window1.set_active(False)
         else:
-            # self.vpaned1.pack2(self.LogScrolledWindow, False, True)
             self.show_log_window1.set_active(True)
 
         self.LogWindow.show()
@@ -2743,15 +2742,18 @@ class NicotineFrame:
         self.np.config.writeConfiguration()
 
     def OnShowLog(self, widget):
+
         show = widget.get_active()
         self.np.config.sections["logging"]["logcollapsed"] = (not show)
+
         if not show:
             if self.debugLogBox in self.vpaned1.get_children():
                 self.vpaned1.remove(self.debugLogBox)
         else:
-            if not self.debugLogBox in self.vpaned1.get_children():
-                self.vpaned1.pack2(self.debugLogBox, False, True)
+            if self.debugLogBox not in self.vpaned1.get_children():
+                self.vpaned1.pack2(self.debugLogBox, True, True)
                 ScrollBottom(self.LogScrolledWindow)
+
         self.np.config.writeConfiguration()
 
     def OnShowFlags(self, widget):
