@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nicotine\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 21:59+0200\n"
-"PO-Revision-Date: 2016-08-29 22:01+0200\n"
+"POT-Creation-Date: 2016-08-31 14:54+0200\n"
+"PO-Revision-Date: 2016-08-31 14:55+0200\n"
 "Last-Translator: Michael LABOUEBE <gfarmerfr@free.fr>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -81,9 +81,6 @@ msgstr "La page dit que mon port est ouvert"
 
 msgid "The page says my port is closed"
 msgstr "La page dit que mon port est fermé"
-
-msgid "(If you can see this option something is wrong)"
-msgstr "(si vous pouvez voir cette option quelque chose s'est mal passé)"
 
 msgid "Nicotine+ is currently listening on port %(listenport)s."
 msgstr "Nicotine+ écoute actuellement sur le port %(listenport)s."
@@ -4453,7 +4450,7 @@ msgstr "Section de configuration inconnue '%s'"
 #, python-format
 msgid "Unknown config option '%(option)s' in section '%(section)s'"
 msgstr ""
-"Option de configuration inconnue %(option)s' dans la section '%(section)s'"
+"Option de configuration inconnue '%(option)s' dans la section '%(section)s'"
 
 #, python-format
 msgid "Failed to process the following databases: %(names)s"
