@@ -1047,24 +1047,26 @@ class GeoBlockFrame(buildFrame):
 class UserinfoFrame(buildFrame):
 
     def __init__(self, parent):
+
         self.p = parent
         buildFrame.__init__(self, "UserinfoFrame")
 
         self.options = {
             "userinfo": {
                 "descr": None,
-                "pic": self.Image,
-                "descrutf8": None
+                "pic": self.Image
             }
         }
+
         self.Image.connect("changed", self.GetImageSize)
 
     def SetSettings(self, config):
+
         self.p.SetWidgetsData(config, self.options)
         userinfo = config["userinfo"]
+
         if userinfo["descr"] is not None:
             descr = eval(userinfo["descr"], {})
-
             self.Description.get_buffer().set_text(descr)
         else:
             self.p.Hilight(self.Description)
@@ -1088,8 +1090,7 @@ class UserinfoFrame(buildFrame):
         return {
             "userinfo": {
                 "descr": descr,
-                "pic": recode2(self.Image.get_text()),
-                "descrutf8": 1
+                "pic": recode2(self.Image.get_text())
             }
         }
 

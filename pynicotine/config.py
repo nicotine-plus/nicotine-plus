@@ -163,8 +163,7 @@ class Config:
 
             "userinfo": {
                 "descr": "''",
-                "pic": "",
-                "descrutf8": 0
+                "pic": ""
             },
 
             "language": {
@@ -404,22 +403,27 @@ class Config:
                     self.defaults[key][key2] = value2
             else:
                 self.defaults[key] = value
+
         try:
             f = open(filename+".alias")
             self.aliases = cPickle.load(f)
             f.close()
         except:
             self.aliases = {}
+
         self.config_lock.release()
 
     def needConfig(self):
+
         errorlevel = 0
+
         try:
             for i in self.sections.keys():
                 for j in self.sections[i].keys():
-                    # print self.sections[i][j]
+
                     if type(self.sections[i][j]) not in [type(None), type("")]:
                         continue
+
                     if self.sections[i][j] is None or self.sections[i][j] == '' and i not in ("userinfo", "ui", "ticker", "players", "language") and j not in ("incompletedir", "autoreply", 'afterfinish', 'afterfolder', 'geoblockcc', 'downloadregexp', "language"):
                         # Repair options set to None with defaults
                         if self.sections[i][j] is None and self.defaults[i][j] is not None:
@@ -439,11 +443,14 @@ class Config:
             self.frame.logMessage(message)
             if errorlevel < 3:
                 errorlevel = 3
+
         if errorlevel > 1:
             self.frame.settingswindow.SetSettings(self.sections)
+
         return errorlevel
 
     def readConfig(self):
+
         self.config_lock.acquire()
 
         self.sections['transfers']['downloads'] = []
@@ -471,6 +478,14 @@ class Config:
         except OSError, msg:
             log.addwarning("Can't create directory '%s', reported error: %s" % (path, msg))
 
+        # Transition from 1.2.16 -> 1.2.16+
+        # Do the cleanup early so we don't get the annoying
+        # 'Unknown config option ...' message
+        self.removeOldOption("transfers", "pmqueueddir")
+        self.removeOldOption("server", "lastportstatuscheck")
+        self.removeOldOption("userinfo", "descrutf8")
+
+        # Checking for nnknown section/options
         unknown1 = [
             'login', 'passw', 'enc', 'downloaddir', 'uploaddir', 'customban',
             'descr', 'pic', 'logsdir', 'roomlogsdir', 'privatelogsdir',
@@ -497,7 +512,7 @@ class Config:
                 "roomnames", "buddies", "roomusers", "commands",
                 "aliases", "onematch"
             ],
-            'language': ["definelanguage", "setlanguage"]
+            'language': ["setlanguage"]
         }
 
         for i in self.parser.sections():
@@ -519,41 +534,6 @@ class Config:
                         self.sections[i][j] = None
                         log.addwarning("CONFIG ERROR: Couldn't decode '%s' section '%s' value '%s'" % (str(j), str(i), str(val)))
 
-        # Transition from 1.2.16 -> 1.2.16+
-        self.removeOldOption("transfers", "pmqueueddir")
-        self.removeOldOption("server", "lastportstatuscheck")
-
-        # Old config file format
-        for user in self.sections["server"]["userlist"]:
-            if len(user) == 2:
-                user += [0, 0, 0, "", ""]
-
-        if len(self.sections["columns"]["userlist"]) < len(self.defaults["columns"]["userlist"]):
-            self.sections["columns"]["userlist"] += [True] * (len(self.defaults["columns"]["userlist"]) - len(self.sections["columns"]["userlist"]))
-
-        if type(self.sections["server"]["ipblocklist"]) is list:
-            ipblocklist = self.sections["server"]["ipblocklist"][:]
-            self.sections["server"]["ipblocklist"] = {}
-            for ip in ipblocklist:
-                self.sections["server"]["ipblocklist"][ip] = ""
-
-        for i in ["%(user)s", "%(message)s"]:
-            if i not in self.sections["ui"]["speechprivate"]:
-                self.sections["ui"]["speechprivate"] = self.defaults["ui"]["speechprivate"]
-            if i not in self.sections["ui"]["speechrooms"]:
-                self.sections["ui"]["speechrooms"] = self.defaults["ui"]["speechrooms"]
-
-        # Replacing old style %s with new $
-        try:
-            self.sections["ui"]["speechcommand"] = self.sections["ui"]["speechcommand"].replace('%s', '$')
-        except KeyError:
-            pass
-        try:
-            for (protocol, command) in self.sections["urls"]["protocols"].iteritems():
-                self.sections["urls"]["protocols"][protocol] = command.replace('%s', '$')
-        except KeyError:
-            pass
-
         # If we stored any of the following as bytes (pre 1.2.15, pre 1.2.16), convert them to unicode
         unicodes = [('ticker', 'default'), ('server', 'autoreply')]
         for (section, subsection) in unicodes:
@@ -573,17 +553,7 @@ class Config:
             except TypeError:
                 pass  # already unicode
 
-        # decode the userinfo from local encoding to utf8 (1.0.3 -> 1.0.4 change)
-        if not self.sections["userinfo"]["descrutf8"]:
-            try:
-                import locale
-                descr = eval(self.sections["userinfo"]["descr"], {}).decode(locale.nl_langinfo(locale.CODESET), "replace").encode("utf-8", "replace")
-                self.sections["userinfo"]["descr"] = descr.__repr__()
-            except:
-                pass
-            self.sections["userinfo"]["descrutf8"] = 1
-
-        # Convert fs-based shared to virtual shared (pre 1.2.17)
+        # Convert fs-based shared to virtual shared (pre 1.2.16+)
         def _convert_to_virtual(x):
             if isinstance(x, tuple):
                 return x
@@ -666,6 +636,7 @@ class Config:
 
         # Setting the port range in numerical order
         self.sections["server"]["portrange"] = (min(self.sections["server"]["portrange"]), max(self.sections["server"]["portrange"]))
+
         self.config_lock.release()
 
     def removeOldOption(self, section, option):
