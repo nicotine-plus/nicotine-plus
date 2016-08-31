@@ -557,13 +557,13 @@ class SlskProtoThread(threading.Thread):
 		#print "Networking thread aborted"
 		self._stopped = 1
 
-        # randomly selects a safe connection to kill and closes the socket--
-        # Will not kill upload, download, or server connections
-        def killOverflowConnection(self, conns):
+	# randomly selects a safe connection to kill and closes the socket--
+	# Will not kill upload, download, or server connections
+	def killOverflowConnection(self, conns):
 		victim_conn = None
 		for (k, v) in conns.iteritems():
 			if self._isUpload(v):
-			        continue
+				continue
 			if self._isDownload(v):
 				continue
 			if k is self._server_socket:
@@ -756,7 +756,7 @@ class SlskProtoThread(threading.Thread):
 						pass
 					conn.fileupl.offset = offset
 					self._ui_callback([conn.fileupl])
-		    
+
 		conn.ibuf = msgBuffer
 		return msgs, conn
 
