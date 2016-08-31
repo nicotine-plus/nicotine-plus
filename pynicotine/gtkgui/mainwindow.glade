@@ -3399,39 +3399,47 @@
             <property name="can_focus">False</property>
             <property name="border_width">2</property>
             <child>
-              <widget class="GtkStatusbar" id="Statusbar">
+              <widget class="GtkStatusbar" id="UpStatus">
+                <property name="width_request">200</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="border_width">1</property>
                 <property name="has_resize_grip">False</property>
               </widget>
               <packing>
-                <property name="expand">True</property>
+                <property name="expand">False</property>
                 <property name="fill">True</property>
+                <property name="pack_type">end</property>
                 <property name="position">0</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkProgressBar" id="SharesProgress">
+              <widget class="GtkStatusbar" id="DownStatus">
+                <property name="width_request">200</property>
+                <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="pulse_step">0.10000000149</property>
-                <property name="text" translatable="yes">Scanning Shares</property>
+                <property name="border_width">1</property>
+                <property name="has_resize_grip">False</property>
               </widget>
               <packing>
                 <property name="expand">False</property>
-                <property name="fill">False</property>
+                <property name="fill">True</property>
+                <property name="pack_type">end</property>
                 <property name="position">1</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkProgressBar" id="BuddySharesProgress">
+              <widget class="GtkStatusbar" id="SocketStatus">
+                <property name="width_request">150</property>
+                <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="pulse_step">0.10000000149</property>
-                <property name="text" translatable="yes">Scanning Buddy Shares</property>
+                <property name="border_width">1</property>
+                <property name="has_resize_grip">False</property>
               </widget>
               <packing>
                 <property name="expand">False</property>
-                <property name="fill">False</property>
+                <property name="fill">True</property>
+                <property name="pack_type">end</property>
                 <property name="position">2</property>
               </packing>
             </child>
@@ -3446,48 +3454,47 @@
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">True</property>
+                <property name="pack_type">end</property>
                 <property name="position">3</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkStatusbar" id="SocketStatus">
-                <property name="width_request">150</property>
-                <property name="visible">True</property>
+              <widget class="GtkProgressBar" id="BuddySharesProgress">
                 <property name="can_focus">False</property>
-                <property name="border_width">1</property>
-                <property name="has_resize_grip">False</property>
+                <property name="pulse_step">0.10000000149</property>
+                <property name="text" translatable="yes">Scanning Buddy Shares</property>
               </widget>
               <packing>
                 <property name="expand">False</property>
-                <property name="fill">True</property>
+                <property name="fill">False</property>
+                <property name="pack_type">end</property>
                 <property name="position">4</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkStatusbar" id="DownStatus">
-                <property name="width_request">200</property>
-                <property name="visible">True</property>
+              <widget class="GtkProgressBar" id="SharesProgress">
                 <property name="can_focus">False</property>
-                <property name="border_width">1</property>
-                <property name="has_resize_grip">False</property>
+                <property name="pulse_step">0.10000000149</property>
+                <property name="text" translatable="yes">Scanning Shares</property>
               </widget>
               <packing>
                 <property name="expand">False</property>
-                <property name="fill">True</property>
+                <property name="fill">False</property>
+                <property name="pack_type">end</property>
                 <property name="position">5</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkStatusbar" id="UpStatus">
-                <property name="width_request">200</property>
+              <widget class="GtkStatusbar" id="Statusbar">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="border_width">1</property>
                 <property name="has_resize_grip">False</property>
               </widget>
               <packing>
-                <property name="expand">False</property>
+                <property name="expand">True</property>
                 <property name="fill">True</property>
+                <property name="pack_type">end</property>
                 <property name="position">6</property>
               </packing>
             </child>
