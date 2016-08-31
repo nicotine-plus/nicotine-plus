@@ -38,12 +38,7 @@ import string, re
 import time
 import locale
 import utils
-try:
-	import hashlib
-	MD5 = hashlib.md5
-except:
-	import md5
-	MD5 = md5.new
+import hashlib
 from utils import executeCommand
 from gtkgui.utils import recode2
 from time import sleep
@@ -880,7 +875,7 @@ class Transfers:
 				basename = self.encode(basename, i.user)
 				winfname = os.path.join(incompletedir, "INCOMPLETE~"+basename)
 				pyfname  = os.path.join(incompletedir, "INCOMPLETE"+basename)
-				m = MD5()
+				m = hashlib.md5()
 				m.update(i.filename+i.user)
 				
 				pynewfname = os.path.join(incompletedir, "INCOMPLETE"+m.hexdigest()+basename)
@@ -1530,7 +1525,7 @@ class Transfers:
 	def getChecksum(self, path):
 		try:
 			h = open(path)
-			m = MD5()
+			m = hashlib.md5()
 			m.update(h.read(-1))
 			digest = m.digest()
 			h.close()

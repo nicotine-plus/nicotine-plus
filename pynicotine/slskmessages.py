@@ -24,7 +24,9 @@
 import struct
 import types
 import zlib
-import os, sys
+import hashlib
+import os
+import sys
 from utils import *
 from logfacility import log
 from itertools import count
@@ -370,12 +372,8 @@ class Login(ServerMessage):
 		self.ip = None
 		
 	def makeNetworkMessage(self):
-		try:
-			import hashlib
-			m = hashlib.md5()
-		except:
-			import md5
-			m = md5.new()
+
+		m = hashlib.md5()
 		m.update(self.username+self.passwd)
 		md5hash = m.hexdigest()
 		message = self.packObject(self.username)+ self.packObject(self.passwd) + self.packObject(self.version) + self.packObject(md5hash) + self.packObject(17)
