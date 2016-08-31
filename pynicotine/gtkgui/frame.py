@@ -372,6 +372,7 @@ class NicotineFrame:
 
         # Import glade widgets
         gtk.glade.set_custom_handler(self.get_custom_widget)
+
         self.wTree = gtk.glade.XML(os.path.join(os.path.dirname(os.path.realpath(__file__)), "mainwindow.glade"), None)
         widgets = self.wTree.get_widget_prefix("")
         for i in widgets:
@@ -382,16 +383,17 @@ class NicotineFrame:
         self.SearchEntryCombo_List = gtk.ListStore(gobject.TYPE_STRING)
         self.SearchEntryCombo.set_model(self.SearchEntryCombo_List)
         self.SearchEntryCombo.set_text_column(0)
+
         self.SearchEntry = self.SearchEntryCombo.child
         self.SearchEntry.connect("activate", self.OnSearch)
+
         self.RoomSearchCombo_List = gtk.ListStore(gobject.TYPE_STRING)
         self.RoomSearchCombo.set_model(self.RoomSearchCombo_List)
         self.RoomSearchCombo.set_text_column(0)
-        self.SearchMethod_List = gtk.ListStore(gobject.TYPE_STRING)
 
+        self.SearchMethod_List = gtk.ListStore(gobject.TYPE_STRING)
         for i in [""]:
             self.SearchMethod_List.append([i])
-
         self.SearchMethod.set_model(self.SearchMethod_List)
 
         self.MainWindow.set_title(_("Nicotine+") + " " + version)
@@ -402,6 +404,7 @@ class NicotineFrame:
         self.MainWindow.connect("focus_out_event", self.OnFocusOut)
         self.MainWindow.connect("configure_event", self.OnWindowChange)
         self.MainWindow.add_accel_group(self.accel_group)
+
         self.wTree.signal_autoconnect(self)
 
         # Enabling RGBA if possible, you need up-to-date Murrine Engine for it from what I've heard
@@ -468,12 +471,14 @@ class NicotineFrame:
 
         gobject.signal_new("network_event", gtk.Window, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, (gobject.TYPE_PYOBJECT,))
         gobject.signal_new("network_event_lo", gtk.Window, gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_PYOBJECT,))
+
         self.MainWindow.connect("network_event", self.OnNetworkEvent)
         self.MainWindow.connect("network_event_lo", self.OnNetworkEvent)
 
         self.MainNotebook.connect("page-removed", self.OnPageRemoved)
         self.MainNotebook.connect("page-reordered", self.OnPageReordered)
         self.MainNotebook.connect("page-added", self.OnPageAdded)
+
         # if sys.platform.startswith("win"):
         #     self.now_playing1.set_sensitive(False)
 
@@ -487,12 +492,8 @@ class NicotineFrame:
             w.set_reorderable(config["ui"]["tab_reorderable"])
             w.show_images(config["ui"]["tab_icons"])
 
-        try:
-            for tab in self.MainNotebook.get_children():
-                self.MainNotebook.set_tab_reorderable(tab, config["ui"]["tab_reorderable"])
-        except:
-            # Old gtk
-            pass
+        for tab in self.MainNotebook.get_children():
+            self.MainNotebook.set_tab_reorderable(tab, config["ui"]["tab_reorderable"])
 
         self.SetTranslatableTabNames()
 
@@ -515,6 +516,7 @@ class NicotineFrame:
 
         self.translux = None
         self.TransparentTint()
+
         self.LogScrolledWindow = gtk.ScrolledWindow()
         self.LogScrolledWindow.set_shadow_type(gtk.SHADOW_IN)
         self.LogScrolledWindow.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
@@ -527,6 +529,7 @@ class NicotineFrame:
 
         self.LogScrolledWindow.add(self.LogWindow)
         self.LogWindow.connect("button-press-event", self.OnPopupLogMenu)
+
         self.debugLogBox.pack_start(self.LogScrolledWindow)
         self.debugWarnings.set_active((1 in config["logging"]["debugmodes"]))
         self.debugSearches.set_active((2 in config["logging"]["debugmodes"]))
@@ -635,6 +638,7 @@ class NicotineFrame:
         thread.start_new_thread(self.BuddiesCombosFill, ("",))
 
         self.SearchMethod_List.clear()
+
         # Space after Joined Rooms is important, so it doesn't conflict
         # with any possible real room, but if it's not translated with the space
         # nothing awful will happen
@@ -648,7 +652,7 @@ class NicotineFrame:
         self.SearchMethod.connect("changed", self.OnSearchMethod)
         self.UserSearchCombo.hide()
         self.RoomSearchCombo.hide()
-        ###
+
         self.disconnect1.set_sensitive(0)
         self.awayreturn1.set_sensitive(0)
         self.check_privileges1.set_sensitive(0)
