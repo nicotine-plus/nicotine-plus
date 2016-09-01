@@ -2121,15 +2121,6 @@
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="tooltip" translatable="yes">Search patterns: with a word = term, without a word = -term</property>
-                                <child internal-child="entry">
-                                  <widget class="GtkEntry" id="comboboxentry-entry2">
-                                    <property name="can_focus">False</property>
-                                    <property name="primary_icon_activatable">False</property>
-                                    <property name="secondary_icon_activatable">False</property>
-                                    <property name="primary_icon_sensitive">True</property>
-                                    <property name="secondary_icon_sensitive">True</property>
-                                  </widget>
-                                </child>
                               </widget>
                               <packing>
                                 <property name="expand">True</property>
@@ -2227,15 +2218,6 @@
                                 <property name="visible">True</property>
                                 <property name="sensitive">False</property>
                                 <property name="can_focus">False</property>
-                                <child internal-child="entry">
-                                  <widget class="GtkEntry" id="comboboxentry-entry4">
-                                    <property name="can_focus">False</property>
-                                    <property name="primary_icon_activatable">False</property>
-                                    <property name="secondary_icon_activatable">False</property>
-                                    <property name="primary_icon_sensitive">True</property>
-                                    <property name="secondary_icon_sensitive">True</property>
-                                  </widget>
-                                </child>
                               </widget>
                               <packing>
                                 <property name="expand">False</property>
