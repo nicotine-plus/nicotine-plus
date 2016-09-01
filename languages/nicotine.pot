@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-01 20:02+0200\n"
+"POT-Creation-Date: 2016-09-01 21:18+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -168,7 +168,7 @@ msgstr ""
 msgid "Leave"
 msgstr ""
 
-msgid "Nicotine"
+msgid "Nicotine+"
 msgstr ""
 
 msgid "_File"
@@ -2002,9 +2002,6 @@ msgstr ""
 msgid "Open Room List?"
 msgstr ""
 
-msgid "Nicotine+"
-msgstr ""
-
 msgid "Set ticker message"
 msgstr ""
 
@@ -3150,13 +3147,13 @@ msgstr ""
 msgid "Can't save shares, '%(user)s', reported error: %(error)s"
 msgstr ""
 
-msgid "Nicotine: Upload Directory's Contents"
+msgid "Nicotine+: Upload Directory's Contents"
 msgstr ""
 
 msgid "Enter the User you wish to upload to:"
 msgstr ""
 
-msgid "Nicotine: Upload File(s)"
+msgid "Nicotine+: Upload File(s)"
 msgstr ""
 
 #, python-format

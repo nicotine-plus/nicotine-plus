@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nicotine\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-01 20:02+0200\n"
-"PO-Revision-Date: 2016-09-01 20:34+0200\n"
+"POT-Creation-Date: 2016-09-01 21:18+0200\n"
+"PO-Revision-Date: 2016-09-01 21:19+0200\n"
 "Last-Translator: Michael LABOUEBE <gfarmerfr@free.fr>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -215,8 +215,8 @@ msgstr "Sortir"
 
 # pynicotine/gtkgui/frame.py
 # pynicotine/gtkgui/nicotine_glade.py
-msgid "Nicotine"
-msgstr "Nicotine"
+msgid "Nicotine+"
+msgstr "Nicotine+"
 
 # pynicotine/gtkgui/nicotine_glade.py
 msgid "_File"
@@ -2624,11 +2624,6 @@ msgstr "Vous n'êtes dans aucun salon de discussion."
 msgid "Open Room List?"
 msgstr "Ouvrir la liste des salons?"
 
-# pynicotine/gtkgui/frame.py
-# pynicotine/gtkgui/nicotine_glade.py
-msgid "Nicotine+"
-msgstr "Nicotine+"
-
 msgid "Set ticker message"
 msgstr "Ajouter un message défilant"
 
@@ -4181,16 +4176,16 @@ msgstr ""
 "Ne peut sauvegarder les partages, '%(user)s', erreur rapportée: %(error)s"
 
 # pynicotine/gtkgui/userbrowse.py
-msgid "Nicotine: Upload Directory's Contents"
-msgstr "Nicotine+ Envoyer le contenu du répertoire"
+msgid "Nicotine+: Upload Directory's Contents"
+msgstr "Nicotine+: Envoyer le contenu du répertoire"
 
 msgid "Enter the User you wish to upload to:"
 msgstr "Entrer le nom d'utilisateur pour envoyer"
 
 # pynicotine/gtkgui/search.py
 # pynicotine/gtkgui/userbrowse.py
-msgid "Nicotine: Upload File(s)"
-msgstr "Envoyer ce(s) fichier(s)"
+msgid "Nicotine+: Upload File(s)"
+msgstr "Nicotine+: Envoyer ce(s) fichier(s)"
 
 # pynicotine/gtkgui/chatrooms.py
 # pynicotine/gtkgui/search.py
