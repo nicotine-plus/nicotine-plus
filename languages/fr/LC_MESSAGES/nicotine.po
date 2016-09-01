@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nicotine\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-31 14:54+0200\n"
-"PO-Revision-Date: 2016-08-31 14:55+0200\n"
+"POT-Creation-Date: 2016-09-01 20:02+0200\n"
+"PO-Revision-Date: 2016-09-01 20:34+0200\n"
 "Last-Translator: Michael LABOUEBE <gfarmerfr@free.fr>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -238,49 +238,49 @@ msgstr "_Absent/De retour"
 msgid "Check _privileges"
 msgstr "Vérifier ses _privilèges"
 
-msgid "Quit"
-msgstr "Quitter"
+msgid "_Quit"
+msgstr "_Quitter"
 
 # pynicotine/gtkgui/nicotine_glade.py
 msgid "_Edit"
-msgstr "_Édition"
+msgstr "_Edition"
 
 # pynicotine/gtkgui/nicotine_glade.py
 msgid "_Settings"
-msgstr "Préférence_s"
+msgstr "_Préférences"
 
 msgid "_Fast Configure"
-msgstr "Con_figuration Rapide"
+msgstr "Configuration _Rapide"
 
 msgid "Configure _Now Playing"
 msgstr "Configurer le _Now Playing"
 
-msgid "Backup Config"
-msgstr "Sauvegarder la configuration"
+msgid "_Backup Config"
+msgstr "Sauvegarder la _configuration"
 
 msgid "_View"
-msgstr "Affichage"
+msgstr "_Affichage"
 
 # pynicotine/gtkgui/nicotine_glade.py
-msgid "_Show log window"
-msgstr "Montrer la fenêtre de_s messages"
+msgid "Show _log window"
+msgstr "Montrer _la fenêtre des messages"
 
 # pynicotine/gtkgui/nicotine_glade.py
 msgid "Show _debug info"
 msgstr "Montrer les informations de _débogage"
 
 # pynicotine/gtkgui/nicotine_glade.py
-msgid "Show room _list"
-msgstr "Montrer la _liste des salons"
+msgid "Show _room list"
+msgstr "Montrer la liste des _salons"
 
 msgid "Show _tickers"
 msgstr "Mon_trer les messages défilants"
 
-msgid "Show chat room log and list toggles"
-msgstr "Montrer les boutons supplémentaires des salons"
+msgid "Show _chat room log and list toggles"
+msgstr "Montrer les boutons _supplémentaires des salons"
 
-msgid "Show flag columns in user lists"
-msgstr "Montrer les drapeaux dans la liste des utilisateurs"
+msgid "Show _flag columns in user lists"
+msgstr "Montrer les _drapeaux dans la liste des utilisateurs"
 
 msgid "Buddylist in separate tab"
 msgstr "Liste des amis dans un onglet séparé"
@@ -293,39 +293,39 @@ msgstr "Liste des amis toujours visible"
 
 # pynicotine/gtkgui/settings_glade.py
 # pynicotine/gtkgui/settingswindow.py
-msgid "Shares"
-msgstr "Partages"
+msgid "_Shares"
+msgstr "_Partages"
 
 # pynicotine/gtkgui/frame.py
-msgid "Configure Shares"
-msgstr "Configuration des partages"
+msgid "_Configure shares"
+msgstr "_Configuration des partages"
 
 # pynicotine/gtkgui/nicotine_glade.py
 msgid "_Rescan shares"
 msgstr "_Réexaminer mes partages"
 
 # pynicotine/gtkgui/nicotine_glade.py
-msgid "_Rescan Buddy shares"
-msgstr "_Réexaminer mes partages pour amis"
+msgid "Rescan B_uddy shares"
+msgstr "Réexaminer mes partages pour _amis"
 
 # pynicotine/gtkgui/nicotine_glade.py
-msgid "Rebuild shares"
-msgstr "Reconstruire mes partages"
+msgid "Re_build shares"
+msgstr "Reconstruire mes _partages"
 
 # pynicotine/gtkgui/nicotine_glade.py
-msgid "Rebuild Buddy shares"
-msgstr "Reconstruire mes partages pour amis"
+msgid "Rebuild Bu_ddy shares"
+msgstr "Reconstruire mes partages pour a_mis"
 
 # pynicotine/gtkgui/nicotine_glade.py
 msgid "_Browse my shares"
-msgstr "Voir mes fichiers partagés"
+msgstr "_Voir mes fichiers partagés"
 
 msgid "_Modes"
-msgstr "_Fenêtres"
+msgstr "_Onglets"
 
 # pynicotine/gtkgui/nicotine_glade.py
 msgid "_Chat Rooms"
-msgstr "Dis_cussions"
+msgstr "_Discussions"
 
 # pynicotine/gtkgui/nicotine_glade.py
 msgid "_Private Chat"
@@ -341,62 +341,61 @@ msgstr "_Envois"
 
 # pynicotine/gtkgui/nicotine_glade.py
 msgid "_Search Files"
-msgstr "Recherche de fichier_s"
+msgstr "_Recherche de fichiers"
 
 # pynicotine/gtkgui/nicotine_glade.py
 # pynicotine/gtkgui/settingswindow.py
 msgid "User I_nfo"
-msgstr "I_nformations utilisateur"
+msgstr "Informations _utilisateur"
 
 # pynicotine/gtkgui/nicotine_glade.py
 msgid "User _Browse"
-msgstr "Fichiers _partagés"
+msgstr "_Fichiers partagés"
 
 msgid "_Interests"
 msgstr "_Centres d'intérêts"
 
 # pynicotine/gtkgui/nicotine_glade.py
 msgid "Buddy _List"
-msgstr "Amis"
+msgstr "_Amis"
 
-# pynicotine/gtkgui/nicotine_glade.py
-msgid "Hel_p"
-msgstr "Aid_e"
+msgid "_Help"
+msgstr "A_ide"
 
-msgid "Offline Nicotine+ Guide"
-msgstr "Guide de Nicotine+ hors ligne"
+msgid "_Offline Nicotine+ Guide"
+msgstr "Guide de Nicotine+ _hors ligne"
 
-msgid "Project Website"
-msgstr "Site internet du projet"
+msgid "Project _Website"
+msgstr "Site _internet du projet"
 
-msgid "Project Github Page"
-msgstr "Page Github du projet"
+msgid "Project _Github Page"
+msgstr "Page _Github du projet"
 
 # pynicotine/gtkgui/about.py
 msgid "About _chat room commands"
-msgstr "Commandes des salons de discussion"
+msgstr "Commandes des salons de _discussion"
 
 # pynicotine/gtkgui/about.py
 msgid "About _private chat commands"
-msgstr "Commandes des dialogues privés"
+msgstr "Commandes des dialogues _privés"
 
 msgid "About _optional dependencies"
-msgstr "Dépendances optionnelles"
+msgstr "Dépendances _optionnelles"
 
 # pynicotine/gtkgui/nicotine_glade.py
 msgid "About _search filters"
-msgstr "Filtres de recherche"
+msgstr "_Filtres de recherche"
 
 # pynicotine/gtkgui/nicotine_glade.py
 msgid "Check _latest"
-msgstr "Vérifier la dernière version"
+msgstr "Vérifier la dernière _version"
 
 msgid "Report a _bug"
 msgstr "Rapporter un _bogue"
 
 # pynicotine/gtkgui/nicotine_glade.py
 msgid "About _Nicotine+"
-msgstr "À propos de Nicotine+"
+msgstr "À propos de _Nicotine+"
 
 msgid "Start Message"
 msgstr "Commencer un dialogue"
@@ -529,11 +528,11 @@ msgstr "Configuration des partages"
 msgid "Similar users"
 msgstr "Utilisateurs semblables"
 
-msgid "Global recommendations"
-msgstr "Recommandations globales"
-
 msgid "Recommendations"
 msgstr "Recommandations"
+
+msgid "Global recommendations"
+msgstr "Recommandations globales"
 
 msgid "Add"
 msgstr "Ajouter"
@@ -576,12 +575,12 @@ msgid "Statistics"
 msgstr "Statistiques"
 
 # pynicotine/gtkgui/frame.py
-msgid "Scanning Shares"
-msgstr "Examen des partages"
-
-# pynicotine/gtkgui/frame.py
 msgid "Scanning Buddy Shares"
 msgstr "Examen des partages pour amis"
+
+# pynicotine/gtkgui/frame.py
+msgid "Scanning Shares"
+msgstr "Examen des partages"
 
 msgid "Nicotine+: Configure Now Playing"
 msgstr "Nicotine+ Configurer le Now Playing"
@@ -1108,6 +1107,11 @@ msgstr "Liste déroulante"
 # pynicotine/gtkgui/nicotine_glade.py
 msgid "Chat text completion"
 msgstr "Complétion des salons de discussions"
+
+# pynicotine/gtkgui/settings_glade.py
+# pynicotine/gtkgui/settingswindow.py
+msgid "Shares"
+msgstr "Partages"
 
 # pynicotine/gtkgui/settings_glade.py
 msgid "Incomplete file directory:"
@@ -3419,6 +3423,9 @@ msgstr "Voir le partage de l'utilisateur"
 msgid "Toggle Away"
 msgstr "Passer Absent/Présent"
 
+msgid "Quit"
+msgstr "Quitter"
+
 #, python-format
 msgid "ERROR: tray menu, %(error)s"
 msgstr "Erreur: menu de la zone de notification, %(error)s"
@@ -4290,7 +4297,7 @@ msgid "_Privileged"
 msgstr "_Privilégié"
 
 msgid "_Trusted"
-msgstr "Marquer comme confiant"
+msgstr "Marquer comme confi_ant"
 
 # pynicotine/gtkgui/userlist.py
 msgid "Edit _comments"

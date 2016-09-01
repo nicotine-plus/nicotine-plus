@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-31 14:54+0200\n"
+"POT-Creation-Date: 2016-09-01 20:02+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -186,7 +186,7 @@ msgstr ""
 msgid "Check _privileges"
 msgstr ""
 
-msgid "Quit"
+msgid "_Quit"
 msgstr ""
 
 msgid "_Edit"
@@ -201,28 +201,28 @@ msgstr ""
 msgid "Configure _Now Playing"
 msgstr ""
 
-msgid "Backup Config"
+msgid "_Backup Config"
 msgstr ""
 
 msgid "_View"
 msgstr ""
 
-msgid "_Show log window"
+msgid "Show _log window"
 msgstr ""
 
 msgid "Show _debug info"
 msgstr ""
 
-msgid "Show room _list"
+msgid "Show _room list"
 msgstr ""
 
 msgid "Show _tickers"
 msgstr ""
 
-msgid "Show chat room log and list toggles"
+msgid "Show _chat room log and list toggles"
 msgstr ""
 
-msgid "Show flag columns in user lists"
+msgid "Show _flag columns in user lists"
 msgstr ""
 
 msgid "Buddylist in separate tab"
@@ -234,22 +234,22 @@ msgstr ""
 msgid "Buddylist always visible"
 msgstr ""
 
-msgid "Shares"
+msgid "_Shares"
 msgstr ""
 
-msgid "Configure Shares"
+msgid "_Configure shares"
 msgstr ""
 
 msgid "_Rescan shares"
 msgstr ""
 
-msgid "_Rescan Buddy shares"
+msgid "Rescan B_uddy shares"
 msgstr ""
 
-msgid "Rebuild shares"
+msgid "Re_build shares"
 msgstr ""
 
-msgid "Rebuild Buddy shares"
+msgid "Rebuild Bu_ddy shares"
 msgstr ""
 
 msgid "_Browse my shares"
@@ -285,16 +285,16 @@ msgstr ""
 msgid "Buddy _List"
 msgstr ""
 
-msgid "Hel_p"
+msgid "_Help"
 msgstr ""
 
-msgid "Offline Nicotine+ Guide"
+msgid "_Offline Nicotine+ Guide"
 msgstr ""
 
-msgid "Project Website"
+msgid "Project _Website"
 msgstr ""
 
-msgid "Project Github Page"
+msgid "Project _Github Page"
 msgstr ""
 
 msgid "About _chat room commands"
@@ -411,10 +411,10 @@ msgstr ""
 msgid "Similar users"
 msgstr ""
 
-msgid "Global recommendations"
+msgid "Recommendations"
 msgstr ""
 
-msgid "Recommendations"
+msgid "Global recommendations"
 msgstr ""
 
 msgid "Add"
@@ -444,10 +444,10 @@ msgstr ""
 msgid "Statistics"
 msgstr ""
 
-msgid "Scanning Shares"
+msgid "Scanning Buddy Shares"
 msgstr ""
 
-msgid "Scanning Buddy Shares"
+msgid "Scanning Shares"
 msgstr ""
 
 msgid "Nicotine+: Configure Now Playing"
@@ -877,6 +877,9 @@ msgid "Drop-down list"
 msgstr ""
 
 msgid "Chat text completion"
+msgstr ""
+
+msgid "Shares"
 msgstr ""
 
 msgid "Incomplete file directory:"
@@ -2590,6 +2593,9 @@ msgid "Lookup a User's Shares"
 msgstr ""
 
 msgid "Toggle Away"
+msgstr ""
+
+msgid "Quit"
 msgstr ""
 
 #, python-format
