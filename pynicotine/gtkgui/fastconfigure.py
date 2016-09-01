@@ -207,6 +207,11 @@ class FastConfigureAssistant(object):
         self.config.sections["server"]["passw"] = self.kids['password'].get_text()
 
         # portpage
+        self.config.sections['server']['portrange'] = (
+            self.kids['lowerport'].get_value(),
+            self.kids['upperport'].get_value()
+        )
+        self.config.sections['server']['upnp'] = self.kids['useupnp'].get_active()
         self.config.sections['server']['firewalled'] = not self.kids['portopen'].get_active()
 
         # sharepage
