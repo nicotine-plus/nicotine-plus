@@ -36,6 +36,7 @@ Trac:
  * French translation and non-translatable strings (#524)
  * Limiting number of upload slots doesn't work all the time (#651)
  * Add option to override locale dir (#495)
+ * File and Fast-Configure keyboard shortcuts are the same (#658)
  * Rescanning shares stalls/fails in some cases (#671)
  * slskmessages.py:69:__init__:Exception: Programming bug (#697)
  * upload queue size limits can't be set to "unlimited" (#706)
@@ -50,7 +51,8 @@ Trac:
  * Cannot download from soulseekqt users (#912)
  * Corrected Hungarian translation for 1.2.16 (#923)
  * Nicotine+ 1.2.16 on win7SP164bit - German language (#998)
- + A bunch more of outdated bug reports
+
+ A bunch of outdated bug reports have been closed on Trac.
 
 
 1.2.16 (31th October 2010)
