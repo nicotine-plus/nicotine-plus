@@ -109,7 +109,7 @@
                     </child>
                     <child>
                       <widget class="GtkImageMenuItem" id="exit1">
-                        <property name="label" translatable="yes">Quit</property>
+                        <property name="label" translatable="yes">_Quit</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="use_underline">True</property>
@@ -164,7 +164,6 @@
                         <property name="use_underline">True</property>
                         <property name="use_stock">False</property>
                         <signal name="activate" handler="OnFastConfigure"/>
-                        <accelerator key="f" signal="activate" modifiers="GDK_MOD1_MASK"/>
                         <child internal-child="image">
                           <widget class="GtkImage" id="image63">
                             <property name="visible">True</property>
@@ -199,7 +198,7 @@
                     </child>
                     <child>
                       <widget class="GtkImageMenuItem" id="BackupConfig">
-                        <property name="label" translatable="yes">Backup Config</property>
+                        <property name="label" translatable="yes">_Backup Config</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
@@ -235,10 +234,10 @@
                       <widget class="GtkCheckMenuItem" id="show_log_window1">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">_Show log window</property>
+                        <property name="label" translatable="yes">Show _log window</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="OnShowLog"/>
-                        <accelerator key="H" signal="activate" modifiers="GDK_MOD1_MASK"/>
+                        <accelerator key="l" signal="activate" modifiers="GDK_MOD1_MASK"/>
                       </widget>
                     </child>
                     <child>
@@ -260,7 +259,7 @@
                       <widget class="GtkCheckMenuItem" id="show_room_list1">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Show room _list</property>
+                        <property name="label" translatable="yes">Show _room list</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="OnShowRoomList"/>
                         <accelerator key="R" signal="activate" modifiers="GDK_MOD1_MASK"/>
@@ -280,7 +279,7 @@
                       <widget class="GtkCheckMenuItem" id="ShowChatButtons">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Show chat room log and list toggles</property>
+                        <property name="label" translatable="yes">Show _chat room log and list toggles</property>
                         <property name="use_underline">True</property>
                         <signal name="toggled" handler="OnShowChatButtons"/>
                         <accelerator key="E" signal="activate" modifiers="GDK_MOD1_MASK"/>
@@ -290,7 +289,7 @@
                       <widget class="GtkCheckMenuItem" id="ShowFlags">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Show flag columns in user lists</property>
+                        <property name="label" translatable="yes">Show _flag columns in user lists</property>
                         <property name="use_underline">True</property>
                         <signal name="toggled" handler="OnShowFlags"/>
                         <accelerator key="g" signal="activate" modifiers="GDK_MOD1_MASK"/>
@@ -347,7 +346,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                <property name="label" translatable="yes">Shares</property>
+                <property name="label" translatable="yes">_Shares</property>
                 <property name="use_underline">True</property>
                 <child>
                   <widget class="GtkMenu" id="menu1">
@@ -356,7 +355,7 @@
                     <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                     <child>
                       <widget class="GtkImageMenuItem" id="ConfigureShares">
-                        <property name="label" translatable="yes">Configure Shares</property>
+                        <property name="label" translatable="yes">_Configure shares</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
@@ -398,7 +397,7 @@
                     </child>
                     <child>
                       <widget class="GtkImageMenuItem" id="rescan_buddy">
-                        <property name="label" translatable="yes">_Rescan Buddy shares</property>
+                        <property name="label" translatable="yes">Rescan B_uddy shares</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="use_underline">True</property>
@@ -421,7 +420,7 @@
                     </child>
                     <child>
                       <widget class="GtkImageMenuItem" id="rebuild1">
-                        <property name="label" translatable="yes">Rebuild shares</property>
+                        <property name="label" translatable="yes">Re_build shares</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="use_underline">True</property>
@@ -438,7 +437,7 @@
                     </child>
                     <child>
                       <widget class="GtkImageMenuItem" id="rebuild_buddy">
-                        <property name="label" translatable="yes">Rebuild Buddy shares</property>
+                        <property name="label" translatable="yes">Rebuild Bu_ddy shares</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="use_underline">True</property>
@@ -650,14 +649,14 @@
               <widget class="GtkMenuItem" id="help1">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">Hel_p</property>
+                <property name="label" translatable="yes">_Help</property>
                 <property name="use_underline">True</property>
                 <child>
                   <widget class="GtkMenu" id="help1_menu">
                     <property name="can_focus">False</property>
                     <child>
                       <widget class="GtkImageMenuItem" id="nicotine_guide1">
-                        <property name="label" translatable="yes">Offline Nicotine+ Guide</property>
+                        <property name="label" translatable="yes">_Offline Nicotine+ Guide</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="use_underline">True</property>
@@ -675,7 +674,7 @@
                     </child>
                     <child>
                       <widget class="GtkImageMenuItem" id="ProjectWebsite">
-                        <property name="label" translatable="yes">Project Website</property>
+                        <property name="label" translatable="yes">Project _Website</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="use_underline">True</property>
@@ -692,7 +691,7 @@
                     </child>
                     <child>
                       <widget class="GtkImageMenuItem" id="ProjectGithubPage">
-                        <property name="label" translatable="yes">Project Github Page</property>
+                        <property name="label" translatable="yes">Project _Github Page</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="use_underline">True</property>
