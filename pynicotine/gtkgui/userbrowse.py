@@ -693,11 +693,14 @@ class UserBrowse:
                 self.frame.logMessage('failed to open %r for reading', directory)  # notify user
 
     def DownloadDirectory(self, dir, prefix="", recurse=0):
+
         if dir == None or dir not in self.shares:
             return
+
         ldir = prefix + dir.split("\\")[-1]
         priorityfiles = []
         normalfiles = []
+
         if self.frame.np.config.sections["transfers"]["prioritize"]:
             for file in self.shares[dir]:
                 parts = file[1].rsplit('.', 1)
@@ -707,32 +710,45 @@ class UserBrowse:
                     normalfiles.append(file)
         else:
             normalfiles = self.shares[dir][:]
+
         if self.frame.np.config.sections["transfers"]["reverseorder"]:
             deco = [(x[1], x) for x in normalfiles]
             deco.sort(reverse=True)
             normalfiles = [x for junk, x in deco]
+
         for file in priorityfiles + normalfiles:
+
             length = bitrate = None
             attrs = file[4]
+
             if attrs != []:
+
                 bitrate = str(attrs[0])
                 if len(attrs) > 2 and attrs[2]:
                     bitrate += " (vbr)"
+
                 try:
                     rl = int(attrs[1])
                 except ValueError:
                     rl = 0
+
                 length = "%i:%02i" % (int(rl // 60), rl % 60)
+
             self.frame.np.transfers.getFile(self.user, "\\".join([dir, file[1]]), ldir, size=file[2], bitrate=bitrate, length=length)
+
         if not recurse:
             return
+
         for directory in self.shares.keys():
             if dir in directory and dir != directory:
                 self.DownloadDirectory(directory, os.path.join(ldir, ""), recurse)
 
     def OnDownloadFiles(self, widget, prefix=""):
+
         dir = self.selected_folder
+
         for fn in self.selected_files:
+
             file = [i for i in self.shares[dir] if i[1] == fn][0]
             path = "\\".join([dir, fn])
             # size = None
@@ -741,15 +757,20 @@ class UserBrowse:
             # if size_l != []: size = size_l[0]
             length = bitrate = None
             attrs = file[4]
+
             if attrs != []:
+
                 bitrate = str(attrs[0])
                 if len(attrs) > 2 and attrs[2]:
                     bitrate += " (vbr)"
+
                 try:
                     rl = int(attrs[1])
                 except ValueError:
                     rl = 0
+
                 length = "%i:%02i" % (int(rl // 60), rl % 60)
+
             self.frame.np.transfers.getFile(self.user, path, prefix, size=size, bitrate=bitrate, length=length)
 
     def OnUploadDirectoryRecursiveTo(self, widget):
@@ -817,10 +838,13 @@ class UserBrowse:
         start_new_thread(self._OnPlayFiles, (widget, prefix))
 
     def _OnPlayFiles(self, widget, prefix=""):
-        path = self.selected_folder.replace("\\", os.sep)
+
+        path = self.frame.np.shares.virtual2real(self.selected_folder)
         executable = self.frame.np.config.sections["players"]["default"]
+
         if "$" not in executable:
             return
+
         for fn in self.selected_files:
             file = os.sep.join([path, fn])
             if os.path.exists(file):
