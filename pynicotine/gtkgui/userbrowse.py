@@ -32,13 +32,13 @@ from pynicotine import slskmessages
 from thread import start_new_thread
 from pynicotine.utils import displayTraceback, executeCommand, CleanFile
 
-
 class UserBrowse:
 
     def __init__(self, userbrowses, user, conn):
 
         self.wTree = gtk.glade.XML(os.path.join(os.path.dirname(os.path.realpath(__file__)), "userbrowse.glade"), None)
         widgets = self.wTree.get_widget_prefix("")
+
         for i in widgets:
             name = gtk.glade.get_widget_name(i)
             self.__dict__[name] = i
@@ -251,6 +251,7 @@ class UserBrowse:
         self.OnPopupMenuUsers(self.popup_menu_users)
 
     def OnPopupMenuUsers(self, menu):
+
         items = menu.get_children()
 
         act = True
@@ -264,6 +265,7 @@ class UserBrowse:
 
         for i in range(3, 8):
             items[i].set_sensitive(act)
+
         return True
 
     def ChangeColours(self):
@@ -284,6 +286,7 @@ class UserBrowse:
         return self.frame.np.decode(str, self.encoding)
 
     def OnExpand(self, widget):
+
         if self.ExpandButton.get_active():
             self.FolderTreeView.expand_all()
             self.ExpandDirectoriesImage.set_from_stock(gtk.STOCK_REMOVE, 4)
@@ -300,17 +303,21 @@ class UserBrowse:
                 self.SetDirectory(None)
 
     def OnFolderClicked(self, widget, event):
+
         if event.button == 1 and event.type == gtk.gdk._2BUTTON_PRESS:
             self.OnDownloadDirectory(widget)
             return True
         elif event.button == 3:
             return self.OnFolderPopupMenu(widget, event)
+
         return False
 
     def OnFolderPopupMenu(self, widget, event):
+
         act = True
         if self.selected_folder is None:
             act = False
+
         items = self.folder_popup_menu.get_children()
         for item in items[1:]:
             item.set_sensitive(act)
@@ -322,6 +329,7 @@ class UserBrowse:
         self.selected_files.append(rawfilename)
 
     def OnFileClicked(self, widget, event):
+
         if event.button == 1 and event.type == gtk.gdk._2BUTTON_PRESS:
             self.selected_files = []
             self.FileTreeView.get_selection().selected_foreach(self.SelectedFilesCallback)
@@ -330,9 +338,11 @@ class UserBrowse:
             return True
         elif event.button == 3:
             return self.OnFilePopupMenu(widget, event)
+
         return False
 
     def OnFilePopupMenu(self, widget, event):
+
         self.selected_files = []
         self.FileTreeView.get_selection().selected_foreach(self.SelectedFilesCallback)
 
@@ -341,6 +351,7 @@ class UserBrowse:
 
         if len(self.selected_files) > 1:
             multiple = True
+
         if len(self.selected_files) >= 1:
             files = True
         else:
@@ -359,6 +370,7 @@ class UserBrowse:
 
         self.FileTreeView.emit_stop_by_name("button_press_event")
         self.file_popup_menu.popup(None, None, None, event.button, event.time)
+
         return True
 
     def MakeNewModel(self, list):
@@ -401,8 +413,10 @@ class UserBrowse:
             self.FolderTreeView.collapse_all()
 
     def BrowseGetDirs(self):
+
         sorted = self.shares
         sorted.sort()
+
         children = []
         self.directories.clear()
         directory = ""
@@ -446,6 +460,7 @@ class UserBrowse:
         sortlist.sort()
 
         directory = sortlist[0]
+
         return directory
 
     def SetDirectory(self, directory):
@@ -459,7 +474,6 @@ class UserBrowse:
         for d, f in self.shares:
             if d == directory:
                 found_dir = True
-                path = self.DirStore.get_path(self.directories[directory])
                 files = f
                 break
 
@@ -473,27 +487,34 @@ class UserBrowse:
                 size = int(file[2])
             except ValueError:
                 size = 0
+
             f = [self.decode(file[1]), Humanize(size)]
+
             if file[3] == "":
                 f += ["", ""]
             else:
                 # file[4] is for file types such as 'mp3'
                 attrs = file[4]
                 if attrs != [] and type(attrs) is list:
+
                     if len(attrs) >= 3:
+
                         br = str(attrs[0])
-                        if len(attrs) > 2 and attrs[2]:
+                        if attrs[2]:
                             br = br + " (vbr)"
+
                         try:
                             rl = int(attrs[1])
                         except ValueError:
                             rl = 0
+
                         l = "%i:%02i" % (rl / 60, rl % 60)
                         f += [br, l]
                     else:
                         f += ["", ""]
                 else:
                     f += ["", ""]
+
             f += [long(size), rl, file[1]]
 
             try:
@@ -502,8 +523,9 @@ class UserBrowse:
                 displayTraceback()
 
     def OnSave(self, widget):
+
         configdir, config = os.path.split(self.frame.np.config.filename)
-        sharesdir = os.path.abspath(configdir+os.sep+"usershares"+os.sep)
+        sharesdir = os.path.abspath(configdir + os.sep + "usershares" + os.sep)
 
         try:
             if not os.path.exists(sharesdir):
@@ -511,6 +533,7 @@ class UserBrowse:
         except Exception, msg:
             error = _("Can't create directory '%(folder)s', reported error: %(error)s" % {'folder': sharesdir, 'error': msg})
             self.frame.logMessage(error)
+
         try:
             import cPickle as mypickle
             import bz2
@@ -529,12 +552,14 @@ class UserBrowse:
         self.MakeNewModel(list)
 
     def UpdateGauge(self, msg):
+
         if msg.total == 0 or msg.bytes == 0:
             fraction = 0.0
         elif msg.bytes >= msg.total:
             fraction = 1.0
         else:
             fraction = float(msg.bytes) / msg.total
+
         self.progressbar1.set_fraction(fraction)
 
     def OnSelectDir(self, selection):
@@ -870,9 +895,11 @@ class UserBrowse:
             self.search_position = 0
 
     def OnClose(self, widget):
+
         self.userbrowses.remove_page(self.Main)
         del self.userbrowses.users[self.user]
         self.frame.np.ClosePeerConnection(self.conn)
+
         for i in self.__dict__.keys():
             del self.__dict__[i]
 
@@ -883,23 +910,30 @@ class UserBrowse:
         self.frame.BrowseUser(self.user)
 
     def OnCopyURL(self, widget):
-        if self.selected_files != [] and self.selected_files != None:
+
+        if self.selected_files != [] and self.selected_files is not None:
             path = "\\".join([self.selected_folder, self.selected_files[0]])
             self.frame.SetClipboardURL(self.user, path)
 
     def OnCopyDirURL(self, widget):
+
         if self.selected_folder is None:
             return
+
         path = self.selected_folder
         if path[:-1] != "/":
             path += "/"
+
         self.frame.SetClipboardURL(self.user, path)
 
     def OnFileManager(self, widget):
+
         if self.selected_folder is None:
             return
-        path = self.selected_folder.replace("\\", os.sep)
+
+        path = self.frame.np.shares.virtual2real(self.selected_folder)
         executable = self.frame.np.config.sections["ui"]["filemanager"]
+
         if "$" in executable:
             executeCommand(executable, path)
 

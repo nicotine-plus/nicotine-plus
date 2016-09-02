@@ -293,6 +293,7 @@ def OpenUri(uri):
     to be a properly formed URI including the scheme (fe. HTTP).
 
     As of now failures will be silently discarded."""
+
     # Situation 1, user defined a way of handling the protocol
     protocol = uri[:uri.find(":")]
     if protocol in PROTOCOL_HANDLERS:
@@ -305,24 +306,18 @@ def OpenUri(uri):
         if PROTOCOL_HANDLERS[protocol]:
             executeCommand(PROTOCOL_HANDLERS[protocol], uri)
             return
+
     # Situation 2, user did not define a way of handling the protocol, we'll leave it up to python
     if webbrowser:
         webbrowser.open(uri)
         return
-    # Situation 3a, we let Gnome (new way?) deal with it
+
+    # Situation 3, we let Gnome VFS deal with it
     try:
         import gnomevfs
         gnomevfs.url_show(uri)
         return
     except Exception, e:
-        pass
-    # Situation 3b, we let Gnome (old way?) deal with it
-    try:
-        # import gnome.vfs <-- doesn't make sense, vfs was never used!
-        import gnome
-        gnome.url_show(uri)
-        return
-    except:
         pass
 
 
