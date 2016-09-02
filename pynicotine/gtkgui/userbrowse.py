@@ -751,10 +751,7 @@ class UserBrowse:
 
             file = [i for i in self.shares[dir] if i[1] == fn][0]
             path = "\\".join([dir, fn])
-            # size = None
             size = file[2]
-            # size_l = [i[2] for i in self.shares[dir] if i[1] == fn]
-            # if size_l != []: size = size_l[0]
             length = bitrate = None
             attrs = file[4]
 
