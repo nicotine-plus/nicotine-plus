@@ -782,28 +782,60 @@ class UserBrowse:
 
         dir = self.selected_folder
 
-        for fn in self.selected_files:
+        for d, f in self.shares:
 
-            file = [i for i in self.shares[dir] if i[1] == fn][0]
-            path = "\\".join([dir, fn])
-            size = file[2]
-            length = bitrate = None
-            attrs = file[4]
+            # Find the wanted directory
+            if d != dir:
+                continue
 
-            if attrs != []:
+            for file in f:
 
-                bitrate = str(attrs[0])
-                if len(attrs) > 2 and attrs[2]:
-                    bitrate += " (vbr)"
+                # Find the wanted file
+                if file[1] not in self.selected_files:
+                    continue
 
-                try:
-                    rl = int(attrs[1])
-                except ValueError:
-                    rl = 0
+                path = "\\".join([dir, file[1]])
+                size = file[2]
+                length = bitrate = None
+                attrs = file[4]
 
-                length = "%i:%02i" % (int(rl // 60), rl % 60)
+                if attrs != []:
 
-            self.frame.np.transfers.getFile(self.user, path, prefix, size=size, bitrate=bitrate, length=length)
+                    bitrate = str(attrs[0])
+                    if len(attrs) > 2 and attrs[2]:
+                        bitrate += " (vbr)"
+
+                    try:
+                        rl = int(attrs[1])
+                    except ValueError:
+                        rl = 0
+
+                    length = "%i:%02i" % (int(rl // 60), rl % 60)
+
+                # Get the file
+                self.frame.np.transfers.getFile(self.user, path, prefix, size=size, bitrate=bitrate, length=length)
+
+            # We have found the wanted directory: we can break out of the loop
+            break
+
+    def OnDownloadFilesTo(self, widget):
+
+        basedir, subdir = self.selected_folder.rsplit("\\", 1)
+        path = os.path.join(self.frame.np.config.sections["transfers"]["downloaddir"], subdir)
+
+        if os.path.exists(path) and os.path.isdir(path):
+            ldir = ChooseDir(self.frame.MainWindow, path)
+        else:
+            ldir = ChooseDir(self.frame.MainWindow, self.frame.np.config.sections["transfers"]["downloaddir"])
+
+        if ldir is None:
+            return
+
+        for directory in ldir:  # iterate over selected files
+            try:
+                self.OnDownloadFiles(widget, directory)
+            except IOError:  # failed to open
+                self.frame.logMessage('failed to open %r for reading', directory)  # notify user
 
     def OnUploadDirectoryRecursiveTo(self, widget):
         self.OnUploadDirectoryTo(widget, recurse=1)
@@ -881,22 +913,6 @@ class UserBrowse:
             file = os.sep.join([path, fn])
             if os.path.exists(file):
                 executeCommand(executable, file, background=False)
-
-    def OnDownloadFilesTo(self, widget):
-        basedir, subdir = self.selected_folder.rsplit("\\", 1)
-        path = os.path.join(self.frame.np.config.sections["transfers"]["downloaddir"], subdir)
-        if os.path.exists(path) and os.path.isdir(path):
-            ldir = ChooseDir(self.frame.MainWindow, path)
-        else:
-            ldir = ChooseDir(self.frame.MainWindow, self.frame.np.config.sections["transfers"]["downloaddir"])
-
-        if ldir is None:
-            return
-        for directory in ldir:  # iterate over selected files
-            try:
-                self.OnDownloadFiles(widget, directory)
-            except IOError:  # failed to open
-                self.frame.logMessage('failed to open %r for reading', directory)  # notify user
 
     def FindMatches(self):
 
