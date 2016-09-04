@@ -21,7 +21,6 @@ from __future__ import division
 import gtk
 import os
 import sys
-import urllib
 import gobject
 from userinfo import UserTabs
 
@@ -31,6 +30,7 @@ from entrydialog import *
 from pynicotine import slskmessages
 from thread import start_new_thread
 from pynicotine.utils import displayTraceback, executeCommand, CleanFile
+
 
 class UserBrowse:
 
@@ -145,6 +145,7 @@ class UserBrowse:
 
         self.folder_popup_menu = PopupMenu(self.frame)
         self.folder_popup_menu.set_user(user)
+
         if user == self.frame.np.config.sections["server"]["login"]:
             self.folder_popup_menu.setup(
                 ("USERMENU", _("User"), self.popup_menu_users, self.OnPopupMenuFolderUser),
@@ -898,18 +899,24 @@ class UserBrowse:
                 self.frame.logMessage('failed to open %r for reading', directory)  # notify user
 
     def FindMatches(self):
+
         self.search_list = []
-        for directory, files in self.shares.items():
+
+        for directory, files in self.shares:
+
             if self.query in directory.lower():
                 if directory not in self.search_list:
                     self.search_list.append(directory)
+
             for file in files:
                 if self.query in file[1].lower():
                     if directory not in self.search_list:
                         self.search_list.append(directory)
 
     def OnSearch(self, widget):
+
         query = widget.get_text().lower()
+
         if self.query == query:
             self.search_position += 1
         else:
@@ -922,26 +929,34 @@ class UserBrowse:
         dir = self.selected_folder
 
         if self.search_list != []:
+
             if self.search_position not in range(len(self.search_list)):
                 self.search_position = 0
+
             self.search_list.sort()
             directory = self.search_list[self.search_position]
+
             path = self.DirStore.get_path(self.directories[directory])
             self.FolderTreeView.expand_to_path(path)
             self.FolderTreeView.set_cursor(path)
+
             # Get matching files in the current directory
             resultfiles = []
             for file in self.files.keys():
                 if query in file.lower():
                     resultfiles.append(file)
+
             sel = self.FileTreeView.get_selection()
             sel.unselect_all()
             l = 1
             resultfiles.sort()
+
             for fn in resultfiles:
                 path = self.FileStore.get_path(self.files[fn])
+
                 # Select each matching file in directory
                 sel.select_path(path)
+
                 if l:
                     # Position cursor at first match
                     self.FileTreeView.scroll_to_cell(path, None, True, 0.5, 0.5)
