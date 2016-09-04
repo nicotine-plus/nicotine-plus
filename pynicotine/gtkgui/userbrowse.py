@@ -88,9 +88,7 @@ class UserBrowse:
                 self.Encoding.set_active_iter(self.Elist[self.encoding])
 
         self.DirStore = gtk.TreeStore(str, str)
-        self.FolderTreeView.set_model(self.DirStore)
         self.FolderTreeView.set_headers_visible(True)
-        self.DirStore.set_sort_column_id(0, gtk.SORT_ASCENDING)
         self.FolderTreeView.set_enable_tree_lines(True)
 
         cols = InitialiseColumns(
@@ -414,52 +412,88 @@ class UserBrowse:
 
     def BrowseGetDirs(self):
 
-        sorted = self.shares
-        sorted.sort()
-
-        children = []
         self.directories.clear()
         directory = ""
-        self.totalsize = 0
         dirseparator = '\\'
 
-        if sorted == []:
+        # If there is no share
+        if self.shares == []:
+
+            # Set the model of the treeviex
+            self.FolderTreeView.set_model(self.DirStore)
+
+            # Sort the DirStore
+            self.DirStore.set_sort_column_id(0, gtk.SORT_ASCENDING)
+
             return directory
 
-        for item, f in sorted:
+        def builddicttree(p, s):
+            """
+                Build recursively a hierarchical dict containing raw subdir
+                'p' is a reference to the parent
+                's' a list of the subdir of a path
 
-            s = item.split(dirseparator)
-            path = ''
+                ex of 's': ['music', 'rock', 'doors']
+            """
 
-            parent = s[0]
-            if parent == '':
-                parent += dirseparator
-                try:
-                    self.directories[parent]
-                except KeyError:
-                    self.directories[parent] = self.DirStore.append(None, [self.decode(parent), parent])
+            if s:
+                subdir = s.pop(0)
 
-            parent = s[0]
-            for seq in s[1:]:
-                path = dirseparator.join([parent, seq])
-                if parent == '':
-                    parent = dirseparator
+                if subdir not in p:
+                    p[subdir] = {}
 
-                try:
-                    self.directories[parent]
-                except KeyError:
-                    self.directories[parent] = self.DirStore.append(None, [self.decode(parent), parent])
+                builddicttree(p[subdir], s)
 
-                if path not in children:
-                    children.append(path)
-                    self.directories[path] = self.DirStore.append(self.directories[parent], [self.decode(path.split(dirseparator)[-1]), path])
+        def buildgtktree(dictdir, parent, path):
+            """
+                Build recursively self.directories with iters pointing to directories
+                'dictdir' is a hierarchical dict containing raw subdir
+                'parent' is the iter pointing to the parent
+                'path' is the current raw path
+            """
 
-                parent = path
+            # Foreach subdir
+            for subdir in dictdir.keys():
 
+                if parent is None:
+                    # The first sudirs are attached to the root (None)
+                    current_path = subdir
+                else:
+                    # Other sudirs futher down the path are attached to their parent
+                    current_path = dirseparator.join([path, subdir])
+
+                self.directories[current_path] = self.DirStore.append(parent, [self.decode(subdir), current_path])
+
+                # If there are subdirs futher down the path: recurse
+                if len(dictdir[subdir]):
+                    buildgtktree(dictdir[subdir], self.directories[current_path], current_path)
+
+        # For each shared dir we will complete the dictionnary
+        dictdir = {}
+
+        for dirshares, f in self.shares:
+
+            # Split the path
+            s = dirshares.split(dirseparator)
+
+            # and build a hierarchical dictionnary containing raw subdir
+            if len(s) >= 1:
+                builddicttree(dictdir, s)
+
+        # Append data to the DirStore
+        buildgtktree(dictdir, None, None)
+
+        # Select the first directory
         sortlist = list(self.directories.keys())
         sortlist.sort()
 
         directory = sortlist[0]
+
+        # Sort the DirStore
+        self.DirStore.set_sort_column_id(0, gtk.SORT_ASCENDING)
+
+        # Set the model of the treeviex
+        self.FolderTreeView.set_model(self.DirStore)
 
         return directory
 
