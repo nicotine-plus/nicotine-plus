@@ -644,14 +644,18 @@ class UserBrowse:
 
         prefix = ""
         dir = self.selected_folder
+
         if dir == None:
             return
+
         localdir = ""
         files = []
         files += self.DownloadDirectoryRecursive(dir, os.path.join(localdir, ""))
+
         # Check the number of files to be downloaded, just to make sure we aren't accidently downloading hundreds or thousands
         numfiles = len(files)
         go_ahead = 0
+
         if len(files) > 100:
             FolderDownload(
                 self.frame,
@@ -678,12 +682,15 @@ class UserBrowse:
                 self.frame.np.transfers.getFile(self.user, file, localpath, size=size, bitrate=bitrate, length=length)
 
     def DownloadDirectoryRecursive(self, dir, prefix=""):
+
         # Find all files and add them to list
         if dir == None:
             return
+
         localdir = prefix + dir.split("\\")[-1]
 
         files = []
+
         if dir in self.shares.keys():
             for file in self.shares[dir]:
                 length = bitrate = None
@@ -699,15 +706,20 @@ class UserBrowse:
                     length = "%i:%02i" % (rl // 60, rl % 60)
 
                 files.append(["\\".join([dir, file[1]]), localdir, file[2], bitrate, length])
+
         for directory in self.shares.keys():
             if dir in directory and dir != directory:
                 files += self.DownloadDirectoryRecursive(directory, os.path.join(localdir, ""))
+
         return files
 
     def OnDownloadDirectoryTo(self, widget):
-        if self.selected_folder == None:
+
+        if self.selected_folder is None:
             return
+
         dir = ChooseDir(self.frame.MainWindow, self.frame.np.config.sections["transfers"]["downloaddir"])
+
         if dir is None:
             return
 
@@ -718,9 +730,12 @@ class UserBrowse:
                 self.frame.logMessage('failed to open %r for reading', directory)  # notify user
 
     def OnDownloadDirectoryRecursiveTo(self, widget):
+
         dir = ChooseDir(self.frame.MainWindow, self.frame.np.config.sections["transfers"]["downloaddir"])
+
         if dir is None:
             return
+
         for directory in dir:  # iterate over selected files
             try:
                 self.DownloadDirectory(self.selected_folder, os.path.join(directory, ""), 1)
@@ -729,54 +744,66 @@ class UserBrowse:
 
     def DownloadDirectory(self, dir, prefix="", recurse=0):
 
-        if dir == None or dir not in self.shares:
+        if dir is None:
             return
 
-        ldir = prefix + dir.split("\\")[-1]
-        priorityfiles = []
-        normalfiles = []
+        for d, f in self.shares:
 
-        if self.frame.np.config.sections["transfers"]["prioritize"]:
-            for file in self.shares[dir]:
-                parts = file[1].rsplit('.', 1)
-                if len(parts) == 2 and parts[1] in ['sfv', 'md5', 'nfo']:
-                    priorityfiles.append(file)
-                else:
-                    normalfiles.append(file)
-        else:
-            normalfiles = self.shares[dir][:]
+            # Find the wanted directory
+            if d != dir:
+                continue
 
-        if self.frame.np.config.sections["transfers"]["reverseorder"]:
-            deco = [(x[1], x) for x in normalfiles]
-            deco.sort(reverse=True)
-            normalfiles = [x for junk, x in deco]
+            ldir = prefix + dir.split("\\")[-1]
 
-        for file in priorityfiles + normalfiles:
+            priorityfiles = []
+            normalfiles = []
 
-            length = bitrate = None
-            attrs = file[4]
+            if self.frame.np.config.sections["transfers"]["prioritize"]:
 
-            if attrs != []:
+                for file in f:
 
-                bitrate = str(attrs[0])
-                if len(attrs) > 2 and attrs[2]:
-                    bitrate += " (vbr)"
+                    parts = file[1].rsplit('.', 1)
 
-                try:
-                    rl = int(attrs[1])
-                except ValueError:
-                    rl = 0
+                    if len(parts) == 2 and parts[1] in ['sfv', 'md5', 'nfo']:
+                        priorityfiles.append(file)
+                    else:
+                        normalfiles.append(file)
+            else:
+                normalfiles = f
 
-                length = "%i:%02i" % (int(rl // 60), rl % 60)
+            if self.frame.np.config.sections["transfers"]["reverseorder"]:
+                deco = [(x[1], x) for x in normalfiles]
+                deco.sort(reverse=True)
+                normalfiles = [x for junk, x in deco]
 
-            self.frame.np.transfers.getFile(self.user, "\\".join([dir, file[1]]), ldir, size=file[2], bitrate=bitrate, length=length)
+            for file in priorityfiles + normalfiles:
 
-        if not recurse:
-            return
+                path = "\\".join([dir, file[1]])
+                size = file[2]
+                length = bitrate = None
+                attrs = file[4]
 
-        for directory in self.shares.keys():
-            if dir in directory and dir != directory:
-                self.DownloadDirectory(directory, os.path.join(ldir, ""), recurse)
+                if attrs != []:
+
+                    bitrate = str(attrs[0])
+                    if len(attrs) > 2 and attrs[2]:
+                        bitrate += " (vbr)"
+
+                    try:
+                        rl = int(attrs[1])
+                    except ValueError:
+                        rl = 0
+
+                    length = "%i:%02i" % (int(rl // 60), rl % 60)
+
+                self.frame.np.transfers.getFile(self.user, path, ldir, size=size, bitrate=bitrate, length=length)
+
+            if not recurse:
+                break
+
+            for subdir, subf in self.shares:
+                if dir in subdir and dir != subdir:
+                    self.DownloadDirectory(subdir, os.path.join(ldir, ""), recurse)
 
     def OnDownloadFiles(self, widget, prefix=""):
 
