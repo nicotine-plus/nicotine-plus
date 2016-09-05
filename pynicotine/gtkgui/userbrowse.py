@@ -641,93 +641,19 @@ class UserBrowse:
         self.DownloadDirectory(self.selected_folder)
 
     def OnDownloadDirectoryRecursive(self, widget):
-
-        prefix = ""
-        dir = self.selected_folder
-
-        if dir == None:
-            return
-
-        localdir = ""
-        files = []
-        files += self.DownloadDirectoryRecursive(dir, os.path.join(localdir, ""))
-
-        # Check the number of files to be downloaded, just to make sure we aren't accidently downloading hundreds or thousands
-        numfiles = len(files)
-        go_ahead = 0
-
-        if len(files) > 100:
-            FolderDownload(
-                self.frame,
-                title=_('Nicotine+') + ': Download %(num)i files?' % {'num': numfiles},
-                message=_("Are you sure you wish to download %(num)i files from %(user)s's directory %(folder)s?" % {'num': numfiles, 'user': self.user, 'folder': dir}),
-                data=files,
-                callback=self.folder_download_response
-            )
-        else:
-            # Good to go, we download these
-            for item in files:
-                file, localpath, size, bitrate, length = item
-                self.frame.np.transfers.getFile(self.user, file, localpath, size=size, bitrate=bitrate, length=length)
-
-    def folder_download_response(self, dialog, response, files):
-
-        if response == gtk.RESPONSE_CANCEL:
-            dialog.destroy()
-            return
-        elif response == gtk.RESPONSE_OK:
-            dialog.destroy()
-            for item in files:
-                file, localpath, size, bitrate, length = item
-                self.frame.np.transfers.getFile(self.user, file, localpath, size=size, bitrate=bitrate, length=length)
-
-    def DownloadDirectoryRecursive(self, dir, prefix=""):
-
-        # Find all files and add them to list
-        if dir == None:
-            return
-
-        localdir = prefix + dir.split("\\")[-1]
-
-        files = []
-
-        if dir in self.shares.keys():
-            for file in self.shares[dir]:
-                length = bitrate = None
-                attrs = file[4]
-                if attrs != []:
-                    bitrate = str(attrs[0])
-                    if len(attrs) > 2 and attrs[2]:
-                        bitrate += " (vbr)"
-                    try:
-                        rl = int(attrs[1])
-                    except ValueError:
-                        rl = 0
-                    length = "%i:%02i" % (rl // 60, rl % 60)
-
-                files.append(["\\".join([dir, file[1]]), localdir, file[2], bitrate, length])
-
-        for directory in self.shares.keys():
-            if dir in directory and dir != directory:
-                files += self.DownloadDirectoryRecursive(directory, os.path.join(localdir, ""))
-
-        return files
+        self.DownloadDirectory(self.selected_folder, "", 1)
 
     def OnDownloadDirectoryTo(self, widget):
-
-        if self.selected_folder is None:
-            return
 
         dir = ChooseDir(self.frame.MainWindow, self.frame.np.config.sections["transfers"]["downloaddir"])
 
         if dir is None:
             return
 
-        for directory in dir:  # iterate over selected files
-            try:
-                self.DownloadDirectory(self.selected_folder, os.path.join(directory, ""))
-            except IOError:  # failed to open
-                self.frame.logMessage('failed to open %r for reading', directory)  # notify user
+        try:
+            self.DownloadDirectory(self.selected_folder, os.path.join(dir[0], ""))
+        except IOError:  # failed to open
+            self.frame.logMessage('Failed to open %r for reading', dir[0])  # notify user
 
     def OnDownloadDirectoryRecursiveTo(self, widget):
 
@@ -736,11 +662,10 @@ class UserBrowse:
         if dir is None:
             return
 
-        for directory in dir:  # iterate over selected files
-            try:
-                self.DownloadDirectory(self.selected_folder, os.path.join(directory, ""), 1)
-            except IOError:  # failed to open
-                self.frame.logMessage('failed to open %r for reading', directory)  # notify user
+        try:
+            self.DownloadDirectory(self.selected_folder, os.path.join(dir[0], ""), 1)
+        except IOError:  # failed to open
+            self.frame.logMessage('Failed to open %r for reading', dir[0])  # notify user
 
     def DownloadDirectory(self, dir, prefix="", recurse=0):
 
@@ -858,11 +783,10 @@ class UserBrowse:
         if ldir is None:
             return
 
-        for directory in ldir:  # iterate over selected files
-            try:
-                self.OnDownloadFiles(widget, directory)
-            except IOError:  # failed to open
-                self.frame.logMessage('failed to open %r for reading', directory)  # notify user
+        try:
+            self.OnDownloadFiles(widget, ldir[0])
+        except IOError:  # failed to open
+            self.frame.logMessage('failed to open %r for reading', ldir[0])  # notify user
 
     def OnUploadDirectoryRecursiveTo(self, widget):
         self.OnUploadDirectoryTo(widget, recurse=1)
