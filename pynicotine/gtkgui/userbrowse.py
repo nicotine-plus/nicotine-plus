@@ -395,6 +395,7 @@ class UserBrowse:
 
         # Generate the directory tree and select first directory
         currentdir = self.BrowseGetDirs()
+
         sel = self.FolderTreeView.get_selection()
         sel.unselect_all()
         if currentdir in self.directories:
@@ -413,7 +414,6 @@ class UserBrowse:
 
     def BrowseGetDirs(self):
 
-        self.directories.clear()
         directory = ""
         dirseparator = '\\'
 
@@ -606,9 +606,9 @@ class UserBrowse:
             return
 
         path = model.get_path(iter)
-        directory = self.DirStore.get_value(self.DirStore.get_iter(path), 1)
-        self.FolderTreeView.expand_to_path(path)
+        directory = model.get_value(iter, 1)
 
+        self.FolderTreeView.expand_to_path(path)
         self.SetDirectory(directory)
 
     def OnResort(self, column, column_id):
@@ -968,8 +968,6 @@ class UserBrowse:
             if self.query == "":
                 return
             self.FindMatches()
-
-        dir = self.selected_folder
 
         if self.search_list != []:
 
