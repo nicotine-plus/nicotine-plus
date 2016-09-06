@@ -131,7 +131,7 @@ if __name__ == '__main__':
         description="Nicotine+, a client for the SoulSeek filesharing network.",
         author="daelstorm",
         author_email="daelstorm@gmail.com",
-        url="http://www.nicotine-plus.org/",
+        url="https://www.nicotine-plus.org/",
         packages=['pynicotine', 'pynicotine.gtkgui'],
         package_dir={'pynicotine.gtkgui': 'pynicotine/gtkgui'},
         package_data={'pynicotine.gtkgui': ["*.py", "*.glade", "*.ui"]},

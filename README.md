@@ -23,7 +23,7 @@ Nicotine+ is not translated in your language ? See: [TRANSLATIONS](doc/TRANSLATI
 
 ### Links
 
-Website: http://www.nicotine-plus.org
+Website: https://www.nicotine-plus.org
 
 Code & Bug Tracker: https://github.com/eLvErDe/nicotine-plus
 

@@ -82,7 +82,7 @@ class AboutDialog(gtk.Dialog):
 
         text = _("""Nicotine+ %s
 Website:
-http://nicotine-plus.org
+https://www.nicotine-plus.org
 Bug Tracker & Source Code:
 https://github.com/eLvErDe/nicotine-plus
 

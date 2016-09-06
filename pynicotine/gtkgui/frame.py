@@ -705,7 +705,7 @@ class NicotineFrame:
         self.WebBrowserTabLabel.set_property("xalign", 0)
         if WebBrowser and config["ui"]["mozembed"] and gtkmozembed is not None:
             self.extravbox.show()
-            self.browser = BrowserWindow(self, "http://nicotine-plus.org")
+            self.browser = BrowserWindow(self, "https://www.nicotine-plus.org")
             self.extravbox.pack_start(self.browser, True, True)
             self.extravbox.show_all()
             self.MainNotebook.append_page(self.extravbox, self.WebBrowserTabLabel)
@@ -2689,7 +2689,7 @@ class NicotineFrame:
             )
 
     def OnProjectWebsite(self, widget):
-        url = "http://nicotine-plus.org/"
+        url = "https://www.nicotine-plus.org/"
         OpenUri(url)
 
     def onProjectGithubPage(self, widget):
