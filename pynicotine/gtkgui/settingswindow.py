@@ -809,7 +809,7 @@ class SharesFrame(buildFrame):
                 message=_("Enter new virtual name for '%(dir)s':") % {'dir': directory}
             )
 
-            if virtual == '':
+            if virtual == '' or virtual is None:
                 pass
             else:
                 newmapping = (virtual, directory)
