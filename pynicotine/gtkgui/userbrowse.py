@@ -644,7 +644,9 @@ class UserBrowse:
         self.OnResort(column, column_id)
 
     def OnDownloadDirectory(self, widget):
-        self.DownloadDirectory(self.selected_folder)
+
+        if self.selected_folder is not None:
+            self.DownloadDirectory(self.selected_folder)
 
     def OnDownloadDirectoryRecursive(self, widget):
         self.DownloadDirectory(self.selected_folder, "", 1)
