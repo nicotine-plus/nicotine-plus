@@ -59,7 +59,7 @@ class UserBrowse:
         self.user = user
         self.conn = conn
 
-        # selected_folder is a path for TreeStore, i.e. a tuple
+        # selected_folder is the current selected folder
         self.selected_folder = None
         self.search_list = []
         self.query = None
@@ -796,26 +796,8 @@ class UserBrowse:
         except IOError:  # failed to open
             self.frame.logMessage('failed to open %r for reading', ldir[0])  # notify user
 
-    def OnUploadDirectoryRecursiveTo(self, widget):
-        self.OnUploadDirectoryTo(widget, recurse=1)
-
-    def UploadDirectoryTo(self, user, dir, recurse=0):
-        if dir == "" or dir is None or user is None or user == "":
-            return
-        ldir = dir.split("\\")[-1]
-        if dir in self.shares.keys():
-            for file in self.shares[dir]:
-                path = "\\".join([dir, file[1]])
-                size = file[2]
-                self.frame.np.transfers.pushFile(user, path, ldir, size=size)
-                self.frame.np.transfers.checkUploadQueue()
-        if not recurse:
-            return
-        for directory in self.shares.keys():
-            if dir in directory and dir != directory:
-                self.UploadDirectoryTo(user, directory, recurse)
-
     def OnUploadDirectoryTo(self, widget, recurse=0):
+
         dir = self.selected_folder
         if dir is None:
             return
@@ -823,6 +805,7 @@ class UserBrowse:
         users = []
         for entry in self.frame.np.config.sections["server"]["userlist"]:
             users.append(entry[0])
+
         users.sort()
         user = input_box(
             self.frame,
@@ -831,16 +814,46 @@ class UserBrowse:
             default_text='',
             droplist=users
         )
+
         if user is None or user == "":
             return
+
         self.frame.np.ProcessRequestToPeer(user, slskmessages.UploadQueueNotification(None))
+
         self.UploadDirectoryTo(user, dir, recurse)
 
+    def OnUploadDirectoryRecursiveTo(self, widget):
+        self.OnUploadDirectoryTo(widget, recurse=1)
+
+    def UploadDirectoryTo(self, user, dir, recurse=0):
+
+        if dir == "" or dir is None or user is None or user == "":
+            return
+
+        ldir = dir.split("\\")[-1]
+
+        if dir in self.shares.keys():
+            for file in self.shares[dir]:
+                path = "\\".join([dir, file[1]])
+                size = file[2]
+                self.frame.np.transfers.pushFile(user, path, ldir, size=size)
+                self.frame.np.transfers.checkUploadQueue()
+
+        if not recurse:
+            return
+
+        for directory in self.shares.keys():
+            if dir in directory and dir != directory:
+                self.UploadDirectoryTo(user, directory, recurse)
+
     def OnUploadFiles(self, widget, prefix=""):
+
         dir = self.selected_folder
         users = []
+
         for entry in self.frame.np.config.sections["server"]["userlist"]:
             users.append(entry[0])
+
         users.sort()
         user = input_box(
             self.frame,
@@ -849,13 +862,15 @@ class UserBrowse:
             default_text='',
             droplist=users
         )
+
         if user is None or user == "":
-            pass
-        else:
-            self.frame.np.ProcessRequestToPeer(user, slskmessages.UploadQueueNotification(None))
-            for fn in self.selected_files:
-                self.frame.np.transfers.pushFile(user, "\\".join([dir, fn]), prefix)
-                self.frame.np.transfers.checkUploadQueue()
+            return
+
+        self.frame.np.ProcessRequestToPeer(user, slskmessages.UploadQueueNotification(None))
+
+        for fn in self.selected_files:
+            self.frame.np.transfers.pushFile(user, "\\".join([dir, fn]), prefix)
+            self.frame.np.transfers.checkUploadQueue()
 
     def OnPlayFiles(self, widget, prefix=""):
         start_new_thread(self._OnPlayFiles, (widget, prefix))
