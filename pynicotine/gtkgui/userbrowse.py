@@ -832,8 +832,13 @@ class UserBrowse:
 
         ldir = dir.split("\\")[-1]
 
-        if dir in self.shares.keys():
-            for file in self.shares[dir]:
+        for d, f in self.shares:
+
+            # Find the wanted directory
+            if d != dir:
+                continue
+
+            for file in f:
                 path = "\\".join([dir, file[1]])
                 size = file[2]
                 self.frame.np.transfers.pushFile(user, path, ldir, size=size)
@@ -842,9 +847,9 @@ class UserBrowse:
         if not recurse:
             return
 
-        for directory in self.shares.keys():
-            if dir in directory and dir != directory:
-                self.UploadDirectoryTo(user, directory, recurse)
+        for subdir, subf in self.shares:
+            if dir in subdir and dir != subdir:
+                self.UploadDirectoryTo(user, subdir, recurse)
 
     def OnUploadFiles(self, widget, prefix=""):
 
