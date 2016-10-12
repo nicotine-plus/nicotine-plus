@@ -8,7 +8,7 @@ A list of stuff & things todo (not in any particular order):
 * Convert libsexy spellcheck stuff to pygtkspell.
 * Upload old sourceforge releases to github & refresh the update check code.
 * GNU/Linux: Switch to using XDG_* directories.
-* Apply downstream patches (debian, fedora & ubuntu).
+* **IN PROGRESS**: Apply downstream patches (debian, fedora & ubuntu).
 * Convert all the libglade files to GTKBuilder.
 * Our sounds are dropped by downstream packagers for being non-free: investigate.
 * Convert old (unmaintained) python-GeoIP code to an up to date version.
