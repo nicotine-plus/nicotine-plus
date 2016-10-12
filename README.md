@@ -25,7 +25,7 @@ Nicotine+ is not translated in your language ? See: [TRANSLATIONS](doc/TRANSLATI
 
 Website: https://www.nicotine-plus.org
 
-IRC channel on Freenode : [#nicotine+](irc://chat.freenode.net:6667/nicotine+)
+IRC channel on Freenode : #nicotine+
 
 Code & Bug Tracker: https://github.com/eLvErDe/nicotine-plus
 
