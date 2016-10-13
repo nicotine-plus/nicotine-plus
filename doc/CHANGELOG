@@ -29,6 +29,7 @@ Github:
 * Build fails on archlinux, can't copy mo file... (#22)
 * Hidden directory files now showing up in file shares (Windows) (#23)
 * upnp functionality is used despite being config'd as False (#24)
+* userbrowse coredump on GTK 2.24.30+ (#25)
 
 Trac:
  * "Abort & Delete" button is mislabeled (#194)
