@@ -6,7 +6,7 @@ A list of stuff & things todo (not in any particular order):
 
 * Drop the bundle Configparser module (upstream as all the patches).
 * Convert libsexy spellcheck stuff to pygtkspell.
-* Upload old sourceforge releases to github & refresh the update check code.
+* **IN PROGRESS**: Upload old sourceforge releases to github & refresh the update check code.
 * GNU/Linux: Switch to using XDG_* directories.
 * **IN PROGRESS**: Apply downstream patches (debian, fedora & ubuntu).
 * Convert all the libglade files to GTKBuilder.
