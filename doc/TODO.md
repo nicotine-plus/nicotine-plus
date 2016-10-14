@@ -6,13 +6,13 @@ A list of stuff & things todo (not in any particular order):
 
 * Drop the bundle Configparser module (upstream as all the patches).
 * Convert libsexy spellcheck stuff to pygtkspell.
-* **IN PROGRESS**: Upload old sourceforge releases to github & refresh the update check code.
 * GNU/Linux: Switch to using XDG_* directories.
 * **IN PROGRESS**: Apply downstream patches (debian, fedora & ubuntu).
 * Convert all the libglade files to GTKBuilder.
 * Our sounds are dropped by downstream packagers for being non-free: investigate.
 * Convert old (unmaintained) python-GeoIP code to an up to date version.
 * Drop the embeded Web browser: doesn't work anymore, outdated and security nightmare.
+* **DONE**: Upload old sourceforge releases to github & refresh the update check code.
 * **DONE**: Finish the port of FastConfigure to use virtual shares.
 * **DONE**: Refresh setuptools installer.
 * **DONE**: Drop in-house mp3 metadata parsing: replaced by mutagen.

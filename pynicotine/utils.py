@@ -41,8 +41,7 @@ import gtk.glade
 from libi18n import SetLocaleEnv
 from logfacility import log as logfacility
 
-version = "1.2.17svn"
-latesturl = "http://nicotine-plus.sourceforge.net/LATEST"
+version = "1.3.0git"
 
 log = 0
 win32 = sys.platform.startswith("win")
