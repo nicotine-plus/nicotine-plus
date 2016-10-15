@@ -2259,6 +2259,7 @@ class NicotineFrame:
 
     def _BuddyRescanFinished(self, data):
         self.np.config.setBuddyShares(*data)
+        self.np.config.writeShares()
 
         self.rescan_buddy.set_sensitive(True)
         self.rebuild_buddy.set_sensitive(True)
@@ -2271,6 +2272,7 @@ class NicotineFrame:
 
     def _RescanFinished(self, data):
         self.np.config.setShares(*data)
+        self.np.config.writeShares()
 
         self.rescan1.set_sensitive(True)
         self.rebuild1.set_sensitive(True)
