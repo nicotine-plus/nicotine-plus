@@ -53,7 +53,7 @@ def GetCompletions(part, list):
 class RoomsControl:
 	CMDS = set(["/alias ", "/unalias ", "/whois ", "/browse ", "/ip ", "/pm ", "/msg ", "/search ", "/usearch ", "/rsearch ",
 		"/bsearch ", "/join ", "/leave ", "/add ", "/buddy ", "/rem ", "/unbuddy ", "/ban ", "/ignore ", "/ignoreip ", "/unban ", "/unignore ",
-		"/clear ", "/part ", "/quit ", "/exit ", "/rescan ", "/tick ", "/nsa ", "/info ", "/detach ", "/attach ", "/reload"])
+		"/clear ", "/part ", "/quit ", "/exit ", "/rescan ", "/tick ", "/nsa ", "/info ", "/detach ", "/attach ", "/toggle"])
 	
 	def __init__(self, frame, ChatNotebook):
 		self.frame = frame
@@ -1338,9 +1338,9 @@ class ChatRoom:
 			self.frame.np.queue.put(slskmessages.RoomTickerSet(self.room, ToBeEncoded(args, self.encoding)))
 		elif cmd in ("/tickers",):
 			self.showTickers()
-		#elif cmd in ('/reload',):
-			#self.frame.pluginhandler.reread()
-			#self.frame.pluginhandler = pluginsystem.PluginHandler(self.frame)
+		elif cmd in ('/toggle',):
+			if byteargs:
+				self.frame.pluginhandler.toggle_plugin(byteargs)
 		elif cmd[:1] == "/" and self.frame.pluginhandler.TriggerPublicCommandEvent(self.room, cmd[1:], args):
 			pass
 		elif cmd and cmd[:1] == "/" and cmd != "/me" and cmd[:2] != "//":

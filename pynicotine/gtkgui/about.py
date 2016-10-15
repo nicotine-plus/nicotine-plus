@@ -600,6 +600,8 @@ class AboutPrivateDialog(GenericTableDialog):
         "/me %s" % _("message"), _("Say something in the third-person"),
         "/now", _("Display the Now Playing script's output"),
         "", "",
+        "/toggle %s" % _("plugin"), _("Toggle plugin on/off state"),
+        "", "",
         "<b>%s</b>" % _("Users"), "",
         "/add /ad '%s'" % _("user"), _("Add user 'user' to your user list"),
         "/rem /unbuddy '%s'" % _("user"), _("Remove user 'user' from your user list"),

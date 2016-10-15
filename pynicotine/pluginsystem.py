@@ -27,8 +27,8 @@ import gobject
 import zipimport
 import imp
 from thread import start_new_thread
-from traceback import extract_stack, extract_tb, format_list
-import traceback
+from traceback import extract_stack, extract_tb, format_list, print_exc
+from time import time
 from pynicotine import slskmessages
 from slskmessages import ToBeEncoded
 from logfacility import log
@@ -41,11 +41,11 @@ returncode = {
     'pass': 2    # do give other plugins the event, do let n+ process it
 }                # returning nothing is the same as 'pass'
 
-tupletype = type(('',''))
+tupletype = type(('', ''))
 
 
 def cast_to_unicode_if_needed(text, logfunc):
-    if type(text) == type(u''):
+    if isinstance(text, unicode):
         return text
     try:
         better = str.decode(text, 'utf8')
@@ -110,10 +110,14 @@ class PluginHandler(object):
                 return fullpath
         return None
 
-    def load_plugin(self, pluginname, reload=False):
-        if not reload and pluginname in self.loaded_plugins:
-            return self.loaded_plugins[pluginname]
+    def toggle_plugin(self, pluginname):
+        on = pluginname in self.enabled_plugins
+        if on:
+            self.disable_plugin(pluginname)
+        else:
+            self.enable_plugin(pluginname)
 
+    def load_plugin(self, pluginname):
         path = self.__findplugin(pluginname)
         if path is None:
             log.add(_("Failed to load plugin '%s', could not find it.") % pluginname)
@@ -163,12 +167,13 @@ class PluginHandler(object):
             return
         try:
             plugin = self.load_plugin(pluginname)
-            if not plugin: raise Exception("Error loading plugin '%s'" % pluginname)
+            if not plugin:
+                raise Exception("Error loading plugin '%s'" % pluginname)
             plugin.enable(self)
             self.enabled_plugins[pluginname] = plugin
-            log.add(_("Loaded plugin %s") % plugin.PLUGIN.__name__)
+            log.add(_("Enabled plugin %s") % plugin.PLUGIN.__name__)
         except:
-            traceback.print_exc()
+            print_exc()
             log.addwarning(_("Unable to enable plugin %s") % pluginname)
             # common.log_exception(logger)
             return False
@@ -184,12 +189,15 @@ class PluginHandler(object):
         return pluginlist
 
     def disable_plugin(self, pluginname):
+        if pluginname not in self.enabled_plugins:
+            return
         try:
             plugin = self.enabled_plugins[pluginname]
+            log.add(_("Disabled plugin {}".format(plugin.PLUGIN.__name__)))
             del self.enabled_plugins[pluginname]
             plugin.disable(self)
         except:
-            traceback.print_exc()
+            print_exc()
             log.addwarning(_("Unable to fully disable plugin %s") % pluginname)
             # common.log_exception(logger)
             return False
@@ -214,7 +222,7 @@ class PluginHandler(object):
         return infodict
 
     def save_enabled(self):
-        self.frame.np.config.sections["plugins"]["enabled"] = self.enabled_plugins.keys()
+        self.frame.np.config.sections["plugins"]["enabled"] = list(self.enabled_plugins.keys())
 
     def check_enabled(self):
         if self.frame.np.config.sections["plugins"]["enable"]:
@@ -223,7 +231,6 @@ class PluginHandler(object):
             to_enable = self.frame.np.config.sections["plugins"]["enabled"]
             for plugin in self.enabled_plugins:
                 self.enabled_plugins[plugin].disable(self)
-                print "Disabled plugin: %s" %plugin
 
     def load_enabled(self):
         enable = self.frame.np.config.sections["plugins"]["enable"]
@@ -235,7 +242,6 @@ class PluginHandler(object):
 
     def plugin_settings(self, plugin):
         try:
-            # customsettings = self.frame.np.config.sections["plugins"][plugin.__id__]
             if not hasattr(plugin, "settings"):
                 return
             if plugin.__id__ not in self.frame.np.config.sections["plugins"]:
@@ -245,36 +251,12 @@ class PluginHandler(object):
                     self.frame.np.config.sections["plugins"][plugin.__id__][i] = plugin.settings[i]
             customsettings = self.frame.np.config.sections["plugins"][plugin.__id__]
 
-            #if customsettings = self.frame.np.config.sections["plugins"][plugin.__id__]
-            #for settingname, info in plugin.metasettings.items():
-                #if settingname not in ('<hr>',):
-                    #settingdescr = info["description"]
-                    #settingtype = info["type"]
-                    #try:
-                        #value = customsettings[settingname]
-                        #try:
-                            #if settingtype.startswith('list '):
-                                #value = list(value)
-                                #(junk, junk, listtype) = settingtype.partition(' ')
-                                #index = 0
-                                #for index in xrange(0, len(value)):
-                                    #value[index] = self.type2cast[listtype](value[index])
-                            #else:
-                                #value = self.type2cast[settingtype](value)
-                                #plugin.settings[settingname] = value
-                        #except ValueError:
-                            #log.add(_("Failed to cast the value '%(value)s', stored under '%(name)s', to %(type)s. Using default value." %
-                                #{'value':value, 'name':settingname, 'type':settingtype}))
-                        #except KeyError:
-                            #log.add(_("Unknown setting type '%(type)s'." % {'type':settingtype}))
-                    #except KeyError:
-                        #pass
             for key in customsettings:
                 if key in plugin.settings:
                     plugin.settings[key] = customsettings[key]
 
                 else:
-                    log.add(_("Stored setting '%(name)s' is no longer present in the plugin") % {'name':key})
+                    log.add(_("Stored setting '%(name)s' is no longer present in the plugin") % {'name': key})
         except KeyError:
             log.add("No custom settings found for %s" % (plugin.__name__,))
             pass
@@ -286,7 +268,7 @@ class PluginHandler(object):
         return self._TriggerCommand("plugin.PLUGIN.PrivateCommandEvent", command, user, args)
 
     def _TriggerCommand(self, strfunc, command, source, args):
-        for module, plugin in self.enabled_plugins.items():
+        for module, plugin in list(self.enabled_plugins.items()):
             try:
                 if plugin.PLUGIN is None:
                     continue
@@ -314,11 +296,11 @@ class PluginHandler(object):
         are precisely the same except for how n+ responds to them, both can be
         triggered by this function."""
         hotpotato = args
-        for module, plugin in self.enabled_plugins.items():
+        for module, plugin in list(self.enabled_plugins.items()):
             try:
                 func = eval("plugin.PLUGIN." + function)
                 ret = func(*hotpotato)
-                if ret != None and type(ret) != tupletype:
+                if ret is not None and type(ret) != tupletype:
                     if ret == returncode['zap']:
                         return None
                     elif ret == returncode['break']:
@@ -327,7 +309,7 @@ class PluginHandler(object):
                         pass
                     else:
                         log.add(_("Plugin %(module)s returned something weird, '%(value)s', ignoring") % {'module': module, 'value': ret})
-                if ret != None:
+                if ret is not None:
                     hotpotato = ret
             except:
                 log.add(_("Plugin %(module)s failed with error %(errortype)s: %(error)s.\nTrace: %(trace)s\nProblem area:%(area)s") % {
@@ -338,6 +320,15 @@ class PluginHandler(object):
                             'area': ''.join(format_list(extract_tb(sys.exc_info()[2])))
                         })
         return hotpotato
+
+    def SearchRequestNotification(self, searchterm, user, searchid):
+        start_new_thread(self.TriggerEvent, ("SearchRequestNotification", (searchterm, user, searchid)))
+
+    def DistribSearchNotification(self, searchterm, user, searchid):
+        start_new_thread(self.TriggerEvent, ("DistribSearchNotification", (searchterm, user, searchid)))
+
+    def PublicRoomMessageNotification(self, room, user, line):
+        start_new_thread(self.TriggerEvent, ("PublicRoomMessageNotification", (room, user, line)))
 
     def IncomingPrivateChatEvent(self, user, line):
         if user != self.myUsername:
@@ -356,7 +347,7 @@ class PluginHandler(object):
         start_new_thread(self.TriggerEvent, ("IncomingPublicChatNotification", (room, user, line)))
 
     def OutgoingPrivateChatEvent(self, user, line):
-        if line != None:
+        if line is not None:
             # if line is None nobody actually said anything
             return self.TriggerEvent("OutgoingPrivateChatEvent", (user, line))
         else:
@@ -458,7 +449,7 @@ class BasePlugin(object):
     __name__ = "BasePlugin"
     __desc__ = "No description provided"
     # __id__ = "baseplugin_original" # you normally don't have to set this manually
-    __version__ = "2008-11-26"
+    __version__ = "2016-08-30"
     __publiccommands__ = []
     __privatecommands__ = []
 
@@ -485,6 +476,15 @@ class BasePlugin(object):
         self.settings = settings
 
     def LoadNotification(self):
+        pass
+
+    def PublicRoomMessageNotification(self, room, user, line):
+        pass
+
+    def SearchRequestNotification(self, searchterm, user, searchid):
+        pass
+
+    def DistribSearchNotification(self, searchterm, user, searchid):
         pass
 
     def IncomingPrivateChatEvent(self, user, line):
@@ -582,3 +582,80 @@ class BasePlugin(object):
         for (trigger, func) in self.__privatecommands__:
             if trigger == command:
                 return func(self, user, args)
+
+
+class ResponseThrottle(object):
+
+    """
+    ResponseThrottle - Mutnick 2016
+
+    See 'reddit' and my other plugins for example use
+
+    Purpose: Avoid flooding chat room with plugin responses
+        Some plugins respond based on user requests and we do not want
+        to respond too much and encounter a temporary server chat ban
+
+    Some of the throttle logic is guesswork as server code is closed source, but works adequately.
+    """
+
+    def __init__(self, frame, plugin_name, logging=False):
+        self.frame = frame
+        self.plugin_name = plugin_name
+        self.logging = logging
+        self.plugin_usage = {}
+
+    def ok_to_respond(self, room, nick, request, seconds_limit_min=30):
+        self.room = room
+        self.nick = nick
+        self.request = request
+        
+        willing_to_respond = True
+        current_time = time()
+
+        if room not in list(self.plugin_usage.keys()):
+            self.plugin_usage[room] = {'last_time': 0, 'last_request': "", 'last_nick': ""}
+
+        last_time = self.plugin_usage[room]['last_time']
+        last_nick = self.plugin_usage[room]['last_nick']
+        last_request = self.plugin_usage[room]['last_request']
+
+        port = False
+        try:
+            ip, port = self.frame.np.users[nick].addr
+        except:
+            port = True
+
+        if nick in self.frame.np.config.sections["server"]["ignorelist"]:
+            willing_to_respond, reason = False, "The nick is ignored"
+        elif self.frame.UserIpIsIgnored(nick):
+            willing_to_respond, reason = False, "The nick's Ip is ignored"
+        elif not port:
+            willing_to_respond, reason = False, "Request likely from simple PHP based griefer bot"
+        elif [nick, request] == [last_nick, last_request]:
+            if (current_time - last_time) < 12 * seconds_limit_min:
+                willing_to_respond, reason = False, "Too soon for same nick to request same resource in room"
+        elif (request == last_request):
+            if (current_time - last_time) < 3 * seconds_limit_min:
+                willing_to_respond, reason = False, "Too soon for different nick to request same resource in room"
+        else:
+            recent_responses = 0
+            for responded_room in self.plugin_usage:
+                if (current_time - self.plugin_usage[responded_room]['last_time']) < seconds_limit_min:
+                    recent_responses += 1
+                    if responded_room == room:
+                        willing_to_respond, reason = False, "Responded in specified room too recently"
+                        break
+            if recent_responses > 3:
+                willing_to_respond, reason = False, "Responded in multiple rooms enough"
+
+        if self.logging:
+            if not willing_to_respond:
+                base_log_msg = "{} plugin request rejected - room '{}', nick '{}'".format(self.plugin_name, room, nick)
+                log.adddebug("{} - {}".format(base_log_msg, reason))
+
+        return willing_to_respond
+
+    def responded(self, msg=""):
+        # possible TODO's: we could actually say public the msg here
+        # make more stateful - track past msg's as additional responder willingness criteria, etc
+        self.plugin_usage[self.room] = {'last_time': time(), 'last_request': self.request, 'last_nick': self.nick}
