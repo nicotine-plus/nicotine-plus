@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# COPYRIGHT (c) 2016 Mutnick <muhing@yahoo.com>
 # Copyright (C) 2007 daelstorm. All rights reserved.
 #
 # This program is free software: you can redistribute it and/or modify

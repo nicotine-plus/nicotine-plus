@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # COPYRIGHT (c) 2016 Michael Labouebe <gfarmerfr@free.fr>
+# COPYRIGHT (c) 2016 Mutnick <muhing@yahoo.com>
 # COPYRIGHT (c) 2008-2011 Quinox <quinox@users.sf.net>
 # COPYRIGHT (C) 2009 Daelstorm <daelstorm@gmail.com>
 #
