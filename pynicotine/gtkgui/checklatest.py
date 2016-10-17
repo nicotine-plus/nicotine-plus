@@ -49,7 +49,7 @@ def makeversion(version):
 
 def checklatest(frame):
 
-    latesturl = 'https://api.github.com/repos/eLvErDe/nicotine-plus/releases/latest'
+    latesturl = 'https://api.github.com/repos/Nicotine-Plus/nicotine-plus/releases/latest'
 
     try:
         response = urllib.urlopen(latesturl)
@@ -77,7 +77,7 @@ def checklatest(frame):
             0,
             gtk.MESSAGE_WARNING,
             gtk.BUTTONS_OK,
-            _("A newer version ('%s') is available. Check Nicotine+ releases page\n(https://github.com/eLvErDe/nicotine-plus/releases) for the latest version.") % data
+            _("A newer version ('%s') is available. Check Nicotine+ releases page\n(https://github.com/Nicotine-Plus/nicotine-plus/releases) for the latest version.") % data
         )
     elif myversion > latest:
         dlg = gtk.MessageDialog(
@@ -85,7 +85,7 @@ def checklatest(frame):
             0,
             gtk.MESSAGE_WARNING,
             gtk.BUTTONS_OK,
-            _("You appear to be using a development version of Nicotine+.\nCheck out the latest version from the Git repository at https://github.com/eLvErDe/nicotine-plus/")
+            _("You appear to be using a development version of Nicotine+.\nCheck out the latest version from the Git repository at https://github.com/Nicotine-Plus/nicotine-plus/")
         )
     else:
         dlg = gtk.MessageDialog(

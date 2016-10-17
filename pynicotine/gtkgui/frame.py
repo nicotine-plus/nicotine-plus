@@ -2695,14 +2695,14 @@ class NicotineFrame:
         OpenUri(url)
 
     def onProjectGithubPage(self, widget):
-        url = "https://github.com/eLvErDe/nicotine-plus"
+        url = "https://github.com/Nicotine-Plus/nicotine-plus"
         OpenUri(url)
 
     def OnCheckLatest(self, widget):
         checklatest(self.MainWindow)
 
     def OnReportBug(self, widget):
-        url = "https://github.com/eLvErDe/nicotine-plus/issues"
+        url = "https://github.com/Nicotine-Plus/nicotine-plus/issues"
         OpenUri(url)
 
     def OnAbout(self, widget):

@@ -85,7 +85,7 @@ class AboutDialog(gtk.Dialog):
 Website:
 https://www.nicotine-plus.org
 Bug Tracker & Source Code:
-https://github.com/eLvErDe/nicotine-plus
+https://github.com/Nicotine-Plus/nicotine-plus
 
 Soulseek: http://www.slsknet.org
 
