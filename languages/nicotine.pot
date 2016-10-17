@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-14 22:50+0200\n"
+"POT-Creation-Date: 2016-10-17 22:26+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1739,7 +1739,7 @@ msgid ""
 "Website:\n"
 "https://www.nicotine-plus.org\n"
 "Bug Tracker & Source Code:\n"
-"https://github.com/eLvErDe/nicotine-plus\n"
+"https://github.com/Nicotine-Plus/nicotine-plus\n"
 "\n"
 "Soulseek: http://www.slsknet.org\n"
 "\n"
@@ -1921,6 +1921,12 @@ msgid "About chat room commands"
 msgstr ""
 
 msgid "Close the current private chat"
+msgstr ""
+
+msgid "plugin"
+msgstr ""
+
+msgid "Toggle plugin on/off state"
 msgstr ""
 
 msgid "Chat Rooms"
@@ -2159,13 +2165,14 @@ msgstr ""
 #, python-format
 msgid ""
 "A newer version ('%s') is available. Check Nicotine+ releases page\n"
-"(https://github.com/eLvErDe/nicotine-plus/releases) for the latest version."
+"(https://github.com/Nicotine-Plus/nicotine-plus/releases) for the latest "
+"version."
 msgstr ""
 
 msgid ""
 "You appear to be using a development version of Nicotine+.\n"
 "Check out the latest version from the Git repository at https://github.com/"
-"eLvErDe/nicotine-plus/"
+"Nicotine-Plus/nicotine-plus/"
 msgstr ""
 
 msgid "You are using the latest version of Nicotine+."
@@ -3442,11 +3449,14 @@ msgid "Plugin archive contains an unsafe path"
 msgstr ""
 
 #, python-format
-msgid "Loaded plugin %s"
+msgid "Enabled plugin %s"
 msgstr ""
 
 #, python-format
 msgid "Unable to enable plugin %s"
+msgstr ""
+
+msgid "Disabled plugin {}"
 msgstr ""
 
 #, python-format
