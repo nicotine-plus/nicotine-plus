@@ -14,6 +14,7 @@ Features
  * Virtual share system implemented.
  * Plugins can now be toggled on/off.
  * A reddit plugin has been added.
+ * Gives user the option to load more than 1000 previous chat lines when they rejoin a chat room.
 
 Bugs
 
