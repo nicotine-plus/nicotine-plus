@@ -8398,7 +8398,7 @@ Clear</property>
                     <property name="secondary_icon_activatable">False</property>
                     <property name="primary_icon_sensitive">True</property>
                     <property name="secondary_icon_sensitive">True</property>
-                    <property name="adjustment">0 0 1000 1 10 0</property>
+                    <property name="adjustment">0 0 10000 1 10 0</property>
                   </widget>
                   <packing>
                     <property name="expand">False</property>
