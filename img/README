@@ -1,16 +1,12 @@
-The new PNG icons are modified from Mark James' Silk icon set 1.3,
-found here: http://www.famfamfam.com/lab/icons/silk/
-which is released under the Creative Commons Attribution 2.5 License.
-
-http://creativecommons.org/licenses/by/2.5/
-
-The Icons taken from Silk and not modified:
-
-hilite.png (renamed from lightbulb.png)
-
 ---
 
 Created by gfarmerfr (released under LGPLv3+)
+
+These icons are derived from the gnome-icon-theme dialog-information.png icon
+which is licensed under LGPLv3+.
+
+hilite.png (modified dialog-information.png)
+hilite3.png (modified dialog-information.png)
 
 These icons are a combined work between the n.png icons and the gnome-icon-theme
 which is licensed under LGPLv3+.
@@ -26,7 +22,6 @@ Created by daelstorm (released under GPLv2+ and upgraded to GPLv3+)
 away.png
 bug.png
 empty.png
-hilite3.png
 missingflag.png
 money.png
 offline.png

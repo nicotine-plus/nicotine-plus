@@ -19,7 +19,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Script based on the work of Josselin Mouette <joss@debian.org>.
-# You should have imagemagick and gnome-icon-theme insatlled to make it work.
+# You should have imagemagick and gnome-icon-theme installed to make it work.
 
 COMPOSE='composite -gravity NorthEast -compose src-over'
 
