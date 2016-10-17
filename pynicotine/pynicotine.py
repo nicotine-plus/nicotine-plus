@@ -734,6 +734,7 @@ class NetworkEventProcessor:
 		msg.msg = findBestEncoding(msg.msg, [self.config.sections["server"]["enc"]] + self.config.sections["server"]["fallbackencodings"])
 		if self.chatrooms is not None:
 			self.chatrooms.roomsctrl.PublicRoomMessage(msg, msg.msg)
+			self.frame.pluginhandler.PublicRoomMessageNotification(msg.room, msg.user, msg.msg)
 		else:
 			self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
 	def JoinRoom(self, msg):
@@ -1517,6 +1518,8 @@ class NetworkEventProcessor:
 	def SearchRequest(self, msg):
 		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
 		self.shares.processSearchRequest(msg.searchterm, msg.user, msg.searchid, direct=0)
+		self.frame.pluginhandler.SearchRequestNotification(msg.searchterm, msg.user, msg.searchid)
+		
 	def RoomSearchRequest(self, msg):
 		self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
 		self.shares.processSearchRequest(msg.searchterm, msg.room, msg.searchid, direct=0)
@@ -1548,6 +1551,7 @@ class NetworkEventProcessor:
 	def DistribSearch(self, msg):
 		if self.respondDistributed: # set in ToggleRespondDistributed
 			self.shares.processSearchRequest(msg.searchterm, msg.user, msg.searchid, 0)
+		self.frame.pluginhandler.DistribSearchNotification(msg.searchterm, msg.user, msg.searchid)
 
 	def NetInfo(self, msg):
 		#print msg.list
