@@ -4,10 +4,14 @@
 
 Michael Labouebe (aka gfarmerfr)
 - Developer
-- Doc update
 - [gfarmerfr(at)free(dot)fr]
 
-eL_vErDe
+Mutnick
+- Created Nicotine+ GitHub Organization
+- Developer
+- [muhing(at)yahoo(dot)com]
+
+eLvErDe
 - Provides Nicotine+ Website
 - Migrated source code from SVN to Github
 - Developer (retired ?)

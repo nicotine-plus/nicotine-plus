@@ -2,6 +2,10 @@
 
 A graphical client for the SoulSeek peer-to-peer system
 
+Website | https://www.nicotine-plus.org
+--- | ---
+**Code & Bug Tracker** | https://github.com/eLvErDe/nicotine-plus
+**IRC** | https://webchat.freenode.net/?channels=nicotine+
 
 Nicotine+ is an attempt to keep Nicotine working with the latest libraries,
 kill bugs, keep current with the Soulseek protocol
@@ -20,14 +24,6 @@ For installation / packaging instruction see: [INSTALL](doc/INSTALL.md)
 You want to help ? See a list of things [TODO](doc/TODO.md)
 
 Nicotine+ is not translated in your language ? See: [TRANSLATIONS](doc/TRANSLATIONS.md)
-
-### Links
-
-Website: https://www.nicotine-plus.org
-
-IRC channel on Freenode : #nicotine+
-
-Code & Bug Tracker: https://github.com/eLvErDe/nicotine-plus
 
 You want to contact someone? See: [MAINTAINERS](doc/MAINTAINERS.md)
 

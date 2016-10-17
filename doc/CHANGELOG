@@ -1,7 +1,4 @@
-git master (unreleased)
-
-The old Trac instance is read-only.
-For reporting bugs go to https://github.com/eLvErDe/nicotine-plus/issues
+1.3.0git (unreleased)
 
 Behavior
  * Showing first 25 results right away to make N+ seem FAST.
@@ -15,6 +12,8 @@ Features
  * UPnP support out of the box on Windows.
  * Refreshed icon and GTK2 theme on Windows.
  * Virtual share system implemented.
+ * Plugins can now be toggled on/off.
+ * A reddit plugin has been added.
 
 Bugs
 
@@ -31,6 +30,7 @@ Github:
 * Hidden directory files now showing up in file shares (Windows) (#23)
 * upnp functionality is used despite being config'd as False (#24)
 * userbrowse coredump on GTK 2.24.30+ (#25)
+* "invalid operation on closed shelf" error on every download (#27)
 
 Trac:
  * "Abort & Delete" button is mislabeled (#194)

@@ -27,10 +27,11 @@ A list of stuff & things todo (not in any particular order):
 * **IN PROGRESS**: Update the wiki.
 * Update the Nicotine Guide.
 * Reach out for translation help.
-* Switch to Python 3.X.
+* Switch to Python 3.
 * Switch to GTK3.
 * Switch to Gstreamer 1.X (require GTK3).
 * Switch from python-notify to an up to date alternative.
+* Replace db files (causing much problems) by something easier like json.
 * **IN PROGRESS**: Use pip and venv for build/tests purposes.
 * **IN PROGRESS**: Make as much as possible optional dependencies work on Windows.
 * **STALLED**: Build the OSX version: I've no Mac.
