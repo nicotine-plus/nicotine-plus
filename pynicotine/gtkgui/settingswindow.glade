@@ -9222,14 +9222,20 @@ Clear</property>
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkComboBox" id="MainPosition">
+                  <widget class="GtkComboBoxEntry" id="MainPosition">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                    <property name="items" translatable="yes">Top
-Bottom
-Left
-Right</property>
+                    <child internal-child="entry">
+                      <widget class="GtkEntry" id="comboboxentry-entry1">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="invisible_char">●</property>
+                        <property name="primary_icon_activatable">False</property>
+                        <property name="secondary_icon_activatable">False</property>
+                        <property name="primary_icon_sensitive">True</property>
+                        <property name="secondary_icon_sensitive">True</property>
+                      </widget>
+                    </child>
                   </widget>
                   <packing>
                     <property name="expand">False</property>
@@ -9299,14 +9305,20 @@ Right</property>
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkComboBox" id="ChatRoomsPosition">
+                  <widget class="GtkComboBoxEntry" id="ChatRoomsPosition">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                    <property name="items" translatable="yes">Top
-Bottom
-Left
-Right</property>
+                    <child internal-child="entry">
+                      <widget class="GtkEntry" id="comboboxentry-entry2">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="invisible_char">●</property>
+                        <property name="primary_icon_activatable">False</property>
+                        <property name="secondary_icon_activatable">False</property>
+                        <property name="primary_icon_sensitive">True</property>
+                        <property name="secondary_icon_sensitive">True</property>
+                      </widget>
+                    </child>
                   </widget>
                   <packing>
                     <property name="expand">False</property>
@@ -9375,14 +9387,20 @@ Right</property>
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkComboBox" id="PrivateChatPosition">
+                  <widget class="GtkComboBoxEntry" id="PrivateChatPosition">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                    <property name="items" translatable="yes">Top
-Bottom
-Left
-Right</property>
+                    <child internal-child="entry">
+                      <widget class="GtkEntry" id="comboboxentry-entry3">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="invisible_char">●</property>
+                        <property name="primary_icon_activatable">False</property>
+                        <property name="secondary_icon_activatable">False</property>
+                        <property name="primary_icon_sensitive">True</property>
+                        <property name="secondary_icon_sensitive">True</property>
+                      </widget>
+                    </child>
                   </widget>
                   <packing>
                     <property name="expand">False</property>
@@ -9451,14 +9469,20 @@ Right</property>
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkComboBox" id="SearchPosition">
+                  <widget class="GtkComboBoxEntry" id="SearchPosition">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                    <property name="items" translatable="yes">Top
-Bottom
-Left
-Right</property>
+                    <child internal-child="entry">
+                      <widget class="GtkEntry" id="comboboxentry-entry4">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="invisible_char">●</property>
+                        <property name="primary_icon_activatable">False</property>
+                        <property name="secondary_icon_activatable">False</property>
+                        <property name="primary_icon_sensitive">True</property>
+                        <property name="secondary_icon_sensitive">True</property>
+                      </widget>
+                    </child>
                   </widget>
                   <packing>
                     <property name="expand">False</property>
@@ -9528,14 +9552,20 @@ Right</property>
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkComboBox" id="UserInfoPosition">
+                  <widget class="GtkComboBoxEntry" id="UserInfoPosition">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                    <property name="items" translatable="yes">Top
-Bottom
-Left
-Right</property>
+                    <child internal-child="entry">
+                      <widget class="GtkEntry" id="comboboxentry-entry5">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="invisible_char">●</property>
+                        <property name="primary_icon_activatable">False</property>
+                        <property name="secondary_icon_activatable">False</property>
+                        <property name="primary_icon_sensitive">True</property>
+                        <property name="secondary_icon_sensitive">True</property>
+                      </widget>
+                    </child>
                   </widget>
                   <packing>
                     <property name="expand">False</property>
@@ -9604,14 +9634,20 @@ Right</property>
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkComboBox" id="UserBrowsePosition">
+                  <widget class="GtkComboBoxEntry" id="UserBrowsePosition">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                    <property name="items" translatable="yes">Top
-Bottom
-Left
-Right</property>
+                    <child internal-child="entry">
+                      <widget class="GtkEntry" id="comboboxentry-entry6">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="invisible_char">●</property>
+                        <property name="primary_icon_activatable">False</property>
+                        <property name="secondary_icon_activatable">False</property>
+                        <property name="primary_icon_sensitive">True</property>
+                        <property name="secondary_icon_sensitive">True</property>
+                      </widget>
+                    </child>
                   </widget>
                   <packing>
                     <property name="expand">False</property>

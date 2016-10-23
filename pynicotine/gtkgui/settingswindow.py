@@ -1947,23 +1947,53 @@ class ColoursFrame(buildFrame):
 class NotebookFrame(buildFrame):
 
     def __init__(self, parent):
+
         self.p = parent
         buildFrame.__init__(self, "NotebookFrame")
+
         self.NotificationIcon.set_from_pixbuf(self.frame.images["online"])
+
+        # Define options for each GtkComboBoxEntry using a liststore
+        # The first element is the translated string,
+        # the second is a GtkPositionType
+        self.PosList = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
+        self.PosList.append([_("Top"), "top"])
+        self.PosList.append([_("Bottom"), "bottom"])
+        self.PosList.append([_("Left"), "left"])
+        self.PosList.append([_("Right"), "right"])
+
+        self.MainPosition.set_model(self.PosList)
+        self.MainPosition.set_text_column(0)
+
+        self.ChatRoomsPosition.set_model(self.PosList)
+        self.ChatRoomsPosition.set_text_column(0)
+
+        self.PrivateChatPosition.set_model(self.PosList)
+        self.PrivateChatPosition.set_text_column(0)
+
+        self.SearchPosition.set_model(self.PosList)
+        self.SearchPosition.set_text_column(0)
+
+        self.UserInfoPosition.set_model(self.PosList)
+        self.UserInfoPosition.set_text_column(0)
+
+        self.UserBrowsePosition.set_model(self.PosList)
+        self.UserBrowsePosition.set_text_column(0)
+
         self.options = {
             "ui": {
                 "tabmain": self.MainPosition,
                 "tabrooms": self.ChatRoomsPosition,
                 "tabprivate": self.PrivateChatPosition,
+                "tabsearch": self.SearchPosition,
                 "tabinfo": self.UserInfoPosition,
                 "tabbrowse": self.UserBrowsePosition,
-                "tabsearch": self.SearchPosition,
                 "labelmain": self.MainAngleSpin,
                 "labelrooms": self.ChatRoomsAngleSpin,
                 "labelprivate": self.PrivateChatAngleSpin,
+                "labelsearch": self.SearchAngleSpin,
                 "labelinfo": self.UserInfoAngleSpin,
                 "labelbrowse": self.UserBrowseAngleSpin,
-                "labelsearch": self.SearchAngleSpin,
                 "tabclosers": self.TabClosers,
                 "tab_icons": self.TabIcons,
                 "tab_colors": self.TabColours,
@@ -1973,23 +2003,53 @@ class NotebookFrame(buildFrame):
         }
 
     def SetSettings(self, config):
+
         self.p.SetWidgetsData(config, self.options)
 
+        # Function to set the default iter
+        #  from the value found in the config file
+        def set_active_conf(model, path, iter, data):
+            if model.get_value(iter, 1) == data["cfg"]:
+                data["combobox"].set_active_iter(iter)
+
+        # Override settings for the GtkComboBoxEntry defining ui positionning
+        for opt in [
+            "tabmain", "tabrooms", "tabprivate",
+            "tabsearch", "tabinfo", "tabbrowse"
+        ]:
+            # Get the value in the config file
+            config_val = config["ui"][opt]
+
+            # Iterate over entries to find which one should be active
+            self.options["ui"][opt].get_model().foreach(set_active_conf, {
+                "cfg": config_val,
+                "combobox": self.options["ui"][opt]
+            })
+
     def GetSettings(self):
+
+        # Get iters from GtkComboBoxEntry fields
+        iter_Main = self.PosList.get_iter(self.MainPosition.get_active())
+        iter_Rooms = self.PosList.get_iter(self.ChatRoomsPosition.get_active())
+        iter_Private = self.PosList.get_iter(self.PrivateChatPosition.get_active())
+        iter_Search = self.PosList.get_iter(self.SearchPosition.get_active())
+        iter_Info = self.PosList.get_iter(self.UserInfoPosition.get_active())
+        iter_Browse = self.PosList.get_iter(self.UserBrowsePosition.get_active())
+
         return {
             "ui": {
-                "tabmain": self.MainPosition.get_active_text(),
-                "tabrooms": self.ChatRoomsPosition.get_active_text(),
-                "tabprivate": self.PrivateChatPosition.get_active_text(),
-                "tabinfo": self.UserInfoPosition.get_active_text(),
-                "tabbrowse": self.UserBrowsePosition.get_active_text(),
-                "tabsearch": self.SearchPosition.get_active_text(),
+                "tabmain": self.PosList.get_value(iter_Main, 1),
+                "tabrooms": self.PosList.get_value(iter_Rooms, 1),
+                "tabprivate": self.PosList.get_value(iter_Private, 1),
+                "tabsearch": self.PosList.get_value(iter_Search, 1),
+                "tabinfo": self.PosList.get_value(iter_Info, 1),
+                "tabbrowse": self.PosList.get_value(iter_Browse, 1),
                 "labelmain": self.MainAngleSpin.get_value_as_int(),
                 "labelrooms": self.ChatRoomsAngleSpin.get_value_as_int(),
                 "labelprivate": self.PrivateChatAngleSpin.get_value_as_int(),
+                "labelsearch": self.SearchAngleSpin.get_value_as_int(),
                 "labelinfo": self.UserInfoAngleSpin.get_value_as_int(),
                 "labelbrowse": self.UserBrowseAngleSpin.get_value_as_int(),
-                "labelsearch": self.SearchAngleSpin.get_value_as_int(),
                 "tabclosers": self.TabClosers.get_active(),
                 "tab_icons": self.TabIcons.get_active(),
                 "tab_colors": self.TabColours.get_active(),
