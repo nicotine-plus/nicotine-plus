@@ -379,8 +379,8 @@
                       </widget>
                     </child>
                     <child>
-                      <widget class="GtkImageMenuItem" id="rescan1">
-                        <property name="label" translatable="yes">_Rescan shares</property>
+                      <widget class="GtkImageMenuItem" id="rescan_public">
+                        <property name="label" translatable="yes">_Rescan Public shares</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="use_underline">True</property>
@@ -419,8 +419,8 @@
                       </widget>
                     </child>
                     <child>
-                      <widget class="GtkImageMenuItem" id="rebuild1">
-                        <property name="label" translatable="yes">Re_build shares</property>
+                      <widget class="GtkImageMenuItem" id="rebuild_public">
+                        <property name="label" translatable="yes">Re_build Public shares</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="use_underline">True</property>
@@ -459,15 +459,32 @@
                       </widget>
                     </child>
                     <child>
-                      <widget class="GtkImageMenuItem" id="browse_my_shares1">
-                        <property name="label" translatable="yes">_Browse my shares</property>
+                      <widget class="GtkImageMenuItem" id="browse_public_shares">
+                        <property name="label" translatable="yes">_Browse Public shares</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">False</property>
-                        <signal name="activate" handler="OnBrowseMyShares"/>
+                        <signal name="activate" handler="OnBrowsePublicShares"/>
                         <child internal-child="image">
                           <widget class="GtkImage" id="image36">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="stock">gtk-harddisk</property>
+                          </widget>
+                        </child>
+                      </widget>
+                    </child>
+                    <child>
+                      <widget class="GtkImageMenuItem" id="browse_buddy_shares">
+                        <property name="label" translatable="yes">Bro_wse Buddy shares</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="use_underline">True</property>
+                        <property name="use_stock">False</property>
+                        <signal name="activate" handler="OnBrowseBuddyShares"/>
+                        <child internal-child="image">
+                          <widget class="GtkImage" id="image64">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="stock">gtk-harddisk</property>

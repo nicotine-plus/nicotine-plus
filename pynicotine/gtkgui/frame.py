@@ -681,7 +681,7 @@ class NicotineFrame:
         if ConfigUnset:
             if ConfigUnset > 1:
                 self.connect1.set_sensitive(False)
-                self.rescan1.set_sensitive(True)
+                self.rescan_public.set_sensitive(True)
                 # Display FastConfigure
                 self.OnFastConfigure(None)
             else:
@@ -2216,8 +2216,9 @@ class NicotineFrame:
             return
         self.rescanning = 1
 
-        self.rescan1.set_sensitive(False)
-        self.rebuild1.set_sensitive(False)
+        self.rescan_public.set_sensitive(False)
+        self.rebuild_public.set_sensitive(False)
+        self.browse_public_shares.set_sensitive(False)
         self.logMessage(_("Rescanning started"))
 
         shared = self.np.config.sections["transfers"]["shared"][:]
@@ -2241,6 +2242,7 @@ class NicotineFrame:
 
         self.rescan_buddy.set_sensitive(False)
         self.rebuild_buddy.set_sensitive(False)
+        self.browse_buddy_shares.set_sensitive(False)
         self.logMessage(_("Rescanning Buddy Shares started"))
 
         shared = self.np.config.sections["transfers"]["buddyshared"][:] + self.np.config.sections["transfers"]["shared"][:]
@@ -2263,6 +2265,7 @@ class NicotineFrame:
 
         self.rescan_buddy.set_sensitive(True)
         self.rebuild_buddy.set_sensitive(True)
+        self.browse_buddy_shares.set_sensitive(True)
         if self.np.transfers is not None:
             self.np.shares.sendNumSharedFoldersFiles()
         self.brescanning = 0
@@ -2274,8 +2277,9 @@ class NicotineFrame:
         self.np.config.setShares(*data)
         self.np.config.writeShares()
 
-        self.rescan1.set_sensitive(True)
-        self.rebuild1.set_sensitive(True)
+        self.rescan_public.set_sensitive(True)
+        self.rebuild_public.set_sensitive(True)
+        self.browse_public_shares.set_sensitive(True)
         if self.np.transfers is not None:
             self.np.shares.sendNumSharedFoldersFiles()
         self.rescanning = 0
@@ -2906,22 +2910,44 @@ class NicotineFrame:
         else:
             self.np.ProcessRequestToPeer(user, slskmessages.UserInfoRequest(None), self.userinfo)
 
-    # Here we go, ugly hack for getting your own shares
+    # Browse a user shares
     def BrowseUser(self, user):
-        login = self.np.config.sections["server"]["login"]
-        if user is None or user == login:
-            user = login
-            if user in [i[0] for i in self.np.config.sections["server"]["userlist"]] and self.np.config.sections["transfers"]["enablebuddyshares"]:
-                m = slskmessages.SharedFileList(None, self.np.config.sections["transfers"]["bsharedfilesstreams"])
-            else:
-                m = slskmessages.SharedFileList(None, self.np.config.sections["transfers"]["sharedfilesstreams"])
-            m.parseNetworkMessage(m.makeNetworkMessage(nozlib=1), nozlib=1)
-            self.userbrowse.ShowInfo(login, m)
-        else:
-            self.np.ProcessRequestToPeer(user, slskmessages.GetSharedFileList(None), self.userbrowse)
 
-    def OnBrowseMyShares(self, widget):
-        self.BrowseUser(None)
+        login = self.np.config.sections["server"]["login"]
+
+        if user is not None:
+            if user == login:
+                self.OnBrowsePublicShares(None)
+            else:
+                self.np.ProcessRequestToPeer(user, slskmessages.GetSharedFileList(None), self.userbrowse)
+
+    # Browse your own public shares
+    def OnBrowsePublicShares(self, widget):
+
+        login = self.np.config.sections["server"]["login"]
+
+        # Deactivate if we only share with buddies
+        if self.np.config.sections["transfers"]["friendsonly"]:
+            m = slskmessages.SharedFileList(None, {})
+        else:
+            m = slskmessages.SharedFileList(None, self.np.config.sections["transfers"]["sharedfilesstreams"])
+
+        m.parseNetworkMessage(m.makeNetworkMessage(nozlib=1), nozlib=1)
+        self.userbrowse.ShowInfo(login, m)
+
+    # Browse your own buddy shares
+    def OnBrowseBuddyShares(self, widget):
+
+        login = self.np.config.sections["server"]["login"]
+
+        # Deactivate if we don't have specific shares for buddies
+        if not self.np.config.sections["transfers"]["enablebuddyshares"]:
+            m = slskmessages.SharedFileList(None, {})
+        else:
+            m = slskmessages.SharedFileList(None, self.np.config.sections["transfers"]["bsharedfilesstreams"])
+
+        m.parseNetworkMessage(m.makeNetworkMessage(nozlib=1), nozlib=1)
+        self.userbrowse.ShowInfo(login, m)
 
     def PrivateRoomRemoveUser(self, room, user):
         self.np.queue.put(slskmessages.PrivateRoomRemoveUser(room, user))

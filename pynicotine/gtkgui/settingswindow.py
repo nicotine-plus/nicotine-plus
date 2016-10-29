@@ -717,14 +717,20 @@ class SharesFrame(buildFrame):
         self.OnFriendsOnlyToggled(widget)
 
     def OnFriendsOnlyToggled(self, widget):
+
         sensitive = self.FriendsOnly.get_active()
         buddiesonly = self.enableBuddyShares.get_active()
+
         self.Shares.set_sensitive(not (sensitive and buddiesonly))
         self.addSharesButton.set_sensitive(not (sensitive and buddiesonly))
         self.removeSharesButton.set_sensitive(not (sensitive and buddiesonly))
         self.BuddyShares.set_sensitive(buddiesonly)
         self.addBuddySharesButton.set_sensitive(buddiesonly)
         self.removeBuddySharesButton.set_sensitive(buddiesonly)
+
+        self.frame.rescan_buddy.set_sensitive(buddiesonly)
+        self.frame.rebuild_buddy.set_sensitive(buddiesonly)
+        self.frame.browse_buddy_shares.set_sensitive(buddiesonly)
 
     def GetNeedRescan(self):
         return self.needrescan
