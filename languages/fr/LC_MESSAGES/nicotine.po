@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nicotine\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-17 22:26+0200\n"
-"PO-Revision-Date: 2016-10-17 22:32+0200\n"
+"POT-Creation-Date: 2016-10-30 00:38+0200\n"
+"PO-Revision-Date: 2016-10-30 00:42+0200\n"
 "Last-Translator: Michael LABOUEBE <gfarmerfr@free.fr>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -301,24 +301,28 @@ msgid "_Configure shares"
 msgstr "_Configuration des partages"
 
 # pynicotine/gtkgui/nicotine_glade.py
-msgid "_Rescan shares"
-msgstr "_Réexaminer mes partages"
+msgid "_Rescan Public shares"
+msgstr "_Réexaminer mes partages public"
 
 # pynicotine/gtkgui/nicotine_glade.py
 msgid "Rescan B_uddy shares"
 msgstr "Réexaminer mes partages pour _amis"
 
 # pynicotine/gtkgui/nicotine_glade.py
-msgid "Re_build shares"
-msgstr "Reconstruire mes _partages"
+msgid "Re_build Public shares"
+msgstr "Reconstruire mes _partages public"
 
 # pynicotine/gtkgui/nicotine_glade.py
 msgid "Rebuild Bu_ddy shares"
 msgstr "Reconstruire mes partages pour a_mis"
 
 # pynicotine/gtkgui/nicotine_glade.py
-msgid "_Browse my shares"
-msgstr "_Voir mes fichiers partagés"
+msgid "_Browse Public shares"
+msgstr "_Voir mes partages public"
+
+# pynicotine/gtkgui/nicotine_glade.py
+msgid "Bro_wse Buddy shares"
+msgstr "V_oir mes partages pour amis"
 
 msgid "_Modes"
 msgstr "_Onglets"
@@ -1564,17 +1568,6 @@ msgstr "Montrer l'icône de statut de l'utilisateur plutôt que le texte associ�
 msgid "Main"
 msgstr "Principale"
 
-msgid ""
-"Top\n"
-"Bottom\n"
-"Left\n"
-"Right"
-msgstr ""
-"Haut\n"
-"Bas\n"
-"Gauche\n"
-"Droite"
-
 msgid "Label Angle:"
 msgstr "Orientation:"
 
@@ -1798,6 +1791,9 @@ msgstr "Renommer"
 msgid "Rescan shares on startup"
 msgstr "Réexaminer mes partages au démarrage"
 
+msgid "Enable Buddy-Only shares"
+msgstr "Activer le partage pour les amis uniquement"
+
 # pynicotine/gtkgui/settings_glade.py
 msgid "Share only to buddies"
 msgstr "Partager seulement avec mes amis"
@@ -1808,9 +1804,6 @@ msgid ""
 msgstr ""
 "Si les partages pour amis sont activés, ils seront disponibles pour votre "
 "liste d'amis, sinon le partage normal sera utilisé."
-
-msgid "Enable Buddy-Only shares"
-msgstr "Activer le partage pour les amis uniquement"
 
 msgid "<b>Buddies-Only Shares</b>"
 msgstr "<b>Partage pour les amis uniquement</b>"

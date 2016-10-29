@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-17 22:26+0200\n"
+"POT-Creation-Date: 2016-10-30 00:38+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -240,19 +240,22 @@ msgstr ""
 msgid "_Configure shares"
 msgstr ""
 
-msgid "_Rescan shares"
+msgid "_Rescan Public shares"
 msgstr ""
 
 msgid "Rescan B_uddy shares"
 msgstr ""
 
-msgid "Re_build shares"
+msgid "Re_build Public shares"
 msgstr ""
 
 msgid "Rebuild Bu_ddy shares"
 msgstr ""
 
-msgid "_Browse my shares"
+msgid "_Browse Public shares"
+msgstr ""
+
+msgid "Bro_wse Buddy shares"
 msgstr ""
 
 msgid "_Modes"
@@ -1226,13 +1229,6 @@ msgstr ""
 msgid "Main"
 msgstr ""
 
-msgid ""
-"Top\n"
-"Bottom\n"
-"Left\n"
-"Right"
-msgstr ""
-
 msgid "Label Angle:"
 msgstr ""
 
@@ -1409,15 +1405,15 @@ msgstr ""
 msgid "Rescan shares on startup"
 msgstr ""
 
+msgid "Enable Buddy-Only shares"
+msgstr ""
+
 msgid "Share only to buddies"
 msgstr ""
 
 msgid ""
 "If buddy shares are enabled, they will be shared. Otherwise normal shares "
 "will be used."
-msgstr ""
-
-msgid "Enable Buddy-Only shares"
 msgstr ""
 
 msgid "<b>Buddies-Only Shares</b>"
