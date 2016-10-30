@@ -724,6 +724,8 @@ class SharesFrame(buildFrame):
         self.Shares.set_sensitive(not (sensitive and buddiesonly))
         self.addSharesButton.set_sensitive(not (sensitive and buddiesonly))
         self.removeSharesButton.set_sensitive(not (sensitive and buddiesonly))
+        self.renameVirtualsButton.set_sensitive(not (sensitive and buddiesonly))
+
         self.BuddyShares.set_sensitive(buddiesonly)
         self.addBuddySharesButton.set_sensitive(buddiesonly)
         self.removeBuddySharesButton.set_sensitive(buddiesonly)
