@@ -729,6 +729,7 @@ class SharesFrame(buildFrame):
         self.BuddyShares.set_sensitive(buddiesonly)
         self.addBuddySharesButton.set_sensitive(buddiesonly)
         self.removeBuddySharesButton.set_sensitive(buddiesonly)
+        self.renameBuddyVirtualsButton.set_sensitive(buddiesonly)
 
         self.frame.rescan_buddy.set_sensitive(buddiesonly)
         self.frame.rebuild_buddy.set_sensitive(buddiesonly)
@@ -803,6 +804,7 @@ class SharesFrame(buildFrame):
         list.append(iter)
 
     def OnRenameVirtuals(self, widget):
+
         iters = []
         self.Shares.get_selection().selected_foreach(self._RemoveSharedDir, iters)
 
@@ -824,6 +826,31 @@ class SharesFrame(buildFrame):
                 self.shareslist.set_value(iter, 0, virtual)
                 self.shareddirs.remove(oldmapping)
                 self.shareddirs.append(newmapping)
+                self.needrescan = 1
+
+    def OnRenameBuddyVirtuals(self, widget):
+
+        iters = []
+        self.BuddyShares.get_selection().selected_foreach(self._RemoveSharedDir, iters)
+
+        for iter in iters:
+            oldvirtual = self.bshareslist.get_value(iter, 0)
+            directory = self.bshareslist.get_value(iter, 3)
+            oldmapping = (oldvirtual, directory)
+
+            virtual = input_box(
+                self.frame,
+                title=_("Virtual name"),
+                message=_("Enter new virtual name for '%(dir)s':") % {'dir': directory}
+            )
+
+            if virtual == '' or virtual is None:
+                pass
+            else:
+                newmapping = (virtual, directory)
+                self.bshareslist.set_value(iter, 0, virtual)
+                self.bshareslist.remove(oldmapping)
+                self.bshareslist.append(newmapping)
                 self.needrescan = 1
 
     def OnRemoveSharedDir(self, widget):
