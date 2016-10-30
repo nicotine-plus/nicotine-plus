@@ -15,10 +15,10 @@ Features
  * Plugins can now be toggled on/off.
  * A reddit plugin has been added.
  * Gives user the option to load more than 1000 previous chat lines when they rejoin a chat room.
+ * You can now browse your buddy shares via the Share menu.
+ * You can now rename your buddy virtual shares via the settings window for shares.
 
-Bugs
-
-Github:
+Bugs closed on Github
 * Remove max length on settings password field (#5, #7)
 * Randomly kill connections on select() out of range failure (#6)
 * Fix shares build / crashes caused by bogus metadata (#10)
@@ -33,7 +33,7 @@ Github:
 * userbrowse coredump on GTK 2.24.30+ (#25)
 * "invalid operation on closed shelf" error on every download (#27)
 
-Trac:
+Bug closed on Trac (readonly)
  * "Abort & Delete" button is mislabeled (#194)
  * No icon found in nicotine.exe (#512)
  * French translation and non-translatable strings (#524)
