@@ -12,6 +12,7 @@ A list of stuff & things todo (not in any particular order):
 * Our sounds are dropped by downstream packagers for being non-free: investigate.
 * Convert old (unmaintained) python-GeoIP code to an up to date version.
 * Drop the embeded Web browser: doesn't work anymore, outdated and security nightmare.
+* Drop the special treatment for downloading ogg files.
 * **DONE**: Upload old sourceforge releases to github & refresh the update check code.
 * **DONE**: Finish the port of FastConfigure to use virtual shares.
 * **DONE**: Refresh setuptools installer.
