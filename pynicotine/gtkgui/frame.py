@@ -162,7 +162,7 @@ class BuddiesComboBoxEntry(gtk.ComboBoxEntry):
 
 class NicotineFrame:
 
-    def __init__(self, config, plugindir, use_trayicon, try_rgba, start_hidden=False, bindip=None):
+    def __init__(self, config, plugindir, use_trayicon, start_hidden=False, bindip=None):
 
         self.clip_data = ""
         self.configfile = config
@@ -251,21 +251,6 @@ class NicotineFrame:
         self.MainWindow.add_accel_group(self.accel_group)
 
         self.wTree.signal_autoconnect(self)
-
-        # Enabling RGBA if possible, you need up-to-date Murrine Engine for it from what I've heard
-        RGBA = False
-        if try_rgba:
-            gtk_screen = self.MainWindow.get_screen()
-            colormap = gtk_screen.get_rgba_colormap()
-            if colormap:
-                if self.MainWindow.is_composited():
-                    RGBA = True
-                    log.add('Enabling RGBA')
-                    gtk_screen.set_default_colormap(colormap)
-                else:
-                    log.add('Your X can handle RGBA, but your window manager cannot. Not enabling transparancy.')
-            else:
-                log.add('Your X cannot handle RGBA, not enabling transparency')
 
         width = self.np.config.sections["ui"]["width"]
         height = self.np.config.sections["ui"]["height"]
@@ -536,13 +521,7 @@ class NicotineFrame:
         self.UpdateDownloadFilters()
 
         if use_trayicon and config["ui"]["trayicon"]:
-            if RGBA:
-                log.add('X11/GTK RGBA Bug workaround: Setting default colormap to RGB')
-                gtk_screen.set_default_colormap(gtk_screen.get_rgb_colormap())
             self.TrayApp.Create()
-            if RGBA:
-                log.add('X11/GTK RGBA Bug workaround: Restoring RGBA as default colormap.')
-                gtk_screen.set_default_colormap(colormap)
 
         self.SetMainTabsVisibility()
         self.startup = False
@@ -3649,8 +3628,9 @@ class gstreamer:
 
 
 class MainApp:
-    def __init__(self, config, plugindir, trayicon, rgbamode, start_hidden, bindip):
-        self.frame = NicotineFrame(config, plugindir, trayicon, rgbamode, start_hidden, bindip)
+
+    def __init__(self, config, plugindir, trayicon, start_hidden, bindip):
+        self.frame = NicotineFrame(config, plugindir, trayicon, start_hidden, bindip)
 
     def MainLoop(self):
         signal.signal(signal.SIGINT, signal.SIG_IGN)

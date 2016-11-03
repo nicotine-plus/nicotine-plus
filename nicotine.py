@@ -130,8 +130,6 @@ Usage: nicotine [OPTION]...
   -p dir,  --plugins=dir      Use non-default directory for plugins
   -t,      --enable-trayicon  Enable the tray icon
   -d,      --disable-trayicon Disable the tray icon
-  -r,      --enable-rgba      Enable RGBA mode, for full program transparency
-  -x,      --disable-rgba     Disable RGBA mode, default mode
   -h,      --help             Show help and exit
   -s,      --hidden           Start the program hidden so only the tray icon is shown
   -b ip,   --bindip=ip        Bind sockets to the given IP (useful for VPN)
@@ -190,8 +188,6 @@ def run():
                                     "profile",
                                     "enable-trayicon",
                                     "disable-trayicon",
-                                    "enable-rgba",
-                                    "disable-rgba",
                                     "version",
                                     "hidden",
                                     "bindip="
@@ -215,7 +211,6 @@ def run():
 
     profile = 0
     trayicon = 1
-    tryrgba = False
     hidden = False
     bindip = None
 
@@ -235,10 +230,6 @@ def run():
             trayicon = 1
         if o in ("-d", "--disable-trayicon"):
             trayicon = 0
-        if o in ('-r', '--enable-rgba'):
-            tryrgba = True
-        if o in ('-x', '--disable-rgba'):
-            tryrgba = False
         if o in ('-s', '--hidden'):
             hidden = True
         if o in ("-v", "--version"):
@@ -250,8 +241,8 @@ def run():
     if result is None:
         from pynicotine.gtkgui import frame
 
-        app = frame.MainApp(config, plugins, trayicon,
-                            tryrgba, hidden, bindip)
+        app = frame.MainApp(config, plugins, trayicon, hidden, bindip)
+
         if profile:
             import hotshot
             logfile = os.path.expanduser(config) + ".profile"
