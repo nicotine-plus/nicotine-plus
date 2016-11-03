@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # COPYRIGHT (c) 2016 Michael Labouebe <gfarmerfr@free.fr>
+# COPYRIGHT (c) 2016 Mutnick <muhing@yahoo.com>
 # COPYRIGHT (c) 2013 eL_vErDe <gandalf@le-vert.net>
 # COPYRIGHT (c) 2008-2012 Quinox <quinox@users.sf.net>
 # COPYRIGHT (c) 2009 Hedonist <ak@sensi.org>
@@ -179,10 +180,8 @@ class Transfers:
 
         # queue sizes
         self.privcount = 0
-        self.oggcount = 0
         self.usersqueued = {}
         self.privusersqueued = {}
-        self.oggusersqueued = {}
         self.geoip = self.eventprocessor.geoip
 
     def setTransferPanels(self, downloads, uploads):
@@ -197,13 +196,6 @@ class Transfers:
 
         if user not in self.privilegedusers:
             self.privilegedusers.append(user)
-
-        if user in self.oggusersqueued:
-            self.privusersqueued.setdefault(user, 0)
-            self.privusersqueued[user] += self.oggusersqueued[user]
-            self.privcount += self.oggusersqueued[user]
-            self.oggcount -= self.oggusersqueued[user]
-            del self.oggusersqueued[user]
 
         if user in self.usersqueued:
             self.privusersqueued.setdefault(user, 0)
@@ -254,7 +246,7 @@ class Transfers:
         self.transferFile(1, user, filename, path, transfer, size, bitrate, length, realfilename)
 
     def transferFile(self, direction, user, filename, path="", transfer=None, size=None, bitrate=None, length=None, realfilename=None):
-        """ Get a single file. path is a local path. if transfer object is 
+        """ Get a single file. path is a local path. if transfer object is
         not None, update it, otherwise create a new one."""
         if transfer is None:
             transfer = Transfer(
@@ -410,7 +402,7 @@ class Transfers:
                 self.uploadspanel.update(i)
 
     def gotConnectError(self, req):
-        """ We couldn't connect to the user, now we are waitng for him to 
+        """ We couldn't connect to the user, now we are waitng for him to
         connect to us. Note that all this logic is handled by the network
         event processor, we just provide a visual feedback to the user."""
 
@@ -551,7 +543,7 @@ class Transfers:
             response = self.TransferRequestDownloads(msg, user, conn, addr)
         else:
             response = self.TransferRequestUploads(msg, user, conn, addr)
-            
+
         if msg.conn is not None:
             self.queue.put(response)
         else:
@@ -597,7 +589,7 @@ class Transfers:
                 self.queue.put(slskmessages.GetUserStatus(user))
                 if user != self.eventprocessor.config.sections["server"]["login"]:
                     response = slskmessages.TransferResponse(conn, 0, reason="Queued", req=transfer.req)
-                self.downloadspanel.update(transfer)        
+                self.downloadspanel.update(transfer)
             else:
                 response = slskmessages.TransferResponse(conn, 0, reason="Cancelled", req=msg.req)
                 self.eventprocessor.logMessage(_("Denied file request: User %(user)s, %(msg)s") % {
@@ -959,7 +951,7 @@ class Transfers:
     def TransferResponse(self, msg):
         """ Got a response to the file request from the peer."""
 
-        if msg.reason != None:
+        if msg.reason is not None:
 
             for i in (self.downloads+self.uploads)[:]:
 
@@ -989,7 +981,7 @@ class Transfers:
 
                 self.checkUploadQueue()
 
-        elif msg.filesize != None:
+        elif msg.filesize is not None:
             for i in self.downloads:
 
                 if i.req != msg.req:
@@ -1106,7 +1098,7 @@ class Transfers:
                 basename = string.split(i.filename, '\\')[-1]
                 basename = self.encode(basename, i.user)
                 winfname = os.path.join(incompletedir, "INCOMPLETE~" + basename)
-                pyfname  = os.path.join(incompletedir, "INCOMPLETE" + basename)
+                pyfname = os.path.join(incompletedir, "INCOMPLETE" + basename)
 
                 m = hashlib.md5()
                 m.update(i.filename + i.user)
@@ -1119,7 +1111,7 @@ class Transfers:
                         fname = pyfname
                     else:
                         fname = pynewfname
-                    
+
                     if win32:
                         f = open(u"%s" % fname, 'ab+')
                     else:
@@ -1140,7 +1132,7 @@ class Transfers:
                         try:
                             import fcntl
                             try:
-                                fcntl.lockf(f, fcntl.LOCK_EX|fcntl.LOCK_NB)
+                                fcntl.lockf(f, fcntl.LOCK_EX | fcntl.LOCK_NB)
                             except IOError, strerror:
                                 self.eventprocessor.logMessage(_("Can't get an exclusive lock on file - I/O error: %s") % strerror)
                         except ImportError:
@@ -1559,13 +1551,6 @@ class Transfers:
         # Sublist of privileged users transfers
         listprivileged = [i for i in list if self.isPrivileged(i.user)]
 
-        if not self.eventprocessor.config.sections["transfers"]["fifoqueue"]:
-            # Sublist of ogg files transfers
-            listogg = [i for i in list if i.filename[-4:].lower() == ".ogg"]
-            if len(listogg) > 0:
-                # Only OGG files will get selected
-                list = listogg
-
         if len(listprivileged) > 0:
             # Upload to a privileged user
             # Only Privileged users' files will get selected
@@ -1647,8 +1632,7 @@ class Transfers:
                         break
         else:
             # Todo
-            list = listogg = listpriv = {user: time.time()}
-            countogg = 0
+            list = listpriv = {user: time.time()}
             countpriv = 0
             trusers = self.getTransferringUsers()
             count = 0
@@ -1701,10 +1685,8 @@ class Transfers:
     def calcUploadQueueSizes(self):
         # queue sizes
         self.privcount = 0
-        self.oggcount = 0
         self.usersqueued = {}
         self.privusersqueued = {}
-        self.oggusersqueued = {}
 
         for i in self.uploads:
             if i.status == "Queued":
@@ -1722,7 +1704,7 @@ class Transfers:
             if self.isPrivileged(username):
                 return len(self.privusersqueued), len(self.privusersqueued)
             else:
-                return len(self.usersqueued)+self.privcount+self.oggcount, len(self.oggusersqueued)+self.privcount
+                return len(self.usersqueued)+self.privcount, self.privcount
 
     def addQueued(self, user, filename):
 
@@ -1730,10 +1712,6 @@ class Transfers:
             self.privusersqueued.setdefault(user, 0)
             self.privusersqueued[user] += 1
             self.privcount += 1
-        elif filename[-4:].lower() == ".ogg":
-            self.oggusersqueued.setdefault(user, 0)
-            self.oggusersqueued[user] += 1
-            self.oggcount += 1
         else:
             self.usersqueued.setdefault(user, 0)
             self.usersqueued[user] += 1
@@ -1745,11 +1723,6 @@ class Transfers:
             self.privcount -= 1
             if self.privusersqueued[user] == 0:
                 del self.privusersqueued[user]
-        elif filename[-4:].lower() == ".ogg":
-            self.oggusersqueued[user] -= 1
-            self.oggcount -= 1
-            if self.oggusersqueued[user] == 0:
-                del self.oggusersqueued[user]
         else:
             self.usersqueued[user] -= 1
             if self.usersqueued[user] == 0:
@@ -1839,7 +1812,7 @@ class Transfers:
             self.checkUploadQueue()
 
     def getRenamed(self, name):
-        """ When a transfer is finished, we remove INCOMPLETE~ or INCOMPLETE 
+        """ When a transfer is finished, we remove INCOMPLETE~ or INCOMPLETE
         prefix from the file's name. """
 
         if win32 and not os.path.exists(u"%s" % name) and not os.path.exists(name):
@@ -2007,7 +1980,7 @@ class Transfers:
                                 bitrate=bitrate,
                                 length=length
                             )
-    
+
     def FolderDestination(self, user, directory):
 
         destination = ""
