@@ -309,11 +309,9 @@ class NicotineFrame:
         self.MainNotebook.connect("page-reordered", self.OnPageReordered)
         self.MainNotebook.connect("page-added", self.OnPageAdded)
 
-        # if sys.platform.startswith("win"):
-        #     self.now_playing1.set_sensitive(False)
-
         for thing in config["interests"]["likes"]:
             self.likes[thing] = self.likeslist.append([thing])
+
         for thing in config["interests"]["dislikes"]:
             self.dislikes[thing] = self.dislikeslist.append([thing])
 
@@ -520,8 +518,21 @@ class NicotineFrame:
 
         self.UpdateDownloadFilters()
 
+        # Create the trayicon if needed
         if use_trayicon and config["ui"]["trayicon"]:
             self.TrayApp.Create()
+
+        # Deactivate public shares related menu entries if we don't use them
+        if self.np.config.sections["transfers"]["friendsonly"]:
+            self.rescan_public.set_sensitive(False)
+            self.rebuild_public.set_sensitive(False)
+            self.browse_public_shares.set_sensitive(False)
+
+        # Deactivate buddy shares related menu entries if we don't use them
+        if not self.np.config.sections["transfers"]["enablebuddyshares"]:
+            self.rescan_buddy.set_sensitive(False)
+            self.rebuild_buddy.set_sensitive(False)
+            self.browse_buddy_shares.set_sensitive(False)
 
         self.SetMainTabsVisibility()
         self.startup = False
@@ -2014,8 +2025,10 @@ class NicotineFrame:
             self.OnBuddyRescan()
 
     def OnRescan(self, widget=None, rebuild=False):
+
         if self.rescanning:
             return
+
         self.rescanning = 1
 
         self.rescan_public.set_sensitive(False)
@@ -2031,6 +2044,7 @@ class NicotineFrame:
         for combo in shared:
             if combo not in cleanedshares:
                 cleanedshares.append(combo)
+
         msg = slskmessages.RescanShares(cleanedshares, lambda: None)
         thread.start_new_thread(self.np.shares.RescanShares, (msg, rebuild))
 
@@ -2038,8 +2052,10 @@ class NicotineFrame:
         self.OnRescan(widget, rebuild=True)
 
     def OnBuddyRescan(self, widget=None, rebuild=False):
+
         if self.brescanning:
             return
+
         self.brescanning = 1
 
         self.rescan_buddy.set_sensitive(False)
@@ -2055,6 +2071,7 @@ class NicotineFrame:
         for i in shared:
             if i not in cleanedshares:
                 cleanedshares.append(i)
+
         msg = slskmessages.RescanBuddyShares(cleanedshares, lambda: None)
         thread.start_new_thread(self.np.shares.RescanBuddyShares, (msg, rebuild))
 
@@ -2742,9 +2759,9 @@ class NicotineFrame:
 
         login = self.np.config.sections["server"]["login"]
 
-        # Deactivate if we don't have specific shares for buddies
+        # Show public shares if we don't have specific shares for buddies
         if not self.np.config.sections["transfers"]["enablebuddyshares"]:
-            m = slskmessages.SharedFileList(None, {})
+            m = slskmessages.SharedFileList(None, self.np.config.sections["transfers"]["sharedfilesstreams"])
         else:
             m = slskmessages.SharedFileList(None, self.np.config.sections["transfers"]["bsharedfilesstreams"])
 

@@ -653,7 +653,6 @@ class SharesFrame(buildFrame):
 
         self.p.SetWidgetsData(config, self.options)
         self.OnEnabledBuddySharesToggled(self.enableBuddyShares)
-        # self.OnFriendsOnlyToggled(self.FriendsOnly)
 
         if transfers["shared"] is not None:
 
@@ -686,6 +685,7 @@ class SharesFrame(buildFrame):
         self.needrescan = 0
 
     def GetSettings(self):
+
         if win32:
             place = "Windows"
             homedir = "C:\windows"
@@ -718,22 +718,47 @@ class SharesFrame(buildFrame):
 
     def OnFriendsOnlyToggled(self, widget):
 
-        sensitive = self.FriendsOnly.get_active()
-        buddiesonly = self.enableBuddyShares.get_active()
+        friendsonly = self.FriendsOnly.get_active()
 
-        self.Shares.set_sensitive(not (sensitive and buddiesonly))
-        self.addSharesButton.set_sensitive(not (sensitive and buddiesonly))
-        self.removeSharesButton.set_sensitive(not (sensitive and buddiesonly))
-        self.renameVirtualsButton.set_sensitive(not (sensitive and buddiesonly))
+        if friendsonly:
+            # If sharing only with friends, buddy shares are activated and should be locked
+            self.enableBuddyShares.set_active(True)
+            self.enableBuddyShares.set_sensitive(False)
+        else:
+            # If not let the buddy shares checkbox be selectable
+            self.enableBuddyShares.set_sensitive(True)
 
-        self.BuddyShares.set_sensitive(buddiesonly)
-        self.addBuddySharesButton.set_sensitive(buddiesonly)
-        self.removeBuddySharesButton.set_sensitive(buddiesonly)
-        self.renameBuddyVirtualsButton.set_sensitive(buddiesonly)
+        buddies = self.enableBuddyShares.get_active()
 
-        self.frame.rescan_buddy.set_sensitive(buddiesonly)
-        self.frame.rebuild_buddy.set_sensitive(buddiesonly)
-        self.frame.browse_buddy_shares.set_sensitive(buddiesonly)
+        if buddies:
+            # If buddy shares are enabled let the friends only checkbox be selectable
+            self.FriendsOnly.set_sensitive(True)
+        else:
+            # If not the friend only checkbox should be deactivated and locked
+            self.FriendsOnly.set_active(False)
+            self.FriendsOnly.set_sensitive(False)
+
+        # Public shares are deactivated if we only share with friends
+        self.Shares.set_sensitive(not (friendsonly and buddies))
+        self.addSharesButton.set_sensitive(not (friendsonly and buddies))
+        self.removeSharesButton.set_sensitive(not (friendsonly and buddies))
+        self.renameVirtualsButton.set_sensitive(not (friendsonly and buddies))
+
+        # Buddy shares are activated only if needed
+        self.BuddyShares.set_sensitive(buddies)
+        self.addBuddySharesButton.set_sensitive(buddies)
+        self.removeBuddySharesButton.set_sensitive(buddies)
+        self.renameBuddyVirtualsButton.set_sensitive(buddies)
+
+        # Buddy shares related menu are activated if needed
+        self.frame.rescan_buddy.set_sensitive(buddies)
+        self.frame.rebuild_buddy.set_sensitive(buddies)
+        self.frame.browse_buddy_shares.set_sensitive(buddies)
+
+        # Public shares related menu are deactivated if we only share with friends
+        self.frame.rescan_public.set_sensitive(not friendsonly)
+        self.frame.rebuild_public.set_sensitive(not friendsonly)
+        self.frame.browse_public_shares.set_sensitive(not friendsonly)
 
     def GetNeedRescan(self):
         return self.needrescan
