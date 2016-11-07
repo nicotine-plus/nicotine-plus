@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nicotine\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-03 19:44+0100\n"
-"PO-Revision-Date: 2016-11-03 19:44+0100\n"
+"POT-Creation-Date: 2016-11-07 23:02+0100\n"
+"PO-Revision-Date: 2016-11-07 23:07+0100\n"
 "Last-Translator: Michael LABOUEBE <gfarmerfr@free.fr>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -520,7 +520,7 @@ msgstr "Configurer ses i_nformations personnelles"
 
 # pynicotine/gtkgui/nicotine_glade.py
 msgid "Browse Shares"
-msgstr "Voir les fichiers"
+msgstr "Voir les partages"
 
 msgid "Load From Disk"
 msgstr "Charger à partir du disque"
@@ -1792,11 +1792,7 @@ msgid "Rescan shares on startup"
 msgstr "Réexaminer mes partages au démarrage"
 
 msgid "Enable Buddy-Only shares"
-msgstr "Activer le partage pour les amis uniquement"
-
-# pynicotine/gtkgui/settings_glade.py
-msgid "Share only to buddies"
-msgstr "Partager seulement avec mes amis"
+msgstr "Activer le partage pour les amis"
 
 msgid ""
 "If buddy shares are enabled, they will be shared. Otherwise normal shares "
@@ -1805,8 +1801,12 @@ msgstr ""
 "Si les partages pour amis sont activés, ils seront disponibles pour votre "
 "liste d'amis, sinon le partage normal sera utilisé."
 
+# pynicotine/gtkgui/settings_glade.py
+msgid "Share only to buddies"
+msgstr "Partager uniquement avec mes amis"
+
 msgid "<b>Buddies-Only Shares</b>"
-msgstr "<b>Partage pour les amis uniquement</b>"
+msgstr "<b>Partage pour les amis</b>"
 
 msgid "Sounds"
 msgstr "Sons"
