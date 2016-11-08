@@ -482,6 +482,7 @@ class Config:
         self.removeOldOption("transfers", "pmqueueddir")
         self.removeOldOption("server", "lastportstatuscheck")
         self.removeOldOption("userinfo", "descrutf8")
+        self.removeOldOption("ui", "mozembed")
 
         # Checking for nnknown section/options
         unknown1 = [
