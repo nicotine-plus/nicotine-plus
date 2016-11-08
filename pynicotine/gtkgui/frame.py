@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # COPYRIGHT (c) 2016 Michael Labouebe <gfarmerfr@free.fr>
+# COPYRIGHT (c) 2016 Mutnick <muhing@yahoo.com>
 # COPYRIGHT (c) 2008-2011 Quinox <quinox@users.sf.net>
 # COPYRIGHT (C) 2006-2009 Daelstorm <daelstorm@gmail.com>
 # COPYRIGHT (C) 2009 Hedonist <ak@sensi.org>
@@ -34,19 +35,11 @@ from pynicotine import slskmessages
 from pynicotine import slskproto
 from pynicotine.utils import version
 import time
-try:
-    import gtkmozembed
-except ImportError:
-    gtkmozembed = None
 import gobject
 import thread
 import urllib
 import signal
 import re
-try:
-    import webbrowser
-except ImportError:
-    webbrowser = None
 from privatechat import PrivateChats
 from chatrooms import ChatRooms
 from userinfo import UserTabs, UserInfo
@@ -167,157 +160,9 @@ class BuddiesComboBoxEntry(gtk.ComboBoxEntry):
             del self.items[item]
 
 
-class BrowserWindow(gtk.VBox):
-    """
-        An HTML browser
-    """
-    def __init__(self, frame, url, nostyles=False):
-        """
-        Initializes the window
-        """
-
-        gtk.VBox.__init__(self)
-        self.set_border_width(5)
-        self.set_spacing(3)
-        self.nostyles = nostyles
-        self.action_count = 0
-
-        self.frame = frame
-        if not nostyles:
-            top = gtk.HBox()
-            top.set_spacing(3)
-
-        self.back = gtk.Button()
-        image = gtk.Image()
-        image.set_from_stock('gtk-go-back', gtk.ICON_SIZE_SMALL_TOOLBAR)
-        self.back.set_image(image)
-        self.back.set_sensitive(False)
-        self.back.connect('clicked', self.on_back)
-        top.pack_start(self.back, False, False)
-
-        self.next = gtk.Button()
-        image = gtk.Image()
-        image.set_from_stock('gtk-go-forward', gtk.ICON_SIZE_SMALL_TOOLBAR)
-        self.next.set_image(image)
-        self.next.connect('clicked', self.on_next)
-        self.next.set_sensitive(False)
-        top.pack_start(self.next, False, False)
-
-        w = gtk.Button(_("Open Browser"))
-        w.connect('clicked', self.on_open_browser)
-        top.pack_start(w, False, False)
-
-        self.entry = gtk.Entry()
-        self.entry.connect('activate', self.entry_activate)
-        top.pack_start(self.entry, True, True)
-        self.pack_start(top, False, True)
-        try:
-            gtkmozembed.set_profile_path(gettempdir(), "nicotine+mozembed")
-            self.view = gtkmozembed.MozEmbed()
-        except Exception,  e:
-            log.addwarning(_('Embedded Mozilla webrowser failed to load: %s(error)') % {'error': e})
-            return
-        else:
-            self.pack_start(self.view, True, True)
-            if not nostyles:
-                self.view.connect('location', self.on_location_change)
-
-        self.show_all()
-        self.finish()
-        repeat = True
-
-        self.view.set_data(
-            '<html><body><b>' + _('Loading requested information...') + '</b></body></html>',
-            ''
-        )
-
-        self.view.connect('net-stop', self.on_net_stop)
-        self.cache_dir = gettempdir()
-
-        self.server = ''
-
-        if url:
-            self.load_url(url, self.action_count, False)
-
-    def finish(self, repeat=True):
-        """
-            Waits for current pending gtk events to finish
-        """
-        while gtk.events_pending():
-            gtk.main_iteration()
-            if not repeat:
-                break
-
-    def shutdown(self):
-        self.view.stop_load()
-        self.view.is_realize = False
-        self.finish()
-
-    def on_net_stop(self, *args):
-        """
-        Called when mozilla is done loading the page
-        """
-        self.view.stopped = True
-
-    def set_text(self, text):
-        """
-        Sets the text of the browser window
-
-        """
-        self.view.set_data(text, '')
-
-    def entry_activate(self, *e):
-        """
-        Called when the user presses enter in the address bar
-        """
-        url = unicode(self.entry.get_text(), 'utf-8')
-        self.load_url(url, self.action_count)
-
-    def on_location_change(self, mozembed):
-        # Only called when not self.nostyles
-        self.entry.set_text(mozembed.get_location())
-        self.back.set_sensitive(self.view.can_go_back())
-        self.next.set_sensitive(self.view.can_go_forward())
-
-    def on_next(self, widget):
-        """
-        Goes to the next entry in history
-        """
-        self.view.go_forward()
-
-    def on_back(self, widget):
-        """
-        Goes to the previous entry in history
-        """
-        self.view.go_back()
-
-    def on_open_browser(self, button):
-        """
-        Opens the current URL in a new browser window (if possible).
-        """
-        # This method is rarely used, so we only do the import when we need to.
-        # "new=1" is to request new window.
-        webbrowser.open(self.view.get_location(), new=1)
-
-    def load_url(self, url, action_count, history=False):
-        """
-        Loads a URL, either from the cache, or from the website specified
-        """
-        self.view.load_url(url)
-
-        if not self.nostyles:
-            if self.view.can_go_back():
-                self.back.set_sensitive(True)
-            if not self.view.can_go_forward():
-                self.next.set_sensitive(False)
-
-        self.entry.set_sensitive(True)
-        self.entry.set_text(url)
-
-
 class NicotineFrame:
 
-    def __init__(self, config, plugindir, use_trayicon, try_rgba, start_hidden=False, WebBrowser=True, bindip=None):
+    def __init__(self, config, plugindir, use_trayicon, try_rgba, start_hidden=False, bindip=None):
 
         self.clip_data = ""
         self.configfile = config
@@ -551,8 +396,6 @@ class NicotineFrame:
         self.LogWindow.show()
         self.OnShowLog(self.show_log_window1)
 
-        self.extravbox = gtk.VBox()  # Web browser vbox
-
         for l in [
             self.ChatTabLabel,
             self.PrivateChatTabLabel,
@@ -700,18 +543,6 @@ class NicotineFrame:
             if RGBA:
                 log.add('X11/GTK RGBA Bug workaround: Restoring RGBA as default colormap.')
                 gtk_screen.set_default_colormap(colormap)
-
-        self.WebBrowserTabLabel = gtk.Label("Browser")
-        self.WebBrowserTabLabel.set_property("xalign", 0)
-        if WebBrowser and config["ui"]["mozembed"] and gtkmozembed is not None:
-            self.extravbox.show()
-            self.browser = BrowserWindow(self, "https://www.nicotine-plus.org")
-            self.extravbox.pack_start(self.browser, True, True)
-            self.extravbox.show_all()
-            self.MainNotebook.append_page(self.extravbox, self.WebBrowserTabLabel)
-            self.MainNotebook.set_tab_reorderable(self.extravbox, self.np.config.sections["ui"]["tab_reorderable"])
-        else:
-            self.browser = None
 
         self.SetMainTabsVisibility()
         self.startup = False
@@ -1146,9 +977,6 @@ class NicotineFrame:
                 self.TrayApp.destroy_trayicon()
 
             self.MainWindow.destroy()
-
-            if self.browser is not None:
-                self.browser.shutdown()
 
             gtk.main_quit()
 
@@ -1683,10 +1511,6 @@ class NicotineFrame:
         if self.TrayApp.trayicon:
             self.TrayApp.destroy_trayicon()
 
-        # Cleaning up the internal browser
-        if self.browser is not None:
-            self.browser.shutdown()
-            gtk.gdk.threads_leave()
 
         # Closing up all shelves db
         for db in [
@@ -2003,8 +1827,7 @@ class NicotineFrame:
             self.SearchTabLabel: self.SearchNotebook,
             self.UserInfoTabLabel: self.UserInfoNotebook,
             self.UserBrowseTabLabel: self.UserBrowseNotebook,
-            self.InterestsTabLabel: None,
-            self.WebBrowserTabLabel: self.extravbox
+            self.InterestsTabLabel: None
         }
 
         if "BuddiesTabLabel" in self.__dict__:
@@ -3384,8 +3207,6 @@ class NicotineFrame:
             name = "interests"   # Interests
         elif tab == self.userlist.userlistvbox:
             name = "userlist"   # Buddy list
-        elif tab == self.extravbox:
-            name = "extra"   # Buddy list
         else:
             # this should never happen, unless you've renamed a widget
             return
@@ -3410,8 +3231,6 @@ class NicotineFrame:
             child = self.interests  # Interests
         elif tab == "userlist":
             child = self.userlist.userlistvbox  # Buddy list
-        elif tab == "extra":
-            child = self.extravbox
         else:
             # this should never happen, unless you've renamed a widget
             return
@@ -3437,8 +3256,6 @@ class NicotineFrame:
             child = self.interests  # Interests
         elif tab == "userlist":
             child = self.userlist.userlistvbox  # Buddy list
-        elif tab == "extra":
-            child = self.extravbox
         else:
             # this should never happen, unless you've renamed a widget
             return
@@ -3832,8 +3649,8 @@ class gstreamer:
 
 
 class MainApp:
-    def __init__(self, config, plugindir, trayicon, rgbamode, start_hidden, WebBrowser, bindip):
-        self.frame = NicotineFrame(config, plugindir, trayicon, rgbamode, start_hidden, WebBrowser, bindip)
+    def __init__(self, config, plugindir, trayicon, rgbamode, start_hidden, bindip):
+        self.frame = NicotineFrame(config, plugindir, trayicon, rgbamode, start_hidden, bindip)
 
     def MainLoop(self):
         signal.signal(signal.SIGINT, signal.SIG_IGN)

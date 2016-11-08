@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # COPYRIGHT (c) 2016 Michael Labouebe <gfarmerfr@free.fr>
+# COPYRIGHT (c) 2016 Mutnick <muhing@yahoo.com>
 # COPYRIGHT (c) 2008-2011 Quinox <quinox@users.sf.net>
 # COPYRIGHT (c) 2008 Gallows <g4ll0ws@gmail.com>
 # COPYRIGHT (C) 2006-2009 Daelstorm <daelstorm@gmail.com>
@@ -25,7 +26,6 @@
 import gtk
 import gobject
 import re
-import webbrowser
 from dirchooser import *
 from utils import InputDialog, InitialiseColumns, recode, recode2, popupWarning, ImportWinSlskConfig, Humanize, OpenUri, HumanSize
 from entrydialog import *
@@ -2596,10 +2596,6 @@ class UrlCatchFrame(buildFrame):
                 "humanizeurls": self.HumanizeURLs,
                 "protocols": None
             },
-            "ui": {
-                "mozembed": self.EnableMozEmbed,
-                "open_in_mozembed": self.EnableMozEmbedURLs
-            }
         }
 
         self.protocolmodel = gtk.ListStore(
@@ -2617,7 +2613,6 @@ class UrlCatchFrame(buildFrame):
         cols[1].set_sort_column_id(1)
         self.ProtocolHandlers.set_model(self.protocolmodel)
         self.ProtocolHandlers.get_selection().connect("changed", self.OnSelect)
-        self.OnToggleMozembed(self.EnableMozEmbed)
 
         renderers = cols[1].get_cell_renderers()
         for render in renderers:
@@ -2655,9 +2650,6 @@ class UrlCatchFrame(buildFrame):
         store = treeview.get_model()
         iter = store.get_iter(index)
         store.set(iter, pos, value)
-
-    def OnToggleMozembed(self, widget):
-        self.EnableMozEmbedURLs.set_sensitive(widget.get_active())
 
     def SetSettings(self, config):
         self.protocolmodel.clear()
@@ -2699,10 +2691,6 @@ class UrlCatchFrame(buildFrame):
             pass
 
         return {
-            "ui": {
-                "mozembed": self.EnableMozEmbed.get_active(),
-                "open_in_mozembed": self.EnableMozEmbedURLs.get_active()
-            },
             "urls": {
                 "urlcatching": self.URLCatching.get_active(),
                 "humanizeurls": self.HumanizeURLs.get_active(),

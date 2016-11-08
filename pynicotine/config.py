@@ -268,8 +268,6 @@ class Config:
                 "inputcolor": "",
                 "spellcheck": 1,
                 "exitdialog": 1,
-                "mozembed": 0,
-                "open_in_mozembed": 0,
                 "notexists": 1,
                 "tab_colors": 0,
                 "tab_default": "",
@@ -501,7 +499,7 @@ class Config:
                 "showaway", "tooltips", "usernamehotspots", "exitdialog",
                 "tab_icons", "spellcheck", "modes_order", "modes_visible",
                 "chat_hidebuttons", "tab_status_icons", "notexists",
-                "mozembed", "open_in_mozembed", "soundenabled", "transalpha",
+                "soundenabled", "transalpha",
                 "enabletrans", "speechenabled", "enablefilters", "width",
                 "height", "xposition", "yposition", "labelmain", "labelrooms",
                 "labelprivate", "labelinfo", "labelbrowse", "labelsearch"

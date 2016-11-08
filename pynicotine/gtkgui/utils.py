@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # COPYRIGHT (c) 2016 Michael Labouebe <gfarmerfr@free.fr>
+# COPYRIGHT (c) 2016 Mutnick <muhing@yahoo.com>
 # COPYRIGHT (c) 2008-2011 Quinox <quinox@users.sf.net>
 # COPYRIGHT (C) 2006-2009 Daelstorm <daelstorm@gmail.com>
 # COPYRIGHT (C) 2003-2004 Hyriand
@@ -22,8 +23,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from __future__ import division
-
-import webbrowser
 
 import gtk
 import gobject
@@ -297,9 +296,6 @@ def OpenUri(uri):
     # Situation 1, user defined a way of handling the protocol
     protocol = uri[:uri.find(":")]
     if protocol in PROTOCOL_HANDLERS:
-        if NICOTINE.browser is not None and NICOTINE.np.config.sections["ui"]["open_in_mozembed"] and protocol in ("http", 'https'):
-            NICOTINE.browser.load_url(uri, 0)
-            return
         if PROTOCOL_HANDLERS[protocol].__class__ is types.MethodType:
             PROTOCOL_HANDLERS[protocol](uri.strip())
             return
@@ -307,12 +303,7 @@ def OpenUri(uri):
             executeCommand(PROTOCOL_HANDLERS[protocol], uri)
             return
 
-    # Situation 2, user did not define a way of handling the protocol, we'll leave it up to python
-    if webbrowser:
-        webbrowser.open(uri)
-        return
-
-    # Situation 3, we let Gnome VFS deal with it
+    # Situation 2, we let Gnome VFS deal with it
     try:
         import gnomevfs
         gnomevfs.url_show(uri)
