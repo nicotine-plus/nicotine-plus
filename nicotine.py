@@ -194,7 +194,6 @@ def run():
                                     "disable-rgba",
                                     "version",
                                     "hidden",
-                                    "disable-webbrowser",
                                     "bindip="
                                    ]
                                    )
@@ -216,7 +215,6 @@ def run():
 
     profile = 0
     trayicon = 1
-    webbrowser = True
     tryrgba = False
     hidden = False
     bindip = None
@@ -237,8 +235,6 @@ def run():
             trayicon = 1
         if o in ("-d", "--disable-trayicon"):
             trayicon = 0
-        if o in ("-w", "--disable-webbrowser"):
-            webbrowser = False
         if o in ('-r', '--enable-rgba'):
             tryrgba = True
         if o in ('-x', '--disable-rgba'):
@@ -255,7 +251,7 @@ def run():
         from pynicotine.gtkgui import frame
 
         app = frame.MainApp(config, plugins, trayicon,
-                            tryrgba, hidden, webbrowser, bindip)
+                            tryrgba, hidden, bindip)
         if profile:
             import hotshot
             logfile = os.path.expanduser(config) + ".profile"

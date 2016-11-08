@@ -483,6 +483,7 @@ class Config:
         self.removeOldOption("server", "lastportstatuscheck")
         self.removeOldOption("userinfo", "descrutf8")
         self.removeOldOption("ui", "mozembed")
+        self.removeOldOption("ui", "open_in_mozembed")
 
         # Checking for nnknown section/options
         unknown1 = [
