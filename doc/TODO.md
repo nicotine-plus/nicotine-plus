@@ -4,14 +4,15 @@ A list of stuff & things todo (not in any particular order):
 
 #### Short term goals
 
-* Drop the bundle Configparser module (upstream as all the patches).
+* **IN PROGRESS**: Drop the bundle Configparser module (upstream as all the patches).
 * Convert libsexy spellcheck stuff to pygtkspell.
 * GNU/Linux: Switch to using XDG_* directories.
 * **IN PROGRESS**: Apply downstream patches (debian, fedora & ubuntu).
 * Convert all the libglade files to GTKBuilder.
 * Our sounds are dropped by downstream packagers for being non-free: investigate.
 * Convert old (unmaintained) python-GeoIP code to an up to date version.
-* Drop the embeded Web browser: doesn't work anymore, outdated and security nightmare.
+* Curate and update embedded plugins.
+* **DONE**: Drop the embeded Web browser: doesn't work anymore, outdated and security nightmare.
 * **DONE**: Drop the special treatment for downloading ogg files.
 * **DONE**: Drop RGBA code that was disable by default and broken.
 * **DONE**: Upload old sourceforge releases to github & refresh the update check code.
@@ -44,10 +45,12 @@ A list of stuff & things todo (not in any particular order):
 
     * Test & refresh Quinox stuff.
 
+
 * **DONE**: Theming
 
     * Find a GTK2 theme to apply to the frozen app so it doesn't look bad.
     * Same goes for fonts.
+
 
 * **DONE**: PyInstaller:
 
