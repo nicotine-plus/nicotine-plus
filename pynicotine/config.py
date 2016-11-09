@@ -268,8 +268,6 @@ class Config:
                 "inputcolor": "",
                 "spellcheck": 1,
                 "exitdialog": 1,
-                "mozembed": 0,
-                "open_in_mozembed": 0,
                 "notexists": 1,
                 "tab_colors": 0,
                 "tab_default": "",
@@ -484,6 +482,8 @@ class Config:
         self.removeOldOption("transfers", "pmqueueddir")
         self.removeOldOption("server", "lastportstatuscheck")
         self.removeOldOption("userinfo", "descrutf8")
+        self.removeOldOption("ui", "mozembed")
+        self.removeOldOption("ui", "open_in_mozembed")
 
         # Checking for nnknown section/options
         unknown1 = [
@@ -501,7 +501,7 @@ class Config:
                 "showaway", "tooltips", "usernamehotspots", "exitdialog",
                 "tab_icons", "spellcheck", "modes_order", "modes_visible",
                 "chat_hidebuttons", "tab_status_icons", "notexists",
-                "mozembed", "open_in_mozembed", "soundenabled", "transalpha",
+                "soundenabled", "transalpha",
                 "enabletrans", "speechenabled", "enablefilters", "width",
                 "height", "xposition", "yposition", "labelmain", "labelrooms",
                 "labelprivate", "labelinfo", "labelbrowse", "labelsearch"
