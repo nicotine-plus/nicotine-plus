@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nicotine\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-07 23:02+0100\n"
-"PO-Revision-Date: 2016-11-07 23:07+0100\n"
+"POT-Creation-Date: 2016-11-09 20:55+0100\n"
+"PO-Revision-Date: 2016-11-09 20:56+0100\n"
 "Last-Translator: Michael LABOUEBE <gfarmerfr@free.fr>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -1980,25 +1980,6 @@ msgstr "Logiciel:"
 msgid "Protocol:"
 msgstr "Protocole:"
 
-msgid "Enabled embedded Webbrowser (unstable if misconfigured)"
-msgstr "Activer le navigateur intégré (instable si mal configuré)"
-
-msgid ""
-"You must have mozembed installed, and correctly set your LD_LIBRARY_PATH and "
-"MOZILLA_FIVE_HOME to the proper directory, or you may experience segfaults. "
-"Try setting them to: /usr/lib/xulrunner-x.x"
-msgstr ""
-"Vous devez avoir mozembed installé et renseigner les variables "
-"LD_LIBRARY_PATH et MOZILLA_FIVE_HOME vers le bon répertoire, ou vous "
-"pourriez avoir des bogues. Essayer de les renseigner avec la valeur: /usr/"
-"lib/xulrunner-x.x"
-
-msgid "Open URLs in embedded Webbrowser"
-msgstr "Ouvrir les liens dans le navigateur intégré"
-
-msgid "Overrides settings for HTTP urls"
-msgstr "Remplacera le logiciel défini pour gérer les urls HTTP"
-
 # pynicotine/gtkgui/settings_glade.py
 msgid "URL Catching:"
 msgstr "Capture d'URL:"
@@ -3080,17 +3061,6 @@ msgstr "Nom virtuel"
 #, python-format
 msgid "Enter virtual name for '%(dir)s':"
 msgstr "Choisissez un nom virtuel pour '%(dir)s':"
-
-# pynicotine/gtkgui/nicotine_glade.py
-msgid "Open Browser"
-msgstr "Ouvrir le navigateur"
-
-#, python-format
-msgid "Embedded Mozilla webrowser failed to load: %s(error)"
-msgstr "Le navigateur embarqué Mozilla n'a pas réussi à démarrer: %s(error)"
-
-msgid "Loading requested information..."
-msgstr "Chargement des informations demandées..."
 
 # pynicotine/gtkgui/nicotine_glade.py
 msgid "Joined Rooms "

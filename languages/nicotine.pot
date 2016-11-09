@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-07 23:02+0100\n"
+"POT-Creation-Date: 2016-11-09 20:55+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1555,21 +1555,6 @@ msgstr ""
 msgid "Protocol:"
 msgstr ""
 
-msgid "Enabled embedded Webbrowser (unstable if misconfigured)"
-msgstr ""
-
-msgid ""
-"You must have mozembed installed, and correctly set your LD_LIBRARY_PATH and "
-"MOZILLA_FIVE_HOME to the proper directory, or you may experience segfaults. "
-"Try setting them to: /usr/lib/xulrunner-x.x"
-msgstr ""
-
-msgid "Open URLs in embedded Webbrowser"
-msgstr ""
-
-msgid "Overrides settings for HTTP urls"
-msgstr ""
-
 msgid "URL Catching:"
 msgstr ""
 
@@ -2318,16 +2303,6 @@ msgstr ""
 
 #, python-format
 msgid "Enter virtual name for '%(dir)s':"
-msgstr ""
-
-msgid "Open Browser"
-msgstr ""
-
-#, python-format
-msgid "Embedded Mozilla webrowser failed to load: %s(error)"
-msgstr ""
-
-msgid "Loading requested information..."
 msgstr ""
 
 msgid "Joined Rooms "
