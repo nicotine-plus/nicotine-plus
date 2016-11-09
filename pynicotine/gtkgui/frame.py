@@ -175,7 +175,7 @@ class NicotineFrame:
         self.current_tab = 0
         self.rescanning = 0
         self.brescanning = 0
-        self.needrescan = 0
+        self.needrescan = False
         self.autoaway = False
         self.awaytimer = None
         self.SEXY = SEXY
@@ -488,7 +488,14 @@ class NicotineFrame:
         self.ShowChatButtons.set_active(not config["ui"]["chat_hidebuttons"])
 
         if config["transfers"]["rescanonstartup"]:
-            self.BothRescan()
+
+            # Rescan public shares if needed
+            if not self.np.config.sections["transfers"]["friendsonly"]:
+                self.OnRescan()
+
+            # Rescan buddy shares if needed
+            if self.np.config.sections["transfers"]["enablebuddyshares"]:
+                self.OnBuddyRescan()
 
         img = gtk.Image()
         img.set_from_pixbuf(self.images["notify"])
@@ -2017,11 +2024,6 @@ class NicotineFrame:
             self.np.config.sections["server"]["ignorelist"].remove(user)
             self.np.config.writeConfiguration()
 
-    def BothRescan(self):
-        self.OnRescan()
-        if self.np.config.sections["transfers"]["enablebuddyshares"]:
-            self.OnBuddyRescan()
-
     def OnRescan(self, widget=None, rebuild=False):
 
         if self.rescanning:
@@ -2199,7 +2201,7 @@ class NicotineFrame:
         if not config["ui"]["trayicon"] and self.TrayApp.HAVE_TRAYICON:
             self.TrayApp.destroy_trayicon()
         elif config["ui"]["trayicon"] and not self.TrayApp.HAVE_TRAYICON:
-            if self.TrayApp.trayicon == None and not self.TrayApp.TRAYICON_CREATED:
+            if self.TrayApp.trayicon is None and not self.TrayApp.TRAYICON_CREATED:
                 self.TrayApp.Load()
             else:
                 self.TrayApp.HAVE_TRAYICON = True
@@ -2270,8 +2272,16 @@ class NicotineFrame:
             self.needrescan = True
 
         if msg == "ok" and self.needrescan:
+
             self.needrescan = False
-            self.BothRescan()
+
+            # Rescan public shares if needed
+            if not self.np.config.sections["transfers"]["friendsonly"]:
+                self.OnRescan()
+
+            # Rescan buddy shares if needed
+            if self.np.config.sections["transfers"]["enablebuddyshares"]:
+                self.OnBuddyRescan()
 
         ConfigUnset = self.np.config.needConfig()
 

@@ -1362,7 +1362,15 @@ class ChatRoom:
             self.frame.ChatNotebook.attach_tab(self.Main)
             gobject.idle_add(self.frame.ScrollBottom, self.ChatScroll.get_parent())
         elif cmd == "/rescan":
-            self.frame.BothRescan()
+
+            # Rescan public shares if needed
+            if not self.frame.np.config.sections["transfers"]["friendsonly"]:
+                self.frame.OnRescan()
+
+            # Rescan buddy shares if needed
+            if self.frame.np.config.sections["transfers"]["enablebuddyshares"]:
+                self.frame.OnBuddyRescan()
+
         elif cmd in ["/tick", "/t"]:
             self.frame.np.queue.put(slskmessages.RoomTickerSet(self.room, ToBeEncoded(args, self.encoding)))
         elif cmd in ("/tickers",):
