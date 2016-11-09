@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 #
-# COPYRIGHT (c) 2016 Michael Labouebe <gfarmerfr@free.fr>
-# COPYRIGHT (c) 2016 Mutnick <muhing@yahoo.com>
-# COPYRIGHT (c) 2008-2011 Quinox <quinox@users.sf.net>
+# COPYRIGHT (C) 2016 Michael Labouebe <gfarmerfr@free.fr>
+# COPYRIGHT (C) 2016 Mutnick <muhing@yahoo.com>
+# COPYRIGHT (C) 2008-2011 Quinox <quinox@users.sf.net>
 # COPYRIGHT (C) 2006-2009 Daelstorm <daelstorm@gmail.com>
 # COPYRIGHT (C) 2009 Hedonist <ak@sensi.org>
 # COPYRIGHT (C) 2003-2004 Hyriand <hyriand@thegraveyard.org>
@@ -1488,6 +1488,7 @@ class NicotineFrame:
         self.np.config.sections["ui"]["yposition"] = ypos
 
     def OnDestroy(self, widget):
+
         self.np.config.sections["privatechat"]["users"] = list(self.privatechats.users.keys())
         self.np.protothread.abort()
         self.np.StopTimers()
@@ -1500,7 +1501,6 @@ class NicotineFrame:
         # Cleaning up the trayicon
         if self.TrayApp.trayicon:
             self.TrayApp.destroy_trayicon()
-
 
         # Closing up all shelves db
         for db in [
@@ -1799,15 +1799,13 @@ class NicotineFrame:
             tablabel.set_text_color(2)
 
     def OnSwitchPage(self, notebook, page, page_nr):
+
         tabLabels = []
         tabs = self.MainNotebook.get_children()
         for i in tabs:
             tabLabels.append(self.MainNotebook.get_tab_label(i))
-        # tabLabels = [self.ChatTabLabel, self.PrivateChatTabLabel, self.DownloadsTabLabel, self.UploadsTabLabel, self.SearchTabLabel, self.UserInfoTabLabel, self.UserBrowseTabLabel, self.InterestsTabLabel]
-        # if "BuddiesTabLabel" in self.__dict__:
-        #     tabLabels.append(self.BuddiesTabLabel)
+
         l = tabLabels[page_nr]
-        # n = [self.ChatNotebook, self.PrivatechatNotebook, None, None, self.SearchNotebook, self.UserInfoNotebook, self.UserBrowseNotebook, None, None][page_nr]
 
         compare = {
             self.ChatTabLabel: self.ChatNotebook,
@@ -2151,18 +2149,26 @@ class NicotineFrame:
             self.settingswindow.SettingsWindow.deiconify()
 
     def OnSettingsClosed(self, widget, msg):
+
         if msg == "cancel":
             self.settingswindow.SettingsWindow.hide()
             return
+
         output = self.settingswindow.GetSettings()
+
         if type(output) is not tuple:
             return
+
         if msg == "ok":
             self.settingswindow.SettingsWindow.hide()
+
         needrescan, needcolors, needcompletion, config = output
+
         for (key, data) in config.items():
             self.np.config.sections[key].update(data)
+
         config = self.np.config.sections
+
         # Write utils.py options
         utils.DECIMALSEP = config["ui"]["decimalsep"]
         utils.CATCH_URLS = config["urls"]["urlcatching"]
@@ -2257,24 +2263,26 @@ class NicotineFrame:
 
         if self.np.transfers is not None:
             self.np.transfers.checkUploadQueue()
+
         self.UpdateTransferButtons()
+
         if needrescan:
-            self.needrescan = 1
+            self.needrescan = True
 
         if msg == "ok" and self.needrescan:
-            self.needrescan = 0
+            self.needrescan = False
             self.BothRescan()
 
         ConfigUnset = self.np.config.needConfig()
+
         if ConfigUnset > 1:
             if self.np.transfers is not None:
                 self.connect1.set_sensitive(0)
-            # self.OnSettings(None)
             self.OnFastConfigure(None)
         else:
             if self.np.transfers is None:
                 self.connect1.set_sensitive(1)
-        # self.SetAllToolTips()
+
         self.pluginhandler.check_enabled()
 
     def OnChangePassword(self, password):

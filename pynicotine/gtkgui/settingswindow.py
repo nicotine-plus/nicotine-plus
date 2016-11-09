@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 #
-# COPYRIGHT (c) 2016 Michael Labouebe <gfarmerfr@free.fr>
-# COPYRIGHT (c) 2016 Mutnick <muhing@yahoo.com>
-# COPYRIGHT (c) 2008-2011 Quinox <quinox@users.sf.net>
-# COPYRIGHT (c) 2008 Gallows <g4ll0ws@gmail.com>
+# COPYRIGHT (C) 2016 Michael Labouebe <gfarmerfr@free.fr>
+# COPYRIGHT (C) 2016 Mutnick <muhing@yahoo.com>
+# COPYRIGHT (C) 2008-2011 Quinox <quinox@users.sf.net>
+# COPYRIGHT (C) 2008 Gallows <g4ll0ws@gmail.com>
 # COPYRIGHT (C) 2006-2009 Daelstorm <daelstorm@gmail.com>
 # COPYRIGHT (C) 2003-2004 Hyriand
 #
@@ -270,7 +270,7 @@ class DownloadsFrame(buildFrame):
 
         buildFrame.__init__(self, "DownloadsFrame")
 
-        self.needrescan = 0
+        self.needrescan = False
 
         self.options = {
             "transfers": {
@@ -332,7 +332,8 @@ class DownloadsFrame(buildFrame):
                 self.filtersiters[filter] = self.filterlist.append([filter, escaped])
 
         self.OnEnableFiltersToggle(self.DownloadFilter)
-        self.needrescan = 0
+
+        self.needrescan = False
 
     def GetSettings(self):
 
@@ -409,10 +410,10 @@ class DownloadsFrame(buildFrame):
             # so only force a scan if the user changes his donwload directory
             if self.ShareDownloadDir.get_active():
                 if dir_disp != transfers["downloaddir"]:
-                    self.needrescan = 1
+                    self.needrescan = True
 
     def OnShareDownloadDirToggled(self, widget):
-        self.needrescan = 1
+        self.needrescan = True
 
     def OnEnableFiltersToggle(self, widget):
         sensitive = widget.get_active()
@@ -593,7 +594,7 @@ class SharesFrame(buildFrame):
 
         buildFrame.__init__(self, "SharesFrame")
 
-        self.needrescan = 0
+        self.needrescan = False
 
         # last column is the raw byte/unicode object for the folder (not shown)
         self.shareslist = gtk.ListStore(
@@ -682,7 +683,7 @@ class SharesFrame(buildFrame):
 
             self.bshareddirs = transfers["buddyshared"][:]
 
-        self.needrescan = 0
+        self.needrescan = False
 
     def GetSettings(self):
 
@@ -792,7 +793,7 @@ class SharesFrame(buildFrame):
                         )
 
                         self.shareddirs.append((virtual, directory))
-                        self.needrescan = 1
+                        self.needrescan = True
 
     def OnAddSharedBuddyDir(self, widget):
         dir1 = ChooseDir(
@@ -823,7 +824,7 @@ class SharesFrame(buildFrame):
                         )
 
                         self.bshareddirs.append((virtual, directory))
-                        self.needrescan = 1
+                        self.needrescan = True
 
     def _RemoveSharedDir(self, model, path, iter, list):
         list.append(iter)
@@ -851,7 +852,7 @@ class SharesFrame(buildFrame):
                 self.shareslist.set_value(iter, 0, virtual)
                 self.shareddirs.remove(oldmapping)
                 self.shareddirs.append(newmapping)
-                self.needrescan = 1
+                self.needrescan = True
 
     def OnRenameBuddyVirtuals(self, widget):
 
@@ -876,7 +877,7 @@ class SharesFrame(buildFrame):
                 self.bshareslist.set_value(iter, 0, virtual)
                 self.bshareslist.remove(oldmapping)
                 self.bshareslist.append(newmapping)
-                self.needrescan = 1
+                self.needrescan = True
 
     def OnRemoveSharedDir(self, widget):
         iters = []
@@ -890,7 +891,7 @@ class SharesFrame(buildFrame):
             self.shareslist.remove(iter)
 
         if iters:
-            self.needrescan = 1
+            self.needrescan = True
 
     def OnRemoveSharedBuddyDir(self, widget):
         iters = []
@@ -904,7 +905,7 @@ class SharesFrame(buildFrame):
             self.bshareslist.remove(iter)
 
         if iters:
-            self.needrescan = 1
+            self.needrescan = True
 
     def GetDirectorySize(self, directory):
 
@@ -2444,7 +2445,7 @@ class SearchFrame(buildFrame):
 
     def OnEnableSearchResults(self, widget):
         active = widget.get_active()
-        for w in self.MaxResults, self.MaxResultsL1, self.MaxResultsL2,self.ToggleDistributed, self.ToggleDistributedInterval, self.secondsLabel:
+        for w in self.MaxResults, self.MaxResultsL1, self.MaxResultsL2, self.ToggleDistributed, self.ToggleDistributedInterval, self.secondsLabel:
             w.set_sensitive(active)
 
 
@@ -2620,7 +2621,7 @@ class UrlCatchFrame(buildFrame):
                 "urlcatching": self.URLCatching,
                 "humanizeurls": self.HumanizeURLs,
                 "protocols": None
-            },
+            }
         }
 
         self.protocolmodel = gtk.ListStore(
@@ -3406,7 +3407,7 @@ class SettingsWindow:
         self.tree["Events"] = model.append(row, [_("Events"), "Events"])
         self.tree["Geo Block"] = model.append(row, [_("Geo Block"), "Geo Block"])
 
-        self.tree["Interface"] = row =  model.append(None, [_("Interface"), "Interface"])
+        self.tree["Interface"] = row = model.append(None, [_("Interface"), "Interface"])
         self.tree["Colours"] = model.append(row, [_("Colors"), "Colours"])
         self.tree["Icons"] = model.append(row, [_("Icons"), "Icons"])
         self.tree["Notebook Tabs"] = model.append(row, [_("Notebook Tabs"), "Notebook Tabs"])
@@ -3575,7 +3576,7 @@ class SettingsWindow:
             return widget.get_active_text()
         elif type(widget) is gtk.FontButton:
             widget.get_font_name()
-        elif type(widget) is gtk.TreeView  and widget.get_model().get_n_columns() == 1:
+        elif type(widget) is gtk.TreeView and widget.get_model().get_n_columns() == 1:
             wlist = []
             iter = widget.get_model().get_iter_root()
             while iter:
@@ -3662,6 +3663,6 @@ class SettingsWindow:
                 for (key, data) in sub.items():
                     config[key].update(data)
 
-            return self.pages["Shares"].GetNeedRescan(), (self.pages["Colours"].needcolors or self.pages["Interface"].needcolors) , self.pages["Completion"].needcompletion, config
+            return self.pages["Shares"].GetNeedRescan(), (self.pages["Colours"].needcolors or self.pages["Interface"].needcolors), self.pages["Completion"].needcompletion, config
         except UserWarning, warning:
             return None
