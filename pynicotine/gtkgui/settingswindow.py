@@ -704,13 +704,31 @@ class SharesFrame(buildFrame):
                 )
                 raise UserWarning
 
+        # Buddy shares related menus are activated if needed
+        buddies = self.enableBuddyShares.get_active()
+
+        buddies_shares_configured = isinstance(self.BuddyShares.get_model().get_iter_root(), gtk.TreeIter)
+
+        self.frame.rescan_buddy.set_sensitive(buddies and buddies_shares_configured)
+        self.frame.rebuild_buddy.set_sensitive(buddies and buddies_shares_configured)
+        self.frame.browse_buddy_shares.set_sensitive(buddies and buddies_shares_configured)
+
+        # Public shares related menus are deactivated if we only share with friends
+        friendsonly = self.FriendsOnly.get_active()
+
+        public_shares_configured = isinstance(self.Shares.get_model().get_iter_root(), gtk.TreeIter)
+
+        self.frame.rescan_public.set_sensitive(not friendsonly)
+        self.frame.rebuild_public.set_sensitive(not friendsonly)
+        self.frame.browse_public_shares.set_sensitive(not friendsonly)
+
         return {
             "transfers": {
                 "shared": self.shareddirs[:],
                 "rescanonstartup": self.RescanOnStartup.get_active(),
                 "buddyshared": self.bshareddirs[:],
-                "enablebuddyshares": self.enableBuddyShares.get_active(),
-                "friendsonly": self.FriendsOnly.get_active()
+                "enablebuddyshares": buddies,
+                "friendsonly": friendsonly
             }
         }
 
@@ -750,16 +768,6 @@ class SharesFrame(buildFrame):
         self.addBuddySharesButton.set_sensitive(buddies)
         self.removeBuddySharesButton.set_sensitive(buddies)
         self.renameBuddyVirtualsButton.set_sensitive(buddies)
-
-        # Buddy shares related menu are activated if needed
-        self.frame.rescan_buddy.set_sensitive(buddies)
-        self.frame.rebuild_buddy.set_sensitive(buddies)
-        self.frame.browse_buddy_shares.set_sensitive(buddies)
-
-        # Public shares related menu are deactivated if we only share with friends
-        self.frame.rescan_public.set_sensitive(not friendsonly)
-        self.frame.rebuild_public.set_sensitive(not friendsonly)
-        self.frame.browse_public_shares.set_sensitive(not friendsonly)
 
     def GetNeedRescan(self):
         return self.needrescan

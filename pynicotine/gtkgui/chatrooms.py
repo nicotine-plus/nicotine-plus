@@ -1364,11 +1364,11 @@ class ChatRoom:
         elif cmd == "/rescan":
 
             # Rescan public shares if needed
-            if not self.frame.np.config.sections["transfers"]["friendsonly"]:
+            if not self.frame.np.config.sections["transfers"]["friendsonly"] and self.np.config.sections["transfers"]["shared"]:
                 self.frame.OnRescan()
 
             # Rescan buddy shares if needed
-            if self.frame.np.config.sections["transfers"]["enablebuddyshares"]:
+            if self.frame.np.config.sections["transfers"]["enablebuddyshares"] and self.np.config.sections["transfers"]["buddyshared"]:
                 self.frame.OnBuddyRescan()
 
         elif cmd in ["/tick", "/t"]:

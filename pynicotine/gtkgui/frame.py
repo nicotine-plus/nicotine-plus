@@ -490,11 +490,11 @@ class NicotineFrame:
         if config["transfers"]["rescanonstartup"]:
 
             # Rescan public shares if needed
-            if not self.np.config.sections["transfers"]["friendsonly"]:
+            if not self.np.config.sections["transfers"]["friendsonly"] and self.np.config.sections["transfers"]["shared"]:
                 self.OnRescan()
 
             # Rescan buddy shares if needed
-            if self.np.config.sections["transfers"]["enablebuddyshares"]:
+            if self.np.config.sections["transfers"]["enablebuddyshares"] and self.np.config.sections["transfers"]["buddyshared"]:
                 self.OnBuddyRescan()
 
         img = gtk.Image()
@@ -530,13 +530,13 @@ class NicotineFrame:
             self.TrayApp.Create()
 
         # Deactivate public shares related menu entries if we don't use them
-        if self.np.config.sections["transfers"]["friendsonly"]:
+        if self.np.config.sections["transfers"]["friendsonly"] or not self.np.config.sections["transfers"]["shared"]:
             self.rescan_public.set_sensitive(False)
             self.rebuild_public.set_sensitive(False)
             self.browse_public_shares.set_sensitive(False)
 
         # Deactivate buddy shares related menu entries if we don't use them
-        if not self.np.config.sections["transfers"]["enablebuddyshares"]:
+        if not self.np.config.sections["transfers"]["enablebuddyshares"] or not self.np.config.sections["transfers"]["buddyshared"]:
             self.rescan_buddy.set_sensitive(False)
             self.rebuild_buddy.set_sensitive(False)
             self.browse_buddy_shares.set_sensitive(False)
@@ -2034,9 +2034,11 @@ class NicotineFrame:
         self.rescan_public.set_sensitive(False)
         self.rebuild_public.set_sensitive(False)
         self.browse_public_shares.set_sensitive(False)
+
         self.logMessage(_("Rescanning started"))
 
         shared = self.np.config.sections["transfers"]["shared"][:]
+
         if self.np.config.sections["transfers"]["sharedownloaddir"]:
             shared.append((_('Downloaded'), self.np.config.sections["transfers"]["downloaddir"]))
 
@@ -2061,9 +2063,11 @@ class NicotineFrame:
         self.rescan_buddy.set_sensitive(False)
         self.rebuild_buddy.set_sensitive(False)
         self.browse_buddy_shares.set_sensitive(False)
+
         self.logMessage(_("Rescanning Buddy Shares started"))
 
         shared = self.np.config.sections["transfers"]["buddyshared"][:] + self.np.config.sections["transfers"]["shared"][:]
+
         if self.np.config.sections["transfers"]["sharedownloaddir"]:
             shared.append((_('Downloaded'), self.np.config.sections["transfers"]["downloaddir"]))
 
@@ -2079,30 +2083,40 @@ class NicotineFrame:
         self.OnBuddyRescan(widget, rebuild=True)
 
     def _BuddyRescanFinished(self, data):
+
         self.np.config.setBuddyShares(*data)
         self.np.config.writeShares()
 
-        self.rescan_buddy.set_sensitive(True)
-        self.rebuild_buddy.set_sensitive(True)
-        self.browse_buddy_shares.set_sensitive(True)
+        if self.np.config.sections["transfers"]["buddyshared"]:
+            self.rescan_buddy.set_sensitive(True)
+            self.rebuild_buddy.set_sensitive(True)
+            self.browse_buddy_shares.set_sensitive(True)
+
         if self.np.transfers is not None:
             self.np.shares.sendNumSharedFoldersFiles()
+
         self.brescanning = 0
         self.logMessage(_("Rescanning Buddy Shares finished"))
+
         self.BuddySharesProgress.hide()
         self.np.shares.CompressShares("buddy")
 
     def _RescanFinished(self, data):
+
         self.np.config.setShares(*data)
         self.np.config.writeShares()
 
-        self.rescan_public.set_sensitive(True)
-        self.rebuild_public.set_sensitive(True)
-        self.browse_public_shares.set_sensitive(True)
+        if self.np.config.sections["transfers"]["shared"]:
+            self.rescan_public.set_sensitive(True)
+            self.rebuild_public.set_sensitive(True)
+            self.browse_public_shares.set_sensitive(True)
+
         if self.np.transfers is not None:
             self.np.shares.sendNumSharedFoldersFiles()
+
         self.rescanning = 0
         self.logMessage(_("Rescanning finished"))
+
         self.SharesProgress.hide()
         self.np.shares.CompressShares("normal")
 
