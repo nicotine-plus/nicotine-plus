@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
-# COPYRIGHT (c) 2016 Michael Labouebe <gfarmerfr@free.fr>
-# COPYRIGHT (c) 2008-2009 Quinox <quinox@users.sf.net>
+# COPYRIGHT (C) 2016 Michael Labouebe <gfarmerfr@free.fr>
+# COPYRIGHT (C) 2008-2009 Quinox <quinox@users.sf.net>
 # COPYRIGHT (C) 2006-2009 Daelstorm <daelstorm@gmail.com>
 #
 # GNU GENERAL PUBLIC LICENSE
@@ -35,8 +35,10 @@ class MetaDialog(gtk.Dialog):
         self.connect("destroy", self.quit)
         self.connect("delete-event", self.quit)
         self.nicotine = frame
+
         if modal:
             self.set_modal(True)
+
         self.Search = Search
 
         self.box = gtk.VBox(spacing=10)
@@ -449,6 +451,7 @@ class EntryDialog(gtk.Dialog):
         self.connect("delete-event", self.quit)
 
         self.gotoption = option
+
         if modal:
             self.set_modal(True)
 
@@ -464,8 +467,10 @@ class EntryDialog(gtk.Dialog):
             label.show()
 
         self.combo = gtk.combo_box_entry_new_text()
+
         for i in droplist:
             self.combo.append_text(i)
+
         self.combo.child.set_text(default_text)
 
         box.pack_start(self.combo, False, False)
@@ -480,17 +485,19 @@ class EntryDialog(gtk.Dialog):
         if self.gotoption:
             box.pack_start(self.option, False, False)
 
+        button = gtk.Button(_("Cancel"))
+        button.connect("clicked", self.quit)
+        button.set_flags(gtk.CAN_DEFAULT)
+        self.action_area.pack_start(button)
+        button.show()
+
         button = gtk.Button(_("OK"))
         button.connect("clicked", self.click)
         button.set_flags(gtk.CAN_DEFAULT)
         self.action_area.pack_start(button)
         button.show()
         button.grab_default()
-        button = gtk.Button(_("Cancel"))
-        button.connect("clicked", self.quit)
-        button.set_flags(gtk.CAN_DEFAULT)
-        self.action_area.pack_start(button)
-        button.show()
+
         self.ret = None
 
     def quit(self, w=None, event=None):
@@ -499,10 +506,12 @@ class EntryDialog(gtk.Dialog):
         gtk.main_quit()
 
     def click(self, button):
+
         if self.gotoption:
             self.ret = [self.combo.child.get_text(), self.option.get_active()]
         else:
             self.ret = self.combo.child.get_text()
+
         self.quit()
 
 
@@ -510,14 +519,19 @@ def input_box(frame, title="Input Box", message="", default_text='',
               modal=True, option=False, optionmessage="",
               optionvalue=False, droplist=[]):
 
-    win = EntryDialog(frame, message, default_text, modal=modal,
-                      option=option, optionmessage=optionmessage,
-                      optionvalue=optionvalue, droplist=droplist)
+    win = EntryDialog(
+        frame, message, default_text,
+        modal=modal, option=option, optionmessage=optionmessage,
+        optionvalue=optionvalue, droplist=droplist
+    )
+
     win.set_title(title)
     win.set_icon(frame.images["n"])
     win.set_default_size(300, 100)
     win.show()
+
     gtk.main()
+
     return win.ret
 
 
@@ -573,6 +587,15 @@ class FindDialog(gtk.Dialog):
         self.entry.grab_focus()
         self.entry.connect("activate", self.next)
 
+        Cancelbutton = self.nicotine.CreateIconButton(
+            gtk.STOCK_CANCEL,
+            "stock",
+            self.quit,
+            _("Cancel")
+        )
+        Cancelbutton.set_flags(gtk.CAN_DEFAULT)
+        self.action_area.pack_start(Cancelbutton)
+
         Previousbutton = self.nicotine.CreateIconButton(
             gtk.STOCK_GO_BACK,
             "stock",
@@ -591,15 +614,6 @@ class FindDialog(gtk.Dialog):
         Nextbutton.set_flags(gtk.CAN_DEFAULT)
         self.action_area.pack_start(Nextbutton)
         Nextbutton.grab_default()
-
-        Cancelbutton = self.nicotine.CreateIconButton(
-            gtk.STOCK_CANCEL,
-            "stock",
-            self.quit,
-            _("Cancel")
-        )
-        Cancelbutton.set_flags(gtk.CAN_DEFAULT)
-        self.action_area.pack_start(Cancelbutton)
 
     def next(self, button):
         self.emit("find-click", "next")
