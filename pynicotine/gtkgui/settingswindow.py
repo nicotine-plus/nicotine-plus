@@ -2018,10 +2018,10 @@ class NotebookFrame(buildFrame):
         # The first element is the translated string,
         # the second is a GtkPositionType
         self.PosList = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
-        self.PosList.append([_("Top"), "top"])
-        self.PosList.append([_("Bottom"), "bottom"])
-        self.PosList.append([_("Left"), "left"])
-        self.PosList.append([_("Right"), "right"])
+        self.PosList.append([_("Top"), "Top"])
+        self.PosList.append([_("Bottom"), "Bottom"])
+        self.PosList.append([_("Left"), "Left"])
+        self.PosList.append([_("Right"), "Right"])
 
         self.MainPosition.set_model(self.PosList)
         self.MainPosition.set_text_column(0)
