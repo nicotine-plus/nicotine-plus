@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: nicotine\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-11-09 20:55+0100\n"
-"PO-Revision-Date: 2016-11-09 20:56+0100\n"
+"PO-Revision-Date: 2016-11-10 22:57+0100\n"
 "Last-Translator: Michael LABOUEBE <gfarmerfr@free.fr>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -3007,14 +3007,14 @@ msgid "Previous"
 msgstr "Précédent"
 
 msgid "Next"
-msgstr "Prochain"
+msgstr "Suivant"
 
 # pynicotine/gtkgui/settings_glade.py
 msgid "<b>Country Code:</b> "
 msgstr "<b>Code du pays:</b> "
 
 msgid "OK"
-msgstr "Oui"
+msgstr "Valider"
 
 msgid "Cancel"
 msgstr "Annuler"
