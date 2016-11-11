@@ -4,7 +4,7 @@ A list of stuff & things todo (not in any particular order):
 
 #### Short term goals
 
-* **IN PROGRESS**: Drop the bundle Configparser module (upstream as all the patches).
+* **IN PROGRESS**: Drop the bundle Configparser module: use upstream version.
 * Convert libsexy spellcheck stuff to pygtkspell.
 * GNU/Linux: Switch to using XDG_* directories.
 * **IN PROGRESS**: Apply downstream patches (debian, fedora & ubuntu).

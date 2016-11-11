@@ -1,5 +1,15 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2007 daelstorm. All rights reserved.
+#
+# COPYRIGHT (C) 2016 Michael Labouebe <gfarmerfr@free.fr>
+# COPYRIGHT (C) 2008-2011 Quinox <quinox@users.sf.net>
+# COPYRIGHT (C) 2009 Hedonist <ak@sensi.org>
+# COPYRIGHT (C) 2007 Gallows <g4ll0ws@gmail.com>
+# COPYRIGHT (C) 2006-2009 Daelstorm <daelstorm@gmail.com>
+# COPYRIGHT (C) 2003-2004 Hyriand
+# COPYRIGHT (C) 2001-2003 Alexander Kanavin
+#
+# GNU GENERAL PUBLIC LICENSE
+#    Version 3, 29 June 2007
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -13,12 +23,6 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-# Previous copyright below
-# Copyright (c) 2003-2004 Hyriand. All rights reserved.
-#
-# Based on code from PySoulSeek, original copyright note:
-# Copyright (c) 2001-2003 Alexander Kanavin. All rights reserved.
 
 """
 This module contains configuration classes for Nicotine.
@@ -26,8 +30,10 @@ This module contains configuration classes for Nicotine.
 
 import ConfigParser
 import string
-import os, time
-import cPickle, bz2
+import os
+import time
+import cPickle
+import bz2
 import shelve
 import sys
 import thread
@@ -55,6 +61,7 @@ class Config:
     parameters.
     """
     def __init__(self, filename):
+
         self.config_lock = thread.allocate_lock()
         self.config_lock.acquire()
         self.frame = None
@@ -426,7 +433,7 @@ class Config:
                         # Repair options set to None with defaults
                         if self.sections[i][j] is None and self.defaults[i][j] is not None:
                             self.sections[i][j] = self.defaults[i][j]
-                            self.frame.logMessage(_("Config option reset to default: Section: %(section)s, Option: %(option)s, to: %(default)s") % {'section':i, 'option':j, 'default':self.sections[i][j]})
+                            self.frame.logMessage(_("Config option reset to default: Section: %(section)s, Option: %(option)s, to: %(default)s") % {'section': i, 'option': j, 'default': self.sections[i][j]})
                             if errorlevel == 0:
                                 errorlevel = 1
                         else:
@@ -434,7 +441,7 @@ class Config:
                                 self.frame.logMessage(_("You need to configure your settings (Server, Username, Password, Download Directory) before connecting..."))
                                 errorlevel = 2
 
-                            self.frame.logMessage(_("Config option unset: Section: %(section)s, Option: %(option)s") % {'section':i, 'option':j})
+                            self.frame.logMessage(_("Config option unset: Section: %(section)s, Option: %(option)s") % {'section': i, 'option': j})
                             self.frame.settingswindow.InvalidSettings(i, j)
         except Exception, error:
             message = _("Config error: %s") % error
@@ -485,7 +492,7 @@ class Config:
         self.removeOldOption("ui", "mozembed")
         self.removeOldOption("ui", "open_in_mozembed")
 
-        # Checking for nnknown section/options
+        # Checking for unknown section/options
         unknown1 = [
             'login', 'passw', 'enc', 'downloaddir', 'uploaddir', 'customban',
             'descr', 'pic', 'logsdir', 'roomlogsdir', 'privatelogsdir',
@@ -644,82 +651,91 @@ class Config:
             if option in self.parser.options(section):
                 self.parser.remove_option(section, option)
 
-    def clearShares(self, sharedfiles, bsharedfiles, sharedfilesstreams, bsharedfilesstreams, wordindex, bwordindex, fileindex, bfileindex, sharedmtimes, bsharedmtimes):
+    def clearShares(
+        self, sharedfiles, bsharedfiles, sharedfilesstreams, bsharedfilesstreams,
+        wordindex, bwordindex, fileindex, bfileindex, sharedmtimes, bsharedmtimes
+    ):
+
         try:
             if sharedfiles:
                 sharedfiles.close()
             try:
-                os.unlink(self.filename+'.files.db')
+                os.unlink(self.filename + '.files.db')
             except:
                 pass
-            sharedfiles = shelve.open(self.filename+".files.db", flag='n')
+            sharedfiles = shelve.open(self.filename + ".files.db", flag='n')
+
             if bsharedfiles:
                 bsharedfiles.close()
             try:
-                os.unlink(self.filename+'.buddyfiles.db')
+                os.unlink(self.filename + '.buddyfiles.db')
             except:
                 pass
-            bsharedfiles = shelve.open(self.filename+".buddyfiles.db", flag='n')
+            bsharedfiles = shelve.open(self.filename + ".buddyfiles.db", flag='n')
 
             if sharedfilesstreams:
                 sharedfilesstreams.close()
             try:
-                os.unlink(self.filename+'.streams.db')
+                os.unlink(self.filename + '.streams.db')
             except:
                 pass
-            sharedfilesstreams =shelve.open(self.filename+".streams.db", flag='n')
+            sharedfilesstreams = shelve.open(self.filename + ".streams.db", flag='n')
+
             if bsharedfilesstreams:
                 bsharedfilesstreams.close()
             try:
-                os.unlink(self.filename+'.buddystreams.db')
+                os.unlink(self.filename + '.buddystreams.db')
             except:
                 pass
-            bsharedfilesstreams =shelve.open(self.filename+".buddystreams.db", flag='n')
+            bsharedfilesstreams = shelve.open(self.filename + ".buddystreams.db", flag='n')
 
             if wordindex:
                 wordindex.close()
             try:
-                os.unlink(self.filename+'.wordindex.db')
+                os.unlink(self.filename + '.wordindex.db')
             except:
                 pass
-            wordindex = shelve.open(self.filename+".wordindex.db", flag='n')
+            wordindex = shelve.open(self.filename + ".wordindex.db", flag='n')
+
             if bwordindex:
                 bwordindex.close()
             try:
-                os.unlink(self.filename+'.buddywordindex.db')
+                os.unlink(self.filename + '.buddywordindex.db')
             except:
                 pass
-            bwordindex = shelve.open(self.filename+".buddywordindex.db", flag='n')
+            bwordindex = shelve.open(self.filename + ".buddywordindex.db", flag='n')
 
             if fileindex:
                 fileindex.close()
             try:
-                os.unlink(self.filename+'.fileindex.db')
+                os.unlink(self.filename + '.fileindex.db')
             except:
                 pass
-            fileindex = shelve.open(self.filename+".fileindex.db", flag='n')
+            fileindex = shelve.open(self.filename + ".fileindex.db", flag='n')
+
             if bfileindex:
                 bfileindex.close()
             try:
-                os.unlink(self.filename+'.buddyfileindex.db')
+                os.unlink(self.filename + '.buddyfileindex.db')
             except:
                 pass
-            bfileindex = shelve.open(self.filename+".buddyfileindex.db", flag='n')
+            bfileindex = shelve.open(self.filename + ".buddyfileindex.db", flag='n')
 
             if sharedmtimes:
                 sharedmtimes.close()
             try:
-                os.unlink(self.filename+'.mtimes.db')
+                os.unlink(self.filename + '.mtimes.db')
             except:
                 pass
-            sharedmtimes = shelve.open(self.filename+".mtimes.db", flag='n')
+            sharedmtimes = shelve.open(self.filename + ".mtimes.db", flag='n')
+
             if bsharedmtimes:
                 bsharedmtimes.close()
             try:
-                os.unlink(self.filename+'.buddymtimes.db')
+                os.unlink(self.filename + '.buddymtimes.db')
             except:
                 pass
-            bsharedmtimes = shelve.open(self.filename+".buddymtimes.db", flag='n')
+            bsharedmtimes = shelve.open(self.filename + ".buddymtimes.db", flag='n')
         except Exception, error:
             log.addwarning(_("Error while writing database files: %s") % error)
             return None
@@ -805,7 +821,9 @@ class Config:
                 return
             else:
                 f.close()
+
         os.umask(oldumask)
+
         # A paranoid precaution since config contains the password
         try:
             os.chmod(self.filename, 0600)
@@ -839,7 +857,7 @@ class Config:
         self.config_lock.acquire()
 
         if filename is None:
-            filename = "%s backup %s.tar.bz2" %(self.filename, time.strftime("%Y-%m-%d %H:%M:%S") )
+            filename = "%s backup %s.tar.bz2" % (self.filename, time.strftime("%Y-%m-%d %H:%M:%S"))
         else:
             if filename[-8:-1] != ".tar.bz2":
                 filename += ".tar.bz2"

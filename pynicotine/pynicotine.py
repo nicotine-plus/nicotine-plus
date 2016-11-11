@@ -807,7 +807,7 @@ class NetworkEventProcessor:
             # Until I know the syntax, sending this message is probably a bad idea
             self.queue.put(slskmessages.AckNotifyPrivileges(msg.token))
 
-        self.logMessage("%s %s" %(msg.__class__, vars(msg)), 4)
+        self.logMessage("%s %s" % (msg.__class__, vars(msg)), 4)
 
     def PMessageUser(self, msg):
 
@@ -940,7 +940,7 @@ class NetworkEventProcessor:
         if self.chatrooms is not None:
             self.chatrooms.roomsctrl.PrivateRoomRemoveOperator(msg)
         self.logMessage("%s %s" % (msg.__class__, vars(msg)), 4)
-    
+
     def PrivateRoomAdded(self, msg):
         if self.chatrooms is not None:
             self.chatrooms.roomsctrl.PrivateRoomAdded(msg)
@@ -1144,7 +1144,7 @@ class NetworkEventProcessor:
 
     def DummyMessage(self, msg):
         self.logMessage("%s %s" % (msg.__class__, vars(msg)), 4)
-    
+
     def Msg12547(self, msg):
         self.logMessage("%s %s" % (msg.__class__, vars(msg)), 4)
 
@@ -1525,7 +1525,7 @@ class NetworkEventProcessor:
         requestTime = time.time()
 
         if user in self.requestedInfo:
-            if not requestTime >  10 + self.requestedInfo[user]:
+            if not requestTime > 10 + self.requestedInfo[user]:
                 # Ignoring request, because it's 10 or less seconds since the
                 # last one by this user
                 return
@@ -1761,7 +1761,7 @@ class NetworkEventProcessor:
     def UploadQueueNotification(self, msg):
         self.logMessage("%s %s" % (msg.__class__, vars(msg)), 4)
         self.transfers.UploadQueueNotification(msg)
-    
+
     def UploadFailed(self, msg):
         if self.transfers is not None:
             self.transfers.UploadFailed(msg)
