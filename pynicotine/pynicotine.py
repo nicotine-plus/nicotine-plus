@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 #
-# COPYRIGHT (c) 2016 Michael Labouebe <gfarmerfr@free.fr>
-# COPYRIGHT (c) 2016 Mutnick <muhing@yahoo.com>
-# COPYRIGHT (c) 2013 eL_vErDe <gandalf@le-vert.net>
-# COPYRIGHT (c) 2008-2012 Quinox <quinox@users.sf.net>
-# COPYRIGHT (c) 2009 Hedonist <ak@sensi.org>
+# COPYRIGHT (C) 2016 Michael Labouebe <gfarmerfr@free.fr>
+# COPYRIGHT (C) 2016 Mutnick <muhing@yahoo.com>
+# COPYRIGHT (C) 2013 eL_vErDe <gandalf@le-vert.net>
+# COPYRIGHT (C) 2008-2012 Quinox <quinox@users.sf.net>
+# COPYRIGHT (C) 2009 Hedonist <ak@sensi.org>
 # COPYRIGHT (C) 2006-2009 Daelstorm <daelstorm@gmail.com>
 # COPYRIGHT (C) 2003-2004 Hyriand
 # COPYRIGHT (C) 2001-2003 Alexander Kanavin
@@ -575,11 +575,6 @@ class NetworkEventProcessor:
                 }
             )
 
-            if msg.connobj.addr[1] == 2240:
-                self.logMessage(
-                    _("WARNING: You tried to connect to the old server, which might have been shut down. To connect to the new Soulseek server edit your settings and change the server port from 2240 to 2242")
-                )
-
             self.setServerTimer()
 
             if self.serverconn is not None:
@@ -650,11 +645,6 @@ class NetworkEventProcessor:
                 'port': msg.addr[1]
             }
         )
-
-        if msg.addr[1] == 2240:
-            self.logMessage(
-                _("WARNING: You are connected to the old server, which will most likely be shut down in the near future. To connect to the new Soulseek server edit your settings and change the server port from 2240 to 2242")
-            )
 
         time.sleep(1)
         self.serverconn = msg.conn

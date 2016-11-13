@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # COPYRIGHT (C) 2016 Michael Labouebe <gfarmerfr@free.fr>
+# COPYRIGHT (C) 2016 Mutnick <muhing@yahoo.com>
 # COPYRIGHT (C) 2008-2011 Quinox <quinox@users.sf.net>
 # COPYRIGHT (C) 2009 Hedonist <ak@sensi.org>
 # COPYRIGHT (C) 2007 Gallows <g4ll0ws@gmail.com>
@@ -60,6 +61,7 @@ class Config:
     First-level keys are config sections, second-level keys are config
     parameters.
     """
+
     def __init__(self, filename):
 
         self.config_lock = thread.allocate_lock()
@@ -76,10 +78,6 @@ class Config:
                 "server": ('server.slsknet.org', 2242),
                 "login": '',
                 "passw": '',
-                "serverlist": [
-                    "server.slsknet.org:2242",
-                    "server.slsknet.org:2240"
-                ],
                 "firewalled": 1,
                 "ctcpmsgs": 0,
                 "autosearch": [],
@@ -429,20 +427,35 @@ class Config:
                     if type(self.sections[i][j]) not in [type(None), type("")]:
                         continue
 
-                    if self.sections[i][j] is None or self.sections[i][j] == '' and i not in ("userinfo", "ui", "ticker", "players", "language") and j not in ("incompletedir", "autoreply", 'afterfinish', 'afterfolder', 'geoblockcc', 'downloadregexp', "language"):
+                    if self.sections[i][j] is None or self.sections[i][j] == '' \
+                       and i not in ("userinfo", "ui", "ticker", "players", "language") \
+                       and j not in ("incompletedir", "autoreply", 'afterfinish', 'afterfolder', 'geoblockcc', 'downloadregexp', "language"):
+
                         # Repair options set to None with defaults
                         if self.sections[i][j] is None and self.defaults[i][j] is not None:
+
                             self.sections[i][j] = self.defaults[i][j]
-                            self.frame.logMessage(_("Config option reset to default: Section: %(section)s, Option: %(option)s, to: %(default)s") % {'section': i, 'option': j, 'default': self.sections[i][j]})
+                            self.frame.logMessage(
+                                _("Config option reset to default: Section: %(section)s, Option: %(option)s, to: %(default)s") % {
+                                    'section': i,
+                                    'option': j,
+                                    'default': self.sections[i][j]
+                                }
+                            )
+
                             if errorlevel == 0:
                                 errorlevel = 1
                         else:
+
                             if errorlevel < 2:
-                                self.frame.logMessage(_("You need to configure your settings (Server, Username, Password, Download Directory) before connecting..."))
+                                self.frame.logMessage(
+                                    _("You need to configure your settings (Server, Username, Password, Download Directory) before connecting...")
+                                )
                                 errorlevel = 2
 
                             self.frame.logMessage(_("Config option unset: Section: %(section)s, Option: %(option)s") % {'section': i, 'option': j})
                             self.frame.settingswindow.InvalidSettings(i, j)
+
         except Exception, error:
             message = _("Config error: %s") % error
             self.frame.logMessage(message)
@@ -483,11 +496,12 @@ class Config:
         except OSError, msg:
             log.addwarning("Can't create directory '%s', reported error: %s" % (path, msg))
 
-        # Transition from 1.2.16 -> 1.2.16+
+        # Transition from 1.2.16 -> 1.3.0
         # Do the cleanup early so we don't get the annoying
         # 'Unknown config option ...' message
         self.removeOldOption("transfers", "pmqueueddir")
         self.removeOldOption("server", "lastportstatuscheck")
+        self.removeOldOption("server", "serverlist")
         self.removeOldOption("userinfo", "descrutf8")
         self.removeOldOption("ui", "mozembed")
         self.removeOldOption("ui", "open_in_mozembed")
@@ -541,26 +555,7 @@ class Config:
                         self.sections[i][j] = None
                         log.addwarning("CONFIG ERROR: Couldn't decode '%s' section '%s' value '%s'" % (str(j), str(i), str(val)))
 
-        # If we stored any of the following as bytes (pre 1.2.15, pre 1.2.16), convert them to unicode
-        unicodes = [('ticker', 'default'), ('server', 'autoreply')]
-        for (section, subsection) in unicodes:
-            try:
-                self.sections[section][subsection] = findBestEncoding(self.sections[section][subsection], ['utf-8'])
-            except TypeError:
-                pass  # Already unicode
-
-        for room in self.sections["ticker"]["rooms"]:
-            encodings = ['utf-8']
-            try:
-                encodings.append(self.sections["server"]["roomencoding"][room])
-            except KeyError:
-                pass
-            try:
-                self.sections["ticker"]["rooms"][room] = findBestEncoding(self.sections["ticker"]["rooms"][room], encodings)
-            except TypeError:
-                pass  # already unicode
-
-        # Convert fs-based shared to virtual shared (pre 1.2.16+)
+        # Convert fs-based shared to virtual shared (pre 1.3.0)
         def _convert_to_virtual(x):
             if isinstance(x, tuple):
                 return x
@@ -621,9 +616,15 @@ class Config:
 
         if _errors:
             log.addwarning(_("Failed to process the following databases: %(names)s") % {'names': '\n'.join(_errors)})
-            files = self.clearShares(sharedfiles, bsharedfiles, sharedfilesstreams, bsharedfilesstreams, wordindex, bwordindex, fileindex, bfileindex, sharedmtimes, bsharedmtimes)
+
+            files = self.clearShares(
+                sharedfiles, bsharedfiles, sharedfilesstreams, bsharedfilesstreams,
+                wordindex, bwordindex, fileindex, bfileindex, sharedmtimes, bsharedmtimes
+            )
+
             if files is not None:
                 sharedfiles, bsharedfiles, sharedfilesstreams, bsharedfilesstreams, wordindex, bwordindex, fileindex, bfileindex, sharedmtimes, bsharedmtimes = files
+
             log.addwarning(_("Shared files database seems to be corrupted, rescan your shares"))
 
         self.sections["transfers"]["sharedfiles"] = sharedfiles
@@ -637,9 +638,6 @@ class Config:
         self.sections["transfers"]["bwordindex"] = bwordindex
         self.sections["transfers"]["bfileindex"] = bfileindex
         self.sections["transfers"]["bsharedmtimes"] = bsharedmtimes
-
-        if self.sections["server"]["server"][0] == "mail.slsknet.org":
-            self.sections["server"]["server"] = ('server.slsknet.org', 2242)
 
         # Setting the port range in numerical order
         self.sections["server"]["portrange"] = (min(self.sections["server"]["portrange"]), max(self.sections["server"]["portrange"]))

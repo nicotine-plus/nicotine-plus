@@ -218,34 +218,19 @@ def ApplyTranslation(lang=None):
     gtk.glade.textdomain(PACKAGE)
 
 
-def getServerList(url):
-    """ Parse server text file from http://www.slsk.org and
-    return a list of servers """
-    import urllib
-    try:
-        f = urllib.urlopen(url)
-        list = [string.strip(i) for i in f.readlines()]
-    except:
-        return []
-    try:
-        list = list[list.index("--servers")+1:]
-    except:
-        return []
-    list = [string.split(i, ":", 2) for i in list]
-    try:
-        return [[i[0], i[2]] for i in list]
-    except:
-        return []
-
-
 def displayTraceback(exception=None):
+
     global log
     import traceback
+
     if exception is None:
         tb = traceback.format_tb(sys.exc_info()[2])
     else:
         tb = traceback.format_tb(exception)
-    if log: log("Traceback: " + str(sys.exc_info()[0].__name__) + ": " + str(sys.exc_info()[1]))
+
+    if log:
+        log("Traceback: " + str(sys.exc_info()[0].__name__) + ": " + str(sys.exc_info()[1]))
+
     for line in tb:
         if type(line) is tuple:
             xline = ""
@@ -372,7 +357,7 @@ def executeCommand(command, replacement=None, background=True, returnoutput=Fals
         finalstdout = PIPE
     procs = []
     try:
-        if len(subcommands) == 1: # no need to fool around with pipes
+        if len(subcommands) == 1:  # no need to fool around with pipes
             procs.append(Popen(subcommands[0], stdout=finalstdout))
         else:
             procs.append(Popen(subcommands[0], stdout=PIPE))
@@ -408,6 +393,7 @@ def findBestEncoding(bytes, encodings, fallback=None):
 def strace(function):
     """Decorator for debugging"""
     from itertools import chain
+
     def newfunc(*args, **kwargs):
         name = function.__name__
         print("%s(%s)" % (name, ", ".join(map(repr, chain(args, kwargs.values())))))
