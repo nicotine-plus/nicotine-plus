@@ -19,6 +19,7 @@ Features
  * You can now rename your buddy virtual shares via the settings window for shares.
 
 Bugs closed on Github
+* Question - Nicotine Still Being Developed? (#1)
 * Remove max length on settings password field (#5, #7)
 * Randomly kill connections on select() out of range failure (#6)
 * Fix shares build / crashes caused by bogus metadata (#10)
