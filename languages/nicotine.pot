@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-09 20:55+0100\n"
+"POT-Creation-Date: 2016-11-13 22:57+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1336,9 +1336,6 @@ msgstr ""
 msgid "Server Settings"
 msgstr ""
 
-msgid "Server: (use server.slsknet.org:2242 for the main server)"
-msgstr ""
-
 msgid "Login:"
 msgstr ""
 
@@ -2271,10 +2268,10 @@ msgstr ""
 msgid "<b>Country Code:</b> "
 msgstr ""
 
-msgid "OK"
+msgid "Cancel"
 msgstr ""
 
-msgid "Cancel"
+msgid "OK"
 msgstr ""
 
 msgid "Virtual Directory"
@@ -3472,12 +3469,6 @@ msgstr ""
 msgid "Can't connect to server %(host)s:%(port)s: %(error)s"
 msgstr ""
 
-msgid ""
-"WARNING: You tried to connect to the old server, which might have been shut "
-"down. To connect to the new Soulseek server edit your settings and change "
-"the server port from 2240 to 2242"
-msgstr ""
-
 #, python-format
 msgid "Can't connect to %s, sending notification via the server"
 msgstr ""
@@ -3488,12 +3479,6 @@ msgstr ""
 
 #, python-format
 msgid "Connected to server %(host)s:%(port)s, logging in..."
-msgstr ""
-
-msgid ""
-"WARNING: You are connected to the old server, which will most likely be shut "
-"down in the near future. To connect to the new Soulseek server edit your "
-"settings and change the server port from 2240 to 2242"
 msgstr ""
 
 #, python-format
@@ -3698,6 +3683,14 @@ msgstr ""
 msgid ""
 "Scanning Error: Broken link to directory: \"%(link)s\" from Path: \"%(path)s"
 "\". Repair or remove this link."
+msgstr ""
+
+#, python-format
+msgid "Inconsistent cache for '%(vdir)s', rebuilding '%(dir)s'"
+msgstr ""
+
+#, python-format
+msgid "Dropping missing directory %(dir)s"
 msgstr ""
 
 #, python-format

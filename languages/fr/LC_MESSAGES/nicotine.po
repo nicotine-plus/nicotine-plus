@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nicotine\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-09 20:55+0100\n"
-"PO-Revision-Date: 2016-11-10 22:57+0100\n"
+"POT-Creation-Date: 2016-11-13 22:57+0100\n"
+"PO-Revision-Date: 2016-11-13 23:00+0100\n"
 "Last-Translator: Michael LABOUEBE <gfarmerfr@free.fr>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -1702,10 +1702,6 @@ msgid "Server Settings"
 msgstr "Préférences du serveur"
 
 # pynicotine/gtkgui/settings_glade.py
-msgid "Server: (use server.slsknet.org:2242 for the main server)"
-msgstr "Serveur: (le serveur primaire est server.slsknet.org:2242)"
-
-# pynicotine/gtkgui/settings_glade.py
 msgid "Login:"
 msgstr "Utilisateur:"
 
@@ -3013,11 +3009,11 @@ msgstr "Suivant"
 msgid "<b>Country Code:</b> "
 msgstr "<b>Code du pays:</b> "
 
-msgid "OK"
-msgstr "Valider"
-
 msgid "Cancel"
 msgstr "Annuler"
+
+msgid "OK"
+msgstr "Valider"
 
 # pynicotine/gtkgui/search.py
 msgid "Virtual Directory"
@@ -4572,15 +4568,6 @@ msgstr "Le serveur ne répond pas, nouvelle tentative dans %i secondes"
 msgid "Can't connect to server %(host)s:%(port)s: %(error)s"
 msgstr "Impossible de se connecter au serveur %(host)s:%(port)s: %(error)s"
 
-msgid ""
-"WARNING: You tried to connect to the old server, which might have been shut "
-"down. To connect to the new Soulseek server edit your settings and change "
-"the server port from 2240 to 2242"
-msgstr ""
-"Attention: Vous avez tenté de vous connecter à l'ancien serveur qui a pu "
-"être supprimé. Afin de vous connecter au nouveau serveur Soulseek, allez "
-"dans vos paramètres et changez  le port du serveur de 2240 vers 2242"
-
 #, python-format
 msgid "Can't connect to %s, sending notification via the server"
 msgstr ""
@@ -4596,15 +4583,6 @@ msgstr "Écoute sur le port %i"
 msgid "Connected to server %(host)s:%(port)s, logging in..."
 msgstr ""
 "Connecté au serveur %(host)s:%(port)s, ouverture de session en cours..."
-
-msgid ""
-"WARNING: You are connected to the old server, which will most likely be shut "
-"down in the near future. To connect to the new Soulseek server edit your "
-"settings and change the server port from 2240 to 2242"
-msgstr ""
-"Attention: Vous êtes connecté à l'ancien serveur qui va probablement être "
-"supprimé un jour. Afin de vous connecter au nouveau serveur Soulseek, allez "
-"dans vos paramètres et changez  le port du serveur de 2240 vers 2242"
 
 # pynicotine/pynicotine.py
 #, python-format
@@ -4865,6 +4843,15 @@ msgid ""
 msgstr ""
 "Erreur lors de l'examen: Lien cassé vers le répertoire: \"%(link)s\" à "
 "partir du chemin: \"%(path)s\". Veuillez réparer ou supprimer ce lien."
+
+#, python-format
+msgid "Inconsistent cache for '%(vdir)s', rebuilding '%(dir)s'"
+msgstr ""
+"Cache inconsistant pour le partage '%(vdir)s', reconstruction de '%(dir)s'"
+
+#, python-format
+msgid "Dropping missing directory %(dir)s"
+msgstr "Suppression du répertoire manquant %(dir)s"
 
 #, python-format
 msgid "Scanning File Error: %(error)s Path: %(path)s"
