@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 #
-# COPYRIGHT (c) 2016 Michael Labouebe <gfarmerfr@free.fr>
-# COPYRIGHT (c) 2016 Mutnick <muhing@yahoo.com>
-# COPYRIGHT (c) 2009-2011 Quinox <quinox@users.sf.net>
+# COPYRIGHT (C) 2016 Michael Labouebe <gfarmerfr@free.fr>
+# COPYRIGHT (C) 2016 Mutnick <muhing@yahoo.com>
+# COPYRIGHT (C) 2009-2011 Quinox <quinox@users.sf.net>
 # COPYRIGHT (C) 2009 Daelstorm <daelstorm@gmail.com>
 #
 # GNU GENERAL PUBLIC LICENSE
@@ -30,7 +30,6 @@ import os
 import time
 import struct
 
-# N+ imports
 import slskmessages
 from slskmessages import NetworkIntType, NetworkLongLongType
 from logfacility import log
@@ -138,6 +137,7 @@ class Shares:
         self.RescanBuddyShares(msg, rebuild=True)
 
     def RescanBuddyShares(self, msg, rebuild=False):
+
         files, streams, wordindex, fileindex, mtimes = self.rescandirs(
             msg.shared,
             self.config.sections["transfers"]["bsharedmtimes"],
@@ -157,6 +157,7 @@ class Shares:
         )
 
     def CompressShares(self, sharestype):
+
         if sharestype == "normal":
             streams = self.config.sections["transfers"]["sharedfilesstreams"]
         elif sharestype == "buddy":
@@ -177,8 +178,10 @@ class Shares:
             self.CompressedSharesBuddy = m
 
     def GetSharedFileList(self, msg):
+
         self.logMessage("%s %s" % (msg.__class__, vars(msg)), 4)
         user = ip = port = None
+
         # Get peer's username, ip and port
         for i in self.np.peerconns:
             if i.conn is msg.conn.conn:
@@ -188,9 +191,11 @@ class Shares:
                         break
                     ip, port = i.addr
                 break
+
         if user == None:
             # No peer connection
             return
+
         requestTime = time.time()
         if user in self.requestedShares:
             if not requestTime > 10 + self.requestedShares[user]:
@@ -198,6 +203,7 @@ class Shares:
                 # last one by this user
                 return
         self.requestedShares[user] = requestTime
+
         # Check address is spoofed, if possible
         # if self.CheckSpoof(user, ip, port):
         #     # Message IS spoofed
@@ -250,14 +256,17 @@ class Shares:
         self.queue.put(m)
 
     def FolderContentsRequest(self, msg):
+
         username = None
         checkuser = None
         reason = ""
+
         for i in self.np.peerconns:
             if i.conn is msg.conn.conn:
                 username = i.username
                 checkuser, reason = self.np.CheckUser(username, None)
                 break
+
         if not username:
             return
         if not checkuser:
@@ -292,43 +301,57 @@ class Shares:
         pass
 
     def processSearchRequest(self, searchterm, user, searchid, direct=0):
+
         if not self.config.sections["searches"]["search_results"]:
             # Don't return _any_ results when this option is disabled
             return
+
         if searchterm is None:
             return
+
         checkuser, reason = self.np.CheckUser(user, None)
         if not checkuser:
             return
+
         if reason == "geoip":
             geoip = 1
         else:
             geoip = 0
+
         maxresults = self.config.sections["searches"]["maxresults"]
+
         if checkuser == 2:
             wordindex = self.config.sections["transfers"]["bwordindex"]
             fileindex = self.config.sections["transfers"]["bfileindex"]
         else:
             wordindex = self.config.sections["transfers"]["wordindex"]
             fileindex = self.config.sections["transfers"]["fileindex"]
+
         fifoqueue = self.config.sections["transfers"]["fifoqueue"]
+
         if maxresults == 0:
             return
+
         terms = searchterm.translate(self.translatepunctuation).lower().split()
         list = [wordindex[i][:] for i in terms if i in wordindex]
+
         if len(list) != len(terms) or len(list) == 0:
-            # self.logMessage(_("User %(user)s is searching for %(query)s, returning no results") %{'user':user, 'query':self.decode(searchterm)}, 2)
             return
+
         min = list[0]
+
         for i in list[1:]:
             if len(i) < len(min):
                 min = i
+
         list.remove(min)
+
         for i in min[:]:
             for j in list:
                 if i not in j:
                     min.remove(i)
                     break
+
         results = min[:maxresults]
 
         if len(results) > 0 and self.np.transfers is not None:
@@ -401,7 +424,7 @@ class Shares:
             newsharedfilesstreams = self.getFilesStreamsUnicode(newmtimes, oldmtimes, sharedfilesstreams, newsharedfiles, yieldfunction)
         else:
             newsharedfilesstreams = self.getFilesStreams(newmtimes, oldmtimes, sharedfilesstreams, newsharedfiles, yieldfunction)
-        
+
         # Update Search Index
         # newwordindex is a dict in format {word: [num, num, ..], ... } with num matching
         # keys in newfileindex
@@ -415,18 +438,217 @@ class Shares:
 
         return newsharedfiles, newsharedfilesstreams, newwordindex, newfileindex, newmtimes
 
+    # Get Modification Times on Unix
+    def getDirsMtimes(self, dirs, yieldcall=None):
+
+        list = {}
+
+        for directory in dirs:
+
+            directory = os.path.expanduser(directory.replace("//", "/"))
+
+            if self.hiddenCheck({'dir': directory}):
+                continue
+
+            try:
+                contents = dircache.listdir(directory)
+                mtime = os.path.getmtime(directory)
+            except OSError, errtuple:
+                message = _("Scanning Directory Error: %(error)s Path: %(path)s") % {'error': errtuple, 'path': directory}
+                print str(message)
+                self.logMessage(message)
+                displayTraceback(sys.exc_info()[2])
+                continue
+
+            contents.sort()
+
+            list[directory] = mtime
+
+            for filename in contents:
+                path = os.path.join(directory, filename)
+                try:
+                    isdir = os.path.isdir(path)
+                except OSError, errtuple:
+                    message = _("Scanning Error: %(error)s Path: %(path)s") % {'error': errtuple, 'path': path}
+                    print str(message)
+                    self.logMessage(message)
+                    continue
+
+                try:
+                    mtime = os.path.getmtime(path)
+                except OSError, errtuple:
+                    islink = False
+                    try:
+                        islink = os.path.islink(path)
+                    except OSError, errtuple2:
+                        print errtuple2
+
+                    if islink:
+                        message = _("Scanning Error: Broken link to directory: \"%(link)s\" from Path: \"%(path)s\". Repair or remove this link.") % {
+                            'link': os.readlink(path),
+                            'path': path
+                        }
+                    else:
+                        message = _("Scanning Error: %(error)s Path: %(path)s") % {
+                            'error': errtuple,
+                            'path': path
+                        }
+
+                    print str(message)
+                    self.logMessage(message)
+                    continue
+                else:
+                    if isdir:
+                        list[path] = mtime
+                        dircontents = self.getDirsMtimes([path])
+                        for k in dircontents:
+                            list[k] = dircontents[k]
+
+                    if yieldcall is not None:
+                        yieldcall()
+
+        return list
+
+    # Check for new files on Unix
+    def getFilesList(self, mtimes, oldmtimes, oldlist, yieldcall=None, progress=None, rebuild=False):
+        """ Get a list of files with their filelength, bitrate and track length in seconds """
+
+        list = {}
+        count = 0
+
+        for directory in mtimes:
+            directory = os.path.expanduser(directory)
+            virtualdir = self.real2virtual(directory)
+            count += 1
+
+            if progress:
+                percent = float(count)/len(mtimes)
+                if percent <= 1.0:
+                    gobject.idle_add(progress.set_fraction, percent)
+
+            if self.hiddenCheck({'dir': directory}):
+                continue
+
+            if not rebuild and directory in oldmtimes:
+                if mtimes[directory] == oldmtimes[directory]:
+                    if os.path.exists(directory):
+                        try:
+                            list[virtualdir] = oldlist[virtualdir]
+                            continue
+                        except KeyError:
+                            log.addwarning(_("Inconsistent cache for '%(vdir)s', rebuilding '%(dir)s'") % {
+                                'vdir': virtualdir,
+                                'dir': directory
+                            })
+                    else:
+                        log.adddebug(_("Dropping missing directory %(dir)s") % {'dir': directory})
+                        continue
+
+            list[virtualdir] = []
+
+            try:
+                contents = os.listdir(directory)
+            except OSError, errtuple:
+                print str(errtuple)
+                self.logMessage(str(errtuple))
+                continue
+
+            contents.sort()
+
+            for filename in contents:
+
+                if self.hiddenCheck({'dir': directory, 'file': filename}):
+                    continue
+
+                path = os.path.join(directory, filename)
+                try:
+                    isfile = os.path.isfile(path)
+                except OSError, errtuple:
+                    message = _("Scanning Error: %(error)s Path: %(path)s") % {'error': errtuple, 'path': path}
+                    print str(message)
+                    self.logMessage(message)
+                    displayTraceback(sys.exc_info()[2])
+                    continue
+                else:
+                    if isfile:
+                        # Get the metadata of the file via mutagen
+                        data = self.getFileInfo(filename, path)
+                        if data is not None:
+                            list[virtualdir].append(data)
+
+                if yieldcall is not None:
+                    yieldcall()
+
+        return list
+
+    # Get metadata via mutagen on Unix
+    def getFileInfo(self, name, pathname):
+
+        try:
+            size = os.path.getsize(pathname)
+            info = metadata.detect(pathname)
+
+            if info:
+                bitrateinfo = (int(info["bitrate"]), int(info["vbr"]))
+                fileinfo = (name, size, bitrateinfo, int(info["time"]))
+            else:
+                fileinfo = (name, size, None, None)
+
+            return fileinfo
+        except Exception, errtuple:
+            message = _("Scanning File Error: %(error)s Path: %(path)s") % {'error': errtuple, 'path': pathname}
+            self.logMessage(message)
+            displayTraceback(sys.exc_info()[2])
+
+    # Get streams of files on Unix
+    def getFilesStreams(self, mtimes, oldmtimes, oldstreams, newsharedfiles, yieldcall=None):
+
+        streams = {}
+        shared = self.config.sections["transfers"]["shared"]
+
+        for directory in mtimes.keys():
+
+            virtualdir = self.real2virtual(directory)
+
+            if self.hiddenCheck({'dir': directory}):
+                continue
+
+            if directory in oldmtimes:
+                if mtimes[directory] == oldmtimes[directory]:
+                    if os.path.exists(directory):
+                        # No change
+                        try:
+                            streams[virtualdir] = oldstreams[virtualdir]
+                            continue
+                        except KeyError:
+                            log.addwarning(_("Inconsistent cache for '%(vdir)s', rebuilding '%(dir)s'") % {
+                                'vdir': virtualdir,
+                                'dir': directory
+                            })
+                    else:
+                        log.adddebug(_("Dropping missing directory %(dir)s") % {'dir': directory})
+                        continue
+
+            streams[virtualdir] = self.getDirStream(newsharedfiles[virtualdir])
+
+            if yieldcall is not None:
+                yieldcall()
+
+        return streams
+
     # Get Modification Times on Windows
     def getDirsMtimesUnicode(self, dirs, yieldcall=None):
 
         list = {}
 
         for directory in dirs:
+
             directory = os.path.expanduser(directory.replace("//", "/"))
 
             u_directory = u"%s" % directory
             str_directory = str(directory)
 
-            if self.hiddenCheck(u_directory):
+            if self.hiddenCheck({'dir': directory}):
                 continue
 
             try:
@@ -443,6 +665,7 @@ class Shares:
             list[str_directory] = mtime
 
             for filename in contents:
+
                 path = os.path.join(directory, filename)
 
                 # force Unicode for reading from disk in win32
@@ -479,145 +702,15 @@ class Shares:
 
         return list
 
-    # Get Modification Times on Unix
-    def getDirsMtimes(self, dirs, yieldcall=None):
-
-        list = {}
-
-        for directory in dirs:
-            directory = os.path.expanduser(directory.replace("//", "/"))
-
-            if self.hiddenCheck(directory):
-                continue
-
-            try:
-                contents = dircache.listdir(directory)
-                mtime = os.path.getmtime(directory)
-            except OSError, errtuple:
-                message = _("Scanning Directory Error: %(error)s Path: %(path)s") % {'error': errtuple, 'path': directory}
-                print str(message)
-                self.logMessage(message)
-                displayTraceback(sys.exc_info()[2])
-                continue
-
-            contents.sort()
-
-            list[directory] = mtime
-            for filename in contents:
-                path = os.path.join(directory, filename)
-                try:
-                    isdir = os.path.isdir(path)
-                except OSError, errtuple:
-                    message = _("Scanning Error: %(error)s Path: %(path)s") % {'error': errtuple, 'path': path}
-                    print str(message)
-                    self.logMessage(message)
-                    continue
-
-                try:
-                    mtime = os.path.getmtime(path)
-                except OSError, errtuple:
-                    islink = False
-                    try:
-                        islink = os.path.islink(path)
-                    except OSError, errtuple2:
-                        print errtuple2
-                    if islink:
-                        message = _("Scanning Error: Broken link to directory: \"%(link)s\" from Path: \"%(path)s\". Repair or remove this link.") % {'link': os.readlink(path), 'path': path}
-                    else:
-                        message = _("Scanning Error: %(error)s Path: %(path)s") % {'error': errtuple, 'path': path}
-                    print str(message)
-                    self.logMessage(message)
-                    continue
-                else:
-                    if isdir:
-                        list[path] = mtime
-                        dircontents = self.getDirsMtimes([path])
-                        for k in dircontents:
-                            list[k] = dircontents[k]
-
-                    if yieldcall is not None:
-                        yieldcall()
-
-        return list
-
-    # Check for new files on Unix
-    def getFilesList(self, mtimes, oldmtimes, oldlist, yieldcall=None, progress=None, rebuild=False):
-        """ Get a list of files with their filelength and
-        (if mp3) bitrate and track length in seconds """
-
-        list = {}
-        count = 0
-
-        for directory in mtimes:
-            directory = os.path.expanduser(directory)
-            virtualdir = self.real2virtual(directory)
-            count += 1
-
-            if progress:
-                percent = float(count)/len(mtimes)
-                if percent <= 1.0:
-                    gobject.idle_add(progress.set_fraction, percent)
-
-            if self.hiddenCheck(directory):
-                continue
-
-            if not rebuild and directory in oldmtimes:
-                if mtimes[directory] == oldmtimes[directory]:
-                    if os.path.exists(directory):
-                        try:
-                            list[virtualdir] = oldlist[virtualdir]
-                            continue
-                        except KeyError:
-                            log.addwarning("Inconsistent cache for '%s', rebuilding '%s'" % (virtualdir, directory))
-                    else:
-                        print "Dropping removed directory %s" % directory
-                        continue
-
-            list[virtualdir] = []
-
-            try:
-                contents = os.listdir(directory)
-            except OSError, errtuple:
-                print str(errtuple)
-                self.logMessage(str(errtuple))
-                continue
-            contents.sort()
-
-            for filename in contents:
-
-                if self.hiddenCheck(filename):
-                    continue
-
-                path = os.path.join(directory, filename)
-                try:
-                    isfile = os.path.isfile(path)
-                except OSError, errtuple:
-                    message = _("Scanning Error: %(error)s Path: %(path)s") % {'error': errtuple, 'path': path}
-                    print str(message)
-                    self.logMessage(message)
-                    displayTraceback(sys.exc_info()[2])
-                    continue
-                else:
-                    if isfile:
-                        # Get the metadata of the file via mutagen
-                        data = self.getFileInfo(filename, path)
-                        if data is not None:
-                            list[virtualdir].append(data)
-
-                if yieldcall is not None:
-                    yieldcall()
-
-        return list
-
     # Check for new files on Windows
     def getFilesListUnicode(self, mtimes, oldmtimes, oldlist, yieldcall=None, progress=None, rebuild=False):
-        """ Get a list of files with their filelength and
-        (if mp3) bitrate and track length in seconds """
+        """ Get a list of files with their filelength, bitrate and track length in seconds """
 
         list = {}
         count = 0
 
         for directory in mtimes:
+
             directory = os.path.expanduser(directory)
             virtualdir = self.real2virtual(directory)
             count += 1
@@ -631,7 +724,7 @@ class Shares:
             u_directory = u"%s" % directory
             str_directory = str(directory)
 
-            if self.hiddenCheck(directory):
+            if self.hiddenCheck({'dir': directory}):
                 continue
 
             if not rebuild and directory in oldmtimes:
@@ -652,7 +745,7 @@ class Shares:
 
             for filename in contents:
 
-                if self.hiddenCheck(filename):
+                if self.hiddenCheck({'dir': directory, 'file': filename}):
                     continue
 
                 path = os.path.join(directory, filename)
@@ -714,25 +807,6 @@ class Shares:
             self.logMessage(message)
             displayTraceback(sys.exc_info()[2])
 
-    # Get metadata via mutagen on Unix
-    def getFileInfo(self, name, pathname):
-
-        try:
-            size = os.path.getsize(pathname)
-            info = metadata.detect(pathname)
-
-            if info:
-                bitrateinfo = (int(info["bitrate"]), int(info["vbr"]))
-                fileinfo = (name, size, bitrateinfo, int(info["time"]))
-            else:
-                fileinfo = (name, size, None, None)
-
-            return fileinfo
-        except Exception, errtuple:
-            message = _("Scanning File Error: %(error)s Path: %(path)s") % {'error': errtuple, 'path': pathname}
-            self.logMessage(message)
-            displayTraceback(sys.exc_info()[2])
-
     # Get streams of files on Windows
     def getFilesStreamsUnicode(self, mtimes, oldmtimes, oldstreams, newsharedfiles, yieldcall=None):
 
@@ -741,12 +815,14 @@ class Shares:
         virtual_dirs = [x[0] for x in shared]
 
         for directory in mtimes.keys():
+
             virtualdir = self.real2virtual(directory)
+
             # force Unicode for reading from disk
             u_directory = u"%s" % directory
             str_directory = str(directory)
 
-            if self.hiddenCheck(directory):
+            if self.hiddenCheck({'dir': directory}):
                 continue
 
             if directory in oldmtimes and directory not in oldstreams:
@@ -763,7 +839,7 @@ class Shares:
                         except KeyError:
                             log.addwarning("Inconsistent cache for '%s', rebuilding '%s'" % (virtualdir, directory))
                     else:
-                        print "2U. Dropping missing directory %s %s" % (type(u_directory), repr(u_directory))
+                        log.adddebug(_("Dropping missing directory %(dir)s") % {'dir': directory})
                         continue
 
             streams[virtualdir] = self.getDirStream(newsharedfiles[virtualdir])
@@ -773,52 +849,21 @@ class Shares:
 
         return streams
 
-    # Get streams of files on Unix
-    def getFilesStreams(self, mtimes, oldmtimes, oldstreams, newsharedfiles, yieldcall=None):
+    # Stop sharing any dot/hidden directories/files
+    def hiddenCheck(self, stuff):
 
-        streams = {}
-        shared = self.config.sections["transfers"]["shared"]
+        subdirs = stuff['dir'].split(os.sep)
 
-        for directory in mtimes.keys():
-            virtualdir = self.real2virtual(directory)
-            if self.hiddenCheck(directory):
-                continue
-
-            if directory in oldmtimes:
-                if mtimes[directory] == oldmtimes[directory]:
-                    if os.path.exists(directory):
-                        # No change
-                        try:
-                            streams[virtualdir] = oldstreams[virtualdir]
-                            continue
-                        except KeyError:
-                            log.addwarning("Inconsistent cache for '%s', rebuilding '%s'" % (virtualdir, directory))
-                    else:
-                        print "2S. Dropping missing directory %s" % directory
-                        continue
-
-            streams[virtualdir] = self.getDirStream(newsharedfiles[virtualdir])
-
-            if yieldcall is not None:
-                yieldcall()
-
-        return streams
-
-    # Stop sharing any dot/hidden directories
-    def hiddenCheck(self, directory):
-
-        dirs = directory.split(os.sep)
-
-        # If any subpart of the directory structure start with a dot
-        # we exclude it
-        for subdir in dirs:
-
-            # Exclude dot directories on any OS
-            if subdir.startswith("."):
+        # If any part of the directory structure start with a dot we exclude it
+        for part in subdirs:
+            if part.startswith("."):
                 return True
 
-        # On Windows check the directories attributes
-        # if the win32file module is available
+        # If we're asked to check a file we exclude it if it start with a dot
+        if 'file' in stuff and stuff['file'].startswith("."):
+            return True
+
+        # On Windows check the directories attributes if the win32file module is available
         if win32:
 
             try:
@@ -827,7 +872,13 @@ class Shares:
                 pass
             else:
 
-                dirattr = GetFileAttributes(directory.replace('\\', '\\\\'))
+                if 'file' in stuff:
+                    # If it's a file it must contain the fully qualified path
+                    path = os.path.join(stuff['dir'], stuff['file']).replace('\\', '\\\\')
+                else:
+                    path = stuff['dir'].replace('\\', '\\\\')
+
+                attrs = GetFileAttributes(unicode(path))
 
                 # Set a mask to check the 2nd bit
                 # See https://msdn.microsoft.com/en-us/library/windows/desktop/gg258117(v=vs.85).aspx
@@ -835,13 +886,14 @@ class Shares:
                 # 2 (0x2)
                 mask = 1 << 1
 
-                if dirattr & mask:
+                if attrs & mask:
                     return True
 
         return False
 
     # Pack all files and metadata in directory
     def getDirStream(self, dir):
+
         msg = slskmessages.SlskMessage()
         stream = msg.packObject(NetworkIntType(len(dir)))
 
@@ -852,6 +904,7 @@ class Shares:
 
     # Pack a file's metadata
     def getByteStream(self, fileinfo):
+
         message = slskmessages.SlskMessage()
 
         stream = chr(1) + message.packObject(fileinfo[0]) + message.packObject(NetworkLongLongType(fileinfo[1]))
@@ -890,7 +943,9 @@ class Shares:
         count = 0
 
         for directory in mtimes.keys():
+
             virtualdir = self.real2virtual(directory)
+
             if progress:
                 percent = float(count)/len(mtimes)
                 if percent <= 1.0:
@@ -898,7 +953,7 @@ class Shares:
 
             count += 1
 
-            if self.hiddenCheck(directory):
+            if self.hiddenCheck({'dir': directory}):
                 continue
 
             for j in newsharedfiles[virtualdir]:
@@ -920,7 +975,9 @@ class Shares:
             if os.path.commonprefix([dir, i]) == i:
                 dir = dir[len(i):]
 
-        words = string.split(string.lower(string.translate(dir+' '+file, string.maketrans(string.punctuation, string.join([' ' for i in string.punctuation], '')))))
+        words = string.split(
+            string.lower(string.translate(dir + ' ' + file, string.maketrans(string.punctuation, string.join([' ' for i in string.punctuation], ''))))
+        )
 
         # remove duplicates
         d = {}
