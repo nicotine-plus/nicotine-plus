@@ -465,7 +465,9 @@ class Shares:
             list[directory] = mtime
 
             for filename in contents:
+
                 path = os.path.join(directory, filename)
+
                 try:
                     isdir = os.path.isdir(path)
                 except OSError, errtuple:
@@ -517,6 +519,7 @@ class Shares:
         count = 0
 
         for directory in mtimes:
+
             directory = os.path.expanduser(directory)
             virtualdir = self.real2virtual(directory)
             count += 1
@@ -654,13 +657,14 @@ class Shares:
             try:
                 contents = dircache.listdir(u_directory)
                 mtime = os.path.getmtime(u_directory)
-                contents.sort()
             except OSError, errtuple:
                 message = _("Scanning Directory Error: %(error)s Path: %(path)s") % {'error': errtuple, 'path': u_directory}
                 print str(message)
                 self.logMessage(message)
                 displayTraceback(sys.exc_info()[2])
                 continue
+
+            contents.sort()
 
             list[str_directory] = mtime
 
@@ -729,8 +733,18 @@ class Shares:
 
             if not rebuild and directory in oldmtimes:
                 if mtimes[directory] == oldmtimes[directory]:
-                    list[virtualdir] = oldlist[virtualdir]
-                    continue
+                    if os.path.exists(directory):
+                        try:
+                            list[virtualdir] = oldlist[virtualdir]
+                            continue
+                        except KeyError:
+                            log.addwarning(_("Inconsistent cache for '%(vdir)s', rebuilding '%(dir)s'") % {
+                                'vdir': virtualdir,
+                                'dir': directory
+                            })
+                    else:
+                        log.adddebug(_("Dropping missing directory %(dir)s") % {'dir': directory})
+                        continue
 
             list[virtualdir] = []
 
@@ -812,7 +826,6 @@ class Shares:
 
         streams = {}
         shared = self.config.sections["transfers"]["shared"]
-        virtual_dirs = [x[0] for x in shared]
 
         for directory in mtimes.keys():
 
@@ -837,7 +850,10 @@ class Shares:
                             streams[virtualdir] = oldstreams[virtualdir]
                             continue
                         except KeyError:
-                            log.addwarning("Inconsistent cache for '%s', rebuilding '%s'" % (virtualdir, directory))
+                            log.addwarning(_("Inconsistent cache for '%(vdir)s', rebuilding '%(dir)s'") % {
+                                'vdir': virtualdir,
+                                'dir': directory
+                            })
                     else:
                         log.adddebug(_("Dropping missing directory %(dir)s") % {'dir': directory})
                         continue
