@@ -78,15 +78,6 @@ You should install GTK 2.24.X.""") % (e)
             return _("""You're using an unsupported version of PyGTK (%s).
 You should install PyGTK 2.24.X.""") % (e)
 
-    # On windows dbhash might be a good choice
-    if win32:
-        try:
-            import dbhash
-        except:
-            log.add(
-                _("Warning: the Berkeley DB module, dbhash, " +
-                  "could not be loaded."))
-
     # Require pynicotine
     try:
         import pynicotine
@@ -98,7 +89,7 @@ in an interpreter's module search path.
 what version of python was used to build the Nicotine
 binary package and what you try to run Nicotine+ with).""")
 
-    # Require GeoIP
+    # Check for optionnal GeoIP
     try:
         import GeoIP
     except ImportError:
@@ -106,10 +97,30 @@ binary package and what you try to run Nicotine+ with).""")
             import _GeoIP
         except ImportError:
             msg = _("""Nicotine+ supports a country code blocker.
-That requires a (GPL'ed) library called GeoIP. You can find it here:
+This requires a (GPL'ed) library called GeoIP. You can find it here:
 C library:       http://www.maxmind.com/app/c
 Python bindings: http://www.maxmind.com/app/python
 (the python bindings require the C library)""")
+            log.addwarning(msg)
+
+    # Windows specific checks
+    if win32:
+
+        # dbhash might be a good choice
+        try:
+            import dbhash
+        except:
+            log.addwarning(
+                _("Warning: the Berkeley DB module, dbhash, " +
+                  "could not be loaded."))
+
+        # win32file is used to handle hidden files
+        try:
+            import win32file
+        except:
+            msg = _("""Nicotine+ supports hidden files attributes on windows.
+This requires a python module called pypiwin32. You can find it here:
+https://pypi.python.org/pypi/pypiwin32""")
             log.addwarning(msg)
 
     return None
