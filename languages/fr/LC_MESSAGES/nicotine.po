@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nicotine\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-13 22:57+0100\n"
-"PO-Revision-Date: 2016-11-13 23:00+0100\n"
+"POT-Creation-Date: 2016-11-21 23:34+0100\n"
+"PO-Revision-Date: 2016-11-21 23:34+0100\n"
 "Last-Translator: Michael LABOUEBE <gfarmerfr@free.fr>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -2119,9 +2119,6 @@ msgstr ""
 "Vous utilisez une version non supportée de PyGTK (%s).\n"
 "Vous devriez installer PyGTK 2.24.X."
 
-msgid "Warning: the Berkeley DB module, dbhash, could not be loaded."
-msgstr "Attention: le module Berkeley DB, dbhash, n'a pu être chargé."
-
 # nicotine
 msgid ""
 "Can not find Nicotine+ modules.\n"
@@ -2139,9 +2136,10 @@ msgstr ""
 "utilisez en ce moment)."
 
 # nicotine
+#, fuzzy
 msgid ""
 "Nicotine+ supports a country code blocker.\n"
-"That requires a (GPL'ed) library called GeoIP. You can find it here:\n"
+"This requires a (GPL'ed) library called GeoIP. You can find it here:\n"
 "C library:       http://www.maxmind.com/app/c\n"
 "Python bindings: http://www.maxmind.com/app/python\n"
 "(the python bindings require the C library)"
@@ -2152,6 +2150,19 @@ msgstr ""
 "Bibliothèque C: http://www.maxmind.com/app/c\n"
 "Module python:  http://www.maxmind.com/app/python\n"
 "(le module python nécessite la bibliothèque C)"
+
+msgid "Warning: the Berkeley DB module, dbhash, could not be loaded."
+msgstr "Attention: le module Berkeley DB, dbhash, n'a pu être chargé."
+
+msgid ""
+"Nicotine+ supports hidden files attributes on windows.\n"
+"This requires a python module called pypiwin32. You can find it here:\n"
+"https://pypi.python.org/pypi/pypiwin32"
+msgstr ""
+"Nicotine+ supporte la gestion des fichiers cachés sous windows.\n"
+"Cela nécessite un module python appelé pypiwin32.\n"
+"Vous pouvez le trouver à l'adresse suivante:\n"
+"https://pypi.python.org/pypi/pypiwin32"
 
 #, python-format
 msgid "Nicotine+ version %s"
