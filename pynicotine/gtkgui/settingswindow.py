@@ -2075,10 +2075,9 @@ class NotebookFrame(buildFrame):
 
         self.p.SetWidgetsData(config, self.options)
 
-        # Function to set the default iter
-        #  from the value found in the config file
+        # Function to set the default iter from the value found in the config file
         def set_active_conf(model, path, iter, data):
-            if model.get_value(iter, 1) == data["cfg"]:
+            if model.get_value(iter, 1).lower() == data["cfg"].lower():
                 data["combobox"].set_active_iter(iter)
 
         # Override settings for the GtkComboBoxEntry defining ui positionning
