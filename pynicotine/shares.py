@@ -731,6 +731,10 @@ class Shares:
             if self.hiddenCheck({'dir': directory}):
                 continue
 
+            if directory in oldmtimes and directory not in oldlist:
+                # Partial information, happened with unicode paths that N+ couldn't handle properly
+                del oldmtimes[directory]
+
             if not rebuild and directory in oldmtimes:
                 if mtimes[directory] == oldmtimes[directory]:
                     if os.path.exists(directory):
