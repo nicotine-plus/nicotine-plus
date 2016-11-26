@@ -48,7 +48,6 @@ class buildFrame:
 
     def __init__(self, window):
         self.frame = self.p.frame
-        # self.tooltips = self.frame.tooltips
         self.wTree = gtk.glade.XML(os.path.join(dir_location, "settingswindow.glade"), window)
         widgets = self.wTree.get_widget_prefix("")
         for i in widgets:
@@ -557,7 +556,6 @@ class DownloadsFrame(buildFrame):
     def cell_toggle_callback(self, widget, index, treeview, pos):
 
         iter = self.filterlist.get_iter(index)
-        # user = self.usersmodel.get_value(iter, 1)
         value = self.filterlist.get_value(iter, pos)
         self.filterlist.set(iter, pos, not value)
 
@@ -751,14 +749,18 @@ class SharesFrame(buildFrame):
         return self.needrescan
 
     def OnAddSharedDir(self, widget):
+
         dir1 = ChooseDir(
             self.Main.get_toplevel(),
             title=_("Nicotine+") + ": " + _("Add a shared directory")
         )
 
         if dir1 is not None:
+
             for directory in dir1:
-                if directory not in self.shareddirs:
+
+                # If the directory is not already shared
+                if directory not in [x[1] for x in self.shareddirs+self.bshareddirs]:
 
                     virtual = input_box(
                         self.frame,
@@ -766,7 +768,8 @@ class SharesFrame(buildFrame):
                         message=_("Enter virtual name for '%(dir)s':") % {'dir': directory}
                     )
 
-                    if virtual == '':
+                    # If the virtual share name is not already used
+                    if virtual == '' or virtual is None or virtual in [x[0] for x in self.shareddirs+self.bshareddirs]:
                         pass
                     else:
                         self.shareslist.append(
@@ -782,14 +785,18 @@ class SharesFrame(buildFrame):
                         self.needrescan = True
 
     def OnAddSharedBuddyDir(self, widget):
+
         dir1 = ChooseDir(
             self.Main.get_toplevel(),
             title=_("Nicotine+") + ": " + _("Add a shared buddy directory")
         )
 
         if dir1 is not None:
+
             for directory in dir1:
-                if directory not in self.bshareddirs:
+
+                # If the directory is not already shared
+                if directory not in [x[1] for x in self.shareddirs+self.bshareddirs]:
 
                     virtual = input_box(
                         self.frame,
@@ -797,7 +804,8 @@ class SharesFrame(buildFrame):
                         message=_("Enter virtual name for '%(dir)s':") % {'dir': directory}
                     )
 
-                    if virtual == '':
+                    # If the virtual share name is not already used
+                    if virtual == '' or virtual is None or virtual in [x[0] for x in self.shareddirs+self.bshareddirs]:
                         pass
                     else:
                         self.bshareslist.append(
@@ -1481,8 +1489,7 @@ class SoundsFrame(buildFrame):
 
     def OnTextToSpeechToggled(self, widget):
         sensitive = self.TextToSpeech.get_active()
-        # for widget in [self.SoundCommand,  self.SoundDirectory,  self.SoundButton, self.DefaultSoundCommand, self.sndcmdLabel, self.snddirLabel]:
-        #    widget.set_sensitive(not sensitive and self.SoundCheck.get_active())
+
         for widget in [self.roomMessageBox, self.privateMessageBox, self.ttsCommandBox]:
             widget.set_sensitive(sensitive)
 
@@ -2792,9 +2799,6 @@ class CensorFrame(buildFrame):
         self.censorlist.clear()
         self.p.SetWidgetsData(config, self.options)
         words = config["words"]
-        # if words["censored"] is not None:
-        #     for word in words["censored"]:
-        #         self.censorlist.append([word])
 
         self.OnCensorCheck(self.CensorCheck)
 
@@ -3047,7 +3051,6 @@ class buildDialog(gtk.Dialog):
 
         window = "PluginProperties"
         self.settings = parent.p
-        # self.tooltips = self.settings.tooltips
         self.wTree = gtk.glade.XML(os.path.join(dir_location, "settingswindow.glade"), window)
 
         widgets = self.wTree.get_widget_prefix("")
@@ -3114,10 +3117,6 @@ class buildDialog(gtk.Dialog):
         iter = treeview.get_model().append([""])
         col = treeview.get_column(0)
 
-        # path = treeview.get_model().get_path(iter)
-        # if path is not None:
-        #     sel.select_path(path)
-        #     treeview.scroll_to_cell(path, None, True, 0.5, 0.5)
         treeview.set_cursor(
             treeview.get_model().get_path(iter),
             focus_column=col,
@@ -3245,7 +3244,6 @@ class PluginFrame(buildFrame):
             render.connect('toggled', self.cell_toggle_callback, self.PluginTreeView, 1)
 
         self.PluginTreeView.set_model(self.pluginlist)
-        # self.PluginTreeView.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
         self.PluginTreeView.get_selection().connect("changed", self.OnSelectPlugin)
 
         self.dialog = buildDialog(self)
@@ -3466,7 +3464,6 @@ class SettingsWindow:
     def UpdateColours(self):
 
         for widget in self.__dict__.values():
-            # if type(widget) in (gtk.Entry, gtk.SpinButton, gtk.TextView, gtk.TreeView, gtk.CheckButton, gtk.RadioButton):
             self.ColourWidgets(widget)
 
         for name, page in self.pages.items():
@@ -3491,8 +3488,7 @@ class SettingsWindow:
             self.viewport1.add(self.empty_label)
 
     def SwitchToPage(self, page):
-        # if not self.SettingsWindow.get_property("visible"):
-        #     self.SettingsWindow.show()
+
         self.SettingsWindow.deiconify()
         child = self.viewport1.get_child()
         if child:
@@ -3611,8 +3607,6 @@ class SettingsWindow:
         elif type(widget) is gtk.TreeView and type(value) is list and widget.get_model().get_n_columns() == 1:
             for item in value:
                 widget.get_model().append([item])
-        # else:
-        #    print "Undefined widget type:", widget, value
 
     def InvalidSettings(self, domain, key):
         for name, page in self.pages.items():

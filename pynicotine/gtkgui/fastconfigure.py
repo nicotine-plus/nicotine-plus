@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
-# COPYRIGHT (c) 2016 Michael Labouebe <gfarmerfr@free.fr>
-# COPYRIGHT (c) 2009-2011 Quinox <quinox@users.sf.net>
+# COPYRIGHT (C) 2016 Michael Labouebe <gfarmerfr@free.fr>
+# COPYRIGHT (C) 2009-2011 Quinox <quinox@users.sf.net>
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -442,14 +442,30 @@ class FastConfigureAssistant(object):
                         message=_("Enter virtual name for '%(dir)s':") % {'dir': directory}
                     )
 
-                    if virtual == '':
+                    if virtual == '' or virtual is None:
                         pass
                     else:
+                        # We get the current defined shares from the treeview
+                        model, paths = self.kids['shareddirectoriestree'].get_selection().get_selected_rows()
+
+                        iter = model.get_iter_root()
+
+                        while iter is not None:
+
+                            # We reject the share if either the virtual share name or the directory is already used
+                            if virtual == model.get_value(iter, 0) or directory == model.get_value(iter, 6):
+                                return
+                            else:
+                                iter = model.iter_next(iter)
+
+                        # The share is unique: we can add it
                         self.addshareddir((virtual, directory))
 
         if name == "removeshares":
+
             model, paths = self.kids['shareddirectoriestree'].get_selection().get_selected_rows()
             refs = [gtk.TreeRowReference(model, x) for x in paths]
+
             for i in refs:
                 self.sharelist.remove(self.sharelist.get_iter(i.get_path()))
 
