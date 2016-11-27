@@ -27,7 +27,7 @@ import thread
 from os.path import exists, getsize, join
 
 from dirchooser import ChooseDir
-from utils import OpenUri, InitialiseColumns, recode, HumanSize
+from utils import OpenUri, InitialiseColumns, recode, HumanSize, popupWarning
 from entrydialog import input_box
 dir_location = os.path.dirname(os.path.realpath(__file__))
 
@@ -428,12 +428,14 @@ class FastConfigureAssistant(object):
             )
 
         if name == "addshare":
+
             selected = ChooseDir(
                 self.window.get_toplevel(),
                 title=_("Nicotine+") + ": " + _("Add a shared directory")
             )
 
             if selected:
+
                 for directory in selected:
 
                     virtual = input_box(
@@ -442,8 +444,17 @@ class FastConfigureAssistant(object):
                         message=_("Enter virtual name for '%(dir)s':") % {'dir': directory}
                     )
 
+                    # If the virtual name is empty
                     if virtual == '' or virtual is None:
+
+                        popupWarning(
+                            self.window,
+                            _("Warning"),
+                            _("The chosen virtual name is empty"),
+                            self.frame.images["n"]
+                        )
                         pass
+
                     else:
                         # We get the current defined shares from the treeview
                         model, paths = self.kids['shareddirectoriestree'].get_selection().get_selected_rows()
@@ -452,9 +463,28 @@ class FastConfigureAssistant(object):
 
                         while iter is not None:
 
-                            # We reject the share if either the virtual share name or the directory is already used
-                            if virtual == model.get_value(iter, 0) or directory == model.get_value(iter, 6):
+                            # We reject the share if the virtual share name is already used
+                            if virtual == model.get_value(iter, 0):
+
+                                popupWarning(
+                                    self.window,
+                                    _("Warning"),
+                                    _("The chosen virtual name already exist"),
+                                    self.frame.images["n"]
+                                )
                                 return
+
+                            # We also reject the share if the directory is already used
+                            elif directory == model.get_value(iter, 6):
+
+                                popupWarning(
+                                    self.window,
+                                    _("Warning"),
+                                    _("The chosen directory is already shared"),
+                                    self.frame.images["n"]
+                                )
+                                return
+
                             else:
                                 iter = model.iter_next(iter)
 

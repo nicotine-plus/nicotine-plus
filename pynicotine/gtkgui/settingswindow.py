@@ -759,8 +759,18 @@ class SharesFrame(buildFrame):
 
             for directory in dir1:
 
-                # If the directory is not already shared
-                if directory not in [x[1] for x in self.shareddirs+self.bshareddirs]:
+                # If the directory is already shared
+                if directory in [x[1] for x in self.shareddirs+self.bshareddirs]:
+
+                    popupWarning(
+                        self.p.SettingsWindow,
+                        _("Warning"),
+                        _("The chosen directory is already shared"),
+                        self.frame.images["n"]
+                    )
+                    pass
+
+                else:
 
                     virtual = input_box(
                         self.frame,
@@ -770,8 +780,17 @@ class SharesFrame(buildFrame):
 
                     # If the virtual share name is not already used
                     if virtual == '' or virtual is None or virtual in [x[0] for x in self.shareddirs+self.bshareddirs]:
+
+                        popupWarning(
+                            self.p.SettingsWindow,
+                            _("Warning"),
+                            _("The chosen virtual name is either empty or already exist"),
+                            self.frame.images["n"]
+                        )
                         pass
+
                     else:
+
                         self.shareslist.append(
                             [
                                 virtual,
@@ -795,8 +814,18 @@ class SharesFrame(buildFrame):
 
             for directory in dir1:
 
-                # If the directory is not already shared
-                if directory not in [x[1] for x in self.shareddirs+self.bshareddirs]:
+                # If the directory is already shared
+                if directory in [x[1] for x in self.shareddirs+self.bshareddirs]:
+
+                    popupWarning(
+                        self.p.SettingsWindow,
+                        _("Warning"),
+                        _("The chosen directory is already shared"),
+                        self.frame.images["n"]
+                    )
+                    pass
+
+                else:
 
                     virtual = input_box(
                         self.frame,
@@ -806,8 +835,17 @@ class SharesFrame(buildFrame):
 
                     # If the virtual share name is not already used
                     if virtual == '' or virtual is None or virtual in [x[0] for x in self.shareddirs+self.bshareddirs]:
+
+                        popupWarning(
+                            self.p.SettingsWindow,
+                            _("Warning"),
+                            _("The chosen virtual name is either empty or already exist"),
+                            self.frame.images["n"]
+                        )
                         pass
+
                     else:
+
                         self.bshareslist.append(
                             [
                                 virtual,
