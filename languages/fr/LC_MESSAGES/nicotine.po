@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nicotine\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-21 23:34+0100\n"
-"PO-Revision-Date: 2016-11-21 23:34+0100\n"
+"POT-Creation-Date: 2016-11-27 23:07+0100\n"
+"PO-Revision-Date: 2016-11-27 23:08+0100\n"
 "Last-Translator: Michael LABOUEBE <gfarmerfr@free.fr>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -14,7 +14,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Poedit-Bookmarks: 1121,180,724,-1,-1,-1,-1,-1,-1,-1\n"
-"X-Generator: Poedit 1.8.8\n"
+"X-Generator: Poedit 1.8.11\n"
 
 msgid "Nicotine+ Fast Configure"
 msgstr "Nicotine+ Configuration Rapide"
@@ -2136,7 +2136,6 @@ msgstr ""
 "utilisez en ce moment)."
 
 # nicotine
-#, fuzzy
 msgid ""
 "Nicotine+ supports a country code blocker.\n"
 "This requires a (GPL'ed) library called GeoIP. You can find it here:\n"
@@ -3069,6 +3068,19 @@ msgstr "Nom virtuel"
 msgid "Enter virtual name for '%(dir)s':"
 msgstr "Choisissez un nom virtuel pour '%(dir)s':"
 
+# pynicotine/gtkgui/settings_glade.py
+msgid "Warning"
+msgstr "Attention"
+
+msgid "The chosen virtual name is empty"
+msgstr "Le nom virtuel choisi est vide"
+
+msgid "The chosen virtual name already exist"
+msgstr "Le nom virtuel choisi existe déjà"
+
+msgid "The chosen directory is already shared"
+msgstr "Le répertoire choisi est déjà partagé"
+
 # pynicotine/gtkgui/nicotine_glade.py
 msgid "Joined Rooms "
 msgstr "Salons joints "
@@ -3700,10 +3712,6 @@ msgstr "Filtrer"
 msgid "Escaped"
 msgstr "Sélection des filtres (echap.)"
 
-# pynicotine/gtkgui/settings_glade.py
-msgid "Warning"
-msgstr "Attention"
-
 #, python-format
 msgid "Security Risk: you should not share your %s directory!"
 msgstr "Risque de sécurité: Vous ne devriez pas partager votre répertoire %s !"
@@ -3724,6 +3732,9 @@ msgstr "Modifier ce filtre de téléchargement:"
 #, python-format
 msgid "%(num)d Failed! %(error)s "
 msgstr "%(num)d a échoué! %(error)s"
+
+msgid "The chosen virtual name is either empty or already exist"
+msgstr "Le nom virtuel choisi est vide ou existe déjà"
 
 # pynicotine/gtkgui/settings_glade.py
 msgid "Add a shared buddy directory"
