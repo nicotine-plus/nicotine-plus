@@ -19,6 +19,8 @@ To run it from git master see: [RUNFROMGIT](doc/RUNFROMGIT.md)
 
 For installation / packaging instruction see: [INSTALL](doc/INSTALL.md)
 
+For downstream packages patches see: [DISTRO_PATCHES](doc/DISTRO_PATCHES.md)
+
 ### Help wanted
 
 You want to help ? See a list of things [TODO](doc/TODO.md)

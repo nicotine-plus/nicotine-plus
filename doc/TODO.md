@@ -7,11 +7,11 @@ A list of stuff & things todo (not in any particular order):
 * **IN PROGRESS**: Drop the bundle Configparser module: use upstream version.
 * Convert libsexy spellcheck stuff to pygtkspell.
 * GNU/Linux: Switch to using XDG_* directories.
-* **IN PROGRESS**: Apply downstream patches (debian, fedora & ubuntu).
 * Convert all the libglade files to GTKBuilder.
 * Our sounds are dropped by downstream packagers for being non-free: investigate.
 * Convert old (unmaintained) python-GeoIP code to an up to date version.
 * Curate and update embedded plugins.
+* **DONE**: Sorting/applying downstream patches (Debian, Fedora & OpenSuSE).
 * **DONE**: Drop the embeded Web browser: doesn't work anymore, outdated and security nightmare.
 * **DONE**: Drop the special treatment for downloading ogg files.
 * **DONE**: Drop RGBA code that was disable by default and broken.
