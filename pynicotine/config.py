@@ -383,13 +383,28 @@ class Config:
             }
         }
 
-        # OS Specific settings
+        # URls handling for Mac
         if sys.platform == 'darwin':
             self.sections["urls"]["protocols"] = {
                 "http": "open -a Safari $",
                 "https": "open -a Safari $"
             }
 
+        # URls handling for Windows
+        if sys.platform.startswith('win'):
+            self.sections["urls"]["protocols"] = {
+                "http": "python -m webbrowser -t $",
+                "https": "python -m webbrowser -t $"
+            }
+
+        # URls handling for Linux
+        if sys.platform.startswith('linux'):
+            self.sections["urls"]["protocols"] = {
+                "http": "xdg-open $",
+                "https": "xdg-open $"
+            }
+
+        # Windows specific stuff
         if sys.platform.startswith('win'):
             self.sections['ui']['filemanager'] = 'explorer $'
             self.sections['transfers']['incompletedir'] = os.path.join(os.environ['APPDATA'], 'nicotine', 'incompletefiles')
