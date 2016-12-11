@@ -252,6 +252,10 @@ eLvErDe
 - Migrated source code from SVN to Github
 - Developer (retired ?)
 
+Kip Warner
+- Debianization
+- [kip(at)thevertigo(dot)com]
+
 ### Retired
 
 daelstorm
