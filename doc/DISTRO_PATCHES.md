@@ -12,7 +12,7 @@
 * 11_disable_sound.patch : **Undecided**
 * 12_default_commands.patch : **Dropped** : Not needed anymore
 * 13_migrate_oldconfig.patch : **Dropped** : Not needed anymore
-* 14_about_icon_[merged].patch : **Merged**
+* 14_about_icon.patch : **Merged**
 
 Also the icons that were non-DFSG compliant have been replaced.
 
