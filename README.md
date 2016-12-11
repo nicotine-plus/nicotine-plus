@@ -27,7 +27,7 @@ You want to help ? See a list of things [TODO](doc/TODO.md)
 
 Nicotine+ is not translated in your language ? See: [TRANSLATIONS](doc/TRANSLATIONS.md)
 
-You want to contact someone? See: [MAINTAINERS](doc/MAINTAINERS.md)
+You want to contact someone? See: [MAINTAINERS](AUTHORS.md)
 
 ### Dependencies
 
