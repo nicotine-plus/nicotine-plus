@@ -25,9 +25,6 @@ added_files = [
     # License file
     ('../COPYING', '.'),
 
-    # Maintainers file
-    ('../AUTHORS.md', '.'),
-
     # News file
     ('../NEWS', '.'),
 
