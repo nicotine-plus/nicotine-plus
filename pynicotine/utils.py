@@ -41,7 +41,7 @@ import gtk.glade
 from libi18n import SetLocaleEnv
 from logfacility import log as logfacility
 
-version = "1.3.0git"
+version = "1.3.0"
 
 log = 0
 win32 = sys.platform.startswith("win")

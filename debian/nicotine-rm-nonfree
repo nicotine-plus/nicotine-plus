@@ -1,0 +1,34 @@
+#! /bin/sh
+set -e
+
+# Create pictures from the GNOME icon theme
+test -f img/n.png
+convert -resize 8x8 img/n.png img/n2.png
+COMPOSE='composite -gravity SouthEast -compose src-over img/n2.png'
+$COMPOSE /usr/share/icons/gnome/16x16/stock/net/stock_connect.png img/connect.png
+$COMPOSE /usr/share/icons/gnome/16x16/stock/net/stock_disconnect.png img/disconnect.png
+$COMPOSE /usr/share/icons/gnome/16x16/status/stock_appointment-reminder.png img/away2.png
+cp /usr/share/icons/gnome/16x16/stock/object/stock_3d-light.png img/hilite.png
+$COMPOSE img/hilite.png img/hilite2.png
+rm -f img/n2.png
+rm -f img/*.ico
+cat >> img/README << EOF
+NOTE FOR THE DEBIAN PACKAGE
+===========================
+All icons coming from Silk were removed, and replaced by icons from the 
+default GNOME icon theme (GPL v2). The script used to create them is in 
+debian/nicotine-rm-non-free.
+EOF
+
+# Re-encode pictures
+python encode_bitmaps.py
+
+# Remove generated .mo files
+rm -f `find languages/ -name \*.mo`
+
+# Remove non-free sounds
+rm -rf sounds
+
+# Remove suspiciously licensed win32 code
+rm -f pynicotine/gtkgui/systraywin32.py
+rm -rf tools

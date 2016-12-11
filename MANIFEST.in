@@ -1,2 +1,5 @@
+include AUTHORS.md
 include COPYING
 include MANIFEST.in
+include NEWS
+include README.md

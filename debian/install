@@ -1,0 +1,4 @@
+debian/nicotine.xpm files/icons/scalable/*.svg /usr/share/pixmaps
+files/*.desktop /usr/share/applications
+nicotine.py /usr/bin
+pynicotine /usr/share/python-support/nicotine

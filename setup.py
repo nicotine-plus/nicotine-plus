@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python2
 # -*- coding: utf-8 -*-
 #
 # COPYRIGHT (c) 2016 Michael Labouebe <gfarmerfr@free.fr>
@@ -122,7 +122,7 @@ for (path, dirs, docfiles) in os.walk("doc"):
 if __name__ == '__main__':
 
     from pynicotine.utils import version
-    LONG_DESCRIPTION = """Nicotine+ is a client for SoulSeek filesharing system, forked from Nicotine."""
+    LONG_DESCRIPTION = """Nicotine+ is a client for the SoulSeek filesharing network, forked from Nicotine."""
 
     setup(
         name="nicotine",
