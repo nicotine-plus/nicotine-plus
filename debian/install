@@ -1,4 +1,1 @@
-files/icons/scalable/nicotine-plus.svg /usr/share/icons/hicolor/scalable/apps
-files/nicotine.desktop /usr/share/applications
-nicotine.py /usr/bin
 pynicotine /usr/share/python-support/nicotine
