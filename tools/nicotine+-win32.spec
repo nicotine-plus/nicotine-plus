@@ -56,7 +56,7 @@ added_files = [
 
 # Analysis pass
 a = Analysis(
-    ['../nicotine.py'],
+    ['../nicotine'],
     pathex=['.'],
     binaries=None,
     datas=added_files,

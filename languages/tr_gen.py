@@ -91,12 +91,19 @@ goodpython = ""
 for path in pythonscripts[:]:
     goodpython += path + " "
 
-print "Generating nicotine-python.pot ...\n"
+# Add the launcher explicitly since it has no .py extension
+print "Generating nicotine-launcher.pot ...\n"
+
+print "xgettext --no-location -L Python -o nicotine-launcher.pot ../nicotine"
+r = system("xgettext --no-location -L Python -o nicotine-launcher.pot ../nicotine")
+
+# Add python scripts
+print "\nGenerating nicotine-python.pot ...\n"
 
 print "xgettext --no-location -o nicotine-python.pot %s" % goodpython
 r = system("xgettext --no-location -o nicotine-python.pot %s" % goodpython)
 
-
+# Add glade files
 print "\nGenerating nicotine-glade.pot ...\n"
 
 gladestring = ""
@@ -104,9 +111,9 @@ for path in gladescripts[:]:
     gladestring += path + " "
 
 print "xgettext --no-location -L Glade -o nicotine-glade.pot %s" % gladestring
-r = system(
-    "xgettext --no-location -L Glade -o nicotine-glade.pot %s" % gladestring)
+r = system("xgettext --no-location -L Glade -o nicotine-glade.pot %s" % gladestring)
 
+# Add builder files
 print "\nGenerating nicotine-builder.pot ...\n"
 
 builderstring = ""
@@ -114,19 +121,17 @@ for path in builderscripts[:]:
     builderstring += path + " "
 
 print "xgettext --no-location -o nicotine-builder.pot %s" % builderstring
-r = system(
-    "xgettext --no-location -o nicotine-builder.pot %s" % builderstring)
+r = system("xgettext --no-location -o nicotine-builder.pot %s" % builderstring)
 
+# Concat every files
 print "\nGenerating nicotine.pot ...\n"
 
-r = system(
-    "msgcat nicotine-builder.pot nicotine-glade.pot nicotine-python.pot " +
-    "-o nicotine.pot"
-)
+r = system("msgcat nicotine-launcher.pot nicotine-builder.pot nicotine-glade.pot nicotine-python.pot -o nicotine.pot")
 
 if r:
     print "Error while creating nicotine.pot"
 else:
+    remove('nicotine-launcher.pot')
     remove('nicotine-builder.pot')
     remove('nicotine-glade.pot')
     remove('nicotine-python.pot')

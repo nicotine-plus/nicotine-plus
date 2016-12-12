@@ -16,7 +16,7 @@
 
 * Check that the python version you are using is 2.7.X via `python -V`.
 
-* In the git root folder run `python nicotine.py`.
+* In the git root folder run `python nicotine`.
 
 ## Windows
 
@@ -32,7 +32,7 @@
 * Launch Nicotine+ either via:
 
     * Right click =>  'Open with' and find `python.exe` in `C:\Python27`.
-    * From the git root folder run via cmd.exe or Powershell `python.exe nicotine.py`.
+    * From the git root folder run via cmd.exe or Powershell `python.exe nicotine`.
 
 ## Optional dependencies
 

@@ -135,7 +135,7 @@ if __name__ == '__main__':
         packages=['pynicotine', 'pynicotine.gtkgui'],
         package_dir={'pynicotine.gtkgui': 'pynicotine/gtkgui'},
         package_data={'pynicotine.gtkgui': ["*.py", "*.glade", "*.ui"]},
-        scripts=['nicotine.py'],
+        scripts=['nicotine'],
         long_description=LONG_DESCRIPTION,
         data_files=files
     )

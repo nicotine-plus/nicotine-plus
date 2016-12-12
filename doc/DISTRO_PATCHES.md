@@ -5,7 +5,7 @@
 ### [Debian/Ubuntu Patches](https://sources.debian.net/src/nicotine/1.2.16%2Bdfsg-1.1/debian/patches/)
 
 * 01_scripts_shebang.patch : **Merged**
-* 02_desktop_paths.patch : **Undecided**
+* 02_desktop_paths.patch : **Merged**
 * 04_buttons_ordering.patch : **Merged**
 * 05_documentation.patch : **Dropped** : Not needed anymore ?
 * 10_exitdialog.patch : **Undecided**

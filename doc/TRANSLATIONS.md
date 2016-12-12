@@ -76,8 +76,8 @@ You can do it either by:
 
 * Setting your locale before starting Nicotine+ ex:
 
-    * English: `LC_ALL=en_US.UTF-8 python nicotine.py`
-    * French: `LC_ALL=fr_FR.UTF-8 python nicotine.py`
+    * English: `LC_ALL=en_US.UTF-8 python nicotine`
+    * French: `LC_ALL=fr_FR.UTF-8 python nicotine`
     * ...
 
 Nicotine+ will first try to find your translation files in your project directory.
