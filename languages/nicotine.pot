@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-27 23:02+0100\n"
+"POT-Creation-Date: 2016-12-12 23:57+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,6 +16,84 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
+
+#, python-format
+msgid ""
+"You're using an unsupported version of Python (%s).\n"
+"You should install Python 2.7.X."
+msgstr ""
+
+msgid "Cannot find GTK+ 2.24.X, please install it."
+msgstr ""
+
+#, python-format
+msgid ""
+"You're using an unsupported version of GTK (%s).\n"
+"You should install GTK 2.24.X."
+msgstr ""
+
+msgid "Cannot find PyGTK 2.24.X, please install it."
+msgstr ""
+
+#, python-format
+msgid ""
+"You're using an unsupported version of PyGTK (%s).\n"
+"You should install PyGTK 2.24.X."
+msgstr ""
+
+msgid ""
+"Can not find Nicotine+ modules.\n"
+"Perhaps they're installed in a directory which is not\n"
+"in an interpreter's module search path.\n"
+"(there could be a version mismatch between\n"
+"what version of python was used to build the Nicotine\n"
+"binary package and what you try to run Nicotine+ with)."
+msgstr ""
+
+msgid ""
+"Nicotine+ supports a country code blocker.\n"
+"This requires a (GPL'ed) library called GeoIP. You can find it here:\n"
+"C library:       http://www.maxmind.com/app/c\n"
+"Python bindings: http://www.maxmind.com/app/python\n"
+"(the python bindings require the C library)"
+msgstr ""
+
+msgid "Warning: the Berkeley DB module, dbhash, could not be loaded."
+msgstr ""
+
+msgid ""
+"Nicotine+ supports hidden files attributes on windows.\n"
+"This requires a python module called pypiwin32. You can find it here:\n"
+"https://pypi.python.org/pypi/pypiwin32"
+msgstr ""
+
+#, python-format
+msgid "Nicotine+ version %s"
+msgstr ""
+
+msgid "Cannot find the pynicotine.utils module."
+msgstr ""
+
+msgid ""
+"Nicotine+ is a Soulseek client.\n"
+"Usage: nicotine [OPTION]...\n"
+"  -c file, --config=file      Use non-default configuration file\n"
+"  -p dir,  --plugins=dir      Use non-default directory for plugins\n"
+"  -t,      --enable-trayicon  Enable the tray icon\n"
+"  -d,      --disable-trayicon Disable the tray icon\n"
+"  -h,      --help             Show help and exit\n"
+"  -s,      --hidden           Start the program hidden so only the tray icon "
+"is shown\n"
+"  -b ip,   --bindip=ip        Bind sockets to the given IP (useful for VPN)\n"
+"  -v,      --version          Display version and exit"
+msgstr ""
+
+msgid "Errors occured while trying to change process name:"
+msgstr ""
+
+#, python-format
+msgid "Starting using the profiler (saving log to %s)"
+msgstr ""
 
 msgid "Nicotine+ Fast Configure"
 msgstr ""
@@ -1631,84 +1709,6 @@ msgid "Add to list"
 msgstr ""
 
 msgid "Save pic"
-msgstr ""
-
-#, python-format
-msgid ""
-"You're using an unsupported version of Python (%s).\n"
-"You should install Python 2.7.X."
-msgstr ""
-
-msgid "Cannot find GTK+ 2.24.X, please install it."
-msgstr ""
-
-#, python-format
-msgid ""
-"You're using an unsupported version of GTK (%s).\n"
-"You should install GTK 2.24.X."
-msgstr ""
-
-msgid "Cannot find PyGTK 2.24.X, please install it."
-msgstr ""
-
-#, python-format
-msgid ""
-"You're using an unsupported version of PyGTK (%s).\n"
-"You should install PyGTK 2.24.X."
-msgstr ""
-
-msgid ""
-"Can not find Nicotine+ modules.\n"
-"Perhaps they're installed in a directory which is not\n"
-"in an interpreter's module search path.\n"
-"(there could be a version mismatch between\n"
-"what version of python was used to build the Nicotine\n"
-"binary package and what you try to run Nicotine+ with)."
-msgstr ""
-
-msgid ""
-"Nicotine+ supports a country code blocker.\n"
-"This requires a (GPL'ed) library called GeoIP. You can find it here:\n"
-"C library:       http://www.maxmind.com/app/c\n"
-"Python bindings: http://www.maxmind.com/app/python\n"
-"(the python bindings require the C library)"
-msgstr ""
-
-msgid "Warning: the Berkeley DB module, dbhash, could not be loaded."
-msgstr ""
-
-msgid ""
-"Nicotine+ supports hidden files attributes on windows.\n"
-"This requires a python module called pypiwin32. You can find it here:\n"
-"https://pypi.python.org/pypi/pypiwin32"
-msgstr ""
-
-#, python-format
-msgid "Nicotine+ version %s"
-msgstr ""
-
-msgid "Cannot find the pynicotine.utils module."
-msgstr ""
-
-msgid ""
-"Nicotine+ is a Soulseek client.\n"
-"Usage: nicotine [OPTION]...\n"
-"  -c file, --config=file      Use non-default configuration file\n"
-"  -p dir,  --plugins=dir      Use non-default directory for plugins\n"
-"  -t,      --enable-trayicon  Enable the tray icon\n"
-"  -d,      --disable-trayicon Disable the tray icon\n"
-"  -h,      --help             Show help and exit\n"
-"  -s,      --hidden           Start the program hidden so only the tray icon "
-"is shown\n"
-"  -b ip,   --bindip=ip        Bind sockets to the given IP (useful for VPN)\n"
-"  -v,      --version          Display version and exit"
-msgstr ""
-
-msgid "Errors occured while trying to change process name:"
-msgstr ""
-
-#, python-format
-msgid "Starting using the profiler (saving log to %s)"
 msgstr ""
 
 msgid "About Nicotine+"
