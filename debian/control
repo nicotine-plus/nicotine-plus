@@ -28,7 +28,7 @@ Depends:
     python-gobject-2,
     python-gtk2 (>= 2.24),
     python (>= 2.7),
-    python-mutagen (>= 1.34),
+    python-mutagen (>= 1.25),
     xdg-utils
 Recommends: python-geoip, python-notify
 Suggests: python-gnome2, python-sexy, python-dbus, python-gst0.10
