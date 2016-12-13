@@ -8,6 +8,18 @@
 DH_VERBOSE = 1
 export DH_OPTIONS=-v
 
+# Set flags for how the package will be built. Note separated with white
+#  space and not comma, as per DPM § 4.9.1...
+
+    # Use as many CPUs as possible for pkgstripfiles which takes forever on
+    #  all our PNGs...
+    DEB_BUILD_OPTIONS +=parallel=0
+
+    # The above should be reflected when dpkg-buildflags is called and merged
+    #  with the defaults...
+    export DEB_BUILD_OPTIONS
+    export DPKG_EXPORT_BUILDFLAGS = 1
+
 # Standard rules and preset shell variables...
 include /usr/share/dpkg/default.mk
 
