@@ -26,20 +26,22 @@ Features
  * You can now rename your buddy virtual shares via the settings window for shares.
 
 Bugs closed on Github
-* Question - Nicotine Still Being Developed? (#1)
-* Remove max length on settings password field (#5, #7)
-* Randomly kill connections on select() out of range failure (#6)
-* Fix shares build / crashes caused by bogus metadata (#10)
-* UPnP Port Mapping piles up in the router (#11)
-* Currently broken on windows (#18)
-* File transfers are failing (#19)
-* Fix variable bitrate detection for MP3 files (#20)
-* Information On nicotine-plus.org (#21)
-* Build fails on archlinux, can't copy mo file... (#22)
-* Hidden directory files now showing up in file shares (Windows) (#23)
-* upnp functionality is used despite being config'd as False (#24)
-* userbrowse coredump on GTK 2.24.30+ (#25)
-* "invalid operation on closed shelf" error on every download (#27)
+ * Question - Nicotine Still Being Developed? (#1)
+ * bug in userbrowse.py (#2)
+ * Remove max length on settings password field (#5, #7)
+ * Randomly kill connections on select() out of range failure (#6)
+ * Fix shares build / crashes caused by bogus metadata (#10)
+ * UPnP Port Mapping piles up in the router (#11)
+ * Currently broken on windows (#18)
+ * File transfers are failing (#19)
+ * Fix variable bitrate detection for MP3 files (#20)
+ * Information On nicotine-plus.org (#21)
+ * Build fails on archlinux, can't copy mo file... (#22)
+ * Hidden directory files now showing up in file shares (Windows) (#23)
+ * upnp functionality is used despite being config'd as False (#24)
+ * userbrowse coredump on GTK 2.24.30+ (#25)
+ * "invalid operation on closed shelf" error on every download (#27)
+ * Unable to save settings (#32)
 
 Bug closed on Trac (readonly)
  * "Abort & Delete" button is mislabeled (#194)
@@ -1249,4 +1251,3 @@ Version 0.4.2 - Aug 5 2003
 --------------------------
 
  * First changelog entry.. Basically everything implemented :)
-
