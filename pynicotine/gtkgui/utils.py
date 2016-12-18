@@ -127,6 +127,10 @@ def showCountryTooltip(widget, x, y, tooltip, sourcecolumn, stripprefix='flag_')
     iter = model.get_iter(path)
     value = model.get_value(iter, sourcecolumn)
 
+    # Avoid throwing an error in there's no flag
+    if value is None:
+        return False
+
     if not value.startswith(stripprefix):
         tooltip.set_text(_("Unknown"))
         return True
