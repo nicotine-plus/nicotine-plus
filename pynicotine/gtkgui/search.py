@@ -29,7 +29,7 @@ import random
 
 from pynicotine import slskmessages
 
-from utils import InitialiseColumns, IconNotebook, PopupMenu, FastListModel, Humanize, HumanSpeed, HumanSize, PressHeader
+from utils import InitialiseColumns, IconNotebook, PopupMenu, Humanize, HumanSpeed, HumanSize, PressHeader
 from dirchooser import ChooseDir
 from entrydialog import *
 from utils import InputDialog, showCountryTooltip

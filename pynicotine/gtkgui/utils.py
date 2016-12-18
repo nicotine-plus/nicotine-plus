@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 #
-# COPYRIGHT (c) 2016 Michael Labouebe <gfarmerfr@free.fr>
-# COPYRIGHT (c) 2016 Mutnick <muhing@yahoo.com>
-# COPYRIGHT (c) 2008-2011 Quinox <quinox@users.sf.net>
+# COPYRIGHT (C) 2016 Michael Labouebe <gfarmerfr@free.fr>
+# COPYRIGHT (C) 2016 Mutnick <muhing@yahoo.com>
+# COPYRIGHT (C) 2008-2011 Quinox <quinox@users.sf.net>
 # COPYRIGHT (C) 2006-2009 Daelstorm <daelstorm@gmail.com>
 # COPYRIGHT (C) 2003-2004 Hyriand
 #
@@ -97,16 +97,17 @@ previouscountrypath = None
 
 
 def showCountryTooltip(widget, x, y, tooltip, sourcecolumn, stripprefix='flag_'):
+
     global previouscountrypath
     try:
         # the returned path of widget.get_path_at_pos is not correct since
-        # this function pretends there's no header!  This also means we
-        # cannot look up the column for the very last user in the list
-        # since the y is too big. Therefore we'll use a y-value of 0 on all
-        # lookups
+        # this function pretends there's no header!
+        # This also means we cannot look up the column for the very last user in the list
+        # since the y is too big.
+        # Therefore we'll use a y-value of 0 on all lookups
         (incorrectpath, column, cx, cy) = widget.get_path_at_pos(x, 0)
-        # the return path of this func is okay, but it doesn't return the
-        # column -_-
+
+        # The return path of this func is okay, but it doesn't return the column -_-
         (path, droppos) = widget.get_dest_row_at_pos(x, y)
     except TypeError:
         # Either function returned None
@@ -116,6 +117,7 @@ def showCountryTooltip(widget, x, y, tooltip, sourcecolumn, stripprefix='flag_')
     if path != previouscountrypath:
         previouscountrypath = path
         return False
+
     title = column.get_title()
 
     if (title != _("Country")):
@@ -128,21 +130,25 @@ def showCountryTooltip(widget, x, y, tooltip, sourcecolumn, stripprefix='flag_')
     if not value.startswith(stripprefix):
         tooltip.set_text(_("Unknown"))
         return True
+
     value = value[len(stripprefix):]
     if value:
         countryname = code2name(value)
     else:
         countryname = "Earth"
+
     if countryname:
         countryname = _(countryname)
     else:
         countryname = _("Unknown (%(countrycode)s)") % {'countrycode': value}
+
     tooltip.set_text(countryname)
 
     return True
 
 
 def HumanizeBytes(size):
+
     if size is None:
         return None
 
@@ -312,7 +318,7 @@ def OpenUri(uri):
         pass
 
 
-def AppendLine(textview, line, tag = None, timestamp = None, showstamp=True, timestamp_format = "%H:%M:%S", username=None, usertag=None, scroll=True):
+def AppendLine(textview, line, tag=None, timestamp=None, showstamp=True, timestamp_format="%H:%M:%S", username=None, usertag=None, scroll=True):
 
     if type(line) not in (type(""), type(u"")):
         line = str(line)  # Error messages are sometimes tuples
@@ -497,7 +503,7 @@ class ImageLabel(gtk.HBox):
             self.Box.reorder_child(self.image, 2)
             if "button" in self.__dict__ and self.closebutton != 0:
                 self.Box.reorder_child(self.button, 3)
-        
+
     def set_onclose(self, closebutton):
         self.closebutton = closebutton
 
@@ -685,7 +691,6 @@ class IconNotebook(gtk.Notebook):
         eventbox.connect('button_press_event', self.on_tab_click, page)
         gtk.Notebook.append_page_menu(self, page, eventbox, label_tab_menu)
         self.set_tab_reorderable(page, self.reorderable)
-        # self.set_tab_detachable(page, True)
 
     def OnTabWindowDestroy(self, widget, page):
         if self.is_tab_detached(page):
@@ -712,7 +717,6 @@ class IconNotebook(gtk.Notebook):
 
         window = gtk.Window()
         window.set_title(title)
-        # window.add_accel_group(self.accel_group)
         window.set_icon(NICOTINE.images["n"])
         window.resize(600, 400)
         vbox = gtk.VBox(False, spacing=5)
@@ -1123,71 +1127,6 @@ def InputDialog(parent, title, message, default=""):
     dlg.destroy()
 
     return result
-
-
-class FastListModel(gtk.GenericTreeModel):
-    COLUMNS = 1
-    COLUMN_TYPES = [gobject.TYPE_STRING]
-
-    def __init__(self):
-        gtk.GenericTreeModel.__init__(self)
-        self.data = []
-
-    def on_get_flags(self):
-        '''returns the GtkTreeModelFlags for this particular type of model'''
-        return gtk.TREE_MODEL_LIST_ONLY
-
-    def on_get_n_columns(self):
-        '''returns the number of columns in the model'''
-        return self.COLUMNS
-
-    def on_get_column_type(self, index):
-        '''returns the type of a column in the model'''
-        return self.COLUMN_TYPES[index]
-
-    def on_get_path(self, iter):
-        '''returns the tree path (a tuple of indices at the various
-        levels) for a particular node.'''
-        return (iter,)
-
-    def on_get_iter(self, path):
-        '''returns the node corresponding to the given path.  In our
-            case, the node is the path'''
-        if path[0] < len(self.data):
-            return path[0]
-        else:
-            return None
-
-    def on_get_value(self, iter, column):
-        '''returns the value stored in a particular column for the node'''
-        return self.data[iter][column]
-
-    def on_iter_next(self, iter):
-        '''returns the next node at this level of the tree'''
-        if iter + 1 < len(self.data):
-            return iter + 1
-        else:
-            return None
-
-    def on_iter_children(self, iter):
-        '''returns the first child of this node'''
-        return 0
-
-    def on_iter_has_child(self, iter):
-        '''returns true if this node has children'''
-        return False
-
-    def on_iter_n_children(self, iter):
-        '''returns the number of children of this node'''
-        return len(self.data)
-
-    def on_iter_nth_child(self, iter, n):
-        '''returns the nth child of this node'''
-        return n
-
-    def on_iter_parent(self, iter):
-        '''returns the parent of this node'''
-        return None
 
 
 def string_sort_func(model, iter1, iter2, column):
