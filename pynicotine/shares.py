@@ -797,10 +797,8 @@ class Shares:
 
         try:
             if type(name) is str:
-                name_f = u"%s" % name
                 pathname_f = u"%s" % pathname
             else:
-                name_f = name
                 pathname_f = pathname
 
             try:
@@ -1020,7 +1018,6 @@ class Shares:
         sharedmtimes = config["transfers"]["sharedmtimes"]
 
         dir = str(os.path.expanduser(os.path.dirname(name)))
-        str_name = str(name)
         file = str(os.path.basename(name))
         size = os.path.getsize(name)
 
@@ -1055,7 +1052,6 @@ class Shares:
         bsharedmtimes = config["transfers"]["bsharedmtimes"]
 
         dir = str(os.path.expanduser(os.path.dirname(name)))
-        str_name = str(name)
         file = str(os.path.basename(name))
         size = os.path.getsize(name)
 

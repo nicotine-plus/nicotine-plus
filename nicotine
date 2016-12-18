@@ -172,7 +172,6 @@ def renameprocess(newname, debug=False):
         # FreeBSD style
         libc = dl.open('/lib/libc.so.6')
         libc.call('setproctitle', newname + '\0')
-        renamed = True
     except:
         errors.append("Failed FreeBSD style")
 
