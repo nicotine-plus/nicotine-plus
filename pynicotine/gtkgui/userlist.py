@@ -1,4 +1,12 @@
-# Copyright (C) 2007 daelstorm. All rights reserved.
+# -*- coding: utf-8 -*-
+#
+# COPYRIGHT (C) 2016 Michael Labouebe <gfarmerfr@free.fr>
+# COPYRIGHT (C) 2009 Quinox <quinox@users.sf.net>
+# COPYRIGHT (C) 2006-2009 Daelstorm <daelstorm@gmail.com>
+# COPYRIGHT (C) 2003-2004 Hyriand
+#
+# GNU GENERAL PUBLIC LICENSE
+#    Version 3, 29 June 2007
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -12,485 +20,563 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-# Original copyright below
-# Copyright (c) 2003-2004 Hyriand. All rights reserved.
 
 import gtk
 import gobject
 import time
-import sys, os
+import sys
+import os
 
 from pynicotine import slskmessages
 from utils import InitialiseColumns, PopupMenu, InputDialog, Humanize, HumanSpeed, PressHeader, showCountryTooltip
 
 
 class UserList:
-	def __init__(self, frame):
-		self.frame = frame
-		self.wTree = gtk.glade.XML(os.path.join(os.path.dirname(os.path.realpath(__file__)), "buddylist.glade"), None)
-		widgets = self.wTree.get_widget_prefix("")
-		for i in widgets:
-			name = gtk.glade.get_widget_name(i)
-			self.__dict__[name] = i
-			#print name, i
-		self.TempWindow.remove(self.userlistvbox)
-		self.TempWindow.destroy()
-		self.wTree.signal_autoconnect(self)
 
-		TARGETS = [('text/plain', 0, 1)]
-		self.UserList.enable_model_drag_source(gtk.gdk.BUTTON1_MASK, TARGETS, gtk.gdk.ACTION_COPY)
-		self.UserList.enable_model_drag_dest(TARGETS,  gtk.gdk.ACTION_COPY)
-		self.UserList.connect("drag_data_get", self.buddylist_drag_data_get_data)
-		self.UserList.connect("drag_data_received", self.DragUserToBuddylist)
+    def __init__(self, frame):
 
-		self.userlist = []
-		
-		self.usersmodel = gtk.ListStore(gtk.gdk.Pixbuf, gtk.gdk.Pixbuf, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_BOOLEAN, gobject.TYPE_BOOLEAN, gobject.TYPE_BOOLEAN, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_INT, gobject.TYPE_INT, gobject.TYPE_INT, gobject.TYPE_INT, gobject.TYPE_STRING)
-		statusiconwidth = self.frame.images["offline"].get_width()+4
-		self.cols = cols = InitialiseColumns(self.UserList,
-			[_("Status"), statusiconwidth, "pixbuf"],
-			[_("Country"), 25, "pixbuf"],
-			[_("User"), 120, "text", self.CellDataFunc],
-			[_("Speed"), 0, "number", self.CellDataFunc],
-			[_("Files"), 0, "number", self.CellDataFunc],
-			[_("Trusted"), 0, "toggle"],
-			[_("Notify"), 0, "toggle"],
-			[_("Privileged"), 0, "toggle"],
-			[_("Last seen"), 160, "text", self.CellDataFunc],
-			[_("Comments"), -1, "edit", self.CellDataFunc],
-		)
-		self.col_status, self.col_country, self.col_user, self.col_speed, self.col_files, self.col_trusted, self.col_notify, self.col_privileged, self.col_last, self.col_comments = cols
-		self.col_status.set_sort_column_id(10)
-		self.col_country.set_sort_column_id(14)
-		self.col_user.set_sort_column_id(2)
-		self.col_speed.set_sort_column_id(11)
-		self.col_files.set_sort_column_id(12)
-		self.col_trusted.set_sort_column_id(5)
-		self.col_notify.set_sort_column_id(6)
-		self.col_privileged.set_sort_column_id(7)
-		self.col_last.set_sort_column_id(13)
-		self.col_comments.set_sort_column_id(9)
-		self.col_status.get_widget().hide()
-		self.col_country.get_widget().hide()
-		config = self.frame.np.config.sections
-		for i in range (10):
-			parent = cols[i].get_widget().get_ancestor(gtk.Button)
-			if parent:
-				parent.connect('button_press_event', PressHeader)
-			# Read Show / Hide column settings from last session
-			cols[i].set_visible(config["columns"]["userlist"][i])
-		if config["columns"]["hideflags"]:
-			cols[1].set_visible(0)
-			config["columns"]["userlist"][1] = 0
-		for render in self.col_trusted.get_cell_renderers():
-			render.connect('toggled', self.cell_toggle_callback, self.UserList, 5)
-		for render in self.col_notify.get_cell_renderers():
-			render.connect('toggled', self.cell_toggle_callback, self.UserList, 6)
-		for render in self.col_privileged.get_cell_renderers():
-			render.connect('toggled', self.cell_toggle_callback, self.UserList, 7)
-		renderers = self.col_comments.get_cell_renderers()
-		for render in renderers:
-			render.connect('edited', self.cell_edited_callback, self.UserList, 9)
-		self.UserList.set_model(self.usersmodel)
-		self.UserList.set_property("rules-hint", True)
-		self.privileged = []
-		self.notify = []
-		self.trusted = []
-		for user in self.frame.np.config.sections["server"]["userlist"]:
-			notify = user[2]
-			privileged = user[3]
-			if len(user) > 4:
-				trusted = user[4]
-			else:
-				trusted = 0;
+        self.frame = frame
+        self.wTree = gtk.glade.XML(os.path.join(os.path.dirname(os.path.realpath(__file__)), "buddylist.glade"), None)
+        widgets = self.wTree.get_widget_prefix("")
 
-			if len(user) > 5:
-				last_seen = user[5]
-				try:
-					time_from_epoch = time.mktime(time.strptime(last_seen,
-										    "%m/%d/%Y %H:%M:%S"))
-				except:
-					if last_seen == '':
-						time_from_epoch = sys.maxint
-					else:
-						time_from_epoch = 0
-			else:
-				last_seen = _("Never seen")
-				user += [last_seen]
-				time_from_epoch = 0
-			if len(user) > 6:
-				flag = user[6]
-			else:
-				user += [None]
-				flag = None
-			row = [self.frame.GetStatusImage(0), self.frame.GetFlagImage(flag), user[0], "0", "0", trusted, notify, privileged, last_seen, user[1], 0, 0, 0, int(time_from_epoch), flag]
-			if len(user) > 2:
-				if user[2]:
-					self.notify.append(user[0])
-				if user[3]:
-					self.privileged.append(user[0])
-				if trusted:
-					self.trusted.append(user[0])
+        for i in widgets:
+            name = gtk.glade.get_widget_name(i)
+            self.__dict__[name] = i
 
-			iter = self.usersmodel.append(row)
-			self.userlist.append([user[0], user[1], last_seen, iter, flag])
-		self.usersmodel.set_sort_column_id(2, gtk.SORT_ASCENDING)
-		self.Popup_Menu_PrivateRooms = PopupMenu(self.frame)
-		self.popup_menu = popup = PopupMenu(frame)
-		popup.setup(
-			("#" + _("Send _message"), popup.OnSendMessage, gtk.STOCK_EDIT),
-			("", None),
-			("#" + _("Show IP a_ddress"), popup.OnShowIPaddress, gtk.STOCK_NETWORK),
-			("#" + _("Get user i_nfo"), popup.OnGetUserInfo, gtk.STOCK_DIALOG_INFO),
-			("#" + _("Brow_se files"), popup.OnBrowseUser, gtk.STOCK_HARDDISK),
-			("#" + _("Gi_ve privileges"), popup.OnGivePrivileges, gtk.STOCK_JUMP_TO),
-			("$" + _("_Ban this user"), popup.OnBanUser),
-			("$" + _("_Ignore this user"), popup.OnIgnoreUser),
-			("", None),
-			("$" + _("_Online notify"), self.OnNotify),
-			("$" + _("_Privileged"), self.OnPrivileged),
-			("$" + _("_Trusted"), self.OnTrusted),
-			("", None),
-			("#" + _("Edit _comments"), self.OnEditComments, gtk.STOCK_EDIT),
-			("#" + _("_Remove"), self.OnRemoveUser, gtk.STOCK_CANCEL),
-			(1, _("Private rooms"), self.Popup_Menu_PrivateRooms, popup.OnPrivateRooms),
-		)
-		items = self.popup_menu.get_children()
-		self.Menu_SendMessage = items[0]
-		self.Menu_ShowIPaddress = items[2]
-		self.Menu_GetUserInfo = items[3]
-		self.Menu_BrowseUser = items[4]
-		self.Menu_GivePrivileges = items[5]
-		self.Menu_BanUser = items[6]
-		self.Menu_IgnoreUser = items[7]
-		self.Menu_OnNotify = items[9]
-		self.Menu_OnPrivileged = items[10]
-		self.Menu_Trusted = items[11]
-		self.Menu_EditComments = items[13]
-		self.Menu_RemoveUser = items[14]
-		self.Menu_PrivateRooms = items[15]
+        self.TempWindow.remove(self.userlistvbox)
+        self.TempWindow.destroy()
+        self.wTree.signal_autoconnect(self)
 
-		self.UserList.connect("button_press_event", self.OnPopupMenu)
-	def OnTooltip(self, widget, x, y, keyboard_mode, tooltip):
-		return showCountryTooltip(widget, x, y, tooltip, 14, 'flag_')
-	def OnMoveList(self, widget):
-		tab = always = chatrooms = False
-		if self.frame.buddylist_in_tab.get_active():
-			tab = True
-		if self.frame.buddylist_always_visible.get_active():
-			always = True
-		if self.frame.buddylist_in_chatrooms1.get_active():
-			chatrooms = True
-		if tab:
-			self.frame.buddylist_in_chatrooms1.set_active(True)
-			self.frame.OnChatRooms(None)
-		if always:
-			self.frame.buddylist_in_tab.set_active(True)
-		if chatrooms:
-			self.frame.buddylist_always_visible.set_active(True)
+        TARGETS = [('text/plain', 0, 1)]
+        self.UserList.enable_model_drag_source(gtk.gdk.BUTTON1_MASK, TARGETS, gtk.gdk.ACTION_COPY)
+        self.UserList.enable_model_drag_dest(TARGETS,  gtk.gdk.ACTION_COPY)
+        self.UserList.connect("drag_data_get", self.buddylist_drag_data_get_data)
+        self.UserList.connect("drag_data_received", self.DragUserToBuddylist)
 
-	def OnAddUser(self, widget):
-		text = widget.get_text()
-		if not text:
-			return
-		widget.set_text("")
-		self.AddToList(text)
+        self.userlist = []
+        
+        self.usersmodel = gtk.ListStore(
+            gtk.gdk.Pixbuf, gtk.gdk.Pixbuf, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_BOOLEAN,
+            gobject.TYPE_BOOLEAN, gobject.TYPE_BOOLEAN, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_INT, gobject.TYPE_INT,
+            gobject.TYPE_INT, gobject.TYPE_INT, gobject.TYPE_STRING
+        )
+        statusiconwidth = self.frame.images["offline"].get_width() + 4
 
-	def UpdateColours(self):
-		self.frame.SetTextBG(self.AddUserEntry)
-	
-	def buddylist_drag_data_get_data(self, treeview, context, selection, target_id, etime):
-		treeselection = treeview.get_selection()
-		model, iter = treeselection.get_selected()
-		status, flag, user, speed, files, trusted, notify, privileged, lastseen, comments = model.get(iter, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9)
-		#data = (status, flag, user, speed, files, trusted, notify, privileged, lastseen, comments)
-		selection.set(selection.target, 8, user)
-		
-	def DragUserToBuddylist(self, treeview, context, x, y, selection, info, etime):
-		model = treeview.get_model()
-		user = selection.data
-		if user:
-			self.AddToList(user)
-	def OnSettingsBanIgnore(self, widget):
-		self.frame.OnSettingsBanIgnore(widget)
+        self.cols = cols = InitialiseColumns(
+            self.UserList,
+            [_("Status"), statusiconwidth, "pixbuf"],
+            [_("Country"), 25, "pixbuf"],
+            [_("User"), 120, "text", self.CellDataFunc],
+            [_("Speed"), 0, "number", self.CellDataFunc],
+            [_("Files"), 0, "number", self.CellDataFunc],
+            [_("Trusted"), 0, "toggle"],
+            [_("Notify"), 0, "toggle"],
+            [_("Privileged"), 0, "toggle"],
+            [_("Last seen"), 160, "text", self.CellDataFunc],
+            [_("Comments"), -1, "edit", self.CellDataFunc],
+        )
 
-	def CellDataFunc(self, column, cellrenderer, model, iter):
-		colour = self.frame.np.config.sections["ui"]["search"]
-		if colour == "":
-			colour = None
-		cellrenderer.set_property("foreground", colour)
-		
-	def cell_toggle_callback(self, widget, index, treeview, pos):
-	
-		iter = self.usersmodel.get_iter(index)
-		user = self.usersmodel.get_value(iter, 2)
-		
-		value = self.usersmodel.get_value(iter, pos)
-		self.usersmodel.set(iter, pos, not value)
-		toggle = not value
-		if pos == 5:
-			if toggle:
-				if user not in self.trusted:
-					self.trusted.append(user)
-				
-			else:
-				if user in self.trusted:
-					self.trusted.remove(user)
-		elif pos == 6:
-			if toggle:
-				if user not in self.notify:
-					self.notify.append(user)
-			else:
-				if user in self.notify:
-					self.notify.remove(user)
-		elif pos == 7:
-			if toggle:
-				if user not in self.privileged:
-					self.privileged.append(user)
-			else:
-				if user in self.privileged:
-					self.privileged.remove(user)
+        self.col_status, self.col_country, self.col_user, self.col_speed, self.col_files, self.col_trusted, self.col_notify, self.col_privileged, self.col_last, self.col_comments = cols
+        self.col_status.set_sort_column_id(10)
+        self.col_country.set_sort_column_id(14)
+        self.col_user.set_sort_column_id(2)
+        self.col_speed.set_sort_column_id(11)
+        self.col_files.set_sort_column_id(12)
+        self.col_trusted.set_sort_column_id(5)
+        self.col_notify.set_sort_column_id(6)
+        self.col_privileged.set_sort_column_id(7)
+        self.col_last.set_sort_column_id(13)
+        self.col_comments.set_sort_column_id(9)
+        self.col_status.get_widget().hide()
+        self.col_country.get_widget().hide()
 
-		self.SaveUserList()
-		
-	def cell_edited_callback(self, widget, index, value, treeview, pos):
-		
-		store = treeview.get_model()
-		iter = store.get_iter(index)
-		if pos == 9:
-			self.SetComment(iter, store, value)
-		
-	def SetLastSeen(self, user, online =False):
-		last_seen = ""
-		time_from_epoch = sys.maxint
+        config = self.frame.np.config.sections
 
-		if not online:
-			last_seen = time.strftime("%m/%d/%Y %H:%M:%S")
-			time_from_epoch = time.mktime(time.strptime(last_seen,
-								    "%m/%d/%Y %H:%M:%S"))
-		for i in self.userlist:
-			if i[0] == user:
-				i[2] = last_seen
-				self.usersmodel.set(i[3], 8, last_seen)
-				self.usersmodel.set(i[3], 13, int(time_from_epoch))
-				break
-				
-		if not online:
-			self.SaveUserList()
-			
-	def SetComment(self, iter, store, comments=None):
-		user = store.get_value(iter, 2)
-		if comments is not None:
-			for i in self.userlist:
-				if i[0] == user:
-					i[1] = comments
-					self.usersmodel.set(iter, 9, comments)
-					break
-			self.SaveUserList()
-			
-	def ConnClose(self):
-		for user in self.userlist:
-			self.usersmodel.set(user[3], 0, self.frame.GetStatusImage(0), 3, "0", 4, "0", 10, 0, 11, 0, 12, 0)
+        for i in range(10):
+            parent = cols[i].get_widget().get_ancestor(gtk.Button)
+            if parent:
+                parent.connect('button_press_event', PressHeader)
+            # Read Show / Hide column settings from last session
+            cols[i].set_visible(config["columns"]["userlist"][i])
 
-		for user in self.userlist:
-			if self.usersmodel.get(user[3], 8)[0] is "":
-				self.SetLastSeen(user[0])
-	
-	def OnPopupMenu(self, widget, event):
-		items = self.popup_menu.get_children()
-		d = self.UserList.get_path_at_pos(int(event.x), int(event.y))
+        if config["columns"]["hideflags"]:
+            cols[1].set_visible(0)
+            config["columns"]["userlist"][1] = 0
 
-		if d:
-			path, column, x, y = d
-			user = self.UserList.get_model().get_value(self.UserList.get_model().get_iter(path), 2)
-			
-			if event.button != 3:
-				if event.type == gtk.gdk._2BUTTON_PRESS:
-					self.frame.privatechats.SendMessage(user, None, 1)
-					self.frame.ChangeMainPage(None, "private")
-				return
-			
-			self.popup_menu.set_user(user)
-			
-			items = self.popup_menu.get_children()
-			me = (self.popup_menu.user == None or self.popup_menu.user == self.frame.np.config.sections["server"]["login"])
-			
-			#self.Menu_SendMessage
-			#self.Menu_ShowIPaddress
-			#self.Menu_GetUserInfo
-			#self.Menu_BrowseUser
-			#self.Menu_GivePrivileges
-			self.Menu_BanUser.set_active(user in self.frame.np.config.sections["server"]["banlist"])
-			self.Menu_IgnoreUser.set_active(user in self.frame.np.config.sections["server"]["ignorelist"])
-			self.Menu_OnNotify.set_active(user in self.notify)
-			self.Menu_OnPrivileged.set_active(user in self.privileged)
-			self.Menu_Trusted.set_active(user in self.trusted)
-			#self.Menu_EditComments
-			#self.Menu_RemoveUser
-			self.Menu_PrivateRooms.set_sensitive(not me) # Private rooms
+        for render in self.col_trusted.get_cell_renderers():
+            render.connect('toggled', self.cell_toggle_callback, self.UserList, 5)
+        for render in self.col_notify.get_cell_renderers():
+            render.connect('toggled', self.cell_toggle_callback, self.UserList, 6)
+        for render in self.col_privileged.get_cell_renderers():
+            render.connect('toggled', self.cell_toggle_callback, self.UserList, 7)
 
-			self.popup_menu.popup(None, None, None, event.button, event.time)
-		
-	def GetIter(self, user):
-		iters = [i[3] for i in self.userlist if i[0] == user]
+        renderers = self.col_comments.get_cell_renderers()
 
-		if iters:
-			return iters[0]
-		else:
-			return None
-			
-	def GetUserStatus(self, msg):
-		iter = self.GetIter(msg.user)
-		if iter is None:
-			return
-		if msg.status == int(self.usersmodel.get_value(iter, 10)):
-			return
+        for render in renderers:
+            render.connect('edited', self.cell_edited_callback, self.UserList, 9)
 
-		if msg.user in self.notify:
-			status = [_("User %s is offline"), _("User %s is away"), _("User %s is online")][msg.status]
-			self.frame.logMessage(status % msg.user)
-			self.frame.NewNotification(status % msg.user)
+        self.UserList.set_model(self.usersmodel)
+        self.UserList.set_property("rules-hint", True)
+        self.privileged = []
+        self.notify = []
+        self.trusted = []
 
-		img = self.frame.GetStatusImage(msg.status)
-		self.usersmodel.set(iter, 0, img, 10, msg.status)
+        for user in self.frame.np.config.sections["server"]["userlist"]:
 
-		if msg.status: # online
-			self.SetLastSeen(msg.user, online=True)
-		elif self.usersmodel.get(iter, 8)[0] is "": # disconnected
-			self.SetLastSeen(msg.user)
+            notify = user[2]
+            privileged = user[3]
 
-	def GetUserStats(self, msg):
-		iter = self.GetIter(msg.user)
-		if iter is None:
-			return
-		hspeed = HumanSpeed(msg.avgspeed)
-		hfiles = Humanize(msg.files)
-		self.usersmodel.set(iter, 3, hspeed, 4, hfiles, 11, msg.avgspeed, 12, msg.files)
-		if msg.country is not None:
-			flag = "flag_"+msg.country
-			self.usersmodel.set(iter, 1, self.frame.GetFlagImage(flag), 14, flag)
-			for i in self.userlist:
-				if i[0] == msg.user:
-					i[4] = flag
-					break
-				
-	def SetUserFlag(self, user, flag):
-		iter = self.GetIter(user)
-		if iter is None:
-			return
-		if user not in [i[0] for i in self.userlist]:
-			return
-		self.usersmodel.set(iter, 1, self.frame.GetFlagImage(flag), 14, flag)
-		for i in self.userlist:
-			if i[0] == user:
-				i[4] = flag
-				
+            if len(user) > 4:
+                trusted = user[4]
+            else:
+                trusted = 0
 
-	def AddToList(self, user):
-		if user in [i[0] for i in self.userlist]:
-			return
+            if len(user) > 5:
+                last_seen = user[5]
+                try:
+                    time_from_epoch = time.mktime(time.strptime(last_seen, "%m/%d/%Y %H:%M:%S"))
+                except:
+                    if last_seen == '':
+                        time_from_epoch = sys.maxint
+                    else:
+                        time_from_epoch = 0
+            else:
+                last_seen = _("Never seen")
+                user += [last_seen]
+                time_from_epoch = 0
 
-		row = [self.frame.GetStatusImage(0), None, user, "0", "0", False, False, False, _("Never seen"), "", 0, 0, 0, 0, ""]
-		iter = self.usersmodel.append(row)
-		self.userlist.append([user, "", _("Never seen"), iter, self.frame.GetUserFlag(user)])
-		self.SaveUserList()
-		self.frame.np.queue.put(slskmessages.AddUser(user))
-		self.frame.np.queue.put(slskmessages.GetPeerAddress(user))
+            if len(user) > 6:
+                flag = user[6]
+            else:
+                user += [None]
+                flag = None
 
-		for widget in self.frame.BuddiesComboEntries:
-			gobject.idle_add(widget.Append, user)
-		if self.frame.np.config.sections["words"]["buddies"]:
-			gobject.idle_add(self.frame.chatrooms.roomsctrl.UpdateCompletions)
-			gobject.idle_add(self.frame.privatechats.UpdateCompletions)
-			
-	def OnEditComments(self, widget):
-		user = self.popup_menu.get_user()
-		for i in self.userlist:
-			if i[0] == user:
-				comments = i[1]
-				break
-		else:
-			comments = ""
-		
-		comments = InputDialog(self.frame.MainWindow, _("Edit comments")+"...", _("Comments")+":", comments)
-		
-		if comments is not None:
-			for i in self.userlist:
-				if i[0] == user:
-					i[1] = comments
-					self.usersmodel.set(i[3], 9, comments)
-					break
-			self.SaveUserList()
+            row = [
+                self.frame.GetStatusImage(0),
+                self.frame.GetFlagImage(flag),
+                user[0], "0", "0",
+                trusted, notify, privileged, last_seen,
+                user[1], 0, 0, 0,
+                int(time_from_epoch),
+                flag
+            ]
 
-	def SaveUserList(self):
-		l = []
+            if len(user) > 2:
+                if user[2]:
+                    self.notify.append(user[0])
+                if user[3]:
+                    self.privileged.append(user[0])
+                if trusted:
+                    self.trusted.append(user[0])
 
-		for i in self.userlist:
-			user, comment, seen, iter, flag = i
-			l.append([user, comment, (user in self.notify), (user in self.privileged), (user in self.trusted), seen, flag])
-		self.frame.np.config.sections["server"]["userlist"] = l
-		self.frame.np.config.writeConfiguration()
-		
-	def saveColumns(self):
-		columns = []
-		for column in self.UserList.get_columns():
-			columns.append(column.get_visible())
-		self.frame.np.config.sections["columns"]["userlist"] = columns
-		
-		
-	def RemoveFromList(self, user):
-		if user in self.notify:
-			self.notify.remove(user)
-		if user in self.privileged:
-			self.privileged.remove(user)
-		if user in self.trusted:
-			self.trusted.remove(user)
-		for i in self.userlist:
-			if i[0] == user:
-				self.userlist.remove(i)
-				self.usersmodel.remove(i[3])
-				break
-		self.SaveUserList()
-		for widget in self.frame.BuddiesComboEntries:
-			gobject.idle_add(widget.Remove, user)
-		if self.frame.np.config.sections["words"]["buddies"]:
-			gobject.idle_add(self.frame.chatrooms.roomsctrl.UpdateCompletions)
-			gobject.idle_add(self.frame.privatechats.UpdateCompletions)
-			
-	def OnRemoveUser(self, widget):
-		self.RemoveFromList(self.popup_menu.get_user())
+            iter = self.usersmodel.append(row)
+            self.userlist.append([user[0], user[1], last_seen, iter, flag])
 
-	def OnNotify(self, widget):
-		user = self.popup_menu.get_user()
-		if not widget.get_active():
-			if user in self.notify:
-				self.notify.remove(user)
-		else:
-			if not user in self.notify:
-				self.notify.append(user)
-		self.SaveUserList()
+        self.usersmodel.set_sort_column_id(2, gtk.SORT_ASCENDING)
+        self.Popup_Menu_PrivateRooms = PopupMenu(self.frame)
+        self.popup_menu = popup = PopupMenu(frame)
 
-	def OnPrivileged(self, widget):
-		user = self.popup_menu.get_user()
-		if not widget.get_active():
-			if user in self.privileged:
-				self.privileged.remove(user)
-		else:
-			if not user in self.privileged:
-				self.privileged.append(user)
-		self.SaveUserList()
-		
-	def OnTrusted(self, widget):
-		user = self.popup_menu.get_user()
-		if not widget.get_active():
-			if user in self.trusted:
-				self.trusted.remove(user)
-		else:
-			if not user in self.trusted:
-				self.trusted.append(user)
-		for i in self.userlist:
-			if i[0] == user:
-				self.usersmodel.set(i[3], 5, (user in self.trusted))
-		self.SaveUserList()
-		
+        popup.setup(
+            ("#" + _("Send _message"), popup.OnSendMessage, gtk.STOCK_EDIT),
+            ("", None),
+            ("#" + _("Show IP a_ddress"), popup.OnShowIPaddress, gtk.STOCK_NETWORK),
+            ("#" + _("Get user i_nfo"), popup.OnGetUserInfo, gtk.STOCK_DIALOG_INFO),
+            ("#" + _("Brow_se files"), popup.OnBrowseUser, gtk.STOCK_HARDDISK),
+            ("#" + _("Gi_ve privileges"), popup.OnGivePrivileges, gtk.STOCK_JUMP_TO),
+            ("$" + _("_Ban this user"), popup.OnBanUser),
+            ("$" + _("_Ignore this user"), popup.OnIgnoreUser),
+            ("", None),
+            ("$" + _("_Online notify"), self.OnNotify),
+            ("$" + _("_Privileged"), self.OnPrivileged),
+            ("$" + _("_Trusted"), self.OnTrusted),
+            ("", None),
+            ("#" + _("Edit _comments"), self.OnEditComments, gtk.STOCK_EDIT),
+            ("#" + _("_Remove"), self.OnRemoveUser, gtk.STOCK_CANCEL),
+            (1, _("Private rooms"), self.Popup_Menu_PrivateRooms, popup.OnPrivateRooms),
+        )
+
+        items = self.popup_menu.get_children()
+        self.Menu_SendMessage = items[0]
+        self.Menu_ShowIPaddress = items[2]
+        self.Menu_GetUserInfo = items[3]
+        self.Menu_BrowseUser = items[4]
+        self.Menu_GivePrivileges = items[5]
+        self.Menu_BanUser = items[6]
+        self.Menu_IgnoreUser = items[7]
+        self.Menu_OnNotify = items[9]
+        self.Menu_OnPrivileged = items[10]
+        self.Menu_Trusted = items[11]
+        self.Menu_EditComments = items[13]
+        self.Menu_RemoveUser = items[14]
+        self.Menu_PrivateRooms = items[15]
+
+        self.UserList.connect("button_press_event", self.OnPopupMenu)
+
+    def OnTooltip(self, widget, x, y, keyboard_mode, tooltip):
+        return showCountryTooltip(widget, x, y, tooltip, 14, 'flag_')
+
+    def OnMoveList(self, widget):
+
+        tab = always = chatrooms = False
+
+        if self.frame.buddylist_in_tab.get_active():
+            tab = True
+        if self.frame.buddylist_always_visible.get_active():
+            always = True
+        if self.frame.buddylist_in_chatrooms1.get_active():
+            chatrooms = True
+        if tab:
+            self.frame.buddylist_in_chatrooms1.set_active(True)
+            self.frame.OnChatRooms(None)
+        if always:
+            self.frame.buddylist_in_tab.set_active(True)
+        if chatrooms:
+            self.frame.buddylist_always_visible.set_active(True)
+
+    def OnAddUser(self, widget):
+
+        text = widget.get_text()
+        if not text:
+            return
+
+        widget.set_text("")
+        self.AddToList(text)
+
+    def UpdateColours(self):
+        self.frame.SetTextBG(self.AddUserEntry)
+
+    def buddylist_drag_data_get_data(self, treeview, context, selection, target_id, etime):
+
+        treeselection = treeview.get_selection()
+        model, iter = treeselection.get_selected()
+        status, flag, user, speed, files, trusted, notify, privileged, lastseen, comments = model.get(iter, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9)
+
+        selection.set(selection.target, 8, user)
+
+    def DragUserToBuddylist(self, treeview, context, x, y, selection, info, etime):
+
+        model = treeview.get_model()
+        user = selection.data
+
+        if user:
+            self.AddToList(user)
+
+    def OnSettingsBanIgnore(self, widget):
+        self.frame.OnSettingsBanIgnore(widget)
+
+    def CellDataFunc(self, column, cellrenderer, model, iter):
+
+        colour = self.frame.np.config.sections["ui"]["search"]
+
+        if colour == "":
+            colour = None
+
+        cellrenderer.set_property("foreground", colour)
+
+    def cell_toggle_callback(self, widget, index, treeview, pos):
+
+        iter = self.usersmodel.get_iter(index)
+        user = self.usersmodel.get_value(iter, 2)
+        value = self.usersmodel.get_value(iter, pos)
+
+        self.usersmodel.set(iter, pos, not value)
+        toggle = not value
+
+        if pos == 5:
+            if toggle:
+                if user not in self.trusted:
+                    self.trusted.append(user)
+            else:
+                if user in self.trusted:
+                    self.trusted.remove(user)
+        elif pos == 6:
+            if toggle:
+                if user not in self.notify:
+                    self.notify.append(user)
+            else:
+                if user in self.notify:
+                    self.notify.remove(user)
+        elif pos == 7:
+            if toggle:
+                if user not in self.privileged:
+                    self.privileged.append(user)
+            else:
+                if user in self.privileged:
+                    self.privileged.remove(user)
+
+        self.SaveUserList()
+
+    def cell_edited_callback(self, widget, index, value, treeview, pos):
+
+        store = treeview.get_model()
+        iter = store.get_iter(index)
+
+        if pos == 9:
+            self.SetComment(iter, store, value)
+
+    def SetLastSeen(self, user, online=False):
+
+        last_seen = ""
+        time_from_epoch = sys.maxint
+
+        if not online:
+            last_seen = time.strftime("%m/%d/%Y %H:%M:%S")
+            time_from_epoch = time.mktime(time.strptime(last_seen, "%m/%d/%Y %H:%M:%S"))
+
+        for i in self.userlist:
+            if i[0] == user:
+                i[2] = last_seen
+                self.usersmodel.set(i[3], 8, last_seen)
+                self.usersmodel.set(i[3], 13, int(time_from_epoch))
+                break
+
+        if not online:
+            self.SaveUserList()
+
+    def SetComment(self, iter, store, comments=None):
+
+        user = store.get_value(iter, 2)
+
+        if comments is not None:
+
+            for i in self.userlist:
+                if i[0] == user:
+                    i[1] = comments
+                    self.usersmodel.set(iter, 9, comments)
+                    break
+
+            self.SaveUserList()
+
+    def ConnClose(self):
+
+        for user in self.userlist:
+            self.usersmodel.set(user[3], 0, self.frame.GetStatusImage(0), 3, "0", 4, "0", 10, 0, 11, 0, 12, 0)
+
+        for user in self.userlist:
+            if self.usersmodel.get(user[3], 8)[0] is "":
+                self.SetLastSeen(user[0])
+
+    def OnPopupMenu(self, widget, event):
+
+        items = self.popup_menu.get_children()
+        d = self.UserList.get_path_at_pos(int(event.x), int(event.y))
+
+        if d:
+            path, column, x, y = d
+            user = self.UserList.get_model().get_value(self.UserList.get_model().get_iter(path), 2)
+
+            if event.button != 3:
+                if event.type == gtk.gdk._2BUTTON_PRESS:
+                    self.frame.privatechats.SendMessage(user, None, 1)
+                    self.frame.ChangeMainPage(None, "private")
+                return
+
+            self.popup_menu.set_user(user)
+
+            items = self.popup_menu.get_children()
+            me = (self.popup_menu.user == None or self.popup_menu.user == self.frame.np.config.sections["server"]["login"])
+
+            self.Menu_BanUser.set_active(user in self.frame.np.config.sections["server"]["banlist"])
+            self.Menu_IgnoreUser.set_active(user in self.frame.np.config.sections["server"]["ignorelist"])
+            self.Menu_OnNotify.set_active(user in self.notify)
+            self.Menu_OnPrivileged.set_active(user in self.privileged)
+            self.Menu_Trusted.set_active(user in self.trusted)
+            self.Menu_PrivateRooms.set_sensitive(not me)  # Private rooms
+
+            self.popup_menu.popup(None, None, None, event.button, event.time)
+
+    def GetIter(self, user):
+
+        iters = [i[3] for i in self.userlist if i[0] == user]
+
+        if iters:
+            return iters[0]
+        else:
+            return None
+
+    def GetUserStatus(self, msg):
+
+        iter = self.GetIter(msg.user)
+
+        if iter is None:
+            return
+        if msg.status == int(self.usersmodel.get_value(iter, 10)):
+            return
+
+        if msg.user in self.notify:
+            status = [_("User %s is offline"), _("User %s is away"), _("User %s is online")][msg.status]
+            self.frame.logMessage(status % msg.user)
+            self.frame.NewNotification(status % msg.user)
+
+        img = self.frame.GetStatusImage(msg.status)
+        self.usersmodel.set(iter, 0, img, 10, msg.status)
+
+        if msg.status:  # online
+            self.SetLastSeen(msg.user, online=True)
+        elif self.usersmodel.get(iter, 8)[0] is "":  # disconnected
+            self.SetLastSeen(msg.user)
+
+    def GetUserStats(self, msg):
+
+        iter = self.GetIter(msg.user)
+        if iter is None:
+            return
+
+        hspeed = HumanSpeed(msg.avgspeed)
+        hfiles = Humanize(msg.files)
+        self.usersmodel.set(iter, 3, hspeed, 4, hfiles, 11, msg.avgspeed, 12, msg.files)
+
+        if msg.country is not None:
+
+            flag = "flag_" + msg.country
+            self.usersmodel.set(iter, 1, self.frame.GetFlagImage(flag), 14, flag)
+
+            for i in self.userlist:
+                if i[0] == msg.user:
+                    i[4] = flag
+                    break
+
+    def SetUserFlag(self, user, flag):
+
+        iter = self.GetIter(user)
+        if iter is None:
+            return
+
+        if user not in [i[0] for i in self.userlist]:
+            return
+
+        self.usersmodel.set(iter, 1, self.frame.GetFlagImage(flag), 14, flag)
+        for i in self.userlist:
+            if i[0] == user:
+                i[4] = flag
+
+    def AddToList(self, user):
+
+        if user in [i[0] for i in self.userlist]:
+            return
+
+        row = [self.frame.GetStatusImage(0), None, user, "0", "0", False, False, False, _("Never seen"), "", 0, 0, 0, 0, ""]
+        iter = self.usersmodel.append(row)
+
+        self.userlist.append([user, "", _("Never seen"), iter, self.frame.GetUserFlag(user)])
+        self.SaveUserList()
+        self.frame.np.queue.put(slskmessages.AddUser(user))
+        self.frame.np.queue.put(slskmessages.GetPeerAddress(user))
+
+        for widget in self.frame.BuddiesComboEntries:
+            gobject.idle_add(widget.Append, user)
+
+        if self.frame.np.config.sections["words"]["buddies"]:
+            gobject.idle_add(self.frame.chatrooms.roomsctrl.UpdateCompletions)
+            gobject.idle_add(self.frame.privatechats.UpdateCompletions)
+
+    def OnEditComments(self, widget):
+
+        user = self.popup_menu.get_user()
+
+        for i in self.userlist:
+            if i[0] == user:
+                comments = i[1]
+                break
+        else:
+            comments = ""
+
+        comments = InputDialog(self.frame.MainWindow, _("Edit comments")+"...", _("Comments")+":", comments)
+
+        if comments is not None:
+            for i in self.userlist:
+                if i[0] == user:
+                    i[1] = comments
+                    self.usersmodel.set(i[3], 9, comments)
+                    break
+            self.SaveUserList()
+
+    def SaveUserList(self):
+
+        l = []
+
+        for i in self.userlist:
+            user, comment, seen, iter, flag = i
+            l.append([user, comment, (user in self.notify), (user in self.privileged), (user in self.trusted), seen, flag])
+
+        self.frame.np.config.sections["server"]["userlist"] = l
+        self.frame.np.config.writeConfiguration()
+
+    def saveColumns(self):
+
+        columns = []
+
+        for column in self.UserList.get_columns():
+            columns.append(column.get_visible())
+
+        self.frame.np.config.sections["columns"]["userlist"] = columns
+
+    def RemoveFromList(self, user):
+
+        if user in self.notify:
+            self.notify.remove(user)
+        if user in self.privileged:
+            self.privileged.remove(user)
+        if user in self.trusted:
+            self.trusted.remove(user)
+
+        for i in self.userlist:
+            if i[0] == user:
+                self.userlist.remove(i)
+                self.usersmodel.remove(i[3])
+                break
+
+        self.SaveUserList()
+
+        for widget in self.frame.BuddiesComboEntries:
+            gobject.idle_add(widget.Remove, user)
+
+        if self.frame.np.config.sections["words"]["buddies"]:
+            gobject.idle_add(self.frame.chatrooms.roomsctrl.UpdateCompletions)
+            gobject.idle_add(self.frame.privatechats.UpdateCompletions)
+
+    def OnRemoveUser(self, widget):
+        self.RemoveFromList(self.popup_menu.get_user())
+
+    def OnNotify(self, widget):
+
+        user = self.popup_menu.get_user()
+
+        if not widget.get_active():
+            if user in self.notify:
+                self.notify.remove(user)
+        else:
+            if not user in self.notify:
+                self.notify.append(user)
+
+        self.SaveUserList()
+
+    def OnPrivileged(self, widget):
+
+        user = self.popup_menu.get_user()
+
+        if not widget.get_active():
+            if user in self.privileged:
+                self.privileged.remove(user)
+        else:
+            if not user in self.privileged:
+                self.privileged.append(user)
+
+        self.SaveUserList()
+
+    def OnTrusted(self, widget):
+
+        user = self.popup_menu.get_user()
+
+        if not widget.get_active():
+            if user in self.trusted:
+                self.trusted.remove(user)
+        else:
+            if not user in self.trusted:
+                self.trusted.append(user)
+
+        for i in self.userlist:
+            if i[0] == user:
+                self.usersmodel.set(i[3], 5, (user in self.trusted))
+
+        self.SaveUserList()
