@@ -1292,7 +1292,7 @@ class Transfers:
                     if not os.access(folder, os.F_OK):
                         os.makedirs(folder)
 
-                    (newname, identicalfile) = self.getRenamedEnhanced(os.path.join(folder, basename), msg.file.name)
+                    (newname, identicalfile) = self.getRenamed(os.path.join(folder, basename), msg.file.name)
 
                     if newname:
                         try:
@@ -1811,27 +1811,7 @@ class Transfers:
             self.uploadspanel.update(i)
             self.checkUploadQueue()
 
-    def getRenamed(self, name):
-        """ When a transfer is finished, we remove INCOMPLETE~ or INCOMPLETE
-        prefix from the file's name. """
-
-        if win32 and not os.path.exists(u"%s" % name) and not os.path.exists(name):
-            # Filename doesn't exist, good for renaming
-            return name
-        elif not win32 and not os.path.exists(name):
-            return name
-        else:
-            # Append numbers to duplicate filenames so old files
-            # do not get overwritten.
-            n = 1
-            while n < 1000:
-                newname = name+"."+str(n)
-                if not os.path.exists(newname):
-                    break
-                n += 1
-            return newname
-
-    def getRenamedEnhanced(self, name, originalfile):
+    def getRenamed(self, name, originalfile):
         """ When a transfer is finished, we remove INCOMPLETE~ or INCOMPLETE
         prefix from the file's name.
 
@@ -1855,7 +1835,7 @@ class Transfers:
             existingchecksum = self.getChecksum(newname)
             if ourchecksum == existingchecksum:
                 return (None, newname)
-            newname = name+"."+str(n)
+            newname = name + "." + str(n)
             if not os.path.exists(newname):
                 break
             n += 1
