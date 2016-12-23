@@ -332,10 +332,8 @@ class Downloads(TransferList):
             if os.path.exists(fn.file.name):
                 playfile = fn.file.name
             else:
-                """
-If this file doesn't exist anymore, it may have finished downloading and have been
-renamed, try looking in the download directory and match the original filename.
-                """
+                # If this file doesn't exist anymore, it may have finished downloading and have been renamed
+                # try looking in the download directory and match the original filename.
                 basename = string.split(fn.filename, '\\')[-1]
                 path = os.sep.join([downloaddir, basename])
                 if os.path.exists(path):
@@ -526,4 +524,4 @@ renamed, try looking in the download directory and match the original filename.
 
     def OnAbortRemoveTransfer(self, widget):
         self.select_transfers()
-        self.OnAbortTransfer(widget, True)
+        self.OnClearTransfer(widget)
