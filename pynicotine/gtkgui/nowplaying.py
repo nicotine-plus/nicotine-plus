@@ -55,6 +55,7 @@ class NowPlaying:
         # All things that aren't needed for a faked instance
         self.accel_group = gtk.AccelGroup()
         self.wTree = gtk.glade.XML(os.path.join(os.path.dirname(os.path.realpath(__file__)), "nowplaying.glade"), None)
+
         widgets = self.wTree.get_widget_prefix("")
         for i in widgets:
             name = gtk.glade.get_widget_name(i)
@@ -70,6 +71,7 @@ class NowPlaying:
         self.NowPlaying.connect("destroy", self.quit)
         self.NowPlaying.connect("destroy-event", self.quit)
         self.NowPlaying.connect("delete-event", self.quit)
+        self.NowPlaying.connect("key-press-event", self.OnKeyPress)
         self.NowPlaying.set_resizable(False)
 
         self.defaultlist = ["$n", "$a - $t", "[$a] $t", "Now $s: [$a] $t", "Now $s: $n", "$a - $b - $t", "$a - $b - $t ($l/$rKBps) from $y $c"]
@@ -303,6 +305,12 @@ class NowPlaying:
 
     def OnNPCancel(self, widget):
         self.quit(None)
+
+    def OnKeyPress(self, widget, event):
+
+        # Close the window when escape is pressed
+        if event.keyval == gtk.keysyms.Escape:
+            self.quit(None)
 
     def quit(self, widget, s=None):
         self.NowPlaying.hide()

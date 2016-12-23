@@ -3560,7 +3560,7 @@ class SettingsWindow:
 
     def OnKeyPress(self, widget, event):
 
-        # Close the settings window when escape is pressed
+        # Close the window when escape is pressed
         if event.keyval == gtk.keysyms.Escape:
             self.OnCancel(widget)
 
