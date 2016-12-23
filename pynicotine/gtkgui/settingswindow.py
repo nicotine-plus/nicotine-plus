@@ -3410,6 +3410,7 @@ class SettingsWindow:
 
         self.SettingsWindow.set_transient_for(frame.MainWindow)
         self.SettingsWindow.connect("delete-event", self.OnDelete)
+        self.SettingsWindow.connect("key-press-event", self.OnKeyPress)
 
         self.empty_label = gtk.Label("")
         self.empty_label.show()
@@ -3556,6 +3557,12 @@ class SettingsWindow:
         self.OnCancel(widget)
         widget.emit_stop_by_name("delete-event")
         return True
+
+    def OnKeyPress(self, widget, event):
+
+        # Close the settings window when escape is pressed
+        if event.keyval == gtk.keysyms.Escape:
+            self.OnCancel(widget)
 
     def GetPosition(self, combobox, option):
         iter = combobox.get_model().get_iter_root()

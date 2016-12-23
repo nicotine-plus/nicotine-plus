@@ -555,5 +555,7 @@ class FastConfigureAssistant(object):
         self.resetcompleteness()
 
     def OnKeyPress(self, widget, event):
-        if event.keyval == gtk.gdk.keyval_from_name("Esc"):
-            self.OnCancel(None)
+
+        # Close the settings window when escape is pressed
+        if event.keyval == gtk.keysyms.Escape:
+            self.OnCancel(widget)
