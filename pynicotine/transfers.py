@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 #
-# COPYRIGHT (c) 2016 Michael Labouebe <gfarmerfr@free.fr>
-# COPYRIGHT (c) 2016 Mutnick <muhing@yahoo.com>
-# COPYRIGHT (c) 2013 eL_vErDe <gandalf@le-vert.net>
-# COPYRIGHT (c) 2008-2012 Quinox <quinox@users.sf.net>
-# COPYRIGHT (c) 2009 Hedonist <ak@sensi.org>
+# COPYRIGHT (C) 2016 Michael Labouebe <gfarmerfr@free.fr>
+# COPYRIGHT (C) 2016 Mutnick <muhing@yahoo.com>
+# COPYRIGHT (C) 2013 eL_vErDe <gandalf@le-vert.net>
+# COPYRIGHT (C) 2008-2012 Quinox <quinox@users.sf.net>
+# COPYRIGHT (C) 2009 Hedonist <ak@sensi.org>
 # COPYRIGHT (C) 2006-2009 Daelstorm <daelstorm@gmail.com>
 # COPYRIGHT (C) 2003-2004 Hyriand
 # COPYRIGHT (C) 2001-2003 Alexander Kanavin
@@ -115,7 +115,6 @@ class Transfers:
     COMPLETED_TRANSFERS = ['Finished', 'Filtered', 'Aborted', 'Cancelled']
     PRE_TRANSFER = ['Queued']
     TRANSFER = ['Requesting file', 'Initializing transfer', 'Transferring']
-    POST_TRANSFER = FAILED_TRANSFERS + COMPLETED_TRANSFERS
 
     def __init__(self, downloads, peerconns, queue, eventprocessor, users):
 
