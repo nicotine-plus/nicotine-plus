@@ -30,7 +30,7 @@ from types import StringType
 import string
 from time import time
 from math import ceil
-from utils import InitialiseColumns, int_sort_func, float_sort_func
+from utils import InitialiseColumns, int_sort_func, float_sort_func, HumanizeBytes
 from pynicotine.logfacility import log
 
 
@@ -237,29 +237,6 @@ class TransferList:
                 if user not in self.selected_users:
                     self.selected_users.append(user)
 
-    def Humanize(self, size, modifier):
-        if size is None:
-            return None
-
-        if modifier == None:
-            modifier = ""
-        else:
-            modifier = " " + modifier
-
-        try:
-            s = int(size)
-            if s >= 1000*1024*1024:
-                r = _("%.2f GB") % ((float(s) / (1024.0*1024.0*1024.0)))
-            elif s >= 1000*1024:
-                r = _("%.2f MB") % ((float(s) / (1024.0*1024.0)))
-            elif s >= 1000:
-                r = _("%.2f KB") % ((float(s) / 1024.0))
-            else:
-                r = str(size)
-            return r + modifier
-        except:
-            return size + modifier
-
     def TranslateStatus(self, status):
 
         if status == "Waiting for download":
@@ -459,7 +436,7 @@ class TransferList:
                     1, _("%(number)2s files ") % {'number': files} + " (" + extensions + ")",
                     2, salientstatus,
                     4, percent,
-                    5, "%s / %s" % (self.Humanize(position, None), self.Humanize(totalsize, None)),
+                    5, "%s / %s" % (HumanizeBytes(position), HumanizeBytes(totalsize)),
                     6, speed,
                     7, elapsed,
                     8, left,
@@ -480,12 +457,12 @@ class TransferList:
         currentbytes = transfer.currentbytes
         place = transfer.place
 
-        if currentbytes == None:
+        if currentbytes is None:
             currentbytes = 0
 
         key = [user, fn]
 
-        status = self.Humanize(self.TranslateStatus(transfer.status), None)
+        status = HumanizeBytes(self.TranslateStatus(transfer.status))
         istatus = self.get_status_index(transfer.status)
 
         try:
@@ -493,7 +470,10 @@ class TransferList:
         except TypeError:
             size = 0
 
-        hsize = "%s / %s" % (self.Humanize(currentbytes, None), self.Humanize(size, transfer.modifier))
+        hsize = "%s / %s" % (HumanizeBytes(currentbytes), HumanizeBytes(size))
+
+        if transfer.modifier:
+            hsize += " (%s)" % transfer.modifier
 
         try:
             speed = "%.1f" % transfer.speed
@@ -506,7 +486,7 @@ class TransferList:
         if speed == "None":
             speed = ""
 
-        if elap == None:
+        if elap is None:
             elap = 0
 
         elap = self.frame.np.transfers.getTime(elap)

@@ -28,7 +28,7 @@ import gtk
 from thread import start_new_thread
 
 from transferlist import TransferList
-from utils import PopupMenu, PressHeader
+from utils import PopupMenu, PressHeader, HumanizeBytes
 from pynicotine import slskmessages
 import string
 import os
@@ -82,9 +82,11 @@ class Downloads(TransferList):
         cols = frame.DownloadList.get_columns()
 
         for i in range(9):
+
             parent = cols[i].get_widget().get_ancestor(gtk.Button)
             if parent:
                 parent.connect('button_press_event', PressHeader)
+
             # Read Show / Hide column settings from last session
             cols[i].set_visible(self.frame.np.config.sections["columns"]["downloads"][i])
 
@@ -184,7 +186,7 @@ class Downloads(TransferList):
 
         for transfer in self.frame.np.transfers.downloads:
             if transfer.user == user and fullname == transfer.filename:
-                size = self.Humanize(transfer.size, None)
+                size = HumanizeBytes(transfer.size)
                 try:
                     speed = str(int(transfer.speed))
                     speed += _(" KB/s")

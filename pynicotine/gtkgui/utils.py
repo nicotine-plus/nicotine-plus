@@ -167,8 +167,7 @@ def HumanizeBytes(size):
         else:
             r = _("%s  B") % numfmt(float(s))
         return r
-    except Exception, e:
-        Output(e)
+    except Exception as e:
         return size
 
     return str(size)
