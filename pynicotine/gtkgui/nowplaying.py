@@ -340,7 +340,7 @@ class NowPlaying:
                 result = self.mpris()
 
         except RuntimeError:
-            log.addwarning("ERROR: Could not execute now playing code. Are you sure you picked the right player?")
+            log.addwarning(_("ERROR: Could not execute now playing code. Are you sure you picked the right player?"))
             result = None
 
         if not result:
@@ -571,7 +571,7 @@ class NowPlaying:
 
         slist = self.NPFormat.child.get_text()
         if not self.bus:
-            log.addwarning("Failed to import DBus, cannot read out Amarok2")
+            log.addwarning(_("Failed to import DBus, cannot read out Amarok2"))
             return
 
         player = self.bus.get_object('org.mpris.amarok', '/Player')
