@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-12 23:57+0100\n"
+"POT-Creation-Date: 2016-12-25 00:07+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -537,13 +537,10 @@ msgstr ""
 msgid "Display what your Media Player is playing in Chat with the /now command"
 msgstr ""
 
-msgid "XMMS / Infopipe"
+msgid "XMMS2"
 msgstr ""
 
-msgid "You must have the Infopipe plugin enabled for this to work"
-msgstr ""
-
-msgid "Amarok"
+msgid "You must have the xmms2-python module"
 msgstr ""
 
 msgid "Audacious"
@@ -553,9 +550,6 @@ msgid "MPD via mpc"
 msgstr ""
 
 msgid "BMPx"
-msgstr ""
-
-msgid "Rhythmbox"
 msgstr ""
 
 msgid "Exaile"
@@ -591,7 +585,7 @@ msgstr ""
 msgid "Example:"
 msgstr ""
 
-msgid "Test"
+msgid "Test the configuration"
 msgstr ""
 
 msgid "PrivateChat"
@@ -2634,6 +2628,11 @@ msgstr ""
 msgid "Program"
 msgstr ""
 
+msgid ""
+"ERROR: Could not execute now playing code. Are you sure you picked the right "
+"player?"
+msgstr ""
+
 msgid "ERROR: DBus not available:"
 msgstr ""
 
@@ -2646,6 +2645,9 @@ msgstr ""
 
 #, python-format
 msgid "ERROR while reading data from the %(program)s DBus interface: %(error)s"
+msgstr ""
+
+msgid "Failed to import DBus, cannot read out Amarok2"
 msgstr ""
 
 msgid "ERROR: audtool didn't detect a running Audacious session."
@@ -2690,14 +2692,23 @@ msgstr ""
 msgid "ERROR: Executing '%(command)s' failed: %(error)s"
 msgstr ""
 
-msgid ""
-"ERROR: /tmp/xmms-info does not exist. Is the Infopipe plugin installed and "
-"is XMMS running?"
+#, python-format
+msgid "ERROR xmms2: failed to load xmmsclient module: %(error)s"
 msgstr ""
 
-msgid ""
-"ERROR: /tmp/xmms-info is empty. Is the Infopipe plugin installed and is XMMS "
-"running?"
+#, python-format
+msgid "ERROR xmms2: connecting failed: %(error)s"
+msgstr ""
+
+#, python-format
+msgid "ERROR xmms2: playback current id error: %(error)s"
+msgstr ""
+
+msgid "ERROR xmms2: nothing is playing"
+msgstr ""
+
+#, python-format
+msgid "ERROR xmms2: medialib get info error: %(error)s"
 msgstr ""
 
 msgid "Client Version"
@@ -2976,21 +2987,6 @@ msgstr ""
 msgid "Categories"
 msgstr ""
 
-msgid "Queue Position"
-msgstr ""
-
-msgid "Percent"
-msgstr ""
-
-msgid "Time elapsed"
-msgstr ""
-
-msgid "Time left"
-msgstr ""
-
-msgid "Path"
-msgstr ""
-
 msgid "Getting status"
 msgstr ""
 
@@ -3048,16 +3044,19 @@ msgstr ""
 msgid "Finished"
 msgstr ""
 
-#, python-format
-msgid "%.2f GB"
+msgid "Queue Position"
 msgstr ""
 
-#, python-format
-msgid "%.2f MB"
+msgid "Percent"
 msgstr ""
 
-#, python-format
-msgid "%.2f KB"
+msgid "Time elapsed"
+msgstr ""
+
+msgid "Time left"
+msgstr ""
+
+msgid "Path"
 msgstr ""
 
 msgid "Connection closed by peer"
@@ -3260,19 +3259,19 @@ msgid "Unknown (%(countrycode)s)"
 msgstr ""
 
 #, python-format
-msgid "%s GB"
+msgid "%.2f GB"
 msgstr ""
 
 #, python-format
-msgid "%s MB"
+msgid "%.2f MB"
 msgstr ""
 
 #, python-format
-msgid "%s KB"
+msgid "%.2f KB"
 msgstr ""
 
 #, python-format
-msgid "%s  B"
+msgid "%.2f  B"
 msgstr ""
 
 #, python-format

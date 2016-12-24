@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nicotine\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-12 23:57+0100\n"
-"PO-Revision-Date: 2016-12-12 23:58+0100\n"
+"POT-Creation-Date: 2016-12-25 00:07+0100\n"
+"PO-Revision-Date: 2016-12-25 00:12+0100\n"
 "Last-Translator: Michael LABOUEBE <gfarmerfr@free.fr>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -719,15 +719,11 @@ msgstr ""
 "Affiche ce que votre lecteur multimédia joue dans la discussion courante en "
 "utilisant la commande /now"
 
-msgid "XMMS / Infopipe"
-msgstr "XMMS / Infopipe"
+msgid "XMMS2"
+msgstr "XMMS2"
 
-msgid "You must have the Infopipe plugin enabled for this to work"
-msgstr ""
-"Vous devez avoir l'extension Infopipe activé pour un bon fonctionnement"
-
-msgid "Amarok"
-msgstr "Amarok"
+msgid "You must have the xmms2-python module"
+msgstr "Vous devez avoir le module xmms2-python d'installé"
 
 msgid "Audacious"
 msgstr "Audacious"
@@ -737,9 +733,6 @@ msgstr "MPD via mpc"
 
 msgid "BMPx"
 msgstr "BMPx"
-
-msgid "Rhythmbox"
-msgstr "Rhythmbox"
 
 msgid "Exaile"
 msgstr "Exaile"
@@ -775,8 +768,8 @@ msgstr "Now Playing format:"
 msgid "Example:"
 msgstr "Exemple:"
 
-msgid "Test"
-msgstr "Test"
+msgid "Test the configuration"
+msgstr "Test de la configuration"
 
 # pynicotine/gtkgui/nicotine_glade.py
 msgid "PrivateChat"
@@ -3475,6 +3468,13 @@ msgstr "Nom de fichier (URI)"
 msgid "Program"
 msgstr "Programme"
 
+msgid ""
+"ERROR: Could not execute now playing code. Are you sure you picked the right "
+"player?"
+msgstr ""
+"Erreur: Impossible d'exécuter le code now playing. Avez-vous choisit le bon "
+"lecteur audio ?"
+
 msgid "ERROR: DBus not available:"
 msgstr "Erreur: DBus non disponible:"
 
@@ -3494,6 +3494,9 @@ msgid "ERROR while reading data from the %(program)s DBus interface: %(error)s"
 msgstr ""
 "Erreur lors de la lecture des données de l'interface DBus de %(program)s : "
 "%(error)s"
+
+msgid "Failed to import DBus, cannot read out Amarok2"
+msgstr "Erreur d'import du module DBus, impossible de se connecter à Amarok2"
 
 msgid "ERROR: audtool didn't detect a running Audacious session."
 msgstr "Erreur: audtool n'a pas détecté de session en cours d'Audacious"
@@ -3544,19 +3547,26 @@ msgstr "lecture"
 msgid "ERROR: Executing '%(command)s' failed: %(error)s"
 msgstr "Erreur: L'exécution de '%(command)s' a échoué: %(error)s"
 
-msgid ""
-"ERROR: /tmp/xmms-info does not exist. Is the Infopipe plugin installed and "
-"is XMMS running?"
+#, python-format
+msgid "ERROR xmms2: failed to load xmmsclient module: %(error)s"
 msgstr ""
-"Erreur: /tmp/xmms-info n'existe pas. Est-ce que l'extension Infopipe est "
-"installée et XMMS en cours d'utilisation?"
+"Erreur: xmms2: erreur impossible de charger le module xmmsclient: %(error)s"
 
-msgid ""
-"ERROR: /tmp/xmms-info is empty. Is the Infopipe plugin installed and is XMMS "
-"running?"
+#, python-format
+msgid "ERROR xmms2: connecting failed: %(error)s"
+msgstr "Erreur: xmms2: erreur de connexion: %(error)s"
+
+#, python-format
+msgid "ERROR xmms2: playback current id error: %(error)s"
 msgstr ""
-"Erreur: /tmp/xmms-info est vide. Est-ce que l'extension Infopipe est "
-"installée et XMMS en cours d'utilisation?"
+"Erreur: xmms2: erreur de récupération de l'identifiant de piste: %(error)s"
+
+msgid "ERROR xmms2: nothing is playing"
+msgstr "Erreur: xmms2: rien à lire"
+
+#, python-format
+msgid "ERROR xmms2: medialib get info error: %(error)s"
+msgstr "Erreur: xmms2: erreur de récupération des info medialib: %(error)s"
 
 msgid "Client Version"
 msgstr "Version du client"
@@ -3928,25 +3938,6 @@ msgstr "Complétion"
 msgid "Categories"
 msgstr "Catégories"
 
-# pynicotine/gtkgui/userinfo.py
-msgid "Queue Position"
-msgstr "Position dans la file d'attente"
-
-msgid "Percent"
-msgstr "Pourcentage"
-
-# pynicotine/gtkgui/transferlist.py
-msgid "Time elapsed"
-msgstr "Temps écoulé"
-
-# pynicotine/gtkgui/transferlist.py
-msgid "Time left"
-msgstr "Temps restant"
-
-# pynicotine/gtkgui/transferlist.py
-msgid "Path"
-msgstr "Chemin"
-
 # pynicotine/transfers.py
 # pynicotine/gtkgui/transferlist.py
 msgid "Getting status"
@@ -4040,20 +4031,24 @@ msgstr "Transfert en cours"
 msgid "Finished"
 msgstr "Terminé"
 
-# pynicotine/gtkgui/transferlist.py
-#, python-format
-msgid "%.2f GB"
-msgstr "%.2f Go"
+# pynicotine/gtkgui/userinfo.py
+msgid "Queue Position"
+msgstr "Position dans la file d'attente"
+
+msgid "Percent"
+msgstr "Pourcentage"
 
 # pynicotine/gtkgui/transferlist.py
-#, python-format
-msgid "%.2f MB"
-msgstr "%.2f Mo"
+msgid "Time elapsed"
+msgstr "Temps écoulé"
 
 # pynicotine/gtkgui/transferlist.py
-#, python-format
-msgid "%.2f KB"
-msgstr "%.2f Ko"
+msgid "Time left"
+msgstr "Temps restant"
+
+# pynicotine/gtkgui/transferlist.py
+msgid "Path"
+msgstr "Chemin"
 
 # pynicotine/transfers.py
 # pynicotine/gtkgui/transferlist.py
@@ -4312,22 +4307,23 @@ msgstr "Inconnu (%(countrycode)s)"
 
 # pynicotine/gtkgui/transferlist.py
 #, python-format
-msgid "%s GB"
-msgstr "%s Go"
+msgid "%.2f GB"
+msgstr "%.2f Go"
 
 # pynicotine/gtkgui/transferlist.py
 #, python-format
-msgid "%s MB"
-msgstr "%s Mo"
+msgid "%.2f MB"
+msgstr "%.2f Mo"
 
 # pynicotine/gtkgui/transferlist.py
 #, python-format
-msgid "%s KB"
-msgstr "%s Ko"
+msgid "%.2f KB"
+msgstr "%.2f Ko"
 
+# pynicotine/gtkgui/transferlist.py
 #, python-format
-msgid "%s  B"
-msgstr "%s  o"
+msgid "%.2f  B"
+msgstr "%.2f o"
 
 #, python-format
 msgid "Column #%i"
