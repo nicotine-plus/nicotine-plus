@@ -24,6 +24,7 @@ Features
  * Gives user the option to load more than 1000 previous chat lines when they rejoin a chat room.
  * You can now browse your buddy shares via the Share menu.
  * You can now rename your buddy virtual shares via the settings window for shares.
+ * XMMS Infopipe support has been removed in favor of xmms2.
 
 Bugs closed on Github
  * Question - Nicotine Still Being Developed? (#1)

@@ -64,7 +64,6 @@ class NowPlaying:
         self.wTree.signal_autoconnect(self)
 
         self.NowPlaying.set_icon(self.frame.images["n"])
-        self.NowPlaying.set_position(gtk.WIN_POS_NONE)
         self.NowPlaying.set_transient_for(self.frame.MainWindow)
         self.NowPlaying.add_accel_group(self.accel_group)
 
@@ -72,16 +71,23 @@ class NowPlaying:
         self.NowPlaying.connect("destroy-event", self.quit)
         self.NowPlaying.connect("delete-event", self.quit)
         self.NowPlaying.connect("key-press-event", self.OnKeyPress)
-        self.NowPlaying.set_resizable(False)
 
-        self.defaultlist = ["$n", "$a - $t", "[$a] $t", "Now $s: [$a] $t", "Now $s: $n", "$a - $b - $t", "$a - $b - $t ($l/$rKBps) from $y $c"]
+        self.defaultlist = [
+            "$n",
+            "$a - $t",
+            "[$a] $t",
+            "Now $s: [$a] $t",
+            "Now $s: $n",
+            "$a - $b - $t",
+            "$a - $b - $t ($l/$r KBps) from $y $c"
+        ]
+
         self.title_clear()
         self.player_replacers = []
         self.NPFormat_List = gtk.ListStore(gobject.TYPE_STRING)
         self.NPFormat.set_model(self.NPFormat_List)
         self.NPFormat.set_text_column(0)
         self.NPFormat.child.connect("activate", self.OnAddFormat)
-        self.NPFormat.child.connect("changed", self.OnModifyFormat)
         self.OnNPPlayer(None)
 
         # Set the active radio button
@@ -141,9 +147,7 @@ class NowPlaying:
 
     def SetPlayer(self, player):
 
-        if player == "infopipe":
-            self.NP_infopipe.set_active(1)
-        elif player == "amarok":
+        if player == "amarok":
             self.NP_amarok.set_active(1)
         elif player == "amarok2":
             self.NP_amarok2.set_active(1)
@@ -165,27 +169,13 @@ class NowPlaying:
             self.NP_foobar.set_active(1)
         elif player == "mpris":
             self.NP_mpris.set_active(1)
+        elif player == "xmms2":
+            self.NP_xmms2.set_active(1)
         elif player == "other":
             self.NP_other.set_active(1)
             self.player_replacers = ["$n"]
         else:
             self.NP_other.set_active(1)
-
-    def OnModifyFormat(self, widget):
-
-        text = self.NPFormat.child.get_text().strip()
-        replacers = []
-
-        for replacer in ["$n", "$t", "$l", "$a", "$b", "$c", "$k", "$y", "$r", "$f", "$s", "$p"]:
-            if replacer in text:
-                replacers.append(replacer)
-
-        for replacer in replacers:
-            if replacer not in self.player_replacers:
-                self.frame.SetTextBG(self.NPFormat.child, "red", "white")
-                return
-
-        self.frame.SetTextBG(self.NPFormat.child, "", "")
 
     def OnAddFormat(self, widget):
 
@@ -219,10 +209,8 @@ class NowPlaying:
     def OnNPPlayer(self, widget):
 
         isset = False
-        if self.NP_infopipe.get_active():
-            self.player_replacers = ["$n",  "$l", "$b", "$c", "$k", "$r", "$f", "$s"]
-            isset = True
-        elif self.NP_mpd.get_active():
+
+        if self.NP_mpd.get_active():
             self.player_replacers = ["$n", "$t", "$a", "$b",  "$f", "$k"]
             isset = True
         elif self.NP_banshee.get_active():
@@ -256,6 +244,9 @@ class NowPlaying:
         elif self.NP_mpris.get_active():
             self.player_replacers = ['$p', '$a', '$b', '$t', '$c', '$r', '$k', '$l']
             self.player_input.set_text(_("Client name (empty = auto):"))
+            isset = True
+        elif self.NP_xmms2.get_active():
+            self.player_replacers = ["$n", "$t", "$l", "$a", "$b", "$c", "$k", "$y", "$r", "$f", "$s"]
             isset = True
         elif self.NP_other.get_active():
             self.player_replacers = ["$n"]
@@ -295,13 +286,13 @@ class NowPlaying:
                 legend += _("Status")
             elif item == "$p":
                 legend += _("Program")
+
             legend += "\n"
 
         self.Legend.set_text(legend)
+
         if not isset:
             self.Legend.set_text("")
-
-        self.OnModifyFormat(self.NPFormat.child)
 
     def OnNPCancel(self, widget):
         self.quit(None)
@@ -334,10 +325,11 @@ class NowPlaying:
 
         self.title_clear()
 
+        result = None
+
         try:
-            if self.NP_infopipe.get_active():
-                result = self.xmms()
-            elif self.NP_amarok.get_active():
+
+            if self.NP_amarok.get_active():
                 result = self.amarok()
             elif self.NP_amarok2.get_active():
                 result = self.amarok2()
@@ -357,10 +349,13 @@ class NowPlaying:
                 result = self.lastfm()
             elif self.NP_foobar.get_active():
                 result = self.foobar()
+            elif self.NP_xmms2.get_active():
+                result = self.xmms2()
             elif self.NP_other.get_active():
                 result = self.other()
             elif self.NP_mpris.get_active():
                 result = self.mpris()
+
         except RuntimeError:
             log.addwarning("ERROR: Could not execute now playing code. Are you sure you picked the right player?")
             result = None
@@ -410,9 +405,7 @@ class NowPlaying:
 
     def OnNPSave(self, widget):
 
-        if self.NP_infopipe.get_active():
-            player = "infopipe"
-        elif self.NP_amarok.get_active():
+        if self.NP_amarok.get_active():
             player = "amarok"
         elif self.NP_amarok2.get_active():
             player = "amarok2"
@@ -434,6 +427,8 @@ class NowPlaying:
             player = "foobar"
         elif self.NP_mpris.get_active():
             player = "mpris"
+        elif self.NP_xmms2.get_active():
+            player = "xmms2"
         elif self.NP_other.get_active():
             player = "other"
 
@@ -1013,56 +1008,95 @@ class NowPlaying:
             self.frame.logMessage(_("ERROR: Executing '%(command)s' failed: %(error)s") % {"command": othercommand, "error": error})
             return None
 
-    def xmms(self):
+    def xmms2(self):
+        """ Function to get xmms2 current playing song """
 
-        if not os.path.exists("/tmp/xmms-info"):
-            self.frame.logMessage(_("ERROR: /tmp/xmms-info does not exist. Is the Infopipe plugin installed and is XMMS running?"))
+        # To communicate with xmms2d, you need an instance of the xmmsclient.XMMS object, which abstracts the connection
+        try:
+            import xmmsclient
+        except ImportError as error:
+            log.addwarning(_("ERROR xmms2: failed to load xmmsclient module: %(error)s") % {"error": error})
             return None
+
+        xmms = xmmsclient.XMMS("NPP")
+
+        # Now we need to connect to xmms2d
+        try:
+            xmms.connect(os.getenv("XMMS_PATH"))
+        except IOError as detail:
+            log.addwarning(_("ERROR xmms2: connecting failed: %(error)s") % {"error": error})
+            return None
+
+        # Retrieve the current playing entry
+        result = xmms.playback_current_id()
+        result.wait()
+        if result.iserror():
+            log.addwarning(_("ERROR xmms2: playback current id error: %(error)s") % {"error": result.get_error()})
+            return None
+
+        id = result.value()
+
+        # Entry 0 is non valid
+        if id == 0:
+            log.addwarning(_("ERROR xmms2: nothing is playing"))
+            return None
+
+        result = xmms.medialib_get_info(id)
+        result.wait()
+
+        # This can return error if the id is not in the medialib
+        if result.iserror():
+            log.addwarning(_("ERROR xmms2: medialib get info error: %(error)s") % {"error": result.get_error()})
+            return None
+
+        # Extract entries from the dict
+        minfo = result.value()
 
         try:
-            fsock = file("/tmp/xmms-info")
-            do = fsock.read().split("\n")
-            fsock.close()
+            self.title["artist"] = str(minfo["artist"])
+            self.title["nowplaying"] = str(minfo["artist"])
+        except KeyError:
+            pass
 
-            if len(do) == 0:
-                self.frame.logMessage(_("ERROR: /tmp/xmms-info is empty. Is the Infopipe plugin installed and is XMMS running?"))
-            infolist = []
-            for i in do:
-                if i == "":
-                    continue
-                infolist.append(i)
+        try:
+            self.title["title"] = str(minfo["title"])
+            self.title["nowplaying"] += " - " + str(minfo["title"])
+        except KeyError:
+            pass
 
-            status = infolist[2][8:]
-            position = infolist[6][10:]
-            time = infolist[8][6:]
-            bitrate = str(int(infolist[9][17:])/1024)
-            frequency = infolist[10][20:]
-            channels = infolist[11][10:]
-            title = infolist[12][7:]
-            filename = infolist[13][7:]
-            self.title = {
-                "title": "",
-                "artist": "",
-                "comment": "",
-                "year": "",
-                "album": "",
-                "track": "",
-                "nowplaying": title,
-                "length": time,
-                "bitrate": bitrate,
-                "channels": channels,
-                "position": position,
-                "filename": filename,
-                "status": status
-            }
+        try:
+            self.title["album"] = str(minfo["album"])
+        except KeyError:
+            pass
 
-            return True
-        except:
-            return None
+        try:
+            self.title["bitrate"] = str(minfo["bitrate"])
+        except KeyError:
+            pass
+
+        try:
+            self.title["filename"] = str(minfo["url"])
+        except KeyError:
+            pass
+
+        try:
+            self.title["length"] = self.get_length_time(minfo["duration"] / 1000)
+        except KeyError:
+            pass
+
+        try:
+            self.title["track"] = str(minfo["tracknr"])
+        except KeyError:
+            pass
+
+        try:
+            self.title["year"] = str(minfo["date"])
+        except KeyError:
+            pass
+
+        return True
 
 if __name__ == "__main__":
-
-    print("Debug mode.")
 
     class FakeInputBox(object):
 
@@ -1084,6 +1118,6 @@ if __name__ == "__main__":
     fakenp.NPCommand = FakeInputBox('')  # if not empty specifies the player
     fakenp.Example = FakeInputBox()
     fakenp.title_clear()
-    answer = fakenp.mpris()
-    print("MPIS answered: %s" % answer)
+    ret = fakenp.xmms2()
+    print("Return: %s" % ret)
     print("Meta-info: %s" % fakenp.title)

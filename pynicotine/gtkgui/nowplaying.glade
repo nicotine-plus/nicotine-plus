@@ -1,25 +1,31 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <glade-interface>
-  <!-- interface-requires gtk+ 2.16 -->
+  <!-- interface-requires gtk+ 2.24 -->
   <!-- interface-naming-policy project-wide -->
   <widget class="GtkWindow" id="NowPlaying">
+    <property name="width_request">600</property>
+    <property name="can_focus">False</property>
     <property name="title" translatable="yes">Nicotine+: Configure Now Playing</property>
+    <property name="resizable">False</property>
     <property name="modal">True</property>
     <property name="window_position">center-on-parent</property>
     <child>
       <widget class="GtkVBox" id="vbox1">
         <property name="visible">True</property>
-        <property name="orientation">vertical</property>
+        <property name="can_focus">False</property>
         <property name="spacing">5</property>
         <child>
           <widget class="GtkLabel" id="label1">
             <property name="visible">True</property>
+            <property name="can_focus">False</property>
             <property name="xalign">0</property>
             <property name="xpad">5</property>
             <property name="label" translatable="yes">Display what your Media Player is playing in Chat with the /now command</property>
             <property name="wrap">True</property>
           </widget>
           <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
             <property name="padding">5</property>
             <property name="position">0</property>
           </packing>
@@ -27,18 +33,25 @@
         <child>
           <widget class="GtkTable" id="table1">
             <property name="visible">True</property>
+            <property name="can_focus">False</property>
             <property name="n_rows">4</property>
             <property name="n_columns">3</property>
             <child>
-              <widget class="GtkRadioButton" id="NP_infopipe">
-                <property name="label" translatable="yes">XMMS / Infopipe</property>
+              <widget class="GtkRadioButton" id="NP_xmms2">
+                <property name="label" translatable="yes">XMMS2</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
-                <property name="tooltip" translatable="yes">You must have the Infopipe plugin enabled for this to work</property>
+                <property name="tooltip" translatable="yes">You must have the xmms2-python module</property>
                 <property name="draw_indicator">True</property>
                 <signal name="clicked" handler="OnNPPlayer"/>
               </widget>
+              <packing>
+                <property name="left_attach">1</property>
+                <property name="right_attach">2</property>
+                <property name="top_attach">3</property>
+                <property name="bottom_attach">4</property>
+              </packing>
             </child>
             <child>
               <widget class="GtkRadioButton" id="NP_amarok">
@@ -47,12 +60,8 @@
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
                 <property name="draw_indicator">True</property>
-                <property name="group">NP_infopipe</property>
+                <property name="group">NP_xmms2</property>
               </widget>
-              <packing>
-                <property name="left_attach">1</property>
-                <property name="right_attach">2</property>
-              </packing>
             </child>
             <child>
               <widget class="GtkRadioButton" id="NP_audacious">
@@ -61,12 +70,12 @@
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
                 <property name="draw_indicator">True</property>
-                <property name="group">NP_infopipe</property>
+                <property name="group">NP_xmms2</property>
                 <signal name="clicked" handler="OnNPPlayer"/>
               </widget>
               <packing>
-                <property name="top_attach">1</property>
-                <property name="bottom_attach">2</property>
+                <property name="left_attach">2</property>
+                <property name="right_attach">3</property>
               </packing>
             </child>
             <child>
@@ -76,12 +85,10 @@
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
                 <property name="draw_indicator">True</property>
-                <property name="group">NP_infopipe</property>
+                <property name="group">NP_xmms2</property>
                 <signal name="clicked" handler="OnNPPlayer"/>
               </widget>
               <packing>
-                <property name="left_attach">1</property>
-                <property name="right_attach">2</property>
                 <property name="top_attach">2</property>
                 <property name="bottom_attach">3</property>
               </packing>
@@ -93,12 +100,10 @@
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
                 <property name="draw_indicator">True</property>
-                <property name="group">NP_infopipe</property>
+                <property name="group">NP_xmms2</property>
                 <signal name="clicked" handler="OnNPPlayer"/>
               </widget>
               <packing>
-                <property name="left_attach">1</property>
-                <property name="right_attach">2</property>
                 <property name="top_attach">1</property>
                 <property name="bottom_attach">2</property>
               </packing>
@@ -110,12 +115,12 @@
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
                 <property name="draw_indicator">True</property>
-                <property name="group">NP_infopipe</property>
+                <property name="group">NP_xmms2</property>
                 <signal name="clicked" handler="OnNPPlayer"/>
               </widget>
               <packing>
-                <property name="left_attach">2</property>
-                <property name="right_attach">3</property>
+                <property name="left_attach">1</property>
+                <property name="right_attach">2</property>
                 <property name="top_attach">2</property>
                 <property name="bottom_attach">3</property>
               </packing>
@@ -127,12 +132,12 @@
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
                 <property name="draw_indicator">True</property>
-                <property name="group">NP_infopipe</property>
+                <property name="group">NP_xmms2</property>
                 <signal name="clicked" handler="OnNPPlayer"/>
               </widget>
               <packing>
-                <property name="left_attach">2</property>
-                <property name="right_attach">3</property>
+                <property name="left_attach">1</property>
+                <property name="right_attach">2</property>
                 <property name="top_attach">1</property>
                 <property name="bottom_attach">2</property>
               </packing>
@@ -144,12 +149,14 @@
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
                 <property name="draw_indicator">True</property>
-                <property name="group">NP_infopipe</property>
+                <property name="group">NP_xmms2</property>
                 <signal name="clicked" handler="OnNPPlayer"/>
               </widget>
               <packing>
-                <property name="top_attach">2</property>
-                <property name="bottom_attach">3</property>
+                <property name="left_attach">2</property>
+                <property name="right_attach">3</property>
+                <property name="top_attach">1</property>
+                <property name="bottom_attach">2</property>
               </packing>
             </child>
             <child>
@@ -159,7 +166,7 @@
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
                 <property name="draw_indicator">True</property>
-                <property name="group">NP_infopipe</property>
+                <property name="group">NP_xmms2</property>
                 <signal name="clicked" handler="OnNPPlayer"/>
               </widget>
               <packing>
@@ -176,12 +183,12 @@
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
                 <property name="draw_indicator">True</property>
-                <property name="group">NP_infopipe</property>
+                <property name="group">NP_xmms2</property>
                 <signal name="clicked" handler="OnNPPlayer"/>
               </widget>
               <packing>
-                <property name="left_attach">2</property>
-                <property name="right_attach">3</property>
+                <property name="left_attach">1</property>
+                <property name="right_attach">2</property>
               </packing>
             </child>
             <child>
@@ -191,11 +198,13 @@
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
                 <property name="draw_indicator">True</property>
-                <property name="group">NP_infopipe</property>
+                <property name="group">NP_xmms2</property>
               </widget>
               <packing>
-                <property name="top_attach">3</property>
-                <property name="bottom_attach">4</property>
+                <property name="left_attach">2</property>
+                <property name="right_attach">3</property>
+                <property name="top_attach">2</property>
+                <property name="bottom_attach">3</property>
               </packing>
             </child>
             <child>
@@ -205,12 +214,10 @@
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
                 <property name="draw_indicator">True</property>
-                <property name="group">NP_infopipe</property>
+                <property name="group">NP_xmms2</property>
                 <signal name="clicked" handler="OnNPPlayer"/>
               </widget>
               <packing>
-                <property name="left_attach">1</property>
-                <property name="right_attach">2</property>
                 <property name="top_attach">3</property>
                 <property name="bottom_attach">4</property>
               </packing>
@@ -222,7 +229,7 @@
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
                 <property name="draw_indicator">True</property>
-                <property name="group">NP_infopipe</property>
+                <property name="group">NP_xmms2</property>
                 <signal name="clicked" handler="OnNPPlayer"/>
               </widget>
               <packing>
@@ -230,22 +237,33 @@
                 <property name="bottom_attach">5</property>
               </packing>
             </child>
+            <child>
+              <placeholder/>
+            </child>
+            <child>
+              <placeholder/>
+            </child>
           </widget>
           <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
             <property name="position">1</property>
           </packing>
         </child>
         <child>
           <widget class="GtkHBox" id="hbox1">
             <property name="visible">True</property>
+            <property name="can_focus">False</property>
             <property name="spacing">5</property>
             <child>
               <widget class="GtkLabel" id="player_input">
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
                 <property name="label" translatable="yes">Player Command/Username</property>
               </widget>
               <packing>
                 <property name="expand">False</property>
+                <property name="fill">True</property>
                 <property name="padding">5</property>
                 <property name="position">0</property>
               </packing>
@@ -254,14 +272,22 @@
               <widget class="GtkEntry" id="NPCommand">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="invisible_char">&#x2022;</property>
+                <property name="invisible_char">•</property>
+                <property name="primary_icon_activatable">False</property>
+                <property name="secondary_icon_activatable">False</property>
+                <property name="primary_icon_sensitive">True</property>
+                <property name="secondary_icon_sensitive">True</property>
               </widget>
               <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
                 <property name="position">1</property>
               </packing>
             </child>
           </widget>
           <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
             <property name="position">2</property>
           </packing>
         </child>
@@ -272,6 +298,7 @@
             <child>
               <widget class="GtkLabel" id="Legend">
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
                 <property name="xalign">0</property>
                 <property name="xpad">5</property>
               </widget>
@@ -279,6 +306,7 @@
             <child>
               <widget class="GtkLabel" id="label3">
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
                 <property name="label" translatable="yes">Legend:</property>
               </widget>
               <packing>
@@ -287,21 +315,26 @@
             </child>
           </widget>
           <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
             <property name="position">3</property>
           </packing>
         </child>
         <child>
           <widget class="GtkHBox" id="hbox3">
             <property name="visible">True</property>
+            <property name="can_focus">False</property>
             <property name="spacing">5</property>
             <child>
               <widget class="GtkLabel" id="label4">
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
                 <property name="xalign">0</property>
                 <property name="label" translatable="yes">Now playing format:</property>
               </widget>
               <packing>
                 <property name="expand">False</property>
+                <property name="fill">True</property>
                 <property name="padding">5</property>
                 <property name="position">0</property>
               </packing>
@@ -309,28 +342,45 @@
             <child>
               <widget class="GtkComboBoxEntry" id="NPFormat">
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <child internal-child="entry">
+                  <widget class="GtkEntry" id="comboboxentry-entry2">
+                    <property name="can_focus">False</property>
+                    <property name="primary_icon_activatable">False</property>
+                    <property name="secondary_icon_activatable">False</property>
+                    <property name="primary_icon_sensitive">True</property>
+                    <property name="secondary_icon_sensitive">True</property>
+                  </widget>
+                </child>
               </widget>
               <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
                 <property name="position">1</property>
               </packing>
             </child>
           </widget>
           <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
             <property name="position">4</property>
           </packing>
         </child>
         <child>
           <widget class="GtkHBox" id="hbox4">
             <property name="visible">True</property>
+            <property name="can_focus">False</property>
             <property name="spacing">5</property>
             <child>
               <widget class="GtkLabel" id="label5">
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
                 <property name="xalign">0</property>
                 <property name="label" translatable="yes">Example:</property>
               </widget>
               <packing>
                 <property name="expand">False</property>
+                <property name="fill">True</property>
                 <property name="padding">5</property>
                 <property name="position">0</property>
               </packing>
@@ -338,61 +388,30 @@
             <child>
               <widget class="GtkLabel" id="Example">
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
                 <property name="xalign">0</property>
               </widget>
               <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
                 <property name="position">1</property>
               </packing>
             </child>
           </widget>
           <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
             <property name="position">5</property>
           </packing>
         </child>
         <child>
           <widget class="GtkHBox" id="hbox5">
             <property name="visible">True</property>
+            <property name="can_focus">False</property>
             <property name="spacing">5</property>
             <child>
-              <widget class="GtkButton" id="NPTest">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-                <signal name="clicked" handler="OnNPTest"/>
-                <child>
-                  <widget class="GtkHBox" id="hbox6">
-                    <property name="visible">True</property>
-                    <child>
-                      <widget class="GtkImage" id="image1">
-                        <property name="visible">True</property>
-                        <property name="stock">gtk-jump-to</property>
-                        <property name="icon-size">1</property>
-                      </widget>
-                      <packing>
-                        <property name="position">0</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <widget class="GtkLabel" id="label6">
-                        <property name="visible">True</property>
-                        <property name="label" translatable="yes">Test</property>
-                      </widget>
-                      <packing>
-                        <property name="position">1</property>
-                      </packing>
-                    </child>
-                  </widget>
-                </child>
-              </widget>
-              <packing>
-                <property name="expand">False</property>
-                <property name="pack_type">end</property>
-                <property name="position">2</property>
-              </packing>
-            </child>
-            <child>
               <widget class="GtkButton" id="NPSave">
-                <property name="label">gtk-save</property>
+                <property name="label">gtk-ok</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
@@ -401,13 +420,14 @@
               </widget>
               <packing>
                 <property name="expand">False</property>
+                <property name="fill">False</property>
                 <property name="pack_type">end</property>
                 <property name="position">0</property>
               </packing>
             </child>
             <child>
               <widget class="GtkButton" id="NPCancel">
-                <property name="label">gtk-cancel</property>
+                <property name="label">gtk-undo</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
@@ -416,12 +436,32 @@
               </widget>
               <packing>
                 <property name="expand">False</property>
+                <property name="fill">False</property>
                 <property name="pack_type">end</property>
                 <property name="position">1</property>
               </packing>
             </child>
+            <child>
+              <widget class="GtkButton" id="NPTest">
+                <property name="label">gtk-execute</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="tooltip" translatable="yes">Test the configuration</property>
+                <property name="use_stock">True</property>
+                <signal name="clicked" handler="OnNPTest"/>
+              </widget>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="pack_type">end</property>
+                <property name="position">2</property>
+              </packing>
+            </child>
           </widget>
           <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
             <property name="position">6</property>
           </packing>
         </child>

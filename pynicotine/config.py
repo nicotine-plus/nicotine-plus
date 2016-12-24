@@ -372,7 +372,7 @@ class Config:
             "players": {
                 "default": "xdg-open $",
                 "npothercommand": "",
-                "npplayer": "infopipe",
+                "npplayer": "",
                 "npformatlist": [],
                 "npformat": ""
             },
