@@ -21,7 +21,7 @@
             <property name="xalign">0</property>
             <property name="xpad">5</property>
             <property name="label" translatable="yes">Display what your Media Player is playing in Chat with the /now command</property>
-            <property name="wrap">True</property>
+            <property name="single_line_mode">True</property>
           </widget>
           <packing>
             <property name="expand">True</property>
@@ -36,6 +36,9 @@
             <property name="can_focus">False</property>
             <property name="n_rows">4</property>
             <property name="n_columns">3</property>
+            <child>
+              <placeholder/>
+            </child>
             <child>
               <widget class="GtkRadioButton" id="NP_xmms2">
                 <property name="label" translatable="yes">XMMS2</property>
@@ -205,9 +208,6 @@
                 <property name="top_attach">3</property>
                 <property name="bottom_attach">4</property>
               </packing>
-            </child>
-            <child>
-              <placeholder/>
             </child>
           </widget>
           <packing>
