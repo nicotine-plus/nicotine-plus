@@ -1,4 +1,12 @@
-# Copyright (C) 2007-2009 daelstorm. All rights reserved.
+# -*- coding: utf-8 -*-
+#
+# COPYRIGHT (C) 2016 Michael Labouebe <gfarmerfr@free.fr>
+# COPYRIGHT (C) 2008-2011 Quinox <quinox@users.sf.net>
+# COPYRIGHT (C) 2008 Gallows <g4ll0ws@gmail.com>
+# COPYRIGHT (C) 2006-2009 Daelstorm <daelstorm@gmail.com>
+#
+# GNU GENERAL PUBLIC LICENSE
+#    Version 3, 29 June 2007
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
