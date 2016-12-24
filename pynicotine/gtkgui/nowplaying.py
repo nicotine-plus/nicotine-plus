@@ -30,8 +30,8 @@ import thread
 import threading
 import copy
 import sys
-from pynicotine.utils import executeCommand
-from pynicotine.logfacility import log
+# from pynicotine.utils import executeCommand
+# from pynicotine.logfacility import log
 
 if sys.platform == "win32":
     HAS_WIN32GUI = False
@@ -145,8 +145,6 @@ class NowPlaying:
             self.NP_mpd.set_active(1)
         elif player == "banshee":
             self.NP_banshee.set_active(1)
-        elif player == "rhythmbox":
-            self.NP_rhythmbox.set_active(1)
         elif player == "bmpx":
             self.NP_bmpx.set_active(1)
         elif player == "exaile":
@@ -208,9 +206,6 @@ class NowPlaying:
             self.player_replacers = ["$n", "$t", "$l", "$a", "$b", "$c", "$k", "$y", "$r", "$f", "$s"]
             isset = True
         elif self.NP_audacious.get_active():
-            self.player_replacers = ["$n", "$t", "$l", "$a", "$b", "$c", "$k", "$y", "$r", "$f", "$s"]
-            isset = True
-        elif self.NP_rhythmbox.get_active():
             self.player_replacers = ["$n", "$t", "$l", "$a", "$b", "$c", "$k", "$y", "$r", "$f", "$s"]
             isset = True
         elif self.NP_bmpx.get_active():
@@ -297,9 +292,7 @@ class NowPlaying:
 
     def DisplayNowPlaying(self, widget, test=0, callback=None):
 
-        if (self.NP_rhythmbox.get_active() or
-                self.NP_bmpx.get_active() or
-                self.NP_mpris.get_active()):
+        if (self.NP_bmpx.get_active() or self.NP_mpris.get_active()):
             # dbus (no threads, please)
             self.GetNP(None, test, callback)
         else:
@@ -322,8 +315,6 @@ class NowPlaying:
                 result = self.mpd()
             elif self.NP_banshee.get_active():
                 result = self.banshee()
-            elif self.NP_rhythmbox.get_active():
-                result = self.rhythmbox()
             elif self.NP_bmpx.get_active():
                 result = self.bmpx()
             elif self.NP_exaile.get_active():
@@ -396,8 +387,6 @@ class NowPlaying:
             player = "mpd"
         elif self.NP_banshee.get_active():
             player = "banshee"
-        elif self.NP_rhythmbox.get_active():
-            player = "rhythmbox"
         elif self.NP_bmpx.get_active():
             player = "bmpx"
         elif self.NP_exaile.get_active():
@@ -750,47 +739,6 @@ class NowPlaying:
             self.title['nowplaying'] += " - " + self.title['title']
 
         return True
-
-    def rhythmbox(self):
-
-        from dbus import Interface
-
-        if self.bus is None:
-            self.frame.logMessage(_("ERROR: DBus not available:") + " "+"Rhythmbox" + " " + _("cannot be contacted"))
-            return None
-
-        try:
-            proxyobj = self.bus.get_object("org.gnome.Rhythmbox", "/org/gnome/Rhythmbox/Shell")
-            rbshell = Interface(proxyobj, "org.gnome.Rhythmbox.Shell")
-            proxyobj = self.bus.get_object('org.gnome.Rhythmbox', '/org/gnome/Rhythmbox/Player')
-            rbplayer = Interface(proxyobj, 'org.gnome.Rhythmbox.Player')
-        except Exception, error:
-            self.frame.logMessage(_("ERROR while accessing the %(program)s DBus interface: %(error)s") % {"program": "Rhythmbox", "error": error})
-            return None
-
-        try:
-            metadata = rbshell.getSongProperties(rbplayer.getPlayingUri())
-            self.title["bitrate"] = str(metadata["bitrate"])
-            self.title["track"] = str(metadata["track-number"])
-            self.title["title"] = metadata["title"]
-            self.title["artist"] = metadata["artist"]
-            self.title["comment"] = metadata["description"]
-            self.title["length"] = self.get_length_time(metadata["duration"])
-            self.title["nowplaying"] = metadata["artist"] + " - " + metadata["title"]
-            self.title["year"] = str(metadata["year"])
-            self.title["album"] = metadata["album"]
-            self.title["filename"] = metadata["location"]
-
-            if rbplayer.getPlaying():
-                self.title["status"] = "playing"
-            else:
-                self.title["status"] = "paused"
-
-            return True
-
-        except Exception, error:
-            self.frame.logMessage(_("ERROR while accessing the %(program)s DBus interface: %(error)s") % {"program": "Rhythmbox", "error": error})
-            return None
 
     def foobar(self):
 
