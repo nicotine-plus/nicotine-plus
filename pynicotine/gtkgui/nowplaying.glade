@@ -44,24 +44,13 @@
                 <property name="receives_default">False</property>
                 <property name="tooltip" translatable="yes">You must have the xmms2-python module</property>
                 <property name="draw_indicator">True</property>
+                <property name="group">NP_amarok2</property>
                 <signal name="clicked" handler="OnNPPlayer"/>
               </widget>
               <packing>
-                <property name="left_attach">1</property>
-                <property name="right_attach">2</property>
                 <property name="top_attach">3</property>
                 <property name="bottom_attach">4</property>
               </packing>
-            </child>
-            <child>
-              <widget class="GtkRadioButton" id="NP_amarok">
-                <property name="label" translatable="yes">Amarok</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">False</property>
-                <property name="draw_indicator">True</property>
-                <property name="group">NP_xmms2</property>
-              </widget>
             </child>
             <child>
               <widget class="GtkRadioButton" id="NP_audacious">
@@ -70,12 +59,12 @@
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
                 <property name="draw_indicator">True</property>
-                <property name="group">NP_xmms2</property>
+                <property name="group">NP_amarok2</property>
                 <signal name="clicked" handler="OnNPPlayer"/>
               </widget>
               <packing>
-                <property name="left_attach">2</property>
-                <property name="right_attach">3</property>
+                <property name="left_attach">1</property>
+                <property name="right_attach">2</property>
               </packing>
             </child>
             <child>
@@ -85,10 +74,12 @@
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
                 <property name="draw_indicator">True</property>
-                <property name="group">NP_xmms2</property>
+                <property name="group">NP_amarok2</property>
                 <signal name="clicked" handler="OnNPPlayer"/>
               </widget>
               <packing>
+                <property name="left_attach">1</property>
+                <property name="right_attach">2</property>
                 <property name="top_attach">2</property>
                 <property name="bottom_attach">3</property>
               </packing>
@@ -100,7 +91,7 @@
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
                 <property name="draw_indicator">True</property>
-                <property name="group">NP_xmms2</property>
+                <property name="group">NP_amarok2</property>
                 <signal name="clicked" handler="OnNPPlayer"/>
               </widget>
               <packing>
@@ -115,12 +106,12 @@
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
                 <property name="draw_indicator">True</property>
-                <property name="group">NP_xmms2</property>
+                <property name="group">NP_amarok2</property>
                 <signal name="clicked" handler="OnNPPlayer"/>
               </widget>
               <packing>
-                <property name="left_attach">1</property>
-                <property name="right_attach">2</property>
+                <property name="left_attach">2</property>
+                <property name="right_attach">3</property>
                 <property name="top_attach">2</property>
                 <property name="bottom_attach">3</property>
               </packing>
@@ -132,7 +123,7 @@
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
                 <property name="draw_indicator">True</property>
-                <property name="group">NP_xmms2</property>
+                <property name="group">NP_amarok2</property>
                 <signal name="clicked" handler="OnNPPlayer"/>
               </widget>
               <packing>
@@ -149,14 +140,12 @@
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
                 <property name="draw_indicator">True</property>
-                <property name="group">NP_xmms2</property>
+                <property name="group">NP_amarok2</property>
                 <signal name="clicked" handler="OnNPPlayer"/>
               </widget>
               <packing>
-                <property name="left_attach">2</property>
-                <property name="right_attach">3</property>
-                <property name="top_attach">1</property>
-                <property name="bottom_attach">2</property>
+                <property name="top_attach">2</property>
+                <property name="bottom_attach">3</property>
               </packing>
             </child>
             <child>
@@ -166,12 +155,12 @@
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
                 <property name="draw_indicator">True</property>
-                <property name="group">NP_xmms2</property>
+                <property name="group">NP_amarok2</property>
                 <signal name="clicked" handler="OnNPPlayer"/>
               </widget>
               <packing>
-                <property name="left_attach">2</property>
-                <property name="right_attach">3</property>
+                <property name="left_attach">1</property>
+                <property name="right_attach">2</property>
                 <property name="top_attach">3</property>
                 <property name="bottom_attach">4</property>
               </packing>
@@ -183,13 +172,8 @@
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
                 <property name="draw_indicator">True</property>
-                <property name="group">NP_xmms2</property>
                 <signal name="clicked" handler="OnNPPlayer"/>
               </widget>
-              <packing>
-                <property name="left_attach">1</property>
-                <property name="right_attach">2</property>
-              </packing>
             </child>
             <child>
               <widget class="GtkRadioButton" id="NP_banshee">
@@ -198,13 +182,11 @@
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
                 <property name="draw_indicator">True</property>
-                <property name="group">NP_xmms2</property>
+                <property name="group">NP_amarok2</property>
               </widget>
               <packing>
                 <property name="left_attach">2</property>
                 <property name="right_attach">3</property>
-                <property name="top_attach">2</property>
-                <property name="bottom_attach">3</property>
               </packing>
             </child>
             <child>
@@ -214,12 +196,14 @@
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
                 <property name="draw_indicator">True</property>
-                <property name="group">NP_xmms2</property>
+                <property name="group">NP_amarok2</property>
                 <signal name="clicked" handler="OnNPPlayer"/>
               </widget>
               <packing>
-                <property name="top_attach">3</property>
-                <property name="bottom_attach">4</property>
+                <property name="left_attach">2</property>
+                <property name="right_attach">3</property>
+                <property name="top_attach">1</property>
+                <property name="bottom_attach">2</property>
               </packing>
             </child>
             <child>
@@ -229,19 +213,15 @@
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
                 <property name="draw_indicator">True</property>
-                <property name="group">NP_xmms2</property>
+                <property name="group">NP_amarok2</property>
                 <signal name="clicked" handler="OnNPPlayer"/>
               </widget>
               <packing>
-                <property name="top_attach">4</property>
-                <property name="bottom_attach">5</property>
+                <property name="left_attach">2</property>
+                <property name="right_attach">3</property>
+                <property name="top_attach">3</property>
+                <property name="bottom_attach">4</property>
               </packing>
-            </child>
-            <child>
-              <placeholder/>
-            </child>
-            <child>
-              <placeholder/>
             </child>
           </widget>
           <packing>

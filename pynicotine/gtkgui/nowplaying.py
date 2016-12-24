@@ -129,9 +129,7 @@ class NowPlaying:
 
     def SetPlayer(self, player):
 
-        if player == "amarok":
-            self.NP_amarok.set_active(1)
-        elif player == "amarok2":
+        if player == "amarok2":
             self.NP_amarok2.set_active(1)
         elif player == "audacious":
             self.NP_audacious.set_active(1)
@@ -197,9 +195,6 @@ class NowPlaying:
             isset = True
         elif self.NP_banshee.get_active():
             self.player_replacers = ["$n", "$t", "$l", "$a", "$b", "$k", "$y", "$r", "$f", "$s"]
-            isset = True
-        elif self.NP_amarok.get_active():
-            self.player_replacers = ["$n", "$t", "$l", "$a", "$b", "$c", "$k", "$y", "$r", "$f", "$s"]
             isset = True
         elif self.NP_amarok2.get_active():
             self.player_replacers = ["$n", "$t", "$l", "$a", "$b", "$c", "$k", "$y", "$r", "$f", "$s"]
@@ -311,9 +306,7 @@ class NowPlaying:
 
         try:
 
-            if self.NP_amarok.get_active():
-                result = self.amarok()
-            elif self.NP_amarok2.get_active():
+            if self.NP_amarok2.get_active():
                 result = self.amarok2()
             elif self.NP_audacious.get_active():
                 result = self.audacious()
@@ -387,9 +380,7 @@ class NowPlaying:
 
     def OnNPSave(self, widget):
 
-        if self.NP_amarok.get_active():
-            player = "amarok"
-        elif self.NP_amarok2.get_active():
+        if self.NP_amarok2.get_active():
             player = "amarok2"
         elif self.NP_audacious.get_active():
             player = "audacious"
@@ -595,83 +586,6 @@ class NowPlaying:
             self.title['nowplaying'] = self.title['artist'] + ' - ' + self.title['title']
 
         return True
-
-    def amarok(self):
-
-        slist = self.NPFormat.child.get_text()
-
-        if "$n" in slist:
-            output = self.amarok_command("nowPlaying")
-            if output:
-                self.title["nowplaying"] = output
-
-        if "$t" in slist:
-            output = self.amarok_command("title")
-            if output:
-                self.title["title"] = output
-
-        if "$l" in slist:
-            output = self.amarok_command("totalTime")
-            if output:
-                self.title["length"] = output
-
-        if "$a" in slist:
-            output = self.amarok_command("artist")
-            if output:
-                self.title["artist"] = output
-
-        if "$b" in slist:
-            output = self.amarok_command("album")
-            if output:
-                self.title["album"] = output
-
-        if "$c" in slist:
-            output = self.amarok_command("comment")
-            if output:
-                self.title["comment"] = output
-
-        if "$k" in slist:
-            output = self.amarok_command("track")
-            if output:
-                self.title["track"] = output
-
-        if "$y" in slist:
-            output = self.amarok_command("year")
-            if output and not output == "0":
-                self.title["year"] = output
-
-        if "$r" in slist:
-            output = self.amarok_command("bitrate")
-            if output:
-                self.title["bitrate"] = output
-
-        if "$f" in slist:
-            output = self.amarok_command("path")
-            if output:
-                self.title["filename"] = output
-
-        if "$s" in slist:
-            output = self.amarok_command("status")
-            if output:
-                status = output
-                if status == "0":
-                    self.title["status"] = "stopped"
-                elif status == "1":
-                    self.title["status"] = "paused"
-                elif status == "2":
-                    self.title["status"] = "playing"
-                else:
-                    self.title["status"] = "unknown"
-
-        return True
-
-    def amarok_command(self, command):
-
-        output = executeCommand("dcop amarok player $", command, returnoutput=True).split('\n')[0]
-        if output == 'call failed':
-            output = None
-
-        return output
 
     def audacious(self):
 
