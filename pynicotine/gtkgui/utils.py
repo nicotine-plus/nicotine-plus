@@ -83,15 +83,6 @@ def popupWarning(parent, title, warning, icon=None):
 
     return 0
 
-
-def numfmt(value):
-    v = str(float(value)) + '0000'
-    i = v.index('.')
-    if i < 4:
-        return v[:5]
-    else:
-        return v[:i+2]
-
 # we could move this into a new class
 previouscountrypath = None
 
@@ -159,13 +150,13 @@ def HumanizeBytes(size):
     try:
         s = int(size)
         if s >= 1000*1024*1024:
-            r = _("%s GB") % numfmt(float(s) / 1073741824.0)
+            r = _("%.2f GB") % (float(s) / (1024.0*1024.0*1024.0))
         elif s >= 1000*1024:
-            r = _("%s MB") % numfmt(float(s) / 1048576.0)
+            r = _("%.2f MB") % (float(s) / (1024.0*1024.0))
         elif s >= 1000:
-            r = _("%s KB") % numfmt(float(s) / 1024.0)
+            r = _("%.2f KB") % (float(s) / 1024.0)
         else:
-            r = _("%s  B") % numfmt(float(s))
+            r = _("%.2f  B") % (float(s))
         return r
     except Exception as e:
         return size
