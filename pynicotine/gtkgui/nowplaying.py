@@ -675,6 +675,9 @@ class NowPlaying:
         return output
 
     def mpris(self):
+        """ Function to get the currently playing song via dbus mpris interface """
+
+        # https://media.readthedocs.org/pdf/mpris2/latest/mpris2.pdf
 
         from dbus import Interface
 
@@ -711,9 +714,6 @@ class NowPlaying:
             self.frame.logMessage(_("Something went wrong while querying %(player)s: %(exception)s") % {'player': player, 'exception': exception})
             return None
 
-        print(metadata)
-
-        # See: http://mms2.org/wiki/MPRIS_Metadata
         self.title['program'] = player
         list_mapping = [('xesam:artist', 'artist')]
 
@@ -728,7 +728,7 @@ class NowPlaying:
                 ('xesam:album', 'album'),
                 ('xesam:comment', 'comment'),
                 ('xesam:audioBitrate', 'bitrate'),
-                ('xesak:trackNumber', 'track'),
+                ('xesak:trackNumber', 'track')
             ]
 
         for (source, dest) in mapping:
@@ -737,9 +737,9 @@ class NowPlaying:
             except KeyError:
                 self.title[dest] = '?'
 
-        # Misc
+        # The length is in microseconds, and be represented as a signed 64-bit integer.
         try:
-            self.title['length'] = self.get_length_time(metadata['mpris:length'] / 1000)
+            self.title['length'] = self.get_length_time(metadata['mpris:length'] / 1000000)
         except KeyError:
             self.title['length'] = '?'
 
@@ -913,7 +913,7 @@ class NowPlaying:
             return None
 
     def xmms2(self):
-        """ Function to get xmms2 current playing song """
+        """ Function to get xmms2 currently playing song """
 
         # To communicate with xmms2d, you need an instance of the xmmsclient.XMMS object, which abstracts the connection
         try:
