@@ -39,6 +39,28 @@ class TransferList:
     MINIMUM_GUI_DELAY = 0.3  # in seconds
     MINIMUM_GUI_DELAY_SLEEP = int(ceil(MINIMUM_GUI_DELAY * 2000))  # in ms
 
+    status_tab = [
+        _("Getting status"),
+        _("Waiting for download"),
+        _("Waiting for upload"),
+        _("Getting address"),
+        _("Connecting"),
+        _("Waiting for peer to connect"),
+        _("Cannot connect"),
+        _("User logged off"),
+        _("Requesting file"),
+        _("Initializing transfer"),
+        _("Filtered"),
+        _("Download directory error"),
+        _("Local file error"),
+        _("File not shared"),
+        _("Aborted"),
+        _("Paused"),
+        _("Queued"),
+        _("Transferring"),
+        _("Finished")
+    ]
+
     def __init__(self, frame, widget):
         self.frame = frame
         self.widget = widget
@@ -70,7 +92,8 @@ class TransferList:
         ]
 
         self.transfersmodel = gtk.TreeStore(*columntypes)
-        self.cols = cols = InitialiseColumns(widget,
+        self.cols = cols = InitialiseColumns(
+            widget,
             [_("User"), 100, "text", self.CellDataFunc],
             [_("Filename"), 250, "text", self.CellDataFunc],
             [_("Status"), 140, "text", self.CellDataFunc],
@@ -112,28 +135,6 @@ class TransferList:
     def UpdateColours(self):
         self.frame.SetTextBG(self.widget)
         self.frame.ChangeListFont(self.widget, self.frame.np.config.sections["ui"]["transfersfont"])
-
-    status_tab = [
-        _("Getting status"),
-        _("Waiting for download"),
-        _("Waiting for upload"),
-        _("Getting address"),
-        _("Connecting"),
-        _("Waiting for peer to connect"),
-        _("Cannot connect"),
-        _("User logged off"),
-        _("Requesting file"),
-        _("Initializing transfer"),
-        _('Filtered'),
-        _("Download directory error"),
-        _("Local file error"),
-        _("File not shared"),
-        _("Aborted"),
-        _('Paused'),
-        _("Queued"),
-        _("Transferring"),
-        _("Finished")
-    ]
 
     def CellDataFunc(self, column, cellrenderer, model, iter):
 
@@ -265,14 +266,14 @@ class TransferList:
             newstatus = _("Aborted")
         elif status == "Finished":
             newstatus = _("Finished")
-        elif status == 'Paused':
+        elif status == "Paused":
             newstatus = _("Paused")
-        elif status == 'Transferring':
+        elif status == "Transferring":
             newstatus = _("Transferring")
-        elif status == 'Filtered':
-            newstatus = _('Filtered')
-        elif status == 'Connection closed by peer':
-            newstatus = _('Connection closed by peer')
+        elif status == "Filtered":
+            newstatus = _("Filtered")
+        elif status == "Connection closed by peer":
+            newstatus = _("Connection closed by peer")
         elif status == "File not shared":
             newstatus = _("File not shared")
         elif status == "Establishing connection":
@@ -407,6 +408,7 @@ class TransferList:
 
                     if status in (_("Transferring"), _("Banned"), _("Getting address"), _("Establishing connection")):
                         salientstatus = status
+
                 try:
                     speed = "%.1f" % ispeed
                 except TypeError:
@@ -603,7 +605,7 @@ class TransferList:
         self.ClearTransfers(statuslist)
 
     def OnClearFailed(self, widget):
-        statuslist = ["Cannot connect", 'Connection closed by peer', "Local file error", "Getting address", "Waiting for peer to connect", "Initializing transfer"]
+        statuslist = ["Cannot connect", "Connection closed by peer", "Local file error", "Getting address", "Waiting for peer to connect", "Initializing transfer"]
         self.ClearTransfers(statuslist)
 
     def OnClearPaused(self, widget):
@@ -615,7 +617,7 @@ class TransferList:
         self.ClearTransfers(statuslist)
 
     def OnClearFinishedErred(self, widget):
-        statuslist = ["Aborted", "Cancelled", "Finished", "Filtered", "Cannot connect", 'Connection closed by peer', "Local file error"]
+        statuslist = ["Aborted", "Cancelled", "Finished", "Filtered", "Cannot connect", "Connection closed by peer", "Local file error"]
         self.ClearTransfers(statuslist)
 
     def OnClearQueued(self, widget):

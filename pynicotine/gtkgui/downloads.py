@@ -85,7 +85,7 @@ class Downloads(TransferList):
 
             parent = cols[i].get_widget().get_ancestor(gtk.Button)
             if parent:
-                parent.connect('button_press_event', PressHeader)
+                parent.connect("button_press_event", PressHeader)
 
             # Read Show / Hide column settings from last session
             cols[i].set_visible(self.frame.np.config.sections["columns"]["downloads"][i])
@@ -516,8 +516,10 @@ class Downloads(TransferList):
         self.select_transfers()
 
         for transfer in self.selected_transfers:
+
             if transfer.status in ["Finished", "Old"]:
                 continue
+
             self.frame.np.transfers.AbortTransfer(transfer)
             transfer.req = None
             self.frame.np.transfers.getFile(transfer.user, transfer.filename, transfer.path, transfer)

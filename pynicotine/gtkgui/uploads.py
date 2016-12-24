@@ -75,9 +75,11 @@ class Uploads(TransferList):
         cols = frame.UploadList.get_columns()
 
         for i in range(9):
+
             parent = cols[i].get_widget().get_ancestor(gtk.Button)
             if parent:
-                parent.connect('button_press_event', PressHeader)
+                parent.connect("button_press_event", PressHeader)
+
             # Read Show / Hide column settings from last session
             cols[i].set_visible(self.frame.np.config.sections["columns"]["uploads"][i])
 

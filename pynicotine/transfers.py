@@ -111,10 +111,10 @@ class TransferTimeout:
 
 class Transfers:
     """ This is the transfers manager"""
-    FAILED_TRANSFERS = ["Cannot connect", 'Connection closed by peer', "Local file error"]
-    COMPLETED_TRANSFERS = ['Finished', 'Filtered', 'Aborted', 'Cancelled']
-    PRE_TRANSFER = ['Queued']
-    TRANSFER = ['Requesting file', 'Initializing transfer', 'Transferring']
+    FAILED_TRANSFERS = ["Cannot connect", "Connection closed by peer", "Local file error"]
+    COMPLETED_TRANSFERS = ["Finished", "Filtered", "Aborted", "Cancelled"]
+    PRE_TRANSFER = ["Queued"]
+    TRANSFER = ["Requesting file", "Initializing transfer", "Transferring"]
 
     def __init__(self, downloads, peerconns, queue, eventprocessor, users):
 
@@ -153,10 +153,10 @@ class Transfers:
                 except:
                     pass
 
-            if len(i) >= 4 and i[3] in ('Aborted', 'Paused'):
-                status = 'Paused'
+            if len(i) >= 4 and i[3] in ("Aborted", "Paused"):
+                status = "Paused"
             else:
-                status = 'Getting status'
+                status = "Getting status"
 
             self.downloads.append(
                 Transfer(
@@ -212,19 +212,19 @@ class Transfers:
         """ We get a status of a user and if he's online, we request a file from him """
 
         for i in self.downloads:
-            if msg.user == i.user and i.status in ["Queued", 'Getting status', 'User logged off', 'Connection closed by peer', 'Aborted', 'Cannot connect', 'Paused']:
+            if msg.user == i.user and i.status in ["Queued", "Getting status", "User logged off", "Connection closed by peer", "Aborted", "Cannot connect", "Paused"]:
                 if msg.status != 0:
-                    if i.status not in ["Queued", 'Aborted', 'Cannot connect', 'Paused']:
+                    if i.status not in ["Queued", "Aborted", "Cannot connect", "Paused"]:
                         self.getFile(i.user, i.filename, i.path, i)
                 else:
-                    if i.status not in ['Aborted', 'Filtered']:
+                    if i.status not in ["Aborted", "Filtered"]:
                         i.status = "User logged off"
                         self.downloadspanel.update(i)
 
         for i in self.uploads[:]:
-            if msg.user == i.user and i.status != 'Finished':
+            if msg.user == i.user and i.status != "Finished":
                 if msg.status != 0:
-                    if i.status == 'Getting status':
+                    if i.status == "Getting status":
                         self.pushFile(i.user, i.filename, i.realfilename, i.path, i)
                 else:
                     if i.transfertimer is not None:
@@ -250,7 +250,7 @@ class Transfers:
         if transfer is None:
             transfer = Transfer(
                 user=user, filename=filename, path=path,
-                status='Getting status', size=size, bitrate=bitrate,
+                status="Getting status", size=size, bitrate=bitrate,
                 length=length
             )
 
@@ -260,7 +260,7 @@ class Transfers:
             else:
                 self._updateOrAppendUpload(user, filename, transfer)
         else:
-            transfer.status = 'Getting status'
+            transfer.status = "Getting status"
 
         try:
             status = self.users[user].status
@@ -275,7 +275,7 @@ class Transfers:
                     self.eventprocessor.logMessage(_("Filtering: %s") % filename, 5)
                     self.AbortTransfer(transfer)
                     # The string to be displayed on the GUI
-                    transfer.status = 'Filtered'
+                    transfer.status = "Filtered"
                     # In order to remove the filtered files from the saved download queue.
                     self.SaveDownloads()
             except:
@@ -286,7 +286,7 @@ class Transfers:
                 self.queue.put(slskmessages.AddUser(user))
             self.queue.put(slskmessages.GetUserStatus(user))
 
-        if transfer.status is not 'Filtered':
+        if transfer.status is not "Filtered":
             transfer.req = newId()
             self.transfers.add(transfer)
             realpath = self.eventprocessor.shares.virtual2real(filename)
@@ -339,13 +339,13 @@ class Transfers:
         key = (transfer.user, transfer.filename)
         try:
             self.downloads[key]
-            return (transfer, 'down')
+            return (transfer, "down")
         except KeyError:
             pass
 
         try:
             self.uploads[key]
-            return (transfer, 'up')
+            return (transfer, "up")
         except KeyError:
             pass
 
@@ -358,7 +358,7 @@ class Transfers:
 
         if transfer is not None:
             transfer.status = status
-            if direction == 'down':
+            if direction == "down":
                 self.downloadspanel.update(transfer)
             else:
                 self.uploadspanel.update(transfer)
@@ -368,7 +368,7 @@ class Transfers:
 
     def gettingAddress(self, req):
 
-        if self._updateStatus(req, 'Getting address'):
+        if self._updateStatus(req, "Getting address"):
             return
 
         print("Entering old part gettingAddress")
@@ -386,7 +386,7 @@ class Transfers:
         """ A connection is in progress, we got the address for a user we need
         to connect to."""
 
-        if self._updateStatus(req, 'Connecting'):
+        if self._updateStatus(req, "Connecting"):
             return
 
         print("Entering old part gotAddress")
@@ -405,7 +405,7 @@ class Transfers:
         connect to us. Note that all this logic is handled by the network
         event processor, we just provide a visual feedback to the user."""
 
-        if self._updateStatus(req, 'Waiting for peer to connect'):
+        if self._updateStatus(req, "Waiting for peer to connect"):
             return
 
         print("Entering old part gotConnectError")
@@ -425,7 +425,7 @@ class Transfers:
         (transfer, direction) = self._findTransfer(req)
 
         if transfer is not None:
-            if direction == 'down':
+            if direction == "down":
                 self._getCantConnectDownload(transfer)
             else:
                 self._getCantConnectUpload(transfer)
@@ -474,7 +474,7 @@ class Transfers:
         """ A transfer connection has been established,
         now exchange initialisation messages."""
 
-        if self._updateStatus(req, 'Initializing transfer'):
+        if self._updateStatus(req, "Initializing transfer"):
             return
 
         print("Entering old part gotFileConnect")
@@ -498,7 +498,7 @@ class Transfers:
         if transfer is not None:
             transfer.status = "Requesting file"
             transfer.requestconn = conn
-            if direction == 'down':
+            if direction == "down":
                 self.downloadspanel.update(transfer)
             else:
                 self.uploadspanel.update(transfer)
@@ -577,7 +577,7 @@ class Transfers:
 
                 transfer = Transfer(
                     user=user, filename=msg.file, path=path,
-                    status='Getting status', size=msg.filesize, req=msg.req
+                    status="Getting status", size=msg.filesize, req=msg.req
                 )
                 self.downloads.append(transfer)
                 self.SaveDownloads()
@@ -886,7 +886,7 @@ class Transfers:
         return False
 
     def getTransferringUsers(self):
-        return [i.user for i in self.uploads if i.req is not None or i.conn is not None or i.status == 'Getting status']  # some file is being transfered
+        return [i.user for i in self.uploads if i.req is not None or i.conn is not None or i.status == "Getting status"]  # some file is being transfered
 
     def transferNegotiating(self):
 
@@ -902,7 +902,7 @@ class Transfers:
                 elif i.conn is not None and i.speed is None:
                     count += 1
 
-                if i.status == 'Getting status':
+                if i.status == "Getting status":
                     count += 1
 
         return count
@@ -1013,7 +1013,7 @@ class Transfers:
             if i.req != msg.req:
                 continue
 
-            if i.status in ["Queued", 'User logged off', 'Paused'] + self.COMPLETED_TRANSFERS:
+            if i.status in ["Queued", "User logged off", "Paused"] + self.COMPLETED_TRANSFERS:
                 continue
 
             i.status = "Cannot connect"
@@ -1040,7 +1040,7 @@ class Transfers:
         (transfer, direction) = self._findTransfer(msg.req)
 
         if transfer is not None:
-            if direction == 'down':
+            if direction == "down":
                 self._FileRequestDownload(msg, transfer)
             else:
                 self._FileRequestUpload(msg, transfer)
@@ -1369,7 +1369,7 @@ class Transfers:
 
                         # walk through downloads and break if any file in the same folder exists, else execute
                         for ia in self.downloads:
-                            if ia.status not in ['Finished', 'Aborted', 'Paused', 'Filtered'] and ia.path and ia.path == i.path:
+                            if ia.status not in ["Finished", "Aborted", "Paused", "Filtered"] and ia.path and ia.path == i.path:
                                 break
                         else:
                             if config["transfers"]["shownotificationperfolder"]:
@@ -1770,7 +1770,7 @@ class Transfers:
 
         for i in self.downloads + self.uploads:
 
-            if i.requestconn == conn and i.status == 'Requesting file':
+            if i.requestconn == conn and i.status == "Requesting file":
                 i.requestconn = None
                 i.status = "Connection closed by peer"
                 i.req = None
@@ -2020,7 +2020,7 @@ class Transfers:
 
     def GetDownloads(self):
         """ Get a list of incomplete and not aborted downloads """
-        return [[i.user, i.filename, i.path, i.status, i.size, i.currentbytes, i.bitrate, i.length] for i in self.downloads if i.status != 'Finished']
+        return [[i.user, i.filename, i.path, i.status, i.size, i.currentbytes, i.bitrate, i.length] for i in self.downloads if i.status != "Finished"]
 
     def SaveDownloads(self):
         """ Save list of files to be downloaded """
