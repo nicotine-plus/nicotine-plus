@@ -227,7 +227,7 @@ class NowPlaying:
             self.player_replacers = ["$n"]
             isset = True
         elif self.NP_mpris.get_active():
-            self.player_replacers = ['$p', '$a', '$b', '$t', '$c', '$r', '$k', '$l']
+            self.player_replacers = ["$n", "$p", "$a", "$b", "$t", "$c", "$r", "$k", "$l"]
             self.player_input.set_text(_("Client name (empty = auto):"))
             isset = True
         elif self.NP_xmms2.get_active():
@@ -742,6 +742,12 @@ class NowPlaying:
             self.title['length'] = self.get_length_time(metadata['mpris:length'] / 1000000)
         except KeyError:
             self.title['length'] = '?'
+
+        if self.title['artist'] != "":
+            self.title['nowplaying'] += self.title['artist']
+
+        if self.title['title'] != "":
+            self.title['nowplaying'] += " - " + self.title['title']
 
         return True
 
