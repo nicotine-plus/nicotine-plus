@@ -216,7 +216,7 @@ class NowPlaying:
             isset = True
         elif self.NP_lastfm.get_active():
             self.player_replacers = ["$n", "$s", "$t", "$a"]
-            self.player_input.set_text(_("Username:"))
+            self.player_input.set_text(_("Username;APIKEY :"))
             isset = True
         elif self.NP_foobar.get_active():
             self.player_replacers = ["$n"]
@@ -230,7 +230,7 @@ class NowPlaying:
             isset = True
         elif self.NP_other.get_active():
             self.player_replacers = ["$n"]
-            self.player_input.set_text(_("Command:"))
+            self.player_input.set_text(_("Command :"))
             isset = True
 
         self.NPCommand.set_sensitive(
@@ -408,10 +408,6 @@ class NowPlaying:
         self.frame.np.config.writeConfiguration()
 
         self.quit(None)
-
-    def get_custom_widget(self, id, string1, string2, int1, int2):
-        w = gtk.Label(_("(custom widget: %s)") % id)
-        return w
 
     def bmpx(self):
 
@@ -782,74 +778,36 @@ class NowPlaying:
 
     def lastfm(self):
 
-        def lastfm_parse(buf):
-
-            from time import time, altzone
-            try:
-                i = buf.index("<artist")
-                i = buf[i+1:].index(">") + i + 2
-                j = buf[i:].index("<") + i
-
-                artist = buf[i:j]
-
-                i = buf[j:].index("<name>") + j + 6
-                j = buf[i:].index("</name>") + i
-
-                title = buf[i:j]
-
-                i = buf[j:].index("<date") + j
-                j = buf[i:].index('"') + i + 1
-                i = buf[j:].index('"') + j
-
-                date = int(buf[j:i])  # utc
-                utc_now = time() + altzone
-                playing = utc_now - date < 300
-
-                return (playing, artist, title)
-            except:
-                return (None, None, None)
+        import httplib
+        import json
 
         try:
-            from socket import socket, AF_INET, SOCK_STREAM
-        except Exception, error:
-            self.frame.logMessage(_("ERROR while loading socket module: %(error)s") % {"command": othercommand, "error": error})
+            conn = httplib.HTTPConnection("ws.audioscrobbler.com")
+        except Exception as error:
+            self.frame.logMessage(_("ERROR: could not connect to audioscrobbler: %(error)s") % {"error": error})
             return None
-
-        user = self.NPCommand.get_text()
-        host = ("ws.audioscrobbler.com", 80)
-        req = 'GET /2.0/user/%s/recenttracks.xml HTTP/1.1\r\n' \
-               'Host: %s\r\n\r\n' % (user, host[0])
-
-        sock = socket(AF_INET, SOCK_STREAM)
 
         try:
-            sock.connect(host)
-        except Exception, error:
-            self.frame.logMessage(_("ERROR: could not connect to audioscrobbler: %s")) % error[1]
+            (user, apikey) = self.NPCommand.get_text().split(';')
+        except ValueError as error:
+            self.frame.logMessage(_("ERROR: Please provide both your lastfm username and API key"))
             return None
 
-        sock.send(req)
-        data = sock.recv(1024)
-        sock.close()
+        conn.request("GET", "/2.0/?method=user.getrecenttracks&user=" + user + "&api_key=" + apikey + "&format=json")
+        resp = conn.getresponse()
+        data = resp.read()
 
-        (status, artist, title) = lastfm_parse(data)
-
-        if status is None:
+        if resp.status != 200 or resp.reason != "OK":
+            self.frame.logMessage(_("ERROR: could not get recenttrack from audioscrobbler: %(error)s") % {"error": str(data)})
             return None
 
-        slist = self.NPFormat.child.get_text()
+        json_api = json.loads(data)
+        lastplayed = json_api["recenttracks"]["track"][0]
 
-        if "$n" in slist:
-            self.title["nowplaying"] = "%s: %s - %s" % ((_("Last played"), _("Now playing"))[status], artist, title)
-
-        if "$t" in slist:
-            self.title["title"] = title
-
-        if "$a" in slist:
-            self.title["artist"] = artist
-
-        if "$s" in slist:
-            self.title["status"] = (_("paused"), _("playing"))[status]
+        self.title["artist"] = lastplayed["artist"]["#text"]
+        self.title["title"] = lastplayed["name"]
+        self.title["album"] = lastplayed["album"]["#text"]
+        self.title["nowplaying"] = "%s: %s - %s - %s" % (_("Last played"), self.title["artist"], self.title["album"], self.title["title"])
 
         return True
 
@@ -976,6 +934,6 @@ if __name__ == "__main__":
     fakenp.NPCommand = FakeInputBox('')  # if not empty specifies the player
     fakenp.Example = FakeInputBox()
     fakenp.title_clear()
-    ret = fakenp.xmms2()
+    ret = fakenp.lastfm()
     print("Return: %s" % ret)
     print("Meta-info: %s" % fakenp.title)
