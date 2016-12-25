@@ -320,42 +320,56 @@ def executeCommand(command, replacement=None, background=True, returnoutput=Fals
     # Example command: "C:\Program Files\WinAmp\WinAmp.exe" --xforce "--title=My Title" $ | flite -t
     if returnoutput:
         background = False
+
     command = command.strip()
+
     if command.endswith("&"):
         command = command[:-1]
         if returnoutput:
             print "Yikes, I was asked to return output but I'm also asked to launch the process in the background. returnoutput gets precedent."
         else:
             background = True
+
     unparsed = command
     arguments = []
+
     while unparsed.count('"') > 1:
+
         (pre, argument, post) = unparsed.split('"', 2)
         if pre:
             arguments += pre.rstrip(' ').split(' ')
+
         arguments.append(argument)
         unparsed = post.lstrip(' ')
+
     if unparsed:
         arguments += unparsed.split(' ')
+
     # arguments is now: ['C:\Program Files\WinAmp\WinAmp.exe', '--xforce', '--title=My Title', '$', '|', 'flite', '-t']
     subcommands = []
     current = []
+
     for argument in arguments:
         if argument in ('|',):
             subcommands.append(current)
             current = []
         else:
             current.append(argument)
+
     subcommands.append(current)
+
     # subcommands is now: [['C:\Program Files\WinAmp\WinAmp.exe', '--xforce', '--title=My Title', '$'], ['flite', '-t']]
     if replacement:
         for i in xrange(0, len(subcommands)):
             subcommands[i] = [x.replace(placeholder, replacement) for x in subcommands[i]]
+
     # Chaining commands...
     finalstdout = None
     if returnoutput:
         finalstdout = PIPE
+
     procs = []
+
     try:
         if len(subcommands) == 1:  # no need to fool around with pipes
             procs.append(Popen(subcommands[0], stdout=finalstdout))
@@ -368,8 +382,10 @@ def executeCommand(command, replacement=None, background=True, returnoutput=Fals
             procs[-1].wait()
     except:
         raise RuntimeError("Problem while executing command %s (%s of %s)" % (subcommands[len(procs)], len(procs)+1, len(subcommands)))
+
     if not returnoutput:
         return True
+
     return procs[-1].communicate()[0]
 
 
