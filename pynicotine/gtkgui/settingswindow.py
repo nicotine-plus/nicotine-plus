@@ -1489,7 +1489,7 @@ class SoundsFrame(buildFrame):
             }
         }
 
-        for executable in ["xmms -e $", "audacious -e $", "amarok -a $", 'exaile $']:
+        for executable in ["amarok -a $", "audacious -e $", "exaile $", "xmms2 add -f $"]:
             self.audioPlayerCombo.append_text(executable)
 
         for executable in ["flite -t $", "echo $ | festival --tts"]:
