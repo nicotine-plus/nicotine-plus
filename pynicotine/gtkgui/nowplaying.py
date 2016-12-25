@@ -145,8 +145,6 @@ class NowPlaying:
             self.NP_mpd.set_active(1)
         elif player == "banshee":
             self.NP_banshee.set_active(1)
-        elif player == "bmpx":
-            self.NP_bmpx.set_active(1)
         elif player == "exaile":
             self.NP_exaile.set_active(1)
         elif player == "lastfm":
@@ -207,9 +205,6 @@ class NowPlaying:
             isset = True
         elif self.NP_audacious.get_active():
             self.player_replacers = ["$n", "$t", "$l", "$a", "$b", "$c", "$k", "$y", "$r", "$f", "$s"]
-            isset = True
-        elif self.NP_bmpx.get_active():
-            self.player_replacers = ["$n", "$t", "$l", "$a", "$b", "$k", "$y", "$r", "$f"]
             isset = True
         elif self.NP_exaile.get_active():
             self.player_replacers = ["$t", "$l", "$a", "$b"]
@@ -292,7 +287,7 @@ class NowPlaying:
 
     def DisplayNowPlaying(self, widget, test=0, callback=None):
 
-        if (self.NP_bmpx.get_active() or self.NP_mpris.get_active()):
+        if self.NP_mpris.get_active():
             # dbus (no threads, please)
             self.GetNP(None, test, callback)
         else:
@@ -315,8 +310,6 @@ class NowPlaying:
                 result = self.mpd()
             elif self.NP_banshee.get_active():
                 result = self.banshee()
-            elif self.NP_bmpx.get_active():
-                result = self.bmpx()
             elif self.NP_exaile.get_active():
                 result = self.exaile()
             elif self.NP_lastfm.get_active():
@@ -387,8 +380,6 @@ class NowPlaying:
             player = "mpd"
         elif self.NP_banshee.get_active():
             player = "banshee"
-        elif self.NP_bmpx.get_active():
-            player = "bmpx"
         elif self.NP_exaile.get_active():
             player = "exaile"
         elif self.NP_lastfm.get_active():
@@ -408,37 +399,6 @@ class NowPlaying:
         self.frame.np.config.writeConfiguration()
 
         self.quit(None)
-
-    def bmpx(self):
-
-        if self.bus is None:
-            self.frame.logMessage(_("ERROR: DBus not available:") + " " + "BMPx" + " " + _("cannot be contacted"))
-            return
-
-        try:
-            bmp_object = self.bus.get_object('org.beepmediaplayer.bmp', '/Core')
-            bmp_iface = self.bus.Interface(bmp_object, 'org.beepmediaplayer.bmp')
-        except Exception, error:
-            self.frame.logMessage(_("ERROR while accessing the %(program)s DBus interface: %(error)s") % {"program": "BMPx", "error": error})
-            return
-
-        try:
-            if bmp_iface.GetCurrentSource() == -1:
-                return None
-            metadata = bmp_iface.GetMetadataFromSource(bmp_iface.GetCurrentSource())
-            self.title["bitrate"] = str(metadata["bitrate"])
-            self.title["track"] = str(metadata["tracknumber"])
-            self.title["title"] = metadata["title"]
-            self.title["artist"] = metadata["artist"]
-            self.title["length"] = self.get_length_time(metadata["time"])
-            self.title["nowplaying"] = metadata["artist"] + " - " + metadata["title"]
-            self.title["year"] = str(metadata["date"])
-            self.title["album"] = metadata["album"]
-            self.title["filename"] = metadata["location"]
-            return True
-        except Exception, error:
-            self.frame.logMessage(_("ERROR while reading data from the %(program)s DBus interface: %(error)s") % {"program": "BMPx", "error": error})
-            return None
 
     def mpd(self):
 
