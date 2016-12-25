@@ -30,8 +30,8 @@ import thread
 import threading
 import copy
 import sys
-# from pynicotine.utils import executeCommand
-# from pynicotine.logfacility import log
+from pynicotine.utils import executeCommand
+from pynicotine.logfacility import log
 
 if sys.platform == "win32":
     HAS_WIN32GUI = False
