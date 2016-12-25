@@ -482,7 +482,7 @@ class NowPlaying:
         [matches.__setitem__(i[0].split(':')[0], filter(len, i[1:])[0]) for i in re.findall(r"(?m)^(title: (?P<title>.*?)|artist: (?P<artist>.*?)|album: (?P<album>.*?)|track-number: (?P<track>.*?)|duration: (?P<length>.*?)|year: (?P<year>.*?)|bit-rate: (?P<bitrate>.*?)|uri: (?P<filename>.*?))$", output)]
 
         if matches:
-            print matches
+
             if "$n" in slist:
                 self.title["nowplaying"] = "%(artist)s - %(title)s" % matches
 
@@ -495,6 +495,7 @@ class NowPlaying:
                     self.title[key] = value.split('%')[0] + ''.join([i[:2].decode('hex')+i[2:] for i in value.split('%')[1:]]).split('://')[1]
                 else:
                     self.title[key] = value
+
             return True
         else:
             return False
@@ -503,7 +504,6 @@ class NowPlaying:
         return executeCommand(" ".join(["banshee"] + commands), returnoutput=True)
 
     def exaile(self):
-        slist = self.NPFormat.child.get_text()
         output = executeCommand('exaile --get-album --get-artist --get-length --get-title', returnoutput=True)
         output = output.split('\n')
         self.title["title"] = output[0]
@@ -514,7 +514,6 @@ class NowPlaying:
 
     def amarok2(self):
 
-        slist = self.NPFormat.child.get_text()
         if not self.bus:
             log.addwarning(_("Failed to import DBus, cannot read out Amarok2"))
             return
