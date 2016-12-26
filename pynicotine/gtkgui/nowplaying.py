@@ -82,6 +82,7 @@ class NowPlaying:
 
         self.defaultlist = [
             "$n",
+            "$n ($f)",
             "$a - $t",
             "[$a] $t",
             "$a - $b - $t",
@@ -435,40 +436,20 @@ class NowPlaying:
         return output
 
     def banshee(self):
+        """ Function to get banshee currently playing song """
 
-        slist = self.NPFormat.child.get_text()
-        if "$n" in slist:
-            commandlist = ["--query-artist", "--query-title"]
-        else:
+        from urllib import unquote
 
-            commandlist = []
-
-            if "$t" in slist:
-                commandlist.append("--query-title")
-
-            if "$a" in slist:
-                commandlist.append("--query-artist")
-
-            if "$b" in slist:
-                commandlist.append("--query-album")
-
-            if "$k" in slist:
-                commandlist.append("--query-track-count")
-
-            if "$l" in slist:
-                commandlist.append("--query-duration")
-
-            if "$y" in slist:
-                commandlist.append("--query-year")
-
-            if "$r" in slist:
-                commandlist.append("--query-bit-rate")
-
-            if "$f" in slist:
-                commandlist.append("--query-uri")
-
-        if not commandlist:
-            return False
+        commandlist = [
+            "--query-title",
+            "--query-artist",
+            "--query-album",
+            "--query-track-count",
+            "--query-duration",
+            "--query-year",
+            "--query-bit-rate",
+            "--query-uri"
+        ]
 
         output = self.banshee_command(commandlist)
 
@@ -477,16 +458,20 @@ class NowPlaying:
 
         if matches:
 
-            if "$n" in slist:
-                self.title["nowplaying"] = "%(artist)s - %(title)s" % matches
+            self.title["nowplaying"] = "%(artist)s - %(title)s" % matches
 
             for key, value in matches.iteritems():
+
                 if key == "duration":
-                    # Convert seconds to minutes:seconds
-                    self.title[key] = "%s:%02d" % (int(round(float(value)/60)), float(value)-(round(float(value)/60)*60))
-                elif key == "filename":
-                    # Convert URI path to normal path
-                    self.title[key] = value.split('%')[0] + ''.join([i[:2].decode('hex')+i[2:] for i in value.split('%')[1:]]).split('://')[1]
+                    value = value.replace(',', '.')
+                    self.title["length"] = self.get_length_time(float(value))
+                elif key == "bit-rate":
+                    self.title["bitrate"] = value
+                elif key == "track-number":
+                    self.title["track"] = value
+                elif key == "uri":
+                    value = unquote(value)
+                    self.title["filename"] = value.split('://')[1]
                 else:
                     self.title[key] = value
 
@@ -495,6 +480,8 @@ class NowPlaying:
             return False
 
     def banshee_command(self, commands):
+        """ Wrapper that calls banshee commandline """
+
         return executeCommand(" ".join(["banshee"] + commands), returnoutput=True)
 
     def exaile(self):
@@ -547,6 +534,7 @@ class NowPlaying:
         return True
 
     def audacious(self):
+        """ Function to get audacious currently playing song """
 
         slist = self.NPFormat.child.get_text()
         output = ""
@@ -608,6 +596,7 @@ class NowPlaying:
         return True
 
     def audacious_command(self, command, subcommand=''):
+        """ Wrapper that calls audacious commandline audtool and parse the output """
 
         try:
             output = executeCommand("audtool %s %s" % (command, subcommand), returnoutput=True).split('\n')[0]
@@ -897,9 +886,9 @@ if __name__ == "__main__":
             print("logMessage: %s" % text)
 
     fakenp = NowPlaying(FakeFrame(), fake=True)
-    fakenp.NPCommand = FakeInputBox('')  # if not empty specifies the player
+    fakenp.NPCommand = FakeInputBox('')
     fakenp.Example = FakeInputBox()
     fakenp.title_clear()
-    ret = fakenp.lastfm()
+    ret = fakenp.banshee()
     print("Return: %s" % ret)
     print("Meta-info: %s" % fakenp.title)
