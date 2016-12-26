@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-25 00:07+0100\n"
+"POT-Creation-Date: 2016-12-26 18:17+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -549,9 +549,6 @@ msgstr ""
 msgid "MPD via mpc"
 msgstr ""
 
-msgid "BMPx"
-msgstr ""
-
 msgid "Exaile"
 msgstr ""
 
@@ -561,7 +558,7 @@ msgstr ""
 msgid "Other"
 msgstr ""
 
-msgid "Amarok2"
+msgid "Amarok"
 msgstr ""
 
 msgid "Banshee"
@@ -570,7 +567,7 @@ msgstr ""
 msgid "foobar"
 msgstr ""
 
-msgid "MPRIS"
+msgid "MPRIS (v2)"
 msgstr ""
 
 msgid "Player Command/Username"
@@ -2585,13 +2582,13 @@ msgstr ""
 msgid "ERROR: Gstreamer-python could not play: %(error)s"
 msgstr ""
 
-msgid "Username:"
+msgid "Username;APIKEY :"
 msgstr ""
 
-msgid "Client name (empty = auto):"
+msgid "Client name (empty = auto) :"
 msgstr ""
 
-msgid "Command:"
+msgid "Command :"
 msgstr ""
 
 msgid "Title"
@@ -2633,27 +2630,17 @@ msgid ""
 "player?"
 msgstr ""
 
-msgid "ERROR: DBus not available:"
+msgid "ERROR: amarok: Failed to import DBus, cannot read out amarok"
 msgstr ""
 
-msgid "cannot be contacted"
-msgstr ""
-
-#, python-format
-msgid "ERROR while accessing the %(program)s DBus interface: %(error)s"
+msgid "ERROR: audacious: audtool didn't detect a running Audacious session."
 msgstr ""
 
 #, python-format
-msgid "ERROR while reading data from the %(program)s DBus interface: %(error)s"
+msgid "ERROR: MPRIS: failed to load dbus module: %(error)s"
 msgstr ""
 
-msgid "Failed to import DBus, cannot read out Amarok2"
-msgstr ""
-
-msgid "ERROR: audtool didn't detect a running Audacious session."
-msgstr ""
-
-msgid "Could not find a suitable MPRIS player."
+msgid "ERROR: MPRIS: Could not find a suitable MPRIS player."
 msgstr ""
 
 #, python-format
@@ -2665,27 +2652,30 @@ msgid "Auto-detected MPRIS player: %s."
 msgstr ""
 
 #, python-format
-msgid "Something went wrong while querying %(player)s: %(exception)s"
+msgid ""
+"ERROR: MPRIS: Something went wrong while querying %(player)s: %(exception)s"
 msgstr ""
 
 #, python-format
-msgid "ERROR while loading socket module: %(error)s"
+msgid "ERROR: foobar: failed to load win32gui module: %(error)s"
+msgstr ""
+
+msgid "ERROR: foobar: is only supported on windows."
 msgstr ""
 
 #, python-format
-msgid "ERROR: could not connect to audioscrobbler: %s"
+msgid "ERROR: lastfm: Could not connect to audioscrobbler: %(error)s"
+msgstr ""
+
+msgid "ERROR: lastfm: Please provide both your lastfm username and API key"
+msgstr ""
+
+#, python-format
+msgid ""
+"ERROR: lastfm: Could not get recent track from audioscrobbler: %(error)s"
 msgstr ""
 
 msgid "Last played"
-msgstr ""
-
-msgid "Now playing"
-msgstr ""
-
-msgid "paused"
-msgstr ""
-
-msgid "playing"
 msgstr ""
 
 #, python-format
@@ -2693,22 +2683,22 @@ msgid "ERROR: Executing '%(command)s' failed: %(error)s"
 msgstr ""
 
 #, python-format
-msgid "ERROR xmms2: failed to load xmmsclient module: %(error)s"
+msgid "ERROR: xmms2: failed to load xmmsclient module: %(error)s"
 msgstr ""
 
 #, python-format
-msgid "ERROR xmms2: connecting failed: %(error)s"
+msgid "ERROR: xmms2: connecting failed: %(error)s"
 msgstr ""
 
 #, python-format
-msgid "ERROR xmms2: playback current id error: %(error)s"
+msgid "ERROR: xmms2: playback current id error: %(error)s"
 msgstr ""
 
-msgid "ERROR xmms2: nothing is playing"
+msgid "ERROR: xmms2: nothing is playing"
 msgstr ""
 
 #, python-format
-msgid "ERROR xmms2: medialib get info error: %(error)s"
+msgid "ERROR: xmms2: medialib get info error: %(error)s"
 msgstr ""
 
 msgid "Client Version"
