@@ -49,19 +49,24 @@ class NowPlaying:
         except Exception, e:
             self.bus = None
 
+        # All things that aren't needed for a faked instance
         if fake:
             return
 
-        # All things that aren't needed for a faked instance
+        # Build the window
         self.accel_group = gtk.AccelGroup()
-        self.wTree = gtk.glade.XML(os.path.join(os.path.dirname(os.path.realpath(__file__)), "nowplaying.glade"), None)
+        builder = gtk.Builder()
+        builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "nowplaying.ui"))
+        self.NowPlaying = builder.get_object("NowPlaying")
+        builder.connect_signals(self)
 
-        widgets = self.wTree.get_widget_prefix("")
-        for i in widgets:
-            name = gtk.glade.get_widget_name(i)
-            self.__dict__[name] = i
+        self.kids = {}
 
-        self.wTree.signal_autoconnect(self)
+        for i in builder.get_objects():
+            try:
+                self.kids[gtk.Buildable.get_name(i)] = i
+            except TypeError:
+                pass
 
         self.NowPlaying.set_icon(self.frame.images["n"])
         self.NowPlaying.set_transient_for(self.frame.MainWindow)
@@ -84,9 +89,9 @@ class NowPlaying:
         self.title_clear()
         self.player_replacers = []
         self.NPFormat_List = gtk.ListStore(gobject.TYPE_STRING)
-        self.NPFormat.set_model(self.NPFormat_List)
-        self.NPFormat.set_text_column(0)
-        self.NPFormat.child.connect("activate", self.OnAddFormat)
+        self.kids['NPFormat'].set_model(self.NPFormat_List)
+        self.kids['NPFormat'].set_text_column(0)
+        self.kids['NPFormat'].child.connect("activate", self.OnAddFormat)
         self.OnNPPlayer(None)
 
         # Set the active radio button
@@ -94,24 +99,24 @@ class NowPlaying:
         self.SetPlayer(config["players"]["npplayer"])
 
         if config["players"]["npformat"] != "":
-            self.NPFormat.child.set_text(config["players"]["npformat"])
+            self.kids['NPFormat'].child.set_text(config["players"]["npformat"])
 
         if config["players"]["npformatlist"] != []:
             if config["players"]["npformat"] == "":
-                self.NPFormat.child.set_text(str(config["players"]["npformatlist"][0]))
+                self.kids['NPFormat'].child.set_text(str(config["players"]["npformatlist"][0]))
             for item in config["players"]["npformatlist"]:
                 self.NPFormat_List.append([item])
 
         if config["players"]["npformat"] == "":
-            self.NPFormat.child.set_text(str(self.defaultlist[0]))
+            self.kids['NPFormat'].child.set_text(str(self.defaultlist[0]))
 
-        self.NPCommand.set_text(config["players"]["npothercommand"])
+        self.kids['NPCommand'].set_text(config["players"]["npothercommand"])
 
         for item in self.defaultlist:
             self.NPFormat_List.append([str(item)])
 
     def title_clear(self):
-        self.Example.set_text("")
+        self.kids['Example'].set_text("")
         self.title = {
             "title": "",
             "artist": "",
@@ -128,32 +133,32 @@ class NowPlaying:
     def SetPlayer(self, player):
 
         if player == "amarok":
-            self.NP_amarok.set_active(1)
+            self.kids['NP_amarok'].set_active(1)
         elif player == "audacious":
-            self.NP_audacious.set_active(1)
+            self.kids['NP_audacious'].set_active(1)
         elif player == "mpd":
-            self.NP_mpd.set_active(1)
+            self.kids['NP_mpd'].set_active(1)
         elif player == "banshee":
-            self.NP_banshee.set_active(1)
+            self.kids['NP_banshee'].set_active(1)
         elif player == "exaile":
-            self.NP_exaile.set_active(1)
+            self.kids['NP_exaile'].set_active(1)
         elif player == "lastfm":
-            self.NP_lastfm.set_active(1)
+            self.kids['NP_lastfm'].set_active(1)
         elif player == "foobar":
-            self.NP_foobar.set_active(1)
+            self.kids['NP_foobar'].set_active(1)
         elif player == "mpris":
-            self.NP_mpris.set_active(1)
+            self.kids['NP_mpris'].set_active(1)
         elif player == "xmms2":
-            self.NP_xmms2.set_active(1)
+            self.kids['NP_xmms2'].set_active(1)
         elif player == "other":
-            self.NP_other.set_active(1)
+            self.kids['NP_other'].set_active(1)
             self.player_replacers = ["$n"]
         else:
-            self.NP_other.set_active(1)
+            self.kids['NP_other'].set_active(1)
 
     def OnAddFormat(self, widget):
 
-        text = self.NPFormat.child.get_text().strip()
+        text = self.kids['NPFormat'].child.get_text().strip()
         if text.isspace() or text == "":
             return
 
@@ -170,7 +175,7 @@ class NowPlaying:
         self.frame.np.config.writeConfiguration()
 
         # Repopulate the combo list
-        self.NPFormat.get_model().clear()
+        self.kids['NPFormat'].get_model().clear()
         templist = []
         for i in items:
             if i not in templist:
@@ -178,50 +183,50 @@ class NowPlaying:
 
         templist += self.defaultlist
         for i in templist:
-            self.NPFormat.append_text(i)
+            self.kids['NPFormat'].append_text(i)
 
     def OnNPPlayer(self, widget):
 
         isset = False
 
-        if self.NP_mpd.get_active():
+        if self.kids['NP_mpd'].get_active():
             self.player_replacers = ["$n", "$t", "$a", "$b",  "$f", "$k"]
             isset = True
-        elif self.NP_banshee.get_active():
+        elif self.kids['NP_banshee'].get_active():
             self.player_replacers = ["$n", "$t", "$l", "$a", "$b", "$k", "$y", "$r", "$f"]
             isset = True
-        elif self.NP_amarok.get_active():
+        elif self.kids['NP_amarok'].get_active():
             self.player_replacers = ["$n", "$t", "$l", "$a", "$b", "$c", "$k", "$y", "$r", "$f"]
             isset = True
-        elif self.NP_audacious.get_active():
+        elif self.kids['NP_audacious'].get_active():
             self.player_replacers = ["$n", "$t", "$l", "$a", "$b", "$c", "$k", "$y", "$r", "$f"]
             isset = True
-        elif self.NP_exaile.get_active():
+        elif self.kids['NP_exaile'].get_active():
             self.player_replacers = ["$n", "$t", "$l", "$a", "$b"]
             isset = True
-        elif self.NP_lastfm.get_active():
+        elif self.kids['NP_lastfm'].get_active():
             self.player_replacers = ["$n", "$t", "$a", "$b"]
-            self.player_input.set_text(_("Username;APIKEY :"))
+            self.kids['player_input'].set_text(_("Username;APIKEY :"))
             isset = True
-        elif self.NP_foobar.get_active():
+        elif self.kids['NP_foobar'].get_active():
             self.player_replacers = ["$n"]
             isset = True
-        elif self.NP_mpris.get_active():
+        elif self.kids['NP_mpris'].get_active():
             self.player_replacers = ["$n", "$p", "$a", "$b", "$t", "$c", "$r", "$k", "$l"]
-            self.player_input.set_text(_("Client name (empty = auto) :"))
+            self.kids['player_input'].set_text(_("Client name (empty = auto) :"))
             isset = True
-        elif self.NP_xmms2.get_active():
+        elif self.kids['NP_xmms2'].get_active():
             self.player_replacers = ["$n", "$t", "$l", "$a", "$b", "$c", "$k", "$y", "$r", "$f"]
             isset = True
-        elif self.NP_other.get_active():
+        elif self.kids['NP_other'].get_active():
             self.player_replacers = ["$n"]
-            self.player_input.set_text(_("Command :"))
+            self.kids['player_input'].set_text(_("Command :"))
             isset = True
 
-        self.NPCommand.set_sensitive(
-            self.NP_lastfm.get_active() or
-            self.NP_other.get_active() or
-            self.NP_mpris.get_active()
+        self.kids['NPCommand'].set_sensitive(
+            self.kids['NP_lastfm'].get_active() or
+            self.kids['NP_other'].get_active() or
+            self.kids['NP_mpris'].get_active()
         )
 
         legend = ""
@@ -252,10 +257,10 @@ class NowPlaying:
 
             legend += "\n"
 
-        self.Legend.set_text(legend)
+        self.kids['Legend'].set_text(legend)
 
         if not isset:
-            self.Legend.set_text("")
+            self.kids['Legend'].set_text("")
 
     def OnNPCancel(self, widget):
         self.quit(None)
@@ -275,7 +280,7 @@ class NowPlaying:
 
     def DisplayNowPlaying(self, widget, test=0, callback=None):
 
-        if self.NP_mpris.get_active():
+        if self.kids['NP_mpris'].get_active():
             # dbus (no threads, please)
             self.GetNP(None, test, callback)
         else:
@@ -290,25 +295,25 @@ class NowPlaying:
 
         try:
 
-            if self.NP_amarok.get_active():
+            if self.kids['NP_amarok'].get_active():
                 result = self.amarok()
-            elif self.NP_audacious.get_active():
+            elif self.kids['NP_audacious'].get_active():
                 result = self.audacious()
-            elif self.NP_mpd.get_active():
+            elif self.kids['NP_mpd'].get_active():
                 result = self.mpd()
-            elif self.NP_banshee.get_active():
+            elif self.kids['NP_banshee'].get_active():
                 result = self.banshee()
-            elif self.NP_exaile.get_active():
+            elif self.kids['NP_exaile'].get_active():
                 result = self.exaile()
-            elif self.NP_lastfm.get_active():
+            elif self.kids['NP_lastfm'].get_active():
                 result = self.lastfm()
-            elif self.NP_foobar.get_active():
+            elif self.kids['NP_foobar'].get_active():
                 result = self.foobar()
-            elif self.NP_xmms2.get_active():
+            elif self.kids['NP_xmms2'].get_active():
                 result = self.xmms2()
-            elif self.NP_other.get_active():
+            elif self.kids['NP_other'].get_active():
                 result = self.other()
-            elif self.NP_mpris.get_active():
+            elif self.kids['NP_mpris'].get_active():
                 result = self.mpris()
 
         except RuntimeError:
@@ -329,7 +334,7 @@ class NowPlaying:
             except TypeError:
                 self.title[key] = value  # already unicode
 
-        title = self.NPFormat.child.get_text()
+        title = self.kids['NPFormat'].child.get_text()
         title = title.replace("%", "%%")  # Escaping user supplied % symbols
         title = title.replace("$t", "%(title)s")
         title = title.replace("$a", "%(artist)s")
@@ -347,7 +352,7 @@ class NowPlaying:
         title = ' '.join([x for x in title.replace('\r', '\n').split('\n') if x])
 
         if test:
-            self.Example.set_text(title)
+            self.kids['Example'].set_text(title)
             return None
 
         if title:
@@ -359,37 +364,37 @@ class NowPlaying:
 
     def OnNPSave(self, widget):
 
-        if self.NP_amarok.get_active():
+        if self.kids['NP_amarok'].get_active():
             player = "amarok"
-        elif self.NP_audacious.get_active():
+        elif self.kids['NP_audacious'].get_active():
             player = "audacious"
-        elif self.NP_mpd.get_active():
+        elif self.kids['NP_mpd'].get_active():
             player = "mpd"
-        elif self.NP_banshee.get_active():
+        elif self.kids['NP_banshee'].get_active():
             player = "banshee"
-        elif self.NP_exaile.get_active():
+        elif self.kids['NP_exaile'].get_active():
             player = "exaile"
-        elif self.NP_lastfm.get_active():
+        elif self.kids['NP_lastfm'].get_active():
             player = "lastfm"
-        elif self.NP_foobar.get_active():
+        elif self.kids['NP_foobar'].get_active():
             player = "foobar"
-        elif self.NP_mpris.get_active():
+        elif self.kids['NP_mpris'].get_active():
             player = "mpris"
-        elif self.NP_xmms2.get_active():
+        elif self.kids['NP_xmms2'].get_active():
             player = "xmms2"
-        elif self.NP_other.get_active():
+        elif self.kids['NP_other'].get_active():
             player = "other"
 
         self.frame.np.config.sections["players"]["npplayer"] = player
-        self.frame.np.config.sections["players"]["npothercommand"] = self.NPCommand.get_text()
-        self.frame.np.config.sections["players"]["npformat"] = self.NPFormat.child.get_text()
+        self.frame.np.config.sections["players"]["npothercommand"] = self.kids['NPCommand'].get_text()
+        self.frame.np.config.sections["players"]["npformat"] = self.kids['NPFormat'].child.get_text()
         self.frame.np.config.writeConfiguration()
 
         self.quit(None)
 
     def mpd(self):
 
-        format = self.NPFormat.child.get_text()
+        format = self.kids['NPFormat'].child.get_text()
 
         if "$a" in format:
             output = self.mpd_command("%artist%")
@@ -528,7 +533,7 @@ class NowPlaying:
     def audacious(self):
         """ Function to get audacious currently playing song """
 
-        slist = self.NPFormat.child.get_text()
+        slist = self.kids['NPFormat'].child.get_text()
         output = ""
         self.audacious_running = True
 
@@ -612,7 +617,8 @@ class NowPlaying:
             log.addwarning(_("ERROR: MPRIS: failed to load dbus module: %(error)s") % {"error": error})
             return None
 
-        player = self.NPCommand.get_text()
+        player = self.kids['NPCommand'].get_text()
+
         dbus_mpris_service = u'org.mpris.MediaPlayer2.'
         dbus_mpris_player_service = u'org.mpris.MediaPlayer2.Player'
         dbus_mpris_path = u'/org/mpris/MediaPlayer2'
@@ -719,7 +725,7 @@ class NowPlaying:
     def get_length_time(self, length):
         """ Function used to normalize tracks duration """
 
-        if length != '' and length != None:
+        if length != '' and length is not None:
 
             minutes = int(length)/60
             seconds = str(int(length) - (60 * minutes))
@@ -746,7 +752,7 @@ class NowPlaying:
             return None
 
         try:
-            (user, apikey) = self.NPCommand.get_text().split(';')
+            (user, apikey) = self.kids['NPCommand'].get_text().split(';')
         except ValueError as error:
             log.addwarning(_("ERROR: lastfm: Please provide both your lastfm username and API key"))
             return None
@@ -771,7 +777,7 @@ class NowPlaying:
 
     def other(self):
         try:
-            othercommand = self.NPCommand.get_text()
+            othercommand = self.kids['NPCommand'].get_text()
             if othercommand == "":
                 return None
 
@@ -869,29 +875,3 @@ class NowPlaying:
             pass
 
         return True
-
-if __name__ == "__main__":
-
-    class FakeInputBox(object):
-
-        def __init__(self, text=''):
-            self.set_text(text)
-
-        def get_text(self):
-            return self.text
-
-        def set_text(self, text):
-            self.text = text
-
-    class FakeFrame(object):
-        @classmethod
-        def logMessage(cls, text):
-            print("logMessage: %s" % text)
-
-    fakenp = NowPlaying(FakeFrame(), fake=True)
-    fakenp.NPCommand = FakeInputBox('')
-    fakenp.Example = FakeInputBox()
-    fakenp.title_clear()
-    ret = fakenp.banshee()
-    print("Return: %s" % ret)
-    print("Meta-info: %s" % fakenp.title)

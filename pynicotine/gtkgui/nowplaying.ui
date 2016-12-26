@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<glade-interface>
-  <!-- interface-requires gtk+ 2.24 -->
+<interface>
+  <requires lib="gtk+" version="2.24"/>
   <!-- interface-naming-policy project-wide -->
-  <widget class="GtkWindow" id="NowPlaying">
+  <object class="GtkWindow" id="NowPlaying">
     <property name="width_request">800</property>
     <property name="can_focus">False</property>
     <property name="title" translatable="yes">Nicotine+: Configure Now Playing</property>
@@ -10,19 +10,19 @@
     <property name="modal">True</property>
     <property name="window_position">center-on-parent</property>
     <child>
-      <widget class="GtkVBox" id="vbox1">
+      <object class="GtkVBox" id="vbox1">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="spacing">5</property>
         <child>
-          <widget class="GtkLabel" id="label1">
+          <object class="GtkLabel" id="label1">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="xalign">0</property>
             <property name="xpad">5</property>
             <property name="label" translatable="yes">Display what your Media Player is playing in Chat with the /now command</property>
             <property name="single_line_mode">True</property>
-          </widget>
+          </object>
           <packing>
             <property name="expand">True</property>
             <property name="fill">True</property>
@@ -31,22 +31,22 @@
           </packing>
         </child>
         <child>
-          <widget class="GtkTable" id="table1">
+          <object class="GtkTable" id="table1">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="n_rows">4</property>
             <property name="n_columns">3</property>
             <child>
-              <widget class="GtkRadioButton" id="NP_xmms2">
+              <object class="GtkRadioButton" id="NP_xmms2">
                 <property name="label" translatable="yes">XMMS2</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
-                <property name="tooltip" translatable="yes">You must have the xmms2-python module</property>
+                <property name="tooltip_text" translatable="yes">You must have the xmms2-python module</property>
                 <property name="draw_indicator">True</property>
                 <property name="group">NP_amarok</property>
                 <signal name="clicked" handler="OnNPPlayer"/>
-              </widget>
+              </object>
               <packing>
                 <property name="left_attach">1</property>
                 <property name="right_attach">2</property>
@@ -55,7 +55,7 @@
               </packing>
             </child>
             <child>
-              <widget class="GtkRadioButton" id="NP_audacious">
+              <object class="GtkRadioButton" id="NP_audacious">
                 <property name="label" translatable="yes">Audacious</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
@@ -63,14 +63,14 @@
                 <property name="draw_indicator">True</property>
                 <property name="group">NP_amarok</property>
                 <signal name="clicked" handler="OnNPPlayer"/>
-              </widget>
+              </object>
               <packing>
                 <property name="left_attach">1</property>
                 <property name="right_attach">2</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkRadioButton" id="NP_mpd">
+              <object class="GtkRadioButton" id="NP_mpd">
                 <property name="label" translatable="yes">MPD via mpc</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
@@ -78,14 +78,14 @@
                 <property name="draw_indicator">True</property>
                 <property name="group">NP_amarok</property>
                 <signal name="clicked" handler="OnNPPlayer"/>
-              </widget>
+              </object>
               <packing>
                 <property name="top_attach">2</property>
                 <property name="bottom_attach">3</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkRadioButton" id="NP_exaile">
+              <object class="GtkRadioButton" id="NP_exaile">
                 <property name="label" translatable="yes">Exaile</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
@@ -93,14 +93,14 @@
                 <property name="draw_indicator">True</property>
                 <property name="group">NP_amarok</property>
                 <signal name="clicked" handler="OnNPPlayer"/>
-              </widget>
+              </object>
               <packing>
                 <property name="top_attach">1</property>
                 <property name="bottom_attach">2</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkRadioButton" id="NP_lastfm">
+              <object class="GtkRadioButton" id="NP_lastfm">
                 <property name="label" translatable="yes">last.fm</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
@@ -108,7 +108,7 @@
                 <property name="draw_indicator">True</property>
                 <property name="group">NP_amarok</property>
                 <signal name="clicked" handler="OnNPPlayer"/>
-              </widget>
+              </object>
               <packing>
                 <property name="left_attach">2</property>
                 <property name="right_attach">3</property>
@@ -117,7 +117,7 @@
               </packing>
             </child>
             <child>
-              <widget class="GtkRadioButton" id="NP_other">
+              <object class="GtkRadioButton" id="NP_other">
                 <property name="label" translatable="yes">Other</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
@@ -125,7 +125,7 @@
                 <property name="draw_indicator">True</property>
                 <property name="group">NP_amarok</property>
                 <signal name="clicked" handler="OnNPPlayer"/>
-              </widget>
+              </object>
               <packing>
                 <property name="left_attach">2</property>
                 <property name="right_attach">3</property>
@@ -134,31 +134,31 @@
               </packing>
             </child>
             <child>
-              <widget class="GtkRadioButton" id="NP_amarok">
+              <object class="GtkRadioButton" id="NP_amarok">
                 <property name="label" translatable="yes">Amarok</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
                 <property name="draw_indicator">True</property>
                 <signal name="clicked" handler="OnNPPlayer"/>
-              </widget>
+              </object>
             </child>
             <child>
-              <widget class="GtkRadioButton" id="NP_banshee">
+              <object class="GtkRadioButton" id="NP_banshee">
                 <property name="label" translatable="yes">Banshee</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
                 <property name="draw_indicator">True</property>
                 <property name="group">NP_amarok</property>
-              </widget>
+              </object>
               <packing>
                 <property name="left_attach">2</property>
                 <property name="right_attach">3</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkRadioButton" id="NP_foobar">
+              <object class="GtkRadioButton" id="NP_foobar">
                 <property name="label" translatable="yes">foobar</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
@@ -166,7 +166,7 @@
                 <property name="draw_indicator">True</property>
                 <property name="group">NP_amarok</property>
                 <signal name="clicked" handler="OnNPPlayer"/>
-              </widget>
+              </object>
               <packing>
                 <property name="left_attach">1</property>
                 <property name="right_attach">2</property>
@@ -175,7 +175,7 @@
               </packing>
             </child>
             <child>
-              <widget class="GtkRadioButton" id="NP_mpris">
+              <object class="GtkRadioButton" id="NP_mpris">
                 <property name="label" translatable="yes">MPRIS (v2)</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
@@ -183,14 +183,14 @@
                 <property name="draw_indicator">True</property>
                 <property name="group">NP_amarok</property>
                 <signal name="clicked" handler="OnNPPlayer"/>
-              </widget>
+              </object>
               <packing>
                 <property name="right_attach">3</property>
                 <property name="top_attach">3</property>
                 <property name="bottom_attach">4</property>
               </packing>
             </child>
-          </widget>
+          </object>
           <packing>
             <property name="expand">True</property>
             <property name="fill">True</property>
@@ -198,16 +198,16 @@
           </packing>
         </child>
         <child>
-          <widget class="GtkHBox" id="hbox1">
+          <object class="GtkHBox" id="hbox1">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="spacing">5</property>
             <child>
-              <widget class="GtkLabel" id="player_input">
+              <object class="GtkLabel" id="player_input">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="label" translatable="yes">Player Command/Username</property>
-              </widget>
+              </object>
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">True</property>
@@ -216,7 +216,7 @@
               </packing>
             </child>
             <child>
-              <widget class="GtkEntry" id="NPCommand">
+              <object class="GtkEntry" id="NPCommand">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="invisible_char">•</property>
@@ -224,14 +224,14 @@
                 <property name="secondary_icon_activatable">False</property>
                 <property name="primary_icon_sensitive">True</property>
                 <property name="secondary_icon_sensitive">True</property>
-              </widget>
+              </object>
               <packing>
                 <property name="expand">True</property>
                 <property name="fill">True</property>
                 <property name="position">1</property>
               </packing>
             </child>
-          </widget>
+          </object>
           <packing>
             <property name="expand">True</property>
             <property name="fill">True</property>
@@ -239,28 +239,25 @@
           </packing>
         </child>
         <child>
-          <widget class="GtkExpander" id="expander1">
+          <object class="GtkExpander" id="expander1">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <child>
-              <widget class="GtkLabel" id="Legend">
+              <object class="GtkLabel" id="Legend">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="xalign">0</property>
                 <property name="xpad">5</property>
-              </widget>
+              </object>
             </child>
-            <child>
-              <widget class="GtkLabel" id="label3">
+            <child type="label">
+              <object class="GtkLabel" id="label3">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="label" translatable="yes">Legend:</property>
-              </widget>
-              <packing>
-                <property name="type">label_item</property>
-              </packing>
+              </object>
             </child>
-          </widget>
+          </object>
           <packing>
             <property name="expand">True</property>
             <property name="fill">True</property>
@@ -268,17 +265,17 @@
           </packing>
         </child>
         <child>
-          <widget class="GtkHBox" id="hbox3">
+          <object class="GtkHBox" id="hbox3">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="spacing">5</property>
             <child>
-              <widget class="GtkLabel" id="label4">
+              <object class="GtkLabel" id="label4">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="xalign">0</property>
                 <property name="label" translatable="yes">Now playing format:</property>
-              </widget>
+              </object>
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">True</property>
@@ -287,26 +284,26 @@
               </packing>
             </child>
             <child>
-              <widget class="GtkComboBoxEntry" id="NPFormat">
+              <object class="GtkComboBoxEntry" id="NPFormat">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <child internal-child="entry">
-                  <widget class="GtkEntry" id="comboboxentry-entry2">
+                  <object class="GtkEntry" id="comboboxentry-entry2">
                     <property name="can_focus">False</property>
                     <property name="primary_icon_activatable">False</property>
                     <property name="secondary_icon_activatable">False</property>
                     <property name="primary_icon_sensitive">True</property>
                     <property name="secondary_icon_sensitive">True</property>
-                  </widget>
+                  </object>
                 </child>
-              </widget>
+              </object>
               <packing>
                 <property name="expand">True</property>
                 <property name="fill">True</property>
                 <property name="position">1</property>
               </packing>
             </child>
-          </widget>
+          </object>
           <packing>
             <property name="expand">True</property>
             <property name="fill">True</property>
@@ -314,17 +311,17 @@
           </packing>
         </child>
         <child>
-          <widget class="GtkHBox" id="hbox4">
+          <object class="GtkHBox" id="hbox4">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="spacing">5</property>
             <child>
-              <widget class="GtkLabel" id="label5">
+              <object class="GtkLabel" id="label5">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="xalign">0</property>
                 <property name="label" translatable="yes">Example:</property>
-              </widget>
+              </object>
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">True</property>
@@ -333,18 +330,18 @@
               </packing>
             </child>
             <child>
-              <widget class="GtkLabel" id="Example">
+              <object class="GtkLabel" id="Example">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="xalign">0</property>
-              </widget>
+              </object>
               <packing>
                 <property name="expand">True</property>
                 <property name="fill">True</property>
                 <property name="position">1</property>
               </packing>
             </child>
-          </widget>
+          </object>
           <packing>
             <property name="expand">True</property>
             <property name="fill">True</property>
@@ -352,19 +349,19 @@
           </packing>
         </child>
         <child>
-          <widget class="GtkHBox" id="hbox5">
+          <object class="GtkHBox" id="hbox5">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="spacing">5</property>
             <child>
-              <widget class="GtkButton" id="NPSave">
+              <object class="GtkButton" id="NPSave">
                 <property name="label">gtk-ok</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="use_stock">True</property>
                 <signal name="clicked" handler="OnNPSave"/>
-              </widget>
+              </object>
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
@@ -373,14 +370,14 @@
               </packing>
             </child>
             <child>
-              <widget class="GtkButton" id="NPCancel">
+              <object class="GtkButton" id="NPCancel">
                 <property name="label">gtk-undo</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="use_stock">True</property>
                 <signal name="clicked" handler="OnNPCancel"/>
-              </widget>
+              </object>
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
@@ -389,15 +386,15 @@
               </packing>
             </child>
             <child>
-              <widget class="GtkButton" id="NPTest">
+              <object class="GtkButton" id="NPTest">
                 <property name="label">gtk-execute</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <property name="tooltip" translatable="yes">Test the configuration</property>
+                <property name="tooltip_text" translatable="yes">Test the configuration</property>
                 <property name="use_stock">True</property>
                 <signal name="clicked" handler="OnNPTest"/>
-              </widget>
+              </object>
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
@@ -405,14 +402,14 @@
                 <property name="position">2</property>
               </packing>
             </child>
-          </widget>
+          </object>
           <packing>
             <property name="expand">True</property>
             <property name="fill">True</property>
             <property name="position">6</property>
           </packing>
         </child>
-      </widget>
+      </object>
     </child>
-  </widget>
-</glade-interface>
+  </object>
+</interface>
