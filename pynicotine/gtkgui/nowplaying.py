@@ -64,6 +64,19 @@ class NowPlaying:
         self.NowPlaying.connect("delete-event", self.quit)
         self.NowPlaying.connect("key-press-event", self.OnKeyPress)
 
+        self.title_clear()
+
+        # Set the active radio button
+        config = self.frame.np.config.sections
+
+        self.player_replacers = []
+
+        self.OnNPPlayer(None)
+        self.SetPlayer(config["players"]["npplayer"])
+
+        # Default format list
+        self.NPFormat_List = gtk.ListStore(gobject.TYPE_STRING)
+
         self.defaultlist = [
             "$n",
             "$n ($f)",
@@ -73,34 +86,29 @@ class NowPlaying:
             "$a - $b - $t ($l/$r KBps) from $y $c"
         ]
 
-        self.title_clear()
-        self.player_replacers = []
-        self.NPFormat_List = gtk.ListStore(gobject.TYPE_STRING)
-        self.kids['NPFormat'].set_model(self.NPFormat_List)
-        self.kids['NPFormat'].set_text_column(0)
-        self.kids['NPFormat'].child.connect("activate", self.OnAddFormat)
-        self.OnNPPlayer(None)
-
-        # Set the active radio button
-        config = self.frame.np.config.sections
-        self.SetPlayer(config["players"]["npplayer"])
-
-        if config["players"]["npformat"] != "":
-            self.kids['NPFormat'].child.set_text(config["players"]["npformat"])
-
-        if config["players"]["npformatlist"] != []:
-            if config["players"]["npformat"] == "":
-                self.kids['NPFormat'].child.set_text(str(config["players"]["npformatlist"][0]))
-            for item in config["players"]["npformatlist"]:
-                self.NPFormat_List.append([item])
-
-        if config["players"]["npformat"] == "":
-            self.kids['NPFormat'].child.set_text(str(self.defaultlist[0]))
-
-        self.kids['NPCommand'].set_text(config["players"]["npothercommand"])
-
         for item in self.defaultlist:
             self.NPFormat_List.append([str(item)])
+
+        # Add custom formats
+        if config["players"]["npformatlist"] != []:
+            for item in config["players"]["npformatlist"]:
+                self.NPFormat_List.append([str(item)])
+
+        # Set the NPFormat model
+        self.kids['NPFormat'].set_entry_text_column(0)
+        self.kids['NPFormat'].set_model(self.NPFormat_List)
+
+        if config["players"]["npformat"] == "":
+            # If there's no default format in the config: set the first of the list
+            self.kids['NPFormat'].set_active(0)
+        else:
+            # If there's is a default format in the config: select the right item
+            for (i, v) in enumerate(self.NPFormat_List):
+                if v[0] == config["players"]["npformat"]:
+                    self.kids['NPFormat'].set_active(i)
+
+        # Set the command from the config
+        self.kids['NPCommand'].set_text(config["players"]["npothercommand"])
 
     def title_clear(self):
         self.kids['Example'].set_text("")
@@ -142,35 +150,6 @@ class NowPlaying:
             self.player_replacers = ["$n"]
         else:
             self.kids['NP_other'].set_active(1)
-
-    def OnAddFormat(self, widget):
-
-        text = self.kids['NPFormat'].child.get_text().strip()
-        if text.isspace() or text == "":
-            return
-
-        items = self.frame.np.config.sections["players"]["npformatlist"]
-        if text in self.defaultlist:
-            return
-
-        if text in items:
-            items.remove(text)
-
-        items.insert(0, text)
-        self.frame.np.config.sections["players"]["npformat"] = text
-        del items[15:]
-        self.frame.np.config.writeConfiguration()
-
-        # Repopulate the combo list
-        self.kids['NPFormat'].get_model().clear()
-        templist = []
-        for i in items:
-            if i not in templist:
-                templist.append(i)
-
-        templist += self.defaultlist
-        for i in templist:
-            self.kids['NPFormat'].append_text(i)
 
     def OnNPPlayer(self, widget):
 
