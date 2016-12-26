@@ -84,8 +84,6 @@ class NowPlaying:
             "$n",
             "$a - $t",
             "[$a] $t",
-            "Now $s: [$a] $t",
-            "Now $s: $n",
             "$a - $b - $t",
             "$a - $b - $t ($l/$r KBps) from $y $c"
         ]
@@ -130,7 +128,6 @@ class NowPlaying:
             "track": "",
             "length": "",
             "nowplaying": "",
-            "status": "",
             "bitrate": "",
             "filename": ""
         }
@@ -198,13 +195,13 @@ class NowPlaying:
             self.player_replacers = ["$n", "$t", "$a", "$b",  "$f", "$k"]
             isset = True
         elif self.NP_banshee.get_active():
-            self.player_replacers = ["$n", "$t", "$l", "$a", "$b", "$k", "$y", "$r", "$f", "$s"]
+            self.player_replacers = ["$n", "$t", "$l", "$a", "$b", "$k", "$y", "$r", "$f"]
             isset = True
         elif self.NP_amarok.get_active():
-            self.player_replacers = ["$n", "$t", "$l", "$a", "$b", "$c", "$k", "$y", "$r", "$f", "$s"]
+            self.player_replacers = ["$n", "$t", "$l", "$a", "$b", "$c", "$k", "$y", "$r", "$f"]
             isset = True
         elif self.NP_audacious.get_active():
-            self.player_replacers = ["$n", "$t", "$l", "$a", "$b", "$c", "$k", "$y", "$r", "$f", "$s"]
+            self.player_replacers = ["$n", "$t", "$l", "$a", "$b", "$c", "$k", "$y", "$r", "$f"]
             isset = True
         elif self.NP_exaile.get_active():
             self.player_replacers = ["$n", "$t", "$l", "$a", "$b"]
@@ -221,7 +218,7 @@ class NowPlaying:
             self.player_input.set_text(_("Client name (empty = auto):"))
             isset = True
         elif self.NP_xmms2.get_active():
-            self.player_replacers = ["$n", "$t", "$l", "$a", "$b", "$c", "$k", "$y", "$r", "$f", "$s"]
+            self.player_replacers = ["$n", "$t", "$l", "$a", "$b", "$c", "$k", "$y", "$r", "$f"]
             isset = True
         elif self.NP_other.get_active():
             self.player_replacers = ["$n"]
@@ -257,8 +254,6 @@ class NowPlaying:
                 legend += _("Year")
             elif item == "$f":
                 legend += _("Filename (URI)")
-            elif item == "$s":
-                legend += _("Status")
             elif item == "$p":
                 legend += _("Program")
 
@@ -352,7 +347,6 @@ class NowPlaying:
         title = title.replace("$l", "%(length)s")
         title = title.replace("$y", "%(year)s")
         title = title.replace("$r", "%(bitrate)s")
-        title = title.replace("$s", "%(status)s")
         title = title.replace("$f", "%(filename)s")
         title = title.replace("$p", "%(program)s")
 
@@ -605,11 +599,6 @@ class NowPlaying:
 
         if "$f" in slist:
             path = self.audacious_command('current-song-filename')
-
-        if "$s" in slist:
-            output = self.audacious_command('playback-status')
-            if output:
-                self.title["status"] = output
 
         if not self.audacious_running:
             self.frame.logMessage(_("ERROR: audtool didn't detect a running Audacious session."))
