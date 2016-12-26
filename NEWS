@@ -30,6 +30,7 @@ Features
  * NowPlaying: BMPx support has been removed.
  * NowPlaying: Lastfm support has been updated and require an API key.
  * NowPlaying: Banshee support has been updated.
+ * NowPlaying: Foobar support has been updated.
 
 Bugs closed on Github
  * Question - Nicotine Still Being Developed? (#1)

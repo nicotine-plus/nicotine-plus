@@ -33,14 +33,6 @@ import sys
 from pynicotine.utils import executeCommand
 from pynicotine.logfacility import log
 
-if sys.platform == "win32":
-    HAS_WIN32GUI = False
-    try:
-        from win32gui import *
-        HAS_WIN32GUI = True
-    except:
-        pass
-
 
 class NowPlaying:
 
@@ -687,29 +679,36 @@ class NowPlaying:
         return True
 
     def foobar(self):
+        """ Function to get foobar currently playing song on windows """
 
-        if HAS_WIN32GUI:
-
-            wnd_ids = [
-                '{DA7CD0DE-1602-45e6-89A1-C2CA151E008E}',
-                '{97E27FAA-C0B3-4b8e-A693-ED7881E99FC1}',
-                '{E7076D1C-A7BF-4f39-B771-BCBE88F2A2A8}'
-            ]
-
-            metadata = None
-
-            for wnd_id in wnd_ids:
-                wnd_txt = GetWindowText(FindWindow(wnd_id, None))
-                if wnd_txt:
-                    m = re.match("(.*)\s+\[foobar.*", wnd_txt)
-                    if m:
-                        metadata = m.groups(0)[0].strip()
-
-            if metadata:
-                self.title["nowplaying"] = "now playing: " + metadata
-                return True
-            else:
+        if sys.platform == "win32":
+            try:
+                from win32gui import GetWindowText, FindWindow
+            except ImportError as error:
+                log.addwarning(_("ERROR: foobar: failed to load win32gui module: %(error)s") % {"error": error})
                 return None
+        else:
+            log.addwarning(_("ERROR: foobar: is only supported on windows."))
+            return None
+
+        wnd_ids = [
+            '{DA7CD0DE-1602-45e6-89A1-C2CA151E008E}',
+            '{97E27FAA-C0B3-4b8e-A693-ED7881E99FC1}',
+            '{E7076D1C-A7BF-4f39-B771-BCBE88F2A2A8}'
+        ]
+
+        metadata = None
+
+        for wnd_id in wnd_ids:
+            wnd_txt = GetWindowText(FindWindow(wnd_id, None))
+            if wnd_txt:
+                m = re.match("(.*)\s+\[foobar.*", wnd_txt)
+                if m:
+                    metadata = m.groups(0)[0].strip()
+
+        if metadata:
+            self.title["nowplaying"] = "now playing: " + metadata.decode('mbcs')
+            return True
         else:
             return None
 
