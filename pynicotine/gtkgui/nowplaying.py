@@ -501,7 +501,7 @@ class NowPlaying:
         """ Function to get amarok currently playing song """
 
         if not self.bus:
-            log.addwarning(_("Failed to import DBus, cannot read out amarok"))
+            log.addwarning(_("ERROR: amarok: Failed to import DBus, cannot read out amarok"))
             return
 
         player = self.bus.get_object('org.mpris.amarok', '/Player')
@@ -582,7 +582,7 @@ class NowPlaying:
             path = self.audacious_command('current-song-filename')
 
         if not self.audacious_running:
-            self.frame.logMessage(_("ERROR: audtool didn't detect a running Audacious session."))
+            log.addwarning(_("ERROR: audacious: audtool didn't detect a running Audacious session."))
             return False
 
         return True
@@ -606,7 +606,11 @@ class NowPlaying:
 
         # https://media.readthedocs.org/pdf/mpris2/latest/mpris2.pdf
 
-        from dbus import Interface
+        try:
+            from dbus import Interface
+        except ImportError as error:
+            log.addwarning(_("ERROR: MPRIS: failed to load dbus module: %(error)s") % {"error": error})
+            return None
 
         player = self.NPCommand.get_text()
         dbus_mpris_service = u'org.mpris.MediaPlayer2.'
@@ -624,21 +628,21 @@ class NowPlaying:
                     players.append(name[len(dbus_mpris_service):])
 
             if not players:
-                self.frame.logMessage(_("Could not find a suitable MPRIS player."))
+                log.addwarning(_("ERROR: MPRIS: Could not find a suitable MPRIS player."))
                 return None
 
             player = players[0]
             if len(players) > 1:
-                self.frame.logMessage(_("Found multiple MPRIS players: %(players)s. Using: %(player)s") % {'players': players, 'player': player})
+                log.addwarning(_("Found multiple MPRIS players: %(players)s. Using: %(player)s") % {'players': players, 'player': player})
             else:
-                self.frame.logMessage(_("Auto-detected MPRIS player: %s.") % player)
+                log.addwarning(_("Auto-detected MPRIS player: %s.") % player)
 
         try:
             player_obj = self.bus.get_object(dbus_mpris_service + player, dbus_mpris_path)
             player_property_obj = Interface(player_obj, dbus_interface=dbus_property)
             metadata = player_property_obj.Get(dbus_mpris_player_service, "Metadata")
         except Exception, exception:
-            self.frame.logMessage(_("Something went wrong while querying %(player)s: %(exception)s") % {'player': player, 'exception': exception})
+            log.addwarning(_("ERROR: MPRIS: Something went wrong while querying %(player)s: %(exception)s") % {'player': player, 'exception': exception})
             return None
 
         self.title['program'] = player
@@ -738,13 +742,13 @@ class NowPlaying:
         try:
             conn = httplib.HTTPConnection("ws.audioscrobbler.com")
         except Exception as error:
-            self.frame.logMessage(_("ERROR: could not connect to audioscrobbler: %(error)s") % {"error": error})
+            log.addwarning(_("ERROR: lastfm: Could not connect to audioscrobbler: %(error)s") % {"error": error})
             return None
 
         try:
             (user, apikey) = self.NPCommand.get_text().split(';')
         except ValueError as error:
-            self.frame.logMessage(_("ERROR: Please provide both your lastfm username and API key"))
+            log.addwarning(_("ERROR: lastfm: Please provide both your lastfm username and API key"))
             return None
 
         conn.request("GET", "/2.0/?method=user.getrecenttracks&user=" + user + "&api_key=" + apikey + "&format=json")
@@ -752,7 +756,7 @@ class NowPlaying:
         data = resp.read()
 
         if resp.status != 200 or resp.reason != "OK":
-            self.frame.logMessage(_("ERROR: could not get recenttrack from audioscrobbler: %(error)s") % {"error": str(data)})
+            log.addwarning(_("ERROR: lastfm: Could not get recent track from audioscrobbler: %(error)s") % {"error": str(data)})
             return None
 
         json_api = json.loads(data)
@@ -775,7 +779,7 @@ class NowPlaying:
             self.title["nowplaying"] = output
             return True
         except Exception, error:
-            self.frame.logMessage(_("ERROR: Executing '%(command)s' failed: %(error)s") % {"command": othercommand, "error": error})
+            log.addwarning(_("ERROR: Executing '%(command)s' failed: %(error)s") % {"command": othercommand, "error": error})
             return None
 
     def xmms2(self):
@@ -785,7 +789,7 @@ class NowPlaying:
         try:
             import xmmsclient
         except ImportError as error:
-            log.addwarning(_("ERROR xmms2: failed to load xmmsclient module: %(error)s") % {"error": error})
+            log.addwarning(_("ERROR: xmms2: failed to load xmmsclient module: %(error)s") % {"error": error})
             return None
 
         xmms = xmmsclient.XMMS("NPP")
@@ -794,21 +798,21 @@ class NowPlaying:
         try:
             xmms.connect(os.getenv("XMMS_PATH"))
         except IOError as detail:
-            log.addwarning(_("ERROR xmms2: connecting failed: %(error)s") % {"error": error})
+            log.addwarning(_("ERROR: xmms2: connecting failed: %(error)s") % {"error": error})
             return None
 
         # Retrieve the current playing entry
         result = xmms.playback_current_id()
         result.wait()
         if result.iserror():
-            log.addwarning(_("ERROR xmms2: playback current id error: %(error)s") % {"error": result.get_error()})
+            log.addwarning(_("ERROR: xmms2: playback current id error: %(error)s") % {"error": result.get_error()})
             return None
 
         id = result.value()
 
         # Entry 0 is non valid
         if id == 0:
-            log.addwarning(_("ERROR xmms2: nothing is playing"))
+            log.addwarning(_("ERROR: xmms2: nothing is playing"))
             return None
 
         result = xmms.medialib_get_info(id)
@@ -816,7 +820,7 @@ class NowPlaying:
 
         # This can return error if the id is not in the medialib
         if result.iserror():
-            log.addwarning(_("ERROR xmms2: medialib get info error: %(error)s") % {"error": result.get_error()})
+            log.addwarning(_("ERROR: xmms2: medialib get info error: %(error)s") % {"error": result.get_error()})
             return None
 
         # Extract entries from the dict
