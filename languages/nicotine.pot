@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-26 18:17+0100\n"
+"POT-Creation-Date: 2016-12-26 20:09+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -205,6 +205,60 @@ msgid "\t"
 msgstr ""
 
 msgid "Summary (page %(page)s of %(pages)s)"
+msgstr ""
+
+msgid "Nicotine+: Configure Now Playing"
+msgstr ""
+
+msgid "Display what your Media Player is playing in Chat with the /now command"
+msgstr ""
+
+msgid "XMMS2"
+msgstr ""
+
+msgid "You must have the xmms2-python module"
+msgstr ""
+
+msgid "Audacious"
+msgstr ""
+
+msgid "MPD via mpc"
+msgstr ""
+
+msgid "Exaile"
+msgstr ""
+
+msgid "last.fm"
+msgstr ""
+
+msgid "Other"
+msgstr ""
+
+msgid "Amarok"
+msgstr ""
+
+msgid "Banshee"
+msgstr ""
+
+msgid "foobar"
+msgstr ""
+
+msgid "MPRIS (v2)"
+msgstr ""
+
+msgid "Player Command/Username"
+msgstr ""
+
+msgid "Legend:"
+msgstr ""
+
+msgid "Now playing format:"
+msgstr ""
+
+msgid "Example:"
+msgstr ""
+
+msgid "Test the configuration"
 msgstr ""
 
 msgid "Buddy List"
@@ -529,60 +583,6 @@ msgid "Scanning Buddy Shares"
 msgstr ""
 
 msgid "Scanning Shares"
-msgstr ""
-
-msgid "Nicotine+: Configure Now Playing"
-msgstr ""
-
-msgid "Display what your Media Player is playing in Chat with the /now command"
-msgstr ""
-
-msgid "XMMS2"
-msgstr ""
-
-msgid "You must have the xmms2-python module"
-msgstr ""
-
-msgid "Audacious"
-msgstr ""
-
-msgid "MPD via mpc"
-msgstr ""
-
-msgid "Exaile"
-msgstr ""
-
-msgid "last.fm"
-msgstr ""
-
-msgid "Other"
-msgstr ""
-
-msgid "Amarok"
-msgstr ""
-
-msgid "Banshee"
-msgstr ""
-
-msgid "foobar"
-msgstr ""
-
-msgid "MPRIS (v2)"
-msgstr ""
-
-msgid "Player Command/Username"
-msgstr ""
-
-msgid "Legend:"
-msgstr ""
-
-msgid "Now playing format:"
-msgstr ""
-
-msgid "Example:"
-msgstr ""
-
-msgid "Test the configuration"
 msgstr ""
 
 msgid "PrivateChat"
@@ -2630,7 +2630,8 @@ msgid ""
 "player?"
 msgstr ""
 
-msgid "ERROR: amarok: Failed to import DBus, cannot read out amarok"
+#, python-format
+msgid "ERROR: amarok: failed to load dbus module: %(error)s"
 msgstr ""
 
 msgid "ERROR: audacious: audtool didn't detect a running Audacious session."

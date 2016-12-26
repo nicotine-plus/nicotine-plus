@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nicotine\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-26 18:17+0100\n"
-"PO-Revision-Date: 2016-12-26 18:25+0100\n"
+"POT-Creation-Date: 2016-12-26 20:09+0100\n"
+"PO-Revision-Date: 2016-12-26 20:10+0100\n"
 "Last-Translator: Michael LABOUEBE <gfarmerfr@free.fr>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -287,6 +287,63 @@ msgstr "\t"
 
 msgid "Summary (page %(page)s of %(pages)s)"
 msgstr "Sommaire (page %(page)s sur %(pages)s)"
+
+msgid "Nicotine+: Configure Now Playing"
+msgstr "Nicotine+ Configurer le Now Playing"
+
+msgid "Display what your Media Player is playing in Chat with the /now command"
+msgstr ""
+"Affiche ce que votre lecteur multimédia joue dans la discussion courante en "
+"utilisant la commande /now"
+
+msgid "XMMS2"
+msgstr "XMMS2"
+
+msgid "You must have the xmms2-python module"
+msgstr "Vous devez avoir le module xmms2-python d'installé"
+
+msgid "Audacious"
+msgstr "Audacious"
+
+msgid "MPD via mpc"
+msgstr "MPD via mpc"
+
+msgid "Exaile"
+msgstr "Exaile"
+
+msgid "last.fm"
+msgstr "last.fm"
+
+msgid "Other"
+msgstr "Autres"
+
+msgid "Amarok"
+msgstr "Amarok"
+
+msgid "Banshee"
+msgstr "Banshee"
+
+msgid "foobar"
+msgstr "foobar"
+
+msgid "MPRIS (v2)"
+msgstr "MPRIS (v2)"
+
+msgid "Player Command/Username"
+msgstr "Commande/Profile pour le lecteur"
+
+# pynicotine/gtkgui/settings_glade.py
+msgid "Legend:"
+msgstr "Légende:"
+
+msgid "Now playing format:"
+msgstr "Now Playing format:"
+
+msgid "Example:"
+msgstr "Exemple:"
+
+msgid "Test the configuration"
+msgstr "Test de la configuration"
 
 # pynicotine/gtkgui/nicotine_glade.py
 msgid "Buddy List"
@@ -710,63 +767,6 @@ msgstr "Examen des partages pour amis"
 # pynicotine/gtkgui/frame.py
 msgid "Scanning Shares"
 msgstr "Examen des partages"
-
-msgid "Nicotine+: Configure Now Playing"
-msgstr "Nicotine+ Configurer le Now Playing"
-
-msgid "Display what your Media Player is playing in Chat with the /now command"
-msgstr ""
-"Affiche ce que votre lecteur multimédia joue dans la discussion courante en "
-"utilisant la commande /now"
-
-msgid "XMMS2"
-msgstr "XMMS2"
-
-msgid "You must have the xmms2-python module"
-msgstr "Vous devez avoir le module xmms2-python d'installé"
-
-msgid "Audacious"
-msgstr "Audacious"
-
-msgid "MPD via mpc"
-msgstr "MPD via mpc"
-
-msgid "Exaile"
-msgstr "Exaile"
-
-msgid "last.fm"
-msgstr "last.fm"
-
-msgid "Other"
-msgstr "Autres"
-
-msgid "Amarok"
-msgstr "Amarok"
-
-msgid "Banshee"
-msgstr "Banshee"
-
-msgid "foobar"
-msgstr "foobar"
-
-msgid "MPRIS (v2)"
-msgstr "MPRIS (v2)"
-
-msgid "Player Command/Username"
-msgstr "Commande/Profile pour le lecteur"
-
-# pynicotine/gtkgui/settings_glade.py
-msgid "Legend:"
-msgstr "Légende:"
-
-msgid "Now playing format:"
-msgstr "Now Playing format:"
-
-msgid "Example:"
-msgstr "Exemple:"
-
-msgid "Test the configuration"
-msgstr "Test de la configuration"
 
 # pynicotine/gtkgui/nicotine_glade.py
 msgid "PrivateChat"
@@ -3472,8 +3472,9 @@ msgstr ""
 "Erreur: Impossible d'exécuter le code now playing. Avez-vous choisit le bon "
 "lecteur audio ?"
 
-msgid "ERROR: amarok: Failed to import DBus, cannot read out amarok"
-msgstr "Erreur: amarok: Impossible de charger le module dbus"
+#, python-format
+msgid "ERROR: amarok: failed to load dbus module: %(error)s"
+msgstr "Erreur: amarok: Impossible de charger le module dbus: %(error)s"
 
 msgid "ERROR: audacious: audtool didn't detect a running Audacious session."
 msgstr ""
@@ -5279,3 +5280,6 @@ msgstr ""
 #, python-format
 msgid "Translation for '%s' not found."
 msgstr "Traduction pour '%s' non trouvée"
+
+#~ msgid "ERROR: amarok: Failed to import DBus, cannot read out amarok"
+#~ msgstr "Erreur: amarok: Impossible de charger le module dbus"
