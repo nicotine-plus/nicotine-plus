@@ -36,24 +36,11 @@ from pynicotine.logfacility import log
 
 class NowPlaying:
 
-    def __init__(self, frame, fake=False):
-        """Create NowPlayer interface
-        If faked=True it will only create a partial instance, enough to debug NP-code with from the command line"""
-
-        # Only configure things here that are required for a faked instance
-        self.frame = frame
-        try:
-            import dbus
-            import dbus.glib
-            self.bus = dbus.SessionBus()
-        except Exception, e:
-            self.bus = None
-
-        # All things that aren't needed for a faked instance
-        if fake:
-            return
+    def __init__(self, frame):
+        """ Create NowPlayer interface """
 
         # Build the window
+        self.frame = frame
         self.accel_group = gtk.AccelGroup()
         builder = gtk.Builder()
         builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "nowplaying.ui"))
@@ -505,9 +492,14 @@ class NowPlaying:
     def amarok(self):
         """ Function to get amarok currently playing song """
 
-        if not self.bus:
-            log.addwarning(_("ERROR: amarok: Failed to import DBus, cannot read out amarok"))
-            return
+        try:
+            import dbus
+            import dbus.glib
+        except ImportError as error:
+            log.addwarning(_("ERROR: amarok: failed to load dbus module: %(error)s") % {"error": error})
+            return None
+
+        self.bus = dbus.SessionBus()
 
         player = self.bus.get_object('org.mpris.amarok', '/Player')
         md = player.GetMetadata()
@@ -610,12 +602,14 @@ class NowPlaying:
         """ Function to get the currently playing song via dbus mpris v2 interface """
 
         # https://media.readthedocs.org/pdf/mpris2/latest/mpris2.pdf
-
         try:
-            from dbus import Interface
+            import dbus
+            import dbus.glib
         except ImportError as error:
             log.addwarning(_("ERROR: MPRIS: failed to load dbus module: %(error)s") % {"error": error})
             return None
+
+        self.bus = dbus.SessionBus()
 
         player = self.kids['NPCommand'].get_text()
 
@@ -645,7 +639,7 @@ class NowPlaying:
 
         try:
             player_obj = self.bus.get_object(dbus_mpris_service + player, dbus_mpris_path)
-            player_property_obj = Interface(player_obj, dbus_interface=dbus_property)
+            player_property_obj = dbus.Interface(player_obj, dbus_interface=dbus_property)
             metadata = player_property_obj.Get(dbus_mpris_player_service, "Metadata")
         except Exception, exception:
             log.addwarning(_("ERROR: MPRIS: Something went wrong while querying %(player)s: %(exception)s") % {'player': player, 'exception': exception})
