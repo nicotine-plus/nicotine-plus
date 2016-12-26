@@ -13,7 +13,7 @@ Behavior
  * Hidden directories on Windows are not shared provided you have the pypiwin32 module installed.
  * Tray icons have been modified to be easier to distribute under debian (DFSG compliant).
  * New versions are now checked against the Github releases page.
- * NowPlaying: MPRIS should now be used for Rhythbox
+ * NowPlaying: MPRIS should now be used for Rhythmbox
 
 Features
  * Translations works on Windows.

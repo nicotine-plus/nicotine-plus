@@ -137,8 +137,8 @@ class NowPlaying:
 
     def SetPlayer(self, player):
 
-        if player == "amarok2":
-            self.NP_amarok2.set_active(1)
+        if player == "amarok":
+            self.NP_amarok.set_active(1)
         elif player == "audacious":
             self.NP_audacious.set_active(1)
         elif player == "mpd":
@@ -200,7 +200,7 @@ class NowPlaying:
         elif self.NP_banshee.get_active():
             self.player_replacers = ["$n", "$t", "$l", "$a", "$b", "$k", "$y", "$r", "$f", "$s"]
             isset = True
-        elif self.NP_amarok2.get_active():
+        elif self.NP_amarok.get_active():
             self.player_replacers = ["$n", "$t", "$l", "$a", "$b", "$c", "$k", "$y", "$r", "$f", "$s"]
             isset = True
         elif self.NP_audacious.get_active():
@@ -302,8 +302,8 @@ class NowPlaying:
 
         try:
 
-            if self.NP_amarok2.get_active():
-                result = self.amarok2()
+            if self.NP_amarok.get_active():
+                result = self.amarok()
             elif self.NP_audacious.get_active():
                 result = self.audacious()
             elif self.NP_mpd.get_active():
@@ -372,8 +372,8 @@ class NowPlaying:
 
     def OnNPSave(self, widget):
 
-        if self.NP_amarok2.get_active():
-            player = "amarok2"
+        if self.NP_amarok.get_active():
+            player = "amarok"
         elif self.NP_audacious.get_active():
             player = "audacious"
         elif self.NP_mpd.get_active():
@@ -504,18 +504,21 @@ class NowPlaying:
         return executeCommand(" ".join(["banshee"] + commands), returnoutput=True)
 
     def exaile(self):
+
         output = executeCommand('exaile --get-album --get-artist --get-length --get-title', returnoutput=True)
         output = output.split('\n')
+
         self.title["title"] = output[0]
         self.title["artist"] = output[1]
         self.title["album"] = output[2]
         self.title["length"] = output[3]
+
         return True
 
-    def amarok2(self):
+    def amarok(self):
 
         if not self.bus:
-            log.addwarning(_("Failed to import DBus, cannot read out Amarok2"))
+            log.addwarning(_("Failed to import DBus, cannot read out amarok"))
             return
 
         player = self.bus.get_object('org.mpris.amarok', '/Player')

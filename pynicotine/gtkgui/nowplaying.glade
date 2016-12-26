@@ -47,7 +47,7 @@
                 <property name="receives_default">False</property>
                 <property name="tooltip" translatable="yes">You must have the xmms2-python module</property>
                 <property name="draw_indicator">True</property>
-                <property name="group">NP_amarok2</property>
+                <property name="group">NP_amarok</property>
                 <signal name="clicked" handler="OnNPPlayer"/>
               </widget>
               <packing>
@@ -64,7 +64,7 @@
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
                 <property name="draw_indicator">True</property>
-                <property name="group">NP_amarok2</property>
+                <property name="group">NP_amarok</property>
                 <signal name="clicked" handler="OnNPPlayer"/>
               </widget>
               <packing>
@@ -79,7 +79,7 @@
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
                 <property name="draw_indicator">True</property>
-                <property name="group">NP_amarok2</property>
+                <property name="group">NP_amarok</property>
                 <signal name="clicked" handler="OnNPPlayer"/>
               </widget>
               <packing>
@@ -94,7 +94,7 @@
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
                 <property name="draw_indicator">True</property>
-                <property name="group">NP_amarok2</property>
+                <property name="group">NP_amarok</property>
                 <signal name="clicked" handler="OnNPPlayer"/>
               </widget>
               <packing>
@@ -109,7 +109,7 @@
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
                 <property name="draw_indicator">True</property>
-                <property name="group">NP_amarok2</property>
+                <property name="group">NP_amarok</property>
                 <signal name="clicked" handler="OnNPPlayer"/>
               </widget>
               <packing>
@@ -126,7 +126,7 @@
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
                 <property name="draw_indicator">True</property>
-                <property name="group">NP_amarok2</property>
+                <property name="group">NP_amarok</property>
                 <signal name="clicked" handler="OnNPPlayer"/>
               </widget>
               <packing>
@@ -135,8 +135,8 @@
               </packing>
             </child>
             <child>
-              <widget class="GtkRadioButton" id="NP_amarok2">
-                <property name="label" translatable="yes">Amarok2</property>
+              <widget class="GtkRadioButton" id="NP_amarok">
+                <property name="label" translatable="yes">Amarok</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
@@ -151,7 +151,7 @@
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
                 <property name="draw_indicator">True</property>
-                <property name="group">NP_amarok2</property>
+                <property name="group">NP_amarok</property>
               </widget>
               <packing>
                 <property name="left_attach">2</property>
@@ -165,7 +165,7 @@
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
                 <property name="draw_indicator">True</property>
-                <property name="group">NP_amarok2</property>
+                <property name="group">NP_amarok</property>
                 <signal name="clicked" handler="OnNPPlayer"/>
               </widget>
               <packing>
@@ -182,7 +182,7 @@
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
                 <property name="draw_indicator">True</property>
-                <property name="group">NP_amarok2</property>
+                <property name="group">NP_amarok</property>
                 <signal name="clicked" handler="OnNPPlayer"/>
               </widget>
               <packing>
