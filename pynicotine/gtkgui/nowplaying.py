@@ -210,7 +210,7 @@ class NowPlaying:
             self.player_replacers = ["$n", "$t", "$l", "$a", "$b"]
             isset = True
         elif self.NP_lastfm.get_active():
-            self.player_replacers = ["$n", "$s", "$t", "$a"]
+            self.player_replacers = ["$n", "$t", "$a", "$b"]
             self.player_input.set_text(_("Username;APIKEY :"))
             isset = True
         elif self.NP_foobar.get_active():
