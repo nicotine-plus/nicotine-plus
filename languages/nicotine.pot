@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-26 20:09+0100\n"
+"POT-Creation-Date: 2016-12-26 23:56+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1156,47 +1156,6 @@ msgstr ""
 msgid "Ignoring"
 msgstr ""
 
-msgid "Import Config"
-msgstr ""
-
-msgid ""
-"Importing the config files from the official client will overwrite some of "
-"your settings (Login, Password, User Info, User Image). Use caution with "
-"this feature."
-msgstr ""
-
-msgid ""
-"Select the directory that contains slsk.exe and the .cfg files: (Ex: C:\\"
-"\\Program Files\\\\SoulSeek)"
-msgstr ""
-
-msgid "Import Directory"
-msgstr ""
-
-msgid "Queue"
-msgstr ""
-
-msgid "Login / Password"
-msgstr ""
-
-msgid "Joined Chat Rooms"
-msgstr ""
-
-msgid "Banned List"
-msgstr ""
-
-msgid "Ignored List"
-msgstr ""
-
-msgid "User Info"
-msgstr ""
-
-msgid "User Image"
-msgstr ""
-
-msgid "Restart Nicotine+ to see all changes take effect"
-msgstr ""
-
 msgid "Log chatrooms by default"
 msgstr ""
 
@@ -1267,11 +1226,6 @@ msgid ""
 msgstr ""
 
 msgid "Choose <b>User info</b> to add text and an image to your personal info."
-msgstr ""
-
-msgid ""
-"Choose <b>Import Config</b> to import the configuration from the official "
-"Soulseek client."
 msgstr ""
 
 msgid "Miscellaneous Settings"
@@ -2900,28 +2854,6 @@ msgid "Warning: Missing translation"
 msgstr ""
 
 msgid "Choose a directory to save your log files"
-msgstr ""
-
-msgid "Import Soulseek config from directory"
-msgstr ""
-
-msgid "Nothing Imported"
-msgstr ""
-
-#, python-format
-msgid "Config files for the official Soulseek client not found in \"%s\""
-msgstr ""
-
-msgid "Imported Soulseek Config"
-msgstr ""
-
-msgid ""
-"Config was imported. You may need to restart for changes to take effect. If "
-"you changed your user name, buddy list or queue then you should restart "
-"immediately."
-msgstr ""
-
-msgid "No options were selected"
 msgstr ""
 
 msgid "Protocol"

@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nicotine\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-26 20:09+0100\n"
-"PO-Revision-Date: 2016-12-26 20:10+0100\n"
+"POT-Creation-Date: 2016-12-26 23:56+0100\n"
+"PO-Revision-Date: 2016-12-26 23:57+0100\n"
 "Last-Translator: Michael LABOUEBE <gfarmerfr@free.fr>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -1502,60 +1502,6 @@ msgstr "Adresse IP ignorées"
 msgid "Ignoring"
 msgstr "Ignorer"
 
-msgid "Import Config"
-msgstr "Importer la configuration"
-
-msgid ""
-"Importing the config files from the official client will overwrite some of "
-"your settings (Login, Password, User Info, User Image). Use caution with "
-"this feature."
-msgstr ""
-"Importer les fichiers de configuration à partir du client officiel va "
-"écraser quelques-uns de vos paramètres (Utilisateur, Mot de passe, User "
-"Info, Image). À utiliser avec précautions."
-
-msgid ""
-"Select the directory that contains slsk.exe and the .cfg files: (Ex: C:\\"
-"\\Program Files\\\\SoulSeek)"
-msgstr ""
-"Sélectionner le répertoire contenant slsk.exe et les fichiers .cfg : (Ex: C:"
-"\\\\Program Files\\\\SoulSeek)"
-
-# pynicotine/gtkgui/search.py
-msgid "Import Directory"
-msgstr "Importer un répertoire"
-
-msgid "Queue"
-msgstr "Fichiers en attente"
-
-# pynicotine/gtkgui/settings_glade.py
-msgid "Login / Password"
-msgstr "Utilisateur / Mot de passe"
-
-# pynicotine/gtkgui/nicotine_glade.py
-msgid "Joined Chat Rooms"
-msgstr "Salons de discussion joints"
-
-# pynicotine/gtkgui/settings_glade.py
-msgid "Banned List"
-msgstr "Utilisateurs bannis"
-
-# pynicotine/gtkgui/settings_glade.py
-msgid "Ignored List"
-msgstr "Utilisateurs ignorés"
-
-# pynicotine/gtkgui/nicotine_glade.py
-# pynicotine/gtkgui/settingswindow.py
-msgid "User Info"
-msgstr "Informations utilisateur"
-
-# pynicotine/gtkgui/nicotine_glade.py
-msgid "User Image"
-msgstr "Image"
-
-msgid "Restart Nicotine+ to see all changes take effect"
-msgstr "Redémarrer Nicotine+ pour observer les changements prendre effet"
-
 # pynicotine/gtkgui/settings_glade.py
 msgid "Log chatrooms by default"
 msgstr "Enregistrer les salons par défaut"
@@ -1650,13 +1596,6 @@ msgid "Choose <b>User info</b> to add text and an image to your personal info."
 msgstr ""
 "Choisissez <b>Informations utilisateur</b> pour ajouter du texte et une "
 "image à vos informations personnelles."
-
-msgid ""
-"Choose <b>Import Config</b> to import the configuration from the official "
-"Soulseek client."
-msgstr ""
-"Choisissez <b>Importer la configuration</b> pour importer la configuration "
-"du client officiel Soulseek."
 
 # pynicotine/gtkgui/settings_glade.py
 msgid "Miscellaneous Settings"
@@ -3832,32 +3771,6 @@ msgstr "Attention: Traduction manquante"
 msgid "Choose a directory to save your log files"
 msgstr "Choisir un répertoire de sauvegarde des journalisations"
 
-msgid "Import Soulseek config from directory"
-msgstr "Importer la configuration de Soulseek à partie du répertoire"
-
-msgid "Nothing Imported"
-msgstr "Rien d'importé"
-
-#, python-format
-msgid "Config files for the official Soulseek client not found in \"%s\""
-msgstr ""
-"Fichiers de configuration du client officiel Soulseek non trouvés dans \"%s\""
-
-msgid "Imported Soulseek Config"
-msgstr "Configuration de Soulseek importée"
-
-msgid ""
-"Config was imported. You may need to restart for changes to take effect. If "
-"you changed your user name, buddy list or queue then you should restart "
-"immediately."
-msgstr ""
-"La configuration a été importée. Vous devriez redémarrer pour que les "
-"changements prennent effet. Si vous avez changé votre nom d'utilisateur, "
-"liste des amis ou la liste des envois vous devriez redémarrer immédiatement."
-
-msgid "No options were selected"
-msgstr "Aucunes options n'ont été sélectionnées"
-
 # pynicotine/gtkgui/settingswindow.py
 msgid "Protocol"
 msgstr "Protocole"
@@ -5280,6 +5193,3 @@ msgstr ""
 #, python-format
 msgid "Translation for '%s' not found."
 msgstr "Traduction pour '%s' non trouvée"
-
-#~ msgid "ERROR: amarok: Failed to import DBus, cannot read out amarok"
-#~ msgstr "Erreur: amarok: Impossible de charger le module dbus"
