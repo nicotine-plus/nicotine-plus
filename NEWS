@@ -19,15 +19,16 @@ Features
  * Translations works on Windows.
  * UPnP support out of the box on Windows.
  * Refreshed icon and GTK2 theme on Windows.
- * Virtual share system implemented.
- * Plugins can now be toggled on/off.
- * A reddit plugin has been added.
  * Gives user the option to load more than 1000 previous chat lines when they rejoin a chat room.
+ * Virtual share system implemented.
  * You can now browse your buddy shares via the Share menu.
  * You can now rename your buddy virtual shares via the settings window for shares.
+ * Plugins: can now be toggled on/off.
+ * Plugins: a reddit plugin has been added.
  * NowPlaying: XMMS Infopipe support has been removed in favor of xmms2.
  * NowPlaying: BMPx support has been removed.
  * NowPlaying: Lastfm support has been updated and require an API key.
+ * NowPlaying: Banshee support has been updated.
 
 Bugs closed on Github
  * Question - Nicotine Still Being Developed? (#1)
@@ -62,6 +63,7 @@ Bug closed on Trac (readonly)
  * Tray icon is lost after explorer is terminated, doesn't return after explorer is restarted (#715)
  * nicotine crashed with TypeError in PopulateFilters(): value is of wrong type for this column (#726)
  * Dont draw eventbox background for tab labels (#727)
+ * Rythmbox Now Playing Error (#750) (#935)
  * Realpath / filename error (#776)
  * Connection limit (#802)
  * Disabled UPnP support due to errors Message (Can We Silence?) (#803)
