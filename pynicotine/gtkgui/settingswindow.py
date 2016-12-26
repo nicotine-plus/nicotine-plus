@@ -27,7 +27,7 @@ import gtk
 import gobject
 import re
 from dirchooser import *
-from utils import InputDialog, InitialiseColumns, recode, recode2, popupWarning, ImportWinSlskConfig, Humanize, OpenUri, HumanSize
+from utils import InputDialog, InitialiseColumns, recode, recode2, popupWarning, Humanize, OpenUri, HumanSize
 from entrydialog import *
 from pynicotine.upnp import UPnPPortMapping
 from pynicotine.utils import CheckTranslationAvailability
@@ -2565,80 +2565,6 @@ class EventsFrame(buildFrame):
         }
 
 
-class ImportFrame(buildFrame):
-
-    def __init__(self, parent):
-        self.p = parent
-        buildFrame.__init__(self, "ImportFrame")
-        self.options = {}
-
-    def SetSettings(self, config):
-
-        self.config = self.frame.np.config
-        path = "C:\Program Files\SoulSeek"
-        if os.path.exists(path):
-            self.ImportPath.set_text(path)
-
-    def GetSettings(self):
-        return {}
-
-    def OnImportDirectory(self, widget):
-
-        dir1 = ChooseDir(
-            self.Main.get_toplevel(),
-            self.ImportPath.get_text(),
-            title=_("Nicotine+") + ": " + _("Import Soulseek config from directory")
-        )
-
-        if dir1 is not None:
-            for directory in dir1:  # iterate over selected files
-                self.ImportPath.set_text(recode(directory))
-
-        directory = self.ImportPath.get_text()
-
-    def OnImportConfig(self, widget):
-        Path = self.ImportPath.get_text()
-        Queue = self.ImportQueue.get_active()
-        Login = self.ImportLogin.get_active()
-        Rooms = self.ImportRooms.get_active()
-        BuddyList = self.ImportBuddyList.get_active()
-        BanList = self.ImportBanList.get_active()
-        IgnoreList = self.ImportIgnoreList.get_active()
-        UserInfo = self.ImportUserInfo.get_active()
-        UserImage = self.ImportUserImage.get_active()
-
-        Import = ImportWinSlskConfig(
-            self.config,
-            Path, Queue, Login, Rooms,
-            BuddyList, BanList, IgnoreList,
-            UserInfo, UserImage
-        )
-        response = Import.Run()
-
-        if response == 0:
-            popupWarning(
-                self.p.SettingsWindow,
-                _("Nothing Imported"),
-                _("Config files for the official Soulseek client not found in \"%s\"") % Path,
-                self.frame.images["n"]
-            )
-        elif response == 1:
-            popupWarning(
-                self.p.SettingsWindow,
-                _("Imported Soulseek Config"),
-                _("Config was imported. You may need to restart for changes to take effect. If you changed your user name, buddy list or queue then you should restart immediately."),
-                self.frame.images["n"]
-            )
-            self.p.SetSettings(self.frame.np.config.sections)
-        elif response == 2:
-            popupWarning(
-                self.p.SettingsWindow,
-                _("Nothing Imported"),
-                _("No options were selected"),
-                self.frame.images["n"]
-            )
-
-
 class UrlCatchFrame(buildFrame):
 
     def __init__(self, parent):
@@ -3448,7 +3374,6 @@ class SettingsWindow:
         self.tree["Sounds"] = model.append(row, [_("Sounds"), "Sounds"])
         self.tree["Searches"] = model.append(row, [_("Searches"), "Searches"])
         self.tree["User info"] = model.append(row, [_("User info"), "User info"])
-        self.tree["Import Config"] = model.append(row, [_("Import Config"), "Import Config"])
 
         p["Server"] = ServerFrame(self, frame.np.getencodings())
         p["Shares"] = SharesFrame(self)
@@ -3472,7 +3397,6 @@ class SettingsWindow:
         p["Auto-Replace"] = AutoReplaceFrame(self)
         p["Chat"] = ChatFrame(self)
         p["Events"] = EventsFrame(self)
-        p["Import Config"] = ImportFrame(self)
         p["Plugins"] = PluginFrame(self)
         p["Misc"] = MiscFrame(self)
 
