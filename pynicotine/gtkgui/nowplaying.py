@@ -519,6 +519,7 @@ class NowPlaying:
         return True
 
     def amarok(self):
+        """ Function to get amarok currently playing song """
 
         if not self.bus:
             log.addwarning(_("Failed to import DBus, cannot read out amarok"))
@@ -620,7 +621,7 @@ class NowPlaying:
         return output
 
     def mpris(self):
-        """ Function to get the currently playing song via dbus mpris interface """
+        """ Function to get the currently playing song via dbus mpris v2 interface """
 
         # https://media.readthedocs.org/pdf/mpris2/latest/mpris2.pdf
 
@@ -724,6 +725,7 @@ class NowPlaying:
             return None
 
     def get_length_time(self, length):
+        """ Function used to normalize tracks duration """
 
         if length != '' and length != None:
 
@@ -740,6 +742,7 @@ class NowPlaying:
         return length
 
     def lastfm(self):
+        """ Function to get the last song played via lastfm api """
 
         import httplib
         import json
