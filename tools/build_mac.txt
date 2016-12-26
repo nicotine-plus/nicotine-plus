@@ -1,5 +1,0 @@
-Building with the new build script is really easy. Just run tools/build-osxapp .
-If you need to do something, the script will tell you (even preliminaries).
-The first time, answering 'yes' to everything is probably OK.
-
-NOTE: should work on Tiger, but currently there is a problem with the macports packages.

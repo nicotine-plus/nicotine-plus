@@ -383,13 +383,6 @@ class Config:
             }
         }
 
-        # URls handling for Mac
-        if sys.platform == 'darwin':
-            self.sections["urls"]["protocols"] = {
-                "http": "open -a Safari $",
-                "https": "open -a Safari $"
-            }
-
         # URls handling for Windows
         if sys.platform.startswith('win'):
             self.sections["urls"]["protocols"] = {
@@ -946,32 +939,6 @@ class Config:
         self.sections["transfers"]["bwordindex"].sync()
         self.sections["transfers"]["bfileindex"].sync()
         self.sections["transfers"]["bsharedmtimes"].sync()
-
-        if sys.platform == 'darwin':  # sync() doesn't seem to be enough on OSX
-
-            self.sections["transfers"]["sharedfiles"].close()
-            self.sections["transfers"]["sharedfilesstreams"].close()
-            self.sections["transfers"]["sharedmtimes"].close()
-            self.sections["transfers"]["wordindex"].close()
-            self.sections["transfers"]["fileindex"].close()
-
-            self.sections["transfers"]["sharedfiles"] = shelve.open(self.filename + ".files.db")
-            self.sections["transfers"]["sharedfilesstreams"] = shelve.open(self.filename + ".streams.db")
-            self.sections["transfers"]["sharedmtimes"] = shelve.open(self.filename + ".mtimes.db")
-            self.sections["transfers"]["wordindex"] = shelve.open(self.filename + ".wordindex.db")
-            self.sections["transfers"]["fileindex"] = shelve.open(self.filename + ".fileindex.db")
-
-            self.sections["transfers"]["bsharedfiles"].close()
-            self.sections["transfers"]["bsharedfilesstreams"].close()
-            self.sections["transfers"]["bsharedmtimes"].close()
-            self.sections["transfers"]["bwordindex"].close()
-            self.sections["transfers"]["bfileindex"].close()
-
-            self.sections["transfers"]["bsharedfiles"] = shelve.open(self.filename + ".buddyfiles.db")
-            self.sections["transfers"]["bsharedfilesstreams"] = shelve.open(self.filename + ".buddystreams.db")
-            self.sections["transfers"]["bsharedmtimes"] = shelve.open(self.filename + ".buddymtimes.db")
-            self.sections["transfers"]["bwordindex"] = shelve.open(self.filename + ".buddywordindex.db")
-            self.sections["transfers"]["bfileindex"] = shelve.open(self.filename + ".buddyfileindex.db")
 
         self.config_lock.release()
 
