@@ -37,9 +37,6 @@
             <property name="n_rows">4</property>
             <property name="n_columns">3</property>
             <child>
-              <placeholder/>
-            </child>
-            <child>
               <widget class="GtkRadioButton" id="NP_xmms2">
                 <property name="label" translatable="yes">XMMS2</property>
                 <property name="visible">True</property>
@@ -51,8 +48,8 @@
                 <signal name="clicked" handler="OnNPPlayer"/>
               </widget>
               <packing>
-                <property name="left_attach">2</property>
-                <property name="right_attach">3</property>
+                <property name="left_attach">1</property>
+                <property name="right_attach">2</property>
                 <property name="top_attach">2</property>
                 <property name="bottom_attach">3</property>
               </packing>
@@ -130,8 +127,10 @@
                 <signal name="clicked" handler="OnNPPlayer"/>
               </widget>
               <packing>
-                <property name="top_attach">3</property>
-                <property name="bottom_attach">4</property>
+                <property name="left_attach">2</property>
+                <property name="right_attach">3</property>
+                <property name="top_attach">2</property>
+                <property name="bottom_attach">3</property>
               </packing>
             </child>
             <child>
@@ -177,7 +176,7 @@
             </child>
             <child>
               <widget class="GtkRadioButton" id="NP_mpris">
-                <property name="label" translatable="yes">MPRIS</property>
+                <property name="label" translatable="yes">MPRIS (v2)</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
@@ -186,14 +185,10 @@
                 <signal name="clicked" handler="OnNPPlayer"/>
               </widget>
               <packing>
-                <property name="left_attach">1</property>
-                <property name="right_attach">2</property>
-                <property name="top_attach">2</property>
-                <property name="bottom_attach">3</property>
+                <property name="right_attach">3</property>
+                <property name="top_attach">3</property>
+                <property name="bottom_attach">4</property>
               </packing>
-            </child>
-            <child>
-              <placeholder/>
             </child>
           </widget>
           <packing>
