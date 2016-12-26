@@ -56,7 +56,7 @@ class WishList(gtk.Dialog):
         self.connect("delete_event", self.quit)
 
         self.nicotine = frame
-        self.set_size_request(250, 250)
+        self.set_size_request(600, 600)
         self.mainHbox = gtk.HBox(False, 5)
         self.mainHbox.show()
 
