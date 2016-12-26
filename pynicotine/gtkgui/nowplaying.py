@@ -216,7 +216,7 @@ class NowPlaying:
             isset = True
         elif self.NP_mpris.get_active():
             self.player_replacers = ["$n", "$p", "$a", "$b", "$t", "$c", "$r", "$k", "$l"]
-            self.player_input.set_text(_("Client name (empty = auto):"))
+            self.player_input.set_text(_("Client name (empty = auto) :"))
             isset = True
         elif self.NP_xmms2.get_active():
             self.player_replacers = ["$n", "$t", "$l", "$a", "$b", "$c", "$k", "$y", "$r", "$f"]
