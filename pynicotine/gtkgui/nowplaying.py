@@ -207,7 +207,7 @@ class NowPlaying:
             self.player_replacers = ["$n", "$t", "$l", "$a", "$b", "$c", "$k", "$y", "$r", "$f", "$s"]
             isset = True
         elif self.NP_exaile.get_active():
-            self.player_replacers = ["$t", "$l", "$a", "$b"]
+            self.player_replacers = ["$n", "$t", "$l", "$a", "$b"]
             isset = True
         elif self.NP_lastfm.get_active():
             self.player_replacers = ["$n", "$s", "$t", "$a"]
@@ -504,14 +504,23 @@ class NowPlaying:
         return executeCommand(" ".join(["banshee"] + commands), returnoutput=True)
 
     def exaile(self):
+        """ Function to get exaile currently playing song """
 
+        # At this time exail doesn't support mpris2: it will com with exaile 4
+        # So we use the command line to query it
         output = executeCommand('exaile --get-album --get-artist --get-length --get-title', returnoutput=True)
         output = output.split('\n')
 
         self.title["title"] = output[0]
         self.title["artist"] = output[1]
         self.title["album"] = output[2]
-        self.title["length"] = output[3]
+        self.title["length"] = self.get_length_time(float(output[3]))
+
+        if self.title['artist'] != "":
+            self.title['nowplaying'] += self.title['artist']
+
+        if self.title['title'] != "":
+            self.title['nowplaying'] += " - " + self.title['title']
 
         return True
 
@@ -728,11 +737,14 @@ class NowPlaying:
     def get_length_time(self, length):
 
         if length != '' and length != None:
+
             minutes = int(length)/60
             seconds = str(int(length) - (60 * minutes))
+
             if len(seconds) < 2:
                 seconds = '0' + seconds
-            length = str(minutes)+":"+str(seconds)
+
+            length = str(minutes) + ":" + str(seconds)
         else:
             length = "0:00"
 
