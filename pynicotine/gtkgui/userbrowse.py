@@ -959,12 +959,14 @@ class UserBrowse:
 
     def OnClose(self, widget):
 
-        self.userbrowses.remove_page(self.Main)
         del self.userbrowses.users[self.user]
         self.frame.np.ClosePeerConnection(self.conn)
 
-        for i in self.__dict__.keys():
-            del self.__dict__[i]
+        if self.frame.UserBrowseNotebook.is_tab_detached(self.Main):
+            self.Main.get_parent_window().destroy()
+        else:
+            self.frame.UserBrowseNotebook.remove_page(self.Main)
+            self.Main.destroy()
 
     def OnRefresh(self, widget):
         self.FolderTreeView.set_sensitive(False)

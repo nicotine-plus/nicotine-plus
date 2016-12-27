@@ -501,14 +501,14 @@ class UserInfo:
 
     def OnClose(self, widget):
 
-        self.userinfos.remove_page(self.Main)
         del self.userinfos.users[self.user]
-
         self.frame.np.ClosePeerConnection(self.conn)
-        self.Main.destroy()
 
-        for i in self.__dict__.keys():
-            del self.__dict__[i]
+        if self.frame.UserInfoNotebook.is_tab_detached(self.Main):
+            self.Main.get_parent_window().destroy()
+        else:
+            self.frame.UserInfoNotebook.remove_page(self.Main)
+            self.Main.destroy()
 
     def OnSavePicture(self, widget):
 
