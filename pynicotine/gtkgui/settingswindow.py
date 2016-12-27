@@ -34,6 +34,7 @@ from pynicotine.utils import CheckTranslationAvailability
 from pynicotine.logfacility import log
 import os
 import sys
+import thread
 
 win32 = sys.platform.startswith("win")
 if win32:
@@ -634,14 +635,18 @@ class SharesFrame(buildFrame):
         if transfers["shared"] is not None:
 
             for (virtual, actual) in transfers["shared"]:
+
                 self.shareslist.append(
                     [
                         virtual,
                         recode(actual),
-                        HumanSize(self.GetDirectorySize(actual)),
+                        "",
                         actual
                     ]
                 )
+
+                # Compute the directory size in the background
+                thread.start_new_thread(self.GetDirectorySize, (actual, self.shareslist))
 
             self.shareddirs = transfers["shared"][:]
 
@@ -652,10 +657,13 @@ class SharesFrame(buildFrame):
                     [
                         virtual,
                         recode(actual),
-                        HumanSize(self.GetDirectorySize(actual)),
+                        "",
                         actual
                     ]
                 )
+
+                # Compute the directory size in the background
+                thread.start_new_thread(self.GetDirectorySize, (actual, self.shareslist))
 
             self.bshareddirs = transfers["buddyshared"][:]
 
@@ -795,13 +803,16 @@ class SharesFrame(buildFrame):
                             [
                                 virtual,
                                 recode(directory),
-                                HumanSize(self.GetDirectorySize(directory)),
+                                "",
                                 directory
                             ]
                         )
 
                         self.shareddirs.append((virtual, directory))
                         self.needrescan = True
+
+                        # Compute the directory size in the background
+                        thread.start_new_thread(self.GetDirectorySize, (directory, self.shareslist))
 
     def OnAddSharedBuddyDir(self, widget):
 
@@ -850,13 +861,16 @@ class SharesFrame(buildFrame):
                             [
                                 virtual,
                                 recode(directory),
-                                HumanSize(self.GetDirectorySize(directory)),
+                                "",
                                 directory
                             ]
                         )
 
                         self.bshareddirs.append((virtual, directory))
                         self.needrescan = True
+
+                        # Compute the directory size in the background
+                        thread.start_new_thread(self.GetDirectorySize, (directory, self.bshareslist))
 
     def _RemoveSharedDir(self, model, path, iter, list):
         list.append(iter)
@@ -939,7 +953,7 @@ class SharesFrame(buildFrame):
         if iters:
             self.needrescan = True
 
-    def GetDirectorySize(self, directory):
+    def GetDirectorySize(self, directory, liststore):
 
         total_size = 0
 
@@ -948,7 +962,26 @@ class SharesFrame(buildFrame):
                 fp = os.path.join(dirpath, f)
                 total_size += os.path.getsize(fp)
 
-        return total_size
+        gobject.idle_add(
+            self._updatedirstats,
+            directory,
+            HumanSize(total_size),
+            liststore
+        )
+
+    def _updatedirstats(self, directory, humansize, liststore):
+
+        iter = liststore.get_iter_root()
+
+        while iter is not None:
+
+            if directory == liststore.get_value(iter, 3):
+
+                liststore.set(iter, 2, humansize)
+
+                return
+
+            iter = liststore.iter_next(iter)
 
 
 class TransfersFrame(buildFrame):
