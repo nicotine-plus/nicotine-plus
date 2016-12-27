@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-26 23:56+0100\n"
+"POT-Creation-Date: 2016-12-27 15:23+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -93,6 +93,15 @@ msgstr ""
 
 #, python-format
 msgid "Starting using the profiler (saving log to %s)"
+msgstr ""
+
+msgid "Buddy List"
+msgstr ""
+
+msgid "Add Buddy: "
+msgstr ""
+
+msgid "Configure banned users"
 msgstr ""
 
 msgid "Nicotine+ Fast Configure"
@@ -261,16 +270,16 @@ msgstr ""
 msgid "Test the configuration"
 msgstr ""
 
-msgid "Buddy List"
-msgstr ""
-
-msgid "Add Buddy: "
-msgstr ""
-
-msgid "Configure banned users"
-msgstr ""
-
 msgid "window1"
+msgstr ""
+
+msgid "Create: "
+msgstr ""
+
+msgid "Hide room list"
+msgstr ""
+
+msgid "Search: "
 msgstr ""
 
 msgid "Toggle Text-To-Speech"
@@ -596,15 +605,6 @@ msgid ""
 msgstr ""
 
 msgid "Close"
-msgstr ""
-
-msgid "Create: "
-msgstr ""
-
-msgid "Hide room list"
-msgstr ""
-
-msgid "Search: "
 msgstr ""
 
 msgid "Query"

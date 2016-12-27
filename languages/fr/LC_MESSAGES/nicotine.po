@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nicotine\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-26 23:56+0100\n"
-"PO-Revision-Date: 2016-12-26 23:57+0100\n"
+"POT-Creation-Date: 2016-12-27 15:23+0100\n"
+"PO-Revision-Date: 2016-12-27 15:23+0100\n"
 "Last-Translator: Michael LABOUEBE <gfarmerfr@free.fr>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -140,6 +140,18 @@ msgstr ""
 #, python-format
 msgid "Starting using the profiler (saving log to %s)"
 msgstr "Début d'utilisation du traceur (enregistre les journaux dans %s)"
+
+# pynicotine/gtkgui/nicotine_glade.py
+msgid "Buddy List"
+msgstr "Liste des amis"
+
+# pynicotine/gtkgui/nicotine_glade.py
+msgid "Add Buddy: "
+msgstr "Ajouter un ami:"
+
+# pynicotine/gtkgui/frame.py
+msgid "Configure banned users"
+msgstr "Configuration des utilisateurs bannis"
 
 msgid "Nicotine+ Fast Configure"
 msgstr "Nicotine+ Configuration Rapide"
@@ -346,21 +358,21 @@ msgid "Test the configuration"
 msgstr "Test de la configuration"
 
 # pynicotine/gtkgui/nicotine_glade.py
-msgid "Buddy List"
-msgstr "Liste des amis"
-
-# pynicotine/gtkgui/nicotine_glade.py
-msgid "Add Buddy: "
-msgstr "Ajouter un ami:"
-
-# pynicotine/gtkgui/frame.py
-msgid "Configure banned users"
-msgstr "Configuration des utilisateurs bannis"
-
-# pynicotine/gtkgui/nicotine_glade.py
 # pynicotine/gtkgui/settings_glade.py
 msgid "window1"
 msgstr "fenêtre1"
+
+# pynicotine/gtkgui/nicotine_glade.py
+msgid "Create: "
+msgstr "Créer: "
+
+# pynicotine/gtkgui/nicotine_glade.py
+msgid "Hide room list"
+msgstr "Cacher la liste des salons"
+
+# pynicotine/gtkgui/nicotine_glade.py
+msgid "Search: "
+msgstr "Recherche:"
 
 msgid "Toggle Text-To-Speech"
 msgstr "Activer la synthèse vocale"
@@ -786,18 +798,6 @@ msgstr ""
 # pynicotine/gtkgui/privatechat.py
 msgid "Close"
 msgstr "Fermer"
-
-# pynicotine/gtkgui/nicotine_glade.py
-msgid "Create: "
-msgstr "Créer: "
-
-# pynicotine/gtkgui/nicotine_glade.py
-msgid "Hide room list"
-msgstr "Cacher la liste des salons"
-
-# pynicotine/gtkgui/nicotine_glade.py
-msgid "Search: "
-msgstr "Recherche:"
 
 # pynicotine/gtkgui/downloads.py
 msgid "Query"
