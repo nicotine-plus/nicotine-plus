@@ -126,7 +126,7 @@ class RoomsControl:
         frame.roomlist.RoomsList.connect("button_press_event", self.OnListClicked)
         frame.roomlist.RoomsList.set_headers_clickable(True)
 
-        frame.roomlist.HideRoomList.connect("clicked", self.OnShowRoomList)
+        frame.roomlist.HideRoomList.connect("clicked", self.OnHideRoomList)
 
         ChatNotebook.connect("switch-page", self.OnSwitchPage)
         ChatNotebook.connect("page-reordered", self.OnReorderedPage)
@@ -229,8 +229,8 @@ class RoomsControl:
             if room.Main == page:
                 self.frame.Notifications.Clear("rooms", name)
 
-    def OnShowRoomList(self, widget):
-        self.frame.show_room_list1.set_active(1)
+    def OnHideRoomList(self, widget):
+        self.frame.show_room_list1.set_active(0)
 
     def OnListClicked(self, widget, event):
         if event.button == 1 and event.type == gtk.gdk._2BUTTON_PRESS:
