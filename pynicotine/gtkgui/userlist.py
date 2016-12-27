@@ -35,17 +35,22 @@ class UserList:
 
     def __init__(self, frame):
 
+        # Build the window
         self.frame = frame
-        self.wTree = gtk.glade.XML(os.path.join(os.path.dirname(os.path.realpath(__file__)), "buddylist.glade"), None)
-        widgets = self.wTree.get_widget_prefix("")
+        builder = gtk.Builder()
+        builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "buddylist.ui"))
+        self.NowPlaying = builder.get_object("NowPlaying")
 
-        for i in widgets:
-            name = gtk.glade.get_widget_name(i)
-            self.__dict__[name] = i
+        for i in builder.get_objects():
+            try:
+                self.__dict__[gtk.Buildable.get_name(i)] = i
+            except TypeError:
+                pass
 
         self.TempWindow.remove(self.userlistvbox)
         self.TempWindow.destroy()
-        self.wTree.signal_autoconnect(self)
+
+        builder.connect_signals(self)
 
         TARGETS = [('text/plain', 0, 1)]
         self.UserList.enable_model_drag_source(gtk.gdk.BUTTON1_MASK, TARGETS, gtk.gdk.ACTION_COPY)
@@ -54,7 +59,7 @@ class UserList:
         self.UserList.connect("drag_data_received", self.DragUserToBuddylist)
 
         self.userlist = []
-        
+
         self.usersmodel = gtk.ListStore(
             gtk.gdk.Pixbuf, gtk.gdk.Pixbuf, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_BOOLEAN,
             gobject.TYPE_BOOLEAN, gobject.TYPE_BOOLEAN, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_INT, gobject.TYPE_INT,
@@ -93,9 +98,11 @@ class UserList:
         config = self.frame.np.config.sections
 
         for i in range(10):
+
             parent = cols[i].get_widget().get_ancestor(gtk.Button)
             if parent:
                 parent.connect('button_press_event', PressHeader)
+
             # Read Show / Hide column settings from last session
             cols[i].set_visible(config["columns"]["userlist"][i])
 
@@ -105,8 +112,10 @@ class UserList:
 
         for render in self.col_trusted.get_cell_renderers():
             render.connect('toggled', self.cell_toggle_callback, self.UserList, 5)
+
         for render in self.col_notify.get_cell_renderers():
             render.connect('toggled', self.cell_toggle_callback, self.UserList, 6)
+
         for render in self.col_privileged.get_cell_renderers():
             render.connect('toggled', self.cell_toggle_callback, self.UserList, 7)
 
@@ -205,7 +214,7 @@ class UserList:
         self.Menu_IgnoreUser = items[7]
         self.Menu_OnNotify = items[9]
         self.Menu_OnPrivileged = items[10]
-        self.Menu_Trusted = items[11]
+        self.Menu_OnTrusted = items[11]
         self.Menu_EditComments = items[13]
         self.Menu_RemoveUser = items[14]
         self.Menu_PrivateRooms = items[15]
@@ -225,6 +234,7 @@ class UserList:
             always = True
         if self.frame.buddylist_in_chatrooms1.get_active():
             chatrooms = True
+
         if tab:
             self.frame.buddylist_in_chatrooms1.set_active(True)
             self.frame.OnChatRooms(None)
@@ -380,7 +390,7 @@ class UserList:
             self.Menu_IgnoreUser.set_active(user in self.frame.np.config.sections["server"]["ignorelist"])
             self.Menu_OnNotify.set_active(user in self.notify)
             self.Menu_OnPrivileged.set_active(user in self.privileged)
-            self.Menu_Trusted.set_active(user in self.trusted)
+            self.Menu_OnTrusted.set_active(user in self.trusted)
             self.Menu_PrivateRooms.set_sensitive(not me)  # Private rooms
 
             self.popup_menu.popup(None, None, None, event.button, event.time)
@@ -538,32 +548,6 @@ class UserList:
     def OnRemoveUser(self, widget):
         self.RemoveFromList(self.popup_menu.get_user())
 
-    def OnNotify(self, widget):
-
-        user = self.popup_menu.get_user()
-
-        if not widget.get_active():
-            if user in self.notify:
-                self.notify.remove(user)
-        else:
-            if not user in self.notify:
-                self.notify.append(user)
-
-        self.SaveUserList()
-
-    def OnPrivileged(self, widget):
-
-        user = self.popup_menu.get_user()
-
-        if not widget.get_active():
-            if user in self.privileged:
-                self.privileged.remove(user)
-        else:
-            if not user in self.privileged:
-                self.privileged.append(user)
-
-        self.SaveUserList()
-
     def OnTrusted(self, widget):
 
         user = self.popup_menu.get_user()
@@ -578,5 +562,39 @@ class UserList:
         for i in self.userlist:
             if i[0] == user:
                 self.usersmodel.set(i[3], 5, (user in self.trusted))
+
+        self.SaveUserList()
+
+    def OnNotify(self, widget):
+
+        user = self.popup_menu.get_user()
+
+        if not widget.get_active():
+            if user in self.notify:
+                self.notify.remove(user)
+        else:
+            if not user in self.notify:
+                self.notify.append(user)
+
+        for i in self.userlist:
+            if i[0] == user:
+                self.usersmodel.set(i[3], 6, (user in self.notify))
+
+        self.SaveUserList()
+
+    def OnPrivileged(self, widget):
+
+        user = self.popup_menu.get_user()
+
+        if not widget.get_active():
+            if user in self.privileged:
+                self.privileged.remove(user)
+        else:
+            if not user in self.privileged:
+                self.privileged.append(user)
+
+        for i in self.userlist:
+            if i[0] == user:
+                self.usersmodel.set(i[3], 7, (user in self.privileged))
 
         self.SaveUserList()

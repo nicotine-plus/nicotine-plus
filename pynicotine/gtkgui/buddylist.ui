@@ -1,52 +1,59 @@
-<?xml version="1.0"?>
-<glade-interface>
-  <!-- interface-requires gtk+ 2.16 -->
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk+" version="2.24"/>
   <!-- interface-naming-policy project-wide -->
-  <widget class="GtkWindow" id="TempWindow">
+  <object class="GtkWindow" id="TempWindow">
+    <property name="can_focus">False</property>
     <child>
-      <widget class="GtkVBox" id="userlistvbox">
+      <object class="GtkVBox" id="userlistvbox">
         <property name="visible">True</property>
-        <property name="orientation">vertical</property>
+        <property name="can_focus">False</property>
         <property name="spacing">3</property>
         <child>
-          <widget class="GtkLabel" id="BuddiesLabel">
+          <object class="GtkLabel" id="BuddiesLabel">
             <property name="visible">True</property>
+            <property name="can_focus">False</property>
             <property name="label" translatable="yes">Buddy List</property>
             <property name="use_markup">True</property>
-          </widget>
+          </object>
           <packing>
             <property name="expand">False</property>
+            <property name="fill">True</property>
             <property name="position">0</property>
           </packing>
         </child>
         <child>
-          <widget class="GtkScrolledWindow" id="userlistSW">
+          <object class="GtkScrolledWindow" id="userlistSW">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="hscrollbar_policy">automatic</property>
             <property name="vscrollbar_policy">automatic</property>
             <property name="shadow_type">in</property>
             <child>
-              <widget class="GtkTreeView" id="UserList">
+              <object class="GtkTreeView" id="UserList">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="has_tooltip">True</property>
-                <signal name="query_tooltip" handler="OnTooltip"/>
-              </widget>
+                <signal name="query-tooltip" handler="OnTooltip" swapped="no"/>
+              </object>
             </child>
-          </widget>
+          </object>
           <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
             <property name="position">1</property>
           </packing>
         </child>
         <child>
-          <widget class="GtkHBox" id="UserHbox">
+          <object class="GtkHBox" id="UserHbox">
             <property name="visible">True</property>
+            <property name="can_focus">False</property>
             <child>
-              <widget class="GtkLabel" id="label1">
+              <object class="GtkLabel" id="label1">
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
                 <property name="label" translatable="yes">Add Buddy: </property>
-              </widget>
+              </object>
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
@@ -54,30 +61,36 @@
               </packing>
             </child>
             <child>
-              <widget class="GtkEntry" id="AddUserEntry">
+              <object class="GtkEntry" id="AddUserEntry">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="invisible_char">&#x2022;</property>
-                <signal name="activate" handler="OnAddUser"/>
-              </widget>
+                <property name="invisible_char">•</property>
+                <property name="primary_icon_activatable">False</property>
+                <property name="secondary_icon_activatable">False</property>
+                <property name="primary_icon_sensitive">True</property>
+                <property name="secondary_icon_sensitive">True</property>
+                <signal name="activate" handler="OnAddUser" swapped="no"/>
+              </object>
               <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
                 <property name="position">1</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkButton" id="MoveList">
+              <object class="GtkButton" id="MoveList">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <signal name="clicked" handler="OnMoveList"/>
+                <signal name="clicked" handler="OnMoveList" swapped="no"/>
                 <child>
-                  <widget class="GtkImage" id="image1">
+                  <object class="GtkImage" id="image1">
                     <property name="visible">True</property>
+                    <property name="can_focus">False</property>
                     <property name="stock">gtk-jump-to</property>
-                    <property name="icon-size">4</property>
-                  </widget>
+                  </object>
                 </child>
-              </widget>
+              </object>
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
@@ -85,33 +98,35 @@
               </packing>
             </child>
             <child>
-              <widget class="GtkButton" id="configureUsers">
+              <object class="GtkButton" id="configureUsers">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <property name="tooltip" translatable="yes">Configure banned users</property>
-                <signal name="clicked" handler="OnSettingsBanIgnore"/>
+                <property name="tooltip_text" translatable="yes">Configure banned users</property>
+                <signal name="clicked" handler="OnSettingsBanIgnore" swapped="no"/>
                 <child>
-                  <widget class="GtkImage" id="image2">
+                  <object class="GtkImage" id="image2">
                     <property name="visible">True</property>
+                    <property name="can_focus">False</property>
                     <property name="stock">gtk-preferences</property>
                     <property name="icon-size">1</property>
-                  </widget>
+                  </object>
                 </child>
-              </widget>
+              </object>
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
                 <property name="position">3</property>
               </packing>
             </child>
-          </widget>
+          </object>
           <packing>
             <property name="expand">False</property>
+            <property name="fill">True</property>
             <property name="position">2</property>
           </packing>
         </child>
-      </widget>
+      </object>
     </child>
-  </widget>
-</glade-interface>
+  </object>
+</interface>
