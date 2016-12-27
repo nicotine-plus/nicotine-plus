@@ -728,14 +728,6 @@ class ChatRoom:
 
         self.OnShowChatButtons(show=(not config["ui"]["chat_hidebuttons"]))
 
-        if self.frame.translux:
-            self.tlux_roomlog = lambda: self.RoomLog.get_window(gtk.TEXT_WINDOW_TEXT)
-            self.tlux_chat = lambda: self.ChatScroll.get_window(gtk.TEXT_WINDOW_TEXT)
-            self.frame.translux.subscribe(self.RoomLog, self.tlux_roomlog)
-            self.frame.translux.subscribe(self.ChatScroll, self.tlux_chat)
-            self.RoomLog.get_parent().get_vadjustment().connect("value-changed", lambda *args: self.RoomLog.queue_draw())
-            self.ChatScroll.get_parent().get_vadjustment().connect("value-changed", lambda *args: self.ChatScroll.queue_draw())
-            self.ChatScroll.get_parent().get_hadjustment().connect("value-changed", lambda *args: self.ChatScroll.queue_draw())
         self.clist = []
         self.Elist = {}
         self.encoding, m = EncodingsMenu(self.frame.np, "roomencoding", room)
@@ -1016,9 +1008,6 @@ class ChatRoom:
             return gtk.Label(_("(custom widget: %s)") % id)
 
     def destroy(self):
-        if self.frame.translux and self.tlux_roomlog:
-            self.frame.translux.unsubscribe(self.tlux_roomlog)
-            self.frame.translux.unsubscribe(self.tlux_chat)
         self.Main.destroy()
 
     def OnPrivateRooms(self, widget):

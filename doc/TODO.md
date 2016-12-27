@@ -7,7 +7,7 @@ A list of stuff & things todo (not in any particular order):
 * **IN PROGRESS**: Drop the bundle Configparser module: use upstream version.
 * Convert libsexy spellcheck stuff to pygtkspell.
 * GNU/Linux: Switch to using XDG_* directories.
-* Convert all the libglade files to GTKBuilder.
+* **IN PROGRESS**: Convert all the libglade files to GTKBuilder.
 * Our sounds are dropped by downstream packagers for being non-free: investigate.
 * Convert old (unmaintained) python-GeoIP code to an up to date version.
 * Curate and update embedded plugins.

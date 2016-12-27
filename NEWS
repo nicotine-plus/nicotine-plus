@@ -15,6 +15,7 @@ Behavior
  * New versions are now checked against the Github releases page.
  * NowPlaying: MPRIS should now be used for Rhythmbox.
  * The MacOS port has been dropped since nobody will step up and maintain it.
+ * The pseudo transparency (translux) feature has been removed.
 
 Features
  * Translations works on Windows.

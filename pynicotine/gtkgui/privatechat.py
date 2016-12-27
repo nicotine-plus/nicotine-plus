@@ -322,12 +322,6 @@ class PrivateChat:
 		completion.connect("match-selected", self.frame.EntryCompletionFoundMatch, self.ChatLine)
 		
 		self.Log.set_active(self.frame.np.config.sections["logging"]["privatechat"])
-
-		if self.frame.translux:
-			self.tlux_chat = lambda: self.ChatScroll.get_window(gtk.TEXT_WINDOW_TEXT)
-			self.frame.translux.subscribe(self.ChatScroll, self.tlux_chat)
-			self.ChatScroll.get_parent().get_vadjustment().connect("value-changed", lambda *args: self.ChatScroll.queue_draw())
-			self.ChatScroll.get_parent().get_hadjustment().connect("value-changed", lambda *args: self.ChatScroll.queue_draw())
 		
 		self.popup_menu_user = popup = PopupMenu(self.frame)
 		popup.setup(
@@ -389,8 +383,6 @@ class PrivateChat:
 		gobject.idle_add(self.frame.ScrollBottom, self.ChatScroll.get_parent())
 		
 	def destroy(self):
-		if self.frame.translux:
-			self.frame.translux.unsubscribe(self.tlux_chat)
 		for i in self.__dict__.keys():
 			del self.__dict__[i]
 		

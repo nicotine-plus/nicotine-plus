@@ -56,7 +56,6 @@ from pynicotine.config import *
 import utils
 import pynicotine.utils
 from utils import AppendLine, ImageLabel, IconNotebook, ScrollBottom, PopupMenu, Humanize, HumanSpeed, HumanSize, popupWarning, OpenUri
-import translux
 from dirchooser import ChooseFile, SaveFile
 from pynicotine.utils import executeCommand
 import nowplaying
@@ -355,9 +354,6 @@ class NicotineFrame:
                 label_tab.child.show_image(config["ui"]["tab_icons"])
                 label_tab.child.set_angle(config["ui"]["labelmain"])
 
-        self.translux = None
-        self.TransparentTint()
-
         self.LogScrolledWindow = gtk.ScrolledWindow()
         self.LogScrolledWindow.set_shadow_type(gtk.SHADOW_IN)
         self.LogScrolledWindow.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
@@ -379,10 +375,6 @@ class NicotineFrame:
         self.debugTransfers.set_active((5 in config["logging"]["debugmodes"]))
         self.debugStatistics.set_active((6 in config["logging"]["debugmodes"]))
         self.debugButtonsBox.hide()
-
-        if self.translux:
-            self.LogScrolledWindow.get_vadjustment().connect("value-changed", lambda *args: self.LogWindow.queue_draw())
-            self.translux.subscribe(self.LogWindow, lambda: self.LogWindow.get_window(gtk.TEXT_WINDOW_TEXT))
 
         if config["logging"]["logcollapsed"]:
             self.show_log_window1.set_active(False)
@@ -1659,7 +1651,6 @@ class NicotineFrame:
 
         self.uploads.ConnClose()
         self.downloads.ConnClose()
-        # self.pluginhandler.ServerDisconnectNotification()
 
     def SetUserStatus(self, status):
         self.UserStatus.pop(self.user_context_id)
@@ -2222,7 +2213,6 @@ class NicotineFrame:
 
         # Modify GUI
         self.UpdateDownloadFilters()
-        self.TransparentTint(1)
         self.np.config.writeConfiguration()
 
         if not config["ui"]["trayicon"] and self.TrayApp.HAVE_TRAYICON:
@@ -2407,39 +2397,6 @@ class NicotineFrame:
         self.UserBrowseNotebook.set_tab_angle(ui["labelbrowse"])
         self.SearchNotebook.set_tab_pos(self.getTabPosition(ui["tabsearch"]))
         self.SearchNotebook.set_tab_angle(ui["labelsearch"])
-
-    def TransparentTint(self, update=None):
-
-        if not self.np.config.sections["ui"]["enabletrans"]:
-            if self.translux:
-                self.translux.disable()
-            return
-
-        filter = ""
-        tint = None
-        ttint = self.np.config.sections["ui"]["transtint"]
-
-        if ttint == "" or ttint[0] != "#":
-            return
-
-        ttint = ttint[1:]
-        if len(ttint) != 6:
-            return
-
-        try:
-
-            alpha = "%02X" % self.np.config.sections["ui"]["transalpha"]
-            tint = long(ttint+alpha, 16)
-
-            if update and self.translux:
-                self.translux.changeTint(tint)
-                if self.LogWindow not in self.translux.subscribers:
-                    self.translux.subscribe(self.LogWindow, lambda: self.LogWindow.get_window(gtk.TEXT_WINDOW_TEXT))
-        except Exception, e:
-            log.addwarning(_('Translux error: %(error)s') % {'error': e})
-
-        if self.translux is None and tint is not None:
-            self.translux = translux.Translux(self.MainWindow, tint)
 
     def CreateIconButton(self, icon, icontype, callback, label=None):
         button = gtk.Button()

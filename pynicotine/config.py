@@ -332,14 +332,10 @@ class Config:
                 "soundtheme": "",
                 "soundcommand": "play -q",
                 "filemanager": "xdg-open $",
-                "enabletrans": 0,
                 "speechenabled": 0,
                 "speechprivate": "%(user)s told you.. %(message)s",
                 "speechrooms": "In %(room)s, %(user)s said %(message)s",
                 "speechcommand": "flite -t $",
-                "transtint": "#aaaaaa",
-                "transalpha": 150,
-                "transfilter": 0x00000000L,
                 "width": 800,
                 "height": 600,
                 "xposition": -1,
@@ -513,6 +509,10 @@ class Config:
         self.removeOldOption("userinfo", "descrutf8")
         self.removeOldOption("ui", "mozembed")
         self.removeOldOption("ui", "open_in_mozembed")
+        self.removeOldOption("ui", "enabletrans")
+        self.removeOldOption("ui", "transtint")
+        self.removeOldOption("ui", "transalpha")
+        self.removeOldOption("ui", "transfilter")
 
         # Checking for unknown section/options
         unknown1 = [
@@ -530,8 +530,7 @@ class Config:
                 "showaway", "tooltips", "usernamehotspots", "exitdialog",
                 "tab_icons", "spellcheck", "modes_order", "modes_visible",
                 "chat_hidebuttons", "tab_status_icons", "notexists",
-                "soundenabled", "transalpha",
-                "enabletrans", "speechenabled", "enablefilters", "width",
+                "soundenabled", "speechenabled", "enablefilters", "width",
                 "height", "xposition", "yposition", "labelmain", "labelrooms",
                 "labelprivate", "labelinfo", "labelbrowse", "labelsearch"
             ],

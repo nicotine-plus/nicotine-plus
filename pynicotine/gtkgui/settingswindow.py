@@ -1717,9 +1717,6 @@ class ColoursFrame(buildFrame):
                 "usernamestyle": self.UsernameStyle,
                 "showaway": self.DisplayAwayColours,
                 "urlcolor": self.URL,
-                "enabletrans": self.EnableTransparent,
-                "transtint": self.TintColor,
-                "transalpha": self.TintAlpha,
                 "tab_default": self.DefaultTab,
                 "tab_hilite": self.HighlightTab,
                 "tab_changed": self.ChangedTab
@@ -1742,8 +1739,6 @@ class ColoursFrame(buildFrame):
                 "useroffline": self.Drawing_OfflineColor,
                 "showaway": self.DisplayAwayColours,
                 "urlcolor": self.Drawing_URL,
-                "enabletrans": self.EnableTransparent,
-                "transtint": self.Drawing_TintColor,
                 "tab_default": self.Drawing_DefaultTab,
                 "tab_hilite": self.Drawing_HighlightTab,
                 "tab_changed": self.Drawing_ChangedTab
@@ -1766,8 +1761,7 @@ class ColoursFrame(buildFrame):
             "useroffline",
             "tab_default",
             "tab_changed",
-            "tab_hilite",
-            "transtint"
+            "tab_hilite"
         ]
 
         for item in ["bold", "italic", "underline", "normal"]:
@@ -1834,10 +1828,6 @@ class ColoursFrame(buildFrame):
         self.UsernameStyle.child.connect("changed", self.FontsColorsChanged)
         self.InputColor.connect("changed", self.FontsColorsChanged)
 
-        # Tint
-        self.PickTint.connect("clicked", self.PickColour, self.TintColor, self.Drawing_TintColor)
-        self.DefaultTint.connect("clicked", self.DefaultColour, self.TintColor)
-
     def SetSettings(self, config):
         self.settingup = 1
 
@@ -1852,13 +1842,8 @@ class ColoursFrame(buildFrame):
                         colour = None
                     drawingarea.modify_bg(gtk.STATE_NORMAL, colour)
                     break
-        try:
-            self.TintAlpha.set_value(config['ui']['transalpha'])
-        except KeyError:
-            pass
+
         self.ToggledAwayColours(self.DisplayAwayColours)
-        self.OnEnableTransparentToggled(self.EnableTransparent)
-        self.ColourScale("")
         self.settingup = 0
         self.needcolors = 0
 
@@ -1873,11 +1858,6 @@ class ColoursFrame(buildFrame):
             self.vboxColours.set_child_packing(self.ChatExpander, False, False, 0, 0)
         else:
             self.vboxColours.set_child_packing(self.ChatExpander, False, True, 0, 0)
-
-        if self.TransparentExpander.get_property("expanded"):
-            self.vboxColours.set_child_packing(self.TransparentExpander, False, False, 0, 0)
-        else:
-            self.vboxColours.set_child_packing(self.TransparentExpander, False, True, 0, 0)
 
     def GetSettings(self):
         return {
@@ -1898,9 +1878,6 @@ class ColoursFrame(buildFrame):
                 "useroffline": self.OfflineColor.get_text(),
                 "usernamehotspots": self.UsernameHotspots.get_active(),
                 "usernamestyle": self.UsernameStyle.child.get_text(),
-                "enabletrans": self.EnableTransparent.get_active(),
-                "transtint": self.TintColor.get_text(),
-                "transalpha": self.TintAlpha.get_value(),
                 "tab_hilite": self.HighlightTab.get_text(),
                 "tab_default": self.DefaultTab.get_text(),
                 "tab_changed": self.ChangedTab.get_text()
@@ -1962,20 +1939,6 @@ class ColoursFrame(buildFrame):
     def FontsColorsChanged(self, widget):
         self.needcolors = 1
 
-    def OnEnableTransparentToggled(self, widget):
-        sensitive = widget.get_active()
-        self.PickTint.set_sensitive(sensitive)
-        self.TintAlpha.set_sensitive(sensitive)
-        self.DefaultTint.set_sensitive(sensitive)
-        self.TintColor.set_sensitive(sensitive)
-        self.Blue.set_sensitive(sensitive)
-        self.Red.set_sensitive(sensitive)
-        self.Green.set_sensitive(sensitive)
-        self.label346.set_sensitive(sensitive)
-        self.label348.set_sensitive(sensitive)
-        self.label349.set_sensitive(sensitive)
-        self.label347.set_sensitive(sensitive)
-
     def OnUsernameHotspotsToggled(self, widget):
         sensitive = widget.get_active()
         self.AwayColor.set_sensitive(sensitive and self.DisplayAwayColours.get_active())
@@ -1995,11 +1958,7 @@ class ColoursFrame(buildFrame):
         dlg = gtk.ColorSelectionDialog(_("Pick a color, any color"))
         colour = entry.get_text()
 
-        if entry is self.TintColor:
-            dlg.colorsel.set_has_opacity_control(True)
-            dlg.colorsel.set_current_alpha(int(self.TintAlpha.get_value()) * 256)
-
-        if colour != None and colour != '':
+        if colour is not None and colour != '':
             try:
                 colour = gtk.gdk.color_parse(colour)
             except:
@@ -2026,39 +1985,7 @@ class ColoursFrame(buildFrame):
                         drawingarea.modify_bg(gtk.STATE_NORMAL, colour)
                         break
 
-        if entry is self.TintColor:
-            alpha = dlg.colorsel.get_current_alpha()
-            self.TintAlpha.set_value(alpha / 256)
-            self.ColourScale("")
-
         dlg.destroy()
-
-    def ColourScale(self, widget):
-        tint = self.TintColor.get_text()
-        if tint != "":
-            if tint[0] == "#" and len(tint) == 7:
-                try:
-                    red = int(tint[1:3], 16)
-                    green = int(tint[3:5], 16)
-                    blue = int(tint[5:], 16)
-
-                    self.Red.set_value(red)
-                    self.Blue.set_value(blue)
-                    self.Green.set_value(green)
-                except Exception, e:
-                    print e
-
-    def ScaleColour(self, widget):
-        if self.settingup:
-            return
-        red = int(self.Red.get_value())
-        green = int(self.Green.get_value())
-        blue = int(self.Blue.get_value())
-
-        colour = "#%02X%02X%02X" % (red, green, blue)
-
-        self.TintColor.set_text(colour)
-        self.Drawing_TintColor.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse(colour))
 
     def DefaultColour(self, widget, entry):
         for section in self.options.keys():
