@@ -77,26 +77,36 @@ class roomlist:
 
     def __init__(self, frame):
 
+        # Build the window
         self.frame = frame
-        self.wTree = gtk.glade.XML(os.path.join(os.path.dirname(os.path.realpath(__file__)), "roomlist.glade"), None)
+        builder = gtk.Builder()
+        builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "roomlist.ui"))
+        self.RoomList = builder.get_object("RoomList")
 
-        widgets = self.wTree.get_widget_prefix("")
-        for i in widgets:
-            name = gtk.glade.get_widget_name(i)
-            self.__dict__[name] = i
+        for i in builder.get_objects():
+            try:
+                self.__dict__[gtk.Buildable.get_name(i)] = i
+            except TypeError:
+                pass
+
         self.RoomList.remove(self.vbox2)
         self.RoomList.destroy()
+
         # self.RoomsList is the TreeView
-        self.wTree.signal_autoconnect(self)
+        builder.connect_signals(self)
+
         self.search_iter = None
         self.query = ""
         self.room_model = self.RoomsList.get_model()
+
         self.FindRoom.connect("clicked", self.OnSearchRoom)
 
     def OnCreateRoom(self, widget):
+
         room = widget.get_text()
         if not room:
             return
+
         self.frame.np.queue.put(slskmessages.JoinRoom(room))
         widget.set_text("")
 
@@ -121,15 +131,18 @@ class roomlist:
             self.query = room
 
         while self.search_iter:
+
             room_match, size = self.room_model.get(self.search_iter, 0, 1)
             if self.query in room_match.lower():
                 path = self.room_model.get_path(self.search_iter)
                 self.RoomsList.set_cursor(path)
                 break
+
             self.search_iter = self.room_model.iter_next(self.search_iter)
 
 
 class BuddiesComboBoxEntry(gtk.ComboBoxEntry):
+
     def __init__(self, frame):
         self.frame = frame
         gtk.ComboBoxEntry.__init__(self)
@@ -1138,6 +1151,7 @@ class NicotineFrame:
             log.addwarning(_("button_press error, %(error)s") % {'error': e})
 
     def get_custom_widget(self, widget, string0, id, string1, string2, int1, int2):
+
         if id == "ChatNotebook":
             return ChatRooms(self)
         elif id == "SearchNotebook":
@@ -1605,7 +1619,6 @@ class NicotineFrame:
         self.userlist.ConnClose()
         self.userinfo.ConnClose()
         self.userbrowse.ConnClose()
-        # self.pluginhandler.ServerDisconnectNotification()
 
     def SetWidgetOnlineStatus(self, status):
         self.connect1.set_sensitive(not status)
@@ -2626,8 +2639,10 @@ class NicotineFrame:
         self.np.config.writeConfiguration()
 
     def OnShowRoomList(self, widget):
+
         show = widget.get_active()
         self.np.config.sections["ui"]["roomlistcollapsed"] = (not show)
+
         if not show:
             if self.roomlist.vbox2 in self.vpaned3.get_children():
                 self.vpaned3.remove(self.roomlist.vbox2)
@@ -2638,6 +2653,7 @@ class NicotineFrame:
             if not self.roomlist.vbox2 in self.vpaned3.get_children():
                 self.vpaned3.pack2(self.roomlist.vbox2, True, True)
                 self.vpaned3.show()
+
         self.np.config.writeConfiguration()
 
     def OnToggleBuddyList(self, widget):

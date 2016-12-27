@@ -1,146 +1,175 @@
-<?xml version="1.0"?>
-<glade-interface>
-  <!-- interface-requires gtk+ 2.16 -->
-  <!-- interface-naming-policy toplevel-contextual -->
-  <widget class="GtkWindow" id="RoomList">
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk+" version="2.24"/>
+  <!-- interface-naming-policy project-wide -->
+  <object class="GtkWindow" id="RoomList">
+    <property name="can_focus">False</property>
     <property name="title" translatable="yes">window1</property>
     <child>
-      <widget class="GtkVBox" id="vbox2">
+      <object class="GtkVBox" id="vbox2">
         <property name="visible">True</property>
-        <property name="orientation">vertical</property>
+        <property name="can_focus">False</property>
         <property name="spacing">3</property>
         <child>
-          <widget class="GtkScrolledWindow" id="scrolledwindow10">
+          <object class="GtkScrolledWindow" id="scrolledwindow10">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="hscrollbar_policy">automatic</property>
             <property name="vscrollbar_policy">automatic</property>
             <property name="shadow_type">in</property>
             <child>
-              <widget class="GtkTreeView" id="RoomsList">
+              <object class="GtkTreeView" id="RoomsList">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-              </widget>
+              </object>
             </child>
-          </widget>
+          </object>
           <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
             <property name="position">0</property>
           </packing>
         </child>
         <child>
-          <widget class="GtkHBox" id="hbox1">
+          <object class="GtkHBox" id="hbox1">
             <property name="visible">True</property>
+            <property name="can_focus">False</property>
             <property name="spacing">3</property>
             <child>
-              <widget class="GtkLabel" id="label10">
+              <object class="GtkLabel" id="label10">
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
                 <property name="label" translatable="yes">Create: </property>
-              </widget>
+              </object>
               <packing>
                 <property name="expand">False</property>
+                <property name="fill">True</property>
                 <property name="position">0</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkEntry" id="CreateRoomEntry">
+              <object class="GtkEntry" id="CreateRoomEntry">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <signal name="activate" handler="OnCreateRoom"/>
-              </widget>
+                <property name="primary_icon_activatable">False</property>
+                <property name="secondary_icon_activatable">False</property>
+                <property name="primary_icon_sensitive">True</property>
+                <property name="secondary_icon_sensitive">True</property>
+                <signal name="activate" handler="OnCreateRoom" swapped="no"/>
+              </object>
               <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
                 <property name="position">1</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkButton" id="HideRoomList">
+              <object class="GtkButton" id="HideRoomList">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                <property name="tooltip" translatable="yes">Hide room list</property>
+                <property name="tooltip_text" translatable="yes">Hide room list</property>
                 <child>
-                  <widget class="GtkAlignment" id="alignment27">
+                  <object class="GtkAlignment" id="alignment27">
                     <property name="visible">True</property>
+                    <property name="can_focus">False</property>
                     <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                     <child>
-                      <widget class="GtkImage" id="image7">
+                      <object class="GtkImage" id="image7">
                         <property name="visible">True</property>
+                        <property name="can_focus">False</property>
                         <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                         <property name="stock">gtk-remove</property>
-                      </widget>
+                      </object>
                     </child>
-                  </widget>
+                  </object>
                 </child>
-              </widget>
+              </object>
               <packing>
                 <property name="expand">False</property>
+                <property name="fill">True</property>
                 <property name="position">2</property>
               </packing>
             </child>
-          </widget>
+          </object>
           <packing>
             <property name="expand">False</property>
+            <property name="fill">True</property>
             <property name="position">1</property>
           </packing>
         </child>
         <child>
-          <widget class="GtkHBox" id="hbox2">
+          <object class="GtkHBox" id="hbox2">
             <property name="visible">True</property>
+            <property name="can_focus">False</property>
             <property name="spacing">3</property>
             <child>
-              <widget class="GtkLabel" id="label1">
+              <object class="GtkLabel" id="label1">
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
                 <property name="label" translatable="yes">Search: </property>
-              </widget>
+              </object>
               <packing>
                 <property name="expand">False</property>
+                <property name="fill">True</property>
                 <property name="position">0</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkEntry" id="SearchRooms">
+              <object class="GtkEntry" id="SearchRooms">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <signal name="activate" handler="OnSearchRoom"/>
-              </widget>
+                <property name="primary_icon_activatable">False</property>
+                <property name="secondary_icon_activatable">False</property>
+                <property name="primary_icon_sensitive">True</property>
+                <property name="secondary_icon_sensitive">True</property>
+                <signal name="activate" handler="OnSearchRoom" swapped="no"/>
+              </object>
               <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
                 <property name="position">1</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkButton" id="FindRoom">
+              <object class="GtkButton" id="FindRoom">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                 <property name="has_tooltip">True</property>
-                <property name="tooltip" translatable="yes">Hide room list</property>
+                <property name="tooltip_text" translatable="yes">Hide room list</property>
                 <child>
-                  <widget class="GtkAlignment" id="alignment1">
+                  <object class="GtkAlignment" id="alignment1">
                     <property name="visible">True</property>
+                    <property name="can_focus">False</property>
                     <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                     <child>
-                      <widget class="GtkImage" id="image1">
+                      <object class="GtkImage" id="image1">
                         <property name="visible">True</property>
+                        <property name="can_focus">False</property>
                         <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                         <property name="stock">gtk-find</property>
-                      </widget>
+                      </object>
                     </child>
-                  </widget>
+                  </object>
                 </child>
-              </widget>
+              </object>
               <packing>
                 <property name="expand">False</property>
+                <property name="fill">True</property>
                 <property name="position">2</property>
               </packing>
             </child>
-          </widget>
+          </object>
           <packing>
             <property name="expand">False</property>
+            <property name="fill">True</property>
             <property name="position">2</property>
           </packing>
         </child>
-      </widget>
+      </object>
     </child>
-  </widget>
-</glade-interface>
+  </object>
+</interface>
