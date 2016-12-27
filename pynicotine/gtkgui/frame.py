@@ -2631,11 +2631,9 @@ class NicotineFrame:
         if not show:
             if self.roomlist.vbox2 in self.vpaned3.get_children():
                 self.vpaned3.remove(self.roomlist.vbox2)
-            # try:
+
             if self.userlist.userlistvbox not in self.vpaned3.get_children():
                 self.vpaned3.hide()
-            # except AttributeError:
-            #     pass # Happens when the roomlist is hidden on startup
         else:
             if not self.roomlist.vbox2 in self.vpaned3.get_children():
                 self.vpaned3.pack2(self.roomlist.vbox2, True, True)
@@ -2643,6 +2641,7 @@ class NicotineFrame:
         self.np.config.writeConfiguration()
 
     def OnToggleBuddyList(self, widget):
+        """ Function used to switch around the UI the BuddyList position """
 
         tab = always = chatrooms = False
 
@@ -2672,32 +2671,46 @@ class NicotineFrame:
             if not chatrooms:
                 self.vpaned3.hide()
 
+        # Reinitialize the userlist to avoid an error that freeze the UI on recent GTK versions
+        # Warning: invalid cast from 'GailPaned' to 'GailNotebook'
+        self.userlist = None
+        self.userlist = UserList(self)
+
         if tab:
+
             self.BuddiesTabLabel = ImageLabel(_("Buddy List"), self.images["empty"])
             self.BuddiesTabLabel.show()
+
             if self.userlist.userlistvbox not in self.MainNotebook.get_children():
                 self.MainNotebook.append_page(self.userlist.userlistvbox, self.BuddiesTabLabel)
+
             if self.userlist.userlistvbox in self.MainNotebook.get_children():
                 self.MainNotebook.set_tab_reorderable(self.userlist.userlistvbox, self.np.config.sections["ui"]["tab_reorderable"])
+
             self.userlist.BuddiesLabel.hide()
 
             self.np.config.sections["ui"]["buddylistinchatrooms"] = 0
 
         if chatrooms:
+
             self.vpaned3.show()
             if self.userlist.userlistvbox not in self.vpaned3.get_children():
                 self.vpaned3.pack1(self.userlist.userlistvbox, True, True)
+
             self.userlist.BuddiesLabel.show()
             self.np.config.sections["ui"]["buddylistinchatrooms"] = 1
 
         if always:
+
             self.vpanedm.show()
             if self.userlist.userlistvbox not in self.vpanedm.get_children():
                 self.vpanedm.pack2(self.userlist.userlistvbox, True, True)
+
             self.userlist.BuddiesLabel.show()
             self.np.config.sections["ui"]["buddylistinchatrooms"] = 2
         else:
             self.vpanedm.hide()
+
         self.np.config.writeConfiguration()
 
     def OnCheckPrivileges(self, widget):
