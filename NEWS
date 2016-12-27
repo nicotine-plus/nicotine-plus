@@ -50,6 +50,7 @@ Bugs closed on Github
  * "invalid operation on closed shelf" error on every download (#27)
  * Unable to save settings (#32)
  * Clear Finished/Aborted button problem (#33)
+ * Settings window slow to open (#36)
 
 Bug closed on Trac (readonly)
  * "Abort & Delete" button is mislabeled (#194)
