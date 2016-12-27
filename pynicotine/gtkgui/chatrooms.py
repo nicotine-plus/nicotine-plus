@@ -1715,13 +1715,6 @@ class ChatRoom:
 
         self.frame.CellDataFunc(column, cellrenderer, model, iter)
 
-    def GetUserHeirarchy(self, user):
-
-        if user not in self.users:
-            return
-
-        self.usersmodel.set(self.users[user], 3, HumanSpeed(avgspeed), 4, Humanize(files), 6, avgspeed, 7, files)
-
     def GetUserStats(self, user, avgspeed, files):
 
         if user not in self.users:
