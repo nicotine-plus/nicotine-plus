@@ -1120,15 +1120,6 @@ def InputDialog(parent, title, message, default=""):
 
     return result
 
-
-def string_sort_func(model, iter1, iter2, column):
-    val1 = model.get_value(iter1, column)
-    val2 = model.get_value(iter2, column)
-    if val1 is None:
-        val1 = ""
-    return locale.strcoll(val1, val2)
-
-
 def int_sort_func(model, iter1, iter2, column):
     try:
         val1 = int(model.get_value(iter1, column))

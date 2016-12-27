@@ -41,7 +41,7 @@ from pynicotine.logfacility import log
 from pynicotine import slskmessages
 from pynicotine import pluginsystem
 from pynicotine.slskmessages import ToBeEncoded
-from utils import InitialiseColumns, AppendLine, PopupMenu, string_sort_func, WriteLog, int_sort_func, Humanize, HumanSpeed, expand_alias, is_alias, EncodingsMenu, SaveEncoding, PressHeader, fixpath, IconNotebook, showCountryTooltip
+from utils import InitialiseColumns, AppendLine, PopupMenu, WriteLog, Humanize, HumanSpeed, expand_alias, is_alias, EncodingsMenu, SaveEncoding, PressHeader, fixpath, IconNotebook, showCountryTooltip
 from pynicotine.utils import findBestEncoding
 from ticker import Ticker
 from entrydialog import OptionDialog, input_box
