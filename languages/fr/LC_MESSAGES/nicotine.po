@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nicotine\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-27 15:23+0100\n"
-"PO-Revision-Date: 2016-12-27 15:23+0100\n"
+"POT-Creation-Date: 2016-12-27 23:30+0100\n"
+"PO-Revision-Date: 2016-12-27 23:32+0100\n"
 "Last-Translator: Michael LABOUEBE <gfarmerfr@free.fr>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -358,6 +358,32 @@ msgid "Test the configuration"
 msgstr "Test de la configuration"
 
 # pynicotine/gtkgui/nicotine_glade.py
+msgid "PrivateChat"
+msgstr "Dialogue privé"
+
+msgid "Character encoding"
+msgstr "Encodage de caractères"
+
+# pynicotine/gtkgui/search.py
+msgid "Direct"
+msgstr "Direct"
+
+msgid ""
+"Send the private message directly to the user (not supported on most clients)"
+msgstr ""
+"Envoi le message privé directement a l'utilisateur (pas encore supporté par "
+"l'ensemble des clients)"
+
+# pynicotine/gtkgui/nicotine_glade.py
+msgid "Log"
+msgstr "Enregistrement"
+
+# pynicotine/gtkgui/nicotine_glade.py
+# pynicotine/gtkgui/privatechat.py
+msgid "Close"
+msgstr "Fermer"
+
+# pynicotine/gtkgui/nicotine_glade.py
 # pynicotine/gtkgui/settings_glade.py
 msgid "window1"
 msgstr "fenêtre1"
@@ -391,13 +417,6 @@ msgstr "Commandes des salons de discussion"
 # pynicotine/gtkgui/chatrooms.py
 msgid "0 people in room"
 msgstr "0 utilisateur dans le salon"
-
-# pynicotine/gtkgui/nicotine_glade.py
-msgid "Log"
-msgstr "Enregistrement"
-
-msgid "Character encoding"
-msgstr "Encodage de caractères"
 
 # pynicotine/gtkgui/nicotine_glade.py
 msgid "Auto-join"
@@ -780,25 +799,6 @@ msgstr "Examen des partages pour amis"
 msgid "Scanning Shares"
 msgstr "Examen des partages"
 
-# pynicotine/gtkgui/nicotine_glade.py
-msgid "PrivateChat"
-msgstr "Dialogue privé"
-
-# pynicotine/gtkgui/search.py
-msgid "Direct"
-msgstr "Direct"
-
-msgid ""
-"Send the private message directly to the user (not supported on most clients)"
-msgstr ""
-"Envoi le message privé directement a l'utilisateur (pas encore supporté par "
-"l'ensemble des clients)"
-
-# pynicotine/gtkgui/nicotine_glade.py
-# pynicotine/gtkgui/privatechat.py
-msgid "Close"
-msgstr "Fermer"
-
 # pynicotine/gtkgui/downloads.py
 msgid "Query"
 msgstr "Requête"
@@ -1149,36 +1149,6 @@ msgstr "Surbrillance"
 # pynicotine/gtkgui/settings_glade.py
 msgid "<b>Tab colors</b>"
 msgstr "<b>Couleurs des onglets</b>"
-
-msgid ""
-"<b>Warning:</b> This feature is resource intensive and may be very slow. If "
-"Nicotine<b>+</b> is started with this feature disabled, you will need to "
-"enable it and restart to see its effects."
-msgstr ""
-"<b>Attention:</b> Cette option est gourmande en CPU et peut ralentir vos "
-"performances. Il vous faudra redémarrer Nicotine+ pour voir les changements "
-"prendre effet."
-
-msgid "Enable Transparent Textviews"
-msgstr "Utiliser les fenêtres de texte transparentes"
-
-msgid "Tint Color"
-msgstr "Teinte de la transparence"
-
-msgid "Red"
-msgstr "Rouge"
-
-msgid "Green"
-msgstr "Vert"
-
-msgid "Blue"
-msgstr "Bleu"
-
-msgid "Alpha"
-msgstr "Transparence"
-
-msgid "<b>Transparent Log Windows</b>"
-msgstr "<b>Fenêtre des messages transparente</b>"
 
 # pynicotine/gtkgui/settings_glade.py
 msgid "<b>Colors</b>"
@@ -2547,6 +2517,14 @@ msgstr "Toujours pour ce canal"
 msgid "Default for all channels"
 msgstr "Par défaut pour tous les canaux"
 
+#, python-format
+msgid ""
+"We have a problem, PyGTK get_text does not seem to return UTF-8. Please file "
+"a bug report. Bytes: %s"
+msgstr ""
+"Il semble y avoir une problème, PyGTK get_text ne retourne pas de l'UTF-8. "
+"Merci de remonter un bogue. Bytes: %s"
+
 # pynicotine/gtkgui/transferlist.py
 msgid "Status"
 msgstr "État"
@@ -3212,10 +3190,6 @@ msgstr "Gauche"
 
 msgid "Right"
 msgstr "Droite"
-
-#, python-format
-msgid "Translux error: %(error)s"
-msgstr "Erreur Translux: %(error)s"
 
 #, python-format
 msgid "Error: %(num)d Download filters failed! %(error)s "

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-27 15:23+0100\n"
+"POT-Creation-Date: 2016-12-27 23:30+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -270,6 +270,25 @@ msgstr ""
 msgid "Test the configuration"
 msgstr ""
 
+msgid "PrivateChat"
+msgstr ""
+
+msgid "Character encoding"
+msgstr ""
+
+msgid "Direct"
+msgstr ""
+
+msgid ""
+"Send the private message directly to the user (not supported on most clients)"
+msgstr ""
+
+msgid "Log"
+msgstr ""
+
+msgid "Close"
+msgstr ""
+
 msgid "window1"
 msgstr ""
 
@@ -295,12 +314,6 @@ msgid "Chat room command help"
 msgstr ""
 
 msgid "0 people in room"
-msgstr ""
-
-msgid "Log"
-msgstr ""
-
-msgid "Character encoding"
 msgstr ""
 
 msgid "Auto-join"
@@ -594,19 +607,6 @@ msgstr ""
 msgid "Scanning Shares"
 msgstr ""
 
-msgid "PrivateChat"
-msgstr ""
-
-msgid "Direct"
-msgstr ""
-
-msgid ""
-"Send the private message directly to the user (not supported on most clients)"
-msgstr ""
-
-msgid "Close"
-msgstr ""
-
 msgid "Query"
 msgstr ""
 
@@ -877,33 +877,6 @@ msgid "Highlight"
 msgstr ""
 
 msgid "<b>Tab colors</b>"
-msgstr ""
-
-msgid ""
-"<b>Warning:</b> This feature is resource intensive and may be very slow. If "
-"Nicotine<b>+</b> is started with this feature disabled, you will need to "
-"enable it and restart to see its effects."
-msgstr ""
-
-msgid "Enable Transparent Textviews"
-msgstr ""
-
-msgid "Tint Color"
-msgstr ""
-
-msgid "Red"
-msgstr ""
-
-msgid "Green"
-msgstr ""
-
-msgid "Blue"
-msgstr ""
-
-msgid "Alpha"
-msgstr ""
-
-msgid "<b>Transparent Log Windows</b>"
 msgstr ""
 
 msgid "<b>Colors</b>"
@@ -1949,6 +1922,12 @@ msgstr ""
 msgid "Default for all channels"
 msgstr ""
 
+#, python-format
+msgid ""
+"We have a problem, PyGTK get_text does not seem to return UTF-8. Please file "
+"a bug report. Bytes: %s"
+msgstr ""
+
 msgid "Status"
 msgstr ""
 
@@ -2429,10 +2408,6 @@ msgid "Left"
 msgstr ""
 
 msgid "Right"
-msgstr ""
-
-#, python-format
-msgid "Translux error: %(error)s"
 msgstr ""
 
 #, python-format
