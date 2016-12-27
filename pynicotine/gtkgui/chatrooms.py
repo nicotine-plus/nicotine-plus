@@ -687,9 +687,6 @@ class RoomsControl:
     def LeaveRoom(self, msg):
 
         room = self.joinedrooms[msg.room]
-        if room.logfile is not None:
-            room.logfile.close()
-            room.logfile = None
 
         if self.frame.ChatNotebook.is_tab_detached(room.Main):
             self.frame.ChatNotebook.attach_tab(room.Main)

@@ -711,6 +711,7 @@ class IconNotebook(gtk.Notebook):
         self.set_tab_reorderable(page, self.reorderable)
 
     def OnTabWindowDestroy(self, widget, page):
+
         if self.is_tab_detached(page):
             self.attach_tab(page, destroying=True)
 

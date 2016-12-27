@@ -245,7 +245,6 @@ class PrivateChats(IconNotebook):
 
     def RemoveTab(self, tab):
 
-        self.remove_page(tab.Main)
         if tab.user in self.frame.TrayApp.tray_status["hilites"]["private"]:
             self.frame.Notifications.Clear("private", tab.user)
 
@@ -253,6 +252,12 @@ class PrivateChats(IconNotebook):
 
         if tab.user in self.frame.np.config.sections["privatechat"]["users"]:
             self.frame.np.config.sections["privatechat"]["users"].remove(tab.user)
+
+        if self.frame.PrivatechatNotebook.is_tab_detached(tab.Main):
+            tab.Main.get_parent_window().destroy()
+        else:
+            self.frame.PrivatechatNotebook.remove_page(tab.Main)
+            tab.Main.destroy()
 
     def Login(self):
 
@@ -439,10 +444,6 @@ class PrivateChat:
             pass
 
         gobject.idle_add(self.frame.ScrollBottom, self.ChatScroll.get_parent())
-
-    def destroy(self):
-        for i in self.__dict__.keys():
-            del self.__dict__[i]
 
     def Login(self):
         timestamp_format = self.frame.np.config.sections["logging"]["private_timestamp"]
@@ -958,7 +959,6 @@ class PrivateChat:
     def OnClose(self, widget):
 
         self.chats.RemoveTab(self)
-        self.destroy()
 
     def GetCompletionList(self, ix=0, text="", clist=[]):
 
