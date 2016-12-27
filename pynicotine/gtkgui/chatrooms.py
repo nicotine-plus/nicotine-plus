@@ -830,7 +830,6 @@ class ChatRoom:
 
         self.room = room
         self.lines = []
-        self.logfile = None
         self.leaving = 0
         self.meta = meta  # not a real room if set to True
         config = self.frame.np.config.sections
@@ -1355,7 +1354,7 @@ class ChatRoom:
 
         line = "\n-- ".join(line.split("\n"))
         if self.Log.get_active():
-            self.logfile = WriteLog(self.logfile, self.frame.np.config.sections["logging"]["roomlogsdir"], self.room, line)
+            WriteLog(self.frame.np.config.sections["logging"]["roomlogsdir"], self.room, line)
 
         self.getUserTag(user)
 
@@ -2130,11 +2129,6 @@ class ChatRoom:
     def OnLogToggled(self, widget):
 
         if not widget.get_active():
-
-            if self.logfile is not None:
-                self.logfile.close()
-                self.logfile = None
-
             if self.room in self.frame.np.config.sections["logging"]["rooms"]:
                 self.frame.np.config.sections["logging"]["rooms"].remove(self.room)
         elif widget.get_active():

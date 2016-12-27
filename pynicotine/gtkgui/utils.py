@@ -1185,6 +1185,7 @@ def InputDialog(parent, title, message, default=""):
 
     return result
 
+
 def int_sort_func(model, iter1, iter2, column):
     try:
         val1 = int(model.get_value(iter1, column))
@@ -1209,18 +1210,21 @@ def float_sort_func(model, iter1, iter2, column):
     return cmp(val1, val2)
 
 
-def WriteLog(logfile, logsdir, fn, msg):
-    if logfile is None:
-        oldumask = os.umask(0077)
-        if not os.path.exists(logsdir):
-            os.makedirs(logsdir)
-        logfile = open(os.path.join(logsdir, fixpath(fn.replace(os.sep, "-")) + ".log"), 'a', 0)
-        os.umask(oldumask)
+def WriteLog(logsdir, fn, msg):
+
+    oldumask = os.umask(0077)
+    if not os.path.exists(logsdir):
+        os.makedirs(logsdir)
+
+    logfile = open(os.path.join(logsdir, fixpath(fn.replace(os.sep, "-")) + ".log"), 'a', 0)
+
+    os.umask(oldumask)
 
     text = "%s %s\n" % (recode(time.strftime(NICOTINE.np.config.sections["logging"]["log_timestamp"])), msg)
+
     logfile.write(text.encode('UTF-8', 'replace'))
     logfile.flush()
-    return logfile
+    logfile.close()
 
 
 def fixpath(path):

@@ -1,57 +1,67 @@
-<?xml version="1.0"?>
-<glade-interface>
-  <!-- interface-requires gtk+ 2.6 -->
-  <!-- interface-naming-policy toplevel-contextual -->
-  <widget class="GtkWindow" id="PrivateChatTab">
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk+" version="2.24"/>
+  <!-- interface-naming-policy project-wide -->
+  <object class="GtkWindow" id="PrivateChatTab">
+    <property name="can_focus">False</property>
     <property name="title" translatable="yes">PrivateChat</property>
     <child>
-      <widget class="GtkVBox" id="Main">
+      <object class="GtkVBox" id="Main">
         <property name="visible">True</property>
-        <property name="orientation">vertical</property>
+        <property name="can_focus">False</property>
         <child>
-          <widget class="GtkScrolledWindow" id="ChatScrollWindow">
+          <object class="GtkScrolledWindow" id="ChatScrollWindow">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="hscrollbar_policy">automatic</property>
             <property name="vscrollbar_policy">automatic</property>
             <property name="shadow_type">in</property>
             <child>
-              <widget class="GtkTextView" id="ChatScroll">
+              <object class="GtkTextView" id="ChatScroll">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="editable">False</property>
                 <property name="wrap_mode">word-char</property>
                 <property name="cursor_visible">False</property>
-              </widget>
+              </object>
             </child>
-          </widget>
+          </object>
           <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
             <property name="position">0</property>
           </packing>
         </child>
         <child>
-          <widget class="GtkHBox" id="hbox5">
+          <object class="GtkHBox" id="hbox5">
             <property name="visible">True</property>
+            <property name="can_focus">False</property>
             <property name="border_width">3</property>
             <property name="spacing">5</property>
             <child>
-              <widget class="GtkEntry" id="ChatLine">
+              <object class="GtkEntry" id="ChatLine">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <signal name="key_press_event" handler="OnKeyPress"/>
-                <signal name="activate" handler="OnEnter"/>
-              </widget>
+                <property name="primary_icon_activatable">False</property>
+                <property name="secondary_icon_activatable">False</property>
+                <property name="primary_icon_sensitive">True</property>
+                <property name="secondary_icon_sensitive">True</property>
+                <signal name="activate" handler="OnEnter" swapped="no"/>
+                <signal name="key-press-event" handler="OnKeyPress" swapped="no"/>
+              </object>
               <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
                 <property name="position">0</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkComboBox" id="Encoding">
+              <object class="GtkComboBox" id="Encoding">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="tooltip" translatable="yes">Character encoding</property>
-                <signal name="changed" handler="OnEncodingChanged"/>
-              </widget>
+                <property name="tooltip_text" translatable="yes">Character encoding</property>
+                <signal name="changed" handler="OnEncodingChanged" swapped="no"/>
+              </object>
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
@@ -59,15 +69,15 @@
               </packing>
             </child>
             <child>
-              <widget class="GtkCheckButton" id="PeerPrivateMessages">
+              <object class="GtkCheckButton" id="PeerPrivateMessages">
                 <property name="label" translatable="yes">Direct</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
                 <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                <property name="tooltip" translatable="yes">Send the private message directly to the user (not supported on most clients)</property>
+                <property name="tooltip_text" translatable="yes">Send the private message directly to the user (not supported on most clients)</property>
                 <property name="draw_indicator">True</property>
-              </widget>
+              </object>
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
@@ -75,15 +85,14 @@
               </packing>
             </child>
             <child>
-              <widget class="GtkCheckButton" id="Log">
+              <object class="GtkCheckButton" id="Log">
                 <property name="label" translatable="yes">Log</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
                 <property name="use_underline">True</property>
                 <property name="draw_indicator">True</property>
-                <signal name="toggled" handler="OnLogToggled"/>
-              </widget>
+              </object>
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
@@ -91,25 +100,28 @@
               </packing>
             </child>
             <child>
-              <widget class="GtkButton" id="CloseButton">
+              <object class="GtkButton" id="CloseButton">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
-                <signal name="clicked" handler="OnClose"/>
+                <signal name="clicked" handler="OnClose" swapped="no"/>
                 <child>
-                  <widget class="GtkAlignment" id="alignment34">
+                  <object class="GtkAlignment" id="alignment34">
                     <property name="visible">True</property>
+                    <property name="can_focus">False</property>
                     <property name="xscale">0</property>
                     <property name="yscale">0</property>
                     <child>
-                      <widget class="GtkHBox" id="hbox54">
+                      <object class="GtkHBox" id="hbox54">
                         <property name="visible">True</property>
+                        <property name="can_focus">False</property>
                         <property name="spacing">2</property>
                         <child>
-                          <widget class="GtkImage" id="image34">
+                          <object class="GtkImage" id="image34">
                             <property name="visible">True</property>
+                            <property name="can_focus">False</property>
                             <property name="stock">gtk-close</property>
-                          </widget>
+                          </object>
                           <packing>
                             <property name="expand">False</property>
                             <property name="fill">False</property>
@@ -117,35 +129,37 @@
                           </packing>
                         </child>
                         <child>
-                          <widget class="GtkLabel" id="label63">
+                          <object class="GtkLabel" id="label63">
                             <property name="visible">True</property>
+                            <property name="can_focus">False</property>
                             <property name="label" translatable="yes">Close</property>
                             <property name="use_underline">True</property>
-                          </widget>
+                          </object>
                           <packing>
                             <property name="expand">False</property>
                             <property name="fill">False</property>
                             <property name="position">1</property>
                           </packing>
                         </child>
-                      </widget>
+                      </object>
                     </child>
-                  </widget>
+                  </object>
                 </child>
-              </widget>
+              </object>
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
                 <property name="position">4</property>
               </packing>
             </child>
-          </widget>
+          </object>
           <packing>
             <property name="expand">False</property>
+            <property name="fill">True</property>
             <property name="position">1</property>
           </packing>
         </child>
-      </widget>
+      </object>
     </child>
-  </widget>
-</glade-interface>
+  </object>
+</interface>

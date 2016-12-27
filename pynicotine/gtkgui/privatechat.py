@@ -315,18 +315,21 @@ class PrivateChat:
         self.chats = chats
         self.frame = chats.frame
 
-        self.wTree = gtk.glade.XML(os.path.join(os.path.dirname(os.path.realpath(__file__)), "privatechat.glade"), None)
-        widgets = self.wTree.get_widget_prefix("")
+        builder = gtk.Builder()
+        builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "privatechat.ui"))
+        self.PrivateChatTab = builder.get_object("PrivateChatTab")
 
-        for i in widgets:
-            name = gtk.glade.get_widget_name(i)
-            self.__dict__[name] = i
+        for i in builder.get_objects():
+            try:
+                self.__dict__[gtk.Buildable.get_name(i)] = i
+            except TypeError:
+                pass
 
         self.PrivateChatTab.remove(self.Main)
         self.PrivateChatTab.destroy()
-        self.wTree.signal_autoconnect(self)
 
-        self.logfile = None
+        builder.connect_signals(self)
+
         self.autoreplied = 0
         self.offlinemessage = 0
         self.status = -1
@@ -537,7 +540,7 @@ class PrivateChat:
             AppendLine(self.ChatScroll, line, tag, timestamp_format=timestamp_format, username=self.user, usertag=self.tag_username)
 
         if self.Log.get_active():
-            self.logfile = WriteLog(self.logfile, self.frame.np.config.sections["logging"]["privatelogsdir"], self.user, line)
+            WriteLog(self.frame.np.config.sections["logging"]["privatelogsdir"], self.user, line)
 
         autoreply = self.frame.np.config.sections["server"]["autoreply"]
         if self.frame.away and not self.autoreplied and autoreply:
@@ -574,7 +577,7 @@ class PrivateChat:
         AppendLine(self.ChatScroll, line, tag, timestamp_format=timestamp_format, username=my_username, usertag=usertag)
 
         if self.Log.get_active():
-            self.logfile = WriteLog(self.logfile, self.frame.np.config.sections["logging"]["privatelogsdir"], self.user, line)
+            WriteLog(self.frame.np.config.sections["logging"]["privatelogsdir"], self.user, line)
 
         if bytestring:
             payload = text
@@ -954,10 +957,6 @@ class PrivateChat:
 
     def OnClose(self, widget):
 
-        if self.logfile is not None:
-            self.logfile.close()
-            self.logfile = None
-
         self.chats.RemoveTab(self)
         self.destroy()
 
@@ -1024,11 +1023,6 @@ class PrivateChat:
         widget.emit_stop_by_name("key_press_event")
 
         return True
-
-    def OnLogToggled(self, widget):
-        if not widget.get_active() and self.logfile is not None:
-            self.logfile.close()
-            self.logfile = None
 
     def OnEncodingChanged(self, widget):
 
