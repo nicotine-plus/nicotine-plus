@@ -64,12 +64,12 @@ from pynicotine.logfacility import log
 from entrydialog import *
 from pynicotine.upnp import UPnPPortMapping
 
+# LibSexy is deprecated, we should try to find a replacement
 SEXY = True
 try:
     import sexy
 except ImportError:
     SEXY = False
-    # LibSexy is deprecated, we should try to find a replacement
 
 
 class roomlist:

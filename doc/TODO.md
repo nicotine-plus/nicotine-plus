@@ -5,7 +5,6 @@ A list of stuff & things todo (not in any particular order):
 #### Short term goals
 
 * **IN PROGRESS**: Drop the bundle Configparser module: use upstream version.
-* Convert libsexy spellcheck stuff to pygtkspell.
 * GNU/Linux: Switch to using XDG_* directories.
 * **IN PROGRESS**: Convert all the libglade files to GTKBuilder.
 * Our sounds are dropped by downstream packagers for being non-free: investigate.
@@ -33,6 +32,7 @@ A list of stuff & things todo (not in any particular order):
 * Switch to Python 3.
 * Switch to GTK3.
 * Switch to Gstreamer 1.X (require GTK3).
+* Switch spellcheck to gspell (require GTK3).
 * Switch from python-notify to an up to date alternative.
 * Replace db files (causing many problems) by something easier like json.
 * **IN PROGRESS**: Use pip and venv for build/tests purposes.
