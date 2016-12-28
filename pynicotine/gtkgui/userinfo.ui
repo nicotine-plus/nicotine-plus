@@ -36,6 +36,7 @@
                               <object class="GtkComboBox" id="Encoding">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
+                                <property name="tooltip_text" translatable="yes">Character encoding</property>
                                 <signal name="changed" handler="OnEncodingChanged" swapped="no"/>
                               </object>
                               <packing>

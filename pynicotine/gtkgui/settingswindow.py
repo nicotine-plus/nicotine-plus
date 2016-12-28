@@ -3483,7 +3483,7 @@ class SettingsWindow:
         elif type(widget) is gtk.ComboBoxEntry:
             return widget.child.get_text()
         elif type(widget) is gtk.ComboBox:
-            return widget.get_active_text()
+            return widget.get_model().get(widget.get_active_iter(), 0)[0]
         elif type(widget) is gtk.FontButton:
             widget.get_font_name()
         elif type(widget) is gtk.TreeView and widget.get_model().get_n_columns() == 1:

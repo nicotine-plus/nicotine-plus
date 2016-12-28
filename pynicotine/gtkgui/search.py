@@ -264,19 +264,20 @@ class Searches(IconNotebook):
 
         users = []
         room = None
+        search_mode = self.frame.SearchMethod.get_model().get(self.frame.SearchMethod.get_active_iter(), 0)[0]
 
-        if self.frame.SearchMethod.get_active_text() == _("Global"):
+        if search_mode == _("Global"):
             mode = 0
-        elif self.frame.SearchMethod.get_active_text() == _("Rooms"):
+        elif search_mode == _("Rooms"):
             mode = 1
             name = self.frame.RoomSearchCombo.child.get_text()
             # Space after Joined Rooms is important, so it doesn't conflict
             # with any possible real room
             if name != _("Joined Rooms ") and not name.isspace():
                 room = name
-        elif self.frame.SearchMethod.get_active_text() == _("Buddies"):
+        elif search_mode == _("Buddies"):
             mode = 2
-        elif self.frame.SearchMethod.get_active_text() == _("User"):
+        elif search_mode == _("User"):
             mode = 3
             user = self.frame.UserSearchCombo.child.get_text().strip()
             if user != "" and not user.isspace():

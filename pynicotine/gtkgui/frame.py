@@ -775,7 +775,9 @@ class NicotineFrame:
     def OnSearchMethod(self, widget):
 
         act = False
-        if self.SearchMethod.get_active_text() == _("User"):
+        search_mode = self.SearchMethod.get_model().get(self.SearchMethod.get_active_iter(), 0)[0]
+
+        if search_mode == _("User"):
             self.UserSearchCombo.show()
             act = True
         else:
@@ -784,7 +786,7 @@ class NicotineFrame:
         self.UserSearchCombo.set_sensitive(act)
 
         act = False
-        if self.SearchMethod.get_active_text() == _("Rooms"):
+        if search_mode == _("Rooms"):
             act = True
             self.RoomSearchCombo.show()
         else:

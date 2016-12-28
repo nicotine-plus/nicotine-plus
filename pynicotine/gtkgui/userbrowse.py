@@ -1009,7 +1009,7 @@ class UserBrowse:
 
     def OnEncodingChanged(self, widget):
 
-        encoding = self.Encoding.get_active_text()
+        encoding = self.Encoding.get_model().get(self.Encoding.get_active_iter(), 0)[0]
 
         if encoding != self.encoding:
             self.encoding = encoding
