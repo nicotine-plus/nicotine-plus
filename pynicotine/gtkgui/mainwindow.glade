@@ -24,39 +24,23 @@
                   <widget class="GtkMenu" id="file1_menu">
                     <property name="can_focus">False</property>
                     <child>
-                      <widget class="GtkImageMenuItem" id="connect1">
-                        <property name="label" translatable="yes">_Connect</property>
+                      <widget class="GtkMenuItem" id="connect1">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">_Connect</property>
                         <property name="use_underline">True</property>
-                        <property name="use_stock">False</property>
                         <signal name="activate" handler="OnConnect"/>
                         <accelerator key="C" signal="activate" modifiers="GDK_MOD1_MASK"/>
-                        <child internal-child="image">
-                          <widget class="GtkImage" id="image7">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="stock">gtk-connect</property>
-                          </widget>
-                        </child>
                       </widget>
                     </child>
                     <child>
-                      <widget class="GtkImageMenuItem" id="disconnect1">
-                        <property name="label" translatable="yes">_Disconnect</property>
+                      <widget class="GtkMenuItem" id="disconnect1">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">_Disconnect</property>
                         <property name="use_underline">True</property>
-                        <property name="use_stock">False</property>
                         <signal name="activate" handler="OnDisconnect"/>
                         <accelerator key="D" signal="activate" modifiers="GDK_MOD1_MASK"/>
-                        <child internal-child="image">
-                          <widget class="GtkImage" id="image23">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="stock">gtk-disconnect</property>
-                          </widget>
-                        </child>
                       </widget>
                     </child>
                     <child>
@@ -67,38 +51,22 @@
                       </widget>
                     </child>
                     <child>
-                      <widget class="GtkImageMenuItem" id="awayreturn1">
-                        <property name="label" translatable="yes">_Away/Return</property>
+                      <widget class="GtkMenuItem" id="awayreturn1">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">_Away/Return</property>
                         <property name="use_underline">True</property>
-                        <property name="use_stock">False</property>
                         <signal name="activate" handler="OnAway"/>
                         <accelerator key="A" signal="activate" modifiers="GDK_MOD1_MASK"/>
-                        <child internal-child="image">
-                          <widget class="GtkImage" id="image30">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="stock">gtk-media-pause</property>
-                          </widget>
-                        </child>
                       </widget>
                     </child>
                     <child>
-                      <widget class="GtkImageMenuItem" id="check_privileges1">
-                        <property name="label" translatable="yes">Check _privileges</property>
+                      <widget class="GtkMenuItem" id="check_privileges1">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Check _privileges</property>
                         <property name="use_underline">True</property>
-                        <property name="use_stock">False</property>
                         <signal name="activate" handler="OnCheckPrivileges"/>
-                        <child internal-child="image">
-                          <widget class="GtkImage" id="image24">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="stock">gtk-jump-to</property>
-                          </widget>
-                        </child>
                       </widget>
                     </child>
                     <child>
@@ -108,21 +76,13 @@
                       </widget>
                     </child>
                     <child>
-                      <widget class="GtkImageMenuItem" id="exit1">
-                        <property name="label" translatable="yes">_Quit</property>
+                      <widget class="GtkMenuItem" id="exit1">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">_Quit</property>
                         <property name="use_underline">True</property>
-                        <property name="use_stock">False</property>
                         <signal name="activate" handler="OnExit"/>
                         <accelerator key="Q" signal="activate" modifiers="GDK_CONTROL_MASK"/>
-                        <child internal-child="image">
-                          <widget class="GtkImage" id="image25">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="stock">gtk-quit</property>
-                          </widget>
-                        </child>
                       </widget>
                     </child>
                   </widget>
@@ -139,55 +99,31 @@
                   <widget class="GtkMenu" id="edit_menu">
                     <property name="can_focus">False</property>
                     <child>
-                      <widget class="GtkImageMenuItem" id="settings1">
-                        <property name="label" translatable="yes">_Settings</property>
+                      <widget class="GtkMenuItem" id="settings1">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">_Settings</property>
                         <property name="use_underline">True</property>
-                        <property name="use_stock">False</property>
                         <signal name="activate" handler="OnSettings"/>
                         <accelerator key="s" signal="activate" modifiers="GDK_MOD1_MASK"/>
-                        <child internal-child="image">
-                          <widget class="GtkImage" id="image26">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="stock">gtk-preferences</property>
-                          </widget>
-                        </child>
                       </widget>
                     </child>
                     <child>
-                      <widget class="GtkImageMenuItem" id="fastconfigure">
+                      <widget class="GtkMenuItem" id="fastconfigure">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
                         <property name="label" translatable="yes">_Fast Configure</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
                         <property name="use_underline">True</property>
-                        <property name="use_stock">False</property>
                         <signal name="activate" handler="OnFastConfigure"/>
-                        <child internal-child="image">
-                          <widget class="GtkImage" id="image63">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="stock">gtk-page-setup</property>
-                          </widget>
-                        </child>
                       </widget>
                     </child>
                     <child>
-                      <widget class="GtkImageMenuItem" id="now_playing1">
-                        <property name="label" translatable="yes">Configure _Now Playing</property>
+                      <widget class="GtkMenuItem" id="now_playing1">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Configure _Now Playing</property>
                         <property name="use_underline">True</property>
-                        <property name="use_stock">False</property>
                         <signal name="activate" handler="OnNowPlayingConfigure"/>
-                        <child internal-child="image">
-                          <widget class="GtkImage" id="image28">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="stock">gtk-preferences</property>
-                          </widget>
-                        </child>
                       </widget>
                     </child>
                     <child>
@@ -197,21 +133,13 @@
                       </widget>
                     </child>
                     <child>
-                      <widget class="GtkImageMenuItem" id="BackupConfig">
-                        <property name="label" translatable="yes">_Backup Config</property>
+                      <widget class="GtkMenuItem" id="BackupConfig">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                        <property name="label" translatable="yes">_Backup Config</property>
                         <property name="use_underline">True</property>
-                        <property name="use_stock">False</property>
                         <signal name="activate" handler="OnBackupConfig"/>
-                        <child internal-child="image">
-                          <widget class="GtkImage" id="image29">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="stock">gtk-save</property>
-                          </widget>
-                        </child>
                       </widget>
                     </child>
                   </widget>
@@ -354,21 +282,13 @@
                     <property name="can_focus">False</property>
                     <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                     <child>
-                      <widget class="GtkImageMenuItem" id="ConfigureShares">
-                        <property name="label" translatable="yes">_Configure shares</property>
+                      <widget class="GtkMenuItem" id="ConfigureShares">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                        <property name="label" translatable="yes">_Configure shares</property>
                         <property name="use_underline">True</property>
-                        <property name="use_stock">False</property>
                         <signal name="activate" handler="OnSettingsShares"/>
-                        <child internal-child="image">
-                          <widget class="GtkImage" id="image31">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="stock">gtk-preferences</property>
-                          </widget>
-                        </child>
                       </widget>
                     </child>
                     <child>
@@ -379,37 +299,21 @@
                       </widget>
                     </child>
                     <child>
-                      <widget class="GtkImageMenuItem" id="rescan_public">
-                        <property name="label" translatable="yes">_Rescan Public shares</property>
+                      <widget class="GtkMenuItem" id="rescan_public">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">_Rescan Public shares</property>
                         <property name="use_underline">True</property>
-                        <property name="use_stock">False</property>
                         <signal name="activate" handler="OnRescan"/>
-                        <child internal-child="image">
-                          <widget class="GtkImage" id="image32">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="stock">gtk-refresh</property>
-                          </widget>
-                        </child>
                       </widget>
                     </child>
                     <child>
-                      <widget class="GtkImageMenuItem" id="rescan_buddy">
-                        <property name="label" translatable="yes">Rescan B_uddy shares</property>
+                      <widget class="GtkMenuItem" id="rescan_buddy">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Rescan B_uddy shares</property>
                         <property name="use_underline">True</property>
-                        <property name="use_stock">False</property>
                         <signal name="activate" handler="OnBuddyRescan"/>
-                        <child internal-child="image">
-                          <widget class="GtkImage" id="image33">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="stock">gtk-refresh</property>
-                          </widget>
-                        </child>
                       </widget>
                     </child>
                     <child>
@@ -419,37 +323,21 @@
                       </widget>
                     </child>
                     <child>
-                      <widget class="GtkImageMenuItem" id="rebuild_public">
-                        <property name="label" translatable="yes">Re_build Public shares</property>
+                      <widget class="GtkMenuItem" id="rebuild_public">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Re_build Public shares</property>
                         <property name="use_underline">True</property>
-                        <property name="use_stock">False</property>
                         <signal name="activate" handler="OnRebuild"/>
-                        <child internal-child="image">
-                          <widget class="GtkImage" id="image34">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="stock">gtk-refresh</property>
-                          </widget>
-                        </child>
                       </widget>
                     </child>
                     <child>
-                      <widget class="GtkImageMenuItem" id="rebuild_buddy">
-                        <property name="label" translatable="yes">Rebuild Bu_ddy shares</property>
+                      <widget class="GtkMenuItem" id="rebuild_buddy">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Rebuild Bu_ddy shares</property>
                         <property name="use_underline">True</property>
-                        <property name="use_stock">False</property>
                         <signal name="activate" handler="OnBuddyRebuild"/>
-                        <child internal-child="image">
-                          <widget class="GtkImage" id="image35">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="stock">gtk-refresh</property>
-                          </widget>
-                        </child>
                       </widget>
                     </child>
                     <child>
@@ -459,37 +347,21 @@
                       </widget>
                     </child>
                     <child>
-                      <widget class="GtkImageMenuItem" id="browse_public_shares">
-                        <property name="label" translatable="yes">_Browse Public shares</property>
+                      <widget class="GtkMenuItem" id="browse_public_shares">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">_Browse Public shares</property>
                         <property name="use_underline">True</property>
-                        <property name="use_stock">False</property>
                         <signal name="activate" handler="OnBrowsePublicShares"/>
-                        <child internal-child="image">
-                          <widget class="GtkImage" id="image36">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="stock">gtk-harddisk</property>
-                          </widget>
-                        </child>
                       </widget>
                     </child>
                     <child>
-                      <widget class="GtkImageMenuItem" id="browse_buddy_shares">
-                        <property name="label" translatable="yes">Bro_wse Buddy shares</property>
+                      <widget class="GtkMenuItem" id="browse_buddy_shares">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Bro_wse Buddy shares</property>
                         <property name="use_underline">True</property>
-                        <property name="use_stock">False</property>
                         <signal name="activate" handler="OnBrowseBuddyShares"/>
-                        <child internal-child="image">
-                          <widget class="GtkImage" id="image64">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="stock">gtk-harddisk</property>
-                          </widget>
-                        </child>
                       </widget>
                     </child>
                   </widget>
@@ -506,156 +378,84 @@
                   <widget class="GtkMenu" id="modes1_menu">
                     <property name="can_focus">False</property>
                     <child>
-                      <widget class="GtkImageMenuItem" id="chat_rooms1">
+                      <widget class="GtkMenuItem" id="chat_rooms1">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
                         <property name="label" translatable="yes">_Chat Rooms</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
                         <property name="use_underline">True</property>
-                        <property name="use_stock">False</property>
                         <signal name="activate" handler="OnChatRooms"/>
-                        <child internal-child="image">
-                          <widget class="GtkImage" id="image37">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="stock">gtk-jump-to</property>
-                          </widget>
-                        </child>
                       </widget>
                     </child>
                     <child>
-                      <widget class="GtkImageMenuItem" id="private_chat1">
+                      <widget class="GtkMenuItem" id="private_chat1">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
                         <property name="label" translatable="yes">_Private Chat</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
                         <property name="use_underline">True</property>
-                        <property name="use_stock">False</property>
                         <signal name="activate" handler="OnPrivateChat"/>
-                        <child internal-child="image">
-                          <widget class="GtkImage" id="image39">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="stock">gtk-jump-to</property>
-                          </widget>
-                        </child>
                       </widget>
                     </child>
                     <child>
-                      <widget class="GtkImageMenuItem" id="downloads1">
+                      <widget class="GtkMenuItem" id="downloads1">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
                         <property name="label" translatable="yes">_Downloads</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
                         <property name="use_underline">True</property>
-                        <property name="use_stock">False</property>
                         <signal name="activate" handler="OnDownloads"/>
-                        <child internal-child="image">
-                          <widget class="GtkImage" id="image40">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="stock">gtk-go-down</property>
-                          </widget>
-                        </child>
                       </widget>
                     </child>
                     <child>
-                      <widget class="GtkImageMenuItem" id="uploads1">
+                      <widget class="GtkMenuItem" id="uploads1">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
                         <property name="label" translatable="yes">_Uploads</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
                         <property name="use_underline">True</property>
-                        <property name="use_stock">False</property>
                         <signal name="activate" handler="OnUploads"/>
-                        <child internal-child="image">
-                          <widget class="GtkImage" id="image42">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="stock">gtk-go-up</property>
-                          </widget>
-                        </child>
                       </widget>
                     </child>
                     <child>
-                      <widget class="GtkImageMenuItem" id="search_files1">
+                      <widget class="GtkMenuItem" id="search_files1">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
                         <property name="label" translatable="yes">_Search Files</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
                         <property name="use_underline">True</property>
-                        <property name="use_stock">False</property>
                         <signal name="activate" handler="OnSearchFiles"/>
-                        <child internal-child="image">
-                          <widget class="GtkImage" id="image47">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="stock">gtk-find</property>
-                          </widget>
-                        </child>
                       </widget>
                     </child>
                     <child>
-                      <widget class="GtkImageMenuItem" id="user_info1">
+                      <widget class="GtkMenuItem" id="user_info1">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
                         <property name="label" translatable="yes">User I_nfo</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
                         <property name="use_underline">True</property>
-                        <property name="use_stock">False</property>
                         <signal name="activate" handler="OnUserInfo"/>
-                        <child internal-child="image">
-                          <widget class="GtkImage" id="image48">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="stock">gtk-info</property>
-                          </widget>
-                        </child>
                       </widget>
                     </child>
                     <child>
-                      <widget class="GtkImageMenuItem" id="user_browse1">
+                      <widget class="GtkMenuItem" id="user_browse1">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
                         <property name="label" translatable="yes">User _Browse</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
                         <property name="use_underline">True</property>
-                        <property name="use_stock">False</property>
                         <signal name="activate" handler="OnUserBrowse"/>
-                        <child internal-child="image">
-                          <widget class="GtkImage" id="image49">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="stock">gtk-harddisk</property>
-                          </widget>
-                        </child>
                       </widget>
                     </child>
                     <child>
-                      <widget class="GtkImageMenuItem" id="interests1">
+                      <widget class="GtkMenuItem" id="interests1">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
                         <property name="label" translatable="yes">_Interests</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
                         <property name="use_underline">True</property>
-                        <property name="use_stock">False</property>
                         <signal name="activate" handler="OnInterests"/>
-                        <child internal-child="image">
-                          <widget class="GtkImage" id="image50">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="stock">gtk-dialog-info</property>
-                          </widget>
-                        </child>
                       </widget>
                     </child>
                     <child>
-                      <widget class="GtkImageMenuItem" id="user_list1">
-                        <property name="label" translatable="yes">Buddy _List</property>
+                      <widget class="GtkMenuItem" id="user_list1">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Buddy _List</property>
                         <property name="use_underline">True</property>
-                        <property name="use_stock">False</property>
                         <signal name="activate" handler="OnUserList"/>
-                        <child internal-child="image">
-                          <widget class="GtkImage" id="image51">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="stock">gtk-index</property>
-                          </widget>
-                        </child>
                       </widget>
                     </child>
                   </widget>
@@ -672,55 +472,31 @@
                   <widget class="GtkMenu" id="help1_menu">
                     <property name="can_focus">False</property>
                     <child>
-                      <widget class="GtkImageMenuItem" id="nicotine_guide1">
-                        <property name="label" translatable="yes">_Offline Nicotine+ Guide</property>
+                      <widget class="GtkMenuItem" id="nicotine_guide1">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">_Offline Nicotine+ Guide</property>
                         <property name="use_underline">True</property>
-                        <property name="use_stock">False</property>
                         <signal name="activate" handler="OnNicotineGuide"/>
                         <accelerator key="F1" signal="activate"/>
-                        <child internal-child="image">
-                          <widget class="GtkImage" id="image52">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="stock">gtk-help</property>
-                          </widget>
-                        </child>
                       </widget>
                     </child>
                     <child>
-                      <widget class="GtkImageMenuItem" id="ProjectWebsite">
+                      <widget class="GtkMenuItem" id="ProjectWebsite">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
                         <property name="label" translatable="yes">Project _Website</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
                         <property name="use_underline">True</property>
-                        <property name="use_stock">False</property>
                         <signal name="activate" handler="OnProjectWebsite"/>
-                        <child internal-child="image">
-                          <widget class="GtkImage" id="image54">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="stock">gtk-home</property>
-                          </widget>
-                        </child>
                       </widget>
                     </child>
                     <child>
-                      <widget class="GtkImageMenuItem" id="ProjectGithubPage">
-                        <property name="label" translatable="yes">Project _Github Page</property>
+                      <widget class="GtkMenuItem" id="ProjectGithubPage">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Project _Github Page</property>
                         <property name="use_underline">True</property>
-                        <property name="use_stock">False</property>
                         <signal name="activate" handler="onProjectGithubPage"/>
-                        <child internal-child="image">
-                          <widget class="GtkImage" id="image55">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="stock">gtk-home</property>
-                          </widget>
-                        </child>
                       </widget>
                     </child>
                     <child>
@@ -730,54 +506,30 @@
                       </widget>
                     </child>
                     <child>
-                      <widget class="GtkImageMenuItem" id="about_chatroom_commands1">
+                      <widget class="GtkMenuItem" id="about_chatroom_commands1">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
                         <property name="label" translatable="yes">About _chat room commands</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
                         <property name="use_underline">True</property>
-                        <property name="use_stock">False</property>
                         <signal name="activate" handler="OnAboutChatroomCommands"/>
-                        <child internal-child="image">
-                          <widget class="GtkImage" id="image56">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="stock">gtk-info</property>
-                          </widget>
-                        </child>
                       </widget>
                     </child>
                     <child>
-                      <widget class="GtkImageMenuItem" id="about_private_chat_command1">
+                      <widget class="GtkMenuItem" id="about_private_chat_command1">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
                         <property name="label" translatable="yes">About _private chat commands</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
                         <property name="use_underline">True</property>
-                        <property name="use_stock">False</property>
                         <signal name="activate" handler="OnAboutPrivateChatCommands"/>
-                        <child internal-child="image">
-                          <widget class="GtkImage" id="image57">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="stock">gtk-info</property>
-                          </widget>
-                        </child>
                       </widget>
                     </child>
                     <child>
-                      <widget class="GtkImageMenuItem" id="about_dependencies">
-                        <property name="label" translatable="yes">About _optional dependencies</property>
+                      <widget class="GtkMenuItem" id="about_dependencies">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">About _optional dependencies</property>
                         <property name="use_underline">True</property>
-                        <property name="use_stock">False</property>
                         <signal name="activate" handler="OnAboutDependencies"/>
-                        <child internal-child="image">
-                          <widget class="GtkImage" id="image58">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="stock">gtk-info</property>
-                          </widget>
-                        </child>
                       </widget>
                     </child>
                     <child>
@@ -787,20 +539,12 @@
                       </widget>
                     </child>
                     <child>
-                      <widget class="GtkImageMenuItem" id="about_search_filters1">
-                        <property name="label" translatable="yes">About _search filters</property>
+                      <widget class="GtkMenuItem" id="about_search_filters1">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">About _search filters</property>
                         <property name="use_underline">True</property>
-                        <property name="use_stock">False</property>
                         <signal name="activate" handler="OnAboutFilters"/>
-                        <child internal-child="image">
-                          <widget class="GtkImage" id="image59">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="stock">gtk-info</property>
-                          </widget>
-                        </child>
                       </widget>
                     </child>
                     <child>
@@ -810,37 +554,21 @@
                       </widget>
                     </child>
                     <child>
-                      <widget class="GtkImageMenuItem" id="check_latest1">
-                        <property name="label" translatable="yes">Check _latest</property>
+                      <widget class="GtkMenuItem" id="check_latest1">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Check _latest</property>
                         <property name="use_underline">True</property>
-                        <property name="use_stock">False</property>
                         <signal name="activate" handler="OnCheckLatest"/>
-                        <child internal-child="image">
-                          <widget class="GtkImage" id="image60">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="stock">gtk-connect</property>
-                          </widget>
-                        </child>
                       </widget>
                     </child>
                     <child>
-                      <widget class="GtkImageMenuItem" id="report_bug">
-                        <property name="label" translatable="yes">Report a _bug</property>
+                      <widget class="GtkMenuItem" id="report_bug">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Report a _bug</property>
                         <property name="use_underline">True</property>
-                        <property name="use_stock">False</property>
                         <signal name="activate" handler="OnReportBug"/>
-                        <child internal-child="image">
-                          <widget class="GtkImage" id="image61">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="stock">gtk-connect</property>
-                          </widget>
-                        </child>
                       </widget>
                     </child>
                     <child>
@@ -850,20 +578,12 @@
                       </widget>
                     </child>
                     <child>
-                      <widget class="GtkImageMenuItem" id="about_nicotine1">
-                        <property name="label" translatable="yes">About _Nicotine+</property>
+                      <widget class="GtkMenuItem" id="about_nicotine1">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">About _Nicotine+</property>
                         <property name="use_underline">True</property>
-                        <property name="use_stock">False</property>
                         <signal name="activate" handler="OnAbout"/>
-                        <child internal-child="image">
-                          <widget class="GtkImage" id="image62">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="stock">gtk-about</property>
-                          </widget>
-                        </child>
                       </widget>
                     </child>
                   </widget>
