@@ -168,7 +168,9 @@ class WishList(gtk.Dialog):
 class Searches(IconNotebook):
 
     def __init__(self, frame):
+
         self.frame = frame
+
         self.interval = 0
         self.searchid = int(random.random() * (2**31-1))
         self.searches = {}
@@ -288,25 +290,25 @@ class Searches(IconNotebook):
 
         if mode == 0:
             feedback = self.frame.pluginhandler.OutgoingGlobalSearchEvent(text)
-            if feedback != None:
+            if feedback is not None:
                 text = feedback[0]
         elif mode == 1:
             feedback = self.frame.pluginhandler.OutgoingRoomSearchEvent(room, text)
-            if feedback != None:
+            if feedback is not None:
                 (room, text) = feedback
         elif mode == 2:
             feedback = self.frame.pluginhandler.OutgoingBuddySearchEvent(text)
-            if feedback != None:
+            if feedback is not None:
                 text = feedback[0]
         elif mode == 3:
             feedback = self.frame.pluginhandler.OutgoingUserSearchEvent(users)
-            if feedback != None:
+            if feedback is not None:
                 users = feedback[0]
         else:
             print "Unknown search mode, not using plugin system. Fix me!"
             feedback = True
 
-        if feedback != None:
+        if feedback is not None:
             self.DoSearch(text, mode, users, room)
             self.frame.SearchEntry.set_text("")
 
@@ -371,7 +373,7 @@ class Searches(IconNotebook):
         self.frame.np.queue.put(slskmessages.WishlistSearch(id, text))
 
     def DoRoomsSearch(self, id, text, room=None):
-        if room != None:
+        if room is not None:
             self.frame.np.queue.put(slskmessages.RoomSearch(room, id, text))
         else:
             for room in self.frame.chatrooms.roomsctrl.joinedrooms.keys():
@@ -425,7 +427,7 @@ class Searches(IconNotebook):
 
     def RemoveAutoSearch(self, id):
 
-        if not id in self.searches:
+        if id not in self.searches:
             return
 
         search = self.searches[id]
@@ -438,17 +440,15 @@ class Searches(IconNotebook):
 
     def RemoveTab(self, tab):
 
-        import gc
         if tab.id in self.searches:
             search = self.searches[tab.id]
             search[2] = None
 
-        self.remove_page(tab.Main)
-        tab.Main.destroy()
-        for i in tab.__dict__.keys():
-            del tab.__dict__[i]
-
-        gc.collect()
+        if self.frame.SearchNotebook.is_tab_detached(tab.Main):
+            tab.Main.get_parent_window().destroy()
+        else:
+            self.frame.SearchNotebook.remove_page(tab.Main)
+            tab.Main.destroy()
 
     def AutoSearch(self, id):
 
@@ -750,7 +750,7 @@ class Search:
         for i in s_config["filterbr"]:
             self.AddCombo(self.FilterBitrate, i, True)
         for i in s_config["filtercc"]:
-            self.AddCombo(self.FilterCountry,i, True)
+            self.AddCombo(self.FilterCountry, i, True)
 
     def AddCombo(self, ComboboxEntry, text, list=False):
 
@@ -866,8 +866,9 @@ class Search:
         return False
 
     def get_flag(self, user, flag=None):
+
         if flag is not None:
-            flag = "flag_"+flag
+            flag = "flag_" + flag
             self.frame.flag_users[user] = flag
         else:
             flag = self.frame.GetUserFlag(user)
@@ -1313,7 +1314,7 @@ class Search:
         if user is None:
             return
 
-        if not user in self.selected_users:
+        if user not in self.selected_users:
             self.selected_users.append(user)
 
         if fn is None or fn == "":
@@ -1521,6 +1522,7 @@ class Search:
             self.ExpandButton.hide()
 
     def OnToggleExpandAll(self, widget):
+
         if self.ExpandButton.get_active():
             self.ResultsList.expand_all()
             self.expandImage.set_from_stock(gtk.STOCK_REMOVE, 4)
