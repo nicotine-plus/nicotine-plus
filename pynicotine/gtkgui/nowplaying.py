@@ -240,7 +240,7 @@ class NowPlaying:
         # Save new defined formats in npformatlist before exiting
         config = self.frame.np.config.sections
 
-        text = self.NPFormat.get_active_text()
+        text = self.NPFormat.child.get_text()
 
         if text is not None and not text.isspace() and text != "":
             if text not in config["players"]["npformatlist"] and text not in self.defaultlist:
@@ -311,7 +311,7 @@ class NowPlaying:
             except TypeError:
                 self.title[key] = value  # already unicode
 
-        title = self.NPFormat.get_active_text()
+        title = self.NPFormat.child.get_text()
         title = title.replace("%", "%%")  # Escaping user supplied % symbols
         title = title.replace("$t", "%(title)s")
         title = title.replace("$a", "%(artist)s")
@@ -364,14 +364,14 @@ class NowPlaying:
 
         self.frame.np.config.sections["players"]["npplayer"] = player
         self.frame.np.config.sections["players"]["npothercommand"] = self.NPCommand.get_text()
-        self.frame.np.config.sections["players"]["npformat"] = self.NPFormat.get_active_text()
+        self.frame.np.config.sections["players"]["npformat"] = self.NPFormat.child.get_text()
         self.frame.np.config.writeConfiguration()
 
         self.quit(None)
 
     def mpd(self):
 
-        format = self.NPFormat.get_active_text()
+        format = self.NPFormat.child.get_text()
 
         if "$a" in format:
             output = self.mpd_command("%artist%")
@@ -515,7 +515,7 @@ class NowPlaying:
     def audacious(self):
         """ Function to get audacious currently playing song """
 
-        slist = self.NPFormat.get_active_text()
+        slist = self.NPFormat.child.get_text()
         output = ""
         self.audacious_running = True
 
