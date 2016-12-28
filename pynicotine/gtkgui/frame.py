@@ -749,7 +749,7 @@ class NicotineFrame:
                             pass
                         del loader
                         del s
-                if not name in self.images:
+                if name not in self.images:
                     self.images[name] = loadStatic(name)
         else:
             for name in names:
@@ -1030,7 +1030,7 @@ class NicotineFrame:
                 mylist = mypickle.load(sharefile)
                 sharefile.close()
                 if not isinstance(mylist, (list, dict)):
-                    raise TypeError, "Bad data in file %(sharesdb)s" % {'sharesdb': share}
+                    raise TypeError("Bad data in file %(sharesdb)s" % {'sharesdb': share})
                 username = share.split(os.sep)[-1]
                 self.userbrowse.InitWindow(username, None)
                 if username in self.userbrowse.users:
@@ -1273,7 +1273,7 @@ class NicotineFrame:
 
     def OnKeyPress(self, widget, event):
         self.OnButtonPress(None, None)
-        if event.state & (gtk.gdk.MOD1_MASK|gtk.gdk.CONTROL_MASK) != gtk.gdk.MOD1_MASK:
+        if event.state & (gtk.gdk.MOD1_MASK | gtk.gdk.CONTROL_MASK) != gtk.gdk.MOD1_MASK:
             return False
         for i in range(1, 10):
             if event.keyval == gtk.gdk.keyval_from_name(str(i)):
@@ -1677,7 +1677,7 @@ class NicotineFrame:
         gobject.idle_add(self.FetchUserListStatus)
 
         AppendLine(self.LogWindow, self.np.decode(msg.banner), self.tag_log)
-        # self.pluginhandler.ServerConnectNotification()
+
         return self.privatechats, self.chatrooms, self.userinfo, self.userbrowse, self.Searches, self.downloads, self.uploads, self.userlist
 
     def GetStatusImage(self, status):
@@ -2597,7 +2597,7 @@ class NicotineFrame:
             if self.userlist.userlistvbox not in self.vpaned3.get_children():
                 self.vpaned3.hide()
         else:
-            if not self.roomlist.vbox2 in self.vpaned3.get_children():
+            if self.roomlist.vbox2 not in self.vpaned3.get_children():
                 self.vpaned3.pack2(self.roomlist.vbox2, True, True)
                 self.vpaned3.show()
 
@@ -2803,7 +2803,7 @@ class NicotineFrame:
         ix = widget.get_position()
         config = self.np.config.sections["words"]
 
-        if entry_text == None or entry_text == "" or entry_text.isspace() or item_text is None:
+        if entry_text is None or entry_text == "" or entry_text.isspace() or item_text is None:
             return False
         # Get word to the left of current position
         if " " in entry_text:
@@ -3309,7 +3309,7 @@ class Notifications:
 
         hilites = self.frame.TrayApp.tray_status["hilites"]
 
-        if location == "rooms" and room != None and user != None:
+        if location == "rooms" and room is not None and user is not None:
             if room not in hilites["rooms"]:
                 hilites["rooms"].append(room)
                 self.sound("room_nick", user, place=room)
@@ -3340,7 +3340,7 @@ class Notifications:
 
     def Clear(self, location, user=None, room=None):
 
-        if location == "rooms" and room != None:
+        if location == "rooms" and room is not None:
             if room in self.frame.TrayApp.tray_status["hilites"]["rooms"]:
                 self.frame.TrayApp.tray_status["hilites"]["rooms"].remove(room)
             self.SetTitle(room)
@@ -3367,7 +3367,7 @@ class Notifications:
             # Allow for the possibility the username is not available
             elif len(self.frame.TrayApp.tray_status["hilites"]["rooms"]) > 0:
                 room = self.frame.TrayApp.tray_status["hilites"]["rooms"][-1]
-                if user == None:
+                if user is None:
                     self.frame.MainWindow.set_title(
                         _("Nicotine+") + " " + version + " :: " + _("You've been mentioned in the %(room)s room") % {'room': room}
                     )
@@ -3441,7 +3441,7 @@ class Notifications:
                 path = None
 
         if not exists:
-            path = "%s/share/nicotine/sounds/default/%s.ogg" %(sys.prefix, soundtitle)
+            path = "%s/share/nicotine/sounds/default/%s.ogg" % (sys.prefix, soundtitle)
             if os.path.exists(path):
                 exists = 1
             else:
@@ -3454,7 +3454,7 @@ class Notifications:
             else:
                 path = None
 
-        if path != None and exists:
+        if path is not None and exists:
             if command == "Gstreamer (gst-python)":
                 if self.frame.gstreamer.player is None:
                     return
@@ -3520,7 +3520,7 @@ class TrayApp:
 
     def Draw(self):
 
-        if not self.HAVE_TRAYICON or self.trayicon == None or self.TRAYICON_CREATED:
+        if not self.HAVE_TRAYICON or self.trayicon is None or self.TRAYICON_CREATED:
             return
 
         self.TRAYICON_CREATED = 1
@@ -3535,11 +3535,11 @@ class TrayApp:
     def SetImage(self, status=None):
 
         # Abort if Trayicon module wasn't loaded
-        if not self.HAVE_TRAYICON or self.trayicon == None or not self.TRAYICON_CREATED:
+        if not self.HAVE_TRAYICON or self.trayicon is None or not self.TRAYICON_CREATED:
             return
 
         try:
-            if status != None:
+            if status is not None:
                 self.tray_status["status"] = status
 
             # Check for hilites, and display hilite icon if there is a room or private hilite
