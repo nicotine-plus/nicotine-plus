@@ -188,17 +188,21 @@ class UserInfo:
 
     def __init__(self, userinfos, user, conn):
 
-        self.wTree = gtk.glade.XML(os.path.join(os.path.dirname(os.path.realpath(__file__)), "userinfo.glade"), None)
-        widgets = self.wTree.get_widget_prefix("")
+        # Build the window
+        builder = gtk.Builder()
+        builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "userinfo.ui"))
+        self.UserInfoTab = builder.get_object("UserInfoTab")
 
-        for i in widgets:
-            name = gtk.glade.get_widget_name(i)
-            self.__dict__[name] = i
+        for i in builder.get_objects():
+            try:
+                self.__dict__[gtk.Buildable.get_name(i)] = i
+            except TypeError:
+                pass
 
         self.UserInfoTab.remove(self.Main)
         self.UserInfoTab.destroy()
 
-        self.wTree.signal_autoconnect(self)
+        builder.connect_signals(self)
 
         self.userinfos = userinfos
         self.frame = userinfos.frame
