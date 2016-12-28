@@ -548,32 +548,41 @@ class Search:
         self.Searches = Searches
         self.frame = Searches.frame
 
-        self.wTree = gtk.glade.XML(os.path.join(os.path.dirname(os.path.realpath(__file__)), "search.glade"), None)
-        widgets = self.wTree.get_widget_prefix("")
+        # Build the window
+        builder = gtk.Builder()
+        builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "search.ui"))
+        self.SearchTab = builder.get_object("SearchTab")
 
-        for i in widgets:
-            name = gtk.glade.get_widget_name(i)
-            self.__dict__[name] = i
+        for i in builder.get_objects():
+            try:
+                self.__dict__[gtk.Buildable.get_name(i)] = i
+            except TypeError:
+                pass
 
         self.SearchTab.remove(self.Main)
         self.SearchTab.destroy()
-        self.wTree.signal_autoconnect(self)
+
+        builder.connect_signals(self)
+
         self.FilterBitrate_List = gtk.ListStore(gobject.TYPE_STRING)
         self.FilterBitrate.set_model(self.FilterBitrate_List)
-        self.FilterBitrate.set_text_column(0)
+        self.FilterBitrate.set_entry_text_column(0)
+
         self.FilterSize_List = gtk.ListStore(gobject.TYPE_STRING)
         self.FilterSize.set_model(self.FilterSize_List)
-        self.FilterSize.set_text_column(0)
+        self.FilterSize.set_entry_text_column(0)
+
         self.FilterCountry_List = gtk.ListStore(gobject.TYPE_STRING)
         self.FilterCountry.set_model(self.FilterCountry_List)
-        self.FilterCountry.set_text_column(0)
+        self.FilterCountry.set_entry_text_column(0)
+
         self.FilterIn_List = gtk.ListStore(gobject.TYPE_STRING)
         self.FilterIn.set_model(self.FilterIn_List)
-        self.FilterIn.set_text_column(0)
+        self.FilterIn.set_entry_text_column(0)
+
         self.FilterOut_List = gtk.ListStore(gobject.TYPE_STRING)
         self.FilterOut.set_model(self.FilterOut_List)
-        self.FilterOut.set_text_column(0)
-        self.wTree.signal_autoconnect(self)
+        self.FilterOut.set_entry_text_column(0)
 
         self.text = text
         self.id = id
@@ -632,6 +641,7 @@ class Search:
         self.FilterSize.connect("changed", self.OnFilterChanged)
         self.FilterBitrate.connect("changed", self.OnFilterChanged)
         self.FilterCountry.connect("changed", self.OnFilterChanged)
+
         self.FilterIn.child.connect("activate", self.OnRefilter)
         self.FilterOut.child.connect("activate", self.OnRefilter)
         self.FilterSize.child.connect("activate", self.OnRefilter)
@@ -723,6 +733,7 @@ class Search:
         if self.frame.np.config.sections["searches"]["enablefilters"]:
 
             filter = self.frame.np.config.sections["searches"]["defilter"]
+
             self.FilterIn.child.set_text(filter[0])
             self.FilterOut.child.set_text(filter[1])
             self.FilterSize.child.set_text(filter[2])
@@ -744,22 +755,26 @@ class Search:
 
         for i in s_config["filterin"]:
             self.AddCombo(self.FilterIn, i, True)
+
         for i in s_config["filterout"]:
             self.AddCombo(self.FilterOut, i, True)
+
         for i in s_config["filtersize"]:
             self.AddCombo(self.FilterSize, i, True)
+
         for i in s_config["filterbr"]:
             self.AddCombo(self.FilterBitrate, i, True)
+
         for i in s_config["filtercc"]:
             self.AddCombo(self.FilterCountry, i, True)
 
-    def AddCombo(self, ComboboxEntry, text, list=False):
+    def AddCombo(self, Combobox, text, list=False):
 
         text = text.strip()
         if not text:
             return False
 
-        model = ComboboxEntry.get_model()
+        model = Combobox.get_model()
         iter = model.get_iter_root()
         match = False
 
