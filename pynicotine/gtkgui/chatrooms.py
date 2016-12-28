@@ -1003,9 +1003,6 @@ class ChatRoom:
         self.Menu_SearchUser = items[15]
         self.Menu_PrivateRooms = items[16]
 
-        img = gtk.Image()
-        img.set_from_pixbuf(self.frame.images["money"])
-        self.Menu_GivePrivileges.set_image(img)
         self.UserList.connect("button_press_event", self.OnPopupMenu)
 
         self.ChatEntry.grab_focus()

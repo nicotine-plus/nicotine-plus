@@ -502,16 +502,6 @@ class NicotineFrame:
             if self.np.config.sections["transfers"]["enablebuddyshares"] and self.np.config.sections["transfers"]["buddyshared"]:
                 self.OnBuddyRescan()
 
-        img = gtk.Image()
-        img.set_from_pixbuf(self.images["notify"])
-        self.about_nicotine1.set_image(img)
-        img = gtk.Image()
-        img.set_from_pixbuf(self.images["bug"])
-        self.report_bug.set_image(img)
-        img = gtk.Image()
-        img.set_from_pixbuf(self.images["money"])
-        self.check_privileges1.set_image(img)
-
         self.now = nowplaying.NowPlaying(self)
         self.SetTabPositions()
 
@@ -729,8 +719,6 @@ class NicotineFrame:
             "trayicon_msg",
             "n",
             "notify",
-            "bug",
-            "money",
             "plugin"
         ]
 
