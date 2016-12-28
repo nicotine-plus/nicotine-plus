@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-27 23:30+0100\n"
+"POT-Creation-Date: 2016-12-28 16:07+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -301,6 +301,84 @@ msgstr ""
 msgid "Search: "
 msgstr ""
 
+msgid "UserBrowse"
+msgstr ""
+
+msgid "Search file and folder names (exact match):"
+msgstr ""
+
+msgid "Expand / Collapse all"
+msgstr ""
+
+msgid "Dirs: Unknown"
+msgstr ""
+
+msgid "Shared: Unknown"
+msgstr ""
+
+msgid "Save"
+msgstr ""
+
+msgid "Refresh"
+msgstr ""
+
+msgid "Self description:"
+msgstr ""
+
+msgid "Total uploads allowed: unknown"
+msgstr ""
+
+msgid "Slots free: unknown"
+msgstr ""
+
+msgid "Queue size: unknown"
+msgstr ""
+
+msgid "Speed: unknown"
+msgstr ""
+
+msgid "Files: unknown"
+msgstr ""
+
+msgid "Directories: unknown"
+msgstr ""
+
+msgid "Accepts Uploads from:"
+msgstr ""
+
+msgid "unknown"
+msgstr ""
+
+msgid "Information:"
+msgstr ""
+
+msgid "Interests:"
+msgstr ""
+
+msgid "Picture:"
+msgstr ""
+
+msgid "Private chat"
+msgstr ""
+
+msgid "Browse"
+msgstr ""
+
+msgid "Show IP"
+msgstr ""
+
+msgid "Add to list"
+msgstr ""
+
+msgid "Ban"
+msgstr ""
+
+msgid "Ignore"
+msgstr ""
+
+msgid "Save pic"
+msgstr ""
+
 msgid "Toggle Text-To-Speech"
 msgstr ""
 
@@ -487,9 +565,6 @@ msgstr ""
 msgid "Files: 0"
 msgstr ""
 
-msgid "Expand / Collapse all"
-msgstr ""
-
 msgid "Group by Users"
 msgstr ""
 
@@ -631,9 +706,6 @@ msgstr ""
 msgid "Stop new search results from being displayed"
 msgstr ""
 
-msgid "Ignore"
-msgstr ""
-
 msgid "Close search tab; press ignore to prevent this tab from reopening"
 msgstr ""
 
@@ -688,9 +760,6 @@ msgid "Auto-reply when away:  "
 msgstr ""
 
 msgid "Away mode"
-msgstr ""
-
-msgid "Ban"
 msgstr ""
 
 msgid "Banned Users:"
@@ -1231,9 +1300,6 @@ msgstr ""
 msgid "Chat rooms"
 msgstr ""
 
-msgid "Private chat"
-msgstr ""
-
 msgid "User info"
 msgstr ""
 
@@ -1554,9 +1620,6 @@ msgstr ""
 msgid "Userinfo"
 msgstr ""
 
-msgid "Self description:"
-msgstr ""
-
 msgid "Image:"
 msgstr ""
 
@@ -1564,69 +1627,6 @@ msgid "Size: 0"
 msgstr ""
 
 msgid "Personal settings"
-msgstr ""
-
-msgid "UserBrowse"
-msgstr ""
-
-msgid "Search file and folder names (exact match):"
-msgstr ""
-
-msgid "Dirs: Unknown"
-msgstr ""
-
-msgid "Shared: Unknown"
-msgstr ""
-
-msgid "Save"
-msgstr ""
-
-msgid "Refresh"
-msgstr ""
-
-msgid "Total uploads allowed: unknown"
-msgstr ""
-
-msgid "Slots free: unknown"
-msgstr ""
-
-msgid "Queue size: unknown"
-msgstr ""
-
-msgid "Speed: unknown"
-msgstr ""
-
-msgid "Files: unknown"
-msgstr ""
-
-msgid "Directories: unknown"
-msgstr ""
-
-msgid "Accepts Uploads from:"
-msgstr ""
-
-msgid "unknown"
-msgstr ""
-
-msgid "Information:"
-msgstr ""
-
-msgid "Interests:"
-msgstr ""
-
-msgid "Picture:"
-msgstr ""
-
-msgid "Browse"
-msgstr ""
-
-msgid "Show IP"
-msgstr ""
-
-msgid "Add to list"
-msgstr ""
-
-msgid "Save pic"
 msgstr ""
 
 msgid "About Nicotine+"
