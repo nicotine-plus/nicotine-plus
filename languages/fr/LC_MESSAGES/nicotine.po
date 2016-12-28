@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nicotine\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-28 16:07+0100\n"
-"PO-Revision-Date: 2016-12-28 16:07+0100\n"
+"POT-Creation-Date: 2016-12-28 19:38+0100\n"
+"PO-Revision-Date: 2016-12-28 19:38+0100\n"
 "Last-Translator: Michael LABOUEBE <gfarmerfr@free.fr>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -400,6 +400,75 @@ msgstr "Cacher la liste des salons"
 msgid "Search: "
 msgstr "Recherche:"
 
+# pynicotine/gtkgui/downloads.py
+msgid "Query"
+msgstr "Requête"
+
+msgid "Results: 0/0"
+msgstr "Résultats: 0/0"
+
+msgid "Expand / Collapse all"
+msgstr "Minimiser / Maximiser"
+
+msgid "Group by Users"
+msgstr "Grouper par utilisateurs"
+
+# pynicotine/gtkgui/nicotine_glade.py
+msgid "Enable filters"
+msgstr "Activer les filtres"
+
+msgid "Wish"
+msgstr "Souhait"
+
+msgid ""
+"This search will be opened the next time you start Nicotine+ and will send "
+"out new search requests after a server-set intervals (usually around one "
+"hour)"
+msgstr ""
+"Cette recherche va être ouverte la prochaine fois que vous démarrez Nicotine"
+"+ et va envoyer des requêtes après un délai définit par le serveur "
+"(généralement une heure)"
+
+msgid "Clear all results"
+msgstr "Enlever les résultats"
+
+msgid "Stop new search results from being displayed"
+msgstr "Arrête l'affichage des nouveaux résultats de la recherche"
+
+# pynicotine/gtkgui/nicotine_glade.py
+msgid "Ignore"
+msgstr "Ignorer"
+
+msgid "Close search tab; press ignore to prevent this tab from reopening"
+msgstr ""
+"Cliquer sur Ignorer pour prévenir de la ré-ouverture de l'onglet de recherche"
+
+# pynicotine/gtkgui/nicotine_glade.py
+# pynicotine/gtkgui/settings_glade.py
+msgid "Filter in:"
+msgstr "Filtre d'inclusion:"
+
+# pynicotine/gtkgui/nicotine_glade.py
+# pynicotine/gtkgui/settings_glade.py
+msgid "Filter out:"
+msgstr "Filtre d'exclusion:"
+
+# pynicotine/gtkgui/nicotine_glade.py
+# pynicotine/gtkgui/settings_glade.py
+msgid "Size:"
+msgstr "Taille:"
+
+# pynicotine/gtkgui/settings_glade.py
+msgid "Bitrate:"
+msgstr "Taux d'encodage:"
+
+msgid "Country:"
+msgstr "Pays:"
+
+# pynicotine/gtkgui/settings_glade.py
+msgid "Free slot"
+msgstr "Place libre en file d'attente"
+
 # pynicotine/gtkgui/nicotine_glade.py
 msgid "UserBrowse"
 msgstr "Fichiers partagés"
@@ -407,9 +476,6 @@ msgstr "Fichiers partagés"
 # pynicotine/gtkgui/nicotine_glade.py
 msgid "Search file and folder names (exact match):"
 msgstr "Rechercher le fichier et le dossier (recherche exacte):"
-
-msgid "Expand / Collapse all"
-msgstr "Minimiser / Maximiser"
 
 # pynicotine/gtkgui/nicotine_glade.py
 msgid "Dirs: Unknown"
@@ -493,10 +559,6 @@ msgstr "Ajouter à la liste"
 
 msgid "Ban"
 msgstr "Bannir"
-
-# pynicotine/gtkgui/nicotine_glade.py
-msgid "Ignore"
-msgstr "Ignorer"
 
 # pynicotine/gtkgui/nicotine_glade.py
 msgid "Save pic"
@@ -731,9 +793,6 @@ msgstr "Utilisateurs: 0"
 msgid "Files: 0"
 msgstr "Fichiers: 0"
 
-msgid "Group by Users"
-msgstr "Grouper par utilisateurs"
-
 # pynicotine/gtkgui/downloads.py
 # pynicotine/gtkgui/uploads.py
 msgid "Auto-retry failed"
@@ -897,65 +956,6 @@ msgstr "Examen des partages pour amis"
 # pynicotine/gtkgui/frame.py
 msgid "Scanning Shares"
 msgstr "Examen des partages"
-
-# pynicotine/gtkgui/downloads.py
-msgid "Query"
-msgstr "Requête"
-
-msgid "Results: 0/0"
-msgstr "Résultats: 0/0"
-
-# pynicotine/gtkgui/nicotine_glade.py
-msgid "Enable filters"
-msgstr "Activer les filtres"
-
-msgid "Wish"
-msgstr "Souhait"
-
-msgid ""
-"This search will be opened the next time you start Nicotine+ and will send "
-"out new search requests after a server-set intervals (usually around one "
-"hour)"
-msgstr ""
-"Cette recherche va être ouverte la prochaine fois que vous démarrez Nicotine"
-"+ et va envoyer des requêtes après un délai définit par le serveur "
-"(généralement une heure)"
-
-msgid "Clear all results"
-msgstr "Enlever les résultats"
-
-msgid "Stop new search results from being displayed"
-msgstr "Arrête l'affichage des nouveaux résultats de la recherche"
-
-msgid "Close search tab; press ignore to prevent this tab from reopening"
-msgstr ""
-"Cliquer sur Ignorer pour prévenir de la ré-ouverture de l'onglet de recherche"
-
-# pynicotine/gtkgui/nicotine_glade.py
-# pynicotine/gtkgui/settings_glade.py
-msgid "Filter in:"
-msgstr "Filtre d'inclusion:"
-
-# pynicotine/gtkgui/nicotine_glade.py
-# pynicotine/gtkgui/settings_glade.py
-msgid "Filter out:"
-msgstr "Filtre d'exclusion:"
-
-# pynicotine/gtkgui/nicotine_glade.py
-# pynicotine/gtkgui/settings_glade.py
-msgid "Size:"
-msgstr "Taille:"
-
-# pynicotine/gtkgui/settings_glade.py
-msgid "Bitrate:"
-msgstr "Taux d'encodage:"
-
-msgid "Country:"
-msgstr "Pays:"
-
-# pynicotine/gtkgui/settings_glade.py
-msgid "Free slot"
-msgstr "Place libre en file d'attente"
 
 msgid ""
 "Enable automatic replacement of chat words you've\n"

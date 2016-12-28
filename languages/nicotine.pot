@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-28 16:07+0100\n"
+"POT-Creation-Date: 2016-12-28 19:38+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -301,13 +301,64 @@ msgstr ""
 msgid "Search: "
 msgstr ""
 
+msgid "Query"
+msgstr ""
+
+msgid "Results: 0/0"
+msgstr ""
+
+msgid "Expand / Collapse all"
+msgstr ""
+
+msgid "Group by Users"
+msgstr ""
+
+msgid "Enable filters"
+msgstr ""
+
+msgid "Wish"
+msgstr ""
+
+msgid ""
+"This search will be opened the next time you start Nicotine+ and will send "
+"out new search requests after a server-set intervals (usually around one "
+"hour)"
+msgstr ""
+
+msgid "Clear all results"
+msgstr ""
+
+msgid "Stop new search results from being displayed"
+msgstr ""
+
+msgid "Ignore"
+msgstr ""
+
+msgid "Close search tab; press ignore to prevent this tab from reopening"
+msgstr ""
+
+msgid "Filter in:"
+msgstr ""
+
+msgid "Filter out:"
+msgstr ""
+
+msgid "Size:"
+msgstr ""
+
+msgid "Bitrate:"
+msgstr ""
+
+msgid "Country:"
+msgstr ""
+
+msgid "Free slot"
+msgstr ""
+
 msgid "UserBrowse"
 msgstr ""
 
 msgid "Search file and folder names (exact match):"
-msgstr ""
-
-msgid "Expand / Collapse all"
 msgstr ""
 
 msgid "Dirs: Unknown"
@@ -371,9 +422,6 @@ msgid "Add to list"
 msgstr ""
 
 msgid "Ban"
-msgstr ""
-
-msgid "Ignore"
 msgstr ""
 
 msgid "Save pic"
@@ -565,9 +613,6 @@ msgstr ""
 msgid "Files: 0"
 msgstr ""
 
-msgid "Group by Users"
-msgstr ""
-
 msgid "Auto-retry failed"
 msgstr ""
 
@@ -680,51 +725,6 @@ msgid "Scanning Buddy Shares"
 msgstr ""
 
 msgid "Scanning Shares"
-msgstr ""
-
-msgid "Query"
-msgstr ""
-
-msgid "Results: 0/0"
-msgstr ""
-
-msgid "Enable filters"
-msgstr ""
-
-msgid "Wish"
-msgstr ""
-
-msgid ""
-"This search will be opened the next time you start Nicotine+ and will send "
-"out new search requests after a server-set intervals (usually around one "
-"hour)"
-msgstr ""
-
-msgid "Clear all results"
-msgstr ""
-
-msgid "Stop new search results from being displayed"
-msgstr ""
-
-msgid "Close search tab; press ignore to prevent this tab from reopening"
-msgstr ""
-
-msgid "Filter in:"
-msgstr ""
-
-msgid "Filter out:"
-msgstr ""
-
-msgid "Size:"
-msgstr ""
-
-msgid "Bitrate:"
-msgstr ""
-
-msgid "Country:"
-msgstr ""
-
-msgid "Free slot"
 msgstr ""
 
 msgid ""
