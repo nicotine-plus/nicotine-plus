@@ -42,17 +42,22 @@ class UserBrowse:
 
     def __init__(self, userbrowses, user, conn):
 
-        self.wTree = gtk.glade.XML(os.path.join(os.path.dirname(os.path.realpath(__file__)), "userbrowse.glade"), None)
-        widgets = self.wTree.get_widget_prefix("")
+        # Build the window
+        builder = gtk.Builder()
+        builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "userbrowse.ui"))
+        self.UserBrowseTab = builder.get_object("UserBrowseTab")
 
-        for i in widgets:
-            name = gtk.glade.get_widget_name(i)
-            self.__dict__[name] = i
+        for i in builder.get_objects():
+            try:
+                self.__dict__[gtk.Buildable.get_name(i)] = i
+            except TypeError:
+                pass
 
         self.UserBrowseTab.remove(self.Main)
         self.UserBrowseTab.destroy()
 
-        self.wTree.signal_autoconnect(self)
+        builder.connect_signals(self)
+
         self.userbrowses = userbrowses
 
         self.frame = userbrowses.frame
