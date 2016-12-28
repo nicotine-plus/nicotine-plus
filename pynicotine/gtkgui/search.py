@@ -201,7 +201,7 @@ class Searches(IconNotebook):
                 templist.append(i)
 
         for i in templist:
-            self.frame.SearchEntryCombo.append_text(i)
+            self.frame.SearchEntryCombo_List.append([i])
 
         self.frame.WishList.connect("clicked", self.WishListDialog.Toggle)
 
@@ -253,7 +253,7 @@ class Searches(IconNotebook):
         self.frame.np.config.sections["searches"]["history"] = []
         self.frame.np.config.writeConfiguration()
         self.frame.SearchEntryCombo.get_model().clear()
-        self.frame.SearchEntryCombo.append_text("")
+        self.frame.SearchEntryCombo_List.append([""])
 
     def OnSearch(self):
 
@@ -346,7 +346,7 @@ class Searches(IconNotebook):
                 templist.append(i)
 
         for i in templist:
-            self.frame.SearchEntryCombo.append_text(i)
+            self.frame.SearchEntryCombo_List.append([i])
 
         if mode == 3 and users != [] and users[0] != '':
             self.usersearches[self.searchid] = users

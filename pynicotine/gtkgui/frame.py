@@ -239,14 +239,14 @@ class NicotineFrame:
         # Create Search combo ListStores
         self.SearchEntryCombo_List = gtk.ListStore(gobject.TYPE_STRING)
         self.SearchEntryCombo.set_model(self.SearchEntryCombo_List)
-        self.SearchEntryCombo.set_text_column(0)
+        self.SearchEntryCombo.set_entry_text_column(0)
 
         self.SearchEntry = self.SearchEntryCombo.child
         self.SearchEntry.connect("activate", self.OnSearch)
 
         self.RoomSearchCombo_List = gtk.ListStore(gobject.TYPE_STRING)
         self.RoomSearchCombo.set_model(self.RoomSearchCombo_List)
-        self.RoomSearchCombo.set_text_column(0)
+        self.RoomSearchCombo.set_entry_text_column(0)
 
         self.SearchMethod_List = gtk.ListStore(gobject.TYPE_STRING)
         for i in [""]:

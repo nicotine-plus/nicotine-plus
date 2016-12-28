@@ -1854,10 +1854,11 @@
                               </packing>
                             </child>
                             <child>
-                              <widget class="GtkComboBoxEntry" id="SearchEntryCombo">
+                              <widget class="GtkComboBox" id="SearchEntryCombo">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="tooltip" translatable="yes">Search patterns: with a word = term, without a word = -term</property>
+                                <property name="has_entry">True</property>
                               </widget>
                               <packing>
                                 <property name="expand">True</property>
@@ -1940,29 +1941,6 @@
                               </packing>
                             </child>
                             <child>
-                              <widget class="Custom" id="UserSearchCombo">
-                                <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                              </widget>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="fill">False</property>
-                                <property name="position">4</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <widget class="GtkComboBoxEntry" id="RoomSearchCombo">
-                                <property name="visible">True</property>
-                                <property name="sensitive">False</property>
-                                <property name="can_focus">False</property>
-                              </widget>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="fill">False</property>
-                                <property name="position">5</property>
-                              </packing>
-                            </child>
-                            <child>
                               <widget class="GtkComboBox" id="SearchMethod">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
@@ -1972,6 +1950,29 @@
                               <packing>
                                 <property name="expand">False</property>
                                 <property name="fill">False</property>
+                                <property name="position">4</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="Custom" id="UserSearchCombo">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                              </widget>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">False</property>
+                                <property name="position">5</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkComboBox" id="RoomSearchCombo">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="has_entry">True</property>
+                              </widget>
+                              <packing>
+                                <property name="expand">True</property>
+                                <property name="fill">True</property>
                                 <property name="position">6</property>
                               </packing>
                             </child>
