@@ -48,15 +48,19 @@ dir_location = os.path.dirname(os.path.realpath(__file__))
 class buildFrame:
 
     def __init__(self, window):
+
         self.frame = self.p.frame
+
         self.wTree = gtk.glade.XML(os.path.join(dir_location, "settingswindow.glade"), window)
         widgets = self.wTree.get_widget_prefix("")
+
         for i in widgets:
             name = gtk.glade.get_widget_name(i)
             self.__dict__[name] = i
 
         self.__dict__[window].remove(self.Main)
         self.__dict__[window].destroy()
+
         self.wTree.signal_autoconnect(self)
 
 
@@ -2133,14 +2137,23 @@ class BloatFrame(buildFrame):
     def __init__(self, parent):
 
         self.p = parent
+
         buildFrame.__init__(self, "BloatFrame")
+
         self.TranslationCombo_List = gtk.ListStore(gobject.TYPE_STRING)
         self.TranslationCombo.set_model(self.TranslationCombo_List)
         cell = gtk.CellRendererText()
         self.TranslationCombo.pack_start(cell, True)
         self.TranslationCombo.add_attribute(cell, 'text', 0)
+
+        # Combobox for the decimal separator
         self.DecimalSep_List = gtk.ListStore(gobject.TYPE_STRING)
+
+        for item in ["<None>", ",", ".", "<space>"]:
+            self.DecimalSep_List.append([item])
+
         self.DecimalSep.set_model(self.DecimalSep_List)
+        self.DecimalSep.set_entry_text_column(0)
 
         self.options = {
             "ui": {
@@ -2161,9 +2174,6 @@ class BloatFrame(buildFrame):
                 "language": self.TranslationCombo
             }
         }
-
-        for item in ["<None>", ",", ".", "<space>"]:
-            self.DecimalSep.append_text(item)
 
         for name, code in self.languagelookup:
             self.TranslationCombo.append_text(name)
@@ -2652,7 +2662,7 @@ class UrlCatchFrame(buildFrame):
 
     def OnSelect(self, selection):
         model, iter = selection.get_selected()
-        if iter == None:
+        if iter is None:
             self.ProtocolCombo.child.set_text("")
         else:
             protocol = model.get_value(iter, 0)
@@ -3285,11 +3295,14 @@ class SettingsWindow:
     def __init__(self, frame):
 
         self.frame = frame
+
         self.wTree = gtk.glade.XML(os.path.join(dir_location, "settingswindow.glade"), "SettingsWindow")
         widgets = self.wTree.get_widget_prefix("")
+
         for i in widgets:
             name = gtk.glade.get_widget_name(i)
             self.__dict__[name] = i
+
         self.wTree.signal_autoconnect(self)
 
         gobject.signal_new("settings-closed", gtk.Window, gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_STRING,))

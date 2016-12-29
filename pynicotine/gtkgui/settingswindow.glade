@@ -968,45 +968,12 @@ typed incorrectly or as an acronym</property>
             <property name="spacing">5</property>
             <child>
               <widget class="GtkCheckButton" id="SpellCheck">
+                <property name="label" translatable="yes">Enable spell checker (requires a restart)</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
                 <property name="tooltip" translatable="yes">Libsexy Website: http://www.chipx86.com/wiki/Libsexy \nlibsexy and sexy-python bindings required.</property>
                 <property name="draw_indicator">True</property>
-                <child>
-                  <widget class="GtkHBox" id="hbox22">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                    <property name="spacing">5</property>
-                    <child>
-                      <widget class="GtkImage" id="image2">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                        <property name="stock">gtk-spell-check</property>
-                      </widget>
-                      <packing>
-                        <property name="expand">True</property>
-                        <property name="fill">True</property>
-                        <property name="position">0</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <widget class="GtkLabel" id="label15">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                        <property name="label" translatable="yes">Enable spell checker (requires a restart)</property>
-                      </widget>
-                      <packing>
-                        <property name="expand">True</property>
-                        <property name="fill">True</property>
-                        <property name="position">1</property>
-                      </packing>
-                    </child>
-                  </widget>
-                </child>
               </widget>
               <packing>
                 <property name="expand">False</property>
@@ -1045,15 +1012,16 @@ typed incorrectly or as an acronym</property>
               </packing>
             </child>
             <child>
-              <placeholder/>
-            </child>
-            <child>
-              <placeholder/>
-            </child>
-            <child>
-              <widget class="GtkHBox" id="hbox172">
+              <widget class="GtkTable" id="table1">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="n_rows">6</property>
+                <property name="n_columns">3</property>
+                <property name="column_spacing">5</property>
+                <property name="row_spacing">5</property>
+                <child>
+                  <placeholder/>
+                </child>
                 <child>
                   <widget class="GtkLabel" id="chatfontlabel">
                     <property name="visible">True</property>
@@ -1062,11 +1030,6 @@ typed incorrectly or as an acronym</property>
                     <property name="label" translatable="yes">Chat Font:</property>
                     <property name="width_chars">15</property>
                   </widget>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">False</property>
-                    <property name="position">0</property>
-                  </packing>
                 </child>
                 <child>
                   <widget class="GtkFontButton" id="SelectChatFont">
@@ -1076,10 +1039,8 @@ typed incorrectly or as an acronym</property>
                     <property name="receives_default">False</property>
                   </widget>
                   <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="padding">5</property>
-                    <property name="position">1</property>
+                    <property name="left_attach">1</property>
+                    <property name="right_attach">2</property>
                   </packing>
                 </child>
                 <child>
@@ -1093,22 +1054,10 @@ typed incorrectly or as an acronym</property>
                     <signal name="clicked" handler="OnDefaultFont"/>
                   </widget>
                   <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">2</property>
+                    <property name="left_attach">2</property>
+                    <property name="right_attach">3</property>
                   </packing>
                 </child>
-              </widget>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">5</property>
-              </packing>
-            </child>
-            <child>
-              <widget class="GtkHBox" id="hbox47">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
                 <child>
                   <widget class="GtkLabel" id="listfontlabel">
                     <property name="visible">True</property>
@@ -1118,9 +1067,8 @@ typed incorrectly or as an acronym</property>
                     <property name="width_chars">15</property>
                   </widget>
                   <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">False</property>
-                    <property name="position">0</property>
+                    <property name="top_attach">1</property>
+                    <property name="bottom_attach">2</property>
                   </packing>
                 </child>
                 <child>
@@ -1131,10 +1079,10 @@ typed incorrectly or as an acronym</property>
                     <property name="receives_default">False</property>
                   </widget>
                   <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="padding">5</property>
-                    <property name="position">1</property>
+                    <property name="left_attach">1</property>
+                    <property name="right_attach">2</property>
+                    <property name="top_attach">1</property>
+                    <property name="bottom_attach">2</property>
                   </packing>
                 </child>
                 <child>
@@ -1147,22 +1095,12 @@ typed incorrectly or as an acronym</property>
                     <property name="use_stock">True</property>
                   </widget>
                   <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">2</property>
+                    <property name="left_attach">2</property>
+                    <property name="right_attach">3</property>
+                    <property name="top_attach">1</property>
+                    <property name="bottom_attach">2</property>
                   </packing>
                 </child>
-              </widget>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">6</property>
-              </packing>
-            </child>
-            <child>
-              <widget class="GtkHBox" id="hbox53">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
                 <child>
                   <widget class="GtkLabel" id="transfersfontlabel">
                     <property name="visible">True</property>
@@ -1172,9 +1110,8 @@ typed incorrectly or as an acronym</property>
                     <property name="width_chars">15</property>
                   </widget>
                   <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">False</property>
-                    <property name="position">0</property>
+                    <property name="top_attach">2</property>
+                    <property name="bottom_attach">3</property>
                   </packing>
                 </child>
                 <child>
@@ -1185,10 +1122,10 @@ typed incorrectly or as an acronym</property>
                     <property name="receives_default">False</property>
                   </widget>
                   <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="padding">5</property>
-                    <property name="position">1</property>
+                    <property name="left_attach">1</property>
+                    <property name="right_attach">2</property>
+                    <property name="top_attach">2</property>
+                    <property name="bottom_attach">3</property>
                   </packing>
                 </child>
                 <child>
@@ -1201,22 +1138,12 @@ typed incorrectly or as an acronym</property>
                     <property name="use_stock">True</property>
                   </widget>
                   <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">2</property>
+                    <property name="left_attach">2</property>
+                    <property name="right_attach">3</property>
+                    <property name="top_attach">2</property>
+                    <property name="bottom_attach">3</property>
                   </packing>
                 </child>
-              </widget>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">7</property>
-              </packing>
-            </child>
-            <child>
-              <widget class="GtkHBox" id="hbox50">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
                 <child>
                   <widget class="GtkLabel" id="searchfontlabel">
                     <property name="visible">True</property>
@@ -1226,9 +1153,8 @@ typed incorrectly or as an acronym</property>
                     <property name="width_chars">15</property>
                   </widget>
                   <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">False</property>
-                    <property name="position">0</property>
+                    <property name="top_attach">3</property>
+                    <property name="bottom_attach">4</property>
                   </packing>
                 </child>
                 <child>
@@ -1239,10 +1165,10 @@ typed incorrectly or as an acronym</property>
                     <property name="receives_default">False</property>
                   </widget>
                   <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="padding">5</property>
-                    <property name="position">1</property>
+                    <property name="left_attach">1</property>
+                    <property name="right_attach">2</property>
+                    <property name="top_attach">3</property>
+                    <property name="bottom_attach">4</property>
                   </packing>
                 </child>
                 <child>
@@ -1255,22 +1181,12 @@ typed incorrectly or as an acronym</property>
                     <property name="use_stock">True</property>
                   </widget>
                   <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">2</property>
+                    <property name="left_attach">2</property>
+                    <property name="right_attach">3</property>
+                    <property name="top_attach">3</property>
+                    <property name="bottom_attach">4</property>
                   </packing>
                 </child>
-              </widget>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">8</property>
-              </packing>
-            </child>
-            <child>
-              <widget class="GtkHBox" id="hbox51">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
                 <child>
                   <widget class="GtkLabel" id="browsefontlabel">
                     <property name="visible">True</property>
@@ -1280,9 +1196,8 @@ typed incorrectly or as an acronym</property>
                     <property name="width_chars">15</property>
                   </widget>
                   <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">False</property>
-                    <property name="position">0</property>
+                    <property name="top_attach">4</property>
+                    <property name="bottom_attach">5</property>
                   </packing>
                 </child>
                 <child>
@@ -1293,10 +1208,10 @@ typed incorrectly or as an acronym</property>
                     <property name="receives_default">False</property>
                   </widget>
                   <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="padding">5</property>
-                    <property name="position">1</property>
+                    <property name="left_attach">1</property>
+                    <property name="right_attach">2</property>
+                    <property name="top_attach">4</property>
+                    <property name="bottom_attach">5</property>
                   </packing>
                 </child>
                 <child>
@@ -1309,23 +1224,12 @@ typed incorrectly or as an acronym</property>
                     <property name="use_stock">True</property>
                   </widget>
                   <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">2</property>
+                    <property name="left_attach">2</property>
+                    <property name="right_attach">3</property>
+                    <property name="top_attach">4</property>
+                    <property name="bottom_attach">5</property>
                   </packing>
                 </child>
-              </widget>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">9</property>
-              </packing>
-            </child>
-            <child>
-              <widget class="GtkHBox" id="hbox182">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="spacing">5</property>
                 <child>
                   <widget class="GtkLabel" id="label213">
                     <property name="visible">True</property>
@@ -1334,37 +1238,28 @@ typed incorrectly or as an acronym</property>
                     <property name="label" translatable="yes">Decimal separator:</property>
                   </widget>
                   <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">0</property>
+                    <property name="top_attach">5</property>
+                    <property name="bottom_attach">6</property>
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkComboBoxEntry" id="DecimalSep">
-                    <property name="width_request">99</property>
+                  <widget class="GtkComboBox" id="DecimalSep">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <child internal-child="entry">
-                      <widget class="GtkEntry" id="comboboxentry-entry6">
-                        <property name="can_focus">False</property>
-                        <property name="primary_icon_activatable">False</property>
-                        <property name="secondary_icon_activatable">False</property>
-                        <property name="primary_icon_sensitive">True</property>
-                        <property name="secondary_icon_sensitive">True</property>
-                      </widget>
-                    </child>
+                    <property name="has_entry">True</property>
                   </widget>
                   <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">1</property>
+                    <property name="left_attach">1</property>
+                    <property name="right_attach">2</property>
+                    <property name="top_attach">5</property>
+                    <property name="bottom_attach">6</property>
                   </packing>
                 </child>
               </widget>
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
-                <property name="position">10</property>
+                <property name="position">3</property>
               </packing>
             </child>
             <child>
@@ -1440,7 +1335,7 @@ typed incorrectly or as an acronym</property>
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">True</property>
-                <property name="position">11</property>
+                <property name="position">4</property>
               </packing>
             </child>
           </widget>
@@ -1449,6 +1344,8 @@ typed incorrectly or as an acronym</property>
           <widget class="GtkLabel" id="label195">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="xpad">5</property>
+            <property name="ypad">5</property>
             <property name="label" translatable="yes">Extra stuff for your comfort</property>
           </widget>
           <packing>
@@ -11058,7 +10955,7 @@ when new results come in</property>
                     </child>
                   </widget>
                   <packing>
-                    <property name="expand">True</property>
+                    <property name="expand">False</property>
                     <property name="fill">True</property>
                     <property name="position">1</property>
                   </packing>
@@ -11090,8 +10987,8 @@ when new results come in</property>
     <property name="can_focus">False</property>
     <property name="title" translatable="yes">Nicotine+ Settings</property>
     <property name="window_position">center</property>
-    <property name="default_width">950</property>
-    <property name="default_height">600</property>
+    <property name="default_width">1000</property>
+    <property name="default_height">700</property>
     <child>
       <widget class="GtkVBox" id="Main">
         <property name="visible">True</property>
