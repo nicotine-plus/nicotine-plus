@@ -54,7 +54,7 @@ class buildFrame:
 
         # Build the frame
         builder = gtk.Builder()
-        builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "settingswindow_" + window + ".ui"))
+        builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "settingswindow_" + window + ".ui"))
 
         self.__dict__[window] = builder.get_object(window)
 
@@ -3079,7 +3079,7 @@ class buildDialog(gtk.Dialog):
 
         # Build the window
         builder = gtk.Builder()
-        builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "settingswindow_PluginProperties.ui"))
+        builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "settingswindow_PluginProperties.ui"))
         self.PluginProperties = builder.get_object(window)
 
         for i in builder.get_objects():
@@ -3395,7 +3395,7 @@ class SettingsWindow:
 
         # Build the window
         builder = gtk.Builder()
-        builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "settingswindow_TreeView.ui"))
+        builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "settingswindow_TreeView.ui"))
 
         self.SettingsWindow = builder.get_object("SettingsWindow")
 

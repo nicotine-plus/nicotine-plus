@@ -79,7 +79,7 @@ class roomlist:
         # Build the window
         self.frame = frame
         builder = gtk.Builder()
-        builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "roomlist.ui"))
+        builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "roomlist.ui"))
         self.RoomList = builder.get_object("RoomList")
 
         for i in builder.get_objects():

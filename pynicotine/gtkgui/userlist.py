@@ -38,7 +38,7 @@ class UserList:
         # Build the window
         self.frame = frame
         builder = gtk.Builder()
-        builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "buddylist.ui"))
+        builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "buddylist.ui"))
         self.TempWindow = builder.get_object("TempWindow")
 
         for i in builder.get_objects():

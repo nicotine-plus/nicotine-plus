@@ -29,7 +29,6 @@ from os.path import exists, getsize, join
 from dirchooser import ChooseDir
 from utils import OpenUri, InitialiseColumns, recode, HumanSize, popupWarning
 from entrydialog import input_box
-dir_location = os.path.dirname(os.path.realpath(__file__))
 
 
 def dirstats(directory):
@@ -72,7 +71,7 @@ class FastConfigureAssistant(object):
         self.config = frame.np.config
 
         builder = gtk.Builder()
-        builder.add_from_file(join(dir_location, "fastconfigure.ui"))
+        builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "fastconfigure.ui"))
         self.window = builder.get_object("FastConfigureAssistant")
         builder.connect_signals(self)
 
