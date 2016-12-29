@@ -2510,11 +2510,25 @@ class EventsFrame(buildFrame):
     def __init__(self, parent):
 
         self.p = parent
+
         buildFrame.__init__(self, "EventsFrame")
 
+        # Combobox for file manager
         self.FileManagerCombo_List = gtk.ListStore(gobject.TYPE_STRING)
+        for executable in [
+            "emelfm2 -1 $",
+            "gentoo -1 $",
+            "konqueror $",
+            "krusader --left $",
+            "nautilus --no-desktop $",
+            "rox $",
+            "thunar $",
+            "xterm -e mc $"
+        ]:
+            self.FileManagerCombo_List.append([executable])
+
         self.FileManagerCombo.set_model(self.FileManagerCombo_List)
-        self.FileManagerCombo.set_text_column(0)
+        self.FileManagerCombo.set_entry_text_column(0)
 
         self.options = {
             "transfers": {
@@ -2526,23 +2540,19 @@ class EventsFrame(buildFrame):
                 "upload_doubleclick": self.UploadDoubleClick
             },
             "ui": {
-                "filemanager": self.FileManagerCombo.child
+                "filemanager": self.FileManagerCombo
             }
         }
 
-        for executable in [
-            "rox $", "konqueror $", "nautilus --no-desktop $", "thunar $",
-            "xterm -e mc $", "emelfm2 -1 $", "krusader --left $", "gentoo -1 $"
-        ]:
-            self.FileManagerCombo.append_text(executable)
-
     def SetSettings(self, config):
+
         if self.frame.pynotify is not None:
             self.ShowNotification.set_sensitive(True)
             self.ShowNotificationPerFolder.set_sensitive(True)
         else:
             self.ShowNotification.set_sensitive(False)
             self.ShowNotificationPerFolder.set_sensitive(False)
+
         self.p.SetWidgetsData(config, self.options)
 
     def GetSettings(self):
