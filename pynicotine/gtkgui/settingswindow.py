@@ -2589,6 +2589,7 @@ class UrlCatchFrame(buildFrame):
     def __init__(self, parent):
 
         self.p = parent
+
         buildFrame.__init__(self, "UrlCatchFrame")
 
         self.options = {
@@ -2605,13 +2606,16 @@ class UrlCatchFrame(buildFrame):
         )
 
         self.protocols = {}
+
         cols = InitialiseColumns(
             self.ProtocolHandlers,
             [_("Protocol"), -1, "text"],
             [_("Handler"), -1, "combo"]
         )
+
         cols[0].set_sort_column_id(0)
         cols[1].set_sort_column_id(1)
+
         self.ProtocolHandlers.set_model(self.protocolmodel)
         self.ProtocolHandlers.get_selection().connect("changed", self.OnSelect)
 
@@ -2625,7 +2629,6 @@ class UrlCatchFrame(buildFrame):
             "xdg-open $",
             "firefox $",
             "firefox -a firefox --remote \"openURL($,new-tab)\"",
-            "mozilla $",
             "opera $",
             "links -g $",
             "dillo $",
@@ -2635,7 +2638,8 @@ class UrlCatchFrame(buildFrame):
             self.handlermodel.append([item])
 
         self.Handler.set_model(self.handlermodel)
-        self.Handler.set_text_column(0)
+        self.Handler.set_entry_text_column(0)
+
         renderers = cols[1].get_cell_renderers()
         for render in renderers:
             render.set_property("model", self.handlermodel)
@@ -2645,7 +2649,7 @@ class UrlCatchFrame(buildFrame):
             self.protomodel.append([item])
 
         self.ProtocolCombo.set_model(self.protomodel)
-        self.ProtocolCombo.set_text_column(0)
+        self.ProtocolCombo.set_entry_text_column(0)
 
     def cell_edited_callback(self, widget, index, value, treeview, pos):
         store = treeview.get_model()
@@ -2653,6 +2657,7 @@ class UrlCatchFrame(buildFrame):
         store.set(iter, pos, value)
 
     def SetSettings(self, config):
+
         self.protocolmodel.clear()
         self.protocols.clear()
         self.p.SetWidgetsData(config, self.options)
@@ -2660,6 +2665,7 @@ class UrlCatchFrame(buildFrame):
         urls = config["urls"]
 
         if urls["protocols"] is not None:
+
             for key in urls["protocols"].keys():
                 if urls["protocols"][key][-1:] == "&":
                     command = urls["protocols"][key][:-1].rstrip()
@@ -2679,6 +2685,7 @@ class UrlCatchFrame(buildFrame):
                 break
 
     def GetSettings(self):
+
         protocols = {}
 
         try:
@@ -2700,8 +2707,10 @@ class UrlCatchFrame(buildFrame):
         }
 
     def OnURLCatchingToggled(self, widget):
+
         self.HumanizeURLs.set_active(widget.get_active())
         act = self.URLCatching.get_active()
+
         self.RemoveHandler.set_sensitive(act)
         self.addButton.set_sensitive(act)
         self.HumanizeURLs.set_sensitive(act)
@@ -2710,7 +2719,9 @@ class UrlCatchFrame(buildFrame):
         self.Handler.set_sensitive(act)
 
     def OnSelect(self, selection):
+
         model, iter = selection.get_selected()
+
         if iter is None:
             self.ProtocolCombo.child.set_text("")
         else:
@@ -2720,8 +2731,10 @@ class UrlCatchFrame(buildFrame):
             self.Handler.child.set_text(handler)
 
     def OnAdd(self, widget):
+
         protocol = self.ProtocolCombo.child.get_text()
         command = self.Handler.child.get_text()
+
         if protocol in self.protocols:
             iter = self.protocols[protocol]
             if iter is not None:
@@ -2731,8 +2744,10 @@ class UrlCatchFrame(buildFrame):
             self.protocols[protocol] = iter
 
     def OnRemove(self, widget):
+
         selection = self.ProtocolHandlers.get_selection()
         model, iter = selection.get_selected()
+
         if iter is not None:
             protocol = self.protocolmodel.get_value(iter, 0)
             self.protocolmodel.remove(iter)
