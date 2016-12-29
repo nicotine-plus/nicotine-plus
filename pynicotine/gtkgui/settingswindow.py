@@ -2693,51 +2693,65 @@ class UrlCatchFrame(buildFrame):
 class CensorFrame(buildFrame):
 
     def __init__(self, parent):
+
         self.p = parent
+
         buildFrame.__init__(self, "CensorFrame")
+
         self.options = {
             "words": {
-                "censorfill": self.CensorReplaceCombo.child,
+                "censorfill": self.CensorReplaceCombo,
                 "censored": self.CensorList,
                 "censorwords": self.CensorCheck
             }
         }
 
         self.censorlist = gtk.ListStore(gobject.TYPE_STRING)
+
         cols = InitialiseColumns(
             self.CensorList,
             [_("Pattern"), -1, "edit", self.frame.CellDataFunc]
         )
+
         cols[0].set_sort_column_id(0)
 
         self.CensorList.set_model(self.censorlist)
+
+        # Combobox for the replacement letter
         self.CensorReplaceCombo_List = gtk.ListStore(gobject.TYPE_STRING)
+        for letter in ["#", "$", "!", " ", "x", "*"]:
+            self.CensorReplaceCombo_List.append([letter])
+
         self.CensorReplaceCombo.set_model(self.CensorReplaceCombo_List)
-        self.CensorReplaceCombo.set_text_column(0)
+        self.CensorReplaceCombo.set_entry_text_column(0)
+
         renderers = cols[0].get_cell_renderers()
         for render in renderers:
             render.connect('edited', self.cell_edited_callback, self.CensorList, 0)
 
-        for letter in ["#", "$", "!", " ", "x", "*"]:
-            self.CensorReplaceCombo.append_text(letter)
-
     def cell_edited_callback(self, widget, index, value, treeview, pos):
+
         store = treeview.get_model()
         iter = store.get_iter(index)
+
         if value != "" and not value.isspace() and len(value) > 2:
             store.set(iter, pos, value)
         else:
             store.remove(iter)
 
     def SetSettings(self, config):
+
         self.censorlist.clear()
         self.p.SetWidgetsData(config, self.options)
+
         words = config["words"]
 
         self.OnCensorCheck(self.CensorCheck)
 
     def OnCensorCheck(self, widget):
+
         sensitive = widget.get_active()
+
         self.CensorList.set_sensitive(sensitive)
         self.RemoveCensor.set_sensitive(sensitive)
         self.AddCensor.set_sensitive(sensitive)
@@ -2745,7 +2759,9 @@ class CensorFrame(buildFrame):
         self.CensorReplaceCombo.set_sensitive(sensitive)
 
     def GetSettings(self):
+
         censored = []
+
         try:
             iter = self.censorlist.get_iter_root()
             while iter is not None:
@@ -2764,10 +2780,13 @@ class CensorFrame(buildFrame):
         }
 
     def OnAdd(self, widget):
+
         iter = self.censorlist.append([""])
+
         selection = self.CensorList.get_selection()
         selection.unselect_all()
         selection.select_iter(iter)
+
         col = self.CensorList.get_column(0)
         render = col.get_cell_renderers()[0]
 

@@ -307,6 +307,8 @@ typed incorrectly or as an acronym</property>
           <widget class="GtkLabel" id="AutoReplaceLabel">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="xpad">5</property>
+            <property name="ypad">5</property>
             <property name="label" translatable="yes">Auto-Replace List</property>
           </widget>
           <packing>
@@ -429,6 +431,8 @@ typed incorrectly or as an acronym</property>
           <widget class="GtkLabel" id="label235">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="xpad">5</property>
+            <property name="ypad">5</property>
             <property name="label" translatable="yes">Away mode</property>
           </widget>
           <packing>
@@ -943,6 +947,8 @@ typed incorrectly or as an acronym</property>
           <widget class="GtkLabel" id="label218">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="xpad">5</property>
+            <property name="ypad">5</property>
             <property name="label" translatable="yes">Banning</property>
           </widget>
           <packing>
@@ -1421,19 +1427,10 @@ typed incorrectly or as an acronym</property>
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkComboBoxEntry" id="CensorReplaceCombo">
+                  <widget class="GtkComboBox" id="CensorReplaceCombo">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                    <child internal-child="entry">
-                      <widget class="GtkEntry" id="comboboxentry-entry20">
-                        <property name="can_focus">False</property>
-                        <property name="primary_icon_activatable">False</property>
-                        <property name="secondary_icon_activatable">False</property>
-                        <property name="primary_icon_sensitive">True</property>
-                        <property name="secondary_icon_sensitive">True</property>
-                      </widget>
-                    </child>
+                    <property name="has_entry">True</property>
                   </widget>
                   <packing>
                     <property name="expand">False</property>
@@ -1667,6 +1664,8 @@ typed incorrectly or as an acronym</property>
           <widget class="GtkLabel" id="CensorLabel">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="xpad">5</property>
+            <property name="ypad">5</property>
             <property name="label" translatable="yes">Censor List</property>
           </widget>
           <packing>
@@ -1827,6 +1826,8 @@ typed incorrectly or as an acronym</property>
           <widget class="GtkLabel" id="ChatLabel">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="xpad">5</property>
+            <property name="ypad">5</property>
             <property name="label" translatable="yes">Chat Settings</property>
             <property name="use_markup">True</property>
           </widget>
@@ -4584,7 +4585,9 @@ typed incorrectly or as an acronym</property>
           <widget class="GtkLabel" id="ColoursLabel">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="label" translatable="yes">&lt;b&gt;Colors&lt;/b&gt;</property>
+            <property name="xpad">5</property>
+            <property name="ypad">5</property>
+            <property name="label" translatable="yes">Colors</property>
             <property name="use_markup">True</property>
           </widget>
           <packing>
@@ -4848,15 +4851,14 @@ typed incorrectly or as an acronym</property>
                 <property name="position">3</property>
               </packing>
             </child>
-            <child>
-              <placeholder/>
-            </child>
           </widget>
         </child>
         <child>
           <widget class="GtkLabel" id="CompletionLabel">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="xpad">5</property>
+            <property name="ypad">5</property>
             <property name="label" translatable="yes">Chat text completion</property>
           </widget>
           <packing>
@@ -5555,6 +5557,8 @@ typed incorrectly or as an acronym</property>
           <widget class="GtkLabel" id="label175">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="xpad">5</property>
+            <property name="ypad">5</property>
             <property name="label" translatable="yes">Downloads</property>
           </widget>
           <packing>
@@ -5855,6 +5859,8 @@ Clear</property>
           <widget class="GtkLabel" id="label236">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="xpad">5</property>
+            <property name="ypad">5</property>
             <property name="label" translatable="yes">Events</property>
           </widget>
           <packing>
@@ -6005,6 +6011,8 @@ Clear</property>
           <widget class="GtkLabel" id="label244">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="xpad">5</property>
+            <property name="ypad">5</property>
             <property name="label" translatable="yes">Geographical Blocking</property>
           </widget>
           <packing>
@@ -6682,6 +6690,8 @@ Clear</property>
           <widget class="GtkLabel" id="label464">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="xpad">5</property>
+            <property name="ypad">5</property>
             <property name="label" translatable="yes">Tray &amp; Icons</property>
           </widget>
           <packing>
@@ -7124,15 +7134,14 @@ Clear</property>
                 <property name="position">0</property>
               </packing>
             </child>
-            <child>
-              <placeholder/>
-            </child>
           </widget>
         </child>
         <child>
           <widget class="GtkLabel" id="label218">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="xpad">5</property>
+            <property name="ypad">5</property>
             <property name="label" translatable="yes">Ignoring</property>
           </widget>
           <packing>
@@ -7555,7 +7564,7 @@ Clear</property>
                     <property name="secondary_icon_activatable">False</property>
                     <property name="primary_icon_sensitive">True</property>
                     <property name="secondary_icon_sensitive">True</property>
-                    <property name="adjustment">0 0 10000 1 10 0</property>
+                    <property name="adjustment">15 0 10000 1 10 0</property>
                   </widget>
                   <packing>
                     <property name="expand">False</property>
@@ -7984,7 +7993,9 @@ Clear</property>
           <widget class="GtkLabel" id="LoggingLabel">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="label" translatable="yes">&lt;b&gt;Logging&lt;/b&gt;</property>
+            <property name="xpad">5</property>
+            <property name="ypad">5</property>
+            <property name="label" translatable="yes">Logging</property>
             <property name="use_markup">True</property>
           </widget>
           <packing>
@@ -8094,6 +8105,8 @@ Clear</property>
           <widget class="GtkLabel" id="label279">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="xpad">5</property>
+            <property name="ypad">5</property>
             <property name="label" translatable="yes">Miscellaneous Settings</property>
             <property name="use_markup">True</property>
           </widget>
@@ -8840,7 +8853,9 @@ Clear</property>
           <widget class="GtkLabel" id="label130">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="label" translatable="yes">&lt;b&gt;Notebook Tabs&lt;/b&gt;</property>
+            <property name="xpad">5</property>
+            <property name="ypad">5</property>
+            <property name="label" translatable="yes">Notebook Tabs</property>
             <property name="use_markup">True</property>
           </widget>
           <packing>
@@ -9818,6 +9833,8 @@ Clear</property>
           <widget class="GtkLabel" id="label246">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="xpad">5</property>
+            <property name="ypad">5</property>
             <property name="label" translatable="yes">Plugin Manager</property>
           </widget>
           <packing>
@@ -9916,6 +9933,8 @@ Clear</property>
               <widget class="GtkLabel" id="PluginLabel">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="xpad">5</property>
+                <property name="ypad">5</property>
                 <property name="label" translatable="yes">Plugin</property>
                 <property name="use_markup">True</property>
               </widget>
@@ -10437,9 +10456,6 @@ when new results come in</property>
                     <property name="position">1</property>
                   </packing>
                 </child>
-                <child>
-                  <placeholder/>
-                </child>
               </widget>
               <packing>
                 <property name="expand">False</property>
@@ -10482,9 +10498,6 @@ when new results come in</property>
                     <property name="position">1</property>
                   </packing>
                 </child>
-                <child>
-                  <placeholder/>
-                </child>
               </widget>
               <packing>
                 <property name="expand">False</property>
@@ -10498,6 +10511,8 @@ when new results come in</property>
           <widget class="GtkLabel" id="label224">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="xpad">5</property>
+            <property name="ypad">5</property>
             <property name="label" translatable="yes">Searches</property>
           </widget>
           <packing>
@@ -10974,6 +10989,8 @@ when new results come in</property>
           <widget class="GtkLabel" id="label165">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="xpad">5</property>
+            <property name="ypad">5</property>
             <property name="label" translatable="yes">Server</property>
           </widget>
           <packing>
@@ -11641,6 +11658,8 @@ when new results come in</property>
           <widget class="GtkLabel" id="label175">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="xpad">5</property>
+            <property name="ypad">5</property>
             <property name="label" translatable="yes">Shares</property>
           </widget>
           <packing>
@@ -12235,7 +12254,9 @@ when new results come in</property>
           <widget class="GtkLabel" id="label420">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="label" translatable="yes">&lt;b&gt;Sounds:&lt;/b&gt;</property>
+            <property name="xpad">5</property>
+            <property name="ypad">5</property>
+            <property name="label" translatable="yes">Sounds</property>
             <property name="use_markup">True</property>
           </widget>
           <packing>
@@ -12831,9 +12852,6 @@ when new results come in</property>
                             <property name="position">0</property>
                           </packing>
                         </child>
-                        <child>
-                          <placeholder/>
-                        </child>
                       </widget>
                       <packing>
                         <property name="expand">True</property>
@@ -12910,6 +12928,8 @@ when new results come in</property>
           <widget class="GtkLabel" id="label183">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="xpad">5</property>
+            <property name="ypad">5</property>
             <property name="label" translatable="yes">Transfers</property>
           </widget>
           <packing>
@@ -13223,7 +13243,9 @@ Protocols handlers: </property>
           <widget class="GtkLabel" id="label246">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="label" translatable="yes">URL Catching:</property>
+            <property name="xpad">5</property>
+            <property name="ypad">5</property>
+            <property name="label" translatable="yes">URL Catching</property>
           </widget>
           <packing>
             <property name="type">label_item</property>
@@ -13435,6 +13457,8 @@ Protocols handlers: </property>
           <widget class="GtkLabel" id="label192">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="xpad">5</property>
+            <property name="ypad">5</property>
             <property name="label" translatable="yes">Personal settings</property>
           </widget>
           <packing>
