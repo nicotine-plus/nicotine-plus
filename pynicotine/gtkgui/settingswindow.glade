@@ -2011,6 +2011,7 @@ typed incorrectly or as an acronym</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
+                                <property name="xalign">0</property>
                                 <child>
                                   <widget class="GtkAlignment" id="alignment16">
                                     <property name="visible">True</property>
@@ -2171,18 +2172,10 @@ typed incorrectly or as an acronym</property>
                                   </packing>
                                 </child>
                                 <child>
-                                  <widget class="GtkComboBoxEntry" id="UsernameStyle">
+                                  <widget class="GtkComboBox" id="UsernameStyle">
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
-                                    <child internal-child="entry">
-                                      <widget class="GtkEntry" id="comboboxentry-entry22">
-                                        <property name="can_focus">False</property>
-                                        <property name="primary_icon_activatable">False</property>
-                                        <property name="secondary_icon_activatable">False</property>
-                                        <property name="primary_icon_sensitive">True</property>
-                                        <property name="secondary_icon_sensitive">True</property>
-                                      </widget>
-                                    </child>
+                                    <property name="has_entry">True</property>
                                   </widget>
                                   <packing>
                                     <property name="expand">False</property>
@@ -2909,6 +2902,7 @@ typed incorrectly or as an acronym</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
+                                <property name="xalign">0</property>
                                 <child>
                                   <widget class="GtkAlignment" id="alignment45">
                                     <property name="visible">True</property>
@@ -3073,6 +3067,7 @@ typed incorrectly or as an acronym</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
+                                <property name="xalign">0</property>
                                 <child>
                                   <widget class="GtkAlignment" id="alignment35">
                                     <property name="visible">True</property>

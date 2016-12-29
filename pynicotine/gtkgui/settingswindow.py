@@ -1696,11 +1696,19 @@ class IconsFrame(buildFrame):
 class ColoursFrame(buildFrame):
 
     def __init__(self, parent):
+
         self.p = parent
+
         buildFrame.__init__(self, "ColoursFrame")
+
+        # Combobox for user names style
         self.UsernameStyle_List = gtk.ListStore(gobject.TYPE_STRING)
+        for item in ["bold", "italic", "underline", "normal"]:
+            self.UsernameStyle_List.append([item])
+
         self.UsernameStyle.set_model(self.UsernameStyle_List)
-        self.UsernameStyle.set_text_column(0)
+        self.UsernameStyle.set_entry_text_column(0)
+        self.UsernameStyle.child.set_editable(False)
 
         self.needcolors = 0
         self.options = {
@@ -1768,11 +1776,6 @@ class ColoursFrame(buildFrame):
             "tab_hilite"
         ]
 
-        for item in ["bold", "italic", "underline", "normal"]:
-            self.UsernameStyle.append_text(item)
-
-        self.UsernameStyle.child.set_editable(False)
-
         self.PickRemote.connect("clicked", self.PickColour, self.Remote, self.Drawing_Remote)
         self.PickLocal.connect("clicked", self.PickColour, self.Local, self.Drawing_Local)
         self.PickMe.connect("clicked", self.PickColour, self.Me, self.Drawing_Me)
@@ -1829,21 +1832,26 @@ class ColoursFrame(buildFrame):
         self.AwayColor.connect("changed", self.FontsColorsChanged)
         self.OnlineColor.connect("changed", self.FontsColorsChanged)
         self.OfflineColor.connect("changed", self.FontsColorsChanged)
-        self.UsernameStyle.child.connect("changed", self.FontsColorsChanged)
+        self.UsernameStyle.connect("changed", self.FontsColorsChanged)
         self.InputColor.connect("changed", self.FontsColorsChanged)
 
     def SetSettings(self, config):
+
         self.settingup = 1
 
         self.p.SetWidgetsData(config, self.options)
         for option in self.colors:
             for key, value in self.colorsd.items():
+
                 if option in value:
+
                     drawingarea = self.colorsd[key][option]
+
                     try:
                         colour = gtk.gdk.color_parse(config[key][option])
                     except:
                         colour = None
+
                     drawingarea.modify_bg(gtk.STATE_NORMAL, colour)
                     break
 
@@ -1889,7 +1897,9 @@ class ColoursFrame(buildFrame):
         }
 
     def ToggledAwayColours(self, widget):
+
         sensitive = widget.get_active()
+
         self.AwayColor.set_sensitive(sensitive)
         self.PickAway.set_sensitive(sensitive)
         self.DefaultAway.set_sensitive(sensitive)
@@ -1899,7 +1909,9 @@ class ColoursFrame(buildFrame):
             self.SetDefaultColor(option)
 
     def SetDefaultColor(self, option):
+
         defaults = self.frame.np.config.defaults
+
         for key, value in self.options.items():
             if option in value:
                 widget = self.options[key][option]
@@ -1909,23 +1921,30 @@ class ColoursFrame(buildFrame):
                     widget.set_value_as_int(defaults[key][option])
                 elif type(widget) is gtk.CheckButton:
                     widget.set_active(defaults[key][option])
-                elif type(widget) is gtk.ComboBoxEntry:
+                elif type(widget) is gtk.ComboBox:
                     widget.child.set_text(defaults[key][option])
 
         for key, value in self.colorsd.items():
+
             if option in value:
+
                 drawingarea = self.colorsd[key][option]
+
                 try:
                     colour = gtk.gdk.color_parse(defaults[key][option])
                 except:
                     colour = None
+
                 drawingarea.modify_bg(gtk.STATE_NORMAL, colour)
                 break
 
     def OnClearAllColours(self, widget):
+
         for option in self.colors:
             for section, value in self.options.items():
+
                 if option in value:
+
                     widget = self.options[section][option]
                     if type(widget) is gtk.Entry:
                         widget.set_text("")
@@ -1933,8 +1952,9 @@ class ColoursFrame(buildFrame):
                         widget.set_value_as_int(0)
                     elif type(widget) is gtk.CheckButton:
                         widget.set_active(0)
-                    elif type(widget) is gtk.ComboBoxEntry:
+                    elif type(widget) is gtk.ComboBox:
                         widget.child.set_text("")
+
             for section, value in self.colorsd.items():
                 if option in value:
                     drawingarea = self.colorsd[section][option]
@@ -1944,7 +1964,9 @@ class ColoursFrame(buildFrame):
         self.needcolors = 1
 
     def OnUsernameHotspotsToggled(self, widget):
+
         sensitive = widget.get_active()
+
         self.AwayColor.set_sensitive(sensitive and self.DisplayAwayColours.get_active())
         self.OnlineColor.set_sensitive(sensitive)
         self.OfflineColor.set_sensitive(sensitive)
@@ -1972,6 +1994,7 @@ class ColoursFrame(buildFrame):
                 dlg.colorsel.set_current_color(colour)
 
         if dlg.run() == gtk.RESPONSE_OK:
+
             colour = dlg.colorsel.get_current_color()
             colourtext = "#%02X%02X%02X" % (colour.red / 256, colour.green / 256, colour.blue / 256)
             entry.set_text(colourtext)
@@ -1982,8 +2005,10 @@ class ColoursFrame(buildFrame):
                     continue
 
                 for key, value in self.options[section].items():
+
                     if key not in self.colorsd[section]:
                         continue
+
                     if entry is value:
                         drawingarea = self.colorsd[section][key]
                         drawingarea.modify_bg(gtk.STATE_NORMAL, colour)
@@ -1992,11 +2017,13 @@ class ColoursFrame(buildFrame):
         dlg.destroy()
 
     def DefaultColour(self, widget, entry):
+
         for section in self.options.keys():
             for key, value in self.options[section].items():
                 if value is entry:
                     self.SetDefaultColor(key)
                     return
+
         entry.set_text("")
 
 
