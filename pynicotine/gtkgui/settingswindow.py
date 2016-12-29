@@ -2106,7 +2106,7 @@ class NotebookFrame(buildFrame):
             if model.get_value(iter, 1).lower() == data["cfg"].lower():
                 data["combobox"].set_active_iter(iter)
 
-        # Override settings for the GtkComboBoxEntry defining ui positionning
+        # Override settings for the GtkComboBox defining ui positionning
         for opt in [
             "tabmain", "tabrooms", "tabprivate",
             "tabsearch", "tabinfo", "tabbrowse"
@@ -2122,7 +2122,7 @@ class NotebookFrame(buildFrame):
 
     def GetSettings(self):
 
-        # Get iters from GtkComboBoxEntry fields
+        # Get iters from GtkComboBox fields
         iter_Main = self.PosList.get_iter(self.MainPosition.get_active())
         iter_Rooms = self.PosList.get_iter(self.ChatRoomsPosition.get_active())
         iter_Private = self.PosList.get_iter(self.PrivateChatPosition.get_active())
@@ -3576,8 +3576,6 @@ class SettingsWindow:
             return widget.get_active()
         elif type(widget) is gtk.RadioButton:
             return widget.get_active()
-        elif type(widget) is gtk.ComboBoxEntry:
-            return widget.child.get_text()
         elif type(widget) is gtk.ComboBox:
             return widget.get_model().get(widget.get_active_iter(), 0)[0]
         elif type(widget) is gtk.FontButton:
@@ -3601,8 +3599,6 @@ class SettingsWindow:
             widget.set_active(0)
         elif type(widget) is gtk.RadioButton:
             widget.set_active(0)
-        elif type(widget) is gtk.ComboBoxEntry:
-            widget.child.set_text("")
         elif type(widget) is gtk.ComboBox:
             self.GetPosition(widget, "")
         elif type(widget) is gtk.FontButton:
@@ -3619,9 +3615,6 @@ class SettingsWindow:
             widget.set_active(value)
         elif type(widget) is gtk.RadioButton:
             widget.set_active(value)
-        elif type(widget) is gtk.ComboBoxEntry:
-            if type(value) in (int, str):
-                widget.child.set_text(value)
         elif type(widget) is gtk.ComboBox:
             if type(value) is str:
                 self.GetPosition(widget, value)
