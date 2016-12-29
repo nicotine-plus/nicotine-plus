@@ -46,22 +46,28 @@ dir_location = os.path.dirname(os.path.realpath(__file__))
 
 
 class buildFrame:
+    """ This class build the individual frames from the settings window """
 
     def __init__(self, window):
 
         self.frame = self.p.frame
 
-        self.wTree = gtk.glade.XML(os.path.join(dir_location, "settingswindow.glade"), window)
-        widgets = self.wTree.get_widget_prefix("")
+        # Build the frame
+        builder = gtk.Builder()
+        builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "settingswindow_" + window + ".ui"))
 
-        for i in widgets:
-            name = gtk.glade.get_widget_name(i)
-            self.__dict__[name] = i
+        self.__dict__[window] = builder.get_object(window)
+
+        for i in builder.get_objects():
+            try:
+                self.__dict__[gtk.Buildable.get_name(i)] = i
+            except TypeError:
+                pass
 
         self.__dict__[window].remove(self.Main)
         self.__dict__[window].destroy()
 
-        self.wTree.signal_autoconnect(self)
+        builder.connect_signals(self)
 
 
 class ServerFrame(buildFrame):
@@ -3063,19 +3069,27 @@ class CompletionFrame(buildFrame):
 
 
 class buildDialog(gtk.Dialog):
+    """ Class used to build a custom dialog for the plugins """
 
     def __init__(self, parent):
 
         window = "PluginProperties"
+
         self.settings = parent.p
-        self.wTree = gtk.glade.XML(os.path.join(dir_location, "settingswindow.glade"), window)
 
-        widgets = self.wTree.get_widget_prefix("")
-        for i in widgets:
-            name = gtk.glade.get_widget_name(i)
-            self.__dict__[name] = i
+        # Build the window
+        builder = gtk.Builder()
+        builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "settingswindow_PluginProperties.ui"))
+        self.PluginProperties = builder.get_object(window)
 
-        self.wTree.signal_autoconnect(self)
+        for i in builder.get_objects():
+            try:
+                self.__dict__[gtk.Buildable.get_name(i)] = i
+            except TypeError:
+                pass
+
+        builder.connect_signals(self)
+
         self.PluginProperties.set_icon(self.settings.frame.images["n"])
         self.PluginProperties.set_transient_for(self.settings.SettingsWindow)
         self.tw = {}
@@ -3379,29 +3393,44 @@ class SettingsWindow:
 
         self.frame = frame
 
-        self.wTree = gtk.glade.XML(os.path.join(dir_location, "settingswindow.glade"), "SettingsWindow")
-        widgets = self.wTree.get_widget_prefix("")
+        # Build the window
+        builder = gtk.Builder()
+        builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "settingswindow_TreeView.ui"))
 
-        for i in widgets:
-            name = gtk.glade.get_widget_name(i)
-            self.__dict__[name] = i
+        self.SettingsWindow = builder.get_object("SettingsWindow")
 
-        self.wTree.signal_autoconnect(self)
+        for i in builder.get_objects():
+            try:
+                self.__dict__[gtk.Buildable.get_name(i)] = i
+            except TypeError:
+                pass
 
+        builder.connect_signals(self)
+
+        # Signal sent and catch by frame.py on close
         gobject.signal_new("settings-closed", gtk.Window, gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_STRING,))
 
+        # Connect the custom handlers
         self.SettingsWindow.set_transient_for(frame.MainWindow)
         self.SettingsWindow.connect("delete-event", self.OnDelete)
         self.SettingsWindow.connect("key-press-event", self.OnKeyPress)
 
+        # This is ?
         self.empty_label = gtk.Label("")
         self.empty_label.show()
         self.viewport1.add(self.empty_label)
+
+        # Treeview of the settings
         self.tree = {}
+
+        # Pages
         self.pages = p = {}
         self.handler_ids = {}
+
+        # Model of the treeview
         model = gtk.TreeStore(str, str)
 
+        # Fill up the model
         self.tree["Server"] = model.append(None, [_("Server"), "Server"])
         self.tree["Shares"] = model.append(None, [_("Shares"), "Shares"])
 
@@ -3431,38 +3460,47 @@ class SettingsWindow:
         self.tree["Searches"] = model.append(row, [_("Searches"), "Searches"])
         self.tree["User info"] = model.append(row, [_("User info"), "User info"])
 
+        # Build individual categories
         p["Server"] = ServerFrame(self, frame.np.getencodings())
         p["Shares"] = SharesFrame(self)
+
         p["Transfers"] = TransfersFrame(self)
         p["Downloads"] = DownloadsFrame(self)
-        p["Geo Block"] = GeoBlockFrame(self)
-        p["User info"] = UserinfoFrame(self)
         p["Ban List"] = BanFrame(self)
-        p["Ignore List"] = IgnoreFrame(self)
+        p["Events"] = EventsFrame(self)
+        p["Geo Block"] = GeoBlockFrame(self)
+
         p["Interface"] = BloatFrame(self)
         p["Colours"] = ColoursFrame(self)
-        p["Notebook Tabs"] = NotebookFrame(self)
-        p["Sounds"] = SoundsFrame(self)
         p["Icons"] = IconsFrame(self)
-        p["URL Catching"] = UrlCatchFrame(self)
-        p["Completion"] = CompletionFrame(self)
-        p["Logging"] = LogFrame(self)
-        p["Searches"] = SearchFrame(self)
+        p["Notebook Tabs"] = NotebookFrame(self)
+
+        p["Chat"] = ChatFrame(self)
         p["Away mode"] = AwayFrame(self)
+        p["Logging"] = LogFrame(self)
+        p["Ignore List"] = IgnoreFrame(self)
         p["Censor List"] = CensorFrame(self)
         p["Auto-Replace"] = AutoReplaceFrame(self)
-        p["Chat"] = ChatFrame(self)
-        p["Events"] = EventsFrame(self)
-        p["Plugins"] = PluginFrame(self)
-        p["Misc"] = MiscFrame(self)
+        p["URL Catching"] = UrlCatchFrame(self)
+        p["Completion"] = CompletionFrame(self)
 
+        p["Misc"] = MiscFrame(self)
+        p["Plugins"] = PluginFrame(self)
+        p["Sounds"] = SoundsFrame(self)
+        p["Searches"] = SearchFrame(self)
+        p["User info"] = UserinfoFrame(self)
+
+        # Title of the treeview
         column = gtk.TreeViewColumn(_("Categories"), gtk.CellRendererText(), text=0)
 
+        # set the model on the treeview
         self.SettingsTreeview.set_model(model)
         self.SettingsTreeview.append_column(column)
 
+        # Expand all
         self.SettingsTreeview.expand_all()
 
+        # Connect the signal when a page/category is changed
         self.SettingsTreeview.get_selection().connect("changed", self.switch_page)
 
         # Set the cursor to the first element of the TreeViewColumn.
