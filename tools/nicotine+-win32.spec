@@ -14,7 +14,7 @@ added_files = [
     ('../pynicotine/gtkgui/*.glade', 'pynicotine/gtkgui'),
 
     # GTK Builder files
-    ('../pynicotine/gtkgui/*.ui', 'pynicotine/gtkgui'),
+    ('../pynicotine/gtkgui/ui/*.ui', 'pynicotine/gtkgui/ui'),
 
     # Nicotine+ Guide
     ('../doc/NicotinePlusGuide', 'doc/NicotinePlusGuide'),
