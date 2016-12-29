@@ -69,12 +69,15 @@ class ServerFrame(buildFrame):
     def __init__(self, parent, encodings):
 
         self.p = parent
+
         buildFrame.__init__(self, "ServerFrame")
 
         self.Elist = {}
         self.EncodingStore = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
+
         self.Encoding.set_model(self.EncodingStore)
-        self.Encoding.set_text_column(0)
+        self.Encoding.set_entry_text_column(0)
+
         cell2 = gtk.CellRendererText()
         self.Encoding.pack_start(cell2, True)
         self.Encoding.add_attribute(cell2, 'text', 1)
@@ -87,7 +90,7 @@ class ServerFrame(buildFrame):
                 "server": None,
                 "login": self.Login,
                 "passw": self.Password,
-                "enc": self.Encoding.child,
+                "enc": self.Encoding,
                 "portrange": None,
                 "firewalled": self.DirectConnection,
                 "upnp": self.UseUPnP,
@@ -1501,15 +1504,29 @@ class SoundsFrame(buildFrame):
         self.p = parent
         buildFrame.__init__(self, "SoundsFrame")
 
+        # Combobox for audio players
         self.audioPlayerCombo_List = gtk.ListStore(gobject.TYPE_STRING)
+        for executable in ["amarok -a $", "audacious -e $", "exaile $", "xmms2 add -f $"]:
+            self.audioPlayerCombo_List.append([executable])
+
         self.audioPlayerCombo.set_model(self.audioPlayerCombo_List)
-        self.audioPlayerCombo.set_text_column(0)
+        self.audioPlayerCombo.set_entry_text_column(0)
+
+        # Combobox for text-to-speech readers
         self.TTSCommand_List = gtk.ListStore(gobject.TYPE_STRING)
+        for executable in ["echo $ | festival --tts", "flite -t $"]:
+            self.TTSCommand_List.append([executable])
+
         self.TTSCommand.set_model(self.TTSCommand_List)
-        self.TTSCommand.set_text_column(0)
+        self.TTSCommand.set_entry_text_column(0)
+
+        # Combobox for internal sound playing
         self.SoundCommand_List = gtk.ListStore(gobject.TYPE_STRING)
+        for item in ["Gstreamer (gst-python)", "ogg123 -q", "play -q"]:
+            self.SoundCommand_List.append([item])
+
         self.SoundCommand.set_model(self.SoundCommand_List)
-        self.SoundCommand.set_text_column(0)
+        self.SoundCommand.set_entry_text_column(0)
 
         self.options = {
             "ui": {
@@ -1526,15 +1543,6 @@ class SoundsFrame(buildFrame):
             }
         }
 
-        for executable in ["amarok -a $", "audacious -e $", "exaile $", "xmms2 add -f $"]:
-            self.audioPlayerCombo.append_text(executable)
-
-        for executable in ["flite -t $", "echo $ | festival --tts"]:
-            self.TTSCommand.append_text(executable)
-
-        for item in ["play -q", "ogg123 -q", "Gstreamer (gst-python)"]:
-            self.SoundCommand.append_text(item)
-
         self.SoundButton.connect("clicked", self.OnChooseSoundDir)
         self.DefaultSoundCommand.connect("clicked", self.DefaultSound)
         self.DefaultTTSCommand.connect("clicked", self.DefaultTTS)
@@ -1542,7 +1550,9 @@ class SoundsFrame(buildFrame):
         self.DefaultRoomMessage.connect("clicked", self.DefaultRooms)
 
     def OnSoundCheckToggled(self, widget):
+
         sensitive = self.SoundCheck.get_active()
+
         self.SoundCommand.set_sensitive(sensitive)
         self.SoundDirectory.set_sensitive(sensitive)
         self.SoundButton.set_sensitive(sensitive)
@@ -1563,18 +1573,20 @@ class SoundsFrame(buildFrame):
         self.SoundCommand.child.set_text("play -q")
 
     def OnTextToSpeechToggled(self, widget):
-        sensitive = self.TextToSpeech.get_active()
 
-        for widget in [self.roomMessageBox, self.privateMessageBox, self.ttsCommandBox]:
-            widget.set_sensitive(sensitive)
+        sensitive = self.TextToSpeech.get_active()
+        self.tableTTS.set_sensitive(sensitive)
 
     def SetSettings(self, config):
+
         self.p.SetWidgetsData(config, self.options)
+
         for i in ["%(user)s", "%(message)s"]:
             if i not in config["ui"]["speechprivate"]:
                 self.DefaultPrivate(None)
             if i not in config["ui"]["speechrooms"]:
                 self.DefaultRooms(None)
+
         self.OnSoundCheckToggled(self.SoundCheck)
         self.OnTextToSpeechToggled(self.TextToSpeech)
 

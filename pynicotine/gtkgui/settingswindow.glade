@@ -2005,7 +2005,7 @@ typed incorrectly or as an acronym</property>
                             <property name="n_rows">9</property>
                             <property name="n_columns">4</property>
                             <property name="column_spacing">5</property>
-                            <property name="row_spacing">3</property>
+                            <property name="row_spacing">5</property>
                             <child>
                               <widget class="GtkButton" id="PickURL">
                                 <property name="visible">True</property>
@@ -3297,7 +3297,7 @@ typed incorrectly or as an acronym</property>
                             <property name="n_rows">6</property>
                             <property name="n_columns">4</property>
                             <property name="column_spacing">5</property>
-                            <property name="row_spacing">3</property>
+                            <property name="row_spacing">5</property>
                             <child>
                               <widget class="GtkDrawingArea" id="Drawing_InputColor">
                                 <property name="width_request">16</property>
@@ -4085,7 +4085,7 @@ typed incorrectly or as an acronym</property>
                             <property name="n_rows">3</property>
                             <property name="n_columns">4</property>
                             <property name="column_spacing">5</property>
-                            <property name="row_spacing">3</property>
+                            <property name="row_spacing">5</property>
                             <child>
                               <widget class="GtkDrawingArea" id="Drawing_HighlightTab">
                                 <property name="width_request">16</property>
@@ -6272,7 +6272,7 @@ Clear</property>
                 <property name="n_rows">8</property>
                 <property name="n_columns">4</property>
                 <property name="column_spacing">10</property>
-                <property name="row_spacing">3</property>
+                <property name="row_spacing">5</property>
                 <child>
                   <placeholder/>
                 </child>
@@ -10870,19 +10870,10 @@ when new results come in</property>
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkComboBoxEntry" id="Encoding">
-                    <property name="width_request">100</property>
+                  <widget class="GtkComboBox" id="Encoding">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <child internal-child="entry">
-                      <widget class="GtkEntry" id="comboboxentry-entry4">
-                        <property name="can_focus">False</property>
-                        <property name="primary_icon_activatable">False</property>
-                        <property name="secondary_icon_activatable">False</property>
-                        <property name="primary_icon_sensitive">True</property>
-                        <property name="secondary_icon_sensitive">True</property>
-                      </widget>
-                    </child>
+                    <property name="has_entry">True</property>
                   </widget>
                   <packing>
                     <property name="expand">False</property>
@@ -11646,21 +11637,13 @@ when new results come in</property>
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkComboBoxEntry" id="SoundCommand">
+                  <widget class="GtkComboBox" id="SoundCommand">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <child internal-child="entry">
-                      <widget class="GtkEntry" id="comboboxentry-entry14">
-                        <property name="can_focus">False</property>
-                        <property name="primary_icon_activatable">False</property>
-                        <property name="secondary_icon_activatable">False</property>
-                        <property name="primary_icon_sensitive">True</property>
-                        <property name="secondary_icon_sensitive">True</property>
-                      </widget>
-                    </child>
+                    <property name="has_entry">True</property>
                   </widget>
                   <packing>
-                    <property name="expand">True</property>
+                    <property name="expand">False</property>
                     <property name="fill">True</property>
                     <property name="position">1</property>
                   </packing>
@@ -11846,40 +11829,30 @@ when new results come in</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkHBox" id="ttsCommandBox">
+              <widget class="GtkTable" id="tableTTS">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="spacing">5</property>
+                <property name="n_rows">3</property>
+                <property name="n_columns">3</property>
+                <property name="column_spacing">5</property>
+                <property name="row_spacing">5</property>
                 <child>
                   <widget class="GtkLabel" id="ttscmdLabel">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
+                    <property name="xalign">0</property>
                     <property name="label" translatable="yes">Text To Speech command:</property>
                   </widget>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">False</property>
-                    <property name="position">0</property>
-                  </packing>
                 </child>
                 <child>
-                  <widget class="GtkComboBoxEntry" id="TTSCommand">
+                  <widget class="GtkComboBox" id="TTSCommand">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <child internal-child="entry">
-                      <widget class="GtkEntry" id="comboboxentry-entry16">
-                        <property name="can_focus">False</property>
-                        <property name="primary_icon_activatable">False</property>
-                        <property name="secondary_icon_activatable">False</property>
-                        <property name="primary_icon_sensitive">True</property>
-                        <property name="secondary_icon_sensitive">True</property>
-                      </widget>
-                    </child>
+                    <property name="has_entry">True</property>
                   </widget>
                   <packing>
-                    <property name="expand">True</property>
-                    <property name="fill">True</property>
-                    <property name="position">1</property>
+                    <property name="left_attach">1</property>
+                    <property name="right_attach">2</property>
                   </packing>
                 </child>
                 <child>
@@ -11929,35 +11902,32 @@ when new results come in</property>
                     </child>
                   </widget>
                   <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">False</property>
-                    <property name="position">2</property>
+                    <property name="left_attach">2</property>
+                    <property name="right_attach">3</property>
                   </packing>
                 </child>
-              </widget>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">5</property>
-              </packing>
-            </child>
-            <child>
-              <widget class="GtkHBox" id="roomMessageBox">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="spacing">5</property>
                 <child>
                   <widget class="GtkLabel" id="crMsgLabel">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">Chat room message:</property>
-                    <property name="width_chars">20</property>
                   </widget>
                   <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">False</property>
-                    <property name="position">0</property>
+                    <property name="top_attach">1</property>
+                    <property name="bottom_attach">2</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkLabel" id="ttscmdLabel3">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="xalign">0</property>
+                    <property name="label" translatable="yes">Private chat message:</property>
+                  </widget>
+                  <packing>
+                    <property name="top_attach">2</property>
+                    <property name="bottom_attach">3</property>
                   </packing>
                 </child>
                 <child>
@@ -11965,15 +11935,35 @@ when new results come in</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                    <property name="invisible_char">●</property>
                     <property name="primary_icon_activatable">False</property>
                     <property name="secondary_icon_activatable">False</property>
                     <property name="primary_icon_sensitive">True</property>
                     <property name="secondary_icon_sensitive">True</property>
                   </widget>
                   <packing>
-                    <property name="expand">True</property>
-                    <property name="fill">True</property>
-                    <property name="position">1</property>
+                    <property name="left_attach">1</property>
+                    <property name="right_attach">2</property>
+                    <property name="top_attach">1</property>
+                    <property name="bottom_attach">2</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkEntry" id="PrivateMessage">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                    <property name="invisible_char">●</property>
+                    <property name="primary_icon_activatable">False</property>
+                    <property name="secondary_icon_activatable">False</property>
+                    <property name="primary_icon_sensitive">True</property>
+                    <property name="secondary_icon_sensitive">True</property>
+                  </widget>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="right_attach">2</property>
+                    <property name="top_attach">2</property>
+                    <property name="bottom_attach">3</property>
                   </packing>
                 </child>
                 <child>
@@ -12023,51 +12013,10 @@ when new results come in</property>
                     </child>
                   </widget>
                   <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">False</property>
-                    <property name="position">2</property>
-                  </packing>
-                </child>
-              </widget>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">6</property>
-              </packing>
-            </child>
-            <child>
-              <widget class="GtkHBox" id="privateMessageBox">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="spacing">5</property>
-                <child>
-                  <widget class="GtkLabel" id="ttscmdLabel3">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="xalign">0</property>
-                    <property name="label" translatable="yes">Private chat message:</property>
-                    <property name="width_chars">20</property>
-                  </widget>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">False</property>
-                    <property name="position">0</property>
-                  </packing>
-                </child>
-                <child>
-                  <widget class="GtkEntry" id="PrivateMessage">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                    <property name="primary_icon_activatable">False</property>
-                    <property name="secondary_icon_activatable">False</property>
-                    <property name="primary_icon_sensitive">True</property>
-                    <property name="secondary_icon_sensitive">True</property>
-                  </widget>
-                  <packing>
-                    <property name="expand">True</property>
-                    <property name="fill">True</property>
-                    <property name="position">1</property>
+                    <property name="left_attach">2</property>
+                    <property name="right_attach">3</property>
+                    <property name="top_attach">1</property>
+                    <property name="bottom_attach">2</property>
                   </packing>
                 </child>
                 <child>
@@ -12117,16 +12066,17 @@ when new results come in</property>
                     </child>
                   </widget>
                   <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">False</property>
-                    <property name="position">2</property>
+                    <property name="left_attach">2</property>
+                    <property name="right_attach">3</property>
+                    <property name="top_attach">2</property>
+                    <property name="bottom_attach">3</property>
                   </packing>
                 </child>
               </widget>
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">True</property>
-                <property name="position">7</property>
+                <property name="position">5</property>
               </packing>
             </child>
             <child>
@@ -12140,27 +12090,19 @@ when new results come in</property>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
                 <property name="padding">5</property>
-                <property name="position">8</property>
+                <property name="position">6</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkComboBoxEntry" id="audioPlayerCombo">
+              <widget class="GtkComboBox" id="audioPlayerCombo">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <child internal-child="entry">
-                  <widget class="GtkEntry" id="comboboxentry-entry18">
-                    <property name="can_focus">False</property>
-                    <property name="primary_icon_activatable">False</property>
-                    <property name="secondary_icon_activatable">False</property>
-                    <property name="primary_icon_sensitive">True</property>
-                    <property name="secondary_icon_sensitive">True</property>
-                  </widget>
-                </child>
+                <property name="has_entry">True</property>
               </widget>
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">True</property>
-                <property name="position">9</property>
+                <property name="position">7</property>
               </packing>
             </child>
           </widget>
