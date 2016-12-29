@@ -2036,7 +2036,7 @@ class NotebookFrame(buildFrame):
 
         self.NotificationIcon.set_from_pixbuf(self.frame.images["online"])
 
-        # Define options for each GtkComboBoxEntry using a liststore
+        # Define options for each GtkComboBox using a liststore
         # The first element is the translated string,
         # the second is a GtkPositionType
         self.PosList = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
@@ -2046,22 +2046,22 @@ class NotebookFrame(buildFrame):
         self.PosList.append([_("Right"), "Right"])
 
         self.MainPosition.set_model(self.PosList)
-        self.MainPosition.set_text_column(0)
+        self.MainPosition.set_entry_text_column(0)
 
         self.ChatRoomsPosition.set_model(self.PosList)
-        self.ChatRoomsPosition.set_text_column(0)
+        self.ChatRoomsPosition.set_entry_text_column(0)
 
         self.PrivateChatPosition.set_model(self.PosList)
-        self.PrivateChatPosition.set_text_column(0)
+        self.PrivateChatPosition.set_entry_text_column(0)
 
         self.SearchPosition.set_model(self.PosList)
-        self.SearchPosition.set_text_column(0)
+        self.SearchPosition.set_entry_text_column(0)
 
         self.UserInfoPosition.set_model(self.PosList)
-        self.UserInfoPosition.set_text_column(0)
+        self.UserInfoPosition.set_entry_text_column(0)
 
         self.UserBrowsePosition.set_model(self.PosList)
-        self.UserBrowsePosition.set_text_column(0)
+        self.UserBrowsePosition.set_entry_text_column(0)
 
         self.options = {
             "ui": {

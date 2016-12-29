@@ -6269,22 +6269,10 @@ Clear</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="border_width">3</property>
-                <property name="n_rows">9</property>
+                <property name="n_rows">8</property>
                 <property name="n_columns">4</property>
                 <property name="column_spacing">10</property>
                 <property name="row_spacing">3</property>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
                 <child>
                   <placeholder/>
                 </child>
@@ -6582,8 +6570,8 @@ Clear</property>
                     <property name="label" translatable="yes">Notify:</property>
                   </widget>
                   <packing>
-                    <property name="top_attach">8</property>
-                    <property name="bottom_attach">9</property>
+                    <property name="top_attach">7</property>
+                    <property name="bottom_attach">8</property>
                     <property name="x_options">GTK_FILL</property>
                     <property name="y_options"/>
                   </packing>
@@ -6597,8 +6585,8 @@ Clear</property>
                   <packing>
                     <property name="left_attach">1</property>
                     <property name="right_attach">2</property>
-                    <property name="top_attach">8</property>
-                    <property name="bottom_attach">9</property>
+                    <property name="top_attach">7</property>
+                    <property name="bottom_attach">8</property>
                     <property name="x_options">GTK_FILL</property>
                     <property name="y_options">GTK_FILL</property>
                   </packing>
@@ -6612,8 +6600,8 @@ Clear</property>
                   <packing>
                     <property name="left_attach">1</property>
                     <property name="right_attach">2</property>
-                    <property name="top_attach">7</property>
-                    <property name="bottom_attach">8</property>
+                    <property name="top_attach">6</property>
+                    <property name="bottom_attach">7</property>
                     <property name="x_options">GTK_FILL</property>
                     <property name="y_options">GTK_FILL</property>
                   </packing>
@@ -6626,8 +6614,8 @@ Clear</property>
                     <property name="label" translatable="yes">Window:</property>
                   </widget>
                   <packing>
-                    <property name="top_attach">7</property>
-                    <property name="bottom_attach">8</property>
+                    <property name="top_attach">6</property>
+                    <property name="bottom_attach">7</property>
                     <property name="x_options">GTK_FILL</property>
                     <property name="y_options"/>
                   </packing>
@@ -8362,20 +8350,10 @@ Clear</property>
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkComboBoxEntry" id="MainPosition">
+                  <widget class="GtkComboBox" id="MainPosition">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <child internal-child="entry">
-                      <widget class="GtkEntry" id="comboboxentry-entry1">
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="invisible_char">●</property>
-                        <property name="primary_icon_activatable">False</property>
-                        <property name="secondary_icon_activatable">False</property>
-                        <property name="primary_icon_sensitive">True</property>
-                        <property name="secondary_icon_sensitive">True</property>
-                      </widget>
-                    </child>
+                    <property name="has_entry">True</property>
                   </widget>
                   <packing>
                     <property name="expand">False</property>
@@ -8394,7 +8372,7 @@ Clear</property>
                   <packing>
                     <property name="expand">False</property>
                     <property name="fill">True</property>
-                    <property name="position">2</property>
+                    <property name="position">3</property>
                   </packing>
                 </child>
                 <child>
@@ -8445,20 +8423,10 @@ Clear</property>
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkComboBoxEntry" id="ChatRoomsPosition">
+                  <widget class="GtkComboBox" id="ChatRoomsPosition">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <child internal-child="entry">
-                      <widget class="GtkEntry" id="comboboxentry-entry2">
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="invisible_char">●</property>
-                        <property name="primary_icon_activatable">False</property>
-                        <property name="secondary_icon_activatable">False</property>
-                        <property name="primary_icon_sensitive">True</property>
-                        <property name="secondary_icon_sensitive">True</property>
-                      </widget>
-                    </child>
+                    <property name="has_entry">True</property>
                   </widget>
                   <packing>
                     <property name="expand">False</property>
@@ -8477,7 +8445,7 @@ Clear</property>
                   <packing>
                     <property name="expand">False</property>
                     <property name="fill">True</property>
-                    <property name="position">2</property>
+                    <property name="position">3</property>
                   </packing>
                 </child>
                 <child>
@@ -8527,20 +8495,10 @@ Clear</property>
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkComboBoxEntry" id="PrivateChatPosition">
+                  <widget class="GtkComboBox" id="PrivateChatPosition">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <child internal-child="entry">
-                      <widget class="GtkEntry" id="comboboxentry-entry3">
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="invisible_char">●</property>
-                        <property name="primary_icon_activatable">False</property>
-                        <property name="secondary_icon_activatable">False</property>
-                        <property name="primary_icon_sensitive">True</property>
-                        <property name="secondary_icon_sensitive">True</property>
-                      </widget>
-                    </child>
+                    <property name="has_entry">True</property>
                   </widget>
                   <packing>
                     <property name="expand">False</property>
@@ -8559,7 +8517,7 @@ Clear</property>
                   <packing>
                     <property name="expand">False</property>
                     <property name="fill">True</property>
-                    <property name="position">2</property>
+                    <property name="position">3</property>
                   </packing>
                 </child>
                 <child>
@@ -8609,20 +8567,10 @@ Clear</property>
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkComboBoxEntry" id="SearchPosition">
+                  <widget class="GtkComboBox" id="SearchPosition">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <child internal-child="entry">
-                      <widget class="GtkEntry" id="comboboxentry-entry4">
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="invisible_char">●</property>
-                        <property name="primary_icon_activatable">False</property>
-                        <property name="secondary_icon_activatable">False</property>
-                        <property name="primary_icon_sensitive">True</property>
-                        <property name="secondary_icon_sensitive">True</property>
-                      </widget>
-                    </child>
+                    <property name="has_entry">True</property>
                   </widget>
                   <packing>
                     <property name="expand">False</property>
@@ -8641,7 +8589,7 @@ Clear</property>
                   <packing>
                     <property name="expand">False</property>
                     <property name="fill">True</property>
-                    <property name="position">2</property>
+                    <property name="position">3</property>
                   </packing>
                 </child>
                 <child>
@@ -8692,20 +8640,10 @@ Clear</property>
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkComboBoxEntry" id="UserInfoPosition">
+                  <widget class="GtkComboBox" id="UserInfoPosition">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <child internal-child="entry">
-                      <widget class="GtkEntry" id="comboboxentry-entry5">
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="invisible_char">●</property>
-                        <property name="primary_icon_activatable">False</property>
-                        <property name="secondary_icon_activatable">False</property>
-                        <property name="primary_icon_sensitive">True</property>
-                        <property name="secondary_icon_sensitive">True</property>
-                      </widget>
-                    </child>
+                    <property name="has_entry">True</property>
                   </widget>
                   <packing>
                     <property name="expand">False</property>
@@ -8724,7 +8662,7 @@ Clear</property>
                   <packing>
                     <property name="expand">False</property>
                     <property name="fill">True</property>
-                    <property name="position">2</property>
+                    <property name="position">3</property>
                   </packing>
                 </child>
                 <child>
@@ -8774,20 +8712,10 @@ Clear</property>
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkComboBoxEntry" id="UserBrowsePosition">
+                  <widget class="GtkComboBox" id="UserBrowsePosition">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <child internal-child="entry">
-                      <widget class="GtkEntry" id="comboboxentry-entry6">
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="invisible_char">●</property>
-                        <property name="primary_icon_activatable">False</property>
-                        <property name="secondary_icon_activatable">False</property>
-                        <property name="primary_icon_sensitive">True</property>
-                        <property name="secondary_icon_sensitive">True</property>
-                      </widget>
-                    </child>
+                    <property name="has_entry">True</property>
                   </widget>
                   <packing>
                     <property name="expand">False</property>
@@ -8806,7 +8734,7 @@ Clear</property>
                   <packing>
                     <property name="expand">False</property>
                     <property name="fill">True</property>
-                    <property name="position">2</property>
+                    <property name="position">3</property>
                   </packing>
                 </child>
                 <child>
