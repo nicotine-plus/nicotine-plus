@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-28 19:38+0100\n"
+"POT-Creation-Date: 2016-12-29 12:48+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -777,12 +777,12 @@ msgstr ""
 msgid "Bloat"
 msgstr ""
 
+msgid "Enable spell checker (requires a restart)"
+msgstr ""
+
 msgid ""
 "Libsexy Website: http://www.chipx86.com/wiki/Libsexy \\nlibsexy and sexy-"
 "python bindings required."
-msgstr ""
-
-msgid "Enable spell checker (requires a restart)"
 msgstr ""
 
 msgid "Show Buttons in Transfers Tabs"
@@ -946,9 +946,6 @@ msgid "Highlight"
 msgstr ""
 
 msgid "<b>Tab colors</b>"
-msgstr ""
-
-msgid "<b>Colors</b>"
 msgstr ""
 
 msgid "Text Completion"
@@ -1249,7 +1246,7 @@ msgstr ""
 msgid "Private chat format:"
 msgstr ""
 
-msgid "<b>Logging</b>"
+msgid "Logging"
 msgstr ""
 
 msgid "Misc"
@@ -1306,7 +1303,7 @@ msgstr ""
 msgid "User browse"
 msgstr ""
 
-msgid "<b>Notebook Tabs</b>"
+msgid "Notebook Tabs"
 msgstr ""
 
 msgid "UrlCatch"
@@ -1505,9 +1502,6 @@ msgstr ""
 msgid "Audio Player Command ($ for filename):"
 msgstr ""
 
-msgid "<b>Sounds:</b>"
-msgstr ""
-
 msgid "Upload directory:"
 msgstr ""
 
@@ -1614,7 +1608,7 @@ msgstr ""
 msgid "Protocol:"
 msgstr ""
 
-msgid "URL Catching:"
+msgid "URL Catching"
 msgstr ""
 
 msgid "Userinfo"
@@ -2864,19 +2858,10 @@ msgstr ""
 msgid "Interface"
 msgstr ""
 
-msgid "Notebook Tabs"
-msgstr ""
-
-msgid "Logging"
-msgstr ""
-
 msgid "Ignore List"
 msgstr ""
 
 msgid "Auto-Replace"
-msgstr ""
-
-msgid "URL Catching"
 msgstr ""
 
 msgid "Completion"

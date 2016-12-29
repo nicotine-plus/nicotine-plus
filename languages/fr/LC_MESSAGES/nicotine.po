@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nicotine\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-28 19:38+0100\n"
-"PO-Revision-Date: 2016-12-28 19:38+0100\n"
+"POT-Creation-Date: 2016-12-29 12:48+0100\n"
+"PO-Revision-Date: 2016-12-29 12:49+0100\n"
 "Last-Translator: Michael LABOUEBE <gfarmerfr@free.fr>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -1025,15 +1025,15 @@ msgstr "Bannir"
 msgid "Bloat"
 msgstr "Amélioration de l'IHM"
 
+msgid "Enable spell checker (requires a restart)"
+msgstr "Activer le correcteur (redémarrage nécessaire)"
+
 msgid ""
 "Libsexy Website: http://www.chipx86.com/wiki/Libsexy \\nlibsexy and sexy-"
 "python bindings required."
 msgstr ""
 "Libsexy site internet: http://www.chipx86.com/wiki/Libsexy \n"
 " nécessite libsexy et le module sexy-python."
-
-msgid "Enable spell checker (requires a restart)"
-msgstr "Activer le correcteur (redémarrage nécessaire)"
 
 msgid "Show Buttons in Transfers Tabs"
 msgstr "Montrer les boutons dans la fenêtre des transferts"
@@ -1241,10 +1241,6 @@ msgstr "Surbrillance"
 # pynicotine/gtkgui/settings_glade.py
 msgid "<b>Tab colors</b>"
 msgstr "<b>Couleurs des onglets</b>"
-
-# pynicotine/gtkgui/settings_glade.py
-msgid "<b>Colors</b>"
-msgstr "<b>Couleurs</b>"
 
 msgid "Text Completion"
 msgstr "Complétion du texte"
@@ -1627,10 +1623,10 @@ msgstr "Format des salons:"
 msgid "Private chat format:"
 msgstr "Format des dialogues privés:"
 
-# pynicotine/gtkgui/search.py
-# pynicotine/gtkgui/userbrowse.py
-msgid "<b>Logging</b>"
-msgstr "<b>Enregistrement</b>"
+# pynicotine/gtkgui/settings_glade.py
+# pynicotine/gtkgui/settingswindow.py
+msgid "Logging"
+msgstr "Enregistrement"
 
 # pynicotine/gtkgui/settingswindow.py
 msgid "Misc"
@@ -1700,9 +1696,8 @@ msgstr "Informations utilisateur"
 msgid "User browse"
 msgstr "Fichiers partagés"
 
-# pynicotine/gtkgui/settings_glade.py
-msgid "<b>Notebook Tabs</b>"
-msgstr "<b>Barre des onglets</b>"
+msgid "Notebook Tabs"
+msgstr "Barre des onglets"
 
 # pynicotine/gtkgui/settingswindow.py
 msgid "UrlCatch"
@@ -1947,10 +1942,6 @@ msgstr ""
 "Commande pour le lecteur audio ($ sera remplacé par le nom du fichier):"
 
 # pynicotine/gtkgui/settings_glade.py
-msgid "<b>Sounds:</b>"
-msgstr "<b>Sons:</b>"
-
-# pynicotine/gtkgui/settings_glade.py
 msgid "Upload directory:"
 msgstr "Répertoire des envois:"
 
@@ -2088,9 +2079,9 @@ msgstr "Logiciel:"
 msgid "Protocol:"
 msgstr "Protocole:"
 
-# pynicotine/gtkgui/settings_glade.py
-msgid "URL Catching:"
-msgstr "Capture d'URL:"
+# pynicotine/gtkgui/settingswindow.py
+msgid "URL Catching"
+msgstr "Capture d'URL"
 
 # pynicotine/gtkgui/nicotine_glade.py
 # pynicotine/gtkgui/settingswindow.py
@@ -3784,24 +3775,12 @@ msgstr "Bloqueur géographique"
 msgid "Interface"
 msgstr "Interface"
 
-msgid "Notebook Tabs"
-msgstr "Barre des onglets"
-
-# pynicotine/gtkgui/settings_glade.py
-# pynicotine/gtkgui/settingswindow.py
-msgid "Logging"
-msgstr "Enregistrement"
-
 # pynicotine/gtkgui/settings_glade.py
 msgid "Ignore List"
 msgstr "Liste des utilisateurs ignorés"
 
 msgid "Auto-Replace"
 msgstr "Substitution de texte"
-
-# pynicotine/gtkgui/settingswindow.py
-msgid "URL Catching"
-msgstr "Capture d'URL"
 
 # pynicotine/gtkgui/settingswindow.py
 msgid "Completion"
