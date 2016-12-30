@@ -44,7 +44,7 @@ from pynicotine.slskmessages import ToBeEncoded
 from utils import InitialiseColumns, AppendLine, PopupMenu, WriteLog, Humanize, HumanSpeed, expand_alias, is_alias, EncodingsMenu, SaveEncoding, PressHeader, fixpath, IconNotebook, showCountryTooltip
 from pynicotine.utils import findBestEncoding
 from ticker import Ticker
-from entrydialog import OptionDialog, input_box
+from entrydialog import input_box
 
 
 def GetCompletion(part, list):
@@ -697,13 +697,6 @@ class RoomsControl:
 
         if msg.room[-1:] != ' ':  # meta rooms
             self.frame.RoomSearchCombo_List.remove(self.frame.searchroomslist[msg.room])
-
-        if self.joinedrooms == {} and not self.frame.show_room_list1.get_active():
-            win = OptionDialog(self.frame, _("You aren't in any chat rooms.") + " " + _("Open Room List?"), modal=True, status=None, option=False, third="")
-            win.connect("response", self.frame.onOpenRoomList)
-            win.set_title(_("Nicotine+") + ": " + _("Open Room List?"))
-            win.set_icon(self.frame.images["n"])
-            win.show()
 
     def ConnClose(self):
 
