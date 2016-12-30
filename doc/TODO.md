@@ -4,6 +4,7 @@ A list of stuff & things todo (not in any particular order):
 
 #### Short term goals
 
+* **IN PROGRESS**: Take care of [deprecated symbols](DEPRECATED_SYMBOLS.md)
 * **IN PROGRESS**: Drop the bundle Configparser module: use upstream version.
 * GNU/Linux: Switch to using XDG_* directories.
 * **IN PROGRESS**: Convert all the libglade files to GTKBuilder.
