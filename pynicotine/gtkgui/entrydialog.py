@@ -280,47 +280,58 @@ class MetaDialog(gtk.Dialog):
     def OnPrevious(self, widget):
 
         if len(self.data.keys()) > 1:
+
             _list = self.data.keys()
-            if not self.current in _list:
+
+            if self.current not in _list:
                 ix -= 1
             else:
                 ix = _list.index(self.current)
-
                 ix -= 1
 
                 if ix < 0:
                     ix = -1
                 elif ix >= len(_list):
                     ix = 0
-            if ix != None:
+
+            if ix is not None:
                 self.current = _list[ix]
-        if self.current == None:
+
+        if self.current is None:
             return
+
         self.Display(self.current)
 
     def OnNext(self, widget):
+
         if len(self.data.keys()) > 1:
+
             _list = self.data.keys()
-            if not self.current in _list:
+
+            if self.current not in _list:
                 ix += 1
             else:
                 ix = _list.index(self.current)
-
                 ix += 1
 
                 if ix < 0:
                     ix = -1
                 elif ix >= len(_list):
                     ix = 0
-            if ix != None:
+
+            if ix is not None:
                 self.current = _list[ix]
-        if self.current == None:
+
+        if self.current is None:
             return
+
         self.Display(self.current)
 
     def Display(self, item):
+
         if item not in self.data:
             return
+
         if not self.Search:
             self.Immediate.hide()
             self.Position.hide()
@@ -402,7 +413,6 @@ class MetaDialog(gtk.Dialog):
         label = gtk.Label()
         label.set_markup(labeltitle)
         label.show()
-        # label.set_property("selectable", True)
         parent.pack_start(label, expand, fill)
 
         try:
