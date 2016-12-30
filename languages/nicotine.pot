@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-29 23:18+0100\n"
+"POT-Creation-Date: 2016-12-30 21:08+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1883,12 +1883,6 @@ msgstr ""
 
 #, python-format
 msgid "You have been added to a private room: %(room)s"
-msgstr ""
-
-msgid "You aren't in any chat rooms."
-msgstr ""
-
-msgid "Open Room List?"
 msgstr ""
 
 msgid "Set ticker message"

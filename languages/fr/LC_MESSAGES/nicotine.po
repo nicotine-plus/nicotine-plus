@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nicotine\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-29 23:18+0100\n"
-"PO-Revision-Date: 2016-12-29 23:20+0100\n"
+"POT-Creation-Date: 2016-12-30 21:08+0100\n"
+"PO-Revision-Date: 2016-12-30 21:09+0100\n"
 "Last-Translator: Michael LABOUEBE <gfarmerfr@free.fr>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -2463,13 +2463,6 @@ msgstr ""
 #, python-format
 msgid "You have been added to a private room: %(room)s"
 msgstr "Vous avez été invité dans le salon privé %(room)s "
-
-msgid "You aren't in any chat rooms."
-msgstr "Vous n'êtes dans aucun salon de discussion."
-
-# pynicotine/gtkgui/settings_glade.py
-msgid "Open Room List?"
-msgstr "Ouvrir la liste des salons?"
 
 msgid "Set ticker message"
 msgstr "Ajouter un message défilant"
