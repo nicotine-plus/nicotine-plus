@@ -2184,11 +2184,15 @@ class BloatFrame(buildFrame):
 
         buildFrame.__init__(self, "BloatFrame")
 
+        # Combobox for the language list
         self.TranslationCombo_List = gtk.ListStore(gobject.TYPE_STRING)
         self.TranslationCombo.set_model(self.TranslationCombo_List)
         cell = gtk.CellRendererText()
         self.TranslationCombo.pack_start(cell, True)
         self.TranslationCombo.add_attribute(cell, 'text', 0)
+
+        for name, code in self.languagelookup:
+            self.TranslationCombo_List.append([name])
 
         # Combobox for the decimal separator
         self.DecimalSep_List = gtk.ListStore(gobject.TYPE_STRING)
@@ -2218,9 +2222,6 @@ class BloatFrame(buildFrame):
                 "language": self.TranslationCombo
             }
         }
-
-        for name, code in self.languagelookup:
-            self.TranslationCombo.append_text(name)
 
         self.DefaultFont.connect("clicked", self.OnDefaultFont)
         self.SelectChatFont.connect("font-set", self.FontsColorsChanged)
