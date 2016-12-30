@@ -78,18 +78,17 @@ class ServerFrame(buildFrame):
 
         buildFrame.__init__(self, "ServerFrame")
 
-        self.Elist = {}
         self.EncodingStore = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
 
         self.Encoding.set_model(self.EncodingStore)
         self.Encoding.set_entry_text_column(0)
 
         cell2 = gtk.CellRendererText()
-        self.Encoding.pack_start(cell2, True)
+        self.Encoding.pack_start(cell2, False)
         self.Encoding.add_attribute(cell2, 'text', 1)
 
         for item in encodings:
-            self.Elist[item[1]] = self.EncodingStore.append([item[1], item[0]])
+            self.EncodingStore.append([item[1], item[0]])
 
         self.options = {
             "server": {
