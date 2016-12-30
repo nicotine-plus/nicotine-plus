@@ -1436,16 +1436,8 @@ class NicotineFrame:
                         r.set_property("foreground", colour)
 
     def PopupMessage(self, popup):
-        self.logMessage(_(popup.title) + ": " + _(popup.message))
         dialog = gtk.MessageDialog(type=gtk.MESSAGE_WARNING, buttons=gtk.BUTTONS_OK, message_format=popup.title)
         dialog.format_secondary_text(popup.message)
-        dialog.connect('response', lambda dialog, response: dialog.destroy())
-        dialog.show()
-
-    def PopupMessage2(self, title, message):
-        dialog = gtk.MessageDialog(type=gtk.MESSAGE_WARNING, buttons=gtk.BUTTONS_OK, message_format=title)
-        dialog.set_title("Nicotine+: " + title)
-        dialog.format_secondary_text(message)
         dialog.connect('response', lambda dialog, response: dialog.destroy())
         dialog.show()
 
