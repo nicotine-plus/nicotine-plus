@@ -294,7 +294,7 @@ class SlskProtoThread(threading.Thread):
 		listenport = None
 		self.lastsocketwarning = 0
 
-		for listenport in range(portrange[0], portrange[1]+1):
+		for listenport in range(int(portrange[0]), int(portrange[1])+1):
 			try:
 				self._p.bind(('', listenport))
 			except socket.error:
