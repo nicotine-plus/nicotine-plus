@@ -23,7 +23,6 @@
 import gtk
 import gobject
 import os
-from pynicotine.utils import version
 
 
 class MetaDialog(gtk.Dialog):
