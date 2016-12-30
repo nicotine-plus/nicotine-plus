@@ -207,8 +207,8 @@ class FastConfigureAssistant(object):
 
         # portpage
         self.config.sections['server']['portrange'] = (
-            int(self.kids['lowerport'].get_value()),
-            int(self.kids['upperport'].get_value())
+            self.kids['lowerport'].get_value_as_int(),
+            self.kids['upperport'].get_value_as_int()
         )
         self.config.sections['server']['upnp'] = self.kids['useupnp'].get_active()
         self.config.sections['server']['firewalled'] = not self.kids['portopen'].get_active()
