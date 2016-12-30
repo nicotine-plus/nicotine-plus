@@ -24,6 +24,7 @@
 import gtk
 import gobject
 import pango
+import os
 
 import re
 import sre_constants
