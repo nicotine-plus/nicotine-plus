@@ -32,7 +32,7 @@ class Ticker(gtk.EventBox):
         gtk.EventBox.__init__(self)
 
         self.entry = gtk.Entry()
-        self.entry.set_editable(False)
+        self.entry.set_property("editable", False)
         self.entry.set_has_frame(False)
         self.entry.show()
         self.add(self.entry)
