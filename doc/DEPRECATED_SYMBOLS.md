@@ -27,3 +27,8 @@ used by get_custom_widget in frame.py
 * pynicotine/gtkgui/frame.py: for r in c.get_cell_renderers():
 * pynicotine/gtkgui/frame.py: for r in c.get_cell_renderers():
 * pynicotine/gtkgui/transferlist.py: self.col_percent.set_attributes(self.col_percent.get_cell_renderers()[0], value=4, visible=14)
+
+#### [gtk_menu_append, macro in GtkMenu](https://developer.gnome.org/gtk2/2.24/GtkMenu.html#gtk-menu-append)
+
+* pynicotine/gtkgui/utils.py: used in PopupMenu(gtk.Menu)
+* pynicotine/gtkgui/utils.py: used in PressHeader
