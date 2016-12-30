@@ -72,7 +72,6 @@ class UserBrowse:
         self.selected_files = []
 
         self.shares = []
-        self.Elist = {}
 
         # Iters for current DirStore
         self.directories = {}
@@ -82,15 +81,17 @@ class UserBrowse:
         self.totalsize = 0
         self.encoding, m = EncodingsMenu(self.frame.np, "userencoding", user)
 
+        # Encoding Combobox
+        self.Elist = {}
         self.EncodingStore = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
-        self.Encoding.set_size_request(100, -1)
         self.Encoding.set_model(self.EncodingStore)
+
         cell = gtk.CellRendererText()
         self.Encoding.pack_start(cell, True)
         self.Encoding.add_attribute(cell, 'text', 0)
+
         cell2 = gtk.CellRendererText()
         self.Encoding.pack_start(cell2, False)
-
         self.Encoding.add_attribute(cell2, 'text', 1)
 
         for item in m:
@@ -99,6 +100,7 @@ class UserBrowse:
                 self.Encoding.set_active_iter(self.Elist[self.encoding])
 
         self.DirStore = gtk.TreeStore(str, str)
+
         self.FolderTreeView.set_headers_visible(True)
         self.FolderTreeView.set_enable_tree_lines(True)
 

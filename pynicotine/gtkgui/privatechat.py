@@ -339,11 +339,11 @@ class PrivateChat:
         self.offlinemessage = 0
         self.status = -1
         self.clist = []
-        self.Elist = {}
 
+        # Encoding Combobox
+        self.Elist = {}
         self.encoding, m = EncodingsMenu(self.frame.np, "userencoding", user)
         self.EncodingStore = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
-        self.Encoding.set_size_request(100, -1)
         self.Encoding.set_model(self.EncodingStore)
 
         cell = gtk.CellRendererText()

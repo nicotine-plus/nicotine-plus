@@ -830,11 +830,11 @@ class ChatRoom:
         self.OnShowChatButtons(show=(not config["ui"]["chat_hidebuttons"]))
 
         self.clist = []
-        self.Elist = {}
 
+        # Encoding Combobox
+        self.Elist = {}
         self.encoding, m = EncodingsMenu(self.frame.np, "roomencoding", room)
         self.EncodingStore = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
-        self.Encoding.set_size_request(100, -1)
         self.Encoding.set_model(self.EncodingStore)
 
         cell = gtk.CellRendererText()
