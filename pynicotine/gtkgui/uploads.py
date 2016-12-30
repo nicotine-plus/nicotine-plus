@@ -4,7 +4,7 @@
 # COPYRIGHT (C) 2009-2011 Quinox <quinox@users.sf.net>
 # COPYRIGHT (C) 2009 Hedonist <ak@sensi.org>
 # COPYRIGHT (C) 2006-2008 Daelstorm <daelstorm@gmail.com>
-# COPYRIGHT (C) 2003-2004 Hyriand
+# COPYRIGHT (C) 2003-2004 Hyriand <hyriand@thegraveyard.org>
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007

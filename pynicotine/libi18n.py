@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
-# COPYRIGHT (c) 2016 Michael Labouebe <gfarmerfr@free.fr>
-# COPYRIGHT (c) 2008 eL_vErDe <gandalf@le-vert.net>
+# COPYRIGHT (C) 2016 Michael Labouebe <gfarmerfr@free.fr>
+# COPYRIGHT (C) 2008 eL_vErDe <gandalf@le-vert.net>
 # COPYRIGHT (C) 2007-2008 Dieter Verfaillie <dieterv@optionexplicit.be>
 #
 # GNU GENERAL PUBLIC LICENSE

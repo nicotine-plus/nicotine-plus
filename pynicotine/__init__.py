@@ -1,2 +1,2 @@
-# Copyright (c) 2003-2004 Hyriand <hyriand@thegraveyard.org>
+# Copyright (C) 2003-2004 Hyriand <hyriand@thegraveyard.org>
 pass

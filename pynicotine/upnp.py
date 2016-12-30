@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
-# COPYRIGHT (c) 2016 Michael Labouebe <gfarmerfr@free.fr>
-# COPYRIGHT (c) 2009-2010 Quinox <quinox@users.sf.net>
+# COPYRIGHT (C) 2016 Michael Labouebe <gfarmerfr@free.fr>
+# COPYRIGHT (C) 2009-2010 Quinox <quinox@users.sf.net>
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007

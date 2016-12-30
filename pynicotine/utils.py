@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 #
-# COPYRIGHT (c) 2016 Michael Labouebe <gfarmerfr@free.fr>
+# COPYRIGHT (C) 2016 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2007 Daelstorm <daelstorm@gmail.com>
-# COPYRIGHT (C) 2003-2004 Hyriand
+# COPYRIGHT (C) 2003-2004 Hyriand <hyriand@thegraveyard.org>
 # COPYRIGHT (C) 2001-2003 Alexander Kanavin
 #
 # GNU GENERAL PUBLIC LICENSE

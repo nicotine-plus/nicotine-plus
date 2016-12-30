@@ -5,7 +5,7 @@
 # COPYRIGHT (C) 2008-2011 Quinox <quinox@users.sf.net>
 # COPYRIGHT (C) 2008 Gallows <g4ll0ws@gmail.com>
 # COPYRIGHT (C) 2006-2009 Daelstorm <daelstorm@gmail.com>
-# COPYRIGHT (C) 2003-2004 Hyriand
+# COPYRIGHT (C) 2003-2004 Hyriand <hyriand@thegraveyard.org>
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
