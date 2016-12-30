@@ -24,7 +24,6 @@ import gtk
 import gobject
 import os
 from pynicotine.utils import version
-import imagedata
 
 
 class MetaDialog(gtk.Dialog):
@@ -195,9 +194,6 @@ class MetaDialog(gtk.Dialog):
         self.Country.hide()
 
         hbox4.pack_start(self.Country, False, False)
-        self.Flag = gtk.Image()
-        self.Flag.hide()
-        hbox4.pack_start(self.Flag, False, False)
 
         self.buttonbox = gtk.HBox(False, 2)
         self.buttonbox.show()
@@ -336,7 +332,6 @@ class MetaDialog(gtk.Dialog):
             self.Immediate.hide()
             self.Position.hide()
             self.Country.hide()
-            self.Flag.hide()
             self.Queue.hide()
             self.Immediate.hide()
             self.ImmediateLabel.hide()
@@ -349,7 +344,6 @@ class MetaDialog(gtk.Dialog):
             self.Immediate.show()
             self.Position.show()
             self.Country.show()
-            self.Flag.show()
             self.Queue.show()
             self.Immediate.show()
             self.ImmediateLabel.show()
@@ -390,15 +384,9 @@ class MetaDialog(gtk.Dialog):
         if country not in ("", None):
             self.Country.set_markup(_("<b>Country Code:</b> ") + country)
             self.Country.show()
-            self.Flag.set_from_pixbuf(
-                self.nicotine.GetFlagImage("flag_" + country)
-            )
-            self.Flag.show()
         else:
             self.Country.set_text("")
             self.Country.hide()
-            self.Flag.set_from_pixbuf(None)
-            self.Flag.hide()
 
     def quit(self, w=None, event=None):
         self.hide()
