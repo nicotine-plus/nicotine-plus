@@ -79,9 +79,11 @@ class ServerFrame(buildFrame):
         buildFrame.__init__(self, "ServerFrame")
 
         self.EncodingStore = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
-
         self.Encoding.set_model(self.EncodingStore)
-        self.Encoding.set_entry_text_column(0)
+
+        cell = gtk.CellRendererText()
+        self.Encoding.pack_start(cell, True)
+        self.Encoding.add_attribute(cell, 'text', 0)
 
         cell2 = gtk.CellRendererText()
         self.Encoding.pack_start(cell2, False)
@@ -106,6 +108,7 @@ class ServerFrame(buildFrame):
     def SetSettings(self, config):
 
         self.p.SetWidgetsData(config, self.options)
+
         server = config["server"]
 
         if server["server"] is not None:
@@ -128,9 +131,6 @@ class ServerFrame(buildFrame):
 
         if server["passw"] is not None:
             self.Password.set_text(server["passw"])
-
-        if server["enc"] is not None:
-            self.Encoding.child.set_text(server["enc"])
 
         if server["portrange"] is not None:
             self.FirstPort.set_value(server["portrange"][0])
@@ -213,7 +213,7 @@ class ServerFrame(buildFrame):
                 "server": server,
                 "login": self.Login.get_text(),
                 "passw": self.Password.get_text(),
-                "enc": self.Encoding.child.get_text(),
+                "enc": self.Encoding.get_model().get(self.Encoding.get_active_iter(), 0)[0],
                 "portrange": portrange,
                 "firewalled": firewalled,
                 "upnp": self.UseUPnP.get_active(),
@@ -1724,8 +1724,10 @@ class ColoursFrame(buildFrame):
             self.UsernameStyle_List.append([item])
 
         self.UsernameStyle.set_model(self.UsernameStyle_List)
-        self.UsernameStyle.set_entry_text_column(0)
-        self.UsernameStyle.child.set_editable(False)
+
+        cell = gtk.CellRendererText()
+        self.UsernameStyle.pack_start(cell, True)
+        self.UsernameStyle.add_attribute(cell, 'text', 0)
 
         self.needcolors = 0
         self.options = {
@@ -1857,6 +1859,7 @@ class ColoursFrame(buildFrame):
         self.settingup = 1
 
         self.p.SetWidgetsData(config, self.options)
+
         for option in self.colors:
             for key, value in self.colorsd.items():
 
@@ -1889,6 +1892,7 @@ class ColoursFrame(buildFrame):
             self.vboxColours.set_child_packing(self.ChatExpander, False, True, 0, 0)
 
     def GetSettings(self):
+
         return {
             "ui": {
                 "chatlocal": self.Local.get_text(),
@@ -1906,7 +1910,7 @@ class ColoursFrame(buildFrame):
                 "useronline": self.OnlineColor.get_text(),
                 "useroffline": self.OfflineColor.get_text(),
                 "usernamehotspots": self.UsernameHotspots.get_active(),
-                "usernamestyle": self.UsernameStyle.child.get_text(),
+                "usernamestyle": self.UsernameStyle.get_model().get(self.UsernameStyle.get_active_iter(), 0)[0],
                 "tab_hilite": self.HighlightTab.get_text(),
                 "tab_default": self.DefaultTab.get_text(),
                 "tab_changed": self.ChangedTab.get_text()
@@ -2187,6 +2191,7 @@ class BloatFrame(buildFrame):
         # Combobox for the language list
         self.TranslationCombo_List = gtk.ListStore(gobject.TYPE_STRING)
         self.TranslationCombo.set_model(self.TranslationCombo_List)
+
         cell = gtk.CellRendererText()
         self.TranslationCombo.pack_start(cell, True)
         self.TranslationCombo.add_attribute(cell, 'text', 0)
@@ -2196,12 +2201,14 @@ class BloatFrame(buildFrame):
 
         # Combobox for the decimal separator
         self.DecimalSep_List = gtk.ListStore(gobject.TYPE_STRING)
+        self.DecimalSep.set_model(self.DecimalSep_List)
+
+        cell2 = gtk.CellRendererText()
+        self.DecimalSep.pack_start(cell2, True)
+        self.DecimalSep.add_attribute(cell2, 'text', 0)
 
         for item in ["<None>", ",", ".", "<space>"]:
             self.DecimalSep_List.append([item])
-
-        self.DecimalSep.set_model(self.DecimalSep_List)
-        self.DecimalSep.set_entry_text_column(0)
 
         self.options = {
             "ui": {
@@ -2243,9 +2250,11 @@ class BloatFrame(buildFrame):
     def SetSettings(self, config):
 
         self.needcolors = 0
+
         ui = config["ui"]
         transfers = config["transfers"]
         language = config["language"]
+
         self.SpellCheck.set_sensitive(self.frame.SEXY)
 
         self.p.SetWidgetsData(config, self.options)
@@ -2275,7 +2284,7 @@ class BloatFrame(buildFrame):
 
         return {
             "ui": {
-                "decimalsep": self.DecimalSep.child.get_text(),
+                "decimalsep": self.DecimalSep.get_model().get(self.DecimalSep.get_active_iter(), 0)[0],
                 "spellcheck": self.SpellCheck.get_active(),
                 "chatfont": self.SelectChatFont.get_font_name(),
                 "listfont": self.SelectListFont.get_font_name(),
@@ -2793,7 +2802,10 @@ class CensorFrame(buildFrame):
             self.CensorReplaceCombo_List.append([letter])
 
         self.CensorReplaceCombo.set_model(self.CensorReplaceCombo_List)
-        self.CensorReplaceCombo.set_entry_text_column(0)
+
+        cell = gtk.CellRendererText()
+        self.CensorReplaceCombo.pack_start(cell, True)
+        self.CensorReplaceCombo.add_attribute(cell, 'text', 0)
 
         renderers = cols[0].get_cell_renderers()
         for render in renderers:
@@ -2812,6 +2824,7 @@ class CensorFrame(buildFrame):
     def SetSettings(self, config):
 
         self.censorlist.clear()
+
         self.p.SetWidgetsData(config, self.options)
 
         words = config["words"]
@@ -2843,7 +2856,7 @@ class CensorFrame(buildFrame):
 
         return {
             "words": {
-                "censorfill": self.CensorReplaceCombo.child.get_text(),
+                "censorfill": self.CensorReplaceCombo.get_model().get(self.CensorReplaceCombo.get_active_iter(), 0)[0],
                 "censored": censored,
                 "censorwords": self.CensorCheck.get_active()
             }
