@@ -698,18 +698,6 @@ def QuitBox(frame, title="Option Box", message="", default_text='',
     return win
 
 
-def ClearDialog(frame, title=_("Nicotine+"), message="", default_text='',
-                modal=True, status=None, tray=False, third="", direction=None):
-
-    win = OptionDialog(frame, message, modal=modal, status=status,
-                       option=False, third=third)
-    win.connect("response", frame.on_clear_response, direction)
-    win.set_title(title)
-    win.set_icon(frame.images["n"])
-    win.show()
-    return win
-
-
 class OptionDialog(gtk.Dialog):
 
     def __init__(self, frame, message="", modal=False, status=None,
