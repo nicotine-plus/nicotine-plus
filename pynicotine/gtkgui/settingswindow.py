@@ -2053,9 +2053,8 @@ class NotebookFrame(buildFrame):
     def __init__(self, parent):
 
         self.p = parent
-        buildFrame.__init__(self, "NotebookFrame")
 
-        self.NotificationIcon.set_from_pixbuf(self.frame.images["online"])
+        buildFrame.__init__(self, "NotebookFrame")
 
         # Define options for each GtkComboBox using a liststore
         # The first element is the translated string,
@@ -2066,23 +2065,31 @@ class NotebookFrame(buildFrame):
         self.PosList.append([_("Left"), "Left"])
         self.PosList.append([_("Right"), "Right"])
 
+        cell = gtk.CellRendererText()
+
         self.MainPosition.set_model(self.PosList)
-        self.MainPosition.set_entry_text_column(0)
+        self.MainPosition.pack_start(cell, True)
+        self.MainPosition.add_attribute(cell, 'text', 0)
 
         self.ChatRoomsPosition.set_model(self.PosList)
-        self.ChatRoomsPosition.set_entry_text_column(0)
+        self.ChatRoomsPosition.pack_start(cell, True)
+        self.ChatRoomsPosition.add_attribute(cell, 'text', 0)
 
         self.PrivateChatPosition.set_model(self.PosList)
-        self.PrivateChatPosition.set_entry_text_column(0)
+        self.PrivateChatPosition.pack_start(cell, True)
+        self.PrivateChatPosition.add_attribute(cell, 'text', 0)
 
         self.SearchPosition.set_model(self.PosList)
-        self.SearchPosition.set_entry_text_column(0)
+        self.SearchPosition.pack_start(cell, True)
+        self.SearchPosition.add_attribute(cell, 'text', 0)
 
         self.UserInfoPosition.set_model(self.PosList)
-        self.UserInfoPosition.set_entry_text_column(0)
+        self.UserInfoPosition.pack_start(cell, True)
+        self.UserInfoPosition.add_attribute(cell, 'text', 0)
 
         self.UserBrowsePosition.set_model(self.PosList)
-        self.UserBrowsePosition.set_entry_text_column(0)
+        self.UserBrowsePosition.pack_start(cell, True)
+        self.UserBrowsePosition.add_attribute(cell, 'text', 0)
 
         self.options = {
             "ui": {
