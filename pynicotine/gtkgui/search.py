@@ -35,7 +35,7 @@ from pynicotine import slskmessages
 
 from utils import InitialiseColumns, IconNotebook, PopupMenu, Humanize, HumanSpeed, HumanSize, PressHeader
 from dirchooser import ChooseDir
-from entrydialog import *
+from entrydialog import MetaDialog
 from utils import InputDialog, showCountryTooltip
 from pynicotine.logfacility import log
 

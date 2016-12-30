@@ -28,7 +28,7 @@ import gobject
 import re
 from dirchooser import *
 from utils import InputDialog, InitialiseColumns, recode, recode2, popupWarning, Humanize, OpenUri, HumanSize
-from entrydialog import *
+from entrydialog import input_box
 from pynicotine.upnp import UPnPPortMapping
 from pynicotine.utils import CheckTranslationAvailability
 from pynicotine.logfacility import log

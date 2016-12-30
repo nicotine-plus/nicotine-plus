@@ -33,7 +33,7 @@ from pynicotine import slskmessages
 import string
 import os
 from pynicotine.utils import executeCommand
-from entrydialog import *
+from entrydialog import MetaDialog, OptionDialog
 
 
 class Downloads(TransferList):

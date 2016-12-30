@@ -61,7 +61,7 @@ from pynicotine.utils import executeCommand
 import nowplaying
 from pynicotine import pluginsystem
 from pynicotine.logfacility import log
-from entrydialog import *
+from entrydialog import FindDialog, input_box, FolderDownload, QuitBox
 from pynicotine.upnp import UPnPPortMapping
 
 # LibSexy is deprecated, we should try to find a replacement
