@@ -341,8 +341,7 @@ class RoomsControl:
         room = input_box(
             self.frame,
             title=_('Nicotine+:') + " " + _("Create Private Room"),
-            message=_('Enter the name of the private room you wish to create'),
-            default_text=''
+            message=_('Enter the name of the private room you wish to create')
         )
 
         if room:

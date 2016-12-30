@@ -1050,35 +1050,39 @@ class NicotineFrame:
         self.UserPrivateCombo.child.set_text("")
 
     def OnOpenPrivateChat(self, widget, prefix=""):
+
         # popup
         users = []
         for entry in self.np.config.sections["server"]["userlist"]:
             users.append(entry[0])
+
         users.sort()
         user = input_box(
             self,
             title=_('Nicotine+:') + " " + _("Start Message"),
             message=_('Enter the User who you wish to send a private message:'),
-            default_text='',
             droplist=users
         )
+
         if user is not None:
             self.privatechats.SendMessage(user, None, 1)
             self.ChangeMainPage(None, "chatrooms")
 
     def OnGetAUsersInfo(self, widget, prefix=""):
+
         # popup
         users = []
         for entry in self.np.config.sections["server"]["userlist"]:
             users.append(entry[0])
+
         users.sort()
         user = input_box(
             self,
             title=_('Nicotine+: Get User Info'),
             message=_('Enter the User whose User Info you wish to receive:'),
-            default_text='',
             droplist=users
         )
+
         if user is None:
             pass
         else:
@@ -1093,7 +1097,6 @@ class NicotineFrame:
             self,
             title=_("Nicotine+: Get A User's IP"),
             message=_('Enter the User whose IP Address you wish to receive:'),
-            default_text='',
             droplist=users
         )
         if user is None:
@@ -1110,7 +1113,6 @@ class NicotineFrame:
             self,
             title=_("Nicotine+: Get A User's Shares List"),
             message=_('Enter the User whose Shares List you wish to receive:'),
-            default_text='',
             droplist=users
         )
         if user is None:

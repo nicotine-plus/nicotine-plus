@@ -421,7 +421,8 @@ class DownloadsFrame(buildFrame):
             self.frame,
             title=_('Nicotine+: Add a download filter'),
             message=_('Enter a new download filter:'),
-            default_text='', option=True, optionvalue=True,
+            option=True,
+            optionvalue=True,
             optionmessage="Escape this filter?",
             droplist=self.filtersiters.keys()
         )
@@ -459,7 +460,9 @@ class DownloadsFrame(buildFrame):
                 self.frame,
                 title=_('Nicotine+: Edit a download filter'),
                 message=_('Modify this download filter:'),
-                default_text=dfilter, option=True, optionvalue=escapedvalue,
+                default_text=dfilter,
+                option=True,
+                optionvalue=escapedvalue,
                 optionmessage="Escape this filter?",
                 droplist=self.filtersiters.keys()
             )

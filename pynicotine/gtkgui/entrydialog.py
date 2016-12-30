@@ -438,8 +438,8 @@ class MetaDialog(gtk.Dialog):
 
 class EntryDialog(gtk.Dialog):
 
-    def __init__(self, frame, message="", default_text='',
-                 modal=True, option=False, optionmessage="",
+    def __init__(self, frame, message="", default_text="",
+                 option=False, optionmessage="",
                  optionvalue=False, droplist=[]):
 
         gtk.Dialog.__init__(self)
@@ -448,9 +448,6 @@ class EntryDialog(gtk.Dialog):
         self.connect("delete-event", self.quit)
 
         self.gotoption = option
-
-        if modal:
-            self.set_modal(True)
 
         box = gtk.VBox(spacing=10)
         box.set_border_width(10)
@@ -463,35 +460,41 @@ class EntryDialog(gtk.Dialog):
             label.set_line_wrap(True)
             label.show()
 
-        self.combo = gtk.combo_box_entry_new_text()
+        self.combo_List = gtk.ListStore(gobject.TYPE_STRING)
+        self.combo = gtk.combo_box_new_with_model_and_entry(model=self.combo_List)
+        self.combo.set_entry_text_column(0)
 
         for i in droplist:
-            self.combo.append_text(i)
+            self.combo_List.append([i])
 
         self.combo.child.set_text(default_text)
 
         box.pack_start(self.combo, False, False)
+
         self.combo.show()
         self.combo.grab_focus()
 
-        self.option = gtk.CheckButton()
-        self.option.set_active(optionvalue)
-        self.option.set_label(optionmessage)
-        self.option.show()
-
         if self.gotoption:
+
+            self.option = gtk.CheckButton()
+            self.option.set_active(optionvalue)
+            self.option.set_label(optionmessage)
+            self.option.show()
+
             box.pack_start(self.option, False, False)
 
         button = gtk.Button(_("Cancel"))
         button.connect("clicked", self.quit)
         button.set_flags(gtk.CAN_DEFAULT)
         self.action_area.pack_start(button)
+
         button.show()
 
         button = gtk.Button(_("OK"))
         button.connect("clicked", self.click)
         button.set_flags(gtk.CAN_DEFAULT)
         self.action_area.pack_start(button)
+
         button.show()
         button.grab_default()
 
@@ -512,13 +515,13 @@ class EntryDialog(gtk.Dialog):
         self.quit()
 
 
-def input_box(frame, title="Input Box", message="", default_text='',
+def input_box(frame, title="Input Box", message="", default_text="",
               modal=True, option=False, optionmessage="",
               optionvalue=False, droplist=[]):
 
     win = EntryDialog(
         frame, message, default_text,
-        modal=modal, option=option, optionmessage=optionmessage,
+        option=option, optionmessage=optionmessage,
         optionvalue=optionvalue, droplist=droplist
     )
 

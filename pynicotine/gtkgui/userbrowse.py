@@ -818,7 +818,6 @@ class UserBrowse:
             self.frame,
             title=_("Nicotine+: Upload Directory's Contents"),
             message=_('Enter the User you wish to upload to:'),
-            default_text='',
             droplist=users
         )
 
@@ -871,7 +870,6 @@ class UserBrowse:
             self.frame,
             title=_('Nicotine+: Upload File(s)'),
             message=_('Enter the User you wish to upload to:'),
-            default_text='',
             droplist=users
         )
 
