@@ -89,14 +89,15 @@ class WishList(gtk.Dialog):
         self.mainVbox.pack_start(self.RemoveWishButton, False, False, 0)
 
         self.SelectAllWishesButton = self.nicotine.CreateIconButton(gtk.STOCK_DND_MULTIPLE, "stock", self.OnSelectAllWishes, _("Select all"))
-
         self.mainVbox.pack_start(self.SelectAllWishesButton, False, False, 0)
 
         self.CloseButton = self.nicotine.CreateIconButton(gtk.STOCK_CLOSE, "stock", self.quit, _("Close"))
         self.mainVbox.pack_end(self.CloseButton, False, False, 0)
+
         self.vbox.pack_start(self.mainHbox, True, True, 0)
 
         self.store = gtk.ListStore(gobject.TYPE_STRING)
+
         column = gtk.TreeViewColumn(_("Wishes"), gtk.CellRendererText(), text=0)
         self.WishlistView.append_column(column)
         self.WishlistView.set_model(self.store)
@@ -131,11 +132,15 @@ class WishList(gtk.Dialog):
             self.nicotine.np.config.sections["server"]["autosearch"].remove(wish)
 
             for number, search in self.nicotine.Searches.searches.items():
+
                 if search[1] == wish and search[4] == 1:
+
                     search[4] = 0
                     self.nicotine.Searches.searches[number] = search
+
                     if search[2] is not None:
                         search[2].RememberCheckButton.set_active(False)
+
                     break
 
     def addWish(self, wish):
@@ -159,6 +164,7 @@ class WishList(gtk.Dialog):
         return True
 
     def Toggle(self, widget):
+
         if self.get_property("visible"):
             self.hide()
         else:
@@ -178,8 +184,11 @@ class Searches(IconNotebook):
         self.users = {}
         self.timer = None
         self.disconnected = 0
+
         ui = self.frame.np.config.sections["ui"]
+
         IconNotebook.__init__(self, frame.images, ui["labelprivate"], ui["tabclosers"], ui["tab_icons"], ui["tab_reorderable"])
+
         self.popup_enable()
 
         self.WishListDialog = WishList(frame)
@@ -331,6 +340,7 @@ class Searches(IconNotebook):
 
         if text in items:
             items.remove(text)
+
         items.insert(0, text)
 
         # Clear old items
@@ -391,7 +401,9 @@ class Searches(IconNotebook):
     def GetUserSearchName(self, id):
 
         if id in self.usersearches:
+
             users = self.usersearches[id]
+
             if len(users) > 1:
                 return _("Users")
             elif len(users) == 1:
@@ -479,8 +491,11 @@ class Searches(IconNotebook):
         page_num = self.get_current_page()
 
         if page_num is not None:
+
             page = self.get_nth_page(page_num)
+
             for name, search in self.searches.items():
+
                 if search[2] is None:
                     continue
                 if search[2].Main == page:
@@ -488,15 +503,21 @@ class Searches(IconNotebook):
                     break
 
     def GetUserStatus(self, msg):
+
         for number, search in self.searches.items():
+
             if search[2] is None:
                 continue
+
             search[2].GetUserStatus(msg)
 
     def NonExistantUser(self, user):
+
         for number, search in self.searches.items():
+
             if search[2] is None:
                 continue
+
             search[2].NonExistantUser(user)
 
     def TabPopup(self, id):
@@ -519,6 +540,7 @@ class Searches(IconNotebook):
             page = self.get_nth_page(n)
 
             for search, data in self.searches.items():
+
                 if data[2] is None:
                     continue
                 if data[2].Main is page:
@@ -528,9 +550,11 @@ class Searches(IconNotebook):
             if id is None:
                 print "ID is none"
                 return
+
             if event.button == 2:
                 self.searches[id][2].OnClose(widget)
                 return True
+
             if event.button == 3:
                 menu = self.TabPopup(id)
                 menu.popup(None, None, None, event.button, event.time)
@@ -620,6 +644,7 @@ class Search:
 
         if mode > 0:
             self.RememberCheckButton.set_sensitive(False)
+
         self.RememberCheckButton.set_active(remember)
 
         self.PopulateFilters()
@@ -674,9 +699,11 @@ class Search:
         cols[0].get_widget().hide()
 
         for i in range(10):
+
             parent = cols[i].get_widget().get_ancestor(gtk.Button)
             if parent:
                 parent.connect('button_press_event', PressHeader)
+
             # Read Show / Hide column settings from last session
             cols[i].set_visible(self.frame.np.config.sections["columns"]["search"][i])
 
@@ -693,9 +720,10 @@ class Search:
         self.col_length.set_sort_column_id(8)
         self.col_country.set_sort_column_id(13)
         self.col_directory.set_sort_column_id(10)
-        self.ResultsList.set_enable_tree_lines(True)
 
+        self.ResultsList.set_enable_tree_lines(True)
         self.ResultsList.set_headers_clickable(True)
+
         self.popup_menu_users = PopupMenu(self.frame)
         self.popup_menu = popup = PopupMenu(self.frame)
         popup.setup(
@@ -715,6 +743,7 @@ class Search:
 
         self._more_results = 0
         self.new_results = []
+
         self.ChangeColours()
 
     def OnTooltip(self, widget, x, y, keyboard_mode, tooltip):
@@ -779,9 +808,12 @@ class Search:
         match = False
 
         while iter is not None:
+
             value = model.get_value(iter, 0)
+
             if value.strip() == text:
                 match = True
+
             iter = model.iter_next(iter)
 
         if not match:
@@ -797,7 +829,7 @@ class Search:
         self.Searches.detach_tab(
             self.Main,
             _("Nicotine+ %(mode)s Search: %(term)s") % {
-                'mode': [_("Global"), _("Rooms"), _("Buddies"),    self.Searches.GetUserSearchName(self.id)][self.mode],
+                'mode': [_("Global"), _("Rooms"), _("Buddies"), self.Searches.GetUserSearchName(self.id)][self.mode],
                 'term': self.text
             }
         )
@@ -829,6 +861,7 @@ class Search:
         decode = self.frame.np.decode
 
         for result in msg.list:
+
             name = result[1].split('\\')[-1]
             dir = result[1][:-len(name)]
             bitrate = ""
@@ -836,9 +869,11 @@ class Search:
             br = 0
 
             if result[3] != "" and len(result[4]) == 3:
+
                 a = result[4]
                 if a[2] == 1:
                     bitrate = " (vbr)"
+
                 bitrate = str(a[0]) + bitrate
                 br = a[0]
                 length = '%i:%02i' % (a[1] / 60, a[1] % 60)
@@ -908,6 +943,7 @@ class Search:
 
             if user in self.Searches.users and status != self.Searches.users[user]:
                 status = self.Searches.users[user]
+
             if status is None:
                 status = 0
 
@@ -916,15 +952,25 @@ class Search:
             h_queue = Humanize(queue)
 
             if self.usersGroup.get_active() and user not in self.usersiters:
-                self.usersiters[user] = self.resultsmodel.append(None, [0, user, "", "", h_speed, h_queue, immediatedl, "", "", self.get_flag(user, country), "", 0, "", country, 0, speed, queue, status])
+                self.usersiters[user] = self.resultsmodel.append(
+                    None,
+                    [0, user, "", "", h_speed, h_queue, immediatedl, "", "", self.get_flag(user, country), "", 0, "", country, 0, speed, queue, status]
+                )
 
-            row = [itercounter, user, filename, h_size, h_speed, h_queue, immediatedl, h_bitrate, length,
-                   directory,  bitrate, fullpath, country,  size, speed, queue, status]
+            row = [
+                itercounter, user, filename, h_size, h_speed, h_queue, immediatedl, h_bitrate, length,
+                directory,  bitrate, fullpath, country,  size, speed, queue, status
+            ]
 
             self.all_data.append(row)
 
             if (displaycounter + returned < self.frame.np.config.sections['searches']["max_displayed_results"]) and (not self.filters or self.check_filter(row)):
-                encoded_row = [itercounter, user, encode(filename, user), h_size, h_speed, h_queue, immediatedl, h_bitrate, length, self.get_flag(user, country), encode(directory, user), bitrate, encode(fullpath, user), country,  size, speed, queue, status]
+
+                encoded_row = [
+                    itercounter, user, encode(filename, user), h_size, h_speed, h_queue, immediatedl, h_bitrate, length,
+                    self.get_flag(user, country), encode(directory, user), bitrate, encode(fullpath, user), country,  size, speed, queue, status
+                ]
+
                 try:
                     if user in self.usersiters:
                         iter = self.resultsmodel.append(self.usersiters[user], encoded_row)
@@ -938,11 +984,14 @@ class Search:
                     iter = None
 
                 path = None
+
                 if iter is not None:
                     path = self.resultsmodel.get_path(iter)
+
                 if path is not None:
                     if self.usersGroup.get_active() and self.ExpandButton.get_active():
                         self.ResultsList.expand_to_path(path)
+
                 returned += 1
 
             itercounter += 1
@@ -1129,12 +1178,20 @@ class Search:
             if self.check_filter(row):
 
                 ix, user, filename,  h_size, h_speed, h_queue, immediatedl, h_bitrate, length, directory,  bitrate, fullpath, country, size, speed, queue, status = row
+
                 if user in self.Searches.users and status != self.Searches.users[user]:
                     status = self.Searches.users[user]
-                if self.usersGroup.get_active() and user not in self.usersiters:
-                    self.usersiters[user] = self.resultsmodel.append(None, [0, user, "", "", h_speed, h_queue, immediatedl, "", "", self.get_flag(user, country), "", 0, "", country, 0, speed, queue, status])
 
-                encoded_row = [ix, user, encode(filename, user), h_size, h_speed, h_queue, immediatedl, h_bitrate, length, self.get_flag(user, country), encode(directory, user), bitrate, encode(fullpath, user), country,  size, speed, queue, status]
+                if self.usersGroup.get_active() and user not in self.usersiters:
+                    self.usersiters[user] = self.resultsmodel.append(
+                        None,
+                        [0, user, "", "", h_speed, h_queue, immediatedl, "", "", self.get_flag(user, country), "", 0, "", country, 0, speed, queue, status]
+                    )
+
+                encoded_row = [
+                    ix, user, encode(filename, user), h_size, h_speed, h_queue, immediatedl, h_bitrate, length,
+                    self.get_flag(user, country), encode(directory, user), bitrate, encode(fullpath, user), country,  size, speed, queue, status
+                ]
 
                 try:
                     if user in self.usersiters:
@@ -1154,7 +1211,9 @@ class Search:
         self.CountVisibleResults()
 
     def CountVisibleResults(self):
+
         if self.usersGroup.get_active():
+
             iter_count = 0
             user_count = self.resultsmodel.iter_n_children(None)
 
@@ -1447,6 +1506,7 @@ class Search:
 
         if not self.frame.np.transfers:
             return
+
         for file in self.selected_results:
             self.frame.np.transfers.getFile(file[0], file[1], prefix, size=file[2], bitrate=file[3], length=file[4])
 
@@ -1458,8 +1518,10 @@ class Search:
             break
 
         dir = ChooseDir(self.frame.MainWindow, self.frame.np.config.sections["transfers"]["downloaddir"], create=True, name=subdir)
+
         if dir is None:
             return
+
         for dirs in dir:
             self.OnDownloadFiles(widget, dirs)
             break
@@ -1481,6 +1543,7 @@ class Search:
 
             if user not in self.frame.np.requestedFolders:
                 continue
+
             if dir in self.frame.np.requestedFolders[user]:
                 del self.frame.np.requestedFolders[user][dir]
 
@@ -1495,13 +1558,17 @@ class Search:
 
         destination = directories[0]
         for i in self.selected_results:
+
             user = i[0]
             dir = string.join(i[1].split("\\")[:-1], "\\")
+
             if (user, dir) in folders:
                 continue
+
             folders.append((user, dir))
 
         for tup in folders:
+
             user, dir = tup
 
             if user not in self.frame.np.requestedFolders:
@@ -1529,6 +1596,7 @@ class Search:
         self.OnRefilter(widget)
 
         self.ResultsList.set_property("show-expanders", widget.get_active())
+
         if widget.get_active():
             self.ResultsList.get_columns()[0].set_visible(False)
             self.ExpandButton.show()
@@ -1586,7 +1654,9 @@ class Search:
         self.Searches.RemoveTab(self)
 
     def OnToggleRemember(self, widget):
+
         self.remember = widget.get_active()
+
         if not self.remember:
             self.Searches.RemoveAutoSearch(self.id)
         else:
