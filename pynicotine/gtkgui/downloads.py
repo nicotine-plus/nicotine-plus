@@ -167,7 +167,6 @@ class Downloads(TransferList):
         win = MetaDialog(self.frame, message,  data, modal, Search=Search)
         win.set_title(title)
         win.set_icon(self.frame.images["n"])
-        win.set_default_size(300, 100)
         win.show()
         gtk.main()
 

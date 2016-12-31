@@ -527,7 +527,7 @@ def input_box(frame, title="Input Box", message="", default_text="",
 
     win.set_title(title)
     win.set_icon(frame.images["n"])
-    win.set_default_size(300, 100)
+    gtk.Window.set_geometry_hints(win, min_width=300)
     win.show()
 
     gtk.main()

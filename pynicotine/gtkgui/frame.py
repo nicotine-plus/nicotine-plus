@@ -2875,7 +2875,6 @@ class NicotineFrame:
             )
             self.FindDialog.set_title(_('Nicotine+: Find string'))
             self.FindDialog.set_icon(self.images["n"])
-            self.FindDialog.set_default_size(300, 100)
             self.FindDialog.set_transient_for(self.MainWindow)
             self.FindDialog.show()
             self.FindDialog.connect("find-click", self.OnFindClicked)
