@@ -3540,10 +3540,8 @@ class TrayApp:
             if self.tray_status["hilites"]["rooms"] == [] and self.tray_status["hilites"]["private"] == []:
                 # If there is no hilite, display the status
                 icon = self.tray_status["status"]
-                self.trayicon.set_blinking(False)
             else:
                 icon = "trayicon_msg"
-                self.trayicon.set_blinking(True)
 
             if icon != self.tray_status["last"]:
                 self.tray_status["last"] = icon
