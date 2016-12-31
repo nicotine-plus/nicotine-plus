@@ -622,8 +622,6 @@ class IconNotebook(gtk.Notebook):
         self.connect("switch-page", self.dismiss_icon)
         self.connect("key_press_event", self.OnKeyPress)
 
-        self.set_scrollable(True)
-
         self.angle = angle
 
     def set_reorderable(self, reorderable):
