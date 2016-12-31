@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-31 19:32+0100\n"
+"POT-Creation-Date: 2016-12-31 22:05+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -102,6 +102,36 @@ msgid "Add Buddy: "
 msgstr ""
 
 msgid "Configure banned users"
+msgstr ""
+
+msgid "ChatRoom"
+msgstr ""
+
+msgid "Hide/Show Status log"
+msgstr ""
+
+msgid "Hide/Show User list"
+msgstr ""
+
+msgid "Toggle Text-To-Speech"
+msgstr ""
+
+msgid "Chat room command help"
+msgstr ""
+
+msgid "0 people in room"
+msgstr ""
+
+msgid "Log"
+msgstr ""
+
+msgid "Character encoding"
+msgstr ""
+
+msgid "Auto-join"
+msgstr ""
+
+msgid "Leave"
 msgstr ""
 
 msgid "Nicotine+ Fast Configure"
@@ -273,17 +303,11 @@ msgstr ""
 msgid "PrivateChat"
 msgstr ""
 
-msgid "Character encoding"
-msgstr ""
-
 msgid "Direct"
 msgstr ""
 
 msgid ""
 "Send the private message directly to the user (not supported on most clients)"
-msgstr ""
-
-msgid "Log"
 msgstr ""
 
 msgid "Close"
@@ -1322,27 +1346,6 @@ msgstr ""
 msgid "Save pic"
 msgstr ""
 
-msgid "Toggle Text-To-Speech"
-msgstr ""
-
-msgid "Hide/Show User list"
-msgstr ""
-
-msgid "Hide/Show Status log"
-msgstr ""
-
-msgid "Chat room command help"
-msgstr ""
-
-msgid "0 people in room"
-msgstr ""
-
-msgid "Auto-join"
-msgstr ""
-
-msgid "Leave"
-msgstr ""
-
 msgid "Nicotine+"
 msgstr ""
 
@@ -1964,10 +1967,6 @@ msgid "--- old messages above ---"
 msgstr ""
 
 #, python-format
-msgid "(custom widget: %s)"
-msgstr ""
-
-#, python-format
 msgid "Remove from private room %s"
 msgstr ""
 
@@ -2318,6 +2317,10 @@ msgstr ""
 
 #, python-format
 msgid "Hide %(tab)s"
+msgstr ""
+
+#, python-format
+msgid "(custom widget: %s)"
 msgstr ""
 
 #, python-format

@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nicotine\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-31 19:32+0100\n"
-"PO-Revision-Date: 2016-12-31 19:33+0100\n"
+"POT-Creation-Date: 2016-12-31 22:07+0100\n"
+"PO-Revision-Date: 2016-12-31 22:07+0100\n"
 "Last-Translator: Michael LABOUEBE <gfarmerfr@free.fr>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -152,6 +152,43 @@ msgstr "Ajouter un ami:"
 # pynicotine/gtkgui/frame.py
 msgid "Configure banned users"
 msgstr "Configuration des utilisateurs bannis"
+
+# pynicotine/gtkgui/nicotine_glade.py
+msgid "ChatRoom"
+msgstr "Salons des discussions"
+
+msgid "Hide/Show Status log"
+msgstr "Cacher/montrer les statuts"
+
+# pynicotine/gtkgui/nicotine_glade.py
+msgid "Hide/Show User list"
+msgstr "Cacher/montrer la liste des utilisateurs"
+
+msgid "Toggle Text-To-Speech"
+msgstr "Activer la synthèse vocale"
+
+# pynicotine/gtkgui/about.py
+msgid "Chat room command help"
+msgstr "Commandes des salons de discussion"
+
+# pynicotine/gtkgui/chatrooms.py
+msgid "0 people in room"
+msgstr "0 utilisateur dans le salon"
+
+# pynicotine/gtkgui/nicotine_glade.py
+msgid "Log"
+msgstr "Enregistrement"
+
+msgid "Character encoding"
+msgstr "Encodage de caractères"
+
+# pynicotine/gtkgui/nicotine_glade.py
+msgid "Auto-join"
+msgstr "Auto-joindre"
+
+# pynicotine/gtkgui/nicotine_glade.py
+msgid "Leave"
+msgstr "Sortir"
 
 msgid "Nicotine+ Fast Configure"
 msgstr "Nicotine+ Configuration Rapide"
@@ -361,9 +398,6 @@ msgstr "Test de la configuration"
 msgid "PrivateChat"
 msgstr "Dialogue privé"
 
-msgid "Character encoding"
-msgstr "Encodage de caractères"
-
 # pynicotine/gtkgui/search.py
 msgid "Direct"
 msgstr "Direct"
@@ -373,10 +407,6 @@ msgid ""
 msgstr ""
 "Envoi le message privé directement a l'utilisateur (pas encore supporté par "
 "l'ensemble des clients)"
-
-# pynicotine/gtkgui/nicotine_glade.py
-msgid "Log"
-msgstr "Enregistrement"
 
 # pynicotine/gtkgui/nicotine_glade.py
 # pynicotine/gtkgui/privatechat.py
@@ -1701,32 +1731,6 @@ msgstr "Ajouter à la liste"
 msgid "Save pic"
 msgstr "Sauver l'image"
 
-msgid "Toggle Text-To-Speech"
-msgstr "Activer la synthèse vocale"
-
-# pynicotine/gtkgui/nicotine_glade.py
-msgid "Hide/Show User list"
-msgstr "Cacher/montrer la liste des utilisateurs"
-
-msgid "Hide/Show Status log"
-msgstr "Cacher/montrer les statuts"
-
-# pynicotine/gtkgui/about.py
-msgid "Chat room command help"
-msgstr "Commandes des salons de discussion"
-
-# pynicotine/gtkgui/chatrooms.py
-msgid "0 people in room"
-msgstr "0 utilisateur dans le salon"
-
-# pynicotine/gtkgui/nicotine_glade.py
-msgid "Auto-join"
-msgstr "Auto-joindre"
-
-# pynicotine/gtkgui/nicotine_glade.py
-msgid "Leave"
-msgstr "Sortir"
-
 # pynicotine/gtkgui/frame.py
 # pynicotine/gtkgui/nicotine_glade.py
 msgid "Nicotine+"
@@ -2609,12 +2613,6 @@ msgstr "Effacer la fenêtre des messages"
 msgid "--- old messages above ---"
 msgstr "---  anciens messages au-dessus ---"
 
-# pynicotine/gtkgui/nicotine_glade.py
-# pynicotine/gtkgui/settings_glade.py
-#, python-format
-msgid "(custom widget: %s)"
-msgstr "(widget perso: %s)"
-
 #, python-format
 msgid "Remove from private room %s"
 msgstr "Retire du salon privé %s"
@@ -3065,6 +3063,12 @@ msgstr "button_press error, %(error)s"
 #, python-format
 msgid "Hide %(tab)s"
 msgstr "Cacher %(tab)s"
+
+# pynicotine/gtkgui/nicotine_glade.py
+# pynicotine/gtkgui/settings_glade.py
+#, python-format
+msgid "(custom widget: %s)"
+msgstr "(widget perso: %s)"
 
 # pynicotine/transfers.py
 # pynicotine/gtkgui/transferlist.py
