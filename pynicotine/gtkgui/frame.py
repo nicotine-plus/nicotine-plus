@@ -140,35 +140,48 @@ class roomlist:
             self.search_iter = self.room_model.iter_next(self.search_iter)
 
 
-class BuddiesComboBoxEntry(gtk.ComboBoxEntry):
+class BuddiesComboBox:
 
-    def __init__(self, frame):
+    def __init__(self, frame, ComboBox):
+
         self.frame = frame
-        gtk.ComboBoxEntry.__init__(self)
+
         self.items = {}
+
+        self.combobox = ComboBox
+
         self.store = gtk.ListStore(gobject.TYPE_STRING)
-        self.set_model(self.store)
-        self.set_text_column(0)
+        self.combobox.set_model(self.store)
+        self.combobox.set_entry_text_column(0)
+
         self.store.set_default_sort_func(lambda *args: -1)
         self.store.set_sort_column_id(-1, gtk.SORT_ASCENDING)
-        self.show()
+
+        self.combobox.show()
 
     def Fill(self):
+
         self.items.clear()
         self.store.clear()
+
         self.items[""] = self.store.append([""])
+
         for user in self.frame.np.config.sections["server"]["userlist"]:
             self.items[user[0]] = self.store.append([user[0]])
+
         self.store.set_sort_column_id(0, gtk.SORT_ASCENDING)
 
     def Append(self, item):
+
         if item in self.items:
             return
-        self.items[item] = self.get_model().append([item])
+
+        self.items[item] = self.combobox.get_model().append([item])
 
     def Remove(self, item):
+
         if item in self.items:
-            self.get_model().remove(self.items[item])
+            self.combobox.get_model().remove(self.items[item])
             del self.items[item]
 
 
@@ -206,7 +219,9 @@ class NicotineFrame:
             self.pynotify = None
 
         self.np = NetworkEventProcessor(self, self.callback, self.logMessage, self.SetStatusText, self.bindip, config)
+
         config = self.np.config.sections
+
         self.temp_modes_order = config["ui"]["modes_order"]
         utils.DECIMALSEP = config["ui"]["decimalsep"]
         utils.CATCH_URLS = config["urls"]["urlcatching"]
@@ -215,6 +230,7 @@ class NicotineFrame:
         utils.PROTOCOL_HANDLERS["slsk"] = self.OnSoulSeek
         utils.USERNAMEHOTSPOTS = config["ui"]["usernamehotspots"]
         utils.NICOTINE = self
+
         pynicotine.utils.log = self.logMessage
 
         self.LoadIcons()
@@ -223,7 +239,6 @@ class NicotineFrame:
         if self.np.config.sections["language"]["setlanguage"]:
             ApplyTranslation(self.np.config.sections["language"]["language"])
 
-        self.BuddiesComboEntries = []
         self.accel_group = gtk.AccelGroup()
         self.roomlist = roomlist(self)
 
@@ -232,6 +247,7 @@ class NicotineFrame:
 
         self.wTree = gtk.glade.XML(os.path.join(os.path.dirname(os.path.realpath(__file__)), "mainwindow.glade"), None)
         widgets = self.wTree.get_widget_prefix("")
+
         for i in widgets:
             name = gtk.glade.get_widget_name(i)
             self.__dict__[name] = i
@@ -251,6 +267,7 @@ class NicotineFrame:
         self.SearchMethod_List = gtk.ListStore(gobject.TYPE_STRING)
         for i in [""]:
             self.SearchMethod_List.append([i])
+
         self.SearchMethod.set_model(self.SearchMethod_List)
 
         self.MainWindow.set_title(_("Nicotine+") + " " + version)
@@ -266,7 +283,9 @@ class NicotineFrame:
 
         width = self.np.config.sections["ui"]["width"]
         height = self.np.config.sections["ui"]["height"]
+
         self.MainWindow.resize(width, height)
+
         xpos = self.np.config.sections["ui"]["xposition"]
         ypos = self.np.config.sections["ui"]["yposition"]
 
@@ -277,10 +296,13 @@ class NicotineFrame:
             self.MainWindow.move(xpos, ypos)
 
         self.MainWindow.show()
+
         self.is_mapped = True
+
         if start_hidden:
             self.MainWindow.unmap()
             self.is_mapped = False
+
         self.minimized = False
         self.HiddenTabs = {}
 
@@ -405,20 +427,27 @@ class NicotineFrame:
 
         self.settingswindow = SettingsWindow(self)
         self.settingswindow.SettingsWindow.connect("settings-closed", self.OnSettingsClosed)
+
         self.fastconfigure = FastConfigureAssistant(self)
 
         self.chatrooms = self.ChatNotebook
         self.chatrooms.show()
+
         self.Searches = self.SearchNotebook
         self.Searches.LoadConfig()
+
         self.downloads = Downloads(self)
         self.uploads = Uploads(self)
         self.userlist = UserList(self)
+
         self.UpdateColours(1)
+
         self.privatechats = self.PrivatechatNotebook
         self.privatechats.show()
+
         self.userinfo = self.UserInfoNotebook
         self.userinfo.show()
+
         self.userbrowse = self.UserBrowseNotebook
         self.userbrowse.show()
 
@@ -462,9 +491,17 @@ class NicotineFrame:
         # Search Methods
         self.searchroomslist = {}
         self.searchmethods = {}
-        self.RoomSearchCombo.set_size_request(150, -1)
-        self.UserSearchCombo.set_size_request(120, -1)
-        self.UserSearchCombo.set_sensitive(False)
+
+        # Create a list of objects of the BuddiesComboBox class
+        # This add a few methods to add/remove entries on all combobox at once
+        self.BuddiesComboEntries = [
+            BuddiesComboBox(self, self.UserSearchCombo),
+            BuddiesComboBox(self, self.UserPrivateCombo),
+            BuddiesComboBox(self, self.UserInfoCombo),
+            BuddiesComboBox(self, self.UserBrowseCombo)
+        ]
+
+        # Initial filling of the buddies combobox
         thread.start_new_thread(self.BuddiesCombosFill, ("",))
 
         self.SearchMethod_List.clear()
@@ -480,6 +517,7 @@ class NicotineFrame:
 
         self.SearchMethod.set_active_iter(self.searchmethods[_("Global")])
         self.SearchMethod.connect("changed", self.OnSearchMethod)
+
         self.UserSearchCombo.hide()
         self.RoomSearchCombo.hide()
 
@@ -488,6 +526,7 @@ class NicotineFrame:
         self.check_privileges1.set_sensitive(0)
 
         self.gstreamer = gstreamer()
+
         self.pluginhandler = pluginsystem.PluginHandler(self, plugindir)
 
         self.ShowChatButtons.set_active(not config["ui"]["chat_hidebuttons"])
@@ -537,7 +576,9 @@ class NicotineFrame:
             self.browse_buddy_shares.set_sensitive(False)
 
         self.SetMainTabsVisibility()
+
         self.startup = False
+
         for (timestamp, level, msg) in log.history:
             self.updateLog(msg, level)
 
@@ -1148,10 +1189,6 @@ class NicotineFrame:
         elif id == "UserBrowseNotebook":
             notebook = UserTabs(self, UserBrowse)
             return notebook
-        elif id in ("UserSearchCombo", "UserPrivateCombo", "UserInfoCombo", "UserBrowseCombo"):
-            comboentry = BuddiesComboBoxEntry(self)
-            self.BuddiesComboEntries.append(comboentry)
-            return comboentry
         elif string1 == "ImageLabel":
             return ImageLabel(string2, self.images["empty"])
         elif "TabLabel" in id:
@@ -1597,6 +1634,7 @@ class NicotineFrame:
         self.userbrowse.ConnClose()
 
     def SetWidgetOnlineStatus(self, status):
+
         self.connect1.set_sensitive(not status)
         self.disconnect1.set_sensitive(status)
         self.awayreturn1.set_sensitive(status)
@@ -2727,8 +2765,8 @@ class NicotineFrame:
         else:
             self.np.ProcessRequestToPeer(user, slskmessages.UserInfoRequest(None), self.userinfo)
 
-    # Browse a user shares
     def BrowseUser(self, user):
+        """ Browse a user shares """
 
         login = self.np.config.sections["server"]["login"]
 
@@ -2738,8 +2776,8 @@ class NicotineFrame:
             else:
                 self.np.ProcessRequestToPeer(user, slskmessages.GetSharedFileList(None), self.userbrowse)
 
-    # Browse your own public shares
     def OnBrowsePublicShares(self, widget):
+        """ Browse your own public shares """
 
         login = self.np.config.sections["server"]["login"]
 
@@ -2752,8 +2790,8 @@ class NicotineFrame:
         m.parseNetworkMessage(m.makeNetworkMessage(nozlib=1), nozlib=1)
         self.userbrowse.ShowInfo(login, m)
 
-    # Browse your own buddy shares
     def OnBrowseBuddyShares(self, widget):
+        """ Browse your own buddy shares """
 
         login = self.np.config.sections["server"]["login"]
 

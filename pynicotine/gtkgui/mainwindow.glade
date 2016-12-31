@@ -666,13 +666,14 @@
                             <property name="can_focus">False</property>
                             <property name="spacing">5</property>
                             <child>
-                              <widget class="Custom" id="UserPrivateCombo">
+                              <widget class="GtkComboBox" id="UserPrivateCombo">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
+                                <property name="has_entry">True</property>
                               </widget>
                               <packing>
                                 <property name="expand">False</property>
-                                <property name="fill">True</property>
+                                <property name="fill">False</property>
                                 <property name="position">0</property>
                               </packing>
                             </child>
@@ -1954,25 +1955,26 @@
                               </packing>
                             </child>
                             <child>
-                              <widget class="Custom" id="UserSearchCombo">
-                                <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                              </widget>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="fill">False</property>
-                                <property name="position">5</property>
-                              </packing>
-                            </child>
-                            <child>
                               <widget class="GtkComboBox" id="RoomSearchCombo">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="has_entry">True</property>
                               </widget>
                               <packing>
-                                <property name="expand">True</property>
-                                <property name="fill">True</property>
+                                <property name="expand">False</property>
+                                <property name="fill">False</property>
+                                <property name="position">6</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkComboBox" id="UserSearchCombo">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="has_entry">True</property>
+                              </widget>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">False</property>
                                 <property name="position">6</property>
                               </packing>
                             </child>
@@ -2066,9 +2068,10 @@
                             <property name="can_focus">False</property>
                             <property name="spacing">5</property>
                             <child>
-                              <widget class="Custom" id="UserInfoCombo">
+                              <widget class="GtkComboBox" id="UserInfoCombo">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
+                                <property name="has_entry">True</property>
                               </widget>
                               <packing>
                                 <property name="expand">False</property>
@@ -2218,9 +2221,10 @@
                             <property name="can_focus">False</property>
                             <property name="spacing">5</property>
                             <child>
-                              <widget class="Custom" id="UserBrowseCombo">
+                              <widget class="GtkComboBox" id="UserBrowseCombo">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
+                                <property name="has_entry">True</property>
                               </widget>
                               <packing>
                                 <property name="expand">False</property>

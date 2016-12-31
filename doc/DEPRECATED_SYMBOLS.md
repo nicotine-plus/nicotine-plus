@@ -1,13 +1,5 @@
 # [List of deprecated symbols](https://developer.gnome.org/gtk2/2.24/api-index-deprecated.html)
 
-#### [GtkComboBoxEntry, struct in GtkComboBoxEntry](https://developer.gnome.org/gtk2/2.24/GtkComboBoxEntry.html)
-
-* pynicotine/gtkgui/frame.py: class BuddiesComboBoxEntry(gtk.ComboBoxEntry):
-* pynicotine/gtkgui/frame.py: gtk.ComboBoxEntry.\__init__(self)
-* pynicotine/gtkgui/frame.py: comboentry = BuddiesComboBoxEntry(self)
-
-used by get_custom_widget in frame.py
-
 #### [gtk_tree_view_column_get_cell_renderers, function in GtkTreeViewColumn](https://developer.gnome.org/gtk2/2.24/GtkTreeViewColumn.html#gtk-tree-view-column-get-cell-renderers)
 
 * pynicotine/gtkgui/settingswindow.py: renderers = cols[1].get_cell_renderers()
