@@ -8,7 +8,7 @@ Version 1.3.0git (unreleased)
 -----------------------------
 
 Behavior
- * Showing first 25 results right away to make N+ seem FAST.
+ * Displaying results of searches should now be faster and not blocking the UI.
  * Send a private message to users who queue a directory has been removed.
  * Hidden directories on Windows are not shared provided you have the pypiwin32 module installed.
  * Tray icons have been modified to be easier to distribute under debian (DFSG compliant).

@@ -30,6 +30,7 @@ import sre_constants
 import locale
 import string
 import random
+import thread
 
 from pynicotine import slskmessages
 
@@ -565,8 +566,6 @@ class Searches(IconNotebook):
 
 class Search:
 
-    WAIT_BEFORE_DISPLAYING = 5000  # in milliseconds
-
     def __init__(self, Searches, text, id, mode, remember):
 
         self.Searches = Searches
@@ -886,10 +885,9 @@ class Search:
 
             if self._more_results == 0 and len(self.resultsmodel) < self.frame.np.config.sections['searches']["max_displayed_results"]:
                 self._more_results = 1
-                if len(self.resultsmodel) < 25:  # Showing the first 25 results right away, buffering the rest
-                    gobject.timeout_add(0, self._realaddresults)
-                else:
-                    gobject.timeout_add(self.WAIT_BEFORE_DISPLAYING, self._realaddresults)
+
+                # Start a thread to display the user results
+                thread.start_new_thread(self._realaddresults, ())
 
             return len(results)
 
@@ -908,11 +906,6 @@ class Search:
             self.frame.Searches.request_changed(self.Main)
             if self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.searchvbox):
                 self.frame.SearchTabLabel.child.set_image(self.frame.images["online"])
-
-        for c in self.ResultsList.get_columns():
-            for r in c.get_cell_renderers():
-                if type(r) is not gtk.CellRendererPixbuf:
-                    r.set_fixed_height_from_font(1)
 
         return False
 

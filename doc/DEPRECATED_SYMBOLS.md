@@ -21,7 +21,6 @@ used by get_custom_widget in frame.py
 * pynicotine/gtkgui/userlist.py: for render in self.col_notify.get_cell_renderers():
 * pynicotine/gtkgui/userlist.py: for render in self.col_privileged.get_cell_renderers():
 * pynicotine/gtkgui/userlist.py: renderers = self.col_comments.get_cell_renderers()
-* pynicotine/gtkgui/search.py: for r in c.get_cell_renderers():
 * pynicotine/gtkgui/frame.py: for r in c.get_cell_renderers():
 * pynicotine/gtkgui/frame.py: for r in c.get_cell_renderers():
 * pynicotine/gtkgui/transferlist.py: self.col_percent.set_attributes(self.col_percent.get_cell_renderers()[0], value=4, visible=14)
