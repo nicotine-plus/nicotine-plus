@@ -14,9 +14,7 @@ used by get_custom_widget in frame.py
 * pynicotine/gtkgui/settingswindow.py: renderers = cols[1].get_cell_renderers()
 * pynicotine/gtkgui/settingswindow.py: renderers = cols[1].get_cell_renderers()
 * pynicotine/gtkgui/settingswindow.py: renderers = cols[0].get_cell_renderers()
-* pynicotine/gtkgui/settingswindow.py: render = col.get_cell_renderers()[0]
 * pynicotine/gtkgui/settingswindow.py: renderers = column.get_cell_renderers()
-* pynicotine/gtkgui/settingswindow.py: render = col.get_cell_renderers()[0]
 * pynicotine/gtkgui/settingswindow.py: renderers = cols[0].get_cell_renderers()
 * pynicotine/gtkgui/settingswindow.py: renderers = cols[1].get_cell_renderers()
 * pynicotine/gtkgui/userlist.py: for render in self.col_trusted.get_cell_renderers():

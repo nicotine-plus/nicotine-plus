@@ -2879,7 +2879,6 @@ class CensorFrame(buildFrame):
         selection.select_iter(iter)
 
         col = self.CensorList.get_column(0)
-        render = col.get_cell_renderers()[0]
 
         self.CensorList.set_cursor(self.censorlist.get_path(iter), focus_column=col, start_editing=True)
 
@@ -2982,7 +2981,6 @@ class AutoReplaceFrame(buildFrame):
         selection.unselect_all()
         selection.select_iter(iter)
         col = self.ReplacementList.get_column(0)
-        render = col.get_cell_renderers()[0]
 
         self.ReplacementList.set_cursor(self.replacelist.get_path(iter), focus_column=col, start_editing=True)
 
