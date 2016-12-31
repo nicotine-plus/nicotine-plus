@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-31 22:05+0100\n"
+"POT-Creation-Date: 2016-12-31 22:24+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -313,7 +313,7 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
-msgid "window1"
+msgid "RoomList"
 msgstr ""
 
 msgid "Create: "
@@ -323,6 +323,9 @@ msgid "Hide room list"
 msgstr ""
 
 msgid "Search: "
+msgstr ""
+
+msgid "Search"
 msgstr ""
 
 msgid "Query"
@@ -700,9 +703,6 @@ msgid "Send to player"
 msgstr ""
 
 msgid "Open Directory"
-msgstr ""
-
-msgid "Search"
 msgstr ""
 
 msgid "Abort"
@@ -1299,6 +1299,9 @@ msgid "Save"
 msgstr ""
 
 msgid "Refresh"
+msgstr ""
+
+msgid "UserInfo"
 msgstr ""
 
 msgid "Total uploads allowed: unknown"
