@@ -43,7 +43,6 @@ from pynicotine import pluginsystem
 from pynicotine.slskmessages import ToBeEncoded
 from utils import InitialiseColumns, AppendLine, PopupMenu, WriteLog, Humanize, HumanSpeed, expand_alias, is_alias, EncodingsMenu, SaveEncoding, PressHeader, fixpath, IconNotebook, showCountryTooltip
 from pynicotine.utils import findBestEncoding
-from ticker import Ticker
 from entrydialog import input_box
 
 
@@ -734,6 +733,89 @@ class RoomsControl:
             room.GetCompletionList(clist=list(self.clist))
 
 
+class Ticker:
+
+    def __init__(self, TickerEventBox):
+
+        self.entry = gtk.Entry()
+        self.entry.set_property("editable", False)
+        self.entry.set_has_frame(False)
+        self.entry.show()
+
+        TickerEventBox.add(self.entry)
+
+        self.messages = {}
+        self.sortedmessages = []
+        self.ix = 0
+        self.source = None
+
+        self.enable()
+
+    def __del__(self):
+        gobject.source_remove(self.source)
+
+    def scroll(self, *args):
+
+        if not self.messages:
+            self.entry.set_text("")
+            return True
+
+        if self.ix >= len(self.messages):
+            self.ix = 0
+
+        (user, message) = self.sortedmessages[self.ix]
+        self.entry.set_text("[%s]: %s" % (user, message))
+        self.ix += 1
+
+        return True
+
+    def add_ticker(self, user, message):
+
+        message = message.replace("\n", " ")
+        self.messages[user] = message
+
+        self.updatesorted()
+
+    def remove_ticker(self, user):
+
+        try:
+            del self.messages[user]
+        except KeyError:
+            return
+
+        self.updatesorted()
+
+    def updatesorted(self):
+
+        lst = [(user, msg) for user, msg in self.messages.iteritems()]
+        lst.sort(cmp=lambda x, y: len(x[1])-len(y[1]))
+        self.sortedmessages = lst
+
+    def get_tickers(self):
+        return [x for x in self.messages.iteritems()]
+
+    def set_ticker(self, msgs):
+        self.messages = msgs
+        self.ix = 0
+        self.scroll()
+
+    def enable(self):
+
+        if self.source:
+            return
+
+        self.source = gobject.timeout_add(2500, self.scroll)
+
+    def disable(self):
+
+        if not self.source:
+            return
+
+        gobject.source_remove(self.source)
+
+        self.source = None
+
+
 def TickDialog(parent, default=""):
 
     dlg = gtk.Dialog(
@@ -757,21 +839,21 @@ def TickDialog(parent, default=""):
     entry.set_text(default)
     dlg.vbox.pack_start(entry, True, True)
 
-    h = gtk.HBox(False, False)
+    v = gtk.VBox(False, False)
     r1 = gtk.RadioButton()
     r1.set_label(_("Just this time"))
     r1.set_active(True)
-    h.pack_start(r1, False, False)
+    v.pack_start(r1, False, False)
 
     r2 = gtk.RadioButton(r1)
     r2.set_label(_("Always for this channel"))
-    h.pack_start(r2, False, False)
+    v.pack_start(r2, False, False)
 
     r3 = gtk.RadioButton(r1)
     r3.set_label(_("Default for all channels"))
-    h.pack_start(r3, False, False)
+    v.pack_start(r3, False, False)
 
-    dlg.vbox.pack_start(h, True, True)
+    dlg.vbox.pack_start(v, True, True)
 
     dlg.vbox.show_all()
 
@@ -800,10 +882,9 @@ def TickDialog(parent, default=""):
 class ChatRoom:
 
     def __init__(self, roomsctrl, room, users, meta=False):
+
         self.roomsctrl = roomsctrl
         self.frame = roomsctrl.frame
-
-        gtk.glade.set_custom_handler(self.get_custom_widget)
 
         self.wTree = gtk.glade.XML(os.path.join(os.path.dirname(os.path.realpath(__file__)), "chatrooms.glade"), None)
         widgets = self.wTree.get_widget_prefix("")
@@ -816,6 +897,8 @@ class ChatRoom:
         self.ChatRoomTab.destroy()
 
         self.wTree.signal_autoconnect(self)
+
+        self.Ticker = Ticker(self.TickerEventBox)
 
         self.room = room
         self.lines = []
@@ -1126,14 +1209,6 @@ class ChatRoom:
         model, iter = treeselection.get_selected()
         user = model.get_value(iter, 2)
         selection.set(selection.target, 8, user)
-
-    def get_custom_widget(self, widget, string0, id, string1, string2, int1=None, int2=None, ):
-
-        if id == "Ticker":
-            t = Ticker()
-            return t
-        else:
-            return gtk.Label(_("(custom widget: %s)") % id)
 
     def destroy(self):
         self.Main.destroy()
