@@ -16,6 +16,8 @@ Behavior
  * NowPlaying: MPRIS should now be used for Rhythmbox.
  * The MacOS port has been dropped since nobody will step up and maintain it.
  * The pseudo transparency (translux) feature has been removed.
+ * Blinking of the trayicon is not recommended and has been removed.
+ * Menu icons have been dropped since they are deprecated by GTK.
 
 Features
  * Translations works on Windows.
