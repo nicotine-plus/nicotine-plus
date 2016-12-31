@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-30 21:08+0100\n"
+"POT-Creation-Date: 2016-12-31 19:32+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -417,12 +417,6 @@ msgid ""
 msgstr ""
 
 msgid "Show Buttons in Transfers Tabs"
-msgstr ""
-
-msgid "Show tooltips"
-msgstr ""
-
-msgid "Hey, you really should disable this!"
 msgstr ""
 
 msgid "Chat Font:"
