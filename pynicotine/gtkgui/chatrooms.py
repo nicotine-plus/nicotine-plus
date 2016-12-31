@@ -455,7 +455,7 @@ class RoomsControl:
             except KeyError:
                 self.PrivateRooms[room[0]] = {"users": [], "joined": room[1], "operators": [],  "owner": None}
 
-        iter = self.roomsmodel.get_iter_root()
+        iter = self.roomsmodel.get_iter_first()
         while iter is not None:
             room = self.roomsmodel.get_value(iter, 0)
             lastiter = iter
@@ -1641,7 +1641,7 @@ class ChatRoom:
                 self.clist.remove(username)
                 if self.frame.np.config.sections["words"]["dropdown"]:
                     liststore = self.ChatEntry.get_completion().get_model()
-                    iter = liststore.get_iter_root()
+                    iter = liststore.get_iter_first()
                     while iter is not None:
                         name = liststore.get_value(iter, 0)
                         if name == username:

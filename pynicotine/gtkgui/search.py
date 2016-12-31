@@ -775,7 +775,7 @@ class Search:
             return False
 
         model = Combobox.get_model()
-        iter = model.get_iter_root()
+        iter = model.get_iter_first()
         match = False
 
         while iter is not None:
@@ -963,7 +963,7 @@ class Search:
                 self.all_data[pos][16] = status
             pos += 1
 
-        iter = self.resultsmodel.get_iter_root()
+        iter = self.resultsmodel.get_iter_first()
 
         while iter is not None:
 
@@ -1236,7 +1236,7 @@ class Search:
         sel = self.ResultsList.get_selection()
         fmodel = self.ResultsList.get_model()
         sel.unselect_all()
-        iter = self.resultsmodel.get_iter_root()
+        iter = self.resultsmodel.get_iter_first()
 
         while iter is not None:
 

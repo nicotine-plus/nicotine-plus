@@ -327,7 +327,7 @@ class FastConfigureAssistant(object):
 
     def getshareddirs(self):
 
-        iter = self.sharelist.get_iter_root()
+        iter = self.sharelist.get_iter_first()
         dirs = []
 
         while iter is not None:
@@ -343,7 +343,7 @@ class FastConfigureAssistant(object):
 
     def addshareddir(self, directory):
 
-        iter = self.sharelist.get_iter_root()
+        iter = self.sharelist.get_iter_first()
 
         while iter is not None:
 
@@ -391,7 +391,7 @@ class FastConfigureAssistant(object):
 
     def _updatedirstats(self, directory, size, files, subdirs, extensions):
 
-        iter = self.sharelist.get_iter_root()
+        iter = self.sharelist.get_iter_first()
 
         while iter is not None:
 
@@ -458,7 +458,7 @@ class FastConfigureAssistant(object):
                         # We get the current defined shares from the treeview
                         model, paths = self.kids['shareddirectoriestree'].get_selection().get_selected_rows()
 
-                        iter = model.get_iter_root()
+                        iter = model.get_iter_first()
 
                         while iter is not None:
 

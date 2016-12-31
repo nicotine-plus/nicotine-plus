@@ -706,7 +706,7 @@ class SharesFrame(buildFrame):
         # Buddy shares related menus are activated if needed
         buddies = self.enableBuddyShares.get_active()
 
-        buddies_shares_configured = isinstance(self.BuddyShares.get_model().get_iter_root(), gtk.TreeIter)
+        buddies_shares_configured = isinstance(self.BuddyShares.get_model().get_iter_first(), gtk.TreeIter)
 
         self.frame.rescan_buddy.set_sensitive(buddies and buddies_shares_configured)
         self.frame.rebuild_buddy.set_sensitive(buddies and buddies_shares_configured)
@@ -715,7 +715,7 @@ class SharesFrame(buildFrame):
         # Public shares related menus are deactivated if we only share with friends
         friendsonly = self.FriendsOnly.get_active()
 
-        public_shares_configured = isinstance(self.Shares.get_model().get_iter_root(), gtk.TreeIter)
+        public_shares_configured = isinstance(self.Shares.get_model().get_iter_first(), gtk.TreeIter)
 
         self.frame.rescan_public.set_sensitive(not friendsonly)
         self.frame.rebuild_public.set_sensitive(not friendsonly)
@@ -986,7 +986,7 @@ class SharesFrame(buildFrame):
 
     def _updatedirstats(self, directory, humansize, liststore):
 
-        iter = liststore.get_iter_root()
+        iter = liststore.get_iter_first()
 
         while iter is not None:
 
@@ -2712,7 +2712,7 @@ class UrlCatchFrame(buildFrame):
         protocols = {}
 
         try:
-            iter = self.protocolmodel.get_iter_root()
+            iter = self.protocolmodel.get_iter_first()
             while iter is not None:
                 protocol = self.protocolmodel.get_value(iter, 0)
                 handler = self.protocolmodel.get_value(iter, 1)
@@ -2854,7 +2854,7 @@ class CensorFrame(buildFrame):
         censored = []
 
         try:
-            iter = self.censorlist.get_iter_root()
+            iter = self.censorlist.get_iter_first()
             while iter is not None:
                 word = self.censorlist.get_value(iter, 0)
                 censored.append(word)
@@ -2960,7 +2960,7 @@ class AutoReplaceFrame(buildFrame):
     def GetSettings(self):
         autoreplaced = {}
         try:
-            iter = self.replacelist.get_iter_root()
+            iter = self.replacelist.get_iter_first()
             while iter is not None:
                 word = self.replacelist.get_value(iter, 0)
                 replacement = self.replacelist.get_value(iter, 1)
@@ -3604,7 +3604,7 @@ class SettingsWindow:
             self.OnCancel(widget)
 
     def GetPosition(self, combobox, option):
-        iter = combobox.get_model().get_iter_root()
+        iter = combobox.get_model().get_iter_first()
         while iter is not None:
             word = combobox.get_model().get_value(iter, 0)
             if word.lower() == option or word == option:
@@ -3641,7 +3641,7 @@ class SettingsWindow:
             widget.get_font_name()
         elif type(widget) is gtk.TreeView and widget.get_model().get_n_columns() == 1:
             wlist = []
-            iter = widget.get_model().get_iter_root()
+            iter = widget.get_model().get_iter_first()
             while iter:
                 word = widget.get_model().get_value(iter, 0)
                 if word is not None:

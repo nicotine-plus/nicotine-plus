@@ -113,7 +113,7 @@ class roomlist:
 
         if self.room_model is not self.RoomsList.get_model():
             self.room_model = self.RoomsList.get_model()
-            self.search_iter = self.room_model.get_iter_root()
+            self.search_iter = self.room_model.get_iter_first()
 
         room = self.SearchRooms.get_text().lower()
 
@@ -122,11 +122,11 @@ class roomlist:
 
         if self.query == room:
             if self.search_iter is None:
-                self.search_iter = self.room_model.get_iter_root()
+                self.search_iter = self.room_model.get_iter_first()
             else:
                 self.search_iter = self.room_model.iter_next(self.search_iter)
         else:
-            self.search_iter = self.room_model.get_iter_root()
+            self.search_iter = self.room_model.get_iter_first()
             self.query = room
 
         while self.search_iter:
