@@ -884,19 +884,24 @@ class ChatRoom:
     def __init__(self, roomsctrl, room, users, meta=False):
 
         self.roomsctrl = roomsctrl
+
         self.frame = roomsctrl.frame
 
-        self.wTree = gtk.glade.XML(os.path.join(os.path.dirname(os.path.realpath(__file__)), "chatrooms.glade"), None)
-        widgets = self.wTree.get_widget_prefix("")
+        # Build the window
+        builder = gtk.Builder()
+        builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "chatrooms.ui"))
+        self.ChatRoomTab = builder.get_object("ChatRoomTab")
 
-        for i in widgets:
-            name = gtk.glade.get_widget_name(i)
-            self.__dict__[name] = i
+        for i in builder.get_objects():
+            try:
+                self.__dict__[gtk.Buildable.get_name(i)] = i
+            except TypeError:
+                pass
 
         self.ChatRoomTab.remove(self.Main)
         self.ChatRoomTab.destroy()
 
-        self.wTree.signal_autoconnect(self)
+        builder.connect_signals(self)
 
         self.Ticker = Ticker(self.TickerEventBox)
 
@@ -906,8 +911,10 @@ class ChatRoom:
         self.meta = meta  # not a real room if set to True
         config = self.frame.np.config.sections
 
-        if not config["ticker"]["hide"]:
-            self.Ticker.show()
+        if config["ticker"]["hide"]:
+            self.TickerEventBox.hide()
+        else:
+            self.TickerEventBox.show()
 
         self.OnShowChatButtons(show=(not config["ui"]["chat_hidebuttons"]))
 
@@ -1651,7 +1658,7 @@ class ChatRoom:
                 text = text[1:]
 
             tuple = self.frame.pluginhandler.OutgoingPublicChatEvent(self.room, text)
-            if tuple != None:
+            if tuple is not None:
                 (r, text) = tuple
                 self.Say(self.frame.AutoReplace(text))
                 self.frame.pluginhandler.OutgoingPublicChatNotification(self.room, text)
@@ -1853,7 +1860,7 @@ class ChatRoom:
             # Chat, Userlists use the normal popup system
             self.popup_menu.editing = True
             self.popup_menu.set_user(user)
-            me = (self.popup_menu.user == None or self.popup_menu.user == self.frame.np.config.sections["server"]["login"])
+            me = (self.popup_menu.user is None or self.popup_menu.user == self.frame.np.config.sections["server"]["login"])
 
             self.Menu_AddToList.set_active(user in [i[0] for i in self.frame.np.config.sections["server"]["userlist"]])
             self.Menu_BanUser.set_active(user in self.frame.np.config.sections["server"]["banlist"])
@@ -2277,6 +2284,7 @@ class ChatRoom:
             return False
 
         config = self.frame.np.config.sections
+
         if config["server"]["login"] in self.Ticker.messages:
             old = self.Ticker.messages[config["server"]["login"]]
         else:
@@ -2284,19 +2292,27 @@ class ChatRoom:
 
         t, result = TickDialog(self.GetTabParent(self.Main), old)
 
-        if not result is None:
+        if result is not None:
+
             if t == 1:
+
                 if not result:
                     if self.room in config["ticker"]["rooms"]:
                         del config["ticker"]["rooms"][self.room]
                 else:
                     config["ticker"]["rooms"][self.room] = result
+
                 self.frame.np.config.writeConfiguration()
+
             elif t == 2:
+
                 if self.room in config["ticker"]["rooms"]:
                     del config["ticker"]["rooms"][self.room]
+
                 config["ticker"]["default"] = result
+
                 self.frame.np.config.writeConfiguration()
+
             self.frame.np.queue.put(slskmessages.RoomTickerSet(self.room, ToBeEncoded(result, self.encoding)))
 
         return True
@@ -2305,10 +2321,10 @@ class ChatRoom:
 
         if visible:
             self.Ticker.enable()
-            self.Ticker.show()
+            self.TickerEventBox.show()
         else:
             self.Ticker.disable()
-            self.Ticker.hide()
+            self.TickerEventBox.hide()
 
 
 class ChatRooms(IconNotebook):
