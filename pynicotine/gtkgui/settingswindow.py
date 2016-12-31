@@ -2228,8 +2228,7 @@ class BloatFrame(buildFrame):
                 "transfersfont": self.SelectTransfersFont,
                 "browserfont": self.SelectBrowserFont,
                 "decimalsep": self.DecimalSep,
-                "spellcheck": self.SpellCheck,
-                "tooltips": self.ShowTooltips
+                "spellcheck": self.SpellCheck
             },
             "transfers": {
                 "enabletransferbuttons": self.ShowTransferButtons
@@ -2300,8 +2299,7 @@ class BloatFrame(buildFrame):
                 "listfont": self.SelectListFont.get_font_name(),
                 "searchfont": self.SelectSearchFont.get_font_name(),
                 "transfersfont": self.SelectTransfersFont.get_font_name(),
-                "browserfont": self.SelectBrowserFont.get_font_name(),
-                "tooltips": self.ShowTooltips.get_active()
+                "browserfont": self.SelectBrowserFont.get_font_name()
             },
             "transfers": {
                 "enabletransferbuttons": self.ShowTransferButtons.get_active()

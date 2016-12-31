@@ -325,7 +325,6 @@ class Config:
                 ],
                 "searchoffline": "#aa0000",
                 "showaway": 0,
-                "tooltips": 1,
                 "buddylistinchatrooms": 0,
                 "trayicon": 1,
                 "soundenabled": 1,
@@ -507,12 +506,13 @@ class Config:
         self.removeOldOption("server", "lastportstatuscheck")
         self.removeOldOption("server", "serverlist")
         self.removeOldOption("userinfo", "descrutf8")
+        self.removeOldOption("ui", "enabletrans")
         self.removeOldOption("ui", "mozembed")
         self.removeOldOption("ui", "open_in_mozembed")
-        self.removeOldOption("ui", "enabletrans")
-        self.removeOldOption("ui", "transtint")
+        self.removeOldOption("ui", "tooltips")
         self.removeOldOption("ui", "transalpha")
         self.removeOldOption("ui", "transfilter")
+        self.removeOldOption("ui", "transtint")
 
         # Checking for unknown section/options
         unknown1 = [
@@ -527,7 +527,7 @@ class Config:
             'ui': [
                 "roomlistcollapsed", "tabclosers", "tab_colors",
                 "tab_reorderable", "buddylistinchatrooms", "trayicon",
-                "showaway", "tooltips", "usernamehotspots", "exitdialog",
+                "showaway", "usernamehotspots", "exitdialog",
                 "tab_icons", "spellcheck", "modes_order", "modes_visible",
                 "chat_hidebuttons", "tab_status_icons", "notexists",
                 "soundenabled", "speechenabled", "enablefilters", "width",

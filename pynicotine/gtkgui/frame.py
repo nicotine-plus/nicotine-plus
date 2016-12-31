@@ -2314,10 +2314,6 @@ class NicotineFrame:
         else:
             self.logMessage("Config backed up to: %s" % message)
 
-    def SetAllToolTips(self):
-        act = self.np.config.sections["ui"]["tooltips"]
-        self.logMessage("I dont konw what to do with SetAllToolTips")
-
     def AutoReplace(self, message):
         if self.np.config.sections["words"]["replacewords"]:
             autoreplaced = self.np.config.sections["words"]["autoreplaced"]
