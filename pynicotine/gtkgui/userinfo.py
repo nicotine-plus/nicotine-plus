@@ -128,19 +128,19 @@ class UserTabs(IconNotebook):
 
         popup = PopupMenu(self.frame)
         popup.setup(
-            ("#" + _("Send _message"), popup.OnSendMessage, gtk.STOCK_EDIT),
-            ("#" + _("Show IP a_ddress"), popup.OnShowIPaddress, gtk.STOCK_NETWORK),
-            ("#" + _("Get user i_nfo"), popup.OnGetUserInfo, gtk.STOCK_DIALOG_INFO),
-            ("#" + _("Brow_se files"), popup.OnBrowseUser, gtk.STOCK_HARDDISK),
-            ("#" + _("Gi_ve privileges"), popup.OnGivePrivileges, gtk.STOCK_JUMP_TO),
-            ("#" + _("Client Version"), popup.OnVersion, gtk.STOCK_ABOUT),
+            ("#" + _("Send _message"), popup.OnSendMessage),
+            ("#" + _("Show IP a_ddress"), popup.OnShowIPaddress),
+            ("#" + _("Get user i_nfo"), popup.OnGetUserInfo),
+            ("#" + _("Brow_se files"), popup.OnBrowseUser),
+            ("#" + _("Gi_ve privileges"), popup.OnGivePrivileges),
+            ("#" + _("Client Version"), popup.OnVersion),
             ("", None),
             ("$" + _("Add user to list"), popup.OnAddToList),
             ("$" + _("Ban this user"), popup.OnBanUser),
             ("$" + _("Ignore this user"), popup.OnIgnoreUser),
             ("", None),
-            ("#" + _("Detach this tab"), self.users[user].Detach, gtk.STOCK_REDO),
-            ("#" + _("Close this tab"), self.users[user].OnClose, gtk.STOCK_CLOSE)
+            ("#" + _("Detach this tab"), self.users[user].Detach),
+            ("#" + _("Close this tab"), self.users[user].OnClose)
         )
         popup.set_user(user)
 
@@ -259,7 +259,7 @@ class UserInfo:
             ("$" + _("I _like this"), self.frame.OnLikeRecommendation),
             ("$" + _("I _don't like this"), self.frame.OnDislikeRecommendation),
             ("", None),
-            ("#" + _("_Search for this item"), self.frame.OnRecommendSearch, gtk.STOCK_FIND),
+            ("#" + _("_Search for this item"), self.frame.OnRecommendSearch)
         )
         self.Likes.connect("button_press_event", self.OnPopupLikesMenu)
 
@@ -268,17 +268,17 @@ class UserInfo:
             ("$" + _("I _like this"), self.frame.OnLikeRecommendation),
             ("$" + _("I _don't like this"), self.frame.OnDislikeRecommendation),
             ("", None),
-            ("#" + _("_Search for this item"), self.frame.OnRecommendSearch, gtk.STOCK_FIND),
+            ("#" + _("_Search for this item"), self.frame.OnRecommendSearch)
         )
         self.Hates.connect("button_press_event", self.OnPopupHatesMenu)
 
         self.image_menu = popup = PopupMenu(self)
         popup.setup(
-            ("#" + _("Zoom 1:1"), self.MakeZoomNormal, gtk.STOCK_ZOOM_100),
-            ("#" + _("Zoom In"), self.MakeZoomIn, gtk.STOCK_ZOOM_IN),
-            ("#" + _("Zoom Out"), self.MakeZoomOut, gtk.STOCK_ZOOM_OUT),
+            ("#" + _("Zoom 1:1"), self.MakeZoomNormal),
+            ("#" + _("Zoom In"), self.MakeZoomIn),
+            ("#" + _("Zoom Out"), self.MakeZoomOut),
             ("", None),
-            ("#" + _("Save Image"), self.OnSavePicture, gtk.STOCK_SAVE)
+            ("#" + _("Save Image"), self.OnSavePicture)
         )
 
     def OnPopupLikesMenu(self, widget, event):

@@ -946,7 +946,9 @@ class IconNotebook(gtk.Notebook):
 class PopupMenu(gtk.Menu):
 
     def __init__(self, frame=None):
+
         gtk.Menu.__init__(self)
+
         self.frame = frame
         self.user = None
         self.useritem = None
@@ -954,70 +956,73 @@ class PopupMenu(gtk.Menu):
         self.editing = False
 
     def setup(self, *items):
+
         for item in items:
+
             if item[0] == "":
                 menuitem = gtk.MenuItem()
+
             elif item[0] == "USER":
+
                 menuitem = gtk.MenuItem(item[1])
                 self.useritem = menuitem
+
                 if len(item) >= 3:
                     self.handlers[menuitem] = menuitem.connect("activate", item[2])
                 else:
                     menuitem.set_sensitive(False)
+
             elif item[0] == 1:
+
                 menuitem = gtk.MenuItem(item[1])
                 menuitem.set_submenu(item[2])
+
                 if len(item) == 5 and item[4] is not None and item[3] is not None:
                     self.handlers[menuitem] = menuitem.connect("activate", item[3], item[4])
                 elif item[3] is not None:
                     self.handlers[menuitem] = menuitem.connect("activate", item[3])
+
             elif item[0] == "USERMENU":
+
                 menuitem = gtk.MenuItem(item[1])
                 menuitem.set_submenu(item[2])
+
                 if item[3] is not None:
                     self.handlers[menuitem] = menuitem.connect("activate", item[3])
+
                 self.useritem = menuitem
-            elif item[0] == 2:
-                menuitem = gtk.ImageMenuItem(item[1])
-                menuitem.set_submenu(item[2])
-                if len(item) == 5 and item[4] is not None and item[3] is not None:
-                    self.handlers[menuitem] = menuitem.connect("activate", item[3], item[4])
-                elif item[3] is not None:
-                    self.handlers[menuitem] = menuitem.connect("activate", item[3])
-                img = gtk.image_new_from_stock(item[4], gtk.ICON_SIZE_MENU)
-                menuitem.set_image(img)
+
             else:
+
                 if item[0][0] == "$":
                     menuitem = gtk.CheckMenuItem(item[0][1:])
                 elif item[0][0] == "#":
-                    menuitem = gtk.ImageMenuItem(item[0][1:])
-                    img = gtk.image_new_from_stock(item[2], gtk.ICON_SIZE_MENU)
-                    menuitem.set_image(img)
-                elif item[0][0] == "%":
-                    menuitem = gtk.ImageMenuItem(item[0][1:])
-                    img = gtk.Image()
-                    img.set_from_pixbuf(item[2])
-                    menuitem.set_image(img)
+                    menuitem = gtk.MenuItem(item[0][1:])
                 else:
                     menuitem = gtk.MenuItem(item[0])
-                if len(item) >= 4 and item[3] is not None and item[1] is not None:
-                    self.handlers[menuitem] = menuitem.connect("activate", item[1], item[3])
+
+                if len(item) >= 3 and item[2] is not None and item[1] is not None:
+                    self.handlers[menuitem] = menuitem.connect("activate", item[1], item[2])
                 elif item[1] is not None:
                     self.handlers[menuitem] = menuitem.connect("activate", item[1])
 
             self.append(menuitem)
+
             menuitem.show()
 
         return self
 
     def clear(self):
+
         for (w, widget) in self.handlers.iteritems():
             w.disconnect(widget)
 
         self.handlers.clear()
+
         for widget in self.get_children():
             self.remove(widget)
             widget.destroy()
+
         if self.useritem is not None:
             self.useritem.destroy()
             self.useritem = None
@@ -1040,8 +1045,10 @@ class PopupMenu(gtk.Menu):
         self.frame.ChangeMainPage(None, "private")
 
     def OnShowIPaddress(self, widget):
+
         if self.user not in self.frame.np.ip_requested:
             self.frame.np.ip_requested.append(self.user)
+
         self.frame.np.queue.put(slskmessages.GetPeerAddress(self.user))
 
     def OnGetUserInfo(self, widget):
@@ -1063,22 +1070,27 @@ class PopupMenu(gtk.Menu):
         self.frame.PrivateRoomRemoveOperator(room, self.user)
 
     def OnAddToList(self, widget):
+
         if self.editing:
             return
+
         if widget.get_active():
             self.frame.userlist.AddToList(self.user)
         else:
             self.frame.userlist.RemoveFromList(self.user)
 
     def OnBanUser(self, widget):
+
         if self.editing:
             return
+
         if widget.get_active():
             self.frame.BanUser(self.user)
         else:
             self.frame.UnbanUser(self.user)
 
     def OnBlockUser(self, widget):
+
         if self.editing:
             return
 
@@ -1088,6 +1100,7 @@ class PopupMenu(gtk.Menu):
             self.frame.OnUnBlockUser(self.user)
 
     def OnIgnoreIP(self, widget):
+
         if self.editing:
             return
 
@@ -1097,6 +1110,7 @@ class PopupMenu(gtk.Menu):
             self.frame.OnUnIgnoreIP(self.user)
 
     def OnIgnoreUser(self, widget):
+
         if self.editing:
             return
 
@@ -1112,7 +1126,9 @@ class PopupMenu(gtk.Menu):
         self.frame.clip.set_text(self.user)
 
     def OnGivePrivileges(self, widget):
+
         self.frame.np.queue.put(slskmessages.CheckPrivileges())
+
         if self.frame.np.privileges_left is None:
             days = _("Unknown")
         else:
@@ -1123,6 +1139,7 @@ class PopupMenu(gtk.Menu):
             _("Give privileges") + " " + _("to %(user)s") % {"user": self.user},
             _("Give how many days of global privileges to this user?") + " (" + _("%(days)s days left") % {'days': days} + ")"
         )
+
         if text:
             try:
                 days = int(text)
@@ -1131,8 +1148,10 @@ class PopupMenu(gtk.Menu):
                 print e
 
     def OnPrivateRooms(self, widget):
-        if self.user == None or self.user == self.frame.np.config.sections["server"]["login"]:
+
+        if self.user is None or self.user == self.frame.np.config.sections["server"]["login"]:
             return False
+
         user = self.user
         items = []
         popup = self.frame.userlist.Popup_Menu_PrivateRooms
@@ -1140,17 +1159,21 @@ class PopupMenu(gtk.Menu):
         popup.set_user(self.user)
 
         for room in self.frame.chatrooms.roomsctrl.PrivateRooms:
+
             if not (self.frame.chatrooms.roomsctrl.IsPrivateRoomOwned(room) or self.frame.chatrooms.roomsctrl.IsPrivateRoomOperator(room)):
                 continue
+
             if self.user in self.frame.chatrooms.roomsctrl.PrivateRooms[room]["users"]:
-                items.append(("#" + _("Remove from private room %s" % room), popup.OnPrivateRoomRemoveUser, gtk.STOCK_REMOVE, room))
+                items.append(("#" + _("Remove from private room %s") % room, popup.OnPrivateRoomRemoveUser, room))
             else:
-                items.append(("#" + _("Add to private room %s" % room), popup.OnPrivateRoomAddUser, gtk.STOCK_ADD, room))
+                items.append(("#" + _("Add to private room %s") % room, popup.OnPrivateRoomAddUser, room))
+
             if self.frame.chatrooms.roomsctrl.IsPrivateRoomOwned(room):
+
                 if self.user in self.frame.chatrooms.roomsctrl.PrivateRooms[room]["operators"]:
-                    items.append(("#" + _("Remove as operator of %s" % room), popup.OnPrivateRoomRemoveOperator, gtk.STOCK_REMOVE, room))
+                    items.append(("#" + _("Remove as operator of %s") % room, popup.OnPrivateRoomRemoveOperator, room))
                 else:
-                    items.append(("#" + _("Add as operator of %s" % room), popup.OnPrivateRoomAddOperator, gtk.STOCK_ADD, room))
+                    items.append(("#" + _("Add as operator of %s") % room, popup.OnPrivateRoomAddOperator, room))
 
         popup.setup(*items)
 

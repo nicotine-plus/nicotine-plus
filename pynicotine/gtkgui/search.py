@@ -525,8 +525,8 @@ class Searches(IconNotebook):
 
         popup = PopupMenu(self.frame)
         popup.setup(
-            ("#" + _("Detach this tab"), self.searches[id][2].Detach, gtk.STOCK_REDO),
-            ("#" + _("Close this tab"), self.searches[id][2].OnClose, gtk.STOCK_CLOSE),
+            ("#" + _("Detach this tab"), self.searches[id][2].Detach),
+            ("#" + _("Close this tab"), self.searches[id][2].OnClose)
         )
         items = popup.get_children()
 
@@ -726,14 +726,14 @@ class Search:
         self.popup_menu_users = PopupMenu(self.frame)
         self.popup_menu = popup = PopupMenu(self.frame)
         popup.setup(
-            ("#" + _("_Download file(s)"), self.OnDownloadFiles, gtk.STOCK_GO_DOWN),
-            ("#" + _("Download file(s) _to..."), self.OnDownloadFilesTo, gtk.STOCK_GO_DOWN),
-            ("#" + _("Download containing _folder(s)"), self.OnDownloadFolders, gtk.STOCK_GO_DOWN),
-            ("#" + _("Download containing f_older(s) to..."), self.OnDownloadFoldersTo, gtk.STOCK_GO_DOWN),
-            ("#" + _("View Metadata of file(s)"), self.OnSearchMeta, gtk.STOCK_PROPERTIES),
+            ("#" + _("_Download file(s)"), self.OnDownloadFiles),
+            ("#" + _("Download file(s) _to..."), self.OnDownloadFilesTo),
+            ("#" + _("Download containing _folder(s)"), self.OnDownloadFolders),
+            ("#" + _("Download containing f_older(s) to..."), self.OnDownloadFoldersTo),
+            ("#" + _("View Metadata of file(s)"), self.OnSearchMeta),
             ("", None),
-            ("#" + _("Copy _URL"), self.OnCopyURL, gtk.STOCK_COPY),
-            ("#" + _("Copy folder U_RL"), self.OnCopyDirURL, gtk.STOCK_COPY),
+            ("#" + _("Copy _URL"), self.OnCopyURL),
+            ("#" + _("Copy folder U_RL"), self.OnCopyDirURL),
             ("", None),
             (1, _("User(s)"), self.popup_menu_users, self.OnPopupMenuUsers)
         )
@@ -1232,16 +1232,16 @@ class Search:
             for user in self.selected_users:
                 popup = PopupMenu(self.frame)
                 popup.setup(
-                    ("#" + _("Send _message"), popup.OnSendMessage, gtk.STOCK_EDIT),
-                    ("#" + _("Show IP a_ddress"), popup.OnShowIPaddress, gtk.STOCK_NETWORK),
-                    ("#" + _("Get user i_nfo"), popup.OnGetUserInfo, gtk.STOCK_DIALOG_INFO),
-                    ("#" + _("Brow_se files"), popup.OnBrowseUser, gtk.STOCK_HARDDISK),
-                    ("#" + _("Gi_ve privileges"), popup.OnGivePrivileges, gtk.STOCK_JUMP_TO),
+                    ("#" + _("Send _message"), popup.OnSendMessage),
+                    ("#" + _("Show IP a_ddress"), popup.OnShowIPaddress),
+                    ("#" + _("Get user i_nfo"), popup.OnGetUserInfo),
+                    ("#" + _("Brow_se files"), popup.OnBrowseUser),
+                    ("#" + _("Gi_ve privileges"), popup.OnGivePrivileges),
                     ("", None),
                     ("$" + _("_Add user to list"), popup.OnAddToList),
                     ("$" + _("_Ban this user"), popup.OnBanUser),
                     ("$" + _("_Ignore this user"), popup.OnIgnoreUser),
-                    ("#" + _("Select User's Results"), self.OnSelectUserResults, gtk.STOCK_INDEX),
+                    ("#" + _("Select User's Results"), self.OnSelectUserResults)
                 )
                 popup.set_user(user)
 

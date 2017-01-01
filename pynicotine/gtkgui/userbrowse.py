@@ -114,10 +114,10 @@ class UserBrowse:
         self.popup_menu_users2 = PopupMenu(self.frame)
         for menu in [self.popup_menu_users, self.popup_menu_users2]:
             menu.setup(
-                ("#" + _("Send _message"), menu.OnSendMessage, gtk.STOCK_EDIT),
-                ("#" + _("Show IP a_ddress"), menu.OnShowIPaddress, gtk.STOCK_NETWORK),
-                ("#" + _("Get user i_nfo"), menu.OnGetUserInfo, gtk.STOCK_DIALOG_INFO),
-                ("#" + _("Gi_ve privileges"), menu.OnGivePrivileges, gtk.STOCK_JUMP_TO),
+                ("#" + _("Send _message"), menu.OnSendMessage),
+                ("#" + _("Show IP a_ddress"), menu.OnShowIPaddress),
+                ("#" + _("Get user i_nfo"), menu.OnGetUserInfo),
+                ("#" + _("Gi_ve privileges"), menu.OnGivePrivileges),
                 ("", None),
                 ("$" + _("_Add user to list"),  menu.OnAddToList),
                 ("$" + _("_Ban this user"), menu.OnBanUser),
@@ -126,34 +126,34 @@ class UserBrowse:
 
         self.popup_menu_downloads_folders = PopupMenu(self.frame)
         self.popup_menu_downloads_folders.setup(
-            ("#" + _("_Download directory"), self.OnDownloadDirectory, gtk.STOCK_GO_DOWN),
-            ("#" + _("Download directory _to..."), self.OnDownloadDirectoryTo, gtk.STOCK_GO_DOWN),
-            ("#" + _("Download _recursive"), self.OnDownloadDirectoryRecursive, gtk.STOCK_GO_DOWN),
-            ("#" + _("Download r_ecursive to..."), self.OnDownloadDirectoryRecursiveTo, gtk.STOCK_GO_DOWN)
+            ("#" + _("_Download directory"), self.OnDownloadDirectory),
+            ("#" + _("Download directory _to..."), self.OnDownloadDirectoryTo),
+            ("#" + _("Download _recursive"), self.OnDownloadDirectoryRecursive),
+            ("#" + _("Download r_ecursive to..."), self.OnDownloadDirectoryRecursiveTo)
         )
 
         self.popup_menu_downloads_files = PopupMenu(self.frame)
         self.popup_menu_downloads_files.setup(
-            ("#" + _("_Download file(s)"), self.OnDownloadFiles, gtk.STOCK_GO_DOWN),
-            ("#" + _("Download _to..."), self.OnDownloadFilesTo, gtk.STOCK_GO_DOWN),
+            ("#" + _("_Download file(s)"), self.OnDownloadFiles),
+            ("#" + _("Download _to..."), self.OnDownloadFilesTo),
             ("", None),
-            ("#" + _("_Download directory"), self.OnDownloadDirectory, gtk.STOCK_GO_DOWN),
-            ("#" + _("Download directory _to..."), self.OnDownloadDirectoryTo, gtk.STOCK_GO_DOWN),
-            ("#" + _("Download _recursive"), self.OnDownloadDirectoryRecursive, gtk.STOCK_GO_DOWN),
-            ("#" + _("Download r_ecursive to..."), self.OnDownloadDirectoryRecursiveTo, gtk.STOCK_GO_DOWN)
+            ("#" + _("_Download directory"), self.OnDownloadDirectory),
+            ("#" + _("Download directory _to..."), self.OnDownloadDirectoryTo),
+            ("#" + _("Download _recursive"), self.OnDownloadDirectoryRecursive),
+            ("#" + _("Download r_ecursive to..."), self.OnDownloadDirectoryRecursiveTo)
         )
 
         self.popup_menu_uploads_folders = PopupMenu(self.frame)
         self.popup_menu_uploads_folders.setup(
-            ("#" + _("Upload Directory to..."), self.OnUploadDirectoryTo, gtk.STOCK_GO_UP),
-            ("#" + _("Upload Directory recursive to..."), self.OnUploadDirectoryRecursiveTo, gtk.STOCK_GO_UP)
+            ("#" + _("Upload Directory to..."), self.OnUploadDirectoryTo),
+            ("#" + _("Upload Directory recursive to..."), self.OnUploadDirectoryRecursiveTo)
         )
 
         self.popup_menu_uploads_files = PopupMenu(self.frame)
         self.popup_menu_uploads_files.setup(
-            ("#" + _("Upload Directory to..."), self.OnUploadDirectoryTo, gtk.STOCK_GO_UP),
-            ("#" + _("Upload Directory recursive to..."), self.OnUploadDirectoryRecursiveTo, gtk.STOCK_GO_UP),
-            ("#" + _("Up_load file(s)"), self.OnUploadFiles, gtk.STOCK_GO_UP)
+            ("#" + _("Upload Directory to..."), self.OnUploadDirectoryTo),
+            ("#" + _("Upload Directory recursive to..."), self.OnUploadDirectoryRecursiveTo),
+            ("#" + _("Up_load file(s)"), self.OnUploadFiles)
         )
 
         self.folder_popup_menu = PopupMenu(self.frame)
@@ -163,19 +163,19 @@ class UserBrowse:
             self.folder_popup_menu.setup(
                 ("USERMENU", _("User"), self.popup_menu_users, self.OnPopupMenuFolderUser),
                 ("", None),
-                (2, _("Download"), self.popup_menu_downloads_folders, self.OnPopupMenuDummy, gtk.STOCK_GO_DOWN),
-                (2, _("Upload"), self.popup_menu_uploads_folders, self.OnPopupMenuDummy, gtk.STOCK_GO_UP),
+                (1, _("Download"), self.popup_menu_downloads_folders, self.OnPopupMenuDummy),
+                (1, _("Upload"), self.popup_menu_uploads_folders, self.OnPopupMenuDummy),
                 ("", None),
-                ("#" + _("Copy _URL"), self.OnCopyDirURL, gtk.STOCK_COPY),
-                ("#" + _("Open in File Manager"), self.OnFileManager, gtk.STOCK_OPEN)
+                ("#" + _("Copy _URL"), self.OnCopyDirURL),
+                ("#" + _("Open in File Manager"), self.OnFileManager)
             )
         else:
             self.folder_popup_menu.setup(
                 ("USERMENU", _("User"), self.popup_menu_users, self.OnPopupMenuFolderUser),
                 ("", None),
-                (2, _("Download"), self.popup_menu_downloads_folders, self.OnPopupMenuDummy, gtk.STOCK_GO_DOWN),
+                (1, _("Download"), self.popup_menu_downloads_folders, self.OnPopupMenuDummy),
                 ("", None),
-                ("#" + _("Copy _URL"), self.OnCopyDirURL, gtk.STOCK_COPY)
+                ("#" + _("Copy _URL"), self.OnCopyDirURL)
             )
 
         self.FolderTreeView.connect("button_press_event", self.OnFolderClicked)
@@ -214,20 +214,20 @@ class UserBrowse:
             self.file_popup_menu.setup(
                 ("USERMENU", "User", self.popup_menu_users2, self.OnPopupMenuFileUser),
                 ("", None),
-                (2, _("Download"), self.popup_menu_downloads_files, self.OnPopupMenuDummy, gtk.STOCK_GO_DOWN),
-                (2, _("Upload"), self.popup_menu_uploads_files, self.OnPopupMenuDummy, gtk.STOCK_GO_UP),
+                (1, _("Download"), self.popup_menu_downloads_files, self.OnPopupMenuDummy),
+                (1, _("Upload"), self.popup_menu_uploads_files, self.OnPopupMenuDummy),
                 ("", None),
-                ("#" + _("Copy _URL"), self.OnCopyURL, gtk.STOCK_COPY),
-                ("#" + _("Send to _player"), self.OnPlayFiles, gtk.STOCK_MEDIA_PLAY),
-                ("#" + _("Open in File Manager"), self.OnFileManager, gtk.STOCK_OPEN)
+                ("#" + _("Copy _URL"), self.OnCopyURL),
+                ("#" + _("Send to _player"), self.OnPlayFiles),
+                ("#" + _("Open in File Manager"), self.OnFileManager)
             )
         else:
             self.file_popup_menu.setup(
                 ("USERMENU", "User", self.popup_menu_users2, self.OnPopupMenuFileUser),
                 ("", None),
-                (2, _("Download"), self.popup_menu_downloads_files, self.OnPopupMenuDummy, gtk.STOCK_GO_DOWN),
+                (1, _("Download"), self.popup_menu_downloads_files, self.OnPopupMenuDummy),
                 ("", None),
-                ("#" + _("Copy _URL"), self.OnCopyURL, gtk.STOCK_COPY)
+                ("#" + _("Copy _URL"), self.OnCopyURL)
             )
 
         self.FileTreeView.connect("button_press_event", self.OnFileClicked)
@@ -238,7 +238,7 @@ class UserBrowse:
             if type(object) is PopupMenu:
                 object.set_user(self.user)
 
-    def OnPopupMenuDummy(self, widget, something):
+    def OnPopupMenuDummy(self, widget):
         pass
 
     def Attach(self, widget=None):

@@ -310,12 +310,12 @@ class NicotineFrame:
 
         # Popup menu on the log windows
         self.logpopupmenu = PopupMenu(self).setup(
-            ("#" + _("Find"), self.OnFindLogWindow, gtk.STOCK_FIND),
+            ("#" + _("Find"), self.OnFindLogWindow),
             ("", None),
-            ("#" + _("Copy"), self.OnCopyLogWindow, gtk.STOCK_COPY),
-            ("#" + _("Copy All"), self.OnCopyAllLogWindow, gtk.STOCK_COPY),
+            ("#" + _("Copy"), self.OnCopyLogWindow),
+            ("#" + _("Copy All"), self.OnCopyAllLogWindow),
             ("", None),
-            ("#" + _("Clear log"), self.OnClearLogWindow, gtk.STOCK_CLEAR)
+            ("#" + _("Clear log"), self.OnClearLogWindow)
         )
 
         # for iterating buddy changes to the combos
@@ -845,10 +845,10 @@ class NicotineFrame:
         self.til_popup_menu = popup = utils.PopupMenu(self)
 
         popup.setup(
-            ("#" + _("_Remove this item"), self.OnRemoveThingILike, gtk.STOCK_CANCEL),
-            ("#" + _("Re_commendations for this item"), self.OnRecommendItem, gtk.STOCK_INDEX),
+            ("#" + _("_Remove this item"), self.OnRemoveThingILike),
+            ("#" + _("Re_commendations for this item"), self.OnRecommendItem),
             ("", None),
-            ("#" + _("_Search for this item"), self.OnRecommendSearch, gtk.STOCK_FIND),
+            ("#" + _("_Search for this item"), self.OnRecommendSearch)
         )
 
         self.LikesList.connect("button_press_event", self.OnPopupTILMenu)
@@ -868,9 +868,9 @@ class NicotineFrame:
         self.tidl_popup_menu = popup = utils.PopupMenu(self)
 
         popup.setup(
-            ("#" + _("_Remove this item"), self.OnRemoveThingIDislike, gtk.STOCK_CANCEL),
+            ("#" + _("_Remove this item"), self.OnRemoveThingIDislike),
             ("", None),
-            ("#" + _("_Search for this item"), self.OnRecommendSearch, gtk.STOCK_FIND)
+            ("#" + _("_Search for this item"), self.OnRecommendSearch)
         )
 
         self.DislikesList.connect("button_press_event", self.OnPopupTIDLMenu)
@@ -896,9 +896,9 @@ class NicotineFrame:
         popup.setup(
             ("$" + _("I _like this"), self.OnLikeRecommendation),
             ("$" + _("I _don't like this"), self.OnDislikeRecommendation),
-            ("#" + _("_Recommendations for this item"), self.OnRecommendRecommendation, gtk.STOCK_INDEX),
+            ("#" + _("_Recommendations for this item"), self.OnRecommendRecommendation),
             ("", None),
-            ("#" + _("_Search for this item"), self.OnRecommendSearch, gtk.STOCK_FIND)
+            ("#" + _("_Search for this item"), self.OnRecommendSearch)
         )
 
         self.RecommendationsList.connect("button_press_event", self.OnPopupRMenu)
@@ -924,9 +924,9 @@ class NicotineFrame:
         popup.setup(
             ("$" + _("I _like this"), self.OnLikeRecommendation),
             ("$" + _("I _don't like this"), self.OnDislikeRecommendation),
-            ("#" + _("_Recommendations for this item"), self.OnRecommendRecommendation, gtk.STOCK_INDEX),
+            ("#" + _("_Recommendations for this item"), self.OnRecommendRecommendation),
             ("", None),
-            ("#" + _("_Search for this item"), self.OnRecommendSearch, gtk.STOCK_FIND)
+            ("#" + _("_Search for this item"), self.OnRecommendSearch)
         )
 
         self.UnrecommendationsList.connect("button_press_event", self.OnPopupUnRecMenu)
@@ -963,12 +963,12 @@ class NicotineFrame:
 
         self.ru_popup_menu = popup = utils.PopupMenu(self)
         popup.setup(
-            ("#" + _("Send _message"), popup.OnSendMessage, gtk.STOCK_EDIT),
+            ("#" + _("Send _message"), popup.OnSendMessage),
             ("", None),
-            ("#" + _("Show IP a_ddress"), popup.OnShowIPaddress, gtk.STOCK_NETWORK),
-            ("#" + _("Get user i_nfo"), popup.OnGetUserInfo, gtk.STOCK_DIALOG_INFO),
-            ("#" + _("Brow_se files"), popup.OnBrowseUser, gtk.STOCK_HARDDISK),
-            ("#" + _("Gi_ve privileges"), popup.OnGivePrivileges, gtk.STOCK_JUMP_TO),
+            ("#" + _("Show IP a_ddress"), popup.OnShowIPaddress),
+            ("#" + _("Get user i_nfo"), popup.OnGetUserInfo),
+            ("#" + _("Brow_se files"), popup.OnBrowseUser),
+            ("#" + _("Gi_ve privileges"), popup.OnGivePrivileges),
             ("", None),
             ("$" + _("_Add user to list"), popup.OnAddToList),
             ("$" + _("_Ban this user"), popup.OnBanUser),
@@ -1205,7 +1205,6 @@ class NicotineFrame:
                 (
                     "#" + _("Hide %(tab)s") % {"tab": _(string2)},
                     self.HideTab,
-                    gtk.STOCK_REMOVE,
                     [eventbox, string1]
                 )
             )
@@ -3591,22 +3590,22 @@ class TrayApp:
             self.tray_popup_menu_server = popup0 = PopupMenu(self)
 
             popup0.setup(
-                ("#" + _("Connect"), self.frame.OnConnect, gtk.STOCK_CONNECT),
-                ("#" + _("Disconnect"), self.frame.OnDisconnect, gtk.STOCK_DISCONNECT)
+                ("#" + _("Connect"), self.frame.OnConnect),
+                ("#" + _("Disconnect"), self.frame.OnDisconnect)
             )
 
             self.tray_popup_menu = popup = PopupMenu(self)
 
             popup.setup(
-                ("#" + _("Hide / Show Nicotine+"), self.HideUnhideWindow, gtk.STOCK_GOTO_BOTTOM),
+                ("#" + _("Hide / Show Nicotine+"), self.HideUnhideWindow),
                 (1, _("Server"), self.tray_popup_menu_server, self.OnPopupServer),
-                ("#" + _("Settings"), self.frame.OnSettings, gtk.STOCK_PREFERENCES),
-                ("#" + _("Send Message"), self.frame.OnOpenPrivateChat, gtk.STOCK_EDIT),
-                ("#" + _("Lookup a User's IP"), self.frame.OnGetAUsersIP, gtk.STOCK_NETWORK),
-                ("#" + _("Lookup a User's Info"), self.frame.OnGetAUsersInfo, gtk.STOCK_DIALOG_INFO),
-                ("#" + _("Lookup a User's Shares"), self.frame.OnGetAUsersShares, gtk.STOCK_HARDDISK),
-                ("%" + _("Toggle Away"), self.frame.OnAway, self.frame.images["trayicon_away"]),
-                ("#" + _("Quit"), self.frame.OnExit, gtk.STOCK_QUIT)
+                ("#" + _("Settings"), self.frame.OnSettings),
+                ("#" + _("Send Message"), self.frame.OnOpenPrivateChat),
+                ("#" + _("Lookup a User's IP"), self.frame.OnGetAUsersIP),
+                ("#" + _("Lookup a User's Info"), self.frame.OnGetAUsersInfo),
+                ("#" + _("Lookup a User's Shares"), self.frame.OnGetAUsersShares),
+                ("$" + _("Toggle Away"), self.frame.OnAway),
+                ("#" + _("Quit"), self.frame.OnExit)
             )
 
         except Exception as e:

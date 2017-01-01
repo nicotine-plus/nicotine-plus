@@ -54,7 +54,7 @@ class UserList:
 
         TARGETS = [('text/plain', 0, 1)]
         self.UserList.enable_model_drag_source(gtk.gdk.BUTTON1_MASK, TARGETS, gtk.gdk.ACTION_COPY)
-        self.UserList.enable_model_drag_dest(TARGETS,  gtk.gdk.ACTION_COPY)
+        self.UserList.enable_model_drag_dest(TARGETS, gtk.gdk.ACTION_COPY)
         self.UserList.connect("drag_data_get", self.buddylist_drag_data_get_data)
         self.UserList.connect("drag_data_received", self.DragUserToBuddylist)
 
@@ -186,12 +186,12 @@ class UserList:
         self.popup_menu = popup = PopupMenu(frame)
 
         popup.setup(
-            ("#" + _("Send _message"), popup.OnSendMessage, gtk.STOCK_EDIT),
+            ("#" + _("Send _message"), popup.OnSendMessage),
             ("", None),
-            ("#" + _("Show IP a_ddress"), popup.OnShowIPaddress, gtk.STOCK_NETWORK),
-            ("#" + _("Get user i_nfo"), popup.OnGetUserInfo, gtk.STOCK_DIALOG_INFO),
-            ("#" + _("Brow_se files"), popup.OnBrowseUser, gtk.STOCK_HARDDISK),
-            ("#" + _("Gi_ve privileges"), popup.OnGivePrivileges, gtk.STOCK_JUMP_TO),
+            ("#" + _("Show IP a_ddress"), popup.OnShowIPaddress),
+            ("#" + _("Get user i_nfo"), popup.OnGetUserInfo),
+            ("#" + _("Brow_se files"), popup.OnBrowseUser),
+            ("#" + _("Gi_ve privileges"), popup.OnGivePrivileges),
             ("$" + _("_Ban this user"), popup.OnBanUser),
             ("$" + _("_Ignore this user"), popup.OnIgnoreUser),
             ("", None),
@@ -199,9 +199,9 @@ class UserList:
             ("$" + _("_Privileged"), self.OnPrivileged),
             ("$" + _("_Trusted"), self.OnTrusted),
             ("", None),
-            ("#" + _("Edit _comments"), self.OnEditComments, gtk.STOCK_EDIT),
-            ("#" + _("_Remove"), self.OnRemoveUser, gtk.STOCK_CANCEL),
-            (1, _("Private rooms"), self.Popup_Menu_PrivateRooms, popup.OnPrivateRooms),
+            ("#" + _("Edit _comments"), self.OnEditComments),
+            ("#" + _("_Remove"), self.OnRemoveUser),
+            (1, _("Private rooms"), self.Popup_Menu_PrivateRooms, popup.OnPrivateRooms)
         )
 
         items = self.popup_menu.get_children()

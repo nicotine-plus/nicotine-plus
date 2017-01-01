@@ -137,11 +137,11 @@ class PrivateChats(IconNotebook):
 
         popup = PopupMenu(self.frame)
         popup.setup(
-            ("#" + _("Show IP a_ddress"), popup.OnShowIPaddress, gtk.STOCK_NETWORK),
-            ("#" + _("Get user i_nfo"), popup.OnGetUserInfo, gtk.STOCK_DIALOG_INFO),
-            ("#" + _("Brow_se files"), popup.OnBrowseUser, gtk.STOCK_HARDDISK),
-            ("#" + _("Gi_ve privileges"), popup.OnGivePrivileges, gtk.STOCK_JUMP_TO),
-            ("#" + _("Client Version"), popup.OnVersion, gtk.STOCK_ABOUT),
+            ("#" + _("Show IP a_ddress"), popup.OnShowIPaddress),
+            ("#" + _("Get user i_nfo"), popup.OnGetUserInfo),
+            ("#" + _("Brow_se files"), popup.OnBrowseUser),
+            ("#" + _("Gi_ve privileges"), popup.OnGivePrivileges),
+            ("#" + _("Client Version"), popup.OnVersion),
             ("", None),
             ("$" + _("Add user to list"), popup.OnAddToList),
             ("$" + _("Ban this user"), popup.OnBanUser),
@@ -149,8 +149,8 @@ class PrivateChats(IconNotebook):
             ("$" + _("B_lock this user's IP Address"), popup.OnBlockUser),
             ("$" + _("Ignore this user's IP Address"), popup.OnIgnoreIP),
             ("", None),
-            ("#" + _("Detach this tab"), self.users[user].Detach, gtk.STOCK_REDO),
-            ("#" + _("Close this tab"), self.users[user].OnClose, gtk.STOCK_CLOSE),
+            ("#" + _("Detach this tab"), self.users[user].Detach),
+            ("#" + _("Close this tab"), self.users[user].OnClose)
         )
 
         popup.set_user(user)
@@ -383,17 +383,17 @@ class PrivateChat:
 
         self.popup_menu_user = popup = PopupMenu(self.frame)
         popup.setup(
-            ("#" + _("Show IP a_ddress"), popup.OnShowIPaddress, gtk.STOCK_NETWORK),
-            ("#" + _("Get user i_nfo"), popup.OnGetUserInfo, gtk.STOCK_DIALOG_INFO),
-            ("#" + _("Brow_se files"), popup.OnBrowseUser, gtk.STOCK_HARDDISK),
-            ("#" + _("Gi_ve privileges"), popup.OnGivePrivileges, gtk.STOCK_JUMP_TO),
-            ("#" + _("Client Version"), popup.OnVersion, gtk.STOCK_ABOUT),
+            ("#" + _("Show IP a_ddress"), popup.OnShowIPaddress),
+            ("#" + _("Get user i_nfo"), popup.OnGetUserInfo),
+            ("#" + _("Brow_se files"), popup.OnBrowseUser),
+            ("#" + _("Gi_ve privileges"), popup.OnGivePrivileges),
+            ("#" + _("Client Version"), popup.OnVersion),
             ("", None),
             ("$" + _("Add user to list"), popup.OnAddToList),
             ("$" + _("Ban this user"), popup.OnBanUser),
             ("$" + _("Ignore this user"), popup.OnIgnoreUser),
             ("$" + _("B_lock this user's IP Address"), popup.OnBlockUser),
-            ("$" + _("Ignore this user's IP Address"), popup.OnIgnoreIP),
+            ("$" + _("Ignore this user's IP Address"), popup.OnIgnoreIP)
         )
 
         popup.set_user(user)
@@ -402,14 +402,14 @@ class PrivateChat:
         popup.setup(
             ("USERMENU", _("User"), self.popup_menu_user, self.OnPopupMenuUser),
             ("", None),
-            ("#" + _("Find"), self.OnFindChatLog, gtk.STOCK_FIND),
+            ("#" + _("Find"), self.OnFindChatLog),
             ("", None),
-            ("#" + _("Copy"), self.OnCopyChatLog, gtk.STOCK_COPY),
-            ("#" + _("Copy All"), self.OnCopyAllChatLog, gtk.STOCK_COPY),
+            ("#" + _("Copy"), self.OnCopyChatLog),
+            ("#" + _("Copy All"), self.OnCopyAllChatLog),
             ("", None),
-            ("#" + _("Clear log"), self.OnClearChatLog, gtk.STOCK_CLEAR),
+            ("#" + _("Clear log"), self.OnClearChatLog),
             ("", None),
-            ("#" + _("Close"), self.OnClose, gtk.STOCK_CANCEL)
+            ("#" + _("Close"), self.OnClose)
         )
 
         popup.set_user(user)

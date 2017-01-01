@@ -47,34 +47,34 @@ class Downloads(TransferList):
 
         self.popup_menu2 = popup2 = PopupMenu(frame)
         popup2.setup(
-            ("#" + _("Clear finished/aborted"), self.OnClearFinishedAborted, gtk.STOCK_CLEAR),
-            ("#" + _("Clear finished"), self.OnClearFinished, gtk.STOCK_CLEAR),
-            ("#" + _("Clear aborted"), self.OnClearAborted, gtk.STOCK_CLEAR),
-            ("#" + _("Clear paused"), self.OnClearPaused, gtk.STOCK_CLEAR),
-            ("#" + _("Clear filtered"), self.OnClearFiltered, gtk.STOCK_CLEAR),
-            ("#" + _("Clear queued"), self.OnClearQueued, gtk.STOCK_CLEAR),
+            ("#" + _("Clear finished/aborted"), self.OnClearFinishedAborted),
+            ("#" + _("Clear finished"), self.OnClearFinished),
+            ("#" + _("Clear aborted"), self.OnClearAborted),
+            ("#" + _("Clear paused"), self.OnClearPaused),
+            ("#" + _("Clear filtered"), self.OnClearFiltered),
+            ("#" + _("Clear queued"), self.OnClearQueued)
         )
         self.popup_menu_users = PopupMenu(frame)
 
         self.popup_menu = popup = PopupMenu(frame)
         popup.setup(
-            ("#" + _("Get place in _queue"), self.OnGetPlaceInQueue, gtk.STOCK_INDEX),
+            ("#" + _("Get place in _queue"), self.OnGetPlaceInQueue),
             ("", None),
-            ("#" + _("Copy _URL"), self.OnCopyURL, gtk.STOCK_COPY),
-            ("#" + _("Copy folder URL"), self.OnCopyDirURL, gtk.STOCK_COPY),
-            ("#" + _("Send to _player"), self.OnPlayFiles, gtk.STOCK_MEDIA_PLAY),
-            ("#" + _("View Metadata of file(s)"), self.OnDownloadMeta, gtk.STOCK_PROPERTIES),
-            ("#" + _("Open Directory"), self.OnOpenDirectory, gtk.STOCK_OPEN),
-            ("#" + _("Search"), self.OnFileSearch, gtk.STOCK_FIND),
+            ("#" + _("Copy _URL"), self.OnCopyURL),
+            ("#" + _("Copy folder URL"), self.OnCopyDirURL),
+            ("#" + _("Send to _player"), self.OnPlayFiles),
+            ("#" + _("View Metadata of file(s)"), self.OnDownloadMeta),
+            ("#" + _("Open Directory"), self.OnOpenDirectory),
+            ("#" + _("Search"), self.OnFileSearch),
             (1, _("User(s)"), self.popup_menu_users, self.OnPopupMenuUsers),
             ("", None),
-            ("#" + _("_Retry"), self.OnRetryTransfer, gtk.STOCK_REDO),
+            ("#" + _("_Retry"), self.OnRetryTransfer),
             ("", None),
-            ("#" + _("Abor_t"), self.OnAbortTransfer, gtk.STOCK_CANCEL),
-            ("#" + _("Abort & Delete"), self.OnAbortRemoveTransfer, gtk.STOCK_DELETE),
-            ("#" + _("_Clear"), self.OnClearTransfer, gtk.STOCK_CLEAR),
+            ("#" + _("Abor_t"), self.OnAbortTransfer),
+            ("#" + _("Abort & Delete"), self.OnAbortRemoveTransfer),
+            ("#" + _("_Clear"), self.OnClearTransfer),
             ("", None),
-            (1, _("Clear Groups"), self.popup_menu2, None),
+            (1, _("Clear Groups"), self.popup_menu2, None)
         )
 
         frame.DownloadList.connect("button_press_event", self.OnPopupMenu, "mouse")
@@ -360,17 +360,17 @@ class Downloads(TransferList):
 
                 popup = PopupMenu(self.frame)
                 popup.setup(
-                    ("#" + _("Send _message"), popup.OnSendMessage, gtk.STOCK_EDIT),
-                    ("#" + _("Show IP a_ddress"), popup.OnShowIPaddress, gtk.STOCK_NETWORK),
-                    ("#" + _("Get user i_nfo"), popup.OnGetUserInfo, gtk.STOCK_DIALOG_INFO),
-                    ("#" + _("Brow_se files"), popup.OnBrowseUser, gtk.STOCK_HARDDISK),
-                    ("#" + _("Gi_ve privileges"), popup.OnGivePrivileges, gtk.STOCK_JUMP_TO),
+                    ("#" + _("Send _message"), popup.OnSendMessage),
+                    ("#" + _("Show IP a_ddress"), popup.OnShowIPaddress),
+                    ("#" + _("Get user i_nfo"), popup.OnGetUserInfo),
+                    ("#" + _("Brow_se files"), popup.OnBrowseUser),
+                    ("#" + _("Gi_ve privileges"), popup.OnGivePrivileges),
                     ("", None),
                     ("$" + _("_Add user to list"), popup.OnAddToList),
                     ("$" + _("_Ban this user"), popup.OnBanUser),
                     ("$" + _("_Ignore this user"), popup.OnIgnoreUser),
-                    ("#" + _("Select User's Transfers"), self.OnSelectUserTransfer, gtk.STOCK_INDEX),
-                    )
+                    ("#" + _("Select User's Transfers"), self.OnSelectUserTransfer)
+                )
                 popup.set_user(user)
 
                 items.append((1, user, popup, self.OnPopupMenuUser, popup))

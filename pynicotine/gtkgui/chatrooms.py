@@ -108,19 +108,19 @@ class RoomsControl:
 
         self.popup_room = None
         self.popup_menu = PopupMenu().setup(
-            ("#" + _("Join room"), self.OnPopupJoin, gtk.STOCK_JUMP_TO),
-            ("#" + _("Leave room"), self.OnPopupLeave, gtk.STOCK_CLOSE),
+            ("#" + _("Join room"), self.OnPopupJoin),
+            ("#" + _("Leave room"), self.OnPopupLeave),
             ("", None),
-            ("#" + _("Enable Private Rooms"), self.OnEnablePrivateRooms, gtk.STOCK_OK),
-            ("#" + _("Disable Private Rooms"), self.OnDisablePrivateRooms, gtk.STOCK_CANCEL),
+            ("#" + _("Enable Private Rooms"), self.OnEnablePrivateRooms),
+            ("#" + _("Disable Private Rooms"), self.OnDisablePrivateRooms),
             ("", None),
-            ("#" + _("Create Private Room"), self.OnPopupCreatePrivateRoom, gtk.STOCK_NEW),
-            ("#" + _("Disown Private Room"), self.OnPopupPrivateRoomDisown, gtk.STOCK_CLOSE),
-            ("#" + _("Cancel room membership"), self.OnPopupPrivateRoomDismember, gtk.STOCK_CANCEL),
+            ("#" + _("Create Private Room"), self.OnPopupCreatePrivateRoom),
+            ("#" + _("Disown Private Room"), self.OnPopupPrivateRoomDisown),
+            ("#" + _("Cancel room membership"), self.OnPopupPrivateRoomDismember),
             ("", None),
-            ("#" + _("Join Public Room"), self.OnJoinPublicRoom, gtk.STOCK_DIALOG_WARNING),
+            ("#" + _("Join Public Room"), self.OnJoinPublicRoom),
             ("", None),
-            ("#" + _("Refresh"), self.OnPopupRefresh, gtk.STOCK_REFRESH),
+            ("#" + _("Refresh"), self.OnPopupRefresh)
         )
 
         items = self.popup_menu.get_children()
@@ -1053,12 +1053,12 @@ class ChatRoom:
         popup.setup(
             ("USER", "", popup.OnCopyUser),
             ("", None),
-            ("#" + _("Send _message"), popup.OnSendMessage, gtk.STOCK_EDIT),
+            ("#" + _("Send _message"), popup.OnSendMessage),
             ("", None),
-            ("#" + _("Show IP a_ddress"), popup.OnShowIPaddress, gtk.STOCK_NETWORK),
-            ("#" + _("Get user i_nfo"), popup.OnGetUserInfo, gtk.STOCK_DIALOG_INFO),
-            ("#" + _("Brow_se files"), popup.OnBrowseUser, gtk.STOCK_HARDDISK),
-            ("#" + _("Gi_ve privileges"), popup.OnGivePrivileges, gtk.STOCK_JUMP_TO),
+            ("#" + _("Show IP a_ddress"), popup.OnShowIPaddress),
+            ("#" + _("Get user i_nfo"), popup.OnGetUserInfo),
+            ("#" + _("Brow_se files"), popup.OnBrowseUser),
+            ("#" + _("Gi_ve privileges"), popup.OnGivePrivileges),
             ("", None),
             ("$" + _("_Add user to list"), popup.OnAddToList),
             ("$" + _("_Ban this user"), popup.OnBanUser),
@@ -1066,8 +1066,8 @@ class ChatRoom:
             ("$" + _("B_lock this user's IP Address"), popup.OnBlockUser),
             ("$" + _("Ignore this user's IP Address"), popup.OnIgnoreIP),
             ("", None),
-            ("#" + _("Sear_ch this user's files"), popup.OnSearchUser, gtk.STOCK_FIND),
-            (1, _("Private rooms"), self.popup_menu_privaterooms, self.OnPrivateRooms),
+            ("#" + _("Sear_ch this user's files"), popup.OnSearchUser),
+            (1, _("Private rooms"), self.popup_menu_privaterooms, self.OnPrivateRooms)
         )
 
         items = self.popup_menu.get_children()
@@ -1091,22 +1091,22 @@ class ChatRoom:
         self.ChatEntryBox.set_focus_child(self.ChatEntry)
 
         self.logpopupmenu = PopupMenu(self.frame).setup(
-            ("#" + _("Find"), self.OnFindLogWindow, gtk.STOCK_FIND),
+            ("#" + _("Find"), self.OnFindLogWindow),
             ("", None),
-            ("#" + _("Copy"), self.OnCopyRoomLog, gtk.STOCK_COPY),
-            ("#" + _("Copy All"), self.OnCopyAllRoomLog, gtk.STOCK_COPY),
+            ("#" + _("Copy"), self.OnCopyRoomLog),
+            ("#" + _("Copy All"), self.OnCopyAllRoomLog),
             ("", None),
-            ("#" + _("Clear log"), self.OnClearRoomLog, gtk.STOCK_CLEAR),
+            ("#" + _("Clear log"), self.OnClearRoomLog)
         )
         self.RoomLog.connect("button-press-event", self.OnPopupRoomLogMenu)
 
         self.chatpopmenu = PopupMenu(self.frame).setup(
-            ("#" + _("Find"), self.OnFindChatLog, gtk.STOCK_FIND),
+            ("#" + _("Find"), self.OnFindChatLog),
             ("", None),
-            ("#" + _("Copy"), self.OnCopyChatLog, gtk.STOCK_COPY),
-            ("#" + _("Copy All"), self.OnCopyAllChatLog, gtk.STOCK_COPY),
+            ("#" + _("Copy"), self.OnCopyChatLog),
+            ("#" + _("Copy All"), self.OnCopyAllChatLog),
             ("", None),
-            ("#" + _("Clear log"), self.OnClearChatLog, gtk.STOCK_CLEAR),
+            ("#" + _("Clear log"), self.OnClearChatLog)
         )
         self.ChatScroll.connect("button-press-event", self.OnPopupChatRoomMenu)
 
@@ -1238,15 +1238,15 @@ class ChatRoom:
                 continue
 
             if user in self.roomsctrl.PrivateRooms[room]["users"]:
-                items.append(("#" + _("Remove from private room %s" % room), popup.OnPrivateRoomRemoveUser, gtk.STOCK_REMOVE, room))
+                items.append(("#" + _("Remove from private room %s") % room, popup.OnPrivateRoomRemoveUser, room))
             else:
-                items.append(("#" + _("Add to private room %s" % room), popup.OnPrivateRoomAddUser, gtk.STOCK_ADD, room))
+                items.append(("#" + _("Add to private room %s") % room, popup.OnPrivateRoomAddUser, room))
 
             if self.roomsctrl.IsPrivateRoomOwned(room):
                 if self.popup_menu.user in self.roomsctrl.PrivateRooms[room]["operators"]:
-                    items.append(("#" + _("Remove as operator of %s" % room), popup.OnPrivateRoomRemoveOperator, gtk.STOCK_REMOVE, room))
+                    items.append(("#" + _("Remove as operator of %s") % room, popup.OnPrivateRoomRemoveOperator, room))
                 else:
-                    items.append(("#" + _("Add as operator of %s" % room), popup.OnPrivateRoomAddOperator, gtk.STOCK_ADD, room))
+                    items.append(("#" + _("Add as operator of %s") % room, popup.OnPrivateRoomAddOperator, room))
 
         popup.setup(*items)
 
@@ -2346,8 +2346,8 @@ class ChatRooms(IconNotebook):
 
         popup = PopupMenu(self.frame)
         popup.setup(
-            ("#" + _("Detach this tab"), self.roomsctrl.joinedrooms[room].Detach, gtk.STOCK_REDO),
-            ("#" + _("Leave this room"), self.roomsctrl.joinedrooms[room].OnLeave, gtk.STOCK_CLOSE),
+            ("#" + _("Detach this tab"), self.roomsctrl.joinedrooms[room].Detach),
+            ("#" + _("Leave this room"), self.roomsctrl.joinedrooms[room].OnLeave)
         )
         popup.set_user(room)
 
