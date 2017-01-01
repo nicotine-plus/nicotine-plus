@@ -1281,10 +1281,10 @@ class NicotineFrame:
         del self.HiddenTabs[child]
 
     def on_tab_click(self, widget, event, id, child):
+
         if event.type == gtk.gdk.BUTTON_PRESS and event.button == 3:
             self.__dict__[id].popup(None, None, None, event.button, event.time)
-        # if event.type == gtk.gdk.BUTTON_PRESS:
-        #     widget.popup(None, None, None, event.button, event.time)
+
         pass
 
     def BuddiesCombosFill(self, nothing):
