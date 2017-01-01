@@ -740,9 +740,6 @@ class Search:
 
         self.ResultsList.connect("button_press_event", self.OnListClicked)
 
-        self._more_results = 0
-        self.new_results = []
-
         self.ChangeColours()
 
     def OnTooltip(self, widget, x, y, keyboard_mode, tooltip):
@@ -850,6 +847,7 @@ class Search:
                 self.Searches.users[user] = 1
 
         self.users.append(user)
+
         results = []
 
         if msg.freeulslots:
@@ -881,33 +879,29 @@ class Search:
 
         if results:
 
-            self.new_results += results
-
-            if self._more_results == 0 and len(self.resultsmodel) < self.frame.np.config.sections['searches']["max_displayed_results"]:
-                self._more_results = 1
-
-                # Start a thread to display the user results
-                thread.start_new_thread(self._realaddresults, ())
+            # Start a thread to display the user results
+            thread.start_new_thread(self._realaddresults, (results, ))
 
             return len(results)
 
-    def _realaddresults(self):
+    def _realaddresults(self, results):
 
-        if "_more_results" not in self.__dict__:
+        counter = len(self.all_data) + 1
+
+        # No more things to add because we've reached the max_stored_results limit
+        if counter > self.frame.np.config.sections['searches']["max_stored_results"]:
             return
 
-        self._more_results = 0
-        r = self.new_results
-        self.new_results = []
+        # Append the data
+        self.append(results)
 
-        res = self.append(r)
+        # Update the displayed count
+        gobject.idle_add(self.CountResults)
 
-        if res:
-            self.frame.Searches.request_changed(self.Main)
-            if self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.searchvbox):
-                self.frame.SearchTabLabel.child.set_image(self.frame.images["online"])
-
-        return False
+        # Update tab notification
+        self.frame.Searches.request_changed(self.Main)
+        if self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.searchvbox):
+            self.frame.SearchTabLabel.child.set_image(self.frame.images["online"])
 
     def get_flag(self, user, flag=None):
 
@@ -921,14 +915,9 @@ class Search:
 
     def append(self, results):
 
-        itercounter = len(self.all_data) + 1
-        displaycounter = len(self.resultsmodel)
+        counter = len(self.all_data) + 1
 
         encode = self.frame.np.encodeuser
-
-        returned = 0
-        if itercounter > self.frame.np.config.sections['searches']["max_stored_results"]:
-            return returned
 
         for r in results:
 
@@ -951,49 +940,49 @@ class Search:
                 )
 
             row = [
-                itercounter, user, filename, h_size, h_speed, h_queue, immediatedl, h_bitrate, length,
+                counter, user, filename, h_size, h_speed, h_queue, immediatedl, h_bitrate, length,
                 directory,  bitrate, fullpath, country,  size, speed, queue, status
             ]
 
             self.all_data.append(row)
 
-            if (displaycounter + returned < self.frame.np.config.sections['searches']["max_displayed_results"]) and (not self.filters or self.check_filter(row)):
+            # No more things to add because we've reached the max_stored_results limit
+            if counter >= self.frame.np.config.sections['searches']["max_stored_results"]:
+                break
+
+            if (counter <= self.frame.np.config.sections['searches']["max_displayed_results"]) and (not self.filters or self.check_filter(row)):
 
                 encoded_row = [
-                    itercounter, user, encode(filename, user), h_size, h_speed, h_queue, immediatedl, h_bitrate, length,
+                    counter, user, encode(filename, user), h_size, h_speed, h_queue, immediatedl, h_bitrate, length,
                     self.get_flag(user, country), encode(directory, user), bitrate, encode(fullpath, user), country,  size, speed, queue, status
                 ]
 
-                try:
-                    if user in self.usersiters:
-                        iter = self.resultsmodel.append(self.usersiters[user], encoded_row)
-                    else:
-                        iter = self.resultsmodel.append(None, encoded_row)
-                except Exception, e:
-                    types = []
-                    for i in encoded_row:
-                        types.append(type(i))
-                    print "Search row error:", e, encoded_row
-                    iter = None
+                gobject.idle_add(self._add_to_model, user, encoded_row)
 
-                path = None
+            counter += 1
 
-                if iter is not None:
-                    path = self.resultsmodel.get_path(iter)
+    def _add_to_model(self, user, encoded_row):
 
-                if path is not None:
-                    if self.usersGroup.get_active() and self.ExpandButton.get_active():
-                        self.ResultsList.expand_to_path(path)
+        try:
+            if user in self.usersiters:
+                iter = self.resultsmodel.append(self.usersiters[user], encoded_row)
+            else:
+                iter = self.resultsmodel.append(None, encoded_row)
+        except Exception, e:
+            types = []
+            for i in encoded_row:
+                types.append(type(i))
+            print "Search row error:", e, encoded_row
+            iter = None
 
-                returned += 1
+        path = None
 
-            itercounter += 1
-            if itercounter > self.frame.np.config.sections['searches']["max_stored_results"]:
-                break
+        if iter is not None:
+            path = self.resultsmodel.get_path(iter)
 
-        self.CountVisibleResults()
-
-        return returned
+        if path is not None:
+            if self.usersGroup.get_active() and self.ExpandButton.get_active():
+                self.ResultsList.expand_to_path(path)
 
     def updateStatus(self, user, status):
 
@@ -1201,9 +1190,9 @@ class Search:
             if displaycounter >= self.frame.np.config.sections['searches']["max_displayed_results"]:
                 break
 
-        self.CountVisibleResults()
+        self.CountResults()
 
-    def CountVisibleResults(self):
+    def CountResults(self):
 
         if self.usersGroup.get_active():
 
