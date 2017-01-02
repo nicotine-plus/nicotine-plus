@@ -552,7 +552,7 @@ class AboutRoomsDialog(GenericTableDialog):
         "/leave /l /part /p '%s'" % _("room"), _("Leave room 'room'"),
         "/clear /cl", _("Clear the chat window"),
         "/tick /t", _("Set your personal ticker"),
-        "/tickers", _("Sjow all the tickers"),
+        "/tickers", _("Show all the tickers"),
         "/attach", _("Reattach a chat window to the notebook"),
         "/detach", _("Detach a chat tab from the notebook"),
         "", "",
