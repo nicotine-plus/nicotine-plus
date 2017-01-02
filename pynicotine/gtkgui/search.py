@@ -188,14 +188,21 @@ class Searches(IconNotebook):
 
         ui = self.frame.np.config.sections["ui"]
 
-        IconNotebook.__init__(self, frame.images, ui["labelprivate"], ui["tabclosers"], ui["tab_icons"], ui["tab_reorderable"])
+        IconNotebook.__init__(
+            self,
+            self.frame.images,
+            angle=ui["labelsearch"],
+            tabclosers=ui["tabclosers"],
+            show_image=ui["tab_icons"],
+            reorderable=ui["tab_reorderable"],
+            notebookraw=self.frame.SearchNotebookRaw
+        )
 
         self.popup_enable()
 
         self.WishListDialog = WishList(frame)
 
         self.UpdateColours()
-        self.show()
 
     def LoadConfig(self):
         """
@@ -458,10 +465,10 @@ class Searches(IconNotebook):
             search = self.searches[tab.id]
             search[2] = None
 
-        if self.frame.SearchNotebook.is_tab_detached(tab.Main):
+        if self.is_tab_detached(tab.Main):
             tab.Main.get_parent_window().destroy()
         else:
-            self.frame.SearchNotebook.remove_page(tab.Main)
+            self.remove_page(tab.Main)
             tab.Main.destroy()
 
     def AutoSearch(self, id):

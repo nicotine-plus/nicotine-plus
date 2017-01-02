@@ -45,23 +45,35 @@ class PrivateChats(IconNotebook):
     CMDS = set(
         [
             "/alias ", "/unalias ", "/whois ", "/browse ", "/ip ", "/pm ", "/msg ", "/search ", "/usearch ", "/rsearch ",
-            "/bsearch ", "/add ", "/buddy ", "/rem ", "/unbuddy ", "/ban ", "/ignore ", "/ignoreip ", "/unban ", "/unignore ", "/clear ",
-            "/quit ", "/exit ", "/rescan ", "/nsa ", "/info ", "/ctcpversion ", "/join "
+            "/bsearch ", "/join ", "/add ", "/buddy ", "/rem ", "/unbuddy ", "/ban ", "/ignore ", "/ignoreip ", "/unban ", "/unignore ",
+            "/clear ", "/quit ", "/exit ", "/rescan ", "/info ", "/attach ", "/detach ", "/ctcpversion "
         ]
     )
 
     def __init__(self, frame):
 
+        self.frame = frame
+
         ui = frame.np.config.sections["ui"]
-        IconNotebook.__init__(self, frame.images, ui["labelprivate"], ui["tabclosers"], ui["tab_icons"], ui["tab_reorderable"], ui["tab_status_icons"])
+
+        IconNotebook.__init__(
+            self,
+            self.frame.images,
+            angle=ui["labelprivate"],
+            tabclosers=ui["tabclosers"],
+            show_image=ui["tab_icons"],
+            reorderable=ui["tab_reorderable"],
+            show_status_image=ui["tab_status_icons"],
+            notebookraw=self.frame.PrivatechatNotebookRaw
+        )
+
         self.popup_enable()
 
-        self.frame = frame
         self.connected = 1
         self.users = {}
         self.clist = []
 
-        self.connect("switch-page", self.OnSwitchPage)
+        self.Notebook.connect("switch-page", self.OnSwitchPage)
 
     def OnSwitchPage(self, notebook, page, page_num, force=0):
 
@@ -221,9 +233,12 @@ class PrivateChats(IconNotebook):
             # If tab isn't detached
             # Hilight main private chats Label
             self.frame.RequestIcon(self.frame.PrivateChatTabLabel, chat.Main)
+
             # Show notifications if the private chats notebook isn't selected,
             # the tab is not selected, or the main window isn't mapped
-            if self.get_current_page() != self.page_num(chat.Main) or self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.privatevbox) or not self.frame.is_mapped:
+            if self.get_current_page() != self.page_num(chat.Main) or \
+               self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.privatevbox) or \
+               not self.frame.is_mapped:
                 self.frame.Notifications.Add("private", msg.user)
 
         # SEND CLIENT VERSION to user if the following string is sent
@@ -253,10 +268,10 @@ class PrivateChats(IconNotebook):
         if tab.user in self.frame.np.config.sections["privatechat"]["users"]:
             self.frame.np.config.sections["privatechat"]["users"].remove(tab.user)
 
-        if self.frame.PrivatechatNotebook.is_tab_detached(tab.Main):
+        if self.is_tab_detached(tab.Main):
             tab.Main.get_parent_window().destroy()
         else:
-            self.frame.PrivatechatNotebook.remove_page(tab.Main)
+            self.remove_page(tab.Main)
             tab.Main.destroy()
 
     def Login(self):
@@ -522,7 +537,12 @@ class PrivateChat:
 
         timestamp_format = self.frame.np.config.sections["logging"]["private_timestamp"]
         if status and not self.offlinemessage:
-            AppendLine(self.ChatScroll, _("* Message(s) sent while you were offline. Timestamps are reported by the server and can be off."), self.tag_hilite, timestamp_format=timestamp_format)
+            AppendLine(
+                self.ChatScroll,
+                _("* Message(s) sent while you were offline. Timestamps are reported by the server and can be off."),
+                self.tag_hilite,
+                timestamp_format=timestamp_format
+            )
             self.offlinemessage = 1
 
         if not status and self.offlinemessage:
@@ -548,7 +568,12 @@ class PrivateChat:
             self.SendMessage(u"[Auto-Message] %s" % autoreply)
             self.autoreplied = 1
 
-        self.frame.Notifications.new_tts(self.frame.np.config.sections["ui"]["speechprivate"] % {"user": self.frame.Notifications.tts_clean(self.user), "message": self.frame.Notifications.tts_clean(speech)})
+        self.frame.Notifications.new_tts(
+            self.frame.np.config.sections["ui"]["speechprivate"] % {
+                "user": self.frame.Notifications.tts_clean(self.user),
+                "message": self.frame.Notifications.tts_clean(speech)
+            }
+        )
 
     def SendMessage(self, text, bytestring=False):
 
@@ -663,12 +688,6 @@ class PrivateChat:
                 if user not in self.frame.np.ip_requested:
                     self.frame.np.ip_requested.append(user)
                 self.frame.np.queue.put(slskmessages.GetPeerAddress(user))
-
-        elif cmd == "/nsa":
-            if args:
-                self.frame.LocalUserInfoRequest(args)
-                self.frame.BrowseUser(args)
-                self.frame.OnUserInfo(None)
 
         elif cmd == "/pm":
             if realargs:

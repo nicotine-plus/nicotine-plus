@@ -40,14 +40,27 @@ from pynicotine.logfacility import log
 # User Info and User Browse Notebooks
 class UserTabs(IconNotebook):
 
-    def __init__(self, frame, subwindow):
+    def __init__(self, frame, subwindow, notebookraw):
+
+        self.frame = frame
 
         ui = frame.np.config.sections["ui"]
-        IconNotebook.__init__(self, frame.images, ui["labelinfo"], ui["tabclosers"], ui["tab_icons"], ui["tab_reorderable"], ui["tab_status_icons"])
+
+        IconNotebook.__init__(
+            self,
+            self.frame.images,
+            angle=ui["labelinfo"],
+            tabclosers=ui["tabclosers"],
+            show_image=ui["tab_icons"],
+            reorderable=ui["tab_reorderable"],
+            show_status_image=ui["tab_status_icons"],
+            notebookraw=notebookraw
+        )
+
         self.popup_enable()
 
         self.subwindow = subwindow
-        self.frame = frame
+
         self.users = {}
         self.mytab = None
 
@@ -508,10 +521,10 @@ class UserInfo:
         del self.userinfos.users[self.user]
         self.frame.np.ClosePeerConnection(self.conn)
 
-        if self.frame.UserInfoNotebook.is_tab_detached(self.Main):
+        if self.userinfos.is_tab_detached(self.Main):
             self.Main.get_parent_window().destroy()
         else:
-            self.frame.UserInfoNotebook.remove_page(self.Main)
+            self.userinfos.remove_page(self.Main)
             self.Main.destroy()
 
     def OnSavePicture(self, widget):

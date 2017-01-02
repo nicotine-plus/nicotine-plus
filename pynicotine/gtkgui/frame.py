@@ -349,6 +349,13 @@ class NicotineFrame:
         for thing in config["interests"]["dislikes"]:
             self.dislikes[thing] = self.dislikeslist.append([thing])
 
+        # Initialise the Notebooks
+        self.ChatNotebook = ChatRooms(self)
+        self.PrivatechatNotebook = PrivateChats(self)
+        self.UserInfoNotebook = UserTabs(self, UserInfo, self.UserInfoNotebookRaw)
+        self.UserBrowseNotebook = UserTabs(self, UserBrowse, self.UserBrowseNotebookRaw)
+        self.SearchNotebook = Searches(self)
+
         for w in self.ChatNotebook, self.PrivatechatNotebook, self.UserInfoNotebook, self.UserBrowseNotebook, self.SearchNotebook:
             w.set_tab_closers(config["ui"]["tabclosers"])
             w.set_reorderable(config["ui"]["tab_reorderable"])
@@ -434,6 +441,7 @@ class NicotineFrame:
         self.chatrooms.show()
 
         self.Searches = self.SearchNotebook
+        self.Searches.show()
         self.Searches.LoadConfig()
 
         self.downloads = Downloads(self)
@@ -1177,19 +1185,7 @@ class NicotineFrame:
 
     def get_custom_widget(self, widget, string0, id, string1, string2, int1, int2):
 
-        if id == "ChatNotebook":
-            return ChatRooms(self)
-        elif id == "SearchNotebook":
-            return Searches(self)
-        elif id == "PrivatechatNotebook":
-            return PrivateChats(self)
-        elif id == "UserInfoNotebook":
-            notebook = UserTabs(self, UserInfo)
-            return notebook
-        elif id == "UserBrowseNotebook":
-            notebook = UserTabs(self, UserBrowse)
-            return notebook
-        elif string1 == "ImageLabel":
+        if string1 == "ImageLabel":
             return ImageLabel(string2, self.images["empty"])
         elif "TabLabel" in id:
             label_tab = ImageLabel(string2, self.images["empty"])
@@ -1552,7 +1548,7 @@ class NicotineFrame:
         # Test if we want to do a port mapping
         if self.np.config.sections["server"]["upnp"]:
 
-            # Initialiase a UPnPPortMapping object
+            # Initialise a UPnPPortMapping object
             upnp = UPnPPortMapping()
 
             # Check if we can do a port mapping
@@ -1852,6 +1848,7 @@ class NicotineFrame:
 
         if "BuddiesTabLabel" in self.__dict__:
             compare[self.BuddiesTabLabel] = None
+
         n = compare[l]
         self.current_tab = l
 
@@ -1863,7 +1860,7 @@ class NicotineFrame:
                 l.child.set_image(self.images["empty"])
                 l.child.set_text_color(0)
 
-        if n is not None and type(n) not in [gtk.HPaned, gtk.VBox]:
+        if n is not None and type(n.Notebook) not in [gtk.HPaned, gtk.VBox]:
             n.popup_disable()
             n.popup_enable()
             if n.get_current_page() != -1:
@@ -1872,11 +1869,11 @@ class NicotineFrame:
         if page_nr == self.MainNotebook.page_num(self.hpaned1):
             if self.chatrooms:
                 p = n.get_current_page()
-                self.chatrooms.roomsctrl.OnSwitchPage(n, None, p, 1)
+                self.chatrooms.roomsctrl.OnSwitchPage(n.Notebook, None, p, 1)
         elif page_nr == self.MainNotebook.page_num(self.privatevbox):
             p = n.get_current_page()
             if "privatechats" in self.__dict__:
-                self.privatechats.OnSwitchPage(n, None, p, 1)
+                self.privatechats.OnSwitchPage(n.Notebook, None, p, 1)
         elif page_nr == self.MainNotebook.page_num(self.vboxuploads):
             self.uploads._update()
         elif page_nr == self.MainNotebook.page_num(self.vboxdownloads):
@@ -2384,8 +2381,10 @@ class NicotineFrame:
     def SetTabPositions(self):
 
         ui = self.np.config.sections["ui"]
+
         self.ChatNotebook.set_tab_pos(self.getTabPosition(ui["tabrooms"]))
         self.ChatNotebook.set_tab_angle(ui["labelrooms"])
+
         self.MainNotebook.set_tab_pos(self.getTabPosition(ui["tabmain"]))
 
         for label_tab in [
@@ -3355,8 +3354,10 @@ class Notifications:
         self.SetTitle(user)
 
     def ClearPage(self, notebook, item):
+
         (page, label, window, focused) = item
         location = None
+
         if notebook is self.frame.ChatNotebook:
             location = "rooms"
             self.Clear(location, room=label)
@@ -3517,8 +3518,10 @@ class TrayApp:
             # desktop to another by clicking on the tray icon
             if self.frame.minimized:
                 self.frame.MainWindow.present()
+
             self.frame.MainWindow.grab_focus()
             self.frame.is_mapped = True
+
             self.frame.chatrooms.roomsctrl.ClearNotifications()
             self.frame.privatechats.ClearNotifications()
 

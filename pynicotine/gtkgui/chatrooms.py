@@ -68,13 +68,15 @@ class RoomsControl:
         [
             "/alias ", "/unalias ", "/whois ", "/browse ", "/ip ", "/pm ", "/msg ", "/search ", "/usearch ", "/rsearch ",
             "/bsearch ", "/join ", "/leave ", "/add ", "/buddy ", "/rem ", "/unbuddy ", "/ban ", "/ignore ", "/ignoreip ", "/unban ", "/unignore ",
-            "/clear ", "/part ", "/quit ", "/exit ", "/rescan ", "/tick ", "/nsa ", "/info ", "/detach ", "/attach ", "/toggle"
+            "/clear ", "/part ", "/quit ", "/exit ", "/rescan ", "/tick ", "/info ", "/attach ", "/detach ", "/toggle", "/tickers"
         ]
     )
 
-    def __init__(self, frame, ChatNotebook):
+    def __init__(self, ChatNotebook):
 
-        self.frame = frame
+        self.frame = ChatNotebook.frame
+        self.ChatNotebook = ChatNotebook
+
         self.joinedrooms = {}
         self.autojoin = 1
         self.rooms = []
@@ -90,15 +92,16 @@ class RoomsControl:
 
         self.clist = []
         self.roomsmodel = gtk.ListStore(str, int, int)
-        frame.roomlist.RoomsList.set_model(self.roomsmodel)
+        self.frame.roomlist.RoomsList.set_model(self.roomsmodel)
 
         self.cols = InitialiseColumns(
-            frame.roomlist.RoomsList,
+            self.frame.roomlist.RoomsList,
             [_("Room"), 150, "text", self.RoomStatus],
             [_("Users"), -1, "number", self.RoomStatus],
         )
         self.cols[0].set_sort_column_id(0)
         self.cols[1].set_sort_column_id(1)
+
         self.roomsmodel.set_sort_func(1, self.PrivateRoomsSort, 1)
 
         for i in range(2):
@@ -130,13 +133,13 @@ class RoomsControl:
         self.Menu_PrivateRoom_Disable.set_sensitive(False)
         self.Menu_PrivateRoom_Create.set_sensitive(False)
 
-        frame.roomlist.RoomsList.connect("button_press_event", self.OnListClicked)
-        frame.roomlist.RoomsList.set_headers_clickable(True)
+        self.frame.roomlist.RoomsList.connect("button_press_event", self.OnListClicked)
+        self.frame.roomlist.RoomsList.set_headers_clickable(True)
 
-        frame.roomlist.HideRoomList.connect("clicked", self.OnHideRoomList)
+        self.frame.roomlist.HideRoomList.connect("clicked", self.OnHideRoomList)
 
-        ChatNotebook.connect("switch-page", self.OnSwitchPage)
-        ChatNotebook.connect("page-reordered", self.OnReorderedPage)
+        self.ChatNotebook.Notebook.connect("switch-page", self.OnSwitchPage)
+        self.ChatNotebook.Notebook.connect("page-reordered", self.OnReorderedPage)
 
         self.frame.SetTextBG(self.frame.roomlist.RoomsList)
         self.frame.SetTextBG(self.frame.roomlist.CreateRoomEntry)
@@ -196,12 +199,15 @@ class RoomsControl:
         self.frame.CellDataFunc(column, cellrenderer, model, iter)
 
     def OnReorderedPage(self, notebook, page, page_num, force=0):
+
         room_tab_order = {}
 
         # Find position of opened autojoined rooms
         for name, room in self.joinedrooms.items():
+
             if name not in self.frame.np.config.sections["server"]["autojoin"]:
                 continue
+
             room_tab_order[notebook.page_num(room.Main)] = name
 
         pos = 1000
@@ -228,9 +234,11 @@ class RoomsControl:
             return
 
         page = notebook.get_nth_page(page_num)
+
         for name, room in self.joinedrooms.items():
             if room.Main == page:
                 gobject.idle_add(room.ChatEntry.grab_focus)
+
                 # Remove hilite
                 self.frame.Notifications.Clear("rooms", None, name)
 
@@ -239,7 +247,8 @@ class RoomsControl:
         if self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.hpaned1):
             return
 
-        page = self.frame.ChatNotebook.get_nth_page(self.frame.ChatNotebook.get_current_page())
+        page = self.ChatNotebook.get_nth_page(self.ChatNotebook.get_current_page())
+
         for name, room in self.joinedrooms.items():
             if room.Main == page:
                 # Remove hilite
@@ -328,8 +337,10 @@ class RoomsControl:
             print e
             pass
 
-        self.frame.ChatNotebook.append_page(room.Main, 'Public ', room.OnLeave, angle)
+        self.ChatNotebook.append_page(room.Main, 'Public ', room.OnLeave, angle)
+
         room.CountUsers()
+
         self.frame.np.queue.put(slskmessages.JoinPublicRoom())
 
     def OnDisablePrivateRooms(self, widget):
@@ -373,6 +384,7 @@ class RoomsControl:
             return
 
         tab = ChatRoom(self, msg.room, msg.users)
+
         self.joinedrooms[msg.room] = tab
 
         if msg.private is not None:
@@ -385,9 +397,10 @@ class RoomsControl:
             print e
             pass
 
-        self.frame.ChatNotebook.append_page(tab.Main, msg.room, tab.OnLeave, angle)
+        self.ChatNotebook.append_page(tab.Main, msg.room, tab.OnLeave, angle)
 
         self.frame.searchroomslist[msg.room] = self.frame.RoomSearchCombo_List.append([msg.room])
+
         tab.CountUsers()
 
     def SetRoomList(self, msg):
@@ -686,11 +699,13 @@ class RoomsControl:
 
         room = self.joinedrooms[msg.room]
 
-        if self.frame.ChatNotebook.is_tab_detached(room.Main):
-            self.frame.ChatNotebook.attach_tab(room.Main)
+        if self.ChatNotebook.is_tab_detached(room.Main):
+            self.ChatNotebook.attach_tab(room.Main)
 
-        self.frame.ChatNotebook.remove_page(room.Main)
+        self.ChatNotebook.remove_page(room.Main)
+
         room.destroy()
+
         del self.joinedrooms[msg.room]
 
         if msg.room[-1:] != ' ':  # meta rooms
@@ -997,9 +1012,11 @@ class ChatRoom:
             config["columns"]["chatrooms"][room].insert(1, 1)
 
         for i in range(5):
+
             parent = cols[i].get_widget().get_ancestor(gtk.Button)
             if parent:
                 parent.connect('button_press_event', PressHeader)
+
             # Read Show / Hide column settings from last session
             cols[i].set_visible(config["columns"]["chatrooms"][room][i])
 
@@ -1197,7 +1214,7 @@ class ChatRoom:
         key = gtk.gdk.keyval_name(event.keyval)
 
         # Match against capslock + control and control
-        if key in ("f", "F") and event.state in (gtk.gdk.CONTROL_MASK, gtk.gdk.LOCK_MASK|gtk.gdk.CONTROL_MASK):
+        if key in ("f", "F") and event.state in (gtk.gdk.CONTROL_MASK, gtk.gdk.LOCK_MASK | gtk.gdk.CONTROL_MASK):
             self.OnFind(widget)
         elif key in ("F3"):
             self.OnFind(widget, repeat=True)
@@ -1375,22 +1392,24 @@ class ChatRoom:
 
             if tag == self.tag_hilite:
 
-                self.frame.ChatNotebook.request_hilite(self.Main)
+                self.roomsctrl.ChatNotebook.request_hilite(self.Main)
 
-                if self.frame.ChatNotebook.is_tab_detached(self.Main):
-                    if not self.frame.ChatNotebook.is_detached_tab_focused(self.Main):
+                if self.roomsctrl.ChatNotebook.is_tab_detached(self.Main):
+                    if not self.roomsctrl.ChatNotebook.is_detached_tab_focused(self.Main):
                         self.frame.Notifications.Add("rooms", user, self.room, tab=False)
                 else:
                     self.frame.ChatRequestIcon(1, self.Main)
 
                     # add hilite to trayicon
-                    if self.frame.ChatNotebook.get_current_page() != self.frame.ChatNotebook.page_num(self.roomsctrl.joinedrooms[self.room].Main) or self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.hpaned1) or not self.frame.is_mapped:
+                    if self.roomsctrl.ChatNotebook.get_current_page() != self.roomsctrl.ChatNotebook.page_num(self.roomsctrl.joinedrooms[self.room].Main) or \
+                       self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.hpaned1) or \
+                       not self.frame.is_mapped:
                         if self.room not in self.frame.TrayApp.tray_status["hilites"]["rooms"]:
                             self.frame.Notifications.Add("rooms", user, self.room, tab=True)
 
             else:
-                self.frame.ChatNotebook.request_changed(self.Main)
-                if self.frame.ChatNotebook.is_tab_detached(self.Main):
+                self.roomsctrl.ChatNotebook.request_changed(self.Main)
+                if self.roomsctrl.ChatNotebook.is_tab_detached(self.Main):
                     pass
                 else:
                     self.frame.ChatRequestIcon(0)
@@ -1427,10 +1446,22 @@ class ChatRoom:
         self.getUserTag(user)
 
         timestamp_format = self.frame.np.config.sections["logging"]["rooms_timestamp"]
+
         if user != login:
-            self.lines.append(AppendLine(self.ChatScroll, self.frame.CensorChat(line), tag, username=user, usertag=self.tag_users[user], timestamp_format=timestamp_format))
+
+            self.lines.append(
+                AppendLine(self.ChatScroll, self.frame.CensorChat(line), tag, username=user, usertag=self.tag_users[user], timestamp_format=timestamp_format)
+            )
+
             if self.Speech.get_active():
-                self.frame.Notifications.new_tts(self.frame.np.config.sections["ui"]["speechrooms"] % {"room": self.room, "user": self.frame.Notifications.tts_clean(user), "message": self.frame.Notifications.tts_clean(speech)})
+
+                self.frame.Notifications.new_tts(
+                    self.frame.np.config.sections["ui"]["speechrooms"] % {
+                        "room": self.room,
+                        "user": self.frame.Notifications.tts_clean(user),
+                        "message": self.frame.Notifications.tts_clean(speech)
+                    }
+                )
         else:
             self.lines.append(AppendLine(self.ChatScroll, line, tag, username=user, usertag=self.tag_users[user], timestamp_format=timestamp_format))
 
@@ -1462,6 +1493,7 @@ class ChatRoom:
     def OnEnter(self, widget):
 
         bytes = widget.get_text()
+
         try:
             text = unicode(bytes, "UTF-8")
         except UnicodeDecodeError:
@@ -1480,12 +1512,14 @@ class ChatRoom:
 
         s = text.split(" ", 1)  # string
         cmd = s[0]
+
         if len(s) == 2:
             args = s[1]
         else:
             args = ""
 
         s = bytes.split(" ", 1)  # bytes
+
         if len(s) == 2:
             byteargs = s[1]
         else:
@@ -1512,12 +1546,6 @@ class ChatRoom:
             if byteargs:
                 self.frame.BrowseUser(byteargs)
                 self.frame.OnUserBrowse(None)
-
-        elif cmd == "/nsa":
-            if byteargs:
-                self.frame.LocalUserInfoRequest(byteargs)
-                self.frame.BrowseUser(byteargs)
-                self.frame.OnUserInfo(None)
 
         elif cmd == "/ip":
             if byteargs:
@@ -1591,11 +1619,6 @@ class ChatRoom:
             if byteargs:
                 self.frame.IgnoreIP(byteargs)
 
-        elif cmd == "/nuke":
-            if byteargs:
-                self.frame.BanUser(byteargs)
-                self.frame.IgnoreUser(byteargs)
-
         elif cmd == "/unban":
             if byteargs:
                 self.frame.UnbanUser(byteargs)
@@ -1622,7 +1645,7 @@ class ChatRoom:
             self.Detach()
 
         elif cmd == "/attach":
-            self.frame.ChatNotebook.attach_tab(self.Main)
+            self.roomsctrl.ChatNotebook.attach_tab(self.Main)
             gobject.idle_add(self.frame.ScrollBottom, self.ChatScroll.get_parent())
 
         elif cmd == "/rescan":
@@ -1671,7 +1694,7 @@ class ChatRoom:
         self.frame.logMessage("%s\n%s" % (header, "\n".join(["%s: %s" % (user, msg) for (user, msg) in tickers])))
 
     def Detach(self, widget=None):
-        self.frame.ChatNotebook.detach_tab(self.Main, _("Nicotine+ Chatroom: %s") % self.room)
+        self.roomsctrl.ChatNotebook.detach_tab(self.Main, _("Nicotine+ Chatroom: %s") % self.room)
         gobject.idle_add(self.frame.ScrollBottom, self.ChatScroll.get_parent())
 
     def Say(self, text):
@@ -1699,6 +1722,7 @@ class ChatRoom:
 
         img = self.frame.GetStatusImage(userdata.status)
         flag = userdata.country
+
         if flag is not None:
             flag = "flag_" + flag
             self.frame.flag_users[username] = flag
@@ -1707,7 +1731,9 @@ class ChatRoom:
 
         hspeed = HumanSpeed(userdata.avgspeed)
         hfiles = Humanize(userdata.files)
+
         self.users[username] = self.usersmodel.append([img, self.frame.GetFlagImage(flag), username, hspeed, hfiles, userdata.status, userdata.avgspeed, userdata.files, flag])
+
         self.getUserTag(username)
 
         self.CountUsers()
@@ -1719,10 +1745,14 @@ class ChatRoom:
 
         # Remove from completion list, and completion drop-down
         if self.frame.np.config.sections["words"]["tab"]:
+
             if username in self.clist and username not in [i[0] for i in self.frame.userlist.userlist]:
+
                 self.clist.remove(username)
+
                 if self.frame.np.config.sections["words"]["dropdown"]:
                     liststore = self.ChatEntry.get_completion().get_model()
+
                     iter = liststore.get_iter_first()
                     while iter is not None:
                         name = liststore.get_value(iter, 0)
@@ -1736,6 +1766,7 @@ class ChatRoom:
 
         self.usersmodel.remove(self.users[username])
         del self.users[username]
+
         self.getUserTag(username)
         self.CountUsers()
 
@@ -1879,6 +1910,7 @@ class ChatRoom:
     def UpdateColours(self):
 
         self.frame.ChangeListFont(self.UserList, self.frame.np.config.sections["ui"]["listfont"])
+
         map = self.ChatScroll.get_style().copy()
         self.backupcolor = map.text[gtk.STATE_NORMAL]
         buffer = self.ChatScroll.get_buffer()
@@ -2039,6 +2071,7 @@ class ChatRoom:
 
             img = self.frame.GetStatusImage(user.status)
             flag = user.country
+
             if flag is not None:
                 flag = "flag_" + flag
                 self.frame.flag_users[username] = flag
@@ -2047,7 +2080,9 @@ class ChatRoom:
 
             hspeed = HumanSpeed(user.avgspeed)
             hfiles = Humanize(user.files)
+
             myiter = self.usersmodel.append([img, self.frame.GetFlagImage(flag), username, hspeed, hfiles, user.status, user.avgspeed, user.files, flag])
+
             self.users[username] = myiter
             self.roomsctrl.GetUserAddress(username)
 
@@ -2078,7 +2113,7 @@ class ChatRoom:
             if self.room in autojoin:
                 autojoin.remove(self.room)
         else:
-            if not self.room in autojoin:
+            if self.room not in autojoin:
                 autojoin.append(self.room)
 
         self.frame.np.config.writeConfiguration()
@@ -2088,7 +2123,9 @@ class ChatRoom:
         completion = self.ChatEntry.get_completion()
         liststore = completion.get_model()
         liststore.clear()
+
         self.clist = []
+
         config = self.frame.np.config.sections["words"]
         completion.set_popup_single_match(not config["onematch"])
         completion.set_minimum_key_length(config["characters"])
@@ -2120,16 +2157,21 @@ class ChatRoom:
     def OnKeyPress(self, widget, event):
 
         if event.keyval == gtk.gdk.keyval_from_name("Prior"):
+
             scrolled = self.ChatScroll.get_parent()
             adj = scrolled.get_vadjustment()
             adj.set_value(adj.value - adj.page_increment)
+
         elif event.keyval == gtk.gdk.keyval_from_name("Next"):
+
             scrolled = self.ChatScroll.get_parent()
             adj = scrolled.get_vadjustment()
             max = adj.upper - adj.page_size
             new = adj.value + adj.page_increment
+
             if new > max:
                 new = max
+
             adj.set_value(new)
 
         # ISO_Left_Tab normally corresponds with shift+tab
@@ -2189,6 +2231,7 @@ class ChatRoom:
                 widget.set_position(preix + len(newnick))
 
         widget.emit_stop_by_name("key_press_event")
+
         return True
 
     def OnTooltip(self, widget, x, y, keyboard_mode, tooltip):
@@ -2218,6 +2261,7 @@ class ChatRoom:
 
         widget.emit_stop_by_name("button-press-event")
         self.chatpopmenu.popup(None, None, None, event.button, event.time)
+
         return True
 
     def OnPopupRoomLogMenu(self, widget, event):
@@ -2227,6 +2271,7 @@ class ChatRoom:
 
         widget.emit_stop_by_name("button-press-event")
         self.logpopupmenu.popup(None, None, None, event.button, event.time)
+
         return True
 
     def OnCopyAllRoomLog(self, widget):
@@ -2273,7 +2318,7 @@ class ChatRoom:
 
     def GetTabParent(self, page):
 
-        if self.frame.ChatNotebook.is_tab_detached(page):
+        if self.roomsctrl.ChatNotebook.is_tab_detached(page):
             return self.Main.get_parent().get_parent()
 
         return self.frame.MainWindow
@@ -2332,11 +2377,23 @@ class ChatRooms(IconNotebook):
     def __init__(self, frame):
 
         self.frame = frame
+
         ui = self.frame.np.config.sections["ui"]
-        IconNotebook.__init__(self, self.frame.images, ui["labelrooms"], ui["tabclosers"], ui["tab_icons"], ui["tab_reorderable"])
-        self.roomsctrl = RoomsControl(frame, self)
+
+        IconNotebook.__init__(
+            self,
+            self.frame.images,
+            angle=ui["labelrooms"],
+            tabclosers=ui["tabclosers"],
+            show_image=ui["tab_icons"],
+            reorderable=ui["tab_reorderable"],
+            notebookraw=self.frame.ChatNotebookRaw
+        )
+
+        self.roomsctrl = RoomsControl(self)
 
         self.popup_enable()
+
         self.set_tab_pos(self.frame.getTabPosition(self.frame.np.config.sections["ui"]["tabrooms"]))
 
     def TabPopup(self, room):

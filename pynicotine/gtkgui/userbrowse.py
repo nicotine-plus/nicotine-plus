@@ -967,10 +967,10 @@ class UserBrowse:
         del self.userbrowses.users[self.user]
         self.frame.np.ClosePeerConnection(self.conn)
 
-        if self.frame.UserBrowseNotebook.is_tab_detached(self.Main):
+        if self.userbrowses.is_tab_detached(self.Main):
             self.Main.get_parent_window().destroy()
         else:
-            self.frame.UserBrowseNotebook.remove_page(self.Main)
+            self.userbrowses.remove_page(self.Main)
             self.Main.destroy()
 
     def OnRefresh(self, widget):
