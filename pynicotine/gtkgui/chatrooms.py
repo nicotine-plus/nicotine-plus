@@ -1482,7 +1482,7 @@ class ChatRoom:
 
         text = expand_alias(self.frame.np.config.aliases, alias)
         if not text:
-            log.add('Alias "%s" returned nothing' % alias)
+            log.add(_('Alias "%s" returned nothing') % alias)
             return
 
         if text[:2] == "//":
