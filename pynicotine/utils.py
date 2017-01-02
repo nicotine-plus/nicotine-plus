@@ -394,11 +394,16 @@ def findBestEncoding(bytes, encodings, fallback=None):
 
     If none match the fallback encoding will be used with the 'replace' argument. If no fallback is
     given the first encoding from the list is used."""
+
+    if isinstance(bytes, unicode):
+        return bytes
+
     for encoding in encodings:
         try:
             return unicode(bytes, encoding)
-        except (UnicodeDecodeError, LookupError), e:
+        except (UnicodeDecodeError, LookupError) as e:
             pass
+
     # None were successful
     if fallback:
         return unicode(bytes, fallback, 'replace')

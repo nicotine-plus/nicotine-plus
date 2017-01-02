@@ -626,7 +626,7 @@ class PrivateChat:
         if text[:2] == "//":
             text = text[1:]
 
-        self.frame.np.queue.put(slskmessages.MessageUser(self.user, self.frame.AutoReplace(text)))
+        self.frame.np.queue.put(slskmessages.MessageUser(self.user, ToBeEncoded(self.frame.AutoReplace(text), self.encoding)))
 
     def OnEnter(self, widget):
 
