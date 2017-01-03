@@ -1128,6 +1128,7 @@ class ChatRoom:
         self.ChatScroll.connect("button-press-event", self.OnPopupChatRoomMenu)
 
         self.buildingcompletion = False
+
         self.GetCompletionList(clist=list(self.roomsctrl.clist))
 
         if config["logging"]["readroomlogs"]:
@@ -2017,6 +2018,7 @@ class ChatRoom:
 
         self.Leave.set_sensitive(False)
         self.leaving = 1
+
         config = self.frame.np.config.sections
 
         if self.room in config["columns"]["chatrooms"]:
@@ -2120,15 +2122,16 @@ class ChatRoom:
 
     def GetCompletionList(self, ix=0, text="", clist=[]):
 
+        config = self.frame.np.config.sections["words"]
+
         completion = self.ChatEntry.get_completion()
+        completion.set_popup_single_match(not config["onematch"])
+        completion.set_minimum_key_length(config["characters"])
+
         liststore = completion.get_model()
         liststore.clear()
 
         self.clist = []
-
-        config = self.frame.np.config.sections["words"]
-        completion.set_popup_single_match(not config["onematch"])
-        completion.set_minimum_key_length(config["characters"])
 
         if not config["tab"]:
             return
@@ -2145,11 +2148,13 @@ class ChatRoom:
 
         clist = list(set(clist))
         clist.sort(key=_combilower)
+
         completion.set_popup_completion(False)
 
         if config["dropdown"]:
             for word in clist:
                 liststore.append([word])
+
             completion.set_popup_completion(True)
 
         self.clist = clist

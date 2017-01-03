@@ -265,6 +265,9 @@ class PrivateChats(IconNotebook):
 
         del self.users[tab.user]
 
+        # Update completions on exit
+        self.UpdateCompletions()
+
         if tab.user in self.frame.np.config.sections["privatechat"]["users"]:
             self.frame.np.config.sections["privatechat"]["users"].remove(tab.user)
 
@@ -310,21 +313,10 @@ class PrivateChats(IconNotebook):
         if config["commands"]:
             clist += self.CMDS
 
-        if config["roomnames"]:
-            clist += self.frame.chatrooms.roomsctrl.rooms
-
-        # no duplicates
-        def _combilower(x):
-            try:
-                return str.lower(x)
-            except:
-                return unicode.lower(x)
-
-        self.clist = list(set(clist))
-        self.clist.sort(key=_combilower)
+        self.clist = clist
 
         for user in self.users.values():
-            user.GetCompletionList(clist=self.clist)
+            user.GetCompletionList(clist=list(self.clist))
 
 
 class PrivateChat:
@@ -334,6 +326,9 @@ class PrivateChat:
         self.user = user
         self.chats = chats
         self.frame = chats.frame
+
+        # We should reference the user as soon as possible
+        self.chats.users[self.user] = self
 
         builder = gtk.Builder()
         builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "privatechat.ui"))
@@ -433,7 +428,8 @@ class PrivateChat:
         self.ChatScroll.connect("key_press_event", self.OnPopupMenu)
 
         self.UpdateColours()
-        self.GetCompletionList(clist=self.chats.clist)
+
+        self.chats.UpdateCompletions()
 
         self.ReadPrivateLog()
 
@@ -983,23 +979,37 @@ class PrivateChat:
     def GetCompletionList(self, ix=0, text="", clist=[]):
 
         config = self.frame.np.config.sections["words"]
+
         completion = self.ChatLine.get_completion()
         completion.set_popup_single_match(not config["onematch"])
         completion.set_minimum_key_length(config["characters"])
 
         liststore = completion.get_model()
         liststore.clear()
+
         self.clist = []
 
         if not config["tab"]:
             return
 
+        # no duplicates
+        def _combilower(x):
+            try:
+                return str.lower(x)
+            except:
+                return unicode.lower(x)
+
+        clist = list(set(clist))
+        clist.sort(key=_combilower)
+
         completion.set_popup_completion(False)
+
         if config["dropdown"]:
             for word in clist:
                 liststore.append([word])
 
-        completion.set_popup_completion(True)
+            completion.set_popup_completion(True)
+
         self.clist = clist
 
     def OnKeyPress(self, widget, event):
