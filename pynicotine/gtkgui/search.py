@@ -889,8 +889,6 @@ class Search:
             # Start a thread to display the user results
             thread.start_new_thread(self._realaddresults, (results, ))
 
-            return len(results)
-
     def _realaddresults(self, results):
 
         counter = len(self.all_data) + 1
