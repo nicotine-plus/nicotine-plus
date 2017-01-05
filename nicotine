@@ -254,12 +254,19 @@ def run():
         app = frame.MainApp(config, plugins, trayicon, hidden, bindip)
 
         if profile:
-            import hotshot
-            logfile = os.path.expanduser(config) + ".profile"
-            profiler = hotshot.Profile(logfile)
-            log.add(_("Starting using the profiler (saving log to %s)") %
-                    logfile)
-            profiler.runcall(app.MainLoop)
+
+            import cProfile
+
+            dumpfile = os.path.expanduser(config) + ".profile"
+            profiler = cProfile.Profile()
+
+            log.add(_("Starting using the profiler (saving dump to %s)") % dumpfile)
+
+            profiler.enable()
+            app.MainLoop()
+            profiler.disable()
+
+            profiler.dump_stats(dumpfile)
         else:
             app.MainLoop()
     else:
