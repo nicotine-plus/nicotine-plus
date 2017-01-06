@@ -47,18 +47,23 @@ win32 = sys.platform.startswith("win")
 illegalpathchars = []
 if win32:
     illegalpathchars += ["?", ":", ">", "<", "|", "*", '"']
+
 illegafilechars = illegalpathchars + ["\\", "/"]
 replacementchar = '_'
 
 
 def CleanFile(filename):
+
     for char in illegafilechars:
         filename = filename.replace(char, replacementchar)
+
     return filename
 
 
 def CleanPath(path, absolute=False):
+
     if win32:
+
         # Without hacks it is (up to Vista) not possible to have more
         # than 26 drives mounted, so we can assume a '[a-zA-Z]:\' prefix
         # for drives - we shouldn't escape that
@@ -66,11 +71,15 @@ def CleanPath(path, absolute=False):
         if absolute and path[1:3] == ':\\' and path[0:1] and path[0].isalpha():
             drive = path[:3]
             path = path[3:]
+
         for char in illegalpathchars:
             path = path.replace(char, replacementchar)
+
         path = ''.join([drive, path])
+
         # Path can never end with a period on Windows machines
         path = path.rstrip('.')
+
     return path
 
 
@@ -97,8 +106,41 @@ def ApplyTranslation():
     # Local path where to find translation (mo) files
     LOCAL_MO_PATH = 'languages'
 
-    # Locales handling: We let the system handle the locales
-    locale.setlocale(locale.LC_ALL, '')
+    # Python 2.7.X is build via Visual Studio 2008 on Windows:
+    # https://stackoverflow.com/questions/32037573/load-gtk-glade-translations-in-windows-using-python-pygobject
+    # https://docs.python.org/devguide/setup.html#windows
+    # The locales table for VS2008 can be found here:
+    # https://msdn.microsoft.com/en-us/library/cdax410z(v=vs.90).aspx
+    # https://msdn.microsoft.com/en-us/library/39cwe7zf(v=vs.90).aspx
+    def _build_localename_win(localetuple):
+        """ Builds a locale code from the given tuple (language code, encoding).
+            No aliasing or normalizing takes place."""
+
+        language, encoding = localetuple
+
+        if language is None:
+            language = 'C'
+
+        if encoding is None:
+            return language
+        else:
+            return language + '.' + encoding
+
+    # Locales handling
+    if win32:
+
+        # On windows python can get a normalize tuple (language code, encoding)
+        locale_win = locale.getdefaultlocale()
+
+        # Build a locale name compatible with gettext
+        locale_win_gettext = _build_localename_win(locale_win)
+
+        # Fix environnement variables
+        os.environ['LC_ALL'] = locale_win_gettext
+
+    else:
+        # Unix locales handling: We let the system handle the locales
+        locale.setlocale(locale.LC_ALL, '')
 
     # Gettext handling
     if gettext.find(PACKAGE, localedir=LOCAL_MO_PATH) is None:
@@ -111,8 +153,20 @@ def ApplyTranslation():
     else:
 
         # Locales are in the current dir: install them
-        locale.bindtextdomain(PACKAGE, LOCAL_MO_PATH)
-        gettext.bindtextdomain(PACKAGE, LOCAL_MO_PATH)
+        if win32:
+
+            # On windows we use intl.dll: the core DLL of GNU gettext-runtime on Windows
+            import ctypes
+
+            libintl = ctypes.cdll.LoadLibrary("intl.dll")
+
+            libintl.bindtextdomain(PACKAGE, LOCAL_MO_PATH)
+            libintl.bind_textdomain_codeset(PACKAGE, "UTF-8")
+
+        else:
+            locale.bindtextdomain(PACKAGE, LOCAL_MO_PATH)
+            gettext.bindtextdomain(PACKAGE, LOCAL_MO_PATH)
+
         tr = gettext.translation(PACKAGE, localedir=LOCAL_MO_PATH)
         tr.install()
 
@@ -147,9 +201,11 @@ def displayTraceback(exception=None):
 # Dictionary that's sorted alphabetically
 # @param UserDict dictionary to be alphabetized
 class SortedDict(UserDict):
+
     # Constructor
     # @param self SortedDict
     def __init__(self):
+
         self.__keys__ = []
         self.__sorted__ = True
         UserDict.__init__(self)
@@ -159,15 +215,18 @@ class SortedDict(UserDict):
     # @param key dict key
     # @param value dict value
     def __setitem__(self, key, value):
+
         if not self.__dict__.has_key(key):
             self.__keys__.append(key)
             self.__sorted__ = False
+
         UserDict.__setitem__(self, key, value)
 
     # Delete key
     # @param self SortedDict
     # @param key dict key
     def __delitem__(self, key):
+
         self.__keys__.remove(key)
         UserDict.__delitem__(self, key)
 
@@ -175,18 +234,22 @@ class SortedDict(UserDict):
     # @param self SortedDict
     # @return __keys__
     def keys(self):
+
         if not self.__sorted__:
             self.__keys__.sort()
             self.__sorted__ = True
+
         return self.__keys__
 
     # Get items
     # @param self SortedDict
     # @return list of keys and items
     def items(self):
+
         if not self.__sorted__:
             self.__keys__.sort()
             self.__sorted__ = True
+
         for key in self.__keys__:
             yield key, self[key]
 
@@ -312,6 +375,7 @@ def findBestEncoding(bytes, encodings, fallback=None):
 
 def strace(function):
     """Decorator for debugging"""
+
     from itertools import chain
 
     def newfunc(*args, **kwargs):
@@ -320,4 +384,5 @@ def strace(function):
         retvalue = function(*args, **kwargs)
         print("%s(%s): %s" % (name, ", ".join(map(repr, chain(args, kwargs.values()))), repr(retvalue)))
         return retvalue
+
     return newfunc
