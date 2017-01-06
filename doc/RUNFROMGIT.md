@@ -8,11 +8,11 @@
 
     * On Redhat/Fedora based distributions:
 
-    `sudo dnf install pygtk2 pygtk2-libglade python-mutagen`
+    `sudo dnf install pygtk2 python-mutagen`
 
     * On Debian/Ubuntu based distributions:
 
-    `sudo apt-get install python-gtk2 python-glade2 python-mutagen`
+    `sudo apt-get install python-gtk2 python-mutagen`
 
 * Check that the python version you are using is 2.7.X via `python -V`.
 
