@@ -613,7 +613,7 @@
                     <property name="scrollable">True</property>
                     <signal name="switch_page" handler="OnSwitchPage"/>
                     <child>
-                      <widget class="GtkHPaned" id="hpaned1">
+                      <widget class="GtkHPaned" id="chathbox">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="border_width">3</property>
@@ -645,11 +645,10 @@
                       </widget>
                     </child>
                     <child>
-                      <widget class="Custom" id="ChatTabLabel">
+                      <widget class="GtkEventBox" id="ChatTabLabel">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="string1">hpaned1</property>
-                        <property name="string2">Chat rooms</property>
+                        <property name="visible_window">False</property>
                       </widget>
                       <packing>
                         <property name="tab_fill">False</property>
@@ -800,11 +799,10 @@
                       </packing>
                     </child>
                     <child>
-                      <widget class="Custom" id="PrivateChatTabLabel">
+                      <widget class="GtkEventBox" id="PrivateChatTabLabel">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="string1">privatevbox</property>
-                        <property name="string2">Private chat</property>
+                        <property name="visible_window">False</property>
                       </widget>
                       <packing>
                         <property name="position">1</property>
@@ -813,7 +811,7 @@
                       </packing>
                     </child>
                     <child>
-                      <widget class="GtkVBox" id="vboxdownloads">
+                      <widget class="GtkVBox" id="downloadsvbox">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <child>
@@ -1318,11 +1316,10 @@
                       </packing>
                     </child>
                     <child>
-                      <widget class="Custom" id="DownloadsTabLabel">
+                      <widget class="GtkEventBox" id="DownloadsTabLabel">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="string1">vboxdownloads</property>
-                        <property name="string2">Downloads</property>
+                        <property name="visible_window">False</property>
                       </widget>
                       <packing>
                         <property name="position">2</property>
@@ -1331,7 +1328,7 @@
                       </packing>
                     </child>
                     <child>
-                      <widget class="GtkVBox" id="vboxuploads">
+                      <widget class="GtkVBox" id="uploadsvbox">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <child>
@@ -1783,11 +1780,10 @@
                       </packing>
                     </child>
                     <child>
-                      <widget class="Custom" id="UploadsTabLabel">
+                      <widget class="GtkEventBox" id="UploadsTabLabel">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="string1">vboxuploads</property>
-                        <property name="string2">Uploads</property>
+                        <property name="visible_window">False</property>
                       </widget>
                       <packing>
                         <property name="position">3</property>
@@ -2050,11 +2046,10 @@
                       </packing>
                     </child>
                     <child>
-                      <widget class="Custom" id="SearchTabLabel">
+                      <widget class="GtkEventBox" id="SearchTabLabel">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="string1">searchvbox</property>
-                        <property name="string2">Search files</property>
+                        <property name="visible_window">False</property>
                       </widget>
                       <packing>
                         <property name="position">4</property>
@@ -2205,11 +2200,10 @@
                       </packing>
                     </child>
                     <child>
-                      <widget class="Custom" id="UserInfoTabLabel">
+                      <widget class="GtkEventBox" id="UserInfoTabLabel">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="string1">userinfovbox</property>
-                        <property name="string2">User info</property>
+                        <property name="visible_window">False</property>
                       </widget>
                       <packing>
                         <property name="position">5</property>
@@ -2413,11 +2407,10 @@
                       </packing>
                     </child>
                     <child>
-                      <widget class="Custom" id="UserBrowseTabLabel">
+                      <widget class="GtkEventBox" id="UserBrowseTabLabel">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="string1">userbrowsevbox</property>
-                        <property name="string2">User browse</property>
+                        <property name="visible_window">False</property>
                       </widget>
                       <packing>
                         <property name="position">6</property>
@@ -2426,7 +2419,7 @@
                       </packing>
                     </child>
                     <child>
-                      <widget class="GtkVBox" id="interests">
+                      <widget class="GtkVBox" id="interestsvbox">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="border_width">10</property>
@@ -2948,11 +2941,10 @@
                       </packing>
                     </child>
                     <child>
-                      <widget class="Custom" id="InterestsTabLabel">
+                      <widget class="GtkEventBox" id="InterestsTabLabel">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="string1">interests</property>
-                        <property name="string2">Interests</property>
+                        <property name="visible_window">False</property>
                       </widget>
                       <packing>
                         <property name="position">7</property>

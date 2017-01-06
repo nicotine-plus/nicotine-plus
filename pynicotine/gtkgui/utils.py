@@ -409,6 +409,7 @@ def AppendLine(textview, line, tag=None, timestamp=None, showstamp=True, timesta
 class ImageLabel(gtk.HBox):
 
     def __init__(self, label="", image=None, onclose=None, closebutton=False, angle=0, show_image=True, statusimage=None, show_status_image=False):
+
         gtk.HBox.__init__(self)
 
         self.closebutton = closebutton

@@ -230,7 +230,7 @@ class RoomsControl:
 
     def OnSwitchPage(self, notebook, page, page_num, force=0):
 
-        if self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.hpaned1) and not force:
+        if self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.chathbox) and not force:
             return
 
         page = notebook.get_nth_page(page_num)
@@ -244,7 +244,7 @@ class RoomsControl:
 
     def ClearNotifications(self):
 
-        if self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.hpaned1):
+        if self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.chathbox):
             return
 
         page = self.ChatNotebook.get_nth_page(self.ChatNotebook.get_current_page())
@@ -1403,7 +1403,7 @@ class ChatRoom:
 
                     # add hilite to trayicon
                     if self.roomsctrl.ChatNotebook.get_current_page() != self.roomsctrl.ChatNotebook.page_num(self.roomsctrl.joinedrooms[self.room].Main) or \
-                       self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.hpaned1) or \
+                       self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.chathbox) or \
                        not self.frame.is_mapped:
                         if self.room not in self.frame.TrayApp.tray_status["hilites"]["rooms"]:
                             self.frame.Notifications.Add("rooms", user, self.room, tab=True)

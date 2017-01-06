@@ -1210,7 +1210,7 @@ class Transfers:
 
         frame = self.eventprocessor.frame
 
-        if frame.MainNotebook.get_current_page() == frame.MainNotebook.page_num(frame.vboxdownloads):
+        if frame.MainNotebook.get_current_page() == frame.MainNotebook.page_num(frame.downloadsvbox):
             return
 
         tablabel = frame.GetTabLabel(frame.DownloadsTabLabel)
@@ -1223,7 +1223,7 @@ class Transfers:
 
         frame = self.eventprocessor.frame
 
-        if frame.MainNotebook.get_current_page() == frame.MainNotebook.page_num(frame.vboxuploads):
+        if frame.MainNotebook.get_current_page() == frame.MainNotebook.page_num(frame.uploadsvbox):
             return
 
         tablabel = frame.GetTabLabel(frame.UploadsTabLabel)

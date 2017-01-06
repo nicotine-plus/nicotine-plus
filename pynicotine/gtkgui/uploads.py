@@ -39,7 +39,7 @@ class Uploads(TransferList):
     def __init__(self, frame):
 
         TransferList.__init__(self, frame, frame.UploadList)
-        self.myvbox = self.frame.vboxuploads
+        self.myvbox = self.frame.uploadsvbox
         self.frame.UploadList.set_property("rules-hint", True)
         self.popup_menu2 = popup2 = PopupMenu(frame)
         popup2.setup(
