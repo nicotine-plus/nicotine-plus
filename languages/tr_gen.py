@@ -54,19 +54,12 @@ def isPythonScript(dir, file):
     return None
 
 
-def isGlade(dir, file):
-    if file.rsplit(".")[-1].lower() in ("glade"):
-        return dir + file
-    return None
-
-
 def isBuilder(dir, file):
     if file.rsplit(".")[-1].lower() in ("ui"):
         return dir + file
     return None
 
 pythonscripts = []
-gladescripts = []
 builderscripts = []
 
 for dir, files in files.items():
@@ -76,10 +69,6 @@ for dir, files in files.items():
         ispy = isPythonScript(dir, file)
         if ispy is not None:
             pythonscripts.append(ispy)
-
-        isglade = isGlade(dir, file)
-        if isglade is not None:
-            gladescripts.append(isglade)
 
         isbuilder = isBuilder(dir, file)
         if isbuilder is not None:
@@ -108,16 +97,6 @@ print "\nGenerating nicotine-python.pot ...\n"
 print "xgettext --no-location -o nicotine-python.pot %s" % goodpython
 r = system("xgettext --no-location -o nicotine-python.pot %s" % goodpython)
 
-# Add glade files
-print "\nGenerating nicotine-glade.pot ...\n"
-
-gladestring = ""
-for path in gladescripts[:]:
-    gladestring += path + " "
-
-print "xgettext --no-location -L Glade -o nicotine-glade.pot %s" % gladestring
-r = system("xgettext --no-location -L Glade -o nicotine-glade.pot %s" % gladestring)
-
 # Add builder files
 print "\nGenerating nicotine-builder.pot ...\n"
 
@@ -131,12 +110,11 @@ r = system("xgettext --no-location -o nicotine-builder.pot %s" % builderstring)
 # Concat every files
 print "\nGenerating nicotine.pot ...\n"
 
-r = system("msgcat nicotine-launcher.pot nicotine-builder.pot nicotine-glade.pot nicotine-python.pot -o nicotine.pot")
+r = system("msgcat nicotine-launcher.pot nicotine-builder.pot nicotine-python.pot -o nicotine.pot")
 
 if r:
     print "Error while creating nicotine.pot"
 else:
     remove('nicotine-launcher.pot')
     remove('nicotine-builder.pot')
-    remove('nicotine-glade.pot')
     remove('nicotine-python.pot')

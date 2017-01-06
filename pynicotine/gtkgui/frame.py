@@ -26,7 +26,6 @@
 import os
 import gettext
 import gtk
-import gtk.glade
 
 from pynicotine.utils import ApplyTranslation
 from tempfile import gettempdir

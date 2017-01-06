@@ -10,9 +10,6 @@ added_files = [
     # Application core modules
     #
 
-    # Glade files
-    ('../pynicotine/gtkgui/*.glade', 'pynicotine/gtkgui'),
-
     # GTK Builder files
     ('../pynicotine/gtkgui/ui/*.ui', 'pynicotine/gtkgui/ui'),
 

@@ -88,7 +88,7 @@ def _putenv_win(name, value):
 
 
 def SetLocaleEnv(lang=None):
-    """Function to set locale used by gettext and glade.
+    """Function to set locale used by gettext.
 
     We try to autodetect the locale if the user don't specify a language
     we can derived the locale from.
@@ -133,8 +133,7 @@ def SetLocaleEnv(lang=None):
         # If a lang is provided
         if win32:
 
-            # On Windows we normalize the language in unix format
-            # for env variables used by glade
+            # On Windows we normalize the language in unix format for env variables
             wanted_lang = locale.normalize(lang).split('.')[0]
 
             # Fix environnement variables

@@ -207,8 +207,7 @@ class Searches(IconNotebook):
     def LoadConfig(self):
         """
         Add search history to SearchEntryCombo later and connect Wishlist,
-        after widgets have been created by glade. (doing this in __init__ causes tracebacks
-        during import with gtk.glade.XML in frame.py)
+        after widgets have been created.
         """
         items = self.frame.np.config.sections["searches"]["history"]
         templist = []
