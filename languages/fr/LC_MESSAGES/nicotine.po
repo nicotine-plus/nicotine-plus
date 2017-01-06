@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nicotine\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-02 20:11+0100\n"
-"PO-Revision-Date: 2017-01-02 20:16+0100\n"
+"POT-Creation-Date: 2017-01-06 22:28+0100\n"
+"PO-Revision-Date: 2017-01-06 22:29+0100\n"
 "Last-Translator: Michael LABOUEBE <gfarmerfr@free.fr>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -132,8 +132,8 @@ msgstr ""
 "Des erreurs sont survenues lors de la tentative de renommage du processus:"
 
 #, python-format
-msgid "Starting using the profiler (saving log to %s)"
-msgstr "Début d'utilisation du traceur (enregistre les journaux dans %s)"
+msgid "Starting using the profiler (saving dump to %s)"
+msgstr "Début d'utilisation du traceur (enregistre les traces dans %s)"
 
 msgid "Buddy List"
 msgstr "Liste des amis"
@@ -311,6 +311,291 @@ msgstr "\t"
 msgid "Summary (page %(page)s of %(pages)s)"
 msgstr "Sommaire (page %(page)s sur %(pages)s)"
 
+msgid "Nicotine+"
+msgstr "Nicotine+"
+
+msgid "_File"
+msgstr "_Fichier"
+
+msgid "_Connect"
+msgstr "Se _connecter"
+
+msgid "_Disconnect"
+msgstr "Se _déconnecter"
+
+msgid "_Away/Return"
+msgstr "_Absent/De retour"
+
+msgid "Check _privileges"
+msgstr "Vérifier ses _privilèges"
+
+msgid "_Quit"
+msgstr "_Quitter"
+
+msgid "_Edit"
+msgstr "_Edition"
+
+msgid "_Settings"
+msgstr "_Préférences"
+
+msgid "_Fast Configure"
+msgstr "Configuration _Rapide"
+
+msgid "Configure _Now Playing"
+msgstr "Configurer le _Now Playing"
+
+msgid "_Backup Config"
+msgstr "Sauvegarder la _configuration"
+
+msgid "_View"
+msgstr "_Affichage"
+
+msgid "Show _log window"
+msgstr "Montrer _la fenêtre des messages"
+
+msgid "Show _debug info"
+msgstr "Montrer les informations de _débogage"
+
+msgid "Show _room list"
+msgstr "Montrer la liste des _salons"
+
+msgid "Show _tickers"
+msgstr "Mon_trer les messages défilants"
+
+msgid "Show _chat room log and list toggles"
+msgstr "Montrer les boutons _supplémentaires des salons"
+
+msgid "Show _flag columns in user lists"
+msgstr "Montrer les _drapeaux dans la liste des utilisateurs"
+
+msgid "Buddylist in separate tab"
+msgstr "Liste des amis dans un onglet séparé"
+
+msgid "Buddylist in Chatrooms"
+msgstr "Liste des amis dans les salons de discussion"
+
+msgid "Buddylist always visible"
+msgstr "Liste des amis toujours visible"
+
+msgid "_Shares"
+msgstr "_Partages"
+
+msgid "_Configure shares"
+msgstr "_Configuration des partages"
+
+msgid "_Rescan Public shares"
+msgstr "_Réexaminer mes partages public"
+
+msgid "Rescan B_uddy shares"
+msgstr "Réexaminer mes partages pour _amis"
+
+msgid "Re_build Public shares"
+msgstr "Reconstruire mes _partages public"
+
+msgid "Rebuild Bu_ddy shares"
+msgstr "Reconstruire mes partages pour a_mis"
+
+msgid "_Browse Public shares"
+msgstr "_Voir mes partages public"
+
+msgid "Bro_wse Buddy shares"
+msgstr "V_oir mes partages pour amis"
+
+msgid "_Modes"
+msgstr "_Onglets"
+
+msgid "_Chat Rooms"
+msgstr "_Discussions"
+
+msgid "_Private Chat"
+msgstr "Dialogues _privés"
+
+msgid "_Downloads"
+msgstr "_Téléchargements"
+
+msgid "_Uploads"
+msgstr "_Envois"
+
+msgid "_Search Files"
+msgstr "_Recherche de fichiers"
+
+msgid "User I_nfo"
+msgstr "Informations _utilisateur"
+
+msgid "User _Browse"
+msgstr "_Fichiers partagés"
+
+msgid "_Interests"
+msgstr "_Centres d'intérêts"
+
+msgid "Buddy _List"
+msgstr "_Amis"
+
+msgid "_Help"
+msgstr "A_ide"
+
+msgid "_Offline Nicotine+ Guide"
+msgstr "Guide de Nicotine+ _hors ligne"
+
+msgid "Project _Website"
+msgstr "Site _internet du projet"
+
+msgid "Project _Github Page"
+msgstr "Page _Github du projet"
+
+msgid "About _chat room commands"
+msgstr "Commandes des salons de _discussion"
+
+msgid "About _private chat commands"
+msgstr "Commandes des dialogues _privés"
+
+msgid "About _optional dependencies"
+msgstr "Dépendances _optionnelles"
+
+msgid "About _search filters"
+msgstr "_Filtres de recherche"
+
+msgid "Check _latest"
+msgstr "Vérifier la dernière _version"
+
+msgid "Report a _bug"
+msgstr "Rapporter un _bogue"
+
+msgid "About _Nicotine+"
+msgstr "À propos de _Nicotine+"
+
+msgid "Start Message"
+msgstr "Commencer un dialogue"
+
+msgid "Configure logging"
+msgstr "Configurer l'enregistrement des messages"
+
+msgid "Users: 0"
+msgstr "Utilisateurs: 0"
+
+msgid "Files: 0"
+msgstr "Fichiers: 0"
+
+msgid "Expand / Collapse all"
+msgstr "Minimiser / Maximiser"
+
+msgid "Group by Users"
+msgstr "Grouper par utilisateurs"
+
+msgid "Auto-retry failed"
+msgstr "Retenter les fichiers en erreur"
+
+msgid "Every 3 minutes"
+msgstr "Toutes les 3 minutes"
+
+msgid "Configure downloads"
+msgstr "Configuration des téléchargements"
+
+msgid "Clear Finished / Aborted"
+msgstr "Enlever les fichiers terminés/annulés"
+
+msgid "Clear Queued"
+msgstr "Enlever les fichiers en attente"
+
+msgid "Retry"
+msgstr "Réessayer"
+
+msgid "Abort"
+msgstr "Annuler"
+
+msgid "Abort & Delete"
+msgstr "Annuler et effacer"
+
+msgid "Ban User(s)"
+msgstr "Bannir ce(s) utilisateur(s)"
+
+msgid "Autoclear Finished"
+msgstr "Enlever les fichiers terminés"
+
+msgid "Configure uploads"
+msgstr "Configuration des envois"
+
+msgid "Clear Finished / Failed"
+msgstr "Enlever terminés/en erreur"
+
+msgid "Abort User's Upload(s)"
+msgstr "Annuler tout envoi de l'utilisateur"
+
+msgid "WishList"
+msgstr "Liste des souhaits"
+
+msgid "Search patterns: with a word = term, without a word = -term"
+msgstr "Syntaxe de recherche: trouver un mot = terme, exclure un mot = -terme"
+
+msgid "Clear all searches attempts"
+msgstr "Nettoyer toutes les tentatives de recherche"
+
+msgid "Search"
+msgstr "Recherche"
+
+msgid "Search scope"
+msgstr "Portée de la recherche:"
+
+msgid "Configure searches"
+msgstr "Configuration des recherches"
+
+msgid "Get Userinfo"
+msgstr "Voir les infos de l'utilisateur"
+
+msgid "Configure user info"
+msgstr "Configurer ses i_nformations personnelles"
+
+msgid "Browse Shares"
+msgstr "Voir les partages"
+
+msgid "Load From Disk"
+msgstr "Charger à partir du disque"
+
+msgid "Configure shares"
+msgstr "Configuration des partages"
+
+msgid "Similar users"
+msgstr "Utilisateurs semblables"
+
+msgid "Recommendations"
+msgstr "Recommandations"
+
+msgid "Global recommendations"
+msgstr "Recommandations globales"
+
+msgid "Add"
+msgstr "Ajouter"
+
+msgid "Unrecommendations"
+msgstr "Déconseillés"
+
+msgid "Debug output:"
+msgstr "Sortie de débogage"
+
+msgid "Warnings"
+msgstr "Mises en garde"
+
+msgid "Search results"
+msgstr "Résultats des recherches"
+
+msgid "Connections"
+msgstr "Connexions"
+
+msgid "Messages"
+msgstr "Messages"
+
+msgid "Transfers"
+msgstr "Transferts"
+
+msgid "Statistics"
+msgstr "Statistiques"
+
+msgid "Scanning Buddy Shares"
+msgstr "Examen des partages pour amis"
+
+msgid "Scanning Shares"
+msgstr "Examen des partages"
+
 msgid "Nicotine+: Configure Now Playing"
 msgstr "Nicotine+ Configurer le Now Playing"
 
@@ -394,20 +679,11 @@ msgstr "Cacher la liste des salons"
 msgid "Search: "
 msgstr "Recherche:"
 
-msgid "Search"
-msgstr "Recherche"
-
 msgid "Query"
 msgstr "Requête"
 
 msgid "Results: 0/0"
 msgstr "Résultats: 0/0"
-
-msgid "Expand / Collapse all"
-msgstr "Minimiser / Maximiser"
-
-msgid "Group by Users"
-msgstr "Grouper par utilisateurs"
 
 msgid "Enable filters"
 msgstr "Activer les filtres"
@@ -540,15 +816,6 @@ msgstr "Police des partages utilisateurs:"
 
 msgid "Decimal separator:"
 msgstr "Séparateur des décimales:"
-
-msgid "Translate to another language"
-msgstr "Traduire en une autre langue"
-
-msgid "Loading translations requires a restart"
-msgstr "Charger une traduction impose un redémarage"
-
-msgid "<b>Language</b>"
-msgstr "<b>Langue</b>"
 
 msgid "Extra stuff for your comfort"
 msgstr "Options supplémentaires"
@@ -800,12 +1067,6 @@ msgstr "Envoyer au lecteur multimédia"
 
 msgid "Open Directory"
 msgstr "Ouvrir le répertoire"
-
-msgid "Abort"
-msgstr "Annuler"
-
-msgid "Retry"
-msgstr "Réessayer"
 
 msgid "Events"
 msgstr "Événements"
@@ -1280,9 +1541,6 @@ msgid "Audio Player Command ($ for filename):"
 msgstr ""
 "Commande pour le lecteur audio ($ sera remplacé par le nom du fichier):"
 
-msgid "Transfers"
-msgstr "Transferts"
-
 msgid "Upload directory:"
 msgstr "Répertoire des envois:"
 
@@ -1399,9 +1657,6 @@ msgstr ""
 "$ sera remplacé par le lien hypertexte, ne pas remplir l'option pour "
 "utiliser le navigateur par défaut."
 
-msgid "Add"
-msgstr "Ajouter"
-
 msgid "Handler:"
 msgstr "Logiciel:"
 
@@ -1491,270 +1746,6 @@ msgstr "Ajouter à la liste"
 
 msgid "Save pic"
 msgstr "Sauver l'image"
-
-msgid "Nicotine+"
-msgstr "Nicotine+"
-
-msgid "_File"
-msgstr "_Fichier"
-
-msgid "_Connect"
-msgstr "Se _connecter"
-
-msgid "_Disconnect"
-msgstr "Se _déconnecter"
-
-msgid "_Away/Return"
-msgstr "_Absent/De retour"
-
-msgid "Check _privileges"
-msgstr "Vérifier ses _privilèges"
-
-msgid "_Quit"
-msgstr "_Quitter"
-
-msgid "_Edit"
-msgstr "_Edition"
-
-msgid "_Settings"
-msgstr "_Préférences"
-
-msgid "_Fast Configure"
-msgstr "Configuration _Rapide"
-
-msgid "Configure _Now Playing"
-msgstr "Configurer le _Now Playing"
-
-msgid "_Backup Config"
-msgstr "Sauvegarder la _configuration"
-
-msgid "_View"
-msgstr "_Affichage"
-
-msgid "Show _log window"
-msgstr "Montrer _la fenêtre des messages"
-
-msgid "Show _debug info"
-msgstr "Montrer les informations de _débogage"
-
-msgid "Show _room list"
-msgstr "Montrer la liste des _salons"
-
-msgid "Show _tickers"
-msgstr "Mon_trer les messages défilants"
-
-msgid "Show _chat room log and list toggles"
-msgstr "Montrer les boutons _supplémentaires des salons"
-
-msgid "Show _flag columns in user lists"
-msgstr "Montrer les _drapeaux dans la liste des utilisateurs"
-
-msgid "Buddylist in separate tab"
-msgstr "Liste des amis dans un onglet séparé"
-
-msgid "Buddylist in Chatrooms"
-msgstr "Liste des amis dans les salons de discussion"
-
-msgid "Buddylist always visible"
-msgstr "Liste des amis toujours visible"
-
-msgid "_Shares"
-msgstr "_Partages"
-
-msgid "_Configure shares"
-msgstr "_Configuration des partages"
-
-msgid "_Rescan Public shares"
-msgstr "_Réexaminer mes partages public"
-
-msgid "Rescan B_uddy shares"
-msgstr "Réexaminer mes partages pour _amis"
-
-msgid "Re_build Public shares"
-msgstr "Reconstruire mes _partages public"
-
-msgid "Rebuild Bu_ddy shares"
-msgstr "Reconstruire mes partages pour a_mis"
-
-msgid "_Browse Public shares"
-msgstr "_Voir mes partages public"
-
-msgid "Bro_wse Buddy shares"
-msgstr "V_oir mes partages pour amis"
-
-msgid "_Modes"
-msgstr "_Onglets"
-
-msgid "_Chat Rooms"
-msgstr "_Discussions"
-
-msgid "_Private Chat"
-msgstr "Dialogues _privés"
-
-msgid "_Downloads"
-msgstr "_Téléchargements"
-
-msgid "_Uploads"
-msgstr "_Envois"
-
-msgid "_Search Files"
-msgstr "_Recherche de fichiers"
-
-msgid "User I_nfo"
-msgstr "Informations _utilisateur"
-
-msgid "User _Browse"
-msgstr "_Fichiers partagés"
-
-msgid "_Interests"
-msgstr "_Centres d'intérêts"
-
-msgid "Buddy _List"
-msgstr "_Amis"
-
-msgid "_Help"
-msgstr "A_ide"
-
-msgid "_Offline Nicotine+ Guide"
-msgstr "Guide de Nicotine+ _hors ligne"
-
-msgid "Project _Website"
-msgstr "Site _internet du projet"
-
-msgid "Project _Github Page"
-msgstr "Page _Github du projet"
-
-msgid "About _chat room commands"
-msgstr "Commandes des salons de _discussion"
-
-msgid "About _private chat commands"
-msgstr "Commandes des dialogues _privés"
-
-msgid "About _optional dependencies"
-msgstr "Dépendances _optionnelles"
-
-msgid "About _search filters"
-msgstr "_Filtres de recherche"
-
-msgid "Check _latest"
-msgstr "Vérifier la dernière _version"
-
-msgid "Report a _bug"
-msgstr "Rapporter un _bogue"
-
-msgid "About _Nicotine+"
-msgstr "À propos de _Nicotine+"
-
-msgid "Start Message"
-msgstr "Commencer un dialogue"
-
-msgid "Configure logging"
-msgstr "Configurer l'enregistrement des messages"
-
-msgid "Users: 0"
-msgstr "Utilisateurs: 0"
-
-msgid "Files: 0"
-msgstr "Fichiers: 0"
-
-msgid "Auto-retry failed"
-msgstr "Retenter les fichiers en erreur"
-
-msgid "Every 3 minutes"
-msgstr "Toutes les 3 minutes"
-
-msgid "Configure downloads"
-msgstr "Configuration des téléchargements"
-
-msgid "Clear Finished / Aborted"
-msgstr "Enlever les fichiers terminés/annulés"
-
-msgid "Clear Queued"
-msgstr "Enlever les fichiers en attente"
-
-msgid "Abort & Delete"
-msgstr "Annuler et effacer"
-
-msgid "Ban User(s)"
-msgstr "Bannir ce(s) utilisateur(s)"
-
-msgid "Autoclear Finished"
-msgstr "Enlever les fichiers terminés"
-
-msgid "Configure uploads"
-msgstr "Configuration des envois"
-
-msgid "Clear Finished / Failed"
-msgstr "Enlever terminés/en erreur"
-
-msgid "Abort User's Upload(s)"
-msgstr "Annuler tout envoi de l'utilisateur"
-
-msgid "WishList"
-msgstr "Liste des souhaits"
-
-msgid "Search patterns: with a word = term, without a word = -term"
-msgstr "Syntaxe de recherche: trouver un mot = terme, exclure un mot = -terme"
-
-msgid "Clear all searches attempts"
-msgstr "Nettoyer toutes les tentatives de recherche"
-
-msgid "Search scope"
-msgstr "Portée de la recherche:"
-
-msgid "Configure searches"
-msgstr "Configuration des recherches"
-
-msgid "Get Userinfo"
-msgstr "Voir les infos de l'utilisateur"
-
-msgid "Configure user info"
-msgstr "Configurer ses i_nformations personnelles"
-
-msgid "Browse Shares"
-msgstr "Voir les partages"
-
-msgid "Load From Disk"
-msgstr "Charger à partir du disque"
-
-msgid "Configure shares"
-msgstr "Configuration des partages"
-
-msgid "Similar users"
-msgstr "Utilisateurs semblables"
-
-msgid "Recommendations"
-msgstr "Recommandations"
-
-msgid "Global recommendations"
-msgstr "Recommandations globales"
-
-msgid "Unrecommendations"
-msgstr "Déconseillés"
-
-msgid "Debug output:"
-msgstr "Sortie de débogage"
-
-msgid "Warnings"
-msgstr "Mises en garde"
-
-msgid "Search results"
-msgstr "Résultats des recherches"
-
-msgid "Connections"
-msgstr "Connexions"
-
-msgid "Messages"
-msgstr "Messages"
-
-msgid "Statistics"
-msgstr "Statistiques"
-
-msgid "Scanning Buddy Shares"
-msgstr "Examen des partages pour amis"
-
-msgid "Scanning Shares"
-msgstr "Examen des partages"
 
 msgid "About Nicotine+"
 msgstr "À propos de Nicotine+"
@@ -2189,6 +2180,10 @@ msgid "Add as operator of %s"
 msgstr "Ajouter comme administrateur de %s"
 
 #, python-format
+msgid "Alias \"%s\" returned nothing"
+msgstr "L'alias \"%s\" n'as rien retourné"
+
+#, python-format
 msgid "Command %s is not recognized"
 msgstr "La commande %s n'est pas reconnue"
 
@@ -2426,6 +2421,19 @@ msgstr "Le nom virtuel choisi existe déjà"
 msgid "The chosen directory is already shared"
 msgstr "Le répertoire choisi est déjà partagé"
 
+msgid "Search files"
+msgstr "Recherche de fichiers"
+
+msgid "Uploads"
+msgstr "Envois"
+
+msgid "Interests"
+msgstr "Centres d'intérêts"
+
+#, python-format
+msgid "Hide %(tab)s"
+msgstr "Cacher %(tab)s"
+
 msgid "Joined Rooms "
 msgstr "Salons joints "
 
@@ -2437,15 +2445,6 @@ msgstr "Amis"
 
 msgid "Rooms"
 msgstr "Salons"
-
-msgid "Search files"
-msgstr "Recherche de fichiers"
-
-msgid "Uploads"
-msgstr "Envois"
-
-msgid "Interests"
-msgstr "Centres d'intérêts"
 
 msgid "Close Nicotine+?"
 msgstr "Fermer Nicotine+?"
@@ -2533,14 +2532,6 @@ msgstr "Entrer le nom de l'utilisateur dont vous souhaitez voir les fichiers:"
 #, python-format
 msgid "button_press error, %(error)s"
 msgstr "button_press error, %(error)s"
-
-#, python-format
-msgid "Hide %(tab)s"
-msgstr "Cacher %(tab)s"
-
-#, python-format
-msgid "(custom widget: %s)"
-msgstr "(widget perso: %s)"
 
 #, python-format
 msgid "Connecting to %(host)s:%(port)s"
@@ -3036,9 +3027,6 @@ msgstr "Choisir un répertoire pour le thème d'icônes"
 
 msgid "Pick a color, any color"
 msgstr "Choisissez une couleur, n'importe laquelle"
-
-msgid "Warning: Missing translation"
-msgstr "Attention: Traduction manquante"
 
 msgid "Choose a directory to save your log files"
 msgstr "Choisir un répertoire de sauvegarde des journalisations"
@@ -4258,7 +4246,3 @@ msgstr "Impossible de selectionner un IGD : %(error)s"
 msgid "Failed to find a suitable external WAN port, bailing out."
 msgstr ""
 "Impossible de trouver un port WAN externe disponible à rediriger, abandon."
-
-#, python-format
-msgid "Translation for '%s' not found."
-msgstr "Traduction pour '%s' non trouvée"

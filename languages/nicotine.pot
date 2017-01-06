@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-02 20:11+0100\n"
+"POT-Creation-Date: 2017-01-06 22:28+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -92,7 +92,7 @@ msgid "Errors occured while trying to change process name:"
 msgstr ""
 
 #, python-format
-msgid "Starting using the profiler (saving log to %s)"
+msgid "Starting using the profiler (saving dump to %s)"
 msgstr ""
 
 msgid "Buddy List"
@@ -246,6 +246,291 @@ msgstr ""
 msgid "Summary (page %(page)s of %(pages)s)"
 msgstr ""
 
+msgid "Nicotine+"
+msgstr ""
+
+msgid "_File"
+msgstr ""
+
+msgid "_Connect"
+msgstr ""
+
+msgid "_Disconnect"
+msgstr ""
+
+msgid "_Away/Return"
+msgstr ""
+
+msgid "Check _privileges"
+msgstr ""
+
+msgid "_Quit"
+msgstr ""
+
+msgid "_Edit"
+msgstr ""
+
+msgid "_Settings"
+msgstr ""
+
+msgid "_Fast Configure"
+msgstr ""
+
+msgid "Configure _Now Playing"
+msgstr ""
+
+msgid "_Backup Config"
+msgstr ""
+
+msgid "_View"
+msgstr ""
+
+msgid "Show _log window"
+msgstr ""
+
+msgid "Show _debug info"
+msgstr ""
+
+msgid "Show _room list"
+msgstr ""
+
+msgid "Show _tickers"
+msgstr ""
+
+msgid "Show _chat room log and list toggles"
+msgstr ""
+
+msgid "Show _flag columns in user lists"
+msgstr ""
+
+msgid "Buddylist in separate tab"
+msgstr ""
+
+msgid "Buddylist in Chatrooms"
+msgstr ""
+
+msgid "Buddylist always visible"
+msgstr ""
+
+msgid "_Shares"
+msgstr ""
+
+msgid "_Configure shares"
+msgstr ""
+
+msgid "_Rescan Public shares"
+msgstr ""
+
+msgid "Rescan B_uddy shares"
+msgstr ""
+
+msgid "Re_build Public shares"
+msgstr ""
+
+msgid "Rebuild Bu_ddy shares"
+msgstr ""
+
+msgid "_Browse Public shares"
+msgstr ""
+
+msgid "Bro_wse Buddy shares"
+msgstr ""
+
+msgid "_Modes"
+msgstr ""
+
+msgid "_Chat Rooms"
+msgstr ""
+
+msgid "_Private Chat"
+msgstr ""
+
+msgid "_Downloads"
+msgstr ""
+
+msgid "_Uploads"
+msgstr ""
+
+msgid "_Search Files"
+msgstr ""
+
+msgid "User I_nfo"
+msgstr ""
+
+msgid "User _Browse"
+msgstr ""
+
+msgid "_Interests"
+msgstr ""
+
+msgid "Buddy _List"
+msgstr ""
+
+msgid "_Help"
+msgstr ""
+
+msgid "_Offline Nicotine+ Guide"
+msgstr ""
+
+msgid "Project _Website"
+msgstr ""
+
+msgid "Project _Github Page"
+msgstr ""
+
+msgid "About _chat room commands"
+msgstr ""
+
+msgid "About _private chat commands"
+msgstr ""
+
+msgid "About _optional dependencies"
+msgstr ""
+
+msgid "About _search filters"
+msgstr ""
+
+msgid "Check _latest"
+msgstr ""
+
+msgid "Report a _bug"
+msgstr ""
+
+msgid "About _Nicotine+"
+msgstr ""
+
+msgid "Start Message"
+msgstr ""
+
+msgid "Configure logging"
+msgstr ""
+
+msgid "Users: 0"
+msgstr ""
+
+msgid "Files: 0"
+msgstr ""
+
+msgid "Expand / Collapse all"
+msgstr ""
+
+msgid "Group by Users"
+msgstr ""
+
+msgid "Auto-retry failed"
+msgstr ""
+
+msgid "Every 3 minutes"
+msgstr ""
+
+msgid "Configure downloads"
+msgstr ""
+
+msgid "Clear Finished / Aborted"
+msgstr ""
+
+msgid "Clear Queued"
+msgstr ""
+
+msgid "Retry"
+msgstr ""
+
+msgid "Abort"
+msgstr ""
+
+msgid "Abort & Delete"
+msgstr ""
+
+msgid "Ban User(s)"
+msgstr ""
+
+msgid "Autoclear Finished"
+msgstr ""
+
+msgid "Configure uploads"
+msgstr ""
+
+msgid "Clear Finished / Failed"
+msgstr ""
+
+msgid "Abort User's Upload(s)"
+msgstr ""
+
+msgid "WishList"
+msgstr ""
+
+msgid "Search patterns: with a word = term, without a word = -term"
+msgstr ""
+
+msgid "Clear all searches attempts"
+msgstr ""
+
+msgid "Search"
+msgstr ""
+
+msgid "Search scope"
+msgstr ""
+
+msgid "Configure searches"
+msgstr ""
+
+msgid "Get Userinfo"
+msgstr ""
+
+msgid "Configure user info"
+msgstr ""
+
+msgid "Browse Shares"
+msgstr ""
+
+msgid "Load From Disk"
+msgstr ""
+
+msgid "Configure shares"
+msgstr ""
+
+msgid "Similar users"
+msgstr ""
+
+msgid "Recommendations"
+msgstr ""
+
+msgid "Global recommendations"
+msgstr ""
+
+msgid "Add"
+msgstr ""
+
+msgid "Unrecommendations"
+msgstr ""
+
+msgid "Debug output:"
+msgstr ""
+
+msgid "Warnings"
+msgstr ""
+
+msgid "Search results"
+msgstr ""
+
+msgid "Connections"
+msgstr ""
+
+msgid "Messages"
+msgstr ""
+
+msgid "Transfers"
+msgstr ""
+
+msgid "Statistics"
+msgstr ""
+
+msgid "Scanning Buddy Shares"
+msgstr ""
+
+msgid "Scanning Shares"
+msgstr ""
+
 msgid "Nicotine+: Configure Now Playing"
 msgstr ""
 
@@ -325,19 +610,10 @@ msgstr ""
 msgid "Search: "
 msgstr ""
 
-msgid "Search"
-msgstr ""
-
 msgid "Query"
 msgstr ""
 
 msgid "Results: 0/0"
-msgstr ""
-
-msgid "Expand / Collapse all"
-msgstr ""
-
-msgid "Group by Users"
 msgstr ""
 
 msgid "Enable filters"
@@ -462,15 +738,6 @@ msgid "Browse Font:"
 msgstr ""
 
 msgid "Decimal separator:"
-msgstr ""
-
-msgid "Translate to another language"
-msgstr ""
-
-msgid "Loading translations requires a restart"
-msgstr ""
-
-msgid "<b>Language</b>"
 msgstr ""
 
 msgid "Extra stuff for your comfort"
@@ -703,12 +970,6 @@ msgid "Send to player"
 msgstr ""
 
 msgid "Open Directory"
-msgstr ""
-
-msgid "Abort"
-msgstr ""
-
-msgid "Retry"
 msgstr ""
 
 msgid "Events"
@@ -1150,9 +1411,6 @@ msgstr ""
 msgid "Audio Player Command ($ for filename):"
 msgstr ""
 
-msgid "Transfers"
-msgstr ""
-
 msgid "Upload directory:"
 msgstr ""
 
@@ -1256,9 +1514,6 @@ msgid ""
 "Protocols handlers: "
 msgstr ""
 
-msgid "Add"
-msgstr ""
-
 msgid "Handler:"
 msgstr ""
 
@@ -1347,270 +1602,6 @@ msgid "Add to list"
 msgstr ""
 
 msgid "Save pic"
-msgstr ""
-
-msgid "Nicotine+"
-msgstr ""
-
-msgid "_File"
-msgstr ""
-
-msgid "_Connect"
-msgstr ""
-
-msgid "_Disconnect"
-msgstr ""
-
-msgid "_Away/Return"
-msgstr ""
-
-msgid "Check _privileges"
-msgstr ""
-
-msgid "_Quit"
-msgstr ""
-
-msgid "_Edit"
-msgstr ""
-
-msgid "_Settings"
-msgstr ""
-
-msgid "_Fast Configure"
-msgstr ""
-
-msgid "Configure _Now Playing"
-msgstr ""
-
-msgid "_Backup Config"
-msgstr ""
-
-msgid "_View"
-msgstr ""
-
-msgid "Show _log window"
-msgstr ""
-
-msgid "Show _debug info"
-msgstr ""
-
-msgid "Show _room list"
-msgstr ""
-
-msgid "Show _tickers"
-msgstr ""
-
-msgid "Show _chat room log and list toggles"
-msgstr ""
-
-msgid "Show _flag columns in user lists"
-msgstr ""
-
-msgid "Buddylist in separate tab"
-msgstr ""
-
-msgid "Buddylist in Chatrooms"
-msgstr ""
-
-msgid "Buddylist always visible"
-msgstr ""
-
-msgid "_Shares"
-msgstr ""
-
-msgid "_Configure shares"
-msgstr ""
-
-msgid "_Rescan Public shares"
-msgstr ""
-
-msgid "Rescan B_uddy shares"
-msgstr ""
-
-msgid "Re_build Public shares"
-msgstr ""
-
-msgid "Rebuild Bu_ddy shares"
-msgstr ""
-
-msgid "_Browse Public shares"
-msgstr ""
-
-msgid "Bro_wse Buddy shares"
-msgstr ""
-
-msgid "_Modes"
-msgstr ""
-
-msgid "_Chat Rooms"
-msgstr ""
-
-msgid "_Private Chat"
-msgstr ""
-
-msgid "_Downloads"
-msgstr ""
-
-msgid "_Uploads"
-msgstr ""
-
-msgid "_Search Files"
-msgstr ""
-
-msgid "User I_nfo"
-msgstr ""
-
-msgid "User _Browse"
-msgstr ""
-
-msgid "_Interests"
-msgstr ""
-
-msgid "Buddy _List"
-msgstr ""
-
-msgid "_Help"
-msgstr ""
-
-msgid "_Offline Nicotine+ Guide"
-msgstr ""
-
-msgid "Project _Website"
-msgstr ""
-
-msgid "Project _Github Page"
-msgstr ""
-
-msgid "About _chat room commands"
-msgstr ""
-
-msgid "About _private chat commands"
-msgstr ""
-
-msgid "About _optional dependencies"
-msgstr ""
-
-msgid "About _search filters"
-msgstr ""
-
-msgid "Check _latest"
-msgstr ""
-
-msgid "Report a _bug"
-msgstr ""
-
-msgid "About _Nicotine+"
-msgstr ""
-
-msgid "Start Message"
-msgstr ""
-
-msgid "Configure logging"
-msgstr ""
-
-msgid "Users: 0"
-msgstr ""
-
-msgid "Files: 0"
-msgstr ""
-
-msgid "Auto-retry failed"
-msgstr ""
-
-msgid "Every 3 minutes"
-msgstr ""
-
-msgid "Configure downloads"
-msgstr ""
-
-msgid "Clear Finished / Aborted"
-msgstr ""
-
-msgid "Clear Queued"
-msgstr ""
-
-msgid "Abort & Delete"
-msgstr ""
-
-msgid "Ban User(s)"
-msgstr ""
-
-msgid "Autoclear Finished"
-msgstr ""
-
-msgid "Configure uploads"
-msgstr ""
-
-msgid "Clear Finished / Failed"
-msgstr ""
-
-msgid "Abort User's Upload(s)"
-msgstr ""
-
-msgid "WishList"
-msgstr ""
-
-msgid "Search patterns: with a word = term, without a word = -term"
-msgstr ""
-
-msgid "Clear all searches attempts"
-msgstr ""
-
-msgid "Search scope"
-msgstr ""
-
-msgid "Configure searches"
-msgstr ""
-
-msgid "Get Userinfo"
-msgstr ""
-
-msgid "Configure user info"
-msgstr ""
-
-msgid "Browse Shares"
-msgstr ""
-
-msgid "Load From Disk"
-msgstr ""
-
-msgid "Configure shares"
-msgstr ""
-
-msgid "Similar users"
-msgstr ""
-
-msgid "Recommendations"
-msgstr ""
-
-msgid "Global recommendations"
-msgstr ""
-
-msgid "Unrecommendations"
-msgstr ""
-
-msgid "Debug output:"
-msgstr ""
-
-msgid "Warnings"
-msgstr ""
-
-msgid "Search results"
-msgstr ""
-
-msgid "Connections"
-msgstr ""
-
-msgid "Messages"
-msgstr ""
-
-msgid "Statistics"
-msgstr ""
-
-msgid "Scanning Buddy Shares"
-msgstr ""
-
-msgid "Scanning Shares"
 msgstr ""
 
 msgid "About Nicotine+"
@@ -1989,6 +1980,10 @@ msgid "Add as operator of %s"
 msgstr ""
 
 #, python-format
+msgid "Alias \"%s\" returned nothing"
+msgstr ""
+
+#, python-format
 msgid "Command %s is not recognized"
 msgstr ""
 
@@ -2218,6 +2213,19 @@ msgstr ""
 msgid "The chosen directory is already shared"
 msgstr ""
 
+msgid "Search files"
+msgstr ""
+
+msgid "Uploads"
+msgstr ""
+
+msgid "Interests"
+msgstr ""
+
+#, python-format
+msgid "Hide %(tab)s"
+msgstr ""
+
 msgid "Joined Rooms "
 msgstr ""
 
@@ -2228,15 +2236,6 @@ msgid "Buddies"
 msgstr ""
 
 msgid "Rooms"
-msgstr ""
-
-msgid "Search files"
-msgstr ""
-
-msgid "Uploads"
-msgstr ""
-
-msgid "Interests"
 msgstr ""
 
 msgid "Close Nicotine+?"
@@ -2319,14 +2318,6 @@ msgstr ""
 
 #, python-format
 msgid "button_press error, %(error)s"
-msgstr ""
-
-#, python-format
-msgid "Hide %(tab)s"
-msgstr ""
-
-#, python-format
-msgid "(custom widget: %s)"
 msgstr ""
 
 #, python-format
@@ -2801,9 +2792,6 @@ msgid "Choose an icon theme directory"
 msgstr ""
 
 msgid "Pick a color, any color"
-msgstr ""
-
-msgid "Warning: Missing translation"
 msgstr ""
 
 msgid "Choose a directory to save your log files"
@@ -3906,8 +3894,4 @@ msgid "Cannot select an IGD : %(error)s"
 msgstr ""
 
 msgid "Failed to find a suitable external WAN port, bailing out."
-msgstr ""
-
-#, python-format
-msgid "Translation for '%s' not found."
 msgstr ""
