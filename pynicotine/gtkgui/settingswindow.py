@@ -308,6 +308,7 @@ class DownloadsFrame(buildFrame):
         transfers = config["transfers"]
 
         self.p.SetWidgetsData(config, self.options)
+
         if transfers["incompletedir"]:
             self.ChooseIncompleteDir.set_current_folder(transfers["incompletedir"])
 
@@ -373,7 +374,6 @@ class DownloadsFrame(buildFrame):
         if dir_gio is not None:
 
             # Convert the gio.File to a string that can be displayed
-            self.incompletedir = dir_disp
             self.IncompleteDir.set_text(dir_disp)
 
     def OnChooseDownloadDir(self, widget):
@@ -391,7 +391,6 @@ class DownloadsFrame(buildFrame):
         if dir_gio is not None:
 
             # Set both the attribute and the text for the GtkEntry
-            self.downloaddir = dir_disp
             self.DownloadDir.set_text(dir_disp)
 
             # Get the transfers section
@@ -1107,7 +1106,6 @@ class TransfersFrame(buildFrame):
         if dir_gio is not None:
 
             # Convert the gio.File to a string that can be displayed
-            self.uploaddir = dir_disp
             self.UploadDir.set_text(dir_disp)
 
     def OnRemoteDownloads(self, widget):
@@ -2284,8 +2282,11 @@ class BloatFrame(buildFrame):
 class LogFrame(buildFrame):
 
     def __init__(self, parent):
+
         self.p = parent
+
         buildFrame.__init__(self, "LogFrame")
+
         self.options = {
             "logging": {
                 "privatechat": self.LogPrivate,
@@ -2308,9 +2309,20 @@ class LogFrame(buildFrame):
         }
 
     def SetSettings(self, config):
+
         self.p.SetWidgetsData(config, self.options)
 
+        if config["logging"]["logsdir"]:
+            self.ChooseLogDir.set_current_folder(config["logging"]["logsdir"])
+
+        if config["logging"]["roomlogsdir"]:
+            self.ChooseRoomLogDir.set_current_folder(config["logging"]["roomlogsdir"])
+
+        if config["logging"]["privatelogsdir"]:
+            self.ChoosePrivateLogDir.set_current_folder(config["logging"]["privatelogsdir"])
+
     def GetSettings(self):
+
         return {
             "logging": {
                 "privatechat": self.LogPrivate.get_active(),
@@ -2334,39 +2346,45 @@ class LogFrame(buildFrame):
 
     def OnChooseLogDir(self, widget):
 
-        dir = ChooseDir(
-            self.Main.get_toplevel(),
-            self.LogDir.get_text(),
-            title=_("Nicotine+") + ": " + _("Choose a directory to save your log files")
-        )
+        # Get a gio.File object from gtk.FileChooser
+        dir_gio = self.ChooseLogDir.get_file()
 
-        if dir is not None:
-            for directory in dir:  # iterate over selected files
-                self.LogDir.set_text(recode(directory))
+        # Convert the gio.File to a string that can be displayed
+        # and stored in the config file
+        dir_disp = dir_gio.get_path()
+
+        if dir_gio is not None:
+
+            # Convert the gio.File to a string that can be displayed
+            self.LogDir.set_text(dir_disp)
 
     def OnChooseRoomLogDir(self, widget):
 
-        dir = ChooseDir(
-            self.Main.get_toplevel(),
-            self.RoomLogDir.get_text(),
-            title=_("Nicotine+") + ": " + _("Choose a directory to save your log files")
-        )
+        # Get a gio.File object from gtk.FileChooser
+        dir_gio = self.ChooseRoomLogDir.get_file()
 
-        if dir is not None:
-            for directory in dir:  # iterate over selected files
-                self.RoomLogDir.set_text(recode(directory))
+        # Convert the gio.File to a string that can be displayed
+        # and stored in the config file
+        dir_disp = dir_gio.get_path()
+
+        if dir_gio is not None:
+
+            # Convert the gio.File to a string that can be displayed
+            self.RoomLogDir.set_text(dir_disp)
 
     def OnChoosePrivateLogDir(self, widget):
 
-        dir = ChooseDir(
-            self.Main.get_toplevel(),
-            self.PrivateLogDir.get_text(),
-            title=_("Nicotine+") + ": " + _("Choose a directory to save your log files")
-        )
+        # Get a gio.File object from gtk.FileChooser
+        dir_gio = self.ChoosePrivateLogDir.get_file()
 
-        if dir is not None:
-            for directory in dir:  # iterate over selected files
-                self.PrivateLogDir.set_text(recode(directory))
+        # Convert the gio.File to a string that can be displayed
+        # and stored in the config file
+        dir_disp = dir_gio.get_path()
+
+        if dir_gio is not None:
+
+            # Convert the gio.File to a string that can be displayed
+            self.PrivateLogDir.set_text(dir_disp)
 
     def OnDefaultTimestamp(self, widget):
         defaults = self.frame.np.config.defaults

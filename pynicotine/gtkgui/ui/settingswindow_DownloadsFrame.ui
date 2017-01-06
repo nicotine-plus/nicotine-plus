@@ -73,8 +73,7 @@
                             <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                             <property name="action">select-folder</property>
                             <property name="show_hidden">True</property>
-                            <property name="title" translatable="yes">Select A Directory</property>
-                            <property name="width_chars">15</property>
+                            <property name="title" translatable="yes">Select a directory</property>
                             <signal name="selection-changed" handler="OnChooseIncompleteDir" swapped="no"/>
                           </object>
                           <packing>
@@ -133,8 +132,7 @@
                             <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                             <property name="action">select-folder</property>
                             <property name="show_hidden">True</property>
-                            <property name="title" translatable="yes">Select A Directory</property>
-                            <property name="width_chars">15</property>
+                            <property name="title" translatable="yes">Select a directory</property>
                             <signal name="selection-changed" handler="OnChooseDownloadDir" swapped="no"/>
                           </object>
                           <packing>
