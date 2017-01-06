@@ -36,9 +36,7 @@ import sys
 import gobject
 import locale
 import gettext
-import gtk.glade
 
-from libi18n import SetLocaleEnv
 from logfacility import log as logfacility
 
 version = "1.3.0"
@@ -76,46 +74,12 @@ def CleanPath(path, absolute=False):
     return path
 
 
-def CheckTranslationAvailability(lang):
-    """Function that check the availabilty for a specified language"""
-
-    # Package name for gettext
-    PACKAGE = 'nicotine'
-
-    # Local path where to find translation (mo) files
-    LOCAL_MO_PATH = 'languages'
-
-    # Message to return to the settingswindow if errors are found
-    msg_alert = ""
-
-    # We don't need checkr since the user wants the english language
-    if lang == "en":
-        return
-
-    # We try to find the translation file in the current path
-    if gettext.find(PACKAGE,
-                    localedir=LOCAL_MO_PATH,
-                    languages=[lang]
-                    ) is None:
-
-        # We try to find the translation file in the global path
-        if gettext.find(PACKAGE, languages=[lang]) is None:
-
-            msg_alert = _("Translation for '%s' not found.") % (lang)
-
-    return msg_alert
-
-
-def ApplyTranslation(lang=None):
+def ApplyTranslation():
     """Function dealing with translations and locales.
 
-    If no language is specified by the user we try to autodetect it
-    and fix the locale.
+    We try to autodetect the language and fix the locale.
 
-    If a language is specified by the user we try to load the corresponding
-    translation file and fix the locale.
-
-    In both case if something goes wrong we fall back to no translation.
+    If something goes wrong we fall back to no translation.
 
     This function also try to find translation files in the project path first:
     $(PROJECT_PATH)/languages/$(LANG)/LC_MESSAGES/nicotine.mo
@@ -133,89 +97,24 @@ def ApplyTranslation(lang=None):
     # Local path where to find translation (mo) files
     LOCAL_MO_PATH = 'languages'
 
-    # If no lang is provided we try to autodetect it
-    if lang is None:
+    # Locales handling: We let the system handle the locales
+    locale.setlocale(locale.LC_ALL, '')
 
-        # Setting up environnement variables for locale handling
-        SetLocaleEnv()
-
-        # Current language derived from the locale
-        currentlang = locale.getlocale()[0].split('_')[0]
-
-        if currentlang == "en":
-            # If the current locale is english we dont translate
-            # It can be either that the locale of the user is really english
-            # ot we might be in the fallback mode of the locale handling
-            gettext.install(PACKAGE)
-        else:
-
-            try:
-                # We try to find the translation file in the current path first
-                tr = gettext.translation(PACKAGE, localedir=LOCAL_MO_PATH)
-                tr.install()
-            except IOError as e1:
-
-                try:
-                    # We try to find the translation file in the global path
-                    tr = gettext.translation(PACKAGE)
-                    tr.install()
-                except IOError as e2:
-                    logfacility.addwarning("Translation for '%s' not found, "
-                                           "falling back to english" %
-                                           (currentlang)
-                                           )
-
-                    # If we can't find the translation for the current locale
-                    # we fall back to no translation at all
-                    gettext.install(PACKAGE)
-
-                    # And we reset locale to english
-                    SetLocaleEnv("en")
-    else:
-
-        # The user has forced a language to be used
-        # Setting up environnement variables for the specified language
-        SetLocaleEnv(lang)
-
-        if lang == "en":
-            # We don't translate since the user wants the english language
-            gettext.install(PACKAGE)
-        else:
-
-            try:
-                # We try to find the translation file in the current path
-                tr = gettext.translation(PACKAGE,
-                                         localedir=LOCAL_MO_PATH,
-                                         languages=[lang]
-                                         )
-                tr.install()
-            except IOError as e1:
-
-                try:
-                    # We try to find the translation file in the global path
-                    tr = gettext.translation(PACKAGE, languages=[lang])
-                    tr.install()
-                except IOError as e2:
-                    logfacility.addwarning("Translation for '%s' not found, "
-                                           "falling back to english" %
-                                           (lang)
-                                           )
-
-                    # If we can't find the translation for the specified
-                    # language: we fall back to no translation at all
-                    gettext.install(PACKAGE)
-
-                    # And we reset locale to english
-                    SetLocaleEnv("en")
-
-    # Now we bind glade to the nicotine domain
-    # Same method than before, try the local then global path
+    # Gettext handling
     if gettext.find(PACKAGE, localedir=LOCAL_MO_PATH) is None:
-        gtk.glade.bindtextdomain(PACKAGE)
-    else:
-        gtk.glade.bindtextdomain(PACKAGE, LOCAL_MO_PATH)
 
-    gtk.glade.textdomain(PACKAGE)
+        # Locales are not in the current dir
+        # We let gettext handle the situation: if if found them in the system dir
+        # the app will be trnaslated, if not it will be untranslated.
+        gettext.install(PACKAGE)
+
+    else:
+
+        # Locales are in the current dir: install them
+        locale.bindtextdomain(PACKAGE, LOCAL_MO_PATH)
+        gettext.bindtextdomain(PACKAGE, LOCAL_MO_PATH)
+        tr = gettext.translation(PACKAGE, localedir=LOCAL_MO_PATH)
+        tr.install()
 
 
 def displayTraceback(exception=None):

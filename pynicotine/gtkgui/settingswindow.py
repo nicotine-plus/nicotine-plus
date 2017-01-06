@@ -30,7 +30,6 @@ from dirchooser import *
 from utils import InputDialog, InitialiseColumns, recode, recode2, popupWarning, Humanize, OpenUri, HumanSize
 from entrydialog import input_box
 from pynicotine.upnp import UPnPPortMapping
-from pynicotine.utils import CheckTranslationAvailability
 from pynicotine.logfacility import log
 import os
 import sys
@@ -54,6 +53,8 @@ class buildFrame:
 
         # Build the frame
         builder = gtk.Builder()
+
+        builder.set_translation_domain('nicotine')
         builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "settingswindow_" + window + ".ui"))
 
         self.__dict__[window] = builder.get_object(window)
@@ -2174,40 +2175,11 @@ class NotebookFrame(buildFrame):
 
 class BloatFrame(buildFrame):
 
-    languagelookup = [
-        ('Dansk (Danish)', 'da'),
-        ('Deutsch (German)', 'de'),
-        ('English (English)', 'en'),
-        ('Español (Spanish)', 'es'),
-        ('Euskara (Bask)', 'eu'),
-        ('Français (French)', 'fr'),
-        ('Italiano (Italian)', 'it'),
-        ('Lietuvių kalba (Lithuanian)', 'lt'),
-        ('Magyar nyelv (Hungarian)', 'hu'),
-        ('Nederlands (Dutch)', 'nl'),
-        ('Polszczyzna (Polish)', 'pl'),
-        ('Português brasileiro (Brazilian Portuguese)', 'pt_BR'),
-        ('Slovenčina (Slovak)', 'sk'),
-        ('Svenska (Swedish)', 'sv'),
-        ('Suomi (Finnish)', 'fi')
-    ]
-
     def __init__(self, parent):
 
         self.p = parent
 
         buildFrame.__init__(self, "BloatFrame")
-
-        # Combobox for the language list
-        self.TranslationCombo_List = gtk.ListStore(gobject.TYPE_STRING)
-        self.TranslationCombo.set_model(self.TranslationCombo_List)
-
-        cell = gtk.CellRendererText()
-        self.TranslationCombo.pack_start(cell, True)
-        self.TranslationCombo.add_attribute(cell, 'text', 0)
-
-        for name, code in self.languagelookup:
-            self.TranslationCombo_List.append([name])
 
         # Combobox for the decimal separator
         self.DecimalSep_List = gtk.ListStore(gobject.TYPE_STRING)
@@ -2232,10 +2204,6 @@ class BloatFrame(buildFrame):
             },
             "transfers": {
                 "enabletransferbuttons": self.ShowTransferButtons
-            },
-            "language": {
-                "setlanguage": self.TranslationCheck,
-                "language": self.TranslationCombo
             }
         }
 
@@ -2261,35 +2229,14 @@ class BloatFrame(buildFrame):
         self.needcolors = 0
 
         ui = config["ui"]
+
         transfers = config["transfers"]
-        language = config["language"]
 
         self.SpellCheck.set_sensitive(self.frame.SEXY)
 
         self.p.SetWidgetsData(config, self.options)
 
-        for i in xrange(0, len(self.languagelookup)):
-            name, code = self.languagelookup[i]
-            if language['language'] == code:
-                self.TranslationCombo.set_active(i)
-                break
-
-        self.OnTranslationCheckToggled(self.TranslationCheck)
-
     def GetSettings(self):
-
-        language = self.languagelookup[self.TranslationCombo.get_active()][1]
-
-        message = CheckTranslationAvailability(language)
-
-        if self.TranslationCheck.get_active() and message is not None and message != "":
-            popupWarning(
-                self.p.SettingsWindow,
-                _("Warning: Missing translation"),
-                message,
-                self.frame.images["n"]
-            )
-            raise UserWarning
 
         return {
             "ui": {
@@ -2303,10 +2250,6 @@ class BloatFrame(buildFrame):
             },
             "transfers": {
                 "enabletransferbuttons": self.ShowTransferButtons.get_active()
-            },
-            "language": {
-                "setlanguage": self.TranslationCheck.get_active(),
-                "language": language
             }
         }
 
@@ -3098,7 +3041,10 @@ class buildDialog(gtk.Dialog):
 
         # Build the window
         builder = gtk.Builder()
+
+        builder.set_translation_domain('nicotine')
         builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "settingswindow_PluginProperties.ui"))
+
         self.PluginProperties = builder.get_object(window)
 
         for i in builder.get_objects():
@@ -3414,6 +3360,8 @@ class SettingsWindow:
 
         # Build the window
         builder = gtk.Builder()
+
+        builder.set_translation_domain('nicotine')
         builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "settingswindow_TreeView.ui"))
 
         self.SettingsWindow = builder.get_object("SettingsWindow")
@@ -3708,7 +3656,6 @@ class SettingsWindow:
                 "urls": {},
                 "players": {},
                 "words": {},
-                "language": {},
                 "plugins": {}
             }
 

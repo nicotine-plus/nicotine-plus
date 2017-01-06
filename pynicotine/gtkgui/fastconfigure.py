@@ -71,7 +71,10 @@ class FastConfigureAssistant(object):
         self.config = frame.np.config
 
         builder = gtk.Builder()
+
+        builder.set_translation_domain('nicotine')
         builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "fastconfigure.ui"))
+
         self.window = builder.get_object("FastConfigureAssistant")
         builder.connect_signals(self)
 

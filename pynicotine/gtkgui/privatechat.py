@@ -331,7 +331,10 @@ class PrivateChat:
         self.chats.users[self.user] = self
 
         builder = gtk.Builder()
+
+        builder.set_translation_domain('nicotine')
         builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "privatechat.ui"))
+
         self.PrivateChatTab = builder.get_object("PrivateChatTab")
 
         for i in builder.get_objects():

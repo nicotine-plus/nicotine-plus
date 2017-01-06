@@ -171,11 +171,6 @@ class Config:
                 "pic": ""
             },
 
-            "language": {
-                "setlanguage": 0,
-                "language": ""
-            },
-
             "words": {
                 "censored": [],
                 "autoreplaced": {
@@ -431,8 +426,8 @@ class Config:
                         continue
 
                     if self.sections[i][j] is None or self.sections[i][j] == '' \
-                       and i not in ("userinfo", "ui", "ticker", "players", "language") \
-                       and j not in ("incompletedir", "autoreply", 'afterfinish', 'afterfolder', 'geoblockcc', 'downloadregexp', "language"):
+                       and i not in ("userinfo", "ui", "ticker", "players") \
+                       and j not in ("incompletedir", "autoreply", 'afterfinish', 'afterfolder', 'geoblockcc', 'downloadregexp'):
 
                         # Repair options set to None with defaults
                         if self.sections[i][j] is None and self.defaults[i][j] is not None:
@@ -513,6 +508,9 @@ class Config:
         self.removeOldOption("ui", "transalpha")
         self.removeOldOption("ui", "transfilter")
         self.removeOldOption("ui", "transtint")
+        self.removeOldOption("language", "language")
+        self.removeOldOption("language", "setlanguage")
+        self.removeOldSection("language")
 
         # Checking for unknown section/options
         unknown1 = [
@@ -539,8 +537,7 @@ class Config:
                 "censored", "characters", "tab", "cycle", "dropdown",
                 "roomnames", "buddies", "roomusers", "commands",
                 "aliases", "onematch"
-            ],
-            'language': ["setlanguage"]
+            ]
         }
 
         for i in self.parser.sections():
@@ -655,6 +652,10 @@ class Config:
         if section in self.parser.sections():
             if option in self.parser.options(section):
                 self.parser.remove_option(section, option)
+
+    def removeOldSection(self, section):
+        if section in self.parser.sections():
+            self.parser.remove_section(section)
 
     def clearShares(
         self, sharedfiles, bsharedfiles, sharedfilesstreams, bsharedfilesstreams,

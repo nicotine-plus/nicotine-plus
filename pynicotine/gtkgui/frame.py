@@ -27,7 +27,6 @@ import os
 import gettext
 import gtk
 
-from pynicotine.utils import ApplyTranslation
 from tempfile import gettempdir
 from pynicotine.pynicotine import NetworkEventProcessor
 from pynicotine import slskmessages
@@ -77,8 +76,12 @@ class roomlist:
 
         # Build the window
         self.frame = frame
+
         builder = gtk.Builder()
+
+        builder.set_translation_domain('nicotine')
         builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "roomlist.ui"))
+
         self.RoomList = builder.get_object("RoomList")
 
         for i in builder.get_objects():
@@ -234,15 +237,13 @@ class NicotineFrame:
 
         self.LoadIcons()
 
-        # Initialize custom language chosen by the user
-        if self.np.config.sections["language"]["setlanguage"]:
-            ApplyTranslation(self.np.config.sections["language"]["language"])
-
         self.accel_group = gtk.AccelGroup()
         self.roomlist = roomlist(self)
 
         # Import GtkBuilder widgets
         builder = gtk.Builder()
+
+        builder.set_translation_domain('nicotine')
         builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "mainwindow.ui"))
 
         for i in builder.get_objects():
