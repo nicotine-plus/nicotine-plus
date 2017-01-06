@@ -242,31 +242,15 @@ class NicotineFrame:
         self.accel_group = gtk.AccelGroup()
         self.roomlist = roomlist(self)
 
-        # Import glade widgets
-        self.wTree = gtk.glade.XML(os.path.join(os.path.dirname(os.path.realpath(__file__)), "mainwindow.glade"), None)
-        widgets = self.wTree.get_widget_prefix("")
+        # Import GtkBuilder widgets
+        builder = gtk.Builder()
+        builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "mainwindow.ui"))
 
-        for i in widgets:
-            name = gtk.glade.get_widget_name(i)
-            self.__dict__[name] = i
-
-        # Create Search combo ListStores
-        self.SearchEntryCombo_List = gtk.ListStore(gobject.TYPE_STRING)
-        self.SearchEntryCombo.set_model(self.SearchEntryCombo_List)
-        self.SearchEntryCombo.set_entry_text_column(0)
-
-        self.SearchEntry = self.SearchEntryCombo.child
-        self.SearchEntry.connect("activate", self.OnSearch)
-
-        self.RoomSearchCombo_List = gtk.ListStore(gobject.TYPE_STRING)
-        self.RoomSearchCombo.set_model(self.RoomSearchCombo_List)
-        self.RoomSearchCombo.set_entry_text_column(0)
-
-        self.SearchMethod_List = gtk.ListStore(gobject.TYPE_STRING)
-        for i in [""]:
-            self.SearchMethod_List.append([i])
-
-        self.SearchMethod.set_model(self.SearchMethod_List)
+        for i in builder.get_objects():
+            try:
+                self.__dict__[gtk.Buildable.get_name(i)] = i
+            except TypeError:
+                pass
 
         self.MainWindow.set_title(_("Nicotine+") + " " + version)
         self.MainWindow.set_icon(self.images["n"])
@@ -277,7 +261,7 @@ class NicotineFrame:
         self.MainWindow.connect("configure_event", self.OnWindowChange)
         self.MainWindow.add_accel_group(self.accel_group)
 
-        self.wTree.signal_autoconnect(self)
+        builder.connect_signals(self)
 
         width = self.np.config.sections["ui"]["width"]
         height = self.np.config.sections["ui"]["height"]
@@ -410,9 +394,11 @@ class NicotineFrame:
                 label_tab.child.set_text_color(0)
 
                 # Set the menu to hide the tab
-                label_tab.connect('button_press_event', self.on_tab_click, label_tab.name + "Menu", map_tablabels_to_box[label_tab])
+                eventbox_name = gtk.Buildable.get_name(label_tab)
 
-                self.__dict__[label_tab.name + "Menu"] = popup = utils.PopupMenu(self)
+                label_tab.connect('button_press_event', self.on_tab_click, eventbox_name + "Menu", map_tablabels_to_box[label_tab])
+
+                self.__dict__[eventbox_name + "Menu"] = popup = utils.PopupMenu(self)
 
                 popup.setup(
                     (
@@ -463,6 +449,25 @@ class NicotineFrame:
 
         self.chatrooms = self.ChatNotebook
         self.chatrooms.show()
+
+        # Create Search combo ListStores
+        self.SearchEntryCombo_List = gtk.ListStore(gobject.TYPE_STRING)
+        self.SearchEntryCombo.set_model(self.SearchEntryCombo_List)
+        self.SearchEntryCombo.set_entry_text_column(0)
+
+        self.SearchEntry = self.SearchEntryCombo.child
+        self.SearchEntry.connect("activate", self.OnSearch)
+
+        self.RoomSearchCombo_List = gtk.ListStore(gobject.TYPE_STRING)
+        self.RoomSearchCombo.set_model(self.RoomSearchCombo_List)
+        self.RoomSearchCombo.set_entry_text_column(0)
+
+        self.SearchMethod_List = gtk.ListStore(gobject.TYPE_STRING)
+        for i in [""]:
+            self.SearchMethod_List.append([i])
+
+        self.SearchMethod.set_model(self.SearchMethod_List)
+        self.SearchMethod.set_entry_text_column(0)
 
         self.Searches = self.SearchNotebook
         self.Searches.show()
