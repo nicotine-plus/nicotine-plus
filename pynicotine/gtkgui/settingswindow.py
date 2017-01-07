@@ -371,7 +371,7 @@ class DownloadsFrame(buildFrame):
         # Convert the gio.File to a string
         dir_disp = self.DownloadDir.get_file().get_path()
 
-        if dir_gio is not None:
+        if dir_disp is not None:
 
             # Get the transfers section
             transfers = self.frame.np.config.sections["transfers"]
@@ -1646,17 +1646,19 @@ class SoundsFrame(buildFrame):
 class IconsFrame(buildFrame):
 
     def __init__(self, parent):
+
         self.p = parent
+
         buildFrame.__init__(self, "IconsFrame")
+
         self.options = {
             "ui": {
-                "icontheme": self.IconTheme,
+                "icontheme": self.ThemeDir,
                 "trayicon": self.TrayiconCheck,
                 "exitdialog": None
             }
         }
-        self.ThemeButton.connect("clicked", self.OnChooseThemeDir)
-        self.DefaultTheme.connect("clicked", self.OnDefaultTheme)
+
         self.N.set_from_pixbuf(self.frame.images["n"])
         self.Away.set_from_pixbuf(self.frame.images["away"])
         self.Online.set_from_pixbuf(self.frame.images["online"])
@@ -1670,11 +1672,18 @@ class IconsFrame(buildFrame):
         self.Notify.set_from_pixbuf(self.frame.images["notify"])
 
     def SetSettings(self, config):
+
         ui = config["ui"]
+
         self.p.SetWidgetsData(config, self.options)
 
+        if ui["icontheme"]:
+            self.ThemeDir.set_current_folder(ui["icontheme"])
+
         if ui["exitdialog"] is not None:
+
             exitdialog = int(ui["exitdialog"])
+
             if exitdialog == 1:
                 self.DialogOnClose.set_active(True)
             elif exitdialog == 2:
@@ -1683,23 +1692,12 @@ class IconsFrame(buildFrame):
                 self.QuitOnClose.set_active(True)
 
     def OnDefaultTheme(self, widget):
-        self.IconTheme.set_text("")
-
-    def OnChooseThemeDir(self, widget):
-
-        dir = ChooseDir(
-            self.Main.get_toplevel(),
-            self.IconTheme.get_text(),
-            title=_("Nicotine+") + ": " + _("Choose an icon theme directory")
-        )
-
-        if dir is not None:
-            for directory in dir:  # iterate over selected files
-                self.IconTheme.set_text(recode(directory))
+        self.ThemeDir.unselect_all()
 
     def GetSettings(self):
 
         mainwindow_close = 0
+
         widgets = [self.QuitOnClose, self.DialogOnClose, self.SendToTrayOnClose]
 
         for i in widgets:
@@ -1707,9 +1705,14 @@ class IconsFrame(buildFrame):
                 mainwindow_close = widgets.index(i)
                 break
 
+        if self.ThemeDir.get_file() is not None:
+            icontheme = recode2(self.ThemeDir.get_file().get_path())
+        else:
+            icontheme = ""
+
         return {
             "ui": {
-                "icontheme": self.IconTheme.get_text(),
+                "icontheme": icontheme,
                 "trayicon": self.TrayiconCheck.get_active(),
                 "exitdialog": mainwindow_close
             }
