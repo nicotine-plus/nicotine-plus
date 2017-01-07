@@ -36,6 +36,8 @@
             <property name="can_focus">False</property>
             <property name="n_rows">4</property>
             <property name="n_columns">3</property>
+            <property name="column_spacing">5</property>
+            <property name="row_spacing">5</property>
             <child>
               <object class="GtkRadioButton" id="NP_xmms2">
                 <property name="label" translatable="yes">XMMS2</property>
@@ -192,7 +194,7 @@
             </child>
           </object>
           <packing>
-            <property name="expand">True</property>
+            <property name="expand">False</property>
             <property name="fill">True</property>
             <property name="position">1</property>
           </packing>

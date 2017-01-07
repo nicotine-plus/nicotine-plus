@@ -295,6 +295,7 @@ class DownloadsFrame(buildFrame):
 
         self.FilterView.set_model(self.filterlist)
         self.FilterView.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
+
         self.DownloadFilters.connect("activate", self.OnExpand)
 
     def OnExpand(self, widget):
@@ -310,10 +311,10 @@ class DownloadsFrame(buildFrame):
         self.p.SetWidgetsData(config, self.options)
 
         if transfers["incompletedir"]:
-            self.ChooseIncompleteDir.set_current_folder(transfers["incompletedir"])
+            self.IncompleteDir.set_current_folder(transfers["incompletedir"])
 
         if transfers["downloaddir"]:
-            self.ChooseDownloadDir.set_current_folder(transfers["downloaddir"])
+            self.DownloadDir.set_current_folder(transfers["downloaddir"])
 
         self.filtersiters = {}
         self.filterlist.clear()
@@ -336,19 +337,21 @@ class DownloadsFrame(buildFrame):
             place = "Home"
             homedir = pwd.getpwuid(os.getuid())[5]
 
-        if homedir == recode2(self.DownloadDir.get_text()) and self.ShareDownloadDir.get_active():
+        if homedir == recode2(self.DownloadDir.get_file().get_path()) and self.ShareDownloadDir.get_active():
+
             popupWarning(
                 self.p.SettingsWindow,
                 _("Warning"),
                 _("Security Risk: you should not share your %s directory!") % place,
                 self.frame.images["n"]
             )
+
             raise UserWarning
 
         return {
             "transfers": {
-                "incompletedir": recode2(self.IncompleteDir.get_text()),
-                "downloaddir": recode2(self.DownloadDir.get_text()),
+                "incompletedir": recode2(self.IncompleteDir.get_file().get_path()),
+                "downloaddir": recode2(self.DownloadDir.get_file().get_path()),
                 "sharedownloaddir": self.ShareDownloadDir.get_active(),
                 "downloadfilters": self.GetFilterList(),
                 "enablefilters": self.DownloadFilter.get_active(),
@@ -359,39 +362,16 @@ class DownloadsFrame(buildFrame):
     def GetNeedRescan(self):
         return self.needrescan
 
-    def OnChooseIncompleteDir(self, widget):
-        """
-        Function called when the incomplete download directory is modified.
-        """
-
-        # Get a gio.File object from gtk.FileChooser
-        dir_gio = self.ChooseIncompleteDir.get_file()
-
-        # Convert the gio.File to a string that can be displayed
-        # and stored in the config file
-        dir_disp = dir_gio.get_path()
-
-        if dir_gio is not None:
-
-            # Convert the gio.File to a string that can be displayed
-            self.IncompleteDir.set_text(dir_disp)
-
     def OnChooseDownloadDir(self, widget):
         """
         Function called when the download directory is modified.
         """
 
         # Get a gio.File object from gtk.FileChooser
-        dir_gio = self.ChooseDownloadDir.get_file()
-
-        # Convert the gio.File to a string that can be displayed
-        # and stored in the config file
-        dir_disp = dir_gio.get_path()
+        # Convert the gio.File to a string
+        dir_disp = self.DownloadDir.get_file().get_path()
 
         if dir_gio is not None:
-
-            # Set both the attribute and the text for the GtkEntry
-            self.DownloadDir.set_text(dir_disp)
 
             # Get the transfers section
             transfers = self.frame.np.config.sections["transfers"]
@@ -406,7 +386,9 @@ class DownloadsFrame(buildFrame):
         self.needrescan = True
 
     def OnEnableFiltersToggle(self, widget):
+
         sensitive = widget.get_active()
+
         self.VerifyFilters.set_sensitive(sensitive)
         self.VerifiedLabel.set_sensitive(sensitive)
         self.DefaultFilters.set_sensitive(sensitive)
@@ -440,19 +422,26 @@ class DownloadsFrame(buildFrame):
             self.OnVerifyFilter(self.VerifyFilters)
 
     def GetFilterList(self):
+
         self.downloadfilters = []
+
         df = list(self.filtersiters.keys())
         df.sort()
+
         for filter in df:
             iter = self.filtersiters[filter]
             dfilter = self.filterlist.get_value(iter, 0)
             escaped = self.filterlist.get_value(iter, 1)
             self.downloadfilters.append([dfilter, int(escaped)])
+
         return self.downloadfilters
 
     def OnEditFilter(self, widget):
+
         dfilter = self.GetSelectedFilter()
+
         if dfilter:
+
             iter = self.filtersiters[dfilter]
             escapedvalue = self.filterlist.get_value(iter, 1)
 
@@ -484,24 +473,35 @@ class DownloadsFrame(buildFrame):
         list.append(iter)
 
     def GetSelectedFilter(self):
+
         iters = []
         self.FilterView.get_selection().selected_foreach(self._SelectedFilter, iters)
+
         if iters == []:
             return None
+
         dfilter = self.filterlist.get_value(iters[0], 0)
+
         return dfilter
 
     def OnRemoveFilter(self, widget):
+
         dfilter = self.GetSelectedFilter()
+
         if dfilter:
+
             iter = self.filtersiters[dfilter]
             self.filterlist.remove(iter)
+
             del self.filtersiters[dfilter]
+
             self.OnVerifyFilter(self.VerifyFilters)
 
     def OnDefaultFilters(self, widget):
+
         self.filtersiters = {}
         self.filterlist.clear()
+
         default_filters = [
             ["desktop.ini", 1],
             ["folder.jpg", 1],
@@ -519,12 +519,15 @@ class DownloadsFrame(buildFrame):
     def OnVerifyFilter(self, widget):
 
         outfilter = "(\\\\("
+
         df = list(self.filtersiters.keys())
         df.sort()
+
         proccessedfilters = []
         failed = {}
 
         for filter in df:
+
             iter = self.filtersiters[filter]
             dfilter = self.filterlist.get_value(iter, 0)
             escaped = self.filterlist.get_value(iter, 1)
@@ -573,6 +576,7 @@ class DownloadsFrame(buildFrame):
 
         iter = self.filterlist.get_iter(index)
         value = self.filterlist.get_value(iter, pos)
+
         self.filterlist.set(iter, pos, not value)
 
         self.OnVerifyFilter(self.VerifyFilters)
@@ -2313,13 +2317,13 @@ class LogFrame(buildFrame):
         self.p.SetWidgetsData(config, self.options)
 
         if config["logging"]["logsdir"]:
-            self.ChooseLogDir.set_current_folder(config["logging"]["logsdir"])
+            self.LogDir.set_current_folder(config["logging"]["logsdir"])
 
         if config["logging"]["roomlogsdir"]:
-            self.ChooseRoomLogDir.set_current_folder(config["logging"]["roomlogsdir"])
+            self.RoomLogDir.set_current_folder(config["logging"]["roomlogsdir"])
 
         if config["logging"]["privatelogsdir"]:
-            self.ChoosePrivateLogDir.set_current_folder(config["logging"]["privatelogsdir"])
+            self.PrivateLogDir.set_current_folder(config["logging"]["privatelogsdir"])
 
     def GetSettings(self):
 
@@ -2327,9 +2331,9 @@ class LogFrame(buildFrame):
             "logging": {
                 "privatechat": self.LogPrivate.get_active(),
                 "chatrooms": self.LogRooms.get_active(),
-                "logsdir": recode2(self.LogDir.get_text()),
-                "roomlogsdir": recode2(self.RoomLogDir.get_text()),
-                "privatelogsdir": recode2(self.PrivateLogDir.get_text()),
+                "logsdir": recode2(self.LogDir.get_file().get_path()),
+                "roomlogsdir": recode2(self.RoomLogDir.get_file().get_path()),
+                "privatelogsdir": recode2(self.PrivateLogDir.get_file().get_path()),
                 "readroomlogs": self.ReadRoomLogs.get_active(),
                 "readroomlines": self.RoomLogLines.get_value_as_int(),
                 "readprivatelines": self.PrivateLogLines.get_value_as_int(),
@@ -2343,48 +2347,6 @@ class LogFrame(buildFrame):
                 "store": self.ReopenPrivateChats.get_active()
             },
         }
-
-    def OnChooseLogDir(self, widget):
-
-        # Get a gio.File object from gtk.FileChooser
-        dir_gio = self.ChooseLogDir.get_file()
-
-        # Convert the gio.File to a string that can be displayed
-        # and stored in the config file
-        dir_disp = dir_gio.get_path()
-
-        if dir_gio is not None:
-
-            # Convert the gio.File to a string that can be displayed
-            self.LogDir.set_text(dir_disp)
-
-    def OnChooseRoomLogDir(self, widget):
-
-        # Get a gio.File object from gtk.FileChooser
-        dir_gio = self.ChooseRoomLogDir.get_file()
-
-        # Convert the gio.File to a string that can be displayed
-        # and stored in the config file
-        dir_disp = dir_gio.get_path()
-
-        if dir_gio is not None:
-
-            # Convert the gio.File to a string that can be displayed
-            self.RoomLogDir.set_text(dir_disp)
-
-    def OnChoosePrivateLogDir(self, widget):
-
-        # Get a gio.File object from gtk.FileChooser
-        dir_gio = self.ChoosePrivateLogDir.get_file()
-
-        # Convert the gio.File to a string that can be displayed
-        # and stored in the config file
-        dir_disp = dir_gio.get_path()
-
-        if dir_gio is not None:
-
-            # Convert the gio.File to a string that can be displayed
-            self.PrivateLogDir.set_text(dir_disp)
 
     def OnDefaultTimestamp(self, widget):
         defaults = self.frame.np.config.defaults
