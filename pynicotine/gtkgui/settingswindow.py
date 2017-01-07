@@ -1513,6 +1513,7 @@ class SoundsFrame(buildFrame):
     def __init__(self, parent):
 
         self.p = parent
+
         buildFrame.__init__(self, "SoundsFrame")
 
         # Combobox for audio players
@@ -1542,7 +1543,7 @@ class SoundsFrame(buildFrame):
         self.options = {
             "ui": {
                 "soundcommand": self.SoundCommand,
-                "soundtheme": self.SoundDirectory,
+                "soundtheme": self.SoundDir,
                 "soundenabled": self.SoundCheck,
                 "speechenabled": self.TextToSpeech,
                 "speechcommand": self.TTSCommand,
@@ -1554,19 +1555,13 @@ class SoundsFrame(buildFrame):
             }
         }
 
-        self.SoundButton.connect("clicked", self.OnChooseSoundDir)
-        self.DefaultSoundCommand.connect("clicked", self.DefaultSound)
-        self.DefaultTTSCommand.connect("clicked", self.DefaultTTS)
-        self.DefaultPrivateMessage.connect("clicked", self.DefaultPrivate)
-        self.DefaultRoomMessage.connect("clicked", self.DefaultRooms)
-
     def OnSoundCheckToggled(self, widget):
 
         sensitive = self.SoundCheck.get_active()
 
         self.SoundCommand.set_sensitive(sensitive)
-        self.SoundDirectory.set_sensitive(sensitive)
-        self.SoundButton.set_sensitive(sensitive)
+        self.SoundDir.set_sensitive(sensitive)
+        self.DefaultSoundDir.set_sensitive(sensitive)
         self.DefaultSoundCommand.set_sensitive(sensitive)
         self.sndcmdLabel.set_sensitive(sensitive)
         self.snddirLabel.set_sensitive(sensitive)
@@ -1586,19 +1581,31 @@ class SoundsFrame(buildFrame):
     def OnTextToSpeechToggled(self, widget):
 
         sensitive = self.TextToSpeech.get_active()
+
         self.tableTTS.set_sensitive(sensitive)
+
+    def OnDefaultSoundTheme(self, widget):
+        self.SoundDir.unselect_all()
 
     def SetSettings(self, config):
 
+        ui = config["ui"]
+
         self.p.SetWidgetsData(config, self.options)
 
+        if ui["soundtheme"]:
+            self.SoundDir.set_current_folder(ui["soundtheme"])
+
         for i in ["%(user)s", "%(message)s"]:
-            if i not in config["ui"]["speechprivate"]:
+
+            if i not in ui["speechprivate"]:
                 self.DefaultPrivate(None)
-            if i not in config["ui"]["speechrooms"]:
+
+            if i not in ui["speechrooms"]:
                 self.DefaultRooms(None)
 
         self.OnSoundCheckToggled(self.SoundCheck)
+
         self.OnTextToSpeechToggled(self.TextToSpeech)
 
     def GetSettings(self):
@@ -1606,19 +1613,27 @@ class SoundsFrame(buildFrame):
         soundcommand = self.SoundCommand.child.get_text()
 
         if soundcommand == "Gstreamer (gst-python)":
+
             if self.SoundCheck.get_active() and self.frame.gstreamer.player is None:
+
                 popupWarning(
                     self.p.SettingsWindow,
                     _("Warning"),
                     _("Gstreamer-python is not installed"),
                     self.frame.images["n"]
                 )
+
                 raise UserWarning
+
+        if self.SoundDir.get_file() is not None:
+            soundtheme = recode2(self.SoundDir.get_file().get_path())
+        else:
+            soundtheme = ""
 
         return {
             "ui": {
                 "soundcommand": soundcommand,
-                "soundtheme": self.SoundDirectory.get_text(),
+                "soundtheme": soundtheme,
                 "soundenabled": self.SoundCheck.get_active(),
                 "speechenabled": self.TextToSpeech.get_active(),
                 "speechcommand": self.TTSCommand.child.get_text(),
@@ -1629,18 +1644,6 @@ class SoundsFrame(buildFrame):
                 "default": self.audioPlayerCombo.child.get_text()
             },
         }
-
-    def OnChooseSoundDir(self, widget):
-
-        dir = ChooseDir(
-            self.Main.get_toplevel(),
-            self.SoundDirectory.get_text(),
-            title=_("Nicotine+") + ": " + _("Choose a sound effects directory")
-        )
-
-        if dir is not None:
-            for directory in dir:  # iterate over selected files
-                self.SoundDirectory.set_text(recode(directory))
 
 
 class IconsFrame(buildFrame):

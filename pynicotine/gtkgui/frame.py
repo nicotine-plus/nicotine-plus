@@ -3340,7 +3340,9 @@ class NicotineFrame:
 class Notifications:
 
     def __init__(self, frame):
+
         self.frame = frame
+
         self.tts = []
         self.tts_playing = False
         self.continue_playing = False
@@ -3419,87 +3421,117 @@ class Notifications:
                     )
 
     def new_tts(self, message):
+
         if not self.frame.np.config.sections["ui"]["speechenabled"]:
             return
+
         if message not in self.tts:
             self.tts.append(message)
             thread.start_new_thread(self.play_tts, ())
 
     def play_tts(self):
+
         if self.tts_playing:
             self.continue_playing = True
             return
+
         for message in self.tts[:]:
             self.tts_player(message)
             if message in self.tts:
                 self.tts.remove(message)
+
         self.tts_playing = False
         if self.continue_playing:
             self.continue_playing = False
             self.play_tts()
 
     def tts_clean(self, message):
+
         for i in ["_", "[", "]", "(", ")"]:
             message = message.replace(i, " ")
+
         return message
 
     def tts_player(self, message):
+
         self.tts_playing = True
+
         executeCommand(self.frame.np.config.sections["ui"]["speechcommand"], message)
 
     def sound(self, message, user, place=None):
+
         if sys.platform == "win32":
             return
 
         if self.frame.np.config.sections["ui"]["speechenabled"]:
+
             if message == "room_nick" and place is not None:
                 self.new_tts(
-                    _("%(myusername)s, the user, %(username)s has mentioned your name in the room, %(place)s.") % {"myusername": self.frame.np.config.sections["server"]["login"], "username": user, "place": place}
+                    _("%(myusername)s, the user, %(username)s has mentioned your name in the room, %(place)s.") % {
+                        "myusername": self.frame.np.config.sections["server"]["login"],
+                        "username": user,
+                        "place": place
+                    }
                 )
             elif message == "private":
                 self.new_tts(
-                    _("%(myusername)s, you have recieved a private message from %(username)s.") % {"myusername": self.frame.np.config.sections["server"]["login"], "username": user}
+                    _("%(myusername)s, you have recieved a private message from %(username)s.") % {
+                        "myusername": self.frame.np.config.sections["server"]["login"],
+                        "username": user
+                    }
                 )
+
             return
 
         if "soundenabled" not in self.frame.np.config.sections["ui"] or not self.frame.np.config.sections["ui"]["soundenabled"]:
             return
+
         if "soundcommand" not in self.frame.np.config.sections["ui"]:
             return
 
         command = self.frame.np.config.sections["ui"]["soundcommand"]
         path = None
         exists = 0
+
         if message == "private":
             soundtitle = "private"
         elif message == "room_nick":
             soundtitle = "room_nick"
 
         if "soundtheme" in self.frame.np.config.sections["ui"]:
+
             path = os.path.expanduser(os.path.join(self.frame.np.config.sections["ui"]["soundtheme"], "%s.ogg" % soundtitle))
+
             if os.path.exists(path):
                 exists = 1
             else:
                 path = None
 
         if not exists:
+
             path = "%s/share/nicotine/sounds/default/%s.ogg" % (sys.prefix, soundtitle)
+
             if os.path.exists(path):
                 exists = 1
             else:
                 path = None
 
         if not exists:
+
             path = "sounds/default/%s.ogg" % soundtitle
+
             if os.path.exists(path):
                 exists = 1
             else:
                 path = None
 
         if path is not None and exists:
+
             if command == "Gstreamer (gst-python)":
+
                 if self.frame.gstreamer.player is None:
                     return
+
                 self.frame.gstreamer.play(path)
             else:
                 os.system("%s %s &" % (command, path))
