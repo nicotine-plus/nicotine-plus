@@ -102,7 +102,7 @@ class Config:
                 "incompletedir": os.path.join(os.path.expanduser("~"), '.nicotine', 'incompletefiles'),
                 "downloaddir": os.path.join(os.path.expanduser("~"), 'nicotine-downloads'),
                 "uploaddir": os.path.join(os.path.expanduser("~"), 'nicotine-uploads'),
-                "sharedownloaddir": 1,
+                "sharedownloaddir": 0,
                 "shared": [],
                 "buddyshared": [],
                 "uploadbandwidth": 10,
