@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# COPYRIGHT (C) 2016 Michael Labouebe <gfarmerfr@free.fr>
+# COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2016 Mutnick <muhing@yahoo.com>
 # COPYRIGHT (C) 2008-2011 Quinox <quinox@users.sf.net>
 # COPYRIGHT (C) 2008 Gallows <g4ll0ws@gmail.com>
@@ -25,6 +25,7 @@
 
 import gtk
 import gobject
+import gio
 import re
 from dirchooser import *
 from utils import InputDialog, InitialiseColumns, recode, recode2, popupWarning, Humanize, OpenUri, HumanSize
@@ -1175,6 +1176,7 @@ class UserinfoFrame(buildFrame):
     def __init__(self, parent):
 
         self.p = parent
+
         buildFrame.__init__(self, "UserinfoFrame")
 
         self.options = {
@@ -1184,52 +1186,48 @@ class UserinfoFrame(buildFrame):
             }
         }
 
-        self.Image.connect("changed", self.GetImageSize)
-
     def SetSettings(self, config):
 
         self.p.SetWidgetsData(config, self.options)
+
         userinfo = config["userinfo"]
 
         if userinfo["descr"] is not None:
             descr = eval(userinfo["descr"], {})
             self.Description.get_buffer().set_text(descr)
 
-        self.GetImageSize()
-
-    def GetImageSize(self, widget=None):
-        if os.path.exists(self.Image.get_text()):
-            size = os.stat(self.Image.get_text())[6]
-            self.ImageSize.set_text(_("Size: %s KB") % Humanize(size/1024))
-        else:
-            self.ImageSize.set_text(_("Size: %s KB") % 0)
+        if userinfo["pic"]:
+            self.Image.set_filename(userinfo["pic"])
+            self.GetImageSize()
 
     def GetSettings(self):
+
         buffer = self.Description.get_buffer()
+
         start = buffer.get_start_iter()
         end = buffer.get_end_iter()
+
         descr = buffer.get_text(start, end).replace("; ", ", ").__repr__()
+
+        if self.Image.get_filename() is not None:
+            pic = recode2(self.Image.get_filename())
+        else:
+            pic = ""
 
         return {
             "userinfo": {
                 "descr": descr,
-                "pic": recode2(self.Image.get_text())
+                "pic": pic
             }
         }
 
-    def OnChooseImage(self, widget):
+    def GetImageSize(self, widget=None):
 
-        dlg = ChooseImage(
-            initialfile=self.Image.get_text(),
-            title=_("Nicotine+") + ": " + _("Choose a user info image")
-        )
-
-        if dlg:
-            for file in dlg:
-                self.Image.set_text(file)
-                break
-
-        self.GetImageSize()
+        if self.Image.get_file().query_exists():
+            size = self.Image.get_file().query_info(gio.FILE_ATTRIBUTE_STANDARD_SIZE).get_size()
+            self.ImageSize.set_text(_("Size: %s KB") % Humanize(size/1024))
+        else:
+            self.ImageSize.set_text(_("Size: %s KB") % 0)
 
 
 class IgnoreFrame(buildFrame):
