@@ -1010,6 +1010,7 @@ class TransfersFrame(buildFrame):
         self.p = parent
 
         buildFrame.__init__(self, "TransfersFrame")
+
         self.UploadsAllowed_List = gtk.ListStore(gobject.TYPE_STRING)
         self.UploadsAllowed.set_model(self.UploadsAllowed_List)
 
@@ -1053,10 +1054,11 @@ class TransfersFrame(buildFrame):
         self.p.SetWidgetsData(config, self.options)
 
         self.OnQueueUseSlotsToggled(self.QueueUseSlots)
+
         self.OnLimitToggled(self.Limit)
 
         if transfers["uploaddir"]:
-            self.ChooseUploadDir.set_current_folder(transfers["uploaddir"])
+            self.UploadDir.set_current_folder(transfers["uploaddir"])
 
         if transfers["uploadallowed"] is not None:
             self.UploadsAllowed.set_active(transfers["uploadallowed"])
@@ -1091,40 +1093,30 @@ class TransfersFrame(buildFrame):
                 "prioritize": self.DownloadChecksumsFirst.get_active(),
                 "remotedownloads": self.RemoteDownloads.get_active(),
                 "uploadallowed": uploadallowed,
-                "uploaddir": recode2(self.UploadDir.get_text())
+                "uploaddir": recode2(self.UploadDir.get_file().get_path())
             }
         }
 
-    def OnChooseUploadDir(self, widget):
-        """
-        Function called when the upload directory is modified.
-        """
-
-        # Get a gio.File object from gtk.FileChooser
-        dir_gio = self.ChooseUploadDir.get_file()
-
-        # Convert the gio.File to a string that can be displayed
-        # and stored in the config file
-        dir_disp = dir_gio.get_path()
-
-        if dir_gio is not None:
-
-            # Convert the gio.File to a string that can be displayed
-            self.UploadDir.set_text(dir_disp)
-
     def OnRemoteDownloads(self, widget):
+
         sensitive = widget.get_active()
+
         self.UploadsAllowed.set_sensitive(sensitive)
 
     def OnQueueUseSlotsToggled(self, widget):
+
         sensitive = widget.get_active()
+
         self.QueueSlots.set_sensitive(sensitive)
+
         self.QueueBandwidth.set_sensitive(not sensitive)
-        self.label185.set_sensitive(not sensitive)
-        self.label186.set_sensitive(not sensitive)
+        self.QueueBandwidthText1.set_sensitive(not sensitive)
+        self.QueueBandwidthText2.set_sensitive(not sensitive)
 
     def OnLimitToggled(self, widget):
+
         sensitive = widget.get_active()
+
         for w in self.LimitSpeed, self.LimitPerTransfer, self.LimitTotalTransfers:
             w.set_sensitive(sensitive)
 
