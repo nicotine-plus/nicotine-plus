@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-06 22:28+0100\n"
+"POT-Creation-Date: 2017-01-07 16:09+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -915,22 +915,19 @@ msgstr ""
 msgid "Incomplete file directory:"
 msgstr ""
 
-msgid "Where incomplete downloads are stored temporarily"
-msgstr ""
-
-msgid "Select A Directory"
-msgstr ""
-
 msgid "Download directory:"
 msgstr ""
 
 msgid "Share download directory"
 msgstr ""
 
-msgid "Limit total download speeds to:"
+msgid "Limit total download speeds to (KBytes/sec):"
 msgstr ""
 
-msgid "KBytes/sec"
+msgid "Where incomplete downloads are stored temporarily"
+msgstr ""
+
+msgid "Select a directory"
 msgstr ""
 
 msgid "<b>Directories</b>"
@@ -963,15 +960,6 @@ msgstr ""
 msgid "Downloads"
 msgstr ""
 
-msgid "Nothing"
-msgstr ""
-
-msgid "Send to player"
-msgstr ""
-
-msgid "Open Directory"
-msgstr ""
-
 msgid "Events"
 msgstr ""
 
@@ -995,13 +983,22 @@ msgstr ""
 msgid "File Manager command ($ for folder path):"
 msgstr ""
 
+msgid "Double-clicking on..."
+msgstr ""
+
 msgid "Download transfers"
 msgstr ""
 
 msgid "Upload transfers"
 msgstr ""
 
-msgid "Double-clicking on..."
+msgid "Nothing"
+msgstr ""
+
+msgid "Send to player"
+msgstr ""
+
+msgid "Open Directory"
 msgstr ""
 
 msgid "GeoBlock"
@@ -1053,9 +1050,6 @@ msgstr ""
 msgid "Icon Theme Directory (requires restart):"
 msgstr ""
 
-msgid "Select"
-msgstr ""
-
 msgid "Current Icons:"
 msgstr ""
 
@@ -1104,6 +1098,15 @@ msgstr ""
 msgid "Ignoring"
 msgstr ""
 
+msgid "Logs directory:"
+msgstr ""
+
+msgid "Chatroom Logs directory:"
+msgstr ""
+
+msgid "Private Chat Logs directory:"
+msgstr ""
+
 msgid "Log chatrooms by default"
 msgstr ""
 
@@ -1111,18 +1114,6 @@ msgid "Log private chat by default"
 msgstr ""
 
 msgid "Log transfers"
-msgstr ""
-
-msgid "Logs directory:"
-msgstr ""
-
-msgid "Choose..."
-msgstr ""
-
-msgid "Chatroom Logs directory:"
-msgstr ""
-
-msgid "Private Chat Logs directory:"
 msgstr ""
 
 msgid "Display logged chat room messages when a room is rejoined"
@@ -1146,13 +1137,13 @@ msgstr ""
 msgid "Log file format:"
 msgstr ""
 
-msgid "http://docs.python.org/lib/module-time.html"
-msgstr ""
-
 msgid "Chat room format:"
 msgstr ""
 
 msgid "Private chat format:"
+msgstr ""
+
+msgid "http://docs.python.org/lib/module-time.html"
 msgstr ""
 
 msgid "Logging"
@@ -1436,6 +1427,9 @@ msgstr ""
 msgid "Queue Uploads if total transfer speed reaches"
 msgstr ""
 
+msgid "KBytes/sec"
+msgstr ""
+
 msgid "Limit number of upload slots to"
 msgstr ""
 
@@ -1533,6 +1527,9 @@ msgid "Image:"
 msgstr ""
 
 msgid "Size: 0"
+msgstr ""
+
+msgid "Choose..."
 msgstr ""
 
 msgid "Personal settings"
@@ -2785,16 +2782,7 @@ msgstr ""
 msgid "Gstreamer-python is not installed"
 msgstr ""
 
-msgid "Choose a sound effects directory"
-msgstr ""
-
-msgid "Choose an icon theme directory"
-msgstr ""
-
 msgid "Pick a color, any color"
-msgstr ""
-
-msgid "Choose a directory to save your log files"
 msgstr ""
 
 msgid "Protocol"

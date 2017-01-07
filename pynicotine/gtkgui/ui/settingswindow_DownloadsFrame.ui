@@ -94,6 +94,7 @@
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                            <property name="tooltip_text" translatable="yes">Where incomplete downloads are stored temporarily</property>
                             <property name="action">select-folder</property>
                             <property name="show_hidden">True</property>
                             <property name="title" translatable="yes">Select a directory</property>

@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nicotine\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-06 22:28+0100\n"
-"PO-Revision-Date: 2017-01-06 22:29+0100\n"
+"POT-Creation-Date: 2017-01-07 16:09+0100\n"
+"PO-Revision-Date: 2017-01-07 16:13+0100\n"
 "Last-Translator: Michael LABOUEBE <gfarmerfr@free.fr>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -735,8 +735,8 @@ msgid ""
 "Enable automatic replacement of chat words you've\n"
 "typed incorrectly or as an acronym"
 msgstr ""
-"Remplace le texte mal orthographié, ou des acronymes, de vos messages "
-"envoyés dans les salons de discussion"
+"Remplace le texte mal orthographié, ou des acronymes,\n"
+"de vos messages envoyés dans les salons de discussion"
 
 msgid "Add..."
 msgstr "Ajouter..."
@@ -827,8 +827,9 @@ msgid ""
 "Add spaces around words if you don't wish to match strings inside words (may "
 "fail at beginning and end of lines)"
 msgstr ""
-"Ajouter des espaces autour des mots si vous ne souhaitez pas retrouver vos "
-"expressions à l'intérieur des mots. (peut échouer en début ou fin de lignes)"
+"Ajouter des espaces autour des mots\n"
+"si vous ne souhaitez pas retrouver vos expressions à l'intérieur des mots.\n"
+"(peut échouer en début ou fin de lignes)"
 
 msgid "Replace censored letters with:"
 msgstr "Remplace les lettres censurées par:"
@@ -1008,23 +1009,20 @@ msgstr "Partages"
 msgid "Incomplete file directory:"
 msgstr "Répertoire pour les fichiers incomplets:"
 
-msgid "Where incomplete downloads are stored temporarily"
-msgstr "Répertoire où sont placés temporairement les fichiers incomplets"
-
-msgid "Select A Directory"
-msgstr "Sélectionnez un répertoire"
-
 msgid "Download directory:"
 msgstr "Répertoire de téléchargement:"
 
 msgid "Share download directory"
 msgstr "Partager le répertoire de téléchargement"
 
-msgid "Limit total download speeds to:"
-msgstr "Limiter la vitesse totale de téléchargement à:"
+msgid "Limit total download speeds to (KBytes/sec):"
+msgstr "Limiter la vitesse totale de téléchargement à (Ko/s):"
 
-msgid "KBytes/sec"
-msgstr "Ko/sec"
+msgid "Where incomplete downloads are stored temporarily"
+msgstr "Répertoire où sont placés temporairement les fichiers incomplets"
+
+msgid "Select a directory"
+msgstr "Sélectionnez un répertoire"
 
 msgid "<b>Directories</b>"
 msgstr "<b>Répertoires:</b>"
@@ -1059,15 +1057,6 @@ msgstr "<b>Filtres de téléchargement:</b>"
 msgid "Downloads"
 msgstr "Téléchargements"
 
-msgid "Nothing"
-msgstr "Ne rien faire"
-
-msgid "Send to player"
-msgstr "Envoyer au lecteur multimédia"
-
-msgid "Open Directory"
-msgstr "Ouvrir le répertoire"
-
 msgid "Events"
 msgstr "Événements"
 
@@ -1097,14 +1086,23 @@ msgstr ""
 msgid "File Manager command ($ for folder path):"
 msgstr "Commande du navigateur de fichiers ($ chemin du dossier):"
 
+msgid "Double-clicking on..."
+msgstr "Double-clique sur ..."
+
 msgid "Download transfers"
 msgstr "Fichiers téléchargés"
 
 msgid "Upload transfers"
 msgstr "Fichiers envoyés"
 
-msgid "Double-clicking on..."
-msgstr "Double-clique sur ..."
+msgid "Nothing"
+msgstr "Ne rien faire"
+
+msgid "Send to player"
+msgstr "Envoyer au lecteur multimédia"
+
+msgid "Open Directory"
+msgstr "Ouvrir le répertoire"
 
 msgid "GeoBlock"
 msgstr "Bloqueur géographique"
@@ -1161,9 +1159,6 @@ msgstr "Toujours quitter lors de la fermeture de la fenêtre principale"
 msgid "Icon Theme Directory (requires restart):"
 msgstr "Répertoire d'icône et de thème (redémarrage nécessaire):"
 
-msgid "Select"
-msgstr "Sélectionner"
-
 msgid "Current Icons:"
 msgstr "Icônes utilisées:"
 
@@ -1212,6 +1207,15 @@ msgstr "Adresse IP ignorées"
 msgid "Ignoring"
 msgstr "Ignorer"
 
+msgid "Logs directory:"
+msgstr "Répertoire d'enregistrement:"
+
+msgid "Chatroom Logs directory:"
+msgstr "Répertoire d'enregistrement des salons:"
+
+msgid "Private Chat Logs directory:"
+msgstr "Répertoire d'enregistrement des dialogues privés:"
+
 msgid "Log chatrooms by default"
 msgstr "Enregistrer les salons par défaut"
 
@@ -1220,18 +1224,6 @@ msgstr "Enregistrer les dialogues privés par défaut"
 
 msgid "Log transfers"
 msgstr "Enregistrer les transferts"
-
-msgid "Logs directory:"
-msgstr "Répertoire d'enregistrement:"
-
-msgid "Choose..."
-msgstr "Choisir un répertoire..."
-
-msgid "Chatroom Logs directory:"
-msgstr "Répertoire d'enregistrement des salons:"
-
-msgid "Private Chat Logs directory:"
-msgstr "Répertoire d'enregistrement des dialogues privés:"
 
 msgid "Display logged chat room messages when a room is rejoined"
 msgstr ""
@@ -1256,14 +1248,14 @@ msgstr "Afficher l'horodatage"
 msgid "Log file format:"
 msgstr "Format des enregistrements:"
 
-msgid "http://docs.python.org/lib/module-time.html"
-msgstr "http://docs.python.org/lib/module-time.html"
-
 msgid "Chat room format:"
 msgstr "Format des salons:"
 
 msgid "Private chat format:"
 msgstr "Format des dialogues privés:"
+
+msgid "http://docs.python.org/lib/module-time.html"
+msgstr "http://docs.python.org/lib/module-time.html"
 
 msgid "Logging"
 msgstr "Enregistrement"
@@ -1570,6 +1562,9 @@ msgstr "Les fichiers seront envoyés dans l'ordre de leur mise en attente"
 msgid "Queue Uploads if total transfer speed reaches"
 msgstr "Mettre en attente les envois si la vitesse totale atteint"
 
+msgid "KBytes/sec"
+msgstr "Ko/sec"
+
 msgid "Limit number of upload slots to"
 msgstr "Limiter le nombre d'envois simultanés à"
 
@@ -1677,6 +1672,9 @@ msgstr "Image:"
 
 msgid "Size: 0"
 msgstr "Taille: 0"
+
+msgid "Choose..."
+msgstr "Choisir un répertoire..."
 
 msgid "Personal settings"
 msgstr "Paramètres personnels"
@@ -3019,17 +3017,8 @@ msgstr "Bloquer l'adresse IP..."
 msgid "Gstreamer-python is not installed"
 msgstr "Gstreamer-python n'est pas installé"
 
-msgid "Choose a sound effects directory"
-msgstr "Choisir un répertoire pour les effets sonores"
-
-msgid "Choose an icon theme directory"
-msgstr "Choisir un répertoire pour le thème d'icônes"
-
 msgid "Pick a color, any color"
 msgstr "Choisissez une couleur, n'importe laquelle"
-
-msgid "Choose a directory to save your log files"
-msgstr "Choisir un répertoire de sauvegarde des journalisations"
 
 msgid "Protocol"
 msgstr "Protocole"
