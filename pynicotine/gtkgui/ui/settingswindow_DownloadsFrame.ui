@@ -36,6 +36,8 @@
                         <property name="can_focus">False</property>
                         <property name="n_rows">4</property>
                         <property name="n_columns">2</property>
+                        <property name="column_spacing">5</property>
+                        <property name="row_spacing">5</property>
                         <child>
                           <object class="GtkLabel" id="IncompleteDirLabel">
                             <property name="visible">True</property>
