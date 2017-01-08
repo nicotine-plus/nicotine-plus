@@ -1659,7 +1659,7 @@ class ChatRoom:
                 self.frame.OnRescan()
 
             # Rescan buddy shares if needed
-            if self.frame.np.config.sections["transfers"]["enablebuddyshares"] and self.np.config.sections["transfers"]["buddyshared"]:
+            if self.frame.np.config.sections["transfers"]["enablebuddyshares"]:
                 self.frame.OnBuddyRescan()
 
         elif cmd in ["/tick", "/t"]:

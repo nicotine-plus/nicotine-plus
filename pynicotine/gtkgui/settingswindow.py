@@ -711,11 +711,9 @@ class SharesFrame(buildFrame):
         # Buddy shares related menus are activated if needed
         buddies = self.enableBuddyShares.get_active()
 
-        buddies_shares_configured = isinstance(self.BuddyShares.get_model().get_iter_first(), gtk.TreeIter)
-
-        self.frame.rescan_buddy.set_sensitive(buddies and buddies_shares_configured)
-        self.frame.rebuild_buddy.set_sensitive(buddies and buddies_shares_configured)
-        self.frame.browse_buddy_shares.set_sensitive(buddies and buddies_shares_configured)
+        self.frame.rescan_buddy.set_sensitive(buddies)
+        self.frame.rebuild_buddy.set_sensitive(buddies)
+        self.frame.browse_buddy_shares.set_sensitive(buddies)
 
         # Public shares related menus are deactivated if we only share with friends
         friendsonly = self.FriendsOnly.get_active()

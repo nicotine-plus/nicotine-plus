@@ -577,7 +577,7 @@ class NicotineFrame:
                 self.OnRescan()
 
             # Rescan buddy shares if needed
-            if self.np.config.sections["transfers"]["enablebuddyshares"] and self.np.config.sections["transfers"]["buddyshared"]:
+            if self.np.config.sections["transfers"]["enablebuddyshares"]:
                 self.OnBuddyRescan()
 
         self.now = nowplaying.NowPlaying(self)
@@ -609,7 +609,7 @@ class NicotineFrame:
             self.browse_public_shares.set_sensitive(False)
 
         # Deactivate buddy shares related menu entries if we don't use them
-        if not self.np.config.sections["transfers"]["enablebuddyshares"] or not self.np.config.sections["transfers"]["buddyshared"]:
+        if not self.np.config.sections["transfers"]["enablebuddyshares"]:
             self.rescan_buddy.set_sensitive(False)
             self.rebuild_buddy.set_sensitive(False)
             self.browse_buddy_shares.set_sensitive(False)
@@ -2122,7 +2122,7 @@ class NicotineFrame:
         self.np.config.setBuddyShares(*data)
         self.np.config.writeShares()
 
-        if self.np.config.sections["transfers"]["buddyshared"]:
+        if self.np.config.sections["transfers"]["enablebuddyshares"]:
             self.rescan_buddy.set_sensitive(True)
             self.rebuild_buddy.set_sensitive(True)
             self.browse_buddy_shares.set_sensitive(True)
