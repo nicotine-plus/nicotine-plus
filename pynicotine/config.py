@@ -494,7 +494,7 @@ class Config:
         except OSError, msg:
             log.addwarning("Can't create directory '%s', reported error: %s" % (path, msg))
 
-        # Transition from 1.2.16 -> 1.3.0
+        # Transition from 1.2.16 -> 1.3.X
         # Do the cleanup early so we don't get the annoying
         # 'Unknown config option ...' message
         self.removeOldOption("transfers", "pmqueueddir")
@@ -559,7 +559,7 @@ class Config:
                         self.sections[i][j] = None
                         log.addwarning("CONFIG ERROR: Couldn't decode '%s' section '%s' value '%s'" % (str(j), str(i), str(val)))
 
-        # Convert fs-based shared to virtual shared (pre 1.3.0)
+        # Convert fs-based shared to virtual shared (pre 1.3.X)
         def _convert_to_virtual(x):
             if isinstance(x, tuple):
                 return x
