@@ -3,5 +3,3 @@ include COPYING
 include MANIFEST.in
 include NEWS
 include README.md
-exclude setup.py
-exclude setup.cfg
