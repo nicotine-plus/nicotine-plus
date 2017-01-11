@@ -323,24 +323,26 @@ class NetworkEventProcessor:
         """
 
         conn = None
+
         for i in self.peerconns:
             if i.username == user and i.init.type == 'P' and message.__class__ is not slskmessages.FileRequest:
                 conn = i
                 break
 
-        if conn is not None:
+        if conn is not None and conn.conn is not None:
 
-            if conn.conn is not None:
-                message.conn = conn.conn
-                self.queue.put(message)
+            message.conn = conn.conn
 
-                if window is not None:
-                    window.InitWindow(conn.username, conn.conn)
-                if message.__class__ is slskmessages.TransferRequest and self.transfers is not None:
-                    self.transfers.gotConnect(message.req, conn.conn)
-                return
-            else:
-                conn.msgs.append(message)
+            self.queue.put(message)
+
+            if window is not None:
+                window.InitWindow(conn.username, conn.conn)
+
+            if message.__class__ is slskmessages.TransferRequest and self.transfers is not None:
+                self.transfers.gotConnect(message.req, conn.conn)
+
+            return
+
         else:
 
             if message.__class__ is slskmessages.FileRequest:
@@ -389,6 +391,7 @@ class NetworkEventProcessor:
                 self.searchResultsConnections.append(conn)
 
         if message.__class__ is slskmessages.TransferRequest and self.transfers is not None:
+
             if conn.addr is None:
                 self.transfers.gettingAddress(message.req)
             elif conn.token is None:
