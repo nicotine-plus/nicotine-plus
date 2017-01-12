@@ -93,10 +93,6 @@ class ConnectToPeerTimeout(Timeout):
         self.callback = callback
 
 
-class CloseSearchResultsTimeout(Timeout):
-    pass
-
-
 class RespondToDistributedSearchesTimeout(Timeout):
     pass
 
@@ -186,10 +182,6 @@ class NetworkEventProcessor:
         self.requestedFolders = {}
         self.speed = 0
 
-        self.searchResultsConnections = []
-        searchresultstimeout = CloseSearchResultsTimeout(self.callback)
-        self.searchResultsTimer = threading.Timer(10, searchresultstimeout.timeout)
-        self.searchResultsTimer.start()
         self.respondDistributed = True
         responddistributedtimeout = RespondToDistributedSearchesTimeout(self.callback)
         self.respondDistributedTimer = threading.Timer(60, responddistributedtimeout.timeout)
@@ -280,7 +272,6 @@ class NetworkEventProcessor:
             slskmessages.DistribSearch: self.DistribSearch,
             ConnectToPeerTimeout: self.ConnectToPeerTimeout,
             RespondToDistributedSearchesTimeout: self.ToggleRespondDistributed,
-            CloseSearchResultsTimeout: self.closeSearchResults,
             transfers.TransferTimeout: self.TransferTimeout,
             slskmessages.RescanShares: self.shares.RescanShares,
             slskmessages.RescanBuddyShares: self.shares.RescanBuddyShares,
@@ -387,9 +378,6 @@ class NetworkEventProcessor:
                 self.peerconns[-1].conntimer = timer
                 timer.start()
 
-            if message.__class__ is slskmessages.FileSearchResult:
-                self.searchResultsConnections.append(conn)
-
         if message.__class__ is slskmessages.TransferRequest and self.transfers is not None:
 
             if conn.addr is None:
@@ -398,18 +386,6 @@ class NetworkEventProcessor:
                 self.transfers.gotAddress(message.req)
             else:
                 self.transfers.gotConnectError(message.req)
-
-    def closeSearchResults(self, msg):
-
-        if self.searchResultsTimer is not None:
-            self.searchResultsTimer.cancel()
-        for conn in self.searchResultsConnections[:]:
-            self.searchResultsConnections.remove(conn)
-            self.ClosePeerConnection(conn)
-
-        searchresultstimeout = CloseSearchResultsTimeout(self.callback)
-        self.searchResultsTimer = threading.Timer(10, searchresultstimeout.timeout)
-        self.searchResultsTimer.start()
 
     def setServerTimer(self):
 
@@ -434,9 +410,6 @@ class NetworkEventProcessor:
 
         if self.servertimer is not None:
             self.servertimer.cancel()
-
-        if self.searchResultsTimer is not None:
-            self.searchResultsTimer.cancel()
 
         if self.respondDistributedTimer is not None:
             self.respondDistributedTimer.cancel()
@@ -634,6 +607,7 @@ class NetworkEventProcessor:
 
         else:
             self.logMessage("%s %s %s" % (msg.err, msg.__class__, vars(msg)), 4)
+
             self.ClosedConnection(msg.connobj.conn, msg.connobj.addr)
 
     def IncPort(self, msg):
@@ -694,9 +668,6 @@ class NetworkEventProcessor:
                 self.setServerTimer()
             else:
                 self.frame.manualdisconnect = 0
-
-            if self.searchResultsTimer is not None:
-                self.searchResultsTimer.cancel()
 
             if self.respondDistributedTimer is not None:
                 self.respondDistributedTimer.cancel()
@@ -784,7 +755,7 @@ class NetworkEventProcessor:
 
     def NotifyPrivileges(self, msg):
 
-        if msg.token != None:
+        if msg.token is not None:
             pass
 
         self.logMessage("%s %s" % (msg.__class__, vars(msg)), 4)
@@ -796,7 +767,7 @@ class NetworkEventProcessor:
 
     def AckNotifyPrivileges(self, msg):
 
-        if msg.token != None:
+        if msg.token is not None:
             # Until I know the syntax, sending this message is probably a bad idea
             self.queue.put(slskmessages.AckNotifyPrivileges(msg.token))
 
@@ -814,7 +785,7 @@ class NetworkEventProcessor:
                     ip, port = i.addr
                 break
 
-        if user == None:
+        if user is None:
             # No peer connection
             return
 
@@ -848,7 +819,7 @@ class NetworkEventProcessor:
 
             tuple = self.frame.pluginhandler.IncomingPrivateChatEvent(msg.user, msg.msg)
 
-            if tuple != None:
+            if tuple is not None:
                 (u, msg.msg) = tuple
                 self.privatechat.ShowMessage(msg, msg.msg, status=status)
                 self.frame.pluginhandler.IncomingPrivateChatNotification(msg.user, msg.msg)
@@ -1027,7 +998,7 @@ class NetworkEventProcessor:
 
         if self.chatrooms is not None:
             event = self.frame.pluginhandler.IncomingPublicChatEvent(msg.room, msg.user, msg.msg)
-            if event != None:
+            if event is not None:
                 (r, n, msg.msg) = event
                 self.chatrooms.roomsctrl.SayChatRoom(msg, msg.msg)
                 self.frame.pluginhandler.IncomingPublicChatNotification(msg.room, msg.user, msg.msg)
@@ -1168,7 +1139,7 @@ class NetworkEventProcessor:
         else:
             self.users[msg.user] = UserAddr(status=msg.status)
 
-        if msg.privileged != None:
+        if msg.privileged is not None:
             if msg.privileged == 1:
                 if self.transfers is not None:
                     self.transfers.addToPrivileged(msg.user)
@@ -1462,7 +1433,7 @@ class NetworkEventProcessor:
         if user not in self.users:
             return 0
 
-        if self.users[user].addr != None:
+        if self.users[user].addr is not None:
 
             if len(self.users[user].addr) == 2:
                 if self.users[user].addr is not None:
@@ -1479,17 +1450,16 @@ class NetworkEventProcessor:
                         return 1
         return 0
 
-    def ClosePeerConnection(self, peerconn, force=False):
+    def ClosePeerConnection(self, peerconn):
 
-        if peerconn == None:
+        if peerconn is None:
             return
-
-        curtime = time.time()
 
         for i in self.peerconns[:]:
             if i.conn == peerconn:
-                if not self.protothread.socketStillActive(i.conn) or force:
+                if not self.protothread.socketStillActive(i.conn):
                     self.queue.put(slskmessages.ConnClose(i.conn))
+                    self.peerconns.remove(i)
                 break
 
     def UserInfoReply(self, msg):
@@ -1511,7 +1481,7 @@ class NetworkEventProcessor:
                     ip, port = i.addr
                 break
 
-        if user == None:
+        if user is None:
             # No peer connection
             return
 
@@ -1527,6 +1497,7 @@ class NetworkEventProcessor:
 
         # Check address is spoofed, if possible
         if user == self.config.sections["server"]["login"]:
+
             if ip is not None and port is not None:
                 self.logMessage(
                     _("Blocking %(user)s from making a UserInfo request, possible spoofing attempt from IP %(ip)s port %(port)s") % {
@@ -1542,19 +1513,22 @@ class NetworkEventProcessor:
                     1
                 )
 
-            if msg.conn.conn != None:
+            if msg.conn.conn is not None:
                 self.queue.put(slskmessages.ConnClose(msg.conn.conn))
 
             return
 
         if user in self.config.sections["server"]["banlist"]:
+
             self.logMessage(
                 _("%(user)s is banned, but is making a UserInfo request") % {
                     'user': user
                 },
                 1
             )
+
             self.logMessage("%s %s" % (msg.__class__, vars(msg)), 1)
+
             return
 
         try:
@@ -1602,6 +1576,7 @@ class NetworkEventProcessor:
     def FileSearchResult(self, msg):
 
         for i in self.peerconns:
+
             if i.conn is msg.conn.conn and self.search is not None:
 
                 if self.geoip:
@@ -1616,6 +1591,7 @@ class NetworkEventProcessor:
                     country = ""
 
                 self.search.ShowResult(msg, i.username, country)
+
                 self.ClosePeerConnection(i.conn)
 
         self.logMessage("%s %s" % (msg.__class__, vars(msg)), 4)
@@ -1658,6 +1634,7 @@ class NetworkEventProcessor:
     def CantConnectToPeer(self, msg):
 
         for i in self.peerconns[:]:
+
             if i.token == msg.token:
 
                 if i.conntimer is not None:
@@ -1667,6 +1644,7 @@ class NetworkEventProcessor:
                     self.DistribConnClosed(i)
 
                 self.peerconns.remove(i)
+
                 self.logMessage(_("Can't connect to %s (either way), giving up") % (i.username), 3)
 
                 for j in i.msgs:
@@ -1676,12 +1654,14 @@ class NetworkEventProcessor:
     def ConnectToPeerTimeout(self, msg):
 
         for i in self.peerconns[:]:
+
             if i == msg.conn:
 
                 if i == self.GetDistribConn():
                     self.DistribConnClosed(i)
 
                 self.peerconns.remove(i)
+
                 self.logMessage(_("User %s does not respond to connect request, giving up") % (i.username), 3)
 
                 for j in i.msgs:
@@ -1891,12 +1871,18 @@ class NetworkEventProcessor:
         self.distribcache.update(msg.list)
 
         if len(self.distribcache) > 0:
+
             self.queue.put(slskmessages.HaveNoParent(0))
+
             if not self.GetDistribConn():
+
                 user = self.distribcache.keys()[0]
                 addr = self.distribcache[user]
+
                 self.queue.put(slskmessages.SearchParent(addr[0]))
+
                 self.ProcessRequestToPeer(user, slskmessages.DistribConn(), None, addr)
+
         self.logMessage("%s %s" % (msg.__class__, vars(msg)), 4)
 
     def DistribAlive(self, msg):
@@ -1913,9 +1899,12 @@ class NetworkEventProcessor:
         del self.distribcache[conn.username]
 
         if len(self.distribcache) > 0:
+
             user = self.distribcache.keys()[0]
             addr = self.distribcache[user]
+
             self.queue.put(slskmessages.SearchParent(addr[0]))
+
             self.ProcessRequestToPeer(user, slskmessages.DistribConn(), None, addr)
         else:
             self.queue.put(slskmessages.HaveNoParent(1))
