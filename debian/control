@@ -4,7 +4,7 @@ Priority: extra
 Maintainer: Kip Warner <kip@thevertigo.com>
 Standards-Version: 3.9.8
 Build-Depends:
-    debhelper (>= 10),
+    debhelper (>= 9),
     dh-python,
     python-all,
     python-gobject-2,
