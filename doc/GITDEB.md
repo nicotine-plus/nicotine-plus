@@ -9,6 +9,7 @@
 * Update APT metadata and install package
 
     `apt-get update`
+    
     `apt-get install nicotine`
 
 Everytime you upgrade your system now, nicotine will be updated to latest version available on git master branch.
