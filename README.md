@@ -15,6 +15,8 @@ and add some new features that users want and/or need.
 
 To run it from git master see: [RUNFROMGIT](doc/RUNFROMGIT.md)
 
+A package repository for Debian/Ubuntu containing latest git master based package is also availabe: [GITDEB](doc/GITDEB.md)
+
 ### Installation / Packaging
 
 For installation / packaging instruction see: [INSTALL](doc/INSTALL.md)
