@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# COPYRIGHT (C) 2016 Michael Labouebe <gfarmerfr@free.fr>
+# COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2016 Mutnick <muhing@yahoo.com>
 # COPYRIGHT (C) 2009-2011 Quinox <quinox@users.sf.net>
 # COPYRIGHT (C) 2009 Daelstorm <daelstorm@gmail.com>
@@ -192,7 +192,7 @@ class Shares:
                     ip, port = i.addr
                 break
 
-        if user == None:
+        if user is None:
             # No peer connection
             return
 
@@ -209,7 +209,7 @@ class Shares:
         #     # Message IS spoofed
         #     return
         if user == self.config.sections["server"]["login"]:
-            if ip != None and port != None:
+            if ip is not None and port is not None:
                 self.logMessage(
                     _("%(user)s is making a BrowseShares request, blocking possible spoofing attempt from IP %(ip)s port %(port)s") % {
                         'user': user,
@@ -222,7 +222,7 @@ class Shares:
                         'user': user
                     }, None)
 
-            if msg.conn.conn != None:
+            if msg.conn.conn is not None:
                 self.queue.put(slskmessages.ConnClose(msg.conn.conn))
             return
 
@@ -592,12 +592,18 @@ class Shares:
             info = metadata.detect(pathname)
 
             if info:
-                bitrateinfo = (int(info["bitrate"]), int(info["vbr"]))
-                fileinfo = (name, size, bitrateinfo, int(info["time"]))
+
+                # Sometimes the duration (time) or the bitrate of the file is unknown
+                if info["time"] is None or info["bitrate"] is None:
+                    fileinfo = (name, size, None, None)
+                else:
+                    bitrateinfo = (int(info["bitrate"]), int(info["vbr"]))
+                    fileinfo = (name, size, bitrateinfo, int(info["time"]))
             else:
                 fileinfo = (name, size, None, None)
 
             return fileinfo
+
         except Exception, errtuple:
             message = _("Scanning File Error: %(error)s Path: %(path)s") % {'error': errtuple, 'path': pathname}
             self.logMessage(message)
@@ -796,6 +802,7 @@ class Shares:
     def getFileInfoUnicode(self, name, pathname):
 
         try:
+
             if type(name) is str:
                 pathname_f = u"%s" % pathname
             else:
@@ -812,12 +819,18 @@ class Shares:
                 info = metadata.detect(pathname)
 
             if info:
-                bitrateinfo = (int(info["bitrate"]), int(info["vbr"]))
-                fileinfo = (name, size, bitrateinfo, int(info["time"]))
+
+                # Sometimes the duration (time) or the bitrate of the file is unknown
+                if info["time"] is None or info["bitrate"] is None:
+                    fileinfo = (name, size, None, None)
+                else:
+                    bitrateinfo = (int(info["bitrate"]), int(info["vbr"]))
+                    fileinfo = (name, size, bitrateinfo, int(info["time"]))
             else:
                 fileinfo = (name, size, None, None)
 
             return fileinfo
+
         except Exception, errtuple:
             message = _("Scanning File Error: %(error)s Path: %(path)s") % {'error': errtuple, 'path': pathname}
             self.logMessage(message)

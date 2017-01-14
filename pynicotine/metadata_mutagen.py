@@ -132,7 +132,7 @@ def processFlac(audio):
     return {
         "bitrate": bitrate,
         "vbr": False,
-        "time": audio.info.length,
+        "time": duration,
     }
 
 
@@ -185,5 +185,5 @@ def processASF(audio):
     return {
         "bitrate": bitrate,
         "vbr": True,
-        "time": audio.info.length,
+        "time": duration,
     }
