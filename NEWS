@@ -4,7 +4,20 @@ News
     As per GCS § 6.7, this file contains a list of user-visible noteworthy
     changes. Note that this is not the same as a changelog.
 
-Version 1.3.1 (10th January 2017)
+Version 1.3.2 unstable (XXth January 2017)
+-----------------------------
+
+Bugs closed on Github
+ * Uploads stop working after a while (#35)
+ * Can't download from certain users (#37)
+
+Bug closed on Trac (readonly)
+ * shared files appear not shared to some peers (#744)
+ * Stops Downloading After About 15 Minutes (#759)
+ * Browse Files from Friemds (#762)
+ * Download issue.... (#903)
+
+Version 1.3.1 unstable (10th January 2017)
 -----------------------------
 
 Behavior
