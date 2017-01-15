@@ -2,10 +2,11 @@
 
 A graphical client for the SoulSeek peer-to-peer system
 
-| Website                | https://www.nicotine-plus.org                        |
-| :--------------------- | :--------------------------------------------------- |
-| **Code & Bug Tracker** | **https://github.com/Nicotine-Plus/nicotine-plus**   |
-| **IRC**                | **https://webchat.freenode.net/?channels=nicotine+** |
+| Website                   | https://www.nicotine-plus.org                            |
+| :------------------------ | :------------------------------------------------------- |
+| **Code & Bug Tracker**    | **https://github.com/Nicotine-Plus/nicotine-plus**       |
+| **IRC**                   | **https://webchat.freenode.net/?channels=nicotine+**     |
+| **PPA for Debian/Ubuntu** | **https://launchpad.net/~kip/+archive/ubuntu/nicotine+** |
 
 Nicotine+ is an attempt to keep Nicotine working with the latest libraries,
 kill bugs, keep current with the Soulseek protocol
@@ -15,11 +16,11 @@ and add some new features that users want and/or need.
 
 To run it from git master see: [RUNFROMGIT](doc/RUNFROMGIT.md)
 
-A package repository for Debian/Ubuntu containing latest git master based package is also availabe: [GITDEB](doc/GITDEB.md)
+A Debian/Ubuntu repository containing latest git master based packages is also available see: [GITDEB](doc/GITDEB.md)
 
-### Installation / Packaging
+### Packaging
 
-For installation / packaging instruction see: [INSTALL](doc/INSTALL.md)
+For packaging instructions see: [PACKAGING](doc/PACKAGING.md)
 
 For downstream packages patches see: [DISTRO_PATCHES](doc/DISTRO_PATCHES.md)
 

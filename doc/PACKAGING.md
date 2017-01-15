@@ -1,14 +1,6 @@
-# Installation / Packaging
+# Packaging
 
 ### GNU/Linux instructions
-
-##### Installation
-
-To install Nicotine from the git repository run:
-
-`sudo python setup.py install`
-
-**WARNING**: Nicotine+ will be installed into the python system directory (typically /usr). There is no easy way to remove it once installed this way.
 
 ##### Building a source distribution
 
