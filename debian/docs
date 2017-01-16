@@ -4,7 +4,7 @@ README.md
 debian/README.Debian
 doc/NicotinePlusGuide/
 doc/DISTRO_PATCHES.md
-doc/INSTALL.md
+doc/PACKAGING.md
 doc/RUNFROMGIT.md
 doc/TODO.md
 doc/TRANSLATIONS.md
