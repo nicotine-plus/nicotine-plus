@@ -1,16 +1,27 @@
 # Nicotine+
 
-A graphical client for the SoulSeek peer-to-peer system
-
-| Website                   | https://www.nicotine-plus.org                            |
-| :------------------------ | :------------------------------------------------------- |
-| **Code & Bug Tracker**    | **https://github.com/Nicotine-Plus/nicotine-plus**       |
-| **IRC**                   | **https://webchat.freenode.net/?channels=nicotine+**     |
-| **PPA for Debian/Ubuntu** | **https://launchpad.net/~kip/+archive/ubuntu/nicotine+** |
+A graphical client for the SoulSeek peer-to-peer system.
 
 Nicotine+ is an attempt to keep Nicotine working with the latest libraries,
 kill bugs, keep current with the Soulseek protocol
 and add some new features that users want and/or need.
+
+### Links
+
+| Website                              | https://www.nicotine-plus.org                                    |
+| :----------------------------------- | :--------------------------------------------------------------- |
+| **Code & Bug Tracker**               | **https://github.com/Nicotine-Plus/nicotine-plus**               |
+| **IRC**                              | **https://webchat.freenode.net/?channels=nicotine+**             |
+| **PPA for Debian/Ubuntu (Stable)**   | **https://launchpad.net/~kip/+archive/ubuntu/nicotine+**         |
+| **PPA for Debian/Ubuntu (Unstable)** | **https://launchpad.net/~kip/+archive/ubuntu/nicotine+unstable** |
+
+### Versioning scheme
+
+Nicotine+ uses a versioning scheme similar to what gnome does:
+
+* Stable releases have an even minor version number, ex: 1.**4**.x, 1.**6**.x, ...
+
+* Unstable releases have an odd minor version number, ex: 1.**3**.x, 1.**5**.x, ...
 
 ### Run it from git
 
