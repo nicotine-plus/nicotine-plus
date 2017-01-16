@@ -106,6 +106,9 @@ class Shares:
         sharedfiles = sum([len(x) for x in conf["transfers"][shared_db].values()])
         self.queue.put(slskmessages.SharedFoldersFiles(sharedfolders, sharedfiles))
 
+    def RebuildShares(self, msg):
+        self.RescanShares(msg, rebuild=True)
+
     def RescanShares(self, msg, rebuild=False):
 
         try:
@@ -129,9 +132,6 @@ class Shares:
         except Exception, ex:
             log.addwarning(_("Failed to rebuild share, serious error occurred. If this problem persists delete ~/.nicotine/*.db and try again. If that doesn't help please file a bug report with the stack trace included (see terminal output after this message). Technical details: %s") % ex)
             raise
-
-    def RebuildShares(self, msg):
-        self.RescanShares(msg, rebuild=True)
 
     def RebuildBuddyShares(self, msg):
         self.RescanBuddyShares(msg, rebuild=True)
@@ -420,10 +420,11 @@ class Shares:
         # Pack shares data
         # returns dict in format { Directory : hex string of files+metadata, ... }
         gobject.idle_add(progress.set_text, _("Building DataBase"))
+
         if win32:
-            newsharedfilesstreams = self.getFilesStreamsUnicode(newmtimes, oldmtimes, sharedfilesstreams, newsharedfiles, yieldfunction)
+            newsharedfilesstreams = self.getFilesStreamsUnicode(newmtimes, oldmtimes, sharedfilesstreams, newsharedfiles, rebuild, yieldfunction)
         else:
-            newsharedfilesstreams = self.getFilesStreams(newmtimes, oldmtimes, sharedfilesstreams, newsharedfiles, yieldfunction)
+            newsharedfilesstreams = self.getFilesStreams(newmtimes, oldmtimes, sharedfilesstreams, newsharedfiles, rebuild, yieldfunction)
 
         # Update Search Index
         # newwordindex is a dict in format {word: [num, num, ..], ... } with num matching
@@ -432,6 +433,7 @@ class Shares:
         gobject.idle_add(progress.set_text, _("Building Index"))
 
         gobject.idle_add(progress.set_fraction, 0.0)
+
         newwordindex, newfileindex = self.getFilesIndex(newmtimes, oldmtimes, shared_directories, newsharedfiles, yieldfunction, progress)
 
         gobject.idle_add(progress.set_fraction, 1.0)
@@ -610,7 +612,7 @@ class Shares:
             displayTraceback(sys.exc_info()[2])
 
     # Get streams of files on Unix
-    def getFilesStreams(self, mtimes, oldmtimes, oldstreams, newsharedfiles, yieldcall=None):
+    def getFilesStreams(self, mtimes, oldmtimes, oldstreams, newsharedfiles, rebuild=False, yieldcall=None):
 
         streams = {}
         shared = self.config.sections["transfers"]["shared"]
@@ -622,7 +624,7 @@ class Shares:
             if self.hiddenCheck({'dir': directory}):
                 continue
 
-            if directory in oldmtimes:
+            if not rebuild and directory in oldmtimes:
                 if mtimes[directory] == oldmtimes[directory]:
                     if os.path.exists(directory):
                         # No change
@@ -837,7 +839,7 @@ class Shares:
             displayTraceback(sys.exc_info()[2])
 
     # Get streams of files on Windows
-    def getFilesStreamsUnicode(self, mtimes, oldmtimes, oldstreams, newsharedfiles, yieldcall=None):
+    def getFilesStreamsUnicode(self, mtimes, oldmtimes, oldstreams, newsharedfiles, rebuild=False, yieldcall=None):
 
         streams = {}
         shared = self.config.sections["transfers"]["shared"]
@@ -857,7 +859,7 @@ class Shares:
                 # Partial information, happened with unicode paths that N+ couldn't handle properly
                 del oldmtimes[directory]
 
-            if directory in oldmtimes:
+            if not rebuild and directory in oldmtimes:
                 if mtimes[directory] == oldmtimes[directory]:
                     if os.path.exists(u_directory):
                         # No change
