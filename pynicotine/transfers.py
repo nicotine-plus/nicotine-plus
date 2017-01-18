@@ -52,7 +52,7 @@ from utils import executeCommand
 from gtkgui.utils import recode2
 from time import sleep
 import gobject
-from temporary import HybridListDictionaryTransferMonstrosity, ReqidManager
+from temporary import HybridListDictionaryTransferMonstrosity
 win32 = sys.platform.startswith("win")
 
 
@@ -123,7 +123,6 @@ class Transfers:
         self.eventprocessor = eventprocessor
         self.downloads = HybridListDictionaryTransferMonstrosity()
         self.uploads = HybridListDictionaryTransferMonstrosity()
-        self.transfers = ReqidManager()
         self.privilegedusers = []
         self.RequestedUploadQueue = []
         getstatus = {}
@@ -288,7 +287,6 @@ class Transfers:
 
         if transfer.status is not "Filtered":
             transfer.req = newId()
-            self.transfers.add(transfer)
             realpath = self.eventprocessor.shares.virtual2real(filename)
             request = slskmessages.TransferRequest(None, direction, transfer.req, filename, self.getFileSize(realpath), realpath)
             self.eventprocessor.ProcessRequestToPeer(user, request)
@@ -328,50 +326,8 @@ class Transfers:
                 1
             )
 
-    def _findTransfer(self, req):
-
-        try:
-            transfer = self.transfers[req]
-        except KeyError:
-            print("Failed to lookup %s in self.transfers" % req)
-            return (None, None)
-
-        key = (transfer.user, transfer.filename)
-        try:
-            self.downloads[key]
-            return (transfer, "down")
-        except KeyError:
-            pass
-
-        try:
-            self.uploads[key]
-            return (transfer, "up")
-        except KeyError:
-            pass
-
-        print("WARNING: Could not find %s in uploads nor downloads!" % (key, ))
-        return (None, None)
-
-    def _updateStatus(self, req, status):
-
-        (transfer, direction) = self._findTransfer(req)
-
-        if transfer is not None:
-            transfer.status = status
-            if direction == "down":
-                self.downloadspanel.update(transfer)
-            else:
-                self.uploadspanel.update(transfer)
-            return True
-
-        return False
-
     def gettingAddress(self, req):
 
-        if self._updateStatus(req, "Getting address"):
-            return
-
-        print("Entering old part gettingAddress")
         for i in self.downloads:
             if i.req == req:
                 i.status = "Getting address"
@@ -386,10 +342,6 @@ class Transfers:
         """ A connection is in progress, we got the address for a user we need
         to connect to."""
 
-        if self._updateStatus(req, "Connecting"):
-            return
-
-        print("Entering old part gotAddress")
         for i in self.downloads:
             if i.req == req:
                 i.status = "Connecting"
@@ -405,10 +357,6 @@ class Transfers:
         connect to us. Note that all this logic is handled by the network
         event processor, we just provide a visual feedback to the user."""
 
-        if self._updateStatus(req, "Waiting for peer to connect"):
-            return
-
-        print("Entering old part gotConnectError")
         for i in self.downloads:
             if i.req == req:
                 i.status = "Waiting for peer to connect"
@@ -421,17 +369,6 @@ class Transfers:
 
     def gotCantConnect(self, req):
         """ We can't connect to the user, either way. """
-
-        (transfer, direction) = self._findTransfer(req)
-
-        if transfer is not None:
-            if direction == "down":
-                self._getCantConnectDownload(transfer)
-            else:
-                self._getCantConnectUpload(transfer)
-            return
-
-        print("Entering old part gotConnect")
 
         for i in self.downloads:
             if i.req == req:
@@ -474,11 +411,6 @@ class Transfers:
         """ A transfer connection has been established,
         now exchange initialisation messages."""
 
-        if self._updateStatus(req, "Initializing transfer"):
-            return
-
-        print("Entering old part gotFileConnect")
-
         for i in self.downloads:
             if i.req == req:
                 i.status = "Initializing transfer"
@@ -492,19 +424,6 @@ class Transfers:
     def gotConnect(self, req, conn):
         """ A connection has been established, now exchange initialisation
         messages."""
-
-        (transfer, direction) = self._findTransfer(req)
-
-        if transfer is not None:
-            transfer.status = "Requesting file"
-            transfer.requestconn = conn
-            if direction == "down":
-                self.downloadspanel.update(transfer)
-            else:
-                self.uploadspanel.update(transfer)
-            return
-
-        print("Entering old part gotConnect")
 
         for i in self.downloads:
             if i.req == req:
@@ -1037,27 +956,18 @@ class Transfers:
         """ Got an incoming file request. Could be an upload request or a
         request to get the file that was previously queued"""
 
-        (transfer, direction) = self._findTransfer(msg.req)
-
-        if transfer is not None:
-            if direction == "down":
-                self._FileRequestDownload(msg, transfer)
-            else:
-                self._FileRequestUpload(msg, transfer)
-            return
-
-        print("Entering old part FileRequest")
-
         for i in self.downloads:
             if msg.req == i.req:
                 self._FileRequestDownload(msg, i)
                 return
+
         for i in self.uploads:
             if msg.req == i.req:
                 self._FileRequestUpload(msg, i)
                 return
 
         self.eventprocessor.logMessage(_("Unknown file request: %s") % str(vars(msg)), 1)
+
         self.queue.put(slskmessages.ConnClose(msg.conn))
 
     def _FileRequestDownload(self, msg, i):

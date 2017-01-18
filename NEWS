@@ -4,6 +4,13 @@ News
     As per GCS § 6.7, this file contains a list of user-visible noteworthy
     changes. Note that this is not the same as a changelog.
 
+Version 1.4.0 unreleased (XXth January 2017)
+-----------------------------
+
+Miscellaneous bugs fixed:
+ * Some files were not shown in shares due to broken metadata of these files.
+
+
 Version 1.3.2 unstable (14th January 2017)
 -----------------------------
 
