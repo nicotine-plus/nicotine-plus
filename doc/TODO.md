@@ -5,25 +5,10 @@ A list of stuff & things todo (not in any particular order):
 #### Short term goals
 
 * **IN PROGRESS**: Take care of [deprecated symbols](DEPRECATED_SYMBOLS.md)
-* **IN PROGRESS**: Drop the bundle Configparser module: use upstream version.
 * GNU/Linux: Switch to using XDG_* directories.
 * Our sounds are dropped by downstream packagers for being non-free: investigate.
 * Convert old (unmaintained) python-GeoIP code to an up to date version.
 * Curate and update embedded plugins.
-* **DONE**: Convert all the libglade files to GTKBuilder.
-* **DONE**: Sorting/applying downstream patches (Debian, Fedora & OpenSuSE).
-* **DONE**: Drop the embeded Web browser: doesn't work anymore, outdated and security nightmare.
-* **DONE**: Drop the special treatment for downloading ogg files.
-* **DONE**: Drop RGBA code that was disable by default and broken.
-* **DONE**: Upload old sourceforge releases to github & refresh the update check code.
-* **DONE**: Finish the port of FastConfigure to use virtual shares.
-* **DONE**: Refresh setuptools installer.
-* **DONE**: Drop in-house mp3 metadata parsing: replaced by mutagen.
-* **DONE**: Drop the old trayicon module: use the GTK included one.
-* **DONE**: Drop psyco (code speed up for Windows): unmaintained and not useful anymore.
-* **DONE**: Drop py2exe code: PyInstaller will be used for Windows.
-* **DONE**: Rewrite UPnP handling to avoid nasty bugs.
-* **DONE**: Rewrite locales/translation code to better handle Windows.
 
 #### Long term goals
 
@@ -35,34 +20,11 @@ A list of stuff & things todo (not in any particular order):
 * Switch to Gstreamer 1.X (require GTK3).
 * Switch spellcheck to gspell (require GTK3).
 * Switch from python-notify to an up to date alternative.
+* Replace the bundle Configparser module by something easier like json.
 * Replace db files (causing many problems) by something easier like json.
-* **IN PROGRESS**: Use pip and venv for build/tests purposes.
 * **IN PROGRESS**: Make as much as possible optional dependencies work on Windows.
 * **STALLED**: Build the OSX version: I've no Mac.
 
 #### Windows specific goals
 
-* NSIS installer:
-
-    * Test & refresh Quinox stuff.
-
-
-* **DONE**: Theming
-
-    * Find a GTK2 theme to apply to the frozen app so it doesn't look bad.
-    * Same goes for fonts.
-
-
-* **DONE**: PyInstaller:
-
-    * Document how to build a frozen app.
-    * Write a spec file including:
-        * The Nicotine Guide.
-        * Translations files.
-        * MiniUPnPc binary for UPnP support.
-        * GtkBuilder files.
-
-
-* **DONE**: UPnP:
-
-    * Use the precompiled binary from the MiniUPnP Project.
+* Refresh the NSIS installer.
