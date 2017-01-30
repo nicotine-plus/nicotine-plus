@@ -230,30 +230,20 @@ class Downloads(TransferList):
         if incompletedir == "":
             incompletedir = downloaddir
 
-        filemanager_config = self.frame.np.config.sections["ui"]["filemanager"]
+        filemanager = self.frame.np.config.sections["ui"]["filemanager"]
         transfer = self.selected_transfers[0]
 
-        filemanager = filemanager_config.split()[0]
-        filemanager_args = filemanager_config.split(filemanager)[1]
-        arg = filemanager_args.split('$')[0].strip()
         complete_path = os.path.join(downloaddir, transfer.path)
-        arg_list = []
-        arg_list.append(filemanager)
-
-        for i in arg.split():
-            arg_list.append(i)
 
         if transfer.path is "":
             if transfer.status is "Finished":
-                arg_list.append(downloaddir)
+                executeCommand(filemanager, downloaddir)
             else:
-                arg_list.append(incompletedir)
+                executeCommand(filemanager, incompletedir)
         elif os.path.exists(complete_path):  # and tranfer.status is "Finished"
-            arg_list.append(complete_path)
+            executeCommand(filemanager, complete_path)
         else:
-            arg_list.append(incompletedir)
-
-        os.spawnvp(os.P_WAIT, filemanager, arg_list)
+            executeCommand(filemanager, incompletedir)
 
     def RebuildTransfers(self):
 

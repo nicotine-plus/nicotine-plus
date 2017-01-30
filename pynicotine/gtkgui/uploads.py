@@ -132,7 +132,6 @@ class Uploads(TransferList):
         filemanager = self.frame.np.config.sections["ui"]["filemanager"]
         transfer = self.selected_transfers[0]
 
-        command = ""
         if os.path.exists(transfer.path):
             executeCommand(filemanager, transfer.path)
         else:
