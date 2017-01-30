@@ -2468,6 +2468,8 @@ class EventsFrame(buildFrame):
         # Combobox for file manager
         self.FileManagerCombo_List = gtk.ListStore(gobject.TYPE_STRING)
         for executable in [
+            "xdg-open $",
+            "explorer $",
             "emelfm2 -1 $",
             "gentoo -1 $",
             "konqueror $",
