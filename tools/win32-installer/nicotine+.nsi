@@ -1,5 +1,5 @@
 !define PRODUCT_NAME "Nicotine+"
-!define PRODUCT_VERSION "1.2.14"
+!define PRODUCT_VERSION "1.4.0"
 !define PRODUCT_PUBLISHER "Nicotine+ Team"
 !define PRODUCT_WEB_SITE "http://www.nicotine-plus.org"
 !define PRODUCT_DIR_REGKEY "Software\Nicotine+"
@@ -23,7 +23,6 @@
 !insertmacro MUI_PAGE_LICENSE "..\..\COPYING"
 ; Validate installation directory
 !define MUI_DIRECTORYPAGE_VERIFYONLEAVE
-!define MUI_PAGE_CUSTOMFUNCTION_LEAVE ValidateInstDir
 !insertmacro MUI_PAGE_DIRECTORY
 Page custom ShortCuts
 !insertmacro MUI_PAGE_INSTFILES
@@ -44,18 +43,8 @@ Section "Core" Core
   SectionIn RO
   SetOverwrite on
   SetOutPath "$INSTDIR"
-  File /r "..\..\dist\"
+  File /r "..\..\dist\Nicotine+\"
 SectionEnd
-
-; This function check if python24.dll exists
-Function ValidateInstDir
-  ${If} ${FileExists} "$INSTDIR\python24.dll"
-    MessageBox MB_OK|MB_ICONEXCLAMATION "The choosen directory contains python24.dll.$\n\
-This probably means you are installing over an old Nicotine+ (< 1.2.10) installation. It is not supported.$\n$\n\
-Please choose another directory or cancel this setup, uninstall the previous Nicotine+ version and then, install this one again."
-    Abort
-  ${EndIf}
-FunctionEnd
 
 Function ShortCuts
   !insertmacro MUI_HEADER_TEXT "Nicotine+ shortcuts" "Please choose where shortctus will be created"
@@ -69,24 +58,13 @@ Section -Post
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "DisplayVersion" "${PRODUCT_VERSION}"
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "URLInfoAbout" "${PRODUCT_WEB_SITE}"
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "Publisher" "${PRODUCT_PUBLISHER}"
-  ; Let's check if and old config exists and move it to APPDATA if possible
-  ${If} ${FileExists} "$INSTDIR\config"
-    DetailPrint "Old configuration detected."
-    ${If} ${FileExists} "$APPDATA\nicotine"
-      DetailPrint "Nicotine+ configuration already exists in APPDATA. Don't move the old one."
-    ${Else}
-      CreateDirectory "$APPDATA\nicotine"
-      Rename "$INSTDIR\config" "$APPDATA\nicotine\config"
-      DetailPrint  "Old Nicotine+ configuration moved to current user APPDATA."
-    ${EndIf}
-  ${EndIf}
   ReadINIStr $0 "$PLUGINSDIR\shortcuts.ini" "Field 2" "State"
   ${if} $0 = 1
-    CreateShortCut "$SMPROGRAMS\Nicotine+.lnk" "$INSTDIR\nicotine.exe"
+    CreateShortCut "$SMPROGRAMS\Nicotine+.lnk" "$INSTDIR\Nicotine+.exe"
   ${endif}
   ReadINIStr $0 "$PLUGINSDIR\shortcuts.ini" "Field 3" "State"
   ${if} $0 = 1
-    CreateShortCut "$DESKTOP\Nicotine+.lnk" "$INSTDIR\nicotine.exe" "" "$INSTDIR\files\win32\nicotine.ico" 0
+    CreateShortCut "$DESKTOP\Nicotine+.lnk" "$INSTDIR\Nicotine+.exe" "" "$INSTDIR\files\win32\nicotine-plus-128px.ico" 0
   ${endif}
 SectionEnd
 
@@ -96,8 +74,8 @@ SectionEnd
 
 Function .onInit
   !insertmacro MUI_INSTALLOPTIONS_EXTRACT "shortcuts.ini"
-  ${IfNot} ${AtLeastWin2000}
-    MessageBox MB_OK|MB_ICONEXCLAMATION "Nicotine+ requires Windows 2000 or later."
+  ${IfNot} ${AtLeastWin7}
+    MessageBox MB_OK|MB_ICONEXCLAMATION "Nicotine+ requires Windows 7 or later."
     Quit
   ${EndIf}
 FunctionEnd

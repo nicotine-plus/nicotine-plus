@@ -32,7 +32,7 @@ added_files = [
     # UPnPc static binary
     ('../files/win32/upnpc', 'files/win32/upnpc'),
 
-    # Icon for the resulting Nicotine+.exe file
+    # Icon for the resulting Nicotine+.exe file and shortcuts
     ('../files/win32/nicotine-plus-128px.ico', 'files/win32'),
 
     # GTK2 rc file for theming

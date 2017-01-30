@@ -24,7 +24,3 @@ A list of stuff & things todo (not in any particular order):
 * Replace db files (causing many problems) by something easier like json.
 * **IN PROGRESS**: Make as much as possible optional dependencies work on Windows.
 * **STALLED**: Build the OSX version: I've no Mac.
-
-#### Windows specific goals
-
-* Refresh the NSIS installer.
