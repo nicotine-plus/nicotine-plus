@@ -35,9 +35,6 @@ archive/money.png
 Created by Quinox (released under GPLv2+ and upgraded to GPLv3+)
 
 archive/nicotine-plus-48px.ico
-archive/nicotine-32px.ico
-archive/nicotine-48px.ico
-archive/nicotine-64px.ico
 archive/nicotine+.png
 
 icons/*
@@ -68,21 +65,3 @@ and based on the Tango Desktop Project Dialog-information.svg icon
 
 archive/hilite.svg
 archive/hilite3.svg
-
----
-
-Created by contact@nilux.org / Unknown license:
-
-archive/nicotine-proposal1.png
-archive/nicotine-proposal2.png
-
----
-
-Unknown license / origin (dates back from the svn rebuild):
-
-archive/nicotine.ico
-archive/nicotine.png
-archive/nicotine_blue.png
-archive/nicotine_blue_upscaled.png
-archive/nicotine_clear.png
-archive/nicotine_orange.png
