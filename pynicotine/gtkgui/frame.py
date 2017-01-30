@@ -2513,25 +2513,26 @@ class NicotineFrame:
             self.DownloadButtons.hide()
 
     def OnNicotineGuide(self, widget):
-        paths = []
-        file = "NicotinePlusGuide/NicotineGuide.htm"
-        path1 = os.getcwd()
-        path1split = path1.rsplit(os.sep, 1)
 
-        if path1split[1] == "doc":
-            paths.append(path1split[0])
-        else:
-            paths.append(path1)
+        paths = []
+
+        subdir = "NicotinePlusGuide"
+        file = "NicotineGuide.htm"
+
+        paths.append(os.getcwd())
+
         path2 = "%s/share/doc/nicotine" % sys.prefix
         paths.append(path2)
 
         for path in paths:
-            if os.path.exists(os.sep.join([path, "doc", file])):
-                url = "file:%s/%s/%s" % (urllib.pathname2url(path).replace("|", ":"), "doc", file)
+
+            if os.path.exists(os.sep.join([path, "doc", subdir, file])):
+                url = "file:%s/%s/%s/%s" % (urllib.pathname2url(path).replace("|", ":"), "doc", subdir, file)
                 OpenUri(url)
                 return
-            if os.path.exists(os.sep.join([path, file])):
-                url = "file:%s/%s" % (urllib.pathname2url(path).replace("|", ":"), file)
+
+            if os.path.exists(os.sep.join([path, subdir, file])):
+                url = "file:%s/%s/%s" % (urllib.pathname2url(path).replace("|", ":"), subdir, file)
                 OpenUri(url)
                 return
         else:

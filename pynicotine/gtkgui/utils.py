@@ -35,6 +35,7 @@ import string
 import re
 import types
 import urllib
+import webbrowser
 
 from pynicotine import slskmessages
 from pynicotine.utils import executeCommand, findBestEncoding
@@ -301,7 +302,12 @@ def OpenUri(uri):
             executeCommand(PROTOCOL_HANDLERS[protocol], uri)
             return
 
-    # Situation 2, we let Gnome VFS deal with it
+    # Situation 2, user did not define a way of handling the protocol, we'll leave it up to python
+    if webbrowser:
+        webbrowser.open(uri)
+        return
+
+    # Situation 3, we let Gnome VFS deal with it
     try:
         import gnomevfs
         gnomevfs.url_show(uri)
