@@ -1,3 +1,15 @@
+nicotine (1.3.2-kip1~git2017014) yakkety; urgency=medium
+
+  * Version 1.3.2.
+
+ -- Kip Warner <kip@thevertigo.com>  Sat, 14 Jan 2017 11:31:15 -0800
+
+nicotine (1.3.1-kip1~git20170109) yakkety; urgency=medium
+
+  * Version 1.3.1.
+
+ -- Kip Warner <kip@thevertigo.com>  Mon, 09 Jan 2017 11:38:21 -0800
+
 nicotine (1.3.0-kip1~git20161212) yakkety; urgency=medium
 
   * Git head.
@@ -11,24 +23,42 @@ nicotine (1.3.0-kip1~git20161210) yakkety; urgency=medium
 
  -- Kip Warner <kip@thevertigo.com>  Sat, 10 Dec 2016 17:05:30 -0800
 
-nicotine (1.2.12+dfsg-1ubuntu1.1) karmic-proposed; urgency=low
+nicotine (1.2.16+dfsg-1.1) unstable; urgency=medium
 
-  * SRU Upload. (LP: #459697)
-  * debian/control:
-    - added a depends on geoip-database preventing nicotine
-      to fail at startup.
+  * Non-maintainer upload.
+  * Port from python-support to dh-python (Closes: #786292)
+  * Drop debian/pyversions
 
- -- Andrea Veri <andrea.veri89@gmail.com>  Thu, 05 Nov 2009 23:37:18 +0100
+ -- Andrey Rahmatullin <wrar@debian.org>  Sun, 23 Aug 2015 16:18:47 +0500
 
-nicotine (1.2.12+dfsg-1ubuntu1) karmic; urgency=low
+nicotine (1.2.16+dfsg-1) unstable; urgency=low
 
-  * debian/control:
-    - added a depends on python-glade2 to prevent nicotine
-      to fail at startup cause a missing module. (LP: #427796)
-    - maintainer field updated using the latest contact email:
-      Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
+  * New upstream release. Closes: #626887.
+  * nicotine-rm-nonfree: update to new filenames in gnome-icon-theme.
+  * Switch to 3.0 quilt format.
+  * Use a tar.bz2 format.
+  * Install the icons in /usr/share/icons/hicolor.
+  * 02_desktop_paths.patch: updated according to the icon names changes.
+  * 05_documentation.patch: updated for the new version.
+  * 11_disable_sound.patch: refreshed.
+  * 12_default_commands.patch: 2/3rds have been merged upstream.
+  * 14_about_icon.patch: updated to follow upstream changes.
 
- -- Andrea Veri <andrea.veri89@gmail.com>  Fri, 11 Sep 2009 13:49:36 +0200
+ -- Josselin Mouette <joss@debian.org>  Wed, 18 May 2011 23:18:37 +0200
+
+nicotine (1.2.14+dfsg-1) unstable; urgency=low
+
+  * New upstream release.
+  * 04_buttons_ordering.patch, 05_documentation.patch,
+    13_migrate_oldconfig.patch: updated for the new version.
+  * 14_about_icon.patch: updated, also ignore vector icons, the code
+    makes my eyes bleed and loads the SVG at a fixed size.
+  * Require python 2.5.
+  * Require python-glade2.
+  * 02_desktop_paths.patch: new patch. Execute nicotine, not
+    nicotine.py. (Insert facepalm picture here.)
+
+ -- Josselin Mouette <joss@debian.org>  Sat, 21 Nov 2009 11:25:30 +0100
 
 nicotine (1.2.12+dfsg-1) unstable; urgency=low
 
@@ -36,9 +66,9 @@ nicotine (1.2.12+dfsg-1) unstable; urgency=low
   * nicotine-rm-nonfree: also remove the .ico stuff.
   * Recommend mutagen instead of pyvorbis.
   * Cope with the renaming of nicotine to nicotine.py
-  * 04_buttons_ordering.patch: the glade part doesn’t need patching 
+  * 04_buttons_ordering.patch: the glade part doesn’t need patching
     anymore.
-  * 10_exitdialog.patch, 12_default_commands.patch: refreshed for the 
+  * 10_exitdialog.patch, 12_default_commands.patch: refreshed for the
     new version.
   * 14_about_icon.patch: set an icon for the about menu entry.
 
@@ -49,10 +79,10 @@ nicotine (1.2.10+dfsg-1) unstable; urgency=low
   * New upstream release.
   * 02_rhythmbox_nowplaying.patch: removed, fixed upstream.
   * 03_settingswindow_combobox.patch: removed, fixed upstream.
-  * 04_buttons_ordering.patch: updated, parts of the issue are fixed 
+  * 04_buttons_ordering.patch: updated, parts of the issue are fixed
     upstream.
-  * 10_exitdialog.patch, 11_disable_sound.patch, 
-    12_default_commands.patch, 13_migrate_oldconfig.patch: updated for 
+  * 10_exitdialog.patch, 11_disable_sound.patch,
+    12_default_commands.patch, 13_migrate_oldconfig.patch: updated for
     the new version.
   * 14_translations_oldserver.patch: dropped, obsolete.
 
@@ -62,12 +92,12 @@ nicotine (1.2.9+dfsg-3) unstable; urgency=low
 
   * 13_migrate_oldconfig.patch: migrate configuration to the new server
     (port 2242 instead of 2240).
-  * 14_translations_oldserver.patch: fix translations in which 
+  * 14_translations_oldserver.patch: fix translations in which
     mail.slsk.org still appears.
   * watch: use dversionmangle.
   * Standards version is 3.8.0, no changes.
   * Use new homepage header.
-  * 02_rhythmbox_nowplaying.patch: patch from “Osiris X” to fix the Now 
+  * 02_rhythmbox_nowplaying.patch: patch from “Osiris X” to fix the Now
     playing feature for Rhythmbox. Closes: #487344.
 
  -- Josselin Mouette <joss@debian.org>  Thu, 11 Sep 2008 16:26:51 +0200
@@ -76,7 +106,7 @@ nicotine (1.2.9+dfsg-2) unstable; urgency=low
 
   * The "let’s apply my own recommendations" release.
   * Switch to quilt, split patches. Build-depend on quilt.
-  * Remove the trayicon change, it is unneeded now nicotine is again 
+  * Remove the trayicon change, it is unneeded now nicotine is again
     architecture-independent.
   * Remove the "Abort&Delete" relabel change, because it breaks i18n.
 
@@ -153,7 +183,7 @@ nicotine (1.2.5.1-1) unstable; urgency=low
   * pynicotine/config.py: make sensible-browser the default url handler,
     and deactivate sound by default.
   * docs: install the html documentation.
-  * pynicotine/gtkgui/frame.py: use the documentation in the Debian doc 
+  * pynicotine/gtkgui/frame.py: use the documentation in the Debian doc
     directory.
 
  -- Josselin Mouette <joss@debian.org>  Thu, 28 Sep 2006 00:38:32 +0200
@@ -173,7 +203,7 @@ nicotine (1.2.4.1-1) unstable; urgency=low
 
 nicotine (1.2.2-3) unstable; urgency=low
 
-  * Put the debhelper commands in the binary-arch target, now we're 
+  * Put the debhelper commands in the binary-arch target, now we're
     binary-dependent.
 
  -- Josselin Mouette <joss@debian.org>  Sat,  1 Jul 2006 01:31:11 +0200
@@ -252,7 +282,7 @@ nicotine (1.0.6-1) unstable; urgency=medium
 
   * New upstream release (closes: #222646).
     + Should fix UI freezes (closes: #218719).
-    + Setting urgency to medium as the protocol for searches has 
+    + Setting urgency to medium as the protocol for searches has
       changed. Again.
   * Suggest again python-psyco (it is enabled by default).
   * Default server is now sk2.slsknet.org.
