@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 #
-# COPYRIGHT (c) 2016 Michael Labouebe <gfarmerfr@free.fr>
+# COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
