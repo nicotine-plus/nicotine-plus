@@ -20,7 +20,7 @@
  * Dreslo
 
 ##### French
- * Michael Labouebe (2016) < gfarmerfr (at) free.fr >
+ * Michael Labouebe (2016-2017) < gfarmerfr (at) free.fr >
  * ManWell (2007)
  * \><((((\*> (2007)
  * flashfr

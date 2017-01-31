@@ -375,7 +375,7 @@ Spanish
  * Dreslo
 
 French
- * Michael Labouebe (2016) <gfarmerfr@free.fr>
+ * Michael Labouebe (2016-2017) <gfarmerfr@free.fr>
  * ManWell (2007)
  * ><((((*> (2007-2009)
  * flashfr

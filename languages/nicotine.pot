@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-07 16:09+0100\n"
+"POT-Creation-Date: 2017-01-31 02:12+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1526,10 +1526,10 @@ msgstr ""
 msgid "Image:"
 msgstr ""
 
-msgid "Size: 0"
+msgid "Select an image"
 msgstr ""
 
-msgid "Choose..."
+msgid "Size: 0"
 msgstr ""
 
 msgid "Personal settings"
@@ -2750,9 +2750,6 @@ msgstr ""
 
 #, python-format
 msgid "Size: %s KB"
-msgstr ""
-
-msgid "Choose a user info image"
 msgstr ""
 
 msgid "Addresses"

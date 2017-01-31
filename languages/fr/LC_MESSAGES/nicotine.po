@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nicotine\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-07 16:09+0100\n"
-"PO-Revision-Date: 2017-01-07 16:13+0100\n"
+"POT-Creation-Date: 2017-01-31 02:12+0100\n"
+"PO-Revision-Date: 2017-01-31 02:13+0100\n"
 "Last-Translator: Michael LABOUEBE <gfarmerfr@free.fr>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -1670,11 +1670,11 @@ msgstr "Description personnelle:"
 msgid "Image:"
 msgstr "Image:"
 
+msgid "Select an image"
+msgstr "Sélectionnez une image"
+
 msgid "Size: 0"
 msgstr "Taille: 0"
-
-msgid "Choose..."
-msgstr "Choisir un répertoire..."
 
 msgid "Personal settings"
 msgstr "Paramètres personnels"
@@ -2986,9 +2986,6 @@ msgstr "Utilisateurs de confiance"
 #, python-format
 msgid "Size: %s KB"
 msgstr "Taille: %s Ko"
-
-msgid "Choose a user info image"
-msgstr "Choisir une image d'information d'utilisateur"
 
 msgid "Addresses"
 msgstr "Adresses"
