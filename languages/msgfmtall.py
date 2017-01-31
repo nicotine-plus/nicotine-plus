@@ -1,8 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
-# COPYRIGHT (c) 2016 Michael Labouebe <gfarmerfr@free.fr>
-# COPYRIGHT (c) 2007 Daelstorm <daelstorm@gmail.com>
+# COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
+# COPYRIGHT (C) 2007 Daelstorm <daelstorm@gmail.com>
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007

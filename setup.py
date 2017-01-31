@@ -1,7 +1,7 @@
 #!/usr/bin/python2
 # -*- coding: utf-8 -*-
 #
-# COPYRIGHT (C) 2016 Michael Labouebe <gfarmerfr@free.fr>
+# COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2009-2010 Quinox <quinox@users.sf.net>
 # COPYRIGHT (C) 2009 Hedonist <ak@sensi.org>
 # COPYRIGHT (C) 2006-2009 Daelstorm <daelstorm@gmail.com>
