@@ -274,8 +274,7 @@ class FastConfigureAssistant(object):
             complete = True
 
         elif name == 'userpasspage':
-            if (len(self.kids['username'].get_text()) > 0 and
-                    len(self.kids['password'].get_text()) > 0):
+            if (len(self.kids['username'].get_text()) > 0 and len(self.kids['password'].get_text()) > 0):
                 complete = True
 
         elif name == 'portpage':
@@ -326,6 +325,23 @@ class FastConfigureAssistant(object):
 
     def OnEntryChanged(self, widget, param1=None, param2=None, param3=None):
         name = gtk.Buildable.get_name(widget)
+        self.resetcompleteness()
+
+    def OnEntryPaste(self, user_data):
+        """
+            Hack to workaround if the user paste is username or password.
+            The "paste-clipboard" event of the GtkEntry doesn't seems to have a length after a text is pasted into it.
+            The "key-press-event" work though...
+            So we get the GtkEditable text via it's "changed" event and we set the GtkEntry with it's value.
+        """
+
+        # Get the name of the GtkEditable object
+        name = gtk.Buildable.get_name(user_data)
+
+        # Set the text of the corresponding entry
+        self.kids[name].set_text(user_data.get_text())
+
+        # Check if the form is complete
         self.resetcompleteness()
 
     def getshareddirs(self):
