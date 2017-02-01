@@ -498,6 +498,9 @@ class EntryDialog(gtk.Dialog):
         button.show()
         button.grab_default()
 
+        # Set modal to True to avoid wrong window having the focus
+        self.set_modal(True)
+
         self.ret = None
 
     def quit(self, w=None, event=None):
