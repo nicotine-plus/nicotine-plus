@@ -8,6 +8,7 @@ Version 1.4.1 unreleased (XX February 2017)
 -----------------------------
 
 Bugs closed on Github
+ * 1.4.0 /usr/bin empty (#38)
  * Configure - Directories Page 4 of 5 (#39)
  * Configure - Username (#40)
 

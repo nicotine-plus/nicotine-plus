@@ -2521,8 +2521,13 @@ class NicotineFrame:
 
         paths.append(os.getcwd())
 
+        # For distros that puts documentation in /usr/share/doc
         path2 = "%s/share/doc/nicotine" % sys.prefix
         paths.append(path2)
+
+        # Slackware puts documentation in /usr/doc
+        path3 = "%s/doc/nicotine" % sys.prefix
+        paths.append(path3)
 
         for path in paths:
 
