@@ -191,9 +191,9 @@ class UserBrowse:
         cols = InitialiseColumns(
             self.FileTreeView,
             [_("Filename"), 250, "text", self.CellDataFunc],
-            [_("Size"), 100, "number", self.CellDataFunc],
+            [_("Size"), 100, "text", self.CellDataFunc],
             [_("Bitrate"), 70, "text", self.CellDataFunc],
-            [_("Length"), 50, "number", self.CellDataFunc]
+            [_("Length"), 50, "text", self.CellDataFunc]
         )
         cols[0].set_sort_column_id(0)
         cols[1].set_sort_column_id(4)

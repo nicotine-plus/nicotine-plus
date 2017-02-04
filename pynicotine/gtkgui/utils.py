@@ -178,9 +178,12 @@ def recode2(s):
 
 
 def InitialiseColumns(treeview, *args):
+
     i = 0
     cols = []
+
     for c in args:
+
         if c[2] == "text":
             renderer = gtk.CellRendererText()
             column = gtk.TreeViewColumn(c[0], renderer, text=i)
@@ -206,7 +209,7 @@ def InitialiseColumns(treeview, *args):
         elif c[2] == "toggle":
             renderer = gtk.CellRendererToggle()
             column = gtk.TreeViewColumn(c[0], renderer, active=i)
-            renderer.set_property("xalign", 1)
+            renderer.set_property("xalign", 0.5)
         else:
             renderer = gtk.CellRendererPixbuf()
             column = gtk.TreeViewColumn(c[0], renderer, pixbuf=i)
@@ -229,8 +232,11 @@ def InitialiseColumns(treeview, *args):
         column.set_reorderable(True)
         column.set_widget(gtk.Label(c[0]))
         column.get_widget().show()
+
         treeview.append_column(column)
+
         cols.append(column)
+
         i += 1
 
     return cols

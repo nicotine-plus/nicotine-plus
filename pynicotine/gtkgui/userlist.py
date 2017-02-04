@@ -82,7 +82,7 @@ class UserList:
             [_("Notify"), 0, "toggle"],
             [_("Privileged"), 0, "toggle"],
             [_("Last seen"), 160, "text", self.CellDataFunc],
-            [_("Comments"), -1, "edit", self.CellDataFunc],
+            [_("Comments"), -1, "edit", self.CellDataFunc]
         )
 
         self.col_status, self.col_country, self.col_user, self.col_speed, self.col_files, self.col_trusted, self.col_notify, self.col_privileged, self.col_last, self.col_comments = cols

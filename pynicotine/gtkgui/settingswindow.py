@@ -1258,6 +1258,7 @@ class IgnoreFrame(buildFrame):
         )
         cols[0].set_sort_column_id(0)
         cols[1].set_sort_column_id(1)
+
         self.IgnoredIPs.set_model(self.ignored_ips_list)
         self.IgnoredIPs.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
 
@@ -1384,10 +1385,11 @@ class BanFrame(buildFrame):
         cols = InitialiseColumns(
             self.Blocked,
             [_("Addresses"), -1, "text", self.frame.CellDataFunc],
-            [_("Users"), -1, "text", self.frame.CellDataFunc],
+            [_("Users"), -1, "text", self.frame.CellDataFunc]
         )
         cols[0].set_sort_column_id(0)
         cols[1].set_sort_column_id(1)
+
         self.Blocked.set_model(self.blockedlist)
         self.Blocked.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
 
@@ -2833,10 +2835,11 @@ class AutoReplaceFrame(buildFrame):
         cols = InitialiseColumns(
             self.ReplacementList,
             [_("Pattern"), 150, "edit", self.frame.CellDataFunc],
-            [_("Replacement"), -1, "edit", self.frame.CellDataFunc],
+            [_("Replacement"), -1, "edit", self.frame.CellDataFunc]
         )
         cols[0].set_sort_column_id(0)
         cols[1].set_sort_column_id(1)
+
         self.ReplacementList.set_model(self.replacelist)
 
         for column in cols:
@@ -3055,7 +3058,8 @@ class buildDialog(gtk.Dialog):
         self.tw[name+"SW"].add(self.tw[name])
 
         self.tw["box%d" % c].pack_start(self.tw[name+"SW"], True, 5)
-        cols = InitialiseColumns(self.tw[name], [description, 150, "edit"], )
+
+        cols = InitialiseColumns(self.tw[name], [description, 150, "edit"])
 
         try:
             self.settings.SetWidget(self.tw[name], value)
@@ -3205,7 +3209,7 @@ class PluginFrame(buildFrame):
         cols = InitialiseColumns(
             self.PluginTreeView,
             [_("Plugins"), 150, "text"],
-            [_("Enabled"), 40, "toggle"],
+            [_("Enabled"), 40, "toggle"]
         )
 
         cols[0].set_sort_column_id(0)

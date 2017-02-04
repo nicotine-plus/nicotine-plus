@@ -97,7 +97,7 @@ class RoomsControl:
         self.cols = InitialiseColumns(
             self.frame.roomlist.RoomsList,
             [_("Room"), 150, "text", self.RoomStatus],
-            [_("Users"), -1, "number", self.RoomStatus],
+            [_("Users"), -1, "number", self.RoomStatus]
         )
         self.cols[0].set_sort_column_id(0)
         self.cols[1].set_sort_column_id(1)
@@ -997,7 +997,7 @@ class ChatRoom:
             [_("Country"), 25, "pixbuf"],
             [_("User"), 100, "text", self.UserColumnDraw],
             [_("Speed"), 0, "number", self.frame.CellDataFunc],
-            [_("Files"), 0, "number", self.frame.CellDataFunc],
+            [_("Files"), 0, "number", self.frame.CellDataFunc]
         )
 
         cols[0].set_sort_column_id(5)

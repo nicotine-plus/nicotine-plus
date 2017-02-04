@@ -97,13 +97,13 @@ class TransferList:
             [_("User"), 100, "text", self.CellDataFunc],
             [_("Filename"), 250, "text", self.CellDataFunc],
             [_("Status"), 140, "text", self.CellDataFunc],
-            [_("Queue Position"), 50, "number", self.CellDataFunc],
+            [_("Queue Position"), 50, "text", self.CellDataFunc],
             [_("Percent"), 70, "progress"],
             [_("Size"), 170, "text", self.CellDataFunc],
-            [_("Speed"), 50, "number", self.CellDataFunc],
+            [_("Speed"), 50, "text", self.CellDataFunc],
             [_("Time elapsed"), 70, "text", self.CellDataFunc],
             [_("Time left"), 70, "text", self.CellDataFunc],
-            [_("Path"), 1000, "text", self.CellDataFunc],
+            [_("Path"), 1000, "text", self.CellDataFunc]
         )
 
         self.col_user, self.col_filename, self.col_status, self.col_position, self.col_percent, self.col_human_size, self.col_human_speed, self.col_time_elapsed, self.col_time_left, self.col_path = cols

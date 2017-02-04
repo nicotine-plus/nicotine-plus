@@ -690,15 +690,15 @@ class Search:
 
         cols = InitialiseColumns(
             self.ResultsList,
-            [_("Number"), 50, "number", self.CellDataFunc],
+            [_("Number"), 50, "text", self.CellDataFunc],
             [_("User"), 100, "text", self.CellDataFunc],
             [_("Filename"), 250, "text", self.CellDataFunc],
-            [_("Size"), 100, "number", self.CellDataFunc],
+            [_("Size"), 100, "text", self.CellDataFunc],
             [_("Speed"), 90, "text", self.CellDataFunc],
-            [_("In queue"), 50, "number", self.CellDataFunc],
+            [_("In queue"), 50, "text", self.CellDataFunc],
             [_("Immediate Download"), 20, "text", self.CellDataFunc],
             [_("Bitrate"), 50, "text", self.CellDataFunc],
-            [_("Length"), 50, "number", self.CellDataFunc],
+            [_("Length"), 50, "text", self.CellDataFunc],
             [_("Country"), 25, "pixbuf"],
             [_("Directory"), 1000, "text", self.CellDataFunc]
         )
