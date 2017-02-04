@@ -31,9 +31,7 @@ The RPM package will be located in the `dist` subdirectory of your git repositor
 
 First you need to install PyInstaller via pip:
 
-`python.exe -m pip install PyInstaller==3.1.1`
-
-We're using the 3.1.1 version because there's a [bug](https://github.com/pyinstaller/pyinstaller/issues/1974) in the 3.2.0 version (hopefully solved in 3.2.1) requiring to install mcvcr100.dll with would require in turn to install Microsoft Visual C++ 2010 Redistributable Package for the frozen application to work.
+`python.exe -m pip install PyInstaller`
 
 Once PyInstaller is installed go to the git root folder and run via cmd.exe or Powershell:
 
