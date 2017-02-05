@@ -12,11 +12,12 @@ Bugs closed on Github
  * Configure - Directories Page 4 of 5 (#39)
  * Configure - Username (#40)
  * 1.4.0 Text Off Set Under Columns (#41)
+ * Make nicotine work with FreeBSD (PR #44)
 
 Version 1.4.0 (31th January 2017)
 -----------------------------
 
-Miscellaneous bugs fixed:
+Miscellaneous bugs fixed
  * Some files were not shown in shares due to broken metadata of these files.
  * Fix a bug preventing the offline help to open.
 
