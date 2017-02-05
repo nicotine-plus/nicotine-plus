@@ -1,3 +1,15 @@
+nicotine (1.4.0-kip2~git20170131) yakkety; urgency=medium
+
+  * Version 1.4.0 for 16.04 / yakkety.
+
+ -- Kip Warner <kip@thevertigo.com>  Tue, 31 Jan 2017 15:34:59 -0800
+
+nicotine (1.4.0-kip1~git20170131) xenial; urgency=medium
+
+  * Version 1.4.0 for 16.04 / xenial.
+
+ -- Kip Warner <kip@thevertigo.com>  Tue, 31 Jan 2017 15:30:43 -0800
+
 nicotine (1.3.2-kip1~git2017014) yakkety; urgency=medium
 
   * Version 1.3.2.
