@@ -30,7 +30,7 @@ import sys
 import gobject
 from userinfo import UserTabs
 
-from utils import InitialiseColumns, PopupMenu, EncodingsMenu, SaveEncoding, Humanize, HumanizeBytes, PressHeader
+from utils import InitialiseColumns, PopupMenu, EncodingsMenu, SaveEncoding, Humanize, HumanSize, PressHeader
 from dirchooser import ChooseDir
 from entrydialog import input_box
 from pynicotine import slskmessages
@@ -404,9 +404,9 @@ class UserBrowse:
                 if filedata[2] < 18446744000000000000:
                     self.totalsize += filedata[2]
                 else:
-                    print "Unbelievable filesize: %s, %s" % (HumanizeBytes(filedata[2]), repr(filedata))
+                    print "Unbelievable filesize: %s, %s" % (HumanSize(filedata[2]), repr(filedata))
 
-        self.AmountShared.set_text(_("Shared: %s") % HumanizeBytes(self.totalsize))
+        self.AmountShared.set_text(_("Shared: %s") % HumanSize(self.totalsize))
         self.NumDirectories.set_text(_("Dirs: %s") % len(self.shares))
 
         # Generate the directory tree and select first directory

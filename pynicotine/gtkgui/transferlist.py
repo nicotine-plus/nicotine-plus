@@ -30,7 +30,7 @@ from types import StringType
 import string
 from time import time
 from math import ceil
-from utils import InitialiseColumns, int_sort_func, float_sort_func, HumanizeBytes, HumanSpeed
+from utils import InitialiseColumns, int_sort_func, float_sort_func, HumanSize, HumanSpeed
 from pynicotine.logfacility import log
 
 
@@ -440,7 +440,7 @@ class TransferList:
                     1, _("%(number)2s files ") % {'number': files} + " (" + extensions + ")",
                     2, salientstatus,
                     4, percent,
-                    5, "%s / %s" % (HumanizeBytes(position), HumanizeBytes(totalsize)),
+                    5, "%s / %s" % (HumanSize(position), HumanSize(totalsize)),
                     6, HumanSpeed(speed),
                     7, elapsed,
                     8, left,
@@ -467,7 +467,7 @@ class TransferList:
 
         key = [user, fn]
 
-        status = HumanizeBytes(self.TranslateStatus(transfer.status))
+        status = HumanSize(self.TranslateStatus(transfer.status))
         istatus = self.get_status_index(transfer.status)
 
         try:
@@ -475,7 +475,7 @@ class TransferList:
         except TypeError:
             size = 0
 
-        hsize = "%s / %s" % (HumanizeBytes(currentbytes), HumanizeBytes(size))
+        hsize = "%s / %s" % (HumanSize(currentbytes), HumanSize(size))
 
         if transfer.modifier:
             hsize += " (%s)" % transfer.modifier

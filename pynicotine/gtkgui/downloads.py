@@ -28,7 +28,7 @@ import gtk
 from thread import start_new_thread
 
 from transferlist import TransferList
-from utils import PopupMenu, PressHeader, HumanizeBytes
+from utils import PopupMenu, PressHeader, HumanSize
 from pynicotine import slskmessages
 import string
 import os
@@ -185,7 +185,7 @@ class Downloads(TransferList):
 
         for transfer in self.frame.np.transfers.downloads:
             if transfer.user == user and fullname == transfer.filename:
-                size = HumanizeBytes(transfer.size)
+                size = HumanSize(transfer.size)
                 try:
                     speed = str(int(transfer.speed))
                     speed += _(" KB/s")

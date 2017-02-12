@@ -1286,40 +1286,17 @@ def fixpath(path):
         return path
 
 
-def HumanizeBytes(size):
-
-    if size is None:
-        return None
-
-    try:
-        s = int(size)
-
-        if s >= 1000*1024*1024:
-            r = _("%.2f GB") % (float(s) / (1024.0*1024.0*1024.0))
-        elif s >= 1000*1024:
-            r = _("%.2f MB") % (float(s) / (1024.0*1024.0))
-        elif s >= 1000:
-            r = _("%.2f KB") % (float(s) / 1024.0)
-        else:
-            r = _("%.2f  B") % (float(s))
-
-        return r
-
-    except Exception as e:
-        return size
-
-
 def HumanSize(number):
 
     try:
         s = float(int(number))
 
-        if s >= 1000*1024*1024:
-            r = _("%.2f GiB") % (s / (1024.0*1024.0*1024.0))
-        elif s >= 1000*1024:
-            r = _("%.2f MiB") % (s / (1024.0*1024.0))
-        elif s >= 1000:
-            r = _("%.2f KiB") % (s / 1024.0)
+        if s >= 1024*1024*1024:
+            r = _("%.2f GB") % (s / (1024.0*1024.0*1024.0))
+        elif s >= 1024*1024:
+            r = _("%.2f MB") % (s / (1024.0*1024.0))
+        elif s >= 1024:
+            r = _("%.2f KB") % (s / 1024.0)
         else:
             r = _("%d Bytes") % s
 
