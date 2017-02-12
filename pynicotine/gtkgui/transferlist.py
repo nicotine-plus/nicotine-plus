@@ -30,13 +30,13 @@ from types import StringType
 import string
 from time import time
 from math import ceil
-from utils import InitialiseColumns, int_sort_func, float_sort_func, HumanizeBytes
+from utils import InitialiseColumns, int_sort_func, float_sort_func, HumanizeBytes, HumanSpeed
 from pynicotine.logfacility import log
 
 
 class TransferList:
 
-    MINIMUM_GUI_DELAY = 0.3  # in seconds
+    MINIMUM_GUI_DELAY = 1  # in seconds
     MINIMUM_GUI_DELAY_SLEEP = int(ceil(MINIMUM_GUI_DELAY * 2000))  # in ms
 
     status_tab = [
@@ -88,7 +88,8 @@ class TransferList:
             gobject.TYPE_INT,
             gobject.TYPE_INT,
             gobject.TYPE_INT,
-            gobject.TYPE_BOOLEAN
+            gobject.TYPE_BOOLEAN,
+            gobject.TYPE_STRING
         ]
 
         self.transfersmodel = gtk.TreeStore(*columntypes)
@@ -100,7 +101,7 @@ class TransferList:
             [_("Queue Position"), 50, "text", self.CellDataFunc],
             [_("Percent"), 70, "progress"],
             [_("Size"), 170, "text", self.CellDataFunc],
-            [_("Speed"), 50, "text", self.CellDataFunc],
+            [_("Speed"), 90, "text", self.CellDataFunc],
             [_("Time elapsed"), 70, "text", self.CellDataFunc],
             [_("Time left"), 70, "text", self.CellDataFunc],
             [_("Path"), 1000, "text", self.CellDataFunc]
@@ -130,6 +131,7 @@ class TransferList:
         self.transfersmodel.set_sort_func(6, float_sort_func, 6)
 
         widget.set_model(self.transfersmodel)
+
         self.UpdateColours()
 
     def UpdateColours(self):
@@ -397,7 +399,7 @@ class TransferList:
                     status = self.transfersmodel.get_value(iter, 2)
 
                     if status == _("Transferring"):
-                        str_speed = self.transfersmodel.get_value(iter, 6)
+                        str_speed = self.transfersmodel.get_value(iter, 15)
                         if str_speed != "":
                             ispeed += float(str_speed)
 
@@ -439,18 +441,19 @@ class TransferList:
                     2, salientstatus,
                     4, percent,
                     5, "%s / %s" % (HumanizeBytes(position), HumanizeBytes(totalsize)),
-                    6, speed,
+                    6, HumanSpeed(speed),
                     7, elapsed,
                     8, left,
                     12, ispeed,
-                    14, True
+                    14, True,
+                    15, speed
                 )
 
         self.lastupdate = time()  # ...and we're done
 
     def update_specific(self, transfer=None):
 
-        if not transfer in self.list:
+        if transfer not in self.list:
             return
 
         fn = transfer.filename
@@ -487,6 +490,9 @@ class TransferList:
 
         if speed == "None":
             speed = ""
+        else:
+            # transfer.speed is in KB
+            speed = float(speed) * 1024
 
         if elap is None:
             elap = 0
@@ -515,7 +521,22 @@ class TransferList:
             if i[2] != transfer:
                 continue
 
-            self.transfersmodel.set(i[1], 1, shortfn, 2, status, 3, str(place), 4, percent, 5, str(hsize), 6, speed, 7, elap, 8, left, 9, self.frame.np.decode(transfer.path), 11, istatus, 12, size, 13, currentbytes)
+            self.transfersmodel.set(
+                i[1],
+                1, shortfn,
+                2, status,
+                3, str(place),
+                4, percent,
+                5, str(hsize),
+                6, HumanSpeed(speed),
+                7, elap,
+                8, left,
+                9, self.frame.np.decode(transfer.path),
+                11, istatus,
+                12, size,
+                13, currentbytes,
+                15, speed
+            )
 
             break
         else:
@@ -524,7 +545,10 @@ class TransferList:
                 if user not in self.users:
                     # Create Parent if it doesn't exist
                     # ProgressRender not visible (last column sets 4th column)
-                    self.users[user] = self.transfersmodel.append(None, [user, "", "", "", 0,  "", "", "", "", "", "", 0, 0, 0,  False])
+                    self.users[user] = self.transfersmodel.append(
+                        None,
+                        [user, "", "", "", 0, "", "", "", "", "", "", 0, 0, 0, False, ""]
+                    )
                     newparent = True
 
                 parent = self.users[user]
@@ -533,7 +557,11 @@ class TransferList:
 
             # Add a new transfer
             path = self.frame.np.decode(transfer.path)
-            iter = self.transfersmodel.append(parent, [user, shortfn, status, str(place), percent, str(hsize), speed, elap, left, path, fn, istatus, size, icurrentbytes, True])
+
+            iter = self.transfersmodel.append(
+                parent,
+                [user, shortfn, status, str(place), percent, str(hsize), HumanSpeed(speed), elap, left, path, fn, istatus, size, icurrentbytes, True, speed]
+            )
 
             # Expand path
             path = self.transfersmodel.get_path(iter)

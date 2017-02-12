@@ -141,28 +141,6 @@ def showCountryTooltip(widget, x, y, tooltip, sourcecolumn, stripprefix='flag_')
     return True
 
 
-def HumanizeBytes(size):
-
-    if size is None:
-        return None
-
-    try:
-        s = int(size)
-        if s >= 1000*1024*1024:
-            r = _("%.2f GB") % (float(s) / (1024.0*1024.0*1024.0))
-        elif s >= 1000*1024:
-            r = _("%.2f MB") % (float(s) / (1024.0*1024.0))
-        elif s >= 1000:
-            r = _("%.2f KB") % (float(s) / 1024.0)
-        else:
-            r = _("%.2f  B") % (float(s))
-        return r
-    except Exception as e:
-        return size
-
-    return str(size)
-
-
 def recode(s):
     try:
         return s.decode(locale.nl_langinfo(locale.CODESET), "replace").encode("utf-8", "replace")
@@ -1266,14 +1244,17 @@ def int_sort_func(model, iter1, iter2, column):
 
 
 def float_sort_func(model, iter1, iter2, column):
+
     try:
         val1 = float(model.get_value(iter1, column))
     except:
         val1 = 0.0
+
     try:
         val2 = float(model.get_value(iter2, column))
     except:
         val2 = 0.0
+
     return cmp(val1, val2)
 
 
@@ -1305,9 +1286,34 @@ def fixpath(path):
         return path
 
 
+def HumanizeBytes(size):
+
+    if size is None:
+        return None
+
+    try:
+        s = int(size)
+
+        if s >= 1000*1024*1024:
+            r = _("%.2f GB") % (float(s) / (1024.0*1024.0*1024.0))
+        elif s >= 1000*1024:
+            r = _("%.2f MB") % (float(s) / (1024.0*1024.0))
+        elif s >= 1000:
+            r = _("%.2f KB") % (float(s) / 1024.0)
+        else:
+            r = _("%.2f  B") % (float(s))
+
+        return r
+
+    except Exception as e:
+        return size
+
+
 def HumanSize(number):
+
     try:
         s = float(int(number))
+
         if s >= 1000*1024*1024:
             r = _("%.2f GiB") % (s / (1024.0*1024.0*1024.0))
         elif s >= 1000*1024:
@@ -1316,24 +1322,30 @@ def HumanSize(number):
             r = _("%.2f KiB") % (s / 1024.0)
         else:
             r = _("%d Bytes") % s
+
         return r
-    except Exception, e:
+
+    except Exception as e:
         return number
 
 
 def HumanSpeed(number):
+
     try:
-        s = float(int(number))
-        if s >= 1000*1024*1024:
-            r = _("%.2f GiB/s") % (s / (1024.0*1024.0*1024.0))
-        elif s >= 1000*1024:
-            r = _("%.2f MiB/s") % (s / (1024.0*1024.0))
-        elif s >= 1000:
-            r = _("%.2f KiB/s") % (s / 1024.0)
+        s = float(number)
+
+        if s >= 1024*1024*1024:
+            r = _("%.2f GB/s") % (s / (1024.0*1024.0*1024.0))
+        elif s >= 1024*1024:
+            r = _("%.2f MB/s") % (s / (1024.0*1024.0))
+        elif s >= 1024:
+            r = _("%.2f KB/s") % (s / 1024.0)
         else:
-            r = _("%d B/s") % (number)
+            r = _("%d B/s") % (s)
+
         return r
-    except Exception, e:
+
+    except Exception as e:
         return number
 
 
