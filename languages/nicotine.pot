@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-31 02:12+0100\n"
+"POT-Creation-Date: 2017-02-12 23:35+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -3099,22 +3099,6 @@ msgid "Unknown (%(countrycode)s)"
 msgstr ""
 
 #, python-format
-msgid "%.2f GB"
-msgstr ""
-
-#, python-format
-msgid "%.2f MB"
-msgstr ""
-
-#, python-format
-msgid "%.2f KB"
-msgstr ""
-
-#, python-format
-msgid "%.2f  B"
-msgstr ""
-
-#, python-format
 msgid "Column #%i"
 msgstr ""
 
@@ -3133,15 +3117,15 @@ msgid "%(days)s days left"
 msgstr ""
 
 #, python-format
-msgid "%.2f GiB"
+msgid "%.2f GB"
 msgstr ""
 
 #, python-format
-msgid "%.2f MiB"
+msgid "%.2f MB"
 msgstr ""
 
 #, python-format
-msgid "%.2f KiB"
+msgid "%.2f KB"
 msgstr ""
 
 #, python-format
@@ -3149,15 +3133,15 @@ msgid "%d Bytes"
 msgstr ""
 
 #, python-format
-msgid "%.2f GiB/s"
+msgid "%.2f GB/s"
 msgstr ""
 
 #, python-format
-msgid "%.2f MiB/s"
+msgid "%.2f MB/s"
 msgstr ""
 
 #, python-format
-msgid "%.2f KiB/s"
+msgid "%.2f KB/s"
 msgstr ""
 
 #, python-format

@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nicotine\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-31 02:12+0100\n"
-"PO-Revision-Date: 2017-01-31 02:13+0100\n"
+"POT-Creation-Date: 2017-02-12 23:35+0100\n"
+"PO-Revision-Date: 2017-02-12 23:36+0100\n"
 "Last-Translator: Michael LABOUEBE <gfarmerfr@free.fr>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -3335,22 +3335,6 @@ msgid "Unknown (%(countrycode)s)"
 msgstr "Inconnu (%(countrycode)s)"
 
 #, python-format
-msgid "%.2f GB"
-msgstr "%.2f Go"
-
-#, python-format
-msgid "%.2f MB"
-msgstr "%.2f Mo"
-
-#, python-format
-msgid "%.2f KB"
-msgstr "%.2f Ko"
-
-#, python-format
-msgid "%.2f  B"
-msgstr "%.2f o"
-
-#, python-format
 msgid "Column #%i"
 msgstr "Colonne #%i"
 
@@ -3369,15 +3353,15 @@ msgid "%(days)s days left"
 msgstr "%(days)s jours restants"
 
 #, python-format
-msgid "%.2f GiB"
+msgid "%.2f GB"
 msgstr "%.2f Go"
 
 #, python-format
-msgid "%.2f MiB"
+msgid "%.2f MB"
 msgstr "%.2f Mo"
 
 #, python-format
-msgid "%.2f KiB"
+msgid "%.2f KB"
 msgstr "%.2f Ko"
 
 #, python-format
@@ -3385,15 +3369,15 @@ msgid "%d Bytes"
 msgstr "%d octets"
 
 #, python-format
-msgid "%.2f GiB/s"
+msgid "%.2f GB/s"
 msgstr "%.2f Go/s"
 
 #, python-format
-msgid "%.2f MiB/s"
+msgid "%.2f MB/s"
 msgstr "%.2f Mo/s"
 
 #, python-format
-msgid "%.2f KiB/s"
+msgid "%.2f KB/s"
 msgstr "%.2f Ko/s"
 
 #, python-format
