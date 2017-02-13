@@ -440,7 +440,7 @@ class Searches(IconNotebook):
             return
 
         search = self.searches[msg.token]
-        if search[2] == None:
+        if search[2] is None:
             search = self.CreateTab(search[0], search[1], search[3], search[4])
 
         search[2].AddResult(msg, username, country)
@@ -870,19 +870,78 @@ class Search:
 
             name = result[1].split('\\')[-1]
             dir = result[1][:-len(name)]
+
             bitrate = ""
             length = ""
+
             br = 0
 
-            if result[3] != "" and len(result[4]) == 3:
+            # If there are 3 entries in the last column
+            if len(result[4]) == 3:
 
                 a = result[4]
-                if a[2] == 1:
-                    bitrate = " (vbr)"
 
-                bitrate = str(a[0]) + bitrate
-                br = a[0]
-                length = '%i:%02i' % (a[1] / 60, a[1] % 60)
+                # Sometimes the vbr indicator is in third position
+                if a[2] == 0 or a[2] == 1:
+
+                    if a[2] == 1:
+                        bitrate = " (vbr)"
+
+                    bitrate = str(a[0]) + bitrate
+                    br = a[0]
+
+                    length = '%i:%02i' % (a[1] / 60, a[1] % 60)
+
+                # Sometimes the vbr indicator is in second position
+                elif a[1] == 0 or a[1] == 1:
+
+                    if a[1] == 1:
+                        bitrate = " (vbr)"
+
+                    bitrate = str(a[0]) + bitrate
+                    br = a[0]
+
+                    length = '%i:%02i' % (a[2] / 60, a[2] % 60)
+
+                # But one thing for sure the bitrate is always on first position
+                else:
+
+                    bitrate = str(a[0]) + bitrate
+                    br = a[0]
+
+            # If there are 2 entries in the last column
+            elif len(result[4]) == 2:
+
+                a = result[4]
+
+                # Sometimes the vbr indicator is in second position
+                if a[1] == 0 or a[1] == 1:
+
+                    # If it's a vbr file we can't deduce the length
+                    if a[1] == 1:
+
+                        bitrate = " (vbr)"
+                        bitrate = str(a[0]) + bitrate
+                        br = a[0]
+
+                    # If it's a constant bitrate we can deduce the length
+                    else:
+
+                        bitrate = str(a[0]) + bitrate
+                        br = a[0]
+
+                        # Dividing the file size by the bitrate in Bytes should give us a good enough approximation
+                        l = result[2] / (br / 8 * 1000)
+
+                        length = '%i:%02i' % (l / 60, l % 60)
+
+                # Sometimes the bitrate is in first position and the length in second position
+                else:
+
+                    bitrate = str(a[0]) + bitrate
+                    br = a[0]
+
+                    length = '%i:%02i' % (a[1] / 60, a[1] % 60)
 
             results.append([user, name, result[2], msg.ulspeed, msg.inqueue, imdl, bitrate, length, dir, br, result[1], country, self.Searches.users[user]])
 
