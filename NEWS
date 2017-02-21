@@ -4,6 +4,12 @@ News
     As per GCS § 6.7, this file contains a list of user-visible noteworthy
     changes. Note that this is not the same as a changelog.
 
+Version 1.4.2 (unreleased)
+-----------------------------
+
+Bugs closed on Github
+ * Bitrate - Length - Speed (#45)
+
 Version 1.4.1 (12 February 2017)
 -----------------------------
 
