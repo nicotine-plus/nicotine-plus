@@ -225,8 +225,8 @@ class Config:
             "columns": {
                 "userlist": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
                 "chatrooms": {},
-                "downloads": [1, 1, 1, 1, 1, 1, 1, 1, 1],
-                "uploads": [1, 1, 1, 1, 1, 1, 1, 1, 1],
+                "downloads_columns": [1, 1, 1, 1, 1, 1, 1, 1, 1],
+                "uploads_columns": [1, 1, 1, 1, 1, 1, 1, 1, 1],
                 "search": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
                 "hideflags": False
             },
@@ -511,6 +511,10 @@ class Config:
         self.removeOldOption("language", "language")
         self.removeOldOption("language", "setlanguage")
         self.removeOldSection("language")
+
+        # Transition from 1.4.1 -> 1.4.2
+        self.removeOldOption("columns", "downloads")
+        self.removeOldOption("columns", "uploads")
 
         # Checking for unknown section/options
         unknown1 = [

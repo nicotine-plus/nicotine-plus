@@ -81,7 +81,7 @@ class Uploads(TransferList):
                 parent.connect("button_press_event", PressHeader)
 
             # Read Show / Hide column settings from last session
-            cols[i].set_visible(self.frame.np.config.sections["columns"]["uploads"][i])
+            cols[i].set_visible(self.frame.np.config.sections["columns"]["uploads_columns"][i])
 
         frame.clearUploadFinishedErredButton.connect("clicked", self.OnClearFinishedErred)
         frame.clearUploadQueueButton.connect("clicked", self.OnTryClearQueued)
@@ -108,7 +108,7 @@ class Uploads(TransferList):
         for column in self.frame.UploadList.get_columns():
             columns.append(column.get_visible())
 
-        self.frame.np.config.sections["columns"]["uploads"] = columns
+        self.frame.np.config.sections["columns"]["uploads_columns"] = columns
 
     def OnTryClearQueued(self, widget):
 

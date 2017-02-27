@@ -88,7 +88,7 @@ class Downloads(TransferList):
                 parent.connect("button_press_event", PressHeader)
 
             # Read Show / Hide column settings from last session
-            cols[i].set_visible(self.frame.np.config.sections["columns"]["downloads"][i])
+            cols[i].set_visible(self.frame.np.config.sections["columns"]["downloads_columns"][i])
 
         frame.clearFinishedAbortedButton.connect("clicked", self.OnClearFinishedAborted)
         frame.clearQueuedButton.connect("clicked", self.OnTryClearQueued)
@@ -115,7 +115,7 @@ class Downloads(TransferList):
         for column in self.frame.DownloadList.get_columns():
             columns.append(column.get_visible())
 
-        self.frame.np.config.sections["columns"]["downloads"] = columns
+        self.frame.np.config.sections["columns"]["downloads_columns"] = columns
 
     def OnToggleAutoRetry(self, widget):
         self.frame.np.config.sections["transfers"]["autoretry_downloads"] = self.frame.ToggleAutoRetry.get_active()
