@@ -1,6 +1,6 @@
 # Distributions Patches
 
-## Patches status from various distributions packages of Nicotine+ 1.2.16
+## Patches status from various distributions packages of Nicotine+
 
 ### [Debian/Ubuntu Patches](https://sources.debian.net/src/nicotine/1.2.16%2Bdfsg-1.1/debian/patches/)
 
@@ -20,12 +20,7 @@ For the non-free sounds: WIP.
 
 ### [Fedora Patches](http://pkgs.fedoraproject.org/cgit/rpms/nicotine+.git/tree/)
 
-* nicotine+-1.2.16-documentation.patch : **Dropped** : Not needed anymore
-* nicotine+-1.2.16-ListModels_casts.patch : **Merged**
-* nicotine+-1.2.16-RHBZ1009934.patch : **Merged**
-* nicotine+-1.2.16-RHBZ662786.patch : **Merged**
-* nicotine+-1.2.16-tab_labels.patch : **Merged**
-* nicotine+-1.2.16-urls_commands.patch : **Dropped** : Not needed anymore
+* nicotine+-1.4.1-documentation.patch : **Undecided**
 
 For the non-free sounds: WIP.
 
