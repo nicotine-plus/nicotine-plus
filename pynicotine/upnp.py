@@ -26,7 +26,7 @@ from utils import findBestEncoding
 import platform
 import re
 import subprocess
-from socket import gethostbyname, gethostname
+import socket
 from subprocess import Popen, PIPE, STDOUT
 
 
@@ -166,8 +166,20 @@ class UPnPPortMapping:
 
         log.add(_('Creating Port Mapping rule via UPnP...'))
 
-        # Local LAN IP
-        self.internalipaddress = gethostbyname(gethostname())
+        # Hack to found out the local LAN IP
+        # See https://stackoverflow.com/questions/166506/finding-local-ip-addresses-using-pythons-stdlib/28950776#28950776
+
+        # Create a UDP socket
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+        # Send a broadcast packet on a local address (doesn't need to be reachable)
+        s.connect(('10.255.255.255', 0))
+
+        # This returns the "primary" IP on the local box, even if that IP is a NAT/private/internal IP.
+        self.internalipaddress = s.getsockname()[0]
+
+        # Close the socket
+        s.close()
 
         # Store the Local LAN port
         self.internallanport = np.protothread._p.getsockname()[1]
