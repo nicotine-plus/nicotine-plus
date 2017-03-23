@@ -1508,7 +1508,13 @@ class SoundsFrame(buildFrame):
 
         # Combobox for audio players
         self.audioPlayerCombo_List = gtk.ListStore(gobject.TYPE_STRING)
-        for executable in ["amarok -a $", "audacious -e $", "exaile $", "xmms2 add -f $"]:
+        for executable in [
+            "amarok -a $",
+            "audacious -e $",
+            "exaile $",
+            "rhythmbox $",
+            "xmms2 add -f $"
+        ]:
             self.audioPlayerCombo_List.append([executable])
 
         self.audioPlayerCombo.set_model(self.audioPlayerCombo_List)
