@@ -200,7 +200,7 @@ def processOpus(audio):
     if duration != 0:
         bitrate = filesize / duration * 8 / 1000
     else:
-        bitrate = none
+        bitrate = None
 
     return {
         "bitrate": bitrate,
