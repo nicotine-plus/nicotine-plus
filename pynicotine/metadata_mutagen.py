@@ -37,6 +37,7 @@ from mutagen.musepack import MusepackInfo
 from mutagen.asf import ASFInfo
 from mutagen.monkeysaudio import MonkeysAudioInfo
 from mutagen.mp4 import MP4Info
+from mutagen.oggopus import OggOpusInfo
 
 # Application specific
 from logfacility import log
@@ -72,6 +73,8 @@ def detect(path):
         return processMP4(audio)
     elif type(audio.info) == ASFInfo:
         return processASF(audio)
+    elif type(audio.info) == OggOpusInfo:
+        return processOpus(audio)
     else:
         print "EEK, what should I do with %(type)s (%(file)s)?" % {"type": str(type(audio.info)), "file": path}
 
@@ -179,6 +182,23 @@ def processASF(audio):
 
     if duration > 0:
         bitrate = filesize / duration / 1000
+    else:
+        bitrate = None
+
+    return {
+        "bitrate": bitrate,
+        "vbr": True,
+        "time": duration,
+    }
+
+def processOpus(audio):
+
+    duration = audio.info.length
+
+    filesize = os.path.getsize(audio.filename)
+
+    if duration != 0:
+        bitrate = filesize / duration * 8 / 1000
     else:
         bitrate = None
 
