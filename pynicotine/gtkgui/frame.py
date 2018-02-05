@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
-# COPYRIGHT (C) 2016 Mutnick <muhing@yahoo.com>
+# COPYRIGHT (C) 2016-2018 Mutnick <mutnick@techie.com>
 # COPYRIGHT (C) 2008-2011 Quinox <quinox@users.sf.net>
 # COPYRIGHT (C) 2006-2009 Daelstorm <daelstorm@gmail.com>
 # COPYRIGHT (C) 2009 Hedonist <ak@sensi.org>
@@ -1017,7 +1017,6 @@ class NicotineFrame:
             self.np.transfers.FolderContentsResponse(data)
 
     def on_quit_response(self, dialog, response):
-
         checkbox = dialog.checkbox.get_active()
         dialog.destroy()
 
@@ -1522,7 +1521,7 @@ class NicotineFrame:
         self.np.config.sections["ui"]["yposition"] = ypos
 
     def OnDestroy(self, widget):
-
+        self.SaveColumns()
         self.np.config.sections["privatechat"]["users"] = list(self.privatechats.users.keys())
         self.np.protothread.abort()
         self.np.StopTimers()

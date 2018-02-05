@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 #
+# COPYRIGHT (C) 2016-2018 Mutnick <mutnick@techie.com>
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2008-2011 Quinox <quinox@users.sf.net>
 # COPYRIGHT (C) 2006-2009 Daelstorm <daelstorm@gmail.com>
@@ -272,7 +273,7 @@ class Searches(IconNotebook):
         self.frame.SearchEntryCombo_List.append([""])
 
     def OnSearch(self):
-
+        self.saveColumns()
         text = self.frame.SearchEntry.get_text().strip()
 
         if not text:
@@ -687,20 +688,20 @@ class Search:
         self.ResultsList.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
         self.ResultsList.set_property("show-expanders", False)
         self.ResultsList.set_property("rules-hint", True)
-
+	widths = self.frame.np.config.sections["columns"]["search_widths"]
         cols = InitialiseColumns(
             self.ResultsList,
-            [_("Number"), 50, "text", self.CellDataFunc],
-            [_("User"), 100, "text", self.CellDataFunc],
-            [_("Filename"), 250, "text", self.CellDataFunc],
-            [_("Size"), 100, "text", self.CellDataFunc],
-            [_("Speed"), 90, "text", self.CellDataFunc],
-            [_("In queue"), 50, "text", self.CellDataFunc],
-            [_("Immediate Download"), 20, "text", self.CellDataFunc],
-            [_("Bitrate"), 50, "text", self.CellDataFunc],
-            [_("Length"), 50, "text", self.CellDataFunc],
-            [_("Country"), 25, "pixbuf"],
-            [_("Directory"), 1000, "text", self.CellDataFunc]
+            [_("Number"), widths[0], "text", self.CellDataFunc],
+            [_("User"), widths[1], "text", self.CellDataFunc],
+            [_("Filename"), widths[2], "text", self.CellDataFunc],
+            [_("Size"), widths[3], "text", self.CellDataFunc],
+            [_("Speed"), widths[4], "text", self.CellDataFunc],
+            [_("In queue"), widths[5], "text", self.CellDataFunc],
+            [_("Immediate Download"), widths[6], "text", self.CellDataFunc],
+            [_("Bitrate"), widths[7], "text", self.CellDataFunc],
+            [_("Length"), widths[8], "text", self.CellDataFunc],
+            [_("Country"), widths[9], "pixbuf"],
+            [_("Directory"), widths[10], "text", self.CellDataFunc]
         )
 
         self.col_num, self.col_user, self.col_file, self.col_size, self.col_speed, self.col_queue, self.col_immediate, self.col_bitrate, self.col_length, self.col_country, self.col_directory = cols
@@ -1412,10 +1413,13 @@ class Search:
     def saveColumns(self):
 
         columns = []
+        widths = []
         for column in self.ResultsList.get_columns():
             columns.append(column.get_visible())
+            widths.append(column.get_width())
 
         self.frame.np.config.sections["columns"]["search"] = columns
+        self.frame.np.config.sections["columns"]["search_widths"] = widths
 
     def SelectedResultsCallback(self, model, path, iter):
 

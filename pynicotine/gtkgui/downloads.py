@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
-# COPYRIGHT (C) 2016 Mutnick <muhing@yahoo.com>
+# COPYRIGHT (C) 2016-2018 Mutnick <mutnick@techie.com>
 # COPYRIGHT (C) 2013 eL_vErDe <gandalf@le-vert.net>
 # COPYRIGHT (C) 2008-2012 Quinox <quinox@users.sf.net>
 # COPYRIGHT (C) 2009 Hedonist <ak@sensi.org>
@@ -40,7 +40,7 @@ class Downloads(TransferList):
 
     def __init__(self, frame):
 
-        TransferList.__init__(self, frame, frame.DownloadList)
+        TransferList.__init__(self, frame, frame.DownloadList, type='downloads')
         self.myvbox = self.frame.downloadsvbox
         self.frame.DownloadList.set_property("rules-hint", True)
         self.accel_group = gtk.AccelGroup()
@@ -110,13 +110,13 @@ class Downloads(TransferList):
         self.OnExpandDownloads(None)
 
     def saveColumns(self):
-
         columns = []
+        widths = []
         for column in self.frame.DownloadList.get_columns():
             columns.append(column.get_visible())
-
+            widths.append(column.get_width())
         self.frame.np.config.sections["columns"]["downloads_columns"] = columns
-
+        self.frame.np.config.sections["columns"]["downloads_widths"] = widths 
     def OnToggleAutoRetry(self, widget):
         self.frame.np.config.sections["transfers"]["autoretry_downloads"] = self.frame.ToggleAutoRetry.get_active()
 

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 #
+# COPYRIGHT (C) 2018 Mutnick <mutnick@techie.com>
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2008-2011 Quinox <quinox@users.sf.net>
 # COPYRIGHT (C) 2009 Hedonist <ak@sensi.org>
@@ -61,9 +62,10 @@ class TransferList:
         _("Finished")
     ]
 
-    def __init__(self, frame, widget):
+    def __init__(self, frame, widget, type):
         self.frame = frame
         self.widget = widget
+        self.type = type
         self.transfers = []
         self.list = None
         self.selected_transfers = []
@@ -93,18 +95,19 @@ class TransferList:
         ]
 
         self.transfersmodel = gtk.TreeStore(*columntypes)
+        widths = self.frame.np.config.sections["columns"]["{}_widths".format(type)]
         self.cols = cols = InitialiseColumns(
             widget,
-            [_("User"), 100, "text", self.CellDataFunc],
-            [_("Filename"), 250, "text", self.CellDataFunc],
-            [_("Status"), 140, "text", self.CellDataFunc],
-            [_("Queue Position"), 50, "text", self.CellDataFunc],
-            [_("Percent"), 70, "progress"],
-            [_("Size"), 170, "text", self.CellDataFunc],
-            [_("Speed"), 90, "text", self.CellDataFunc],
-            [_("Time elapsed"), 70, "text", self.CellDataFunc],
-            [_("Time left"), 70, "text", self.CellDataFunc],
-            [_("Path"), 1000, "text", self.CellDataFunc]
+            [_("User"), widths[0], "text", self.CellDataFunc],
+            [_("Filename"), widths[1], "text", self.CellDataFunc],
+            [_("Status"), widths[2], "text", self.CellDataFunc],
+            [_("Queue Position"), widths[3], "text", self.CellDataFunc],
+            [_("Percent"), widths[4], "progress"],
+            [_("Size"), widths[5], "text", self.CellDataFunc],
+            [_("Speed"), widths[6], "text", self.CellDataFunc],
+            [_("Time elapsed"), widths[7], "text", self.CellDataFunc],
+            [_("Time left"), widths[8], "text", self.CellDataFunc],
+            [_("Path"), widths[9], "text", self.CellDataFunc]
         )
 
         self.col_user, self.col_filename, self.col_status, self.col_position, self.col_percent, self.col_human_size, self.col_human_speed, self.col_time_elapsed, self.col_time_left, self.col_path = cols
