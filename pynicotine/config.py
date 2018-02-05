@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
-# COPYRIGHT (C) 2016 Mutnick <muhing@yahoo.com>
+# COPYRIGHT (C) 2016-2018 Mutnick <mutnick@techie.com>
 # COPYRIGHT (C) 2008-2011 Quinox <quinox@users.sf.net>
 # COPYRIGHT (C) 2009 Hedonist <ak@sensi.org>
 # COPYRIGHT (C) 2007 Gallows <g4ll0ws@gmail.com>
@@ -224,10 +224,14 @@ class Config:
 
             "columns": {
                 "userlist": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                "userlist_widths": [0, 25, 120, 0, 0, 0, 0, 0, 160],
                 "chatrooms": {},
                 "downloads_columns": [1, 1, 1, 1, 1, 1, 1, 1, 1],
+                "downloads_widths": [100, 250, 140, 50, 70, 170, 90, 140, 120, 1000],
                 "uploads_columns": [1, 1, 1, 1, 1, 1, 1, 1, 1],
+                "uploads_widths": [100, 250, 140, 50, 70, 170, 90, 140, 120, 1000],
                 "search": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                "search_widths": [50, 100, 250, 100, 90, 50, 20, 50, 50, 25, 1000],
                 "hideflags": False
             },
 

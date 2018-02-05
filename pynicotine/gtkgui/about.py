@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
-# COPYRIGHT (C) 2016 Mutnick <muhing@yahoo.com>
+# COPYRIGHT (C) 2016 Mutnick <mutnick@techie.com>
 # COPYRIGHT (C) 2008-2010 Quinox <quinox@users.sf.net>
 # COPYRIGHT (C) 2006-2008 Daelstorm <daelstorm@gmail.com>
 # COPYRIGHT (C) 2003-2004 Hyriand <hyriand@thegraveyard.org>
@@ -245,7 +245,7 @@ Michael Labouebe (aka gfarmerfr)
 Mutnick
 - Created Nicotine+ GitHub Organization
 - Developer
-- [muhing(at)yahoo(dot)com]
+- [mutnick(at)techie(dot)com]
 
 eLvErDe
 - Provides Nicotine+ Website

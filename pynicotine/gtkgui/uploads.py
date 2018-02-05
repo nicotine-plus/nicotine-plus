@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 #
+# COPYRIGHT (C) 2016-2018 Mutnick <mutnick@techie.com>
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2009-2011 Quinox <quinox@users.sf.net>
 # COPYRIGHT (C) 2009 Hedonist <ak@sensi.org>
@@ -38,7 +39,7 @@ class Uploads(TransferList):
 
     def __init__(self, frame):
 
-        TransferList.__init__(self, frame, frame.UploadList)
+        TransferList.__init__(self, frame, frame.UploadList, type='uploads')
         self.myvbox = self.frame.uploadsvbox
         self.frame.UploadList.set_property("rules-hint", True)
         self.popup_menu2 = popup2 = PopupMenu(frame)
@@ -105,11 +106,13 @@ class Uploads(TransferList):
     def saveColumns(self):
 
         columns = []
+        widths = []
         for column in self.frame.UploadList.get_columns():
             columns.append(column.get_visible())
+            widths.append(column.get_width())
 
         self.frame.np.config.sections["columns"]["uploads_columns"] = columns
-
+        self.frame.np.config.sections["columns"]["uploads_widths"] = widths
     def OnTryClearQueued(self, widget):
 
         direction = "up"

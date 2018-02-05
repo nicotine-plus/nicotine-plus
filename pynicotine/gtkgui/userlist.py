@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 #
+# COPYRIGHT (C) 2018 Mutnick <mutnick@techie.com>
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2009 Quinox <quinox@users.sf.net>
 # COPYRIGHT (C) 2006-2009 Daelstorm <daelstorm@gmail.com>
@@ -70,18 +71,18 @@ class UserList:
             gobject.TYPE_INT, gobject.TYPE_INT, gobject.TYPE_STRING
         )
         statusiconwidth = self.frame.images["offline"].get_width() + 4
-
+        widths = self.frame.np.config.sections["columns"]["userlist_widths"]
         self.cols = cols = InitialiseColumns(
             self.UserList,
             [_("Status"), statusiconwidth, "pixbuf"],
-            [_("Country"), 25, "pixbuf"],
-            [_("User"), 120, "text", self.CellDataFunc],
-            [_("Speed"), 0, "number", self.CellDataFunc],
-            [_("Files"), 0, "number", self.CellDataFunc],
-            [_("Trusted"), 0, "toggle"],
-            [_("Notify"), 0, "toggle"],
-            [_("Privileged"), 0, "toggle"],
-            [_("Last seen"), 160, "text", self.CellDataFunc],
+            [_("Country"), widths[1] , "pixbuf"],
+            [_("User"), widths[2], "text", self.CellDataFunc],
+            [_("Speed"), widths[3], "number", self.CellDataFunc],
+            [_("Files"), widths[4], "number", self.CellDataFunc],
+            [_("Trusted"), widths[5], "toggle"],
+            [_("Notify"), widths[6], "toggle"],
+            [_("Privileged"), widths[7], "toggle"],
+            [_("Last seen"), widths[8], "text", self.CellDataFunc],
             [_("Comments"), -1, "edit", self.CellDataFunc]
         )
 
@@ -519,12 +520,12 @@ class UserList:
     def saveColumns(self):
 
         columns = []
-
+        widths = []
         for column in self.UserList.get_columns():
             columns.append(column.get_visible())
-
+            widths.append(column.get_width())
         self.frame.np.config.sections["columns"]["userlist"] = columns
-
+        self.frame.np.config.sections["columns"]["userlist_widths"] = widths
     def RemoveFromList(self, user):
 
         if user in self.notify:
