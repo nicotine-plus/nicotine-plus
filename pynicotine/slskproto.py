@@ -296,7 +296,7 @@ class SlskProtoThread(threading.Thread):
 
 		for listenport in range(int(portrange[0]), int(portrange[1])+1):
 			try:
-				self._p.bind(('', listenport))
+				self._p.bind((bindip or '', listenport))
 			except socket.error:
 				listenport = None
 			else:
