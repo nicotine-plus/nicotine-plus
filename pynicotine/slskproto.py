@@ -259,8 +259,8 @@ class SlskProtoThread(threading.Thread):
 	# - With Windows, based on #473, it would seem these connections are never removed
 	CONNECTION_MAX_IDLE = 60
 
-	def __init__(self, ui_callback, queue, bindip, config, eventprocessor):
-		""" ui_callback is a UI callback function to be called with messages 
+	def __init__(self, ui_callback, queue, bindip, port, config, eventprocessor):
+		""" ui_callback is a UI callback function to be called with messages
 		list as a parameter. queue is Queue object that holds messages from UI
 		thread.
 		"""
@@ -272,7 +272,7 @@ class SlskProtoThread(threading.Thread):
 		self._bindip = bindip
 		self._config = config
 		self._eventprocessor = eventprocessor
-		portrange = config.sections["server"]["portrange"]
+		portrange = (port, port) if port else config.sections["server"]["portrange"]
 		self.serverclasses = {}
 		for i in self.servercodes.keys():
 			self.serverclasses[self.servercodes[i]] = i
