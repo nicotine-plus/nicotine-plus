@@ -124,6 +124,8 @@ msgstr ""
 "minimisé\n"
 "  -b ip,  --bindip=ip                            Attache Nicotine+ à l'IP "
 "spécifiée (utile pour les VPN)\n"
+"  -l port, --port=port        Écoutez le port donné. Annule la configuration "
+"de la portrange\n"
 "  -v, --version                                   Affiche la version et "
 "quitte"
 

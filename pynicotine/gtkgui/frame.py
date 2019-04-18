@@ -189,7 +189,7 @@ class BuddiesComboBox:
 
 class NicotineFrame:
 
-    def __init__(self, config, plugindir, use_trayicon, start_hidden=False, bindip=None):
+    def __init__(self, config, plugindir, use_trayicon, start_hidden=False, bindip=None, port=None):
 
         self.clip_data = ""
         self.configfile = config
@@ -208,6 +208,7 @@ class NicotineFrame:
         self.SEXY = SEXY
         self.chatrooms = None
         self.bindip = bindip
+        self.port = port
         self.got_focus = False
 
         try:
@@ -220,7 +221,7 @@ class NicotineFrame:
         except ImportError:
             self.pynotify = None
 
-        self.np = NetworkEventProcessor(self, self.callback, self.logMessage, self.SetStatusText, self.bindip, config)
+        self.np = NetworkEventProcessor(self, self.callback, self.logMessage, self.SetStatusText, self.bindip, self.port, config)
 
         config = self.np.config.sections
 
@@ -3728,8 +3729,8 @@ class gstreamer:
 
 class MainApp:
 
-    def __init__(self, config, plugindir, trayicon, start_hidden, bindip):
-        self.frame = NicotineFrame(config, plugindir, trayicon, start_hidden, bindip)
+    def __init__(self, config, plugindir, trayicon, start_hidden, bindip, port):
+        self.frame = NicotineFrame(config, plugindir, trayicon, start_hidden, bindip, port)
 
     def MainLoop(self):
         signal.signal(signal.SIGINT, signal.SIG_IGN)
