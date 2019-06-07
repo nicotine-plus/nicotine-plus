@@ -18,6 +18,16 @@
 
 * In the git root folder run `python nicotine`.
 
+## FreeBSD
+
+* Install all the required dependencies:
+
+    `sudo pkg install py27-gtk2 py27-mutagen`
+
+* Check that the python version you are using is 2.7.X via `python -V`.
+
+* In the git root folder run `python nicotine`.
+
 ## Windows
 
 * Install all the required dependencies:
