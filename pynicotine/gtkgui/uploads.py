@@ -113,6 +113,7 @@ class Uploads(TransferList):
 
         self.frame.np.config.sections["columns"]["uploads_columns"] = columns
         self.frame.np.config.sections["columns"]["uploads_widths"] = widths
+
     def OnTryClearQueued(self, widget):
 
         direction = "up"

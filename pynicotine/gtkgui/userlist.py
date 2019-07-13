@@ -75,7 +75,7 @@ class UserList:
         self.cols = cols = InitialiseColumns(
             self.UserList,
             [_("Status"), statusiconwidth, "pixbuf"],
-            [_("Country"), widths[1] , "pixbuf"],
+            [_("Country"), widths[1], "pixbuf"],
             [_("User"), widths[2], "text", self.CellDataFunc],
             [_("Speed"), widths[3], "number", self.CellDataFunc],
             [_("Files"), widths[4], "number", self.CellDataFunc],
@@ -526,6 +526,7 @@ class UserList:
             widths.append(column.get_width())
         self.frame.np.config.sections["columns"]["userlist"] = columns
         self.frame.np.config.sections["columns"]["userlist_widths"] = widths
+
     def RemoveFromList(self, user):
 
         if user in self.notify:

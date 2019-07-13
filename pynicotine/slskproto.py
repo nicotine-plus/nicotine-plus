@@ -75,6 +75,7 @@ if MAXFILELIMIT > 0:
 # maybe because closed connections aren't closed on the spot.
 MAXFILELIMIT = max(int(floor(MAXFILELIMIT*0.9)), 100)
 
+
 class Connection:
     """
     Holds data about a connection. conn is a socket object,
@@ -89,6 +90,7 @@ class Connection:
         self.init = None
         self.lastreadlength = 100*1024
 
+
 class ServerConnection(Connection):
     """
     Server socket
@@ -96,6 +98,7 @@ class ServerConnection(Connection):
     def __init__(self, conn = None, addr = None, ibuf = "", obuf = ""):
         Connection.__init__(self, conn, addr, ibuf, obuf)
         self.lastping = time.time()
+
 
 class PeerConnection(Connection):
     def __init__(self, conn = None, addr = None, ibuf = "", obuf = "", init = None):
@@ -109,7 +112,7 @@ class PeerConnection(Connection):
         self.piercefw = None
         self.lastactive = time.time()
 
-        self.starttime = None # Used for upload bandwidth management
+        self.starttime = None  # Used for upload bandwidth management
         self.sentbytes2 = 0
         self.readbytes2 = 0
 
@@ -123,6 +126,7 @@ class PeerConnectionInProgress:
         self.conn = conn
         self.msgObj = msgObj
         self.lastactive = time.time()
+
 
 class SlskProtoThread(threading.Thread):
     """ This is a netwroking thread that actually does all the communication.
@@ -163,13 +167,13 @@ class SlskProtoThread(threading.Thread):
         Recommendations:54,
         GlobalRecommendations:56,
         UserInterests:57,
-        PlaceInLineResponse:60, # Depreciated?
+        PlaceInLineResponse:60,  # Depreciated?
         RoomAdded:62,
         RoomRemoved:63,
         RoomList:64,
         ExactFileSearch:65,
         AdminMessage:66,
-        GlobalUserList:67, # Depreciated?
+        GlobalUserList:67,  # Depreciated?
         TunneledMessage:68,  # Depreciated?
         PrivilegedUsers:69,
         HaveNoParent:71,
@@ -207,7 +211,7 @@ class SlskProtoThread(threading.Thread):
         BranchLevel:126,
         BranchRoot:127,
         ChildDepth:129,
-        #AnotherStatus:10,
+        # AnotherStatus:10,
         PrivateRoomUsers:133,
         PrivateRoomAddUser:134,
         PrivateRoomRemoveUser:135,
@@ -314,9 +318,9 @@ class SlskProtoThread(threading.Thread):
 
     def _isUpload(self, conn):
         return conn.__class__ is PeerConnection and conn.fileupl is not None
+
     def _isDownload(self, conn):
         return conn.__class__ is PeerConnection and conn.filedown is not None
-
 
     def _calcUploadSpeed(self, i):
         curtime = time.time()
@@ -412,7 +416,7 @@ class SlskProtoThread(threading.Thread):
                 numsockets += len(conns) + len(connsinprogress)
 
                 self._ui_callback([InternalData(numsockets)])
-                #print("Sockets open: %s = %s + %s + %s (+1)" % (len(conns.keys()+connsinprogress.keys()+[p]+outsock), len(conns.keys()),  len(connsinprogress.keys()), len(outsock)))
+                # print("Sockets open: %s = %s + %s + %s (+1)" % (len(conns.keys()+connsinprogress.keys()+[p]+outsock), len(conns.keys()),  len(connsinprogress.keys()), len(outsock)))
             except select.error as error:
                 if len(error.args) == 2 and error.args[0] == EINTR:
                     # Error recieved; but we don't care :)
@@ -498,9 +502,9 @@ class SlskProtoThread(threading.Thread):
                         limit = self._downloadlimit[0](conns, connection)
                         if limit is None or limit > 0:
                             self._dlimits[connection] = limit
-                            #if connection in self._dlimits:
-                                #Todo: fix this Ugly download limit hack (sleep)
-                                #time.sleep(1.0)
+                            # if connection in self._dlimits:
+                            #     Todo: fix this Ugly download limit hack (sleep)
+                            #     time.sleep(1.0)
 
                         try:
                             self.readData(conns, connection)
@@ -539,7 +543,7 @@ class SlskProtoThread(threading.Thread):
                     if curtime - conns[connection].lastactive > self.CONNECTION_MAX_IDLE:
                         self._ui_callback([ConnClose(connection, conns[connection].addr)])
                         connection.close()
-                        #print("Closed_run", conns[i].addr)
+                        # print("Closed_run", conns[i].addr)
                         del conns[connection]
                     #  Was 30 seconds
             if server_socket in conns:
@@ -554,7 +558,7 @@ class SlskProtoThread(threading.Thread):
         # Close Server Port
         if server_socket is not None:
             server_socket.close()
-        #print("Networking thread aborted")
+        # print("Networking thread aborted")
         self._stopped = 1
 
     # randomly selects a safe connection to kill and closes the socket--
@@ -680,9 +684,8 @@ class SlskProtoThread(threading.Thread):
         if not data:
             self._ui_callback([ConnClose(i, conns[i].addr)])
             i.close()
-            #print("Closed", conns[i].addr)
+            # print("Closed", conns[i].addr)
             del conns[i]
-
 
     def process_server_input(self, msgBuffer):
         """ Server has sent us something, this function retrieves messages
@@ -974,7 +977,7 @@ class SlskProtoThread(threading.Thread):
                         socketwarning = True
                 elif msgObj.__class__ is ConnClose and msgObj.conn in conns:
                     msgObj.conn.close()
-                    #print("Close3", conns[msgObj.conn].addr)
+                    # print("Close3", conns[msgObj.conn].addr)
                     self._ui_callback([ConnClose(msgObj.conn, conns[msgObj.conn].addr)])
                     del conns[msgObj.conn]
                 elif msgObj.__class__ is OutConn:

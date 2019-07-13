@@ -82,6 +82,7 @@ def popupWarning(parent, title, warning, icon=None):
 
     return 0
 
+
 # we could move this into a new class
 previouscountrypath = None
 

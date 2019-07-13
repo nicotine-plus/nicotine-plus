@@ -74,6 +74,7 @@ class logger(object):
         except KeyError:
             self.add("Failed to remove listener %s, does not exist." % (callback,), 1)
 
+
 useconsole = True
 try:
     CONSOLEENCODING = stdout.encoding
@@ -113,6 +114,8 @@ def consolelogger(timestamp, level, msg):
             print(i.encode(CONSOLEENCODING, 'replace'))
     else:
         pass
+
+
 try:
     log
 except NameError:

@@ -609,7 +609,7 @@ class ResponseThrottle(object):
         self.room = room
         self.nick = nick
         self.request = request
-        
+
         willing_to_respond = True
         current_time = time()
 

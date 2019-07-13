@@ -99,24 +99,29 @@ MAX_INTERPOLATION_DEPTH = 10
 
 from utils import SortedDict
 
+
 # exception classes
 class Error(Exception):
     def __init__(self, msg=''):
         self._msg = msg
         Exception.__init__(self, msg)
+
     def __repr__(self):
         return self._msg
     __str__ = __repr__
+
 
 class NoSectionError(Error):
     def __init__(self, section):
         Error.__init__(self, 'No section: %s' % section)
         self.section = section
 
+
 class DuplicateSectionError(Error):
     def __init__(self, section):
         Error.__init__(self, "Section %s already exists" % section)
         self.section = section
+
 
 class NoOptionError(Error):
     def __init__(self, option, section):
@@ -124,6 +129,7 @@ class NoOptionError(Error):
                     (option, section))
         self.option = option
         self.section = section
+
 
 class InterpolationError(Error):
     def __init__(self, reference, option, section, rawval):
@@ -138,6 +144,7 @@ class InterpolationError(Error):
         self.option = option
         self.section = section
 
+
 class InterpolationDepthError(Error):
     def __init__(self, option, section, rawval):
         Error.__init__(self,
@@ -149,6 +156,7 @@ class InterpolationDepthError(Error):
         self.option = option
         self.section = section
 
+
 class ParsingError(Error):
     def __init__(self, filename):
         Error.__init__(self, 'File contains parsing errors: %s' % filename)
@@ -159,6 +167,7 @@ class ParsingError(Error):
         self.errors.append((lineno, line))
         self._msg = self._msg + '\n\t[line %2d]: %s' % (lineno, line)
 
+
 class MissingSectionHeaderError(ParsingError):
     def __init__(self, filename, lineno, line):
         Error.__init__(
@@ -168,7 +177,6 @@ class MissingSectionHeaderError(ParsingError):
         self.filename = filename
         self.lineno = lineno
         self.line = line
-
 
 
 class ConfigParser:
