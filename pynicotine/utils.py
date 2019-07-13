@@ -288,7 +288,7 @@ def executeCommand(command, replacement=None, background=True, returnoutput=Fals
     if command.endswith("&"):
         command = command[:-1]
         if returnoutput:
-            print "Yikes, I was asked to return output but I'm also asked to launch the process in the background. returnoutput gets precedent."
+            print("Yikes, I was asked to return output but I'm also asked to launch the process in the background. returnoutput gets precedent.")
         else:
             background = True
 

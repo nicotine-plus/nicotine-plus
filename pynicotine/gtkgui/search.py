@@ -323,7 +323,7 @@ class Searches(IconNotebook):
             if feedback is not None:
                 users = feedback[0]
         else:
-            print "Unknown search mode, not using plugin system. Fix me!"
+            print("Unknown search mode, not using plugin system. Fix me!")
             feedback = True
 
         if feedback is not None:
@@ -556,7 +556,7 @@ class Searches(IconNotebook):
                     break
 
             if id is None:
-                print "ID is none"
+                print("ID is none")
                 return
 
             if event.button == 2:
@@ -688,7 +688,7 @@ class Search:
         self.ResultsList.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
         self.ResultsList.set_property("show-expanders", False)
         self.ResultsList.set_property("rules-hint", True)
-	widths = self.frame.np.config.sections["columns"]["search_widths"]
+        widths = self.frame.np.config.sections["columns"]["search_widths"]
         cols = InitialiseColumns(
             self.ResultsList,
             [_("Number"), widths[0], "text", self.CellDataFunc],
@@ -1035,11 +1035,11 @@ class Search:
                 iter = self.resultsmodel.append(self.usersiters[user], encoded_row)
             else:
                 iter = self.resultsmodel.append(None, encoded_row)
-        except Exception, e:
+        except Exception as e:
             types = []
             for i in encoded_row:
                 types.append(type(i))
-            print "Search row error:", e, encoded_row
+            print("Search row error:", e, encoded_row)
             iter = None
 
         path = None
@@ -1247,10 +1247,10 @@ class Search:
                         iter = self.resultsmodel.append(self.usersiters[user], encoded_row)
                     else:
                         iter = self.resultsmodel.append(None, encoded_row)
-                except Exception, e:
-                    print "Filters: Search row error:", e
+                except Exception as e:
+                    print("Filters: Search row error:", e)
                     for i in encoded_row:
-                        print i, type(i),
+                        print(i, type(i),)
 
                 displaycounter += 1
 

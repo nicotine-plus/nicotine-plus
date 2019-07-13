@@ -511,7 +511,7 @@ class TransferList:
                 percent = 100
             else:
                 percent = ((100 * icurrentbytes) / int(size))
-        except Exception, e:
+        except Exception as e:
             icurrentbytes = 0
             percent = 0
 

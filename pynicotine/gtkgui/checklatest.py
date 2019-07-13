@@ -56,7 +56,7 @@ def checklatest(frame):
         data = json.loads(response.read())
         response.close()
         latest = makeversion(data[u'name'])
-    except Exception, m:
+    except Exception as m:
         dlg = gtk.MessageDialog(
             frame,
             0,

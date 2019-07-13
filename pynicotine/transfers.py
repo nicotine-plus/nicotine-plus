@@ -993,9 +993,9 @@ class Transfers:
                 if not os.access(incompletedir, os.F_OK):
                     os.makedirs(incompletedir)
                 if not os.access(incompletedir, os.R_OK | os.W_OK | os.X_OK):
-                    raise OSError, "Download directory %s Permissions error.\nDir Permissions: %s" % (incompletedir, oct(os.stat(incompletedir)[stat.ST_MODE] & 0777))
+                    raise OSError( "Download directory %s Permissions error.\nDir Permissions: %s" % (incompletedir, oct(os.stat(incompletedir)[stat.ST_MODE] & 0o777)))
 
-            except OSError, strerror:
+            except OSError as strerror:
                 self.eventprocessor.logMessage(_("OS error: %s") % strerror)
                 i.status = "Download directory error"
                 i.conn = None
@@ -1026,7 +1026,7 @@ class Transfers:
                     else:
                         f = open(fname, 'ab+')
 
-                except IOError, strerror:
+                except IOError as strerror:
                     self.eventprocessor.logMessage(_("Download I/O error: %s") % strerror)
                     i.status = "Local file error"
                     try:
@@ -1042,7 +1042,7 @@ class Transfers:
                             import fcntl
                             try:
                                 fcntl.lockf(f, fcntl.LOCK_EX | fcntl.LOCK_NB)
-                            except IOError, strerror:
+                            except IOError as strerror:
                                 self.eventprocessor.logMessage(_("Can't get an exclusive lock on file - I/O error: %s") % strerror)
                         except ImportError:
                             pass
@@ -1095,7 +1095,7 @@ class Transfers:
                     'user': i.user,
                     'file': self.decode(i.filename)
                 })
-            except IOError, strerror:
+            except IOError as strerror:
                 self.eventprocessor.logMessage(_("Upload I/O error: %s") % strerror)
                 i.status = "Local file error"
                 try:
@@ -1206,10 +1206,10 @@ class Transfers:
                     if newname:
                         try:
                             shutil.move(msg.file.name, newname)
-                        except (IOError, OSError), inst:
+                        except (IOError, OSError) as inst:
                                 try:
                                     shutil.move(msg.file.name, u"%s" % newname)
-                                except (IOError, OSError), inst:
+                                except (IOError, OSError) as inst:
                                     log.addwarning(
                                         _("Couldn't move '%(tempfile)s' to '%(file)s': %(error)s") % {
                                             'tempfile': self.decode(msg.file.name),
@@ -1295,7 +1295,7 @@ class Transfers:
                                     self.eventprocessor.logMessage(_("Trouble executing on folder: %s") % config["transfers"]["afterfolder"])
                                 else:
                                     self.eventprocessor.logMessage(_("Executed on folder: %s") % config["transfers"]["afterfolder"])
-            except IOError, strerror:
+            except IOError as strerror:
                 self.eventprocessor.logMessage(_("Download I/O error: %s") % self.decode(strerror))
                 i.status = "Local file error"
                 try:

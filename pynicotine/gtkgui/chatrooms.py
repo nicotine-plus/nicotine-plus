@@ -333,8 +333,8 @@ class RoomsControl:
 
         try:
             angle = int(self.frame.np.config.sections["ui"]["labelrooms"])
-        except Exception, e:
-            print e
+        except Exception as e:
+            print(e)
             pass
 
         self.ChatNotebook.append_page(room.Main, 'Public ', room.OnLeave, angle)
@@ -393,8 +393,8 @@ class RoomsControl:
         angle = 0
         try:
             angle = int(self.frame.np.config.sections["ui"]["labelrooms"])
-        except Exception, e:
-            print e
+        except Exception as e:
+            print(e)
             pass
 
         self.ChatNotebook.append_page(tab.Main, msg.room, tab.OnLeave, angle)
@@ -1210,7 +1210,7 @@ class ChatRoom:
                 self.lines.append(AppendLine(self.ChatScroll, _("--- old messages above ---"), self.tag_hilite))
 
             gobject.idle_add(self.frame.ScrollBottom, self.ChatScroll.get_parent())
-        except IOError, e:
+        except IOError as e:
             pass
 
     def on_key_press_event(self, widget, event):
@@ -2034,7 +2034,7 @@ class ChatRoom:
                 self.frame.np.queue.put(slskmessages.LeavePublicRoom())
                 self.roomsctrl.LeaveRoom(slskmessages.LeaveRoom(self.room))  # Faking protocol msg
             else:
-                print "Unknown meta chatroom closed."
+                print("Unknown meta chatroom closed.")
 
         self.frame.pluginhandler.LeaveChatroomNotification(self.room)
 

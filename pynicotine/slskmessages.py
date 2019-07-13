@@ -79,7 +79,7 @@ class ToBeEncoded(object):
     """Holds text and the desired eventual encoding"""
     def __init__(self, uni, encoding):
         if not isinstance(uni, unicode):
-            print "ZOMG, you really don't know what you're doing! %s is NOT unicode, its a %s: %s" % (uni, type(uni), repr(uni))
+            print("ZOMG, you really don't know what you're doing! %s is NOT unicode, its a %s: %s" % (uni, type(uni), repr(uni)))
             raise(Exception("Programming bug"))
         self.unicode = uni
         self.encoding = encoding
@@ -89,11 +89,11 @@ class ToBeEncoded(object):
         if self.cached:
             return self.cached
         self.cached = self.unicode.encode(self.encoding, "replace")
-        # print "The bytes of %s are %s" % (self.unicode, repr(self.cached))
+        # print("The bytes of %s are %s" % (self.unicode, repr(self.cached)))
         return self.cached
 
     def dont(self):
-        print "Dont do that"
+        print("Dont do that")
     bytes = property(getbytes, dont)
 
     def __getitem__(self, key):
@@ -110,7 +110,7 @@ class JustDecoded(object):
     """Holds text, the original bytes and its supposed encoding"""
     def __init__(self, bytes, encoding):
         if not isinstance(bytes, str):
-            print "ZOMG, you really don't know what you're doing! %s is NOT string, its a %s: %s" % (bytes, type(bytes), repr(bytes))
+            print("ZOMG, you really don't know what you're doing! %s is NOT string, its a %s: %s" % (bytes, type(bytes), repr(bytes)))
             raise(Exception("Programming bug"))
         self.bytes = bytes
         self.encoding = encoding
@@ -125,7 +125,7 @@ class JustDecoded(object):
 
     def setunicode(self, uni):
         if not isinstance(uni, unicode):
-            print "ZOMG, you really don't know what you're doing! %s is NOT unicode, its a %s: %s" % (uni, type(uni), repr(bytes))
+            print("ZOMG, you really don't know what you're doing! %s is NOT unicode, its a %s: %s" % (uni, type(uni), repr(bytes)))
             raise(Exception("Programming bug"))
         self.cached = uni
     unicode = property(getunicode, setunicode)
@@ -325,11 +325,11 @@ class SlskMessage:
                 return struct.calcsize("<Q")+start, struct.unpack("<Q", message[start:start+struct.calcsize("<Q")])[0]
             else:
                 return start, None
-        except struct.error, error:
+        except struct.error as error:
             if printerror:
                 log.addwarning("%s %s trying to unpack %s at '%s' at %s/%s" % (self.__class__, error, type, message[start:].__repr__(), start, len(message)))
                 self.debug(message)
-            raise struct.error, error
+            raise struct.error(error)
             # return start, None
 
     def packObject(self, object):
@@ -373,11 +373,11 @@ class SlskMessage:
         try:
             # log.add('Decoding %s with LongLong...' % messagename)
             self._parseNetworkMessage(message, NetworkLongLongType)
-        except struct.error, e:
+        except struct.error as e:
             try:
                 # log.add('Decoding %s with Int...' % messagename)
                 self._parseNetworkMessage(message, NetworkIntType)
-            except struct.error, f:
+            except struct.error as f:
                 lines = []
                 lines.append(_("Exception during parsing %(area)s: %(exception)s") % {'area': 'first ' + messagename, 'exception': e})
                 lines.append(_("Exception during parsing %(area)s: %(exception)s") % {'area': 'second ' + messagename, 'exception': f})
@@ -398,9 +398,9 @@ class SlskMessage:
         return '.'.join(strlist)
 
     def debug(self, message=None):
-        print self, self.__dict__
+        print(self, self.__dict__)
         if message:
-            print "Message contents:", message.__repr__()
+            print("Message contents:", message.__repr__())
 
 
 class ServerMessage(SlskMessage):
@@ -431,7 +431,7 @@ class Login(ServerMessage):
         m.update(self.username+self.passwd)
         md5hash = m.hexdigest()
         message = self.packObject(self.username) + self.packObject(self.passwd) + self.packObject(self.version) + self.packObject(md5hash) + self.packObject(17)
-        # print message.__repr__()
+        # print(message.__repr__())
         return message
 
     def parseNetworkMessage(self, message):
@@ -446,14 +446,14 @@ class Login(ServerMessage):
                 import socket
                 pos, self.ip = pos+4, socket.inet_ntoa(self.strrev(message[pos:pos+4]))
                 # Unknown number
-            except Exception, error:
+            except Exception as error:
                 log.addwarning("Error unpacking IP address: %s" % (error,))
             try:
                 # MD5 hexdigest of the password you sent
                 if len(message[pos:]) > 0:
                     pos, self.checksum = self.getObject(message, types.StringType, pos)
-                # print self.checksum
-            except Exception, error:
+                # print(self.checksum)
+            except Exception as error:
                 # Not an official client on the official server
                 pass
 
@@ -1194,7 +1194,7 @@ class RoomList(ServerMessage):
                 pos, usercount = self.getObject(message, types.IntType, pos)
                 rooms[i][1] = usercount
             return (pos, rooms)
-        except Exception, error:
+        except Exception as error:
             log.addwarning(_("Exception during parsing %(area)s: %(exception)s") % {'area': 'RoomList', 'exception': error})
             return (originalpos, [])
 
@@ -1365,7 +1365,7 @@ class PrivilegedUsers(ServerMessage):
         try:
             x = zlib.decompress(message)
             message = x[4:]
-        except Exception, error:
+        except Exception as error:
             pass
         self.users = []
         pos, numusers = self.getObject(message, types.IntType)
@@ -1716,7 +1716,7 @@ class SharedFileList(PeerMessage):
         if not nozlib:
             try:
                 message = zlib.decompress(message)
-            except Exception, error:
+            except Exception as error:
                 log.addwarning(_("Exception during parsing %(area)s: %(exception)s") % {'area': 'SharedFileList', 'exception': error})
                 self.list = {}
                 return
@@ -1903,7 +1903,7 @@ class FolderContentsResponse(PeerMessage):
     def parseNetworkMessage(self, message):
         try:
             message = zlib.decompress(message)
-        except Exception, error:
+        except Exception as error:
             log.addwarning(_("Exception during parsing %(area)s: %(exception)s") % {'area': 'FolderContentsResponse', 'exception': error})
             self.list = {}
             return
@@ -2104,7 +2104,7 @@ class DistribBranchLevel(DistribMessage):
 
     def parseNetworkMessage(self, message):
         pos, self.value = self.getObject(message, types.IntType)
-        # print message.__repr__()
+        # print(message.__repr__())
 
 
 class DistribBranchRoot(DistribMessage):
@@ -2114,7 +2114,7 @@ class DistribBranchRoot(DistribMessage):
     def parseNetworkMessage(self, message):
         # pos, self.value = self.getObject(message, types.IntType)
         pos, self.user = self.getObject(message, types.StringType)
-        # print self.something, self.user
+        # print(self.something, self.user)
 
 
 class DistribChildDepth(DistribMessage):
@@ -2123,7 +2123,7 @@ class DistribChildDepth(DistribMessage):
 
     def parseNetworkMessage(self, message):
         pos, self.value = self.getObject(message, types.IntType)
-        # print self.something, self.user
+        # print(self.something, self.user)
 
 
 class DistribMessage9(DistribMessage):
@@ -2139,7 +2139,7 @@ class DistribMessage9(DistribMessage):
         # message =  x[4:]
         # pos, self.user = self.getObject(message, types.StringType)
         # self.debug()
-        # print self.something, self.user
+        # print(self.something, self.user)
 
 
 class BranchLevel(ServerMessage):
@@ -2148,7 +2148,7 @@ class BranchLevel(ServerMessage):
 
     def parseNetworkMessage(self, message):
         pos, self.value = self.getObject(message, types.IntType)
-        # print message.__repr__()
+        # print(message.__repr__())
 
 
 class BranchRoot(ServerMessage):
@@ -2158,7 +2158,7 @@ class BranchRoot(ServerMessage):
     def parseNetworkMessage(self, message):
         # pos, self.value = self.getObject(message, types.IntType)
         pos, self.user = self.getObject(message, types.StringType)
-        # print self.something, self.user
+        # print(self.something, self.user)
 
 
 class AcceptChildren(ServerMessage):

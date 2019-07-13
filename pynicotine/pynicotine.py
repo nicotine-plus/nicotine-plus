@@ -82,7 +82,7 @@ class Timeout:
     def timeout(self):
         try:
             self.callback([self])
-        except Exception, e:
+        except Exception as e:
             print("Exception in callback %s: %s" % (self.callback, e))
 
 
@@ -1446,7 +1446,7 @@ class NetworkEventProcessor:
                             'real_ip': u_ip
                         }
                         self.logMessage(warning, 1)
-                        print warning
+                        print(warning)
                         return 1
         return 0
 
@@ -1970,7 +1970,7 @@ class NetworkEventProcessor:
                 f.write(time.strftime("%c"))
                 f.write(" %s\n" % message)
                 f.close()
-            except IOError, error:
+            except IOError as error:
                 self.logMessage(_("Couldn't write to transfer log: %s") % error)
 
         if toUI:

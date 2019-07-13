@@ -129,7 +129,7 @@ class Shares:
                 [files, streams, wordindex, fileindex, mtimes],
                 "normal"
             )
-        except Exception, ex:
+        except Exception as ex:
             log.addwarning(_("Failed to rebuild share, serious error occurred. If this problem persists delete ~/.nicotine/*.db and try again. If that doesn't help please file a bug report with the stack trace included (see terminal output after this message). Technical details: %s") % ex)
             raise
 
@@ -165,7 +165,7 @@ class Shares:
 
         if streams is None:
             message = _("ERROR: No %(type)s shares database available") % {"type": sharestype}
-            print message
+            print(message)
             self.logMessage(message, None)
             return
 
@@ -297,7 +297,7 @@ class Shares:
         self.logMessage("%s %s" % (msg.__class__, vars(msg)), 4)
 
     def processExactSearchRequest(self, searchterm, user, searchid,  direct=0, checksum=None):
-        print searchterm, user, searchid, checksum
+        print(searchterm, user, searchid, checksum)
         pass
 
     def processSearchRequest(self, searchterm, user, searchid, direct=0):
@@ -455,9 +455,9 @@ class Shares:
             try:
                 contents = dircache.listdir(directory)
                 mtime = os.path.getmtime(directory)
-            except OSError, errtuple:
+            except OSError as errtuple:
                 message = _("Scanning Directory Error: %(error)s Path: %(path)s") % {'error': errtuple, 'path': directory}
-                print str(message)
+                print(str(message))
                 self.logMessage(message)
                 displayTraceback(sys.exc_info()[2])
                 continue
@@ -472,20 +472,20 @@ class Shares:
 
                 try:
                     isdir = os.path.isdir(path)
-                except OSError, errtuple:
+                except OSError as errtuple:
                     message = _("Scanning Error: %(error)s Path: %(path)s") % {'error': errtuple, 'path': path}
-                    print str(message)
+                    print(str(message))
                     self.logMessage(message)
                     continue
 
                 try:
                     mtime = os.path.getmtime(path)
-                except OSError, errtuple:
+                except OSError as errtuple:
                     islink = False
                     try:
                         islink = os.path.islink(path)
-                    except OSError, errtuple2:
-                        print errtuple2
+                    except OSError as errtuple2:
+                        print(errtuple2)
 
                     if islink:
                         message = _("Scanning Error: Broken link to directory: \"%(link)s\" from Path: \"%(path)s\". Repair or remove this link.") % {
@@ -498,7 +498,7 @@ class Shares:
                             'path': path
                         }
 
-                    print str(message)
+                    print(str(message))
                     self.logMessage(message)
                     continue
                 else:
@@ -553,8 +553,8 @@ class Shares:
 
             try:
                 contents = os.listdir(directory)
-            except OSError, errtuple:
-                print str(errtuple)
+            except OSError as errtuple:
+                print(str(errtuple))
                 self.logMessage(str(errtuple))
                 continue
 
@@ -568,9 +568,9 @@ class Shares:
                 path = os.path.join(directory, filename)
                 try:
                     isfile = os.path.isfile(path)
-                except OSError, errtuple:
+                except OSError as errtuple:
                     message = _("Scanning Error: %(error)s Path: %(path)s") % {'error': errtuple, 'path': path}
-                    print str(message)
+                    print(str(message))
                     self.logMessage(message)
                     displayTraceback(sys.exc_info()[2])
                     continue
@@ -606,7 +606,7 @@ class Shares:
 
             return fileinfo
 
-        except Exception, errtuple:
+        except Exception as errtuple:
             message = _("Scanning File Error: %(error)s Path: %(path)s") % {'error': errtuple, 'path': pathname}
             self.logMessage(message)
             displayTraceback(sys.exc_info()[2])
@@ -665,9 +665,9 @@ class Shares:
             try:
                 contents = dircache.listdir(u_directory)
                 mtime = os.path.getmtime(u_directory)
-            except OSError, errtuple:
+            except OSError as errtuple:
                 message = _("Scanning Directory Error: %(error)s Path: %(path)s") % {'error': errtuple, 'path': u_directory}
-                print str(message)
+                print(str(message))
                 self.logMessage(message)
                 displayTraceback(sys.exc_info()[2])
                 continue
@@ -686,20 +686,20 @@ class Shares:
 
                 try:
                     isdir = os.path.isdir(u_path)
-                except OSError, errtuple:
+                except OSError as errtuple:
                     message = _("Scanning Error: %(error)s Path: %(path)s") % {'error': errtuple, 'path': u_path}
-                    print str(message)
+                    print(str(message))
                     self.logMessage(message)
                     continue
 
                 try:
                     mtime = os.path.getmtime(u_path)
-                except OSError, errtuple:
+                except OSError as errtuple:
                     try:
                         mtime = os.path.getmtime(s_path)
-                    except OSError, errtuple:
+                    except OSError as errtuple:
                         message = _("Scanning Error: %(error)s Path: %(path)s") % {'error': errtuple, 'path': u_path}
-                        print str(message)
+                        print(str(message))
                         self.logMessage(message)
                         continue
                 else:
@@ -762,8 +762,8 @@ class Shares:
 
             try:
                 contents = os.listdir(u_directory)
-            except OSError, errtuple:
-                print str(errtuple)
+            except OSError as errtuple:
+                print(str(errtuple))
                 self.logMessage(str(errtuple))
                 continue
 
@@ -782,9 +782,9 @@ class Shares:
                 try:
                     # try to force Unicode for reading from disk
                     isfile = os.path.isfile(ppath)
-                except OSError, errtuple:
+                except OSError as errtuple:
                     message = _("Scanning Error: %(error)s Path: %(path)s") % {'error': errtuple, 'path': path}
-                    print str(message)
+                    print(str(message))
                     self.logMessage(message)
                     displayTraceback(sys.exc_info()[2])
                     continue
@@ -833,7 +833,7 @@ class Shares:
 
             return fileinfo
 
-        except Exception, errtuple:
+        except Exception as errtuple:
             message = _("Scanning File Error: %(error)s Path: %(path)s") % {'error': errtuple, 'path': pathname}
             self.logMessage(message)
             displayTraceback(sys.exc_info()[2])

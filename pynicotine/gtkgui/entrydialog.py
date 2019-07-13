@@ -404,8 +404,8 @@ class MetaDialog(gtk.Dialog):
 
         try:
             label.set_property("xalign", xalign)
-        except Exception, e:
-            print e
+        except Exception as e:
+            print(e)
             pass
 
         return label

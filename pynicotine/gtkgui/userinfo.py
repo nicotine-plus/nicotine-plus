@@ -466,14 +466,14 @@ class UserInfo:
                 gc.collect()
                 self.actual_zoom = 0
                 self.SavePicture.set_sensitive(True)
-            except TypeError, e:
+            except TypeError as e:
                 name = tempfile.mktemp()
                 f = open(name, "w")
                 f.write(pic)
                 f.close()
                 self.image.set_from_file(name)
                 os.remove(name)
-            except Exception, e:
+            except Exception as e:
                 self.image.set_from_pixbuf(None)
                 self.SavePicture.set_sensitive(False)
         else:

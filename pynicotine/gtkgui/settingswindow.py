@@ -541,7 +541,7 @@ class DownloadsFrame(buildFrame):
                 re.compile("("+dfilter+")")
                 outfilter += dfilter
                 proccessedfilters.append(dfilter)
-            except Exception, e:
+            except Exception as e:
                 failed[dfilter] = e
 
             if filter is not df[-1]:
@@ -552,7 +552,7 @@ class DownloadsFrame(buildFrame):
         try:
             re.compile(outfilter)
 
-        except Exception, e:
+        except Exception as e:
             failed[outfilter] = e
 
         if len(failed.keys()) >= 1:
@@ -3125,9 +3125,9 @@ class buildDialog(gtk.Dialog):
         for name, data in options.items():
             if plugin not in self.settings.frame.np.config.sections["plugins"] or name not in self.settings.frame.np.config.sections["plugins"][plugin]:
                 if plugin not in self.settings.frame.np.config.sections["plugins"]:
-                    print "No1 " + plugin + ", " + repr(self.settings.frame.np.config.sections["plugins"].keys())
+                    print("No1 " + plugin + ", " + repr(self.settings.frame.np.config.sections["plugins"].keys()))
                 elif name not in self.settings.frame.np.config.sections["plugins"][plugin]:
-                    print "No2 " + name + ", " + repr(self.settings.frame.np.config.sections["plugins"][plugin].keys())
+                    print("No2 " + name + ", " + repr(self.settings.frame.np.config.sections["plugins"][plugin].keys()))
                 continue
 
             # We currently support SpinButtons, TreeView (one per plugin) and Checkboxes.
@@ -3168,7 +3168,7 @@ class buildDialog(gtk.Dialog):
             elif data["type"] in ("list string",):
                 self.GenerateTreeView(name, data["description"], value, c)
             else:
-                print "Unknown setting type '%s', data '%s'" % (name, data)
+                print("Unknown setting type '%s', data '%s'" % (name, data))
 
             c += 1
 
@@ -3651,5 +3651,5 @@ class SettingsWindow:
                     config[key].update(data)
 
             return self.pages["Shares"].GetNeedRescan(), (self.pages["Colours"].needcolors or self.pages["Interface"].needcolors), self.pages["Completion"].needcompletion, config
-        except UserWarning, warning:
+        except UserWarning as warning:
             return None

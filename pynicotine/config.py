@@ -458,7 +458,7 @@ class Config:
                             self.frame.logMessage(_("Config option unset: Section: %(section)s, Option: %(option)s") % {'section': i, 'option': j})
                             self.frame.settingswindow.InvalidSettings(i, j)
 
-        except Exception, error:
+        except Exception as error:
             message = _("Config error: %s") % error
             self.frame.logMessage(message)
             if errorlevel < 3:
@@ -479,12 +479,12 @@ class Config:
             # <1.2.13 stored transfers inside the main config
             try:
                 handle = open(self.filename+'.transfers.pickle')
-            except IOError, inst:
+            except IOError as inst:
                 log.addwarning(_("Something went wrong while opening your transfer list: %(error)s") % {'error': str(inst)})
             else:
                 try:
                     self.sections['transfers']['downloads'] = cPickle.load(handle)
-                except (IOError, EOFError, ValueError), inst:
+                except (IOError, EOFError, ValueError) as inst:
                     log.addwarning(_("Something went wrong while reading your transfer list: %(error)s") % {'error': str(inst)})
             try:
                 handle.close()
@@ -495,7 +495,7 @@ class Config:
         try:
             if not os.path.isdir(path):
                 os.makedirs(path)
-        except OSError, msg:
+        except OSError as msg:
             log.addwarning("Can't create directory '%s', reported error: %s" % (path, msg))
 
         # Transition from 1.2.16 -> 1.4.0
@@ -612,7 +612,7 @@ class Config:
                 try:
                     os.unlink(shelvefile)
                     _opened_shelves.append(shelve.open(shelvefile, flag='n'))
-                except Exception, ex:
+                except Exception as ex:
                     print("Failed to unlink %s: %s" % (shelvefile, ex))
 
         sharedfiles = _opened_shelves.pop(0)
@@ -750,7 +750,7 @@ class Config:
             except:
                 pass
             bsharedmtimes = shelve.open(self.filename + ".buddymtimes.db", flag='n')
-        except Exception, error:
+        except Exception as error:
             log.addwarning(_("Error while writing database files: %s") % error)
             return None
         return sharedfiles, bsharedfiles, sharedfilesstreams, bsharedfilesstreams, wordindex, bwordindex, fileindex, bfileindex, sharedmtimes, bsharedmtimes
@@ -766,7 +766,7 @@ class Config:
         backupfile = realfile + ' .backup'
         try:
             handle = open(tmpfile, 'w')
-        except Exception, inst:
+        except Exception as inst:
             log.addwarning(_("Something went wrong while opening your transfer list: %(error)s") % {'error': str(inst)})
         else:
             try:
@@ -775,7 +775,7 @@ class Config:
                 try:
                     # Please let it be atomic...
                     os.rename(tmpfile, realfile)
-                except Exception, inst:
+                except Exception as inst:
                     # ...ugh. Okay, how about...
                     try:
                         os.unlink(backupfile)
@@ -783,7 +783,7 @@ class Config:
                         pass
                     os.rename(realfile, backupfile)
                     os.rename(tmpfile, realfile)
-            except Exception, inst:
+            except Exception as inst:
                 log.addwarning(_("Something went wrong while writing your transfer list: %(error)s") % {'error': str(inst)})
         finally:
             try:
@@ -815,21 +815,21 @@ class Config:
         try:
             if not os.path.isdir(path):
                 os.makedirs(path)
-        except OSError, msg:
+        except OSError as msg:
             log.addwarning(_("Can't create directory '%(path)s', reported error: %(error)s") % {'path': path, 'error': msg})
 
-        oldumask = os.umask(0077)
+        oldumask = os.umask(0o077)
 
         try:
             f = open(self.filename + ".new", "w")
-        except IOError, e:
+        except IOError as e:
             log.addwarning(_("Can't save config file, I/O error: %s") % e)
             self.config_lock.release()
             return
         else:
             try:
                 self.parser.write(f)
-            except IOError, e:
+            except IOError as e:
                 log.addwarning(_("Can't save config file, I/O error: %s") % e)
                 self.config_lock.release()
                 return
@@ -840,7 +840,7 @@ class Config:
 
         # A paranoid precaution since config contains the password
         try:
-            os.chmod(self.filename, 0600)
+            os.chmod(self.filename, 0o600)
         except:
             pass
 
@@ -850,18 +850,18 @@ class Config:
                 try:
                     if os.path.exists(self.filename + ".old"):
                         os.remove(self.filename + ".old")
-                except OSError, error:
+                except OSError as error:
                     log.addwarning(_("Can't remove %s" % self.filename + ".old"))
                 try:
                     os.rename(self.filename, self.filename + ".old")
-                except OSError, error:
+                except OSError as error:
                     log.addwarning(_("Can't back config file up, error: %s") % error)
         except OSError:
             pass
 
         try:
             os.rename(self.filename + ".new", self.filename)
-        except OSError, error:
+        except OSError as error:
             log.addwarning(_("Can't rename config file, error: %s") % error)
 
         self.config_lock.release()
@@ -887,8 +887,8 @@ class Config:
                 tar.add(self.filename+".alias")
 
             tar.close()
-        except Exception, e:
-            print e
+        except Exception as e:
+            print(e)
             self.config_lock.release()
             return (1, "Cannot write backup archive: %s" % e)
         self.config_lock.release()

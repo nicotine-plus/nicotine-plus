@@ -636,7 +636,7 @@ class NowPlaying:
             player_obj = self.bus.get_object(dbus_mpris_service + player, dbus_mpris_path)
             player_property_obj = dbus.Interface(player_obj, dbus_interface=dbus_property)
             metadata = player_property_obj.Get(dbus_mpris_player_service, "Metadata")
-        except Exception, exception:
+        except Exception as exception:
             log.addwarning(_("ERROR: MPRIS: Something went wrong while querying %(player)s: %(exception)s") % {'player': player, 'exception': exception})
             return None
 
@@ -773,7 +773,7 @@ class NowPlaying:
             output = executeCommand(othercommand, returnoutput=True)
             self.title["nowplaying"] = output
             return True
-        except Exception, error:
+        except Exception as error:
             log.addwarning(_("ERROR: Executing '%(command)s' failed: %(error)s") % {"command": othercommand, "error": error})
             return None
 

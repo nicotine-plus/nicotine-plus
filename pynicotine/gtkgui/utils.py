@@ -296,7 +296,7 @@ def OpenUri(uri):
         import gnomevfs
         gnomevfs.url_show(uri)
         return
-    except Exception, e:
+    except Exception as e:
         pass
 
 
@@ -1167,8 +1167,8 @@ class PopupMenu(gtk.Menu):
             try:
                 days = int(text)
                 self.frame.GivePrivileges(self.user, days)
-            except Exception, e:
-                print e
+            except Exception as e:
+                print(e)
 
     def OnPrivateRooms(self, widget):
 
@@ -1260,7 +1260,7 @@ def float_sort_func(model, iter1, iter2, column):
 
 def WriteLog(logsdir, fn, msg):
 
-    oldumask = os.umask(0077)
+    oldumask = os.umask(0o077)
     if not os.path.exists(logsdir):
         os.makedirs(logsdir)
 
@@ -1446,8 +1446,8 @@ def _expand_alias(aliases, cmd):
                 ret = ret + alias[i]
                 i = i + 1
         return ret
-    except Exception, error:
-        print error
+    except Exception as error:
+        print(error)
         pass
     return ""
 

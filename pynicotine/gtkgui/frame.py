@@ -745,7 +745,7 @@ class NicotineFrame:
 
         try:
             self.pynotifyBox.show()
-        except gobject.GError, error:
+        except gobject.GError as error:
             self.logMessage(_("Notification Error: %s") % str(error))
 
     def LoadIcons(self):
@@ -1076,7 +1076,7 @@ class NicotineFrame:
         try:
             if not os.path.exists(sharesdir):
                 os.mkdir(sharesdir)
-        except Exception, msg:
+        except Exception as msg:
             log.addwarning(_("Can't create directory '%(folder)s', reported error: %(error)s") % {'folder': sharesdir, 'error': msg})
 
         shares = ChooseFile(self.MainWindow.get_toplevel(), sharesdir, multiple=True)
@@ -1095,7 +1095,7 @@ class NicotineFrame:
                 self.userbrowse.InitWindow(username, None)
                 if username in self.userbrowse.users:
                     self.userbrowse.users[username].LoadShares(mylist)
-            except Exception, msg:
+            except Exception as msg:
                 log.addwarning(_("Loading Shares from disk failed: %(error)s") % {'error': msg})
 
     def OnNowPlayingConfigure(self, widget):
@@ -1191,7 +1191,7 @@ class NicotineFrame:
                 return True
                 # Tell calling code that we have not handled this event pass it on.
             return False
-        except Exception, e:
+        except Exception as e:
             log.addwarning(_("button_press error, %(error)s") % {'error': e})
 
     def OnPageRemoved(self, MainNotebook, child, page_num):
@@ -1498,8 +1498,8 @@ class NicotineFrame:
                     AppendLine(self.LogWindow, msg, self.tag_log, scroll=True)
                     if self.np.config.sections["logging"]["logcollapsed"]:
                         self.SetStatusText(msg)
-                except Exception, e:
-                    print e
+                except Exception as e:
+                    print(e)
         return False
 
     def ScrollBottom(self, widget):
@@ -1751,7 +1751,7 @@ class NicotineFrame:
                     loader.write(data, len(data))
                     loader.close()
                     img = loader.get_pixbuf()
-                except Exception, e:
+                except Exception as e:
                     log.addwarning(_("Error loading image for %(flag)s: %(error)s") % {'flag': flag, 'error': e})
                 self.flag_images[flag] = img
                 return img
@@ -2475,7 +2475,7 @@ class NicotineFrame:
                 re.compile("("+dfilter+")")
                 outfilter += dfilter
                 proccessedfilters.append(dfilter)
-            except Exception, e:
+            except Exception as e:
                 failed[dfilter] = e
 
             proccessedfilters.append(dfilter)
@@ -2498,7 +2498,7 @@ class NicotineFrame:
                     errors += "Filter: %s Error: %s " % (filter, error)
                 error = _("Error: %(num)d Download filters failed! %(error)s " % {'num': len(failed.keys()), 'error': errors})
                 self.logMessage(error)
-        except Exception, e:
+        except Exception as e:
             # Strange that individual filters _and_ the composite filter both fail
             self.logMessage(_("Error: Download Filter failed! Verify your filters. Reason: %s" % e))
             self.np.config.sections["transfers"]["downloadregexp"] = ""
@@ -2733,7 +2733,7 @@ class NicotineFrame:
     def SetClipboardURL(self, user, path):
         self.clip.set_text("slsk://" + urllib.pathname2url("%s/%s" % (user, path.replace("\\", "/"))))
         self.clip_data = "slsk://" + urllib.pathname2url("%s/%s" % (user, path.replace("\\", "/")))
-        self.MainWindow.selection_owner_set("PRIMARY", 0L)
+        self.MainWindow.selection_owner_set("PRIMARY", long(0))
 
     def OnSelectionGet(self, widget, data, info, timestamp):
         data.set_text(self.clip_data, -1)
@@ -3698,14 +3698,14 @@ class gstreamer:
             import pygst
             pygst.require("0.10")
             import gst
-        except Exception, error:
+        except Exception as error:
             return
         self.gst = gst
         try:
             self.player = gst.element_factory_make("playbin", "player")
             fakesink = gst.element_factory_make('fakesink', "my-fakesink")
             self.player.set_property("video-sink", fakesink)
-        except Exception, error:
+        except Exception as error:
             log.addwarning(_("ERROR: Gstreamer-python could not play: %(error)s") % {'error': error})
             self.gst = self.player = None
             return
