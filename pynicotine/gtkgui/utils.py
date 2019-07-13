@@ -326,10 +326,10 @@ def AppendLine(textview, line, tag=None, timestamp=None, showstamp=True, timesta
 
     def _usertag(buffer, section):
         # Tag usernames with popup menu creating tag, and away/online/offline colors
-        if USERNAMEHOTSPOTS and username != None and usertag != None:
+        if USERNAMEHOTSPOTS and username is not None and usertag is not None:
             np = re.compile(re.escape(username))
             match = np.search(section)
-            if match != None:
+            if match is not None:
                 start2 = section[:match.start()]
                 name = match.group()[:]
                 start = section[match.end():]

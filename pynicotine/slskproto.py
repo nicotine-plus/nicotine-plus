@@ -529,7 +529,7 @@ class SlskProtoThread(threading.Thread):
                         if conns[connection].init is not None and conns[connection].init.type == 'D':
                             msgs, conns[connection] = self.process_distrib_input(conns[connection], conns[connection].ibuf)
                             self._ui_callback(msgs)
-                        if conns[connection].conn == None:
+                        if conns[connection].conn is None:
                             del conns[connection]
 
             # ---------------------------

@@ -389,7 +389,7 @@ class UserList:
             self.popup_menu.set_user(user)
 
             items = self.popup_menu.get_children()
-            me = (self.popup_menu.user == None or self.popup_menu.user == self.frame.np.config.sections["server"]["login"])
+            me = (self.popup_menu.user is None or self.popup_menu.user == self.frame.np.config.sections["server"]["login"])
 
             self.Menu_BanUser.set_active(user in self.frame.np.config.sections["server"]["banlist"])
             self.Menu_IgnoreUser.set_active(user in self.frame.np.config.sections["server"]["ignorelist"])
