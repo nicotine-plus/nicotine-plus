@@ -1812,8 +1812,8 @@ class ChatRoom:
                 cellrenderer.set_property("weight", pango.WEIGHT_NORMAL)
                 cellrenderer.set_property("underline", pango.UNDERLINE_NONE)
         else:
-                cellrenderer.set_property("weight", pango.WEIGHT_NORMAL)
-                cellrenderer.set_property("underline", pango.UNDERLINE_NONE)
+            cellrenderer.set_property("weight", pango.WEIGHT_NORMAL)
+            cellrenderer.set_property("underline", pango.UNDERLINE_NONE)
 
         self.frame.CellDataFunc(column, cellrenderer, model, iter)
 

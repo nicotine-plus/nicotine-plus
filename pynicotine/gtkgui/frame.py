@@ -381,32 +381,32 @@ class NicotineFrame:
             self.UserBrowseTabLabel,
             self.InterestsTabLabel
         ]:
-                # Initialize the image label
-                img_label = ImageLabel(translated_tablabels[label_tab], self.images["empty"])
-                img_label.show()
+            # Initialize the image label
+            img_label = ImageLabel(translated_tablabels[label_tab], self.images["empty"])
+            img_label.show()
 
-                # Add it to the eventbox
-                label_tab.add(img_label)
+            # Add it to the eventbox
+            label_tab.add(img_label)
 
-                # Set tab icons, angle and text color
-                label_tab.child.show_image(config["ui"]["tab_icons"])
-                label_tab.child.set_angle(config["ui"]["labelmain"])
-                label_tab.child.set_text_color(0)
+            # Set tab icons, angle and text color
+            label_tab.child.show_image(config["ui"]["tab_icons"])
+            label_tab.child.set_angle(config["ui"]["labelmain"])
+            label_tab.child.set_text_color(0)
 
-                # Set the menu to hide the tab
-                eventbox_name = gtk.Buildable.get_name(label_tab)
+            # Set the menu to hide the tab
+            eventbox_name = gtk.Buildable.get_name(label_tab)
 
-                label_tab.connect('button_press_event', self.on_tab_click, eventbox_name + "Menu", map_tablabels_to_box[label_tab])
+            label_tab.connect('button_press_event', self.on_tab_click, eventbox_name + "Menu", map_tablabels_to_box[label_tab])
 
-                self.__dict__[eventbox_name + "Menu"] = popup = utils.PopupMenu(self)
+            self.__dict__[eventbox_name + "Menu"] = popup = utils.PopupMenu(self)
 
-                popup.setup(
-                    (
-                        "#" + _("Hide %(tab)s") % {"tab": translated_tablabels[label_tab]}, self.HideTab, [label_tab, map_tablabels_to_box[label_tab]]
-                    )
+            popup.setup(
+                (
+                    "#" + _("Hide %(tab)s") % {"tab": translated_tablabels[label_tab]}, self.HideTab, [label_tab, map_tablabels_to_box[label_tab]]
                 )
+            )
 
-                popup.set_user(map_tablabels_to_box[label_tab])
+            popup.set_user(map_tablabels_to_box[label_tab])
 
         self.LogScrolledWindow = gtk.ScrolledWindow()
         self.LogScrolledWindow.set_shadow_type(gtk.SHADOW_IN)
