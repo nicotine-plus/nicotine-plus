@@ -30,7 +30,9 @@ from math import floor
 from slskmessages import *
 import SocketServer
 import socket
-import random,  sys, time
+import random
+import sys
+import time
 if sys.platform == "win32":
     from multiselect import multiselect
 import select

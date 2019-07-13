@@ -87,6 +87,7 @@ ConfigParser -- responsible for for parsing a list of
 
 import re
 import types
+from utils import SortedDict
 
 __all__ = ["NoSectionError", "DuplicateSectionError", "NoOptionError",
            "InterpolationError", "InterpolationDepthError", "ParsingError",
@@ -96,8 +97,6 @@ __all__ = ["NoSectionError", "DuplicateSectionError", "NoOptionError",
 DEFAULTSECT = "DEFAULT"
 
 MAX_INTERPOLATION_DEPTH = 10
-
-from utils import SortedDict
 
 
 # exception classes
@@ -134,12 +133,12 @@ class NoOptionError(Error):
 class InterpolationError(Error):
     def __init__(self, reference, option, section, rawval):
         Error.__init__(self,
-            "Bad value substitution:\n"
-            "\tsection: [%s]\n"
-            "\toption : %s\n"
-            "\tkey    : %s\n"
-            "\trawval : %s\n"
-            % (section, option, reference, rawval))
+                       "Bad value substitution:\n"
+                       "\tsection: [%s]\n"
+                       "\toption : %s\n"
+                       "\tkey    : %s\n"
+                       "\trawval : %s\n"
+                       % (section, option, reference, rawval))
         self.reference = reference
         self.option = option
         self.section = section
@@ -148,11 +147,11 @@ class InterpolationError(Error):
 class InterpolationDepthError(Error):
     def __init__(self, option, section, rawval):
         Error.__init__(self,
-            "Value interpolation too deeply recursive:\n"
-            "\tsection: [%s]\n"
-            "\toption : %s\n"
-            "\trawval : %s\n"
-            % (section, option, rawval))
+                       "Value interpolation too deeply recursive:\n"
+                       "\tsection: [%s]\n"
+                       "\toption : %s\n"
+                       "\trawval : %s\n"
+                       % (section, option, rawval))
         self.option = option
         self.section = section
 
@@ -318,7 +317,7 @@ class ConfigParser:
         return self.__get(section, float, option)
 
     _boolean_states = {'1': True, 'yes': True, 'true': True, 'on': True,
-                    '0': False, 'no': False, 'false': False, 'off': False}
+                       '0': False, 'no': False, 'false': False, 'off': False}
 
     def getboolean(self, section, option):
         v = self.get(section, option)
@@ -367,7 +366,7 @@ class ConfigParser:
                 value = self.__sections[section][key]
                 if key != "__name__":
                     fp.write("%s = %s\n" %
-                        (key, str(value).replace('\n', '\n\t')))
+                             (key, str(value).replace('\n', '\n\t')))
             fp.write("\n")
 
     def remove_option(self, section, option):

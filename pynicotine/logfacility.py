@@ -90,7 +90,10 @@ if useconsole:
     CONSOLEWIDTH = 80
     try:
         # Fixed, you better not resize your window!
-        import sys, fcntl, termios, struct
+        import sys
+        import fcntl
+        import termios
+        import struct
         data = fcntl.ioctl(sys.stdout.fileno(), termios.TIOCGWINSZ, '1234')
         CONSOLEWIDTH = struct.unpack('hh', data)[1]
     except Exception:

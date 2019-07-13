@@ -19,13 +19,15 @@
 
 # Original copyright notice below
 # Copyright (C) 2007 Ingmar K. Steen (iksteen@gmail.com)
-#
+
+# import the necessary modules
+import select
+import threading
+import thread
+
 # define how large our socket sets may grow (used as a default for the
 # multiselect() call).
 MAX_SELECT_SOCKETS = 64
-
-# import the necessary modules
-import select, threading, thread
 
 
 # multiselect call mimics select.select(r,w,x,timout=None) but starts threads
@@ -46,8 +48,8 @@ def multiselect(r_fds, w_fds, x_fds, timeout=None, limit=MAX_SELECT_SOCKETS):
         fds_ = fds[:limit]
         fds = fds[limit:]
         fdsets.append(([fd for fd in fds_ if fd in r_fds],
-[fd for fd in fds_ if fd in w_fds],
-[fd for fd in fds_ if fd in x_fds]))
+                       [fd for fd in fds_ if fd in w_fds],
+                       [fd for fd in fds_ if fd in x_fds]))
 
     # the return fd sets
     r_r_fds = []
@@ -109,7 +111,8 @@ def multiselect(r_fds, w_fds, x_fds, timeout=None, limit=MAX_SELECT_SOCKETS):
 
 
 if __name__ == '__main__':
-    import socket, random
+    import socket
+    import random
     fds = []
     files = {}
     for i in range(100):
