@@ -133,23 +133,23 @@ class Transfers:
             if len(i) >= 6:
                 try:
                     size = int(i[4])
-                except:
+                except Exception:
                     pass
 
                 try:
                     currentbytes = int(i[5])
-                except:
+                except Exception:
                     pass
 
             if len(i) >= 8:
                 try:
                     bitrate = i[6]
-                except:
+                except Exception:
                     pass
 
                 try:
                     length = i[7]
-                except:
+                except Exception:
                     pass
 
             if len(i) >= 4 and i[3] in ("Aborted", "Paused"):
@@ -277,7 +277,7 @@ class Transfers:
                     transfer.status = "Filtered"
                     # In order to remove the filtered files from the saved download queue.
                     self.SaveDownloads()
-            except:
+            except Exception:
                 pass
 
         if status is None:
@@ -860,7 +860,7 @@ class Transfers:
                 size = os.path.getsize(u"%s" % filename.replace("\\", os.sep))
             else:
                 size = os.path.getsize(filename.replace("\\", os.sep))
-        except:
+        except Exception:
             # file doesn't exist (remote files are always this)
             size = 0
 
@@ -1031,7 +1031,7 @@ class Transfers:
                     i.status = "Local file error"
                     try:
                         f.close()
-                    except:
+                    except Exception:
                         pass
                     i.conn = None
                     self.queue.put(slskmessages.ConnClose(msg.conn))
@@ -1100,7 +1100,7 @@ class Transfers:
                 i.status = "Local file error"
                 try:
                     f.close()
-                except:
+                except Exception:
                     pass
                 i.conn = None
                 self.queue.put(slskmessages.ConnClose(msg.conn))
@@ -1300,7 +1300,7 @@ class Transfers:
                 i.status = "Local file error"
                 try:
                     msg.file.close()
-                except:
+                except Exception:
                     pass
                 i.conn = None
                 self.queue.put(slskmessages.ConnClose(msg.conn))
@@ -1793,7 +1793,7 @@ class Transfers:
 
             try:
                 msg.file.close()
-            except:
+            except Exception:
                 pass
 
             i.conn = None
@@ -1847,7 +1847,7 @@ class Transfers:
                                 bitrate += " (vbr)"
                             try:
                                 rl = int(attrs[1])
-                            except:
+                            except Exception:
                                 rl = 0
                             length = "%i:%02i" % (rl // 60, rl % 60)
 
@@ -1911,7 +1911,7 @@ class Transfers:
                 transfer.file.close()
                 if remove:
                     os.remove(transfer.file.name)
-            except:
+            except Exception:
                 pass
             if transfer in self.uploads:
                 self.eventprocessor.logTransfer(
@@ -1940,7 +1940,7 @@ class Transfers:
     def decode(self, string):
         try:
             return string.decode(locale.nl_langinfo(locale.CODESET), "replace").encode("utf-8", "replace")
-        except:
+        except Exception:
             return string
 
     def encode(self, string, user=None):
@@ -1954,5 +1954,5 @@ class Transfers:
         string = self.eventprocessor.decode(string, coding)
         try:
             return string.encode(locale.nl_langinfo(locale.CODESET))
-        except:
+        except Exception:
             return string

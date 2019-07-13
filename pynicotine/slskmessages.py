@@ -562,7 +562,7 @@ class GetUserStatus(ServerMessage):
         # Exception handler is for Soulfind compatibility
         try:
             pos, self.privileged = pos+1, ord(message[pos])
-        except:
+        except Exception:
             pass
 
 
@@ -1848,7 +1848,7 @@ class FileSearchResult(PeerMessage):
         for i in self.list:
             try:
                 filelist.append(self.fileindex[str(i)])
-            except:
+            except Exception:
                 pass
 
         queuesize = self.inqueue[0]
@@ -2134,7 +2134,7 @@ class DistribMessage9(DistribMessage):
         # pos, self.value = self.getObject(message, types.IntType)
         try:
             x = zlib.decompress(message)
-        except:
+        except Exception:
             self.debug()
         # message =  x[4:]
         # pos, self.user = self.getObject(message, types.StringType)

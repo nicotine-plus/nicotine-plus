@@ -342,7 +342,7 @@ def executeCommand(command, replacement=None, background=True, returnoutput=Fals
             procs.append(Popen(subcommands[-1], stdin=procs[-1].stdout, stdout=finalstdout))
         if not background and not returnoutput:
             procs[-1].wait()
-    except:
+    except Exception:
         raise RuntimeError("Problem while executing command %s (%s of %s)" % (subcommands[len(procs)], len(procs)+1, len(subcommands)))
 
     if not returnoutput:

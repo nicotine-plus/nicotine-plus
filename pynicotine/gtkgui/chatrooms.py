@@ -173,13 +173,13 @@ class RoomsControl:
         try:
             private1 = model.get_value(iter1, 2) * 10000
             private1 += model.get_value(iter1, 1)
-        except:
+        except Exception:
             private1 = 0
 
         try:
             private2 = model.get_value(iter2, 2) * 10000
             private2 += model.get_value(iter2, 1)
-        except:
+        except Exception:
             private2 = 0
 
         return cmp(private1, private2)
@@ -1149,7 +1149,7 @@ class ChatRoom:
 
         try:
             roomlines = int(config["logging"]["readroomlines"])
-        except:
+        except Exception:
             roomlines = 15
 
         try:
@@ -2146,7 +2146,7 @@ class ChatRoom:
         def _combilower(x):
             try:
                 return str.lower(x)
-            except:
+            except Exception:
                 return unicode.lower(x)
 
         clist = list(set(clist))

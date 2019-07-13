@@ -179,7 +179,7 @@ class ServerFrame(buildFrame):
             server = self.Server.get_text().split(":")
             server[1] = int(server[1])
             server = tuple(server)
-        except:
+        except Exception:
             server = None
 
         if str(self.Login.get_text()) == "None":
@@ -195,7 +195,7 @@ class ServerFrame(buildFrame):
             firstport = min(self.FirstPort.get_value_as_int(), self.LastPort.get_value_as_int())
             lastport = max(self.FirstPort.get_value_as_int(), self.LastPort.get_value_as_int())
             portrange = (firstport, lastport)
-        except:
+        except Exception:
             portrange = None
             popupWarning(
                 self.p.SettingsWindow,
@@ -1068,7 +1068,7 @@ class TransfersFrame(buildFrame):
 
         try:
             uploadallowed = self.UploadsAllowed.get_active()
-        except:
+        except Exception:
             uploadallowed = 0
 
         if not self.RemoteDownloads.get_active():
@@ -1336,7 +1336,7 @@ class IgnoreFrame(buildFrame):
             try:
                 if int(chars) > 255:
                     return
-            except:
+            except Exception:
                 return
 
         if ip not in self.ignored_ips:
@@ -1478,7 +1478,7 @@ class BanFrame(buildFrame):
             try:
                 if int(chars) > 255:
                     return
-            except:
+            except Exception:
                 return
 
         if ip not in self.blocked:
@@ -1877,7 +1877,7 @@ class ColoursFrame(buildFrame):
 
                     try:
                         colour = gtk.gdk.color_parse(config[key][option])
-                    except:
+                    except Exception:
                         colour = None
 
                     drawingarea.modify_bg(gtk.STATE_NORMAL, colour)
@@ -1961,7 +1961,7 @@ class ColoursFrame(buildFrame):
 
                 try:
                     colour = gtk.gdk.color_parse(defaults[key][option])
-                except:
+                except Exception:
                     colour = None
 
                 drawingarea.modify_bg(gtk.STATE_NORMAL, colour)
@@ -2016,7 +2016,7 @@ class ColoursFrame(buildFrame):
         if colour is not None and colour != '':
             try:
                 colour = gtk.gdk.color_parse(colour)
-            except:
+            except Exception:
                 dlg.destroy()
                 return
             else:
@@ -2386,7 +2386,7 @@ class SearchFrame(buildFrame):
     def SetSettings(self, config):
         try:
             searches = config["searches"]
-        except:
+        except Exception:
             searches = None
         self.p.SetWidgetsData(config, self.options)
 
@@ -2455,7 +2455,7 @@ class AwayFrame(buildFrame):
     def GetSettings(self):
         try:
             autoaway = self.AutoAway.get_value_as_int()
-        except:
+        except Exception:
             autoaway = None
         return {
             "server": {
@@ -2645,7 +2645,7 @@ class UrlCatchFrame(buildFrame):
                 handler = self.protocolmodel.get_value(iter, 1)
                 protocols[protocol] = handler
                 iter = self.protocolmodel.iter_next(iter)
-        except:
+        except Exception:
             pass
 
         return {
@@ -2786,7 +2786,7 @@ class CensorFrame(buildFrame):
                 word = self.censorlist.get_value(iter, 0)
                 censored.append(word)
                 iter = self.censorlist.iter_next(iter)
-        except:
+        except Exception:
             pass
 
         return {
@@ -2893,7 +2893,7 @@ class AutoReplaceFrame(buildFrame):
                 replacement = self.replacelist.get_value(iter, 1)
                 autoreplaced[word] = replacement
                 iter = self.replacelist.iter_next(iter)
-        except:
+        except Exception:
             autoreplaced.clear()
 
         return {
@@ -3069,7 +3069,7 @@ class buildDialog(gtk.Dialog):
 
         try:
             self.settings.SetWidget(self.tw[name], value)
-        except:
+        except Exception:
             pass
 
         self.addButton = gtk.Button(_("Add"), gtk.STOCK_ADD)

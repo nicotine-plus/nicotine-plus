@@ -144,14 +144,14 @@ def showCountryTooltip(widget, x, y, tooltip, sourcecolumn, stripprefix='flag_')
 def recode(s):
     try:
         return s.decode(locale.nl_langinfo(locale.CODESET), "replace").encode("utf-8", "replace")
-    except:
+    except Exception:
         return s
 
 
 def recode2(s):
     try:
         return s.decode("utf-8", "replace").encode(locale.nl_langinfo(locale.CODESET), "replace")
-    except:
+    except Exception:
         return s
 
 
@@ -549,7 +549,7 @@ class ImageLabel(gtk.HBox):
 
             try:
                 gtk.gdk.color_parse(color)
-            except:
+            except Exception:
                 color = ""
         else:
             color = ""
@@ -631,7 +631,7 @@ class IconNotebook:
             page, label_tab, status, label_tab_menu = data
             try:
                 self.Notebook.set_tab_reorderable(page, self.reorderable)
-            except:
+            except Exception:
                 pass
 
     def set_tab_closers(self, closers):
@@ -1234,11 +1234,11 @@ def InputDialog(parent, title, message, default=""):
 def int_sort_func(model, iter1, iter2, column):
     try:
         val1 = int(model.get_value(iter1, column))
-    except:
+    except Exception:
         val1 = 0
     try:
         val2 = int(model.get_value(iter2, column))
-    except:
+    except Exception:
         val2 = 0
     return cmp(val1, val2)
 
@@ -1247,12 +1247,12 @@ def float_sort_func(model, iter1, iter2, column):
 
     try:
         val1 = float(model.get_value(iter1, column))
-    except:
+    except Exception:
         val1 = 0.0
 
     try:
         val2 = float(model.get_value(iter2, column))
-    except:
+    except Exception:
         val2 = 0.0
 
     return cmp(val1, val2)
@@ -1282,7 +1282,7 @@ def fixpath(path):
             for char in chars:
                 path = path.replace(char, "_")
         return path
-    except:
+    except Exception:
         return path
 
 

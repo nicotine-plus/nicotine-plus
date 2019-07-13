@@ -55,7 +55,7 @@ def detect(path):
 
     try:
         audio.info
-    except:
+    except Exception:
         # mutagen didn't think the file was audio
         return None
 

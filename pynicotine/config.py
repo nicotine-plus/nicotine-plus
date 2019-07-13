@@ -413,7 +413,7 @@ class Config:
             f = open(filename+".alias")
             self.aliases = cPickle.load(f)
             f.close()
-        except:
+        except Exception:
             self.aliases = {}
 
         self.config_lock.release()
@@ -488,7 +488,7 @@ class Config:
                     log.addwarning(_("Something went wrong while reading your transfer list: %(error)s") % {'error': str(inst)})
             try:
                 handle.close()
-            except:
+            except Exception:
                 pass
 
         path, fn = os.path.split(self.filename)
@@ -563,7 +563,7 @@ class Config:
                 else:
                     try:
                         self.sections[i][j] = eval(val, {})
-                    except:
+                    except Exception:
                         self.sections[i][j] = None
                         log.addwarning("CONFIG ERROR: Couldn't decode '%s' section '%s' value '%s'" % (str(j), str(i), str(val)))
 
@@ -607,7 +607,7 @@ class Config:
         for shelvefile in shelves:
             try:
                 _opened_shelves.append(shelve.open(shelvefile))
-            except:
+            except Exception:
                 _errors.append(shelvefile)
                 try:
                     os.unlink(shelvefile)
@@ -675,7 +675,7 @@ class Config:
                 sharedfiles.close()
             try:
                 os.unlink(self.filename + '.files.db')
-            except:
+            except Exception:
                 pass
             sharedfiles = shelve.open(self.filename + ".files.db", flag='n')
 
@@ -683,7 +683,7 @@ class Config:
                 bsharedfiles.close()
             try:
                 os.unlink(self.filename + '.buddyfiles.db')
-            except:
+            except Exception:
                 pass
             bsharedfiles = shelve.open(self.filename + ".buddyfiles.db", flag='n')
 
@@ -691,7 +691,7 @@ class Config:
                 sharedfilesstreams.close()
             try:
                 os.unlink(self.filename + '.streams.db')
-            except:
+            except Exception:
                 pass
             sharedfilesstreams = shelve.open(self.filename + ".streams.db", flag='n')
 
@@ -699,7 +699,7 @@ class Config:
                 bsharedfilesstreams.close()
             try:
                 os.unlink(self.filename + '.buddystreams.db')
-            except:
+            except Exception:
                 pass
             bsharedfilesstreams = shelve.open(self.filename + ".buddystreams.db", flag='n')
 
@@ -707,7 +707,7 @@ class Config:
                 wordindex.close()
             try:
                 os.unlink(self.filename + '.wordindex.db')
-            except:
+            except Exception:
                 pass
             wordindex = shelve.open(self.filename + ".wordindex.db", flag='n')
 
@@ -715,7 +715,7 @@ class Config:
                 bwordindex.close()
             try:
                 os.unlink(self.filename + '.buddywordindex.db')
-            except:
+            except Exception:
                 pass
             bwordindex = shelve.open(self.filename + ".buddywordindex.db", flag='n')
 
@@ -723,7 +723,7 @@ class Config:
                 fileindex.close()
             try:
                 os.unlink(self.filename + '.fileindex.db')
-            except:
+            except Exception:
                 pass
             fileindex = shelve.open(self.filename + ".fileindex.db", flag='n')
 
@@ -731,7 +731,7 @@ class Config:
                 bfileindex.close()
             try:
                 os.unlink(self.filename + '.buddyfileindex.db')
-            except:
+            except Exception:
                 pass
             bfileindex = shelve.open(self.filename + ".buddyfileindex.db", flag='n')
 
@@ -739,7 +739,7 @@ class Config:
                 sharedmtimes.close()
             try:
                 os.unlink(self.filename + '.mtimes.db')
-            except:
+            except Exception:
                 pass
             sharedmtimes = shelve.open(self.filename + ".mtimes.db", flag='n')
 
@@ -747,7 +747,7 @@ class Config:
                 bsharedmtimes.close()
             try:
                 os.unlink(self.filename + '.buddymtimes.db')
-            except:
+            except Exception:
                 pass
             bsharedmtimes = shelve.open(self.filename + ".buddymtimes.db", flag='n')
         except Exception as error:
@@ -779,7 +779,7 @@ class Config:
                     # ...ugh. Okay, how about...
                     try:
                         os.unlink(backupfile)
-                    except:
+                    except Exception:
                         pass
                     os.rename(realfile, backupfile)
                     os.rename(tmpfile, realfile)
@@ -788,7 +788,7 @@ class Config:
         finally:
             try:
                 handle.close()
-            except:
+            except Exception:
                 pass
         self.config_lock.release()
 
@@ -841,7 +841,7 @@ class Config:
         # A paranoid precaution since config contains the password
         try:
             os.chmod(self.filename, 0o600)
-        except:
+        except Exception:
             pass
 
         try:

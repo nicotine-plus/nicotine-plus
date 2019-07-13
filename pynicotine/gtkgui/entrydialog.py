@@ -426,7 +426,7 @@ class MetaDialog(gtk.Dialog):
 
         try:
             entry.set_property("xalign", xalign)
-        except:
+        except Exception:
             pass
 
         entry.show()

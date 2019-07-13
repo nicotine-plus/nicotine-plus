@@ -812,12 +812,12 @@ class Shares:
 
             try:
                 size = os.path.getsize(pathname_f)
-            except:
+            except Exception:
                 size = os.path.getsize(pathname)
 
             try:
                 info = metadata.detect(pathname_f)
-            except:
+            except Exception:
                 info = metadata.detect(pathname)
 
             if info:
@@ -954,7 +954,7 @@ class Shares:
                     message.packObject(NetworkIntType(fileinfo[2][1]))
                 )
                 stream += msgbytes
-            except:
+            except Exception:
                 log.addwarning(_("Found meta data that couldn't be encoded, possible corrupt file: '%(file)s' has a bitrate of %(bitrate)s kbs, a length of %(length)s seconds and a VBR of %(vbr)s" % {
                         'file':    fileinfo[0],
                         'bitrate': fileinfo[2][0],

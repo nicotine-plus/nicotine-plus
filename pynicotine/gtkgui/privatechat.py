@@ -444,7 +444,7 @@ class PrivateChat:
 
         try:
             lines = int(config["logging"]["readprivatelines"])
-        except:
+        except Exception:
             lines = 15
 
         try:
@@ -999,7 +999,7 @@ class PrivateChat:
         def _combilower(x):
             try:
                 return str.lower(x)
-            except:
+            except Exception:
                 return unicode.lower(x)
 
         clist = list(set(clist))

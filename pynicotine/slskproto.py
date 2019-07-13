@@ -65,7 +65,7 @@ if MAXFILELIMIT > 0:
     # Bumping soft limit
     try:
         resource.setrlimit(resource.RLIMIT_NOFILE, (MAXFILELIMIT, MAXFILELIMIT))
-    except:
+    except Exception:
         pass
 
 # Since most people have a limit of 1024 or higher we can
@@ -439,7 +439,7 @@ class SlskProtoThread(threading.Thread):
             if p in input[:]:
                 try:
                     incconn, incaddr = p.accept()
-                except:
+                except Exception:
                     time.sleep(0.01)
                 else:
                     ip, port = self.getIpPort(incaddr)
@@ -581,7 +581,7 @@ class SlskProtoThread(threading.Thread):
             print('Killing overflow connection ', pn)
             victim_conn.shutdown(socket.SHUT_RDWR)
             victim_conn.close()
-        except:
+        except Exception:
             return False
         return True
 

@@ -189,7 +189,7 @@ class Downloads(TransferList):
                 try:
                     speed = str(int(transfer.speed))
                     speed += _(" KB/s")
-                except:
+                except Exception:
                     pass
                 bitratestr = str(transfer.bitrate)
                 length = str(transfer.length)

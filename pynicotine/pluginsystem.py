@@ -56,7 +56,7 @@ def cast_to_unicode_if_needed(text, logfunc):
         better = str.decode(text, 'utf8', 'replace')
         logfunc("Plugin problem: casting '%s' to unicode, losing characters in the process." % repr(text))
         return better
-    except:
+    except Exception:
         logfunc("Plugin problem: failed to completely cast '%s', you're on your own from here on." % repr(text))
         return text
 
@@ -95,7 +95,7 @@ class PluginHandler(object):
             self.plugindir = plugindir
         try:
             os.makedirs(self.plugindir)
-        except:
+        except Exception:
             pass
         self.plugindirs.append(self.plugindir)
         if os.path.isdir(self.plugindir):
@@ -159,7 +159,7 @@ class PluginHandler(object):
             try:
                 shutil.rmtree(self.__findplugin(pluginname))
                 return True
-            except:
+            except Exception:
                 pass
         return False
 
@@ -173,7 +173,7 @@ class PluginHandler(object):
             plugin.enable(self)
             self.enabled_plugins[pluginname] = plugin
             log.add(_("Enabled plugin %s") % plugin.PLUGIN.__name__)
-        except:
+        except Exception:
             print_exc()
             log.addwarning(_("Unable to enable plugin %s") % pluginname)
             # common.log_exception(logger)
@@ -197,7 +197,7 @@ class PluginHandler(object):
             log.add(_("Disabled plugin {}".format(plugin.PLUGIN.__name__)))
             del self.enabled_plugins[pluginname]
             plugin.disable(self)
-        except:
+        except Exception:
             print_exc()
             log.addwarning(_("Unable to fully disable plugin %s") % pluginname)
             # common.log_exception(logger)
@@ -282,7 +282,7 @@ class PluginHandler(object):
                         pass
                     else:
                         log.add(_("Plugin %(module)s returned something weird, '%(value)s', ignoring") % {'module': module, 'value': str(ret)})
-            except:
+            except Exception:
                 log.add(_("Plugin %(module)s failed with error %(errortype)s: %(error)s.\nTrace: %(trace)s\nProblem area:%(area)s") % {
                             'module': module,
                             'errortype': sys.exc_info()[0],
@@ -312,7 +312,7 @@ class PluginHandler(object):
                         log.add(_("Plugin %(module)s returned something weird, '%(value)s', ignoring") % {'module': module, 'value': ret})
                 if ret is not None:
                     hotpotato = ret
-            except:
+            except Exception:
                 log.add(_("Plugin %(module)s failed with error %(errortype)s: %(error)s.\nTrace: %(trace)s\nProblem area:%(area)s") % {
                             'module': module,
                             'errortype': sys.exc_info()[0],
@@ -623,7 +623,7 @@ class ResponseThrottle(object):
         port = False
         try:
             ip, port = self.frame.np.users[nick].addr
-        except:
+        except Exception:
             port = True
 
         if nick in self.frame.np.config.sections["server"]["ignorelist"]:

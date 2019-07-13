@@ -149,7 +149,7 @@ class UserList:
                 last_seen = user[5]
                 try:
                     time_from_epoch = time.mktime(time.strptime(last_seen, "%m/%d/%Y %H:%M:%S"))
-                except:
+                except Exception:
                     if last_seen == '':
                         time_from_epoch = sys.maxint
                     else:

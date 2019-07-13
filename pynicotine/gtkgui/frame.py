@@ -735,10 +735,10 @@ class NicotineFrame:
             self.pynotifyBox.set_icon_from_pixbuf(self.images["notify"])
             try:
                 n.attach_to_status_icon(self.TrayApp.trayicon)
-            except:
+            except Exception:
                 try:
                     n.attach_to_widget(self.TrayApp.trayicon)
-                except:
+                except Exception:
                     pass
         else:
             self.pynotifyBox.update(title, xmlmessage)
@@ -2282,7 +2282,7 @@ class NicotineFrame:
         try:
             for tab in self.MainNotebook.get_children():
                 self.MainNotebook.set_tab_reorderable(tab, config["ui"]["tab_reorderable"])
-        except:
+        except Exception:
             # Old gtk
             pass
 
@@ -2727,7 +2727,7 @@ class NicotineFrame:
                 self.np.ProcessRequestToPeer(user, slskmessages.FolderContentsRequest(None, file[:-1].replace("/", "\\")))
             else:
                 self.np.transfers.getFile(user, file.replace("/", "\\"), "")
-        except:
+        except Exception:
             self.logMessage(_("Invalid SoulSeek meta-url: %s") % url)
 
     def SetClipboardURL(self, user, path):
@@ -2758,7 +2758,7 @@ class NicotineFrame:
                 else:
                     has_pic = False
                     pic = None
-            except:
+            except Exception:
                 pic = None
 
             descr = self.np.encode(eval(self.np.config.sections["userinfo"]["descr"], {}))

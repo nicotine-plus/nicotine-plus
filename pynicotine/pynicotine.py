@@ -431,7 +431,7 @@ class NetworkEventProcessor:
         string = self.decode(string, coding)
         try:
             return string.encode(locale.nl_langinfo(locale.CODESET))
-        except:
+        except Exception:
             return string
 
     def encode(self, str, networkenc=None):
@@ -1316,7 +1316,7 @@ class NetworkEventProcessor:
                     'port': msg.port,
                     'country': cc
                 }
-            except:
+            except Exception:
                 message = _("IP address of %(user)s is %(ip)s, port %(port)i%(country)s") % {
                  'user': msg.user,
                  'ip': msg.ip,
@@ -1542,7 +1542,7 @@ class NetworkEventProcessor:
             f = open(userpic, 'rb')
             pic = f.read()
             f.close()
-        except:
+        except Exception:
             pic = None
 
         descr = self.encode(eval(self.config.sections["userinfo"]["descr"], {})).replace("\n", "\r\n")

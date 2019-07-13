@@ -153,7 +153,7 @@ class TransferList:
 
         try:
             return int(val)
-        except:
+        except Exception:
             if val in self.status_tab:
                 return self.status_tab.index(val)
             else:
