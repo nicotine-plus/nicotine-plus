@@ -265,7 +265,7 @@ class SlskProtoThread(threading.Thread):
     # - With Windows, based on #473, it would seem these connections are never removed
     CONNECTION_MAX_IDLE = 60
 
-    def __init__(self, ui_callback, queue, bindip, config, eventprocessor):
+    def __init__(self, ui_callback, queue, bindip, port, config, eventprocessor):
         """ ui_callback is a UI callback function to be called with messages
         list as a parameter. queue is Queue object that holds messages from UI
         thread.
@@ -278,7 +278,7 @@ class SlskProtoThread(threading.Thread):
         self._bindip = bindip
         self._config = config
         self._eventprocessor = eventprocessor
-        portrange = config.sections["server"]["portrange"]
+        portrange = (port, port) if port else config.sections["server"]["portrange"]
         self.serverclasses = {}
         for i in self.servercodes.keys():
             self.serverclasses[self.servercodes[i]] = i
@@ -302,7 +302,7 @@ class SlskProtoThread(threading.Thread):
 
         for listenport in range(int(portrange[0]), int(portrange[1])+1):
             try:
-                self._p.bind(('', listenport))
+                self._p.bind((bindip or '', listenport))
             except socket.error:
                 listenport = None
             else:
@@ -705,7 +705,7 @@ class SlskProtoThread(threading.Thread):
                 msg.parseNetworkMessage(msgBuffer[8:msgsize+4])
                 msgs.append(msg)
             else:
-                msgs.append(_("Server message type %(type)i size %(size)i contents %(msgBuffer)s unknown") % {'type': msgtype, 'size': msgsize - 4, 'msgBuffer': msgBuffer[8:msgsize+4].__repr__()})
+                msgs.append(_("Server message type %(type)i size %(size)i contents %(msgBuffer)s unknown") % {'type': msgtype, 'size': msgsize - 4, 'msgBuffer': msgBuffer[8:msgsize + 4].__repr__()})
             msgBuffer = msgBuffer[msgsize+4:]
         return msgs, msgBuffer
 

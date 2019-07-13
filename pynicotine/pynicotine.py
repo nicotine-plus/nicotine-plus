@@ -101,7 +101,7 @@ class NetworkEventProcessor:
     """ This class contains handlers for various messages from the networking
     thread"""
 
-    def __init__(self, frame, callback, writelog, setstatus, bindip, configfile):
+    def __init__(self, frame, callback, writelog, setstatus, bindip, port, configfile):
 
         self.frame = frame
         self.callback = callback
@@ -120,6 +120,7 @@ class NetworkEventProcessor:
             self.callback([PopupMessage(short, long)])
 
         self.bindip = bindip
+        self.port = port
         self.config.frame = frame
         self.config.readConfig()
         self.peerconns = []
@@ -142,7 +143,7 @@ class NetworkEventProcessor:
             except ImportError:
                 self.geoip = None
 
-        self.protothread = slskproto.SlskProtoThread(self.frame.networkcallback, self.queue, self.bindip, self.config, self)
+        self.protothread = slskproto.SlskProtoThread(self.frame.networkcallback, self.queue, self.bindip, self.port, self.config, self)
 
         uselimit = self.config.sections["transfers"]["uselimit"]
         uploadlimit = self.config.sections["transfers"]["uploadlimit"]

@@ -1,3 +1,27 @@
+nicotine (1.4.2-kip1-git20180205~bionic) bionic; urgency=medium
+
+  * New upstream release, 1.4.2. Building for bionic.
+
+ -- Kip Warner <kip@thevertigo.com>  Sat, 17 Feb 2018 12:33:15 -0800
+
+nicotine (1.4.2-kip1-git20180205~artful) artful; urgency=medium
+
+  * New upstream release, 1.4.2. Building for artful.
+
+ -- Kip Warner <kip@thevertigo.com>  Sat, 17 Feb 2018 12:24:12 -0800
+
+nicotine (1.4.1-kip2~git20171007ubuntu1) artful; urgency=medium
+
+  * No new upstream changes. Built for artful.
+
+ -- Kip Warner <kip@thevertigo.com>  Sat, 07 Oct 2017 18:03:58 -0700
+
+nicotine (1.4.1-kip2~git20170413) zesty; urgency=medium
+
+  * Version 1.4.1 for 17.04 / zesty.
+
+ -- Kip Warner <kip@thevertigo.com>  Thu, 13 Apr 2017 18:34:38 -0700
+
 nicotine (1.4.1-kip2~git20170212) yakkety; urgency=medium
 
   * Version 1.4.1 for 16.10 / yakkety.
@@ -12,7 +36,7 @@ nicotine (1.4.1-kip1~git20170212) xenial; urgency=medium
 
 nicotine (1.4.0-kip2~git20170131) yakkety; urgency=medium
 
-  * Version 1.4.0 for 16.04 / yakkety.
+  * Version 1.4.0 for 16.10 / yakkety.
 
  -- Kip Warner <kip@thevertigo.com>  Tue, 31 Jan 2017 15:34:59 -0800
 

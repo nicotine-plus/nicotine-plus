@@ -121,6 +121,8 @@ msgstr ""
 "  -s,      --hidden       Uruchom program ukryty\n"
 "  -b ip,  --bindip=ip      Zbinduj sockety to podanego adresu IP (przydatne "
 "dla VPN-ów)\n"
+"  -l port, --port=port    Posłuchaj danego portu. Uporządkowanie konfiguracji "
+"portrange\n"
 "  -v,      --version       Pokaż wersję i wyjdź"
 
 msgid "Errors occured while trying to change process name:"

@@ -85,6 +85,8 @@ msgid ""
 "  -s,      --hidden           Start the program hidden so only the tray icon "
 "is shown\n"
 "  -b ip,   --bindip=ip        Bind sockets to the given IP (useful for VPN)\n"
+"  -l port, --port=port        Listen on the given port. Overrides the "
+"portrange configuration\n"
 "  -v,      --version          Display version and exit"
 msgstr ""
 

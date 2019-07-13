@@ -39,7 +39,7 @@ import gettext
 
 from logfacility import log as logfacility
 
-version = "1.4.1"
+version = "1.4.2"
 
 log = 0
 win32 = sys.platform.startswith("win")
