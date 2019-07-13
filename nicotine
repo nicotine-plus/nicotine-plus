@@ -109,7 +109,7 @@ Python bindings: http://www.maxmind.com/app/python
         # dbhash might be a good choice
         try:
             import dbhash
-        except:
+        except Exception:
             log.addwarning(
                 _("Warning: the Berkeley DB module, dbhash, " +
                   "could not be loaded."))
@@ -117,7 +117,7 @@ Python bindings: http://www.maxmind.com/app/python
         # win32file is used to handle hidden files
         try:
             import win32file
-        except:
+        except Exception:
             msg = _("""Nicotine+ supports hidden files attributes on windows.
 This requires a python module called pypiwin32. You can find it here:
 https://pypi.python.org/pypi/pypiwin32""")
@@ -130,7 +130,7 @@ def version():
     try:
         import pynicotine.utils
         print _("Nicotine+ version %s" % pynicotine.utils.version)
-    except ImportError, error:
+    except ImportError as error:
         print _("Cannot find the pynicotine.utils module.")
 
 
@@ -155,7 +155,7 @@ def renameprocess(newname, debug=False):
     try:
         import procname
         procname.setprocname(newname)
-    except:
+    except Exception:
         errors.append("Failed procname module")
 
     # Renaming ourselves for pkill et al.
@@ -164,7 +164,7 @@ def renameprocess(newname, debug=False):
         # GNU/Linux style
         libc = ctypes.CDLL('libc.so.6')
         libc.prctl(15, newname, 0, 0, 0)
-    except:
+    except Exception:
         errors.append("Failed GNU/Linux style")
 
     try:
@@ -172,7 +172,7 @@ def renameprocess(newname, debug=False):
         # FreeBSD style
         libc = dl.open('/lib/libc.so.6')
         libc.call('setproctitle', newname + '\0')
-    except:
+    except Exception:
         errors.append("Failed FreeBSD style")
 
     if debug and errors:
@@ -271,6 +271,7 @@ def run():
             app.MainLoop()
     else:
         print result
+
 
 if __name__ == '__main__':
     try:
