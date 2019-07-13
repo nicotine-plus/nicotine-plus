@@ -216,7 +216,7 @@ class SortedDict(UserDict):
     # @param value dict value
     def __setitem__(self, key, value):
 
-        if not self.__dict__.has_key(key):
+        if key not in self.__dict__:
             self.__keys__.append(key)
             self.__sorted__ = False
 
