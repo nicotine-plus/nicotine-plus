@@ -29,7 +29,6 @@ import re
 import thread
 import threading
 import copy
-import sys
 from pynicotine.utils import executeCommand
 from pynicotine.logfacility import log
 
