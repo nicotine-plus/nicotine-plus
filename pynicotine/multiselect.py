@@ -32,7 +32,7 @@ import select, threading, thread
 def multiselect(r_fds, w_fds, x_fds, timeout = None, limit = MAX_SELECT_SOCKETS):
     fds = []
     for fd in r_fds + w_fds + x_fds:
-        if not fd in fds:
+        if fd not in fds:
             fds.append(fd)
 
     # if we're using less than the limit, fall back to regular select

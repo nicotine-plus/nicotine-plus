@@ -1455,7 +1455,7 @@ class Transfers:
         trusers = self.getTransferringUsers()
 
         # List of transfer instances of users who are not currently transferring
-        list = [i for i in self.uploads if not i.user in trusers and i.status == "Queued"]
+        list = [i for i in self.uploads if i.user not in trusers and i.status == "Queued"]
 
         # Sublist of privileged users transfers
         listprivileged = [i for i in list if self.isPrivileged(i.user)]

@@ -561,7 +561,7 @@ class UserList:
             if user in self.trusted:
                 self.trusted.remove(user)
         else:
-            if not user in self.trusted:
+            if user not in self.trusted:
                 self.trusted.append(user)
 
         for i in self.userlist:
@@ -578,7 +578,7 @@ class UserList:
             if user in self.notify:
                 self.notify.remove(user)
         else:
-            if not user in self.notify:
+            if user not in self.notify:
                 self.notify.append(user)
 
         for i in self.userlist:
@@ -595,7 +595,7 @@ class UserList:
             if user in self.privileged:
                 self.privileged.remove(user)
         else:
-            if not user in self.privileged:
+            if user not in self.privileged:
                 self.privileged.append(user)
 
         for i in self.userlist:
