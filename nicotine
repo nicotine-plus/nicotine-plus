@@ -81,7 +81,7 @@ You should install PyGTK 2.24.X.""") % (e)
     # Require pynicotine
     try:
         import pynicotine
-    except ImportError, e:
+    except ImportError as e:
         return _("""Can not find Nicotine+ modules.
 Perhaps they're installed in a directory which is not
 in an interpreter's module search path.
