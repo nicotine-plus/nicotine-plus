@@ -236,8 +236,8 @@ class Downloads(TransferList):
 
         complete_path = os.path.join(downloaddir, transfer.path)
 
-        if transfer.path is "":
-            if transfer.status is "Finished":
+        if transfer.path == "":
+            if transfer.status == "Finished":
                 executeCommand(filemanager, downloaddir)
             else:
                 executeCommand(filemanager, incompletedir)

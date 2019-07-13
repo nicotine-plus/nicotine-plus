@@ -368,7 +368,7 @@ class UserList:
             self.usersmodel.set(user[3], 0, self.frame.GetStatusImage(0), 3, "0", 4, "0", 10, 0, 11, 0, 12, 0)
 
         for user in self.userlist:
-            if self.usersmodel.get(user[3], 8)[0] is "":
+            if self.usersmodel.get(user[3], 8)[0] == "":
                 self.SetLastSeen(user[0])
 
     def OnPopupMenu(self, widget, event):
@@ -428,7 +428,7 @@ class UserList:
 
         if msg.status:  # online
             self.SetLastSeen(msg.user, online=True)
-        elif self.usersmodel.get(iter, 8)[0] is "":  # disconnected
+        elif self.usersmodel.get(iter, 8)[0] == "":  # disconnected
             self.SetLastSeen(msg.user)
 
     def GetUserStats(self, msg):
