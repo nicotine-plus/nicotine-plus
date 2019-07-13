@@ -88,10 +88,10 @@ ConfigParser -- responsible for for parsing a list of
 import re
 import types
 
-__all__ = ["NoSectionError","DuplicateSectionError","NoOptionError",
-        "InterpolationError","InterpolationDepthError","ParsingError",
-        "MissingSectionHeaderError","ConfigParser",
-        "DEFAULTSECT", "MAX_INTERPOLATION_DEPTH"]
+__all__ = ["NoSectionError", "DuplicateSectionError", "NoOptionError",
+           "InterpolationError", "InterpolationDepthError", "ParsingError",
+           "MissingSectionHeaderError", "ConfigParser",
+           "DEFAULTSECT", "MAX_INTERPOLATION_DEPTH"]
 
 DEFAULTSECT = "DEFAULT"
 
@@ -126,7 +126,7 @@ class DuplicateSectionError(Error):
 class NoOptionError(Error):
     def __init__(self, option, section):
         Error.__init__(self, "No option `%s' in section: %s" %
-                    (option, section))
+                       (option, section))
         self.option = option
         self.section = section
 
@@ -403,9 +403,9 @@ class ConfigParser:
     OPTCRE = re.compile(
         r'(?P<option>[^:=\s][^:=]*)'          # very permissive!
         r'\s*(?P<vi>[:=])\s*'                 # any number of space/tab,
-                                            # followed by separator
-                                            # (either : or =), followed
-                                            # by any # space/tab
+                                              # followed by separator
+                                              # (either : or =), followed
+                                              # by any # space/tab
         r'(?P<value>.*)$'                     # everything up to eol
         )
 

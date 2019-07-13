@@ -354,7 +354,7 @@ class SlskMessage:
             return struct.pack("<i", object.value)
         elif type(object) is NetworkLongLongType:
             return struct.pack("<Q", object.value)
-        log.addwarning(_("Warning: unknown object type %s") % type(object) +" "+ ("in message %(type)s") % {'type': self.__class__})
+        log.addwarning(_("Warning: unknown object type %s") % type(object) + " " + ("in message %(type)s") % {'type': self.__class__})
         return ""
 
     def makeNetworkMessage(self):

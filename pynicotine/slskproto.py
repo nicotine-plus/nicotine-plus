@@ -82,7 +82,7 @@ class Connection:
     addr is (ip, port) pair, ibuf and obuf are input and output msgBuffer,
     init is a PeerInit object (see slskmessages docstrings).
     """
-    def __init__(self, conn = None, addr = None, ibuf = "", obuf = ""):
+    def __init__(self, conn=None, addr=None, ibuf="", obuf=""):
         self.conn = conn
         self.addr = addr
         self.ibuf = ibuf
@@ -95,13 +95,13 @@ class ServerConnection(Connection):
     """
     Server socket
     """
-    def __init__(self, conn = None, addr = None, ibuf = "", obuf = ""):
+    def __init__(self, conn=None, addr=None, ibuf="", obuf=""):
         Connection.__init__(self, conn, addr, ibuf, obuf)
         self.lastping = time.time()
 
 
 class PeerConnection(Connection):
-    def __init__(self, conn = None, addr = None, ibuf = "", obuf = "", init = None):
+    def __init__(self, conn=None, addr=None, ibuf="", obuf="", init=None):
         Connection.__init__(self, conn, addr, ibuf, obuf)
         self.filereq = None
         self.filedown = None
@@ -122,7 +122,7 @@ class PeerConnectionInProgress:
     hold data about a connection that is not yet established. msgObj is
     a message to be sent after the connection has been established.
     """
-    def __init__(self, conn = None, msgObj = None):
+    def __init__(self, conn=None, msgObj=None):
         self.conn = conn
         self.msgObj = msgObj
         self.lastactive = time.time()
@@ -139,123 +139,123 @@ class SlskProtoThread(threading.Thread):
     These are the codes."""
 
     servercodes = {
-        Login:1,
-        SetWaitPort:2,
-        GetPeerAddress:3,
-        AddUser:5,
-        Unknown6:6,
-        GetUserStatus:7,
-        SayChatroom:13,
-        JoinRoom:14,
-        LeaveRoom:15,
-        UserJoinedRoom:16,
-        UserLeftRoom:17,
-        ConnectToPeer:18,
-        MessageUser:22,
-        MessageAcked:23,
-        FileSearch:26,
-        SetStatus:28,
-        ServerPing:32,
-        SendSpeed:34,
-        SharedFoldersFiles:35,
-        GetUserStats:36,
-        QueuedDownloads:40,
-        Relogged:41,
-        UserSearch:42,
-        AddThingILike:51,
-        RemoveThingILike:52,
-        Recommendations:54,
-        GlobalRecommendations:56,
-        UserInterests:57,
-        PlaceInLineResponse:60,  # Depreciated?
-        RoomAdded:62,
-        RoomRemoved:63,
-        RoomList:64,
-        ExactFileSearch:65,
-        AdminMessage:66,
-        GlobalUserList:67,  # Depreciated?
-        TunneledMessage:68,  # Depreciated?
-        PrivilegedUsers:69,
-        HaveNoParent:71,
-        SearchParent:73,
-        ParentMinSpeed:83,
-        ParentSpeedRatio:84,
-        Msg85:85,
-        ParentInactivityTimeout:86,
-        SearchInactivityTimeout:87,
-        MinParentsInCache:88,
-        Msg89:89,
-        DistribAliveInterval:90,
-        AddToPrivileged:91,
-        CheckPrivileges:92,
-        SearchRequest:93,
-        AcceptChildren:100,
-        NetInfo:102,
-        WishlistSearch:103,
-        WishlistInterval:104,
-        SimilarUsers:110,
-        ItemRecommendations:111,
-        ItemSimilarUsers:112,
-        RoomTickerState:113,
-        RoomTickerAdd:114,
-        RoomTickerRemove:115,
-        RoomTickerSet:116,
-        AddThingIHate:117,
-        RemoveThingIHate:118,
-        RoomSearch:120,
-        SendUploadSpeed:121,
-        UserPrivileged:122,
-        GivePrivileges:123,
-        NotifyPrivileges:124,
-        AckNotifyPrivileges:125,
-        BranchLevel:126,
-        BranchRoot:127,
-        ChildDepth:129,
-        # AnotherStatus:10,
-        PrivateRoomUsers:133,
-        PrivateRoomAddUser:134,
-        PrivateRoomRemoveUser:135,
-        PrivateRoomDismember:136,
-        PrivateRoomDisown:137,
-        PrivateRoomSomething:138,
-        PrivateRoomAdded:139,
-        PrivateRoomRemoved:140,
-        PrivateRoomToggle:141,
-        ChangePassword:142,
-        PrivateRoomAddOperator:143,
-        PrivateRoomRemoveOperator:144,
-        PrivateRoomOperatorAdded:145,
-        PrivateRoomOperatorRemoved:146,
-        PrivateRoomOwned:148,
-        JoinPublicRoom:150,
-        LeavePublicRoom:151,
-        PublicRoomMessage:152,
-        CantConnectToPeer:1001,
+        Login: 1,
+        SetWaitPort: 2,
+        GetPeerAddress: 3,
+        AddUser: 5,
+        Unknown6: 6,
+        GetUserStatus: 7,
+        SayChatroom: 13,
+        JoinRoom: 14,
+        LeaveRoom: 15,
+        UserJoinedRoom: 16,
+        UserLeftRoom: 17,
+        ConnectToPeer: 18,
+        MessageUser: 22,
+        MessageAcked: 23,
+        FileSearch: 26,
+        SetStatus: 28,
+        ServerPing: 32,
+        SendSpeed: 34,
+        SharedFoldersFiles: 35,
+        GetUserStats: 36,
+        QueuedDownloads: 40,
+        Relogged: 41,
+        UserSearch: 42,
+        AddThingILike: 51,
+        RemoveThingILike: 52,
+        Recommendations: 54,
+        GlobalRecommendations: 56,
+        UserInterests: 57,
+        PlaceInLineResponse: 60,  # Depreciated?
+        RoomAdded: 62,
+        RoomRemoved: 63,
+        RoomList: 64,
+        ExactFileSearch: 65,
+        AdminMessage: 66,
+        GlobalUserList: 67,  # Depreciated?
+        TunneledMessage: 68,  # Depreciated?
+        PrivilegedUsers: 69,
+        HaveNoParent: 71,
+        SearchParent: 73,
+        ParentMinSpeed: 83,
+        ParentSpeedRatio: 84,
+        Msg85: 85,
+        ParentInactivityTimeout: 86,
+        SearchInactivityTimeout: 87,
+        MinParentsInCache: 88,
+        Msg89: 89,
+        DistribAliveInterval: 90,
+        AddToPrivileged: 91,
+        CheckPrivileges: 92,
+        SearchRequest: 93,
+        AcceptChildren: 100,
+        NetInfo: 102,
+        WishlistSearch: 103,
+        WishlistInterval: 104,
+        SimilarUsers: 110,
+        ItemRecommendations: 111,
+        ItemSimilarUsers: 112,
+        RoomTickerState: 113,
+        RoomTickerAdd: 114,
+        RoomTickerRemove: 115,
+        RoomTickerSet: 116,
+        AddThingIHate: 117,
+        RemoveThingIHate: 118,
+        RoomSearch: 120,
+        SendUploadSpeed: 121,
+        UserPrivileged: 122,
+        GivePrivileges: 123,
+        NotifyPrivileges: 124,
+        AckNotifyPrivileges: 125,
+        BranchLevel: 126,
+        BranchRoot: 127,
+        ChildDepth: 129,
+        # AnotherStatus: 10,
+        PrivateRoomUsers: 133,
+        PrivateRoomAddUser: 134,
+        PrivateRoomRemoveUser: 135,
+        PrivateRoomDismember: 136,
+        PrivateRoomDisown: 137,
+        PrivateRoomSomething: 138,
+        PrivateRoomAdded: 139,
+        PrivateRoomRemoved: 140,
+        PrivateRoomToggle: 141,
+        ChangePassword: 142,
+        PrivateRoomAddOperator: 143,
+        PrivateRoomRemoveOperator: 144,
+        PrivateRoomOperatorAdded: 145,
+        PrivateRoomOperatorRemoved: 146,
+        PrivateRoomOwned: 148,
+        JoinPublicRoom: 150,
+        LeavePublicRoom: 151,
+        PublicRoomMessage: 152,
+        CantConnectToPeer: 1001,
         }
 
     peercodes = {
-        GetSharedFileList:4,
-        SharedFileList:5,
-        FileSearchRequest:8,
-        FileSearchResult:9,
-        UserInfoRequest:15,
-        UserInfoReply:16,
-        PMessageUser:22,
-        FolderContentsRequest:36,
-        FolderContentsResponse:37,
-        TransferRequest:40,
-        TransferResponse:41,
-        PlaceholdUpload:42,
-        QueueUpload:43,
-        PlaceInQueue:44,
-        UploadFailed:46,
-        QueueFailed:50,
-        PlaceInQueueRequest:51,
-        UploadQueueNotification:52,
-        Msg12547:12547
+        GetSharedFileList: 4,
+        SharedFileList: 5,
+        FileSearchRequest: 8,
+        FileSearchResult: 9,
+        UserInfoRequest: 15,
+        UserInfoReply: 16,
+        PMessageUser: 22,
+        FolderContentsRequest: 36,
+        FolderContentsResponse: 37,
+        TransferRequest: 40,
+        TransferResponse: 41,
+        PlaceholdUpload: 42,
+        QueueUpload: 43,
+        PlaceInQueue: 44,
+        UploadFailed: 46,
+        QueueFailed: 50,
+        PlaceInQueueRequest: 51,
+        UploadQueueNotification: 52,
+        Msg12547: 12547
         }
 
-    distribclasses = {0:DistribAlive, 3:DistribSearch, 4:DistribBranchLevel, 5: DistribBranchRoot, 7: DistribChildDepth, 9:DistribMessage9}
+    distribclasses = {0: DistribAlive, 3: DistribSearch, 4: DistribBranchLevel, 5: DistribBranchRoot, 7: DistribChildDepth, 9: DistribMessage9}
 
     IN_PROGRESS_STALE_AFTER = 30
     # The value of 30 was pulled out of thin air. When we let the OS handle this:
@@ -311,8 +311,8 @@ class SlskProtoThread(threading.Thread):
             self.start()
         else:
             short = _("Could not bind to a local port, aborting connection")
-            long = _("The range you specified for client connection ports was %(low)s-%(high)s, but none of these were usable. Increase and/or move the range and restart Nicotine+.") % {'low':portrange[0], 'high':portrange[1]}
-            if  portrange[0] < 1024:
+            long = _("The range you specified for client connection ports was %(low)s-%(high)s, but none of these were usable. Increase and/or move the range and restart Nicotine+.") % {'low': portrange[0], 'high': portrange[1]}
+            if portrange[0] < 1024:
                 long += "\n\n" + _("Note that part of your range lies below 1024, this is usually not allowed on most operating systems with the exception of Windows.")
             self._ui_callback([PopupMessage(short, long)])
 
@@ -407,9 +407,9 @@ class SlskProtoThread(threading.Thread):
             try:
                 # Select Networking Input and Output sockets
                 if sys.platform == "win32":
-                    input, output, exc = multiselect(conns.keys() + connsinprogress.keys()+ [p], connsinprogress.keys() + outsock, [], 0.5)
+                    input, output, exc = multiselect(conns.keys() + connsinprogress.keys() + [p], connsinprogress.keys() + outsock, [], 0.5)
                 else:
-                    input, output, exc = select.select(conns.keys() + connsinprogress.keys() +[p], connsinprogress.keys() + outsock, [], 0.5)
+                    input, output, exc = select.select(conns.keys() + connsinprogress.keys() + [p], connsinprogress.keys() + outsock, [], 0.5)
                 numsockets = 0
                 if p is not None:
                     numsockets += 1
@@ -475,12 +475,12 @@ class SlskProtoThread(threading.Thread):
                 else:
                     if connection_in_progress in output:
                         if connection_in_progress is server_socket:
-                            conns[server_socket] = ServerConnection(server_socket, msgObj.addr, "","")
+                            conns[server_socket] = ServerConnection(server_socket, msgObj.addr, "", "")
                             self._ui_callback([ServerConn(server_socket, msgObj.addr)])
                         else:
                             ip, port = self.getIpPort(msgObj.addr)
                             if self.ipBlocked(ip):
-                                message = "Blocking peer connection in progress to IP: %(ip)s Port: %(port)s" % { "ip":ip, "port":port}
+                                message = "Blocking peer connection in progress to IP: %(ip)s Port: %(port)s" % {"ip": ip, "port": port}
                                 log.add(message, 3)
                                 connection_in_progress.close()
                             else:
@@ -491,7 +491,7 @@ class SlskProtoThread(threading.Thread):
             for connection in conns.keys()[:]:
                 ip, port = self.getIpPort(conns[connection].addr)
                 if self.ipBlocked(ip) and connection is not self._server_socket:
-                    message = "Blocking peer connection to IP: %(ip)s Port: %(port)s" % { "ip":ip, "port":port}
+                    message = "Blocking peer connection to IP: %(ip)s Port: %(port)s" % {"ip": ip, "port": port}
                     log.add(message, 3)
                     connection.close()
                     del conns[connection]
@@ -612,7 +612,7 @@ class SlskProtoThread(threading.Thread):
             seg = 0
             for part in parts:
                 # Stop if there's no wildcard or matching string number
-                if part not in ( s_address[seg],  "*"):
+                if part not in (s_address[seg], "*"):
                     break
 
                 seg += 1
@@ -677,7 +677,7 @@ class SlskProtoThread(threading.Thread):
                 conns[i].lastreadlength = conns[i].lastreadlength * 2
         else:
             # Speed Limited Download data (transfers)
-            data = i.recv(conns[i].lastreadlength )
+            data = i.recv(conns[i].lastreadlength)
             conns[i].ibuf += data
             conns[i].lastreadlength = limit
             conns[i].readbytes2 += len(data)
@@ -703,7 +703,7 @@ class SlskProtoThread(threading.Thread):
                 msg.parseNetworkMessage(msgBuffer[8:msgsize+4])
                 msgs.append(msg)
             else:
-                msgs.append(_("Server message type %(type)i size %(size)i contents %(msgBuffer)s unknown") %{'type':msgtype, 'size':msgsize-4, 'msgBuffer':msgBuffer[8:msgsize+4].__repr__()})
+                msgs.append(_("Server message type %(type)i size %(size)i contents %(msgBuffer)s unknown") % {'type': msgtype, 'size': msgsize - 4, 'msgBuffer': msgBuffer[8:msgsize+4].__repr__()})
             msgBuffer = msgBuffer[msgsize+4:]
         return msgs, msgBuffer
 
@@ -798,7 +798,7 @@ class SlskProtoThread(threading.Thread):
                         conn.init = msg
                         msgs.append(msg)
                 elif conn.piercefw is None:
-                    msgs.append(_("Unknown peer init code: %(type)i, message contents %(msgBuffer)s") %{'type':ord(msgBuffer[4]), 'msgBuffer':msgBuffer[5:msgsize+4].__repr__()})
+                    msgs.append(_("Unknown peer init code: %(type)i, message contents %(msgBuffer)s") % {'type': ord(msgBuffer[4]), 'msgBuffer': msgBuffer[5:msgsize + 4].__repr__()})
                     conn.conn.close()
                     self._ui_callback([ConnClose(conn.conn, conn.addr)])
                     conn.conn = None
@@ -822,14 +822,14 @@ class SlskProtoThread(threading.Thread):
                                 if conn.addr is not None:
                                     host = conn.addr[0]
                                     port = conn.addr[1]
-                            debugmessage = _("There was an error while unpacking Peer message type %(type)s size %(size)i contents %(msgBuffer)s from user: %(user)s, %(host)s:%(port)s") %{'type':msgname, 'size':msgsize-4, 'msgBuffer':msgBuffer[8:msgsize+4].__repr__(), 'user':conn.init.user, 'host': host, 'port': port}
+                            debugmessage = _("There was an error while unpacking Peer message type %(type)s size %(size)i contents %(msgBuffer)s from user: %(user)s, %(host)s:%(port)s") % {'type': msgname, 'size': msgsize - 4, 'msgBuffer': msgBuffer[8:msgsize + 4].__repr__(), 'user': conn.init.user, 'host': host, 'port': port}
                             print(debugmessage)
                             msgs.append(debugmessage)
                             del msg
                         else:
                             msgs.append(msg)
                     except Exception as error:
-                        debugmessage =  "Error in message function:", error, msgtype, conn
+                        debugmessage = "Error in message function:", error, msgtype, conn
                         msgs.append(debugmessage)
                         print(debugmessage)
 
@@ -848,13 +848,13 @@ class SlskProtoThread(threading.Thread):
                             newbuf += "\n"
                         newbuf += char
                         x += 1
-                    debugmessage = _("Peer message type %(type)s size %(size)i contents %(msgBuffer)s unknown, from user: %(user)s, %(host)s:%(port)s") %{'type':msgtype, 'size':msgsize-4, 'msgBuffer': newbuf, 'user':conn.init.user, 'host': host, 'port': port}
+                    debugmessage = _("Peer message type %(type)s size %(size)i contents %(msgBuffer)s unknown, from user: %(user)s, %(host)s:%(port)s") % {'type': msgtype, 'size': msgsize - 4, 'msgBuffer': newbuf, 'user': conn.init.user, 'host': host, 'port': port}
                     msgs.append(debugmessage)
                     print(debugmessage)
 
             else:
                 # Unknown Message type
-                msgs.append(_("Can't handle connection type %s") %(conn.init.type))
+                msgs.append(_("Can't handle connection type %s") % (conn.init.type))
             if msgsize >= 0:
                 msgBuffer = msgBuffer[msgsize+4:]
             else:
@@ -879,7 +879,7 @@ class SlskProtoThread(threading.Thread):
                 msg.parseNetworkMessage(msgBuffer[5:msgsize+4])
                 msgs.append(msg)
             else:
-                msgs.append(_("Distrib message type %(type)i size %(size)i contents %(msgBuffer)s unknown") %{'type':msgtype, 'size':msgsize-1, 'msgBuffer':msgBuffer[5:msgsize+4].__repr__() } )
+                msgs.append(_("Distrib message type %(type)i size %(size)i contents %(msgBuffer)s unknown") % {'type': msgtype, 'size': msgsize - 1, 'msgBuffer': msgBuffer[5:msgsize + 4].__repr__()})
                 conn.conn.close()
                 self._ui_callback([ConnClose(conn.conn, conn.addr)])
                 conn.conn = None
@@ -924,7 +924,7 @@ class SlskProtoThread(threading.Thread):
                         queue.put(msgObj)
                         needsleep = True
                 except Exception as error:
-                    self._ui_callback([_("Error packaging message: %(type)s %(msg_obj)s, %(error)s") %{'type':msgObj.__class__, 'msg_obj':vars(msgObj), 'error': str(error)}])
+                    self._ui_callback([_("Error packaging message: %(type)s %(msg_obj)s, %(error)s") % {'type': msgObj.__class__, 'msg_obj': vars(msgObj), 'error': str(error)}])
             elif issubclass(msgObj.__class__, PeerMessage):
                 if msgObj.conn in conns:
                     # Pack Peer and File and Search Messages
@@ -956,7 +956,7 @@ class SlskProtoThread(threading.Thread):
                             conns[msgObj.conn].obuf += struct.pack("<ii", len(msg) + 4, self.peercodes[msgObj.__class__]) + msg
                 else:
                     if msgObj.__class__ not in [PeerInit, PierceFireWall, FileSearchResult]:
-                        message = _("Can't send the message over the closed connection: %(type)s %(msg_obj)s") %{'type':msgObj.__class__, 'msg_obj':vars(msgObj)}
+                        message = _("Can't send the message over the closed connection: %(type)s %(msg_obj)s") % {'type': msgObj.__class__, 'msg_obj': vars(msgObj)}
                         log.add(message, 3)
             elif issubclass(msgObj.__class__, InternalMessage):
                 socketwarning = False
@@ -996,7 +996,7 @@ class SlskProtoThread(threading.Thread):
                         # TODO "as" won't work here
                         except socket.error, (errnum, strerror):
                             import errno
-                            if errno.errorcode.get(errnum,"") == 'EMFILE':
+                            if errno.errorcode.get(errnum, "") == 'EMFILE':
                                 queue.put(msgObj)
                                 needsleep = True
                             else:
@@ -1027,7 +1027,7 @@ class SlskProtoThread(threading.Thread):
                     self._downloadlimit = (self._calcDLimitByTotal, msgObj.limit)
                 if socketwarning and time.time() - self.lastsocketwarning > 60:
                     self.lastsocketwarning = time.time()
-                    log.addwarning(_("You have just hit your connection limit of %(limit)s. Nicotine+ will drop connections for your protection. If you get this message often you should search for less generic terms, or increase your per-process file descriptor limit.") % {'limit':maxsockets})
+                    log.addwarning(_("You have just hit your connection limit of %(limit)s. Nicotine+ will drop connections for your protection. If you get this message often you should search for less generic terms, or increase your per-process file descriptor limit.") % {'limit': maxsockets})
         if needsleep:
             time.sleep(1)
 

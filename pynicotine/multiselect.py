@@ -30,7 +30,7 @@ import select, threading, thread
 
 # multiselect call mimics select.select(r,w,x,timout=None) but starts threads
 # if the fd sets grow beyond the specified limit
-def multiselect(r_fds, w_fds, x_fds, timeout = None, limit = MAX_SELECT_SOCKETS):
+def multiselect(r_fds, w_fds, x_fds, timeout=None, limit=MAX_SELECT_SOCKETS):
     fds = []
     for fd in r_fds + w_fds + x_fds:
         if fd not in fds:

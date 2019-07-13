@@ -993,7 +993,7 @@ class Transfers:
                 if not os.access(incompletedir, os.F_OK):
                     os.makedirs(incompletedir)
                 if not os.access(incompletedir, os.R_OK | os.W_OK | os.X_OK):
-                    raise OSError( "Download directory %s Permissions error.\nDir Permissions: %s" % (incompletedir, oct(os.stat(incompletedir)[stat.ST_MODE] & 0o777)))
+                    raise OSError("Download directory %s Permissions error.\nDir Permissions: %s" % (incompletedir, oct(os.stat(incompletedir)[stat.ST_MODE] & 0o777)))
 
             except OSError as strerror:
                 self.eventprocessor.logMessage(_("OS error: %s") % strerror)
