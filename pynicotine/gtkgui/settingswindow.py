@@ -42,8 +42,6 @@ if win32:
 else:
     import pwd
 
-dir_location = os.path.dirname(os.path.realpath(__file__))
-
 
 class buildFrame:
     """ This class build the individual frames from the settings window """
