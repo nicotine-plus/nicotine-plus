@@ -29,7 +29,7 @@ import sys
 import os
 
 from pynicotine import slskmessages
-from utils import InitialiseColumns, PopupMenu, InputDialog, Humanize, HumanSpeed, PressHeader, showCountryTooltip
+from .utils import InitialiseColumns, PopupMenu, InputDialog, Humanize, HumanSpeed, PressHeader, showCountryTooltip
 
 
 class UserList:
@@ -151,7 +151,7 @@ class UserList:
                     time_from_epoch = time.mktime(time.strptime(last_seen, "%m/%d/%Y %H:%M:%S"))
                 except:
                     if last_seen == '':
-                        time_from_epoch = sys.maxint
+                        time_from_epoch = sys.maxsize
                     else:
                         time_from_epoch = 0
             else:
@@ -332,7 +332,7 @@ class UserList:
     def SetLastSeen(self, user, online=False):
 
         last_seen = ""
-        time_from_epoch = sys.maxint
+        time_from_epoch = sys.maxsize
 
         if not online:
             last_seen = time.strftime("%m/%d/%Y %H:%M:%S")

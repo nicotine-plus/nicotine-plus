@@ -23,12 +23,12 @@ import gtk
 import gobject
 import os
 import sys
-import thread
+import _thread
 from os.path import exists, getsize, join
 
-from dirchooser import ChooseDir
-from utils import OpenUri, InitialiseColumns, recode, HumanSize, popupWarning
-from entrydialog import input_box
+from .dirchooser import ChooseDir
+from .utils import OpenUri, InitialiseColumns, recode, HumanSize, popupWarning
+from .entrydialog import input_box
 
 
 def dirstats(directory):
@@ -88,7 +88,7 @@ class FastConfigureAssistant(object):
 
         numpages = self.window.get_n_pages()
 
-        for n in xrange(numpages):
+        for n in range(numpages):
             page = self.window.get_nth_page(n)
             template = self.window.get_page_title(page)
             self.window.set_page_title(
@@ -381,14 +381,14 @@ class FastConfigureAssistant(object):
             directory[1]
         ])
 
-        thread.start_new_thread(self._addsharedir, (directory,))
+        _thread.start_new_thread(self._addsharedir, (directory,))
 
     def _addsharedir(self, directory):
 
         subdirs, files, size, extensions = dirstats(directory[1])
         exts = []
 
-        for ext, count in extensions.iteritems():
+        for ext, count in extensions.items():
             exts.append((count, ext))
 
         exts.sort(reverse=True)

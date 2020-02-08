@@ -25,7 +25,7 @@
 This module contains utility functions.
 """
 
-from __future__ import division
+
 
 import string
 from UserDict import UserDict
@@ -37,7 +37,7 @@ import gobject
 import locale
 import gettext
 
-from logfacility import log as logfacility
+from .logfacility import log as logfacility
 
 version = "1.4.2"
 
@@ -240,7 +240,7 @@ class SortedDict(UserDict):
     # @param value dict value
     def __setitem__(self, key, value):
 
-        if not self.__dict__.has_key(key):
+        if key not in self.__dict__:
             self.__keys__.append(key)
             self.__sorted__ = False
 
@@ -312,7 +312,7 @@ def executeCommand(command, replacement=None, background=True, returnoutput=Fals
     if command.endswith("&"):
         command = command[:-1]
         if returnoutput:
-            print "Yikes, I was asked to return output but I'm also asked to launch the process in the background. returnoutput gets precedent."
+            print("Yikes, I was asked to return output but I'm also asked to launch the process in the background. returnoutput gets precedent.")
         else:
             background = True
 
@@ -346,7 +346,7 @@ def executeCommand(command, replacement=None, background=True, returnoutput=Fals
 
     # subcommands is now: [['C:\Program Files\WinAmp\WinAmp.exe', '--xforce', '--title=My Title', '$'], ['flite', '-t']]
     if replacement:
-        for i in xrange(0, len(subcommands)):
+        for i in range(0, len(subcommands)):
             subcommands[i] = [x.replace(placeholder, replacement) for x in subcommands[i]]
 
     # Chaining commands...
@@ -381,20 +381,20 @@ def findBestEncoding(bytes, encodings, fallback=None):
     If none match the fallback encoding will be used with the 'replace' argument. If no fallback is
     given the first encoding from the list is used."""
 
-    if isinstance(bytes, unicode):
+    if isinstance(bytes, str):
         return bytes
 
     for encoding in encodings:
         try:
-            return unicode(bytes, encoding)
+            return str(bytes, encoding)
         except (UnicodeDecodeError, LookupError) as e:
             pass
 
     # None were successful
     if fallback:
-        return unicode(bytes, fallback, 'replace')
+        return str(bytes, fallback, 'replace')
     else:
-        return unicode(bytes, encodings[0], 'replace')
+        return str(bytes, encodings[0], 'replace')
 
 
 def strace(function):
@@ -404,9 +404,9 @@ def strace(function):
 
     def newfunc(*args, **kwargs):
         name = function.__name__
-        print("%s(%s)" % (name, ", ".join(map(repr, chain(args, kwargs.values())))))
+        print(("%s(%s)" % (name, ", ".join(map(repr, chain(args, list(kwargs.values())))))))
         retvalue = function(*args, **kwargs)
-        print("%s(%s): %s" % (name, ", ".join(map(repr, chain(args, kwargs.values()))), repr(retvalue)))
+        print(("%s(%s): %s" % (name, ", ".join(map(repr, chain(args, list(kwargs.values())))), repr(retvalue))))
         return retvalue
 
     return newfunc

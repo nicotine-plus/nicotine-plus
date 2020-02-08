@@ -72,7 +72,7 @@ class Plugin(BasePlugin):
             s.connect((ip, port))
             self.log("%s:%s: Port is open." % (ip, port))
             return 'open'
-        except socket.error, inst:
+        except socket.error as inst:
             self.log("%s:%s: Port is closed." % (ip, port))
             return 'closed'
         s.close()

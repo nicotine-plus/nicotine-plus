@@ -25,7 +25,7 @@
 MAX_SELECT_SOCKETS = 64
 
 # import the necessary modules
-import select, threading, thread
+import select, threading, _thread
 
 # multiselect call mimics select.select(r,w,x,timout=None) but starts threads
 # if the fd sets grow beyond the specified limit
@@ -70,7 +70,7 @@ def multiselect(r_fds, w_fds, x_fds, timeout = None, limit = MAX_SELECT_SOCKETS)
 	done_event = threading.Event()
 
 	# a lock to prevent race conditions when appending to the return fd sets
-	lock = thread.allocate_lock()
+	lock = _thread.allocate_lock()
 
 	# the select thread
 	def thread_select(r_fds, w_fds, x_fds, r_r_fds, r_w_fds, r_x_fds, lock, done_event):
@@ -89,7 +89,7 @@ def multiselect(r_fds, w_fds, x_fds, timeout = None, limit = MAX_SELECT_SOCKETS)
 
 	# start the select threads
 	for fdset in fdsets:
-		thread.start_new_thread(thread_select, fdset + (r_r_fds, r_w_fds, r_x_fds, lock, done_event))
+		_thread.start_new_thread(thread_select, fdset + (r_r_fds, r_w_fds, r_x_fds, lock, done_event))
 
 	# wait for one of the threads to complete
 	done_event.wait(timeout)
@@ -119,7 +119,7 @@ if __name__ == '__main__':
 	while fds:
 		r, w, x = multiselect(fds, [], [], None, 25)
 		if r:
-			print 'data on fds:', ', '.join([str(fd.fileno()) for fd in r])
+			print('data on fds:', ', '.join([str(fd.fileno()) for fd in r]))
 			for s in r:
 				data = s.recv(int(random.random() * 4096) + 1)
 				if not data:
@@ -128,4 +128,4 @@ if __name__ == '__main__':
 					fds.remove(s)
 				else:
 					files[s].write(data)
-	print 'done'
+	print('done')

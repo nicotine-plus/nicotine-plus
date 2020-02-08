@@ -6,14 +6,14 @@
 NPLUS = True
 class FakePlugin(object):
     def log(self, text):
-        print text
+        print(text)
 
-from urllib import urlopen
+from urllib.request import urlopen
 try:
     from pynicotine.pluginsystem import BasePlugin
 except ImportError:
     NPLUS = False
-    print "It seems this plugin is not loaded from within n+. Faking events..."
+    print("It seems this plugin is not loaded from within n+. Faking events...")
     BasePlugin = FakePlugin
 
 
@@ -40,14 +40,14 @@ class Plugin(BasePlugin):
     __name__ = "MusicBrainz url2search"
     def OutgoingGlobalSearchEvent(self, search):
         terms = search.split()
-        for i in xrange(0,len(terms)):
+        for i in range(0,len(terms)):
             lowerterm = terms[i].lower()
             if lowerterm[:23] == "http://musicbrainz.org/" or lowerterm[:27] == "http://www.musicbrainz.org/":
                 self.log("Fetching " + terms[i])
                 terms[i] = self.mb2search(terms[i])
         return (' '.join(terms),)
     def mb2search(self, url):
-        print "Opening url " +url
+        print("Opening url " +url)
         f = urlopen(url)
         html = f.read()
         information = []
@@ -61,17 +61,17 @@ class Plugin(BasePlugin):
             end = html.find('</span>',start)
             if end > -1:
                 information.append(deltags(html[start:end]))
-        print "Info: " + repr(information)
+        print("Info: " + repr(information))
         return ' '.join(information)
 
 # Debugging again
 if not NPLUS:
-    print "Faking search events"
+    print("Faking search events")
     instance = Plugin()
     urls = ['http://musicbrainz.org/artist/6af1a69f-0bd9-4b2b-8a53-94f6786443ac.html',
             'http://musicbrainz.org/release/fafde3cb-ed09-4212-9ffd-b05323152801.html',
             'http://www.musicbrainz.org/release/2971a9f7-6c30-408b-93a3-87e4d07988ea.html']
     for url in urls:
-        print "Searching for '" + url + "'..."
-        print "... " + repr(instance.OutgoingGlobalSearchEvent(url))
-    print "End fake"
+        print("Searching for '" + url + "'...")
+        print("... " + repr(instance.OutgoingGlobalSearchEvent(url)))
+    print("End fake")

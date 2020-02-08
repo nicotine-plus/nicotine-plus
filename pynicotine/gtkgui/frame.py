@@ -34,32 +34,32 @@ from pynicotine import slskproto
 from pynicotine.utils import version
 import time
 import gobject
-import thread
-import urllib
+import _thread
+import urllib.request, urllib.parse, urllib.error
 import signal
 import re
-from privatechat import PrivateChats
-from chatrooms import ChatRooms
-from userinfo import UserTabs, UserInfo
-from search import Searches
-from downloads import Downloads
-from uploads import Uploads
-from userlist import UserList
-from userbrowse import UserBrowse
-from settingswindow import SettingsWindow
-from fastconfigure import FastConfigureAssistant
-from about import *
-from checklatest import checklatest
+from .privatechat import PrivateChats
+from .chatrooms import ChatRooms
+from .userinfo import UserTabs, UserInfo
+from .search import Searches
+from .downloads import Downloads
+from .uploads import Uploads
+from .userlist import UserList
+from .userbrowse import UserBrowse
+from .settingswindow import SettingsWindow
+from .fastconfigure import FastConfigureAssistant
+from .about import *
+from .checklatest import checklatest
 from pynicotine.config import *
-import utils
+from . import utils
 import pynicotine.utils
-from utils import AppendLine, ImageLabel, IconNotebook, ScrollBottom, PopupMenu, Humanize, HumanSpeed, HumanSize, popupWarning, OpenUri
-from dirchooser import ChooseFile, SaveFile
+from .utils import AppendLine, ImageLabel, IconNotebook, ScrollBottom, PopupMenu, Humanize, HumanSpeed, HumanSize, popupWarning, OpenUri
+from .dirchooser import ChooseFile, SaveFile
 from pynicotine.utils import executeCommand
-import nowplaying
+from . import nowplaying
 from pynicotine import pluginsystem
 from pynicotine.logfacility import log
-from entrydialog import FindDialog, input_box, FolderDownload, QuitBox
+from .entrydialog import FindDialog, input_box, FolderDownload, QuitBox
 from pynicotine.upnp import UPnPPortMapping
 
 # LibSexy is deprecated, we should try to find a replacement
@@ -552,7 +552,7 @@ class NicotineFrame:
         ]
 
         # Initial filling of the buddies combobox
-        thread.start_new_thread(self.BuddiesCombosFill, ("",))
+        _thread.start_new_thread(self.BuddiesCombosFill, ("",))
 
         self.SearchMethod_List.clear()
 
@@ -756,7 +756,7 @@ class NicotineFrame:
 
         try:
             self.pynotifyBox.show()
-        except gobject.GError, error:
+        except gobject.GError as error:
             self.logMessage(_("Notification Error: %s") % str(error))
 
     def LoadIcons(self):
@@ -1086,7 +1086,7 @@ class NicotineFrame:
         try:
             if not os.path.exists(sharesdir):
                 os.makedirs(sharesdir)
-        except Exception, msg:
+        except Exception as msg:
             log.addwarning(_("Can't create directory '%(folder)s', reported error: %(error)s") % {'folder': sharesdir, 'error': msg})
 
         shares = ChooseFile(self.MainWindow.get_toplevel(), sharesdir, multiple=True)
@@ -1094,7 +1094,7 @@ class NicotineFrame:
             return
         for share in shares:
             try:
-                import cPickle as mypickle
+                import pickle as mypickle
                 import bz2
                 sharefile = bz2.BZ2File(share)
                 mylist = mypickle.load(sharefile)
@@ -1105,7 +1105,7 @@ class NicotineFrame:
                 self.userbrowse.InitWindow(username, None)
                 if username in self.userbrowse.users:
                     self.userbrowse.users[username].LoadShares(mylist)
-            except Exception, msg:
+            except Exception as msg:
                 log.addwarning(_("Loading Shares from disk failed: %(error)s") % {'error': msg})
 
     def OnNowPlayingConfigure(self, widget):
@@ -1201,7 +1201,7 @@ class NicotineFrame:
                 return True
                 # Tell calling code that we have not handled this event pass it on.
             return False
-        except Exception, e:
+        except Exception as e:
             log.addwarning(_("button_press error, %(error)s") % {'error': e})
 
     def OnPageRemoved(self, MainNotebook, child, page_num):
@@ -1371,7 +1371,7 @@ class NicotineFrame:
 
     def postTransferMsgs(self, msgs, curtime):
         trmsgs = []
-        for (key, value) in self.transfermsgs.iteritems():
+        for (key, value) in self.transfermsgs.items():
             trmsgs.append(value)
         msgs = trmsgs+msgs
         self.transfermsgs = {}
@@ -1508,8 +1508,8 @@ class NicotineFrame:
                     AppendLine(self.LogWindow, msg, self.tag_log, scroll=True)
                     if self.np.config.sections["logging"]["logcollapsed"]:
                         self.SetStatusText(msg)
-                except Exception, e:
-                    print e
+                except Exception as e:
+                    print(e)
         return False
 
     def ScrollBottom(self, widget):
@@ -1571,7 +1571,7 @@ class NicotineFrame:
             # Test if we are able to do a port mapping
             if self.upnppossible:
                 # Do the port mapping
-                thread.start_new_thread(upnp.AddPortMapping, (self, self.np))
+                _thread.start_new_thread(upnp.AddPortMapping, (self, self.np))
             else:
                 # Display errors
                 if errors is not None:
@@ -1761,7 +1761,7 @@ class NicotineFrame:
                     loader.write(data, len(data))
                     loader.close()
                     img = loader.get_pixbuf()
-                except Exception, e:
+                except Exception as e:
                     log.addwarning(_("Error loading image for %(flag)s: %(error)s") % {'flag': flag, 'error': e})
                 self.flag_images[flag] = img
                 return img
@@ -1946,25 +1946,25 @@ class NicotineFrame:
             self.np.transfers.BanUser(user)
 
     def UserIpIsBlocked(self, user):
-        for ip, username in self.np.config.sections["server"]["ipblocklist"].items():
+        for ip, username in list(self.np.config.sections["server"]["ipblocklist"].items()):
             if user == username:
                 return True
         return False
 
     def BlockedUserIp(self, user):
-        for ip, username in self.np.config.sections["server"]["ipblocklist"].items():
+        for ip, username in list(self.np.config.sections["server"]["ipblocklist"].items()):
             if user == username:
                 return ip
         return None
 
     def UserIpIsIgnored(self, user):
-        for ip, username in self.np.config.sections["server"]["ipignorelist"].items():
+        for ip, username in list(self.np.config.sections["server"]["ipignorelist"].items()):
             if user == username:
                 return True
         return False
 
     def IgnoredUserIp(self, user):
-        for ip, username in self.np.config.sections["server"]["ipignorelist"].items():
+        for ip, username in list(self.np.config.sections["server"]["ipignorelist"].items()):
             if user == username:
                 return ip
         return None
@@ -2092,7 +2092,7 @@ class NicotineFrame:
                 cleanedshares.append(combo)
 
         msg = slskmessages.RescanShares(cleanedshares, lambda: None)
-        thread.start_new_thread(self.np.shares.RescanShares, (msg, rebuild))
+        _thread.start_new_thread(self.np.shares.RescanShares, (msg, rebuild))
 
     def OnRebuild(self, widget=None):
         self.OnRescan(widget, rebuild=True)
@@ -2121,7 +2121,7 @@ class NicotineFrame:
                 cleanedshares.append(i)
 
         msg = slskmessages.RescanBuddyShares(cleanedshares, lambda: None)
-        thread.start_new_thread(self.np.shares.RescanBuddyShares, (msg, rebuild))
+        _thread.start_new_thread(self.np.shares.RescanBuddyShares, (msg, rebuild))
 
     def OnBuddyRebuild(self, widget=None):
         self.OnBuddyRescan(widget, rebuild=True)
@@ -2224,7 +2224,7 @@ class NicotineFrame:
 
         needrescan, needcolors, needcompletion, config = output
 
-        for (key, data) in config.items():
+        for (key, data) in list(config.items()):
             self.np.config.sections[key].update(data)
 
         config = self.np.config.sections
@@ -2373,7 +2373,7 @@ class NicotineFrame:
     def AutoReplace(self, message):
         if self.np.config.sections["words"]["replacewords"]:
             autoreplaced = self.np.config.sections["words"]["autoreplaced"]
-            for word, replacement in autoreplaced.items():
+            for word, replacement in list(autoreplaced.items()):
                 message = message.replace(word, replacement)
 
         return message
@@ -2485,7 +2485,7 @@ class NicotineFrame:
                 re.compile("("+dfilter+")")
                 outfilter += dfilter
                 proccessedfilters.append(dfilter)
-            except Exception, e:
+            except Exception as e:
                 failed[dfilter] = e
 
             proccessedfilters.append(dfilter)
@@ -2502,13 +2502,13 @@ class NicotineFrame:
             re.compile(outfilter)
             self.np.config.sections["transfers"]["downloadregexp"] = outfilter
             # Send error messages for each failed filter to log window
-            if len(failed.keys()) >= 1:
+            if len(list(failed.keys())) >= 1:
                 errors = ""
-                for filter, error in failed.items():
+                for filter, error in list(failed.items()):
                     errors += "Filter: %s Error: %s " % (filter, error)
-                error = _("Error: %(num)d Download filters failed! %(error)s " % {'num': len(failed.keys()), 'error': errors})
+                error = _("Error: %(num)d Download filters failed! %(error)s " % {'num': len(list(failed.keys())), 'error': errors})
                 self.logMessage(error)
-        except Exception, e:
+        except Exception as e:
             # Strange that individual filters _and_ the composite filter both fail
             self.logMessage(_("Error: Download Filter failed! Verify your filters. Reason: %s" % e))
             self.np.config.sections["transfers"]["downloadregexp"] = ""
@@ -2541,12 +2541,12 @@ class NicotineFrame:
         for path in paths:
 
             if os.path.exists(os.sep.join([path, "doc", subdir, file])):
-                url = "file:%s/%s/%s/%s" % (urllib.pathname2url(path).replace("|", ":"), "doc", subdir, file)
+                url = "file:%s/%s/%s/%s" % (urllib.request.pathname2url(path).replace("|", ":"), "doc", subdir, file)
                 OpenUri(url)
                 return
 
             if os.path.exists(os.sep.join([path, subdir, file])):
-                url = "file:%s/%s/%s" % (urllib.pathname2url(path).replace("|", ":"), subdir, file)
+                url = "file:%s/%s/%s" % (urllib.request.pathname2url(path).replace("|", ":"), subdir, file)
                 OpenUri(url)
                 return
         else:
@@ -2604,7 +2604,7 @@ class NicotineFrame:
             self.np.config.sections["ui"]["chat_hidebuttons"] = (not show)
         if self.chatrooms is None:
             return
-        for room in self.chatrooms.roomsctrl.joinedrooms.values():
+        for room in list(self.chatrooms.roomsctrl.joinedrooms.values()):
             room.OnShowChatButtons(not self.np.config.sections["ui"]["chat_hidebuttons"])
 
         self.np.config.writeConfiguration()
@@ -2732,7 +2732,7 @@ class NicotineFrame:
 
     def OnSoulSeek(self, url):
         try:
-            user, file = urllib.url2pathname(url[7:]).split("/", 1)
+            user, file = urllib.request.url2pathname(url[7:]).split("/", 1)
             if file[-1] == "/":
                 self.np.ProcessRequestToPeer(user, slskmessages.FolderContentsRequest(None, file[:-1].replace("/", "\\")))
             else:
@@ -2741,9 +2741,9 @@ class NicotineFrame:
             self.logMessage(_("Invalid SoulSeek meta-url: %s") % url)
 
     def SetClipboardURL(self, user, path):
-        self.clip.set_text("slsk://" + urllib.pathname2url("%s/%s" % (user, path.replace("\\", "/"))))
-        self.clip_data = "slsk://" + urllib.pathname2url("%s/%s" % (user, path.replace("\\", "/")))
-        self.MainWindow.selection_owner_set("PRIMARY", 0L)
+        self.clip.set_text("slsk://" + urllib.request.pathname2url("%s/%s" % (user, path.replace("\\", "/"))))
+        self.clip_data = "slsk://" + urllib.request.pathname2url("%s/%s" % (user, path.replace("\\", "/")))
+        self.MainWindow.selection_owner_set("PRIMARY", 0)
 
     def OnSelectionGet(self, widget, data, info, timestamp):
         data.set_text(self.clip_data, -1)
@@ -2754,7 +2754,7 @@ class NicotineFrame:
             try:
                 if self.np.config.sections["userinfo"]["pic"] != "":
                     if sys.platform == "win32":
-                        userpic = u"%s" % self.np.config.sections["userinfo"]["pic"]
+                        userpic = "%s" % self.np.config.sections["userinfo"]["pic"]
                     else:
                         userpic = self.np.config.sections["userinfo"]["pic"]
                     if os.path.exists(userpic):
@@ -3029,14 +3029,14 @@ class NicotineFrame:
 
     def SetRecommendations(self, title, recom):
         self.recommendationslist.clear()
-        for (thing, rating) in recom.iteritems():
+        for (thing, rating) in recom.items():
             thing = self.np.decode(thing)
             self.recommendationslist.append([thing, Humanize(rating), rating])
         self.recommendationslist.set_sort_column_id(2, gtk.SORT_DESCENDING)
 
     def SetUnrecommendations(self, title, recom):
         self.unrecommendationslist.clear()
-        for (thing, rating) in recom.iteritems():
+        for (thing, rating) in recom.items():
             thing = self.np.decode(thing)
             self.unrecommendationslist.append([thing, Humanize(rating), rating])
         self.unrecommendationslist.set_sort_column_id(2, gtk.SORT_ASCENDING)
@@ -3065,7 +3065,7 @@ class NicotineFrame:
     def SimilarUsers(self, msg):
         self.recommendationuserslist.clear()
         self.recommendationusers = {}
-        for user in msg.users.keys():
+        for user in list(msg.users.keys()):
             iter = self.recommendationuserslist.append([self.images["offline"], user, "0", "0", 0, 0, 0])
             self.recommendationusers[user] = iter
             self.np.queue.put(slskmessages.AddUser(user))
@@ -3230,7 +3230,7 @@ class NicotineFrame:
         show = widget.get_active()
         self.np.config.sections["ticker"]["hide"] = (not show)
         self.np.config.writeConfiguration()
-        for room in self.chatrooms.roomsctrl.joinedrooms.values():
+        for room in list(self.chatrooms.roomsctrl.joinedrooms.values()):
             room.ShowTicker(show)
 
     def RecommendationsExpanderStatus(self, widget):
@@ -3442,7 +3442,7 @@ class Notifications:
 
         if message not in self.tts:
             self.tts.append(message)
-            thread.start_new_thread(self.play_tts, ())
+            _thread.start_new_thread(self.play_tts, ())
 
     def play_tts(self):
 
@@ -3708,14 +3708,14 @@ class gstreamer:
             import pygst
             pygst.require("0.10")
             import gst
-        except Exception, error:
+        except Exception as error:
             return
         self.gst = gst
         try:
             self.player = gst.element_factory_make("playbin", "player")
             fakesink = gst.element_factory_make('fakesink', "my-fakesink")
             self.player.set_property("video-sink", fakesink)
-        except Exception, error:
+        except Exception as error:
             log.addwarning(_("ERROR: Gstreamer-python could not play: %(error)s") % {'error': error})
             self.gst = self.player = None
             return

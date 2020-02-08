@@ -22,19 +22,19 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from __future__ import division
+
 
 import gtk
 import os
 import sys
 import gobject
-from userinfo import UserTabs
+from .userinfo import UserTabs
 
-from utils import InitialiseColumns, PopupMenu, EncodingsMenu, SaveEncoding, Humanize, HumanSize, PressHeader
-from dirchooser import ChooseDir
-from entrydialog import input_box
+from .utils import InitialiseColumns, PopupMenu, EncodingsMenu, SaveEncoding, Humanize, HumanSize, PressHeader
+from .dirchooser import ChooseDir
+from .entrydialog import input_box
 from pynicotine import slskmessages
-from thread import start_new_thread
+from _thread import start_new_thread
 from pynicotine.utils import displayTraceback, executeCommand, CleanFile
 
 
@@ -238,7 +238,7 @@ class UserBrowse:
 
         self.ChangeColours()
 
-        for name, object in self.__dict__.items():
+        for name, object in list(self.__dict__.items()):
             if type(object) is PopupMenu:
                 object.set_user(self.user)
 
@@ -405,7 +405,7 @@ class UserBrowse:
                 if filedata[2] < 18446744000000000000:
                     self.totalsize += filedata[2]
                 else:
-                    print "Unbelievable filesize: %s, %s" % (HumanSize(filedata[2]), repr(filedata))
+                    print("Unbelievable filesize: %s, %s" % (HumanSize(filedata[2]), repr(filedata)))
 
         self.AmountShared.set_text(_("Shared: %s") % HumanSize(self.totalsize))
         self.NumDirectories.set_text(_("Dirs: %s") % len(self.shares))
@@ -471,7 +471,7 @@ class UserBrowse:
             """
 
             # Foreach subdir
-            for subdir in dictdir.keys():
+            for subdir in list(dictdir.keys()):
 
                 if parent is None:
                     # The first sudirs are attached to the root (None)
@@ -567,11 +567,11 @@ class UserBrowse:
                 else:
                     f += ["", ""]
 
-            f += [long(size), rl, file[1]]
+            f += [int(size), rl, file[1]]
 
             try:
                 self.files[f[0]] = self.FileStore.append(f)
-            except Exception, error:
+            except Exception as error:
                 displayTraceback()
 
     def OnSave(self, widget):
@@ -580,17 +580,17 @@ class UserBrowse:
         try:
             if not os.path.exists(sharesdir):
                 os.mkdir(sharesdir)
-        except Exception, msg:
+        except Exception as msg:
             error = _("Can't create directory '%(folder)s', reported error: %(error)s" % {'folder': sharesdir, 'error': msg})
             self.frame.logMessage(error)
 
         try:
-            import cPickle as mypickle
+            import pickle as mypickle
             import bz2
             sharesfile = bz2.BZ2File(os.path.join(sharesdir, CleanFile(self.user)), 'w')
             mypickle.dump(self.shares, sharesfile, mypickle.HIGHEST_PROTOCOL)
             sharesfile.close()
-        except Exception, msg:
+        except Exception as msg:
             error = _("Can't save shares, '%(user)s', reported error: %(error)s" % {'user': self.user, 'error': msg})
             self.frame.logMessage(error)
 
@@ -930,7 +930,7 @@ class UserBrowse:
 
         if self.search_list != []:
 
-            if self.search_position not in range(len(self.search_list)):
+            if self.search_position not in list(range(len(self.search_list))):
                 self.search_position = 0
 
             self.search_list.sort()
@@ -942,7 +942,7 @@ class UserBrowse:
 
             # Get matching files in the current directory
             resultfiles = []
-            for file in self.files.keys():
+            for file in list(self.files.keys()):
                 if query in file.lower():
                     resultfiles.append(file)
 

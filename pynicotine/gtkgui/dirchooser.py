@@ -27,7 +27,7 @@ import os
 import locale
 import sys
 
-from utils import recode, InputDialog
+from .utils import recode, InputDialog
 
 
 def ChooseDir(parent=None, initialdir="~", create=False, name=None, title=None):

@@ -25,15 +25,15 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import gtk
-from thread import start_new_thread
+from _thread import start_new_thread
 
-from transferlist import TransferList
-from utils import PopupMenu, PressHeader, HumanSize
+from .transferlist import TransferList
+from .utils import PopupMenu, PressHeader, HumanSize
 from pynicotine import slskmessages
 import string
 import os
 from pynicotine.utils import executeCommand
-from entrydialog import MetaDialog, OptionDialog
+from .entrydialog import MetaDialog, OptionDialog
 
 
 class Downloads(TransferList):

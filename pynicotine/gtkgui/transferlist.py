@@ -23,7 +23,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from __future__ import division
+
 
 import gtk
 import gobject
@@ -31,7 +31,7 @@ from types import StringType
 import string
 from time import time
 from math import ceil
-from utils import InitialiseColumns, int_sort_func, float_sort_func, HumanSize, HumanSpeed
+from .utils import InitialiseColumns, int_sort_func, float_sort_func, HumanSize, HumanSpeed
 from pynicotine.logfacility import log
 
 
@@ -316,7 +316,7 @@ class TransferList:
                 self.update_specific(newtransfer)
                 return
         else:
-            print("WARNING: Could not find transfer %s." % oldtransfer)
+            print(("WARNING: Could not find transfer %s." % oldtransfer))
 
     def update(self, transfer=None, forced=False):
 
@@ -364,7 +364,7 @@ class TransferList:
         self.lastupdate = time()  # ...we're working...
 
         # Remove empty parent rows
-        for (username, user) in [x for x in self.users.iteritems()]:
+        for (username, user) in [x for x in self.users.items()]:
 
             if not self.transfersmodel.iter_has_child(user):
                 self.transfersmodel.remove(user)
@@ -432,7 +432,7 @@ class TransferList:
                 if len(extensions) == 0:
                     extensions = "Unknown"
                 elif len(extensions) == 1:
-                    extensions = _("All %(ext)s") % {'ext': extensions.keys()[0]}
+                    extensions = _("All %(ext)s") % {'ext': list(extensions.keys())[0]}
                 else:
                     extensionlst = [(extensions[key], key) for key in extensions]
                     extensionlst.sort(reverse=True)
@@ -511,7 +511,7 @@ class TransferList:
                 percent = 100
             else:
                 percent = ((100 * icurrentbytes) / int(size))
-        except Exception, e:
+        except Exception as e:
             icurrentbytes = 0
             percent = 0
 

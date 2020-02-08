@@ -22,7 +22,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from __future__ import division
+
 
 import gtk
 import gobject
@@ -34,12 +34,12 @@ import sys
 import string
 import re
 import types
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import webbrowser
 
 from pynicotine import slskmessages
 from pynicotine.utils import executeCommand, findBestEncoding
-from countrycodes import code2name
+from .countrycodes import code2name
 
 DECIMALSEP = ""
 
@@ -296,13 +296,13 @@ def OpenUri(uri):
         import gnomevfs
         gnomevfs.url_show(uri)
         return
-    except Exception, e:
+    except Exception as e:
         pass
 
 
 def AppendLine(textview, line, tag=None, timestamp=None, showstamp=True, timestamp_format="%H:%M:%S", username=None, usertag=None, scroll=True):
 
-    if type(line) not in (type(""), type(u"")):
+    if type(line) not in (type(""), type("")):
         line = str(line)  # Error messages are sometimes tuples
 
     def _makeurltag(buffer, tag, url):
@@ -381,7 +381,7 @@ def AppendLine(textview, line, tag=None, timestamp=None, showstamp=True, timesta
         line = line[match.end()-1:]
 
         if url.startswith("slsk://") and HUMANIZE_URLS:
-            url = urllib.url2pathname(url)
+            url = urllib.request.url2pathname(url)
 
         _append(buffer, url, urltag)
         # Match remaining url
@@ -1037,7 +1037,7 @@ class PopupMenu(gtk.Menu):
 
     def clear(self):
 
-        for (w, widget) in self.handlers.iteritems():
+        for (w, widget) in self.handlers.items():
             w.disconnect(widget)
 
         self.handlers.clear()
@@ -1167,8 +1167,8 @@ class PopupMenu(gtk.Menu):
             try:
                 days = int(text)
                 self.frame.GivePrivileges(self.user, days)
-            except Exception, e:
-                print e
+            except Exception as e:
+                print(e)
 
     def OnPrivateRooms(self, widget):
 
@@ -1260,7 +1260,7 @@ def float_sort_func(model, iter1, iter2, column):
 
 def WriteLog(logsdir, fn, msg):
 
-    oldumask = os.umask(0077)
+    oldumask = os.umask(0o077)
     if not os.path.exists(logsdir):
         os.makedirs(logsdir)
 
@@ -1446,8 +1446,8 @@ def _expand_alias(aliases, cmd):
                 ret = ret + alias[i]
                 i = i + 1
         return ret
-    except Exception, error:
-        print error
+    except Exception as error:
+        print(error)
         pass
     return ""
 

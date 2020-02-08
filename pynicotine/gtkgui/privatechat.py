@@ -30,8 +30,8 @@ import pango
 
 from time import daylight, altzone
 
-from utils import AppendLine, IconNotebook, PopupMenu, WriteLog, expand_alias, is_alias, EncodingsMenu, SaveEncoding, fixpath
-from chatrooms import GetCompletion
+from .utils import AppendLine, IconNotebook, PopupMenu, WriteLog, expand_alias, is_alias, EncodingsMenu, SaveEncoding, fixpath
+from .chatrooms import GetCompletion
 from pynicotine import slskmessages
 from pynicotine.slskmessages import ToBeEncoded
 from pynicotine.utils import version
@@ -82,7 +82,7 @@ class PrivateChats(IconNotebook):
 
         page = notebook.get_nth_page(page_num)
 
-        for user, tab in self.users.items():
+        for user, tab in list(self.users.items()):
             if tab.Main == page:
                 gobject.idle_add(tab.ChatLine.grab_focus)
                 # Remove hilite if selected tab belongs to a user in the hilite list
@@ -96,7 +96,7 @@ class PrivateChats(IconNotebook):
 
         page = self.get_nth_page(self.get_current_page())
 
-        for user, tab in self.users.items():
+        for user, tab in list(self.users.items()):
             if tab.Main == page:
                 # Remove hilite
                 if user in self.frame.TrayApp.tray_status["hilites"]["private"]:
@@ -107,7 +107,7 @@ class PrivateChats(IconNotebook):
         if not focused:
             return
 
-        for user, tab in self.users.items():
+        for user, tab in list(self.users.items()):
             if tab.Main == page:
                 if user in self.frame.TrayApp.tray_status["hilites"]["private"]:
                     self.frame.Notifications.Clear("private", tab.user)
@@ -186,7 +186,7 @@ class PrivateChats(IconNotebook):
 
             n = self.page_num(child)
             page = self.get_nth_page(n)
-            username = [user for user, tab in self.users.items() if tab.Main is page][0]
+            username = [user for user, tab in list(self.users.items()) if tab.Main is page][0]
 
             if event.button == 2:
                 self.users[username].OnClose(widget)
@@ -250,12 +250,12 @@ class PrivateChats(IconNotebook):
         self.users[msg.user].ShowMessage(text, status, msg.timestamp)
 
         if ctcpversion and self.frame.np.config.sections["server"]["ctcpmsgs"] == 0:
-            self.SendMessage(msg.user, u"Nicotine+ %s" % version)
+            self.SendMessage(msg.user, "Nicotine+ %s" % version)
 
         self.frame.pluginhandler.IncomingPrivateChatNotification(msg.user, text)
 
     def UpdateColours(self):
-        for chat in self.users.values():
+        for chat in list(self.users.values()):
             chat.ChangeColours()
 
     def RemoveTab(self, tab):
@@ -302,20 +302,20 @@ class PrivateChats(IconNotebook):
     def UpdateCompletions(self):
 
         config = self.frame.np.config.sections["words"]
-        clist = [self.frame.np.config.sections["server"]["login"], "nicotine"] + self.users.keys()
+        clist = [self.frame.np.config.sections["server"]["login"], "nicotine"] + list(self.users.keys())
 
         if config["buddies"]:
             clist += [i[0] for i in self.frame.userlist.userlist]
 
         if config["aliases"]:
-            clist += ["/"+k for k in self.frame.np.config.aliases.keys()]
+            clist += ["/"+k for k in list(self.frame.np.config.aliases.keys())]
 
         if config["commands"]:
             clist += self.CMDS
 
         self.clist = clist
 
-        for user in self.users.values():
+        for user in list(self.users.values()):
             user.GetCompletionList(clist=list(self.clist))
 
 
@@ -454,7 +454,7 @@ class PrivateChat:
             s = d.split("\n")
             for l in s[- lines:-1]:
                 AppendLine(self.ChatScroll, l + "\n", self.tag_hilite, timestamp_format="", username=self.user, usertag=self.tag_hilite)
-        except IOError, e:
+        except IOError as e:
             pass
 
         gobject.idle_add(self.frame.ScrollBottom, self.ChatScroll.get_parent())
@@ -564,7 +564,7 @@ class PrivateChat:
 
         autoreply = self.frame.np.config.sections["server"]["autoreply"]
         if self.frame.away and not self.autoreplied and autoreply:
-            self.SendMessage(u"[Auto-Message] %s" % autoreply)
+            self.SendMessage("[Auto-Message] %s" % autoreply)
             self.autoreplied = 1
 
         self.frame.Notifications.new_tts(
@@ -632,18 +632,18 @@ class PrivateChat:
         bytes = widget.get_text()
 
         try:
-            text = unicode(bytes, "UTF-8")
+            text = str(bytes, "UTF-8")
         except UnicodeDecodeError:
             log.addwarning(_("We have a problem, PyGTK get_text does not seem to return UTF-8. Please file a bug report. Bytes: %s") % (repr(bytes)))
-            text = unicode(bytes, "UTF-8", "replace")
+            text = str(bytes, "UTF-8", "replace")
 
         if not text:
             widget.set_text("")
             return
 
         if is_alias(self.frame.np.config.aliases, text):
-            import thread
-            thread.start_new_thread(self.threadAlias, (text,))
+            import _thread
+            _thread.start_new_thread(self.threadAlias, (text,))
             widget.set_text("")
             return
 
@@ -1000,7 +1000,7 @@ class PrivateChat:
             try:
                 return str.lower(x)
             except:
-                return unicode.lower(x)
+                return str.lower(x)
 
         clist = list(set(clist))
         clist.sort(key=_combilower)

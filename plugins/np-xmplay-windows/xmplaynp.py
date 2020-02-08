@@ -36,7 +36,7 @@ if __name__ == "__main__":
 		if item:
 			info[item.lower()] = value
 		
-	keys = info.keys()
+	keys = list(info.keys())
 	keys.sort(reverse = True, key = len)
 	for key in keys:
 		value = info[key]
@@ -46,4 +46,4 @@ if __name__ == "__main__":
 		layout = layout.replace(optional, '')
 	# And now removing the brackers of filled in fields
 	layout = layout.replace('{{', '').replace('}}','')
-	print layout
+	print(layout)

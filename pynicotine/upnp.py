@@ -19,9 +19,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from pynicotine import slskmessages
-from logfacility import log
-from utils import findBestEncoding
+from .pynicotine import slskmessages
+from .logfacility import log
+from .utils import findBestEncoding
 
 import platform
 import re

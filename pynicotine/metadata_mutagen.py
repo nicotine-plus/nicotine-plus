@@ -22,7 +22,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from __future__ import division
+
 
 # Python modules
 import mutagen
@@ -40,7 +40,7 @@ from mutagen.mp4 import MP4Info
 from mutagen.oggopus import OggOpusInfo
 
 # Application specific
-from logfacility import log
+from .logfacility import log
 
 
 def detect(path):
@@ -49,7 +49,7 @@ def detect(path):
         audio = mutagen.File(path)
     except IOError:
         return None
-    except Exception, e:
+    except Exception as e:
         log.addwarning("Mutagen crashed on '%s': %s" % (path, e))
         return None
 
@@ -76,7 +76,7 @@ def detect(path):
     elif type(audio.info) == OggOpusInfo:
         return processOpus(audio)
     else:
-        print "EEK, what should I do with %(type)s (%(file)s)?" % {"type": str(type(audio.info)), "file": path}
+        print("EEK, what should I do with %(type)s (%(file)s)?" % {"type": str(type(audio.info)), "file": path})
 
     return processGeneric(audio)
 

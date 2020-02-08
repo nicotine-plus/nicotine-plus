@@ -2,7 +2,7 @@
 
 from os.path import exists
 from subprocess import Popen, PIPE
-from thread import start_new_thread
+from _thread import start_new_thread
 
 from pynicotine.pluginsystem import BasePlugin, returncode
 
@@ -54,7 +54,7 @@ class Plugin(BasePlugin):
 		self.log("Probing XMPlay...")
 		try:
 			proc = Popen([self.settings['pythonbin'], self.settings['helperpath'], self.settings['format']], stdout=PIPE)
-		except Exception, inst:
+		except Exception as inst:
 			self.log("Probing failed (do you use Windows?): %s" % (inst,))
 			return
 		(out, err) = proc.communicate()

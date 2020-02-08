@@ -29,29 +29,29 @@
 This is the actual client code. Actual GUI classes are in the separate modules
 """
 
-from __future__ import division
+
 
 import time
 import datetime
 import shutil
-from urllib import urlencode
-import slskproto
-import slskmessages
-from slskmessages import newId, PopupMessage, ToBeEncoded
-import transfers
-import Queue
+from urllib.parse import urlencode
+from . import slskproto
+from . import slskmessages
+from .slskmessages import newId, PopupMessage, ToBeEncoded
+from . import transfers
+import queue
 import threading
-from config import *
+from .config import *
 import string
 import types
 import locale
-import utils
-from shares import Shares
-from utils import CleanFile, findBestEncoding
+from . import utils
+from .shares import Shares
+from .utils import CleanFile, findBestEncoding
 import os
 import logging
 
-from ConfigParser import Error as ConfigParserError
+from .ConfigParser import Error as ConfigParserError
 
 
 class PeerConnection:
@@ -82,8 +82,8 @@ class Timeout:
     def timeout(self):
         try:
             self.callback([self])
-        except Exception, e:
-            print("Exception in callback %s: %s" % (self.callback, e))
+        except Exception as e:
+            print(("Exception in callback %s: %s" % (self.callback, e)))
 
 
 class ConnectToPeerTimeout(Timeout):
@@ -115,7 +115,7 @@ class NetworkEventProcessor:
             shutil.move(config, corruptfile)
             short = _("Your config file is corrupt")
             long = _("We're sorry, but it seems your configuration file is corrupt. Please reconfigure Nicotine+.\n\nWe renamed your old configuration file to\n%(corrupt)s\nIf you open this file with a text editor you might be able to rescue some of your settings.") % {'corrupt': corruptfile}
-            log.addwarning(long)
+            log.addwarning(int)
             self.config = Config(config, data_dir)
             self.callback([PopupMessage(short, long)])
 
@@ -130,7 +130,7 @@ class NetworkEventProcessor:
         self.ip_requested = []
         self.PrivateMessageQueue = {}
         self.users = {}
-        self.queue = Queue.Queue(0)
+        self.queue = queue.Queue(0)
         self.shares = Shares(self)
 
         try:
@@ -440,7 +440,7 @@ class NetworkEventProcessor:
         if networkenc is None:
             networkenc = self.config.sections["server"]["enc"]
 
-        if type(str) is types.UnicodeType:
+        if type(str) is str:
             return str.encode(networkenc, 'replace')
         else:
             return str.decode("utf-8", 'replace').encode(networkenc, 'replace')
@@ -1447,7 +1447,7 @@ class NetworkEventProcessor:
                             'real_ip': u_ip
                         }
                         self.logMessage(warning, 1)
-                        print warning
+                        print(warning)
                         return 1
         return 0
 
@@ -1534,7 +1534,7 @@ class NetworkEventProcessor:
 
         try:
             if sys.platform == "win32":
-                userpic = u"%s" % self.config.sections["userinfo"]["pic"]
+                userpic = "%s" % self.config.sections["userinfo"]["pic"]
                 if not os.path.exists(userpic):
                     userpic = self.config.sections["userinfo"]["pic"]
             else:
@@ -1761,8 +1761,8 @@ class NetworkEventProcessor:
             folder = ""
             files = []
 
-            for i in msg.list.keys():
-                for j in msg.list[i].keys():
+            for i in list(msg.list.keys()):
+                for j in list(msg.list[i].keys()):
                     if os.path.commonprefix([i, j]) == j:
                         files = msg.list[i][j]
                         numfiles = len(files)
@@ -1877,7 +1877,7 @@ class NetworkEventProcessor:
 
             if not self.GetDistribConn():
 
-                user = self.distribcache.keys()[0]
+                user = list(self.distribcache.keys())[0]
                 addr = self.distribcache[user]
 
                 self.queue.put(slskmessages.SearchParent(addr[0]))
@@ -1901,7 +1901,7 @@ class NetworkEventProcessor:
 
         if len(self.distribcache) > 0:
 
-            user = self.distribcache.keys()[0]
+            user = list(self.distribcache.keys())[0]
             addr = self.distribcache[user]
 
             self.queue.put(slskmessages.SearchParent(addr[0]))
@@ -1934,7 +1934,7 @@ class NetworkEventProcessor:
             encodings = [self.config.sections["server"]["enc"]] + self.config.sections["server"]["fallbackencodings"]
 
         unicodes = {}
-        for user, bytes in msg.msgs.iteritems():
+        for user, bytes in msg.msgs.items():
             unicodes[user] = findBestEncoding(bytes, encodings)
 
         msg.msgs = unicodes
@@ -1971,7 +1971,7 @@ class NetworkEventProcessor:
                 f.write(time.strftime("%c"))
                 f.write(" %s\n" % message)
                 f.close()
-            except IOError, error:
+            except IOError as error:
                 self.logMessage(_("Couldn't write to transfer log: %s") % error)
 
         if toUI:

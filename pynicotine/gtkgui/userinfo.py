@@ -31,7 +31,7 @@ import gtk
 import gobject
 
 # Application specific
-from utils import IconNotebook, PopupMenu, EncodingsMenu, SaveEncoding,  Humanize, InitialiseColumns, AppendLine
+from .utils import IconNotebook, PopupMenu, EncodingsMenu, SaveEncoding,  Humanize, InitialiseColumns, AppendLine
 from pynicotine import slskmessages
 from pynicotine.utils import CleanFile
 from pynicotine.logfacility import log
@@ -128,13 +128,13 @@ class UserTabs(IconNotebook):
 
     def UpdateGauge(self, msg):
 
-        for i in self.users.values():
+        for i in list(self.users.values()):
             if i.conn == msg.conn.conn:
                 i.UpdateGauge(msg)
 
     def UpdateColours(self):
 
-        for i in self.users.values():
+        for i in list(self.users.values()):
             i.ChangeColours()
 
     def TabPopup(self, user):
@@ -171,7 +171,7 @@ class UserTabs(IconNotebook):
 
             n = self.page_num(child)
             page = self.get_nth_page(n)
-            username = [user for user, tab in self.users.items() if tab.Main is page][0]
+            username = [user for user, tab in list(self.users.items()) if tab.Main is page][0]
 
             if event.button == 2:
                 self.users[username].OnClose(widget)
@@ -466,14 +466,14 @@ class UserInfo:
                 gc.collect()
                 self.actual_zoom = 0
                 self.SavePicture.set_sensitive(True)
-            except TypeError, e:
+            except TypeError as e:
                 name = tempfile.mktemp()
                 f = open(name, "w")
                 f.write(pic)
                 f.close()
                 self.image.set_from_file(name)
                 os.remove(name)
-            except Exception, e:
+            except Exception as e:
                 self.image.set_from_pixbuf(None)
                 self.SavePicture.set_sensitive(False)
         else:
