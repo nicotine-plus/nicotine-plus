@@ -22,11 +22,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import gtk
-import os
+import gi
+gi.require_version('Gtk', '3.0')
+
+from gi.repository import Gtk as gtk
 import sys
 from pynicotine.utils import version
-from . import imagedata
 from .utils import AppendLine
 
 

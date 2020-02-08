@@ -23,10 +23,13 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-import sys
-import gtk
-import gobject
-import pango
+import gi
+gi.require_version('Gtk', '3.0')
+gi.require_version('Pango', '1.0')
+
+from gi.repository import Gtk as gtk
+from gi.repository import GObject as gobject
+from gi.repository import Pango as pango
 
 from time import daylight, altzone
 
