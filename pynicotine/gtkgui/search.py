@@ -81,7 +81,7 @@ class WishList(gtk.Dialog):
 
         self.mainHbox.pack_start(self.WishScrollWin, True, True, 0)
         self.mainVbox = gtk.VBox(False, 5)
-        self.mainHbox.pack_start(self.mainVbox, False, False)
+        self.mainHbox.pack_start(self.mainVbox, False, False, 0)
         self.mainVbox.show()
         self.mainVbox.set_spacing(5)
 
@@ -104,10 +104,10 @@ class WishList(gtk.Dialog):
         column = gtk.TreeViewColumn(_("Wishes"), gtk.CellRendererText(), text=0)
         self.WishlistView.append_column(column)
         self.WishlistView.set_model(self.store)
-        self.WishlistView.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
+        self.WishlistView.get_selection().set_mode(gtk.SelectionMode.MULTIPLE)
 
         column.set_sort_column_id(0)
-        self.store.set_sort_column_id(0, gtk.SORT_ASCENDING)
+        self.store.set_sort_column_id(0, gtk.SortType.ASCENDING)
         self.wishes = {}
 
         for wish in self.nicotine.np.config.sections["server"]["autosearch"]:
@@ -1102,7 +1102,7 @@ class Search:
         else:
             compare = cmp
 
-        if order == gtk.SORT_ASCENDING:
+        if order == gtk.SortType.ASCENDING:
             self.all_data.sort(lambda r1, r2: compare(r1[col], r2[col]))
         else:
             self.all_data.sort(lambda r2, r1: compare(r1[col], r2[col]))
