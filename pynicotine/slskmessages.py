@@ -1760,7 +1760,7 @@ class SharedFileList(PeerMessage):
         # instead of repacking it, unless rebuild is True
         if not rebuild and self.built is not None:
             return self.built
-        msg = ""
+        msg = b""
         msg = msg + self.packObject(len(list(self.list.keys())))
         for (key, value) in self.list.items():
             msg = msg + self.packObject(key.replace(os.sep, "\\")) + value
