@@ -219,8 +219,10 @@ class ConfigParser:
 		try:
 			opts.update(defaults)
 		except KeyError as e:
-			print(e)
-			pprint(opts)
+			if '__name__' not in e.args:
+				raise
+		if '__name__' in opts:
+			del opts['__name__']
 
 		return list(opts.keys())
 
