@@ -411,7 +411,7 @@ class Config:
                 self.defaults[key] = value
 
         try:
-            f = open(filename+".alias")
+            f = open(filename+".alias", 'rb')
             self.aliases = pickle.load(f)
             f.close()
         except:
@@ -968,7 +968,7 @@ class Config:
 
     def writeAliases(self):
         self.config_lock.acquire()
-        f = open(self.filename+".alias", "w")
+        f = open(self.filename+".alias", "wb")
         pickle.dump(self.aliases, f, 1)
         f.close()
         self.config_lock.release()
