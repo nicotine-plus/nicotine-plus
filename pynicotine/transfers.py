@@ -29,11 +29,8 @@
 the transfer manager.
 """
 
-
-
 from . import slskmessages
 import threading
-import _thread
 from .slskmessages import newId
 from .logfacility import log
 
@@ -49,9 +46,7 @@ import locale
 from . import utils
 import hashlib
 from .utils import executeCommand
-from .gtkgui.utils import recode2
 from time import sleep
-import gobject
 from .temporary import HybridListDictionaryTransferMonstrosity
 win32 = sys.platform.startswith("win")
 

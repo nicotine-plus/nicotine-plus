@@ -29,9 +29,7 @@ import mutagen
 import os
 
 from mutagen.mp3 import MP3, MPEGInfo
-from mutagen.mp4 import MP4StreamInfoError
 from mutagen.flac import FLAC, StreamInfo
-# from mutagen.apev2 import APEv2, APEv2File
 from mutagen.oggvorbis import OggVorbisInfo
 from mutagen.musepack import MusepackInfo
 from mutagen.asf import ASFInfo

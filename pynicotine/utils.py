@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 #
+# COPYRIGHT (C) 2020 Lene Preuss <lene.preuss@gmail.com>
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2007 Daelstorm <daelstorm@gmail.com>
 # COPYRIGHT (C) 2003-2004 Hyriand <hyriand@thegraveyard.org>
@@ -25,21 +26,15 @@
 This module contains utility functions.
 """
 
-
-
-import string
-from UserDict import UserDict
+from collections import UserDict
 from subprocess import Popen, PIPE
 import os
-import dircache
 import sys
-import gobject
 import locale
 import gettext
 
-from .logfacility import log as logfacility
 
-version = "1.4.2"
+version = "1.5.0"
 
 log = 0
 win32 = sys.platform.startswith("win")

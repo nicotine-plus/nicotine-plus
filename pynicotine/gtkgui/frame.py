@@ -23,17 +23,16 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
-import gettext
-import gtk
-
-from tempfile import gettempdir
 from pynicotine.pynicotine import NetworkEventProcessor
 from pynicotine import slskmessages
 from pynicotine import slskproto
 from pynicotine.utils import version
-import time
-import gobject
+
+import gi
+gi.require_version('Gtk', '3.0')
+
+from gi.repository import GObject as gobject
+
 import _thread
 import urllib.request, urllib.parse, urllib.error
 import signal

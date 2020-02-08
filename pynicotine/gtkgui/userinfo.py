@@ -27,8 +27,11 @@ import os
 import time
 
 # Python modules
-import gtk
-import gobject
+import gi
+gi.require_version('Gtk', '3.0')
+
+from gi.repository import Gtk as gtk
+from gi.repository import GObject as gobject
 
 # Application specific
 from .utils import IconNotebook, PopupMenu, EncodingsMenu, SaveEncoding,  Humanize, InitialiseColumns, AppendLine

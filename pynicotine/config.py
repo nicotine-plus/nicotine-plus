@@ -479,7 +479,7 @@ class Config:
         if exists(os.path.join(self.data_dir, 'transfers.pickle')):
             # <1.2.13 stored transfers inside the main config
             try:
-                handle = open(os.path.join(self.data_dir, 'transfers.pickle'))
+                handle = open(os.path.join(self.data_dir, 'transfers.pickle'), 'rb')
             except IOError as inst:
                 log.addwarning(_("Something went wrong while opening your transfer list: %(error)s") % {'error': str(inst)})
             else:

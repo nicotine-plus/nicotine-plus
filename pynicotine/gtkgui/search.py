@@ -22,10 +22,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import gtk
-import gobject
-import os
+import gi
+gi.require_version('Gtk', '3.0')
 
+from gi.repository import Gtk as gtk
+from gi.repository import GObject as gobject
+
+import os
 import re
 import sre_constants
 import locale
@@ -40,8 +43,6 @@ from .dirchooser import ChooseDir
 from .entrydialog import MetaDialog
 from .utils import InputDialog, showCountryTooltip
 from pynicotine.logfacility import log
-
-from time import time
 
 
 class WishList(gtk.Dialog):
@@ -688,7 +689,7 @@ class Search:
         self.ResultsList.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
         self.ResultsList.set_property("show-expanders", False)
         self.ResultsList.set_property("rules-hint", True)
-	widths = self.frame.np.config.sections["columns"]["search_widths"]
+        widths = self.frame.np.config.sections["columns"]["search_widths"]
         cols = InitialiseColumns(
             self.ResultsList,
             [_("Number"), widths[0], "text", self.CellDataFunc],

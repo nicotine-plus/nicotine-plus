@@ -27,19 +27,19 @@
 from os.path import commonprefix
 import os
 import re
-import time
-import sys
 
 # Python modules
-import gtk
-import gobject
-import locale
-import pango
+import gi
+gi.require_version('Gtk', '3.0')
+gi.require_version('Pango', '1.0')
+
+from gi.repository import Gtk as gtk
+from gi.repository import GObject as gobject
+from gi.repository import Pango as pango
 
 # Application specific
 from pynicotine.logfacility import log
 from pynicotine import slskmessages
-from pynicotine import pluginsystem
 from pynicotine.slskmessages import ToBeEncoded
 from .utils import InitialiseColumns, AppendLine, PopupMenu, WriteLog, Humanize, HumanSpeed, expand_alias, is_alias, EncodingsMenu, SaveEncoding, PressHeader, fixpath, IconNotebook, showCountryTooltip
 from pynicotine.utils import findBestEncoding

@@ -22,13 +22,16 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # System imports
-import dircache
-import gobject
+# import dircache
+import gi
+gi.require_version('Gtk', '3.0')
+
+from gi.repository import GObject as gobject
+
 import string
 import sys
 import os
 import time
-import struct
 
 from . import slskmessages
 from .slskmessages import NetworkIntType, NetworkLongLongType

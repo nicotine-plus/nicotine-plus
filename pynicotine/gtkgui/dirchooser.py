@@ -21,13 +21,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import gtk
-import gobject
-import os
-import locale
-import sys
+import gi
+gi.require_version('Gtk', '3.0')
 
-from .utils import recode, InputDialog
+from gi.repository import Gtk as gtk
+import os
 
 
 def ChooseDir(parent=None, initialdir="~", create=False, name=None, title=None):
