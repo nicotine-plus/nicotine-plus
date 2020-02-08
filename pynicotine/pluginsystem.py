@@ -27,12 +27,12 @@ import gtk
 import gobject
 import zipimport
 import imp
-from thread import start_new_thread
+from _thread import start_new_thread
 from traceback import extract_stack, extract_tb, format_list, print_exc
 from time import time
-from pynicotine import slskmessages
-from slskmessages import ToBeEncoded
-from logfacility import log
+from .pynicotine import slskmessages
+from .slskmessages import ToBeEncoded
+from .logfacility import log
 
 WIN32 = sys.platform.startswith("win")
 
@@ -46,7 +46,7 @@ tupletype = type(('', ''))
 
 
 def cast_to_unicode_if_needed(text, logfunc):
-    if isinstance(text, unicode):
+    if isinstance(text, str):
         return text
     try:
         better = str.decode(text, 'utf8')

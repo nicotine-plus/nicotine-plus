@@ -26,8 +26,8 @@ import gtk
 import os
 import sys
 from pynicotine.utils import version
-import imagedata
-from utils import AppendLine
+from . import imagedata
+from .utils import AppendLine
 
 
 class GenericAboutDialog(gtk.Dialog):

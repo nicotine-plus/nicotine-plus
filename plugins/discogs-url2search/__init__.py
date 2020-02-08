@@ -6,14 +6,14 @@
 NPLUS = True
 class FakePlugin(object):
     def log(self, text):
-        print text
+        print(text)
 
-from urllib import urlopen
+from urllib.request import urlopen
 try:
     from pynicotine.pluginsystem import BasePlugin
 except ImportError:
     NPLUS = False
-    print "It seems this plugin is not loaded from within n+. Faking events..."
+    print("It seems this plugin is not loaded from within n+. Faking events...")
     BasePlugin = FakePlugin
 
 def enable(frame):
@@ -41,14 +41,14 @@ class Plugin(BasePlugin):
     __desc__ = """Enables you to enter Discogs URLs in the search window which will be converted to albums, artists of both."""
     def OutgoingGlobalSearchEvent(self, search):
         terms = search.split()
-        for i in xrange(0,len(terms)):
+        for i in range(0,len(terms)):
             lowerterm = terms[i].lower()
             if lowerterm[:30] == "http://www.discogs.com/artist/" or lowerterm[:31] == "http://www.discogs.com/release/":
                 self.log("Fetching " + terms[i])
                 terms[i] = self.discogs2search(terms[i])
         return (' '.join(terms),)
     def discogs2search(self, url):
-        print "Opening url " +url
+        print("Opening url " +url)
         f = urlopen(url)
         html = f.read()
         information = []
@@ -62,12 +62,12 @@ class Plugin(BasePlugin):
 
 # Debugging again
 if not NPLUS:
-    print "Faking search events"
+    print("Faking search events")
     instance = Plugin()
     urls = ['http://www.discogs.com/artist/Dulce+Liquido',
             'http://www.discogs.com/release/174106',
             'http://www.discogs.com/release/1225584']
     for url in urls:
-        print "Searching for '" + url + "'..."
-        print "... " + repr(instance.OutgoingGlobalSearchEvent(url))
-    print "End fake"
+        print("Searching for '" + url + "'...")
+        print("... " + repr(instance.OutgoingGlobalSearchEvent(url)))
+    print("End fake")

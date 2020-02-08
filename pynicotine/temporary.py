@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from utils import strace
+from .utils import strace
 
 
 class HybridListDictionaryMonstrosity(object):
@@ -53,7 +53,7 @@ class HybridListDictionaryMonstrosity(object):
         return self._list.__iter__()
     def keys(self):
         """Dict func."""
-        return self._dict.keys()
+        return list(self._dict.keys())
     def __getitem__(self, index_or_key):
         """Dict/list func."""
         if isinstance(index_or_key, int):
@@ -100,7 +100,7 @@ class HybridListDictionaryMonstrosity(object):
         return len(self._dict)
     def iteritems(self):
         """Dict func."""
-        return self._dict.iteritems()
+        return iter(self._dict.items())
 
 
 class HybridListDictionaryTransferMonstrosity(HybridListDictionaryMonstrosity):

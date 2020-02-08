@@ -31,14 +31,14 @@ import sre_constants
 import locale
 import string
 import random
-import thread
+import _thread
 
 from pynicotine import slskmessages
 
-from utils import InitialiseColumns, IconNotebook, PopupMenu, Humanize, HumanSpeed, HumanSize, PressHeader
-from dirchooser import ChooseDir
-from entrydialog import MetaDialog
-from utils import InputDialog, showCountryTooltip
+from .utils import InitialiseColumns, IconNotebook, PopupMenu, Humanize, HumanSpeed, HumanSize, PressHeader
+from .dirchooser import ChooseDir
+from .entrydialog import MetaDialog
+from .utils import InputDialog, showCountryTooltip
 from pynicotine.logfacility import log
 
 from time import time
@@ -133,7 +133,7 @@ class WishList(gtk.Dialog):
 
             self.nicotine.np.config.sections["server"]["autosearch"].remove(wish)
 
-            for number, search in self.nicotine.Searches.searches.items():
+            for number, search in list(self.nicotine.Searches.searches.items()):
 
                 if search[1] == wish and search[4] == 1:
 
@@ -256,7 +256,7 @@ class Searches(IconNotebook):
 
         # Search for a maximum of 3 items at each search interval
         for term in searches[0:3]:
-            for i in self.searches.values():
+            for i in list(self.searches.values()):
                 if i[1] == term and i[4]:
                     self.DoWishListSearch(i[0], term)
                     oldsearch = searches.pop()
@@ -323,7 +323,7 @@ class Searches(IconNotebook):
             if feedback is not None:
                 users = feedback[0]
         else:
-            print "Unknown search mode, not using plugin system. Fix me!"
+            print("Unknown search mode, not using plugin system. Fix me!")
             feedback = True
 
         if feedback is not None:
@@ -395,7 +395,7 @@ class Searches(IconNotebook):
         if room is not None:
             self.frame.np.queue.put(slskmessages.RoomSearch(room, id, text))
         else:
-            for room in self.frame.chatrooms.roomsctrl.joinedrooms.keys():
+            for room in list(self.frame.chatrooms.roomsctrl.joinedrooms.keys()):
                 self.frame.np.queue.put(slskmessages.RoomSearch(room, id, text))
 
     def DoBuddiesSearch(self, id, text):
@@ -487,7 +487,7 @@ class Searches(IconNotebook):
 
     def UpdateColours(self):
 
-        for id in self.searches.values():
+        for id in list(self.searches.values()):
             if id[2] is None:
                 continue
             id[2].ChangeColours()
@@ -502,7 +502,7 @@ class Searches(IconNotebook):
 
             page = self.get_nth_page(page_num)
 
-            for name, search in self.searches.items():
+            for name, search in list(self.searches.items()):
 
                 if search[2] is None:
                     continue
@@ -512,7 +512,7 @@ class Searches(IconNotebook):
 
     def GetUserStatus(self, msg):
 
-        for number, search in self.searches.items():
+        for number, search in list(self.searches.items()):
 
             if search[2] is None:
                 continue
@@ -521,7 +521,7 @@ class Searches(IconNotebook):
 
     def NonExistantUser(self, user):
 
-        for number, search in self.searches.items():
+        for number, search in list(self.searches.items()):
 
             if search[2] is None:
                 continue
@@ -547,7 +547,7 @@ class Searches(IconNotebook):
             n = self.page_num(child)
             page = self.get_nth_page(n)
 
-            for search, data in self.searches.items():
+            for search, data in list(self.searches.items()):
 
                 if data[2] is None:
                     continue
@@ -556,7 +556,7 @@ class Searches(IconNotebook):
                     break
 
             if id is None:
-                print "ID is none"
+                print("ID is none")
                 return
 
             if event.button == 2:
@@ -949,7 +949,7 @@ class Search:
         if results:
 
             # Start a thread to display the user results
-            thread.start_new_thread(self._realaddresults, (results, ))
+            _thread.start_new_thread(self._realaddresults, (results, ))
 
     def _realaddresults(self, results):
 
@@ -996,7 +996,7 @@ class Search:
             if status is None:
                 status = 0
 
-            h_size = HumanSize(long(size))
+            h_size = HumanSize(int(size))
             h_speed = HumanSpeed(speed)
             h_queue = Humanize(queue)
 
@@ -1035,11 +1035,11 @@ class Search:
                 iter = self.resultsmodel.append(self.usersiters[user], encoded_row)
             else:
                 iter = self.resultsmodel.append(None, encoded_row)
-        except Exception, e:
+        except Exception as e:
             types = []
             for i in encoded_row:
                 types.append(type(i))
-            print "Search row error:", e, encoded_row
+            print("Search row error:", e, encoded_row)
             iter = None
 
         path = None
@@ -1137,7 +1137,7 @@ class Search:
             return True
 
         try:
-            filter = long(filter) * factor
+            filter = int(filter) * factor
         except TypeError:
             return True
 
@@ -1247,10 +1247,10 @@ class Search:
                         iter = self.resultsmodel.append(self.usersiters[user], encoded_row)
                     else:
                         iter = self.resultsmodel.append(None, encoded_row)
-                except Exception, e:
-                    print "Filters: Search row error:", e
+                except Exception as e:
+                    print("Filters: Search row error:", e)
                     for i in encoded_row:
-                        print i, type(i),
+                        print(i, type(i), end=' ')
 
                 displaycounter += 1
 

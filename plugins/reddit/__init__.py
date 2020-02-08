@@ -61,4 +61,4 @@ class Plugin(BasePlugin):
                     if posts.entries:
                         self.responder.responded()
                         for post in posts.entries[0:self.settings['reddit_links']]:
-                            self.saypublic(room, u"/me {}: {}".format(post.title, post.link))
+                            self.saypublic(room, "/me {}: {}".format(post.title, post.link))

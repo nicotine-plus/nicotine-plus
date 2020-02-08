@@ -61,8 +61,8 @@ class logger(object):
         for callback in self.listeners:
             try:
                 callback(timestamp, level, msg)
-            except Exception, e:
-                print "Callback on %s failed: %s %s\n%s" % (callback, level, msg, e)
+            except Exception as e:
+                print("Callback on %s failed: %s %s\n%s" % (callback, level, msg, e))
                 pass
 
     def addlistener(self, callback):
@@ -78,7 +78,7 @@ useconsole = True
 try:
     CONSOLEENCODING = stdout.encoding
 except AttributeError:
-    print "stdout does not have an encoding attribute - disabling console logging."
+    print("stdout does not have an encoding attribute - disabling console logging.")
     useconsole = False
 
 if useconsole:
@@ -110,7 +110,7 @@ def consolelogger(timestamp, level, msg):
     if level in (1,):
         wrapper.initial_indent = time.strftime(TIMEFORMAT, timestamp)
         for i in wrapper.wrap(msg):
-            print i.encode(CONSOLEENCODING, 'replace')
+            print(i.encode(CONSOLEENCODING, 'replace'))
     else:
         pass
 try:

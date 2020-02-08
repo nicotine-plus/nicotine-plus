@@ -24,15 +24,15 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import gtk
-from thread import start_new_thread
+from _thread import start_new_thread
 
-from transferlist import TransferList
-from utils import PopupMenu, PressHeader
+from .transferlist import TransferList
+from .utils import PopupMenu, PressHeader
 import string
 import os
 from pynicotine.utils import executeCommand
 from pynicotine import slskmessages
-from entrydialog import OptionDialog
+from .entrydialog import OptionDialog
 
 
 class Uploads(TransferList):
@@ -389,7 +389,7 @@ class Uploads(TransferList):
         else:
             act = False
 
-        for i in range(3, 5) + range(6, 10):
+        for i in list(range(3, 5)) + list(range(6, 10)):
             items[i].set_sensitive(act)
 
         items[2].set_sensitive(act)  # send to player

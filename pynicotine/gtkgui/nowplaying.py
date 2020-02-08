@@ -26,7 +26,7 @@ import gobject
 import os
 import sys
 import re
-import thread
+import _thread
 import threading
 import copy
 import sys
@@ -267,7 +267,7 @@ class NowPlaying:
             self.GetNP(None, test, callback)
         else:
             # thread (command execution)
-            thread.start_new_thread(self.GetNP, (None, test, callback))
+            _thread.start_new_thread(self.GetNP, (None, test, callback))
 
     def GetNP(self, widget, test=None, callback=None):
 
@@ -310,9 +310,9 @@ class NowPlaying:
         # - this is a failsafe.
         oldtitle = copy.copy(self.title)
         self.title_clear()
-        for key, value in oldtitle.iteritems():
+        for key, value in oldtitle.items():
             try:
-                self.title[key] = unicode(value, "UTF-8", "replace")
+                self.title[key] = str(value, "UTF-8", "replace")
             except TypeError:
                 self.title[key] = value  # already unicode
 
@@ -417,7 +417,7 @@ class NowPlaying:
     def banshee(self):
         """ Function to get banshee currently playing song """
 
-        from urllib import unquote
+        from urllib.parse import unquote
 
         commandlist = [
             "--query-title",
@@ -439,7 +439,7 @@ class NowPlaying:
 
             self.title["nowplaying"] = "%(artist)s - %(title)s" % matches
 
-            for key, value in matches.iteritems():
+            for key, value in matches.items():
 
                 if key == "duration":
                     value = value.replace(',', '.')
@@ -499,7 +499,7 @@ class NowPlaying:
         player = self.bus.get_object('org.mpris.amarok', '/Player')
         md = player.GetMetadata()
 
-        for key, value in md.iteritems():
+        for key, value in md.items():
 
             if key == 'mtime':
                 # Convert seconds to minutes:seconds
@@ -608,10 +608,10 @@ class NowPlaying:
 
         player = self.NPCommand.get_text()
 
-        dbus_mpris_service = u'org.mpris.MediaPlayer2.'
-        dbus_mpris_player_service = u'org.mpris.MediaPlayer2.Player'
-        dbus_mpris_path = u'/org/mpris/MediaPlayer2'
-        dbus_property = u'org.freedesktop.DBus.Properties'
+        dbus_mpris_service = 'org.mpris.MediaPlayer2.'
+        dbus_mpris_player_service = 'org.mpris.MediaPlayer2.Player'
+        dbus_mpris_path = '/org/mpris/MediaPlayer2'
+        dbus_property = 'org.freedesktop.DBus.Properties'
 
         if not player:
 
@@ -636,7 +636,7 @@ class NowPlaying:
             player_obj = self.bus.get_object(dbus_mpris_service + player, dbus_mpris_path)
             player_property_obj = dbus.Interface(player_obj, dbus_interface=dbus_property)
             metadata = player_property_obj.Get(dbus_mpris_player_service, "Metadata")
-        except Exception, exception:
+        except Exception as exception:
             log.addwarning(_("ERROR: MPRIS: Something went wrong while querying %(player)s: %(exception)s") % {'player': player, 'exception': exception})
             return None
 
@@ -659,7 +659,7 @@ class NowPlaying:
 
         for (source, dest) in mapping:
             try:
-                self.title[dest] = unicode(metadata[source])
+                self.title[dest] = str(metadata[source])
             except KeyError:
                 self.title[dest] = '?'
 
@@ -731,11 +731,11 @@ class NowPlaying:
     def lastfm(self):
         """ Function to get the last song played via lastfm api """
 
-        import httplib
+        import http.client
         import json
 
         try:
-            conn = httplib.HTTPConnection("ws.audioscrobbler.com")
+            conn = http.client.HTTPConnection("ws.audioscrobbler.com")
         except Exception as error:
             log.addwarning(_("ERROR: lastfm: Could not connect to audioscrobbler: %(error)s") % {"error": error})
             return None
@@ -773,7 +773,7 @@ class NowPlaying:
             output = executeCommand(othercommand, returnoutput=True)
             self.title["nowplaying"] = output
             return True
-        except Exception, error:
+        except Exception as error:
             log.addwarning(_("ERROR: Executing '%(command)s' failed: %(error)s") % {"command": othercommand, "error": error})
             return None
 

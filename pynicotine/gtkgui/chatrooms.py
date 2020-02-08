@@ -41,9 +41,9 @@ from pynicotine.logfacility import log
 from pynicotine import slskmessages
 from pynicotine import pluginsystem
 from pynicotine.slskmessages import ToBeEncoded
-from utils import InitialiseColumns, AppendLine, PopupMenu, WriteLog, Humanize, HumanSpeed, expand_alias, is_alias, EncodingsMenu, SaveEncoding, PressHeader, fixpath, IconNotebook, showCountryTooltip
+from .utils import InitialiseColumns, AppendLine, PopupMenu, WriteLog, Humanize, HumanSpeed, expand_alias, is_alias, EncodingsMenu, SaveEncoding, PressHeader, fixpath, IconNotebook, showCountryTooltip
 from pynicotine.utils import findBestEncoding
-from entrydialog import input_box
+from .entrydialog import input_box
 
 
 def GetCompletion(part, list):
@@ -84,7 +84,7 @@ class RoomsControl:
         self.PrivateRooms = config["private_rooms"]["rooms"]
 
         # Config cleanup
-        for room, data in self.PrivateRooms.items():
+        for room, data in list(self.PrivateRooms.items()):
             if "owner" not in data:
                 self.PrivateRooms[room]["owner"] = None
             if "operator" in data:
@@ -203,7 +203,7 @@ class RoomsControl:
         room_tab_order = {}
 
         # Find position of opened autojoined rooms
-        for name, room in self.joinedrooms.items():
+        for name, room in list(self.joinedrooms.items()):
 
             if name not in self.frame.np.config.sections["server"]["autojoin"]:
                 continue
@@ -235,7 +235,7 @@ class RoomsControl:
 
         page = notebook.get_nth_page(page_num)
 
-        for name, room in self.joinedrooms.items():
+        for name, room in list(self.joinedrooms.items()):
             if room.Main == page:
                 gobject.idle_add(room.ChatEntry.grab_focus)
 
@@ -249,7 +249,7 @@ class RoomsControl:
 
         page = self.ChatNotebook.get_nth_page(self.ChatNotebook.get_current_page())
 
-        for name, room in self.joinedrooms.items():
+        for name, room in list(self.joinedrooms.items()):
             if room.Main == page:
                 # Remove hilite
                 self.frame.Notifications.Clear("rooms", None, name)
@@ -259,7 +259,7 @@ class RoomsControl:
         if not focused:
             return
 
-        for name, room in self.users.items():
+        for name, room in list(self.users.items()):
             if room.Main == page:
                 self.frame.Notifications.Clear("rooms", name)
 
@@ -333,8 +333,8 @@ class RoomsControl:
 
         try:
             angle = int(self.frame.np.config.sections["ui"]["labelrooms"])
-        except Exception, e:
-            print e
+        except Exception as e:
+            print(e)
             pass
 
         self.ChatNotebook.append_page(room.Main, 'Public ', room.OnLeave, angle)
@@ -393,8 +393,8 @@ class RoomsControl:
         angle = 0
         try:
             angle = int(self.frame.np.config.sections["ui"]["labelrooms"])
-        except Exception, e:
-            print e
+        except Exception as e:
+            print(e)
             pass
 
         self.ChatNotebook.append_page(tab.Main, msg.room, tab.OnLeave, angle)
@@ -409,7 +409,7 @@ class RoomsControl:
 
             self.autojoin = 0
             if self.joinedrooms:
-                list = self.joinedrooms.keys()
+                list = list(self.joinedrooms.keys())
             else:
                 list = self.frame.np.config.sections["server"]["autojoin"]
 
@@ -618,15 +618,15 @@ class RoomsControl:
                 self.PrivateRooms[msg.room]["owner"] = None
 
     def GetUserStats(self, msg):
-        for room in self.joinedrooms.values():
+        for room in list(self.joinedrooms.values()):
             room.GetUserStats(msg.user, msg.avgspeed, msg.files)
 
     def GetUserStatus(self, msg):
-        for room in self.joinedrooms.values():
+        for room in list(self.joinedrooms.values()):
             room.GetUserStatus(msg.user, msg.status)
 
     def SetUserFlag(self, user, flag):
-        for room in self.joinedrooms.values():
+        for room in list(self.joinedrooms.values()):
             room.SetUserFlag(user, flag)
 
     def GetUserAddress(self, user):
@@ -683,16 +683,16 @@ class RoomsControl:
         self.frame.SetTextBG(self.frame.roomlist.CreateRoomEntry)
         self.frame.SetTextBG(self.frame.roomlist.SearchRooms)
 
-        for room in self.joinedrooms.values():
+        for room in list(self.joinedrooms.values()):
             room.ChangeColours()
 
     def saveColumns(self):
 
-        for room in self.frame.np.config.sections["columns"]["chatrooms"].keys()[:]:
+        for room in list(self.frame.np.config.sections["columns"]["chatrooms"].keys())[:]:
             if room not in self.joinedrooms:
                 del self.frame.np.config.sections["columns"]["chatrooms"][room]
 
-        for room in self.joinedrooms.values():
+        for room in list(self.joinedrooms.values()):
             room.saveColumns()
 
     def LeaveRoom(self, msg):
@@ -715,7 +715,7 @@ class RoomsControl:
 
         self.roomsmodel.clear()
 
-        for room in self.joinedrooms.values():
+        for room in list(self.joinedrooms.values()):
             room.ConnClose()
 
         self.autojoin = 1
@@ -737,14 +737,14 @@ class RoomsControl:
                 clist += [i[0] for i in self.frame.userlist.userlist]
 
             if config["aliases"]:
-                clist += ["/" + k for k in self.frame.np.config.aliases.keys()]
+                clist += ["/" + k for k in list(self.frame.np.config.aliases.keys())]
 
             if config["commands"]:
                 clist += self.CMDS
 
             self.clist = clist
 
-        for room in self.joinedrooms.values():
+        for room in list(self.joinedrooms.values()):
             room.GetCompletionList(clist=list(self.clist))
 
 
@@ -802,12 +802,12 @@ class Ticker:
 
     def updatesorted(self):
 
-        lst = [(user, msg) for user, msg in self.messages.iteritems()]
+        lst = [(user, msg) for user, msg in self.messages.items()]
         lst.sort(cmp=lambda x, y: len(x[1])-len(y[1]))
         self.sortedmessages = lst
 
     def get_tickers(self):
-        return [x for x in self.messages.iteritems()]
+        return [x for x in self.messages.items()]
 
     def set_ticker(self, msgs):
         self.messages = msgs
@@ -884,10 +884,10 @@ def TickDialog(parent, default=""):
 
         bytes = entry.get_text()
         try:
-            result = unicode(bytes, "UTF-8")
+            result = str(bytes, "UTF-8")
         except UnicodeDecodeError:
             log.addwarning(_("We have a problem, PyGTK get_text does not seem to return UTF-8. Please file a bug report. Bytes: %s") % (repr(bytes)))
-            result = unicode(bytes, "UTF-8", "replace")
+            result = str(bytes, "UTF-8", "replace")
 
     dlg.destroy()
 
@@ -1041,7 +1041,7 @@ class ChatRoom:
             gobject.TYPE_STRING
         )
 
-        for (username, user) in users.iteritems():
+        for (username, user) in users.items():
 
             img = self.frame.GetStatusImage(user.status)
             flag = user.country
@@ -1210,7 +1210,7 @@ class ChatRoom:
                 self.lines.append(AppendLine(self.ChatScroll, _("--- old messages above ---"), self.tag_hilite))
 
             gobject.idle_add(self.frame.ScrollBottom, self.ChatScroll.get_parent())
-        except IOError, e:
+        except IOError as e:
             pass
 
     def on_key_press_event(self, widget, event):
@@ -1360,7 +1360,7 @@ class ChatRoom:
     def TickerSet(self, msg):
 
         self.Ticker.set_ticker({})
-        for user in msg.msgs.keys():
+        for user in list(msg.msgs.keys()):
             if user in self.frame.np.config.sections["server"]["ignorelist"] or self.frame.UserIpIsIgnored(user):
                 # User ignored, ignore Ticker messages
                 return
@@ -1499,18 +1499,18 @@ class ChatRoom:
         bytes = widget.get_text()
 
         try:
-            text = unicode(bytes, "UTF-8")
+            text = str(bytes, "UTF-8")
         except UnicodeDecodeError:
             log.addwarning(_("We have a problem, PyGTK get_text does not seem to return UTF-8. Please file a bug report. Bytes: %s") % (repr(bytes)))
-            text = unicode(bytes, "UTF-8", "replace")
+            text = str(bytes, "UTF-8", "replace")
 
         if not text:
             widget.set_text("")
             return
 
         if is_alias(self.frame.np.config.aliases, text):
-            import thread
-            thread.start_new_thread(self.threadAlias, (text,))
+            import _thread
+            _thread.start_new_thread(self.threadAlias, (text,))
             widget.set_text("")
             return
 
@@ -1776,7 +1776,7 @@ class ChatRoom:
 
     def CountUsers(self):
 
-        numusers = len(self.users.keys())
+        numusers = len(list(self.users.keys()))
         if numusers > 1:
             self.LabelPeople.show()
             self.LabelPeople.set_text(_("%i people in room") % numusers)
@@ -2034,7 +2034,7 @@ class ChatRoom:
                 self.frame.np.queue.put(slskmessages.LeavePublicRoom())
                 self.roomsctrl.LeaveRoom(slskmessages.LeaveRoom(self.room))  # Faking protocol msg
             else:
-                print "Unknown meta chatroom closed."
+                print("Unknown meta chatroom closed.")
 
         self.frame.pluginhandler.LeaveChatroomNotification(self.room)
 
@@ -2058,7 +2058,7 @@ class ChatRoom:
         if not self.AutoJoin.get_active() and self.room in config["columns"]["chatrooms"]:
             del config["columns"]["chatrooms"][self.room]
 
-        for tag in self.tag_users.values():
+        for tag in list(self.tag_users.values()):
             self.changecolour(tag, "useroffline")
 
         self.Ticker.set_ticker({})
@@ -2069,7 +2069,7 @@ class ChatRoom:
         self.usersmodel.set_default_sort_func(lambda *args: -1)
         self.usersmodel.set_sort_column_id(-1, gtk.SORT_ASCENDING)
 
-        for (username, user) in users.iteritems():
+        for (username, user) in users.items():
 
             if username in self.users:
                 self.usersmodel.remove(self.users[username])
@@ -2147,7 +2147,7 @@ class ChatRoom:
             try:
                 return str.lower(x)
             except:
-                return unicode.lower(x)
+                return str.lower(x)
 
         clist = list(set(clist))
         clist.sort(key=_combilower)
@@ -2424,7 +2424,7 @@ class ChatRooms(IconNotebook):
 
             n = self.page_num(child)
             page = self.get_nth_page(n)
-            room = [room for room, tab in self.roomsctrl.joinedrooms.items() if tab.Main is page][0]
+            room = [room for room, tab in list(self.roomsctrl.joinedrooms.items()) if tab.Main is page][0]
 
             if event.button == 2:
                 self.roomsctrl.joinedrooms[room].OnLeave(widget)

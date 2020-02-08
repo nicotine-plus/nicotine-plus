@@ -222,7 +222,7 @@ class MetaDialog(gtk.Dialog):
 
         self.Selected = self.MakeLabel(
             self.buttonbox,
-            _("<b>%s</b> File(s) Selected") % len(self.data.keys()),
+            _("<b>%s</b> File(s) Selected") % len(list(self.data.keys())),
             expand=False,
             xalign=1
         )
@@ -269,14 +269,14 @@ class MetaDialog(gtk.Dialog):
         self.nicotine.BrowseUser(meta["user"])
 
     def OnDownloadAll(self, widget):
-        for item, meta in self.data.items():
+        for item, meta in list(self.data.items()):
             self.nicotine.np.transfers.getFile(meta["user"], meta["fn"], "")
 
     def OnPrevious(self, widget):
 
-        if len(self.data.keys()) > 1:
+        if len(list(self.data.keys())) > 1:
 
-            _list = self.data.keys()
+            _list = list(self.data.keys())
 
             if self.current not in _list:
                 ix -= 1
@@ -299,9 +299,9 @@ class MetaDialog(gtk.Dialog):
 
     def OnNext(self, widget):
 
-        if len(self.data.keys()) > 1:
+        if len(list(self.data.keys())) > 1:
 
-            _list = self.data.keys()
+            _list = list(self.data.keys())
 
             if self.current not in _list:
                 ix += 1
@@ -356,7 +356,7 @@ class MetaDialog(gtk.Dialog):
         data = self.data[self.current]
         More = False
 
-        if len(self.data.keys()) > 1:
+        if len(list(self.data.keys())) > 1:
             More = True
 
         self.Next.set_sensitive(More)
@@ -404,8 +404,8 @@ class MetaDialog(gtk.Dialog):
 
         try:
             label.set_property("xalign", xalign)
-        except Exception, e:
-            print e
+        except Exception as e:
+            print(e)
             pass
 
         return label
@@ -588,7 +588,7 @@ class FindDialog(gtk.Dialog):
         box.pack_start(self.entry, False, False)
         self.entry.show()
         self.entry.grab_focus()
-        self.entry.connect("activate", self.next)
+        self.entry.connect("activate", self.__next__)
 
         Cancelbutton = self.nicotine.CreateIconButton(
             gtk.STOCK_CANCEL,
@@ -611,7 +611,7 @@ class FindDialog(gtk.Dialog):
         Nextbutton = self.nicotine.CreateIconButton(
             gtk.STOCK_GO_FORWARD,
             "stock",
-            self.next,
+            self.__next__,
             _("Next")
         )
         Nextbutton.set_flags(gtk.CAN_DEFAULT)

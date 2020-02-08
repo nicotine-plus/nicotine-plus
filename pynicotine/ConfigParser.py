@@ -97,7 +97,7 @@ DEFAULTSECT = "DEFAULT"
 
 MAX_INTERPOLATION_DEPTH = 10
 
-from utils import SortedDict
+from .utils import SortedDict
 
 # exception classes
 class Error(Exception):
@@ -178,7 +178,7 @@ class ConfigParser:
 			self.__defaults = SortedDict()
 		else:
 			self.__defaults = SortedDict()
-			for key, value in defaults.items():
+			for key, value in list(defaults.items()):
 				self.__defaults[key] = value
 
 	def defaults(self):
@@ -187,7 +187,7 @@ class ConfigParser:
 	def sections(self):
 		"""Return a list of section names, excluding [DEFAULT]"""
 		# self.__sections will never have [DEFAULT] in it
-		return self.__sections.keys()
+		return list(self.__sections.keys())
 
 	def add_section(self, section):
 		"""Create a new section in the configuration.
@@ -215,7 +215,7 @@ class ConfigParser:
 		opts.update(self.__defaults)
 		if '__name__' in opts:
 			del opts['__name__']
-		return opts.keys()
+		return list(opts.keys())
 
 	def read(self, filenames):
 		"""Read and parse a filename or a list of filenames.
@@ -227,7 +227,7 @@ class ConfigParser:
 		configuration files in the list will be read.  A single
 		filename may also be given.
 		"""
-		if isinstance(filenames, types.StringTypes):
+		if isinstance(filenames, (str,)):
 			filenames = [filenames]
 		for filename in filenames:
 			try:
@@ -292,7 +292,7 @@ class ConfigParser:
 			if value.find("%(") != -1:
 				try:
 					value = value % vars
-				except KeyError, key:
+				except KeyError as key:
 					raise InterpolationError(key, option, section, rawval)
 			else:
 				break
@@ -315,7 +315,7 @@ class ConfigParser:
 	def getboolean(self, section, option):
 		v = self.get(section, option)
 		if v.lower() not in self._boolean_states:
-			raise ValueError, 'Not a boolean: %s' % v
+			raise ValueError('Not a boolean: %s' % v)
 		return self._boolean_states[v.lower()]
 
 	def optionxform(self, optionstr):
@@ -348,12 +348,12 @@ class ConfigParser:
 		"""Write an .ini-format representation of the configuration state."""
 		if self.__defaults:
 			fp.write("[%s]\n" % DEFAULTSECT)
-			for (key, value) in self.__defaults.items():
+			for (key, value) in list(self.__defaults.items()):
 				fp.write("%s = %s\n" % (key, str(value).replace('\n', '\n\t')))
 			fp.write("\n")
-		for (section, data) in self.__sections.iteritems():
+		for (section, data) in self.__sections.items():
 			fp.write("[%s]\n" % section)
-			keys = data.keys()
+			keys = list(data.keys())
 			keys.sort()
 			for key in keys:
 				value = self.__sections[section][key]
@@ -448,7 +448,7 @@ class ConfigParser:
 					optname = None
 				# no section header in the file?
 				elif cursect is None:
-					raise MissingSectionHeaderError(fpname, lineno, `line`)
+					raise MissingSectionHeaderError(fpname, lineno, repr(line))
 				# an option line?
 				else:
 					mo = self.OPTCRE.match(line)
@@ -467,7 +467,7 @@ class ConfigParser:
 						# list of all bogus lines
 						if not e:
 							e = ParsingError(fpname)
-						e.append(lineno, `line`)
+						e.append(lineno, repr(line))
 		# if any parsing errors occurred, raise an exception
 		if e:
 			raise e

@@ -23,23 +23,23 @@
 This module implements SoulSeek networking protocol.
 """
 
-from __future__ import division
+
 
 from math import floor
 
-from slskmessages import *
-import SocketServer
+from .slskmessages import *
+import socketserver
 import socket
 import random,  sys, time
 if sys.platform == "win32":
-	from multiselect import multiselect
+	from .multiselect import multiselect
 import select
 import threading
 import struct
 
 from errno import EINTR
-from utils import win32
-from logfacility import log
+from .utils import win32
+from .logfacility import log
 
 MAXFILELIMIT = -1
 if win32:
@@ -274,10 +274,10 @@ class SlskProtoThread(threading.Thread):
 		self._eventprocessor = eventprocessor
 		portrange = (port, port) if port else config.sections["server"]["portrange"]
 		self.serverclasses = {}
-		for i in self.servercodes.keys():
+		for i in list(self.servercodes.keys()):
 			self.serverclasses[self.servercodes[i]] = i
 		self.peerclasses = {}
-		for i in self.peercodes.keys():
+		for i in list(self.peercodes.keys()):
 			self.peerclasses[self.peercodes[i]] = i
 		self._p = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		self._p.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -310,7 +310,7 @@ class SlskProtoThread(threading.Thread):
 			long = _("The range you specified for client connection ports was %(low)s-%(high)s, but none of these were usable. Increase and/or move the range and restart Nicotine+.") % {'low':portrange[0], 'high':portrange[1]}
 			if  portrange[0] < 1024:
 				long += "\n\n" + _("Note that part of your range lies below 1024, this is usually not allowed on most operating systems with the exception of Windows.")
-			self._ui_callback([PopupMessage(short, long)])
+			self._ui_callback([PopupMessage(short, int)])
 	
 	def _isUpload(self, conn):
 		return conn.__class__ is PeerConnection and conn.fileupl is not None
@@ -332,19 +332,19 @@ class SlskProtoThread(threading.Thread):
 		max = self._uploadlimit[1] * 1024.0
 		limit = max - self._calcUploadSpeed(i) + 1024
 		if limit < 1024.0:
-			return long(0)
-		return long(limit)
+			return int(0)
+		return int(limit)
 
 	def _calcLimitByTotal(self, conns, i):
 		max = self._uploadlimit[1] * 1024.0
 		bw = 0.0
-		for j in conns.values():
+		for j in list(conns.values()):
 			if self._isUpload(j):
 				bw += self._calcUploadSpeed(j)
 		limit = max - bw + 1024
 		if limit < 1024.0:
-			return long(0)
-		return long(limit)
+			return int(0)
+		return int(limit)
 
 	def _calcDownloadSpeed(self, i):
 		curtime = time.time()
@@ -364,8 +364,8 @@ class SlskProtoThread(threading.Thread):
 				bw += self._calcDownloadSpeed(j)
 		limit = max - bw + 1023
 		if limit < 1024.0:
-			return long(0)
-		return long(limit)
+			return int(0)
+		return int(limit)
 
 	def _calcLimitNone(self, conns, i):
 		return None
@@ -384,10 +384,10 @@ class SlskProtoThread(threading.Thread):
 			if not queue.empty():
 				conns, connsinprogress, server_socket = self.process_queue(queue, conns, connsinprogress, server_socket)
 				self._server_socket = server_socket
-			for i in conns.keys()[:]:
+			for i in list(conns.keys())[:]:
 				if conns[i].__class__ is ServerConnection and i is not server_socket:
 					del conns[i]
-			outsocks = [i for i in conns.keys() if len(conns[i].obuf) > 0 or (i is not server_socket and conns[i].fileupl is not None and conns[i].fileupl.offset is not None)]
+			outsocks = [i for i in list(conns.keys()) if len(conns[i].obuf) > 0 or (i is not server_socket and conns[i].fileupl is not None and conns[i].fileupl.offset is not None)]
 			outsock = []
 			self._limits = {}
 			self._dlimits = {}
@@ -403,9 +403,9 @@ class SlskProtoThread(threading.Thread):
 			try:
 				# Select Networking Input and Output sockets
 				if sys.platform == "win32":
-					input, output, exc = multiselect(conns.keys() + connsinprogress.keys()+ [p], connsinprogress.keys() + outsock, [], 0.5)
+					input, output, exc = multiselect(list(conns.keys()) + list(connsinprogress.keys())+ [p], list(connsinprogress.keys()) + outsock, [], 0.5)
 				else:
-					input, output, exc = select.select(conns.keys() + connsinprogress.keys() +[p], connsinprogress.keys() + outsock, [], 0.5)
+					input, output, exc = select.select(list(conns.keys()) + list(connsinprogress.keys()) +[p], list(connsinprogress.keys()) + outsock, [], 0.5)
 				numsockets = 0
 				if p is not None:
 					numsockets += 1
@@ -413,27 +413,27 @@ class SlskProtoThread(threading.Thread):
 
 				self._ui_callback([InternalData(numsockets)])
 				#print "Sockets open: %s = %s + %s + %s (+1)" % (len(conns.keys()+connsinprogress.keys()+[p]+outsock), len(conns.keys()),  len(connsinprogress.keys()), len(outsock))
-			except select.error, error:
+			except select.error as error:
 				if len(error.args) == 2 and error.args[0] == EINTR:
 					# Error recieved; but we don't care :)
 					continue
 				# Error recieved; terminate networking loop
-				print time.strftime("%H:%M:%S"), "select.error", error
+				print(time.strftime("%H:%M:%S"), "select.error", error)
 				self._want_abort = 1
 				message = _("Major Socket Error: Networking terminated! %s" % str(error))
 				log.addwarning(message)
-			except ValueError, error:
+			except ValueError as error:
 				# Possibly opened too many sockets
-				print time.strftime("%H:%M:%S"), "select ValueError:",  error
+				print(time.strftime("%H:%M:%S"), "select ValueError:",  error)
 				if not self.killOverflowConnection(connsinprogress):
 					self.killOverflowConnection(conns)
 				continue
 			# Write Output
-			for (key, value) in conns.iteritems():
+			for (key, value) in conns.items():
 				if key in output:
 					try:
 						self.writeData(server_socket, conns, key)
-					except socket.error, err:
+					except socket.error as err:
 						self._ui_callback([ConnectError(value, err)])
 			# Listen / Peer Port
 			if p in input[:]:
@@ -455,7 +455,7 @@ class SlskProtoThread(threading.Thread):
 					
 			# Manage Connections
 			curtime = time.time()
-			for connection_in_progress in connsinprogress.keys()[:]:
+			for connection_in_progress in list(connsinprogress.keys())[:]:
 				if (curtime - connsinprogress[connection_in_progress].lastactive) > self.IN_PROGRESS_STALE_AFTER:
 					connection_in_progress.close()
 					del connsinprogress[connection_in_progress]
@@ -464,7 +464,7 @@ class SlskProtoThread(threading.Thread):
 					msgObj = connsinprogress[connection_in_progress].msgObj
 					if connection_in_progress in input:
 						connection_in_progress.recv(0)
-				except socket.error, err:
+				except socket.error as err:
 					self._ui_callback([ConnectError(msgObj, err)])
 					connection_in_progress.close()
 					del connsinprogress[connection_in_progress]
@@ -484,7 +484,7 @@ class SlskProtoThread(threading.Thread):
 								self._ui_callback([OutConn(connection_in_progress, msgObj.addr)])
 						del connsinprogress[connection_in_progress]
 			# Process Data
-			for connection in conns.keys()[:]:
+			for connection in list(conns.keys())[:]:
 				ip, port = self.getIpPort(conns[connection].addr)
 				if self.ipBlocked(ip) and connection is not self._server_socket:
 					message = "Blocking peer connection to IP: %(ip)s Port: %(port)s" % { "ip":ip, "port":port}
@@ -504,12 +504,12 @@ class SlskProtoThread(threading.Thread):
 								
 						try:
 							self.readData(conns, connection)
-						except socket.error, err:
+						except socket.error as err:
 							self._ui_callback([ConnectError(conns[connection], err)])
 					else:
 						try:
 							self.readData(conns, connection)
-						except socket.error, err:
+						except socket.error as err:
 							self._ui_callback([ConnectError(conns[connection], err)])
 				if connection in conns and len(conns[connection].ibuf) > 0:
 					if connection is server_socket:
@@ -533,8 +533,8 @@ class SlskProtoThread(threading.Thread):
 			# ---------------------------
 			# Timeout Connections
 			curtime = time.time()
-			connsockets = len(conns.keys())
-			for connection in conns.keys()[:]:
+			connsockets = len(list(conns.keys()))
+			for connection in list(conns.keys())[:]:
 				if connection is not server_socket and connection is not p:
 					if curtime - conns[connection].lastactive > self.CONNECTION_MAX_IDLE:
 						self._ui_callback([ConnClose(connection, conns[connection].addr)])
@@ -561,7 +561,7 @@ class SlskProtoThread(threading.Thread):
 	# Will not kill upload, download, or server connections
 	def killOverflowConnection(self, conns):
 		victim_conn = None
-		for (k, v) in conns.iteritems():
+		for (k, v) in conns.items():
 			if self._isUpload(v):
 				continue
 			if self._isDownload(v):
@@ -578,7 +578,7 @@ class SlskProtoThread(threading.Thread):
 		# if endpoint is not connected, will get an exception on sockets...
 		try:
 			pn = victim_conn.getpeername()
-			print 'Killing overflow connection ', pn
+			print('Killing overflow connection ', pn)
 			victim_conn.shutdown(socket.SHUT_RDWR)
 			victim_conn.close()
 		except:
@@ -650,7 +650,7 @@ class SlskProtoThread(threading.Thread):
 						if bytestoread > 0:
 							read = conns[i].fileupl.file.read(bytestoread)
 							conns[i].obuf = conns[i].obuf + read
-				except IOError, strerror:
+				except IOError as strerror:
 					self._ui_callback([FileError(conns[i], conns[i].fileupl.file, strerror)])
 				except ValueError:
 					pass
@@ -737,7 +737,7 @@ class SlskProtoThread(threading.Thread):
 			if leftbytes > 0:
 				try:
 					conn.filedown.file.write(msgBuffer[:leftbytes])
-				except IOError, strerror:
+				except IOError as strerror:
 					self._ui_callback([FileError(conn, conn.filedown.file, strerror)])
 				except ValueError:
 					pass
@@ -750,7 +750,7 @@ class SlskProtoThread(threading.Thread):
 				if offset is not None:
 					try:
 						conn.fileupl.file.seek(offset)
-					except IOError, strerror:
+					except IOError as strerror:
 						self._ui_callback([FileError(conn, conn.fileupl.file, strerror)])
 					except ValueError:
 						pass
@@ -780,8 +780,8 @@ class SlskProtoThread(threading.Thread):
 					msg = PierceFireWall(conn)
 					try:
 						msg.parseNetworkMessage(msgBuffer[5:msgsize+4])
-					except Exception, error:
-						print error
+					except Exception as error:
+						print(error)
 					else:
 						conn.piercefw = msg
 						msgs.append(msg)
@@ -789,8 +789,8 @@ class SlskProtoThread(threading.Thread):
 					msg = PeerInit(conn)
 					try:
 						msg.parseNetworkMessage(msgBuffer[5:msgsize+4])
-					except Exception, error:
-						print error
+					except Exception as error:
+						print(error)
 					else:
 						conn.init = msg
 						msgs.append(msg)
@@ -811,24 +811,24 @@ class SlskProtoThread(threading.Thread):
 						# Parse Peer Message and handle exceptions
 						try:
 							msg.parseNetworkMessage(msgBuffer[8:msgsize+4])
-						except Exception, error:
+						except Exception as error:
 							host = port = _("unknown")
 							msgname = str(self.peerclasses[msgtype]).split(".")[-1]
-							print "Error parsing %s:" % msgname, error
+							print("Error parsing %s:" % msgname, error)
 							if "addr" in conn.__dict__:
 								if conn.addr is not None:
 									host = conn.addr[0]
 									port = conn.addr[1]
 							debugmessage = _("There was an error while unpacking Peer message type %(type)s size %(size)i contents %(msgBuffer)s from user: %(user)s, %(host)s:%(port)s") %{'type':msgname, 'size':msgsize-4, 'msgBuffer':msgBuffer[8:msgsize+4].__repr__(), 'user':conn.init.user, 'host': host, 'port': port}
-							print debugmessage
+							print(debugmessage)
 							msgs.append(debugmessage)
 							del msg
 						else:
 							msgs.append(msg)
-					except Exception, error:
+					except Exception as error:
 						debugmessage =  "Error in message function:", error, msgtype, conn
 						msgs.append(debugmessage)
-						print debugmessage
+						print(debugmessage)
 						
 				else:
 					host = port = _("unknown")
@@ -847,7 +847,7 @@ class SlskProtoThread(threading.Thread):
 						x += 1
 					debugmessage = _("Peer message type %(type)s size %(size)i contents %(msgBuffer)s unknown, from user: %(user)s, %(host)s:%(port)s") %{'type':msgtype, 'size':msgsize-4, 'msgBuffer': newbuf, 'user':conn.init.user, 'host': host, 'port': port}
 					msgs.append(debugmessage)
-					print debugmessage
+					print(debugmessage)
 					
 			else:
 				# Unknown Message type 
@@ -890,7 +890,7 @@ class SlskProtoThread(threading.Thread):
 
 	def _resetCounters(self, conns):
 		curtime = time.time()
-		for i in conns.values():
+		for i in list(conns.values()):
 			if self._isUpload(i):
 				i.starttime = curtime
 				i.sentbytes2 = 0
@@ -920,7 +920,7 @@ class SlskProtoThread(threading.Thread):
 					else:
 						queue.put(msgObj)
 						needsleep = True
-				except Exception, error:
+				except Exception as error:
 					self._ui_callback([_("Error packaging message: %(type)s %(msg_obj)s, %(error)s") %{'type':msgObj.__class__, 'msg_obj':vars(msgObj), 'error': str(error)}])
 			elif issubclass(msgObj.__class__, PeerMessage):
 				if msgObj.conn in conns:
@@ -968,7 +968,7 @@ class SlskProtoThread(threading.Thread):
 							server_socket.setblocking(1)
 							connsinprogress[server_socket] = PeerConnectionInProgress(server_socket, msgObj)
 							numsockets += 1
-						except socket.error, err:
+						except socket.error as err:
 							self._ui_callback([ConnectError(msgObj, err)])
 					else:
 						socketwarning = True
@@ -990,7 +990,8 @@ class SlskProtoThread(threading.Thread):
 							conn.setblocking(1)
 							connsinprogress[conn] = PeerConnectionInProgress(conn, msgObj)
 							numsockets += 1
-						except socket.error, (errnum, strerror):
+						except socket.error as xxx_todo_changeme:
+							(errnum, strerror) = xxx_todo_changeme.args
 							import errno
 							if errno.errorcode.get(errnum,"") == 'EMFILE':
 								queue.put(msgObj)

@@ -81,7 +81,7 @@ You should install PyGTK 2.24.X.""") % (e)
     # Require pynicotine
     try:
         import pynicotine
-    except ImportError, e:
+    except ImportError as e:
         return _("""Can not find Nicotine+ modules.
 Perhaps they're installed in a directory which is not
 in an interpreter's module search path.
@@ -108,7 +108,7 @@ Python bindings: http://www.maxmind.com/app/python
 
         # dbhash might be a good choice
         try:
-            import dbhash
+            import dbm.bsd
         except:
             log.addwarning(
                 _("Warning: the Berkeley DB module, dbhash, " +
@@ -129,13 +129,13 @@ https://pypi.python.org/pypi/pypiwin32""")
 def version():
     try:
         import pynicotine.utils
-        print _("Nicotine+ version %s" % pynicotine.utils.version)
-    except ImportError, error:
-        print _("Cannot find the pynicotine.utils module.")
+        print(_("Nicotine+ version %s" % pynicotine.utils.version))
+    except ImportError as error:
+        print(_("Cannot find the pynicotine.utils module."))
 
 
 def usage():
-    print _("""Nicotine+ is a Soulseek client.
+    print(_("""Nicotine+ is a Soulseek client.
 Usage: nicotine [OPTION]...
   -c file, --config=file      Use non-default configuration file
   -p dir,  --plugins=dir      Use non-default directory for plugins
@@ -145,7 +145,7 @@ Usage: nicotine [OPTION]...
   -s,      --hidden           Start the program hidden so only the tray icon is shown
   -b ip,   --bindip=ip        Bind sockets to the given IP (useful for VPN)
   -l port, --port=port        Listen on the given port. Overrides the portrange configuration
-  -v,      --version          Display version and exit""")
+  -v,      --version          Display version and exit"""))
 
 
 def renameprocess(newname, debug=False):
@@ -275,7 +275,7 @@ def run():
         else:
             app.MainLoop()
     else:
-        print result
+        print(result)
 
 if __name__ == '__main__':
     try:

@@ -27,14 +27,14 @@ import gtk
 import gobject
 import gio
 import re
-from dirchooser import *
-from utils import InputDialog, InitialiseColumns, recode, recode2, popupWarning, Humanize, OpenUri, HumanSize
-from entrydialog import input_box
+from .dirchooser import *
+from .utils import InputDialog, InitialiseColumns, recode, recode2, popupWarning, Humanize, OpenUri, HumanSize
+from .entrydialog import input_box
 from pynicotine.upnp import UPnPPortMapping
 from pynicotine.logfacility import log
 import os
 import sys
-import thread
+import _thread
 
 win32 = sys.platform.startswith("win")
 if win32:
@@ -407,7 +407,7 @@ class DownloadsFrame(buildFrame):
             option=True,
             optionvalue=True,
             optionmessage="Escape this filter?",
-            droplist=self.filtersiters.keys()
+            droplist=list(self.filtersiters.keys())
         )
 
         if type(response) is list:
@@ -454,7 +454,7 @@ class DownloadsFrame(buildFrame):
                 option=True,
                 optionvalue=escapedvalue,
                 optionmessage="Escape this filter?",
-                droplist=self.filtersiters.keys()
+                droplist=list(self.filtersiters.keys())
             )
 
             if type(response) is list:
@@ -541,7 +541,7 @@ class DownloadsFrame(buildFrame):
                 re.compile("("+dfilter+")")
                 outfilter += dfilter
                 proccessedfilters.append(dfilter)
-            except Exception, e:
+            except Exception as e:
                 failed[dfilter] = e
 
             if filter is not df[-1]:
@@ -552,20 +552,20 @@ class DownloadsFrame(buildFrame):
         try:
             re.compile(outfilter)
 
-        except Exception, e:
+        except Exception as e:
             failed[outfilter] = e
 
-        if len(failed.keys()) >= 1:
+        if len(list(failed.keys())) >= 1:
             errors = ""
 
-            for filter, error in failed.items():
+            for filter, error in list(failed.items()):
                 errors += "Filter: %(filter)s Error: %(error)s " % {
                     'filter': filter,
                     'error': error
                 }
 
             error = _("%(num)d Failed! %(error)s " % {
-                'num': len(failed.keys()),
+                'num': len(list(failed.keys())),
                 'error': errors}
             )
 
@@ -666,7 +666,7 @@ class SharesFrame(buildFrame):
                 )
 
                 # Compute the directory size in the background
-                thread.start_new_thread(self.GetDirectorySize, (actual, self.shareslist))
+                _thread.start_new_thread(self.GetDirectorySize, (actual, self.shareslist))
 
             self.shareddirs = transfers["shared"][:]
 
@@ -683,7 +683,7 @@ class SharesFrame(buildFrame):
                 )
 
                 # Compute the directory size in the background
-                thread.start_new_thread(self.GetDirectorySize, (actual, self.shareslist))
+                _thread.start_new_thread(self.GetDirectorySize, (actual, self.shareslist))
 
             self.bshareddirs = transfers["buddyshared"][:]
 
@@ -830,7 +830,7 @@ class SharesFrame(buildFrame):
                         self.needrescan = True
 
                         # Compute the directory size in the background
-                        thread.start_new_thread(self.GetDirectorySize, (directory, self.shareslist))
+                        _thread.start_new_thread(self.GetDirectorySize, (directory, self.shareslist))
 
     def OnAddSharedBuddyDir(self, widget):
 
@@ -888,7 +888,7 @@ class SharesFrame(buildFrame):
                         self.needrescan = True
 
                         # Compute the directory size in the background
-                        thread.start_new_thread(self.GetDirectorySize, (directory, self.bshareslist))
+                        _thread.start_new_thread(self.GetDirectorySize, (directory, self.bshareslist))
 
     def _RemoveSharedDir(self, model, path, iter, list):
         list.append(iter)
@@ -1277,7 +1277,7 @@ class IgnoreFrame(buildFrame):
 
         if server["ipignorelist"] is not None:
             self.ignored_ips = server["ipignorelist"].copy()
-            for ip, user in self.ignored_ips.items():
+            for ip, user in list(self.ignored_ips.items()):
                 self.ignored_ips_list.append([ip, user])
 
     def GetSettings(self):
@@ -1404,7 +1404,7 @@ class BanFrame(buildFrame):
 
         if server["ipblocklist"] is not None:
             self.blocked = server["ipblocklist"].copy()
-            for blocked, user in server["ipblocklist"].items():
+            for blocked, user in list(server["ipblocklist"].items()):
                 self.blockedlist.append([blocked, user])
 
         if transfers["usecustomban"] is not None:
@@ -1869,7 +1869,7 @@ class ColoursFrame(buildFrame):
         self.p.SetWidgetsData(config, self.options)
 
         for option in self.colors:
-            for key, value in self.colorsd.items():
+            for key, value in list(self.colorsd.items()):
 
                 if option in value:
 
@@ -1941,7 +1941,7 @@ class ColoursFrame(buildFrame):
 
         defaults = self.frame.np.config.defaults
 
-        for key, value in self.options.items():
+        for key, value in list(self.options.items()):
             if option in value:
                 widget = self.options[key][option]
                 if type(widget) is gtk.Entry:
@@ -1953,7 +1953,7 @@ class ColoursFrame(buildFrame):
                 elif type(widget) is gtk.ComboBox:
                     widget.child.set_text(defaults[key][option])
 
-        for key, value in self.colorsd.items():
+        for key, value in list(self.colorsd.items()):
 
             if option in value:
 
@@ -1970,7 +1970,7 @@ class ColoursFrame(buildFrame):
     def OnClearAllColours(self, widget):
 
         for option in self.colors:
-            for section, value in self.options.items():
+            for section, value in list(self.options.items()):
 
                 if option in value:
 
@@ -1984,7 +1984,7 @@ class ColoursFrame(buildFrame):
                     elif type(widget) is gtk.ComboBox:
                         widget.child.set_text("")
 
-            for section, value in self.colorsd.items():
+            for section, value in list(self.colorsd.items()):
                 if option in value:
                     drawingarea = self.colorsd[section][option]
                     drawingarea.modify_bg(gtk.STATE_NORMAL, None)
@@ -2028,12 +2028,12 @@ class ColoursFrame(buildFrame):
             colourtext = "#%02X%02X%02X" % (colour.red / 256, colour.green / 256, colour.blue / 256)
             entry.set_text(colourtext)
 
-            for section in self.options.keys():
+            for section in list(self.options.keys()):
 
                 if section not in self.colorsd:
                     continue
 
-                for key, value in self.options[section].items():
+                for key, value in list(self.options[section].items()):
 
                     if key not in self.colorsd[section]:
                         continue
@@ -2047,8 +2047,8 @@ class ColoursFrame(buildFrame):
 
     def DefaultColour(self, widget, entry):
 
-        for section in self.options.keys():
-            for key, value in self.options[section].items():
+        for section in list(self.options.keys()):
+            for key, value in list(self.options[section].items()):
                 if value is entry:
                     self.SetDefaultColor(key)
                     return
@@ -2616,7 +2616,7 @@ class UrlCatchFrame(buildFrame):
 
         if urls["protocols"] is not None:
 
-            for key in urls["protocols"].keys():
+            for key in list(urls["protocols"].keys()):
                 if urls["protocols"][key][-1:] == "&":
                     command = urls["protocols"][key][:-1].rstrip()
                 else:
@@ -2629,7 +2629,7 @@ class UrlCatchFrame(buildFrame):
         selection = self.ProtocolHandlers.get_selection()
         selection.unselect_all()
 
-        for key, iter in self.protocols.items():
+        for key, iter in list(self.protocols.items()):
             if iter is not None:
                 selection.select_iter(iter)
                 break
@@ -2871,7 +2871,7 @@ class AutoReplaceFrame(buildFrame):
         self.p.SetWidgetsData(config, self.options)
         words = config["words"]
         if words["autoreplaced"] is not None:
-            for word, replacement in words["autoreplaced"].items():
+            for word, replacement in list(words["autoreplaced"].items()):
                 self.replacelist.append([word, replacement])
 
         self.OnReplaceCheck(self.ReplaceCheck)
@@ -2934,7 +2934,7 @@ class AutoReplaceFrame(buildFrame):
             "tihs": "this"
         }
 
-        for word, replacement in defaults.items():
+        for word, replacement in list(defaults.items()):
             self.replacelist.append([word, replacement])
 
 
@@ -3122,12 +3122,12 @@ class buildDialog(gtk.Dialog):
 
         c = 0
 
-        for name, data in options.items():
+        for name, data in list(options.items()):
             if plugin not in self.settings.frame.np.config.sections["plugins"] or name not in self.settings.frame.np.config.sections["plugins"][plugin]:
                 if plugin not in self.settings.frame.np.config.sections["plugins"]:
-                    print "No1 " + plugin + ", " + repr(self.settings.frame.np.config.sections["plugins"].keys())
+                    print("No1 " + plugin + ", " + repr(list(self.settings.frame.np.config.sections["plugins"].keys())))
                 elif name not in self.settings.frame.np.config.sections["plugins"][plugin]:
-                    print "No2 " + name + ", " + repr(self.settings.frame.np.config.sections["plugins"][plugin].keys())
+                    print("No2 " + name + ", " + repr(list(self.settings.frame.np.config.sections["plugins"][plugin].keys())))
                 continue
 
             # We currently support SpinButtons, TreeView (one per plugin) and Checkboxes.
@@ -3168,7 +3168,7 @@ class buildDialog(gtk.Dialog):
             elif data["type"] in ("list string",):
                 self.GenerateTreeView(name, data["description"], value, c)
             else:
-                print "Unknown setting type '%s', data '%s'" % (name, data)
+                print("Unknown setting type '%s', data '%s'" % (name, data))
 
             c += 1
 
@@ -3305,7 +3305,7 @@ class PluginFrame(buildFrame):
         return {
             "plugins": {
                 "enable": self.PluginsEnable.get_active(),
-                "enabled": self.frame.pluginhandler.enabled_plugins.keys()
+                "enabled": list(self.frame.pluginhandler.enabled_plugins.keys())
             }
          }
 
@@ -3473,11 +3473,11 @@ class SettingsWindow:
 
     def UpdateColours(self):
 
-        for widget in self.__dict__.values():
+        for widget in list(self.__dict__.values()):
             self.ColourWidgets(widget)
 
-        for name, page in self.pages.items():
-            for widget in page.__dict__.values():
+        for name, page in list(self.pages.items()):
+            for widget in list(page.__dict__.values()):
                 self.ColourWidgets(widget)
 
     def SetTextBG(self, widget, bgcolor="", fgcolor=""):
@@ -3545,7 +3545,7 @@ class SettingsWindow:
             iter = combobox.get_model().iter_next(iter)
 
     def SetWidgetsData(self, config, options):
-        for section, keys in options.items():
+        for section, keys in list(options.items()):
             if section not in config:
                 continue
             for key in keys:
@@ -3618,14 +3618,14 @@ class SettingsWindow:
                 widget.get_model().append([item])
 
     def InvalidSettings(self, domain, key):
-        for name, page in self.pages.items():
+        for name, page in list(self.pages.items()):
             if domain in page.options:
                 if key in page.options[domain]:
                     self.SwitchToPage(name)
                     break
 
     def SetSettings(self, config):
-        for page in self.pages.values():
+        for page in list(self.pages.values()):
             page.SetSettings(config)
 
     def GetSettings(self):
@@ -3645,11 +3645,11 @@ class SettingsWindow:
                 "plugins": {}
             }
 
-            for page in self.pages.values():
+            for page in list(self.pages.values()):
                 sub = page.GetSettings()
-                for (key, data) in sub.items():
+                for (key, data) in list(sub.items()):
                     config[key].update(data)
 
             return self.pages["Shares"].GetNeedRescan(), (self.pages["Colours"].needcolors or self.pages["Interface"].needcolors), self.pages["Completion"].needcompletion, config
-        except UserWarning, warning:
+        except UserWarning as warning:
             return None

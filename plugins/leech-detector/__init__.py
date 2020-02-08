@@ -32,7 +32,7 @@ class Plugin(BasePlugin):
             return
         if status == 'requesting':
             if stats['files'] == 0:
-                self.sendprivate(user, u'You are not sharing any files, that makes me a sad panda :(')
+                self.sendprivate(user, 'You are not sharing any files, that makes me a sad panda :(')
                 self.log("User %s doesn't share any files, sent complaint." % user)
             else:
                 self.log('User %s is okay, sharing %s files' % (user, stats['files']))
