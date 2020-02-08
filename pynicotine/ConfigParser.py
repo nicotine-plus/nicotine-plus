@@ -93,6 +93,9 @@ __all__ = ["NoSectionError","DuplicateSectionError","NoOptionError",
 		"MissingSectionHeaderError","ConfigParser",
 		"DEFAULTSECT", "MAX_INTERPOLATION_DEPTH"]
 
+from copy import deepcopy
+from pprint import pprint
+
 DEFAULTSECT = "DEFAULT"
 
 MAX_INTERPOLATION_DEPTH = 10
@@ -212,9 +215,15 @@ class ConfigParser:
 			opts = self.__sections[section].copy()
 		except KeyError:
 			raise NoSectionError(section)
-		opts.update(self.__defaults)
+		defaults = deepcopy(self.__defaults)
+		try:
+			opts.update(defaults)
+		except KeyError as e:
+			if '__name__' not in e.args:
+				raise
 		if '__name__' in opts:
 			del opts['__name__']
+
 		return list(opts.keys())
 
 	def read(self, filenames):
