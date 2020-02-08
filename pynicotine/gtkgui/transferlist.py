@@ -73,7 +73,7 @@ class TransferList:
         self.users = {}
         self.lastupdate = 0
         self.finalupdatetimerid = None
-        widget.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
+        widget.get_selection().set_mode(gtk.SelectionMode.MULTIPLE)
 
         columntypes = [
             gobject.TYPE_STRING,
@@ -122,7 +122,7 @@ class TransferList:
         self.transfersmodel.set_sort_func(3, int_sort_func, 3)
         self.col_percent.set_sort_column_id(11)
 
-        self.col_percent.set_attributes(self.col_percent.get_cell_renderers()[0], value=4, visible=14)
+        self.col_percent.set_attributes(self.col_percent.get_cells()[0], value=4, visible=14)
 
         self.col_human_size.set_sort_column_id(12)
         self.col_human_speed.set_sort_column_id(6)

@@ -21,9 +21,11 @@
 
 import gi
 gi.require_version('Gtk', '3.0')
+gi.require_version('Gdk', '3.0')
 
 from gi.repository import GObject as gobject
 from gi.repository import Gtk as gtk
+from gi.repository import Gdk
 
 import os
 import _thread
@@ -131,7 +133,7 @@ class FastConfigureAssistant(object):
 
         self.kids['shareddirectoriestree'].set_model(self.sharelist)
         self.kids['shareddirectoriestree'].get_selection().set_mode(
-            gtk.SELECTION_MULTIPLE
+            gtk.SelectionMode.MULTIPLE
         )
 
         self.initphase = False
@@ -419,7 +421,8 @@ class FastConfigureAssistant(object):
 
             if directory[1] == self.sharelist.get_value(iter, 6):
 
-                self.sharelist.insert_after(iter, [
+                # self.sharelist.insert_after(iter, [
+                self.sharelist.insert(0, [
                     directory[0],
                     recode(directory[1]),
                     HumanSize(size),
@@ -578,5 +581,5 @@ class FastConfigureAssistant(object):
     def OnKeyPress(self, widget, event):
 
         # Close the window when escape is pressed
-        if event.keyval == gtk.keysyms.Escape:
+        if event.keyval == Gdk.KEY_Escape:
             self.OnCancel(widget)

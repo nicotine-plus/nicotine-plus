@@ -31,9 +31,11 @@ import re
 # Python modules
 import gi
 gi.require_version('Gtk', '3.0')
+gi.require_version('Gdk', '3.0')
 gi.require_version('Pango', '1.0')
 
 from gi.repository import Gtk as gtk
+from gi.repository import Gdk
 from gi.repository import GObject as gobject
 from gi.repository import Pango as pango
 
@@ -268,7 +270,7 @@ class RoomsControl:
 
     def OnListClicked(self, widget, event):
 
-        if event.button == 1 and event.type == gtk.gdk._2BUTTON_PRESS:
+        if event.button == 1 and event.type == Gdk._2BUTTON_PRESS:
 
             d = self.frame.roomlist.RoomsList.get_path_at_pos(int(event.x), int(event.y))
             if d:
@@ -421,7 +423,7 @@ class RoomsControl:
         self.frame.roomlist.RoomsList.set_model(None)
         self.roomsmodel.set_default_sort_func(lambda *args: -1)
         self.roomsmodel.set_sort_func(1, lambda *args: -1)
-        self.roomsmodel.set_sort_column_id(-1, gtk.SORT_ASCENDING)
+        self.roomsmodel.set_sort_column_id(-1, gtk.SortType.ASCENDING)
 
         self.rooms = []
         for room, users in msg.rooms:
@@ -1030,8 +1032,8 @@ class ChatRoom:
         self.users = {}
 
         self.usersmodel = gtk.ListStore(
-            gtk.gdk.Pixbuf,
-            gtk.gdk.Pixbuf,
+            Gdk.Pixbuf,
+            Gdk.Pixbuf,
             gobject.TYPE_STRING,
             gobject.TYPE_STRING,
             gobject.TYPE_STRING,
@@ -1058,12 +1060,12 @@ class ChatRoom:
             self.users[username] = iter
             self.roomsctrl.GetUserAddress(username)
 
-        self.usersmodel.set_sort_column_id(2, gtk.SORT_ASCENDING)
+        self.usersmodel.set_sort_column_id(2, gtk.SortType.ASCENDING)
 
         self.UpdateColours()
 
         self.UserList.set_model(self.usersmodel)
-        self.UserList.enable_model_drag_source(gtk.gdk.BUTTON1_MASK, [('text/plain', 0, 2)], gtk.gdk.ACTION_COPY)
+        self.UserList.enable_model_drag_source(Gdk.BUTTON1_MASK, [('text/plain', 0, 2)], Gdk.DragAction.COPY)
         self.UserList.connect("drag_data_get", self.drag_data_get_data)
         self.UserList.set_property("rules-hint", True)
 
@@ -1215,10 +1217,10 @@ class ChatRoom:
 
     def on_key_press_event(self, widget, event):
 
-        key = gtk.gdk.keyval_name(event.keyval)
+        key = Gdk.keyval_name(event.keyval)
 
         # Match against capslock + control and control
-        if key in ("f", "F") and event.state in (gtk.gdk.CONTROL_MASK, gtk.gdk.LOCK_MASK | gtk.gdk.CONTROL_MASK):
+        if key in ("f", "F") and event.state in (Gdk.CONTROL_MASK, Gdk.LOCK_MASK | Gdk.CONTROL_MASK):
             self.OnFind(widget)
         elif key in ("F3"):
             self.OnFind(widget, repeat=True)
@@ -1299,7 +1301,7 @@ class ChatRoom:
 
         # Double click starts a private message
         if event.button != 3:
-            if event.type == gtk.gdk._2BUTTON_PRESS:
+            if event.type == Gdk._2BUTTON_PRESS:
                 self.frame.privatechats.SendMessage(user, None, 1)
                 self.frame.ChangeMainPage(None, "private")
             return
@@ -1890,7 +1892,7 @@ class ChatRoom:
 
     def UserNameEvent(self, tag, widget, event, iter, user):
 
-        if tag.last_event_type == gtk.gdk.BUTTON_PRESS and event.type == gtk.gdk.BUTTON_RELEASE and event.button in (1, 2):
+        if tag.last_event_type == Gdk.BUTTON_PRESS and event.type == Gdk.BUTTON_RELEASE and event.button in (1, 2):
 
             # Chat, Userlists use the normal popup system
             self.popup_menu.editing = True
@@ -1966,7 +1968,7 @@ class ChatRoom:
         if color == "":
             color = self.backupcolor
         else:
-            color = gtk.gdk.color_parse(color)
+            color = Gdk.color_parse(color)
 
         tag.set_property("foreground-gdk", color)
         tag.set_property("font", font)
@@ -2067,7 +2069,7 @@ class ChatRoom:
 
         # Update user list with an inexpensive sorting function
         self.usersmodel.set_default_sort_func(lambda *args: -1)
-        self.usersmodel.set_sort_column_id(-1, gtk.SORT_ASCENDING)
+        self.usersmodel.set_sort_column_id(-1, gtk.SortType.ASCENDING)
 
         for (username, user) in users.items():
 
@@ -2094,7 +2096,7 @@ class ChatRoom:
         self.UserList.set_sensitive(True)
 
         # Reinitialize sorting after loop is complet
-        self.usersmodel.set_sort_column_id(2, gtk.SORT_ASCENDING)
+        self.usersmodel.set_sort_column_id(2, gtk.SortType.ASCENDING)
         self.usersmodel.set_default_sort_func(None)
 
         # Spit this line into chat log
@@ -2164,13 +2166,13 @@ class ChatRoom:
 
     def OnKeyPress(self, widget, event):
 
-        if event.keyval == gtk.gdk.keyval_from_name("Prior"):
+        if event.keyval == Gdk.keyval_from_name("Prior"):
 
             scrolled = self.ChatScroll.get_parent()
             adj = scrolled.get_vadjustment()
             adj.set_value(adj.value - adj.page_increment)
 
-        elif event.keyval == gtk.gdk.keyval_from_name("Next"):
+        elif event.keyval == Gdk.keyval_from_name("Next"):
 
             scrolled = self.ChatScroll.get_parent()
             adj = scrolled.get_vadjustment()
@@ -2183,8 +2185,8 @@ class ChatRoom:
             adj.set_value(new)
 
         # ISO_Left_Tab normally corresponds with shift+tab
-        if event.keyval not in (gtk.gdk.keyval_from_name("Tab"), gtk.gdk.keyval_from_name("ISO_Left_Tab")):
-            if event.keyval not in (gtk.gdk.keyval_from_name("Shift_L"), gtk.gdk.keyval_from_name("Shift_R")):
+        if event.keyval not in (Gdk.keyval_from_name("Tab"), Gdk.keyval_from_name("ISO_Left_Tab")):
+            if event.keyval not in (Gdk.keyval_from_name("Shift_L"), Gdk.keyval_from_name("Shift_R")):
                 self.midwaycompletion = False
             return False
 
@@ -2229,7 +2231,7 @@ class ChatRoom:
                 widget.delete_text(ix - len(currentnick), ix)
                 direction = 1  # Forward cycle
 
-                if event.keyval == gtk.gdk.keyval_from_name("ISO_Left_Tab"):
+                if event.keyval == Gdk.keyval_from_name("ISO_Left_Tab"):
                     direction = -1  # Backward cycle
 
                 self.completions['currentindex'] = (self.completions['currentindex'] + direction) % len(self.completions['completions'])
@@ -2333,7 +2335,7 @@ class ChatRoom:
 
     def OnTickerClicked(self, widget, event):
 
-        if event.button != 1 or event.type != gtk.gdk._2BUTTON_PRESS:
+        if event.button != 1 or event.type != Gdk._2BUTTON_PRESS:
             return False
 
         config = self.frame.np.config.sections
@@ -2420,7 +2422,7 @@ class ChatRooms(IconNotebook):
 
     def on_tab_click(self, widget, event, child):
 
-        if event.type == gtk.gdk.BUTTON_PRESS:
+        if event.type == Gdk.BUTTON_PRESS:
 
             n = self.page_num(child)
             page = self.get_nth_page(n)

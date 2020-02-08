@@ -70,9 +70,9 @@ class WishList(gtk.Dialog):
         self.vbox.pack_start(self.WishLabel, False, True, 0)
 
         self.WishScrollWin = gtk.ScrolledWindow()
-        self.WishScrollWin.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+        self.WishScrollWin.set_policy(gtk.PolicyType.AUTOMATIC, gtk.PolicyType.AUTOMATIC)
         self.WishScrollWin.show()
-        self.WishScrollWin.set_shadow_type(gtk.SHADOW_IN)
+        self.WishScrollWin.set_shadow_type(gtk.ShadowType.IN)
 
         self.WishlistView = gtk.TreeView()
         self.WishlistView.show()
@@ -81,7 +81,7 @@ class WishList(gtk.Dialog):
 
         self.mainHbox.pack_start(self.WishScrollWin, True, True, 0)
         self.mainVbox = gtk.VBox(False, 5)
-        self.mainHbox.pack_start(self.mainVbox, False, False)
+        self.mainHbox.pack_start(self.mainVbox, False, False, 0)
         self.mainVbox.show()
         self.mainVbox.set_spacing(5)
 
@@ -104,10 +104,10 @@ class WishList(gtk.Dialog):
         column = gtk.TreeViewColumn(_("Wishes"), gtk.CellRendererText(), text=0)
         self.WishlistView.append_column(column)
         self.WishlistView.set_model(self.store)
-        self.WishlistView.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
+        self.WishlistView.get_selection().set_mode(gtk.SelectionMode.MULTIPLE)
 
         column.set_sort_column_id(0)
-        self.store.set_sort_column_id(0, gtk.SORT_ASCENDING)
+        self.store.set_sort_column_id(0, gtk.SortType.ASCENDING)
         self.wishes = {}
 
         for wish in self.nicotine.np.config.sections["server"]["autosearch"]:
@@ -542,7 +542,7 @@ class Searches(IconNotebook):
 
     def on_tab_click(self, widget, event, child):
 
-        if event.type == gtk.gdk.BUTTON_PRESS:
+        if event.type == Gdk.BUTTON_PRESS:
 
             id = None
             n = self.page_num(child)
@@ -639,7 +639,7 @@ class Search:
             str,  # immediatedl
             str,  # h_bitrate
             str,  # length
-            gtk.gdk.Pixbuf,  # self.get_flag(user, country)
+            Gdk.Pixbuf,  # self.get_flag(user, country)
             str,  # directory
             int,  # bitrate
             str,  # fullpath
@@ -1102,7 +1102,7 @@ class Search:
         else:
             compare = cmp
 
-        if order == gtk.SORT_ASCENDING:
+        if order == gtk.SortType.ASCENDING:
             self.all_data.sort(lambda r1, r2: compare(r1[col], r2[col]))
         else:
             self.all_data.sort(lambda r2, r1: compare(r1[col], r2[col]))
@@ -1452,7 +1452,7 @@ class Search:
 
     def OnListClicked(self, widget, event):
 
-        if event.button == 1 and event.type == gtk.gdk._2BUTTON_PRESS:
+        if event.button == 1 and event.type == Gdk._2BUTTON_PRESS:
             self.select_results()
             self.OnDownloadFiles(widget)
             self.ResultsList.get_selection().unselect_all()

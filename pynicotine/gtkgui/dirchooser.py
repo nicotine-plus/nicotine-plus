@@ -33,14 +33,14 @@ def ChooseDir(parent=None, initialdir="~", create=False, name=None, title=None):
     dialog = gtk.FileChooserDialog(
         title=title,
         parent=parent,
-        action=gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER,
-        buttons=(gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT, gtk.STOCK_OK, gtk.RESPONSE_ACCEPT)
+        action=gtk.FileChooserAction.SELECT_FOLDER,
+        buttons=(gtk.STOCK_CANCEL, gtk.ResponseType.REJECT, gtk.STOCK_OK, gtk.ResponseType.ACCEPT)
     )
 
     if create:
-        dialog.set_action(gtk.FILE_CHOOSER_ACTION_CREATE_FOLDER)
+        dialog.set_action(gtk.FileChooserAction.CREATE_FOLDER)
     else:
-        dialog.set_action(gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER)
+        dialog.set_action(gtk.FileChooserAction.SELECT_FOLDER)
         dialog.set_select_multiple(True)
 
     dir = os.path.expanduser(initialdir)
@@ -55,7 +55,7 @@ def ChooseDir(parent=None, initialdir="~", create=False, name=None, title=None):
 
     response = dialog.run()
 
-    if response == gtk.RESPONSE_ACCEPT:
+    if response == gtk.ResponseType.ACCEPT:
         res = dialog.get_filenames()
     else:
         res = None
@@ -69,11 +69,11 @@ def ChooseFile(parent=None, initialdir="~", initialfile="", multiple=False):
 
     dialog = gtk.FileChooserDialog(
         parent=parent,
-        action=gtk.FILE_CHOOSER_ACTION_OPEN,
-        buttons=(gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT, gtk.STOCK_OK, gtk.RESPONSE_ACCEPT)
+        action=gtk.FileChooserAction.OPEN,
+        buttons=(gtk.STOCK_CANCEL, gtk.ResponseType.REJECT, gtk.STOCK_OK, gtk.ResponseType.ACCEPT)
     )
 
-    dialog.set_action(gtk.FILE_CHOOSER_ACTION_OPEN)
+    dialog.set_action(gtk.FileChooserAction.OPEN)
     dialog.set_select_multiple(multiple)
     dir = os.path.expanduser(initialdir)
 
@@ -84,7 +84,7 @@ def ChooseFile(parent=None, initialdir="~", initialfile="", multiple=False):
 
     response = dialog.run()
 
-    if response == gtk.RESPONSE_ACCEPT:
+    if response == gtk.ResponseType.ACCEPT:
         res = dialog.get_filenames()
     else:
         res = None
@@ -98,11 +98,11 @@ def SaveFile(parent=None, initialdir="~", initialfile="", title=None):
 
     dialog = gtk.FileChooserDialog(
         parent=parent,
-        action=gtk.FILE_CHOOSER_ACTION_SAVE,
-        buttons=(gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT, gtk.STOCK_OK, gtk.RESPONSE_ACCEPT)
+        action=gtk.FileChooserAction.SAVE,
+        buttons=(gtk.STOCK_CANCEL, gtk.ResponseType.REJECT, gtk.STOCK_OK, gtk.ResponseType.ACCEPT)
     )
 
-    dialog.set_action(gtk.FILE_CHOOSER_ACTION_SAVE)
+    dialog.set_action(gtk.FileChooserAction.SAVE)
     dialog.set_select_multiple(False)
     dialog.set_show_hidden(True)
 
@@ -118,7 +118,7 @@ def SaveFile(parent=None, initialdir="~", initialfile="", title=None):
 
     response = dialog.run()
 
-    if response == gtk.RESPONSE_ACCEPT:
+    if response == gtk.ResponseType.ACCEPT:
         res = dialog.get_filenames()
     else:
         res = None

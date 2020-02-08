@@ -31,6 +31,8 @@ import gi
 gi.require_version('Gtk', '3.0')
 
 from gi.repository import Gtk as gtk
+from gi.repository import Gdk
+from gi.repository import GdkPixbuf
 from gi.repository import GObject as gobject
 
 # Application specific
@@ -170,7 +172,7 @@ class UserTabs(IconNotebook):
 
     def on_tab_click(self, widget, event, child):
 
-        if event.type == gtk.gdk.BUTTON_PRESS:
+        if event.type == Gdk.BUTTON_PRESS:
 
             n = self.page_num(child)
             page = self.get_nth_page(n)
@@ -239,13 +241,13 @@ class UserInfo:
         self.Hates.set_model(self.hatesStore)
         cols = InitialiseColumns(self.Hates, [_("Hates"), 0, "text", self.CellDataFunc])
         cols[0].set_sort_column_id(0)
-        self.hatesStore.set_sort_column_id(0, gtk.SORT_ASCENDING)
+        self.hatesStore.set_sort_column_id(0, gtk.SortType.ASCENDING)
 
         self.likesStore = gtk.ListStore(gobject.TYPE_STRING)
         self.Likes.set_model(self.likesStore)
         cols = InitialiseColumns(self.Likes, [_("Likes"), 0, "text", self.CellDataFunc])
         cols[0].set_sort_column_id(0)
-        self.likesStore.set_sort_column_id(0, gtk.SORT_ASCENDING)
+        self.likesStore.set_sort_column_id(0, gtk.SortType.ASCENDING)
 
         # Encoding Combobox
         self.Elist = {}
@@ -460,7 +462,7 @@ class UserInfo:
         if has_pic and pic is not None:
             try:
                 import gc
-                loader = gtk.gdk.PixbufLoader()
+                loader = GdkPixbuf.PixbufLoader()
                 loader.write(pic)
                 loader.close()
                 self.image_pixbuf = loader.get_pixbuf()
@@ -559,7 +561,7 @@ class UserInfo:
 
     def OnImageClick(self, widget, event):
 
-        if event.type != gtk.gdk.BUTTON_PRESS or event.button != 3:
+        if event.type != Gdk.BUTTON_PRESS or event.button != 3:
             return False
 
         act = True
@@ -577,7 +579,7 @@ class UserInfo:
 
     def OnScrollEvent(self, widget, event):
 
-        if event.direction == gtk.gdk.SCROLL_UP:
+        if event.direction == Gdk.SCROLL_UP:
             self.MakeZoomIn()
         else:
             self.MakeZoomOut()
@@ -605,7 +607,7 @@ class UserInfo:
         else:
             self.actual_zoom += self.zoom_factor
 
-        pixbuf_zoomed = self.image_pixbuf.scale_simple(CalcZoomIn(x), CalcZoomIn(y), gtk.gdk.INTERP_TILES)
+        pixbuf_zoomed = self.image_pixbuf.scale_simple(CalcZoomIn(x), CalcZoomIn(y), Gdk.INTERP_TILES)
         self.image.set_from_pixbuf(pixbuf_zoomed)
 
         del pixbuf_zoomed
@@ -631,7 +633,7 @@ class UserInfo:
             self.actual_zoom += self.zoom_factor
             return
 
-        pixbuf_zoomed = self.image_pixbuf.scale_simple(CalcZoomOut(x), CalcZoomOut(y), gtk.gdk.INTERP_TILES)
+        pixbuf_zoomed = self.image_pixbuf.scale_simple(CalcZoomOut(x), CalcZoomOut(y), Gdk.INTERP_TILES)
         self.image.set_from_pixbuf(pixbuf_zoomed)
 
         del pixbuf_zoomed

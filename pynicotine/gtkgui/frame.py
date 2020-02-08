@@ -30,13 +30,17 @@ from pynicotine.utils import version
 
 import gi
 gi.require_version('Gtk', '3.0')
+gi.require_version('Gdk', '3.0')
 
 from gi.repository import GObject as gobject
+from gi.repository import Gdk
+from gi.repository import GdkPixbuf
 
 import _thread
 import urllib.request, urllib.parse, urllib.error
 import signal
 import re
+from . import imagedata
 from .privatechat import PrivateChats
 from .chatrooms import ChatRooms
 from .userinfo import UserTabs, UserInfo
@@ -156,7 +160,7 @@ class BuddiesComboBox:
         self.combobox.set_entry_text_column(0)
 
         self.store.set_default_sort_func(lambda *args: -1)
-        self.store.set_sort_column_id(-1, gtk.SORT_ASCENDING)
+        self.store.set_sort_column_id(-1, gtk.SortType.ASCENDING)
 
         self.combobox.show()
 
@@ -170,7 +174,7 @@ class BuddiesComboBox:
         for user in self.frame.np.config.sections["server"]["userlist"]:
             self.items[user[0]] = self.store.append([user[0]])
 
-        self.store.set_sort_column_id(0, gtk.SORT_ASCENDING)
+        self.store.set_sort_column_id(0, gtk.SortType.ASCENDING)
 
     def Append(self, item):
 
@@ -264,8 +268,11 @@ class NicotineFrame:
 
         self.MainWindow.set_title(_("Nicotine+") + " " + version)
         self.MainWindow.set_icon(self.images["n"])
-        self.MainWindow.selection_add_target("PRIMARY", "STRING", 1)
-        self.MainWindow.set_geometry_hints(None, min_width=500, min_height=460)
+        # self.MainWindow.selection_add_target("PRIMARY", "STRING", 1)
+        hints_geometry = Gdk.Geometry()
+        hints_geometry.base_height = 460
+        hints_geometry.base_width = 500
+        self.MainWindow.set_geometry_hints(None, hints_geometry, Gdk.WindowHints(Gdk.WindowHints.MIN_SIZE))
         self.MainWindow.connect("focus_in_event", self.OnFocusIn)
         self.MainWindow.connect("focus_out_event", self.OnFocusOut)
         self.MainWindow.connect("configure_event", self.OnWindowChange)
@@ -283,7 +290,7 @@ class NicotineFrame:
 
         # According to the pygtk doc this will be ignored my many window managers since the move takes place before we do a show()
         if min(xpos, ypos) < 0:
-            self.MainWindow.set_position(gtk.WIN_POS_CENTER)
+            self.MainWindow.set_position(gtk.WindowPosition.CENTER)
         else:
             self.MainWindow.move(xpos, ypos)
 
@@ -298,7 +305,8 @@ class NicotineFrame:
         self.minimized = False
         self.HiddenTabs = {}
 
-        self.clip = gtk.Clipboard(display=gtk.gdk.display_get_default(), selection="CLIPBOARD")
+        display = Gdk.Display.get_default()
+        self.clip = gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
 
         # Popup menu on the log windows
         self.logpopupmenu = PopupMenu(self).setup(
@@ -399,9 +407,9 @@ class NicotineFrame:
                 label_tab.add(img_label)
 
                 # Set tab icons, angle and text color
-                label_tab.child.show_image(config["ui"]["tab_icons"])
-                label_tab.child.set_angle(config["ui"]["labelmain"])
-                label_tab.child.set_text_color(0)
+                img_label.show_image(config["ui"]["tab_icons"])
+                img_label.set_angle(config["ui"]["labelmain"])
+                img_label.set_text_color(0)
 
                 # Set the menu to hide the tab
                 eventbox_name = gtk.Buildable.get_name(label_tab)
@@ -419,19 +427,19 @@ class NicotineFrame:
                 popup.set_user(map_tablabels_to_box[label_tab])
 
         self.LogScrolledWindow = gtk.ScrolledWindow()
-        self.LogScrolledWindow.set_shadow_type(gtk.SHADOW_IN)
-        self.LogScrolledWindow.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+        self.LogScrolledWindow.set_shadow_type(gtk.ShadowType.IN)
+        self.LogScrolledWindow.set_policy(gtk.PolicyType.AUTOMATIC, gtk.PolicyType.AUTOMATIC)
         self.LogScrolledWindow.show()
 
         self.LogWindow = gtk.TextView()
-        self.LogWindow.set_wrap_mode(gtk.WRAP_WORD)
+        self.LogWindow.set_wrap_mode(gtk.WrapMode.WORD)
         self.LogWindow.set_cursor_visible(False)
         self.LogWindow.set_editable(False)
 
         self.LogScrolledWindow.add(self.LogWindow)
         self.LogWindow.connect("button-press-event", self.OnPopupLogMenu)
 
-        self.debugLogBox.pack_start(self.LogScrolledWindow)
+        self.debugLogBox.pack_start(self.LogScrolledWindow, False, False, 0)
         self.debugWarnings.set_active((1 in config["logging"]["debugmodes"]))
         self.debugSearches.set_active((2 in config["logging"]["debugmodes"]))
         self.debugConnections.set_active((3 in config["logging"]["debugmodes"]))
@@ -465,7 +473,7 @@ class NicotineFrame:
         self.SearchEntryCombo.set_model(self.SearchEntryCombo_List)
         self.SearchEntryCombo.set_entry_text_column(0)
 
-        self.SearchEntry = self.SearchEntryCombo.child
+        self.SearchEntry = self.SearchEntryCombo.get_child()
         self.SearchEntry.connect("activate", self.OnSearch)
 
         self.RoomSearchCombo_List = gtk.ListStore(gobject.TYPE_STRING)
@@ -502,13 +510,13 @@ class NicotineFrame:
         self.userbrowse.SetTabLabel(self.UserBrowseTabLabel)
 
         self.sUserinfoButton.connect("clicked", self.OnGetUserInfo)
-        self.UserInfoCombo.child.connect("activate", self.OnGetUserInfo)
+        self.UserInfoCombo.get_child().connect("activate", self.OnGetUserInfo)
 
         self.sPrivateChatButton.connect("clicked", self.OnGetPrivateChat)
-        self.UserPrivateCombo.child.connect("activate", self.OnGetPrivateChat)
+        self.UserPrivateCombo.get_child().connect("activate", self.OnGetPrivateChat)
 
         self.sSharesButton.connect("clicked", self.OnGetShares)
-        self.UserBrowseCombo.child.connect("activate", self.OnGetShares)
+        self.UserBrowseCombo.get_child().connect("activate", self.OnGetShares)
 
         if config["ui"]["roomlistcollapsed"]:
             self.show_room_list1.set_active(False)
@@ -721,8 +729,8 @@ class NicotineFrame:
         return True
 
     def window_state_event_cb(self, window, event):
-        if event.changed_mask and gtk.gdk.WINDOW_STATE_ICONIFIED:
-            if event.new_window_state and gtk.gdk.WINDOW_STATE_ICONIFIED:
+        if event.changed_mask and Gdk.WindowState.ICONIFIED:
+            if event.new_window_state and Gdk.WindowState.ICONIFIED:
                 self.minimized = 1
             else:
                 self.minimized = 0
@@ -766,15 +774,15 @@ class NicotineFrame:
         scale = None
 
         def loadStatic(name):
-            loader = gtk.gdk.PixbufLoader()
+            loader = GdkPixbuf.PixbufLoader()
             data = getattr(imagedata, "%s" % (name,))
-            loader.write(data, len(data))
+            loader.write(data)
             loader.close()
             pixbuf = loader.get_pixbuf()
             if scale:
                 w, h = pixbuf.get_width(), pixbuf.get_height()
                 if w == h:
-                    pixbuf = pixbuf.scale_simple(scale, scale, gtk.gdk.INTERP_BILINEAR)
+                    pixbuf = pixbuf.scale_simple(scale, scale, Gdk.INTERP_BILINEAR)
             return pixbuf
 
         names = [
@@ -805,7 +813,7 @@ class NicotineFrame:
                         data = open(path, 'rb')
                         s = data.read()
                         data.close()
-                        loader = gtk.gdk.PixbufLoader()
+                        loader = GdkPixbuf.PixbufLoader()
                         try:
                             loader.write(s, len(s))
                             loader.close()
@@ -813,7 +821,7 @@ class NicotineFrame:
                             if scale:
                                 w, h = pixbuf.get_width(), pixbuf.get_height()
                                 if w == h:
-                                    pixbuf = pixbuf.scale_simple(scale, scale, gtk.gdk.INTERP_BILINEAR)
+                                    pixbuf = pixbuf.scale_simple(scale, scale, Gdk.INTERP_BILINEAR)
                             self.images[name] = pixbuf
                             loaded = True
                         except gobject.GError:
@@ -857,7 +865,7 @@ class NicotineFrame:
 
         self.likes = {}
         self.likeslist = gtk.ListStore(gobject.TYPE_STRING)
-        self.likeslist.set_sort_column_id(0, gtk.SORT_ASCENDING)
+        self.likeslist.set_sort_column_id(0, gtk.SortType.ASCENDING)
 
         cols = utils.InitialiseColumns(
             self.LikesList,
@@ -869,7 +877,9 @@ class NicotineFrame:
 
         self.RecommendationsList.set_property("rules-hint", True)
         self.RecommendationUsersList.set_property("rules-hint", True)
-        self.RecommendationUsersList.enable_model_drag_source(gtk.gdk.BUTTON1_MASK, [('text/plain', 0, 2)], gtk.gdk.ACTION_COPY)
+        self.RecommendationUsersList.enable_model_drag_source(
+            Gdk.ModifierType.BUTTON1_MASK, [('text/plain', 0, 2)], Gdk.DragAction.COPY
+        )
         self.RecommendationUsersList.connect("drag_data_get", self.similar_users_drag_data_get_data)
 
         self.til_popup_menu = popup = utils.PopupMenu(self)
@@ -885,7 +895,7 @@ class NicotineFrame:
 
         self.dislikes = {}
         self.dislikeslist = gtk.ListStore(gobject.TYPE_STRING)
-        self.dislikeslist.set_sort_column_id(0, gtk.SORT_ASCENDING)
+        self.dislikeslist.set_sort_column_id(0, gtk.SortType.ASCENDING)
 
         cols = utils.InitialiseColumns(
             self.DislikesList,
@@ -980,7 +990,8 @@ class NicotineFrame:
 
         self.recommendationusers = {}
         self.recommendationuserslist = gtk.ListStore(
-            gtk.gdk.Pixbuf,
+            # GdkPixbuf.get_type(),
+            gobject.TYPE_GTYPE,
             gobject.TYPE_STRING,
             gobject.TYPE_STRING,
             gobject.TYPE_STRING,
@@ -989,7 +1000,7 @@ class NicotineFrame:
             gobject.TYPE_INT
         )
         self.RecommendationUsersList.set_model(self.recommendationuserslist)
-        self.recommendationuserslist.set_sort_column_id(1, gtk.SORT_ASCENDING)
+        self.recommendationuserslist.set_sort_column_id(1, gtk.SortType.ASCENDING)
 
         self.ru_popup_menu = popup = utils.PopupMenu(self)
         popup.setup(
@@ -1067,18 +1078,18 @@ class NicotineFrame:
             self.show_room_list1.set_active(True)
 
     def OnGetUserInfo(self, widget):
-        text = self.UserInfoCombo.child.get_text()
+        text = self.UserInfoCombo.get_child().get_text()
         if not text:
             return
         self.LocalUserInfoRequest(text)
-        self.UserInfoCombo.child.set_text("")
+        self.UserInfoCombo.get_child().set_text("")
 
     def OnGetShares(self, widget):
-        text = self.UserBrowseCombo.child.get_text()
+        text = self.UserBrowseCombo.get_child().get_text()
         if not text:
             return
         self.BrowseUser(text)
-        self.UserBrowseCombo.child.set_text("")
+        self.UserBrowseCombo.get_child().set_text("")
 
     def OnLoadFromDisk(self, widget):
         sharesdir = os.path.join(self.data_dir, "usershares")
@@ -1112,11 +1123,11 @@ class NicotineFrame:
         self.now.NowPlaying.deiconify()
 
     def OnGetPrivateChat(self, widget):
-        text = self.UserPrivateCombo.child.get_text()
+        text = self.UserPrivateCombo.get_child().get_text()
         if not text:
             return
         self.privatechats.SendMessage(text, None, 1)
-        self.UserPrivateCombo.child.set_text("")
+        self.UserPrivateCombo.get_child().set_text("")
 
     def OnOpenPrivateChat(self, widget, prefix=""):
 
@@ -1192,7 +1203,7 @@ class NicotineFrame:
     def button_press(self, widget, event):
         try:
 
-            if event.type == gtk.gdk.BUTTON_PRESS:
+            if event.type == Gdk.BUTTON_PRESS:
                 widget.popup(None, None, None, event.button, event.time)
 
                 # Tell calling code that we have handled this event the buck
@@ -1291,7 +1302,7 @@ class NicotineFrame:
 
     def on_tab_click(self, widget, event, id, child):
 
-        if event.type == gtk.gdk.BUTTON_PRESS and event.button == 3:
+        if event.type == Gdk.BUTTON_PRESS and event.button == 3:
             self.__dict__[id].popup(None, None, None, event.button, event.time)
 
         pass
@@ -1320,10 +1331,10 @@ class NicotineFrame:
 
     def OnKeyPress(self, widget, event):
         self.OnButtonPress(None, None)
-        if event.state & (gtk.gdk.MOD1_MASK | gtk.gdk.CONTROL_MASK) != gtk.gdk.MOD1_MASK:
+        if event.state & (Gdk.ModifierType.MOD1_MASK | Gdk.ModifierType.CONTROL_MASK) != Gdk.ModifierType.MOD1_MASK:
             return False
         for i in range(1, 10):
-            if event.keyval == gtk.gdk.keyval_from_name(str(i)):
+            if event.keyval == Gdk.keyval_from_name(str(i)):
                 self.MainNotebook.set_current_page(i-1)
                 widget.emit_stop_by_name("key_press_event")
                 return True
@@ -1402,7 +1413,7 @@ class NicotineFrame:
         if font == "":
             font = 'default font'
         for c in listview.get_columns():
-            for r in c.get_cell_renderers():
+            for r in c.get_cells():
                 if type(r) in (gtk.CellRendererText, gtk.CellRendererCombo):
                     r.set_property("font", font)
 
@@ -1411,16 +1422,16 @@ class NicotineFrame:
         font = self.np.config.sections["ui"]["chatfont"]
 
         if color == "":
-            map = self.LogWindow.get_style().copy()
-            colour = map.text[gtk.STATE_NORMAL]
+            map = self.LogWindow.get_style_context()
+            colour = map.get_color(gtk.StateFlags.NORMAL)
         else:
-            colour = gtk.gdk.color_parse(color)
+            colour = Gdk.color_parse(color)
         if font == "":
             font = None
         if first:
             self.tag_log = self.LogWindow.get_buffer().create_tag()
         self.tag_log.set_property("font", font)
-        self.tag_log.set_property("foreground-gdk", colour)
+        self.tag_log.set_property("foreground-rgba", colour)
 
         self.SetTextBG(self.LogWindow)
         self.SetTextBG(self.userlist.UserList)
@@ -1441,9 +1452,9 @@ class NicotineFrame:
         self.SetTextBG(self.RecommendationUsersList)
         self.SetTextBG(self.LikesList)
         self.SetTextBG(self.DislikesList)
-        self.SetTextBG(self.UserPrivateCombo.child)
-        self.SetTextBG(self.UserInfoCombo.child)
-        self.SetTextBG(self.UserBrowseCombo.child)
+        self.SetTextBG(self.UserPrivateCombo.get_child())
+        self.SetTextBG(self.UserInfoCombo.get_child())
+        self.SetTextBG(self.UserBrowseCombo.get_child())
         self.SetTextBG(self.SearchEntry)
 
     def SetTextBG(self, widget, bgcolor="", fgcolor=""):
@@ -1452,31 +1463,31 @@ class NicotineFrame:
         else:
             if bgcolor == "":
                 bgcolor = self.np.config.sections["ui"]["textbg"]
-            colour = gtk.gdk.color_parse(bgcolor)
+            colour = Gdk.color_parse(bgcolor)
 
-        widget.modify_base(gtk.STATE_NORMAL, colour)
-        widget.modify_bg(gtk.STATE_NORMAL, colour)
+        widget.modify_base(gtk.StateFlags.NORMAL, colour)
+        widget.modify_bg(gtk.StateFlags.NORMAL, colour)
         widgetlist = [gtk.Entry, gtk.SpinButton]
         if SEXY:
             widgetlist.append(sexy.SpellEntry)
         if type(widget) in widgetlist:
             if fgcolor != "":
-                colour = gtk.gdk.color_parse(fgcolor)
+                colour = Gdk.color_parse(fgcolor)
             elif fgcolor == "" and self.np.config.sections["ui"]["inputcolor"] == "":
                 colour = None
             elif fgcolor == "" and self.np.config.sections["ui"]["inputcolor"] != "":
                 fgcolor = self.np.config.sections["ui"]["inputcolor"]
-                colour = gtk.gdk.color_parse(fgcolor)
+                colour = Gdk.color_parse(fgcolor)
 
-            widget.modify_text(gtk.STATE_NORMAL, colour)
-            widget.modify_fg(gtk.STATE_NORMAL, colour)
+            widget.modify_text(gtk.StateFlags.NORMAL, colour)
+            widget.modify_fg(gtk.StateFlags.NORMAL, colour)
 
         if type(widget) is gtk.TreeView:
             colour = self.np.config.sections["ui"]["search"]
             if colour == "":
                 colour = None
             for c in widget.get_columns():
-                for r in c.get_cell_renderers():
+                for r in c.get_cells():
                     if type(r) in (gtk.CellRendererText, gtk.CellRendererCombo):
                         r.set_property("foreground", colour)
 
@@ -1755,7 +1766,7 @@ class NicotineFrame:
             if hasattr(imagedata, flag):
                 img = None
                 try:
-                    loader = gtk.gdk.PixbufLoader("png")
+                    loader = GdkPixbuf.PixbufLoader("png")
                     data = getattr(imagedata, flag)
                     loader.write(data, len(data))
                     loader.close()
@@ -1831,7 +1842,7 @@ class NicotineFrame:
         if type(TabLabel) is ImageLabel:
             tablabel = TabLabel
         elif type(TabLabel) is gtk.EventBox:
-            tablabel = TabLabel.child
+            tablabel = TabLabel.get_child()
 
         return tablabel
 
@@ -1878,8 +1889,8 @@ class NicotineFrame:
                 l.set_image(self.images["empty"])
                 l.set_text_color(0)
             elif type(l) is gtk.EventBox:
-                l.child.set_image(self.images["empty"])
-                l.child.set_text_color(0)
+                l.get_child().set_image(self.images["empty"])
+                l.get_child().set_text_color(0)
 
         if n is not None and type(n.Notebook) not in [gtk.HPaned, gtk.VBox]:
             n.popup_disable()
@@ -2314,8 +2325,8 @@ class NicotineFrame:
                 label_tab.show_image(config["ui"]["tab_icons"])
                 label_tab.set_text_color(None)
             elif type(label_tab) is gtk.EventBox:
-                label_tab.child.show_image(config["ui"]["tab_icons"])
-                label_tab.child.set_text_color(None)
+                label_tab.get_child().show_image(config["ui"]["tab_icons"])
+                label_tab.get_child().set_text_color(None)
 
         self.SetTabPositions()
 
@@ -2388,15 +2399,15 @@ class NicotineFrame:
 
     def getTabPosition(self, string):
         if string in ("Top", "top", _("Top")):
-            position = gtk.POS_TOP
+            position = gtk.PositionType.TOP
         elif string in ("Bottom", "bottom", _("Bottom")):
-            position = gtk.POS_BOTTOM
+            position = gtk.PositionType.BOTTOM
         elif string in ("Left", "left", _("Left")):
-            position = gtk.POS_LEFT
+            position = gtk.PositionType.LEFT
         elif string in ("Right", "right", _("Right")):
-            position = gtk.POS_RIGHT
+            position = gtk.PositionType.RIGHT
         else:
-            position = gtk.POS_TOP
+            position = gtk.PositionType.TOP
         return position
 
     def SetTabPositions(self):
@@ -2418,7 +2429,7 @@ class NicotineFrame:
             self.UserBrowseTabLabel,
             self.InterestsTabLabel
         ]:
-            label_tab.child.set_angle(ui["labelmain"])
+            label_tab.get_child().set_angle(ui["labelmain"])
 
         if "BuddiesTabLabel" in self.__dict__:
             self.BuddiesTabLabel.set_angle(ui["labelmain"])
@@ -2437,7 +2448,7 @@ class NicotineFrame:
         button.connect_object("clicked", callback, "")
         button.show()
 
-        Alignment = gtk.Alignment(0.5, 0.5, 0, 0)
+        Alignment = gtk.Alignment(xalign=0.5, yalign=0.5, xscale=0, yscale=0)
         Alignment.show()
 
         Hbox = gtk.HBox(False, 2)
@@ -3031,14 +3042,14 @@ class NicotineFrame:
         for (thing, rating) in recom.items():
             thing = self.np.decode(thing)
             self.recommendationslist.append([thing, Humanize(rating), rating])
-        self.recommendationslist.set_sort_column_id(2, gtk.SORT_DESCENDING)
+        self.recommendationslist.set_sort_column_id(2, gtk.SortType.DESCENDING)
 
     def SetUnrecommendations(self, title, recom):
         self.unrecommendationslist.clear()
         for (thing, rating) in recom.items():
             thing = self.np.decode(thing)
             self.unrecommendationslist.append([thing, Humanize(rating), rating])
-        self.unrecommendationslist.set_sort_column_id(2, gtk.SORT_ASCENDING)
+        self.unrecommendationslist.set_sort_column_id(2, gtk.SortType.ASCENDING)
 
     def GlobalRecommendations(self, msg):
         self.SetRecommendations("Global recommendations", msg.recommendations)
@@ -3096,7 +3107,7 @@ class NicotineFrame:
         path, column, x, y = d
         user = self.recommendationuserslist.get_value(self.recommendationuserslist.get_iter(path), 1)
         if event.button != 3:
-            if event.type == gtk.gdk._2BUTTON_PRESS:
+            if event.type == Gdk._2BUTTON_PRESS:
                 self.privatechats.SendMessage(user)
                 self.ChangeMainPage(None, "private")
             return
@@ -3743,7 +3754,7 @@ class MainApp:
     def MainLoop(self):
         signal.signal(signal.SIGINT, signal.SIG_IGN)
         self.frame.MainWindow.show()
-        gtk.gdk.threads_init()
-        gtk.gdk.threads_enter()  # Without this N+ hangs on XP (Vista and Linux don't have that problem)
+        Gdk.threads_init()
+        Gdk.threads_enter()  # Without this N+ hangs on XP (Vista and Linux don't have that problem)
         gtk.main()
-        gtk.gdk.threads_leave()
+        Gdk.threads_leave()

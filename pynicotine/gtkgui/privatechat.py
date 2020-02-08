@@ -185,7 +185,7 @@ class PrivateChats(IconNotebook):
 
     def on_tab_click(self, widget, event, child):
 
-        if event.type == gtk.gdk.BUTTON_PRESS:
+        if event.type == Gdk.BUTTON_PRESS:
 
             n = self.page_num(child)
             page = self.get_nth_page(n)
@@ -476,15 +476,15 @@ class PrivateChat:
 
     def OnPopupMenu(self, widget, event):
 
-        if event.type == gtk.gdk.BUTTON_PRESS and event.button == 3:
+        if event.type == Gdk.BUTTON_PRESS and event.button == 3:
 
             self.popup_menu.popup(None, None, None, event.button, event.time)
             self.ChatScroll.emit_stop_by_name("button_press_event")
             return True
 
-        elif event.type == gtk.gdk.KEY_PRESS:
+        elif event.type == Gdk.KEY_PRESS:
 
-            if event.keyval == gtk.gdk.keyval_from_name("Menu"):
+            if event.keyval == Gdk.keyval_from_name("Menu"):
 
                 self.popup_menu.popup(None, None, None, 0, 0)
                 self.ChatScroll.emit_stop_by_name("key_press_event")
@@ -827,7 +827,7 @@ class PrivateChat:
         if color == "":
             color = self.backupcolor
         else:
-            color = gtk.gdk.color_parse(color)
+            color = Gdk.color_parse(color)
 
         font = self.frame.np.config.sections["ui"]["chatfont"]
         tag = buffer.create_tag()
@@ -904,7 +904,7 @@ class PrivateChat:
         if color == "":
             color = self.backupcolor
         else:
-            color = gtk.gdk.color_parse(color)
+            color = Gdk.color_parse(color)
 
         tag.set_property("foreground-gdk", color)
         tag.set_property("font", font)
@@ -1020,13 +1020,13 @@ class PrivateChat:
 
     def OnKeyPress(self, widget, event):
 
-        if event.keyval == gtk.gdk.keyval_from_name("Prior"):
+        if event.keyval == Gdk.keyval_from_name("Prior"):
 
             scrolled = self.ChatScroll.get_parent()
             adj = scrolled.get_vadjustment()
             adj.set_value(adj.value - adj.page_increment)
 
-        elif event.keyval == gtk.gdk.keyval_from_name("Next"):
+        elif event.keyval == Gdk.keyval_from_name("Next"):
 
             scrolled = self.ChatScroll.get_parent()
             adj = scrolled.get_vadjustment()
@@ -1038,7 +1038,7 @@ class PrivateChat:
 
             adj.set_value(new)
 
-        if event.keyval != gtk.gdk.keyval_from_name("Tab"):
+        if event.keyval != Gdk.keyval_from_name("Tab"):
             return False
 
         config = self.frame.np.config.sections["words"]

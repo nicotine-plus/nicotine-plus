@@ -22,8 +22,10 @@
 
 import gi
 gi.require_version('Gtk', '3.0')
+gi.require_version('Gdk', '3.0')
 
 from gi.repository import Gtk as gtk
+from gi.repository import Gdk
 from gi.repository import GObject as gobject
 
 
@@ -44,13 +46,13 @@ class MetaDialog(gtk.Dialog):
         self.box = gtk.VBox(spacing=10)
         self.box.set_border_width(10)
         self.box.show()
-        self.vbox.pack_start(self.box)
+        self.vbox.pack_start(self.box, False, False, 0)
 
         if message:
             label = gtk.Label()
             label.set_markup(message)
             label.set_line_wrap(False)
-            self.box.pack_start(label, False, False)
+            self.box.pack_start(label, False, False, 0)
             label.show()
             label.set_alignment(0, 0.5)
 
@@ -63,7 +65,7 @@ class MetaDialog(gtk.Dialog):
         self.UF = gtk.Frame()
         self.UF.show()
         self.UF.set_shadow_type(gtk.SHADOW_ETCHED_IN)
-        self.box.pack_start(self.UF, False, False)
+        self.box.pack_start(self.UF, False, False, 0)
 
         vbox3 = gtk.VBox(spacing=5)
         vbox3.set_border_width(5)
@@ -84,7 +86,7 @@ class MetaDialog(gtk.Dialog):
             self.OnBrowseUser, _("Browse")
         )
 
-        hbox2.pack_start(self.BrowseUser, False, False)
+        hbox2.pack_start(self.BrowseUser, False, False, 0)
 
         self.PositionLabel, self.Position = self.MakeLabelStaticEntry(
             hbox2,
@@ -95,11 +97,11 @@ class MetaDialog(gtk.Dialog):
             xalign=1
         )
 
-        vbox3.pack_start(hbox2, False, False)
+        vbox3.pack_start(hbox2, False, False, 0)
 
         hbox3 = gtk.HBox(spacing=5)
         hbox3.show()
-        vbox3.pack_start(hbox3, False, False)
+        vbox3.pack_start(hbox3, False, False, 0)
 
         self.FilenameLabel, self.Filename = self.MakeLabelStaticEntry(
             hbox3,
@@ -110,7 +112,7 @@ class MetaDialog(gtk.Dialog):
 
         hbox5 = gtk.HBox(spacing=5)
         hbox5.show()
-        vbox3.pack_start(hbox5, False, False)
+        vbox3.pack_start(hbox5, False, False, 0)
 
         self.DirectoryLabel, self.Directory = self.MakeLabelStaticEntry(
             hbox5,
@@ -154,11 +156,11 @@ class MetaDialog(gtk.Dialog):
         )
 
         self.Media.add(hbox6)
-        self.box.pack_start(self.Media, False, False)
+        self.box.pack_start(self.Media, False, False, 0)
 
         hbox7 = gtk.HBox(spacing=5, homogeneous=False)
         hbox7.show()
-        self.box.pack_start(hbox7, False, False)
+        self.box.pack_start(hbox7, False, False, 0)
 
         self.ImmediateLabel, self.Immediate = self.MakeLabelStaticEntry(
             hbox7,
@@ -180,7 +182,7 @@ class MetaDialog(gtk.Dialog):
 
         hbox4 = gtk.HBox(spacing=5, homogeneous=False)
         hbox4.show()
-        self.box.pack_start(hbox4, False, False)
+        self.box.pack_start(hbox4, False, False, 0)
 
         self.SpeedLabel, self.Speed = self.MakeLabelStaticEntry(
             hbox4,
@@ -194,13 +196,13 @@ class MetaDialog(gtk.Dialog):
         self.Country = gtk.Label()
         self.Country.hide()
 
-        hbox4.pack_start(self.Country, False, False)
+        hbox4.pack_start(self.Country, False, False, 0)
 
         self.buttonbox = gtk.HBox(False, 2)
         self.buttonbox.show()
         self.buttonbox.set_spacing(2)
 
-        self.box.pack_start(self.buttonbox, False, False)
+        self.box.pack_start(self.buttonbox, False, False, 0)
 
         # Download Button
         self.DownloadItem = self.nicotine.CreateIconButton(
@@ -210,7 +212,7 @@ class MetaDialog(gtk.Dialog):
             _("Download")
         )
 
-        self.buttonbox.pack_start(self.DownloadItem, False, False)
+        self.buttonbox.pack_start(self.DownloadItem, False, False, 0)
 
         # Download All Button
         self.DownloadAll = self.nicotine.CreateIconButton(
@@ -220,7 +222,7 @@ class MetaDialog(gtk.Dialog):
             _("Download All")
         )
 
-        self.buttonbox.pack_start(self.DownloadAll, False, False)
+        self.buttonbox.pack_start(self.DownloadAll, False, False, 0)
 
         self.Selected = self.MakeLabel(
             self.buttonbox,
@@ -253,8 +255,8 @@ class MetaDialog(gtk.Dialog):
             _("Close")
         )
 
-        button.set_flags(gtk.CAN_DEFAULT)
-        self.action_area.pack_start(button)
+        button.props.can_default = True
+        self.action_area.pack_start(button, False, False, 0)
 
         button.grab_default()
 
@@ -402,7 +404,7 @@ class MetaDialog(gtk.Dialog):
         label = gtk.Label()
         label.set_markup(labeltitle)
         label.show()
-        parent.pack_start(label, expand, fill)
+        parent.pack_start(label, expand, fill, 0)
 
         try:
             label.set_property("xalign", xalign)
@@ -420,7 +422,7 @@ class MetaDialog(gtk.Dialog):
         label.set_markup(labeltitle)
         label.show()
 
-        parent.pack_start(label, False, False)
+        parent.pack_start(label, False, False, 0)
 
         entry = gtk.Entry()
         entry.set_property("editable", editable)
@@ -434,7 +436,7 @@ class MetaDialog(gtk.Dialog):
         entry.show()
         if entrydata is not None:
             entry.set_text(entrydata)
-        parent.pack_start(entry, expand, fill)
+        parent.pack_start(entry, expand, fill, 0)
         return label, entry
 
 
@@ -453,25 +455,25 @@ class EntryDialog(gtk.Dialog):
 
         box = gtk.VBox(spacing=10)
         box.set_border_width(10)
-        self.vbox.pack_start(box)
+        self.vbox.pack_start(box, False, False, 0)
         box.show()
 
         if message:
             label = gtk.Label(message)
-            box.pack_start(label, False, False)
+            box.pack_start(label, False, False, 0)
             label.set_line_wrap(True)
             label.show()
 
         self.combo_List = gtk.ListStore(gobject.TYPE_STRING)
-        self.combo = gtk.combo_box_new_with_model_and_entry(model=self.combo_List)
+        self.combo = gtk.ComboBox.new_with_model_and_entry(model=self.combo_List)
         self.combo.set_entry_text_column(0)
 
         for i in droplist:
             self.combo_List.append([i])
 
-        self.combo.child.set_text(default_text)
+        self.combo.get_child().set_text(default_text)
 
-        box.pack_start(self.combo, False, False)
+        box.pack_start(self.combo, False, False, 0)
 
         self.combo.show()
         self.combo.grab_focus()
@@ -483,19 +485,19 @@ class EntryDialog(gtk.Dialog):
             self.option.set_label(optionmessage)
             self.option.show()
 
-            box.pack_start(self.option, False, False)
+            box.pack_start(self.option, False, False, 0)
 
         button = gtk.Button(_("Cancel"))
         button.connect("clicked", self.quit)
-        button.set_flags(gtk.CAN_DEFAULT)
-        self.action_area.pack_start(button)
+        button.props.can_default = True
+        self.action_area.pack_start(button, False, False, 0)
 
         button.show()
 
         button = gtk.Button(_("OK"))
         button.connect("clicked", self.click)
-        button.set_flags(gtk.CAN_DEFAULT)
-        self.action_area.pack_start(button)
+        button.props.can_default = True
+        self.action_area.pack_start(button, False, False, 0)
 
         button.show()
         button.grab_default()
@@ -513,9 +515,9 @@ class EntryDialog(gtk.Dialog):
     def click(self, button):
 
         if self.gotoption:
-            self.ret = [self.combo.child.get_text(), self.option.get_active()]
+            self.ret = [self.combo.get_child().get_text(), self.option.get_active()]
         else:
-            self.ret = self.combo.child.get_text()
+            self.ret = self.combo.get_child().get_text()
 
         self.quit()
 
@@ -532,7 +534,10 @@ def input_box(frame, title="Input Box", message="", default_text="",
 
     win.set_title(title)
     win.set_icon(frame.images["n"])
-    gtk.Window.set_geometry_hints(win, min_width=300)
+
+    hints_geometry = Gdk.Geometry()
+    hints_geometry.min_width = 300
+    win.set_geometry_hints(None, hints_geometry, Gdk.WindowHints(Gdk.WindowHints.MIN_SIZE))
     win.show()
 
     gtk.main()
@@ -576,18 +581,18 @@ class FindDialog(gtk.Dialog):
 
         box = gtk.VBox(spacing=10)
         box.set_border_width(10)
-        self.vbox.pack_start(box)
+        self.vbox.pack_start(box, False, False, 0)
         box.show()
 
         if message:
             label = gtk.Label(message)
-            box.pack_start(label, False, False)
+            box.pack_start(label, False, False, 0)
             label.set_line_wrap(True)
             label.show()
 
         self.entry = gtk.Entry()
 
-        box.pack_start(self.entry, False, False)
+        box.pack_start(self.entry, False, False, 0)
         self.entry.show()
         self.entry.grab_focus()
         self.entry.connect("activate", self.__next__)
@@ -598,8 +603,8 @@ class FindDialog(gtk.Dialog):
             self.quit,
             _("Cancel")
         )
-        Cancelbutton.set_flags(gtk.CAN_DEFAULT)
-        self.action_area.pack_start(Cancelbutton)
+        Cancelbutton.props.can_default = True
+        self.action_area.pack_start(Cancelbutton, False, False, 0)
 
         Previousbutton = self.nicotine.CreateIconButton(
             gtk.STOCK_GO_BACK,
@@ -607,8 +612,8 @@ class FindDialog(gtk.Dialog):
             self.previous,
             _("Previous")
         )
-        Previousbutton.set_flags(gtk.CAN_DEFAULT)
-        self.action_area.pack_start(Previousbutton)
+        Previousbutton.props.can_default = True
+        self.action_area.pack_start(Previousbutton, False, False, 0)
 
         Nextbutton = self.nicotine.CreateIconButton(
             gtk.STOCK_GO_FORWARD,
@@ -616,8 +621,8 @@ class FindDialog(gtk.Dialog):
             self.__next__,
             _("Next")
         )
-        Nextbutton.set_flags(gtk.CAN_DEFAULT)
-        self.action_area.pack_start(Nextbutton)
+        Nextbutton.props.can_default = True
+        self.action_area.pack_start(Nextbutton, False, False, 0)
         Nextbutton.grab_default()
 
     def next(self, button):
@@ -658,30 +663,30 @@ class FolderDownloadDialog(gtk.Dialog):
         self.set_modal(modal)
         box = gtk.VBox(spacing=10)
         box.set_border_width(10)
-        self.vbox.pack_start(box)
+        self.vbox.pack_start(box, False, False, 0)
         box.show()
         hbox = gtk.HBox(spacing=5)
         hbox.set_border_width(5)
         hbox.show()
-        box.pack_start(hbox)
+        box.pack_start(hbox, False, False, 0)
 
         image = gtk.Image()
         image.set_padding(0, 0)
         icon = gtk.STOCK_DIALOG_QUESTION
         image.set_from_stock(icon, 4)
         image.show()
-        hbox.pack_start(image)
+        hbox.pack_start(image, False, False, 0)
 
         if message:
             label = gtk.Label(message)
-            hbox.pack_start(label)
+            hbox.pack_start(label, False, False, 0)
             label.set_line_wrap(True)
             label.show()
 
         hbox2 = gtk.HBox(spacing=5)
         hbox2.set_border_width(5)
         hbox2.show()
-        box.pack_start(hbox2)
+        box.pack_start(hbox2, False, False, 0)
 
         cancel_button = self.add_button(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL)
         ok_button = self.add_button(gtk.STOCK_OK, gtk.RESPONSE_OK)
@@ -718,12 +723,12 @@ class OptionDialog(gtk.Dialog):
         self.set_modal(modal)
         box = gtk.VBox(spacing=10)
         box.set_border_width(10)
-        self.vbox.pack_start(box)
+        self.vbox.pack_start(box, False, False, 0)
         box.show()
         hbox = gtk.HBox(spacing=5)
         hbox.set_border_width(5)
         hbox.show()
-        box.pack_start(hbox)
+        box.pack_start(hbox, False, False, 0)
 
         if status:
             image = gtk.Image()
@@ -734,27 +739,27 @@ class OptionDialog(gtk.Dialog):
                 icon = gtk.STOCK_DIALOG_QUESTION
             image.set_from_stock(icon, 4)
             image.show()
-            hbox.pack_start(image)
+            hbox.pack_start(image, False, False, 0)
 
         if message:
             label = gtk.Label(message)
-            hbox.pack_start(label)
+            hbox.pack_start(label, False, False, 0)
             label.set_line_wrap(True)
             label.show()
 
         hbox2 = gtk.HBox(spacing=5)
         hbox2.set_border_width(5)
         hbox2.show()
-        box.pack_start(hbox2)
+        box.pack_start(hbox2, False, False, 0)
 
         # Storing under self. so we can find it easily later
         if rememberbox:
             self.checkbox = gtk.CheckButton("Remember choice")
-            box.pack_start(self.checkbox)
+            box.pack_start(self.checkbox, False, False, 0)
             self.checkbox.show()
 
         if option:
-            Alignment = gtk.Alignment(0.5, 0.5, 0, 0)
+            Alignment = gtk.Alignment(xalign=0.5, yalign=0.5, xscale=0, yscale=0)
             Alignment.show()
 
             Hbox = gtk.HBox(False, 2)
