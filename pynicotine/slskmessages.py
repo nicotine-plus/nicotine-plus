@@ -436,7 +436,7 @@ class Login(ServerMessage):
         return message
 
     def parseNetworkMessage(self, message):
-        pos, self.success = 1, ord(message[0])
+        pos, self.success = 1, (ord(message[0]) if isinstance(message[0], str) else message[0])
         if not self.success:
             pos, self.reason = self.getObject(message, bytes, pos)
 
@@ -496,7 +496,7 @@ class GetPeerAddress(ServerMessage):
     def parseNetworkMessage(self, message):
         pos, self.user = self.getObject(message, bytes)
         import socket
-        pos, self.ip = pos+4, socket.inet_ntoa(self.strrev(message[pos:pos+4]))
+        pos, self.ip = pos+4, socket.inet_ntoa(message[pos+4:pos:-1])
         pos, self.port = self.getObject(message, int, pos, 1)
 
 
@@ -1426,7 +1426,7 @@ class CantConnectToPeer(ServerMessage):
 class ServerPing(ServerMessage):
     """ Message 32 """
     def makeNetworkMessage(self):
-        return ""
+        return b""
 
     def parseNetworkMessage(self, message):
         pass
@@ -2074,7 +2074,7 @@ class HaveNoParent(ServerMessage):  # 71
         self.noparent = noparent
 
     def makeNetworkMessage(self):
-        return chr(self.noparent)
+        return bytes((self.noparent,))
 
 
 class DistribAlive(DistribMessage):
@@ -2186,13 +2186,14 @@ class NetInfo(ServerMessage):
     def __init__(self):
         pass
 
-    def parseNetworkMessage(self, message):
+    def parseNetworkMessage(self, message: bytes):
         self.list = {}
         pos, num = self.getObject(message, int)
         for i in range(num):
             pos, username = self.getObject(message, bytes, pos)
             import socket
-            pos, ip = pos+4, socket.inet_ntoa(self.strrev(message[pos:pos+4]))
+            # pos, ip = pos+4, socket.inet_ntoa(self.strrev(message[pos:pos+4]))
+            pos, ip = pos+4, socket.inet_ntoa(message[pos+4:pos:-1])
             pos, port = self.getObject(message, int, pos)
             self.list[username] = (ip, port)
 
