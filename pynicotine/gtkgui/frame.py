@@ -397,9 +397,9 @@ class NicotineFrame:
                 label_tab.add(img_label)
 
                 # Set tab icons, angle and text color
-                label_tab.child.show_image(config["ui"]["tab_icons"])
-                label_tab.child.set_angle(config["ui"]["labelmain"])
-                label_tab.child.set_text_color(0)
+                img_label.show_image(config["ui"]["tab_icons"])
+                img_label.set_angle(config["ui"]["labelmain"])
+                img_label.set_text_color(0)
 
                 # Set the menu to hide the tab
                 eventbox_name = gtk.Buildable.get_name(label_tab)
@@ -417,19 +417,19 @@ class NicotineFrame:
                 popup.set_user(map_tablabels_to_box[label_tab])
 
         self.LogScrolledWindow = gtk.ScrolledWindow()
-        self.LogScrolledWindow.set_shadow_type(gtk.SHADOW_IN)
-        self.LogScrolledWindow.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+        self.LogScrolledWindow.set_shadow_type(gtk.ShadowType.IN)
+        self.LogScrolledWindow.set_policy(gtk.PolicyType.AUTOMATIC, gtk.PolicyType.AUTOMATIC)
         self.LogScrolledWindow.show()
 
         self.LogWindow = gtk.TextView()
-        self.LogWindow.set_wrap_mode(gtk.WRAP_WORD)
+        self.LogWindow.set_wrap_mode(gtk.WrapMode.WORD)
         self.LogWindow.set_cursor_visible(False)
         self.LogWindow.set_editable(False)
 
         self.LogScrolledWindow.add(self.LogWindow)
         self.LogWindow.connect("button-press-event", self.OnPopupLogMenu)
 
-        self.debugLogBox.pack_start(self.LogScrolledWindow)
+        self.debugLogBox.pack_start(self.LogScrolledWindow, False, False, 0)
         self.debugWarnings.set_active((1 in config["logging"]["debugmodes"]))
         self.debugSearches.set_active((2 in config["logging"]["debugmodes"]))
         self.debugConnections.set_active((3 in config["logging"]["debugmodes"]))
@@ -2439,7 +2439,7 @@ class NicotineFrame:
         button.connect_object("clicked", callback, "")
         button.show()
 
-        Alignment = gtk.Alignment(0.5, 0.5, 0, 0)
+        Alignment = gtk.Alignment(xalign=0.5, yalign=0.5, xscale=0, yscale=0)
         Alignment.show()
 
         Hbox = gtk.HBox(False, 2)

@@ -464,9 +464,9 @@ class ImageLabel(gtk.HBox):
         self.add(self.Box)
         self.Box.show()
 
-        self.Box.pack_start(self.statusimage, False, False)
-        self.Box.pack_start(self.label, True, True)
-        self.Box.pack_start(self.image, False, False)
+        self.Box.pack_start(self.statusimage, False, False, 0)
+        self.Box.pack_start(self.label, True, True, 0)
+        self.Box.pack_start(self.image, False, False, 0)
 
         if self.closebutton and self.onclose is not None:
             self._add_close_button()

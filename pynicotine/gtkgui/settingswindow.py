@@ -299,7 +299,7 @@ class DownloadsFrame(buildFrame):
             render.connect('toggled', self.cell_toggle_callback, self.filterlist, 1)
 
         self.FilterView.set_model(self.filterlist)
-        self.FilterView.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
+        self.FilterView.get_selection().set_mode(gtk.SelectionMode.MULTIPLE)
 
         self.DownloadFilters.connect("activate", self.OnExpand)
 
@@ -625,7 +625,7 @@ class SharesFrame(buildFrame):
         )
 
         self.Shares.set_model(self.shareslist)
-        self.Shares.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
+        self.Shares.get_selection().set_mode(gtk.SelectionMode.MULTIPLE)
 
         bcolumns = InitialiseColumns(
             self.BuddyShares,
@@ -635,7 +635,7 @@ class SharesFrame(buildFrame):
         )
 
         self.BuddyShares.set_model(self.bshareslist)
-        self.BuddyShares.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
+        self.BuddyShares.get_selection().set_mode(gtk.SelectionMode.MULTIPLE)
 
         self.options = {
             "transfers": {
@@ -1251,7 +1251,7 @@ class IgnoreFrame(buildFrame):
         column = gtk.TreeViewColumn(_("Users"), gtk.CellRendererText(), text=0)
         self.IgnoredUsers.append_column(column)
         self.IgnoredUsers.set_model(self.ignorelist)
-        self.IgnoredUsers.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
+        self.IgnoredUsers.get_selection().set_mode(gtk.SelectionMode.MULTIPLE)
 
         self.ignored_ips = {}
         self.ignored_ips_list = gtk.ListStore(str, str)
@@ -1264,7 +1264,7 @@ class IgnoreFrame(buildFrame):
         cols[1].set_sort_column_id(1)
 
         self.IgnoredIPs.set_model(self.ignored_ips_list)
-        self.IgnoredIPs.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
+        self.IgnoredIPs.get_selection().set_mode(gtk.SelectionMode.MULTIPLE)
 
     def SetSettings(self, config):
         server = config["server"]
@@ -1382,7 +1382,7 @@ class BanFrame(buildFrame):
         column = gtk.TreeViewColumn(_("Users"), gtk.CellRendererText(), text=0)
         self.Banned.append_column(column)
         self.Banned.set_model(self.banlist)
-        self.Banned.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
+        self.Banned.get_selection().set_mode(gtk.SelectionMode.MULTIPLE)
 
         self.blocked = {}
         self.blockedlist = gtk.ListStore(str, str)
@@ -1395,7 +1395,7 @@ class BanFrame(buildFrame):
         cols[1].set_sort_column_id(1)
 
         self.Blocked.set_model(self.blockedlist)
-        self.Blocked.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
+        self.Blocked.get_selection().set_mode(gtk.SelectionMode.MULTIPLE)
 
     def SetSettings(self, config):
         server = config["server"]
