@@ -1,5 +1,13 @@
 # Nicotine+
 
+## Notes porting to Python 3
+
+* sudo apt install libcairo2-dev libgirepository1.0-dev
+* pip install pygobject
+* pip install mutagen
+
+## Intro
+
 A graphical client for the SoulSeek peer-to-peer system.
 
 Nicotine+ is an attempt to keep Nicotine working with the latest libraries,
