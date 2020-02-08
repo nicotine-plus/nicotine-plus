@@ -15,6 +15,7 @@ MANIFEST
 build/
 dist/
 
-# Ignore IDE and emacs files
+# Ignore IDE, emacs and other system files
 \#*#
 .idea
+.venv
