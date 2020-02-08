@@ -197,13 +197,13 @@ def InitialiseColumns(treeview, *args):
 
         if c[1] == -1:
             column.set_resizable(False)
-            column.set_sizing(gtk.TREE_VIEW_COLUMN_AUTOSIZE)
+            column.set_sizing(gtk.TreeViewColumnSizing.AUTOSIZE)
         else:
             column.set_resizable(True)
             if c[1] == 0:
-                column.set_sizing(gtk.TREE_VIEW_COLUMN_GROW_ONLY)
+                column.set_sizing(gtk.TreeViewColumnSizing.GROW_ONLY)
             else:
-                column.set_sizing(gtk.TREE_VIEW_COLUMN_FIXED)
+                column.set_sizing(gtk.TreeViewColumnSizing.FIXED)
                 column.set_fixed_width(c[1])
             column.set_min_width(0)
 

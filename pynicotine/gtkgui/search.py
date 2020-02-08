@@ -70,9 +70,9 @@ class WishList(gtk.Dialog):
         self.vbox.pack_start(self.WishLabel, False, True, 0)
 
         self.WishScrollWin = gtk.ScrolledWindow()
-        self.WishScrollWin.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+        self.WishScrollWin.set_policy(gtk.PolicyType.AUTOMATIC, gtk.PolicyType.AUTOMATIC)
         self.WishScrollWin.show()
-        self.WishScrollWin.set_shadow_type(gtk.SHADOW_IN)
+        self.WishScrollWin.set_shadow_type(gtk.ShadowType.IN)
 
         self.WishlistView = gtk.TreeView()
         self.WishlistView.show()
