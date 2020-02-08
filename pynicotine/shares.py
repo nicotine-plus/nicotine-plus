@@ -54,9 +54,9 @@ class Shares:
         self.CompressShares("buddy")
         self.requestedShares = {}
         self.newbuddyshares = self.newnormalshares = False
-        self.translatepunctuation = string.maketrans(
+        self.translatepunctuation = str.maketrans(
             string.punctuation,
-            string.join([' ' for i in string.punctuation], '')
+            ''.join([' ' for i in string.punctuation])
         )
 
     def real2virtual(self, path):
