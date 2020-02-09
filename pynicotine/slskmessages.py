@@ -425,6 +425,9 @@ class Login(ServerMessage):
         self.version = version
         self.ip = None
 
+    def __repr__(self):
+        return f"Login({self.username}, {self.passwd}, {self.version}, {self.ip})"
+
     def makeNetworkMessage(self):
 
         m = hashlib.md5()
@@ -476,6 +479,9 @@ class SetWaitPort(ServerMessage):
     """ Send this to server to indicate port number that we listen on."""
     def __init__(self, port=None):
         self.port = port
+
+    def __repr__(self):
+        return f"SetWaitPort({self.port})"
 
     def makeNetworkMessage(self):
         return self.packObject(NetworkIntType(self.port))
