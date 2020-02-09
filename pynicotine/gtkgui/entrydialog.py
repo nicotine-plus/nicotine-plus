@@ -780,12 +780,12 @@ class OptionDialog(gtk.Dialog):
                 Label.show()
                 Hbox.pack_start(Label, False, False, 0)
 
-            tray_button = self.add_button("", gtk.RESPONSE_REJECT)
+            tray_button = self.add_button("", gtk.ResponseType.REJECT)
             tray_button.remove(tray_button.get_child())
             tray_button.add(Alignment)
 
-        cancel_button = self.add_button(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL)
-        ok_button = self.add_button(gtk.STOCK_OK, gtk.RESPONSE_OK)
+        cancel_button = self.add_button(gtk.STOCK_CANCEL, gtk.ResponseType.CANCEL)
+        ok_button = self.add_button(gtk.STOCK_OK, gtk.ResponseType.OK)
         ok_button.grab_default()
 
     def quit(self, *args):
