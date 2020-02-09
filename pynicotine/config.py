@@ -773,7 +773,7 @@ class Config:
         tmpfile = realfile + '.tmp'
         backupfile = realfile + ' .backup'
         try:
-            handle = open(tmpfile, 'w')
+            handle = open(tmpfile, 'wb')
         except Exception as inst:
             log.addwarning(_("Something went wrong while opening your transfer list: %(error)s") % {'error': str(inst)})
         else:
