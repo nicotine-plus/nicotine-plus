@@ -388,7 +388,7 @@ class UserList:
             user = self.UserList.get_model().get_value(self.UserList.get_model().get_iter(path), 2)
 
             if event.button != 3:
-                if event.type == Gdk._2BUTTON_PRESS:
+                if event.type == Gdk.EventType._2BUTTON_PRESS:
                     self.frame.privatechats.SendMessage(user, None, 1)
                     self.frame.ChangeMainPage(None, "private")
                 return

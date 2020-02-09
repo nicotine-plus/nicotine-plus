@@ -990,7 +990,6 @@ class NicotineFrame:
 
         self.recommendationusers = {}
         self.recommendationuserslist = gtk.ListStore(
-            # GdkPixbuf.get_type(),
             gobject.TYPE_GTYPE,
             gobject.TYPE_STRING,
             gobject.TYPE_STRING,
@@ -1030,10 +1029,10 @@ class NicotineFrame:
 
     def folder_download_response(self, dialog, response, data):
 
-        if response == gtk.RESPONSE_CANCEL:
+        if response == gtk.ResponseType.CANCEL:
             dialog.destroy()
             return
-        elif response == gtk.RESPONSE_OK:
+        elif response == gtk.ResponseType.OK:
             dialog.destroy()
             self.np.transfers.FolderContentsResponse(data)
 
@@ -1041,7 +1040,7 @@ class NicotineFrame:
         checkbox = dialog.checkbox.get_active()
         dialog.destroy()
 
-        if response == gtk.RESPONSE_OK:
+        if response == gtk.ResponseType.OK:
 
             if checkbox:
                 self.np.config.sections["ui"]["exitdialog"] = 0
@@ -1053,10 +1052,10 @@ class NicotineFrame:
 
             gtk.main_quit()
 
-        elif response == gtk.RESPONSE_CANCEL:
+        elif response == gtk.ResponseType.CANCEL:
             pass
 
-        elif response == gtk.RESPONSE_REJECT:
+        elif response == gtk.ResponseType.REJECT:
             if checkbox:
                 self.np.config.sections["ui"]["exitdialog"] = 2
             if self.is_mapped:
@@ -1066,7 +1065,7 @@ class NicotineFrame:
     def on_clear_response(self, dialog, response, direction):
         dialog.destroy()
 
-        if response == gtk.RESPONSE_OK:
+        if response == gtk.ResponseType.OK:
             if direction == "down":
                 self.downloads.ClearTransfers(["Queued"])
             elif direction == "up":
@@ -1074,7 +1073,7 @@ class NicotineFrame:
 
     def onOpenRoomList(self, dialog, response):
         dialog.destroy()
-        if response == gtk.RESPONSE_OK:
+        if response == gtk.ResponseType.OK:
             self.show_room_list1.set_active(True)
 
     def OnGetUserInfo(self, widget):
@@ -1203,7 +1202,7 @@ class NicotineFrame:
     def button_press(self, widget, event):
         try:
 
-            if event.type == Gdk.BUTTON_PRESS:
+            if event.type == Gdk.EventType.BUTTON_PRESS:
                 widget.popup(None, None, None, event.button, event.time)
 
                 # Tell calling code that we have handled this event the buck
@@ -1302,7 +1301,7 @@ class NicotineFrame:
 
     def on_tab_click(self, widget, event, id, child):
 
-        if event.type == Gdk.BUTTON_PRESS and event.button == 3:
+        if event.type == Gdk.EventType.BUTTON_PRESS and event.button == 3:
             self.__dict__[id].popup(None, None, None, event.button, event.time)
 
         pass
@@ -3107,7 +3106,7 @@ class NicotineFrame:
         path, column, x, y = d
         user = self.recommendationuserslist.get_value(self.recommendationuserslist.get_iter(path), 1)
         if event.button != 3:
-            if event.type == Gdk._2BUTTON_PRESS:
+            if event.type == Gdk.EventType._2BUTTON_PRESS:
                 self.privatechats.SendMessage(user)
                 self.ChangeMainPage(None, "private")
             return

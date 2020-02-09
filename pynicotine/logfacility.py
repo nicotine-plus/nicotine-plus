@@ -105,12 +105,10 @@ if useconsole:
 
 
 def consolelogger(timestamp, level, msg):
-    # if level in (None,):
-    #    print "FIX MY SOURCE -- %s %s" % (time.asctime(timestamp), msg)
     if level in (1,):
         wrapper.initial_indent = time.strftime(TIMEFORMAT, timestamp)
         for i in wrapper.wrap(msg):
-            print(i.encode(CONSOLEENCODING, 'replace'))
+            print(i)
     else:
         pass
 try:

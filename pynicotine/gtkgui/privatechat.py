@@ -25,9 +25,11 @@
 import os
 import gi
 gi.require_version('Gtk', '3.0')
+gi.require_version('Gdk', '3.0')
 gi.require_version('Pango', '1.0')
 
 from gi.repository import Gtk as gtk
+from gi.repository import Gdk
 from gi.repository import GObject as gobject
 from gi.repository import Pango as pango
 
@@ -185,7 +187,7 @@ class PrivateChats(IconNotebook):
 
     def on_tab_click(self, widget, event, child):
 
-        if event.type == Gdk.BUTTON_PRESS:
+        if event.type == Gdk.EventType.BUTTON_PRESS:
 
             n = self.page_num(child)
             page = self.get_nth_page(n)
@@ -476,7 +478,7 @@ class PrivateChat:
 
     def OnPopupMenu(self, widget, event):
 
-        if event.type == Gdk.BUTTON_PRESS and event.button == 3:
+        if event.type == Gdk.EventType.BUTTON_PRESS and event.button == 3:
 
             self.popup_menu.popup(None, None, None, event.button, event.time)
             self.ChatScroll.emit_stop_by_name("button_press_event")

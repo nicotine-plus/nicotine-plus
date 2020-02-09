@@ -172,7 +172,7 @@ class UserTabs(IconNotebook):
 
     def on_tab_click(self, widget, event, child):
 
-        if event.type == Gdk.BUTTON_PRESS:
+        if event.type == Gdk.EventType.BUTTON_PRESS:
 
             n = self.page_num(child)
             page = self.get_nth_page(n)
@@ -561,7 +561,7 @@ class UserInfo:
 
     def OnImageClick(self, widget, event):
 
-        if event.type != Gdk.BUTTON_PRESS or event.button != 3:
+        if event.type != Gdk.EventType.BUTTON_PRESS or event.button != 3:
             return False
 
         act = True

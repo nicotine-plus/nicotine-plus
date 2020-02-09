@@ -26,8 +26,10 @@
 import gi
 gi.require_version('Pango', '1.0')
 gi.require_version('Gtk', '3.0')
+gi.require_version('Gdk', '3.0')
 
 from gi.repository import Gtk as gtk
+from gi.repository import Gdk
 from gi.repository import GObject as gobject
 from gi.repository import Pango as pango
 import time
@@ -266,7 +268,7 @@ def ScrollBottom(widget):
 
 
 def UrlEvent(tag, widget, event, iter, url):
-    if tag.last_event_type == Gdk.BUTTON_PRESS and event.type == Gdk.BUTTON_RELEASE and event.button == 1:
+    if tag.last_event_type == Gdk.EventType.BUTTON_PRESS and event.type == Gdk.EventType.BUTTON_RELEASE and event.button == 1:
         if url[:4] == "www.":
             url = "http://" + url
         OpenUri(url)
@@ -706,7 +708,7 @@ class IconNotebook:
 
         eventbox.add(label_tab)
         eventbox.show()
-        eventbox.set_events(Gdk.BUTTON_PRESS_MASK)
+        eventbox.set_events(Gdk.EventType.BUTTON_PRESS_MASK)
         eventbox.connect('button_press_event', self.on_tab_click, page)
 
         gtk.Notebook.append_page_menu(self.Notebook, page, eventbox, label_tab_menu)
@@ -777,7 +779,7 @@ class IconNotebook:
 
         eventbox.add(label_tab)
         eventbox.show()
-        eventbox.set_events(Gdk.BUTTON_PRESS_MASK)
+        eventbox.set_events(Gdk.EventType.BUTTON_PRESS_MASK)
         eventbox.connect('button_press_event', self.on_tab_click, page)
 
         gtk.Notebook.append_page_menu(self.Notebook, pagewidget, eventbox, label_tab_menu)

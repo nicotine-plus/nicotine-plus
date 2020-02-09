@@ -24,8 +24,10 @@
 
 import gi
 gi.require_version('Gtk', '3.0')
+gi.require_version('Gdk', '3.0')
 
 from gi.repository import Gtk as gtk
+from gi.repository import Gdk
 from gi.repository import GObject as gobject
 
 import os
@@ -542,7 +544,7 @@ class Searches(IconNotebook):
 
     def on_tab_click(self, widget, event, child):
 
-        if event.type == Gdk.BUTTON_PRESS:
+        if event.type == Gdk.EventType.BUTTON_PRESS:
 
             id = None
             n = self.page_num(child)
@@ -1452,7 +1454,7 @@ class Search:
 
     def OnListClicked(self, widget, event):
 
-        if event.button == 1 and event.type == Gdk._2BUTTON_PRESS:
+        if event.button == 1 and event.type == Gdk.EventType._2BUTTON_PRESS:
             self.select_results()
             self.OnDownloadFiles(widget)
             self.ResultsList.get_selection().unselect_all()
