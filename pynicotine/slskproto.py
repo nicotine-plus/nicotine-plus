@@ -81,7 +81,7 @@ class Connection:
 	addr is (ip, port) pair, ibuf and obuf are input and output msgBuffer,
 	init is a PeerInit object (see slskmessages docstrings).
 	"""
-	def __init__(self, conn = None, addr = None, ibuf = "", obuf = ""):
+	def __init__(self, conn = None, addr = None, ibuf = b"", obuf = b""):
 		self.conn = conn
 		self.addr = addr
 		self.ibuf = ibuf
@@ -93,12 +93,12 @@ class ServerConnection(Connection):
 	"""
 	Server socket
 	"""
-	def __init__(self, conn = None, addr = None, ibuf = "", obuf = ""):
+	def __init__(self, conn = None, addr = None, ibuf = b"", obuf = b""):
 		Connection.__init__(self, conn, addr, ibuf, obuf)
 		self.lastping = time.time()
 
 class PeerConnection(Connection):
-	def __init__(self, conn = None, addr = None, ibuf = "", obuf = "", init = None):
+	def __init__(self, conn = None, addr = None, ibuf = b"", obuf = b"", init = None):
 		Connection.__init__(self, conn, addr, ibuf, obuf)
 		self.filereq = None
 		self.filedown = None
@@ -668,6 +668,7 @@ class SlskProtoThread(threading.Thread):
 		if limit is None:
 			# Unlimited download data
 			data = i.recv(conns[i].lastreadlength)
+			print(type(conns[i].ibuf), type(data))
 			conns[i].ibuf = conns[i].ibuf + data
 			if len(data) >= conns[i].lastreadlength//2:
 				conns[i].lastreadlength = conns[i].lastreadlength * 2 

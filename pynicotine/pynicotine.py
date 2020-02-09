@@ -450,7 +450,8 @@ class NetworkEventProcessor:
         if networkenc is None:
             networkenc = self.config.sections["server"]["enc"]
 
-        return str(string).decode(networkenc, 'replace').encode("utf-8", "replace")
+        # return string.decode(networkenc, 'replace').encode("utf-8", "replace")
+        return string.encode("utf-8", "replace")
 
     def getencodings(self):
 

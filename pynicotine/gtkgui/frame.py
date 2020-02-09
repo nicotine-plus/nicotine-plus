@@ -1331,7 +1331,7 @@ class NicotineFrame:
 
     def OnKeyPress(self, widget, event):
         self.OnButtonPress(None, None)
-        if event.state & (Gdk.MOD1_MASK | Gdk.CONTROL_MASK) != Gdk.MOD1_MASK:
+        if event.state & (Gdk.ModifierType.MOD1_MASK | Gdk.ModifierType.CONTROL_MASK) != Gdk.ModifierType.MOD1_MASK:
             return False
         for i in range(1, 10):
             if event.keyval == Gdk.keyval_from_name(str(i)):

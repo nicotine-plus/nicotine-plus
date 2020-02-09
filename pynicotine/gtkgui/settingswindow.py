@@ -1207,7 +1207,7 @@ class UserinfoFrame(buildFrame):
         start = buffer.get_start_iter()
         end = buffer.get_end_iter()
 
-        descr = buffer.get_text(start, end).replace("; ", ", ").__repr__()
+        descr = buffer.get_text(start, end, True).replace("; ", ", ").__repr__()
 
         if self.Image.get_filename() is not None:
             pic = recode2(self.Image.get_filename())
@@ -3534,7 +3534,7 @@ class SettingsWindow:
     def OnKeyPress(self, widget, event):
 
         # Close the window when escape is pressed
-        if event.keyval == gtk.keysyms.Escape:
+        if event.keyval == Gdk.KEY_Escape:
             self.OnCancel(widget)
 
     def GetPosition(self, combobox, option):

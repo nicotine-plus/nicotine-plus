@@ -22,8 +22,10 @@
 
 import gi
 gi.require_version('Gtk', '3.0')
+gi.require_version('Gdk', '3.0')
 
 from gi.repository import Gtk as gtk
+from gi.repository import Gdk
 from gi.repository import GObject as gobject
 
 
@@ -253,7 +255,7 @@ class MetaDialog(gtk.Dialog):
             _("Close")
         )
 
-        button.set_flags(gtk.CAN_DEFAULT)
+        button.props.can_default = True
         self.action_area.pack_start(button, False, False, 0)
 
         button.grab_default()
@@ -463,13 +465,13 @@ class EntryDialog(gtk.Dialog):
             label.show()
 
         self.combo_List = gtk.ListStore(gobject.TYPE_STRING)
-        self.combo = gtk.combo_box_new_with_model_and_entry(model=self.combo_List)
+        self.combo = gtk.ComboBox.new_with_model_and_entry(model=self.combo_List)
         self.combo.set_entry_text_column(0)
 
         for i in droplist:
             self.combo_List.append([i])
 
-        self.combo.child.set_text(default_text)
+        self.combo.get_child().set_text(default_text)
 
         box.pack_start(self.combo, False, False, 0)
 
@@ -487,14 +489,14 @@ class EntryDialog(gtk.Dialog):
 
         button = gtk.Button(_("Cancel"))
         button.connect("clicked", self.quit)
-        button.set_flags(gtk.CAN_DEFAULT)
+        button.props.can_default = True
         self.action_area.pack_start(button, False, False, 0)
 
         button.show()
 
         button = gtk.Button(_("OK"))
         button.connect("clicked", self.click)
-        button.set_flags(gtk.CAN_DEFAULT)
+        button.props.can_default = True
         self.action_area.pack_start(button, False, False, 0)
 
         button.show()
@@ -513,9 +515,9 @@ class EntryDialog(gtk.Dialog):
     def click(self, button):
 
         if self.gotoption:
-            self.ret = [self.combo.child.get_text(), self.option.get_active()]
+            self.ret = [self.combo.get_child().get_text(), self.option.get_active()]
         else:
-            self.ret = self.combo.child.get_text()
+            self.ret = self.combo.get_child().get_text()
 
         self.quit()
 
@@ -532,7 +534,10 @@ def input_box(frame, title="Input Box", message="", default_text="",
 
     win.set_title(title)
     win.set_icon(frame.images["n"])
-    gtk.Window.set_geometry_hints(win, min_width=300)
+
+    hints_geometry = Gdk.Geometry()
+    hints_geometry.min_width = 300
+    win.set_geometry_hints(None, hints_geometry, Gdk.WindowHints(Gdk.WindowHints.MIN_SIZE))
     win.show()
 
     gtk.main()
@@ -598,7 +603,7 @@ class FindDialog(gtk.Dialog):
             self.quit,
             _("Cancel")
         )
-        Cancelbutton.set_flags(gtk.CAN_DEFAULT)
+        Cancelbutton.props.can_default = True
         self.action_area.pack_start(Cancelbutton, False, False, 0)
 
         Previousbutton = self.nicotine.CreateIconButton(
@@ -607,7 +612,7 @@ class FindDialog(gtk.Dialog):
             self.previous,
             _("Previous")
         )
-        Previousbutton.set_flags(gtk.CAN_DEFAULT)
+        Previousbutton.props.can_default = True
         self.action_area.pack_start(Previousbutton, False, False, 0)
 
         Nextbutton = self.nicotine.CreateIconButton(
@@ -616,7 +621,7 @@ class FindDialog(gtk.Dialog):
             self.__next__,
             _("Next")
         )
-        Nextbutton.set_flags(gtk.CAN_DEFAULT)
+        Nextbutton.props.can_default = True
         self.action_area.pack_start(Nextbutton, False, False, 0)
         Nextbutton.grab_default()
 
