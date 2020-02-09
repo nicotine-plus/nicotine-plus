@@ -421,13 +421,12 @@ class FastConfigureAssistant(object):
 
             if directory[1] == self.sharelist.get_value(iter, 6):
 
-                # self.sharelist.insert_after(iter, [
                 self.sharelist.insert(0, [
                     directory[0],
                     recode(directory[1]),
                     HumanSize(size),
-                    files,
-                    subdirs,
+                    str(files),
+                    str(subdirs),
                     extensions,
                     directory[1]
                 ])
