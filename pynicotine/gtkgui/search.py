@@ -24,6 +24,7 @@
 
 import gi
 gi.require_version('Gtk', '3.0')
+gi.require_version('Gdk', '3.0')
 
 from gi.repository import Gtk as gtk
 from gi.repository import Gdk
@@ -640,7 +641,7 @@ class Search:
             str,  # immediatedl
             str,  # h_bitrate
             str,  # length
-            Gdk.Pixbuf,  # self.get_flag(user, country)
+            gobject.TYPE_GTYPE,  # self.get_flag(user, country)
             str,  # directory
             int,  # bitrate
             str,  # fullpath
