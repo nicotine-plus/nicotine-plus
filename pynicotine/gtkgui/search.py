@@ -542,7 +542,7 @@ class Searches(IconNotebook):
 
     def on_tab_click(self, widget, event, child):
 
-        if event.type == gtk.gdk.BUTTON_PRESS:
+        if event.type == Gdk.BUTTON_PRESS:
 
             id = None
             n = self.page_num(child)
@@ -639,7 +639,7 @@ class Search:
             str,  # immediatedl
             str,  # h_bitrate
             str,  # length
-            gtk.gdk.Pixbuf,  # self.get_flag(user, country)
+            Gdk.Pixbuf,  # self.get_flag(user, country)
             str,  # directory
             int,  # bitrate
             str,  # fullpath
@@ -1452,7 +1452,7 @@ class Search:
 
     def OnListClicked(self, widget, event):
 
-        if event.button == 1 and event.type == gtk.gdk._2BUTTON_PRESS:
+        if event.button == 1 and event.type == Gdk._2BUTTON_PRESS:
             self.select_results()
             self.OnDownloadFiles(widget)
             self.ResultsList.get_selection().unselect_all()

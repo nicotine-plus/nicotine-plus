@@ -24,8 +24,10 @@
 
 import gi
 gi.require_version('Gtk', '3.0')
+gi.require_version('Gdk', '3.0')
 
 from gi.repository import Gtk as gtk
+from gi.repository import Gdk
 from gi.repository import GObject as gobject
 
 import time
@@ -62,15 +64,15 @@ class UserList:
         builder.connect_signals(self)
 
         TARGETS = [('text/plain', 0, 1)]
-        self.UserList.enable_model_drag_source(gtk.gdk.BUTTON1_MASK, TARGETS, gtk.gdk.ACTION_COPY)
-        self.UserList.enable_model_drag_dest(TARGETS, gtk.gdk.ACTION_COPY)
+        self.UserList.enable_model_drag_source(Gdk.ModifierType.BUTTON1_MASK, TARGETS, Gdk.DragAction.COPY)
+        self.UserList.enable_model_drag_dest(TARGETS, Gdk.DragAction.COPY)
         self.UserList.connect("drag_data_get", self.buddylist_drag_data_get_data)
         self.UserList.connect("drag_data_received", self.DragUserToBuddylist)
 
         self.userlist = []
 
         self.usersmodel = gtk.ListStore(
-            gtk.gdk.Pixbuf, gtk.gdk.Pixbuf, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_BOOLEAN,
+            gobject.TYPE_GTYPE, gobject.TYPE_GTYPE, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_BOOLEAN,
             gobject.TYPE_BOOLEAN, gobject.TYPE_BOOLEAN, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_INT, gobject.TYPE_INT,
             gobject.TYPE_INT, gobject.TYPE_INT, gobject.TYPE_STRING
         )
@@ -119,16 +121,16 @@ class UserList:
             cols[1].set_visible(0)
             config["columns"]["userlist"][1] = 0
 
-        for render in self.col_trusted.get_cell_renderers():
+        for render in self.col_trusted.get_cells():
             render.connect('toggled', self.cell_toggle_callback, self.UserList, 5)
 
-        for render in self.col_notify.get_cell_renderers():
+        for render in self.col_notify.get_cells():
             render.connect('toggled', self.cell_toggle_callback, self.UserList, 6)
 
-        for render in self.col_privileged.get_cell_renderers():
+        for render in self.col_privileged.get_cells():
             render.connect('toggled', self.cell_toggle_callback, self.UserList, 7)
 
-        renderers = self.col_comments.get_cell_renderers()
+        renderers = self.col_comments.get_cells()
 
         for render in renderers:
             render.connect('edited', self.cell_edited_callback, self.UserList, 9)
@@ -187,10 +189,11 @@ class UserList:
                 if trusted:
                     self.trusted.append(user[0])
 
-            iter = self.usersmodel.append(row)
+            # iter = self.usersmodel.append(row)
+            iter = self.usersmodel.insert(0, row)
             self.userlist.append([user[0], user[1], last_seen, iter, flag])
 
-        self.usersmodel.set_sort_column_id(2, gtk.SORT_ASCENDING)
+        self.usersmodel.set_sort_column_id(2, gtk.SortType.ASCENDING)
         self.Popup_Menu_PrivateRooms = PopupMenu(self.frame)
         self.popup_menu = popup = PopupMenu(frame)
 
@@ -385,7 +388,7 @@ class UserList:
             user = self.UserList.get_model().get_value(self.UserList.get_model().get_iter(path), 2)
 
             if event.button != 3:
-                if event.type == gtk.gdk._2BUTTON_PRESS:
+                if event.type == Gdk._2BUTTON_PRESS:
                     self.frame.privatechats.SendMessage(user, None, 1)
                     self.frame.ChangeMainPage(None, "private")
                 return

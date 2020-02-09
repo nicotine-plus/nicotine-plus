@@ -24,9 +24,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import gi
-gi.require_version('Gtk', '3.0')
+gi.require_version('Gdk', '3.0')
 
-from gi.repository import Gtk as gtk
+from gi.repository import Gdk
 from gi.repository import GObject as gobject
 from gi.repository import Gio as gio
 
@@ -291,7 +291,7 @@ class DownloadsFrame(buildFrame):
 
         cols[0].set_sort_column_id(0)
         cols[1].set_sort_column_id(1)
-        renderers = cols[1].get_cell_renderers()
+        renderers = cols[1].get_cells()
 
         for render in renderers:
             render.connect('toggled', self.cell_toggle_callback, self.filterlist, 1)
@@ -1571,10 +1571,10 @@ class SoundsFrame(buildFrame):
         self.RoomMessage.set_text("In %(room)s, %(user)s said %(message)s")
 
     def DefaultTTS(self, widget):
-        self.TTSCommand.child.set_text("flite -t \"%s\"")
+        self.TTSCommand.get_child().set_text("flite -t \"%s\"")
 
     def DefaultSound(self, widget):
-        self.SoundCommand.child.set_text("play -q")
+        self.SoundCommand.get_child().set_text("play -q")
 
     def OnTextToSpeechToggled(self, widget):
 
@@ -1608,7 +1608,7 @@ class SoundsFrame(buildFrame):
 
     def GetSettings(self):
 
-        soundcommand = self.SoundCommand.child.get_text()
+        soundcommand = self.SoundCommand.get_child().get_text()
 
         if soundcommand == "Gstreamer (gst-python)":
 
@@ -1634,12 +1634,12 @@ class SoundsFrame(buildFrame):
                 "soundtheme": soundtheme,
                 "soundenabled": self.SoundCheck.get_active(),
                 "speechenabled": self.TextToSpeech.get_active(),
-                "speechcommand": self.TTSCommand.child.get_text(),
+                "speechcommand": self.TTSCommand.get_child().get_text(),
                 "speechrooms": self.RoomMessage.get_text(),
                 "speechprivate": self.PrivateMessage.get_text()
             },
             "players": {
-                "default": self.audioPlayerCombo.child.get_text()
+                "default": self.audioPlayerCombo.get_child().get_text()
             },
         }
 
@@ -1878,11 +1878,11 @@ class ColoursFrame(buildFrame):
                     drawingarea = self.colorsd[key][option]
 
                     try:
-                        colour = gtk.gdk.color_parse(config[key][option])
+                        colour = Gdk.color_parse(config[key][option])
                     except:
                         colour = None
 
-                    drawingarea.modify_bg(gtk.STATE_NORMAL, colour)
+                    drawingarea.modify_bg(gtk.StateType.NORMAL, colour)
                     break
 
         self.ToggledAwayColours(self.DisplayAwayColours)
@@ -1953,7 +1953,7 @@ class ColoursFrame(buildFrame):
                 elif type(widget) is gtk.CheckButton:
                     widget.set_active(defaults[key][option])
                 elif type(widget) is gtk.ComboBox:
-                    widget.child.set_text(defaults[key][option])
+                    widget.get_child().set_text(defaults[key][option])
 
         for key, value in list(self.colorsd.items()):
 
@@ -1962,7 +1962,7 @@ class ColoursFrame(buildFrame):
                 drawingarea = self.colorsd[key][option]
 
                 try:
-                    colour = gtk.gdk.color_parse(defaults[key][option])
+                    colour = Gdk.color_parse(defaults[key][option])
                 except:
                     colour = None
 
@@ -1984,7 +1984,7 @@ class ColoursFrame(buildFrame):
                     elif type(widget) is gtk.CheckButton:
                         widget.set_active(0)
                     elif type(widget) is gtk.ComboBox:
-                        widget.child.set_text("")
+                        widget.get_child().set_text("")
 
             for section, value in list(self.colorsd.items()):
                 if option in value:
@@ -2017,7 +2017,7 @@ class ColoursFrame(buildFrame):
 
         if colour is not None and colour != '':
             try:
-                colour = gtk.gdk.color_parse(colour)
+                colour = Gdk.color_parse(colour)
             except:
                 dlg.destroy()
                 return
@@ -2531,7 +2531,7 @@ class EventsFrame(buildFrame):
                 "upload_doubleclick": self.UploadDoubleClick.get_active()
             },
             "ui": {
-                "filemanager": self.FileManagerCombo.child.get_text()
+                "filemanager": self.FileManagerCombo.get_child().get_text()
             }
         }
 
@@ -2571,7 +2571,7 @@ class UrlCatchFrame(buildFrame):
         self.ProtocolHandlers.set_model(self.protocolmodel)
         self.ProtocolHandlers.get_selection().connect("changed", self.OnSelect)
 
-        renderers = cols[1].get_cell_renderers()
+        renderers = cols[1].get_cells()
         for render in renderers:
             render.connect('edited', self.cell_edited_callback, self.ProtocolHandlers, 1)
 
@@ -2592,7 +2592,7 @@ class UrlCatchFrame(buildFrame):
         self.Handler.set_model(self.handlermodel)
         self.Handler.set_entry_text_column(0)
 
-        renderers = cols[1].get_cell_renderers()
+        renderers = cols[1].get_cells()
         for render in renderers:
             render.set_property("model", self.handlermodel)
 
@@ -2675,17 +2675,17 @@ class UrlCatchFrame(buildFrame):
         model, iter = selection.get_selected()
 
         if iter is None:
-            self.ProtocolCombo.child.set_text("")
+            self.ProtocolCombo.get_child().set_text("")
         else:
             protocol = model.get_value(iter, 0)
             handler = model.get_value(iter, 1)
-            self.ProtocolCombo.child.set_text(protocol)
-            self.Handler.child.set_text(handler)
+            self.ProtocolCombo.get_child().set_text(protocol)
+            self.Handler.get_child().set_text(handler)
 
     def OnAdd(self, widget):
 
-        protocol = self.ProtocolCombo.child.get_text()
-        command = self.Handler.child.get_text()
+        protocol = self.ProtocolCombo.get_child().get_text()
+        command = self.Handler.get_child().get_text()
 
         if protocol in self.protocols:
             iter = self.protocols[protocol]
@@ -2744,7 +2744,7 @@ class CensorFrame(buildFrame):
         self.CensorReplaceCombo.pack_start(cell, True)
         self.CensorReplaceCombo.add_attribute(cell, 'text', 0)
 
-        renderers = cols[0].get_cell_renderers()
+        renderers = cols[0].get_cells()
         for render in renderers:
             render.connect('edited', self.cell_edited_callback, self.CensorList, 0)
 
@@ -2851,7 +2851,7 @@ class AutoReplaceFrame(buildFrame):
         self.ReplacementList.set_model(self.replacelist)
 
         for column in cols:
-            renderers = column.get_cell_renderers()
+            renderers = column.get_cells()
             for render in renderers:
                 render.connect('edited', self.cell_edited_callback, self.ReplacementList, cols.index(column))
 
@@ -3084,7 +3084,7 @@ class buildDialog(gtk.Dialog):
         self.Main.pack_start(self.tw["box%d" % c], True, True)
         self.Main.pack_start(self.tw["vbox%d" % c], False, False)
 
-        renderers = cols[0].get_cell_renderers()
+        renderers = cols[0].get_cells()
         for render in renderers:
             render.connect('edited', self.cell_edited_callback, self.tw[name])
 
@@ -3223,7 +3223,7 @@ class PluginFrame(buildFrame):
         cols[0].set_sort_column_id(0)
         cols[1].set_sort_column_id(1)
 
-        renderers = cols[1].get_cell_renderers()
+        renderers = cols[1].get_cells()
         for render in renderers:
             render.connect('toggled', self.cell_toggle_callback, self.PluginTreeView, 1)
 

@@ -292,7 +292,7 @@ class Downloads(TransferList):
 
     def on_key_press_event(self, widget, event):
 
-        key = gtk.gdk.keyval_name(event.keyval)
+        key = Gdk.keyval_name(event.keyval)
 
         if key in ("P", "p"):
             self.OnPopupMenu(widget, event, "keyboard")
@@ -421,7 +421,7 @@ class Downloads(TransferList):
 
         if kind == "mouse":
             if event.button != 3:
-                if event.button == 1 and event.type == gtk.gdk._2BUTTON_PRESS:
+                if event.button == 1 and event.type == Gdk._2BUTTON_PRESS:
                     self.DoubleClick(event)
                 return False
 

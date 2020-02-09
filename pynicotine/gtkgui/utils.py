@@ -266,7 +266,7 @@ def ScrollBottom(widget):
 
 
 def UrlEvent(tag, widget, event, iter, url):
-    if tag.last_event_type == gtk.gdk.BUTTON_PRESS and event.type == gtk.gdk.BUTTON_RELEASE and event.button == 1:
+    if tag.last_event_type == Gdk.BUTTON_PRESS and event.type == Gdk.BUTTON_RELEASE and event.button == 1:
         if url[:4] == "www.":
             url = "http://" + url
         OpenUri(url)
@@ -311,7 +311,7 @@ def AppendLine(textview, line, tag=None, timestamp=None, showstamp=True, timesta
     def _makeurltag(buffer, tag, url):
         props = {}
 
-        props["foreground_gdk"] = gtk.gdk.color_parse(NICOTINE.np.config.sections["ui"]["urlcolor"])
+        props["foreground_gdk"] = Gdk.color_parse(NICOTINE.np.config.sections["ui"]["urlcolor"])
         props["underline"] = pango.UNDERLINE_SINGLE
         tag = buffer.create_tag(**props)
         tag.last_event_type = -1
@@ -551,7 +551,7 @@ class ImageLabel(gtk.HBox):
                 color = NICOTINE.np.config.sections["ui"]["tab_default"]
 
             try:
-                gtk.gdk.color_parse(color)
+                Gdk.color_parse(color)
             except:
                 color = ""
         else:
@@ -669,12 +669,12 @@ class IconNotebook:
 
     def OnKeyPress(self, widget, event):
 
-        if event.state & (gtk.gdk.MOD1_MASK | gtk.gdk.CONTROL_MASK) != gtk.gdk.MOD1_MASK:
+        if event.state & (Gdk.MOD1_MASK | Gdk.CONTROL_MASK) != Gdk.MOD1_MASK:
             return False
 
-        if event.keyval in [gtk.gdk.keyval_from_name("Up"), gtk.gdk.keyval_from_name("Left")]:
+        if event.keyval in [Gdk.keyval_from_name("Up"), Gdk.keyval_from_name("Left")]:
             self.prev_page()
-        elif event.keyval in [gtk.gdk.keyval_from_name("Down"), gtk.gdk.keyval_from_name("Right")]:
+        elif event.keyval in [Gdk.keyval_from_name("Down"), Gdk.keyval_from_name("Right")]:
             self.next_page()
         else:
             return False
@@ -706,7 +706,7 @@ class IconNotebook:
 
         eventbox.add(label_tab)
         eventbox.show()
-        eventbox.set_events(gtk.gdk.BUTTON_PRESS_MASK)
+        eventbox.set_events(Gdk.BUTTON_PRESS_MASK)
         eventbox.connect('button_press_event', self.on_tab_click, page)
 
         gtk.Notebook.append_page_menu(self.Notebook, page, eventbox, label_tab_menu)
@@ -777,7 +777,7 @@ class IconNotebook:
 
         eventbox.add(label_tab)
         eventbox.show()
-        eventbox.set_events(gtk.gdk.BUTTON_PRESS_MASK)
+        eventbox.set_events(Gdk.BUTTON_PRESS_MASK)
         eventbox.connect('button_press_event', self.on_tab_click, page)
 
         gtk.Notebook.append_page_menu(self.Notebook, pagewidget, eventbox, label_tab_menu)

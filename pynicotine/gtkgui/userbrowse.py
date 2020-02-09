@@ -199,7 +199,7 @@ class UserBrowse:
         cols[1].set_sort_column_id(4)
         cols[2].set_sort_column_id(2)
         cols[3].set_sort_column_id(5)
-        self.FileStore.set_sort_column_id(0, gtk.SORT_ASCENDING)
+        self.FileStore.set_sort_column_id(0, gtk.SortType.ASCENDING)
 
         for i in range(4):
             parent = cols[i].get_widget().get_ancestor(gtk.Button)
@@ -319,7 +319,7 @@ class UserBrowse:
 
     def OnFolderClicked(self, widget, event):
 
-        if event.button == 1 and event.type == gtk.gdk._2BUTTON_PRESS:
+        if event.button == 1 and event.type == Gdk._2BUTTON_PRESS:
             self.OnDownloadDirectory(widget)
             return True
         elif event.button == 3:
@@ -345,7 +345,7 @@ class UserBrowse:
 
     def OnFileClicked(self, widget, event):
 
-        if event.button == 1 and event.type == gtk.gdk._2BUTTON_PRESS:
+        if event.button == 1 and event.type == Gdk._2BUTTON_PRESS:
             self.selected_files = []
             self.FileTreeView.get_selection().selected_foreach(self.SelectedFilesCallback)
             self.OnDownloadFiles(widget)
@@ -440,7 +440,7 @@ class UserBrowse:
             self.FolderTreeView.set_model(self.DirStore)
 
             # Sort the DirStore
-            self.DirStore.set_sort_column_id(0, gtk.SORT_ASCENDING)
+            self.DirStore.set_sort_column_id(0, gtk.SortType.ASCENDING)
 
             return directory
 
@@ -507,7 +507,7 @@ class UserBrowse:
         directory = sortlist[0]
 
         # Sort the DirStore
-        self.DirStore.set_sort_column_id(0, gtk.SORT_ASCENDING)
+        self.DirStore.set_sort_column_id(0, gtk.SortType.ASCENDING)
 
         # Set the model of the treeviex
         self.FolderTreeView.set_model(self.DirStore)
@@ -632,10 +632,10 @@ class UserBrowse:
         if model.sort_col == column_id:
             order = model.sort_order
 
-            if order == gtk.SORT_ASCENDING:
+            if order == gtk.SortType.ASCENDING:
                 order = gtk.SORT_DESCENDING
             else:
-                order = gtk.SORT_ASCENDING
+                order = gtk.SortType.ASCENDING
 
             column.set_sort_order(order)
             model.sort_order = order
