@@ -22,16 +22,15 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # System imports
-# import dircache
-import gi
-gi.require_version('Gtk', '3.0')
-
-from gi.repository import GObject as gobject
-
 import string
 import sys
 import os
 import time
+
+import gi
+gi.require_version('Gtk', '3.0')
+
+from gi.repository import GObject as gobject
 
 from . import slskmessages
 from .slskmessages import NetworkIntType, NetworkLongLongType
@@ -40,6 +39,26 @@ from .utils import displayTraceback
 from . import metadata_mutagen as metadata
 
 win32 = sys.platform.startswith("win")
+
+
+class dircache:
+    """Adapted from https://raw.githubusercontent.com/python/cpython/2.7/Lib/dircache.py"""
+
+    cache = {}
+
+    @classmethod
+    def listdir(cls, path):
+        try:
+            cached_mtime, dir_list = cls.cache[path]
+            del cls.cache[path]
+        except KeyError:
+            cached_mtime, dir_list = -1, []
+        mtime = os.stat(path).st_mtime
+        if mtime != cached_mtime:
+            dir_list = os.listdir(path)
+            dir_list.sort()
+        cls.cache[path] = mtime, dir_list
+        return dir_list
 
 
 class Shares:
