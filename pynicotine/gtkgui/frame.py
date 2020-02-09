@@ -990,7 +990,6 @@ class NicotineFrame:
 
         self.recommendationusers = {}
         self.recommendationuserslist = gtk.ListStore(
-            # GdkPixbuf.get_type(),
             gobject.TYPE_GTYPE,
             gobject.TYPE_STRING,
             gobject.TYPE_STRING,
@@ -1203,7 +1202,7 @@ class NicotineFrame:
     def button_press(self, widget, event):
         try:
 
-            if event.type == Gdk.BUTTON_PRESS:
+            if event.type == Gdk.EventType.BUTTON_PRESS:
                 widget.popup(None, None, None, event.button, event.time)
 
                 # Tell calling code that we have handled this event the buck
@@ -1302,7 +1301,7 @@ class NicotineFrame:
 
     def on_tab_click(self, widget, event, id, child):
 
-        if event.type == Gdk.BUTTON_PRESS and event.button == 3:
+        if event.type == Gdk.EventType.BUTTON_PRESS and event.button == 3:
             self.__dict__[id].popup(None, None, None, event.button, event.time)
 
         pass
@@ -3107,7 +3106,7 @@ class NicotineFrame:
         path, column, x, y = d
         user = self.recommendationuserslist.get_value(self.recommendationuserslist.get_iter(path), 1)
         if event.button != 3:
-            if event.type == Gdk._2BUTTON_PRESS:
+            if event.type == Gdk.EventType._2BUTTON_PRESS:
                 self.privatechats.SendMessage(user)
                 self.ChangeMainPage(None, "private")
             return

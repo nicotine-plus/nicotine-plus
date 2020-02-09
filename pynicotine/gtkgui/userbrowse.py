@@ -25,8 +25,10 @@
 import os
 import gi
 gi.require_version('Gtk', '3.0')
+gi.require_version('Gdk', '3.0')
 
 from gi.repository import Gtk as gtk
+from gi.repository import Gdk
 from gi.repository import GObject as gobject
 
 from .utils import InitialiseColumns, PopupMenu, EncodingsMenu, SaveEncoding, Humanize, HumanSize, PressHeader
@@ -319,7 +321,7 @@ class UserBrowse:
 
     def OnFolderClicked(self, widget, event):
 
-        if event.button == 1 and event.type == Gdk._2BUTTON_PRESS:
+        if event.button == 1 and event.type == Gdk.EventType._2BUTTON_PRESS:
             self.OnDownloadDirectory(widget)
             return True
         elif event.button == 3:
@@ -345,7 +347,7 @@ class UserBrowse:
 
     def OnFileClicked(self, widget, event):
 
-        if event.button == 1 and event.type == Gdk._2BUTTON_PRESS:
+        if event.button == 1 and event.type == Gdk.EventType._2BUTTON_PRESS:
             self.selected_files = []
             self.FileTreeView.get_selection().selected_foreach(self.SelectedFilesCallback)
             self.OnDownloadFiles(widget)

@@ -270,7 +270,7 @@ class RoomsControl:
 
     def OnListClicked(self, widget, event):
 
-        if event.button == 1 and event.type == Gdk._2BUTTON_PRESS:
+        if event.button == 1 and event.type == Gdk.EventType._2BUTTON_PRESS:
 
             d = self.frame.roomlist.RoomsList.get_path_at_pos(int(event.x), int(event.y))
             if d:
@@ -1065,7 +1065,7 @@ class ChatRoom:
         self.UpdateColours()
 
         self.UserList.set_model(self.usersmodel)
-        self.UserList.enable_model_drag_source(Gdk.BUTTON1_MASK, [('text/plain', 0, 2)], Gdk.DragAction.COPY)
+        self.UserList.enable_model_drag_source(Gdk.EventType.BUTTON1_MASK, [('text/plain', 0, 2)], Gdk.DragAction.COPY)
         self.UserList.connect("drag_data_get", self.drag_data_get_data)
         self.UserList.set_property("rules-hint", True)
 
@@ -1301,7 +1301,7 @@ class ChatRoom:
 
         # Double click starts a private message
         if event.button != 3:
-            if event.type == Gdk._2BUTTON_PRESS:
+            if event.type == Gdk.EventType._2BUTTON_PRESS:
                 self.frame.privatechats.SendMessage(user, None, 1)
                 self.frame.ChangeMainPage(None, "private")
             return
@@ -1892,7 +1892,7 @@ class ChatRoom:
 
     def UserNameEvent(self, tag, widget, event, iter, user):
 
-        if tag.last_event_type == Gdk.BUTTON_PRESS and event.type == Gdk.BUTTON_RELEASE and event.button in (1, 2):
+        if tag.last_event_type == Gdk.EventType.BUTTON_PRESS and event.type == Gdk.EventType.BUTTON_RELEASE and event.button in (1, 2):
 
             # Chat, Userlists use the normal popup system
             self.popup_menu.editing = True
@@ -2335,7 +2335,7 @@ class ChatRoom:
 
     def OnTickerClicked(self, widget, event):
 
-        if event.button != 1 or event.type != Gdk._2BUTTON_PRESS:
+        if event.button != 1 or event.type != Gdk.EventType._2BUTTON_PRESS:
             return False
 
         config = self.frame.np.config.sections
@@ -2422,7 +2422,7 @@ class ChatRooms(IconNotebook):
 
     def on_tab_click(self, widget, event, child):
 
-        if event.type == Gdk.BUTTON_PRESS:
+        if event.type == Gdk.EventType.BUTTON_PRESS:
 
             n = self.page_num(child)
             page = self.get_nth_page(n)

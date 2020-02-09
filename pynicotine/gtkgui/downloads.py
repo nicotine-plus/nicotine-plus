@@ -26,8 +26,10 @@
 
 import gi
 gi.require_version('Gtk', '3.0')
+gi.require_version('Gdk', '3.0')
 
 from gi.repository import Gtk as gtk
+from gi.repository import Gdk
 from _thread import start_new_thread
 
 from .transferlist import TransferList
@@ -421,7 +423,7 @@ class Downloads(TransferList):
 
         if kind == "mouse":
             if event.button != 3:
-                if event.button == 1 and event.type == Gdk._2BUTTON_PRESS:
+                if event.button == 1 and event.type == Gdk.EventType._2BUTTON_PRESS:
                     self.DoubleClick(event)
                 return False
 
