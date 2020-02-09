@@ -980,7 +980,10 @@ class SharesFrame(buildFrame):
         for dirpath, dirnames, filenames in os.walk(directory):
             for f in filenames:
                 fp = os.path.join(dirpath, f)
-                total_size += os.path.getsize(fp)
+                try:
+                    total_size += os.path.getsize(fp)
+                except FileNotFoundError:
+                    pass
 
         gobject.idle_add(
             self._updatedirstats,
