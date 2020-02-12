@@ -389,7 +389,6 @@ class SlskProtoThread(threading.Thread):
 		while not self._want_abort:
 			if not queue.empty():
 				conns, connsinprogress, server_socket = self.process_queue(queue, conns, connsinprogress, server_socket)
-				print(f"conns: {conns}\nconnsinprogress: {connsinprogress}\nserver socket: {server_socket}")
 				self._server_socket = server_socket
 			for i in list(conns.keys())[:]:
 				if conns[i].__class__ is ServerConnection and i is not server_socket:
@@ -494,7 +493,7 @@ class SlskProtoThread(threading.Thread):
 			# Process Data
 			for connection in list(conns.keys())[:]:
 				ip, port = self.getIpPort(conns[connection].addr)
-				print(f"ip: {ip}:{port}  p: {p}, conn: {connection}")
+				# print(f"ip: {ip}:{port}  p: {p}, conn: {connection}")
 				if self.ipBlocked(ip) and connection is not self._server_socket:
 					message = "Blocking peer connection to IP: %(ip)s Port: %(port)s" % { "ip":ip, "port":port}
 					log.add(message, 3)
@@ -637,7 +636,7 @@ class SlskProtoThread(threading.Thread):
 		return ip, port
 		
 	def writeData(self, server_socket, conns, i):
-		print(f"writing {conns[i].obuf} to {i}")
+		print(f'writing {"".join("%02x" % b for b in conns[i].obuf)} to {i}')
 		if i in self._limits:
 			limit = self._limits[i]
 		else:
@@ -649,6 +648,7 @@ class SlskProtoThread(threading.Thread):
 			bytes_send = i.send(conns[i].obuf)
 		else:
 			bytes_send = i.send(conns[i].obuf[:limit])
+		print('bytes_send', bytes_send)
 		i.setblocking(1)
 		conns[i].obuf = conns[i].obuf[bytes_send:]
 		if i is not server_socket:
@@ -679,7 +679,7 @@ class SlskProtoThread(threading.Thread):
 		if limit is None:
 			# Unlimited download data
 			data = i.recv(conns[i].lastreadlength)
-			print(f"readData {data} into {conns[i].ibuf}")
+			print(f"readData {data} into {conns[i].ibuf} ({conns[i].addr})")
 			conns[i].ibuf = conns[i].ibuf + data
 			if len(data) >= conns[i].lastreadlength//2:
 				conns[i].lastreadlength = conns[i].lastreadlength * 2 
@@ -925,18 +925,22 @@ class SlskProtoThread(threading.Thread):
 			msgList.append(queue.get())
 		print(f"process_queue({msgList})")
 		for msgObj in msgList:
-			print(f"    processing {msgObj}")
 			if issubclass(msgObj.__class__, ServerMessage):
-				print(f"      server message")
+				print(f"    processing {msgObj} {msgObj.__class__}")
 				try:
 					msg = msgObj.makeNetworkMessage()
+					print(f"      msg: {msg}")
+					print('server_socket in conns:', server_socket, conns)
 					if server_socket in conns:
-						print(f"      server socket: {server_socket}, conns: {conns}")
+						print(f"      writing obuf: {server_socket}: {self.servercodes[msgObj.__class__]} + {msg}")
+						print(f'                    {struct.pack("<ii", len(msg)+4, self.servercodes[msgObj.__class__]) + msg}')
 						conns[server_socket].obuf = conns[server_socket].obuf + struct.pack("<ii", len(msg)+4, self.servercodes[msgObj.__class__]) + msg
 					else:
+						print("      sleep")
 						queue.put(msgObj)
 						needsleep = True
 				except Exception as error:
+					print(_("Error packaging message: %(type)s %(msg_obj)s, %(error)s") %{'type':msgObj.__class__, 'msg_obj':vars(msgObj), 'error': str(error)})
 					self._ui_callback([_("Error packaging message: %(type)s %(msg_obj)s, %(error)s") %{'type':msgObj.__class__, 'msg_obj':vars(msgObj), 'error': str(error)}])
 			elif issubclass(msgObj.__class__, PeerMessage):
 				if msgObj.conn in conns:
@@ -972,6 +976,7 @@ class SlskProtoThread(threading.Thread):
 						message = _("Can't send the message over the closed connection: %(type)s %(msg_obj)s") %{'type':msgObj.__class__, 'msg_obj':vars(msgObj)}
 						log.add(message, 3)
 			elif issubclass(msgObj.__class__, InternalMessage):
+				print(f"Internal msg: {msgObj}")
 				socketwarning = False
 				if msgObj.__class__ is ServerConn:
 					if maxsockets == -1 or numsockets < maxsockets:

@@ -29,9 +29,6 @@
 This is the actual client code. Actual GUI classes are in the separate modules
 """
 
-
-
-import time
 import datetime
 import shutil
 from urllib.parse import urlencode
@@ -42,10 +39,7 @@ from . import transfers
 import queue
 import threading
 from .config import *
-import string
-import types
 import locale
-from . import utils
 from .shares import Shares
 from .utils import CleanFile, findBestEncoding
 import os
@@ -629,6 +623,8 @@ class NetworkEventProcessor:
         self.serverconn = msg.conn
         self.servertimeout = -1
         self.users = {}
+        if self.waitport is not None:
+            self.queue.put(slskmessages.SetWaitPort(self.waitport))
         self.queue.put(
             slskmessages.Login(
                 self.config.sections["server"]["login"],
@@ -636,9 +632,6 @@ class NetworkEventProcessor:
                 157  # 155, 156, 157, 180
             )
         )
-
-        if self.waitport is not None:
-            self.queue.put(slskmessages.SetWaitPort(self.waitport))
 
     def PeerInit(self, msg):
         self.peerconns.append(

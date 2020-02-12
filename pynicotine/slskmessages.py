@@ -22,11 +22,8 @@
 # Copyright (c) 2001-2003 Alexander Kanavin. All rights reserved.
 
 import struct
-import types
 import zlib
 import hashlib
-import os
-import sys
 from .utils import *
 from .logfacility import log
 from itertools import count
@@ -153,6 +150,9 @@ class Conn(InternalMessage):
         self.conn = conn
         self.addr = addr
         self.init = init
+
+    def __repr__(self):
+        return f"{type(self).__name__}: {self.conn} {self.addr} {self.init}"
 
 
 class OutConn(Conn):
@@ -345,7 +345,7 @@ class SlskMessage:
             # The server seeems to cut off strings at \x00 regardless of the length
             return struct.pack("<i", len(object.bytes))+object.bytes
         elif type(object) is str:
-            log.addwarning(_("Warning: networking thread has to convert unicode string %(object)s message %(type)s") % {'object': object, 'type': self.__class__})
+            log.addwarning(f"Warning: networking thread has to convert unicode string {object} {self.__class__}")
             encoded = object.encode("utf-8", 'replace')
             return struct.pack("<i", len(encoded))+encoded
         elif type(object) is NetworkIntType:
@@ -429,12 +429,9 @@ class Login(ServerMessage):
         return f"Login({self.username}, {self.passwd}, {self.version}, {self.ip})"
 
     def makeNetworkMessage(self):
-
-        m = hashlib.md5()
-        m.update(self.username+self.passwd)
-        md5hash = m.hexdigest()
+        payload = self.username + self.passwd
+        md5hash = hashlib.md5(payload.encode()).hexdigest()
         message = self.packObject(self.username) + self.packObject(self.passwd) + self.packObject(self.version) + self.packObject(md5hash) + self.packObject(17)
-        # print message.__repr__()
         return message
 
     def parseNetworkMessage(self, message):
