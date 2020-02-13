@@ -27,6 +27,7 @@ import hashlib
 from .utils import *
 from .logfacility import log
 from itertools import count
+from tools.debug import debug
 
 """ This module contains message classes, that networking and UI thread
 exchange. Basically there are three types of messages: internal messages,
@@ -398,9 +399,9 @@ class SlskMessage:
         return '.'.join(strlist)
 
     def debug(self, message=None):
-        print(self, self.__dict__)
+        debug(self, self.__dict__)
         if message:
-            print("Message contents:", message.__repr__())
+            debug("Message contents:", message.__repr__())
 
 
 class ServerMessage(SlskMessage):

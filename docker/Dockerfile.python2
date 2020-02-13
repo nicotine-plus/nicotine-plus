@@ -1,0 +1,25 @@
+# Usage examples:
+# docker build -t nicotine -f docker/Dockerfile.python2 .
+# docker run --net=host --env="DISPLAY" --volume="$HOME/.Xauthority:/root/.Xauthority:rw" -t nicotine
+# docker exec -it <ID> ptpython
+# docker exec -it -e DISPLAY=$DISPLAY <ID> xfce4-terminal
+
+FROM ubuntu:18.04
+
+RUN apt-get update
+RUN apt-get install -y software-properties-common
+RUN add-apt-repository -y ppa:kip/nicotine+
+RUN apt-get install -y nicotine xfce4-terminal
+
+COPY docker/config /root/.nicotine
+
+ENV slskproto="/usr/lib/python2.7/dist-packages/pynicotine/slskproto.py"
+RUN sed -i '/def writeData(self, server_socket, conns, i):/a\\
+\t\tprint "writing", "".join("%02x" % ord(b) for b in conns[i].obuf)' $slskproto
+RUN sed -i '/if connection in conns and len(conns\[connection\].ibuf) > 0:/a\\
+\t\t\t\t\tprint "    ibuf: ", conns[connection].ibuf' $slskproto
+
+RUN sed -i 's/if connection in conns and len(conns[connection].ibuf) > 0:/if connection in conns and len(conns[connection].ibuf) > 0:\n					print(f"    ibuf: {conns[connection].ibuf}")/g' $slskproto
+ENV DISPLAY=:0
+CMD nicotine || sleep 100000
+
