@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
 # COPYRIGHT (C) 2020 Lene Preuss <lene.preuss@gmail.com>
@@ -42,9 +42,9 @@ win32 = platform.system().startswith("Win")
 
 def checkenv():
 
-    # Require Python 3.7 or newer
+    # Require Python 3.6 or newer
     try:
-        assert sys.version_info[:2] >= (3, 7), '.'.join(
+        assert sys.version_info[:2] >= (3, 6), '.'.join(
             map(str, sys.version_info[:3])
         )
     except AssertionError as e:
