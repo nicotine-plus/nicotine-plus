@@ -4,23 +4,23 @@
 
 Nicotine+ is a graphical client for the SoulSeek peer-to-peer system. It is an attempt to keep Nicotine working with the latest libraries, kill bugs, keep current with the SoulSeek protocol, and add some new features that users want and/or need.
 
-## License
+# License
 
 Nicotine+ released under the terms of the [GNU Public License v3](https://www.gnu.org/licenses/gpl-3.0-standalone.html) or later.
 
-## Contributing
-If you'd like to contribute, you have a couple of options to get started. You can open an issue ticket on GitHub. You can discuss what you'd like to do in the `#nicotine+` on Freenode. Or you can use the [mailing list](nicotine-team@lists.launchpad.net) if you'd like.
+# Getting Involved
+Please come and join us in the `#nicotine+` channel on Freenode!
 
-Developers are encouraged to join the [Launchpad Team](https://launchpad.net/~nicotine-team) so that they are automatically notified of failed commits.
+If you'd like to contribute, you have a couple of options to get started. You can open an issue ticket on GitHub, discuss in `#nicotine+`, or post to the project [mailing list](nicotine-team@lists.launchpad.net). Developers are also encouraged to join the [Launchpad Team](https://launchpad.net/~nicotine-team) or subscribe to the mailing list so that they are automatically notified of failed commits.
 
 There is a current list of things [TODO](doc/TODO.md). If you'd like to translate Nicotine+ into another language it has not been already, see [TRANSLATIONS](doc/TRANSLATIONS.md).
 
 You want to contact someone? See: [MAINTAINERS](AUTHORS.md)
 
-## Precompiled Packages
+# Precompiled Packages
 If you have no need to modify the Nicotine+ source, you are strongly recommended to use precompiled packages for your distribution. This will save you time.
 
-### Ubuntu PPA (Unstable)
+## Ubuntu PPA (Unstable)
 The project builds [daily unstable snapshots](https://code.launchpad.net/~nicotine-team/+recipe/nicotine+-daily) in a separate unstable PPA. To use it, run the following:
 
 ```console
@@ -29,7 +29,7 @@ $ sudo apt update
 $ sudo apt install nicotine
 ```
 
-### Ubuntu PPA (Stable)
+## Ubuntu PPA (Stable)
 To use stable packages, run the following:
 
 ```console
@@ -55,16 +55,16 @@ To run it from git master see: [RUNFROMGIT](doc/RUNFROMGIT.md)
 
 A Debian/Ubuntu repository containing the latest git master-based packages is also available: [GITDEB](doc/GITDEB.md)
 
-### Dependencies
+# Dependencies
 
-##### Required
+## Required
 
 * [Python 2.7.X](https://www.python.org/)
 * [Gtk+ 2.24.X](http://www.gtk.org/)
 * [PyGTK 2.24.X](http://www.pygtk.org/)
 * [mutagen](https://github.com/quodlibet/mutagen)
 
-##### Optional
+## Optional
 
 * [GeoIP python bindings](https://dev.maxmind.com/geoip/legacy/downloadable/) for Country lookup: need an alternative (unmaintained).
 * [python-notify](http://www.galago-project.org) for notification support: need an alternative (unmaintained).
