@@ -66,7 +66,7 @@ class PluginHandler(object):
     frame = None  # static variable... but should it be?
     guiqueue = []  # fifo isn't supported by older python
 
-    def __init__(self, frame, plugindir=None):
+    def __init__(self, frame, plugindir):
         self.frame = frame
         log.add(_("Loading plugin handler"))
         self.myUsername = self.frame.np.config.sections["server"]["login"]
@@ -81,28 +81,18 @@ class PluginHandler(object):
             'str': str
         }
 
-        if not plugindir:
-            if WIN32:
-                try:
-                    mydir = os.path.join(os.environ['APPDATA'], 'nicotine')
-                except KeyError:
-                    # windows 9x?
-                    mydir, x = os.path.split(sys.argv[0])
-                self.plugindir = os.path.join(mydir, "plugins")
-            else:
-                self.plugindir = os.path.join(os.path.expanduser("~"), '.nicotine', 'plugins')
-        else:
-            self.plugindir = plugindir
         try:
-            os.makedirs(self.plugindir)
+            os.makedirs(plugindir)
         except:
             pass
-        self.plugindirs.append(self.plugindir)
-        if os.path.isdir(self.plugindir):
+
+        self.plugindirs.append(plugindir)
+
+        if os.path.isdir(plugindir):
             # self.load_directory(self.plugindir)
             self.load_enabled()
         else:
-            log.add(_("It appears '%s' is not a directory, not loading plugins.") % self.plugindir)
+            log.add(_("It appears '%s' is not a directory, not loading plugins.") % plugindir)
 
     def __findplugin(self, pluginname):
         for directory in self.plugindirs:

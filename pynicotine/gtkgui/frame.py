@@ -189,9 +189,10 @@ class BuddiesComboBox:
 
 class NicotineFrame:
 
-    def __init__(self, config, plugindir, use_trayicon, start_hidden=False, bindip=None, port=None):
+    def __init__(self, data_dir, config, plugins, use_trayicon, start_hidden=False, bindip=None, port=None):
 
         self.clip_data = ""
+        self.data_dir = data_dir
         self.configfile = config
         self.transfermsgs = {}
         self.transfermsgspostedtime = 0
@@ -221,7 +222,16 @@ class NicotineFrame:
         except ImportError:
             self.pynotify = None
 
-        self.np = NetworkEventProcessor(self, self.callback, self.logMessage, self.SetStatusText, self.bindip, self.port, config)
+        self.np = NetworkEventProcessor(
+          self,
+          self.callback,
+          self.logMessage,
+          self.SetStatusText,
+          self.bindip,
+          self.port,
+          data_dir,
+          config
+        )
 
         config = self.np.config.sections
 
@@ -567,7 +577,7 @@ class NicotineFrame:
 
         self.gstreamer = gstreamer()
 
-        self.pluginhandler = pluginsystem.PluginHandler(self, plugindir)
+        self.pluginhandler = pluginsystem.PluginHandler(self, plugins)
 
         self.ShowChatButtons.set_active(not config["ui"]["chat_hidebuttons"])
 
@@ -1072,11 +1082,10 @@ class NicotineFrame:
         self.UserBrowseCombo.child.set_text("")
 
     def OnLoadFromDisk(self, widget):
-        configdir, config = os.path.split(self.np.config.filename)
-        sharesdir = os.path.abspath(configdir+os.sep+"usershares"+os.sep)
+        sharesdir = os.path.join(self.data_dir, "usershares")
         try:
             if not os.path.exists(sharesdir):
-                os.mkdir(sharesdir)
+                os.makedirs(sharesdir)
         except Exception, msg:
             log.addwarning(_("Can't create directory '%(folder)s', reported error: %(error)s") % {'folder': sharesdir, 'error': msg})
 
@@ -3729,8 +3738,8 @@ class gstreamer:
 
 class MainApp:
 
-    def __init__(self, config, plugindir, trayicon, start_hidden, bindip, port):
-        self.frame = NicotineFrame(config, plugindir, trayicon, start_hidden, bindip, port)
+    def __init__(self, data_dir, config, plugins, trayicon, start_hidden, bindip, port):
+        self.frame = NicotineFrame(data_dir, config, plugins, trayicon, start_hidden, bindip, port)
 
     def MainLoop(self):
         signal.signal(signal.SIGINT, signal.SIG_IGN)
