@@ -101,7 +101,7 @@ class NetworkEventProcessor:
     """ This class contains handlers for various messages from the networking
     thread"""
 
-    def __init__(self, frame, callback, writelog, setstatus, bindip, port, configfile):
+    def __init__(self, frame, callback, writelog, setstatus, bindip, port, data_dir, config):
 
         self.frame = frame
         self.callback = callback
@@ -109,14 +109,14 @@ class NetworkEventProcessor:
         self.setStatus = setstatus
 
         try:
-            self.config = Config(configfile)
+            self.config = Config(config, data_dir)
         except ConfigParserError:
-            corruptfile = ".".join([configfile, CleanFile(datetime.datetime.now().strftime("%Y-%M-%d_%H:%M:%S")), "corrupt"])
-            shutil.move(configfile, corruptfile)
+            corruptfile = ".".join([config, CleanFile(datetime.datetime.now().strftime("%Y-%M-%d_%H:%M:%S")), "corrupt"])
+            shutil.move(config, corruptfile)
             short = _("Your config file is corrupt")
             long = _("We're sorry, but it seems your configuration file is corrupt. Please reconfigure Nicotine+.\n\nWe renamed your old configuration file to\n%(corrupt)s\nIf you open this file with a text editor you might be able to rescue some of your settings.") % {'corrupt': corruptfile}
             log.addwarning(long)
-            self.config = Config(configfile)
+            self.config = Config(config, data_dir)
             self.callback([PopupMessage(short, long)])
 
         self.bindip = bindip
