@@ -5,14 +5,17 @@ on: [push]
 jobs:
   build:
 
-    runs-on: ubuntu-latest
-
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-16.04, ubuntu-18.04, ubuntu-latest]
+        python: [3.6, 3.7, 3.8]
     steps:
     - uses: actions/checkout@v2
-    - name: Set up Python 3.6
+    - name: Set up Python ${{ matrix.python }}
       uses: actions/setup-python@v1
       with:
-        python-version: 3.6
+        python-version: ${{ matrix.python }}
     - name: Install dependencies
       run: |
         sudo apt-get install libgeoip-dev
