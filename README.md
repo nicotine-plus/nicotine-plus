@@ -21,7 +21,7 @@ You want to contact someone? See: [MAINTAINERS](AUTHORS.md)
 If you have no need to modify the Nicotine+ source, you are strongly recommended to use precompiled packages for your distribution. This will save you time.
 
 ## Ubuntu PPA (Unstable)
-The project builds [daily unstable snapshots](https://code.launchpad.net/~nicotine-team/+recipe/nicotine+-daily) in a separate unstable PPA. To use it, run the following:
+The project builds [daily unstable snapshots](https://code.launchpad.net/~nicotine-team/+recipe/nicotine+-daily) in a separate [unstable PPA](https://code.launchpad.net/~nicotine-team/+archive/ubuntu/unstable). To use it, run the following:
 
 ```console
 $ sudo add-apt-repository ppa:nicotine-team/unstable
@@ -30,7 +30,7 @@ $ sudo apt install nicotine
 ```
 
 ## Ubuntu PPA (Stable)
-To use stable packages, run the following:
+To use [stable packages](https://launchpad.net/~nicotine-team/+archive/ubuntu/stable), run the following:
 
 ```console
 $ sudo add-apt-repository ppa:nicotine-team/stable
