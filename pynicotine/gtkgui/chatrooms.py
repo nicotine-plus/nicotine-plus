@@ -396,12 +396,11 @@ class RoomsControl:
         try:
             angle = int(self.frame.np.config.sections["ui"]["labelrooms"])
         except Exception as e:
-            print(e)
-            pass
+            debug(e)
 
         self.ChatNotebook.append_page(tab.Main, msg.room, tab.OnLeave, angle)
 
-        self.frame.searchroomslist[msg.room] = self.frame.RoomSearchCombo_List.append([msg.room])
+        self.frame.searchroomslist[msg.room] = self.frame.RoomSearchCombo_List.append([(msg.room)])
 
         tab.CountUsers()
 
@@ -428,7 +427,7 @@ class RoomsControl:
         self.rooms = []
         for room, users in msg.rooms:
             debug('room', room, 'users', users)
-            self.roomsmodel.append([room.decode('utf-8'), users, 0])
+            self.roomsmodel.append([room, users, 0])
             self.rooms.append(room)
 
         self.SetPrivateRooms(msg.ownedprivaterooms, msg.otherprivaterooms)
@@ -650,6 +649,7 @@ class RoomsControl:
         self.joinedrooms[msg.room].UserLeftRoom(msg.username)
 
     def TickerSet(self, msg):
+        debug(msg)
         self.joinedrooms[msg.room].TickerSet(msg)
 
     def TickerAdd(self, msg):
@@ -779,11 +779,12 @@ class Ticker:
             self.entry.set_text("")
             return True
 
-        if self.ix >= len(self.messages):
+        if not self.sortedmessages:
+            self.updatesorted()
+
+        if self.ix >= len(self.sortedmessages):
             self.ix = 0
 
-        debug('sortedmessages', self.sortedmessages)
-        debug('ix', self.ix)
         (user, message) = self.sortedmessages[self.ix]
         self.entry.set_text("[%s]: %s" % (user, message))
         self.ix += 1
@@ -809,7 +810,7 @@ class Ticker:
     def updatesorted(self):
 
         lst = [(user, msg) for user, msg in self.messages.items()]
-        lst.sort(key=lambda x, y: len(x[1])-len(y[1]))
+        lst.sort(key=lambda x: len(x[1]))
         self.sortedmessages = lst
 
     def get_tickers(self):
@@ -1053,7 +1054,7 @@ class ChatRoom:
             flag = user.country
 
             if flag:
-                flag = "flag_"+flag.decode('utf-8')
+                flag = "flag_" + flag
                 self.frame.flag_users[username] = flag
             else:
                 flag = self.frame.GetUserFlag(username)
@@ -1061,7 +1062,7 @@ class ChatRoom:
             hspeed = HumanSpeed(user.avgspeed)
             hfiles = Humanize(user.files)
             iter = self.usersmodel.append(
-                [img, self.frame.GetFlagImage(flag), username.decode('utf-8'), hspeed, hfiles, user.status, user.avgspeed, user.files, flag]
+                [img, self.frame.GetFlagImage(flag), username, hspeed, hfiles, user.status, user.avgspeed, user.files, flag]
             )
             self.users[username] = iter
             self.roomsctrl.GetUserAddress(username)
@@ -1156,7 +1157,7 @@ class ChatRoom:
         config = self.frame.np.config.sections
         log = os.path.join(
             config["logging"]["roomlogsdir"],
-            fixpath(self.room.decode('utf-8').replace(os.sep, "-")) + ".log"
+            fixpath(self.room.replace(os.sep, "-")) + ".log"
         )
 
         try:
@@ -1734,7 +1735,7 @@ class ChatRoom:
             if username not in self.clist:
                 self.clist.append(username)
                 if self.frame.np.config.sections["words"]["dropdown"]:
-                    self.ChatEntry.get_completion().get_model().append([username.decode('utf-8')])
+                    self.ChatEntry.get_completion().get_model().append([username])
 
         if username not in self.frame.np.config.sections["server"]["ignorelist"] and not self.frame.UserIpIsIgnored(username):
             AppendLine(self.RoomLog, _("%s joined the room") % username, self.tag_log)
@@ -1809,10 +1810,10 @@ class ChatRoom:
                     break
                 iter = self.roomsctrl.roomsmodel.iter_next(iter)
         else:
-            self.roomsctrl.roomsmodel.append([self.room.decode('utf-8'), numusers, 0])
+            self.roomsctrl.roomsmodel.append([self.room, numusers, 0])
             self.roomsctrl.rooms.append(self.room)
 
-    def UserColumnDraw(self, column, cellrenderer, model, iter):
+    def UserColumnDraw(self, column, cellrenderer, model, iter, dummy="dummy"):
 
         user = self.usersmodel.get_value(iter, 2)
 

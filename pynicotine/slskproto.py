@@ -929,12 +929,12 @@ class SlskProtoThread(threading.Thread):
 				# debug(f"    processing {msgObj.__class__.__name__} {msgObj}")
 				try:
 					msg = msgObj.makeNetworkMessage()
-					if msg == '':
+					if msg == '' or msg is None:
 						msg = b''
 					# debug(f"      msg: {msg}")
 					if server_socket in conns:
 						# debug(f'      obuf: {conns[server_socket].obuf}')
-						# debug(f'      msg:  {msg}')
+						debug(f'      msg:  {msg}')
 						# debug(f'      pack: {struct.pack("<ii", len(msg)+4, self.servercodes[msgObj.__class__])}')
 
 						conns[server_socket].obuf += \
