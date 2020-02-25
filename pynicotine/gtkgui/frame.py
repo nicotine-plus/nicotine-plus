@@ -1765,9 +1765,9 @@ class NicotineFrame:
             if hasattr(imagedata, flag):
                 img = None
                 try:
-                    loader = GdkPixbuf.PixbufLoader("png")
+                    loader = GdkPixbuf.PixbufLoader()
                     data = getattr(imagedata, flag)
-                    loader.write(data, len(data))
+                    loader.write(data)
                     loader.close()
                     img = loader.get_pixbuf()
                 except Exception as e:

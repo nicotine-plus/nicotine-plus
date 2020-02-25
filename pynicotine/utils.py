@@ -405,3 +405,16 @@ def strace(function):
         return retvalue
 
     return newfunc
+
+
+def cmp(a, b):
+    """Replacement for cmp() which is removed in Python 3"""
+    return (a > b) - (a < b)
+
+
+def debug(*args):
+    """
+    Prints debugging info.
+    TODO: add CLI switch --debug for en-/disabling.
+    """
+    print('*'*8, *[arg[:200] if isinstance(arg, str) else arg for arg in args])

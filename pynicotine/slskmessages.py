@@ -27,7 +27,6 @@ import hashlib
 from .utils import *
 from .logfacility import log
 from itertools import count
-from tools.debug import debug
 
 """ This module contains message classes, that networking and UI thread
 exchange. Basically there are three types of messages: internal messages,
@@ -445,7 +444,8 @@ class Login(ServerMessage):
         if len(message[pos:]) > 0:
             try:
                 import socket
-                pos, self.ip = pos+4, socket.inet_ntoa(self.strrev(message[pos:pos+4]))
+                pos, self.ip = pos+4, socket.inet_ntoa(message[pos+4:pos:-1])
+                debug('IP', self.ip)
                 # Unknown number
             except Exception as error:
                 log.addwarning("Error unpacking IP address: %s" % (error,))
@@ -1010,12 +1010,12 @@ class ConnectToPeer(ServerMessage):
         pos, self.user = self.getObject(message, bytes)
         pos, self.type = self.getObject(message, bytes, pos)
         import socket
-        pos, self.ip = pos+4, socket.inet_ntoa(self.strrev(message[pos:pos+4]))
+        pos, self.ip = pos+4, socket.inet_ntoa(message[pos+4:pos:-1])
         pos, self.port = self.getObject(message, int, pos, 1)
         pos, self.token = self.getObject(message, int, pos)
         if len(message[pos:]) > 0:
             # Don't know what this is, may be some kind of status
-            pos, self.unknown = pos+1, ord(message[pos])
+            pos, self.unknown = pos+1, message[pos]
 
 
 class MessageUser(ServerMessage):

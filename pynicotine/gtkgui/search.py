@@ -23,6 +23,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import gi
+
+from ..utils import cmp
+
 gi.require_version('Gtk', '3.0')
 gi.require_version('Gdk', '3.0')
 

@@ -30,6 +30,7 @@ import re
 
 # Python modules
 import gi
+
 gi.require_version('Gtk', '3.0')
 gi.require_version('Gdk', '3.0')
 gi.require_version('Pango', '1.0')
@@ -44,7 +45,7 @@ from pynicotine.logfacility import log
 from pynicotine import slskmessages
 from pynicotine.slskmessages import ToBeEncoded
 from .utils import InitialiseColumns, AppendLine, PopupMenu, WriteLog, Humanize, HumanSpeed, expand_alias, is_alias, EncodingsMenu, SaveEncoding, PressHeader, fixpath, IconNotebook, showCountryTooltip
-from pynicotine.utils import findBestEncoding
+from pynicotine.utils import findBestEncoding, cmp, debug
 from .entrydialog import input_box
 
 
@@ -66,13 +67,13 @@ def GetCompletions(part, list):
 
 class RoomsControl:
 
-    CMDS = set(
-        [
-            "/alias ", "/unalias ", "/whois ", "/browse ", "/ip ", "/pm ", "/msg ", "/search ", "/usearch ", "/rsearch ",
-            "/bsearch ", "/join ", "/leave ", "/add ", "/buddy ", "/rem ", "/unbuddy ", "/ban ", "/ignore ", "/ignoreip ", "/unban ", "/unignore ",
-            "/clear ", "/part ", "/quit ", "/exit ", "/rescan ", "/tick ", "/info ", "/attach ", "/detach ", "/toggle", "/tickers"
-        ]
-    )
+    CMDS = {
+        "/alias ", "/unalias ", "/whois ", "/browse ", "/ip ", "/pm ", "/msg ", "/search ",
+        "/usearch ", "/rsearch ", "/bsearch ", "/join ", "/leave ", "/add ", "/buddy ", "/rem ",
+        "/unbuddy ", "/ban ", "/ignore ", "/ignoreip ", "/unban ", "/unignore ", "/clear ",
+        "/part ", "/quit ", "/exit ", "/rescan ", "/tick ", "/info ", "/attach ", "/detach ",
+        "/toggle", "/tickers"
+    }
 
     def __init__(self, ChatNotebook):
 
@@ -186,17 +187,16 @@ class RoomsControl:
 
         return cmp(private1, private2)
 
-    def RoomStatus(self, column, cellrenderer, model, iter):
-
+    def RoomStatus(self, column, cellrenderer, model, iter, dummy='dummy'):
         if self.roomsmodel.get_value(iter, 2) >= 2:
-            cellrenderer.set_property("underline", pango.UNDERLINE_SINGLE)
-            cellrenderer.set_property("weight", pango.WEIGHT_BOLD)
+            cellrenderer.set_property("underline", pango.Underline.SINGLE)
+            cellrenderer.set_property("weight", pango.Weight.BOLD)
         elif self.roomsmodel.get_value(iter, 2) >= 1:
-            cellrenderer.set_property("weight", pango.WEIGHT_BOLD)
-            cellrenderer.set_property("underline", pango.UNDERLINE_NONE)
+            cellrenderer.set_property("weight", pango.Weight.BOLD)
+            cellrenderer.set_property("underline", pango.Underline.NONE)
         else:
-            cellrenderer.set_property("weight", pango.WEIGHT_NORMAL)
-            cellrenderer.set_property("underline", pango.UNDERLINE_NONE)
+            cellrenderer.set_property("weight", pango.Weight.NORMAL)
+            cellrenderer.set_property("underline", pango.Underline.NONE)
 
         self.frame.CellDataFunc(column, cellrenderer, model, iter)
 
@@ -427,14 +427,15 @@ class RoomsControl:
 
         self.rooms = []
         for room, users in msg.rooms:
-            self.roomsmodel.append([room, users, 0])
+            debug('room', room, 'users', users)
+            self.roomsmodel.append([room.decode('utf-8'), users, 0])
             self.rooms.append(room)
 
         self.SetPrivateRooms(msg.ownedprivaterooms, msg.otherprivaterooms)
         self.frame.roomlist.RoomsList.set_model(self.roomsmodel)
         self.roomsmodel.set_sort_func(1, self.PrivateRoomsSort, 1)
-        self.roomsmodel.set_sort_column_id(1, gtk.SORT_DESCENDING)
-        self.roomsmodel.set_default_sort_func(None)
+        self.roomsmodel.set_sort_column_id(1, gtk.SortType.DESCENDING)
+        self.roomsmodel.set_default_sort_func(self.PrivateRoomsSort)
 
         if self.frame.np.config.sections["words"]["roomnames"]:
             self.frame.chatrooms.roomsctrl.UpdateCompletions()
@@ -645,6 +646,7 @@ class RoomsControl:
             self.GetUserAddress(msg.username)
 
     def UserLeftRoom(self, msg):
+        debug('joined rooms', self.joinedrooms, 'leaving', msg)
         self.joinedrooms[msg.room].UserLeftRoom(msg.username)
 
     def TickerSet(self, msg):
@@ -780,6 +782,8 @@ class Ticker:
         if self.ix >= len(self.messages):
             self.ix = 0
 
+        debug('sortedmessages', self.sortedmessages)
+        debug('ix', self.ix)
         (user, message) = self.sortedmessages[self.ix]
         self.entry.set_text("[%s]: %s" % (user, message))
         self.ix += 1
@@ -805,7 +809,7 @@ class Ticker:
     def updatesorted(self):
 
         lst = [(user, msg) for user, msg in self.messages.items()]
-        lst.sort(cmp=lambda x, y: len(x[1])-len(y[1]))
+        lst.sort(key=lambda x, y: len(x[1])-len(y[1]))
         self.sortedmessages = lst
 
     def get_tickers(self):
@@ -1032,8 +1036,8 @@ class ChatRoom:
         self.users = {}
 
         self.usersmodel = gtk.ListStore(
-            Gdk.Pixbuf,
-            Gdk.Pixbuf,
+            gobject.TYPE_GTYPE,
+            gobject.TYPE_GTYPE,
             gobject.TYPE_STRING,
             gobject.TYPE_STRING,
             gobject.TYPE_STRING,
@@ -1048,15 +1052,17 @@ class ChatRoom:
             img = self.frame.GetStatusImage(user.status)
             flag = user.country
 
-            if flag is not None:
-                flag = "flag_"+flag
+            if flag:
+                flag = "flag_"+flag.decode('utf-8')
                 self.frame.flag_users[username] = flag
             else:
                 flag = self.frame.GetUserFlag(username)
 
             hspeed = HumanSpeed(user.avgspeed)
             hfiles = Humanize(user.files)
-            iter = self.usersmodel.append([img, self.frame.GetFlagImage(flag), username, hspeed, hfiles, user.status, user.avgspeed, user.files, flag])
+            iter = self.usersmodel.append(
+                [img, self.frame.GetFlagImage(flag), username.decode('utf-8'), hspeed, hfiles, user.status, user.avgspeed, user.files, flag]
+            )
             self.users[username] = iter
             self.roomsctrl.GetUserAddress(username)
 
@@ -1065,7 +1071,7 @@ class ChatRoom:
         self.UpdateColours()
 
         self.UserList.set_model(self.usersmodel)
-        self.UserList.enable_model_drag_source(Gdk.EventType.BUTTON1_MASK, [('text/plain', 0, 2)], Gdk.DragAction.COPY)
+        self.UserList.enable_model_drag_source(Gdk.ModifierType.BUTTON1_MASK, [('text/plain', 0, 2)], Gdk.DragAction.COPY)
         self.UserList.connect("drag_data_get", self.drag_data_get_data)
         self.UserList.set_property("rules-hint", True)
 
@@ -1141,13 +1147,17 @@ class ChatRoom:
 
         self.CountUsers()
 
-    def RoomStatus(self, column, cellrenderer, model, iter):
-        cellrenderer.set_property("weight", colour)
+    def RoomStatus(self, column, cellrenderer, model, iter, dummy='dummy'):
+        # cellrenderer.set_property("weight", colour)
+        pass
 
     def ReadRoomLogs(self):
 
         config = self.frame.np.config.sections
-        log = os.path.join(config["logging"]["roomlogsdir"], fixpath(self.room.replace(os.sep, "-")) + ".log")
+        log = os.path.join(
+            config["logging"]["roomlogsdir"],
+            fixpath(self.room.decode('utf-8').replace(os.sep, "-")) + ".log"
+        )
 
         try:
             roomlines = int(config["logging"]["readroomlines"])
@@ -1456,7 +1466,10 @@ class ChatRoom:
         if user != login:
 
             self.lines.append(
-                AppendLine(self.ChatScroll, self.frame.CensorChat(line), tag, username=user, usertag=self.tag_users[user], timestamp_format=timestamp_format)
+                AppendLine(
+                    self.ChatScroll, self.frame.CensorChat(line).encode('utf-8'), tag,
+                    username=user, usertag=self.tag_users[user], timestamp_format=timestamp_format
+                )
             )
 
             if self.Speech.get_active():
@@ -1721,7 +1734,7 @@ class ChatRoom:
             if username not in self.clist:
                 self.clist.append(username)
                 if self.frame.np.config.sections["words"]["dropdown"]:
-                    self.ChatEntry.get_completion().get_model().append([username])
+                    self.ChatEntry.get_completion().get_model().append([username.decode('utf-8')])
 
         if username not in self.frame.np.config.sections["server"]["ignorelist"] and not self.frame.UserIpIsIgnored(username):
             AppendLine(self.RoomLog, _("%s joined the room") % username, self.tag_log)
@@ -1796,7 +1809,7 @@ class ChatRoom:
                     break
                 iter = self.roomsctrl.roomsmodel.iter_next(iter)
         else:
-            self.roomsctrl.roomsmodel.append([self.room, numusers, 0])
+            self.roomsctrl.roomsmodel.append([self.room.decode('utf-8'), numusers, 0])
             self.roomsctrl.rooms.append(self.room)
 
     def UserColumnDraw(self, column, cellrenderer, model, iter):
@@ -1805,17 +1818,17 @@ class ChatRoom:
 
         if self.room in self.roomsctrl.PrivateRooms:
             if user == self.roomsctrl.PrivateRooms[self.room]["owner"]:
-                cellrenderer.set_property("underline", pango.UNDERLINE_SINGLE)
-                cellrenderer.set_property("weight", pango.WEIGHT_BOLD)
+                cellrenderer.set_property("underline", pango.Underline.SINGLE)
+                cellrenderer.set_property("weight", pango.Weight.BOLD)
             elif user in (self.roomsctrl.PrivateRooms[self.room]["operators"]):
-                cellrenderer.set_property("weight", pango.WEIGHT_BOLD)
-                cellrenderer.set_property("underline", pango.UNDERLINE_NONE)
+                cellrenderer.set_property("weight", pango.Weight.BOLD)
+                cellrenderer.set_property("underline", pango.Underline.NONE)
             else:
-                cellrenderer.set_property("weight", pango.WEIGHT_NORMAL)
-                cellrenderer.set_property("underline", pango.UNDERLINE_NONE)
+                cellrenderer.set_property("weight", pango.Weight.NORMAL)
+                cellrenderer.set_property("underline", pango.Underline.NONE)
         else:
-                cellrenderer.set_property("weight", pango.WEIGHT_NORMAL)
-                cellrenderer.set_property("underline", pango.UNDERLINE_NONE)
+                cellrenderer.set_property("weight", pango.Weight.NORMAL)
+                cellrenderer.set_property("underline", pango.Underline.NONE)
 
         self.frame.CellDataFunc(column, cellrenderer, model, iter)
 
@@ -1871,19 +1884,19 @@ class ChatRoom:
             usernamestyle = self.frame.np.config.sections["ui"]["usernamestyle"]
 
             if usernamestyle == "bold":
-                tag.set_property("weight", pango.WEIGHT_BOLD)
+                tag.set_property("weight", pango.Weight.BOLD)
             else:
-                tag.set_property("weight", pango.WEIGHT_NORMAL)
+                tag.set_property("weight", pango.Weight.NORMAL)
 
             if usernamestyle == "italic":
-                tag.set_property("style", pango.STYLE_ITALIC)
+                tag.set_property("style", pango.Style.ITALIC)
             else:
-                tag.set_property("style", pango.STYLE_NORMAL)
+                tag.set_property("style", pango.Style.NORMAL)
 
             if usernamestyle == "underline":
-                tag.set_property("underline", pango.UNDERLINE_SINGLE)
+                tag.set_property("underline", pango.Underline.SINGLE)
             else:
-                tag.set_property("underline", pango.UNDERLINE_NONE)
+                tag.set_property("underline", pango.Underline.NONE)
 
             tag.connect("event", self.UserNameEvent, username)
             tag.last_event_type = -1
@@ -1918,7 +1931,10 @@ class ChatRoom:
         self.frame.ChangeListFont(self.UserList, self.frame.np.config.sections["ui"]["listfont"])
 
         map = self.ChatScroll.get_style().copy()
-        self.backupcolor = map.text[gtk.STATE_NORMAL]
+        try:
+            self.backupcolor = map.text[gtk.StateFlags.NORMAL]
+        except IndexError:
+            self.backupcolor = ''
         buffer = self.ChatScroll.get_buffer()
 
         self.tag_remote = self.makecolour(buffer, "chatremote")
@@ -1979,19 +1995,19 @@ class ChatRoom:
             usernamestyle = self.frame.np.config.sections["ui"]["usernamestyle"]
 
             if usernamestyle == "bold":
-                tag.set_property("weight", pango.WEIGHT_BOLD)
+                tag.set_property("weight", pango.Weight.BOLD)
             else:
-                tag.set_property("weight", pango.WEIGHT_NORMAL)
+                tag.set_property("weight", pango.Weight.NORMAL)
 
             if usernamestyle == "italic":
-                tag.set_property("style", pango.STYLE_ITALIC)
+                tag.set_property("style", pango.Style.ITALIC)
             else:
-                tag.set_property("style", pango.STYLE_NORMAL)
+                tag.set_property("style", pango.Style.NORMAL)
 
             if usernamestyle == "underline":
-                tag.set_property("underline", pango.UNDERLINE_SINGLE)
+                tag.set_property("underline", pango.Underline.SINGLE)
             else:
-                tag.set_property("underline", pango.UNDERLINE_NONE)
+                tag.set_property("underline", pango.Underline.NONE)
 
     def ChangeColours(self):
 
@@ -2146,10 +2162,12 @@ class ChatRoom:
 
         # no duplicates
         def _combilower(x):
+            if not isinstance(x, str):
+                x = x.decode('utf-8')
             try:
-                return str.lower(x)
+                return x.lower()
             except:
-                return str.lower(x)
+                return x
 
         clist = list(set(clist))
         clist.sort(key=_combilower)
@@ -2158,6 +2176,8 @@ class ChatRoom:
 
         if config["dropdown"]:
             for word in clist:
+                if not isinstance(word, str):
+                    word = word.decode('utf-8')
                 liststore.append([word])
 
             completion.set_popup_completion(True)

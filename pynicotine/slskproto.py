@@ -36,9 +36,8 @@ import threading
 import struct
 
 from errno import EINTR
-from .utils import win32
+from .utils import win32, debug
 from .logfacility import log
-from tools.debug import debug
 
 MAXFILELIMIT = -1
 if win32:
@@ -521,7 +520,7 @@ class SlskProtoThread(threading.Thread):
 						except socket.error as err:
 							self._ui_callback([ConnectError(conns[connection], err)])
 				if connection in conns and len(conns[connection].ibuf) > 0:
-					debug(f"    ibuf: {conns[connection].ibuf}")
+					# debug(f"    ibuf: {conns[connection].ibuf}")
 					if connection is server_socket:
 						msgs, conns[server_socket].ibuf = self.process_server_input(conns[server_socket].ibuf)
 						self._ui_callback(msgs)
@@ -637,7 +636,7 @@ class SlskProtoThread(threading.Thread):
 		return ip, port
 
 	def writeData(self, server_socket, conns, i):
-		debug(f'writing {"".join("%02x" % b for b in conns[i].obuf)} to {i}')
+		# debug(f'writing {"".join("%02x" % b for b in conns[i].obuf)} to {i}')
 		if i in self._limits:
 			limit = self._limits[i]
 		else:
@@ -680,7 +679,7 @@ class SlskProtoThread(threading.Thread):
 		if limit is None:
 			# Unlimited download data
 			data = i.recv(conns[i].lastreadlength)
-			debug(f"readData {data} into {conns[i].ibuf} ({conns[i].addr})")
+			# debug(f"readData {data} into {conns[i].ibuf} ({conns[i].addr})")
 			conns[i].ibuf = conns[i].ibuf + data
 			if len(data) >= conns[i].lastreadlength//2:
 				conns[i].lastreadlength = conns[i].lastreadlength * 2
@@ -927,17 +926,21 @@ class SlskProtoThread(threading.Thread):
 
 		for msgObj in msgList:
 			if issubclass(msgObj.__class__, ServerMessage):
-				debug(f"    processing {msgObj.__class__.__name__} {msgObj}")
+				# debug(f"    processing {msgObj.__class__.__name__} {msgObj}")
 				try:
 					msg = msgObj.makeNetworkMessage()
-					debug(f"      msg: {msg}")
+					if msg == '':
+						msg = b''
+					# debug(f"      msg: {msg}")
 					if server_socket in conns:
-						debug(f'      obuf: {conns[server_socket].obuf}')
-						debug(f'      writing obuf: {struct.pack("<ii", len(msg)+4, self.servercodes[msgObj.__class__]) + msg}')
-						conns[server_socket].obuf = conns[server_socket].obuf + \
+						# debug(f'      obuf: {conns[server_socket].obuf}')
+						# debug(f'      msg:  {msg}')
+						# debug(f'      pack: {struct.pack("<ii", len(msg)+4, self.servercodes[msgObj.__class__])}')
+
+						conns[server_socket].obuf += \
 							struct.pack("<ii", len(msg)+4, self.servercodes[msgObj.__class__]) + \
 							msg
-						debug(f'      obuf: {conns[server_socket].obuf}')
+						# debug(f'      obuf: {conns[server_socket].obuf}')
 					else:
 						print("      sleep")
 						queue.put(msgObj)
@@ -956,7 +959,9 @@ class SlskProtoThread(threading.Thread):
 						conns[msgObj.conn].init = msgObj
 						msg = msgObj.makeNetworkMessage()
 						if conns[msgObj.conn].piercefw is None:
-							conns[msgObj.conn].obuf = conns[msgObj.conn].obuf + struct.pack("<i", len(msg) + 1) + chr(1) + msg
+							conns[msgObj.conn].obuf += struct.pack("<i", len(msg) + 1) + \
+								bytes(chr(1), 'ascii') + \
+								msg
 
 					elif msgObj.__class__ is FileRequest:
 						conns[msgObj.conn].filereq = msgObj
