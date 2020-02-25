@@ -534,7 +534,7 @@ class ImageLabel(gtk.HBox):
         self.button.set_relief(gtk.ReliefStyle.NONE)
 
         self.button.show_all()
-        self.Box.pack_start(self.button, False, False)
+        self.Box.pack_start(self.button, False, False, 0)
 
     def _remove_close_button(self):
         if "button" not in self.__dict__:
@@ -676,7 +676,7 @@ class IconNotebook:
 
     def OnKeyPress(self, widget, event):
 
-        if event.state & (Gdk.MOD1_MASK | Gdk.CONTROL_MASK) != Gdk.MOD1_MASK:
+        if event.state & (Gdk.ModifierType.MOD1_MASK | Gdk.ModifierType.CONTROL_MASK) != Gdk.ModifierType.MOD1_MASK:
             return False
 
         if event.keyval in [Gdk.keyval_from_name("Up"), Gdk.keyval_from_name("Left")]:
@@ -713,7 +713,7 @@ class IconNotebook:
 
         eventbox.add(label_tab)
         eventbox.show()
-        eventbox.set_events(Gdk.EventType.BUTTON_PRESS_MASK)
+        eventbox.set_events(Gdk.EventMask.BUTTON_PRESS_MASK)
         eventbox.connect('button_press_event', self.on_tab_click, page)
 
         gtk.Notebook.append_page_menu(self.Notebook, page, eventbox, label_tab_menu)

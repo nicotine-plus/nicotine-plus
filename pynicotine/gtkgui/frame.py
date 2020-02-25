@@ -1387,7 +1387,7 @@ class NicotineFrame:
         self.transfermsgspostedtime = curtime
         return msgs
 
-    def CellDataFunc(self, column, cellrenderer, model, iter):
+    def CellDataFunc(self, column, cellrenderer, model, iter, dummy="dummy"):
         colour = self.np.config.sections["ui"]["search"]
         if colour == "":
             colour = None
