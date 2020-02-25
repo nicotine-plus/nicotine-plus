@@ -24,6 +24,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import gi
+
 gi.require_version('Pango', '1.0')
 gi.require_version('Gtk', '3.0')
 gi.require_version('Gdk', '3.0')
@@ -43,7 +44,7 @@ import urllib.request, urllib.parse, urllib.error
 import webbrowser
 
 from pynicotine import slskmessages
-from pynicotine.utils import executeCommand, findBestEncoding
+from pynicotine.utils import executeCommand, findBestEncoding, cmp
 from .countrycodes import code2name
 
 DECIMALSEP = ""
@@ -261,9 +262,10 @@ def header_toggle(menuitem, column):
 
 def ScrollBottom(widget):
     va = widget.get_vadjustment()
-    if va is None:
-        return False
-    va.set_value(va.upper - va.page_size)
+    try:
+        va.set_value(va.upper - va.page_size)
+    except AttributeError:
+        pass
     return False
 
 
@@ -314,7 +316,7 @@ def AppendLine(textview, line, tag=None, timestamp=None, showstamp=True, timesta
         props = {}
 
         props["foreground_gdk"] = Gdk.color_parse(NICOTINE.np.config.sections["ui"]["urlcolor"])
-        props["underline"] = pango.UNDERLINE_SINGLE
+        props["underline"] = pango.Underline.SINGLE
         tag = buffer.create_tag(**props)
         tag.last_event_type = -1
         tag.connect("event", UrlEvent, url)
@@ -347,7 +349,10 @@ def AppendLine(textview, line, tag=None, timestamp=None, showstamp=True, timesta
 
     scrolledwindow = textview.get_parent()
     va = scrolledwindow.get_vadjustment()
-    bottom = va.value >= (va.upper - int(va.page_size*1.5))
+    try:
+        bottom = va.value >= (va.upper - int(va.page_size*1.5))
+    except AttributeError:
+        bottom = True
 
     buffer = textview.get_buffer()
     linenr = buffer.get_line_count()
@@ -522,11 +527,11 @@ class ImageLabel(gtk.HBox):
             return
         self.button = gtk.Button()
         img = gtk.Image()
-        img.set_from_stock(gtk.STOCK_CLOSE, gtk.ICON_SIZE_MENU)
+        img.set_from_stock(gtk.STOCK_CLOSE, gtk.IconSize.MENU)
         self.button.add(img)
         if self.onclose is not None:
             self.button.connect("clicked", self.onclose)
-        self.button.set_relief(gtk.RELIEF_NONE)
+        self.button.set_relief(gtk.ReliefStyle.NONE)
 
         self.button.show_all()
         self.Box.pack_start(self.button, False, False)

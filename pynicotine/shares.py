@@ -28,6 +28,7 @@ import os
 import time
 
 import gi
+
 gi.require_version('Gtk', '3.0')
 
 from gi.repository import GObject as gobject
@@ -35,7 +36,7 @@ from gi.repository import GObject as gobject
 from . import slskmessages
 from .slskmessages import NetworkIntType, NetworkLongLongType
 from .logfacility import log
-from .utils import displayTraceback
+from .utils import displayTraceback, debug
 from . import metadata_mutagen as metadata
 
 win32 = sys.platform.startswith("win")
@@ -357,6 +358,8 @@ class Shares:
         if maxresults == 0:
             return
 
+        debug("searchterm", searchterm)
+        debug("translatepunctuation", self.translatepunctuation)
         terms = searchterm.translate(self.translatepunctuation).lower().split()
         list = [wordindex[i][:] for i in terms if i in wordindex]
 

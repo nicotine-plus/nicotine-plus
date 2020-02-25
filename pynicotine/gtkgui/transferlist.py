@@ -24,6 +24,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import gi
+
+from ..utils import cmp
+
 gi.require_version('Gtk', '3.0')
 
 from gi.repository import Gtk as gtk
@@ -171,7 +174,7 @@ class TransferList:
         # We want 0% to be always below anything else,
         # so we have to look up whether we are ascending or descending
         ascending = True
-        if model.get_sort_column_id()[1] == gtk.SORT_DESCENDING:
+        if model.get_sort_column_id()[1] == gtk.SortType.DESCENDING:
             ascending = False
 
         val1 = self.get_status_index(model.get_value(iter1, column))

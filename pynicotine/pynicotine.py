@@ -441,11 +441,14 @@ class NetworkEventProcessor:
 
     def decode(self, string, networkenc=None):
 
+        if isinstance(string, str):
+            return string
+
         if networkenc is None:
             networkenc = self.config.sections["server"]["enc"]
 
-        # return string.decode(networkenc, 'replace').encode("utf-8", "replace")
-        return string.encode("utf-8", "replace")
+        return string.decode(networkenc, 'replace').encode("utf-8", "replace")
+        # return string.encode("utf-8", "replace")
 
     def getencodings(self):
 
@@ -681,7 +684,7 @@ class NetworkEventProcessor:
         else:
             for i in self.peerconns[:]:
                 if i.conn == conn:
-                    self.logMessage(_("Connection closed by peer: %s") % self.decode(vars(i)), 3)
+                    self.logMessage(_("Connection closed by peer: %s") % vars(i))
 
                     if i.conntimer is not None:
                         i.conntimer.cancel()

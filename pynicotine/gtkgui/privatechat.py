@@ -869,25 +869,25 @@ class PrivateChat:
         usernamestyle = self.frame.np.config.sections["ui"]["usernamestyle"]
 
         if usernamestyle == "bold":
-            self.tag_username.set_property("weight",  pango.WEIGHT_BOLD)
-            self.tag_my_username.set_property("weight",  pango.WEIGHT_BOLD)
+            self.tag_username.set_property("weight",  pango.Weight.BOLD)
+            self.tag_my_username.set_property("weight",  pango.Weight.BOLD)
         else:
-            self.tag_username.set_property("weight",  pango.WEIGHT_NORMAL)
-            self.tag_my_username.set_property("weight",  pango.WEIGHT_NORMAL)
+            self.tag_username.set_property("weight",  pango.Weight.NORMAL)
+            self.tag_my_username.set_property("weight",  pango.Weight.NORMAL)
 
         if usernamestyle == "italic":
-            self.tag_username.set_property("style",  pango.STYLE_ITALIC)
-            self.tag_my_username.set_property("style",  pango.STYLE_ITALIC)
+            self.tag_username.set_property("style",  pango.Style.ITALIC)
+            self.tag_my_username.set_property("style",  pango.Style.ITALIC)
         else:
-            self.tag_username.set_property("style",  pango.STYLE_NORMAL)
-            self.tag_my_username.set_property("style",  pango.STYLE_NORMAL)
+            self.tag_username.set_property("style",  pango.Style.NORMAL)
+            self.tag_my_username.set_property("style",  pango.Style.NORMAL)
 
         if usernamestyle == "underline":
-            self.tag_username.set_property("underline", pango.UNDERLINE_SINGLE)
-            self.tag_my_username.set_property("underline", pango.UNDERLINE_SINGLE)
+            self.tag_username.set_property("underline", pango.Underline.SINGLE)
+            self.tag_my_username.set_property("underline", pango.Underline.SINGLE)
         else:
-            self.tag_username.set_property("underline", pango.UNDERLINE_NONE)
-            self.tag_my_username.set_property("underline", pango.UNDERLINE_NONE)
+            self.tag_username.set_property("underline", pango.Underline.NONE)
+            self.tag_my_username.set_property("underline", pango.Underline.NONE)
 
         self.frame.SetTextBG(self.ChatScroll)
         self.frame.SetTextBG(self.ChatLine)
@@ -916,19 +916,19 @@ class PrivateChat:
             usernamestyle = self.frame.np.config.sections["ui"]["usernamestyle"]
 
             if usernamestyle == "bold":
-                tag.set_property("weight",  pango.WEIGHT_BOLD)
+                tag.set_property("weight",  pango.Weight.BOLD)
             else:
-                tag.set_property("weight",  pango.WEIGHT_NORMAL)
+                tag.set_property("weight",  pango.Weight.NORMAL)
 
             if usernamestyle == "italic":
-                tag.set_property("style",  pango.STYLE_ITALIC)
+                tag.set_property("style",  pango.Style.ITALIC)
             else:
-                tag.set_property("style",  pango.STYLE_NORMAL)
+                tag.set_property("style",  pango.Style.NORMAL)
 
             if usernamestyle == "underline":
-                tag.set_property("underline", pango.UNDERLINE_SINGLE)
+                tag.set_property("underline", pango.Underline.SINGLE)
             else:
-                tag.set_property("underline", pango.UNDERLINE_NONE)
+                tag.set_property("underline", pango.Underline.NONE)
 
     def ChangeColours(self):
 

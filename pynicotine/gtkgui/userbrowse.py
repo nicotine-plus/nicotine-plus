@@ -635,7 +635,7 @@ class UserBrowse:
             order = model.sort_order
 
             if order == gtk.SortType.ASCENDING:
-                order = gtk.SORT_DESCENDING
+                order = gtk.SortType.DESCENDING
             else:
                 order = gtk.SortType.ASCENDING
 
