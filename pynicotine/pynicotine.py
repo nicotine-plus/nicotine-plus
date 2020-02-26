@@ -41,7 +41,7 @@ import threading
 from .config import *
 import locale
 from .shares import Shares
-from .utils import CleanFile, findBestEncoding
+from .utils import CleanFile, findBestEncoding, debug
 import os
 import logging
 
@@ -985,7 +985,6 @@ class NetworkEventProcessor:
         return False
 
     def SayChatRoom(self, msg):
-
         if msg.room in self.config.sections["server"]["roomencoding"]:
             encodings = [self.config.sections["server"]["roomencoding"][msg.room]] + self.config.sections["server"]["fallbackencodings"]
             encodings.append(self.config.sections["server"]["enc"])

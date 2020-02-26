@@ -340,7 +340,6 @@ class SlskMessage:
         except struct.error as error:
             if printerror:
                 log.addwarning("%s %s trying to unpack %s at '%s' at %s/%s" % (self.__class__, error, type, message[start:].__repr__(), start, len(message)))
-                self.debug(message)
             raise struct.error(error)
             # return start, None
 
@@ -409,9 +408,7 @@ class SlskMessage:
         return '.'.join(strlist)
 
     def debug(self, message=None):
-        debug(self, self.__dict__)
-        if message:
-            debug("Message contents:", message.__repr__())
+        debug(type(self).__name__, self.__dict__, message.__repr__())
 
 
 class ServerMessage(SlskMessage):
@@ -457,7 +454,6 @@ class Login(ServerMessage):
             try:
                 import socket
                 pos, self.ip = pos+4, socket.inet_ntoa(message[pos+4:pos:-1])
-                debug('IP', self.ip)
                 # Unknown number
             except Exception as error:
                 log.addwarning("Error unpacking IP address: %s" % (error,))

@@ -931,7 +931,6 @@ class SlskProtoThread(threading.Thread):
 					msg = msgObj.makeNetworkMessage()
 					if msg == '' or msg is None:
 						msg = b''
-					# debug(f"      msg: {msg}")
 					if server_socket in conns:
 						# debug(f'      obuf: {conns[server_socket].obuf}')
 						debug(f'      msg:  {msg}')
@@ -984,7 +983,6 @@ class SlskProtoThread(threading.Thread):
 						message = _("Can't send the message over the closed connection: %(type)s %(msg_obj)s") %{'type':msgObj.__class__, 'msg_obj':vars(msgObj)}
 						log.add(message, 3)
 			elif issubclass(msgObj.__class__, InternalMessage):
-				debug(f"Internal msg: {msgObj}")
 				socketwarning = False
 				if msgObj.__class__ is ServerConn:
 					if maxsockets == -1 or numsockets < maxsockets:
