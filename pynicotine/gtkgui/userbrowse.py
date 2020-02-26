@@ -339,7 +339,7 @@ class UserBrowse:
         for item in items[1:]:
             item.set_sensitive(act)
 
-        self.folder_popup_menu.popup(None, None, None, event.button, event.time)
+        self.folder_popup_menu.popup(None, None, None, None, event.button, event.time)
 
     def SelectedFilesCallback(self, model, path, iter):
         rawfilename = self.FileStore.get_value(iter, 6)
@@ -386,7 +386,7 @@ class UserBrowse:
             items[4].set_sensitive(not multiple and files)  # Copy URL
 
         self.FileTreeView.emit_stop_by_name("button_press_event")
-        self.file_popup_menu.popup(None, None, None, event.button, event.time)
+        self.file_popup_menu.popup(None, None, None, None, event.button, event.time)
 
         return True
 

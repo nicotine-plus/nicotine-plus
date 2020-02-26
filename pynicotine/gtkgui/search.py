@@ -571,7 +571,7 @@ class Searches(IconNotebook):
 
             if event.button == 3:
                 menu = self.TabPopup(id)
-                menu.popup(None, None, None, event.button, event.time)
+                menu.popup(None, None, None, None, event.button, event.time)
                 return True
 
         return False
@@ -1486,7 +1486,7 @@ class Search:
         items[8].set_sensitive(users)
 
         widget.emit_stop_by_name("button_press_event")
-        self.popup_menu.popup(None, None, None, event.button, event.time)
+        self.popup_menu.popup(None, None, None, None, event.button, event.time)
 
         return True
 

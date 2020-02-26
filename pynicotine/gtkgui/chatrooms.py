@@ -314,7 +314,7 @@ class RoomsControl:
         self.Menu_PrivateRoom_Disown.set_sensitive(self.IsPrivateRoomOwned(self.popup_room))  # Disown
         self.Menu_PrivateRoom_Dismember.set_sensitive((prooms_enabled and self.IsPrivateRoomMember(self.popup_room)))  # Dismember
 
-        self.popup_menu.popup(None, None, None, event.button, event.time)
+        self.popup_menu.popup(None, None, None, None, event.button, event.time)
 
     def OnPopupJoin(self, widget):
         self.frame.np.queue.put(slskmessages.JoinRoom(self.popup_room))
@@ -1328,7 +1328,7 @@ class ChatRoom:
         self.Menu_PrivateRooms.set_sensitive(not me)
 
         self.popup_menu.editing = False
-        self.popup_menu.popup(None, None, None, event.button, event.time)
+        self.popup_menu.popup(None, None, None, None, event.button, event.time)
 
     def OnShowChatHelp(self, widget):
         self.frame.OnAboutChatroomCommands(widget, self.GetTabParent(self.Main))
@@ -1912,7 +1912,7 @@ class ChatRoom:
             self.Menu_PrivateRooms.set_sensitive(not me)
 
             self.popup_menu.editing = False
-            self.popup_menu.popup(None, None, None, event.button, event.time)
+            self.popup_menu.popup(None, None, None, None, event.button, event.time)
 
         tag.last_event_type = event.type
 
@@ -2280,7 +2280,7 @@ class ChatRoom:
             return False
 
         widget.emit_stop_by_name("button-press-event")
-        self.chatpopmenu.popup(None, None, None, event.button, event.time)
+        self.chatpopmenu.popup(None, None, None, None, event.button, event.time)
 
         return True
 
@@ -2290,7 +2290,7 @@ class ChatRoom:
             return False
 
         widget.emit_stop_by_name("button-press-event")
-        self.logpopupmenu.popup(None, None, None, event.button, event.time)
+        self.logpopupmenu.popup(None, None, None, None, event.button, event.time)
 
         return True
 
@@ -2444,7 +2444,7 @@ class ChatRooms(IconNotebook):
 
             if event.button == 3:
                 menu = self.TabPopup(room)
-                menu.popup(None, None, None, event.button, event.time)
+                menu.popup(None, None, None, None, event.button, event.time)
                 return True
 
             return False

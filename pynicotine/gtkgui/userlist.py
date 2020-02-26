@@ -408,7 +408,7 @@ class UserList:
             self.Menu_OnTrusted.set_active(user in self.trusted)
             self.Menu_PrivateRooms.set_sensitive(not me)  # Private rooms
 
-            self.popup_menu.popup(None, None, None, event.button, event.time)
+            self.popup_menu.popup(None, None, None, None, event.button, event.time)
 
     def GetIter(self, user):
 

@@ -250,7 +250,7 @@ def PressHeader(widget, event):
         pos += 1
 
     menu.show_all()
-    menu.popup(None, None, None, event.button, event.time)
+    menu.popup(None, None, None, None, event.button, event.time)
 
     return True
 

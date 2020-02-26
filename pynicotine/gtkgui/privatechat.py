@@ -199,7 +199,7 @@ class PrivateChats(IconNotebook):
 
             if event.button == 3:
                 menu = self.TabPopup(username)
-                menu.popup(None, None, None, event.button, event.time)
+                menu.popup(None, None, None, None, event.button, event.time)
                 return True
 
             return False
@@ -480,7 +480,7 @@ class PrivateChat:
 
         if event.type == Gdk.EventType.BUTTON_PRESS and event.button == 3:
 
-            self.popup_menu.popup(None, None, None, event.button, event.time)
+            self.popup_menu.popup(None, None, None, None, event.button, event.time)
             self.ChatScroll.emit_stop_by_name("button_press_event")
             return True
 
@@ -488,7 +488,7 @@ class PrivateChat:
 
             if event.keyval == Gdk.keyval_from_name("Menu"):
 
-                self.popup_menu.popup(None, None, None, 0, 0)
+                self.popup_menu.popup(None, None, None, None, 0, 0)
                 self.ChatScroll.emit_stop_by_name("key_press_event")
                 return True
 

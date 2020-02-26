@@ -184,7 +184,7 @@ class UserTabs(IconNotebook):
 
             if event.button == 3:
                 menu = self.TabPopup(username)
-                menu.popup(None, None, None, event.button, event.time)
+                menu.popup(None, None, None, None, event.button, event.time)
                 return True
 
             return False
@@ -322,7 +322,7 @@ class UserInfo:
         items[0].set_active(thing in self.frame.np.config.sections["interests"]["likes"])
         items[1].set_active(thing in self.frame.np.config.sections["interests"]["dislikes"])
 
-        self.likes_popup_menu.popup(None, None, None, event.button, event.time)
+        self.likes_popup_menu.popup(None, None, None, None, event.button, event.time)
 
     def OnPopupHatesMenu(self, widget, event):
 
@@ -344,7 +344,7 @@ class UserInfo:
         items[0].set_active(thing in self.frame.np.config.sections["interests"]["likes"])
         items[1].set_active(thing in self.frame.np.config.sections["interests"]["dislikes"])
 
-        self.hates_popup_menu.popup(None, None, None, event.button, event.time)
+        self.hates_popup_menu.popup(None, None, None, None, event.button, event.time)
 
     def ConnClose(self):
         pass
@@ -573,7 +573,7 @@ class UserInfo:
         for item in items:
             item.set_sensitive(act)
 
-        self.image_menu.popup(None, None, None, event.button, event.time)
+        self.image_menu.popup(None, None, None, None, event.button, event.time)
 
         return True  # Don't scroll the gtk.ScrolledWindow
 
