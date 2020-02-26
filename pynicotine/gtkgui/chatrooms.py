@@ -426,7 +426,6 @@ class RoomsControl:
 
         self.rooms = []
         for room, users in msg.rooms:
-            debug('room', room, 'users', users)
             self.roomsmodel.append([room, users, 0])
             self.rooms.append(room)
 
@@ -645,11 +644,9 @@ class RoomsControl:
             self.GetUserAddress(msg.username)
 
     def UserLeftRoom(self, msg):
-        debug('joined rooms', self.joinedrooms, 'leaving', msg)
         self.joinedrooms[msg.room].UserLeftRoom(msg.username)
 
     def TickerSet(self, msg):
-        debug(msg)
         self.joinedrooms[msg.room].TickerSet(msg)
 
     def TickerAdd(self, msg):
@@ -659,7 +656,6 @@ class RoomsControl:
         self.joinedrooms[msg.room].TickerRemove(msg)
 
     def SayChatRoom(self, msg, text):
-
         if msg.user in self.frame.np.config.sections["server"]["ignorelist"]:
             return
 
@@ -1393,7 +1389,6 @@ class ChatRoom:
         self.Ticker.remove_ticker(msg.user)
 
     def SayChatRoom(self, msg, text, public=False):
-
         text = re.sub("\s\s+", "  ", text)
         login = self.frame.np.config.sections["server"]["login"]
         user = msg.user
@@ -1468,7 +1463,7 @@ class ChatRoom:
 
             self.lines.append(
                 AppendLine(
-                    self.ChatScroll, self.frame.CensorChat(line).encode('utf-8'), tag,
+                    self.ChatScroll, self.frame.CensorChat(line), tag,
                     username=user, usertag=self.tag_users[user], timestamp_format=timestamp_format
                 )
             )
@@ -1483,7 +1478,12 @@ class ChatRoom:
                     }
                 )
         else:
-            self.lines.append(AppendLine(self.ChatScroll, line, tag, username=user, usertag=self.tag_users[user], timestamp_format=timestamp_format))
+            self.lines.append(
+                AppendLine(
+                    self.ChatScroll, line, tag,
+                    username=user, usertag=self.tag_users[user], timestamp_format=timestamp_format
+                )
+            )
 
     def getUserTag(self, user):
 

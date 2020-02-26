@@ -26,9 +26,12 @@
 from pynicotine.pynicotine import NetworkEventProcessor
 from pynicotine import slskmessages
 from pynicotine import slskproto
-from pynicotine.utils import version
+from pynicotine.utils import version, debug
 
 import gi
+
+from ..slskmessages import InternalData
+
 gi.require_version('Gtk', '3.0')
 gi.require_version('Gdk', '3.0')
 
@@ -1366,6 +1369,8 @@ class NicotineFrame:
             gobject.idle_add(self.emit_network_event, msgs[:])
 
     def networkcallback(self, msgs):
+        # if [m for m in msgs if not isinstance(m, InternalData)]:
+        #     debug('networkcallback', msgs)
         curtime = time.time()
         for i in msgs[:]:
             if i.__class__ is slskmessages.DownloadFile or i.__class__ is slskmessages.UploadFile:
