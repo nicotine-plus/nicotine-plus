@@ -327,7 +327,7 @@ class SlskMessage:
                     return struct.calcsize("<L")+start, struct.unpack("<L", message[start:start+struct.calcsize("<L")])[0]
             elif type is bytes:
                 length = struct.unpack("<I", message[start:start+intsize])[0]
-                string = message[start+intsize:start+length+intsize].decode('utf-8')
+                string = message[start+intsize:start+length+intsize].decode('utf-8', errors='replace')
                 return length+intsize+start, string
             elif type is NetworkIntType:
                 return intsize+start, struct.unpack("<I", message[start:start+intsize])[0]
