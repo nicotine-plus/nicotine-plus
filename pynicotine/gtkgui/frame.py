@@ -990,7 +990,7 @@ class NicotineFrame:
 
         self.recommendationusers = {}
         self.recommendationuserslist = gtk.ListStore(
-            gobject.TYPE_GTYPE,
+            gobject.TYPE_OBJECT,
             gobject.TYPE_STRING,
             gobject.TYPE_STRING,
             gobject.TYPE_STRING,

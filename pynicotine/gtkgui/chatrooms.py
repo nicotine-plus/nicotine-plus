@@ -1037,8 +1037,8 @@ class ChatRoom:
         self.users = {}
 
         self.usersmodel = gtk.ListStore(
-            gobject.TYPE_GTYPE,
-            gobject.TYPE_GTYPE,
+            gobject.TYPE_OBJECT,
+            gobject.TYPE_OBJECT,
             gobject.TYPE_STRING,
             gobject.TYPE_STRING,
             gobject.TYPE_STRING,
