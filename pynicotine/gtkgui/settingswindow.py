@@ -2027,7 +2027,7 @@ class ColoursFrame(buildFrame):
             else:
                 dlg.colorsel.set_current_color(colour)
 
-        if dlg.run() == gtk.RESPONSE_OK:
+        if dlg.run() == gtk.ResponseType.OK:
 
             colour = dlg.colorsel.get_current_color()
             colourtext = "#%02X%02X%02X" % (colour.red / 256, colour.green / 256, colour.blue / 256)
@@ -3081,11 +3081,11 @@ class buildDialog(gtk.Dialog):
         self.removeButton = gtk.Button(_("Remove"), gtk.STOCK_REMOVE)
 
         self.tw["vbox%d" % c] = gtk.HBox(False, 5)
-        self.tw["vbox%d" % c].pack_start(self.addButton, False, False)
-        self.tw["vbox%d" % c].pack_start(self.removeButton, False, False)
+        self.tw["vbox%d" % c].pack_start(self.addButton, False, False, 0)
+        self.tw["vbox%d" % c].pack_start(self.removeButton, False, False, 0)
 
-        self.Main.pack_start(self.tw["box%d" % c], True, True)
-        self.Main.pack_start(self.tw["vbox%d" % c], False, False)
+        self.Main.pack_start(self.tw["box%d" % c], True, True, 0)
+        self.Main.pack_start(self.tw["vbox%d" % c], False, False, 0)
 
         renderers = cols[0].get_cells()
         for render in renderers:
@@ -3146,30 +3146,30 @@ class buildDialog(gtk.Dialog):
             if data["type"] in ("integer", "int"):
                 self.tw["box%d" % c] = gtk.HBox(False, 5)
                 self.tw["label%d" % c] = self.GenerateLabel(data["description"])
-                self.tw["box%d" % c].pack_start(self.tw["label%d" % c], False, False)
+                self.tw["box%d" % c].pack_start(self.tw["label%d" % c], False, False, 0)
 
                 self.tw[name] = gtk.SpinButton(gtk.Adjustment(0, 0, 99999, 1, 10, 0))
                 self.settings.SetWidget(self.tw[name], self.settings.frame.np.config.sections["plugins"][plugin][name])
-                self.tw["box%d" % c].pack_start(self.tw[name], False, False)
-                self.Main.pack_start(self.tw["box%d" % c], False, False)
+                self.tw["box%d" % c].pack_start(self.tw[name], False, False, 0)
+                self.Main.pack_start(self.tw["box%d" % c], False, False, 0)
             elif data["type"] in ("bool",):
                 self.tw["box%d" % c] = gtk.HBox(False, 5)
                 self.tw["label%d" % c] = self.GenerateLabel(data["description"])
-                self.tw["box%d" % c].pack_start(self.tw["label%d" % c], False, False)
+                self.tw["box%d" % c].pack_start(self.tw["label%d" % c], False, False, 0)
 
                 self.tw[name] = gtk.CheckButton()
                 self.settings.SetWidget(self.tw[name], self.settings.frame.np.config.sections["plugins"][plugin][name])
-                self.tw["box%d" % c].pack_start(self.tw[name], False, False)
-                self.Main.pack_start(self.tw["box%d" % c], False, False)
+                self.tw["box%d" % c].pack_start(self.tw[name], False, False, 0)
+                self.Main.pack_start(self.tw["box%d" % c], False, False, 0)
             elif data['type'] in ('str', 'string', 'file'):
                 self.tw["box%d" % c] = gtk.HBox(False, 5)
                 self.tw["label%d" % c] = self.GenerateLabel(data["description"])
-                self.tw["box%d" % c].pack_start(self.tw["label%d" % c], False, False)
+                self.tw["box%d" % c].pack_start(self.tw["label%d" % c], False, False, 0)
 
                 self.tw[name] = gtk.Entry()
                 self.settings.SetWidget(self.tw[name], self.settings.frame.np.config.sections["plugins"][plugin][name])
-                self.tw["box%d" % c].pack_start(self.tw[name], False, False)
-                self.Main.pack_start(self.tw["box%d" % c], False, False)
+                self.tw["box%d" % c].pack_start(self.tw[name], False, False, 0)
+                self.Main.pack_start(self.tw["box%d" % c], False, False, 0)
             elif data["type"] in ("list string",):
                 self.GenerateTreeView(name, data["description"], value, c)
             else:

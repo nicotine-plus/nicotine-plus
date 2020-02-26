@@ -40,7 +40,7 @@ class GenericAboutDialog(gtk.Dialog):
             title,
             parent,
             gtk.DialogFlags.MODAL,
-            (gtk.STOCK_OK, gtk.RESPONSE_OK)
+            (gtk.STOCK_OK, gtk.ResponseType.OK)
         )
 
         if nicotine:
@@ -94,11 +94,11 @@ Based on code from Nicotine and PySoulSeek""") % version
 
         AppendLine(TextView, text, None, None, showstamp=False)
         vbox = gtk.VBox()
-        vbox.pack_start(img, False, True)
+        vbox.pack_start(img, False, True, 0)
         hbox = gtk.HBox()
         hbox.set_spacing(10)
-        hbox.pack_start(vbox, False, True)
-        hbox.pack_start(ScrolledWindow, True, True)
+        hbox.pack_start(vbox, False, True, 0)
+        hbox.pack_start(ScrolledWindow, True, True, 0)
 
         self.expander = gtk.Expander(_("Dependencies"))
         self.expander.show()
@@ -120,8 +120,8 @@ Based on code from Nicotine and PySoulSeek""") % version
         VersionPython.set_alignment(0, 0.5)
         VersionPython.show()
 
-        hboxpython.pack_start(python, True, True)
-        hboxpython.pack_start(VersionPython, True, True)
+        hboxpython.pack_start(python, True, True, 0)
+        hboxpython.pack_start(VersionPython, True, True, 0)
 
         hboxgtk = gtk.HBox(5)
         hboxgtk.show()
@@ -137,8 +137,8 @@ Based on code from Nicotine and PySoulSeek""") % version
         VersionGTK.set_alignment(0, 0.5)
         VersionGTK.show()
 
-        hboxgtk.pack_start(gtkplus, True, True)
-        hboxgtk.pack_start(VersionGTK, True, True)
+        hboxgtk.pack_start(gtkplus, True, True, 0)
+        hboxgtk.pack_start(VersionGTK, True, True, 0)
 
         hboxpygtk = gtk.HBox(5)
         hboxpygtk.show()
@@ -154,15 +154,15 @@ Based on code from Nicotine and PySoulSeek""") % version
         VersionPyGTK.set_alignment(0, 0.5)
         VersionPyGTK.show()
 
-        hboxpygtk.pack_start(pygtkplus, True, True)
-        hboxpygtk.pack_start(VersionPyGTK, True, True)
+        hboxpygtk.pack_start(pygtkplus, True, True, 0)
+        hboxpygtk.pack_start(VersionPyGTK, True, True, 0)
 
-        self.vbox2.pack_start(hboxpython, True, True)
-        self.vbox2.pack_start(hboxgtk, True, True)
-        self.vbox2.pack_start(hboxpygtk, True, True)
+        self.vbox2.pack_start(hboxpython, True, True, 0)
+        self.vbox2.pack_start(hboxgtk, True, True, 0)
+        self.vbox2.pack_start(hboxpygtk, True, True, 0)
 
-        self.vbox.pack_start(hbox, True, True)
-        self.vbox.pack_start(self.expander, True, True)
+        self.vbox.pack_start(hbox, True, True, 0)
+        self.vbox.pack_start(self.expander, True, True, 0)
 
         self.LicenseButton = self.nicotine.CreateIconButton(
             gtk.STOCK_ABOUT,
@@ -539,8 +539,8 @@ class GenericTableDialog(GenericAboutDialog):
             table.attach(l, 0, 1, i, i+1, xoptions=gtk.FILL)
             table.attach(r, 1, 2, i, i+1, xoptions=gtk.FILL | gtk.EXPAND)
 
-        vbox2.pack_start(table, False, False)
-        vbox2.pack_start(gtk.Label(), True, True)
+        vbox2.pack_start(table, False, False, 0)
+        vbox2.pack_start(gtk.Label(), True, True, 0)
         ScrolledWindow.add_with_viewport(vbox2)
         self.vbox.pack_start(ScrolledWindow)
         self.show_all()

@@ -839,9 +839,9 @@ def TickDialog(parent, default=""):
     dlg = gtk.Dialog(
         title=_("Set ticker message"),
         parent=parent,
-        buttons=(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL, gtk.STOCK_OK, gtk.RESPONSE_OK)
+        buttons=(gtk.STOCK_CANCEL, gtk.ResponseType.CANCEL, gtk.STOCK_OK, gtk.ResponseType.OK)
     )
-    dlg.set_default_response(gtk.RESPONSE_OK)
+    dlg.set_default_response(gtk.ResponseType.OK)
 
     t = 0
 
@@ -850,33 +850,33 @@ def TickDialog(parent, default=""):
 
     l = gtk.Label(_("Set room ticker message:"))
     l.set_alignment(0, 0.5)
-    dlg.vbox.pack_start(l, False, False)
+    dlg.vbox.pack_start(l, False, False, 0)
 
     entry = gtk.Entry()
     entry.set_activates_default(True)
     entry.set_text(default)
-    dlg.vbox.pack_start(entry, True, True)
+    dlg.vbox.pack_start(entry, True, True, 0)
 
     v = gtk.VBox(False, False)
     r1 = gtk.RadioButton()
     r1.set_label(_("Just this time"))
     r1.set_active(True)
-    v.pack_start(r1, False, False)
+    v.pack_start(r1, False, False, 0)
 
     r2 = gtk.RadioButton(r1)
     r2.set_label(_("Always for this channel"))
-    v.pack_start(r2, False, False)
+    v.pack_start(r2, False, False, 0)
 
     r3 = gtk.RadioButton(r1)
     r3.set_label(_("Default for all channels"))
-    v.pack_start(r3, False, False)
+    v.pack_start(r3, False, False, 0)
 
-    dlg.vbox.pack_start(v, True, True)
+    dlg.vbox.pack_start(v, True, True, 0)
 
     dlg.vbox.show_all()
 
     result = None
-    if dlg.run() == gtk.RESPONSE_OK:
+    if dlg.run() == gtk.ResponseType.OK:
 
         if r1.get_active():
             t = 0
