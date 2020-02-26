@@ -1969,7 +1969,7 @@ class ColoursFrame(buildFrame):
                 except:
                     colour = None
 
-                drawingarea.modify_bg(gtk.STATE_NORMAL, colour)
+                drawingarea.modify_bg(gtk.StateFlags.NORMAL, colour)
                 break
 
     def OnClearAllColours(self, widget):
@@ -1992,7 +1992,7 @@ class ColoursFrame(buildFrame):
             for section, value in list(self.colorsd.items()):
                 if option in value:
                     drawingarea = self.colorsd[section][option]
-                    drawingarea.modify_bg(gtk.STATE_NORMAL, None)
+                    drawingarea.modify_bg(gtk.StateFlags.NORMAL, None)
 
     def FontsColorsChanged(self, widget):
         self.needcolors = 1
@@ -2045,7 +2045,7 @@ class ColoursFrame(buildFrame):
 
                     if entry is value:
                         drawingarea = self.colorsd[section][key]
-                        drawingarea.modify_bg(gtk.STATE_NORMAL, colour)
+                        drawingarea.modify_bg(gtk.StateFlags.NORMAL, colour)
                         break
 
         dlg.destroy()

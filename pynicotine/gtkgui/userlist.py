@@ -72,9 +72,12 @@ class UserList:
         self.userlist = []
 
         self.usersmodel = gtk.ListStore(
-            gobject.TYPE_GTYPE, gobject.TYPE_GTYPE, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_BOOLEAN,
-            gobject.TYPE_BOOLEAN, gobject.TYPE_BOOLEAN, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_INT, gobject.TYPE_INT,
-            gobject.TYPE_INT, gobject.TYPE_INT, gobject.TYPE_STRING
+            gobject.TYPE_OBJECT, gobject.TYPE_OBJECT,
+            gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING,
+            gobject.TYPE_BOOLEAN, gobject.TYPE_BOOLEAN, gobject.TYPE_BOOLEAN,
+            gobject.TYPE_STRING, gobject.TYPE_STRING,
+            gobject.TYPE_INT, gobject.TYPE_INT, gobject.TYPE_INT, gobject.TYPE_INT,
+            gobject.TYPE_STRING
         )
         statusiconwidth = self.frame.images["offline"].get_width() + 4
         widths = self.frame.np.config.sections["columns"]["userlist_widths"]

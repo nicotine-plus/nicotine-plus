@@ -990,7 +990,7 @@ class NicotineFrame:
 
         self.recommendationusers = {}
         self.recommendationuserslist = gtk.ListStore(
-            gobject.TYPE_GTYPE,
+            gobject.TYPE_OBJECT,
             gobject.TYPE_STRING,
             gobject.TYPE_STRING,
             gobject.TYPE_STRING,
@@ -1523,7 +1523,10 @@ class NicotineFrame:
 
     def ScrollBottom(self, widget):
         va = widget.get_vadjustment()
-        va.set_value(va.upper - va.page_size)
+        try:
+            va.set_value(va.upper - va.page_size)
+        except AttributeError:
+            pass
         widget.set_vadjustment(va)
         return False
 

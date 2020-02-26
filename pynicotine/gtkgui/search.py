@@ -644,7 +644,7 @@ class Search:
             str,  # immediatedl
             str,  # h_bitrate
             str,  # length
-            gobject.TYPE_GTYPE,  # self.get_flag(user, country)
+            gobject.TYPE_OBJECT,  # self.get_flag(user, country)
             str,  # directory
             int,  # bitrate
             str,  # fullpath

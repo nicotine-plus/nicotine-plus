@@ -1037,8 +1037,8 @@ class ChatRoom:
         self.users = {}
 
         self.usersmodel = gtk.ListStore(
-            gobject.TYPE_GTYPE,
-            gobject.TYPE_GTYPE,
+            gobject.TYPE_OBJECT,
+            gobject.TYPE_OBJECT,
             gobject.TYPE_STRING,
             gobject.TYPE_STRING,
             gobject.TYPE_STRING,
@@ -1512,13 +1512,7 @@ class ChatRoom:
 
     def OnEnter(self, widget):
 
-        bytes = widget.get_text()
-
-        try:
-            text = str(bytes, "UTF-8")
-        except UnicodeDecodeError:
-            log.addwarning(_("We have a problem, PyGTK get_text does not seem to return UTF-8. Please file a bug report. Bytes: %s") % (repr(bytes)))
-            text = str(bytes, "UTF-8", "replace")
+        text = widget.get_text()
 
         if not text:
             widget.set_text("")
@@ -1538,12 +1532,7 @@ class ChatRoom:
         else:
             args = ""
 
-        s = bytes.split(" ", 1)  # bytes
-
-        if len(s) == 2:
-            byteargs = s[1]
-        else:
-            byteargs = ""
+        byteargs = args.encode('utf-8')  # bytes
 
         if cmd in ("/alias", "/al"):
             AppendLine(self.ChatScroll, self.frame.np.config.AddAlias(args), self.tag_remote, "")
@@ -1581,7 +1570,7 @@ class ChatRoom:
 
         elif cmd in ["/m", "/msg"]:
             if byteargs:
-                user = byteargs.split(" ", 1)[0]
+                user = byteargs.split(b" ", 1)[0]
                 try:
                     msg = args.split(" ", 1)[1]
                 except IndexError:
@@ -2013,7 +2002,7 @@ class ChatRoom:
     def ChangeColours(self):
 
         map = self.ChatScroll.get_style().copy()
-        self.backupcolor = map.text[gtk.STATE_NORMAL]
+        self.backupcolor = map.text[gtk.StateFlags.NORMAL]
 
         self.changecolour(self.tag_remote, "chatremote")
         self.changecolour(self.tag_local, "chatlocal")
