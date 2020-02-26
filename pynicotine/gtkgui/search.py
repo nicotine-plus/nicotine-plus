@@ -293,7 +293,7 @@ class Searches(IconNotebook):
             mode = 0
         elif search_mode == _("Rooms"):
             mode = 1
-            name = self.frame.RoomSearchCombo.child.get_text()
+            name = self.frame.RoomSearchCombo.get_child().get_text()
             # Space after Joined Rooms is important, so it doesn't conflict
             # with any possible real room
             if name != _("Joined Rooms ") and not name.isspace():
@@ -302,7 +302,7 @@ class Searches(IconNotebook):
             mode = 2
         elif search_mode == _("User"):
             mode = 3
-            user = self.frame.UserSearchCombo.child.get_text().strip()
+            user = self.frame.UserSearchCombo.get_child().get_text().strip()
             if user != "" and not user.isspace():
                 users = [user]
             else:
@@ -379,7 +379,7 @@ class Searches(IconNotebook):
         if search[2] is not None:
             self.set_current_page(self.page_num(search[2].Main))
 
-        text = self.frame.np.encode(text)
+        # text = self.frame.np.encode(text)
         if mode == 0:
             self.DoGlobalSearch(self.searchid, text)
         elif mode == 1:
@@ -682,16 +682,16 @@ class Search:
         self.FilterBitrate.connect("changed", self.OnFilterChanged)
         self.FilterCountry.connect("changed", self.OnFilterChanged)
 
-        self.FilterIn.child.connect("activate", self.OnRefilter)
-        self.FilterOut.child.connect("activate", self.OnRefilter)
-        self.FilterSize.child.connect("activate", self.OnRefilter)
-        self.FilterBitrate.child.connect("activate", self.OnRefilter)
-        self.FilterCountry.child.connect("activate", self.OnRefilter)
+        self.FilterIn.get_child().connect("activate", self.OnRefilter)
+        self.FilterOut.get_child().connect("activate", self.OnRefilter)
+        self.FilterSize.get_child().connect("activate", self.OnRefilter)
+        self.FilterBitrate.get_child().connect("activate", self.OnRefilter)
+        self.FilterCountry.get_child().connect("activate", self.OnRefilter)
 
         self.selected_results = []
         self.selected_users = []
 
-        self.ResultsList.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
+        self.ResultsList.get_selection().set_mode(gtk.SelectionMode.MULTIPLE)
         self.ResultsList.set_property("show-expanders", False)
         self.ResultsList.set_property("rules-hint", True)
         widths = self.frame.np.config.sections["columns"]["search_widths"]
@@ -775,14 +775,14 @@ class Search:
 
             filter = self.frame.np.config.sections["searches"]["defilter"]
 
-            self.FilterIn.child.set_text(filter[0])
-            self.FilterOut.child.set_text(filter[1])
-            self.FilterSize.child.set_text(filter[2])
-            self.FilterBitrate.child.set_text(filter[3])
+            self.FilterIn.get_child().set_text(filter[0])
+            self.FilterOut.get_child().set_text(filter[1])
+            self.FilterSize.get_child().set_text(filter[2])
+            self.FilterBitrate.get_child().set_text(filter[3])
             self.FilterFreeSlot.set_active(filter[4])
 
             if(len(filter) > 5):
-                self.FilterCountry.child.set_text(filter[5])
+                self.FilterCountry.get_child().set_text(filter[5])
 
             self.filtersCheck.set_active(1)
 
@@ -1202,18 +1202,18 @@ class Search:
                 f_in = re.compile(f_in.lower())
                 self.filters[0] = f_in
             except sre_constants.error:
-                self.frame.SetTextBG(self.FilterIn.child, "red", "white")
+                self.frame.SetTextBG(self.FilterIn.get_child(), "red", "white")
             else:
-                self.frame.SetTextBG(self.FilterIn.child)
+                self.frame.SetTextBG(self.FilterIn.get_child())
 
         if f_out:
             try:
                 f_out = re.compile(f_out.lower())
                 self.filters[1] = f_out
             except sre_constants.error:
-                self.frame.SetTextBG(self.FilterOut.child, "red", "white")
+                self.frame.SetTextBG(self.FilterOut.get_child(), "red", "white")
             else:
-                self.frame.SetTextBG(self.FilterOut.child)
+                self.frame.SetTextBG(self.FilterOut.get_child())
 
         if size:
             self.filters[2] = size
@@ -1390,11 +1390,11 @@ class Search:
     def ChangeColours(self):
 
         self.frame.SetTextBG(self.ResultsList)
-        self.frame.SetTextBG(self.FilterIn.child)
-        self.frame.SetTextBG(self.FilterOut.child)
-        self.frame.SetTextBG(self.FilterSize.child)
-        self.frame.SetTextBG(self.FilterBitrate.child)
-        self.frame.SetTextBG(self.FilterCountry.child)
+        self.frame.SetTextBG(self.FilterIn.get_child())
+        self.frame.SetTextBG(self.FilterOut.get_child())
+        self.frame.SetTextBG(self.FilterSize.get_child())
+        self.frame.SetTextBG(self.FilterBitrate.get_child())
+        self.frame.SetTextBG(self.FilterCountry.get_child())
         self.frame.SetTextBG(self.RememberCheckButton)
         self.frame.SetTextBG(self.FilterFreeSlot)
 

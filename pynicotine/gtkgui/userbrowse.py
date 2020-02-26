@@ -209,7 +209,7 @@ class UserBrowse:
                 parent.connect('button_press_event', PressHeader)
 
         # Read Show / Hide column settings from last session
-        self.FileTreeView.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
+        self.FileTreeView.get_selection().set_mode(gtk.SelectionMode.MULTIPLE)
         self.FileTreeView.set_headers_clickable(True)
         self.FileTreeView.set_property("rules-hint", True)
 
