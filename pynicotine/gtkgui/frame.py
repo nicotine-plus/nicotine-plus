@@ -1206,7 +1206,7 @@ class NicotineFrame:
         try:
 
             if event.type == Gdk.EventType.BUTTON_PRESS:
-                widget.popup(None, None, None, event.button, event.time)
+                widget.popup(None, None, None, None, event.button, event.time)
 
                 # Tell calling code that we have handled this event the buck
                 # stops here.
@@ -1305,7 +1305,7 @@ class NicotineFrame:
     def on_tab_click(self, widget, event, id, child):
 
         if event.type == Gdk.EventType.BUTTON_PRESS and event.button == 3:
-            self.__dict__[id].popup(None, None, None, event.button, event.time)
+            self.__dict__[id].popup(None, None, None, None, event.button, event.time)
 
         pass
 
@@ -2913,7 +2913,7 @@ class NicotineFrame:
         if event.button != 3:
             return False
         widget.emit_stop_by_name("button-press-event")
-        self.logpopupmenu.popup(None, None, None, event.button, event.time)
+        self.logpopupmenu.popup(None, None, None, None, event.button, event.time)
         return True
 
     #
@@ -3122,7 +3122,7 @@ class NicotineFrame:
         items[7].set_active(user in [i[0] for i in self.np.config.sections["server"]["userlist"]])
         items[8].set_active(user in self.np.config.sections["server"]["banlist"])
         items[9].set_active(user in self.np.config.sections["server"]["ignorelist"])
-        self.ru_popup_menu.popup(None, None, None, event.button, event.time)
+        self.ru_popup_menu.popup(None, None, None, None, event.button, event.time)
 
     def OnRemoveThingILike(self, widget):
         thing = self.til_popup_menu.get_user()
@@ -3149,7 +3149,7 @@ class NicotineFrame:
         iter = self.likeslist.get_iter(path)
         thing = self.likeslist.get_value(iter, 0)
         self.til_popup_menu.set_user(thing)
-        self.til_popup_menu.popup(None, None, None, event.button, event.time)
+        self.til_popup_menu.popup(None, None, None, None, event.button, event.time)
 
     def OnRemoveThingIDislike(self, widget):
         thing = self.tidl_popup_menu.get_user()
@@ -3171,7 +3171,7 @@ class NicotineFrame:
         iter = self.dislikeslist.get_iter(path)
         thing = self.dislikeslist.get_value(iter, 0)
         self.tidl_popup_menu.set_user(thing)
-        self.tidl_popup_menu.popup(None, None, None, event.button, event.time)
+        self.tidl_popup_menu.popup(None, None, None, None, event.button, event.time)
 
     def OnLikeRecommendation(self, widget):
         thing = widget.parent.get_user()
@@ -3224,7 +3224,7 @@ class NicotineFrame:
         self.r_popup_menu.set_user(thing)
         items[0].set_active(thing in self.np.config.sections["interests"]["likes"])
         items[1].set_active(thing in self.np.config.sections["interests"]["dislikes"])
-        self.r_popup_menu.popup(None, None, None, event.button, event.time)
+        self.r_popup_menu.popup(None, None, None, None, event.button, event.time)
 
     def OnPopupUnRecMenu(self, widget, event):
         if event.button != 3:
@@ -3239,7 +3239,7 @@ class NicotineFrame:
         self.ur_popup_menu.set_user(thing)
         items[0].set_active(thing in self.np.config.sections["interests"]["likes"])
         items[1].set_active(thing in self.np.config.sections["interests"]["dislikes"])
-        self.ur_popup_menu.popup(None, None, None, event.button, event.time)
+        self.ur_popup_menu.popup(None, None, None, None, event.button, event.time)
 
     def OnShowTickers(self, widget):
         if not self.chatrooms:
@@ -3711,7 +3711,7 @@ class TrayApp:
     def OnStatusIconPopup(self, status_icon, button, activate_time):
 
         if button == 3:
-            self.tray_popup_menu.popup(None, None, None, button, activate_time)
+            self.tray_popup_menu.popup(None, None, None, None, button, activate_time)
 
     def SetToolTip(self, string):
         if self.trayicon is not None:

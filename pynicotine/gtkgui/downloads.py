@@ -121,7 +121,7 @@ class Downloads(TransferList):
             columns.append(column.get_visible())
             widths.append(column.get_width())
         self.frame.np.config.sections["columns"]["downloads_columns"] = columns
-        self.frame.np.config.sections["columns"]["downloads_widths"] = widths 
+        self.frame.np.config.sections["columns"]["downloads_widths"] = widths
     def OnToggleAutoRetry(self, widget):
         self.frame.np.config.sections["transfers"]["autoretry_downloads"] = self.frame.ToggleAutoRetry.get_active()
 
@@ -472,7 +472,7 @@ class Downloads(TransferList):
         for i in range(10, 15):
             items[i].set_sensitive(act)
 
-        self.popup_menu.popup(None, None, None, 3, event.time)
+        self.popup_menu.popup(None, None, None, None, 3, event.time)
 
         if kind == "keyboard":
             widget.emit_stop_by_name("key_press_event")

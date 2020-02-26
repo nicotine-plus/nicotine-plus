@@ -398,7 +398,7 @@ class Uploads(TransferList):
 
         items[2].set_sensitive(act)  # send to player
 
-        self.popup_menu.popup(None, None, None, 3, event.time)
+        self.popup_menu.popup(None, None, None, None, 3, event.time)
         if kind == "keyboard":
             widget.emit_stop_by_name("key_press_event")
         elif kind == "mouse":

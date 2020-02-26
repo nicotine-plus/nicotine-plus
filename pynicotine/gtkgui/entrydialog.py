@@ -688,8 +688,8 @@ class FolderDownloadDialog(gtk.Dialog):
         hbox2.show()
         box.pack_start(hbox2, False, False, 0)
 
-        cancel_button = self.add_button(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL)
-        ok_button = self.add_button(gtk.STOCK_OK, gtk.RESPONSE_OK)
+        cancel_button = self.add_button(gtk.STOCK_CANCEL, gtk.ResponseType.CANCEL)
+        ok_button = self.add_button(gtk.STOCK_OK, gtk.ResponseType.OK)
         ok_button.grab_default()
 
     def quit(self, *args):

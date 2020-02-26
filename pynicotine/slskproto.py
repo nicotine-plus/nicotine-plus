@@ -411,6 +411,7 @@ class SlskProtoThread(threading.Thread):
 				if sys.platform == "win32":
 					input, output, exc = multiselect(list(conns.keys()) + list(connsinprogress.keys())+ [p], list(connsinprogress.keys()) + outsock, [], 0.5)
 				else:
+					debug('select.select', len(list(conns.keys()) + list(connsinprogress.keys()) +[p]), len(list(connsinprogress.keys()) + outsock))
 					input, output, exc = select.select(list(conns.keys()) + list(connsinprogress.keys()) +[p], list(connsinprogress.keys()) + outsock, [], 0.5)
 				numsockets = 0
 				if p is not None:
@@ -700,7 +701,7 @@ class SlskProtoThread(threading.Thread):
 		from the msgBuffer, creates message objects and returns them and the rest
 		of the msgBuffer.
 		"""
-		print(f"process_server_input({bytes.decode('utf-8')}")
+		debug(f"process_server_input({msgBuffer}")
 		msgs = []
 		# Server messages are 8 bytes or greater in length
 		while len(msgBuffer) >= 8:
@@ -953,7 +954,9 @@ class SlskProtoThread(threading.Thread):
 					if msgObj.__class__ is PierceFireWall:
 						conns[msgObj.conn].piercefw = msgObj
 						msg = msgObj.makeNetworkMessage()
-						conns[msgObj.conn].obuf = conns[msgObj.conn].obuf + struct.pack("<i", len(msg) + 1) + chr(0) + msg
+						conns[msgObj.conn].obuf += struct.pack("<i", len(msg) + 1) + \
+							bytes(chr(0), 'ascii') + \
+							msg
 					elif msgObj.__class__ is PeerInit:
 						conns[msgObj.conn].init = msgObj
 						msg = msgObj.makeNetworkMessage()
@@ -965,7 +968,7 @@ class SlskProtoThread(threading.Thread):
 					elif msgObj.__class__ is FileRequest:
 						conns[msgObj.conn].filereq = msgObj
 						msg = msgObj.makeNetworkMessage()
-						conns[msgObj.conn].obuf = conns[msgObj.conn].obuf + msg
+						conns[msgObj.conn].obuf += msg
 						self._ui_callback([msgObj])
 					else:
 						checkuser = 1
@@ -977,7 +980,8 @@ class SlskProtoThread(threading.Thread):
 								checkuser = 0
 						if checkuser:
 							msg = msgObj.makeNetworkMessage()
-							conns[msgObj.conn].obuf += struct.pack("<ii", len(msg) + 4, self.peercodes[msgObj.__class__]) + msg
+							conns[msgObj.conn].obuf += struct.pack("<ii", len(msg) + 4, self.peercodes[msgObj.__class__]) + \
+								msg
 				else:
 					if msgObj.__class__ not in [PeerInit, PierceFireWall, FileSearchResult]:
 						message = _("Can't send the message over the closed connection: %(type)s %(msg_obj)s") %{'type':msgObj.__class__, 'msg_obj':vars(msgObj)}

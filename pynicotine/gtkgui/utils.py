@@ -58,8 +58,8 @@ NICOTINE = None
 
 
 def popupWarning(parent, title, warning, icon=None):
-    dlg = gtk.Dialog(title=title, parent=parent, buttons=(gtk.STOCK_OK, gtk.RESPONSE_OK))
-    dlg.set_default_response(gtk.RESPONSE_OK)
+    dlg = gtk.Dialog(title=title, parent=parent, buttons=(gtk.STOCK_OK, gtk.ResponseType.OK))
+    dlg.set_default_response(gtk.ResponseType.OK)
     dlg.set_icon(icon)
     dlg.set_border_width(10)
     dlg.vbox.set_spacing(10)
@@ -78,12 +78,12 @@ def popupWarning(parent, title, warning, icon=None):
     label = gtk.Label()
     label.set_markup(warning)
     label.set_line_wrap(True)
-    hbox.pack_start(label, True, True)
+    hbox.pack_start(label, True, True, 0)
 
     dlg.vbox.show_all()
 
     result = None
-    if dlg.run() == gtk.RESPONSE_OK:
+    if dlg.run() == gtk.ResponseType.OK:
         dlg.destroy()
 
     return 0
@@ -250,7 +250,7 @@ def PressHeader(widget, event):
         pos += 1
 
     menu.show_all()
-    menu.popup(None, None, None, event.button, event.time)
+    menu.popup(None, None, None, None, event.button, event.time)
 
     return True
 
@@ -1215,25 +1215,25 @@ class PopupMenu(gtk.Menu):
 
 def InputDialog(parent, title, message, default=""):
 
-    dlg = gtk.Dialog(title=title, parent=parent, buttons=(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL, gtk.STOCK_OK, gtk.RESPONSE_OK))
-    dlg.set_default_response(gtk.RESPONSE_OK)
+    dlg = gtk.Dialog(title=title, parent=parent, buttons=(gtk.STOCK_CANCEL, gtk.ResponseType.CANCEL, gtk.STOCK_OK, gtk.ResponseType.OK))
+    dlg.set_default_response(gtk.ResponseType.OK)
 
     dlg.set_border_width(10)
     dlg.vbox.set_spacing(10)
 
     l = gtk.Label(message)
     l.set_alignment(0, 0.5)
-    dlg.vbox.pack_start(l, False, False)
+    dlg.vbox.pack_start(l, False, False, 0)
 
     entry = gtk.Entry()
     entry.set_activates_default(True)
     entry.set_text(default)
-    dlg.vbox.pack_start(entry, True, True)
+    dlg.vbox.pack_start(entry, True, True, 0)
 
     dlg.vbox.show_all()
 
     result = None
-    if dlg.run() == gtk.RESPONSE_OK:
+    if dlg.run() == gtk.ResponseType.OK:
         result = entry.get_text()
 
     dlg.destroy()
