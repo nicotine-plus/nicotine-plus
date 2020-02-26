@@ -39,7 +39,7 @@ from .utils import AppendLine, IconNotebook, PopupMenu, WriteLog, expand_alias, 
 from .chatrooms import GetCompletion
 from pynicotine import slskmessages
 from pynicotine.slskmessages import ToBeEncoded
-from pynicotine.utils import version
+from pynicotine.utils import version, debug
 from pynicotine.logfacility import log
 
 CTCP_VERSION = "\x01VERSION\x01"
@@ -484,7 +484,7 @@ class PrivateChat:
             self.ChatScroll.emit_stop_by_name("button_press_event")
             return True
 
-        elif event.type == Gdk.KEY_PRESS:
+        elif event.type == Gdk.EventType.KEY_PRESS:
 
             if event.keyval == Gdk.keyval_from_name("Menu"):
 
@@ -529,6 +529,8 @@ class PrivateChat:
         self.ChatScroll.get_buffer().set_text("")
 
     def ShowMessage(self, text, status=None, timestamp=None):
+
+        self.UpdateColours()
 
         if text[:4] == "/me ":
             line = "* %s %s" % (self.user, self.frame.CensorChat(text[4:]))
@@ -634,13 +636,7 @@ class PrivateChat:
 
     def OnEnter(self, widget):
 
-        bytes = widget.get_text()
-
-        try:
-            text = str(bytes, "UTF-8")
-        except UnicodeDecodeError:
-            log.addwarning(_("We have a problem, PyGTK get_text does not seem to return UTF-8. Please file a bug report. Bytes: %s") % (repr(bytes)))
-            text = str(bytes, "UTF-8", "replace")
+        text = widget.get_text()
 
         if not text:
             widget.set_text("")
@@ -827,7 +823,7 @@ class PrivateChat:
 
         color = self.frame.np.config.sections["ui"][colour]
         if color == "":
-            color = self.backupcolor
+            color = Gdk.color_parse(self.backupcolor)
         else:
             color = Gdk.color_parse(color)
 
@@ -841,7 +837,11 @@ class PrivateChat:
     def UpdateColours(self):
 
         map = self.frame.MainWindow.get_style().copy()
-        self.backupcolor = map.text[gtk.STATE_NORMAL]
+
+        try:
+            self.backupcolor = map.text[gtk.StateFlags.NORMAL]
+        except IndexError:
+            self.backupcolor = ''
 
         buffer = self.ChatScroll.get_buffer()
         self.tag_remote = self.makecolour(buffer, "chatremote")
@@ -933,7 +933,7 @@ class PrivateChat:
     def ChangeColours(self):
 
         map = self.ChatScroll.get_style().copy()
-        self.backupcolor = map.text[gtk.STATE_NORMAL]
+        self.backupcolor = map.text[gtk.StateFlags.NORMAL]
 
         self.changecolour(self.tag_remote, "chatremote")
         self.changecolour(self.tag_local, "chatlocal")

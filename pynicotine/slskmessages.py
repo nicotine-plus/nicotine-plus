@@ -529,7 +529,7 @@ class AddUser(ServerMessage):
 
     def parseNetworkMessage(self, message):
         pos, self.user = self.getObject(message, bytes)
-        pos, self.userexists = pos+1, ord(message[pos])
+        pos, self.userexists = pos+1, message[pos]
         if len(message[pos:]) > 0:
             pos, self.status = self.getObject(message, int, pos)
             pos, self.avgspeed = self.getObject(message, int, pos)

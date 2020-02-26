@@ -1523,7 +1523,10 @@ class NicotineFrame:
 
     def ScrollBottom(self, widget):
         va = widget.get_vadjustment()
-        va.set_value(va.upper - va.page_size)
+        try:
+            va.set_value(va.upper - va.page_size)
+        except AttributeError:
+            pass
         widget.set_vadjustment(va)
         return False
 
