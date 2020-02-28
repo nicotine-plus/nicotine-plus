@@ -1,0 +1,10 @@
+# DEP-8 continuous integration tests.
+#
+#  TODO: Add in tree unit testing whenever it becomes available.
+#
+
+Test-Command: nicotine --version | grep Nicotine+
+Depends: nicotine
+Restrictions: isolation-container
+Features: test-name=test-version
+
