@@ -83,6 +83,30 @@ def CleanPath(path, absolute=False):
     return path
 
 
+def GetUserDirectories():
+    """Returns a tuple:
+    - the config directory
+    - the data directory"""
+    home = os.path.expanduser("~")
+
+    legacy_dir = os.path.join(home, '.nicotine')
+
+    if os.path.isdir(legacy_dir):
+        return legacy_dir, legacy_dir
+
+    def xdgPath(xdg, default):
+        path = os.environ.get(xdg)
+
+        path = path.split(':')[0] if path else default
+
+        return os.path.join(path, 'nicotine')
+
+    config_dir = xdgPath('XDG_CONFIG_HOME', os.path.join(home, '.config'))
+    data_dir = xdgPath('XDG_DATA_HOME', os.path.join(home, '.local', 'share'))
+
+    return config_dir, data_dir
+
+
 def ApplyTranslation():
     """Function dealing with translations and locales.
 

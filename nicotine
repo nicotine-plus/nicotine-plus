@@ -30,7 +30,7 @@ import os
 import platform
 import sys
 from pynicotine.logfacility import log
-from pynicotine.utils import ApplyTranslation
+from pynicotine.utils import ApplyTranslation, GetUserDirectories
 
 # Setting gettext and locale
 ApplyTranslation()
@@ -212,14 +212,16 @@ def run():
 
     if win32:
         try:
-            mydir = os.path.join(os.environ['APPDATA'], 'nicotine')
+            data_dir = os.path.join(os.environ['APPDATA'], 'nicotine')
         except KeyError:
-            mydir, x = os.path.split(sys.argv[0])
-        config = os.path.join(mydir, "config", "config")
-        plugins = os.path.join(mydir, "plugins")
+            data_dir, x = os.path.split(sys.argv[0])
+
+        config = os.path.join(data_dir, "config", "config")
     else:
-        config = os.path.join(os.path.expanduser("~"), '.nicotine', 'config')
-        plugins = os.path.join(os.path.expanduser("~"), '.nicotine', 'plugins')
+        config_dir, data_dir = GetUserDirectories()
+        config = os.path.join(config_dir, 'config')
+
+    plugins = os.path.join(data_dir, 'plugins')
 
     profile = 0
     trayicon = 1
@@ -256,7 +258,7 @@ def run():
     if result is None:
         from pynicotine.gtkgui import frame
 
-        app = frame.MainApp(config, plugins, trayicon, hidden, bindip, port)
+        app = frame.MainApp(data_dir, config, plugins, trayicon, hidden, bindip, port)
 
         if profile:
 

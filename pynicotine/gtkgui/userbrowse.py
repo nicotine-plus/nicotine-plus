@@ -40,7 +40,8 @@ from pynicotine.utils import displayTraceback, executeCommand, CleanFile
 
 class UserBrowse:
 
-    def __init__(self, userbrowses, user, conn):
+    def __init__(self, userbrowses, user, conn, data_dir):
+        self.data_dir = data_dir
 
         # Build the window
         builder = gtk.Builder()
@@ -574,9 +575,7 @@ class UserBrowse:
                 displayTraceback()
 
     def OnSave(self, widget):
-
-        configdir, config = os.path.split(self.frame.np.config.filename)
-        sharesdir = os.path.abspath(configdir + os.sep + "usershares" + os.sep)
+        sharesdir = os.path.join(self.data_dir, "usershares")
 
         try:
             if not os.path.exists(sharesdir):

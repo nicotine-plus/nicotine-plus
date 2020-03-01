@@ -129,8 +129,11 @@ class Shares:
                 [files, streams, wordindex, fileindex, mtimes],
                 "normal"
             )
-        except Exception as ex:
-            log.addwarning(_("Failed to rebuild share, serious error occurred. If this problem persists delete ~/.nicotine/*.db and try again. If that doesn't help please file a bug report with the stack trace included (see terminal output after this message). Technical details: %s") % ex)
+        except Exception, ex:
+            log.addwarning(
+              _("Failed to rebuild share, serious error occurred. If this problem persists delete %s/*.db and try again. If that doesn't help please file a bug report with the stack trace included (see terminal output after this message). Technical details: %s")
+              % (self.config.sections["data"]["dir"], ex)
+            )
             raise
 
     def RebuildBuddyShares(self, msg):

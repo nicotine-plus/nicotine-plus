@@ -5,7 +5,6 @@ A list of stuff & things todo (not in any particular order):
 #### Short term goals
 
 * **IN PROGRESS**: Take care of [deprecated symbols](DEPRECATED_SYMBOLS.md)
-* GNU/Linux: Switch to using XDG_* directories.
 * Our sounds are dropped by downstream packagers for being non-free: investigate.
 * Convert old (unmaintained) python-GeoIP code to an up to date version.
 * Curate and update embedded plugins.
