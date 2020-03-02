@@ -701,7 +701,7 @@ class SlskProtoThread(threading.Thread):
 		from the msgBuffer, creates message objects and returns them and the rest
 		of the msgBuffer.
 		"""
-		print(f"process_server_input({bytes.decode('utf-8')}")
+		debug(f"process_server_input({msgBuffer}")
 		msgs = []
 		# Server messages are 8 bytes or greater in length
 		while len(msgBuffer) >= 8:
