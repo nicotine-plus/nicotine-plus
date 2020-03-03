@@ -2,6 +2,7 @@ import socket
 import time
 import pickle
 
+
 class Rocket:
     """
     A recording socket.
