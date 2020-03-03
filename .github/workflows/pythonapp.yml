@@ -25,13 +25,10 @@ jobs:
       run: |
         pip install flake8
         # warn if there are Python syntax errors or undefined names. exit-zero treats all errors as warnings
-        flake8 pynicotine --count --exit-zero --max-complexity=10 --select=E9,F63,F7,F82 --show-source --statistics | tee flake8.out
-        wc flake8.out
+        flake8 pynicotine --count --exit-zero --max-complexity=10 --statistics
       continue-on-error: true
     - name: Test with pytest
-      env:
-        PYTHONPATH: .
       run: |
         pip install pytest
         pytest
-      continue-on-error: false
+      continue-on-error: true
