@@ -25,7 +25,7 @@ def enable(frame):
 def disable(frame):
     global PLUGIN
     PLUGIN = None
-	
+    
 # The real plugin
 def deltags(string):
     open = 0
