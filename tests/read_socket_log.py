@@ -1,6 +1,6 @@
 import pickle
 
-with open('data/socket_localhost:22420.log', 'rb') as f:
+with open('data/login/socket_localhost:22420.log', 'rb') as f:
     logs = pickle.load(f, encoding='bytes')
 
 logs_chronologically = {}
