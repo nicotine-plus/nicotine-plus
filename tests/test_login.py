@@ -13,6 +13,7 @@ from tests.mock_socket import monkeypatch_socket, monkeypatch_select
 
 # Time (in s) needed for SlskProtoThread main loop to run at least once
 SLSKPROTO_RUN_TIME = 0.5
+LOGIN_DATAFILE = 'data/login/socket_localhost:22420.log'
 
 
 @pytest.fixture(scope="module", autouse=True)
@@ -36,7 +37,7 @@ def test_instantiate_proto(config) -> None:
 
 
 def test_server_conn(config, monkeypatch) -> None:
-    mock_socket = monkeypatch_socket(monkeypatch)
+    mock_socket = monkeypatch_socket(monkeypatch, LOGIN_DATAFILE)
     monkeypatch_select(monkeypatch)
     proto = SlskProtoThread(
         ui_callback=Mock(), queue=Queue(0), bindip='',
@@ -54,7 +55,7 @@ def test_server_conn(config, monkeypatch) -> None:
 
 
 def test_login(config, monkeypatch) -> None:
-    mock_socket = monkeypatch_socket(monkeypatch)
+    mock_socket = monkeypatch_socket(monkeypatch, LOGIN_DATAFILE)
     monkeypatch_select(monkeypatch)
     proto = SlskProtoThread(
         ui_callback=Mock(), queue=Queue(0), bindip='',
