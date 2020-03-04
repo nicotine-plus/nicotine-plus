@@ -28,6 +28,8 @@ jobs:
         flake8 pynicotine --count --exit-zero --max-complexity=10 --statistics
       continue-on-error: true
     - name: Test with pytest
+      env:
+        PYTHONPATH: .
       run: |
         pip install pytest
         pytest
