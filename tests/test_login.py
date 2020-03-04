@@ -7,7 +7,7 @@ from unittest.mock import Mock, MagicMock
 import pytest
 
 from pynicotine.slskproto import SlskProtoThread
-from pynicotine.slskmessages import ServerConn
+from pynicotine.slskmessages import ServerConn, Login, SetWaitPort
 from pynicotine.utils import ApplyTranslation
 from tests.mock_socket import monkeypatch_socket, monkeypatch_select
 
@@ -51,3 +51,19 @@ def test_server_conn(config, monkeypatch) -> None:
     assert mock_socket.connect_ex.call_count == 1
     assert mock_socket.listen.call_count == 1
     assert mock_socket.close.call_count == 1
+
+
+def test_login(config, monkeypatch) -> None:
+    mock_socket = monkeypatch_socket(monkeypatch)
+    monkeypatch_select(monkeypatch)
+    proto = SlskProtoThread(
+        ui_callback=Mock(), queue=Queue(0), bindip='',
+        port=None, config=config, eventprocessor=Mock()
+    )
+    proto._queue.put(ServerConn())
+    sleep(SLSKPROTO_RUN_TIME / 2)
+    proto._queue.put(Login('username', 'password', 157))
+    proto._queue.put(SetWaitPort(1))
+    sleep(SLSKPROTO_RUN_TIME)
+    proto.abort()
+    pytest.fail()
