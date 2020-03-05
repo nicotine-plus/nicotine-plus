@@ -1,3 +1,5 @@
+# patches the original (Python2) nicotine to print debugging messages
+#
 # Usage examples:
 # docker build -t nicotine -f docker/Dockerfile.python2 .
 # docker run --net=host --env="DISPLAY" --volume="$HOME/.Xauthority:/root/.Xauthority:rw" -t nicotine
@@ -14,12 +16,21 @@ RUN apt-get install -y nicotine xfce4-terminal
 COPY docker/config /root/.nicotine
 
 ENV slskproto="/usr/lib/python2.7/dist-packages/pynicotine/slskproto.py"
-RUN sed -i '/def writeData(self, server_socket, conns, i):/a\\
-\t\tprint "writing", "".join("%02x" % ord(b) for b in conns[i].obuf)' $slskproto
+# run()
 RUN sed -i '/if connection in conns and len(conns\[connection\].ibuf) > 0:/a\\
-\t\t\t\t\tprint "    ibuf: ", conns[connection].ibuf' $slskproto
+\t\t\t\t\tprint "********    ibuf: ", conns[connection].ibuf' $slskproto
+# writeData()
+RUN sed -i '/def writeData(self, server_socket, conns, i):/a\\
+\t\tprint "********writing", conns[i].obuf' $slskproto
+# readData()
+RUN sed -i '/data = i.recv(conns[i].lastreadlength)/a\\
+\t\t\tprint "********readData {} into {}".format(data[:200], conns[i].ibuf[:200])' $slskproto
+# process_queue()
+RUN sed -i '/msgList.append(queue.get())/a\\
+\t\tprint "********queue:", msgList' $slskproto
+RUN sed -i '/\t\t\t\t\tif server_socket in conns:/a\\
+\t\t\t\t\t\tprint "********      msg:", msg[:200]' $slskproto
 
-RUN sed -i 's/if connection in conns and len(conns[connection].ibuf) > 0:/if connection in conns and len(conns[connection].ibuf) > 0:\n					print(f"    ibuf: {conns[connection].ibuf}")/g' $slskproto
 ENV DISPLAY=:0
 CMD nicotine || sleep 100000
 

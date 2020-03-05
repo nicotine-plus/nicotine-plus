@@ -122,7 +122,7 @@ class PeerConnection(Connection):
 class PeerConnectionInProgress:
 	""" As all p2p connect()s are non-blocking, this class is used to
 	hold data about a connection that is not yet established. msgObj is
-	a message to be sent after the connection has been established.
+	a message "".join("%02x" % b for b in conns[i].obuf)to be sent after the connection has been established.
 	"""
 	def __init__(self, conn=None, msgObj=None):
 		self.conn = conn
@@ -411,7 +411,6 @@ class SlskProtoThread(threading.Thread):
 				if sys.platform == "win32":
 					input, output, exc = multiselect(list(conns.keys()) + list(connsinprogress.keys())+ [p], list(connsinprogress.keys()) + outsock, [], 0.5)
 				else:
-					debug('select.select', len(list(conns.keys()) + list(connsinprogress.keys()) +[p]), len(list(connsinprogress.keys()) + outsock))
 					input, output, exc = select.select(list(conns.keys()) + list(connsinprogress.keys()) +[p], list(connsinprogress.keys()) + outsock, [], 0.5)
 				numsockets = 0
 				if p is not None:
@@ -521,7 +520,7 @@ class SlskProtoThread(threading.Thread):
 						except socket.error as err:
 							self._ui_callback([ConnectError(conns[connection], err)])
 				if connection in conns and len(conns[connection].ibuf) > 0:
-					# debug(f"    ibuf: {conns[connection].ibuf}")
+					debug(f"    ibuf: {conns[connection].ibuf}")
 					if connection is server_socket:
 						msgs, conns[server_socket].ibuf = self.process_server_input(conns[server_socket].ibuf)
 						self._ui_callback(msgs)
@@ -637,7 +636,7 @@ class SlskProtoThread(threading.Thread):
 		return ip, port
 
 	def writeData(self, server_socket, conns, i):
-		# debug(f'writing {"".join("%02x" % b for b in conns[i].obuf)} to {i}')
+		debug(f'writing {conns[i].obuf} to {i}')
 		if i in self._limits:
 			limit = self._limits[i]
 		else:
@@ -680,7 +679,7 @@ class SlskProtoThread(threading.Thread):
 		if limit is None:
 			# Unlimited download data
 			data = i.recv(conns[i].lastreadlength)
-			# debug(f"readData {data} into {conns[i].ibuf} ({conns[i].addr})")
+			debug(f"readData {data} into {conns[i].ibuf} ({conns[i].addr})")
 			conns[i].ibuf = conns[i].ibuf + data
 			if len(data) >= conns[i].lastreadlength//2:
 				conns[i].lastreadlength = conns[i].lastreadlength * 2
@@ -924,7 +923,7 @@ class SlskProtoThread(threading.Thread):
 		numsockets += len(conns) + len(connsinprogress)
 		while not queue.empty():
 			msgList.append(queue.get())
-
+		debug('queue:', msgList)
 		for msgObj in msgList:
 			if issubclass(msgObj.__class__, ServerMessage):
 				# debug(f"    processing {msgObj.__class__.__name__} {msgObj}")
