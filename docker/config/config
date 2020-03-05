@@ -45,21 +45,21 @@ protocols = {'http': 'xdg-open $', 'https': 'xdg-open $'}
 urlcatching = True
 
 [players]
-default = 
-npformat = 
+default =
+npformat =
 npformatlist = []
-npothercommand = 
-npplayer = 
+npothercommand =
+npplayer =
 
 [ticker]
-default = 
+default =
 hide = 0
 rooms = {}
 
 [server]
 autoaway = 15
 autojoin = ['nicotine']
-autoreply = 
+autoreply =
 autosearch = []
 banlist = []
 ctcpmsgs = False
@@ -84,39 +84,39 @@ enabled = 0
 rooms = {}
 
 [ui]
-browserfont = 
+browserfont =
 buddylistinchatrooms = 0
 chat_hidebuttons = False
-chatfont = 
+chatfont =
 chathilite = red
 chatlocal = BLUE
 chatme = FOREST GREEN
-chatremote = 
+chatremote =
 decimalsep = ,
 exitdialog = 1
 filemanager = xdg-open $
 height = 600
-icontheme = 
-inputcolor = 
+icontheme =
+inputcolor =
 labelbrowse = 0
 labelinfo = 0
 labelmain = 0
 labelprivate = 0
 labelrooms = 0
 labelsearch = 0
-listfont = 
+listfont =
 modes_order = ['chatrooms', 'private', 'downloads', 'uploads', 'search', 'userinfo', 'userbrowse', 'interests', 'userlist']
 modes_visible = {'interests': 1, 'userbrowse': 1, 'search': 1, 'uploads': 1, 'chatrooms': 1, 'downloads': 1, 'userlist': 1, 'private': 1, 'userinfo': 1}
 notexists = 1
 roomlistcollapsed = False
-search = 
-searchfont = 
+search =
+searchfont =
 searchoffline = #aa0000
 searchq = GREY
 showaway = 0
 soundcommand = play -q
 soundenabled = True
-soundtheme = 
+soundtheme =
 speechcommand = flite -t $
 speechenabled = False
 speechprivate = %(user)s told you.. %(message)s
@@ -124,7 +124,7 @@ speechrooms = In %(room)s, %(user)s said %(message)s
 spellcheck = True
 tab_changed = #0000ff
 tab_colors = False
-tab_default = 
+tab_default =
 tab_hilite = red
 tab_icons = True
 tab_reorderable = True
@@ -136,8 +136,8 @@ tabmain = Top
 tabprivate = Top
 tabrooms = Top
 tabsearch = Top
-textbg = 
-transfersfont = 
+textbg =
+transfersfont =
 trayicon = True
 urgencyhint = True
 urlcolor = #3D2B7F
@@ -152,7 +152,7 @@ yposition = 780
 
 [userinfo]
 descr = ''
-pic = 
+pic =
 
 [words]
 aliases = True
@@ -176,8 +176,8 @@ enable = True
 enabled = []
 
 [transfers]
-afterfinish = 
-afterfolder = 
+afterfinish =
+afterfolder =
 autoclear_uploads = 0
 autoretry_downloads = 0
 buddyshared = []
@@ -230,7 +230,7 @@ store = False
 users = []
 
 [columns]
-chatrooms = {'nicotine': [True, True, True, True, True]}
+chatrooms = {}
 downloads_columns = [True, True, True, True, True, True, True, True, True, True]
 downloads_widths = [100, 250, 140, 50, 70, 170, 90, 140, 120, 1000]
 hideflags = False

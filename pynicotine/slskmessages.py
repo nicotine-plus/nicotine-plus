@@ -850,14 +850,14 @@ class PrivateRoomRemoved(ServerMessage):
 class PrivateRoomToggle(ServerMessage):
     """ We send this when we want to enable or disable invitations to private rooms"""
     def __init__(self, enabled=None):
-        self.enabled = int(enabled)
+        self.enabled = None if enabled is None else int(enabled)
 
     def makeNetworkMessage(self):
-        return chr(self.enabled)
+        return bytes((self.enabled,))
 
     def parseNetworkMessage(self, message):
         # When this is received, we store it in the config, and disable the appropriate menu item
-        pos, self.enabled = 1, bool(ord(message[0]))
+        pos, self.enabled = 1, bool(int(message[0]))
 
 
 class PrivateRoomAddOperator(ServerMessage):
