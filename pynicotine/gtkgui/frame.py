@@ -1343,6 +1343,7 @@ class NicotineFrame:
         return False
 
     def emit_network_event(self, msgs):
+        debug("emit_network_event", [msg.__class__.__name__ for msg in msgs])
         lo = [msg for msg in msgs if msg.__class__ is slskmessages.FileSearchResult]
         hi = [msg for msg in msgs if msg.__class__ is not slskmessages.FileSearchResult]
         if hi:
@@ -1369,6 +1370,7 @@ class NicotineFrame:
             gobject.idle_add(self.emit_network_event, msgs[:])
 
     def networkcallback(self, msgs):
+        debug("networkcallback", [msg.__class__.__name__ for msg in msgs])
         # if [m for m in msgs if not isinstance(m, InternalData)]:
         #     debug('networkcallback', msgs)
         curtime = time.time()

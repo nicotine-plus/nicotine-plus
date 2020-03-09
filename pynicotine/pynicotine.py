@@ -1571,7 +1571,7 @@ class NetworkEventProcessor:
                     self.userbrowse.ShowInfo(i.username, msg)
 
     def FileSearchResult(self, msg):
-
+        debug(f"FileSearchResult({msg}):")
         for i in self.peerconns:
 
             if i.conn is msg.conn.conn and self.search is not None:

@@ -523,20 +523,25 @@ class SlskProtoThread(threading.Thread):
 					debug(f"    ibuf: {conns[connection].ibuf}")
 					if connection is server_socket:
 						msgs, conns[server_socket].ibuf = self.process_server_input(conns[server_socket].ibuf)
+						debug("526", [msg.__class__.__name__ for msg in msgs])
 						self._ui_callback(msgs)
 					else:
 						if conns[connection].init is None or conns[connection].init.type not in ['F', 'D']:
 							msgs, conns[connection] = self.process_peer_input(conns[connection], conns[connection].ibuf)
+							debug("531", [msg.__class__.__name__ for msg in msgs])
 							self._ui_callback(msgs)
 						if conns[connection].init is not None and conns[connection].init.type == 'F':
 							msgs, conns[connection] = self.process_file_input(conns[connection], conns[connection].ibuf)
+							debug("535", [msg.__class__.__name__ for msg in msgs])
 							self._ui_callback(msgs)
 						if conns[connection].init is not None and conns[connection].init.type == 'D':
 							msgs, conns[connection] = self.process_distrib_input(conns[connection], conns[connection].ibuf)
+							debug("539", [msg.__class__.__name__ for msg in msgs])
 							self._ui_callback(msgs)
 						if conns[connection].conn == None:
 							del conns[connection]
-
+				else:
+					debug("???", connection, connection in conns)
 			# ---------------------------
 			# Server Pings used to get us banned
 			# ---------------------------
@@ -636,7 +641,7 @@ class SlskProtoThread(threading.Thread):
 		return ip, port
 
 	def writeData(self, server_socket, conns, i):
-		debug(f'writing {conns[i].obuf} to {i}')
+		debug(f'writing {conns[i].obuf}')
 		if i in self._limits:
 			limit = self._limits[i]
 		else:
@@ -679,7 +684,7 @@ class SlskProtoThread(threading.Thread):
 		if limit is None:
 			# Unlimited download data
 			data = i.recv(conns[i].lastreadlength)
-			debug(f"readData {data} into {conns[i].ibuf} ({conns[i].addr})")
+			debug(f"readData {data}")
 			conns[i].ibuf = conns[i].ibuf + data
 			if len(data) >= conns[i].lastreadlength//2:
 				conns[i].lastreadlength = conns[i].lastreadlength * 2

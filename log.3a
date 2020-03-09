@@ -1,0 +1,57 @@
+******** queue: [<pynicotine.slskmessages.FileSearch object at 0x7fdd0de8c7b8>]
+********       msg:  b'\x8f@/i\x0c\x00\x00\x0070 gwen auto'
+******** writing b'\x18\x00\x00\x00\x1a\x00\x00\x00\x8f@/i\x0c\x00\x00\x0070 gwen auto'
+******** bytes sent: 28
+******** readData b',\x00\x00\x00\x12\x00\x00\x00\n\x00\x00\x00Hellomolly\x01\x00\x00\x00PJ\x10\xd0\xc3m\xd7
+********     ibuf: b',\x00\x00\x00\x12\x00\x00\x00\n\x00\x00\x00Hellomolly\x01\x00\x00\x00PJ\x10\xd0\xc3m\xd7
+******** process_server_input(b',\x00\x00\x00\x12\x00\x00\x00\n\x00\x00\x00Hellomolly\x01\x00\x00\x00PJ\x10\xd0\xc3m\xd7
+******** 526 ['ConnectToPeer']
+******** networkcallback ['ConnectToPeer']
+******** emit_network_event ['ConnectToPeer']
+******** readData b'(\x00\x00\x00\x12\x00\x00\x00\x06\x00\x00\x00PeeJay\x01\x00\x00\x00P\x01G$Y\x02\xea
+********     ibuf: b'(\x00\x00\x00\x12\x00\x00\x00\x06\x00\x00\x00PeeJay\x01\x00\x00\x00P\x01G$Y\x02\xea
+******** process_server_input(b'(\x00\x00\x00\x12\x00\x00\x00\x06\x00\x00\x00PeeJay\x01\x00\x00\x00P\x01G$Y\x02\xea
+******** 526 ['ConnectToPeer', 'ConnectToPeer', 'ConnectToPeer', 'ConnectToPeer']
+******** networkcallback ['ConnectToPeer', 'ConnectToPeer', 'ConnectToPeer', 'ConnectToPeer']
+******** queue: [OutConn: None ('109.195.208.16', 55149) <pynicotine.slskmessages.PeerInit>]
+******** emit_network_event ['ConnectToPeer', 'ConnectToPeer', 'ConnectToPeer', 'ConnectToPeer']
+******** readData b"'\x00\x00\x00\x12\x00\x00\x00\x05\x00\x00\x00ceniq\x01\x00\x00\x00P\x19\xb0\x99[v\xd8
+********     ibuf: b"'\x00\x00\x00\x12\x00\x00\x00\x05\x00\x00\x00ceniq\x01\x00\x00\x00P\x19\xb0\x99[v\xd8
+******** process_server_input(b"'\x00\x00\x00\x12\x00\x00\x00\x05\x00\x00\x00ceniq\x01\x00\x00\x00P\x19\xb0\x99[v\xd8
+******** 526 ['ConnectToPeer', 'ConnectToPeer']
+******** networkcallback ['ConnectToPeer', 'ConnectToPeer']
+******** queue: [OutConn: None ('2.89.36.71', 59906) <pynicotine.slskmessages.PeerInit>, OutConn: None ('12.81.96.253', 59660) <pynicotine.slskmessages.PeerInit>, OutConn: None ('20.71.64.120', 60948) <pynicotine.slskmessages.PeerInit>, OutConn: None ('55.174.104.189', 53303) <pynicotine.slskmessages.PeerInit>]
+******** emit_network_event ['ConnectToPeer', 'ConnectToPeer']
+******** readData b')\x00\x00\x00\x12\x00\x00\x00\x07\x00\x00\x00Village\x01\x00\x00\x00P\xb4B\x02\x05\x89\xd4\x00\x00t\xf7
+********     ibuf: b')\x00\x00\x00\x12\x00\x00\x00\x07\x00\x00\x00Village\x01\x00\x00\x00P\xb4B\x02\x05\x89\xd4\x00\x00t\xf7
+******** process_server_input(b')\x00\x00\x00\x12\x00\x00\x00\x07\x00\x00\x00Village\x01\x00\x00\x00P\xb4B\x02\x05\x89\xd4\x00\x00t\xf7
+******** 526 ['ConnectToPeer']
+******** networkcallback ['ConnectToPeer']
+******** queue: [OutConn: None ('118.91.153.176', 55414) <pynicotine.slskmessages.PeerInit>, OutConn: None ('103.88.147.57', 61543) <pynicotine.slskmessages.PeerInit>]
+******** emit_network_event ['ConnectToPeer']
+******** readData b'-\x00\x00\x00\x12\x00\x00\x00\x0b\x00\x00\x00meadowgreen\x01\x00\x00\x00P\x8d\xa8\x8f\x96
+********     ibuf: b'-\x00\x00\x00\x12\x00\x00\x00\x0b\x00\x00\x00meadowgreen\x01\x00\x00\x00P\x8d\xa8\x8f\x96
+******** process_server_input(b'-\x00\x00\x00\x12\x00\x00\x00\x0b\x00\x00\x00meadowgreen\x01\x00\x00\x00P\x8d\xa8\x8f\x96
+******** 526 ['ConnectToPeer']
+******** networkcallback ['ConnectToPeer']
+******** queue: [OutConn: None ('137.5.2.66', 54409) <pynicotine.slskmessages.PeerInit>]
+******** emit_network_event ['ConnectToPeer']
+******** queue: [OutConn: None ('92.150.143.168', 55132) <pynicotine.slskmessages.PeerInit>]
+******** readData b'0\x00\x00\x00\x12\x00\x00\x00\x0e\x00\x00\x00FamousMortimer\x01\x00\x00\x00P\x16\xb0\xdb\xa2\xa0\xf1
+********     ibuf: b'0\x00\x00\x00\x12\x00\x00\x00\x0e\x00\x00\x00FamousMortimer\x01\x00\x00\x00P\x16\xb0\xdb\xa2\xa0\xf1
+******** process_server_input(b'0\x00\x00\x00\x12\x00\x00\x00\x0e\x00\x00\x00FamousMortimer\x01\x00\x00\x00P\x16\xb0\xdb\xa2\xa0\xf1
+******** 526 ['ConnectToPeer']
+******** networkcallback ['ConnectToPeer']
+******** emit_network_event ['ConnectToPeer']
+******** queue: [OutConn: None ('160.162.219.176', 61856) <pynicotine.slskmessages.PeerInit>]
+******** readData b'\xce\x00\x00\x00f\x00\x00\x00\n\x00\x00\x00\x0f\x00\x00\x00bulkybubblebutt\xe8\xc2\xefb\xc7\xcf\x00\x00\x0c\x00\x00\x00astuary_king\x7f
+********     ibuf: b'\xce\x00\x00\x00f\x00\x00\x00\n\x00\x00\x00\x0f\x00\x00\x00bulkybubblebutt\xe8\xc2\xefb\xc7\xcf\x00\x00\x0c\x00\x00\x00astuary_king\x7f
+******** process_server_input(b'\xce\x00\x00\x00f\x00\x00\x00\n\x00\x00\x00\x0f\x00\x00\x00bulkybubblebutt\xe8\xc2\xefb\xc7\xcf\x00\x00\x0c\x00\x00\x00astuary_king\x7f
+******** 526 ['NetInfo']
+******** networkcallback ['NetInfo']
+******** emit_network_event ['NetInfo']
+******** queue: [<pynicotine.slskmessages.HaveNoParent>, <pynicotine.slskmessages.SearchParent>, OutConn: None ('199.98.239.194', 53191) None]
+********       msg:  b'\x00'
+********       msg:  b'\x04\x00\x00\x00\xc2\xefb\xc7'
+******** writing b'\x05\x00\x00\x00G\x00\x00\x00\x00\x0c\x00\x00\x00I\x00\x00\x00\x04\x00\x00\x00\xc2\xefb\xc7'
+******** bytes sent: 25
