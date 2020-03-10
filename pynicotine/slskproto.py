@@ -540,8 +540,10 @@ class SlskProtoThread(threading.Thread):
 							self._ui_callback(msgs)
 						if conns[connection].conn == None:
 							del conns[connection]
+				elif connection not in conns:
+					debug("connection not in conns:", connection, conns)
 				else:
-					debug("???", connection, connection in conns)
+					debug('conn.ibuf:', conns[connection].ibuf)
 			# ---------------------------
 			# Server Pings used to get us banned
 			# ---------------------------

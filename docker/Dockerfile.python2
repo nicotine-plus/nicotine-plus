@@ -31,7 +31,7 @@ RUN sed -i '/self.process_distrib_input(conns\[connection\], conns\[connection\]
 RUN sed -i '/def writeData(self, server_socket, conns, i):/a\\
 \t\tprint "********writing", conns[i].obuf' $slskproto
 RUN sed -i '/bytes_send = i.send(conns\[i\].obuf\[:limit\])/a\\
-\t\tprint 'bytes sent:', bytes_send' $slskproto
+\t\tprint "bytes sent:", bytes_send' $slskproto
 
 # readData()
 RUN sed -i '/data = i.recv(conns\[i\].lastreadlength)/a\\
@@ -45,16 +45,20 @@ RUN sed -i '/\t\t\t\t\tif server_socket in conns:/a\\
 RUN less $slskproto
 
 ENV pynicotine="/usr/lib/python2.7/dist-packages/pynicotine/pynicotine.py"
-RUN sed -i '/def FileSearchResult(self, msg):/a\\
-        traceback.print_stack()' $pynicotine
+#RUN sed -i '/def FileSearchResult(self, msg):/a\\
+#        traceback.print_stack()' $pynicotine
 RUN sed -i '/def FileSearchResult(self, msg):/a\\
         import traceback' $pynicotine
+RUN sed -i '/def ConnectToPeer(self, msg):/a\\
+        print "ConnectToPeer", msg' $pynicotine
+RUN sed -i '/self.logMessage("%s %s" % (msg.__class__, vars(msg)), 3)/a\\
+        print "    peerconns", self.peerconns' $pynicotine
 
 ENV frame="/usr/lib/python2.7/dist-packages/pynicotine/gtkgui/frame.py"
-RUN sed -i '/def emit_network_event(self, msgs):/a\\
-        print "emit_network_event", [msg.__class__.__name__ for msg in msgs]' $frame
-RUN sed -i '/def networkcallback(self, msgs):/a\\
-        print "networkcallback", [msg.__class__.__name__ for msg in msgs]' $frame
+#RUN sed -i '/def emit_network_event(self, msgs):/a\\
+#        print "emit_network_event", [msg.__class__.__name__ for msg in msgs]' $frame
+#RUN sed -i '/def networkcallback(self, msgs):/a\\
+#        print "networkcallback", [msg.__class__.__name__ for msg in msgs]' $frame
 
 ENV DISPLAY=:0
 CMD nicotine || sleep 100000

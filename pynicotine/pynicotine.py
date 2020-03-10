@@ -1369,7 +1369,7 @@ class NetworkEventProcessor:
         self.logMessage("%s %s" % (msg.__class__, vars(msg)), 3)
 
     def ConnectToPeer(self, msg):
-
+        debug('ConnectToPeer', msg)
         init = slskmessages.PeerInit(None, msg.user, msg.type, 0)
 
         self.queue.put(slskmessages.OutConn(None, (msg.ip, msg.port), init))
@@ -1382,7 +1382,7 @@ class NetworkEventProcessor:
                 init=init
             )
         )
-
+        debug('peerconns', self.peerconns)
         self.logMessage("%s %s" % (msg.__class__, vars(msg)), 3)
 
     def CheckUser(self, user, addr):
