@@ -293,7 +293,7 @@ class UserBrowse:
         self.frame.ChangeListFont(self.FolderTreeView, self.frame.np.config.sections["ui"]["browserfont"])
         self.frame.ChangeListFont(self.FileTreeView, self.frame.np.config.sections["ui"]["browserfont"])
 
-    def CellDataFunc(self, column, cellrenderer, model, iter):
+    def CellDataFunc(self, column, cellrenderer, model, iter, dummy="dummy"):
         colour = self.frame.np.config.sections["ui"]["search"]
         if colour == "":
             colour = None
