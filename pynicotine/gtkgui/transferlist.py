@@ -144,7 +144,7 @@ class TransferList:
         self.frame.SetTextBG(self.widget)
         self.frame.ChangeListFont(self.widget, self.frame.np.config.sections["ui"]["transfersfont"])
 
-    def CellDataFunc(self, column, cellrenderer, model, iter):
+    def CellDataFunc(self, column, cellrenderer, model, iter, dummy="dummy"):
 
         colour = self.frame.np.config.sections["ui"]["search"]
         if colour == "":

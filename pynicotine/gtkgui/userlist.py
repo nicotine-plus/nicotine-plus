@@ -289,7 +289,7 @@ class UserList:
     def OnSettingsBanIgnore(self, widget):
         self.frame.OnSettingsBanIgnore(widget)
 
-    def CellDataFunc(self, column, cellrenderer, model, iter):
+    def CellDataFunc(self, column, cellrenderer, model, iter, dummy="dummy"):
 
         colour = self.frame.np.config.sections["ui"]["search"]
 

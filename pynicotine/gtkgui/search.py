@@ -1490,7 +1490,7 @@ class Search:
 
         return True
 
-    def CellDataFunc(self, column, cellrenderer, model, iter):
+    def CellDataFunc(self, column, cellrenderer, model, iter, dummy="dummy"):
 
         status = model.get_value(iter, 17)
         imdl = model.get_value(iter, 6)
