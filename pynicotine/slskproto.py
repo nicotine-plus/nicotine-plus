@@ -520,7 +520,6 @@ class SlskProtoThread(threading.Thread):
 						except socket.error as err:
 							self._ui_callback([ConnectError(conns[connection], err)])
 				if connection in conns and len(conns[connection].ibuf) > 0:
-					debug(f"    ibuf: {conns[connection].ibuf}")
 					if connection is server_socket:
 						msgs, conns[server_socket].ibuf = self.process_server_input(conns[server_socket].ibuf)
 						debug("526", [msg.__class__.__name__ for msg in msgs])
@@ -542,8 +541,6 @@ class SlskProtoThread(threading.Thread):
 							del conns[connection]
 				elif connection not in conns:
 					debug("connection not in conns:", connection, conns)
-				else:
-					debug('conn.ibuf:', conns[connection].ibuf)
 			# ---------------------------
 			# Server Pings used to get us banned
 			# ---------------------------
@@ -686,7 +683,6 @@ class SlskProtoThread(threading.Thread):
 		if limit is None:
 			# Unlimited download data
 			data = i.recv(conns[i].lastreadlength)
-			debug(f"readData {data}")
 			conns[i].ibuf = conns[i].ibuf + data
 			if len(data) >= conns[i].lastreadlength//2:
 				conns[i].lastreadlength = conns[i].lastreadlength * 2
@@ -696,6 +692,7 @@ class SlskProtoThread(threading.Thread):
 			conns[i].ibuf += data
 			conns[i].lastreadlength = limit
 			conns[i].readbytes2 += len(data)
+		debug(f"readData {data}")
 		if not data:
 			self._ui_callback([ConnClose(i, conns[i].addr)])
 			i.close()
@@ -707,7 +704,6 @@ class SlskProtoThread(threading.Thread):
 		from the msgBuffer, creates message objects and returns them and the rest
 		of the msgBuffer.
 		"""
-		debug(f"process_server_input({msgBuffer}")
 		msgs = []
 		# Server messages are 8 bytes or greater in length
 		while len(msgBuffer) >= 8:
@@ -948,7 +944,6 @@ class SlskProtoThread(threading.Thread):
 							msg
 						# debug(f'      obuf: {conns[server_socket].obuf}')
 					else:
-						print("      sleep")
 						queue.put(msgObj)
 						needsleep = True
 				except Exception as error:
