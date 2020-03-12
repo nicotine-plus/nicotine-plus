@@ -342,7 +342,7 @@ class UserList:
     def SetLastSeen(self, user, online=False):
 
         last_seen = ""
-        time_from_epoch = sys.maxsize
+        time_from_epoch = 2147483647  # Gtk only allows range -2147483648 to 2147483647 in set()
 
         if not online:
             last_seen = time.strftime("%m/%d/%Y %H:%M:%S")
