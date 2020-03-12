@@ -968,7 +968,7 @@ class Shares:
 
         message = slskmessages.SlskMessage()
 
-        stream = chr(1) + message.packObject(fileinfo[0]) + message.packObject(NetworkLongLongType(fileinfo[1]))
+        stream = bytes([1]) + message.packObject(fileinfo[0]) + message.packObject(NetworkLongLongType(fileinfo[1]))
         if fileinfo[2] is not None:
             try:
                 msgbytes = ''
@@ -1036,9 +1036,9 @@ class Shares:
             if os.path.commonprefix([dir, i]) == i:
                 dir = dir[len(i):]
 
-        words = string.split(
-            string.lower(string.translate(dir + ' ' + file, string.maketrans(string.punctuation, string.join([' ' for i in string.punctuation], ''))))
-        )
+        words = (dir + ' ' + file).translate(
+            str.maketrans(string.punctuation, ''.join([' ' for i in string.punctuation]))
+        ).lower().split()
 
         # remove duplicates
         d = {}
