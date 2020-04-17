@@ -929,20 +929,13 @@ class SlskProtoThread(threading.Thread):
 		debug('queue:', msgList)
 		for msgObj in msgList:
 			if issubclass(msgObj.__class__, ServerMessage):
-				# debug(f"    processing {msgObj.__class__.__name__} {msgObj}")
 				try:
 					msg = msgObj.makeNetworkMessage()
 					if msg == '' or msg is None:
 						msg = b''
 					if server_socket in conns:
-						# debug(f'      obuf: {conns[server_socket].obuf}')
-						debug(f'      msg:  {msg}')
-						# debug(f'      pack: {struct.pack("<ii", len(msg)+4, self.servercodes[msgObj.__class__])}')
-
-						conns[server_socket].obuf += \
-							struct.pack("<ii", len(msg)+4, self.servercodes[msgObj.__class__]) + \
-							msg
-						# debug(f'      obuf: {conns[server_socket].obuf}')
+						out_msg = struct.pack("<ii", len(msg) + 4, self.servercodes[msgObj.__class__]) + msg
+						conns[server_socket].obuf += out_msg
 					else:
 						queue.put(msgObj)
 						needsleep = True
