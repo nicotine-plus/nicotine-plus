@@ -67,4 +67,4 @@ def test_login(config, monkeypatch) -> None:
     proto._queue.put(SetWaitPort(1))
     sleep(SLSKPROTO_RUN_TIME)
     proto.abort()
-    pytest.fail()
+    pytest.skip('Login succeeded, actual test TBD')
