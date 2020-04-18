@@ -22,9 +22,10 @@ ENV VIRTUAL_ENV=./nicotine-venv
 RUN python3 -m virtualenv --python=/usr/bin/python3 $VIRTUAL_ENV
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
-RUN pip install ptpython pytest pygobject mutagen
+RUN pip install ptpython pytest flake8 pygobject mutagen
 ENV PYTHONPATH=".:$PYTHONPATH"
-RUN pytest || true
+RUN pytest
+RUN flake8 nicotine pynicotine plugins --ignore=E402,E501,W503,W504
 ENV DISPLAY=:0
 CMD ./nicotine || sleep 100000
 
