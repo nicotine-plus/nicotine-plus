@@ -32,7 +32,6 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk as gtk
 from gi.repository import GObject as gobject
 
-import string
 from time import time
 from math import ceil
 from .utils import InitialiseColumns, int_sort_func, float_sort_func, HumanSize, HumanSpeed
@@ -590,7 +589,7 @@ class TransferList:
     def OnCopyDirURL(self, widget):
 
         i = self.selected_transfers[0]
-        path = string.join(i.filename.split("\\")[:-1], "\\") + "\\"
+        path = "\\".join(i.filename.split("\\")[:-1]) + "\\"
 
         if path[:-1] != "/":
             path += "/"

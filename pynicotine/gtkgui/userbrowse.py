@@ -36,13 +36,13 @@ from .dirchooser import ChooseDir
 from .entrydialog import input_box
 from pynicotine import slskmessages
 from _thread import start_new_thread
-from pynicotine.utils import displayTraceback, executeCommand, CleanFile
+from pynicotine.utils import displayTraceback, executeCommand, CleanFile, GetUserDirectories
 
 
 class UserBrowse:
 
-    def __init__(self, userbrowses, user, conn, data_dir):
-        self.data_dir = data_dir
+    def __init__(self, userbrowses, user, conn):
+        _config_dir, self.data_dir = GetUserDirectories()
 
         # Build the window
         builder = gtk.Builder()

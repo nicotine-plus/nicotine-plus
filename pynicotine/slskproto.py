@@ -122,7 +122,7 @@ class PeerConnection(Connection):
 class PeerConnectionInProgress:
 	""" As all p2p connect()s are non-blocking, this class is used to
 	hold data about a connection that is not yet established. msgObj is
-	a message "".join("%02x" % b for b in conns[i].obuf)to be sent after the connection has been established.
+	a message to be sent after the connection has been established.
 	"""
 	def __init__(self, conn=None, msgObj=None):
 		self.conn = conn
@@ -312,11 +312,18 @@ class SlskProtoThread(threading.Thread):
 		if listenport is not None:
 			self.start()
 		else:
-			short = _("Could not bind to a local port, aborting connection")
-			long = _("The range you specified for client connection ports was %(low)s-%(high)s, but none of these were usable. Increase and/or move the range and restart Nicotine+.") % {'low':portrange[0], 'high':portrange[1]}
-			if  portrange[0] < 1024:
-				long += "\n\n" + _("Note that part of your range lies below 1024, this is usually not allowed on most operating systems with the exception of Windows.")
-			self._ui_callback([PopupMessage(short, int)])
+			short_message = _("Could not bind to a local port, aborting connection")
+			long_message = _(
+				f"The range you specified for client connection ports was "
+				f"{portrange[0]}-{portrange[1]}, but none of these were usable. Increase and/or "
+				f"move the range and restart Nicotine+."
+			)
+			if portrange[0] < 1024:
+				long_message += "\n\n" + _(
+					"Note that part of your range lies below 1024, this is usually not allowed on"
+					" most operating systems with the exception of Windows."
+				)
+			self._ui_callback([PopupMessage(short_message, long_message)])
 
 	def _isUpload(self, conn):
 		return conn.__class__ is PeerConnection and conn.fileupl is not None
@@ -791,7 +798,7 @@ class SlskProtoThread(threading.Thread):
 				break
 			elif conn.init is None:
 				# Unpack Peer Connections
-				if msgBuffer[4] == chr(0):
+				if msgBuffer[4] == 0:
 					msg = PierceFireWall(conn)
 					try:
 						msg.parseNetworkMessage(msgBuffer[5:msgsize+4])
@@ -800,7 +807,7 @@ class SlskProtoThread(threading.Thread):
 					else:
 						conn.piercefw = msg
 						msgs.append(msg)
-				elif msgBuffer[4] == chr(1):
+				elif msgBuffer[4] == 1:
 					msg = PeerInit(conn)
 					try:
 						msg.parseNetworkMessage(msgBuffer[5:msgsize+4])
@@ -810,7 +817,10 @@ class SlskProtoThread(threading.Thread):
 						conn.init = msg
 						msgs.append(msg)
 				elif conn.piercefw is None:
-					msgs.append(_("Unknown peer init code: %(type)i, message contents %(msgBuffer)s") %{'type':ord(msgBuffer[4]), 'msgBuffer':msgBuffer[5:msgsize+4].__repr__()})
+					msgs.append(_(
+						f"Unknown peer init code: {msgBuffer[4]}, message contents "
+						f"{msgBuffer[5:msgsize + 4].__repr__()}"
+					))
 					conn.conn.close()
 					self._ui_callback([ConnClose(conn.conn, conn.addr)])
 					conn.conn = None
@@ -870,7 +880,7 @@ class SlskProtoThread(threading.Thread):
 			if msgsize >= 0:
 				msgBuffer = msgBuffer[msgsize+4:]
 			else:
-				msgBuffer = ""
+				msgBuffer = b""
 		conn.ibuf = msgBuffer
 		return msgs, conn
 
@@ -885,7 +895,7 @@ class SlskProtoThread(threading.Thread):
 			msgsize = struct.unpack("<i", msgBuffer[:4])[0]
 			if msgsize + 4 > len(msgBuffer):
 				break
-			msgtype = ord(msgBuffer[4])
+			msgtype = msgBuffer[4]
 			if msgtype in self.distribclasses:
 				msg = self.distribclasses[msgtype](conn)
 				msg.parseNetworkMessage(msgBuffer[5:msgsize+4])
@@ -899,7 +909,7 @@ class SlskProtoThread(threading.Thread):
 			if msgsize >= 0:
 				msgBuffer = msgBuffer[msgsize+4:]
 			else:
-				msgBuffer = ""
+				msgBuffer = b""
 		conn.ibuf = msgBuffer
 		return msgs, conn
 

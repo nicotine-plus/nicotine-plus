@@ -268,7 +268,7 @@ class UserInfo:
             if self.encoding == item[1]:
                 self.Encoding.set_active_iter(self.Elist[self.encoding])
 
-        self.tag_local = self.makecolour(buffer, "chatremote")
+        self.tag_local = self.makecolour("chatremote")
         self.ChangeColours()
 
         self.InterestsExpander.connect("activate", self.ExpanderStatus)
@@ -376,7 +376,7 @@ class UserInfo:
         else:
             self.InfoVbox.set_child_packing(widget, True, True, 0, 0)
 
-    def makecolour(self, buffer, colour):
+    def makecolour(self, colour):
 
         buffer = self.descr.get_buffer()
         colour = self.frame.np.config.sections["ui"][colour]

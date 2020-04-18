@@ -423,11 +423,7 @@ class NetworkEventProcessor:
         if user and user in config["server"]["userencoding"]:
             coding = config["server"]["userencoding"][user]
 
-        string = self.decode(string, coding)
-        try:
-            return string.encode(locale.nl_langinfo(locale.CODESET))
-        except:
-            return string
+        return self.decode(string, coding)
 
     def encode(self, str, networkenc=None):
 
