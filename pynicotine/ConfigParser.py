@@ -86,71 +86,77 @@ ConfigParser -- responsible for for parsing a list of
 """
 
 import re
-import types
-
-__all__ = ["NoSectionError","DuplicateSectionError","NoOptionError",
-        "InterpolationError","InterpolationDepthError","ParsingError",
-        "MissingSectionHeaderError","ConfigParser",
-        "DEFAULTSECT", "MAX_INTERPOLATION_DEPTH"]
-
 from copy import deepcopy
-from pprint import pprint
+
+from pynicotine.utils import SortedDict
+
+__all__ = ["NoSectionError", "DuplicateSectionError", "NoOptionError",
+           "InterpolationError", "InterpolationDepthError", "ParsingError",
+           "MissingSectionHeaderError", "ConfigParser",
+           "DEFAULTSECT", "MAX_INTERPOLATION_DEPTH"]
+
 
 DEFAULTSECT = "DEFAULT"
 
 MAX_INTERPOLATION_DEPTH = 10
 
-from .utils import SortedDict
 
 # exception classes
 class Error(Exception):
     def __init__(self, msg=''):
         self._msg = msg
         Exception.__init__(self, msg)
+
     def __repr__(self):
         return self._msg
     __str__ = __repr__
+
 
 class NoSectionError(Error):
     def __init__(self, section):
         Error.__init__(self, 'No section: %s' % section)
         self.section = section
 
+
 class DuplicateSectionError(Error):
     def __init__(self, section):
         Error.__init__(self, "Section %s already exists" % section)
         self.section = section
 
+
 class NoOptionError(Error):
     def __init__(self, option, section):
         Error.__init__(self, "No option `%s' in section: %s" %
-                    (option, section))
+                       (option, section))
         self.option = option
         self.section = section
+
 
 class InterpolationError(Error):
     def __init__(self, reference, option, section, rawval):
         Error.__init__(self,
-            "Bad value substitution:\n"
-            "\tsection: [%s]\n"
-            "\toption : %s\n"
-            "\tkey    : %s\n"
-            "\trawval : %s\n"
-            % (section, option, reference, rawval))
+                       "Bad value substitution:\n"
+                       "\tsection: [%s]\n"
+                       "\toption : %s\n"
+                       "\tkey    : %s\n"
+                       "\trawval : %s\n"
+                       % (section, option, reference, rawval))
         self.reference = reference
         self.option = option
         self.section = section
 
+
 class InterpolationDepthError(Error):
     def __init__(self, option, section, rawval):
         Error.__init__(self,
-            "Value interpolation too deeply recursive:\n"
-            "\tsection: [%s]\n"
-            "\toption : %s\n"
-            "\trawval : %s\n"
-            % (section, option, rawval))
+                       "Value interpolation too deeply recursive:\n"
+                       "\tsection: [%s]\n"
+                       "\toption : %s\n"
+                       "\trawval : %s\n"
+                       % (section, option, rawval))
         self.option = option
         self.section = section
+
 
 class ParsingError(Error):
     def __init__(self, filename):
@@ -162,6 +168,7 @@ class ParsingError(Error):
         self.errors.append((lineno, line))
         self._msg = self._msg + '\n\t[line %2d]: %s' % (lineno, line)
 
+
 class MissingSectionHeaderError(ParsingError):
     def __init__(self, filename, lineno, line):
         Error.__init__(
@@ -171,7 +178,6 @@ class MissingSectionHeaderError(ParsingError):
         self.filename = filename
         self.lineno = lineno
         self.line = line
-
 
 
 class ConfigParser:
@@ -319,7 +325,7 @@ class ConfigParser:
         return self.__get(section, float, option)
 
     _boolean_states = {'1': True, 'yes': True, 'true': True, 'on': True,
-                    '0': False, 'no': False, 'false': False, 'off': False}
+                       '0': False, 'no': False, 'false': False, 'off': False}
 
     def getboolean(self, section, option):
         v = self.get(section, option)
@@ -368,7 +374,7 @@ class ConfigParser:
                 value = self.__sections[section][key]
                 if key != "__name__":
                     fp.write("%s = %s\n" %
-                        (key, str(value).replace('\n', '\n\t')))
+                             (key, str(value).replace('\n', '\n\t')))
             fp.write("\n")
 
     def remove_option(self, section, option):
@@ -400,15 +406,15 @@ class ConfigParser:
         r'\['                                 # [
         r'(?P<header>[^]]+)'                  # very permissive!
         r'\]'                                 # ]
-        )
+    )
     OPTCRE = re.compile(
         r'(?P<option>[^:=\s][^:=]*)'          # very permissive!
         r'\s*(?P<vi>[:=])\s*'                 # any number of space/tab,
-                                            # followed by separator
-                                            # (either : or =), followed
-                                            # by any # space/tab
+        # followed by separator
+        # (either : or =), followed
+        # by any # space/tab
         r'(?P<value>.*)$'                     # everything up to eol
-        )
+    )
 
     def __read(self, fp, fpname):
         """Parse a sectioned setup file.

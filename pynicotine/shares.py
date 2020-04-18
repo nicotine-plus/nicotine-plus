@@ -21,23 +21,25 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# System imports
+import os
 import string
 import sys
-import os
 import time
+from gettext import gettext as _
 
 import gi
+from gi.repository import GObject as gobject
+
+from pynicotine import metadata_mutagen as metadata
+from pynicotine import slskmessages
+from pynicotine.logfacility import log
+from pynicotine.slskmessages import NetworkIntType
+from pynicotine.slskmessages import NetworkLongLongType
+from pynicotine.utils import debug
+from pynicotine.utils import displayTraceback
 
 gi.require_version('Gtk', '3.0')
 
-from gi.repository import GObject as gobject
-
-from . import slskmessages
-from .slskmessages import NetworkIntType, NetworkLongLongType
-from .logfacility import log
-from .utils import displayTraceback, debug
-from . import metadata_mutagen as metadata
 
 win32 = sys.platform.startswith("win")
 
@@ -154,8 +156,7 @@ class Shares:
             )
         except Exception as ex:
             log.addwarning(
-              _("Failed to rebuild share, serious error occurred. If this problem persists delete %s/*.db and try again. If that doesn't help please file a bug report with the stack trace included (see terminal output after this message). Technical details: %s")
-              % (self.config.sections["data"]["dir"], ex)
+                _("Failed to rebuild share, serious error occurred. If this problem persists delete %s/*.db and try again. If that doesn't help please file a bug report with the stack trace included (see terminal output after this message). Technical details: %s") % (self.config.sections["data"]["dir"], ex)
             )
             raise
 
@@ -253,8 +254,8 @@ class Shares:
             return
 
         self.logMessage(_("%(user)s is making a BrowseShares request") % {
-                'user': user
-            }, 1)
+            'user': user
+        }, 1)
 
         addr = msg.conn.addr[0]
         checkuser, reason = self.np.CheckUser(user, addr)
@@ -304,7 +305,7 @@ class Shares:
         elif checkuser == 2:
             shares = self.config.sections["transfers"]["bsharedfiles"]
         else:
-            response = self.queue.put(slskmessages.TransferResponse(msg.conn.conn, 0, reason=reason, req=0))
+            response = self.queue.put(slskmessages.TransferResponse(msg.conn.conn, 0, reason=reason, req=0))  # noqa: F841
             shares = {}
 
         if checkuser:
@@ -322,7 +323,7 @@ class Shares:
 
         self.logMessage("%s %s" % (msg.__class__, vars(msg)), 4)
 
-    def processExactSearchRequest(self, searchterm, user, searchid,  direct=0, checksum=None):
+    def processExactSearchRequest(self, searchterm, user, searchid, direct=0, checksum=None):
         print(searchterm, user, searchid, checksum)
         pass
 
@@ -555,7 +556,7 @@ class Shares:
             count += 1
 
             if progress:
-                percent = float(count)/len(mtimes)
+                percent = float(count) / len(mtimes)
                 if percent <= 1.0:
                     gobject.idle_add(progress.set_fraction, percent)
 
@@ -643,7 +644,7 @@ class Shares:
     def getFilesStreams(self, mtimes, oldmtimes, oldstreams, newsharedfiles, rebuild=False, yieldcall=None):
 
         streams = {}
-        shared = self.config.sections["transfers"]["shared"]
+        shared = self.config.sections["transfers"]["shared"]  # noqa: F841
 
         for directory in list(mtimes.keys()):
 
@@ -722,7 +723,7 @@ class Shares:
 
                 try:
                     mtime = os.path.getmtime(u_path)
-                except OSError as errtuple:
+                except OSError as errtuple:  # noqa: F841
                     try:
                         mtime = os.path.getmtime(s_path)
                     except OSError as errtuple:
@@ -756,13 +757,13 @@ class Shares:
             count += 1
 
             if progress:
-                percent = float(count)/len(mtimes)
+                percent = float(count) / len(mtimes)
                 if percent <= 1.0:
                     gobject.idle_add(progress.set_fraction, percent)
 
             # force Unicode for reading from disk
             u_directory = "%s" % directory
-            str_directory = str(directory)
+            str_directory = str(directory)  # noqa: F841
 
             if self.hiddenCheck({'dir': directory}):
                 continue
@@ -840,12 +841,12 @@ class Shares:
 
             try:
                 size = os.path.getsize(pathname_f)
-            except:
+            except Exception:
                 size = os.path.getsize(pathname)
 
             try:
                 info = metadata.detect(pathname_f)
-            except:
+            except Exception:
                 info = metadata.detect(pathname)
 
             if info:
@@ -870,7 +871,7 @@ class Shares:
     def getFilesStreamsUnicode(self, mtimes, oldmtimes, oldstreams, newsharedfiles, rebuild=False, yieldcall=None):
 
         streams = {}
-        shared = self.config.sections["transfers"]["shared"]
+        shared = self.config.sections["transfers"]["shared"]  # noqa: F841
 
         for directory in list(mtimes.keys()):
 
@@ -878,7 +879,7 @@ class Shares:
 
             # force Unicode for reading from disk
             u_directory = "%s" % directory
-            str_directory = str(directory)
+            str_directory = str(directory)  # noqa: F841
 
             if self.hiddenCheck({'dir': directory}):
                 continue
@@ -929,7 +930,7 @@ class Shares:
 
             try:
                 from win32file import GetFileAttributes
-            except ImportError as e:
+            except ImportError as e:  # noqa: F841
                 pass
             else:
 
@@ -982,13 +983,13 @@ class Shares:
                     message.packObject(NetworkIntType(fileinfo[2][1]))
                 )
                 stream += msgbytes
-            except:
+            except Exception:
                 log.addwarning(_("Found meta data that couldn't be encoded, possible corrupt file: '%(file)s' has a bitrate of %(bitrate)s kbs, a length of %(length)s seconds and a VBR of %(vbr)s" % {
-                        'file':    fileinfo[0],
-                        'bitrate': fileinfo[2][0],
-                        'length':  fileinfo[3],
-                        'vbr':     fileinfo[2][1]
-                    }))
+                    'file': fileinfo[0],
+                    'bitrate': fileinfo[2][0],
+                    'length': fileinfo[3],
+                    'vbr': fileinfo[2][1]
+                }))
                 stream += message.packObject('') + message.packObject(0)
         else:
             stream += message.packObject('') + message.packObject(0)
@@ -1008,7 +1009,7 @@ class Shares:
             virtualdir = self.real2virtual(directory)
 
             if progress:
-                percent = float(count)/len(mtimes)
+                percent = float(count) / len(mtimes)
                 if percent <= 1.0:
                     gobject.idle_add(progress.set_fraction, percent)
 
@@ -1021,7 +1022,7 @@ class Shares:
                 indexes = self.getIndexWords(virtualdir, j[0], shareddirs)
                 for k in indexes:
                     wordindex.setdefault(k, []).append(index)
-                fileindex[str(index)] = ((virtualdir + '\\' + j[0]), )+j[1:]
+                fileindex[str(index)] = ((virtualdir + '\\' + j[0]), ) + j[1:]
                 index += 1
 
             if yieldcall is not None:
@@ -1062,7 +1063,7 @@ class Shares:
 
         dir = str(os.path.expanduser(os.path.dirname(name)))
         file = str(os.path.basename(name))
-        size = os.path.getsize(name)
+        size = os.path.getsize(name)  # noqa: F841
 
         shared[dir] = shared.get(dir, [])
 
@@ -1096,7 +1097,7 @@ class Shares:
 
         dir = str(os.path.expanduser(os.path.dirname(name)))
         file = str(os.path.basename(name))
-        size = os.path.getsize(name)
+        size = os.path.getsize(name)  # noqa: F841
 
         bshared[dir] = bshared.get(dir, [])
 
@@ -1116,4 +1117,4 @@ class Shares:
                 wordindex[i] = [index]
             else:
                 wordindex[i] = wordindex[i] + [index]
-        fileindex[str(index)] = (os.path.join(dir, fileinfo[0]),)+fileinfo[1:]
+        fileindex[str(index)] = (os.path.join(dir, fileinfo[0]),) + fileinfo[1:]

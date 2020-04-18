@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-#
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2016 Mutnick <muhing@yahoo.com>
 # COPYRIGHT (C) 2013 eL_vErDe <gandalf@le-vert.net>
@@ -30,22 +28,29 @@ This is the actual client code. Actual GUI classes are in the separate modules
 """
 
 import datetime
-import shutil
-from urllib.parse import urlencode
-from . import slskproto
-from . import slskmessages
-from .slskmessages import newId, PopupMessage, ToBeEncoded
-from . import transfers
-import queue
-import threading
-from .config import *
-import locale
-from .shares import Shares
-from .utils import CleanFile, findBestEncoding, debug
-import os
 import logging
+import os
+import queue
+import shutil
+import sys
+import threading
+import time
+from gettext import gettext as _
+from urllib.parse import urlencode
 
-from .ConfigParser import Error as ConfigParserError
+from pynicotine import slskmessages
+from pynicotine import slskproto
+from pynicotine import transfers
+from pynicotine.config import Config
+from pynicotine.ConfigParser import Error as ConfigParserError
+from pynicotine.shares import Shares
+from pynicotine.slskmessages import PopupMessage
+from pynicotine.slskmessages import ToBeEncoded
+from pynicotine.slskmessages import newId
+from pynicotine.utils import CleanFile
+from pynicotine.utils import debug
+from pynicotine.utils import findBestEncoding
+from pynicotine.utils import log
 
 
 class PeerConnection:
@@ -476,8 +481,8 @@ class NetworkEventProcessor:
             ['Chinese Simple', 'cp936'],
             ['Korean', 'cp949'],
             ['Chinese Traditional', 'cp950'],
-            ['Urdu',  'cp1006'],
-            ['Turkish',  'cp1026'],
+            ['Urdu', 'cp1006'],
+            ['Turkish', 'cp1026'],
             ['Latin', 'cp1140'],
             ['Central European', 'cp1250'],
             ['Cyrillic', 'cp1251'],
@@ -720,7 +725,7 @@ class NetworkEventProcessor:
 
             self.transfers.setTransferPanels(downloads, uploads)
             self.shares.sendNumSharedFoldersFiles()
-            self.queue.put(slskmessages.SetStatus((not self.frame.away)+1))
+            self.queue.put(slskmessages.SetStatus((not self.frame.away) + 1))
 
             for thing in self.config.sections["interests"]["likes"]:
                 self.queue.put(slskmessages.AddThingILike(self.encode(thing)))
@@ -1291,7 +1296,7 @@ class NetworkEventProcessor:
                 cc = self.geoip.country_name_by_addr(msg.ip)
                 cn = self.geoip.country_code_by_addr(msg.ip)
                 if cn is not None:
-                    self.frame.HasUserFlag(msg.user, "flag_"+cn)
+                    self.frame.HasUserFlag(msg.user, "flag_" + cn)
             else:
                 cc = ""
 
@@ -1309,12 +1314,12 @@ class NetworkEventProcessor:
                     'port': msg.port,
                     'country': cc
                 }
-            except:
+            except Exception:
                 message = _("IP address of %(user)s is %(ip)s, port %(port)i%(country)s") % {
-                 'user': msg.user,
-                 'ip': msg.ip,
-                 'port': msg.port,
-                 'country': cc
+                    'user': msg.user,
+                    'ip': msg.ip,
+                    'port': msg.port,
+                    'country': cc
                 }
 
             self.logMessage(message)
@@ -1535,7 +1540,7 @@ class NetworkEventProcessor:
             f = open(userpic, 'rb')
             pic = f.read()
             f.close()
-        except:
+        except Exception:
             pic = None
 
         descr = self.encode(eval(self.config.sections["userinfo"]["descr"], {})).replace("\n", "\r\n")

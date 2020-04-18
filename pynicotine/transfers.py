@@ -29,25 +29,27 @@
 the transfer manager.
 """
 
-from . import slskmessages
-import threading
-from .slskmessages import newId
-from .logfacility import log
-
-import os
-import stat
-import sys
-import shutil
-import os.path
-import string
-import re
-import time
-import locale
-from . import utils
 import hashlib
-from .utils import executeCommand
+import locale
+import os
+import os.path
+import re
+import shutil
+import stat
+import string
+import sys
+import threading
+import time
+from gettext import gettext as _
 from time import sleep
-from .temporary import HybridListDictionaryTransferMonstrosity
+
+from pynicotine import slskmessages
+from pynicotine import utils
+from pynicotine.logfacility import log
+from pynicotine.slskmessages import newId
+from pynicotine.temporary import HybridListDictionaryTransferMonstrosity
+from pynicotine.utils import executeCommand
+
 win32 = sys.platform.startswith("win")
 
 
@@ -128,23 +130,23 @@ class Transfers:
             if len(i) >= 6:
                 try:
                     size = int(i[4])
-                except:
+                except Exception:
                     pass
 
                 try:
                     currentbytes = int(i[5])
-                except:
+                except Exception:
                     pass
 
             if len(i) >= 8:
                 try:
                     bitrate = i[6]
-                except:
+                except Exception:
                     pass
 
                 try:
                     length = i[7]
-                except:
+                except Exception:
                     pass
 
             if len(i) >= 4 and i[3] in ("Aborted", "Paused"):
@@ -272,7 +274,7 @@ class Transfers:
                     transfer.status = "Filtered"
                     # In order to remove the filtered files from the saved download queue.
                     self.SaveDownloads()
-            except:
+            except Exception:
                 pass
 
         if status is None:
@@ -280,7 +282,7 @@ class Transfers:
                 self.queue.put(slskmessages.AddUser(user))
             self.queue.put(slskmessages.GetUserStatus(user))
 
-        if transfer.status is not "Filtered":
+        if transfer.status != "Filtered":
             transfer.req = newId()
             realpath = self.eventprocessor.shares.virtual2real(filename)
             request = slskmessages.TransferRequest(None, direction, transfer.req, filename, self.getFileSize(realpath), realpath)
@@ -435,7 +437,7 @@ class Transfers:
     def TransferRequest(self, msg):
 
         user = response = None
-        transfers = self.eventprocessor.config.sections["transfers"]
+        transfers = self.eventprocessor.config.sections["transfers"]  # noqa: F841
 
         if msg.conn is not None:
             for i in self.peerconns:
@@ -831,7 +833,7 @@ class Transfers:
 
         if limit_upload_slots:
             maxupslots = self.eventprocessor.config.sections["transfers"]["uploadslots"]
-            if len(bandwidthlist)+currently_negotiating >= maxupslots:
+            if len(bandwidthlist) + currently_negotiating >= maxupslots:
                 return False
 
         if limit_upload_speed:
@@ -855,7 +857,7 @@ class Transfers:
                 size = os.path.getsize("%s" % filename.replace("\\", os.sep))
             else:
                 size = os.path.getsize(filename.replace("\\", os.sep))
-        except:
+        except Exception:
             # file doesn't exist (remote files are always this)
             size = 0
 
@@ -866,7 +868,7 @@ class Transfers:
 
         if msg.reason is not None:
 
-            for i in (self.downloads+self.uploads)[:]:
+            for i in (self.downloads + self.uploads)[:]:
 
                 if i.req != msg.req:
                     continue
@@ -922,7 +924,7 @@ class Transfers:
 
     def TransferTimeout(self, msg):
 
-        for i in (self.downloads+self.uploads)[:]:
+        for i in (self.downloads + self.uploads)[:]:
 
             if i.req != msg.req:
                 continue
@@ -1026,7 +1028,7 @@ class Transfers:
                     i.status = "Local file error"
                     try:
                         f.close()
-                    except:
+                    except Exception:
                         pass
                     i.conn = None
                     self.queue.put(slskmessages.ConnClose(msg.conn))
@@ -1095,7 +1097,7 @@ class Transfers:
                 i.status = "Local file error"
                 try:
                     f.close()
-                except:
+                except Exception:
                     pass
                 i.conn = None
                 self.queue.put(slskmessages.ConnClose(msg.conn))
@@ -1201,17 +1203,17 @@ class Transfers:
                     if newname:
                         try:
                             shutil.move(msg.file.name, newname)
-                        except (IOError, OSError) as inst:
-                                try:
-                                    shutil.move(msg.file.name, "%s" % newname)
-                                except (IOError, OSError) as inst:
-                                    log.addwarning(
-                                        _("Couldn't move '%(tempfile)s' to '%(file)s': %(error)s") % {
-                                            'tempfile': self.decode(msg.file.name),
-                                            'file': self.decode(newname),
-                                            'error': str(inst)
-                                        }
-                                    )
+                        except (IOError, OSError) as inst:  # noqa: F841
+                            try:
+                                shutil.move(msg.file.name, "%s" % newname)
+                            except (IOError, OSError) as inst:
+                                log.addwarning(
+                                    _("Couldn't move '%(tempfile)s' to '%(file)s': %(error)s") % {
+                                        'tempfile': self.decode(msg.file.name),
+                                        'file': self.decode(newname),
+                                        'error': str(inst)
+                                    }
+                                )
 
                     i.status = "Finished"
 
@@ -1295,7 +1297,7 @@ class Transfers:
                 i.status = "Local file error"
                 try:
                     msg.file.close()
-                except:
+                except Exception:
                     pass
                 i.conn = None
                 self.queue.put(slskmessages.ConnClose(msg.conn))
@@ -1450,7 +1452,7 @@ class Transfers:
         trusers = self.getTransferringUsers()
 
         # List of transfer instances of users who are not currently transferring
-        list = [i for i in self.uploads if not i.user in trusers and i.status == "Queued"]
+        list = [i for i in self.uploads if i.user not in trusers and i.status == "Queued"]
 
         # Sublist of privileged users transfers
         listprivileged = [i for i in list if self.isPrivileged(i.user)]
@@ -1536,7 +1538,7 @@ class Transfers:
                         break
         else:
             # Todo
-            list = listpriv = {user: time.time()}
+            list = listpriv = {user: time.time()}  # noqa: F841
             countpriv = 0
             trusers = self.getTransferringUsers()
             count = 0
@@ -1608,7 +1610,7 @@ class Transfers:
             if self.isPrivileged(username):
                 return len(self.privusersqueued), len(self.privusersqueued)
             else:
-                return len(self.usersqueued)+self.privcount, self.privcount
+                return len(self.usersqueued) + self.privcount, self.privcount
 
     def addQueued(self, user, filename):
 
@@ -1780,7 +1782,7 @@ class Transfers:
     def FileError(self, msg):
         """ Networking thread encountered a local file error"""
 
-        for i in self.downloads+self.uploads:
+        for i in self.downloads + self.uploads:
 
             if i.conn != msg.conn.conn:
                 continue
@@ -1788,7 +1790,7 @@ class Transfers:
 
             try:
                 msg.file.close()
-            except:
+            except Exception:
                 pass
 
             i.conn = None
@@ -1842,7 +1844,7 @@ class Transfers:
                                 bitrate += " (vbr)"
                             try:
                                 rl = int(attrs[1])
-                            except:
+                            except Exception:
                                 rl = 0
                             length = "%i:%02i" % (rl // 60, rl % 60)
 
@@ -1884,7 +1886,7 @@ class Transfers:
     def AbortTransfers(self):
         """ Stop all transfers """
 
-        for i in self.downloads+self.uploads:
+        for i in self.downloads + self.uploads:
             if i.status in ("Aborted", "Paused"):
                 self.AbortTransfer(i)
                 i.status = "Paused"
@@ -1906,7 +1908,7 @@ class Transfers:
                 transfer.file.close()
                 if remove:
                     os.remove(transfer.file.name)
-            except:
+            except Exception:
                 pass
             if transfer in self.uploads:
                 self.eventprocessor.logTransfer(
@@ -1935,7 +1937,7 @@ class Transfers:
     def decode(self, string):
         try:
             return string.decode(locale.nl_langinfo(locale.CODESET), "replace").encode("utf-8", "replace")
-        except:
+        except Exception:
             return string
 
     def encode(self, string, user=None):

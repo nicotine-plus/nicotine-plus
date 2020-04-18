@@ -22,31 +22,36 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import gi
+import locale
+import os
+import random
+import re
+import sre_constants
+from gettext import gettext as _
 
-from ..utils import cmp
+import gi
+from gi.repository import Gdk
+from gi.repository import GObject as gobject
+from gi.repository import Gtk as gtk
+
+import _thread
+from pynicotine import slskmessages
+from pynicotine.gtkgui.dirchooser import ChooseDir
+from pynicotine.gtkgui.entrydialog import MetaDialog
+from pynicotine.gtkgui.utils import Humanize
+from pynicotine.gtkgui.utils import HumanSize
+from pynicotine.gtkgui.utils import HumanSpeed
+from pynicotine.gtkgui.utils import IconNotebook
+from pynicotine.gtkgui.utils import InitialiseColumns
+from pynicotine.gtkgui.utils import InputDialog
+from pynicotine.gtkgui.utils import PopupMenu
+from pynicotine.gtkgui.utils import PressHeader
+from pynicotine.gtkgui.utils import showCountryTooltip
+from pynicotine.logfacility import log
+from pynicotine.utils import cmp
 
 gi.require_version('Gtk', '3.0')
 gi.require_version('Gdk', '3.0')
-
-from gi.repository import Gtk as gtk
-from gi.repository import Gdk
-from gi.repository import GObject as gobject
-
-import os
-import re
-import sre_constants
-import locale
-import random
-import _thread
-
-from pynicotine import slskmessages
-
-from .utils import InitialiseColumns, IconNotebook, PopupMenu, Humanize, HumanSpeed, HumanSize, PressHeader
-from .dirchooser import ChooseDir
-from .entrydialog import MetaDialog
-from .utils import InputDialog, showCountryTooltip
-from pynicotine.logfacility import log
 
 
 class WishList(gtk.Dialog):
@@ -185,7 +190,7 @@ class Searches(IconNotebook):
         self.frame = frame
 
         self.interval = 0
-        self.searchid = int(random.random() * (2**31-1))
+        self.searchid = int(random.random() * (2 ** 31 - 1))
         self.searches = {}
         self.usersearches = {}
         self.users = {}
@@ -238,7 +243,7 @@ class Searches(IconNotebook):
                 self.searchid = (self.searchid + 1) % (2**31)
 
         self.OnAutoSearch()
-        self.timer = gobject.timeout_add(self.interval*1000, self.OnAutoSearch)
+        self.timer = gobject.timeout_add(self.interval * 1000, self.OnAutoSearch)
 
     def ConnClose(self):
 
@@ -540,7 +545,7 @@ class Searches(IconNotebook):
             ("#" + _("Detach this tab"), self.searches[id][2].Detach),
             ("#" + _("Close this tab"), self.searches[id][2].OnClose)
         )
-        items = popup.get_children()
+        items = popup.get_children()  # noqa: F841
 
         return popup
 
@@ -762,7 +767,7 @@ class Search:
 
     def OnFilterChanged(self, widget):
 
-        model = widget.get_model()
+        model = widget.get_model()  # noqa: F841
         iter = widget.get_active_iter()
 
         if iter:
@@ -870,7 +875,7 @@ class Search:
         else:
             imdl = "N"
 
-        decode = self.frame.np.decode
+        decode = self.frame.np.decode  # noqa: F841
 
         for result in msg.list:
 
@@ -937,7 +942,7 @@ class Search:
                         br = a[0]
 
                         # Dividing the file size by the bitrate in Bytes should give us a good enough approximation
-                        l = result[2] / (br / 8 * 1000)
+                        l = result[2] / (br / 8 * 1000)  # noqa: E741
 
                         length = '%i:%02i' % (l / 60, l % 60)
 
@@ -993,7 +998,7 @@ class Search:
 
         for r in results:
 
-            user, filename, size, speed, queue, immediatedl, h_bitrate, length, directory, bitrate, fullpath,  country, status = r
+            user, filename, size, speed, queue, immediatedl, h_bitrate, length, directory, bitrate, fullpath, country, status = r
 
             if user in self.Searches.users and status != self.Searches.users[user]:
                 status = self.Searches.users[user]
@@ -1013,7 +1018,7 @@ class Search:
 
             row = [
                 counter, user, filename, h_size, h_speed, h_queue, immediatedl, h_bitrate, length,
-                directory,  bitrate, fullpath, country,  size, speed, queue, status
+                directory, bitrate, fullpath, country, size, speed, queue, status
             ]
 
             self.all_data.append(row)
@@ -1026,7 +1031,7 @@ class Search:
 
                 encoded_row = [
                     counter, user, encode(filename, user), h_size, h_speed, h_queue, immediatedl, h_bitrate, length,
-                    self.get_flag(user, country), encode(directory, user), bitrate, encode(fullpath, user), country,  size, speed, queue, status
+                    self.get_flag(user, country), encode(directory, user), bitrate, encode(fullpath, user), country, size, speed, queue, status
                 ]
 
                 gobject.idle_add(self._add_to_model, user, encoded_row)
@@ -1115,7 +1120,7 @@ class Search:
 
         op = ">="
         if filter[:1] in (">", "<", "="):
-            op, filter = filter[:1]+"=", filter[1:]
+            op, filter = filter[:1] + "=", filter[1:]
 
         if not filter:
             return True
@@ -1146,7 +1151,7 @@ class Search:
         except TypeError:
             return True
 
-        if eval(str(value)+op+str(filter), {}):
+        if eval(str(value) + op + str(filter), {}):
             return True
 
         return False
@@ -1231,7 +1236,7 @@ class Search:
 
             if self.check_filter(row):
 
-                ix, user, filename,  h_size, h_speed, h_queue, immediatedl, h_bitrate, length, directory,  bitrate, fullpath, country, size, speed, queue, status = row
+                ix, user, filename, h_size, h_speed, h_queue, immediatedl, h_bitrate, length, directory, bitrate, fullpath, country, size, speed, queue, status = row
 
                 if user in self.Searches.users and status != self.Searches.users[user]:
                     status = self.Searches.users[user]
@@ -1244,14 +1249,14 @@ class Search:
 
                 encoded_row = [
                     ix, user, encode(filename, user), h_size, h_speed, h_queue, immediatedl, h_bitrate, length,
-                    self.get_flag(user, country), encode(directory, user), bitrate, encode(fullpath, user), country,  size, speed, queue, status
+                    self.get_flag(user, country), encode(directory, user), bitrate, encode(fullpath, user), country, size, speed, queue, status
                 ]
 
                 try:
                     if user in self.usersiters:
                         iter = self.resultsmodel.append(self.usersiters[user], encoded_row)
                     else:
-                        iter = self.resultsmodel.append(None, encoded_row)
+                        iter = self.resultsmodel.append(None, encoded_row)  # noqa: F841
                 except Exception as e:
                     print("Filters: Search row error:", e)
                     for i in encoded_row:
@@ -1510,7 +1515,7 @@ class Search:
 
     def MetaBox(self, title="Meta Data", message="", data=None, modal=True):
 
-        win = MetaDialog(self.frame, message,  data, modal)
+        win = MetaDialog(self.frame, message, data, modal)
         win.set_title(title)
         win.set_icon(self.frame.images["n"])
         win.show()

@@ -19,16 +19,18 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+import json
+import urllib.error
+import urllib.parse
+import urllib.request
+from gettext import gettext as _
 
 import gi
-gi.require_version('Gtk', '3.0')
-
 from gi.repository import Gtk as gtk
 
-import urllib.request, urllib.parse, urllib.error
-import json
-
 from pynicotine.utils import version
+
+gi.require_version('Gtk', '3.0')
 
 
 def makeversion(version):

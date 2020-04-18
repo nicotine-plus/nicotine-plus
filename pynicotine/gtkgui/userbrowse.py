@@ -23,20 +23,31 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-import gi
-gi.require_version('Gtk', '3.0')
-gi.require_version('Gdk', '3.0')
+from gettext import gettext as _
 
-from gi.repository import Gtk as gtk
+import gi
 from gi.repository import Gdk
 from gi.repository import GObject as gobject
+from gi.repository import Gtk as gtk
 
-from .utils import InitialiseColumns, PopupMenu, EncodingsMenu, SaveEncoding, Humanize, HumanSize, PressHeader
-from .dirchooser import ChooseDir
-from .entrydialog import input_box
-from pynicotine import slskmessages
 from _thread import start_new_thread
-from pynicotine.utils import displayTraceback, executeCommand, CleanFile, GetUserDirectories
+from pynicotine import slskmessages
+from pynicotine.gtkgui.dirchooser import ChooseDir
+from pynicotine.gtkgui.entrydialog import input_box
+from pynicotine.gtkgui.utils import EncodingsMenu
+from pynicotine.gtkgui.utils import GetUserDirectories
+from pynicotine.gtkgui.utils import Humanize
+from pynicotine.gtkgui.utils import HumanSize
+from pynicotine.gtkgui.utils import InitialiseColumns
+from pynicotine.gtkgui.utils import PopupMenu
+from pynicotine.gtkgui.utils import PressHeader
+from pynicotine.gtkgui.utils import SaveEncoding
+from pynicotine.utils import CleanFile
+from pynicotine.utils import displayTraceback
+from pynicotine.utils import executeCommand
+
+gi.require_version('Gtk', '3.0')
+gi.require_version('Gdk', '3.0')
 
 
 class UserBrowse:
@@ -124,7 +135,7 @@ class UserBrowse:
                 ("#" + _("Get user i_nfo"), menu.OnGetUserInfo),
                 ("#" + _("Gi_ve privileges"), menu.OnGivePrivileges),
                 ("", None),
-                ("$" + _("_Add user to list"),  menu.OnAddToList),
+                ("$" + _("_Add user to list"), menu.OnAddToList),
                 ("$" + _("_Ban this user"), menu.OnBanUser),
                 ("$" + _("_Ignore this user"), menu.OnIgnoreUser)
             )
@@ -561,7 +572,7 @@ class UserBrowse:
                         except ValueError:
                             rl = 0
 
-                        l = "%i:%02i" % (rl / 60, rl % 60)
+                        l = "%i:%02i" % (rl / 60, rl % 60)  # noqa: E741
                         f += [br, l]
                     else:
                         f += ["", ""]
@@ -572,7 +583,7 @@ class UserBrowse:
 
             try:
                 self.files[f[0]] = self.FileStore.append(f)
-            except Exception as error:
+            except Exception as error:  # noqa: F841
                 displayTraceback()
 
     def OnSave(self, widget):
@@ -949,7 +960,7 @@ class UserBrowse:
 
             sel = self.FileTreeView.get_selection()
             sel.unselect_all()
-            l = 1
+            l = 1  # noqa: E741
             resultfiles.sort()
 
             for fn in resultfiles:
@@ -961,7 +972,7 @@ class UserBrowse:
                 if l:
                     # Position cursor at first match
                     self.FileTreeView.scroll_to_cell(path, None, True, 0.5, 0.5)
-                    l = 0
+                    l = 0  # noqa: E741
         else:
             self.search_position = 0
 

@@ -21,19 +21,21 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import gi
-gi.require_version('Gtk', '3.0')
-
-from gi.repository import Gtk as gtk
-from gi.repository import GObject as gobject
-
+import copy
 import os
 import re
-import _thread
-import copy
 import sys
-from pynicotine.utils import executeCommand
+from gettext import gettext as _
+
+import gi
+from gi.repository import GObject as gobject
+from gi.repository import Gtk as gtk
+
+import _thread
 from pynicotine.logfacility import log
+from pynicotine.utils import executeCommand
+
+gi.require_version('Gtk', '3.0')
 
 
 class NowPlaying:
@@ -161,7 +163,7 @@ class NowPlaying:
         isset = False
 
         if self.NP_mpd.get_active():
-            self.player_replacers = ["$n", "$t", "$a", "$b",  "$f", "$k"]
+            self.player_replacers = ["$n", "$t", "$a", "$b", "$f", "$k"]
             isset = True
         elif self.NP_banshee.get_active():
             self.player_replacers = ["$n", "$t", "$l", "$a", "$b", "$k", "$y", "$r", "$f"]
@@ -573,7 +575,7 @@ class NowPlaying:
                 self.title["bitrate"] = output
 
         if "$f" in slist:
-            path = self.audacious_command('current-song-filename')
+            path = self.audacious_command('current-song-filename')  # noqa: F841
 
         if not self.audacious_running:
             log.addwarning(_("ERROR: audacious: audtool didn't detect a running Audacious session."))
@@ -652,12 +654,12 @@ class NowPlaying:
                 self.title[dest] = '?'
 
         mapping = [
-                ('xesam:title', 'title'),
-                ('xesam:album', 'album'),
-                ('xesam:comment', 'comment'),
-                ('xesam:audioBitrate', 'bitrate'),
-                ('xesak:trackNumber', 'track')
-            ]
+            ('xesam:title', 'title'),
+            ('xesam:album', 'album'),
+            ('xesam:comment', 'comment'),
+            ('xesam:audioBitrate', 'bitrate'),
+            ('xesak:trackNumber', 'track')
+        ]
 
         for (source, dest) in mapping:
             try:
@@ -703,9 +705,9 @@ class NowPlaying:
         for wnd_id in wnd_ids:
             wnd_txt = GetWindowText(FindWindow(wnd_id, None))
             if wnd_txt:
-                m = re.match("(.*)\s+\[foobar.*", wnd_txt)
+                m = re.match(r"(.*)\\s+\[foobar.*", wnd_txt)
                 if m:
-                    metadata = m.groups(0)[0].strip()
+                    metadata = m.groups()[0].strip()
 
         if metadata:
             self.title["nowplaying"] = "now playing: " + metadata.decode('mbcs')
@@ -718,7 +720,7 @@ class NowPlaying:
 
         if length != '' and length is not None:
 
-            minutes = int(length)/60
+            minutes = int(length) / 60
             seconds = str(int(length) - (60 * minutes))
 
             if len(seconds) < 2:
@@ -744,7 +746,7 @@ class NowPlaying:
 
         try:
             (user, apikey) = self.NPCommand.get_text().split(';')
-        except ValueError as error:
+        except ValueError as error:  # noqa: F841
             log.addwarning(_("ERROR: lastfm: Please provide both your lastfm username and API key"))
             return None
 
@@ -794,7 +796,7 @@ class NowPlaying:
         # Now we need to connect to xmms2d
         try:
             xmms.connect(os.getenv("XMMS_PATH"))
-        except IOError as detail:
+        except IOError as error:
             log.addwarning(_("ERROR: xmms2: connecting failed: %(error)s") % {"error": error})
             return None
 

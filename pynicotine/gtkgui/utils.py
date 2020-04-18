@@ -22,29 +22,34 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+import locale
+import os
+import re
+import sys
+import time
+import types
+import urllib.error
+import urllib.parse
+import urllib.request
+import webbrowser
+from gettext import gettext as _
 
 import gi
+from gi.repository import Gdk
+from gi.repository import GObject as gobject
+from gi.repository import Gtk as gtk
+from gi.repository import Pango as pango
+
+from pynicotine import slskmessages
+from pynicotine.gtkgui.countrycodes import code2name
+from pynicotine.utils import cmp
+from pynicotine.utils import executeCommand
+from pynicotine.utils import findBestEncoding
 
 gi.require_version('Pango', '1.0')
 gi.require_version('Gtk', '3.0')
 gi.require_version('Gdk', '3.0')
 
-from gi.repository import Gtk as gtk
-from gi.repository import Gdk
-from gi.repository import GObject as gobject
-from gi.repository import Pango as pango
-import time
-import locale
-import os
-import sys
-import re
-import types
-import urllib.request, urllib.parse, urllib.error
-import webbrowser
-
-from pynicotine import slskmessages
-from pynicotine.utils import executeCommand, findBestEncoding, cmp
-from .countrycodes import code2name
 
 DECIMALSEP = ""
 
@@ -81,11 +86,12 @@ def popupWarning(parent, title, warning, icon=None):
 
     dlg.vbox.show_all()
 
-    result = None
+    result = None  # noqa: F841
     if dlg.run() == gtk.ResponseType.OK:
         dlg.destroy()
 
     return 0
+
 
 # we could move this into a new class
 previouscountrypath = None
@@ -115,7 +121,7 @@ def showCountryTooltip(widget, x, y, tooltip, sourcecolumn, stripprefix='flag_')
 
     title = column.get_title()
 
-    if (title != _("Country")):
+    if title != _("Country"):
         return False
 
     model = widget.get_model()
@@ -149,14 +155,14 @@ def showCountryTooltip(widget, x, y, tooltip, sourcecolumn, stripprefix='flag_')
 def recode(s):
     try:
         return s.decode(locale.nl_langinfo(locale.CODESET), "replace").encode("utf-8", "replace")
-    except:
+    except Exception:
         return s
 
 
 def recode2(s):
     try:
         return s.decode("utf-8", "replace").encode(locale.nl_langinfo(locale.CODESET), "replace")
-    except:
+    except Exception:
         return s
 
 
@@ -285,7 +291,7 @@ def OpenUri(uri):
     # Situation 1, user defined a way of handling the protocol
     protocol = uri[:uri.find(":")]
     if protocol in PROTOCOL_HANDLERS:
-        if PROTOCOL_HANDLERS[protocol].__class__ is types.MethodType:
+        if isinstance(PROTOCOL_HANDLERS[protocol], types.MethodType):
             PROTOCOL_HANDLERS[protocol](uri.strip())
             return
         if PROTOCOL_HANDLERS[protocol]:
@@ -302,7 +308,7 @@ def OpenUri(uri):
         import gnomevfs
         gnomevfs.url_show(uri)
         return
-    except Exception as e:
+    except Exception as e:  # noqa: F841
         pass
 
 
@@ -331,10 +337,10 @@ def AppendLine(textview, line, tag=None, timestamp=None, showstamp=True, timesta
 
     def _usertag(buffer, section):
         # Tag usernames with popup menu creating tag, and away/online/offline colors
-        if USERNAMEHOTSPOTS and username != None and usertag != None:
+        if USERNAMEHOTSPOTS and username is not None and usertag is not None:
             np = re.compile(re.escape(username))
             match = np.search(section)
-            if match != None:
+            if match is not None:
                 start2 = section[:match.start()]
                 name = match.group()[:]
                 start = section[match.end():]
@@ -349,7 +355,7 @@ def AppendLine(textview, line, tag=None, timestamp=None, showstamp=True, timesta
     scrolledwindow = textview.get_parent()
     va = scrolledwindow.get_vadjustment()
     try:
-        bottom = va.value >= (va.upper - int(va.page_size*1.5))
+        bottom = va.value >= (va.upper - int(va.page_size * 1.5))
     except AttributeError:
         bottom = True
 
@@ -358,7 +364,7 @@ def AppendLine(textview, line, tag=None, timestamp=None, showstamp=True, timesta
     ME = 0
 
     if line.startswith("* "):
-        ME = 1
+        ME = 1  # noqa: F841
 
     TIMESTAMP = None
     TS = 0
@@ -387,7 +393,7 @@ def AppendLine(textview, line, tag=None, timestamp=None, showstamp=True, timesta
         _usertag(buffer, start)
         url = match.group()[:-1]
         urltag = _makeurltag(buffer, tag, url)
-        line = line[match.end()-1:]
+        line = line[match.end() - 1:]
 
         if url.startswith("slsk://") and HUMANIZE_URLS:
             url = urllib.request.url2pathname(url)
@@ -558,7 +564,7 @@ class ImageLabel(gtk.HBox):
 
             try:
                 Gdk.color_parse(color)
-            except:
+            except Exception:
                 color = ""
         else:
             color = ""
@@ -640,7 +646,7 @@ class IconNotebook:
             page, label_tab, status, label_tab_menu = data
             try:
                 self.Notebook.set_tab_reorderable(page, self.reorderable)
-            except:
+            except Exception:
                 pass
 
     def set_tab_closers(self, closers):
@@ -1184,7 +1190,7 @@ class PopupMenu(gtk.Menu):
         if self.user is None or self.user == self.frame.np.config.sections["server"]["login"]:
             return False
 
-        user = self.user
+        user = self.user  # noqa: F841
         items = []
         popup = self.frame.userlist.Popup_Menu_PrivateRooms
         popup.clear()
@@ -1220,7 +1226,7 @@ def InputDialog(parent, title, message, default=""):
     dlg.set_border_width(10)
     dlg.vbox.set_spacing(10)
 
-    l = gtk.Label(message)
+    l = gtk.Label(message)  # noqa: E741
     l.set_alignment(0, 0.5)
     dlg.vbox.pack_start(l, False, False, 0)
 
@@ -1243,11 +1249,11 @@ def InputDialog(parent, title, message, default=""):
 def int_sort_func(model, iter1, iter2, column):
     try:
         val1 = int(model.get_value(iter1, column))
-    except:
+    except Exception:
         val1 = 0
     try:
         val2 = int(model.get_value(iter2, column))
-    except:
+    except Exception:
         val2 = 0
     return cmp(val1, val2)
 
@@ -1256,12 +1262,12 @@ def float_sort_func(model, iter1, iter2, column):
 
     try:
         val1 = float(model.get_value(iter1, column))
-    except:
+    except Exception:
         val1 = 0.0
 
     try:
         val2 = float(model.get_value(iter2, column))
-    except:
+    except Exception:
         val2 = 0.0
 
     return cmp(val1, val2)
@@ -1291,7 +1297,7 @@ def fixpath(path):
             for char in chars:
                 path = path.replace(char, "_")
         return path
-    except:
+    except Exception:
         return path
 
 
@@ -1300,10 +1306,10 @@ def HumanSize(number):
     try:
         s = float(int(number))
 
-        if s >= 1024*1024*1024:
-            r = _("%.2f GB") % (s / (1024.0*1024.0*1024.0))
-        elif s >= 1024*1024:
-            r = _("%.2f MB") % (s / (1024.0*1024.0))
+        if s >= 1024 * 1024 * 1024:
+            r = _("%.2f GB") % (s / (1024.0 * 1024.0 * 1024.0))
+        elif s >= 1024 * 1024:
+            r = _("%.2f MB") % (s / (1024.0 * 1024.0))
         elif s >= 1024:
             r = _("%.2f KB") % (s / 1024.0)
         else:
@@ -1311,7 +1317,7 @@ def HumanSize(number):
 
         return r
 
-    except Exception as e:
+    except Exception as e:  # noqa: F841
         return number
 
 
@@ -1320,18 +1326,18 @@ def HumanSpeed(number):
     try:
         s = float(number)
 
-        if s >= 1024*1024*1024:
-            r = _("%.2f GB/s") % (s / (1024.0*1024.0*1024.0))
-        elif s >= 1024*1024:
-            r = _("%.2f MB/s") % (s / (1024.0*1024.0))
+        if s >= 1024 * 1024 * 1024:
+            r = _("%.2f GB/s") % (s / (1024.0 * 1024.0 * 1024.0))
+        elif s >= 1024 * 1024:
+            r = _("%.2f MB/s") % (s / (1024.0 * 1024.0))
         elif s >= 1024:
             r = _("%.2f KB/s") % (s / 1024.0)
         else:
-            r = _("%d B/s") % (s)
+            r = _("%d B/s") % s
 
         return r
 
-    except Exception as e:
+    except Exception as e:  # noqa: F841
         return number
 
 
@@ -1397,8 +1403,8 @@ def _expand_alias(aliases, cmd):
         ret = ""
         i = 0
         while i < len(alias):
-            if alias[i:i+2] == "$(":
-                arg = getpart(alias[i+1:])
+            if alias[i:i + 2] == "$(":
+                arg = getpart(alias[i + 1:])
                 if not arg:
                     ret = ret + "$"
                     i = i + 1
@@ -1421,31 +1427,31 @@ def _expand_alias(aliases, cmd):
                         last = int(args[1])
                     else:
                         last = len(cmd)
-                v = " ".join(cmd[first:last+1])
+                v = " ".join(cmd[first:last + 1])
                 if not v:
                     v = default
                 ret = ret + v
-            elif alias[i:i+2] == "|(":
-                arg = getpart(alias[i+1:])
+            elif alias[i:i + 2] == "|(":
+                arg = getpart(alias[i + 1:])
                 if not arg:
                     ret = ret + "|"
                     i = i + 1
                     continue
                 i = i + len(arg) + 3
-                for j in range(len(cmd)-1, -1, -1):
+                for j in range(len(cmd) - 1, -1, -1):
                     arg = arg.replace("$%i" % j, cmd[j])
                 arg = arg.replace("$@", " ".join(cmd[1:]))
 
                 import subprocess
 
                 p = subprocess.Popen(arg, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, close_fds=(not sys.platform.startswith("win")))
-                exit = p.wait()
+                exit = p.wait()  # noqa: F841
 
                 (stdout, stdin) = (p.stdout, p.stdin)
                 v = stdout.read().split("\n")
                 r = ""
                 for l in v:
-                    l = l.strip()
+                    l = l.strip()  # noqa: E741
                     if l:
                         r = r + l + "\n"
                 ret = ret + r.strip()

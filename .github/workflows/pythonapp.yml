@@ -24,8 +24,7 @@ jobs:
     - name: Lint with flake8
       run: |
         pip install flake8
-        # warn if there are Python syntax errors or undefined names. exit-zero treats all errors as warnings
-        flake8 pynicotine --count --exit-zero --max-complexity=10 --statistics
+        flake8 nicotine pynicotine plugins --ignore=E402,E501,W503,W504
       continue-on-error: true
     - name: Test with pytest
       env:

@@ -22,20 +22,27 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import gi
-gi.require_version('Gtk', '3.0')
-gi.require_version('Gdk', '3.0')
+import os
+import sys
+import time
+from gettext import gettext as _
 
-from gi.repository import Gtk as gtk
+import gi
 from gi.repository import Gdk
 from gi.repository import GObject as gobject
-
-import time
-import sys
-import os
+from gi.repository import Gtk as gtk
 
 from pynicotine import slskmessages
-from .utils import InitialiseColumns, PopupMenu, InputDialog, Humanize, HumanSpeed, PressHeader, showCountryTooltip
+from pynicotine.gtkgui.utils import Humanize
+from pynicotine.gtkgui.utils import HumanSpeed
+from pynicotine.gtkgui.utils import InitialiseColumns
+from pynicotine.gtkgui.utils import InputDialog
+from pynicotine.gtkgui.utils import PopupMenu
+from pynicotine.gtkgui.utils import PressHeader
+from pynicotine.gtkgui.utils import showCountryTooltip
+
+gi.require_version('Gtk', '3.0')
+gi.require_version('Gdk', '3.0')
 
 
 class UserList:
@@ -84,7 +91,7 @@ class UserList:
         self.cols = cols = InitialiseColumns(
             self.UserList,
             [_("Status"), statusiconwidth, "pixbuf"],
-            [_("Country"), widths[1] , "pixbuf"],
+            [_("Country"), widths[1], "pixbuf"],
             [_("User"), widths[2], "text", self.CellDataFunc],
             [_("Speed"), widths[3], "number", self.CellDataFunc],
             [_("Files"), widths[4], "number", self.CellDataFunc],
@@ -158,7 +165,7 @@ class UserList:
                 last_seen = user[5]
                 try:
                     time_from_epoch = time.mktime(time.strptime(last_seen, "%m/%d/%Y %H:%M:%S"))
-                except:
+                except Exception:
                     if last_seen == '':
                         time_from_epoch = sys.maxsize
                     else:
@@ -280,7 +287,7 @@ class UserList:
 
     def DragUserToBuddylist(self, treeview, context, x, y, selection, info, etime):
 
-        model = treeview.get_model()
+        model = treeview.get_model()  # noqa: F841
         user = selection.data
 
         if user:
@@ -378,7 +385,7 @@ class UserList:
             self.usersmodel.set(user[3], 0, self.frame.GetStatusImage(0), 3, "0", 4, "0", 10, 0, 11, 0, 12, 0)
 
         for user in self.userlist:
-            if self.usersmodel.get(user[3], 8)[0] is "":
+            if self.usersmodel.get(user[3], 8)[0] == "":
                 self.SetLastSeen(user[0])
 
     def OnPopupMenu(self, widget, event):
@@ -398,8 +405,8 @@ class UserList:
 
             self.popup_menu.set_user(user)
 
-            items = self.popup_menu.get_children()
-            me = (self.popup_menu.user == None or self.popup_menu.user == self.frame.np.config.sections["server"]["login"])
+            items = self.popup_menu.get_children()  # noqa: F841
+            me = (self.popup_menu.user is None or self.popup_menu.user == self.frame.np.config.sections["server"]["login"])
 
             self.Menu_BanUser.set_active(user in self.frame.np.config.sections["server"]["banlist"])
             self.Menu_IgnoreUser.set_active(user in self.frame.np.config.sections["server"]["ignorelist"])
@@ -438,7 +445,7 @@ class UserList:
 
         if msg.status:  # online
             self.SetLastSeen(msg.user, online=True)
-        elif self.usersmodel.get(iter, 8)[0] is "":  # disconnected
+        elif self.usersmodel.get(iter, 8)[0] == "":  # disconnected
             self.SetLastSeen(msg.user)
 
     def GetUserStats(self, msg):
@@ -506,7 +513,7 @@ class UserList:
         else:
             comments = ""
 
-        comments = InputDialog(self.frame.MainWindow, _("Edit comments")+"...", _("Comments")+":", comments)
+        comments = InputDialog(self.frame.MainWindow, _("Edit comments") + "...", _("Comments") + ":", comments)
 
         if comments is not None:
             for i in self.userlist:
@@ -518,7 +525,7 @@ class UserList:
 
     def SaveUserList(self):
 
-        l = []
+        l = []  # noqa: E741
 
         for i in self.userlist:
             user, comment, seen, iter, flag = i
@@ -536,6 +543,7 @@ class UserList:
             widths.append(column.get_width())
         self.frame.np.config.sections["columns"]["userlist"] = columns
         self.frame.np.config.sections["columns"]["userlist_widths"] = widths
+
     def RemoveFromList(self, user):
 
         if user in self.notify:
@@ -571,7 +579,7 @@ class UserList:
             if user in self.trusted:
                 self.trusted.remove(user)
         else:
-            if not user in self.trusted:
+            if user not in self.trusted:
                 self.trusted.append(user)
 
         for i in self.userlist:
@@ -588,7 +596,7 @@ class UserList:
             if user in self.notify:
                 self.notify.remove(user)
         else:
-            if not user in self.notify:
+            if user not in self.notify:
                 self.notify.append(user)
 
         for i in self.userlist:
@@ -605,7 +613,7 @@ class UserList:
             if user in self.privileged:
                 self.privileged.remove(user)
         else:
-            if not user in self.privileged:
+            if user not in self.privileged:
                 self.privileged.append(user)
 
         for i in self.userlist:

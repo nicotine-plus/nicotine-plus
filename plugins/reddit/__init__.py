@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-#
 # COPYRIGHT (c) 2016 Mutnick <muhing@yahoo.com>
 #
 # GNU GENERAL PUBLIC LICENSE
@@ -27,7 +25,8 @@ Example uses:
 
 """
 import feedparser
-from pynicotine.pluginsystem import BasePlugin, ResponseThrottle
+from pynicotine.pluginsystem import BasePlugin
+from pynicotine.pluginsystem import ResponseThrottle
 
 
 def enable(plugins):
@@ -57,8 +56,8 @@ class Plugin(BasePlugin):
         if line.startswith(self.plugin_command) and (" " in line):
             subreddit = line.split(" ")[1].strip("/")
             if self.responder.ok_to_respond(room, nick, subreddit):
-                    posts = feedparser.parse('https://www.reddit.com/r/' + subreddit + '/.rss')
-                    if posts.entries:
-                        self.responder.responded()
-                        for post in posts.entries[0:self.settings['reddit_links']]:
-                            self.saypublic(room, "/me {}: {}".format(post.title, post.link))
+                posts = feedparser.parse('https://www.reddit.com/r/' + subreddit + '/.rss')
+                if posts.entries:
+                    self.responder.responded()
+                    for post in posts.entries[0:self.settings['reddit_links']]:
+                        self.saypublic(room, "/me {}: {}".format(post.title, post.link))

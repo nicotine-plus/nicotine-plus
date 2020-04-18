@@ -20,13 +20,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import gi
-gi.require_version('Gtk', '3.0')
-gi.require_version('Gdk', '3.0')
+from gettext import gettext as _
 
-from gi.repository import Gtk as gtk
+import gi
 from gi.repository import Gdk
 from gi.repository import GObject as gobject
+from gi.repository import Gtk as gtk
+
+gi.require_version('Gtk', '3.0')
+gi.require_version('Gdk', '3.0')
 
 
 class MetaDialog(gtk.Dialog):
@@ -283,7 +285,7 @@ class MetaDialog(gtk.Dialog):
             _list = list(self.data.keys())
 
             if self.current not in _list:
-                ix -= 1
+                ix -= 1  # noqa: F821
             else:
                 ix = _list.index(self.current)
                 ix -= 1
@@ -308,7 +310,7 @@ class MetaDialog(gtk.Dialog):
             _list = list(self.data.keys())
 
             if self.current not in _list:
-                ix += 1
+                ix += 1  # noqa: F821
             else:
                 ix = _list.index(self.current)
                 ix += 1
@@ -430,7 +432,7 @@ class MetaDialog(gtk.Dialog):
 
         try:
             entry.set_property("xalign", xalign)
-        except:
+        except Exception:
             pass
 
         entry.show()
@@ -688,7 +690,7 @@ class FolderDownloadDialog(gtk.Dialog):
         hbox2.show()
         box.pack_start(hbox2, False, False, 0)
 
-        cancel_button = self.add_button(gtk.STOCK_CANCEL, gtk.ResponseType.CANCEL)
+        cancel_button = self.add_button(gtk.STOCK_CANCEL, gtk.ResponseType.CANCEL)  # noqa: F841
         ok_button = self.add_button(gtk.STOCK_OK, gtk.ResponseType.OK)
         ok_button.grab_default()
 
@@ -784,7 +786,7 @@ class OptionDialog(gtk.Dialog):
             tray_button.remove(tray_button.get_child())
             tray_button.add(Alignment)
 
-        cancel_button = self.add_button(gtk.STOCK_CANCEL, gtk.ResponseType.CANCEL)
+        cancel_button = self.add_button(gtk.STOCK_CANCEL, gtk.ResponseType.CANCEL)  # noqa: F841
         ok_button = self.add_button(gtk.STOCK_OK, gtk.ResponseType.OK)
         ok_button.grab_default()
 

@@ -23,20 +23,23 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import gi
-gi.require_version('Gtk', '3.0')
-gi.require_version('Gtk', '3.0')
-
-from gi.repository import Gtk as gtk
-from gi.repository import Gdk
-from _thread import start_new_thread
-
-from .transferlist import TransferList
-from .utils import PopupMenu, PressHeader
 import os
-from pynicotine.utils import executeCommand
+from gettext import gettext as _
+
+import gi
+from gi.repository import Gdk
+from gi.repository import Gtk as gtk
+
+from _thread import start_new_thread
 from pynicotine import slskmessages
-from .entrydialog import OptionDialog
+from pynicotine.gtkgui.entrydialog import OptionDialog
+from pynicotine.gtkgui.transferlist import TransferList
+from pynicotine.gtkgui.utils import PopupMenu
+from pynicotine.gtkgui.utils import PressHeader
+from pynicotine.utils import executeCommand
+
+gi.require_version('Gtk', '3.0')
+gi.require_version('Gdk', '3.0')
 
 
 class Uploads(TransferList):
@@ -117,13 +120,14 @@ class Uploads(TransferList):
 
         self.frame.np.config.sections["columns"]["uploads_columns"] = columns
         self.frame.np.config.sections["columns"]["uploads_widths"] = widths
+
     def OnTryClearQueued(self, widget):
 
         direction = "up"
 
         win = OptionDialog(self.frame, _("Clear All Queued Uploads?"), modal=True, status=None, option=False, third="")
         win.connect("response", self.frame.on_clear_response, direction)
-        win.set_title(_("Nicotine+")+": "+_("Clear Queued Transfers"))
+        win.set_title(_("Nicotine+") + ": " + _("Clear Queued Transfers"))
         win.set_icon(self.frame.images["n"])
 
         win.show()
@@ -370,7 +374,7 @@ class Uploads(TransferList):
         self.SelectCurrentRow(event, kind)
 
         users = len(self.selected_users) > 0
-        multi_users = len(self.selected_users) > 1
+        multi_users = len(self.selected_users) > 1  # noqa: F841
         files = len(self.selected_transfers) > 0
         multi_files = len(self.selected_transfers) > 1
 

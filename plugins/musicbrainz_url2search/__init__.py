@@ -1,14 +1,14 @@
-#!/usr/bin/python -tt
-# -*- coding: utf-8 -*-
-
-
 # For debugging
 NPLUS = True
+
+
 class FakePlugin(object):
     def log(self, text):
         print(text)
 
+
 from urllib.request import urlopen
+
 try:
     from pynicotine.pluginsystem import BasePlugin
 except ImportError:
@@ -21,48 +21,53 @@ def enable(frame):
     global PLUGIN
     PLUGIN = Plugin(frame)
 
-                    
+
 def disable(frame):
     global PLUGIN
     PLUGIN = None
-    
+
+
 # The real plugin
 def deltags(string):
     open = 0
     while open > -1:
-        open = string.find('<',open)
-        close = string.find('>',open)
+        open = string.find('<', open)
+        close = string.find('>', open)
         if open > -1 and close > -1:
-            string = string[:open]+' '+string[close+1:]
+            string = string[:open] + ' ' + string[close + 1:]
     return string.strip()
+
 
 class Plugin(BasePlugin):
     __name__ = "MusicBrainz url2search"
+
     def OutgoingGlobalSearchEvent(self, search):
         terms = search.split()
-        for i in range(0,len(terms)):
+        for i in range(0, len(terms)):
             lowerterm = terms[i].lower()
             if lowerterm[:23] == "http://musicbrainz.org/" or lowerterm[:27] == "http://www.musicbrainz.org/":
                 self.log("Fetching " + terms[i])
                 terms[i] = self.mb2search(terms[i])
-        return (' '.join(terms),)
+        return ' '.join(terms),
+
     def mb2search(self, url):
-        print("Opening url " +url)
+        print("Opening url " + url)
         f = urlopen(url)
         html = f.read()
         information = []
         start = html.find('<td class="title">')
         if start > -1:
-            end = html.find('</td>',start)
+            end = html.find('</td>', start)
             if end > -1:
                 information.append(deltags(html[start:end]))
         start = html.find('<span class="linkrelease-icon">')
         if start > -1:
-            end = html.find('</span>',start)
+            end = html.find('</span>', start)
             if end > -1:
                 information.append(deltags(html[start:end]))
         print("Info: " + repr(information))
         return ' '.join(information)
+
 
 # Debugging again
 if not NPLUS:

@@ -23,30 +23,42 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Python core
-from os.path import commonprefix
 import os
 import re
+from gettext import gettext as _
+from os.path import commonprefix
 
-# Python modules
 import gi
+from gi.repository import Gdk
+from gi.repository import GObject as gobject
+from gi.repository import Gtk as gtk
+from gi.repository import Pango as pango
+
+from pynicotine import slskmessages
+from pynicotine.gtkgui.entrydialog import input_box
+from pynicotine.gtkgui.utils import AppendLine
+from pynicotine.gtkgui.utils import EncodingsMenu
+from pynicotine.gtkgui.utils import Humanize
+from pynicotine.gtkgui.utils import HumanSpeed
+from pynicotine.gtkgui.utils import IconNotebook
+from pynicotine.gtkgui.utils import InitialiseColumns
+from pynicotine.gtkgui.utils import PopupMenu
+from pynicotine.gtkgui.utils import PressHeader
+from pynicotine.gtkgui.utils import SaveEncoding
+from pynicotine.gtkgui.utils import WriteLog
+from pynicotine.gtkgui.utils import expand_alias
+from pynicotine.gtkgui.utils import fixpath
+from pynicotine.gtkgui.utils import is_alias
+from pynicotine.gtkgui.utils import showCountryTooltip
+from pynicotine.logfacility import log
+from pynicotine.slskmessages import ToBeEncoded
+from pynicotine.utils import cmp
+from pynicotine.utils import debug
+from pynicotine.utils import findBestEncoding
 
 gi.require_version('Gtk', '3.0')
 gi.require_version('Gdk', '3.0')
 gi.require_version('Pango', '1.0')
-
-from gi.repository import Gtk as gtk
-from gi.repository import Gdk
-from gi.repository import GObject as gobject
-from gi.repository import Pango as pango
-
-# Application specific
-from pynicotine.logfacility import log
-from pynicotine import slskmessages
-from pynicotine.slskmessages import ToBeEncoded
-from .utils import InitialiseColumns, AppendLine, PopupMenu, WriteLog, Humanize, HumanSpeed, expand_alias, is_alias, EncodingsMenu, SaveEncoding, PressHeader, fixpath, IconNotebook, showCountryTooltip
-from pynicotine.utils import findBestEncoding, cmp, debug
-from .entrydialog import input_box
 
 
 def GetCompletion(part, list):
@@ -176,13 +188,13 @@ class RoomsControl:
         try:
             private1 = model.get_value(iter1, 2) * 10000
             private1 += model.get_value(iter1, 1)
-        except:
+        except Exception:
             private1 = 0
 
         try:
             private2 = model.get_value(iter2, 2) * 10000
             private2 += model.get_value(iter2, 1)
-        except:
+        except Exception:
             private2 = 0
 
         return cmp(private1, private2)
@@ -290,7 +302,7 @@ class RoomsControl:
         if event.button != 3 or self.roomsmodel is None:
             return
 
-        items = self.popup_menu.get_children()
+        items = self.popup_menu.get_children()  # noqa: F841
         d = self.frame.roomlist.RoomsList.get_path_at_pos(int(event.x), int(event.y))
 
         if d:
@@ -410,7 +422,7 @@ class RoomsControl:
 
             self.autojoin = 0
             if self.joinedrooms:
-                list = list(self.joinedrooms.keys())
+                list = list(self.joinedrooms.keys())  # noqa: F823
             else:
                 list = self.frame.np.config.sections["server"]["autojoin"]
 
@@ -448,25 +460,25 @@ class RoomsControl:
                 self.PrivateRooms[room[0]]['joined'] = room[1]
                 if self.PrivateRooms[room[0]]['owner'] != myusername:
                     log.addwarning(_("I remember the room %(room)s being owned by %(previous)s, but the server says its owned by %(new)s.") % {
-                            'room': room[0],
-                            'previous': self.PrivateRooms[room[0]]['owner'],
-                            'new': myusername
-                        })
+                        'room': room[0],
+                        'previous': self.PrivateRooms[room[0]]['owner'],
+                        'new': myusername
+                    })
                 self.PrivateRooms[room[0]]['owner'] = myusername
             except KeyError:
-                self.PrivateRooms[room[0]] = {"users": [], "joined": room[1], "operators": [],  "owner": myusername}
+                self.PrivateRooms[room[0]] = {"users": [], "joined": room[1], "operators": [], "owner": myusername}
 
         for room in otherrooms:
             try:
                 self.PrivateRooms[room[0]]['joined'] = room[1]
                 if self.PrivateRooms[room[0]]['owner'] == myusername:
                     log.addwarning(_("I remember the room %(room)s being owned by %(old)s, but the server says that's not true.") % {
-                            'room': room[0],
-                            'old': self.PrivateRooms[room[0]]['owner'],
-                        })
+                        'room': room[0],
+                        'old': self.PrivateRooms[room[0]]['owner'],
+                    })
                     self.PrivateRooms[room[0]]['owner'] = None
             except KeyError:
-                self.PrivateRooms[room[0]] = {"users": [], "joined": room[1], "operators": [],  "owner": None}
+                self.PrivateRooms[room[0]] = {"users": [], "joined": room[1], "operators": [], "owner": None}
 
         iter = self.roomsmodel.get_iter_first()
         while iter is not None:
@@ -848,7 +860,7 @@ def TickDialog(parent, default=""):
     dlg.set_border_width(10)
     dlg.vbox.set_spacing(10)
 
-    l = gtk.Label(_("Set room ticker message:"))
+    l = gtk.Label(_("Set room ticker message:"))  # noqa: E741
     l.set_alignment(0, 0.5)
     dlg.vbox.pack_start(l, False, False, 0)
 
@@ -993,7 +1005,7 @@ class ChatRoom:
         if room in config["server"]["autojoin"]:
             self.AutoJoin.set_active(True)
 
-        statusiconwidth = self.frame.images["offline"].get_width()+4
+        statusiconwidth = self.frame.images["offline"].get_width() + 4
         self.cols = cols = InitialiseColumns(
             self.UserList,
             [_("Status"), statusiconwidth, "pixbuf"],
@@ -1158,7 +1170,7 @@ class ChatRoom:
 
         try:
             roomlines = int(config["logging"]["readroomlines"])
-        except:
+        except Exception:
             roomlines = 15
 
         try:
@@ -1175,7 +1187,7 @@ class ChatRoom:
 
             for bytes in loglines[-roomlines:-1]:
 
-                l = findBestEncoding(bytes, encodings)
+                l = findBestEncoding(bytes, encodings)  # noqa: E741
 
                 # Try to parse line for username
                 if len(l) > 20 and l[10].isspace() and l[11].isdigit() and l[20] in ("[", "*"):
@@ -1183,7 +1195,7 @@ class ChatRoom:
                     line = l[11:]
                     if l[20] == "[" and l[20:].find("] ") != -1:
                         namepos = l[20:].find("] ")
-                        user = l[21:20+namepos].strip()
+                        user = l[21:20 + namepos].strip()
                         user = user.encode('UTF-8')  # this could go screwy! But there's no other way without logging raw bytes in the log file
                         self.getUserTag(user)
                         usertag = self.tag_users[user]
@@ -1195,7 +1207,7 @@ class ChatRoom:
                         tag = self.tag_local
                     elif l[20] == "*":
                         tag = self.tag_me
-                    elif l[20+namepos:].upper().find(config["server"]["login"].upper()) > -1:
+                    elif l[20 + namepos:].upper().find(config["server"]["login"].upper()) > -1:
                         tag = self.tag_hilite
                     else:
                         tag = self.tag_remote
@@ -1205,9 +1217,9 @@ class ChatRoom:
                     tag = None
                     usertag = None
 
-                timestamp_format = self.frame.np.config.sections["logging"]["rooms_timestamp"]
+                timestamp_format = self.frame.np.config.sections["logging"]["rooms_timestamp"]  # noqa: F841
 
-                line = re.sub("\s\s+", "  ", line)
+                line = re.sub(r"\\s\\s+", "  ", line)
                 line += "\n"
 
                 if user != config["server"]["login"]:
@@ -1219,7 +1231,7 @@ class ChatRoom:
                 self.lines.append(AppendLine(self.ChatScroll, _("--- old messages above ---"), self.tag_hilite))
 
             gobject.idle_add(self.frame.ScrollBottom, self.ChatScroll.get_parent())
-        except IOError as e:
+        except IOError as e:  # noqa: F841
             pass
 
     def on_key_press_event(self, widget, event):
@@ -1288,16 +1300,16 @@ class ChatRoom:
             return
 
         menu = popup
-        user = menu.user
-        items = menu.get_children()
+        user = menu.user  # noqa: F841
+        items = menu.get_children()  # noqa: F841
 
-        act = False
+        act = False  # noqa: F841
 
         return True
 
     def OnPopupMenu(self, widget, event):
 
-        items = self.popup_menu.get_children()
+        items = self.popup_menu.get_children()  # noqa: F841
         d = self.UserList.get_path_at_pos(int(event.x), int(event.y))
 
         if not d:
@@ -1389,7 +1401,7 @@ class ChatRoom:
         self.Ticker.remove_ticker(msg.user)
 
     def SayChatRoom(self, msg, text, public=False):
-        text = re.sub("\s\s+", "  ", text)
+        text = re.sub("\\s\\s+", "  ", text)
         login = self.frame.np.config.sections["server"]["login"]
         user = msg.user
 
@@ -1707,7 +1719,7 @@ class ChatRoom:
         gobject.idle_add(self.frame.ScrollBottom, self.ChatScroll.get_parent())
 
     def Say(self, text):
-        text = re.sub("\s\s+", "  ", text)
+        text = re.sub("\\s\\s+", "  ", text)
         tobeencoded = ToBeEncoded(text, self.encoding)
         self.frame.np.queue.put(slskmessages.SayChatroom(self.room, tobeencoded))
 
@@ -1817,8 +1829,8 @@ class ChatRoom:
                 cellrenderer.set_property("weight", pango.Weight.NORMAL)
                 cellrenderer.set_property("underline", pango.Underline.NONE)
         else:
-                cellrenderer.set_property("weight", pango.Weight.NORMAL)
-                cellrenderer.set_property("underline", pango.Underline.NONE)
+            cellrenderer.set_property("weight", pango.Weight.NORMAL)
+            cellrenderer.set_property("underline", pango.Underline.NONE)
 
         self.frame.CellDataFunc(column, cellrenderer, model, iter)
 
@@ -2156,7 +2168,7 @@ class ChatRoom:
                 x = x.decode('utf-8')
             try:
                 return x.lower()
-            except:
+            except Exception:
                 return x
 
         clist = list(set(clist))

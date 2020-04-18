@@ -10,13 +10,10 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-import os
 import textwrap
 import time
-from sys import stdout, platform
-
 from collections import deque
+from sys import stdout
 
 
 class logger(object):
@@ -31,7 +28,7 @@ class logger(object):
             self.pop = -1  # -1 means 'let python do the popping'
         except TypeError:
             self.history = deque([])
-            self.pop = maxlogitems+1  # value is how many items to go before we start popping. Python < 2.6 support
+            self.pop = maxlogitems + 1  # value is how many items to go before we start popping. Python < 2.6 support
 
     def addwarning(self, msg):
         """Add a message with the level corresponding to warnings."""
@@ -74,6 +71,7 @@ class logger(object):
         except KeyError:
             self.add("Failed to remove listener %s, does not exist." % (callback,), 1)
 
+
 useconsole = True
 try:
     CONSOLEENCODING = stdout.encoding
@@ -89,10 +87,13 @@ if useconsole:
     CONSOLEWIDTH = 80
     try:
         # Fixed, you better not resize your window!
-        import sys, fcntl, termios, struct
+        import sys
+        import fcntl
+        import termios
+        import struct
         data = fcntl.ioctl(sys.stdout.fileno(), termios.TIOCGWINSZ, '1234')
         CONSOLEWIDTH = struct.unpack('hh', data)[1]
-    except:
+    except Exception:
         pass
 
     TIMEFORMAT = "%a %H:%M "
@@ -111,6 +112,8 @@ def consolelogger(timestamp, level, msg):
             print(i)
     else:
         pass
+
+
 try:
     log
 except NameError:

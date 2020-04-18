@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-#
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2008-2011 Quinox <quinox@users.sf.net>
 # COPYRIGHT (C) 2007 Gallows <g4ll0ws@gmail.com>
@@ -21,26 +19,36 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 import os
+from gettext import gettext as _
+from time import altzone
+from time import daylight
+
 import gi
+from gi.repository import Gdk
+from gi.repository import GObject as gobject
+from gi.repository import Gtk as gtk
+from gi.repository import Pango as pango
+
+from pynicotine import slskmessages
+from pynicotine.gtkgui.chatrooms import GetCompletion
+from pynicotine.gtkgui.utils import AppendLine
+from pynicotine.gtkgui.utils import EncodingsMenu
+from pynicotine.gtkgui.utils import IconNotebook
+from pynicotine.gtkgui.utils import PopupMenu
+from pynicotine.gtkgui.utils import SaveEncoding
+from pynicotine.gtkgui.utils import WriteLog
+from pynicotine.gtkgui.utils import expand_alias
+from pynicotine.gtkgui.utils import fixpath
+from pynicotine.gtkgui.utils import is_alias
+from pynicotine.logfacility import log
+from pynicotine.slskmessages import ToBeEncoded
+from pynicotine.utils import version
+
 gi.require_version('Gtk', '3.0')
 gi.require_version('Gdk', '3.0')
 gi.require_version('Pango', '1.0')
 
-from gi.repository import Gtk as gtk
-from gi.repository import Gdk
-from gi.repository import GObject as gobject
-from gi.repository import Pango as pango
-
-from time import daylight, altzone
-
-from .utils import AppendLine, IconNotebook, PopupMenu, WriteLog, expand_alias, is_alias, EncodingsMenu, SaveEncoding, fixpath
-from .chatrooms import GetCompletion
-from pynicotine import slskmessages
-from pynicotine.slskmessages import ToBeEncoded
-from pynicotine.utils import version, debug
-from pynicotine.logfacility import log
 
 CTCP_VERSION = "\x01VERSION\x01"
 
@@ -313,7 +321,7 @@ class PrivateChats(IconNotebook):
             clist += [i[0] for i in self.frame.userlist.userlist]
 
         if config["aliases"]:
-            clist += ["/"+k for k in list(self.frame.np.config.aliases.keys())]
+            clist += ["/" + k for k in list(self.frame.np.config.aliases.keys())]
 
         if config["commands"]:
             clist += self.CMDS
@@ -449,7 +457,7 @@ class PrivateChat:
 
         try:
             lines = int(config["logging"]["readprivatelines"])
-        except:
+        except Exception:
             lines = 15
 
         try:
@@ -459,7 +467,7 @@ class PrivateChat:
             s = d.split("\n")
             for l in s[- lines:-1]:
                 AppendLine(self.ChatScroll, l + "\n", self.tag_hilite, timestamp_format="", username=self.user, usertag=self.tag_hilite)
-        except IOError as e:
+        except IOError as e:  # noqa: F841
             pass
 
         gobject.idle_add(self.frame.ScrollBottom, self.ChatScroll.get_parent())
@@ -558,7 +566,7 @@ class PrivateChat:
             # The timestamps from the server are off by a lot, so we'll only use them when this is an offline message
             # Also, they are in UTC so we need to correct them
             if daylight:
-                timestamp -= (3600*daylight)
+                timestamp -= (3600 * daylight)
             else:
                 timestamp += altzone
 
@@ -817,7 +825,7 @@ class PrivateChat:
         gobject.idle_add(self.frame.ScrollBottom, self.ChatScroll.get_parent())
 
     def NowPlayingThread(self):
-        np = self.frame.now.DisplayNowPlaying(None, 0, self.SendMessage)
+        np = self.frame.now.DisplayNowPlaying(None, 0, self.SendMessage)  # noqa: F841
 
     def makecolour(self, buffer, colour):
 
@@ -869,18 +877,18 @@ class PrivateChat:
         usernamestyle = self.frame.np.config.sections["ui"]["usernamestyle"]
 
         if usernamestyle == "bold":
-            self.tag_username.set_property("weight",  pango.Weight.BOLD)
-            self.tag_my_username.set_property("weight",  pango.Weight.BOLD)
+            self.tag_username.set_property("weight", pango.Weight.BOLD)
+            self.tag_my_username.set_property("weight", pango.Weight.BOLD)
         else:
-            self.tag_username.set_property("weight",  pango.Weight.NORMAL)
-            self.tag_my_username.set_property("weight",  pango.Weight.NORMAL)
+            self.tag_username.set_property("weight", pango.Weight.NORMAL)
+            self.tag_my_username.set_property("weight", pango.Weight.NORMAL)
 
         if usernamestyle == "italic":
-            self.tag_username.set_property("style",  pango.Style.ITALIC)
-            self.tag_my_username.set_property("style",  pango.Style.ITALIC)
+            self.tag_username.set_property("style", pango.Style.ITALIC)
+            self.tag_my_username.set_property("style", pango.Style.ITALIC)
         else:
-            self.tag_username.set_property("style",  pango.Style.NORMAL)
-            self.tag_my_username.set_property("style",  pango.Style.NORMAL)
+            self.tag_username.set_property("style", pango.Style.NORMAL)
+            self.tag_my_username.set_property("style", pango.Style.NORMAL)
 
         if usernamestyle == "underline":
             self.tag_username.set_property("underline", pango.Underline.SINGLE)
@@ -916,14 +924,14 @@ class PrivateChat:
             usernamestyle = self.frame.np.config.sections["ui"]["usernamestyle"]
 
             if usernamestyle == "bold":
-                tag.set_property("weight",  pango.Weight.BOLD)
+                tag.set_property("weight", pango.Weight.BOLD)
             else:
-                tag.set_property("weight",  pango.Weight.NORMAL)
+                tag.set_property("weight", pango.Weight.NORMAL)
 
             if usernamestyle == "italic":
-                tag.set_property("style",  pango.Style.ITALIC)
+                tag.set_property("style", pango.Style.ITALIC)
             else:
-                tag.set_property("style",  pango.Style.NORMAL)
+                tag.set_property("style", pango.Style.NORMAL)
 
             if usernamestyle == "underline":
                 tag.set_property("underline", pango.Underline.SINGLE)
@@ -1004,7 +1012,7 @@ class PrivateChat:
         def _combilower(x):
             try:
                 return str.lower(x)
-            except:
+            except Exception:
                 return str.lower(x)
 
         clist = list(set(clist))

@@ -22,19 +22,22 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+from gettext import gettext as _
+from math import ceil
+from time import time
 
 import gi
+from gi.repository import GObject as gobject
+from gi.repository import Gtk as gtk
 
-from ..utils import cmp
+from pynicotine.gtkgui.utils import HumanSize
+from pynicotine.gtkgui.utils import HumanSpeed
+from pynicotine.gtkgui.utils import InitialiseColumns
+from pynicotine.gtkgui.utils import float_sort_func
+from pynicotine.gtkgui.utils import int_sort_func
+from pynicotine.utils import cmp
 
 gi.require_version('Gtk', '3.0')
-
-from gi.repository import Gtk as gtk
-from gi.repository import GObject as gobject
-
-from time import time
-from math import ceil
-from .utils import InitialiseColumns, int_sort_func, float_sort_func, HumanSize, HumanSpeed
 
 
 class TransferList:
@@ -155,7 +158,7 @@ class TransferList:
 
         try:
             return int(val)
-        except:
+        except Exception:
             if val in self.status_tab:
                 return self.status_tab.index(val)
             else:
@@ -427,7 +430,7 @@ class TransferList:
                 if ispeed <= 0.0:
                     left = "∞"
                 else:
-                    left = self.frame.np.transfers.getTime((totalsize - position)/ispeed/1024)
+                    left = self.frame.np.transfers.getTime((totalsize - position) / ispeed / 1024)
 
                 elapsed = self.frame.np.transfers.getTime(elap)
 
@@ -513,7 +516,7 @@ class TransferList:
                 percent = 100
             else:
                 percent = ((100 * icurrentbytes) / int(size))
-        except Exception as e:
+        except Exception as e:  # noqa: F841
             icurrentbytes = 0
             percent = 0
 

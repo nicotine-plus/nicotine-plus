@@ -25,14 +25,18 @@
 MAX_SELECT_SOCKETS = 64
 
 # import the necessary modules
-import select, threading, _thread
+import select
+import threading
+
+import _thread
+
 
 # multiselect call mimics select.select(r,w,x,timout=None) but starts threads
 # if the fd sets grow beyond the specified limit
-def multiselect(r_fds, w_fds, x_fds, timeout = None, limit = MAX_SELECT_SOCKETS):
+def multiselect(r_fds, w_fds, x_fds, timeout=None, limit=MAX_SELECT_SOCKETS):
     fds = []
     for fd in r_fds + w_fds + x_fds:
-        if not fd in fds:
+        if fd not in fds:
             fds.append(fd)
 
     # if we're using less than the limit, fall back to regular select
@@ -45,8 +49,8 @@ def multiselect(r_fds, w_fds, x_fds, timeout = None, limit = MAX_SELECT_SOCKETS)
         fds_ = fds[:limit]
         fds = fds[limit:]
         fdsets.append(([fd for fd in fds_ if fd in r_fds],
-[fd for fd in fds_ if fd in w_fds],
-[fd for fd in fds_ if fd in x_fds]))
+                       [fd for fd in fds_ if fd in w_fds],
+                       [fd for fd in fds_ if fd in x_fds]))
 
     # the return fd sets
     r_r_fds = []
@@ -96,18 +100,20 @@ def multiselect(r_fds, w_fds, x_fds, timeout = None, limit = MAX_SELECT_SOCKETS)
 
     # acquire the lock
     lock.acquire()
-    
+
     # collect the return data
     ret = (r_r_fds, r_w_fds, r_x_fds)
-    
+
     # release the lock
     lock.release()
-    
+
     # return our data
     return ret
 
+
 if __name__ == '__main__':
-    import socket, random
+    import socket
+    import random
     fds = []
     files = {}
     for i in range(100):

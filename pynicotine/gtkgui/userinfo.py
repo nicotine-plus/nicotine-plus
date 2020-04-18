@@ -21,25 +21,29 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Python core
-import tempfile
 import os
+import tempfile
 import time
+from gettext import gettext as _
 
-# Python modules
 import gi
-gi.require_version('Gtk', '3.0')
-
-from gi.repository import Gtk as gtk
 from gi.repository import Gdk
 from gi.repository import GdkPixbuf
 from gi.repository import GObject as gobject
+from gi.repository import Gtk as gtk
 
-# Application specific
-from .utils import IconNotebook, PopupMenu, EncodingsMenu, SaveEncoding,  Humanize, InitialiseColumns, AppendLine
 from pynicotine import slskmessages
-from pynicotine.utils import CleanFile
+from pynicotine.gtkgui.utils import AppendLine
+from pynicotine.gtkgui.utils import EncodingsMenu
+from pynicotine.gtkgui.utils import Humanize
+from pynicotine.gtkgui.utils import IconNotebook
+from pynicotine.gtkgui.utils import InitialiseColumns
+from pynicotine.gtkgui.utils import PopupMenu
+from pynicotine.gtkgui.utils import SaveEncoding
 from pynicotine.logfacility import log
+from pynicotine.utils import CleanFile
+
+gi.require_version('Gtk', '3.0')
 
 
 # User Info and User Browse Notebooks
@@ -268,7 +272,7 @@ class UserInfo:
             if self.encoding == item[1]:
                 self.Encoding.set_active_iter(self.Elist[self.encoding])
 
-        self.tag_local = self.makecolour("chatremote")
+        self.tag_local = self.makecolour("chatremote")  # noqa: F821
         self.ChangeColours()
 
         self.InterestsExpander.connect("activate", self.ExpanderStatus)
@@ -471,14 +475,14 @@ class UserInfo:
                 gc.collect()
                 self.actual_zoom = 0
                 self.SavePicture.set_sensitive(True)
-            except TypeError as e:
+            except TypeError as e:  # noqa: F841
                 name = tempfile.mktemp()
                 f = open(name, "w")
                 f.write(pic)
                 f.close()
                 self.image.set_from_file(name)
                 os.remove(name)
-            except Exception as e:
+            except Exception as e:  # noqa: F841
                 self.image.set_from_pixbuf(None)
                 self.SavePicture.set_sensitive(False)
         else:

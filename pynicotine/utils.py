@@ -26,13 +26,13 @@
 This module contains utility functions.
 """
 
-from collections import UserDict
-from subprocess import Popen, PIPE
+import gettext
+import locale
 import os
 import sys
-import locale
-import gettext
-
+from collections import UserDict
+from subprocess import PIPE
+from subprocess import Popen
 
 version = "1.5.0"
 
@@ -114,7 +114,7 @@ def ApplyTranslation():
 
     If no translations are found we fall back to the system path for locates:
     GNU/Linux: /usr/share/locale/$(LANG)/LC_MESSAGES
-    Windows: %PYTHONHOME%\share\locale\$(LANG)\LC_MESSAGES
+    Windows: %PYTHONHOME%\\share\\locale\\$(LANG)\\LC_MESSAGES
 
     Note: To the best of my knowledge when we are in a python venv
     falling back to the system path does not work."""
@@ -294,7 +294,7 @@ def executeCommand(command, replacement=None, background=True, returnoutput=Fals
     goes wrong while executing the command.
 
     Example commands:
-    * "C:\Program Files\WinAmp\WinAmp.exe" --xforce "--title=My Window Title"
+    * "C:\\Program Files\\WinAmp\\WinAmp.exe" --xforce "--title=My Window Title"
     * mplayer $
     * echo $ | flite -t """
 
@@ -361,8 +361,8 @@ def executeCommand(command, replacement=None, background=True, returnoutput=Fals
             procs.append(Popen(subcommands[-1], stdin=procs[-1].stdout, stdout=finalstdout))
         if not background and not returnoutput:
             procs[-1].wait()
-    except:
-        raise RuntimeError("Problem while executing command %s (%s of %s)" % (subcommands[len(procs)], len(procs)+1, len(subcommands)))
+    except Exception:
+        raise RuntimeError("Problem while executing command %s (%s of %s)" % (subcommands[len(procs)], len(procs) + 1, len(subcommands)))
 
     if not returnoutput:
         return True
@@ -382,7 +382,7 @@ def findBestEncoding(bytes, encodings, fallback=None):
     for encoding in encodings:
         try:
             return str(bytes, encoding)
-        except (UnicodeDecodeError, LookupError) as e:
+        except (UnicodeDecodeError, LookupError) as e:  # noqa: F841
             pass
 
     # None were successful
@@ -417,4 +417,4 @@ def debug(*args):
     Prints debugging info.
     TODO: add CLI switch --debug for en-/disabling.
     """
-    print('*'*8, *[arg[:200] if isinstance(arg, str) else arg for arg in args])
+    print('*' * 8, *[arg[:200] if isinstance(arg, str) else arg for arg in args])

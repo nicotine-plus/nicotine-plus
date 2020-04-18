@@ -22,13 +22,16 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import gi
-gi.require_version('Gtk', '3.0')
-
-from gi.repository import Gtk as gtk
 import sys
+from gettext import gettext as _
+
+import gi
+from gi.repository import Gtk as gtk
+
+from pynicotine.gtkgui.utils import AppendLine
 from pynicotine.utils import version
-from .utils import AppendLine
+
+gi.require_version('Gtk', '3.0')
 
 
 class GenericAboutDialog(gtk.Dialog):
@@ -314,7 +317,7 @@ Wretched
 - Beta tester
 - Bringer of great ideas
 
-(va)\*10^3
+(va)\\*10^3
 - Beta tester
 - Designer of the old nicotine homepage and artwork (logos)
 
@@ -527,17 +530,17 @@ class GenericTableDialog(GenericAboutDialog):
         table.set_row_spacings(2)
 
         for i in range(rows):
-            l = gtk.Label()
-            l.set_markup(self.items[i*2])
+            l = gtk.Label()  # noqa: E741
+            l.set_markup(self.items[i * 2])
             l.set_alignment(0.0, 0.5)
             l.set_selectable(True)
             r = gtk.Label()
-            r.set_markup(self.items[i*2+1])
+            r.set_markup(self.items[i * 2 + 1])
             r.set_alignment(0.0, 0.5)
             r.set_line_wrap(True)
             r.set_selectable(True)
-            table.attach(l, 0, 1, i, i+1, xoptions=gtk.FILL)
-            table.attach(r, 1, 2, i, i+1, xoptions=gtk.FILL | gtk.EXPAND)
+            table.attach(l, 0, 1, i, i + 1, xoptions=gtk.FILL)
+            table.attach(r, 1, 2, i, i + 1, xoptions=gtk.FILL | gtk.EXPAND)
 
         vbox2.pack_start(table, False, False, 0)
         vbox2.pack_start(gtk.Label(), True, True, 0)
