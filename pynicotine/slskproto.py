@@ -171,7 +171,6 @@ from pynicotine.slskmessages import UserPrivileged
 from pynicotine.slskmessages import UserSearch
 from pynicotine.slskmessages import WishlistInterval
 from pynicotine.slskmessages import WishlistSearch
-from pynicotine.utils import debug
 from pynicotine.utils import win32
 
 if sys.platform == "win32":
@@ -675,25 +674,20 @@ class SlskProtoThread(threading.Thread):
                 if connection in conns and len(conns[connection].ibuf) > 0:
                     if connection is server_socket:
                         msgs, conns[server_socket].ibuf = self.process_server_input(conns[server_socket].ibuf)
-                        debug("526", [msg.__class__.__name__ for msg in msgs])
                         self._ui_callback(msgs)
                     else:
                         if conns[connection].init is None or conns[connection].init.type not in ['F', 'D']:
                             msgs, conns[connection] = self.process_peer_input(conns[connection], conns[connection].ibuf)
-                            debug("531", [msg.__class__.__name__ for msg in msgs])
                             self._ui_callback(msgs)
                         if conns[connection].init is not None and conns[connection].init.type == 'F':
                             msgs, conns[connection] = self.process_file_input(conns[connection], conns[connection].ibuf)
-                            debug("535", [msg.__class__.__name__ for msg in msgs])
                             self._ui_callback(msgs)
                         if conns[connection].init is not None and conns[connection].init.type == 'D':
                             msgs, conns[connection] = self.process_distrib_input(conns[connection], conns[connection].ibuf)
-                            debug("539", [msg.__class__.__name__ for msg in msgs])
                             self._ui_callback(msgs)
                         if conns[connection].conn is None:
                             del conns[connection]
-                elif connection not in conns:
-                    debug("connection not in conns:", connection, conns)
+
             # ---------------------------
             # Server Pings used to get us banned
             # ---------------------------
@@ -793,7 +787,6 @@ class SlskProtoThread(threading.Thread):
         return ip, port
 
     def writeData(self, server_socket, conns, i):
-        debug(f'writing {conns[i].obuf}')
         if i in self._limits:
             limit = self._limits[i]
         else:
@@ -805,7 +798,7 @@ class SlskProtoThread(threading.Thread):
             bytes_send = i.send(conns[i].obuf)
         else:
             bytes_send = i.send(conns[i].obuf[:limit])
-        debug('bytes sent:', bytes_send)
+
         i.setblocking(1)
         conns[i].obuf = conns[i].obuf[bytes_send:]
         if i is not server_socket:
@@ -845,7 +838,7 @@ class SlskProtoThread(threading.Thread):
             conns[i].ibuf += data
             conns[i].lastreadlength = limit
             conns[i].readbytes2 += len(data)
-        debug(f"readData {data}")
+
         if not data:
             self._ui_callback([ConnClose(i, conns[i].addr)])
             i.close()
@@ -991,7 +984,6 @@ class SlskProtoThread(threading.Thread):
                                     host = conn.addr[0]
                                     port = conn.addr[1]
                             debugmessage = _("There was an error while unpacking Peer message type %(type)s size %(size)i contents %(msgBuffer)s from user: %(user)s, %(host)s:%(port)s") % {'type': msgname, 'size': msgsize - 4, 'msgBuffer': msgBuffer[8:msgsize + 4].__repr__(), 'user': conn.init.user, 'host': host, 'port': port}
-                            debug(debugmessage)
                             msgs.append(debugmessage)
                             del msg
                         else:
@@ -999,7 +991,6 @@ class SlskProtoThread(threading.Thread):
                     except Exception as error:
                         debugmessage = "Error in message function:", error, msgtype, conn
                         msgs.append(debugmessage)
-                        debug(debugmessage)
 
                 else:
                     host = port = _("unknown")
@@ -1018,7 +1009,6 @@ class SlskProtoThread(threading.Thread):
                         x += 1
                     debugmessage = _("Peer message type %(type)s size %(size)i contents %(msgBuffer)s unknown, from user: %(user)s, %(host)s:%(port)s") % {'type': msgtype, 'size': msgsize - 4, 'msgBuffer': newbuf, 'user': conn.init.user, 'host': host, 'port': port}
                     msgs.append(debugmessage)
-                    debug(debugmessage)
 
             else:
                 # Unknown Message type
@@ -1082,23 +1072,18 @@ class SlskProtoThread(threading.Thread):
         numsockets += len(conns) + len(connsinprogress)
         while not queue.empty():
             msgList.append(queue.get())
-        debug('queue:', msgList)
+
         for msgObj in msgList:
             if issubclass(msgObj.__class__, ServerMessage):
-                # debug(f"    processing {msgObj.__class__.__name__} {msgObj}")
                 try:
                     msg = msgObj.makeNetworkMessage()
                     if msg == '' or msg is None:
                         msg = b''
                     if server_socket in conns:
-                        # debug(f'      obuf: {conns[server_socket].obuf}')
-                        debug(f'      msg:  {msg}')
-                        # debug(f'      pack: {struct.pack("<ii", len(msg)+4, self.servercodes[msgObj.__class__])}')
 
                         conns[server_socket].obuf += \
                             struct.pack("<ii", len(msg) + 4, self.servercodes[msgObj.__class__]) + \
                             msg
-                    # debug(f'      obuf: {conns[server_socket].obuf}')
                     else:
                         queue.put(msgObj)
                         needsleep = True

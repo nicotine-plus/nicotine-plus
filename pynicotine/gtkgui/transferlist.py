@@ -543,7 +543,7 @@ class TransferList:
                 11, istatus,
                 12, size,
                 13, currentbytes,
-                15, speed
+                15, str(speed)
             )
 
             break

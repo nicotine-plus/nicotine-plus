@@ -435,7 +435,7 @@ class Login(ServerMessage):
         self.ip = None
 
     def __repr__(self):
-        return f"Login({self.username}, {self.passwd}, {self.version}, {self.ip})"
+        return f"Login({self.username}, {self.version}, {self.ip})"
 
     def makeNetworkMessage(self):
         payload = self.username + self.passwd
@@ -1930,7 +1930,7 @@ class FolderContentsResponse(PeerMessage):
                 pos, nfiles = self.getObject(message, int, pos)
                 shares[folder][directory] = []
                 for j in range(nfiles):
-                    pos, code = pos + 1, ord(message[pos])
+                    pos, code = pos + 1, message[pos]
                     pos, name = self.getObject(message, bytes, pos, printerror=False)
                     pos, size = self.getObject(message, sizetype, pos, getsignedint=1, printerror=False)
                     pos, ext = self.getObject(message, bytes, pos, printerror=False)
@@ -1991,7 +1991,7 @@ class TransferResponse(PeerMessage):
         self.filesize = filesize
 
     def makeNetworkMessage(self):
-        msg = self.packObject(NetworkIntType(self.req)) + chr(self.allowed)
+        msg = self.packObject(NetworkIntType(self.req)) + bytes([self.allowed])
         if self.reason is not None:
             msg = msg + self.packObject(self.reason)
         if self.filesize is not None:

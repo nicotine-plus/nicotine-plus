@@ -35,7 +35,6 @@ from pynicotine import slskmessages
 from pynicotine.logfacility import log
 from pynicotine.slskmessages import NetworkIntType
 from pynicotine.slskmessages import NetworkLongLongType
-from pynicotine.utils import debug
 from pynicotine.utils import displayTraceback
 
 gi.require_version('Gtk', '3.0')
@@ -359,8 +358,6 @@ class Shares:
         if maxresults == 0:
             return
 
-        debug("searchterm", searchterm)
-        debug("translatepunctuation", self.translatepunctuation)
         terms = searchterm.translate(self.translatepunctuation).lower().split()
         list = [wordindex[i][:] for i in terms if i in wordindex]
 

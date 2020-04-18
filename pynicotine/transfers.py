@@ -36,7 +36,6 @@ import os.path
 import re
 import shutil
 import stat
-import string
 import sys
 import threading
 import time
@@ -1001,13 +1000,13 @@ class Transfers:
 
             else:
                 # also check for a windows-style incomplete transfer
-                basename = string.split(i.filename, '\\')[-1]
+                basename = i.filename.split('\\')[-1]
                 basename = self.encode(basename, i.user)
                 winfname = os.path.join(incompletedir, "INCOMPLETE~" + basename)
                 pyfname = os.path.join(incompletedir, "INCOMPLETE" + basename)
 
                 m = hashlib.md5()
-                m.update(i.filename + i.user)
+                m.update((i.filename + i.user).encode('utf-8'))
 
                 pynewfname = os.path.join(incompletedir, "INCOMPLETE" + m.hexdigest() + basename)
                 try:
@@ -1187,7 +1186,7 @@ class Transfers:
                     i.status = "Transferring"
                 else:
                     msg.file.close()
-                    basename = utils.CleanPath(self.encode(string.split(i.filename, '\\')[-1], i.user))
+                    basename = utils.CleanPath(self.encode(i.filename.split('\\')[-1], i.user))
                     downloaddir = config["transfers"]["downloaddir"]
 
                     if i.path and i.path[0] == '/':

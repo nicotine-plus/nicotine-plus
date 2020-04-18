@@ -35,7 +35,6 @@ from pynicotine import slskmessages
 from pynicotine.gtkgui.dirchooser import ChooseDir
 from pynicotine.gtkgui.entrydialog import input_box
 from pynicotine.gtkgui.utils import EncodingsMenu
-from pynicotine.gtkgui.utils import GetUserDirectories
 from pynicotine.gtkgui.utils import Humanize
 from pynicotine.gtkgui.utils import HumanSize
 from pynicotine.gtkgui.utils import InitialiseColumns
@@ -45,6 +44,7 @@ from pynicotine.gtkgui.utils import SaveEncoding
 from pynicotine.utils import CleanFile
 from pynicotine.utils import displayTraceback
 from pynicotine.utils import executeCommand
+from pynicotine.utils import GetUserDirectories
 
 gi.require_version('Gtk', '3.0')
 gi.require_version('Gdk', '3.0')

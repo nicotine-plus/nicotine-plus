@@ -48,7 +48,6 @@ from pynicotine.slskmessages import PopupMessage
 from pynicotine.slskmessages import ToBeEncoded
 from pynicotine.slskmessages import newId
 from pynicotine.utils import CleanFile
-from pynicotine.utils import debug
 from pynicotine.utils import findBestEncoding
 from pynicotine.utils import log
 
@@ -1370,7 +1369,6 @@ class NetworkEventProcessor:
         self.logMessage("%s %s" % (msg.__class__, vars(msg)), 3)
 
     def ConnectToPeer(self, msg):
-        debug('ConnectToPeer', msg)
         init = slskmessages.PeerInit(None, msg.user, msg.type, 0)
 
         self.queue.put(slskmessages.OutConn(None, (msg.ip, msg.port), init))
@@ -1383,7 +1381,6 @@ class NetworkEventProcessor:
                 init=init
             )
         )
-        debug('peerconns', self.peerconns)
         self.logMessage("%s %s" % (msg.__class__, vars(msg)), 3)
 
     def CheckUser(self, user, addr):
@@ -1572,7 +1569,6 @@ class NetworkEventProcessor:
                     self.userbrowse.ShowInfo(i.username, msg)
 
     def FileSearchResult(self, msg):
-        debug(f"FileSearchResult({msg}):")
         for i in self.peerconns:
 
             if i.conn is msg.conn.conn and self.search is not None:
