@@ -985,7 +985,7 @@ class ChatRoom:
             self.ChatEntry.connect("activate", self.OnEnter)
 
             self.ChatEntry.connect("key_press_event", self.OnKeyPress)
-            self.ChatEntryBox.pack_start(self.ChatEntry, True, True, 0)
+            self.ChatEntryBox.pack_start(self.ChatEntry, True)
 
         self.midwaycompletion = False  # True if the user just used tab completion
         self.completions = {}  # Holds temp. information about tab completoin

@@ -70,7 +70,7 @@ def popupWarning(parent, title, warning, icon=None):
     hbox = gtk.HBox(spacing=5)
     hbox.set_border_width(5)
     hbox.show()
-    dlg.vbox.pack_start(hbox)
+    dlg.vbox.pack_start(hbox, True, True, 0)
 
     image = gtk.Image()
     image.set_padding(0, 0)
@@ -78,7 +78,7 @@ def popupWarning(parent, title, warning, icon=None):
     image.set_from_stock(icon, 4)
     image.show()
 
-    hbox.pack_start(image)
+    hbox.pack_start(image, True, True, 0)
     label = gtk.Label()
     label.set_markup(warning)
     label.set_line_wrap(True)
@@ -829,7 +829,7 @@ class IconNotebook:
 
         vbox = gtk.VBox(False, spacing=5)
         vbox.set_border_width(5)
-        vbox.pack_start(page)
+        vbox.pack_start(page, True, True, 0)
         vbox.show()
 
         window.add(vbox)
@@ -1075,7 +1075,7 @@ class PopupMenu(gtk.Menu):
 
     def OnSearchUser(self, widget):
         self.frame.SearchMethod.set_active_iter(self.frame.searchmethods[_("User")])
-        self.frame.UserSearchCombo.child.set_text(self.user)
+        self.frame.UserSearchCombo.get_child().set_text(self.user)
         self.frame.ChangeMainPage(None, "search")
 
     def OnSendMessage(self, widget):

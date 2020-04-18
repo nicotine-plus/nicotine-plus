@@ -393,7 +393,7 @@ class PrivateChat:
             self.ChatLine.show()
             self.ChatLine.connect("activate", self.OnEnter)
             self.ChatLine.connect("key_press_event", self.OnKeyPress)
-            self.hbox5.pack_start(self.ChatLine)
+            self.hbox5.pack_start(self.ChatLine, True, True, 0)
             self.hbox5.reorder_child(self.ChatLine, 0)
 
         completion = gtk.EntryCompletion()

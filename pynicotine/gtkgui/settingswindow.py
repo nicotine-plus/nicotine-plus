@@ -3079,7 +3079,7 @@ class buildDialog(gtk.Dialog):
         self.tw[name].set_model(gtk.ListStore(gobject.TYPE_STRING))
         self.tw[name + "SW"].add(self.tw[name])
 
-        self.tw["box%d" % c].pack_start(self.tw[name + "SW"], True, 5)
+        self.tw["box%d" % c].pack_start(self.tw[name + "SW"], True, True, 5)
 
         cols = InitialiseColumns(self.tw[name], [description, 150, "edit"])
 

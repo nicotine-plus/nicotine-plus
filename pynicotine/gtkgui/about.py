@@ -173,7 +173,7 @@ Based on code from Nicotine and PySoulSeek""") % version
             self.license, _("License")
         )
 
-        self.action_area.pack_start(self.LicenseButton)
+        self.action_area.pack_start(self.LicenseButton, True, True, 0)
 
         self.CreditsButton = self.nicotine.CreateIconButton(
             gtk.STOCK_ABOUT,
@@ -182,7 +182,7 @@ Based on code from Nicotine and PySoulSeek""") % version
             _("Credits")
         )
 
-        self.action_area.pack_start(self.CreditsButton)
+        self.action_area.pack_start(self.CreditsButton, True, True, 0)
 
         self.CloseButton = self.nicotine.CreateIconButton(
             gtk.STOCK_CLOSE,
@@ -192,7 +192,7 @@ Based on code from Nicotine and PySoulSeek""") % version
         )
 
         self.CloseButton.set_flags(gtk.CAN_DEFAULT)
-        self.action_area.pack_start(self.CloseButton)
+        self.action_area.pack_start(self.CloseButton, True, True, 0)
 
         self.show_all()
 
@@ -420,7 +420,7 @@ Euskara
         translatorsLabel = gtk.Label(_("Translators"))
         translatorsLabel.show()
         self.notebook.append_page(self.TransScrolledWindow, translatorsLabel)
-        self.vbox.pack_start(self.notebook)
+        self.vbox.pack_start(self.notebook, True, True, 0)
 
 
 class AboutLicenseDialog(GenericAboutDialog):
@@ -461,7 +461,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see < http://www.gnu.org/licenses/ >."""
 
         AppendLine(self.TextView, text, None, None, showstamp=False)
-        self.vbox.pack_start(self.ScrolledWindow)
+        self.vbox.pack_start(self.ScrolledWindow, True, True, 0)
         self.show_all()
 
 
@@ -505,7 +505,7 @@ You do not need to do another search to apply a different filter."""))
 
         label.set_justify(gtk.JUSTIFY_LEFT)
         label.set_selectable(True)
-        self.vbox.pack_start(label)
+        self.vbox.pack_start(label, True, True, 0)
         self.show_all()
 
 
@@ -545,7 +545,7 @@ class GenericTableDialog(GenericAboutDialog):
         vbox2.pack_start(table, False, False, 0)
         vbox2.pack_start(gtk.Label(), True, True, 0)
         ScrolledWindow.add_with_viewport(vbox2)
-        self.vbox.pack_start(ScrolledWindow)
+        self.vbox.pack_start(ScrolledWindow, True, True, 0)
         self.show_all()
 
 

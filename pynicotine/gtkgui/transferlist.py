@@ -568,7 +568,7 @@ class TransferList:
 
             iter = self.transfersmodel.append(
                 parent,
-                [user, shortfn, status, str(place), percent, str(hsize), HumanSpeed(speed), elap, left, path, fn, istatus, size, icurrentbytes, True, speed]
+                [user, shortfn, status, str(place), percent, str(hsize), HumanSpeed(speed), elap, left, path, fn, istatus, size, icurrentbytes, True, str(speed)]
             )
 
             # Expand path

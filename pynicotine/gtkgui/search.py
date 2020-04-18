@@ -1726,7 +1726,7 @@ class Search:
 
     def PushHistory(self, widget, title):
 
-        text = widget.child.get_text()
+        text = widget.get_child().get_text()
         if not text.strip():
             return None
 
@@ -1735,7 +1735,7 @@ class Search:
         self.frame.np.config.pushHistory(history, text, 5)
 
         self.AddCombo(widget, text)
-        widget.child.set_text(text)
+        widget.get_child().set_text(text)
 
         return text
 
