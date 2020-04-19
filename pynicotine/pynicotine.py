@@ -429,15 +429,15 @@ class NetworkEventProcessor:
 
         return self.decode(string, coding)
 
-    def encode(self, str, networkenc=None):
+    def encode(self, string, networkenc=None):
 
         if networkenc is None:
             networkenc = self.config.sections["server"]["enc"]
 
-        if type(str) is str:
-            return str.encode(networkenc, 'replace')
+        if isinstance(string, str):
+            return string.encode(networkenc, 'replace')
         else:
-            return str.decode("utf-8", 'replace').encode(networkenc, 'replace')
+            return string.decode("utf-8", 'replace').encode(networkenc, 'replace')
 
     def decode(self, string, networkenc=None):
 
