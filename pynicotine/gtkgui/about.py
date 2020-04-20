@@ -490,7 +490,7 @@ This will apply to any existing results, and any more that are returned.
 To filter in a different way, just set the relevant terms.
 You do not need to do another search to apply a different filter."""))
 
-        label.set_justify(gtk.JUSTIFY_LEFT)
+        label.set_justify(gtk.Justification.LEFT)
         label.set_selectable(True)
         self.vbox.pack_start(label, True, True, 0)
         self.show_all()
@@ -509,7 +509,7 @@ class GenericTableDialog(GenericAboutDialog):
         self.resize(650, 500)
         vbox2 = gtk.VBox()
         vbox2.show()
-        rows = len(self.items) / 2
+        rows = int(len(self.items) / 2)
         self.table = table = gtk.Table(rows, 2)
         table.set_col_spacings(5)
         table.set_row_spacings(2)
@@ -517,15 +517,15 @@ class GenericTableDialog(GenericAboutDialog):
         for i in range(rows):
             l = gtk.Label()  # noqa: E741
             l.set_markup(self.items[i * 2])
-            l.set_alignment(0.0, 0.5)
+            l.set_alignment(0.0, 0.0)
             l.set_selectable(True)
             r = gtk.Label()
             r.set_markup(self.items[i * 2 + 1])
-            r.set_alignment(0.0, 0.5)
+            r.set_alignment(0.0, 0.0)
             r.set_line_wrap(True)
             r.set_selectable(True)
-            table.attach(l, 0, 1, i, i + 1, xoptions=gtk.FILL)
-            table.attach(r, 1, 2, i, i + 1, xoptions=gtk.FILL | gtk.EXPAND)
+            table.attach(l, 0, 1, i, i + 1, xoptions=gtk.AttachOptions.FILL)
+            table.attach(r, 1, 2, i, i + 1, xoptions=gtk.AttachOptions.FILL | gtk.AttachOptions.EXPAND)
 
         vbox2.pack_start(table, False, False, 0)
         vbox2.pack_start(gtk.Label(), True, True, 0)
