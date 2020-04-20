@@ -422,11 +422,11 @@ class RoomsControl:
 
             self.autojoin = 0
             if self.joinedrooms:
-                list = list(self.joinedrooms.keys())  # noqa: F823
+                room_list = list(self.joinedrooms.keys())
             else:
-                list = self.frame.np.config.sections["server"]["autojoin"]
+                room_list = self.frame.np.config.sections["server"]["autojoin"]
 
-            for room in list:
+            for room in room_list:
                 if room[-1:] != ' ':
                     self.frame.np.queue.put(slskmessages.JoinRoom(room))
 
@@ -2115,7 +2115,7 @@ class ChatRoom:
 
         # Reinitialize sorting after loop is complet
         self.usersmodel.set_sort_column_id(2, gtk.SortType.ASCENDING)
-        self.usersmodel.set_default_sort_func(None)
+        self.usersmodel.set_default_sort_func(lambda *args: -1)
 
         # Spit this line into chat log
         AppendLine(self.ChatScroll, _("--- reconnected ---"), self.tag_hilite)
