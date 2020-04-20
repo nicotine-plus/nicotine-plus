@@ -1700,15 +1700,15 @@ class UserInfoReply(PeerMessage):
 
     def makeNetworkMessage(self):
         if self.pic is not None:
-            pic = chr(1) + self.packObject(self.pic)
+            pic = chr(1).encode() + self.packObject(self.pic)
         else:
-            pic = chr(0)
+            pic = chr(0).encode()
 
         return (self.packObject(self.descr) +
                 pic +
                 self.packObject(NetworkIntType(self.totalupl)) +
                 self.packObject(NetworkIntType(self.queuesize)) +
-                chr(self.slotsavail) +
+                self.slotsavail.encode() +
                 self.packObject(NetworkIntType(self.uploadallowed)))
 
 
@@ -1864,7 +1864,7 @@ class FileSearchResult(PeerMessage):
                self.packObject(NetworkIntType(self.token)) +
                self.packObject(NetworkIntType(len(filelist))))
         for i in filelist:
-            msg += (chr(1) +
+            msg += (chr(1).encode() +
                     self.packObject(i[0]. replace(os. sep, "\\")) +
                     self.packObject(NetworkLongLongType(i[1])))
             if i[2] is None:
@@ -1879,7 +1879,7 @@ class FileSearchResult(PeerMessage):
                         self.packObject(NetworkIntType(i[3])) +
                         self.packObject(2) +
                         self.packObject(i[2][1]))
-        msg += (chr(self.freeulslots) +
+        msg += (chr(self.freeulslots).encode() +
                 self.packObject(NetworkIntType(self.ulspeed)) +
                 self.packObject(NetworkIntType(queuesize)))
         return zlib.compress(msg)
@@ -1946,7 +1946,7 @@ class FolderContentsResponse(PeerMessage):
     def makeNetworkMessage(self):
         msg = self.packObject(1) + self.packObject(self.dir) + self.packObject(1) + self.packObject(self.dir) + self.packObject(len(self.list))
         for i in self.list:
-            msg = msg + chr(1) + self.packObject(i[0]) + self.packObject(i[1]) + self.packObject(0)
+            msg = msg + chr(1).encode() + self.packObject(i[0]) + self.packObject(i[1]) + self.packObject(0)
             if i[2] is None:
                 msg = msg + self.packObject('') + self.packObject(0)
             else:
@@ -2001,7 +2001,7 @@ class TransferResponse(PeerMessage):
     def parseNetworkMessage(self, message):
         pos, self.req = self.getObject(message, int)
         pos, self.allowed = pos + 1, message[pos]
-        if message[pos:] != "":
+        if message[pos:]:
             if self.allowed:
                 pos, self.filesize = self.getObject(message, int, pos)
             else:
@@ -2173,7 +2173,7 @@ class AcceptChildren(ServerMessage):
         self.enabled = enabled
 
     def makeNetworkMessage(self):
-        return chr(self.enabled)
+        return chr(self.enabled).encode()
 
 
 class ChildDepth(ServerMessage):

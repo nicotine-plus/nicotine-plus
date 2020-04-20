@@ -979,6 +979,9 @@ class SlskProtoThread(threading.Thread):
                             host = port = _("unknown")
                             msgname = str(self.peerclasses[msgtype]).split(".")[-1]
                             print("Error parsing %s:" % msgname, error)
+                            import traceback
+                            for line in traceback.format_tb(error.__traceback__):
+                                print(line)
                             if "addr" in conn.__dict__:
                                 if conn.addr is not None:
                                     host = conn.addr[0]
