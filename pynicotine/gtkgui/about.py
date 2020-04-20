@@ -27,6 +27,7 @@ from gettext import gettext as _
 
 import gi
 from gi.repository import Gtk as gtk
+from gi import __version__ as gobject_version
 
 from pynicotine.gtkgui.utils import AppendLine
 from pynicotine.utils import version
@@ -50,7 +51,7 @@ class GenericAboutDialog(gtk.Dialog):
             self.set_icon(nicotine.images["n"])
 
         self.set_resizable(True)
-        self.set_position(gtk.WIN_POS_CENTER)
+        self.set_position(gtk.WindowPosition.CENTER)
         self.vbox.set_spacing(10)
         self.set_border_width(5)
 
@@ -64,7 +65,7 @@ class AboutDialog(gtk.Dialog):
         gtk.Dialog.__init__(self, _("About Nicotine+"), parent, gtk.DialogFlags.MODAL)
 
         self.set_resizable(True)
-        self.set_position(gtk.WIN_POS_CENTER)
+        self.set_position(gtk.WindowPosition.CENTER)
         self.vbox.set_spacing(10)
         self.set_border_width(5)
 
@@ -72,13 +73,11 @@ class AboutDialog(gtk.Dialog):
         img.set_from_pixbuf(self.nicotine.images["n"])
 
         ScrolledWindow = gtk.ScrolledWindow()
-        ScrolledWindow.set_shadow_type(gtk.SHADOW_IN)
-        ScrolledWindow.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
         ScrolledWindow.show()
         ScrolledWindow.set_size_request(400, 250)
 
         TextView = gtk.TextView()
-        TextView.set_wrap_mode(gtk.WRAP_WORD)
+        TextView.set_wrap_mode(gtk.WrapMode.WORD)
         TextView.set_cursor_visible(False)
         TextView.set_editable(False)
         TextView.show()
@@ -103,7 +102,7 @@ Based on code from Nicotine and PySoulSeek""") % version
         hbox.pack_start(vbox, False, True, 0)
         hbox.pack_start(ScrolledWindow, True, True, 0)
 
-        self.expander = gtk.Expander(_("Dependencies"))
+        self.expander = gtk.Expander()
         self.expander.show()
 
         pythonversion = '.'.join(map(str, sys.version_info[:3]))
@@ -129,7 +128,7 @@ Based on code from Nicotine and PySoulSeek""") % version
         hboxgtk = gtk.HBox(5)
         hboxgtk.show()
 
-        gtkversion = '.'.join(map(str, gtk.gtk_version[:3]))
+        gtkversion = f'{gtk.get_major_version()}.{gtk.get_minor_version()}.{gtk.get_micro_version()}'
 
         VersionGTK = gtk.Label(gtkversion)
 
@@ -146,19 +145,17 @@ Based on code from Nicotine and PySoulSeek""") % version
         hboxpygtk = gtk.HBox(5)
         hboxpygtk.show()
 
-        pygtkversion = '.'.join(map(str, gtk.pygtk_version[:3]))
+        VersionPyGObject = gtk.Label(gobject_version)
 
-        VersionPyGTK = gtk.Label(pygtkversion)
-
-        pygtkplus = gtk.Label("PyGTK+:")
+        pygtkplus = gtk.Label("PyGObject:")
         pygtkplus.set_alignment(0, 0.5)
         pygtkplus.show()
 
-        VersionPyGTK.set_alignment(0, 0.5)
-        VersionPyGTK.show()
+        VersionPyGObject.set_alignment(0, 0.5)
+        VersionPyGObject.show()
 
         hboxpygtk.pack_start(pygtkplus, True, True, 0)
-        hboxpygtk.pack_start(VersionPyGTK, True, True, 0)
+        hboxpygtk.pack_start(VersionPyGObject, True, True, 0)
 
         self.vbox2.pack_start(hboxpython, True, True, 0)
         self.vbox2.pack_start(hboxgtk, True, True, 0)
@@ -191,7 +188,6 @@ Based on code from Nicotine and PySoulSeek""") % version
             _("Close")
         )
 
-        self.CloseButton.set_flags(gtk.CAN_DEFAULT)
         self.action_area.pack_start(self.CloseButton, True, True, 0)
 
         self.show_all()
@@ -224,13 +220,10 @@ class AboutCreditsDialog(GenericAboutDialog):
         self.notebook = gtk.Notebook()
         self.notebook.show()
         self.DevScrolledWindow = gtk.ScrolledWindow()
-        self.DevScrolledWindow.set_shadow_type(gtk.SHADOW_IN)
-        self.DevScrolledWindow.set_policy(gtk.POLICY_AUTOMATIC,
-                                          gtk.POLICY_AUTOMATIC)
         self.DevScrolledWindow.show()
 
         self.DevTextView = gtk.TextView()
-        self.DevTextView.set_wrap_mode(gtk.WRAP_WORD)
+        self.DevTextView.set_wrap_mode(gtk.WrapMode.WORD)
         self.DevTextView.set_cursor_visible(False)
         self.DevTextView.set_editable(False)
         self.DevTextView.show()
@@ -350,13 +343,10 @@ distributed under a CC BY-SA 3.0 Unported license."""
         self.notebook.append_page(self.DevScrolledWindow, developersLabel)
 
         self.TransScrolledWindow = gtk.ScrolledWindow()
-        self.TransScrolledWindow.set_shadow_type(gtk.SHADOW_IN)
-        self.TransScrolledWindow.set_policy(gtk.POLICY_AUTOMATIC,
-                                            gtk.POLICY_AUTOMATIC)
         self.TransScrolledWindow.show()
 
         self.TransTextView = gtk.TextView()
-        self.TransTextView.set_wrap_mode(gtk.WRAP_WORD)
+        self.TransTextView.set_wrap_mode(gtk.WrapMode.WORD)
         self.TransTextView.set_cursor_visible(False)
         self.TransTextView.set_editable(False)
         self.TransTextView.set_left_margin(3)
@@ -431,9 +421,6 @@ class AboutLicenseDialog(GenericAboutDialog):
         self.set_resizable(True)
         self.resize(550, 450)
         self.ScrolledWindow = gtk.ScrolledWindow()
-        self.ScrolledWindow.set_shadow_type(gtk.SHADOW_IN)
-        self.ScrolledWindow.set_policy(gtk.POLICY_AUTOMATIC,
-                                       gtk.POLICY_AUTOMATIC)
         self.ScrolledWindow.show()
 
         self.TextView = gtk.TextView()
@@ -518,8 +505,6 @@ class GenericTableDialog(GenericAboutDialog):
         GenericAboutDialog.__init__(self, parent, title)
         self.set_resizable(True)
         ScrolledWindow = gtk.ScrolledWindow()
-        ScrolledWindow.set_shadow_type(gtk.SHADOW_IN)
-        ScrolledWindow.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
         ScrolledWindow.show()
         self.resize(650, 500)
         vbox2 = gtk.VBox()
