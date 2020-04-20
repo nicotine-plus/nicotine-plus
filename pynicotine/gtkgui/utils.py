@@ -1046,6 +1046,7 @@ class PopupMenu(gtk.Menu):
 
             self.append(menuitem)
 
+            menuitem.set_use_underline(True)
             menuitem.show()
 
         return self
