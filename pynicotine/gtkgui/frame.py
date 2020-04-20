@@ -451,6 +451,7 @@ class NicotineFrame:
         self.LogScrolledWindow = gtk.ScrolledWindow()
         self.LogScrolledWindow.set_shadow_type(gtk.ShadowType.IN)
         self.LogScrolledWindow.set_policy(gtk.PolicyType.AUTOMATIC, gtk.PolicyType.AUTOMATIC)
+        self.LogScrolledWindow.set_propagate_natural_height(True)
         self.LogScrolledWindow.show()
 
         self.LogWindow = gtk.TextView()
