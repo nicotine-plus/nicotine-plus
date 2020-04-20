@@ -152,56 +152,34 @@ class UserList:
         self.trusted = []
 
         for user in self.frame.np.config.sections["server"]["userlist"]:
+            username, comment, notify, privileged, trusted, last_seen, flag = user
 
-            notify = user[2]
-            privileged = user[3]
-
-            if len(user) > 4:
-                trusted = user[4]
-            else:
-                trusted = 0
-
-            if len(user) > 5:
-                last_seen = user[5]
-                try:
-                    time_from_epoch = time.mktime(time.strptime(last_seen, "%m/%d/%Y %H:%M:%S"))
-                except Exception:
-                    if last_seen == '':
-                        time_from_epoch = sys.maxsize
-                    else:
-                        time_from_epoch = 0
+            if last_seen:
+                time_from_epoch = time.mktime(time.strptime(last_seen, "%m/%d/%Y %H:%M:%S"))
             else:
                 last_seen = _("Never seen")
-                user += [last_seen]
                 time_from_epoch = 0
-
-            if len(user) > 6:
-                flag = user[6]
-            else:
-                user += [None]
-                flag = None
 
             row = [
                 self.frame.GetStatusImage(0),
                 self.frame.GetFlagImage(flag),
-                user[0], "0", "0",
+                username, "0", "0",
                 trusted, notify, privileged, last_seen,
-                user[1], 0, 0, 0,
-                int(time_from_epoch),
+                comment, 0, 0, 0,
+                time_from_epoch,
                 flag
             ]
 
             if len(user) > 2:
-                if user[2]:
-                    self.notify.append(user[0])
-                if user[3]:
-                    self.privileged.append(user[0])
+                if notify:
+                    self.notify.append(username)
+                if privileged:
+                    self.privileged.append(username)
                 if trusted:
-                    self.trusted.append(user[0])
+                    self.trusted.append(username)
 
-            # iter = self.usersmodel.append(row)
-            iter = self.usersmodel.insert(0, row)
-            self.userlist.append([user[0], user[1], last_seen, iter, flag])
+            iter_ = self.usersmodel.insert(0, row)
+            self.userlist.append([user[0], user[1], last_seen, iter_, flag])
 
         self.usersmodel.set_sort_column_id(2, gtk.SortType.ASCENDING)
         self.Popup_Menu_PrivateRooms = PopupMenu(self.frame)

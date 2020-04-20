@@ -526,14 +526,14 @@ class AddUser(ServerMessage):
     def parseNetworkMessage(self, message):
         pos, self.user = self.getObject(message, bytes)
         pos, self.userexists = pos + 1, message[pos]
-        if len(message[pos:]) > 0:
+        if message[pos:]:
             pos, self.status = self.getObject(message, int, pos)
             pos, self.avgspeed = self.getObject(message, int, pos)
             pos, self.downloadnum = self.getObject(message, int, pos, getsignedint=1)
 
             pos, self.files = self.getObject(message, int, pos)
             pos, self.dirs = self.getObject(message, int, pos)
-            if len(message[pos:]) > 0:
+            if message[pos:]:
                 pos, self.country = self.getObject(message, bytes, pos)
 
 
