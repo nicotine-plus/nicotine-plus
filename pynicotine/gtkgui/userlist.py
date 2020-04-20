@@ -153,11 +153,11 @@ class UserList:
         for user in self.frame.np.config.sections["server"]["userlist"]:
             username, comment, notify, privileged, trusted, last_seen, flag = user
 
-            if last_seen:
-                time_from_epoch = time.mktime(time.strptime(last_seen, "%m/%d/%Y %H:%M:%S"))
-            else:
+            if last_seen in ('', 'Never seen'):
                 last_seen = _("Never seen")
                 time_from_epoch = 0
+            else:
+                time_from_epoch = time.mktime(time.strptime(last_seen, "%m/%d/%Y %H:%M:%S"))
 
             row = [
                 self.frame.GetStatusImage(0),
