@@ -39,9 +39,15 @@ jobs:
       run: |
         sudo apt-get install devscripts debhelper dh-python python-all \
           python-gobject-2 python-setuptools quilt
+    - name: Build binary .deb
+      run: |
+        dpkg-buildpackage -b -rfakeroot -us -uc
     - name: Build source .deb
       run: |
-        debuild -S -us -uc
+        cd ..
+        tar --exclude-vcs -jcf nicotine_1.4.3.orig.tar.bz2 nicotine-plus
+        cd nicotine-plus
+        dpkg-buildpackage -S -rfakeroot -us -uc
     - name: Collect source .deb artifacts
       run: |
         mkdir ../output

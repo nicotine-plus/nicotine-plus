@@ -15,6 +15,11 @@ MANIFEST
 build/
 dist/
 debian/files
+debian/.debhelper
+debian/*.debhelper*
+debian/nicotine
+debian/nicotine.substvars
+.pybuild
 
 # Ignore IDE, emacs and other system files
 \#*#
