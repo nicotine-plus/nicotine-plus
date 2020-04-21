@@ -42,11 +42,19 @@ jobs:
     - name: Build binary .deb
       run: |
         dpkg-buildpackage -b -rfakeroot -us -uc
+    - name: Archive binary .deb artifacts
+      uses: actions/upload-artifact@v1
+      with:
+        name: nicotine.deb
+        path: ../nicotine_1.4.3_all.deb
+    - name: Clean binary .deb
+      run: |
+        rm ../nicotine_1.4.3_all.deb
     - name: Build source .deb
       run: |
-        cd ..
+        pushd ..
         tar --exclude-vcs -jcf nicotine_1.4.3.orig.tar.bz2 nicotine-plus
-        cd nicotine-plus
+        popd
         dpkg-buildpackage -S -rfakeroot -us -uc
     - name: Collect source .deb artifacts
       run: |
