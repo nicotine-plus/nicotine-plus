@@ -1,3 +1,13 @@
+nicotine (1.4.3) disco; urgency=medium
+
+  * Upgrade Python to >= 3.6, use Gtk+ 3
+
+ -- Lene Preuss <lene.preuss@gmail.com>  Tue, 21 Apr 2020 18:35:00 +0200
+
+nicotine (1.4.3) eoan; urgency=medium
+
+  * Upgrade Python to >= 3.6, use Gtk+ 3
+
 nicotine (1.4.2-1) eoan; urgency=medium
 
   * Latest upstream.

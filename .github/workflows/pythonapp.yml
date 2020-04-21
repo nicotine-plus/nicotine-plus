@@ -3,8 +3,7 @@ name: Nicotine+ CI
 on: [push]
 
 jobs:
-  build:
-
+  test:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -31,3 +30,24 @@ jobs:
       run: |
         pip install pytest
         pytest
+
+  package:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install dependencies
+      run: |
+        sudo apt-get install devscripts debhelper dh-python python-all \
+          python-gobject-2 python-setuptools quilt
+    - name: Build source .deb
+      run: |
+        debuild -S -us -uc
+    - name: Collect source .deb artifacts
+      run: |
+        mkdir ../output
+        mv ../nicotine_?.?.?* ../output
+    - name: Archive source .deb artifacts
+      uses: actions/upload-artifact@v1
+      with:
+        name: nicotine-debuild-artifacts
+        path: ../output

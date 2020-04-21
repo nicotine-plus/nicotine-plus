@@ -11,10 +11,11 @@ Build-Depends:
     gettext,
     lintian,
     python-setuptools,
-    quilt
+    quilt,
+    python3
 Vcs-Git: https://github.com/Nicotine-Plus/nicotine-plus.git
 Vcs-browser: https://github.com/Nicotine-Plus/nicotine-plus
-X-Python-Version: >= 2.7
+X-Python-Version: >= 3.6
 Homepage: https://www.nicotine-plus.org/
 
 Package: nicotine
@@ -24,18 +25,23 @@ Depends:
     ${misc:Depends},
     miniupnpc (>= 1.9),
     python-gobject-2,
-    python-gtk2 (>= 2.24),
-    python (>= 2.7),
+    libgtk-3-0,
+    libcairo2-dev,
+    libgirepository1.0-dev,
+    python3-gi,
+    gobject-introspection,
+    gir1.2-gtk-3.0,
+    python (>= 3.6),
     python-mutagen (>= 1.25),
     xdg-utils
 Recommends: python-geoip, python-notify
 Suggests: python-gnome2, python-sexy, python-dbus, python-gst0.10
-Description: graphical client for SoulSeek P2P network (Gtk+ / Python 2)
+Description: graphical client for SoulSeek P2P network (Gtk+ / Python 3)
  Nicotine+ is a client for SoulSeek, a light and efficient file sharing
- system, written in Python and using the GTK+2 toolkit, based on the
+ system, written in Python and using the GTK+ toolkit, based on the
  PySoulSeek project.
  .
  It features uploading, downloading, searching and chatting, with
  strict bandwidth control, and tries to look like PySoulSeek.
  .
- This package installs the Gtk+ 2 client which uses Python 2.
+ This package installs the Gtk+ 3 client which uses Python 3.
