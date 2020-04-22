@@ -25,3 +25,5 @@ debian/nicotine.substvars
 \#*#
 .idea
 .venv
+
+.mypy_cache

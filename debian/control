@@ -31,7 +31,7 @@ Depends:
     python3-gi,
     gobject-introspection,
     gir1.2-gtk-3.0,
-    python (>= 3.6),
+    python3 (>= 3.6),
     python-mutagen (>= 1.25),
     xdg-utils
 Recommends: python-geoip, python-notify
