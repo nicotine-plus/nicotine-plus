@@ -17,6 +17,7 @@ WORKDIR /nicotine
 COPY . /nicotine
 
 COPY docker/config /root/.nicotine
+COPY docker/shares /root/shares
 
 ENV VIRTUAL_ENV=./nicotine-venv
 RUN python3 -m virtualenv --python=/usr/bin/python3 $VIRTUAL_ENV
