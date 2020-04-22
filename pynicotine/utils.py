@@ -34,7 +34,7 @@ from collections import UserDict
 from subprocess import PIPE
 from subprocess import Popen
 
-version = "1.5.0"
+version = "1.4.3"
 
 log = 0
 win32 = sys.platform.startswith("win")
