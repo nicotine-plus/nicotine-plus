@@ -1700,15 +1700,15 @@ class UserInfoReply(PeerMessage):
 
     def makeNetworkMessage(self):
         if self.pic is not None:
-            pic = bytes(1) + self.packObject(self.pic)
+            pic = bytes([1]) + self.packObject(self.pic)
         else:
-            pic = bytes(0)
+            pic = bytes([0])
 
         return (self.packObject(self.descr) +
                 pic +
                 self.packObject(NetworkIntType(self.totalupl)) +
                 self.packObject(NetworkIntType(self.queuesize)) +
-                self.slotsavail.encode() +
+                bytes([self.slotsavail]) +
                 self.packObject(NetworkIntType(self.uploadallowed)))
 
 
