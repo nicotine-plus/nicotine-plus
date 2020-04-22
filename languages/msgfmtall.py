@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
