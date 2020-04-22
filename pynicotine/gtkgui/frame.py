@@ -838,7 +838,7 @@ class NicotineFrame:
                         data.close()
                         loader = GdkPixbuf.PixbufLoader()
                         try:
-                            loader.write(s, len(s))
+                            loader.write(s)
                             loader.close()
                             pixbuf = loader.get_pixbuf()
                             if scale:
