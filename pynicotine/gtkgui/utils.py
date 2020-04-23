@@ -998,7 +998,7 @@ class PopupMenu(gtk.Menu):
         for item in items:
 
             if item[0] == "":
-                menuitem = gtk.MenuItem()
+                menuitem = gtk.SeparatorMenuItem()
 
             elif item[0] == "USER":
 
