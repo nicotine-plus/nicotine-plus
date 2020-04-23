@@ -2778,7 +2778,6 @@ class NicotineFrame:
     def SetClipboardURL(self, user, path):
         self.clip.set_text("slsk://" + urllib.request.pathname2url("%s/%s" % (user, path.replace("\\", "/"))), -1)
         self.clip_data = "slsk://" + urllib.request.pathname2url("%s/%s" % (user, path.replace("\\", "/")))
-        self.MainWindow.selection_owner_set("PRIMARY", 0)
 
     def OnSelectionGet(self, widget, data, info, timestamp):
         data.set_text(self.clip_data, -1)
