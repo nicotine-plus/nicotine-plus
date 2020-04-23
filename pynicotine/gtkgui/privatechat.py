@@ -526,12 +526,12 @@ class PrivateChat:
         if bound is not None and len(bound) == 2:
             start, end = bound
             log = self.ChatScroll.get_buffer().get_text(start, end)
-            self.frame.clip.set_text(log)
+            self.frame.clip.set_text(log, -1)
 
     def OnCopyAllChatLog(self, widget):
         start, end = self.ChatScroll.get_buffer().get_bounds()
         log = self.ChatScroll.get_buffer().get_text(start, end)
-        self.frame.clip.set_text(log)
+        self.frame.clip.set_text(log, -1)
 
     def OnClearChatLog(self, widget):
         self.ChatScroll.get_buffer().set_text("")

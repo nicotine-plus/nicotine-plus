@@ -2776,7 +2776,7 @@ class NicotineFrame:
             self.logMessage(_("Invalid SoulSeek meta-url: %s") % url)
 
     def SetClipboardURL(self, user, path):
-        self.clip.set_text("slsk://" + urllib.request.pathname2url("%s/%s" % (user, path.replace("\\", "/"))))
+        self.clip.set_text("slsk://" + urllib.request.pathname2url("%s/%s" % (user, path.replace("\\", "/"))), -1)
         self.clip_data = "slsk://" + urllib.request.pathname2url("%s/%s" % (user, path.replace("\\", "/")))
         self.MainWindow.selection_owner_set("PRIMARY", 0)
 
@@ -2945,12 +2945,12 @@ class NicotineFrame:
         if bound is not None and len(bound) == 2:
             start, end = bound
             log = self.LogWindow.get_buffer().get_text(start, end)
-            self.clip.set_text(log)
+            self.clip.set_text(log, -1)
 
     def OnCopyAllLogWindow(self, widget):
         start, end = self.LogWindow.get_buffer().get_bounds()
         log = self.LogWindow.get_buffer().get_text(start, end)
-        self.clip.set_text(log)
+        self.clip.set_text(log, -1)
 
     def OnClearLogWindow(self, widget):
         self.LogWindow.get_buffer().set_text("")
