@@ -66,7 +66,7 @@ class MetaDialog(gtk.Dialog):
 
         self.UF = gtk.Frame()
         self.UF.show()
-        self.UF.set_shadow_type(gtk.SHADOW_ETCHED_IN)
+        self.UF.set_shadow_type(gtk.ShadowType.ETCHED_IN)
         self.box.pack_start(self.UF, False, False, 0)
 
         vbox3 = gtk.VBox(spacing=5)
@@ -125,7 +125,7 @@ class MetaDialog(gtk.Dialog):
 
         self.Media = gtk.Frame()
         self.Media.show()
-        self.Media.set_shadow_type(gtk.SHADOW_ETCHED_IN)
+        self.Media.set_shadow_type(gtk.ShadowType.ETCHED_IN)
         hbox6 = gtk.HBox(spacing=5, homogeneous=False)
         hbox6.set_border_width(5)
         hbox6.show()
@@ -247,8 +247,8 @@ class MetaDialog(gtk.Dialog):
             _("Next")
         )
 
-        self.buttonbox.pack_end(self.Next, False, False)
-        self.buttonbox.pack_end(self.Previous, False, False)
+        self.buttonbox.pack_end(self.Next, False, False, 0)
+        self.buttonbox.pack_end(self.Previous, False, False, 0)
 
         button = self.nicotine.CreateIconButton(
             gtk.STOCK_CLOSE,
