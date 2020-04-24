@@ -1749,7 +1749,7 @@ class Transfers:
 
     def getChecksum(self, path):
         try:
-            h = open(path)
+            h = open(path, 'rb')
             m = hashlib.md5()
             m.update(h.read(-1))
             digest = m.digest()
