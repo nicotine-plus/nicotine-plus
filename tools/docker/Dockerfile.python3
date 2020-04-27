@@ -10,7 +10,7 @@ RUN apt-get update
 RUN apt-get install -y python3 python3-pip python3-virtualenv \
     miniupnpc python-gobject-2 python-mutagen xdg-utils \
     libgtk-3-0 libcairo2-dev libgirepository1.0-dev python3-gi gobject-introspection gir1.2-gtk-3.0 \
-    xfce4-terminal
+    xfce4-terminal locales-all
 
 
 WORKDIR /nicotine
@@ -27,5 +27,11 @@ RUN pip install ptpython pytest flake8 pygobject mutagen
 ENV PYTHONPATH=".:$PYTHONPATH"
 RUN pytest
 RUN flake8 nicotine pynicotine plugins --ignore=E402,E501,W503,W504
+
 ENV DISPLAY=:0
+
+# ensure the container's locale is set
+ENV LANGUAGE en_US:en
+ENV LC_ALL en_US.UTF-8
+
 CMD ./nicotine || sleep 100000
