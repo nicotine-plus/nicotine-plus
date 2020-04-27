@@ -338,7 +338,7 @@ def AppendLine(textview, line, tag=None, timestamp=None, showstamp=True, timesta
     def _usertag(buffer, section):
         # Tag usernames with popup menu creating tag, and away/online/offline colors
         if USERNAMEHOTSPOTS and username is not None and usertag is not None:
-            np = re.compile(re.escape(username))
+            np = re.compile(re.escape(str(username)))
             match = np.search(section)
             if match is not None:
                 start2 = section[:match.start()]
@@ -1280,7 +1280,7 @@ def WriteLog(logsdir, fn, msg):
     if not os.path.exists(logsdir):
         os.makedirs(logsdir)
 
-    logfile = open(os.path.join(logsdir, fixpath(fn.replace(os.sep, "-")) + ".log"), 'a', 0)
+    logfile = open(os.path.join(logsdir, fixpath(fn.replace(os.sep, "-")) + ".log"), 'ab', 0)
 
     os.umask(oldumask)
 
