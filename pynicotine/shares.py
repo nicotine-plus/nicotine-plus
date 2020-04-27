@@ -1055,8 +1055,8 @@ class Shares:
         sharedstreams = config["transfers"]["sharedfilesstreams"]
         wordindex = config["transfers"]["wordindex"]
         fileindex = config["transfers"]["fileindex"]
-        shareddirs = config["transfers"]["shared"] + [config["transfers"]["downloaddir"]]
-        sharedmtimes = config["transfers"]["sharedmtimes"]
+        shareddirs = [path for _name, path in config["transfers"]["shared"]]
+        shareddirs.append(config["transfers"]["downloaddir"])
 
         dir = str(os.path.expanduser(os.path.dirname(name)))
         file = str(os.path.basename(name))
@@ -1070,7 +1070,6 @@ class Shares:
             sharedstreams[dir] = self.getDirStream(shared[dir])
             words = self.getIndexWords(dir, file, shareddirs)
             self.addToIndex(wordindex, fileindex, words, dir, fileinfo)
-            sharedmtimes[dir] = os.path.getmtime(dir)
             self.newnormalshares = True
 
         if config["transfers"]["enablebuddyshares"]:
