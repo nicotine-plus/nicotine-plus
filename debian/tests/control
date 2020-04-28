@@ -5,6 +5,6 @@
 
 Test-Command: nicotine --version | grep Nicotine+
 Depends: nicotine
-Restrictions: isolation-container
+Restrictions: isolation-container, superficial
 Features: test-name=test-version
 
