@@ -12,7 +12,8 @@ Build-Depends:
     lintian,
     python-setuptools,
     quilt,
-    python3
+    python3 (>=3.6),
+    python3-pyatspi
 Vcs-Git: https://github.com/Nicotine-Plus/nicotine-plus.git
 Vcs-browser: https://github.com/Nicotine-Plus/nicotine-plus
 X-Python-Version: >= 3.6
