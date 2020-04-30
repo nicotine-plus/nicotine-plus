@@ -1,6 +1,6 @@
 # DEP-8 continuous integration tests.
 #
-#  TODO: Add in integration testing whenever it becomes available.
+#  TODO: Make integration testing run
 #
 
 Test-Command: nicotine --version | grep Nicotine+
@@ -13,12 +13,19 @@ Depends:
     nicotine,
     python3-pytest
 Restrictions: isolation-container
-Features: test-name=test-unit
+Features: test-name=unit-tests
 
-# Fails thanks to dependency hell
-#Test-Command: python tests/integration/run_app.sh nicotine
-#Depends:
-#    nicotine,
-#    python3-atspi
-#Restrictions: isolation-container
-#Features: test-name=test-integration
+Test-Command: python3 tests/integration/run_app.py
+Depends:
+    nicotine,
+    python3-dogtail,
+    python3-pyatspi,
+    python3-cairo,
+    python3-gi,
+    python3-pip,
+    gir1.2-gtk-3.0,
+    python3-wheel,
+    python3-setuptools,
+    xvfb
+Restrictions: isolation-container
+Features: test-name=integration-tests
