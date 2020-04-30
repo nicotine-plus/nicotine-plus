@@ -1,6 +1,6 @@
 # DEP-8 continuous integration tests.
 #
-#  TODO: Add in tree unit testing whenever it becomes available.
+#  TODO: Add in integration testing whenever it becomes available.
 #
 
 Test-Command: nicotine --version | grep Nicotine+
@@ -8,3 +8,17 @@ Depends: nicotine
 Restrictions: isolation-container
 Features: test-name=test-version
 
+Test-Command: pytest-3 tests/unit
+Depends:
+    nicotine,
+    python3-pytest
+Restrictions: isolation-container
+Features: test-name=test-unit
+
+# Fails thanks to dependency hell
+#Test-Command: python tests/integration/run_app.sh nicotine
+#Depends:
+#    nicotine,
+#    python3-atspi
+#Restrictions: isolation-container
+#Features: test-name=test-integration
