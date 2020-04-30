@@ -4,28 +4,16 @@
 #
 
 Test-Command: nicotine --version | grep Nicotine+
-Depends: nicotine
+Depends: @
 Restrictions: isolation-container
 Features: test-name=test-version
 
 Test-Command: pytest-3 tests/unit
-Depends:
-    nicotine,
-    python3-pytest
+Depends: @, python3-pytest
 Restrictions: isolation-container
 Features: test-name=unit-tests
 
-Test-Command: xvfb python3 tests/integration/run_app.py
-Depends:
-    nicotine,
-    python3-dogtail,
-    python3-pyatspi,
-    python3-cairo,
-    python3-gi,
-    python3-pip,
-    gir1.2-gtk-3.0,
-    python3-wheel,
-    python3-setuptools,
-    xvfb
+Test-Command: xvfb-run -a python3 tests/integration/run_app.py
+Depends: @, python3-dogtail, xvfb
 Restrictions: isolation-container
 Features: test-name=integration-tests
