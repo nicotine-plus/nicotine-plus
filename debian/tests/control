@@ -5,7 +5,7 @@
 
 Test-Command: nicotine --version | grep Nicotine+
 Depends: @
-Restrictions: isolation-container
+Restrictions: isolation-container, superficial
 Features: test-name=test-version
 
 Test-Command: pytest-3 tests/unit
