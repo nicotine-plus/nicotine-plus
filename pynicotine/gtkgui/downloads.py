@@ -23,17 +23,26 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-import gtk
-from thread import start_new_thread
-
-from transferlist import TransferList
-from utils import PopupMenu, PressHeader, HumanSize
-from pynicotine import slskmessages
-import string
 import os
+import string
+from gettext import gettext as _
+
+import gi
+from gi.repository import Gdk
+from gi.repository import Gtk as gtk
+
+from _thread import start_new_thread
+from pynicotine import slskmessages
+from pynicotine.gtkgui.entrydialog import MetaDialog
+from pynicotine.gtkgui.entrydialog import OptionDialog
+from pynicotine.gtkgui.transferlist import TransferList
+from pynicotine.gtkgui.utils import HumanSize
+from pynicotine.gtkgui.utils import PopupMenu
+from pynicotine.gtkgui.utils import PressHeader
 from pynicotine.utils import executeCommand
-from entrydialog import MetaDialog, OptionDialog
+
+gi.require_version('Gtk', '3.0')
+gi.require_version('Gdk', '3.0')
 
 
 class Downloads(TransferList):
@@ -116,7 +125,8 @@ class Downloads(TransferList):
             columns.append(column.get_visible())
             widths.append(column.get_width())
         self.frame.np.config.sections["columns"]["downloads_columns"] = columns
-        self.frame.np.config.sections["columns"]["downloads_widths"] = widths 
+        self.frame.np.config.sections["columns"]["downloads_widths"] = widths
+
     def OnToggleAutoRetry(self, widget):
         self.frame.np.config.sections["transfers"]["autoretry_downloads"] = self.frame.ToggleAutoRetry.get_active()
 
@@ -164,7 +174,7 @@ class Downloads(TransferList):
 
     def MetaBox(self, title="Meta Data", message="", data=None, modal=True, Search=False):
 
-        win = MetaDialog(self.frame, message,  data, modal, Search=Search)
+        win = MetaDialog(self.frame, message, data, modal, Search=Search)
         win.set_title(title)
         win.set_icon(self.frame.images["n"])
         win.show()
@@ -180,7 +190,7 @@ class Downloads(TransferList):
         filename = model.get_value(iter, 1)
         fullname = model.get_value(iter, 10)
         size = speed = "0"
-        length = bitrate = None
+        length = bitrate = None  # noqa: F841
         queue = immediate = num = country = bitratestr = ""
 
         for transfer in self.frame.np.transfers.downloads:
@@ -189,7 +199,7 @@ class Downloads(TransferList):
                 try:
                     speed = str(int(transfer.speed))
                     speed += _(" KB/s")
-                except:
+                except Exception:
                     pass
                 bitratestr = str(transfer.bitrate)
                 length = str(transfer.length)
@@ -235,8 +245,8 @@ class Downloads(TransferList):
 
         complete_path = os.path.join(downloaddir, transfer.path)
 
-        if transfer.path is "":
-            if transfer.status is "Finished":
+        if transfer.path == "":
+            if transfer.status == "Finished":
                 executeCommand(filemanager, downloaddir)
             else:
                 executeCommand(filemanager, incompletedir)
@@ -289,7 +299,7 @@ class Downloads(TransferList):
 
     def on_key_press_event(self, widget, event):
 
-        key = gtk.gdk.keyval_name(event.keyval)
+        key = Gdk.keyval_name(event.keyval)
 
         if key in ("P", "p"):
             self.OnPopupMenu(widget, event, "keyboard")
@@ -418,7 +428,7 @@ class Downloads(TransferList):
 
         if kind == "mouse":
             if event.button != 3:
-                if event.button == 1 and event.type == gtk.gdk._2BUTTON_PRESS:
+                if event.button == 1 and event.type == Gdk.EventType._2BUTTON_PRESS:
                     self.DoubleClick(event)
                 return False
 
@@ -427,7 +437,7 @@ class Downloads(TransferList):
         self.widget.get_selection().selected_foreach(self.SelectedTransfersCallback)
 
         users = len(self.selected_users) > 0
-        multi_users = len(self.selected_users) > 1
+        multi_users = len(self.selected_users) > 1  # noqa: F841
         files = len(self.selected_transfers) > 0
         multi_files = len(self.selected_transfers) > 1
 
@@ -467,7 +477,7 @@ class Downloads(TransferList):
         for i in range(10, 15):
             items[i].set_sensitive(act)
 
-        self.popup_menu.popup(None, None, None, 3, event.time)
+        self.popup_menu.popup(None, None, None, None, 3, event.time)
 
         if kind == "keyboard":
             widget.emit_stop_by_name("key_press_event")

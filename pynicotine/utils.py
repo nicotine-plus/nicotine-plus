@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 #
+# COPYRIGHT (C) 2020 Lene Preuss <lene.preuss@gmail.com>
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2007 Daelstorm <daelstorm@gmail.com>
 # COPYRIGHT (C) 2003-2004 Hyriand <hyriand@thegraveyard.org>
@@ -25,21 +26,15 @@
 This module contains utility functions.
 """
 
-from __future__ import division
-
-import string
-from UserDict import UserDict
-from subprocess import Popen, PIPE
-import os
-import dircache
-import sys
-import gobject
-import locale
 import gettext
+import locale
+import os
+import sys
+from collections import UserDict
+from subprocess import PIPE
+from subprocess import Popen
 
-from logfacility import log as logfacility
-
-version = "1.4.2"
+version = "1.4.3"
 
 log = 0
 win32 = sys.platform.startswith("win")
@@ -119,7 +114,7 @@ def ApplyTranslation():
 
     If no translations are found we fall back to the system path for locates:
     GNU/Linux: /usr/share/locale/$(LANG)/LC_MESSAGES
-    Windows: %PYTHONHOME%\share\locale\$(LANG)\LC_MESSAGES
+    Windows: %PYTHONHOME%\\share\\locale\\$(LANG)\\LC_MESSAGES
 
     Note: To the best of my knowledge when we are in a python venv
     falling back to the system path does not work."""
@@ -240,7 +235,7 @@ class SortedDict(UserDict):
     # @param value dict value
     def __setitem__(self, key, value):
 
-        if not self.__dict__.has_key(key):
+        if key not in self.__dict__:
             self.__keys__.append(key)
             self.__sorted__ = False
 
@@ -299,7 +294,7 @@ def executeCommand(command, replacement=None, background=True, returnoutput=Fals
     goes wrong while executing the command.
 
     Example commands:
-    * "C:\Program Files\WinAmp\WinAmp.exe" --xforce "--title=My Window Title"
+    * "C:\\Program Files\\WinAmp\\WinAmp.exe" --xforce "--title=My Window Title"
     * mplayer $
     * echo $ | flite -t """
 
@@ -312,7 +307,7 @@ def executeCommand(command, replacement=None, background=True, returnoutput=Fals
     if command.endswith("&"):
         command = command[:-1]
         if returnoutput:
-            print "Yikes, I was asked to return output but I'm also asked to launch the process in the background. returnoutput gets precedent."
+            print("Yikes, I was asked to return output but I'm also asked to launch the process in the background. returnoutput gets precedent.")
         else:
             background = True
 
@@ -346,7 +341,7 @@ def executeCommand(command, replacement=None, background=True, returnoutput=Fals
 
     # subcommands is now: [['C:\Program Files\WinAmp\WinAmp.exe', '--xforce', '--title=My Title', '$'], ['flite', '-t']]
     if replacement:
-        for i in xrange(0, len(subcommands)):
+        for i in range(0, len(subcommands)):
             subcommands[i] = [x.replace(placeholder, replacement) for x in subcommands[i]]
 
     # Chaining commands...
@@ -366,8 +361,8 @@ def executeCommand(command, replacement=None, background=True, returnoutput=Fals
             procs.append(Popen(subcommands[-1], stdin=procs[-1].stdout, stdout=finalstdout))
         if not background and not returnoutput:
             procs[-1].wait()
-    except:
-        raise RuntimeError("Problem while executing command %s (%s of %s)" % (subcommands[len(procs)], len(procs)+1, len(subcommands)))
+    except Exception:
+        raise RuntimeError("Problem while executing command %s (%s of %s)" % (subcommands[len(procs)], len(procs) + 1, len(subcommands)))
 
     if not returnoutput:
         return True
@@ -381,20 +376,20 @@ def findBestEncoding(bytes, encodings, fallback=None):
     If none match the fallback encoding will be used with the 'replace' argument. If no fallback is
     given the first encoding from the list is used."""
 
-    if isinstance(bytes, unicode):
+    if isinstance(bytes, str):
         return bytes
 
     for encoding in encodings:
         try:
-            return unicode(bytes, encoding)
-        except (UnicodeDecodeError, LookupError) as e:
+            return str(bytes, encoding)
+        except (UnicodeDecodeError, LookupError) as e:  # noqa: F841
             pass
 
     # None were successful
     if fallback:
-        return unicode(bytes, fallback, 'replace')
+        return str(bytes, fallback, 'replace')
     else:
-        return unicode(bytes, encodings[0], 'replace')
+        return str(bytes, encodings[0], 'replace')
 
 
 def strace(function):
@@ -404,9 +399,22 @@ def strace(function):
 
     def newfunc(*args, **kwargs):
         name = function.__name__
-        print("%s(%s)" % (name, ", ".join(map(repr, chain(args, kwargs.values())))))
+        print(("%s(%s)" % (name, ", ".join(map(repr, chain(args, list(kwargs.values())))))))
         retvalue = function(*args, **kwargs)
-        print("%s(%s): %s" % (name, ", ".join(map(repr, chain(args, kwargs.values()))), repr(retvalue)))
+        print(("%s(%s): %s" % (name, ", ".join(map(repr, chain(args, list(kwargs.values())))), repr(retvalue))))
         return retvalue
 
     return newfunc
+
+
+def cmp(a, b):
+    """Replacement for cmp() which is removed in Python 3"""
+    return (a > b) - (a < b)
+
+
+def debug(*args):
+    """
+    Prints debugging info.
+    TODO: add CLI switch --debug for en-/disabling.
+    """
+    print('*' * 8, *[arg[:200] if isinstance(arg, str) else arg for arg in args])

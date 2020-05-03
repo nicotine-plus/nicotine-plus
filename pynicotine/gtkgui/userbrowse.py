@@ -22,26 +22,38 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from __future__ import division
-
-import gtk
 import os
-import sys
-import gobject
-from userinfo import UserTabs
+from gettext import gettext as _
 
-from utils import InitialiseColumns, PopupMenu, EncodingsMenu, SaveEncoding, Humanize, HumanSize, PressHeader
-from dirchooser import ChooseDir
-from entrydialog import input_box
+import gi
+from gi.repository import Gdk
+from gi.repository import GObject as gobject
+from gi.repository import Gtk as gtk
+
+from _thread import start_new_thread
 from pynicotine import slskmessages
-from thread import start_new_thread
-from pynicotine.utils import displayTraceback, executeCommand, CleanFile
+from pynicotine.gtkgui.dirchooser import ChooseDir
+from pynicotine.gtkgui.entrydialog import input_box
+from pynicotine.gtkgui.utils import EncodingsMenu
+from pynicotine.gtkgui.utils import Humanize
+from pynicotine.gtkgui.utils import HumanSize
+from pynicotine.gtkgui.utils import InitialiseColumns
+from pynicotine.gtkgui.utils import PopupMenu
+from pynicotine.gtkgui.utils import PressHeader
+from pynicotine.gtkgui.utils import SaveEncoding
+from pynicotine.utils import CleanFile
+from pynicotine.utils import displayTraceback
+from pynicotine.utils import executeCommand
+from pynicotine.utils import GetUserDirectories
+
+gi.require_version('Gtk', '3.0')
+gi.require_version('Gdk', '3.0')
 
 
 class UserBrowse:
 
-    def __init__(self, userbrowses, user, conn, data_dir):
-        self.data_dir = data_dir
+    def __init__(self, userbrowses, user, conn):
+        _config_dir, self.data_dir = GetUserDirectories()
 
         # Build the window
         builder = gtk.Builder()
@@ -123,7 +135,7 @@ class UserBrowse:
                 ("#" + _("Get user i_nfo"), menu.OnGetUserInfo),
                 ("#" + _("Gi_ve privileges"), menu.OnGivePrivileges),
                 ("", None),
-                ("$" + _("_Add user to list"),  menu.OnAddToList),
+                ("$" + _("_Add user to list"), menu.OnAddToList),
                 ("$" + _("_Ban this user"), menu.OnBanUser),
                 ("$" + _("_Ignore this user"), menu.OnIgnoreUser)
             )
@@ -200,7 +212,7 @@ class UserBrowse:
         cols[1].set_sort_column_id(4)
         cols[2].set_sort_column_id(2)
         cols[3].set_sort_column_id(5)
-        self.FileStore.set_sort_column_id(0, gtk.SORT_ASCENDING)
+        self.FileStore.set_sort_column_id(0, gtk.SortType.ASCENDING)
 
         for i in range(4):
             parent = cols[i].get_widget().get_ancestor(gtk.Button)
@@ -208,7 +220,7 @@ class UserBrowse:
                 parent.connect('button_press_event', PressHeader)
 
         # Read Show / Hide column settings from last session
-        self.FileTreeView.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
+        self.FileTreeView.get_selection().set_mode(gtk.SelectionMode.MULTIPLE)
         self.FileTreeView.set_headers_clickable(True)
         self.FileTreeView.set_property("rules-hint", True)
 
@@ -238,7 +250,7 @@ class UserBrowse:
 
         self.ChangeColours()
 
-        for name, object in self.__dict__.items():
+        for name, object in list(self.__dict__.items()):
             if type(object) is PopupMenu:
                 object.set_user(self.user)
 
@@ -292,7 +304,7 @@ class UserBrowse:
         self.frame.ChangeListFont(self.FolderTreeView, self.frame.np.config.sections["ui"]["browserfont"])
         self.frame.ChangeListFont(self.FileTreeView, self.frame.np.config.sections["ui"]["browserfont"])
 
-    def CellDataFunc(self, column, cellrenderer, model, iter):
+    def CellDataFunc(self, column, cellrenderer, model, iter, dummy="dummy"):
         colour = self.frame.np.config.sections["ui"]["search"]
         if colour == "":
             colour = None
@@ -320,7 +332,7 @@ class UserBrowse:
 
     def OnFolderClicked(self, widget, event):
 
-        if event.button == 1 and event.type == gtk.gdk._2BUTTON_PRESS:
+        if event.button == 1 and event.type == Gdk.EventType._2BUTTON_PRESS:
             self.OnDownloadDirectory(widget)
             return True
         elif event.button == 3:
@@ -338,7 +350,7 @@ class UserBrowse:
         for item in items[1:]:
             item.set_sensitive(act)
 
-        self.folder_popup_menu.popup(None, None, None, event.button, event.time)
+        self.folder_popup_menu.popup(None, None, None, None, event.button, event.time)
 
     def SelectedFilesCallback(self, model, path, iter):
         rawfilename = self.FileStore.get_value(iter, 6)
@@ -346,7 +358,7 @@ class UserBrowse:
 
     def OnFileClicked(self, widget, event):
 
-        if event.button == 1 and event.type == gtk.gdk._2BUTTON_PRESS:
+        if event.button == 1 and event.type == Gdk.EventType._2BUTTON_PRESS:
             self.selected_files = []
             self.FileTreeView.get_selection().selected_foreach(self.SelectedFilesCallback)
             self.OnDownloadFiles(widget)
@@ -385,7 +397,7 @@ class UserBrowse:
             items[4].set_sensitive(not multiple and files)  # Copy URL
 
         self.FileTreeView.emit_stop_by_name("button_press_event")
-        self.file_popup_menu.popup(None, None, None, event.button, event.time)
+        self.file_popup_menu.popup(None, None, None, None, event.button, event.time)
 
         return True
 
@@ -405,7 +417,7 @@ class UserBrowse:
                 if filedata[2] < 18446744000000000000:
                     self.totalsize += filedata[2]
                 else:
-                    print "Unbelievable filesize: %s, %s" % (HumanSize(filedata[2]), repr(filedata))
+                    print("Unbelievable filesize: %s, %s" % (HumanSize(filedata[2]), repr(filedata)))
 
         self.AmountShared.set_text(_("Shared: %s") % HumanSize(self.totalsize))
         self.NumDirectories.set_text(_("Dirs: %s") % len(self.shares))
@@ -441,7 +453,7 @@ class UserBrowse:
             self.FolderTreeView.set_model(self.DirStore)
 
             # Sort the DirStore
-            self.DirStore.set_sort_column_id(0, gtk.SORT_ASCENDING)
+            self.DirStore.set_sort_column_id(0, gtk.SortType.ASCENDING)
 
             return directory
 
@@ -471,7 +483,7 @@ class UserBrowse:
             """
 
             # Foreach subdir
-            for subdir in dictdir.keys():
+            for subdir in list(dictdir.keys()):
 
                 if parent is None:
                     # The first sudirs are attached to the root (None)
@@ -508,7 +520,7 @@ class UserBrowse:
         directory = sortlist[0]
 
         # Sort the DirStore
-        self.DirStore.set_sort_column_id(0, gtk.SORT_ASCENDING)
+        self.DirStore.set_sort_column_id(0, gtk.SortType.ASCENDING)
 
         # Set the model of the treeviex
         self.FolderTreeView.set_model(self.DirStore)
@@ -560,18 +572,18 @@ class UserBrowse:
                         except ValueError:
                             rl = 0
 
-                        l = "%i:%02i" % (rl / 60, rl % 60)
+                        l = "%i:%02i" % (rl / 60, rl % 60)  # noqa: E741
                         f += [br, l]
                     else:
                         f += ["", ""]
                 else:
                     f += ["", ""]
 
-            f += [long(size), rl, file[1]]
+            f += [int(size), rl, file[1]]
 
             try:
                 self.files[f[0]] = self.FileStore.append(f)
-            except Exception, error:
+            except Exception as error:  # noqa: F841
                 displayTraceback()
 
     def OnSave(self, widget):
@@ -580,17 +592,17 @@ class UserBrowse:
         try:
             if not os.path.exists(sharesdir):
                 os.mkdir(sharesdir)
-        except Exception, msg:
+        except Exception as msg:
             error = _("Can't create directory '%(folder)s', reported error: %(error)s" % {'folder': sharesdir, 'error': msg})
             self.frame.logMessage(error)
 
         try:
-            import cPickle as mypickle
+            import pickle as mypickle
             import bz2
             sharesfile = bz2.BZ2File(os.path.join(sharesdir, CleanFile(self.user)), 'w')
             mypickle.dump(self.shares, sharesfile, mypickle.HIGHEST_PROTOCOL)
             sharesfile.close()
-        except Exception, msg:
+        except Exception as msg:
             error = _("Can't save shares, '%(user)s', reported error: %(error)s" % {'user': self.user, 'error': msg})
             self.frame.logMessage(error)
 
@@ -633,10 +645,10 @@ class UserBrowse:
         if model.sort_col == column_id:
             order = model.sort_order
 
-            if order == gtk.SORT_ASCENDING:
-                order = gtk.SORT_DESCENDING
+            if order == gtk.SortType.ASCENDING:
+                order = gtk.SortType.DESCENDING
             else:
-                order = gtk.SORT_ASCENDING
+                order = gtk.SortType.ASCENDING
 
             column.set_sort_order(order)
             model.sort_order = order
@@ -930,7 +942,7 @@ class UserBrowse:
 
         if self.search_list != []:
 
-            if self.search_position not in range(len(self.search_list)):
+            if self.search_position not in list(range(len(self.search_list))):
                 self.search_position = 0
 
             self.search_list.sort()
@@ -942,13 +954,13 @@ class UserBrowse:
 
             # Get matching files in the current directory
             resultfiles = []
-            for file in self.files.keys():
+            for file in list(self.files.keys()):
                 if query in file.lower():
                     resultfiles.append(file)
 
             sel = self.FileTreeView.get_selection()
             sel.unselect_all()
-            l = 1
+            l = 1  # noqa: E741
             resultfiles.sort()
 
             for fn in resultfiles:
@@ -960,7 +972,7 @@ class UserBrowse:
                 if l:
                     # Position cursor at first match
                     self.FileTreeView.scroll_to_cell(path, None, True, 0.5, 0.5)
-                    l = 0
+                    l = 0  # noqa: E741
         else:
             self.search_position = 0
 

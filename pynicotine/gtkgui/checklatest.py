@@ -19,12 +19,18 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-import gtk
-import urllib
 import json
+import urllib.error
+import urllib.parse
+import urllib.request
+from gettext import gettext as _
+
+import gi
+from gi.repository import Gtk as gtk
 
 from pynicotine.utils import version
+
+gi.require_version('Gtk', '3.0')
 
 
 def makeversion(version):
@@ -52,11 +58,11 @@ def checklatest(frame):
     latesturl = 'https://api.github.com/repos/Nicotine-Plus/nicotine-plus/releases/latest'
 
     try:
-        response = urllib.urlopen(latesturl)
+        response = urllib.request.urlopen(latesturl)
         data = json.loads(response.read())
         response.close()
-        latest = makeversion(data[u'name'])
-    except Exception, m:
+        latest = makeversion(data['name'])
+    except Exception as m:
         dlg = gtk.MessageDialog(
             frame,
             0,

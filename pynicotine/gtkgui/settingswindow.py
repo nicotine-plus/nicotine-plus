@@ -23,18 +23,33 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import gtk
-import gobject
-import gio
-import re
-from dirchooser import *
-from utils import InputDialog, InitialiseColumns, recode, recode2, popupWarning, Humanize, OpenUri, HumanSize
-from entrydialog import input_box
-from pynicotine.upnp import UPnPPortMapping
-from pynicotine.logfacility import log
 import os
+import re
 import sys
-import thread
+from gettext import gettext as _
+
+import gi
+from gi.repository import Gdk
+from gi.repository import Gio as gio
+from gi.repository import GObject as gobject
+from gi.repository import Gtk as gtk
+
+import _thread
+from pynicotine.gtkgui.dirchooser import ChooseDir
+from pynicotine.gtkgui.entrydialog import input_box
+from pynicotine.gtkgui.utils import Humanize
+from pynicotine.gtkgui.utils import HumanSize
+from pynicotine.gtkgui.utils import InitialiseColumns
+from pynicotine.gtkgui.utils import InputDialog
+from pynicotine.gtkgui.utils import OpenUri
+from pynicotine.gtkgui.utils import popupWarning
+from pynicotine.gtkgui.utils import recode
+from pynicotine.gtkgui.utils import recode2
+from pynicotine.logfacility import log
+from pynicotine.upnp import UPnPPortMapping
+
+gi.require_version('Gdk', '3.0')
+
 
 win32 = sys.platform.startswith("win")
 if win32:
@@ -144,7 +159,7 @@ class ServerFrame(buildFrame):
 
         # We need to check if the frame has the upnppossible attribute
         # If UPnP port mapping is wanted, OnFirstConnect has been called
-        # and the attibute is set.
+        # and the attribute is set.
         # Otherwise we need to check if we have the prerequisites for allowing it.
         # The initialization of the UPnPPortMapping object and the check
         # don't generate any unwanted network traffic.
@@ -177,7 +192,7 @@ class ServerFrame(buildFrame):
             server = self.Server.get_text().split(":")
             server[1] = int(server[1])
             server = tuple(server)
-        except:
+        except Exception:
             server = None
 
         if str(self.Login.get_text()) == "None":
@@ -193,7 +208,7 @@ class ServerFrame(buildFrame):
             firstport = min(self.FirstPort.get_value_as_int(), self.LastPort.get_value_as_int())
             lastport = max(self.FirstPort.get_value_as_int(), self.LastPort.get_value_as_int())
             portrange = (firstport, lastport)
-        except:
+        except Exception:
             portrange = None
             popupWarning(
                 self.p.SettingsWindow,
@@ -287,13 +302,13 @@ class DownloadsFrame(buildFrame):
 
         cols[0].set_sort_column_id(0)
         cols[1].set_sort_column_id(1)
-        renderers = cols[1].get_cell_renderers()
+        renderers = cols[1].get_cells()
 
         for render in renderers:
             render.connect('toggled', self.cell_toggle_callback, self.filterlist, 1)
 
         self.FilterView.set_model(self.filterlist)
-        self.FilterView.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
+        self.FilterView.get_selection().set_mode(gtk.SelectionMode.MULTIPLE)
 
         self.DownloadFilters.connect("activate", self.OnExpand)
 
@@ -331,7 +346,7 @@ class DownloadsFrame(buildFrame):
 
         if win32:
             place = "Windows"
-            homedir = "C:\windows"
+            homedir = "C:\\windows"
         else:
             place = "Home"
             homedir = pwd.getpwuid(os.getuid())[5]
@@ -405,7 +420,7 @@ class DownloadsFrame(buildFrame):
             option=True,
             optionvalue=True,
             optionmessage="Escape this filter?",
-            droplist=self.filtersiters.keys()
+            droplist=list(self.filtersiters.keys())
         )
 
         if type(response) is list:
@@ -452,7 +467,7 @@ class DownloadsFrame(buildFrame):
                 option=True,
                 optionvalue=escapedvalue,
                 optionmessage="Escape this filter?",
-                droplist=self.filtersiters.keys()
+                droplist=list(self.filtersiters.keys())
             )
 
             if type(response) is list:
@@ -506,7 +521,7 @@ class DownloadsFrame(buildFrame):
             ["folder.jpg", 1],
             ["*.url", 1],
             ["thumbs.db", 1],
-            ["albumart(_{........-....-....-....-............}_)?(_?(large|small))?\.jpg", 0]
+            ["albumart(_{........-....-....-....-............}_)?(_?(large|small))?\\.jpg", 0]
         ]
 
         for dfilter in default_filters:
@@ -533,13 +548,13 @@ class DownloadsFrame(buildFrame):
 
             if escaped:
                 dfilter = re.escape(dfilter)
-                dfilter = dfilter.replace("\*", ".*")
+                dfilter = dfilter.replace("\\*", ".*")
 
             try:
-                re.compile("("+dfilter+")")
+                re.compile("(" + dfilter + ")")
                 outfilter += dfilter
                 proccessedfilters.append(dfilter)
-            except Exception, e:
+            except Exception as e:
                 failed[dfilter] = e
 
             if filter is not df[-1]:
@@ -550,20 +565,20 @@ class DownloadsFrame(buildFrame):
         try:
             re.compile(outfilter)
 
-        except Exception, e:
+        except Exception as e:
             failed[outfilter] = e
 
-        if len(failed.keys()) >= 1:
+        if len(list(failed.keys())) >= 1:
             errors = ""
 
-            for filter, error in failed.items():
+            for filter, error in list(failed.items()):
                 errors += "Filter: %(filter)s Error: %(error)s " % {
                     'filter': filter,
                     'error': error
                 }
 
             error = _("%(num)d Failed! %(error)s " % {
-                'num': len(failed.keys()),
+                'num': len(list(failed.keys())),
                 'error': errors}
             )
 
@@ -607,11 +622,11 @@ class SharesFrame(buildFrame):
 
         self.bshareddirs = []
 
-        column = gtk.TreeViewColumn(
+        column = gtk.TreeViewColumn(  # noqa: F841
             "Shared dirs", gtk.CellRendererText(), text=0
         )
 
-        columns = InitialiseColumns(
+        columns = InitialiseColumns(  # noqa: F841
             self.Shares,
             [_("Virtual Directory"), 0, "text"],
             [_("Directory"), 0, "text"],
@@ -619,9 +634,9 @@ class SharesFrame(buildFrame):
         )
 
         self.Shares.set_model(self.shareslist)
-        self.Shares.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
+        self.Shares.get_selection().set_mode(gtk.SelectionMode.MULTIPLE)
 
-        bcolumns = InitialiseColumns(
+        bcolumns = InitialiseColumns(  # noqa: F841
             self.BuddyShares,
             [_("Virtual Directory"), 0, "text"],
             [_("Directory"), 0, "text"],
@@ -629,7 +644,7 @@ class SharesFrame(buildFrame):
         )
 
         self.BuddyShares.set_model(self.bshareslist)
-        self.BuddyShares.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
+        self.BuddyShares.get_selection().set_mode(gtk.SelectionMode.MULTIPLE)
 
         self.options = {
             "transfers": {
@@ -664,7 +679,7 @@ class SharesFrame(buildFrame):
                 )
 
                 # Compute the directory size in the background
-                thread.start_new_thread(self.GetDirectorySize, (actual, self.shareslist))
+                _thread.start_new_thread(self.GetDirectorySize, (actual, self.shareslist))
 
             self.shareddirs = transfers["shared"][:]
 
@@ -681,7 +696,7 @@ class SharesFrame(buildFrame):
                 )
 
                 # Compute the directory size in the background
-                thread.start_new_thread(self.GetDirectorySize, (actual, self.shareslist))
+                _thread.start_new_thread(self.GetDirectorySize, (actual, self.shareslist))
 
             self.bshareddirs = transfers["buddyshared"][:]
 
@@ -691,12 +706,12 @@ class SharesFrame(buildFrame):
 
         if win32:
             place = "Windows"
-            homedir = "C:\windows"
+            homedir = "C:\\windows"
         else:
             place = "Home"
             homedir = pwd.getpwuid(os.getuid())[5]
 
-        for share in self.shareddirs+self.bshareddirs:
+        for share in self.shareddirs + self.bshareddirs:
             if homedir == share:
                 popupWarning(
                     self.p.SettingsWindow,
@@ -716,7 +731,7 @@ class SharesFrame(buildFrame):
         # Public shares related menus are deactivated if we only share with friends
         friendsonly = self.FriendsOnly.get_active()
 
-        public_shares_configured = isinstance(self.Shares.get_model().get_iter_first(), gtk.TreeIter)
+        public_shares_configured = isinstance(self.Shares.get_model().get_iter_first(), gtk.TreeIter)  # noqa: F841
 
         self.frame.rescan_public.set_sensitive(not friendsonly)
         self.frame.rebuild_public.set_sensitive(not friendsonly)
@@ -784,7 +799,7 @@ class SharesFrame(buildFrame):
             for directory in dir1:
 
                 # If the directory is already shared
-                if directory in [x[1] for x in self.shareddirs+self.bshareddirs]:
+                if directory in [x[1] for x in self.shareddirs + self.bshareddirs]:
 
                     popupWarning(
                         self.p.SettingsWindow,
@@ -803,7 +818,7 @@ class SharesFrame(buildFrame):
                     )
 
                     # If the virtual share name is not already used
-                    if virtual == '' or virtual is None or virtual in [x[0] for x in self.shareddirs+self.bshareddirs]:
+                    if virtual == '' or virtual is None or virtual in [x[0] for x in self.shareddirs + self.bshareddirs]:
 
                         popupWarning(
                             self.p.SettingsWindow,
@@ -828,7 +843,7 @@ class SharesFrame(buildFrame):
                         self.needrescan = True
 
                         # Compute the directory size in the background
-                        thread.start_new_thread(self.GetDirectorySize, (directory, self.shareslist))
+                        _thread.start_new_thread(self.GetDirectorySize, (directory, self.shareslist))
 
     def OnAddSharedBuddyDir(self, widget):
 
@@ -842,7 +857,7 @@ class SharesFrame(buildFrame):
             for directory in dir1:
 
                 # If the directory is already shared
-                if directory in [x[1] for x in self.shareddirs+self.bshareddirs]:
+                if directory in [x[1] for x in self.shareddirs + self.bshareddirs]:
 
                     popupWarning(
                         self.p.SettingsWindow,
@@ -861,7 +876,7 @@ class SharesFrame(buildFrame):
                     )
 
                     # If the virtual share name is not already used
-                    if virtual == '' or virtual is None or virtual in [x[0] for x in self.shareddirs+self.bshareddirs]:
+                    if virtual == '' or virtual is None or virtual in [x[0] for x in self.shareddirs + self.bshareddirs]:
 
                         popupWarning(
                             self.p.SettingsWindow,
@@ -886,7 +901,7 @@ class SharesFrame(buildFrame):
                         self.needrescan = True
 
                         # Compute the directory size in the background
-                        thread.start_new_thread(self.GetDirectorySize, (directory, self.bshareslist))
+                        _thread.start_new_thread(self.GetDirectorySize, (directory, self.bshareslist))
 
     def _RemoveSharedDir(self, model, path, iter, list):
         list.append(iter)
@@ -976,7 +991,10 @@ class SharesFrame(buildFrame):
         for dirpath, dirnames, filenames in os.walk(directory):
             for f in filenames:
                 fp = os.path.join(dirpath, f)
-                total_size += os.path.getsize(fp)
+                try:
+                    total_size += os.path.getsize(fp)
+                except FileNotFoundError:
+                    pass
 
         gobject.idle_add(
             self._updatedirstats,
@@ -1066,7 +1084,7 @@ class TransfersFrame(buildFrame):
 
         try:
             uploadallowed = self.UploadsAllowed.get_active()
-        except:
+        except Exception:
             uploadallowed = 0
 
         if not self.RemoteDownloads.get_active():
@@ -1133,10 +1151,10 @@ class GeoBlockFrame(buildFrame):
         }
 
         try:
-            import GeoIP
+            import GeoIP  # noqa: F401
         except ImportError:
             try:
-                import _GeoIP
+                import _GeoIP  # noqa: F401
             except ImportError:
                 self.GeoBlock.set_sensitive(False)
                 self.GeoPanic.set_sensitive(False)
@@ -1203,7 +1221,7 @@ class UserinfoFrame(buildFrame):
         start = buffer.get_start_iter()
         end = buffer.get_end_iter()
 
-        descr = buffer.get_text(start, end).replace("; ", ", ").__repr__()
+        descr = buffer.get_text(start, end, True).replace("; ", ", ").__repr__()
 
         if self.Image.get_filename() is not None:
             pic = recode2(self.Image.get_filename())
@@ -1220,8 +1238,8 @@ class UserinfoFrame(buildFrame):
     def GetImageSize(self, widget=None):
 
         if self.Image.get_file().query_exists():
-            size = self.Image.get_file().query_info(gio.FILE_ATTRIBUTE_STANDARD_SIZE).get_size()
-            self.ImageSize.set_text(_("Size: %s KB") % Humanize(size/1024))
+            size = self.Image.get_file().query_info(gio.FILE_ATTRIBUTE_STANDARD_SIZE, gio.FileQueryInfoFlags.NONE, None).get_size()
+            self.ImageSize.set_text(_("Size: %s KB") % Humanize(size / 1024))
         else:
             self.ImageSize.set_text(_("Size: %s KB") % 0)
 
@@ -1245,7 +1263,7 @@ class IgnoreFrame(buildFrame):
         column = gtk.TreeViewColumn(_("Users"), gtk.CellRendererText(), text=0)
         self.IgnoredUsers.append_column(column)
         self.IgnoredUsers.set_model(self.ignorelist)
-        self.IgnoredUsers.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
+        self.IgnoredUsers.get_selection().set_mode(gtk.SelectionMode.MULTIPLE)
 
         self.ignored_ips = {}
         self.ignored_ips_list = gtk.ListStore(str, str)
@@ -1258,11 +1276,11 @@ class IgnoreFrame(buildFrame):
         cols[1].set_sort_column_id(1)
 
         self.IgnoredIPs.set_model(self.ignored_ips_list)
-        self.IgnoredIPs.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
+        self.IgnoredIPs.get_selection().set_mode(gtk.SelectionMode.MULTIPLE)
 
     def SetSettings(self, config):
         server = config["server"]
-        transfers = config["transfers"]
+        transfers = config["transfers"]  # noqa: F841
 
         self.ignorelist.clear()
         self.ignored_ips_list.clear()
@@ -1275,7 +1293,7 @@ class IgnoreFrame(buildFrame):
 
         if server["ipignorelist"] is not None:
             self.ignored_ips = server["ipignorelist"].copy()
-            for ip, user in self.ignored_ips.items():
+            for ip, user in list(self.ignored_ips.items()):
                 self.ignored_ips_list.append([ip, user])
 
     def GetSettings(self):
@@ -1334,7 +1352,7 @@ class IgnoreFrame(buildFrame):
             try:
                 if int(chars) > 255:
                     return
-            except:
+            except Exception:
                 return
 
         if ip not in self.ignored_ips:
@@ -1376,7 +1394,7 @@ class BanFrame(buildFrame):
         column = gtk.TreeViewColumn(_("Users"), gtk.CellRendererText(), text=0)
         self.Banned.append_column(column)
         self.Banned.set_model(self.banlist)
-        self.Banned.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
+        self.Banned.get_selection().set_mode(gtk.SelectionMode.MULTIPLE)
 
         self.blocked = {}
         self.blockedlist = gtk.ListStore(str, str)
@@ -1389,7 +1407,7 @@ class BanFrame(buildFrame):
         cols[1].set_sort_column_id(1)
 
         self.Blocked.set_model(self.blockedlist)
-        self.Blocked.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
+        self.Blocked.get_selection().set_mode(gtk.SelectionMode.MULTIPLE)
 
     def SetSettings(self, config):
         server = config["server"]
@@ -1402,7 +1420,7 @@ class BanFrame(buildFrame):
 
         if server["ipblocklist"] is not None:
             self.blocked = server["ipblocklist"].copy()
-            for blocked, user in server["ipblocklist"].items():
+            for blocked, user in list(server["ipblocklist"].items()):
                 self.blockedlist.append([blocked, user])
 
         if transfers["usecustomban"] is not None:
@@ -1476,7 +1494,7 @@ class BanFrame(buildFrame):
             try:
                 if int(chars) > 255:
                     return
-            except:
+            except Exception:
                 return
 
         if ip not in self.blocked:
@@ -1567,10 +1585,10 @@ class SoundsFrame(buildFrame):
         self.RoomMessage.set_text("In %(room)s, %(user)s said %(message)s")
 
     def DefaultTTS(self, widget):
-        self.TTSCommand.child.set_text("flite -t \"%s\"")
+        self.TTSCommand.get_child().set_text("flite -t \"%s\"")
 
     def DefaultSound(self, widget):
-        self.SoundCommand.child.set_text("play -q")
+        self.SoundCommand.get_child().set_text("play -q")
 
     def OnTextToSpeechToggled(self, widget):
 
@@ -1604,7 +1622,7 @@ class SoundsFrame(buildFrame):
 
     def GetSettings(self):
 
-        soundcommand = self.SoundCommand.child.get_text()
+        soundcommand = self.SoundCommand.get_child().get_text()
 
         if soundcommand == "Gstreamer (gst-python)":
 
@@ -1630,12 +1648,12 @@ class SoundsFrame(buildFrame):
                 "soundtheme": soundtheme,
                 "soundenabled": self.SoundCheck.get_active(),
                 "speechenabled": self.TextToSpeech.get_active(),
-                "speechcommand": self.TTSCommand.child.get_text(),
+                "speechcommand": self.TTSCommand.get_child().get_text(),
                 "speechrooms": self.RoomMessage.get_text(),
                 "speechprivate": self.PrivateMessage.get_text()
             },
             "players": {
-                "default": self.audioPlayerCombo.child.get_text()
+                "default": self.audioPlayerCombo.get_child().get_text()
             },
         }
 
@@ -1867,18 +1885,18 @@ class ColoursFrame(buildFrame):
         self.p.SetWidgetsData(config, self.options)
 
         for option in self.colors:
-            for key, value in self.colorsd.items():
+            for key, value in list(self.colorsd.items()):
 
                 if option in value:
 
                     drawingarea = self.colorsd[key][option]
 
                     try:
-                        colour = gtk.gdk.color_parse(config[key][option])
-                    except:
+                        colour = Gdk.color_parse(config[key][option])
+                    except Exception:
                         colour = None
 
-                    drawingarea.modify_bg(gtk.STATE_NORMAL, colour)
+                    drawingarea.modify_bg(gtk.StateType.NORMAL, colour)
                     break
 
         self.ToggledAwayColours(self.DisplayAwayColours)
@@ -1939,7 +1957,7 @@ class ColoursFrame(buildFrame):
 
         defaults = self.frame.np.config.defaults
 
-        for key, value in self.options.items():
+        for key, value in list(self.options.items()):
             if option in value:
                 widget = self.options[key][option]
                 if type(widget) is gtk.Entry:
@@ -1949,26 +1967,26 @@ class ColoursFrame(buildFrame):
                 elif type(widget) is gtk.CheckButton:
                     widget.set_active(defaults[key][option])
                 elif type(widget) is gtk.ComboBox:
-                    widget.child.set_text(defaults[key][option])
+                    widget.get_child().set_text(defaults[key][option])
 
-        for key, value in self.colorsd.items():
+        for key, value in list(self.colorsd.items()):
 
             if option in value:
 
                 drawingarea = self.colorsd[key][option]
 
                 try:
-                    colour = gtk.gdk.color_parse(defaults[key][option])
-                except:
+                    colour = Gdk.color_parse(defaults[key][option])
+                except Exception:
                     colour = None
 
-                drawingarea.modify_bg(gtk.STATE_NORMAL, colour)
+                drawingarea.modify_bg(gtk.StateFlags.NORMAL, colour)
                 break
 
     def OnClearAllColours(self, widget):
 
         for option in self.colors:
-            for section, value in self.options.items():
+            for section, value in list(self.options.items()):
 
                 if option in value:
 
@@ -1980,12 +1998,12 @@ class ColoursFrame(buildFrame):
                     elif type(widget) is gtk.CheckButton:
                         widget.set_active(0)
                     elif type(widget) is gtk.ComboBox:
-                        widget.child.set_text("")
+                        widget.get_child().set_text("")
 
-            for section, value in self.colorsd.items():
+            for section, value in list(self.colorsd.items()):
                 if option in value:
                     drawingarea = self.colorsd[section][option]
-                    drawingarea.modify_bg(gtk.STATE_NORMAL, None)
+                    drawingarea.modify_bg(gtk.StateFlags.NORMAL, None)
 
     def FontsColorsChanged(self, widget):
         self.needcolors = 1
@@ -2013,40 +2031,40 @@ class ColoursFrame(buildFrame):
 
         if colour is not None and colour != '':
             try:
-                colour = gtk.gdk.color_parse(colour)
-            except:
+                colour = Gdk.color_parse(colour)
+            except Exception:
                 dlg.destroy()
                 return
             else:
                 dlg.colorsel.set_current_color(colour)
 
-        if dlg.run() == gtk.RESPONSE_OK:
+        if dlg.run() == gtk.ResponseType.OK:
 
             colour = dlg.colorsel.get_current_color()
             colourtext = "#%02X%02X%02X" % (colour.red / 256, colour.green / 256, colour.blue / 256)
             entry.set_text(colourtext)
 
-            for section in self.options.keys():
+            for section in list(self.options.keys()):
 
                 if section not in self.colorsd:
                     continue
 
-                for key, value in self.options[section].items():
+                for key, value in list(self.options[section].items()):
 
                     if key not in self.colorsd[section]:
                         continue
 
                     if entry is value:
                         drawingarea = self.colorsd[section][key]
-                        drawingarea.modify_bg(gtk.STATE_NORMAL, colour)
+                        drawingarea.modify_bg(gtk.StateFlags.NORMAL, colour)
                         break
 
         dlg.destroy()
 
     def DefaultColour(self, widget, entry):
 
-        for section in self.options.keys():
-            for key, value in self.options[section].items():
+        for section in list(self.options.keys()):
+            for key, value in list(self.options[section].items()):
                 if value is entry:
                     self.SetDefaultColor(key)
                     return
@@ -2230,9 +2248,9 @@ class BloatFrame(buildFrame):
 
         self.needcolors = 0
 
-        ui = config["ui"]
+        ui = config["ui"]  # noqa: F841
 
-        transfers = config["transfers"]
+        transfers = config["transfers"]  # noqa: F841
 
         self.SpellCheck.set_sensitive(self.frame.SEXY)
 
@@ -2384,7 +2402,7 @@ class SearchFrame(buildFrame):
     def SetSettings(self, config):
         try:
             searches = config["searches"]
-        except:
+        except Exception:
             searches = None
         self.p.SetWidgetsData(config, self.options)
 
@@ -2447,13 +2465,13 @@ class AwayFrame(buildFrame):
         }
 
     def SetSettings(self, config):
-        server = config["server"]
+        server = config["server"]  # noqa: F841
         self.p.SetWidgetsData(config, self.options)
 
     def GetSettings(self):
         try:
             autoaway = self.AutoAway.get_value_as_int()
-        except:
+        except Exception:
             autoaway = None
         return {
             "server": {
@@ -2527,7 +2545,7 @@ class EventsFrame(buildFrame):
                 "upload_doubleclick": self.UploadDoubleClick.get_active()
             },
             "ui": {
-                "filemanager": self.FileManagerCombo.child.get_text()
+                "filemanager": self.FileManagerCombo.get_child().get_text()
             }
         }
 
@@ -2567,7 +2585,7 @@ class UrlCatchFrame(buildFrame):
         self.ProtocolHandlers.set_model(self.protocolmodel)
         self.ProtocolHandlers.get_selection().connect("changed", self.OnSelect)
 
-        renderers = cols[1].get_cell_renderers()
+        renderers = cols[1].get_cells()
         for render in renderers:
             render.connect('edited', self.cell_edited_callback, self.ProtocolHandlers, 1)
 
@@ -2581,14 +2599,14 @@ class UrlCatchFrame(buildFrame):
             "links -g $",
             "dillo $",
             "konqueror $",
-            "\"c:\Program Files\Mozilla Firefox\Firefox.exe\" $"
+            "\"c:\\Program Files\\Mozilla Firefox\\Firefox.exe\" $"
         ]:
             self.handlermodel.append([item])
 
         self.Handler.set_model(self.handlermodel)
         self.Handler.set_entry_text_column(0)
 
-        renderers = cols[1].get_cell_renderers()
+        renderers = cols[1].get_cells()
         for render in renderers:
             render.set_property("model", self.handlermodel)
 
@@ -2614,7 +2632,7 @@ class UrlCatchFrame(buildFrame):
 
         if urls["protocols"] is not None:
 
-            for key in urls["protocols"].keys():
+            for key in list(urls["protocols"].keys()):
                 if urls["protocols"][key][-1:] == "&":
                     command = urls["protocols"][key][:-1].rstrip()
                 else:
@@ -2627,7 +2645,7 @@ class UrlCatchFrame(buildFrame):
         selection = self.ProtocolHandlers.get_selection()
         selection.unselect_all()
 
-        for key, iter in self.protocols.items():
+        for key, iter in list(self.protocols.items()):
             if iter is not None:
                 selection.select_iter(iter)
                 break
@@ -2643,7 +2661,7 @@ class UrlCatchFrame(buildFrame):
                 handler = self.protocolmodel.get_value(iter, 1)
                 protocols[protocol] = handler
                 iter = self.protocolmodel.iter_next(iter)
-        except:
+        except Exception:
             pass
 
         return {
@@ -2671,17 +2689,17 @@ class UrlCatchFrame(buildFrame):
         model, iter = selection.get_selected()
 
         if iter is None:
-            self.ProtocolCombo.child.set_text("")
+            self.ProtocolCombo.get_child().set_text("")
         else:
             protocol = model.get_value(iter, 0)
             handler = model.get_value(iter, 1)
-            self.ProtocolCombo.child.set_text(protocol)
-            self.Handler.child.set_text(handler)
+            self.ProtocolCombo.get_child().set_text(protocol)
+            self.Handler.get_child().set_text(handler)
 
     def OnAdd(self, widget):
 
-        protocol = self.ProtocolCombo.child.get_text()
-        command = self.Handler.child.get_text()
+        protocol = self.ProtocolCombo.get_child().get_text()
+        command = self.Handler.get_child().get_text()
 
         if protocol in self.protocols:
             iter = self.protocols[protocol]
@@ -2740,7 +2758,7 @@ class CensorFrame(buildFrame):
         self.CensorReplaceCombo.pack_start(cell, True)
         self.CensorReplaceCombo.add_attribute(cell, 'text', 0)
 
-        renderers = cols[0].get_cell_renderers()
+        renderers = cols[0].get_cells()
         for render in renderers:
             render.connect('edited', self.cell_edited_callback, self.CensorList, 0)
 
@@ -2760,7 +2778,7 @@ class CensorFrame(buildFrame):
 
         self.p.SetWidgetsData(config, self.options)
 
-        words = config["words"]
+        words = config["words"]  # noqa: F841
 
         self.OnCensorCheck(self.CensorCheck)
 
@@ -2784,7 +2802,7 @@ class CensorFrame(buildFrame):
                 word = self.censorlist.get_value(iter, 0)
                 censored.append(word)
                 iter = self.censorlist.iter_next(iter)
-        except:
+        except Exception:
             pass
 
         return {
@@ -2847,7 +2865,7 @@ class AutoReplaceFrame(buildFrame):
         self.ReplacementList.set_model(self.replacelist)
 
         for column in cols:
-            renderers = column.get_cell_renderers()
+            renderers = column.get_cells()
             for render in renderers:
                 render.connect('edited', self.cell_edited_callback, self.ReplacementList, cols.index(column))
 
@@ -2869,7 +2887,7 @@ class AutoReplaceFrame(buildFrame):
         self.p.SetWidgetsData(config, self.options)
         words = config["words"]
         if words["autoreplaced"] is not None:
-            for word, replacement in words["autoreplaced"].items():
+            for word, replacement in list(words["autoreplaced"].items()):
                 self.replacelist.append([word, replacement])
 
         self.OnReplaceCheck(self.ReplaceCheck)
@@ -2891,7 +2909,7 @@ class AutoReplaceFrame(buildFrame):
                 replacement = self.replacelist.get_value(iter, 1)
                 autoreplaced[word] = replacement
                 iter = self.replacelist.iter_next(iter)
-        except:
+        except Exception:
             autoreplaced.clear()
 
         return {
@@ -2932,7 +2950,7 @@ class AutoReplaceFrame(buildFrame):
             "tihs": "this"
         }
 
-        for word, replacement in defaults.items():
+        for word, replacement in list(defaults.items()):
             self.replacelist.append([word, replacement])
 
 
@@ -2969,7 +2987,7 @@ class CompletionFrame(buildFrame):
         self.CompleteRoomNamesCheck.connect("toggled", self.OnCompletionChanged)
 
     def SetSettings(self, config):
-        completion = config["words"]
+        completion = config["words"]  # noqa: F841
         self.needcompletion = 0
         self.p.SetWidgetsData(config, self.options)
 
@@ -3053,34 +3071,34 @@ class buildDialog(gtk.Dialog):
 
         self.tw["box%d" % c] = gtk.VBox(False, 5)
 
-        self.tw[name+"SW"] = gtk.ScrolledWindow()
-        self.tw[name+"SW"].set_shadow_type(gtk.SHADOW_IN)
-        self.tw[name+"SW"].set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+        self.tw[name + "SW"] = gtk.ScrolledWindow()
+        self.tw[name + "SW"].set_shadow_type(gtk.SHADOW_IN)
+        self.tw[name + "SW"].set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
 
         self.tw[name] = gtk.TreeView()
         self.tw[name].set_model(gtk.ListStore(gobject.TYPE_STRING))
-        self.tw[name+"SW"].add(self.tw[name])
+        self.tw[name + "SW"].add(self.tw[name])
 
-        self.tw["box%d" % c].pack_start(self.tw[name+"SW"], True, 5)
+        self.tw["box%d" % c].pack_start(self.tw[name + "SW"], True, True, 5)
 
         cols = InitialiseColumns(self.tw[name], [description, 150, "edit"])
 
         try:
             self.settings.SetWidget(self.tw[name], value)
-        except:
+        except Exception:
             pass
 
         self.addButton = gtk.Button(_("Add"), gtk.STOCK_ADD)
         self.removeButton = gtk.Button(_("Remove"), gtk.STOCK_REMOVE)
 
         self.tw["vbox%d" % c] = gtk.HBox(False, 5)
-        self.tw["vbox%d" % c].pack_start(self.addButton, False, False)
-        self.tw["vbox%d" % c].pack_start(self.removeButton, False, False)
+        self.tw["vbox%d" % c].pack_start(self.addButton, False, False, 0)
+        self.tw["vbox%d" % c].pack_start(self.removeButton, False, False, 0)
 
-        self.Main.pack_start(self.tw["box%d" % c], True, True)
-        self.Main.pack_start(self.tw["vbox%d" % c], False, False)
+        self.Main.pack_start(self.tw["box%d" % c], True, True, 0)
+        self.Main.pack_start(self.tw["vbox%d" % c], False, False, 0)
 
-        renderers = cols[0].get_cell_renderers()
+        renderers = cols[0].get_cells()
         for render in renderers:
             render.connect('edited', self.cell_edited_callback, self.tw[name])
 
@@ -3120,12 +3138,12 @@ class buildDialog(gtk.Dialog):
 
         c = 0
 
-        for name, data in options.items():
+        for name, data in list(options.items()):
             if plugin not in self.settings.frame.np.config.sections["plugins"] or name not in self.settings.frame.np.config.sections["plugins"][plugin]:
                 if plugin not in self.settings.frame.np.config.sections["plugins"]:
-                    print "No1 " + plugin + ", " + repr(self.settings.frame.np.config.sections["plugins"].keys())
+                    print("No1 " + plugin + ", " + repr(list(self.settings.frame.np.config.sections["plugins"].keys())))
                 elif name not in self.settings.frame.np.config.sections["plugins"][plugin]:
-                    print "No2 " + name + ", " + repr(self.settings.frame.np.config.sections["plugins"][plugin].keys())
+                    print("No2 " + name + ", " + repr(list(self.settings.frame.np.config.sections["plugins"][plugin].keys())))
                 continue
 
             # We currently support SpinButtons, TreeView (one per plugin) and Checkboxes.
@@ -3139,34 +3157,34 @@ class buildDialog(gtk.Dialog):
             if data["type"] in ("integer", "int"):
                 self.tw["box%d" % c] = gtk.HBox(False, 5)
                 self.tw["label%d" % c] = self.GenerateLabel(data["description"])
-                self.tw["box%d" % c].pack_start(self.tw["label%d" % c], False, False)
+                self.tw["box%d" % c].pack_start(self.tw["label%d" % c], False, False, 0)
 
                 self.tw[name] = gtk.SpinButton(gtk.Adjustment(0, 0, 99999, 1, 10, 0))
                 self.settings.SetWidget(self.tw[name], self.settings.frame.np.config.sections["plugins"][plugin][name])
-                self.tw["box%d" % c].pack_start(self.tw[name], False, False)
-                self.Main.pack_start(self.tw["box%d" % c], False, False)
+                self.tw["box%d" % c].pack_start(self.tw[name], False, False, 0)
+                self.Main.pack_start(self.tw["box%d" % c], False, False, 0)
             elif data["type"] in ("bool",):
                 self.tw["box%d" % c] = gtk.HBox(False, 5)
                 self.tw["label%d" % c] = self.GenerateLabel(data["description"])
-                self.tw["box%d" % c].pack_start(self.tw["label%d" % c], False, False)
+                self.tw["box%d" % c].pack_start(self.tw["label%d" % c], False, False, 0)
 
                 self.tw[name] = gtk.CheckButton()
                 self.settings.SetWidget(self.tw[name], self.settings.frame.np.config.sections["plugins"][plugin][name])
-                self.tw["box%d" % c].pack_start(self.tw[name], False, False)
-                self.Main.pack_start(self.tw["box%d" % c], False, False)
+                self.tw["box%d" % c].pack_start(self.tw[name], False, False, 0)
+                self.Main.pack_start(self.tw["box%d" % c], False, False, 0)
             elif data['type'] in ('str', 'string', 'file'):
                 self.tw["box%d" % c] = gtk.HBox(False, 5)
                 self.tw["label%d" % c] = self.GenerateLabel(data["description"])
-                self.tw["box%d" % c].pack_start(self.tw["label%d" % c], False, False)
+                self.tw["box%d" % c].pack_start(self.tw["label%d" % c], False, False, 0)
 
                 self.tw[name] = gtk.Entry()
                 self.settings.SetWidget(self.tw[name], self.settings.frame.np.config.sections["plugins"][plugin][name])
-                self.tw["box%d" % c].pack_start(self.tw[name], False, False)
-                self.Main.pack_start(self.tw["box%d" % c], False, False)
+                self.tw["box%d" % c].pack_start(self.tw[name], False, False, 0)
+                self.Main.pack_start(self.tw["box%d" % c], False, False, 0)
             elif data["type"] in ("list string",):
                 self.GenerateTreeView(name, data["description"], value, c)
             else:
-                print "Unknown setting type '%s', data '%s'" % (name, data)
+                print("Unknown setting type '%s', data '%s'" % (name, data))
 
             c += 1
 
@@ -3219,7 +3237,7 @@ class PluginFrame(buildFrame):
         cols[0].set_sort_column_id(0)
         cols[1].set_sort_column_id(1)
 
-        renderers = cols[1].get_cell_renderers()
+        renderers = cols[1].get_cells()
         for render in renderers:
             render.connect('toggled', self.cell_toggle_callback, self.PluginTreeView, 1)
 
@@ -3303,9 +3321,9 @@ class PluginFrame(buildFrame):
         return {
             "plugins": {
                 "enable": self.PluginsEnable.get_active(),
-                "enabled": self.frame.pluginhandler.enabled_plugins.keys()
+                "enabled": list(self.frame.pluginhandler.enabled_plugins.keys())
             }
-         }
+         }  # noqa: E121
 
 
 class ChatFrame(buildFrame):
@@ -3471,11 +3489,11 @@ class SettingsWindow:
 
     def UpdateColours(self):
 
-        for widget in self.__dict__.values():
+        for widget in list(self.__dict__.values()):
             self.ColourWidgets(widget)
 
-        for name, page in self.pages.items():
-            for widget in page.__dict__.values():
+        for name, page in list(self.pages.items()):
+            for widget in list(page.__dict__.values()):
                 self.ColourWidgets(widget)
 
     def SetTextBG(self, widget, bgcolor="", fgcolor=""):
@@ -3530,7 +3548,7 @@ class SettingsWindow:
     def OnKeyPress(self, widget, event):
 
         # Close the window when escape is pressed
-        if event.keyval == gtk.keysyms.Escape:
+        if event.keyval == Gdk.KEY_Escape:
             self.OnCancel(widget)
 
     def GetPosition(self, combobox, option):
@@ -3543,7 +3561,7 @@ class SettingsWindow:
             iter = combobox.get_model().iter_next(iter)
 
     def SetWidgetsData(self, config, options):
-        for section, keys in options.items():
+        for section, keys in list(options.items()):
             if section not in config:
                 continue
             for key in keys:
@@ -3616,14 +3634,14 @@ class SettingsWindow:
                 widget.get_model().append([item])
 
     def InvalidSettings(self, domain, key):
-        for name, page in self.pages.items():
+        for name, page in list(self.pages.items()):
             if domain in page.options:
                 if key in page.options[domain]:
                     self.SwitchToPage(name)
                     break
 
     def SetSettings(self, config):
-        for page in self.pages.values():
+        for page in list(self.pages.values()):
             page.SetSettings(config)
 
     def GetSettings(self):
@@ -3643,11 +3661,11 @@ class SettingsWindow:
                 "plugins": {}
             }
 
-            for page in self.pages.values():
+            for page in list(self.pages.values()):
                 sub = page.GetSettings()
-                for (key, data) in sub.items():
+                for (key, data) in list(sub.items()):
                     config[key].update(data)
 
             return self.pages["Shares"].GetNeedRescan(), (self.pages["Colours"].needcolors or self.pages["Interface"].needcolors), self.pages["Completion"].needcompletion, config
-        except UserWarning, warning:
+        except UserWarning as warning:  # noqa: F841
             return None

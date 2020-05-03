@@ -21,20 +21,29 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Python core
-import tempfile
 import os
+import tempfile
 import time
+from gettext import gettext as _
 
-# Python modules
-import gtk
-import gobject
+import gi
+from gi.repository import Gdk
+from gi.repository import GdkPixbuf
+from gi.repository import GObject as gobject
+from gi.repository import Gtk as gtk
 
-# Application specific
-from utils import IconNotebook, PopupMenu, EncodingsMenu, SaveEncoding,  Humanize, InitialiseColumns, AppendLine
 from pynicotine import slskmessages
-from pynicotine.utils import CleanFile
+from pynicotine.gtkgui.utils import AppendLine
+from pynicotine.gtkgui.utils import EncodingsMenu
+from pynicotine.gtkgui.utils import Humanize
+from pynicotine.gtkgui.utils import IconNotebook
+from pynicotine.gtkgui.utils import InitialiseColumns
+from pynicotine.gtkgui.utils import PopupMenu
+from pynicotine.gtkgui.utils import SaveEncoding
 from pynicotine.logfacility import log
+from pynicotine.utils import CleanFile
+
+gi.require_version('Gtk', '3.0')
 
 
 # User Info and User Browse Notebooks
@@ -128,13 +137,13 @@ class UserTabs(IconNotebook):
 
     def UpdateGauge(self, msg):
 
-        for i in self.users.values():
+        for i in list(self.users.values()):
             if i.conn == msg.conn.conn:
                 i.UpdateGauge(msg)
 
     def UpdateColours(self):
 
-        for i in self.users.values():
+        for i in list(self.users.values()):
             i.ChangeColours()
 
     def TabPopup(self, user):
@@ -167,11 +176,11 @@ class UserTabs(IconNotebook):
 
     def on_tab_click(self, widget, event, child):
 
-        if event.type == gtk.gdk.BUTTON_PRESS:
+        if event.type == Gdk.EventType.BUTTON_PRESS:
 
             n = self.page_num(child)
             page = self.get_nth_page(n)
-            username = [user for user, tab in self.users.items() if tab.Main is page][0]
+            username = [user for user, tab in list(self.users.items()) if tab.Main is page][0]
 
             if event.button == 2:
                 self.users[username].OnClose(widget)
@@ -179,7 +188,7 @@ class UserTabs(IconNotebook):
 
             if event.button == 3:
                 menu = self.TabPopup(username)
-                menu.popup(None, None, None, event.button, event.time)
+                menu.popup(None, None, None, None, event.button, event.time)
                 return True
 
             return False
@@ -236,13 +245,13 @@ class UserInfo:
         self.Hates.set_model(self.hatesStore)
         cols = InitialiseColumns(self.Hates, [_("Hates"), 0, "text", self.CellDataFunc])
         cols[0].set_sort_column_id(0)
-        self.hatesStore.set_sort_column_id(0, gtk.SORT_ASCENDING)
+        self.hatesStore.set_sort_column_id(0, gtk.SortType.ASCENDING)
 
         self.likesStore = gtk.ListStore(gobject.TYPE_STRING)
         self.Likes.set_model(self.likesStore)
         cols = InitialiseColumns(self.Likes, [_("Likes"), 0, "text", self.CellDataFunc])
         cols[0].set_sort_column_id(0)
-        self.likesStore.set_sort_column_id(0, gtk.SORT_ASCENDING)
+        self.likesStore.set_sort_column_id(0, gtk.SortType.ASCENDING)
 
         # Encoding Combobox
         self.Elist = {}
@@ -263,7 +272,7 @@ class UserInfo:
             if self.encoding == item[1]:
                 self.Encoding.set_active_iter(self.Elist[self.encoding])
 
-        self.tag_local = self.makecolour(buffer, "chatremote")
+        self.tag_local = self.makecolour("chatremote")  # noqa: F821
         self.ChangeColours()
 
         self.InterestsExpander.connect("activate", self.ExpanderStatus)
@@ -317,7 +326,7 @@ class UserInfo:
         items[0].set_active(thing in self.frame.np.config.sections["interests"]["likes"])
         items[1].set_active(thing in self.frame.np.config.sections["interests"]["dislikes"])
 
-        self.likes_popup_menu.popup(None, None, None, event.button, event.time)
+        self.likes_popup_menu.popup(None, None, None, None, event.button, event.time)
 
     def OnPopupHatesMenu(self, widget, event):
 
@@ -339,7 +348,7 @@ class UserInfo:
         items[0].set_active(thing in self.frame.np.config.sections["interests"]["likes"])
         items[1].set_active(thing in self.frame.np.config.sections["interests"]["dislikes"])
 
-        self.hates_popup_menu.popup(None, None, None, event.button, event.time)
+        self.hates_popup_menu.popup(None, None, None, None, event.button, event.time)
 
     def ConnClose(self):
         pass
@@ -356,7 +365,7 @@ class UserInfo:
             }
         )
 
-    def CellDataFunc(self, column, cellrenderer, model, iter):
+    def CellDataFunc(self, column, cellrenderer, model, iter, dummy="dummy"):
 
         colour = self.frame.np.config.sections["ui"]["search"]
         if colour == "":
@@ -371,7 +380,7 @@ class UserInfo:
         else:
             self.InfoVbox.set_child_packing(widget, True, True, 0, 0)
 
-    def makecolour(self, buffer, colour):
+    def makecolour(self, colour):
 
         buffer = self.descr.get_buffer()
         colour = self.frame.np.config.sections["ui"][colour]
@@ -457,7 +466,7 @@ class UserInfo:
         if has_pic and pic is not None:
             try:
                 import gc
-                loader = gtk.gdk.PixbufLoader()
+                loader = GdkPixbuf.PixbufLoader()
                 loader.write(pic)
                 loader.close()
                 self.image_pixbuf = loader.get_pixbuf()
@@ -466,14 +475,14 @@ class UserInfo:
                 gc.collect()
                 self.actual_zoom = 0
                 self.SavePicture.set_sensitive(True)
-            except TypeError, e:
+            except TypeError as e:  # noqa: F841
                 name = tempfile.mktemp()
                 f = open(name, "w")
                 f.write(pic)
                 f.close()
                 self.image.set_from_file(name)
                 os.remove(name)
-            except Exception, e:
+            except Exception as e:  # noqa: F841
                 self.image.set_from_pixbuf(None)
                 self.SavePicture.set_sensitive(False)
         else:
@@ -556,7 +565,7 @@ class UserInfo:
 
     def OnImageClick(self, widget, event):
 
-        if event.type != gtk.gdk.BUTTON_PRESS or event.button != 3:
+        if event.type != Gdk.EventType.BUTTON_PRESS or event.button != 3:
             return False
 
         act = True
@@ -568,13 +577,13 @@ class UserInfo:
         for item in items:
             item.set_sensitive(act)
 
-        self.image_menu.popup(None, None, None, event.button, event.time)
+        self.image_menu.popup(None, None, None, None, event.button, event.time)
 
         return True  # Don't scroll the gtk.ScrolledWindow
 
     def OnScrollEvent(self, widget, event):
 
-        if event.direction == gtk.gdk.SCROLL_UP:
+        if event.direction == Gdk.SCROLL_UP:
             self.MakeZoomIn()
         else:
             self.MakeZoomOut()
@@ -602,7 +611,7 @@ class UserInfo:
         else:
             self.actual_zoom += self.zoom_factor
 
-        pixbuf_zoomed = self.image_pixbuf.scale_simple(CalcZoomIn(x), CalcZoomIn(y), gtk.gdk.INTERP_TILES)
+        pixbuf_zoomed = self.image_pixbuf.scale_simple(CalcZoomIn(x), CalcZoomIn(y), Gdk.INTERP_TILES)
         self.image.set_from_pixbuf(pixbuf_zoomed)
 
         del pixbuf_zoomed
@@ -628,7 +637,7 @@ class UserInfo:
             self.actual_zoom += self.zoom_factor
             return
 
-        pixbuf_zoomed = self.image_pixbuf.scale_simple(CalcZoomOut(x), CalcZoomOut(y), gtk.gdk.INTERP_TILES)
+        pixbuf_zoomed = self.image_pixbuf.scale_simple(CalcZoomOut(x), CalcZoomOut(y), Gdk.INTERP_TILES)
         self.image.set_from_pixbuf(pixbuf_zoomed)
 
         del pixbuf_zoomed

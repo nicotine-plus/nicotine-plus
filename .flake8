@@ -1,0 +1,4 @@
+[flake8]
+builtins = _
+max-line-length: 120
+ignore = E402, W605

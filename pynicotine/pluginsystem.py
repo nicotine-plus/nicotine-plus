@@ -21,20 +21,31 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
-import sys
-import gtk
-import gobject
-import zipimport
 import imp
-from thread import start_new_thread
-from traceback import extract_stack, extract_tb, format_list, print_exc
+import os
+import shutil
+import sys
+import tarfile
+from gettext import gettext as _
 from time import time
-from pynicotine import slskmessages
-from slskmessages import ToBeEncoded
-from logfacility import log
+from traceback import extract_stack
+from traceback import extract_tb
+from traceback import format_list
+from traceback import print_exc
+
+import gi
+from gi.repository import GObject as gobject
+
+from _thread import start_new_thread
+from pynicotine.logfacility import log
+from pynicotine.pynicotine import slskmessages
+from pynicotine.slskmessages import ToBeEncoded
+
+gi.require_version('Gtk', '3.0')
+
 
 WIN32 = sys.platform.startswith("win")
+
 
 returncode = {
     'break': 0,  # don't give other plugins the event, do let n+ process it
@@ -46,7 +57,7 @@ tupletype = type(('', ''))
 
 
 def cast_to_unicode_if_needed(text, logfunc):
-    if isinstance(text, unicode):
+    if isinstance(text, str):
         return text
     try:
         better = str.decode(text, 'utf8')
@@ -56,9 +67,13 @@ def cast_to_unicode_if_needed(text, logfunc):
         better = str.decode(text, 'utf8', 'replace')
         logfunc("Plugin problem: casting '%s' to unicode, losing characters in the process." % repr(text))
         return better
-    except:
+    except Exception:
         logfunc("Plugin problem: failed to completely cast '%s', you're on your own from here on." % repr(text))
         return text
+
+
+class InvalidPluginError(Exception):
+    pass
 
 
 class PluginHandler(object):
@@ -83,7 +98,7 @@ class PluginHandler(object):
 
         try:
             os.makedirs(plugindir)
-        except:
+        except Exception:
             pass
 
         self.plugindirs.append(plugindir)
@@ -149,7 +164,7 @@ class PluginHandler(object):
             try:
                 shutil.rmtree(self.__findplugin(pluginname))
                 return True
-            except:
+            except Exception:
                 pass
         return False
 
@@ -163,7 +178,7 @@ class PluginHandler(object):
             plugin.enable(self)
             self.enabled_plugins[pluginname] = plugin
             log.add(_("Enabled plugin %s") % plugin.PLUGIN.__name__)
-        except:
+        except Exception:
             print_exc()
             log.addwarning(_("Unable to enable plugin %s") % pluginname)
             # common.log_exception(logger)
@@ -187,7 +202,7 @@ class PluginHandler(object):
             log.add(_("Disabled plugin {}".format(plugin.PLUGIN.__name__)))
             del self.enabled_plugins[pluginname]
             plugin.disable(self)
-        except:
+        except Exception:
             print_exc()
             log.addwarning(_("Unable to fully disable plugin %s") % pluginname)
             # common.log_exception(logger)
@@ -219,7 +234,7 @@ class PluginHandler(object):
         if self.frame.np.config.sections["plugins"]["enable"]:
             self.load_enabled()
         else:
-            to_enable = self.frame.np.config.sections["plugins"]["enabled"]
+            to_enable = self.frame.np.config.sections["plugins"]["enabled"]  # noqa: F841
             for plugin in self.enabled_plugins:
                 self.enabled_plugins[plugin].disable(self)
 
@@ -272,14 +287,14 @@ class PluginHandler(object):
                         pass
                     else:
                         log.add(_("Plugin %(module)s returned something weird, '%(value)s', ignoring") % {'module': module, 'value': str(ret)})
-            except:
+            except Exception:
                 log.add(_("Plugin %(module)s failed with error %(errortype)s: %(error)s.\nTrace: %(trace)s\nProblem area:%(area)s") % {
-                            'module': module,
-                            'errortype': sys.exc_info()[0],
-                            'error': sys.exc_info()[1],
-                            'trace': ''.join(format_list(extract_stack())),
-                            'area': ''.join(format_list(extract_tb(sys.exc_info()[2])))
-                        })
+                    'module': module,
+                    'errortype': sys.exc_info()[0],
+                    'error': sys.exc_info()[1],
+                    'trace': ''.join(format_list(extract_stack())),
+                    'area': ''.join(format_list(extract_tb(sys.exc_info()[2])))
+                })
         return False
 
     def TriggerEvent(self, function, args):
@@ -302,14 +317,14 @@ class PluginHandler(object):
                         log.add(_("Plugin %(module)s returned something weird, '%(value)s', ignoring") % {'module': module, 'value': ret})
                 if ret is not None:
                     hotpotato = ret
-            except:
+            except Exception:
                 log.add(_("Plugin %(module)s failed with error %(errortype)s: %(error)s.\nTrace: %(trace)s\nProblem area:%(area)s") % {
-                            'module': module,
-                            'errortype': sys.exc_info()[0],
-                            'error': sys.exc_info()[1],
-                            'trace': ''.join(format_list(extract_stack())),
-                            'area': ''.join(format_list(extract_tb(sys.exc_info()[2])))
-                        })
+                    'module': module,
+                    'errortype': sys.exc_info()[0],
+                    'error': sys.exc_info()[1],
+                    'trace': ''.join(format_list(extract_stack())),
+                    'area': ''.join(format_list(extract_tb(sys.exc_info()[2])))
+                })
         return hotpotato
 
     def SearchRequestNotification(self, searchterm, user, searchid):
@@ -456,9 +471,9 @@ class BasePlugin(object):
             self.__id__ = self.__name__.lower().replace(' ', '_').replace('%', '_').replace('=', '_')
         self.init()
         for (trigger, func) in self.__publiccommands__:
-            self.frame.chatrooms.roomsctrl.CMDS.add('/'+trigger+' ')
+            self.frame.chatrooms.roomsctrl.CMDS.add('/' + trigger + ' ')
         for (trigger, func) in self.__privatecommands__:
-            self.frame.privatechats.CMDS.add('/'+trigger+' ')
+            self.frame.privatechats.CMDS.add('/' + trigger + ' ')
 
     def init(self):
         pass
@@ -599,7 +614,7 @@ class ResponseThrottle(object):
         self.room = room
         self.nick = nick
         self.request = request
-        
+
         willing_to_respond = True
         current_time = time()
 
@@ -613,7 +628,7 @@ class ResponseThrottle(object):
         port = False
         try:
             ip, port = self.frame.np.users[nick].addr
-        except:
+        except Exception:
             port = True
 
         if nick in self.frame.np.config.sections["server"]["ignorelist"]:

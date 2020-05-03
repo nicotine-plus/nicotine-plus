@@ -37,7 +37,7 @@ VERSION_UPSTREAM_DISTUTILS = $(shell sed -n 's/^version\s*=\s*"\(\S*\)"$$/\1/p' 
 
 # Catch all debhelper rule...
 %:
-	dh $@ --with python2 --buildsystem=pybuild
+	dh $@ --with python3 --buildsystem=pybuild
 
 # Prepare an upstream vanilla distribution tarball as per DPM § 4.9...
 #  http://wiki.debian.org/onlyjob/get-orig-source

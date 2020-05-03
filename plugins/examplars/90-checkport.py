@@ -1,13 +1,15 @@
-# -*- coding: utf-8 -*-
-
 import socket
 
-from pynicotine.pluginsystem import BasePlugin, returncode
 from pynicotine import slskmessages
+from pynicotine.pluginsystem import BasePlugin
+from pynicotine.pluginsystem import returncode
+
 
 def enable(plugins):
     global PLUGIN
     PLUGIN = Plugin(plugins)
+
+
 def disable(plugins):
     global PLUGIN
     PLUGIN = None
@@ -18,9 +20,11 @@ class Plugin(BasePlugin):
     __version__ = "2008-11-26r00"
     __author__ = "quinox"
     __desc__ = """By examining chatroom messages this plugin tries to find people that have a potential firewall/router problem, and if found tests their port. If a closed port is encountered a message will be sent to him/her."""
+
     def init(self):
-        self.checked = {} # keys are users, value of 1 means pending requested scan, 2 means pending unrequested scan and 3 means the user was scanned
+        self.checked = {}  # keys are users, value of 1 means pending requested scan, 2 means pending unrequested scan and 3 means the user was scanned
         self.checkroom = 'nicotine'
+
     def IncomingPublicChatNotification(self, room, user, line):
         if room != self.checkroom:
             return
@@ -37,6 +41,7 @@ class Plugin(BasePlugin):
                 self.resolve(user)
             else:
                 self.log("%s seems to have trouble, but we already performed a port scan" % (user,))
+
     def UserResolveNotification(self, user, ip, port, country):
         if user in self.checked:
             status = self.checkport(ip, port)
@@ -53,6 +58,7 @@ class Plugin(BasePlugin):
                 else:
                     self.log("%s: Unknown port status on %s:%s" % (user, ip, port))
             self.checked[user] = 3
+
     def MyPublicCommand(self, room, args):
         if args:
             self.checked[args] = 1
@@ -60,8 +66,10 @@ class Plugin(BasePlugin):
             return returncode['zap']
         else:
             self.log("Provide a user name as parameter.")
+
     def resolve(self, user):
         self.parent.frame.np.queue.put(slskmessages.GetPeerAddress(user))
+
     def checkport(self, ip, port):
         if ip in ('0.0.0.0',) or port in ('0',):
             return 'unknown'
@@ -72,8 +80,9 @@ class Plugin(BasePlugin):
             s.connect((ip, port))
             self.log("%s:%s: Port is open." % (ip, port))
             return 'open'
-        except socket.error, inst:
+        except socket.error as inst:  # noqa: F841
             self.log("%s:%s: Port is closed." % (ip, port))
             return 'closed'
         s.close()
+
     __publiccommands__ = [('port', MyPublicCommand)]

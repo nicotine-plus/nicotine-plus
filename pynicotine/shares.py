@@ -21,22 +21,46 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# System imports
-import dircache
-import gobject
+import os
 import string
 import sys
-import os
 import time
-import struct
+from gettext import gettext as _
 
-import slskmessages
-from slskmessages import NetworkIntType, NetworkLongLongType
-from logfacility import log
-from utils import displayTraceback
-import metadata_mutagen as metadata
+import gi
+from gi.repository import GObject as gobject
+
+from pynicotine import metadata_mutagen as metadata
+from pynicotine import slskmessages
+from pynicotine.logfacility import log
+from pynicotine.slskmessages import NetworkIntType
+from pynicotine.slskmessages import NetworkLongLongType
+from pynicotine.utils import displayTraceback
+
+gi.require_version('Gtk', '3.0')
+
 
 win32 = sys.platform.startswith("win")
+
+
+class dircache:
+    """Adapted from https://raw.githubusercontent.com/python/cpython/2.7/Lib/dircache.py"""
+
+    cache = {}
+
+    @classmethod
+    def listdir(cls, path):
+        try:
+            cached_mtime, dir_list = cls.cache[path]
+            del cls.cache[path]
+        except KeyError:
+            cached_mtime, dir_list = -1, []
+        mtime = os.stat(path).st_mtime
+        if mtime != cached_mtime:
+            dir_list = os.listdir(path)
+            dir_list.sort()
+        cls.cache[path] = mtime, dir_list
+        return dir_list
 
 
 class Shares:
@@ -51,9 +75,9 @@ class Shares:
         self.CompressShares("buddy")
         self.requestedShares = {}
         self.newbuddyshares = self.newnormalshares = False
-        self.translatepunctuation = string.maketrans(
+        self.translatepunctuation = str.maketrans(
             string.punctuation,
-            string.join([' ' for i in string.punctuation], '')
+            ''.join([' ' for i in string.punctuation])
         )
 
     def real2virtual(self, path):
@@ -103,7 +127,7 @@ class Shares:
             shared_db = "sharedfiles"
 
         sharedfolders = len(conf["transfers"][shared_db])
-        sharedfiles = sum([len(x) for x in conf["transfers"][shared_db].values()])
+        sharedfiles = sum([len(x) for x in list(conf["transfers"][shared_db].values())])
         self.queue.put(slskmessages.SharedFoldersFiles(sharedfolders, sharedfiles))
 
     def RebuildShares(self, msg):
@@ -129,10 +153,9 @@ class Shares:
                 [files, streams, wordindex, fileindex, mtimes],
                 "normal"
             )
-        except Exception, ex:
+        except Exception as ex:
             log.addwarning(
-              _("Failed to rebuild share, serious error occurred. If this problem persists delete %s/*.db and try again. If that doesn't help please file a bug report with the stack trace included (see terminal output after this message). Technical details: %s")
-              % (self.config.sections["data"]["dir"], ex)
+                _("Failed to rebuild share, serious error occurred. If this problem persists delete %s/*.db and try again. If that doesn't help please file a bug report with the stack trace included (see terminal output after this message). Technical details: %s") % (self.config.sections["data"]["dir"], ex)
             )
             raise
 
@@ -168,7 +191,7 @@ class Shares:
 
         if streams is None:
             message = _("ERROR: No %(type)s shares database available") % {"type": sharestype}
-            print message
+            print(message)
             self.logMessage(message, None)
             return
 
@@ -230,8 +253,8 @@ class Shares:
             return
 
         self.logMessage(_("%(user)s is making a BrowseShares request") % {
-                'user': user
-            }, 1)
+            'user': user
+        }, 1)
 
         addr = msg.conn.addr[0]
         checkuser, reason = self.np.CheckUser(user, addr)
@@ -281,7 +304,7 @@ class Shares:
         elif checkuser == 2:
             shares = self.config.sections["transfers"]["bsharedfiles"]
         else:
-            response = self.queue.put(slskmessages.TransferResponse(msg.conn.conn, 0, reason=reason, req=0))
+            response = self.queue.put(slskmessages.TransferResponse(msg.conn.conn, 0, reason=reason, req=0))  # noqa: F841
             shares = {}
 
         if checkuser:
@@ -299,8 +322,8 @@ class Shares:
 
         self.logMessage("%s %s" % (msg.__class__, vars(msg)), 4)
 
-    def processExactSearchRequest(self, searchterm, user, searchid,  direct=0, checksum=None):
-        print searchterm, user, searchid, checksum
+    def processExactSearchRequest(self, searchterm, user, searchid, direct=0, checksum=None):
+        print(searchterm, user, searchid, checksum)
         pass
 
     def processSearchRequest(self, searchterm, user, searchid, direct=0):
@@ -458,9 +481,9 @@ class Shares:
             try:
                 contents = dircache.listdir(directory)
                 mtime = os.path.getmtime(directory)
-            except OSError, errtuple:
+            except OSError as errtuple:
                 message = _("Scanning Directory Error: %(error)s Path: %(path)s") % {'error': errtuple, 'path': directory}
-                print str(message)
+                print(str(message))
                 self.logMessage(message)
                 displayTraceback(sys.exc_info()[2])
                 continue
@@ -475,20 +498,20 @@ class Shares:
 
                 try:
                     isdir = os.path.isdir(path)
-                except OSError, errtuple:
+                except OSError as errtuple:
                     message = _("Scanning Error: %(error)s Path: %(path)s") % {'error': errtuple, 'path': path}
-                    print str(message)
+                    print(str(message))
                     self.logMessage(message)
                     continue
 
                 try:
                     mtime = os.path.getmtime(path)
-                except OSError, errtuple:
+                except OSError as errtuple:
                     islink = False
                     try:
                         islink = os.path.islink(path)
-                    except OSError, errtuple2:
-                        print errtuple2
+                    except OSError as errtuple2:
+                        print(errtuple2)
 
                     if islink:
                         message = _("Scanning Error: Broken link to directory: \"%(link)s\" from Path: \"%(path)s\". Repair or remove this link.") % {
@@ -501,7 +524,7 @@ class Shares:
                             'path': path
                         }
 
-                    print str(message)
+                    print(str(message))
                     self.logMessage(message)
                     continue
                 else:
@@ -530,7 +553,7 @@ class Shares:
             count += 1
 
             if progress:
-                percent = float(count)/len(mtimes)
+                percent = float(count) / len(mtimes)
                 if percent <= 1.0:
                     gobject.idle_add(progress.set_fraction, percent)
 
@@ -556,8 +579,8 @@ class Shares:
 
             try:
                 contents = os.listdir(directory)
-            except OSError, errtuple:
-                print str(errtuple)
+            except OSError as errtuple:
+                print(str(errtuple))
                 self.logMessage(str(errtuple))
                 continue
 
@@ -571,9 +594,9 @@ class Shares:
                 path = os.path.join(directory, filename)
                 try:
                     isfile = os.path.isfile(path)
-                except OSError, errtuple:
+                except OSError as errtuple:
                     message = _("Scanning Error: %(error)s Path: %(path)s") % {'error': errtuple, 'path': path}
-                    print str(message)
+                    print(str(message))
                     self.logMessage(message)
                     displayTraceback(sys.exc_info()[2])
                     continue
@@ -609,7 +632,7 @@ class Shares:
 
             return fileinfo
 
-        except Exception, errtuple:
+        except Exception as errtuple:
             message = _("Scanning File Error: %(error)s Path: %(path)s") % {'error': errtuple, 'path': pathname}
             self.logMessage(message)
             displayTraceback(sys.exc_info()[2])
@@ -618,9 +641,9 @@ class Shares:
     def getFilesStreams(self, mtimes, oldmtimes, oldstreams, newsharedfiles, rebuild=False, yieldcall=None):
 
         streams = {}
-        shared = self.config.sections["transfers"]["shared"]
+        shared = self.config.sections["transfers"]["shared"]  # noqa: F841
 
-        for directory in mtimes.keys():
+        for directory in list(mtimes.keys()):
 
             virtualdir = self.real2virtual(directory)
 
@@ -659,7 +682,7 @@ class Shares:
 
             directory = os.path.expanduser(directory.replace("//", "/"))
 
-            u_directory = u"%s" % directory
+            u_directory = "%s" % directory
             str_directory = str(directory)
 
             if self.hiddenCheck({'dir': directory}):
@@ -668,9 +691,9 @@ class Shares:
             try:
                 contents = dircache.listdir(u_directory)
                 mtime = os.path.getmtime(u_directory)
-            except OSError, errtuple:
+            except OSError as errtuple:
                 message = _("Scanning Directory Error: %(error)s Path: %(path)s") % {'error': errtuple, 'path': u_directory}
-                print str(message)
+                print(str(message))
                 self.logMessage(message)
                 displayTraceback(sys.exc_info()[2])
                 continue
@@ -684,25 +707,25 @@ class Shares:
                 path = os.path.join(directory, filename)
 
                 # force Unicode for reading from disk in win32
-                u_path = u"%s" % path
+                u_path = "%s" % path
                 s_path = str(path)
 
                 try:
                     isdir = os.path.isdir(u_path)
-                except OSError, errtuple:
+                except OSError as errtuple:
                     message = _("Scanning Error: %(error)s Path: %(path)s") % {'error': errtuple, 'path': u_path}
-                    print str(message)
+                    print(str(message))
                     self.logMessage(message)
                     continue
 
                 try:
                     mtime = os.path.getmtime(u_path)
-                except OSError, errtuple:
+                except OSError as errtuple:  # noqa: F841
                     try:
                         mtime = os.path.getmtime(s_path)
-                    except OSError, errtuple:
+                    except OSError as errtuple:
                         message = _("Scanning Error: %(error)s Path: %(path)s") % {'error': errtuple, 'path': u_path}
-                        print str(message)
+                        print(str(message))
                         self.logMessage(message)
                         continue
                 else:
@@ -731,13 +754,13 @@ class Shares:
             count += 1
 
             if progress:
-                percent = float(count)/len(mtimes)
+                percent = float(count) / len(mtimes)
                 if percent <= 1.0:
                     gobject.idle_add(progress.set_fraction, percent)
 
             # force Unicode for reading from disk
-            u_directory = u"%s" % directory
-            str_directory = str(directory)
+            u_directory = "%s" % directory
+            str_directory = str(directory)  # noqa: F841
 
             if self.hiddenCheck({'dir': directory}):
                 continue
@@ -765,8 +788,8 @@ class Shares:
 
             try:
                 contents = os.listdir(u_directory)
-            except OSError, errtuple:
-                print str(errtuple)
+            except OSError as errtuple:
+                print(str(errtuple))
                 self.logMessage(str(errtuple))
                 continue
 
@@ -779,15 +802,15 @@ class Shares:
 
                 path = os.path.join(directory, filename)
                 s_path = str(path)
-                ppath = unicode(path)
+                ppath = str(path)
 
                 s_filename = str(filename)
                 try:
                     # try to force Unicode for reading from disk
                     isfile = os.path.isfile(ppath)
-                except OSError, errtuple:
+                except OSError as errtuple:
                     message = _("Scanning Error: %(error)s Path: %(path)s") % {'error': errtuple, 'path': path}
-                    print str(message)
+                    print(str(message))
                     self.logMessage(message)
                     displayTraceback(sys.exc_info()[2])
                     continue
@@ -809,18 +832,18 @@ class Shares:
         try:
 
             if type(name) is str:
-                pathname_f = u"%s" % pathname
+                pathname_f = "%s" % pathname
             else:
                 pathname_f = pathname
 
             try:
                 size = os.path.getsize(pathname_f)
-            except:
+            except Exception:
                 size = os.path.getsize(pathname)
 
             try:
                 info = metadata.detect(pathname_f)
-            except:
+            except Exception:
                 info = metadata.detect(pathname)
 
             if info:
@@ -836,7 +859,7 @@ class Shares:
 
             return fileinfo
 
-        except Exception, errtuple:
+        except Exception as errtuple:
             message = _("Scanning File Error: %(error)s Path: %(path)s") % {'error': errtuple, 'path': pathname}
             self.logMessage(message)
             displayTraceback(sys.exc_info()[2])
@@ -845,15 +868,15 @@ class Shares:
     def getFilesStreamsUnicode(self, mtimes, oldmtimes, oldstreams, newsharedfiles, rebuild=False, yieldcall=None):
 
         streams = {}
-        shared = self.config.sections["transfers"]["shared"]
+        shared = self.config.sections["transfers"]["shared"]  # noqa: F841
 
-        for directory in mtimes.keys():
+        for directory in list(mtimes.keys()):
 
             virtualdir = self.real2virtual(directory)
 
             # force Unicode for reading from disk
-            u_directory = u"%s" % directory
-            str_directory = str(directory)
+            u_directory = "%s" % directory
+            str_directory = str(directory)  # noqa: F841
 
             if self.hiddenCheck({'dir': directory}):
                 continue
@@ -904,7 +927,7 @@ class Shares:
 
             try:
                 from win32file import GetFileAttributes
-            except ImportError as e:
+            except ImportError as e:  # noqa: F841
                 pass
             else:
 
@@ -914,7 +937,7 @@ class Shares:
                 else:
                     path = stuff['dir'].replace('\\', '\\\\')
 
-                attrs = GetFileAttributes(unicode(path))
+                attrs = GetFileAttributes(str(path))
 
                 # Set a mask to check the 2nd bit
                 # See https://msdn.microsoft.com/en-us/library/windows/desktop/gg258117(v=vs.85).aspx
@@ -943,7 +966,7 @@ class Shares:
 
         message = slskmessages.SlskMessage()
 
-        stream = chr(1) + message.packObject(fileinfo[0]) + message.packObject(NetworkLongLongType(fileinfo[1]))
+        stream = bytes([1]) + message.packObject(fileinfo[0]) + message.packObject(NetworkLongLongType(fileinfo[1]))
         if fileinfo[2] is not None:
             try:
                 msgbytes = ''
@@ -957,13 +980,13 @@ class Shares:
                     message.packObject(NetworkIntType(fileinfo[2][1]))
                 )
                 stream += msgbytes
-            except:
+            except Exception:
                 log.addwarning(_("Found meta data that couldn't be encoded, possible corrupt file: '%(file)s' has a bitrate of %(bitrate)s kbs, a length of %(length)s seconds and a VBR of %(vbr)s" % {
-                        'file':    fileinfo[0],
-                        'bitrate': fileinfo[2][0],
-                        'length':  fileinfo[3],
-                        'vbr':     fileinfo[2][1]
-                    }))
+                    'file': fileinfo[0],
+                    'bitrate': fileinfo[2][0],
+                    'length': fileinfo[3],
+                    'vbr': fileinfo[2][1]
+                }))
                 stream += message.packObject('') + message.packObject(0)
         else:
             stream += message.packObject('') + message.packObject(0)
@@ -978,12 +1001,12 @@ class Shares:
         index = 0
         count = 0
 
-        for directory in mtimes.keys():
+        for directory in list(mtimes.keys()):
 
             virtualdir = self.real2virtual(directory)
 
             if progress:
-                percent = float(count)/len(mtimes)
+                percent = float(count) / len(mtimes)
                 if percent <= 1.0:
                     gobject.idle_add(progress.set_fraction, percent)
 
@@ -996,7 +1019,7 @@ class Shares:
                 indexes = self.getIndexWords(virtualdir, j[0], shareddirs)
                 for k in indexes:
                     wordindex.setdefault(k, []).append(index)
-                fileindex[str(index)] = ((virtualdir + '\\' + j[0]), )+j[1:]
+                fileindex[str(index)] = ((virtualdir + '\\' + j[0]), ) + j[1:]
                 index += 1
 
             if yieldcall is not None:
@@ -1011,15 +1034,15 @@ class Shares:
             if os.path.commonprefix([dir, i]) == i:
                 dir = dir[len(i):]
 
-        words = string.split(
-            string.lower(string.translate(dir + ' ' + file, string.maketrans(string.punctuation, string.join([' ' for i in string.punctuation], ''))))
-        )
+        words = (dir + ' ' + file).translate(
+            str.maketrans(string.punctuation, ''.join([' ' for i in string.punctuation]))
+        ).lower().split()
 
         # remove duplicates
         d = {}
         for x in words:
             d[x] = x
-        return d.values()
+        return list(d.values())
 
     def addToShared(self, name):
         """ Add a file to the normal shares database """
@@ -1032,12 +1055,12 @@ class Shares:
         sharedstreams = config["transfers"]["sharedfilesstreams"]
         wordindex = config["transfers"]["wordindex"]
         fileindex = config["transfers"]["fileindex"]
-        shareddirs = config["transfers"]["shared"] + [config["transfers"]["downloaddir"]]
-        sharedmtimes = config["transfers"]["sharedmtimes"]
+        shareddirs = [path for _name, path in config["transfers"]["shared"]]
+        shareddirs.append(config["transfers"]["downloaddir"])
 
         dir = str(os.path.expanduser(os.path.dirname(name)))
         file = str(os.path.basename(name))
-        size = os.path.getsize(name)
+        size = os.path.getsize(name)  # noqa: F841
 
         shared[dir] = shared.get(dir, [])
 
@@ -1047,7 +1070,6 @@ class Shares:
             sharedstreams[dir] = self.getDirStream(shared[dir])
             words = self.getIndexWords(dir, file, shareddirs)
             self.addToIndex(wordindex, fileindex, words, dir, fileinfo)
-            sharedmtimes[dir] = os.path.getmtime(dir)
             self.newnormalshares = True
 
         if config["transfers"]["enablebuddyshares"]:
@@ -1071,7 +1093,7 @@ class Shares:
 
         dir = str(os.path.expanduser(os.path.dirname(name)))
         file = str(os.path.basename(name))
-        size = os.path.getsize(name)
+        size = os.path.getsize(name)  # noqa: F841
 
         bshared[dir] = bshared.get(dir, [])
 
@@ -1085,10 +1107,10 @@ class Shares:
             self.newbuddyshares = True
 
     def addToIndex(self, wordindex, fileindex, words, dir, fileinfo):
-        index = len(fileindex.keys())
+        index = len(list(fileindex.keys()))
         for i in words:
             if i not in wordindex:
                 wordindex[i] = [index]
             else:
                 wordindex[i] = wordindex[i] + [index]
-        fileindex[str(index)] = (os.path.join(dir, fileinfo[0]),)+fileinfo[1:]
+        fileindex[str(index)] = (os.path.join(dir, fileinfo[0]),) + fileinfo[1:]

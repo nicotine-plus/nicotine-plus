@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 #
+# COPYRIGHT (C) 2020 Lene Preuss <lene.preuss@gmail.com>
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2016 Mutnick <muhing@yahoo.com>
 # COPYRIGHT (C) 2008-2011 Quinox <quinox@users.sf.net>
@@ -21,25 +22,34 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-from __future__ import division
-
-import gtk
-import gobject
-import pango
-import time
 import locale
 import os
-import sys
-import string
 import re
+import sys
+import time
 import types
-import urllib
+import urllib.error
+import urllib.parse
+import urllib.request
 import webbrowser
+from gettext import gettext as _
+
+import gi
+from gi.repository import Gdk
+from gi.repository import GObject as gobject
+from gi.repository import Gtk as gtk
+from gi.repository import Pango as pango
 
 from pynicotine import slskmessages
-from pynicotine.utils import executeCommand, findBestEncoding
-from countrycodes import code2name
+from pynicotine.gtkgui.countrycodes import code2name
+from pynicotine.utils import cmp
+from pynicotine.utils import executeCommand
+from pynicotine.utils import findBestEncoding
+
+gi.require_version('Pango', '1.0')
+gi.require_version('Gtk', '3.0')
+gi.require_version('Gdk', '3.0')
+
 
 DECIMALSEP = ""
 
@@ -52,15 +62,15 @@ NICOTINE = None
 
 
 def popupWarning(parent, title, warning, icon=None):
-    dlg = gtk.Dialog(title=title, parent=parent, buttons=(gtk.STOCK_OK, gtk.RESPONSE_OK))
-    dlg.set_default_response(gtk.RESPONSE_OK)
+    dlg = gtk.Dialog(title=title, parent=parent, buttons=(gtk.STOCK_OK, gtk.ResponseType.OK))
+    dlg.set_default_response(gtk.ResponseType.OK)
     dlg.set_icon(icon)
     dlg.set_border_width(10)
     dlg.vbox.set_spacing(10)
     hbox = gtk.HBox(spacing=5)
     hbox.set_border_width(5)
     hbox.show()
-    dlg.vbox.pack_start(hbox)
+    dlg.vbox.pack_start(hbox, True, True, 0)
 
     image = gtk.Image()
     image.set_padding(0, 0)
@@ -68,19 +78,20 @@ def popupWarning(parent, title, warning, icon=None):
     image.set_from_stock(icon, 4)
     image.show()
 
-    hbox.pack_start(image)
+    hbox.pack_start(image, True, True, 0)
     label = gtk.Label()
     label.set_markup(warning)
     label.set_line_wrap(True)
-    hbox.pack_start(label, True, True)
+    hbox.pack_start(label, True, True, 0)
 
     dlg.vbox.show_all()
 
-    result = None
-    if dlg.run() == gtk.RESPONSE_OK:
+    result = None  # noqa: F841
+    if dlg.run() == gtk.ResponseType.OK:
         dlg.destroy()
 
     return 0
+
 
 # we could move this into a new class
 previouscountrypath = None
@@ -110,7 +121,7 @@ def showCountryTooltip(widget, x, y, tooltip, sourcecolumn, stripprefix='flag_')
 
     title = column.get_title()
 
-    if (title != _("Country")):
+    if title != _("Country"):
         return False
 
     model = widget.get_model()
@@ -144,14 +155,14 @@ def showCountryTooltip(widget, x, y, tooltip, sourcecolumn, stripprefix='flag_')
 def recode(s):
     try:
         return s.decode(locale.nl_langinfo(locale.CODESET), "replace").encode("utf-8", "replace")
-    except:
+    except Exception:
         return s
 
 
 def recode2(s):
     try:
         return s.decode("utf-8", "replace").encode(locale.nl_langinfo(locale.CODESET), "replace")
-    except:
+    except Exception:
         return s
 
 
@@ -194,13 +205,13 @@ def InitialiseColumns(treeview, *args):
 
         if c[1] == -1:
             column.set_resizable(False)
-            column.set_sizing(gtk.TREE_VIEW_COLUMN_AUTOSIZE)
+            column.set_sizing(gtk.TreeViewColumnSizing.AUTOSIZE)
         else:
             column.set_resizable(True)
             if c[1] == 0:
-                column.set_sizing(gtk.TREE_VIEW_COLUMN_GROW_ONLY)
+                column.set_sizing(gtk.TreeViewColumnSizing.GROW_ONLY)
             else:
-                column.set_sizing(gtk.TREE_VIEW_COLUMN_FIXED)
+                column.set_sizing(gtk.TreeViewColumnSizing.FIXED)
                 column.set_fixed_width(c[1])
             column.set_min_width(0)
 
@@ -244,7 +255,7 @@ def PressHeader(widget, event):
         pos += 1
 
     menu.show_all()
-    menu.popup(None, None, None, event.button, event.time)
+    menu.popup(None, None, None, None, event.button, event.time)
 
     return True
 
@@ -256,14 +267,15 @@ def header_toggle(menuitem, column):
 
 def ScrollBottom(widget):
     va = widget.get_vadjustment()
-    if va is None:
-        return False
-    va.set_value(va.upper - va.page_size)
+    try:
+        va.set_value(va.get_upper() - va.get_page_size())
+    except AttributeError:
+        pass
     return False
 
 
 def UrlEvent(tag, widget, event, iter, url):
-    if tag.last_event_type == gtk.gdk.BUTTON_PRESS and event.type == gtk.gdk.BUTTON_RELEASE and event.button == 1:
+    if tag.last_event_type == Gdk.EventType.BUTTON_PRESS and event.type == Gdk.EventType.BUTTON_RELEASE and event.button == 1:
         if url[:4] == "www.":
             url = "http://" + url
         OpenUri(url)
@@ -279,7 +291,7 @@ def OpenUri(uri):
     # Situation 1, user defined a way of handling the protocol
     protocol = uri[:uri.find(":")]
     if protocol in PROTOCOL_HANDLERS:
-        if PROTOCOL_HANDLERS[protocol].__class__ is types.MethodType:
+        if isinstance(PROTOCOL_HANDLERS[protocol], types.MethodType):
             PROTOCOL_HANDLERS[protocol](uri.strip())
             return
         if PROTOCOL_HANDLERS[protocol]:
@@ -296,20 +308,20 @@ def OpenUri(uri):
         import gnomevfs
         gnomevfs.url_show(uri)
         return
-    except Exception, e:
+    except Exception as e:  # noqa: F841
         pass
 
 
 def AppendLine(textview, line, tag=None, timestamp=None, showstamp=True, timestamp_format="%H:%M:%S", username=None, usertag=None, scroll=True):
 
-    if type(line) not in (type(""), type(u"")):
+    if type(line) not in (type(""), type("")):
         line = str(line)  # Error messages are sometimes tuples
 
     def _makeurltag(buffer, tag, url):
         props = {}
 
-        props["foreground_gdk"] = gtk.gdk.color_parse(NICOTINE.np.config.sections["ui"]["urlcolor"])
-        props["underline"] = pango.UNDERLINE_SINGLE
+        props["foreground_gdk"] = Gdk.color_parse(NICOTINE.np.config.sections["ui"]["urlcolor"])
+        props["underline"] = pango.Underline.SINGLE
         tag = buffer.create_tag(**props)
         tag.last_event_type = -1
         tag.connect("event", UrlEvent, url)
@@ -325,10 +337,10 @@ def AppendLine(textview, line, tag=None, timestamp=None, showstamp=True, timesta
 
     def _usertag(buffer, section):
         # Tag usernames with popup menu creating tag, and away/online/offline colors
-        if USERNAMEHOTSPOTS and username != None and usertag != None:
-            np = re.compile(re.escape(username))
+        if USERNAMEHOTSPOTS and username is not None and usertag is not None:
+            np = re.compile(re.escape(str(username)))
             match = np.search(section)
-            if match != None:
+            if match is not None:
                 start2 = section[:match.start()]
                 name = match.group()[:]
                 start = section[match.end():]
@@ -342,14 +354,17 @@ def AppendLine(textview, line, tag=None, timestamp=None, showstamp=True, timesta
 
     scrolledwindow = textview.get_parent()
     va = scrolledwindow.get_vadjustment()
-    bottom = va.value >= (va.upper - int(va.page_size*1.5))
+    try:
+        bottom = va.value >= (va.upper - int(va.page_size * 1.5))
+    except AttributeError:
+        bottom = True
 
     buffer = textview.get_buffer()
     linenr = buffer.get_line_count()
     ME = 0
 
     if line.startswith("* "):
-        ME = 1
+        ME = 1  # noqa: F841
 
     TIMESTAMP = None
     TS = 0
@@ -378,10 +393,10 @@ def AppendLine(textview, line, tag=None, timestamp=None, showstamp=True, timesta
         _usertag(buffer, start)
         url = match.group()[:-1]
         urltag = _makeurltag(buffer, tag, url)
-        line = line[match.end()-1:]
+        line = line[match.end() - 1:]
 
         if url.startswith("slsk://") and HUMANIZE_URLS:
-            url = urllib.url2pathname(url)
+            url = urllib.request.url2pathname(url)
 
         _append(buffer, url, urltag)
         # Match remaining url
@@ -461,9 +476,9 @@ class ImageLabel(gtk.HBox):
         self.add(self.Box)
         self.Box.show()
 
-        self.Box.pack_start(self.statusimage, False, False)
-        self.Box.pack_start(self.label, True, True)
-        self.Box.pack_start(self.image, False, False)
+        self.Box.pack_start(self.statusimage, False, False, 0)
+        self.Box.pack_start(self.label, True, True, 0)
+        self.Box.pack_start(self.image, False, False, 0)
 
         if self.closebutton and self.onclose is not None:
             self._add_close_button()
@@ -517,14 +532,14 @@ class ImageLabel(gtk.HBox):
             return
         self.button = gtk.Button()
         img = gtk.Image()
-        img.set_from_stock(gtk.STOCK_CLOSE, gtk.ICON_SIZE_MENU)
+        img.set_from_stock(gtk.STOCK_CLOSE, gtk.IconSize.MENU)
         self.button.add(img)
         if self.onclose is not None:
             self.button.connect("clicked", self.onclose)
-        self.button.set_relief(gtk.RELIEF_NONE)
+        self.button.set_relief(gtk.ReliefStyle.NONE)
 
         self.button.show_all()
-        self.Box.pack_start(self.button, False, False)
+        self.Box.pack_start(self.button, False, False, 0)
 
     def _remove_close_button(self):
         if "button" not in self.__dict__:
@@ -548,8 +563,8 @@ class ImageLabel(gtk.HBox):
                 color = NICOTINE.np.config.sections["ui"]["tab_default"]
 
             try:
-                gtk.gdk.color_parse(color)
-            except:
+                Gdk.color_parse(color)
+            except Exception:
                 color = ""
         else:
             color = ""
@@ -631,7 +646,7 @@ class IconNotebook:
             page, label_tab, status, label_tab_menu = data
             try:
                 self.Notebook.set_tab_reorderable(page, self.reorderable)
-            except:
+            except Exception:
                 pass
 
     def set_tab_closers(self, closers):
@@ -666,12 +681,12 @@ class IconNotebook:
 
     def OnKeyPress(self, widget, event):
 
-        if event.state & (gtk.gdk.MOD1_MASK | gtk.gdk.CONTROL_MASK) != gtk.gdk.MOD1_MASK:
+        if event.state & (Gdk.ModifierType.MOD1_MASK | Gdk.ModifierType.CONTROL_MASK) != Gdk.ModifierType.MOD1_MASK:
             return False
 
-        if event.keyval in [gtk.gdk.keyval_from_name("Up"), gtk.gdk.keyval_from_name("Left")]:
+        if event.keyval in [Gdk.keyval_from_name("Up"), Gdk.keyval_from_name("Left")]:
             self.prev_page()
-        elif event.keyval in [gtk.gdk.keyval_from_name("Down"), gtk.gdk.keyval_from_name("Right")]:
+        elif event.keyval in [Gdk.keyval_from_name("Down"), Gdk.keyval_from_name("Right")]:
             self.next_page()
         else:
             return False
@@ -703,7 +718,7 @@ class IconNotebook:
 
         eventbox.add(label_tab)
         eventbox.show()
-        eventbox.set_events(gtk.gdk.BUTTON_PRESS_MASK)
+        eventbox.set_events(Gdk.EventMask.BUTTON_PRESS_MASK)
         eventbox.connect('button_press_event', self.on_tab_click, page)
 
         gtk.Notebook.append_page_menu(self.Notebook, page, eventbox, label_tab_menu)
@@ -774,7 +789,7 @@ class IconNotebook:
 
         eventbox.add(label_tab)
         eventbox.show()
-        eventbox.set_events(gtk.gdk.BUTTON_PRESS_MASK)
+        eventbox.set_events(Gdk.EventType.BUTTON_PRESS_MASK)
         eventbox.connect('button_press_event', self.on_tab_click, page)
 
         gtk.Notebook.append_page_menu(self.Notebook, pagewidget, eventbox, label_tab_menu)
@@ -814,7 +829,7 @@ class IconNotebook:
 
         vbox = gtk.VBox(False, spacing=5)
         vbox.set_border_width(5)
-        vbox.pack_start(page)
+        vbox.pack_start(page, True, True, 0)
         vbox.show()
 
         window.add(vbox)
@@ -983,7 +998,7 @@ class PopupMenu(gtk.Menu):
         for item in items:
 
             if item[0] == "":
-                menuitem = gtk.MenuItem()
+                menuitem = gtk.SeparatorMenuItem()
 
             elif item[0] == "USER":
 
@@ -1031,13 +1046,14 @@ class PopupMenu(gtk.Menu):
 
             self.append(menuitem)
 
+            menuitem.set_use_underline(True)
             menuitem.show()
 
         return self
 
     def clear(self):
 
-        for (w, widget) in self.handlers.iteritems():
+        for (w, widget) in self.handlers.items():
             w.disconnect(widget)
 
         self.handlers.clear()
@@ -1060,7 +1076,7 @@ class PopupMenu(gtk.Menu):
 
     def OnSearchUser(self, widget):
         self.frame.SearchMethod.set_active_iter(self.frame.searchmethods[_("User")])
-        self.frame.UserSearchCombo.child.set_text(self.user)
+        self.frame.UserSearchCombo.get_child().set_text(self.user)
         self.frame.ChangeMainPage(None, "search")
 
     def OnSendMessage(self, widget):
@@ -1146,7 +1162,7 @@ class PopupMenu(gtk.Menu):
         self.frame.privatechats.SendMessage(self.user, "\x01VERSION\x01", bytestring=True)
 
     def OnCopyUser(self, widget):
-        self.frame.clip.set_text(self.user)
+        self.frame.clip.set_text(self.user, -1)
 
     def OnGivePrivileges(self, widget):
 
@@ -1167,15 +1183,15 @@ class PopupMenu(gtk.Menu):
             try:
                 days = int(text)
                 self.frame.GivePrivileges(self.user, days)
-            except Exception, e:
-                print e
+            except Exception as e:
+                print(e)
 
     def OnPrivateRooms(self, widget):
 
         if self.user is None or self.user == self.frame.np.config.sections["server"]["login"]:
             return False
 
-        user = self.user
+        user = self.user  # noqa: F841
         items = []
         popup = self.frame.userlist.Popup_Menu_PrivateRooms
         popup.clear()
@@ -1205,25 +1221,25 @@ class PopupMenu(gtk.Menu):
 
 def InputDialog(parent, title, message, default=""):
 
-    dlg = gtk.Dialog(title=title, parent=parent, buttons=(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL, gtk.STOCK_OK, gtk.RESPONSE_OK))
-    dlg.set_default_response(gtk.RESPONSE_OK)
+    dlg = gtk.Dialog(title=title, parent=parent, buttons=(gtk.STOCK_CANCEL, gtk.ResponseType.CANCEL, gtk.STOCK_OK, gtk.ResponseType.OK))
+    dlg.set_default_response(gtk.ResponseType.OK)
 
     dlg.set_border_width(10)
     dlg.vbox.set_spacing(10)
 
-    l = gtk.Label(message)
+    l = gtk.Label(message)  # noqa: E741
     l.set_alignment(0, 0.5)
-    dlg.vbox.pack_start(l, False, False)
+    dlg.vbox.pack_start(l, False, False, 0)
 
     entry = gtk.Entry()
     entry.set_activates_default(True)
     entry.set_text(default)
-    dlg.vbox.pack_start(entry, True, True)
+    dlg.vbox.pack_start(entry, True, True, 0)
 
     dlg.vbox.show_all()
 
     result = None
-    if dlg.run() == gtk.RESPONSE_OK:
+    if dlg.run() == gtk.ResponseType.OK:
         result = entry.get_text()
 
     dlg.destroy()
@@ -1234,11 +1250,11 @@ def InputDialog(parent, title, message, default=""):
 def int_sort_func(model, iter1, iter2, column):
     try:
         val1 = int(model.get_value(iter1, column))
-    except:
+    except Exception:
         val1 = 0
     try:
         val2 = int(model.get_value(iter2, column))
-    except:
+    except Exception:
         val2 = 0
     return cmp(val1, val2)
 
@@ -1247,12 +1263,12 @@ def float_sort_func(model, iter1, iter2, column):
 
     try:
         val1 = float(model.get_value(iter1, column))
-    except:
+    except Exception:
         val1 = 0.0
 
     try:
         val2 = float(model.get_value(iter2, column))
-    except:
+    except Exception:
         val2 = 0.0
 
     return cmp(val1, val2)
@@ -1260,11 +1276,11 @@ def float_sort_func(model, iter1, iter2, column):
 
 def WriteLog(logsdir, fn, msg):
 
-    oldumask = os.umask(0077)
+    oldumask = os.umask(0o077)
     if not os.path.exists(logsdir):
         os.makedirs(logsdir)
 
-    logfile = open(os.path.join(logsdir, fixpath(fn.replace(os.sep, "-")) + ".log"), 'a', 0)
+    logfile = open(os.path.join(logsdir, fixpath(fn.replace(os.sep, "-")) + ".log"), 'ab', 0)
 
     os.umask(oldumask)
 
@@ -1282,7 +1298,7 @@ def fixpath(path):
             for char in chars:
                 path = path.replace(char, "_")
         return path
-    except:
+    except Exception:
         return path
 
 
@@ -1291,10 +1307,10 @@ def HumanSize(number):
     try:
         s = float(int(number))
 
-        if s >= 1024*1024*1024:
-            r = _("%.2f GB") % (s / (1024.0*1024.0*1024.0))
-        elif s >= 1024*1024:
-            r = _("%.2f MB") % (s / (1024.0*1024.0))
+        if s >= 1024 * 1024 * 1024:
+            r = _("%.2f GB") % (s / (1024.0 * 1024.0 * 1024.0))
+        elif s >= 1024 * 1024:
+            r = _("%.2f MB") % (s / (1024.0 * 1024.0))
         elif s >= 1024:
             r = _("%.2f KB") % (s / 1024.0)
         else:
@@ -1302,7 +1318,7 @@ def HumanSize(number):
 
         return r
 
-    except Exception as e:
+    except Exception as e:  # noqa: F841
         return number
 
 
@@ -1311,18 +1327,18 @@ def HumanSpeed(number):
     try:
         s = float(number)
 
-        if s >= 1024*1024*1024:
-            r = _("%.2f GB/s") % (s / (1024.0*1024.0*1024.0))
-        elif s >= 1024*1024:
-            r = _("%.2f MB/s") % (s / (1024.0*1024.0))
+        if s >= 1024 * 1024 * 1024:
+            r = _("%.2f GB/s") % (s / (1024.0 * 1024.0 * 1024.0))
+        elif s >= 1024 * 1024:
+            r = _("%.2f MB/s") % (s / (1024.0 * 1024.0))
         elif s >= 1024:
             r = _("%.2f KB/s") % (s / 1024.0)
         else:
-            r = _("%d B/s") % (s)
+            r = _("%d B/s") % s
 
         return r
 
-    except Exception as e:
+    except Exception as e:  # noqa: F841
         return number
 
 
@@ -1388,8 +1404,8 @@ def _expand_alias(aliases, cmd):
         ret = ""
         i = 0
         while i < len(alias):
-            if alias[i:i+2] == "$(":
-                arg = getpart(alias[i+1:])
+            if alias[i:i + 2] == "$(":
+                arg = getpart(alias[i + 1:])
                 if not arg:
                     ret = ret + "$"
                     i = i + 1
@@ -1412,31 +1428,31 @@ def _expand_alias(aliases, cmd):
                         last = int(args[1])
                     else:
                         last = len(cmd)
-                v = string.join(cmd[first:last+1])
+                v = " ".join(cmd[first:last + 1])
                 if not v:
                     v = default
                 ret = ret + v
-            elif alias[i:i+2] == "|(":
-                arg = getpart(alias[i+1:])
+            elif alias[i:i + 2] == "|(":
+                arg = getpart(alias[i + 1:])
                 if not arg:
                     ret = ret + "|"
                     i = i + 1
                     continue
                 i = i + len(arg) + 3
-                for j in range(len(cmd)-1, -1, -1):
+                for j in range(len(cmd) - 1, -1, -1):
                     arg = arg.replace("$%i" % j, cmd[j])
-                arg = arg.replace("$@", string.join(cmd[1:], " "))
+                arg = arg.replace("$@", " ".join(cmd[1:]))
 
                 import subprocess
 
                 p = subprocess.Popen(arg, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, close_fds=(not sys.platform.startswith("win")))
-                exit = p.wait()
+                exit = p.wait()  # noqa: F841
 
                 (stdout, stdin) = (p.stdout, p.stdin)
                 v = stdout.read().split("\n")
                 r = ""
                 for l in v:
-                    l = l.strip()
+                    l = l.strip()  # noqa: E741
                     if l:
                         r = r + l + "\n"
                 ret = ret + r.strip()
@@ -1446,8 +1462,8 @@ def _expand_alias(aliases, cmd):
                 ret = ret + alias[i]
                 i = i + 1
         return ret
-    except Exception, error:
-        print error
+    except Exception as error:
+        print(error)
         pass
     return ""
 

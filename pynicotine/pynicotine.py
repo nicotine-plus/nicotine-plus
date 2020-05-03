@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-#
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2016 Mutnick <muhing@yahoo.com>
 # COPYRIGHT (C) 2013 eL_vErDe <gandalf@le-vert.net>
@@ -29,29 +27,29 @@
 This is the actual client code. Actual GUI classes are in the separate modules
 """
 
-from __future__ import division
-
-import time
 import datetime
-import shutil
-from urllib import urlencode
-import slskproto
-import slskmessages
-from slskmessages import newId, PopupMessage, ToBeEncoded
-import transfers
-import Queue
-import threading
-from config import *
-import string
-import types
-import locale
-import utils
-from shares import Shares
-from utils import CleanFile, findBestEncoding
-import os
 import logging
+import os
+import queue
+import shutil
+import sys
+import threading
+import time
+from gettext import gettext as _
+from urllib.parse import urlencode
 
-from ConfigParser import Error as ConfigParserError
+from pynicotine import slskmessages
+from pynicotine import slskproto
+from pynicotine import transfers
+from pynicotine.config import Config
+from pynicotine.ConfigParser import Error as ConfigParserError
+from pynicotine.shares import Shares
+from pynicotine.slskmessages import PopupMessage
+from pynicotine.slskmessages import ToBeEncoded
+from pynicotine.slskmessages import newId
+from pynicotine.utils import CleanFile
+from pynicotine.utils import findBestEncoding
+from pynicotine.utils import log
 
 
 class PeerConnection:
@@ -82,8 +80,8 @@ class Timeout:
     def timeout(self):
         try:
             self.callback([self])
-        except Exception, e:
-            print("Exception in callback %s: %s" % (self.callback, e))
+        except Exception as e:
+            print(("Exception in callback %s: %s" % (self.callback, e)))
 
 
 class ConnectToPeerTimeout(Timeout):
@@ -115,7 +113,7 @@ class NetworkEventProcessor:
             shutil.move(config, corruptfile)
             short = _("Your config file is corrupt")
             long = _("We're sorry, but it seems your configuration file is corrupt. Please reconfigure Nicotine+.\n\nWe renamed your old configuration file to\n%(corrupt)s\nIf you open this file with a text editor you might be able to rescue some of your settings.") % {'corrupt': corruptfile}
-            log.addwarning(long)
+            log.addwarning(int)
             self.config = Config(config, data_dir)
             self.callback([PopupMessage(short, long)])
 
@@ -130,7 +128,7 @@ class NetworkEventProcessor:
         self.ip_requested = []
         self.PrivateMessageQueue = {}
         self.users = {}
-        self.queue = Queue.Queue(0)
+        self.queue = queue.Queue(0)
         self.shares = Shares(self)
 
         try:
@@ -429,28 +427,28 @@ class NetworkEventProcessor:
         if user and user in config["server"]["userencoding"]:
             coding = config["server"]["userencoding"][user]
 
-        string = self.decode(string, coding)
-        try:
-            return string.encode(locale.nl_langinfo(locale.CODESET))
-        except:
-            return string
+        return self.decode(string, coding)
 
-    def encode(self, str, networkenc=None):
+    def encode(self, string, networkenc=None):
 
         if networkenc is None:
             networkenc = self.config.sections["server"]["enc"]
 
-        if type(str) is types.UnicodeType:
-            return str.encode(networkenc, 'replace')
+        if isinstance(string, str):
+            return string.encode(networkenc, 'replace')
         else:
-            return str.decode("utf-8", 'replace').encode(networkenc, 'replace')
+            return string.decode("utf-8", 'replace').encode(networkenc, 'replace')
 
     def decode(self, string, networkenc=None):
 
+        if isinstance(string, str):
+            return string
+
         if networkenc is None:
             networkenc = self.config.sections["server"]["enc"]
 
-        return str(string).decode(networkenc, 'replace').encode("utf-8", "replace")
+        return string.decode(networkenc, 'replace').encode("utf-8", "replace")
+        # return string.encode("utf-8", "replace")
 
     def getencodings(self):
 
@@ -482,8 +480,8 @@ class NetworkEventProcessor:
             ['Chinese Simple', 'cp936'],
             ['Korean', 'cp949'],
             ['Chinese Traditional', 'cp950'],
-            ['Urdu',  'cp1006'],
-            ['Turkish',  'cp1026'],
+            ['Urdu', 'cp1006'],
+            ['Turkish', 'cp1026'],
             ['Latin', 'cp1140'],
             ['Central European', 'cp1250'],
             ['Cyrillic', 'cp1251'],
@@ -635,7 +633,6 @@ class NetworkEventProcessor:
                 157  # 155, 156, 157, 180
             )
         )
-
         if self.waitport is not None:
             self.queue.put(slskmessages.SetWaitPort(self.waitport))
 
@@ -687,7 +684,7 @@ class NetworkEventProcessor:
         else:
             for i in self.peerconns[:]:
                 if i.conn == conn:
-                    self.logMessage(_("Connection closed by peer: %s") % self.decode(vars(i)), 3)
+                    self.logMessage(_("Connection closed by peer: %s") % vars(i))
 
                     if i.conntimer is not None:
                         i.conntimer.cancel()
@@ -727,7 +724,7 @@ class NetworkEventProcessor:
 
             self.transfers.setTransferPanels(downloads, uploads)
             self.shares.sendNumSharedFoldersFiles()
-            self.queue.put(slskmessages.SetStatus((not self.frame.away)+1))
+            self.queue.put(slskmessages.SetStatus((not self.frame.away) + 1))
 
             for thing in self.config.sections["interests"]["likes"]:
                 self.queue.put(slskmessages.AddThingILike(self.encode(thing)))
@@ -988,7 +985,6 @@ class NetworkEventProcessor:
         return False
 
     def SayChatRoom(self, msg):
-
         if msg.room in self.config.sections["server"]["roomencoding"]:
             encodings = [self.config.sections["server"]["roomencoding"][msg.room]] + self.config.sections["server"]["fallbackencodings"]
             encodings.append(self.config.sections["server"]["enc"])
@@ -1299,7 +1295,7 @@ class NetworkEventProcessor:
                 cc = self.geoip.country_name_by_addr(msg.ip)
                 cn = self.geoip.country_code_by_addr(msg.ip)
                 if cn is not None:
-                    self.frame.HasUserFlag(msg.user, "flag_"+cn)
+                    self.frame.HasUserFlag(msg.user, "flag_" + cn)
             else:
                 cc = ""
 
@@ -1317,12 +1313,12 @@ class NetworkEventProcessor:
                     'port': msg.port,
                     'country': cc
                 }
-            except:
+            except Exception:
                 message = _("IP address of %(user)s is %(ip)s, port %(port)i%(country)s") % {
-                 'user': msg.user,
-                 'ip': msg.ip,
-                 'port': msg.port,
-                 'country': cc
+                    'user': msg.user,
+                    'ip': msg.ip,
+                    'port': msg.port,
+                    'country': cc
                 }
 
             self.logMessage(message)
@@ -1373,7 +1369,6 @@ class NetworkEventProcessor:
         self.logMessage("%s %s" % (msg.__class__, vars(msg)), 3)
 
     def ConnectToPeer(self, msg):
-
         init = slskmessages.PeerInit(None, msg.user, msg.type, 0)
 
         self.queue.put(slskmessages.OutConn(None, (msg.ip, msg.port), init))
@@ -1386,7 +1381,6 @@ class NetworkEventProcessor:
                 init=init
             )
         )
-
         self.logMessage("%s %s" % (msg.__class__, vars(msg)), 3)
 
     def CheckUser(self, user, addr):
@@ -1447,7 +1441,7 @@ class NetworkEventProcessor:
                             'real_ip': u_ip
                         }
                         self.logMessage(warning, 1)
-                        print warning
+                        print(warning)
                         return 1
         return 0
 
@@ -1534,7 +1528,7 @@ class NetworkEventProcessor:
 
         try:
             if sys.platform == "win32":
-                userpic = u"%s" % self.config.sections["userinfo"]["pic"]
+                userpic = "%s" % self.config.sections["userinfo"]["pic"]
                 if not os.path.exists(userpic):
                     userpic = self.config.sections["userinfo"]["pic"]
             else:
@@ -1543,7 +1537,7 @@ class NetworkEventProcessor:
             f = open(userpic, 'rb')
             pic = f.read()
             f.close()
-        except:
+        except Exception:
             pic = None
 
         descr = self.encode(eval(self.config.sections["userinfo"]["descr"], {})).replace("\n", "\r\n")
@@ -1575,7 +1569,6 @@ class NetworkEventProcessor:
                     self.userbrowse.ShowInfo(i.username, msg)
 
     def FileSearchResult(self, msg):
-
         for i in self.peerconns:
 
             if i.conn is msg.conn.conn and self.search is not None:
@@ -1761,8 +1754,8 @@ class NetworkEventProcessor:
             folder = ""
             files = []
 
-            for i in msg.list.keys():
-                for j in msg.list[i].keys():
+            for i in list(msg.list.keys()):
+                for j in list(msg.list[i].keys()):
                     if os.path.commonprefix([i, j]) == j:
                         files = msg.list[i][j]
                         numfiles = len(files)
@@ -1877,7 +1870,7 @@ class NetworkEventProcessor:
 
             if not self.GetDistribConn():
 
-                user = self.distribcache.keys()[0]
+                user = list(self.distribcache.keys())[0]
                 addr = self.distribcache[user]
 
                 self.queue.put(slskmessages.SearchParent(addr[0]))
@@ -1901,7 +1894,7 @@ class NetworkEventProcessor:
 
         if len(self.distribcache) > 0:
 
-            user = self.distribcache.keys()[0]
+            user = list(self.distribcache.keys())[0]
             addr = self.distribcache[user]
 
             self.queue.put(slskmessages.SearchParent(addr[0]))
@@ -1934,7 +1927,7 @@ class NetworkEventProcessor:
             encodings = [self.config.sections["server"]["enc"]] + self.config.sections["server"]["fallbackencodings"]
 
         unicodes = {}
-        for user, bytes in msg.msgs.iteritems():
+        for user, bytes in msg.msgs.items():
             unicodes[user] = findBestEncoding(bytes, encodings)
 
         msg.msgs = unicodes
@@ -1971,7 +1964,7 @@ class NetworkEventProcessor:
                 f.write(time.strftime("%c"))
                 f.write(" %s\n" % message)
                 f.close()
-            except IOError, error:
+            except IOError as error:
                 self.logMessage(_("Couldn't write to transfer log: %s") % error)
 
         if toUI:

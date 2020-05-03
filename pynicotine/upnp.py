@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-#
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2009-2010 Quinox <quinox@users.sf.net>
 #
@@ -19,15 +17,18 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from pynicotine import slskmessages
-from logfacility import log
-from utils import findBestEncoding
-
 import platform
 import re
-import subprocess
 import socket
-from subprocess import Popen, PIPE, STDOUT
+import subprocess
+from gettext import gettext as _
+from subprocess import PIPE
+from subprocess import STDOUT
+from subprocess import Popen
+
+from pynicotine.logfacility import log
+from pynicotine.pynicotine import slskmessages
+from pynicotine.utils import findBestEncoding
 
 
 class UPnPPortMapping:
@@ -93,7 +94,7 @@ class UPnPPortMapping:
 
         try:
             # First we try to import the python binding
-            import miniupnpc
+            import miniupnpc  # noqa: F401
         except ImportError as e1:
             try:
                 # We fail to import the python module: fallback to the binary.
@@ -172,8 +173,8 @@ class UPnPPortMapping:
         # Create a UDP socket
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-        # Send a broadcast packet on a local address (doesn't need to be reachable)
-        s.connect(('10.255.255.255', 0))
+        # Send a broadcast packet on a local address (doesn't need to be reachable, but MacOS requires port to be non-zero)
+        s.connect(('10.255.255.255', 1))
 
         # This returns the "primary" IP on the local box, even if that IP is a NAT/private/internal IP.
         self.internalipaddress = s.getsockname()[0]

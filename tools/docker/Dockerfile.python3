@@ -1,0 +1,37 @@
+# Usage examples:
+# docker build -t nicotine -f docker/Dockerfile.python3 .
+# docker run --net=host --env="DISPLAY" --volume="$HOME/.Xauthority:/root/.Xauthority:rw" -t nicotine
+# docker exec -it <ID> ptpython
+# docker exec -it -e DISPLAY=$DISPLAY <ID> xfce4-terminal
+
+FROM ubuntu:18.04
+
+RUN apt-get update
+RUN apt-get install -y python3 python3-pip python3-virtualenv \
+    miniupnpc python-gobject-2 python-mutagen xdg-utils \
+    libgtk-3-0 libcairo2-dev libgirepository1.0-dev python3-gi gobject-introspection gir1.2-gtk-3.0 \
+    xfce4-terminal locales-all
+
+
+WORKDIR /nicotine
+COPY . /nicotine
+
+COPY tools/docker/config /root/.nicotine
+COPY tools/docker/shares /root/shares
+
+ENV VIRTUAL_ENV=./nicotine-venv
+RUN python3 -m virtualenv --python=/usr/bin/python3 $VIRTUAL_ENV
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+
+RUN pip install ptpython pytest flake8 pygobject mutagen
+ENV PYTHONPATH=".:$PYTHONPATH"
+RUN pytest
+RUN flake8 nicotine pynicotine plugins --ignore=E402,E501,W503,W504
+
+ENV DISPLAY=:0
+
+# ensure the container's locale is set
+ENV LANGUAGE en_US:en
+ENV LC_ALL en_US.UTF-8
+
+CMD ./nicotine || sleep 100000

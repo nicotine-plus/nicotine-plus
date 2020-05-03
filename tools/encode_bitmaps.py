@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
@@ -55,13 +55,13 @@ if isfile(missing):
 outf = open(os.path.join("pynicotine", "gtkgui", "imagedata.py"), "w")
 
 for image in sorted(table):
-    print image[0]
+    print(image[0])
     f = open(os.path.join("img", image[0]), "rb")
     outf.write("%s = %r\n" % (image[1], f.read()))
     f.close()
 
 for image in flagtable:
-    print image[0]
+    print(image[0])
     f = open(image[0], "rb")
     outf.write("%s = %r\n" % (image[1], f.read()))
     f.close()

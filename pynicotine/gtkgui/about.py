@@ -22,12 +22,17 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import gtk
-import os
 import sys
+from gettext import gettext as _
+
+import gi
+from gi.repository import Gtk as gtk
+from gi import __version__ as gobject_version
+
+from pynicotine.gtkgui.utils import AppendLine
 from pynicotine.utils import version
-import imagedata
-from utils import AppendLine
+
+gi.require_version('Gtk', '3.0')
 
 
 class GenericAboutDialog(gtk.Dialog):
@@ -38,15 +43,15 @@ class GenericAboutDialog(gtk.Dialog):
             self,
             title,
             parent,
-            gtk.DIALOG_MODAL,
-            (gtk.STOCK_OK, gtk.RESPONSE_OK)
+            gtk.DialogFlags.MODAL,
+            (gtk.STOCK_OK, gtk.ResponseType.OK)
         )
 
         if nicotine:
             self.set_icon(nicotine.images["n"])
 
         self.set_resizable(True)
-        self.set_position(gtk.WIN_POS_CENTER)
+        self.set_position(gtk.WindowPosition.CENTER)
         self.vbox.set_spacing(10)
         self.set_border_width(5)
 
@@ -57,10 +62,10 @@ class AboutDialog(gtk.Dialog):
 
         self.nicotine = nicotine
 
-        gtk.Dialog.__init__(self, _("About Nicotine+"), parent, gtk.DIALOG_MODAL)
+        gtk.Dialog.__init__(self, _("About Nicotine+"), parent, gtk.DialogFlags.MODAL)
 
         self.set_resizable(True)
-        self.set_position(gtk.WIN_POS_CENTER)
+        self.set_position(gtk.WindowPosition.CENTER)
         self.vbox.set_spacing(10)
         self.set_border_width(5)
 
@@ -68,13 +73,11 @@ class AboutDialog(gtk.Dialog):
         img.set_from_pixbuf(self.nicotine.images["n"])
 
         ScrolledWindow = gtk.ScrolledWindow()
-        ScrolledWindow.set_shadow_type(gtk.SHADOW_IN)
-        ScrolledWindow.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
         ScrolledWindow.show()
         ScrolledWindow.set_size_request(400, 250)
 
         TextView = gtk.TextView()
-        TextView.set_wrap_mode(gtk.WRAP_WORD)
+        TextView.set_wrap_mode(gtk.WrapMode.WORD)
         TextView.set_cursor_visible(False)
         TextView.set_editable(False)
         TextView.show()
@@ -93,13 +96,13 @@ Based on code from Nicotine and PySoulSeek""") % version
 
         AppendLine(TextView, text, None, None, showstamp=False)
         vbox = gtk.VBox()
-        vbox.pack_start(img, False, True)
+        vbox.pack_start(img, False, True, 0)
         hbox = gtk.HBox()
         hbox.set_spacing(10)
-        hbox.pack_start(vbox, False, True)
-        hbox.pack_start(ScrolledWindow, True, True)
+        hbox.pack_start(vbox, False, True, 0)
+        hbox.pack_start(ScrolledWindow, True, True, 0)
 
-        self.expander = gtk.Expander(_("Dependencies"))
+        self.expander = gtk.Expander()
         self.expander.show()
 
         pythonversion = '.'.join(map(str, sys.version_info[:3]))
@@ -119,13 +122,13 @@ Based on code from Nicotine and PySoulSeek""") % version
         VersionPython.set_alignment(0, 0.5)
         VersionPython.show()
 
-        hboxpython.pack_start(python, True, True)
-        hboxpython.pack_start(VersionPython, True, True)
+        hboxpython.pack_start(python, True, True, 0)
+        hboxpython.pack_start(VersionPython, True, True, 0)
 
         hboxgtk = gtk.HBox(5)
         hboxgtk.show()
 
-        gtkversion = '.'.join(map(str, gtk.gtk_version[:3]))
+        gtkversion = f'{gtk.get_major_version()}.{gtk.get_minor_version()}.{gtk.get_micro_version()}'
 
         VersionGTK = gtk.Label(gtkversion)
 
@@ -136,32 +139,30 @@ Based on code from Nicotine and PySoulSeek""") % version
         VersionGTK.set_alignment(0, 0.5)
         VersionGTK.show()
 
-        hboxgtk.pack_start(gtkplus, True, True)
-        hboxgtk.pack_start(VersionGTK, True, True)
+        hboxgtk.pack_start(gtkplus, True, True, 0)
+        hboxgtk.pack_start(VersionGTK, True, True, 0)
 
         hboxpygtk = gtk.HBox(5)
         hboxpygtk.show()
 
-        pygtkversion = '.'.join(map(str, gtk.pygtk_version[:3]))
+        VersionPyGObject = gtk.Label(gobject_version)
 
-        VersionPyGTK = gtk.Label(pygtkversion)
-
-        pygtkplus = gtk.Label("PyGTK+:")
+        pygtkplus = gtk.Label("PyGObject:")
         pygtkplus.set_alignment(0, 0.5)
         pygtkplus.show()
 
-        VersionPyGTK.set_alignment(0, 0.5)
-        VersionPyGTK.show()
+        VersionPyGObject.set_alignment(0, 0.5)
+        VersionPyGObject.show()
 
-        hboxpygtk.pack_start(pygtkplus, True, True)
-        hboxpygtk.pack_start(VersionPyGTK, True, True)
+        hboxpygtk.pack_start(pygtkplus, True, True, 0)
+        hboxpygtk.pack_start(VersionPyGObject, True, True, 0)
 
-        self.vbox2.pack_start(hboxpython, True, True)
-        self.vbox2.pack_start(hboxgtk, True, True)
-        self.vbox2.pack_start(hboxpygtk, True, True)
+        self.vbox2.pack_start(hboxpython, True, True, 0)
+        self.vbox2.pack_start(hboxgtk, True, True, 0)
+        self.vbox2.pack_start(hboxpygtk, True, True, 0)
 
-        self.vbox.pack_start(hbox, True, True)
-        self.vbox.pack_start(self.expander, True, True)
+        self.vbox.pack_start(hbox, True, True, 0)
+        self.vbox.pack_start(self.expander, True, True, 0)
 
         self.LicenseButton = self.nicotine.CreateIconButton(
             gtk.STOCK_ABOUT,
@@ -169,7 +170,7 @@ Based on code from Nicotine and PySoulSeek""") % version
             self.license, _("License")
         )
 
-        self.action_area.pack_start(self.LicenseButton)
+        self.action_area.pack_start(self.LicenseButton, True, True, 0)
 
         self.CreditsButton = self.nicotine.CreateIconButton(
             gtk.STOCK_ABOUT,
@@ -178,7 +179,7 @@ Based on code from Nicotine and PySoulSeek""") % version
             _("Credits")
         )
 
-        self.action_area.pack_start(self.CreditsButton)
+        self.action_area.pack_start(self.CreditsButton, True, True, 0)
 
         self.CloseButton = self.nicotine.CreateIconButton(
             gtk.STOCK_CLOSE,
@@ -187,8 +188,7 @@ Based on code from Nicotine and PySoulSeek""") % version
             _("Close")
         )
 
-        self.CloseButton.set_flags(gtk.CAN_DEFAULT)
-        self.action_area.pack_start(self.CloseButton)
+        self.action_area.pack_start(self.CloseButton, True, True, 0)
 
         self.show_all()
 
@@ -220,13 +220,10 @@ class AboutCreditsDialog(GenericAboutDialog):
         self.notebook = gtk.Notebook()
         self.notebook.show()
         self.DevScrolledWindow = gtk.ScrolledWindow()
-        self.DevScrolledWindow.set_shadow_type(gtk.SHADOW_IN)
-        self.DevScrolledWindow.set_policy(gtk.POLICY_AUTOMATIC,
-                                          gtk.POLICY_AUTOMATIC)
         self.DevScrolledWindow.show()
 
         self.DevTextView = gtk.TextView()
-        self.DevTextView.set_wrap_mode(gtk.WRAP_WORD)
+        self.DevTextView.set_wrap_mode(gtk.WrapMode.WORD)
         self.DevTextView.set_cursor_visible(False)
         self.DevTextView.set_editable(False)
         self.DevTextView.show()
@@ -255,6 +252,10 @@ eLvErDe
 Kip Warner
 - Debianization
 - [kip(at)thevertigo(dot)com]
+
+Lene Preuss
+- Python3 migration
+- [lene.preuss(at)here(dot)com]
 
 ### Retired
 
@@ -313,7 +314,7 @@ Wretched
 - Beta tester
 - Bringer of great ideas
 
-(va)\*10^3
+(va)\\*10^3
 - Beta tester
 - Designer of the old nicotine homepage and artwork (logos)
 
@@ -346,13 +347,10 @@ distributed under a CC BY-SA 3.0 Unported license."""
         self.notebook.append_page(self.DevScrolledWindow, developersLabel)
 
         self.TransScrolledWindow = gtk.ScrolledWindow()
-        self.TransScrolledWindow.set_shadow_type(gtk.SHADOW_IN)
-        self.TransScrolledWindow.set_policy(gtk.POLICY_AUTOMATIC,
-                                            gtk.POLICY_AUTOMATIC)
         self.TransScrolledWindow.show()
 
         self.TransTextView = gtk.TextView()
-        self.TransTextView.set_wrap_mode(gtk.WRAP_WORD)
+        self.TransTextView.set_wrap_mode(gtk.WrapMode.WORD)
         self.TransTextView.set_cursor_visible(False)
         self.TransTextView.set_editable(False)
         self.TransTextView.set_left_margin(3)
@@ -416,7 +414,7 @@ Euskara
         translatorsLabel = gtk.Label(_("Translators"))
         translatorsLabel.show()
         self.notebook.append_page(self.TransScrolledWindow, translatorsLabel)
-        self.vbox.pack_start(self.notebook)
+        self.vbox.pack_start(self.notebook, True, True, 0)
 
 
 class AboutLicenseDialog(GenericAboutDialog):
@@ -427,9 +425,6 @@ class AboutLicenseDialog(GenericAboutDialog):
         self.set_resizable(True)
         self.resize(550, 450)
         self.ScrolledWindow = gtk.ScrolledWindow()
-        self.ScrolledWindow.set_shadow_type(gtk.SHADOW_IN)
-        self.ScrolledWindow.set_policy(gtk.POLICY_AUTOMATIC,
-                                       gtk.POLICY_AUTOMATIC)
         self.ScrolledWindow.show()
 
         self.TextView = gtk.TextView()
@@ -457,7 +452,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see < http://www.gnu.org/licenses/ >."""
 
         AppendLine(self.TextView, text, None, None, showstamp=False)
-        self.vbox.pack_start(self.ScrolledWindow)
+        self.vbox.pack_start(self.ScrolledWindow, True, True, 0)
         self.show_all()
 
 
@@ -499,9 +494,9 @@ This will apply to any existing results, and any more that are returned.
 To filter in a different way, just set the relevant terms.
 You do not need to do another search to apply a different filter."""))
 
-        label.set_justify(gtk.JUSTIFY_LEFT)
+        label.set_justify(gtk.Justification.LEFT)
         label.set_selectable(True)
-        self.vbox.pack_start(label)
+        self.vbox.pack_start(label, True, True, 0)
         self.show_all()
 
 
@@ -514,34 +509,32 @@ class GenericTableDialog(GenericAboutDialog):
         GenericAboutDialog.__init__(self, parent, title)
         self.set_resizable(True)
         ScrolledWindow = gtk.ScrolledWindow()
-        ScrolledWindow.set_shadow_type(gtk.SHADOW_IN)
-        ScrolledWindow.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
         ScrolledWindow.show()
         self.resize(650, 500)
         vbox2 = gtk.VBox()
         vbox2.show()
-        rows = len(self.items) / 2
+        rows = int(len(self.items) / 2)
         self.table = table = gtk.Table(rows, 2)
         table.set_col_spacings(5)
         table.set_row_spacings(2)
 
         for i in range(rows):
-            l = gtk.Label()
-            l.set_markup(self.items[i*2])
-            l.set_alignment(0.0, 0.5)
+            l = gtk.Label()  # noqa: E741
+            l.set_markup(self.items[i * 2])
+            l.set_alignment(0.0, 0.0)
             l.set_selectable(True)
             r = gtk.Label()
-            r.set_markup(self.items[i*2+1])
-            r.set_alignment(0.0, 0.5)
+            r.set_markup(self.items[i * 2 + 1])
+            r.set_alignment(0.0, 0.0)
             r.set_line_wrap(True)
             r.set_selectable(True)
-            table.attach(l, 0, 1, i, i+1, xoptions=gtk.FILL)
-            table.attach(r, 1, 2, i, i+1, xoptions=gtk.FILL | gtk.EXPAND)
+            table.attach(l, 0, 1, i, i + 1, xoptions=gtk.AttachOptions.FILL)
+            table.attach(r, 1, 2, i, i + 1, xoptions=gtk.AttachOptions.FILL | gtk.AttachOptions.EXPAND)
 
-        vbox2.pack_start(table, False, False)
-        vbox2.pack_start(gtk.Label(), True, True)
+        vbox2.pack_start(table, False, False, 0)
+        vbox2.pack_start(gtk.Label(), True, True, 0)
         ScrolledWindow.add_with_viewport(vbox2)
-        self.vbox.pack_start(ScrolledWindow)
+        self.vbox.pack_start(ScrolledWindow, True, True, 0)
         self.show_all()
 
 

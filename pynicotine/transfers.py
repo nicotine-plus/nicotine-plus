@@ -29,30 +29,26 @@
 the transfer manager.
 """
 
-from __future__ import division
-
-import slskmessages
-import threading
-import thread
-from slskmessages import newId
-from logfacility import log
-
+import hashlib
+import locale
 import os
+import os.path
+import re
+import shutil
 import stat
 import sys
-import shutil
-import os.path
-import string
-import re
+import threading
 import time
-import locale
-import utils
-import hashlib
-from utils import executeCommand
-from gtkgui.utils import recode2
+from gettext import gettext as _
 from time import sleep
-import gobject
-from temporary import HybridListDictionaryTransferMonstrosity
+
+from pynicotine import slskmessages
+from pynicotine import utils
+from pynicotine.logfacility import log
+from pynicotine.slskmessages import newId
+from pynicotine.temporary import HybridListDictionaryTransferMonstrosity
+from pynicotine.utils import executeCommand
+
 win32 = sys.platform.startswith("win")
 
 
@@ -133,23 +129,23 @@ class Transfers:
             if len(i) >= 6:
                 try:
                     size = int(i[4])
-                except:
+                except Exception:
                     pass
 
                 try:
                     currentbytes = int(i[5])
-                except:
+                except Exception:
                     pass
 
             if len(i) >= 8:
                 try:
                     bitrate = i[6]
-                except:
+                except Exception:
                     pass
 
                 try:
                     length = i[7]
-                except:
+                except Exception:
                     pass
 
             if len(i) >= 4 and i[3] in ("Aborted", "Paused"):
@@ -166,7 +162,7 @@ class Transfers:
             )
             getstatus[i[0]] = ""
 
-        for i in getstatus.keys():
+        for i in list(getstatus.keys()):
             if i not in self.eventprocessor.watchedusers:
                 self.queue.put(slskmessages.AddUser(i))
             self.queue.put(slskmessages.GetUserStatus(i))
@@ -277,7 +273,7 @@ class Transfers:
                     transfer.status = "Filtered"
                     # In order to remove the filtered files from the saved download queue.
                     self.SaveDownloads()
-            except:
+            except Exception:
                 pass
 
         if status is None:
@@ -285,7 +281,7 @@ class Transfers:
                 self.queue.put(slskmessages.AddUser(user))
             self.queue.put(slskmessages.GetUserStatus(user))
 
-        if transfer.status is not "Filtered":
+        if transfer.status != "Filtered":
             transfer.req = newId()
             realpath = self.eventprocessor.shares.virtual2real(filename)
             request = slskmessages.TransferRequest(None, direction, transfer.req, filename, self.getFileSize(realpath), realpath)
@@ -440,7 +436,7 @@ class Transfers:
     def TransferRequest(self, msg):
 
         user = response = None
-        transfers = self.eventprocessor.config.sections["transfers"]
+        transfers = self.eventprocessor.config.sections["transfers"]  # noqa: F841
 
         if msg.conn is not None:
             for i in self.peerconns:
@@ -777,8 +773,8 @@ class Transfers:
     def fileIsShared(self, user, virtualfilename, realfilename):
 
         if win32:
-            u_realfilename = u"%s" % realfilename
-            u_virtualfilename = u"%s" % virtualfilename
+            u_realfilename = "%s" % realfilename
+            u_virtualfilename = "%s" % virtualfilename
         else:
             u_realfilename = realfilename
             u_virtualfilename = virtualfilename
@@ -836,7 +832,7 @@ class Transfers:
 
         if limit_upload_slots:
             maxupslots = self.eventprocessor.config.sections["transfers"]["uploadslots"]
-            if len(bandwidthlist)+currently_negotiating >= maxupslots:
+            if len(bandwidthlist) + currently_negotiating >= maxupslots:
                 return False
 
         if limit_upload_speed:
@@ -857,10 +853,10 @@ class Transfers:
 
         try:
             if win32:
-                size = os.path.getsize(u"%s" % filename.replace("\\", os.sep))
+                size = os.path.getsize("%s" % filename.replace("\\", os.sep))
             else:
                 size = os.path.getsize(filename.replace("\\", os.sep))
-        except:
+        except Exception:
             # file doesn't exist (remote files are always this)
             size = 0
 
@@ -871,7 +867,7 @@ class Transfers:
 
         if msg.reason is not None:
 
-            for i in (self.downloads+self.uploads)[:]:
+            for i in (self.downloads + self.uploads)[:]:
 
                 if i.req != msg.req:
                     continue
@@ -927,7 +923,7 @@ class Transfers:
 
     def TransferTimeout(self, msg):
 
-        for i in (self.downloads+self.uploads)[:]:
+        for i in (self.downloads + self.uploads)[:]:
 
             if i.req != msg.req:
                 continue
@@ -993,9 +989,9 @@ class Transfers:
                 if not os.access(incompletedir, os.F_OK):
                     os.makedirs(incompletedir)
                 if not os.access(incompletedir, os.R_OK | os.W_OK | os.X_OK):
-                    raise OSError, "Download directory %s Permissions error.\nDir Permissions: %s" % (incompletedir, oct(os.stat(incompletedir)[stat.ST_MODE] & 0777))
+                    raise OSError("Download directory %s Permissions error.\nDir Permissions: %s" % (incompletedir, oct(os.stat(incompletedir)[stat.ST_MODE] & 0o777)))
 
-            except OSError, strerror:
+            except OSError as strerror:
                 self.eventprocessor.logMessage(_("OS error: %s") % strerror)
                 i.status = "Download directory error"
                 i.conn = None
@@ -1004,13 +1000,13 @@ class Transfers:
 
             else:
                 # also check for a windows-style incomplete transfer
-                basename = string.split(i.filename, '\\')[-1]
+                basename = i.filename.split('\\')[-1]
                 basename = self.encode(basename, i.user)
                 winfname = os.path.join(incompletedir, "INCOMPLETE~" + basename)
                 pyfname = os.path.join(incompletedir, "INCOMPLETE" + basename)
 
                 m = hashlib.md5()
-                m.update(i.filename + i.user)
+                m.update((i.filename + i.user).encode('utf-8'))
 
                 pynewfname = os.path.join(incompletedir, "INCOMPLETE" + m.hexdigest() + basename)
                 try:
@@ -1022,16 +1018,16 @@ class Transfers:
                         fname = pynewfname
 
                     if win32:
-                        f = open(u"%s" % fname, 'ab+')
+                        f = open("%s" % fname, 'ab+')
                     else:
                         f = open(fname, 'ab+')
 
-                except IOError, strerror:
+                except IOError as strerror:
                     self.eventprocessor.logMessage(_("Download I/O error: %s") % strerror)
                     i.status = "Local file error"
                     try:
                         f.close()
-                    except:
+                    except Exception:
                         pass
                     i.conn = None
                     self.queue.put(slskmessages.ConnClose(msg.conn))
@@ -1042,7 +1038,7 @@ class Transfers:
                             import fcntl
                             try:
                                 fcntl.lockf(f, fcntl.LOCK_EX | fcntl.LOCK_NB)
-                            except IOError, strerror:
+                            except IOError as strerror:
                                 self.eventprocessor.logMessage(_("Can't get an exclusive lock on file - I/O error: %s") % strerror)
                         except ImportError:
                             pass
@@ -1056,9 +1052,9 @@ class Transfers:
                     i.place = 0
                     i.offset = size
                     i.starttime = time.time()
-                    self.eventprocessor.logMessage(_("Download started: %s") % (u"%s" % f.name), 5)
+                    self.eventprocessor.logMessage(_("Download started: %s") % ("%s" % f.name), 5)
 
-                    self.eventprocessor.logTransfer(_("Download started: user %(user)s, file %(file)s") % {'user': i.user, 'file': u"%s" % f.name}, 5)
+                    self.eventprocessor.logTransfer(_("Download started: user %(user)s, file %(file)s") % {'user': i.user, 'file': "%s" % f.name}, 5)
 
             self.SetIconDownloads()
             self.downloadspanel.update(i)
@@ -1082,7 +1078,7 @@ class Transfers:
             try:
                 # Open File
                 if win32:
-                    filename = u"%s" % i.realfilename.replace("\\", os.sep)
+                    filename = "%s" % i.realfilename.replace("\\", os.sep)
                 else:
                     filename = i.realfilename.replace("\\", os.sep)
 
@@ -1095,12 +1091,12 @@ class Transfers:
                     'user': i.user,
                     'file': self.decode(i.filename)
                 })
-            except IOError, strerror:
+            except IOError as strerror:
                 self.eventprocessor.logMessage(_("Upload I/O error: %s") % strerror)
                 i.status = "Local file error"
                 try:
                     f.close()
-                except:
+                except Exception:
                     pass
                 i.conn = None
                 self.queue.put(slskmessages.ConnClose(msg.conn))
@@ -1190,7 +1186,7 @@ class Transfers:
                     i.status = "Transferring"
                 else:
                     msg.file.close()
-                    basename = utils.CleanPath(self.encode(string.split(i.filename, '\\')[-1], i.user))
+                    basename = utils.CleanPath(self.encode(i.filename.split('\\')[-1], i.user))
                     downloaddir = config["transfers"]["downloaddir"]
 
                     if i.path and i.path[0] == '/':
@@ -1206,17 +1202,17 @@ class Transfers:
                     if newname:
                         try:
                             shutil.move(msg.file.name, newname)
-                        except (IOError, OSError), inst:
-                                try:
-                                    shutil.move(msg.file.name, u"%s" % newname)
-                                except (IOError, OSError), inst:
-                                    log.addwarning(
-                                        _("Couldn't move '%(tempfile)s' to '%(file)s': %(error)s") % {
-                                            'tempfile': self.decode(msg.file.name),
-                                            'file': self.decode(newname),
-                                            'error': str(inst)
-                                        }
-                                    )
+                        except (IOError, OSError) as inst:  # noqa: F841
+                            try:
+                                shutil.move(msg.file.name, "%s" % newname)
+                            except (IOError, OSError) as inst:
+                                log.addwarning(
+                                    _("Couldn't move '%(tempfile)s' to '%(file)s': %(error)s") % {
+                                        'tempfile': self.decode(msg.file.name),
+                                        'file': self.decode(newname),
+                                        'error': str(inst)
+                                    }
+                                )
 
                     i.status = "Finished"
 
@@ -1252,7 +1248,7 @@ class Transfers:
 
                     if newname:
                         if win32:
-                            self.addToShared(u"%s" % newname)
+                            self.addToShared("%s" % newname)
                         else:
                             self.addToShared(newname)
                         self.eventprocessor.shares.sendNumSharedFoldersFiles()
@@ -1295,12 +1291,12 @@ class Transfers:
                                     self.eventprocessor.logMessage(_("Trouble executing on folder: %s") % config["transfers"]["afterfolder"])
                                 else:
                                     self.eventprocessor.logMessage(_("Executed on folder: %s") % config["transfers"]["afterfolder"])
-            except IOError, strerror:
+            except IOError as strerror:
                 self.eventprocessor.logMessage(_("Download I/O error: %s") % self.decode(strerror))
                 i.status = "Local file error"
                 try:
                     msg.file.close()
-                except:
+                except Exception:
                     pass
                 i.conn = None
                 self.queue.put(slskmessages.ConnClose(msg.conn))
@@ -1455,7 +1451,7 @@ class Transfers:
         trusers = self.getTransferringUsers()
 
         # List of transfer instances of users who are not currently transferring
-        list = [i for i in self.uploads if not i.user in trusers and i.status == "Queued"]
+        list = [i for i in self.uploads if i.user not in trusers and i.status == "Queued"]
 
         # Sublist of privileged users transfers
         listprivileged = [i for i in list if self.isPrivileged(i.user)]
@@ -1541,7 +1537,7 @@ class Transfers:
                         break
         else:
             # Todo
-            list = listpriv = {user: time.time()}
+            list = listpriv = {user: time.time()}  # noqa: F841
             countpriv = 0
             trusers = self.getTransferringUsers()
             count = 0
@@ -1613,7 +1609,7 @@ class Transfers:
             if self.isPrivileged(username):
                 return len(self.privusersqueued), len(self.privusersqueued)
             else:
-                return len(self.usersqueued)+self.privcount, self.privcount
+                return len(self.usersqueued) + self.privcount, self.privcount
 
     def addQueued(self, user, filename):
 
@@ -1729,7 +1725,7 @@ class Transfers:
         with the same checksum value already exists as identicalfile, if
         identicalfile is None the file can be saved under newname."""
 
-        if win32 and not os.path.exists(u"%s" % name) and not os.path.exists(name):
+        if win32 and not os.path.exists("%s" % name) and not os.path.exists(name):
             # Filename doesn't exist, good for renaming
             return (name, None)
         elif not win32 and not os.path.exists(name):
@@ -1753,7 +1749,7 @@ class Transfers:
 
     def getChecksum(self, path):
         try:
-            h = open(path)
+            h = open(path, 'rb')
             m = hashlib.md5()
             m.update(h.read(-1))
             digest = m.digest()
@@ -1785,7 +1781,7 @@ class Transfers:
     def FileError(self, msg):
         """ Networking thread encountered a local file error"""
 
-        for i in self.downloads+self.uploads:
+        for i in self.downloads + self.uploads:
 
             if i.conn != msg.conn.conn:
                 continue
@@ -1793,7 +1789,7 @@ class Transfers:
 
             try:
                 msg.file.close()
-            except:
+            except Exception:
                 pass
 
             i.conn = None
@@ -1815,8 +1811,8 @@ class Transfers:
         if username is None:
             return
 
-        for i in msg.list.keys():
-            for directory in msg.list[i].keys():
+        for i in list(msg.list.keys()):
+            for directory in list(msg.list[i].keys()):
 
                 if os.path.commonprefix([i, directory]) == directory:
                     priorityfiles = []
@@ -1847,7 +1843,7 @@ class Transfers:
                                 bitrate += " (vbr)"
                             try:
                                 rl = int(attrs[1])
-                            except:
+                            except Exception:
                                 rl = 0
                             length = "%i:%02i" % (rl // 60, rl % 60)
 
@@ -1889,7 +1885,7 @@ class Transfers:
     def AbortTransfers(self):
         """ Stop all transfers """
 
-        for i in self.downloads+self.uploads:
+        for i in self.downloads + self.uploads:
             if i.status in ("Aborted", "Paused"):
                 self.AbortTransfer(i)
                 i.status = "Paused"
@@ -1911,7 +1907,7 @@ class Transfers:
                 transfer.file.close()
                 if remove:
                     os.remove(transfer.file.name)
-            except:
+            except Exception:
                 pass
             if transfer in self.uploads:
                 self.eventprocessor.logTransfer(
@@ -1940,7 +1936,7 @@ class Transfers:
     def decode(self, string):
         try:
             return string.decode(locale.nl_langinfo(locale.CODESET), "replace").encode("utf-8", "replace")
-        except:
+        except Exception:
             return string
 
     def encode(self, string, user=None):
@@ -1951,8 +1947,4 @@ class Transfers:
         if user and user in config["server"]["userencoding"]:
             coding = config["server"]["userencoding"][user]
 
-        string = self.eventprocessor.decode(string, coding)
-        try:
-            return string.encode(locale.nl_langinfo(locale.CODESET))
-        except:
-            return string
+        return self.eventprocessor.decode(string, coding)

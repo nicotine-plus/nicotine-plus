@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-#
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2016-2018 Mutnick <mutnick@techie.com>
 # COPYRIGHT (C) 2008-2011 Quinox <quinox@users.sf.net>
@@ -29,20 +27,17 @@
 This module contains configuration classes for Nicotine.
 """
 
-import ConfigParser
-import string
 import os
-import time
-import cPickle
-import bz2
+import pickle
 import shelve
 import sys
-import thread
-
+import time
+from gettext import gettext as _
 from os.path import exists
 
-from logfacility import log
-from utils import findBestEncoding
+import _thread
+from pynicotine import ConfigParser
+from pynicotine.logfacility import log
 
 
 class Config:
@@ -64,7 +59,7 @@ class Config:
 
     def __init__(self, filename, data_dir):
 
-        self.config_lock = thread.allocate_lock()
+        self.config_lock = _thread.allocate_lock()
         self.config_lock.acquire()
         self.frame = None
         self.filename = filename
@@ -159,7 +154,7 @@ class Config:
                     ["folder.jpg", 1],
                     ["*.url", 1],
                     ["thumbs.db", 1],
-                    ["albumart(_{........-....-....-....-............}_)?(_?(large|small))?\.jpg", 0]
+                    ["albumart(_{........-....-....-....-............}_)?(_?(large|small))?\\.jpg", 0]
                 ],
                 "download_doubleclick": 1,
                 "upload_doubleclick": 1,
@@ -404,21 +399,21 @@ class Config:
             self.sections['transfers']['uploaddir'] = os.path.join(os.environ['APPDATA'], 'nicotine', 'uploads')
 
         self.defaults = {}
-        for key, value in self.sections.items():
+        for key, value in list(self.sections.items()):
             if type(value) is dict:
                 if key not in self.defaults:
                     self.defaults[key] = {}
 
-                for key2, value2 in value.items():
+                for key2, value2 in list(value.items()):
                     self.defaults[key][key2] = value2
             else:
                 self.defaults[key] = value
 
         try:
-            f = open(filename+".alias")
-            self.aliases = cPickle.load(f)
+            f = open(filename + ".alias", 'rb')
+            self.aliases = pickle.load(f)
             f.close()
-        except:
+        except Exception:
             self.aliases = {}
 
         self.config_lock.release()
@@ -428,8 +423,8 @@ class Config:
         errorlevel = 0
 
         try:
-            for i in self.sections.keys():
-                for j in self.sections[i].keys():
+            for i in list(self.sections.keys()):
+                for j in list(self.sections[i].keys()):
 
                     if type(self.sections[i][j]) not in [type(None), type("")]:
                         continue
@@ -463,7 +458,7 @@ class Config:
                             self.frame.logMessage(_("Config option unset: Section: %(section)s, Option: %(option)s") % {'section': i, 'option': j})
                             self.frame.settingswindow.InvalidSettings(i, j)
 
-        except Exception, error:
+        except Exception as error:
             message = _("Config error: %s") % error
             self.frame.logMessage(message)
             if errorlevel < 3:
@@ -483,32 +478,31 @@ class Config:
         if exists(os.path.join(self.data_dir, 'transfers.pickle')):
             # <1.2.13 stored transfers inside the main config
             try:
-                handle = open(os.path.join(self.data_dir, 'transfers.pickle'))
-            except IOError, inst:
+                handle = open(os.path.join(self.data_dir, 'transfers.pickle'), 'rb')
+            except IOError as inst:
                 log.addwarning(_("Something went wrong while opening your transfer list: %(error)s") % {'error': str(inst)})
             else:
                 try:
-                    self.sections['transfers']['downloads'] = cPickle.load(handle)
-                except (IOError, EOFError, ValueError), inst:
+                    self.sections['transfers']['downloads'] = pickle.load(handle)
+                except (IOError, EOFError, ValueError) as inst:
                     log.addwarning(_("Something went wrong while reading your transfer list: %(error)s") % {'error': str(inst)})
             try:
                 handle.close()
-            except:
+            except Exception:
                 pass
 
         path, fn = os.path.split(self.filename)
         try:
             if not os.path.isdir(path):
                 os.makedirs(path)
-        except OSError, msg:
+        except OSError as msg:
             log.addwarning("Can't create directory '%s', reported error: %s" % (path, msg))
 
         try:
             if not os.path.isdir(self.data_dir):
                 os.makedirs(self.data_dir)
-        except OSError, msg:
+        except OSError as msg:
             log.addwarning("Can't create directory '%s', reported error: %s" % (path, msg))
-
 
         # Transition from 1.2.16 -> 1.4.0
         # Do the cleanup early so we don't get the annoying
@@ -575,7 +569,7 @@ class Config:
                 else:
                     try:
                         self.sections[i][j] = eval(val, {})
-                    except:
+                    except Exception:
                         self.sections[i][j] = None
                         log.addwarning("CONFIG ERROR: Couldn't decode '%s' section '%s' value '%s'" % (str(j), str(i), str(val)))
 
@@ -619,13 +613,13 @@ class Config:
         for shelvefile in shelves:
             try:
                 _opened_shelves.append(shelve.open(shelvefile))
-            except:
+            except Exception:
                 _errors.append(shelvefile)
                 try:
                     os.unlink(shelvefile)
                     _opened_shelves.append(shelve.open(shelvefile, flag='n'))
-                except Exception, ex:
-                    print("Failed to unlink %s: %s" % (shelvefile, ex))
+                except Exception as ex:
+                    print(("Failed to unlink %s: %s" % (shelvefile, ex)))
 
         sharedfiles = _opened_shelves.pop(0)
         bsharedfiles = _opened_shelves.pop(0)
@@ -687,7 +681,7 @@ class Config:
                 sharedfiles.close()
             try:
                 os.unlink(os.path.join(self.data_dir, 'files.db'))
-            except:
+            except Exception:
                 pass
             sharedfiles = shelve.open(os.path.join(self.data_dir, "files.db"), flag='n')
 
@@ -695,7 +689,7 @@ class Config:
                 bsharedfiles.close()
             try:
                 os.unlink(os.path.join(self.data_dir, 'buddyfiles.db'))
-            except:
+            except Exception:
                 pass
             bsharedfiles = shelve.open(os.path.join(self.data_dir, "buddyfiles.db"), flag='n')
 
@@ -703,7 +697,7 @@ class Config:
                 sharedfilesstreams.close()
             try:
                 os.unlink(os.path.join(self.data_dir, 'streams.db'))
-            except:
+            except Exception:
                 pass
             sharedfilesstreams = shelve.open(os.path.join(self.data_dir, "streams.db"), flag='n')
 
@@ -711,7 +705,7 @@ class Config:
                 bsharedfilesstreams.close()
             try:
                 os.unlink(os.path.join(self.data_dir, 'buddystreams.db'))
-            except:
+            except Exception:
                 pass
             bsharedfilesstreams = shelve.open(os.path.join(self.data_dir, "buddystreams.db"), flag='n')
 
@@ -719,7 +713,7 @@ class Config:
                 wordindex.close()
             try:
                 os.unlink(os.path.join(self.data_dir, 'wordindex.db'))
-            except:
+            except Exception:
                 pass
             wordindex = shelve.open(os.path.join(self.data_dir, "wordindex.db"), flag='n')
 
@@ -727,7 +721,7 @@ class Config:
                 bwordindex.close()
             try:
                 os.unlink(os.path.join(self.data_dir, 'buddywordindex.db'))
-            except:
+            except Exception:
                 pass
             bwordindex = shelve.open(os.path.join(self.data_dir, "buddywordindex.db"), flag='n')
 
@@ -735,7 +729,7 @@ class Config:
                 fileindex.close()
             try:
                 os.unlink(os.path.join(self.data_dir, 'fileindex.db'))
-            except:
+            except Exception:
                 pass
             fileindex = shelve.open(os.path.join(self.data_dir, "fileindex.db"), flag='n')
 
@@ -743,7 +737,7 @@ class Config:
                 bfileindex.close()
             try:
                 os.unlink(os.path.join(self.data_dir, 'buddyfileindex.db'))
-            except:
+            except Exception:
                 pass
             bfileindex = shelve.open(os.path.join(self.data_dir, "buddyfileindex.db"), flag='n')
 
@@ -751,7 +745,7 @@ class Config:
                 sharedmtimes.close()
             try:
                 os.unlink(os.path.join(self.data_dir, 'mtimes.db'))
-            except:
+            except Exception:
                 pass
             sharedmtimes = shelve.open(os.path.join(self.data_dir, "mtimes.db"), flag='n')
 
@@ -759,10 +753,10 @@ class Config:
                 bsharedmtimes.close()
             try:
                 os.unlink(os.path.join(self.data_dir, 'buddymtimes.db'))
-            except:
+            except Exception:
                 pass
             bsharedmtimes = shelve.open(os.path.join(self.data_dir, "buddymtimes.db"), flag='n')
-        except Exception, error:
+        except Exception as error:
             log.addwarning(_("Error while writing database files: %s") % error)
             return None
         return sharedfiles, bsharedfiles, sharedfilesstreams, bsharedfilesstreams, wordindex, bwordindex, fileindex, bfileindex, sharedmtimes, bsharedmtimes
@@ -777,30 +771,30 @@ class Config:
         tmpfile = realfile + '.tmp'
         backupfile = realfile + ' .backup'
         try:
-            handle = open(tmpfile, 'w')
-        except Exception, inst:
+            handle = open(tmpfile, 'wb')
+        except Exception as inst:
             log.addwarning(_("Something went wrong while opening your transfer list: %(error)s") % {'error': str(inst)})
         else:
             try:
-                cPickle.dump(self.sections['transfers']['downloads'], handle)
+                pickle.dump(self.sections['transfers']['downloads'], handle)
                 handle.close()
                 try:
                     # Please let it be atomic...
                     os.rename(tmpfile, realfile)
-                except Exception, inst:
+                except Exception as inst:  # noqa: F841
                     # ...ugh. Okay, how about...
                     try:
                         os.unlink(backupfile)
-                    except:
+                    except Exception:
                         pass
                     os.rename(realfile, backupfile)
                     os.rename(tmpfile, realfile)
-            except Exception, inst:
+            except Exception as inst:
                 log.addwarning(_("Something went wrong while writing your transfer list: %(error)s") % {'error': str(inst)})
         finally:
             try:
                 handle.close()
-            except:
+            except Exception:
                 pass
         self.config_lock.release()
 
@@ -814,10 +808,10 @@ class Config:
             "bwordindex", "bfileindex", "bsharedmtimes", "downloads"
         ]
 
-        for i in self.sections.keys():
+        for i in list(self.sections.keys()):
             if not self.parser.has_section(i):
                 self.parser.add_section(i)
-            for j in self.sections[i].keys():
+            for j in list(self.sections[i].keys()):
                 if j not in external_sections:
                     self.parser.set(i, j, self.sections[i][j])
                 else:
@@ -827,21 +821,21 @@ class Config:
         try:
             if not os.path.isdir(path):
                 os.makedirs(path)
-        except OSError, msg:
+        except OSError as msg:
             log.addwarning(_("Can't create directory '%(path)s', reported error: %(error)s") % {'path': path, 'error': msg})
 
-        oldumask = os.umask(0077)
+        oldumask = os.umask(0o077)
 
         try:
             f = open(self.filename + ".new", "w")
-        except IOError, e:
+        except IOError as e:
             log.addwarning(_("Can't save config file, I/O error: %s") % e)
             self.config_lock.release()
             return
         else:
             try:
                 self.parser.write(f)
-            except IOError, e:
+            except IOError as e:
                 log.addwarning(_("Can't save config file, I/O error: %s") % e)
                 self.config_lock.release()
                 return
@@ -852,8 +846,8 @@ class Config:
 
         # A paranoid precaution since config contains the password
         try:
-            os.chmod(self.filename, 0600)
-        except:
+            os.chmod(self.filename, 0o600)
+        except Exception:
             pass
 
         try:
@@ -862,18 +856,18 @@ class Config:
                 try:
                     if os.path.exists(self.filename + ".old"):
                         os.remove(self.filename + ".old")
-                except OSError, error:
+                except OSError as error:  # noqa: F841
                     log.addwarning(_("Can't remove %s" % self.filename + ".old"))
                 try:
                     os.rename(self.filename, self.filename + ".old")
-                except OSError, error:
+                except OSError as error:
                     log.addwarning(_("Can't back config file up, error: %s") % error)
         except OSError:
             pass
 
         try:
             os.rename(self.filename + ".new", self.filename)
-        except OSError, error:
+        except OSError as error:
             log.addwarning(_("Can't rename config file, error: %s") % error)
 
         self.config_lock.release()
@@ -895,12 +889,12 @@ class Config:
             if not os.path.exists(self.filename):
                 raise BaseException("Config file missing")
             tar.add(self.filename)
-            if os.path.exists(self.filename+".alias"):
-                tar.add(self.filename+".alias")
+            if os.path.exists(self.filename + ".alias"):
+                tar.add(self.filename + ".alias")
 
             tar.close()
-        except Exception, e:
-            print e
+        except Exception as e:
+            print(e)
             self.config_lock.release()
             return (1, "Cannot write backup archive: %s" % e)
         self.config_lock.release()
@@ -909,11 +903,11 @@ class Config:
     def setBuddyShares(self, files, streams, wordindex, fileindex, mtimes):
 
         storable_objects = [
-                (files,     "bsharedfiles",        "buddyfiles.db"),
-                (streams,   "bsharedfilesstreams", "buddystreams.db"),
-                (mtimes,    "bsharedmtimes",       "buddymtimes.db"),
-                (wordindex, "bwordindex",          "buddywordindex.db"),
-                (fileindex, "bfileindex",          "buddyfileindex.db")
+            (files, "bsharedfiles", "buddyfiles.db"),
+            (streams, "bsharedfilesstreams", "buddystreams.db"),
+            (mtimes, "bsharedmtimes", "buddymtimes.db"),
+            (wordindex, "bwordindex", "buddywordindex.db"),
+            (fileindex, "bfileindex", "buddyfileindex.db")
         ]
 
         self.config_lock.acquire()
@@ -923,11 +917,11 @@ class Config:
     def setShares(self, files, streams, wordindex, fileindex, mtimes):
 
         storable_objects = [
-                (files,     "sharedfiles",        "files.db"),
-                (streams,   "sharedfilesstreams", "streams.db"),
-                (mtimes,    "sharedmtimes",       "mtimes.db"),
-                (wordindex, "wordindex",          "wordindex.db"),
-                (fileindex, "fileindex",          "fileindex.db")
+            (files, "sharedfiles", "files.db"),
+            (streams, "sharedfilesstreams", "streams.db"),
+            (mtimes, "sharedmtimes", "mtimes.db"),
+            (wordindex, "wordindex", "wordindex.db"),
+            (fileindex, "fileindex", "fileindex.db")
         ]
 
         self.config_lock.acquire()
@@ -941,7 +935,7 @@ class Config:
             self.sections["transfers"][destination].close()
             self.sections["transfers"][destination] = shelve.open(os.path.join(self.data_dir, filename), flag='n')
 
-            for (key, value) in source.iteritems():
+            for (key, value) in source.items():
                 self.sections["transfers"][destination][key] = value
 
     def writeShares(self):
@@ -972,8 +966,8 @@ class Config:
 
     def writeAliases(self):
         self.config_lock.acquire()
-        f = open(self.filename+".alias", "w")
-        cPickle.dump(self.aliases, f, 1)
+        f = open(self.filename + ".alias", "wb")
+        pickle.dump(self.aliases, f, 1)
         f.close()
         self.config_lock.release()
 
@@ -991,9 +985,9 @@ class Config:
                 return _("No such alias (%s)") % rest + "\n"
         else:
             m = "\n" + _("Aliases:") + "\n"
-            for (key, value) in self.aliases.iteritems():
+            for (key, value) in self.aliases.items():
                 m = m + "%s: %s\n" % (key, value)
-            return m+"\n"
+            return m + "\n"
 
     def Unalias(self, rest):
         if rest and rest in self.aliases:

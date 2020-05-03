@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-#
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2016 Josep Anguera <josep.anguera@gmail.com>
 # COPYRIGHT (C) 2016 Mutnick <muhing@yahoo.com>
@@ -21,26 +19,18 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-from __future__ import division
-
-# Python modules
-import mutagen
 import os
 
-from mutagen.mp3 import MP3, MPEGInfo
-from mutagen.mp4 import MP4StreamInfoError
-from mutagen.flac import FLAC, StreamInfo
-# from mutagen.apev2 import APEv2, APEv2File
-from mutagen.oggvorbis import OggVorbisInfo
-from mutagen.musepack import MusepackInfo
+import mutagen
 from mutagen.asf import ASFInfo
+from mutagen.flac import StreamInfo
 from mutagen.monkeysaudio import MonkeysAudioInfo
+from mutagen.mp3 import MPEGInfo
 from mutagen.mp4 import MP4Info
+from mutagen.musepack import MusepackInfo
 from mutagen.oggopus import OggOpusInfo
-
-# Application specific
-from logfacility import log
+from mutagen.oggvorbis import OggVorbisInfo
+from pynicotine.logfacility import log
 
 
 def detect(path):
@@ -49,13 +39,13 @@ def detect(path):
         audio = mutagen.File(path)
     except IOError:
         return None
-    except Exception, e:
+    except Exception as e:
         log.addwarning("Mutagen crashed on '%s': %s" % (path, e))
         return None
 
     try:
         audio.info
-    except:
+    except Exception:
         # mutagen didn't think the file was audio
         return None
 
@@ -76,7 +66,7 @@ def detect(path):
     elif type(audio.info) == OggOpusInfo:
         return processOpus(audio)
     else:
-        print "EEK, what should I do with %(type)s (%(file)s)?" % {"type": str(type(audio.info)), "file": path}
+        print("EEK, what should I do with %(type)s (%(file)s)?" % {"type": str(type(audio.info)), "file": path})
 
     return processGeneric(audio)
 
@@ -85,7 +75,7 @@ def processGeneric(audio):
 
     try:
         return {
-            "bitrate": (audio.info.bitrate/1000),
+            "bitrate": (audio.info.bitrate / 1000),
             "vbr": False,
             "time": audio.info.length,
         }
@@ -115,7 +105,7 @@ def processMPEG(audio):
             vbr = (audio.info.bitrate / 1000) not in rates
 
     return {
-        "bitrate": (audio.info.bitrate/1000),
+        "bitrate": (audio.info.bitrate / 1000),
         "vbr": vbr,
         "time": audio.info.length,
     }
@@ -142,7 +132,7 @@ def processFlac(audio):
 def processVorbis(audio):
 
     return {
-        "bitrate": (audio.info.bitrate/1000),
+        "bitrate": (audio.info.bitrate / 1000),
         "vbr": True,
         "time": audio.info.length,
     }
@@ -168,7 +158,7 @@ def processMonkeys(audio):
 def processMP4(audio):
 
     return {
-        "bitrate": (audio.info.bitrate/1000),
+        "bitrate": (audio.info.bitrate / 1000),
         "vbr": True,
         "time": audio.info.length,
     }
@@ -190,6 +180,7 @@ def processASF(audio):
         "vbr": True,
         "time": duration,
     }
+
 
 def processOpus(audio):
 

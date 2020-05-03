@@ -22,26 +22,36 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import gtk
-import gobject
+import locale
 import os
-
+import random
 import re
 import sre_constants
-import locale
-import string
-import random
-import thread
+from gettext import gettext as _
 
+import gi
+from gi.repository import Gdk
+from gi.repository import GObject as gobject
+from gi.repository import Gtk as gtk
+
+import _thread
 from pynicotine import slskmessages
-
-from utils import InitialiseColumns, IconNotebook, PopupMenu, Humanize, HumanSpeed, HumanSize, PressHeader
-from dirchooser import ChooseDir
-from entrydialog import MetaDialog
-from utils import InputDialog, showCountryTooltip
+from pynicotine.gtkgui.dirchooser import ChooseDir
+from pynicotine.gtkgui.entrydialog import MetaDialog
+from pynicotine.gtkgui.utils import Humanize
+from pynicotine.gtkgui.utils import HumanSize
+from pynicotine.gtkgui.utils import HumanSpeed
+from pynicotine.gtkgui.utils import IconNotebook
+from pynicotine.gtkgui.utils import InitialiseColumns
+from pynicotine.gtkgui.utils import InputDialog
+from pynicotine.gtkgui.utils import PopupMenu
+from pynicotine.gtkgui.utils import PressHeader
+from pynicotine.gtkgui.utils import showCountryTooltip
 from pynicotine.logfacility import log
+from pynicotine.utils import cmp
 
-from time import time
+gi.require_version('Gtk', '3.0')
+gi.require_version('Gdk', '3.0')
 
 
 class WishList(gtk.Dialog):
@@ -69,9 +79,9 @@ class WishList(gtk.Dialog):
         self.vbox.pack_start(self.WishLabel, False, True, 0)
 
         self.WishScrollWin = gtk.ScrolledWindow()
-        self.WishScrollWin.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+        self.WishScrollWin.set_policy(gtk.PolicyType.AUTOMATIC, gtk.PolicyType.AUTOMATIC)
         self.WishScrollWin.show()
-        self.WishScrollWin.set_shadow_type(gtk.SHADOW_IN)
+        self.WishScrollWin.set_shadow_type(gtk.ShadowType.IN)
 
         self.WishlistView = gtk.TreeView()
         self.WishlistView.show()
@@ -80,7 +90,7 @@ class WishList(gtk.Dialog):
 
         self.mainHbox.pack_start(self.WishScrollWin, True, True, 0)
         self.mainVbox = gtk.VBox(False, 5)
-        self.mainHbox.pack_start(self.mainVbox, False, False)
+        self.mainHbox.pack_start(self.mainVbox, False, False, 0)
         self.mainVbox.show()
         self.mainVbox.set_spacing(5)
 
@@ -103,10 +113,10 @@ class WishList(gtk.Dialog):
         column = gtk.TreeViewColumn(_("Wishes"), gtk.CellRendererText(), text=0)
         self.WishlistView.append_column(column)
         self.WishlistView.set_model(self.store)
-        self.WishlistView.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
+        self.WishlistView.get_selection().set_mode(gtk.SelectionMode.MULTIPLE)
 
         column.set_sort_column_id(0)
-        self.store.set_sort_column_id(0, gtk.SORT_ASCENDING)
+        self.store.set_sort_column_id(0, gtk.SortType.ASCENDING)
         self.wishes = {}
 
         for wish in self.nicotine.np.config.sections["server"]["autosearch"]:
@@ -133,7 +143,7 @@ class WishList(gtk.Dialog):
 
             self.nicotine.np.config.sections["server"]["autosearch"].remove(wish)
 
-            for number, search in self.nicotine.Searches.searches.items():
+            for number, search in list(self.nicotine.Searches.searches.items()):
 
                 if search[1] == wish and search[4] == 1:
 
@@ -180,7 +190,7 @@ class Searches(IconNotebook):
         self.frame = frame
 
         self.interval = 0
-        self.searchid = int(random.random() * (2**31-1))
+        self.searchid = int(random.random() * (2 ** 31 - 1))
         self.searches = {}
         self.usersearches = {}
         self.users = {}
@@ -233,7 +243,7 @@ class Searches(IconNotebook):
                 self.searchid = (self.searchid + 1) % (2**31)
 
         self.OnAutoSearch()
-        self.timer = gobject.timeout_add(self.interval*1000, self.OnAutoSearch)
+        self.timer = gobject.timeout_add(self.interval * 1000, self.OnAutoSearch)
 
     def ConnClose(self):
 
@@ -256,7 +266,7 @@ class Searches(IconNotebook):
 
         # Search for a maximum of 3 items at each search interval
         for term in searches[0:3]:
-            for i in self.searches.values():
+            for i in list(self.searches.values()):
                 if i[1] == term and i[4]:
                     self.DoWishListSearch(i[0], term)
                     oldsearch = searches.pop()
@@ -287,7 +297,7 @@ class Searches(IconNotebook):
             mode = 0
         elif search_mode == _("Rooms"):
             mode = 1
-            name = self.frame.RoomSearchCombo.child.get_text()
+            name = self.frame.RoomSearchCombo.get_child().get_text()
             # Space after Joined Rooms is important, so it doesn't conflict
             # with any possible real room
             if name != _("Joined Rooms ") and not name.isspace():
@@ -296,7 +306,7 @@ class Searches(IconNotebook):
             mode = 2
         elif search_mode == _("User"):
             mode = 3
-            user = self.frame.UserSearchCombo.child.get_text().strip()
+            user = self.frame.UserSearchCombo.get_child().get_text().strip()
             if user != "" and not user.isspace():
                 users = [user]
             else:
@@ -323,7 +333,7 @@ class Searches(IconNotebook):
             if feedback is not None:
                 users = feedback[0]
         else:
-            print "Unknown search mode, not using plugin system. Fix me!"
+            print("Unknown search mode, not using plugin system. Fix me!")
             feedback = True
 
         if feedback is not None:
@@ -373,7 +383,7 @@ class Searches(IconNotebook):
         if search[2] is not None:
             self.set_current_page(self.page_num(search[2].Main))
 
-        text = self.frame.np.encode(text)
+        # text = self.frame.np.encode(text)
         if mode == 0:
             self.DoGlobalSearch(self.searchid, text)
         elif mode == 1:
@@ -395,7 +405,7 @@ class Searches(IconNotebook):
         if room is not None:
             self.frame.np.queue.put(slskmessages.RoomSearch(room, id, text))
         else:
-            for room in self.frame.chatrooms.roomsctrl.joinedrooms.keys():
+            for room in list(self.frame.chatrooms.roomsctrl.joinedrooms.keys()):
                 self.frame.np.queue.put(slskmessages.RoomSearch(room, id, text))
 
     def DoBuddiesSearch(self, id, text):
@@ -487,7 +497,7 @@ class Searches(IconNotebook):
 
     def UpdateColours(self):
 
-        for id in self.searches.values():
+        for id in list(self.searches.values()):
             if id[2] is None:
                 continue
             id[2].ChangeColours()
@@ -502,7 +512,7 @@ class Searches(IconNotebook):
 
             page = self.get_nth_page(page_num)
 
-            for name, search in self.searches.items():
+            for name, search in list(self.searches.items()):
 
                 if search[2] is None:
                     continue
@@ -512,7 +522,7 @@ class Searches(IconNotebook):
 
     def GetUserStatus(self, msg):
 
-        for number, search in self.searches.items():
+        for number, search in list(self.searches.items()):
 
             if search[2] is None:
                 continue
@@ -521,7 +531,7 @@ class Searches(IconNotebook):
 
     def NonExistantUser(self, user):
 
-        for number, search in self.searches.items():
+        for number, search in list(self.searches.items()):
 
             if search[2] is None:
                 continue
@@ -535,19 +545,19 @@ class Searches(IconNotebook):
             ("#" + _("Detach this tab"), self.searches[id][2].Detach),
             ("#" + _("Close this tab"), self.searches[id][2].OnClose)
         )
-        items = popup.get_children()
+        items = popup.get_children()  # noqa: F841
 
         return popup
 
     def on_tab_click(self, widget, event, child):
 
-        if event.type == gtk.gdk.BUTTON_PRESS:
+        if event.type == Gdk.EventType.BUTTON_PRESS:
 
             id = None
             n = self.page_num(child)
             page = self.get_nth_page(n)
 
-            for search, data in self.searches.items():
+            for search, data in list(self.searches.items()):
 
                 if data[2] is None:
                     continue
@@ -556,7 +566,7 @@ class Searches(IconNotebook):
                     break
 
             if id is None:
-                print "ID is none"
+                print("ID is none")
                 return
 
             if event.button == 2:
@@ -565,7 +575,7 @@ class Searches(IconNotebook):
 
             if event.button == 3:
                 menu = self.TabPopup(id)
-                menu.popup(None, None, None, event.button, event.time)
+                menu.popup(None, None, None, None, event.button, event.time)
                 return True
 
         return False
@@ -638,7 +648,7 @@ class Search:
             str,  # immediatedl
             str,  # h_bitrate
             str,  # length
-            gtk.gdk.Pixbuf,  # self.get_flag(user, country)
+            gobject.TYPE_OBJECT,  # self.get_flag(user, country)
             str,  # directory
             int,  # bitrate
             str,  # fullpath
@@ -676,19 +686,19 @@ class Search:
         self.FilterBitrate.connect("changed", self.OnFilterChanged)
         self.FilterCountry.connect("changed", self.OnFilterChanged)
 
-        self.FilterIn.child.connect("activate", self.OnRefilter)
-        self.FilterOut.child.connect("activate", self.OnRefilter)
-        self.FilterSize.child.connect("activate", self.OnRefilter)
-        self.FilterBitrate.child.connect("activate", self.OnRefilter)
-        self.FilterCountry.child.connect("activate", self.OnRefilter)
+        self.FilterIn.get_child().connect("activate", self.OnRefilter)
+        self.FilterOut.get_child().connect("activate", self.OnRefilter)
+        self.FilterSize.get_child().connect("activate", self.OnRefilter)
+        self.FilterBitrate.get_child().connect("activate", self.OnRefilter)
+        self.FilterCountry.get_child().connect("activate", self.OnRefilter)
 
         self.selected_results = []
         self.selected_users = []
 
-        self.ResultsList.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
+        self.ResultsList.get_selection().set_mode(gtk.SelectionMode.MULTIPLE)
         self.ResultsList.set_property("show-expanders", False)
         self.ResultsList.set_property("rules-hint", True)
-	widths = self.frame.np.config.sections["columns"]["search_widths"]
+        widths = self.frame.np.config.sections["columns"]["search_widths"]
         cols = InitialiseColumns(
             self.ResultsList,
             [_("Number"), widths[0], "text", self.CellDataFunc],
@@ -757,7 +767,7 @@ class Search:
 
     def OnFilterChanged(self, widget):
 
-        model = widget.get_model()
+        model = widget.get_model()  # noqa: F841
         iter = widget.get_active_iter()
 
         if iter:
@@ -769,14 +779,14 @@ class Search:
 
             filter = self.frame.np.config.sections["searches"]["defilter"]
 
-            self.FilterIn.child.set_text(filter[0])
-            self.FilterOut.child.set_text(filter[1])
-            self.FilterSize.child.set_text(filter[2])
-            self.FilterBitrate.child.set_text(filter[3])
+            self.FilterIn.get_child().set_text(filter[0])
+            self.FilterOut.get_child().set_text(filter[1])
+            self.FilterSize.get_child().set_text(filter[2])
+            self.FilterBitrate.get_child().set_text(filter[3])
             self.FilterFreeSlot.set_active(filter[4])
 
             if(len(filter) > 5):
-                self.FilterCountry.child.set_text(filter[5])
+                self.FilterCountry.get_child().set_text(filter[5])
 
             self.filtersCheck.set_active(1)
 
@@ -865,7 +875,7 @@ class Search:
         else:
             imdl = "N"
 
-        decode = self.frame.np.decode
+        decode = self.frame.np.decode  # noqa: F841
 
         for result in msg.list:
 
@@ -932,7 +942,7 @@ class Search:
                         br = a[0]
 
                         # Dividing the file size by the bitrate in Bytes should give us a good enough approximation
-                        l = result[2] / (br / 8 * 1000)
+                        l = result[2] / (br / 8 * 1000)  # noqa: E741
 
                         length = '%i:%02i' % (l / 60, l % 60)
 
@@ -949,7 +959,7 @@ class Search:
         if results:
 
             # Start a thread to display the user results
-            thread.start_new_thread(self._realaddresults, (results, ))
+            _thread.start_new_thread(self._realaddresults, (results, ))
 
     def _realaddresults(self, results):
 
@@ -968,7 +978,7 @@ class Search:
         # Update tab notification
         self.frame.Searches.request_changed(self.Main)
         if self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.searchvbox):
-            self.frame.SearchTabLabel.child.set_image(self.frame.images["online"])
+            self.frame.SearchTabLabel.get_child().set_image(self.frame.images["online"])
 
     def get_flag(self, user, flag=None):
 
@@ -988,7 +998,7 @@ class Search:
 
         for r in results:
 
-            user, filename, size, speed, queue, immediatedl, h_bitrate, length, directory, bitrate, fullpath,  country, status = r
+            user, filename, size, speed, queue, immediatedl, h_bitrate, length, directory, bitrate, fullpath, country, status = r
 
             if user in self.Searches.users and status != self.Searches.users[user]:
                 status = self.Searches.users[user]
@@ -996,7 +1006,7 @@ class Search:
             if status is None:
                 status = 0
 
-            h_size = HumanSize(long(size))
+            h_size = HumanSize(int(size))
             h_speed = HumanSpeed(speed)
             h_queue = Humanize(queue)
 
@@ -1008,7 +1018,7 @@ class Search:
 
             row = [
                 counter, user, filename, h_size, h_speed, h_queue, immediatedl, h_bitrate, length,
-                directory,  bitrate, fullpath, country,  size, speed, queue, status
+                directory, bitrate, fullpath, country, size, speed, queue, status
             ]
 
             self.all_data.append(row)
@@ -1021,7 +1031,7 @@ class Search:
 
                 encoded_row = [
                     counter, user, encode(filename, user), h_size, h_speed, h_queue, immediatedl, h_bitrate, length,
-                    self.get_flag(user, country), encode(directory, user), bitrate, encode(fullpath, user), country,  size, speed, queue, status
+                    self.get_flag(user, country), encode(directory, user), bitrate, encode(fullpath, user), country, size, speed, queue, status
                 ]
 
                 gobject.idle_add(self._add_to_model, user, encoded_row)
@@ -1035,11 +1045,11 @@ class Search:
                 iter = self.resultsmodel.append(self.usersiters[user], encoded_row)
             else:
                 iter = self.resultsmodel.append(None, encoded_row)
-        except Exception, e:
+        except Exception as e:
             types = []
             for i in encoded_row:
                 types.append(type(i))
-            print "Search row error:", e, encoded_row
+            print("Search row error:", e, encoded_row)
             iter = None
 
         path = None
@@ -1101,7 +1111,7 @@ class Search:
         else:
             compare = cmp
 
-        if order == gtk.SORT_ASCENDING:
+        if order == gtk.SortType.ASCENDING:
             self.all_data.sort(lambda r1, r2: compare(r1[col], r2[col]))
         else:
             self.all_data.sort(lambda r2, r1: compare(r1[col], r2[col]))
@@ -1110,7 +1120,7 @@ class Search:
 
         op = ">="
         if filter[:1] in (">", "<", "="):
-            op, filter = filter[:1]+"=", filter[1:]
+            op, filter = filter[:1] + "=", filter[1:]
 
         if not filter:
             return True
@@ -1137,11 +1147,11 @@ class Search:
             return True
 
         try:
-            filter = long(filter) * factor
+            filter = int(filter) * factor
         except TypeError:
             return True
 
-        if eval(str(value)+op+str(filter), {}):
+        if eval(str(value) + op + str(filter), {}):
             return True
 
         return False
@@ -1196,18 +1206,18 @@ class Search:
                 f_in = re.compile(f_in.lower())
                 self.filters[0] = f_in
             except sre_constants.error:
-                self.frame.SetTextBG(self.FilterIn.child, "red", "white")
+                self.frame.SetTextBG(self.FilterIn.get_child(), "red", "white")
             else:
-                self.frame.SetTextBG(self.FilterIn.child)
+                self.frame.SetTextBG(self.FilterIn.get_child())
 
         if f_out:
             try:
                 f_out = re.compile(f_out.lower())
                 self.filters[1] = f_out
             except sre_constants.error:
-                self.frame.SetTextBG(self.FilterOut.child, "red", "white")
+                self.frame.SetTextBG(self.FilterOut.get_child(), "red", "white")
             else:
-                self.frame.SetTextBG(self.FilterOut.child)
+                self.frame.SetTextBG(self.FilterOut.get_child())
 
         if size:
             self.filters[2] = size
@@ -1226,7 +1236,7 @@ class Search:
 
             if self.check_filter(row):
 
-                ix, user, filename,  h_size, h_speed, h_queue, immediatedl, h_bitrate, length, directory,  bitrate, fullpath, country, size, speed, queue, status = row
+                ix, user, filename, h_size, h_speed, h_queue, immediatedl, h_bitrate, length, directory, bitrate, fullpath, country, size, speed, queue, status = row
 
                 if user in self.Searches.users and status != self.Searches.users[user]:
                     status = self.Searches.users[user]
@@ -1239,18 +1249,18 @@ class Search:
 
                 encoded_row = [
                     ix, user, encode(filename, user), h_size, h_speed, h_queue, immediatedl, h_bitrate, length,
-                    self.get_flag(user, country), encode(directory, user), bitrate, encode(fullpath, user), country,  size, speed, queue, status
+                    self.get_flag(user, country), encode(directory, user), bitrate, encode(fullpath, user), country, size, speed, queue, status
                 ]
 
                 try:
                     if user in self.usersiters:
                         iter = self.resultsmodel.append(self.usersiters[user], encoded_row)
                     else:
-                        iter = self.resultsmodel.append(None, encoded_row)
-                except Exception, e:
-                    print "Filters: Search row error:", e
+                        iter = self.resultsmodel.append(None, encoded_row)  # noqa: F841
+                except Exception as e:
+                    print("Filters: Search row error:", e)
                     for i in encoded_row:
-                        print i, type(i),
+                        print(i, type(i), end=' ')
 
                 displaycounter += 1
 
@@ -1384,11 +1394,11 @@ class Search:
     def ChangeColours(self):
 
         self.frame.SetTextBG(self.ResultsList)
-        self.frame.SetTextBG(self.FilterIn.child)
-        self.frame.SetTextBG(self.FilterOut.child)
-        self.frame.SetTextBG(self.FilterSize.child)
-        self.frame.SetTextBG(self.FilterBitrate.child)
-        self.frame.SetTextBG(self.FilterCountry.child)
+        self.frame.SetTextBG(self.FilterIn.get_child())
+        self.frame.SetTextBG(self.FilterOut.get_child())
+        self.frame.SetTextBG(self.FilterSize.get_child())
+        self.frame.SetTextBG(self.FilterBitrate.get_child())
+        self.frame.SetTextBG(self.FilterCountry.get_child())
         self.frame.SetTextBG(self.RememberCheckButton)
         self.frame.SetTextBG(self.FilterFreeSlot)
 
@@ -1451,7 +1461,7 @@ class Search:
 
     def OnListClicked(self, widget, event):
 
-        if event.button == 1 and event.type == gtk.gdk._2BUTTON_PRESS:
+        if event.button == 1 and event.type == Gdk.EventType._2BUTTON_PRESS:
             self.select_results()
             self.OnDownloadFiles(widget)
             self.ResultsList.get_selection().unselect_all()
@@ -1480,11 +1490,11 @@ class Search:
         items[8].set_sensitive(users)
 
         widget.emit_stop_by_name("button_press_event")
-        self.popup_menu.popup(None, None, None, event.button, event.time)
+        self.popup_menu.popup(None, None, None, None, event.button, event.time)
 
         return True
 
-    def CellDataFunc(self, column, cellrenderer, model, iter):
+    def CellDataFunc(self, column, cellrenderer, model, iter, dummy="dummy"):
 
         status = model.get_value(iter, 17)
         imdl = model.get_value(iter, 6)
@@ -1505,7 +1515,7 @@ class Search:
 
     def MetaBox(self, title="Meta Data", message="", data=None, modal=True):
 
-        win = MetaDialog(self.frame, message,  data, modal)
+        win = MetaDialog(self.frame, message, data, modal)
         win.set_title(title)
         win.set_icon(self.frame.images["n"])
         win.show()
@@ -1585,7 +1595,7 @@ class Search:
         for i in self.selected_results:
 
             user = i[0]
-            dir = string.join(i[1].split("\\")[:-1], "\\")
+            dir = "\\".join(i[1].split("\\")[:-1])
 
             if (user, dir) in folders:
                 continue
@@ -1612,7 +1622,7 @@ class Search:
         for i in self.selected_results:
 
             user = i[0]
-            dir = string.join(i[1].split("\\")[:-1], "\\")
+            dir = "\\".join(i[1].split("\\")[:-1]) + "\\"
 
             if (user, dir) in folders:
                 continue
@@ -1636,7 +1646,7 @@ class Search:
     def OnCopyDirURL(self, widget):
 
         user, path = self.selected_results[0][:2]
-        path = string.join(path.split("\\")[:-1], "\\") + "\\"
+        path = "\\".join(path.split("\\")[:-1]) + "\\"
 
         if path[:-1] != "/":
             path += "/"
@@ -1716,7 +1726,7 @@ class Search:
 
     def PushHistory(self, widget, title):
 
-        text = widget.child.get_text()
+        text = widget.get_child().get_text()
         if not text.strip():
             return None
 
@@ -1725,7 +1735,7 @@ class Search:
         self.frame.np.config.pushHistory(history, text, 5)
 
         self.AddCombo(widget, text)
-        widget.child.set_text(text)
+        widget.get_child().set_text(text)
 
         return text
 

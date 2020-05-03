@@ -23,16 +23,23 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import gtk
-from thread import start_new_thread
-
-from transferlist import TransferList
-from utils import PopupMenu, PressHeader
-import string
 import os
-from pynicotine.utils import executeCommand
+from gettext import gettext as _
+
+import gi
+from gi.repository import Gdk
+from gi.repository import Gtk as gtk
+
+from _thread import start_new_thread
 from pynicotine import slskmessages
-from entrydialog import OptionDialog
+from pynicotine.gtkgui.entrydialog import OptionDialog
+from pynicotine.gtkgui.transferlist import TransferList
+from pynicotine.gtkgui.utils import PopupMenu
+from pynicotine.gtkgui.utils import PressHeader
+from pynicotine.utils import executeCommand
+
+gi.require_version('Gtk', '3.0')
+gi.require_version('Gdk', '3.0')
 
 
 class Uploads(TransferList):
@@ -113,13 +120,14 @@ class Uploads(TransferList):
 
         self.frame.np.config.sections["columns"]["uploads_columns"] = columns
         self.frame.np.config.sections["columns"]["uploads_widths"] = widths
+
     def OnTryClearQueued(self, widget):
 
         direction = "up"
 
         win = OptionDialog(self.frame, _("Clear All Queued Uploads?"), modal=True, status=None, option=False, third="")
         win.connect("response", self.frame.on_clear_response, direction)
-        win.set_title(_("Nicotine+")+": "+_("Clear Queued Transfers"))
+        win.set_title(_("Nicotine+") + ": " + _("Clear Queued Transfers"))
         win.set_icon(self.frame.images["n"])
 
         win.show()
@@ -260,7 +268,7 @@ class Uploads(TransferList):
 
     def on_key_press_event(self, widget, event):
 
-        key = gtk.gdk.keyval_name(event.keyval)
+        key = Gdk.keyval_name(event.keyval)
 
         if key in ("P", "p"):
             self.OnPopupMenu(widget, event, "keyboard")
@@ -355,7 +363,7 @@ class Uploads(TransferList):
 
         if kind == "mouse":
             if event.button != 3:
-                if event.button == 1 and event.type == gtk.gdk._2BUTTON_PRESS:
+                if event.button == 1 and event.type == Gdk.EventType._2BUTTON_PRESS:
                     self.DoubleClick(event)
                 return False
 
@@ -366,7 +374,7 @@ class Uploads(TransferList):
         self.SelectCurrentRow(event, kind)
 
         users = len(self.selected_users) > 0
-        multi_users = len(self.selected_users) > 1
+        multi_users = len(self.selected_users) > 1  # noqa: F841
         files = len(self.selected_transfers) > 0
         multi_files = len(self.selected_transfers) > 1
 
@@ -389,12 +397,12 @@ class Uploads(TransferList):
         else:
             act = False
 
-        for i in range(3, 5) + range(6, 10):
+        for i in list(range(3, 5)) + list(range(6, 10)):
             items[i].set_sensitive(act)
 
         items[2].set_sensitive(act)  # send to player
 
-        self.popup_menu.popup(None, None, None, 3, event.time)
+        self.popup_menu.popup(None, None, None, None, 3, event.time)
         if kind == "keyboard":
             widget.emit_stop_by_name("key_press_event")
         elif kind == "mouse":

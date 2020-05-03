@@ -19,16 +19,28 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import gtk
-import gobject
 import os
-import sys
-import thread
-from os.path import exists, getsize, join
+from gettext import gettext as _
+from os.path import exists
+from os.path import getsize
+from os.path import join
 
-from dirchooser import ChooseDir
-from utils import OpenUri, InitialiseColumns, recode, HumanSize, popupWarning
-from entrydialog import input_box
+import gi
+from gi.repository import Gdk
+from gi.repository import GObject as gobject
+from gi.repository import Gtk as gtk
+
+import _thread
+from pynicotine.gtkgui.dirchooser import ChooseDir
+from pynicotine.gtkgui.entrydialog import input_box
+from pynicotine.gtkgui.utils import HumanSize
+from pynicotine.gtkgui.utils import InitialiseColumns
+from pynicotine.gtkgui.utils import OpenUri
+from pynicotine.gtkgui.utils import popupWarning
+from pynicotine.gtkgui.utils import recode
+
+gi.require_version('Gtk', '3.0')
+gi.require_version('Gdk', '3.0')
 
 
 def dirstats(directory):
@@ -88,7 +100,7 @@ class FastConfigureAssistant(object):
 
         numpages = self.window.get_n_pages()
 
-        for n in xrange(numpages):
+        for n in range(numpages):
             page = self.window.get_nth_page(n)
             template = self.window.get_page_title(page)
             self.window.set_page_title(
@@ -116,7 +128,7 @@ class FastConfigureAssistant(object):
             gobject.TYPE_STRING
         )
 
-        columns = InitialiseColumns(
+        columns = InitialiseColumns(  # noqa: F841
             self.kids['shareddirectoriestree'],
             [_("Virtual Directory"), 0, "text"],
             [_("Directory"), 0, "text"],
@@ -128,7 +140,7 @@ class FastConfigureAssistant(object):
 
         self.kids['shareddirectoriestree'].set_model(self.sharelist)
         self.kids['shareddirectoriestree'].get_selection().set_mode(
-            gtk.SELECTION_MULTIPLE
+            gtk.SelectionMode.MULTIPLE
         )
 
         self.initphase = False
@@ -324,7 +336,7 @@ class FastConfigureAssistant(object):
         self.resetcompleteness(page)
 
     def OnEntryChanged(self, widget, param1=None, param2=None, param3=None):
-        name = gtk.Buildable.get_name(widget)
+        name = gtk.Buildable.get_name(widget)  # noqa: F841
         self.resetcompleteness()
 
     def OnEntryPaste(self, user_data):
@@ -381,14 +393,14 @@ class FastConfigureAssistant(object):
             directory[1]
         ])
 
-        thread.start_new_thread(self._addsharedir, (directory,))
+        _thread.start_new_thread(self._addsharedir, (directory,))
 
     def _addsharedir(self, directory):
 
         subdirs, files, size, extensions = dirstats(directory[1])
         exts = []
 
-        for ext, count in extensions.iteritems():
+        for ext, count in extensions.items():
             exts.append((count, ext))
 
         exts.sort(reverse=True)
@@ -416,12 +428,12 @@ class FastConfigureAssistant(object):
 
             if directory[1] == self.sharelist.get_value(iter, 6):
 
-                self.sharelist.insert_after(iter, [
+                self.sharelist.insert(0, [
                     directory[0],
                     recode(directory[1]),
                     HumanSize(size),
-                    files,
-                    subdirs,
+                    str(files),
+                    str(subdirs),
                     extensions,
                     directory[1]
                 ])
@@ -439,9 +451,10 @@ class FastConfigureAssistant(object):
         name = gtk.Buildable.get_name(widget)
 
         if name == "checkmyport":
-            OpenUri('='.join([
-                'http://tools.slsknet.org/porttest.php?port',
-                str(self.frame.np.waitport)
+            OpenUri(
+                '='.join([
+                    'http://tools.slsknet.org/porttest.php?port',
+                    str(self.frame.np.waitport)
                 ])
             )
 
@@ -552,7 +565,7 @@ class FastConfigureAssistant(object):
         if self.initphase:
             return
 
-        name = gtk.Buildable.get_name(widget)
+        name = gtk.Buildable.get_name(widget)  # noqa: F841
 
         self.resetcompleteness()
 
@@ -575,5 +588,5 @@ class FastConfigureAssistant(object):
     def OnKeyPress(self, widget, event):
 
         # Close the window when escape is pressed
-        if event.keyval == gtk.keysyms.Escape:
+        if event.keyval == Gdk.KEY_Escape:
             self.OnCancel(widget)

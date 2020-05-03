@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-#
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2008-2011 Quinox <quinox@users.sf.net>
 # COPYRIGHT (C) 2007 Gallows <g4ll0ws@gmail.com>
@@ -21,21 +19,36 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 import os
-import sys
-import gtk
-import gobject
-import pango
+from gettext import gettext as _
+from time import altzone
+from time import daylight
 
-from time import daylight, altzone
+import gi
+from gi.repository import Gdk
+from gi.repository import GObject as gobject
+from gi.repository import Gtk as gtk
+from gi.repository import Pango as pango
 
-from utils import AppendLine, IconNotebook, PopupMenu, WriteLog, expand_alias, is_alias, EncodingsMenu, SaveEncoding, fixpath
-from chatrooms import GetCompletion
 from pynicotine import slskmessages
+from pynicotine.gtkgui.chatrooms import GetCompletion
+from pynicotine.gtkgui.utils import AppendLine
+from pynicotine.gtkgui.utils import EncodingsMenu
+from pynicotine.gtkgui.utils import IconNotebook
+from pynicotine.gtkgui.utils import PopupMenu
+from pynicotine.gtkgui.utils import SaveEncoding
+from pynicotine.gtkgui.utils import WriteLog
+from pynicotine.gtkgui.utils import expand_alias
+from pynicotine.gtkgui.utils import fixpath
+from pynicotine.gtkgui.utils import is_alias
+from pynicotine.logfacility import log
 from pynicotine.slskmessages import ToBeEncoded
 from pynicotine.utils import version
-from pynicotine.logfacility import log
+
+gi.require_version('Gtk', '3.0')
+gi.require_version('Gdk', '3.0')
+gi.require_version('Pango', '1.0')
+
 
 CTCP_VERSION = "\x01VERSION\x01"
 
@@ -82,7 +95,7 @@ class PrivateChats(IconNotebook):
 
         page = notebook.get_nth_page(page_num)
 
-        for user, tab in self.users.items():
+        for user, tab in list(self.users.items()):
             if tab.Main == page:
                 gobject.idle_add(tab.ChatLine.grab_focus)
                 # Remove hilite if selected tab belongs to a user in the hilite list
@@ -96,7 +109,7 @@ class PrivateChats(IconNotebook):
 
         page = self.get_nth_page(self.get_current_page())
 
-        for user, tab in self.users.items():
+        for user, tab in list(self.users.items()):
             if tab.Main == page:
                 # Remove hilite
                 if user in self.frame.TrayApp.tray_status["hilites"]["private"]:
@@ -107,7 +120,7 @@ class PrivateChats(IconNotebook):
         if not focused:
             return
 
-        for user, tab in self.users.items():
+        for user, tab in list(self.users.items()):
             if tab.Main == page:
                 if user in self.frame.TrayApp.tray_status["hilites"]["private"]:
                     self.frame.Notifications.Clear("private", tab.user)
@@ -182,11 +195,11 @@ class PrivateChats(IconNotebook):
 
     def on_tab_click(self, widget, event, child):
 
-        if event.type == gtk.gdk.BUTTON_PRESS:
+        if event.type == Gdk.EventType.BUTTON_PRESS:
 
             n = self.page_num(child)
             page = self.get_nth_page(n)
-            username = [user for user, tab in self.users.items() if tab.Main is page][0]
+            username = [user for user, tab in list(self.users.items()) if tab.Main is page][0]
 
             if event.button == 2:
                 self.users[username].OnClose(widget)
@@ -194,7 +207,7 @@ class PrivateChats(IconNotebook):
 
             if event.button == 3:
                 menu = self.TabPopup(username)
-                menu.popup(None, None, None, event.button, event.time)
+                menu.popup(None, None, None, None, event.button, event.time)
                 return True
 
             return False
@@ -250,12 +263,12 @@ class PrivateChats(IconNotebook):
         self.users[msg.user].ShowMessage(text, status, msg.timestamp)
 
         if ctcpversion and self.frame.np.config.sections["server"]["ctcpmsgs"] == 0:
-            self.SendMessage(msg.user, u"Nicotine+ %s" % version)
+            self.SendMessage(msg.user, "Nicotine+ %s" % version)
 
         self.frame.pluginhandler.IncomingPrivateChatNotification(msg.user, text)
 
     def UpdateColours(self):
-        for chat in self.users.values():
+        for chat in list(self.users.values()):
             chat.ChangeColours()
 
     def RemoveTab(self, tab):
@@ -302,20 +315,20 @@ class PrivateChats(IconNotebook):
     def UpdateCompletions(self):
 
         config = self.frame.np.config.sections["words"]
-        clist = [self.frame.np.config.sections["server"]["login"], "nicotine"] + self.users.keys()
+        clist = [self.frame.np.config.sections["server"]["login"], "nicotine"] + list(self.users.keys())
 
         if config["buddies"]:
             clist += [i[0] for i in self.frame.userlist.userlist]
 
         if config["aliases"]:
-            clist += ["/"+k for k in self.frame.np.config.aliases.keys()]
+            clist += ["/" + k for k in list(self.frame.np.config.aliases.keys())]
 
         if config["commands"]:
             clist += self.CMDS
 
         self.clist = clist
 
-        for user in self.users.values():
+        for user in list(self.users.values()):
             user.GetCompletionList(clist=list(self.clist))
 
 
@@ -380,7 +393,7 @@ class PrivateChat:
             self.ChatLine.show()
             self.ChatLine.connect("activate", self.OnEnter)
             self.ChatLine.connect("key_press_event", self.OnKeyPress)
-            self.hbox5.pack_start(self.ChatLine)
+            self.hbox5.pack_start(self.ChatLine, True, True, 0)
             self.hbox5.reorder_child(self.ChatLine, 0)
 
         completion = gtk.EntryCompletion()
@@ -444,7 +457,7 @@ class PrivateChat:
 
         try:
             lines = int(config["logging"]["readprivatelines"])
-        except:
+        except Exception:
             lines = 15
 
         try:
@@ -454,7 +467,7 @@ class PrivateChat:
             s = d.split("\n")
             for l in s[- lines:-1]:
                 AppendLine(self.ChatScroll, l + "\n", self.tag_hilite, timestamp_format="", username=self.user, usertag=self.tag_hilite)
-        except IOError, e:
+        except IOError as e:  # noqa: F841
             pass
 
         gobject.idle_add(self.frame.ScrollBottom, self.ChatScroll.get_parent())
@@ -473,17 +486,17 @@ class PrivateChat:
 
     def OnPopupMenu(self, widget, event):
 
-        if event.type == gtk.gdk.BUTTON_PRESS and event.button == 3:
+        if event.type == Gdk.EventType.BUTTON_PRESS and event.button == 3:
 
-            self.popup_menu.popup(None, None, None, event.button, event.time)
+            self.popup_menu.popup(None, None, None, None, event.button, event.time)
             self.ChatScroll.emit_stop_by_name("button_press_event")
             return True
 
-        elif event.type == gtk.gdk.KEY_PRESS:
+        elif event.type == Gdk.EventType.KEY_PRESS:
 
-            if event.keyval == gtk.gdk.keyval_from_name("Menu"):
+            if event.keyval == Gdk.keyval_from_name("Menu"):
 
-                self.popup_menu.popup(None, None, None, 0, 0)
+                self.popup_menu.popup(None, None, None, None, 0, 0)
                 self.ChatScroll.emit_stop_by_name("key_press_event")
                 return True
 
@@ -513,17 +526,19 @@ class PrivateChat:
         if bound is not None and len(bound) == 2:
             start, end = bound
             log = self.ChatScroll.get_buffer().get_text(start, end)
-            self.frame.clip.set_text(log)
+            self.frame.clip.set_text(log, -1)
 
     def OnCopyAllChatLog(self, widget):
         start, end = self.ChatScroll.get_buffer().get_bounds()
         log = self.ChatScroll.get_buffer().get_text(start, end)
-        self.frame.clip.set_text(log)
+        self.frame.clip.set_text(log, -1)
 
     def OnClearChatLog(self, widget):
         self.ChatScroll.get_buffer().set_text("")
 
     def ShowMessage(self, text, status=None, timestamp=None):
+
+        self.UpdateColours()
 
         if text[:4] == "/me ":
             line = "* %s %s" % (self.user, self.frame.CensorChat(text[4:]))
@@ -551,7 +566,7 @@ class PrivateChat:
             # The timestamps from the server are off by a lot, so we'll only use them when this is an offline message
             # Also, they are in UTC so we need to correct them
             if daylight:
-                timestamp -= (3600*daylight)
+                timestamp -= (3600 * daylight)
             else:
                 timestamp += altzone
 
@@ -564,7 +579,7 @@ class PrivateChat:
 
         autoreply = self.frame.np.config.sections["server"]["autoreply"]
         if self.frame.away and not self.autoreplied and autoreply:
-            self.SendMessage(u"[Auto-Message] %s" % autoreply)
+            self.SendMessage("[Auto-Message] %s" % autoreply)
             self.autoreplied = 1
 
         self.frame.Notifications.new_tts(
@@ -629,21 +644,15 @@ class PrivateChat:
 
     def OnEnter(self, widget):
 
-        bytes = widget.get_text()
-
-        try:
-            text = unicode(bytes, "UTF-8")
-        except UnicodeDecodeError:
-            log.addwarning(_("We have a problem, PyGTK get_text does not seem to return UTF-8. Please file a bug report. Bytes: %s") % (repr(bytes)))
-            text = unicode(bytes, "UTF-8", "replace")
+        text = widget.get_text()
 
         if not text:
             widget.set_text("")
             return
 
         if is_alias(self.frame.np.config.aliases, text):
-            import thread
-            thread.start_new_thread(self.threadAlias, (text,))
+            import _thread
+            _thread.start_new_thread(self.threadAlias, (text,))
             widget.set_text("")
             return
 
@@ -816,15 +825,15 @@ class PrivateChat:
         gobject.idle_add(self.frame.ScrollBottom, self.ChatScroll.get_parent())
 
     def NowPlayingThread(self):
-        np = self.frame.now.DisplayNowPlaying(None, 0, self.SendMessage)
+        np = self.frame.now.DisplayNowPlaying(None, 0, self.SendMessage)  # noqa: F841
 
     def makecolour(self, buffer, colour):
 
         color = self.frame.np.config.sections["ui"][colour]
         if color == "":
-            color = self.backupcolor
+            color = Gdk.color_parse(self.backupcolor)
         else:
-            color = gtk.gdk.color_parse(color)
+            color = Gdk.color_parse(color)
 
         font = self.frame.np.config.sections["ui"]["chatfont"]
         tag = buffer.create_tag()
@@ -836,7 +845,11 @@ class PrivateChat:
     def UpdateColours(self):
 
         map = self.frame.MainWindow.get_style().copy()
-        self.backupcolor = map.text[gtk.STATE_NORMAL]
+
+        try:
+            self.backupcolor = map.text[gtk.StateFlags.NORMAL]
+        except IndexError:
+            self.backupcolor = ''
 
         buffer = self.ChatScroll.get_buffer()
         self.tag_remote = self.makecolour(buffer, "chatremote")
@@ -864,25 +877,25 @@ class PrivateChat:
         usernamestyle = self.frame.np.config.sections["ui"]["usernamestyle"]
 
         if usernamestyle == "bold":
-            self.tag_username.set_property("weight",  pango.WEIGHT_BOLD)
-            self.tag_my_username.set_property("weight",  pango.WEIGHT_BOLD)
+            self.tag_username.set_property("weight", pango.Weight.BOLD)
+            self.tag_my_username.set_property("weight", pango.Weight.BOLD)
         else:
-            self.tag_username.set_property("weight",  pango.WEIGHT_NORMAL)
-            self.tag_my_username.set_property("weight",  pango.WEIGHT_NORMAL)
+            self.tag_username.set_property("weight", pango.Weight.NORMAL)
+            self.tag_my_username.set_property("weight", pango.Weight.NORMAL)
 
         if usernamestyle == "italic":
-            self.tag_username.set_property("style",  pango.STYLE_ITALIC)
-            self.tag_my_username.set_property("style",  pango.STYLE_ITALIC)
+            self.tag_username.set_property("style", pango.Style.ITALIC)
+            self.tag_my_username.set_property("style", pango.Style.ITALIC)
         else:
-            self.tag_username.set_property("style",  pango.STYLE_NORMAL)
-            self.tag_my_username.set_property("style",  pango.STYLE_NORMAL)
+            self.tag_username.set_property("style", pango.Style.NORMAL)
+            self.tag_my_username.set_property("style", pango.Style.NORMAL)
 
         if usernamestyle == "underline":
-            self.tag_username.set_property("underline", pango.UNDERLINE_SINGLE)
-            self.tag_my_username.set_property("underline", pango.UNDERLINE_SINGLE)
+            self.tag_username.set_property("underline", pango.Underline.SINGLE)
+            self.tag_my_username.set_property("underline", pango.Underline.SINGLE)
         else:
-            self.tag_username.set_property("underline", pango.UNDERLINE_NONE)
-            self.tag_my_username.set_property("underline", pango.UNDERLINE_NONE)
+            self.tag_username.set_property("underline", pango.Underline.NONE)
+            self.tag_my_username.set_property("underline", pango.Underline.NONE)
 
         self.frame.SetTextBG(self.ChatScroll)
         self.frame.SetTextBG(self.ChatLine)
@@ -901,7 +914,7 @@ class PrivateChat:
         if color == "":
             color = self.backupcolor
         else:
-            color = gtk.gdk.color_parse(color)
+            color = Gdk.color_parse(color)
 
         tag.set_property("foreground-gdk", color)
         tag.set_property("font", font)
@@ -911,24 +924,24 @@ class PrivateChat:
             usernamestyle = self.frame.np.config.sections["ui"]["usernamestyle"]
 
             if usernamestyle == "bold":
-                tag.set_property("weight",  pango.WEIGHT_BOLD)
+                tag.set_property("weight", pango.Weight.BOLD)
             else:
-                tag.set_property("weight",  pango.WEIGHT_NORMAL)
+                tag.set_property("weight", pango.Weight.NORMAL)
 
             if usernamestyle == "italic":
-                tag.set_property("style",  pango.STYLE_ITALIC)
+                tag.set_property("style", pango.Style.ITALIC)
             else:
-                tag.set_property("style",  pango.STYLE_NORMAL)
+                tag.set_property("style", pango.Style.NORMAL)
 
             if usernamestyle == "underline":
-                tag.set_property("underline", pango.UNDERLINE_SINGLE)
+                tag.set_property("underline", pango.Underline.SINGLE)
             else:
-                tag.set_property("underline", pango.UNDERLINE_NONE)
+                tag.set_property("underline", pango.Underline.NONE)
 
     def ChangeColours(self):
 
         map = self.ChatScroll.get_style().copy()
-        self.backupcolor = map.text[gtk.STATE_NORMAL]
+        self.backupcolor = map.text[gtk.StateFlags.NORMAL]
 
         self.changecolour(self.tag_remote, "chatremote")
         self.changecolour(self.tag_local, "chatlocal")
@@ -999,8 +1012,8 @@ class PrivateChat:
         def _combilower(x):
             try:
                 return str.lower(x)
-            except:
-                return unicode.lower(x)
+            except Exception:
+                return str.lower(x)
 
         clist = list(set(clist))
         clist.sort(key=_combilower)
@@ -1017,13 +1030,13 @@ class PrivateChat:
 
     def OnKeyPress(self, widget, event):
 
-        if event.keyval == gtk.gdk.keyval_from_name("Prior"):
+        if event.keyval == Gdk.keyval_from_name("Prior"):
 
             scrolled = self.ChatScroll.get_parent()
             adj = scrolled.get_vadjustment()
             adj.set_value(adj.value - adj.page_increment)
 
-        elif event.keyval == gtk.gdk.keyval_from_name("Next"):
+        elif event.keyval == Gdk.keyval_from_name("Next"):
 
             scrolled = self.ChatScroll.get_parent()
             adj = scrolled.get_vadjustment()
@@ -1035,7 +1048,7 @@ class PrivateChat:
 
             adj.set_value(new)
 
-        if event.keyval != gtk.gdk.keyval_from_name("Tab"):
+        if event.keyval != Gdk.keyval_from_name("Tab"):
             return False
 
         config = self.frame.np.config.sections["words"]

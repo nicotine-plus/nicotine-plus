@@ -23,27 +23,42 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Python core
-from os.path import commonprefix
 import os
 import re
-import time
-import sys
+from gettext import gettext as _
+from os.path import commonprefix
 
-# Python modules
-import gtk
-import gobject
-import locale
-import pango
+import gi
+from gi.repository import Gdk
+from gi.repository import GObject as gobject
+from gi.repository import Gtk as gtk
+from gi.repository import Pango as pango
 
-# Application specific
-from pynicotine.logfacility import log
 from pynicotine import slskmessages
-from pynicotine import pluginsystem
+from pynicotine.gtkgui.entrydialog import input_box
+from pynicotine.gtkgui.utils import AppendLine
+from pynicotine.gtkgui.utils import EncodingsMenu
+from pynicotine.gtkgui.utils import Humanize
+from pynicotine.gtkgui.utils import HumanSpeed
+from pynicotine.gtkgui.utils import IconNotebook
+from pynicotine.gtkgui.utils import InitialiseColumns
+from pynicotine.gtkgui.utils import PopupMenu
+from pynicotine.gtkgui.utils import PressHeader
+from pynicotine.gtkgui.utils import SaveEncoding
+from pynicotine.gtkgui.utils import WriteLog
+from pynicotine.gtkgui.utils import expand_alias
+from pynicotine.gtkgui.utils import fixpath
+from pynicotine.gtkgui.utils import is_alias
+from pynicotine.gtkgui.utils import showCountryTooltip
+from pynicotine.logfacility import log
 from pynicotine.slskmessages import ToBeEncoded
-from utils import InitialiseColumns, AppendLine, PopupMenu, WriteLog, Humanize, HumanSpeed, expand_alias, is_alias, EncodingsMenu, SaveEncoding, PressHeader, fixpath, IconNotebook, showCountryTooltip
+from pynicotine.utils import cmp
+from pynicotine.utils import debug
 from pynicotine.utils import findBestEncoding
-from entrydialog import input_box
+
+gi.require_version('Gtk', '3.0')
+gi.require_version('Gdk', '3.0')
+gi.require_version('Pango', '1.0')
 
 
 def GetCompletion(part, list):
@@ -64,13 +79,13 @@ def GetCompletions(part, list):
 
 class RoomsControl:
 
-    CMDS = set(
-        [
-            "/alias ", "/unalias ", "/whois ", "/browse ", "/ip ", "/pm ", "/msg ", "/search ", "/usearch ", "/rsearch ",
-            "/bsearch ", "/join ", "/leave ", "/add ", "/buddy ", "/rem ", "/unbuddy ", "/ban ", "/ignore ", "/ignoreip ", "/unban ", "/unignore ",
-            "/clear ", "/part ", "/quit ", "/exit ", "/rescan ", "/tick ", "/info ", "/attach ", "/detach ", "/toggle", "/tickers"
-        ]
-    )
+    CMDS = {
+        "/alias ", "/unalias ", "/whois ", "/browse ", "/ip ", "/pm ", "/msg ", "/search ",
+        "/usearch ", "/rsearch ", "/bsearch ", "/join ", "/leave ", "/add ", "/buddy ", "/rem ",
+        "/unbuddy ", "/ban ", "/ignore ", "/ignoreip ", "/unban ", "/unignore ", "/clear ",
+        "/part ", "/quit ", "/exit ", "/rescan ", "/tick ", "/info ", "/attach ", "/detach ",
+        "/toggle", "/tickers"
+    }
 
     def __init__(self, ChatNotebook):
 
@@ -84,7 +99,7 @@ class RoomsControl:
         self.PrivateRooms = config["private_rooms"]["rooms"]
 
         # Config cleanup
-        for room, data in self.PrivateRooms.items():
+        for room, data in list(self.PrivateRooms.items()):
             if "owner" not in data:
                 self.PrivateRooms[room]["owner"] = None
             if "operator" in data:
@@ -173,28 +188,27 @@ class RoomsControl:
         try:
             private1 = model.get_value(iter1, 2) * 10000
             private1 += model.get_value(iter1, 1)
-        except:
+        except Exception:
             private1 = 0
 
         try:
             private2 = model.get_value(iter2, 2) * 10000
             private2 += model.get_value(iter2, 1)
-        except:
+        except Exception:
             private2 = 0
 
         return cmp(private1, private2)
 
-    def RoomStatus(self, column, cellrenderer, model, iter):
-
+    def RoomStatus(self, column, cellrenderer, model, iter, dummy='dummy'):
         if self.roomsmodel.get_value(iter, 2) >= 2:
-            cellrenderer.set_property("underline", pango.UNDERLINE_SINGLE)
-            cellrenderer.set_property("weight", pango.WEIGHT_BOLD)
+            cellrenderer.set_property("underline", pango.Underline.SINGLE)
+            cellrenderer.set_property("weight", pango.Weight.BOLD)
         elif self.roomsmodel.get_value(iter, 2) >= 1:
-            cellrenderer.set_property("weight", pango.WEIGHT_BOLD)
-            cellrenderer.set_property("underline", pango.UNDERLINE_NONE)
+            cellrenderer.set_property("weight", pango.Weight.BOLD)
+            cellrenderer.set_property("underline", pango.Underline.NONE)
         else:
-            cellrenderer.set_property("weight", pango.WEIGHT_NORMAL)
-            cellrenderer.set_property("underline", pango.UNDERLINE_NONE)
+            cellrenderer.set_property("weight", pango.Weight.NORMAL)
+            cellrenderer.set_property("underline", pango.Underline.NONE)
 
         self.frame.CellDataFunc(column, cellrenderer, model, iter)
 
@@ -203,7 +217,7 @@ class RoomsControl:
         room_tab_order = {}
 
         # Find position of opened autojoined rooms
-        for name, room in self.joinedrooms.items():
+        for name, room in list(self.joinedrooms.items()):
 
             if name not in self.frame.np.config.sections["server"]["autojoin"]:
                 continue
@@ -235,7 +249,7 @@ class RoomsControl:
 
         page = notebook.get_nth_page(page_num)
 
-        for name, room in self.joinedrooms.items():
+        for name, room in list(self.joinedrooms.items()):
             if room.Main == page:
                 gobject.idle_add(room.ChatEntry.grab_focus)
 
@@ -249,7 +263,7 @@ class RoomsControl:
 
         page = self.ChatNotebook.get_nth_page(self.ChatNotebook.get_current_page())
 
-        for name, room in self.joinedrooms.items():
+        for name, room in list(self.joinedrooms.items()):
             if room.Main == page:
                 # Remove hilite
                 self.frame.Notifications.Clear("rooms", None, name)
@@ -259,7 +273,7 @@ class RoomsControl:
         if not focused:
             return
 
-        for name, room in self.users.items():
+        for name, room in list(self.users.items()):
             if room.Main == page:
                 self.frame.Notifications.Clear("rooms", name)
 
@@ -268,7 +282,7 @@ class RoomsControl:
 
     def OnListClicked(self, widget, event):
 
-        if event.button == 1 and event.type == gtk.gdk._2BUTTON_PRESS:
+        if event.button == 1 and event.type == Gdk.EventType._2BUTTON_PRESS:
 
             d = self.frame.roomlist.RoomsList.get_path_at_pos(int(event.x), int(event.y))
             if d:
@@ -288,7 +302,7 @@ class RoomsControl:
         if event.button != 3 or self.roomsmodel is None:
             return
 
-        items = self.popup_menu.get_children()
+        items = self.popup_menu.get_children()  # noqa: F841
         d = self.frame.roomlist.RoomsList.get_path_at_pos(int(event.x), int(event.y))
 
         if d:
@@ -312,7 +326,7 @@ class RoomsControl:
         self.Menu_PrivateRoom_Disown.set_sensitive(self.IsPrivateRoomOwned(self.popup_room))  # Disown
         self.Menu_PrivateRoom_Dismember.set_sensitive((prooms_enabled and self.IsPrivateRoomMember(self.popup_room)))  # Dismember
 
-        self.popup_menu.popup(None, None, None, event.button, event.time)
+        self.popup_menu.popup(None, None, None, None, event.button, event.time)
 
     def OnPopupJoin(self, widget):
         self.frame.np.queue.put(slskmessages.JoinRoom(self.popup_room))
@@ -333,8 +347,8 @@ class RoomsControl:
 
         try:
             angle = int(self.frame.np.config.sections["ui"]["labelrooms"])
-        except Exception, e:
-            print e
+        except Exception as e:
+            print(e)
             pass
 
         self.ChatNotebook.append_page(room.Main, 'Public ', room.OnLeave, angle)
@@ -393,13 +407,12 @@ class RoomsControl:
         angle = 0
         try:
             angle = int(self.frame.np.config.sections["ui"]["labelrooms"])
-        except Exception, e:
-            print e
-            pass
+        except Exception as e:
+            debug(e)
 
         self.ChatNotebook.append_page(tab.Main, msg.room, tab.OnLeave, angle)
 
-        self.frame.searchroomslist[msg.room] = self.frame.RoomSearchCombo_List.append([msg.room])
+        self.frame.searchroomslist[msg.room] = self.frame.RoomSearchCombo_List.append([(msg.room)])
 
         tab.CountUsers()
 
@@ -409,11 +422,11 @@ class RoomsControl:
 
             self.autojoin = 0
             if self.joinedrooms:
-                list = self.joinedrooms.keys()
+                room_list = list(self.joinedrooms.keys())
             else:
-                list = self.frame.np.config.sections["server"]["autojoin"]
+                room_list = self.frame.np.config.sections["server"]["autojoin"]
 
-            for room in list:
+            for room in room_list:
                 if room[-1:] != ' ':
                     self.frame.np.queue.put(slskmessages.JoinRoom(room))
 
@@ -421,7 +434,7 @@ class RoomsControl:
         self.frame.roomlist.RoomsList.set_model(None)
         self.roomsmodel.set_default_sort_func(lambda *args: -1)
         self.roomsmodel.set_sort_func(1, lambda *args: -1)
-        self.roomsmodel.set_sort_column_id(-1, gtk.SORT_ASCENDING)
+        self.roomsmodel.set_sort_column_id(-1, gtk.SortType.ASCENDING)
 
         self.rooms = []
         for room, users in msg.rooms:
@@ -431,8 +444,8 @@ class RoomsControl:
         self.SetPrivateRooms(msg.ownedprivaterooms, msg.otherprivaterooms)
         self.frame.roomlist.RoomsList.set_model(self.roomsmodel)
         self.roomsmodel.set_sort_func(1, self.PrivateRoomsSort, 1)
-        self.roomsmodel.set_sort_column_id(1, gtk.SORT_DESCENDING)
-        self.roomsmodel.set_default_sort_func(None)
+        self.roomsmodel.set_sort_column_id(1, gtk.SortType.DESCENDING)
+        self.roomsmodel.set_default_sort_func(self.PrivateRoomsSort)
 
         if self.frame.np.config.sections["words"]["roomnames"]:
             self.frame.chatrooms.roomsctrl.UpdateCompletions()
@@ -447,25 +460,25 @@ class RoomsControl:
                 self.PrivateRooms[room[0]]['joined'] = room[1]
                 if self.PrivateRooms[room[0]]['owner'] != myusername:
                     log.addwarning(_("I remember the room %(room)s being owned by %(previous)s, but the server says its owned by %(new)s.") % {
-                            'room': room[0],
-                            'previous': self.PrivateRooms[room[0]]['owner'],
-                            'new': myusername
-                        })
+                        'room': room[0],
+                        'previous': self.PrivateRooms[room[0]]['owner'],
+                        'new': myusername
+                    })
                 self.PrivateRooms[room[0]]['owner'] = myusername
             except KeyError:
-                self.PrivateRooms[room[0]] = {"users": [], "joined": room[1], "operators": [],  "owner": myusername}
+                self.PrivateRooms[room[0]] = {"users": [], "joined": room[1], "operators": [], "owner": myusername}
 
         for room in otherrooms:
             try:
                 self.PrivateRooms[room[0]]['joined'] = room[1]
                 if self.PrivateRooms[room[0]]['owner'] == myusername:
                     log.addwarning(_("I remember the room %(room)s being owned by %(old)s, but the server says that's not true.") % {
-                            'room': room[0],
-                            'old': self.PrivateRooms[room[0]]['owner'],
-                        })
+                        'room': room[0],
+                        'old': self.PrivateRooms[room[0]]['owner'],
+                    })
                     self.PrivateRooms[room[0]]['owner'] = None
             except KeyError:
-                self.PrivateRooms[room[0]] = {"users": [], "joined": room[1], "operators": [],  "owner": None}
+                self.PrivateRooms[room[0]] = {"users": [], "joined": room[1], "operators": [], "owner": None}
 
         iter = self.roomsmodel.get_iter_first()
         while iter is not None:
@@ -618,15 +631,15 @@ class RoomsControl:
                 self.PrivateRooms[msg.room]["owner"] = None
 
     def GetUserStats(self, msg):
-        for room in self.joinedrooms.values():
+        for room in list(self.joinedrooms.values()):
             room.GetUserStats(msg.user, msg.avgspeed, msg.files)
 
     def GetUserStatus(self, msg):
-        for room in self.joinedrooms.values():
+        for room in list(self.joinedrooms.values()):
             room.GetUserStatus(msg.user, msg.status)
 
     def SetUserFlag(self, user, flag):
-        for room in self.joinedrooms.values():
+        for room in list(self.joinedrooms.values()):
             room.SetUserFlag(user, flag)
 
     def GetUserAddress(self, user):
@@ -655,7 +668,6 @@ class RoomsControl:
         self.joinedrooms[msg.room].TickerRemove(msg)
 
     def SayChatRoom(self, msg, text):
-
         if msg.user in self.frame.np.config.sections["server"]["ignorelist"]:
             return
 
@@ -683,16 +695,16 @@ class RoomsControl:
         self.frame.SetTextBG(self.frame.roomlist.CreateRoomEntry)
         self.frame.SetTextBG(self.frame.roomlist.SearchRooms)
 
-        for room in self.joinedrooms.values():
+        for room in list(self.joinedrooms.values()):
             room.ChangeColours()
 
     def saveColumns(self):
 
-        for room in self.frame.np.config.sections["columns"]["chatrooms"].keys()[:]:
+        for room in list(self.frame.np.config.sections["columns"]["chatrooms"].keys())[:]:
             if room not in self.joinedrooms:
                 del self.frame.np.config.sections["columns"]["chatrooms"][room]
 
-        for room in self.joinedrooms.values():
+        for room in list(self.joinedrooms.values()):
             room.saveColumns()
 
     def LeaveRoom(self, msg):
@@ -715,7 +727,7 @@ class RoomsControl:
 
         self.roomsmodel.clear()
 
-        for room in self.joinedrooms.values():
+        for room in list(self.joinedrooms.values()):
             room.ConnClose()
 
         self.autojoin = 1
@@ -737,14 +749,14 @@ class RoomsControl:
                 clist += [i[0] for i in self.frame.userlist.userlist]
 
             if config["aliases"]:
-                clist += ["/" + k for k in self.frame.np.config.aliases.keys()]
+                clist += ["/" + k for k in list(self.frame.np.config.aliases.keys())]
 
             if config["commands"]:
                 clist += self.CMDS
 
             self.clist = clist
 
-        for room in self.joinedrooms.values():
+        for room in list(self.joinedrooms.values()):
             room.GetCompletionList(clist=list(self.clist))
 
 
@@ -775,7 +787,10 @@ class Ticker:
             self.entry.set_text("")
             return True
 
-        if self.ix >= len(self.messages):
+        if not self.sortedmessages:
+            self.updatesorted()
+
+        if self.ix >= len(self.sortedmessages):
             self.ix = 0
 
         (user, message) = self.sortedmessages[self.ix]
@@ -802,12 +817,12 @@ class Ticker:
 
     def updatesorted(self):
 
-        lst = [(user, msg) for user, msg in self.messages.iteritems()]
-        lst.sort(cmp=lambda x, y: len(x[1])-len(y[1]))
+        lst = [(user, msg) for user, msg in self.messages.items()]
+        lst.sort(key=lambda x: len(x[1]))
         self.sortedmessages = lst
 
     def get_tickers(self):
-        return [x for x in self.messages.iteritems()]
+        return [x for x in self.messages.items()]
 
     def set_ticker(self, msgs):
         self.messages = msgs
@@ -836,44 +851,44 @@ def TickDialog(parent, default=""):
     dlg = gtk.Dialog(
         title=_("Set ticker message"),
         parent=parent,
-        buttons=(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL, gtk.STOCK_OK, gtk.RESPONSE_OK)
+        buttons=(gtk.STOCK_CANCEL, gtk.ResponseType.CANCEL, gtk.STOCK_OK, gtk.ResponseType.OK)
     )
-    dlg.set_default_response(gtk.RESPONSE_OK)
+    dlg.set_default_response(gtk.ResponseType.OK)
 
     t = 0
 
     dlg.set_border_width(10)
     dlg.vbox.set_spacing(10)
 
-    l = gtk.Label(_("Set room ticker message:"))
+    l = gtk.Label(_("Set room ticker message:"))  # noqa: E741
     l.set_alignment(0, 0.5)
-    dlg.vbox.pack_start(l, False, False)
+    dlg.vbox.pack_start(l, False, False, 0)
 
     entry = gtk.Entry()
     entry.set_activates_default(True)
     entry.set_text(default)
-    dlg.vbox.pack_start(entry, True, True)
+    dlg.vbox.pack_start(entry, True, True, 0)
 
     v = gtk.VBox(False, False)
     r1 = gtk.RadioButton()
     r1.set_label(_("Just this time"))
     r1.set_active(True)
-    v.pack_start(r1, False, False)
+    v.pack_start(r1, False, False, 0)
 
     r2 = gtk.RadioButton(r1)
     r2.set_label(_("Always for this channel"))
-    v.pack_start(r2, False, False)
+    v.pack_start(r2, False, False, 0)
 
     r3 = gtk.RadioButton(r1)
     r3.set_label(_("Default for all channels"))
-    v.pack_start(r3, False, False)
+    v.pack_start(r3, False, False, 0)
 
-    dlg.vbox.pack_start(v, True, True)
+    dlg.vbox.pack_start(v, True, True, 0)
 
     dlg.vbox.show_all()
 
     result = None
-    if dlg.run() == gtk.RESPONSE_OK:
+    if dlg.run() == gtk.ResponseType.OK:
 
         if r1.get_active():
             t = 0
@@ -884,10 +899,10 @@ def TickDialog(parent, default=""):
 
         bytes = entry.get_text()
         try:
-            result = unicode(bytes, "UTF-8")
+            result = str(bytes, "UTF-8")
         except UnicodeDecodeError:
             log.addwarning(_("We have a problem, PyGTK get_text does not seem to return UTF-8. Please file a bug report. Bytes: %s") % (repr(bytes)))
-            result = unicode(bytes, "UTF-8", "replace")
+            result = str(bytes, "UTF-8", "replace")
 
     dlg.destroy()
 
@@ -970,7 +985,7 @@ class ChatRoom:
             self.ChatEntry.connect("activate", self.OnEnter)
 
             self.ChatEntry.connect("key_press_event", self.OnKeyPress)
-            self.ChatEntryBox.pack_start(self.ChatEntry, True, True, 0)
+            self.ChatEntryBox.pack_start(self.ChatEntry, True)
 
         self.midwaycompletion = False  # True if the user just used tab completion
         self.completions = {}  # Holds temp. information about tab completoin
@@ -990,7 +1005,7 @@ class ChatRoom:
         if room in config["server"]["autojoin"]:
             self.AutoJoin.set_active(True)
 
-        statusiconwidth = self.frame.images["offline"].get_width()+4
+        statusiconwidth = self.frame.images["offline"].get_width() + 4
         self.cols = cols = InitialiseColumns(
             self.UserList,
             [_("Status"), statusiconwidth, "pixbuf"],
@@ -1030,8 +1045,8 @@ class ChatRoom:
         self.users = {}
 
         self.usersmodel = gtk.ListStore(
-            gtk.gdk.Pixbuf,
-            gtk.gdk.Pixbuf,
+            gobject.TYPE_OBJECT,
+            gobject.TYPE_OBJECT,
             gobject.TYPE_STRING,
             gobject.TYPE_STRING,
             gobject.TYPE_STRING,
@@ -1041,29 +1056,31 @@ class ChatRoom:
             gobject.TYPE_STRING
         )
 
-        for (username, user) in users.iteritems():
+        for (username, user) in users.items():
 
             img = self.frame.GetStatusImage(user.status)
             flag = user.country
 
-            if flag is not None:
-                flag = "flag_"+flag
+            if flag:
+                flag = "flag_" + flag
                 self.frame.flag_users[username] = flag
             else:
                 flag = self.frame.GetUserFlag(username)
 
             hspeed = HumanSpeed(user.avgspeed)
             hfiles = Humanize(user.files)
-            iter = self.usersmodel.append([img, self.frame.GetFlagImage(flag), username, hspeed, hfiles, user.status, user.avgspeed, user.files, flag])
+            iter = self.usersmodel.append(
+                [img, self.frame.GetFlagImage(flag), username, hspeed, hfiles, user.status, user.avgspeed, user.files, flag]
+            )
             self.users[username] = iter
             self.roomsctrl.GetUserAddress(username)
 
-        self.usersmodel.set_sort_column_id(2, gtk.SORT_ASCENDING)
+        self.usersmodel.set_sort_column_id(2, gtk.SortType.ASCENDING)
 
         self.UpdateColours()
 
         self.UserList.set_model(self.usersmodel)
-        self.UserList.enable_model_drag_source(gtk.gdk.BUTTON1_MASK, [('text/plain', 0, 2)], gtk.gdk.ACTION_COPY)
+        self.UserList.enable_model_drag_source(Gdk.ModifierType.BUTTON1_MASK, [('text/plain', 0, 2)], Gdk.DragAction.COPY)
         self.UserList.connect("drag_data_get", self.drag_data_get_data)
         self.UserList.set_property("rules-hint", True)
 
@@ -1139,17 +1156,21 @@ class ChatRoom:
 
         self.CountUsers()
 
-    def RoomStatus(self, column, cellrenderer, model, iter):
-        cellrenderer.set_property("weight", colour)
+    def RoomStatus(self, column, cellrenderer, model, iter, dummy='dummy'):
+        # cellrenderer.set_property("weight", colour)
+        pass
 
     def ReadRoomLogs(self):
 
         config = self.frame.np.config.sections
-        log = os.path.join(config["logging"]["roomlogsdir"], fixpath(self.room.replace(os.sep, "-")) + ".log")
+        log = os.path.join(
+            config["logging"]["roomlogsdir"],
+            fixpath(self.room.replace(os.sep, "-")) + ".log"
+        )
 
         try:
             roomlines = int(config["logging"]["readroomlines"])
-        except:
+        except Exception:
             roomlines = 15
 
         try:
@@ -1166,7 +1187,7 @@ class ChatRoom:
 
             for bytes in loglines[-roomlines:-1]:
 
-                l = findBestEncoding(bytes, encodings)
+                l = findBestEncoding(bytes, encodings)  # noqa: E741
 
                 # Try to parse line for username
                 if len(l) > 20 and l[10].isspace() and l[11].isdigit() and l[20] in ("[", "*"):
@@ -1174,7 +1195,7 @@ class ChatRoom:
                     line = l[11:]
                     if l[20] == "[" and l[20:].find("] ") != -1:
                         namepos = l[20:].find("] ")
-                        user = l[21:20+namepos].strip()
+                        user = l[21:20 + namepos].strip()
                         user = user.encode('UTF-8')  # this could go screwy! But there's no other way without logging raw bytes in the log file
                         self.getUserTag(user)
                         usertag = self.tag_users[user]
@@ -1186,7 +1207,7 @@ class ChatRoom:
                         tag = self.tag_local
                     elif l[20] == "*":
                         tag = self.tag_me
-                    elif l[20+namepos:].upper().find(config["server"]["login"].upper()) > -1:
+                    elif l[20 + namepos:].upper().find(config["server"]["login"].upper()) > -1:
                         tag = self.tag_hilite
                     else:
                         tag = self.tag_remote
@@ -1196,9 +1217,9 @@ class ChatRoom:
                     tag = None
                     usertag = None
 
-                timestamp_format = self.frame.np.config.sections["logging"]["rooms_timestamp"]
+                timestamp_format = self.frame.np.config.sections["logging"]["rooms_timestamp"]  # noqa: F841
 
-                line = re.sub("\s\s+", "  ", line)
+                line = re.sub(r"\\s\\s+", "  ", line)
                 line += "\n"
 
                 if user != config["server"]["login"]:
@@ -1210,15 +1231,15 @@ class ChatRoom:
                 self.lines.append(AppendLine(self.ChatScroll, _("--- old messages above ---"), self.tag_hilite))
 
             gobject.idle_add(self.frame.ScrollBottom, self.ChatScroll.get_parent())
-        except IOError, e:
+        except IOError as e:  # noqa: F841
             pass
 
     def on_key_press_event(self, widget, event):
 
-        key = gtk.gdk.keyval_name(event.keyval)
+        key = Gdk.keyval_name(event.keyval)
 
         # Match against capslock + control and control
-        if key in ("f", "F") and event.state in (gtk.gdk.CONTROL_MASK, gtk.gdk.LOCK_MASK | gtk.gdk.CONTROL_MASK):
+        if key in ("f", "F") and event.state in (Gdk.CONTROL_MASK, Gdk.LOCK_MASK | Gdk.CONTROL_MASK):
             self.OnFind(widget)
         elif key in ("F3"):
             self.OnFind(widget, repeat=True)
@@ -1279,16 +1300,16 @@ class ChatRoom:
             return
 
         menu = popup
-        user = menu.user
-        items = menu.get_children()
+        user = menu.user  # noqa: F841
+        items = menu.get_children()  # noqa: F841
 
-        act = False
+        act = False  # noqa: F841
 
         return True
 
     def OnPopupMenu(self, widget, event):
 
-        items = self.popup_menu.get_children()
+        items = self.popup_menu.get_children()  # noqa: F841
         d = self.UserList.get_path_at_pos(int(event.x), int(event.y))
 
         if not d:
@@ -1299,7 +1320,7 @@ class ChatRoom:
 
         # Double click starts a private message
         if event.button != 3:
-            if event.type == gtk.gdk._2BUTTON_PRESS:
+            if event.type == Gdk.EventType._2BUTTON_PRESS:
                 self.frame.privatechats.SendMessage(user, None, 1)
                 self.frame.ChangeMainPage(None, "private")
             return
@@ -1319,7 +1340,7 @@ class ChatRoom:
         self.Menu_PrivateRooms.set_sensitive(not me)
 
         self.popup_menu.editing = False
-        self.popup_menu.popup(None, None, None, event.button, event.time)
+        self.popup_menu.popup(None, None, None, None, event.button, event.time)
 
     def OnShowChatHelp(self, widget):
         self.frame.OnAboutChatroomCommands(widget, self.GetTabParent(self.Main))
@@ -1360,7 +1381,7 @@ class ChatRoom:
     def TickerSet(self, msg):
 
         self.Ticker.set_ticker({})
-        for user in msg.msgs.keys():
+        for user in list(msg.msgs.keys()):
             if user in self.frame.np.config.sections["server"]["ignorelist"] or self.frame.UserIpIsIgnored(user):
                 # User ignored, ignore Ticker messages
                 return
@@ -1380,8 +1401,7 @@ class ChatRoom:
         self.Ticker.remove_ticker(msg.user)
 
     def SayChatRoom(self, msg, text, public=False):
-
-        text = re.sub("\s\s+", "  ", text)
+        text = re.sub("\\s\\s+", "  ", text)
         login = self.frame.np.config.sections["server"]["login"]
         user = msg.user
 
@@ -1454,7 +1474,10 @@ class ChatRoom:
         if user != login:
 
             self.lines.append(
-                AppendLine(self.ChatScroll, self.frame.CensorChat(line), tag, username=user, usertag=self.tag_users[user], timestamp_format=timestamp_format)
+                AppendLine(
+                    self.ChatScroll, self.frame.CensorChat(line), tag,
+                    username=user, usertag=self.tag_users[user], timestamp_format=timestamp_format
+                )
             )
 
             if self.Speech.get_active():
@@ -1467,7 +1490,12 @@ class ChatRoom:
                     }
                 )
         else:
-            self.lines.append(AppendLine(self.ChatScroll, line, tag, username=user, usertag=self.tag_users[user], timestamp_format=timestamp_format))
+            self.lines.append(
+                AppendLine(
+                    self.ChatScroll, line, tag,
+                    username=user, usertag=self.tag_users[user], timestamp_format=timestamp_format
+                )
+            )
 
     def getUserTag(self, user):
 
@@ -1496,21 +1524,15 @@ class ChatRoom:
 
     def OnEnter(self, widget):
 
-        bytes = widget.get_text()
-
-        try:
-            text = unicode(bytes, "UTF-8")
-        except UnicodeDecodeError:
-            log.addwarning(_("We have a problem, PyGTK get_text does not seem to return UTF-8. Please file a bug report. Bytes: %s") % (repr(bytes)))
-            text = unicode(bytes, "UTF-8", "replace")
+        text = widget.get_text()
 
         if not text:
             widget.set_text("")
             return
 
         if is_alias(self.frame.np.config.aliases, text):
-            import thread
-            thread.start_new_thread(self.threadAlias, (text,))
+            import _thread
+            _thread.start_new_thread(self.threadAlias, (text,))
             widget.set_text("")
             return
 
@@ -1522,12 +1544,7 @@ class ChatRoom:
         else:
             args = ""
 
-        s = bytes.split(" ", 1)  # bytes
-
-        if len(s) == 2:
-            byteargs = s[1]
-        else:
-            byteargs = ""
+        byteargs = args.encode('utf-8')  # bytes
 
         if cmd in ("/alias", "/al"):
             AppendLine(self.ChatScroll, self.frame.np.config.AddAlias(args), self.tag_remote, "")
@@ -1565,7 +1582,7 @@ class ChatRoom:
 
         elif cmd in ["/m", "/msg"]:
             if byteargs:
-                user = byteargs.split(" ", 1)[0]
+                user = byteargs.split(b" ", 1)[0]
                 try:
                     msg = args.split(" ", 1)[1]
                 except IndexError:
@@ -1702,7 +1719,7 @@ class ChatRoom:
         gobject.idle_add(self.frame.ScrollBottom, self.ChatScroll.get_parent())
 
     def Say(self, text):
-        text = re.sub("\s\s+", "  ", text)
+        text = re.sub("\\s\\s+", "  ", text)
         tobeencoded = ToBeEncoded(text, self.encoding)
         self.frame.np.queue.put(slskmessages.SayChatroom(self.room, tobeencoded))
 
@@ -1776,7 +1793,7 @@ class ChatRoom:
 
     def CountUsers(self):
 
-        numusers = len(self.users.keys())
+        numusers = len(list(self.users.keys()))
         if numusers > 1:
             self.LabelPeople.show()
             self.LabelPeople.set_text(_("%i people in room") % numusers)
@@ -1797,23 +1814,23 @@ class ChatRoom:
             self.roomsctrl.roomsmodel.append([self.room, numusers, 0])
             self.roomsctrl.rooms.append(self.room)
 
-    def UserColumnDraw(self, column, cellrenderer, model, iter):
+    def UserColumnDraw(self, column, cellrenderer, model, iter, dummy="dummy"):
 
         user = self.usersmodel.get_value(iter, 2)
 
         if self.room in self.roomsctrl.PrivateRooms:
             if user == self.roomsctrl.PrivateRooms[self.room]["owner"]:
-                cellrenderer.set_property("underline", pango.UNDERLINE_SINGLE)
-                cellrenderer.set_property("weight", pango.WEIGHT_BOLD)
+                cellrenderer.set_property("underline", pango.Underline.SINGLE)
+                cellrenderer.set_property("weight", pango.Weight.BOLD)
             elif user in (self.roomsctrl.PrivateRooms[self.room]["operators"]):
-                cellrenderer.set_property("weight", pango.WEIGHT_BOLD)
-                cellrenderer.set_property("underline", pango.UNDERLINE_NONE)
+                cellrenderer.set_property("weight", pango.Weight.BOLD)
+                cellrenderer.set_property("underline", pango.Underline.NONE)
             else:
-                cellrenderer.set_property("weight", pango.WEIGHT_NORMAL)
-                cellrenderer.set_property("underline", pango.UNDERLINE_NONE)
+                cellrenderer.set_property("weight", pango.Weight.NORMAL)
+                cellrenderer.set_property("underline", pango.Underline.NONE)
         else:
-                cellrenderer.set_property("weight", pango.WEIGHT_NORMAL)
-                cellrenderer.set_property("underline", pango.UNDERLINE_NONE)
+            cellrenderer.set_property("weight", pango.Weight.NORMAL)
+            cellrenderer.set_property("underline", pango.Underline.NONE)
 
         self.frame.CellDataFunc(column, cellrenderer, model, iter)
 
@@ -1869,19 +1886,19 @@ class ChatRoom:
             usernamestyle = self.frame.np.config.sections["ui"]["usernamestyle"]
 
             if usernamestyle == "bold":
-                tag.set_property("weight", pango.WEIGHT_BOLD)
+                tag.set_property("weight", pango.Weight.BOLD)
             else:
-                tag.set_property("weight", pango.WEIGHT_NORMAL)
+                tag.set_property("weight", pango.Weight.NORMAL)
 
             if usernamestyle == "italic":
-                tag.set_property("style", pango.STYLE_ITALIC)
+                tag.set_property("style", pango.Style.ITALIC)
             else:
-                tag.set_property("style", pango.STYLE_NORMAL)
+                tag.set_property("style", pango.Style.NORMAL)
 
             if usernamestyle == "underline":
-                tag.set_property("underline", pango.UNDERLINE_SINGLE)
+                tag.set_property("underline", pango.Underline.SINGLE)
             else:
-                tag.set_property("underline", pango.UNDERLINE_NONE)
+                tag.set_property("underline", pango.Underline.NONE)
 
             tag.connect("event", self.UserNameEvent, username)
             tag.last_event_type = -1
@@ -1890,7 +1907,7 @@ class ChatRoom:
 
     def UserNameEvent(self, tag, widget, event, iter, user):
 
-        if tag.last_event_type == gtk.gdk.BUTTON_PRESS and event.type == gtk.gdk.BUTTON_RELEASE and event.button in (1, 2):
+        if tag.last_event_type == Gdk.EventType.BUTTON_PRESS and event.type == Gdk.EventType.BUTTON_RELEASE and event.button in (1, 2):
 
             # Chat, Userlists use the normal popup system
             self.popup_menu.editing = True
@@ -1907,7 +1924,7 @@ class ChatRoom:
             self.Menu_PrivateRooms.set_sensitive(not me)
 
             self.popup_menu.editing = False
-            self.popup_menu.popup(None, None, None, event.button, event.time)
+            self.popup_menu.popup(None, None, None, None, event.button, event.time)
 
         tag.last_event_type = event.type
 
@@ -1916,7 +1933,10 @@ class ChatRoom:
         self.frame.ChangeListFont(self.UserList, self.frame.np.config.sections["ui"]["listfont"])
 
         map = self.ChatScroll.get_style().copy()
-        self.backupcolor = map.text[gtk.STATE_NORMAL]
+        try:
+            self.backupcolor = map.text[gtk.StateFlags.NORMAL]
+        except IndexError:
+            self.backupcolor = ''
         buffer = self.ChatScroll.get_buffer()
 
         self.tag_remote = self.makecolour(buffer, "chatremote")
@@ -1966,7 +1986,7 @@ class ChatRoom:
         if color == "":
             color = self.backupcolor
         else:
-            color = gtk.gdk.color_parse(color)
+            color = Gdk.color_parse(color)
 
         tag.set_property("foreground-gdk", color)
         tag.set_property("font", font)
@@ -1977,24 +1997,24 @@ class ChatRoom:
             usernamestyle = self.frame.np.config.sections["ui"]["usernamestyle"]
 
             if usernamestyle == "bold":
-                tag.set_property("weight", pango.WEIGHT_BOLD)
+                tag.set_property("weight", pango.Weight.BOLD)
             else:
-                tag.set_property("weight", pango.WEIGHT_NORMAL)
+                tag.set_property("weight", pango.Weight.NORMAL)
 
             if usernamestyle == "italic":
-                tag.set_property("style", pango.STYLE_ITALIC)
+                tag.set_property("style", pango.Style.ITALIC)
             else:
-                tag.set_property("style", pango.STYLE_NORMAL)
+                tag.set_property("style", pango.Style.NORMAL)
 
             if usernamestyle == "underline":
-                tag.set_property("underline", pango.UNDERLINE_SINGLE)
+                tag.set_property("underline", pango.Underline.SINGLE)
             else:
-                tag.set_property("underline", pango.UNDERLINE_NONE)
+                tag.set_property("underline", pango.Underline.NONE)
 
     def ChangeColours(self):
 
         map = self.ChatScroll.get_style().copy()
-        self.backupcolor = map.text[gtk.STATE_NORMAL]
+        self.backupcolor = map.text[gtk.StateFlags.NORMAL]
 
         self.changecolour(self.tag_remote, "chatremote")
         self.changecolour(self.tag_local, "chatlocal")
@@ -2034,7 +2054,7 @@ class ChatRoom:
                 self.frame.np.queue.put(slskmessages.LeavePublicRoom())
                 self.roomsctrl.LeaveRoom(slskmessages.LeaveRoom(self.room))  # Faking protocol msg
             else:
-                print "Unknown meta chatroom closed."
+                print("Unknown meta chatroom closed.")
 
         self.frame.pluginhandler.LeaveChatroomNotification(self.room)
 
@@ -2058,7 +2078,7 @@ class ChatRoom:
         if not self.AutoJoin.get_active() and self.room in config["columns"]["chatrooms"]:
             del config["columns"]["chatrooms"][self.room]
 
-        for tag in self.tag_users.values():
+        for tag in list(self.tag_users.values()):
             self.changecolour(tag, "useroffline")
 
         self.Ticker.set_ticker({})
@@ -2067,9 +2087,9 @@ class ChatRoom:
 
         # Update user list with an inexpensive sorting function
         self.usersmodel.set_default_sort_func(lambda *args: -1)
-        self.usersmodel.set_sort_column_id(-1, gtk.SORT_ASCENDING)
+        self.usersmodel.set_sort_column_id(-1, gtk.SortType.ASCENDING)
 
-        for (username, user) in users.iteritems():
+        for (username, user) in users.items():
 
             if username in self.users:
                 self.usersmodel.remove(self.users[username])
@@ -2094,8 +2114,8 @@ class ChatRoom:
         self.UserList.set_sensitive(True)
 
         # Reinitialize sorting after loop is complet
-        self.usersmodel.set_sort_column_id(2, gtk.SORT_ASCENDING)
-        self.usersmodel.set_default_sort_func(None)
+        self.usersmodel.set_sort_column_id(2, gtk.SortType.ASCENDING)
+        self.usersmodel.set_default_sort_func(lambda *args: -1)
 
         # Spit this line into chat log
         AppendLine(self.ChatScroll, _("--- reconnected ---"), self.tag_hilite)
@@ -2144,10 +2164,12 @@ class ChatRoom:
 
         # no duplicates
         def _combilower(x):
+            if not isinstance(x, str):
+                x = x.decode('utf-8')
             try:
-                return str.lower(x)
-            except:
-                return unicode.lower(x)
+                return x.lower()
+            except Exception:
+                return x
 
         clist = list(set(clist))
         clist.sort(key=_combilower)
@@ -2156,6 +2178,8 @@ class ChatRoom:
 
         if config["dropdown"]:
             for word in clist:
+                if not isinstance(word, str):
+                    word = word.decode('utf-8')
                 liststore.append([word])
 
             completion.set_popup_completion(True)
@@ -2164,13 +2188,13 @@ class ChatRoom:
 
     def OnKeyPress(self, widget, event):
 
-        if event.keyval == gtk.gdk.keyval_from_name("Prior"):
+        if event.keyval == Gdk.keyval_from_name("Prior"):
 
             scrolled = self.ChatScroll.get_parent()
             adj = scrolled.get_vadjustment()
             adj.set_value(adj.value - adj.page_increment)
 
-        elif event.keyval == gtk.gdk.keyval_from_name("Next"):
+        elif event.keyval == Gdk.keyval_from_name("Next"):
 
             scrolled = self.ChatScroll.get_parent()
             adj = scrolled.get_vadjustment()
@@ -2183,8 +2207,8 @@ class ChatRoom:
             adj.set_value(new)
 
         # ISO_Left_Tab normally corresponds with shift+tab
-        if event.keyval not in (gtk.gdk.keyval_from_name("Tab"), gtk.gdk.keyval_from_name("ISO_Left_Tab")):
-            if event.keyval not in (gtk.gdk.keyval_from_name("Shift_L"), gtk.gdk.keyval_from_name("Shift_R")):
+        if event.keyval not in (Gdk.keyval_from_name("Tab"), Gdk.keyval_from_name("ISO_Left_Tab")):
+            if event.keyval not in (Gdk.keyval_from_name("Shift_L"), Gdk.keyval_from_name("Shift_R")):
                 self.midwaycompletion = False
             return False
 
@@ -2229,7 +2253,7 @@ class ChatRoom:
                 widget.delete_text(ix - len(currentnick), ix)
                 direction = 1  # Forward cycle
 
-                if event.keyval == gtk.gdk.keyval_from_name("ISO_Left_Tab"):
+                if event.keyval == Gdk.keyval_from_name("ISO_Left_Tab"):
                     direction = -1  # Backward cycle
 
                 self.completions['currentindex'] = (self.completions['currentindex'] + direction) % len(self.completions['completions'])
@@ -2268,7 +2292,7 @@ class ChatRoom:
             return False
 
         widget.emit_stop_by_name("button-press-event")
-        self.chatpopmenu.popup(None, None, None, event.button, event.time)
+        self.chatpopmenu.popup(None, None, None, None, event.button, event.time)
 
         return True
 
@@ -2278,14 +2302,14 @@ class ChatRoom:
             return False
 
         widget.emit_stop_by_name("button-press-event")
-        self.logpopupmenu.popup(None, None, None, event.button, event.time)
+        self.logpopupmenu.popup(None, None, None, None, event.button, event.time)
 
         return True
 
     def OnCopyAllRoomLog(self, widget):
         start, end = self.RoomLog.get_buffer().get_bounds()
         log = self.RoomLog.get_buffer().get_text(start, end)
-        self.frame.clip.set_text(log)
+        self.frame.clip.set_text(log, -1)
 
     def OnCopyRoomLog(self, widget):
 
@@ -2294,7 +2318,7 @@ class ChatRoom:
         if bound is not None and len(bound) == 2:
             start, end = bound
             log = self.RoomLog.get_buffer().get_text(start, end)
-            self.frame.clip.set_text(log)
+            self.frame.clip.set_text(log, -1)
 
     def OnCopyChatLog(self, widget):
 
@@ -2303,12 +2327,12 @@ class ChatRoom:
         if bound is not None and len(bound) == 2:
             start, end = bound
             log = self.ChatScroll.get_buffer().get_text(start, end)
-            self.frame.clip.set_text(log)
+            self.frame.clip.set_text(log, -1)
 
     def OnCopyAllChatLog(self, widget):
         start, end = self.ChatScroll.get_buffer().get_bounds()
         log = self.ChatScroll.get_buffer().get_text(start, end)
-        self.frame.clip.set_text(log)
+        self.frame.clip.set_text(log, -1)
 
     def OnClearChatLog(self, widget):
         self.ChatScroll.get_buffer().set_text("")
@@ -2333,7 +2357,7 @@ class ChatRoom:
 
     def OnTickerClicked(self, widget, event):
 
-        if event.button != 1 or event.type != gtk.gdk._2BUTTON_PRESS:
+        if event.button != 1 or event.type != Gdk.EventType._2BUTTON_PRESS:
             return False
 
         config = self.frame.np.config.sections
@@ -2420,11 +2444,11 @@ class ChatRooms(IconNotebook):
 
     def on_tab_click(self, widget, event, child):
 
-        if event.type == gtk.gdk.BUTTON_PRESS:
+        if event.type == Gdk.EventType.BUTTON_PRESS:
 
             n = self.page_num(child)
             page = self.get_nth_page(n)
-            room = [room for room, tab in self.roomsctrl.joinedrooms.items() if tab.Main is page][0]
+            room = [room for room, tab in list(self.roomsctrl.joinedrooms.items()) if tab.Main is page][0]
 
             if event.button == 2:
                 self.roomsctrl.joinedrooms[room].OnLeave(widget)
@@ -2432,7 +2456,7 @@ class ChatRooms(IconNotebook):
 
             if event.button == 3:
                 menu = self.TabPopup(room)
-                menu.popup(None, None, None, event.button, event.time)
+                menu.popup(None, None, None, None, event.button, event.time)
                 return True
 
             return False

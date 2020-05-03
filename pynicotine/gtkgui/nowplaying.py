@@ -21,17 +21,21 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import gtk
-import gobject
-import os
-import sys
-import re
-import thread
-import threading
 import copy
+import os
+import re
 import sys
-from pynicotine.utils import executeCommand
+from gettext import gettext as _
+
+import gi
+from gi.repository import GObject as gobject
+from gi.repository import Gtk as gtk
+
+import _thread
 from pynicotine.logfacility import log
+from pynicotine.utils import executeCommand
+
+gi.require_version('Gtk', '3.0')
 
 
 class NowPlaying:
@@ -159,7 +163,7 @@ class NowPlaying:
         isset = False
 
         if self.NP_mpd.get_active():
-            self.player_replacers = ["$n", "$t", "$a", "$b",  "$f", "$k"]
+            self.player_replacers = ["$n", "$t", "$a", "$b", "$f", "$k"]
             isset = True
         elif self.NP_banshee.get_active():
             self.player_replacers = ["$n", "$t", "$l", "$a", "$b", "$k", "$y", "$r", "$f"]
@@ -245,7 +249,7 @@ class NowPlaying:
         # Save new defined formats in npformatlist before exiting
         config = self.frame.np.config.sections
 
-        text = self.NPFormat.child.get_text()
+        text = self.NPFormat.get_child().get_text()
 
         if text is not None and not text.isspace() and text != "":
             if text not in config["players"]["npformatlist"] and text not in self.defaultlist:
@@ -267,7 +271,7 @@ class NowPlaying:
             self.GetNP(None, test, callback)
         else:
             # thread (command execution)
-            thread.start_new_thread(self.GetNP, (None, test, callback))
+            _thread.start_new_thread(self.GetNP, (None, test, callback))
 
     def GetNP(self, widget, test=None, callback=None):
 
@@ -310,13 +314,13 @@ class NowPlaying:
         # - this is a failsafe.
         oldtitle = copy.copy(self.title)
         self.title_clear()
-        for key, value in oldtitle.iteritems():
+        for key, value in oldtitle.items():
             try:
-                self.title[key] = unicode(value, "UTF-8", "replace")
+                self.title[key] = str(value, "UTF-8", "replace")
             except TypeError:
                 self.title[key] = value  # already unicode
 
-        title = self.NPFormat.child.get_text()
+        title = self.NPFormat.get_child().get_text()
         title = title.replace("%", "%%")  # Escaping user supplied % symbols
         title = title.replace("$t", "%(title)s")
         title = title.replace("$a", "%(artist)s")
@@ -369,14 +373,14 @@ class NowPlaying:
 
         self.frame.np.config.sections["players"]["npplayer"] = player
         self.frame.np.config.sections["players"]["npothercommand"] = self.NPCommand.get_text()
-        self.frame.np.config.sections["players"]["npformat"] = self.NPFormat.child.get_text()
+        self.frame.np.config.sections["players"]["npformat"] = self.NPFormat.get_child().get_text()
         self.frame.np.config.writeConfiguration()
 
         self.quit(None)
 
     def mpd(self):
 
-        format = self.NPFormat.child.get_text()
+        format = self.NPFormat.get_child().get_text()
 
         if "$a" in format:
             output = self.mpd_command("%artist%")
@@ -417,7 +421,7 @@ class NowPlaying:
     def banshee(self):
         """ Function to get banshee currently playing song """
 
-        from urllib import unquote
+        from urllib.parse import unquote
 
         commandlist = [
             "--query-title",
@@ -439,7 +443,7 @@ class NowPlaying:
 
             self.title["nowplaying"] = "%(artist)s - %(title)s" % matches
 
-            for key, value in matches.iteritems():
+            for key, value in matches.items():
 
                 if key == "duration":
                     value = value.replace(',', '.')
@@ -499,7 +503,7 @@ class NowPlaying:
         player = self.bus.get_object('org.mpris.amarok', '/Player')
         md = player.GetMetadata()
 
-        for key, value in md.iteritems():
+        for key, value in md.items():
 
             if key == 'mtime':
                 # Convert seconds to minutes:seconds
@@ -520,7 +524,7 @@ class NowPlaying:
     def audacious(self):
         """ Function to get audacious currently playing song """
 
-        slist = self.NPFormat.child.get_text()
+        slist = self.NPFormat.get_child().get_text()
         output = ""
         self.audacious_running = True
 
@@ -571,7 +575,7 @@ class NowPlaying:
                 self.title["bitrate"] = output
 
         if "$f" in slist:
-            path = self.audacious_command('current-song-filename')
+            path = self.audacious_command('current-song-filename')  # noqa: F841
 
         if not self.audacious_running:
             log.addwarning(_("ERROR: audacious: audtool didn't detect a running Audacious session."))
@@ -608,10 +612,10 @@ class NowPlaying:
 
         player = self.NPCommand.get_text()
 
-        dbus_mpris_service = u'org.mpris.MediaPlayer2.'
-        dbus_mpris_player_service = u'org.mpris.MediaPlayer2.Player'
-        dbus_mpris_path = u'/org/mpris/MediaPlayer2'
-        dbus_property = u'org.freedesktop.DBus.Properties'
+        dbus_mpris_service = 'org.mpris.MediaPlayer2.'
+        dbus_mpris_player_service = 'org.mpris.MediaPlayer2.Player'
+        dbus_mpris_path = '/org/mpris/MediaPlayer2'
+        dbus_property = 'org.freedesktop.DBus.Properties'
 
         if not player:
 
@@ -636,7 +640,7 @@ class NowPlaying:
             player_obj = self.bus.get_object(dbus_mpris_service + player, dbus_mpris_path)
             player_property_obj = dbus.Interface(player_obj, dbus_interface=dbus_property)
             metadata = player_property_obj.Get(dbus_mpris_player_service, "Metadata")
-        except Exception, exception:
+        except Exception as exception:
             log.addwarning(_("ERROR: MPRIS: Something went wrong while querying %(player)s: %(exception)s") % {'player': player, 'exception': exception})
             return None
 
@@ -650,16 +654,16 @@ class NowPlaying:
                 self.title[dest] = '?'
 
         mapping = [
-                ('xesam:title', 'title'),
-                ('xesam:album', 'album'),
-                ('xesam:comment', 'comment'),
-                ('xesam:audioBitrate', 'bitrate'),
-                ('xesak:trackNumber', 'track')
-            ]
+            ('xesam:title', 'title'),
+            ('xesam:album', 'album'),
+            ('xesam:comment', 'comment'),
+            ('xesam:audioBitrate', 'bitrate'),
+            ('xesak:trackNumber', 'track')
+        ]
 
         for (source, dest) in mapping:
             try:
-                self.title[dest] = unicode(metadata[source])
+                self.title[dest] = str(metadata[source])
             except KeyError:
                 self.title[dest] = '?'
 
@@ -701,9 +705,9 @@ class NowPlaying:
         for wnd_id in wnd_ids:
             wnd_txt = GetWindowText(FindWindow(wnd_id, None))
             if wnd_txt:
-                m = re.match("(.*)\s+\[foobar.*", wnd_txt)
+                m = re.match(r"(.*)\\s+\[foobar.*", wnd_txt)
                 if m:
-                    metadata = m.groups(0)[0].strip()
+                    metadata = m.groups()[0].strip()
 
         if metadata:
             self.title["nowplaying"] = "now playing: " + metadata.decode('mbcs')
@@ -716,7 +720,7 @@ class NowPlaying:
 
         if length != '' and length is not None:
 
-            minutes = int(length)/60
+            minutes = int(length) / 60
             seconds = str(int(length) - (60 * minutes))
 
             if len(seconds) < 2:
@@ -731,18 +735,18 @@ class NowPlaying:
     def lastfm(self):
         """ Function to get the last song played via lastfm api """
 
-        import httplib
+        import http.client
         import json
 
         try:
-            conn = httplib.HTTPConnection("ws.audioscrobbler.com")
+            conn = http.client.HTTPConnection("ws.audioscrobbler.com")
         except Exception as error:
             log.addwarning(_("ERROR: lastfm: Could not connect to audioscrobbler: %(error)s") % {"error": error})
             return None
 
         try:
             (user, apikey) = self.NPCommand.get_text().split(';')
-        except ValueError as error:
+        except ValueError as error:  # noqa: F841
             log.addwarning(_("ERROR: lastfm: Please provide both your lastfm username and API key"))
             return None
 
@@ -773,7 +777,7 @@ class NowPlaying:
             output = executeCommand(othercommand, returnoutput=True)
             self.title["nowplaying"] = output
             return True
-        except Exception, error:
+        except Exception as error:
             log.addwarning(_("ERROR: Executing '%(command)s' failed: %(error)s") % {"command": othercommand, "error": error})
             return None
 
@@ -792,7 +796,7 @@ class NowPlaying:
         # Now we need to connect to xmms2d
         try:
             xmms.connect(os.getenv("XMMS_PATH"))
-        except IOError as detail:
+        except IOError as error:
             log.addwarning(_("ERROR: xmms2: connecting failed: %(error)s") % {"error": error})
             return None
 

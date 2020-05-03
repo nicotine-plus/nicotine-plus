@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
@@ -62,7 +62,7 @@ def isBuilder(dir, file):
 pythonscripts = []
 builderscripts = []
 
-for dir, files in files.items():
+for dir, files in list(files.items()):
 
     for file in files:
 
@@ -86,34 +86,34 @@ for path in pythonscripts[:]:
     goodpython += path + " "
 
 # Add the launcher explicitly since it has no .py extension
-print "Generating nicotine-launcher.pot ...\n"
+print("Generating nicotine-launcher.pot ...\n")
 
-print "xgettext --no-location -L Python -o nicotine-launcher.pot ../nicotine"
+print("xgettext --no-location -L Python -o nicotine-launcher.pot ../nicotine")
 r = system("xgettext --no-location -L Python -o nicotine-launcher.pot ../nicotine")
 
 # Add python scripts
-print "\nGenerating nicotine-python.pot ...\n"
+print("\nGenerating nicotine-python.pot ...\n")
 
-print "xgettext --no-location -o nicotine-python.pot %s" % goodpython
+print("xgettext --no-location -o nicotine-python.pot %s" % goodpython)
 r = system("xgettext --no-location -o nicotine-python.pot %s" % goodpython)
 
 # Add builder files
-print "\nGenerating nicotine-builder.pot ...\n"
+print("\nGenerating nicotine-builder.pot ...\n")
 
 builderstring = ""
 for path in builderscripts[:]:
     builderstring += path + " "
 
-print "xgettext --no-location -o nicotine-builder.pot %s" % builderstring
+print("xgettext --no-location -o nicotine-builder.pot %s" % builderstring)
 r = system("xgettext --no-location -o nicotine-builder.pot %s" % builderstring)
 
 # Concat every files
-print "\nGenerating nicotine.pot ...\n"
+print("\nGenerating nicotine.pot ...\n")
 
 r = system("msgcat nicotine-launcher.pot nicotine-builder.pot nicotine-python.pot -o nicotine.pot")
 
 if r:
-    print "Error while creating nicotine.pot"
+    print("Error while creating nicotine.pot")
 else:
     remove('nicotine-launcher.pot')
     remove('nicotine-builder.pot')

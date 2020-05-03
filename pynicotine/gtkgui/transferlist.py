@@ -22,17 +22,22 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-from __future__ import division
-
-import gtk
-import gobject
-from types import StringType
-import string
-from time import time
+from gettext import gettext as _
 from math import ceil
-from utils import InitialiseColumns, int_sort_func, float_sort_func, HumanSize, HumanSpeed
-from pynicotine.logfacility import log
+from time import time
+
+import gi
+from gi.repository import GObject as gobject
+from gi.repository import Gtk as gtk
+
+from pynicotine.gtkgui.utils import HumanSize
+from pynicotine.gtkgui.utils import HumanSpeed
+from pynicotine.gtkgui.utils import InitialiseColumns
+from pynicotine.gtkgui.utils import float_sort_func
+from pynicotine.gtkgui.utils import int_sort_func
+from pynicotine.utils import cmp
+
+gi.require_version('Gtk', '3.0')
 
 
 class TransferList:
@@ -73,7 +78,7 @@ class TransferList:
         self.users = {}
         self.lastupdate = 0
         self.finalupdatetimerid = None
-        widget.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
+        widget.get_selection().set_mode(gtk.SelectionMode.MULTIPLE)
 
         columntypes = [
             gobject.TYPE_STRING,
@@ -122,7 +127,7 @@ class TransferList:
         self.transfersmodel.set_sort_func(3, int_sort_func, 3)
         self.col_percent.set_sort_column_id(11)
 
-        self.col_percent.set_attributes(self.col_percent.get_cell_renderers()[0], value=4, visible=14)
+        self.col_percent.set_attributes(self.col_percent.get_cells()[0], value=4, visible=14)
 
         self.col_human_size.set_sort_column_id(12)
         self.col_human_speed.set_sort_column_id(6)
@@ -141,7 +146,7 @@ class TransferList:
         self.frame.SetTextBG(self.widget)
         self.frame.ChangeListFont(self.widget, self.frame.np.config.sections["ui"]["transfersfont"])
 
-    def CellDataFunc(self, column, cellrenderer, model, iter):
+    def CellDataFunc(self, column, cellrenderer, model, iter, dummy="dummy"):
 
         colour = self.frame.np.config.sections["ui"]["search"]
         if colour == "":
@@ -153,7 +158,7 @@ class TransferList:
 
         try:
             return int(val)
-        except:
+        except Exception:
             if val in self.status_tab:
                 return self.status_tab.index(val)
             else:
@@ -171,7 +176,7 @@ class TransferList:
         # We want 0% to be always below anything else,
         # so we have to look up whether we are ascending or descending
         ascending = True
-        if model.get_sort_column_id()[1] == gtk.SORT_DESCENDING:
+        if model.get_sort_column_id()[1] == gtk.SortType.DESCENDING:
             ascending = False
 
         val1 = self.get_status_index(model.get_value(iter1, column))
@@ -316,7 +321,7 @@ class TransferList:
                 self.update_specific(newtransfer)
                 return
         else:
-            print("WARNING: Could not find transfer %s." % oldtransfer)
+            print(("WARNING: Could not find transfer %s." % oldtransfer))
 
     def update(self, transfer=None, forced=False):
 
@@ -364,7 +369,7 @@ class TransferList:
         self.lastupdate = time()  # ...we're working...
 
         # Remove empty parent rows
-        for (username, user) in [x for x in self.users.iteritems()]:
+        for (username, user) in [x for x in self.users.items()]:
 
             if not self.transfersmodel.iter_has_child(user):
                 self.transfersmodel.remove(user)
@@ -425,14 +430,14 @@ class TransferList:
                 if ispeed <= 0.0:
                     left = "∞"
                 else:
-                    left = self.frame.np.transfers.getTime((totalsize - position)/ispeed/1024)
+                    left = self.frame.np.transfers.getTime((totalsize - position) / ispeed / 1024)
 
                 elapsed = self.frame.np.transfers.getTime(elap)
 
                 if len(extensions) == 0:
                     extensions = "Unknown"
                 elif len(extensions) == 1:
-                    extensions = _("All %(ext)s") % {'ext': extensions.keys()[0]}
+                    extensions = _("All %(ext)s") % {'ext': list(extensions.keys())[0]}
                 else:
                     extensionlst = [(extensions[key], key) for key in extensions]
                     extensionlst.sort(reverse=True)
@@ -511,7 +516,7 @@ class TransferList:
                 percent = 100
             else:
                 percent = ((100 * icurrentbytes) / int(size))
-        except Exception, e:
+        except Exception as e:  # noqa: F841
             icurrentbytes = 0
             percent = 0
 
@@ -538,7 +543,7 @@ class TransferList:
                 11, istatus,
                 12, size,
                 13, currentbytes,
-                15, speed
+                15, str(speed)
             )
 
             break
@@ -563,7 +568,7 @@ class TransferList:
 
             iter = self.transfersmodel.append(
                 parent,
-                [user, shortfn, status, str(place), percent, str(hsize), HumanSpeed(speed), elap, left, path, fn, istatus, size, icurrentbytes, True, speed]
+                [user, shortfn, status, str(place), percent, str(hsize), HumanSpeed(speed), elap, left, path, fn, istatus, size, icurrentbytes, True, str(speed)]
             )
 
             # Expand path
@@ -587,7 +592,7 @@ class TransferList:
     def OnCopyDirURL(self, widget):
 
         i = self.selected_transfers[0]
-        path = string.join(i.filename.split("\\")[:-1], "\\") + "\\"
+        path = "\\".join(i.filename.split("\\")[:-1]) + "\\"
 
         if path[:-1] != "/":
             path += "/"
