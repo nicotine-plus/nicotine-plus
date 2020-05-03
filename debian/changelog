@@ -1,5 +1,12 @@
-nicotine (1.4.3) eoan; urgency=medium
+nicotine (1.4.3-1) UNRELEASED; urgency=medium
 
-  * Upgrade Python to >= 3.6, use Gtk+ 3
+  * Ported to Python3 and GTk+3.
 
- -- Lene Preuss <lene.preuss@gmail.com>  Tue, 21 Apr 2020 18:35:00 +0200
+ -- Lene Preuss <lene.preuss@gmail.com>  Sun, 03 May 2020 15:53:07 +0200
+
+nicotine (1.4.2-1) eoan; urgency=medium
+
+  * Latest upstream.
+
+ -- Kip Warner <kip@thevertigo.com>  Sat, 27 Feb 2020 18:49:00 -0800
+
