@@ -824,7 +824,7 @@ class NicotineFrame:
             "plugin"
         ]
 
-        if "icontheme" in self.np.config.sections["ui"]:
+        if self.np.config.sections["ui"].get("icontheme"):
             extensions = ["jpg", "jpeg", "bmp", "png", "svg"]
             for name in names:
                 path = None
