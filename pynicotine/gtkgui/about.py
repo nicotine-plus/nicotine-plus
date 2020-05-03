@@ -253,6 +253,10 @@ Kip Warner
 - Debianization
 - [kip(at)thevertigo(dot)com]
 
+Lene Preuss
+- Python3 migration
+- [lene.preuss(at)here(dot)com]
+
 ### Retired
 
 daelstorm
