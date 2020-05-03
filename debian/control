@@ -2,26 +2,26 @@ Source: nicotine
 Section: net
 Priority: extra
 Maintainer: Kip Warner <kip@thevertigo.com>
-Standards-Version: 4.1.1
+Standards-Version: 4.3.0.3
 Build-Depends:
-    debhelper (>= 10),
+    debhelper-compat (= 11),
     dh-python,
-    python-all,
+    python3-all,
     python-gobject-2,
     gettext,
     lintian,
     python-setuptools,
-    quilt,
-    python3
+    quilt
 Vcs-Git: https://github.com/Nicotine-Plus/nicotine-plus.git
 Vcs-browser: https://github.com/Nicotine-Plus/nicotine-plus
 X-Python-Version: >= 3.6
 Homepage: https://github.com/Nicotine-Plus/nicotine-plus
+Rules-Requires-Root: no
 
 Package: nicotine
 Architecture: all
 Depends:
-    ${python:Depends},
+    ${python3:Depends},
     ${misc:Depends},
     miniupnpc (>= 1.9),
     python-gobject-2,
@@ -45,3 +45,4 @@ Description: graphical client for SoulSeek P2P network (Gtk+ / Python 3)
  strict bandwidth control, and tries to look like PySoulSeek.
  .
  This package installs the Gtk+ 3 client which uses Python 3.
+

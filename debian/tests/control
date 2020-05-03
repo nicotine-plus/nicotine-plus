@@ -17,3 +17,4 @@ Test-Command: xvfb-run -a python3 tests/integration/run_app.py
 Depends: @, python3-dogtail, xvfb
 Restrictions: isolation-container
 Features: test-name=integration-tests
+
