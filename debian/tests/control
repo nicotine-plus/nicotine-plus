@@ -5,16 +5,16 @@
 
 Test-Command: nicotine --version | grep Nicotine+
 Depends: @
-#Restrictions: isolation-container, superficial
+Restrictions: isolation-container, superficial
 Features: test-name=test-version
 
 Test-Command: pytest-3 test/unit
 Depends: @, python3-pytest
-#Restrictions: isolation-container
+Restrictions: isolation-container
 Features: test-name=unit-tests
 
-Test-Command: xvfb-run -a python3 test/integration/run_app.py
-Depends: @, python3-dogtail, xvfb
-#Restrictions: isolation-container
+Test-Command: sh -c 'pip3 install robotframework && xvfb-run robot test/integration/nicotine.robot'
+Depends: @, python3-pip, xvfb
+Restrictions: isolation-container
 Features: test-name=integration-tests
 

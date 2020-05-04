@@ -139,7 +139,8 @@ if __name__ == '__main__':
         package_dir={'pynicotine.gtkgui': 'pynicotine/gtkgui'},
         package_data={
             'pynicotine.gtkgui.ui': ["*.ui"],
-            'test.unit.data': ["login/socket_localhost:22420.log"]
+            'test.unit.data': ["login/socket_localhost:22420.log"],
+            'test.integration': ["nicotine.robot"]
         },
         scripts=['nicotine'],
         long_description=LONG_DESCRIPTION,
