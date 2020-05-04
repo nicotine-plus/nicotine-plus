@@ -6,7 +6,8 @@ Standards-Version: 4.3.0.3
 Build-Depends:
     debhelper-compat (= 11),
     dh-python,
-    python3-all,
+    python3 (>= 3.6),
+    python3-pytest,
     python-gobject-2,
     gettext,
     lintian,
@@ -34,8 +35,8 @@ Depends:
     python3 (>= 3.6),
     python3-mutagen (>= 1.25),
     xdg-utils
-Recommends: python-geoip, python-notify
-Suggests: python-gnome2, python-sexy, python-dbus, python-gst0.10
+Recommends: python3-geoip, python3-notify2
+Suggests: python-gnome2, python-sexy, python3-dbus, python3-gst1.0
 Description: graphical client for SoulSeek P2P network (Gtk+ / Python 3)
  Nicotine+ is a client for SoulSeek, a light and efficient file sharing
  system, written in Python and using the GTK+ toolkit, based on the

@@ -132,10 +132,14 @@ if __name__ == '__main__':
         author="Michael Labouebe",
         author_email="gfarmerfr@free.fr",
         url="https://www.nicotine-plus.org/",
-        packages=['pynicotine', 'pynicotine.gtkgui', 'pynicotine.gtkgui.ui'],
+        packages=[
+            'pynicotine', 'pynicotine.gtkgui', 'pynicotine.gtkgui.ui',
+            'test', 'test.unit', 'test.unit.data', 'test.integration',
+        ],
         package_dir={'pynicotine.gtkgui': 'pynicotine/gtkgui'},
         package_data={
-            'pynicotine.gtkgui.ui': ["*.ui"]
+            'pynicotine.gtkgui.ui': ["*.ui"],
+            'test.unit.data': ["login/socket_localhost:22420.log"]
         },
         scripts=['nicotine'],
         long_description=LONG_DESCRIPTION,
