@@ -1,6 +1,9 @@
 name: Nicotine+ CI
 
-on: [push]
+on:
+  push:
+    branches-ignore:
+      - '**'
 
 env:
   # workaround until figuring out how to dynamically read this from source code
