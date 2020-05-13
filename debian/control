@@ -8,10 +8,9 @@ Build-Depends:
     dh-python,
     python3 (>= 3.6),
     python3-pytest,
-    python-gobject-2,
     gettext,
     lintian,
-    python-setuptools,
+    python3-setuptools,
     quilt
 Vcs-Git: https://github.com/Nicotine-Plus/nicotine-plus.git
 Vcs-browser: https://github.com/Nicotine-Plus/nicotine-plus
@@ -25,10 +24,6 @@ Depends:
     ${python3:Depends},
     ${misc:Depends},
     miniupnpc (>= 1.9),
-    python-gobject-2,
-    libgtk-3-0,
-    libcairo2-dev,
-    libgirepository1.0-dev,
     python3-gi,
     gobject-introspection,
     gir1.2-gtk-3.0,
