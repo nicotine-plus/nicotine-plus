@@ -9,7 +9,7 @@ import pytest
 from pynicotine.slskproto import SlskProtoThread
 from pynicotine.slskmessages import ServerConn, Login, SetWaitPort
 from pynicotine.utils import ApplyTranslation
-from tests.mock_socket import monkeypatch_socket, monkeypatch_select
+from test.unit.mock_socket import monkeypatch_socket, monkeypatch_select
 
 # Time (in s) needed for SlskProtoThread main loop to run at least once
 SLSKPROTO_RUN_TIME = 0.5
