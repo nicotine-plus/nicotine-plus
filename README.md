@@ -2,12 +2,6 @@
 
 [![N|Solid](files/icons/96x96/nicotine-plus.png)](https://github.com/Nicotine-Plus/nicotine-plus/)
 
-## Notes porting to Python 3
-
-* sudo apt install libcairo2-dev libgirepository1.0-dev
-* pip install pygobject
-* pip install mutagen
-
 ## Intro
 
 A graphical client for the SoulSeek peer-to-peer system.
@@ -69,10 +63,11 @@ A Debian/Ubuntu repository containing the latest git master-based packages is al
 
 ## Required
 
-* [Python 2.7.X](https://www.python.org/)
-* [Gtk+ 2.24.X](http://www.gtk.org/)
-* [PyGTK 2.24.X](http://www.pygtk.org/)
-* [mutagen](https://github.com/quodlibet/mutagen)
+* [python3](https://www.python.org/)
+* [python3-gi](https://pygobject.readthedocs.io/en/latest/getting_started.html)
+* [gobject-introspection](https://gi.readthedocs.io/en/latest/)
+* [gir1.2-gtk-3.0](https://www.gtk.org/)
+* [python3-mutagen](https://mutagen.readthedocs.io/en/latest/)
 
 ## Optional
 
