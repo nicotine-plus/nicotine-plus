@@ -1,12 +1,13 @@
 [Desktop Entry]
-Encoding=UTF-8
-Version=1.0
-Name=Nicotine-Plus
-Comment=Python client for the SoulSeek P2P file sharing network which uses Gtk+.
-Exec=nicotine
-Icon=nicotine-plus
-Terminal=false
 Type=Application
+Version=1.1
+Name=Nicotine-Plus
+GenericName=SoulSeek Client
+Comment=A graphical client for the SoulSeek peer-to-peer system.
+Icon=nicotine-plus
+Exec=nicotine
+Terminal=false
 Categories=Audio;AudioVideo;FileTransfer;P2P;GTK;
 Keywords=SoulSeek,Nicotine,file sharing,napster,music,P2P,peer-to-peer
 StartupNotify=true
+

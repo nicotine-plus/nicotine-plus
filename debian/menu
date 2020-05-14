@@ -1,5 +1,0 @@
-?package(nicotine): needs="X11" \
-                    section="Applications/Network/File Transfer" \
-                    title="Nicotine-Plus" \
-                    command="/usr/bin/nicotine" \
-                    icon="/usr/share/icons/hicolor/scalable/apps/nicotine-plus.svg"
