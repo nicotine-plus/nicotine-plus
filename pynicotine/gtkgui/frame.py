@@ -1447,7 +1447,8 @@ class NicotineFrame:
             map = self.LogWindow.get_style_context()
             colour = map.get_color(gtk.StateFlags.NORMAL)
         else:
-            colour = Gdk.color_parse(color)
+            colour = Gdk.RGBA()
+            colour.parse(color)
         if font == "":
             font = None
         if first:
