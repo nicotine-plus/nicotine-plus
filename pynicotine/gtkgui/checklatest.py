@@ -66,8 +66,8 @@ def checklatest(frame):
         dlg = gtk.MessageDialog(
             frame,
             0,
-            gtk.MESSAGE_ERROR,
-            gtk.BUTTONS_OK,
+            gtk.MessageType.ERROR,
+            gtk.ButtonsType.OK,
             _("Could not retrieve version information!\nError: %s") % m
         )
         dlg.set_title(_("Check Latest Version"))
@@ -81,24 +81,24 @@ def checklatest(frame):
         dlg = gtk.MessageDialog(
             frame,
             0,
-            gtk.MESSAGE_WARNING,
-            gtk.BUTTONS_OK,
+            gtk.MessageType.WARNING,
+            gtk.ButtonsType.OK,
             _("A newer version ('%s') is available. Check Nicotine+ releases page\n(https://github.com/Nicotine-Plus/nicotine-plus/releases) for the latest version.") % data
         )
     elif myversion > latest:
         dlg = gtk.MessageDialog(
             frame,
             0,
-            gtk.MESSAGE_WARNING,
-            gtk.BUTTONS_OK,
+            gtk.MessageType.WARNING,
+            gtk.ButtonsType.OK,
             _("You appear to be using a development version of Nicotine+.\nCheck out the latest version from the Git repository at https://github.com/Nicotine-Plus/nicotine-plus/")
         )
     else:
         dlg = gtk.MessageDialog(
             frame,
             0,
-            gtk.MESSAGE_INFO,
-            gtk.BUTTONS_OK,
+            gtk.MessageType.INFO,
+            gtk.ButtonsType.OK,
             _("You are using the latest version of Nicotine+.")
         )
 
