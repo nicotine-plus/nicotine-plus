@@ -46,7 +46,6 @@ from pynicotine import slskproto
 from pynicotine.gtkgui import imagedata
 from pynicotine.gtkgui import nowplaying
 from pynicotine.gtkgui import utils
-from pynicotine.gtkgui.about import AboutDependenciesDialog
 from pynicotine.gtkgui.about import AboutDialog
 from pynicotine.gtkgui.about import AboutFiltersDialog
 from pynicotine.gtkgui.about import AboutPrivateDialog
@@ -2586,11 +2585,6 @@ class NicotineFrame:
 
     def OnAboutPrivateChatCommands(self, widget):
         dlg = AboutPrivateDialog(self.MainWindow)
-        dlg.run()
-        dlg.destroy()
-
-    def OnAboutDependencies(self, widget):
-        dlg = AboutDependenciesDialog(self.MainWindow)
         dlg.run()
         dlg.destroy()
 

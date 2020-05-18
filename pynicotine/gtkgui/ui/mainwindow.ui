@@ -514,15 +514,6 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkMenuItem" id="about_dependencies">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">About _optional dependencies</property>
-                        <property name="use_underline">True</property>
-                        <signal name="activate" handler="OnAboutDependencies" swapped="no"/>
-                      </object>
-                    </child>
-                    <child>
                       <object class="GtkSeparatorMenuItem" id="scheidingslijn4">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
