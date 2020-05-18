@@ -2557,43 +2557,8 @@ class NicotineFrame:
             self.UploadButtons.hide()
             self.DownloadButtons.hide()
 
-    def OnNicotineGuide(self, widget):
-
-        paths = []
-
-        subdir = "NicotinePlusGuide"
-        file = "NicotineGuide.htm"
-
-        paths.append(os.getcwd())
-
-        # For distros that puts documentation in /usr/share/doc
-        path2 = "%s/share/doc/nicotine" % sys.prefix
-        paths.append(path2)
-
-        # Slackware puts documentation in /usr/doc
-        path3 = "%s/doc/nicotine" % sys.prefix
-        paths.append(path3)
-
-        for path in paths:
-
-            if os.path.exists(os.sep.join([path, "doc", subdir, file])):
-                url = "file:%s/%s/%s/%s" % (urllib.request.pathname2url(path).replace("|", ":"), "doc", subdir, file)
-                OpenUri(url)
-                return
-
-            if os.path.exists(os.sep.join([path, subdir, file])):
-                url = "file:%s/%s/%s" % (urllib.request.pathname2url(path).replace("|", ":"), subdir, file)
-                OpenUri(url)
-                return
-        else:
-            popupWarning(
-                None,
-                _("Cannot Find Nicotine+ Offline Guide"),
-                _("The Nicotine+ Offline Guide ( NicotineGuide.htm ) was not found.")
-            )
-
     def OnProjectWebsite(self, widget):
-        url = "https://www.nicotine-plus.org/"
+        url = "https://github.com/Nicotine-Plus/nicotine-plus/"
         OpenUri(url)
 
     def onProjectGithubPage(self, widget):

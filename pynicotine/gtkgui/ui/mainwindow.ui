@@ -472,16 +472,6 @@
                   <object class="GtkMenu" id="help1_menu">
                     <property name="can_focus">False</property>
                     <child>
-                      <object class="GtkMenuItem" id="nicotine_guide1">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">_Offline Nicotine+ Guide</property>
-                        <property name="use_underline">True</property>
-                        <accelerator key="F1" signal="activate"/>
-                        <signal name="activate" handler="OnNicotineGuide" swapped="no"/>
-                      </object>
-                    </child>
-                    <child>
                       <object class="GtkMenuItem" id="ProjectWebsite">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
