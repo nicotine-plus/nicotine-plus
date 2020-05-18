@@ -1622,8 +1622,7 @@ msgid "Events"
 msgstr "Udalosti"
 
 #: pynicotine/gtkgui/settings_glade.py:2642
-msgid ""
-"Show notification popup in tray after each download\n"
+msgid "Show notification popup in tray after each download\n"
 "(requires python-notify and notification-daemon)"
 msgstr ""
 "Zobraziť okno s upozornením v systémovej lište po\n"

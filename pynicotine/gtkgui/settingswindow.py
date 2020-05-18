@@ -2524,7 +2524,7 @@ class EventsFrame(buildFrame):
 
     def SetSettings(self, config):
 
-        if self.frame.pynotify is not None:
+        if self.frame.notify is not None:
             self.ShowNotification.set_sensitive(True)
             self.ShowNotificationPerFolder.set_sensitive(True)
         else:

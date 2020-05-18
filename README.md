@@ -94,6 +94,5 @@ $ autopkgtest --shell-fail --apt-upgrade ../nicotine_(...).dsc -- \
 ## Optional
 
 * [GeoIP python bindings](https://dev.maxmind.com/geoip/legacy/downloadable/) for Country lookup: need an alternative (unmaintained).
-* [python-notify](http://www.galago-project.org) for notification support: need an alternative (unmaintained).
 * [MiniUPnPc python module or binary](https://miniupnp.tuxfamily.org/) for opening ports on your router.
 * [Python for Windows Extensions](https://sourceforge.net/projects/pywin32/) for hiding directories from your shares (Windows only).

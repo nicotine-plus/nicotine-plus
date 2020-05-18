@@ -743,12 +743,8 @@ msgid "Events"
 msgstr "Ereignisse"
 
 #, fuzzy
-msgid ""
-"Show notification popup in tray after...\n"
-"(requires python-notify and notification-daemon)"
-msgstr ""
-"Benachrichtigung in Systemleiste nach Herunterladen …\n"
-"(benötigt python-notify und notification-daemon)"
+msgid "Show notification popup in tray after..."
+msgstr "Benachrichtigung in Systemleiste nach Herunterladen …"
 
 msgid "...each file"
 msgstr "jeder Datei"
