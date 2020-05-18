@@ -237,14 +237,15 @@ class NicotineFrame:
         self.got_focus = False
 
         try:
-            import pynotify
-            pynotify.init("Nicotine+")
-            self.pynotify = pynotify
-            self.pynotifyBox = None
+            gi.require_version('Notify', '0.7')
+            from gi.repository import Notify
+            Notify.init("Nicotine+")
+            self.notify = Notify
+            self.notifyBox = None
             from xml.dom.minidom import getDOMImplementation
             self.xmldocument = getDOMImplementation().createDocument(None, None, None)
         except ImportError:
-            self.pynotify = None
+            self.notify = None
 
         self.np = NetworkEventProcessor(
             self,
@@ -766,25 +767,18 @@ class NicotineFrame:
 
     def NewNotification(self, message, title="Nicotine+"):
 
-        if self.pynotify is None:
+        if self.notify is None:
             return
 
         xmlmessage = self.xmldocument.createTextNode(message).toxml()
-        if self.pynotifyBox is None:
-            self.pynotifyBox = self.pynotify.Notification(title, xmlmessage)
-            self.pynotifyBox.set_icon_from_pixbuf(self.images["notify"])
-            try:
-                n.attach_to_status_icon(self.TrayApp.trayicon)  # noqa: F821
-            except Exception:
-                try:
-                    n.attach_to_widget(self.TrayApp.trayicon)  # noqa: F821
-                except Exception:
-                    pass
+        if self.notifyBox is None:
+            self.notifyBox = self.notify.Notification.new(title, xmlmessage)
+            self.notifyBox.set_image_from_pixbuf(self.images["notify"])
         else:
-            self.pynotifyBox.update(title, xmlmessage)
+            self.notifyBox.update(title, xmlmessage)
 
         try:
-            self.pynotifyBox.show()
+            self.notifyBox.show()
         except gobject.GError as error:
             self.logMessage(_("Notification Error: %s") % str(error))
 
