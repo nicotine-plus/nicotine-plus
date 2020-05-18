@@ -30,7 +30,7 @@ Depends:
     python3-dbus,
     python3-geoip,
     python3-gi,
-    python3-gst1.0,
+    python3-gst-1.0,
     python3-mutagen (>= 1.25),
     python3-notify2,
     xdg-utils
