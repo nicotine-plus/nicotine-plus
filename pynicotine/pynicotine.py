@@ -684,7 +684,7 @@ class NetworkEventProcessor:
         else:
             for i in self.peerconns[:]:
                 if i.conn == conn:
-                    self.logMessage(_("Connection closed by peer: %s") % vars(i))
+                    self.logMessage(_("Connection closed by peer: %s") % vars(i), debugLevel=3)
 
                     if i.conntimer is not None:
                         i.conntimer.cancel()
