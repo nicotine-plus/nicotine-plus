@@ -201,12 +201,13 @@ class UserBrowse:
         self.FileStore = gtk.ListStore(str, str, str, str, gobject.TYPE_INT64, int, str)
 
         self.FileTreeView.set_model(self.FileStore)
+        widths = self.frame.np.config.sections["columns"]["userbrowse_widths"]
         cols = InitialiseColumns(
             self.FileTreeView,
-            [_("Filename"), 250, "text", self.CellDataFunc],
-            [_("Size"), 100, "text", self.CellDataFunc],
-            [_("Bitrate"), 70, "text", self.CellDataFunc],
-            [_("Length"), 50, "text", self.CellDataFunc]
+            [_("Filename"), widths[0], "text", self.CellDataFunc],
+            [_("Size"), widths[1], "text", self.CellDataFunc],
+            [_("Bitrate"), widths[2], "text", self.CellDataFunc],
+            [_("Length"), widths[3], "text", self.CellDataFunc]
         )
         cols[0].set_sort_column_id(0)
         cols[1].set_sort_column_id(4)
@@ -214,12 +215,16 @@ class UserBrowse:
         cols[3].set_sort_column_id(5)
         self.FileStore.set_sort_column_id(0, gtk.SortType.ASCENDING)
 
+        config = self.frame.np.config.sections
+
         for i in range(4):
             parent = cols[i].get_widget().get_ancestor(gtk.Button)
             if parent:
                 parent.connect('button_press_event', PressHeader)
+            
+            # Read Show / Hide column settings from last session
+            cols[i].set_visible(config["columns"]["userbrowse"][i])
 
-        # Read Show / Hide column settings from last session
         self.FileTreeView.get_selection().set_mode(gtk.SelectionMode.MULTIPLE)
         self.FileTreeView.set_headers_clickable(True)
         self.FileTreeView.set_property("rules-hint", True)
@@ -605,6 +610,16 @@ class UserBrowse:
         except Exception as msg:
             error = _("Can't save shares, '%(user)s', reported error: %(error)s" % {'user': self.user, 'error': msg})
             self.frame.logMessage(error)
+
+    def saveColumns(self):
+
+        columns = []
+        widths = []
+        for column in self.FileTreeView.get_columns():
+            columns.append(column.get_visible())
+            widths.append(column.get_width())
+        self.frame.np.config.sections["columns"]["userbrowse"] = columns
+        self.frame.np.config.sections["columns"]["userbrowse_widths"] = widths
 
     def ShowInfo(self, msg):
         self.conn = None

@@ -110,6 +110,11 @@ class UserTabs(IconNotebook):
             self.users[user] = w
             self.frame.np.queue.put(slskmessages.AddUser(user))
 
+    def saveColumns(self):
+
+        for user in self.users:
+            self.users[user].saveColumns()
+
     def ShowLocalInfo(self, user, descr, has_pic, pic, totalupl, queuesize, slotsavail, uploadallowed):
 
         self.InitWindow(user, None)

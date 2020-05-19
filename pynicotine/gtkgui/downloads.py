@@ -90,7 +90,7 @@ class Downloads(TransferList):
         frame.DownloadList.connect("key-press-event", self.on_key_press_event)
         cols = frame.DownloadList.get_columns()
 
-        for i in range(9):
+        for i in range(10):
 
             parent = cols[i].get_widget().get_ancestor(gtk.Button)
             if parent:

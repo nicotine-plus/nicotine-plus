@@ -717,7 +717,7 @@ class Search:
         self.col_num, self.col_user, self.col_file, self.col_size, self.col_speed, self.col_queue, self.col_immediate, self.col_bitrate, self.col_length, self.col_country, self.col_directory = cols
         cols[0].get_widget().hide()
 
-        for i in range(10):
+        for i in range(11):
 
             parent = cols[i].get_widget().get_ancestor(gtk.Button)
             if parent:
