@@ -2897,12 +2897,12 @@ class NicotineFrame:
         bound = self.LogWindow.get_buffer().get_selection_bounds()
         if bound is not None and len(bound) == 2:
             start, end = bound
-            log = self.LogWindow.get_buffer().get_text(start, end)
+            log = self.LogWindow.get_buffer().get_text(start, end, True)
             self.clip.set_text(log, -1)
 
     def OnCopyAllLogWindow(self, widget):
         start, end = self.LogWindow.get_buffer().get_bounds()
-        log = self.LogWindow.get_buffer().get_text(start, end)
+        log = self.LogWindow.get_buffer().get_text(start, end, True)
         self.clip.set_text(log, -1)
 
     def OnClearLogWindow(self, widget):
