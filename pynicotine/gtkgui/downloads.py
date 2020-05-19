@@ -335,7 +335,7 @@ class Downloads(TransferList):
             else:
                 # If this file doesn't exist anymore, it may have finished downloading and have been renamed
                 # try looking in the download directory and match the original filename.
-                basename = string.split(fn.filename, '\\')[-1]
+                basename = str.split(fn.filename, '\\')[-1]
                 path = os.sep.join([downloaddir, basename])
                 if os.path.exists(path):
                     playfile = path

@@ -82,8 +82,10 @@
                 <signal name="clicked" handler="OnNPPlayer" swapped="no"/>
               </object>
               <packing>
-                <property name="top_attach">2</property>
-                <property name="bottom_attach">3</property>
+                <property name="left_attach">2</property>
+                <property name="right_attach">3</property>
+                <property name="top_attach">1</property>
+                <property name="bottom_attach">2</property>
               </packing>
             </child>
             <child>
@@ -97,8 +99,8 @@
                 <signal name="clicked" handler="OnNPPlayer" swapped="no"/>
               </object>
               <packing>
-                <property name="top_attach">1</property>
-                <property name="bottom_attach">2</property>
+                <property name="left_attach">2</property>
+                <property name="right_attach">3</property>
               </packing>
             </child>
             <child>
@@ -112,8 +114,8 @@
                 <signal name="clicked" handler="OnNPPlayer" swapped="no"/>
               </object>
               <packing>
-                <property name="left_attach">2</property>
-                <property name="right_attach">3</property>
+                <property name="left_attach">1</property>
+                <property name="right_attach">2</property>
                 <property name="top_attach">1</property>
                 <property name="bottom_attach">2</property>
               </packing>
@@ -146,20 +148,6 @@
               </object>
             </child>
             <child>
-              <object class="GtkRadioButton" id="NP_banshee">
-                <property name="label" translatable="yes">Banshee</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">False</property>
-                <property name="draw_indicator">True</property>
-                <property name="group">NP_amarok</property>
-              </object>
-              <packing>
-                <property name="left_attach">2</property>
-                <property name="right_attach">3</property>
-              </packing>
-            </child>
-            <child>
               <object class="GtkRadioButton" id="NP_foobar">
                 <property name="label" translatable="yes">foobar</property>
                 <property name="visible">True</property>
@@ -170,8 +158,6 @@
                 <signal name="clicked" handler="OnNPPlayer" swapped="no"/>
               </object>
               <packing>
-                <property name="left_attach">1</property>
-                <property name="right_attach">2</property>
                 <property name="top_attach">1</property>
                 <property name="bottom_attach">2</property>
               </packing>
@@ -187,9 +173,8 @@
                 <signal name="clicked" handler="OnNPPlayer" swapped="no"/>
               </object>
               <packing>
-                <property name="right_attach">3</property>
-                <property name="top_attach">3</property>
-                <property name="bottom_attach">4</property>
+                <property name="top_attach">2</property>
+                <property name="bottom_attach">3</property>
               </packing>
             </child>
           </object>

@@ -140,8 +140,6 @@ class NowPlaying:
             self.NP_audacious.set_active(1)
         elif player == "mpd":
             self.NP_mpd.set_active(1)
-        elif player == "banshee":
-            self.NP_banshee.set_active(1)
         elif player == "exaile":
             self.NP_exaile.set_active(1)
         elif player == "lastfm":
@@ -164,9 +162,6 @@ class NowPlaying:
 
         if self.NP_mpd.get_active():
             self.player_replacers = ["$n", "$t", "$a", "$b", "$f", "$k"]
-            isset = True
-        elif self.NP_banshee.get_active():
-            self.player_replacers = ["$n", "$t", "$l", "$a", "$b", "$k", "$y", "$r", "$f"]
             isset = True
         elif self.NP_amarok.get_active():
             self.player_replacers = ["$n", "$t", "$l", "$a", "$b", "$c", "$k", "$y", "$r", "$f"]
@@ -266,12 +261,7 @@ class NowPlaying:
 
     def DisplayNowPlaying(self, widget, test=0, callback=None):
 
-        if self.NP_mpris.get_active():
-            # dbus (no threads, please)
-            self.GetNP(None, test, callback)
-        else:
-            # thread (command execution)
-            _thread.start_new_thread(self.GetNP, (None, test, callback))
+        self.GetNP(None, test, callback)
 
     def GetNP(self, widget, test=None, callback=None):
 
@@ -287,8 +277,6 @@ class NowPlaying:
                 result = self.audacious()
             elif self.NP_mpd.get_active():
                 result = self.mpd()
-            elif self.NP_banshee.get_active():
-                result = self.banshee()
             elif self.NP_exaile.get_active():
                 result = self.exaile()
             elif self.NP_lastfm.get_active():
@@ -356,8 +344,6 @@ class NowPlaying:
             player = "audacious"
         elif self.NP_mpd.get_active():
             player = "mpd"
-        elif self.NP_banshee.get_active():
-            player = "banshee"
         elif self.NP_exaile.get_active():
             player = "exaile"
         elif self.NP_lastfm.get_active():
@@ -411,82 +397,12 @@ class NowPlaying:
 
     def mpd_command(self, command):
 
-        output = executeCommand("mpc --format $", command, returnoutput=True).split('\n')[0]
+        output = executeCommand("mpc --format $", command, returnoutput=True).decode().split('\n')[0]
 
         if output == '' or output.startswith("MPD_HOST") or output.startswith("volume: "):
             return None
 
         return output
-
-    def banshee(self):
-        """ Function to get banshee currently playing song """
-
-        from urllib.parse import unquote
-
-        commandlist = [
-            "--query-title",
-            "--query-artist",
-            "--query-album",
-            "--query-track-count",
-            "--query-duration",
-            "--query-year",
-            "--query-bit-rate",
-            "--query-uri"
-        ]
-
-        output = self.banshee_command(commandlist)
-
-        matches = {}
-        [matches.__setitem__(i[0].split(':')[0], filter(len, i[1:])[0]) for i in re.findall(r"(?m)^(title: (?P<title>.*?)|artist: (?P<artist>.*?)|album: (?P<album>.*?)|track-number: (?P<track>.*?)|duration: (?P<length>.*?)|year: (?P<year>.*?)|bit-rate: (?P<bitrate>.*?)|uri: (?P<filename>.*?))$", output)]
-
-        if matches:
-
-            self.title["nowplaying"] = "%(artist)s - %(title)s" % matches
-
-            for key, value in matches.items():
-
-                if key == "duration":
-                    value = value.replace(',', '.')
-                    self.title["length"] = self.get_length_time(float(value))
-                elif key == "bit-rate":
-                    self.title["bitrate"] = value
-                elif key == "track-number":
-                    self.title["track"] = value
-                elif key == "uri":
-                    value = unquote(value)
-                    self.title["filename"] = value.split('://')[1]
-                else:
-                    self.title[key] = value
-
-            return True
-        else:
-            return False
-
-    def banshee_command(self, commands):
-        """ Wrapper that calls banshee commandline """
-
-        return executeCommand(" ".join(["banshee"] + commands), returnoutput=True)
-
-    def exaile(self):
-        """ Function to get exaile currently playing song """
-
-        # At this time exail doesn't support mpris2: it will com with exaile 4
-        # So we use the command line to query it
-        output = executeCommand('exaile --get-album --get-artist --get-length --get-title', returnoutput=True)
-        output = output.split('\n')
-
-        self.title["title"] = output[0]
-        self.title["artist"] = output[1]
-        self.title["album"] = output[2]
-        self.title["length"] = self.get_length_time(float(output[3]))
-
-        if self.title['artist'] != "":
-            self.title['nowplaying'] += self.title['artist']
-
-        if self.title['title'] != "":
-            self.title['nowplaying'] += " - " + self.title['title']
-
-        return True
 
     def amarok(self):
         """ Function to get amarok currently playing song """
@@ -587,9 +503,9 @@ class NowPlaying:
         """ Wrapper that calls audacious commandline audtool and parse the output """
 
         try:
-            output = executeCommand("audtool %s %s" % (command, subcommand), returnoutput=True).split('\n')[0]
+            output = executeCommand("audtool %s %s" % (command, subcommand), returnoutput=True).decode().split('\n')[0]
         except RuntimeError:
-            output = executeCommand("audtool2 %s %s" % (command, subcommand), returnoutput=True).split('\n')[0]
+            output = executeCommand("audtool2 %s %s" % (command, subcommand), returnoutput=True).decode().split('\n')[0]
 
         if output.startswith('audtool'):
             output = None
