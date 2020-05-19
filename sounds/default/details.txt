@@ -1,18 +1,18 @@
 Origins of audio samples
 ============================================================================
 
-Creator: zeuss
-Creator's Url: http://freesound.iua.upf.edu/usersViewSingle.php?id=124239
+Creator: Joao_Janz
+Creator's Url: https://freesound.org/people/Joao_Janz/
 
 Nicotine+ Filename: room_nick.ogg
-Sample Url: http://freesound.iua.upf.edu/samplesViewSingle.php?id=22267
-Original Filename: 22267_zeuss_The_Chime.wav
+Sample Url: https://freesound.org/people/Joao_Janz/sounds/504779/
+Original Filename: 504779__joao-janz__percussive-alert-1-2.wav
 
 ============================================================================
 
-Creator: yawfle
-Creator's Url: http://freesound.iua.upf.edu/usersViewSingle.php?id=11628
+Creator: Joao_Janz
+Creator's Url: https://freesound.org/people/Joao_Janz/
 
 Nicotine+ Filename: private.ogg
-Sample Url: http://freesound.iua.upf.edu/samplesViewSingle.php?id=19875
-Original Filename: 19875_yawfle_fpphone_bellding.flac
+Sample Url: https://freesound.org/people/Joao_Janz/sounds/478514/
+Original Filename: 478514__joao-janz__notification-4-1.wav

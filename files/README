@@ -1,41 +1,6 @@
 ---
 
-These icons are from Mark James Silk icon set 1.3,
-found here: http://www.famfamfam.com/lab/icons/silk/
-which is released under the Creative Commons Attribution 2.5 License.
-
-http://creativecommons.org/licenses/by/2.5/
-
-Unmodified:
-
-archive/hilite.png (renamed from lightbulb.png)
-
-Modified:
-
-archive/away2.png
-archive/connect.png
-archive/disconnect.png
-archive/hilite2.png
-
----
-
-Created by daelstorm (released under GPLv2+ and upgraded to GPLv3+)
-
-archive/birdies.xcf
-archive/bug.png
-archive/away2.ico
-archive/connect.ico
-archive/disconnect.ico
-archive/hilite2.ico
-archive/hilite3.png
-archive/money.png
-
----
-
 Created by Quinox (released under GPLv2+ and upgraded to GPLv3+)
-
-archive/nicotine-plus-48px.ico
-archive/nicotine+.png
 
 icons/*
 
@@ -55,12 +20,3 @@ win32/nicotine-installer.ico
 Created by gfarmerfr (released under GPLv3+)
 
 win32/nicotine-plus-128px.ico (derived from icons/scalable/nicotine-plus.svg)
-
----
-
-Modified by gfarmerfr (released under Public Domain)
-and based on the Tango Desktop Project Dialog-information.svg icon
-(https://commons.wikimedia.org/wiki/File:Dialog-information.svg).
-
-archive/hilite.svg
-archive/hilite3.svg
