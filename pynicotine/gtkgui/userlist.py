@@ -85,11 +85,10 @@ class UserList:
             gobject.TYPE_INT, gobject.TYPE_INT, gobject.TYPE_INT, gobject.TYPE_INT,
             gobject.TYPE_STRING
         )
-        statusiconwidth = self.frame.images["offline"].get_width() + 4
         widths = self.frame.np.config.sections["columns"]["userlist_widths"]
         self.cols = cols = InitialiseColumns(
             self.UserList,
-            [_("Status"), statusiconwidth, "pixbuf"],
+            [_("Status"), widths[0], "pixbuf"],
             [_("Country"), widths[1], "pixbuf"],
             [_("User"), widths[2], "text", self.CellDataFunc],
             [_("Speed"), widths[3], "number", self.CellDataFunc],
@@ -98,7 +97,7 @@ class UserList:
             [_("Notify"), widths[6], "toggle"],
             [_("Privileged"), widths[7], "toggle"],
             [_("Last seen"), widths[8], "text", self.CellDataFunc],
-            [_("Comments"), -1, "edit", self.CellDataFunc]
+            [_("Comments"), widths[9], "edit", self.CellDataFunc]
         )
 
         self.col_status, self.col_country, self.col_user, self.col_speed, self.col_files, self.col_trusted, self.col_notify, self.col_privileged, self.col_last, self.col_comments = cols
