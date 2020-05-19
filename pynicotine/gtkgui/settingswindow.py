@@ -2027,21 +2027,22 @@ class ColoursFrame(buildFrame):
     def PickColour(self, widget, entry, drawingarea):
 
         dlg = gtk.ColorSelectionDialog(_("Pick a color, any color"))
-        colour = entry.get_text()
+        colourtext = entry.get_text()
 
-        if colour is not None and colour != '':
+        if colourtext is not None and colourtext != '':
             try:
-                colour = Gdk.color_parse(colour)
+                rgba = Gdk.RGBA()
+                rgba.parse(colourtext)
             except Exception:
                 dlg.destroy()
                 return
             else:
-                dlg.colorsel.set_current_color(colour)
+                dlg.get_color_selection().set_current_rgba(rgba)
 
         if dlg.run() == gtk.ResponseType.OK:
 
-            colour = dlg.colorsel.get_current_color()
-            colourtext = "#%02X%02X%02X" % (colour.red / 256, colour.green / 256, colour.blue / 256)
+            rgba = dlg.get_color_selection().get_current_rgba()
+            colourtext = "#%02X%02X%02X" % (round(rgba.red * 255), round(rgba.green * 255), round(rgba.blue * 255))
             entry.set_text(colourtext)
 
             for section in list(self.options.keys()):
@@ -2056,7 +2057,7 @@ class ColoursFrame(buildFrame):
 
                     if entry is value:
                         drawingarea = self.colorsd[section][key]
-                        drawingarea.modify_bg(gtk.StateFlags.NORMAL, colour)
+                        drawingarea.modify_bg(gtk.StateFlags.NORMAL, rgba.to_color())
                         break
 
         dlg.destroy()
