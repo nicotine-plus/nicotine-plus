@@ -3693,15 +3693,15 @@ class gstreamer:
     def __init__(self):
         self.player = None
         try:
-            import pygst
-            pygst.require("0.10")
-            import gst
+            gi.require_version('Gst', '1.0')
+            from gi.repository import Gst
+            Gst.init(None)
         except Exception as error:  # noqa: F841
             return
-        self.gst = gst
+        self.gst = Gst
         try:
-            self.player = gst.element_factory_make("playbin", "player")
-            fakesink = gst.element_factory_make('fakesink', "my-fakesink")
+            self.player = Gst.ElementFactory.make("playbin", "player")
+            fakesink = Gst.ElementFactory.make('fakesink', "my-fakesink")
             self.player.set_property("video-sink", fakesink)
         except Exception as error:
             log.addwarning(_("ERROR: Gstreamer-python could not play: %(error)s") % {'error': error})
@@ -3714,14 +3714,14 @@ class gstreamer:
 
     def play(self, path):
         self.player.set_property('uri', "file://" + path)
-        self.player.set_state(self.gst.STATE_PLAYING)
+        self.player.set_state(self.gst.State.PLAYING)
 
     def on_gst_message(self, bus, message):
         t = message.type
-        if t == self.gst.MESSAGE_EOS:
-            self.player.set_state(self.gst.STATE_NULL)
-        elif t == self.gst.MESSAGE_ERROR:
-            self.player.set_state(self.gst.STATE_NULL)
+        if t == self.gst.MessageType.EOS:
+            self.player.set_state(self.gst.State.NULL)
+        elif t == self.gst.MessageType.ERROR:
+            self.player.set_state(self.gst.State.NULL)
 
 
 class MainApp:
