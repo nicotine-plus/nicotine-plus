@@ -553,7 +553,7 @@ class UserInfo:
         pathname = os.path.join(self.frame.np.config.sections["transfers"]["downloaddir"], CleanFile(filename))
 
         if not os.path.exists(pathname):
-            self.image_pixbuf.save(pathname, "jpeg", {"quality": "100"})
+            self.image_pixbuf.savev(pathname, "jpeg", ["quality"], ["100"])
             log.add(_("Picture saved to %s") % pathname)
         else:
             log.add(_("Picture not saved, %s already exists.") % pathname)
