@@ -969,7 +969,7 @@ class Shares:
         stream = bytes([1]) + message.packObject(fileinfo[0]) + message.packObject(NetworkLongLongType(fileinfo[1]))
         if fileinfo[2] is not None:
             try:
-                msgbytes = ''
+                msgbytes = b''
                 msgbytes += message.packObject('mp3') + message.packObject(3)
                 msgbytes += (
                     message.packObject(0) +
