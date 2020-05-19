@@ -82,7 +82,7 @@ class Uploads(TransferList):
 
         cols = frame.UploadList.get_columns()
 
-        for i in range(9):
+        for i in range(10):
 
             parent = cols[i].get_widget().get_ancestor(gtk.Button)
             if parent:

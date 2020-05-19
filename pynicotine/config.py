@@ -219,6 +219,8 @@ class Config:
             },
 
             "columns": {
+                "userbrowse": [1, 1, 1, 1],
+                "userbrowse_widths": [250, 100, 70, 50],
                 "userlist": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
                 "userlist_widths": [0, 25, 120, 0, 0, 0, 0, 0, 160],
                 "chatrooms": {},

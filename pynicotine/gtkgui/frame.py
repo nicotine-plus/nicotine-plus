@@ -851,7 +851,7 @@ class NicotineFrame:
                 self.images[name] = loadStatic(name)
 
     def SaveColumns(self):
-        for i in [self.userlist, self.chatrooms.roomsctrl, self.downloads, self.uploads, self.Searches]:
+        for i in [self.userbrowse, self.userlist, self.chatrooms.roomsctrl, self.downloads, self.uploads, self.Searches]:
             i.saveColumns()
         self.np.config.writeConfiguration()
 
