@@ -1932,9 +1932,9 @@ class ChatRoom:
 
         self.frame.ChangeListFont(self.UserList, self.frame.np.config.sections["ui"]["listfont"])
 
-        map = self.ChatScroll.get_style().copy()
+        map = self.ChatScroll.get_style_context()
         try:
-            self.backupcolor = map.text[gtk.StateFlags.NORMAL]
+            self.backupcolor = map.get_color(gtk.StateFlags.NORMAL)
         except IndexError:
             self.backupcolor = ''
         buffer = self.ChatScroll.get_buffer()
@@ -2013,8 +2013,8 @@ class ChatRoom:
 
     def ChangeColours(self):
 
-        map = self.ChatScroll.get_style().copy()
-        self.backupcolor = map.text[gtk.StateFlags.NORMAL]
+        map = self.ChatScroll.get_style_context()
+        self.backupcolor = map.get_color(gtk.StateFlags.NORMAL)
 
         self.changecolour(self.tag_remote, "chatremote")
         self.changecolour(self.tag_local, "chatlocal")
@@ -2308,7 +2308,7 @@ class ChatRoom:
 
     def OnCopyAllRoomLog(self, widget):
         start, end = self.RoomLog.get_buffer().get_bounds()
-        log = self.RoomLog.get_buffer().get_text(start, end)
+        log = self.RoomLog.get_buffer().get_text(start, end, True)
         self.frame.clip.set_text(log, -1)
 
     def OnCopyRoomLog(self, widget):
@@ -2317,7 +2317,7 @@ class ChatRoom:
 
         if bound is not None and len(bound) == 2:
             start, end = bound
-            log = self.RoomLog.get_buffer().get_text(start, end)
+            log = self.RoomLog.get_buffer().get_text(start, end, True)
             self.frame.clip.set_text(log, -1)
 
     def OnCopyChatLog(self, widget):
@@ -2326,12 +2326,12 @@ class ChatRoom:
 
         if bound is not None and len(bound) == 2:
             start, end = bound
-            log = self.ChatScroll.get_buffer().get_text(start, end)
+            log = self.ChatScroll.get_buffer().get_text(start, end, True)
             self.frame.clip.set_text(log, -1)
 
     def OnCopyAllChatLog(self, widget):
         start, end = self.ChatScroll.get_buffer().get_bounds()
-        log = self.ChatScroll.get_buffer().get_text(start, end)
+        log = self.ChatScroll.get_buffer().get_text(start, end, True)
         self.frame.clip.set_text(log, -1)
 
     def OnClearChatLog(self, widget):

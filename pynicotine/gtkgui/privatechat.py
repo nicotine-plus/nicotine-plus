@@ -525,12 +525,12 @@ class PrivateChat:
         bound = self.ChatScroll.get_buffer().get_selection_bounds()
         if bound is not None and len(bound) == 2:
             start, end = bound
-            log = self.ChatScroll.get_buffer().get_text(start, end)
+            log = self.ChatScroll.get_buffer().get_text(start, end, True)
             self.frame.clip.set_text(log, -1)
 
     def OnCopyAllChatLog(self, widget):
         start, end = self.ChatScroll.get_buffer().get_bounds()
-        log = self.ChatScroll.get_buffer().get_text(start, end)
+        log = self.ChatScroll.get_buffer().get_text(start, end, True)
         self.frame.clip.set_text(log, -1)
 
     def OnClearChatLog(self, widget):
@@ -844,10 +844,10 @@ class PrivateChat:
 
     def UpdateColours(self):
 
-        map = self.frame.MainWindow.get_style().copy()
+        map = self.frame.MainWindow.get_style_context()
 
         try:
-            self.backupcolor = map.text[gtk.StateFlags.NORMAL]
+            self.backupcolor = map.get_color(gtk.StateFlags.NORMAL)
         except IndexError:
             self.backupcolor = ''
 
@@ -940,8 +940,8 @@ class PrivateChat:
 
     def ChangeColours(self):
 
-        map = self.ChatScroll.get_style().copy()
-        self.backupcolor = map.text[gtk.StateFlags.NORMAL]
+        map = self.ChatScroll.get_style_context()
+        self.backupcolor = map.get_color(gtk.StateFlags.NORMAL)
 
         self.changecolour(self.tag_remote, "chatremote")
         self.changecolour(self.tag_local, "chatlocal")
