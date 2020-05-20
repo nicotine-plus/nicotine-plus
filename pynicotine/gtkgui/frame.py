@@ -271,6 +271,8 @@ class NicotineFrame:
 
         pynicotine.utils.log = self.logMessage
 
+        log.addlistener(self.logCallback)
+
         self.LoadIcons()
 
         self.accel_group = gtk.AccelGroup()
@@ -657,11 +659,6 @@ class NicotineFrame:
         self.SetMainTabsVisibility()
 
         self.startup = False
-
-        for (timestamp, level, msg) in log.history:
-            self.updateLog(msg, level)
-
-        log.addlistener(self.logCallback)
 
     def AddDebugLevel(self, debugLevel):
         if debugLevel not in self.np.config.sections["logging"]["debugmodes"]:
