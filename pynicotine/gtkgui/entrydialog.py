@@ -597,7 +597,7 @@ class FindDialog(gtk.Dialog):
         box.pack_start(self.entry, False, False, 0)
         self.entry.show()
         self.entry.grab_focus()
-        self.entry.connect("activate", self.__next__)
+        self.entry.connect("activate", self.next)
 
         Cancelbutton = self.nicotine.CreateIconButton(
             gtk.STOCK_CANCEL,
@@ -620,7 +620,7 @@ class FindDialog(gtk.Dialog):
         Nextbutton = self.nicotine.CreateIconButton(
             gtk.STOCK_GO_FORWARD,
             "stock",
-            self.__next__,
+            self.next,
             _("Next")
         )
         Nextbutton.props.can_default = True

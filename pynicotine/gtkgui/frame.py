@@ -2963,34 +2963,43 @@ class NicotineFrame:
         if direction == "next":
             current = buffer.get_mark("insert")
             iter = buffer.get_iter_at_mark(current)
-            match1 = iter.forward_search(query, gtk.TEXT_SEARCH_TEXT_ONLY, limit=None)
+            match1 = iter.forward_search(query, gtk.TextSearchFlags.TEXT_ONLY, limit=None)
 
             if match1 is not None and len(match1) == 2:
                 match_start, match_end = match1
                 buffer.place_cursor(match_end)
                 buffer.select_range(match_end, match_start)
-                textview.scroll_to_iter(match_start, 0)
+                textview.scroll_to_iter(match_start, 0, False, 0.5, 0.5)
             else:
                 iter = start
-                match1 = iter.forward_search(query, gtk.TEXT_SEARCH_TEXT_ONLY, limit=None)
+                match1 = iter.forward_search(query, gtk.TextSearchFlags.TEXT_ONLY, limit=None)
 
                 if match1 is not None and len(match1) == 2:
                     match_start, match_end = match1
                     buffer.place_cursor(match_end)
                     buffer.select_range(match_end, match_start)
-                    textview.scroll_to_iter(match_start, 0)
+                    textview.scroll_to_iter(match_start, 0, False, 0.5, 0.5)
 
         elif direction == "previous":
 
             current = buffer.get_mark("insert")
             iter = buffer.get_iter_at_mark(current)
-            match1 = iter.backward_search(query, gtk.TEXT_SEARCH_TEXT_ONLY, limit=None)
+            match1 = iter.backward_search(query, gtk.TextSearchFlags.TEXT_ONLY, limit=None)
 
             if match1 is not None and len(match1) == 2:
                 match_start, match_end = match1
                 buffer.place_cursor(match_start)
                 buffer.select_range(match_start, match_end)
-                textview.scroll_to_iter(match_start, 0)
+                textview.scroll_to_iter(match_start, 0, False, 0.5, 0.5)
+            else:
+                iter = end
+                match1 = iter.backward_search(query, gtk.TextSearchFlags.TEXT_ONLY, limit=None)
+
+                if match1 is not None and len(match1) == 2:
+                    match_start, match_end = match1
+                    buffer.place_cursor(match_start)
+                    buffer.select_range(match_start, match_end)
+                    textview.scroll_to_iter(match_start, 0, False, 0.5, 0.5)
             return
 
     def OnAddThingILike(self, widget):
