@@ -1349,7 +1349,7 @@ class Search:
         if len(self.selected_users) == 0:
             return
 
-        selected_user = widget.parent.user
+        selected_user = widget.get_parent().user
 
         sel = self.ResultsList.get_selection()
         fmodel = self.ResultsList.get_model()
