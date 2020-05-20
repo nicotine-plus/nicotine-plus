@@ -4,7 +4,6 @@ A list of stuff & things todo (not in any particular order):
 
 #### Short term goals
 
-* Our sounds are dropped by downstream packagers for being non-free: investigate.
 * Change python-geoip (deprecated) to python-geoip2
 * Switch spellcheck from libsexy (deprecated) to gspell.
 

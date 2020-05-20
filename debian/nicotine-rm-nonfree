@@ -4,8 +4,5 @@ set -e
 # Remove generated .mo files
 rm -f `find languages/ -name \*.mo`
 
-# Remove non-free sounds
-rm -rf sounds
-
 # Remove suspiciously licensed win32 code
 rm -rf tools
