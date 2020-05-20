@@ -1,6 +1,6 @@
-nicotine (1.4.3-2) UNRELEASED; urgency=medium
+nicotine (1.4.3-2) eoan; urgency=medium
 
-  * Xenial support
+  * Dropped Python requirement from 3.7 to 3.5 for Xenial support
 
  -- Mathias <mail@mathias.is>  Wed, 20 May 2020 22:01:00 +0300
 
