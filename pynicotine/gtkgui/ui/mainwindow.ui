@@ -3173,7 +3173,7 @@
               <object class="GtkProgressBar" id="BuddySharesProgress">
                 <property name="can_focus">False</property>
                 <property name="pulse_step">0.10000000149</property>
-                <property name="show_text">True</property>
+                <property name="show_text">False</property>
                 <property name="text" translatable="yes">Scanning Buddy Shares</property>
                 <property name="valign">GTK_ALIGN_CENTER</property>
               </object>
@@ -3188,7 +3188,7 @@
               <object class="GtkProgressBar" id="SharesProgress">
                 <property name="can_focus">False</property>
                 <property name="pulse_step">0.10000000149</property>
-                <property name="show_text">True</property>
+                <property name="show_text">False</property>
                 <property name="text" translatable="yes">Scanning Shares</property>
                 <property name="valign">GTK_ALIGN_CENTER</property>
               </object>
