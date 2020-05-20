@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/python
 # COPYRIGHT (C) 2020 Lene Preuss <lene.preuss@gmail.com>
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2008-2011 Quinox <quinox@users.sf.net>
@@ -42,14 +42,14 @@ win32 = platform.system().startswith("Win")
 
 def checkenv():
 
-    # Require Python 3.6 or newer
+    # Require Python 3.5 or newer
     try:
-        assert sys.version_info[:2] >= (3, 6), '.'.join(
+        assert sys.version_info[:2] >= (3, 5), '.'.join(
             map(str, sys.version_info[:3])
         )
     except AssertionError as e:
         return _("""You're using an unsupported version of Python (%s).
-You should install Python 3.7 or newer.""") % (e)
+You should install Python 3.5 or newer.""") % (e)
 
     # Require GTK+ >= 3
     try:

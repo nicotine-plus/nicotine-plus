@@ -3113,13 +3113,11 @@
           <object class="GtkHBox" id="hbox10">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="border_width">2</property>
             <child>
               <object class="GtkStatusbar" id="UpStatus">
                 <property name="width_request">200</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="border_width">1</property>
                 <!--property name="has_resize_grip">False</property-->
               </object>
               <packing>
@@ -3134,7 +3132,6 @@
                 <property name="width_request">200</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="border_width">1</property>
                 <!--property name="has_resize_grip">False</property-->
               </object>
               <packing>
@@ -3149,7 +3146,6 @@
                 <property name="width_request">150</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="border_width">1</property>
                 <!--property name="has_resize_grip">False</property-->
               </object>
               <packing>
@@ -3164,7 +3160,6 @@
                 <property name="width_request">80</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="border_width">1</property>
                 <!--property name="has_resize_grip">False</property-->
               </object>
               <packing>
@@ -3178,7 +3173,9 @@
               <object class="GtkProgressBar" id="BuddySharesProgress">
                 <property name="can_focus">False</property>
                 <property name="pulse_step">0.10000000149</property>
+                <property name="show_text">True</property>
                 <property name="text" translatable="yes">Scanning Buddy Shares</property>
+                <property name="valign">GTK_ALIGN_CENTER</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -3191,7 +3188,9 @@
               <object class="GtkProgressBar" id="SharesProgress">
                 <property name="can_focus">False</property>
                 <property name="pulse_step">0.10000000149</property>
+                <property name="show_text">True</property>
                 <property name="text" translatable="yes">Scanning Shares</property>
+                <property name="valign">GTK_ALIGN_CENTER</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -3204,7 +3203,6 @@
               <object class="GtkStatusbar" id="Statusbar">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="border_width">1</property>
                 <!--property name="has_resize_grip">False</property-->
               </object>
               <packing>
