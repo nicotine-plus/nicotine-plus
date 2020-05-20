@@ -44,7 +44,7 @@ def checkenv():
 
     # Require Python 3.5 or newer
     try:
-        assert sys.version_info[:2] >= (3, 6), '.'.join(
+        assert sys.version_info[:2] >= (3, 5), '.'.join(
             map(str, sys.version_info[:3])
         )
     except AssertionError as e:

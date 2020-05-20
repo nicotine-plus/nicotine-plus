@@ -6,7 +6,7 @@ Standards-Version: 4.3.0.3
 Build-Depends:
     debhelper-compat (= 11),
     dh-python,
-    python3 (>= 3.4),
+    python3 (>= 3.5),
     python3-pytest,
     gettext,
     lintian,
@@ -26,7 +26,7 @@ Depends:
     miniupnpc (>= 1.9),
     gobject-introspection,
     gir1.2-gtk-3.0,
-    python3 (>= 3.4),
+    python3 (>= 3.5),
     python3-dbus,
     python3-geoip,
     python3-gi,
