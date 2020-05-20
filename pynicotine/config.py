@@ -224,6 +224,7 @@ class Config:
                 "userlist": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
                 "userlist_widths": [0, 25, 120, 0, 0, 0, 0, 0, 160, 1000],
                 "chatrooms": {},
+                "chatrooms_widths": {},
                 "downloads_columns": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
                 "downloads_widths": [100, 250, 140, 50, 70, 170, 90, 140, 120, 1000],
                 "uploads_columns": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],

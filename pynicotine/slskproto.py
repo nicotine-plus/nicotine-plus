@@ -220,13 +220,13 @@ class Connection:
     """
     def __init__(self, conn=None, addr=None, ibuf=b"", obuf=b""):
         if not isinstance(ibuf, bytes):
-            raise ValueError(f'ibuf is of type {type(ibuf).__name__}: {ibuf}')
+            raise ValueError('ibuf is of type {}: {}'.format(type(ibuf).__name__, ibuf))
         if not isinstance(obuf, bytes):
-            raise ValueError(f'obuf is of type {type(obuf).__name__}: {obuf}')
+            raise ValueError('obuf is of type {}: {}'.format(type(obuf).__name__, ibuf))
         self.conn = conn
         self.addr = addr
-        self.ibuf: bytes = ibuf
-        self.obuf: bytes = obuf
+        self.ibuf = ibuf  # type: bytes
+        self.obuf = obuf  # type: bytes
         self.init = None
         self.lastreadlength = 100 * 1024
 
@@ -459,9 +459,9 @@ class SlskProtoThread(threading.Thread):
         else:
             short_message = _("Could not bind to a local port, aborting connection")
             long_message = _(
-                f"The range you specified for client connection ports was "
-                f"{portrange[0]}-{portrange[1]}, but none of these were usable. Increase and/or "
-                f"move the range and restart Nicotine+."
+                "The range you specified for client connection ports was "
+                "{}-{}, but none of these were usable. Increase and/or ".format(portrange[0], portrange[1]) +
+                "move the range and restart Nicotine+."
             )
             if portrange[0] < 1024:
                 long_message += "\n\n" + _(
@@ -595,7 +595,7 @@ class SlskProtoThread(threading.Thread):
                         self._ui_callback([ConnectError(value, err)])
             # Listen / Peer Port
             if p in input[:]:
-                print(f"reading from {p}")
+                print("reading from {}".format(p))
                 try:
                     incconn, incaddr = p.accept()
                 except Exception:
@@ -645,7 +645,7 @@ class SlskProtoThread(threading.Thread):
             # Process Data
             for connection in list(conns.keys())[:]:
                 ip, port = self.getIpPort(conns[connection].addr)
-                # print(f"ip: {ip}:{port}  p: {p}, conn: {connection}")
+                # print("ip: {}:{}  p: {}, conn: {}".format(ip, port, p, connection))
                 if self.ipBlocked(ip) and connection is not self._server_socket:
                     message = "Blocking peer connection to IP: %(ip)s Port: %(port)s" % {"ip": ip, "port": port}
                     log.add(message, 3)
@@ -957,8 +957,8 @@ class SlskProtoThread(threading.Thread):
                         msgs.append(msg)
                 elif conn.piercefw is None:
                     msgs.append(_(
-                        f"Unknown peer init code: {msgBuffer[4]}, message contents "
-                        f"{ msgBuffer[5:msgsize + 4].__repr__()}"
+                        "Unknown peer init code: {}, message contents ".format(msgBuffer[4]) +
+                        "{}".format(msgBuffer[5:msgsize + 4].__repr__())
                     ))
                     conn.conn.close()
                     self._ui_callback([ConnClose(conn.conn, conn.addr)])

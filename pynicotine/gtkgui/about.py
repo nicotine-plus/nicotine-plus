@@ -128,7 +128,7 @@ Based on code from Nicotine and PySoulSeek""") % version
         hboxgtk = gtk.HBox(5)
         hboxgtk.show()
 
-        gtkversion = f'{gtk.get_major_version()}.{gtk.get_minor_version()}.{gtk.get_micro_version()}'
+        gtkversion = '{}.{}.{}'.format(gtk.get_major_version(), gtk.get_minor_version(), gtk.get_micro_version())
 
         VersionGTK = gtk.Label(gtkversion)
 
@@ -221,14 +221,6 @@ class AboutCreditsDialog(GenericAboutDialog):
         self.notebook.show()
         self.DevScrolledWindow = gtk.ScrolledWindow()
         self.DevScrolledWindow.show()
-
-        self.DevTextView = gtk.TextView()
-        self.DevTextView.set_wrap_mode(gtk.WrapMode.WORD)
-        self.DevTextView.set_cursor_visible(False)
-        self.DevTextView.set_editable(False)
-        self.DevTextView.show()
-        self.DevTextView.set_left_margin(3)
-        self.DevScrolledWindow.add(self.DevTextView)
 
         text = """
 # Nicotine+ MAINTAINERS
@@ -340,7 +332,14 @@ vasi
 Country flags provided by http://flags.blogpotato.de/,
 distributed under a CC BY-SA 3.0 Unported license."""
 
-        AppendLine(self.DevTextView, text, None, None, showstamp=False)
+        self.DevTextView = gtk.TextView()
+        self.DevTextView.get_buffer().set_text(text)
+        self.DevTextView.set_wrap_mode(gtk.WrapMode.WORD)
+        self.DevTextView.set_cursor_visible(False)
+        self.DevTextView.set_editable(False)
+        self.DevTextView.show()
+        self.DevTextView.set_left_margin(3)
+        self.DevScrolledWindow.add(self.DevTextView)
 
         developersLabel = gtk.Label(_("Developers"))
         developersLabel.show()
@@ -348,14 +347,6 @@ distributed under a CC BY-SA 3.0 Unported license."""
 
         self.TransScrolledWindow = gtk.ScrolledWindow()
         self.TransScrolledWindow.show()
-
-        self.TransTextView = gtk.TextView()
-        self.TransTextView.set_wrap_mode(gtk.WrapMode.WORD)
-        self.TransTextView.set_cursor_visible(False)
-        self.TransTextView.set_editable(False)
-        self.TransTextView.set_left_margin(3)
-        self.TransTextView.show()
-        self.TransScrolledWindow.add(self.TransTextView)
 
         text = """
 Dutch
@@ -409,7 +400,14 @@ Finnish
 Euskara
  * The Librezale.org Team <librezale@librezale.org>"""
 
-        AppendLine(self.TransTextView, text, None, None, showstamp=False)
+        self.TransTextView = gtk.TextView()
+        self.TransTextView.get_buffer().set_text(text)
+        self.TransTextView.set_wrap_mode(gtk.WrapMode.WORD)
+        self.TransTextView.set_cursor_visible(False)
+        self.TransTextView.set_editable(False)
+        self.TransTextView.set_left_margin(3)
+        self.TransTextView.show()
+        self.TransScrolledWindow.add(self.TransTextView)
 
         translatorsLabel = gtk.Label(_("Translators"))
         translatorsLabel.show()
@@ -426,13 +424,6 @@ class AboutLicenseDialog(GenericAboutDialog):
         self.resize(550, 450)
         self.ScrolledWindow = gtk.ScrolledWindow()
         self.ScrolledWindow.show()
-
-        self.TextView = gtk.TextView()
-        self.TextView.set_cursor_visible(False)
-        self.TextView.set_editable(False)
-        self.TextView.set_left_margin(3)
-        self.TextView.show()
-        self.ScrolledWindow.add(self.TextView)
 
         text = """GNU General Public License version 3 notice
 
@@ -451,7 +442,14 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see < http://www.gnu.org/licenses/ >."""
 
-        AppendLine(self.TextView, text, None, None, showstamp=False)
+        self.TextView = gtk.TextView()
+        self.TextView.get_buffer().set_text(text)
+        self.TextView.set_cursor_visible(False)
+        self.TextView.set_editable(False)
+        self.TextView.set_left_margin(3)
+        self.TextView.show()
+        self.ScrolledWindow.add(self.TextView)
+
         self.vbox.pack_start(self.ScrolledWindow, True, True, 0)
         self.show_all()
 
@@ -511,8 +509,6 @@ class GenericTableDialog(GenericAboutDialog):
         ScrolledWindow = gtk.ScrolledWindow()
         ScrolledWindow.show()
         self.resize(650, 500)
-        vbox2 = gtk.VBox()
-        vbox2.show()
         rows = int(len(self.items) / 2)
         self.table = table = gtk.Table(rows, 2)
         table.set_col_spacings(5)
@@ -531,9 +527,8 @@ class GenericTableDialog(GenericAboutDialog):
             table.attach(l, 0, 1, i, i + 1, xoptions=gtk.AttachOptions.FILL)
             table.attach(r, 1, 2, i, i + 1, xoptions=gtk.AttachOptions.FILL | gtk.AttachOptions.EXPAND)
 
-        vbox2.pack_start(table, False, False, 0)
-        vbox2.pack_start(gtk.Label(), True, True, 0)
-        ScrolledWindow.add_with_viewport(vbox2)
+        ScrolledWindow.add_with_viewport(table)
+        ScrolledWindow.set_vadjustment(gtk.Adjustment(value=0))
         self.vbox.pack_start(ScrolledWindow, True, True, 0)
         self.show_all()
 

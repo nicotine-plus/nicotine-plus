@@ -167,7 +167,7 @@ class Conn(InternalMessage):
         self.init = init
 
     def __repr__(self):
-        return f"{type(self).__name__}: {self.conn} {self.addr} {self.init}"
+        return '{}: {} {} {}'.format(type(self).__name__, self.conn, self.addr, self.init)
 
 
 class OutConn(Conn):
@@ -435,7 +435,7 @@ class Login(ServerMessage):
         self.ip = None
 
     def __repr__(self):
-        return f"Login({self.username}, {self.version}, {self.ip})"
+        return 'Login({}, {}, {})'.format(self.username, self.version, self.ip)
 
     def makeNetworkMessage(self):
         payload = self.username + self.passwd
@@ -487,7 +487,7 @@ class SetWaitPort(ServerMessage):
         self.port = port
 
     def __repr__(self):
-        return f"SetWaitPort({self.port})"
+        return 'SetWaitPort({})'.format(self.port)
 
     def makeNetworkMessage(self):
         return self.packObject(NetworkIntType(self.port))

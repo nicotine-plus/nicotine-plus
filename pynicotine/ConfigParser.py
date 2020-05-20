@@ -86,7 +86,6 @@ ConfigParser -- responsible for for parsing a list of
 """
 
 import re
-from copy import deepcopy
 
 from pynicotine.utils import SortedDict
 
@@ -221,12 +220,7 @@ class ConfigParser:
             opts = self.__sections[section].copy()
         except KeyError:
             raise NoSectionError(section)
-        defaults = deepcopy(self.__defaults)
-        try:
-            opts.update(defaults)
-        except KeyError as e:
-            if '__name__' not in e.args:
-                raise
+
         if '__name__' in opts:
             del opts['__name__']
 

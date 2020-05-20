@@ -2,11 +2,11 @@ Source: nicotine
 Section: net
 Priority: optional
 Maintainer: Kip Warner <kip@thevertigo.com>
-Standards-Version: 4.3.0.3
+Standards-Version: 3.9.7
 Build-Depends:
-    debhelper-compat (= 11),
+    debhelper (>= 9~),
     dh-python,
-    python3 (>= 3.6),
+    python3 (>= 3.5),
     python3-pytest,
     gettext,
     lintian,
@@ -14,7 +14,7 @@ Build-Depends:
     quilt
 Vcs-Git: https://github.com/Nicotine-Plus/nicotine-plus.git
 Vcs-browser: https://github.com/Nicotine-Plus/nicotine-plus
-X-Python-Version: >= 3.6
+X-Python-Version: >= 3.5
 Homepage: https://github.com/Nicotine-Plus/nicotine-plus
 Rules-Requires-Root: no
 
@@ -26,7 +26,7 @@ Depends:
     miniupnpc (>= 1.9),
     gobject-introspection,
     gir1.2-gtk-3.0,
-    python3 (>= 3.6),
+    python3 (>= 3.5),
     python3-dbus,
     python3-geoip,
     python3-gi,

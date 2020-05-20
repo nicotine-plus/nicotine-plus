@@ -8,7 +8,7 @@ from pathlib import Path
 class MockSocket(Mock):
 
     def set_data(self, datafile: str) -> None:
-        with open(Path(__file__).resolve().parent / datafile, 'rb') as file:
+        with open(str(Path(__file__).resolve().parent / datafile), 'rb') as file:
             logs = pickle.load(file, encoding='bytes')
         self.events = {}
         for mode in b'send', b'recv':
@@ -16,10 +16,10 @@ class MockSocket(Mock):
                 self.events[time] = (mode.decode('latin1'), event)
 
     def send(self, data: bytes) -> None:
-        print(f"sending data {data}")
+        print("sending data {}".format(data))
 
     def recv(self, bufsize: int) -> bytes:
-        print(f"recving {bufsize} data")
+        print("recving {} data".format(bufsize))
         return b''
 
 
