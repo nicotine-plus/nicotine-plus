@@ -1986,7 +1986,7 @@ class ChatRoom:
         font = self.frame.np.config.sections["ui"]["chatfont"]
 
         if color == "":
-            color = self.backuprgba.get_color()
+            color = self.backuprgba.to_color()
         else:
             color = Gdk.color_parse(color)
 
