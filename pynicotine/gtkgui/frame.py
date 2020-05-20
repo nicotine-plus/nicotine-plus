@@ -271,6 +271,8 @@ class NicotineFrame:
 
         pynicotine.utils.log = self.logMessage
 
+        log.addlistener(self.logCallback)
+
         self.LoadIcons()
 
         self.accel_group = gtk.AccelGroup()
@@ -451,7 +453,6 @@ class NicotineFrame:
         self.LogScrolledWindow = gtk.ScrolledWindow()
         self.LogScrolledWindow.set_shadow_type(gtk.ShadowType.IN)
         self.LogScrolledWindow.set_policy(gtk.PolicyType.AUTOMATIC, gtk.PolicyType.AUTOMATIC)
-        self.LogScrolledWindow.set_propagate_natural_height(True)
         self.LogScrolledWindow.show()
 
         self.LogWindow = gtk.TextView()
@@ -462,7 +463,7 @@ class NicotineFrame:
         self.LogScrolledWindow.add(self.LogWindow)
         self.LogWindow.connect("button-press-event", self.OnPopupLogMenu)
 
-        self.debugLogBox.pack_start(self.LogScrolledWindow, False, False, 0)
+        self.debugLogBox.pack_start(self.LogScrolledWindow, True, True, 0)
         self.debugWarnings.set_active((1 in config["logging"]["debugmodes"]))
         self.debugSearches.set_active((2 in config["logging"]["debugmodes"]))
         self.debugConnections.set_active((3 in config["logging"]["debugmodes"]))
@@ -658,11 +659,6 @@ class NicotineFrame:
         self.SetMainTabsVisibility()
 
         self.startup = False
-
-        for (timestamp, level, msg) in log.history:
-            self.updateLog(msg, level)
-
-        log.addlistener(self.logCallback)
 
     def AddDebugLevel(self, debugLevel):
         if debugLevel not in self.np.config.sections["logging"]["debugmodes"]:

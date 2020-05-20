@@ -870,16 +870,16 @@ def TickDialog(parent, default=""):
     dlg.vbox.pack_start(entry, True, True, 0)
 
     v = gtk.VBox(False, False)
-    r1 = gtk.RadioButton()
+    r1 = gtk.RadioButton().new_from_widget(None)
     r1.set_label(_("Just this time"))
     r1.set_active(True)
     v.pack_start(r1, False, False, 0)
 
-    r2 = gtk.RadioButton(r1)
+    r2 = gtk.RadioButton().new_from_widget(r1)
     r2.set_label(_("Always for this channel"))
     v.pack_start(r2, False, False, 0)
 
-    r3 = gtk.RadioButton(r1)
+    r3 = gtk.RadioButton().new_from_widget(r1)
     r3.set_label(_("Default for all channels"))
     v.pack_start(r3, False, False, 0)
 
@@ -897,12 +897,7 @@ def TickDialog(parent, default=""):
         elif r3.get_active():
             t = 2
 
-        bytes = entry.get_text()
-        try:
-            result = str(bytes, "UTF-8")
-        except UnicodeDecodeError:
-            log.addwarning(_("We have a problem, PyGTK get_text does not seem to return UTF-8. Please file a bug report. Bytes: %s") % (repr(bytes)))
-            result = str(bytes, "UTF-8", "replace")
+        result = entry.get_text()
 
     dlg.destroy()
 
@@ -1934,9 +1929,9 @@ class ChatRoom:
 
         map = self.ChatScroll.get_style_context()
         try:
-            self.backupcolor = map.get_color(gtk.StateFlags.NORMAL)
+            self.backuprgba = map.get_color(gtk.StateFlags.NORMAL)
         except IndexError:
-            self.backupcolor = ''
+            self.backuprgba = ''
         buffer = self.ChatScroll.get_buffer()
 
         self.tag_remote = self.makecolour(buffer, "chatremote")
@@ -1984,7 +1979,7 @@ class ChatRoom:
         font = self.frame.np.config.sections["ui"]["chatfont"]
 
         if color == "":
-            color = self.backupcolor
+            color = self.backuprgba.to_color()
         else:
             color = Gdk.color_parse(color)
 
@@ -2014,7 +2009,7 @@ class ChatRoom:
     def ChangeColours(self):
 
         map = self.ChatScroll.get_style_context()
-        self.backupcolor = map.get_color(gtk.StateFlags.NORMAL)
+        self.backuprgba = map.get_color(gtk.StateFlags.NORMAL)
 
         self.changecolour(self.tag_remote, "chatremote")
         self.changecolour(self.tag_local, "chatlocal")
