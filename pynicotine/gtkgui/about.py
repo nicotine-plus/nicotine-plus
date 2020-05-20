@@ -128,7 +128,7 @@ Based on code from Nicotine and PySoulSeek""") % version
         hboxgtk = gtk.HBox(5)
         hboxgtk.show()
 
-        gtkversion = f'{gtk.get_major_version()}.{gtk.get_minor_version()}.{gtk.get_micro_version()}'
+        gtkversion = '{}.{}.{}'.format(gtk.get_major_version(), gtk.get_minor_version(), gtk.get_micro_version())
 
         VersionGTK = gtk.Label(gtkversion)
 

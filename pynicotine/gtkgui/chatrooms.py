@@ -704,6 +704,10 @@ class RoomsControl:
             if room not in self.joinedrooms:
                 del self.frame.np.config.sections["columns"]["chatrooms"][room]
 
+        for room in list(self.frame.np.config.sections["columns"]["chatrooms_widths"].keys())[:]:
+            if room not in self.joinedrooms:
+                del self.frame.np.config.sections["columns"]["chatrooms_widths"][room]
+
         for room in list(self.joinedrooms.values()):
             room.saveColumns()
 
@@ -1000,14 +1004,17 @@ class ChatRoom:
         if room in config["server"]["autojoin"]:
             self.AutoJoin.set_active(True)
 
-        statusiconwidth = self.frame.images["offline"].get_width() + 4
+        if room not in config["columns"]["chatrooms_widths"]:
+            config["columns"]["chatrooms_widths"][room] = [0, 25, 100, 0, 0]
+
+        widths = self.frame.np.config.sections["columns"]["chatrooms_widths"][room]
         self.cols = cols = InitialiseColumns(
             self.UserList,
-            [_("Status"), statusiconwidth, "pixbuf"],
-            [_("Country"), 25, "pixbuf"],
-            [_("User"), 100, "text", self.UserColumnDraw],
-            [_("Speed"), 0, "number", self.frame.CellDataFunc],
-            [_("Files"), 0, "number", self.frame.CellDataFunc]
+            [_("Status"), widths[0], "pixbuf"],
+            [_("Country"), widths[1], "pixbuf"],
+            [_("User"), widths[2], "text", self.UserColumnDraw],
+            [_("Speed"), widths[3], "number", self.frame.CellDataFunc],
+            [_("Files"), widths[4], "number", self.frame.CellDataFunc]
         )
 
         cols[0].set_sort_column_id(5)
@@ -2042,6 +2049,9 @@ class ChatRoom:
         if self.room in config["columns"]["chatrooms"]:
             del config["columns"]["chatrooms"][self.room]
 
+        if self.room in config["columns"]["chatrooms_widths"]:
+            del config["columns"]["chatrooms_widths"][self.room]
+
         if not self.meta:
             self.frame.np.queue.put(slskmessages.LeaveRoom(self.room))
         else:
@@ -2056,10 +2066,13 @@ class ChatRoom:
     def saveColumns(self):
 
         columns = []
+        widths = []
         for column in self.UserList.get_columns():
             columns.append(column.get_visible())
+            widths.append(column.get_width())
 
         self.frame.np.config.sections["columns"]["chatrooms"][self.room] = columns
+        self.frame.np.config.sections["columns"]["chatrooms_widths"][self.room] = widths
 
     def ConnClose(self):
 
@@ -2072,6 +2085,9 @@ class ChatRoom:
         config = self.frame.np.config.sections
         if not self.AutoJoin.get_active() and self.room in config["columns"]["chatrooms"]:
             del config["columns"]["chatrooms"][self.room]
+
+        if not self.AutoJoin.get_active() and self.room in config["columns"]["chatrooms_widths"]:
+            del config["columns"]["chatrooms_widths"][self.room]
 
         for tag in list(self.tag_users.values()):
             self.changecolour(tag, "useroffline")

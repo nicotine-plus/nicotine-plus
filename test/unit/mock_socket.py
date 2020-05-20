@@ -16,10 +16,10 @@ class MockSocket(Mock):
                 self.events[time] = (mode.decode('latin1'), event)
 
     def send(self, data: bytes) -> None:
-        print(f"sending data {data}")
+        print("sending data {}".format(data))
 
     def recv(self, bufsize: int) -> bytes:
-        print(f"recving {bufsize} data")
+        print("recving {} data".format(bufsize))
         return b''
 
 
