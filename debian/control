@@ -2,9 +2,9 @@ Source: nicotine
 Section: net
 Priority: optional
 Maintainer: Kip Warner <kip@thevertigo.com>
-Standards-Version: 4.3.0.3
+Standards-Version: 3.9.7
 Build-Depends:
-    debhelper-compat (= 11),
+    debhelper (>= 9~),
     dh-python,
     python3 (>= 3.5),
     python3-pytest,
