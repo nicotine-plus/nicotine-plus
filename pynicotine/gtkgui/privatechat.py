@@ -831,7 +831,7 @@ class PrivateChat:
 
         color = self.frame.np.config.sections["ui"][colour]
         if color == "":
-            color = Gdk.color_parse(self.backupcolor)
+            color = self.backuprgba.to_color()
         else:
             color = Gdk.color_parse(color)
 
@@ -847,9 +847,9 @@ class PrivateChat:
         map = self.frame.MainWindow.get_style_context()
 
         try:
-            self.backupcolor = map.get_color(gtk.StateFlags.NORMAL)
+            self.backuprgba = map.get_color(gtk.StateFlags.NORMAL)
         except IndexError:
-            self.backupcolor = ''
+            self.backuprgba = ''
 
         buffer = self.ChatScroll.get_buffer()
         self.tag_remote = self.makecolour(buffer, "chatremote")
@@ -912,7 +912,7 @@ class PrivateChat:
         font = self.frame.np.config.sections["ui"]["chatfont"]
 
         if color == "":
-            color = self.backupcolor
+            color = self.backuprgba.to_color()
         else:
             color = Gdk.color_parse(color)
 
@@ -941,7 +941,7 @@ class PrivateChat:
     def ChangeColours(self):
 
         map = self.ChatScroll.get_style_context()
-        self.backupcolor = map.get_color(gtk.StateFlags.NORMAL)
+        self.backuprgba = map.get_color(gtk.StateFlags.NORMAL)
 
         self.changecolour(self.tag_remote, "chatremote")
         self.changecolour(self.tag_local, "chatlocal")
