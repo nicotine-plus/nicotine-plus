@@ -3149,7 +3149,7 @@ class NicotineFrame:
         self.tidl_popup_menu.popup(None, None, None, None, event.button, event.time)
 
     def OnLikeRecommendation(self, widget):
-        thing = widget.parent.get_user()
+        thing = widget.get_parent().get_user()
         if widget.get_active() and thing not in self.np.config.sections["interests"]["likes"]:
             self.np.config.sections["interests"]["likes"].append(thing)
             self.likes[thing] = self.likeslist.append([thing])
@@ -3163,7 +3163,7 @@ class NicotineFrame:
             self.np.queue.put(slskmessages.RemoveThingILike(self.np.encode(thing)))
 
     def OnDislikeRecommendation(self, widget):
-        thing = widget.parent.get_user()
+        thing = widget.get_parent().get_user()
         if widget.get_active() and thing not in self.np.config.sections["interests"]["dislikes"]:
             self.np.config.sections["interests"]["dislikes"].append(thing)
             self.dislikes[thing] = self.dislikeslist.append([thing])
@@ -3182,7 +3182,7 @@ class NicotineFrame:
         self.np.queue.put(slskmessages.ItemSimilarUsers(self.np.encode(thing)))
 
     def OnRecommendSearch(self, widget):
-        thing = widget.parent.get_user()
+        thing = widget.get_parent().get_user()
         self.SearchEntry.set_text(thing)
         self.ChangeMainPage(None, "search")
 
