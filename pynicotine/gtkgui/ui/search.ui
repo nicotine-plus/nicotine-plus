@@ -9,12 +9,12 @@
       <object class="GtkVBox" id="Main">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
-        <property name="spacing">1</property>
         <child>
           <object class="GtkHBox" id="hbox6">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="spacing">5</property>
+            <property name="border_width">5</property>
             <child>
               <object class="GtkLabel" id="QueryLabel">
                 <property name="visible">True</property>
@@ -248,14 +248,15 @@
           <packing>
             <property name="expand">False</property>
             <property name="fill">True</property>
-            <property name="padding">3</property>
             <property name="position">0</property>
           </packing>
         </child>
         <child>
           <object class="GtkHBox" id="Filters">
             <property name="can_focus">False</property>
-            <property name="spacing">2</property>
+            <property name="spacing">10</property>
+            <property name="margin_left">5</property>
+            <property name="margin_right">5</property>
             <child>
               <object class="GtkLabel" id="label13">
                 <property name="visible">True</property>
@@ -407,7 +408,6 @@
             <property name="can_focus">True</property>
             <property name="hscrollbar_policy">automatic</property>
             <property name="vscrollbar_policy">automatic</property>
-            <property name="shadow_type">in</property>
             <child>
               <object class="GtkTreeView" id="ResultsList">
                 <property name="visible">True</property>

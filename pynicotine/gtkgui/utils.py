@@ -622,6 +622,7 @@ class IconNotebook:
 
         # We store the real gtk.Notebook object
         self.Notebook = notebookraw
+        self.Notebook.set_show_border(True)
 
         self.tabclosers = tabclosers
         self.reorderable = reorderable
@@ -1046,7 +1047,9 @@ class PopupMenu(gtk.Menu):
 
             self.append(menuitem)
 
-            menuitem.set_use_underline(True)
+            if item[0] != "":
+                menuitem.set_use_underline(True)
+
             menuitem.show()
 
         return self

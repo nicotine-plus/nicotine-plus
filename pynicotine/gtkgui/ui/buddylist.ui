@@ -8,7 +8,8 @@
       <object class="GtkVBox" id="userlistvbox">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
-        <property name="spacing">3</property>
+        <property name="border_width">5</property>
+        <property name="spacing">5</property>
         <child>
           <object class="GtkLabel" id="BuddiesLabel">
             <property name="visible">True</property>
@@ -48,6 +49,7 @@
           <object class="GtkHBox" id="UserHbox">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="spacing">5</property>
             <child>
               <object class="GtkLabel" id="label1">
                 <property name="visible">True</property>
@@ -57,6 +59,7 @@
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
+                <property name="padding">5</property>
                 <property name="position">0</property>
               </packing>
             </child>
