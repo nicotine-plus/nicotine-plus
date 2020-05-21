@@ -592,18 +592,19 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="scrollable">True</property>
+                    <property name="show_border">False</property>
                     <signal name="switch-page" handler="OnSwitchPage" swapped="no"/>
                     <child>
                       <object class="GtkHPaned" id="chathbox">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <property name="border_width">3</property>
                         <child>
                           <object class="GtkNotebook" id="ChatNotebookRaw">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="show_border">False</property>
                             <property name="scrollable">True</property>
+                            <property name="border_width">5</property>
                           </object>
                           <packing>
                             <property name="resize">True</property>
@@ -799,6 +800,8 @@
                       <object class="GtkVBox" id="downloadsvbox">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="border_width">5</property>
+                        <property name="spacing">5</property>
                         <child>
                           <object class="GtkHBox" id="hbox3">
                             <property name="visible">True</property>
@@ -816,7 +819,7 @@
                               <packing>
                                 <property name="expand">False</property>
                                 <property name="fill">True</property>
-                                <property name="padding">10</property>
+                                <property name="padding">5</property>
                                 <property name="position">0</property>
                               </packing>
                             </child>
@@ -831,7 +834,7 @@
                               <packing>
                                 <property name="expand">False</property>
                                 <property name="fill">True</property>
-                                <property name="padding">10</property>
+                                <property name="padding">5</property>
                                 <property name="position">1</property>
                               </packing>
                             </child>
@@ -945,7 +948,6 @@
                           <packing>
                             <property name="expand">False</property>
                             <property name="fill">False</property>
-                            <property name="padding">2</property>
                             <property name="position">0</property>
                           </packing>
                         </child>
@@ -955,6 +957,7 @@
                             <property name="can_focus">True</property>
                             <property name="hscrollbar_policy">automatic</property>
                             <property name="vscrollbar_policy">automatic</property>
+                            <property name="shadow_type">in</property>
                             <child>
                               <object class="GtkTreeView" id="DownloadList">
                                 <property name="visible">True</property>
@@ -1291,7 +1294,6 @@
                           <packing>
                             <property name="expand">False</property>
                             <property name="fill">True</property>
-                            <property name="padding">3</property>
                             <property name="position">2</property>
                           </packing>
                         </child>
@@ -1318,6 +1320,8 @@
                       <object class="GtkVBox" id="uploadsvbox">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="border_width">5</property>
+                        <property name="spacing">5</property>
                         <child>
                           <object class="GtkHBox" id="hbox13">
                             <property name="visible">True</property>
@@ -1335,7 +1339,7 @@
                               <packing>
                                 <property name="expand">False</property>
                                 <property name="fill">True</property>
-                                <property name="padding">10</property>
+                                <property name="padding">5</property>
                                 <property name="position">0</property>
                               </packing>
                             </child>
@@ -1350,7 +1354,7 @@
                               <packing>
                                 <property name="expand">False</property>
                                 <property name="fill">True</property>
-                                <property name="padding">10</property>
+                                <property name="padding">5</property>
                                 <property name="position">1</property>
                               </packing>
                             </child>
@@ -1464,7 +1468,6 @@
                           <packing>
                             <property name="expand">False</property>
                             <property name="fill">False</property>
-                            <property name="padding">2</property>
                             <property name="position">0</property>
                           </packing>
                         </child>
@@ -1474,6 +1477,7 @@
                             <property name="can_focus">True</property>
                             <property name="hscrollbar_policy">automatic</property>
                             <property name="vscrollbar_policy">automatic</property>
+                            <property name="shadow_type">in</property>
                             <child>
                               <object class="GtkTreeView" id="UploadList">
                                 <property name="visible">True</property>
@@ -1757,7 +1761,6 @@
                           <packing>
                             <property name="expand">False</property>
                             <property name="fill">True</property>
-                            <property name="padding">3</property>
                             <property name="position">2</property>
                           </packing>
                         </child>
@@ -2417,8 +2420,8 @@
                       <object class="GtkVBox" id="interestsvbox">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="border_width">10</property>
-                        <property name="spacing">10</property>
+                        <property name="border_width">5</property>
+                        <property name="spacing">5</property>
                         <child>
                           <object class="GtkHBox" id="hbox12">
                             <property name="visible">True</property>
@@ -2609,6 +2612,7 @@
                                     <property name="can_focus">False</property>
                                     <property name="spacing">10</property>
                                     <property name="homogeneous">True</property>
+                                    <property name="margin_right">5</property>
                                     <child>
                                       <object class="GtkVBox" id="vbox14">
                                         <property name="visible">True</property>
@@ -2796,6 +2800,8 @@
                                         <property name="visible">True</property>
                                         <property name="can_focus">False</property>
                                         <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                                        <property name="margin_left">5</property>
+                                        <property name="margin_right">5</property>
                                         <child>
                                           <object class="GtkExpander" id="RecommendationsExpander">
                                             <property name="visible">True</property>
@@ -2892,6 +2898,7 @@
                                         <property name="hscrollbar_policy">automatic</property>
                                         <property name="vscrollbar_policy">automatic</property>
                                         <property name="shadow_type">in</property>
+                                        <property name="margin_left">5</property>
                                         <child>
                                           <object class="GtkTreeView" id="RecommendationUsersList">
                                             <property name="visible">True</property>
@@ -2984,6 +2991,7 @@
                   <object class="GtkHBox" id="debugButtonsBox">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
+                    <property name="border_width">5</property>
                     <property name="spacing">4</property>
                     <child>
                       <object class="GtkLabel" id="debugLabel">
@@ -2995,6 +3003,7 @@
                       <packing>
                         <property name="expand">False</property>
                         <property name="fill">True</property>
+                        <property name="padding">10</property>
                         <property name="position">0</property>
                       </packing>
                     </child>

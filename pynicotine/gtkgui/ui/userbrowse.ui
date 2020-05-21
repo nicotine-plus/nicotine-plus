@@ -13,6 +13,7 @@
           <object class="GtkHBox" id="hbox8">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="border_width">5</property>
             <property name="spacing">5</property>
             <child>
               <object class="GtkLabel" id="label20">
@@ -53,7 +54,6 @@
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
-                <property name="padding">5</property>
                 <property name="position">2</property>
               </packing>
             </child>
@@ -76,7 +76,8 @@
                   <object class="GtkHBox" id="hbox61">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="spacing">5</property>
+                    <property name="spacing">10</property>
+                    <property name="border_width">5</property>
                     <child>
                       <object class="GtkToggleButton" id="ExpandButton">
                         <property name="visible">True</property>
@@ -141,7 +142,6 @@
                     <property name="can_focus">True</property>
                     <property name="hscrollbar_policy">automatic</property>
                     <property name="vscrollbar_policy">automatic</property>
-                    <property name="shadow_type">in</property>
                     <child>
                       <object class="GtkTreeView" id="FolderTreeView">
                         <property name="visible">True</property>
@@ -358,7 +358,6 @@
                     <property name="can_focus">True</property>
                     <property name="hscrollbar_policy">automatic</property>
                     <property name="vscrollbar_policy">automatic</property>
-                    <property name="shadow_type">in</property>
                     <child>
                       <object class="GtkTreeView" id="FileTreeView">
                         <property name="visible">True</property>

@@ -622,6 +622,7 @@ class IconNotebook:
 
         # We store the real gtk.Notebook object
         self.Notebook = notebookraw
+        self.Notebook.set_show_border(True)
 
         self.tabclosers = tabclosers
         self.reorderable = reorderable

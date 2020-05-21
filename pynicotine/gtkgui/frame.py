@@ -451,7 +451,6 @@ class NicotineFrame:
             popup.set_user(map_tablabels_to_box[label_tab])
 
         self.LogScrolledWindow = gtk.ScrolledWindow()
-        self.LogScrolledWindow.set_shadow_type(gtk.ShadowType.IN)
         self.LogScrolledWindow.set_policy(gtk.PolicyType.AUTOMATIC, gtk.PolicyType.AUTOMATIC)
         self.LogScrolledWindow.show()
 
