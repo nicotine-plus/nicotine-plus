@@ -275,11 +275,11 @@ def ScrollBottom(widget):
 
 
 def UrlEvent(tag, widget, event, iter, url):
-    if tag.last_event_type == Gdk.EventType.BUTTON_PRESS and event.type == Gdk.EventType.BUTTON_RELEASE:
+    if tag.last_event_type == Gdk.EventType.BUTTON_PRESS and event.button.type == Gdk.EventType.BUTTON_RELEASE and event.button.button == 1:
         if url[:4] == "www.":
             url = "http://" + url
         OpenUri(url)
-    tag.last_event_type = event.type
+    tag.last_event_type = event.button.type
 
 
 def OpenUri(uri):
