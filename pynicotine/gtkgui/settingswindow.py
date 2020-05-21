@@ -1212,7 +1212,6 @@ class UserinfoFrame(buildFrame):
 
         if userinfo["pic"]:
             self.Image.set_filename(userinfo["pic"])
-            self.GetImageSize()
 
     def GetSettings(self):
 
@@ -1235,13 +1234,8 @@ class UserinfoFrame(buildFrame):
             }
         }
 
-    def GetImageSize(self, widget=None):
-
-        if self.Image.get_file().query_exists():
-            size = self.Image.get_file().query_info(gio.FILE_ATTRIBUTE_STANDARD_SIZE, gio.FileQueryInfoFlags.NONE, None).get_size()
-            self.ImageSize.set_text(_("Size: %s KB") % Humanize(size / 1024))
-        else:
-            self.ImageSize.set_text(_("Size: %s KB") % 0)
+    def OnDefaultImage(self, widget):
+        self.Image.unselect_all()
 
 
 class IgnoreFrame(buildFrame):
@@ -3231,7 +3225,7 @@ class PluginFrame(buildFrame):
 
         cols = InitialiseColumns(
             self.PluginTreeView,
-            [_("Plugins"), 150, "text"],
+            [_("Plugins"), 400, "text"],
             [_("Enabled"), 40, "toggle"]
         )
 
@@ -3316,7 +3310,7 @@ class PluginFrame(buildFrame):
         return {}
 
     def OnPluginsEnable(self, widget):
-        self.notebook1.set_sensitive(self.PluginsEnable.get_active())
+        self.vbox99.set_sensitive(self.PluginsEnable.get_active())
 
     def GetSettings(self):
         return {

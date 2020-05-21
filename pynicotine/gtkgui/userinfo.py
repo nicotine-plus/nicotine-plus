@@ -443,7 +443,7 @@ class UserInfo:
         self.image_pixbuf = None
         self.descr.get_buffer().set_text("")
 
-        AppendLine(self.descr, self.frame.np.decode(descr, self.encoding), self.tag_local, showstamp=False, scroll=False)
+        AppendLine(self.descr, descr.decode(self.encoding), self.tag_local, showstamp=False, scroll=False)
 
         self.uploads.set_text(_("Total uploads allowed: %i") % totalupl)
         self.queuesize.set_text(_("Queue size: %i") % queuesize)
@@ -565,7 +565,7 @@ class UserInfo:
         if encoding != self.encoding:
             self.encoding = encoding
             buffer = self.descr.get_buffer()
-            buffer.set_text(self.frame.np.decode(self._descr, self.encoding))
+            buffer.set_text(self._descr.decode(self.encoding))
             SaveEncoding(self.frame.np, "userencoding", self.user, self.encoding)
 
     def OnImageClick(self, widget, event):
