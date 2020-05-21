@@ -98,7 +98,6 @@
                     <property name="can_focus">False</property>
                     <property name="create_folders">False</property>
                     <property name="title" translatable="yes">Select an image</property>
-                    <signal name="file-set" handler="GetImageSize" swapped="no"/>
                   </object>
                   <packing>
                     <property name="expand">True</property>
@@ -107,18 +106,46 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkLabel" id="ImageSize">
+                  <object class="GtkButton" id="DefaultImage">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                    <property name="xalign">0</property>
-                    <property name="label" translatable="yes">Size: 0</property>
-                    <property name="width_chars">15</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">False</property>
+                    <signal name="clicked" handler="OnDefaultImage" swapped="no"/>
+                      <child>
+                        <object class="GtkHBox" id="hbox11">
+                          <property name="visible">True</property>
+                          <property name="can_focus">False</property>
+                          <property name="spacing">4</property>
+                          <child>
+                            <object class="GtkImage" id="image3">
+                              <property name="visible">True</property>
+                              <property name="can_focus">False</property>
+                              <property name="stock">gtk-refresh</property>
+                            </object>
+                            <packing>
+                              <property name="expand">False</property>
+                              <property name="fill">False</property>
+                              <property name="position">0</property>
+                            </packing>
+                          </child>
+                          <child>
+                            <object class="GtkLabel" id="label3">
+                              <property name="visible">True</property>
+                              <property name="can_focus">False</property>
+                              <property name="label" translatable="yes">Default</property>
+                            </object>
+                            <packing>
+                              <property name="expand">False</property>
+                              <property name="fill">False</property>
+                              <property name="position">1</property>
+                            </packing>
+                          </child>
+                        </object>
+                    </child>
                   </object>
                   <packing>
                     <property name="expand">False</property>
                     <property name="fill">True</property>
-                    <property name="pack_type">end</property>
                     <property name="position">2</property>
                   </packing>
                 </child>
