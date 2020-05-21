@@ -53,7 +53,7 @@ class GenericAboutDialog(gtk.Dialog):
         self.set_resizable(True)
         self.set_position(gtk.WindowPosition.CENTER)
         self.vbox.set_spacing(10)
-        self.set_border_width(5)
+        self.set_border_width(10)
 
 
 class AboutDialog(gtk.Dialog):
@@ -67,7 +67,7 @@ class AboutDialog(gtk.Dialog):
         self.set_resizable(True)
         self.set_position(gtk.WindowPosition.CENTER)
         self.vbox.set_spacing(10)
-        self.set_border_width(5)
+        self.set_border_width(10)
 
         img = gtk.Image()
         img.set_from_pixbuf(self.nicotine.images["n"])
@@ -75,6 +75,7 @@ class AboutDialog(gtk.Dialog):
         ScrolledWindow = gtk.ScrolledWindow()
         ScrolledWindow.show()
         ScrolledWindow.set_size_request(400, 250)
+        ScrolledWindow.set_shadow_type(gtk.ShadowType.IN)
 
         TextView = gtk.TextView()
         TextView.set_wrap_mode(gtk.WrapMode.WORD)
@@ -102,7 +103,7 @@ Based on code from Nicotine and PySoulSeek""") % version
         hbox.pack_start(vbox, False, True, 0)
         hbox.pack_start(ScrolledWindow, True, True, 0)
 
-        self.expander = gtk.Expander()
+        self.expander = gtk.Expander.new(_("Dependencies"))
         self.expander.show()
 
         pythonversion = '.'.join(map(str, sys.version_info[:3]))

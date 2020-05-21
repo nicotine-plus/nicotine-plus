@@ -14,7 +14,7 @@
   </object>
   <object class="GtkAssistant" id="FastConfigureAssistant">
     <property name="can_focus">False</property>
-    <property name="border_width">12</property>
+    <property name="border_width">10</property>
     <property name="title" translatable="yes">Nicotine+ Fast Configure</property>
     <property name="modal">True</property>
     <property name="window_position">center</property>
