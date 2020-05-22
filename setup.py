@@ -28,7 +28,6 @@
     sudo python setup.py install
 """
 
-import sys
 import os
 import glob
 
@@ -44,7 +43,7 @@ manpages = glob.glob(os.path.join("manpages", "*.1"))
 for man in manpages:
     files.append(
         (
-            os.path.join(sys.prefix, "share/man/man1"),
+            "share/man/man1",
             [man]
         )
     )
@@ -53,7 +52,7 @@ for man in manpages:
 for sizeicons in ["16x16", "32x32", "48x48", "64x64", "96x96"]:
     files.append(
         (
-            os.path.join(sys.prefix, "share/icons/hicolor", sizeicons, "apps"),
+            os.path.join("share/icons/hicolor", sizeicons, "apps"),
             ["files/icons/" + sizeicons + "/nicotine-plus.png"]
         )
     )
@@ -61,7 +60,7 @@ for sizeicons in ["16x16", "32x32", "48x48", "64x64", "96x96"]:
 # Scalable icons
 files.append(
     (
-        os.path.join(sys.prefix, "share/icons/hicolor/scalable/apps"),
+        "share/icons/hicolor/scalable/apps",
         ["files/icons/scalable/nicotine-plus.svg"]
     )
 )
@@ -69,7 +68,7 @@ files.append(
 # Desktop file
 files.append(
     (
-        os.path.join(sys.prefix, "share/applications"),
+        "share/applications",
         ["files/nicotine.desktop"]
     )
 )
@@ -87,7 +86,7 @@ for mo in mo_dirs:
 
     files.append(
         (
-            os.path.join(sys.prefix, "share/locale", lang, "LC_MESSAGES"),
+            os.path.join("share/locale", lang, "LC_MESSAGES"),
             [os.path.join(lc_messages_path, "nicotine.mo")]
         )
     )
@@ -100,7 +99,7 @@ for (path, dirs, pluginfiles) in os.walk("plugins"):
     for f in pluginfiles:
         files.append(
             (
-                os.path.join(sys.prefix, "share/nicotine/plugins", dst_path),
+                os.path.join("share/nicotine/plugins", dst_path),
                 [os.path.join(path, f)]
             )
         )
@@ -113,7 +112,7 @@ for sounds in sound_dirs:
     for file in ["private.ogg", "room_nick.ogg", "details.txt", "license.txt"]:
         files.append(
             (
-                os.path.join(sys.prefix, "share/nicotine/sounds", theme),
+                os.path.join("share/nicotine/sounds", theme),
                 [os.path.join(sounds, file)]
             )
         )
@@ -126,7 +125,7 @@ for (path, dirs, docfiles) in os.walk("doc"):
     for f in docfiles:
         files.append(
             (
-                os.path.join(sys.prefix, "share/doc/nicotine", dst_path),
+                os.path.join("share/doc/nicotine", dst_path),
                 [os.path.join(path, f)]
             )
         )
