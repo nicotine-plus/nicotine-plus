@@ -588,7 +588,7 @@ class UserInfo:
 
     def OnScrollEvent(self, widget, event):
 
-        if event.direction == Gdk.SCROLL_UP:
+        if event.get_scroll_deltas().delta_y < 0:
             self.MakeZoomIn()
         else:
             self.MakeZoomOut()
