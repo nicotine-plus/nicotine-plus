@@ -85,6 +85,7 @@ class Downloads(TransferList):
             ("", None),
             (1, _("Clear Groups"), self.popup_menu2, None)
         )
+        self.popup_menu.attach_to_widget(frame.DownloadList, None)
 
         frame.DownloadList.connect("button_press_event", self.OnPopupMenu, "mouse")
         frame.DownloadList.connect("key-press-event", self.on_key_press_event)
