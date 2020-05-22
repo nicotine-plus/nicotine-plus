@@ -220,17 +220,17 @@ class Config:
 
             "columns": {
                 "userbrowse": [1, 1, 1, 1],
-                "userbrowse_widths": [250, 100, 70, 50],
+                "userbrowse_widths": [250, 100, 70, 0],
                 "userlist": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-                "userlist_widths": [0, 25, 120, 0, 0, 0, 0, 0, 160, 1000],
+                "userlist_widths": [0, 25, 120, 0, 0, 0, 0, 0, 160, 0],
                 "chatrooms": {},
                 "chatrooms_widths": {},
                 "downloads_columns": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-                "downloads_widths": [100, 250, 140, 50, 70, 170, 90, 140, 120, 1000],
+                "downloads_widths": [100, 250, 140, 50, 70, 170, 90, 140, 120, 0],
                 "uploads_columns": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-                "uploads_widths": [100, 250, 140, 50, 70, 170, 90, 140, 120, 1000],
+                "uploads_widths": [100, 250, 140, 50, 70, 170, 90, 140, 120, 0],
                 "search": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-                "search_widths": [50, 100, 250, 100, 90, 50, 20, 50, 50, 25, 1000],
+                "search_widths": [50, 100, 250, 100, 90, 50, 20, 50, 50, 25, 0],
                 "hideflags": False
             },
 
