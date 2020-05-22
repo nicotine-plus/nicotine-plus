@@ -202,6 +202,8 @@ class UserList:
             (1, _("Private rooms"), self.Popup_Menu_PrivateRooms, popup.OnPrivateRooms)
         )
 
+        popup.attach_to_widget(self.UserList, None)
+
         items = self.popup_menu.get_children()
         self.Menu_SendMessage = items[0]
         self.Menu_ShowIPaddress = items[2]

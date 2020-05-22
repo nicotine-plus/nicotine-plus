@@ -545,6 +545,9 @@ class Searches(IconNotebook):
             ("#" + _("Detach this tab"), self.searches[id][2].Detach),
             ("#" + _("Close this tab"), self.searches[id][2].OnClose)
         )
+
+        popup.attach_to_widget(self.frame.SearchNotebookRaw, None)
+
         items = popup.get_children()  # noqa: F841
 
         return popup
@@ -757,6 +760,8 @@ class Search:
             ("", None),
             (1, _("User(s)"), self.popup_menu_users, self.OnPopupMenuUsers)
         )
+
+        popup.attach_to_widget(self.ResultsList, None)
 
         self.ResultsList.connect("button_press_event", self.OnListClicked)
 

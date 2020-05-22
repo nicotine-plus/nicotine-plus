@@ -34,7 +34,6 @@ import glob
 
 from os.path import isdir
 from distutils.core import setup
-from distutils.dir_util import copy_tree
 
 # Compute data_files
 files = []
@@ -94,7 +93,17 @@ for mo in mo_dirs:
     )
 
 # Plugins
-copy_tree("plugins", os.path.join(sys.prefix, "share/nicotine/plugins"))
+for (path, dirs, pluginfiles) in os.walk("plugins"):
+
+    dst_path = os.sep.join(path.split("/")[1:])
+
+    for f in pluginfiles:
+        files.append(
+            (
+                os.path.join(sys.prefix, "share/nicotine/plugins", dst_path),
+                [os.path.join(path, f)]
+            )
+        )
 
 # Sounds
 sound_dirs = glob.glob(os.path.join("sounds", "*"))

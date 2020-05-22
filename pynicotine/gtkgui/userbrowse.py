@@ -140,6 +140,8 @@ class UserBrowse:
                 ("$" + _("_Ignore this user"), menu.OnIgnoreUser)
             )
 
+        self.popup_menu_users2.attach_to_widget(self.FolderTreeView, None)
+
         self.popup_menu_downloads_folders = PopupMenu(self.frame)
         self.popup_menu_downloads_folders.setup(
             ("#" + _("_Download directory"), self.OnDownloadDirectory),
@@ -147,6 +149,8 @@ class UserBrowse:
             ("#" + _("Download _recursive"), self.OnDownloadDirectoryRecursive),
             ("#" + _("Download r_ecursive to..."), self.OnDownloadDirectoryRecursiveTo)
         )
+
+        self.popup_menu_downloads_folders.attach_to_widget(self.FolderTreeView, None)
 
         self.popup_menu_downloads_files = PopupMenu(self.frame)
         self.popup_menu_downloads_files.setup(
@@ -159,11 +163,15 @@ class UserBrowse:
             ("#" + _("Download r_ecursive to..."), self.OnDownloadDirectoryRecursiveTo)
         )
 
+        self.popup_menu_downloads_files.attach_to_widget(self.FolderTreeView, None)
+
         self.popup_menu_uploads_folders = PopupMenu(self.frame)
         self.popup_menu_uploads_folders.setup(
             ("#" + _("Upload Directory to..."), self.OnUploadDirectoryTo),
             ("#" + _("Upload Directory recursive to..."), self.OnUploadDirectoryRecursiveTo)
         )
+
+        self.popup_menu_uploads_folders.attach_to_widget(self.FolderTreeView, None)
 
         self.popup_menu_uploads_files = PopupMenu(self.frame)
         self.popup_menu_uploads_files.setup(
@@ -171,6 +179,8 @@ class UserBrowse:
             ("#" + _("Upload Directory recursive to..."), self.OnUploadDirectoryRecursiveTo),
             ("#" + _("Up_load file(s)"), self.OnUploadFiles)
         )
+
+        self.popup_menu_uploads_files.attach_to_widget(self.FolderTreeView, None)
 
         self.folder_popup_menu = PopupMenu(self.frame)
         self.folder_popup_menu.set_user(user)
@@ -193,6 +203,8 @@ class UserBrowse:
                 ("", None),
                 ("#" + _("Copy _URL"), self.OnCopyDirURL)
             )
+
+        self.folder_popup_menu.attach_to_widget(self.FolderTreeView, None)
 
         self.FolderTreeView.connect("button_press_event", self.OnFolderClicked)
         self.FolderTreeView.get_selection().connect("changed", self.OnSelectDir)
@@ -250,6 +262,8 @@ class UserBrowse:
                 ("", None),
                 ("#" + _("Copy _URL"), self.OnCopyURL)
             )
+
+        self.file_popup_menu.attach_to_widget(self.FolderTreeView, None)
 
         self.FileTreeView.connect("button_press_event", self.OnFileClicked)
 

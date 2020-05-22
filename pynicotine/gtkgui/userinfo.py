@@ -169,6 +169,8 @@ class UserTabs(IconNotebook):
             ("#" + _("Detach this tab"), self.users[user].Detach),
             ("#" + _("Close this tab"), self.users[user].OnClose)
         )
+
+        popup.attach_to_widget(self.frame.userinfovbox, None)
         popup.set_user(user)
 
         items = popup.get_children()
@@ -291,6 +293,8 @@ class UserInfo:
             ("", None),
             ("#" + _("_Search for this item"), self.frame.OnRecommendSearch)
         )
+
+        popup.attach_to_widget(self.Likes, None)
         self.Likes.connect("button_press_event", self.OnPopupLikesMenu)
 
         self.hates_popup_menu = popup = PopupMenu(self)
@@ -300,6 +304,8 @@ class UserInfo:
             ("", None),
             ("#" + _("_Search for this item"), self.frame.OnRecommendSearch)
         )
+
+        popup.attach_to_widget(self.Hates, None)
         self.Hates.connect("button_press_event", self.OnPopupHatesMenu)
 
         self.image_menu = popup = PopupMenu(self)
@@ -310,6 +316,8 @@ class UserInfo:
             ("", None),
             ("#" + _("Save Image"), self.OnSavePicture)
         )
+
+        popup.attach_to_widget(self.frame.userinfovbox, None)
 
     def OnPopupLikesMenu(self, widget, event):
 

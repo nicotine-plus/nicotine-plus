@@ -332,16 +332,6 @@ class NicotineFrame:
         display = Gdk.Display.get_default()  # noqa: F841
         self.clip = gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
 
-        # Popup menu on the log windows
-        self.logpopupmenu = PopupMenu(self).setup(
-            ("#" + _("Find"), self.OnFindLogWindow),
-            ("", None),
-            ("#" + _("Copy"), self.OnCopyLogWindow),
-            ("#" + _("Copy All"), self.OnCopyAllLogWindow),
-            ("", None),
-            ("#" + _("Clear log"), self.OnClearLogWindow)
-        )
-
         # for iterating buddy changes to the combos
         self.CreateRecommendationsWidgets()
 
@@ -448,6 +438,7 @@ class NicotineFrame:
                 )
             )
 
+            popup.attach_to_widget(self.MainNotebook, None)
             popup.set_user(map_tablabels_to_box[label_tab])
 
         self.LogScrolledWindow = gtk.ScrolledWindow()
@@ -461,6 +452,18 @@ class NicotineFrame:
 
         self.LogScrolledWindow.add(self.LogWindow)
         self.LogWindow.connect("button-press-event", self.OnPopupLogMenu)
+
+        # Popup menu on the log windows
+        self.logpopupmenu = PopupMenu(self).setup(
+            ("#" + _("Find"), self.OnFindLogWindow),
+            ("", None),
+            ("#" + _("Copy"), self.OnCopyLogWindow),
+            ("#" + _("Copy All"), self.OnCopyAllLogWindow),
+            ("", None),
+            ("#" + _("Clear log"), self.OnClearLogWindow)
+        )
+        
+        self.logpopupmenu.attach_to_widget(self.LogScrolledWindow, None)
 
         self.debugLogBox.pack_start(self.LogScrolledWindow, True, True, 0)
         self.debugWarnings.set_active((1 in config["logging"]["debugmodes"]))
@@ -901,6 +904,8 @@ class NicotineFrame:
             ("", None),
             ("#" + _("_Search for this item"), self.OnRecommendSearch)
         )
+        
+        popup.attach_to_widget(self.LikesList, None)
 
         self.LikesList.connect("button_press_event", self.OnPopupTILMenu)
 
@@ -923,6 +928,8 @@ class NicotineFrame:
             ("", None),
             ("#" + _("_Search for this item"), self.OnRecommendSearch)
         )
+
+        popup.attach_to_widget(self.DislikesList, None)
 
         self.DislikesList.connect("button_press_event", self.OnPopupTIDLMenu)
 
@@ -952,6 +959,8 @@ class NicotineFrame:
             ("#" + _("_Search for this item"), self.OnRecommendSearch)
         )
 
+        popup.attach_to_widget(self.RecommendationsList, None)
+
         self.RecommendationsList.connect("button_press_event", self.OnPopupRMenu)
 
         cols = utils.InitialiseColumns(
@@ -979,6 +988,8 @@ class NicotineFrame:
             ("", None),
             ("#" + _("_Search for this item"), self.OnRecommendSearch)
         )
+
+        popup.attach_to_widget(self.UnrecommendationsList, None)
 
         self.UnrecommendationsList.connect("button_press_event", self.OnPopupUnRecMenu)
         self.RecommendationsExpander.connect("activate", self.RecommendationsExpanderStatus)
@@ -1025,6 +1036,8 @@ class NicotineFrame:
             ("$" + _("_Ban this user"), popup.OnBanUser),
             ("$" + _("_Ignore this user"), popup.OnIgnoreUser)
         )
+
+        popup.attach_to_widget(self.RecommendationUsersList, None)
 
         self.RecommendationUsersList.connect("button_press_event", self.OnPopupRUMenu)
 
