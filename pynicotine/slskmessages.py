@@ -311,7 +311,7 @@ class DebugMessage(InternalMessage):
 
 class SlskMessage:
     """ This is a parent class for all protocol messages. """
-    def getObject(self, message, type, start=0, getintasshort=0, getsignedint=0, printerror=True):
+    def getObject(self, message, type, start=0, getintasshort=0, getsignedint=0, printerror=True, rawbytes=False):
         """ Returns object of specified type, extracted from message (which is
         a binary array). start is an offset."""
         intsize = struct.calcsize("<I")
@@ -326,8 +326,12 @@ class SlskMessage:
 
             elif type is bytes:
                 length = struct.unpack("<I", message[start:start + intsize])[0]
-                string = message[start + intsize:start + length + intsize].decode('utf-8', errors='replace')
-                return length + intsize + start, string
+                string = message[start + intsize:start + length + intsize]
+                
+                if rawbytes is True:
+                    return length + intsize + start, string
+                else:
+                    return length + intsize + start, string.decode('utf-8', errors='replace')
             elif type is NetworkIntType:
                 return intsize + start, struct.unpack("<I", message[start:start + intsize])[0]
             elif type is NetworkSignedIntType:
@@ -1687,10 +1691,10 @@ class UserInfoReply(PeerMessage):
         self.uploadallowed = uploadallowed
 
     def parseNetworkMessage(self, message):
-        pos, self.descr = self.getObject(message, bytes)
+        pos, self.descr = self.getObject(message, bytes, 0, 0, 0, True, True)
         pos, self.has_pic = pos + 1, message[pos]
         if self.has_pic:
-            pos, self.pic = self.getObject(message, bytes, pos)
+            pos, self.pic = self.getObject(message, bytes, pos, 0, 0, True, True)
         pos, self.totalupl = self.getObject(message, int, pos)
         pos, self.queuesize = self.getObject(message, int, pos)
         pos, self.slotsavail = pos + 1, message[pos]
