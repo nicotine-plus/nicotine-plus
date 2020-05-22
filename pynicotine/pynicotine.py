@@ -1462,7 +1462,6 @@ class NetworkEventProcessor:
             if i.conn is msg.conn.conn and self.userinfo is not None:
                 # probably impossible to do this
                 if i.username != self.config.sections["server"]["login"]:
-                    msg.descr = msg.descr.encode()
                     self.userinfo.ShowInfo(i.username, msg)
 
     def UserInfoRequest(self, msg):
