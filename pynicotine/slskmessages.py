@@ -311,7 +311,7 @@ class DebugMessage(InternalMessage):
 
 class SlskMessage:
     """ This is a parent class for all protocol messages. """
-    def getObject(self, message, type, start=0, getintasshort=0, getsignedint=0, printerror=True):
+    def getObject(self, message, type, start=0, getintasshort=0, getsignedint=0, printerror=True, rawbytes=False):
         """ Returns object of specified type, extracted from message (which is
         a binary array). start is an offset."""
         intsize = struct.calcsize("<I")
@@ -326,7 +326,11 @@ class SlskMessage:
 
             elif type is bytes:
                 length = struct.unpack("<I", message[start:start + intsize])[0]
-                string = message[start + intsize:start + length + intsize].decode('utf-8', errors='replace')
+                string = message[start + intsize:start + length + intsize]
+                
+                if rawbytes is False:
+                    string = string.decode('utf-8', errors='replace')
+
                 return length + intsize + start, string
             elif type is NetworkIntType:
                 return intsize + start, struct.unpack("<I", message[start:start + intsize])[0]
@@ -534,7 +538,7 @@ class AddUser(ServerMessage):
             pos, self.files = self.getObject(message, int, pos)
             pos, self.dirs = self.getObject(message, int, pos)
             if message[pos:]:
-                pos, self.country = self.getObject(message, bytes, pos)
+                pos, self.country = self.getObject(message, bytes, pos, 0, 0, True, True)
 
 
 class Unknown6(ServerMessage):
@@ -1687,10 +1691,10 @@ class UserInfoReply(PeerMessage):
         self.uploadallowed = uploadallowed
 
     def parseNetworkMessage(self, message):
-        pos, self.descr = self.getObject(message, bytes)
+        pos, self.descr = self.getObject(message, bytes, 0, 0, 0, True, True)
         pos, self.has_pic = pos + 1, message[pos]
         if self.has_pic:
-            pos, self.pic = self.getObject(message, bytes, pos)
+            pos, self.pic = self.getObject(message, bytes, pos, 0, 0, True, True)
         pos, self.totalupl = self.getObject(message, int, pos)
         pos, self.queuesize = self.getObject(message, int, pos)
         pos, self.slotsavail = pos + 1, message[pos]

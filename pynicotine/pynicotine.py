@@ -1280,6 +1280,12 @@ class NetworkEventProcessor:
                 del self.ipignore_requested[msg.user]
                 return
 
+            import socket
+            if self.geoip:
+                cn = self.geoip.country_code_by_addr(msg.ip)
+                if cn is not None:
+                    self.frame.HasUserFlag(msg.user, "flag_" + cn)
+
             # From this point on all paths should call
             # self.frame.pluginhandler.UserResolveNotification precisely once
             if msg.user in self.PrivateMessageQueue:
@@ -1290,12 +1296,8 @@ class NetworkEventProcessor:
 
             self.ip_requested.remove(msg.user)
 
-            import socket
             if self.geoip:
                 cc = self.geoip.country_name_by_addr(msg.ip)
-                cn = self.geoip.country_code_by_addr(msg.ip)
-                if cn is not None:
-                    self.frame.HasUserFlag(msg.user, "flag_" + cn)
             else:
                 cc = ""
 
