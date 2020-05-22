@@ -89,8 +89,8 @@ binary package and what you try to run Nicotine+ with).""")
         except ImportError:
             msg = _("""Nicotine+ supports a country code blocker.
 This requires a (GPL'ed) library called GeoIP. You can find it here:
-C library:       http://www.maxmind.com/app/c
-Python bindings: http://www.maxmind.com/app/python
+C library:       https://github.com/maxmind/geoip-api-c
+Python bindings: https://github.com/maxmind/geoip-api-python
 (the python bindings require the C library)""")
             log.addwarning(msg)
 
