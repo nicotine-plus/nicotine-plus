@@ -101,10 +101,6 @@ class PluginHandler(object):
         except Exception:
             pass
 
-        # Load system-wide plugins
-        self.plugindirs.append(os.path.join(sys.prefix, "share/nicotine/plugins"))
-
-        # Load home directory plugins
         self.plugindirs.append(plugindir)
 
         if os.path.isdir(plugindir):
