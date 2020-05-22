@@ -1062,6 +1062,7 @@ class ChatRoom:
 
             img = self.frame.GetStatusImage(user.status)
             flag = user.country
+            #print(flag)
 
             if flag:
                 flag = "flag_" + flag

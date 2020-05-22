@@ -537,8 +537,9 @@ class AddUser(ServerMessage):
 
             pos, self.files = self.getObject(message, int, pos)
             pos, self.dirs = self.getObject(message, int, pos)
+            pos = pos + 4
             if message[pos:]:
-                pos, self.country = self.getObject(message, bytes, pos, 0, 0, True, True)
+                pos, self.country = self.getObject(message, bytes, pos)
 
 
 class Unknown6(ServerMessage):
