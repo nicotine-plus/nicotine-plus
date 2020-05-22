@@ -328,10 +328,10 @@ class SlskMessage:
                 length = struct.unpack("<I", message[start:start + intsize])[0]
                 string = message[start + intsize:start + length + intsize]
                 
-                if rawbytes is True:
-                    return length + intsize + start, string
-                else:
-                    return length + intsize + start, string.decode('utf-8', errors='replace')
+                if rawbytes is False:
+                    string = string.decode('utf-8', errors='replace')
+
+                return length + intsize + start, string
             elif type is NetworkIntType:
                 return intsize + start, struct.unpack("<I", message[start:start + intsize])[0]
             elif type is NetworkSignedIntType:
