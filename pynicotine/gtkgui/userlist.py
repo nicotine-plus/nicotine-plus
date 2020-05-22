@@ -436,15 +436,10 @@ class UserList:
         hfiles = Humanize(msg.files)
         self.usersmodel.set(iter, 3, hspeed, 4, hfiles, 11, msg.avgspeed, 12, msg.files)
 
-        if msg.country is not None:
+        if msg.country is not None and msg.country != "":
 
             flag = "flag_" + msg.country
-            self.usersmodel.set(iter, 1, self.frame.GetFlagImage(flag), 14, flag)
-
-            for i in self.userlist:
-                if i[0] == msg.user:
-                    i[4] = flag
-                    break
+            self.SetUserFlag(msg.user, flag)
 
     def SetUserFlag(self, user, flag):
 

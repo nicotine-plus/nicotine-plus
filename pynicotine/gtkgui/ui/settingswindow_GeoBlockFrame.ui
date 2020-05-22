@@ -114,7 +114,7 @@
                 <property name="xalign">0</property>
                 <property name="yalign">0</property>
                 <property name="xpad">8</property>
-                <property name="label" translatable="yes">http://www.maxmind.com/app/c</property>
+                <property name="label" translatable="yes">https://github.com/maxmind/geoip-api-c</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -129,7 +129,7 @@
                 <property name="xalign">0</property>
                 <property name="yalign">0</property>
                 <property name="xpad">8</property>
-                <property name="label" translatable="yes">http://www.maxmind.com/app/python</property>
+                <property name="label" translatable="yes">https://github.com/maxmind/geoip-api-python</property>
               </object>
               <packing>
                 <property name="expand">False</property>

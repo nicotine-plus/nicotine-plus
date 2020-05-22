@@ -1249,7 +1249,7 @@ class ChatRoom:
         key = Gdk.keyval_name(event.keyval)
 
         # Match against capslock + control and control
-        if key in ("f", "F") and event.state in (Gdk.CONTROL_MASK, Gdk.LOCK_MASK | Gdk.CONTROL_MASK):
+        if key in ("f", "F") and event.state in (Gdk.ModifierType.CONTROL_MASK, Gdk.ModifierType.LOCK_MASK | Gdk.ModifierType.CONTROL_MASK):
             self.OnFind(widget)
         elif key in ("F3"):
             self.OnFind(widget, repeat=True)

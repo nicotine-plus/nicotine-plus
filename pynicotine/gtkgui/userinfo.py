@@ -596,7 +596,7 @@ class UserInfo:
 
     def OnScrollEvent(self, widget, event):
 
-        if event.direction == Gdk.SCROLL_UP:
+        if event.get_scroll_deltas().delta_y < 0:
             self.MakeZoomIn()
         else:
             self.MakeZoomOut()
@@ -624,7 +624,7 @@ class UserInfo:
         else:
             self.actual_zoom += self.zoom_factor
 
-        pixbuf_zoomed = self.image_pixbuf.scale_simple(CalcZoomIn(x), CalcZoomIn(y), Gdk.INTERP_TILES)
+        pixbuf_zoomed = self.image_pixbuf.scale_simple(CalcZoomIn(x), CalcZoomIn(y), GdkPixbuf.InterpType.TILES)
         self.image.set_from_pixbuf(pixbuf_zoomed)
 
         del pixbuf_zoomed
@@ -650,7 +650,7 @@ class UserInfo:
             self.actual_zoom += self.zoom_factor
             return
 
-        pixbuf_zoomed = self.image_pixbuf.scale_simple(CalcZoomOut(x), CalcZoomOut(y), Gdk.INTERP_TILES)
+        pixbuf_zoomed = self.image_pixbuf.scale_simple(CalcZoomOut(x), CalcZoomOut(y), GdkPixbuf.InterpType.TILES)
         self.image.set_from_pixbuf(pixbuf_zoomed)
 
         del pixbuf_zoomed

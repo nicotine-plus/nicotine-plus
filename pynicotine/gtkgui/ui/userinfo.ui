@@ -363,6 +363,7 @@
                     <property name="can_focus">True</property>
                     <property name="hscrollbar_policy">automatic</property>
                     <property name="vscrollbar_policy">automatic</property>
+                    <signal name="scroll-event" handler="OnScrollEvent" swapped="no"/>
                     <child>
                       <object class="GtkViewport" id="viewport2">
                         <property name="visible">True</property>
@@ -373,7 +374,6 @@
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <signal name="button-press-event" handler="OnImageClick" swapped="no"/>
-                            <signal name="scroll-event" handler="OnScrollEvent" swapped="no"/>
                             <child>
                               <object class="GtkImage" id="image">
                                 <property name="visible">True</property>
