@@ -276,6 +276,7 @@ class Config:
                 "tab_default": "",
                 "tab_hilite": "red",
                 "tab_changed": "#0000ff",
+                "tab_select_previous": 1,
                 "tab_reorderable": 1,
                 "tabmain": "Top",
                 "tabrooms": "Top",
@@ -300,6 +301,7 @@ class Config:
                 "listfont": "",
                 "browserfont": "",
                 "transfersfont": "",
+                "last_tab_id": 0,
                 "modes_visible": {
                     "chatrooms": 1,
                     "private": 1,
@@ -540,8 +542,8 @@ class Config:
 
         unknown2 = {
             'ui': [
-                "roomlistcollapsed", "tabclosers", "tab_colors",
-                "tab_reorderable", "buddylistinchatrooms", "trayicon",
+                "roomlistcollapsed", "tab_select_previous", "tabclosers",
+                "tab_colors","tab_reorderable", "buddylistinchatrooms", "trayicon",
                 "showaway", "usernamehotspots", "exitdialog",
                 "tab_icons", "spellcheck", "modes_order", "modes_visible",
                 "chat_hidebuttons", "tab_status_icons", "notexists",
