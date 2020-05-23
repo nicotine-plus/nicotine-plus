@@ -659,6 +659,7 @@ class NicotineFrame:
             self.browse_buddy_shares.set_sensitive(False)
 
         self.SetMainTabsVisibility()
+        self.SetLastSessionTab()
 
         self.startup = False
 
@@ -1290,6 +1291,20 @@ class NicotineFrame:
                 num = self.MainNotebook.page_num(tab)
                 self.MainNotebook.remove_page(num)
 
+    def SetLastSessionTab(self):
+
+        try:
+            if self.np.config.sections["ui"]["tab_select_previous"]:
+                lasttabid = int(self.np.config.sections["ui"]["last_tab_id"])
+                
+                if 0 <= lasttabid <= self.MainNotebook.get_n_pages():
+                    self.MainNotebook.set_current_page(lasttabid)
+                    return
+        except Exception: 
+            pass
+
+        self.MainNotebook.set_current_page(0)
+
     def HideTab(self, widget, lista):
 
         eventbox, child = lista
@@ -1569,6 +1584,9 @@ class NicotineFrame:
 
     def OnDestroy(self, widget):
         self.SaveColumns()
+
+        self.np.config.sections["ui"]["last_tab_id"] = self.MainNotebook.get_current_page()
+
         self.np.config.sections["privatechat"]["users"] = list(self.privatechats.users.keys())
         self.np.protothread.abort()
         self.np.StopTimers()
