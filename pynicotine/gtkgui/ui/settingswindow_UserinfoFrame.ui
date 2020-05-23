@@ -93,7 +93,7 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkFileChooserButton" id="Image">
+                  <object class="GtkFileChooserButton" id="ImageChooser">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="create_folders">False</property>
