@@ -78,12 +78,8 @@ class Config:
                 "ctcpmsgs": 0,
                 "autosearch": [],
                 "autoreply": "",
-                "roomencoding": {},
-                "fallbackencodings": ['utf-8', 'cp1252'],  # Put the multi-byte encodings up front - they are the most likely to err
-                "userencoding": {},
                 "portrange": (2234, 2239),
                 "upnp": False,
-                "enc": "utf-8",
                 "userlist": [],
                 "banlist": [],
                 "ignorelist": [],
@@ -530,6 +526,12 @@ class Config:
         # Transition from 1.4.1 -> 1.4.2
         self.removeOldOption("columns", "downloads")
         self.removeOldOption("columns", "uploads")
+
+        # Remove old encoding settings (1.4.3)
+        self.removeOldOption("server", "enc")
+        self.removeOldOption("server", "fallbackencodings")
+        self.removeOldOption("server", "roomencoding")
+        self.removeOldOption("server", "userencoding")
 
         # Checking for unknown section/options
         unknown1 = [

@@ -33,16 +33,13 @@ from gi.repository import Pango as pango
 from pynicotine import slskmessages
 from pynicotine.gtkgui.chatrooms import GetCompletion
 from pynicotine.gtkgui.utils import AppendLine
-from pynicotine.gtkgui.utils import EncodingsMenu
 from pynicotine.gtkgui.utils import IconNotebook
 from pynicotine.gtkgui.utils import PopupMenu
-from pynicotine.gtkgui.utils import SaveEncoding
 from pynicotine.gtkgui.utils import WriteLog
 from pynicotine.gtkgui.utils import expand_alias
 from pynicotine.gtkgui.utils import fixpath
 from pynicotine.gtkgui.utils import is_alias
 from pynicotine.logfacility import log
-from pynicotine.slskmessages import ToBeEncoded
 from pynicotine.utils import version
 
 gi.require_version('Gtk', '3.0')
@@ -367,25 +364,6 @@ class PrivateChat:
         self.status = -1
         self.clist = []
 
-        # Encoding Combobox
-        self.Elist = {}
-        self.encoding, m = EncodingsMenu(self.frame.np, "userencoding", user)
-        self.EncodingStore = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
-        self.Encoding.set_model(self.EncodingStore)
-
-        cell = gtk.CellRendererText()
-        self.Encoding.pack_start(cell, True)
-        self.Encoding.add_attribute(cell, 'text', 0)
-
-        cell2 = gtk.CellRendererText()
-        self.Encoding.pack_start(cell2, False)
-        self.Encoding.add_attribute(cell2, 'text', 1)
-
-        for item in m:
-            self.Elist[item[1]] = self.EncodingStore.append([item[1], item[0]])
-            if self.encoding == item[1]:
-                self.Encoding.set_active_iter(self.Elist[self.encoding])
-
         if self.frame.SEXY and self.frame.np.config.sections["ui"]["spellcheck"]:
             import sexy
             self.hbox5.remove(self.ChatLine)
@@ -625,13 +603,13 @@ class PrivateChat:
         if bytestring:
             payload = text
         else:
-            payload = ToBeEncoded(self.frame.AutoReplace(text), self.encoding)
+            payload = self.frame.AutoReplace(text)
 
         if self.PeerPrivateMessages.get_active():
             # not in the soulseek protocol
-            self.frame.np.ProcessRequestToPeer(self.user, slskmessages.PMessageUser(None, my_username, payload))
+            self.frame.np.ProcessRequestToPeer(self.user, slskmessages.PMessageUser(None, my_username, text))
         else:
-            self.frame.np.queue.put(slskmessages.MessageUser(self.user, payload))
+            self.frame.np.queue.put(slskmessages.MessageUser(self.user, text))
 
     def threadAlias(self, alias):
 
@@ -643,7 +621,7 @@ class PrivateChat:
         if text[:2] == "//":
             text = text[1:]
 
-        self.frame.np.queue.put(slskmessages.MessageUser(self.user, ToBeEncoded(self.frame.AutoReplace(text), self.encoding)))
+        self.frame.np.queue.put(slskmessages.MessageUser(self.user, self.frame.AutoReplace(text)))
 
     def OnEnter(self, widget):
 
@@ -1072,11 +1050,3 @@ class PrivateChat:
         widget.emit_stop_by_name("key_press_event")
 
         return True
-
-    def OnEncodingChanged(self, widget):
-
-        encoding = self.Encoding.get_model().get(self.Encoding.get_active_iter(), 0)[0]
-
-        if encoding != self.encoding:
-            self.encoding = encoding
-            SaveEncoding(self.frame.np, "userencoding", self.user, self.encoding)

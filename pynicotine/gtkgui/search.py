@@ -383,7 +383,6 @@ class Searches(IconNotebook):
         if search[2] is not None:
             self.set_current_page(self.page_num(search[2].Main))
 
-        # text = self.frame.np.encode(text)
         if mode == 0:
             self.DoGlobalSearch(self.searchid, text)
         elif mode == 1:
@@ -880,8 +879,6 @@ class Search:
         else:
             imdl = "N"
 
-        decode = self.frame.np.decode  # noqa: F841
-
         for result in msg.list:
 
             name = result[1].split('\\')[-1]
@@ -999,8 +996,6 @@ class Search:
 
         counter = len(self.all_data) + 1
 
-        encode = self.frame.np.encodeuser
-
         for r in results:
 
             user, filename, size, speed, queue, immediatedl, h_bitrate, length, directory, bitrate, fullpath, country, status = r
@@ -1035,8 +1030,8 @@ class Search:
             if (counter <= self.frame.np.config.sections['searches']["max_displayed_results"]) and (not self.filters or self.check_filter(row)):
 
                 encoded_row = [
-                    counter, user, encode(filename, user), h_size, h_speed, h_queue, immediatedl, h_bitrate, length,
-                    self.get_flag(user, country), encode(directory, user), bitrate, encode(fullpath, user), country, size, speed, queue, status
+                    counter, user, filename, h_size, h_speed, h_queue, immediatedl, h_bitrate, length,
+                    self.get_flag(user, country), directory, bitrate, fullpath, country, size, speed, queue, status
                 ]
 
                 gobject.idle_add(self._add_to_model, user, encoded_row)
@@ -1199,11 +1194,6 @@ class Search:
 
     def set_filters(self, enable, f_in, f_out, size, bitrate, freeslot, country):
 
-        if self.frame.np.transfers is None:
-            encode = self.frame.np.encode
-        else:
-            encode = self.frame.np.transfers.encode
-
         self.filters = [None, None, None, None, freeslot, None]
 
         if f_in:
@@ -1253,8 +1243,8 @@ class Search:
                     )
 
                 encoded_row = [
-                    ix, user, encode(filename, user), h_size, h_speed, h_queue, immediatedl, h_bitrate, length,
-                    self.get_flag(user, country), encode(directory, user), bitrate, encode(fullpath, user), country, size, speed, queue, status
+                    ix, user, filename, h_size, h_speed, h_queue, immediatedl, h_bitrate, length,
+                    self.get_flag(user, country), directory, bitrate, fullpath, country, size, speed, queue, status
                 ]
 
                 try:

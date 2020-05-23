@@ -39,7 +39,6 @@ from gi.repository import GObject as gobject
 from _thread import start_new_thread
 from pynicotine.logfacility import log
 from pynicotine.pynicotine import slskmessages
-from pynicotine.slskmessages import ToBeEncoded
 
 gi.require_version('Gtk', '3.0')
 
@@ -426,7 +425,7 @@ class PluginHandler(object):
 
     def saychatroom(self, room, text):
         text = cast_to_unicode_if_needed(text, log.addwarning)
-        self.frame.np.queue.put(slskmessages.SayChatroom(room, ToBeEncoded(text, 'UTF-8')))
+        self.frame.np.queue.put(slskmessages.SayChatroom(room, text))
 
     def sayprivate(self, user, text):
         '''Send user message in private (showing up in GUI)'''
@@ -576,7 +575,7 @@ class BasePlugin(object):
         except KeyError:
             return False
         text = cast_to_unicode_if_needed(text, self.log)
-        msg = slskmessages.SayChatroom(room, ToBeEncoded(text, 'UTF-8'))
+        msg = slskmessages.SayChatroom(room, text)
         msg.user = user
         room.SayChatRoom(msg, text)
         return True

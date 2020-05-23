@@ -89,69 +89,6 @@ class NetworkLongLongType(NetworkBaseType):
     pass
 
 
-class ToBeEncoded:
-    """Holds text and the desired eventual encoding"""
-    def __init__(self, uni, encoding):
-        if not isinstance(uni, str):
-            raise ValueError("ZOMG, you really don't know what you're doing! %s is NOT unicode, its a %s: %s" % (uni, type(uni), repr(uni)))
-        self.str = uni
-        self.encoding = encoding
-        self.cached = None
-
-    def getbytes(self):
-        if self.cached:
-            return self.cached
-        self.cached = self.str.encode(self.encoding, "replace")
-        # print "The bytes of %s are %s" % (self.unicode, repr(self.cached))
-        return self.cached
-
-    def dont(self):
-        print("Dont do that")
-    bytes = property(getbytes, dont)
-
-    def __getitem__(self, key):
-        return self.str[key]
-
-    def __str__(self):
-        return "%s" % (self.getbytes(),)
-
-    def __repr__(self):
-        return "ToBeEncoded(%s, %s)" % (repr(self.getbytes()), self.encoding)
-
-
-class JustDecoded:
-    """Holds text, the original bytes and its supposed encoding"""
-    def __init__(self, bytes, encoding):
-        if not isinstance(bytes, str):
-            raise ValueError("ZOMG, you really don't know what you're doing! %s is NOT string, its a %s: %s" % (bytes, type(bytes), repr(bytes)))
-        self.bytes = bytes
-        self.encoding = encoding
-        self.cached = None
-        self.modified = False
-
-    def getunicode(self):
-        if self.cached:
-            return self.cached
-        self.cached = self.bytes.decode(self.encoding, "replace")
-        return self.cached
-
-    def setunicode(self, uni):
-        if not isinstance(uni, str):
-            print("ZOMG, you really don't know what you're doing! %s is NOT unicode, its a %s: %s" % (uni, type(uni), repr(bytes)))
-            raise Exception
-        self.cached = uni
-    str = property(getunicode, setunicode)
-
-    def __getitem__(self, key):
-        return self.str[key]
-
-    def __str__(self):
-        return "%s" % (self.getbytes(),)
-
-    def __repr__(self):
-        return "ToBeEncoded(%s, %s)" % (repr(self.getbytes()), self.encoding)
-
-
 class InternalMessage:
     pass
 
@@ -356,9 +293,6 @@ class SlskMessage:
                 return struct.pack("<Q", object)
         elif type(object) is bytes:
             return struct.pack("<i", len(object)) + object
-        elif type(object) is ToBeEncoded:
-            # The server seems to cut off strings at \x00 regardless of the length
-            return struct.pack("<i", len(object.bytes)) + object.bytes
         elif type(object) is str:
             encoded = object.encode("utf-8", 'replace')
             return struct.pack("<i", len(encoded)) + encoded
@@ -1692,7 +1626,7 @@ class UserInfoReply(PeerMessage):
         self.uploadallowed = uploadallowed
 
     def parseNetworkMessage(self, message):
-        pos, self.descr = self.getObject(message, bytes, 0, 0, 0, True, True)
+        pos, self.descr = self.getObject(message, bytes)
         pos, self.has_pic = pos + 1, message[pos]
         if self.has_pic:
             pos, self.pic = self.getObject(message, bytes, pos, 0, 0, True, True)

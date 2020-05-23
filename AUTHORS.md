@@ -2,10 +2,6 @@
 
 ### Active
 
-Michael Labouebe (aka gfarmerfr)
-- Developer
-- [gfarmerfr(at)free(dot)fr]
-
 Mutnick
 - Created Nicotine+ GitHub Organization
 - Developer
@@ -19,6 +15,14 @@ eLvErDe
 Kip Warner
 - Debianization
 - [kip(at)thevertigo(dot)com]
+
+Lene Preuss
+- Python3 migration
+- [lene.preuss(at)here(dot)com]
+
+mathiascode
+- Developer
+- [mail(at)mathias(dot)is]
 
 ### Retired
 
@@ -57,6 +61,10 @@ osiris
 - handy-man, documentation, some GNU/Linux packaging, Nicotine+ on win32
 - Author of Nicotine+ Guide
 - [osiris.contact(at)gmail(dot)com]
+
+Michael Labouebe (aka gfarmerfr)
+- Developer
+- [gfarmerfr(at)free(dot)fr]
 
 ---
 

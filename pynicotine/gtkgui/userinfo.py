@@ -34,12 +34,10 @@ from gi.repository import Gtk as gtk
 
 from pynicotine import slskmessages
 from pynicotine.gtkgui.utils import AppendLine
-from pynicotine.gtkgui.utils import EncodingsMenu
 from pynicotine.gtkgui.utils import Humanize
 from pynicotine.gtkgui.utils import IconNotebook
 from pynicotine.gtkgui.utils import InitialiseColumns
 from pynicotine.gtkgui.utils import PopupMenu
-from pynicotine.gtkgui.utils import SaveEncoding
 from pynicotine.logfacility import log
 from pynicotine.utils import CleanFile
 
@@ -260,25 +258,6 @@ class UserInfo:
         cols[0].set_sort_column_id(0)
         self.likesStore.set_sort_column_id(0, gtk.SortType.ASCENDING)
 
-        # Encoding Combobox
-        self.Elist = {}
-        self.encoding, m = EncodingsMenu(self.frame.np, "userencoding", user)
-        self.EncodingStore = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
-        self.Encoding.set_model(self.EncodingStore)
-
-        cell = gtk.CellRendererText()
-        self.Encoding.pack_start(cell, True)
-        self.Encoding.add_attribute(cell, 'text', 0)
-
-        cell2 = gtk.CellRendererText()
-        self.Encoding.pack_start(cell2, False)
-        self.Encoding.add_attribute(cell2, 'text', 1)
-
-        for item in m:
-            self.Elist[item[1]] = self.EncodingStore.append([item[1], item[0]])
-            if self.encoding == item[1]:
-                self.Encoding.set_active_iter(self.Elist[self.encoding])
-
         self.tag_local = self.makecolour("chatremote")  # noqa: F821
         self.ChangeColours()
 
@@ -447,7 +426,7 @@ class UserInfo:
         self.image_pixbuf = None
         self.descr.get_buffer().set_text("")
 
-        AppendLine(self.descr, descr.decode(self.encoding), self.tag_local, showstamp=False, scroll=False)
+        AppendLine(self.descr, descr, self.tag_local, showstamp=False, scroll=False)
 
         self.uploads.set_text(_("Total uploads allowed: %i") % totalupl)
         self.queuesize.set_text(_("Queue size: %i") % queuesize)
@@ -561,16 +540,6 @@ class UserInfo:
             log.add(_("Picture saved to %s") % pathname)
         else:
             log.add(_("Picture not saved, %s already exists.") % pathname)
-
-    def OnEncodingChanged(self, widget):
-
-        encoding = self.Encoding.get_model().get(self.Encoding.get_active_iter(), 0)[0]
-
-        if encoding != self.encoding:
-            self.encoding = encoding
-            buffer = self.descr.get_buffer()
-            buffer.set_text(self._descr.decode(self.encoding))
-            SaveEncoding(self.frame.np, "userencoding", self.user, self.encoding)
 
     def OnImageClick(self, widget, event):
 

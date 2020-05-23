@@ -37,24 +37,20 @@ from gi.repository import Pango as pango
 from pynicotine import slskmessages
 from pynicotine.gtkgui.entrydialog import input_box
 from pynicotine.gtkgui.utils import AppendLine
-from pynicotine.gtkgui.utils import EncodingsMenu
 from pynicotine.gtkgui.utils import Humanize
 from pynicotine.gtkgui.utils import HumanSpeed
 from pynicotine.gtkgui.utils import IconNotebook
 from pynicotine.gtkgui.utils import InitialiseColumns
 from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.gtkgui.utils import PressHeader
-from pynicotine.gtkgui.utils import SaveEncoding
 from pynicotine.gtkgui.utils import WriteLog
 from pynicotine.gtkgui.utils import expand_alias
 from pynicotine.gtkgui.utils import fixpath
 from pynicotine.gtkgui.utils import is_alias
 from pynicotine.gtkgui.utils import showCountryTooltip
 from pynicotine.logfacility import log
-from pynicotine.slskmessages import ToBeEncoded
 from pynicotine.utils import cmp
 from pynicotine.utils import debug
-from pynicotine.utils import findBestEncoding
 
 gi.require_version('Gtk', '3.0')
 gi.require_version('Gdk', '3.0')
@@ -954,25 +950,6 @@ class ChatRoom:
 
         self.clist = []
 
-        # Encoding Combobox
-        self.Elist = {}
-        self.encoding, m = EncodingsMenu(self.frame.np, "roomencoding", room)
-        self.EncodingStore = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
-        self.Encoding.set_model(self.EncodingStore)
-
-        cell = gtk.CellRendererText()
-        self.Encoding.pack_start(cell, True)
-        self.Encoding.add_attribute(cell, 'text', 0)
-
-        cell2 = gtk.CellRendererText()
-        self.Encoding.pack_start(cell2, False)
-        self.Encoding.add_attribute(cell2, 'text', 1)
-
-        for item in m:
-            self.Elist[item[1]] = self.EncodingStore.append([item[1], item[0]])
-            if self.encoding == item[1]:
-                self.Encoding.set_active_iter(self.Elist[self.encoding])
-
         self.Ticker.entry.connect("button_press_event", self.OnTickerClicked)
         self.Ticker.entry.connect("focus-in-event", self.OnTickerFocus)
         self.Ticker.entry.connect("focus-out-event", self.OnTickerFocus)
@@ -1184,12 +1161,6 @@ class ChatRoom:
             roomlines = 15
 
         try:
-            encodings = ['UTF-8']  # New style logging, always in UTF-8
-            try:
-                encodings.append(config["server"]["roomencoding"][self.room])  # Old style logging, room dependent
-            except KeyError:
-                pass
-
             f = open(log, "r")
             logfile = f.read()
             f.close()
@@ -1197,7 +1168,7 @@ class ChatRoom:
 
             for bytes in loglines[-roomlines:-1]:
 
-                l = findBestEncoding(bytes, encodings)  # noqa: E741
+                l = bytes
 
                 # Try to parse line for username
                 if len(l) > 20 and l[10].isspace() and l[11].isdigit() and l[20] in ("[", "*"):
@@ -1206,7 +1177,6 @@ class ChatRoom:
                     if l[20] == "[" and l[20:].find("] ") != -1:
                         namepos = l[20:].find("] ")
                         user = l[21:20 + namepos].strip()
-                        user = user.encode('UTF-8')  # this could go screwy! But there's no other way without logging raw bytes in the log file
                         self.getUserTag(user)
                         usertag = self.tag_users[user]
                     else:
@@ -1530,7 +1500,7 @@ class ChatRoom:
         if text[:2] == "//":
             text = text[1:]
 
-        self.frame.np.queue.put(slskmessages.SayChatroom(self.room, ToBeEncoded(self.frame.AutoReplace(text), self.encoding)))
+        self.frame.np.queue.put(slskmessages.SayChatroom(self.room, self.frame.AutoReplace(text)))
 
     def OnEnter(self, widget):
 
@@ -1690,7 +1660,7 @@ class ChatRoom:
                 self.frame.OnBuddyRescan()
 
         elif cmd in ["/tick", "/t"]:
-            self.frame.np.queue.put(slskmessages.RoomTickerSet(self.room, ToBeEncoded(args, self.encoding)))
+            self.frame.np.queue.put(slskmessages.RoomTickerSet(self.room, args))
 
         elif cmd in ("/tickers",):
             self.showTickers()
@@ -1730,8 +1700,7 @@ class ChatRoom:
 
     def Say(self, text):
         text = re.sub("\\s\\s+", "  ", text)
-        tobeencoded = ToBeEncoded(text, self.encoding)
-        self.frame.np.queue.put(slskmessages.SayChatroom(self.room, tobeencoded))
+        self.frame.np.queue.put(slskmessages.SayChatroom(self.room, text))
 
     def NowPlayingThread(self):
         self.frame.now.DisplayNowPlaying(None, test=0, callback=self.Say)
@@ -2183,8 +2152,6 @@ class ChatRoom:
 
         # no duplicates
         def _combilower(x):
-            if not isinstance(x, str):
-                x = x.decode('utf-8')
             try:
                 return x.lower()
             except Exception:
@@ -2197,8 +2164,6 @@ class ChatRoom:
 
         if config["dropdown"]:
             for word in clist:
-                if not isinstance(word, str):
-                    word = word.decode('utf-8')
                 liststore.append([word])
 
             completion.set_popup_completion(True)
@@ -2296,14 +2261,6 @@ class ChatRoom:
         elif widget.get_active():
             if self.room not in self.frame.np.config.sections["logging"]["rooms"]:
                 self.frame.np.config.sections["logging"]["rooms"].append(self.room)
-
-    def OnEncodingChanged(self, widget):
-
-        encoding = self.Encoding.get_model().get(self.Encoding.get_active_iter(), 0)[0]
-
-        if encoding != self.encoding:
-            self.encoding = encoding
-            SaveEncoding(self.frame.np, "roomencoding", self.room, self.encoding)
 
     def OnPopupChatRoomMenu(self, widget, event):
 
@@ -2409,7 +2366,7 @@ class ChatRoom:
 
                 self.frame.np.config.writeConfiguration()
 
-            self.frame.np.queue.put(slskmessages.RoomTickerSet(self.room, ToBeEncoded(result, self.encoding)))
+            self.frame.np.queue.put(slskmessages.RoomTickerSet(self.room, result))
 
         return True
 
