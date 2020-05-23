@@ -30,6 +30,7 @@ from gettext import gettext as _
 
 import gi
 from gi.repository import Gdk
+from gi.repository import GdkPixbuf
 from gi.repository import Gio as gio
 from gi.repository import GObject as gobject
 from gi.repository import Gtk as gtk
@@ -1196,9 +1197,32 @@ class UserinfoFrame(buildFrame):
         self.options = {
             "userinfo": {
                 "descr": None,
-                "pic": self.Image
+                "pic": self.ImageChooser
             }
         }
+        
+        def UpdateImagePreview(chooser):
+            path = chooser.get_preview_filename()
+
+            try:
+                pixbuf = GdkPixbuf.Pixbuf.new_from_file(path)
+                
+                maxwidth, maxheight = 300.0, 700.0
+                width, height = pixbuf.get_width(), pixbuf.get_height()
+                scale = min(maxwidth / width, maxheight / height)
+
+                if scale < 1:
+                    width, height = int(width * scale), int(height * scale)
+                    pixbuf = pixbuf.scale_simple(width, height, GdkPixbuf.InterpType.BILINEAR)
+
+                preview.set_from_pixbuf(pixbuf)
+                chooser.set_preview_widget_active(True)
+            except Exception:
+                chooser.set_preview_widget_active(False)
+        
+        preview = gtk.Image()
+        self.ImageChooser.set_preview_widget(preview)
+        self.ImageChooser.connect('update-preview', UpdateImagePreview)
 
     def SetSettings(self, config):
 
@@ -1211,7 +1235,7 @@ class UserinfoFrame(buildFrame):
             self.Description.get_buffer().set_text(descr)
 
         if userinfo["pic"]:
-            self.Image.set_filename(userinfo["pic"])
+            self.ImageChooser.set_filename(userinfo["pic"])
 
     def GetSettings(self):
 
@@ -1222,8 +1246,8 @@ class UserinfoFrame(buildFrame):
 
         descr = buffer.get_text(start, end, True).replace("; ", ", ").__repr__()
 
-        if self.Image.get_filename() is not None:
-            pic = recode2(self.Image.get_filename())
+        if self.ImageChooser.get_filename() is not None:
+            pic = recode2(self.ImageChooser.get_filename())
         else:
             pic = ""
 
@@ -1235,7 +1259,7 @@ class UserinfoFrame(buildFrame):
         }
 
     def OnDefaultImage(self, widget):
-        self.Image.unselect_all()
+        self.ImageChooser.unselect_all()
 
 
 class IgnoreFrame(buildFrame):
