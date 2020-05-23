@@ -1162,10 +1162,12 @@ class Search:
         if not self.filtersCheck.get_active():
             return True
 
-        if filters[0] and not filters[0].search(row[2].lower()):
+        # "Included text"-filter, check full file path (located at index 11 in row)
+        if filters[0] and not filters[0].search(row[11].lower()):
             return False
 
-        if filters[1] and filters[1].search(row[2].lower()):
+        # "Excluded text"-filter, check full file path (located at index 11 in row)
+        if filters[1] and filters[1].search(row[11].lower()):
             return False
 
         if filters[2] and not self.checkDigit(filters[2], row[13]):
