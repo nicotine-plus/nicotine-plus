@@ -282,10 +282,6 @@ class UserInfo:
         self.tag_local = self.makecolour("chatremote")  # noqa: F821
         self.ChangeColours()
 
-        self.InterestsExpander.connect("activate", self.ExpanderStatus)
-        self.InformationExpander.connect("activate", self.ExpanderStatus)
-        self.DescriptionExpander.connect("activate", self.ExpanderStatus)
-
         self.likes_popup_menu = popup = PopupMenu(self)
         popup.setup(
             ("$" + _("I _like this"), self.frame.OnLikeRecommendation),

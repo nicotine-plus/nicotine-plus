@@ -992,8 +992,6 @@ class NicotineFrame:
         popup.attach_to_widget(self.UnrecommendationsList, None)
 
         self.UnrecommendationsList.connect("button_press_event", self.OnPopupUnRecMenu)
-        self.RecommendationsExpander.connect("activate", self.RecommendationsExpanderStatus)
-        self.UnrecommendationsExpander.connect("activate", self.RecommendationsExpanderStatus)
 
         statusiconwidth = self.images["offline"].get_width() + 4
 
