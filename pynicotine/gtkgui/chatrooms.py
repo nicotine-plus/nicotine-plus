@@ -51,7 +51,6 @@ from pynicotine.gtkgui.utils import showCountryTooltip
 from pynicotine.logfacility import log
 from pynicotine.utils import cmp
 from pynicotine.utils import debug
-from pynicotine.utils import findBestEncoding
 
 gi.require_version('Gtk', '3.0')
 gi.require_version('Gdk', '3.0')
@@ -1162,8 +1161,6 @@ class ChatRoom:
             roomlines = 15
 
         try:
-            encodings = ['UTF-8']  # New style logging, always in UTF-8
-
             f = open(log, "r")
             logfile = f.read()
             f.close()
@@ -1171,7 +1168,7 @@ class ChatRoom:
 
             for bytes in loglines[-roomlines:-1]:
 
-                l = findBestEncoding(bytes, encodings)  # noqa: E741
+                l = bytes
 
                 # Try to parse line for username
                 if len(l) > 20 and l[10].isspace() and l[11].isdigit() and l[20] in ("[", "*"):
@@ -1180,7 +1177,6 @@ class ChatRoom:
                     if l[20] == "[" and l[20:].find("] ") != -1:
                         namepos = l[20:].find("] ")
                         user = l[21:20 + namepos].strip()
-                        user = user.encode('UTF-8')  # this could go screwy! But there's no other way without logging raw bytes in the log file
                         self.getUserTag(user)
                         usertag = self.tag_users[user]
                     else:

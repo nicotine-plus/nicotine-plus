@@ -45,7 +45,6 @@ from pynicotine.config import Config
 from pynicotine.ConfigParser import Error as ConfigParserError
 from pynicotine.shares import Shares
 from pynicotine.slskmessages import PopupMessage
-from pynicotine.slskmessages import ToBeEncoded
 from pynicotine.slskmessages import newId
 from pynicotine.utils import CleanFile
 from pynicotine.utils import findBestEncoding
@@ -697,9 +696,6 @@ class NetworkEventProcessor:
 
     def MessageUser(self, msg):
 
-        encodings = [self.config.sections["server"]["enc"]] + self.config.sections["server"]["fallbackencodings"]
-
-        msg.msg = findBestEncoding(msg.msg, encodings)
         status = 0
         if self.logintime:
             if time.time() <= self.logintime + 2:
@@ -728,8 +724,6 @@ class NetworkEventProcessor:
 
     def PublicRoomMessage(self, msg):
 
-        msg.msg = findBestEncoding(msg.msg, [self.config.sections["server"]["enc"]] + self.config.sections["server"]["fallbackencodings"])
-
         if self.chatrooms is not None:
             self.chatrooms.roomsctrl.PublicRoomMessage(msg, msg.msg)
             self.frame.pluginhandler.PublicRoomMessageNotification(msg.room, msg.user, msg.msg)
@@ -749,8 +743,7 @@ class NetworkEventProcessor:
                 ticker = self.config.sections["ticker"]["default"]
 
             if ticker:
-                encoding = self.config.sections["server"]["enc"]
-                self.queue.put(slskmessages.RoomTickerSet(msg.room, ToBeEncoded(ticker, encoding)))
+                self.queue.put(slskmessages.RoomTickerSet(msg.room, ticker))
 
         self.logMessage("%s %s" % (msg.__class__, vars(msg)), 4)
 
@@ -876,9 +869,6 @@ class NetworkEventProcessor:
         return False
 
     def SayChatRoom(self, msg):
-        encodings = [self.config.sections["server"]["enc"]] + self.config.sections["server"]["fallbackencodings"]
-
-        msg.msg = findBestEncoding(msg.msg, encodings)
 
         if self.chatrooms is not None:
             event = self.frame.pluginhandler.IncomingPublicChatEvent(msg.room, msg.user, msg.msg)
@@ -1823,9 +1813,6 @@ class NetworkEventProcessor:
 
     def RoomTickerAdd(self, msg):
 
-        encodings = [self.config.sections["server"]["enc"]] + self.config.sections["server"]["fallbackencodings"]
-
-        msg.msg = findBestEncoding(msg.msg, encodings)
         if self.chatrooms is not None:
             self.chatrooms.roomsctrl.TickerAdd(msg)
 

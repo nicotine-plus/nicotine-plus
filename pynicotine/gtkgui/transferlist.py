@@ -466,7 +466,7 @@ class TransferList:
 
         fn = transfer.filename
         user = transfer.user
-        shortfn = self.frame.np.transfers.encode(fn.split("\\")[-1], user)
+        shortfn = fn.split("\\")[-1]
         currentbytes = transfer.currentbytes
         place = transfer.place
 

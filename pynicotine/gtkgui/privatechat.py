@@ -40,7 +40,6 @@ from pynicotine.gtkgui.utils import expand_alias
 from pynicotine.gtkgui.utils import fixpath
 from pynicotine.gtkgui.utils import is_alias
 from pynicotine.logfacility import log
-from pynicotine.slskmessages import ToBeEncoded
 from pynicotine.utils import version
 
 gi.require_version('Gtk', '3.0')
