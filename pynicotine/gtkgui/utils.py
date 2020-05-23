@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 #
-# COPYRIGHT (C) 2020 Mathias <mail@mathias.is>
 # COPYRIGHT (C) 2020 Lene Preuss <lene.preuss@gmail.com>
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2016 Mutnick <muhing@yahoo.com>
