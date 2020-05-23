@@ -87,7 +87,7 @@ class buildFrame:
 
 class ServerFrame(buildFrame):
 
-    def __init__(self, parent):
+    def __init__(self, parents):
 
         self.p = parent
 

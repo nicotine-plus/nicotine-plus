@@ -1799,13 +1799,6 @@ class NetworkEventProcessor:
 
     def RoomTickerState(self, msg):
 
-        encodings = [self.config.sections["server"]["enc"]] + self.config.sections["server"]["fallbackencodings"]
-
-        unicodes = {}
-        for user, bytes in msg.msgs.items():
-            unicodes[user] = findBestEncoding(bytes, encodings)
-
-        msg.msgs = unicodes
         if self.chatrooms is not None:
             self.chatrooms.roomsctrl.TickerSet(msg)
 
