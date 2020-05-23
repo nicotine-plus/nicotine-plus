@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 #
+# COPYRIGHT (C) 2020 Mathias <mail@mathias.is>
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2016 Mutnick <muhing@yahoo.com>
 # COPYRIGHT (C) 2008-2011 Quinox <quinox@users.sf.net>
@@ -2152,8 +2153,6 @@ class ChatRoom:
 
         # no duplicates
         def _combilower(x):
-            if not isinstance(x, str):
-                x = x.decode('utf-8')
             try:
                 return x.lower()
             except Exception:
@@ -2166,8 +2165,6 @@ class ChatRoom:
 
         if config["dropdown"]:
             for word in clist:
-                if not isinstance(word, str):
-                    word = word.decode('utf-8')
                 liststore.append([word])
 
             completion.set_popup_completion(True)

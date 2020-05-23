@@ -141,8 +141,7 @@ if __name__ == '__main__':
         version=version,
         license="GPLv3",
         description="Nicotine+, a client for the SoulSeek filesharing network.",
-        author="Michael Labouebe",
-        author_email="gfarmerfr@free.fr",
+        author="Nicotine+ Contributors",
         url="https://www.nicotine-plus.org/",
         packages=[
             'pynicotine', 'pynicotine.gtkgui', 'pynicotine.gtkgui.ui',

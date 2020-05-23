@@ -56,12 +56,9 @@ def _str(arg: Union[bytes, str]) -> str:
     Until we figure out the best way to convert between protocol messages, which
     are in bytes, and strings, use this function explicitly
     """
-    print("hit")
     if isinstance(arg, bytes):
-        print("bytes")
         return arg.decode('utf-8')
     elif isinstance(arg, str):
-        print("str")
         return arg
     return arg
 
