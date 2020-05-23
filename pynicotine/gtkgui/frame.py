@@ -1770,7 +1770,8 @@ class NicotineFrame:
         self.downloads.InitInterface(self.np.transfers.downloads)
         gobject.idle_add(self.FetchUserListStatus)
 
-        AppendLine(self.LogWindow, self.np.decode(msg.banner), self.tag_log)
+        if msg.banner != "":
+            AppendLine(self.LogWindow, msg.banner, self.tag_log)
 
         return self.privatechats, self.chatrooms, self.userinfo, self.userbrowse, self.Searches, self.downloads, self.uploads, self.userlist
 
