@@ -2784,7 +2784,7 @@ class NicotineFrame:
             except Exception:
                 pic = None
 
-            descr = self.np.encode(eval(self.np.config.sections["userinfo"]["descr"], {}))
+            descr = self.np.config.sections["userinfo"]["descr"]
 
             if self.np.transfers is not None:
 
@@ -3038,7 +3038,7 @@ class NicotineFrame:
             self.np.config.sections["interests"]["likes"].append(thing)
             self.likes[thing] = self.likeslist.append([thing])
             self.np.config.writeConfiguration()
-            self.np.queue.put(slskmessages.AddThingILike(self.np.encode(thing)))
+            self.np.queue.put(slskmessages.AddThingILike(thing))
 
     def OnAddThingIDislike(self, widget):
         thing = utils.InputDialog(self.MainWindow, _("Add thing I don't like"), _("I don't like") + ":")
@@ -3047,19 +3047,17 @@ class NicotineFrame:
             self.np.config.sections["interests"]["dislikes"].append(thing)
             self.dislikes[thing] = self.dislikeslist.append([thing])
             self.np.config.writeConfiguration()
-            self.np.queue.put(slskmessages.AddThingIHate(self.np.encode(thing)))
+            self.np.queue.put(slskmessages.AddThingIHate(thing))
 
     def SetRecommendations(self, title, recom):
         self.recommendationslist.clear()
         for (thing, rating) in recom.items():
-            thing = self.np.decode(thing)
             self.recommendationslist.append([thing, Humanize(rating), rating])
         self.recommendationslist.set_sort_column_id(2, gtk.SortType.DESCENDING)
 
     def SetUnrecommendations(self, title, recom):
         self.unrecommendationslist.clear()
         for (thing, rating) in recom.items():
-            thing = self.np.decode(thing)
             self.unrecommendationslist.append([thing, Humanize(rating), rating])
         self.unrecommendationslist.set_sort_column_id(2, gtk.SortType.ASCENDING)
 
@@ -3137,12 +3135,12 @@ class NicotineFrame:
         del self.likes[thing]
         self.np.config.sections["interests"]["likes"].remove(thing)
         self.np.config.writeConfiguration()
-        self.np.queue.put(slskmessages.RemoveThingILike(self.np.encode(thing)))
+        self.np.queue.put(slskmessages.RemoveThingILike(thing))
 
     def OnRecommendItem(self, widget):
         thing = self.til_popup_menu.get_user()
-        self.np.queue.put(slskmessages.ItemRecommendations(self.np.encode(thing)))
-        self.np.queue.put(slskmessages.ItemSimilarUsers(self.np.encode(thing)))
+        self.np.queue.put(slskmessages.ItemRecommendations(thing))
+        self.np.queue.put(slskmessages.ItemSimilarUsers(thing))
 
     def OnPopupTILMenu(self, widget, event):
         if event.button != 3:
@@ -3164,7 +3162,7 @@ class NicotineFrame:
         del self.dislikes[thing]
         self.np.config.sections["interests"]["dislikes"].remove(thing)
         self.np.config.writeConfiguration()
-        self.np.queue.put(slskmessages.RemoveThingIHate(self.np.encode(thing)))
+        self.np.queue.put(slskmessages.RemoveThingIHate(thing))
 
     def OnPopupTIDLMenu(self, widget, event):
         if event.button != 3:
@@ -3184,13 +3182,13 @@ class NicotineFrame:
             self.np.config.sections["interests"]["likes"].append(thing)
             self.likes[thing] = self.likeslist.append([thing])
             self.np.config.writeConfiguration()
-            self.np.queue.put(slskmessages.AddThingILike(self.np.encode(thing)))
+            self.np.queue.put(slskmessages.AddThingILike(thing))
         elif not widget.get_active() and thing in self.np.config.sections["interests"]["likes"]:
             self.likeslist.remove(self.likes[thing])
             del self.likes[thing]
             self.np.config.sections["interests"]["likes"].remove(thing)
             self.np.config.writeConfiguration()
-            self.np.queue.put(slskmessages.RemoveThingILike(self.np.encode(thing)))
+            self.np.queue.put(slskmessages.RemoveThingILike(thing))
 
     def OnDislikeRecommendation(self, widget):
         thing = widget.get_parent().get_user()
@@ -3198,18 +3196,18 @@ class NicotineFrame:
             self.np.config.sections["interests"]["dislikes"].append(thing)
             self.dislikes[thing] = self.dislikeslist.append([thing])
             self.np.config.writeConfiguration()
-            self.np.queue.put(slskmessages.AddThingIHate(self.np.encode(thing)))
+            self.np.queue.put(slskmessages.AddThingIHate(thing))
         elif not widget.get_active() and thing in self.np.config.sections["interests"]["dislikes"]:
             self.dislikeslist.remove(self.dislikes[thing])
             del self.dislikes[thing]
             self.np.config.sections["interests"]["dislikes"].remove(thing)
             self.np.config.writeConfiguration()
-            self.np.queue.put(slskmessages.RemoveThingIHate(self.np.encode(thing)))
+            self.np.queue.put(slskmessages.RemoveThingIHate(thing))
 
     def OnRecommendRecommendation(self, widget):
         thing = self.r_popup_menu.get_user()
-        self.np.queue.put(slskmessages.ItemRecommendations(self.np.encode(thing)))
-        self.np.queue.put(slskmessages.ItemSimilarUsers(self.np.encode(thing)))
+        self.np.queue.put(slskmessages.ItemRecommendations(thing))
+        self.np.queue.put(slskmessages.ItemSimilarUsers(thing))
 
     def OnRecommendSearch(self, widget):
         thing = widget.get_parent().get_user()

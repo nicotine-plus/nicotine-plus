@@ -87,32 +87,17 @@ class buildFrame:
 
 class ServerFrame(buildFrame):
 
-    def __init__(self, parent, encodings):
+    def __init__(self, parent):
 
         self.p = parent
 
         buildFrame.__init__(self, "ServerFrame")
-
-        self.EncodingStore = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
-        self.Encoding.set_model(self.EncodingStore)
-
-        cell = gtk.CellRendererText()
-        self.Encoding.pack_start(cell, True)
-        self.Encoding.add_attribute(cell, 'text', 0)
-
-        cell2 = gtk.CellRendererText()
-        self.Encoding.pack_start(cell2, False)
-        self.Encoding.add_attribute(cell2, 'text', 1)
-
-        for item in encodings:
-            self.EncodingStore.append([item[1], item[0]])
 
         self.options = {
             "server": {
                 "server": None,
                 "login": self.Login,
                 "passw": self.Password,
-                "enc": self.Encoding,
                 "portrange": None,
                 "firewalled": self.DirectConnection,
                 "upnp": self.UseUPnP,
@@ -228,7 +213,6 @@ class ServerFrame(buildFrame):
                 "server": server,
                 "login": self.Login.get_text(),
                 "passw": self.Password.get_text(),
-                "enc": self.Encoding.get_model().get(self.Encoding.get_active_iter(), 0)[0],
                 "portrange": portrange,
                 "firewalled": firewalled,
                 "upnp": self.UseUPnP.get_active(),
@@ -3427,7 +3411,7 @@ class SettingsWindow:
         self.tree["User info"] = model.append(row, [_("User info"), "User info"])
 
         # Build individual categories
-        p["Server"] = ServerFrame(self, frame.np.getencodings())
+        p["Server"] = ServerFrame(self)
         p["Shares"] = SharesFrame(self)
 
         p["Transfers"] = TransfersFrame(self)

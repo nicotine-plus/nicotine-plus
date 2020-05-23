@@ -102,7 +102,7 @@ class ToBeEncoded:
         if self.cached:
             return self.cached
         self.cached = self.str.encode(self.encoding, "replace")
-        # print "The bytes of %s are %s" % (self.unicode, repr(self.cached))
+        # print("The bytes of %s are %s" % (self.unicode, repr(self.cached)))
         return self.cached
 
     def dont(self):
@@ -1692,7 +1692,7 @@ class UserInfoReply(PeerMessage):
         self.uploadallowed = uploadallowed
 
     def parseNetworkMessage(self, message):
-        pos, self.descr = self.getObject(message, bytes, 0, 0, 0, True, True)
+        pos, self.descr = self.getObject(message, bytes)
         pos, self.has_pic = pos + 1, message[pos]
         if self.has_pic:
             pos, self.pic = self.getObject(message, bytes, pos, 0, 0, True, True)

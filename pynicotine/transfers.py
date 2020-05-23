@@ -308,7 +308,7 @@ class Transfers:
                 self.eventprocessor.logTransfer(
                     _("Retrying failed download: user %(user)s, file %(file)s") % {
                         'user': i.user,
-                        'file': self.decode(i.filename)
+                        'file': i.filename
                     },
                     1
                 )
@@ -317,7 +317,7 @@ class Transfers:
             self.eventprocessor.logTransfer(
                 _("Failed download: user %(user)s, file %(file)s") % {
                     'user': user,
-                    'file': self.decode(msg.file)
+                    'file': msg.file
                 },
                 1
             )
@@ -984,7 +984,6 @@ class Transfers:
                 else:
                     incompletedir = os.path.join(downloaddir, utils.CleanPath(i.path))
 
-            incompletedir = self.encode(incompletedir, i.user)
             try:
                 if not os.access(incompletedir, os.F_OK):
                     os.makedirs(incompletedir)
@@ -1001,7 +1000,6 @@ class Transfers:
             else:
                 # also check for a windows-style incomplete transfer
                 basename = i.filename.split('\\')[-1]
-                basename = self.encode(basename, i.user)
                 winfname = os.path.join(incompletedir, "INCOMPLETE~" + basename)
                 pyfname = os.path.join(incompletedir, "INCOMPLETE" + basename)
 
@@ -1089,7 +1087,7 @@ class Transfers:
 
                 self.eventprocessor.logTransfer(_("Upload started: user %(user)s, file %(file)s") % {
                     'user': i.user,
-                    'file': self.decode(i.filename)
+                    'file': i.filename
                 })
             except IOError as strerror:
                 self.eventprocessor.logMessage(_("Upload I/O error: %s") % strerror)
@@ -1186,13 +1184,13 @@ class Transfers:
                     i.status = "Transferring"
                 else:
                     msg.file.close()
-                    basename = utils.CleanPath(self.encode(i.filename.split('\\')[-1], i.user))
+                    basename = utils.CleanPath(i.filename.split('\\')[-1], i.user)
                     downloaddir = config["transfers"]["downloaddir"]
 
                     if i.path and i.path[0] == '/':
                         folder = utils.CleanPath(i.path)
                     else:
-                        folder = os.path.join(downloaddir, self.encode(i.path))
+                        folder = os.path.join(downloaddir, i.path)
 
                     if not os.access(folder, os.F_OK):
                         os.makedirs(folder)
@@ -1208,9 +1206,9 @@ class Transfers:
                             except (IOError, OSError) as inst:
                                 log.addwarning(
                                     _("Couldn't move '%(tempfile)s' to '%(file)s': %(error)s") % {
-                                        'tempfile': self.decode(msg.file.name),
-                                        'file': self.decode(newname),
-                                        'error': str(inst)
+                                        'tempfile': msg.file.name,
+                                        'file': newname,
+                                        'error': inst
                                     }
                                 )
 
@@ -1219,27 +1217,27 @@ class Transfers:
                     if newname:
                         self.eventprocessor.logMessage(
                             _("Download finished: %(file)s") % {
-                                'file': self.decode(newname)
+                                'file': newname
                             },
                             5
                         )
                         self.eventprocessor.logTransfer(
                             _("Download finished: user %(user)s, file %(file)s") % {
                                 'user': i.user,
-                                'file': self.decode(i.filename)
+                                'file': i.filename
                             }
                         )
                     else:
                         self.eventprocessor.logMessage(
                             _("File %(file)s is identical to %(identical)s, not saving.") % {
-                                'file': self.decode(msg.file.name),
+                                'file': msg.file.name,
                                 'identical': identicalfile
                             }
                         )
                         self.eventprocessor.logTransfer(
                             _("Download finished but not saved since it's a duplicate: user %(user)s, file %(file)s") % {
                                 'user': i.user,
-                                'file': self.decode(i.filename)
+                                'file': i.filename
                             }
                         )
 
@@ -1292,7 +1290,7 @@ class Transfers:
                                 else:
                                     self.eventprocessor.logMessage(_("Executed on folder: %s") % config["transfers"]["afterfolder"])
             except IOError as strerror:
-                self.eventprocessor.logMessage(_("Download I/O error: %s") % self.decode(strerror))
+                self.eventprocessor.logMessage(_("Download I/O error: %s") % strerror)
                 i.status = "Local file error"
                 try:
                     msg.file.close()
@@ -1380,7 +1378,7 @@ class Transfers:
                 self.eventprocessor.logTransfer(
                     _("Upload finished: %(user)s, file %(file)s") % {
                         'user': i.user,
-                        'file': self.decode(i.filename)
+                        'file': i.filename
                     }
                 )
 
@@ -1699,7 +1697,7 @@ class Transfers:
                         self.eventprocessor.logTransfer(
                             _("Retrying failed download: %(user)s, file %(file)s") % {
                                 'user': i.user,
-                                'file': self.decode(i.filename)
+                                'file': i.filename
                             },
                             1
                         )
@@ -1932,19 +1930,3 @@ class Transfers:
         """ Save list of files to be downloaded """
         self.eventprocessor.config.sections["transfers"]["downloads"] = self.GetDownloads()
         self.eventprocessor.config.writeDownloadQueue()
-
-    def decode(self, string):
-        try:
-            return string.decode(locale.nl_langinfo(locale.CODESET), "replace").encode("utf-8", "replace")
-        except Exception:
-            return string
-
-    def encode(self, string, user=None):
-
-        coding = None
-        config = self.eventprocessor.config.sections
-
-        if user and user in config["server"]["userencoding"]:
-            coding = config["server"]["userencoding"][user]
-
-        return self.eventprocessor.decode(string, coding)

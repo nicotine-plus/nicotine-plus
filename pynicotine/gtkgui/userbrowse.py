@@ -34,13 +34,11 @@ from _thread import start_new_thread
 from pynicotine import slskmessages
 from pynicotine.gtkgui.dirchooser import ChooseDir
 from pynicotine.gtkgui.entrydialog import input_box
-from pynicotine.gtkgui.utils import EncodingsMenu
 from pynicotine.gtkgui.utils import Humanize
 from pynicotine.gtkgui.utils import HumanSize
 from pynicotine.gtkgui.utils import InitialiseColumns
 from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.gtkgui.utils import PressHeader
-from pynicotine.gtkgui.utils import SaveEncoding
 from pynicotine.utils import CleanFile
 from pynicotine.utils import displayTraceback
 from pynicotine.utils import executeCommand
@@ -95,25 +93,6 @@ class UserBrowse:
         # Iters for current FileStore
         self.files = {}
         self.totalsize = 0
-        self.encoding, m = EncodingsMenu(self.frame.np, "userencoding", user)
-
-        # Encoding Combobox
-        self.Elist = {}
-        self.EncodingStore = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
-        self.Encoding.set_model(self.EncodingStore)
-
-        cell = gtk.CellRendererText()
-        self.Encoding.pack_start(cell, True)
-        self.Encoding.add_attribute(cell, 'text', 0)
-
-        cell2 = gtk.CellRendererText()
-        self.Encoding.pack_start(cell2, False)
-        self.Encoding.add_attribute(cell2, 'text', 1)
-
-        for item in m:
-            self.Elist[item[1]] = self.EncodingStore.append([item[1], item[0]])
-            if self.encoding == item[1]:
-                self.Encoding.set_active_iter(self.Elist[self.encoding])
 
         self.DirStore = gtk.TreeStore(str, str)
 
@@ -209,7 +188,7 @@ class UserBrowse:
         self.FolderTreeView.connect("button_press_event", self.OnFolderClicked)
         self.FolderTreeView.get_selection().connect("changed", self.OnSelectDir)
 
-        # DecodedFilename, HSize, Bitrate, HLength, Size, Length, RawFilename
+        # Filename, HSize, Bitrate, HLength, Size, Length, RawFilename
         self.FileStore = gtk.ListStore(str, str, str, str, gobject.TYPE_INT64, int, str)
 
         self.FileTreeView.set_model(self.FileStore)
@@ -328,9 +307,6 @@ class UserBrowse:
         if colour == "":
             colour = None
         cellrenderer.set_property("foreground", colour)
-
-    def decode(self, str):
-        return self.frame.np.decode(str, self.encoding)
 
     def OnExpand(self, widget):
 
@@ -511,7 +487,7 @@ class UserBrowse:
                     # Other sudirs futher down the path are attached to their parent
                     current_path = dirseparator.join([path, subdir])
 
-                self.directories[current_path] = self.DirStore.append(parent, [self.decode(subdir), current_path])
+                self.directories[current_path] = self.DirStore.append(parent, [subdir, current_path])
 
                 # If there are subdirs futher down the path: recurse
                 if len(dictdir[subdir]):
@@ -564,14 +540,14 @@ class UserBrowse:
             return
 
         for file in files:
-            # DecodedFilename, HSize, Bitrate, HLength, Size, Length, RawFilename
+            # Filename, HSize, Bitrate, HLength, Size, Length, RawFilename
             rl = 0
             try:
                 size = int(file[2])
             except ValueError:
                 size = 0
 
-            f = [self.decode(file[1]), Humanize(size)]
+            f = [file[1], Humanize(size)]
 
             if file[3] == "":
                 f += ["", ""]
@@ -1049,12 +1025,3 @@ class UserBrowse:
 
         if "$" in executable:
             executeCommand(executable, path)
-
-    def OnEncodingChanged(self, widget):
-
-        encoding = self.Encoding.get_model().get(self.Encoding.get_active_iter(), 0)[0]
-
-        if encoding != self.encoding:
-            self.encoding = encoding
-            self.MakeNewModel(self.shares)
-            SaveEncoding(self.frame.np, "userencoding", self.user, self.encoding)

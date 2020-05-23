@@ -419,114 +419,11 @@ class NetworkEventProcessor:
     def ConnectToServer(self, msg):
         self.frame.OnConnect(None)
 
-    def encodeuser(self, string, user=None):
-
-        coding = None
-        config = self.config.sections
-
-        if user and user in config["server"]["userencoding"]:
-            coding = config["server"]["userencoding"][user]
-
-        return self.decode(string, coding)
-
-    def encode(self, string, networkenc=None):
-
-        if networkenc is None:
-            networkenc = self.config.sections["server"]["enc"]
-
-        if isinstance(string, str):
-            return string.encode(networkenc, 'replace')
-        else:
-            return string.decode("utf-8", 'replace').encode(networkenc, 'replace')
-
-    def decode(self, string, networkenc=None):
-
-        if isinstance(string, str):
-            return string
-
-        if networkenc is None:
-            networkenc = self.config.sections["server"]["enc"]
-
-        return string.decode(networkenc, 'replace').encode("utf-8", "replace")
-        # return string.encode("utf-8", "replace")
-
-    def getencodings(self):
-
-        # Encodings and descriptions for ComboBoxes
-        return [
-            ["Latin", 'ascii'],
-            ["US-Canada", 'cp037'],
-            ['Hebrew', 'cp424'],
-            ['US English', 'cp437'],
-            ['International', 'cp500'],
-            ['Greek', 'cp737'],
-            ['Estonian', 'cp775'],
-            ['Western European', 'cp850'],
-            ['Central European', 'cp852'],
-            ['Cyrillic', 'cp855'],
-            ['Cyrillic', 'cp856'],
-            ['Turkish', 'cp857'],
-            ['Portuguese', 'cp860'],
-            ['Icelandic', 'cp861'],
-            ['Hebrew', 'cp862'],
-            ['French Canadian', 'cp863'],
-            ['Arabic', 'cp864'],
-            ['Nordic', 'cp865'],
-            ['Cyrillic', 'cp866'],
-            ['Latin-9', 'cp869'],
-            ['Thai', 'cp874'],
-            ['Greek', 'cp875'],
-            ['Japanese', 'cp932'],
-            ['Chinese Simple', 'cp936'],
-            ['Korean', 'cp949'],
-            ['Chinese Traditional', 'cp950'],
-            ['Urdu', 'cp1006'],
-            ['Turkish', 'cp1026'],
-            ['Latin', 'cp1140'],
-            ['Central European', 'cp1250'],
-            ['Cyrillic', 'cp1251'],
-            ['Latin', 'cp1252'],
-            ['Greek', 'cp1253'],
-            ['Turkish', 'cp1254'],
-            ['Hebrew', 'cp1255'],
-            ['Arabic', 'cp1256'],
-            ['Baltic', 'cp1257'],
-            ['Vietnamese', 'cp1258'],
-            ['Latin', 'iso8859-1'],
-            ['Latin 2', 'iso8859-2'],
-            ['South European', 'iso8859-3'],
-            ['North European', 'iso8859-4'],
-            ['Cyrillic', 'iso8859-5'],
-            ['Arabic', 'iso8859-6'],
-            ['Greek', 'iso8859-7'],
-            ['Hebrew', 'iso8859-8'],
-            ['Turkish', 'iso8859-9'],
-            ['Nordic', 'iso8859-10'],
-            ['Thai', 'iso8859-11'],
-            ['Baltic', 'iso8859-13'],
-            ['Celtic', 'iso8859-14'],
-            ['Western European', 'iso8859-15'],
-            ['South-Eastern European', 'iso8859-16'],
-            ['Cyrillic', 'koi8-r'],
-            ['Latin', 'latin-1'],
-            ['Japanese', 'shift_jis'],
-            ['Korean', 'euc_kr'],
-            ['Cyrillic', 'mac-cyrillic'],
-            ['Greek', 'mac-greek'],
-            ['Icelandic', 'mac-iceland'],
-            ['Latin 2', 'mac-latin2'],
-            ['Latin', 'mac-roman'],
-            ['Turkish', 'mac-turkish'],
-            ['International', 'utf-16'],
-            ['International', 'utf-7'],
-            ['International', 'utf-8']
-        ]
-
     # Notify user of error when recieving or sending a message
     # @param self NetworkEventProcessor (Class)
     # @param string a string containing an error message
     def Notify(self, string):
-        self.logMessage("%s" % self.decode(string))
+        self.logMessage("%s" % string)
 
     def PopupMessage(self, msg):
         self.setStatus(_(msg.title))
@@ -546,7 +443,7 @@ class NetworkEventProcessor:
                 _("Can't connect to server %(host)s:%(port)s: %(error)s") % {
                     'host': msg.connobj.addr[0],
                     'port': msg.connobj.addr[1],
-                    'error': self.decode(msg.err)
+                    'error': msg.err
                 }
             )
 
@@ -727,9 +624,9 @@ class NetworkEventProcessor:
             self.queue.put(slskmessages.SetStatus((not self.frame.away) + 1))
 
             for thing in self.config.sections["interests"]["likes"]:
-                self.queue.put(slskmessages.AddThingILike(self.encode(thing)))
+                self.queue.put(slskmessages.AddThingILike(thing))
             for thing in self.config.sections["interests"]["dislikes"]:
-                self.queue.put(slskmessages.AddThingIHate(self.encode(thing)))
+                self.queue.put(slskmessages.AddThingIHate(thing))
 
             if not len(self.distribcache):
                 self.queue.put(slskmessages.HaveNoParent(1))
@@ -800,11 +697,7 @@ class NetworkEventProcessor:
 
     def MessageUser(self, msg):
 
-        if msg.user in self.config.sections["server"]["userencoding"]:
-            encodings = [self.config.sections["server"]["userencoding"][msg.user]] + self.config.sections["server"]["fallbackencodings"]
-            encodings.append(self.config.sections["server"]["enc"])
-        else:
-            encodings = [self.config.sections["server"]["enc"]] + self.config.sections["server"]["fallbackencodings"]
+        encodings = [self.config.sections["server"]["enc"]] + self.config.sections["server"]["fallbackencodings"]
 
         msg.msg = findBestEncoding(msg.msg, encodings)
         status = 0
@@ -857,8 +750,6 @@ class NetworkEventProcessor:
 
             if ticker:
                 encoding = self.config.sections["server"]["enc"]
-                if msg.room in self.config.sections["server"]["roomencoding"]:
-                    encoding = self.config.sections["server"]["roomencoding"][msg.room]
                 self.queue.put(slskmessages.RoomTickerSet(msg.room, ToBeEncoded(ticker, encoding)))
 
         self.logMessage("%s %s" % (msg.__class__, vars(msg)), 4)
@@ -985,11 +876,7 @@ class NetworkEventProcessor:
         return False
 
     def SayChatRoom(self, msg):
-        if msg.room in self.config.sections["server"]["roomencoding"]:
-            encodings = [self.config.sections["server"]["roomencoding"][msg.room]] + self.config.sections["server"]["fallbackencodings"]
-            encodings.append(self.config.sections["server"]["enc"])
-        else:
-            encodings = [self.config.sections["server"]["enc"]] + self.config.sections["server"]["fallbackencodings"]
+        encodings = [self.config.sections["server"]["enc"]] + self.config.sections["server"]["fallbackencodings"]
 
         msg.msg = findBestEncoding(msg.msg, encodings)
 
@@ -1542,7 +1429,7 @@ class NetworkEventProcessor:
         except Exception:
             pic = None
 
-        descr = self.encode(eval(self.config.sections["userinfo"]["descr"], {})).replace("\n", "\r\n")
+        descr = self.config.sections["userinfo"]["descr"].replace("\n", "\r\n")
 
         if self.transfers is not None:
             totalupl = self.transfers.getTotalUploadsAllowed()
@@ -1922,11 +1809,7 @@ class NetworkEventProcessor:
 
     def RoomTickerState(self, msg):
 
-        if msg.room in self.config.sections["server"]["roomencoding"]:
-            encodings = [self.config.sections["server"]["roomencoding"][msg.room]] + self.config.sections["server"]["fallbackencodings"]
-            encodings.append(self.config.sections["server"]["enc"])
-        else:
-            encodings = [self.config.sections["server"]["enc"]] + self.config.sections["server"]["fallbackencodings"]
+        encodings = [self.config.sections["server"]["enc"]] + self.config.sections["server"]["fallbackencodings"]
 
         unicodes = {}
         for user, bytes in msg.msgs.items():
@@ -1940,11 +1823,7 @@ class NetworkEventProcessor:
 
     def RoomTickerAdd(self, msg):
 
-        if msg.room in self.config.sections["server"]["roomencoding"]:
-            encodings = [self.config.sections["server"]["roomencoding"][msg.room]] + self.config.sections["server"]["fallbackencodings"]
-            encodings.append(self.config.sections["server"]["enc"])
-        else:
-            encodings = [self.config.sections["server"]["enc"]] + self.config.sections["server"]["fallbackencodings"]
+        encodings = [self.config.sections["server"]["enc"]] + self.config.sections["server"]["fallbackencodings"]
 
         msg.msg = findBestEncoding(msg.msg, encodings)
         if self.chatrooms is not None:

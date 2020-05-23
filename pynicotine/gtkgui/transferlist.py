@@ -539,7 +539,7 @@ class TransferList:
                 6, HumanSpeed(speed),
                 7, elap,
                 8, left,
-                9, self.frame.np.decode(transfer.path),
+                9, transfer.path,
                 11, istatus,
                 12, size,
                 13, currentbytes,
@@ -564,7 +564,7 @@ class TransferList:
                 parent = None
 
             # Add a new transfer
-            path = self.frame.np.decode(transfer.path)
+            path = transfer.path
 
             iter = self.transfersmodel.append(
                 parent,

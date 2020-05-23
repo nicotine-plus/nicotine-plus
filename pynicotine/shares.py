@@ -400,14 +400,14 @@ class Shares:
                     self.logMessage(
                         _("User %(user)s is directly searching for %(query)s, returning %(num)i results") % {
                             'user': user,
-                            'query': self.np.decode(searchterm),
+                            'query': searchterm,
                             'num': len(results)
                         }, 2)
                 else:
                     self.logMessage(
                         _("User %(user)s is searching for %(query)s, returning %(num)i results") % {
                             'user': user,
-                            'query': self.np.decode(searchterm),
+                            'query': searchterm,
                             'num': len(results)
                         }, 2)
 

@@ -1470,24 +1470,3 @@ def _expand_alias(aliases, cmd):
         print(error)
         pass
     return ""
-
-
-def EncodingsMenu(np, section=None, entry=None):
-    if section and entry and entry in np.config.sections["server"][section]:
-        encoding = np.config.sections["server"][section][entry]
-    else:
-        encoding = np.config.sections["server"]["enc"]
-
-    z = []
-    for enc in np.getencodings():
-        z.append(enc)
-
-    return encoding, z
-
-
-def SaveEncoding(np, section, entry, encoding):
-    if encoding != np.config.sections["server"]["enc"]:
-        np.config.sections["server"][section][entry] = encoding
-    elif entry in np.config.sections["server"][section]:
-        del np.config.sections["server"][section][entry]
-    np.config.writeConfiguration()
