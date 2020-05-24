@@ -975,22 +975,22 @@ class IconNotebook:
 
 class PopupMenu(gtk.Menu):
 
-    def __init__(self, frame=None):
+    def __init__(self, frame=None, shouldattach=True):
 
         gtk.Menu.__init__(self)
 
-        # The frame is passed when the menu needs to be attached to
-        # a widget. In other words, when it's not a submenu.
         self.frame = frame
         self.user = None
         self.useritem = None
         self.handlers = {}
         self.editing = False
 
-    def setup(self, *items):
-
-        if hasattr(self.frame, 'MainWindow'):
+        # If the menu is not a submenu, it needs to be attached
+        # to the main window, otherwise it has no parent
+        if shouldattach and hasattr(self.frame, 'MainWindow'):
             self.attach_to_widget(self.frame.MainWindow, None)
+
+    def setup(self, *items):
 
         for item in items:
 

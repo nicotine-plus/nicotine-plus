@@ -54,8 +54,8 @@ class Downloads(TransferList):
         self.frame.DownloadList.set_property("rules-hint", True)
         self.accel_group = gtk.AccelGroup()
 
-        self.popup_menu_users = PopupMenu()
-        self.popup_menu_clear = popup2 = PopupMenu()
+        self.popup_menu_users = PopupMenu(self.frame, False)
+        self.popup_menu_clear = popup2 = PopupMenu(self.frame, False)
         popup2.setup(
             ("#" + _("Clear finished/aborted"), self.OnClearFinishedAborted),
             ("#" + _("Clear finished"), self.OnClearFinished),
@@ -358,7 +358,7 @@ class Downloads(TransferList):
 
             for user in self.selected_users:
 
-                popup = PopupMenu()
+                popup = PopupMenu(self.frame, False)
                 popup.setup(
                     ("#" + _("Send _message"), popup.OnSendMessage),
                     ("#" + _("Show IP a_ddress"), popup.OnShowIPaddress),

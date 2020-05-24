@@ -1063,7 +1063,7 @@ class ChatRoom:
         self.UserList.connect("drag_data_get", self.drag_data_get_data)
         self.UserList.set_property("rules-hint", True)
 
-        self.popup_menu_privaterooms = PopupMenu()
+        self.popup_menu_privaterooms = PopupMenu(self.frame, False)
         self.popup_menu = popup = PopupMenu(self.frame)
 
         popup.setup(
