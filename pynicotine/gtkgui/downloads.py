@@ -54,7 +54,8 @@ class Downloads(TransferList):
         self.frame.DownloadList.set_property("rules-hint", True)
         self.accel_group = gtk.AccelGroup()
 
-        self.popup_menu2 = popup2 = PopupMenu(frame)
+        self.popup_menu_users = PopupMenu()
+        self.popup_menu_clear = popup2 = PopupMenu()
         popup2.setup(
             ("#" + _("Clear finished/aborted"), self.OnClearFinishedAborted),
             ("#" + _("Clear finished"), self.OnClearFinished),
@@ -63,7 +64,6 @@ class Downloads(TransferList):
             ("#" + _("Clear filtered"), self.OnClearFiltered),
             ("#" + _("Clear queued"), self.OnClearQueued)
         )
-        self.popup_menu_users = PopupMenu(frame)
 
         self.popup_menu = popup = PopupMenu(frame)
         popup.setup(
@@ -83,9 +83,8 @@ class Downloads(TransferList):
             ("#" + _("Abort & Delete"), self.OnAbortRemoveTransfer),
             ("#" + _("_Clear"), self.OnClearTransfer),
             ("", None),
-            (1, _("Clear Groups"), self.popup_menu2, None)
+            (1, _("Clear Groups"), self.popup_menu_clear, None)
         )
-        self.popup_menu.attach_to_widget(frame.DownloadList, None)
 
         frame.DownloadList.connect("button_press_event", self.OnPopupMenu, "mouse")
         frame.DownloadList.connect("key-press-event", self.on_key_press_event)
@@ -359,7 +358,7 @@ class Downloads(TransferList):
 
             for user in self.selected_users:
 
-                popup = PopupMenu(self.frame)
+                popup = PopupMenu()
                 popup.setup(
                     ("#" + _("Send _message"), popup.OnSendMessage),
                     ("#" + _("Show IP a_ddress"), popup.OnShowIPaddress),

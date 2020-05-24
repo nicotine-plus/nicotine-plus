@@ -180,7 +180,7 @@ class UserList:
             self.userlist.append([user[0], user[1], last_seen, iter_, flag])
 
         self.usersmodel.set_sort_column_id(2, gtk.SortType.ASCENDING)
-        self.Popup_Menu_PrivateRooms = PopupMenu(self.frame)
+        self.Popup_Menu_PrivateRooms = PopupMenu()
         self.popup_menu = popup = PopupMenu(frame)
 
         popup.setup(
@@ -201,8 +201,6 @@ class UserList:
             ("#" + _("_Remove"), self.OnRemoveUser),
             (1, _("Private rooms"), self.Popup_Menu_PrivateRooms, popup.OnPrivateRooms)
         )
-
-        popup.attach_to_widget(self.UserList, None)
 
         items = self.popup_menu.get_children()
         self.Menu_SendMessage = items[0]

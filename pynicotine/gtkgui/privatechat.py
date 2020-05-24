@@ -175,7 +175,6 @@ class PrivateChats(IconNotebook):
             ("#" + _("Close this tab"), self.users[user].OnClose)
         )
 
-        popup.attach_to_widget(self.frame.PrivatechatNotebookRaw, None)
         popup.set_user(user)
 
         me = (popup.user is None or popup.user == self.frame.np.config.sections["server"]["login"])
@@ -401,7 +400,6 @@ class PrivateChat:
             ("$" + _("Ignore this user's IP Address"), popup.OnIgnoreIP)
         )
 
-        popup.attach_to_widget(self.ChatScroll, None)
         popup.set_user(user)
 
         self.popup_menu = popup = PopupMenu(self.frame)
@@ -418,7 +416,6 @@ class PrivateChat:
             ("#" + _("Close"), self.OnClose)
         )
 
-        popup.attach_to_widget(self.ChatScroll, None)
         popup.set_user(user)
 
         self.ChatScroll.connect("button_press_event", self.OnPopupMenu)

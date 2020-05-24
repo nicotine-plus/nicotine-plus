@@ -255,7 +255,7 @@ def PressHeader(widget, event):
         pos += 1
 
     menu.show_all()
-    menu.attach_to_widget(widget.get_parent(), None)
+    menu.attach_to_widget(widget.get_toplevel(), None)
     menu.popup(None, None, None, None, event.button, event.time)
 
     return True
@@ -989,6 +989,8 @@ class PopupMenu(gtk.Menu):
 
         gtk.Menu.__init__(self)
 
+        # The frame is passed when the menu needs to be attached to
+        # a widget. In other words, when it's not a submenu.
         self.frame = frame
         self.user = None
         self.useritem = None
@@ -996,6 +998,9 @@ class PopupMenu(gtk.Menu):
         self.editing = False
 
     def setup(self, *items):
+
+        if hasattr(self.frame, 'MainWindow'):
+            self.attach_to_widget(self.frame.MainWindow, None)
 
         for item in items:
 
