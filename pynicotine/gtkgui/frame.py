@@ -2559,7 +2559,7 @@ class NicotineFrame:
             self.DownloadButtons.hide()
 
     def OnProjectWebsite(self, widget):
-        url = "https://github.com/Nicotine-Plus/nicotine-plus/"
+        url = "https://nicotine-plus.org/"
         OpenUri(url, self.MainWindow)
 
     def onProjectGithubPage(self, widget):

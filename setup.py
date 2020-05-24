@@ -142,7 +142,7 @@ if __name__ == '__main__':
         license="GPLv3",
         description="Nicotine+, a client for the SoulSeek filesharing network.",
         author="Nicotine+ Contributors",
-        url="https://www.nicotine-plus.org/",
+        url="https://nicotine-plus.org/",
         packages=[
             'pynicotine', 'pynicotine.gtkgui', 'pynicotine.gtkgui.ui',
             'test', 'test.unit', 'test.unit.data', 'test.integration',
