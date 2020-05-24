@@ -246,6 +246,11 @@ class FastConfigureAssistant(object):
     def OnApply(self, widget):
         self.store()
         self.window.hide()
+
+        self.frame.logMessage(
+            _("Setup complete! Connecting...")
+        )
+
         if not self.frame.np.serverconn:
             self.frame.OnFirstConnect(-1)
 
