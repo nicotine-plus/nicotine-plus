@@ -1,4 +1,5 @@
-# Nicotine+ MAINTAINERS
+# Nicotine+ Maintainers
+This is a somewhat up-to-date list of current Nicotine+ maintainers. For inquiries, it is recommended to [open an issue ticket](https://github.com/Nicotine-Plus/nicotine-plus/issues) on GitHub.
 
 ### Active
 
@@ -68,7 +69,7 @@ Michael Labouebe (aka gfarmerfr)
 
 ---
 
-# Nicotine MAINTAINERS
+# Nicotine Maintainers
 
 ### Retired
 
@@ -106,10 +107,10 @@ SeeSchloss
 
 vasi
 - Mac developer
-- [djvasi@gmail.com]
+- [djvasi(at)gmail(dot)com]
 - Packaged nicotine on OSX PowerPc
 
 
-# Contact info
+# Contact Info
 Have you done something for Nicotine or Nicotine+ and your name is forgotten?
-Please let us know.
+Please [let us know](https://github.com/Nicotine-Plus/nicotine-plus/issues).

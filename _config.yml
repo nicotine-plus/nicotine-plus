@@ -1,0 +1,17 @@
+title: Nicotine+
+logo: /files/icons/96x96/nicotine-plus.png
+description: A graphical client for the SoulSeek peer-to-peer system
+
+plugins:
+  - jekyll-relative-links
+
+relative_links:
+  enabled: true
+  collections: true
+
+exclude:
+  - files/README
+  - img/README
+  - plugins/README
+
+theme: jekyll-theme-minimal
