@@ -279,11 +279,11 @@ def UrlEvent(tag, widget, event, iter, url):
     if tag.last_event_type == Gdk.EventType.BUTTON_PRESS and event.button.type == Gdk.EventType.BUTTON_RELEASE and event.button.button == 1:
         if url[:4] == "www.":
             url = "http://" + url
-        OpenUri(url)
+        OpenUri(url, widget.get_toplevel())
     tag.last_event_type = event.button.type
 
 
-def OpenUri(uri):
+def OpenUri(uri, window):
     """Open a URI in an external (web) browser. The given argument has
     to be a properly formed URI including the scheme (fe. HTTP).
 
@@ -299,18 +299,8 @@ def OpenUri(uri):
             executeCommand(PROTOCOL_HANDLERS[protocol], uri)
             return
 
-    # Situation 2, user did not define a way of handling the protocol, we'll leave it up to python
-    if webbrowser:
-        webbrowser.open(uri)
-        return
-
-    # Situation 3, we let Gnome VFS deal with it
-    try:
-        import gnomevfs
-        gnomevfs.url_show(uri)
-        return
-    except Exception as e:  # noqa: F841
-        pass
+    # Situation 2, user did not define a way of handling the protocol
+    gtk.show_uri_on_window(window, uri, Gdk.CURRENT_TIME)
 
 
 def AppendLine(textview, line, tag=None, timestamp=None, showstamp=True, timestamp_format="%H:%M:%S", username=None, usertag=None, scroll=True):

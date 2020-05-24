@@ -225,7 +225,7 @@ class ServerFrame(buildFrame):
         self.frame.OnChangePassword(self.Password.get_text())
 
     def OnCheckPort(self, widget):
-        OpenUri('='.join(['http://tools.slsknet.org/porttest.php?port', str(self.frame.np.waitport)]))
+        OpenUri('='.join(['http://tools.slsknet.org/porttest.php?port', str(self.frame.np.waitport)]), self.p.SettingsWindow)
 
     def OnUPnPToggled(self, widget):
 
