@@ -456,7 +456,6 @@ class Config:
                                 )
                                 errorlevel = 2
 
-                            self.frame.logMessage(_("Config option unset: Section: %(section)s, Option: %(option)s") % {'section': i, 'option': j})
                             self.frame.settingswindow.InvalidSettings(i, j)
 
         except Exception as error:
