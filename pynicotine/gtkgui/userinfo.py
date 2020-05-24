@@ -470,12 +470,6 @@ class UserInfo:
                 f.close()
                 self.image.set_from_file(name)
                 os.remove(name)
-            except Exception as e:  # noqa: F841
-                self.image.set_from_pixbuf(None)
-                self.SavePicture.set_sensitive(False)
-        else:
-            self.image.set_from_pixbuf(None)
-            self.SavePicture.set_sensitive(False)
 
     def ShowInfo(self, msg):
         self.ShowUserInfo(msg.descr, msg.has_pic, msg.pic, msg.totalupl, msg.queuesize, msg.slotsavail, msg.uploadallowed)
