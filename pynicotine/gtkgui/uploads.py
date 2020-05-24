@@ -49,7 +49,9 @@ class Uploads(TransferList):
         TransferList.__init__(self, frame, frame.UploadList, type='uploads')
         self.myvbox = self.frame.uploadsvbox
         self.frame.UploadList.set_property("rules-hint", True)
-        self.popup_menu2 = popup2 = PopupMenu(frame)
+
+        self.popup_menu_users = PopupMenu()
+        self.popup_menu_clear = popup2 = PopupMenu()
         popup2.setup(
             ("#" + _("Clear finished/erred"), self.OnClearFinishedErred),
             ("#" + _("Clear finished/aborted"), self.OnClearFinishedAborted),
@@ -58,8 +60,6 @@ class Uploads(TransferList):
             ("#" + _("Clear queued"), self.OnClearQueued),
             ("#" + _("Clear failed"), self.OnClearFailed)
         )
-
-        self.popup_menu_users = PopupMenu(frame)
 
         self.popup_menu = popup = PopupMenu(frame)
         popup.setup(
@@ -74,9 +74,8 @@ class Uploads(TransferList):
             ("#" + _("_Clear"), self.OnClearTransfer),
             ("#" + _("_Retry"), self.OnUploadTransfer),
             ("", None),
-            (1, _("Clear Groups"), self.popup_menu2, None)
+            (1, _("Clear Groups"), self.popup_menu_clear, None)
         )
-        self.popup_menu.attach_to_widget(frame.UploadList, None)
 
         frame.UploadList.connect("button_press_event", self.OnPopupMenu, "mouse")
         frame.UploadList.connect("key-press-event", self.on_key_press_event)
@@ -312,7 +311,7 @@ class Uploads(TransferList):
             self.selected_users.sort(key=str.lower)
 
             for user in self.selected_users:
-                popup = PopupMenu(self.frame)
+                popup = PopupMenu()
                 popup.setup(
                     ("#" + _("Send _message"), popup.OnSendMessage),
                     ("#" + _("Show IP a_ddress"), popup.OnShowIPaddress),

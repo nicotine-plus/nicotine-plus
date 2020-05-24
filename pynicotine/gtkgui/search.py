@@ -545,8 +545,6 @@ class Searches(IconNotebook):
             ("#" + _("Close this tab"), self.searches[id][2].OnClose)
         )
 
-        popup.attach_to_widget(self.frame.SearchNotebookRaw, None)
-
         items = popup.get_children()  # noqa: F841
 
         return popup
@@ -745,7 +743,7 @@ class Search:
         self.ResultsList.set_enable_tree_lines(True)
         self.ResultsList.set_headers_clickable(True)
 
-        self.popup_menu_users = PopupMenu(self.frame)
+        self.popup_menu_users = PopupMenu()
         self.popup_menu = popup = PopupMenu(self.frame)
         popup.setup(
             ("#" + _("_Download file(s)"), self.OnDownloadFiles),
@@ -759,8 +757,6 @@ class Search:
             ("", None),
             (1, _("User(s)"), self.popup_menu_users, self.OnPopupMenuUsers)
         )
-
-        popup.attach_to_widget(self.ResultsList, None)
 
         self.ResultsList.connect("button_press_event", self.OnListClicked)
 
@@ -1293,7 +1289,7 @@ class Search:
             self.selected_users.sort(key=str.lower)
 
             for user in self.selected_users:
-                popup = PopupMenu(self.frame)
+                popup = PopupMenu()
                 popup.setup(
                     ("#" + _("Send _message"), popup.OnSendMessage),
                     ("#" + _("Show IP a_ddress"), popup.OnShowIPaddress),

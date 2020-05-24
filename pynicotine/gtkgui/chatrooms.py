@@ -121,7 +121,7 @@ class RoomsControl:
                 parent.connect('button_press_event', PressHeader)
 
         self.popup_room = None
-        self.popup_menu = PopupMenu().setup(
+        self.popup_menu = PopupMenu(self.frame).setup(
             ("#" + _("Join room"), self.OnPopupJoin),
             ("#" + _("Leave room"), self.OnPopupLeave),
             ("", None),
@@ -136,8 +136,6 @@ class RoomsControl:
             ("", None),
             ("#" + _("Refresh"), self.OnPopupRefresh)
         )
-
-        self.popup_menu.attach_to_widget(self.frame.roomlist.RoomsList, None)
 
         items = self.popup_menu.get_children()
         self.Menu_Join, self.Menu_Leave, self.Menu_Empty1, self.Menu_PrivateRoom_Enable, self.Menu_PrivateRoom_Disable, self.Menu_Empty2, self.Menu_PrivateRoom_Create, self.Menu_PrivateRoom_Disown, self.Menu_PrivateRoom_Dismember, self.Menu_Empty3, self.Menu_JoinPublicRoom, self.Menu_Empty4, self.Menu_Refresh = items
@@ -1065,7 +1063,7 @@ class ChatRoom:
         self.UserList.connect("drag_data_get", self.drag_data_get_data)
         self.UserList.set_property("rules-hint", True)
 
-        self.popup_menu_privaterooms = PopupMenu(self.frame)
+        self.popup_menu_privaterooms = PopupMenu()
         self.popup_menu = popup = PopupMenu(self.frame)
 
         popup.setup(
@@ -1087,8 +1085,6 @@ class ChatRoom:
             ("#" + _("Sear_ch this user's files"), popup.OnSearchUser),
             (1, _("Private rooms"), self.popup_menu_privaterooms, self.OnPrivateRooms)
         )
-
-        popup.attach_to_widget(self.UserList, None)
 
         items = self.popup_menu.get_children()
 
@@ -1119,7 +1115,6 @@ class ChatRoom:
             ("#" + _("Clear log"), self.OnClearRoomLog)
         )
 
-        self.logpopupmenu.attach_to_widget(self.RoomLog, None)
         self.RoomLog.connect("button-press-event", self.OnPopupRoomLogMenu)
 
         self.chatpopmenu = PopupMenu(self.frame).setup(
@@ -1131,7 +1126,6 @@ class ChatRoom:
             ("#" + _("Clear log"), self.OnClearChatLog)
         )
 
-        self.chatpopmenu.attach_to_widget(self.ChatScroll, None)
         self.ChatScroll.connect("button-press-event", self.OnPopupChatRoomMenu)
 
         self.buildingcompletion = False
@@ -2414,7 +2408,6 @@ class ChatRooms(IconNotebook):
             ("#" + _("Detach this tab"), self.roomsctrl.joinedrooms[room].Detach),
             ("#" + _("Leave this room"), self.roomsctrl.joinedrooms[room].OnLeave)
         )
-        popup.attach_to_widget(self.roomsctrl.joinedrooms[room], None)
         popup.set_user(room)
 
         return popup
