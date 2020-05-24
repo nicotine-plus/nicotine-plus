@@ -82,7 +82,7 @@ class UPnPPortMapping:
 
         (out, err) = p.communicate()
 
-        return out.rstrip()
+        return out.decode('utf-8').rstrip()
 
     def IsPossible(self):
         """Function to check the requirements for doing a port mapping.
@@ -319,7 +319,7 @@ class UPnPPortMapping:
         command = [
             self.upnpcbinary,
             '-e',
-            '"Nicotine+"',
+            'Nicotine+',
             '-a',
             str(self.internalipaddress),
             str(self.internallanport),
