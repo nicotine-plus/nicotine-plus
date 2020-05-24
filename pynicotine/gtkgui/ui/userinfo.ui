@@ -758,6 +758,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
+                <property name="sensitive">False</property>
                 <signal name="clicked" handler="OnSavePicture" swapped="no"/>
                 <child>
                   <object class="GtkAlignment" id="alignment29">

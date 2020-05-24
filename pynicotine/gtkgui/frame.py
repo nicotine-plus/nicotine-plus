@@ -2784,7 +2784,7 @@ class NicotineFrame:
             except Exception:
                 pic = None
 
-            descr = self.np.config.sections["userinfo"]["descr"]
+            descr = eval(self.np.config.sections["userinfo"]["descr"])
 
             if self.np.transfers is not None:
 
