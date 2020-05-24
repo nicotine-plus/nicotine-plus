@@ -1446,8 +1446,6 @@ class NicotineFrame:
             tag.set_property("font", font)
 
     def ChangeListFont(self, listview, font):
-        if font == "":
-            font = 'default font'
         for c in listview.get_columns():
             for r in c.get_cells():
                 if type(r) in (gtk.CellRendererText, gtk.CellRendererCombo):
@@ -1463,8 +1461,6 @@ class NicotineFrame:
         else:
             colour = Gdk.RGBA()
             colour.parse(color)
-        if font == "":
-            font = None
         if first:
             self.tag_log = self.LogWindow.get_buffer().create_tag()
         self.tag_log.set_property("font", font)
