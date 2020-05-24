@@ -14,7 +14,7 @@ eLvErDe
 - Developer (retired ?)
 
 Kip Warner
-- Debianization
+- Developer
 - [kip(at)thevertigo(dot)com]
 
 Lene Preuss
