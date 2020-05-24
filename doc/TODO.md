@@ -5,6 +5,7 @@ A list of stuff & things todo (not in any particular order):
 #### Short term goals
 
 * Switch spellcheck from libsexy (deprecated) to gspell.
+* Switch to MiniUPnPc Python bindings (python3-miniupnpc)
 
 #### Long term goals
 
