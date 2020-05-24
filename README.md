@@ -3,7 +3,7 @@
 Nicotine+ is a graphical client for the [Soulseek](https://www.slsknet.org/) peer-to-peer system. It is an attempt to keep [Nicotine](https://web.archive.org/web/20150720173459/http://nicotine.thegraveyard.org/) working with the latest libraries, kill bugs, keep current with the Soulseek protocol, and add some new features that users want and/or need.
 
 # Download Nicotine+
-The current stable version of Nicotine+ is 1.4.1
+The current stable version of Nicotine+ is 1.4.1. An unstable version 1.4.3 is currently under development and available for testing.
 
 ## GNU/Linux
 If you have no need to modify the Nicotine+ source, you are strongly recommended to use precompiled packages for your distribution. This will save you time.
@@ -42,11 +42,11 @@ Please come and join us in the `#nicotine+` channel on Freenode!
 
 If you'd like to contribute, you have a couple of options to get started. You can [open an issue ticket](https://github.com/Nicotine-Plus/nicotine-plus/issues) on GitHub, discuss in `#nicotine+`, or post to the project [mailing list](mailto:nicotine-team@lists.launchpad.net). Developers are also encouraged to join the [Launchpad Team](https://launchpad.net/~nicotine-team) or subscribe to the mailing list so that they are automatically notified of failed commits.
 
-There is a current list of things [TODO](doc/TODO.md).
+There is a current list of things [TODO.md](doc/TODO.md).
 
-If you'd like to translate Nicotine+ into another language it has not been already, see [TRANSLATIONS](doc/TRANSLATIONS.md).
+If you'd like to translate Nicotine+ into another language it has not been already, see [TRANSLATIONS.md](doc/TRANSLATIONS.md).
 
-If you want to contact someone, see [MAINTAINERS](AUTHORS.md).
+If you want to contact someone, see [MAINTAINERS.md](AUTHORS.md).
 
 # Continuous Integration Testing
 
