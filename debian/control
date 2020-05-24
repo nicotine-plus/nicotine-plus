@@ -15,7 +15,7 @@ Build-Depends:
 Vcs-Git: https://github.com/Nicotine-Plus/nicotine-plus.git
 Vcs-browser: https://github.com/Nicotine-Plus/nicotine-plus
 X-Python-Version: >= 3.5
-Homepage: https://github.com/Nicotine-Plus/nicotine-plus
+Homepage: https://nicotine-plus.org
 Rules-Requires-Root: no
 
 Package: nicotine
