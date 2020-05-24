@@ -82,7 +82,7 @@ class UPnPPortMapping:
 
         (out, err) = p.communicate()
 
-        return out.rstrip()
+        return out.decode('utf-8').rstrip()
 
     def IsPossible(self):
         """Function to check the requirements for doing a port mapping.
@@ -276,7 +276,7 @@ class UPnPPortMapping:
             $
         """, re.VERBOSE)
 
-        for line in output.decode('utf-8').split('\n'):
+        for line in output.split('\n'):
 
             line = line.strip()
 
@@ -319,7 +319,7 @@ class UPnPPortMapping:
         command = [
             self.upnpcbinary,
             '-e',
-            '"Nicotine+"',
+            'Nicotine+',
             '-a',
             str(self.internalipaddress),
             str(self.internallanport),
@@ -333,7 +333,7 @@ class UPnPPortMapping:
             raise RuntimeError(
                 _('Failed to use UPnPc binary: %(error)s') % {'error': str(e)})
 
-        for line in output.decode('utf-8').split('\n'):
+        for line in output.split('\n'):
             if line.startswith("external ") and \
                line.find(" is redirected to internal ") > -1:
                 log.adddebug('Success')
