@@ -345,7 +345,7 @@ class Config:
 
             "urls": {
                 "urlcatching": 1,
-                "protocols": {"http": "", "https": ""},
+                "protocols": {},
                 "humanizeurls": 1
             },
 
@@ -377,20 +377,6 @@ class Config:
                 "enabled": []
             }
         }
-
-        # URls handling for Windows
-        if sys.platform.startswith('win'):
-            self.sections["urls"]["protocols"] = {
-                "http": "python -m webbrowser -t $",
-                "https": "python -m webbrowser -t $"
-            }
-
-        # URls handling for Linux
-        if sys.platform.startswith('linux'):
-            self.sections["urls"]["protocols"] = {
-                "http": "xdg-open $",
-                "https": "xdg-open $"
-            }
 
         # Windows specific stuff
         if sys.platform.startswith('win'):
