@@ -239,6 +239,7 @@ eLvErDe
 - Developer (retired ?)
 
 Kip Warner
+- Developer
 - Debianization
 - [kip(at)thevertigo(dot)com]
 
