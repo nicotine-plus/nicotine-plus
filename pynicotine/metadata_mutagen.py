@@ -40,7 +40,7 @@ def detect(path):
     except IOError:
         return None
     except Exception as e:
-        log.addwarning("Mutagen crashed on '%s': %s" % (path, e))
+        print("Mutagen crashed on '%s': %s" % (path, e))
         return None
 
     try:
