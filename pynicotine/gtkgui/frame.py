@@ -3655,14 +3655,14 @@ class TrayApp:
 
         try:
 
-            self.tray_popup_menu_server = popup0 = PopupMenu(self)
+            self.tray_popup_menu_server = popup0 = PopupMenu(self, False)
 
             popup0.setup(
                 ("#" + _("Connect"), self.frame.OnConnect),
                 ("#" + _("Disconnect"), self.frame.OnDisconnect)
             )
 
-            self.tray_popup_menu = popup = PopupMenu(self)
+            self.tray_popup_menu = popup = PopupMenu(self, False)
 
             popup.setup(
                 ("#" + _("Hide / Show Nicotine+"), self.HideUnhideWindow),

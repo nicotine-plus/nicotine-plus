@@ -180,7 +180,7 @@ class UserList:
             self.userlist.append([user[0], user[1], last_seen, iter_, flag])
 
         self.usersmodel.set_sort_column_id(2, gtk.SortType.ASCENDING)
-        self.Popup_Menu_PrivateRooms = PopupMenu()
+        self.Popup_Menu_PrivateRooms = PopupMenu(self.frame, False)
         self.popup_menu = popup = PopupMenu(frame)
 
         popup.setup(

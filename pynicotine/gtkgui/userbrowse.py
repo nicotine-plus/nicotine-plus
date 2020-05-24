@@ -105,8 +105,8 @@ class UserBrowse:
         )
         cols[0].set_sort_column_id(0)
 
-        self.popup_menu_users = PopupMenu()
-        self.popup_menu_users2 = PopupMenu()
+        self.popup_menu_users = PopupMenu(self.frame, False)
+        self.popup_menu_users2 = PopupMenu(self.frame, False)
         for menu in [self.popup_menu_users, self.popup_menu_users2]:
             menu.setup(
                 ("#" + _("Send _message"), menu.OnSendMessage),
@@ -119,7 +119,7 @@ class UserBrowse:
                 ("$" + _("_Ignore this user"), menu.OnIgnoreUser)
             )
 
-        self.popup_menu_downloads_folders = PopupMenu()
+        self.popup_menu_downloads_folders = PopupMenu(self.frame, False)
         self.popup_menu_downloads_folders.setup(
             ("#" + _("_Download directory"), self.OnDownloadDirectory),
             ("#" + _("Download directory _to..."), self.OnDownloadDirectoryTo),
@@ -127,7 +127,7 @@ class UserBrowse:
             ("#" + _("Download r_ecursive to..."), self.OnDownloadDirectoryRecursiveTo)
         )
 
-        self.popup_menu_downloads_files = PopupMenu()
+        self.popup_menu_downloads_files = PopupMenu(self.frame, False)
         self.popup_menu_downloads_files.setup(
             ("#" + _("_Download file(s)"), self.OnDownloadFiles),
             ("#" + _("Download _to..."), self.OnDownloadFilesTo),
@@ -138,13 +138,13 @@ class UserBrowse:
             ("#" + _("Download r_ecursive to..."), self.OnDownloadDirectoryRecursiveTo)
         )
 
-        self.popup_menu_uploads_folders = PopupMenu()
+        self.popup_menu_uploads_folders = PopupMenu(self.frame, False)
         self.popup_menu_uploads_folders.setup(
             ("#" + _("Upload Directory to..."), self.OnUploadDirectoryTo),
             ("#" + _("Upload Directory recursive to..."), self.OnUploadDirectoryRecursiveTo)
         )
 
-        self.popup_menu_uploads_files = PopupMenu()
+        self.popup_menu_uploads_files = PopupMenu(self.frame, False)
         self.popup_menu_uploads_files.setup(
             ("#" + _("Upload Directory to..."), self.OnUploadDirectoryTo),
             ("#" + _("Upload Directory recursive to..."), self.OnUploadDirectoryRecursiveTo),

@@ -50,8 +50,8 @@ class Uploads(TransferList):
         self.myvbox = self.frame.uploadsvbox
         self.frame.UploadList.set_property("rules-hint", True)
 
-        self.popup_menu_users = PopupMenu()
-        self.popup_menu_clear = popup2 = PopupMenu()
+        self.popup_menu_users = PopupMenu(self.frame, False)
+        self.popup_menu_clear = popup2 = PopupMenu(self.frame, False)
         popup2.setup(
             ("#" + _("Clear finished/erred"), self.OnClearFinishedErred),
             ("#" + _("Clear finished/aborted"), self.OnClearFinishedAborted),
@@ -311,7 +311,7 @@ class Uploads(TransferList):
             self.selected_users.sort(key=str.lower)
 
             for user in self.selected_users:
-                popup = PopupMenu()
+                popup = PopupMenu(self.frame, False)
                 popup.setup(
                     ("#" + _("Send _message"), popup.OnSendMessage),
                     ("#" + _("Show IP a_ddress"), popup.OnShowIPaddress),

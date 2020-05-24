@@ -743,7 +743,7 @@ class Search:
         self.ResultsList.set_enable_tree_lines(True)
         self.ResultsList.set_headers_clickable(True)
 
-        self.popup_menu_users = PopupMenu()
+        self.popup_menu_users = PopupMenu(self.frame, False)
         self.popup_menu = popup = PopupMenu(self.frame)
         popup.setup(
             ("#" + _("_Download file(s)"), self.OnDownloadFiles),
@@ -1289,7 +1289,7 @@ class Search:
             self.selected_users.sort(key=str.lower)
 
             for user in self.selected_users:
-                popup = PopupMenu()
+                popup = PopupMenu(self.frame, False)
                 popup.setup(
                     ("#" + _("Send _message"), popup.OnSendMessage),
                     ("#" + _("Show IP a_ddress"), popup.OnShowIPaddress),
