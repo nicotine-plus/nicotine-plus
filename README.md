@@ -88,16 +88,16 @@ $ autopkgtest --shell-fail --apt-upgrade ../nicotine_(...).dsc -- \
 
 ## Required
 
-* [python3](https://www.python.org/)
-* [python3-gi](https://pygobject.readthedocs.io/en/latest/getting_started.html)
-* [gobject-introspection](https://gi.readthedocs.io/en/latest/)
-* [gir1.2-gtk-3.0](https://www.gtk.org/)
-* [python3-mutagen](https://mutagen.readthedocs.io/en/latest/) >= 1.36.2
-* [robotframework](https://robotframework.org/) for 
+* [python3](https://www.python.org/) for interpreter;
+* [python3-gi](https://pygobject.readthedocs.io/en/latest/getting_started.html) for using GObject introspection with Python 3;
+* [gobject-introspection](https://gi.readthedocs.io/en/latest/) for GObject introspection;
+* [gir1.2-gtk-3.0](https://www.gtk.org/) for GObject introspection bindings for GTK;
+* [python3-mutagen](https://mutagen.readthedocs.io/en/latest/) >= 1.36.2 for metadata parsing;
+* [robotframework](https://robotframework.org/) for CI testing.
 
 ## Optional
 
 * [python3-geoip](https://github.com/maxmind/geoip-api-python) >= 1.3.2 for country lookup;
-* [python3-miniupnpc](https://miniupnp.tuxfamily.org/) >= 1.9 for opening ports on your router or `upnpc(1)` if not available.
+* [python3-miniupnpc](https://miniupnp.tuxfamily.org/) >= 1.9 for opening ports on your router or `upnpc(1)` if not available;
 * [Python for Windows Extensions](https://sourceforge.net/projects/pywin32/) for hiding directories from your shares (Windows only).
 
