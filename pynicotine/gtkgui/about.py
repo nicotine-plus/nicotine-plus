@@ -236,7 +236,8 @@ Mutnick
 eLvErDe
 - Provides Nicotine+ Website
 - Migrated source code from SVN to Github
-- Developer (retired ?)
+- python3-miniupnpc bindings
+- Developer
 
 Kip Warner
 - Developer
