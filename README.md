@@ -92,10 +92,12 @@ $ autopkgtest --shell-fail --apt-upgrade ../nicotine_(...).dsc -- \
 * [python3-gi](https://pygobject.readthedocs.io/en/latest/getting_started.html)
 * [gobject-introspection](https://gi.readthedocs.io/en/latest/)
 * [gir1.2-gtk-3.0](https://www.gtk.org/)
-* [python3-mutagen](https://mutagen.readthedocs.io/en/latest/)
+* [python3-mutagen](https://mutagen.readthedocs.io/en/latest/) >= 1.36.2
+* [robotframework](https://robotframework.org/) for 
 
 ## Optional
 
-* [GeoIP python bindings](https://github.com/maxmind/geoip-api-python) for country lookup.
-* [MiniUPnPc python module or binary](https://miniupnp.tuxfamily.org/) for opening ports on your router.
+* [python3-geoip](https://github.com/maxmind/geoip-api-python) >= 1.3.2 for country lookup;
+* [python3-miniupnpc](https://miniupnp.tuxfamily.org/) >= 1.9 for opening ports on your router or `upnpc(1)` if not available.
 * [Python for Windows Extensions](https://sourceforge.net/projects/pywin32/) for hiding directories from your shares (Windows only).
+

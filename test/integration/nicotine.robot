@@ -11,4 +11,5 @@ Library           nicotine_library.py
 
 Run nicotine as shell command
     Running nicotine starts a process    nicotine    3
-    Result should be    ${True}
+    Result should be    0
+

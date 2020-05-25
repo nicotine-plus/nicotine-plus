@@ -1,2 +1,0 @@
-pytest>=5.4.1
-dogtail>=0.9.10

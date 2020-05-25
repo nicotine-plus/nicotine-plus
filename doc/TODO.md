@@ -5,7 +5,6 @@ A list of stuff & things todo (not in any particular order):
 #### Short term goals
 
 * Switch spellcheck from libsexy (deprecated) to gspell.
-* Switch to MiniUPnPc Python bindings (python3-miniupnpc)
 
 #### Long term goals
 
@@ -15,8 +14,10 @@ A list of stuff & things todo (not in any particular order):
 * Replace the bundle Configparser module by something easier like json.
 * Replace db files (causing many problems) by something easier like json.
 * Make as much as possible optional dependencies work on Windows.
-* Switch from legacy GeoIP (maintenance mode) to a good alternative
+* Switch from legacy GeoIP (maintenance mode) to a good alternative, perhaps
+  python3-geoip2.
 
 #### Windows specific goals
 
 * Refresh the NSIS installer icons.
+

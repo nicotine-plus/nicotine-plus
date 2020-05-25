@@ -245,6 +245,7 @@ Kip Warner
 
 Lene Preuss
 - Python3 migration
+- Unit and DEP-8 continuous integration testing
 - [lene.preuss(at)here(dot)com]
 
 mathiascode

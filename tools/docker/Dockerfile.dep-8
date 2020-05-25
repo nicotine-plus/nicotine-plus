@@ -5,18 +5,18 @@
 
 FROM ubuntu:19.10
 
-RUN apt-get update
-RUN apt-get -y upgrade
-RUN apt-get update
+RUN apt update
+RUN apt -y upgrade
+RUN apt update
 ENV DEBIAN_FRONTEND=noninteractive
 ENV DEBCONF_NONINTERACTIVE_SEEN=true
 # dependencies for dpkg and autopkgtest
-RUN apt-get -y install dpkg-dev quilt debhelper dh-python python-all lintian \
+RUN apt -y install dpkg-dev quilt debhelper dh-python python-all lintian \
                        autopkgtest
 # dependencies for building and testing nicotine
-RUN apt-get -y install python3-pyatspi python-gobject-2 python3-pytest python-setuptools python3-dogtail
+RUN apt -y install python3-pyatspi python-gobject-2 python3-pytest python-setuptools python3-dogtail
 # dependencies to get gsettings (needed by dogtail) to work
-RUN apt-get -y install libglib2.0-bin libgtk-3-0
+RUN apt -y install libglib2.0-bin libgtk-3-0
 
 RUN gsettings set org.gnome.desktop.interface toolkit-accessibility true
 

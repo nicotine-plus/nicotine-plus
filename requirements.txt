@@ -1,3 +1,0 @@
-GeoIP==1.3.2
-miniupnpc==1.9
-mutagen==1.36.2
