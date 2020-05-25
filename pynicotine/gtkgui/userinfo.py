@@ -375,6 +375,8 @@ class UserInfo:
         if colour:
             tag.set_property("foreground", colour)
 
+        return tag
+
     def changecolour(self, tag, colour):
 
         color = self.frame.np.config.sections["ui"][colour]
