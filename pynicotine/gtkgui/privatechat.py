@@ -385,7 +385,7 @@ class PrivateChat:
 
         self.Log.set_active(self.frame.np.config.sections["logging"]["privatechat"])
 
-        self.popup_menu_user = popup = PopupMenu(self.frame)
+        self.popup_menu_user = popup = PopupMenu(self.frame, False)
         popup.setup(
             ("#" + _("Show IP a_ddress"), popup.OnShowIPaddress),
             ("#" + _("Get user i_nfo"), popup.OnGetUserInfo),
@@ -879,7 +879,7 @@ class PrivateChat:
         if color == "":
             color = None
 
-        self.tag_log.set_property("foreground", color)
+        tag.set_property("foreground", color)
 
         font = self.frame.np.config.sections["ui"]["chatfont"]
         tag.set_property("font", font)
