@@ -807,27 +807,19 @@ class PrivateChat:
 
     def makecolour(self, buffer, colour):
 
-        color = self.frame.np.config.sections["ui"][colour]
-        if color == "":
-            color = self.backuprgba.to_color()
-        else:
-            color = Gdk.color_parse(color)
-
+        colour = self.frame.np.config.sections["ui"][colour]
         font = self.frame.np.config.sections["ui"]["chatfont"]
-        tag = buffer.create_tag()
-        tag.set_property("foreground-gdk", color)
-        tag.set_property("font", font)
+        
+        tag = buffer.create_tag(font=font)
+
+        if colour:
+            tag.set_property("foreground", colour)
 
         return tag
 
     def UpdateColours(self):
 
         map = self.frame.MainWindow.get_style_context()
-
-        try:
-            self.backuprgba = map.get_color(gtk.StateFlags.NORMAL)
-        except IndexError:
-            self.backuprgba = ''
 
         buffer = self.ChatScroll.get_buffer()
         self.tag_remote = self.makecolour(buffer, "chatremote")
@@ -882,19 +874,14 @@ class PrivateChat:
 
     def changecolour(self, tag, colour):
 
-        if colour in self.frame.np.config.sections["ui"]:
-            color = self.frame.np.config.sections["ui"][colour]
-        else:
-            color = ""
-
-        font = self.frame.np.config.sections["ui"]["chatfont"]
+        color = self.frame.np.config.sections["ui"][colour]
 
         if color == "":
-            color = self.backuprgba.to_color()
-        else:
-            color = Gdk.color_parse(color)
+            color = None
 
-        tag.set_property("foreground-gdk", color)
+        self.tag_log.set_property("foreground", color)
+
+        font = self.frame.np.config.sections["ui"]["chatfont"]
         tag.set_property("font", font)
 
         if colour in ["useraway", "useronline", "useroffline"]:
@@ -919,7 +906,6 @@ class PrivateChat:
     def ChangeColours(self):
 
         map = self.ChatScroll.get_style_context()
-        self.backuprgba = map.get_color(gtk.StateFlags.NORMAL)
 
         self.changecolour(self.tag_remote, "chatremote")
         self.changecolour(self.tag_local, "chatlocal")

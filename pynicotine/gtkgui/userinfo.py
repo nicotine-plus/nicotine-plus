@@ -369,29 +369,23 @@ class UserInfo:
         buffer = self.descr.get_buffer()
         colour = self.frame.np.config.sections["ui"][colour]
         font = self.frame.np.config.sections["ui"]["chatfont"]
+        
+        tag = buffer.create_tag(font=font)
 
         if colour:
-            return buffer.create_tag(foreground=colour, font=font)
-        else:
-            return buffer.create_tag(font=font)
+            tag.set_property("foreground", colour)
 
     def changecolour(self, tag, colour):
 
-        if colour in self.frame.np.config.sections["ui"]:
-            color = self.frame.np.config.sections["ui"][colour]
-        else:
+        color = self.frame.np.config.sections["ui"][colour]
+
+        if color == "":
             color = None
 
+        tag.set_property("foreground", color)
+        
         font = self.frame.np.config.sections["ui"]["chatfont"]
-
-        if color:
-            if color == "":
-                color = None
-
-            tag.set_property("foreground", color)
-            tag.set_property("font", font)
-        else:
-            tag.set_property("font", font)
+        tag.set_property("font", font)
 
     def ChangeColours(self):
 
