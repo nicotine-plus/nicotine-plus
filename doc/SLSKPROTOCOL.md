@@ -393,13 +393,13 @@ Nicotine: JoinRoom
     11. Iterate thru number of usercountries
         1.  **string** <ins>countrycode</ins>
             **Uppercase country code**
-    12. **string** <span class="underline">owner</span> **If private
+    12. **string** <ins>owner</ins> **If private
         room**
-    13. **int** <span class="underline">number of operators in
-        room</span> **If private room**
-    14. Iterate the <span class="underline">number of operators</span>
+    13. **int** <ins>number of operators in
+        room</ins> **If private room**
+    14. Iterate the <ins>number of operators</ins>
         **museekd uses a vector of strings**
-        1.  **string** <span class="underline">operator</span>
+        1.  **string** <ins>operator</ins>
 
 ### Server Code 15
 
@@ -498,7 +498,7 @@ Order](#peer-connection-message-order)
     4.  **int** <ins>port</ins>
     5.  **uint32** <ins>token</ins> *Use this token
         for [Pierce Firewall](#peer-code-0)*
-    6.  **bool** <span class="underline">privileged</span>
+    6.  **bool** <ins>privileged</ins>
 
 ### Server Code 22
 
@@ -521,7 +521,7 @@ Nicotine: MessageUser
     2.  **int** <ins>timestamp</ins>
     3.  **string** <ins>username</ins>
     4.  **string** <ins>message</ins>
-    5.  **bool** <span class="underline">isAdmin</span> **1 if sent by
+    5.  **bool** <ins>isAdmin</ins> **1 if sent by
         server, elsenot present**
 
 ### Server Code 23
@@ -892,37 +892,37 @@ will download all rooms.
 
 <!-- end list -->
 
-1.  **int** <span class="underline">number of owned private rooms</span>
-2.  Iterate for <span class="underline">number of owned private
-    rooms</span>
-    1.  **string** <span class="underline">owned private room</span>
-3.  **int** <span class="underline">number of owned private rooms</span>
-4.  Iterate for <span class="underline">number of owned private
-    rooms</span>
-    1.  **int** <span class="underline">number of users in owned private
-        room</span>
+1.  **int** <ins>number of owned private rooms</ins>
+2.  Iterate for <ins>number of owned private
+    rooms</ins>
+    1.  **string** <ins>owned private room</ins>
+3.  **int** <ins>number of owned private rooms</ins>
+4.  Iterate for <ins>number of owned private
+    rooms</ins>
+    1.  **int** <ins>number of users in owned private
+        room</ins>
 
 <!-- end list -->
 
-1.  **int** <span class="underline">number of private rooms (except
-    owned)</span>
-2.  Iterate for <span class="underline">number of private rooms (except
-    owned)</span>
-    1.  **string** <span class="underline">private room</span>
-3.  **int** <span class="underline">number of private rooms (except
-    owned)</span>
-4.  Iterate for <span class="underline">number of private rooms (except
-    owned)</span>
-    1.  **int** <span class="underline">number of users in private rooms
-        (except owned)</span>
+1.  **int** <ins>number of private rooms (except
+    owned)</ins>
+2.  Iterate for <ins>number of private rooms (except
+    owned)</ins>
+    1.  **string** <ins>private room</ins>
+3.  **int** <ins>number of private rooms (except
+    owned)</ins>
+4.  Iterate for <ins>number of private rooms (except
+    owned)</ins>
+    1.  **int** <ins>number of users in private rooms
+        (except owned)</ins>
 
 <!-- end list -->
 
-1.  **int** <span class="underline">number of operated private
-    rooms</span>
-2.  Iterate for <span class="underline">number of operated private
-    rooms</span>
-    1.  **string** <span class="underline">operated private room</span>
+1.  **int** <ins>number of operated private
+    rooms</ins>
+2.  Iterate for <ins>number of operated private
+    rooms</ins>
+    1.  **string** <ins>operated private room</ins>
 
 ### Server Code 65
 
@@ -1840,9 +1840,9 @@ Nicotine: Unimplemented
 #### Data Order
 
   - Send
-    1.  **string** <span class="underline">pass</span>
+    1.  **string** <ins>pass</ins>
   - Receive
-    1.  **string** <span class="underline">pass</span>
+    1.  **string** <ins>pass</ins>
 
 ### Server Code 143
 
@@ -1861,10 +1861,10 @@ Nicotine: PrivateRoomAddOperator
 
   - Send
     1.  **string** <ins>room</ins>
-    2.  **string** <span class="underline">operator</span>
+    2.  **string** <ins>operator</ins>
   - Receive
     1.  **string** <ins>room</ins>
-    2.  **string** <span class="underline">operator</span>
+    2.  **string** <ins>operator</ins>
 
 ### Server Code 144
 
@@ -1936,18 +1936,18 @@ List of operators of a specific room, that we can disop.
 #### Function Names
 
 Museekd: SPrivRoomAlterableOperators  
-Nicotine: <span class="missing wiki">PrivateRoomOwned?</span>
+Nicotine: PrivateRoomOwned
 
 #### Data Order
 
   - Not sent
   - Receive
-    1.  **string** <span class="underline">room</span>
-    2.  **int** <span class="underline">number of operators in
-        room</span>
-    3.  Iterate the <span class="underline">number of operators</span>
+    1.  **string** <ins>room</ins>
+    2.  **int** <ins>number of operators in
+        room</ins>
+    3.  Iterate the <ins>number of operators</ins>
         **museekd uses a vector of strings**
-        1.  **string** <span class="underline">operator</span>
+        1.  **string** <ins>operator</ins>
 
 ### Server Code 149
 
@@ -1965,11 +1965,11 @@ Nicotine: Unimplemented
 #### Data Order
 
   - Send
-    1.  **int** <span class="underline">number of users</span>
-    2.  Iterate the <span class="underline">number of users</span>
+    1.  **int** <ins>number of users</ins>
+    2.  Iterate the <ins>number of users</ins>
         **museekd uses a vector of strings**
-        1.  **string** <span class="underline">user</span>
-    3.  **string** <span class="underline">message</span>
+        1.  **string** <ins>user</ins>
+    3.  **string** <ins>message</ins>
 
 ### Server Code 150
 
@@ -2024,9 +2024,9 @@ Nicotine: Unimplemented
 #### Data Order
 
   - Receive
-    1.  **string** <span class="underline">room</span>
-    2.  **string** <span class="underline">user</span>
-    3.  **string** <span class="underline">message</span>
+    1.  **string** <ins>room</ins>
+    2.  **string** <ins>user</ins>
+    3.  **string** <ins>message</ins>
 
 ### Server Code 1001
 
@@ -2266,9 +2266,9 @@ Nicotine: FileSearchResult
             1.  **int** <ins>place in
                 attributes</ins>
             2.  **int** <ins>attribute</ins>
-    5.  **bool** <span class="underline">slotfree</span>
-    6.  **int** <span class="underline">avgspeed</span>
-    7.  **off\_t** <span class="underline">queue length</span>
+    5.  **bool** <ins>slotfree</ins>
+    6.  **int** <ins>avgspeed</ins>
+    7.  **off\_t** <ins>queue length</ins>
   - Receive
     1.  decompress
     2.  **string** <ins>user</ins>
@@ -2285,9 +2285,9 @@ Nicotine: FileSearchResult
             1.  **int** <ins>place in
                 attributes</ins>
             2.  **int** <ins>attribute</ins>
-    6.  **bool** <span class="underline">slotfree</span>
-    7.  **int** <span class="underline">avgspeed</span>
-    8.  **off\_t** <span class="underline">queue length</span>
+    6.  **bool** <ins>slotfree</ins>
+    7.  **int** <ins>avgspeed</ins>
+    8.  **off\_t** <ins>queue length</ins>
 
 ### Peer Code 15
 
