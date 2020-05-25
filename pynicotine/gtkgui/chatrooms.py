@@ -1848,11 +1848,11 @@ class ChatRoom:
 
         colour = self.frame.np.config.sections["ui"][colour]
         font = self.frame.np.config.sections["ui"]["chatfont"]
+        
+        tag = buffer.create_tag(font=font)
 
         if colour:
-            tag = buffer.create_tag(foreground=colour, font=font)
-        else:
-            tag = buffer.create_tag(font=font)
+            tag.set_property("foreground", colour)
 
         if username is not None:
 
@@ -1906,10 +1906,6 @@ class ChatRoom:
         self.frame.ChangeListFont(self.UserList, self.frame.np.config.sections["ui"]["listfont"])
 
         map = self.ChatScroll.get_style_context()
-        try:
-            self.backuprgba = map.get_color(gtk.StateFlags.NORMAL)
-        except IndexError:
-            self.backuprgba = ''
         buffer = self.ChatScroll.get_buffer()
 
         self.tag_remote = self.makecolour(buffer, "chatremote")
@@ -1949,19 +1945,14 @@ class ChatRoom:
 
     def changecolour(self, tag, colour):
 
-        if colour in self.frame.np.config.sections["ui"]:
-            color = self.frame.np.config.sections["ui"][colour]
-        else:
-            color = ""
-
-        font = self.frame.np.config.sections["ui"]["chatfont"]
+        color = self.frame.np.config.sections["ui"][colour]
 
         if color == "":
-            color = self.backuprgba.to_color()
-        else:
-            color = Gdk.color_parse(color)
+            color = None
 
-        tag.set_property("foreground-gdk", color)
+        tag.set_property("foreground", color)
+
+        font = self.frame.np.config.sections["ui"]["chatfont"]
         tag.set_property("font", font)
 
         # Hotspots
@@ -1987,7 +1978,6 @@ class ChatRoom:
     def ChangeColours(self):
 
         map = self.ChatScroll.get_style_context()
-        self.backuprgba = map.get_color(gtk.StateFlags.NORMAL)
 
         self.changecolour(self.tag_remote, "chatremote")
         self.changecolour(self.tag_local, "chatlocal")

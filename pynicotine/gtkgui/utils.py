@@ -311,7 +311,7 @@ def AppendLine(textview, line, tag=None, timestamp=None, showstamp=True, timesta
     def _makeurltag(buffer, tag, url):
         props = {}
 
-        props["foreground_gdk"] = Gdk.color_parse(NICOTINE.np.config.sections["ui"]["urlcolor"])
+        props["foreground"] = NICOTINE.np.config.sections["ui"]["urlcolor"]
         props["underline"] = pango.Underline.SINGLE
         tag = buffer.create_tag(**props)
         tag.last_event_type = -1

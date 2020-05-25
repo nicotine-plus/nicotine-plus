@@ -1417,21 +1417,6 @@ class NicotineFrame:
             colour = None
         cellrenderer.set_property("foreground", colour)
 
-    def changecolour(self, tag, colour):
-        if colour in self.frame.np.config.sections["ui"]:
-            color = self.frame.np.config.sections["ui"][colour]
-        else:
-            color = None
-        font = self.frame.np.config.sections["ui"]["chatfont"]
-
-        if color:
-            if color == "":
-                color = None
-            tag.set_property("foreground", color)
-            tag.set_property("font", font)
-        else:
-            tag.set_property("font", font)
-
     def ChangeListFont(self, listview, font):
         for c in listview.get_columns():
             for r in c.get_cells():
@@ -1439,19 +1424,18 @@ class NicotineFrame:
                     r.set_property("font", font)
 
     def UpdateColours(self, first=0):
-        color = self.np.config.sections["ui"]["chatremote"]
-        font = self.np.config.sections["ui"]["chatfont"]
-
-        if color == "":
-            map = self.LogWindow.get_style_context()
-            colour = map.get_color(gtk.StateFlags.NORMAL)
-        else:
-            colour = Gdk.RGBA()
-            colour.parse(color)
         if first:
             self.tag_log = self.LogWindow.get_buffer().create_tag()
+
+        color = self.np.config.sections["ui"]["chatremote"]
+
+        if color == "":
+            color = None
+
+        self.tag_log.set_property("foreground", color)
+
+        font = self.np.config.sections["ui"]["chatfont"]
         self.tag_log.set_property("font", font)
-        self.tag_log.set_property("foreground-rgba", colour)
 
         self.SetTextBG(self.LogWindow)
         self.SetTextBG(self.userlist.UserList)
