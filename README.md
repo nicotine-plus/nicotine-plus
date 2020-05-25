@@ -18,7 +18,7 @@ $ sudo apt install nicotine
 ```
 
 ### Ubuntu PPA (Unstable)
-The project builds [daily unstable snapshots](https://code.launchpad.net/~nicotine-team/+recipe/nicotine+-daily) in a separate [unstable PPA](https://code.launchpad.net/~nicotine-team/+archive/ubuntu/unstable). To use it, run the following:
+The project builds [daily unstable snapshots](https://code.launchpad.net/~nicotine-team/+recipe/nicotine+-daily) in a separate [unstable PPA](https://code.launchpad.net/~nicotine-team/+archive/ubuntu/unstable). It currently contains bleeding edge packages for _Breezy_, _Eoan_, _Focal_, and _Groovy_. To use it, run the following:
 
 ```console
 $ sudo add-apt-repository ppa:nicotine-team/unstable
@@ -88,7 +88,7 @@ $ autopkgtest --shell-fail --apt-upgrade ../nicotine_(...).dsc -- \
 
 ## Required
 
-* [python3](https://www.python.org/) for interpreter;
+* [python3](https://www.python.org/) >= 3.5 for interpreter;
 * [python3-gi](https://pygobject.readthedocs.io/en/latest/getting_started.html) for using GObject introspection with Python 3;
 * [gobject-introspection](https://gi.readthedocs.io/en/latest/) for GObject introspection;
 * [gir1.2-gtk-3.0](https://www.gtk.org/) for GObject introspection bindings for GTK;
