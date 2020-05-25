@@ -47,7 +47,8 @@ Soulfind is obviously not the exact same the official Soulseek server,
 but it handles the protocol well enough (and can be modified).
 
 In museekd 0.1.13, these messages are sent and received in
-Museek/ServerConnection.cc and defined in Museek/ServerMessages.hh
+Museek/ServerConnection.cc and defined in Museek/ServerMessages.hh.
+Since museekd 0.2, they are defined in museekd/servermessages.h.
 
 In Nicotine, these messages are matched to their message number in
 slskproto.py in the SlskProtoThread function, defined in slskmessages.py
@@ -137,11 +138,16 @@ and callbacks for the messages are set in pynicotine.py.
 | 139  | [Private Room Added](#server-code-139)            |
 | 140  | [Private Room Removed](#server-code-140)          |
 | 141  | [Private Room Toggle](#server-code-141)           |
+| 142  | [New Password](#server-code-142)     |
 | 143  | [Private Room Add Operator](#server-code-143)     |
 | 144  | [Private Room Remove Operator](#server-code-144)  |
 | 145  | [Private Room Operator Added](#server-code-145)   |
 | 146  | [Private Room Operator Removed](#server-code-146) |
 | 148  | [Private Room Owned](#server-code-148)            |
+| 149  | [Message Users](#server-code-149)                 |
+| 150  | [Ask Public Chat](#server-code-150)               |
+| 151  | [Stop Public Chat](#server-code-151)              |
+| 152  | [Public Chat](#server-code-152)                   |
 | 1001 | [Cannot Connect](#server-code-1001)               |
 
 ### Server Code 1
@@ -186,10 +192,8 @@ Send your username, password, and client version.
         for Museek+ *181* for Nicotine+
     4.  **string** <ins>MD5 hex digest of
         concatenated username & password</ins>
-    5.  **uint32** <ins>1</ins> ??? No idea what
-        exactly this is.
-    6.  **string** <ins>Unknown string</ins> *In 157
-        and up*
+    5.  **uint32** <ins>minor version</ins> Minor
+        version (0x13000000 for 157 ns 13e, 0x11000000 for 157 ns 13c)
 
 <!-- end list -->
 
@@ -323,6 +327,7 @@ Nicotine: GetUserStatus
     1.  **string** <ins>username</ins>
     2.  **int** <ins>status</ins> *0 == Offline, 1
         == Away; 2 == Online*
+    3.  **bool** <ins>privileged</ins>
 
 ### Server Code 13
 
@@ -366,6 +371,7 @@ Nicotine: JoinRoom
   - Receive
     1.  **string** <ins>room</ins>
     2.  **int** <ins>number of users in room</ins>
+        **For private rooms, also contain owner and operators**
     3.  Iterate the <ins>number of users</ins>
         **museekd uses a vector of strings**
         1.  **string** <ins>user</ins>
@@ -384,17 +390,16 @@ Nicotine: JoinRoom
     9.  Iterate thru number of slotsfree
         1.  **int** <ins>slotsfree</ins>
     10. **int** <ins>number of usercountries</ins>
-        (may not be implemented)
     11. Iterate thru number of usercountries
         1.  **string** <ins>countrycode</ins>
             **Uppercase country code**
-
-ServerMessages.hh then Iterates thru
-<ins>userdata</ins> and
-<ins>users</ins> (For passing message to daemon)
-
-  - Add data to [RoomData](#room-data)
-    users\[**string** username \] = **data**
+    12. **string** <span class="underline">owner</span> **If private
+        room**
+    13. **int** <span class="underline">number of operators in
+        room</span> **If private room**
+    14. Iterate the <span class="underline">number of operators</span>
+        **museekd uses a vector of strings**
+        1.  **string** <span class="underline">operator</span>
 
 ### Server Code 15
 
@@ -493,6 +498,7 @@ Order](#peer-connection-message-order)
     4.  **int** <ins>port</ins>
     5.  **uint32** <ins>token</ins> *Use this token
         for [Pierce Firewall](#peer-code-0)*
+    6.  **bool** <span class="underline">privileged</span>
 
 ### Server Code 22
 
@@ -515,6 +521,8 @@ Nicotine: MessageUser
     2.  **int** <ins>timestamp</ins>
     3.  **string** <ins>username</ins>
     4.  **string** <ins>message</ins>
+    5.  **bool** <span class="underline">isAdmin</span> **1 if sent by
+        server, elsenot present**
 
 ### Server Code 23
 
@@ -642,7 +650,8 @@ Nicotine: SharedFoldersFiles
 ### Server Code 36
 
 **Get User Stats** Museekd: SGetUserStats  
-Nicotine: GetUserStats
+Nicotine: GetUserStats **This is
+deprecated, see SAddUser.**
 
 #### Data Order
 
@@ -876,11 +885,44 @@ will download all rooms.
     1.  **int** <ins>number of rooms</ins>
     2.  Iterate for <ins>number of rooms</ins>
         1.  **string** <ins>room</ins>
-    3.  **int** <ins>number of rooms</ins> (unused
-        in museekd)
+    3.  **int** <ins>number of rooms</ins>
     4.  Iterate for <ins>number of rooms</ins>
         1.  **int** <ins>number of users in
             room</ins>
+
+<!-- end list -->
+
+1.  **int** <span class="underline">number of owned private rooms</span>
+2.  Iterate for <span class="underline">number of owned private
+    rooms</span>
+    1.  **string** <span class="underline">owned private room</span>
+3.  **int** <span class="underline">number of owned private rooms</span>
+4.  Iterate for <span class="underline">number of owned private
+    rooms</span>
+    1.  **int** <span class="underline">number of users in owned private
+        room</span>
+
+<!-- end list -->
+
+1.  **int** <span class="underline">number of private rooms (except
+    owned)</span>
+2.  Iterate for <span class="underline">number of private rooms (except
+    owned)</span>
+    1.  **string** <span class="underline">private room</span>
+3.  **int** <span class="underline">number of private rooms (except
+    owned)</span>
+4.  Iterate for <span class="underline">number of private rooms (except
+    owned)</span>
+    1.  **int** <span class="underline">number of users in private rooms
+        (except owned)</span>
+
+<!-- end list -->
+
+1.  **int** <span class="underline">number of operated private
+    rooms</span>
+2.  Iterate for <span class="underline">number of operated private
+    rooms</span>
+    1.  **string** <span class="underline">operated private room</span>
 
 ### Server Code 65
 
@@ -1008,7 +1050,7 @@ ParentSpeedRatio
 
 #### Description
 
-Unknown Purpose. Number was 0x0a before 157c. Now 0x64 since 157 NS 13c.
+Unknown Purpose.
 
 #### Data Order
 
@@ -1600,7 +1642,7 @@ Museekd: **SChildDepth**
 
 ### Server Code 133
 
-**Private Room Users**
+**Private Room Users that we can (dis)op/dismember**
 
 #### Description
 
@@ -1608,7 +1650,7 @@ We get this when we've created a private room
 
 #### Function Names
 
-Museekd: Unimplemented  
+Museekd: SPrivRoomAlterableMembers  
 Nicotine: PrivateRoomUsers
 
 #### Data Order
@@ -1631,7 +1673,7 @@ We get / receive this when we add a user to a private room.
 
 #### Function Names
 
-Museekd: Unimplemented  
+Museekd: SPrivRoomAddUser  
 Nicotine: PrivateRoomAddUser
 
 #### Data Order
@@ -1653,7 +1695,7 @@ We get / send this when we remove a user from a private room
 
 #### Function Names
 
-Museekd: Unimplemented  
+Museekd: SPrivRoomRemoveUser  
 Nicotine: PrivateRoomRemoveUser
 
 #### Data Order
@@ -1675,15 +1717,14 @@ We do this to remove our own membership of a private room.
 
 #### Function Names
 
-Museekd: Unimplemented  
+Museekd: SPrivRoomDismember  
 Nicotine: PrivateRoomDismember
 
 #### Data Order
 
   - Send
     1.  **string** <ins>room</ins>
-  - Receive
-    1.  **string** <ins>room</ins>
+  - Not received
 
 ### Server Code 137
 
@@ -1695,15 +1736,14 @@ We do this to stop owning a private room.
 
 #### Function Names
 
-Museekd: Unimplemented  
+Museekd: SPrivRoomDisown  
 Nicotine: PrivateRoomDisown
 
 #### Data Order
 
   - Send
     1.  **string** <ins>room</ins>
-  - Receive
-    1.  **string** <ins>room</ins>
+  - Not received
 
 ### Server Code 138
 
@@ -1715,7 +1755,7 @@ Undocumented
 
 #### Function Names
 
-Museekd: Unimplemented  
+Museekd: SPrivRoomUnknown138  
 Nicotine: PrivateRoomSomething
 
 #### Data Order
@@ -1731,17 +1771,16 @@ Nicotine: PrivateRoomSomething
 
 #### Description
 
-We are sent this when we are added to a private room.
+We receive this when we are added to a private room.
 
 #### Function Names
 
-Museekd: Unimplemented  
+Museekd: SPrivRoomAdded  
 Nicotine: PrivateRoomAdded
 
 #### Data Order
 
-  - Send
-    1.  **string** <ins>room</ins>
+  - Not sent
   - Receive
     1.  **string** <ins>room</ins>
 
@@ -1751,17 +1790,16 @@ Nicotine: PrivateRoomAdded
 
 #### Description
 
-We are sent this when we are removed from a private room.
+We receive this when we are removed from a private room.
 
 #### Function Names
 
-Museekd: Unimplemented  
+Museekd: SPrivRoomRemoved  
 Nicotine: PrivateRoomRemoved
 
 #### Data Order
 
-  - Send
-    1.  **string** <ins>room</ins>
+  - Not sent
   - Receive
     1.  **string** <ins>room</ins>
 
@@ -1776,7 +1814,7 @@ rooms
 
 #### Function Names
 
-Museekd: Unimplemented  
+Museekd: SPrivRoomToggle  
 Nicotine: PrivateRoomToggle
 
 #### Data Order
@@ -1785,6 +1823,26 @@ Nicotine: PrivateRoomToggle
     1.  **bool** <ins>enable</ins>
   - Receive
     1.  **bool** <ins>enable</ins>
+
+### Server Code 142
+
+**New Password**
+
+#### Description
+
+Send the new password. Server sent it back to confirm.
+
+#### Function Names
+
+Museekd: SNewPassword  
+Nicotine: Unimplemented
+
+#### Data Order
+
+  - Send
+    1.  **string** <span class="underline">pass</span>
+  - Receive
+    1.  **string** <span class="underline">pass</span>
 
 ### Server Code 143
 
@@ -1796,15 +1854,17 @@ We send this to add private room operator abilities to a user
 
 #### Function Names
 
-Museekd: Unimplemented  
+Museekd: SPrivRoomAddOperator  
 Nicotine: PrivateRoomAddOperator
 
 #### Data Order
 
   - Send
     1.  **string** <ins>room</ins>
+    2.  **string** <span class="underline">operator</span>
   - Receive
     1.  **string** <ins>room</ins>
+    2.  **string** <span class="underline">operator</span>
 
 ### Server Code 144
 
@@ -1832,11 +1892,11 @@ Nicotine: PrivateRoomRemoveOperator
 
 #### Description
 
-> We receive this when given privateroom operator abilities
+We receive this when given private room operator abilities
 
 #### Function Names
 
-Museekd: Unimplemented  
+Museekd: SPrivRoomOperatorAdded  
 Nicotine: PrivateRoomOperatorAdded
 
 #### Data Order
@@ -1856,35 +1916,117 @@ We receive this when privateroom operator abilities are removed
 
 #### Function Names
 
-Museekd: Unimplemented  
+Museekd: SPrivRoomOperatorRemoved  
 Nicotine: PrivateRoomOperatorRemoved
 
 #### Data Order
 
-  - Send
-    1.  **string** <ins>room</ins>
+  - Not sent
   - Receive
     1.  **string** <ins>room</ins>
 
 ### Server Code 148
 
-**Private Room Owned**
+**Private Room Operators**
 
 #### Description
 
-Undocumented
+List of operators of a specific room, that we can disop.
 
 #### Function Names
 
-Museekd: Unimplemented  
-Nicotine: PrivateRoomOwned
+Museekd: SPrivRoomAlterableOperators  
+Nicotine: <span class="missing wiki">PrivateRoomOwned?</span>
+
+#### Data Order
+
+  - Not sent
+  - Receive
+    1.  **string** <span class="underline">room</span>
+    2.  **int** <span class="underline">number of operators in
+        room</span>
+    3.  Iterate the <span class="underline">number of operators</span>
+        **museekd uses a vector of strings**
+        1.  **string** <span class="underline">operator</span>
+
+### Server Code 149
+
+**Message Users**
+
+#### Description
+
+Sends a broadcast private message to the given list of users.
+
+#### Function Names
+
+Museekd: SMessageUsers  
+Nicotine: Unimplemented
 
 #### Data Order
 
   - Send
-    1.  **string** <ins>room</ins>
+    1.  **int** <span class="underline">number of users</span>
+    2.  Iterate the <span class="underline">number of users</span>
+        **museekd uses a vector of strings**
+        1.  **string** <span class="underline">user</span>
+    3.  **string** <span class="underline">message</span>
+
+### Server Code 150
+
+**Ask Public Chat**
+
+#### Description
+
+Ask the server to send us public chat.
+
+#### Function Names
+
+Museekd: SAskPublicChat  
+Nicotine: Unimplemented
+
+#### Data Order
+
+  - Send
+      - Empty Message
+
+### Server Code 151
+
+**Stop Public Chat**
+
+#### Description
+
+Ask the server to stop sending us public chat.
+
+#### Function Names
+
+Museekd: SStopPublicChat  
+Nicotine: Unimplemented
+
+#### Data Order
+
+  - Send
+      - Empty Message
+
+### Server Code 152
+
+**Private Chat**
+
+#### Description
+
+Public chat sent by the server (ie every single line written in every
+public room).
+
+#### Function Names
+
+Museekd: SPublicChat  
+Nicotine: Unimplemented
+
+#### Data Order
+
   - Receive
-    1.  **string** <ins>room</ins>
+    1.  **string** <span class="underline">room</span>
+    2.  **string** <span class="underline">user</span>
+    3.  **string** <span class="underline">message</span>
 
 ### Server Code 1001
 
@@ -1917,7 +2059,8 @@ Order](#peer-connection-message-order)
 | Send to Peer | Receive from Peer |
 
 In museekd 0.1.13, these messages are sent and received in
-Museek/PeerConnection.cc and defined in Museek/PeerMessages.hh
+Museek/PeerConnection.cc and defined in Museek/PeerMessages.hh. Since
+museekd 0.2, they are defined in museekd/peermessages.h.
 
 #### The Peer Init Message format
 
@@ -2123,12 +2266,16 @@ Nicotine: FileSearchResult
             1.  **int** <ins>place in
                 attributes</ins>
             2.  **int** <ins>attribute</ins>
+    5.  **bool** <span class="underline">slotfree</span>
+    6.  **int** <span class="underline">avgspeed</span>
+    7.  **off\_t** <span class="underline">queue length</span>
   - Receive
-    1.  **string** <ins>user</ins>
-    2.  **int** <ins>ticket</ins>
-    3.  **int** <ins>results size</ins>
+    1.  decompress
+    2.  **string** <ins>user</ins>
+    3.  **int** <ins>ticket</ins>
+    4.  **int** <ins>results size</ins>
         <ins>number of results</ins>
-    4.  Iterate for <ins>number of results</ins>
+    5.  Iterate for <ins>number of results</ins>
         museekd pop buffer
         1.  **string** <ins>filename</ins>
         2.  **off\_t** <ins>size</ins>
@@ -2138,6 +2285,9 @@ Nicotine: FileSearchResult
             1.  **int** <ins>place in
                 attributes</ins>
             2.  **int** <ins>attribute</ins>
+    6.  **bool** <span class="underline">slotfree</span>
+    7.  **int** <span class="underline">avgspeed</span>
+    8.  **off\_t** <span class="underline">queue length</span>
 
 ### Peer Code 15
 
@@ -2248,8 +2398,9 @@ Nicotine: FolderContentsResponse
                     number</ins>
                 2.  **int** <ins>attribute</ins>
   - Receive
-    1.  **int** <ins>number of folders</ins>
-    2.  Iterate for <ins>number of folders</ins>
+    1.  decompress
+    2.  **int** <ins>number of folders</ins>
+    3.  Iterate for <ins>number of folders</ins>
         1.  **string** <ins>dir</ins>
         2.  **int** <ins>number of files</ins>
         3.  Iterate <ins>number of files</ins>
@@ -2500,7 +2651,8 @@ Nicotine: **Not implemented**
 | Receive | Receive from Node |
 
 In museekd 0.1.13, these messages are sent and received in
-Museek/DistribConnection.cc and defined in Museek/DistribMessages.hh
+Museek/DistribConnection.cc and defined in Museek/DistribMessages.hh.
+Since museekd 0.2, they are defined in museekd/distributedmessages.h.
 
 #### The Message format
 
