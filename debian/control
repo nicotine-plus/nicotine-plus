@@ -23,7 +23,7 @@ Architecture: all
 Depends:
     ${python3:Depends},
     ${misc:Depends},
-    miniupnpc (>= 1.9),
+    python3-miniupnpc | miniupnpc (>= 1.9),
     gobject-introspection,
     gir1.2-gtk-3.0,
     gir1.2-notify-0.7,
