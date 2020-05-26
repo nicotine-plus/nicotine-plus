@@ -82,14 +82,18 @@ class Uploads(TransferList):
 
         cols = frame.UploadList.get_columns()
 
-        for i in range(10):
+        try:
+            for i in range(len(cols)):
 
-            parent = cols[i].get_widget().get_ancestor(gtk.Button)
-            if parent:
-                parent.connect("button_press_event", PressHeader)
+                parent = cols[i].get_widget().get_ancestor(gtk.Button)
+                if parent:
+                    parent.connect("button_press_event", PressHeader)
 
-            # Read Show / Hide column settings from last session
-            cols[i].set_visible(self.frame.np.config.sections["columns"]["uploads_columns"][i])
+                # Read Show / Hide column settings from last session
+                cols[i].set_visible(self.frame.np.config.sections["columns"]["uploads_columns"][i])
+        except IndexError:
+            # Column count in config is probably incorrect (outdated?), don't crash
+            pass
 
         frame.clearUploadFinishedErredButton.connect("clicked", self.OnClearFinishedErred)
         frame.clearUploadQueueButton.connect("clicked", self.OnTryClearQueued)

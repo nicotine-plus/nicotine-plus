@@ -101,6 +101,7 @@ class TransferList:
 
         self.transfersmodel = gtk.TreeStore(*columntypes)
         widths = self.frame.np.config.sections["columns"]["{}_widths".format(type)]
+
         self.cols = cols = InitialiseColumns(
             widget,
             [_("User"), widths[0], "text", self.CellDataFunc],

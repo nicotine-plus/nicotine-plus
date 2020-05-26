@@ -1008,14 +1008,18 @@ class ChatRoom:
         if len(config["columns"]["chatrooms"][room]) != 5:  # Insert new column to old settings.
             config["columns"]["chatrooms"][room].insert(1, 1)
 
-        for i in range(5):
+        try:
+            for i in range(len(cols)):
 
-            parent = cols[i].get_widget().get_ancestor(gtk.Button)
-            if parent:
-                parent.connect('button_press_event', PressHeader)
+                parent = cols[i].get_widget().get_ancestor(gtk.Button)
+                if parent:
+                    parent.connect("button_press_event", PressHeader)
 
-            # Read Show / Hide column settings from last session
-            cols[i].set_visible(config["columns"]["chatrooms"][room][i])
+                # Read Show / Hide column settings from last session
+                cols[i].set_visible(config["columns"]["chatrooms"][room][i])
+        except IndexError:
+            # Column count in config is probably incorrect (outdated?), don't crash
+            pass
 
         if config["columns"]["hideflags"]:
             cols[1].set_visible(0)
