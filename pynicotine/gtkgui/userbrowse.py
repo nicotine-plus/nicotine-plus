@@ -196,13 +196,18 @@ class UserBrowse:
 
         config = self.frame.np.config.sections
 
-        for i in range(4):
-            parent = cols[i].get_widget().get_ancestor(gtk.Button)
-            if parent:
-                parent.connect('button_press_event', PressHeader)
-            
-            # Read Show / Hide column settings from last session
-            cols[i].set_visible(config["columns"]["userbrowse"][i])
+        try:
+            for i in range(len(cols)):
+
+                parent = cols[i].get_widget().get_ancestor(gtk.Button)
+                if parent:
+                    parent.connect("button_press_event", PressHeader)
+
+                # Read Show / Hide column settings from last session
+                cols[i].set_visible(self.frame.np.config.sections["columns"]["userbrowse"][i])
+        except IndexError:
+            # Column count in config is probably incorrect (outdated?), don't crash
+            pass
 
         self.FileTreeView.get_selection().set_mode(gtk.SelectionMode.MULTIPLE)
         self.FileTreeView.set_headers_clickable(True)

@@ -116,14 +116,18 @@ class UserList:
 
         config = self.frame.np.config.sections
 
-        for i in range(10):
+        try:
+            for i in range(len(cols)):
 
-            parent = cols[i].get_widget().get_ancestor(gtk.Button)
-            if parent:
-                parent.connect('button_press_event', PressHeader)
+                parent = cols[i].get_widget().get_ancestor(gtk.Button)
+                if parent:
+                    parent.connect("button_press_event", PressHeader)
 
-            # Read Show / Hide column settings from last session
-            cols[i].set_visible(config["columns"]["userlist"][i])
+                # Read Show / Hide column settings from last session
+                cols[i].set_visible(self.frame.np.config.sections["columns"]["userlist"][i])
+        except IndexError:
+            # Column count in config is probably incorrect (outdated?), don't crash
+            pass
 
         if config["columns"]["hideflags"]:
             cols[1].set_visible(0)
