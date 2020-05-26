@@ -1,6 +1,13 @@
 name: Nicotine+ packaging CI
 
-on: [push]
+on:
+  push:
+    branches:
+      - master
+      - add_github_ci
+  pull_request:
+    branches:
+      - master
 
 env:
   # workaround until figuring out how to dynamically read this from source code
@@ -17,78 +24,34 @@ jobs:
           sudo apt-get install devscripts debhelper dh-python python-all \
             python-gobject-2 python-setuptools quilt
           sudo apt-get -y install dh-python python3 python3-pytest gettext lintian python3-setuptools quilt
-      - name: Build binary .deb
-        run: |
-          dpkg-buildpackage -b -rfakeroot -us -uc
-          echo ../nicotine_${NICOTINE_VERSION}_all.deb
-          ls -l  ../*.deb
-      - name: Archive binary .deb artifacts
-        uses: actions/upload-artifact@v1
-        with:
-          name: nicotine.deb
-          # path does not work with env variables, so cannot use #NICOTINE_VERSION here (damn)
-          path: ../nicotine_1.4.3-2_all.deb
-      - name: Clean binary .deb
-        run: |
-          mkdir ../binary
-          mv ../nicotine_${NICOTINE_VERSION}_all.deb ../binary
       - name: Build source .deb
         run: |
           ./debian/rules get-orig-source
-          ls -al ..
           dpkg-buildpackage -S -sa -us -uc
       - name: Collect source .deb artifacts
         run: |
-          ls -al ..
           mkdir ../source
           mv ../nicotine_${NICOTINE_VERSION}* ../nicotine_*.orig.tar.* ../source
-          ls -al ../source
       - name: Archive source .deb artifacts
         uses: actions/upload-artifact@v1
         with:
           name: debuild-source
           path: ../source
 
-  test-install:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        #os: [ubuntu-16.04, ubuntu-18.04, ubuntu-latest]
-        os: [ubuntu-latest]
-    needs: package
-    steps:
-    - name: Download.deb to ${{ matrix.os }}
-      uses: actions/download-artifact@v1
-      with:
-        name: nicotine.deb
-    - name: Bring ${{ matrix.os }} up to date
-      run: |
-        sudo apt-get update
-        sudo apt-get upgrade
-    - name: Test binary .deb installs on ${{ matrix.os }}
-      run: |
-        sudo apt-get install ./nicotine.deb/nicotine_${NICOTINE_VERSION}_all.deb
-        nicotine --version | grep ${NICOTINE_VERSION}
-
   autopkgtest:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        os: [focal]
     needs: package
     steps:
-    - name: Download artifacts to ${{ matrix.os }}
+    - name: Download artifacts
       uses: actions/download-artifact@v1
       with:
         name: debuild-source
-    - name: Where is the goddamn thing
-      run: |
-        ls -al . ${DEBUILD_SOURCE}
     - name: Install autopkgtest dependencies
       run: |
+        curl https://bazel.build/bazel-release.pub.gpg | sudo apt-key add -
         sudo apt-get update
         sudo apt-get upgrade
-        sudo apt install autopkgtest
+        sudo apt install autopkgtest bazel
     - name: Run autopkgtest image
       run: |
         sudo autopkgtest --shell-fail --apt-upgrade \

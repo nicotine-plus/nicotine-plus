@@ -1,6 +1,6 @@
 name: Nicotine+ source-level tests
 
-on: [push]
+on: push
 
 jobs:
 
@@ -8,10 +8,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        #os: [ubuntu-16.04, ubuntu-18.04, ubuntu-latest]
-        #python: [3.5, 3.6, 3.7, 3.8]
-        os: [ubuntu-latest]
-        python: [3.8]
+        os: [ubuntu-16.04, ubuntu-18.04, ubuntu-latest]
+        python: [3.5, 3.6, 3.7, 3.8]
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python ${{ matrix.python }}
@@ -27,9 +25,9 @@ jobs:
           pip install flake8
           flake8 nicotine pynicotine plugins --ignore=E402,E501,W503,W504
         continue-on-error: true
-      - name: Test with pytest
+      - name: Unit tests
         env:
           PYTHONPATH: .
         run: |
           pip install pytest
-          pytest
+          pytest test/unit
