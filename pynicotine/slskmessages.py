@@ -260,7 +260,6 @@ class SlskMessage:
                     return intsize + start, struct.unpack("<i", message[start:start + intsize])[0]
                 else:
                     return intsize + start, struct.unpack("<I", message[start:start + intsize])[0]
-
             elif type is bytes:
                 length = struct.unpack("<I", message[start:start + intsize])[0]
                 string = message[start + intsize:start + length + intsize]
@@ -467,11 +466,11 @@ class AddUser(ServerMessage):
         if message[pos:]:
             pos, self.status = self.getObject(message, int, pos)
             pos, self.avgspeed = self.getObject(message, int, pos)
-            pos, self.downloadnum = self.getObject(message, int, pos, getsignedint=1)
+            pos, self.downloadnum = self.getObject(message, NetworkLongLongType, pos)
 
             pos, self.files = self.getObject(message, int, pos)
             pos, self.dirs = self.getObject(message, int, pos)
-            pos = pos + 4
+
             if message[pos:]:
                 pos, self.country = self.getObject(message, bytes, pos)
 
@@ -1063,7 +1062,7 @@ class GetUserStats(ServerMessage):
     def parseNetworkMessage(self, message):
         pos, self.user = self.getObject(message, bytes)
         pos, self.avgspeed = self.getObject(message, int, pos, getsignedint=1)
-        pos, self.downloadnum = self.getObject(message, int, pos, getsignedint=1)
+        pos, self.downloadnum = self.getObject(message, NetworkLongLongType, pos)
         pos, self.files = self.getObject(message, int, pos)
         pos, self.dirs = self.getObject(message, int, pos)
 
@@ -1154,7 +1153,7 @@ class ExactFileSearch(ServerMessage):
         pos, self.req = self.getObject(message, int, pos)
         pos, self.file = self.getObject(message, bytes, pos)
         pos, self.folder = self.getObject(message, bytes, pos)
-        pos, self.size = self.getObject(message, int, pos, getsignedint=1)
+        pos, self.size = self.getObject(message, NetworkLongLongType, pos)
         pos, self.checksum = self.getObject(message, int, pos)
 
 
