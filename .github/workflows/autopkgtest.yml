@@ -1,0 +1,87 @@
+name: Nicotine+ packaging CI
+
+on:
+  push:
+    branches:
+      - master
+      - add_github_ci
+  pull_request:
+    branches:
+      - master
+
+env:
+  DEBUILD_SOURCE: debuild-source
+
+jobs:
+
+  get-version:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Read version
+        run: |
+          sudo apt-get -y install dpkg-dev
+          NICOTINE_VERSION=$(dpkg-parsechangelog | grep Version | cut -d : -f2 | tr -d '[:space:]')
+          echo $NICOTINE_VERSION > NICOTINE_VERSION
+      - name: Archive version string
+        uses: actions/upload-artifact@v1
+        with:
+          name: NICOTINE_VERSION
+          path: NICOTINE_VERSION
+
+  package:
+    runs-on: ubuntu-latest
+    needs: get-version
+    steps:
+      - uses: actions/checkout@v2
+      - name: Get version
+        uses: actions/download-artifact@v1
+        with:
+          name: NICOTINE_VERSION
+      - name: Install build dependencies
+        run: |
+          BUILD_DEPS=$(perl -ne 'next if /^#/; $p=(s/^Build-Depends:\s*/ / or (/^ / and $p)); s/,|\n|\([^)]+\)//mg; print if $p' < debian/control)
+          sudo apt-get install $BUILD_DEPS
+      - name: Build source .deb
+        run: |
+          ./debian/rules get-orig-source
+          dpkg-buildpackage -S -sa -us -uc
+      - name: Collect source .deb artifacts
+        run: |
+          NICOTINE_VERSION=$(<NICOTINE_VERSION/NICOTINE_VERSION)
+          mkdir ../source
+          mv ../nicotine_${NICOTINE_VERSION}* ../nicotine_*.orig.tar.* ../source
+      - name: Archive source .deb artifacts
+        uses: actions/upload-artifact@v1
+        with:
+          name: debuild-source
+          path: ../source
+
+  autopkgtest:
+    runs-on: ubuntu-latest
+    needs:
+      - package
+      - get-version
+    steps:
+      - name: Get version
+        uses: actions/download-artifact@v1
+        with:
+          name: NICOTINE_VERSION
+      - name: Download artifacts
+        uses: actions/download-artifact@v1
+        with:
+          name: debuild-source
+      - name: Install autopkgtest dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get upgrade
+          sudo apt install autopkgtest
+      - name: Run autopkgtest
+        run: |
+          set +e
+          NICOTINE_VERSION=$(<NICOTINE_VERSION/NICOTINE_VERSION)
+          sudo autopkgtest ./${DEBUILD_SOURCE}/nicotine_${NICOTINE_VERSION}_source.changes -- null
+          # autopkgtest exit code 2 signifies skipped tests
+          if [ $? -gt 2 ]; then
+            exit 1
+          fi
