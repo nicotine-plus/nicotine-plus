@@ -291,6 +291,7 @@ class NicotineFrame:
                 pass
 
         self.MainWindow.set_title(_("Nicotine+") + " " + version)
+        self.MainWindow.set_default_icon(self.images["n"])
         self.MainWindow.set_icon(self.images["n"])
         # self.MainWindow.selection_add_target("PRIMARY", "STRING", 1)
         hints_geometry = Gdk.Geometry()
@@ -2558,7 +2559,7 @@ class NicotineFrame:
         OpenUri(url, self.MainWindow)
 
     def OnAbout(self, widget):
-        dlg = AboutDialog(self.MainWindow, self)
+        dlg = AboutDialog(self.MainWindow)
         dlg.run()
         dlg.destroy()
 
