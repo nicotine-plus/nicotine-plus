@@ -1,0 +1,35 @@
+name: Nicotine+ source-level tests
+
+on: [push]
+
+jobs:
+
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        #os: [ubuntu-16.04, ubuntu-18.04, ubuntu-latest]
+        #python: [3.5, 3.6, 3.7, 3.8]
+        os: [ubuntu-latest]
+        python: [3.8]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python }}
+        uses: actions/setup-python@v1
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Install dependencies
+        run: |
+          sudo apt-get -y install miniupnpc gobject-introspection gir1.2-gtk-3.0 gir1.2-notify-0.7 \
+            python3 python3-dbus python3-geoip python3-gi python3-gst-1.0 python3-mutagen xdg-utils
+      - name: Lint with flake8
+        run: |
+          pip install flake8
+          flake8 nicotine pynicotine plugins --ignore=E402,E501,W503,W504
+        continue-on-error: true
+      - name: Test with pytest
+        env:
+          PYTHONPATH: .
+        run: |
+          pip install pytest
+          pytest
