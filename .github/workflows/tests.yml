@@ -1,6 +1,6 @@
 name: Nicotine+ source-level tests
 
-on: push
+on: [push, pull_request]
 
 jobs:
 
