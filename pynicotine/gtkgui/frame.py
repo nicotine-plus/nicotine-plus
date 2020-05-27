@@ -1285,7 +1285,7 @@ class NicotineFrame:
                 if 0 <= lasttabid <= self.MainNotebook.get_n_pages():
                     self.MainNotebook.set_current_page(lasttabid)
                     return
-        except Exception: 
+        except Exception:
             pass
 
         self.MainNotebook.set_current_page(0)

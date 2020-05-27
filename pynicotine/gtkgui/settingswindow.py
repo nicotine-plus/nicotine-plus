@@ -1455,8 +1455,8 @@ class BanFrame(buildFrame):
             self.banned.append(user)
             self.banlist.append([user])
 
-    def _AppendItem(self, model, path, iter, l):
-        l.append(iter)
+    def _AppendItem(self, model, path, iter, line):
+        line.append(iter)
 
     def OnRemoveBanned(self, widget):
         iters = []

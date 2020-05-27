@@ -53,7 +53,7 @@ Based on code from Nicotine and PySoulSeek""")
         self.set_license_type(gtk.License.GPL_3_0_ONLY)
         self.set_authors(
             ["# Nicotine+ MAINTAINERS",
-            """
+                """
 ### Active
 
 Mutnick
@@ -126,8 +126,8 @@ Michael Labouebe (aka gfarmerfr)
 - Developer
 - [gfarmerfr(at)free(dot)fr]
 """,
-            "# Nicotine MAINTAINERS",
-            """
+                "# Nicotine MAINTAINERS",
+                """
 ### Retired
 
 Hyriand
@@ -170,8 +170,8 @@ vasi
 
 Country flags provided by flags.blogpotato.de,
 distributed under a CC BY-SA 3.0 Unported license.
-"""
-])
+"""]
+        )
         self.set_translator_credits(
             """Dutch
  * nince78 (2007)
