@@ -48,6 +48,7 @@ from pynicotine.logfacility import log
 from pynicotine.slskmessages import newId
 from pynicotine.temporary import HybridListDictionaryTransferMonstrosity
 from pynicotine.utils import executeCommand
+from pynicotine.utils import CleanFile
 
 win32 = sys.platform.startswith("win")
 
@@ -999,7 +1000,7 @@ class Transfers:
 
             else:
                 # also check for a windows-style incomplete transfer
-                basename = i.filename.split('\\')[-1]
+                basename = CleanFile(i.filename.split('\\')[-1])
                 winfname = os.path.join(incompletedir, "INCOMPLETE~" + basename)
                 pyfname = os.path.join(incompletedir, "INCOMPLETE" + basename)
 
@@ -1184,7 +1185,7 @@ class Transfers:
                     i.status = "Transferring"
                 else:
                     msg.file.close()
-                    basename = utils.CleanPath(i.filename.split('\\')[-1], i.user)
+                    basename = CleanFile(i.filename.split('\\')[-1])
                     downloaddir = config["transfers"]["downloaddir"]
 
                     if i.path and i.path[0] == '/':

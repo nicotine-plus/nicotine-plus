@@ -43,13 +43,13 @@ illegalpathchars = []
 if win32:
     illegalpathchars += ["?", ":", ">", "<", "|", "*", '"']
 
-illegafilechars = illegalpathchars + ["\\", "/"]
+illegalfilechars = illegalpathchars + ["\\", "/"]
 replacementchar = '_'
 
 
 def CleanFile(filename):
 
-    for char in illegafilechars:
+    for char in illegalfilechars:
         filename = filename.replace(char, replacementchar)
 
     return filename
