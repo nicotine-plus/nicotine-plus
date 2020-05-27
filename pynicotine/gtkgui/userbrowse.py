@@ -194,8 +194,6 @@ class UserBrowse:
         cols[3].set_sort_column_id(5)
         self.FileStore.set_sort_column_id(0, gtk.SortType.ASCENDING)
 
-        config = self.frame.np.config.sections
-
         try:
             for i in range(len(cols)):
 

@@ -30,7 +30,6 @@ the transfer manager.
 """
 
 import hashlib
-import locale
 import os
 import os.path
 import re

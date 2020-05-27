@@ -54,7 +54,7 @@ You should install Python 3.5 or newer.""") % (e)
     # Require GTK+ >= 3
     try:
         import gi
-    except ModuleNotFoundError:
+    except ImportError:
         return _("Cannot find pygobject, please install it.")
     else:
         try:
@@ -66,7 +66,7 @@ You should install GTK 3.0 or newer.""") % e
     # Require PyGTK
     try:
         from gi.repository import Gtk  # noqa: F401
-    except ModuleNotFoundError:
+    except ImportError:
         return _("Cannot import the Gtk module. Bad install of the python-gobject module?")
 
     # Require pynicotine

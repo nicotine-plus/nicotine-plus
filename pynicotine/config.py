@@ -530,7 +530,7 @@ class Config:
         unknown2 = {
             'ui': [
                 "roomlistcollapsed", "tab_select_previous", "tabclosers",
-                "tab_colors","tab_reorderable", "buddylistinchatrooms", "trayicon",
+                "tab_colors", "tab_reorderable", "buddylistinchatrooms", "trayicon",
                 "showaway", "usernamehotspots", "exitdialog",
                 "tab_icons", "spellcheck", "modes_order", "modes_visible",
                 "chat_hidebuttons", "tab_status_icons", "notexists",

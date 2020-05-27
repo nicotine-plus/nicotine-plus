@@ -30,7 +30,6 @@ from mutagen.mp4 import MP4Info
 from mutagen.musepack import MusepackInfo
 from mutagen.oggopus import OggOpusInfo
 from mutagen.oggvorbis import OggVorbisInfo
-from pynicotine.logfacility import log
 
 
 def detect(path):

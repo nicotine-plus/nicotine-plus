@@ -289,7 +289,6 @@ class UserInfo:
             ("#" + _("Save Image"), self.OnSavePicture)
         )
 
-
     def OnPopupLikesMenu(self, widget, event):
 
         if event.button != 3:
@@ -369,7 +368,7 @@ class UserInfo:
         buffer = self.descr.get_buffer()
         colour = self.frame.np.config.sections["ui"][colour]
         font = self.frame.np.config.sections["ui"]["chatfont"]
-        
+
         tag = buffer.create_tag(font=font)
 
         if colour:
@@ -385,7 +384,7 @@ class UserInfo:
             color = None
 
         tag.set_property("foreground", color)
-        
+
         font = self.frame.np.config.sections["ui"]["chatfont"]
         tag.set_property("font", font)
 

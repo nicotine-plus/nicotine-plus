@@ -31,14 +31,12 @@ from gettext import gettext as _
 import gi
 from gi.repository import Gdk
 from gi.repository import GdkPixbuf
-from gi.repository import Gio as gio
 from gi.repository import GObject as gobject
 from gi.repository import Gtk as gtk
 
 import _thread
 from pynicotine.gtkgui.dirchooser import ChooseDir
 from pynicotine.gtkgui.entrydialog import input_box
-from pynicotine.gtkgui.utils import Humanize
 from pynicotine.gtkgui.utils import HumanSize
 from pynicotine.gtkgui.utils import InitialiseColumns
 from pynicotine.gtkgui.utils import InputDialog
@@ -1184,13 +1182,13 @@ class UserinfoFrame(buildFrame):
                 "pic": self.ImageChooser
             }
         }
-        
+
         def UpdateImagePreview(chooser):
             path = chooser.get_preview_filename()
 
             try:
                 pixbuf = GdkPixbuf.Pixbuf.new_from_file(path)
-                
+
                 maxwidth, maxheight = 300.0, 700.0
                 width, height = pixbuf.get_width(), pixbuf.get_height()
                 scale = min(maxwidth / width, maxheight / height)
@@ -1203,7 +1201,7 @@ class UserinfoFrame(buildFrame):
                 chooser.set_preview_widget_active(True)
             except Exception:
                 chooser.set_preview_widget_active(False)
-        
+
         preview = gtk.Image()
         self.ImageChooser.set_preview_widget(preview)
         self.ImageChooser.connect('update-preview', UpdateImagePreview)
@@ -1306,8 +1304,8 @@ class IgnoreFrame(buildFrame):
             }
         }
 
-    def _AppendItem(self, model, path, iter, l):
-        l.append(iter)
+    def _AppendItem(self, model, path, iter, line):
+        line.append(iter)
 
     def OnAddIgnored(self, widget):
 
@@ -1457,8 +1455,8 @@ class BanFrame(buildFrame):
             self.banned.append(user)
             self.banlist.append([user])
 
-    def _AppendItem(self, model, path, iter, l):
-        l.append(iter)
+    def _AppendItem(self, model, path, iter, line):
+        line.append(iter)
 
     def OnRemoveBanned(self, widget):
         iters = []

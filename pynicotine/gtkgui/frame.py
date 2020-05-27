@@ -75,7 +75,6 @@ from pynicotine.gtkgui.utils import ImageLabel
 from pynicotine.gtkgui.utils import OpenUri
 from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.gtkgui.utils import ScrollBottom
-from pynicotine.gtkgui.utils import popupWarning
 from pynicotine.logfacility import log
 from pynicotine.pynicotine import NetworkEventProcessor
 from pynicotine.upnp import UPnPPortMapping
@@ -1282,11 +1281,11 @@ class NicotineFrame:
         try:
             if self.np.config.sections["ui"]["tab_select_previous"]:
                 lasttabid = int(self.np.config.sections["ui"]["last_tab_id"])
-                
+
                 if 0 <= lasttabid <= self.MainNotebook.get_n_pages():
                     self.MainNotebook.set_current_page(lasttabid)
                     return
-        except Exception: 
+        except Exception:
             pass
 
         self.MainNotebook.set_current_page(0)
@@ -1925,22 +1924,22 @@ class NicotineFrame:
 
     def UpdateBandwidth(self):
 
-        def _calc(l):
+        def _calc(line):
             bandwidth = 0.0
             users = 0  # noqa: F841
-            l = [i for i in l if i.conn is not None]  # noqa: E741
-            for i in l:
+            line = [i for i in line if i.conn is not None]  # noqa: E741
+            for i in line:
                 if i.speed is not None:
                     bandwidth = bandwidth + i.speed
-            return len(l), bandwidth
+            return len(line), bandwidth
 
-        def _num_users(l):
+        def _num_users(line):
             users = []
 
-            for i in l:
+            for i in line:
                 if i.user not in users:
                     users.append(i.user)
-            return len(users), len(l)
+            return len(users), len(line)
 
         if self.np.transfers is not None:
             usersdown, down = _calc(self.np.transfers.downloads)

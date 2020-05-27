@@ -263,7 +263,7 @@ class SlskMessage:
             elif type is bytes:
                 length = struct.unpack("<I", message[start:start + intsize])[0]
                 string = message[start + intsize:start + length + intsize]
-                
+
                 if rawbytes is False:
                     string = string.decode('utf-8', errors='replace')
 

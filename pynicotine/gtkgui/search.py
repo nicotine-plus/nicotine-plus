@@ -130,8 +130,8 @@ class WishList(gtk.Dialog):
             self.wishes[wish] = self.store.append([wish])
             self.nicotine.Searches.NewWish(wish)
 
-    def _RemoveWish(self, model, path, iter, l):
-        l.append(iter)
+    def _RemoveWish(self, model, path, iter, line):
+        line.append(iter)
 
     def removeWish(self, wish):
 
