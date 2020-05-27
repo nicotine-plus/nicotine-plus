@@ -1166,15 +1166,15 @@ class ChatRoom:
 
             for bytes in loglines[-roomlines:-1]:
 
-                l = bytes
+                li = bytes
 
                 # Try to parse line for username
-                if len(l) > 20 and l[10].isspace() and l[11].isdigit() and l[20] in ("[", "*"):
+                if len(li) > 20 and li[10].isspace() and li[11].isdigit() and li[20] in ("[", "*"):
 
-                    line = l[11:]
-                    if l[20] == "[" and l[20:].find("] ") != -1:
-                        namepos = l[20:].find("] ")
-                        user = l[21:20 + namepos].strip()
+                    line = li[11:]
+                    if li[20] == "[" and li[20:].find("] ") != -1:
+                        namepos = li[20:].find("] ")
+                        user = li[21:20 + namepos].strip()
                         self.getUserTag(user)
                         usertag = self.tag_users[user]
                     else:
@@ -1183,14 +1183,14 @@ class ChatRoom:
 
                     if user == config["server"]["login"]:
                         tag = self.tag_local
-                    elif l[20] == "*":
+                    elif li[20] == "*":
                         tag = self.tag_me
-                    elif l[20 + namepos:].upper().find(config["server"]["login"].upper()) > -1:
+                    elif li[20 + namepos:].upper().find(config["server"]["login"].upper()) > -1:
                         tag = self.tag_hilite
                     else:
                         tag = self.tag_remote
                 else:
-                    line = l
+                    line = li
                     user = None
                     tag = None
                     usertag = None
@@ -1852,7 +1852,7 @@ class ChatRoom:
 
         colour = self.frame.np.config.sections["ui"][colour]
         font = self.frame.np.config.sections["ui"]["chatfont"]
-        
+
         tag = buffer.create_tag(font=font)
 
         if colour:
@@ -1909,7 +1909,6 @@ class ChatRoom:
 
         self.frame.ChangeListFont(self.UserList, self.frame.np.config.sections["ui"]["listfont"])
 
-        map = self.ChatScroll.get_style_context()
         buffer = self.ChatScroll.get_buffer()
 
         self.tag_remote = self.makecolour(buffer, "chatremote")
@@ -1980,8 +1979,6 @@ class ChatRoom:
                 tag.set_property("underline", pango.Underline.NONE)
 
     def ChangeColours(self):
-
-        map = self.ChatScroll.get_style_context()
 
         self.changecolour(self.tag_remote, "chatremote")
         self.changecolour(self.tag_local, "chatlocal")

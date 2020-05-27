@@ -1183,8 +1183,8 @@ class SlskProtoThread(threading.Thread):
                     # struct.pack("<i", number) was used here before, but was replaced due to integer limits
                     # see https://github.com/Nicotine-Plus/nicotine-plus/issues/100
                     conns[msgObj.conn].obuf = conns[msgObj.conn].obuf \
-                    + codecs.decode('%%0%dx' % (4 << 1) % msgObj.offset, 'hex')[::-1] \
-                    + codecs.decode('%%0%dx' % (4 << 1) % 0, 'hex')[::-1]
+                        + codecs.decode('%%0%dx' % (4 << 1) % msgObj.offset, 'hex')[::-1] \
+                        + codecs.decode('%%0%dx' % (4 << 1) % 0, 'hex')[::-1]
                     conns[msgObj.conn].bytestoread = msgObj.filesize - msgObj.offset
                     self._ui_callback([DownloadFile(msgObj.conn, 0, msgObj.file)])
                 elif msgObj.__class__ is UploadFile and msgObj.conn in conns:

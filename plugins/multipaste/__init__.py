@@ -30,8 +30,8 @@ class Plugin(BasePlugin):
                 self.log("Posting " + str(self.settings['maxprivatelines']) + " of " + str(len(lines)) + " lines.")
             else:
                 self.log("Splitting lines.")
-            for l in lines[:self.settings['maxprivatelines']]:
-                self.sayprivate(nick, l)
+            for line in lines[:self.settings['maxprivatelines']]:
+                self.sayprivate(nick, line)
             return returncode['zap']
 
     def OutgoingPublicChatEvent(self, room, line):
@@ -41,6 +41,6 @@ class Plugin(BasePlugin):
                 self.log("Posting " + str(self.settings['maxpubliclines']) + " of " + str(len(lines)) + " lines.")
             else:
                 self.log("Splitting lines.")
-            for l in lines[:self.settings['maxpubliclines']]:
-                self.saypublic(room, l)
+            for line in lines[:self.settings['maxpubliclines']]:
+                self.saypublic(room, line)
             return returncode['zap']

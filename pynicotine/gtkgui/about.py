@@ -22,14 +22,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import sys
 from gettext import gettext as _
 
 import gi
 from gi.repository import Gtk as gtk
-from gi import __version__ as gobject_version
 
-from pynicotine.gtkgui.utils import AppendLine
 from pynicotine.utils import version
 
 gi.require_version('Gtk', '3.0')
@@ -49,14 +46,14 @@ class AboutDialog(gtk.AboutDialog):
         self.set_program_name(_("Nicotine+"))
         self.set_version(version)
         self.set_comments(
-_("""A graphical client for the Soulseek peer-to-peer system
+            _("""A graphical client for the Soulseek peer-to-peer system
 Based on code from Nicotine and PySoulSeek""")
         )
         self.set_website("https://nicotine-plus.org")
         self.set_license_type(gtk.License.GPL_3_0_ONLY)
         self.set_authors(
             ["# Nicotine+ MAINTAINERS",
-"""
+            """
 ### Active
 
 Mutnick
@@ -129,8 +126,8 @@ Michael Labouebe (aka gfarmerfr)
 - Developer
 - [gfarmerfr(at)free(dot)fr]
 """,
-"# Nicotine MAINTAINERS",
-"""
+            "# Nicotine MAINTAINERS",
+            """
 ### Retired
 
 Hyriand
@@ -174,9 +171,9 @@ vasi
 Country flags provided by flags.blogpotato.de,
 distributed under a CC BY-SA 3.0 Unported license.
 """
-        ])
+])
         self.set_translator_credits(
-"""Dutch
+            """Dutch
  * nince78 (2007)
  * hyriand
 

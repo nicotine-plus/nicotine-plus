@@ -24,7 +24,6 @@ jobs:
         run: |
           pip install flake8
           flake8 nicotine pynicotine plugins --ignore=E402,E501,W503,W504
-        continue-on-error: true
       - name: Unit tests
         env:
           PYTHONPATH: .

@@ -443,8 +443,8 @@ class PrivateChat:
             d = f.read()
             f.close()
             s = d.split("\n")
-            for l in s[- lines:-1]:
-                AppendLine(self.ChatScroll, l + "\n", self.tag_hilite, timestamp_format="", username=self.user, usertag=self.tag_hilite)
+            for line in s[- lines:-1]:
+                AppendLine(self.ChatScroll, line + "\n", self.tag_hilite, timestamp_format="", username=self.user, usertag=self.tag_hilite)
         except IOError as e:  # noqa: F841
             pass
 
@@ -604,9 +604,9 @@ class PrivateChat:
 
         if self.PeerPrivateMessages.get_active():
             # not in the soulseek protocol
-            self.frame.np.ProcessRequestToPeer(self.user, slskmessages.PMessageUser(None, my_username, text))
+            self.frame.np.ProcessRequestToPeer(self.user, slskmessages.PMessageUser(None, my_username, payload))
         else:
-            self.frame.np.queue.put(slskmessages.MessageUser(self.user, text))
+            self.frame.np.queue.put(slskmessages.MessageUser(self.user, payload))
 
     def threadAlias(self, alias):
 
@@ -809,7 +809,7 @@ class PrivateChat:
 
         colour = self.frame.np.config.sections["ui"][colour]
         font = self.frame.np.config.sections["ui"]["chatfont"]
-        
+
         tag = buffer.create_tag(font=font)
 
         if colour:
@@ -818,8 +818,6 @@ class PrivateChat:
         return tag
 
     def UpdateColours(self):
-
-        map = self.frame.MainWindow.get_style_context()
 
         buffer = self.ChatScroll.get_buffer()
         self.tag_remote = self.makecolour(buffer, "chatremote")
@@ -904,8 +902,6 @@ class PrivateChat:
                 tag.set_property("underline", pango.Underline.NONE)
 
     def ChangeColours(self):
-
-        map = self.ChatScroll.get_style_context()
 
         self.changecolour(self.tag_remote, "chatremote")
         self.changecolour(self.tag_local, "chatlocal")

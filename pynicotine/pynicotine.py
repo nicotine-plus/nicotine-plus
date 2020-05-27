@@ -48,7 +48,6 @@ from pynicotine.shares import Shares
 from pynicotine.slskmessages import PopupMessage
 from pynicotine.slskmessages import newId
 from pynicotine.utils import CleanFile
-from pynicotine.utils import findBestEncoding
 from pynicotine.utils import log
 
 

@@ -31,7 +31,6 @@ import gi
 from gi.repository import GObject as gobject
 from gi.repository import Gtk as gtk
 
-import _thread
 from pynicotine.logfacility import log
 from pynicotine.utils import executeCommand
 

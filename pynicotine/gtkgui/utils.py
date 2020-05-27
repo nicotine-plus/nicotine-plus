@@ -31,7 +31,6 @@ import types
 import urllib.error
 import urllib.parse
 import urllib.request
-import webbrowser
 from gettext import gettext as _
 
 import gi
@@ -1454,10 +1453,10 @@ def _expand_alias(aliases, cmd):
                 (stdout, stdin) = (p.stdout, p.stdin)
                 v = stdout.read().split("\n")
                 r = ""
-                for l in v:
-                    l = l.strip()  # noqa: E741
-                    if l:
-                        r = r + l + "\n"
+                for line in v:
+                    line = line.strip()  # noqa: E741
+                    if line:
+                        r = r + line + "\n"
                 ret = ret + r.strip()
                 stdin.close()
                 stdout.close()
