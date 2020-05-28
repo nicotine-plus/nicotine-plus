@@ -88,6 +88,7 @@ class FastConfigureAssistant(object):
         builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "fastconfigure.ui"))
 
         self.window = builder.get_object("FastConfigureAssistant")
+        self.window.set_transient_for(frame.MainWindow)
         builder.connect_signals(self)
 
         self.kids = {}
@@ -97,23 +98,6 @@ class FastConfigureAssistant(object):
                 self.kids[gtk.Buildable.get_name(i)] = i
             except TypeError:
                 pass
-
-        numpages = self.window.get_n_pages()
-
-        for n in range(numpages):
-            page = self.window.get_nth_page(n)
-            template = self.window.get_page_title(page)
-            self.window.set_page_title(
-                page,
-                template % {
-                    'page': (n + 1),
-                    'pages': numpages
-                }
-            )
-
-        self.templates = {
-            'listenport': self.kids['listenport'].get_text(),
-        }
 
         # Page specific, sharepage
         # The last column is the raw byte/unicode object
@@ -159,11 +143,6 @@ class FastConfigureAssistant(object):
         )
         self.kids['password'].set_text(
             self.config.sections["server"]["passw"]
-        )
-
-        # portpage
-        self.kids['advancedports'].set_expanded(
-            self.config.sections["server"]["upnp"]
         )
 
         if self.config.sections["server"]["firewalled"]:
@@ -257,22 +236,6 @@ class FastConfigureAssistant(object):
     def OnCancel(self, widget):
         self.window.hide()
 
-    def updatepage(self, page):
-        """Updates information on the given page with.
-        Use _populate if possible."""
-
-        if not page:
-            return
-
-        name = gtk.Buildable.get_name(page)
-
-        if name == 'portpage':
-            self.kids['listenport'].set_markup(
-                _(self.templates['listenport']) % {
-                    'listenport': '<b>' + str(self.frame.np.waitport) + '</b>'
-                }
-            )
-
     def resetcompleteness(self, page=None):
         """Turns on the complete flag if everything required is filled in."""
 
@@ -316,10 +279,8 @@ class FastConfigureAssistant(object):
 
             if showcpwarning:
                 self.kids['labelclosedport'].show()
-                self.kids['warningclosedport'].show()
             else:
                 self.kids['labelclosedport'].hide()
-                self.kids['warningclosedport'].hide()
 
             shownfwarning = (
                 self.kids['onlysharewithfriends'].get_active() or
@@ -328,16 +289,13 @@ class FastConfigureAssistant(object):
 
             if shownfwarning:
                 self.kids['labelnoshare'].show()
-                self.kids['warningnoshare'].show()
             else:
                 self.kids['labelnoshare'].hide()
-                self.kids['warningnoshare'].hide()
 
         self.window.set_page_complete(page, complete)
 
     def OnPrepare(self, widget, page):
         self.window.set_page_complete(page, False)
-        self.updatepage(page)
         self.resetcompleteness(page)
 
     def OnEntryChanged(self, widget, param1=None, param2=None, param3=None):
