@@ -48,15 +48,6 @@ for man in manpages:
         )
     )
 
-# Icons with fixed size
-for sizeicons in ["16x16", "32x32", "48x48", "64x64", "96x96"]:
-    files.append(
-        (
-            os.path.join("share/icons/hicolor", sizeicons, "apps"),
-            ["files/icons/" + sizeicons + "/nicotine-plus.png"]
-        )
-    )
-
 # Scalable icons
 files.append(
     (

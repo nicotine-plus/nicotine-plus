@@ -1,7 +1,7 @@
 !define PRODUCT_NAME "Nicotine+"
-!define PRODUCT_VERSION "1.4.2"
+!define PRODUCT_VERSION "1.4.3"
 !define PRODUCT_PUBLISHER "Nicotine+ Team"
-!define PRODUCT_WEB_SITE "http://www.nicotine-plus.org"
+!define PRODUCT_WEB_SITE "https://nicotine-plus.org"
 !define PRODUCT_DIR_REGKEY "Software\Nicotine+"
 !define PRODUCT_UNINST_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}"
 !define PRODUCT_UNINST_ROOT_KEY "HKLM"
@@ -14,13 +14,13 @@
 !define MUI_WELCOMEPAGE_TITLE_3LINES
 !define MUI_HEADERIMAGE
 !define MUI_HEADERIMAGE_RIGHT
-!define MUI_ICON "..\..\files\win32\nicotine-installer.ico"
-!define MUI_UNICON "..\..\files\win32\nicotine-installer.ico"
-!define MUI_HEADERIMAGE_BITMAP "..\..\files\win32\modern-header.bmp"
-!define MUI_WELCOMEFINISHPAGE_BITMAP "..\..\files\win32\modern-wizard.bmp"
+!define MUI_ICON "..\..\..\files\win32\nicotine-plus.ico"
+!define MUI_UNICON "..\..\..\files\win32\nicotine-plus.ico"
+!define MUI_HEADERIMAGE_BITMAP
+!define MUI_WELCOMEFINISHPAGE_BITMAP
 
 !insertmacro MUI_PAGE_WELCOME
-!insertmacro MUI_PAGE_LICENSE "..\..\COPYING"
+!insertmacro MUI_PAGE_LICENSE "..\..\..\COPYING"
 ; Validate installation directory
 !define MUI_DIRECTORYPAGE_VERIFYONLEAVE
 !insertmacro MUI_PAGE_DIRECTORY
@@ -43,7 +43,7 @@ Section "Core" Core
   SectionIn RO
   SetOverwrite on
   SetOutPath "$INSTDIR"
-  File /r "..\..\dist\Nicotine+\"
+  File /r "..\..\..\dist\Nicotine+\"
 SectionEnd
 
 Function ShortCuts
@@ -64,7 +64,7 @@ Section -Post
   ${endif}
   ReadINIStr $0 "$PLUGINSDIR\shortcuts.ini" "Field 3" "State"
   ${if} $0 = 1
-    CreateShortCut "$DESKTOP\Nicotine+.lnk" "$INSTDIR\Nicotine+.exe" "" "$INSTDIR\files\win32\nicotine-plus-128px.ico" 0
+    CreateShortCut "$DESKTOP\Nicotine+.lnk" "$INSTDIR\Nicotine+.exe" "" "$INSTDIR\files\win32\nicotine-plus.ico" 0
   ${endif}
 SectionEnd
 
