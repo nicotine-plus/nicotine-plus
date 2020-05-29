@@ -14,13 +14,13 @@
 !define MUI_WELCOMEPAGE_TITLE_3LINES
 !define MUI_HEADERIMAGE
 !define MUI_HEADERIMAGE_RIGHT
-!define MUI_ICON "..\..\..\files\win32\nicotine-plus.ico"
-!define MUI_UNICON "..\..\..\files\win32\nicotine-plus.ico"
+!define MUI_ICON "..\..\files\win32\nicotine-plus.ico"
+!define MUI_UNICON "..\..\files\win32\nicotine-plus.ico"
 !define MUI_HEADERIMAGE_BITMAP
 !define MUI_WELCOMEFINISHPAGE_BITMAP
 
 !insertmacro MUI_PAGE_WELCOME
-!insertmacro MUI_PAGE_LICENSE "..\..\..\COPYING"
+!insertmacro MUI_PAGE_LICENSE "..\..\COPYING"
 ; Validate installation directory
 !define MUI_DIRECTORYPAGE_VERIFYONLEAVE
 !insertmacro MUI_PAGE_DIRECTORY
@@ -43,7 +43,7 @@ Section "Core" Core
   SectionIn RO
   SetOverwrite on
   SetOutPath "$INSTDIR"
-  File /r "..\..\..\dist\Nicotine+\"
+  File /r "..\..\dist\Nicotine+\"
 SectionEnd
 
 Function ShortCuts
