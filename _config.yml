@@ -1,5 +1,5 @@
 title: Nicotine+
-logo: /files/icons/scalable/nicotine-plus.svg
+logo: /files/linux/nicotine-plus.svg
 description: A graphical client for the SoulSeek peer-to-peer system
 
 plugins:
@@ -10,7 +10,8 @@ relative_links:
   collections: true
 
 exclude:
-  - files/README
+  - files/linux/README
+  - files/windows/README
   - img/README
   - plugins/README
 

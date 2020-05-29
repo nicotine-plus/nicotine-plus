@@ -52,7 +52,7 @@ for man in manpages:
 files.append(
     (
         "share/icons/hicolor/scalable/apps",
-        ["files/icons/scalable/nicotine-plus.svg"]
+        ["files/linux/nicotine-plus.svg"]
     )
 )
 
@@ -60,7 +60,7 @@ files.append(
 files.append(
     (
         "share/applications",
-        ["files/nicotine.desktop"]
+        ["files/linux/nicotine.desktop"]
     )
 )
 

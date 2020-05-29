@@ -14,8 +14,8 @@
 !define MUI_WELCOMEPAGE_TITLE_3LINES
 !define MUI_HEADERIMAGE
 !define MUI_HEADERIMAGE_RIGHT
-!define MUI_ICON "..\..\files\win32\nicotine-plus.ico"
-!define MUI_UNICON "..\..\files\win32\nicotine-plus.ico"
+!define MUI_ICON "nicotine-plus.ico"
+!define MUI_UNICON "nicotine-plus.ico"
 !define MUI_HEADERIMAGE_BITMAP
 !define MUI_WELCOMEFINISHPAGE_BITMAP
 
@@ -64,7 +64,7 @@ Section -Post
   ${endif}
   ReadINIStr $0 "$PLUGINSDIR\shortcuts.ini" "Field 3" "State"
   ${if} $0 = 1
-    CreateShortCut "$DESKTOP\Nicotine+.lnk" "$INSTDIR\Nicotine+.exe" "" "$INSTDIR\files\win32\nicotine-plus.ico" 0
+    CreateShortCut "$DESKTOP\Nicotine+.lnk" "$INSTDIR\Nicotine+.exe" "" "$INSTDIR\nicotine-plus.ico" 0
   ${endif}
 SectionEnd
 

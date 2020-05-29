@@ -26,7 +26,7 @@ added_files = [
     #
 
     # Icon for the resulting Nicotine+.exe file and shortcuts
-    ('../../files/win32/nicotine-plus.ico', 'files/win32'),
+    ('nicotine-plus.ico', '.'),
 ]
 
 # Analysis pass
@@ -67,5 +67,5 @@ exe = EXE(
     strip=False,
     upx=True,
     console=False,
-    icon='files/win32/nicotine-plus.ico'
+    icon='nicotine-plus.ico'
 )

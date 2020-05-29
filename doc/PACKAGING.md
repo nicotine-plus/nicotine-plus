@@ -35,7 +35,7 @@ First you need to install PyInstaller via pip:
 
 Once PyInstaller is installed go to the git root folder and run via cmd.exe or Powershell:
 
-`pyinstaller.exe .\tools\windows\nicotine+.spec`
+`pyinstaller.exe .\files\windows\nicotine+.spec`
 
 When the frozen application finish to build you will find it under the `dist\Nicotine+` subdirectory.
 
@@ -45,8 +45,8 @@ If you want to run the frozen application you can launch the executable `dist\Ni
 
 After building the frozen app download the last zip from [NSIS2 version](https://sourceforge.net/projects/nsis/files/NSIS%202/).
 
-Extract it in the `tools\windows` directory.
+Extract it in the `files\windows` directory.
 
-Then via cmd.exe or Powershell go to `tools\windows` directory and run `nsis-$(version)/makensis.exe nicotine+.nsi`
+Then via cmd.exe or Powershell go to `files\windows` directory and run `nsis-$(version)/makensis.exe nicotine+.nsi`
 
-You should now find a `Nicotine+-$(version).exe` installer in the `tools\windows` directory.
+You should now find a `Nicotine+-$(version).exe` installer in the `files\windows` directory.
