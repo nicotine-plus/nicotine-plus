@@ -3728,7 +3728,4 @@ class MainApp:
     def MainLoop(self):
         signal.signal(signal.SIGINT, signal.SIG_IGN)
         self.frame.MainWindow.show()
-        Gdk.threads_init()
-        Gdk.threads_enter()  # Without this N+ hangs on XP (Vista and Linux don't have that problem)
         gtk.main()
-        Gdk.threads_leave()
