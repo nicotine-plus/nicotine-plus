@@ -3505,7 +3505,7 @@ class Notifications:
 
         if "soundtheme" in self.frame.np.config.sections["ui"]:
 
-            path = os.path.expanduser(os.path.join(self.frame.np.config.sections["ui"]["soundtheme"], "%s.flac" % soundtitle))
+            path = os.path.expanduser(os.path.join(self.frame.np.config.sections["ui"]["soundtheme"], "%s.wav" % soundtitle))
 
             if os.path.exists(path):
                 exists = 1
@@ -3514,7 +3514,7 @@ class Notifications:
 
         if not exists:
 
-            path = "%s/share/nicotine/sounds/default/%s.flac" % (sys.prefix, soundtitle)
+            path = "%s/share/nicotine/sounds/default/%s.wav" % (sys.prefix, soundtitle)
 
             if os.path.exists(path):
                 exists = 1
@@ -3523,7 +3523,7 @@ class Notifications:
 
         if not exists:
 
-            path = "sounds/default/%s.flac" % soundtitle
+            path = "sounds/default/%s.wav" % soundtitle
 
             if os.path.exists(path):
                 exists = 1

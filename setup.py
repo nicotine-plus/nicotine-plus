@@ -100,7 +100,7 @@ sound_dirs = glob.glob(os.path.join("sounds", "*"))
 
 for sounds in sound_dirs:
     p, theme = os.path.split(sounds)
-    for file in ["private.ogg", "room_nick.ogg", "details.txt", "license.txt"]:
+    for file in ["private.wav", "room_nick.wav", "details.txt", "license.txt"]:
         files.append(
             (
                 os.path.join("share/nicotine/sounds", theme),
