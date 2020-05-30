@@ -69,3 +69,13 @@ exe = EXE(
     console=False,
     icon='nicotine-plus.ico'
 )
+
+coll = COLLECT(
+    exe,
+    a.binaries,
+    a.zipfiles,
+    a.datas,
+    strip=False,
+    upx=False,
+    name='Nicotine+'
+)

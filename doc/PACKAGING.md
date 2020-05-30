@@ -2,7 +2,7 @@
 
 ### GNU/Linux instructions
 
-##### Building a source distribution
+#### Building a source distribution
 
 To build source distribution files (.tar.bz2 & .tar.gz) from the git repository run:
 
@@ -10,7 +10,7 @@ To build source distribution files (.tar.bz2 & .tar.gz) from the git repository 
 
 The source distribution files will be located in the `dist` subdirectory of your git repository.
 
-##### Building a RPM package
+#### Building a RPM package
 
 You need to install the RPM building tools first:
 
@@ -27,21 +27,37 @@ The RPM package will be located in the `dist` subdirectory of your git repositor
 
 ### Windows
 
-##### Building a frozen application via PyInstaller
+#### Building a frozen application via PyInstaller
 
-First you need to install PyInstaller via pip:
+First, follow the instructions on installing MSYS2: [https://pygobject.readthedocs.io/en/latest/getting_started.html#windows-logo-windows](https://pygobject.readthedocs.io/en/latest/getting_started.html#windows-logo-windows)
 
-`python.exe -m pip install PyInstaller`
+Then, you need to install PyInstaller via pip (in a Mingw terminal):
 
-Once PyInstaller is installed go to the git root folder and run via cmd.exe or Powershell:
+`pacman -S mingw-w64-x86_64-python3-pip`  
+`pip install PyInstaller`
 
-`pyinstaller.exe .\files\windows\nicotine+.spec`
+Once PyInstaller is installed, clone the Nicotine+ git repository:
+
+`pacman -S git`  
+`git clone https://github.com/Nicotine-Plus/nicotine-plus`  
+`cd nicotine-plus`  
+
+Install dependencies:
+
+`pacman -S mingw-w64-x86_64-libnotify`  
+`pip install mutagen`  
+`pacman -S mingw-w64-x86_64-miniupnpc`  
+`pacman -S mingw-w64-x86_64-gst-python`  
+
+Run PyInstaller:
+
+`pyinstaller ./files/windows/nicotine+.spec`
 
 When the frozen application finish to build you will find it under the `dist\Nicotine+` subdirectory.
 
 If you want to run the frozen application you can launch the executable `dist\Nicotine+\Nicotine+.exe`.
 
-##### Building a NSIS installer from the frozen application
+#### Building a NSIS installer from the frozen application
 
 After building the frozen app download the last zip from [NSIS2 version](https://sourceforge.net/projects/nsis/files/NSIS%202/).
 
