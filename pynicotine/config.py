@@ -325,7 +325,6 @@ class Config:
                 "trayicon": 1,
                 "soundenabled": 1,
                 "soundtheme": "",
-                "soundcommand": "Gstreamer (gst-python)",
                 "filemanager": "xdg-open $",
                 "speechenabled": 0,
                 "speechprivate": "%(user)s told you.. %(message)s",
@@ -517,6 +516,9 @@ class Config:
         self.removeOldOption("server", "fallbackencodings")
         self.removeOldOption("server", "roomencoding")
         self.removeOldOption("server", "userencoding")
+        
+        # Remove soundcommand config, replaced by GSound (1.4.3)
+        self.removeOldOption("ui", "soundcommand")
 
         # Checking for unknown section/options
         unknown1 = [

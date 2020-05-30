@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.36.0 -->
 <interface>
-  <requires lib="gtk+" version="3.18"/>
+  <requires lib="gtk+" version="2.24"/>
+  <!-- interface-naming-policy project-wide -->
   <object class="GtkWindow" id="SoundsFrame">
     <property name="can_focus">False</property>
     <property name="title" translatable="yes">Sounds</property>
@@ -50,6 +50,7 @@
               <object class="GtkTable" id="table1">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="n_rows">2</property>
                 <property name="n_columns">3</property>
                 <property name="column_spacing">5</property>
                 <property name="row_spacing">5</property>
@@ -57,9 +58,13 @@
                   <object class="GtkLabel" id="snddirLabel">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="label" translatable="yes">Sound Effects Directory:</property>
                     <property name="xalign">0</property>
+                    <property name="label" translatable="yes">Sound Effects Directory:</property>
                   </object>
+                  <packing>
+                    <property name="top_attach">1</property>
+                    <property name="bottom_attach">2</property>
+                  </packing>
                 </child>
                 <child>
                   <object class="GtkFileChooserButton" id="SoundDir">
@@ -71,6 +76,8 @@
                   <packing>
                     <property name="left_attach">1</property>
                     <property name="right_attach">2</property>
+                    <property name="top_attach">1</property>
+                    <property name="bottom_attach">2</property>
                   </packing>
                 </child>
                 <child>
@@ -123,6 +130,8 @@
                   <packing>
                     <property name="left_attach">2</property>
                     <property name="right_attach">3</property>
+                    <property name="top_attach">1</property>
+                    <property name="bottom_attach">2</property>
                   </packing>
                 </child>
               </object>
@@ -160,8 +169,8 @@
                   <object class="GtkLabel" id="ttscmdLabel">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="label" translatable="yes">Text To Speech command:</property>
                     <property name="xalign">0</property>
+                    <property name="label" translatable="yes">Text To Speech command:</property>
                   </object>
                 </child>
                 <child>
@@ -169,11 +178,6 @@
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="has_entry">True</property>
-                    <child internal-child="entry">
-                      <object class="GtkEntry">
-                        <property name="can_focus">False</property>
-                      </object>
-                    </child>
                   </object>
                   <packing>
                     <property name="left_attach">1</property>
@@ -236,8 +240,8 @@
                   <object class="GtkLabel" id="crMsgLabel">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="label" translatable="yes">Chat room message:</property>
                     <property name="xalign">0</property>
+                    <property name="label" translatable="yes">Chat room message:</property>
                   </object>
                   <packing>
                     <property name="top_attach">1</property>
@@ -248,8 +252,8 @@
                   <object class="GtkLabel" id="ttscmdLabel3">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="label" translatable="yes">Private chat message:</property>
                     <property name="xalign">0</property>
+                    <property name="label" translatable="yes">Private chat message:</property>
                   </object>
                   <packing>
                     <property name="top_attach">2</property>
@@ -264,6 +268,8 @@
                     <property name="invisible_char">●</property>
                     <property name="primary_icon_activatable">False</property>
                     <property name="secondary_icon_activatable">False</property>
+                    <property name="primary_icon_sensitive">True</property>
+                    <property name="secondary_icon_sensitive">True</property>
                   </object>
                   <packing>
                     <property name="left_attach">1</property>
@@ -280,6 +286,8 @@
                     <property name="invisible_char">●</property>
                     <property name="primary_icon_activatable">False</property>
                     <property name="secondary_icon_activatable">False</property>
+                    <property name="primary_icon_sensitive">True</property>
+                    <property name="secondary_icon_sensitive">True</property>
                   </object>
                   <packing>
                     <property name="left_attach">1</property>
@@ -407,8 +415,8 @@
               <object class="GtkLabel" id="label421">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">Audio Player Command ($ for filename):</property>
                 <property name="xalign">0</property>
+                <property name="label" translatable="yes">Audio Player Command ($ for filename):</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -422,11 +430,6 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="has_entry">True</property>
-                <child internal-child="entry">
-                  <object class="GtkEntry">
-                    <property name="can_focus">False</property>
-                  </object>
-                </child>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -447,9 +450,6 @@
           </object>
         </child>
       </object>
-    </child>
-    <child type="titlebar">
-      <placeholder/>
     </child>
   </object>
 </interface>

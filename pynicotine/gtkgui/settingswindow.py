@@ -1544,17 +1544,8 @@ class SoundsFrame(buildFrame):
         self.TTSCommand.set_model(self.TTSCommand_List)
         self.TTSCommand.set_entry_text_column(0)
 
-        # Combobox for internal sound playing
-        self.SoundCommand_List = gtk.ListStore(gobject.TYPE_STRING)
-        for item in ["Gstreamer (gst-python)", "ogg123 -q", "play -q"]:
-            self.SoundCommand_List.append([item])
-
-        self.SoundCommand.set_model(self.SoundCommand_List)
-        self.SoundCommand.set_entry_text_column(0)
-
         self.options = {
             "ui": {
-                "soundcommand": self.SoundCommand,
                 "soundtheme": self.SoundDir,
                 "soundenabled": self.SoundCheck,
                 "speechenabled": self.TextToSpeech,
@@ -1571,11 +1562,8 @@ class SoundsFrame(buildFrame):
 
         sensitive = self.SoundCheck.get_active()
 
-        self.SoundCommand.set_sensitive(sensitive)
         self.SoundDir.set_sensitive(sensitive)
         self.DefaultSoundDir.set_sensitive(sensitive)
-        self.DefaultSoundCommand.set_sensitive(sensitive)
-        self.sndcmdLabel.set_sensitive(sensitive)
         self.snddirLabel.set_sensitive(sensitive)
 
     def DefaultPrivate(self, widget):
@@ -1586,9 +1574,6 @@ class SoundsFrame(buildFrame):
 
     def DefaultTTS(self, widget):
         self.TTSCommand.get_child().set_text("flite -t \"%s\"")
-
-    def DefaultSound(self, widget):
-        self.SoundCommand.get_child().set_text("Gstreamer (gst-python)")
 
     def OnTextToSpeechToggled(self, widget):
 
@@ -1622,21 +1607,6 @@ class SoundsFrame(buildFrame):
 
     def GetSettings(self):
 
-        soundcommand = self.SoundCommand.get_child().get_text()
-
-        if soundcommand == "Gstreamer (gst-python)":
-
-            if self.SoundCheck.get_active() and self.frame.gstreamer.player is None:
-
-                popupWarning(
-                    self.p.SettingsWindow,
-                    _("Warning"),
-                    _("Gstreamer-python is not installed"),
-                    self.frame.images["n"]
-                )
-
-                raise UserWarning
-
         if self.SoundDir.get_file() is not None:
             soundtheme = recode2(self.SoundDir.get_file().get_path())
         else:
@@ -1644,7 +1614,6 @@ class SoundsFrame(buildFrame):
 
         return {
             "ui": {
-                "soundcommand": soundcommand,
                 "soundtheme": soundtheme,
                 "soundenabled": self.SoundCheck.get_active(),
                 "speechenabled": self.TextToSpeech.get_active(),
