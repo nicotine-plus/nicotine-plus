@@ -31,6 +31,7 @@ import types
 import urllib.error
 import urllib.parse
 import urllib.request
+import webbrowser
 from gettext import gettext as _
 
 import gi
@@ -299,6 +300,10 @@ def OpenUri(uri, window):
             return
 
     # Situation 2, user did not define a way of handling the protocol
+    if sys.platform == "win32" and webbrowser:
+        webbrowser.open(uri)
+        return
+    
     gtk.show_uri_on_window(window, uri, Gdk.CURRENT_TIME)
 
 

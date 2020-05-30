@@ -63,7 +63,6 @@ You should install Python 3.5 or newer.""") % (e)
             return _("""You're using an unsupported version of GTK (%s).
 You should install GTK 3.0 or newer.""") % e
 
-    # Require PyGTK
     try:
         from gi.repository import Gtk  # noqa: F401
     except ImportError:
@@ -80,7 +79,7 @@ in an interpreter's module search path.
 what version of python was used to build the Nicotine
 binary package and what you try to run Nicotine+ with).""")
 
-    # Check for optionnal GeoIP
+    # Check for optional GeoIP
     try:
         import GeoIP  # noqa: F401
     except ImportError:
