@@ -47,7 +47,7 @@ Install dependencies:
 `pacman -S mingw-w64-x86_64-libnotify`  
 `pip install mutagen`  
 `pacman -S mingw-w64-x86_64-miniupnpc`  
-`pacman -S mingw-w64-x86_64-gst-python`  
+`pacman -S mingw-w64-x86_64-gst-plugins-base`  
 
 Run PyInstaller:
 

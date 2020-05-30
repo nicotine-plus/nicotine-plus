@@ -11,9 +11,21 @@ added_files = [
  
     # GTK Builder files
     ('pynicotine/gtkgui/ui/*.ui', 'pynicotine/gtkgui/ui'),
+
+    # GTK win32 theme
+    ('files/windows/settings.ini', 'etc/gtk-3.0'),
+    
+    # Icon
+    ('files/nicotine-plus.svg', 'share/icons/hicolor/scalable/apps'),
  
     # Translation files
     ('languages', 'languages'),
+
+    # Plugins
+    ('plugins', 'share/nicotine/plugins'),
+
+    # Sounds
+    ('sounds', 'share/nicotine/sounds'),
  
     # License file
     ('COPYING', '.'),

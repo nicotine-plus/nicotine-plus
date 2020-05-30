@@ -3462,9 +3462,6 @@ class Notifications:
 
     def sound(self, message, user, place=None):
 
-        if sys.platform == "win32":
-            return
-
         if self.frame.np.config.sections["ui"]["speechenabled"]:
 
             if message == "room_nick" and place is not None:
