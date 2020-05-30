@@ -325,7 +325,7 @@ class Config:
                 "trayicon": 1,
                 "soundenabled": 1,
                 "soundtheme": "",
-                "soundcommand": "play -q",
+                "soundcommand": "Gstreamer (gst-python)",
                 "filemanager": "xdg-open $",
                 "speechenabled": 0,
                 "speechprivate": "%(user)s told you.. %(message)s",

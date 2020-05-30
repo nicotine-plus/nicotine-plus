@@ -303,7 +303,7 @@ def OpenUri(uri, window):
     if sys.platform == "win32" and webbrowser:
         webbrowser.open(uri)
         return
-    
+
     gtk.show_uri_on_window(window, uri, Gdk.CURRENT_TIME)
 
 

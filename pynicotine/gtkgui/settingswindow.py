@@ -1588,7 +1588,7 @@ class SoundsFrame(buildFrame):
         self.TTSCommand.get_child().set_text("flite -t \"%s\"")
 
     def DefaultSound(self, widget):
-        self.SoundCommand.get_child().set_text("play -q")
+        self.SoundCommand.get_child().set_text("Gstreamer (gst-python)")
 
     def OnTextToSpeechToggled(self, widget):
 
