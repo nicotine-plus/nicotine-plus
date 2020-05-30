@@ -1,6 +1,6 @@
 title: Nicotine+
 logo: /files/icons/scalable/nicotine-plus.svg
-description: A graphical client for the SoulSeek peer-to-peer system
+description: A graphical client for Soulseek
 
 plugins:
   - jekyll-relative-links
