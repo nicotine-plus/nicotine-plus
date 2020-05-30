@@ -10,7 +10,7 @@ relative_links:
   collections: true
 
 exclude:
-  - files/linux/README
+  - files/README
   - files/windows/README
   - img/README
   - plugins/README
