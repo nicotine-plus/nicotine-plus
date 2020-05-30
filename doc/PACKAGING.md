@@ -59,10 +59,10 @@ If you want to run the frozen application you can launch the executable `dist\Ni
 
 #### Building a NSIS installer from the frozen application
 
-After building the frozen app download the last zip from [NSIS2 version](https://sourceforge.net/projects/nsis/files/NSIS%202/).
+After building the frozen app download the last zip from [NSIS3 version](https://sourceforge.net/projects/nsis/files/NSIS%203/).
 
 Extract it in the `files\windows` directory.
 
-Then via cmd.exe or Powershell go to `files\windows` directory and run `nsis-$(version)/makensis.exe nicotine+.nsi`
+Then via cmd.exe or Powershell go to `files\windows` directory and run `nsis-$(version)/makensis.exe nicotine.nsi`
 
 You should now find a `Nicotine+-$(version).exe` installer in the `files\windows` directory.

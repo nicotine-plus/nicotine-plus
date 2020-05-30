@@ -16,8 +16,6 @@
 !define MUI_HEADERIMAGE_RIGHT
 !define MUI_ICON "nicotine-plus.ico"
 !define MUI_UNICON "nicotine-plus.ico"
-!define MUI_HEADERIMAGE_BITMAP
-!define MUI_WELCOMEFINISHPAGE_BITMAP
 
 !insertmacro MUI_PAGE_WELCOME
 !insertmacro MUI_PAGE_LICENSE "..\..\COPYING"
