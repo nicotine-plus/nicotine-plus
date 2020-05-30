@@ -234,17 +234,20 @@ class NicotineFrame:
         self.bindip = bindip
         self.port = port
         self.got_focus = False
+        self.notify = None
 
-        try:
-            gi.require_version('Notify', '0.7')
-            from gi.repository import Notify
-            Notify.init("Nicotine+")
-            self.notify = Notify
-            self.notifyBox = None
-            from xml.dom.minidom import getDOMImplementation
-            self.xmldocument = getDOMImplementation().createDocument(None, None, None)
-        except ImportError:
-            self.notify = None
+        # No good way of supporting notifications on Windows currently
+        if sys.platform != "win32":
+            try:
+                gi.require_version('Notify', '0.7')
+                from gi.repository import Notify
+                Notify.init("Nicotine+")
+                self.notify = Notify
+                self.notifyBox = None
+                from xml.dom.minidom import getDOMImplementation
+                self.xmldocument = getDOMImplementation().createDocument(None, None, None)
+            except ImportError:
+                pass
 
         self.np = NetworkEventProcessor(
             self,

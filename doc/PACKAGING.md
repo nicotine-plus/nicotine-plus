@@ -44,10 +44,8 @@ Once PyInstaller is installed, clone the Nicotine+ git repository:
 
 Install dependencies:
 
-`pacman -S mingw-w64-x86_64-libnotify`  
+`pacman -S mingw-w64-x86_64-dbus mingw-w64-x86_64-libnotify mingw-w64-x86_64-miniupnpc mingw-w64-x86_64-gst-plugins-base`  
 `pip install mutagen`  
-`pacman -S mingw-w64-x86_64-miniupnpc`  
-`pacman -S mingw-w64-x86_64-gst-plugins-base`  
 
 Run PyInstaller:
 
