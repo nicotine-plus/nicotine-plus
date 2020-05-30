@@ -249,14 +249,14 @@ class NicotineFrame:
             except ImportError:
                 pass
 
-        try:
-            gi.require_version('GSound', '1.0')
-            from gi.repository import GSound
-            ctx = GSound.Context()
-            ctx.init()
-            self.gsound = ctx
-        except ImportError:
-            pass
+            try:
+                gi.require_version('GSound', '1.0')
+                from gi.repository import GSound
+                ctx = GSound.Context()
+                ctx.init()
+                self.gsound = ctx
+            except ImportError:
+                pass
 
         self.np = NetworkEventProcessor(
             self,
@@ -3505,7 +3505,7 @@ class Notifications:
 
         if "soundtheme" in self.frame.np.config.sections["ui"]:
 
-            path = os.path.expanduser(os.path.join(self.frame.np.config.sections["ui"]["soundtheme"], "%s.ogg" % soundtitle))
+            path = os.path.expanduser(os.path.join(self.frame.np.config.sections["ui"]["soundtheme"], "%s.flac" % soundtitle))
 
             if os.path.exists(path):
                 exists = 1
@@ -3514,7 +3514,7 @@ class Notifications:
 
         if not exists:
 
-            path = "%s/share/nicotine/sounds/default/%s.ogg" % (sys.prefix, soundtitle)
+            path = "%s/share/nicotine/sounds/default/%s.flac" % (sys.prefix, soundtitle)
 
             if os.path.exists(path):
                 exists = 1
@@ -3523,7 +3523,7 @@ class Notifications:
 
         if not exists:
 
-            path = "sounds/default/%s.ogg" % soundtitle
+            path = "sounds/default/%s.flac" % soundtitle
 
             if os.path.exists(path):
                 exists = 1
@@ -3532,7 +3532,11 @@ class Notifications:
 
         if path is not None and exists:
 
-            self.frame.gsound.play_simple({'media.filename': path})
+            if sys.platform == "win32":
+                import winsound
+                winsound.PlaySound(path, winsound.SND_FILENAME)
+            else:
+                self.frame.gsound.play_simple({'media.filename': path})
 
 
 class TrayApp:
