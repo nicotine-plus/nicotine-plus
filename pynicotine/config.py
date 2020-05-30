@@ -335,6 +335,7 @@ class Config:
                 "height": 600,
                 "xposition": -1,
                 "yposition": -1,
+                "maximized": True,
                 "urgencyhint": True
             },
 

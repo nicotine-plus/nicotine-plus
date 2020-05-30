@@ -638,8 +638,10 @@ class NetworkEventProcessor:
             self.frame.manualdisconnect = 1
             self.setStatus(_("Can not log in, reason: %s") % (msg.reason))
             self.logMessage(_("Can not log in, reason: %s") % (msg.reason))
-            self.frame.settingswindow.SetSettings(self.config.sections)
-            self.frame.settingswindow.SwitchToPage("Server")
+
+            if self.frame.settingswindow is not None:
+                self.frame.settingswindow.SetSettings(self.config.sections)
+                self.frame.settingswindow.SwitchToPage("Server")
 
     def ChangePassword(self, msg):
         password = msg.password
