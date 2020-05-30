@@ -3495,10 +3495,6 @@ class Notifications:
         if "soundenabled" not in self.frame.np.config.sections["ui"] or not self.frame.np.config.sections["ui"]["soundenabled"]:
             return
 
-        if "soundcommand" not in self.frame.np.config.sections["ui"]:
-            return
-
-        command = self.frame.np.config.sections["ui"]["soundcommand"]
         path = None
         exists = 0
 
@@ -3536,7 +3532,7 @@ class Notifications:
 
         if path is not None and exists:
 
-            self.frame.gsound.play_simple({'media.filename' : path})
+            self.frame.gsound.play_simple({'media.filename': path})
 
 
 class TrayApp:

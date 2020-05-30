@@ -516,7 +516,7 @@ class Config:
         self.removeOldOption("server", "fallbackencodings")
         self.removeOldOption("server", "roomencoding")
         self.removeOldOption("server", "userencoding")
-        
+
         # Remove soundcommand config, replaced by GSound (1.4.3)
         self.removeOldOption("ui", "soundcommand")
 
