@@ -51,7 +51,7 @@ Install dependencies:
 
 Run PyInstaller:
 
-`pyinstaller ./files/windows/nicotine+.spec`
+`pyinstaller nicotine.spec`
 
 When the frozen application finish to build you will find it under the `dist\Nicotine+` subdirectory.
 
