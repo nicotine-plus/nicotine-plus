@@ -169,11 +169,6 @@
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="has_entry">True</property>
-                    <child internal-child="entry">
-                      <object class="GtkEntry">
-                        <property name="can_focus">False</property>
-                      </object>
-                    </child>
                   </object>
                   <packing>
                     <property name="left_attach">1</property>
@@ -422,11 +417,6 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="has_entry">True</property>
-                <child internal-child="entry">
-                  <object class="GtkEntry">
-                    <property name="can_focus">False</property>
-                  </object>
-                </child>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -447,9 +437,6 @@
           </object>
         </child>
       </object>
-    </child>
-    <child type="titlebar">
-      <placeholder/>
     </child>
   </object>
 </interface>
