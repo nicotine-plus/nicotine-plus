@@ -330,7 +330,17 @@ class NicotineFrame:
         else:
             self.MainWindow.move(xpos, ypos)
 
+        maximized = self.np.config.sections["ui"]["maximized"]
+
+        if maximized == "True":
+            self.MainWindow.maximize()
+
         self.MainWindow.show()
+
+        # Initialize these windows/dialogs later when necessary
+        self.fastconfigure = None
+        self.now = None
+        self.settingswindow = None
 
         self.is_mapped = True
 
@@ -495,11 +505,6 @@ class NicotineFrame:
 
         self.show_debug_info1.set_active(self.np.config.sections["logging"]["debug"])
 
-        self.settingswindow = SettingsWindow(self)
-        self.settingswindow.SettingsWindow.connect("settings-closed", self.OnSettingsClosed)
-
-        self.fastconfigure = FastConfigureAssistant(self)
-
         self.chatrooms = self.ChatNotebook
         self.chatrooms.show()
 
@@ -631,7 +636,6 @@ class NicotineFrame:
             if self.np.config.sections["transfers"]["enablebuddyshares"]:
                 self.OnBuddyRescan()
 
-        self.now = nowplaying.NowPlaying(self)
         self.SetTabPositions()
 
         ConfigUnset = self.np.config.needConfig()
@@ -1138,6 +1142,9 @@ class NicotineFrame:
                 log.addwarning(_("Loading Shares from disk failed: %(error)s") % {'error': msg})
 
     def OnNowPlayingConfigure(self, widget):
+        if self.now is None:
+            self.now = nowplaying.NowPlaying(self)
+
         self.now.NowPlaying.show()
         self.now.NowPlaying.deiconify()
 
@@ -1558,6 +1565,8 @@ class NicotineFrame:
         self.np.config.sections["ui"]["yposition"] = ypos
 
     def OnDestroy(self, widget):
+        self.np.config.sections["ui"]["maximized"] = self.MainWindow.is_maximized()
+
         self.SaveColumns()
 
         self.np.config.sections["ui"]["last_tab_id"] = self.MainNotebook.get_current_page()
@@ -2007,7 +2016,9 @@ class NicotineFrame:
         if ip not in ipignorelist:
             ipignorelist[ip] = ""
             self.np.config.writeConfiguration()
-            self.settingswindow.pages["Ignore List"].SetSettings(self.np.config.sections)
+
+            if self.settingswindow is not None:
+                self.settingswindow.pages["Ignore List"].SetSettings(self.np.config.sections)
 
     def OnIgnoreIP(self, user):
         if user not in self.np.users or type(self.np.users[user].addr) is not tuple:
@@ -2020,7 +2031,9 @@ class NicotineFrame:
         if ip not in ipignorelist or self.np.config.sections["server"]["ipignorelist"][ip] != user:
             self.np.config.sections["server"]["ipignorelist"][ip] = user
             self.np.config.writeConfiguration()
-            self.settingswindow.pages["Ignore List"].SetSettings(self.np.config.sections)
+
+            if self.settingswindow is not None:
+                self.settingswindow.pages["Ignore List"].SetSettings(self.np.config.sections)
 
     def OnUnIgnoreIP(self, user):
         ipignorelist = self.np.config.sections["server"]["ipignorelist"]
@@ -2029,7 +2042,9 @@ class NicotineFrame:
             if ip is not None:
                 del ipignorelist[ip]
                 self.np.config.writeConfiguration()
-                self.settingswindow.pages["Ignore List"].SetSettings(self.np.config.sections)
+
+                if self.settingswindow is not None:
+                    self.settingswindow.pages["Ignore List"].SetSettings(self.np.config.sections)
                 return True
 
         if user not in self.np.users:
@@ -2045,7 +2060,9 @@ class NicotineFrame:
         if ip in ipignorelist:
             del ipignorelist[ip]
             self.np.config.writeConfiguration()
-            self.settingswindow.pages["Ignore List"].SetSettings(self.np.config.sections)
+
+            if self.settingswindow is not None:
+                self.settingswindow.pages["Ignore List"].SetSettings(self.np.config.sections)
 
     def OnBlockUser(self, user):
         if user not in self.np.users or type(self.np.users[user].addr) is not tuple:
@@ -2058,7 +2075,9 @@ class NicotineFrame:
         if ip not in self.np.config.sections["server"]["ipblocklist"] or self.np.config.sections["server"]["ipblocklist"][ip] != user:
             self.np.config.sections["server"]["ipblocklist"][ip] = user
             self.np.config.writeConfiguration()
-            self.settingswindow.pages["Ban List"].SetSettings(self.np.config.sections)
+
+            if self.settingswindow is not None:
+                self.settingswindow.pages["Ban List"].SetSettings(self.np.config.sections)
 
     def OnUnBlockUser(self, user):
         if self.UserIpIsBlocked(user):
@@ -2066,7 +2085,9 @@ class NicotineFrame:
             if ip is not None:
                 del self.np.config.sections["server"]["ipblocklist"][ip]
                 self.np.config.writeConfiguration()
-                self.settingswindow.pages["Ban List"].SetSettings(self.np.config.sections)
+
+                if self.settingswindow is not None:
+                    self.settingswindow.pages["Ban List"].SetSettings(self.np.config.sections)
                 return True
 
         if user not in self.np.users:
@@ -2082,7 +2103,9 @@ class NicotineFrame:
         if ip in self.np.config.sections["server"]["ipblocklist"]:
             del self.np.config.sections["server"]["ipblocklist"][ip]
             self.np.config.writeConfiguration()
-            self.settingswindow.pages["Ban List"].SetSettings(self.np.config.sections)
+
+            if self.settingswindow is not None:
+                self.settingswindow.pages["Ban List"].SetSettings(self.np.config.sections)
 
     def UnbanUser(self, user):
         if user in self.np.config.sections["server"]["banlist"]:
@@ -2228,16 +2251,27 @@ class NicotineFrame:
         self.OnSettings(widget, 'Ban List')
 
     def OnFastConfigure(self, widget):
-        if not self.settingswindow.SettingsWindow.get_property("visible"):
-            self.fastconfigure.show()
+        if self.fastconfigure is None:
+            self.fastconfigure = FastConfigureAssistant(self)
+
+        if self.settingswindow is not None and self.settingswindow.SettingsWindow.get_property("visible"):
+            return
+
+        self.fastconfigure.show()
 
     def OnSettings(self, widget, page=None):
-        if not self.fastconfigure.window.get_property("visible"):
-            self.settingswindow.SetSettings(self.np.config.sections)
-            if page:
-                self.settingswindow.SwitchToPage(page)
-            self.settingswindow.SettingsWindow.show()
-            self.settingswindow.SettingsWindow.deiconify()
+        if self.settingswindow is None:
+            self.settingswindow = SettingsWindow(self)
+            self.settingswindow.SettingsWindow.connect("settings-closed", self.OnSettingsClosed)
+
+        if self.fastconfigure is not None and self.fastconfigure.window.get_property("visible"):
+            return
+
+        self.settingswindow.SetSettings(self.np.config.sections)
+        if page:
+            self.settingswindow.SwitchToPage(page)
+        self.settingswindow.SettingsWindow.show()
+        self.settingswindow.SettingsWindow.deiconify()
 
     def OnSettingsClosed(self, widget, msg):
 
@@ -3695,5 +3729,4 @@ class MainApp:
 
     def MainLoop(self):
         signal.signal(signal.SIGINT, signal.SIG_IGN)
-        self.frame.MainWindow.show()
         gtk.main()

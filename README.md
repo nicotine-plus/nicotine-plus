@@ -1,6 +1,6 @@
 # Nicotine+
 
-Nicotine+ is a graphical client for the [Soulseek](https://www.slsknet.org/) peer-to-peer system. It is an attempt to keep [Nicotine](https://web.archive.org/web/20150720173459/http://nicotine.thegraveyard.org/) working with the latest libraries, kill bugs, keep current with the Soulseek protocol, and add some new features that users want and/or need.
+Nicotine+ is a graphical client for the [Soulseek](https://www.slsknet.org/) peer-to-peer file sharing network. It is an attempt to keep [Nicotine](https://web.archive.org/web/20150720173459/http://nicotine.thegraveyard.org/) working with the latest libraries, kill bugs, keep current with the Soulseek protocol, and add some new features that users want and/or need.
 
 # Download Nicotine+
 The current stable version of Nicotine+ is 1.4.1. An unstable version 1.4.3 is currently under development and available for testing.
