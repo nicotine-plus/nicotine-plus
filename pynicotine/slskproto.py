@@ -25,11 +25,13 @@ This module implements SoulSeek networking protocol.
 
 import codecs
 import select
+import selectors
 import socket
 import struct
 import sys
 import threading
 import time
+from collections import defaultdict
 from errno import EINTR
 from gettext import gettext as _
 from math import floor
@@ -529,6 +531,33 @@ class SlskProtoThread(threading.Thread):
     def _calcLimitNone(self, conns, i):
         return None
 
+    def select(self, input_list, output_list, selector):
+        # Select Networking Input and Output sockets
+        timeout = 0.5
+
+        try:
+            if sys.platform == "win32":
+                input, output, exc = multiselect(input_list, output_list, [], timeout)
+            else:
+                event_masks = defaultdict(int)
+
+                for fileobj in input_list:
+                    event_masks[fileobj] |= selectors.EVENT_READ
+                for fileobj in output_list:
+                    event_masks[fileobj] |= selectors.EVENT_WRITE
+
+                for fileobj, event_masks in event_masks.items():
+                    selector.register(fileobj, event_masks)
+
+                key_events = selector.select(timeout)
+                input = [key.fileobj for key, event in key_events if event & selectors.EVENT_READ]
+                output = [key.fileobj for key, event in key_events if event & selectors.EVENT_WRITE]
+        except PermissionError:
+            # The selector chosen by the selectors module didn't work? Fall back to the select() syscall
+            input, output, exc = select.select(input_list, output_list, [], timeout)
+
+        return (input, output)
+
     def run(self):
         """ Actual networking loop is here."""
         # @var p Peer / Listen Port
@@ -561,10 +590,10 @@ class SlskProtoThread(threading.Thread):
                     outsock.append(i)
             try:
                 # Select Networking Input and Output sockets
-                if sys.platform == "win32":
-                    input, output, exc = multiselect(list(conns.keys()) + list(connsinprogress.keys()) + [p], list(connsinprogress.keys()) + outsock, [], 0.5)
-                else:
-                    input, output, exc = select.select(list(conns.keys()) + list(connsinprogress.keys()) + [p], list(connsinprogress.keys()) + outsock, [], 0.5)
+                input_list = list(conns.keys()) + list(connsinprogress.keys()) + [p]
+                output_list = list(connsinprogress.keys()) + outsock
+                input, output = self.select(input_list, output_list, selectors.DefaultSelector())
+
                 numsockets = 0
                 if p is not None:
                     numsockets += 1
@@ -572,12 +601,12 @@ class SlskProtoThread(threading.Thread):
 
                 self._ui_callback([InternalData(numsockets)])
             # print "Sockets open: %s = %s + %s + %s (+1)" % (len(conns.keys()+connsinprogress.keys()+[p]+outsock), len(conns.keys()),  len(connsinprogress.keys()), len(outsock))
-            except select.error as error:
+            except OSError as error:
                 if len(error.args) == 2 and error.args[0] == EINTR:
                     # Error recieved; but we don't care :)
                     continue
                 # Error recieved; terminate networking loop
-                print(time.strftime("%H:%M:%S"), "select.error", error)
+                print(time.strftime("%H:%M:%S"), "select OSError:", error)
                 self._want_abort = 1
                 message = _("Major Socket Error: Networking terminated! %s" % str(error))
                 log.addwarning(message)
