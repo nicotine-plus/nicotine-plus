@@ -10,31 +10,31 @@ added_files = [
     #
  
     # GTK Builder files
-    ('pynicotine/gtkgui/ui/*.ui', 'pynicotine/gtkgui/ui'),
+    ('../../pynicotine/gtkgui/ui/*.ui', 'pynicotine/gtkgui/ui'),
 
     # GTK win32 theme
-    ('files/windows/settings.ini', 'etc/gtk-3.0'),
+    ('../../files/windows/settings.ini', 'etc/gtk-3.0'),
     
     # Icon
-    ('files/nicotine-plus.svg', 'share/icons/hicolor/scalable/apps'),
+    ('../../files/nicotine-plus.svg', 'share/icons/hicolor/scalable/apps'),
  
     # Translation files
-    ('languages', 'languages'),
+    ('../../languages', 'languages'),
 
     # Plugins
-    ('plugins', 'share/nicotine/plugins'),
+    ('../../plugins', 'share/nicotine/plugins'),
 
     # Sounds
-    ('sounds', 'share/nicotine/sounds'),
+    ('../../sounds', 'share/nicotine/sounds'),
  
     # License file
-    ('COPYING', '.'),
+    ('../../COPYING', '.'),
  
     # News file
-    ('NEWS', '.'),
+    ('../../NEWS', '.'),
 ]
  
-a = Analysis(['nicotine'],
+a = Analysis(['../../nicotine'],
              pathex=['.'],
              binaries=[],
              datas=added_files,
@@ -69,7 +69,7 @@ exe = EXE(pyz,
           strip=False,
           upx=True,
           console=False,
-          icon='files/windows/nicotine-plus.ico')
+          icon='../../files/windows/nicotine-plus.ico')
 coll = COLLECT(exe,
                a.binaries,
                a.zipfiles,
