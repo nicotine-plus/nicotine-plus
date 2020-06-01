@@ -18,8 +18,8 @@ jobs:
           python-version: ${{ matrix.python }}
       - name: Install dependencies
         run: |
-          sudo apt-get -y install miniupnpc gobject-introspection gir1.2-appindicator3-0.1 gir1.2-gtk-3.0 gir1.2-notify-0.7 \
-            python3 python3-dbus python3-geoip python3-gi python3-gst-1.0 python3-mutagen xdg-utils
+          sudo apt-get -y install miniupnpc gobject-introspection gir1.2-appindicator3-0.1 gir1.2-gsound-1.0 gir1.2-gtk-3.0 \
+            gir1.2-notify-0.7 python3 python3-dbus python3-geoip python3-gi python3-gst-1.0 python3-mutagen xdg-utils
       - name: Lint with flake8
         run: |
           pip install flake8

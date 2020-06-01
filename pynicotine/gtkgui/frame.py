@@ -235,6 +235,7 @@ class NicotineFrame:
         self.bindip = bindip
         self.port = port
         self.got_focus = False
+        self.notify = None
 
         try:
             gi.require_version('AppIndicator3', '0.1')
@@ -243,16 +244,27 @@ class NicotineFrame:
         except (ImportError, ValueError):
             self.appindicator = False
 
-        try:
-            gi.require_version('Notify', '0.7')
-            from gi.repository import Notify
-            Notify.init("Nicotine+")
-            self.notify = Notify
-            self.notifyBox = None
-            from xml.dom.minidom import getDOMImplementation
-            self.xmldocument = getDOMImplementation().createDocument(None, None, None)
-        except ImportError:
-            self.notify = None
+        # No good way of supporting notifications on Windows currently
+        if sys.platform != "win32":
+            try:
+                gi.require_version('Notify', '0.7')
+                from gi.repository import Notify
+                Notify.init("Nicotine+")
+                self.notify = Notify
+                self.notifyBox = None
+                from xml.dom.minidom import getDOMImplementation
+                self.xmldocument = getDOMImplementation().createDocument(None, None, None)
+            except (ImportError, ValueError):
+                self.notify = None
+
+            try:
+                gi.require_version('GSound', '1.0')
+                from gi.repository import GSound
+                ctx = GSound.Context()
+                ctx.init()
+                self.gsound = ctx
+            except (ImportError, ValueError):
+                pass
 
         self.np = NetworkEventProcessor(
             self,
@@ -624,8 +636,6 @@ class NicotineFrame:
         self.disconnect1.set_sensitive(0)
         self.awayreturn1.set_sensitive(0)
         self.check_privileges1.set_sensitive(0)
-
-        self.gstreamer = gstreamer()
 
         self.pluginhandler = pluginsystem.PluginHandler(self, plugins)
 
@@ -3519,9 +3529,6 @@ class Notifications:
 
     def sound(self, message, user, place=None):
 
-        if sys.platform == "win32":
-            return
-
         if self.frame.np.config.sections["ui"]["speechenabled"]:
 
             if message == "room_nick" and place is not None:
@@ -3545,10 +3552,6 @@ class Notifications:
         if "soundenabled" not in self.frame.np.config.sections["ui"] or not self.frame.np.config.sections["ui"]["soundenabled"]:
             return
 
-        if "soundcommand" not in self.frame.np.config.sections["ui"]:
-            return
-
-        command = self.frame.np.config.sections["ui"]["soundcommand"]
         path = None
         exists = 0
 
@@ -3559,7 +3562,7 @@ class Notifications:
 
         if "soundtheme" in self.frame.np.config.sections["ui"]:
 
-            path = os.path.expanduser(os.path.join(self.frame.np.config.sections["ui"]["soundtheme"], "%s.ogg" % soundtitle))
+            path = os.path.expanduser(os.path.join(self.frame.np.config.sections["ui"]["soundtheme"], "%s.wav" % soundtitle))
 
             if os.path.exists(path):
                 exists = 1
@@ -3568,7 +3571,7 @@ class Notifications:
 
         if not exists:
 
-            path = "%s/share/nicotine/sounds/default/%s.ogg" % (sys.prefix, soundtitle)
+            path = "%s/share/nicotine/sounds/default/%s.wav" % (sys.prefix, soundtitle)
 
             if os.path.exists(path):
                 exists = 1
@@ -3577,7 +3580,7 @@ class Notifications:
 
         if not exists:
 
-            path = "sounds/default/%s.ogg" % soundtitle
+            path = "sounds/default/%s.wav" % soundtitle
 
             if os.path.exists(path):
                 exists = 1
@@ -3586,49 +3589,11 @@ class Notifications:
 
         if path is not None and exists:
 
-            if command == "Gstreamer (gst-python)":
-
-                if self.frame.gstreamer.player is None:
-                    return
-
-                self.frame.gstreamer.play(path)
+            if sys.platform == "win32":
+                import winsound
+                winsound.PlaySound(path, winsound.SND_FILENAME)
             else:
-                os.system("%s %s &" % (command, path))
-
-
-class gstreamer:
-    def __init__(self):
-        self.player = None
-        try:
-            gi.require_version('Gst', '1.0')
-            from gi.repository import Gst
-            Gst.init(None)
-        except Exception as error:  # noqa: F841
-            return
-        self.gst = Gst
-        try:
-            self.player = Gst.ElementFactory.make("playbin", "player")
-            fakesink = Gst.ElementFactory.make('fakesink', "my-fakesink")
-            self.player.set_property("video-sink", fakesink)
-        except Exception as error:
-            log.addwarning(_("ERROR: Gstreamer-python could not play: %(error)s") % {'error': error})
-            self.gst = self.player = None
-            return
-
-        self.bus = self.player.get_bus()
-        self.bus.add_signal_watch()
-        self.bus.connect('message', self.on_gst_message)
-
-    def play(self, path):
-        self.player.set_property('uri', "file://" + path)
-        self.player.set_state(self.gst.State.PLAYING)
-
-    def on_gst_message(self, bus, message):
-        t = message.type
-        if t == self.gst.MessageType.EOS:
-            self.player.set_state(self.gst.State.NULL)
-        elif t == self.gst.MessageType.ERROR:
-            self.player.set_state(self.gst.State.NULL)
+                self.frame.gsound.play_simple({'media.filename': path})
 
 
 class MainApp:
@@ -3638,7 +3603,4 @@ class MainApp:
 
     def MainLoop(self):
         signal.signal(signal.SIGINT, signal.SIG_IGN)
-        Gdk.threads_init()
-        Gdk.threads_enter()  # Without this N+ hangs on XP (Vista and Linux don't have that problem)
         gtk.main()
-        Gdk.threads_leave()

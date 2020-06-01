@@ -63,7 +63,6 @@ You should install Python 3.5 or newer.""") % (e)
             return _("""You're using an unsupported version of GTK (%s).
 You should install GTK 3.0 or newer.""") % e
 
-    # Require PyGTK
     try:
         from gi.repository import Gtk  # noqa: F401
     except ImportError:
@@ -80,7 +79,7 @@ in an interpreter's module search path.
 what version of python was used to build the Nicotine
 binary package and what you try to run Nicotine+ with).""")
 
-    # Check for optionnal GeoIP
+    # Check for optional GeoIP
     try:
         import GeoIP  # noqa: F401
     except ImportError:
@@ -92,26 +91,6 @@ This requires a (GPL'ed) library called GeoIP. You can find it here:
 C library:       https://github.com/maxmind/geoip-api-c
 Python bindings: https://github.com/maxmind/geoip-api-python
 (the python bindings require the C library)""")
-            log.addwarning(msg)
-
-    # Windows specific checks
-    if win32:
-
-        # dbhash might be a good choice
-        try:
-            import dbm.bsd  # noqa: F401
-        except Exception:
-            log.addwarning(
-                _("Warning: the Berkeley DB module, dbhash, " +
-                  "could not be loaded."))
-
-        # win32file is used to handle hidden files
-        try:
-            import win32file  # noqa: F401
-        except Exception:
-            msg = _("""Nicotine+ supports hidden files attributes on windows.
-This requires a python module called pypiwin32. You can find it here:
-https://pypi.python.org/pypi/pypiwin32""")
             log.addwarning(msg)
 
     return None
