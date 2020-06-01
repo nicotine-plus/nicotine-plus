@@ -98,6 +98,7 @@ $ autopkgtest --shell-fail --apt-upgrade ../nicotine_(...).dsc -- \
 
 ## Optional
 
+* [gir1.2-appindicator3-0.1](https://lazka.github.io/pgi-docs/AppIndicator3-0.1/index.html) for tray icon;
 * [python3-geoip](https://github.com/maxmind/geoip-api-python) >= 1.3.2 for country lookup;
 * [python3-miniupnpc](https://miniupnp.tuxfamily.org/) >= 1.9 for opening ports on your router or `upnpc(1)` if not available;
 * [Python for Windows Extensions](https://sourceforge.net/projects/pywin32/) for hiding directories from your shares (Windows only).
