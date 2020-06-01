@@ -716,11 +716,6 @@ msgstr ""
 msgid "Enable spell checker (requires a restart)"
 msgstr ""
 
-msgid ""
-"Libsexy Website: http://www.chipx86.com/wiki/Libsexy \\nlibsexy and sexy-"
-"python bindings required."
-msgstr ""
-
 msgid "Show Buttons in Transfers Tabs"
 msgstr ""
 
@@ -1826,9 +1821,6 @@ msgstr ""
 msgid "Download Notifications"
 msgstr ""
 
-msgid "About optional dependencies"
-msgstr ""
-
 msgid "Room"
 msgstr ""
 
@@ -1891,12 +1883,6 @@ msgid "Always for this channel"
 msgstr ""
 
 msgid "Default for all channels"
-msgstr ""
-
-#, python-format
-msgid ""
-"We have a problem, PyGTK get_text does not seem to return UTF-8. Please file "
-"a bug report. Bytes: %s"
 msgstr ""
 
 msgid "Status"

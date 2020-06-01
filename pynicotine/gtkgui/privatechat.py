@@ -363,16 +363,12 @@ class PrivateChat:
         self.status = -1
         self.clist = []
 
-        if self.frame.SEXY and self.frame.np.config.sections["ui"]["spellcheck"]:
-            import sexy
-            self.hbox5.remove(self.ChatLine)
-            self.ChatLine.destroy()
-            self.ChatLine = sexy.SpellEntry()
-            self.ChatLine.show()
-            self.ChatLine.connect("activate", self.OnEnter)
-            self.ChatLine.connect("key_press_event", self.OnKeyPress)
-            self.hbox5.pack_start(self.ChatLine, True, True, 0)
-            self.hbox5.reorder_child(self.ChatLine, 0)
+        if self.frame.gspell and self.frame.np.config.sections["ui"]["spellcheck"]:
+            from gi.repository import Gspell
+            spell_buffer = Gspell.EntryBuffer.get_from_gtk_entry_buffer(self.ChatLine.get_buffer())
+            spell_buffer.set_spell_checker(Gspell.Checker.new())
+            spell_view = Gspell.Entry.get_from_gtk_entry(self.ChatLine)
+            spell_view.set_inline_spell_checking(True)
 
         completion = gtk.EntryCompletion()
         self.ChatLine.set_completion(completion)

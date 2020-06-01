@@ -952,16 +952,12 @@ class ChatRoom:
         self.Ticker.entry.connect("focus-in-event", self.OnTickerFocus)
         self.Ticker.entry.connect("focus-out-event", self.OnTickerFocus)
 
-        if self.frame.SEXY and config["ui"]["spellcheck"]:
-            import sexy
-            self.ChatEntryBox.remove(self.ChatEntry)
-            self.ChatEntry.destroy()
-            self.ChatEntry = sexy.SpellEntry()
-            self.ChatEntry.show()
-            self.ChatEntry.connect("activate", self.OnEnter)
-
-            self.ChatEntry.connect("key_press_event", self.OnKeyPress)
-            self.ChatEntryBox.pack_start(self.ChatEntry, True)
+        if self.frame.gspell and self.frame.np.config.sections["ui"]["spellcheck"]:
+            from gi.repository import Gspell
+            spell_buffer = Gspell.EntryBuffer.get_from_gtk_entry_buffer(self.ChatEntry.get_buffer())
+            spell_buffer.set_spell_checker(Gspell.Checker.new())
+            spell_view = Gspell.Entry.get_from_gtk_entry(self.ChatEntry)
+            spell_view.set_inline_spell_checking(True)
 
         self.midwaycompletion = False  # True if the user just used tab completion
         self.completions = {}  # Holds temp. information about tab completoin

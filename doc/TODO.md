@@ -4,7 +4,7 @@ A list of stuff & things todo (not in any particular order):
 
 #### Short term goals
 
-* Switch spellcheck from libsexy (deprecated) to gspell.
+* Make as much as possible optional dependencies work on Windows.
 
 #### Long term goals
 
@@ -13,7 +13,6 @@ A list of stuff & things todo (not in any particular order):
 * Reach out for translation help.
 * Replace the bundle Configparser module by something easier like json.
 * Replace db files (causing many problems) by something easier like json.
-* Make as much as possible optional dependencies work on Windows.
 * Switch from legacy GeoIP (maintenance mode) to a good alternative, perhaps
   python3-geoip2.
 

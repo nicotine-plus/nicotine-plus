@@ -85,14 +85,6 @@ gi.require_version('Gtk', '3.0')
 gi.require_version('Gdk', '3.0')
 
 
-# LibSexy is deprecated, we should try to find a replacement
-SEXY = True
-try:
-    import sexy
-except ImportError:
-    SEXY = False
-
-
 class roomlist:
 
     def __init__(self, frame):
@@ -229,13 +221,21 @@ class NicotineFrame:
         self.needrescan = False
         self.autoaway = False
         self.awaytimer = None
-        self.SEXY = SEXY
         self.chatrooms = None
         self.bindip = bindip
         self.port = port
         self.got_focus = False
 
         try:
+            # Spell checking support
+            gi.require_version('Gspell', '1')
+            from gi.repository import Gspell  # noqa: F401
+            self.gspell = True
+        except (ImportError, ValueError):
+            self.gspell = False
+
+        try:
+            # Notification support
             gi.require_version('Notify', '0.7')
             from gi.repository import Notify
             Notify.init("Nicotine+")
@@ -243,7 +243,7 @@ class NicotineFrame:
             self.notifyBox = None
             from xml.dom.minidom import getDOMImplementation
             self.xmldocument = getDOMImplementation().createDocument(None, None, None)
-        except ImportError:
+        except (ImportError, ValueError):
             self.notify = None
 
         self.np = NetworkEventProcessor(
@@ -1479,8 +1479,6 @@ class NicotineFrame:
         widget.modify_base(gtk.StateFlags.NORMAL, colour)
         widget.modify_bg(gtk.StateFlags.NORMAL, colour)
         widgetlist = [gtk.Entry, gtk.SpinButton]
-        if SEXY:
-            widgetlist.append(sexy.SpellEntry)
         if type(widget) in widgetlist:
             if fgcolor != "":
                 colour = Gdk.color_parse(fgcolor)
