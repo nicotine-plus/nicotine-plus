@@ -2226,7 +2226,7 @@ class BloatFrame(buildFrame):
 
         transfers = config["transfers"]  # noqa: F841
 
-        self.SpellCheck.set_sensitive(self.frame.SEXY)
+        self.SpellCheck.set_sensitive(self.frame.gspell)
 
         self.p.SetWidgetsData(config, self.options)
 

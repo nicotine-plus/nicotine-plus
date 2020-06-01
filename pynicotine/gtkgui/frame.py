@@ -86,14 +86,6 @@ gi.require_version('Gtk', '3.0')
 gi.require_version('Gdk', '3.0')
 
 
-# LibSexy is deprecated, we should try to find a replacement
-SEXY = True
-try:
-    import sexy
-except ImportError:
-    SEXY = False
-
-
 class roomlist:
 
     def __init__(self, frame):
@@ -230,7 +222,6 @@ class NicotineFrame:
         self.needrescan = False
         self.autoaway = False
         self.awaytimer = None
-        self.SEXY = SEXY
         self.chatrooms = None
         self.bindip = bindip
         self.port = port
@@ -238,15 +229,25 @@ class NicotineFrame:
         self.notify = None
 
         try:
+            # Tray icon support
             gi.require_version('AppIndicator3', '0.1')
             from gi.repository import AppIndicator3  # noqa: F401
             self.appindicator = True
         except (ImportError, ValueError):
             self.appindicator = False
 
+        try:
+            # Spell checking support
+            gi.require_version('Gspell', '1')
+            from gi.repository import Gspell  # noqa: F401
+            self.gspell = True
+        except (ImportError, ValueError):
+            self.gspell = False
+
         # No good way of supporting notifications on Windows currently
         if sys.platform != "win32":
             try:
+                # Notification support
                 gi.require_version('Notify', '0.7')
                 from gi.repository import Notify
                 Notify.init("Nicotine+")
@@ -258,6 +259,7 @@ class NicotineFrame:
                 self.notify = None
 
             try:
+                # Sound effect support
                 gi.require_version('GSound', '1.0')
                 from gi.repository import GSound
                 ctx = GSound.Context()
@@ -1504,8 +1506,6 @@ class NicotineFrame:
         widget.modify_base(gtk.StateFlags.NORMAL, colour)
         widget.modify_bg(gtk.StateFlags.NORMAL, colour)
         widgetlist = [gtk.Entry, gtk.SpinButton]
-        if SEXY:
-            widgetlist.append(sexy.SpellEntry)
         if type(widget) in widgetlist:
             if fgcolor != "":
                 colour = Gdk.color_parse(fgcolor)
