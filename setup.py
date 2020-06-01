@@ -65,6 +65,15 @@ files.append(
     )
 )
 
+# Tray icons
+for iconname in ["trayicon_away.png", "trayicon_connect.png", "trayicon_disconnect.png", "trayicon_msg.png"]:
+    files.append(
+        (
+            "share/nicotine/trayicons",
+            ["img/" + iconname]
+        )
+    )
+
 # Desktop file
 files.append(
     (

@@ -24,24 +24,18 @@
 COMPOSE='composite -gravity NorthEast -compose src-over'
 
 # Base Nicotine+ icon
-convert -resize 16x16 img/n.png img/base.png
+convert -background none -resize 32x32 files/icons/scalable/nicotine-plus.svg img/base.png
 
 # Default icon in the notification area
-$COMPOSE /usr/share/icons/gnome/8x8/emblems/emblem-default.png img/base.png img/trayicon_connect.png
+$COMPOSE /usr/share/icons/Adwaita/16x16/legacy/emblem-default.png img/base.png img/trayicon_connect.png
 
 # Notification area icon when disconnected
-convert -resize 8x8 /usr/share/icons/gnome/16x16/actions/process-stop.png img/net_ko.png
-$COMPOSE img/net_ko.png img/base.png img/trayicon_disconnect.png
-rm -f img/net_ko.png
+$COMPOSE /usr/share/icons/Adwaita/16x16/legacy/process-stop.png img/base.png img/trayicon_disconnect.png
 
 # Notification area icon when the user is away
-convert -resize 8x8 /usr/share/icons/gnome/16x16/status/appointment-soon.png img/clock.png
-$COMPOSE img/clock.png img/base.png img/trayicon_away.png
-rm -f img/clock.png
+$COMPOSE /usr/share/icons/Adwaita/16x16/legacy/appointment-soon.png img/base.png img/trayicon_away.png
 
 # Notification area icon when you get a message
-convert -resize 9x9 -alpha extract -alpha shape -background blue /usr/share/icons/gnome/16x16/status/starred.png img/msg.png
-$COMPOSE img/msg.png img/base.png img/trayicon_msg.png
-rm -f img/msg.png
+$COMPOSE /usr/share/icons/Adwaita/16x16/legacy/starred.png img/base.png img/trayicon_msg.png
 
 rm -f img/base.png
