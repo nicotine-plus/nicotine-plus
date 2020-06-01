@@ -29,7 +29,6 @@ Depends:
     python3 (>= 3.5),
     python3-dbus,
     python3-gi,
-    python3-gst-1.0,
     python3-mutagen (>= 1.25),
     xdg-utils
 Recommends:
