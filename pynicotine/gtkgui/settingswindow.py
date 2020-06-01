@@ -1643,6 +1643,8 @@ class IconsFrame(buildFrame):
             }
         }
 
+        self.TrayiconCheck.set_sensitive(self.frame.appindicator)
+
         self.N.set_from_pixbuf(self.frame.images["n"])
         self.Away.set_from_pixbuf(self.frame.images["away"])
         self.Online.set_from_pixbuf(self.frame.images["online"])
