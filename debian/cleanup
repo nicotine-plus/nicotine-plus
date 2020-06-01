@@ -3,6 +3,3 @@ set -e
 
 # Remove generated .mo files
 rm -f `find languages/ -name \*.mo`
-
-# Remove suspiciously licensed win32 code
-rm -rf tools

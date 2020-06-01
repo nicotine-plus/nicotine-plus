@@ -48,22 +48,22 @@ for man in manpages:
         )
     )
 
-# Icons with fixed size
-for sizeicons in ["16x16", "32x32", "48x48", "64x64", "96x96"]:
-    files.append(
-        (
-            os.path.join("share/icons/hicolor", sizeicons, "apps"),
-            ["files/icons/" + sizeicons + "/nicotine-plus.png"]
-        )
-    )
-
 # Scalable icons
 files.append(
     (
         "share/icons/hicolor/scalable/apps",
-        ["files/icons/scalable/nicotine-plus.svg"]
+        ["files/nicotine-plus.svg"]
     )
 )
+
+# Tray icons
+for iconname in ["trayicon_away.png", "trayicon_connect.png", "trayicon_disconnect.png", "trayicon_msg.png"]:
+    files.append(
+        (
+            "share/nicotine/trayicons",
+            ["img/" + iconname]
+        )
+    )
 
 # Desktop file
 files.append(
@@ -109,7 +109,7 @@ sound_dirs = glob.glob(os.path.join("sounds", "*"))
 
 for sounds in sound_dirs:
     p, theme = os.path.split(sounds)
-    for file in ["private.ogg", "room_nick.ogg", "details.txt", "license.txt"]:
+    for file in ["private.wav", "room_nick.wav", "details.txt", "license.txt"]:
         files.append(
             (
                 os.path.join("share/nicotine/sounds", theme),

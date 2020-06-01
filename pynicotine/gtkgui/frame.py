@@ -45,6 +45,7 @@ from pynicotine import slskmessages
 from pynicotine import slskproto
 from pynicotine.gtkgui import imagedata
 from pynicotine.gtkgui import nowplaying
+from pynicotine.gtkgui import tray
 from pynicotine.gtkgui import utils
 from pynicotine.gtkgui.about import AboutDialog
 from pynicotine.gtkgui.about import AboutFiltersDialog
@@ -225,6 +226,15 @@ class NicotineFrame:
         self.bindip = bindip
         self.port = port
         self.got_focus = False
+        self.notify = None
+
+        try:
+            # Tray icon support
+            gi.require_version('AppIndicator3', '0.1')
+            from gi.repository import AppIndicator3  # noqa: F401
+            self.appindicator = True
+        except (ImportError, ValueError):
+            self.appindicator = False
 
         try:
             # Spell checking support
@@ -234,17 +244,29 @@ class NicotineFrame:
         except (ImportError, ValueError):
             self.gspell = False
 
-        try:
-            # Notification support
-            gi.require_version('Notify', '0.7')
-            from gi.repository import Notify
-            Notify.init("Nicotine+")
-            self.notify = Notify
-            self.notifyBox = None
-            from xml.dom.minidom import getDOMImplementation
-            self.xmldocument = getDOMImplementation().createDocument(None, None, None)
-        except (ImportError, ValueError):
-            self.notify = None
+        # No good way of supporting notifications on Windows currently
+        if sys.platform != "win32":
+            try:
+                # Notification support
+                gi.require_version('Notify', '0.7')
+                from gi.repository import Notify
+                Notify.init("Nicotine+")
+                self.notify = Notify
+                self.notifyBox = None
+                from xml.dom.minidom import getDOMImplementation
+                self.xmldocument = getDOMImplementation().createDocument(None, None, None)
+            except (ImportError, ValueError):
+                self.notify = None
+
+            try:
+                # Sound effect support
+                gi.require_version('GSound', '1.0')
+                from gi.repository import GSound
+                ctx = GSound.Context()
+                ctx.init()
+                self.gsound = ctx
+            except (ImportError, ValueError):
+                pass
 
         self.np = NetworkEventProcessor(
             self,
@@ -568,7 +590,14 @@ class NicotineFrame:
         self.SetUserStatus(_("Offline"))
 
         self.Notifications = Notifications(self)
-        self.TrayApp = TrayApp(self)
+
+        if self.appindicator:
+            self.TrayApp = tray.TrayApp(self)
+
+        self.hilites = {
+            "rooms": [],
+            "private": []
+        }
 
         self.UpdateBandwidth()
         self.UpdateTransferButtons()
@@ -610,8 +639,6 @@ class NicotineFrame:
         self.awayreturn1.set_sensitive(0)
         self.check_privileges1.set_sensitive(0)
 
-        self.gstreamer = gstreamer()
-
         self.pluginhandler = pluginsystem.PluginHandler(self, plugins)
 
         self.ShowChatButtons.set_active(not config["ui"]["chat_hidebuttons"])
@@ -644,7 +671,7 @@ class NicotineFrame:
         self.UpdateDownloadFilters()
 
         # Create the trayicon if needed
-        if use_trayicon and config["ui"]["trayicon"]:
+        if self.appindicator and use_trayicon and config["ui"]["trayicon"]:
             self.TrayApp.Create()
 
         # Deactivate public shares related menu entries if we don't use them
@@ -725,13 +752,13 @@ class NicotineFrame:
         if not self.np.config.sections["ui"]["exitdialog"]:
             return False
 
-        if self.TrayApp.HAVE_TRAYICON and self.np.config.sections["ui"]["exitdialog"] == 2:
+        if self.appindicator and self.TrayApp.IsTrayIconVisible() and self.np.config.sections["ui"]["exitdialog"] == 2:
             if self.is_mapped:
                 self.MainWindow.unmap()
                 self.is_mapped = False
             return True
 
-        if self.TrayApp.HAVE_TRAYICON:
+        if self.appindicator and self.TrayApp.IsTrayIconVisible():
             option = QuitBox(
                 self,
                 title=_('Close Nicotine+?'),
@@ -1059,7 +1086,7 @@ class NicotineFrame:
             if checkbox:
                 self.np.config.sections["ui"]["exitdialog"] = 0
 
-            if self.TrayApp.trayicon:
+            if self.appindicator and self.TrayApp.trayicon:
                 self.TrayApp.destroy_trayicon()
 
             self.MainWindow.destroy()
@@ -1569,7 +1596,7 @@ class NicotineFrame:
         self.np.config.writeConfig()
 
         # Cleaning up the trayicon
-        if self.TrayApp.trayicon:
+        if self.appindicator and self.TrayApp.trayicon:
             self.TrayApp.destroy_trayicon()
 
         # Closing up all shelves db
@@ -1613,8 +1640,9 @@ class NicotineFrame:
 
     def OnConnect(self, widget):
 
-        self.TrayApp.tray_status["status"] = "trayicon_connect"
-        self.TrayApp.SetImage()
+        if self.appindicator:
+            self.TrayApp.tray_status["status"] = "trayicon_connect"
+            self.TrayApp.SetImage()
 
         if self.np.serverconn is not None:
             return
@@ -1656,8 +1684,9 @@ class NicotineFrame:
 
         self.SetUserStatus(_("Offline"))
 
-        self.TrayApp.tray_status["status"] = "trayicon_disconnect"
-        self.TrayApp.SetImage()
+        if self.appindicator:
+            self.TrayApp.tray_status["status"] = "trayicon_disconnect"
+            self.TrayApp.SetImage()
 
         self.Searches.interval = 0
         self.chatrooms.ConnClose()
@@ -1704,8 +1733,9 @@ class NicotineFrame:
 
         self.SetUserStatus(_("Offline"))
 
-        self.TrayApp.tray_status["status"] = "trayicon_disconnect"
-        self.TrayApp.SetImage()
+        if self.appindicator:
+            self.TrayApp.tray_status["status"] = "trayicon_disconnect"
+            self.TrayApp.SetImage()
 
         self.uploads.ConnClose()
         self.downloads.ConnClose()
@@ -1723,8 +1753,9 @@ class NicotineFrame:
         if self.away == 0:
             self.SetUserStatus(_("Online"))
 
-            self.TrayApp.tray_status["status"] = "trayicon_connect"
-            self.TrayApp.SetImage()
+            if self.appindicator:
+                self.TrayApp.tray_status["status"] = "trayicon_connect"
+                self.TrayApp.SetImage()
 
             autoaway = self.np.config.sections["server"]["autoaway"]
 
@@ -1735,8 +1766,9 @@ class NicotineFrame:
         else:
             self.SetUserStatus(_("Away"))
 
-            self.TrayApp.tray_status["status"] = "trayicon_away"
-            self.TrayApp.SetImage()
+            if self.appindicator:
+                self.TrayApp.tray_status["status"] = "trayicon_away"
+                self.TrayApp.SetImage()
 
         self.SetWidgetOnlineStatus(True)
 
@@ -1813,13 +1845,15 @@ class NicotineFrame:
         if self.away == 0:
             self.SetUserStatus(_("Online"))
 
-            self.TrayApp.tray_status["status"] = "trayicon_connect"
-            self.TrayApp.SetImage()
+            if self.appindicator:
+                self.TrayApp.tray_status["status"] = "trayicon_connect"
+                self.TrayApp.SetImage()
         else:
             self.SetUserStatus(_("Away"))
 
-            self.TrayApp.tray_status["status"] = "trayicon_away"
-            self.TrayApp.SetImage()
+            if self.appindicator:
+                self.TrayApp.tray_status["status"] = "trayicon_away"
+                self.TrayApp.SetImage()
 
         self.np.queue.put(slskmessages.SetStatus(self.away and 1 or 2))
         self.privatechats.UpdateColours()
@@ -1967,7 +2001,8 @@ class NicotineFrame:
         self.DownStatus.push(self.down_context_id, _("Down: %(num)i users, %(speed).1f KB/s") % {'num': usersdown, 'speed': down})
         self.UpStatus.push(self.up_context_id, _("Up: %(num)i users, %(speed).1f KB/s") % {'num': usersup, 'speed': up})
 
-        self.TrayApp.SetToolTip(_("Nicotine+ Transfers: %(speeddown).1f KB/s Down, %(speedup).1f KB/s Up") % {'speeddown': down, 'speedup': up})
+        if self.appindicator:
+            self.TrayApp.SetToolTip(_("Nicotine+ Transfers: %(speeddown).1f KB/s Down, %(speedup).1f KB/s Up") % {'speeddown': down, 'speedup': up})
 
     def BanUser(self, user):
         if self.np.transfers is not None:
@@ -2308,15 +2343,12 @@ class NicotineFrame:
         self.UpdateDownloadFilters()
         self.np.config.writeConfiguration()
 
-        if not config["ui"]["trayicon"] and self.TrayApp.HAVE_TRAYICON:
-            self.TrayApp.destroy_trayicon()
-        elif config["ui"]["trayicon"] and not self.TrayApp.HAVE_TRAYICON:
-            if self.TrayApp.trayicon is None and not self.TrayApp.TRAYICON_CREATED:
+        if self.appindicator:
+            if not config["ui"]["trayicon"] and self.TrayApp.IsTrayIconVisible():
+                self.TrayApp.destroy_trayicon()
+            elif config["ui"]["trayicon"] and not self.TrayApp.IsTrayIconVisible():
                 self.TrayApp.Load()
-            else:
-                self.TrayApp.HAVE_TRAYICON = True
-
-            self.TrayApp.Draw()
+                self.TrayApp.Draw()
 
         if needcompletion:
             self.chatrooms.roomsctrl.UpdateCompletions()
@@ -3383,21 +3415,23 @@ class Notifications:
 
     def Add(self, location, user, room=None, tab=True):
 
-        hilites = self.frame.TrayApp.tray_status["hilites"]
-
         if location == "rooms" and room is not None and user is not None:
-            if room not in hilites["rooms"]:
-                hilites["rooms"].append(room)
+            if room not in self.frame.hilites["rooms"]:
+                self.frame.hilites["rooms"].append(room)
                 self.sound("room_nick", user, place=room)
-                self.frame.TrayApp.SetImage()
+
+                if self.frame.appindicator:
+                    self.frame.TrayApp.SetImage()
         elif location == "private":
-            if user in hilites[location]:
-                hilites[location].remove(user)
-                hilites[location].append(user)
-            elif user not in hilites[location]:
-                hilites[location].append(user)
+            if user in self.frame.hilites[location]:
+                self.frame.hilites[location].remove(user)
+                self.frame.hilites[location].append(user)
+            elif user not in self.frame.hilites[location]:
+                self.frame.hilites[location].append(user)
                 self.sound(location, user)
-                self.frame.TrayApp.SetImage()
+
+                if self.frame.appindicator:
+                    self.frame.TrayApp.SetImage()
 
         if tab and self.frame.np.config.sections["ui"]["urgencyhint"] and not self.frame.got_focus:
             self.frame.MainWindow.set_urgency_hint(True)
@@ -3419,32 +3453,33 @@ class Notifications:
     def Clear(self, location, user=None, room=None):
 
         if location == "rooms" and room is not None:
-            if room in self.frame.TrayApp.tray_status["hilites"]["rooms"]:
-                self.frame.TrayApp.tray_status["hilites"]["rooms"].remove(room)
+            if room in self.frame.hilites["rooms"]:
+                self.frame.hilites["rooms"].remove(room)
             self.SetTitle(room)
         elif location == "private":
-            if user in self.frame.TrayApp.tray_status["hilites"]["private"]:
-                self.frame.TrayApp.tray_status["hilites"]["private"].remove(user)
+            if user in self.frame.hilites["private"]:
+                self.frame.hilites["private"].remove(user)
             self.SetTitle(user)
 
-        self.frame.TrayApp.SetImage()
+        if self.frame.appindicator:
+            self.frame.TrayApp.SetImage()
 
     def SetTitle(self, user=None):
 
-        if self.frame.TrayApp.tray_status["hilites"]["rooms"] == [] and self.frame.TrayApp.tray_status["hilites"]["private"] == []:
+        if self.frame.hilites["rooms"] == [] and self.frame.hilites["private"] == []:
             # Reset Title
             if self.frame.MainWindow.get_title() != _("Nicotine+") + " " + version:
                 self.frame.MainWindow.set_title(_("Nicotine+") + " " + version)
         else:
             # Private Chats have a higher priority
-            if len(self.frame.TrayApp.tray_status["hilites"]["private"]) > 0:
-                user = self.frame.TrayApp.tray_status["hilites"]["private"][-1]
+            if len(self.frame.hilites["private"]) > 0:
+                user = self.frame.hilites["private"][-1]
                 self.frame.MainWindow.set_title(
                     _("Nicotine+") + " " + version + " :: " + _("Private Message from %(user)s") % {'user': user}
                 )
             # Allow for the possibility the username is not available
-            elif len(self.frame.TrayApp.tray_status["hilites"]["rooms"]) > 0:
-                room = self.frame.TrayApp.tray_status["hilites"]["rooms"][-1]
+            elif len(self.frame.hilites["rooms"]) > 0:
+                room = self.frame.hilites["rooms"][-1]
                 if user is None:
                     self.frame.MainWindow.set_title(
                         _("Nicotine+") + " " + version + " :: " + _("You've been mentioned in the %(room)s room") % {'room': room}
@@ -3494,9 +3529,6 @@ class Notifications:
 
     def sound(self, message, user, place=None):
 
-        if sys.platform == "win32":
-            return
-
         if self.frame.np.config.sections["ui"]["speechenabled"]:
 
             if message == "room_nick" and place is not None:
@@ -3520,10 +3552,6 @@ class Notifications:
         if "soundenabled" not in self.frame.np.config.sections["ui"] or not self.frame.np.config.sections["ui"]["soundenabled"]:
             return
 
-        if "soundcommand" not in self.frame.np.config.sections["ui"]:
-            return
-
-        command = self.frame.np.config.sections["ui"]["soundcommand"]
         path = None
         exists = 0
 
@@ -3534,7 +3562,7 @@ class Notifications:
 
         if "soundtheme" in self.frame.np.config.sections["ui"]:
 
-            path = os.path.expanduser(os.path.join(self.frame.np.config.sections["ui"]["soundtheme"], "%s.ogg" % soundtitle))
+            path = os.path.expanduser(os.path.join(self.frame.np.config.sections["ui"]["soundtheme"], "%s.wav" % soundtitle))
 
             if os.path.exists(path):
                 exists = 1
@@ -3543,7 +3571,7 @@ class Notifications:
 
         if not exists:
 
-            path = "%s/share/nicotine/sounds/default/%s.ogg" % (sys.prefix, soundtitle)
+            path = "%s/share/nicotine/sounds/default/%s.wav" % (sys.prefix, soundtitle)
 
             if os.path.exists(path):
                 exists = 1
@@ -3552,7 +3580,7 @@ class Notifications:
 
         if not exists:
 
-            path = "sounds/default/%s.ogg" % soundtitle
+            path = "sounds/default/%s.wav" % soundtitle
 
             if os.path.exists(path):
                 exists = 1
@@ -3561,198 +3589,11 @@ class Notifications:
 
         if path is not None and exists:
 
-            if command == "Gstreamer (gst-python)":
-
-                if self.frame.gstreamer.player is None:
-                    return
-
-                self.frame.gstreamer.play(path)
+            if sys.platform == "win32":
+                import winsound
+                winsound.PlaySound(path, winsound.SND_FILENAME)
             else:
-                os.system("%s %s &" % (command, path))
-
-
-class TrayApp:
-
-    def __init__(self, frame):
-        self.frame = frame
-        self.trayicon = None
-        self.TRAYICON_CREATED = 0
-        self.HAVE_TRAYICON = False
-        self.tray_status = {
-            "hilites": {
-                "rooms": [],
-                "private": []
-            },
-            "status": "trayicon_disconnect",
-            "last": "trayicon_disconnect"
-        }
-        self.CreateMenu()
-
-    def HideUnhideWindow(self, widget):
-
-        if self.frame.is_mapped:
-            self.frame.MainWindow.unmap()
-            self.frame.is_mapped = False
-        else:
-            self.frame.MainWindow.map()
-            # weird, but this allows us to easily a minimized nicotine from one
-            # desktop to another by clicking on the tray icon
-            if self.frame.minimized:
-                self.frame.MainWindow.present()
-
-            self.frame.MainWindow.grab_focus()
-            self.frame.is_mapped = True
-
-            self.frame.chatrooms.roomsctrl.ClearNotifications()
-            self.frame.privatechats.ClearNotifications()
-
-    def Create(self):
-
-        self.Load()
-        self.Draw()
-
-    def Load(self):
-
-        trayicon = gtk.StatusIcon()
-        self.trayicon = trayicon
-        self.HAVE_TRAYICON = True
-
-    def destroy_trayicon(self):
-
-        if not self.TRAYICON_CREATED:
-            return
-
-        self.TRAYICON_CREATED = 0
-        self.HAVE_TRAYICON = False
-        self.tray_popup_menu.destroy()
-        self.trayicon.set_visible(False)
-        self.trayicon = None
-
-    def Draw(self):
-
-        if not self.HAVE_TRAYICON or self.trayicon is None or self.TRAYICON_CREATED:
-            return
-
-        self.TRAYICON_CREATED = 1
-
-        self.trayicon.set_visible(True)
-        self.trayicon.connect("popup-menu", self.OnStatusIconPopup)
-        self.trayicon.connect("activate", self.OnStatusIconClicked)
-
-        self.SetImage(self.tray_status["status"])
-        self.SetToolTip("Nicotine+")
-
-    def SetImage(self, status=None):
-
-        # Abort if Trayicon module wasn't loaded
-        if not self.HAVE_TRAYICON or self.trayicon is None or not self.TRAYICON_CREATED:
-            return
-
-        try:
-            if status is not None:
-                self.tray_status["status"] = status
-
-            # Check for hilites, and display hilite icon if there is a room or private hilite
-            if self.tray_status["hilites"]["rooms"] == [] and self.tray_status["hilites"]["private"] == []:
-                # If there is no hilite, display the status
-                icon = self.tray_status["status"]
-            else:
-                icon = "trayicon_msg"
-
-            if icon != self.tray_status["last"]:
-                self.tray_status["last"] = icon
-
-            self.trayicon.set_from_pixbuf(self.frame.images[icon])
-
-        except Exception as e:
-            log.addwarning(_("ERROR: cannot set trayicon image: %(error)s") % {'error': e})
-
-    def CreateMenu(self):
-
-        try:
-
-            self.tray_popup_menu_server = popup0 = PopupMenu(self, False)
-
-            popup0.setup(
-                ("#" + _("Connect"), self.frame.OnConnect),
-                ("#" + _("Disconnect"), self.frame.OnDisconnect)
-            )
-
-            self.tray_popup_menu = popup = PopupMenu(self, False)
-
-            popup.setup(
-                ("#" + _("Hide / Show Nicotine+"), self.HideUnhideWindow),
-                (1, _("Server"), self.tray_popup_menu_server, self.OnPopupServer),
-                ("#" + _("Settings"), self.frame.OnSettings),
-                ("#" + _("Send Message"), self.frame.OnOpenPrivateChat),
-                ("#" + _("Lookup a User's IP"), self.frame.OnGetAUsersIP),
-                ("#" + _("Lookup a User's Info"), self.frame.OnGetAUsersInfo),
-                ("#" + _("Lookup a User's Shares"), self.frame.OnGetAUsersShares),
-                ("$" + _("Toggle Away"), self.frame.OnAway),
-                ("#" + _("Quit"), self.frame.OnExit)
-            )
-
-        except Exception as e:
-            log.addwarning(_('ERROR: tray menu, %(error)s') % {'error': e})
-
-    def OnPopupServer(self, widget):
-
-        items = self.tray_popup_menu_server.get_children()
-
-        if self.tray_status["status"] == "trayicon_disconnect":
-            items[0].set_sensitive(True)
-            items[1].set_sensitive(False)
-        else:
-            items[0].set_sensitive(False)
-            items[1].set_sensitive(True)
-        return
-
-    def OnStatusIconClicked(self, status_icon):
-        self.HideUnhideWindow(None)
-
-    def OnStatusIconPopup(self, status_icon, button, activate_time):
-
-        if button == 3:
-            self.tray_popup_menu.popup(None, None, None, None, button, activate_time)
-
-    def SetToolTip(self, string):
-        if self.trayicon is not None:
-            self.trayicon.set_tooltip_text(string)
-
-
-class gstreamer:
-    def __init__(self):
-        self.player = None
-        try:
-            gi.require_version('Gst', '1.0')
-            from gi.repository import Gst
-            Gst.init(None)
-        except Exception as error:  # noqa: F841
-            return
-        self.gst = Gst
-        try:
-            self.player = Gst.ElementFactory.make("playbin", "player")
-            fakesink = Gst.ElementFactory.make('fakesink', "my-fakesink")
-            self.player.set_property("video-sink", fakesink)
-        except Exception as error:
-            log.addwarning(_("ERROR: Gstreamer-python could not play: %(error)s") % {'error': error})
-            self.gst = self.player = None
-            return
-
-        self.bus = self.player.get_bus()
-        self.bus.add_signal_watch()
-        self.bus.connect('message', self.on_gst_message)
-
-    def play(self, path):
-        self.player.set_property('uri', "file://" + path)
-        self.player.set_state(self.gst.State.PLAYING)
-
-    def on_gst_message(self, bus, message):
-        t = message.type
-        if t == self.gst.MessageType.EOS:
-            self.player.set_state(self.gst.State.NULL)
-        elif t == self.gst.MessageType.ERROR:
-            self.player.set_state(self.gst.State.NULL)
+                self.frame.gsound.play_simple({'media.filename': path})
 
 
 class MainApp:
@@ -3762,7 +3603,4 @@ class MainApp:
 
     def MainLoop(self):
         signal.signal(signal.SIGINT, signal.SIG_IGN)
-        Gdk.threads_init()
-        Gdk.threads_enter()  # Without this N+ hangs on XP (Vista and Linux don't have that problem)
         gtk.main()
-        Gdk.threads_leave()
