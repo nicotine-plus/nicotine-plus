@@ -35,6 +35,7 @@ from gettext import gettext as _
 import gi
 from gi.repository import Gdk
 from gi.repository import GdkPixbuf
+from gi.repository import GLib
 from gi.repository import GObject as gobject
 from gi.repository import Gtk as gtk
 
@@ -221,7 +222,7 @@ class NicotineFrame:
         self.brescanning = 0
         self.needrescan = False
         self.autoaway = False
-        self.awaytimer = None
+        self.awaytimerid = None
         self.chatrooms = None
         self.bindip = bindip
         self.port = port
@@ -1368,6 +1369,13 @@ class NicotineFrame:
         for widget in self.BuddiesComboEntries:
             gobject.idle_add(widget.Fill)
 
+    def RemoveAwayTimer(self, timerid):
+        # Check that the away timer hasn't been destroyed already
+        # Happens if the timer expires
+        context = GLib.MainContext.default()
+        if context.find_source_by_id(timerid) is not None:
+            gobject.source_remove(timerid)
+
     def OnAutoAway(self):
         if not self.away:
             self.autoaway = True
@@ -1378,13 +1386,14 @@ class NicotineFrame:
         if self.autoaway:
             self.OnAway(None)
             self.autoaway = False
-        if self.awaytimer is not None:
-            gobject.source_remove(self.awaytimer)
+        if self.awaytimerid is not None:
+            self.RemoveAwayTimer(self.awaytimerid)
+
             autoaway = self.np.config.sections["server"]["autoaway"]
             if autoaway > 0:
-                self.awaytimer = gobject.timeout_add(1000 * 60 * autoaway, self.OnAutoAway)
+                self.awaytimerid = gobject.timeout_add(1000 * 60 * autoaway, self.OnAutoAway)
             else:
-                self.awaytimer = None
+                self.awaytimerid = None
 
     def OnKeyPress(self, widget, event):
         self.OnButtonPress(None, None)
@@ -1673,9 +1682,9 @@ class NicotineFrame:
 
     def ConnClose(self, conn, addr):
 
-        if self.awaytimer is not None:
-            gobject.source_remove(self.awaytimer)
-            self.awaytimer = None
+        if self.awaytimerid is not None:
+            self.RemoveAwayTimer(self.awaytimerid)
+            self.awaytimerid = None
 
         if self.autoaway:
             self.autoaway = self.away = False
@@ -1760,9 +1769,9 @@ class NicotineFrame:
             autoaway = self.np.config.sections["server"]["autoaway"]
 
             if autoaway > 0:
-                self.awaytimer = gobject.timeout_add(1000 * 60 * autoaway, self.OnAutoAway)
+                self.awaytimerid = gobject.timeout_add(1000 * 60 * autoaway, self.OnAutoAway)
             else:
-                self.awaytimer = None
+                self.awaytimerid = None
         else:
             self.SetUserStatus(_("Away"))
 

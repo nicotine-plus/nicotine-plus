@@ -90,7 +90,6 @@ class Downloads(TransferList):
         cols = frame.DownloadList.get_columns()
 
         try:
-            print(len(cols))
             for i in range(len(cols)):
 
                 parent = cols[i].get_widget().get_ancestor(gtk.Button)
