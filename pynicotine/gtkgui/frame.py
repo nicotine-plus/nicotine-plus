@@ -228,6 +228,7 @@ class NicotineFrame:
         self.port = port
         self.got_focus = False
         self.notify = None
+        self.gsound = None
 
         try:
             # Tray icon support
@@ -267,7 +268,7 @@ class NicotineFrame:
                 ctx.init()
                 self.gsound = ctx
             except (ImportError, ValueError):
-                pass
+                self.gsound = None
 
         self.np = NetworkEventProcessor(
             self,
@@ -3552,6 +3553,9 @@ class Notifications:
                     }
                 )
 
+            return
+
+        if self.gsound is None and sys.platform != "win32":
             return
 
         if "soundenabled" not in self.frame.np.config.sections["ui"] or not self.frame.np.config.sections["ui"]["soundenabled"]:
