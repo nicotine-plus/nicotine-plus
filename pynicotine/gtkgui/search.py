@@ -34,7 +34,6 @@ from gi.repository import Gdk
 from gi.repository import GObject as gobject
 from gi.repository import Gtk as gtk
 
-import _thread
 from pynicotine import slskmessages
 from pynicotine.gtkgui.dirchooser import ChooseDir
 from pynicotine.gtkgui.entrydialog import MetaDialog
@@ -450,6 +449,13 @@ class Searches(IconNotebook):
             return
 
         search = self.searches[msg.token]
+
+        counter = len(search[2].all_data) + 1
+
+        # No more things to add because we've reached the max_stored_results limit
+        if counter > self.frame.np.config.sections['searches']["max_stored_results"]:
+            return
+
         if search[2] is None:
             search = self.CreateTab(search[0], search[1], search[3], search[4])
 
@@ -955,23 +961,15 @@ class Search:
             results.append([user, name, result[2], msg.ulspeed, msg.inqueue, imdl, bitrate, length, dir, br, result[1], country, self.Searches.users[user]])
 
         if results:
-
-            # Start a thread to display the user results
-            _thread.start_new_thread(self._realaddresults, (results, ))
+            self._realaddresults(results)
 
     def _realaddresults(self, results):
-
-        counter = len(self.all_data) + 1
-
-        # No more things to add because we've reached the max_stored_results limit
-        if counter > self.frame.np.config.sections['searches']["max_stored_results"]:
-            return
 
         # Append the data
         self.append(results)
 
         # Update the displayed count
-        gobject.idle_add(self.CountResults)
+        self.CountResults()
 
         # Update tab notification
         self.frame.Searches.request_changed(self.Main)
@@ -994,6 +992,10 @@ class Search:
 
         for r in results:
 
+            # No more things to add because we've reached the max_stored_results limit
+            if counter > self.frame.np.config.sections['searches']["max_stored_results"]:
+                return
+
             user, filename, size, speed, queue, immediatedl, h_bitrate, length, directory, bitrate, fullpath, country, status = r
 
             if user in self.Searches.users and status != self.Searches.users[user]:
@@ -1014,47 +1016,37 @@ class Search:
 
             row = [
                 counter, user, filename, h_size, h_speed, h_queue, immediatedl, h_bitrate, length,
-                directory, bitrate, fullpath, country, size, speed, queue, status
+                self.get_flag(user, country), directory, bitrate, fullpath, country, size, speed, queue, status
             ]
 
             self.all_data.append(row)
 
-            # No more things to add because we've reached the max_stored_results limit
-            if counter >= self.frame.np.config.sections['searches']["max_stored_results"]:
-                break
-
-            if (counter <= self.frame.np.config.sections['searches']["max_displayed_results"]) and (not self.filters or self.check_filter(row)):
-
-                encoded_row = [
-                    counter, user, filename, h_size, h_speed, h_queue, immediatedl, h_bitrate, length,
-                    self.get_flag(user, country), directory, bitrate, fullpath, country, size, speed, queue, status
-                ]
-
-                gobject.idle_add(self._add_to_model, user, encoded_row)
+            if (counter <= self.frame.np.config.sections['searches']["max_displayed_results"]) and (not self.filters or self.check_filter(r)):
+                self._add_to_model(user, row)
 
             counter += 1
 
-    def _add_to_model(self, user, encoded_row):
+    def _add_to_model(self, user, row):
 
         try:
             if user in self.usersiters:
-                iter = self.resultsmodel.append(self.usersiters[user], encoded_row)
+                iter = self.resultsmodel.append(self.usersiters[user], row)
             else:
-                iter = self.resultsmodel.append(None, encoded_row)
+                iter = self.resultsmodel.append(None, row)
         except Exception as e:
             types = []
-            for i in encoded_row:
+            for i in row:
                 types.append(type(i))
-            print("Search row error:", e, encoded_row)
+            print("Search row error:", e, row)
             iter = None
 
-        path = None
+        if self.usersGroup.get_active() and self.ExpandButton.get_active():
+            path = None
 
-        if iter is not None:
-            path = self.resultsmodel.get_path(iter)
+            if iter is not None:
+                path = self.resultsmodel.get_path(iter)
 
-        if path is not None:
-            if self.usersGroup.get_active() and self.ExpandButton.get_active():
+            if path is not None:
                 self.ResultsList.expand_to_path(path)
 
     def updateStatus(self, user, status):
@@ -1159,17 +1151,17 @@ class Search:
             return True
 
         # "Included text"-filter, check full file path (located at index 11 in row)
-        if filters[0] and not filters[0].search(row[11].lower()):
+        if filters[0] and not filters[0].search(row[12].lower()):
             return False
 
         # "Excluded text"-filter, check full file path (located at index 11 in row)
-        if filters[1] and filters[1].search(row[11].lower()):
+        if filters[1] and filters[1].search(row[12].lower()):
             return False
 
-        if filters[2] and not self.checkDigit(filters[2], row[13]):
+        if filters[2] and not self.checkDigit(filters[2], row[14]):
             return False
 
-        if filters[3] and not self.checkDigit(filters[3], row[10], False):
+        if filters[3] and not self.checkDigit(filters[3], row[11], False):
             return False
 
         if filters[4] and row[6] != "Y":
@@ -1179,13 +1171,13 @@ class Search:
             for cc in filters[5]:
                 if not cc:
                     continue
-                if row[12] is None:
+                if row[13] is None:
                     return False
 
                 if cc[0] == "-":
-                    if row[12].upper() == cc[1:].upper():
+                    if row[13].upper() == cc[1:].upper():
                         return False
-                elif cc.upper() != row[12].upper():
+                elif cc.upper() != row[13].upper():
                     return False
 
         return True
@@ -1229,7 +1221,7 @@ class Search:
 
             if self.check_filter(row):
 
-                ix, user, filename, h_size, h_speed, h_queue, immediatedl, h_bitrate, length, directory, bitrate, fullpath, country, size, speed, queue, status = row
+                ix, user, filename, h_size, h_speed, h_queue, immediatedl, h_bitrate, length, flag, directory, bitrate, fullpath, country, size, speed, queue, status = row
 
                 if user in self.Searches.users and status != self.Searches.users[user]:
                     status = self.Searches.users[user]
@@ -1240,19 +1232,14 @@ class Search:
                         [0, user, "", "", h_speed, h_queue, immediatedl, "", "", self.get_flag(user, country), "", 0, "", country, 0, speed, queue, status]
                     )
 
-                encoded_row = [
-                    ix, user, filename, h_size, h_speed, h_queue, immediatedl, h_bitrate, length,
-                    self.get_flag(user, country), directory, bitrate, fullpath, country, size, speed, queue, status
-                ]
-
                 try:
                     if user in self.usersiters:
-                        iter = self.resultsmodel.append(self.usersiters[user], encoded_row)
+                        iter = self.resultsmodel.append(self.usersiters[user], row)
                     else:
-                        iter = self.resultsmodel.append(None, encoded_row)  # noqa: F841
+                        iter = self.resultsmodel.append(None, row)  # noqa: F841
                 except Exception as e:
                     print("Filters: Search row error:", e)
-                    for i in encoded_row:
+                    for i in row:
                         print(i, type(i), end=' ')
 
                 displaycounter += 1
