@@ -16,6 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import gi
+import glob
 import os
 import sys
 
@@ -85,8 +86,8 @@ class TrayApp:
             trayicon.set_menu(self.tray_popup_menu)
 
             iconpath = self.frame.np.config.sections["ui"]["icontheme"]
-            for iconname in ["trayicon_away.png", "trayicon_connect.png", "trayicon_disconnect.png", "trayicon_msg.png"]:
-                if not os.path.exists(iconpath + iconname):
+            for iconname in ["trayicon_away", "trayicon_connect", "trayicon_disconnect", "trayicon_msg"]:
+                if not glob.glob(os.path.join(iconpath, iconname) + ".*"):
                     iconpath = os.path.join(sys.prefix, "share/nicotine/trayicons")
                     break
 
