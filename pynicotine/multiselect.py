@@ -109,29 +109,3 @@ def multiselect(r_fds, w_fds, x_fds, timeout=None, limit=MAX_SELECT_SOCKETS):
 
     # return our data
     return ret
-
-
-if __name__ == '__main__':
-    import socket
-    import random
-    fds = []
-    files = {}
-    for i in range(100):
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.connect(('www.nxs.nl', 80))
-        s.send('GET /files/100mb.bin\r\n')
-        fds.append(s)
-        files[s] = open("data/100mb.%03i" % i, 'wb')
-    while fds:
-        r, w, x = multiselect(fds, [], [], None, 25)
-        if r:
-            print('data on fds:', ', '.join([str(fd.fileno()) for fd in r]))
-            for s in r:
-                data = s.recv(int(random.random() * 4096) + 1)
-                if not data:
-                    files[s].close()
-                    del files[s]
-                    fds.remove(s)
-                else:
-                    files[s].write(data)
-    print('done')
