@@ -282,7 +282,6 @@ class NicotineFrame:
 
         config = self.np.config.sections
 
-        self.temp_modes_order = config["ui"]["modes_order"]
         utils.DECIMALSEP = config["ui"]["decimalsep"]
         utils.CATCH_URLS = config["urls"]["urlcatching"]
         utils.HUMANIZE_URLS = config["urls"]["humanizeurls"]
@@ -687,6 +686,7 @@ class NicotineFrame:
             self.rebuild_buddy.set_sensitive(False)
             self.browse_buddy_shares.set_sensitive(False)
 
+        self.SetMainTabsOrder()
         self.SetMainTabsVisibility()
         self.SetLastSessionTab()
 
@@ -1269,7 +1269,6 @@ class NicotineFrame:
         self.OnPageReordered(MainNotebook, child, page_num)
 
     def OnPageReordered(self, MainNotebook, child, page_num):
-
         if self.exiting:
             return
 
@@ -1279,40 +1278,40 @@ class NicotineFrame:
 
         self.np.config.sections["ui"]["modes_order"] = tabs
 
-    def SetMainTabsVisibility(self):
-
-        tabs = self.temp_modes_order
+    def SetMainTabsOrder(self):
+        tabs = self.np.config.sections["ui"]["modes_order"]
         order = 0
 
         for name in tabs:
             tab = self.MatchMainNamePage(name)
+
+            # Ensure that the tab exists (Buddy List tab may be hidden)
+            if tab is None or self.MainNotebook.page_num(tab) != -1:
+                continue
+
             self.MainNotebook.reorder_child(tab, order)
             order += 1
 
+    def SetMainTabsVisibility(self):
         visible = self.np.config.sections["ui"]["modes_visible"]
 
         for name in visible:
-
             tab = self.MatchMainNamePage(name)
             if tab is None:
                 continue
 
-            eventbox = self.MainNotebook.get_tab_label(tab)
-
             if not visible[name]:
-
                 if tab not in self.MainNotebook.get_children():
                     return
 
                 if tab in self.HiddenTabs:
                     return
 
-                self.HiddenTabs[tab] = eventbox
+                self.HiddenTabs[tab] = self.MainNotebook.get_tab_label(tab)
                 num = self.MainNotebook.page_num(tab)
                 self.MainNotebook.remove_page(num)
 
     def SetLastSessionTab(self):
-
         try:
             if self.np.config.sections["ui"]["tab_select_previous"]:
                 lasttabid = int(self.np.config.sections["ui"]["last_tab_id"])
@@ -1326,7 +1325,6 @@ class NicotineFrame:
         self.MainNotebook.set_current_page(0)
 
     def HideTab(self, widget, lista):
-
         eventbox, child = lista
         tab = self.__dict__[child]
 
@@ -1342,7 +1340,6 @@ class NicotineFrame:
         self.MainNotebook.remove_page(num)
 
     def ShowTab(self, widget, lista):
-
         name, child = lista
 
         if child in self.MainNotebook.get_children():
@@ -1359,7 +1356,6 @@ class NicotineFrame:
         del self.HiddenTabs[child]
 
     def on_tab_click(self, widget, event, id, child):
-
         if event.type == Gdk.EventType.BUTTON_PRESS and event.button == 3:
             self.__dict__[id].popup(None, None, None, None, event.button, event.time)
 
