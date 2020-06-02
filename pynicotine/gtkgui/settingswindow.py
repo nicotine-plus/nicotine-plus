@@ -1522,6 +1522,9 @@ class SoundsFrame(buildFrame):
 
         buildFrame.__init__(self, "SoundsFrame")
 
+        if self.frame.gsound is None:
+            self.SoundCheck.set_sensitive(False)
+
         # Combobox for audio players
         self.audioPlayerCombo_List = gtk.ListStore(gobject.TYPE_STRING)
         for executable in [
