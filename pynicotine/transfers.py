@@ -477,6 +477,7 @@ class Transfers:
                     i.transfertimer.cancel()
 
                 i.transfertimer = threading.Timer(30.0, transfertimeout.timeout)
+                i.transfertimer.setDaemon(True)
                 i.transfertimer.start()
                 response = slskmessages.TransferResponse(conn, 1, req=i.req)
                 self.downloadspanel.update(i)
@@ -588,6 +589,7 @@ class Transfers:
 
         self._updateOrAppendUpload(user, msg.file, transferobj)
         transferobj.transfertimer = threading.Timer(30.0, transfertimeout.timeout)
+        transferobj.transfertimer.setDaemon(True)
         transferobj.transfertimer.start()
         self.uploadspanel.update(transferobj)
         return response

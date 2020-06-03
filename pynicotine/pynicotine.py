@@ -183,6 +183,7 @@ class NetworkEventProcessor:
         self.respondDistributed = True
         responddistributedtimeout = RespondToDistributedSearchesTimeout(self.callback)
         self.respondDistributedTimer = threading.Timer(60, responddistributedtimeout.timeout)
+        self.respondDistributedTimer.setDaemon(True)
         self.respondDistributedTimer.start()
 
         # Callback handlers for messages
@@ -373,6 +374,7 @@ class NetworkEventProcessor:
                 timeout = 120.0
                 conntimeout = ConnectToPeerTimeout(self.peerconns[-1], self.callback)
                 timer = threading.Timer(timeout, conntimeout.timeout)
+                timer.setDaemon(True)
                 self.peerconns[-1].conntimer = timer
                 timer.start()
 
@@ -393,6 +395,7 @@ class NetworkEventProcessor:
             self.servertimeout = self.servertimeout * 2
 
         self.servertimer = threading.Timer(self.servertimeout, self.ServerTimeout)
+        self.servertimer.setDaemon(True)
         self.servertimer.start()
         logging.info(_("The server seems to be down or not responding, retrying in %i seconds") % (self.servertimeout))
 
@@ -473,6 +476,7 @@ class NetworkEventProcessor:
 
                         conntimeout = ConnectToPeerTimeout(i, self.callback)
                         timer = threading.Timer(120.0, conntimeout.timeout)
+                        timer.setDaemon(True)
                         timer.start()
 
                         if i.conntimer is not None:
@@ -1731,6 +1735,7 @@ class NetworkEventProcessor:
 
             responddistributedtimeout = RespondToDistributedSearchesTimeout(self.callback)
             self.respondDistributedTimer = threading.Timer(self.config.sections["searches"]["distrib_ignore"], responddistributedtimeout.timeout)
+            self.respondDistributedTimer.setDaemon(True)
             self.respondDistributedTimer.start()
         else:
             # Always respond
