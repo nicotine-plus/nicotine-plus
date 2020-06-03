@@ -24,7 +24,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import os
 import re
-import signal
 import sys
 import time
 import urllib.error
@@ -3620,5 +3619,4 @@ class MainApp:
         self.frame = NicotineFrame(data_dir, config, plugins, trayicon, start_hidden, bindip, port)
 
     def MainLoop(self):
-        signal.signal(signal.SIGINT, signal.SIG_IGN)
         gtk.main()
