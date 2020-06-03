@@ -189,6 +189,8 @@ def ApplyTranslation():
         tr = gettext.translation(PACKAGE, localedir=LOCAL_MO_PATH)
         tr.install()
 
+    gettext.textdomain(PACKAGE)
+
 
 def displayTraceback(exception=None):
 
