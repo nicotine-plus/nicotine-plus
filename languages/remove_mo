@@ -1,0 +1,5 @@
+#! /bin/sh
+set -e
+
+# Remove generated .mo files
+rm -f `find . -name \*.mo`

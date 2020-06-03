@@ -1,0 +1,5 @@
+#!/bin/sh
+
+# Removes fuzzy (incomplete/incorrect) translations
+find ./ -iname *.po -exec msgattrib --clear-fuzzy --empty -o {} {} \;
+rm -f `find . -name \*.po~`

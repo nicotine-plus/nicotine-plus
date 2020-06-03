@@ -1,12 +1,12 @@
-## For a list of translators see [TRANSLATORS](TRANSLATORS.md)
+# Translations
 
-If your name is missing: please contact us.
+For a list of translators, see [TRANSLATORS.md](TRANSLATORS.md)
 
----
+If your name is missing, please contact us.
 
-# Translators
+## For Translators
 
-### HowTo translate
+### How To Translate
 
 ##### To create a new language:
 
@@ -32,7 +32,7 @@ If your name is missing: please contact us.
 
 3. **PLEASE** make sure that you are using UNIX style line ending and UTF-8 encoding.
 
-### How to test translations
+### How To Test Translations
 
 When finished editing the .po file you must compile the language file to a .mo file.
 
@@ -44,13 +44,11 @@ You can do this either by:
 
 When restarting Nicotine+ you should see the fruit of your labor :)
 
----
-
-# Developers
+## For Developers
 
 ##### To update the .pot file (template):
 
-* Run the `tr_gen.py` script from the `languages` directory.
+* Run the `update_pot.py` script from the `languages` directory.
 
 ##### To update all languages .po files:
 
@@ -62,19 +60,11 @@ When restarting Nicotine+ you should see the fruit of your labor :)
 
 * Run the `msgfmtall.py` script from the `languages` directory.
 
----
-
-# More on translation
+## More On Translation
 
 Nicotine+ will try to autodetect your language based on what locale you're using.
 
-For testing purposes Nicotine+ can be forced to use a specific language.
-
-You can do it either by:
-
-* Setting the language via the GUI `Preferences -> Language`.
-
-* Setting your locale before starting Nicotine+ ex:
+For testing purposes Nicotine+ can be forced to use a specific language. You can do it by setting your locale before starting Nicotine+ ex:
 
     * English: `LC_ALL=en_US.UTF-8 python nicotine`
     * French: `LC_ALL=fr_FR.UTF-8 python nicotine`
