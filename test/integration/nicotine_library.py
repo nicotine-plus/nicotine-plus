@@ -11,15 +11,15 @@ class nicotine_library:  # noqa
             command = [command]
 
         # Assume failure by default
-        exitcode = 1
+        issuccess = False
 
         try:
             subprocess.call(command, timeout=int(timeout))
         except subprocess.TimeoutExpired:
             # Program was still running, success!
-            exitcode = 0
+            issuccess = True
 
-        self._result = exitcode
+        self._result = issuccess
 
     def result_should_be(self, expected):
         assert self._result == expected
