@@ -451,7 +451,7 @@ class Config:
             if errorlevel < 3:
                 errorlevel = 3
 
-        if errorlevel > 1 and self.frame.settingswindow is not None:
+        if errorlevel > 1:
             self.frame.settingswindow.SetSettings(self.sections)
 
         return errorlevel
