@@ -88,7 +88,12 @@ class TrayApp:
             iconpath = self.frame.np.config.sections["ui"]["icontheme"]
             for iconname in ["trayicon_away", "trayicon_connect", "trayicon_disconnect", "trayicon_msg"]:
                 if not glob.glob(os.path.join(iconpath, iconname) + ".*"):
+                    # Fall back to system-wide tray icon location
                     iconpath = os.path.join(sys.prefix, "share/nicotine/trayicons")
+                    if not glob.glob(os.path.join(iconpath, iconname) + ".*"):
+                        # Nicotine+ is not installed system-wide, load tray icons from current folder
+                        iconpath = os.path.join(os.getcwd(), "img")
+                        break
                     break
 
             trayicon.set_icon_theme_path(iconpath)
