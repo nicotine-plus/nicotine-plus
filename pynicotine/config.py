@@ -442,7 +442,8 @@ class Config:
                                 )
                                 errorlevel = 2
 
-                            self.frame.settingswindow.InvalidSettings(i, j)
+                            if self.frame.settingswindow is not None:
+                                self.frame.settingswindow.InvalidSettings(i, j)
 
         except Exception as error:
             message = _("Config error: %s") % error
@@ -450,7 +451,7 @@ class Config:
             if errorlevel < 3:
                 errorlevel = 3
 
-        if errorlevel > 1:
+        if errorlevel > 1 and self.frame.settingswindow is not None:
             self.frame.settingswindow.SetSettings(self.sections)
 
         return errorlevel
