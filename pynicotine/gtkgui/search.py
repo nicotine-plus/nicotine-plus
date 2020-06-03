@@ -1422,8 +1422,8 @@ class Search:
             if num != r[0] or user != r[1]:
                 continue
 
-            fn = r[11]
-            size = r[13]
+            fn = r[12]
+            size = r[14]
             bitrate = r[7]
             length = r[8]
             break
