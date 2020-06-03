@@ -580,6 +580,8 @@ class NicotineFrame:
             self.buddylist_in_chatrooms1.set_active(True)
         elif buddylist == 2:
             self.buddylist_always_visible.set_active(True)
+        elif buddylist == 3:
+            self.buddylist_hidden.set_active(True)
         elif buddylist == 0:
             self.buddylist_in_tab.set_active(True)
 
@@ -2708,7 +2710,7 @@ class NicotineFrame:
     def OnToggleBuddyList(self, widget):
         """ Function used to switch around the UI the BuddyList position """
 
-        tab = always = chatrooms = False
+        tab = always = chatrooms = hidden = False
 
         if self.buddylist_in_tab.get_active():
             tab = True
@@ -2716,6 +2718,8 @@ class NicotineFrame:
             always = True
         if self.buddylist_in_chatrooms1.get_active():
             chatrooms = True
+        if self.buddylist_hidden.get_active():
+            hidden = True
 
         if self.userlist.userlistvbox in self.MainNotebook.get_children():
             if tab:
@@ -2773,8 +2777,10 @@ class NicotineFrame:
 
             self.userlist.BuddiesLabel.show()
             self.np.config.sections["ui"]["buddylistinchatrooms"] = 2
-        else:
+
+        if hidden:
             self.vpanedm.hide()
+            self.np.config.sections["ui"]["buddylistinchatrooms"] = 3
 
         self.np.config.writeConfiguration()
 
@@ -3406,6 +3412,9 @@ class NicotineFrame:
         self.ChangeMainPage(widget, "interests")
 
     def OnUserList(self, widget):
+        self.buddylist_in_tab.set_active(True)
+
+        self.OnToggleBuddyList(widget)
         self.ChangeMainPage(widget, "userlist")
 
 
