@@ -27,6 +27,7 @@
 This module contains configuration classes for Nicotine.
 """
 
+import configparser
 import os
 import pickle
 import shelve
@@ -36,7 +37,6 @@ from gettext import gettext as _
 from os.path import exists
 
 import _thread
-from pynicotine import ConfigParser
 from pynicotine.logfacility import log
 
 
@@ -64,7 +64,7 @@ class Config:
         self.frame = None
         self.filename = filename
         self.data_dir = data_dir
-        self.parser = ConfigParser.ConfigParser()
+        self.parser = configparser.RawConfigParser()
         self.parser.read([self.filename])
 
         LOGDIR = os.path.join(data_dir, "logs")
@@ -366,10 +366,6 @@ class Config:
                 "npplayer": "",
                 "npformatlist": [],
                 "npformat": ""
-            },
-
-            "data": {
-                "dir": data_dir
             },
 
             "plugins": {

@@ -36,6 +36,7 @@ from pynicotine.logfacility import log
 from pynicotine.slskmessages import NetworkIntType
 from pynicotine.slskmessages import NetworkLongLongType
 from pynicotine.utils import displayTraceback
+from pynicotine.utils import GetUserDirectories
 
 gi.require_version('Gtk', '3.0')
 
@@ -154,8 +155,9 @@ class Shares:
                 "normal"
             )
         except Exception as ex:
+            config_dir, data_dir = GetUserDirectories()
             log.addwarning(
-                _("Failed to rebuild share, serious error occurred. If this problem persists delete %s/*.db and try again. If that doesn't help please file a bug report with the stack trace included (see terminal output after this message). Technical details: %s") % (self.config.sections["data"]["dir"], ex)
+                _("Failed to rebuild share, serious error occurred. If this problem persists delete %s/*.db and try again. If that doesn't help please file a bug report with the stack trace included (see terminal output after this message). Technical details: %s") % (data_dir, ex)
             )
             raise
 
