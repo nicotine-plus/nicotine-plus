@@ -386,10 +386,6 @@ class NicotineFrame:
         self.MainWindow.connect("network_event", self.OnNetworkEvent)
         self.MainWindow.connect("network_event_lo", self.OnNetworkEvent)
 
-        self.MainNotebook.connect("page-removed", self.OnPageRemoved)
-        self.MainNotebook.connect("page-reordered", self.OnPageReordered)
-        self.MainNotebook.connect("page-added", self.OnPageAdded)
-
         for thing in config["interests"]["likes"]:
             self.likes[thing] = self.likeslist.append([thing])
 
@@ -693,6 +689,10 @@ class NicotineFrame:
         self.SetMainTabsOrder()
         self.SetMainTabsVisibility()
         self.SetLastSessionTab()
+
+        self.MainNotebook.connect("page-removed", self.OnPageRemoved)
+        self.MainNotebook.connect("page-reordered", self.OnPageReordered)
+        self.MainNotebook.connect("page-added", self.OnPageAdded)
 
         self.startup = False
 
@@ -1289,7 +1289,7 @@ class NicotineFrame:
             tab = self.MatchMainNamePage(name)
 
             # Ensure that the tab exists (Buddy List tab may be hidden)
-            if tab is None or self.MainNotebook.page_num(tab) != -1:
+            if tab is None or self.MainNotebook.page_num(tab) == -1:
                 continue
 
             self.MainNotebook.reorder_child(tab, order)
