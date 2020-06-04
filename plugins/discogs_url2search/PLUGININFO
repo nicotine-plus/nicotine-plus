@@ -1,4 +1,0 @@
-Version="2008-07-06r00"
-Authors=['quinox']
-Name="Discogs url2search"
-Description="Enables you to enter Discogs URLs in the search window which will be converted to albums, artists of both."

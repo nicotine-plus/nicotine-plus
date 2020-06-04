@@ -8,7 +8,6 @@ A list of stuff & things todo (not in any particular order):
 
 #### Long term goals
 
-* Curate and update embedded plugins.
 * Reach out for translation help.
 * Replace db files (causing many problems) by something easier like json.
 * Switch from legacy GeoIP (maintenance mode) to a good alternative, perhaps

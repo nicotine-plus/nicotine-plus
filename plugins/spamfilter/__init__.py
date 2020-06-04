@@ -2,12 +2,12 @@ from pynicotine.pluginsystem import BasePlugin
 from pynicotine.pluginsystem import returncode
 
 
-def enable(frame):
+def enable(plugins):
     global PLUGIN
-    PLUGIN = Plugin(frame)
+    PLUGIN = Plugin(plugins)
 
 
-def disable(frame):
+def disable(plugins):
     global PLUGIN
     PLUGIN = None
 

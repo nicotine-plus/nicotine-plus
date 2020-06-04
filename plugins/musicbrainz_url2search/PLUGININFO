@@ -1,4 +1,0 @@
-Version="2008-07-06r00"
-Authors=['quinox']
-Name="MusicBrainz url2search"
-Description="Enables you to enter MusicBrainz URLs in the search window which will be converted to albums, artists of both."

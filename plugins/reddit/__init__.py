@@ -40,10 +40,7 @@ def disable(plugins):
 
 
 class Plugin(BasePlugin):
-    __name__ = "reddit"
-    __version__ = "2015-08-02r05"
-    __author__ = "Mutnick"
-    __desc__ = """Displays topics and links for a requested subreddit."""
+    __name__ = "Reddit"
     settings = {'reddit_links': 3}
     metasettings = {'reddit_links': {"description": 'Maximum number of links to provide', 'type': 'integer'}}
 
