@@ -11,6 +11,7 @@ def enable(plugins):
 def disable(plugins):
     global PLUGIN
     PLUGIN = None
+    gc.set_debug(0)
 
 
 class Plugin(BasePlugin):

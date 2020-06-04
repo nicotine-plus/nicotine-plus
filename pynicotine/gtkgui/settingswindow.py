@@ -3293,6 +3293,15 @@ class PluginFrame(buildFrame):
     def OnPluginsEnable(self, widget):
         self.vbox99.set_sensitive(self.PluginsEnable.get_active())
 
+        if not self.PluginsEnable.get_active():
+            # Disable all plugins
+            for plugin in list(self.frame.pluginhandler.enabled_plugins):
+                self.frame.pluginhandler.disable_plugin(plugin)
+
+            # Uncheck all checkboxes in GUI
+            for plugin in self.pluginlist:
+                self.pluginlist.set(plugin.iter, 1, False)
+
     def GetSettings(self):
         return {
             "plugins": {

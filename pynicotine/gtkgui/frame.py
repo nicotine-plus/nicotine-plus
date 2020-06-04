@@ -2445,8 +2445,6 @@ class NicotineFrame:
             if self.np.transfers is None:
                 self.connect1.set_sensitive(1)
 
-        self.pluginhandler.check_enabled()
-
     def OnChangePassword(self, password):
         self.np.queue.put(slskmessages.ChangePassword(password))
 

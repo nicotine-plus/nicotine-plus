@@ -23,9 +23,7 @@
 
 import imp
 import os
-import shutil
 import sys
-import tarfile
 from gettext import gettext as _
 from time import time
 from traceback import extract_stack
@@ -142,35 +140,6 @@ class PluginHandler(object):
         self.loaded_plugins[pluginname] = plugin
         return plugin
 
-    def install_plugin(self, path):
-        try:
-            tar = tarfile.open(path, "r:*")  # transparently supports gz, bz2
-        except (tarfile.ReadError, OSError):
-            raise InvalidPluginError(_('Plugin archive is not in the correct format'))
-
-        # ensure the paths in the archive are sane
-        mems = tar.getmembers()
-        base = os.path.basename(path)[:-4]
-        if os.path.isdir(os.path.join(self.plugindirs[0], base)):
-            raise InvalidPluginError(_('A plugin with the name "%s" is '
-                                       'already installed') % base)
-
-        for m in mems:
-            if not m.name.startswith(base):
-                raise InvalidPluginError(_("Plugin archive contains an unsafe path"))
-
-        tar.extractall(self.plugindirs[0])
-
-    def uninstall_plugin(self, pluginname):
-        self.disable_plugin(pluginname)
-        for dir in self.plugindirs:
-            try:
-                shutil.rmtree(self.__findplugin(pluginname))
-                return True
-            except Exception:
-                pass
-        return False
-
     def enable_plugin(self, pluginname):
         if pluginname in self.enabled_plugins:
             return
@@ -232,14 +201,6 @@ class PluginHandler(object):
 
     def save_enabled(self):
         self.frame.np.config.sections["plugins"]["enabled"] = list(self.enabled_plugins.keys())
-
-    def check_enabled(self):
-        if self.frame.np.config.sections["plugins"]["enable"]:
-            self.load_enabled()
-        else:
-            to_enable = self.frame.np.config.sections["plugins"]["enabled"]  # noqa: F841
-            for plugin in self.enabled_plugins:
-                self.enabled_plugins[plugin].disable(self)
 
     def load_enabled(self):
         enable = self.frame.np.config.sections["plugins"]["enable"]
