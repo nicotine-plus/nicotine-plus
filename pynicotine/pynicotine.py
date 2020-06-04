@@ -38,7 +38,6 @@ import sys
 import threading
 import time
 from gettext import gettext as _
-from urllib.parse import urlencode
 
 from pynicotine import slskmessages
 from pynicotine import slskproto
@@ -933,15 +932,10 @@ class NetworkEventProcessor:
         mins = msg.seconds // 60
         hours = mins // 60
         days = hours // 24
-        wheretogetthem = " " + _("You can acquire privileges by donating at %(url)s") % {
-            'url': 'http://www.slsknet.org/userlogin.php?' + urlencode({
-                'username': self.config.sections["server"]["login"]
-            })
-        }
 
         if msg.seconds == 0:
             self.logMessage(
-                _("You have no privileges left. They are not needed for Nicotine+ to function properly.") + wheretogetthem
+                _("You have no privileges left. They are not necessary, but allow your downloads to be queued ahead of non-privileged users.")
             )
         else:
             self.logMessage(
@@ -950,7 +944,7 @@ class NetworkEventProcessor:
                     'hours': hours % 24,
                     'minutes': mins % 60,
                     'seconds': msg.seconds % 60
-                } + wheretogetthem
+                }
             )
 
         self.privileges_left = msg.seconds

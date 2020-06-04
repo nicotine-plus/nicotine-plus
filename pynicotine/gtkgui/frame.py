@@ -30,6 +30,7 @@ import urllib.error
 import urllib.parse
 import urllib.request
 from gettext import gettext as _
+from urllib.parse import urlencode
 
 import gi
 from gi.repository import Gdk
@@ -640,6 +641,7 @@ class NicotineFrame:
         self.disconnect1.set_sensitive(0)
         self.awayreturn1.set_sensitive(0)
         self.check_privileges1.set_sensitive(0)
+        self.get_privileges1.set_sensitive(0)
 
         self.pluginhandler = pluginsystem.PluginHandler(self, plugins)
 
@@ -1575,7 +1577,8 @@ class NicotineFrame:
 
     def SetStatusText(self, msg):
         self.Statusbar.pop(self.status_context_id)
-        self.Statusbar.push(self.status_context_id, str(msg))
+        self.Statusbar.push(self.status_context_id, msg)
+        self.Statusbar.set_tooltip_text(msg)
 
     def OnWindowChange(self, widget, blag):
         (width, height) = self.MainWindow.get_size()
@@ -1710,6 +1713,7 @@ class NicotineFrame:
         self.disconnect1.set_sensitive(status)
         self.awayreturn1.set_sensitive(status)
         self.check_privileges1.set_sensitive(status)
+        self.get_privileges1.set_sensitive(status)
 
         self.roomlist.CreateRoomEntry.set_sensitive(status)
         self.roomlist.RoomsList.set_sensitive(status)
@@ -2784,6 +2788,14 @@ class NicotineFrame:
 
     def OnCheckPrivileges(self, widget):
         self.np.queue.put(slskmessages.CheckPrivileges())
+
+    def OnGetPrivileges(self, widget):
+        url = "%(url)s" % {
+            'url': 'https://www.slsknet.org/userlogin.php?' + urlencode({
+                'username': self.np.config.sections["server"]["login"]
+            })
+        }
+        OpenUri(url, self.MainWindow)
 
     def OnSoulSeek(self, url):
         try:
