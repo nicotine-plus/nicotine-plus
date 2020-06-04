@@ -1,6 +1,7 @@
 title: Nicotine+
 logo: /files/nicotine-plus.svg
 description: A graphical client for Soulseek
+url: https://nicotine-plus.github.io/nicotine-plus/
 
 plugins:
   - jekyll-relative-links
