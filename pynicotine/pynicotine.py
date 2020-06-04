@@ -28,6 +28,7 @@
 This is the actual client code. Actual GUI classes are in the separate modules
 """
 
+import configparser
 import datetime
 import logging
 import os
@@ -43,7 +44,6 @@ from pynicotine import slskmessages
 from pynicotine import slskproto
 from pynicotine import transfers
 from pynicotine.config import Config
-from pynicotine.ConfigParser import Error as ConfigParserError
 from pynicotine.shares import Shares
 from pynicotine.slskmessages import PopupMessage
 from pynicotine.slskmessages import newId
@@ -107,7 +107,7 @@ class NetworkEventProcessor:
 
         try:
             self.config = Config(config, data_dir)
-        except ConfigParserError:
+        except configparser.Error:
             corruptfile = ".".join([config, CleanFile(datetime.datetime.now().strftime("%Y-%M-%d_%H:%M:%S")), "corrupt"])
             shutil.move(config, corruptfile)
             short = _("Your config file is corrupt")

@@ -10,7 +10,6 @@ A list of stuff & things todo (not in any particular order):
 
 * Curate and update embedded plugins.
 * Reach out for translation help.
-* Replace the bundle Configparser module by something easier like json.
 * Replace db files (causing many problems) by something easier like json.
 * Switch from legacy GeoIP (maintenance mode) to a good alternative, perhaps
   python3-geoip2.
