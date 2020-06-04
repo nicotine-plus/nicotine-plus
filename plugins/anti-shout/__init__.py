@@ -13,15 +13,12 @@ def disable(plugins):
 
 class Plugin(BasePlugin):
     __name__ = "Anti-SHOUT"
-    __version__ = "2008-11-18r00"
-    __author__ = "quinox"
-    __desc__ = """Tries to spot people shouting and converts their messages to a more polite form."""
     settings = {
         'maxscore': 0.6,
         'minlength': 10,
     }
     metasettings = {
-        'maxratio': {
+        'maxscore': {
             'description': 'The maximum ratio capitals/noncapitals before fixing capitalization',
             'type': 'float', 'minimum': 0, 'maximum': 1, 'stepsize': 0.1},
         'minlength': {

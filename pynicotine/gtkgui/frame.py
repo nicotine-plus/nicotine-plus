@@ -843,8 +843,7 @@ class NicotineFrame:
             "trayicon_disconnect",
             "trayicon_msg",
             "n",
-            "notify",
-            "plugin"
+            "notify"
         ]
 
         if self.np.config.sections["ui"].get("icontheme"):

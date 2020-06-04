@@ -14,9 +14,6 @@ def disable(plugins):
 
 class Plugin(BasePlugin):
     __name__ = "Leech detector"
-    __version__ = "2011-10-29r00"
-    __author__ = "quinox"
-    __desc__ = '''Detects when leechers are downloading'''
 
     def init(self):
         self.probed = {}

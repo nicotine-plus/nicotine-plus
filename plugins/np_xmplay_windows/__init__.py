@@ -21,7 +21,7 @@ def disable(frame):
 
 class Plugin(BasePlugin):
     __name__ = "XMPlay (Windows) Now Playing"
-    __id__ = "np-xmplay-windows"
+    __id__ = "np_xmplay_windows"
     settings = {
         'format': 'XMPlay: {%artist - }{%title }{[%album]}',
         'pythonbin': 'C:\\Python27\\Python.exe',

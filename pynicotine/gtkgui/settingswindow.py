@@ -3049,8 +3049,8 @@ class buildDialog(gtk.Dialog):
         self.tw["box%d" % c] = gtk.VBox(False, 5)
 
         self.tw[name + "SW"] = gtk.ScrolledWindow()
-        self.tw[name + "SW"].set_shadow_type(gtk.SHADOW_IN)
-        self.tw[name + "SW"].set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+        self.tw[name + "SW"].set_shadow_type(gtk.ShadowType.IN)
+        self.tw[name + "SW"].set_policy(gtk.PolicyType.AUTOMATIC, gtk.PolicyType.AUTOMATIC)
 
         self.tw[name] = gtk.TreeView()
         self.tw[name].set_model(gtk.ListStore(gobject.TYPE_STRING))
@@ -3131,12 +3131,12 @@ class buildDialog(gtk.Dialog):
 
             value = self.settings.frame.np.config.sections["plugins"][plugin][name]
 
-            if data["type"] in ("integer", "int"):
+            if data["type"] in ("integer", "int", "float"):
                 self.tw["box%d" % c] = gtk.HBox(False, 5)
                 self.tw["label%d" % c] = self.GenerateLabel(data["description"])
                 self.tw["box%d" % c].pack_start(self.tw["label%d" % c], False, False, 0)
 
-                self.tw[name] = gtk.SpinButton(gtk.Adjustment(0, 0, 99999, 1, 10, 0))
+                self.tw[name] = gtk.SpinButton.new(gtk.Adjustment(0, 0, 99999, 1, 10, 0), 1, 2)
                 self.settings.SetWidget(self.tw[name], self.settings.frame.np.config.sections["plugins"][plugin][name])
                 self.tw["box%d" % c].pack_start(self.tw[name], False, False, 0)
                 self.Main.pack_start(self.tw["box%d" % c], False, False, 0)
@@ -3248,7 +3248,6 @@ class PluginFrame(buildFrame):
         self.PluginName.set_markup("<b>%(name)s</b>" % {"name": info['Name']})
         self.PluginDescription.get_buffer().set_text("%(description)s" % {"description": info['Description'].replace(r'\n', "\n")})
         self.PluginAuthor.set_markup("<b>%(author)s</b>" % {"author": ", ".join(info['Authors'])})
-        self.PluginImage.set_from_pixbuf(self.frame.images["plugin"])
 
         settings = self.frame.pluginhandler.get_plugin_settings(self.selected_plugin)
 
