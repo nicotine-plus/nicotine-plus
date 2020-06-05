@@ -2746,7 +2746,6 @@ class NicotineFrame:
         self.userlist = UserList(self)
 
         if tab:
-
             self.BuddiesTabLabel = ImageLabel(_("Buddy List"), self.images["empty"])
             self.BuddiesTabLabel.show()
 
@@ -2761,7 +2760,6 @@ class NicotineFrame:
             self.np.config.sections["ui"]["buddylistinchatrooms"] = 0
 
         if chatrooms:
-
             self.vpaned3.show()
             if self.userlist.userlistvbox not in self.vpaned3.get_children():
                 self.vpaned3.pack1(self.userlist.userlistvbox, True, True)
@@ -2770,16 +2768,17 @@ class NicotineFrame:
             self.np.config.sections["ui"]["buddylistinchatrooms"] = 1
 
         if always:
-
             self.vpanedm.show()
             if self.userlist.userlistvbox not in self.vpanedm.get_children():
                 self.vpanedm.pack2(self.userlist.userlistvbox, True, True)
 
             self.userlist.BuddiesLabel.show()
             self.np.config.sections["ui"]["buddylistinchatrooms"] = 2
+        else:
+            self.vpanedm.hide()
 
         if hidden:
-            self.vpanedm.hide()
+            # Work already done by the else statement above, just save the choice to config
             self.np.config.sections["ui"]["buddylistinchatrooms"] = 3
 
         self.np.config.writeConfiguration()
