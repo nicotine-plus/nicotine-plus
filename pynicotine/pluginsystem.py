@@ -21,7 +21,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import imp
+import importlib
 import os
 import sys
 from gettext import gettext as _
@@ -32,7 +32,7 @@ from traceback import format_list
 from traceback import print_exc
 
 import gi
-from gi.repository import GObject as gobject
+from gi.repository import GLib
 
 from _thread import start_new_thread
 from pynicotine.logfacility import log
@@ -130,7 +130,7 @@ class PluginHandler(object):
             log.add(_("Failed to load plugin '%s', could not find it.") % pluginname)
             return False
         sys.path.insert(0, path)
-        plugin = imp.load_source(pluginname, os.path.join(path, '__init__.py'))
+        plugin = importlib.load_source(pluginname, os.path.join(path, '__init__.py'))
         instance = plugin.Plugin(self)
         self.plugin_settings(instance)
         instance.LoadNotification()
@@ -189,14 +189,14 @@ class PluginHandler(object):
 
     def get_plugin_info(self, pluginname):
         path = os.path.join(self.__findplugin(pluginname), 'PLUGININFO')
-        f = open(path)
-        infodict = {}
-        for line in f:
-            try:
-                key, val = line.split("=", 1)
-                infodict[key] = eval(val)
-            except ValueError:
-                pass  # this happens on blank lines
+        with open(path) as f:
+            infodict = {}
+            for line in f:
+                try:
+                    key, val = line.split("=", 1)
+                    infodict[key] = eval(val)
+                except ValueError:
+                    pass  # this happens on blank lines
         return infodict
 
     def save_enabled(self):
@@ -379,7 +379,7 @@ class PluginHandler(object):
         if len(self.guiqueue) >= 0:
             addidle = True
         if addidle:
-            gobject.idle_add(self.processQueue)
+            GLib.idle_add(self.processQueue)
 
     def log(self, text):
         self.appendqueue({'type': 'logtext', 'text': text})

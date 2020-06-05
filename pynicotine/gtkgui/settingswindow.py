@@ -30,6 +30,7 @@ from gettext import gettext as _
 
 import gi
 from gi.repository import Gdk
+from gi.repository import GLib
 from gi.repository import GdkPixbuf
 from gi.repository import GObject as gobject
 from gi.repository import Gtk as gtk
@@ -979,7 +980,7 @@ class SharesFrame(buildFrame):
                 except FileNotFoundError:
                     pass
 
-        gobject.idle_add(
+        GLib.idle_add(
             self._updatedirstats,
             directory,
             HumanSize(total_size),
@@ -3362,7 +3363,7 @@ class SettingsWindow:
         builder.connect_signals(self)
 
         # Signal sent and catch by frame.py on close
-        gobject.signal_new("settings-closed", gtk.Window, gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_STRING,))
+        gobject.signal_new("settings-closed", gtk.Window, gobject.SignalFlags.RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_STRING,))
 
         # Connect the custom handlers
         self.SettingsWindow.set_transient_for(frame.MainWindow)
@@ -3370,7 +3371,7 @@ class SettingsWindow:
         self.SettingsWindow.connect("key-press-event", self.OnKeyPress)
 
         # This is ?
-        self.empty_label = gtk.Label("")
+        self.empty_label = gtk.Label.new("")
         self.empty_label.show()
         self.viewport1.add(self.empty_label)
 
@@ -3527,7 +3528,7 @@ class SettingsWindow:
 
     def OnDelete(self, widget, event):
         self.OnCancel(widget)
-        widget.emit_stop_by_name("delete-event")
+        widget.stop_emission_by_name("delete-event")
         return True
 
     def OnKeyPress(self, widget, event):

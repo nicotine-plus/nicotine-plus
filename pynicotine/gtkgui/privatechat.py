@@ -26,6 +26,7 @@ from time import daylight
 
 import gi
 from gi.repository import Gdk
+from gi.repository import GLib
 from gi.repository import GObject as gobject
 from gi.repository import Gtk as gtk
 from gi.repository import Pango as pango
@@ -94,7 +95,7 @@ class PrivateChats(IconNotebook):
 
         for user, tab in list(self.users.items()):
             if tab.Main == page:
-                gobject.idle_add(tab.ChatLine.grab_focus)
+                GLib.idle_add(tab.ChatLine.grab_focus)
                 # Remove hilite if selected tab belongs to a user in the hilite list
                 if user in self.frame.hilites["private"]:
                     self.frame.Notifications.Clear("private", tab.user)
@@ -444,7 +445,7 @@ class PrivateChat:
         except IOError as e:  # noqa: F841
             pass
 
-        gobject.idle_add(self.frame.ScrollBottom, self.ChatScroll.get_parent())
+        GLib.idle_add(self.frame.ScrollBottom, self.ChatScroll.get_parent())
 
     def Login(self):
         timestamp_format = self.frame.np.config.sections["logging"]["private_timestamp"]
@@ -463,7 +464,7 @@ class PrivateChat:
         if event.type == Gdk.EventType.BUTTON_PRESS and event.button == 3:
 
             self.popup_menu.popup(None, None, None, None, event.button, event.time)
-            self.ChatScroll.emit_stop_by_name("button_press_event")
+            self.ChatScroll.stop_emission_by_name("button_press_event")
             return True
 
         elif event.type == Gdk.EventType.KEY_PRESS:
@@ -471,7 +472,7 @@ class PrivateChat:
             if event.keyval == Gdk.keyval_from_name("Menu"):
 
                 self.popup_menu.popup(None, None, None, None, 0, 0)
-                self.ChatScroll.emit_stop_by_name("key_press_event")
+                self.ChatScroll.stop_emission_by_name("key_press_event")
                 return True
 
         return False
@@ -786,7 +787,7 @@ class PrivateChat:
 
     def Attach(self, widget=None):
         self.chats.attach_tab(self.Main)
-        gobject.idle_add(self.frame.ScrollBottom, self.ChatScroll.get_parent())
+        GLib.idle_add(self.frame.ScrollBottom, self.ChatScroll.get_parent())
 
     def Detach(self, widget=None):
         self.chats.detach_tab(
@@ -796,7 +797,7 @@ class PrivateChat:
                 'status': [_("Offline"), _("Away"), _("Online")][self.status]
             }
         )
-        gobject.idle_add(self.frame.ScrollBottom, self.ChatScroll.get_parent())
+        GLib.idle_add(self.frame.ScrollBottom, self.ChatScroll.get_parent())
 
     def NowPlayingThread(self):
         np = self.frame.now.DisplayNowPlaying(None, 0, self.SendMessage)  # noqa: F841
@@ -1022,6 +1023,6 @@ class PrivateChat:
             widget.insert_text(completion, ix)
             widget.set_position(preix + len(completion))
 
-        widget.emit_stop_by_name("key_press_event")
+        widget.stop_emission_by_name("key_press_event")
 
         return True

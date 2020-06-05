@@ -380,7 +380,7 @@ class UserBrowse:
             items[2].set_sensitive(files)  # Downloads
             items[4].set_sensitive(not multiple and files)  # Copy URL
 
-        self.FileTreeView.emit_stop_by_name("button_press_event")
+        self.FileTreeView.stop_emission_by_name("button_press_event")
         self.file_popup_menu.popup(None, None, None, None, event.button, event.time)
 
         return True

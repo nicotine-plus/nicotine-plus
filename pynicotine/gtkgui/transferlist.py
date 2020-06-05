@@ -27,6 +27,7 @@ from math import ceil
 from time import time
 
 import gi
+from gi.repository import GLib
 from gi.repository import GObject as gobject
 from gi.repository import Gtk as gtk
 
@@ -364,7 +365,7 @@ class TransferList:
         if not forced and (now - self.lastupdate) < self.MINIMUM_GUI_DELAY:
             if not self.finalupdatetimerid:
                 self.finalupdatetimerid = True  # I'm not sure if gobject returns fast enough
-                self.finalupdatetimerid = gobject.timeout_add(self.MINIMUM_GUI_DELAY_SLEEP, self.finalupdate, self.update)
+                self.finalupdatetimerid = GLib.timeout_add(self.MINIMUM_GUI_DELAY_SLEEP, self.finalupdate, self.update)
             return
 
         self.lastupdate = time()  # ...we're working...

@@ -408,9 +408,9 @@ class Uploads(TransferList):
 
         self.popup_menu.popup(None, None, None, None, 3, event.time)
         if kind == "keyboard":
-            widget.emit_stop_by_name("key_press_event")
+            widget.stop_emission_by_name("key_press_event")
         elif kind == "mouse":
-            widget.emit_stop_by_name("button_press_event")
+            widget.stop_emission_by_name("button_press_event")
 
         return True
 
