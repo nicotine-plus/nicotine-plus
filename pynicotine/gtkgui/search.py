@@ -31,6 +31,7 @@ from gettext import gettext as _
 
 import gi
 from gi.repository import Gdk
+from gi.repository import GLib
 from gi.repository import GObject as gobject
 from gi.repository import Gtk as gtk
 
@@ -68,11 +69,10 @@ class WishList(gtk.Dialog):
 
         self.nicotine = frame
         self.set_size_request(600, 600)
-        self.mainHbox = gtk.HBox(False, 5)
+        self.mainHbox = gtk.Box.new(gtk.Orientation.HORIZONTAL, 5)
         self.mainHbox.show()
 
-        self.WishLabel = gtk.Label(_("Search Wishlist"))
-        self.WishLabel.set_padding(0, 0)
+        self.WishLabel = gtk.Label.new(_("Search Wishlist"))
         self.WishLabel.set_line_wrap(False)
         self.WishLabel.show()
         self.vbox.pack_start(self.WishLabel, False, True, 0)
@@ -88,7 +88,7 @@ class WishList(gtk.Dialog):
         self.WishScrollWin.add(self.WishlistView)
 
         self.mainHbox.pack_start(self.WishScrollWin, True, True, 0)
-        self.mainVbox = gtk.VBox(False, 5)
+        self.mainVbox = gtk.Box.new(gtk.Orientation.VERTICAL, 5)
         self.mainHbox.pack_start(self.mainVbox, False, False, 0)
         self.mainVbox.show()
         self.mainVbox.set_spacing(5)
@@ -242,14 +242,14 @@ class Searches(IconNotebook):
                 self.searchid = (self.searchid + 1) % (2**31)
 
         self.OnAutoSearch()
-        self.timer = gobject.timeout_add(self.interval * 1000, self.OnAutoSearch)
+        self.timer = GLib.timeout_add(self.interval * 1000, self.OnAutoSearch)
 
     def ConnClose(self):
 
         self.disconnected = 1
 
         if self.timer is not None:
-            gobject.source_remove(self.timer)
+            GLib.source_remove(self.timer)
             self.timer = None
 
     def OnAutoSearch(self, *args):
@@ -1469,7 +1469,7 @@ class Search:
         items[7].set_sensitive(files)
         items[8].set_sensitive(users)
 
-        widget.emit_stop_by_name("button_press_event")
+        widget.stop_emission_by_name("button_press_event")
         self.popup_menu.popup(None, None, None, None, event.button, event.time)
 
         return True

@@ -36,7 +36,7 @@ from gettext import gettext as _
 
 import gi
 from gi.repository import Gdk
-from gi.repository import GObject as gobject
+from gi.repository import GLib
 from gi.repository import Gtk as gtk
 from gi.repository import Pango as pango
 
@@ -219,7 +219,7 @@ def InitialiseColumns(treeview, *args):
             column.set_cell_data_func(renderer, c[3])
 
         column.set_reorderable(True)
-        column.set_widget(gtk.Label(c[0]))
+        column.set_widget(gtk.Label.new(c[0]))
         column.get_widget().show()
 
         treeview.append_column(column)
@@ -405,7 +405,7 @@ def AppendLine(textview, line, tag=None, timestamp=None, showstamp=True, timesta
         _usertag(buffer, line)
 
     if scroll and bottom:
-        gobject.idle_add(ScrollBottom, scrolledwindow)
+        GLib.idle_add(ScrollBottom, scrolledwindow)
 
     return linenr
 
@@ -691,7 +691,7 @@ class IconNotebook:
         else:
             return False
 
-        widget.emit_stop_by_name("key_press_event")
+        widget.stop_emission_by_name("key_press_event")
 
         return True
 
@@ -1007,7 +1007,7 @@ class PopupMenu(gtk.Menu):
 
             elif item[0] == "USER":
 
-                menuitem = gtk.MenuItem(item[1])
+                menuitem = gtk.MenuItem.new_with_label(item[1])
                 self.useritem = menuitem
 
                 if len(item) >= 3:
@@ -1017,7 +1017,7 @@ class PopupMenu(gtk.Menu):
 
             elif item[0] == 1:
 
-                menuitem = gtk.MenuItem(item[1])
+                menuitem = gtk.MenuItem.new_with_label(item[1])
                 menuitem.set_submenu(item[2])
 
                 if len(item) == 5 and item[4] is not None and item[3] is not None:
@@ -1027,7 +1027,7 @@ class PopupMenu(gtk.Menu):
 
             elif item[0] == "USERMENU":
 
-                menuitem = gtk.MenuItem(item[1])
+                menuitem = gtk.MenuItem.new_with_label(item[1])
                 menuitem.set_submenu(item[2])
 
                 if item[3] is not None:
@@ -1038,11 +1038,11 @@ class PopupMenu(gtk.Menu):
             else:
 
                 if item[0][0] == "$":
-                    menuitem = gtk.CheckMenuItem(item[0][1:])
+                    menuitem = gtk.CheckMenuItem.new_with_label(item[0][1:])
                 elif item[0][0] == "#":
-                    menuitem = gtk.MenuItem(item[0][1:])
+                    menuitem = gtk.MenuItem.new_with_label(item[0][1:])
                 else:
-                    menuitem = gtk.MenuItem(item[0])
+                    menuitem = gtk.MenuItem.new_with_label(item[0])
 
                 if len(item) >= 3 and item[2] is not None and item[1] is not None:
                     self.handlers[menuitem] = menuitem.connect("activate", item[1], item[2])

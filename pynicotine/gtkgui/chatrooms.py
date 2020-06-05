@@ -30,6 +30,7 @@ from os.path import commonprefix
 
 import gi
 from gi.repository import Gdk
+from gi.repository import GLib
 from gi.repository import GObject as gobject
 from gi.repository import Gtk as gtk
 from gi.repository import Pango as pango
@@ -247,7 +248,7 @@ class RoomsControl:
 
         for name, room in list(self.joinedrooms.items()):
             if room.Main == page:
-                gobject.idle_add(room.ChatEntry.grab_focus)
+                GLib.idle_add(room.ChatEntry.grab_focus)
 
                 # Remove hilite
                 self.frame.Notifications.Clear("rooms", None, name)
@@ -779,7 +780,7 @@ class Ticker:
         self.enable()
 
     def __del__(self):
-        gobject.source_remove(self.source)
+        GLib.source_remove(self.source)
 
     def scroll(self, *args):
 
@@ -834,14 +835,14 @@ class Ticker:
         if self.source:
             return
 
-        self.source = gobject.timeout_add(2500, self.scroll)
+        self.source = GLib.timeout_add(2500, self.scroll)
 
     def disable(self):
 
         if not self.source:
             return
 
-        gobject.source_remove(self.source)
+        GLib.source_remove(self.source)
 
         self.source = None
 
@@ -850,9 +851,9 @@ def TickDialog(parent, default=""):
 
     dlg = gtk.Dialog(
         title=_("Set ticker message"),
-        parent=parent,
-        buttons=(gtk.STOCK_CANCEL, gtk.ResponseType.CANCEL, gtk.STOCK_OK, gtk.ResponseType.OK)
+        transient_for=parent
     )
+    dlg.add_buttons(gtk.STOCK_CANCEL, gtk.ResponseType.CANCEL, gtk.STOCK_OK, gtk.ResponseType.OK)
     dlg.set_default_response(gtk.ResponseType.OK)
 
     t = 0
@@ -860,7 +861,7 @@ def TickDialog(parent, default=""):
     dlg.set_border_width(10)
     dlg.vbox.set_spacing(10)
 
-    l = gtk.Label(_("Set room ticker message:"))  # noqa: E741
+    l = gtk.Label.new(_("Set room ticker message:"))  # noqa: E741
     l.set_alignment(0, 0.5)
     dlg.vbox.pack_start(l, False, False, 0)
 
@@ -869,7 +870,7 @@ def TickDialog(parent, default=""):
     entry.set_text(default)
     dlg.vbox.pack_start(entry, True, True, 0)
 
-    v = gtk.VBox(False, False)
+    v = gtk.Box.new(gtk.Orientation.VERTICAL, False)
     r1 = gtk.RadioButton().new_from_widget(None)
     r1.set_label(_("Just this time"))
     r1.set_active(True)
@@ -1204,7 +1205,7 @@ class ChatRoom:
             if len(loglines[-roomlines:-1]) > 0:
                 self.lines.append(AppendLine(self.ChatScroll, _("--- old messages above ---"), self.tag_hilite))
 
-            gobject.idle_add(self.frame.ScrollBottom, self.ChatScroll.get_parent())
+            GLib.idle_add(self.frame.ScrollBottom, self.ChatScroll.get_parent())
         except IOError as e:  # noqa: F841
             pass
 
@@ -1641,7 +1642,7 @@ class ChatRoom:
 
         elif cmd == "/attach":
             self.roomsctrl.ChatNotebook.attach_tab(self.Main)
-            gobject.idle_add(self.frame.ScrollBottom, self.ChatScroll.get_parent())
+            GLib.idle_add(self.frame.ScrollBottom, self.ChatScroll.get_parent())
 
         elif cmd == "/rescan":
 
@@ -1690,7 +1691,7 @@ class ChatRoom:
 
     def Detach(self, widget=None):
         self.roomsctrl.ChatNotebook.detach_tab(self.Main, _("Nicotine+ Chatroom: %s") % self.room)
-        gobject.idle_add(self.frame.ScrollBottom, self.ChatScroll.get_parent())
+        GLib.idle_add(self.frame.ScrollBottom, self.ChatScroll.get_parent())
 
     def Say(self, text):
         text = re.sub("\\s\\s+", "  ", text)
@@ -2227,7 +2228,7 @@ class ChatRoom:
                 widget.insert_text(newnick, preix)
                 widget.set_position(preix + len(newnick))
 
-        widget.emit_stop_by_name("key_press_event")
+        widget.stop_emission_by_name("key_press_event")
 
         return True
 
@@ -2248,7 +2249,7 @@ class ChatRoom:
         if event.button != 3:
             return False
 
-        widget.emit_stop_by_name("button-press-event")
+        widget.stop_emission_by_name("button-press-event")
         self.chatpopmenu.popup(None, None, None, None, event.button, event.time)
 
         return True
@@ -2258,7 +2259,7 @@ class ChatRoom:
         if event.button != 3:
             return False
 
-        widget.emit_stop_by_name("button-press-event")
+        widget.stop_emission_by_name("button-press-event")
         self.logpopupmenu.popup(None, None, None, None, event.button, event.time)
 
         return True

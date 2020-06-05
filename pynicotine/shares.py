@@ -28,7 +28,7 @@ import time
 from gettext import gettext as _
 
 import gi
-from gi.repository import GObject as gobject
+from gi.repository import GLib
 
 from pynicotine import metadata_mutagen as metadata
 from pynicotine import slskmessages
@@ -113,7 +113,7 @@ class Shares:
 
     def logMessage(self, message, debugLevel=0):
         if self.LogMessage is not None:
-            gobject.idle_add(self.LogMessage, message, debugLevel)
+            GLib.idle_add(self.LogMessage, message, debugLevel)
 
     def sendNumSharedFoldersFiles(self):
         """
@@ -423,9 +423,9 @@ class Shares:
         # returns dict in format:  { Directory : mtime, ... }
         shared_directories = [x[1] for x in shared]
 
-        gobject.idle_add(progress.set_text, _("Checking for changes"))
-        gobject.idle_add(progress.show)
-        gobject.idle_add(progress.set_fraction, 0)
+        GLib.idle_add(progress.set_text, _("Checking for changes"))
+        GLib.idle_add(progress.show)
+        GLib.idle_add(progress.set_fraction, 0)
 
         self.logMessage(_("%(num)s directories found before rescan/rebuild") % {"num": len(oldmtimes)})
 
@@ -436,7 +436,7 @@ class Shares:
 
         self.logMessage(_("%(num)s directories found after rescan/rebuild") % {"num": len(newmtimes)})
 
-        gobject.idle_add(progress.set_text, _("Scanning %s") % name)
+        GLib.idle_add(progress.set_text, _("Scanning %s") % name)
 
         # Get list of files
         # returns dict in format { Directory : { File : metadata, ... }, ... }
@@ -447,7 +447,7 @@ class Shares:
 
         # Pack shares data
         # returns dict in format { Directory : hex string of files+metadata, ... }
-        gobject.idle_add(progress.set_text, _("Building DataBase"))
+        GLib.idle_add(progress.set_text, _("Building DataBase"))
 
         if win32:
             newsharedfilesstreams = self.getFilesStreamsUnicode(newmtimes, oldmtimes, sharedfilesstreams, newsharedfiles, rebuild, yieldfunction)
@@ -458,13 +458,13 @@ class Shares:
         # newwordindex is a dict in format {word: [num, num, ..], ... } with num matching
         # keys in newfileindex
         # newfileindex is a dict in format { num: (path, size, (bitrate, vbr), length), ... }
-        gobject.idle_add(progress.set_text, _("Building Index"))
+        GLib.idle_add(progress.set_text, _("Building Index"))
 
-        gobject.idle_add(progress.set_fraction, 0.0)
+        GLib.idle_add(progress.set_fraction, 0.0)
 
         newwordindex, newfileindex = self.getFilesIndex(newmtimes, oldmtimes, shared_directories, newsharedfiles, yieldfunction, progress)
 
-        gobject.idle_add(progress.set_fraction, 1.0)
+        GLib.idle_add(progress.set_fraction, 1.0)
 
         return newsharedfiles, newsharedfilesstreams, newwordindex, newfileindex, newmtimes
 
@@ -557,7 +557,7 @@ class Shares:
             if progress:
                 percent = float(count) / len(mtimes)
                 if percent <= 1.0:
-                    gobject.idle_add(progress.set_fraction, percent)
+                    GLib.idle_add(progress.set_fraction, percent)
 
             if self.hiddenCheck({'dir': directory}):
                 continue
@@ -758,7 +758,7 @@ class Shares:
             if progress:
                 percent = float(count) / len(mtimes)
                 if percent <= 1.0:
-                    gobject.idle_add(progress.set_fraction, percent)
+                    GLib.idle_add(progress.set_fraction, percent)
 
             # force Unicode for reading from disk
             u_directory = "%s" % directory
@@ -1010,7 +1010,7 @@ class Shares:
             if progress:
                 percent = float(count) / len(mtimes)
                 if percent <= 1.0:
-                    gobject.idle_add(progress.set_fraction, percent)
+                    GLib.idle_add(progress.set_fraction, percent)
 
             count += 1
 

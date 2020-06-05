@@ -28,6 +28,7 @@ from gettext import gettext as _
 
 import gi
 from gi.repository import Gdk
+from gi.repository import GLib
 from gi.repository import GObject as gobject
 from gi.repository import Gtk as gtk
 
@@ -471,11 +472,11 @@ class UserList:
         self.frame.np.queue.put(slskmessages.GetPeerAddress(user))
 
         for widget in self.frame.BuddiesComboEntries:
-            gobject.idle_add(widget.Append, user)
+            GLib.idle_add(widget.Append, user)
 
         if self.frame.np.config.sections["words"]["buddies"]:
-            gobject.idle_add(self.frame.chatrooms.roomsctrl.UpdateCompletions)
-            gobject.idle_add(self.frame.privatechats.UpdateCompletions)
+            GLib.idle_add(self.frame.chatrooms.roomsctrl.UpdateCompletions)
+            GLib.idle_add(self.frame.privatechats.UpdateCompletions)
 
     def OnEditComments(self, widget):
 
@@ -537,11 +538,11 @@ class UserList:
         self.SaveUserList()
 
         for widget in self.frame.BuddiesComboEntries:
-            gobject.idle_add(widget.Remove, user)
+            GLib.idle_add(widget.Remove, user)
 
         if self.frame.np.config.sections["words"]["buddies"]:
-            gobject.idle_add(self.frame.chatrooms.roomsctrl.UpdateCompletions)
-            gobject.idle_add(self.frame.privatechats.UpdateCompletions)
+            GLib.idle_add(self.frame.chatrooms.roomsctrl.UpdateCompletions)
+            GLib.idle_add(self.frame.privatechats.UpdateCompletions)
 
     def OnRemoveUser(self, widget):
         self.RemoveFromList(self.popup_menu.get_user())

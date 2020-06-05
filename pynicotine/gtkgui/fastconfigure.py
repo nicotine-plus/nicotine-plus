@@ -27,6 +27,7 @@ from os.path import join
 
 import gi
 from gi.repository import Gdk
+from gi.repository import GLib
 from gi.repository import GObject as gobject
 from gi.repository import Gtk as gtk
 
@@ -374,7 +375,7 @@ class FastConfigureAssistant(object):
         if len(exts) > 5:
             extstring += ", ..."
 
-        gobject.idle_add(
+        GLib.idle_add(
             self._updatedirstats,
             directory,
             HumanSize(size),

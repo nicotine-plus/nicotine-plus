@@ -380,8 +380,8 @@ class NicotineFrame:
         self.MainWindow.connect("key_press_event", self.OnKeyPress)
         self.MainWindow.connect("motion-notify-event", self.OnButtonPress)
 
-        gobject.signal_new("network_event", gtk.Window, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, (gobject.TYPE_PYOBJECT,))
-        gobject.signal_new("network_event_lo", gtk.Window, gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_PYOBJECT,))
+        gobject.signal_new("network_event", gtk.Window, gobject.SignalFlags.RUN_FIRST, gobject.TYPE_NONE, (gobject.TYPE_PYOBJECT,))
+        gobject.signal_new("network_event_lo", gtk.Window, gobject.SignalFlags.RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_PYOBJECT,))
 
         self.MainWindow.connect("network_event", self.OnNetworkEvent)
         self.MainWindow.connect("network_event_lo", self.OnNetworkEvent)
@@ -1366,14 +1366,14 @@ class NicotineFrame:
 
     def BuddiesCombosFill(self, nothing):
         for widget in self.BuddiesComboEntries:
-            gobject.idle_add(widget.Fill)
+            GLib.idle_add(widget.Fill)
 
     def RemoveAwayTimer(self, timerid):
         # Check that the away timer hasn't been destroyed already
         # Happens if the timer expires
         context = GLib.MainContext.default()
         if context.find_source_by_id(timerid) is not None:
-            gobject.source_remove(timerid)
+            GLib.source_remove(timerid)
 
     def OnAutoAway(self):
         if not self.away:
@@ -1390,7 +1390,7 @@ class NicotineFrame:
 
             autoaway = self.np.config.sections["server"]["autoaway"]
             if autoaway > 0:
-                self.awaytimerid = gobject.timeout_add(1000 * 60 * autoaway, self.OnAutoAway)
+                self.awaytimerid = GLib.timeout_add(1000 * 60 * autoaway, self.OnAutoAway)
             else:
                 self.awaytimerid = None
 
@@ -1401,7 +1401,7 @@ class NicotineFrame:
         for i in range(1, 10):
             if event.keyval == Gdk.keyval_from_name(str(i)):
                 self.MainNotebook.set_current_page(i - 1)
-                widget.emit_stop_by_name("key_press_event")
+                widget.stop_emission_by_name("key_press_event")
                 return True
         return False
 
@@ -1429,7 +1429,7 @@ class NicotineFrame:
 
     def callback(self, msgs):
         if len(msgs) > 0:
-            gobject.idle_add(self.emit_network_event, msgs[:])
+            GLib.idle_add(self.emit_network_event, msgs[:])
 
     def networkcallback(self, msgs):
         curtime = time.time()
@@ -1442,7 +1442,7 @@ class NicotineFrame:
         if curtime - self.transfermsgspostedtime > 1.0:
             msgs = self.postTransferMsgs(msgs, curtime)
         if len(msgs) > 0:
-            gobject.idle_add(self.emit_network_event, msgs[:])
+            GLib.idle_add(self.emit_network_event, msgs[:])
 
     def postTransferMsgs(self, msgs, curtime):
         trmsgs = []
@@ -1542,7 +1542,7 @@ class NicotineFrame:
         dialog.show()
 
     def logCallback(self, timestamp, level, msg):
-        gobject.idle_add(self.updateLog, msg, level, priority=gobject.PRIORITY_DEFAULT)
+        GLib.idle_add(self.updateLog, msg, level, priority=GLib.PRIORITY_DEFAULT)
 
     def logMessage(self, msg, debugLevel=0):
         log.add(msg, debugLevel)
@@ -1770,7 +1770,7 @@ class NicotineFrame:
             autoaway = self.np.config.sections["server"]["autoaway"]
 
             if autoaway > 0:
-                self.awaytimerid = gobject.timeout_add(1000 * 60 * autoaway, self.OnAutoAway)
+                self.awaytimerid = GLib.timeout_add(1000 * 60 * autoaway, self.OnAutoAway)
             else:
                 self.awaytimerid = None
         else:
@@ -1784,7 +1784,7 @@ class NicotineFrame:
 
         self.uploads.InitInterface(self.np.transfers.uploads)
         self.downloads.InitInterface(self.np.transfers.downloads)
-        gobject.idle_add(self.FetchUserListStatus)
+        GLib.idle_add(self.FetchUserListStatus)
 
         if msg.banner != "":
             AppendLine(self.LogWindow, msg.banner, self.tag_log)
@@ -2253,9 +2253,9 @@ class NicotineFrame:
 
     def RescanFinished(self, data, type):
         if type == "buddy":
-            gobject.idle_add(self._BuddyRescanFinished, data)
+            GLib.idle_add(self._BuddyRescanFinished, data)
         elif type == "normal":
-            gobject.idle_add(self._RescanFinished, data)
+            GLib.idle_add(self._RescanFinished, data)
 
     def OnSettingsShares(self, widget):
         self.OnSettings(widget, 'Shares')
@@ -2534,12 +2534,11 @@ class NicotineFrame:
         Alignment = gtk.Alignment(xalign=0.5, yalign=0.5, xscale=0, yscale=0)
         Alignment.show()
 
-        Hbox = gtk.HBox(False, 2)
+        Hbox = gtk.Box.new(gtk.Orientation.HORIZONTAL, 2)
         Hbox.show()
         Hbox.set_spacing(2)
 
         image = gtk.Image()
-        image.set_padding(0, 0)
 
         if icontype == "stock":
             image.set_from_stock(icon, 4)
@@ -2550,8 +2549,7 @@ class NicotineFrame:
         Hbox.pack_start(image, False, False, 0)
         Alignment.add(Hbox)
         if label:
-            Label = gtk.Label(label)
-            Label.set_padding(0, 0)
+            Label = gtk.Label.new(label)
             Label.show()
             Hbox.pack_start(Label, False, False, 0)
         button.add(Alignment)
@@ -2958,7 +2956,7 @@ class NicotineFrame:
     def OnPopupLogMenu(self, widget, event):
         if event.button != 3:
             return False
-        widget.emit_stop_by_name("button-press-event")
+        widget.stop_emission_by_name("button-press-event")
         self.logpopupmenu.popup(None, None, None, None, event.button, event.time)
         return True
 
@@ -3571,7 +3569,7 @@ class Notifications:
 
             return
 
-        if self.gsound is None and sys.platform != "win32":
+        if self.frame.gsound is None and sys.platform != "win32":
             return
 
         if "soundenabled" not in self.frame.np.config.sections["ui"] or not self.frame.np.config.sections["ui"]["soundenabled"]:

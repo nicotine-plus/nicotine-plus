@@ -461,7 +461,7 @@ class EntryDialog(gtk.Dialog):
         box.show()
 
         if message:
-            label = gtk.Label(message)
+            label = gtk.Label.new(message)
             box.pack_start(label, False, False, 0)
             label.set_line_wrap(True)
             label.show()
@@ -560,7 +560,7 @@ class FindDialog(gtk.Dialog):
             gobject.signal_new(
                 "find-click",
                 gtk.Window,
-                gobject.SIGNAL_RUN_LAST,
+                gobject.SignalFlags.RUN_LAST,
                 gobject.TYPE_NONE,
                 (gobject.TYPE_STRING,)
             )
@@ -587,7 +587,7 @@ class FindDialog(gtk.Dialog):
         box.show()
 
         if message:
-            label = gtk.Label(message)
+            label = gtk.Label.new(message)
             box.pack_start(label, False, False, 0)
             label.set_line_wrap(True)
             label.show()
@@ -680,7 +680,7 @@ class FolderDownloadDialog(gtk.Dialog):
         hbox.pack_start(image, False, False, 0)
 
         if message:
-            label = gtk.Label(message)
+            label = gtk.Label.new(message)
             hbox.pack_start(label, False, False, 0)
             label.set_line_wrap(True)
             label.show()
@@ -744,7 +744,7 @@ class OptionDialog(gtk.Dialog):
             hbox.pack_start(image, False, False, 0)
 
         if message:
-            label = gtk.Label(message)
+            label = gtk.Label.new(message)
             hbox.pack_start(label, False, False, 0)
             label.set_line_wrap(True)
             label.show()
@@ -777,7 +777,7 @@ class OptionDialog(gtk.Dialog):
             Alignment.add(Hbox)
 
             if label:
-                Label = gtk.Label(third)
+                Label = gtk.Label.new(third)
                 Label.set_padding(0, 0)
                 Label.show()
                 Hbox.pack_start(Label, False, False, 0)
