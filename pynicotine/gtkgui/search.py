@@ -450,14 +450,14 @@ class Searches(IconNotebook):
 
         search = self.searches[msg.token]
 
+        if search[2] is None:
+            search = self.CreateTab(search[0], search[1], search[3], search[4])
+
         counter = len(search[2].all_data) + 1
 
         # No more things to add because we've reached the max_stored_results limit
         if counter > self.frame.np.config.sections['searches']["max_stored_results"]:
             return
-
-        if search[2] is None:
-            search = self.CreateTab(search[0], search[1], search[3], search[4])
 
         search[2].AddResult(msg, username, country)
 
