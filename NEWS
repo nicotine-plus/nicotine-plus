@@ -4,7 +4,84 @@ News
     As per GCS § 6.7, this file contains a list of user-visible noteworthy
     changes. Note that this is not the same as a changelog.
 
-Version 1.4.2 (unreleased)
+Version 2.0.0 (unreleased)
+-----------------------------
+
+Changes
+ * Ported from Python 2 to Python 3
+ * Ported from GTK2 to GTK3 (PyGTK to PyGObject)
+ * Support for HiDPI displays
+ * Nicotine+ now follows the XDG Base Directory Specification
+ * Replaced deprecated dependencies with maintained ones
+ * Added unit and DEP-8 continuous integration testing
+ * Column widths are now remembered between sessions
+ * Added option to open previous tab on startup
+ * Added option to hide buddy list
+ * Search filters now check the directory path
+ * Plugins are now bundled with Nicotine+ installations by default
+ * Minor UI cleanups
+ * General code cleanups, removed dead code
+ * Replaced non-free sound effects
+
+Bugs closed in GitHub
+ * Columns Position Not Being Maintained (#8)
+ * send to player does not work. (#53)
+ * Segfault When Getting User Info (#57)
+ * Segmentation fault on Ubuntu Gnome 17.04 (#60)
+ * Nicotine+ Windows 8.1 (64-bit) mutagen attempts to handle non-video files (#62)
+ * Nicotine+ 1.4.1, windows 8.1 (64-bit) errors when using UPNP (#63)
+ * Nicotine+ 1.4.1, windows 8.1 (64-bit) Spurious error messages (#64)
+ * Nicotine + 1.4.1, windows 8.1 (64-bit) buttons not working (#65)
+ * Can't share directories (#68)
+ * Question: Is Development Dead? (#73)
+ * select ValueError: filedescriptor out of range in select() (#77)
+ * blurry tray icon in kde plasma (#81)
+ * Problems sharing files (#83)
+ * Uploads not working (#85)
+ * UI very condensed on high-dpi linux. (#88)
+ * New Commits - Is Development Back? (#90)
+ * Filter doesn't include directory path (#91)
+ * XDG Base Directory Support (#94)
+ * Nicotine+ 1.4.2, Debian 9 (64-bit) Downloading file size >2GB appears as negative numbers, files near 4GB download 0 byte. (#100)
+ * Nicotine+ 1.4.1 don't handle invalid characters in Windows (#101)
+ * Random crash on Raspbian (#103)
+ * Bitrate not shown for most music in search results (#104)
+ * Nicotine+ 1.4.2, Debian 9 (64 bit) : Can't get shared files + current downloads disappeared : since the last but one update, from branch master (#107)
+ * Website is badly out of date (#109)
+ * images seem to be integrated from the launch directory if they have special names (#113)
+ * Not working on Ubuntu 20.04 Focal Fossa (#115)
+ * Please update Nicotine to work on the latest Ubuntu (20.04) (#123)
+ * Compiled 'Master Branch' - Nicotine is Black Blank Screen? (#140)
+ * Question: 1.4.3 - Columns Hiding? (#143)
+ * info user correct extra typo (#144)
+ * select user transfert does not select anything (#145)
+ * clicking hyperlinks does not open browser (#146)
+ * left click does not work on users nickname in rooms (#147)
+ * Interest tab : text zone too small (#148)
+ * request : adding file chooser preview widget in info user picture setting (#149)
+ * menu separator does not follow gtk+ rules (#151)
+ * 1.4.3 Linux - Hidding Tabs - Always Opens Now Under Buddy List (#154)
+ * strace shows weird file access syscalls (#155)
+ * (world) flags missing at startup / and buddy list (#161)
+ * setup.py: DistutilsFileError (#164)
+ * warnings causes by userlist resizing columns (#165)
+ * Question: No more charsets selection ? (#180)
+ * my gtk3 theme gives checkbuttons looks bigger (#181)
+ * Question - Bug? - Log Window Issue (#186)
+ * wait a minute, only spellchecker is missing ? (#190)
+ * userlist for myself does not display files number (#192)
+ * AttributeError in changecolour(): PrivateChat object has no attribute 'tag_log' (#194)
+ * IndexError at start on Debian Buster (#202)
+ * Speed up program startup times (#215)
+ * custom tray icons not respected (#239)
+ * Request: Modes Tab Placement? (#242)
+
+Version 1.4.3 (unstable)
+-----------------------------
+
+* Rolling development release in preparation for 2.0.0
+
+Version 1.4.2 (February 17, 2018)
 -----------------------------
 
 Bugs closed on Github
