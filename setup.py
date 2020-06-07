@@ -73,6 +73,14 @@ files.append(
     )
 )
 
+# AppStream metainfo
+files.append(
+    (
+        "share/metainfo",
+        ["files/appdata/nicotine.appdata.xml"]
+    )
+)
+
 # Translation files
 mo_dirs = [x for x in glob.glob(os.path.join("languages", "*")) if isdir(x)]
 
