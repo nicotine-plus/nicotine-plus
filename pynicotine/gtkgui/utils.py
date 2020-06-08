@@ -272,6 +272,7 @@ def ScrollBottom(widget):
         va.set_value(va.get_upper() - va.get_page_size())
     except AttributeError:
         pass
+    widget.set_vadjustment(va)
     return False
 
 

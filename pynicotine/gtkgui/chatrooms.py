@@ -25,6 +25,7 @@
 
 import os
 import re
+from collections import deque
 from gettext import gettext as _
 from os.path import commonprefix
 
@@ -44,6 +45,7 @@ from pynicotine.gtkgui.utils import IconNotebook
 from pynicotine.gtkgui.utils import InitialiseColumns
 from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.gtkgui.utils import PressHeader
+from pynicotine.gtkgui.utils import ScrollBottom
 from pynicotine.gtkgui.utils import WriteLog
 from pynicotine.gtkgui.utils import expand_alias
 from pynicotine.gtkgui.utils import fixpath
@@ -935,7 +937,6 @@ class ChatRoom:
         self.Ticker = Ticker(self.TickerEventBox)
 
         self.room = room
-        self.lines = []
         self.leaving = 0
         self.meta = meta  # not a real room if set to True
         config = self.frame.np.config.sections
@@ -1151,63 +1152,59 @@ class ChatRoom:
         )
 
         try:
-            roomlines = int(config["logging"]["readroomlines"])
+            numlines = int(config["logging"]["readroomlines"])
         except Exception:
-            roomlines = 15
+            numlines = 15
 
         try:
-            f = open(log, "r")
-            logfile = f.read()
-            f.close()
-            loglines = logfile.split("\n")
+            with open(log, 'r') as lines:
+                # Only show as many log lines as specified in config
+                lines = deque(lines, numlines)
 
-            for bytes in loglines[-roomlines:-1]:
+                for bytes in lines:
+                    li = bytes
 
-                li = bytes
+                    # Try to parse line for username
+                    if len(li) > 20 and li[10].isspace() and li[11].isdigit() and li[20] in ("[", "*"):
 
-                # Try to parse line for username
-                if len(li) > 20 and li[10].isspace() and li[11].isdigit() and li[20] in ("[", "*"):
+                        line = li[11:]
+                        if li[20] == "[" and li[20:].find("] ") != -1:
+                            namepos = li[20:].find("] ")
+                            user = li[21:20 + namepos].strip()
+                            self.getUserTag(user)
+                            usertag = self.tag_users[user]
+                        else:
+                            user = None
+                            usertag = None
 
-                    line = li[11:]
-                    if li[20] == "[" and li[20:].find("] ") != -1:
-                        namepos = li[20:].find("] ")
-                        user = li[21:20 + namepos].strip()
-                        self.getUserTag(user)
-                        usertag = self.tag_users[user]
+                        if user == config["server"]["login"]:
+                            tag = self.tag_local
+                        elif li[20] == "*":
+                            tag = self.tag_me
+                        elif li[20 + namepos:].upper().find(config["server"]["login"].upper()) > -1:
+                            tag = self.tag_hilite
+                        else:
+                            tag = self.tag_remote
                     else:
+                        line = li
                         user = None
+                        tag = None
                         usertag = None
 
-                    if user == config["server"]["login"]:
-                        tag = self.tag_local
-                    elif li[20] == "*":
-                        tag = self.tag_me
-                    elif li[20 + namepos:].upper().find(config["server"]["login"].upper()) > -1:
-                        tag = self.tag_hilite
+                    line = re.sub(r"\\s\\s+", "  ", line)
+
+                    if user != config["server"]["login"]:
+                        AppendLine(self.ChatScroll, self.frame.CensorChat(line), tag, username=user, usertag=usertag, timestamp_format="")
                     else:
-                        tag = self.tag_remote
-                else:
-                    line = li
-                    user = None
-                    tag = None
-                    usertag = None
+                        AppendLine(self.ChatScroll, line, tag, username=user, usertag=usertag, timestamp_format="")
 
-                timestamp_format = self.frame.np.config.sections["logging"]["rooms_timestamp"]  # noqa: F841
+                if len(lines) > 0:
+                    AppendLine(self.ChatScroll, _("--- old messages above ---"), self.tag_hilite)
 
-                line = re.sub(r"\\s\\s+", "  ", line)
-                line += "\n"
-
-                if user != config["server"]["login"]:
-                    self.lines.append(AppendLine(self.ChatScroll, self.frame.CensorChat(line), tag, username=user, usertag=usertag, timestamp_format=""))
-                else:
-                    self.lines.append(AppendLine(self.ChatScroll, line, tag, username=user, usertag=usertag, timestamp_format=""))
-
-            if len(loglines[-roomlines:-1]) > 0:
-                self.lines.append(AppendLine(self.ChatScroll, _("--- old messages above ---"), self.tag_hilite))
-
-            GLib.idle_add(self.frame.ScrollBottom, self.ChatScroll.get_parent())
         except IOError as e:  # noqa: F841
             pass
+
+        GLib.idle_add(ScrollBottom, self.ChatScroll.get_parent())
 
     def on_key_press_event(self, widget, event):
 
@@ -1431,13 +1428,6 @@ class ChatRoom:
 
             speech = text
 
-        if len(self.lines) >= 400:
-            buffer = self.ChatScroll.get_buffer()
-            start = buffer.get_start_iter()
-            end = buffer.get_iter_at_line(1)
-            self.ChatScroll.get_buffer().delete(start, end)
-            del self.lines[0]
-
         line = "\n-- ".join(line.split("\n"))
         if self.Log.get_active():
             WriteLog(self.frame.np.config.sections["logging"]["roomlogsdir"], self.room, line)
@@ -1448,11 +1438,9 @@ class ChatRoom:
 
         if user != login:
 
-            self.lines.append(
-                AppendLine(
-                    self.ChatScroll, self.frame.CensorChat(line), tag,
-                    username=user, usertag=self.tag_users[user], timestamp_format=timestamp_format
-                )
+            AppendLine(
+                self.ChatScroll, self.frame.CensorChat(line), tag,
+                username=user, usertag=self.tag_users[user], timestamp_format=timestamp_format
             )
 
             if self.Speech.get_active():
@@ -1465,11 +1453,9 @@ class ChatRoom:
                     }
                 )
         else:
-            self.lines.append(
-                AppendLine(
-                    self.ChatScroll, line, tag,
-                    username=user, usertag=self.tag_users[user], timestamp_format=timestamp_format
-                )
+            AppendLine(
+                self.ChatScroll, line, tag,
+                username=user, usertag=self.tag_users[user], timestamp_format=timestamp_format
             )
 
     def getUserTag(self, user):
@@ -1625,7 +1611,6 @@ class ChatRoom:
 
         elif cmd in ["/clear", "/cl"]:
             self.ChatScroll.get_buffer().set_text("")
-            self.lines = []
 
         elif cmd in ["/a", "/away"]:
             self.frame.OnAway(None)
@@ -1642,7 +1627,7 @@ class ChatRoom:
 
         elif cmd == "/attach":
             self.roomsctrl.ChatNotebook.attach_tab(self.Main)
-            GLib.idle_add(self.frame.ScrollBottom, self.ChatScroll.get_parent())
+            GLib.idle_add(ScrollBottom, self.ChatScroll.get_parent())
 
         elif cmd == "/rescan":
 
@@ -1691,7 +1676,7 @@ class ChatRoom:
 
     def Detach(self, widget=None):
         self.roomsctrl.ChatNotebook.detach_tab(self.Main, _("Nicotine+ Chatroom: %s") % self.room)
-        GLib.idle_add(self.frame.ScrollBottom, self.ChatScroll.get_parent())
+        GLib.idle_add(ScrollBottom, self.ChatScroll.get_parent())
 
     def Say(self, text):
         text = re.sub("\\s\\s+", "  ", text)
@@ -2294,7 +2279,6 @@ class ChatRoom:
 
     def OnClearChatLog(self, widget):
         self.ChatScroll.get_buffer().set_text("")
-        self.lines = []
 
     def OnClearRoomLog(self, widget):
         self.RoomLog.get_buffer().set_text("")
