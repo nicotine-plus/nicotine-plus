@@ -20,6 +20,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import os
+from collections import deque
 from gettext import gettext as _
 from time import altzone
 from time import daylight
@@ -431,17 +432,17 @@ class PrivateChat:
         log = os.path.join(config["logging"]["privatelogsdir"], fixpath(self.user.replace(os.sep, "-")) + ".log")
 
         try:
-            lines = int(config["logging"]["readprivatelines"])
+            numlines = int(config["logging"]["readprivatelines"])
         except Exception:
-            lines = 15
+            numlines = 15
 
         try:
-            f = open(log, "r")
-            d = f.read()
-            f.close()
-            s = d.split("\n")
-            for line in s[- lines:-1]:
-                AppendLine(self.ChatScroll, line + "\n", self.tag_hilite, timestamp_format="", username=self.user, usertag=self.tag_hilite)
+            with open(log, 'r') as lines:
+                # Only show as many log lines as specified in config (one line is empty)
+                lines = deque(lines, numlines + 1)
+
+                for line in lines:
+                    AppendLine(self.ChatScroll, line, self.tag_hilite, timestamp_format="", username=self.user, usertag=self.tag_hilite)
         except IOError as e:  # noqa: F841
             pass
 

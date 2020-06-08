@@ -25,6 +25,7 @@
 
 import os
 import re
+from collections import deque
 from gettext import gettext as _
 from os.path import commonprefix
 
@@ -1151,63 +1152,59 @@ class ChatRoom:
         )
 
         try:
-            roomlines = int(config["logging"]["readroomlines"])
+            numlines = int(config["logging"]["readroomlines"])
         except Exception:
-            roomlines = 15
+            numlines = 15
 
         try:
-            f = open(log, "r")
-            logfile = f.read()
-            f.close()
-            loglines = logfile.split("\n")
+            with open(log, 'r') as lines:
+                # Only show as many log lines as specified in config (one line is empty)
+                lines = deque(lines, numlines + 1)
 
-            for bytes in loglines[-roomlines:-1]:
+                for bytes in lines:
+                    li = bytes
 
-                li = bytes
+                    # Try to parse line for username
+                    if len(li) > 20 and li[10].isspace() and li[11].isdigit() and li[20] in ("[", "*"):
 
-                # Try to parse line for username
-                if len(li) > 20 and li[10].isspace() and li[11].isdigit() and li[20] in ("[", "*"):
+                        line = li[11:]
+                        if li[20] == "[" and li[20:].find("] ") != -1:
+                            namepos = li[20:].find("] ")
+                            user = li[21:20 + namepos].strip()
+                            self.getUserTag(user)
+                            usertag = self.tag_users[user]
+                        else:
+                            user = None
+                            usertag = None
 
-                    line = li[11:]
-                    if li[20] == "[" and li[20:].find("] ") != -1:
-                        namepos = li[20:].find("] ")
-                        user = li[21:20 + namepos].strip()
-                        self.getUserTag(user)
-                        usertag = self.tag_users[user]
+                        if user == config["server"]["login"]:
+                            tag = self.tag_local
+                        elif li[20] == "*":
+                            tag = self.tag_me
+                        elif li[20 + namepos:].upper().find(config["server"]["login"].upper()) > -1:
+                            tag = self.tag_hilite
+                        else:
+                            tag = self.tag_remote
                     else:
+                        line = li
                         user = None
+                        tag = None
                         usertag = None
 
-                    if user == config["server"]["login"]:
-                        tag = self.tag_local
-                    elif li[20] == "*":
-                        tag = self.tag_me
-                    elif li[20 + namepos:].upper().find(config["server"]["login"].upper()) > -1:
-                        tag = self.tag_hilite
+                    line = re.sub(r"\\s\\s+", "  ", line)
+
+                    if user != config["server"]["login"]:
+                        self.lines.append(AppendLine(self.ChatScroll, self.frame.CensorChat(line), tag, username=user, usertag=usertag, timestamp_format=""))
                     else:
-                        tag = self.tag_remote
-                else:
-                    line = li
-                    user = None
-                    tag = None
-                    usertag = None
+                        self.lines.append(AppendLine(self.ChatScroll, line, tag, username=user, usertag=usertag, timestamp_format=""))
 
-                timestamp_format = self.frame.np.config.sections["logging"]["rooms_timestamp"]  # noqa: F841
+                if len(lines) > 0:
+                    self.lines.append(AppendLine(self.ChatScroll, _("--- old messages above ---"), self.tag_hilite))
 
-                line = re.sub(r"\\s\\s+", "  ", line)
-                line += "\n"
-
-                if user != config["server"]["login"]:
-                    self.lines.append(AppendLine(self.ChatScroll, self.frame.CensorChat(line), tag, username=user, usertag=usertag, timestamp_format=""))
-                else:
-                    self.lines.append(AppendLine(self.ChatScroll, line, tag, username=user, usertag=usertag, timestamp_format=""))
-
-            if len(loglines[-roomlines:-1]) > 0:
-                self.lines.append(AppendLine(self.ChatScroll, _("--- old messages above ---"), self.tag_hilite))
-
-            GLib.idle_add(self.frame.ScrollBottom, self.ChatScroll.get_parent())
         except IOError as e:  # noqa: F841
             pass
+
+        GLib.idle_add(self.frame.ScrollBottom, self.ChatScroll.get_parent())
 
     def on_key_press_event(self, widget, event):
 
