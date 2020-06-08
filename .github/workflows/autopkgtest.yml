@@ -58,7 +58,10 @@ jobs:
           path: ../source
 
   autopkgtest:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-16.04, ubuntu-18.04, ubuntu-20.04]
     needs:
       - package
       - get-version
@@ -80,7 +83,12 @@ jobs:
         run: |
           set +e
           NICOTINE_VERSION=$(<NICOTINE_VERSION/NICOTINE_VERSION)
-          sudo autopkgtest ./${DEBUILD_SOURCE}/nicotine_${NICOTINE_VERSION}_source.changes -- null
+
+          # Ubuntu 16.04 uses adt-run
+          if ! sudo autopkgtest ./${DEBUILD_SOURCE}/nicotine_${NICOTINE_VERSION}_source.changes -- null; then
+            sudo adt-run --changes ./${DEBUILD_SOURCE}/nicotine_${NICOTINE_VERSION}_source.changes --- null
+          fi
+
           # autopkgtest exit code 2 signifies skipped tests
           if [ $? -gt 2 ]; then
             exit 1
