@@ -50,15 +50,15 @@
       "buildsystem" : "simple",
       "sources" : [
         {
-          "url" : "https://dl.miyuru.lk/geoip/maxmind/country/maxmind4.dat.gz",
-          "sha256" : "9b223f4454d8b3846179e7398f4eaa90bc9673466387b0f9f39a33ec428c02f5",
+          "url" : "https://raw.githubusercontent.com/Nicotine-Plus/nicotine-plus/master/files/flatpak/GeoIP.dat.gz",
+          "sha256" : "025e516ec14a8a705fb479880ffce43f9fdb8869666d522c38c791069f4b0acf",
           "type" : "file"
         }
       ],
       "build-commands" : [
-        "gzip -d maxmind4.dat.gz",
+        "gzip -d GeoIP.dat.gz",
         "mkdir \"${FLATPAK_DEST}\"/share/GeoIP/",
-        "mv maxmind4.dat \"${FLATPAK_DEST}\"/share/GeoIP/GeoIP.dat"
+        "mv GeoIP.dat \"${FLATPAK_DEST}\"/share/GeoIP/GeoIP.dat"
       ]
     },
     {
