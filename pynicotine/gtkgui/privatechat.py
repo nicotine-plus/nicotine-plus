@@ -37,6 +37,7 @@ from pynicotine.gtkgui.chatrooms import GetCompletion
 from pynicotine.gtkgui.utils import AppendLine
 from pynicotine.gtkgui.utils import IconNotebook
 from pynicotine.gtkgui.utils import PopupMenu
+from pynicotine.gtkgui.utils import ScrollBottom
 from pynicotine.gtkgui.utils import WriteLog
 from pynicotine.gtkgui.utils import expand_alias
 from pynicotine.gtkgui.utils import fixpath
@@ -446,7 +447,7 @@ class PrivateChat:
         except IOError as e:  # noqa: F841
             pass
 
-        GLib.idle_add(self.frame.ScrollBottom, self.ChatScroll.get_parent())
+        GLib.idle_add(ScrollBottom, self.ChatScroll.get_parent())
 
     def Login(self):
         timestamp_format = self.frame.np.config.sections["logging"]["private_timestamp"]
@@ -788,7 +789,7 @@ class PrivateChat:
 
     def Attach(self, widget=None):
         self.chats.attach_tab(self.Main)
-        GLib.idle_add(self.frame.ScrollBottom, self.ChatScroll.get_parent())
+        GLib.idle_add(ScrollBottom, self.ChatScroll.get_parent())
 
     def Detach(self, widget=None):
         self.chats.detach_tab(
@@ -798,7 +799,7 @@ class PrivateChat:
                 'status': [_("Offline"), _("Away"), _("Online")][self.status]
             }
         )
-        GLib.idle_add(self.frame.ScrollBottom, self.ChatScroll.get_parent())
+        GLib.idle_add(ScrollBottom, self.ChatScroll.get_parent())
 
     def NowPlayingThread(self):
         np = self.frame.now.DisplayNowPlaying(None, 0, self.SendMessage)  # noqa: F841

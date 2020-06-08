@@ -45,6 +45,7 @@ from pynicotine.gtkgui.utils import IconNotebook
 from pynicotine.gtkgui.utils import InitialiseColumns
 from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.gtkgui.utils import PressHeader
+from pynicotine.gtkgui.utils import ScrollBottom
 from pynicotine.gtkgui.utils import WriteLog
 from pynicotine.gtkgui.utils import expand_alias
 from pynicotine.gtkgui.utils import fixpath
@@ -1204,7 +1205,7 @@ class ChatRoom:
         except IOError as e:  # noqa: F841
             pass
 
-        GLib.idle_add(self.frame.ScrollBottom, self.ChatScroll.get_parent())
+        GLib.idle_add(ScrollBottom, self.ChatScroll.get_parent())
 
     def on_key_press_event(self, widget, event):
 
@@ -1639,7 +1640,7 @@ class ChatRoom:
 
         elif cmd == "/attach":
             self.roomsctrl.ChatNotebook.attach_tab(self.Main)
-            GLib.idle_add(self.frame.ScrollBottom, self.ChatScroll.get_parent())
+            GLib.idle_add(ScrollBottom, self.ChatScroll.get_parent())
 
         elif cmd == "/rescan":
 
@@ -1688,7 +1689,7 @@ class ChatRoom:
 
     def Detach(self, widget=None):
         self.roomsctrl.ChatNotebook.detach_tab(self.Main, _("Nicotine+ Chatroom: %s") % self.room)
-        GLib.idle_add(self.frame.ScrollBottom, self.ChatScroll.get_parent())
+        GLib.idle_add(ScrollBottom, self.ChatScroll.get_parent())
 
     def Say(self, text):
         text = re.sub("\\s\\s+", "  ", text)
