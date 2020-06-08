@@ -16,7 +16,7 @@ added_files = [
     ('../../files/windows/settings.ini', 'etc/gtk-3.0'),
     
     # Icon
-    ('../../files/nicotine-plus.svg', 'share/icons/hicolor/scalable/apps'),
+    ('../../files/org.nicotine_plus.Nicotine.svg', 'share/icons/hicolor/scalable/apps'),
  
     # Translation files
     ('../../languages', 'languages'),
