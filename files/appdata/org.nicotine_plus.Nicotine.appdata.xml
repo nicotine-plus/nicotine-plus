@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="desktop-application">
-  <id>nicotine.desktop</id>
-  <launchable type="desktop-id">nicotine.desktop</launchable>
+  <id>org.nicotine_plus.Nicotine</id>
+  <launchable type="desktop-id">org.nicotine_plus.Nicotine.desktop</launchable>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-3.0+</project_license>
   <translation type="gettext">nicotine</translation>

@@ -52,7 +52,7 @@ for man in manpages:
 files.append(
     (
         "share/icons/hicolor/scalable/apps",
-        ["files/nicotine-plus.svg"]
+        ["files/org.nicotine_plus.Nicotine.svg"]
     )
 )
 
@@ -69,7 +69,7 @@ for iconname in ["trayicon_away.png", "trayicon_connect.png", "trayicon_disconne
 files.append(
     (
         "share/applications",
-        ["files/nicotine.desktop"]
+        ["files/org.nicotine_plus.Nicotine.desktop"]
     )
 )
 
@@ -77,7 +77,7 @@ files.append(
 files.append(
     (
         "share/metainfo",
-        ["files/appdata/nicotine.appdata.xml"]
+        ["files/appdata/org.nicotine_plus.Nicotine.appdata.xml"]
     )
 )
 

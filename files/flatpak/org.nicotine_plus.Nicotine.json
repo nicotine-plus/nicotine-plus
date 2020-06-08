@@ -1,0 +1,144 @@
+{
+  "id" : "org.nicotine_plus.Nicotine",
+  "runtime" : "org.gnome.Platform",
+  "runtime-version" : "3.36",
+  "sdk" : "org.gnome.Sdk",
+  "command" : "nicotine",
+  "modules" : [
+    "shared-modules/libappindicator/libappindicator-gtk3-introspection-12.10.json",
+    {
+      "name" : "gsound",
+      "sources" : [
+        {
+          "url" : "https://gitlab.gnome.org/GNOME/gsound.git",
+          "commit" : "a86946b494aa32782b3f6334344d07b5c11d5219",
+          "type" : "git"
+        }
+      ],
+      "cleanup" : [
+        "/bin"
+      ]
+    },
+    {
+      "name" : "gspell",
+      "sources" : [
+        {
+          "url" : "https://download.gnome.org/sources/gspell/1.8/gspell-1.8.3.tar.xz",
+          "sha256" : "5ae514dd0216be069176accf6d0049d6a01cfa6a50df4bc06be85f7080b62de8",
+          "type" : "archive"
+        }
+      ],
+      "cleanup" : [
+        "/bin"
+      ]
+    },
+    {
+      "name" : "geoip",
+      "sources" : [
+        {
+          "url" : "https://github.com/maxmind/geoip-api-c/releases/download/v1.6.12/GeoIP-1.6.12.tar.gz",
+          "sha256" : "1dfb748003c5e4b7fd56ba8c4cd786633d5d6f409547584f6910398389636f80",
+          "type" : "archive"
+        }
+      ],
+      "cleanup" : [
+        "/bin"
+      ]
+    },
+    {
+      "name" : "geoip-database",
+      "buildsystem" : "simple",
+      "sources" : [
+        {
+          "url" : "https://dl.miyuru.lk/geoip/maxmind/country/maxmind4.dat.gz",
+          "sha256" : "9b223f4454d8b3846179e7398f4eaa90bc9673466387b0f9f39a33ec428c02f5",
+          "type" : "file"
+        }
+      ],
+      "build-commands" : [
+        "gzip -d maxmind4.dat.gz",
+        "mkdir \"${FLATPAK_DEST}\"/share/GeoIP/",
+        "mv maxmind4.dat \"${FLATPAK_DEST}\"/share/GeoIP/GeoIP.dat"
+      ]
+    },
+    {
+      "name" : "python3-geoip",
+      "buildsystem" : "simple",
+      "sources" : [
+        {
+          "url" : "https://files.pythonhosted.org/packages/f2/7b/a463b7c3df8ef4b9c92906da29ddc9e464d4045f00c475ad31cdb9a97aae/GeoIP-1.3.2.tar.gz",
+          "sha256" : "a890da6a21574050692198f14b07aa4268a01371278dfc24f71cd9bc87ebf0e6",
+          "type" : "file"
+        }
+      ],
+      "build-commands" : [
+        "pip3 install --no-index --find-links=\"file://${PWD}\" --prefix=\"${FLATPAK_DEST}\" GeoIP"
+      ]
+    },
+    {
+      "name" : "python3-miniupnpc",
+      "buildsystem" : "simple",
+      "sources" : [
+        {
+          "url" : "https://files.pythonhosted.org/packages/0c/e8/dbb2747230dfd98a6138cb65b322072eade4d92e1006e518c8711f8f5b85/miniupnpc-2.0.2.tar.gz",
+          "sha256" : "7ea46c93486fe1bdb31f0e0c2d911d224fce70bf5ea120e4295d647dfe274931",
+          "type" : "file"
+        }
+      ],
+      "build-commands" : [
+        "pip3 install --no-index --find-links=\"file://${PWD}\" --prefix=\"${FLATPAK_DEST}\" miniupnpc"
+      ]
+    },
+    {
+      "name" : "python3-mutagen",
+      "buildsystem" : "simple",
+      "sources" : [
+        {
+          "url" : "https://files.pythonhosted.org/packages/49/d7/245d48972216d000238d6ccc09142bc1be88e707b38e8fb19a0155292cb6/mutagen-1.44.0-py3-none-any.whl",
+          "sha256" : "1cfc9f40cc0c89f051e3f3dbd5d9057a193c98433cf6c95e02d7f5a395615c01",
+          "type" : "file"
+        }
+      ],
+      "build-commands" : [
+        "pip3 install --no-index --find-links=\"file://${PWD}\" --prefix=\"${FLATPAK_DEST}\" mutagen"
+      ],
+      "cleanup" : [
+        "/bin"
+      ]
+    },
+    {
+      "name" : "nicotine",
+      "buildsystem" : "simple",
+      "sources" : [
+        {
+          "url" : "https://github.com/Nicotine-Plus/nicotine-plus.git",
+          "commit" : "21d70622c5b0309fe06d455b5ea8eae5ffbbbac4",
+          "type" : "git"
+        }
+      ],
+      "build-commands" : [
+        "python3 setup.py install --prefix=\"${FLATPAK_DEST}\""
+      ]
+    }
+  ],
+  "cleanup" : [
+    "/include",
+    "/lib/debug",
+    "/lib/pkgconfig",
+    "/share/aclocal",
+    "/share/info",
+    "/share/man",
+    "/share/gtk-doc",
+    "/share/vala",
+    "*.a",
+    "*.la"
+  ],
+  "finish-args" : [
+    "--socket=fallback-x11",
+    "--socket=x11",
+    "--socket=wayland",
+    "--share=ipc",
+    "--share=network",
+    "--filesystem=host"
+  ]
+}
