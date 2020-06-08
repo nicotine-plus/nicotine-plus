@@ -37,6 +37,7 @@ from gi.repository import Gtk as gtk
 from gi.repository import Pango as pango
 
 from pynicotine import slskmessages
+from pynicotine.gtkgui import nowplaying
 from pynicotine.gtkgui.entrydialog import input_box
 from pynicotine.gtkgui.utils import AppendLine
 from pynicotine.gtkgui.utils import Humanize
@@ -1683,6 +1684,9 @@ class ChatRoom:
         self.frame.np.queue.put(slskmessages.SayChatroom(self.room, text))
 
     def NowPlayingThread(self):
+        if self.frame.now is None:
+            self.frame.now = nowplaying.NowPlaying(self.frame)
+
         self.frame.now.DisplayNowPlaying(None, test=0, callback=self.Say)
 
     def UserJoinedRoom(self, username, userdata):

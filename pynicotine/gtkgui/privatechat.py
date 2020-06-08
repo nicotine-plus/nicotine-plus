@@ -33,6 +33,7 @@ from gi.repository import Gtk as gtk
 from gi.repository import Pango as pango
 
 from pynicotine import slskmessages
+from pynicotine.gtkgui import nowplaying
 from pynicotine.gtkgui.chatrooms import GetCompletion
 from pynicotine.gtkgui.utils import AppendLine
 from pynicotine.gtkgui.utils import IconNotebook
@@ -802,6 +803,9 @@ class PrivateChat:
         GLib.idle_add(ScrollBottom, self.ChatScroll.get_parent())
 
     def NowPlayingThread(self):
+        if self.frame.now is None:
+            self.frame.now = nowplaying.NowPlaying(self.frame)
+
         np = self.frame.now.DisplayNowPlaying(None, 0, self.SendMessage)  # noqa: F841
 
     def makecolour(self, buffer, colour):

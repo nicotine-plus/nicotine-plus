@@ -75,6 +75,7 @@ Bugs closed in GitHub
  * Speed up program startup times (#215)
  * custom tray icons not respected (#239)
  * Request: Modes Tab Placement? (#242)
+ * /now playing does not work after nic+ restart (#255)
  * text in log aera in chat rooms lag to display from entry (#253)
 
 Version 1.4.3 (unstable)
