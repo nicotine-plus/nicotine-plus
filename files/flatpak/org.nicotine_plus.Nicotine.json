@@ -91,11 +91,13 @@
     "*.la"
   ],
   "finish-args" : [
-    "--socket=fallback-x11",
-    "--socket=x11",
     "--socket=wayland",
+    "--socket=fallback-x11",
+    "--socket=pulseaudio",
     "--share=ipc",
     "--share=network",
-    "--filesystem=host"
+    "--filesystem=host",
+    "--talk-name=org.freedesktop.Notifications",
+    "--talk-name=org.kde.StatusNotifierWatcher"
   ]
 }
