@@ -42,7 +42,7 @@ class AboutDialog(gtk.AboutDialog):
             parent,
             gtk.DialogFlags.MODAL
         )
-        self.set_logo_icon_name("nicotine-plus")
+        self.set_logo_icon_name("org.nicotine_plus.Nicotine")
         self.set_program_name(_("Nicotine+"))
         self.set_version(version)
         self.set_comments(

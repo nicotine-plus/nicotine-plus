@@ -20,6 +20,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import os
+from collections import deque
 from gettext import gettext as _
 from time import altzone
 from time import daylight
@@ -37,6 +38,7 @@ from pynicotine.gtkgui.chatrooms import GetCompletion
 from pynicotine.gtkgui.utils import AppendLine
 from pynicotine.gtkgui.utils import IconNotebook
 from pynicotine.gtkgui.utils import PopupMenu
+from pynicotine.gtkgui.utils import ScrollBottom
 from pynicotine.gtkgui.utils import WriteLog
 from pynicotine.gtkgui.utils import expand_alias
 from pynicotine.gtkgui.utils import fixpath
@@ -432,21 +434,21 @@ class PrivateChat:
         log = os.path.join(config["logging"]["privatelogsdir"], fixpath(self.user.replace(os.sep, "-")) + ".log")
 
         try:
-            lines = int(config["logging"]["readprivatelines"])
+            numlines = int(config["logging"]["readprivatelines"])
         except Exception:
-            lines = 15
+            numlines = 15
 
         try:
-            f = open(log, "r")
-            d = f.read()
-            f.close()
-            s = d.split("\n")
-            for line in s[- lines:-1]:
-                AppendLine(self.ChatScroll, line + "\n", self.tag_hilite, timestamp_format="", username=self.user, usertag=self.tag_hilite)
+            with open(log, 'r') as lines:
+                # Only show as many log lines as specified in config
+                lines = deque(lines, numlines)
+
+                for line in lines:
+                    AppendLine(self.ChatScroll, line, self.tag_hilite, timestamp_format="", username=self.user, usertag=self.tag_hilite)
         except IOError as e:  # noqa: F841
             pass
 
-        GLib.idle_add(self.frame.ScrollBottom, self.ChatScroll.get_parent())
+        GLib.idle_add(ScrollBottom, self.ChatScroll.get_parent())
 
     def Login(self):
         timestamp_format = self.frame.np.config.sections["logging"]["private_timestamp"]
@@ -788,7 +790,7 @@ class PrivateChat:
 
     def Attach(self, widget=None):
         self.chats.attach_tab(self.Main)
-        GLib.idle_add(self.frame.ScrollBottom, self.ChatScroll.get_parent())
+        GLib.idle_add(ScrollBottom, self.ChatScroll.get_parent())
 
     def Detach(self, widget=None):
         self.chats.detach_tab(
@@ -798,7 +800,7 @@ class PrivateChat:
                 'status': [_("Offline"), _("Away"), _("Online")][self.status]
             }
         )
-        GLib.idle_add(self.frame.ScrollBottom, self.ChatScroll.get_parent())
+        GLib.idle_add(ScrollBottom, self.ChatScroll.get_parent())
 
     def NowPlayingThread(self):
         if self.frame.now is None:

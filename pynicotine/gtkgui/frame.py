@@ -1566,15 +1566,6 @@ class NicotineFrame:
                     print(e)
         return False
 
-    def ScrollBottom(self, widget):
-        va = widget.get_vadjustment()
-        try:
-            va.set_value(va.upper - va.page_size)
-        except AttributeError:
-            pass
-        widget.set_vadjustment(va)
-        return False
-
     def SetStatusText(self, msg):
         self.Statusbar.pop(self.status_context_id)
         self.Statusbar.push(self.status_context_id, msg)
