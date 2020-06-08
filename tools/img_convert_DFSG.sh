@@ -24,7 +24,7 @@
 COMPOSE='composite -gravity NorthEast -compose src-over'
 
 # Base Nicotine+ icon
-convert -background none -resize 32x32 files/icons/scalable/nicotine-plus.svg img/base.png
+convert -background none -resize 32x32 files/org.nicotine_plus.Nicotine.svg img/base.png
 
 # Default icon in the notification area
 $COMPOSE /usr/share/icons/Adwaita/16x16/legacy/emblem-default.png img/base.png img/trayicon_connect.png
