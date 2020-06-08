@@ -439,8 +439,8 @@ class PrivateChat:
 
         try:
             with open(log, 'r') as lines:
-                # Only show as many log lines as specified in config (one line is empty)
-                lines = deque(lines, numlines + 1)
+                # Only show as many log lines as specified in config
+                lines = deque(lines, numlines)
 
                 for line in lines:
                     AppendLine(self.ChatScroll, line, self.tag_hilite, timestamp_format="", username=self.user, usertag=self.tag_hilite)

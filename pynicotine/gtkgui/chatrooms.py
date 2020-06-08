@@ -937,7 +937,6 @@ class ChatRoom:
         self.Ticker = Ticker(self.TickerEventBox)
 
         self.room = room
-        self.lines = []
         self.leaving = 0
         self.meta = meta  # not a real room if set to True
         config = self.frame.np.config.sections
@@ -1159,8 +1158,8 @@ class ChatRoom:
 
         try:
             with open(log, 'r') as lines:
-                # Only show as many log lines as specified in config (one line is empty)
-                lines = deque(lines, numlines + 1)
+                # Only show as many log lines as specified in config
+                lines = deque(lines, numlines)
 
                 for bytes in lines:
                     li = bytes
@@ -1195,12 +1194,12 @@ class ChatRoom:
                     line = re.sub(r"\\s\\s+", "  ", line)
 
                     if user != config["server"]["login"]:
-                        self.lines.append(AppendLine(self.ChatScroll, self.frame.CensorChat(line), tag, username=user, usertag=usertag, timestamp_format=""))
+                        AppendLine(self.ChatScroll, self.frame.CensorChat(line), tag, username=user, usertag=usertag, timestamp_format="")
                     else:
-                        self.lines.append(AppendLine(self.ChatScroll, line, tag, username=user, usertag=usertag, timestamp_format=""))
+                        AppendLine(self.ChatScroll, line, tag, username=user, usertag=usertag, timestamp_format="")
 
                 if len(lines) > 0:
-                    self.lines.append(AppendLine(self.ChatScroll, _("--- old messages above ---"), self.tag_hilite))
+                    AppendLine(self.ChatScroll, _("--- old messages above ---"), self.tag_hilite)
 
         except IOError as e:  # noqa: F841
             pass
@@ -1429,13 +1428,6 @@ class ChatRoom:
 
             speech = text
 
-        if len(self.lines) >= 400:
-            buffer = self.ChatScroll.get_buffer()
-            start = buffer.get_start_iter()
-            end = buffer.get_iter_at_line(1)
-            self.ChatScroll.get_buffer().delete(start, end)
-            del self.lines[0]
-
         line = "\n-- ".join(line.split("\n"))
         if self.Log.get_active():
             WriteLog(self.frame.np.config.sections["logging"]["roomlogsdir"], self.room, line)
@@ -1446,11 +1438,9 @@ class ChatRoom:
 
         if user != login:
 
-            self.lines.append(
-                AppendLine(
-                    self.ChatScroll, self.frame.CensorChat(line), tag,
-                    username=user, usertag=self.tag_users[user], timestamp_format=timestamp_format
-                )
+            AppendLine(
+                self.ChatScroll, self.frame.CensorChat(line), tag,
+                username=user, usertag=self.tag_users[user], timestamp_format=timestamp_format
             )
 
             if self.Speech.get_active():
@@ -1463,11 +1453,9 @@ class ChatRoom:
                     }
                 )
         else:
-            self.lines.append(
-                AppendLine(
-                    self.ChatScroll, line, tag,
-                    username=user, usertag=self.tag_users[user], timestamp_format=timestamp_format
-                )
+            AppendLine(
+                self.ChatScroll, line, tag,
+                username=user, usertag=self.tag_users[user], timestamp_format=timestamp_format
             )
 
     def getUserTag(self, user):
@@ -1623,7 +1611,6 @@ class ChatRoom:
 
         elif cmd in ["/clear", "/cl"]:
             self.ChatScroll.get_buffer().set_text("")
-            self.lines = []
 
         elif cmd in ["/a", "/away"]:
             self.frame.OnAway(None)
@@ -2292,7 +2279,6 @@ class ChatRoom:
 
     def OnClearChatLog(self, widget):
         self.ChatScroll.get_buffer().set_text("")
-        self.lines = []
 
     def OnClearRoomLog(self, widget):
         self.RoomLog.get_buffer().set_text("")
