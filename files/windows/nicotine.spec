@@ -26,7 +26,10 @@ added_files = [
 
     # Sounds
     ('../../sounds', 'share/nicotine/sounds'),
- 
+
+    # GeoIP database
+    ('../../files/GeoIP.dat', '.'),
+
     # License file
     ('../../COPYING', '.'),
  

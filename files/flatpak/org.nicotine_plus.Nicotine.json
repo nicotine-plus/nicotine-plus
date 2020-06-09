@@ -50,8 +50,8 @@
       "buildsystem" : "simple",
       "sources" : [
         {
-          "url" : "https://raw.githubusercontent.com/Nicotine-Plus/nicotine-plus/master/files/flatpak/GeoIP.dat.gz",
-          "sha256" : "025e516ec14a8a705fb479880ffce43f9fdb8869666d522c38c791069f4b0acf",
+          "url" : "https://raw.githubusercontent.com/Nicotine-Plus/nicotine-plus/master/files/GeoIP.dat.gz",
+          "sha256" : "228620e70b3ff894f5f139cb6cfec84c00d2b42fa9c286ef567b439efe31167d",
           "type" : "file"
         }
       ],
@@ -112,7 +112,7 @@
       "sources" : [
         {
           "url" : "https://github.com/Nicotine-Plus/nicotine-plus.git",
-          "commit" : "21d70622c5b0309fe06d455b5ea8eae5ffbbbac4",
+          "commit" : "2e4f3b327d9f68a643d4af1c50570695cd07c1a3",
           "type" : "git"
         }
       ],
