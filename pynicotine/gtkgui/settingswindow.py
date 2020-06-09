@@ -1523,7 +1523,7 @@ class SoundsFrame(buildFrame):
 
         buildFrame.__init__(self, "SoundsFrame")
 
-        if self.frame.gsound is None:
+        if not win32 and self.frame.gsound is None:
             self.SoundCheck.set_sensitive(False)
 
         # Combobox for audio players

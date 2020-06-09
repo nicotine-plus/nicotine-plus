@@ -42,18 +42,33 @@ Once PyInstaller is installed, clone the Nicotine+ git repository:
 `git clone https://github.com/Nicotine-Plus/nicotine-plus`  
 `cd nicotine-plus`  
 
-Install dependencies:
+Install GeoIP dependency:
+
+`pacman -S autoconf automake libtool mingw-w64-x86_64-gcc`  
+`git clone https://github.com/maxmind/geoip-api-c`  
+`cd geoip-api-c`  
+`autoreconf -i`  
+`./configure`  
+`make`  
+`pip install GeoIP`  
+`cd ..`  
+`gzip -d files/flatpak/GeoIP.dat.gz`  
+`cp -r GeoIP.dat C:/msys64/mingw64/bin/`
+
+Install other dependencies:
 
 `pacman -S mingw-w64-x86_64-miniupnpc`  
 `pip install mutagen`  
 
 Run PyInstaller:
 
-`pyinstaller nicotine.spec`
+`pyinstaller files/windows/nicotine.spec`
 
 When the frozen application finish to build you will find it under the `dist\Nicotine+` subdirectory.
 
 If you want to run the frozen application you can launch the executable `dist\Nicotine+\Nicotine+.exe`.
+
+It's a tedious process, deal with it. :)
 
 #### Building a NSIS installer from the frozen application
 
