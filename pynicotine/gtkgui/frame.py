@@ -231,14 +231,6 @@ class NicotineFrame:
         self.gsound = None
 
         try:
-            # Tray icon support
-            gi.require_version('AppIndicator3', '0.1')
-            from gi.repository import AppIndicator3  # noqa: F401
-            self.appindicator = True
-        except (ImportError, ValueError):
-            self.appindicator = False
-
-        try:
             # Spell checking support
             gi.require_version('Gspell', '1')
             from gi.repository import Gspell  # noqa: F401
@@ -590,8 +582,7 @@ class NicotineFrame:
 
         self.Notifications = Notifications(self)
 
-        if self.appindicator:
-            self.TrayApp = tray.TrayApp(self)
+        self.TrayApp = tray.TrayApp(self)
 
         self.hilites = {
             "rooms": [],
@@ -671,7 +662,7 @@ class NicotineFrame:
         self.UpdateDownloadFilters()
 
         # Create the trayicon if needed
-        if self.appindicator and use_trayicon and config["ui"]["trayicon"]:
+        if use_trayicon and config["ui"]["trayicon"]:
             self.TrayApp.Create()
 
         # Deactivate public shares related menu entries if we don't use them
@@ -757,13 +748,13 @@ class NicotineFrame:
         if not self.np.config.sections["ui"]["exitdialog"]:
             return False
 
-        if self.appindicator and self.TrayApp.IsTrayIconVisible() and self.np.config.sections["ui"]["exitdialog"] == 2:
+        if self.TrayApp.IsTrayIconVisible() and self.np.config.sections["ui"]["exitdialog"] == 2:
             if self.is_mapped:
                 self.MainWindow.unmap()
                 self.is_mapped = False
             return True
 
-        if self.appindicator and self.TrayApp.IsTrayIconVisible():
+        if self.TrayApp.IsTrayIconVisible():
             option = QuitBox(
                 self,
                 title=_('Close Nicotine+?'),
@@ -1090,7 +1081,7 @@ class NicotineFrame:
             if checkbox:
                 self.np.config.sections["ui"]["exitdialog"] = 0
 
-            if self.appindicator and self.TrayApp.trayicon:
+            if self.TrayApp.trayicon:
                 self.TrayApp.destroy_trayicon()
 
             self.MainWindow.destroy()
@@ -1596,7 +1587,7 @@ class NicotineFrame:
         self.np.config.writeConfig()
 
         # Cleaning up the trayicon
-        if self.appindicator and self.TrayApp.trayicon:
+        if self.TrayApp.trayicon:
             self.TrayApp.destroy_trayicon()
 
         # Closing up all shelves db
@@ -1640,9 +1631,8 @@ class NicotineFrame:
 
     def OnConnect(self, widget):
 
-        if self.appindicator:
-            self.TrayApp.tray_status["status"] = "trayicon_connect"
-            self.TrayApp.SetImage()
+        self.TrayApp.tray_status["status"] = "trayicon_connect"
+        self.TrayApp.SetImage()
 
         if self.np.serverconn is not None:
             return
@@ -1684,9 +1674,8 @@ class NicotineFrame:
 
         self.SetUserStatus(_("Offline"))
 
-        if self.appindicator:
-            self.TrayApp.tray_status["status"] = "trayicon_disconnect"
-            self.TrayApp.SetImage()
+        self.TrayApp.tray_status["status"] = "trayicon_disconnect"
+        self.TrayApp.SetImage()
 
         self.Searches.interval = 0
         self.chatrooms.ConnClose()
@@ -1734,9 +1723,8 @@ class NicotineFrame:
 
         self.SetUserStatus(_("Offline"))
 
-        if self.appindicator:
-            self.TrayApp.tray_status["status"] = "trayicon_disconnect"
-            self.TrayApp.SetImage()
+        self.TrayApp.tray_status["status"] = "trayicon_disconnect"
+        self.TrayApp.SetImage()
 
         self.uploads.ConnClose()
         self.downloads.ConnClose()
@@ -1754,9 +1742,8 @@ class NicotineFrame:
         if self.away == 0:
             self.SetUserStatus(_("Online"))
 
-            if self.appindicator:
-                self.TrayApp.tray_status["status"] = "trayicon_connect"
-                self.TrayApp.SetImage()
+            self.TrayApp.tray_status["status"] = "trayicon_connect"
+            self.TrayApp.SetImage()
 
             autoaway = self.np.config.sections["server"]["autoaway"]
 
@@ -1767,9 +1754,8 @@ class NicotineFrame:
         else:
             self.SetUserStatus(_("Away"))
 
-            if self.appindicator:
-                self.TrayApp.tray_status["status"] = "trayicon_away"
-                self.TrayApp.SetImage()
+            self.TrayApp.tray_status["status"] = "trayicon_away"
+            self.TrayApp.SetImage()
 
         self.SetWidgetOnlineStatus(True)
 
@@ -1846,15 +1832,13 @@ class NicotineFrame:
         if self.away == 0:
             self.SetUserStatus(_("Online"))
 
-            if self.appindicator:
-                self.TrayApp.tray_status["status"] = "trayicon_connect"
-                self.TrayApp.SetImage()
+            self.TrayApp.tray_status["status"] = "trayicon_connect"
+            self.TrayApp.SetImage()
         else:
             self.SetUserStatus(_("Away"))
 
-            if self.appindicator:
-                self.TrayApp.tray_status["status"] = "trayicon_away"
-                self.TrayApp.SetImage()
+            self.TrayApp.tray_status["status"] = "trayicon_away"
+            self.TrayApp.SetImage()
 
         self.np.queue.put(slskmessages.SetStatus(self.away and 1 or 2))
         self.privatechats.UpdateColours()
@@ -2002,8 +1986,7 @@ class NicotineFrame:
         self.DownStatus.push(self.down_context_id, _("Down: %(num)i users, %(speed).1f KB/s") % {'num': usersdown, 'speed': down})
         self.UpStatus.push(self.up_context_id, _("Up: %(num)i users, %(speed).1f KB/s") % {'num': usersup, 'speed': up})
 
-        if self.appindicator:
-            self.TrayApp.SetToolTip(_("Nicotine+ Transfers: %(speeddown).1f KB/s Down, %(speedup).1f KB/s Up") % {'speeddown': down, 'speedup': up})
+        self.TrayApp.SetToolTip(_("Nicotine+ Transfers: %(speeddown).1f KB/s Down, %(speedup).1f KB/s Up") % {'speeddown': down, 'speedup': up})
 
     def BanUser(self, user):
         if self.np.transfers is not None:
@@ -2344,12 +2327,11 @@ class NicotineFrame:
         self.UpdateDownloadFilters()
         self.np.config.writeConfiguration()
 
-        if self.appindicator:
-            if not config["ui"]["trayicon"] and self.TrayApp.IsTrayIconVisible():
-                self.TrayApp.destroy_trayicon()
-            elif config["ui"]["trayicon"] and not self.TrayApp.IsTrayIconVisible():
-                self.TrayApp.Load()
-                self.TrayApp.Draw()
+        if not config["ui"]["trayicon"] and self.TrayApp.IsTrayIconVisible():
+            self.TrayApp.destroy_trayicon()
+        elif config["ui"]["trayicon"] and not self.TrayApp.IsTrayIconVisible():
+            self.TrayApp.Load()
+            self.TrayApp.Draw()
 
         if needcompletion:
             self.chatrooms.roomsctrl.UpdateCompletions()
@@ -3431,8 +3413,7 @@ class Notifications:
                 self.frame.hilites["rooms"].append(room)
                 self.sound("room_nick", user, place=room)
 
-                if self.frame.appindicator:
-                    self.frame.TrayApp.SetImage()
+                self.frame.TrayApp.SetImage()
         elif location == "private":
             if user in self.frame.hilites[location]:
                 self.frame.hilites[location].remove(user)
@@ -3441,8 +3422,7 @@ class Notifications:
                 self.frame.hilites[location].append(user)
                 self.sound(location, user)
 
-                if self.frame.appindicator:
-                    self.frame.TrayApp.SetImage()
+                self.frame.TrayApp.SetImage()
 
         if tab and self.frame.np.config.sections["ui"]["urgencyhint"] and not self.frame.got_focus:
             self.frame.MainWindow.set_urgency_hint(True)
@@ -3472,8 +3452,7 @@ class Notifications:
                 self.frame.hilites["private"].remove(user)
             self.SetTitle(user)
 
-        if self.frame.appindicator:
-            self.frame.TrayApp.SetImage()
+        self.frame.TrayApp.SetImage()
 
     def SetTitle(self, user=None):
 
