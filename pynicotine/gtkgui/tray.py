@@ -27,10 +27,17 @@ from pynicotine.logfacility import log
 class TrayApp:
 
     def __init__(self, frame):
-        gi.require_version('AppIndicator3', '0.1')
-        from gi.repository import AppIndicator3 as appindicator
+        try:
+            # Check if AppIndicator3 is available
+            gi.require_version('AppIndicator3', '0.1')
+            from gi.repository import AppIndicator3  # noqa: F401
+            self.appindicator = AppIndicator3
+        except (ImportError, ValueError):
+            # No AppIndicator3, Fall back to GtkStatusIcon
+            from gi.repository import Gtk
+            self.appindicator = None
+            self.gtk = Gtk
 
-        self.appindicator = appindicator
         self.frame = frame
         self.trayicon = None
         self.tray_status = {
@@ -73,43 +80,65 @@ class TrayApp:
             items[1].set_sensitive(True)
         return
 
+    # GtkStatusIcon fallback
+    def OnStatusIconPopup(self, status_icon, button, activate_time):
+        if button == 3:
+            self.tray_popup_menu.popup(None, None, None, None, button, activate_time)
+
     def Create(self):
         self.Load()
         self.Draw()
 
     def Load(self):
         if self.trayicon is None:
-            trayicon = self.appindicator.Indicator.new(
-                "Nicotine+",
-                "",
-                self.appindicator.IndicatorCategory.APPLICATION_STATUS)
-            trayicon.set_menu(self.tray_popup_menu)
+            if self.appindicator is not None:
+                trayicon = self.appindicator.Indicator.new(
+                    "Nicotine+",
+                    "",
+                    self.appindicator.IndicatorCategory.APPLICATION_STATUS)
+                trayicon.set_menu(self.tray_popup_menu)
 
-            iconpath = self.frame.np.config.sections["ui"]["icontheme"]
-            for iconname in ["trayicon_away", "trayicon_connect", "trayicon_disconnect", "trayicon_msg"]:
-                if not glob.glob(os.path.join(iconpath, iconname) + ".*"):
-                    # Fall back to system-wide tray icon location
-                    iconpath = os.path.join(sys.prefix, "share/nicotine/trayicons")
+                iconpath = self.frame.np.config.sections["ui"]["icontheme"]
+                for iconname in ["trayicon_away", "trayicon_connect", "trayicon_disconnect", "trayicon_msg"]:
                     if not glob.glob(os.path.join(iconpath, iconname) + ".*"):
-                        # Nicotine+ is not installed system-wide, load tray icons from current folder
-                        iconpath = os.path.join(os.getcwd(), "img")
+                        # Fall back to system-wide tray icon location
+                        iconpath = os.path.join(sys.prefix, "share/nicotine/trayicons")
+                        if not glob.glob(os.path.join(iconpath, iconname) + ".*"):
+                            # Nicotine+ is not installed system-wide, load tray icons from current folder
+                            iconpath = os.path.join(os.getcwd(), "img")
+                            break
                         break
-                    break
 
-            trayicon.set_icon_theme_path(iconpath)
+                trayicon.set_icon_theme_path(iconpath)
+            else:
+                # GtkStatusIcon fallback
+                trayicon = self.gtk.StatusIcon()
+
             self.trayicon = trayicon
 
-        self.trayicon.set_status(self.appindicator.IndicatorStatus.ACTIVE)
+        if self.appindicator is not None:
+            self.trayicon.set_status(self.appindicator.IndicatorStatus.ACTIVE)
+        else:
+            # GtkStatusIcon fallback
+            self.trayicon.set_visible(True)
 
     def destroy_trayicon(self):
         if not self.IsTrayIconVisible():
             return
 
-        self.trayicon.set_status(self.appindicator.IndicatorStatus.PASSIVE)
+        if self.appindicator is not None:
+            self.trayicon.set_status(self.appindicator.IndicatorStatus.PASSIVE)
+        else:
+            # GtkStatusIcon fallback
+            self.trayicon.set_visible(False)
 
     def Draw(self):
         if not self.IsTrayIconVisible():
             return
+
+        if self.appindicator is None:
+            # GtkStatusIcon fallback
+            self.trayicon.connect("popup-menu", self.OnStatusIconPopup)
 
         self.SetImage(self.tray_status["status"])
         self.SetToolTip("Nicotine+")
@@ -132,7 +161,13 @@ class TrayApp:
             self.frame.privatechats.ClearNotifications()
 
     def IsTrayIconVisible(self):
-        if self.trayicon is None or self.trayicon.get_status() != self.appindicator.IndicatorStatus.ACTIVE:
+        if self.trayicon is None:
+            return False
+
+        if self.appindicator is None:
+            return self.trayicon.get_visible()
+
+        if self.appindicator is not None and self.trayicon.get_status() != self.appindicator.IndicatorStatus.ACTIVE:
             return False
 
         return True
@@ -155,11 +190,19 @@ class TrayApp:
             if icon != self.tray_status["last"]:
                 self.tray_status["last"] = icon
 
-            self.trayicon.set_icon_full(icon, "Nicotine+")
+            if self.appindicator is not None:
+                self.trayicon.set_icon_full(icon, "Nicotine+")
+            else:
+                # GtkStatusIcon fallback
+                self.trayicon.set_from_pixbuf(self.frame.images[icon])
 
         except Exception as e:
             log.addwarning(_("ERROR: cannot set trayicon image: %(error)s") % {'error': e})
 
     def SetToolTip(self, string):
         if self.trayicon is not None:
-            self.trayicon.set_title(string)
+            if self.appindicator is not None:
+                self.trayicon.set_title(string)
+            else:
+                # GtkStatusIcon fallback
+                self.trayicon.set_tooltip_text(string)
