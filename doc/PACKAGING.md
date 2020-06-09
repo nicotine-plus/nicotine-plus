@@ -10,6 +10,26 @@ To build source distribution files (.tar.bz2 & .tar.gz) from the git repository 
 
 The source distribution files will be located in the `dist` subdirectory of your git repository.
 
+#### Building a Debian package
+
+Unstable and stable PPAs are already provided for pre-compiled packages, as described in the `README.md`. However, if you wish to build your own package perform the following.
+
+Start by generating the "upstream" tarball:
+```
+$ cd nicotine_source
+$ ./debian/rules get-orig-source
+```
+
+Build the Debian source package:
+```
+$ debuild -S -sa
+```
+
+Build the binary from the source package and upstream tarball via `sbuild`:
+```
+$ sbuild ../nicotine(...).dsc
+```
+
 #### Building a RPM package
 
 You need to install the RPM building tools first:
