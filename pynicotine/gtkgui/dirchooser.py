@@ -30,13 +30,20 @@ gi.require_version('Gtk', '3.0')
 
 
 def ChooseDir(parent=None, initialdir="~", create=False, name=None, title=None):
-
-    dialog = gtk.FileChooserDialog(
-        title=title,
-        parent=parent,
-        action=gtk.FileChooserAction.SELECT_FOLDER,
-        buttons=(gtk.STOCK_CANCEL, gtk.ResponseType.REJECT, gtk.STOCK_OK, gtk.ResponseType.ACCEPT)
-    )
+    try:
+        dialog = gtk.FileChooserNative.new(
+            title,
+            parent,
+            gtk.FileChooserAction.CREATE_FOLDER,
+            _("_Open"),
+            _("_Cancel")
+        )
+    except AttributeError:
+        dialog = gtk.FileChooserDialog(
+            title,
+            parent
+        )
+        dialog.add_buttons(_("_Cancel"), gtk.ResponseType.CANCEL, _("_Open"), gtk.ResponseType.ACCEPT)
 
     if create:
         dialog.set_action(gtk.FileChooserAction.CREATE_FOLDER)
@@ -67,14 +74,22 @@ def ChooseDir(parent=None, initialdir="~", create=False, name=None, title=None):
 
 
 def ChooseFile(parent=None, initialdir="~", initialfile="", multiple=False):
+    try:
+        dialog = gtk.FileChooserNative.new(
+            None,
+            parent,
+            gtk.FileChooserAction.OPEN,
+            _("_Open"),
+            _("_Cancel")
+        )
+    except AttributeError:
+        dialog = gtk.FileChooserDialog(
+            None,
+            parent,
+            gtk.FileChooserAction.OPEN
+        )
+        dialog.add_buttons(_("_Cancel"), gtk.ResponseType.CANCEL, _("_Open"), gtk.ResponseType.ACCEPT)
 
-    dialog = gtk.FileChooserDialog(
-        parent=parent,
-        action=gtk.FileChooserAction.OPEN,
-        buttons=(gtk.STOCK_CANCEL, gtk.ResponseType.REJECT, gtk.STOCK_OK, gtk.ResponseType.ACCEPT)
-    )
-
-    dialog.set_action(gtk.FileChooserAction.OPEN)
     dialog.set_select_multiple(multiple)
     dir = os.path.expanduser(initialdir)
 
@@ -96,19 +111,24 @@ def ChooseFile(parent=None, initialdir="~", initialfile="", multiple=False):
 
 
 def SaveFile(parent=None, initialdir="~", initialfile="", title=None):
+    try:
+        dialog = gtk.FileChooserNative.new(
+            title,
+            parent,
+            gtk.FileChooserAction.SAVE,
+            _("_Save"),
+            _("_Cancel")
+        )
+    except AttributeError:
+        dialog = gtk.FileChooserDialog(
+            title,
+            parent,
+            gtk.FileChooserAction.SAVE
+        )
+        dialog.add_buttons(_("_Cancel"), gtk.ResponseType.CANCEL, _("_Save"), gtk.ResponseType.ACCEPT)
 
-    dialog = gtk.FileChooserDialog(
-        parent=parent,
-        action=gtk.FileChooserAction.SAVE,
-        buttons=(gtk.STOCK_CANCEL, gtk.ResponseType.REJECT, gtk.STOCK_OK, gtk.ResponseType.ACCEPT)
-    )
-
-    dialog.set_action(gtk.FileChooserAction.SAVE)
     dialog.set_select_multiple(False)
     dialog.set_show_hidden(True)
-
-    if title:
-        dialog.set_title(title)
 
     dir = os.path.expanduser(initialdir)
 
