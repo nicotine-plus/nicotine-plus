@@ -1,18 +1,21 @@
 .\"
-.TH "NICOTINE+" "1" "May 2020" "Version 1.4.3" ""
+.TH "NICOTINE+" "1" "June 2020" "" ""
 .SH "NAME"
-.B Nicotine+ - A graphical client for the SoulSeek peer-to-peer system.
+.B Nicotine+ - A graphical client for the Soulseek peer-to-peer file sharing network.
 
 .SH "SYNOPSIS"
 .B nicotine
 [options]
 .SH "DESCRIPTION"
 .BI Nicotine+
-is a GTK\-based client for the SoulSeek peer\-to\-peer network written in Python.
+is a GTK\-based client for the Soulseek peer\-to\-peer file sharing network.
 .SH "OPTIONS"
 .TP
 .BI \-c " <file>" "\fR,\fP \-\^\-config=" <file>
 Use <file> as configuration file. If <file> does not exists a new empty configuration file will be created.
+.TP
+.BI \-p " <dir>" "\fR,\fP \-\^\-plugins=" <dir>
+Use <dir> as directory for plugins. If <dir> does not exists a new empty directory will be created.
 .TP
 .B \-t, \-\^\-enable\-trayicon
 Enable the tray icon.
@@ -41,7 +44,7 @@ If required dependencies are not present it returns 1.
 .br
 If the given list of arguments cannot be parsed it returns 2.
 .SH "FILES"
-All personal files are stored in the folder ~/.nicotine/
+Config files are stored in the folder ~/.config/nicotine/, other personal files in ~/.local/share/nicotine/
 .SH "AUTHOR"
 This manual page was initially written by Adam Cecile <gandalf@le\-vert.net> for the Nicotine+ project.
 .br

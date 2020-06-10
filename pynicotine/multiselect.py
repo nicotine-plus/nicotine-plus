@@ -20,15 +20,15 @@
 # Original copyright notice below
 # Copyright (C) 2007 Ingmar K. Steen (iksteen@gmail.com)
 #
-# define how large our socket sets may grow (used as a default for the
-# multiselect() call).
-MAX_SELECT_SOCKETS = 64
-
 # import the necessary modules
 import select
 import threading
 
 import _thread
+
+# define how large our socket sets may grow (used as a default for the
+# multiselect() call).
+MAX_SELECT_SOCKETS = 64
 
 
 # multiselect call mimics select.select(r,w,x,timout=None) but starts threads

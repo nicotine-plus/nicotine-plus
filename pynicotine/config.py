@@ -330,11 +330,11 @@ class Config:
                 "speechprivate": "%(user)s told you.. %(message)s",
                 "speechrooms": "In %(room)s, %(user)s said %(message)s",
                 "speechcommand": "flite -t $",
-                "width": 800,
+                "width": 1000,
                 "height": 600,
                 "xposition": -1,
                 "yposition": -1,
-                "maximized": True,
+                "maximized": "True",
                 "urgencyhint": True
             },
 
