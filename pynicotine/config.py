@@ -377,9 +377,6 @@ class Config:
         # Windows specific stuff
         if sys.platform.startswith('win'):
             self.sections['ui']['filemanager'] = 'explorer $'
-            self.sections['transfers']['incompletedir'] = os.path.join(os.environ['APPDATA'], 'nicotine', 'incompletefiles')
-            self.sections['transfers']['downloaddir'] = os.path.join(os.environ['APPDATA'], 'nicotine', 'uploads')
-            self.sections['transfers']['uploaddir'] = os.path.join(os.environ['APPDATA'], 'nicotine', 'uploads')
 
         self.defaults = {}
         for key, value in list(self.sections.items()):
