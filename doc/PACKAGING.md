@@ -34,9 +34,9 @@ $ sbuild ../nicotine(...).dsc
 
 You need to install the RPM building tools first:
 
-* On Redhat/Fedora based distributions: `sudo dnf install rpm-build`
+* On Redhat/Fedora based distributions: `sudo dnf install rpm-build python3-gobject-devel`
 
-* On Debian/Ubuntu based distributions: `sudo apt-get install rpm`
+* On Debian/Ubuntu based distributions: `sudo apt install rpm`
 
 Then you can create an RPM with:
 
@@ -70,9 +70,10 @@ Install GeoIP dependency:
 `autoreconf -i`  
 `./configure`  
 `make`  
+`make install`  
 `pip install GeoIP`  
 `cd ..`  
-`gzip -d files/flatpak/GeoIP.dat.gz`  
+`gzip -d files/GeoIP.dat.gz`  
 `cp -r GeoIP.dat C:/msys64/mingw64/bin/`
 
 Install other dependencies:

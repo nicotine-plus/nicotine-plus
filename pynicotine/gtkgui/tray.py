@@ -20,6 +20,8 @@ import glob
 import os
 import sys
 
+from gettext import gettext as _
+
 from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.logfacility import log
 

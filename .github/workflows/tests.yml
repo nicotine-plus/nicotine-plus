@@ -23,7 +23,7 @@ jobs:
       - name: Lint with flake8
         run: |
           pip install flake8
-          flake8 nicotine pynicotine plugins --ignore=E402,E501,W503,W504
+          flake8 nicotine pynicotine plugins --ignore=E501,W503,W504
       - name: Unit tests
         env:
           PYTHONPATH: .
