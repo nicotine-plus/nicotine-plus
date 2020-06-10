@@ -32,6 +32,7 @@ Bugs closed in GitHub
  * Nicotine+ 1.4.1, windows 8.1 (64-bit) errors when using UPNP (#63)
  * Nicotine+ 1.4.1, windows 8.1 (64-bit) Spurious error messages (#64)
  * Nicotine + 1.4.1, windows 8.1 (64-bit) buttons not working (#65)
+ * Downloads directory is not shared (#66)
  * Can't share directories (#68)
  * Question: Is Development Dead? (#73)
  * select ValueError: filedescriptor out of range in select() (#77)
