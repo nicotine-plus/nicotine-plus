@@ -775,10 +775,10 @@ class Ticker:
 
         TickerEventBox.add(self.entry)
 
-        self.messages = {}
-        self.sortedmessages = []
+        self.messages = []
         self.ix = 0
         self.source = None
+        self.shouldsort = False
 
         self.enable()
 
@@ -791,13 +791,15 @@ class Ticker:
             self.entry.set_text("")
             return True
 
-        if not self.sortedmessages:
-            self.updatesorted()
+        if self.shouldsort:
+            # A new ticker was added, sort the tickers by message length
+            self.messages.sort(key=lambda x: len(x[1]))
+            self.shouldsort = False
 
-        if self.ix >= len(self.sortedmessages):
+        if self.ix >= len(self.messages):
             self.ix = 0
 
-        (user, message) = self.sortedmessages[self.ix]
+        (user, message) = self.messages[self.ix]
         self.entry.set_text("[%s]: %s" % (user, message))
         self.ix += 1
 
@@ -806,24 +808,17 @@ class Ticker:
     def add_ticker(self, user, message):
 
         message = message.replace("\n", " ")
-        self.messages[user] = message
+        self.messages.append((user, message))
 
-        self.updatesorted()
+        # Indicates that the ticker list should be sorted on the next scroll
+        self.shouldsort = True
 
-    def remove_ticker(self, user):
+    def remove_ticker(self, user, message):
 
         try:
-            del self.messages[user]
-        except KeyError:
-            return
-
-        self.updatesorted()
-
-    def updatesorted(self):
-
-        lst = [(user, msg) for user, msg in self.messages.items()]
-        lst.sort(key=lambda x: len(x[1]))
-        self.sortedmessages = lst
+            self.messages.remove((user, message))
+        except ValueError:
+            pass
 
     def get_tickers(self):
         return [x for x in self.messages.items()]
@@ -1353,7 +1348,7 @@ class ChatRoom:
 
     def TickerSet(self, msg):
 
-        self.Ticker.set_ticker({})
+        self.Ticker.set_ticker([])
         for user in list(msg.msgs.keys()):
             if user in self.frame.np.config.sections["server"]["ignorelist"] or self.frame.UserIpIsIgnored(user):
                 # User ignored, ignore Ticker messages
@@ -1371,7 +1366,7 @@ class ChatRoom:
         self.Ticker.add_ticker(msg.user, msg.msg)
 
     def TickerRemove(self, msg):
-        self.Ticker.remove_ticker(msg.user)
+        self.Ticker.remove_ticker(msg.user, msg.msg)
 
     def SayChatRoom(self, msg, text, public=False):
         text = re.sub("\\s\\s+", "  ", text)
@@ -2040,7 +2035,7 @@ class ChatRoom:
         for tag in list(self.tag_users.values()):
             self.changecolour(tag, "useroffline")
 
-        self.Ticker.set_ticker({})
+        self.Ticker.set_ticker([])
 
     def Rejoined(self, users):
 
