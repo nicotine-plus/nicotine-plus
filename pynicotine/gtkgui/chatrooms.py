@@ -821,7 +821,7 @@ class Ticker:
             pass
 
     def get_tickers(self):
-        return [x for x in self.messages.items()]
+        return self.messages
 
     def set_ticker(self, msgs):
         self.messages = msgs
