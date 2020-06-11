@@ -601,12 +601,12 @@ class Config:
         _errors = []
         for shelvefile in shelves:
             try:
-                _opened_shelves.append(shelve.open(shelvefile))
+                _opened_shelves.append(shelve.open(shelvefile, protocol=pickle.HIGHEST_PROTOCOL))
             except Exception:
                 _errors.append(shelvefile)
                 try:
                     os.unlink(shelvefile)
-                    _opened_shelves.append(shelve.open(shelvefile, flag='n'))
+                    _opened_shelves.append(shelve.open(shelvefile, flag='n', protocol=pickle.HIGHEST_PROTOCOL))
                 except Exception as ex:
                     print(("Failed to unlink %s: %s" % (shelvefile, ex)))
 
@@ -672,7 +672,7 @@ class Config:
                 os.unlink(os.path.join(self.data_dir, 'files.db'))
             except Exception:
                 pass
-            sharedfiles = shelve.open(os.path.join(self.data_dir, "files.db"), flag='n')
+            sharedfiles = shelve.open(os.path.join(self.data_dir, "files.db"), flag='n', protocol=pickle.HIGHEST_PROTOCOL)
 
             if bsharedfiles:
                 bsharedfiles.close()
@@ -680,7 +680,7 @@ class Config:
                 os.unlink(os.path.join(self.data_dir, 'buddyfiles.db'))
             except Exception:
                 pass
-            bsharedfiles = shelve.open(os.path.join(self.data_dir, "buddyfiles.db"), flag='n')
+            bsharedfiles = shelve.open(os.path.join(self.data_dir, "buddyfiles.db"), flag='n', protocol=pickle.HIGHEST_PROTOCOL)
 
             if sharedfilesstreams:
                 sharedfilesstreams.close()
@@ -688,7 +688,7 @@ class Config:
                 os.unlink(os.path.join(self.data_dir, 'streams.db'))
             except Exception:
                 pass
-            sharedfilesstreams = shelve.open(os.path.join(self.data_dir, "streams.db"), flag='n')
+            sharedfilesstreams = shelve.open(os.path.join(self.data_dir, "streams.db"), flag='n', protocol=pickle.HIGHEST_PROTOCOL)
 
             if bsharedfilesstreams:
                 bsharedfilesstreams.close()
@@ -696,7 +696,7 @@ class Config:
                 os.unlink(os.path.join(self.data_dir, 'buddystreams.db'))
             except Exception:
                 pass
-            bsharedfilesstreams = shelve.open(os.path.join(self.data_dir, "buddystreams.db"), flag='n')
+            bsharedfilesstreams = shelve.open(os.path.join(self.data_dir, "buddystreams.db"), flag='n', protocol=pickle.HIGHEST_PROTOCOL)
 
             if wordindex:
                 wordindex.close()
@@ -704,7 +704,7 @@ class Config:
                 os.unlink(os.path.join(self.data_dir, 'wordindex.db'))
             except Exception:
                 pass
-            wordindex = shelve.open(os.path.join(self.data_dir, "wordindex.db"), flag='n')
+            wordindex = shelve.open(os.path.join(self.data_dir, "wordindex.db"), flag='n', protocol=pickle.HIGHEST_PROTOCOL)
 
             if bwordindex:
                 bwordindex.close()
@@ -712,7 +712,7 @@ class Config:
                 os.unlink(os.path.join(self.data_dir, 'buddywordindex.db'))
             except Exception:
                 pass
-            bwordindex = shelve.open(os.path.join(self.data_dir, "buddywordindex.db"), flag='n')
+            bwordindex = shelve.open(os.path.join(self.data_dir, "buddywordindex.db"), flag='n', protocol=pickle.HIGHEST_PROTOCOL)
 
             if fileindex:
                 fileindex.close()
@@ -720,7 +720,7 @@ class Config:
                 os.unlink(os.path.join(self.data_dir, 'fileindex.db'))
             except Exception:
                 pass
-            fileindex = shelve.open(os.path.join(self.data_dir, "fileindex.db"), flag='n')
+            fileindex = shelve.open(os.path.join(self.data_dir, "fileindex.db"), flag='n', protocol=pickle.HIGHEST_PROTOCOL)
 
             if bfileindex:
                 bfileindex.close()
@@ -728,7 +728,7 @@ class Config:
                 os.unlink(os.path.join(self.data_dir, 'buddyfileindex.db'))
             except Exception:
                 pass
-            bfileindex = shelve.open(os.path.join(self.data_dir, "buddyfileindex.db"), flag='n')
+            bfileindex = shelve.open(os.path.join(self.data_dir, "buddyfileindex.db"), flag='n', protocol=pickle.HIGHEST_PROTOCOL)
 
             if sharedmtimes:
                 sharedmtimes.close()
@@ -736,7 +736,7 @@ class Config:
                 os.unlink(os.path.join(self.data_dir, 'mtimes.db'))
             except Exception:
                 pass
-            sharedmtimes = shelve.open(os.path.join(self.data_dir, "mtimes.db"), flag='n')
+            sharedmtimes = shelve.open(os.path.join(self.data_dir, "mtimes.db"), flag='n', protocol=pickle.HIGHEST_PROTOCOL)
 
             if bsharedmtimes:
                 bsharedmtimes.close()
@@ -744,7 +744,7 @@ class Config:
                 os.unlink(os.path.join(self.data_dir, 'buddymtimes.db'))
             except Exception:
                 pass
-            bsharedmtimes = shelve.open(os.path.join(self.data_dir, "buddymtimes.db"), flag='n')
+            bsharedmtimes = shelve.open(os.path.join(self.data_dir, "buddymtimes.db"), flag='n', protocol=pickle.HIGHEST_PROTOCOL)
         except Exception as error:
             log.addwarning(_("Error while writing database files: %s") % error)
             return None
@@ -765,7 +765,7 @@ class Config:
             log.addwarning(_("Something went wrong while opening your transfer list: %(error)s") % {'error': str(inst)})
         else:
             try:
-                pickle.dump(self.sections['transfers']['downloads'], handle)
+                pickle.dump(self.sections['transfers']['downloads'], handle, protocol=pickle.HIGHEST_PROTOCOL)
                 handle.close()
                 try:
                     # Please let it be atomic...
@@ -922,7 +922,7 @@ class Config:
         for (source, destination, filename) in storable_objects:
 
             self.sections["transfers"][destination].close()
-            self.sections["transfers"][destination] = shelve.open(os.path.join(self.data_dir, filename), flag='n')
+            self.sections["transfers"][destination] = shelve.open(os.path.join(self.data_dir, filename), flag='n', protocol=pickle.HIGHEST_PROTOCOL)
 
             for (key, value) in source.items():
                 self.sections["transfers"][destination][key] = value
@@ -956,7 +956,7 @@ class Config:
     def writeAliases(self):
         self.config_lock.acquire()
         f = open(self.filename + ".alias", "wb")
-        pickle.dump(self.aliases, f, 1)
+        pickle.dump(self.aliases, f, protocol=pickle.HIGHEST_PROTOCOL)
         f.close()
         self.config_lock.release()
 

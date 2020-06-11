@@ -2566,11 +2566,11 @@ class NicotineFrame:
             re.compile(outfilter)
             self.np.config.sections["transfers"]["downloadregexp"] = outfilter
             # Send error messages for each failed filter to log window
-            if len(list(failed.keys())) >= 1:
+            if len(failed) >= 1:
                 errors = ""
                 for filter, error in list(failed.items()):
                     errors += "Filter: %s Error: %s " % (filter, error)
-                error = _("Error: %(num)d Download filters failed! %(error)s " % {'num': len(list(failed.keys())), 'error': errors})
+                error = _("Error: %(num)d Download filters failed! %(error)s " % {'num': len(failed), 'error': errors})
                 self.logMessage(error)
         except Exception as e:
             # Strange that individual filters _and_ the composite filter both fail

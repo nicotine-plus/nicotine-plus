@@ -1751,7 +1751,7 @@ class ChatRoom:
 
     def CountUsers(self):
 
-        numusers = len(list(self.users.keys()))
+        numusers = len(self.users)
         if numusers > 1:
             self.LabelPeople.show()
             self.LabelPeople.set_text(_("%i people in room") % numusers)

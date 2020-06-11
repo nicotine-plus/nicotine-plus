@@ -228,7 +228,7 @@ class MetaDialog(gtk.Dialog):
 
         self.Selected = self.MakeLabel(
             self.buttonbox,
-            _("<b>%s</b> File(s) Selected") % len(list(self.data.keys())),
+            _("<b>%s</b> File(s) Selected") % len(self.data),
             expand=False,
             xalign=1
         )
@@ -280,7 +280,7 @@ class MetaDialog(gtk.Dialog):
 
     def OnPrevious(self, widget):
 
-        if len(list(self.data.keys())) > 1:
+        if len(self.data) > 1:
 
             _list = list(self.data.keys())
 
@@ -305,7 +305,7 @@ class MetaDialog(gtk.Dialog):
 
     def OnNext(self, widget):
 
-        if len(list(self.data.keys())) > 1:
+        if len(self.data) > 1:
 
             _list = list(self.data.keys())
 
@@ -362,7 +362,7 @@ class MetaDialog(gtk.Dialog):
         data = self.data[self.current]
         More = False
 
-        if len(list(self.data.keys())) > 1:
+        if len(self.data) > 1:
             More = True
 
         self.Next.set_sensitive(More)
