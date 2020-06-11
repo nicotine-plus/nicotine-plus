@@ -443,7 +443,7 @@ class SlskProtoThread(threading.Thread):
         self._dlimits = {}
         # GeoIP Config
         self._geoip = None
-        # GeoIP Module
+        # GeoIP Database
         self.geoip = self._eventprocessor.geoip
         listenport = None
         self.lastsocketwarning = 0
@@ -1149,10 +1149,10 @@ class SlskProtoThread(threading.Thread):
                     else:
                         checkuser = 1
                         if msgObj.__class__ is FileSearchResult and msgObj.geoip and self.geoip and self._geoip:
-                            cc = self.geoip.country_code_by_addr(conns[msgObj.conn].addr[0])
-                            if not cc and self._geoip[0]:
+                            cc = self.geoip.get_all(conns[msgObj.conn].addr[0]).country_short
+                            if cc == "-" and self._geoip[0]:
                                 checkuser = 0
-                            elif cc and self._geoip[1][0].find(cc) >= 0:
+                            elif cc != "-" and self._geoip[1][0].find(cc) >= 0:
                                 checkuser = 0
                         if checkuser:
                             msg = msgObj.makeNetworkMessage()

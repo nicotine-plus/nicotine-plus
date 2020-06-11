@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nicotine+ 1.2.7\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-06-03 02:11+0300\n"
+"POT-Creation-Date: 2020-06-11 07:35+0300\n"
 "PO-Revision-Date: 2007-03-11 14:35+0200\n"
 "Last-Translator: K. Viittanen <mr_auer@welho.net>\n"
 "Language-Team: K.Viittanen <mr_auer@welho.net>\n"
@@ -41,14 +41,6 @@ msgid ""
 "(there could be a version mismatch between\n"
 "what version of python was used to build the Nicotine\n"
 "binary package and what you try to run Nicotine+ with)."
-msgstr ""
-
-msgid ""
-"Nicotine+ supports a country code blocker.\n"
-"This requires a (GPL'ed) library called GeoIP. You can find it here:\n"
-"C library:       https://github.com/maxmind/geoip-api-c\n"
-"Python bindings: https://github.com/maxmind/geoip-api-python\n"
-"(the python bindings require the C library)"
 msgstr ""
 
 #, python-format
@@ -210,8 +202,11 @@ msgstr "_Katkaise yhteys"
 msgid "_Away/Return"
 msgstr "_Poissa/Palaa"
 
-msgid "Check _privileges"
-msgstr "Tarkista_etuoikeudet"
+msgid "Check _Privileges"
+msgstr ""
+
+msgid "Get _Privileges"
+msgstr ""
 
 msgid "_Quit"
 msgstr ""
@@ -260,6 +255,9 @@ msgid "Buddylist in Chatrooms"
 msgstr "Kaverilista keskusteluhuoneissa"
 
 msgid "Buddylist always visible"
+msgstr ""
+
+msgid "Buddylist hidden"
 msgstr ""
 
 msgid "_Shares"
@@ -951,16 +949,9 @@ msgid "Country codes to block (comma separated):"
 msgstr "Maakoodit jotka estetään (erotetaan pilkulla)"
 
 msgid ""
-"Geo Block (if available) controls from which countries users are allowed "
-"access to your shares."
+"Geo Block controls from which countries users are allowed access to your "
+"shares."
 msgstr ""
-
-msgid ""
-"If you wish to use Geo Block, install GeoIP and it's Python Bindings from "
-"your distro's packaging tool or from:"
-msgstr ""
-"Jos haluat käyttää maantieteellistä estoa, asenna GeoIP ja sen Python-"
-"sidokset julkaisusi pakettityökalulla tai osoitteesta:"
 
 msgid "Geographical Blocking"
 msgstr "Maantieteellinen esto"
@@ -1613,16 +1604,6 @@ msgstr ""
 msgid "Failed to load plugin '%s', could not find it."
 msgstr ""
 
-msgid "Plugin archive is not in the correct format"
-msgstr ""
-
-#, python-format
-msgid "A plugin with the name \"%s\" is already installed"
-msgstr ""
-
-msgid "Plugin archive contains an unsafe path"
-msgstr ""
-
 #, python-format
 msgid "Enabled plugin %s"
 msgstr ""
@@ -1723,13 +1704,9 @@ msgstr ""
 msgid "%i privileged users"
 msgstr "%i etuoikeutettua käyttäjää"
 
-#, python-format
-msgid "You can acquire privileges by donating at %(url)s"
-msgstr ""
-
 msgid ""
-"You have no privileges left. They are not needed for Nicotine+ to function "
-"properly."
+"You have no privileges left. They are not necessary, but allow your "
+"downloads to be queued ahead of non-privileged users."
 msgstr ""
 
 #, python-format
@@ -2259,7 +2236,10 @@ msgstr ""
 
 msgid ""
 "A graphical client for the Soulseek peer-to-peer system\n"
-"Based on code from Nicotine and PySoulSeek"
+"Based on code from Nicotine and PySoulSeek\n"
+"\n"
+"This product includes IP2Location LITE data, available from:\n"
+"https://www.ip2location.com"
 msgstr ""
 
 msgid "About search filters"
@@ -2659,6 +2639,15 @@ msgid ""
 msgstr ""
 
 msgid "You are using the latest version of Nicotine+."
+msgstr ""
+
+msgid "_Open"
+msgstr ""
+
+msgid "_Cancel"
+msgstr ""
+
+msgid "_Save"
 msgstr ""
 
 msgid "Clear finished/aborted"

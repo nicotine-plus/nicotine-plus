@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-06-03 02:11+0300\n"
+"POT-Creation-Date: 2020-06-11 07:35+0300\n"
 "PO-Revision-Date: 2007-03-06 23:12+0200\n"
 "Last-Translator: daelstorm <daelstorm@gmail.com>\n"
 "Language-Team: nicola <info@nicoladimaria.info>\n"
@@ -38,14 +38,6 @@ msgid ""
 "(there could be a version mismatch between\n"
 "what version of python was used to build the Nicotine\n"
 "binary package and what you try to run Nicotine+ with)."
-msgstr ""
-
-msgid ""
-"Nicotine+ supports a country code blocker.\n"
-"This requires a (GPL'ed) library called GeoIP. You can find it here:\n"
-"C library:       https://github.com/maxmind/geoip-api-c\n"
-"Python bindings: https://github.com/maxmind/geoip-api-python\n"
-"(the python bindings require the C library)"
 msgstr ""
 
 # pynicotine/gtkgui/chatrooms.py
@@ -242,8 +234,12 @@ msgid "_Away/Return"
 msgstr "_Assente/Ritorna"
 
 # pynicotine/gtkgui/nicotine_glade.py
-msgid "Check _privileges"
-msgstr "Controllo _privilegi"
+msgid "Check _Privileges"
+msgstr ""
+
+# pynicotine/gtkgui/nicotine_glade.py
+msgid "Get _Privileges"
+msgstr ""
 
 msgid "_Quit"
 msgstr ""
@@ -297,6 +293,9 @@ msgid "Buddylist in Chatrooms"
 msgstr "Amici in chat"
 
 msgid "Buddylist always visible"
+msgstr ""
+
+msgid "Buddylist hidden"
 msgstr ""
 
 # pynicotine/gtkgui/settings_glade.py
@@ -1158,16 +1157,9 @@ msgid "Country codes to block (comma separated):"
 msgstr "Codice paese per bloccare (separato da virgole):"
 
 msgid ""
-"Geo Block (if available) controls from which countries users are allowed "
-"access to your shares."
+"Geo Block controls from which countries users are allowed access to your "
+"shares."
 msgstr ""
-
-msgid ""
-"If you wish to use Geo Block, install GeoIP and it's Python Bindings from "
-"your distro's packaging tool or from:"
-msgstr ""
-"Se vuoi usare Geo Block, installa GeoIP e Python Bindings per la tua "
-"distribuzione"
 
 # pynicotine/gtkgui/settings_glade.py
 msgid "Geographical Blocking"
@@ -1952,16 +1944,6 @@ msgstr ""
 msgid "Failed to load plugin '%s', could not find it."
 msgstr ""
 
-msgid "Plugin archive is not in the correct format"
-msgstr ""
-
-#, python-format
-msgid "A plugin with the name \"%s\" is already installed"
-msgstr ""
-
-msgid "Plugin archive contains an unsafe path"
-msgstr ""
-
 #, python-format
 msgid "Enabled plugin %s"
 msgstr ""
@@ -2070,13 +2052,9 @@ msgstr ""
 msgid "%i privileged users"
 msgstr "%i Controllo privilegi"
 
-#, python-format
-msgid "You can acquire privileges by donating at %(url)s"
-msgstr ""
-
 msgid ""
-"You have no privileges left. They are not needed for Nicotine+ to function "
-"properly."
+"You have no privileges left. They are not necessary, but allow your "
+"downloads to be queued ahead of non-privileged users."
 msgstr ""
 
 # pynicotine/pynicotine.py
@@ -2669,7 +2647,10 @@ msgstr ""
 
 msgid ""
 "A graphical client for the Soulseek peer-to-peer system\n"
-"Based on code from Nicotine and PySoulSeek"
+"Based on code from Nicotine and PySoulSeek\n"
+"\n"
+"This product includes IP2Location LITE data, available from:\n"
+"https://www.ip2location.com"
 msgstr ""
 
 # pynicotine/gtkgui/about.py
@@ -3209,6 +3190,16 @@ msgstr ""
 
 # pynicotine/gtkgui/checklatest.py
 msgid "You are using the latest version of Nicotine+."
+msgstr ""
+
+msgid "_Open"
+msgstr ""
+
+msgid "_Cancel"
+msgstr ""
+
+# pynicotine/gtkgui/nicotine_glade.py
+msgid "_Save"
 msgstr ""
 
 # pynicotine/gtkgui/downloads.py

@@ -16,11 +16,11 @@
 
     * On Redhat/Fedora based distributions:
 
-    `sudo dnf install gsound gspell libappindicator-gtk3 libnotify python3-GeoIP python3-miniupnpc`
+    `sudo dnf install gsound gspell libappindicator-gtk3 libnotify python3-miniupnpc`
 
     * On Debian/Ubuntu based distributions:
 
-    `sudo apt install gir1.2-appindicator3-0.1 gir1.2-gsound-1.0 gir1.2-gspell-1 gir1.2-notify-0.7 python3-geoip python3-miniupnpc `
+    `sudo apt install gir1.2-appindicator3-0.1 gir1.2-gsound-1.0 gir1.2-gspell-1 gir1.2-notify-0.7 python3-miniupnpc `
 
 * Check that the Python version you are using is 3.5 or newer via `python -V`.
 

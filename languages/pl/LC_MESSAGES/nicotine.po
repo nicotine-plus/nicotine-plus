@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-06-03 02:11+0300\n"
+"POT-Creation-Date: 2020-06-11 07:35+0300\n"
 "PO-Revision-Date: 2017-02-27 19:37+0100\n"
 "Last-Translator: mariachini\n"
 "Language-Team: \n"
@@ -51,15 +51,6 @@ msgstr ""
 "(może być też rozbieżność w wersji pomiędzy\n"
 "wersją Pythona użytą to zbudowania Nicotine+\n"
 "a posiadaną przez ciebie.)"
-
-# bindings?
-msgid ""
-"Nicotine+ supports a country code blocker.\n"
-"This requires a (GPL'ed) library called GeoIP. You can find it here:\n"
-"C library:       https://github.com/maxmind/geoip-api-c\n"
-"Python bindings: https://github.com/maxmind/geoip-api-python\n"
-"(the python bindings require the C library)"
-msgstr ""
 
 #, python-format
 msgid "Nicotine+ version %s"
@@ -229,8 +220,11 @@ msgstr "_Rozłącz"
 msgid "_Away/Return"
 msgstr "_Nieobecny/Powrót"
 
-msgid "Check _privileges"
-msgstr "Sprawdź _przywileje"
+msgid "Check _Privileges"
+msgstr ""
+
+msgid "Get _Privileges"
+msgstr ""
 
 msgid "_Quit"
 msgstr "_Zamknij"
@@ -279,6 +273,9 @@ msgstr "Lista znajomych w Pokojach rozmów"
 
 msgid "Buddylist always visible"
 msgstr "Lista znajomych zawsze widoczna"
+
+msgid "Buddylist hidden"
+msgstr ""
 
 msgid "_Shares"
 msgstr "_Udostępnienia"
@@ -966,15 +963,8 @@ msgid "Country codes to block (comma separated):"
 msgstr "Kody krajów do zablokowania (oddzielone przecinkami):"
 
 msgid ""
-"Geo Block (if available) controls from which countries users are allowed "
-"access to your shares."
-msgstr ""
-"Geo blokada (jeśli dostępna) kontroluje, z których krajów użytkownicy mają "
-"dostęp do twoich udostępnień."
-
-msgid ""
-"If you wish to use Geo Block, install GeoIP and it's Python Bindings from "
-"your distro's packaging tool or from:"
+"Geo Block controls from which countries users are allowed access to your "
+"shares."
 msgstr ""
 
 msgid "Geographical Blocking"
@@ -1626,16 +1616,6 @@ msgstr ""
 msgid "Failed to load plugin '%s', could not find it."
 msgstr "Błąd ładowania wtyczki '%s', nie znaleziono jej."
 
-msgid "Plugin archive is not in the correct format"
-msgstr ""
-
-#, python-format
-msgid "A plugin with the name \"%s\" is already installed"
-msgstr ""
-
-msgid "Plugin archive contains an unsafe path"
-msgstr ""
-
 #, python-format
 msgid "Enabled plugin %s"
 msgstr "Aktywne wtyczki %s"
@@ -1734,13 +1714,9 @@ msgstr ""
 msgid "%i privileged users"
 msgstr ""
 
-#, python-format
-msgid "You can acquire privileges by donating at %(url)s"
-msgstr ""
-
 msgid ""
-"You have no privileges left. They are not needed for Nicotine+ to function "
-"properly."
+"You have no privileges left. They are not necessary, but allow your "
+"downloads to be queued ahead of non-privileged users."
 msgstr ""
 
 #, python-format
@@ -2249,7 +2225,10 @@ msgstr "O Nicotine++"
 
 msgid ""
 "A graphical client for the Soulseek peer-to-peer system\n"
-"Based on code from Nicotine and PySoulSeek"
+"Based on code from Nicotine and PySoulSeek\n"
+"\n"
+"This product includes IP2Location LITE data, available from:\n"
+"https://www.ip2location.com"
 msgstr ""
 
 msgid "About search filters"
@@ -2652,6 +2631,15 @@ msgstr ""
 
 msgid "You are using the latest version of Nicotine+."
 msgstr "Używasz ostatniej wersji Nicotine+."
+
+msgid "_Open"
+msgstr ""
+
+msgid "_Cancel"
+msgstr ""
+
+msgid "_Save"
+msgstr ""
 
 msgid "Clear finished/aborted"
 msgstr "Wyczyść skończone/wstrzymane"

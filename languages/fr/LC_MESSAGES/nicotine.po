@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nicotine\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-06-03 02:11+0300\n"
+"POT-Creation-Date: 2020-06-11 07:35+0300\n"
 "PO-Revision-Date: 2017-02-12 23:36+0100\n"
 "Last-Translator: Michael LABOUEBE <gfarmerfr@free.fr>\n"
 "Language-Team: \n"
@@ -48,14 +48,6 @@ msgstr ""
 "(le paquet binaire de Nicotine+ n'a peut-être pas été\n"
 "produit par la même version de python que celle que vous\n"
 "utilisez en ce moment)."
-
-msgid ""
-"Nicotine+ supports a country code blocker.\n"
-"This requires a (GPL'ed) library called GeoIP. You can find it here:\n"
-"C library:       https://github.com/maxmind/geoip-api-c\n"
-"Python bindings: https://github.com/maxmind/geoip-api-python\n"
-"(the python bindings require the C library)"
-msgstr ""
 
 #, python-format
 msgid "Nicotine+ version %s"
@@ -228,8 +220,11 @@ msgstr "Se _déconnecter"
 msgid "_Away/Return"
 msgstr "_Absent/De retour"
 
-msgid "Check _privileges"
-msgstr "Vérifier ses _privilèges"
+msgid "Check _Privileges"
+msgstr ""
+
+msgid "Get _Privileges"
+msgstr ""
 
 msgid "_Quit"
 msgstr "_Quitter"
@@ -278,6 +273,9 @@ msgstr "Liste des amis dans les salons de discussion"
 
 msgid "Buddylist always visible"
 msgstr "Liste des amis toujours visible"
+
+msgid "Buddylist hidden"
+msgstr ""
 
 msgid "_Shares"
 msgstr "_Partages"
@@ -996,18 +994,9 @@ msgid "Country codes to block (comma separated):"
 msgstr "Codes de pays à bloquer (séparés par des virgules):"
 
 msgid ""
-"Geo Block (if available) controls from which countries users are allowed "
-"access to your shares."
+"Geo Block controls from which countries users are allowed access to your "
+"shares."
 msgstr ""
-"Le bloqueur géographique (si disponible) permet de contrôler les pays des "
-"utilisateurs qui auront accès à vos partages."
-
-msgid ""
-"If you wish to use Geo Block, install GeoIP and it's Python Bindings from "
-"your distro's packaging tool or from:"
-msgstr ""
-"Si vous souhaitez utiliser le bloqueur géographique, vous devez installer le "
-"module python GeoIP en utilisant votre gestionnaire de paquets ou depuis:"
 
 msgid "Geographical Blocking"
 msgstr "Bloqueur géographique"
@@ -1700,16 +1689,6 @@ msgstr ""
 msgid "Failed to load plugin '%s', could not find it."
 msgstr "Impossible de charger l'extension '%s', impossible de la localiser."
 
-msgid "Plugin archive is not in the correct format"
-msgstr "L'archive de l'extension n'est pas au bon format"
-
-#, python-format
-msgid "A plugin with the name \"%s\" is already installed"
-msgstr "L'extension \"%s\" est déjà installée"
-
-msgid "Plugin archive contains an unsafe path"
-msgstr "L'archive de l'extension contient un répertoire dangereux"
-
 #, python-format
 msgid "Enabled plugin %s"
 msgstr "Extensions activées %s"
@@ -1825,16 +1804,10 @@ msgstr "(Attention: %(realuser)s tente d'usurper l'identité de %(fakeuser)s) "
 msgid "%i privileged users"
 msgstr "%i utilisateurs privilégiés"
 
-#, python-format
-msgid "You can acquire privileges by donating at %(url)s"
-msgstr "Vous pouvez obtenir des privilèges par un don à %(url)s"
-
 msgid ""
-"You have no privileges left. They are not needed for Nicotine+ to function "
-"properly."
+"You have no privileges left. They are not necessary, but allow your "
+"downloads to be queued ahead of non-privileged users."
 msgstr ""
-"Vous n'avez plus de privilèges. Ils ne sont pas nécessaires à l'utilisation "
-"correcte de Nicotine+."
 
 #, python-format
 msgid ""
@@ -2411,7 +2384,10 @@ msgstr "À propos de Nicotine+"
 
 msgid ""
 "A graphical client for the Soulseek peer-to-peer system\n"
-"Based on code from Nicotine and PySoulSeek"
+"Based on code from Nicotine and PySoulSeek\n"
+"\n"
+"This product includes IP2Location LITE data, available from:\n"
+"https://www.ip2location.com"
 msgstr ""
 
 msgid "About search filters"
@@ -2863,6 +2839,15 @@ msgstr ""
 
 msgid "You are using the latest version of Nicotine+."
 msgstr "Vous utilisez la dernière version de Nicotine+."
+
+msgid "_Open"
+msgstr ""
+
+msgid "_Cancel"
+msgstr ""
+
+msgid "_Save"
+msgstr ""
 
 msgid "Clear finished/aborted"
 msgstr "Enlever les fichiers terminés/annulés"

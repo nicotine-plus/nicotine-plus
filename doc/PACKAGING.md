@@ -62,21 +62,7 @@ Once PyInstaller is installed, clone the Nicotine+ git repository:
 `git clone https://github.com/Nicotine-Plus/nicotine-plus`  
 `cd nicotine-plus`  
 
-Install GeoIP dependency:
-
-`pacman -S autoconf automake libtool mingw-w64-x86_64-gcc`  
-`git clone https://github.com/maxmind/geoip-api-c`  
-`cd geoip-api-c`  
-`autoreconf -i`  
-`./configure`  
-`make`  
-`make install`  
-`pip install GeoIP`  
-`cd ..`  
-`gzip -d files/GeoIP.dat.gz`  
-`cp -r GeoIP.dat C:/msys64/mingw64/bin/`
-
-Install other dependencies:
+Install dependencies:
 
 `pacman -S mingw-w64-x86_64-miniupnpc`  
 `pip install mutagen`  

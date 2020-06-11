@@ -82,59 +82,13 @@
                 <property name="xalign">0</property>
                 <property name="yalign">0</property>
                 <property name="xpad">8</property>
-                <property name="label" translatable="yes">Geo Block (if available) controls from which countries users are allowed access to your shares.</property>
+                <property name="label" translatable="yes">Geo Block controls from which countries users are allowed access to your shares.</property>
                 <property name="wrap">True</property>
               </object>
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
                 <property name="position">4</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel" id="label48">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="xalign">0</property>
-                <property name="yalign">0</property>
-                <property name="xpad">8</property>
-                <property name="label" translatable="yes">If you wish to use Geo Block, install GeoIP and it's Python Bindings from your distro's packaging tool or from:</property>
-                <property name="wrap">True</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="position">5</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel" id="label49">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="xalign">0</property>
-                <property name="yalign">0</property>
-                <property name="xpad">8</property>
-                <property name="label" translatable="no">https://github.com/maxmind/geoip-api-c</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="position">6</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel" id="label50">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="xalign">0</property>
-                <property name="yalign">0</property>
-                <property name="xpad">8</property>
-                <property name="label" translatable="no">https://github.com/maxmind/geoip-api-python</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="position">7</property>
               </packing>
             </child>
           </object>
