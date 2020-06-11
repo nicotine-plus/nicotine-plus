@@ -138,26 +138,23 @@ class TrayApp:
         if not self.IsTrayIconVisible():
             return
 
-        if self.appindicator is None:
+        if self.appindicator is not None:
+            # Action to hide/unhide main window when middle clicking the tray icon
+            hide_unhide_item = self.tray_popup_menu.get_children()[0]
+            self.trayicon.set_secondary_activate_target(hide_unhide_item)
+        else:
             # GtkStatusIcon fallback
+            self.trayicon.connect("activate", self.HideUnhideWindow)
             self.trayicon.connect("popup-menu", self.OnStatusIconPopup)
 
         self.SetImage(self.tray_status["status"])
         self.SetToolTip("Nicotine+")
 
     def HideUnhideWindow(self, widget):
-        if self.frame.is_mapped:
-            self.frame.MainWindow.unmap()
-            self.frame.is_mapped = False
+        if self.frame.MainWindow.get_property("visible"):
+            self.frame.MainWindow.hide()
         else:
-            self.frame.MainWindow.map()
-            # weird, but this allows us to easily a minimized nicotine from one
-            # desktop to another by clicking on the tray icon
-            if self.frame.minimized:
-                self.frame.MainWindow.present()
-
-            self.frame.MainWindow.grab_focus()
-            self.frame.is_mapped = True
+            self.frame.MainWindow.show()
 
             self.frame.chatrooms.roomsctrl.ClearNotifications()
             self.frame.privatechats.ClearNotifications()
