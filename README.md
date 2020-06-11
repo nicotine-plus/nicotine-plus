@@ -104,3 +104,7 @@ $ autopkgtest --shell-fail --apt-upgrade ../nicotine_(...).dsc -- \
 * [python3-geoip](https://github.com/maxmind/geoip-api-python) >= 1.3.2 for country lookup;
 * [python3-miniupnpc](https://miniupnp.tuxfamily.org/) >= 1.9 for opening ports on your router or `upnpc(1)` if not available;
 
+# Legal and Privacy
+
+- By using Nicotine+, you agree to abide by the Soulseek [rules](http://slsknet.org/news/node/681) and [terms of service](http://slsknet.org/news/node/682), as long as you are using the official Soulseek server.
+- While Nicotine+ does not collect any user data, the official Soulseek server or a user-configured third-party server may potentially do so.
