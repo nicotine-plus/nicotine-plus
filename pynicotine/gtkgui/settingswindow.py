@@ -1134,17 +1134,6 @@ class GeoBlockFrame(buildFrame):
             }
         }
 
-        try:
-            import GeoIP  # noqa: F401
-        except ImportError:
-            try:
-                import _GeoIP  # noqa: F401
-            except ImportError:
-                self.GeoBlock.set_sensitive(False)
-                self.GeoPanic.set_sensitive(False)
-                self.GeoBlockCC.set_sensitive(False)
-                self.CountryCodesLabel.set_sensitive(False)
-
     def SetSettings(self, config):
         transfers = config["transfers"]
         self.p.SetWidgetsData(config, self.options)

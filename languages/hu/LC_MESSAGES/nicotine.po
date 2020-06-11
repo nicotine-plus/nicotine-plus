@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nicotine\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-06-03 02:11+0300\n"
+"POT-Creation-Date: 2020-06-11 07:35+0300\n"
 "PO-Revision-Date: 2020-04-11 23:30+0200\n"
 "Last-Translator: Baloo <djbaloo@mailbox.hu>\n"
 "Language-Team: Hungarian\n"
@@ -53,14 +53,6 @@ msgstr ""
 "(Lehet, hogy a verziók nem egyeznek egymással: \n"
 "más python verzióval lett készítve a Nicotine+ csomag,\n"
 "mint amivel most futtatni próbálja)."
-
-msgid ""
-"Nicotine+ supports a country code blocker.\n"
-"This requires a (GPL'ed) library called GeoIP. You can find it here:\n"
-"C library:       https://github.com/maxmind/geoip-api-c\n"
-"Python bindings: https://github.com/maxmind/geoip-api-python\n"
-"(the python bindings require the C library)"
-msgstr ""
 
 #, python-format
 msgid "Nicotine+ version %s"
@@ -246,8 +238,11 @@ msgstr "_Megszakítás"
 msgid "_Away/Return"
 msgstr "_Távol/Visszajött"
 
-msgid "Check _privileges"
-msgstr "_Privilégium (elsőbbség) lekérdezése"
+msgid "Check _Privileges"
+msgstr ""
+
+msgid "Get _Privileges"
+msgstr ""
 
 msgid "_Quit"
 msgstr "_Kilépés"
@@ -296,6 +291,9 @@ msgstr "Barátlista a chatszobákban"
 
 msgid "Buddylist always visible"
 msgstr "Barátlista mindig látható"
+
+msgid "Buddylist hidden"
+msgstr ""
 
 msgid "_Shares"
 msgstr "_Megosztások"
@@ -1008,18 +1006,9 @@ msgid "Country codes to block (comma separated):"
 msgstr "Országkódok tiltása (vesszővel elválasztva):"
 
 msgid ""
-"Geo Block (if available) controls from which countries users are allowed "
-"access to your shares."
+"Geo Block controls from which countries users are allowed access to your "
+"shares."
 msgstr ""
-"GeoBlock (ha elérhető) ellenőrzi, mely országok felhasználói érhetik el az "
-"Ön megosztását."
-
-msgid ""
-"If you wish to use Geo Block, install GeoIP and it's Python Bindings from "
-"your distro's packaging tool or from:"
-msgstr ""
-"Ha szeretné használni a GeoBlockot, telepítse a GeoIP-t a Python "
-"függőségeivel a rendszer csomagkezelőjével, vagy innen:"
 
 msgid "Geographical Blocking"
 msgstr "Országkódok tiltása"
@@ -1696,16 +1685,6 @@ msgstr "Úgy tűnik, '%s' nem egy mappa, nincs betöltve beépülő."
 msgid "Failed to load plugin '%s', could not find it."
 msgstr "'%s' beépülő betöltése sikertelen, mert nem található."
 
-msgid "Plugin archive is not in the correct format"
-msgstr "Beépülő archívuma nincs megfelelő formátumban"
-
-#, python-format
-msgid "A plugin with the name \"%s\" is already installed"
-msgstr "A beépülő \"%s\" névvel már telepítve van"
-
-msgid "Plugin archive contains an unsafe path"
-msgstr "Beépülő archívuma nem biztonságos útvonalat tartalmaz"
-
 #, python-format
 msgid "Enabled plugin %s"
 msgstr "Engedélyezett beépülő %s"
@@ -1816,14 +1795,10 @@ msgstr ""
 msgid "%i privileged users"
 msgstr "%i elsőbbségi user"
 
-#, python-format
-msgid "You can acquire privileges by donating at %(url)s"
-msgstr "Elsőbbséget nyerhet adakozással itt: %(url)s"
-
 msgid ""
-"You have no privileges left. They are not needed for Nicotine+ to function "
-"properly."
-msgstr "Nem maradt elsőbbsége. Ettől még a Nicotine+ helyesen fog működni."
+"You have no privileges left. They are not necessary, but allow your "
+"downloads to be queued ahead of non-privileged users."
+msgstr ""
 
 #, python-format
 msgid ""
@@ -2379,7 +2354,10 @@ msgstr "Nicotine+ névjegye"
 
 msgid ""
 "A graphical client for the Soulseek peer-to-peer system\n"
-"Based on code from Nicotine and PySoulSeek"
+"Based on code from Nicotine and PySoulSeek\n"
+"\n"
+"This product includes IP2Location LITE data, available from:\n"
+"https://www.ip2location.com"
 msgstr ""
 
 msgid "About search filters"
@@ -2825,6 +2803,15 @@ msgstr ""
 
 msgid "You are using the latest version of Nicotine+."
 msgstr "Ön a legújabb Nicotine+ verziót használja."
+
+msgid "_Open"
+msgstr ""
+
+msgid "_Cancel"
+msgstr ""
+
+msgid "_Save"
+msgstr ""
 
 msgid "Clear finished/aborted"
 msgstr "Letöltöttek/megszakított tisztítása"

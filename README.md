@@ -101,7 +101,6 @@ $ autopkgtest --shell-fail --apt-upgrade ../nicotine_(...).dsc -- \
 * [gir1.2-gsound-1.0](https://lazka.github.io/pgi-docs/GSound-1.0/index.html) for sound effects;
 * [gir1.2-gspell-1](https://lazka.github.io/pgi-docs/Gspell-1/index.html) for spell checking in chat;
 * [gir1.2-notify-0.7](https://lazka.github.io/pgi-docs/Notify-0.7/index.html) for desktop notifications;
-* [python3-geoip](https://github.com/maxmind/geoip-api-python) >= 1.3.2 for country lookup;
 * [python3-miniupnpc](https://miniupnp.tuxfamily.org/) >= 1.9 for opening ports on your router or `upnpc(1)` if not available;
 
 # Legal and Privacy

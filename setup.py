@@ -148,15 +148,15 @@ if __name__ == '__main__':
         name="nicotine",
         version=version,
         license="GPLv3",
-        description="Nicotine+, a client for the SoulSeek filesharing network.",
+        description="Nicotine+, a client for the Soulseek file sharing network.",
         author="Nicotine+ Contributors",
         url="https://nicotine-plus.org/",
         packages=[
-            'pynicotine', 'pynicotine.gtkgui', 'pynicotine.gtkgui.ui',
+            'pynicotine', 'pynicotine.geoip', 'pynicotine.gtkgui', 'pynicotine.gtkgui.ui',
             'test', 'test.unit', 'test.unit.data', 'test.integration',
         ],
-        package_dir={'pynicotine.gtkgui': 'pynicotine/gtkgui'},
         package_data={
+            'pynicotine.geoip': ["ipcountrydb.bin"],
             'pynicotine.gtkgui.ui': ["*.ui"],
             'test.unit.data': ["login/socket_localhost:22420.log"],
             'test.integration': ["nicotine.robot"]

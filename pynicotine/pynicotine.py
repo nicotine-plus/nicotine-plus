@@ -43,6 +43,7 @@ from pynicotine import slskmessages
 from pynicotine import slskproto
 from pynicotine import transfers
 from pynicotine.config import Config
+from pynicotine.geoip import IP2Location
 from pynicotine.shares import Shares
 from pynicotine.slskmessages import PopupMessage
 from pynicotine.slskmessages import newId
@@ -129,15 +130,9 @@ class NetworkEventProcessor:
         self.queue = queue.Queue(0)
         self.shares = Shares(self)
 
-        try:
-            import GeoIP
-            self.geoip = GeoIP.new(GeoIP.GEOIP_MEMORY_CACHE)
-        except ImportError:
-            try:
-                import _GeoIP
-                self.geoip = _GeoIP.new(_GeoIP.GEOIP_MEMORY_CACHE)
-            except ImportError:
-                self.geoip = None
+        script_dir = os.path.dirname(__file__)
+        file_path = os.path.join(script_dir, "geoip/ipcountrydb.bin")
+        self.geoip = IP2Location.IP2Location(file_path, "SHARED_MEMORY")
 
         self.protothread = slskproto.SlskProtoThread(self.frame.networkcallback, self.queue, self.bindip, self.port, self.config, self)
 
@@ -1158,10 +1153,9 @@ class NetworkEventProcessor:
                 return
 
             import socket
-            if self.geoip:
-                cn = self.geoip.country_code_by_addr(msg.ip)
-                if cn is not None:
-                    self.frame.HasUserFlag(msg.user, "flag_" + cn)
+            cn = self.geoip.get_all(msg.ip).country_short
+            if cn != "-":
+                self.frame.HasUserFlag(msg.user, "flag_" + cn)
 
             # From this point on all paths should call
             # self.frame.pluginhandler.UserResolveNotification precisely once
@@ -1173,12 +1167,9 @@ class NetworkEventProcessor:
 
             self.ip_requested.remove(msg.user)
 
-            if self.geoip:
-                cc = self.geoip.country_name_by_addr(msg.ip)
-            else:
-                cc = ""
+            cc = self.geoip.get_all(msg.ip).country_short
 
-            if cc:
+            if cc != "-":
                 cc = " (%s)" % cc
             else:
                 cc = ""
@@ -1284,14 +1275,14 @@ class NetworkEventProcessor:
         if self.config.sections["transfers"]["friendsonly"]:
             return 0, _("Sorry, friends only")
 
-        if not self.geoip or not self.config.sections["transfers"]["geoblock"]:
+        if not self.config.sections["transfers"]["geoblock"]:
             return 1, _("geoip")
 
-        cc = None
+        cc = "-"
         if addr is not None:
-            cc = self.geoip.country_code_by_addr(addr)
+            cc = self.geoip.get_all(addr).country_short
 
-        if not cc:
+        if cc == "-":
             if self.config.sections["transfers"]["geopanic"]:
                 return 0, _("Sorry, geographical paranoia")
             else:
@@ -1452,15 +1443,12 @@ class NetworkEventProcessor:
 
             if i.conn is msg.conn.conn and self.search is not None:
 
-                if self.geoip:
-                    if i.addr:
-                        country = self.geoip.country_code_by_addr(i.addr[0])
-                    else:
-                        country = ""
+                if i.addr:
+                    country = self.geoip.get_all(i.addr[0]).country_short
                 else:
                     country = ""
 
-                if country is None:
+                if country == "-":
                     country = ""
 
                 self.search.ShowResult(msg, i.username, country)

@@ -33,49 +33,6 @@
       ]
     },
     {
-      "name" : "geoip",
-      "sources" : [
-        {
-          "url" : "https://github.com/maxmind/geoip-api-c/releases/download/v1.6.12/GeoIP-1.6.12.tar.gz",
-          "sha256" : "1dfb748003c5e4b7fd56ba8c4cd786633d5d6f409547584f6910398389636f80",
-          "type" : "archive"
-        }
-      ],
-      "cleanup" : [
-        "/bin"
-      ]
-    },
-    {
-      "name" : "geoip-database",
-      "buildsystem" : "simple",
-      "sources" : [
-        {
-          "url" : "https://raw.githubusercontent.com/Nicotine-Plus/nicotine-plus/master/files/GeoIP.dat.gz",
-          "sha256" : "228620e70b3ff894f5f139cb6cfec84c00d2b42fa9c286ef567b439efe31167d",
-          "type" : "file"
-        }
-      ],
-      "build-commands" : [
-        "gzip -d GeoIP.dat.gz",
-        "mkdir \"${FLATPAK_DEST}\"/share/GeoIP/",
-        "mv GeoIP.dat \"${FLATPAK_DEST}\"/share/GeoIP/GeoIP.dat"
-      ]
-    },
-    {
-      "name" : "python3-geoip",
-      "buildsystem" : "simple",
-      "sources" : [
-        {
-          "url" : "https://files.pythonhosted.org/packages/f2/7b/a463b7c3df8ef4b9c92906da29ddc9e464d4045f00c475ad31cdb9a97aae/GeoIP-1.3.2.tar.gz",
-          "sha256" : "a890da6a21574050692198f14b07aa4268a01371278dfc24f71cd9bc87ebf0e6",
-          "type" : "file"
-        }
-      ],
-      "build-commands" : [
-        "pip3 install --no-index --find-links=\"file://${PWD}\" --prefix=\"${FLATPAK_DEST}\" GeoIP"
-      ]
-    },
-    {
       "name" : "python3-miniupnpc",
       "buildsystem" : "simple",
       "sources" : [

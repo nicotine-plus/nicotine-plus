@@ -52,7 +52,7 @@ When restarting Nicotine+ you should see the fruit of your labor :)
 
 ##### To update all languages .po files:
 
-* Run the `mergeall` script from the `languages` directory.
+* Run the `merge_all` script from the `languages` directory.
 
 * Then, each `nicotine.po` will need to be updated by translators.
 

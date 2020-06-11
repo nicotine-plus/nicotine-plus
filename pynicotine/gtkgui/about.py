@@ -47,7 +47,10 @@ class AboutDialog(gtk.AboutDialog):
         self.set_version(version)
         self.set_comments(
             _("""A graphical client for the Soulseek peer-to-peer system
-Based on code from Nicotine and PySoulSeek""")
+Based on code from Nicotine and PySoulSeek
+
+This product includes IP2Location LITE data, available from:
+https://www.ip2location.com""")
         )
         self.set_website("https://nicotine-plus.org")
         self.set_license_type(gtk.License.GPL_3_0_ONLY)

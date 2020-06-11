@@ -79,20 +79,6 @@ in an interpreter's module search path.
 what version of python was used to build the Nicotine
 binary package and what you try to run Nicotine+ with).""")
 
-    # Check for optional GeoIP
-    try:
-        import GeoIP  # noqa: F401
-    except ImportError:
-        try:
-            import _GeoIP  # noqa: F401
-        except ImportError:
-            msg = _("""Nicotine+ supports a country code blocker.
-This requires a (GPL'ed) library called GeoIP. You can find it here:
-C library:       https://github.com/maxmind/geoip-api-c
-Python bindings: https://github.com/maxmind/geoip-api-python
-(the python bindings require the C library)""")
-            log.addwarning(msg)
-
     return None
 
 
