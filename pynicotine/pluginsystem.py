@@ -21,10 +21,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import importlib
 import os
 import sys
 from gettext import gettext as _
+from importlib.machinery import SourceFileLoader
 from time import time
 from traceback import extract_stack
 from traceback import extract_tb
@@ -130,7 +130,7 @@ class PluginHandler(object):
             log.add(_("Failed to load plugin '%s', could not find it.") % pluginname)
             return False
         sys.path.insert(0, path)
-        plugin = importlib.load_source(pluginname, os.path.join(path, '__init__.py'))
+        plugin = SourceFileLoader(pluginname, os.path.join(path, '__init__.py')).load_module()
         instance = plugin.Plugin(self)
         self.plugin_settings(instance)
         instance.LoadNotification()
