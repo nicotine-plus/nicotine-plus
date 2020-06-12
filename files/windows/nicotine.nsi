@@ -12,8 +12,6 @@
 
 !define MUI_ABORTWARNING
 !define MUI_WELCOMEPAGE_TITLE_3LINES
-!define MUI_HEADERIMAGE
-!define MUI_HEADERIMAGE_RIGHT
 !define MUI_ICON "nicotine-plus.ico"
 !define MUI_UNICON "nicotine-plus.ico"
 
@@ -31,11 +29,13 @@ ReserveFile "shortcuts.ini"
 !insertmacro MUI_RESERVEFILE_INSTALLOPTIONS
 
 Name "${PRODUCT_NAME} (${PRODUCT_VERSION})"
+BrandingText "${PRODUCT_NAME}"
 OutFile "${PRODUCT_NAME}-${PRODUCT_VERSION}.exe"
 InstallDir "$PROGRAMFILES\Nicotine+"
 InstallDirRegKey HKLM "${PRODUCT_DIR_REGKEY}" ""
 ShowInstDetails show
 ShowUnInstDetails show
+ManifestDPIAware true
 
 Section "Core" Core
   SectionIn RO
