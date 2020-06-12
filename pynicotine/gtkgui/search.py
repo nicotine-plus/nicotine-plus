@@ -54,134 +54,6 @@ gi.require_version('Gtk', '3.0')
 gi.require_version('Gdk', '3.0')
 
 
-class WishList(gtk.Dialog):
-
-    def __init__(self, frame):
-
-        gtk.Dialog.__init__(self)
-
-        self.set_title(_("Nicotine+ Wishlist"))
-        self.set_icon(frame.images["n"])
-        self.connect("destroy", self.quit)
-        self.connect("destroy-event", self.quit)
-        self.connect("delete-event", self.quit)
-        self.connect("delete_event", self.quit)
-
-        self.nicotine = frame
-        self.set_size_request(600, 600)
-        self.mainHbox = gtk.Box.new(gtk.Orientation.HORIZONTAL, 5)
-        self.mainHbox.show()
-
-        self.WishLabel = gtk.Label.new(_("Search Wishlist"))
-        self.WishLabel.set_line_wrap(False)
-        self.WishLabel.show()
-        self.vbox.pack_start(self.WishLabel, False, True, 0)
-
-        self.WishScrollWin = gtk.ScrolledWindow()
-        self.WishScrollWin.set_policy(gtk.PolicyType.AUTOMATIC, gtk.PolicyType.AUTOMATIC)
-        self.WishScrollWin.show()
-        self.WishScrollWin.set_shadow_type(gtk.ShadowType.IN)
-
-        self.WishlistView = gtk.TreeView()
-        self.WishlistView.show()
-        self.WishlistView.set_headers_visible(False)
-        self.WishScrollWin.add(self.WishlistView)
-
-        self.mainHbox.pack_start(self.WishScrollWin, True, True, 0)
-        self.mainVbox = gtk.Box.new(gtk.Orientation.VERTICAL, 5)
-        self.mainHbox.pack_start(self.mainVbox, False, False, 0)
-        self.mainVbox.show()
-        self.mainVbox.set_spacing(5)
-
-        self.AddWishButton = self.nicotine.CreateIconButton(gtk.STOCK_ADD, "stock", self.OnAddWish, _("Add..."))
-        self.mainVbox.pack_start(self.AddWishButton, False, False, 0)
-
-        self.RemoveWishButton = self.nicotine.CreateIconButton(gtk.STOCK_REMOVE, "stock", self.OnRemoveWish, _("Remove"))
-        self.mainVbox.pack_start(self.RemoveWishButton, False, False, 0)
-
-        self.SelectAllWishesButton = self.nicotine.CreateIconButton(gtk.STOCK_DND_MULTIPLE, "stock", self.OnSelectAllWishes, _("Select all"))
-        self.mainVbox.pack_start(self.SelectAllWishesButton, False, False, 0)
-
-        self.CloseButton = self.nicotine.CreateIconButton(gtk.STOCK_CLOSE, "stock", self.quit, _("Close"))
-        self.mainVbox.pack_end(self.CloseButton, False, False, 0)
-
-        self.vbox.pack_start(self.mainHbox, True, True, 0)
-
-        self.store = gtk.ListStore(gobject.TYPE_STRING)
-
-        column = gtk.TreeViewColumn(_("Wishes"), gtk.CellRendererText(), text=0)
-        self.WishlistView.append_column(column)
-        self.WishlistView.set_model(self.store)
-        self.WishlistView.get_selection().set_mode(gtk.SelectionMode.MULTIPLE)
-
-        column.set_sort_column_id(0)
-        self.store.set_sort_column_id(0, gtk.SortType.ASCENDING)
-        self.wishes = {}
-
-        for wish in self.nicotine.np.config.sections["server"]["autosearch"]:
-            self.wishes[wish] = self.store.append([wish])
-
-    def OnAddWish(self, widget):
-
-        wish = InputDialog(self.vbox.get_toplevel(), _("Add Wish..."), _("Wish:"))
-
-        if wish and wish not in self.wishes:
-            self.wishes[wish] = self.store.append([wish])
-            self.nicotine.Searches.NewWish(wish)
-
-    def _RemoveWish(self, model, path, iter, line):
-        line.append(iter)
-
-    def removeWish(self, wish):
-
-        if wish in self.wishes:
-            self.store.remove(self.wishes[wish])
-            del self.wishes[wish]
-
-        if wish in self.nicotine.np.config.sections["server"]["autosearch"]:
-
-            self.nicotine.np.config.sections["server"]["autosearch"].remove(wish)
-
-            for number, search in list(self.nicotine.Searches.searches.items()):
-
-                if search[1] == wish and search[4] == 1:
-
-                    search[4] = 0
-                    self.nicotine.Searches.searches[number] = search
-
-                    if search[2] is not None:
-                        search[2].RememberCheckButton.set_active(False)
-
-                    break
-
-    def addWish(self, wish):
-        if wish and wish not in self.wishes:
-            self.wishes[wish] = self.store.append([wish])
-
-    def OnRemoveWish(self, widget):
-
-        iters = []
-        self.WishlistView.get_selection().selected_foreach(self._RemoveWish, iters)
-
-        for iter in iters:
-            wish = self.store.get_value(iter, 0)
-            self.removeWish(wish)
-
-    def OnSelectAllWishes(self, widget):
-        self.WishlistView.get_selection().select_all()
-
-    def quit(self, w=None, event=None):
-        self.hide()
-        return True
-
-    def Toggle(self, widget):
-
-        if self.get_property("visible"):
-            self.hide()
-        else:
-            self.show()
-
-
 class Searches(IconNotebook):
 
     def __init__(self, frame):
@@ -773,7 +645,6 @@ class Search:
 
     def OnFilterChanged(self, widget):
 
-        model = widget.get_model()  # noqa: F841
         iter = widget.get_active_iter()
 
         if iter:
@@ -875,6 +746,7 @@ class Search:
         self.users.append(user)
 
         results = []
+        counter = len(self.all_data) + 1
 
         if msg.freeulslots:
             imdl = "Y"
@@ -883,8 +755,15 @@ class Search:
 
         for result in msg.list:
 
+            if counter > self.frame.np.config.sections['searches']["max_stored_results"]:
+                return
+
             name = result[1].split('\\')[-1]
             dir = result[1][:-len(name)]
+
+            h_size = HumanSize(int(result[2]))
+            h_speed = HumanSpeed(msg.ulspeed)
+            h_queue = Humanize(msg.inqueue)
 
             bitrate = ""
             length = ""
@@ -958,7 +837,13 @@ class Search:
 
                     length = '%i:%02i' % (a[1] / 60, a[1] % 60)
 
-            results.append([user, name, result[2], msg.ulspeed, msg.inqueue, imdl, bitrate, length, dir, br, result[1], country, self.Searches.users[user]])
+            status = self.Searches.users[user]
+
+            if status is None:
+                status = 0
+
+            results.append([counter, user, name, h_size, h_speed, h_queue, imdl, bitrate, length, self.get_flag(user, country), dir, br, result[1], country, result[2], msg.ulspeed, msg.inqueue, status])
+            counter += 1
 
         if results:
             self._realaddresults(results)
@@ -988,43 +873,20 @@ class Search:
 
     def append(self, results):
 
-        counter = len(self.all_data) + 1
+        for row in results:
 
-        for r in results:
-
-            # No more things to add because we've reached the max_stored_results limit
-            if counter > self.frame.np.config.sections['searches']["max_stored_results"]:
-                return
-
-            user, filename, size, speed, queue, immediatedl, h_bitrate, length, directory, bitrate, fullpath, country, status = r
-
-            if user in self.Searches.users and status != self.Searches.users[user]:
-                status = self.Searches.users[user]
-
-            if status is None:
-                status = 0
-
-            h_size = HumanSize(int(size))
-            h_speed = HumanSpeed(speed)
-            h_queue = Humanize(queue)
+            counter, user, filename, h_size, h_speed, h_queue, immediatedl, h_bitrate, length, flag, directory, bitrate, fullpath, country, size, speed, queue, status = row
 
             if self.usersGroup.get_active() and user not in self.usersiters:
                 self.usersiters[user] = self.resultsmodel.append(
                     None,
-                    [0, user, "", "", h_speed, h_queue, immediatedl, "", "", self.get_flag(user, country), "", 0, "", country, 0, speed, queue, status]
+                    [0, user, "", "", h_speed, h_queue, immediatedl, "", "", flag, "", 0, "", country, 0, speed, queue, status]
                 )
-
-            row = [
-                counter, user, filename, h_size, h_speed, h_queue, immediatedl, h_bitrate, length,
-                self.get_flag(user, country), directory, bitrate, fullpath, country, size, speed, queue, status
-            ]
 
             self.all_data.append(row)
 
-            if (counter <= self.frame.np.config.sections['searches']["max_displayed_results"]) and (not self.filters or self.check_filter(r)):
+            if (counter <= self.frame.np.config.sections['searches']["max_displayed_results"]) and (not self.filters or self.check_filter(row)):
                 self._add_to_model(user, row)
-
-            counter += 1
 
     def _add_to_model(self, user, row):
 
@@ -1150,11 +1012,11 @@ class Search:
         if not self.filtersCheck.get_active():
             return True
 
-        # "Included text"-filter, check full file path (located at index 11 in row)
+        # "Included text"-filter, check full file path (located at index 12 in row)
         if filters[0] and not filters[0].search(row[12].lower()):
             return False
 
-        # "Excluded text"-filter, check full file path (located at index 11 in row)
+        # "Excluded text"-filter, check full file path (located at index 12 in row)
         if filters[1] and filters[1].search(row[12].lower()):
             return False
 
@@ -1737,3 +1599,131 @@ class Search:
                 self.ResultsList.expand_all()
             else:
                 self.ResultsList.collapse_all()
+
+
+class WishList(gtk.Dialog):
+
+    def __init__(self, frame):
+
+        gtk.Dialog.__init__(self)
+
+        self.set_title(_("Nicotine+ Wishlist"))
+        self.set_icon(frame.images["n"])
+        self.connect("destroy", self.quit)
+        self.connect("destroy-event", self.quit)
+        self.connect("delete-event", self.quit)
+        self.connect("delete_event", self.quit)
+
+        self.nicotine = frame
+        self.set_size_request(600, 600)
+        self.mainHbox = gtk.Box.new(gtk.Orientation.HORIZONTAL, 5)
+        self.mainHbox.show()
+
+        self.WishLabel = gtk.Label.new(_("Search Wishlist"))
+        self.WishLabel.set_line_wrap(False)
+        self.WishLabel.show()
+        self.vbox.pack_start(self.WishLabel, False, True, 0)
+
+        self.WishScrollWin = gtk.ScrolledWindow()
+        self.WishScrollWin.set_policy(gtk.PolicyType.AUTOMATIC, gtk.PolicyType.AUTOMATIC)
+        self.WishScrollWin.show()
+        self.WishScrollWin.set_shadow_type(gtk.ShadowType.IN)
+
+        self.WishlistView = gtk.TreeView()
+        self.WishlistView.show()
+        self.WishlistView.set_headers_visible(False)
+        self.WishScrollWin.add(self.WishlistView)
+
+        self.mainHbox.pack_start(self.WishScrollWin, True, True, 0)
+        self.mainVbox = gtk.Box.new(gtk.Orientation.VERTICAL, 5)
+        self.mainHbox.pack_start(self.mainVbox, False, False, 0)
+        self.mainVbox.show()
+        self.mainVbox.set_spacing(5)
+
+        self.AddWishButton = self.nicotine.CreateIconButton(gtk.STOCK_ADD, "stock", self.OnAddWish, _("Add..."))
+        self.mainVbox.pack_start(self.AddWishButton, False, False, 0)
+
+        self.RemoveWishButton = self.nicotine.CreateIconButton(gtk.STOCK_REMOVE, "stock", self.OnRemoveWish, _("Remove"))
+        self.mainVbox.pack_start(self.RemoveWishButton, False, False, 0)
+
+        self.SelectAllWishesButton = self.nicotine.CreateIconButton(gtk.STOCK_DND_MULTIPLE, "stock", self.OnSelectAllWishes, _("Select all"))
+        self.mainVbox.pack_start(self.SelectAllWishesButton, False, False, 0)
+
+        self.CloseButton = self.nicotine.CreateIconButton(gtk.STOCK_CLOSE, "stock", self.quit, _("Close"))
+        self.mainVbox.pack_end(self.CloseButton, False, False, 0)
+
+        self.vbox.pack_start(self.mainHbox, True, True, 0)
+
+        self.store = gtk.ListStore(gobject.TYPE_STRING)
+
+        column = gtk.TreeViewColumn(_("Wishes"), gtk.CellRendererText(), text=0)
+        self.WishlistView.append_column(column)
+        self.WishlistView.set_model(self.store)
+        self.WishlistView.get_selection().set_mode(gtk.SelectionMode.MULTIPLE)
+
+        column.set_sort_column_id(0)
+        self.store.set_sort_column_id(0, gtk.SortType.ASCENDING)
+        self.wishes = {}
+
+        for wish in self.nicotine.np.config.sections["server"]["autosearch"]:
+            self.wishes[wish] = self.store.append([wish])
+
+    def OnAddWish(self, widget):
+
+        wish = InputDialog(self.vbox.get_toplevel(), _("Add Wish..."), _("Wish:"))
+
+        if wish and wish not in self.wishes:
+            self.wishes[wish] = self.store.append([wish])
+            self.nicotine.Searches.NewWish(wish)
+
+    def _RemoveWish(self, model, path, iter, line):
+        line.append(iter)
+
+    def removeWish(self, wish):
+
+        if wish in self.wishes:
+            self.store.remove(self.wishes[wish])
+            del self.wishes[wish]
+
+        if wish in self.nicotine.np.config.sections["server"]["autosearch"]:
+
+            self.nicotine.np.config.sections["server"]["autosearch"].remove(wish)
+
+            for number, search in list(self.nicotine.Searches.searches.items()):
+
+                if search[1] == wish and search[4] == 1:
+
+                    search[4] = 0
+                    self.nicotine.Searches.searches[number] = search
+
+                    if search[2] is not None:
+                        search[2].RememberCheckButton.set_active(False)
+
+                    break
+
+    def addWish(self, wish):
+        if wish and wish not in self.wishes:
+            self.wishes[wish] = self.store.append([wish])
+
+    def OnRemoveWish(self, widget):
+
+        iters = []
+        self.WishlistView.get_selection().selected_foreach(self._RemoveWish, iters)
+
+        for iter in iters:
+            wish = self.store.get_value(iter, 0)
+            self.removeWish(wish)
+
+    def OnSelectAllWishes(self, widget):
+        self.WishlistView.get_selection().select_all()
+
+    def quit(self, w=None, event=None):
+        self.hide()
+        return True
+
+    def Toggle(self, widget):
+
+        if self.get_property("visible"):
+            self.hide()
+        else:
+            self.show()

@@ -79,6 +79,7 @@ Bugs closed in GitHub
  * text in log aera in chat rooms lag to display from entry (#253)
  * /now playing does not work after nic+ restart (#255)
  * on kde LMB on tray icon brings menu, not app (#270)
+ * lower on an int? (#278)
 
 Version 1.4.3 (unstable)
 -----------------------------
