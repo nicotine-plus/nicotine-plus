@@ -584,7 +584,7 @@ class UserBrowse:
             import pickle as mypickle
             import bz2
             sharesfile = bz2.BZ2File(os.path.join(sharesdir, CleanFile(self.user)), 'w')
-            mypickle.dump(self.shares, sharesfile, mypickle.HIGHEST_PROTOCOL)
+            mypickle.dump(self.shares, sharesfile, protocol=mypickle.HIGHEST_PROTOCOL)
             sharesfile.close()
         except Exception as msg:
             error = _("Can't save shares, '%(user)s', reported error: %(error)s" % {'user': self.user, 'error': msg})

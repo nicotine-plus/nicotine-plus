@@ -1706,7 +1706,7 @@ class SharedFileList(PeerMessage):
         if not rebuild and self.built is not None:
             return self.built
         msg = b""
-        msg = msg + self.packObject(len(list(self.list.keys())))
+        msg = msg + self.packObject(len(self.list))
         for (key, value) in self.list.items():
             msg = msg + self.packObject(key.replace(os.sep, "\\")) + value
         if not nozlib:

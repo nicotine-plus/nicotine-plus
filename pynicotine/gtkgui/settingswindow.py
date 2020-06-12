@@ -552,7 +552,7 @@ class DownloadsFrame(buildFrame):
         except Exception as e:
             failed[outfilter] = e
 
-        if len(list(failed.keys())) >= 1:
+        if len(failed) >= 1:
             errors = ""
 
             for filter, error in list(failed.items()):
@@ -562,7 +562,7 @@ class DownloadsFrame(buildFrame):
                 }
 
             error = _("%(num)d Failed! %(error)s " % {
-                'num': len(list(failed.keys())),
+                'num': len(failed),
                 'error': errors}
             )
 
