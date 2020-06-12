@@ -1542,16 +1542,28 @@ class NicotineFrame:
         '''For information about debug levels see
         pydoc pynicotine.logfacility.logger.add
         '''
+
+        logcollapsed = self.np.config.sections["logging"]["logcollapsed"]
+
+        if logcollapsed:
+            # Make sure we don't attempt to scroll in the log window
+            # if it's hidden, to prevent those nasty GTK warnings :)
+            shouldscroll = False
+        else:
+            shouldscroll = True
+
         if self.np.config.sections["logging"]["debug"]:
             if debugLevel in (None, 0) or debugLevel in self.np.config.sections["logging"]["debugmodes"]:
-                AppendLine(self.LogWindow, msg, self.tag_log, scroll=True)
-                if self.np.config.sections["logging"]["logcollapsed"]:
+                AppendLine(self.LogWindow, msg, self.tag_log, scroll=shouldscroll)
+
+                if logcollapsed:
                     self.SetStatusText(msg)
         else:
             if debugLevel in (None, 0, 1):
                 try:
-                    AppendLine(self.LogWindow, msg, self.tag_log, scroll=True)
-                    if self.np.config.sections["logging"]["logcollapsed"]:
+                    AppendLine(self.LogWindow, msg, self.tag_log, scroll=shouldscroll)
+
+                    if logcollapsed:
                         self.SetStatusText(msg)
                 except Exception as e:
                     print(e)
