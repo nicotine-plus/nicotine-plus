@@ -99,7 +99,7 @@ class PluginHandler(object):
             pass
 
         # Load system-wide plugins
-        self.plugindirs.append(os.path.join(sys.prefix, "share/nicotine/plugins"))
+        self.plugindirs.append(os.path.join(sys.base_prefix, "share/nicotine/plugins"))
 
         # Load home directory plugins
         self.plugindirs.append(plugindir)

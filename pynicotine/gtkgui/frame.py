@@ -3576,7 +3576,7 @@ class Notifications:
 
         if not exists:
 
-            path = "%s/share/nicotine/sounds/default/%s.wav" % (sys.prefix, soundtitle)
+            path = "%s/share/nicotine/sounds/default/%s.wav" % (sys.base_prefix, soundtitle)
 
             if os.path.exists(path):
                 exists = 1
