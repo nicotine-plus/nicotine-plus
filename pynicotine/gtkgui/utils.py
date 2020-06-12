@@ -287,7 +287,6 @@ def UrlEvent(tag, widget, event, iter, url):
 def OpenUri(uri, window):
     """Open a URI in an external (web) browser. The given argument has
     to be a properly formed URI including the scheme (fe. HTTP).
-
     As of now failures will be silently discarded."""
 
     # Situation 1, user defined a way of handling the protocol
@@ -305,7 +304,11 @@ def OpenUri(uri, window):
         webbrowser.open(uri)
         return
 
-    gtk.show_uri_on_window(window, uri, Gdk.CURRENT_TIME)
+    try:
+        gtk.show_uri_on_window(window, uri, Gdk.CURRENT_TIME)
+    except AttributeError:
+        screen = window.get_screen()
+        gtk.show_uri(screen, uri, Gdk.CURRENT_TIME)
 
 
 def AppendLine(textview, line, tag=None, timestamp=None, showstamp=True, timestamp_format="%H:%M:%S", username=None, usertag=None, scroll=True):
@@ -611,7 +614,6 @@ class ImageLabel(gtk.HBox):
 
 class IconNotebook:
     """ This class implements a pseudo gtk.Notebook
-
     On top of what a gtk.Notebook provides:
     - You can have icons on the notebook tab.
     - You can choose the label orientation (angle).
