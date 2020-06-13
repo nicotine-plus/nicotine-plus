@@ -427,7 +427,6 @@ class SlskProtoThread(threading.Thread):
         # GeoIP Database
         self.geoip = self._eventprocessor.geoip
         listenport = None
-        self.lastsocketwarning = 0
 
         for listenport in range(int(portrange[0]), int(portrange[1]) + 1):
             try:
@@ -1144,7 +1143,6 @@ class SlskProtoThread(threading.Thread):
                         message = _("Can't send the message over the closed connection: %(type)s %(msg_obj)s") % {'type': msgObj.__class__, 'msg_obj': vars(msgObj)}
                         log.add(message, 3)
             elif issubclass(msgObj.__class__, InternalMessage):
-                socketwarning = False
                 if msgObj.__class__ is ServerConn:
                     if maxsockets == -1 or numsockets < maxsockets:
                         try:
@@ -1158,8 +1156,6 @@ class SlskProtoThread(threading.Thread):
                             numsockets += 1
                         except socket.error as err:
                             self._ui_callback([ConnectError(msgObj, err)])
-                    else:
-                        socketwarning = True
                 elif msgObj.__class__ is ConnClose and msgObj.conn in conns:
                     msgObj.conn.close()
                     # print "Close3", conns[msgObj.conn].addr
@@ -1186,8 +1182,6 @@ class SlskProtoThread(threading.Thread):
                                 needsleep = True
                             else:
                                 self._ui_callback([ConnectError(msgObj, (errnum, strerror))])
-                    else:
-                        socketwarning = True
                 elif msgObj.__class__ is DownloadFile and msgObj.conn in conns:
                     conns[msgObj.conn].filedown = msgObj
 
@@ -1215,9 +1209,6 @@ class SlskProtoThread(threading.Thread):
                     self._uploadlimit = (cb, msgObj.limit)
                 elif msgObj.__class__ is SetDownloadLimit:
                     self._downloadlimit = (self._calcDLimitByTotal, msgObj.limit)
-                if socketwarning and time.time() - self.lastsocketwarning > 60:
-                    self.lastsocketwarning = time.time()
-                    log.addwarning(_("You have just hit your connection limit of %(limit)s. Nicotine+ will drop connections for your protection. If you get this message often you should search for less generic terms, or increase your per-process file descriptor limit.") % {'limit': maxsockets})
         if needsleep:
             time.sleep(1)
 
