@@ -34,7 +34,6 @@ import time
 from collections import defaultdict
 from errno import EINTR
 from gettext import gettext as _
-from math import floor
 
 from pynicotine.logfacility import log
 from pynicotine.slskmessages import AcceptChildren
@@ -174,45 +173,27 @@ from pynicotine.slskmessages import UserPrivileged
 from pynicotine.slskmessages import UserSearch
 from pynicotine.slskmessages import WishlistInterval
 from pynicotine.slskmessages import WishlistSearch
-from pynicotine.utils import win32
 
+
+# Set our actual file limit to 2048 as a failsafe
+# If this limit is set too close to our artificial
+# 1024 limit, Nicotine+ will freak out due to too many
+# open files
 if sys.platform == "win32":
     from pynicotine.multiselect import multiselect
-
-
-MAXFILELIMIT = -1
-if win32:
     import ctypes
     ctypes.cdll.msvcrt._setmaxstdio(2048)
-    MAXFILELIMIT = ctypes.cdll.msvcrt._getmaxstdio()
 else:
     try:
         import resource
-        try:
-            (soft, MAXFILELIMIT) = resource.getrlimit(resource.RLIMIT_NOFILE)
-        except AttributeError:
-            pass
-    except ImportError:
-        pass
-
-# OSX reports INFINITE as hard limit, but supports up to 10240
-# Solaris supposedly reports 65535 and actually supports this
-# Linux usually reports 1024 and supports this.
-if MAXFILELIMIT > 65535:
-    MAXFILELIMIT = 2048
-if MAXFILELIMIT > 0:
-    # Bumping soft limit
-    try:
-        resource.setrlimit(resource.RLIMIT_NOFILE, (MAXFILELIMIT, MAXFILELIMIT))
+        resource.setrlimit(resource.RLIMIT_NOFILE, (2048, 2048))
     except Exception:
         pass
 
-# Since most people have a limit of 1024 or higher we can
-# set it to 90% of the max limit and still get a workable amount of
-# connections. We cannot set it to 100% because our connection count
-# doesn't agree with with the OS connection count (at least on Linux),
-# maybe because closed connections aren't closed on the spot.
-MAXFILELIMIT = max(int(floor(MAXFILELIMIT * 0.9)), 100)
+# Set our artificial file limit to prevent freezing the GUI
+# TODO: investigate if we can improve the performance somehow
+# and bump this limit
+MAXFILELIMIT = 1024
 
 
 class Connection:
