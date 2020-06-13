@@ -885,7 +885,7 @@ class Search:
 
             self.all_data.append(row)
 
-            if (counter <= self.frame.np.config.sections['searches']["max_displayed_results"]) and (not self.filters or self.check_filter(row)):
+            if (len(self.resultsmodel) < self.frame.np.config.sections['searches']["max_displayed_results"]) and (not self.filters or self.check_filter(row)):
                 self._add_to_model(user, row)
 
     def _add_to_model(self, user, row):
@@ -918,7 +918,7 @@ class Search:
 
         for r in self.all_data:
             if user == r[1]:
-                self.all_data[pos][16] = status
+                self.all_data[pos][17] = status
             pos += 1
 
         iter = self.resultsmodel.get_iter_first()
