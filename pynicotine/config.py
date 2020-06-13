@@ -920,12 +920,15 @@ class Config:
     def _storeObjects(self, storable_objects):
 
         for (source, destination, filename) in storable_objects:
+            try:
+                self.sections["transfers"][destination].close()
+                self.sections["transfers"][destination] = shelve.open(os.path.join(self.data_dir, filename), flag='n', protocol=pickle.HIGHEST_PROTOCOL)
 
-            self.sections["transfers"][destination].close()
-            self.sections["transfers"][destination] = shelve.open(os.path.join(self.data_dir, filename), flag='n', protocol=pickle.HIGHEST_PROTOCOL)
-
-            for (key, value) in source.items():
-                self.sections["transfers"][destination][key] = value
+                for (key, value) in source.items():
+                    self.sections["transfers"][destination][key] = value
+            except Exception as e:
+                log.addwarning(_("Can't save %s: %s") % (filename, e))
+                return
 
     def writeShares(self):
 
@@ -955,9 +958,21 @@ class Config:
 
     def writeAliases(self):
         self.config_lock.acquire()
-        f = open(self.filename + ".alias", "wb")
-        pickle.dump(self.aliases, f, protocol=pickle.HIGHEST_PROTOCOL)
-        f.close()
+        try:
+            f = open(self.filename + ".alias", "wb")
+        except Exception as e:
+            log.addwarning(_("Something went wrong while opening your alias file: %s") % e)
+        else:
+            try:
+                pickle.dump(self.aliases, f, protocol=pickle.HIGHEST_PROTOCOL)
+                f.close()
+            except Exception as e:
+                log.addwarning(_("Something went wrong while saving your alias file: %s") % e)
+        finally:
+            try:
+                f.close()
+            except Exception:
+                pass
         self.config_lock.release()
 
     def AddAlias(self, rest):
