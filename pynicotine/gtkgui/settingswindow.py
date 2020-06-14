@@ -47,6 +47,7 @@ from pynicotine.gtkgui.utils import recode
 from pynicotine.gtkgui.utils import recode2
 from pynicotine.logfacility import log
 from pynicotine.upnp import UPnPPortMapping
+from pynicotine.utils import unescape
 
 gi.require_version('Gdk', '3.0')
 
@@ -1203,7 +1204,7 @@ class UserinfoFrame(buildFrame):
         userinfo = config["userinfo"]
 
         if userinfo["descr"] is not None:
-            descr = eval(userinfo["descr"], {})
+            descr = unescape(userinfo["descr"])
             self.Description.get_buffer().set_text(descr)
 
         if userinfo["pic"]:

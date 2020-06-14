@@ -30,6 +30,7 @@ import gettext
 import locale
 import os
 import sys
+from codecs import encode, decode
 from collections import UserDict
 from subprocess import PIPE
 from subprocess import Popen
@@ -273,6 +274,16 @@ class SortedDict(UserDict):
 
         for key in self.__keys__:
             yield key, self[key]
+
+
+def unescape(string):
+    """Removes quotes from the beginning and end of strings, and unescapes it."""
+
+    string = decode(encode(string, 'latin-1', 'backslashreplace'), 'unicode-escape')
+
+    if (string[0] == string[-1]) and string.startswith(("'", '"')):
+        return string[1:-1]
+    return string
 
 
 def executeCommand(command, replacement=None, background=True, returnoutput=False, placeholder='$'):

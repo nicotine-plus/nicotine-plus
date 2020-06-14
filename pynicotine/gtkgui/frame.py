@@ -81,6 +81,7 @@ from pynicotine.logfacility import log
 from pynicotine.pynicotine import NetworkEventProcessor
 from pynicotine.upnp import UPnPPortMapping
 from pynicotine.utils import executeCommand
+from pynicotine.utils import unescape
 from pynicotine.utils import version
 
 gi.require_version('Gtk', '3.0')
@@ -2817,7 +2818,7 @@ class NicotineFrame:
             except Exception:
                 pic = None
 
-            descr = eval(self.np.config.sections["userinfo"]["descr"])
+            descr = unescape(self.np.config.sections["userinfo"]["descr"])
 
             if self.np.transfers is not None:
 

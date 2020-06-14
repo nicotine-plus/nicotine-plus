@@ -49,6 +49,7 @@ from pynicotine.slskmessages import PopupMessage
 from pynicotine.slskmessages import newId
 from pynicotine.utils import CleanFile
 from pynicotine.utils import log
+from pynicotine.utils import unescape
 
 
 class PeerConnection:
@@ -1410,7 +1411,7 @@ class NetworkEventProcessor:
         except Exception:
             pic = None
 
-        descr = self.config.sections["userinfo"]["descr"].replace("\n", "\r\n")
+        descr = unescape(self.config.sections["userinfo"]["descr"])
 
         if self.transfers is not None:
             totalupl = self.transfers.getTotalUploadsAllowed()
