@@ -81,6 +81,7 @@ from pynicotine.logfacility import log
 from pynicotine.pynicotine import NetworkEventProcessor
 from pynicotine.upnp import UPnPPortMapping
 from pynicotine.utils import executeCommand
+from pynicotine.utils import installPrefix
 from pynicotine.utils import unescape
 from pynicotine.utils import version
 
@@ -3577,7 +3578,8 @@ class Notifications:
 
         if not exists:
 
-            path = "%s/share/nicotine/sounds/default/%s.wav" % (sys.base_prefix, soundtitle)
+            prefix = installPrefix()
+            path = "%s/share/nicotine/sounds/default/%s.wav" % (prefix, soundtitle)
 
             if os.path.exists(path):
                 exists = 1

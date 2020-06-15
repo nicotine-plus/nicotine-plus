@@ -37,6 +37,7 @@ from gi.repository import GLib
 from _thread import start_new_thread
 from pynicotine.logfacility import log
 from pynicotine.pynicotine import slskmessages
+from pynicotine.utils import installPrefix
 
 gi.require_version('Gtk', '3.0')
 
@@ -99,7 +100,8 @@ class PluginHandler(object):
             pass
 
         # Load system-wide plugins
-        self.plugindirs.append(os.path.join(sys.base_prefix, "share/nicotine/plugins"))
+        prefix = installPrefix()
+        self.plugindirs.append(os.path.join(prefix, "share/nicotine/plugins"))
 
         # Load home directory plugins
         self.plugindirs.append(plugindir)

@@ -405,6 +405,23 @@ def findBestEncoding(bytes, encodings, fallback=None):
         return str(bytes, encodings[0], 'replace')
 
 
+def is_flatpak():
+    """Detect if we are running Flatpak"""
+
+    return sys.platform == "linux" and os.path.exists("/.flatpak-info")
+
+
+def installPrefix():
+    """Returns the system prefix where Nicotine+ is installed"""
+
+    prefix = sys.prefix
+
+    if is_flatpak():
+        prefix = "/app"
+
+    return prefix
+
+
 def strace(function):
     """Decorator for debugging"""
 
