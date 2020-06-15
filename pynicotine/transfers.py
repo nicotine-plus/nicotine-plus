@@ -1253,17 +1253,17 @@ class Transfers:
                             self.addToShared(newname)
                         self.eventprocessor.shares.sendNumSharedFoldersFiles()
 
+                        if config["transfers"]["shownotification"]:
+                            self.eventprocessor.frame.NewNotification(
+                                _("%(file)s downloaded from %(user)s") % {
+                                    'user': i.user,
+                                    'file': newname.rsplit(os.sep, 1)[1]
+                                },
+                                title=_("Nicotine+ :: file downloaded")
+                            )
+
                     self.SaveDownloads()
                     self.downloadspanel.update(i)
-
-                    if config["transfers"]["shownotification"]:
-                        self.eventprocessor.frame.NewNotification(
-                            _("%(file)s downloaded from %(user)s") % {
-                                'user': i.user,
-                                'file': newname.rsplit(os.sep, 1)[1]
-                            },
-                            title=_("Nicotine+ :: file downloaded")
-                        )
 
                     if newname and config["transfers"]["afterfinish"]:
                         if not executeCommand(config["transfers"]["afterfinish"], newname):

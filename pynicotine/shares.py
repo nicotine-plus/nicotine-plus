@@ -1057,21 +1057,25 @@ class Shares:
         sharedstreams = config["transfers"]["sharedfilesstreams"]
         wordindex = config["transfers"]["wordindex"]
         fileindex = config["transfers"]["fileindex"]
+
         shareddirs = [path for _name, path in config["transfers"]["shared"]]
         shareddirs.append(config["transfers"]["downloaddir"])
 
+        sharedmtimes = config["transfers"]["sharedmtimes"]
+
         dir = str(os.path.expanduser(os.path.dirname(name)))
+        vdir = self.real2virtual(dir)
         file = str(os.path.basename(name))
-        size = os.path.getsize(name)  # noqa: F841
 
-        shared[dir] = shared.get(dir, [])
+        shared[vdir] = shared.get(vdir, [])
 
-        if file not in [i[0] for i in shared[dir]]:
+        if file not in [i[0] for i in shared[vdir]]:
             fileinfo = self.getFileInfo(file, name)
-            shared[dir] = shared[dir] + [fileinfo]
-            sharedstreams[dir] = self.getDirStream(shared[dir])
-            words = self.getIndexWords(dir, file, shareddirs)
-            self.addToIndex(wordindex, fileindex, words, dir, fileinfo)
+            shared[vdir] = shared[vdir] + [fileinfo]
+            sharedstreams[vdir] = self.getDirStream(shared[vdir])
+            words = self.getIndexWords(vdir, file, shareddirs)
+            self.addToIndex(wordindex, fileindex, words, vdir, fileinfo)
+            sharedmtimes[vdir] = os.path.getmtime(dir)
             self.newnormalshares = True
 
         if config["transfers"]["enablebuddyshares"]:
@@ -1090,22 +1094,26 @@ class Shares:
         bsharedstreams = config["transfers"]["bsharedfilesstreams"]
         bwordindex = config["transfers"]["bwordindex"]
         bfileindex = config["transfers"]["bfileindex"]
-        bshareddirs = config["transfers"]["buddyshared"] + config["transfers"]["shared"] + [config["transfers"]["downloaddir"]]
+
+        bshareddirs = [path for _name, path in config["transfers"]["shared"]]
+        bshareddirs += [path for _name, path in config["transfers"]["buddyshared"]]
+        bshareddirs.append(config["transfers"]["downloaddir"])
+
         bsharedmtimes = config["transfers"]["bsharedmtimes"]
 
         dir = str(os.path.expanduser(os.path.dirname(name)))
+        vdir = self.real2virtual(dir)
         file = str(os.path.basename(name))
-        size = os.path.getsize(name)  # noqa: F841
 
-        bshared[dir] = bshared.get(dir, [])
+        bshared[vdir] = bshared.get(vdir, [])
 
-        if file not in [i[0] for i in bshared[dir]]:
+        if file not in [i[0] for i in bshared[vdir]]:
             fileinfo = self.getFileInfo(file, name)
-            bshared[dir] = bshared[dir] + [fileinfo]
-            bsharedstreams[dir] = self.getDirStream(bshared[dir])
-            words = self.getIndexWords(dir, file, bshareddirs)
-            self.addToIndex(bwordindex, bfileindex, words, dir, fileinfo)
-            bsharedmtimes[dir] = os.path.getmtime(dir)
+            bshared[vdir] = bshared[vdir] + [fileinfo]
+            bsharedstreams[vdir] = self.getDirStream(bshared[vdir])
+            words = self.getIndexWords(vdir, file, bshareddirs)
+            self.addToIndex(bwordindex, bfileindex, words, vdir, fileinfo)
+            bsharedmtimes[vdir] = os.path.getmtime(dir)
             self.newbuddyshares = True
 
     def addToIndex(self, wordindex, fileindex, words, dir, fileinfo):
