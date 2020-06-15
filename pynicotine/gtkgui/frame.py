@@ -248,8 +248,6 @@ class NicotineFrame:
                 Notify.init("Nicotine+")
                 self.notify = Notify
                 self.notifyBox = None
-                from xml.dom.minidom import getDOMImplementation
-                self.xmldocument = getDOMImplementation().createDocument(None, None, None)
             except (ImportError, ValueError):
                 self.notify = None
 
@@ -794,12 +792,11 @@ class NicotineFrame:
         if self.notify is None:
             return
 
-        xmlmessage = self.xmldocument.createTextNode(message).toxml()
         if self.notifyBox is None:
-            self.notifyBox = self.notify.Notification.new(title, xmlmessage)
+            self.notifyBox = self.notify.Notification.new(title, message)
             self.notifyBox.set_image_from_pixbuf(self.images["notify"])
         else:
-            self.notifyBox.update(title, xmlmessage)
+            self.notifyBox.update(title, message)
 
         try:
             self.notifyBox.show()
