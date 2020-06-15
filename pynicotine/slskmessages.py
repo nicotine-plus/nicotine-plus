@@ -32,6 +32,7 @@ from typing import Union
 
 from pynicotine.logfacility import log
 from pynicotine.utils import debug
+from pynicotine.utils import findBestEncoding
 
 """ This module contains message classes, that networking and UI thread
 exchange. Basically there are three types of messages: internal messages,
@@ -265,7 +266,7 @@ class SlskMessage:
                 string = message[start + intsize:start + length + intsize]
 
                 if rawbytes is False:
-                    string = string.decode('utf-8', errors='replace')
+                    string = findBestEncoding(string, ['utf-8', 'iso-8859-1'])
 
                 return length + intsize + start, string
             elif type is NetworkIntType:
@@ -1628,7 +1629,7 @@ class UserInfoReply(PeerMessage):
         pos, self.descr = self.getObject(message, bytes)
         pos, self.has_pic = pos + 1, message[pos]
         if self.has_pic:
-            pos, self.pic = self.getObject(message, bytes, pos, 0, 0, True, True)
+            pos, self.pic = self.getObject(message, bytes, pos, 0, 0, True, True)  # Raw bytes
         pos, self.totalupl = self.getObject(message, int, pos)
         pos, self.queuesize = self.getObject(message, int, pos)
         pos, self.slotsavail = pos + 1, message[pos]
