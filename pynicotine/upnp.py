@@ -17,10 +17,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import platform
 import re
 import socket
-import subprocess
 from gettext import gettext as _
 from subprocess import PIPE
 from subprocess import STDOUT
@@ -28,7 +26,6 @@ from subprocess import Popen
 
 from pynicotine.logfacility import log
 from pynicotine.pynicotine import slskmessages
-from pynicotine.utils import findBestEncoding
 
 
 class UPnPPortMapping:
@@ -50,17 +47,8 @@ class UPnPPortMapping:
         # client
         self.foundexistingmapping = False
 
-        # Detect if we're on Windpws
-        self.iswin32 = platform.system().startswith("Win")
-
-        # Defining where the miniupnpc binary might be
-        if self.iswin32:
-            # On windows we use a static build of upnpc
-            # That needs to be put in the upnpc subfolder
-            self.upnpcbinary = 'files\\win32\\upnpc\\upnpc-static.exe'
-        else:
-            # On GNU/linux we try to find it in the $PATH
-            self.upnpcbinary = 'upnpc'
+        # We try to find the miniupnpc binary in the $PATH
+        self.upnpcbinary = 'upnpc'
 
     def run_binary(self, cmd):
         """Function used to call the upnpc binary.
@@ -71,14 +59,7 @@ class UPnPPortMapping:
         Also prevent the command prompt from being shown on Windows.
         """
 
-        if self.iswin32:
-            # Ugly hack to hide the command prompt on Windows
-            info = subprocess.STARTUPINFO()
-            info.dwFlags |= subprocess.STARTF_USESHOWWINDOW
-
-            p = Popen(cmd, stdout=PIPE, stderr=STDOUT, startupinfo=info)
-        else:
-            p = Popen(cmd, stdout=PIPE, stderr=STDOUT)
+        p = Popen(cmd, stdout=PIPE, stderr=STDOUT)
 
         (out, err) = p.communicate()
 
@@ -105,12 +86,7 @@ class UPnPPortMapping:
                     _('Failed to import miniupnpc module: %(error)s') %
                     {'error': str(e1)},
                     _('Failed to run upnpc binary: %(error)s') %
-                    {
-                        'error': findBestEncoding(
-                            str(e2),
-                            ['utf-8', 'ascii', 'iso8859-1']
-                        )
-                    }
+                    {'error': str(e2)}
                 ]
                 return (False, errors)
             else:
