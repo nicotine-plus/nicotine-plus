@@ -5,7 +5,7 @@ Nicotine+ is a graphical client for the [Soulseek](https://www.slsknet.org/) pee
 [Screenshots](files/screenshots/SCREENSHOTS.md)
 
 # Download Nicotine+
-The current stable version of Nicotine+ is 1.4.1. An unstable version 1.4.3 is currently under development and available for testing.
+The current stable version of Nicotine+ is 2.0.0, released on <insert date here>.
 
 ## GNU/Linux
 If you have no need to modify the Nicotine+ source, you are strongly recommended to use precompiled packages for your distribution. This will save you time.
@@ -32,8 +32,7 @@ $ sudo apt install nicotine
 Package maintainers, please insert instructions for users to install pre-compiled packages from your respective repositories here.
 
 ## Windows
-- [Nicotine+ Installer](https://github.com/Nicotine-Plus/nicotine-plus/releases/download/1.4.1/Nicotine.-1.4.1.exe)  
-- [Nicotine+ Source](https://github.com/Nicotine-Plus/nicotine-plus/archive/1.4.1.tar.gz)
+- [Nicotine+ Installer](https://github.com/Nicotine-Plus/nicotine-plus/releases/download/2.0.0/Nicotine+-2.0.0.exe)  
 
 # License
 
