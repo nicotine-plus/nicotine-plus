@@ -44,7 +44,6 @@ from pynicotine import slskmessages
 from pynicotine.gtkgui.countrycodes import code2name
 from pynicotine.utils import cmp
 from pynicotine.utils import executeCommand
-from pynicotine.utils import findBestEncoding
 
 gi.require_version('Pango', '1.0')
 gi.require_version('Gtk', '3.0')
@@ -1384,7 +1383,7 @@ def is_alias(aliases, cmd):
 
 def expand_alias(aliases, cmd):
     output = _expand_alias(aliases, cmd)
-    return findBestEncoding(output, ['UTF-8', 'ASCII'])
+    return output
 
 
 def _expand_alias(aliases, cmd):
@@ -1442,32 +1441,6 @@ def _expand_alias(aliases, cmd):
                 if not v:
                     v = default
                 ret = ret + v
-            elif alias[i:i + 2] == "|(":
-                arg = getpart(alias[i + 1:])
-                if not arg:
-                    ret = ret + "|"
-                    i = i + 1
-                    continue
-                i = i + len(arg) + 3
-                for j in range(len(cmd) - 1, -1, -1):
-                    arg = arg.replace("$%i" % j, cmd[j])
-                arg = arg.replace("$@", " ".join(cmd[1:]))
-
-                import subprocess
-
-                p = subprocess.Popen(arg, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, close_fds=(not sys.platform.startswith("win")))
-                exit = p.wait()  # noqa: F841
-
-                (stdout, stdin) = (p.stdout, p.stdin)
-                v = stdout.read().split("\n")
-                r = ""
-                for line in v:
-                    line = line.strip()  # noqa: E741
-                    if line:
-                        r = r + line + "\n"
-                ret = ret + r.strip()
-                stdin.close()
-                stdout.close()
             else:
                 ret = ret + alias[i]
                 i = i + 1
