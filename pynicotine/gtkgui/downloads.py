@@ -38,6 +38,7 @@ from pynicotine.gtkgui.transferlist import TransferList
 from pynicotine.gtkgui.utils import HumanSize
 from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.gtkgui.utils import PressHeader
+from pynicotine.gtkgui.utils import SetTreeviewSelectedRow
 from pynicotine.utils import executeCommand
 
 gi.require_version('Gtk', '3.0')
@@ -348,9 +349,7 @@ class Downloads(TransferList):
 
     def OnPopupMenuUsers(self, widget):
 
-        self.selected_transfers = []
-        self.selected_users = []
-        self.widget.get_selection().selected_foreach(self.SelectedTransfersCallback)
+        self.select_transfers()
 
         self.popup_menu_users.clear()
 
@@ -435,16 +434,14 @@ class Downloads(TransferList):
                     self.DoubleClick(event)
                 return False
 
-        self.selected_transfers = []
-        self.selected_users = []
-        self.widget.get_selection().selected_foreach(self.SelectedTransfersCallback)
+            SetTreeviewSelectedRow(widget, event)
+
+        self.select_transfers()
 
         users = len(self.selected_users) > 0
         multi_users = len(self.selected_users) > 1  # noqa: F841
         files = len(self.selected_transfers) > 0
         multi_files = len(self.selected_transfers) > 1
-
-        self.SelectCurrentRow(event, kind)
 
         items = self.popup_menu.get_children()
         if users:

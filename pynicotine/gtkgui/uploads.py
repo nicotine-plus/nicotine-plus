@@ -36,6 +36,7 @@ from pynicotine.gtkgui.entrydialog import OptionDialog
 from pynicotine.gtkgui.transferlist import TransferList
 from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.gtkgui.utils import PressHeader
+from pynicotine.gtkgui.utils import SetTreeviewSelectedRow
 from pynicotine.utils import executeCommand
 
 gi.require_version('Gtk', '3.0')
@@ -303,9 +304,7 @@ class Uploads(TransferList):
 
     def OnPopupMenuUsers(self, widget):
 
-        self.selected_transfers = []
-        self.selected_users = []
-        self.widget.get_selection().selected_foreach(self.SelectedTransfersCallback)
+        self.select_transfers()
 
         self.popup_menu_users.clear()
 
@@ -371,11 +370,9 @@ class Uploads(TransferList):
                     self.DoubleClick(event)
                 return False
 
-        self.selected_transfers = []
-        self.selected_users = []
-        self.widget.get_selection().selected_foreach(self.SelectedTransfersCallback)
+            SetTreeviewSelectedRow(widget, event)
 
-        self.SelectCurrentRow(event, kind)
+        self.select_transfers()
 
         users = len(self.selected_users) > 0
         multi_users = len(self.selected_users) > 1  # noqa: F841
@@ -407,6 +404,7 @@ class Uploads(TransferList):
         items[2].set_sensitive(act)  # send to player
 
         self.popup_menu.popup(None, None, None, None, 3, event.time)
+
         if kind == "keyboard":
             widget.stop_emission_by_name("key_press_event")
         elif kind == "mouse":

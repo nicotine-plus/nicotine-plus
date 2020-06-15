@@ -46,6 +46,7 @@ from pynicotine.gtkgui.utils import InitialiseColumns
 from pynicotine.gtkgui.utils import InputDialog
 from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.gtkgui.utils import PressHeader
+from pynicotine.gtkgui.utils import SetTreeviewSelectedRow
 from pynicotine.gtkgui.utils import showCountryTooltip
 from pynicotine.logfacility import log
 from pynicotine.utils import cmp
@@ -1318,6 +1319,7 @@ class Search:
         if event.button != 3:
             return False
 
+        SetTreeviewSelectedRow(widget, event)
         self.select_results()
 
         items = self.popup_menu.get_children()
@@ -1331,8 +1333,8 @@ class Search:
         items[7].set_sensitive(files)
         items[8].set_sensitive(users)
 
-        widget.stop_emission_by_name("button_press_event")
         self.popup_menu.popup(None, None, None, None, event.button, event.time)
+        widget.stop_emission_by_name("button_press_event")
 
         return True
 
