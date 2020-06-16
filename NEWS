@@ -81,6 +81,7 @@ Bugs closed in GitHub
  * on kde LMB on tray icon brings menu, not app (#270)
  * lower on an int? (#278)
  * unable to download to created folder (#301)
+ * right-clicking file that user 2 downloads points to user 1 (#297)
 
 Version 1.4.3 (unstable)
 -----------------------------

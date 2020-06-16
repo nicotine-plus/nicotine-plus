@@ -39,6 +39,7 @@ from pynicotine.gtkgui.utils import HumanSize
 from pynicotine.gtkgui.utils import InitialiseColumns
 from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.gtkgui.utils import PressHeader
+from pynicotine.gtkgui.utils import SetTreeviewSelectedRow
 from pynicotine.utils import CleanFile
 from pynicotine.utils import displayTraceback
 from pynicotine.utils import executeCommand
@@ -354,6 +355,8 @@ class UserBrowse:
         return False
 
     def OnFilePopupMenu(self, widget, event):
+
+        SetTreeviewSelectedRow(widget, event)
 
         self.selected_files = []
         self.FileTreeView.get_selection().selected_foreach(self.SelectedFilesCallback)

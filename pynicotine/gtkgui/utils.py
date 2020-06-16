@@ -265,6 +265,23 @@ def header_toggle(menuitem, column):
     NICOTINE.SaveColumns()
 
 
+def SetTreeviewSelectedRow(treeview, event):
+    """Handles row selection when right-clicking in a treeview"""
+
+    pathinfo = treeview.get_path_at_pos(event.x, event.y)
+
+    if pathinfo is not None:
+        path, col, cell_x, cell_y = pathinfo
+
+        selection = treeview.get_selection()
+
+        # Make sure we don't attempt to select a single row if the row is already
+        # in a selection of multiple rows, otherwise the other rows will be unselected
+        if selection.count_selected_rows() <= 1 or not selection.path_is_selected(path):
+            treeview.grab_focus()
+            treeview.set_cursor(path, col, False)
+
+
 def ScrollBottom(widget):
     va = widget.get_vadjustment()
     try:
