@@ -232,6 +232,12 @@ class Transfers:
 
     def getFile(self, user, filename, path="", transfer=None, size=None, bitrate=None, length=None):
         path = utils.CleanPath(path, absolute=True)
+
+         for i in self.downloads:
+            if i.user == user and i.filename == filename and i.path == path:
+                # Don't add duplicate downloads
+                return
+
         self.transferFile(0, user, filename, path, transfer, size, bitrate, length)
 
     def pushFile(self, user, filename, realfilename, path="", transfer=None, size=None, bitrate=None, length=None):
