@@ -1453,18 +1453,18 @@ class Search:
 
     def OnDownloadFoldersTo(self, widget):
 
-        subdir = None
         folders = []
-        directories = ChooseDir(self.frame.MainWindow, self.frame.np.config.sections["transfers"]["downloaddir"], create=True, name=subdir)
+        directories = ChooseDir(self.frame.MainWindow, self.frame.np.config.sections["transfers"]["downloaddir"], create=False)
 
         if directories is None or directories == []:
             return
 
         destination = directories[0]
+
         for i in self.selected_results:
 
             user = i[0]
-            dir = "\\".join(i[1].split("\\")[:-1]) + "\\"
+            dir = "\\".join(i[1].split("\\")[:-1])
 
             if (user, dir) in folders:
                 continue
