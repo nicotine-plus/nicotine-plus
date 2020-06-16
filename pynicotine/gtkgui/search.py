@@ -1418,12 +1418,7 @@ class Search:
 
     def OnDownloadFilesTo(self, widget):
 
-        subdir = None
-        for file in self.selected_results:
-            subdir = file[1].rsplit("\\", 1)[0].rsplit("\\", 1)[1]
-            break
-
-        dir = ChooseDir(self.frame.MainWindow, self.frame.np.config.sections["transfers"]["downloaddir"], create=True, name=subdir)
+        dir = ChooseDir(self.frame.MainWindow, self.frame.np.config.sections["transfers"]["downloaddir"], multichoice=False)
 
         if dir is None:
             return
@@ -1456,7 +1451,7 @@ class Search:
     def OnDownloadFoldersTo(self, widget):
 
         folders = []
-        directories = ChooseDir(self.frame.MainWindow, self.frame.np.config.sections["transfers"]["downloaddir"], create=False)
+        directories = ChooseDir(self.frame.MainWindow, self.frame.np.config.sections["transfers"]["downloaddir"], multichoice=False)
 
         if directories is None or directories == []:
             return
