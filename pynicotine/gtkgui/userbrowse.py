@@ -671,7 +671,7 @@ class UserBrowse:
 
     def OnDownloadDirectoryTo(self, widget):
 
-        dir = ChooseDir(self.frame.MainWindow, self.frame.np.config.sections["transfers"]["downloaddir"])
+        dir = ChooseDir(self.frame.MainWindow, self.frame.np.config.sections["transfers"]["downloaddir"], multichoice=False)
 
         if dir is None:
             return
@@ -683,7 +683,7 @@ class UserBrowse:
 
     def OnDownloadDirectoryRecursiveTo(self, widget):
 
-        dir = ChooseDir(self.frame.MainWindow, self.frame.np.config.sections["transfers"]["downloaddir"])
+        dir = ChooseDir(self.frame.MainWindow, self.frame.np.config.sections["transfers"]["downloaddir"], multichoice=False)
 
         if dir is None:
             return
@@ -798,13 +798,17 @@ class UserBrowse:
 
     def OnDownloadFilesTo(self, widget):
 
-        basedir, subdir = self.selected_folder.rsplit("\\", 1)
-        path = os.path.join(self.frame.np.config.sections["transfers"]["downloaddir"], subdir)
+        try:
+            _, dir = self.selected_folder.rsplit("\\", 1)
+        except ValueError:
+            dir = self.selected_folder
+
+        path = os.path.join(self.frame.np.config.sections["transfers"]["downloaddir"], dir)
 
         if os.path.exists(path) and os.path.isdir(path):
-            ldir = ChooseDir(self.frame.MainWindow, path)
+            ldir = ChooseDir(self.frame.MainWindow, path, multichoice=False)
         else:
-            ldir = ChooseDir(self.frame.MainWindow, self.frame.np.config.sections["transfers"]["downloaddir"])
+            ldir = ChooseDir(self.frame.MainWindow, self.frame.np.config.sections["transfers"]["downloaddir"], multichoice=False)
 
         if ldir is None:
             return

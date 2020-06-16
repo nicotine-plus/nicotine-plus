@@ -2789,7 +2789,7 @@ class CensorFrame(buildFrame):
 
         col = self.CensorList.get_column(0)
 
-        self.CensorList.set_cursor(self.censorlist.get_path(iter), focus_column=col, start_editing=True)
+        self.CensorList.set_cursor(self.censorlist.get_path(iter), col, True)
 
     def OnRemove(self, widget):
         selection = self.CensorList.get_selection()
@@ -2841,13 +2841,6 @@ class AutoReplaceFrame(buildFrame):
         iter = store.get_iter(index)
         store.set(iter, pos, value)
 
-        if pos == 0:
-            treeview.set_cursor(
-                store.get_path(iter),
-                treeview.get_column(1),
-                start_editing=True
-            )
-
     def SetSettings(self, config):
         self.replacelist.clear()
         self.p.SetWidgetsData(config, self.options)
@@ -2892,7 +2885,7 @@ class AutoReplaceFrame(buildFrame):
         selection.select_iter(iter)
         col = self.ReplacementList.get_column(0)
 
-        self.ReplacementList.set_cursor(self.replacelist.get_path(iter), focus_column=col, start_editing=True)
+        self.ReplacementList.set_cursor(self.replacelist.get_path(iter), col, True)
 
     def OnRemove(self, widget):
         selection = self.ReplacementList.get_selection()
@@ -3081,11 +3074,7 @@ class buildDialog(gtk.Dialog):
         iter = treeview.get_model().append([""])
         col = treeview.get_column(0)
 
-        treeview.set_cursor(
-            treeview.get_model().get_path(iter),
-            focus_column=col,
-            start_editing=True
-        )
+        treeview.set_cursor(treeview.get_model().get_path(iter), col, True)
 
     def OnRemove(self, widget, treeview):
         selection = treeview.get_selection()

@@ -32,12 +32,12 @@ from gi.repository import Gtk as gtk
 gi.require_version('Gtk', '3.0')
 
 
-def ChooseDir(parent=None, initialdir="~", create=False, name=None, title=None):
+def ChooseDir(parent=None, initialdir="~", title=None, multichoice=True):
     try:
         dialog = gtk.FileChooserNative.new(
             title,
             parent,
-            gtk.FileChooserAction.CREATE_FOLDER,
+            gtk.FileChooserAction.SELECT_FOLDER,
             _("_Open"),
             _("_Cancel")
         )
@@ -48,10 +48,7 @@ def ChooseDir(parent=None, initialdir="~", create=False, name=None, title=None):
         )
         dialog.add_buttons(_("_Cancel"), gtk.ResponseType.CANCEL, _("_Open"), gtk.ResponseType.ACCEPT)
 
-    if create:
-        dialog.set_action(gtk.FileChooserAction.CREATE_FOLDER)
-    else:
-        dialog.set_action(gtk.FileChooserAction.SELECT_FOLDER)
+    if multichoice:
         dialog.set_select_multiple(True)
 
     dir = os.path.expanduser(initialdir)
@@ -60,9 +57,6 @@ def ChooseDir(parent=None, initialdir="~", create=False, name=None, title=None):
         dialog.set_current_folder(dir)
     else:
         dialog.set_current_folder(os.path.expanduser("~"))
-
-    if name:
-        dialog.set_current_name(name)
 
     response = dialog.run()
 
