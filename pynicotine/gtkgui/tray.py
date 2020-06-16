@@ -18,12 +18,12 @@
 import gi
 import glob
 import os
-import sys
 
 from gettext import gettext as _
 
 from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.logfacility import log
+from pynicotine.utils import installPrefix
 
 
 class TrayApp:
@@ -104,7 +104,8 @@ class TrayApp:
                 for iconname in ["trayicon_away", "trayicon_connect", "trayicon_disconnect", "trayicon_msg"]:
                     if not glob.glob(os.path.join(iconpath, iconname) + ".*"):
                         # Fall back to system-wide tray icon location
-                        iconpath = os.path.join(sys.base_prefix, "share/nicotine/trayicons")
+                        prefix = installPrefix()
+                        iconpath = os.path.join(prefix, "share/nicotine/trayicons")
                         if not glob.glob(os.path.join(iconpath, iconname) + ".*"):
                             # Nicotine+ is not installed system-wide, load tray icons from current folder
                             iconpath = os.path.join(os.getcwd(), "img")
