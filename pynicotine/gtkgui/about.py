@@ -159,7 +159,7 @@ Gustavo
 SeeSchloss
 - Developer
 - Made 1.0.8 win32 installer
-- Created Soulfind seeschloss.org/soulfind.html,
+- Created Soulfind github.com/seeschloss/soulfind,
   opensource Soulseek Server written in D
 
 vasi
