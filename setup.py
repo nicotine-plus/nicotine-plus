@@ -152,14 +152,11 @@ if __name__ == '__main__':
         author="Nicotine+ Contributors",
         url="https://nicotine-plus.org/",
         packages=[
-            'pynicotine', 'pynicotine.geoip', 'pynicotine.gtkgui', 'pynicotine.gtkgui.ui',
-            'test', 'test.unit', 'test.unit.data', 'test.integration',
+            'pynicotine', 'pynicotine.geoip', 'pynicotine.gtkgui', 'pynicotine.gtkgui.ui'
         ],
         package_data={
             'pynicotine.geoip': ["ipcountrydb.bin"],
-            'pynicotine.gtkgui.ui': ["*.ui"],
-            'test.unit.data': ["login/socket_localhost:22420.log"],
-            'test.integration': ["nicotine.robot"]
+            'pynicotine.gtkgui.ui': ["*.ui"]
         },
         scripts=['nicotine'],
         long_description=LONG_DESCRIPTION,

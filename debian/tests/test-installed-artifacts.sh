@@ -16,7 +16,7 @@ pip3 --disable-pip-version-check install robotframework
 
 # Run the GUI inside of a dummy frame buffer...
 echo "*** Launching Nicotine+ inside of dummy frame buffer..."
-xvfb-run robot test/integration/nicotine.robot
+xvfb-run robot ../../test/integration/nicotine.robot
 
 # Done...
 echo "*** OK!"

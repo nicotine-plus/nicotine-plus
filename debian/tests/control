@@ -7,7 +7,7 @@ Restrictions: isolation-container, superficial
 Features: test-name=test-version
 
 # Perform local in-tree unit tests...
-Test-Command: py.test-3 test/unit
+Test-Command: py.test-3 ../../test/unit
 Depends: @, python3-pytest
 Restrictions: isolation-container
 Features: test-name=unit-tests
