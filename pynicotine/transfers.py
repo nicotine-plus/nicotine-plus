@@ -150,6 +150,8 @@ class Transfers:
 
             if len(i) >= 4 and i[3] in ("Aborted", "Paused"):
                 status = "Paused"
+            elif len(i) >= 4 and i[3] == "Filtered":
+                status = "Filtered"
             else:
                 status = "Getting status"
 

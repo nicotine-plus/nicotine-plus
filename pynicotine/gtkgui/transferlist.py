@@ -362,6 +362,11 @@ class TransferList:
                 for f in range(files):
 
                     iter = self.transfersmodel.iter_nth_child(user, f)
+                    status = self.transfersmodel.get_value(iter, 2)
+
+                    if salientstatus in ('', _("Finished"), _("Filtered")):  # we prefer anything over ''/finished
+                        salientstatus = status
+
                     filename = self.transfersmodel.get_value(iter, 10)
                     parts = filename.rsplit('.', 1)
 
@@ -372,6 +377,10 @@ class TransferList:
                         except KeyError:
                             extensions[ext.lower()] = 1
 
+                    if status == _("Filtered"):
+                        # We don't want to count filtered files when calculating the progress
+                        continue
+
                     for transfer in self.list:
                         if [transfer.user, transfer.filename] == [username, filename] and transfer.timeelapsed is not None:
                             elap += transfer.timeelapsed
@@ -379,7 +388,6 @@ class TransferList:
 
                     totalsize += self.transfersmodel.get_value(iter, 12)
                     position += self.transfersmodel.get_value(iter, 13)
-                    status = self.transfersmodel.get_value(iter, 2)
 
                     if status == _("Transferring"):
                         str_speed = self.transfersmodel.get_value(iter, 15)
@@ -387,9 +395,6 @@ class TransferList:
                             ispeed += float(str_speed)
 
                         left = self.transfersmodel.get_value(iter, 8)
-
-                    if salientstatus in ('', _("Finished")):  # we prefer anything over ''/finished
-                        salientstatus = status
 
                     if status in (_("Transferring"), _("Banned"), _("Getting address"), _("Establishing connection")):
                         salientstatus = status
