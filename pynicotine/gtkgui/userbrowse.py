@@ -667,6 +667,7 @@ class UserBrowse:
             self.DownloadDirectory(self.selected_folder)
 
     def OnDownloadDirectoryRecursive(self, widget):
+
         self.DownloadDirectory(self.selected_folder, "", 1)
 
     def OnDownloadDirectoryTo(self, widget):
@@ -698,13 +699,13 @@ class UserBrowse:
         if dir is None:
             return
 
+        ldir = prefix + dir.split("\\")[-1]
+
         for d, f in self.shares:
 
             # Find the wanted directory
             if d != dir:
                 continue
-
-            ldir = prefix + dir.split("\\")[-1]
 
             priorityfiles = []
             normalfiles = []
@@ -749,12 +750,12 @@ class UserBrowse:
 
                 self.frame.np.transfers.getFile(self.user, path, ldir, size=size, bitrate=bitrate, length=length)
 
-            if not recurse:
-                break
+        if not recurse:
+            return
 
-            for subdir, subf in self.shares:
-                if dir in subdir and dir != subdir:
-                    self.DownloadDirectory(subdir, os.path.join(ldir, ""), recurse)
+        for subdir, subf in self.shares:
+            if dir in subdir and dir != subdir:
+                self.DownloadDirectory(subdir, os.path.join(ldir, ""), recurse)
 
     def OnDownloadFiles(self, widget, prefix=""):
 
