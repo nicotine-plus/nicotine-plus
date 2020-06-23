@@ -316,6 +316,12 @@ class Downloads(TransferList):
                 self.OnRetryTransfer(widget)
             elif key == "Delete":
                 self.OnAbortTransfer(widget, True, True)
+            else:
+                # No key match, continue event
+                return False
+
+        widget.stop_emission_by_name("key_press_event")
+        return True
 
     def OnPlayFiles(self, widget, prefix=""):
         start_new_thread(self._OnPlayFiles, (widget, prefix))

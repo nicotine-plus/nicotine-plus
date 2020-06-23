@@ -278,14 +278,18 @@ class Uploads(TransferList):
         if key in ("P", "p"):
             self.OnPopupMenu(widget, event, "keyboard")
         else:
-            self.selected_transfers = []
-            self.selected_users = []
-            self.widget.get_selection().selected_foreach(self.SelectedTransfersCallback)
+            self.select_transfers()
 
             if key in ("T", "t"):
                 self.OnAbortTransfer(widget)
             elif key == "Delete":
                 self.OnAbortTransfer(widget, False, True)
+            else:
+                # No key match, continue event
+                return False
+
+        widget.stop_emission_by_name("key_press_event")
+        return True
 
     def OnPlayFiles(self, widget, prefix=""):
         start_new_thread(self._OnPlayFiles, (widget, prefix))
