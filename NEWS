@@ -84,6 +84,7 @@ Bugs closed in GitHub
  * unable to download to created folder (#301)
  * status never reach 100% becasue of filtered files (#302)
  * twice downloaded same folder, aborted duplicate files, remove aborted does not remove (#305)
+ * downloading folder from user browse doesn't work (#311)
 
 Version 1.4.3 (unstable)
 -----------------------------
