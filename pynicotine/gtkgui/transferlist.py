@@ -590,9 +590,7 @@ class TransferList:
             i.req = None
 
             if clear:
-                for t in self.list[:]:
-                    if i.user == t.user and i.filename == t.filename:
-                        self.list.remove(t)
+                self.list.remove(i)
 
         self.update()
 
