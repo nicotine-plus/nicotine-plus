@@ -755,7 +755,7 @@ class UserBrowse:
 
         for subdir, subf in self.shares:
             if dir in subdir and dir != subdir:
-                self.DownloadDirectory(subdir, os.path.join(ldir, ""), recurse)
+                self.DownloadDirectory(subdir, os.path.join(ldir, ""))
 
     def OnDownloadFiles(self, widget, prefix=""):
 
