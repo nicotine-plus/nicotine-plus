@@ -12,8 +12,8 @@ added_files = [
     # GTK Builder files
     ('../../pynicotine/gtkgui/ui/*.ui', 'pynicotine/gtkgui/ui'),
 
-    # GTK win32 theme
-    ('../../files/windows/settings.ini', 'etc/gtk-3.0'),
+    # GeoIP database
+    ('../../pynicotine/geoip/ipcountrydb.bin', 'pynicotine/geoip'),
     
     # Icon
     ('../../files/org.nicotine_plus.Nicotine.svg', 'share/icons/hicolor/scalable/apps'),
