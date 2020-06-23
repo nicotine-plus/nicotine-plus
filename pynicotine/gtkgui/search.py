@@ -1414,7 +1414,7 @@ class Search:
             return
 
         for file in self.selected_results:
-            self.frame.np.transfers.getFile(file[0], file[1], prefix, size=file[2], bitrate=file[3], length=file[4])
+            self.frame.np.transfers.getFile(file[0], file[1], prefix, size=file[2], bitrate=file[3], length=file[4], checkduplicate=True)
 
     def OnDownloadFilesTo(self, widget):
 
