@@ -28,6 +28,7 @@ import sys
 from gettext import gettext as _
 
 import gi
+from gi.repository import Gdk
 from gi.repository import GObject as gobject
 from gi.repository import Gtk as gtk
 
@@ -235,7 +236,7 @@ class NowPlaying:
     def OnKeyPress(self, widget, event):
 
         # Close the window when escape is pressed
-        if event.keyval == gtk.keysyms.Escape:
+        if event.keyval == Gdk.KEY_Escape:
             self.quit(None)
 
     def quit(self, widget, s=None):
