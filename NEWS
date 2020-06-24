@@ -4,7 +4,7 @@ News
     As per GCS § 6.7, this file contains a list of user-visible noteworthy
     changes. Note that this is not the same as a changelog.
 
-Version 2.0.0 (<insert date here>)
+Version 2.0.0 (24 June 2020)
 -----------------------------
 
 Changes
@@ -22,6 +22,7 @@ Changes
  * Column widths are now remembered between sessions
  * Added option to open previous tab on startup
  * Added option to hide buddy list
+ * Custom messages can now be sent to leechers in Settings -> Misc -> Plugins -> Leech detector
  * Plugins are now bundled with Nicotine+ installations by default
  * Nicotine+ now follows the XDG Base Directory Specification
  * Replaced deprecated dependencies with maintained ones
@@ -99,6 +100,7 @@ Bugs closed in GitHub
  * twice downloaded same folder, aborted duplicate files, remove aborted does not remove (#305)
  * downloading folder from user browse doesn't work (#311)
  * cannot connect (#312)
+ * In download page, pressing Delete key removes 2 files instead of 1 (#314)
  * Distrib message type 93 unknown (#322)
  * Window decorator close button doesn't work (#330)
  * Question: group by folders vs group by users (#335)
