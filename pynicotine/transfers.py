@@ -232,13 +232,14 @@ class Transfers:
         if msg.status == 0:
             self.checkUploadQueue()
 
-    def getFile(self, user, filename, path="", transfer=None, size=None, bitrate=None, length=None):
+    def getFile(self, user, filename, path="", transfer=None, size=None, bitrate=None, length=None, checkduplicate=False):
         path = utils.CleanPath(path, absolute=True)
 
-        for i in self.downloads:
-            if i.user == user and i.filename == filename and i.path == path:
-                # Don't add duplicate downloads
-                return
+        if checkduplicate:
+            for i in self.downloads:
+                if i.user == user and i.filename == filename and i.path == path:
+                    # Don't add duplicate downloads
+                    return
 
         self.transferFile(0, user, filename, path, transfer, size, bitrate, length)
 
@@ -1862,7 +1863,8 @@ class Transfers:
                                 self.FolderDestination(username, directory),
                                 size=file[2],
                                 bitrate=bitrate,
-                                length=length
+                                length=length,
+                                checkduplicate=True
                             )
                         else:
                             self.getFile(
@@ -1871,7 +1873,8 @@ class Transfers:
                                 self.FolderDestination(username, directory),
                                 size=file[2],
                                 bitrate=bitrate,
-                                length=length
+                                length=length,
+                                checkduplicate=True
                             )
 
     def FolderDestination(self, user, directory):

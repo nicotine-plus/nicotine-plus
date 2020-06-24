@@ -268,7 +268,7 @@ class MetaDialog(gtk.Dialog):
 
     def OnDownloadItem(self, widget):
         meta = self.data[self.current]
-        self.nicotine.np.transfers.getFile(meta["user"], meta["fn"], "")
+        self.nicotine.np.transfers.getFile(meta["user"], meta["fn"], "", checkduplicate=True)
 
     def OnBrowseUser(self, widget):
         meta = self.data[self.current]
@@ -276,7 +276,7 @@ class MetaDialog(gtk.Dialog):
 
     def OnDownloadAll(self, widget):
         for item, meta in list(self.data.items()):
-            self.nicotine.np.transfers.getFile(meta["user"], meta["fn"], "")
+            self.nicotine.np.transfers.getFile(meta["user"], meta["fn"], "", checkduplicate=True)
 
     def OnPrevious(self, widget):
 
