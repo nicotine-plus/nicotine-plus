@@ -68,7 +68,7 @@
             </child>
             <child>
               <object class="GtkCheckButton" id="directoryGroup">
-                <property name="label" translatable="yes">Group by Directory</property>
+                <property name="label" translatable="yes">Group by folder</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>

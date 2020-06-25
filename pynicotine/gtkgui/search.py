@@ -1070,20 +1070,17 @@ class Search:
 
         try:
             if directory in self.directoryiters:
-                iter = self.resultsmodel.append(
+                self.resultsmodel.append(
                     self.directoryiters[directory],
-                    [0, user, self.get_flag(user, country), immediatedl, h_speed, h_queue, "", filename, h_size, h_bitrate, length, bitrate, fullpath, country, size, speed, queue, status]
+                    [0, user, self.get_flag(user, country), immediatedl, h_speed, h_queue, directory, filename, h_size, h_bitrate, length, bitrate, fullpath, country, size, speed, queue, status]
                 )
             else:
-                iter = self.resultsmodel.append(None, row)  # noqa: F841
+                self.resultsmodel.append(None, row)  # noqa: F841
         except Exception as e:
             types = []
             for i in row:
                 types.append(type(i))
             print("Search row error:", e, row)
-            iter = None
-
-        return iter
 
     def CountResults(self):
 
@@ -1249,14 +1246,19 @@ class Search:
 
     def SelectedResultsCallback(self, model, path, iter):
 
-        num = model.get_value(iter, 0)
         user = model.get_value(iter, 1)
+        dir = model.get_value(iter, 6)
+        file = model.get_value(iter, 7)
         fn = None
+        isdirectory = False
 
         for r in self.all_data:
 
-            if num != r[0] or user != r[1]:
+            if (file != "" and file != r[7]) or dir != r[6] or user != r[1]:
                 continue
+
+            if file == "":
+                isdirectory = True
 
             fn = r[12]
             size = r[14]
@@ -1270,10 +1272,7 @@ class Search:
         if user not in self.selected_users:
             self.selected_users.append(user)
 
-        if fn is None or fn == "":
-            return
-
-        self.selected_results.append((user, fn, size, bitrate, length))
+        self.selected_results.append((user, fn, size, bitrate, length, isdirectory))
 
     def OnListClicked(self, widget, event):
 
@@ -1302,9 +1301,18 @@ class Search:
         for i in range(0, 5):
             items[i].set_sensitive(files)
 
-        items[6].set_sensitive(files)
+        items[0].set_sensitive(False)
+        items[1].set_sensitive(False)
+        items[6].set_sensitive(False)
         items[7].set_sensitive(files)
         items[8].set_sensitive(users)
+
+        for result in self.selected_results:
+            if result[5] is False:
+                # At least one selected result is a file, activate file-related items
+                items[0].set_sensitive(True)
+                items[1].set_sensitive(True)
+                items[6].set_sensitive(True)
 
         self.popup_menu.popup(None, None, None, None, event.button, event.time)
         widget.stop_emission_by_name("button_press_event")
@@ -1387,7 +1395,9 @@ class Search:
             return
 
         for file in self.selected_results:
-            self.frame.np.transfers.getFile(file[0], file[1], prefix, size=file[2], bitrate=file[3], length=file[4])
+            # Make sure the selected result is not a directory
+            if file[5] is False:
+                self.frame.np.transfers.getFile(file[0], file[1], prefix, size=file[2], bitrate=file[3], length=file[4])
 
     def OnDownloadFilesTo(self, widget):
 
