@@ -126,20 +126,20 @@ class TransferList:
         self.col_status.set_sort_column_id(3)
 
         # Only view progress renderer on transfers, not user tree parents
-        self.transfersmodel.set_sort_func(2, self.status_sort_func, 2)
+        self.transfersmodel.set_sort_func(3, self.status_sort_func, 3)
         self.col_position.set_sort_column_id(4)
-        self.transfersmodel.set_sort_func(3, int_sort_func, 3)
+        self.transfersmodel.set_sort_func(4, int_sort_func, 4)
         self.col_percent.set_sort_column_id(11)
 
-        self.col_percent.set_attributes(self.col_percent.get_cells()[0], value=4, visible=14)
+        self.col_percent.set_attributes(self.col_percent.get_cells()[0], value=5, visible=14)
 
         self.col_human_size.set_sort_column_id(12)
         self.col_human_speed.set_sort_column_id(7)
         self.col_time_elapsed.set_sort_column_id(8)
         self.col_time_left.set_sort_column_id(9)
 
-        self.transfersmodel.set_sort_func(11, self.progress_sort_func, 4)
-        self.transfersmodel.set_sort_func(6, float_sort_func, 6)
+        self.transfersmodel.set_sort_func(11, self.progress_sort_func, 5)
+        self.transfersmodel.set_sort_func(7, float_sort_func, 7)
 
         widget.set_model(self.transfersmodel)
 
@@ -438,6 +438,11 @@ class TransferList:
                     14, True,
                     15, speed
                 )
+
+        for (username, useriter) in [x for x in self.users.items()]:
+            if not self.transfersmodel.iter_has_child(useriter):
+                self.transfersmodel.remove(useriter)
+                del self.users[username]
 
         self.lastupdate = time()  # ...and we're done
 

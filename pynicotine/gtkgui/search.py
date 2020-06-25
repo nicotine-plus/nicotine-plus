@@ -1104,16 +1104,25 @@ class Search:
 
         if self.directoryGroup.get_active():
 
-            iter_count = 0
-            user_count = self.resultsmodel.iter_n_children(None)
-
-            for i in range(user_count):
-                iters = self.resultsmodel.iter_nth_child(None, i)
-                iter_count += self.resultsmodel.iter_n_children(iters)
+            iter_count = self.ResultIter(self.resultsmodel.get_iter_first())
 
             self.Counter.set_text("Results: %d/%d" % (iter_count, len(self.all_data)))
         else:
             self.Counter.set_text("Results: %d/%d" % (self.resultsmodel.iter_n_children(None), len(self.all_data)))
+
+    def ResultIter(self, iter, count=0):
+
+        while iter is not None:
+
+            count += self.resultsmodel.iter_n_children(iter)
+
+            if self.resultsmodel.iter_has_child(iter):
+
+                self.ResultIter(self.resultsmodel.iter_children(iter), count)
+
+            iter = self.resultsmodel.iter_next(iter)
+
+        return count
 
     def OnPopupMenuUsers(self, widget):
 
