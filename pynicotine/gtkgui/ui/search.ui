@@ -67,8 +67,8 @@
               </packing>
             </child>
             <child>
-              <object class="GtkCheckButton" id="usersGroup">
-                <property name="label" translatable="yes">Group by Users</property>
+              <object class="GtkCheckButton" id="directoryGroup">
+                <property name="label" translatable="yes">Group by Directory</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>

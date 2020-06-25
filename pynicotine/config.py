@@ -231,6 +231,7 @@ class Config:
             },
 
             "searches": {
+                "group_directory": True,
                 "maxresults": 50,
                 "re_filter": 0,
                 "history": [],
