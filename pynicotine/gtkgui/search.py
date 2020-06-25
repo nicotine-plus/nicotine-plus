@@ -516,7 +516,7 @@ class Search:
         self.resultslimit = 2000
         self.QueryLabel.set_text(text)
 
-        self.directoryGroup.set_active(self.frame.np.config.sections["searches"]["group_directory"])
+        self.directoryGroup.set_active(self.frame.np.config.sections["searches"]["group_searches"])
         self.directoryGroup.connect("toggled", self.OnGroup)
 
         self.all_data = []
@@ -581,7 +581,7 @@ class Search:
         self.ResultsList.get_selection().set_mode(gtk.SelectionMode.MULTIPLE)
         self.ResultsList.set_property("show-expanders", self.directoryGroup.get_active())
         self.ResultsList.set_property("rules-hint", True)
-        widths = self.frame.np.config.sections["columns"]["search_widths"]
+        widths = self.frame.np.config.sections["columns"]["filesearch_widths"]
         cols = InitialiseColumns(
             self.ResultsList,
             [_("Number"), widths[0], "text", self.CellDataFunc],
@@ -597,6 +597,7 @@ class Search:
             [_("Length"), widths[10], "text", self.CellDataFunc]
         )
 
+        self.col_num, self.col_user, self.col_country, self.col_immediate, self.col_speed, self.col_queue, self.col_directory, self.col_file, self.col_size, self.col_bitrate, self.col_length = cols
         cols[0].get_widget().hide()
 
         for i in range(11):
@@ -606,9 +607,22 @@ class Search:
                 parent.connect('button_press_event', PressHeader)
 
             # Read Show / Hide column settings from last session
-            cols[i].set_visible(self.frame.np.config.sections["columns"]["search"][i])
+            cols[i].set_visible(self.frame.np.config.sections["columns"]["filesearch_columns"][i])
 
         self.ResultsList.set_model(self.resultsmodel)
+
+        self.col_num.set_sort_column_id(0)
+        self.col_user.set_sort_column_id(1)
+        self.col_file.set_sort_column_id(7)
+        self.col_size.set_sort_column_id(14)
+        self.col_speed.set_sort_column_id(15)
+        self.col_queue.set_sort_column_id(16)
+        self.col_immediate.set_sort_column_id(3)
+        self.col_bitrate.set_sort_column_id(11)
+        self.col_length.set_sort_column_id(10)
+        self.col_country.set_sort_column_id(13)
+        self.col_directory.set_sort_column_id(6)
+
         self.ResultsList.set_enable_tree_lines(True)
         self.ResultsList.set_headers_clickable(True)
 
@@ -865,19 +879,57 @@ class Search:
     def append(self, results):
 
         for row in results:
-
-            self.AddRow(row)
+            iter = self.AddRowToModel(row)
 
             self.all_data.append(row)
 
-            if self.directoryGroup.get_active():
-                if self.ExpandButton.get_active():
-                    self.ResultsList.expand_all()
-                else:
-                    self.ResultsList.collapse_all()
+            if self.directoryGroup.get_active() and self.ExpandButton.get_active():
+                path = None
+
+                if iter is not None:
+                    path = self.resultsmodel.get_path(iter)
+
+                if path is not None:
+                    self.ResultsList.expand_to_path(path)
 
             if len(self.resultsmodel) >= self.frame.np.config.sections['searches']["max_displayed_results"]:
                 break
+
+    def AddRowToModel(self, row):
+        counter, user, flag, immediatedl, h_speed, h_queue, directory, filename, h_size, h_bitrate, length, bitrate, fullpath, country, size, speed, queue, status = row
+
+        if user in self.Searches.users and status != self.Searches.users[user]:
+            status = self.Searches.users[user]
+
+        if self.directoryGroup.get_active():
+            if user not in self.usersiters:
+                self.usersiters[user] = self.resultsmodel.append(
+                    None,
+                    [0, user, self.get_flag(user, country), immediatedl, h_speed, h_queue, "", "", "", "", "", 0, "", country, 0, speed, queue, status]
+                )
+
+            if directory not in self.directoryiters:
+                self.directoryiters[directory] = self.resultsmodel.append(
+                    self.usersiters[user],
+                    [0, user, self.get_flag(user, country), immediatedl, h_speed, h_queue, directory, "", "", "", "", 0, "", country, 0, speed, queue, status]
+                )
+
+        try:
+            if directory in self.directoryiters:
+                iter = self.resultsmodel.append(
+                    self.directoryiters[directory],
+                    [0, user, self.get_flag(user, country), immediatedl, h_speed, h_queue, "", filename, h_size, h_bitrate, length, bitrate, fullpath, country, size, speed, queue, status]
+                )
+            else:
+                iter = self.resultsmodel.append(None, row)  # noqa: F841
+        except Exception as e:
+            types = []
+            for i in row:
+                types.append(type(i))
+            print("Search row error:", e, row)
+            iter = None
+
+        return iter
 
     def updateStatus(self, user, status):
 
@@ -1041,46 +1093,12 @@ class Search:
         for row in self.all_data:
 
             if self.check_filter(row):
-
-                self.AddRow(row)
+                self.AddRowToModel(row)
 
             if len(self.resultsmodel) >= self.frame.np.config.sections['searches']["max_displayed_results"]:
                 break
 
         self.CountResults()
-
-    def AddRow(self, row):
-        counter, user, flag, immediatedl, h_speed, h_queue, directory, filename, h_size, h_bitrate, length, bitrate, fullpath, country, size, speed, queue, status = row
-
-        if user in self.Searches.users and status != self.Searches.users[user]:
-            status = self.Searches.users[user]
-
-        if self.directoryGroup.get_active():
-            if user not in self.usersiters:
-                self.usersiters[user] = self.resultsmodel.append(
-                    None,
-                    [0, user, self.get_flag(user, country), immediatedl, h_speed, h_queue, "", "", "", "", "", 0, "", country, 0, speed, queue, status]
-                )
-
-            if directory not in self.directoryiters:
-                self.directoryiters[directory] = self.resultsmodel.append(
-                    self.usersiters[user],
-                    [0, user, self.get_flag(user, country), immediatedl, h_speed, h_queue, directory, "", "", "", "", 0, "", country, 0, speed, queue, status]
-                )
-
-        try:
-            if directory in self.directoryiters:
-                self.resultsmodel.append(
-                    self.directoryiters[directory],
-                    [0, user, self.get_flag(user, country), immediatedl, h_speed, h_queue, "", filename, h_size, h_bitrate, length, bitrate, fullpath, country, size, speed, queue, status]
-                )
-            else:
-                self.resultsmodel.append(None, row)  # noqa: F841
-        except Exception as e:
-            types = []
-            for i in row:
-                types.append(type(i))
-            print("Search row error:", e, row)
 
     def CountResults(self):
 
@@ -1241,8 +1259,8 @@ class Search:
             columns.append(column.get_visible())
             widths.append(column.get_width())
 
-        self.frame.np.config.sections["columns"]["search"] = columns
-        self.frame.np.config.sections["columns"]["search_widths"] = widths
+        self.frame.np.config.sections["columns"]["filesearch_columns"] = columns
+        self.frame.np.config.sections["columns"]["filesearch_widths"] = widths
 
     def SelectedResultsCallback(self, model, path, iter):
 
@@ -1307,6 +1325,7 @@ class Search:
 
         items[0].set_sensitive(False)
         items[1].set_sensitive(False)
+        items[4].set_sensitive(False)
         items[6].set_sensitive(False)
         items[7].set_sensitive(files)
         items[8].set_sensitive(users)
@@ -1316,6 +1335,7 @@ class Search:
                 # At least one selected result is a file, activate file-related items
                 items[0].set_sensitive(True)
                 items[1].set_sensitive(True)
+                items[4].set_sensitive(True)
                 items[6].set_sensitive(True)
 
         self.popup_menu.popup(None, None, None, None, event.button, event.time)
@@ -1354,33 +1374,36 @@ class Search:
 
     def SelectedResultsAllData(self, model, path, iter, data):
 
-        num = model.get_value(iter, 0)
-        user = model.get_value(iter, 1)
-        immediate = model.get_value(iter, 3)
-        speed = model.get_value(iter, 4)
-        queue = model.get_value(iter, 5)
-        directory = model.get_value(iter, 6)
         filename = model.get_value(iter, 7)
-        size = model.get_value(iter, 8)
-        bitratestr = model.get_value(iter, 9)
-        length = model.get_value(iter, 10)
-        fn = model.get_value(iter, 12)
-        country = model.get_value(iter, 13)
 
-        data[len(data)] = {
-            "user": user,
-            "fn": fn,
-            "position": num,
-            "filename": filename,
-            "directory": directory,
-            "size": size,
-            "speed": speed,
-            "queue": queue,
-            "immediate": immediate,
-            "bitrate": bitratestr,
-            "length": length,
-            "country": country
-        }
+        # We only want to see the metadata of files, not directories
+        if filename != "":
+            num = model.get_value(iter, 0)
+            user = model.get_value(iter, 1)
+            immediate = model.get_value(iter, 3)
+            speed = model.get_value(iter, 4)
+            queue = model.get_value(iter, 5)
+            directory = model.get_value(iter, 6)
+            size = model.get_value(iter, 8)
+            bitratestr = model.get_value(iter, 9)
+            length = model.get_value(iter, 10)
+            fn = model.get_value(iter, 12)
+            country = model.get_value(iter, 13)
+
+            data[len(data)] = {
+                "user": user,
+                "fn": fn,
+                "position": num,
+                "filename": filename,
+                "directory": directory,
+                "size": size,
+                "speed": speed,
+                "queue": queue,
+                "immediate": immediate,
+                "bitrate": bitratestr,
+                "length": length,
+                "country": country
+            }
 
     def OnSearchMeta(self, widget):
 
@@ -1490,7 +1513,7 @@ class Search:
 
         self.ResultsList.set_property("show-expanders", widget.get_active())
 
-        self.frame.np.config.sections["searches"]["group_directory"] = self.directoryGroup.get_active()
+        self.frame.np.config.sections["searches"]["group_searches"] = self.directoryGroup.get_active()
 
         if widget.get_active():
             self.ResultsList.get_columns()[0].set_visible(False)

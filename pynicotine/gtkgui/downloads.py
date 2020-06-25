@@ -49,7 +49,7 @@ class Downloads(TransferList):
 
     def __init__(self, frame):
 
-        TransferList.__init__(self, frame, frame.DownloadList, type='downloads')
+        TransferList.__init__(self, frame, frame.DownloadList, type='download')
         self.myvbox = self.frame.downloadsvbox
         self.frame.DownloadList.set_property("rules-hint", True)
         self.accel_group = gtk.AccelGroup()
@@ -98,7 +98,7 @@ class Downloads(TransferList):
                     parent.connect("button_press_event", PressHeader)
 
                 # Read Show / Hide column settings from last session
-                cols[i].set_visible(self.frame.np.config.sections["columns"]["downloads_columns"][i])
+                cols[i].set_visible(self.frame.np.config.sections["columns"]["download_columns"][i])
         except IndexError:
             # Column count in config is probably incorrect (outdated?), don't crash
             pass
@@ -128,8 +128,8 @@ class Downloads(TransferList):
         for column in self.frame.DownloadList.get_columns():
             columns.append(column.get_visible())
             widths.append(column.get_width())
-        self.frame.np.config.sections["columns"]["downloads_columns"] = columns
-        self.frame.np.config.sections["columns"]["downloads_widths"] = widths
+        self.frame.np.config.sections["columns"]["download_columns"] = columns
+        self.frame.np.config.sections["columns"]["download_widths"] = widths
 
     def OnToggleAutoRetry(self, widget):
         self.frame.np.config.sections["transfers"]["autoretry_downloads"] = self.frame.ToggleAutoRetry.get_active()

@@ -77,6 +77,7 @@ class TransferList:
         self.selected_transfers = []
         self.selected_users = []
         self.users = {}
+        self.paths = {}
         self.lastupdate = 0
         self.finalupdatetimerid = None
         widget.get_selection().set_mode(gtk.SelectionMode.MULTIPLE)
@@ -86,8 +87,8 @@ class TransferList:
             gobject.TYPE_STRING,
             gobject.TYPE_STRING,
             gobject.TYPE_STRING,
-            gobject.TYPE_UINT64,
             gobject.TYPE_STRING,
+            gobject.TYPE_UINT64,
             gobject.TYPE_STRING,
             gobject.TYPE_STRING,
             gobject.TYPE_STRING,
@@ -106,36 +107,36 @@ class TransferList:
         self.cols = cols = InitialiseColumns(
             widget,
             [_("User"), widths[0], "text", self.CellDataFunc],
-            [_("Filename"), widths[1], "text", self.CellDataFunc],
-            [_("Status"), widths[2], "text", self.CellDataFunc],
-            [_("Queue Position"), widths[3], "text", self.CellDataFunc],
-            [_("Percent"), widths[4], "progress"],
-            [_("Size"), widths[5], "text", self.CellDataFunc],
-            [_("Speed"), widths[6], "text", self.CellDataFunc],
-            [_("Time elapsed"), widths[7], "text", self.CellDataFunc],
-            [_("Time left"), widths[8], "text", self.CellDataFunc],
-            [_("Path"), widths[9], "text", self.CellDataFunc]
+            [_("Path"), widths[1], "text", self.CellDataFunc],
+            [_("Filename"), widths[2], "text", self.CellDataFunc],
+            [_("Status"), widths[3], "text", self.CellDataFunc],
+            [_("Queue Position"), widths[4], "text", self.CellDataFunc],
+            [_("Percent"), widths[5], "progress"],
+            [_("Size"), widths[6], "text", self.CellDataFunc],
+            [_("Speed"), widths[7], "text", self.CellDataFunc],
+            [_("Time elapsed"), widths[8], "text", self.CellDataFunc],
+            [_("Time left"), widths[9], "text", self.CellDataFunc]
         )
 
-        self.col_user, self.col_filename, self.col_status, self.col_position, self.col_percent, self.col_human_size, self.col_human_speed, self.col_time_elapsed, self.col_time_left, self.col_path = cols
+        self.col_user, self.col_path, self.col_filename, self.col_status, self.col_position, self.col_percent, self.col_human_size, self.col_human_speed, self.col_time_elapsed, self.col_time_left = cols
 
         self.col_user.set_sort_column_id(0)
-        self.col_filename.set_sort_column_id(1)
-        self.col_status.set_sort_column_id(2)
+        self.col_path.set_sort_column_id(1)
+        self.col_filename.set_sort_column_id(2)
+        self.col_status.set_sort_column_id(3)
 
         # Only view progress renderer on transfers, not user tree parents
         self.transfersmodel.set_sort_func(2, self.status_sort_func, 2)
-        self.col_position.set_sort_column_id(3)
+        self.col_position.set_sort_column_id(4)
         self.transfersmodel.set_sort_func(3, int_sort_func, 3)
         self.col_percent.set_sort_column_id(11)
 
         self.col_percent.set_attributes(self.col_percent.get_cells()[0], value=4, visible=14)
 
         self.col_human_size.set_sort_column_id(12)
-        self.col_human_speed.set_sort_column_id(6)
-        self.col_time_elapsed.set_sort_column_id(7)
-        self.col_time_left.set_sort_column_id(8)
-        self.col_path.set_sort_column_id(9)
+        self.col_human_speed.set_sort_column_id(7)
+        self.col_time_elapsed.set_sort_column_id(8)
+        self.col_time_left.set_sort_column_id(9)
 
         self.transfersmodel.set_sort_func(11, self.progress_sort_func, 4)
         self.transfersmodel.set_sort_func(6, float_sort_func, 6)
@@ -207,6 +208,7 @@ class TransferList:
         self.transfersmodel.clear()
         self.transfers = []
         self.users.clear()
+        self.paths.clear()
         self.selected_transfers = []
         self.selected_users = []
 
@@ -362,7 +364,7 @@ class TransferList:
                 for f in range(files):
 
                     iter = self.transfersmodel.iter_nth_child(user, f)
-                    status = self.transfersmodel.get_value(iter, 2)
+                    status = self.transfersmodel.get_value(iter, 3)
 
                     if salientstatus in ('', _("Finished"), _("Filtered")):  # we prefer anything over ''/finished
                         salientstatus = status
@@ -394,7 +396,7 @@ class TransferList:
                         if str_speed != "":
                             ispeed += float(str_speed)
 
-                        left = self.transfersmodel.get_value(iter, 8)
+                        left = self.transfersmodel.get_value(iter, 9)
 
                     if status in (_("Transferring"), _("Banned"), _("Getting address"), _("Establishing connection")):
                         salientstatus = status
@@ -425,13 +427,13 @@ class TransferList:
 
                 self.transfersmodel.set(
                     user,
-                    1, _("%(number)2s files ") % {'number': files} + " (" + extensions + ")",
-                    2, salientstatus,
-                    4, percent,
-                    5, "%s / %s" % (HumanSize(position), HumanSize(totalsize)),
-                    6, HumanSpeed(speed),
-                    7, elapsed,
-                    8, left,
+                    2, _("%(number)2s files ") % {'number': files} + " (" + extensions + ")",
+                    3, salientstatus,
+                    5, percent,
+                    6, "%s / %s" % (HumanSize(position), HumanSize(totalsize)),
+                    7, HumanSpeed(speed),
+                    8, elapsed,
+                    9, left,
                     12, ispeed,
                     14, True,
                     15, speed
@@ -511,15 +513,15 @@ class TransferList:
 
             self.transfersmodel.set(
                 i[1],
-                1, shortfn,
-                2, status,
-                3, str(place),
-                4, percent,
-                5, str(hsize),
-                6, HumanSpeed(speed),
-                7, elap,
-                8, left,
-                9, transfer.path,
+                1, transfer.path,
+                2, shortfn,
+                3, status,
+                4, str(place),
+                5, percent,
+                6, str(hsize),
+                7, HumanSpeed(speed),
+                8, elap,
+                9, left,
                 11, istatus,
                 12, size,
                 13, currentbytes,
@@ -535,20 +537,30 @@ class TransferList:
                     # ProgressRender not visible (last column sets 4th column)
                     self.users[user] = self.transfersmodel.append(
                         None,
-                        [user, "", "", "", 0, "", "", "", "", "", "", 0, 0, 0, False, ""]
+                        [user, "", "", "", "", 0, "", "", "", "", "", 0, 0, 0, False, ""]
                     )
                     newparent = True
 
-                parent = self.users[user]
+                if transfer.path not in self.paths:
+                    self.paths[transfer.path] = self.transfersmodel.append(
+                        self.users[user],
+                        [user, transfer.path, "", "", "", 0, "", "", "", "", "", 0, 0, 0, False, ""]
+                    )
+                    newparent = True
+
+                parent = self.paths[transfer.path]
             else:
                 parent = None
 
             # Add a new transfer
-            path = transfer.path
+            if self.TreeUsers:
+                path = None
+            else:
+                path = transfer.path
 
             iter = self.transfersmodel.append(
                 parent,
-                [user, shortfn, status, str(place), percent, str(hsize), HumanSpeed(speed), elap, left, path, fn, istatus, size, icurrentbytes, True, str(speed)]
+                [user, path, shortfn, status, str(place), percent, str(hsize), HumanSpeed(speed), elap, left, fn, istatus, size, icurrentbytes, True, str(speed)]
             )
 
             # Expand path
@@ -560,6 +572,7 @@ class TransferList:
 
     def Clear(self):
         self.users.clear()
+        self.paths.clear()
         self.transfers = []
         self.selected_transfers = []
         self.selected_users = []
