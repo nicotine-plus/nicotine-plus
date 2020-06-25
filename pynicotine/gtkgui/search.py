@@ -1258,7 +1258,11 @@ class Search:
                 continue
 
             if file == "":
-                isdirectory = True
+                if dir == "":
+                    # Result is not a file or directory, don't add it
+                    return
+                else:
+                    isdirectory = True
 
             fn = r[12]
             size = r[14]
