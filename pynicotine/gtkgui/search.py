@@ -1072,7 +1072,7 @@ class Search:
             if directory in self.directoryiters:
                 self.resultsmodel.append(
                     self.directoryiters[directory],
-                    [0, user, self.get_flag(user, country), immediatedl, h_speed, h_queue, directory, filename, h_size, h_bitrate, length, bitrate, fullpath, country, size, speed, queue, status]
+                    [0, user, self.get_flag(user, country), immediatedl, h_speed, h_queue, "", filename, h_size, h_bitrate, length, bitrate, fullpath, country, size, speed, queue, status]
                 )
             else:
                 self.resultsmodel.append(None, row)  # noqa: F841
@@ -1254,7 +1254,7 @@ class Search:
 
         for r in self.all_data:
 
-            if (file != "" and file != r[7]) or dir != r[6] or user != r[1]:
+            if (file != "" and file != r[7]) or (dir != "" and dir != r[6]) or user != r[1]:
                 continue
 
             if file == "":
