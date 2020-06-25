@@ -1260,6 +1260,12 @@ class Search:
         fn = None
         isdirectory = False
 
+        if user is None:
+            return
+
+        if user not in self.selected_users:
+            self.selected_users.append(user)
+
         for r in self.all_data:
 
             if (file != "" and file != r[7]) or (dir != "" and dir != r[6]) or user != r[1]:
@@ -1277,12 +1283,6 @@ class Search:
             bitrate = r[9]
             length = r[10]
             break
-
-        if user is None:
-            return
-
-        if user not in self.selected_users:
-            self.selected_users.append(user)
 
         self.selected_results.append((user, fn, size, bitrate, length, isdirectory))
 
