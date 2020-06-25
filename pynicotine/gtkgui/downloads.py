@@ -143,12 +143,9 @@ class Downloads(TransferList):
         win.set_icon(self.frame.images["n"])
         win.show()
 
-    def expandcollapse(self, path):
-
+    def expand(self, path):
         if self.frame.ExpandDownloads.get_active():
-            self.frame.DownloadList.expand_row(path, True)
-        else:
-            self.frame.DownloadList.collapse_row(path)
+            self.frame.DownloadList.expand_to_path(path)
 
     def OnExpandDownloads(self, widget):
 

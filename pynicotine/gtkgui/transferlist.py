@@ -346,14 +346,14 @@ class TransferList:
         self.lastupdate = time()  # ...we're working...
 
         # Remove empty parent rows
-        for (username, user) in [x for x in self.users.items()]:
+        for (path, pathiter) in [x for x in self.paths.items()]:
 
-            if not self.transfersmodel.iter_has_child(user):
-                self.transfersmodel.remove(user)
-                del self.users[username]
+            if not self.transfersmodel.iter_has_child(pathiter):
+                self.transfersmodel.remove(pathiter)
+                del self.paths[path]
             else:
 
-                files = self.transfersmodel.iter_n_children(user)
+                files = self.transfersmodel.iter_n_children(pathiter)
                 ispeed = 0.0
                 percent = totalsize = position = 0
                 elapsed = left = ""
@@ -363,7 +363,7 @@ class TransferList:
 
                 for f in range(files):
 
-                    iter = self.transfersmodel.iter_nth_child(user, f)
+                    iter = self.transfersmodel.iter_nth_child(pathiter, f)
                     status = self.transfersmodel.get_value(iter, 3)
 
                     if salientstatus in ('', _("Finished"), _("Filtered")):  # we prefer anything over ''/finished
@@ -384,7 +384,7 @@ class TransferList:
                         continue
 
                     for transfer in self.list:
-                        if [transfer.user, transfer.filename] == [username, filename] and transfer.timeelapsed is not None:
+                        if [transfer.user, transfer.filename] == [path, filename] and transfer.timeelapsed is not None:
                             elap += transfer.timeelapsed
                             break
 
@@ -426,7 +426,7 @@ class TransferList:
                     extensions = ", ".join([str(count) + " " + ext for (count, ext) in extensionlst])
 
                 self.transfersmodel.set(
-                    user,
+                    pathiter,
                     2, _("%(number)2s files ") % {'number': files} + " (" + extensions + ")",
                     3, salientstatus,
                     5, percent,
@@ -511,9 +511,14 @@ class TransferList:
             if i[2] != transfer:
                 continue
 
+            if self.TreeUsers:
+                path = None
+            else:
+                path = transfer.path
+
             self.transfersmodel.set(
                 i[1],
-                1, transfer.path,
+                1, path,
                 2, shortfn,
                 3, status,
                 4, str(place),
@@ -530,7 +535,6 @@ class TransferList:
 
             break
         else:
-            newparent = False
             if self.TreeUsers:
                 if user not in self.users:
                     # Create Parent if it doesn't exist
@@ -539,14 +543,12 @@ class TransferList:
                         None,
                         [user, "", "", "", "", 0, "", "", "", "", "", 0, 0, 0, False, ""]
                     )
-                    newparent = True
 
                 if transfer.path not in self.paths:
                     self.paths[transfer.path] = self.transfersmodel.append(
                         self.users[user],
                         [user, transfer.path, "", "", "", 0, "", "", "", "", "", 0, 0, 0, False, ""]
                     )
-                    newparent = True
 
                 parent = self.paths[transfer.path]
             else:
@@ -564,11 +566,11 @@ class TransferList:
             )
 
             # Expand path
-            path = self.transfersmodel.get_path(iter)
             self.transfers.append([key, iter, transfer])
 
-            if newparent:
-                self.expandcollapse(self.transfersmodel.get_path(parent))
+            if parent is not None:
+                path = self.transfersmodel.get_path(iter)
+                self.expand(path)
 
     def Clear(self):
         self.users.clear()

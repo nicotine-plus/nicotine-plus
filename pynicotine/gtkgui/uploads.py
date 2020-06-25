@@ -162,12 +162,9 @@ class Uploads(TransferList):
             self.frame.ChangeMainPage(None, "search")
             break
 
-    def expandcollapse(self, path):
-
-        if self.frame.ExpandUploads.get_active():
-            self.frame.UploadList.expand_row(path, True)
-        else:
-            self.frame.UploadList.collapse_row(path)
+    def expand(self, path):
+        if self.frame.ExpandDownloads.get_active():
+            self.frame.UploadList.expand_to_path(path)
 
     def OnExpandUploads(self, widget):
 
