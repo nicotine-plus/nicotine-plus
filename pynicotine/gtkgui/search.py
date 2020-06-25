@@ -926,7 +926,7 @@ class Search:
                     [0, user, self.get_flag(user, country), immediatedl, h_speed, h_queue, "", filename, h_size, h_bitrate, length, bitrate, fullpath, country, size, speed, queue, status]
                 )
             else:
-                iter = self.resultsmodel.append(None, row)  # noqa: F841
+                iter = self.resultsmodel.append(None, row)
         except Exception as e:
             types = []
             for i in row:
@@ -1109,23 +1109,20 @@ class Search:
     def CountResults(self):
 
         if self.directoryGroup.get_active():
-            count = self.CountResultsIter(self.resultsmodel.get_iter_first())
+            iter = self.resultsmodel.get_iter_first()
+            count = 0
+
+            while iter is not None:
+                if self.resultsmodel.iter_has_child(iter):
+                    child = self.resultsmodel.iter_children(iter)
+
+                    while child is not None:
+                        count += self.resultsmodel.iter_n_children(child)
+                        child = self.resultsmodel.iter_next(child)
+
+                iter = self.resultsmodel.iter_next(iter)
         else:
-            count = self.resultsmodel.iter_n_children(None)
-
-        return count
-
-    def CountResultsIter(self, iter, count=0):
-
-        while iter is not None:
-
-            count += self.resultsmodel.iter_n_children(iter)
-
-            if self.resultsmodel.iter_has_child(iter):
-
-                self.CountResultsIter(self.resultsmodel.iter_children(iter), count)
-
-            iter = self.resultsmodel.iter_next(iter)
+            count = len(self.resultsmodel)
 
         return count
 
@@ -1428,14 +1425,9 @@ class Search:
         for file in self.selected_results:
             # Make sure the selected result is not a directory
             if file[5] is False:
-                self.frame.np.transfers.getFile(file[0], file[1], prefix, size=file[2], bitrate=file[3], length=file[4])
+                self.frame.np.transfers.getFile(file[0], file[1], prefix, size=file[2], bitrate=file[3], length=file[4], checkduplicate=True)
 
     def OnDownloadFilesTo(self, widget):
-
-        subdir = None
-        for file in self.selected_results:
-            subdir = file[1].rsplit("\\", 1)[0].rsplit("\\", 1)[1]
-            break
 
         dir = ChooseDir(self.frame.MainWindow, self.frame.np.config.sections["transfers"]["downloaddir"], multichoice=False)
 
