@@ -1187,33 +1187,23 @@ class Search:
         sel.unselect_all()
         iter = self.resultsmodel.get_iter_first()
 
-        while iter is not None:
-
-            user = self.resultsmodel.get_value(iter, 1)
-
-            if selected_user == user:
-
-                fn = self.resultsmodel.get_value(iter, 12)
-
-                if fn == "" or self.resultsmodel.iter_has_child(iter):
-
-                    child = self.resultsmodel.iter_children(iter)
-
-                    while child is not None:
-
-                        user = self.resultsmodel.get_value(child, 1)
-
-                        if selected_user == user:
-                            sel.select_path(fmodel.get_path(child),)
-
-                        child = self.resultsmodel.iter_next(child)
-                else:
-                    ix = fmodel.get_path(iter)
-                    sel.select_path(ix,)
-
-            iter = self.resultsmodel.iter_next(iter)
+        self.UserRowIter(fmodel, sel, selected_user, iter)
 
         self.select_results()
+
+    def UserRowIter(self, fmodel, sel, selected_user, iter):
+        child = self.resultsmodel.iter_children(iter)
+
+        while child is not None:
+
+            user = self.resultsmodel.get_value(child, 1)
+
+            if selected_user == user:
+                sel.select_path(fmodel.get_path(child),)
+
+            self.UserRowIter(fmodel, sel, selected_user, child)
+
+            child = self.resultsmodel.iter_next(child)
 
     def select_results(self):
 
