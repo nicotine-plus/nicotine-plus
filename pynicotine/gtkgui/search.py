@@ -517,6 +517,7 @@ class Search:
         self.QueryLabel.set_text(text)
 
         self.directoryGroup.set_active(self.frame.np.config.sections["searches"]["group_directory"])
+        self.directoryGroup.connect("toggled", self.OnGroup)
 
         self.all_data = []
         self.filters = None
@@ -578,7 +579,7 @@ class Search:
         self.selected_users = []
 
         self.ResultsList.get_selection().set_mode(gtk.SelectionMode.MULTIPLE)
-        self.ResultsList.set_property("show-expanders", False)
+        self.ResultsList.set_property("show-expanders", self.directoryGroup.get_active())
         self.ResultsList.set_property("rules-hint", True)
         widths = self.frame.np.config.sections["columns"]["search_widths"]
         cols = InitialiseColumns(
