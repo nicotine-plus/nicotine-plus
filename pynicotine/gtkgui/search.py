@@ -858,9 +858,6 @@ class Search:
         # Append the data
         self.append(results)
 
-        # Update the displayed count
-        self.CountResults()
-
         # Update tab notification
         self.frame.Searches.request_changed(self.Main)
         if self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.searchvbox):
@@ -879,9 +876,18 @@ class Search:
     def append(self, results):
 
         for row in results:
-            iter = self.AddRowToModel(row)
 
             self.all_data.append(row)
+
+            if not self.check_filter(row):
+                continue
+
+            count = self.CountResults()
+
+            if count >= self.frame.np.config.sections['searches']["max_displayed_results"]:
+                break
+
+            iter = self.AddRowToModel(row)
 
             if self.directoryGroup.get_active() and self.ExpandButton.get_active():
                 path = None
@@ -892,8 +898,7 @@ class Search:
                 if path is not None:
                     self.ResultsList.expand_to_path(path)
 
-            if len(self.resultsmodel) >= self.frame.np.config.sections['searches']["max_displayed_results"]:
-                break
+        self.Counter.set_text("Results: %d/%d" % (count, len(self.all_data)))
 
     def AddRowToModel(self, row):
         counter, user, flag, immediatedl, h_speed, h_queue, directory, filename, h_size, h_bitrate, length, bitrate, fullpath, country, size, speed, queue, status = row
@@ -1091,26 +1096,26 @@ class Search:
         self.resultsmodel.clear()
 
         for row in self.all_data:
+            count = self.CountResults()
+
+            if count >= self.frame.np.config.sections['searches']["max_displayed_results"]:
+                break
 
             if self.check_filter(row):
                 self.AddRowToModel(row)
 
-            if len(self.resultsmodel) >= self.frame.np.config.sections['searches']["max_displayed_results"]:
-                break
-
-        self.CountResults()
+        self.Counter.set_text("Results: %d/%d" % (count, len(self.all_data)))
 
     def CountResults(self):
 
         if self.directoryGroup.get_active():
-
-            iter_count = self.ResultIter(self.resultsmodel.get_iter_first())
-
-            self.Counter.set_text("Results: %d/%d" % (iter_count, len(self.all_data)))
+            count = self.CountResultsIter(self.resultsmodel.get_iter_first())
         else:
-            self.Counter.set_text("Results: %d/%d" % (self.resultsmodel.iter_n_children(None), len(self.all_data)))
+            count = self.resultsmodel.iter_n_children(None)
 
-    def ResultIter(self, iter, count=0):
+        return count
+
+    def CountResultsIter(self, iter, count=0):
 
         while iter is not None:
 
@@ -1118,7 +1123,7 @@ class Search:
 
             if self.resultsmodel.iter_has_child(iter):
 
-                self.ResultIter(self.resultsmodel.iter_children(iter), count)
+                self.CountResultsIter(self.resultsmodel.iter_children(iter), count)
 
             iter = self.resultsmodel.iter_next(iter)
 
