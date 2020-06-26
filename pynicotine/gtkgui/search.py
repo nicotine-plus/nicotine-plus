@@ -950,35 +950,44 @@ class Search:
         self.Searches.users[user] = status
         pos = 0
 
+        groupresults = self.directoryGroup.get_active()
+        maxdisplayedresults = self.frame.np.config.sections['searches']["max_displayed_results"]
+
         for r in self.all_data:
             if user == r[1]:
                 self.all_data[pos][17] = status
+
+                if not groupresults and pos < maxdisplayedresults:
+                    iter = self.resultsmodel.get_iter_from_string(str(pos))
+                    self.resultsmodel.set_value(iter, 17, status)
+
             pos += 1
 
-        useriter = self.resultsmodel.get_iter_first()
+        if groupresults:
+            useriter = self.resultsmodel.get_iter_first()
 
-        while useriter is not None:
-            selected_user = self.resultsmodel.get_value(useriter, 1)
+            while useriter is not None:
+                selected_user = self.resultsmodel.get_value(useriter, 1)
 
-            if selected_user == user:
-                self.resultsmodel.set_value(useriter, 17, status)
+                if selected_user == user:
+                    self.resultsmodel.set_value(useriter, 17, status)
 
-                diriter = self.resultsmodel.iter_children(useriter)
+                    diriter = self.resultsmodel.iter_children(useriter)
 
-                while diriter is not None:
-                    self.resultsmodel.set_value(diriter, 17, status)
+                    while diriter is not None:
+                        self.resultsmodel.set_value(diriter, 17, status)
 
-                    fileiter = self.resultsmodel.iter_children(diriter)
+                        fileiter = self.resultsmodel.iter_children(diriter)
 
-                    while fileiter is not None:
-                        self.resultsmodel.set_value(fileiter, 17, status)
+                        while fileiter is not None:
+                            self.resultsmodel.set_value(fileiter, 17, status)
 
-                        fileiter = self.resultsmodel.iter_next(fileiter)
+                            fileiter = self.resultsmodel.iter_next(fileiter)
 
-                    diriter = self.resultsmodel.iter_next(diriter)
-                return
+                        diriter = self.resultsmodel.iter_next(diriter)
+                    return
 
-            useriter = self.resultsmodel.iter_next(useriter)
+                useriter = self.resultsmodel.iter_next(useriter)
 
     def sort(self):
 
