@@ -330,6 +330,9 @@ class Searches(IconNotebook):
 
         # No more things to add because we've reached the max_stored_results limit
         if counter > self.frame.np.config.sections['searches']["max_stored_results"]:
+            if search is not None:
+                del search
+
             return
 
         search[2].AddResult(msg, username, country)
