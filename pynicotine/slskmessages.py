@@ -1214,14 +1214,6 @@ class MinParentsInCache(ServerMessage):
         pos, self.num = self.getObject(message, int)
 
 
-class Msg12547(ServerMessage):
-    def __init__(self, conn):
-        self.conn = conn
-
-    def parseNetworkMessage(self, message):
-        pass
-
-
 class UploadQueueNotification(PeerMessage):
     def __init__(self, conn):
         self.conn = conn
@@ -2028,22 +2020,6 @@ class DistribChildDepth(DistribMessage):
 
     def parseNetworkMessage(self, message):
         pos, self.value = self.getObject(message, int)
-        # print self.something, self.user
-
-
-class DistribMessage9(DistribMessage):
-    def __init__(self, conn):
-        self.conn = conn
-
-    def parseNetworkMessage(self, message):
-        # pos, self.value = self.getObject(message, types.IntType)
-        try:
-            x = zlib.decompress(message)  # noqa: F841
-        except Exception:
-            self.debug()
-        # message =  x[4:]
-        # pos, self.user = self.getObject(message, types.StringType)
-        # self.debug()
         # print self.something, self.user
 
 

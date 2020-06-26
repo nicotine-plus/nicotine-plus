@@ -237,10 +237,9 @@ class NetworkEventProcessor:
             slskmessages.ParentMinSpeed: self.DummyMessage,
             slskmessages.ParentSpeedRatio: self.DummyMessage,
             slskmessages.Msg85: self.DummyMessage,
-            slskmessages.Msg12547: self.Msg12547,
-            slskmessages.ParentInactivityTimeout: self.ParentInactivityTimeout,
-            slskmessages.SearchInactivityTimeout: self.SearchInactivityTimeout,
-            slskmessages.MinParentsInCache: self.MinParentsInCache,
+            slskmessages.ParentInactivityTimeout: self.DummyMessage,
+            slskmessages.SearchInactivityTimeout: self.DummyMessage,
+            slskmessages.MinParentsInCache: self.DummyMessage,
             slskmessages.Msg89: self.DummyMessage,
             slskmessages.WishlistInterval: self.WishlistInterval,
             slskmessages.DistribAliveInterval: self.DummyMessage,
@@ -250,7 +249,6 @@ class NetworkEventProcessor:
             slskmessages.DistribChildDepth: self.DistribChildDepth,
             slskmessages.DistribBranchLevel: self.DistribBranchLevel,
             slskmessages.DistribBranchRoot: self.DistribBranchRoot,
-            slskmessages.DistribMessage9: self.DistribMessage9,
             slskmessages.AdminMessage: self.AdminMessage,
             slskmessages.TunneledMessage: self.TunneledMessage,
             slskmessages.IncConn: self.IncConn,
@@ -949,47 +947,31 @@ class NetworkEventProcessor:
         self.logMessage("%s" % (msg.msg))
 
     def ChildDepth(self, msg):
-        # TODO: Distributed search messages need to implemented
+        # TODO: Implement me
         self.logMessage("%s %s" % (msg.__class__, vars(msg)), 4)
 
     def BranchLevel(self, msg):
-        # TODO: Distributed search messages need to implemented
+        # TODO: Implement me
         self.logMessage("%s %s" % (msg.__class__, vars(msg)), 4)
 
     def BranchRoot(self, msg):
-        # TODO: Distributed search messages need to implemented
+        # TODO: Implement me
         self.logMessage("%s %s" % (msg.__class__, vars(msg)), 4)
 
     def DistribChildDepth(self, msg):
-        # TODO: Distributed search messages need to implemented
+        # TODO: Implement me
         self.logMessage("%s %s" % (msg.__class__, vars(msg)), 4)
 
     def DistribBranchLevel(self, msg):
-        # TODO: Distributed search messages need to implemented
+        # TODO: Implement me
         self.logMessage("%s %s" % (msg.__class__, vars(msg)), 4)
 
     def DistribBranchRoot(self, msg):
-        # TODO: Distributed search messages need to implemented
-        self.logMessage("%s %s" % (msg.__class__, vars(msg)), 4)
-
-    def DistribMessage9(self, msg):
-        # TODO: Distributed search messages need to implemented
+        # TODO: Implement me
         self.logMessage("%s %s" % (msg.__class__, vars(msg)), 4)
 
     def DummyMessage(self, msg):
         self.logMessage("%s %s" % (msg.__class__, vars(msg)), 4)
-
-    def Msg12547(self, msg):
-        self.logMessage("%s %s" % (msg.__class__, vars(msg)), 4)
-
-    def ParentInactivityTimeout(self, msg):
-        pass
-
-    def SearchInactivityTimeout(self, msg):
-        pass
-
-    def MinParentsInCache(self, msg):
-        pass
 
     def WishlistInterval(self, msg):
         if self.search is not None:

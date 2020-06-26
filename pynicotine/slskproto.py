@@ -57,7 +57,6 @@ from pynicotine.slskmessages import DistribAliveInterval
 from pynicotine.slskmessages import DistribBranchLevel
 from pynicotine.slskmessages import DistribBranchRoot
 from pynicotine.slskmessages import DistribChildDepth
-from pynicotine.slskmessages import DistribMessage9
 from pynicotine.slskmessages import DistribSearch
 from pynicotine.slskmessages import DownloadFile
 from pynicotine.slskmessages import ExactFileSearch
@@ -92,7 +91,6 @@ from pynicotine.slskmessages import MessageUser
 from pynicotine.slskmessages import MinParentsInCache
 from pynicotine.slskmessages import Msg85
 from pynicotine.slskmessages import Msg89
-from pynicotine.slskmessages import Msg12547
 from pynicotine.slskmessages import NetInfo
 from pynicotine.slskmessages import NotifyPrivileges
 from pynicotine.slskmessages import OutConn
@@ -375,8 +373,7 @@ class SlskProtoThread(threading.Thread):
         UploadFailed: 46,
         QueueFailed: 50,
         PlaceInQueueRequest: 51,
-        UploadQueueNotification: 52,
-        Msg12547: 12547
+        UploadQueueNotification: 52
     }
 
     distribclasses = {
@@ -385,7 +382,7 @@ class SlskProtoThread(threading.Thread):
         4: DistribBranchLevel,
         5: DistribBranchRoot,
         7: DistribChildDepth,
-        9: DistribMessage9
+        93: DistribSearch
     }
 
     IN_PROGRESS_STALE_AFTER = 30
