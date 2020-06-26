@@ -188,7 +188,7 @@ class Downloads(TransferList):
             return
 
         user = model.get_value(iter, 0)
-        filename = model.get_value(iter, 1)
+        filename = model.get_value(iter, 2)
         fullname = model.get_value(iter, 10)
         size = speed = "0"
         length = bitrate = None  # noqa: F841
