@@ -512,7 +512,7 @@ class Search:
         self.remember = remember
         self.usersiters = {}
         self.directoryiters = {}
-        self.users = []
+        self.users = set()
         self.resultslimit = 2000
         self.QueryLabel.set_text(text)
 
@@ -748,7 +748,7 @@ class Search:
             if user == self.frame.np.config.sections["server"]["login"]:
                 self.Searches.users[user] = 1
 
-        self.users.append(user)
+        self.users.add(user)
 
         results = []
         counter = len(self.all_data) + 1
@@ -851,17 +851,7 @@ class Search:
             counter += 1
 
         if results:
-            self._realaddresults(results)
-
-    def _realaddresults(self, results):
-
-        # Append the data
-        self.append(results)
-
-        # Update tab notification
-        self.frame.Searches.request_changed(self.Main)
-        if self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.searchvbox):
-            self.frame.SearchTabLabel.get_child().set_image(self.frame.images["online"])
+            self.append(results)
 
     def get_flag(self, user, flag=None):
 
@@ -898,7 +888,13 @@ class Search:
                 if path is not None:
                     self.ResultsList.expand_to_path(path)
 
+        # Update counter
         self.Counter.set_text("Results: %d/%d" % (count, len(self.all_data)))
+
+        # Update tab notification
+        self.frame.Searches.request_changed(self.Main)
+        if self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.searchvbox):
+            self.frame.SearchTabLabel.get_child().set_image(self.frame.images["online"])
 
     def AddRowToModel(self, row):
         counter, user, flag, immediatedl, h_speed, h_queue, directory, filename, h_size, h_bitrate, length, bitrate, fullpath, country, size, speed, queue, status = row
@@ -920,13 +916,13 @@ class Search:
                 )
 
         try:
-            if directory in self.directoryiters:
-                iter = self.resultsmodel.append(
-                    self.directoryiters[directory],
-                    [0, user, self.get_flag(user, country), immediatedl, h_speed, h_queue, "", filename, h_size, h_bitrate, length, bitrate, fullpath, country, size, speed, queue, status]
-                )
-            else:
-                iter = self.resultsmodel.append(None, row)
+            parent = None
+
+            if self.directoryGroup.get_active():
+                parent = self.directoryiters[directory]
+                row[6] = ""  # Directory not visible for file row if "group by folder" is enabled
+
+            iter = self.resultsmodel.append(parent, row)
         except Exception as e:
             types = []
             for i in row:
