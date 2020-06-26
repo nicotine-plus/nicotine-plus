@@ -955,19 +955,30 @@ class Search:
                 self.all_data[pos][17] = status
             pos += 1
 
-        self.statusIter(user, status, self.resultsmodel.get_iter_first())
+        useriter = self.resultsmodel.get_iter_first()
 
-    def statusIter(self, user, status, iter):
-        while iter is not None:
-            selected_user = self.resultsmodel.get_value(iter, 1)
+        while useriter is not None:
+            selected_user = self.resultsmodel.get_value(useriter, 1)
 
             if selected_user == user:
-                self.resultsmodel.set_value(iter, 17, status)
+                self.resultsmodel.set_value(useriter, 17, status)
 
-            if self.resultsmodel.iter_has_child(iter):
-                self.statusIter(user, status, self.resultsmodel.iter_children(iter))
+                diriter = self.resultsmodel.iter_children(useriter)
 
-            iter = self.resultsmodel.iter_next(iter)
+                while diriter is not None:
+                    self.resultsmodel.set_value(diriter, 17, status)
+
+                    fileiter = self.resultsmodel.iter_children(diriter)
+
+                    while fileiter is not None:
+                        self.resultsmodel.set_value(fileiter, 17, status)
+
+                        fileiter = self.resultsmodel.iter_next(fileiter)
+
+                    diriter = self.resultsmodel.iter_next(diriter)
+                return
+
+            useriter = self.resultsmodel.iter_next(useriter)
 
     def sort(self):
 
