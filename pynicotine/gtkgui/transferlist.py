@@ -212,6 +212,32 @@ class TransferList:
         self.selected_transfers = []
         self.selected_users = []
 
+    def select_transfers(self):
+        self.selected_transfers = []
+        self.selected_users = []
+        self.widget.get_selection().selected_foreach(self.SelectedTransfersCallback)
+
+    def OnBan(self, widget):
+        self.select_transfers()
+
+        for user in self.selected_users:
+            self.frame.BanUser(user)
+
+    def OnFileSearch(self, widget):
+        self.select_transfers()
+
+        for transfer in self.selected_transfers:
+            self.frame.SearchEntry.set_text(transfer.filename.rsplit("\\", 1)[1])
+            self.frame.ChangeMainPage(None, "search")
+            break
+
+    def RebuildTransfers(self):
+        if self.frame.np.transfers is None:
+            return
+
+        self.Clear()
+        self.update()
+
     def SelectedTransfersCallback(self, model, path, iter):
 
         user = model.get_value(iter, 0)

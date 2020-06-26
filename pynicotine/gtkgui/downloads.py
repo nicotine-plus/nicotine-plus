@@ -256,24 +256,6 @@ class Downloads(TransferList):
         else:
             executeCommand(filemanager, incompletedir)
 
-    def RebuildTransfers(self):
-
-        if self.frame.np.transfers is None:
-            return
-
-        self.Clear()
-        self.update()
-
-    def select_transfers(self):
-        self.selected_transfers = []
-        self.selected_users = []
-        self.widget.get_selection().selected_foreach(self.SelectedTransfersCallback)
-
-    def OnBan(self, widgets):
-        self.select_transfers()
-        for user in self.selected_users:
-            self.frame.BanUser(user)
-
     def OnSelectAbortTransfer(self, widget):
         self.select_transfers()
         self.OnAbortTransfer(widget, False)
@@ -448,9 +430,9 @@ class Downloads(TransferList):
 
         items = self.popup_menu.get_children()
         if users:
-            items[7].set_sensitive(True)  # Users Menu
+            items[8].set_sensitive(True)  # Users Menu
         else:
-            items[7].set_sensitive(False)  # Users Menu
+            items[8].set_sensitive(False)  # Users Menu
 
         if files:
             act = True
@@ -461,7 +443,7 @@ class Downloads(TransferList):
         items[4].set_sensitive(act)  # Send to player
         items[5].set_sensitive(act)  # View Meta
         items[6].set_sensitive(act)  # File manager
-        items[8].set_sensitive(act)  # Search filename
+        items[7].set_sensitive(act)  # Search filename
 
         act = False
         if not multi_files and files:
@@ -503,15 +485,6 @@ class Downloads(TransferList):
             if i.status != "Queued":
                 continue
             self.frame.np.ProcessRequestToPeer(i.user, slskmessages.PlaceInQueueRequest(None, i.filename))
-
-    def OnFileSearch(self, widget):
-
-        self.select_transfers()
-
-        for transfer in self.selected_transfers:
-            self.frame.SearchEntry.set_text(transfer.filename.rsplit("\\", 1)[1])
-            self.frame.ChangeMainPage(None, "search")
-            break
 
     def OnRetryTransfer(self, widget):
 

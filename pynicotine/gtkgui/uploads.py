@@ -153,15 +153,6 @@ class Uploads(TransferList):
         else:
             executeCommand(filemanager, incompletedir)
 
-    def OnFileSearch(self, widget):
-
-        self.select_transfers()
-
-        for transfer in self.selected_transfers:
-            self.frame.SearchEntry.set_text(transfer.filename.rsplit("\\", 1)[1])
-            self.frame.ChangeMainPage(None, "search")
-            break
-
     def expand(self, path):
         if self.frame.ExpandDownloads.get_active():
             self.frame.UploadList.expand_to_path(path)
@@ -194,28 +185,6 @@ class Uploads(TransferList):
             self.frame.ExpandUploads.hide()
         else:
             self.frame.ExpandUploads.show()
-
-    def RebuildTransfers(self):
-
-        if self.frame.np.transfers is None:
-            return
-
-        self.Clear()
-        self.update()
-
-    def select_transfers(self):
-
-        self.selected_transfers = []
-        self.selected_users = []
-
-        self.widget.get_selection().selected_foreach(self.SelectedTransfersCallback)
-
-    def OnBan(self, widget):
-
-        self.select_transfers()
-
-        for user in self.selected_users:
-            self.frame.BanUser(user)
 
     def OnAbortUser(self, widget):
 
