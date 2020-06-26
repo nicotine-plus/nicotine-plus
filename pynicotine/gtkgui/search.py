@@ -920,6 +920,7 @@ class Search:
 
             if self.directoryGroup.get_active():
                 parent = self.directoryiters[directory]
+                row = row[:]
                 row[6] = ""  # Directory not visible for file row if "group by folder" is enabled
 
             iter = self.resultsmodel.append(parent, row)
