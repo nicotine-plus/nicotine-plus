@@ -1,6 +1,11 @@
 # -*- coding: utf-8 -*-
 #
+# Copyright (C) 2020 Nicotine+ Team
 # Copyright (C) 2007 daelstorm. All rights reserved.
+# Copyright (c) 2003-2004 Hyriand. All rights reserved.
+#
+# Based on code from PySoulSeek, original copyright note:
+# Copyright (c) 2001-2003 Alexander Kanavin. All rights reserved.
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,12 +19,6 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-# Previous copyright below
-# Copyright (c) 2003-2004 Hyriand. All rights reserved.
-#
-# Based on code from PySoulSeek, original copyright note:
-# Copyright (c) 2001-2003 Alexander Kanavin. All rights reserved.
 
 import hashlib
 import os
@@ -28,7 +27,6 @@ import struct
 import zlib
 from gettext import gettext as _
 from itertools import count
-from typing import Union
 
 from pynicotine.logfacility import log
 from pynicotine.utils import debug
@@ -45,23 +43,6 @@ def newId():
     global counter
     Id = next(counter)
     return Id
-
-# Python objects cannot be used as a source to determine the network object,
-# since diff. OS/Arch will have diff. ranges for Integers, Longs, etc.
-#
-# By default they are all unsigned unless noted otherwise
-
-
-def _str(arg: Union[bytes, str]) -> str:
-    """
-    Until we figure out the best way to convert between protocol messages, which
-    are in bytes, and strings, use this function explicitly
-    """
-    if isinstance(arg, bytes):
-        return arg.decode('utf-8')
-    elif isinstance(arg, str):
-        return arg
-    return arg
 
 
 class NetworkBaseType:
@@ -151,7 +132,7 @@ class PeerTransfer(InternalMessage):
         self.conn = conn
         self.bytes = bytes
         self.total = total
-        self.msg = _str(msg)
+        self.msg = msg
 
 
 class DownloadFile(InternalMessage):
@@ -161,14 +142,14 @@ class DownloadFile(InternalMessage):
     def __init__(self, conn=None, offset=None, file=None, filesize=None):
         self.conn = conn
         self.offset = offset
-        self.file = _str(file)
+        self.file = file
         self.filesize = filesize
 
 
 class UploadFile(InternalMessage):
     def __init__(self, conn=None, file=None, size=None, sentbytes=0, offset=None):
         self.conn = conn
-        self.file = _str(file)
+        self.file = file
         self.size = size
         self.sentbytes = sentbytes
         self.offset = offset
@@ -179,8 +160,8 @@ class FileError(InternalMessage):
     filetransfer. """
     def __init__(self, conn=None, file=None, strerror=None):
         self.conn = conn
-        self.file = _str(file)
-        self.strerror = _str(strerror)
+        self.file = file
+        self.strerror = strerror
 
 
 class SetUploadLimit(InternalMessage):
@@ -224,12 +205,12 @@ class DistribConn(InternalMessage):
 
 class Notify(InternalMessage):
     def __init__(self, msg):
-        self.msg = _str(msg)
+        self.msg = msg
 
 
 class InternalData(InternalMessage):
     def __init__(self, msg):
-        self.msg = _str(msg)
+        self.msg = msg
 
 
 class DebugMessage(InternalMessage):
@@ -243,7 +224,7 @@ class DebugMessage(InternalMessage):
         5 - Transfers
         6 - Connection, Bandwidth and Usage Statistics
         '''
-        self.msg = _str(msg)
+        self.msg = msg
         self.debugLevel = debugLevel
 
 
@@ -269,10 +250,6 @@ class SlskMessage:
                     string = findBestEncoding(string, ['utf-8', 'iso-8859-1'])
 
                 return length + intsize + start, string
-            elif type is NetworkIntType:
-                return intsize + start, struct.unpack("<I", message[start:start + intsize])[0]
-            elif type is NetworkSignedIntType:
-                return intsize + start, struct.unpack("<i", message[start:start + intsize])[0]
             elif type is NetworkLongLongType:
                 return struct.calcsize("<Q") + start, struct.unpack("<Q", message[start:start + struct.calcsize("<Q")])[0]
             else:
@@ -315,26 +292,6 @@ class SlskMessage:
         in an object"""
         log.addwarning(_("Can't parse incoming messages, class %s") % (self.__class__,))
 
-    def doubleParseNetworkMessage(self, message):
-        """Calls self._parseNetworkMessage first with a NetworkLongLongType, if that fails with NetworkIntType."""
-        messagename = str(self)
-        try:
-            # log.add('Decoding %s with LongLong...' % messagename)
-            self._parseNetworkMessage(message, NetworkLongLongType)
-        except struct.error as e:
-            try:
-                # log.add('Decoding %s with Int...' % messagename)
-                self._parseNetworkMessage(message, NetworkIntType)
-            except struct.error as f:
-                lines = []
-                lines.append(_("Exception during parsing %(area)s: %(exception)s") % {'area': 'first ' + messagename, 'exception': e})
-                lines.append(_("Exception during parsing %(area)s: %(exception)s") % {'area': 'second ' + messagename, 'exception': f})
-                lines.append(_("Offending package: %(bytes)s") % {'bytes': repr(message[:1000])})
-                log.addwarning("\n".join(lines))
-                return False
-        # log.add('Successfully decoded %s' % messagename)
-        return True
-
     def strrev(self, str):
         strlist = list(str)
         strlist.reverse()
@@ -366,7 +323,6 @@ class Login(ServerMessage):
     established. Server responds with the greeting message. """
 
     def __init__(self, username=None, passwd=None, version=None):
-        # TODO: use _str(). also needs to be changed downstream, so defer change for now.
         self.username = username
         self.passwd = passwd
         self.version = version
@@ -410,7 +366,7 @@ class ChangePassword(ServerMessage):
     We receive a response if our password changes. """
 
     def __init__(self, password=None):
-        self.password = _str(password)
+        self.password = password
 
     def makeNetworkMessage(self):
         return self.packObject(self.password)
@@ -434,7 +390,7 @@ class SetWaitPort(ServerMessage):
 class GetPeerAddress(ServerMessage):
     """ Used to find out a peer's (ip, port) address."""
     def __init__(self, user=None):
-        self.user = _str(user)
+        self.user = user
 
     def makeNetworkMessage(self):
         return self.packObject(self.user)
@@ -449,7 +405,7 @@ class GetPeerAddress(ServerMessage):
 class AddUser(ServerMessage):
     """ Used to be kept updated about a user's status."""
     def __init__(self, user=None):
-        self.user = _str(user)
+        self.user = user
         self.status = None
         self.avgspeed = None
         self.downloadnum = None
@@ -479,7 +435,7 @@ class AddUser(ServerMessage):
 class Unknown6(ServerMessage):
     """ Message 6 """
     def __init__(self, user=None):
-        self.user = _str(user)
+        self.user = user
 
     def makeNetworkMessage(self):
         return self.packObject(self.user)
@@ -492,7 +448,7 @@ class Unknown6(ServerMessage):
 class RemoveUser(ServerMessage):
     """ Used when we no longer want to be kept updated about a user's status."""
     def __init__(self, user=None):
-        self.user = _str(user)
+        self.user = user
 
     def makeNetworkMessage(self):
         return self.packObject(self.user)
@@ -501,7 +457,7 @@ class RemoveUser(ServerMessage):
 class GetUserStatus(ServerMessage):
     """ Server tells us if a user has gone away or has returned"""
     def __init__(self, user=None):
-        self.user = _str(user)
+        self.user = user
         self.privileged = None
 
     def makeNetworkMessage(self):
@@ -520,7 +476,7 @@ class GetUserStatus(ServerMessage):
 class SetStatus(ServerMessage):
     """ We send our new status to the server """
     def __init__(self, status=None):
-        self.status = _str(status)
+        self.status = status
 
     def makeNetworkMessage(self):
         return self.packObject(self.status)
@@ -530,10 +486,10 @@ class NotifyPrivileges(ServerMessage):
     """ Server tells us something about privileges"""
     def __init__(self, token=None, user=None):
         self.token = token
-        self.user = _str(user)
+        self.user = user
 
     def parseNetworkMessage(self, message):
-        pos, self.token = self.getObject(message, int)
+        pos, self.toaken = self.getObject(message, int)
         pos, self.user = self.getObject(message, bytes, pos)
 
     def makeNetworkMessage(self):
@@ -580,8 +536,8 @@ class PublicRoomMessage(ServerMessage):
 class SayChatroom(ServerMessage):
     """ Either we want to say something in the chatroom, or someone did."""
     def __init__(self, room=None, msg=None):
-        self.room = _str(room)
-        self.msg = _str(msg)
+        self.room = room
+        self.msg = msg
 
     def makeNetworkMessage(self):
         return self.packObject(self.room) + self.packObject(self.msg)
@@ -610,7 +566,7 @@ class JoinRoom(ServerMessage):
     """ Server sends us this message when we join a room. Contains users list
     with data on everyone."""
     def __init__(self, room=None, private=None):
-        self.room = _str(room)
+        self.room = room
         self.private = private
         self.owner = None
         self.operators = []
@@ -669,7 +625,7 @@ class JoinRoom(ServerMessage):
 class PrivateRoomUsers(ServerMessage):
     """ We get this when we've created a private room."""
     def __init__(self, room=None, numusers=None, users=None):
-        self.room = _str(room)
+        self.room = room
         self.numusers = numusers
         self.users = users
 
@@ -685,7 +641,7 @@ class PrivateRoomUsers(ServerMessage):
 class PrivateRoomOwned(ServerMessage):
     """ We get this when we've created a private room."""
     def __init__(self, room=None, number=None):
-        self.room = _str(room)
+        self.room = room
         self.number = number
 
     def parseNetworkMessage(self, message):
@@ -700,8 +656,8 @@ class PrivateRoomOwned(ServerMessage):
 class PrivateRoomAddUser(ServerMessage):
     """ We get / receive this when we add a user to a private room."""
     def __init__(self, room=None, user=None):
-        self.room = _str(room)
-        self.user = _str(user)
+        self.room = room
+        self.user = user
 
     def makeNetworkMessage(self):
         return self.packObject(self.room) + self.packObject(self.user)
@@ -714,7 +670,7 @@ class PrivateRoomAddUser(ServerMessage):
 class PrivateRoomDismember(ServerMessage):
     """ We do this to remove our own membership of a private room."""
     def __init__(self, room=None):
-        self.room = _str(room)
+        self.room = room
 
     def makeNetworkMessage(self):
         return self.packObject(self.room)
@@ -726,7 +682,7 @@ class PrivateRoomDismember(ServerMessage):
 class PrivateRoomDisown(ServerMessage):
     """ We do this to stop owning a private room."""
     def __init__(self, room=None):
-        self.room = _str(room)
+        self.room = room
 
     def makeNetworkMessage(self):
         return self.packObject(self.room)
@@ -738,7 +694,7 @@ class PrivateRoomDisown(ServerMessage):
 class PrivateRoomSomething(ServerMessage):
     """Unknown"""
     def __init__(self, room=None):
-        self.room = _str(room)
+        self.room = room
 
     def makeNetworkMessage(self):
         return self.packObject(self.room)
@@ -751,8 +707,8 @@ class PrivateRoomSomething(ServerMessage):
 class PrivateRoomRemoveUser(ServerMessage):
     """ We get this when we've removed a user from a private room."""
     def __init__(self, room=None, user=None):
-        self.room = _str(room)
-        self.user = _str(user)
+        self.room = room
+        self.user = user
 
     def makeNetworkMessage(self):
         return self.packObject(self.room) + self.packObject(self.user)
@@ -765,7 +721,7 @@ class PrivateRoomRemoveUser(ServerMessage):
 class PrivateRoomAdded(ServerMessage):
     """ We are sent this when we are added to a private room."""
     def __init__(self, room=None):
-        self.room = _str(room)
+        self.room = room
 
     def makeNetworkMessage(self):
         return self.packObject(self.room)
@@ -777,7 +733,7 @@ class PrivateRoomAdded(ServerMessage):
 class PrivateRoomRemoved(ServerMessage):
     """ We are sent this when we are removed from a private room."""
     def __init__(self, room=None):
-        self.room = _str(room)
+        self.room = room
 
     def makeNetworkMessage(self):
         return self.packObject(self.room)
@@ -802,8 +758,8 @@ class PrivateRoomToggle(ServerMessage):
 class PrivateRoomAddOperator(ServerMessage):
     """ We send this to add private room operator abilities to a user"""
     def __init__(self, room=None, user=None):
-        self.room = _str(room)
-        self.user = _str(user)
+        self.room = room
+        self.user = user
 
     def makeNetworkMessage(self):
         return self.packObject(self.room) + self.packObject(self.user)
@@ -816,8 +772,8 @@ class PrivateRoomAddOperator(ServerMessage):
 class PrivateRoomRemoveOperator(ServerMessage):
     """ We send this to remove privateroom operator abilities from a user"""
     def __init__(self, room=None, user=None):
-        self.room = _str(room)
-        self.user = _str(user)
+        self.room = room
+        self.user = user
 
     def makeNetworkMessage(self):
         return self.packObject(self.room) + self.packObject(self.user)
@@ -830,7 +786,7 @@ class PrivateRoomRemoveOperator(ServerMessage):
 class PrivateRoomOperatorAdded(ServerMessage):
     """ We receive this when given privateroom operator abilities"""
     def __init__(self, room=None):
-        self.room = _str(room)
+        self.room = room
 
     def makeNetworkMessage(self):
         return self.packObject(self.room)
@@ -842,7 +798,7 @@ class PrivateRoomOperatorAdded(ServerMessage):
 class PrivateRoomOperatorRemoved(ServerMessage):
     """ We receive this when privateroom operator abilities are removed"""
     def __init__(self, room=None):
-        self.room = _str(room)
+        self.room = room
 
     def makeNetworkMessage(self):
         return self.packObject(self.room)
@@ -855,7 +811,7 @@ class PrivateRoomOperatorRemoved(ServerMessage):
 class LeaveRoom(ServerMessage):
     """ We send this when we want to leave a room."""
     def __init__(self, room=None):
-        self.room = _str(room)
+        self.room = room
 
     def makeNetworkMessage(self):
         return self.packObject(self.room)
@@ -919,7 +875,7 @@ class RoomTickerRemove(ServerMessage):
     """ Message 115 """
     def __init__(self, room=None):
         self.user = None
-        self.room = _str(room)
+        self.room = room
 
     def parseNetworkMessage(self, message):
         pos, self.room = self.getObject(message, bytes)
@@ -929,8 +885,8 @@ class RoomTickerRemove(ServerMessage):
 class RoomTickerSet(ServerMessage):
     """ Message 116 """
     def __init__(self, room=None, msg=""):
-        self.room = _str(room)
-        self.msg = _str(msg)
+        self.room = room
+        self.msg = msg
 
     def makeNetworkMessage(self):
         return self.packObject(self.room) + self.packObject(self.msg)
@@ -944,8 +900,8 @@ class ConnectToPeer(ServerMessage):
     """
     def __init__(self, token=None, user=None, type=None):
         self.token = token
-        self.user = _str(user)
-        self.type = _str(type)
+        self.user = user
+        self.type = type
 
     def makeNetworkMessage(self):
         return self.packObject(NetworkIntType(self.token)) + self.packObject(self.user) + self.packObject(self.type)
@@ -965,8 +921,8 @@ class ConnectToPeer(ServerMessage):
 class MessageUser(ServerMessage):
     """ Chat phrase sent to someone or received by us in private"""
     def __init__(self, user=None, msg=None):
-        self.user = _str(user)
-        self.msg = _str(msg)
+        self.user = user
+        self.msg = msg
 
     def makeNetworkMessage(self):
         return self.packObject(self.user) + self.packObject(self.msg)
@@ -994,7 +950,7 @@ class FileSearch(ServerMessage):
     """ Server send this to tell us someone is searching for something."""
     def __init__(self, requestid=None, text=None):
         self.searchid = requestid
-        self.searchterm = _str(text)
+        self.searchterm = text
         if text:
             self.searchterm = ' '.join([x for x in text.split() if x != '-'])
 
@@ -1023,7 +979,7 @@ class SendSpeed(ServerMessage):
     """ We used to send this after a finished download to let the server update
     the speed statistics for a user"""
     def __init__(self, user=None, speed=None):
-        self.user = _str(user)
+        self.user = user
         self.speed = speed
 
     def makeNetworkMessage(self):
@@ -1054,7 +1010,7 @@ class SharedFoldersFiles(ServerMessage):
 class GetUserStats(ServerMessage):
     """ Server sends this to indicate change in user's statistics"""
     def __init__(self, user=None):
-        self.user = _str(user)
+        self.user = user
         self.country = None
 
     def makeNetworkMessage(self):
@@ -1081,7 +1037,7 @@ class PlaceInLineResponse(ServerMessage):
     waiting for files from other peer """
     def __init__(self, user=None, req=None, place=None):
         self.req = req
-        self.user = _str(user)
+        self.user = user
         self.place = place
 
     def makeNetworkMessage(self):
@@ -1178,10 +1134,10 @@ class GlobalUserList(JoinRoom):
 
 class TunneledMessage(ServerMessage):
     def __init__(self, user=None, req=None, code=None, msg=None):
-        self.user = _str(user)
+        self.user = user
         self.req = req
         self.code = code
-        self.msg = _str(msg)
+        self.msg = msg
 
     def makeNetworkMessage(self, message):
         return (self.packObject(self.user) +
@@ -1351,7 +1307,7 @@ class CantConnectToPeer(ServerMessage):
     """
     def __init__(self, token=None, user=None):
         self.token = token
-        self.user = _str(user)
+        self.user = user
 
     def makeNetworkMessage(self):
         return (self.packObject(NetworkIntType(self.token)) +
@@ -1379,7 +1335,7 @@ class ServerPing(ServerMessage):
 class AddThingILike(ServerMessage):
     """ Add item to our likes list """
     def __init__(self, thing=None):
-        self.thing = _str(thing)
+        self.thing = thing
 
     def makeNetworkMessage(self):
         return self.packObject(self.thing)
@@ -1392,7 +1348,7 @@ class AddThingIHate(AddThingILike):
 class RemoveThingILike(ServerMessage):
     """ Remove item from our likes list """
     def __init__(self, thing=None):
-        self.thing = _str(thing)
+        self.thing = thing
 
     def makeNetworkMessage(self):
         return self.packObject(self.thing)
@@ -1404,7 +1360,7 @@ class RemoveThingIHate(RemoveThingILike):
 
 class UserInterests(ServerMessage):
     def __init__(self, user=None):
-        self.user = _str(user)
+        self.user = user
         self.likes = None
         self.hates = None
 
@@ -1465,7 +1421,7 @@ class Recommendations(GlobalRecommendations):
 class ItemRecommendations(GlobalRecommendations):
     def __init__(self, thing=None):
         GlobalRecommendations.__init__(self)
-        self.thing = _str(thing)
+        self.thing = thing
 
     def makeNetworkMessage(self):
         return self.packObject(self.thing)
@@ -1493,7 +1449,7 @@ class SimilarUsers(ServerMessage):
 
 class ItemSimilarUsers(ServerMessage):
     def __init__(self, thing=None):
-        self.thing = _str(thing)
+        self.thing = thing
         self.users = None
 
     def makeNetworkMessage(self):
@@ -1510,9 +1466,9 @@ class ItemSimilarUsers(ServerMessage):
 
 class RoomSearch(ServerMessage):
     def __init__(self, room=None, requestid=None, text=""):
-        self.room = _str(room)
+        self.room = room
         self.searchid = requestid
-        self.searchterm = ' '.join([x for x in _str(text.split()) if x != '-'])
+        self.searchterm = ' '.join([x for x in text.split() if x != '-'])
 
     def makeNetworkMessage(self):
         return (self.packObject(self.room) +
@@ -1530,9 +1486,9 @@ class RoomSearch(ServerMessage):
 
 class UserSearch(ServerMessage):
     def __init__(self, user=None, requestid=None, text=None):
-        self.suser = _str(user)
+        self.suser = user
         self.searchid = requestid
-        self.searchterm = _str(text)
+        self.searchterm = text
 
     def makeNetworkMessage(self):
         return (self.packObject(self.suser) +
@@ -1567,8 +1523,8 @@ class PeerInit(PeerMessage):
     otherwise"""
     def __init__(self, conn, user=None, type=None, token=None):
         self.conn = conn
-        self.user = _str(user)
-        self.type = _str(type)
+        self.user = user
+        self.type = type
         self.token = token
 
     def makeNetworkMessage(self):
@@ -1586,8 +1542,8 @@ class PMessageUser(PeerMessage):
     """ Chat phrase sent to someone or received by us in private"""
     def __init__(self, conn=None, user=None, msg=None):
         self.conn = conn
-        self.user = _str(user)
-        self.msg = _str(msg)
+        self.user = user
+        self.msg = msg
 
     def makeNetworkMessage(self):
         return (self.packObject(0) +
@@ -1618,8 +1574,8 @@ class UserInfoReply(PeerMessage):
     """ Peer responds with this, when asked for user information."""
     def __init__(self, conn, descr=None, pic=None, totalupl=None, queuesize=None, slotsavail=None, uploadallowed=None):
         self.conn = conn
-        self.descr = _str(descr)
-        self.pic = _str(pic)
+        self.descr = descr
+        self.pic = pic
         self.totalupl = totalupl
         self.queuesize = queuesize
         self.slotsavail = slotsavail
@@ -1659,17 +1615,16 @@ class SharedFileList(PeerMessage):
         self.built = None
 
     def parseNetworkMessage(self, message, nozlib=False):
-        if not nozlib:
-            try:
+        try:
+            if not nozlib:
                 message = zlib.decompress(message)
-            except Exception as error:
-                log.addwarning(_("Exception during parsing %(area)s: %(exception)s") % {'area': 'SharedFileList', 'exception': error})
-                self.list = {}
-                return
-        if not self.doubleParseNetworkMessage(message):
+
+            self._parseNetworkMessage(message)
+        except Exception as error:
+            log.addwarning(_("Exception during parsing %(area)s: %(exception)s") % {'area': 'SharedFileList', 'exception': error})
             self.list = {}
 
-    def _parseNetworkMessage(self, message, sizetype):
+    def _parseNetworkMessage(self, message):
         shares = []
         pos, ndir = self.getObject(message, int)
         for i in range(ndir):
@@ -1679,7 +1634,7 @@ class SharedFileList(PeerMessage):
             for j in range(nfiles):
                 pos, code = pos + 1, message[pos]
                 pos, name = self.getObject(message, bytes, pos)
-                pos, size = self.getObject(message, sizetype, pos, getsignedint=True, printerror=False)
+                pos, size = self.getObject(message, NetworkLongLongType, pos, getsignedint=True, printerror=False)
                 if message[pos - 1] == '\xff':
                     # Buggy SLSK?
                     # Some file sizes will be huge if unpacked as a signed
@@ -1735,7 +1690,7 @@ class FileSearchRequest(PeerMessage):
     def __init__(self, conn, requestid=None, text=None):
         self.conn = conn
         self.requestid = requestid
-        self.text = _str(text)
+        self.text = text
 
     def makeNetworkMessage(self):
         return self.packObject(NetworkIntType(self.requestid)) + self.packObject(self.text)
@@ -1749,7 +1704,7 @@ class FileSearchResult(PeerMessage):
     """ Peer sends this when it has a file search match."""
     def __init__(self, conn, user=None, geoip=None, token=None, shares=None, fileindex=None, freeulslots=None, ulspeed=None, inqueue=None, fifoqueue=None):
         self.conn = conn
-        self.user = _str(user)
+        self.user = user
         self.geoip = geoip
         self.token = token
         self.list = shares
@@ -1761,11 +1716,14 @@ class FileSearchResult(PeerMessage):
         self.pos = 0
 
     def parseNetworkMessage(self, message):
-        message = zlib.decompress(message)
-        if not self.doubleParseNetworkMessage(message):
+        try:
+            message = zlib.decompress(message)
+            self._parseNetworkMessage(message)
+        except Exception as error:
+            log.addwarning(_("Exception during parsing %(area)s: %(exception)s") % {'area': 'FileSearchResult', 'exception': error})
             self.list = {}
 
-    def _parseNetworkMessage(self, message, sizetype):
+    def _parseNetworkMessage(self, message):
         self.pos, self.user = self.getObject(message, bytes)
         self.pos, self.token = self.getObject(message, int, self.pos)
         self.pos, nfiles = self.getObject(message, int, self.pos)
@@ -1774,7 +1732,7 @@ class FileSearchResult(PeerMessage):
             self.pos, code = self.pos + 1, message[self.pos]
             self.pos, name = self.getObject(message, bytes, self.pos)
             # suppressing errors with unpacking, can be caused by incorrect sizetype
-            self.pos, size = self.getObject(message, sizetype, self.pos, printerror=False)
+            self.pos, size = self.getObject(message, NetworkLongLongType, self.pos, printerror=False)
             self.pos, ext = self.getObject(message, bytes, self.pos, printerror=False)
             self.pos, numattr = self.getObject(message, int, self.pos, printerror=False)
             attrs = []
@@ -1799,8 +1757,9 @@ class FileSearchResult(PeerMessage):
 
         queuesize = self.inqueue[0]
 
+        print(self.token)
         msg = (self.packObject(self.user) +
-               self.packObject(NetworkIntType(self.token)) +
+               self.packObject(NetworkLongLongType(self.token)) +
                self.packObject(NetworkIntType(len(filelist))))
         for i in filelist:
             msg += (bytes([1]) +
@@ -1828,7 +1787,7 @@ class FolderContentsRequest(PeerMessage):
     """ Ask the peer to send us the contents of a single folder. """
     def __init__(self, conn, directory=None):
         self.conn = conn
-        self.dir = _str(directory)
+        self.dir = directory
 
     def makeNetworkMessage(self):
         return self.packObject(1) + self.packObject(self.dir)
@@ -1843,20 +1802,18 @@ class FolderContentsResponse(PeerMessage):
     """
     def __init__(self, conn, directory=None, shares=None):
         self.conn = conn
-        self.dir = _str(directory)
+        self.dir = directory
         self.list = shares
 
     def parseNetworkMessage(self, message):
         try:
             message = zlib.decompress(message)
+            self._parseNetworkMessage(message)
         except Exception as error:
             log.addwarning(_("Exception during parsing %(area)s: %(exception)s") % {'area': 'FolderContentsResponse', 'exception': error})
             self.list = {}
-            return
-        if not self.doubleParseNetworkMessage(message):
-            self.list = {}
 
-    def _parseNetworkMessage(self, message, sizetype):
+    def _parseNetworkMessage(self, message):
         shares = {}
         pos, nfolders = self.getObject(message, int)
         for h in range(nfolders):
@@ -1871,7 +1828,7 @@ class FolderContentsResponse(PeerMessage):
                 for j in range(nfiles):
                     pos, code = pos + 1, message[pos]
                     pos, name = self.getObject(message, bytes, pos, printerror=False)
-                    pos, size = self.getObject(message, sizetype, pos, getsignedint=1, printerror=False)
+                    pos, size = self.getObject(message, NetworkLongLongType, pos, getsignedint=1, printerror=False)
                     pos, ext = self.getObject(message, bytes, pos, printerror=False)
                     pos, numattr = self.getObject(message, int, pos, printerror=False)
                     attrs = []
@@ -1901,7 +1858,7 @@ class TransferRequest(PeerMessage):
         self.conn = conn
         self.direction = direction
         self.req = req
-        self.file = _str(file)  # virtual file
+        self.file = file  # virtual file
         self.realfile = realfile
         self.filesize = filesize
 
@@ -1926,7 +1883,7 @@ class TransferResponse(PeerMessage):
         self.conn = conn
         self.allowed = allowed
         self.req = req
-        self.reason = _str(reason)
+        self.reason = reason
         self.filesize = filesize
 
     def makeNetworkMessage(self):
@@ -1950,7 +1907,7 @@ class TransferResponse(PeerMessage):
 class PlaceholdUpload(PeerMessage):
     def __init__(self, conn, file=None):
         self.conn = conn
-        self.file = _str(file)
+        self.file = file
 
     def makeNetworkMessage(self):
         return self.packObject(self.file)
@@ -1970,7 +1927,7 @@ class UploadFailed(PlaceholdUpload):
 class PlaceInQueue(PeerMessage):
     def __init__(self, conn, filename=None, place=None):
         self.conn = conn
-        self.filename = _str(filename)
+        self.filename = filename
         self.place = place
 
     def makeNetworkMessage(self):
@@ -1988,8 +1945,8 @@ class PlaceInQueueRequest(PlaceholdUpload):
 class QueueFailed(PeerMessage):
     def __init__(self, conn, file=None, reason=None):
         self.conn = conn
-        self.file = _str(file)
-        self.reason = _str(reason)
+        self.file = file
+        self.reason = reason
 
     def makeNetworkMessage(self):
         return self.packObject(self.file) + self.packObject(self.reason)
@@ -2004,7 +1961,7 @@ class FileRequest(PeerMessage):
     them. """
     def __init__(self, conn, req=None):
         self.conn = conn
-        self.req = _str(req)
+        self.req = req
 
     def makeNetworkMessage(self):
         msg = self.packObject(self.req)
@@ -2033,14 +1990,16 @@ class DistribSearch(DistribMessage):
         self.conn = conn
 
     def parseNetworkMessage(self, message):
-        if not self.doubleParseNetworkMessage(message):
-            log.addwarning('Hitme')
+        try:
+            self._parseNetworkMessage(message)
+        except Exception as error:
+            log.addwarning(_("Exception during parsing %(area)s: %(exception)s") % {'area': 'DistribSearch', 'exception': error})
             return False
 
-    def _parseNetworkMessage(self, message, sizetype):
-        pos, self.something = self.getObject(message, sizetype, printerror=False)
+    def _parseNetworkMessage(self, message):
+        pos, self.unknown = self.getObject(message, NetworkLongLongType, printerror=False)
         pos, self.user = self.getObject(message, bytes, pos, printerror=False)
-        pos, self.searchid = self.getObject(message, sizetype, pos, printerror=False)
+        pos, self.searchid = self.getObject(message, NetworkLongLongType, pos, printerror=False)
         pos, self.searchterm = self.getObject(message, bytes, pos, printerror=False)
 
 
@@ -2154,7 +2113,7 @@ class SearchRequest(ServerMessage):
 class UserPrivileged(ServerMessage):
     """ Discover whether a user is privileged or not """
     def __init__(self, user=None):
-        self.user = _str(user)
+        self.user = user
         self.privileged = None
 
     def makeNetworkMessage(self):
@@ -2168,7 +2127,7 @@ class UserPrivileged(ServerMessage):
 class GivePrivileges(ServerMessage):
     """ Give (part) of your privileges to another user on the network """
     def __init__(self, user=None, days=None):
-        self.user = _str(user)
+        self.user = user
         self.days = days
 
     def makeNetworkMessage(self):
@@ -2179,5 +2138,5 @@ class PopupMessage:
     """For messages that should be shown to the user prominently, for example
     through a popup. Should be used sparsely."""
     def __init__(self, title, message):
-        self.title = _str(title)
-        self.message = _str(message)
+        self.title = title
+        self.message = message
