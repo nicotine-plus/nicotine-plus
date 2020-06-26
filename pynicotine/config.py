@@ -231,6 +231,7 @@ class Config:
             },
 
             "searches": {
+                "expand_searches": True,
                 "group_searches": True,
                 "maxresults": 50,
                 "re_filter": 0,

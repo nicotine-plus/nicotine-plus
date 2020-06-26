@@ -519,6 +519,9 @@ class Search:
         self.directoryGroup.set_active(self.frame.np.config.sections["searches"]["group_searches"])
         self.directoryGroup.connect("toggled", self.OnGroup)
 
+        self.ExpandButton.set_active(self.frame.np.config.sections["searches"]["expand_searches"])
+        self.ExpandButton.connect("toggled", self.OnToggleExpandAll)
+
         self.all_data = []
         self.filters = None
         self.COLUMN_TYPES = [
@@ -884,14 +887,17 @@ class Search:
 
             iter = self.AddRowToModel(row)
 
-            if self.directoryGroup.get_active() and self.ExpandButton.get_active():
-                path = None
+            if self.directoryGroup.get_active():
+                if self.ExpandButton.get_active():
+                    path = None
 
-                if iter is not None:
-                    path = self.resultsmodel.get_path(iter)
+                    if iter is not None:
+                        path = self.resultsmodel.get_path(iter)
 
-                if path is not None:
-                    self.ResultsList.expand_to_path(path)
+                    if path is not None:
+                        self.ResultsList.expand_to_path(path)
+                else:
+                    self.collapse_all()
 
         # Update counter
         self.Counter.set_text("Results: %d/%d" % (count, len(self.all_data)))
@@ -1225,6 +1231,16 @@ class Search:
 
         self.ResultsList.get_selection().selected_foreach(self.SelectedResultsCallback)
 
+    def collapse_all(self):
+        self.ResultsList.collapse_all()
+
+        iter = self.resultsmodel.get_iter_first()
+
+        while iter is not None:
+            path = self.resultsmodel.get_path(iter)
+            self.ResultsList.expand_to_path(path)
+            iter = self.resultsmodel.iter_next(iter)
+
     def ChangeColours(self):
 
         self.frame.SetTextBG(self.ResultsList)
@@ -1522,12 +1538,16 @@ class Search:
 
     def OnToggleExpandAll(self, widget):
 
-        if self.ExpandButton.get_active():
+        active = self.ExpandButton.get_active()
+
+        if active:
             self.ResultsList.expand_all()
             self.expandImage.set_from_stock(gtk.STOCK_REMOVE, 4)
         else:
-            self.ResultsList.collapse_all()
+            self.collapse_all()
             self.expandImage.set_from_stock(gtk.STOCK_ADD, 4)
+
+        self.frame.np.config.sections["searches"]["expand_searches"] = active
 
     def OnToggleFilters(self, widget):
 
@@ -1544,7 +1564,7 @@ class Search:
             if self.ExpandButton.get_active():
                 self.ResultsList.expand_all()
             else:
-                self.ResultsList.collapse_all()
+                self.collapse_all()
 
     def OnIgnore(self, widget):
 
@@ -1611,7 +1631,7 @@ class Search:
             if self.ExpandButton.get_active():
                 self.ResultsList.expand_all()
             else:
-                self.ResultsList.collapse_all()
+                self.collapse_all()
 
 
 class WishList(gtk.Dialog):
