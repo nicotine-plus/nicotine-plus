@@ -514,6 +514,7 @@ class Search:
         self.directoryiters = {}
         self.users = set()
         self.resultslimit = 2000
+        self.numvisibleresults = 0
         self.QueryLabel.set_text(text)
 
         self.directoryGroup.set_active(self.frame.np.config.sections["searches"]["group_searches"])
@@ -880,9 +881,7 @@ class Search:
             if not self.check_filter(row):
                 continue
 
-            count = self.CountResults()
-
-            if count >= self.frame.np.config.sections['searches']["max_displayed_results"]:
+            if self.numvisibleresults >= self.frame.np.config.sections['searches']["max_displayed_results"]:
                 break
 
             iter = self.AddRowToModel(row)
@@ -900,7 +899,7 @@ class Search:
                     self.collapse_all()
 
         # Update counter
-        self.Counter.set_text("Results: %d/%d" % (count, len(self.all_data)))
+        self.Counter.set_text("Results: %d/%d" % (self.numvisibleresults, len(self.all_data)))
 
         # Update tab notification
         self.frame.Searches.request_changed(self.Main)
@@ -935,6 +934,8 @@ class Search:
                 row[6] = ""  # Directory not visible for file row if "group by folder" is enabled
 
             iter = self.resultsmodel.append(parent, row)
+
+            self.numvisibleresults += 1
         except Exception as e:
             types = []
             for i in row:
@@ -1102,37 +1103,16 @@ class Search:
         self.usersiters.clear()
         self.directoryiters.clear()
         self.resultsmodel.clear()
+        self.numvisibleresults = 0
 
         for row in self.all_data:
-            count = self.CountResults()
-
-            if count >= self.frame.np.config.sections['searches']["max_displayed_results"]:
+            if self.numvisibleresults >= self.frame.np.config.sections['searches']["max_displayed_results"]:
                 break
 
             if self.check_filter(row):
                 self.AddRowToModel(row)
 
-        self.Counter.set_text("Results: %d/%d" % (count, len(self.all_data)))
-
-    def CountResults(self):
-
-        if self.directoryGroup.get_active():
-            iter = self.resultsmodel.get_iter_first()
-            count = 0
-
-            while iter is not None:
-                if self.resultsmodel.iter_has_child(iter):
-                    child = self.resultsmodel.iter_children(iter)
-
-                    while child is not None:
-                        count += self.resultsmodel.iter_n_children(child)
-                        child = self.resultsmodel.iter_next(child)
-
-                iter = self.resultsmodel.iter_next(iter)
-        else:
-            count = len(self.resultsmodel)
-
-        return count
+        self.Counter.set_text("Results: %d/%d" % (self.numvisibleresults, len(self.all_data)))
 
     def OnPopupMenuUsers(self, widget):
 
