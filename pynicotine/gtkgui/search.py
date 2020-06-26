@@ -522,7 +522,7 @@ class Search:
         self.all_data = []
         self.filters = None
         self.COLUMN_TYPES = [
-            int,  # num
+            str,  # num
             str,  # user
             gobject.TYPE_OBJECT,  # self.get_flag(user, country)
             str,  # immediatedl
@@ -581,6 +581,7 @@ class Search:
         self.ResultsList.get_selection().set_mode(gtk.SelectionMode.MULTIPLE)
         self.ResultsList.set_property("show-expanders", self.directoryGroup.get_active())
         self.ResultsList.set_property("rules-hint", True)
+
         widths = self.frame.np.config.sections["columns"]["filesearch_widths"]
         cols = InitialiseColumns(
             self.ResultsList,
@@ -599,6 +600,10 @@ class Search:
 
         self.col_num, self.col_user, self.col_country, self.col_immediate, self.col_speed, self.col_queue, self.col_directory, self.col_file, self.col_size, self.col_bitrate, self.col_length = cols
         cols[0].get_widget().hide()
+
+        if self.directoryGroup.get_active():
+            self.ResultsList.get_columns()[0].set_visible(False)
+            self.ExpandButton.show()
 
         for i in range(11):
 
@@ -847,7 +852,7 @@ class Search:
             if status is None:
                 status = 0
 
-            results.append([counter, user, self.get_flag(user, country), imdl, h_speed, h_queue, dir, name, h_size, bitrate, length, br, result[1], country, result[2], msg.ulspeed, msg.inqueue, status])
+            results.append([str(counter), user, self.get_flag(user, country), imdl, h_speed, h_queue, dir, name, h_size, bitrate, length, br, result[1], country, result[2], msg.ulspeed, msg.inqueue, status])
             counter += 1
 
         if results:
@@ -906,13 +911,13 @@ class Search:
             if user not in self.usersiters:
                 self.usersiters[user] = self.resultsmodel.append(
                     None,
-                    [0, user, self.get_flag(user, country), immediatedl, h_speed, h_queue, "", "", "", "", "", 0, "", country, 0, speed, queue, status]
+                    ["", user, self.get_flag(user, country), immediatedl, h_speed, h_queue, "", "", "", "", "", 0, "", country, 0, speed, queue, status]
                 )
 
             if directory not in self.directoryiters:
                 self.directoryiters[directory] = self.resultsmodel.append(
                     self.usersiters[user],
-                    [0, user, self.get_flag(user, country), immediatedl, h_speed, h_queue, directory, "", "", "", "", 0, "", country, 0, speed, queue, status]
+                    ["", user, self.get_flag(user, country), immediatedl, h_speed, h_queue, directory, "", "", "", "", 0, "", country, 0, speed, queue, status]
                 )
 
         try:
