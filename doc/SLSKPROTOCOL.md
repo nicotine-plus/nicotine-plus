@@ -1708,7 +1708,7 @@ We send this after a finished upload to let the server update the speed statisti
 
 ### Server Code 122
 
-**A user's Soulseek Privileges**
+**User Privileges**
 
 #### Function Names
 
@@ -1730,7 +1730,7 @@ We ask the server whether a user is privileged or not.
 
 ### Server Code 123
 
-**Give Soulseek Privileges to user**
+**Give Privileges**
 
 #### Function Names
 
@@ -1751,7 +1751,7 @@ We give (part of) our privileges, specified in days, to another user on the netw
 
 ### Server Code 124
 
-**Server sends us a Notification about our privileges**
+**Notify Privileges**
 
 #### Function Names
 
@@ -1759,13 +1759,16 @@ Nicotine: NotifyPrivileges
 
 #### Description
 
+The server sends us a notification about our privileges.
+
 #### Data Order
 
   - Send
     1.  **int** <ins>token</ins>
     2.  **string** <ins>user</ins>
   - Receive
-      - *No Message*
+    1.  **int** <ins>token</ins>
+    2.  **string** <ins>user</ins>
 
 ### Server Code 125
 
@@ -1780,7 +1783,7 @@ Nicotine: AckNotifyPrivileges
 #### Data Order
 
   - Send
-      - *No Message*
+    1.  **int** <ins>token</ins>
   - Receive
     1.  **int** <ins>token</ins>
 
@@ -2940,14 +2943,14 @@ In Nicotine, these messages are matched to their message number in slskproto.py 
 
 #### Message Index
 
-| Code | Message                               |
-| ---- | ------------------------------------- |
-| 0    | [Ping](#distributed-code-0)           |
-| 3    | [Search Request](#distributed-code-3) |
-| 4    | [Branch Level](#distributed-code-4)   |
-| 5    | [Branch Root](#distributed-code-5)    |
-| 7    | [Child Depth](#distributed-code-7)    |
-| 93   | [Search Request](#distributed-code-93)|
+| Code | Message                                      |
+| ---- | -------------------------------------------- |
+| 0    | [Ping](#distributed-code-0)                  |
+| 3    | [Search Request](#distributed-code-3)        |
+| 4    | [Branch Level](#distributed-code-4)          |
+| 5    | [Branch Root](#distributed-code-5)           |
+| 7    | [Child Depth](#distributed-code-7)           |
+| 93   | [Server Search Request](#distributed-code-93)|
 
 ### Distributed Code 0
 
@@ -2988,14 +2991,14 @@ Nicotine: DistribSearch
 #### Data Order
 
   - Send
-    1.  **uint32** <ins>unknown</ins>
+    1.  **int** <ins>unknown</ins>
     2.  **string** <ins>user</ins>
-    3.  **uint32** <ins>ticket</ins>
+    3.  **int** <ins>ticket</ins>
     4.  **string** <ins>query</ins>
   - Receive
-    1.  **uint32** <ins>unknown</ins>
+    1.  **int** <ins>unknown</ins>
     2.  **string** <ins>user</ins>
-    3.  **uint32** <ins>ticket</ins>
+    3.  **int** <ins>ticket</ins>
     4.  **string** <ins>query</ins>
 
 ### Distributed Code 4
@@ -3060,7 +3063,7 @@ Nicotine: Unimplemented
 
 ### Distributed Code 93
 
-**Search Request**
+**Server Search Request**
 
 #### Description
 
@@ -3071,19 +3074,20 @@ Search requests are sent to us by the server using SearchRequest if we're a bran
 
 #### Function Names
 
-Nicotine: DistribSearch
+Museekd: Unimplemented  
+Nicotine: DistribServerSearch
 
 #### Data Order
 
   - Send
-    1.  **uint32** <ins>unknown</ins>
+    1.  **off_t** <ins>unknown</ins> *always 210503729152 (?)*
     2.  **string** <ins>user</ins>
-    3.  **uint32** <ins>ticket</ins>
+    3.  **int** <ins>ticket</ins>
     4.  **string** <ins>query</ins>
   - Receive
-    1.  **uint32** <ins>unknown</ins>
+    1.  **off_t** <ins>unknown</ins> *always 210503729152 (?)*
     2.  **string** <ins>user</ins>
-    3.  **uint32** <ins>ticket</ins>
+    3.  **int** <ins>ticket</ins>
     4.  **string** <ins>query</ins>
 
 ## Museek Data Types

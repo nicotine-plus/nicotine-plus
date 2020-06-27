@@ -260,6 +260,7 @@ class NetworkEventProcessor:
             slskmessages.NetInfo: self.NetInfo,
             slskmessages.DistribAlive: self.DummyMessage,
             slskmessages.DistribSearch: self.DistribSearch,
+            slskmessages.DistribServerSearch: self.DistribSearch,
             ConnectToPeerTimeout: self.ConnectToPeerTimeout,
             RespondToDistributedSearchesTimeout: self.ToggleRespondDistributed,
             transfers.TransferTimeout: self.TransferTimeout,

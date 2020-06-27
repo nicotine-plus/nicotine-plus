@@ -57,6 +57,7 @@ from pynicotine.slskmessages import DistribBranchLevel
 from pynicotine.slskmessages import DistribBranchRoot
 from pynicotine.slskmessages import DistribChildDepth
 from pynicotine.slskmessages import DistribSearch
+from pynicotine.slskmessages import DistribServerSearch
 from pynicotine.slskmessages import DownloadFile
 from pynicotine.slskmessages import ExactFileSearch
 from pynicotine.slskmessages import FileError
@@ -376,7 +377,7 @@ class SlskProtoThread(threading.Thread):
         4: DistribBranchLevel,  # Unimplemented
         5: DistribBranchRoot,  # Unimplemented
         7: DistribChildDepth,  # Unimplemented
-        93: DistribSearch
+        93: DistribServerSearch
     }
 
     IN_PROGRESS_STALE_AFTER = 30

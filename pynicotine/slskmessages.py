@@ -243,7 +243,6 @@ class SlskMessage:
             elif type is bytes:
                 length = struct.unpack("<I", message[start:start + intsize].ljust(intsize, b'\0'))[0]
                 string = message[start + intsize:start + length + intsize]
-                print(string)
 
                 if rawbytes is False:
                     string = findBestEncoding(string, ['utf-8', 'iso-8859-1'])
@@ -1814,7 +1813,6 @@ class FileSearchResult(PeerMessage):
         self.pos, self.inqueue = self.getObject(message, int, self.pos)
 
     def makeNetworkMessage(self):
-        print("hm")
         filelist = []
         for i in self.list:
             try:
@@ -1824,9 +1822,8 @@ class FileSearchResult(PeerMessage):
 
         queuesize = self.inqueue[0]
 
-        print(filelist)
         msg = (self.packObject(self.user) +
-               self.packObject(NetworkLongLongType(self.token)) +
+               self.packObject(NetworkIntType(self.token)) +
                self.packObject(NetworkIntType(len(filelist))))
         for i in filelist:
             msg += (bytes([1]) +
@@ -1847,8 +1844,6 @@ class FileSearchResult(PeerMessage):
         msg += (bytes([self.freeulslots]) +
                 self.packObject(NetworkIntType(self.ulspeed)) +
                 self.packObject(NetworkIntType(queuesize)))
-        print(msg)
-        print(zlib.compress(msg))
         return zlib.compress(msg)
 
 
@@ -2067,7 +2062,7 @@ class DistribAlive(DistribMessage):
 
 
 class DistribSearch(DistribMessage):
-    """ Distrib code: 3 or 93 """
+    """ Distrib code: 3 """
     """
     Search request that arrives through the distributed network.
     We transmit the search request to our children.
@@ -2080,22 +2075,44 @@ class DistribSearch(DistribMessage):
         self.conn = conn
 
     def parseNetworkMessage(self, message):
-        # try:
-        self._parseNetworkMessage(message)
-        # except Exception as error:
-        # log.addwarning(_("Exception during parsing %(area)s: %(exception)s") % {'area': 'DistribSearch', 'exception': error})
-        # return False
+        try:
+            self._parseNetworkMessage(message)
+        except Exception as error:
+            log.addwarning(_("Exception during parsing %(area)s: %(exception)s") % {'area': 'DistribSearch', 'exception': error})
+            return False
 
     def _parseNetworkMessage(self, message):
-        print(message)
-        pos, self.unknown = self.getObject(message, NetworkLongLongType, printerror=False)
-        print(self.unknown)
+        pos, self.unknown = self.getObject(message, int, printerror=False)
         pos, self.user = self.getObject(message, bytes, pos, printerror=False)
-        print(self.user)
         pos, self.searchid = self.getObject(message, int, pos, printerror=False)
-        print(self.searchid)
         pos, self.searchterm = self.getObject(message, bytes, pos, printerror=False)
-        print(self.searchterm)
+
+
+class DistribServerSearch(DistribMessage):
+    """ Distrib code: 93 """
+    """
+    Search request that arrives through the distributed network.
+    We transmit the search request to our children.
+
+    Search requests are sent to us by the server using SearchRequest
+    if we're a branch root, or by our parent using DistribSearch.
+    (TODO: check that this works / is implemented)
+    """
+    def __init__(self, conn):
+        self.conn = conn
+
+    def parseNetworkMessage(self, message):
+        try:
+            self._parseNetworkMessage(message)
+        except Exception as error:
+            log.addwarning(_("Exception during parsing %(area)s: %(exception)s") % {'area': 'DistribServerSearch', 'exception': error})
+            return False
+
+    def _parseNetworkMessage(self, message):
+        pos, self.unknown = self.getObject(message, NetworkLongLongType, printerror=False)
+        pos, self.user = self.getObject(message, bytes, pos, printerror=False)
+        pos, self.searchid = self.getObject(message, int, pos, printerror=False)
+        pos, self.searchterm = self.getObject(message, bytes, pos, printerror=False)
 
 
 class DistribBranchLevel(DistribMessage):
@@ -2185,7 +2202,6 @@ class SearchRequest(ServerMessage):
     """ Server code: 93 """
     """ The server sends us search requests from other users. """
     def parseNetworkMessage(self, message):
-        print(message)
         pos, self.code = 1, message[0]
         pos, self.something = self.getObject(message, int, pos)
         pos, self.user = self.getObject(message, bytes, pos)
@@ -2217,7 +2233,6 @@ class GivePrivileges(ServerMessage):
         self.days = days
 
     def makeNetworkMessage(self):
-        print(self.user)
         return self.packObject(self.user) + self.packObject(self.days)
 
 
