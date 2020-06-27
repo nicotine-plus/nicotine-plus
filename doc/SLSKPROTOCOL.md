@@ -1158,6 +1158,8 @@ Nicotine: HaveNoParent
 
 #### Description
 
+We inform the server if we have a distributed parent or not. If not, the server eventually sends us a NetInfo message with a list of 10 possible parents to connect to.
+
 #### Data Order
 
   - Send
@@ -1401,7 +1403,7 @@ Nicotine: AcceptChildren (not yet used)
 
 #### Description
 
-The server send us information about what nodes have been added/removed in the network.
+The server send us information about what nodes have been added/removed in the network. The list contains 10 possible distributed parents to connect to.
 
 #### Function Names
 

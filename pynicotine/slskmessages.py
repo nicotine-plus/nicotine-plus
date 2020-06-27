@@ -2045,10 +2045,14 @@ class FileRequest(PeerMessage):
 
 class HaveNoParent(ServerMessage):
     """ Server code: 71 """
+    """ We inform the server if we have a distributed parent or not.
+    If not, the server eventually sends us a NetInfo message with a
+    list of 10 possible parents to connect to. """
     def __init__(self, noparent=None):
         self.noparent = noparent
 
     def makeNetworkMessage(self):
+        print(self.noparent)
         return bytes((self.noparent,))
 
 
@@ -2187,7 +2191,8 @@ class ChildDepth(ServerMessage):
 class NetInfo(ServerMessage):
     """ Server code: 102 """
     """ The server send us information about what nodes have been
-    added/removed in the network. """
+    added/removed in the network. The list contains 10 possible
+    distributed parents to connect to. """
     def parseNetworkMessage(self, message: bytes):
         self.list = {}
         pos, num = self.getObject(message, int)
@@ -2196,6 +2201,7 @@ class NetInfo(ServerMessage):
             pos, self.ip = pos + 4, socket.inet_ntoa(message[pos:pos + 4][::-1])
             pos, port = self.getObject(message, int, pos)
             self.list[username] = (self.ip, port)
+        print(self.list)
 
 
 class SearchRequest(ServerMessage):
