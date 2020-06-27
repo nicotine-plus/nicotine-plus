@@ -72,7 +72,6 @@ and callbacks for the messages are set in pynicotine.py.
 | 2    | [Set Listen Port](#server-code-2)                 |
 | 3    | [Get Peer Address](#server-code-3)                |
 | 5    | [Add User](#server-code-5)                        |
-| 6    | [Unknown](#server-code-6)                         |
 | 7    | [Get Status](#server-code-7)                      |
 | 13   | [Say in Chat Room](#server-code-13)               |
 | 14   | [Join Room](#server-code-14)                      |
