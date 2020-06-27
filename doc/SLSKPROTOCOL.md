@@ -297,26 +297,6 @@ Used to be kept updated about a user's status.
         6.  **string** <ins>Country Code</ins> (may
             not be implemented)
 
-### Server Code 6
-
-**Unknown**
-
-#### Function Names
-
-Museekd: Unimplemented  
-Nicotine: Unimplemented
-
-#### Description
-
-Something to do with user status. Usually sent right after SAddUser.
-
-#### Data Order
-
-  - Send
-    1.  **string** <ins>username</ins>
-  - Receive
-      - *No Message*
-
 ### Server Code 7
 
 **Get Status**

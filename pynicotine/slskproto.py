@@ -156,7 +156,6 @@ from pynicotine.slskmessages import SimilarUsers
 from pynicotine.slskmessages import TransferRequest
 from pynicotine.slskmessages import TransferResponse
 from pynicotine.slskmessages import TunneledMessage
-from pynicotine.slskmessages import Unknown6
 from pynicotine.slskmessages import UploadFailed
 from pynicotine.slskmessages import UploadFile
 from pynicotine.slskmessages import UploadQueueNotification
@@ -263,7 +262,6 @@ class SlskProtoThread(threading.Thread):
         SetWaitPort: 2,
         GetPeerAddress: 3,
         AddUser: 5,
-        Unknown6: 6,
         GetUserStatus: 7,
         SayChatroom: 13,
         JoinRoom: 14,

@@ -437,20 +437,6 @@ class AddUser(ServerMessage):
                 pos, self.country = self.getObject(message, bytes, pos)
 
 
-class Unknown6(ServerMessage):
-    """ Server code: 6 """
-    """ UNKNOWN """
-    def __init__(self, user=None):
-        self.user = user
-
-    def makeNetworkMessage(self):
-        return self.packObject(self.user)
-
-    def parseNetworkMessage(self, message):
-        self.debug()
-        pass
-
-
 class RemoveUser(ServerMessage):
     """ Used when we no longer want to be kept updated about a user's status.
     (is this used anywhere?) """
@@ -2052,7 +2038,6 @@ class HaveNoParent(ServerMessage):
         self.noparent = noparent
 
     def makeNetworkMessage(self):
-        print(self.noparent)
         return bytes((self.noparent,))
 
 
@@ -2201,7 +2186,6 @@ class NetInfo(ServerMessage):
             pos, self.ip = pos + 4, socket.inet_ntoa(message[pos:pos + 4][::-1])
             pos, port = self.getObject(message, int, pos)
             self.list[username] = (self.ip, port)
-        print(self.list)
 
 
 class SearchRequest(ServerMessage):
