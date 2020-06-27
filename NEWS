@@ -86,6 +86,7 @@ Bugs closed in GitHub
  * twice downloaded same folder, aborted duplicate files, remove aborted does not remove (#305)
  * downloading folder from user browse doesn't work (#311)
  * cannot connect (#312)
+ * Distrib message type 93 unknown (#322)
 
 Version 1.4.3 (unstable)
 -----------------------------
