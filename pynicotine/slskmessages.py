@@ -408,7 +408,9 @@ class GetPeerAddress(ServerMessage):
 
 class AddUser(ServerMessage):
     """ Server code: 5 """
-    """ Used to be kept updated about a user's status. """
+    """ Used to be kept updated about a user's stats. When a user's
+    stats have changed, the server sends a GetUserStats response message
+    with the new user stats. """
     def __init__(self, user=None):
         self.user = user
         self.status = None
@@ -1049,7 +1051,10 @@ class SharedFoldersFiles(ServerMessage):
 
 class GetUserStats(ServerMessage):
     """ Server code: 36 """
-    """ The server sends this to indicate a change in a user's statistics. """
+    """ The server sends this to indicate a change in a user's statistics,
+    if we've requested to watch the user in AddUser previously. A user's
+    stats can also be requested by sending a GetUserStats message to the
+    server, but AddUser should be used instead. """
     def __init__(self, user=None):
         self.user = user
         self.country = None

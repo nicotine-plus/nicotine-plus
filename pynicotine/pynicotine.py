@@ -903,8 +903,6 @@ class NetworkEventProcessor:
 
         if msg.files is not None:
             self.GetUserStats(msg)
-        elif msg.userexists and msg.files is None:
-            self.queue.put(slskmessages.GetUserStats(msg.user))
 
     def PrivilegedUsers(self, msg):
 
@@ -912,7 +910,7 @@ class NetworkEventProcessor:
             self.transfers.setPrivilegedUsers(msg.users)
             self.logMessage(_("%i privileged users") % (len(msg.users)))
             self.queue.put(slskmessages.HaveNoParent(1))
-            self.queue.put(slskmessages.GetUserStats(self.config.sections["server"]["login"]))
+            self.queue.put(slskmessages.AddUser(self.config.sections["server"]["login"]))
             self.frame.pluginhandler.ServerConnectNotification()
         else:
             self.logMessage("%s %s" % (msg.__class__, vars(msg)), 4)
