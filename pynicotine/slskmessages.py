@@ -241,8 +241,9 @@ class SlskMessage:
                 else:
                     return intsize + start, struct.unpack("<I", message[start:start + intsize])[0]
             elif type is bytes:
-                length = struct.unpack("<I", message[start:start + intsize])[0]
+                length = struct.unpack("<I", message[start:start + intsize].ljust(intsize, b'\0'))[0]
                 string = message[start + intsize:start + length + intsize]
+                print(string)
 
                 if rawbytes is False:
                     string = findBestEncoding(string, ['utf-8', 'iso-8859-1'])
@@ -1813,6 +1814,7 @@ class FileSearchResult(PeerMessage):
         self.pos, self.inqueue = self.getObject(message, int, self.pos)
 
     def makeNetworkMessage(self):
+        print("hm")
         filelist = []
         for i in self.list:
             try:
@@ -1822,7 +1824,7 @@ class FileSearchResult(PeerMessage):
 
         queuesize = self.inqueue[0]
 
-        print(self.token)
+        print(filelist)
         msg = (self.packObject(self.user) +
                self.packObject(NetworkLongLongType(self.token)) +
                self.packObject(NetworkIntType(len(filelist))))
@@ -1845,6 +1847,8 @@ class FileSearchResult(PeerMessage):
         msg += (bytes([self.freeulslots]) +
                 self.packObject(NetworkIntType(self.ulspeed)) +
                 self.packObject(NetworkIntType(queuesize)))
+        print(msg)
+        print(zlib.compress(msg))
         return zlib.compress(msg)
 
 
@@ -2083,11 +2087,15 @@ class DistribSearch(DistribMessage):
         # return False
 
     def _parseNetworkMessage(self, message):
-        print("hit")
-        pos, self.unknown = self.getObject(message, int, printerror=False)
+        print(message)
+        pos, self.unknown = self.getObject(message, NetworkLongLongType, printerror=False)
+        print(self.unknown)
         pos, self.user = self.getObject(message, bytes, pos, printerror=False)
+        print(self.user)
         pos, self.searchid = self.getObject(message, int, pos, printerror=False)
+        print(self.searchid)
         pos, self.searchterm = self.getObject(message, bytes, pos, printerror=False)
+        print(self.searchterm)
 
 
 class DistribBranchLevel(DistribMessage):
@@ -2177,6 +2185,7 @@ class SearchRequest(ServerMessage):
     """ Server code: 93 """
     """ The server sends us search requests from other users. """
     def parseNetworkMessage(self, message):
+        print(message)
         pos, self.code = 1, message[0]
         pos, self.something = self.getObject(message, int, pos)
         pos, self.user = self.getObject(message, bytes, pos)
@@ -2208,6 +2217,7 @@ class GivePrivileges(ServerMessage):
         self.days = days
 
     def makeNetworkMessage(self):
+        print(self.user)
         return self.packObject(self.user) + self.packObject(self.days)
 
 
