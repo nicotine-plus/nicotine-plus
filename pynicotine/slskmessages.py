@@ -1931,7 +1931,7 @@ class TransferRequest(PeerMessage):
         pos, self.req = self.getObject(message, int, pos)
         pos, self.file = self.getObject(message, bytes, pos)
         if self.direction == 1:
-            pos, self.filesize = self.getObject(message, int, pos)
+            pos, self.filesize = self.getObject(message, NetworkLongLongType, pos)
 
 
 class TransferResponse(PeerMessage):
@@ -1958,7 +1958,7 @@ class TransferResponse(PeerMessage):
         pos, self.allowed = pos + 1, message[pos]
         if message[pos:]:
             if self.allowed:
-                pos, self.filesize = self.getObject(message, int, pos)
+                pos, self.filesize = self.getObject(message, NetworkLongLongType, pos)
             else:
                 pos, self.reason = self.getObject(message, bytes, pos)
 
